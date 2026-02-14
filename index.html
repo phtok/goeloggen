@@ -84,11 +84,6 @@ body{
     color:#dde1ec;
 }
 #header{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    z-index:101;
     background:#111318;
     border-bottom:1px solid rgba(255,255,255,0.07);
     height:52px;
@@ -96,46 +91,41 @@ body{
     display:flex;
     align-items:center;
     justify-content:space-between;
+    flex-shrink:0;
 }
 #preview-area{
-    position:fixed;
-    top:52px;
-    left:0;
-    right:0;
-    z-index:100;
     background:#1a1d26;
-    padding:30px 20px;
+    padding:20px;
     border-bottom:1px solid rgba(255,255,255,0.07);
-    min-height:180px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-#controls-area{
-    padding-top:290px;
-    padding-left:20px;
-    padding-right:20px;
-    padding-bottom:40px;
-}
-
-#preview-area{
     display:flex;
     flex-direction:column;
     align-items:center;
+    justify-content:center;
+    max-height:50vh;
+    overflow-y:auto;
+    flex-shrink:0;
+}
+#controls-area{
+    padding:20px;
+    flex:1;
+    overflow-y:auto;
+}
+
+#preview-area{
     gap:16px;
 }
 </style></head><!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Goetheanum Logo Generator</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,sans-serif;background:#0d0f14;color:#dde1ec;overflow-x:hidden}
+body{font-family:Inter,sans-serif;background:#0d0f14;color:#dde1ec;overflow:hidden;display:flex;flex-direction:column;height:100vh}
 
-/* Fixed Top: Header + Preview */
+/* Full-height two-panel layout */
+html,body{height:100%;overflow:hidden}
+
 #top-section{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    z-index:100;
+    display:flex;
+    flex-direction:column;
+    height:auto;
     background:#111318;
     border-bottom:2px solid rgba(91,141,245,0.2);
 }
@@ -147,6 +137,7 @@ body{font-family:Inter,sans-serif;background:#0d0f14;color:#dde1ec;overflow-x:hi
     display:flex;
     align-items:center;
     gap:16px;
+    flex-shrink:0;
 }
 .hlogo svg{width:14px;height:17px}
 .htitle{font-family:"Titillium Web",Inter,sans-serif;font-size:17px;font-weight:600;color:#5b8df5}
@@ -160,6 +151,9 @@ body{font-family:Inter,sans-serif;background:#0d0f14;color:#dde1ec;overflow-x:hi
     flex-direction:column;
     align-items:center;
     gap:12px;
+    max-height:50vh;
+    overflow-y:auto;
+    flex-shrink:0;
 }
 
 #preview{
@@ -214,9 +208,10 @@ body{font-family:Inter,sans-serif;background:#0d0f14;color:#dde1ec;overflow-x:hi
 
 /* Scrollable Controls */
 #controls-area{
-    margin-top:240px;
+    margin-top:0;
     padding:20px;
-    min-height:calc(100vh - 240px);
+    flex:1;
+    overflow-y:auto;
 }
 
 /* Responsive Grid */
