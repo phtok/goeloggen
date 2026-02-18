@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# Editor / temp
+*.swp
+*.swo
+*.tmp
+*.log
+
+# Local generated outputs
+tmp/
+output/
+
+# Large local research/data folders (not for GitHub)
+hefte_pdf/
+ausgabe_zeichnungen/
+
+# Local experiment snapshots
+archive/
