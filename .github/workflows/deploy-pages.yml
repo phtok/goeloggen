@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - "index.html"
-      - "index-visitenkarten-onepager.html"
+      - "visitenkarten.html"
       - "assets/**"
       - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
@@ -34,8 +34,8 @@ jobs:
           mkdir -p _site
           test -f index.html
           cp index.html _site/index.html
-          if [ -f index-visitenkarten-onepager.html ]; then
-            cp index-visitenkarten-onepager.html _site/index-visitenkarten-onepager.html
+          if [ -f visitenkarten.html ]; then
+            cp visitenkarten.html _site/visitenkarten.html
           fi
           if [ -d assets ]; then
             mkdir -p _site/assets
