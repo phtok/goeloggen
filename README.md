@@ -60,7 +60,7 @@ Die Website kann direkt über GitHub Pages bereitgestellt werden.
 ### Was wird veröffentlicht
 
 - `index.html` (Logo-Generator)
-- `index-visitenkarten-onepager.html` (Visitenkarten-Tool)
+- `visitenkarten.html` (Visitenkarten-Tool)
 - `assets/` (Schriften, Glyphen, Logos)
 
 Der Deploy-Workflow liegt in:

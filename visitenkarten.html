@@ -802,7 +802,7 @@
         </div>
 
         <div class="row">
-          <label for="roleBlockEn" id="lblRoleBlockEn">Funktion / Organisation EN (optional)</label>
+          <label for="roleBlockEn" id="lblRoleBlockEn">Englische Übersetzung</label>
           <textarea id="roleBlockEn" placeholder="Executive Council Member of the&#10;General Anthroposophical Society"></textarea>
         </div>
       </fieldset>
@@ -1040,7 +1040,7 @@
           symbolSet: "bau",
           fullName: "Rudolf Steiner",
           roleLinesDe: ["Administration des", "Goetheanum-Baues"],
-          roleLinesEn: [],
+          roleLinesEn: ["Administration of the", "Goetheanum Building"],
           contactLines: [
             "Postfach · CH 4143 Dornach",
             "Telefon +41 61 706 44 13",
@@ -1324,7 +1324,7 @@
           symbolSet: defaultSymbolForSchema(schemaKey),
           fullName: "Rudolf Steiner",
           roleLinesDe: [bereicheRoleLineDe(schemaKey)],
-          roleLinesEn: [],
+          roleLinesEn: [bereicheRoleLineEn(schemaKey)],
           contactLines: defaultContactLines(schemaKey)
         };
       }
@@ -1381,7 +1381,7 @@
           label_unit: "Einheit / Sektion / Bereich",
           label_name: "Name",
           label_role: "Funktion / Organisation",
-          label_role_en: "Funktion / Organisation EN (optional)",
+          label_role_en: "Englische Übersetzung",
           cat_society: "Gesellschaft",
           cat_school: "Hochschule",
           cat_divisions: "Bereiche",
@@ -1408,7 +1408,7 @@
           label_unit: "Unit / Section / Department",
           label_name: "Name",
           label_role: "Role / Organization",
-          label_role_en: "English translation (optional)",
+          label_role_en: "English translation",
           cat_society: "Society",
           cat_school: "School",
           cat_divisions: "Departments",
