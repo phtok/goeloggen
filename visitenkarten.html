@@ -943,7 +943,11 @@
             .concat((GCI_CATS.bereiche && GCI_CATS.bereiche.items) || [])
             .concat((GCI_CATS.teilbereiche && GCI_CATS.teilbereiche.items) || [])
         )
-      );
+      ).sort(function (a, b) {
+        const aName = (GCI_ORGS[a] && GCI_ORGS[a].name_de) || a;
+        const bName = (GCI_ORGS[b] && GCI_ORGS[b].name_de) || b;
+        return aName.localeCompare(bName, "de", { sensitivity: "base" });
+      });
 
       const ORG_CATS = {
         hochschule: {
