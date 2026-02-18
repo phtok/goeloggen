@@ -1,0 +1,63 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "index.html"
+      - "index-visitenkarten-onepager.html"
+      - "assets/**"
+      - ".github/workflows/deploy-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build publish bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          test -f index.html
+          cp index.html _site/index.html
+          if [ -f index-visitenkarten-onepager.html ]; then
+            cp index-visitenkarten-onepager.html _site/index-visitenkarten-onepager.html
+          fi
+          if [ -d assets ]; then
+            mkdir -p _site/assets
+            cp -R assets/. _site/assets/
+          fi
+          touch _site/.nojekyll
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

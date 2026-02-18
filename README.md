@@ -52,3 +52,23 @@ Ein interaktiver Web-Generator für Logos aller Goetheanum-Sektionen und -Organi
 ## Entwicklung
 
 Entwickelt für die digitale Markenführung des Goetheanum.
+
+## GitHub Pages Deployment
+
+Die Website kann direkt über GitHub Pages bereitgestellt werden.
+
+### Was wird veröffentlicht
+
+- `index.html` (Logo-Generator)
+- `index-visitenkarten-onepager.html` (Visitenkarten-Tool)
+- `assets/` (Schriften, Glyphen, Logos)
+
+Der Deploy-Workflow liegt in:
+
+- `.github/workflows/deploy-pages.yml`
+
+### Einmalig im GitHub-Repo aktivieren
+
+1. GitHub Repo öffnen: `Settings -> Pages`
+2. Bei `Build and deployment` als Source `GitHub Actions` wählen
+3. Auf `main` pushen (oder Workflow manuell via `Actions` starten)
