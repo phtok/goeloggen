@@ -1,0 +1,1663 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Goetheanum Briefschaften & Signatur</title>
+  <style>
+    @font-face {
+      font-family: "SourceSansPro-Regular";
+      src: url("https://goetheanum.ch/build/fonts/SourceSansPro/SourceSansPro-Regular.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "SourceSansPro-SemiBold";
+      src: url("https://goetheanum.ch/build/fonts/SourceSansPro/SourceSansPro-SemiBold.woff2") format("woff2");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Titillium-Upright";
+      src:
+        url("assets/fonts/Titillium-LightUpright.otf") format("opentype"),
+        local("Titillium Light Upright");
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Titillium-Upright";
+      src:
+        url("assets/fonts/Titillium-RegularUpright.otf") format("opentype"),
+        local("Titillium Regular Upright");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Titillium-Upright";
+      src:
+        url("assets/fonts/Titillium-SemiboldUpright.otf") format("opentype"),
+        local("Titillium Semibold Upright");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #36424f;
+      --panel: #37404c;
+      --line: rgba(219, 224, 228, 0.15);
+      --line-strong: rgba(219, 224, 228, 0.26);
+      --text: #dbe0e4;
+      --muted: #a7b2bd;
+      --accent: #ebb565;
+      --preview-bg: #3d4957;
+      --doc-w-mm: 210;
+      --doc-h-mm: 297;
+      --left-col: clamp(300px, 31vw, 430px);
+      --stage-max: 860px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "SourceSansPro-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: var(--accent);
+      z-index: 999;
+    }
+
+    .page-head {
+      margin-top: 6px;
+      background: #1f2833;
+      border-bottom: 1px solid var(--line-strong);
+      position: sticky;
+      top: 6px;
+      z-index: 100;
+    }
+
+    .page-head-inner {
+      min-height: 92px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 18px;
+      height: 22px;
+      color: #dbe0e4;
+      flex: 0 0 auto;
+    }
+
+    .brand-title {
+      font-family: "Titillium-Upright", sans-serif;
+      font-size: 2rem;
+      line-height: 0.95;
+      letter-spacing: 0.01em;
+      color: #f4f6f8;
+      white-space: nowrap;
+    }
+
+    .brand-sub {
+      display: block;
+      font-size: 1.52rem;
+      font-weight: 300;
+      color: #dbe0e4;
+    }
+
+    .ui-toggle {
+      display: inline-flex;
+      gap: 10px;
+      white-space: nowrap;
+    }
+
+    .ui-toggle button {
+      border: 0;
+      background: transparent;
+      color: rgba(219, 224, 228, 0.65);
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .ui-toggle button.on,
+    .ui-toggle button:hover {
+      color: #fff;
+    }
+
+    .app {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(300px, var(--left-col)) minmax(0, 1fr);
+      grid-template-areas: "controls preview";
+      gap: 6px;
+      min-height: calc(100vh - 98px);
+    }
+
+    .controls {
+      grid-area: controls;
+      padding: 16px 16px 20px;
+      background: rgba(24, 32, 41, 0.24);
+      border-right: 1px solid rgba(219, 224, 228, 0.18);
+      display: grid;
+      gap: 0;
+      align-content: start;
+      overflow: auto;
+    }
+
+    fieldset {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px 10px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      display: grid;
+      gap: 9px;
+      margin: 0;
+    }
+
+    fieldset + fieldset {
+      margin-top: -1px;
+    }
+
+    .fieldset-title {
+      margin-bottom: 2px;
+      font-size: 0.69rem;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #dbe0e4;
+      line-height: 1;
+    }
+
+    .row {
+      display: grid;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      min-height: 17px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      font: inherit;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      border: none;
+      border-radius: 0.3rem;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      font-family: "SourceSansPro-Regular", sans-serif;
+    }
+
+    textarea {
+      min-height: 68px;
+      resize: vertical;
+      line-height: 1.3;
+    }
+
+    textarea.contact-block {
+      min-height: 180px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      box-shadow: 0 0 0 0.2rem rgba(235, 181, 101, 0.28);
+    }
+
+    .preview {
+      grid-area: preview;
+      padding: 14px 18px 18px;
+      display: grid;
+      align-content: start;
+      justify-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .stage {
+      width: min(100%, var(--stage-max));
+      max-width: min(100%, var(--stage-max));
+      height: min(74vh, 700px);
+      min-height: 420px;
+      border: 1px solid rgba(219, 224, 228, 0.2);
+      border-radius: 8px;
+      background: var(--preview-bg);
+      padding: 18px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .preview-zoom {
+      transform-origin: center;
+      transition: transform 0.15s ease;
+    }
+
+    .doc-preview {
+      width: calc(var(--doc-w-mm) * 1mm);
+      height: calc(var(--doc-h-mm) * 1mm);
+      background: #fff;
+      border-radius: 2px;
+      box-shadow:
+        0 1px 1px rgba(15, 22, 29, 0.18),
+        0 11px 26px rgba(15, 22, 29, 0.24);
+      overflow: hidden;
+      font-family: "Titillium-Upright", sans-serif;
+      text-rendering: geometricPrecision;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .doc-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .preview-meta {
+      width: min(100%, var(--stage-max));
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.79rem;
+      line-height: 1.35;
+      display: grid;
+      gap: 2px;
+      justify-items: center;
+    }
+
+    .preview-actions {
+      width: min(100%, var(--stage-max));
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 0.45rem;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      padding: 7px 12px;
+      font-size: 0.74rem;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 0.15s ease;
+      position: relative;
+    }
+
+    .btn:hover {
+      background: #fff;
+      color: #37404c;
+    }
+
+    .btn.primary {
+      background: #fff;
+      color: #37404c;
+    }
+
+    .btn:disabled {
+      opacity: 0.58;
+      cursor: default;
+    }
+
+    .btn[data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      transform: translateX(-50%);
+      background: #1f2731;
+      color: #f6f5f1;
+      border: 1px solid rgba(219, 224, 228, 0.28);
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 0.65rem;
+      line-height: 1.2;
+      min-width: 165px;
+      max-width: 220px;
+      white-space: normal;
+      pointer-events: none;
+      z-index: 80;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    .btn[data-tip]:hover::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 3px);
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #1f2731;
+      pointer-events: none;
+      z-index: 81;
+    }
+
+    .checkbox-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      justify-self: center;
+    }
+
+    @media (max-width: 980px) {
+      .page-head-inner {
+        min-height: 82px;
+        padding: 14px;
+      }
+
+      .brand-title {
+        font-size: 1.55rem;
+      }
+
+      .brand-sub {
+        font-size: 1.22rem;
+      }
+
+      .app {
+        grid-template-columns: minmax(230px, clamp(240px, 42vw, 360px)) minmax(0, 1fr);
+        gap: 4px;
+      }
+
+      .controls {
+        padding: 12px;
+      }
+
+      .preview {
+        padding: 10px;
+      }
+
+      .stage {
+        min-height: 360px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "preview"
+          "controls";
+      }
+
+      .controls {
+        border-right: 0;
+        border-top: 1px solid rgba(219, 224, 228, 0.16);
+        min-height: 0;
+        height: auto;
+      }
+
+      .stage {
+        min-height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="brand-lockup">
+        <svg class="brand-mark" viewBox="0 0 16 20" aria-hidden="true">
+          <path fill="currentColor" d="M5.7224,3.472L15.8254,0v21.07h-6.002l.007-7.74c.003-.501-.086-.969-.242-1.438-.475-1.43-3.866-8.42-3.866-8.42" />
+          <path fill="currentColor" d="M5.292,7.1965s3.062,4.895,3.062,6.039l.048,7.834h-3.538l-.022-2.693c-.035-1.633-3.74-6.24-3.74-6.24l4.19-4.94Z" />
+          <path fill="currentColor" d="M0,17.9464l2.355-1.673s1.103,1.842,1.201,2.488c.099.646.02,2.309.02,2.309H1.072s.005-.607.008-.876c.007-.476-.144-.883-.375-1.274-.108-.183-.609-.818-.705-.974" />
+        </svg>
+        <h1 class="brand-title">Goetheanum<span class="brand-sub" id="appTitleSub">Briefschaften</span></h1>
+      </div>
+      <div class="ui-toggle" id="uiLangToggle" role="group" aria-label="Sprache / Language">
+        <button type="button" data-uilang="de" class="on">DE</button>
+        <button type="button" data-uilang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="controls">
+      <fieldset>
+        <div class="fieldset-title" id="fsEntityTitle">Entität</div>
+        <div class="row">
+          <label for="orgCategory" id="lblOrgCategory">Kategorie</label>
+          <select id="orgCategory">
+            <option value="hochschule" id="optCatHochschule">Hochschule</option>
+            <option value="gesellschaft" id="optCatGesellschaft">Gesellschaft</option>
+            <option value="bereiche" id="optCatBereiche">Bereiche</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label for="schema" id="lblSchema">Einheit / Sektion / Bereich</label>
+          <select id="schema"></select>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <div class="fieldset-title" id="fsDocTitle">Dokument</div>
+        <div class="row">
+          <label for="docType" id="lblDocType">Typ</label>
+          <select id="docType">
+            <option value="letter" id="optDocLetter">Briefpapier A4</option>
+            <option value="envelope" id="optDocEnvelope">Kuvert C5</option>
+            <option value="signature" id="optDocSignature">Signatur</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <div class="fieldset-title" id="fsPersonTitle">Person</div>
+        <div class="row">
+          <label for="fullName" id="lblFullName">Name</label>
+          <input id="fullName" type="text" placeholder="Rudolf Steiner" />
+        </div>
+
+        <div class="row">
+          <label for="roleBlock" id="lblRoleBlock">Funktion DE</label>
+          <textarea id="roleBlock" placeholder="Leiter der Sektion"></textarea>
+        </div>
+
+        <div class="row">
+          <label for="roleBlockEn" id="lblRoleBlockEn">Englische Übersetzung</label>
+          <textarea id="roleBlockEn" placeholder="Leader of the Section"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <div class="fieldset-title" id="fsContactTitle">Kontakt</div>
+        <div class="row">
+          <textarea id="contactBlock" class="contact-block" placeholder="Hügelweg 59 · 4143 Dornach&#10;Telefon +41 61 706 4X XX&#10;name@goetheanum.ch&#10;www.goetheanum.ch"></textarea>
+        </div>
+      </fieldset>
+    </section>
+
+    <section class="preview">
+      <div class="stage">
+        <div class="preview-zoom" id="previewZoom">
+          <article class="doc-preview" id="previewDoc" aria-label="Dokumentvorschau"></article>
+        </div>
+      </div>
+
+      <div class="preview-meta" id="meta">
+        <span id="metaLine1">210 × 297 mm · Einheit</span>
+        <span id="metaLine2">Briefpapier</span>
+      </div>
+
+      <label class="checkbox-row" id="cropToggleRow">
+        <input type="checkbox" id="includeCrop" checked />
+        <span id="cropLabel">3 mm Beschnitt + Schnittmarken</span>
+      </label>
+
+      <div class="preview-actions">
+        <button type="button" class="btn" id="btnPdf" data-tip="Vektor-PDF für Briefpapier oder Kuvert.">PDF</button>
+        <button type="button" class="btn" id="btnSvg" data-tip="Vektor-SVG. Ideal für Layoutkontrolle.">SVG</button>
+        <button type="button" class="btn" id="btnPng" data-tip="PNG als rasterisierte Alternative.">PNG</button>
+        <button type="button" class="btn primary" id="btnOutlook" data-tip="Signatur als HTML-Datei für Outlook/Apple Mail.">Outlook HTML</button>
+        <button type="button" class="btn" id="btnOffice" data-tip="Signatur als Office-Textvorlage (einfach einfügen).">Office TXT</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/titillium-outline-glyphs.js"></script>
+  <script src="assets/brief-symbols.js"></script>
+  <script src="assets/goe-orgs.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      const SYMBOL_LIBRARY = window.BRIEF_SYMBOL_LIBRARY || {};
+      const ORG_CATS = window.GOE_ORG_CATS || {};
+      const ORG_DEFS = window.GOE_ORG_DEFS || {};
+      const HOCHSCHULE_KEYS = window.GOE_HOCHSCHULE_KEYS || [];
+
+      const TITILLIUM_OUTLINE_PAYLOAD = window.TITILLIUM_OUTLINE_GLYPHS || {};
+      const TITILLIUM_OUTLINE_GLYPHS = TITILLIUM_OUTLINE_PAYLOAD.fonts || TITILLIUM_OUTLINE_PAYLOAD;
+      const TITILLIUM_OUTLINE_UPM = window.TITILLIUM_OUTLINE_UPM || TITILLIUM_OUTLINE_PAYLOAD.upm || 1000;
+
+      const refs = {
+        orgCategory: document.getElementById("orgCategory"),
+        schema: document.getElementById("schema"),
+        docType: document.getElementById("docType"),
+        includeCrop: document.getElementById("includeCrop"),
+        fullName: document.getElementById("fullName"),
+        roleBlock: document.getElementById("roleBlock"),
+        roleBlockEn: document.getElementById("roleBlockEn"),
+        contactBlock: document.getElementById("contactBlock")
+      };
+
+      const previewDoc = document.getElementById("previewDoc");
+      const previewZoom = document.getElementById("previewZoom");
+      const stageEl = document.querySelector(".stage");
+
+      const UI_I18N = {
+        de: {
+          app_sub: "Briefschaften",
+          field_entity: "Entität",
+          field_doc: "Dokument",
+          field_person: "Person",
+          field_contact: "Kontakt",
+          label_category: "Kategorie",
+          label_unit: "Einheit / Sektion / Bereich",
+          label_doc_type: "Typ",
+          label_name: "Name",
+          label_role: "Funktion DE",
+          label_role_en: "Englische Übersetzung",
+          cat_school: "Hochschule",
+          cat_society: "Gesellschaft",
+          cat_departments: "Bereiche",
+          doc_letter: "Briefpapier A4",
+          doc_envelope: "Kuvert C5",
+          doc_signature: "Signatur",
+          crop: "3 mm Beschnitt + Schnittmarken",
+          btn_pdf: "PDF",
+          btn_svg: "SVG",
+          btn_png: "PNG",
+          btn_outlook: "Outlook HTML",
+          btn_office: "Office TXT",
+          meta_unit: "Einheit",
+          meta_letter: "Briefpapier",
+          meta_envelope: "Kuvert",
+          meta_signature: "Signatur",
+          ph_name: "Rudolf Steiner",
+          ph_role: "Leiter der Sektion",
+          ph_role_en: "Leader of the Section",
+          ph_contact: "Hügelweg 59 · 4143 Dornach\nTelefon +41 61 706 4X XX\nname@goetheanum.ch\nwww.goetheanum.ch"
+        },
+        en: {
+          app_sub: "Letterhead",
+          field_entity: "Entity",
+          field_doc: "Document",
+          field_person: "Person",
+          field_contact: "Contact",
+          label_category: "Category",
+          label_unit: "Unit / Section / Department",
+          label_doc_type: "Type",
+          label_name: "Name",
+          label_role: "Role DE",
+          label_role_en: "English translation",
+          cat_school: "School",
+          cat_society: "Society",
+          cat_departments: "Departments",
+          doc_letter: "Letterhead A4",
+          doc_envelope: "Envelope C5",
+          doc_signature: "Signature",
+          crop: "3 mm bleed + crop marks",
+          btn_pdf: "PDF",
+          btn_svg: "SVG",
+          btn_png: "PNG",
+          btn_outlook: "Outlook HTML",
+          btn_office: "Office TXT",
+          meta_unit: "Unit",
+          meta_letter: "Letterhead",
+          meta_envelope: "Envelope",
+          meta_signature: "Signature",
+          ph_name: "Rudolf Steiner",
+          ph_role: "Section Leader",
+          ph_role_en: "Leader of the Section",
+          ph_contact: "Huegelweg 59 · 4143 Dornach\nPhone +41 61 706 4X XX\nname@goetheanum.ch\nwww.goetheanum.ch"
+        }
+      };
+
+      let currentUiLang = "de";
+      let pdfLibLoadPromise = null;
+
+      function uiDict() {
+        return UI_I18N[currentUiLang] || UI_I18N.de;
+      }
+
+      function esc(value) {
+        return String(value || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function splitLines(value) {
+        return String(value || "")
+          .split(/\r?\n/)
+          .map(function (line) { return line.trim(); })
+          .filter(Boolean);
+      }
+
+      function orgNameForUi(org) {
+        if (!org) {
+          return "";
+        }
+        if (currentUiLang === "en") {
+          return org.nameEn || org.name || org.nameDe || "";
+        }
+        return org.nameDe || org.name || org.nameEn || "";
+      }
+
+      function categoryForSchema(schemaKey) {
+        const keys = Object.keys(ORG_CATS);
+        for (let i = 0; i < keys.length; i += 1) {
+          const catKey = keys[i];
+          const cat = ORG_CATS[catKey];
+          if (cat && Array.isArray(cat.items) && cat.items.indexOf(schemaKey) !== -1) {
+            return catKey;
+          }
+        }
+        return null;
+      }
+
+      function defaultSymbolForSchema(schemaKey) {
+        if (schemaKey === "bauadmin") {
+          return "bau";
+        }
+        const category = categoryForSchema(schemaKey);
+        if (category === "hochschule") {
+          return "hochschule";
+        }
+        if (category === "gesellschaft") {
+          return "gesellschaft";
+        }
+        return "icon";
+      }
+
+      function docDimensionsMm(model) {
+        if (model.docType === "envelope") {
+          return { widthMm: 229, heightMm: 162, label: "C5" };
+        }
+        if (model.docType === "signature") {
+          return { widthMm: 160, heightMm: 45, label: "Signatur" };
+        }
+        return { widthMm: 210, heightMm: 297, label: "A4" };
+      }
+
+      function syncDocCssVars(model) {
+        const dims = docDimensionsMm(model);
+        document.documentElement.style.setProperty("--doc-w-mm", String(dims.widthMm));
+        document.documentElement.style.setProperty("--doc-h-mm", String(dims.heightMm));
+      }
+
+      function populateOrgOptions(preferredKey) {
+        const cat = ORG_CATS[refs.orgCategory.value];
+        const items = (cat && cat.items) || [];
+        const previous = refs.schema.value;
+        refs.schema.innerHTML = "";
+        items.forEach(function (key) {
+          const org = ORG_DEFS[key];
+          if (!org) {
+            return;
+          }
+          const opt = document.createElement("option");
+          opt.value = key;
+          opt.textContent = orgNameForUi(org);
+          refs.schema.appendChild(opt);
+        });
+
+        const target = preferredKey && items.indexOf(preferredKey) !== -1 ? preferredKey : previous;
+        if (target && items.indexOf(target) !== -1) {
+          refs.schema.value = target;
+        } else if (items.length) {
+          refs.schema.value = items[0];
+        }
+      }
+
+      function rolePlaceholderFor(schemaKey) {
+        const category = categoryForSchema(schemaKey);
+        if (schemaKey === "bauadmin") {
+          return {
+            de: "Administration des Goetheanum-Baues",
+            en: "Administration of the Goetheanum Building"
+          };
+        }
+        if (category === "gesellschaft") {
+          return {
+            de: "Vorstand der Allgemeinen Anthroposophischen Gesellschaft",
+            en: "Executive Council Member of the General Anthroposophical Society"
+          };
+        }
+        if (category === "hochschule") {
+          return {
+            de: "Leiter der Sektion der Freien Hochschule für Geisteswissenschaft",
+            en: "Leader of the Section of the School of Spiritual Science"
+          };
+        }
+        const org = ORG_DEFS[schemaKey];
+        const deName = org ? (org.nameDe || org.name) : "Bereich";
+        const enName = org ? (org.nameEn || org.name) : "Department";
+        return {
+          de: "Mitarbeit " + deName,
+          en: "" + enName + " staff"
+        };
+      }
+
+      function defaultContactLines(schemaKey) {
+        if (schemaKey === "bauadmin") {
+          return [
+            "Postfach · CH 4143 Dornach",
+            "Telefon +41 61 706 4X XX",
+            "name@goetheanum.ch"
+          ];
+        }
+        return [
+          "Hügelweg 59 · 4143 Dornach",
+          "Telefon +41 61 706 4X XX",
+          "name@goetheanum.ch",
+          "www.goetheanum.ch"
+        ];
+      }
+
+      function applySchemaPreset(force) {
+        const schemaKey = refs.schema.value;
+        const placeholders = rolePlaceholderFor(schemaKey);
+
+        const dict = uiDict();
+        refs.fullName.placeholder = dict.ph_name;
+        refs.roleBlock.placeholder = placeholders.de || dict.ph_role;
+        refs.roleBlockEn.placeholder = placeholders.en || dict.ph_role_en;
+        refs.contactBlock.placeholder = dict.ph_contact;
+
+        if (force || !refs.fullName.value.trim()) {
+          refs.fullName.value = categoryForSchema(schemaKey) === "hochschule" ? "Dr. Rudolf Steiner" : "Rudolf Steiner";
+        }
+        if (force || !refs.roleBlock.value.trim()) {
+          refs.roleBlock.value = placeholders.de || "";
+        }
+        if (force || !refs.roleBlockEn.value.trim()) {
+          refs.roleBlockEn.value = placeholders.en || "";
+        }
+        if (force || !refs.contactBlock.value.trim()) {
+          refs.contactBlock.value = defaultContactLines(schemaKey).join("\n");
+        }
+      }
+
+      function collectModel() {
+        const schemaKey = refs.schema.value;
+        const org = ORG_DEFS[schemaKey] || {};
+        const category = categoryForSchema(schemaKey) || refs.orgCategory.value;
+        return {
+          schema: schemaKey,
+          category: category,
+          docType: refs.docType.value,
+          includeCrop: refs.includeCrop.checked,
+          motifColor: org.color || "#005eb8",
+          textColor: "#5d5d5d",
+          bgColor: "#ffffff",
+          fullName: refs.fullName.value.trim(),
+          roleLinesDe: splitLines(refs.roleBlock.value),
+          roleLinesEn: splitLines(refs.roleBlockEn.value),
+          contactLines: splitLines(refs.contactBlock.value),
+          symbolSet: defaultSymbolForSchema(schemaKey)
+        };
+      }
+
+      function symbolSpecFor(symbolSet) {
+        return SYMBOL_LIBRARY[symbolSet] || SYMBOL_LIBRARY.icon;
+      }
+
+      function renderSymbolShapes(spec, color) {
+        const fill = esc(color);
+        const pathMarkup = (spec.paths || []).map(function (d) {
+          return '<path d="' + d + '" fill="' + fill + '" />';
+        }).join("");
+        const polygonMarkup = (spec.polygons || []).map(function (points) {
+          return '<polygon points="' + points + '" fill="' + fill + '" />';
+        }).join("");
+        return pathMarkup + polygonMarkup;
+      }
+
+      function motifBoxMmFor(model) {
+        if (model.docType === "envelope") {
+          if (model.symbolSet === "bau") {
+            return { x: 11.6, y: 9.8, w: 58.2, h: 59.2 };
+          }
+          return { x: 13.2, y: 10.2, w: 19.8, h: 32.6 };
+        }
+        if (model.docType === "signature") {
+          return { x: 4, y: 4, w: 12, h: 20 };
+        }
+        if (model.symbolSet === "bau") {
+          return { x: 13.8, y: 13.0, w: 66.0, h: 67.0 };
+        }
+        return { x: 15.6, y: 15.2, w: 25.2, h: 41.6 };
+      }
+
+      function docHeaderLine2(schemaKey) {
+        const org = ORG_DEFS[schemaKey];
+        if (!org) {
+          return "";
+        }
+        if (schemaKey === "gesellschaft") {
+          return "Allgemeine Anthroposophische Gesellschaft";
+        }
+        if (HOCHSCHULE_KEYS.indexOf(schemaKey) !== -1) {
+          return "Freie Hochschule für Geisteswissenschaft";
+        }
+        return org.nameDe || org.name || "";
+      }
+
+      function normalizeOutlineWeight(weight) {
+        const w = Number(weight) || 400;
+        if (w >= 550) {
+          return 600;
+        }
+        if (w <= 350) {
+          return 300;
+        }
+        return 400;
+      }
+
+      function outlineFontForWeight(outlineFonts, weight) {
+        if (!outlineFonts) {
+          return null;
+        }
+        const normalized = normalizeOutlineWeight(weight);
+        return (
+          outlineFonts[String(normalized)] ||
+          outlineFonts[normalized] ||
+          outlineFonts["400"] ||
+          outlineFonts[400] ||
+          outlineFonts["600"] ||
+          outlineFonts[600] ||
+          outlineFonts["300"] ||
+          outlineFonts[300] ||
+          null
+        );
+      }
+
+      function outlineGlyphAdvance(glyphSet, char, fontSize) {
+        const glyph = glyphSet ? glyphSet[char] : null;
+        if (glyph && typeof glyph.width === "number") {
+          return glyph.width * (fontSize / TITILLIUM_OUTLINE_UPM);
+        }
+        return fontSize * 0.36;
+      }
+
+      function measureOutlineTextWidth(text, glyphSet, fontSize) {
+        const raw = String(text || "");
+        let width = 0;
+        for (let i = 0; i < raw.length; i += 1) {
+          width += outlineGlyphAdvance(glyphSet, raw[i], fontSize);
+        }
+        return width;
+      }
+
+      function outlinePathMarkupForText(text, x, y, fontSize, weight, anchor, fill, outlineFonts) {
+        const raw = String(text || "");
+        if (!raw) {
+          return "";
+        }
+        const glyphSet = outlineFontForWeight(outlineFonts, weight);
+        if (!glyphSet) {
+          return "";
+        }
+
+        const scale = fontSize / TITILLIUM_OUTLINE_UPM;
+        const advance = measureOutlineTextWidth(raw, glyphSet, fontSize);
+
+        let startX = x;
+        if (anchor === "middle") {
+          startX = x - (advance / 2);
+        } else if (anchor === "end") {
+          startX = x - advance;
+        }
+
+        let currentX = startX;
+        const parts = [];
+        for (let i = 0; i < raw.length; i += 1) {
+          const char = raw[i];
+          const glyph = glyphSet[char];
+          if (glyph && glyph.path) {
+            parts.push('<path d="' + esc(glyph.path) + '" transform="translate(' + currentX.toFixed(3) + " " + y.toFixed(3) + ') scale(' + scale.toFixed(6) + " " + (-scale).toFixed(6) + ')" />');
+          }
+          currentX += outlineGlyphAdvance(glyphSet, char, fontSize);
+        }
+        if (!parts.length) {
+          return "";
+        }
+        return '<g fill="' + esc(fill) + '">' + parts.join("") + "</g>";
+      }
+
+      function svgTextLineMarkup(params) {
+        const line = String(params.text || "");
+        const fill = esc(params.fill || "#000");
+        const anchor = params.anchor || "start";
+        const usePathText = Boolean(params.textAsPaths && params.outlineFonts);
+
+        if (usePathText) {
+          const pathMarkup = outlinePathMarkupForText(
+            line,
+            params.x,
+            params.y,
+            params.fontSize,
+            params.fontWeight,
+            anchor,
+            fill,
+            params.outlineFonts
+          );
+          if (pathMarkup) {
+            return pathMarkup;
+          }
+        }
+
+        return (
+          '<text x="' + params.x + '" y="' + params.y + '" text-anchor="' + anchor + '" fill="' + fill + '" font-family="Titillium-Upright, sans-serif" font-size="' + params.fontSize + '" font-weight="' + (params.fontWeight || 400) + '">' +
+            esc(line) +
+          "</text>"
+        );
+      }
+
+      function titilliumSvgFontDefs() {
+        const style =
+          "@font-face{font-family:'Titillium-Upright';font-style:normal;font-weight:300;src:url('assets/fonts/Titillium-LightUpright.otf') format('opentype');}" +
+          "@font-face{font-family:'Titillium-Upright';font-style:normal;font-weight:400;src:url('assets/fonts/Titillium-RegularUpright.otf') format('opentype');}" +
+          "@font-face{font-family:'Titillium-Upright';font-style:normal;font-weight:600;src:url('assets/fonts/Titillium-SemiboldUpright.otf') format('opentype');}" +
+          "text{font-family:'Titillium-Upright',sans-serif;}";
+        return "<defs><style><![CDATA[" + style + "]]></style></defs>";
+      }
+
+      async function ensureTitilliumOutlineFonts() {
+        if (!TITILLIUM_OUTLINE_GLYPHS || !Object.keys(TITILLIUM_OUTLINE_GLYPHS).length) {
+          throw new Error("Titillium-Pfaddaten fehlen.");
+        }
+        return TITILLIUM_OUTLINE_GLYPHS;
+      }
+
+      function cropMarksMarkup(ox, oy, pageW, pageH) {
+        return (
+          '<line x1="' + (ox - 30) + '" y1="' + oy + '" x2="' + (ox - 2) + '" y2="' + oy + '" stroke="#111" stroke-width="2" />' +
+          '<line x1="' + ox + '" y1="' + (oy - 30) + '" x2="' + ox + '" y2="' + (oy - 2) + '" stroke="#111" stroke-width="2" />' +
+          '<line x1="' + (ox + pageW + 2) + '" y1="' + oy + '" x2="' + (ox + pageW + 30) + '" y2="' + oy + '" stroke="#111" stroke-width="2" />' +
+          '<line x1="' + (ox + pageW) + '" y1="' + (oy - 30) + '" x2="' + (ox + pageW) + '" y2="' + (oy - 2) + '" stroke="#111" stroke-width="2" />' +
+          '<line x1="' + (ox - 30) + '" y1="' + (oy + pageH) + '" x2="' + (ox - 2) + '" y2="' + (oy + pageH) + '" stroke="#111" stroke-width="2" />' +
+          '<line x1="' + ox + '" y1="' + (oy + pageH + 2) + '" x2="' + ox + '" y2="' + (oy + pageH + 30) + '" stroke="#111" stroke-width="2" />' +
+          '<line x1="' + (ox + pageW + 2) + '" y1="' + (oy + pageH) + '" x2="' + (ox + pageW + 30) + '" y2="' + (oy + pageH) + '" stroke="#111" stroke-width="2" />' +
+          '<line x1="' + (ox + pageW) + '" y1="' + (oy + pageH + 2) + '" x2="' + (ox + pageW) + '" y2="' + (oy + pageH + 30) + '" stroke="#111" stroke-width="2" />'
+        );
+      }
+
+      function buildLetterOrEnvelopeSvg(model, withCrop, options) {
+        const svgOptions = options || {};
+        const outlineFonts = svgOptions.outlineFonts || null;
+        const textAsPaths = Boolean(svgOptions.textAsPaths && outlineFonts);
+
+        const dims = docDimensionsMm(model);
+        const unit = 10;
+        const pageW = dims.widthMm * unit;
+        const pageH = dims.heightMm * unit;
+        const bleed = withCrop ? 3 * unit : 0;
+        const totalW = pageW + (bleed * 2);
+        const totalH = pageH + (bleed * 2);
+        const ox = bleed;
+        const oy = bleed;
+
+        const mm = function (value) {
+          return value * unit;
+        };
+
+        const motifBox = motifBoxMmFor(model);
+        const spec = symbolSpecFor(model.symbolSet);
+        const org = ORG_DEFS[model.schema] || {};
+
+        let textParts = "";
+
+        const headerRightMm = model.docType === "envelope" ? 217.5 : 193.0;
+        const headerTopMm = model.docType === "envelope" ? 13.8 : 16.6;
+        const headerLine2 = docHeaderLine2(model.schema);
+
+        textParts += svgTextLineMarkup({
+          text: "Goetheanum",
+          x: ox + mm(headerRightMm),
+          y: oy + mm(headerTopMm),
+          fontSize: mm(model.docType === "envelope" ? 2.8 : 2.6),
+          fontWeight: 400,
+          fill: "#8f959b",
+          anchor: "end",
+          textAsPaths: textAsPaths,
+          outlineFonts: outlineFonts
+        });
+
+        textParts += svgTextLineMarkup({
+          text: headerLine2,
+          x: ox + mm(headerRightMm),
+          y: oy + mm(headerTopMm + (model.docType === "envelope" ? 3.0 : 2.8)),
+          fontSize: mm(model.docType === "envelope" ? 2.45 : 2.35),
+          fontWeight: 600,
+          fill: model.motifColor,
+          anchor: "end",
+          textAsPaths: textAsPaths,
+          outlineFonts: outlineFonts
+        });
+
+        const footerLines = model.contactLines.length ? model.contactLines : defaultContactLines(model.schema);
+        const footerBaseMm = model.docType === "envelope" ? 152.2 : 286.6;
+        const footerXmm = model.docType === "envelope" ? 15.2 : 15.8;
+        const footerSizeMm = model.docType === "envelope" ? 2.05 : 2.1;
+        const footerLeadMm = model.docType === "envelope" ? 2.7 : 2.75;
+        const maxFooterLines = model.docType === "envelope" ? 2 : 4;
+
+        for (let i = 0; i < Math.min(footerLines.length, maxFooterLines); i += 1) {
+          textParts += svgTextLineMarkup({
+            text: footerLines[i],
+            x: ox + mm(footerXmm),
+            y: oy + mm(footerBaseMm + (i * footerLeadMm)),
+            fontSize: mm(footerSizeMm),
+            fontWeight: 400,
+            fill: model.textColor,
+            anchor: "start",
+            textAsPaths: textAsPaths,
+            outlineFonts: outlineFonts
+          });
+        }
+
+        const senderRoleDe = model.roleLinesDe.length ? model.roleLinesDe[0] : "";
+        const senderRoleEn = model.roleLinesEn.length ? model.roleLinesEn[0] : "";
+        const senderRightMm = model.docType === "envelope" ? 217.0 : 193.0;
+        const senderTopMm = model.docType === "envelope" ? 50.8 : 56.0;
+
+        textParts += svgTextLineMarkup({
+          text: model.fullName || "Rudolf Steiner",
+          x: ox + mm(senderRightMm),
+          y: oy + mm(senderTopMm),
+          fontSize: mm(model.docType === "envelope" ? 3.3 : 3.45),
+          fontWeight: 600,
+          fill: model.textColor,
+          anchor: "end",
+          textAsPaths: textAsPaths,
+          outlineFonts: outlineFonts
+        });
+
+        if (senderRoleDe) {
+          textParts += svgTextLineMarkup({
+            text: senderRoleDe,
+            x: ox + mm(senderRightMm),
+            y: oy + mm(senderTopMm + 3.65),
+            fontSize: mm(model.docType === "envelope" ? 2.35 : 2.45),
+            fontWeight: 400,
+            fill: model.textColor,
+            anchor: "end",
+            textAsPaths: textAsPaths,
+            outlineFonts: outlineFonts
+          });
+        }
+
+        if (senderRoleEn) {
+          textParts += svgTextLineMarkup({
+            text: senderRoleEn,
+            x: ox + mm(senderRightMm),
+            y: oy + mm(senderTopMm + 6.9),
+            fontSize: mm(model.docType === "envelope" ? 2.2 : 2.3),
+            fontWeight: 300,
+            fill: model.textColor,
+            anchor: "end",
+            textAsPaths: textAsPaths,
+            outlineFonts: outlineFonts
+          });
+        }
+
+        const motifSvg =
+          '<svg x="' + (ox + mm(motifBox.x)) + '" y="' + (oy + mm(motifBox.y)) + '" width="' + mm(motifBox.w) + '" height="' + mm(motifBox.h) + '" viewBox="' + esc(spec.viewBox) + '" preserveAspectRatio="xMinYMin meet">' +
+            renderSymbolShapes(spec, model.motifColor) +
+          "</svg>";
+
+        const crop = withCrop ? cropMarksMarkup(ox, oy, pageW, pageH) : "";
+
+        return (
+          '<?xml version="1.0" encoding="UTF-8"?>\n' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="' + (totalW / unit) + 'mm" height="' + (totalH / unit) + 'mm" viewBox="0 0 ' + totalW + ' ' + totalH + '">' +
+            titilliumSvgFontDefs() +
+            '<rect x="' + ox + '" y="' + oy + '" width="' + pageW + '" height="' + pageH + '" fill="#ffffff" />' +
+            motifSvg +
+            textParts +
+            crop +
+          "</svg>"
+        );
+      }
+
+      function buildSignatureHtml(model) {
+        const org = ORG_DEFS[model.schema] || {};
+        const lines = model.contactLines.length ? model.contactLines : defaultContactLines(model.schema);
+        const roleDe = model.roleLinesDe.join("<br />");
+        const roleEn = model.roleLinesEn.join("<br />");
+        const sigColor = model.motifColor;
+        const textColor = "#5d5d5d";
+
+        return (
+          '<table cellpadding="0" cellspacing="0" border="0" style="font-family:Titillium-Upright,Segoe UI,Arial,sans-serif;color:' + textColor + ';font-size:13px;line-height:1.35;">' +
+            '<tr>' +
+              '<td style="padding:0 16px 0 0;vertical-align:top;">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" width="42" height="62" viewBox="0 0 64.988 116.787" style="display:block;">' +
+                  renderSymbolShapes(symbolSpecFor(model.symbolSet), sigColor) +
+                '</svg>' +
+              '</td>' +
+              '<td style="vertical-align:top;">' +
+                '<div style="font-size:29px;line-height:1.0;font-weight:600;">' + esc(model.fullName || "Rudolf Steiner") + '</div>' +
+                (roleDe ? '<div style="margin-top:7px;font-size:18px;line-height:1.2;font-weight:400;">' + roleDe + '</div>' : "") +
+                (roleEn ? '<div style="margin-top:5px;font-size:17px;line-height:1.2;font-weight:300;">' + roleEn + '</div>' : "") +
+                '<div style="margin-top:10px;font-size:15px;line-height:1.28;">' + lines.map(function (line) { return esc(line); }).join("<br />") + '</div>' +
+                '<div style="margin-top:8px;font-size:14px;line-height:1.2;color:' + sigColor + ';font-weight:600;">' + esc(org.nameDe || org.name || "Goetheanum") + '</div>' +
+              '</td>' +
+            '</tr>' +
+          "</table>"
+        );
+      }
+
+      function buildSignatureText(model) {
+        const org = ORG_DEFS[model.schema] || {};
+        const lines = model.contactLines.length ? model.contactLines : defaultContactLines(model.schema);
+        const roleDe = model.roleLinesDe.join("\n");
+        const roleEn = model.roleLinesEn.join("\n");
+        const parts = [model.fullName || "Rudolf Steiner"];
+        if (roleDe) {
+          parts.push(roleDe);
+        }
+        if (roleEn) {
+          parts.push(roleEn);
+        }
+        parts.push(lines.join("\n"));
+        parts.push(org.nameDe || org.name || "Goetheanum");
+        return parts.join("\n\n");
+      }
+
+      function buildDocSvg(model, withCrop, options) {
+        if (model.docType === "signature") {
+          const unit = 10;
+          const w = 160 * unit;
+          const h = 45 * unit;
+          const ox = withCrop ? 30 : 0;
+          const oy = withCrop ? 30 : 0;
+          const totalW = w + (ox * 2);
+          const totalH = h + (oy * 2);
+          const spec = symbolSpecFor(model.symbolSet);
+          const lines = model.contactLines.length ? model.contactLines : defaultContactLines(model.schema);
+          const roleDe = model.roleLinesDe;
+          const roleEn = model.roleLinesEn;
+          const outlineFonts = options && options.outlineFonts;
+          const textAsPaths = Boolean(options && options.textAsPaths && outlineFonts);
+
+          let text = "";
+          text += svgTextLineMarkup({ text: model.fullName || "Rudolf Steiner", x: ox + 520, y: oy + 134, fontSize: 95, fontWeight: 600, fill: model.textColor, anchor: "start", textAsPaths: textAsPaths, outlineFonts: outlineFonts });
+          roleDe.forEach(function (line, index) {
+            text += svgTextLineMarkup({ text: line, x: ox + 520, y: oy + 195 + (index * 44), fontSize: 38, fontWeight: 400, fill: model.textColor, anchor: "start", textAsPaths: textAsPaths, outlineFonts: outlineFonts });
+          });
+          roleEn.forEach(function (line, index) {
+            text += svgTextLineMarkup({ text: line, x: ox + 520, y: oy + 276 + (index * 42), fontSize: 36, fontWeight: 300, fill: model.textColor, anchor: "start", textAsPaths: textAsPaths, outlineFonts: outlineFonts });
+          });
+          lines.forEach(function (line, index) {
+            text += svgTextLineMarkup({ text: line, x: ox + 520, y: oy + 368 + (index * 36), fontSize: 33, fontWeight: 400, fill: model.textColor, anchor: "start", textAsPaths: textAsPaths, outlineFonts: outlineFonts });
+          });
+
+          return (
+            '<?xml version="1.0" encoding="UTF-8"?>\n' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="' + (totalW / unit) + 'mm" height="' + (totalH / unit) + 'mm" viewBox="0 0 ' + totalW + ' ' + totalH + '">' +
+              titilliumSvgFontDefs() +
+              '<rect x="' + ox + '" y="' + oy + '" width="' + w + '" height="' + h + '" fill="#ffffff" />' +
+              '<svg x="' + (ox + 60) + '" y="' + (oy + 52) + '" width="180" height="300" viewBox="' + esc(spec.viewBox) + '" preserveAspectRatio="xMinYMin meet">' + renderSymbolShapes(spec, model.motifColor) + '</svg>' +
+              text +
+            '</svg>'
+          );
+        }
+        return buildLetterOrEnvelopeSvg(model, withCrop, options);
+      }
+
+      function renderPreview(model) {
+        syncDocCssVars(model);
+        const svg = buildDocSvg(model, false);
+        previewDoc.innerHTML = svg.replace(/^<\?xml[^>]*>\s*/i, "").replace("<svg ", '<svg class="doc-svg" ');
+      }
+
+      function fitPreviewDoc() {
+        if (!stageEl || !previewDoc || !previewZoom) {
+          return;
+        }
+        previewZoom.style.transform = "scale(1)";
+        const stageRect = stageEl.getBoundingClientRect();
+        const docW = previewDoc.offsetWidth || 1;
+        const docH = previewDoc.offsetHeight || 1;
+        const scale = Math.min(1, Math.min((stageRect.width - 16) / docW, (stageRect.height - 16) / docH));
+        previewZoom.style.transform = "scale(" + scale.toFixed(3) + ")";
+      }
+
+      function updateMeta(model) {
+        const dims = docDimensionsMm(model);
+        const org = ORG_DEFS[model.schema];
+        const dict = uiDict();
+
+        const metaLine1 = document.getElementById("metaLine1");
+        const metaLine2 = document.getElementById("metaLine2");
+        metaLine1.textContent = dims.widthMm + " × " + dims.heightMm + " mm · " + (org ? orgNameForUi(org) : dict.meta_unit);
+
+        let docLabel = dict.meta_letter;
+        if (model.docType === "envelope") {
+          docLabel = dict.meta_envelope;
+        } else if (model.docType === "signature") {
+          docLabel = dict.meta_signature;
+        }
+        metaLine2.textContent = docLabel;
+
+        const cropToggleRow = document.getElementById("cropToggleRow");
+        cropToggleRow.style.display = model.docType === "signature" ? "none" : "inline-flex";
+      }
+
+      function applyUiLanguage(lang) {
+        currentUiLang = lang === "en" ? "en" : "de";
+        const dict = uiDict();
+
+        document.documentElement.lang = currentUiLang;
+        document.getElementById("appTitleSub").textContent = dict.app_sub;
+        document.getElementById("fsEntityTitle").textContent = dict.field_entity;
+        document.getElementById("fsDocTitle").textContent = dict.field_doc;
+        document.getElementById("fsPersonTitle").textContent = dict.field_person;
+        document.getElementById("fsContactTitle").textContent = dict.field_contact;
+        document.getElementById("lblOrgCategory").textContent = dict.label_category;
+        document.getElementById("lblSchema").textContent = dict.label_unit;
+        document.getElementById("lblDocType").textContent = dict.label_doc_type;
+        document.getElementById("lblFullName").textContent = dict.label_name;
+        document.getElementById("lblRoleBlock").textContent = dict.label_role;
+        document.getElementById("lblRoleBlockEn").textContent = dict.label_role_en;
+
+        document.getElementById("optCatHochschule").textContent = dict.cat_school;
+        document.getElementById("optCatGesellschaft").textContent = dict.cat_society;
+        document.getElementById("optCatBereiche").textContent = dict.cat_departments;
+
+        document.getElementById("optDocLetter").textContent = dict.doc_letter;
+        document.getElementById("optDocEnvelope").textContent = dict.doc_envelope;
+        document.getElementById("optDocSignature").textContent = dict.doc_signature;
+
+        document.getElementById("cropLabel").textContent = dict.crop;
+
+        document.getElementById("btnPdf").textContent = dict.btn_pdf;
+        document.getElementById("btnSvg").textContent = dict.btn_svg;
+        document.getElementById("btnPng").textContent = dict.btn_png;
+        document.getElementById("btnOutlook").textContent = dict.btn_outlook;
+        document.getElementById("btnOffice").textContent = dict.btn_office;
+
+        populateOrgOptions(refs.schema.value);
+        applySchemaPreset(false);
+
+        const toggle = document.getElementById("uiLangToggle");
+        toggle.querySelectorAll("button[data-uilang]").forEach(function (btn) {
+          btn.classList.toggle("on", btn.getAttribute("data-uilang") === currentUiLang);
+        });
+
+        renderAll();
+      }
+
+      function buildExportBaseName(model) {
+        const schema = String(model.schema || "goetheanum").toLowerCase().replace(/[^a-z0-9_-]+/g, "-");
+        const type = model.docType === "envelope" ? "kuvert" : model.docType === "signature" ? "signatur" : "briefpapier";
+        return "goetheanum_" + type + "_" + schema;
+      }
+
+      function downloadBlob(blob, fileName) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 40);
+      }
+
+      function loadExternalScriptOnce(src) {
+        return new Promise(function (resolve, reject) {
+          const existing = document.querySelector('script[data-external-src="' + src + '"]');
+          if (existing) {
+            if (existing.getAttribute("data-loaded") === "1") {
+              resolve();
+              return;
+            }
+            existing.addEventListener("load", function () { resolve(); }, { once: true });
+            existing.addEventListener("error", function () { reject(new Error("Script konnte nicht geladen werden: " + src)); }, { once: true });
+            return;
+          }
+
+          const script = document.createElement("script");
+          script.src = src;
+          script.async = true;
+          script.defer = true;
+          script.setAttribute("data-external-src", src);
+          script.addEventListener("load", function () {
+            script.setAttribute("data-loaded", "1");
+            resolve();
+          }, { once: true });
+          script.addEventListener("error", function () {
+            reject(new Error("Script konnte nicht geladen werden: " + src));
+          }, { once: true });
+          document.head.appendChild(script);
+        });
+      }
+
+      async function loadExternalScriptAny(sources) {
+        const urls = Array.isArray(sources) ? sources : [sources];
+        let lastError = null;
+        for (let i = 0; i < urls.length; i += 1) {
+          try {
+            await loadExternalScriptOnce(urls[i]);
+            return;
+          } catch (err) {
+            lastError = err;
+          }
+        }
+        throw (lastError || new Error("Script konnte nicht geladen werden."));
+      }
+
+      async function ensureVectorPdfLibs() {
+        const hasVectorApi = function () {
+          return Boolean(
+            window.jspdf &&
+            window.jspdf.jsPDF &&
+            window.jspdf.jsPDF.API &&
+            typeof window.jspdf.jsPDF.API.svg === "function"
+          );
+        };
+
+        if (hasVectorApi()) {
+          return;
+        }
+
+        if (!pdfLibLoadPromise) {
+          pdfLibLoadPromise = (async function () {
+            await loadExternalScriptAny([
+              "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js",
+              "https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js",
+              "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+            ]);
+            await loadExternalScriptAny([
+              "https://cdn.jsdelivr.net/npm/svg2pdf.js@2.2.3/dist/svg2pdf.umd.min.js",
+              "https://unpkg.com/svg2pdf.js@2.2.3/dist/svg2pdf.umd.min.js",
+              "https://cdnjs.cloudflare.com/ajax/libs/svg2pdf.js/2.2.3/svg2pdf.umd.min.js"
+            ]);
+          })();
+        }
+
+        await pdfLibLoadPromise;
+        if (!hasVectorApi()) {
+          throw new Error("Vector-PDF-Bibliotheken nicht verfügbar.");
+        }
+      }
+
+      function svgToImage(svgMarkup) {
+        return new Promise(function (resolve, reject) {
+          const blob = new Blob([svgMarkup], { type: "image/svg+xml;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const img = new Image();
+          img.onload = function () {
+            URL.revokeObjectURL(url);
+            resolve(img);
+          };
+          img.onerror = function () {
+            URL.revokeObjectURL(url);
+            reject(new Error("SVG konnte nicht geladen werden."));
+          };
+          img.src = url;
+        });
+      }
+
+      async function exportSvg(model) {
+        const outlineFonts = await ensureTitilliumOutlineFonts();
+        const svg = buildDocSvg(model, model.docType === "signature" ? false : model.includeCrop, {
+          textAsPaths: true,
+          outlineFonts: outlineFonts
+        });
+        downloadBlob(new Blob([svg], { type: "image/svg+xml" }), buildExportBaseName(model) + ".svg");
+      }
+
+      async function exportPdf(model) {
+        const dims = docDimensionsMm(model);
+        const includeCrop = model.docType === "signature" ? false : model.includeCrop;
+        const bleed = includeCrop ? 6 : 0;
+        const pageW = dims.widthMm + bleed;
+        const pageH = dims.heightMm + bleed;
+
+        await ensureVectorPdfLibs();
+        const outlineFonts = await ensureTitilliumOutlineFonts();
+        const JsPdf = window.jspdf.jsPDF;
+        const doc = new JsPdf({
+          orientation: pageW > pageH ? "landscape" : "portrait",
+          unit: "mm",
+          format: [pageW, pageH],
+          compress: true,
+          putOnlyUsedFonts: true,
+          precision: 12
+        });
+
+        const svgMarkup = buildDocSvg(model, includeCrop, {
+          textAsPaths: true,
+          outlineFonts: outlineFonts
+        });
+        const parsed = new DOMParser().parseFromString(svgMarkup, "image/svg+xml");
+        const root = parsed.documentElement;
+        if (!root || root.nodeName.toLowerCase() !== "svg") {
+          throw new Error("SVG konnte nicht gelesen werden.");
+        }
+
+        await doc.svg(root, {
+          x: 0,
+          y: 0,
+          width: pageW,
+          height: pageH
+        });
+
+        const out = doc.output("blob");
+        downloadBlob(out, buildExportBaseName(model) + ".pdf");
+      }
+
+      async function exportPng(model) {
+        const dims = docDimensionsMm(model);
+        const dpi = 600;
+        const includeCrop = model.docType === "signature" ? false : model.includeCrop;
+        const bleedMm = includeCrop ? 3 : 0;
+        const pxPerMm = dpi / 25.4;
+        const widthPx = Math.max(1, Math.round((dims.widthMm + bleedMm * 2) * pxPerMm));
+        const heightPx = Math.max(1, Math.round((dims.heightMm + bleedMm * 2) * pxPerMm));
+
+        const svg = buildDocSvg(model, includeCrop, {
+          textAsPaths: true,
+          outlineFonts: await ensureTitilliumOutlineFonts()
+        });
+        const image = await svgToImage(svg);
+        const canvas = document.createElement("canvas");
+        canvas.width = widthPx;
+        canvas.height = heightPx;
+        const ctx = canvas.getContext("2d", { alpha: false });
+        if (!ctx) {
+          throw new Error("Canvas-Kontext konnte nicht erstellt werden.");
+        }
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, widthPx, heightPx);
+        ctx.drawImage(image, 0, 0, widthPx, heightPx);
+
+        const blob = await new Promise(function (resolve, reject) {
+          canvas.toBlob(function (b) {
+            if (!b) {
+              reject(new Error("PNG konnte nicht erzeugt werden."));
+              return;
+            }
+            resolve(b);
+          }, "image/png");
+        });
+
+        downloadBlob(blob, buildExportBaseName(model) + ".png");
+      }
+
+      function exportOutlook(model) {
+        const html =
+          "<!doctype html><html><head><meta charset=\"utf-8\"><title>Goetheanum Signatur</title></head><body>" +
+          buildSignatureHtml(model) +
+          "</body></html>";
+        downloadBlob(new Blob([html], { type: "text/html;charset=utf-8" }), buildExportBaseName(model) + "_outlook.html");
+      }
+
+      function exportOffice(model) {
+        const text = buildSignatureText(model);
+        downloadBlob(new Blob([text], { type: "text/plain;charset=utf-8" }), buildExportBaseName(model) + "_office.txt");
+      }
+
+      async function withExportState(buttonId, workingText, runner) {
+        const btn = document.getElementById(buttonId);
+        const label = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = workingText;
+        try {
+          await runner();
+        } catch (err) {
+          console.error(err);
+          alert("Export fehlgeschlagen. Bitte erneut versuchen.");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = label;
+        }
+      }
+
+      function toggleButtonsForDocType(docType) {
+        const isSignature = docType === "signature";
+        document.getElementById("btnPdf").disabled = false;
+        document.getElementById("btnSvg").disabled = false;
+        document.getElementById("btnPng").disabled = false;
+
+        document.getElementById("btnOutlook").style.display = isSignature ? "inline-block" : "none";
+        document.getElementById("btnOffice").style.display = isSignature ? "inline-block" : "none";
+      }
+
+      function renderAll() {
+        const model = collectModel();
+        toggleButtonsForDocType(model.docType);
+        renderPreview(model);
+        updateMeta(model);
+        fitPreviewDoc();
+      }
+
+      function wireEvents() {
+        Object.keys(refs).forEach(function (key) {
+          const el = refs[key];
+          const update = function () {
+            if (key === "orgCategory") {
+              populateOrgOptions();
+              applySchemaPreset(true);
+            }
+            if (key === "schema") {
+              applySchemaPreset(false);
+            }
+            renderAll();
+          };
+
+          if (el.tagName === "SELECT" || el.type === "checkbox") {
+            el.addEventListener("change", update);
+          } else {
+            el.addEventListener("input", update);
+          }
+        });
+
+        document.getElementById("btnSvg").addEventListener("click", function () {
+          withExportState("btnSvg", "SVG …", async function () {
+            await exportSvg(collectModel());
+          });
+        });
+
+        document.getElementById("btnPng").addEventListener("click", function () {
+          withExportState("btnPng", "PNG …", async function () {
+            await exportPng(collectModel());
+          });
+        });
+
+        document.getElementById("btnPdf").addEventListener("click", function () {
+          withExportState("btnPdf", "PDF …", async function () {
+            await exportPdf(collectModel());
+          });
+        });
+
+        document.getElementById("btnOutlook").addEventListener("click", function () {
+          exportOutlook(collectModel());
+        });
+
+        document.getElementById("btnOffice").addEventListener("click", function () {
+          exportOffice(collectModel());
+        });
+
+        document.getElementById("uiLangToggle").addEventListener("click", function (event) {
+          const target = event.target.closest("button[data-uilang]");
+          if (!target) {
+            return;
+          }
+          applyUiLanguage(target.getAttribute("data-uilang"));
+        });
+
+        window.addEventListener("resize", fitPreviewDoc);
+      }
+
+      function init() {
+        refs.orgCategory.value = "hochschule";
+        populateOrgOptions("aas");
+        refs.docType.value = "letter";
+        applySchemaPreset(true);
+        wireEvents();
+        applyUiLanguage("de");
+        renderAll();
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
