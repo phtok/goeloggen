@@ -145,6 +145,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
+      position: relative;
     }
 
     .brand-lockup {
@@ -197,6 +198,20 @@
       color: #dbe0e4;
     }
 
+    .secret-toggle-header {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 88px;
+      height: 30px;
+      border: 0;
+      background: transparent;
+      opacity: 0.01;
+      z-index: 40;
+      cursor: default;
+    }
+
     .app {
       width: 100%;
       max-width: 100vw;
@@ -243,6 +258,93 @@
       gap: 6px;
       flex-wrap: wrap;
       justify-content: center;
+    }
+
+    .owner-mode-state {
+      margin-top: 6px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: #86d97a;
+      font-size: 0.74rem;
+      line-height: 1;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+      letter-spacing: 0.02em;
+    }
+
+    .owner-mode-state.on {
+      display: inline-flex;
+    }
+
+    .owner-mode-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #59d66c;
+      box-shadow:
+        0 0 0 1px rgba(19, 54, 26, 0.55),
+        0 0 8px rgba(89, 214, 108, 0.75);
+      flex: 0 0 auto;
+    }
+
+    .email-gate {
+      position: fixed;
+      inset: 0;
+      background: rgba(16, 22, 28, 0.72);
+      z-index: 900;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .email-gate.open {
+      display: flex;
+    }
+
+    .email-gate-dialog {
+      width: min(520px, 100%);
+      border: 1px solid rgba(219, 224, 228, 0.22);
+      border-radius: 9px;
+      background: #2f3a46;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+      padding: 14px 14px 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .email-gate-title {
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+      color: #eff2f4;
+      font-size: 0.98rem;
+      letter-spacing: 0.01em;
+    }
+
+    .email-gate-copy {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.3;
+    }
+
+    .email-gate-line {
+      color: #dbe0e4;
+      font-size: 0.79rem;
+      line-height: 1.2;
+    }
+
+    .email-gate-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .email-gate-error {
+      min-height: 15px;
+      color: #f2a8a8;
+      font-size: 0.74rem;
+      line-height: 1.2;
     }
 
     .preview-actions .btn {
@@ -793,6 +895,7 @@
       <div class="brand-lockup">
         <img class="brand-logo" src="assets/goe-visiten.svg" alt="Goetheanum Visitenkarten Logo" />
       </div>
+      <button type="button" class="secret-toggle-header" id="ownerModeSwitch" aria-label="Owner Mode"></button>
       <div class="ui-toggle" id="uiLangToggle" role="group" aria-label="Sprache / Language">
         <button type="button" data-uilang="de" class="on">DE</button>
         <button type="button" data-uilang="en">EN</button>
@@ -873,9 +976,30 @@
           <span class="preview-actions-break" aria-hidden="true"></span>
           <button type="button" class="btn primary" id="btnSheetPdf" data-tip="A4-Druckbogen als Vektor-PDF mit maximaler Anzahl Karten; optional mit Schnittmarken.">Druckbogen</button>
         </div>
+        <div class="owner-mode-state" id="ownerModeState" aria-live="polite">
+          <span class="owner-mode-dot" aria-hidden="true"></span>
+          <span id="ownerModeStateText">Schnell-Download aktiv</span>
+        </div>
       </div>
     </section>
   </main>
+
+  <section class="email-gate" id="emailGate" aria-hidden="true">
+    <form class="email-gate-dialog" id="emailGateForm">
+      <h2 class="email-gate-title" id="emailGateTitle">Datei per E-Mail anfordern</h2>
+      <p class="email-gate-copy" id="emailGateCopy">Erlaubt sind nur Empfänger mit @goetheanum.ch.</p>
+      <p class="email-gate-line" id="emailGateFormat">Format: PDF</p>
+      <div class="row">
+        <label for="emailGateAddress" id="emailGateLabel">E-Mail-Adresse</label>
+        <input id="emailGateAddress" type="text" inputmode="email" autocomplete="email" placeholder="name@goetheanum.ch" />
+      </div>
+      <p class="email-gate-error" id="emailGateError"></p>
+      <div class="email-gate-actions">
+        <button type="button" class="btn" id="emailGateCancel">Abbrechen</button>
+        <button type="submit" class="btn primary" id="emailGateSubmit">Anfordern</button>
+      </div>
+    </form>
+  </section>
 
   <section class="print-sheet" id="printSheet" aria-hidden="true">
     <div class="print-artboard" id="printArtboard">
@@ -1441,6 +1565,17 @@
           tip_svg: "Vektor-SVG. Falls verfügbar mit Textpfaden, sonst mit Titillium-Schriftdefinition.",
           tip_png: "Rasterbild als Notlösung, Export in 600 dpi für hohe Auflösung.",
           tip_sheet: "A4-Druckbogen als Vektor-PDF mit maximaler Anzahl Karten; optional mit Schnittmarken.",
+          owner_mode_on: "Schnell-Download aktiv",
+          email_gate_title: "Datei per E-Mail anfordern",
+          email_gate_copy: "Erlaubt sind nur Empfänger mit @goetheanum.ch.",
+          email_gate_format: "Format",
+          email_gate_label: "E-Mail-Adresse",
+          email_gate_submit: "Anfordern",
+          email_gate_cancel: "Abbrechen",
+          email_gate_invalid: "Bitte eine gültige @goetheanum.ch-Adresse eingeben.",
+          email_gate_missing_endpoint: "E-Mail-Versand ist noch nicht konfiguriert.",
+          email_gate_success: "Anfrage gesendet. Die Datei wird an die angegebene Adresse zugestellt.",
+          email_gate_requesting: "Anfrage …",
           placeholder_name: "Vorname Nachname",
           placeholder_role: "Vorstand der Allgemeinen\nAnthroposophischen Gesellschaft\nFreie Hochschule für Geisteswissenschaft",
           placeholder_role_en: "Executive Council Member of the\nGeneral Anthroposophical Society",
@@ -1471,6 +1606,17 @@
           tip_svg: "Vector SVG. If available with text paths, otherwise with Titillium font definition.",
           tip_png: "Raster fallback export at 600 dpi for high resolution.",
           tip_sheet: "A4 print sheet as vector PDF with maximum number of cards; crop marks optional.",
+          owner_mode_on: "Quick download active",
+          email_gate_title: "Request file by email",
+          email_gate_copy: "Only recipients with @goetheanum.ch are allowed.",
+          email_gate_format: "Format",
+          email_gate_label: "Email address",
+          email_gate_submit: "Request",
+          email_gate_cancel: "Cancel",
+          email_gate_invalid: "Please enter a valid @goetheanum.ch address.",
+          email_gate_missing_endpoint: "Email delivery endpoint is not configured yet.",
+          email_gate_success: "Request sent. The file will be delivered to the specified address.",
+          email_gate_requesting: "Request …",
           placeholder_name: "First name Last name",
           placeholder_role: "Executive Council Member of the\nGeneral Anthroposophical Society",
           placeholder_role_en: "Optional English translation",
@@ -1485,9 +1631,28 @@
       const stageEl = document.querySelector(".stage");
       const printArtboard = document.getElementById("printArtboard");
       const uiLangToggle = document.getElementById("uiLangToggle");
+      const ownerModeSwitch = document.getElementById("ownerModeSwitch");
+      const ownerModeState = document.getElementById("ownerModeState");
+      const ownerModeStateText = document.getElementById("ownerModeStateText");
+      const emailGate = document.getElementById("emailGate");
+      const emailGateForm = document.getElementById("emailGateForm");
+      const emailGateAddress = document.getElementById("emailGateAddress");
+      const emailGateError = document.getElementById("emailGateError");
+      const emailGateSubmit = document.getElementById("emailGateSubmit");
+      const emailGateCancel = document.getElementById("emailGateCancel");
+      const emailGateFormat = document.getElementById("emailGateFormat");
 
       let lastPreset = null;
       let currentUiLang = "de";
+      let ownerModeEnabled = false;
+      let ownerTapCount = 0;
+      let ownerTapTimer = null;
+      let pendingEmailRequest = null;
+
+      const OWNER_MODE_STORAGE_KEY = "vk_owner_mode_bypass";
+      const EMAIL_TARGET_STORAGE_KEY = "vk_last_email_target";
+      const EMAIL_EXPORT_ENDPOINT =
+        (window.VK_EMAIL_EXPORT_ENDPOINT || localStorage.getItem("vk_email_export_endpoint") || "").trim();
 
       function uiDict() {
         return UI_I18N[currentUiLang] || UI_I18N.de;
@@ -1515,6 +1680,113 @@
           return org.nameEn || org.name || org.nameDe || "";
         }
         return org.nameDe || org.name || org.nameEn || "";
+      }
+
+      function isGoetheanumEmail(value) {
+        return /^[a-z0-9._%+-]+@goetheanum\.ch$/i.test(String(value || "").trim());
+      }
+
+      function updateOwnerModeUi() {
+        if (!ownerModeState || !ownerModeStateText) {
+          return;
+        }
+        ownerModeState.classList.toggle("on", ownerModeEnabled);
+        ownerModeStateText.textContent = uiDict().owner_mode_on;
+      }
+
+      function setOwnerModeEnabled(enabled) {
+        ownerModeEnabled = Boolean(enabled);
+        try {
+          localStorage.setItem(OWNER_MODE_STORAGE_KEY, ownerModeEnabled ? "1" : "0");
+        } catch (err) {
+          // no-op
+        }
+        updateOwnerModeUi();
+      }
+
+      function handleOwnerTap() {
+        ownerTapCount += 1;
+        if (ownerTapTimer) {
+          clearTimeout(ownerTapTimer);
+        }
+        ownerTapTimer = setTimeout(function () {
+          ownerTapCount = 0;
+          ownerTapTimer = null;
+        }, 1300);
+        if (ownerTapCount >= 5) {
+          setOwnerModeEnabled(!ownerModeEnabled);
+          ownerTapCount = 0;
+          if (ownerTapTimer) {
+            clearTimeout(ownerTapTimer);
+            ownerTapTimer = null;
+          }
+        }
+      }
+
+      function openEmailGate(payload) {
+        if (!emailGate || !emailGateAddress || !emailGateFormat) {
+          return;
+        }
+        pendingEmailRequest = payload || null;
+        emailGate.classList.add("open");
+        emailGate.setAttribute("aria-hidden", "false");
+        emailGateError.textContent = "";
+        emailGateFormat.textContent = uiDict().email_gate_format + ": " + (payload && payload.label ? payload.label : "");
+        const preferred = (function () {
+          try {
+            return localStorage.getItem(EMAIL_TARGET_STORAGE_KEY) || "";
+          } catch (err) {
+            return "";
+          }
+        })();
+        emailGateAddress.value = preferred;
+        setTimeout(function () {
+          emailGateAddress.focus();
+          emailGateAddress.select();
+        }, 20);
+      }
+
+      function closeEmailGate() {
+        if (!emailGate) {
+          return;
+        }
+        pendingEmailRequest = null;
+        emailGate.classList.remove("open");
+        emailGate.setAttribute("aria-hidden", "true");
+        emailGateError.textContent = "";
+        if (emailGateSubmit) {
+          emailGateSubmit.disabled = false;
+          emailGateSubmit.textContent = uiDict().email_gate_submit;
+        }
+      }
+
+      async function sendEmailExportRequest(request) {
+        if (!EMAIL_EXPORT_ENDPOINT) {
+          throw new Error(uiDict().email_gate_missing_endpoint);
+        }
+        const response = await fetch(EMAIL_EXPORT_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+          throw new Error("E-Mail-Request fehlgeschlagen (" + response.status + ").");
+        }
+        return response;
+      }
+
+      async function ensureExportAuthorized(kindLabel, exportKind, model, runDirect) {
+        if (ownerModeEnabled) {
+          await runDirect();
+          return;
+        }
+        openEmailGate({
+          kind: exportKind,
+          label: kindLabel,
+          model: model
+        });
       }
 
       function applyUiLanguage(lang) {
@@ -1545,9 +1817,15 @@
         textById("btnSvg", dict.btn_svg);
         textById("btnPng", dict.btn_png);
         textById("btnSheetPdf", dict.btn_sheet);
+        textById("emailGateTitle", dict.email_gate_title);
+        textById("emailGateCopy", dict.email_gate_copy);
+        textById("emailGateLabel", dict.email_gate_label);
+        textById("emailGateSubmit", dict.email_gate_submit);
+        textById("emailGateCancel", dict.email_gate_cancel);
 
         placeholderById("fullName", dict.placeholder_name);
         placeholderById("contactBlock", dict.placeholder_contact);
+        placeholderById("emailGateAddress", "name@goetheanum.ch");
 
         const btnPdf = document.getElementById("btnPdf");
         const btnSvg = document.getElementById("btnSvg");
@@ -1570,6 +1848,7 @@
         syncFormatControl(refs.schema.value);
         syncRolePlaceholders(refs.schema.value);
         syncOrgColorInfo();
+        updateOwnerModeUi();
         renderAll();
 
         if (uiLangToggle) {
@@ -3321,42 +3600,118 @@
 
         document.getElementById("btnSvg").addEventListener("click", function () {
           const model = collectModel();
-          withExportState("btnSvg", "SVG …", async function () {
-            let svg = "";
-            try {
-              const outlineFonts = await ensureTitilliumOutlineFonts();
-              svg = buildSvg(model, model.includeCrop, {
-                textAsPaths: true,
-                outlineFonts: outlineFonts
-              });
-            } catch (err) {
-              console.warn("Pfad-SVG nicht verfügbar, fallback auf Text-SVG.", err);
-              svg = buildSvg(model, model.includeCrop);
-            }
-            const name = buildExportBaseName(model) + ".svg";
-            downloadBlob(new Blob([svg], { type: "image/svg+xml" }), name);
+          ensureExportAuthorized(uiDict().btn_svg, "svg", model, async function () {
+            await withExportState("btnSvg", "SVG …", async function () {
+              let svg = "";
+              try {
+                const outlineFonts = await ensureTitilliumOutlineFonts();
+                svg = buildSvg(model, model.includeCrop, {
+                  textAsPaths: true,
+                  outlineFonts: outlineFonts
+                });
+              } catch (err) {
+                console.warn("Pfad-SVG nicht verfügbar, fallback auf Text-SVG.", err);
+                svg = buildSvg(model, model.includeCrop);
+              }
+              const name = buildExportBaseName(model) + ".svg";
+              downloadBlob(new Blob([svg], { type: "image/svg+xml" }), name);
+            });
           });
         });
 
         document.getElementById("btnPng").addEventListener("click", function () {
           const model = collectModel();
-          withExportState("btnPng", "PNG …", async function () {
-            await exportPng(model, 600);
+          ensureExportAuthorized(uiDict().btn_png, "png", model, async function () {
+            await withExportState("btnPng", "PNG …", async function () {
+              await exportPng(model, 600);
+            });
           });
         });
 
         document.getElementById("btnPdf").addEventListener("click", function () {
           const model = collectModel();
-          withExportState("btnPdf", "PDF …", async function () {
-            await exportPdf(model);
+          ensureExportAuthorized(uiDict().btn_pdf, "pdf", model, async function () {
+            await withExportState("btnPdf", "PDF …", async function () {
+              await exportPdf(model);
+            });
           });
         });
 
         document.getElementById("btnSheetPdf").addEventListener("click", function () {
           const model = collectModel();
-          withExportState("btnSheetPdf", currentUiLang === "en" ? "Sheet …" : "Bogen …", async function () {
-            await exportSheetPdf(model);
+          ensureExportAuthorized(uiDict().btn_sheet, "sheet_pdf", model, async function () {
+            await withExportState("btnSheetPdf", currentUiLang === "en" ? "Sheet …" : "Bogen …", async function () {
+              await exportSheetPdf(model);
+            });
           });
+        });
+
+        if (emailGateCancel) {
+          emailGateCancel.addEventListener("click", function () {
+            closeEmailGate();
+          });
+        }
+
+        if (emailGateAddress) {
+          emailGateAddress.addEventListener("input", function () {
+            emailGateError.textContent = "";
+          });
+        }
+
+        if (emailGateForm) {
+          emailGateForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            if (!pendingEmailRequest) {
+              closeEmailGate();
+              return;
+            }
+            const address = String(emailGateAddress.value || "").trim();
+            if (!isGoetheanumEmail(address)) {
+              emailGateError.textContent = uiDict().email_gate_invalid;
+              return;
+            }
+            if (emailGateSubmit) {
+              emailGateSubmit.disabled = true;
+              emailGateSubmit.textContent = uiDict().email_gate_requesting;
+            }
+            emailGateError.textContent = "";
+            try {
+              await sendEmailExportRequest({
+                recipientEmail: address,
+                exportKind: pendingEmailRequest.kind,
+                model: pendingEmailRequest.model,
+                requestedAt: new Date().toISOString(),
+                source: "visitenkarten"
+              });
+              try {
+                localStorage.setItem(EMAIL_TARGET_STORAGE_KEY, address);
+              } catch (err) {
+                // no-op
+              }
+              closeEmailGate();
+              alert(uiDict().email_gate_success);
+            } catch (err) {
+              emailGateError.textContent = err && err.message ? err.message : "Request failed.";
+              if (emailGateSubmit) {
+                emailGateSubmit.disabled = false;
+                emailGateSubmit.textContent = uiDict().email_gate_submit;
+              }
+            }
+          });
+        }
+
+        if (emailGate) {
+          emailGate.addEventListener("click", function (event) {
+            if (event.target === emailGate) {
+              closeEmailGate();
+            }
+          });
+        }
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape" && emailGate && emailGate.classList.contains("open")) {
+            closeEmailGate();
+          }
         });
 
         if (uiLangToggle) {
@@ -3372,18 +3727,28 @@
         window.addEventListener("resize", function () {
           fitPreviewCard();
         });
+
+        if (ownerModeSwitch) {
+          ownerModeSwitch.addEventListener("click", function () {
+            handleOwnerTap();
+          });
+        }
       }
 
       function init() {
         let startLang = "de";
+        let storedOwnerMode = "0";
         try {
           const stored = localStorage.getItem("vk_ui_lang");
           if (stored === "en" || stored === "de") {
             startLang = stored;
           }
+          storedOwnerMode = localStorage.getItem(OWNER_MODE_STORAGE_KEY) || "0";
         } catch (err) {
           startLang = "de";
+          storedOwnerMode = "0";
         }
+        ownerModeEnabled = storedOwnerMode === "1";
         applyUiLanguage(startLang);
 
         refs.orgCategory.value = "hochschule";
