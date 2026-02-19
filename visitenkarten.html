@@ -308,6 +308,38 @@
       width: 100%;
     }
 
+    .export-format-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .export-format-label {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .export-format-select {
+      width: auto;
+      min-width: 116px;
+      border: 1px solid rgba(219, 224, 228, 0.24);
+      border-radius: 0.35rem;
+      padding: 5px 26px 5px 9px;
+      color: #f3f5f7;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.74rem;
+      font-family: "SourceSansPro-Regular", sans-serif;
+      line-height: 1.15;
+    }
+
+    .export-format-select:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
     .export-crop-toggle {
       display: inline-flex;
       align-items: center;
@@ -810,7 +842,7 @@
       <fieldset>
         <div class="fieldset-title" id="fsContactTitle">Kontakt</div>
         <div class="row">
-          <textarea id="contactBlock" class="contact-block" placeholder="Hügelweg 59 · 4143 Dornach&#10;Telefon +41 61 706 43 12&#10;name@goetheanum.ch&#10;www.goetheanum.ch"></textarea>
+          <textarea id="contactBlock" class="contact-block" placeholder="Hügelweg 59 · 4143 Dornach&#10;Telefon +41 61 706 4X XX&#10;name@goetheanum.ch&#10;www.goetheanum.ch"></textarea>
         </div>
       </fieldset>
     </section>
@@ -825,10 +857,17 @@
       <div class="preview-export">
         <div class="export-meta" id="meta">
           <span class="export-meta-line" id="metaLine1">55 × 85 mm · Einheit</span>
+          <label class="export-meta-line export-format-row">
+            <span class="export-format-label" id="formatLabel">Format</span>
+            <select id="cardFormat" class="export-format-select">
+              <option value="portrait" id="optFormatPortrait">Hochformat</option>
+              <option value="landscape" id="optFormatLandscape">Querformat</option>
+            </select>
+          </label>
           <label class="export-meta-line export-crop-toggle"><input type="checkbox" id="includeCrop" checked /><span id="cropLabelText">3 mm Beschnitt + Schnittmarken</span></label>
         </div>
         <div class="preview-actions">
-          <button type="button" class="btn" id="btnPdf" data-tip="Einzelkarte als Vektor-PDF ohne Schnittmarken (55 × 85 mm). Für Marken den Druckbogen verwenden.">PDF</button>
+          <button type="button" class="btn" id="btnPdf" data-tip="Einzelkarte als Vektor-PDF ohne Schnittmarken. Für Marken den Druckbogen verwenden.">PDF</button>
           <button type="button" class="btn" id="btnSvg" data-tip="Vektor-SVG. Falls verfügbar mit Textpfaden, sonst mit Titillium-Schriftdefinition.">SVG</button>
           <button type="button" class="btn" id="btnPng" data-tip="Rasterbild als Notlösung, Export in 600 dpi für hohe Auflösung.">PNG</button>
           <span class="preview-actions-break" aria-hidden="true"></span>
@@ -1058,7 +1097,7 @@
           roleLinesEn: [],
           contactLines: [
             "Hügelweg 59 · 4143 Dornach",
-            "Telefon +41 61 706 44 00",
+            "Telefon +41 61 706 4X XX",
             "name@goetheanum.ch",
             "www.goetheanum.ch"
           ]
@@ -1349,6 +1388,7 @@
       const fieldIds = [
         "orgCategory",
         "schema",
+        "cardFormat",
         "includeCrop",
         "fullName",
         "roleBlock",
@@ -1383,9 +1423,12 @@
           field_contact: "Kontakt",
           label_category: "Kategorie",
           label_unit: "Einheit / Sektion / Bereich",
+          label_format: "Format",
           label_name: "Name",
           label_role: "Funktion / Organisation",
           label_role_en: "Englische Übersetzung",
+          format_portrait: "Hochformat",
+          format_landscape: "Querformat",
           cat_society: "Gesellschaft",
           cat_school: "Hochschule",
           cat_divisions: "Bereiche",
@@ -1394,14 +1437,14 @@
           btn_svg: "SVG",
           btn_png: "PNG",
           btn_sheet: "Druckbogen",
-          tip_pdf: "Einzelkarte als Vektor-PDF ohne Schnittmarken (55 × 85 mm). Für Marken den Druckbogen verwenden.",
+          tip_pdf: "Einzelkarte als Vektor-PDF ohne Schnittmarken. Für Marken den Druckbogen verwenden.",
           tip_svg: "Vektor-SVG. Falls verfügbar mit Textpfaden, sonst mit Titillium-Schriftdefinition.",
           tip_png: "Rasterbild als Notlösung, Export in 600 dpi für hohe Auflösung.",
           tip_sheet: "A4-Druckbogen als Vektor-PDF mit maximaler Anzahl Karten; optional mit Schnittmarken.",
           placeholder_name: "Vorname Nachname",
           placeholder_role: "Vorstand der Allgemeinen\nAnthroposophischen Gesellschaft\nFreie Hochschule für Geisteswissenschaft",
           placeholder_role_en: "Executive Council Member of the\nGeneral Anthroposophical Society",
-          placeholder_contact: "Hügelweg 59 · 4143 Dornach\nTelefon +41 61 706 43 12\nname@goetheanum.ch\nwww.goetheanum.ch",
+          placeholder_contact: "Hügelweg 59 · 4143 Dornach\nTelefon +41 61 706 4X XX\nname@goetheanum.ch\nwww.goetheanum.ch",
           meta_fallback_unit: "Einheit"
         },
         en: {
@@ -1410,9 +1453,12 @@
           field_contact: "Contact",
           label_category: "Category",
           label_unit: "Unit / Section / Department",
+          label_format: "Format",
           label_name: "Name",
           label_role: "Role / Organization",
           label_role_en: "English translation",
+          format_portrait: "Portrait",
+          format_landscape: "Landscape",
           cat_society: "Society",
           cat_school: "School",
           cat_divisions: "Departments",
@@ -1421,14 +1467,14 @@
           btn_svg: "SVG",
           btn_png: "PNG",
           btn_sheet: "Print Sheet",
-          tip_pdf: "Single card as vector PDF without crop marks (55 × 85 mm). Use Print Sheet for crop marks.",
+          tip_pdf: "Single card as vector PDF without crop marks. Use Print Sheet for crop marks.",
           tip_svg: "Vector SVG. If available with text paths, otherwise with Titillium font definition.",
           tip_png: "Raster fallback export at 600 dpi for high resolution.",
           tip_sheet: "A4 print sheet as vector PDF with maximum number of cards; crop marks optional.",
           placeholder_name: "First name Last name",
           placeholder_role: "Executive Council Member of the\nGeneral Anthroposophical Society",
           placeholder_role_en: "Optional English translation",
-          placeholder_contact: "Huegelweg 59 · 4143 Dornach\nPhone +41 61 706 43 12\nname@goetheanum.ch\nwww.goetheanum.ch",
+          placeholder_contact: "Huegelweg 59 · 4143 Dornach\nPhone +41 61 706 4X XX\nname@goetheanum.ch\nwww.goetheanum.ch",
           meta_fallback_unit: "Unit"
         }
       };
@@ -1485,9 +1531,12 @@
         textById("fsContactTitle", dict.field_contact);
         textById("lblOrgCategory", dict.label_category);
         textById("lblSchema", dict.label_unit);
+        textById("formatLabel", dict.label_format);
         textById("lblFullName", dict.label_name);
         textById("lblRoleBlock", dict.label_role);
         textById("lblRoleBlockEn", dict.label_role_en);
+        textById("optFormatPortrait", dict.format_portrait);
+        textById("optFormatLandscape", dict.format_landscape);
         textById("optCatGesellschaft", dict.cat_society);
         textById("optCatHochschule", dict.cat_school);
         textById("optCatBereiche", dict.cat_divisions);
@@ -1518,6 +1567,7 @@
         }
 
         populateOrgOptions(refs.schema.value);
+        syncFormatControl(refs.schema.value);
         syncRolePlaceholders(refs.schema.value);
         syncOrgColorInfo();
         renderAll();
@@ -1833,7 +1883,7 @@
         }
         return [
           "Hügelweg 59 · 4143 Dornach",
-          "Telefon +41 61 706 43 00",
+          "Telefon +41 61 706 4X XX",
           "name@goetheanum.ch",
           "www.goetheanum.ch"
         ];
@@ -1897,6 +1947,53 @@
         return defaultSymbolForSchema(schemaKey);
       }
 
+      function supportsLandscapeFormat(schemaKey) {
+        return categoryForSchema(schemaKey) === "bereiche";
+      }
+
+      function syncFormatControl(schemaKey) {
+        if (!refs.cardFormat) {
+          return;
+        }
+        const key = schemaKey || refs.schema.value;
+        const landscapeAllowed = supportsLandscapeFormat(key);
+        if (!landscapeAllowed && refs.cardFormat.value !== "portrait") {
+          refs.cardFormat.value = "portrait";
+        }
+        refs.cardFormat.disabled = !landscapeAllowed;
+      }
+
+      function cardFormatForModel(model) {
+        const desired = model && model.cardFormat === "landscape" ? "landscape" : "portrait";
+        const key = model && model.schema ? model.schema : refs.schema.value;
+        if (desired === "landscape" && supportsLandscapeFormat(key)) {
+          return "landscape";
+        }
+        return "portrait";
+      }
+
+      function cardDimensionsMm(model) {
+        const format = cardFormatForModel(model);
+        if (format === "landscape") {
+          return {
+            widthMm: 85,
+            heightMm: 55,
+            format: "landscape"
+          };
+        }
+        return {
+          widthMm: 55,
+          heightMm: 85,
+          format: "portrait"
+        };
+      }
+
+      function syncCardCssVars(model) {
+        const dims = cardDimensionsMm(model);
+        document.documentElement.style.setProperty("--card-w-mm", String(dims.widthMm));
+        document.documentElement.style.setProperty("--card-h-mm", String(dims.heightMm));
+      }
+
       function collectModel() {
         const schemaKey = refs.schema.value;
         const schemaOrg = ORG_DEFS[schemaKey];
@@ -1910,6 +2007,7 @@
           schema: schemaKey,
           symbolSet: symbolSet,
           categoryKey: categoryForSchema(schemaKey) || refs.orgCategory.value,
+          cardFormat: refs.cardFormat ? refs.cardFormat.value : "portrait",
           includeCrop: refs.includeCrop.checked,
           motifColor: schemaOrg ? schemaOrg.color : "#0061a9",
           textColor: CARD_DEFAULTS.textColor,
@@ -2072,6 +2170,8 @@
       function textLayoutFor(model, roleCount, contactCount) {
         const motifType = motifTypeForModel(model);
         const categoryKey = model.categoryKey || categoryForSchema(model.schema);
+        const cardDims = cardDimensionsMm(model);
+        const format = cardDims.format;
         const roleLines = Math.max(roleCount, 0);
         const contactLines = Math.max(contactCount, 0);
 
@@ -2121,6 +2221,19 @@
           rolesToContactGapMm = 7.056;
         }
 
+        if (motifType === "bereiche" && format === "landscape") {
+          nameRightMm = 77.95;
+          bodyRightMm = 78.1;
+          lineLeadMm = 3.34;
+          nameSizeMm = 4.06;
+          roleSizeMm = 2.96;
+          contactSizeMm = 2.78;
+          roleWeight = 600;
+          maxLastContactBaselineMm = 46.8;
+          nameToRolesGapMm = 5.35;
+          rolesToContactGapMm = 5.55;
+        }
+
         // Kontaktblock unten rechts fixieren: letzte Zeile bleibt an fester Baseline,
         // zusätzliche Zeilen wachsen nach oben.
         const contactStartBaselineMm = maxLastContactBaselineMm - (Math.max(contactLines, 1) - 1) * lineLeadMm;
@@ -2157,11 +2270,15 @@
         cardEl.innerHTML = svgMarkup;
       }
 
-      function motifBoxMmFor(motifType) {
+      function motifBoxMmFor(motifType, model) {
+        const dims = cardDimensionsMm(model);
         if (motifType === "bau") {
           return { x: 5.24, y: 4.76, w: 42.76, h: 43.72 };
         }
         if (motifType === "bereiche") {
+          if (dims.format === "landscape") {
+            return { x: 4.9, y: 4.9, w: 34.32, h: 9.68 };
+          }
           return { x: 5.8, y: 4.9, w: 38.4, h: 11.4 };
         }
         return { x: 5.27, y: 5.06, w: 22.14, h: 36.93 };
@@ -2172,8 +2289,9 @@
         const outlineFonts = svgOptions.outlineFonts || null;
         const textAsPaths = Boolean(svgOptions.textAsPaths && outlineFonts);
         const unit = 10;
-        const cardW = 55 * unit;
-        const cardH = 85 * unit;
+        const dims = cardDimensionsMm(model);
+        const cardW = dims.widthMm * unit;
+        const cardH = dims.heightMm * unit;
         const bleed = withCrop ? 3 * unit : 0;
         const totalW = cardW + (bleed * 2);
         const totalH = cardH + (bleed * 2);
@@ -2196,7 +2314,8 @@
         const contactLines = toLineArray(model.contactLines);
         const name = model.fullName || "Vorname Nachname";
         const textLayout = textLayoutFor(model, roleLines.length, contactLines.length);
-        const motifBox = motifBoxMmFor(motifType);
+        const motifBox = motifBoxMmFor(motifType, model);
+        const schemaDef = ORG_DEFS[model.schema];
 
         function motifSvg() {
           if (motifType === "bereiche") {
@@ -2305,7 +2424,7 @@
 
         if (!roleLines.length && !contactLines.length) {
           textParts += svgTextLineMarkup({
-            text: schema.name || "",
+            text: schemaDef ? schemaDef.name : "",
             x: bodyAnchorX,
             y: (oy + mm(textLayout.rolesBaselineMm)),
             fontSize: mm(textLayout.roleSizeMm),
@@ -2361,10 +2480,11 @@
       }
 
       function pageSizeMm(model) {
+        const dims = cardDimensionsMm(model);
         const bleed = model.includeCrop ? 3 : 0;
         return {
-          widthMm: 55 + (bleed * 2),
-          heightMm: 85 + (bleed * 2)
+          widthMm: dims.widthMm + (bleed * 2),
+          heightMm: dims.heightMm + (bleed * 2)
         };
       }
 
@@ -2439,7 +2559,7 @@
           categoryKey: model.categoryKey,
           symbolSet: symbolSet
         });
-        const motifBox = motifBoxMmFor(motifType);
+        const motifBox = motifBoxMmFor(motifType, model);
         let motifSvg = "";
 
         if (motifType === "bereiche") {
@@ -2559,10 +2679,11 @@
         const size = pageSizePx(model, dpi);
         const pxPerMm = dpi / 25.4;
         const bleedMm = model.includeCrop ? 3 : 0;
+        const dims = cardDimensionsMm(model);
         const ox = bleedMm * pxPerMm;
         const oy = bleedMm * pxPerMm;
-        const cardWpx = 55 * pxPerMm;
-        const cardHpx = 85 * pxPerMm;
+        const cardWpx = dims.widthMm * pxPerMm;
+        const cardHpx = dims.heightMm * pxPerMm;
 
         await ensureTitilliumReady();
         const canvas = document.createElement("canvas");
@@ -2616,7 +2737,8 @@
       function buildExportBaseName(model) {
         const raw = String(model.schema || "karte").toLowerCase();
         const schema = raw.replace(/[^a-z0-9_-]+/g, "-").replace(/^-+|-+$/g, "") || "karte";
-        return "visitenkarte_" + schema + (model.includeCrop ? "_mit-schnittmarken" : "");
+        const formatSuffix = cardDimensionsMm(model).format === "landscape" ? "_quer" : "";
+        return "visitenkarte_" + schema + formatSuffix + (model.includeCrop ? "_mit-schnittmarken" : "");
       }
 
       function buildPdfBlobFromJpeg(jpegBytes, imageWidthPx, imageHeightPx, pageWidthPt, pageHeightPt) {
@@ -2876,15 +2998,16 @@
         const pdfModel = Object.assign({}, model, {
           includeCrop: false
         });
+        const dims = cardDimensionsMm(pdfModel);
         const fileName = buildExportBaseName(pdfModel) + ".pdf";
         try {
           await ensureVectorPdfLibs();
           const outlineFonts = await ensureTitilliumOutlineFonts();
           const JsPdf = window.jspdf.jsPDF;
           const doc = new JsPdf({
-            orientation: "portrait",
+            orientation: dims.widthMm > dims.heightMm ? "landscape" : "portrait",
             unit: "mm",
-            format: [55, 85],
+            format: [dims.widthMm, dims.heightMm],
             compress: true,
             putOnlyUsedFonts: true,
             precision: 12
@@ -2901,8 +3024,8 @@
           await doc.svg(svgRoot, {
             x: 0,
             y: 0,
-            width: 55,
-            height: 85
+            width: dims.widthMm,
+            height: dims.heightMm
           });
           const vectorBlob = doc.output("blob");
           if (!vectorBlob || !vectorBlob.size) {
@@ -3056,12 +3179,13 @@
         const a4wMm = 210;
         const a4hMm = 297;
         const outerMarginMm = 4;
-        const tileWmm = 55;
-        const tileHmm = 85;
         const tileModel = Object.assign({}, model, {
           includeCrop: false,
           bgColor: "#ffffff"
         });
+        const tileDims = cardDimensionsMm(tileModel);
+        const tileWmm = tileDims.widthMm;
+        const tileHmm = tileDims.heightMm;
         const layoutMm = chooseSheetLayout(tileWmm, tileHmm, a4wMm, a4hMm, outerMarginMm);
         const base = buildExportBaseName(tileModel);
         const file = base.replace(/^visitenkarte_/, "visitenkarten_") + "_druckbogen-a4_" + layoutMm.count + "x.pdf";
@@ -3145,6 +3269,7 @@
 
       function renderAll() {
         const model = collectModel();
+        syncCardCssVars(model);
         syncOrgColorInfo();
         renderCard(previewCard, model);
         renderCard(printCard, model);
@@ -3153,8 +3278,9 @@
         const org = ORG_DEFS[model.schema];
         const line1 = document.getElementById("metaLine1");
         if (line1) {
+          const dims = cardDimensionsMm(model);
           const dict = uiDict();
-          line1.textContent = "55 × 85 mm · " + (org ? orgNameForUi(org) : dict.meta_fallback_unit);
+          line1.textContent = dims.widthMm + " × " + dims.heightMm + " mm · " + (org ? orgNameForUi(org) : dict.meta_fallback_unit);
         }
 
         if (model.includeCrop) {
@@ -3174,11 +3300,13 @@
           const update = function () {
             if (key === "orgCategory") {
               populateOrgOptions();
+              syncFormatControl(refs.schema.value);
               applySchemaPreset(false);
               renderAll();
               return;
             }
             if (key === "schema") {
+              syncFormatControl(refs.schema.value);
               applySchemaPreset(false);
             }
             renderAll();
@@ -3260,6 +3388,7 @@
 
         refs.orgCategory.value = "hochschule";
         populateOrgOptions("aas");
+        syncFormatControl("aas");
         applySchemaPreset(true);
         wireEvents();
         renderAll();
