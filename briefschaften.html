@@ -118,31 +118,16 @@
     .brand-lockup {
       display: flex;
       align-items: center;
-      gap: 12px;
       min-width: 0;
     }
 
-    .brand-mark {
-      width: 18px;
-      height: 22px;
-      color: #dbe0e4;
-      flex: 0 0 auto;
-    }
-
-    .brand-title {
-      font-family: "Titillium-Upright", sans-serif;
-      font-size: 2rem;
-      line-height: 0.95;
-      letter-spacing: 0.01em;
-      color: #f4f6f8;
-      white-space: nowrap;
-    }
-
-    .brand-sub {
+    .brand-logo {
+      width: auto;
+      height: 52px;
+      max-width: min(100%, 520px);
       display: block;
-      font-size: 1.52rem;
-      font-weight: 300;
-      color: #dbe0e4;
+      flex: 0 0 auto;
+      opacity: 0.98;
     }
 
     .ui-toggle {
@@ -411,12 +396,9 @@
         padding: 14px;
       }
 
-      .brand-title {
-        font-size: 1.55rem;
-      }
-
-      .brand-sub {
-        font-size: 1.22rem;
+      .brand-logo {
+        height: 42px;
+        max-width: min(100%, 390px);
       }
 
       .app {
@@ -462,12 +444,7 @@
   <header class="page-head">
     <div class="page-head-inner">
       <div class="brand-lockup">
-        <svg class="brand-mark" viewBox="0 0 16 20" aria-hidden="true">
-          <path fill="currentColor" d="M5.7224,3.472L15.8254,0v21.07h-6.002l.007-7.74c.003-.501-.086-.969-.242-1.438-.475-1.43-3.866-8.42-3.866-8.42" />
-          <path fill="currentColor" d="M5.292,7.1965s3.062,4.895,3.062,6.039l.048,7.834h-3.538l-.022-2.693c-.035-1.633-3.74-6.24-3.74-6.24l4.19-4.94Z" />
-          <path fill="currentColor" d="M0,17.9464l2.355-1.673s1.103,1.842,1.201,2.488c.099.646.02,2.309.02,2.309H1.072s.005-.607.008-.876c.007-.476-.144-.883-.375-1.274-.108-.183-.609-.818-.705-.974" />
-        </svg>
-        <h1 class="brand-title">Goetheanum<span class="brand-sub" id="appTitleSub">Briefschaften</span></h1>
+        <img class="brand-logo" src="assets/goe-briefe.svg" alt="Goetheanum Briefschaften" />
       </div>
       <div class="ui-toggle" id="uiLangToggle" role="group" aria-label="Sprache / Language">
         <button type="button" data-uilang="de" class="on">DE</button>
@@ -1301,7 +1278,6 @@
         const dict = uiDict();
 
         document.documentElement.lang = currentUiLang;
-        document.getElementById("appTitleSub").textContent = dict.app_sub;
         document.getElementById("fsEntityTitle").textContent = dict.field_entity;
         document.getElementById("fsDocTitle").textContent = dict.field_doc;
         document.getElementById("fsPersonTitle").textContent = dict.field_person;
