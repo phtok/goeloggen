@@ -17,3 +17,7 @@ ausgabe_zeichnungen/
 
 # Local experiment snapshots
 archive/
+
+# Cloudflare worker local state/config
+workers/.wrangler/
+workers/wrangler.toml

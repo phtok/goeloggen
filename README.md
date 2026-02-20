@@ -61,7 +61,13 @@ Die Website kann direkt über GitHub Pages bereitgestellt werden.
 
 - `index.html` (Logo-Generator)
 - `visitenkarten.html` (Visitenkarten-Tool)
+- `briefschaften.html` (Briefpapier/Kuvert/Signatur)
 - `assets/` (Schriften, Glyphen, Logos)
+
+Optional für E-Mail-gesteuerte Visitenkarten-Downloads:
+
+- `assets/vk-email-config.js` (Endpoint-Konfiguration)
+- `workers/visitenkarten-email-worker.js` (Cloudflare Worker)
 
 Der Deploy-Workflow liegt in:
 

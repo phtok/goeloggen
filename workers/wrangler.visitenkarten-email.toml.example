@@ -1,0 +1,17 @@
+name = "goetheanum-visitenkarten-email"
+main = "visitenkarten-email-worker.js"
+compatibility_date = "2025-01-01"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGINS = "https://grafik.goetheanum.ch,https://phtok.github.io"
+FROM_EMAIL = "Goetheanum Grafik <grafik@goetheanum.ch>"
+ALERT_EMAIL = "philipp.tok@goetheanum.ch"
+APP_URL = "https://grafik.goetheanum.ch/visitenkarten"
+RATE_LIMIT_MAX = "12"
+RATE_LIMIT_WINDOW_SEC = "900"
+MAX_ATTACHMENT_BYTES = "14680064"
+DRY_RUN = "0"
+
+# Required secret:
+# wrangler secret put RESEND_API_KEY
