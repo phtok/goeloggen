@@ -1018,6 +1018,7 @@
 
   <script src="assets/titillium-outline-glyphs.js"></script>
   <script src="assets/gci-glyphs.js"></script>
+  <script src="assets/vk-email-config.js"></script>
   <script>
     (function () {
       "use strict";
@@ -1576,6 +1577,8 @@
           email_gate_missing_endpoint: "E-Mail-Versand ist noch nicht konfiguriert.",
           email_gate_success: "Anfrage gesendet. Die Datei wird an die angegebene Adresse zugestellt.",
           email_gate_requesting: "Anfrage …",
+          email_gate_preparing: "Datei wird vorbereitet …",
+          email_gate_file_too_large: "Datei ist zu groß für den E-Mail-Versand.",
           placeholder_name: "Vorname Nachname",
           placeholder_role: "Vorstand der Allgemeinen\nAnthroposophischen Gesellschaft\nFreie Hochschule für Geisteswissenschaft",
           placeholder_role_en: "Executive Council Member of the\nGeneral Anthroposophical Society",
@@ -1617,6 +1620,8 @@
           email_gate_missing_endpoint: "Email delivery endpoint is not configured yet.",
           email_gate_success: "Request sent. The file will be delivered to the specified address.",
           email_gate_requesting: "Request …",
+          email_gate_preparing: "Preparing file …",
+          email_gate_file_too_large: "File is too large for email delivery.",
           placeholder_name: "First name Last name",
           placeholder_role: "Executive Council Member of the\nGeneral Anthroposophical Society",
           placeholder_role_en: "Optional English translation",
@@ -1653,6 +1658,7 @@
       const EMAIL_TARGET_STORAGE_KEY = "vk_last_email_target";
       const EMAIL_EXPORT_ENDPOINT =
         (window.VK_EMAIL_EXPORT_ENDPOINT || localStorage.getItem("vk_email_export_endpoint") || "").trim();
+      const EMAIL_MAX_ATTACHMENT_BYTES = Number(window.VK_EMAIL_MAX_ATTACHMENT_BYTES || 14 * 1024 * 1024);
 
       function uiDict() {
         return UI_I18N[currentUiLang] || UI_I18N.de;
@@ -1772,9 +1778,107 @@
           body: JSON.stringify(request)
         });
         if (!response.ok) {
-          throw new Error("E-Mail-Request fehlgeschlagen (" + response.status + ").");
+          let detail = "";
+          try {
+            const payload = await response.json();
+            detail = payload && payload.error ? String(payload.error) : "";
+          } catch (err) {
+            detail = "";
+          }
+          throw new Error(detail || ("E-Mail-Request fehlgeschlagen (" + response.status + ")."));
         }
         return response;
+      }
+
+      function fileNameForEmailExport(kind, model) {
+        if (kind === "sheet_pdf") {
+          const tileModel = Object.assign({}, model, {
+            includeCrop: false,
+            bgColor: "#ffffff"
+          });
+          const dims = cardDimensionsMm(tileModel);
+          const layoutMm = chooseSheetLayout(dims.widthMm, dims.heightMm, 210, 297, 4);
+          const base = buildExportBaseName(tileModel);
+          return base.replace(/^visitenkarte_/, "visitenkarten_") + "_druckbogen-a4_" + layoutMm.count + "x.pdf";
+        }
+        if (kind === "pdf") {
+          const pdfModel = Object.assign({}, model, {
+            includeCrop: false
+          });
+          return buildExportBaseName(pdfModel) + ".pdf";
+        }
+        if (kind === "png") {
+          return buildExportBaseName(model) + "_600dpi.png";
+        }
+        if (kind === "svg") {
+          return buildExportBaseName(model) + ".svg";
+        }
+        return buildExportBaseName(model) + ".bin";
+      }
+
+      async function createSvgBlob(model) {
+        let svg = "";
+        try {
+          const outlineFonts = await ensureTitilliumOutlineFonts();
+          svg = buildSvg(model, model.includeCrop, {
+            textAsPaths: true,
+            outlineFonts: outlineFonts
+          });
+        } catch (err) {
+          console.warn("Pfad-SVG nicht verfügbar, fallback auf Text-SVG.", err);
+          svg = buildSvg(model, model.includeCrop);
+        }
+        return new Blob([svg], { type: "image/svg+xml" });
+      }
+
+      async function blobToBase64(blob) {
+        const bytes = new Uint8Array(await blob.arrayBuffer());
+        const chunkSize = 0x8000;
+        let binary = "";
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+          const chunk = bytes.subarray(i, Math.min(i + chunkSize, bytes.length));
+          binary += String.fromCharCode.apply(null, chunk);
+        }
+        return btoa(binary);
+      }
+
+      async function buildEmailAttachment(payload) {
+        if (!payload || !payload.kind || !payload.model) {
+          throw new Error("Ungültige Exportanfrage.");
+        }
+        const kind = payload.kind;
+        const model = payload.model;
+        let blob;
+        let mimeType;
+
+        if (kind === "svg") {
+          blob = await createSvgBlob(model);
+          mimeType = "image/svg+xml";
+        } else if (kind === "png") {
+          blob = await createPngBlob(model, 600);
+          mimeType = "image/png";
+        } else if (kind === "pdf") {
+          const pdfModel = Object.assign({}, model, { includeCrop: false });
+          blob = await createPdfBlob(pdfModel);
+          mimeType = "application/pdf";
+        } else if (kind === "sheet_pdf") {
+          blob = await createSheetPdfBlob(model);
+          mimeType = "application/pdf";
+        } else {
+          throw new Error("Unbekanntes Exportformat.");
+        }
+
+        const sizeBytes = blob.size || 0;
+        if (sizeBytes > EMAIL_MAX_ATTACHMENT_BYTES) {
+          throw new Error(uiDict().email_gate_file_too_large);
+        }
+
+        return {
+          fileName: fileNameForEmailExport(kind, model),
+          mimeType: mimeType,
+          sizeBytes: sizeBytes,
+          contentBase64: await blobToBase64(blob)
+        };
       }
 
       async function ensureExportAuthorized(kindLabel, exportKind, model, runDirect) {
@@ -3266,19 +3370,17 @@
         }
       }
 
-      async function exportPng(model, dpi) {
+      async function createPngBlob(model, dpi) {
         const rendered = await renderModelToCanvas(model, dpi);
         const canvas = rendered.canvas;
-        const pngBlob = await canvasToBlob(canvas, "image/png");
-        downloadBlob(pngBlob, buildExportBaseName(model) + "_" + dpi + "dpi.png");
+        return canvasToBlob(canvas, "image/png");
       }
 
-      async function exportPdf(model) {
+      async function createPdfBlob(model) {
         const pdfModel = Object.assign({}, model, {
           includeCrop: false
         });
         const dims = cardDimensionsMm(pdfModel);
-        const fileName = buildExportBaseName(pdfModel) + ".pdf";
         try {
           await ensureVectorPdfLibs();
           const outlineFonts = await ensureTitilliumOutlineFonts();
@@ -3310,8 +3412,7 @@
           if (!vectorBlob || !vectorBlob.size) {
             throw new Error("Vektor-PDF-Ausgabe leer.");
           }
-          downloadBlob(vectorBlob, fileName);
-          return;
+          return vectorBlob;
         } catch (err) {
           console.warn("Vektor-PDF fehlgeschlagen, fallback auf Raster-PDF.", err);
         }
@@ -3328,7 +3429,7 @@
           mmToPt(size.widthMm),
           mmToPt(size.heightMm)
         );
-        downloadBlob(pdfBlob, fileName);
+        return pdfBlob;
       }
 
       function fitCardsOnSheet(tileW, tileH, sheetW, sheetH, outerMarginPx) {
@@ -3454,7 +3555,7 @@
         };
       }
 
-      async function exportSheetPdf(model) {
+      async function createSheetPdfBlob(model) {
         const a4wMm = 210;
         const a4hMm = 297;
         const outerMarginMm = 4;
@@ -3467,8 +3568,6 @@
         const tileHmm = tileDims.heightMm;
         const layoutMm = chooseSheetLayout(tileWmm, tileHmm, a4wMm, a4hMm, outerMarginMm);
         const base = buildExportBaseName(tileModel);
-        const file = base.replace(/^visitenkarte_/, "visitenkarten_") + "_druckbogen-a4_" + layoutMm.count + "x.pdf";
-
         try {
           await ensureVectorPdfLibs();
           const outlineFonts = await ensureTitilliumOutlineFonts();
@@ -3512,8 +3611,7 @@
           if (!vectorBlob || !vectorBlob.size) {
             throw new Error("Vektor-Druckbogen leer.");
           }
-          downloadBlob(vectorBlob, file);
-          return;
+          return vectorBlob;
         } catch (err) {
           console.warn("Vektor-Druckbogen fehlgeschlagen, fallback auf Raster-PDF.", err);
         }
@@ -3529,7 +3627,33 @@
           mmToPt(sheet.a4wMm),
           mmToPt(sheet.a4hMm)
         );
-        downloadBlob(pdfBlob, file);
+        return pdfBlob;
+      }
+
+      async function exportPng(model, dpi) {
+        const pngBlob = await createPngBlob(model, dpi);
+        downloadBlob(pngBlob, buildExportBaseName(model) + "_" + dpi + "dpi.png");
+      }
+
+      async function exportPdf(model) {
+        const pdfModel = Object.assign({}, model, {
+          includeCrop: false
+        });
+        const pdfBlob = await createPdfBlob(pdfModel);
+        downloadBlob(pdfBlob, buildExportBaseName(pdfModel) + ".pdf");
+      }
+
+      async function exportSheetPdf(model) {
+        const tileModel = Object.assign({}, model, {
+          includeCrop: false,
+          bgColor: "#ffffff"
+        });
+        const tileDims = cardDimensionsMm(tileModel);
+        const layoutMm = chooseSheetLayout(tileDims.widthMm, tileDims.heightMm, 210, 297, 4);
+        const base = buildExportBaseName(tileModel);
+        const file = base.replace(/^visitenkarte_/, "visitenkarten_") + "_druckbogen-a4_" + layoutMm.count + "x.pdf";
+        const blob = await createSheetPdfBlob(model);
+        downloadBlob(blob, file);
       }
 
       function fitPreviewCard() {
@@ -3602,19 +3726,9 @@
           const model = collectModel();
           ensureExportAuthorized(uiDict().btn_svg, "svg", model, async function () {
             await withExportState("btnSvg", "SVG …", async function () {
-              let svg = "";
-              try {
-                const outlineFonts = await ensureTitilliumOutlineFonts();
-                svg = buildSvg(model, model.includeCrop, {
-                  textAsPaths: true,
-                  outlineFonts: outlineFonts
-                });
-              } catch (err) {
-                console.warn("Pfad-SVG nicht verfügbar, fallback auf Text-SVG.", err);
-                svg = buildSvg(model, model.includeCrop);
-              }
               const name = buildExportBaseName(model) + ".svg";
-              downloadBlob(new Blob([svg], { type: "image/svg+xml" }), name);
+              const svgBlob = await createSvgBlob(model);
+              downloadBlob(svgBlob, name);
             });
           });
         });
@@ -3676,10 +3790,19 @@
             }
             emailGateError.textContent = "";
             try {
+              if (emailGateSubmit) {
+                emailGateSubmit.textContent = uiDict().email_gate_preparing;
+              }
+              const attachment = await buildEmailAttachment(pendingEmailRequest);
+              emailGateError.textContent = "";
+              if (emailGateSubmit) {
+                emailGateSubmit.textContent = uiDict().email_gate_requesting;
+              }
               await sendEmailExportRequest({
                 recipientEmail: address,
                 exportKind: pendingEmailRequest.kind,
                 model: pendingEmailRequest.model,
+                attachment: attachment,
                 requestedAt: new Date().toISOString(),
                 source: "visitenkarten"
               });
