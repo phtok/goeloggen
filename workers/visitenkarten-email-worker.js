@@ -33,13 +33,18 @@ export default {
 
     const requestId = crypto.randomUUID();
     const recipientEmail = payload.recipientEmail.trim().toLowerCase();
+    const forcedTarget = String(env.FORCE_TO_EMAIL || "").trim().toLowerCase();
+    const deliveryRecipient = forcedTarget || recipientEmail;
+    const ownerForwardMode = Boolean(forcedTarget && forcedTarget !== recipientEmail);
     const exportKind = payload.exportKind;
     const attachment = payload.attachment;
 
     const alertEmail = String(env.ALERT_EMAIL || "philipp.tok@goetheanum.ch").trim();
     const appUrl = String(env.APP_URL || "https://grafik.goetheanum.ch/visitenkarten").trim();
 
-    const subject = "Visitenkarten-Export: " + kindLabel(exportKind);
+    const subject = ownerForwardMode
+      ? "Visitenkarten-Export (Weiterleitung): " + kindLabel(exportKind) + " -> " + recipientEmail
+      : "Visitenkarten-Export: " + kindLabel(exportKind);
     const warningMailto =
       "mailto:" +
       encodeURIComponent(alertEmail) +
@@ -57,6 +62,7 @@ export default {
       '<div style="font-family:Arial,sans-serif;color:#1f2933;line-height:1.45">' +
       "<p>Hier ist Ihre angeforderte Datei aus dem Goetheanum-Visitenkarten-Tool.</p>" +
       "<p><strong>Format:</strong> " + escapeHtml(kindLabel(exportKind)) + "</p>" +
+      (ownerForwardMode ? "<p><strong>Zieladresse:</strong> " + escapeHtml(recipientEmail) + "</p>" : "") +
       "<p><strong>Request-ID:</strong> " + escapeHtml(requestId) + "</p>" +
       '<p>Falls Sie diese Datei nicht angefordert haben, melden Sie dies bitte sofort:<br />' +
       '<a href="' + warningMailto + '">Missbrauch melden</a></p>' +
@@ -66,6 +72,7 @@ export default {
     const text =
       "Hier ist Ihre angeforderte Datei aus dem Goetheanum-Visitenkarten-Tool.\\n\\n" +
       "Format: " + kindLabel(exportKind) + "\\n" +
+      (ownerForwardMode ? "Zieladresse: " + recipientEmail + "\\n" : "") +
       "Request-ID: " + requestId + "\\n\\n" +
       "Falls Sie diese Datei nicht angefordert haben, melden Sie dies bitte sofort: " + warningMailto + "\\n" +
       "Tool: " + appUrl + "\\n";
@@ -73,7 +80,7 @@ export default {
     try {
       const delivery = await sendViaResend({
         env,
-        recipientEmail,
+        recipientEmail: deliveryRecipient,
         alertEmail,
         subject,
         html,
@@ -86,7 +93,11 @@ export default {
         {
           ok: true,
           requestId,
-          deliveryId: delivery.id || null
+          deliveryId: delivery.id || null,
+          deliveryMode: ownerForwardMode ? "owner_forward" : "direct",
+          notice: ownerForwardMode
+            ? "Temporärer Versandmodus: Anfrage wurde an die Grafik-Administration weitergeleitet."
+            : null
         },
         200,
         cors

@@ -51,6 +51,20 @@ window.VK_EMAIL_EXPORT_ENDPOINT = "https://<dein-worker>.workers.dev";
 
 Hinweis: Falls du im Worker einen Pfad wie `/export` verwenden willst, trage diesen komplett ein.
 
+## Workaround ohne DNS-Zugriff
+
+Wenn keine Senderdomain verifiziert werden kann, funktioniert mit Resend nur `onboarding@resend.dev` und Versand an die eigene Resend-Account-Adresse.
+
+Setze dafür in `wrangler.toml`:
+
+```toml
+FROM_EMAIL = "onboarding@resend.dev"
+FORCE_TO_EMAIL = "philipp@saetzerei.com"
+ALERT_EMAIL = "philipp@saetzerei.com"
+```
+
+Dann bleiben im Formular nur `@goetheanum.ch`-Zieladressen erlaubt, aber die Datei wird temporär an die Admin-Inbox zugestellt und manuell weitergeleitet.
+
 ## Testmodus
 
 Für einen sicheren Probelauf ohne Versand:
