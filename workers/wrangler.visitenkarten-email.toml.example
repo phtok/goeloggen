@@ -6,6 +6,7 @@ workers_dev = true
 [vars]
 ALLOWED_ORIGINS = "https://grafik.goetheanum.ch,https://www.grafik.goetheanum.ch,https://phtok.github.io,null"
 FROM_EMAIL = "Goetheanum Grafik <grafik@goe.saetzerei.com>"
+REPLY_TO_EMAIL = "philipp@saetzerei.com"
 ALERT_EMAIL = "philipp@saetzerei.com"
 # Optional explicit direct mode:
 # FORCE_TO_EMAIL = ""
