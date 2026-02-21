@@ -4,9 +4,11 @@ compatibility_date = "2025-01-01"
 workers_dev = true
 
 [vars]
-ALLOWED_ORIGINS = "https://grafik.goetheanum.ch,https://phtok.github.io"
-FROM_EMAIL = "Goetheanum Grafik <grafik@goetheanum.ch>"
-ALERT_EMAIL = "philipp.tok@goetheanum.ch"
+ALLOWED_ORIGINS = "https://grafik.goetheanum.ch,https://www.grafik.goetheanum.ch,https://phtok.github.io,null"
+FROM_EMAIL = "Goetheanum Grafik <grafik@goe.saetzerei.com>"
+ALERT_EMAIL = "philipp@saetzerei.com"
+# Optional explicit direct mode:
+# FORCE_TO_EMAIL = ""
 # Optional fallback while no sender domain is verified in Resend:
 # FROM_EMAIL = "onboarding@resend.dev"
 # FORCE_TO_EMAIL = "philipp@saetzerei.com"
