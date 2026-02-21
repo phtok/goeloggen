@@ -12,7 +12,7 @@ Dieser Worker nimmt Export-Requests aus `visitenkarten.html` entgegen und versen
   - `image/png`
 - Rate-Limit pro IP (in-memory)
 - BCC-Kopie an `ALERT_EMAIL` (Standard: `philipp@saetzerei.com`)
-- Antworten gehen an `REPLY_TO_EMAIL` (Standard: `philipp@saetzerei.com`)
+- Antworten gehen an `REPLY_TO_EMAIL` (Standard: `philipp.tok@goetheanum.ch`)
 - enthält in der Mail einen Warn-Link an `ALERT_EMAIL`
 
 ## Setup
