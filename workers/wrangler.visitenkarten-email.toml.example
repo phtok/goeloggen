@@ -7,6 +7,10 @@ workers_dev = true
 ALLOWED_ORIGINS = "https://grafik.goetheanum.ch,https://phtok.github.io"
 FROM_EMAIL = "Goetheanum Grafik <grafik@goetheanum.ch>"
 ALERT_EMAIL = "philipp.tok@goetheanum.ch"
+# Optional fallback while no sender domain is verified in Resend:
+# FROM_EMAIL = "onboarding@resend.dev"
+# FORCE_TO_EMAIL = "philipp@saetzerei.com"
+# ALERT_EMAIL = "philipp@saetzerei.com"
 APP_URL = "https://grafik.goetheanum.ch/visitenkarten"
 RATE_LIMIT_MAX = "12"
 RATE_LIMIT_WINDOW_SEC = "900"
