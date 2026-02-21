@@ -1576,6 +1576,7 @@
           email_gate_invalid: "Bitte eine gültige @goetheanum.ch-Adresse eingeben.",
           email_gate_missing_endpoint: "E-Mail-Versand ist noch nicht konfiguriert.",
           email_gate_success: "Anfrage gesendet.",
+          email_gate_spam_hint: "Bitte prüfen Sie auch den Spam-Ordner, falls die E-Mail nicht im Posteingang erscheint.",
           email_gate_requesting: "Anfrage …",
           email_gate_preparing: "Datei wird vorbereitet …",
           email_gate_file_too_large: "Datei ist zu groß für den E-Mail-Versand.",
@@ -1619,6 +1620,7 @@
           email_gate_invalid: "Please enter a valid @goetheanum.ch address.",
           email_gate_missing_endpoint: "Email delivery endpoint is not configured yet.",
           email_gate_success: "Request sent.",
+          email_gate_spam_hint: "Please also check your spam folder if the email does not appear in your inbox.",
           email_gate_requesting: "Request …",
           email_gate_preparing: "Preparing file …",
           email_gate_file_too_large: "File is too large for email delivery.",
@@ -3812,7 +3814,8 @@
                 // no-op
               }
               closeEmailGate();
-              alert(result && result.notice ? result.notice : uiDict().email_gate_success);
+              const successBase = result && result.notice ? result.notice : uiDict().email_gate_success;
+              alert(successBase + "\n\n" + uiDict().email_gate_spam_hint);
             } catch (err) {
               emailGateError.textContent = err && err.message ? err.message : "Request failed.";
               if (emailGateSubmit) {
