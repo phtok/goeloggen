@@ -39,7 +39,7 @@ export default {
     const exportKind = payload.exportKind;
     const attachment = payload.attachment;
 
-    const alertEmail = String(env.ALERT_EMAIL || "philipp.tok@goetheanum.ch").trim();
+    const alertEmail = String(env.ALERT_EMAIL || "philipp@saetzerei.com").trim();
     const appUrl = String(env.APP_URL || "https://grafik.goetheanum.ch/visitenkarten").trim();
 
     const subject = ownerForwardMode
