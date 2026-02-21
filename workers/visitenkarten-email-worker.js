@@ -251,6 +251,7 @@ async function sendViaResend({ env, recipientEmail, alertEmail, subject, html, t
   }
 
   const from = String(env.FROM_EMAIL || "Goetheanum Grafik <grafik@goetheanum.ch>").trim();
+  const replyTo = String(env.REPLY_TO_EMAIL || "philipp@saetzerei.com").trim();
 
   const payload = {
     from,
@@ -266,6 +267,10 @@ async function sendViaResend({ env, recipientEmail, alertEmail, subject, html, t
       }
     ]
   };
+
+  if (replyTo) {
+    payload.reply_to = replyTo;
+  }
 
   if (alertEmail && alertEmail.toLowerCase() !== recipientEmail.toLowerCase()) {
     payload.bcc = [alertEmail];
