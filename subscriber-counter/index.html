@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GTV Abo-Dashboard</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body style="margin:0">
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback } = React;
+
+// ─── LIVE-DATENQUELLE ─────────────────────────────────────────────────────────
+// URL des Cloudflare Workers, z.B. https://gtv-subscriber-counter.workers.dev/data
+// Leer lassen → manueller Modus (nur Seed-Daten)
+const WORKER_URL = "";
+const REFRESH_INTERVAL = 60000;
+// ─────────────────────────────────────────────────────────────────────────────
+
+const SEED_DATA = [
+{ date: "2025-02-26", time: "16:52", name: "Reinhart Gatzsche", email: "reinhart.ilja@gmail.com", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-26", time: "17:15", name: "Roger Kokos", email: "r.kokos@mercuriuscollege.nl", type: "Standard-Abo Jährlich", action: "neu", lang: "nl" },
+{ date: "2025-02-26", time: "17:38", name: "Joerg Furrer", email: "info@panbuch.ch", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-26", time: "18:01", name: "Alexander Höhne", email: "hoehne.a@gmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-26", time: "18:15", name: "Annette Leuenberger", email: "anleuenberger@gmx.net", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-26", time: "18:24", name: "Silvia Bigler", email: "silvia.bigler@hotmail.com", type: "Standard-Abo Jährlich", action: "läuft-aus", lang: "de" },
+{ date: "2025-02-26", time: "18:39", name: "Barbara Berrien", email: "emaho@t-online.de", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-26", time: "18:45", name: "Claudia Dörn", email: "c.doern@t-online.de", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-26", time: "19:42", name: "Alexandra Boos", email: "alexboos@benbuergin.de", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-26", time: "19:54", name: "Eva Anderstedt", email: "eva.anderstedt@gmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "sv" },
+{ date: "2025-02-26", time: "20:03", name: "Jens-Norbert Marxen", email: "jensnor1@t-online.de", type: "Standard-Abo Monatlich", action: "bestandskündigung", lang: "de" },
+{ date: "2025-02-26", time: "23:40", name: "Ole-Andreas Asmervik Drivenes", email: "drivenes.ole@gmail.com", type: "Standard-Abo Monatlich", action: "neu", lang: "no" },
+{ date: "2025-02-27", time: "04:08", name: "Hildegard Sofia Porten", email: "hsporten@me.com", type: "Ermässigtes Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-27", time: "09:46", name: "Tsuyoshi (Go) Goto", email: "go25nondual@gmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "ja" },
+{ date: "2025-02-27", time: "10:29", name: "Peter Schrey", email: "peter.schrey@outlook.de", type: "Ermässigtes Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-27", time: "10:32", name: "Ulrike Härtel", email: "uhaertel@gemeinschaft-altenschlirf.de", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-27", time: "10:51", name: "Eva Wysser", email: "eva.wysser@gmx.ch", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-27", time: "11:18", name: "Bernadette Gollmer", email: "bgollmer@active.ch", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-27", time: "12:18", name: "henrik hemauer", email: "henrik.hemauer@bluewin.ch", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-27", time: "12:37", name: "David McGavin", email: "johnstarke@fastmail.fm", type: "Standard-Abo Jährlich", action: "läuft-aus", lang: "en" },
+{ date: "2025-02-27", time: "15:44", name: "Esther Schmucki", email: "e.schmucki@bluewin.ch", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-27", time: "16:16", name: "Andrea Akmenkalns", email: "andreaakmenkalns@gmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "lv" },
+{ date: "2025-02-27", time: "16:17", name: "Martha", email: "soulrestorationarts@gmail.com", type: "Standard-Abo Jährlich", action: "läuft-aus", lang: "en" },
+{ date: "2025-02-27", time: "16:17", name: "Carmen Hering", email: "carmenheringdo@gmail.com", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-27", time: "16:54", name: "DR Michael R Evans", email: "michaelrevans@btinternet.com", type: "Standard-Abo Jährlich", action: "neu", lang: "en" },
+{ date: "2025-02-27", time: "17:45", name: "Alexander Hintze", email: "ajfhintze@hotmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-27", time: "18:26", name: "Edwin Kasnitz", email: "edwinper@web.de", type: "Ermässigtes Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-27", time: "18:49", name: "Lucie Gautier", email: "luciegautier76@gmail.com", type: "Standard-Abo Monatlich", action: "neu", lang: "fr" },
+{ date: "2025-02-27", time: "19:08", name: "Kalypso Kodaxaky", email: "koxdcomiks84@gmail.com", type: "Standard-Abo Monatlich", action: "neu", lang: "el" },
+{ date: "2025-02-27", time: "21:00", name: "Debra S Barford", email: "dsbarford@yahoo.com", type: "Standard-Abo Jährlich", action: "neu", lang: "en" },
+{ date: "2025-02-27", time: "21:17", name: "April Moore", email: "aprilismoon@gmail.com", type: "Standard-Abo Monatlich", action: "neu", lang: "en" },
+{ date: "2025-02-27", time: "22:08", name: "Norbert Birk", email: "nbidrummer@gmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-27", time: "23:35", name: "Sandra", email: "szandravhb@protonmail.com", type: "Standard-Abo Monatlich", action: "bestandskündigung", lang: "de" },
+{ date: "2025-02-28", time: "01:45", name: "Maria Te Huia", email: "hybernia@xtra.co.nz", type: "Standard-Abo Monatlich", action: "neu", lang: "en" },
+{ date: "2025-02-28", time: "05:20", name: "Sabine Ada Michel", email: "sabine.basel@posteo.de", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "07:28", name: "Dominique Preg", email: "preg@posteo.de", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "08:15", name: "Gernot Feichtl", email: "gernot@feichtl.de", type: "Standard-Abo Monatlich", action: "bestandskündigung", lang: "de" },
+{ date: "2025-02-28", time: "09:00", name: "Oswald Hasselmann", email: "hasselmann@vtxmail.ch", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "09:03", name: "Günter Conrad", email: "sternenstill@gmx.de", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "09:09", name: "Tanja Plümer", email: "tanja.pluemer@posteo.de", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "09:09", name: "Michael Steiner", email: "michaelsteiner9@gmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "09:19", name: "Annika Laurén", email: "annika.lauren@rklaurens.se", type: "Standard-Abo Jährlich", action: "neu", lang: "sv" },
+{ date: "2025-02-28", time: "09:44", name: "Esther Uehlinger", email: "esther.uehlinger@web.de", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "10:27", name: "Michael Zuber", email: "michael.zuber@me.com", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "10:32", name: "Lea Koch", email: "lea.koch@student.alanus.edu", type: "Ermässigtes Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "11:05", name: "Jörg Carstensen", email: "joergcarstensen@outlook.com", type: "Standard-Abo Monatlich", action: "läuft-aus", lang: "de" },
+{ date: "2025-02-28", time: "11:12", name: "Wolfgang Dünkler", email: "duenkler@me.com", type: "Ermässigtes Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "12:24", name: "Veronika Poláčková Nejedlová", email: "veronika.polackova@gmail.com", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "15:13", name: "Brigitte Seitz", email: "brigitte.seitz@gmx.ch", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "15:57", name: "Katrin Manow", email: "katrinmanow@gmx.de", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "17:10", name: "Margaret Wheeler", email: "margaretannewheeler@btinternet.com", type: "Standard-Abo Monatlich", action: "neu", lang: "en" },
+{ date: "2025-02-28", time: "17:31", name: "Ricarda Zawadzki", email: "ricarda@bzawadzki.ch", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "17:32", name: "Maria Balog", email: "mariabalog88@gmail.com", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "18:04", name: "Keith Simon's", email: "globalquest28@gmail.com", type: "Standard-Abo Monatlich", action: "läuft-aus", lang: "en" },
+{ date: "2025-02-28", time: "18:41", name: "Henri", email: "balaguera@gmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "fr" },
+{ date: "2025-02-28", time: "19:09", name: "Elisabeth Gold", email: "elgold554@hotmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "en" },
+{ date: "2025-02-28", time: "21:49", name: "Hartmut Waechter", email: "hattigu01@hotmail.com", type: "Ermässigtes Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-02-28", time: "21:57", name: "Antonia Olavarria", email: "a.radrigan@gmail.com", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-03-01", time: "08:36", name: "Attila Tigyi", email: "gentlereef@outlook.com", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-03-01", time: "09:13", name: "Petr Gorny", email: "pegorny@gmail.com", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-03-01", time: "10:57", name: "Brigitte Munz", email: "brig.munz@gmail.com", type: "Standard-Abo Monatlich", action: "läuft-aus", lang: "de" },
+{ date: "2025-03-01", time: "11:45", name: "Melanie Böhm", email: "melanieboehm@hotmail.de", type: "Standard-Abo Jährlich", action: "bestandskündigung", lang: "de" },
+{ date: "2025-03-01", time: "12:15", name: "Adrian Large", email: "adriantwlarge@gmail.com", type: "Ermässigtes Abo Monatlich", action: "neu", lang: "en" },
+{ date: "2025-03-01", time: "13:56", name: "Petr Nejtek", email: "p.nejtek@seznam.cz", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-03-01", time: "16:23", name: "Daiana Vassella", email: "vasselladaiana@gmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-03-01", time: "16:23", name: "Edith Lammerts van Bueren", email: "elammerts@gmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "nl" },
+{ date: "2025-03-01", time: "17:59", name: "Christiane Bernert", email: "christiane.bernert@gmx.net", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-03-01", time: "18:07", name: "Reinhard Schwarz", email: "rspaed@anthromed.at", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-03-01", time: "19:03", name: "Monika Schlecker", email: "monika.brueckl1948@gmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "de" },
+{ date: "2025-03-01", time: "19:12", name: "Gerhard Herz", email: "info@ibuibu.com", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+{ date: "2025-03-01", time: "19:47", name: "Pauline Reynolds", email: "ppreynolds52@gmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "en" },
+{ date: "2025-03-01", time: "20:11", name: "Tonya", email: "millertonya@hotmail.com", type: "Standard-Abo Jährlich", action: "neu", lang: "en" },
+{ date: "2025-03-01", time: "20:40", name: "Ute Beier", email: "ute-beier@gmx.de", type: "Standard-Abo Jährlich", action: "bestandskündigung", lang: "de" },
+{ date: "2025-03-01", time: "20:48", name: "Veronika Doupalová", email: "info@rytmicke-masaze.cz", type: "Standard-Abo Monatlich", action: "neu", lang: "de" },
+];
+
+const LANG_META = {
+  de: { label: "Deutsch", flag: "🇩🇪🇦🇹🇨🇭", color: "#c9a84c", note: "D / A / CH" },
+  en: { label: "Englisch", flag: "🇬🇧🇺🇸", color: "#7eb8c9", note: "GB / USA" },
+  fr: { label: "Französisch", flag: "🇫🇷", color: "#a08fd4", note: "Frankreich" },
+  nl: { label: "Niederländisch", flag: "🇳🇱", color: "#e8a84c", note: "Niederlande" },
+  no: { label: "Norwegisch", flag: "🇳🇴", color: "#9fc98a", note: "Norwegen" },
+  sv: { label: "Schwedisch", flag: "🇸🇪", color: "#6abfb8", note: "Schweden" },
+  ja: { label: "Japanisch", flag: "🇯🇵", color: "#d47a6a", note: "Japan" },
+  lv: { label: "Lettisch", flag: "🇱🇻", color: "#c97a8a", note: "Lettland" },
+  el: { label: "Griechisch", flag: "🇬🇷", color: "#7a9fd4", note: "Griechenland" },
+};
+
+const TYPE_COLORS = {
+  "Standard-Abo Jährlich": "#c9a84c",
+  "Standard-Abo Monatlich": "#7eb8c9",
+  "Ermässigtes Abo Jährlich": "#9fc98a",
+  "Ermässigtes Abo Monatlich": "#9fc98a",
+};
+
+const DAY_LABELS = {
+  "2025-02-26": "26. Feb", "2025-02-27": "27. Feb",
+  "2025-02-28": "28. Feb", "2025-03-01": "1. Mär", "2025-03-02": "2. Mär",
+};
+
+function dedup(data) {
+  const seen = new Map();
+  data.forEach(d => {
+    const key = (d.email || d.name || "").toLowerCase();
+    if (!seen.has(key)) seen.set(key, d);
+    else if (d.action === "bestandskündigung") seen.set(key, d);
+    else if (d.action === "läuft-aus" && seen.get(key).action === "neu") seen.set(key, d);
+  });
+  return Array.from(seen.values());
+}
+
+function guessLang(email = "") {
+  const domain = (email.split("@")[1] || "").toLowerCase();
+  if (/\.(de|ch|at)$|gmx\.|web\.de|bluewin|active\.ch/.test(domain)) return "de";
+  if (/\.nl$/.test(domain)) return "nl";
+  if (/\.fr$/.test(domain)) return "fr";
+  if (/\.no$/.test(domain)) return "no";
+  if (/\.se$/.test(domain)) return "sv";
+  if (/\.jp$/.test(domain)) return "ja";
+  if (/\.lv$/.test(domain)) return "lv";
+  if (/\.(gr|com\.gr)$/.test(domain)) return "el";
+  if (/btinternet|\.co\.uk$/.test(domain)) return "en";
+  return "en";
+}
+
+function Bar({ value, max, color, height = 120 }) {
+  const pct = max > 0 ? (value / max) * height : 0;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+      <span style={{ fontSize: 11, color, fontWeight: 700 }}>{value}</span>
+      <div style={{ width: 32, height, background: "rgba(255,255,255,0.06)", borderRadius: 4, display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
+        <div style={{ width: "100%", height: pct, background: color, borderRadius: "4px 4px 0 0", transition: "height 0.8s ease" }} />
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [tab, setTab] = useState("übersicht");
+  const [liveData, setLiveData] = useState([]);
+  const [lastFetch, setLastFetch] = useState(null);
+  const [fetchError, setFetchError] = useState(null);
+
+  const fetchLive = useCallback(async () => {
+    if (!WORKER_URL) return;
+    try {
+      const res = await fetch(WORKER_URL);
+      const data = await res.json();
+      const entries = data?.entries || [];
+      if (Array.isArray(entries)) {
+        setLiveData(entries);
+        setFetchError(null);
+        setLastFetch(new Date());
+      }
+    } catch {
+      setFetchError(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchLive();
+    const iv = setInterval(fetchLive, REFRESH_INTERVAL);
+    return () => clearInterval(iv);
+  }, [fetchLive]);
+
+  const ALL_DATA = dedup([
+    ...SEED_DATA,
+    ...liveData.map(d => ({ ...d, lang: d.lang || guessLang(d.email) })),
+  ]);
+
+  const allDates = [...new Set(ALL_DATA.map(d => d.date))].sort();
+  const subs = ALL_DATA.filter(d => d.action === "neu" || d.action === "läuft-aus");
+  const totalNeu = subs.length;
+  const totalLäuftAus = ALL_DATA.filter(d => d.action === "läuft-aus").length;
+  const totalBestandskünd = ALL_DATA.filter(d => d.action === "bestandskündigung").length;
+
+  function getDayStats(date) {
+    const e = ALL_DATA.filter(d => d.date === date);
+    return { neu: e.filter(d => d.action === "neu" || d.action === "läuft-aus").length, läuftAus: e.filter(d => d.action === "läuft-aus").length };
+  }
+  const dayStats = allDates.map(date => ({ date, ...getDayStats(date) }));
+  const maxNeu = Math.max(...dayStats.map(d => d.neu), 1);
+
+  const typeBreakdown = {};
+  subs.forEach(s => { typeBreakdown[s.type] = (typeBreakdown[s.type] || 0) + 1; });
+
+  const langBreakdown = {};
+  subs.forEach(d => { langBreakdown[d.lang] = (langBreakdown[d.lang] || 0) + 1; });
+  const langEntries = Object.entries(langBreakdown).sort((a, b) => b[1] - a[1]);
+  const langMax = langEntries[0]?.[1] || 1;
+
+  const isLive = Boolean(WORKER_URL);
+  const statusColor = isLive ? (fetchError ? "#d47a6a" : "#9fc98a") : "#3a3028";
+  const statusLabel = isLive ? (fetchError ? "OFFLINE" : "LIVE") : "MANUELL";
+
+  return (
+    <div style={{ fontFamily: "'Georgia','Times New Roman',serif", background: "#0f1117", minHeight: "100vh", color: "#e8e0d0", paddingBottom: 60 }}>
+
+      {/* Header */}
+      <div style={{ background: "linear-gradient(180deg,#1a1c28 0%,#0f1117 100%)", borderBottom: "1px solid rgba(201,168,76,0.25)", padding: "32px 24px 24px" }}>
+        <div style={{ maxWidth: 680, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div>
+            <div style={{ fontSize: 10, letterSpacing: 4, color: "#c9a84c", textTransform: "uppercase", marginBottom: 8 }}>Goetheanum TV · Marketing-Aktion</div>
+            <h1 style={{ margin: 0, fontSize: 26, fontWeight: 400, color: "#f5eed8" }}>GTV Abo-Kampagne</h1>
+            <div style={{ fontSize: 12, color: "#7a7060", marginTop: 6, letterSpacing: 1 }}>26. Februar – 2. März 2025</div>
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, justifyContent: "flex-end" }}>
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: statusColor, boxShadow: isLive && !fetchError ? "0 0 6px #9fc98a" : "none", animation: isLive && !fetchError ? "pulse 2s infinite" : "none" }} />
+              <span style={{ fontSize: 10, letterSpacing: 1, color: statusColor }}>{statusLabel}</span>
+            </div>
+            {lastFetch && <div style={{ fontSize: 9, color: "#4a4035", marginTop: 4 }}>{lastFetch.toLocaleTimeString("de-CH", { hour: "2-digit", minute: "2-digit" })}</div>}
+            {isLive && <button onClick={fetchLive} style={{ marginTop: 6, fontSize: 9, color: "#5a5040", background: "none", border: "1px solid #3a3028", borderRadius: 4, padding: "2px 8px", cursor: "pointer" }}>↻</button>}
+          </div>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 680, margin: "0 auto", padding: "0 24px" }}>
+
+        {/* KPIs */}
+        <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr 1fr", gap: 12, marginTop: 28, alignItems: "start" }}>
+          {[
+            { label: "Neue Abos", value: totalNeu, color: "#c9a84c", note: "aktive Neuzugänge", big: true },
+            { label: "davon läuft aus", value: totalLäuftAus, color: "#7eb8c9", note: "Verlängerung gekündigt" },
+            { label: "Bestandskündigungen", value: totalBestandskünd, color: "#d47a6a", note: "separat — nicht verrechnet" },
+          ].map(k => (
+            <div key={k.label} style={{ background: k.big ? "rgba(201,168,76,0.07)" : "rgba(255,255,255,0.03)", border: `1px solid ${k.color}${k.big ? "50" : "25"}`, borderRadius: 12, padding: k.big ? "28px 20px" : "14px 12px", textAlign: "center" }}>
+              <div style={{ fontSize: k.big ? 64 : 28, fontWeight: 300, color: k.color, lineHeight: 1 }}>{k.value}</div>
+              <div style={{ fontSize: k.big ? 12 : 10, color: "#a09080", marginTop: 8, letterSpacing: 0.5 }}>{k.label}</div>
+              <div style={{ fontSize: 9, color: "#60554a", marginTop: 4 }}>{k.note}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Tabs */}
+        <div style={{ display: "flex", gap: 2, marginTop: 32, borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+          {["übersicht", "sprachen", "zeitlinie", "liste"].map(t => (
+            <button key={t} onClick={() => setTab(t)} style={{ background: "none", border: "none", color: tab === t ? "#c9a84c" : "#6a6050", fontSize: 12, letterSpacing: 1.5, textTransform: "uppercase", padding: "8px 16px", cursor: "pointer", borderBottom: tab === t ? "2px solid #c9a84c" : "2px solid transparent", marginBottom: -1 }}>{t}</button>
+          ))}
+        </div>
+
+        {/* ÜBERSICHT */}
+        {tab === "übersicht" && (
+          <div style={{ marginTop: 28 }}>
+            <div style={{ fontSize: 10, letterSpacing: 3, color: "#6a6050", textTransform: "uppercase", marginBottom: 20 }}>Tagesübersicht · Neue Abos</div>
+            <div style={{ display: "flex", gap: 24, alignItems: "flex-end", padding: "0 8px 16px", flexWrap: "wrap" }}>
+              {dayStats.map(d => (
+                <div key={d.date} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                  <Bar value={d.neu} max={maxNeu} color="#c9a84c" />
+                  {d.läuftAus > 0 && <div style={{ fontSize: 9, color: "#7eb8c9" }}>{d.läuftAus}× ⌛</div>}
+                  <div style={{ fontSize: 10, color: "#7a7060" }}>{DAY_LABELS[d.date] || d.date}</div>
+                </div>
+              ))}
+              {["2025-02-28", "2025-03-01", "2025-03-02"].filter(d => !allDates.includes(d)).map(d => (
+                <div key={d} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                    <span style={{ fontSize: 11, color: "#2a2520" }}>—</span>
+                    <div style={{ width: 32, height: 120, background: "rgba(255,255,255,0.03)", borderRadius: 4 }} />
+                  </div>
+                  <div style={{ fontSize: 10, color: "#3a3028" }}>{DAY_LABELS[d]}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ fontSize: 10, letterSpacing: 3, color: "#6a6050", textTransform: "uppercase", margin: "28px 0 16px" }}>Abo-Typen</div>
+            {Object.entries(typeBreakdown).map(([type, count]) => (
+              <div key={type} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
+                <div style={{ width: 10, height: 10, borderRadius: "50%", background: TYPE_COLORS[type] || "#888", flexShrink: 0 }} />
+                <div style={{ flex: 1, fontSize: 13, color: "#c0b09a" }}>{type}</div>
+                <div style={{ fontSize: 13, color: TYPE_COLORS[type] || "#888", fontWeight: 600, marginRight: 8 }}>{count}</div>
+                <div style={{ width: 100, height: 4, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" }}>
+                  <div style={{ height: "100%", width: `${(count / totalNeu) * 100}%`, background: TYPE_COLORS[type] || "#888", borderRadius: 2 }} />
+                </div>
+                <div style={{ fontSize: 10, color: "#5a5040", width: 32, textAlign: "right" }}>{Math.round((count / totalNeu) * 100)}%</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* SPRACHEN */}
+        {tab === "sprachen" && (
+          <div style={{ marginTop: 28 }}>
+            <div style={{ fontSize: 10, letterSpacing: 3, color: "#6a6050", textTransform: "uppercase", marginBottom: 8 }}>Sprachliche Herkunft · Schätzung</div>
+            <div style={{ fontSize: 11, color: "#5a5040", marginBottom: 24, lineHeight: 1.6 }}>Anthroposophische Inhalte sprechen traditionell ein deutschsprachiges Publikum an – die Aktion erreicht aber auch ein international gestreutes Feld. Englischsprachige Abonnenten kommen vermutlich über globale Anthroposophie-Netzwerke, die übrigen Einzelsprachen deuten auf persönliche Empfehlung hin.</div>
+            {langEntries.map(([lang, count]) => {
+              const meta = LANG_META[lang] || { label: lang, flag: "🌐", color: "#888", note: "" };
+              return (
+                <div key={lang} style={{ marginBottom: 16 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                    <span style={{ fontSize: 18 }}>{meta.flag}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <span style={{ fontSize: 13, color: "#d8cbb8" }}>{meta.label}</span>
+                        <span style={{ fontSize: 11, color: meta.color, fontWeight: 600 }}>{count} · {Math.round((count / totalNeu) * 100)}%</span>
+                      </div>
+                      <div style={{ fontSize: 9, color: "#5a5040" }}>{meta.note}</div>
+                    </div>
+                  </div>
+                  <div style={{ height: 6, background: "rgba(255,255,255,0.05)", borderRadius: 3, overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${(count / langMax) * 100}%`, background: meta.color, borderRadius: 3, transition: "width 0.6s ease" }} />
+                  </div>
+                  <div style={{ marginTop: 6, display: "flex", flexWrap: "wrap", gap: 4 }}>
+                    {ALL_DATA.filter(d => d.lang === lang && (d.action === "neu" || d.action === "läuft-aus")).map((d, i) => (
+                      <span key={i} style={{ fontSize: 10, color: "#7a6a58", background: "rgba(255,255,255,0.04)", padding: "2px 8px", borderRadius: 10, borderLeft: d.action === "läuft-aus" ? `2px solid ${meta.color}60` : "none" }}>
+                        {d.name}{d.action === "läuft-aus" ? " ⌛" : ""}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ZEITLINIE */}
+        {tab === "zeitlinie" && (
+          <div style={{ marginTop: 28 }}>
+            <div style={{ fontSize: 10, letterSpacing: 3, color: "#6a6050", textTransform: "uppercase", marginBottom: 20 }}>Verlauf · Kumulativ</div>
+            {(() => {
+              let cum = 0;
+              const events = [...subs].sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`)).map(d => ({ ...d, cum: ++cum }));
+              return (
+                <div style={{ position: "relative" }}>
+                  <div style={{ position: "absolute", left: 20, top: 12, bottom: 12, width: 1, background: "rgba(201,168,76,0.2)" }} />
+                  {events.map((e, i) => (
+                    <div key={i} style={{ display: "flex", gap: 20, marginBottom: 6, alignItems: "center" }}>
+                      <div style={{ width: 40, textAlign: "center" }}>
+                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: TYPE_COLORS[e.type] || "#c9a84c", margin: "0 auto", position: "relative", zIndex: 1 }} />
+                      </div>
+                      <div style={{ flex: 1, background: "rgba(255,255,255,0.03)", borderRadius: 6, padding: "8px 12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div>
+                          <div style={{ fontSize: 12, color: "#d8cbb8" }}>{e.name} {LANG_META[e.lang]?.flag || ""}{e.action === "läuft-aus" ? " ⌛" : ""}</div>
+                          <div style={{ fontSize: 10, color: "#5a5040", marginTop: 2 }}>{DAY_LABELS[e.date] || e.date} · {e.time} · {e.type}</div>
+                        </div>
+                        <div style={{ fontSize: 18, color: "#c9a84c", fontWeight: 300, marginLeft: 16 }}>#{e.cum}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* LISTE */}
+        {tab === "liste" && (
+          <div style={{ marginTop: 28 }}>
+            <div style={{ fontSize: 10, letterSpacing: 3, color: "#6a6050", textTransform: "uppercase", marginBottom: 20 }}>Abonnentenliste · {subs.length} Einträge</div>
+            {subs.map((s, i) => (
+              <div key={i} style={{ display: "flex", gap: 12, padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.05)", alignItems: "center" }}>
+                <div style={{ width: 24, fontSize: 10, color: "#4a4035", textAlign: "right" }}>{i + 1}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13, color: "#d8cbb8" }}>{s.name}</div>
+                  <div style={{ fontSize: 10, color: "#5a5040", marginTop: 1 }}>{s.email}</div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontSize: 10, color: TYPE_COLORS[s.type] || "#888", background: `${TYPE_COLORS[s.type] || "#888"}18`, padding: "2px 8px", borderRadius: 10 }}>{s.type}</div>
+                  <div style={{ fontSize: 9, color: "#4a4035", marginTop: 3 }}>{DAY_LABELS[s.date] || s.date} · {s.time} · {LANG_META[s.lang]?.flag || ""}</div>
+                </div>
+              </div>
+            ))}
+            {[
+              { label: "Läuft aus", color: "#7eb8c950", icon: "⌛", filter: "läuft-aus", iconColor: "#7eb8c9" },
+              { label: "Bestandskündigungen", color: "#d47a6a50", icon: "✕", filter: "bestandskündigung", iconColor: "#d47a6a" }
+            ].map(sec => (
+              <div key={sec.filter}>
+                <div style={{ fontSize: 10, letterSpacing: 3, color: sec.color, textTransform: "uppercase", margin: "24px 0 12px" }}>{sec.label} · {ALL_DATA.filter(d => d.action === sec.filter).length}</div>
+                {ALL_DATA.filter(d => d.action === sec.filter).map((s, i) => (
+                  <div key={i} style={{ display: "flex", gap: 12, padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", alignItems: "center" }}>
+                    <div style={{ width: 24, fontSize: 12, color: sec.iconColor, textAlign: "right" }}>{sec.icon}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 13, color: "#8a7060" }}>{s.name}</div>
+                      <div style={{ fontSize: 10, color: "#4a3830" }}>{s.email} · {s.type}</div>
+                    </div>
+                    <div style={{ fontSize: 9, color: "#4a3830" }}>{DAY_LABELS[s.date] || s.date} · {s.time}</div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Footer */}
+        <div style={{ marginTop: 40, padding: "16px", background: "rgba(201,168,76,0.05)", borderRadius: 8, borderLeft: "2px solid #c9a84c40" }}>
+          <div style={{ fontSize: 10, color: "#6a5a40", lineHeight: 1.6 }}>
+            {WORKER_URL
+              ? `Live via Webhook-Worker · Refresh alle ${REFRESH_INTERVAL / 1000}s · ${liveData.length} neue Einträge`
+              : "Manueller Modus · Uscreen-Webhook-Worker nicht konfiguriert"
+            } · Aktion 26. Feb – 2. März 2025
+          </div>
+        </div>
+      </div>
+
+      <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }`}</style>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

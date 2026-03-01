@@ -1,0 +1,21 @@
+name = "gtv-subscriber-counter"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+workers_dev = true
+
+# KV-Namespace anlegen:
+#   wrangler kv:namespace create EVENTS_KV
+# Dann die zurückgegebene ID unten eintragen.
+[[kv_namespaces]]
+binding = "EVENTS_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+
+[vars]
+ALLOWED_ORIGINS = "*"
+
+# Secrets via wrangler setzen:
+#   wrangler secret put WEBHOOK_SECRET
+#     → Token für die Uscreen-Webhook-URL: /webhook?token=DEIN_SECRET
+#
+#   wrangler secret put ADMIN_SECRET
+#     → Bearer-Token für manuellen Eintrag: POST /entry
