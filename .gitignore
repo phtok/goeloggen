@@ -21,3 +21,4 @@ archive/
 # Cloudflare worker local state/config
 workers/.wrangler/
 workers/wrangler.toml
+gtv-subs/.wrangler/
