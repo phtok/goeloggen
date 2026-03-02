@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mitglieder Login - Public Secrets</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="backend-page">
+    <header class="topbar">
+      <h1>Public Secrets - Mitglieder Login</h1>
+      <a href="/index.html" class="secondary-link">Zur Webseite</a>
+    </header>
+
+    <main class="admin-main">
+      <section class="card">
+        <h2>Einmalzugang anfordern</h2>
+        <label for="email">E-Mail</label>
+        <input id="email" type="email" placeholder="name@example.com" />
+        <div class="actions">
+          <button id="requestBtn" class="primary" type="button">Link senden</button>
+        </div>
+        <p id="requestMsg" class="muted"></p>
+      </section>
+
+      <section class="card">
+        <h2>Token eingeben</h2>
+        <label for="token">Einmal-Token</label>
+        <input id="token" type="text" placeholder="Token aus E-Mail" />
+        <div class="actions">
+          <button id="verifyBtn" class="primary" type="button">Einloggen</button>
+        </div>
+        <p id="verifyMsg" class="muted"></p>
+      </section>
+    </main>
+
+    <script src="member-login.js?v=20260301f"></script>
+      <script src="/theme-toggle.js"></script>
+  </body>
+</html>

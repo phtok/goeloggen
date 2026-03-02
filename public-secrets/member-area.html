@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mein Bereich - Public Secrets</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="backend-page">
+    <header class="topbar">
+      <h1 id="memberHeadline">Public Secrets - Mein Bereich</h1>
+      <div class="actions">
+        <a href="/index.html" class="secondary-link">Zur Webseite</a>
+        <button id="logoutBtn" class="secondary" type="button">Logout</button>
+      </div>
+    </header>
+
+    <main class="admin-main admin-grid">
+      <section class="card">
+        <h2>Mein Profil</h2>
+        <div class="form-grid">
+          <label for="role">Rolle</label>
+          <input id="role" type="text" />
+          <label for="portraitUrl">Portrait-URL</label>
+          <input id="portraitUrl" type="url" />
+          <label for="links">Links (eine URL pro Zeile)</label>
+          <textarea id="links" rows="3"></textarea>
+          <label for="bioShort">Kurzvita</label>
+          <textarea id="bioShort" rows="2"></textarea>
+          <label for="bio">Vita</label>
+          <textarea id="bio" rows="5"></textarea>
+        </div>
+        <div class="actions">
+          <button id="saveProfileBtn" class="primary" type="button">Profil speichern</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Meine Fragen</h2>
+        <input id="qId" type="hidden" />
+        <div class="form-grid">
+          <label for="qText">Fragetext</label>
+          <textarea id="qText" rows="3"></textarea>
+          <label for="qDate">Datum</label>
+          <input id="qDate" type="date" />
+          <label for="qLocation">Ort</label>
+          <input id="qLocation" type="text" />
+        </div>
+        <div class="actions">
+          <button id="saveQuestionBtn" class="primary" type="button">Frage speichern</button>
+          <button id="resetQuestionBtn" class="secondary" type="button">Zurücksetzen</button>
+        </div>
+        <div id="questionList" class="list"></div>
+      </section>
+
+      <section class="card">
+        <h2>Meine Initiativen</h2>
+        <input id="iId" type="hidden" />
+        <div class="form-grid">
+          <label for="iTitle">Titel</label>
+          <input id="iTitle" type="text" />
+          <label for="iStatus">Status</label>
+          <input id="iStatus" type="text" value="aktiv" />
+          <label for="iDescription">Beschreibung</label>
+          <textarea id="iDescription" rows="3"></textarea>
+          <label for="iSourceUrl">Quelle</label>
+          <input id="iSourceUrl" type="url" />
+        </div>
+        <div class="actions">
+          <button id="saveInitiativeBtn" class="primary" type="button">Initiative speichern</button>
+          <button id="resetInitiativeBtn" class="secondary" type="button">Zurücksetzen</button>
+        </div>
+        <div id="initiativeList" class="list"></div>
+      </section>
+
+      <section class="card">
+        <h2>Meine Termine</h2>
+        <input id="eId" type="hidden" />
+        <div class="form-grid two-col">
+          <div>
+            <label for="eTitle">Titel</label>
+            <input id="eTitle" type="text" />
+          </div>
+          <div>
+            <label for="eDate">Datum</label>
+            <input id="eDate" type="date" />
+          </div>
+          <div>
+            <label for="eLocation">Ort</label>
+            <input id="eLocation" type="text" />
+          </div>
+          <div class="checkbox-inline admin-checkbox">
+            <input id="eArchived" type="checkbox" />
+            <label for="eArchived">Archiviert</label>
+          </div>
+          <div class="full">
+            <label for="eDescription">Beschreibung</label>
+            <textarea id="eDescription" rows="3"></textarea>
+          </div>
+          <div class="full">
+            <label for="eSourceUrl">Quelle</label>
+            <input id="eSourceUrl" type="url" />
+          </div>
+        </div>
+        <div class="actions">
+          <button id="saveEventBtn" class="primary" type="button">Termin speichern</button>
+          <button id="resetEventBtn" class="secondary" type="button">Zurücksetzen</button>
+        </div>
+        <div id="eventList" class="list"></div>
+      </section>
+    </main>
+
+    <script src="member-area.js?v=20260301f"></script>
+      <script src="/theme-toggle.js"></script>
+  </body>
+</html>
