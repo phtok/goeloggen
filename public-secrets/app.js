@@ -24,8 +24,10 @@ let state = {
   view: "question",
   questionStep: "intro",
   questionListSort: "popular",
+  questionsControlsOpen: false,
   menuEnabled: false,
   activeAuthor: "",
+  shuffledPeople: [],
   expandedQuestionDetails: {},
   expandedQuestionComments: {},
   expandedQuestionCompose: {}
@@ -39,6 +41,7 @@ document.addEventListener("click", (event) => {
   const nav = event.target.closest("[data-view]");
   if (nav) {
     state.view = nav.dataset.view;
+    if (state.view !== "author") state.activeAuthor = "";
     render();
     return;
   }
@@ -55,6 +58,11 @@ document.addEventListener("click", (event) => {
     if (actionEl.dataset.action === "sort-questions") {
       if (state.view !== "questions") return;
       state.questionListSort = actionEl.dataset.sort || "popular";
+      renderQuestionsView();
+      return;
+    }
+    if (actionEl.dataset.action === "toggle-list-controls") {
+      state.questionsControlsOpen = !state.questionsControlsOpen;
       renderQuestionsView();
       return;
     }
@@ -204,12 +212,19 @@ async function fetchInitiatives() {
 
 async function fetchPeople() {
   try {
-    const res = await fetch("data/people.json");
-    if (!res.ok) throw new Error("People file unavailable");
+    const res = await fetch("/api/people");
+    if (!res.ok) throw new Error("People API unavailable");
     const rows = await res.json();
-    return Array.isArray(rows) ? rows : [];
+    if (Array.isArray(rows)) return rows;
   } catch {
-    return [];
+    try {
+      const fallback = await fetch("data/people.json");
+      if (!fallback.ok) throw new Error("People file unavailable");
+      const rows = await fallback.json();
+      return Array.isArray(rows) ? rows : [];
+    } catch {
+      return [];
+    }
   }
 }
 
@@ -233,6 +248,7 @@ async function fetchComments() {
 
 function render() {
   updateShellVisibility();
+  updateTopNavActive();
   if (!state.questions.length) return renderSimplePage("Keine Fragen", "Es sind noch keine Fragen eingetragen.");
   if (state.view === "question") return renderQuestionView();
   if (state.view === "questions") return renderQuestionsView();
@@ -271,6 +287,11 @@ function handleQuestionAction(action, ratingRaw, idRaw) {
 
   if (action === "next") {
     nextQuestion();
+    return;
+  }
+
+  if (action === "prev") {
+    previousQuestion();
     return;
   }
 
@@ -332,16 +353,20 @@ function renderQuestionView() {
   const effectiveComment = interaction.comment || "";
 
   const commentBlock = state.questionStep === "comment"
-    ? `<section class="flow-step answer-step"><textarea id="commentInput" class="answer-input" rows="4" placeholder="Deine Antwort">${escapeHtml(effectiveComment)}</textarea><input id="commentNameInput" class="answer-name-input" type="text" placeholder="Dein Name" value="${escapeHtml(effectiveName)}" /><div class="actions"><button class="primary" data-action="submit" type="button">Speichern</button><button class="secondary" data-action="next" type="button">Nächste Frage</button><button class="secondary" data-action="show-own-question" type="button">Eigene Frage</button></div></section>`
+    ? `<section class="flow-step answer-step"><textarea id="commentInput" class="answer-input" rows="4" placeholder="Deine Antwort">${escapeHtml(effectiveComment)}</textarea><input id="commentNameInput" class="answer-name-input" type="text" placeholder="Dein Name" value="${escapeHtml(effectiveName)}" /><div class="actions quiet-actions"><button class="quiet-btn quiet-btn-primary" data-action="submit" type="button">Speichern</button><button class="quiet-btn" data-action="next" type="button">Nächste Frage</button><button class="quiet-btn" data-action="show-own-question" type="button">Eigene Frage</button></div></section>`
     : "";
 
   const ownQuestionBlock = state.questionStep === "own-question"
-    ? `<section class="flow-step"><p class="flow-label">Eigene Frage formulieren</p><textarea id="ownQuestionText" rows="3" placeholder="Frage"></textarea><input id="ownQuestionAuthor" type="text" placeholder="Autorin" /><input id="ownQuestionDate" type="date" /><input id="ownQuestionLocation" type="text" placeholder="Ort" /><div class="actions"><button class="primary" data-action="submit-own-question" type="button">Frage senden & weiter</button><button class="secondary" data-action="back-to-comment" type="button">Zurück</button></div></section>`
+    ? `<section class="flow-step"><p class="flow-label">Eigene Frage formulieren</p><textarea id="ownQuestionText" rows="3" placeholder="Frage"></textarea><input id="ownQuestionAuthor" type="text" placeholder="Autorin" /><input id="ownQuestionDate" type="date" /><input id="ownQuestionLocation" type="text" placeholder="Ort" /><div class="actions quiet-actions"><button class="quiet-btn quiet-btn-primary" data-action="submit-own-question" type="button">Frage senden & weiter</button><button class="quiet-btn" data-action="back-to-comment" type="button">Zurück</button></div></section>`
     : "";
 
   app.innerHTML = `
     <section class="question-flow" aria-live="polite">
-      <h1 class="question-title" data-action="reveal-rating" title="Frage öffnen">${escapeHtml(question.text)}</h1>
+      <div class="question-nav-line">
+        <button class="question-edge-nav" type="button" data-action="prev" aria-label="Vorherige Frage">‹</button>
+        <h1 class="question-title" data-action="reveal-rating" title="Frage öffnen">${escapeHtml(question.text)}</h1>
+        <button class="question-edge-nav" type="button" data-action="next" aria-label="Nächste Frage">›</button>
+      </div>
       ${commentBlock}
       ${ownQuestionBlock}
     </section>
@@ -351,14 +376,17 @@ function renderQuestionView() {
 function renderQuestionsView() {
   const sort = state.questionListSort;
   const rows = buildSortedQuestionRows(sort, state.questions);
+  const controls = state.questionsControlsOpen
+    ? `<div class="sort-strip centered-sort-strip" role="group" aria-label="Sortierung">
+        <button class="sort-btn ${sort === "popular" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="popular">Beliebt</button>
+        <button class="sort-btn ${sort === "chronology" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="chronology">Chronik</button>
+        <button class="sort-btn ${sort === "interactions" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="interactions">Aktiv</button>
+      </div>`
+    : "";
   app.innerHTML = `
     <section>
-      <h2>Fragen</h2>
-      <div class="sort-strip" role="group" aria-label="Sortierung">
-        <button class="sort-btn ${sort === "popular" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="popular">Beliebt</button>
-        <button class="sort-btn ${sort === "chronology" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="chronology">Chronologie</button>
-        <button class="sort-btn ${sort === "interactions" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="interactions">Interaktionen</button>
-      </div>
+      <div class="questions-control-heart-wrap"><button class="questions-control-heart ${state.questionsControlsOpen ? "active" : ""}" type="button" data-action="toggle-list-controls" aria-label="Sortierung anzeigen">♥</button></div>
+      ${controls}
       ${renderQuestionRows(rows, { showAuthorLinks: true })}
     </section>
   `;
@@ -445,7 +473,7 @@ function renderQuestionRows(rows, options = {}) {
         ? `<div class="question-detail-line"><span>${dateText ? escapeHtml(dateText) : "Ohne Datum"}</span><span class="question-meta-sep">·</span><span>${authorLine || "Anonym"}</span><span class="question-meta-sep">·</span><button class="author-link question-heart-toggle ${userHeart ? "active" : ""}" type="button" data-action="toggle-list-heart" data-id="${escapeHtml(qid)}">${Number(row.votes || 0)} ♥</button><span class="question-meta-sep">·</span><button class="author-link question-compose-toggle" type="button" data-action="toggle-comment-compose" data-id="${escapeHtml(qid)}">Antworten${answerCount > 0 ? ` (${answerCount})` : ""}</button></div>`
         : "";
       const compose = detailOpen && composeOpen
-        ? `<div class="list-comment-form answer-compose"><textarea class="answer-input" rows="3" data-comment-text-for="${escapeHtml(qid)}" placeholder="Deine Antwort">${escapeHtml(commentDraft)}</textarea><input class="answer-name-input" type="text" data-comment-name-for="${escapeHtml(qid)}" placeholder="Dein Name" value="${escapeHtml(nameDraft)}" /><div class="actions"><button class="secondary" type="button" data-action="save-list-comment" data-id="${escapeHtml(qid)}">Speichern</button><button class="secondary" type="button" data-action="toggle-comments" data-id="${escapeHtml(qid)}">Antworten lesen</button></div></div>`
+        ? `<div class="list-comment-form answer-compose"><textarea class="answer-input" rows="3" data-comment-text-for="${escapeHtml(qid)}" placeholder="Deine Antwort">${escapeHtml(commentDraft)}</textarea><input class="answer-name-input" type="text" data-comment-name-for="${escapeHtml(qid)}" placeholder="Dein Name" value="${escapeHtml(nameDraft)}" /><div class="actions quiet-actions"><button class="quiet-btn quiet-btn-primary" type="button" data-action="save-list-comment" data-id="${escapeHtml(qid)}">Speichern</button><button class="quiet-btn" type="button" data-action="toggle-comments" data-id="${escapeHtml(qid)}">Antworten lesen</button></div></div>`
         : "";
       const answers = detailOpen && answersOpen && answerCount > 0
         ? `<div class="list">${commentRows
@@ -477,18 +505,19 @@ function renderQuestionRows(rows, options = {}) {
 
 function renderPeopleView() {
   if (!state.people.length) return renderSimplePage("Menschen", "Noch keine Ensemble-Mitglieder eingetragen.");
+  if (!Array.isArray(state.shuffledPeople) || state.shuffledPeople.length !== state.people.length) {
+    state.shuffledPeople = shuffleArray(state.people.slice());
+  }
   app.innerHTML = `
     <section>
-      <h2>Menschen</h2>
       <div class="list people-grid">
-        ${state.people
+        ${state.shuffledPeople
           .map((person) => {
             const slug = person.slug || slugify(person.name || "");
             const image = person.portraitUrl
               ? `<img class="member-avatar-small" src="${escapeHtml(person.portraitUrl)}" alt="${escapeHtml(person.name || "")}" loading="lazy" />`
               : `<div class="member-avatar-small member-avatar-fallback">${escapeHtml(initials(person.name || ""))}</div>`;
-            const role = String(person.role || "").toLowerCase();
-            return `<article class="card member-card">${image}<div class="member-card-content"><h3><a class="member-link" href="/members/${escapeHtml(slug)}.html">${escapeHtml(person.name || "")}</a></h3><p class="muted">${escapeHtml(role)}</p></div></article>`;
+            return `<article class="card member-card member-card-portrait">${image}<div class="member-card-content"><h3><a class="member-link" href="/members/${escapeHtml(slug)}.html">${escapeHtml(person.name || "")}</a></h3></div></article>`;
           })
           .join("")}
       </div>
@@ -608,6 +637,16 @@ function nextQuestion() {
   renderQuestionView();
 }
 
+function previousQuestion() {
+  if (!state.questions.length) return;
+  if (!isQuestionOrderValid()) buildQuestionOrder({ resetIndex: false });
+  const total = state.questionOrder.length || state.questions.length;
+  state.currentIndex = (state.currentIndex - 1 + total) % total;
+  state.currentRating = 0;
+  state.questionStep = "intro";
+  renderQuestionView();
+}
+
 function saveInteraction(questionId, rating, comment, name) {
   const safeRating = Number(rating) > 0 ? 1 : 0;
   const saved = {
@@ -712,6 +751,15 @@ function updateShellVisibility() {
   if (siteFooter) siteFooter.classList.toggle("hidden", !state.menuEnabled);
 }
 
+function updateTopNavActive() {
+  const links = document.querySelectorAll(".top-nav-link[data-view]");
+  const activeView = state.view === "author" ? "questions" : state.view;
+  links.forEach((el) => {
+    const target = String(el.dataset.view || "");
+    el.classList.toggle("is-active", target === activeView);
+  });
+}
+
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, "&amp;")
@@ -729,6 +777,17 @@ function initials(name) {
     .join("")
     .slice(0, 2)
     .toUpperCase();
+}
+
+function shuffleArray(input) {
+  const arr = Array.isArray(input) ? input.slice() : [];
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+  }
+  return arr;
 }
 
 function slugify(value) {
