@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 const http = require("http");
 const fs = require("fs/promises");
+const fsSync = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
 const HOST = process.env.HOST || "127.0.0.1";
 const PORT = Number(process.env.PORT || 8787);
 const ROOT = __dirname;
-const DATA_DIR = path.resolve(process.env.PUBLIC_SECRETE_DATA_DIR || path.join(ROOT, "data"));
+const DATA_DIR = resolveDataDir();
 const QUESTIONS_FILE = path.join(DATA_DIR, "questions.json");
 const EVENTS_FILE = path.join(DATA_DIR, "events.json");
 const INITIATIVES_FILE = path.join(DATA_DIR, "initiatives.json");
@@ -866,6 +867,28 @@ function injectThemeAssets(html) {
   }
 
   return out;
+}
+
+function resolveDataDir() {
+  const fromEnv = String(process.env.PUBLIC_SECRETE_DATA_DIR || "").trim();
+  if (fromEnv) return path.resolve(fromEnv);
+
+  if (process.env.RENDER) {
+    const candidates = [
+      "/opt/render/project/src/public-secrets/data",
+      "/app/data"
+    ];
+    for (const candidate of candidates) {
+      try {
+        if (fsSync.existsSync(candidate)) return candidate;
+      } catch {
+        // ignore path access errors and continue with next candidate
+      }
+    }
+    return "/app/data";
+  }
+
+  return path.join(ROOT, "data");
 }
 
 async function ensureDataFiles() {

@@ -39,6 +39,7 @@ Wichtig fuer Persistenz auf Render:
 - Bei `Docker`-Services ist der Standard-Datenpfad im Container `/app/data`.
 - Du kannst den Pfad per Env-Variable setzen: `PUBLIC_SECRETE_DATA_DIR`.
 - Falls deine Disk schon auf einem anderen Mount-Pfad haengt (z. B. `/opt/render/project/src/public-secrets/data`), setze `PUBLIC_SECRETE_DATA_DIR` genau auf diesen Pfad.
+- Ohne gesetzte Variable versucht der Server auf Render automatisch zuerst `/opt/render/project/src/public-secrets/data`, danach `/app/data`.
 
 ## Login (MVP)
 Standard-Zugang:
