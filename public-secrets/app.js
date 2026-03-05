@@ -25,7 +25,8 @@ let state = {
   questionStep: "intro",
   questionListSort: "popular",
   menuEnabled: false,
-  questionsAuthorFilter: "",
+  activeAuthor: "",
+  expandedQuestionDetails: {},
   expandedQuestionComments: {},
   expandedQuestionCompose: {}
 };
@@ -50,33 +51,39 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  if (state.view === "questions") {
+  if (state.view === "questions" || state.view === "author") {
     if (actionEl.dataset.action === "sort-questions") {
+      if (state.view !== "questions") return;
       state.questionListSort = actionEl.dataset.sort || "popular";
       renderQuestionsView();
       return;
     }
     if (actionEl.dataset.action === "filter-author") {
       const author = String(actionEl.dataset.author || "").trim();
-      const person = findPersonByAuthor(author);
-      if (person && person.slug) {
-        window.location.href = `/members/${encodeURIComponent(person.slug)}.html`;
-        return;
-      }
-      state.questionsAuthorFilter = author;
-      renderQuestionsView();
+      if (!author) return;
+      state.activeAuthor = author;
+      state.view = "author";
+      renderAuthorView();
       return;
     }
     if (actionEl.dataset.action === "clear-author-filter") {
-      state.questionsAuthorFilter = "";
+      state.activeAuthor = "";
+      state.view = "questions";
       renderQuestionsView();
+      return;
+    }
+    if (actionEl.dataset.action === "toggle-question-detail") {
+      const id = String(actionEl.dataset.id || "");
+      if (!id) return;
+      state.expandedQuestionDetails[id] = !state.expandedQuestionDetails[id];
+      render();
       return;
     }
     if (actionEl.dataset.action === "toggle-comments") {
       const id = String(actionEl.dataset.id || "");
       if (!id) return;
       state.expandedQuestionComments[id] = !state.expandedQuestionComments[id];
-      renderQuestionsView();
+      render();
       return;
     }
     if (actionEl.dataset.action === "toggle-list-heart") {
@@ -85,14 +92,14 @@ document.addEventListener("click", (event) => {
       const interaction = getInteraction(id);
       const nextRating = Number(interaction.rating || 0) > 0 ? 0 : 1;
       saveInteraction(id, nextRating, interaction.comment || "", interaction.name || "");
-      renderQuestionsView();
+      render();
       return;
     }
     if (actionEl.dataset.action === "toggle-comment-compose") {
       const id = String(actionEl.dataset.id || "");
       if (!id) return;
       state.expandedQuestionCompose[id] = !state.expandedQuestionCompose[id];
-      renderQuestionsView();
+      render();
       return;
     }
     if (actionEl.dataset.action === "save-list-comment") {
@@ -104,8 +111,7 @@ document.addEventListener("click", (event) => {
       const name = nameInput ? nameInput.value.trim() : "";
       const interaction = getInteraction(id);
       saveInteraction(id, Number(interaction.rating || 0), comment, name);
-      state.expandedQuestionCompose[id] = false;
-      renderQuestionsView();
+      render();
       return;
     }
     if (actionEl.dataset.action === "submit-reply") {
@@ -230,6 +236,7 @@ function render() {
   if (!state.questions.length) return renderSimplePage("Keine Fragen", "Es sind noch keine Fragen eingetragen.");
   if (state.view === "question") return renderQuestionView();
   if (state.view === "questions") return renderQuestionsView();
+  if (state.view === "author") return renderAuthorView();
   if (state.view === "people") return renderPeopleView();
   if (state.view === "initiatives") return renderInitiativesView();
   if (state.view === "calendar") return renderCalendarView();
@@ -245,18 +252,6 @@ function handleQuestionAction(action, ratingRaw, idRaw) {
       state.menuEnabled = true;
       updateShellVisibility();
     }
-    state.questionStep = "rating";
-    renderQuestionView();
-    return;
-  }
-
-  if (action === "toggle-heart") {
-    const question = currentQuestion();
-    if (!question) return;
-    const next = Number(state.currentRating || 0) > 0 ? 0 : 1;
-    state.currentRating = next;
-    const existing = getInteraction(question.id);
-    saveInteraction(question.id, next, existing.comment || "", existing.name || "");
     state.questionStep = "comment";
     renderQuestionView();
     return;
@@ -282,12 +277,13 @@ function handleQuestionAction(action, ratingRaw, idRaw) {
   if (action === "submit") {
     const question = currentQuestion();
     if (!question) return;
+    const existing = getInteraction(question.id);
     const nameInput = app.querySelector("#commentNameInput");
     const name = nameInput ? nameInput.value.trim() : "";
     const commentInput = app.querySelector("#commentInput");
     const comment = commentInput ? commentInput.value.trim() : "";
-    saveInteraction(question.id, state.currentRating, comment, name);
-    nextQuestion();
+    saveInteraction(question.id, Number(existing.rating || 0), comment, name);
+    renderQuestionView();
     return;
   }
 
@@ -332,16 +328,11 @@ function renderQuestionView() {
   if (!question) return renderSimplePage("Keine Fragen", "Es sind noch keine Fragen eingetragen.");
 
   const interaction = getInteraction(question.id);
-  const effectiveRating = state.currentRating || Number(interaction.rating || 0);
   const effectiveName = interaction.name || "";
   const effectiveComment = interaction.comment || "";
 
-  const ratingBlock = state.questionStep === "rating" || state.questionStep === "comment"
-    ? `<section class="flow-step"><div class="resonance-wrap"><button class="heart-btn ${effectiveRating > 0 ? "active" : ""}" type="button" data-action="toggle-heart" aria-label="Resonanz geben">♥</button></div><button class="flow-next" data-action="next" type="button">Nächste Frage</button></section>`
-    : "";
-
   const commentBlock = state.questionStep === "comment"
-    ? `<section class="flow-step"><p class="flow-label">Kommentieren</p><input id="commentNameInput" type="text" placeholder="Dein Name" value="${escapeHtml(effectiveName)}" /><textarea id="commentInput" rows="4" placeholder="Dein Gedanke zur Frage...">${escapeHtml(effectiveComment)}</textarea><div class="actions"><button class="primary" data-action="submit" type="button">Speichern & weiter</button><button class="secondary" data-action="next" type="button">Nächste Frage</button><button class="secondary" data-action="show-own-question" type="button">Eigene Frage</button></div></section>`
+    ? `<section class="flow-step answer-step"><textarea id="commentInput" class="answer-input" rows="4" placeholder="Deine Antwort">${escapeHtml(effectiveComment)}</textarea><input id="commentNameInput" class="answer-name-input" type="text" placeholder="Dein Name" value="${escapeHtml(effectiveName)}" /><div class="actions"><button class="primary" data-action="submit" type="button">Speichern</button><button class="secondary" data-action="next" type="button">Nächste Frage</button><button class="secondary" data-action="show-own-question" type="button">Eigene Frage</button></div></section>`
     : "";
 
   const ownQuestionBlock = state.questionStep === "own-question"
@@ -351,7 +342,6 @@ function renderQuestionView() {
   app.innerHTML = `
     <section class="question-flow" aria-live="polite">
       <h1 class="question-title" data-action="reveal-rating" title="Frage öffnen">${escapeHtml(question.text)}</h1>
-      ${ratingBlock}
       ${commentBlock}
       ${ownQuestionBlock}
     </section>
@@ -360,148 +350,129 @@ function renderQuestionView() {
 
 function renderQuestionsView() {
   const sort = state.questionListSort;
-  const authorFilter = state.questionsAuthorFilter;
-  const commentsByQuestion = getCommentsByQuestionMap();
-  const statsRows = statsByQuestion();
-  const statsById = new Map(statsRows.map((row) => [String(row.question.id || ""), row]));
-  let rows = [];
-  const authorCounts = new Map();
+  const rows = buildSortedQuestionRows(sort, state.questions);
+  app.innerHTML = `
+    <section>
+      <h2>Fragen</h2>
+      <div class="sort-strip" role="group" aria-label="Sortierung">
+        <button class="sort-btn ${sort === "popular" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="popular">Beliebt</button>
+        <button class="sort-btn ${sort === "chronology" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="chronology">Chronologie</button>
+        <button class="sort-btn ${sort === "interactions" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="interactions">Interaktionen</button>
+      </div>
+      ${renderQuestionRows(rows, { showAuthorLinks: true })}
+    </section>
+  `;
+}
 
-  if (sort === "popular") {
-    rows = statsRows
-      .sort((a, b) => b.votes - a.votes || b.comments - a.comments)
-      .map((r) => ({
-        question: r.question,
-        votes: r.votes
-      }));
+function renderAuthorView() {
+  const author = String(state.activeAuthor || "").trim();
+  if (!author) {
+    state.view = "questions";
+    renderQuestionsView();
+    return;
   }
+  const filtered = state.questions.filter((q) =>
+    (q.authors || []).some((a) => normalizeName(a) === normalizeName(author))
+  );
+  const rows = buildSortedQuestionRows(state.questionListSort, filtered);
+  app.innerHTML = `
+    <section>
+      <div class="row-between">
+        <h2>Fragen von ${escapeHtml(author)}</h2>
+        <button class="sort-btn" type="button" data-action="clear-author-filter">Zur Fragenliste</button>
+      </div>
+      ${renderQuestionRows(rows, { showAuthorLinks: false })}
+    </section>
+  `;
+}
+
+function buildSortedQuestionRows(sort, questionsPool) {
+  const pool = Array.isArray(questionsPool) ? questionsPool : [];
+  const ids = new Set(pool.map((q) => String(q.id || "")));
+  const statsRows = statsByQuestion().filter((row) => ids.has(String(row.question.id || "")));
+  const statsById = new Map(statsRows.map((row) => [String(row.question.id || ""), row]));
 
   if (sort === "chronology") {
-    rows = state.questions
+    return pool
       .slice()
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .map((q) => ({
-        question: q,
-        votes: (statsById.get(String(q.id || "")) || { votes: 0 }).votes
-      }));
+      .map((q) => {
+        const row = statsById.get(String(q.id || "")) || { votes: 0, comments: 0 };
+        return { question: q, votes: row.votes, comments: row.comments };
+      });
   }
 
   if (sort === "interactions") {
-    rows = statsRows
+    return statsRows
+      .slice()
       .sort((a, b) => b.votes + b.comments - (a.votes + a.comments))
-      .map((r) => ({
-        question: r.question,
-        votes: r.votes
-      }));
+      .map((row) => ({ question: row.question, votes: row.votes, comments: row.comments }));
   }
 
-  if (authorFilter) {
-    rows = rows.filter((row) =>
-      (row.question.authors || []).some((a) => normalizeName(a) === normalizeName(authorFilter))
-    );
-  }
+  return statsRows
+    .slice()
+    .sort((a, b) => b.votes - a.votes || b.comments - a.comments)
+    .map((row) => ({ question: row.question, votes: row.votes, comments: row.comments }));
+}
 
-  for (let i = 0; i < state.questions.length; i += 1) {
-    const authors = state.questions[i].authors || [];
-    for (let j = 0; j < authors.length; j += 1) {
-      const author = authors[j];
-      authorCounts.set(author, (authorCounts.get(author) || 0) + 1);
-    }
-  }
-  const authorList = Array.from(authorCounts.entries()).sort((a, b) => a[0].localeCompare(b[0], "de"));
-
-  const filterInfo = authorFilter
-    ? `<div class="filter-info">Autor:in: <strong>${escapeHtml(authorFilter)}</strong> <button class="sort-btn" type="button" data-action="clear-author-filter">Filter aufheben</button></div>`
-    : "";
-
-  app.innerHTML = `
-    <section class="questions-layout">
-      <div>
-        <h2>Fragen</h2>
-        <div class="sort-strip" role="group" aria-label="Sortierung">
-          <button class="sort-btn ${sort === "popular" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="popular">Beliebt</button>
-          <button class="sort-btn ${sort === "chronology" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="chronology">Chronologie</button>
-          <button class="sort-btn ${sort === "interactions" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="interactions">Interaktionen</button>
-        </div>
-        ${filterInfo}
-        <div class="list">
-          ${rows
-            .map((row) => {
-              const q = row.question || {};
-              const qid = String(q.id || "");
-              const commentRows = commentsByQuestion.get(qid) || [];
-              const commentCount = countCommentEntries(commentRows);
-              const expanded = Boolean(state.expandedQuestionComments[qid]);
-              const composeOpen = Boolean(state.expandedQuestionCompose[qid]);
-              const interaction = getInteraction(qid);
-              const userHeart = Number(interaction.rating || 0) > 0;
-              const commentDraft = String(interaction.comment || "");
-              const nameDraft = String(interaction.name || "");
-              const authorLine = (q.authors || [])
-                .map(
-                  (author) =>
-                    `<button class="author-link" type="button" data-action="filter-author" data-author="${escapeHtml(author)}">${escapeHtml(author)}</button>`
-                )
-                .join(" · ");
-              const metaParts = [];
-              const dateText = formatShortDate(q.createdAt);
-              const locationText = String(q.location || "").trim();
-              if (dateText) metaParts.push(`<span>${escapeHtml(dateText)}</span>`);
-              if (locationText) metaParts.push(`<span>${escapeHtml(locationText)}</span>`);
-              if (authorLine) metaParts.push(`<span>${authorLine}</span>`);
-              const meta = metaParts.join('<span class="question-meta-sep"> · </span>');
-              const heartToggle = `<button class="author-link question-heart-toggle ${userHeart ? "active" : ""}" type="button" data-action="toggle-list-heart" data-id="${escapeHtml(qid)}">${Number(row.votes || 0)} ♥</button>`;
-              const commentComposeToggle = `<button class="author-link question-compose-toggle" type="button" data-action="toggle-comment-compose" data-id="${escapeHtml(qid)}">Kommentieren</button>`;
-              const commentToggle = commentCount > 0
-                ? `<button class="author-link question-comments-toggle" type="button" data-action="toggle-comments" data-id="${escapeHtml(qid)}">Kommentare ${commentCount}</button>`
-                : "";
-              const commentsBlock = commentCount > 0 && expanded
-                ? `<div class="list">${commentRows
-                    .map((entry) => {
-                      const when = entry.updatedAt ? new Date(entry.updatedAt).toLocaleDateString("de-DE") : "";
-                      const by = entry.name ? entry.name : "Anonym";
-                      const hasMainComment = Boolean(String(entry.comment || "").trim());
-                      const replies = Array.isArray(entry.replies) ? entry.replies : [];
-                      const repliesBlock = replies.length
-                        ? `<div class="list">${replies
-                            .map((reply) => {
-                              const rw = reply.createdAt ? new Date(reply.createdAt).toLocaleDateString("de-DE") : "";
-                              const rb = reply.name ? reply.name : "Anonym";
-                              return `<article class="card"><p class="muted">${escapeHtml(rb)}${rw ? ` · ${escapeHtml(rw)}` : ""}</p><p>${escapeHtml(reply.text || "")}</p></article>`;
-                            })
-                            .join("")}</div>`
-                        : "";
-                      const canReply = entry.id ? "true" : "false";
-                      const replyForm = canReply === "true"
-                        ? `<div class="reply-form"><input type="text" data-reply-name-for="${escapeHtml(entry.id)}" placeholder="Dein Name" /><textarea rows="2" data-reply-text-for="${escapeHtml(entry.id)}" placeholder="Antwort schreiben..."></textarea><div class="actions"><button class="secondary" type="button" data-action="submit-reply" data-id="${escapeHtml(entry.id)}">Antwort senden</button></div></div>`
-                        : "";
-                      const commentText = hasMainComment ? `<p>${escapeHtml(entry.comment || "")}</p>` : "";
-                      return `<article class="card"><p class="muted">${escapeHtml(by)}${when ? ` · ${escapeHtml(when)}` : ""}</p>${commentText}${repliesBlock}${replyForm}</article>`;
+function renderQuestionRows(rows, options = {}) {
+  const showAuthorLinks = options.showAuthorLinks !== false;
+  const commentsByQuestion = getCommentsByQuestionMap();
+  const markup = rows
+    .map((row) => {
+      const q = row.question || {};
+      const qid = String(q.id || "");
+      const detailOpen = Boolean(state.expandedQuestionDetails[qid]);
+      const composeOpen = Boolean(state.expandedQuestionCompose[qid]);
+      const answersOpen = Boolean(state.expandedQuestionComments[qid]);
+      const commentRows = commentsByQuestion.get(qid) || [];
+      const answerCount = countCommentEntries(commentRows);
+      const interaction = getInteraction(qid);
+      const userHeart = Number(interaction.rating || 0) > 0;
+      const commentDraft = String(interaction.comment || "");
+      const nameDraft = String(interaction.name || "");
+      const dateText = formatShortDate(q.createdAt);
+      const authorText = (q.authors || []).join(", ");
+      const authorLine = showAuthorLinks
+        ? (q.authors || [])
+            .map(
+              (author) =>
+                `<button class="author-link" type="button" data-action="filter-author" data-author="${escapeHtml(author)}">${escapeHtml(author)}</button>`
+            )
+            .join(", ")
+        : escapeHtml(authorText);
+      const details = detailOpen
+        ? `<div class="question-detail-line"><span>${dateText ? escapeHtml(dateText) : "Ohne Datum"}</span><span class="question-meta-sep">·</span><span>${authorLine || "Anonym"}</span><span class="question-meta-sep">·</span><button class="author-link question-heart-toggle ${userHeart ? "active" : ""}" type="button" data-action="toggle-list-heart" data-id="${escapeHtml(qid)}">${Number(row.votes || 0)} ♥</button><span class="question-meta-sep">·</span><button class="author-link question-compose-toggle" type="button" data-action="toggle-comment-compose" data-id="${escapeHtml(qid)}">Antworten${answerCount > 0 ? ` (${answerCount})` : ""}</button></div>`
+        : "";
+      const compose = detailOpen && composeOpen
+        ? `<div class="list-comment-form answer-compose"><textarea class="answer-input" rows="3" data-comment-text-for="${escapeHtml(qid)}" placeholder="Deine Antwort">${escapeHtml(commentDraft)}</textarea><input class="answer-name-input" type="text" data-comment-name-for="${escapeHtml(qid)}" placeholder="Dein Name" value="${escapeHtml(nameDraft)}" /><div class="actions"><button class="secondary" type="button" data-action="save-list-comment" data-id="${escapeHtml(qid)}">Speichern</button><button class="secondary" type="button" data-action="toggle-comments" data-id="${escapeHtml(qid)}">Antworten lesen</button></div></div>`
+        : "";
+      const answers = detailOpen && answersOpen && answerCount > 0
+        ? `<div class="list">${commentRows
+            .map((entry) => {
+              const by = entry.name ? entry.name : "Anonym";
+              const when = entry.updatedAt ? new Date(entry.updatedAt).toLocaleDateString("de-DE") : "";
+              const text = String(entry.comment || "").trim();
+              const replies = Array.isArray(entry.replies) ? entry.replies : [];
+              const main = text ? `<p>${escapeHtml(text)}</p>` : "";
+              const replyList = replies.length
+                ? `<div class="list">${replies
+                    .map((reply) => {
+                      const rb = reply.name ? reply.name : "Anonym";
+                      const rw = reply.createdAt ? new Date(reply.createdAt).toLocaleDateString("de-DE") : "";
+                      return `<article class="card"><p class="muted">${escapeHtml(rb)}${rw ? ` · ${escapeHtml(rw)}` : ""}</p><p>${escapeHtml(reply.text || "")}</p></article>`;
                     })
                     .join("")}</div>`
                 : "";
-              const commentForm = composeOpen
-                ? `<div class="list-comment-form"><input type="text" data-comment-name-for="${escapeHtml(qid)}" placeholder="Dein Name" value="${escapeHtml(nameDraft)}" /><textarea rows="3" data-comment-text-for="${escapeHtml(qid)}" placeholder="Dein Kommentar">${escapeHtml(commentDraft)}</textarea><div class="actions"><button class="secondary" type="button" data-action="save-list-comment" data-id="${escapeHtml(qid)}">Kommentar speichern</button></div></div>`
-                : "";
-              const commentsStat = commentToggle ? `<span class="question-meta-sep"> · </span>${commentToggle}` : "";
-              return `<article class="card question-list-item"><h3>${escapeHtml(q.text || "")}</h3><p class="muted question-meta">${meta}</p><p class="question-stats">${heartToggle}<span class="question-meta-sep"> · </span>${commentComposeToggle}${commentsStat}</p>${commentForm}${commentsBlock}</article>`;
+              if (!main && !replyList) return "";
+              return `<article class="card"><p class="muted">${escapeHtml(by)}${when ? ` · ${escapeHtml(when)}` : ""}</p>${main}${replyList}</article>`;
             })
-            .join("")}
-        </div>
-      </div>
-      <aside>
-        <h2>Autor:innen</h2>
-        <div class="list">
-          ${authorList
-            .map(
-              ([author, count]) =>
-                `<article class="card"><button class="author-link" type="button" data-action="filter-author" data-author="${escapeHtml(author)}">${escapeHtml(author)}</button><span class="author-count">(${count})</span></article>`
-            )
-            .join("")}
-        </div>
-      </aside>
-    </section>
-  `;
+            .join("")}</div>`
+        : "";
+      return `<article class="card question-list-item"><h3><button class="question-open-btn" type="button" data-action="toggle-question-detail" data-id="${escapeHtml(qid)}">${escapeHtml(q.text || "")}</button></h3>${details}${compose}${answers}</article>`;
+    })
+    .join("");
+  return `<div class="question-stack">${markup}</div>`;
 }
 
 function renderPeopleView() {
@@ -1029,7 +1000,7 @@ async function persistComment(entry) {
     if (!res.ok) return;
     const saved = await res.json();
     upsertCommentInState(saved);
-    if (state.view === "questions") renderQuestionsView();
+    if (state.view === "questions" || state.view === "author") render();
   } catch {}
 }
 
@@ -1049,7 +1020,7 @@ async function submitReply(commentId, text, name) {
     if (!res.ok) return;
     const updated = await res.json();
     upsertCommentInState(updated);
-    if (state.view === "questions") renderQuestionsView();
+    if (state.view === "questions" || state.view === "author") render();
   } catch {}
 }
 
