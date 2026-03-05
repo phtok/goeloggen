@@ -476,24 +476,24 @@ function renderQuestionRows(rows, options = {}) {
         ? `<div class="list-comment-form answer-compose"><textarea class="answer-input" rows="3" data-comment-text-for="${escapeHtml(qid)}" placeholder="Deine Antwort">${escapeHtml(commentDraft)}</textarea><input class="answer-name-input" type="text" data-comment-name-for="${escapeHtml(qid)}" placeholder="Dein Name" value="${escapeHtml(nameDraft)}" /><div class="actions quiet-actions"><button class="quiet-btn quiet-btn-primary" type="button" data-action="save-list-comment" data-id="${escapeHtml(qid)}">Speichern</button><button class="quiet-btn" type="button" data-action="toggle-comments" data-id="${escapeHtml(qid)}">Antworten lesen</button></div></div>`
         : "";
       const answers = detailOpen && answersOpen && answerCount > 0
-        ? `<div class="list">${commentRows
+        ? `<div class="list answers-list">${commentRows
             .map((entry) => {
               const by = entry.name ? entry.name : "Anonym";
               const when = entry.updatedAt ? new Date(entry.updatedAt).toLocaleDateString("de-DE") : "";
               const text = String(entry.comment || "").trim();
               const replies = Array.isArray(entry.replies) ? entry.replies : [];
-              const main = text ? `<p>${escapeHtml(text)}</p>` : "";
+              const main = text ? `<p class="answer-text">${escapeHtml(text)}</p>` : "";
               const replyList = replies.length
-                ? `<div class="list">${replies
+                ? `<div class="list answers-list">${replies
                     .map((reply) => {
                       const rb = reply.name ? reply.name : "Anonym";
                       const rw = reply.createdAt ? new Date(reply.createdAt).toLocaleDateString("de-DE") : "";
-                      return `<article class="card"><p class="muted">${escapeHtml(rb)}${rw ? ` · ${escapeHtml(rw)}` : ""}</p><p>${escapeHtml(reply.text || "")}</p></article>`;
+                      return `<article class="card"><p class="answer-text">${escapeHtml(reply.text || "")}</p><p class="muted answer-by">${escapeHtml(rb)}${rw ? ` · ${escapeHtml(rw)}` : ""}</p></article>`;
                     })
                     .join("")}</div>`
                 : "";
               if (!main && !replyList) return "";
-              return `<article class="card"><p class="muted">${escapeHtml(by)}${when ? ` · ${escapeHtml(when)}` : ""}</p>${main}${replyList}</article>`;
+              return `<article class="card">${main}<p class="muted answer-by">${escapeHtml(by)}${when ? ` · ${escapeHtml(when)}` : ""}</p>${replyList}</article>`;
             })
             .join("")}</div>`
         : "";
@@ -761,12 +761,20 @@ function updateTopNavActive() {
 }
 
 function escapeHtml(str) {
-  return String(str)
+  return toGuillemets(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function toGuillemets(value) {
+  let text = String(value || "");
+  text = text.replace(/[„“«]/g, "‹").replace(/[”»]/g, "›");
+  text = text.replace(/"([^"\n]+)"/g, "‹$1›");
+  text = text.replace(/‚/g, "‹").replace(/[‘’]/g, "›");
+  return text;
 }
 
 function initials(name) {

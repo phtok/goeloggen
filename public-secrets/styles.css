@@ -235,20 +235,24 @@ main {
 
 .centered-sort-strip {
   justify-content: center;
+  margin-top: 0.65rem;
+  margin-bottom: 2rem;
 }
 
 .sort-btn {
-  border: 1px solid var(--line);
-  background: var(--surface);
-  border-radius: 999px;
-  padding: 0.28rem 0.65rem;
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  padding: 0.12rem 0;
   cursor: pointer;
   font: inherit;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 .sort-btn.active {
-  border-color: var(--petrol);
-  color: var(--petrol);
+  color: var(--text);
 }
 
 .questions-layout {
@@ -293,13 +297,13 @@ main {
   background: transparent;
   color: var(--text);
   font: inherit;
-  font-size: clamp(1.35rem, 2.8vw, 2.05rem);
+  font-size: clamp(1.5rem, 3.25vw, 2.25rem);
   line-height: 1.22;
   font-weight: 500;
   cursor: pointer;
   padding: 0;
-  text-wrap: pretty;
-  width: min(100%, 44ch);
+  text-wrap: balance;
+  width: min(100%, 50ch);
   margin: 0 auto;
   display: inline-block;
 }
@@ -371,11 +375,22 @@ input {
   border: 0;
   background: transparent;
   border-radius: 0;
+  box-shadow: none;
+  outline: none;
   padding-left: 0;
   padding-right: 0;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+}
+
+.answer-input {
+  font-size: 1.14rem;
+  line-height: 1.45;
+}
+
+.answer-name-input {
+  font-size: 1rem;
 }
 
 .answer-input::placeholder,
@@ -469,7 +484,7 @@ button.secondary,
 .questions-control-heart-wrap {
   display: grid;
   justify-content: center;
-  margin: 0.2rem 0 0.5rem;
+  margin: 0.2rem 0 0.8rem;
 }
 
 .questions-control-heart {
@@ -545,6 +560,7 @@ button.secondary,
   object-fit: cover;
   border: 1px solid var(--line);
   flex: 0 0 56px;
+  filter: grayscale(100%);
 }
 
 .member-avatar-fallback {
@@ -568,6 +584,7 @@ button.secondary,
   object-fit: cover;
   border: 1px solid var(--line);
   flex: 0 0 96px;
+  filter: grayscale(100%);
 }
 
 .people-grid {
@@ -616,6 +633,20 @@ button.secondary,
 
 .calendar-card h3 {
   margin: 0;
+}
+
+.answers-list .card {
+  text-align: center;
+}
+
+.answer-text {
+  margin: 0;
+  font-size: 1.03rem;
+  line-height: 1.45;
+}
+
+.answer-by {
+  margin-top: 0.45rem;
 }
 
 .calendar-date {
@@ -794,6 +825,11 @@ html.theme-invert video,
 html.theme-invert canvas,
 html.theme-invert svg {
   filter: none !important;
+}
+
+html.theme-invert .member-avatar-small,
+html.theme-invert .member-avatar-large {
+  filter: grayscale(100%) !important;
 }
 
 .theme-toggle {

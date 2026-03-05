@@ -203,10 +203,18 @@ function initials(name) {
 }
 
 function escapeHtml(str) {
-  return String(str)
+  return toGuillemets(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function toGuillemets(value) {
+  let text = String(value || "");
+  text = text.replace(/[„“«]/g, "‹").replace(/[”»]/g, "›");
+  text = text.replace(/"([^"\n]+)"/g, "‹$1›");
+  text = text.replace(/‚/g, "‹").replace(/[‘’]/g, "›");
+  return text;
 }
