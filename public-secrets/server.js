@@ -7,7 +7,7 @@ const crypto = require("crypto");
 const HOST = process.env.HOST || "127.0.0.1";
 const PORT = Number(process.env.PORT || 8787);
 const ROOT = __dirname;
-const DATA_DIR = path.join(ROOT, "data");
+const DATA_DIR = path.resolve(process.env.PUBLIC_SECRETE_DATA_DIR || path.join(ROOT, "data"));
 const QUESTIONS_FILE = path.join(DATA_DIR, "questions.json");
 const EVENTS_FILE = path.join(DATA_DIR, "events.json");
 const INITIATIVES_FILE = path.join(DATA_DIR, "initiatives.json");
@@ -41,6 +41,7 @@ start().catch((error) => {
 });
 
 async function start() {
+  console.log(`Using data directory: ${DATA_DIR}`);
   await ensureDataFiles();
 
   const server = http.createServer(async (req, res) => {

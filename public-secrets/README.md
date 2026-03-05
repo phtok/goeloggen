@@ -35,6 +35,11 @@ Einfachster Weg: **GitHub + Render** (Konfiguration liegt schon bereit: `Dockerf
 4. Render liest `render.yaml` automatisch und erstellt die Web-App
 5. Nach dem Deploy bekommst du direkt einen öffentlichen Link wie `https://public-secrets.onrender.com`
 
+Wichtig fuer Persistenz auf Render:
+- Bei `Docker`-Services ist der Standard-Datenpfad im Container `/app/data`.
+- Du kannst den Pfad per Env-Variable setzen: `PUBLIC_SECRETE_DATA_DIR`.
+- Falls deine Disk schon auf einem anderen Mount-Pfad haengt (z. B. `/opt/render/project/src/public-secrets/data`), setze `PUBLIC_SECRETE_DATA_DIR` genau auf diesen Pfad.
+
 ## Login (MVP)
 Standard-Zugang:
 - Benutzername: `editor`
