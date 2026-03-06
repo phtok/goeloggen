@@ -55,7 +55,7 @@ init();
 async function init() {
   const auth = await fetch("/api/member/auth/me");
   if (!auth.ok) {
-    window.location.href = "/member-login.html";
+    window.location.href = "/login.html";
     return;
   }
   me = await auth.json();
@@ -65,7 +65,7 @@ async function init() {
 
 logoutBtn.addEventListener("click", async () => {
   await fetch("/api/member/auth/logout", { method: "POST" });
-  window.location.href = "/member-login.html";
+  window.location.href = "/login.html";
 });
 
 saveProfileBtn.addEventListener("click", async () => {

@@ -126,7 +126,7 @@ async function handleApi(req, res, pathname, url) {
     await writeData(TOKENS_FILE, tokens);
 
     const baseUrl = `http://${req.headers.host || `${HOST}:${PORT}`}`;
-    const loginUrl = `${baseUrl}/member-login.html?token=${token}`;
+    const loginUrl = `${baseUrl}/login.html?token=${token}`;
     const delivery = await deliverMemberMagicLink(email, person, loginUrl);
     return sendJson(res, 200, {
       ok: true,

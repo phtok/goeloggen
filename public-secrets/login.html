@@ -13,10 +13,20 @@
     <main class="admin-main">
       <section class="card">
         <h2>Login</h2>
-        <p><a class="member-link" href="/member-login.html">Mitglieder Login</a></p>
-        <p><a class="member-link" href="/admin.html">Redaktion Login</a></p>
+        <div class="form-grid">
+          <label for="identity">E-Mail oder Benutzername</label>
+          <input id="identity" type="text" autocomplete="username" placeholder="name@example.com" />
+          <label for="secret">Code oder Passwort</label>
+          <input id="secret" type="password" autocomplete="current-password" placeholder="Einmal-Code oder Passwort" />
+        </div>
+        <div class="actions">
+          <button id="requestBtn" class="secondary" type="button">Zugangslink senden</button>
+          <button id="loginBtn" class="primary" type="button">Einloggen</button>
+        </div>
+        <p id="loginMsg" class="muted"></p>
       </section>
     </main>
+    <script src="login.js?v=20260306a"></script>
       <script src="/theme-toggle.js"></script>
   </body>
 </html>

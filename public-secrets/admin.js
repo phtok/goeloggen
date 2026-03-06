@@ -72,7 +72,9 @@ async function init() {
   if (ok) {
     showAdmin();
     await refreshAll();
+    return;
   }
+  window.location.href = "/login.html";
 }
 
 loginBtn.addEventListener("click", async () => {
@@ -93,7 +95,7 @@ loginBtn.addEventListener("click", async () => {
 
 logoutBtn.addEventListener("click", async () => {
   await fetch("/api/auth/logout", { method: "POST" });
-  hideAdmin();
+  window.location.href = "/login.html";
 });
 
 saveQuestionBtn.addEventListener("click", async () => {
