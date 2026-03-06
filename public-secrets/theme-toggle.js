@@ -102,11 +102,35 @@
     apply(readPreference());
 
     if (isQuestionLanding) {
-      setHidden(true);
+      const initialView = readCurrentView();
+      setHidden(initialView === "question");
+      window.addEventListener("ps:view-changed", (event) => {
+        const detail = event && event.detail ? event.detail : {};
+        const view = String(detail.view || "question");
+        if (view !== "question") {
+          clearFadeTimers();
+          setHidden(false);
+          return;
+        }
+        setHidden(true);
+      });
       window.addEventListener("ps:question-opened", () => {
+        const view = readCurrentView();
+        if (view !== "question") return;
         clearFadeTimers();
         setHidden(false);
       });
+    }
+  }
+
+  function readCurrentView() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const view = String(params.get("view") || "").trim();
+      if (!view) return "question";
+      return view;
+    } catch {
+      return "question";
     }
   }
 

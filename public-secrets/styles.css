@@ -54,7 +54,20 @@ html.font-proxima body {
 
 .topbar-main {
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
+  position: relative;
+}
+
+.topbar-main.is-section {
+  justify-content: space-between;
+}
+
+.header-brand {
+  font-size: 0.96rem;
+}
+
+.header-inline-nav {
+  gap: 0.35rem;
 }
 
 .menu-toggle {
@@ -91,7 +104,8 @@ html.font-proxima body {
 
 .top-menu-panel {
   position: absolute;
-  right: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
   top: calc(100% + 0.2rem);
   min-width: 220px;
   background: var(--surface);
@@ -565,10 +579,31 @@ button.secondary,
   margin-top: 1rem;
 }
 
+.own-question-block .quiet-btn {
+  margin-top: 0.2rem;
+}
+
+.own-question-input {
+  font-size: 1.6rem;
+  line-height: 1.4;
+  min-height: 7rem;
+}
+
+.own-question-meta {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+}
+
 .questions-control-heart-wrap {
   display: grid;
   justify-content: center;
-  margin: 0.2rem 0 0.8rem;
+  margin: 0.2rem 0 1.8rem;
 }
 
 .questions-control-heart {
@@ -1009,7 +1044,7 @@ body:not(.admin-page):not(.backend-page) .initiative-hero {
 }
 
 @media (max-width: 860px) {
-  .topbar-main {
+  .topbar-main.is-section {
     flex-direction: column;
     align-items: flex-start;
   }

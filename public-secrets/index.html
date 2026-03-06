@@ -8,6 +8,7 @@
   </head>
   <body class="site-questions">
     <header id="mainHeader" class="topbar topbar-main hidden">
+      <button id="headerBrandBtn" class="brand-link header-brand hidden" type="button" data-view="question">public secrets ensemble</button>
       <button id="menuToggleBtn" class="menu-toggle" type="button" data-action="toggle-menu" aria-label="Menü öffnen" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -18,6 +19,15 @@
         <button class="top-nav-link" type="button" data-view="initiatives">Initiativen</button>
         <button class="top-nav-link" type="button" data-view="calendar">Kalender</button>
       </nav>
+      <nav id="headerInlineNav" class="top-nav header-inline-nav hidden" aria-label="Hauptnavigation">
+        <button class="top-nav-link" type="button" data-view="questions">Fragen</button>
+        <span class="dot">·</span>
+        <button class="top-nav-link" type="button" data-view="people">Menschen</button>
+        <span class="dot">·</span>
+        <button class="top-nav-link" type="button" data-view="initiatives">Initiativen</button>
+        <span class="dot">·</span>
+        <button class="top-nav-link" type="button" data-view="calendar">Kalender</button>
+      </nav>
     </header>
 
     <main id="app" class="main-stage"></main>
@@ -26,7 +36,7 @@
       <a href="/login.html">Login</a>
     </footer>
 
-    <script src="app.js?v=20260306a"></script>
+    <script src="app.js?v=20260306b"></script>
       <script src="/theme-toggle.js"></script>
   </body>
 </html>

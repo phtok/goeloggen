@@ -40,6 +40,8 @@ const mainHeader = document.getElementById("mainHeader");
 const siteFooter = document.getElementById("siteFooter");
 const menuToggleBtn = document.getElementById("menuToggleBtn");
 const mainMenuPanel = document.getElementById("mainMenuPanel");
+const headerBrandBtn = document.getElementById("headerBrandBtn");
+const headerInlineNav = document.getElementById("headerInlineNav");
 
 document.addEventListener("click", (event) => {
   const nav = event.target.closest("[data-view]");
@@ -81,6 +83,16 @@ document.addEventListener("click", (event) => {
     }
     if (actionEl.dataset.action === "toggle-list-controls") {
       state.questionsControlsOpen = !state.questionsControlsOpen;
+      if (state.questionsControlsOpen) {
+        const openAll = {};
+        for (let i = 0; i < state.questions.length; i += 1) {
+          const id = String(state.questions[i].id || "");
+          if (id) openAll[id] = true;
+        }
+        state.expandedQuestionDetails = openAll;
+      } else {
+        state.expandedQuestionDetails = {};
+      }
       renderQuestionsView();
       return;
     }
@@ -273,6 +285,7 @@ async function fetchComments() {
 
 function render() {
   syncUrlWithView();
+  notifyViewChanged();
   updateShellVisibility();
   updateTopNavActive();
   if (!state.questions.length) return renderSimplePage("Keine Fragen", "Es sind noch keine Fragen eingetragen.");
@@ -380,7 +393,7 @@ function handleQuestionAction(action, ratingRaw, idRaw) {
     };
     submitPublicQuestion(payload).then((ok) => {
       if (!ok) return;
-      state.questionStep = "thanks";
+      state.questionStep = "own-thanks";
       renderQuestionView();
     });
     return;
@@ -407,9 +420,20 @@ function renderQuestionView() {
     app.innerHTML = `
       <section class="question-flow thanks-flow" aria-live="polite">
         <h2 class="thanks-title">Danke</h2>
+        <button class="flow-arrow" data-action="next" type="button" aria-label="Zur nächsten Frage">↓</button>
         <div class="actions quiet-actions thanks-actions">
           <button class="quiet-btn quiet-btn-primary" data-action="show-own-question" type="button">Eigene Frage</button>
         </div>
+      </section>
+    `;
+    return;
+  }
+
+  if (state.questionStep === "own-thanks") {
+    app.innerHTML = `
+      <section class="question-flow thanks-flow" aria-live="polite">
+        <h2 class="thanks-title">Danke</h2>
+        <button class="flow-arrow" data-action="next" type="button" aria-label="Zur nächsten Frage">↓</button>
       </section>
     `;
     return;
@@ -427,23 +451,50 @@ function renderQuestionView() {
     : "";
 
   const ownQuestionBlock = state.questionStep === "own-question"
-    ? `<section class="flow-step"><p class="flow-label">Eigene Frage formulieren</p><textarea id="ownQuestionText" rows="3" placeholder="Frage"></textarea><input id="ownQuestionAuthor" type="text" placeholder="Autorin" /><input id="ownQuestionDate" type="date" /><input id="ownQuestionLocation" type="text" placeholder="Ort" /><div class="actions quiet-actions"><button class="quiet-btn quiet-btn-primary" data-action="submit-own-question" type="button">Frage senden</button><button class="quiet-btn" data-action="back-to-thanks" type="button">Zurück</button></div></section>`
+    ? `<section class="flow-step answer-step own-question-block"><textarea id="ownQuestionText" class="answer-input own-question-input" rows="4" placeholder="Eigene Frage formulieren"></textarea><input id="ownQuestionAuthor" class="answer-name-input own-question-meta" type="text" placeholder="Autorin" /><input id="ownQuestionDate" class="answer-name-input own-question-meta" type="date" /><input id="ownQuestionLocation" class="answer-name-input own-question-meta" type="text" placeholder="Ort" /><button class="flow-arrow" data-action="submit-own-question" type="button" aria-label="Frage senden">↓</button><button class="quiet-btn" data-action="back-to-thanks" type="button">Zurück</button></section>`
     : "";
 
-  app.innerHTML = `
-    <section class="question-flow" aria-live="polite">
-      <div class="question-nav-line">
-        <button class="question-edge-nav" type="button" data-action="prev" aria-label="Vorherige Frage">‹</button>
-        <h1 class="question-title" data-action="reveal-rating" title="Frage öffnen">${escapeHtml(question.text)}</h1>
-        <button class="question-edge-nav" type="button" data-action="next" aria-label="Nächste Frage">›</button>
-      </div>
-      ${responseBlock}
-      ${ownQuestionBlock}
-    </section>
-  `;
+  const showQuestionLine = state.questionStep !== "own-question";
+  app.innerHTML = showQuestionLine
+    ? `
+      <section class="question-flow" aria-live="polite">
+        <div class="question-nav-line">
+          <button class="question-edge-nav" type="button" data-action="prev" aria-label="Vorherige Frage">‹</button>
+          <h1 class="question-title" data-action="reveal-rating" title="Frage öffnen">${escapeHtml(question.text)}</h1>
+          <button class="question-edge-nav" type="button" data-action="next" aria-label="Nächste Frage">›</button>
+        </div>
+        ${responseBlock}
+        ${ownQuestionBlock}
+      </section>
+    `
+    : `
+      <section class="question-flow" aria-live="polite">
+        ${ownQuestionBlock}
+      </section>
+    `;
 
   if (state.questionStep === "answer") {
     const input = app.querySelector("#commentInput");
+    if (input && typeof input.focus === "function") {
+      try {
+        input.focus({ preventScroll: true });
+      } catch {
+        input.focus();
+      }
+    }
+  }
+  if (state.questionStep === "name") {
+    const input = app.querySelector("#commentNameInput");
+    if (input && typeof input.focus === "function") {
+      try {
+        input.focus({ preventScroll: true });
+      } catch {
+        input.focus();
+      }
+    }
+  }
+  if (state.questionStep === "own-question") {
+    const input = app.querySelector("#ownQuestionText");
     if (input && typeof input.focus === "function") {
       try {
         input.focus({ preventScroll: true });
@@ -878,12 +929,17 @@ function updateTopNavActive() {
 }
 
 function renderHeaderMenu() {
+  const isQuestionView = state.view === "question";
   const open = Boolean(state.menuEnabled && state.menuOpen);
+  if (mainHeader) mainHeader.classList.toggle("is-section", state.menuEnabled && !isQuestionView);
   if (mainMenuPanel) mainMenuPanel.classList.toggle("hidden", !open);
   if (menuToggleBtn) {
+    menuToggleBtn.classList.toggle("hidden", !(state.menuEnabled && isQuestionView));
     menuToggleBtn.classList.toggle("is-open", open);
     menuToggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
   }
+  if (headerBrandBtn) headerBrandBtn.classList.toggle("hidden", !(state.menuEnabled && !isQuestionView));
+  if (headerInlineNav) headerInlineNav.classList.toggle("hidden", !(state.menuEnabled && !isQuestionView));
 }
 
 function escapeHtml(str) {
@@ -999,6 +1055,16 @@ function syncUrlWithView() {
     const nextUrl = `${url.pathname}${nextSearch ? `?${nextSearch}` : ""}`;
     const currentUrl = `${window.location.pathname}${window.location.search}`;
     if (nextUrl !== currentUrl) window.history.replaceState({}, "", nextUrl);
+  } catch {}
+}
+
+function notifyViewChanged() {
+  try {
+    window.dispatchEvent(
+      new CustomEvent("ps:view-changed", {
+        detail: { view: state.view, menuEnabled: state.menuEnabled }
+      })
+    );
   } catch {}
 }
 
