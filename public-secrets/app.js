@@ -23,9 +23,11 @@ let state = {
   currentRating: 0,
   view: "question",
   questionStep: "intro",
+  questionDrafts: {},
   questionListSort: "popular",
   questionsControlsOpen: false,
   menuEnabled: false,
+  menuOpen: false,
   activeAuthor: "",
   shuffledPeople: [],
   expandedQuestionDetails: {},
@@ -36,18 +38,34 @@ let state = {
 const app = document.getElementById("app");
 const mainHeader = document.getElementById("mainHeader");
 const siteFooter = document.getElementById("siteFooter");
+const menuToggleBtn = document.getElementById("menuToggleBtn");
+const mainMenuPanel = document.getElementById("mainMenuPanel");
 
 document.addEventListener("click", (event) => {
   const nav = event.target.closest("[data-view]");
   if (nav) {
     state.view = nav.dataset.view;
     if (state.view !== "author") state.activeAuthor = "";
+    state.menuOpen = false;
     render();
     return;
   }
 
   const actionEl = event.target.closest("[data-action]");
-  if (!actionEl) return;
+  if (!actionEl) {
+    if (state.menuOpen && !event.target.closest("#mainHeader")) {
+      state.menuOpen = false;
+      renderHeaderMenu();
+    }
+    return;
+  }
+
+  if (actionEl.dataset.action === "toggle-menu") {
+    if (!state.menuEnabled) return;
+    state.menuOpen = !state.menuOpen;
+    renderHeaderMenu();
+    return;
+  }
 
   if (state.view === "question") {
     handleQuestionAction(actionEl.dataset.action, actionEl.dataset.rating, actionEl.dataset.id);
@@ -127,6 +145,13 @@ document.addEventListener("click", (event) => {
       return;
     }
   }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  if (!state.menuOpen) return;
+  state.menuOpen = false;
+  renderHeaderMenu();
 });
 
 init();
@@ -247,6 +272,7 @@ async function fetchComments() {
 }
 
 function render() {
+  syncUrlWithView();
   updateShellVisibility();
   updateTopNavActive();
   if (!state.questions.length) return renderSimplePage("Keine Fragen", "Es sind noch keine Fragen eingetragen.");
@@ -261,14 +287,30 @@ function render() {
 
 function handleQuestionAction(action, ratingRaw, idRaw) {
   if (action === "reveal-rating") {
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("ps:question-opened"));
-    }
     if (!state.menuEnabled) {
       state.menuEnabled = true;
       updateShellVisibility();
     }
-    state.questionStep = "comment";
+    const question = currentQuestion();
+    if (question) {
+      const interaction = getInteraction(question.id);
+      setQuestionDraft(question.id, {
+        comment: String(interaction.comment || ""),
+        name: String(interaction.name || "")
+      });
+    }
+    state.questionStep = "answer";
+    renderQuestionView();
+    return;
+  }
+
+  if (action === "show-name") {
+    const question = currentQuestion();
+    if (!question) return;
+    const commentInput = app.querySelector("#commentInput");
+    const comment = commentInput ? commentInput.value : "";
+    setQuestionDraft(question.id, { comment });
+    state.questionStep = "name";
     renderQuestionView();
     return;
   }
@@ -279,8 +321,14 @@ function handleQuestionAction(action, ratingRaw, idRaw) {
     return;
   }
 
-  if (action === "back-to-comment") {
-    state.questionStep = "comment";
+  if (action === "back-to-answer") {
+    state.questionStep = "answer";
+    renderQuestionView();
+    return;
+  }
+
+  if (action === "back-to-thanks") {
+    state.questionStep = "thanks";
     renderQuestionView();
     return;
   }
@@ -298,12 +346,18 @@ function handleQuestionAction(action, ratingRaw, idRaw) {
   if (action === "submit") {
     const question = currentQuestion();
     if (!question) return;
-    const existing = getInteraction(question.id);
-    const nameInput = app.querySelector("#commentNameInput");
-    const name = nameInput ? nameInput.value.trim() : "";
     const commentInput = app.querySelector("#commentInput");
-    const comment = commentInput ? commentInput.value.trim() : "";
+    const nameInput = app.querySelector("#commentNameInput");
+    const draft = getQuestionDraft(question.id);
+    const existing = getInteraction(question.id);
+    const comment = commentInput ? commentInput.value.trim() : String(draft.comment || "");
+    const name = nameInput ? nameInput.value.trim() : String(draft.name || "");
     saveInteraction(question.id, Number(existing.rating || 0), comment, name);
+    clearQuestionDraft(question.id);
+    state.questionStep = "thanks";
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("ps:question-opened"));
+    }
     renderQuestionView();
     return;
   }
@@ -326,7 +380,8 @@ function handleQuestionAction(action, ratingRaw, idRaw) {
     };
     submitPublicQuestion(payload).then((ok) => {
       if (!ok) return;
-      nextQuestion();
+      state.questionStep = "thanks";
+      renderQuestionView();
     });
     return;
   }
@@ -348,16 +403,31 @@ function renderQuestionView() {
   const question = currentQuestion();
   if (!question) return renderSimplePage("Keine Fragen", "Es sind noch keine Fragen eingetragen.");
 
-  const interaction = getInteraction(question.id);
-  const effectiveName = interaction.name || "";
-  const effectiveComment = interaction.comment || "";
+  if (state.questionStep === "thanks") {
+    app.innerHTML = `
+      <section class="question-flow thanks-flow" aria-live="polite">
+        <h2 class="thanks-title">Danke</h2>
+        <div class="actions quiet-actions thanks-actions">
+          <button class="quiet-btn quiet-btn-primary" data-action="show-own-question" type="button">Eigene Frage</button>
+        </div>
+      </section>
+    `;
+    return;
+  }
 
-  const commentBlock = state.questionStep === "comment"
-    ? `<section class="flow-step answer-step"><textarea id="commentInput" class="answer-input" rows="4" placeholder="Deine Antwort">${escapeHtml(effectiveComment)}</textarea><input id="commentNameInput" class="answer-name-input" type="text" placeholder="Dein Name" value="${escapeHtml(effectiveName)}" /><div class="actions quiet-actions"><button class="quiet-btn quiet-btn-primary" data-action="submit" type="button">Speichern</button><button class="quiet-btn" data-action="next" type="button">Nächste Frage</button><button class="quiet-btn" data-action="show-own-question" type="button">Eigene Frage</button></div></section>`
+  const interaction = getInteraction(question.id);
+  const draft = getQuestionDraft(question.id);
+  const effectiveName = draft.name !== undefined ? String(draft.name || "") : String(interaction.name || "");
+  const effectiveComment = draft.comment !== undefined ? String(draft.comment || "") : String(interaction.comment || "");
+
+  const responseBlock = state.questionStep === "answer"
+    ? `<section class="flow-step answer-step"><textarea id="commentInput" class="answer-input" rows="4" placeholder="Deine Antwort">${escapeHtml(effectiveComment)}</textarea><button class="flow-arrow" data-action="show-name" type="button" aria-label="Weiter">↓</button></section>`
+    : state.questionStep === "name"
+      ? `<section class="flow-step answer-step"><textarea id="commentInput" class="answer-input" rows="4" placeholder="Deine Antwort">${escapeHtml(effectiveComment)}</textarea><input id="commentNameInput" class="answer-name-input" type="text" placeholder="Dein Name" value="${escapeHtml(effectiveName)}" /><button class="flow-arrow" data-action="submit" type="button" aria-label="Speichern">↓</button></section>`
     : "";
 
   const ownQuestionBlock = state.questionStep === "own-question"
-    ? `<section class="flow-step"><p class="flow-label">Eigene Frage formulieren</p><textarea id="ownQuestionText" rows="3" placeholder="Frage"></textarea><input id="ownQuestionAuthor" type="text" placeholder="Autorin" /><input id="ownQuestionDate" type="date" /><input id="ownQuestionLocation" type="text" placeholder="Ort" /><div class="actions quiet-actions"><button class="quiet-btn quiet-btn-primary" data-action="submit-own-question" type="button">Frage senden & weiter</button><button class="quiet-btn" data-action="back-to-comment" type="button">Zurück</button></div></section>`
+    ? `<section class="flow-step"><p class="flow-label">Eigene Frage formulieren</p><textarea id="ownQuestionText" rows="3" placeholder="Frage"></textarea><input id="ownQuestionAuthor" type="text" placeholder="Autorin" /><input id="ownQuestionDate" type="date" /><input id="ownQuestionLocation" type="text" placeholder="Ort" /><div class="actions quiet-actions"><button class="quiet-btn quiet-btn-primary" data-action="submit-own-question" type="button">Frage senden</button><button class="quiet-btn" data-action="back-to-thanks" type="button">Zurück</button></div></section>`
     : "";
 
   app.innerHTML = `
@@ -367,10 +437,21 @@ function renderQuestionView() {
         <h1 class="question-title" data-action="reveal-rating" title="Frage öffnen">${escapeHtml(question.text)}</h1>
         <button class="question-edge-nav" type="button" data-action="next" aria-label="Nächste Frage">›</button>
       </div>
-      ${commentBlock}
+      ${responseBlock}
       ${ownQuestionBlock}
     </section>
   `;
+
+  if (state.questionStep === "answer") {
+    const input = app.querySelector("#commentInput");
+    if (input && typeof input.focus === "function") {
+      try {
+        input.focus({ preventScroll: true });
+      } catch {
+        input.focus();
+      }
+    }
+  }
 }
 
 function renderQuestionsView() {
@@ -635,6 +716,8 @@ function currentQuestion() {
 
 function nextQuestion() {
   if (!state.questions.length) return;
+  const current = currentQuestion();
+  if (current) clearQuestionDraft(current.id);
   if (!isQuestionOrderValid()) buildQuestionOrder({ resetIndex: false });
   const total = state.questionOrder.length || state.questions.length;
   state.currentIndex = (state.currentIndex + 1) % total;
@@ -645,6 +728,8 @@ function nextQuestion() {
 
 function previousQuestion() {
   if (!state.questions.length) return;
+  const current = currentQuestion();
+  if (current) clearQuestionDraft(current.id);
   if (!isQuestionOrderValid()) buildQuestionOrder({ resetIndex: false });
   const total = state.questionOrder.length || state.questions.length;
   state.currentIndex = (state.currentIndex - 1 + total) % total;
@@ -673,6 +758,27 @@ function saveInteraction(questionId, rating, comment, name) {
 
 function getInteraction(questionId) {
   return state.interactions.responses[questionId] || { rating: 0, comment: "", name: "" };
+}
+
+function getQuestionDraft(questionId) {
+  const key = String(questionId || "");
+  if (!key) return {};
+  return state.questionDrafts[key] || {};
+}
+
+function setQuestionDraft(questionId, patch) {
+  const key = String(questionId || "");
+  if (!key) return;
+  state.questionDrafts[key] = {
+    ...getQuestionDraft(key),
+    ...patch
+  };
+}
+
+function clearQuestionDraft(questionId) {
+  const key = String(questionId || "");
+  if (!key) return;
+  delete state.questionDrafts[key];
 }
 
 function loadInteractionsState() {
@@ -735,6 +841,7 @@ function statsByQuestion() {
   const comments = Array.isArray(state.comments) ? state.comments : [];
   for (let i = 0; i < comments.length; i += 1) {
     const row = comments[i];
+    if (row && row.visible === false) continue;
     const target = map.get(row.questionId);
     if (!target) continue;
     if (Number(row.rating) > 0) {
@@ -742,7 +849,9 @@ function statsByQuestion() {
       target.sum += 1;
     }
     if (row.comment) target.comments += 1;
-    const replies = Array.isArray(row.replies) ? row.replies : [];
+    const replies = Array.isArray(row.replies)
+      ? row.replies.filter((reply) => reply && reply.visible !== false && String(reply.text || "").trim().length > 0)
+      : [];
     target.comments += replies.length;
   }
   return Array.from(map.values());
@@ -753,8 +862,10 @@ function renderSimplePage(title, text) {
 }
 
 function updateShellVisibility() {
+  if (!state.menuEnabled) state.menuOpen = false;
   if (mainHeader) mainHeader.classList.toggle("hidden", !state.menuEnabled);
-  if (siteFooter) siteFooter.classList.toggle("hidden", !state.menuEnabled);
+  if (siteFooter) siteFooter.classList.toggle("hidden", !(state.menuEnabled && state.view !== "question"));
+  renderHeaderMenu();
 }
 
 function updateTopNavActive() {
@@ -764,6 +875,15 @@ function updateTopNavActive() {
     const target = String(el.dataset.view || "");
     el.classList.toggle("is-active", target === activeView);
   });
+}
+
+function renderHeaderMenu() {
+  const open = Boolean(state.menuEnabled && state.menuOpen);
+  if (mainMenuPanel) mainMenuPanel.classList.toggle("hidden", !open);
+  if (menuToggleBtn) {
+    menuToggleBtn.classList.toggle("is-open", open);
+    menuToggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  }
 }
 
 function escapeHtml(str) {
@@ -839,7 +959,7 @@ function findPersonByAuthor(authorName) {
 
 function initiativeHref(initiative) {
   const id = String(initiative && initiative.id ? initiative.id : "").trim();
-  if (id) return `/initiatives/${encodeURIComponent(id)}.html`;
+  if (id) return `/initiatives.html?id=${encodeURIComponent(id)}`;
   return "/initiatives.html";
 }
 
@@ -847,6 +967,11 @@ function getInitialViewFromUrl() {
   try {
     const params = new URLSearchParams(window.location.search);
     const view = String(params.get("view") || "").trim();
+    const author = String(params.get("author") || "").trim();
+    if (view === "questions" && author) {
+      state.activeAuthor = author;
+      return "author";
+    }
     if (view === "question" || view === "questions" || view === "people" || view === "initiatives" || view === "calendar") {
       return view;
     }
@@ -854,6 +979,27 @@ function getInitialViewFromUrl() {
   } catch {
     return "";
   }
+}
+
+function syncUrlWithView() {
+  try {
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+    if (state.view === "question") {
+      params.delete("view");
+      params.delete("author");
+    } else if (state.view === "author" && state.activeAuthor) {
+      params.set("view", "questions");
+      params.set("author", state.activeAuthor);
+    } else {
+      params.set("view", state.view);
+      params.delete("author");
+    }
+    const nextSearch = params.toString();
+    const nextUrl = `${url.pathname}${nextSearch ? `?${nextSearch}` : ""}`;
+    const currentUrl = `${window.location.pathname}${window.location.search}`;
+    if (nextUrl !== currentUrl) window.history.replaceState({}, "", nextUrl);
+  } catch {}
 }
 
 function mergeLocalInteractionsIntoComments() {
@@ -874,9 +1020,10 @@ function upsertCommentInState(entry) {
           browserId: String(reply.browserId || "").trim(),
           name: String(reply.name || "").trim(),
           text: String(reply.text || "").trim(),
-          createdAt: String(reply.createdAt || "")
+          createdAt: String(reply.createdAt || ""),
+          visible: reply.visible === false ? false : true
         }))
-        .filter((reply) => reply.text)
+        .filter((reply) => reply.text || reply.visible === false)
     : [];
   const normalized = {
     id: String(entry.id || ""),
@@ -886,6 +1033,7 @@ function upsertCommentInState(entry) {
     name: String(entry.name || "").trim(),
     comment: String(entry.comment || "").trim(),
     updatedAt: String(entry.updatedAt || new Date().toISOString()),
+    visible: entry.visible === false ? false : true,
     replies
   };
   if (!normalized.questionId || !normalized.browserId) return;
@@ -1021,13 +1169,17 @@ function getCommentsByQuestionMap() {
   const rows = Array.isArray(state.comments) ? state.comments : [];
   for (let i = 0; i < rows.length; i += 1) {
     const row = rows[i];
+    if (row && row.visible === false) continue;
     const qid = String(row.questionId || "");
     if (!qid) continue;
     const hasComment = Boolean(String(row.comment || "").trim());
-    const hasReplies = Array.isArray(row.replies) && row.replies.length > 0;
+    const visibleReplies = Array.isArray(row.replies)
+      ? row.replies.filter((reply) => reply && reply.visible !== false && String(reply.text || "").trim().length > 0)
+      : [];
+    const hasReplies = visibleReplies.length > 0;
     if (!hasComment && !hasReplies) continue;
     if (!byQuestion.has(qid)) byQuestion.set(qid, []);
-    byQuestion.get(qid).push(row);
+    byQuestion.get(qid).push({ ...row, replies: visibleReplies });
   }
   const keys = Array.from(byQuestion.keys());
   for (let i = 0; i < keys.length; i += 1) {
@@ -1042,8 +1194,11 @@ function countCommentEntries(rows) {
   let total = 0;
   for (let i = 0; i < safeRows.length; i += 1) {
     const row = safeRows[i];
+    if (row && row.visible === false) continue;
     if (String(row.comment || "").trim()) total += 1;
-    const replies = Array.isArray(row.replies) ? row.replies : [];
+    const replies = Array.isArray(row.replies)
+      ? row.replies.filter((reply) => reply && reply.visible !== false && String(reply.text || "").trim().length > 0)
+      : [];
     total += replies.length;
   }
   return total;

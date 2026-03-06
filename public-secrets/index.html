@@ -8,14 +8,14 @@
   </head>
   <body class="site-questions">
     <header id="mainHeader" class="topbar topbar-main hidden">
-      <button class="brand-link" type="button" data-view="question">public secrets ensemble</button>
-      <nav class="top-nav" aria-label="Hauptnavigation">
+      <button id="menuToggleBtn" class="menu-toggle" type="button" data-action="toggle-menu" aria-label="Menü öffnen" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="mainMenuPanel" class="top-menu-panel hidden" aria-label="Hauptnavigation">
+        <button class="brand-link menu-title" type="button" data-view="question">public secrets ensemble</button>
         <button class="top-nav-link" type="button" data-view="questions">Fragen</button>
-        <span class="dot">·</span>
         <button class="top-nav-link" type="button" data-view="people">Menschen</button>
-        <span class="dot">·</span>
         <button class="top-nav-link" type="button" data-view="initiatives">Initiativen</button>
-        <span class="dot">·</span>
         <button class="top-nav-link" type="button" data-view="calendar">Kalender</button>
       </nav>
     </header>
@@ -26,7 +26,7 @@
       <a href="/login.html">Login</a>
     </footer>
 
-    <script src="app.js?v=20260302-layout2"></script>
+    <script src="app.js?v=20260306a"></script>
       <script src="/theme-toggle.js"></script>
   </body>
 </html>

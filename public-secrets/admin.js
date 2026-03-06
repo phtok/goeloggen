@@ -314,6 +314,106 @@ personList.addEventListener("click", async (event) => {
   }
 });
 
+commentList.addEventListener("click", async (event) => {
+  const btn = event.target.closest("button[data-action]");
+  if (!btn) return;
+  const action = String(btn.dataset.action || "");
+  const commentId = String(btn.dataset.commentId || "");
+  const replyId = String(btn.dataset.replyId || "");
+  if (!commentId) return;
+
+  if (action === "delete-comment") {
+    if (!confirm("Kommentar wirklich löschen?")) return;
+    const res = await fetch(`/api/comments/${encodeURIComponent(commentId)}`, { method: "DELETE" });
+    if (!res.ok) return alert("Löschen fehlgeschlagen");
+    await refreshComments();
+    return;
+  }
+
+  if (action === "toggle-comment-visible") {
+    const isVisible = String(btn.dataset.visible || "true") !== "false";
+    const body = { visible: !isVisible };
+    const res = await fetch(`/api/comments/${encodeURIComponent(commentId)}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) return alert("Sichtbarkeit konnte nicht geändert werden");
+    await refreshComments();
+    return;
+  }
+
+  if (action === "save-comment") {
+    const nameInput = commentList.querySelector(`input[data-comment-name="${escapeAttr(commentId)}"]`);
+    const textInput = commentList.querySelector(`textarea[data-comment-text="${escapeAttr(commentId)}"]`);
+    const ratingInput = commentList.querySelector(`input[data-comment-rating="${escapeAttr(commentId)}"]`);
+    const visibleInput = commentList.querySelector(`input[data-comment-visible="${escapeAttr(commentId)}"]`);
+    const body = {
+      name: nameInput ? nameInput.value : "",
+      comment: textInput ? textInput.value : "",
+      rating: ratingInput && ratingInput.checked ? 1 : 0,
+      visible: visibleInput ? visibleInput.checked : true
+    };
+    const res = await fetch(`/api/comments/${encodeURIComponent(commentId)}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) return alert("Kommentar konnte nicht gespeichert werden");
+    await refreshComments();
+    return;
+  }
+
+  if (!replyId) return;
+
+  if (action === "delete-reply") {
+    if (!confirm("Antwort wirklich löschen?")) return;
+    const res = await fetch(`/api/comments/${encodeURIComponent(commentId)}/replies/${encodeURIComponent(replyId)}`, {
+      method: "DELETE"
+    });
+    if (!res.ok) return alert("Löschen fehlgeschlagen");
+    await refreshComments();
+    return;
+  }
+
+  if (action === "toggle-reply-visible") {
+    const isVisible = String(btn.dataset.visible || "true") !== "false";
+    const body = { visible: !isVisible };
+    const res = await fetch(`/api/comments/${encodeURIComponent(commentId)}/replies/${encodeURIComponent(replyId)}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) return alert("Sichtbarkeit konnte nicht geändert werden");
+    await refreshComments();
+    return;
+  }
+
+  if (action === "save-reply") {
+    const nameInput = commentList.querySelector(
+      `input[data-reply-name="${escapeAttr(replyId)}"][data-reply-comment="${escapeAttr(commentId)}"]`
+    );
+    const textInput = commentList.querySelector(
+      `textarea[data-reply-text="${escapeAttr(replyId)}"][data-reply-comment="${escapeAttr(commentId)}"]`
+    );
+    const visibleInput = commentList.querySelector(
+      `input[data-reply-visible="${escapeAttr(replyId)}"][data-reply-comment="${escapeAttr(commentId)}"]`
+    );
+    const body = {
+      name: nameInput ? nameInput.value : "",
+      text: textInput ? textInput.value : "",
+      visible: visibleInput ? visibleInput.checked : true
+    };
+    const res = await fetch(`/api/comments/${encodeURIComponent(commentId)}/replies/${encodeURIComponent(replyId)}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) return alert("Antwort konnte nicht gespeichert werden");
+    await refreshComments();
+  }
+});
+
 async function refreshAll() {
   await Promise.all([refreshQuestions(), refreshEvents(), refreshInitiatives(), refreshPeople(), refreshComments()]);
   renderComments();
@@ -378,7 +478,7 @@ async function refreshPeople() {
 
 async function refreshComments() {
   if (!commentList) return;
-  cache.comments = await apiGet("/api/comments");
+  cache.comments = await apiGet("/api/comments?includeHidden=true");
   cache.comments.sort((a, b) => Date.parse(String(b.updatedAt || "")) - Date.parse(String(a.updatedAt || "")));
   renderComments();
   refreshCounts();
@@ -393,18 +493,46 @@ function renderComments() {
       const when = comment.updatedAt ? new Date(comment.updatedAt).toLocaleString("de-DE") : "";
       const q = questionById.get(String(comment.questionId || ""));
       const qText = q ? q.text || "" : "(Frage nicht gefunden)";
-      const rating = Number(comment.rating) > 0 ? `<p class="muted">Resonanz (1)</p>` : "";
+      const visible = comment.visible === false ? false : true;
       const replies = Array.isArray(comment.replies) ? comment.replies : [];
       const repliesBlock = replies.length
         ? `<div class="list">${replies
             .map((reply) => {
               const rb = reply.name ? escapeHtml(reply.name) : "Anonym";
               const rw = reply.createdAt ? new Date(reply.createdAt).toLocaleString("de-DE") : "";
-              return `<article class="card"><p class="muted">${rb}${rw ? ` · ${escapeHtml(rw)}` : ""}</p><p>${escapeHtml(reply.text || "")}</p></article>`;
+              const rVisible = reply.visible === false ? false : true;
+              return `<article class="card">
+                <p class="muted">${rb}${rw ? ` · ${escapeHtml(rw)}` : ""}${rVisible ? "" : " · Ausgeblendet"}</p>
+                <label>Name</label>
+                <input type="text" data-reply-name="${escapeAttr(reply.id || "")}" data-reply-comment="${escapeAttr(comment.id || "")}" value="${escapeAttr(reply.name || "")}" />
+                <label>Antwort</label>
+                <textarea rows="2" data-reply-text="${escapeAttr(reply.id || "")}" data-reply-comment="${escapeAttr(comment.id || "")}">${escapeHtml(reply.text || "")}</textarea>
+                <div class="checkbox-inline"><input type="checkbox" data-reply-visible="${escapeAttr(reply.id || "")}" data-reply-comment="${escapeAttr(comment.id || "")}" ${rVisible ? "checked" : ""} /><label>Sichtbar</label></div>
+                <div class="actions">
+                  <button class="secondary" data-action="save-reply" data-comment-id="${escapeAttr(comment.id || "")}" data-reply-id="${escapeAttr(reply.id || "")}">Speichern</button>
+                  <button class="secondary" data-action="toggle-reply-visible" data-comment-id="${escapeAttr(comment.id || "")}" data-reply-id="${escapeAttr(reply.id || "")}" data-visible="${rVisible ? "true" : "false"}">${rVisible ? "Ausblenden" : "Einblenden"}</button>
+                  <button class="secondary" data-action="delete-reply" data-comment-id="${escapeAttr(comment.id || "")}" data-reply-id="${escapeAttr(reply.id || "")}">Löschen</button>
+                </div>
+              </article>`;
             })
             .join("")}</div>`
         : "";
-      return `<article class="card"><h3>${escapeHtml(qText)}</h3><p class="muted">${by}${when ? ` · ${escapeHtml(when)}` : ""}</p>${rating}<p>${escapeHtml(comment.comment || "")}</p>${repliesBlock}</article>`;
+      return `<article class="card">
+        <h3>${escapeHtml(qText)}</h3>
+        <p class="muted">${by}${when ? ` · ${escapeHtml(when)}` : ""}${visible ? "" : " · Ausgeblendet"}</p>
+        <label>Name</label>
+        <input type="text" data-comment-name="${escapeAttr(comment.id || "")}" value="${escapeAttr(comment.name || "")}" />
+        <label>Kommentar</label>
+        <textarea rows="3" data-comment-text="${escapeAttr(comment.id || "")}">${escapeHtml(comment.comment || "")}</textarea>
+        <div class="checkbox-inline"><input type="checkbox" data-comment-rating="${escapeAttr(comment.id || "")}" ${Number(comment.rating) > 0 ? "checked" : ""} /><label>Resonanz</label></div>
+        <div class="checkbox-inline"><input type="checkbox" data-comment-visible="${escapeAttr(comment.id || "")}" ${visible ? "checked" : ""} /><label>Sichtbar</label></div>
+        <div class="actions">
+          <button class="secondary" data-action="save-comment" data-comment-id="${escapeAttr(comment.id || "")}">Speichern</button>
+          <button class="secondary" data-action="toggle-comment-visible" data-comment-id="${escapeAttr(comment.id || "")}" data-visible="${visible ? "true" : "false"}">${visible ? "Ausblenden" : "Einblenden"}</button>
+          <button class="secondary" data-action="delete-comment" data-comment-id="${escapeAttr(comment.id || "")}">Löschen</button>
+        </div>
+        ${repliesBlock}
+      </article>`;
     })
     .join("");
   if (!cache.comments.length) commentList.innerHTML = `<p class="muted">Noch keine Kommentare vorhanden.</p>`;
@@ -493,6 +621,14 @@ async function apiGet(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Request failed: ${url}`);
   return res.json();
+}
+
+function escapeAttr(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 function escapeHtml(str) {

@@ -214,10 +214,24 @@ async function handleApi(req, res, pathname, url) {
   }
 
   if (req.method === "GET" && pathname === "/api/comments") {
-    const comments = await readData(COMMENTS_FILE);
+    const includeHidden = String(url.searchParams.get("includeHidden") || "").trim().toLowerCase() === "true";
+    if (includeHidden) {
+      const session = requireEditorSession(req, res);
+      if (!session) return;
+    }
+    const comments = (await readData(COMMENTS_FILE)).map(normalizeCommentRow);
     const questionId = String(url.searchParams.get("questionId") || "").trim();
     const rows = comments
       .filter((row) => (questionId ? String(row.questionId || "") === questionId : true))
+      .map((row) => {
+        if (includeHidden) return row;
+        if (row.visible === false) return null;
+        const replies = Array.isArray(row.replies)
+          ? row.replies.filter((reply) => reply && reply.visible !== false && String(reply.text || "").trim().length > 0)
+          : [];
+        return { ...row, replies };
+      })
+      .filter(Boolean)
       .filter((row) => {
         const hasComment = String(row.comment || "").trim().length > 0;
         const hasReplies = Array.isArray(row.replies) && row.replies.length > 0;
@@ -242,13 +256,21 @@ async function handleApi(req, res, pathname, url) {
       rating: body.rating,
       name: body.name,
       comment: body.comment,
+      visible: true,
       updatedAt: new Date().toISOString()
     });
     const idx = comments.findIndex(
       (row) => String(row.questionId || "") === questionId && String(row.browserId || "") === browserId
     );
-    if (idx >= 0) comments[idx] = { ...comments[idx], ...nextRow, id: comments[idx].id || nextRow.id };
-    else comments.push(nextRow);
+    if (idx >= 0) {
+      const existing = normalizeCommentRow(comments[idx]);
+      comments[idx] = normalizeCommentRow({
+        ...existing,
+        ...nextRow,
+        id: existing.id || nextRow.id,
+        replies: existing.replies || []
+      });
+    } else comments.push(nextRow);
     await writeData(COMMENTS_FILE, comments);
     return sendJson(res, 200, idx >= 0 ? comments[idx] : nextRow);
   }
@@ -270,6 +292,7 @@ async function handleApi(req, res, pathname, url) {
       browserId: String(body.browserId || "").trim(),
       name: body.name,
       text,
+      visible: true,
       createdAt: new Date().toISOString()
     });
 
@@ -280,6 +303,102 @@ async function handleApi(req, res, pathname, url) {
     const updated = normalizeCommentRow({
       ...current,
       replies,
+      updatedAt: new Date().toISOString()
+    });
+    comments[idx] = updated;
+    await writeData(COMMENTS_FILE, comments);
+    return sendJson(res, 200, updated);
+  }
+
+  if (req.method === "PUT" && /^\/api\/comments\/[^/]+$/.test(pathname)) {
+    const session = requireEditorSession(req, res);
+    if (!session) return;
+    const body = await readJsonBody(req);
+    const match = pathname.match(/^\/api\/comments\/([^/]+)$/);
+    const commentId = decodeURIComponent(match ? match[1] : "");
+    if (!commentId) return sendJson(res, 400, { error: "commentId fehlt" });
+    const comments = await readData(COMMENTS_FILE);
+    const idx = comments.findIndex((row) => String(row.id || "") === commentId);
+    if (idx < 0) return sendJson(res, 404, { error: "Kommentar nicht gefunden" });
+    const current = normalizeCommentRow(comments[idx]);
+    const updated = normalizeCommentRow({
+      ...current,
+      name: body.name === undefined ? current.name : String(body.name || "").trim(),
+      comment: body.comment === undefined ? current.comment : String(body.comment || "").trim(),
+      rating: body.rating === undefined ? current.rating : (Number(body.rating) > 0 ? 1 : 0),
+      visible: body.visible === undefined ? current.visible : Boolean(body.visible),
+      updatedAt: new Date().toISOString(),
+      replies: current.replies || []
+    });
+    comments[idx] = updated;
+    await writeData(COMMENTS_FILE, comments);
+    return sendJson(res, 200, updated);
+  }
+
+  if (req.method === "DELETE" && /^\/api\/comments\/[^/]+$/.test(pathname)) {
+    const session = requireEditorSession(req, res);
+    if (!session) return;
+    const match = pathname.match(/^\/api\/comments\/([^/]+)$/);
+    const commentId = decodeURIComponent(match ? match[1] : "");
+    if (!commentId) return sendJson(res, 400, { error: "commentId fehlt" });
+    const comments = await readData(COMMENTS_FILE);
+    const next = comments.filter((row) => String(row.id || "") !== commentId);
+    if (next.length === comments.length) return sendJson(res, 404, { error: "Kommentar nicht gefunden" });
+    await writeData(COMMENTS_FILE, next);
+    return sendJson(res, 200, { ok: true });
+  }
+
+  if (req.method === "PUT" && /^\/api\/comments\/[^/]+\/replies\/[^/]+$/.test(pathname)) {
+    const session = requireEditorSession(req, res);
+    if (!session) return;
+    const body = await readJsonBody(req);
+    const match = pathname.match(/^\/api\/comments\/([^/]+)\/replies\/([^/]+)$/);
+    const commentId = decodeURIComponent(match ? match[1] : "");
+    const replyId = decodeURIComponent(match ? match[2] : "");
+    if (!commentId || !replyId) return sendJson(res, 400, { error: "replyId oder commentId fehlt" });
+
+    const comments = await readData(COMMENTS_FILE);
+    const idx = comments.findIndex((row) => String(row.id || "") === commentId);
+    if (idx < 0) return sendJson(res, 404, { error: "Kommentar nicht gefunden" });
+    const current = normalizeCommentRow(comments[idx]);
+    const replies = Array.isArray(current.replies) ? current.replies.slice() : [];
+    const ridx = replies.findIndex((reply) => String(reply.id || "") === replyId);
+    if (ridx < 0) return sendJson(res, 404, { error: "Antwort nicht gefunden" });
+    replies[ridx] = normalizeReplyRow({
+      ...replies[ridx],
+      name: body.name === undefined ? replies[ridx].name : String(body.name || "").trim(),
+      text: body.text === undefined ? replies[ridx].text : String(body.text || "").trim(),
+      visible: body.visible === undefined ? replies[ridx].visible : Boolean(body.visible),
+      createdAt: replies[ridx].createdAt
+    });
+    const updated = normalizeCommentRow({
+      ...current,
+      replies,
+      updatedAt: new Date().toISOString()
+    });
+    comments[idx] = updated;
+    await writeData(COMMENTS_FILE, comments);
+    return sendJson(res, 200, updated);
+  }
+
+  if (req.method === "DELETE" && /^\/api\/comments\/[^/]+\/replies\/[^/]+$/.test(pathname)) {
+    const session = requireEditorSession(req, res);
+    if (!session) return;
+    const match = pathname.match(/^\/api\/comments\/([^/]+)\/replies\/([^/]+)$/);
+    const commentId = decodeURIComponent(match ? match[1] : "");
+    const replyId = decodeURIComponent(match ? match[2] : "");
+    if (!commentId || !replyId) return sendJson(res, 400, { error: "replyId oder commentId fehlt" });
+
+    const comments = await readData(COMMENTS_FILE);
+    const idx = comments.findIndex((row) => String(row.id || "") === commentId);
+    if (idx < 0) return sendJson(res, 404, { error: "Kommentar nicht gefunden" });
+    const current = normalizeCommentRow(comments[idx]);
+    const replies = Array.isArray(current.replies) ? current.replies.slice() : [];
+    const nextReplies = replies.filter((reply) => String(reply.id || "") !== replyId);
+    if (nextReplies.length === replies.length) return sendJson(res, 404, { error: "Antwort nicht gefunden" });
+    const updated = normalizeCommentRow({
+      ...current,
+      replies: nextReplies,
       updatedAt: new Date().toISOString()
     });
     comments[idx] = updated;
@@ -1067,6 +1186,7 @@ function normalizeCommentRow(input) {
     name: String(input.name || "").trim(),
     comment: String(input.comment || "").trim(),
     updatedAt: normalizeCreatedAt(input.updatedAt),
+    visible: input.visible === false ? false : true,
     replies
   };
 }
@@ -1077,7 +1197,8 @@ function normalizeReplyRow(input) {
     browserId: String(input.browserId || "").trim(),
     name: String(input.name || "").trim(),
     text: String(input.text || "").trim(),
-    createdAt: normalizeCreatedAt(input.createdAt)
+    createdAt: normalizeCreatedAt(input.createdAt),
+    visible: input.visible === false ? false : true
   };
 }
 
