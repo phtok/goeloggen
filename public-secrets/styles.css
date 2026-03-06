@@ -660,6 +660,13 @@ button.secondary,
   color: var(--muted);
 }
 
+.calendar-image {
+  width: 100%;
+  border-radius: 12px;
+  margin: 0.55rem 0;
+  display: block;
+}
+
 .calendar-link {
   margin-top: 0.2rem;
   color: var(--text);
@@ -680,6 +687,13 @@ button.secondary,
   display: block;
 }
 
+.initiative-thumb {
+  width: 100%;
+  border-radius: 10px;
+  margin: 0 0 0.65rem;
+  display: block;
+}
+
 .form-grid {
   display: grid;
   gap: 0.5rem;
@@ -691,6 +705,29 @@ button.secondary,
 
 .form-grid .full {
   grid-column: 1 / -1;
+}
+
+.upload-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.upload-row input[type="file"] {
+  flex: 1 1 240px;
+  padding: 0.45rem;
+  border-style: dashed;
+  background: var(--surface-soft);
+}
+
+.upload-row button {
+  white-space: nowrap;
+}
+
+.upload-status {
+  font-size: 0.88rem;
+  min-height: 1.2em;
 }
 
 .hidden {

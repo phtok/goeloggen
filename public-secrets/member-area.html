@@ -23,6 +23,11 @@
           <input id="role" type="text" />
           <label for="portraitUrl">Portrait-URL</label>
           <input id="portraitUrl" type="url" />
+          <div class="full upload-row">
+            <input id="portraitFile" type="file" accept="image/*" />
+            <button id="uploadPortraitBtn" class="secondary" type="button">Bild hochladen</button>
+            <span id="portraitUploadStatus" class="muted upload-status"></span>
+          </div>
           <label for="links">Links (eine URL pro Zeile)</label>
           <textarea id="links" rows="3"></textarea>
           <label for="bioShort">Kurzvita</label>
@@ -63,6 +68,13 @@
           <input id="iStatus" type="text" value="aktiv" />
           <label for="iDescription">Beschreibung</label>
           <textarea id="iDescription" rows="3"></textarea>
+          <label for="iImageUrl">Bild-URL</label>
+          <input id="iImageUrl" type="url" />
+          <div class="full upload-row">
+            <input id="iImageFile" type="file" accept="image/*" />
+            <button id="uploadInitiativeImageBtn" class="secondary" type="button">Bild hochladen</button>
+            <span id="initiativeUploadStatus" class="muted upload-status"></span>
+          </div>
           <label for="iSourceUrl">Quelle</label>
           <input id="iSourceUrl" type="url" />
         </div>
@@ -98,6 +110,15 @@
             <textarea id="eDescription" rows="3"></textarea>
           </div>
           <div class="full">
+            <label for="eImageUrl">Bild-URL</label>
+            <input id="eImageUrl" type="url" />
+          </div>
+          <div class="full upload-row">
+            <input id="eImageFile" type="file" accept="image/*" />
+            <button id="uploadEventImageBtn" class="secondary" type="button">Bild hochladen</button>
+            <span id="eventUploadStatus" class="muted upload-status"></span>
+          </div>
+          <div class="full">
             <label for="eSourceUrl">Quelle</label>
             <input id="eSourceUrl" type="url" />
           </div>
@@ -110,7 +131,7 @@
       </section>
     </main>
 
-    <script src="member-area.js?v=20260301f"></script>
+    <script src="member-area.js?v=20260306a"></script>
       <script src="/theme-toggle.js"></script>
   </body>
 </html>

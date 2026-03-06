@@ -9,6 +9,7 @@ const HOST = process.env.HOST || "127.0.0.1";
 const PORT = Number(process.env.PORT || 8787);
 const ROOT = __dirname;
 const DATA_DIR = resolveDataDir();
+const UPLOADS_DIR = path.join(DATA_DIR, "uploads");
 const QUESTIONS_FILE = path.join(DATA_DIR, "questions.json");
 const EVENTS_FILE = path.join(DATA_DIR, "events.json");
 const INITIATIVES_FILE = path.join(DATA_DIR, "initiatives.json");
@@ -33,6 +34,8 @@ const MIME_TYPES = {
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
   ".webp": "image/webp",
+  ".avif": "image/avif",
+  ".gif": "image/gif",
   ".ico": "image/x-icon"
 };
 
@@ -49,6 +52,10 @@ async function start() {
     try {
       await handleRequest(req, res);
     } catch (error) {
+      if (error && error.status) {
+        sendJson(res, error.status, { error: error.message });
+        return;
+      }
       console.error("Unhandled error:", error);
       sendJson(res, 500, { error: "Internal server error" });
     }
@@ -65,6 +72,9 @@ async function handleRequest(req, res) {
 
   if (pathname.startsWith("/api/")) {
     return handleApi(req, res, pathname, url);
+  }
+  if (pathname.startsWith("/uploads/")) {
+    return serveUploadedFile(res, pathname);
   }
 
   return serveStatic(res, pathname);
@@ -164,6 +174,20 @@ async function handleApi(req, res, pathname, url) {
     const session = requireMemberSession(req, res);
     if (!session) return;
     return sendJson(res, 200, { memberSlug: session.memberSlug, memberName: session.memberName });
+  }
+
+  if (req.method === "POST" && pathname === "/api/member/uploads") {
+    const session = requireMemberSession(req, res);
+    if (!session) return;
+    const body = await readJsonBody(req);
+    const result = await saveUploadedImage({
+      filename: body.filename,
+      contentType: body.contentType,
+      dataBase64: body.dataBase64,
+      target: body.target,
+      memberSlug: session.memberSlug
+    });
+    return sendJson(res, 201, result);
   }
 
   if (req.method === "GET" && pathname === "/api/questions") {
@@ -379,7 +403,8 @@ async function handleApi(req, res, pathname, url) {
       date: String(body.date || "").trim(),
       archived: Boolean(body.archived),
       hosts,
-      sourceUrl: String(body.sourceUrl || "").trim()
+      sourceUrl: String(body.sourceUrl || "").trim(),
+      imageUrl: String(body.imageUrl || "").trim()
     };
     if (!newItem.title || !newItem.date) return sendJson(res, 400, { error: "Titel und Datum sind Pflicht" });
     const events = await readData(EVENTS_FILE);
@@ -409,7 +434,8 @@ async function handleApi(req, res, pathname, url) {
       date: body.date === undefined ? events[idx].date : String(body.date).trim(),
       archived: body.archived === undefined ? events[idx].archived : Boolean(body.archived),
       hosts,
-      sourceUrl: body.sourceUrl === undefined ? events[idx].sourceUrl || "" : String(body.sourceUrl).trim()
+      sourceUrl: body.sourceUrl === undefined ? events[idx].sourceUrl || "" : String(body.sourceUrl).trim(),
+      imageUrl: body.imageUrl === undefined ? events[idx].imageUrl || "" : String(body.imageUrl).trim()
     };
     if (!updated.title || !updated.date) return sendJson(res, 400, { error: "Titel und Datum sind Pflicht" });
     events[idx] = updated;
@@ -449,7 +475,8 @@ async function handleApi(req, res, pathname, url) {
       description: String(body.description || "").trim(),
       status: String(body.status || "aktiv").trim(),
       hosts,
-      sourceUrl: String(body.sourceUrl || "").trim()
+      sourceUrl: String(body.sourceUrl || "").trim(),
+      imageUrl: String(body.imageUrl || "").trim()
     };
     if (!newItem.title) return sendJson(res, 400, { error: "Titel ist Pflicht" });
     const initiatives = await readData(INITIATIVES_FILE);
@@ -477,7 +504,8 @@ async function handleApi(req, res, pathname, url) {
       description: body.description === undefined ? initiatives[idx].description : String(body.description).trim(),
       status: body.status === undefined ? initiatives[idx].status : String(body.status).trim(),
       hosts,
-      sourceUrl: body.sourceUrl === undefined ? initiatives[idx].sourceUrl || "" : String(body.sourceUrl).trim()
+      sourceUrl: body.sourceUrl === undefined ? initiatives[idx].sourceUrl || "" : String(body.sourceUrl).trim(),
+      imageUrl: body.imageUrl === undefined ? initiatives[idx].imageUrl || "" : String(body.imageUrl).trim()
     };
     if (!updated.title) return sendJson(res, 400, { error: "Titel ist Pflicht" });
     initiatives[idx] = updated;
@@ -651,7 +679,8 @@ async function handleApi(req, res, pathname, url) {
       date: String(body.date || "").trim(),
       archived: Boolean(body.archived),
       hosts: normalizeHosts(body.hosts),
-      sourceUrl: String(body.sourceUrl || "").trim()
+      sourceUrl: String(body.sourceUrl || "").trim(),
+      imageUrl: String(body.imageUrl || "").trim()
     };
     if (!newItem.title || !newItem.date) return sendJson(res, 400, { error: "Titel und Datum sind Pflicht" });
 
@@ -678,7 +707,8 @@ async function handleApi(req, res, pathname, url) {
       date: body.date === undefined ? events[idx].date : String(body.date).trim(),
       archived: body.archived === undefined ? events[idx].archived : Boolean(body.archived),
       hosts: body.hosts === undefined ? events[idx].hosts || [] : normalizeHosts(body.hosts),
-      sourceUrl: body.sourceUrl === undefined ? events[idx].sourceUrl || "" : String(body.sourceUrl).trim()
+      sourceUrl: body.sourceUrl === undefined ? events[idx].sourceUrl || "" : String(body.sourceUrl).trim(),
+      imageUrl: body.imageUrl === undefined ? events[idx].imageUrl || "" : String(body.imageUrl).trim()
     };
     if (!updated.title || !updated.date) return sendJson(res, 400, { error: "Titel und Datum sind Pflicht" });
 
@@ -708,7 +738,8 @@ async function handleApi(req, res, pathname, url) {
       description: String(body.description || "").trim(),
       status: String(body.status || "aktiv").trim(),
       hosts: normalizeHosts(body.hosts),
-      sourceUrl: String(body.sourceUrl || "").trim()
+      sourceUrl: String(body.sourceUrl || "").trim(),
+      imageUrl: String(body.imageUrl || "").trim()
     };
     if (!newItem.title) return sendJson(res, 400, { error: "Titel ist Pflicht" });
 
@@ -733,7 +764,8 @@ async function handleApi(req, res, pathname, url) {
       description: body.description === undefined ? initiatives[idx].description : String(body.description).trim(),
       status: body.status === undefined ? initiatives[idx].status : String(body.status).trim(),
       hosts: body.hosts === undefined ? initiatives[idx].hosts || [] : normalizeHosts(body.hosts),
-      sourceUrl: body.sourceUrl === undefined ? initiatives[idx].sourceUrl || "" : String(body.sourceUrl).trim()
+      sourceUrl: body.sourceUrl === undefined ? initiatives[idx].sourceUrl || "" : String(body.sourceUrl).trim(),
+      imageUrl: body.imageUrl === undefined ? initiatives[idx].imageUrl || "" : String(body.imageUrl).trim()
     };
     if (!updated.title) return sendJson(res, 400, { error: "Titel ist Pflicht" });
 
@@ -851,6 +883,30 @@ async function serveStatic(res, pathname) {
   }
 }
 
+async function serveUploadedFile(res, pathname) {
+  const rel = pathname.slice("/uploads/".length).trim();
+  if (!rel) return sendText(res, 404, "Not found");
+  const filePath = path.resolve(UPLOADS_DIR, rel);
+  if (!filePath.startsWith(`${UPLOADS_DIR}${path.sep}`) && filePath !== UPLOADS_DIR) {
+    return sendText(res, 403, "Forbidden");
+  }
+
+  try {
+    const stat = await fs.stat(filePath);
+    if (!stat.isFile()) return sendText(res, 404, "Not found");
+    const ext = path.extname(filePath).toLowerCase();
+    const contentType = MIME_TYPES[ext] || "application/octet-stream";
+    const data = await fs.readFile(filePath);
+    res.writeHead(200, {
+      "Content-Type": contentType,
+      "Cache-Control": "no-store"
+    });
+    res.end(data);
+  } catch {
+    sendText(res, 404, "Not found");
+  }
+}
+
 function injectThemeAssets(html) {
   let out = String(html || "");
   const prelude = '<script>try{const p=localStorage.getItem("ps_theme_preference_v2");const l=localStorage.getItem("ps_theme_invert_v1");const pref=(p==="light"||p==="dark"||p==="auto")?p:(l==="1"?"dark":(l==="0"?"light":"auto"));const dark=pref==="dark"||(pref==="auto"&&window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(dark)document.documentElement.classList.add("theme-invert");const qs=new URLSearchParams(window.location.search);const qf=String(qs.get("font")||"").toLowerCase();const sf=String(localStorage.getItem("ps_font_mode_v1")||"").toLowerCase();const f=(qf==="proxima"||qf==="inclusive")?qf:((sf==="proxima"||sf==="inclusive")?sf:"inclusive");document.documentElement.classList.toggle("font-inclusive",f==="inclusive");document.documentElement.classList.toggle("font-proxima",f==="proxima");if(qf==="proxima"||qf==="inclusive")localStorage.setItem("ps_font_mode_v1",f);}catch{}</script>';
@@ -893,6 +949,7 @@ function resolveDataDir() {
 
 async function ensureDataFiles() {
   await fs.mkdir(DATA_DIR, { recursive: true });
+  await fs.mkdir(UPLOADS_DIR, { recursive: true });
   await ensureJsonFile(QUESTIONS_FILE, []);
   await ensureJsonFile(EVENTS_FILE, [
     {
@@ -1136,6 +1193,67 @@ function createHttpError(status, message) {
   const err = new Error(message);
   err.status = status;
   return err;
+}
+
+async function saveUploadedImage({ filename, contentType, dataBase64, target, memberSlug }) {
+  const resolvedType = normalizeImageMimeType(contentType);
+  if (!resolvedType) throw createHttpError(400, "Nur Bilddateien sind erlaubt");
+
+  const base64Raw = String(dataBase64 || "").trim();
+  const encoded = base64Raw.includes(",") ? base64Raw.split(",").pop() : base64Raw;
+  if (!encoded) throw createHttpError(400, "Dateiinhalt fehlt");
+
+  let data;
+  try {
+    data = Buffer.from(encoded, "base64");
+  } catch {
+    throw createHttpError(400, "Dateiinhalt ist ungültig");
+  }
+  if (!data.length) throw createHttpError(400, "Leere Datei");
+  if (data.length > 8 * 1024 * 1024) throw createHttpError(413, "Datei ist zu groß (max. 8MB)");
+
+  const ext = mimeToExt(resolvedType) || safeExtFromFilename(filename) || "jpg";
+  const targetDir = normalizeUploadTarget(target);
+  const baseName = slugify(path.parse(String(filename || "")).name) || slugify(memberSlug) || "upload";
+  const uniqueName = `${baseName}-${Date.now()}-${crypto.randomBytes(4).toString("hex")}.${ext}`;
+  const writeDir = path.join(UPLOADS_DIR, targetDir);
+  const writePath = path.join(writeDir, uniqueName);
+
+  await fs.mkdir(writeDir, { recursive: true });
+  await fs.writeFile(writePath, data);
+
+  return { url: `/uploads/${targetDir}/${uniqueName}` };
+}
+
+function normalizeUploadTarget(value) {
+  const clean = String(value || "").trim().toLowerCase();
+  if (clean === "profile" || clean === "initiative" || clean === "event") return clean;
+  return "misc";
+}
+
+function normalizeImageMimeType(value) {
+  const mime = String(value || "").trim().toLowerCase();
+  if (mime === "image/png" || mime === "image/jpeg" || mime === "image/webp" || mime === "image/avif" || mime === "image/gif") {
+    return mime;
+  }
+  return "";
+}
+
+function mimeToExt(mime) {
+  if (mime === "image/png") return "png";
+  if (mime === "image/jpeg") return "jpg";
+  if (mime === "image/webp") return "webp";
+  if (mime === "image/avif") return "avif";
+  if (mime === "image/gif") return "gif";
+  return "";
+}
+
+function safeExtFromFilename(value) {
+  const ext = path.extname(String(value || "")).toLowerCase().replace(/^\./, "");
+  if (ext === "png" || ext === "jpg" || ext === "jpeg" || ext === "webp" || ext === "avif" || ext === "gif") {
+    return ext === "jpeg" ? "jpg" : ext;
+  }
+  return "";
 }
 
 process.on("uncaughtException", (err) => {

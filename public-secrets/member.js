@@ -88,13 +88,19 @@ function renderInitiative(initiative) {
   const link = initiative.sourceUrl
     ? `<p><a class="member-link" href="${escapeHtml(initiative.sourceUrl)}" target="_blank" rel="noopener noreferrer">Quelle</a></p>`
     : "";
-  return `<article class="card"><h3><a class="member-link" href="${detailHref}">${escapeHtml(initiative.title || "")}</a></h3><p class="muted">${escapeHtml(initiative.description || "")}</p><p><a class="member-link" href="${detailHref}">Mehr</a></p>${link}</article>`;
+  const image = initiative.imageUrl
+    ? `<img class="initiative-thumb" src="${escapeHtml(initiative.imageUrl)}" alt="${escapeHtml(initiative.title || "")}" loading="lazy" />`
+    : "";
+  return `<article class="card">${image}<h3><a class="member-link" href="${detailHref}">${escapeHtml(initiative.title || "")}</a></h3><p class="muted">${escapeHtml(initiative.description || "")}</p><p><a class="member-link" href="${detailHref}">Mehr</a></p>${link}</article>`;
 }
 
 function renderEvent(event) {
   const date = event.date ? new Date(event.date).toLocaleDateString("de-DE") : "";
   const location = event.location ? ` - ${escapeHtml(event.location)}` : "";
-  return `<article class="card"><h3>${escapeHtml(event.title || "")}</h3><p class="muted">${escapeHtml(date)}${location}</p><p>${escapeHtml(event.description || "")}</p></article>`;
+  const image = event.imageUrl
+    ? `<img class="calendar-image" src="${escapeHtml(event.imageUrl)}" alt="${escapeHtml(event.title || "")}" loading="lazy" />`
+    : "";
+  return `<article class="card"><h3>${escapeHtml(event.title || "")}</h3><p class="muted">${escapeHtml(date)}${location}</p>${image}<p>${escapeHtml(event.description || "")}</p></article>`;
 }
 
 async function fetchPeople() {

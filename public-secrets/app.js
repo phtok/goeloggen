@@ -553,7 +553,10 @@ function renderInitiativesView() {
           return `<section class="initiative-group"><h3 class="initiative-group-title">${escapeHtml(category)}</h3><div class="list initiatives-grid">${items
             .map((i) => {
               const href = initiativeHref(i);
-              return `<article class="card"><h3><a class="member-link" href="${escapeHtml(href)}">${escapeHtml(i.title)}</a></h3><p class="muted">${escapeHtml(i.description || "")}</p><p><a class="member-link" href="${escapeHtml(href)}">Mehr</a></p></article>`;
+              const image = i.imageUrl
+                ? `<img class="initiative-thumb" src="${escapeHtml(i.imageUrl)}" alt="${escapeHtml(i.title || "")}" loading="lazy" />`
+                : "";
+              return `<article class="card">${image}<h3><a class="member-link" href="${escapeHtml(href)}">${escapeHtml(i.title)}</a></h3><p class="muted">${escapeHtml(i.description || "")}</p><p><a class="member-link" href="${escapeHtml(href)}">Mehr</a></p></article>`;
             })
           .join("")}
           </div></section>`;
@@ -599,7 +602,10 @@ function renderCalendarCard(event, parsedDate) {
   const link = event.sourceUrl
     ? `<a class="calendar-link" target="_blank" rel="noopener noreferrer" href="${escapeHtml(event.sourceUrl)}">Zur Veranstaltung</a>`
     : "";
-  return `<article class="card calendar-card"><p class="calendar-date">${escapeHtml(dateLabel)}</p><h3>${escapeHtml(event.title || "")}</h3><p class="calendar-subtitle">${escapeHtml(subtitle)}</p>${link}</article>`;
+  const image = event.imageUrl
+    ? `<img class="calendar-image" src="${escapeHtml(event.imageUrl)}" alt="${escapeHtml(event.title || "")}" loading="lazy" />`
+    : "";
+  return `<article class="card calendar-card"><p class="calendar-date">${escapeHtml(dateLabel)}</p><h3>${escapeHtml(event.title || "")}</h3>${image}<p class="calendar-subtitle">${escapeHtml(subtitle)}</p>${link}</article>`;
 }
 
 function parseEventDate(value) {

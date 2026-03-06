@@ -3,6 +3,9 @@ const logoutBtn = document.getElementById("logoutBtn");
 
 const roleInput = document.getElementById("role");
 const portraitUrlInput = document.getElementById("portraitUrl");
+const portraitFileInput = document.getElementById("portraitFile");
+const uploadPortraitBtn = document.getElementById("uploadPortraitBtn");
+const portraitUploadStatus = document.getElementById("portraitUploadStatus");
 const linksInput = document.getElementById("links");
 const bioShortInput = document.getElementById("bioShort");
 const bioInput = document.getElementById("bio");
@@ -20,6 +23,10 @@ const iId = document.getElementById("iId");
 const iTitle = document.getElementById("iTitle");
 const iStatus = document.getElementById("iStatus");
 const iDescription = document.getElementById("iDescription");
+const iImageUrl = document.getElementById("iImageUrl");
+const iImageFile = document.getElementById("iImageFile");
+const uploadInitiativeImageBtn = document.getElementById("uploadInitiativeImageBtn");
+const initiativeUploadStatus = document.getElementById("initiativeUploadStatus");
 const iSourceUrl = document.getElementById("iSourceUrl");
 const saveInitiativeBtn = document.getElementById("saveInitiativeBtn");
 const resetInitiativeBtn = document.getElementById("resetInitiativeBtn");
@@ -30,6 +37,10 @@ const eTitle = document.getElementById("eTitle");
 const eDate = document.getElementById("eDate");
 const eLocation = document.getElementById("eLocation");
 const eDescription = document.getElementById("eDescription");
+const eImageUrl = document.getElementById("eImageUrl");
+const eImageFile = document.getElementById("eImageFile");
+const uploadEventImageBtn = document.getElementById("uploadEventImageBtn");
+const eventUploadStatus = document.getElementById("eventUploadStatus");
 const eSourceUrl = document.getElementById("eSourceUrl");
 const eArchived = document.getElementById("eArchived");
 const saveEventBtn = document.getElementById("saveEventBtn");
@@ -74,6 +85,15 @@ saveProfileBtn.addEventListener("click", async () => {
   await loadProfile();
 });
 
+uploadPortraitBtn.addEventListener("click", () =>
+  handleImageUpload({
+    fileInput: portraitFileInput,
+    targetInput: portraitUrlInput,
+    statusEl: portraitUploadStatus,
+    target: "profile"
+  })
+);
+
 saveQuestionBtn.addEventListener("click", async () => {
   const body = {
     text: qText.value.trim(),
@@ -100,6 +120,7 @@ saveInitiativeBtn.addEventListener("click", async () => {
     title: iTitle.value.trim(),
     status: iStatus.value.trim() || "aktiv",
     description: iDescription.value.trim(),
+    imageUrl: iImageUrl.value.trim(),
     sourceUrl: iSourceUrl.value.trim()
   };
   const id = iId.value.trim();
@@ -117,12 +138,22 @@ saveInitiativeBtn.addEventListener("click", async () => {
 
 resetInitiativeBtn.addEventListener("click", resetInitiativeForm);
 
+uploadInitiativeImageBtn.addEventListener("click", () =>
+  handleImageUpload({
+    fileInput: iImageFile,
+    targetInput: iImageUrl,
+    statusEl: initiativeUploadStatus,
+    target: "initiative"
+  })
+);
+
 saveEventBtn.addEventListener("click", async () => {
   const body = {
     title: eTitle.value.trim(),
     date: eDate.value,
     location: eLocation.value.trim(),
     description: eDescription.value.trim(),
+    imageUrl: eImageUrl.value.trim(),
     sourceUrl: eSourceUrl.value.trim(),
     archived: eArchived.checked
   };
@@ -140,6 +171,15 @@ saveEventBtn.addEventListener("click", async () => {
 });
 
 resetEventBtn.addEventListener("click", resetEventForm);
+
+uploadEventImageBtn.addEventListener("click", () =>
+  handleImageUpload({
+    fileInput: eImageFile,
+    targetInput: eImageUrl,
+    statusEl: eventUploadStatus,
+    target: "event"
+  })
+);
 
 questionList.addEventListener("click", async (event) => {
   const btn = event.target.closest("button[data-action]");
@@ -172,6 +212,7 @@ initiativeList.addEventListener("click", async (event) => {
     iTitle.value = row.title || "";
     iStatus.value = row.status || "";
     iDescription.value = row.description || "";
+    iImageUrl.value = row.imageUrl || "";
     iSourceUrl.value = row.sourceUrl || "";
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -194,6 +235,7 @@ eventList.addEventListener("click", async (event) => {
     eDate.value = row.date || "";
     eLocation.value = row.location || "";
     eDescription.value = row.description || "";
+    eImageUrl.value = row.imageUrl || "";
     eSourceUrl.value = row.sourceUrl || "";
     eArchived.checked = Boolean(row.archived);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -234,7 +276,12 @@ async function refreshInitiatives() {
   if (!res.ok) return;
   cache.initiatives = await res.json();
   initiativeList.innerHTML = cache.initiatives
-    .map((i) => `<article class="card"><h3>${escapeHtml(i.title || "")}</h3><p class="muted">${escapeHtml(i.status || "")}</p><p>${escapeHtml(i.description || "")}</p><div class="actions"><button class="secondary" data-action="edit-i" data-id="${i.id}">Bearbeiten</button><button class="secondary" data-action="del-i" data-id="${i.id}">Löschen</button></div></article>`)
+    .map((i) => {
+      const image = i.imageUrl
+        ? `<p><a class="member-link" target="_blank" rel="noopener noreferrer" href="${escapeHtml(i.imageUrl)}">Bild</a></p>`
+        : "";
+      return `<article class="card"><h3>${escapeHtml(i.title || "")}</h3><p class="muted">${escapeHtml(i.status || "")}</p><p>${escapeHtml(i.description || "")}</p>${image}<div class="actions"><button class="secondary" data-action="edit-i" data-id="${i.id}">Bearbeiten</button><button class="secondary" data-action="del-i" data-id="${i.id}">Löschen</button></div></article>`;
+    })
     .join("");
 }
 
@@ -243,7 +290,12 @@ async function refreshEvents() {
   if (!res.ok) return;
   cache.events = await res.json();
   eventList.innerHTML = cache.events
-    .map((e) => `<article class="card"><h3>${escapeHtml(e.title || "")}</h3><p class="muted">${escapeHtml(e.date || "")} - ${escapeHtml(e.location || "")}</p><p>${escapeHtml(e.description || "")}</p><div class="actions"><button class="secondary" data-action="edit-e" data-id="${e.id}">Bearbeiten</button><button class="secondary" data-action="del-e" data-id="${e.id}">Löschen</button></div></article>`)
+    .map((e) => {
+      const image = e.imageUrl
+        ? `<p><a class="member-link" target="_blank" rel="noopener noreferrer" href="${escapeHtml(e.imageUrl)}">Bild</a></p>`
+        : "";
+      return `<article class="card"><h3>${escapeHtml(e.title || "")}</h3><p class="muted">${escapeHtml(e.date || "")} - ${escapeHtml(e.location || "")}</p><p>${escapeHtml(e.description || "")}</p>${image}<div class="actions"><button class="secondary" data-action="edit-e" data-id="${e.id}">Bearbeiten</button><button class="secondary" data-action="del-e" data-id="${e.id}">Löschen</button></div></article>`;
+    })
     .join("");
 }
 
@@ -259,7 +311,10 @@ function resetInitiativeForm() {
   iTitle.value = "";
   iStatus.value = "aktiv";
   iDescription.value = "";
+  iImageUrl.value = "";
   iSourceUrl.value = "";
+  if (iImageFile) iImageFile.value = "";
+  setUploadStatus(initiativeUploadStatus, "");
 }
 
 function resetEventForm() {
@@ -268,8 +323,67 @@ function resetEventForm() {
   eDate.value = "";
   eLocation.value = "";
   eDescription.value = "";
+  eImageUrl.value = "";
   eSourceUrl.value = "";
   eArchived.checked = false;
+  if (eImageFile) eImageFile.value = "";
+  setUploadStatus(eventUploadStatus, "");
+}
+
+async function handleImageUpload({ fileInput, targetInput, statusEl, target }) {
+  const file = fileInput && fileInput.files ? fileInput.files[0] : null;
+  if (!file) {
+    setUploadStatus(statusEl, "Bitte zuerst eine Bilddatei wählen.", true);
+    return;
+  }
+  if (!file.type || !file.type.startsWith("image/")) {
+    setUploadStatus(statusEl, "Nur Bilddateien sind erlaubt.", true);
+    return;
+  }
+
+  try {
+    setUploadStatus(statusEl, "Upload läuft …");
+    const dataBase64 = await fileToBase64(file);
+    const res = await fetch("/api/member/uploads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        filename: file.name,
+        contentType: file.type,
+        dataBase64,
+        target
+      })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(String(err.error || "Upload fehlgeschlagen"));
+    }
+    const payload = await res.json();
+    targetInput.value = String(payload.url || "").trim();
+    setUploadStatus(statusEl, "Bild hochgeladen.");
+    fileInput.value = "";
+  } catch (error) {
+    setUploadStatus(statusEl, String(error.message || "Upload fehlgeschlagen"), true);
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      const encoded = result.includes(",") ? result.split(",").pop() : result;
+      resolve(encoded || "");
+    };
+    reader.onerror = () => reject(new Error("Datei konnte nicht gelesen werden"));
+    reader.readAsDataURL(file);
+  });
+}
+
+function setUploadStatus(el, message, isError = false) {
+  if (!el) return;
+  el.textContent = String(message || "");
+  el.style.color = isError ? "#b42318" : "";
 }
 
 function escapeHtml(str) {
