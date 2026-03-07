@@ -14,19 +14,23 @@
       <section class="card">
         <h2>Login</h2>
         <div class="form-grid">
+          <p class="muted">Mit Link aus E-Mail einloggen</p>
+          <label for="emailForLink">E-Mail</label>
+          <input id="emailForLink" type="email" autocomplete="email" placeholder="name@example.com" />
+          <button id="requestBtn" class="secondary" type="button">Link senden</button>
+          <p class="muted">Mit Passwort einloggen</p>
           <label for="identity">E-Mail oder Benutzername</label>
           <input id="identity" type="text" autocomplete="username" placeholder="name@example.com" />
-          <label for="secret">Code oder Passwort</label>
-          <input id="secret" type="password" autocomplete="current-password" placeholder="Einmal-Code oder Passwort" />
+          <label for="password">Passwort</label>
+          <input id="password" type="password" autocomplete="current-password" placeholder="Passwort" />
         </div>
         <div class="actions">
-          <button id="requestBtn" class="secondary" type="button">Zugangslink senden</button>
           <button id="loginBtn" class="primary" type="button">Einloggen</button>
         </div>
         <p id="loginMsg" class="muted"></p>
       </section>
     </main>
-    <script src="login.js?v=20260306a"></script>
+    <script src="login.js?v=20260307b"></script>
       <script src="/theme-toggle.js"></script>
   </body>
 </html>

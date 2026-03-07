@@ -6,6 +6,10 @@ const portraitUrlInput = document.getElementById("portraitUrl");
 const portraitFileInput = document.getElementById("portraitFile");
 const uploadPortraitBtn = document.getElementById("uploadPortraitBtn");
 const portraitUploadStatus = document.getElementById("portraitUploadStatus");
+const portraitFocusXInput = document.getElementById("portraitFocusX");
+const portraitFocusYInput = document.getElementById("portraitFocusY");
+const portraitFocusPreview = document.getElementById("portraitFocusPreview");
+const profilePasswordInput = document.getElementById("profilePassword");
 const linksInput = document.getElementById("links");
 const bioInput = document.getElementById("bio");
 const saveProfileBtn = document.getElementById("saveProfileBtn");
@@ -68,29 +72,47 @@ logoutBtn.addEventListener("click", async () => {
 });
 
 saveProfileBtn.addEventListener("click", async () => {
+  await saveProfile();
+});
+
+async function saveProfile() {
   const body = {
     role: roleInput.value.trim(),
     portraitUrl: portraitUrlInput.value.trim(),
+    portraitFocusX: normalizeFocus(portraitFocusXInput ? portraitFocusXInput.value : 50),
+    portraitFocusY: normalizeFocus(portraitFocusYInput ? portraitFocusYInput.value : 50),
     links: parseLines(linksInput.value),
     bio: bioInput.value.trim()
   };
+  if (profilePasswordInput && profilePasswordInput.value.trim()) {
+    body.password = profilePasswordInput.value;
+  }
   const res = await fetch("/api/member/profile", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
   });
-  if (!res.ok) return alert("Profil konnte nicht gespeichert werden");
+  if (!res.ok) {
+    alert("Profil konnte nicht gespeichert werden");
+    return false;
+  }
+  if (profilePasswordInput) profilePasswordInput.value = "";
   await loadProfile();
-});
+  return true;
+}
 
-uploadPortraitBtn.addEventListener("click", () =>
-  handleImageUpload({
+uploadPortraitBtn.addEventListener("click", async () => {
+  const ok = await handleImageUpload({
     fileInput: portraitFileInput,
     targetInput: portraitUrlInput,
     statusEl: portraitUploadStatus,
     target: "profile"
-  })
-);
+  });
+  if (ok) await saveProfile();
+});
+
+if (portraitFocusXInput) portraitFocusXInput.addEventListener("input", updatePortraitFocusPreview);
+if (portraitFocusYInput) portraitFocusYInput.addEventListener("input", updatePortraitFocusPreview);
 
 saveQuestionBtn.addEventListener("click", async () => {
   const body = {
@@ -251,6 +273,9 @@ async function loadProfile() {
   const profile = await res.json();
   roleInput.value = profile.role || "";
   portraitUrlInput.value = profile.portraitUrl || "";
+  if (portraitFocusXInput) portraitFocusXInput.value = String(normalizeFocus(profile.portraitFocusX));
+  if (portraitFocusYInput) portraitFocusYInput.value = String(normalizeFocus(profile.portraitFocusY));
+  updatePortraitFocusPreview();
   linksInput.value = Array.isArray(profile.links) ? profile.links.join("\n") : "";
   bioInput.value = profile.bio || "";
 }
@@ -331,11 +356,11 @@ async function handleImageUpload({ fileInput, targetInput, statusEl, target }) {
   const file = fileInput && fileInput.files ? fileInput.files[0] : null;
   if (!file) {
     setUploadStatus(statusEl, "Bitte zuerst eine Bilddatei wählen.", true);
-    return;
+    return false;
   }
   if (!file.type || !file.type.startsWith("image/")) {
     setUploadStatus(statusEl, "Nur Bilddateien sind erlaubt.", true);
-    return;
+    return false;
   }
 
   try {
@@ -359,8 +384,10 @@ async function handleImageUpload({ fileInput, targetInput, statusEl, target }) {
     targetInput.value = String(payload.url || "").trim();
     setUploadStatus(statusEl, "Bild hochgeladen.");
     fileInput.value = "";
+    return true;
   } catch (error) {
     setUploadStatus(statusEl, String(error.message || "Upload fehlgeschlagen"), true);
+    return false;
   }
 }
 
@@ -381,6 +408,19 @@ function setUploadStatus(el, message, isError = false) {
   if (!el) return;
   el.textContent = String(message || "");
   el.style.color = isError ? "#b42318" : "";
+}
+
+function updatePortraitFocusPreview() {
+  if (!portraitFocusPreview) return;
+  const x = normalizeFocus(portraitFocusXInput ? portraitFocusXInput.value : 50);
+  const y = normalizeFocus(portraitFocusYInput ? portraitFocusYInput.value : 50);
+  portraitFocusPreview.textContent = `Ausrichtung: ${x}% · ${y}%`;
+}
+
+function normalizeFocus(value) {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return 50;
+  return Math.max(0, Math.min(100, Math.round(num)));
 }
 
 function escapeHtml(str) {

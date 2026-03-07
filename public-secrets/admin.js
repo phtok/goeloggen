@@ -51,6 +51,9 @@ const pSlug = document.getElementById("pSlug");
 const pEmail = document.getElementById("pEmail");
 const pRole = document.getElementById("pRole");
 const pPortraitUrl = document.getElementById("pPortraitUrl");
+const pPortraitFocusX = document.getElementById("pPortraitFocusX");
+const pPortraitFocusY = document.getElementById("pPortraitFocusY");
+const pPassword = document.getElementById("pPassword");
 const pPortraitFile = document.getElementById("pPortraitFile");
 const uploadPersonPortraitBtn = document.getElementById("uploadPersonPortraitBtn");
 const personPortraitUploadStatus = document.getElementById("personPortraitUploadStatus");
@@ -183,9 +186,12 @@ savePersonBtn.addEventListener("click", async () => {
     email: pEmail.value.trim(),
     role: pRole.value.trim(),
     portraitUrl: pPortraitUrl.value.trim(),
+    portraitFocusX: normalizeFocus(pPortraitFocusX ? pPortraitFocusX.value : 50),
+    portraitFocusY: normalizeFocus(pPortraitFocusY ? pPortraitFocusY.value : 50),
     links: parseLines(pLinks.value),
     bio: pBio.value.trim()
   };
+  if (pPassword && pPassword.value.trim()) body.password = pPassword.value;
   const id = pId.value.trim();
   const url = id ? `/api/people/${id}` : "/api/people";
   const method = id ? "PUT" : "POST";
@@ -311,6 +317,9 @@ personList.addEventListener("click", async (event) => {
     pEmail.value = row.email || "";
     pRole.value = row.role || "";
     pPortraitUrl.value = row.portraitUrl || "";
+    if (pPortraitFocusX) pPortraitFocusX.value = String(normalizeFocus(row.portraitFocusX));
+    if (pPortraitFocusY) pPortraitFocusY.value = String(normalizeFocus(row.portraitFocusY));
+    if (pPassword) pPassword.value = "";
     pLinks.value = Array.isArray(row.links) ? row.links.join("\n") : "";
     pBio.value = row.bio || "";
     focusWithoutScroll(pName);
@@ -480,7 +489,7 @@ async function refreshPeople() {
       const portrait = person.portraitUrl
         ? `<p><a class="member-link" target="_blank" rel="noopener noreferrer" href="${escapeHtml(person.portraitUrl)}">Portrait öffnen</a></p>`
         : "";
-      return `<article class="card"><h3>${escapeHtml(person.name || "")}</h3><p class="muted">${escapeHtml(person.role || "")}</p><p class="muted">Slug: ${escapeHtml(person.slug || "")}</p><p class="muted">E-Mail: ${escapeHtml(person.email || "")}</p>${links}${portrait}<div class="actions"><button class="secondary" data-action="edit-person" data-id="${escapeHtml(person.slug || "")}">Bearbeiten</button><button class="secondary" data-action="delete-person" data-id="${escapeHtml(person.slug || "")}">Löschen</button></div></article>`;
+      return `<article class="card"><h3>${escapeHtml(person.name || "")}</h3><p class="muted">${escapeHtml(person.role || "")}</p><p class="muted">Slug: ${escapeHtml(person.slug || "")}</p><p class="muted">E-Mail: ${escapeHtml(person.email || "")}</p><p class="muted">Passwort: ${person.hasPassword ? "gesetzt" : "nicht gesetzt"}</p>${links}${portrait}<div class="actions"><button class="secondary" data-action="edit-person" data-id="${escapeHtml(person.slug || "")}">Bearbeiten</button><button class="secondary" data-action="delete-person" data-id="${escapeHtml(person.slug || "")}">Löschen</button></div></article>`;
     })
     .join("");
   refreshCounts();
@@ -598,6 +607,9 @@ function resetPersonForm() {
   pEmail.value = "";
   pRole.value = "";
   pPortraitUrl.value = "";
+  if (pPortraitFocusX) pPortraitFocusX.value = "50";
+  if (pPortraitFocusY) pPortraitFocusY.value = "50";
+  if (pPassword) pPassword.value = "";
   pLinks.value = "";
   pBio.value = "";
   if (pPortraitFile) pPortraitFile.value = "";
@@ -665,6 +677,12 @@ function setUploadStatus(el, message, isError = false) {
   if (!el) return;
   el.textContent = String(message || "");
   el.style.color = isError ? "#b42318" : "";
+}
+
+function normalizeFocus(value) {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return 50;
+  return Math.max(0, Math.min(100, Math.round(num)));
 }
 
 async function checkSession() {

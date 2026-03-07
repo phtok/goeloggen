@@ -103,25 +103,44 @@ html.font-proxima body {
 }
 
 .top-menu-panel {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: calc(100% + 0.2rem);
-  min-width: 220px;
-  background: var(--surface);
-  border: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
-  border-radius: 10px;
-  padding: 0.55rem 0.65rem;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--bg);
+  border: 0;
+  border-radius: 0;
+  padding: 4.5rem 1.2rem 2rem;
   display: grid;
-  gap: 0.3rem;
-  box-shadow: 0 10px 28px color-mix(in oklab, var(--text) 12%, transparent);
+  align-content: start;
+  justify-items: center;
+  gap: 0.95rem;
   z-index: 12;
 }
 
 .menu-title {
-  font-size: 0.92rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  margin: 0 0 0.2rem;
+  margin: 0 0 0.6rem;
+}
+
+.menu-login {
+  margin-top: 1.15rem;
+  color: var(--muted);
+}
+
+.menu-close {
+  position: absolute;
+  top: 0.95rem;
+  right: 1rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
 }
 
 .brand-link {
@@ -559,7 +578,9 @@ button.secondary,
   background: transparent;
   color: color-mix(in oklab, var(--muted) 75%, transparent);
   font: inherit;
-  font-size: 1.7rem;
+  font-size: 1rem;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
   line-height: 1;
   cursor: pointer;
   padding: 0;
@@ -606,18 +627,38 @@ button.secondary,
   margin: 0.2rem 0 3rem;
 }
 
-.questions-control-heart {
+.questions-sort-toggle {
   border: 0;
   background: transparent;
-  color: var(--star);
-  font-size: 2.2rem;
-  line-height: 1;
+  width: 2.2rem;
+  height: 1.5rem;
+  display: grid;
+  align-content: center;
+  gap: 0.2rem;
   padding: 0;
   cursor: pointer;
 }
 
-.questions-control-heart.active {
-  color: var(--star-active);
+.questions-sort-toggle span {
+  display: block;
+  height: 1px;
+  background: color-mix(in oklab, var(--muted) 72%, transparent);
+}
+
+.questions-sort-toggle span:nth-child(1) {
+  width: 1.5rem;
+}
+
+.questions-sort-toggle span:nth-child(2) {
+  width: 1.1rem;
+}
+
+.questions-sort-toggle span:nth-child(3) {
+  width: 0.7rem;
+}
+
+.questions-sort-toggle.active span {
+  background: var(--text);
 }
 
 .card {
@@ -673,12 +714,12 @@ button.secondary,
 }
 
 .member-avatar-small {
-  width: 56px;
-  height: 56px;
+  width: 168px;
+  height: 168px;
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid var(--line);
-  flex: 0 0 56px;
+  flex: 0 0 168px;
   filter: grayscale(100%);
 }
 
@@ -907,7 +948,7 @@ button.secondary,
 }
 
 .admin-panel-body {
-  border-top: 1px solid var(--line);
+  border-top: 0;
   padding: 0.9rem;
 }
 
@@ -937,6 +978,20 @@ button.secondary,
 
 .admin-checkbox {
   align-self: end;
+}
+
+.admin-page .card,
+.backend-page .card {
+  border-color: color-mix(in oklab, var(--line) 45%, transparent);
+}
+
+.admin-page .admin-list .card,
+.backend-page .list .card {
+  background: transparent;
+}
+
+.admin-page .stat-box {
+  border-color: color-mix(in oklab, var(--line) 45%, transparent);
 }
 
 .site-footer {
@@ -1044,9 +1099,15 @@ body:not(.admin-page):not(.backend-page) .initiative-hero {
 }
 
 @media (max-width: 860px) {
-  .topbar-main.is-section {
+  .topbar-main.is-section,
+  body:not(.site-questions) .topbar-main {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
+  }
+
+  body:not(.site-questions) .topbar-main .top-nav {
+    justify-content: center;
   }
 
   .people-grid {

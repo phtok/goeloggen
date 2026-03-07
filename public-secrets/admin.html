@@ -176,6 +176,18 @@
                 <button id="uploadPersonPortraitBtn" class="secondary" type="button">Bild hochladen</button>
                 <span id="personPortraitUploadStatus" class="muted upload-status"></span>
               </div>
+              <div>
+                <label for="pPortraitFocusX">Bild-Ausschnitt horizontal</label>
+                <input id="pPortraitFocusX" type="range" min="0" max="100" value="50" />
+              </div>
+              <div>
+                <label for="pPortraitFocusY">Bild-Ausschnitt vertikal</label>
+                <input id="pPortraitFocusY" type="range" min="0" max="100" value="50" />
+              </div>
+              <div class="full">
+                <label for="pPassword">Passwort (optional neu setzen)</label>
+                <input id="pPassword" type="password" autocomplete="new-password" />
+              </div>
               <div class="full">
                 <label for="pLinks">Links (eine URL pro Zeile)</label>
                 <textarea id="pLinks" rows="3" placeholder="https://..."></textarea>
@@ -202,7 +214,7 @@
       </section>
     </main>
 
-    <script src="admin.js?v=20260307a"></script>
+    <script src="admin.js?v=20260307b"></script>
       <script src="/theme-toggle.js"></script>
   </body>
 </html>

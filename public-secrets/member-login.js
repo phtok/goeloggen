@@ -23,10 +23,7 @@ requestBtn.addEventListener("click", async () => {
     requestMsg.textContent = "Anfrage fehlgeschlagen.";
     return;
   }
-  const data = await res.json();
-  requestMsg.textContent = data.previewUrl
-    ? `Link erzeugt (Outbox-Modus). Vorschau: ${data.previewUrl}`
-    : "Wenn die E-Mail hinterlegt ist, wurde ein Einmalzugang versendet.";
+  requestMsg.textContent = "Wenn die E-Mail hinterlegt ist, wurde ein Einmalzugang versendet.";
 });
 
 verifyBtn.addEventListener("click", async () => {

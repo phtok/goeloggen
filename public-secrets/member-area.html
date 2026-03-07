@@ -23,6 +23,13 @@
           <input id="role" type="text" />
           <label for="portraitUrl">Portrait-Pfad</label>
           <input id="portraitUrl" type="text" placeholder="/assets/portraits/name.jpg oder /uploads/profile/..." />
+          <label for="portraitFocusX">Bild-Ausschnitt horizontal</label>
+          <input id="portraitFocusX" type="range" min="0" max="100" value="50" />
+          <label for="portraitFocusY">Bild-Ausschnitt vertikal</label>
+          <input id="portraitFocusY" type="range" min="0" max="100" value="50" />
+          <div class="full muted" id="portraitFocusPreview">Ausrichtung: 50% · 50%</div>
+          <label for="profilePassword">Neues Passwort (optional)</label>
+          <input id="profilePassword" type="password" autocomplete="new-password" />
           <div class="full upload-row">
             <input id="portraitFile" type="file" accept="image/*" />
             <button id="uploadPortraitBtn" class="secondary" type="button">Bild hochladen</button>
@@ -129,7 +136,7 @@
       </section>
     </main>
 
-    <script src="member-area.js?v=20260307a"></script>
+    <script src="member-area.js?v=20260307b"></script>
       <script src="/theme-toggle.js"></script>
   </body>
 </html>

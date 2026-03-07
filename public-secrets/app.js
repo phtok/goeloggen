@@ -20,19 +20,19 @@ let state = {
   interactions: loadInteractionsState(),
   questionOrder: [],
   currentIndex: 0,
-  currentRating: 0,
   view: "question",
   questionStep: "intro",
   questionDrafts: {},
-  questionListSort: "popular",
+  questionListSort: "newest",
   questionsControlsOpen: false,
-  menuEnabled: false,
+  menuEnabled: true,
   menuOpen: false,
   activeAuthor: "",
   shuffledPeople: [],
   expandedQuestionDetails: {},
   expandedQuestionComments: {},
-  expandedQuestionCompose: {}
+  expandedQuestionCompose: {},
+  memberName: ""
 };
 
 const app = document.getElementById("app");
@@ -77,7 +77,7 @@ document.addEventListener("click", (event) => {
   if (state.view === "questions" || state.view === "author") {
     if (actionEl.dataset.action === "sort-questions") {
       if (state.view !== "questions") return;
-      state.questionListSort = actionEl.dataset.sort || "popular";
+      state.questionListSort = actionEl.dataset.sort || "newest";
       renderQuestionsView();
       return;
     }
@@ -124,16 +124,7 @@ document.addEventListener("click", (event) => {
       render();
       return;
     }
-    if (actionEl.dataset.action === "toggle-list-heart") {
-      const id = String(actionEl.dataset.id || "");
-      if (!id) return;
-      const interaction = getInteraction(id);
-      const nextRating = Number(interaction.rating || 0) > 0 ? 0 : 1;
-      saveInteraction(id, nextRating, interaction.comment || "", interaction.name || "");
-      render();
-      return;
-    }
-    if (actionEl.dataset.action === "toggle-comment-compose") {
+    if (actionEl.dataset.action === "toggle-comment-compose" || actionEl.dataset.action === "toggle-answer-compose") {
       const id = String(actionEl.dataset.id || "");
       if (!id) return;
       state.expandedQuestionCompose[id] = !state.expandedQuestionCompose[id];
@@ -147,8 +138,7 @@ document.addEventListener("click", (event) => {
       const nameInput = app.querySelector(`input[data-comment-name-for="${escapeHtml(id)}"]`);
       const comment = textInput ? textInput.value.trim() : "";
       const name = nameInput ? nameInput.value.trim() : "";
-      const interaction = getInteraction(id);
-      saveInteraction(id, Number(interaction.rating || 0), comment, name);
+      saveInteraction(id, 0, comment, name);
       render();
       return;
     }
@@ -172,7 +162,6 @@ async function init() {
   const initialView = getInitialViewFromUrl();
   if (initialView) {
     state.view = initialView;
-    if (initialView !== "question") state.menuEnabled = true;
   }
 
   try {
@@ -188,6 +177,7 @@ async function init() {
     state.people = [];
     state.comments = [];
   }
+  state.memberName = await fetchMemberName();
   mergeLocalInteractionsIntoComments();
   buildQuestionOrder({ resetIndex: true });
   render();
@@ -283,6 +273,17 @@ async function fetchComments() {
   }
 }
 
+async function fetchMemberName() {
+  try {
+    const res = await fetch("/api/member/auth/me");
+    if (!res.ok) return "";
+    const row = await res.json();
+    return String(row.memberName || "").trim();
+  } catch {
+    return "";
+  }
+}
+
 function render() {
   syncUrlWithView();
   notifyViewChanged();
@@ -300,16 +301,12 @@ function render() {
 
 function handleQuestionAction(action, ratingRaw, idRaw) {
   if (action === "reveal-rating") {
-    if (!state.menuEnabled) {
-      state.menuEnabled = true;
-      updateShellVisibility();
-    }
     const question = currentQuestion();
     if (question) {
       const interaction = getInteraction(question.id);
       setQuestionDraft(question.id, {
         comment: String(interaction.comment || ""),
-        name: String(interaction.name || "")
+        name: String(interaction.name || state.memberName || "")
       });
     }
     state.questionStep = "answer";
@@ -365,7 +362,7 @@ function handleQuestionAction(action, ratingRaw, idRaw) {
     const existing = getInteraction(question.id);
     const comment = commentInput ? commentInput.value.trim() : String(draft.comment || "");
     const name = nameInput ? nameInput.value.trim() : String(draft.name || "");
-    saveInteraction(question.id, Number(existing.rating || 0), comment, name);
+    saveInteraction(question.id, 0, comment, name);
     clearQuestionDraft(question.id);
     state.questionStep = "thanks";
     if (typeof window !== "undefined") {
@@ -387,7 +384,7 @@ function handleQuestionAction(action, ratingRaw, idRaw) {
     }
     const payload = {
       text,
-      author: authorInput ? authorInput.value.trim() : "",
+      author: authorInput ? authorInput.value.trim() : String(state.memberName || ""),
       createdAt: dateInput && dateInput.value ? `${dateInput.value}T12:00:00.000Z` : "",
       location: locationInput ? locationInput.value.trim() : ""
     };
@@ -420,7 +417,7 @@ function renderQuestionView() {
     app.innerHTML = `
       <section class="question-flow thanks-flow" aria-live="polite">
         <h2 class="thanks-title">Danke</h2>
-        <button class="flow-arrow" data-action="next" type="button" aria-label="Zur nächsten Frage">↓</button>
+        <button class="flow-arrow" data-action="next" type="button" aria-label="Zur nächsten Frage">weiter ›</button>
         <div class="actions quiet-actions thanks-actions">
           <button class="quiet-btn quiet-btn-primary" data-action="show-own-question" type="button">Eigene Frage</button>
         </div>
@@ -433,7 +430,7 @@ function renderQuestionView() {
     app.innerHTML = `
       <section class="question-flow thanks-flow" aria-live="polite">
         <h2 class="thanks-title">Danke</h2>
-        <button class="flow-arrow" data-action="next" type="button" aria-label="Zur nächsten Frage">↓</button>
+        <button class="flow-arrow" data-action="next" type="button" aria-label="Zur nächsten Frage">weiter ›</button>
       </section>
     `;
     return;
@@ -445,13 +442,13 @@ function renderQuestionView() {
   const effectiveComment = draft.comment !== undefined ? String(draft.comment || "") : String(interaction.comment || "");
 
   const responseBlock = state.questionStep === "answer"
-    ? `<section class="flow-step answer-step"><textarea id="commentInput" class="answer-input" rows="4" placeholder="Deine Antwort">${escapeHtml(effectiveComment)}</textarea><button class="flow-arrow" data-action="show-name" type="button" aria-label="Weiter">↓</button></section>`
+    ? `<section class="flow-step answer-step"><textarea id="commentInput" class="answer-input" rows="4" placeholder="Deine Antwort">${escapeHtml(effectiveComment)}</textarea><button class="flow-arrow" data-action="show-name" type="button" aria-label="Weiter">weiter ›</button></section>`
     : state.questionStep === "name"
-      ? `<section class="flow-step answer-step"><textarea id="commentInput" class="answer-input" rows="4" placeholder="Deine Antwort">${escapeHtml(effectiveComment)}</textarea><input id="commentNameInput" class="answer-name-input" type="text" placeholder="Dein Name" value="${escapeHtml(effectiveName)}" /><button class="flow-arrow" data-action="submit" type="button" aria-label="Speichern">↓</button></section>`
+      ? `<section class="flow-step answer-step"><textarea id="commentInput" class="answer-input" rows="4" placeholder="Deine Antwort">${escapeHtml(effectiveComment)}</textarea><input id="commentNameInput" class="answer-name-input" type="text" placeholder="Dein Name" value="${escapeHtml(effectiveName || state.memberName || "")}" /><button class="flow-arrow" data-action="submit" type="button" aria-label="Speichern">speichern ›</button></section>`
     : "";
 
   const ownQuestionBlock = state.questionStep === "own-question"
-    ? `<section class="flow-step answer-step own-question-block"><textarea id="ownQuestionText" class="answer-input own-question-input" rows="4" placeholder="Eigene Frage formulieren"></textarea><input id="ownQuestionAuthor" class="answer-name-input own-question-meta" type="text" placeholder="Autorin" /><input id="ownQuestionDate" class="answer-name-input own-question-meta" type="date" /><input id="ownQuestionLocation" class="answer-name-input own-question-meta" type="text" placeholder="Ort" /><button class="flow-arrow" data-action="submit-own-question" type="button" aria-label="Frage senden">↓</button><button class="quiet-btn" data-action="back-to-thanks" type="button">Zurück</button></section>`
+    ? `<section class="flow-step answer-step own-question-block"><textarea id="ownQuestionText" class="answer-input own-question-input" rows="4" placeholder="Eigene Frage formulieren"></textarea><input id="ownQuestionAuthor" class="answer-name-input own-question-meta" type="text" placeholder="Autorin" value="${escapeHtml(state.memberName || "")}" /><input id="ownQuestionDate" class="answer-name-input own-question-meta" type="date" /><input id="ownQuestionLocation" class="answer-name-input own-question-meta" type="text" placeholder="Ort" /><button class="flow-arrow" data-action="submit-own-question" type="button" aria-label="Frage senden">senden ›</button><button class="quiet-btn" data-action="back-to-thanks" type="button">Zurück</button></section>`
     : "";
 
   const showQuestionLine = state.questionStep !== "own-question";
@@ -510,14 +507,14 @@ function renderQuestionsView() {
   const rows = buildSortedQuestionRows(sort, state.questions);
   const controls = state.questionsControlsOpen
     ? `<div class="sort-strip centered-sort-strip" role="group" aria-label="Sortierung">
-        <button class="sort-btn ${sort === "popular" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="popular">Beliebt</button>
-        <button class="sort-btn ${sort === "chronology" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="chronology">Chronik</button>
-        <button class="sort-btn ${sort === "interactions" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="interactions">Aktiv</button>
+        <button class="sort-btn ${sort === "answered" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="answered">Beantwortet</button>
+        <button class="sort-btn ${sort === "newest" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="newest">Neueste</button>
+        <button class="sort-btn ${sort === "chaos" ? "active" : ""}" type="button" data-action="sort-questions" data-sort="chaos">Chaos</button>
       </div>`
     : "";
   app.innerHTML = `
     <section>
-      <div class="questions-control-heart-wrap"><button class="questions-control-heart ${state.questionsControlsOpen ? "active" : ""}" type="button" data-action="toggle-list-controls" aria-label="Sortierung anzeigen">♥</button></div>
+      <div class="questions-control-heart-wrap"><button class="questions-sort-toggle ${state.questionsControlsOpen ? "active" : ""}" type="button" data-action="toggle-list-controls" aria-label="Sortierung anzeigen"><span></span><span></span><span></span></button></div>
       ${controls}
       ${renderQuestionRows(rows, { showAuthorLinks: true })}
     </section>
@@ -548,31 +545,28 @@ function renderAuthorView() {
 
 function buildSortedQuestionRows(sort, questionsPool) {
   const pool = Array.isArray(questionsPool) ? questionsPool : [];
-  const ids = new Set(pool.map((q) => String(q.id || "")));
-  const statsRows = statsByQuestion().filter((row) => ids.has(String(row.question.id || "")));
-  const statsById = new Map(statsRows.map((row) => [String(row.question.id || ""), row]));
+  const commentsByQuestion = getCommentsByQuestionMap();
+  const rows = pool.map((q) => {
+    const qid = String(q.id || "");
+    const entries = commentsByQuestion.get(qid) || [];
+    const answers = countCommentEntries(entries);
+    const lastAnswerTs = latestAnswerTimestamp(entries);
+    return { question: q, answers, lastAnswerTs };
+  });
 
-  if (sort === "chronology") {
-    return pool
+  if (sort === "answered") {
+    return rows
       .slice()
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .map((q) => {
-        const row = statsById.get(String(q.id || "")) || { votes: 0, comments: 0 };
-        return { question: q, votes: row.votes, comments: row.comments };
-      });
+      .sort((a, b) => b.answers - a.answers || b.lastAnswerTs - a.lastAnswerTs || Date.parse(String(b.question.createdAt || "")) - Date.parse(String(a.question.createdAt || "")));
   }
 
-  if (sort === "interactions") {
-    return statsRows
-      .slice()
-      .sort((a, b) => b.votes + b.comments - (a.votes + a.comments))
-      .map((row) => ({ question: row.question, votes: row.votes, comments: row.comments }));
+  if (sort === "chaos") {
+    return shuffleArray(rows);
   }
 
-  return statsRows
+  return rows
     .slice()
-    .sort((a, b) => b.votes - a.votes || b.comments - a.comments)
-    .map((row) => ({ question: row.question, votes: row.votes, comments: row.comments }));
+    .sort((a, b) => Date.parse(String(b.question.createdAt || "")) - Date.parse(String(a.question.createdAt || "")));
 }
 
 function renderQuestionRows(rows, options = {}) {
@@ -588,10 +582,10 @@ function renderQuestionRows(rows, options = {}) {
       const commentRows = commentsByQuestion.get(qid) || [];
       const answerCount = countCommentEntries(commentRows);
       const interaction = getInteraction(qid);
-      const userHeart = Number(interaction.rating || 0) > 0;
       const commentDraft = String(interaction.comment || "");
-      const nameDraft = String(interaction.name || "");
+      const nameDraft = String(interaction.name || state.memberName || "");
       const dateText = formatShortDate(q.createdAt);
+      const locationText = String(q.location || "").trim() || "Ohne Ort";
       const authorText = (q.authors || []).join(", ");
       const authorLine = showAuthorLinks
         ? (q.authors || [])
@@ -602,13 +596,14 @@ function renderQuestionRows(rows, options = {}) {
             .join(", ")
         : escapeHtml(authorText);
       const details = detailOpen
-        ? `<div class="question-detail-line"><span>${dateText ? escapeHtml(dateText) : "Ohne Datum"}</span><span class="question-meta-sep">·</span><span>${authorLine || "Anonym"}</span><span class="question-meta-sep">·</span><button class="author-link question-heart-toggle ${userHeart ? "active" : ""}" type="button" data-action="toggle-list-heart" data-id="${escapeHtml(qid)}">${Number(row.votes || 0)} ♥</button><span class="question-meta-sep">·</span><button class="author-link question-compose-toggle" type="button" data-action="toggle-comment-compose" data-id="${escapeHtml(qid)}">Antworten${answerCount > 0 ? ` (${answerCount})` : ""}</button></div>`
+        ? `<div class="question-detail-line"><span>${escapeHtml(locationText)}</span><span class="question-meta-sep">·</span><span>${dateText ? escapeHtml(dateText) : "Ohne Datum"}</span><span class="question-meta-sep">·</span><span>${authorLine || "Anonym"}</span><span class="question-meta-sep">·</span><button class="author-link question-compose-toggle" type="button" data-action="toggle-comments" data-id="${escapeHtml(qid)}">${answerCount} Antworten</button><span class="question-meta-sep">·</span><button class="author-link question-compose-toggle" type="button" data-action="toggle-answer-compose" data-id="${escapeHtml(qid)}">Beantworten</button></div>`
         : "";
       const compose = detailOpen && composeOpen
-        ? `<div class="list-comment-form answer-compose"><textarea class="answer-input" rows="3" data-comment-text-for="${escapeHtml(qid)}" placeholder="Deine Antwort">${escapeHtml(commentDraft)}</textarea><input class="answer-name-input" type="text" data-comment-name-for="${escapeHtml(qid)}" placeholder="Dein Name" value="${escapeHtml(nameDraft)}" /><div class="actions quiet-actions"><button class="quiet-btn quiet-btn-primary" type="button" data-action="save-list-comment" data-id="${escapeHtml(qid)}">Speichern</button><button class="quiet-btn" type="button" data-action="toggle-comments" data-id="${escapeHtml(qid)}">Antworten lesen</button></div></div>`
+        ? `<div class="list-comment-form answer-compose"><textarea class="answer-input" rows="3" data-comment-text-for="${escapeHtml(qid)}" placeholder="Deine Antwort">${escapeHtml(commentDraft)}</textarea><input class="answer-name-input" type="text" data-comment-name-for="${escapeHtml(qid)}" placeholder="Dein Name" value="${escapeHtml(nameDraft)}" /><div class="actions quiet-actions"><button class="quiet-btn quiet-btn-primary" type="button" data-action="save-list-comment" data-id="${escapeHtml(qid)}">Speichern</button><button class="quiet-btn" type="button" data-action="toggle-comments" data-id="${escapeHtml(qid)}">${answerCount} Antworten</button></div></div>`
         : "";
-      const answers = detailOpen && answersOpen && answerCount > 0
-        ? `<div class="list answers-list">${commentRows
+      const answers = detailOpen && answersOpen
+        ? (answerCount > 0
+          ? `<div class="list answers-list">${commentRows
             .map((entry) => {
               const by = entry.name ? entry.name : "Anonym";
               const when = entry.updatedAt ? new Date(entry.updatedAt).toLocaleDateString("de-DE") : "";
@@ -628,6 +623,7 @@ function renderQuestionRows(rows, options = {}) {
               return `<article class="card">${main}<p class="muted answer-by">${escapeHtml(by)}${when ? ` · ${escapeHtml(when)}` : ""}</p>${replyList}</article>`;
             })
             .join("")}</div>`
+          : `<p class="muted">Noch keine Antworten.</p>`)
         : "";
       return `<article class="card question-list-item"><h3><button class="question-open-btn" type="button" data-action="toggle-question-detail" data-id="${escapeHtml(qid)}">${escapeHtml(q.text || "")}</button></h3>${details}${compose}${answers}</article>`;
     })
@@ -646,10 +642,12 @@ function renderPeopleView() {
         ${state.shuffledPeople
           .map((person) => {
             const slug = person.slug || slugify(person.name || "");
+            const href = `/members/${escapeHtml(slug)}.html`;
+            const style = portraitObjectPositionStyle(person);
             const image = person.portraitUrl
-              ? `<img class="member-avatar-small" src="${escapeHtml(person.portraitUrl)}" alt="${escapeHtml(person.name || "")}" loading="lazy" />`
-              : `<div class="member-avatar-small member-avatar-fallback">${escapeHtml(initials(person.name || ""))}</div>`;
-            return `<article class="card member-card member-card-portrait">${image}<div class="member-card-content"><h3><a class="member-link" href="/members/${escapeHtml(slug)}.html">${escapeHtml(person.name || "")}</a></h3></div></article>`;
+              ? `<a class="member-link" href="${href}"><img class="member-avatar-small" src="${escapeHtml(person.portraitUrl)}" alt="${escapeHtml(person.name || "")}" loading="lazy" ${style} /></a>`
+              : `<a class="member-link" href="${href}"><div class="member-avatar-small member-avatar-fallback">${escapeHtml(initials(person.name || ""))}</div></a>`;
+            return `<article class="card member-card member-card-portrait">${image}<div class="member-card-content"><h3><a class="member-link" href="${href}">${escapeHtml(person.name || "")}</a></h3></div></article>`;
           })
           .join("")}
       </div>
@@ -699,7 +697,7 @@ function renderInitiativesView() {
 }
 
 function renderCalendarView() {
-  if (!state.events.length) return renderSimplePage("Kalender", "Noch keine Veranstaltungen eingetragen.");
+  if (!state.events.length) return renderSimplePage("Momente", "Noch keine Veranstaltungen eingetragen.");
   const rows = state.events.slice().sort((a, b) => eventSortValue(b) - eventSortValue(a));
   let lastYear = "";
   let lastMonth = "";
@@ -720,7 +718,7 @@ function renderCalendarView() {
   }
   app.innerHTML = `
     <section>
-      <h2>Kalender</h2>
+      <h2>Momente</h2>
       <div class="list calendar-list">
         ${blocks.join("")}
       </div>
@@ -772,7 +770,6 @@ function nextQuestion() {
   if (!isQuestionOrderValid()) buildQuestionOrder({ resetIndex: false });
   const total = state.questionOrder.length || state.questions.length;
   state.currentIndex = (state.currentIndex + 1) % total;
-  state.currentRating = 0;
   state.questionStep = "intro";
   renderQuestionView();
 }
@@ -784,7 +781,6 @@ function previousQuestion() {
   if (!isQuestionOrderValid()) buildQuestionOrder({ resetIndex: false });
   const total = state.questionOrder.length || state.questions.length;
   state.currentIndex = (state.currentIndex - 1 + total) % total;
-  state.currentRating = 0;
   state.questionStep = "intro";
   renderQuestionView();
 }
@@ -915,7 +911,7 @@ function renderSimplePage(title, text) {
 function updateShellVisibility() {
   if (!state.menuEnabled) state.menuOpen = false;
   if (mainHeader) mainHeader.classList.toggle("hidden", !state.menuEnabled);
-  if (siteFooter) siteFooter.classList.toggle("hidden", !(state.menuEnabled && state.view !== "question"));
+  if (siteFooter) siteFooter.classList.add("hidden");
   renderHeaderMenu();
 }
 
@@ -1150,6 +1146,15 @@ function buildQuestionOrder(options = {}) {
     ordered.push(picked.id);
   }
 
+  const preferredFirst = getPreferredFirstQuestionId();
+  if (preferredFirst) {
+    const idx = ordered.findIndex((id) => String(id || "") === String(preferredFirst || ""));
+    if (idx > 0) {
+      const chosen = ordered.splice(idx, 1)[0];
+      ordered.unshift(chosen);
+    }
+  }
+
   const lastFirst = readLastFirstQuestionId();
   if (ordered.length > 1 && lastFirst && ordered[0] === lastFirst) {
     const swapIndex = 1 + Math.floor(Math.random() * (ordered.length - 1));
@@ -1167,6 +1172,32 @@ function buildQuestionOrder(options = {}) {
     const max = state.questionOrder.length || state.questions.length;
     state.currentIndex = ((state.currentIndex % max) + max) % max;
   }
+}
+
+function getPreferredFirstQuestionId() {
+  if (!state.questions.length) return "";
+  const commentsByQuestion = getCommentsByQuestionMap();
+  let bestAnsweredId = "";
+  let bestAnsweredTs = 0;
+
+  for (let i = 0; i < state.questions.length; i += 1) {
+    const q = state.questions[i];
+    const qid = String(q.id || "");
+    const entries = commentsByQuestion.get(qid) || [];
+    const answerCount = countCommentEntries(entries);
+    if (answerCount <= 0) continue;
+    const ts = latestAnswerTimestamp(entries);
+    if (ts > bestAnsweredTs) {
+      bestAnsweredTs = ts;
+      bestAnsweredId = qid;
+    }
+  }
+  if (bestAnsweredId) return bestAnsweredId;
+
+  const newest = state.questions
+    .slice()
+    .sort((a, b) => Date.parse(String(b.createdAt || "")) - Date.parse(String(a.createdAt || "")))[0];
+  return newest ? String(newest.id || "") : "";
 }
 
 function computeQuestionWeights() {
@@ -1270,11 +1301,44 @@ function countCommentEntries(rows) {
   return total;
 }
 
+function latestAnswerTimestamp(rows) {
+  const safeRows = Array.isArray(rows) ? rows : [];
+  let best = 0;
+  for (let i = 0; i < safeRows.length; i += 1) {
+    const row = safeRows[i];
+    if (!row || row.visible === false) continue;
+    if (String(row.comment || "").trim()) {
+      const ts = Date.parse(String(row.updatedAt || ""));
+      if (Number.isFinite(ts) && ts > best) best = ts;
+    }
+    const replies = Array.isArray(row.replies)
+      ? row.replies.filter((reply) => reply && reply.visible !== false && String(reply.text || "").trim().length > 0)
+      : [];
+    for (let j = 0; j < replies.length; j += 1) {
+      const ts = Date.parse(String(replies[j].createdAt || ""));
+      if (Number.isFinite(ts) && ts > best) best = ts;
+    }
+  }
+  return best;
+}
+
 function formatShortDate(value) {
   if (!value) return "";
   const date = new Date(String(value));
   if (Number.isNaN(date.getTime())) return "";
   return date.toLocaleDateString("de-DE");
+}
+
+function portraitObjectPositionStyle(person) {
+  const fx = normalizePortraitFocus(person && person.portraitFocusX);
+  const fy = normalizePortraitFocus(person && person.portraitFocusY);
+  return `style="object-position:${fx}% ${fy}%;"`;
+}
+
+function normalizePortraitFocus(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return 50;
+  return Math.max(0, Math.min(100, Math.round(n)));
 }
 
 async function persistComment(entry) {

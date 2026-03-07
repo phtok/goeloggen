@@ -45,7 +45,7 @@ async function init() {
       ${hosts ? `<p class="muted">Mitwirkende: ${hosts}</p>` : ""}
       ${paragraphs}
       ${source}
-      <p><a class="member-link" href="/index.html">Zurück zu Initiativen</a></p>
+      <p><a class="member-link" href="/index.html?view=initiatives">Zurück zu Initiativen</a></p>
     </section>
   `;
 }

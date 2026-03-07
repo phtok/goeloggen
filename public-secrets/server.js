@@ -126,14 +126,36 @@ async function handleApi(req, res, pathname, url) {
     });
     await writeData(TOKENS_FILE, tokens);
 
-    const baseUrl = `http://${req.headers.host || `${HOST}:${PORT}`}`;
+    const proto = String(req.headers["x-forwarded-proto"] || "").trim() || (req.socket && req.socket.encrypted ? "https" : "http");
+    const baseUrl = `${proto}://${req.headers.host || `${HOST}:${PORT}`}`;
     const loginUrl = `${baseUrl}/login.html?token=${token}`;
     const delivery = await deliverMemberMagicLink(email, person, loginUrl);
     return sendJson(res, 200, {
       ok: true,
-      delivery: delivery.mode,
-      previewUrl: delivery.previewUrl || null
+      delivery: delivery.mode
     });
+  }
+
+  if (req.method === "POST" && pathname === "/api/member/auth/password-login") {
+    const body = await readJsonBody(req);
+    const identity = String(body.identity || body.email || "").trim().toLowerCase();
+    const password = String(body.password || "");
+    if (!identity || !password) return sendJson(res, 400, { error: "E-Mail und Passwort sind erforderlich" });
+
+    const people = await readData(PEOPLE_FILE);
+    const person = people.find((p) => String(p.email || "").trim().toLowerCase() === identity);
+    if (!person) return sendJson(res, 401, { error: "Ungültige Anmeldedaten" });
+    if (!verifyPasswordHash(password, String(person.passwordHash || ""))) {
+      return sendJson(res, 401, { error: "Ungültige Anmeldedaten" });
+    }
+
+    const sid = createSession({
+      role: "member",
+      memberSlug: String(person.slug || ""),
+      memberName: String(person.name || "")
+    });
+    setSessionCookie(res, sid);
+    return sendJson(res, 200, { ok: true, memberSlug: person.slug, memberName: person.name });
   }
 
   if (req.method === "POST" && pathname === "/api/member/auth/verify") {
@@ -212,7 +234,7 @@ async function handleApi(req, res, pathname, url) {
 
   if (req.method === "GET" && pathname === "/api/people") {
     const people = await readData(PEOPLE_FILE);
-    return sendJson(res, 200, people);
+    return sendJson(res, 200, people.map(sanitizePersonForClient));
   }
 
   if (req.method === "GET" && pathname === "/api/events") {
@@ -427,7 +449,7 @@ async function handleApi(req, res, pathname, url) {
     const people = await readData(PEOPLE_FILE);
     const person = people.find((p) => String(p.slug || "") === String(session.memberSlug || ""));
     if (!person) return sendJson(res, 404, { error: "Mitglied nicht gefunden" });
-    return sendJson(res, 200, person);
+    return sendJson(res, 200, sanitizePersonForClient(person));
   }
 
   if (req.method === "PUT" && pathname === "/api/member/profile") {
@@ -443,10 +465,15 @@ async function handleApi(req, res, pathname, url) {
       role: body.role === undefined ? current.role || "" : String(body.role).trim(),
       bio: body.bio === undefined ? current.bio || "" : String(body.bio).trim(),
       portraitUrl: body.portraitUrl === undefined ? current.portraitUrl || "" : String(body.portraitUrl).trim(),
-      links: body.links === undefined ? normalizeLinks(current.links || []) : normalizeLinks(body.links)
+      links: body.links === undefined ? normalizeLinks(current.links || []) : normalizeLinks(body.links),
+      portraitFocusX: body.portraitFocusX === undefined ? normalizePortraitFocus(current.portraitFocusX) : normalizePortraitFocus(body.portraitFocusX),
+      portraitFocusY: body.portraitFocusY === undefined ? normalizePortraitFocus(current.portraitFocusY) : normalizePortraitFocus(body.portraitFocusY)
     };
+    if (body.password !== undefined && String(body.password || "").trim()) {
+      people[idx].passwordHash = createPasswordHash(String(body.password || ""));
+    }
     await writeData(PEOPLE_FILE, people);
-    return sendJson(res, 200, people[idx]);
+    return sendJson(res, 200, sanitizePersonForClient(people[idx]));
   }
 
   if (req.method === "GET" && pathname === "/api/member/questions") {
@@ -689,16 +716,28 @@ async function handleApi(req, res, pathname, url) {
     const portraitUrl = String(body.portraitUrl || "").trim();
     const links = normalizeLinks(body.links);
     const email = String(body.email || "").trim().toLowerCase();
+    const password = String(body.password || "").trim();
     const slug = String(body.slug || slugify(name)).trim();
     if (!name) return sendJson(res, 400, { error: "Name ist Pflicht" });
 
     const people = await readData(PEOPLE_FILE);
     const candidate = slug || makeId("member");
     const uniqueSlug = makeUniqueSlug(candidate, people.map((p) => String(p.slug || "")));
-    const newItem = { name, role, slug: uniqueSlug, email, bio, portraitUrl, links };
+    const newItem = {
+      name,
+      role,
+      slug: uniqueSlug,
+      email,
+      bio,
+      portraitUrl,
+      portraitFocusX: normalizePortraitFocus(body.portraitFocusX),
+      portraitFocusY: normalizePortraitFocus(body.portraitFocusY),
+      links
+    };
+    if (password) newItem.passwordHash = createPasswordHash(password);
     people.push(newItem);
     await writeData(PEOPLE_FILE, people);
-    return sendJson(res, 201, newItem);
+    return sendJson(res, 201, sanitizePersonForClient(newItem));
   }
 
   if (pathname.startsWith("/api/questions/") && req.method === "PUT") {
@@ -741,6 +780,8 @@ async function handleApi(req, res, pathname, url) {
       email: body.email === undefined ? people[idx].email || "" : String(body.email).trim().toLowerCase(),
       bio: body.bio === undefined ? people[idx].bio || "" : String(body.bio).trim(),
       portraitUrl: body.portraitUrl === undefined ? people[idx].portraitUrl || "" : String(body.portraitUrl).trim(),
+      portraitFocusX: body.portraitFocusX === undefined ? normalizePortraitFocus(people[idx].portraitFocusX) : normalizePortraitFocus(body.portraitFocusX),
+      portraitFocusY: body.portraitFocusY === undefined ? normalizePortraitFocus(people[idx].portraitFocusY) : normalizePortraitFocus(body.portraitFocusY),
       links: body.links === undefined ? normalizeLinks(people[idx].links || []) : normalizeLinks(body.links)
     };
     if (!updated.name) return sendJson(res, 400, { error: "Name ist Pflicht" });
@@ -750,10 +791,13 @@ async function handleApi(req, res, pathname, url) {
       const others = people.filter((_, i) => i !== idx).map((p) => String(p.slug || ""));
       updated.slug = makeUniqueSlug(requested, others);
     }
+    if (body.password !== undefined && String(body.password || "").trim()) {
+      updated.passwordHash = createPasswordHash(String(body.password || ""));
+    }
 
     people[idx] = updated;
     await writeData(PEOPLE_FILE, people);
-    return sendJson(res, 200, updated);
+    return sendJson(res, 200, sanitizePersonForClient(updated));
   }
 
   if (pathname.startsWith("/api/questions/") && req.method === "DELETE") {
@@ -1124,6 +1168,16 @@ async function migratePeopleData() {
       item.portraitUrl = localPortrait;
       changed = true;
     }
+    const fx = normalizePortraitFocus(item.portraitFocusX);
+    const fy = normalizePortraitFocus(item.portraitFocusY);
+    if (Number(item.portraitFocusX) !== fx) {
+      item.portraitFocusX = fx;
+      changed = true;
+    }
+    if (Number(item.portraitFocusY) !== fy) {
+      item.portraitFocusY = fy;
+      changed = true;
+    }
     return item;
   });
   if (changed) await writeData(PEOPLE_FILE, next);
@@ -1217,6 +1271,21 @@ function normalizeLinks(input) {
   return [];
 }
 
+function normalizePortraitFocus(value) {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return 50;
+  return Math.max(0, Math.min(100, Math.round(num)));
+}
+
+function sanitizePersonForClient(person) {
+  const row = { ...(person || {}) };
+  delete row.passwordHash;
+  row.hasPassword = Boolean(person && person.passwordHash);
+  row.portraitFocusX = normalizePortraitFocus(row.portraitFocusX);
+  row.portraitFocusY = normalizePortraitFocus(row.portraitFocusY);
+  return row;
+}
+
 function normalizeCreatedAt(input, fallback) {
   if (input === undefined || input === null || String(input).trim() === "") {
     return fallback || new Date().toISOString();
@@ -1301,6 +1370,31 @@ function makeUniqueSlug(baseSlug, existingSlugs) {
   let n = 2;
   while (used.has(`${cleaned}-${n}`)) n += 1;
   return `${cleaned}-${n}`;
+}
+
+function createPasswordHash(password) {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.scryptSync(String(password || ""), salt, 64).toString("hex");
+  return `v1$${salt}$${hash}`;
+}
+
+function verifyPasswordHash(password, packed) {
+  const raw = String(packed || "").trim();
+  if (!raw) return false;
+  const parts = raw.split("$");
+  if (parts.length !== 3 || parts[0] !== "v1") return false;
+  const salt = parts[1];
+  const expected = parts[2];
+  if (!salt || !expected) return false;
+  const actual = crypto.scryptSync(String(password || ""), salt, 64).toString("hex");
+  const a = Buffer.from(actual, "hex");
+  const b = Buffer.from(expected, "hex");
+  if (a.length !== b.length) return false;
+  try {
+    return crypto.timingSafeEqual(a, b);
+  } catch {
+    return false;
+  }
 }
 
 async function deliverMemberMagicLink(email, person, loginUrl) {
