@@ -51,8 +51,10 @@ const pSlug = document.getElementById("pSlug");
 const pEmail = document.getElementById("pEmail");
 const pRole = document.getElementById("pRole");
 const pPortraitUrl = document.getElementById("pPortraitUrl");
+const pPortraitFile = document.getElementById("pPortraitFile");
+const uploadPersonPortraitBtn = document.getElementById("uploadPersonPortraitBtn");
+const personPortraitUploadStatus = document.getElementById("personPortraitUploadStatus");
 const pLinks = document.getElementById("pLinks");
-const pBioShort = document.getElementById("pBioShort");
 const pBio = document.getElementById("pBio");
 const savePersonBtn = document.getElementById("savePersonBtn");
 const resetPersonBtn = document.getElementById("resetPersonBtn");
@@ -182,7 +184,6 @@ savePersonBtn.addEventListener("click", async () => {
     role: pRole.value.trim(),
     portraitUrl: pPortraitUrl.value.trim(),
     links: parseLines(pLinks.value),
-    bioShort: pBioShort.value.trim(),
     bio: pBio.value.trim()
   };
   const id = pId.value.trim();
@@ -201,6 +202,17 @@ savePersonBtn.addEventListener("click", async () => {
 });
 
 resetPersonBtn.addEventListener("click", resetPersonForm);
+
+if (uploadPersonPortraitBtn) {
+  uploadPersonPortraitBtn.addEventListener("click", () =>
+    handleImageUpload({
+      fileInput: pPortraitFile,
+      targetInput: pPortraitUrl,
+      statusEl: personPortraitUploadStatus,
+      target: "profile"
+    })
+  );
+}
 
 questionList.addEventListener("click", async (event) => {
   const btn = event.target.closest("button[data-action]");
@@ -300,7 +312,6 @@ personList.addEventListener("click", async (event) => {
     pRole.value = row.role || "";
     pPortraitUrl.value = row.portraitUrl || "";
     pLinks.value = Array.isArray(row.links) ? row.links.join("\n") : "";
-    pBioShort.value = row.bioShort || "";
     pBio.value = row.bio || "";
     focusWithoutScroll(pName);
     return;
@@ -463,14 +474,13 @@ async function refreshPeople() {
   cache.people.sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "de"));
   personList.innerHTML = cache.people
     .map((person) => {
-      const short = person.bioShort ? `<p>${escapeHtml(person.bioShort)}</p>` : "";
       const links = Array.isArray(person.links) && person.links.length
         ? `<p class="muted">${person.links.map((link) => escapeHtml(link)).join(" · ")}</p>`
         : "";
       const portrait = person.portraitUrl
         ? `<p><a class="member-link" target="_blank" rel="noopener noreferrer" href="${escapeHtml(person.portraitUrl)}">Portrait öffnen</a></p>`
         : "";
-      return `<article class="card"><h3>${escapeHtml(person.name || "")}</h3><p class="muted">${escapeHtml(person.role || "")}</p><p class="muted">Slug: ${escapeHtml(person.slug || "")}</p><p class="muted">E-Mail: ${escapeHtml(person.email || "")}</p>${short}${links}${portrait}<div class="actions"><button class="secondary" data-action="edit-person" data-id="${escapeHtml(person.slug || "")}">Bearbeiten</button><button class="secondary" data-action="delete-person" data-id="${escapeHtml(person.slug || "")}">Löschen</button></div></article>`;
+      return `<article class="card"><h3>${escapeHtml(person.name || "")}</h3><p class="muted">${escapeHtml(person.role || "")}</p><p class="muted">Slug: ${escapeHtml(person.slug || "")}</p><p class="muted">E-Mail: ${escapeHtml(person.email || "")}</p>${links}${portrait}<div class="actions"><button class="secondary" data-action="edit-person" data-id="${escapeHtml(person.slug || "")}">Bearbeiten</button><button class="secondary" data-action="delete-person" data-id="${escapeHtml(person.slug || "")}">Löschen</button></div></article>`;
     })
     .join("");
   refreshCounts();
@@ -589,8 +599,9 @@ function resetPersonForm() {
   pRole.value = "";
   pPortraitUrl.value = "";
   pLinks.value = "";
-  pBioShort.value = "";
   pBio.value = "";
+  if (pPortraitFile) pPortraitFile.value = "";
+  setUploadStatus(personPortraitUploadStatus, "");
 }
 
 function parseLines(value) {
@@ -598,6 +609,62 @@ function parseLines(value) {
     .split(/\r?\n/)
     .map((v) => v.trim())
     .filter(Boolean);
+}
+
+async function handleImageUpload({ fileInput, targetInput, statusEl, target }) {
+  const file = fileInput && fileInput.files ? fileInput.files[0] : null;
+  if (!file) {
+    setUploadStatus(statusEl, "Bitte zuerst eine Bilddatei wählen.", true);
+    return;
+  }
+  if (!file.type || !file.type.startsWith("image/")) {
+    setUploadStatus(statusEl, "Nur Bilddateien sind erlaubt.", true);
+    return;
+  }
+
+  try {
+    setUploadStatus(statusEl, "Upload läuft …");
+    const dataBase64 = await fileToBase64(file);
+    const res = await fetch("/api/uploads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        filename: file.name,
+        contentType: file.type,
+        dataBase64,
+        target
+      })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(String(err.error || "Upload fehlgeschlagen"));
+    }
+    const payload = await res.json();
+    targetInput.value = String(payload.url || "").trim();
+    setUploadStatus(statusEl, "Bild hochgeladen.");
+    fileInput.value = "";
+  } catch (error) {
+    setUploadStatus(statusEl, String(error.message || "Upload fehlgeschlagen"), true);
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      const encoded = result.includes(",") ? result.split(",").pop() : result;
+      resolve(encoded || "");
+    };
+    reader.onerror = () => reject(new Error("Datei konnte nicht gelesen werden"));
+    reader.readAsDataURL(file);
+  });
+}
+
+function setUploadStatus(el, message, isError = false) {
+  if (!el) return;
+  el.textContent = String(message || "");
+  el.style.color = isError ? "#b42318" : "";
 }
 
 async function checkSession() {

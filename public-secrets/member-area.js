@@ -7,7 +7,6 @@ const portraitFileInput = document.getElementById("portraitFile");
 const uploadPortraitBtn = document.getElementById("uploadPortraitBtn");
 const portraitUploadStatus = document.getElementById("portraitUploadStatus");
 const linksInput = document.getElementById("links");
-const bioShortInput = document.getElementById("bioShort");
 const bioInput = document.getElementById("bio");
 const saveProfileBtn = document.getElementById("saveProfileBtn");
 
@@ -73,7 +72,6 @@ saveProfileBtn.addEventListener("click", async () => {
     role: roleInput.value.trim(),
     portraitUrl: portraitUrlInput.value.trim(),
     links: parseLines(linksInput.value),
-    bioShort: bioShortInput.value.trim(),
     bio: bioInput.value.trim()
   };
   const res = await fetch("/api/member/profile", {
@@ -254,7 +252,6 @@ async function loadProfile() {
   roleInput.value = profile.role || "";
   portraitUrlInput.value = profile.portraitUrl || "";
   linksInput.value = Array.isArray(profile.links) ? profile.links.join("\n") : "";
-  bioShortInput.value = profile.bioShort || "";
   bioInput.value = profile.bio || "";
 }
 

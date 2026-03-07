@@ -603,7 +603,7 @@ button.secondary,
 .questions-control-heart-wrap {
   display: grid;
   justify-content: center;
-  margin: 0.2rem 0 1.8rem;
+  margin: 0.2rem 0 3rem;
 }
 
 .questions-control-heart {

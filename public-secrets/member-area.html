@@ -21,8 +21,8 @@
         <div class="form-grid">
           <label for="role">Rolle</label>
           <input id="role" type="text" />
-          <label for="portraitUrl">Portrait-URL</label>
-          <input id="portraitUrl" type="url" />
+          <label for="portraitUrl">Portrait-Pfad</label>
+          <input id="portraitUrl" type="text" placeholder="/assets/portraits/name.jpg oder /uploads/profile/..." />
           <div class="full upload-row">
             <input id="portraitFile" type="file" accept="image/*" />
             <button id="uploadPortraitBtn" class="secondary" type="button">Bild hochladen</button>
@@ -30,8 +30,6 @@
           </div>
           <label for="links">Links (eine URL pro Zeile)</label>
           <textarea id="links" rows="3"></textarea>
-          <label for="bioShort">Kurzvita</label>
-          <textarea id="bioShort" rows="2"></textarea>
           <label for="bio">Vita</label>
           <textarea id="bio" rows="5"></textarea>
         </div>
@@ -68,8 +66,8 @@
           <input id="iStatus" type="text" value="aktiv" />
           <label for="iDescription">Beschreibung</label>
           <textarea id="iDescription" rows="3"></textarea>
-          <label for="iImageUrl">Bild-URL</label>
-          <input id="iImageUrl" type="url" />
+          <label for="iImageUrl">Bild-Pfad</label>
+          <input id="iImageUrl" type="text" placeholder="/uploads/initiative/..." />
           <div class="full upload-row">
             <input id="iImageFile" type="file" accept="image/*" />
             <button id="uploadInitiativeImageBtn" class="secondary" type="button">Bild hochladen</button>
@@ -110,8 +108,8 @@
             <textarea id="eDescription" rows="3"></textarea>
           </div>
           <div class="full">
-            <label for="eImageUrl">Bild-URL</label>
-            <input id="eImageUrl" type="url" />
+            <label for="eImageUrl">Bild-Pfad</label>
+            <input id="eImageUrl" type="text" placeholder="/uploads/event/..." />
           </div>
           <div class="full upload-row">
             <input id="eImageFile" type="file" accept="image/*" />
@@ -131,7 +129,7 @@
       </section>
     </main>
 
-    <script src="member-area.js?v=20260306a"></script>
+    <script src="member-area.js?v=20260307a"></script>
       <script src="/theme-toggle.js"></script>
   </body>
 </html>

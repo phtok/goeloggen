@@ -47,6 +47,7 @@ start().catch((error) => {
 async function start() {
   console.log(`Using data directory: ${DATA_DIR}`);
   await ensureDataFiles();
+  await migratePeopleData();
 
   const server = http.createServer(async (req, res) => {
     try {
@@ -186,6 +187,20 @@ async function handleApi(req, res, pathname, url) {
       dataBase64: body.dataBase64,
       target: body.target,
       memberSlug: session.memberSlug
+    });
+    return sendJson(res, 201, result);
+  }
+
+  if (req.method === "POST" && pathname === "/api/uploads") {
+    const session = requireSession(req, res);
+    if (!session) return;
+    const body = await readJsonBody(req);
+    const result = await saveUploadedImage({
+      filename: body.filename,
+      contentType: body.contentType,
+      dataBase64: body.dataBase64,
+      target: body.target,
+      memberSlug: session.memberSlug || session.username || "editor"
     });
     return sendJson(res, 201, result);
   }
@@ -427,7 +442,6 @@ async function handleApi(req, res, pathname, url) {
       ...current,
       role: body.role === undefined ? current.role || "" : String(body.role).trim(),
       bio: body.bio === undefined ? current.bio || "" : String(body.bio).trim(),
-      bioShort: body.bioShort === undefined ? current.bioShort || "" : String(body.bioShort).trim(),
       portraitUrl: body.portraitUrl === undefined ? current.portraitUrl || "" : String(body.portraitUrl).trim(),
       links: body.links === undefined ? normalizeLinks(current.links || []) : normalizeLinks(body.links)
     };
@@ -672,7 +686,6 @@ async function handleApi(req, res, pathname, url) {
     const name = String(body.name || "").trim();
     const role = String(body.role || "").trim();
     const bio = String(body.bio || "").trim();
-    const bioShort = String(body.bioShort || "").trim();
     const portraitUrl = String(body.portraitUrl || "").trim();
     const links = normalizeLinks(body.links);
     const email = String(body.email || "").trim().toLowerCase();
@@ -682,7 +695,7 @@ async function handleApi(req, res, pathname, url) {
     const people = await readData(PEOPLE_FILE);
     const candidate = slug || makeId("member");
     const uniqueSlug = makeUniqueSlug(candidate, people.map((p) => String(p.slug || "")));
-    const newItem = { name, role, slug: uniqueSlug, email, bio, bioShort, portraitUrl, links };
+    const newItem = { name, role, slug: uniqueSlug, email, bio, portraitUrl, links };
     people.push(newItem);
     await writeData(PEOPLE_FILE, people);
     return sendJson(res, 201, newItem);
@@ -727,7 +740,6 @@ async function handleApi(req, res, pathname, url) {
       role: body.role === undefined ? people[idx].role || "" : String(body.role).trim(),
       email: body.email === undefined ? people[idx].email || "" : String(body.email).trim().toLowerCase(),
       bio: body.bio === undefined ? people[idx].bio || "" : String(body.bio).trim(),
-      bioShort: body.bioShort === undefined ? people[idx].bioShort || "" : String(body.bioShort).trim(),
       portraitUrl: body.portraitUrl === undefined ? people[idx].portraitUrl || "" : String(body.portraitUrl).trim(),
       links: body.links === undefined ? normalizeLinks(people[idx].links || []) : normalizeLinks(body.links)
     };
@@ -1093,6 +1105,47 @@ async function ensureJsonFile(filePath, fallback) {
   } catch {
     await writeData(filePath, fallback);
   }
+}
+
+async function migratePeopleData() {
+  const people = await readData(PEOPLE_FILE);
+  if (!Array.isArray(people) || people.length === 0) return;
+  const portraitMap = await buildLocalPortraitMap();
+  let changed = false;
+  const next = people.map((row) => {
+    const item = { ...(row || {}) };
+    if (Object.prototype.hasOwnProperty.call(item, "bioShort")) {
+      delete item.bioShort;
+      changed = true;
+    }
+    const slug = String(item.slug || "").trim();
+    const localPortrait = portraitMap.get(slug);
+    if (localPortrait && String(item.portraitUrl || "").trim() !== localPortrait) {
+      item.portraitUrl = localPortrait;
+      changed = true;
+    }
+    return item;
+  });
+  if (changed) await writeData(PEOPLE_FILE, next);
+}
+
+async function buildLocalPortraitMap() {
+  const map = new Map();
+  const dir = path.join(ROOT, "assets", "portraits");
+  let files = [];
+  try {
+    files = await fs.readdir(dir);
+  } catch {
+    return map;
+  }
+  for (const file of files) {
+    const ext = path.extname(file).toLowerCase();
+    if (!ext || ![".png", ".jpg", ".jpeg", ".webp", ".avif", ".gif"].includes(ext)) continue;
+    const slug = path.basename(file, ext).toLowerCase();
+    if (!slug) continue;
+    map.set(slug, `/assets/portraits/${file}`);
+  }
+  return map;
 }
 
 async function readData(filePath) {
