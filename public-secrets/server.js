@@ -194,21 +194,25 @@ async function handleApi(req, res, pathname, url) {
   }
 
   if (req.method === "GET" && pathname === "/api/member/auth/me") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
-    return sendJson(res, 200, { memberSlug: session.memberSlug, memberName: session.memberName });
+    const memberContext = await requireMemberContext(req, res, { url });
+    if (!memberContext) return;
+    return sendJson(res, 200, {
+      memberSlug: memberContext.memberSlug,
+      memberName: memberContext.memberName,
+      actorRole: memberContext.actorRole
+    });
   }
 
   if (req.method === "POST" && pathname === "/api/member/uploads") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
     const body = await readJsonBody(req);
+    const memberContext = await requireMemberContext(req, res, { url, body });
+    if (!memberContext) return;
     const result = await saveUploadedImage({
       filename: body.filename,
       contentType: body.contentType,
       dataBase64: body.dataBase64,
       target: body.target,
-      memberSlug: session.memberSlug
+      memberSlug: memberContext.memberSlug
     });
     return sendJson(res, 201, result);
   }
@@ -444,20 +448,20 @@ async function handleApi(req, res, pathname, url) {
   }
 
   if (req.method === "GET" && pathname === "/api/member/profile") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
+    const memberContext = await requireMemberContext(req, res, { url });
+    if (!memberContext) return;
     const people = await readData(PEOPLE_FILE);
-    const person = people.find((p) => String(p.slug || "") === String(session.memberSlug || ""));
+    const person = people.find((p) => String(p.slug || "") === String(memberContext.memberSlug || ""));
     if (!person) return sendJson(res, 404, { error: "Mitglied nicht gefunden" });
     return sendJson(res, 200, sanitizePersonForClient(person));
   }
 
   if (req.method === "PUT" && pathname === "/api/member/profile") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
     const body = await readJsonBody(req);
+    const memberContext = await requireMemberContext(req, res, { url, body });
+    if (!memberContext) return;
     const people = await readData(PEOPLE_FILE);
-    const idx = people.findIndex((p) => String(p.slug || "") === String(session.memberSlug || ""));
+    const idx = people.findIndex((p) => String(p.slug || "") === String(memberContext.memberSlug || ""));
     if (idx < 0) return sendJson(res, 404, { error: "Mitglied nicht gefunden" });
     const current = people[idx];
     people[idx] = {
@@ -477,18 +481,18 @@ async function handleApi(req, res, pathname, url) {
   }
 
   if (req.method === "GET" && pathname === "/api/member/questions") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
+    const memberContext = await requireMemberContext(req, res, { url });
+    if (!memberContext) return;
     const questions = await readData(QUESTIONS_FILE);
-    const own = questions.filter((q) => includesMember(q.authors, session.memberName));
+    const own = questions.filter((q) => includesMember(q.authors, memberContext.memberName));
     return sendJson(res, 200, own);
   }
 
   if (req.method === "POST" && pathname === "/api/member/questions") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
     const body = await readJsonBody(req);
-    const authors = ensureMemberHost(normalizeAuthors(body.authors), session.memberName);
+    const memberContext = await requireMemberContext(req, res, { url, body });
+    if (!memberContext) return;
+    const authors = ensureMemberHost(normalizeAuthors(body.authors), memberContext.memberName);
     const newItem = {
       id: makeId("q"),
       text: String(body.text || "").trim(),
@@ -504,17 +508,17 @@ async function handleApi(req, res, pathname, url) {
   }
 
   if (pathname.startsWith("/api/member/questions/") && req.method === "PUT") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
     const id = pathname.split("/").pop();
     const body = await readJsonBody(req);
+    const memberContext = await requireMemberContext(req, res, { url, body });
+    if (!memberContext) return;
     const questions = await readData(QUESTIONS_FILE);
     const idx = questions.findIndex((q) => q.id === id);
     if (idx < 0) return sendJson(res, 404, { error: "Frage nicht gefunden" });
-    if (!includesMember(questions[idx].authors, session.memberName)) return sendJson(res, 403, { error: "Kein Zugriff" });
+    if (!includesMember(questions[idx].authors, memberContext.memberName)) return sendJson(res, 403, { error: "Kein Zugriff" });
     const authors = ensureMemberHost(
       body.authors === undefined ? questions[idx].authors || [] : normalizeAuthors(body.authors),
-      session.memberName
+      memberContext.memberName
     );
     const updated = {
       ...questions[idx],
@@ -530,31 +534,31 @@ async function handleApi(req, res, pathname, url) {
   }
 
   if (pathname.startsWith("/api/member/questions/") && req.method === "DELETE") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
+    const memberContext = await requireMemberContext(req, res, { url });
+    if (!memberContext) return;
     const id = pathname.split("/").pop();
     const questions = await readData(QUESTIONS_FILE);
     const row = questions.find((q) => q.id === id);
     if (!row) return sendJson(res, 404, { error: "Frage nicht gefunden" });
-    if (!includesMember(row.authors, session.memberName)) return sendJson(res, 403, { error: "Kein Zugriff" });
+    if (!includesMember(row.authors, memberContext.memberName)) return sendJson(res, 403, { error: "Kein Zugriff" });
     const next = questions.filter((q) => q.id !== id);
     await writeData(QUESTIONS_FILE, next);
     return sendJson(res, 200, { ok: true });
   }
 
   if (req.method === "GET" && pathname === "/api/member/events") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
+    const memberContext = await requireMemberContext(req, res, { url });
+    if (!memberContext) return;
     const events = await readData(EVENTS_FILE);
-    const own = events.filter((e) => includesMember(e.hosts, session.memberName));
+    const own = events.filter((e) => includesMember(e.hosts, memberContext.memberName));
     return sendJson(res, 200, own);
   }
 
   if (req.method === "POST" && pathname === "/api/member/events") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
     const body = await readJsonBody(req);
-    const hosts = ensureMemberHost(normalizeHosts(body.hosts), session.memberName);
+    const memberContext = await requireMemberContext(req, res, { url, body });
+    if (!memberContext) return;
+    const hosts = ensureMemberHost(normalizeHosts(body.hosts), memberContext.memberName);
     const newItem = {
       id: makeId("ev"),
       title: String(body.title || "").trim(),
@@ -574,17 +578,17 @@ async function handleApi(req, res, pathname, url) {
   }
 
   if (pathname.startsWith("/api/member/events/") && req.method === "PUT") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
     const id = pathname.split("/").pop();
     const body = await readJsonBody(req);
+    const memberContext = await requireMemberContext(req, res, { url, body });
+    if (!memberContext) return;
     const events = await readData(EVENTS_FILE);
     const idx = events.findIndex((e) => e.id === id);
     if (idx < 0) return sendJson(res, 404, { error: "Termin nicht gefunden" });
-    if (!includesMember(events[idx].hosts, session.memberName)) return sendJson(res, 403, { error: "Kein Zugriff" });
+    if (!includesMember(events[idx].hosts, memberContext.memberName)) return sendJson(res, 403, { error: "Kein Zugriff" });
     const hosts = ensureMemberHost(
       body.hosts === undefined ? events[idx].hosts || [] : normalizeHosts(body.hosts),
-      session.memberName
+      memberContext.memberName
     );
     const updated = {
       ...events[idx],
@@ -604,31 +608,31 @@ async function handleApi(req, res, pathname, url) {
   }
 
   if (pathname.startsWith("/api/member/events/") && req.method === "DELETE") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
+    const memberContext = await requireMemberContext(req, res, { url });
+    if (!memberContext) return;
     const id = pathname.split("/").pop();
     const events = await readData(EVENTS_FILE);
     const row = events.find((e) => e.id === id);
     if (!row) return sendJson(res, 404, { error: "Termin nicht gefunden" });
-    if (!includesMember(row.hosts, session.memberName)) return sendJson(res, 403, { error: "Kein Zugriff" });
+    if (!includesMember(row.hosts, memberContext.memberName)) return sendJson(res, 403, { error: "Kein Zugriff" });
     const next = events.filter((e) => e.id !== id);
     await writeData(EVENTS_FILE, next);
     return sendJson(res, 200, { ok: true });
   }
 
   if (req.method === "GET" && pathname === "/api/member/initiatives") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
+    const memberContext = await requireMemberContext(req, res, { url });
+    if (!memberContext) return;
     const initiatives = await readData(INITIATIVES_FILE);
-    const own = initiatives.filter((i) => includesMember(i.hosts, session.memberName));
+    const own = initiatives.filter((i) => includesMember(i.hosts, memberContext.memberName));
     return sendJson(res, 200, own);
   }
 
   if (req.method === "POST" && pathname === "/api/member/initiatives") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
     const body = await readJsonBody(req);
-    const hosts = ensureMemberHost(normalizeHosts(body.hosts), session.memberName);
+    const memberContext = await requireMemberContext(req, res, { url, body });
+    if (!memberContext) return;
+    const hosts = ensureMemberHost(normalizeHosts(body.hosts), memberContext.memberName);
     const newItem = {
       id: makeId("in"),
       title: String(body.title || "").trim(),
@@ -646,17 +650,17 @@ async function handleApi(req, res, pathname, url) {
   }
 
   if (pathname.startsWith("/api/member/initiatives/") && req.method === "PUT") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
     const id = pathname.split("/").pop();
     const body = await readJsonBody(req);
+    const memberContext = await requireMemberContext(req, res, { url, body });
+    if (!memberContext) return;
     const initiatives = await readData(INITIATIVES_FILE);
     const idx = initiatives.findIndex((i) => i.id === id);
     if (idx < 0) return sendJson(res, 404, { error: "Initiative nicht gefunden" });
-    if (!includesMember(initiatives[idx].hosts, session.memberName)) return sendJson(res, 403, { error: "Kein Zugriff" });
+    if (!includesMember(initiatives[idx].hosts, memberContext.memberName)) return sendJson(res, 403, { error: "Kein Zugriff" });
     const hosts = ensureMemberHost(
       body.hosts === undefined ? initiatives[idx].hosts || [] : normalizeHosts(body.hosts),
-      session.memberName
+      memberContext.memberName
     );
     const updated = {
       ...initiatives[idx],
@@ -674,13 +678,13 @@ async function handleApi(req, res, pathname, url) {
   }
 
   if (pathname.startsWith("/api/member/initiatives/") && req.method === "DELETE") {
-    const session = requireMemberSession(req, res);
-    if (!session) return;
+    const memberContext = await requireMemberContext(req, res, { url });
+    if (!memberContext) return;
     const id = pathname.split("/").pop();
     const initiatives = await readData(INITIATIVES_FILE);
     const row = initiatives.find((i) => i.id === id);
     if (!row) return sendJson(res, 404, { error: "Initiative nicht gefunden" });
-    if (!includesMember(row.hosts, session.memberName)) return sendJson(res, 403, { error: "Kein Zugriff" });
+    if (!includesMember(row.hosts, memberContext.memberName)) return sendJson(res, 403, { error: "Kein Zugriff" });
     const next = initiatives.filter((i) => i.id !== id);
     await writeData(INITIATIVES_FILE, next);
     return sendJson(res, 200, { ok: true });
@@ -984,14 +988,44 @@ function requireEditorSession(req, res) {
   return session;
 }
 
-function requireMemberSession(req, res) {
+async function requireMemberContext(req, res, options = {}) {
+  const { url = null, body = null } = options;
   const session = requireSession(req, res);
   if (!session) return null;
-  if (session.role !== "member") {
-    sendJson(res, 403, { error: "Nur Mitglied erlaubt" });
+
+  if (session.role === "member") {
+    return {
+      actorRole: "member",
+      memberSlug: String(session.memberSlug || ""),
+      memberName: String(session.memberName || "")
+    };
+  }
+
+  if (session.role !== "editor") {
+    sendJson(res, 403, { error: "Nur Mitglied oder Redaktion erlaubt" });
     return null;
   }
-  return session;
+
+  const fromQuery = url ? String(url.searchParams.get("asMember") || "").trim() : "";
+  const fromBody = body && body.asMember !== undefined ? String(body.asMember || "").trim() : "";
+  const asMember = fromBody || fromQuery;
+  if (!asMember) {
+    sendJson(res, 400, { error: "Bitte Mitgliedsauswahl setzen (asMember)." });
+    return null;
+  }
+
+  const people = await readData(PEOPLE_FILE);
+  const member = people.find((person) => String(person.slug || "") === asMember);
+  if (!member) {
+    sendJson(res, 404, { error: "Mitglied nicht gefunden" });
+    return null;
+  }
+
+  return {
+    actorRole: "editor",
+    memberSlug: String(member.slug || ""),
+    memberName: String(member.name || "")
+  };
 }
 
 function createSession(payload) {

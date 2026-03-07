@@ -1,5 +1,9 @@
 const headline = document.getElementById("memberHeadline");
 const logoutBtn = document.getElementById("logoutBtn");
+const memberModeHint = document.getElementById("memberModeHint");
+const memberSwitchLabel = document.getElementById("memberSwitchLabel");
+const memberSwitch = document.getElementById("memberSwitch");
+const adminViewLink = document.getElementById("adminViewLink");
 
 const roleInput = document.getElementById("role");
 const portraitUrlInput = document.getElementById("portraitUrl");
@@ -52,17 +56,35 @@ const eventList = document.getElementById("eventList");
 
 let me = null;
 let cache = { questions: [], initiatives: [], events: [] };
+let isEditorMode = false;
+let activeMemberSlug = String(new URLSearchParams(window.location.search).get("asMember") || "").trim();
+let memberOptions = [];
 
 init();
 
 async function init() {
-  const auth = await fetch("/api/member/auth/me");
-  if (!auth.ok) {
+  const memberAuth = await fetch(memberApiPath("/api/member/auth/me"));
+  if (memberAuth.ok) {
+    me = await memberAuth.json();
+    isEditorMode = String(me.actorRole || "") === "editor";
+    if (isEditorMode) {
+      await setupEditorMode();
+    } else {
+      setMemberUiMode();
+      updateHeadline();
+    }
+    await Promise.all([loadProfile(), refreshQuestions(), refreshInitiatives(), refreshEvents()]);
+    return;
+  }
+
+  const editorAuth = await fetch("/api/auth/me");
+  if (!editorAuth.ok) {
     window.location.href = "/login.html";
     return;
   }
-  me = await auth.json();
-  headline.textContent = `Public Secrets - ${me.memberName}`;
+
+  isEditorMode = true;
+  await setupEditorMode();
   await Promise.all([loadProfile(), refreshQuestions(), refreshInitiatives(), refreshEvents()]);
 }
 
@@ -70,6 +92,117 @@ logoutBtn.addEventListener("click", async () => {
   await fetch("/api/member/auth/logout", { method: "POST" });
   window.location.href = "/login.html";
 });
+
+if (memberSwitch) {
+  memberSwitch.addEventListener("change", async () => {
+    if (!isEditorMode) return;
+    const nextSlug = String(memberSwitch.value || "").trim();
+    if (!nextSlug || nextSlug === activeMemberSlug) return;
+    await switchMemberContext(nextSlug);
+  });
+}
+
+async function setupEditorMode() {
+  setMemberUiMode();
+  const peopleRes = await fetch("/api/people");
+  if (!peopleRes.ok) {
+    alert("Mitgliederliste konnte nicht geladen werden.");
+    window.location.href = "/admin.html";
+    return;
+  }
+
+  const people = await peopleRes.json();
+  memberOptions = Array.isArray(people)
+    ? people
+        .filter((person) => String(person.slug || "").trim() && String(person.name || "").trim())
+        .sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "de"))
+    : [];
+  if (!memberOptions.length) {
+    alert("Keine Mitglieder gefunden.");
+    window.location.href = "/admin.html";
+    return;
+  }
+
+  if (!activeMemberSlug || !memberOptions.some((person) => String(person.slug || "") === activeMemberSlug)) {
+    activeMemberSlug = String(memberOptions[0].slug || "");
+  }
+  renderMemberSwitch();
+  await switchMemberContext(activeMemberSlug, { skipRender: true });
+}
+
+function setMemberUiMode() {
+  if (!isEditorMode) {
+    if (memberModeHint) memberModeHint.classList.add("hidden");
+    if (memberSwitchLabel) memberSwitchLabel.classList.add("hidden");
+    if (memberSwitch) memberSwitch.classList.add("hidden");
+    if (adminViewLink) adminViewLink.classList.add("hidden");
+    return;
+  }
+  if (memberModeHint) {
+    memberModeHint.textContent = "Redaktion · Mitgliedsansicht";
+    memberModeHint.classList.remove("hidden");
+  }
+  if (memberSwitchLabel) memberSwitchLabel.classList.remove("hidden");
+  if (memberSwitch) memberSwitch.classList.remove("hidden");
+  if (adminViewLink) adminViewLink.classList.remove("hidden");
+}
+
+function renderMemberSwitch() {
+  if (!memberSwitch) return;
+  memberSwitch.innerHTML = memberOptions
+    .map((person) => {
+      const slug = String(person.slug || "");
+      const name = escapeHtml(String(person.name || ""));
+      const selected = slug === activeMemberSlug ? " selected" : "";
+      return `<option value="${escapeHtml(slug)}"${selected}>${name}</option>`;
+    })
+    .join("");
+}
+
+async function switchMemberContext(slug, options = {}) {
+  activeMemberSlug = String(slug || "").trim();
+  if (!activeMemberSlug) return;
+
+  const auth = await fetch(memberApiPath("/api/member/auth/me"));
+  if (!auth.ok) {
+    alert("Mitgliedskontext konnte nicht geladen werden.");
+    return;
+  }
+  me = await auth.json();
+  updateHeadline();
+  syncMemberQueryParam();
+  if (memberSwitch) memberSwitch.value = activeMemberSlug;
+  if (options.skipRender) return;
+  resetAllForms();
+  await Promise.all([loadProfile(), refreshQuestions(), refreshInitiatives(), refreshEvents()]);
+}
+
+function updateHeadline() {
+  const name = String((me && me.memberName) || "").trim();
+  headline.textContent = name ? `Public Secrets - ${name}` : "Public Secrets - Mein Bereich";
+}
+
+function resetAllForms() {
+  resetQuestionForm();
+  resetInitiativeForm();
+  resetEventForm();
+  if (profilePasswordInput) profilePasswordInput.value = "";
+}
+
+function memberApiPath(pathname) {
+  if (!isEditorMode) return pathname;
+  const slug = String(activeMemberSlug || "").trim();
+  if (!slug) return pathname;
+  const sep = pathname.includes("?") ? "&" : "?";
+  return `${pathname}${sep}asMember=${encodeURIComponent(slug)}`;
+}
+
+function syncMemberQueryParam() {
+  if (!isEditorMode) return;
+  const url = new URL(window.location.href);
+  url.searchParams.set("asMember", String(activeMemberSlug || ""));
+  history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+}
 
 saveProfileBtn.addEventListener("click", async () => {
   await saveProfile();
@@ -87,7 +220,7 @@ async function saveProfile() {
   if (profilePasswordInput && profilePasswordInput.value.trim()) {
     body.password = profilePasswordInput.value;
   }
-  const res = await fetch("/api/member/profile", {
+  const res = await fetch(memberApiPath("/api/member/profile"), {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
@@ -123,7 +256,7 @@ saveQuestionBtn.addEventListener("click", async () => {
   const id = qId.value.trim();
   const url = id ? `/api/member/questions/${id}` : "/api/member/questions";
   const method = id ? "PUT" : "POST";
-  const res = await fetch(url, {
+  const res = await fetch(memberApiPath(url), {
     method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
@@ -146,7 +279,7 @@ saveInitiativeBtn.addEventListener("click", async () => {
   const id = iId.value.trim();
   const url = id ? `/api/member/initiatives/${id}` : "/api/member/initiatives";
   const method = id ? "PUT" : "POST";
-  const res = await fetch(url, {
+  const res = await fetch(memberApiPath(url), {
     method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
@@ -180,7 +313,7 @@ saveEventBtn.addEventListener("click", async () => {
   const id = eId.value.trim();
   const url = id ? `/api/member/events/${id}` : "/api/member/events";
   const method = id ? "PUT" : "POST";
-  const res = await fetch(url, {
+  const res = await fetch(memberApiPath(url), {
     method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
@@ -216,7 +349,7 @@ questionList.addEventListener("click", async (event) => {
   }
   if (btn.dataset.action === "del-q") {
     if (!confirm("Frage löschen?")) return;
-    await fetch(`/api/member/questions/${id}`, { method: "DELETE" });
+    await fetch(memberApiPath(`/api/member/questions/${id}`), { method: "DELETE" });
     await refreshQuestions();
   }
 });
@@ -238,7 +371,7 @@ initiativeList.addEventListener("click", async (event) => {
   }
   if (btn.dataset.action === "del-i") {
     if (!confirm("Initiative löschen?")) return;
-    await fetch(`/api/member/initiatives/${id}`, { method: "DELETE" });
+    await fetch(memberApiPath(`/api/member/initiatives/${id}`), { method: "DELETE" });
     await refreshInitiatives();
   }
 });
@@ -262,13 +395,13 @@ eventList.addEventListener("click", async (event) => {
   }
   if (btn.dataset.action === "del-e") {
     if (!confirm("Termin löschen?")) return;
-    await fetch(`/api/member/events/${id}`, { method: "DELETE" });
+    await fetch(memberApiPath(`/api/member/events/${id}`), { method: "DELETE" });
     await refreshEvents();
   }
 });
 
 async function loadProfile() {
-  const res = await fetch("/api/member/profile");
+  const res = await fetch(memberApiPath("/api/member/profile"));
   if (!res.ok) return;
   const profile = await res.json();
   roleInput.value = profile.role || "";
@@ -281,7 +414,7 @@ async function loadProfile() {
 }
 
 async function refreshQuestions() {
-  const res = await fetch("/api/member/questions");
+  const res = await fetch(memberApiPath("/api/member/questions"));
   if (!res.ok) return;
   cache.questions = await res.json();
   questionList.innerHTML = cache.questions
@@ -294,7 +427,7 @@ async function refreshQuestions() {
 }
 
 async function refreshInitiatives() {
-  const res = await fetch("/api/member/initiatives");
+  const res = await fetch(memberApiPath("/api/member/initiatives"));
   if (!res.ok) return;
   cache.initiatives = await res.json();
   initiativeList.innerHTML = cache.initiatives
@@ -308,7 +441,7 @@ async function refreshInitiatives() {
 }
 
 async function refreshEvents() {
-  const res = await fetch("/api/member/events");
+  const res = await fetch(memberApiPath("/api/member/events"));
   if (!res.ok) return;
   cache.events = await res.json();
   eventList.innerHTML = cache.events
@@ -366,7 +499,7 @@ async function handleImageUpload({ fileInput, targetInput, statusEl, target }) {
   try {
     setUploadStatus(statusEl, "Upload läuft …");
     const dataBase64 = await fileToBase64(file);
-    const res = await fetch("/api/member/uploads", {
+    const res = await fetch(memberApiPath("/api/member/uploads"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

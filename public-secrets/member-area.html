@@ -10,6 +10,10 @@
     <header class="topbar">
       <h1 id="memberHeadline">Public Secrets - Mein Bereich</h1>
       <div class="actions">
+        <span id="memberModeHint" class="muted hidden"></span>
+        <label id="memberSwitchLabel" for="memberSwitch" class="muted hidden">Mitglied</label>
+        <select id="memberSwitch" class="hidden"></select>
+        <a id="adminViewLink" href="/admin.html" class="secondary-link hidden">Admin-Ansicht</a>
         <a href="/index.html" class="secondary-link">Zur Webseite</a>
         <button id="logoutBtn" class="secondary" type="button">Logout</button>
       </div>
@@ -136,7 +140,7 @@
       </section>
     </main>
 
-    <script src="member-area.js?v=20260307b"></script>
+    <script src="member-area.js?v=20260307c"></script>
       <script src="/theme-toggle.js"></script>
   </body>
 </html>
