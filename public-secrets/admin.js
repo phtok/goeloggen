@@ -44,6 +44,8 @@ const iCount = document.getElementById("iCount");
 const pCount = document.getElementById("pCount");
 const cCount = document.getElementById("cCount");
 const commentList = document.getElementById("commentList");
+const loginOutboxList = document.getElementById("loginOutboxList");
+const refreshOutboxBtn = document.getElementById("refreshOutboxBtn");
 
 const pId = document.getElementById("pId");
 const pName = document.getElementById("pName");
@@ -67,7 +69,8 @@ let cache = {
   events: [],
   initiatives: [],
   people: [],
-  comments: []
+  comments: [],
+  loginOutbox: []
 };
 
 init();
@@ -434,8 +437,33 @@ commentList.addEventListener("click", async (event) => {
   }
 });
 
+if (refreshOutboxBtn) {
+  refreshOutboxBtn.addEventListener("click", async () => {
+    await refreshOutbox();
+  });
+}
+
+if (loginOutboxList) {
+  loginOutboxList.addEventListener("click", async (event) => {
+    const btn = event.target.closest("button[data-action]");
+    if (!btn) return;
+    if (btn.dataset.action !== "copy-login-url") return;
+    const url = String(btn.dataset.url || "");
+    if (!url) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      btn.textContent = "Kopiert";
+      setTimeout(() => {
+        btn.textContent = "Link kopieren";
+      }, 1200);
+    } catch {
+      prompt("Link kopieren:", url);
+    }
+  });
+}
+
 async function refreshAll() {
-  await Promise.all([refreshQuestions(), refreshEvents(), refreshInitiatives(), refreshPeople(), refreshComments()]);
+  await Promise.all([refreshQuestions(), refreshEvents(), refreshInitiatives(), refreshPeople(), refreshComments(), refreshOutbox()]);
   renderComments();
   refreshCounts();
 }
@@ -501,6 +529,26 @@ async function refreshComments() {
   cache.comments.sort((a, b) => Date.parse(String(b.updatedAt || "")) - Date.parse(String(a.updatedAt || "")));
   renderComments();
   refreshCounts();
+}
+
+async function refreshOutbox() {
+  if (!loginOutboxList) return;
+  cache.loginOutbox = await apiGet("/api/member/auth/outbox");
+  const rows = Array.isArray(cache.loginOutbox) ? cache.loginOutbox : [];
+  loginOutboxList.innerHTML = rows
+    .map((row) => {
+      const when = row.createdAt ? new Date(row.createdAt).toLocaleString("de-DE") : "";
+      const error = row.deliveryError ? `<p class="muted">Fehler: ${escapeHtml(row.deliveryError)}</p>` : "";
+      const slug = row.memberSlug ? `<p class="muted">Slug: ${escapeHtml(row.memberSlug)}</p>` : "";
+      const email = row.email ? `<p class="muted">E-Mail: ${escapeHtml(row.email)}</p>` : "";
+      const link = row.loginUrl ? escapeAttr(row.loginUrl) : "";
+      const actions = row.loginUrl
+        ? `<div class="actions"><a class="secondary-link" href="${escapeAttr(row.loginUrl)}" target="_blank" rel="noopener noreferrer">Link öffnen</a><button class="secondary" data-action="copy-login-url" data-url="${link}" type="button">Link kopieren</button></div>`
+        : "";
+      return `<article class="card"><h3>Login-Link</h3><p class="muted">${escapeHtml(when)}</p>${email}${slug}${error}${actions}</article>`;
+    })
+    .join("");
+  if (!rows.length) loginOutboxList.innerHTML = `<p class="muted">Keine Fallback-Links vorhanden.</p>`;
 }
 
 function renderComments() {

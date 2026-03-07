@@ -24,7 +24,12 @@ requestBtn.addEventListener("click", async () => {
     loginMsg.textContent = "Link konnte nicht gesendet werden.";
     return;
   }
-  loginMsg.textContent = "Wenn die Adresse hinterlegt ist, wurde ein Login-Link versendet.";
+  const payload = await res.json().catch(() => ({}));
+  if (String(payload.delivery || "") === "email") {
+    loginMsg.textContent = "Wenn die Adresse hinterlegt ist, wurde ein Login-Link versendet (bitte auch Spam prüfen).";
+    return;
+  }
+  loginMsg.textContent = "Mailversand derzeit gestört. Die Redaktion kann im Backend einen Fallback-Link bereitstellen.";
 });
 
 loginBtn.addEventListener("click", async () => {

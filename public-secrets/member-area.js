@@ -6,6 +6,7 @@ const memberSwitch = document.getElementById("memberSwitch");
 const adminViewLink = document.getElementById("adminViewLink");
 
 const roleInput = document.getElementById("role");
+const passwordChangeNotice = document.getElementById("passwordChangeNotice");
 const portraitUrlInput = document.getElementById("portraitUrl");
 const portraitFileInput = document.getElementById("portraitFile");
 const uploadPortraitBtn = document.getElementById("uploadPortraitBtn");
@@ -72,6 +73,7 @@ async function init() {
     } else {
       setMemberUiMode();
       updateHeadline();
+      updatePasswordChangeNotice();
     }
     await Promise.all([loadProfile(), refreshQuestions(), refreshInitiatives(), refreshEvents()]);
     return;
@@ -170,6 +172,7 @@ async function switchMemberContext(slug, options = {}) {
   }
   me = await auth.json();
   updateHeadline();
+  updatePasswordChangeNotice();
   syncMemberQueryParam();
   if (memberSwitch) memberSwitch.value = activeMemberSlug;
   if (options.skipRender) return;
@@ -180,6 +183,27 @@ async function switchMemberContext(slug, options = {}) {
 function updateHeadline() {
   const name = String((me && me.memberName) || "").trim();
   headline.textContent = name ? `Public Secrets - ${name}` : "Public Secrets - Mein Bereich";
+}
+
+function updatePasswordChangeNotice() {
+  if (!passwordChangeNotice) return;
+  if (isEditorMode) {
+    passwordChangeNotice.classList.add("hidden");
+    return;
+  }
+  if (me && me.mustChangePassword) {
+    passwordChangeNotice.classList.remove("hidden");
+    return;
+  }
+  passwordChangeNotice.classList.add("hidden");
+}
+
+function ensureMemberPasswordUpdated() {
+  if (isEditorMode) return true;
+  if (!me || !me.mustChangePassword) return true;
+  alert("Bitte zuerst im Profil ein eigenes Passwort setzen.");
+  if (profilePasswordInput) profilePasswordInput.focus();
+  return false;
 }
 
 function resetAllForms() {
@@ -209,6 +233,12 @@ saveProfileBtn.addEventListener("click", async () => {
 });
 
 async function saveProfile() {
+  if (!isEditorMode && me && me.mustChangePassword && !(profilePasswordInput && profilePasswordInput.value.trim())) {
+    alert("Bitte zuerst ein eigenes Passwort setzen und Profil speichern.");
+    if (profilePasswordInput) profilePasswordInput.focus();
+    return false;
+  }
+
   const body = {
     role: roleInput.value.trim(),
     portraitUrl: portraitUrlInput.value.trim(),
@@ -229,6 +259,10 @@ async function saveProfile() {
     alert("Profil konnte nicht gespeichert werden");
     return false;
   }
+  if (!isEditorMode && body.password) {
+    me.mustChangePassword = false;
+    updatePasswordChangeNotice();
+  }
   if (profilePasswordInput) profilePasswordInput.value = "";
   await loadProfile();
   return true;
@@ -248,6 +282,7 @@ if (portraitFocusXInput) portraitFocusXInput.addEventListener("input", updatePor
 if (portraitFocusYInput) portraitFocusYInput.addEventListener("input", updatePortraitFocusPreview);
 
 saveQuestionBtn.addEventListener("click", async () => {
+  if (!ensureMemberPasswordUpdated()) return;
   const body = {
     text: qText.value.trim(),
     createdAt: qDate.value ? `${qDate.value}T12:00:00.000Z` : "",
@@ -269,6 +304,7 @@ saveQuestionBtn.addEventListener("click", async () => {
 resetQuestionBtn.addEventListener("click", resetQuestionForm);
 
 saveInitiativeBtn.addEventListener("click", async () => {
+  if (!ensureMemberPasswordUpdated()) return;
   const body = {
     title: iTitle.value.trim(),
     status: iStatus.value.trim() || "aktiv",
@@ -301,6 +337,7 @@ uploadInitiativeImageBtn.addEventListener("click", () =>
 );
 
 saveEventBtn.addEventListener("click", async () => {
+  if (!ensureMemberPasswordUpdated()) return;
   const body = {
     title: eTitle.value.trim(),
     date: eDate.value,

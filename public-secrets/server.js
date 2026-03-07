@@ -48,6 +48,7 @@ async function start() {
   console.log(`Using data directory: ${DATA_DIR}`);
   await ensureDataFiles();
   await migratePeopleData();
+  await ensureInitialMemberPasswords();
 
   const server = http.createServer(async (req, res) => {
     try {
@@ -132,8 +133,27 @@ async function handleApi(req, res, pathname, url) {
     const delivery = await deliverMemberMagicLink(email, person, loginUrl);
     return sendJson(res, 200, {
       ok: true,
-      delivery: delivery.mode
+      delivery: delivery.mode,
+      deliveryError: String(delivery.error || "")
     });
+  }
+
+  if (req.method === "GET" && pathname === "/api/member/auth/outbox") {
+    const session = requireEditorSession(req, res);
+    if (!session) return;
+    const outbox = await readData(OUTBOX_FILE);
+    const rows = outbox
+      .slice()
+      .sort((a, b) => Date.parse(String(b.createdAt || "")) - Date.parse(String(a.createdAt || "")))
+      .slice(0, 200)
+      .map((row) => ({
+        email: String(row.email || "").trim().toLowerCase(),
+        memberSlug: String(row.memberSlug || "").trim(),
+        createdAt: normalizeCreatedAt(row.createdAt),
+        loginUrl: String(row.loginUrl || "").trim(),
+        deliveryError: String(row.deliveryError || "").trim()
+      }));
+    return sendJson(res, 200, rows);
   }
 
   if (req.method === "POST" && pathname === "/api/member/auth/password-login") {
@@ -152,10 +172,16 @@ async function handleApi(req, res, pathname, url) {
     const sid = createSession({
       role: "member",
       memberSlug: String(person.slug || ""),
-      memberName: String(person.name || "")
+      memberName: String(person.name || ""),
+      mustChangePassword: Boolean(person.mustChangePassword)
     });
     setSessionCookie(res, sid);
-    return sendJson(res, 200, { ok: true, memberSlug: person.slug, memberName: person.name });
+    return sendJson(res, 200, {
+      ok: true,
+      memberSlug: person.slug,
+      memberName: person.name,
+      mustChangePassword: Boolean(person.mustChangePassword)
+    });
   }
 
   if (req.method === "POST" && pathname === "/api/member/auth/verify") {
@@ -180,10 +206,16 @@ async function handleApi(req, res, pathname, url) {
     const sid = createSession({
       role: "member",
       memberSlug: String(person.slug || ""),
-      memberName: String(person.name || "")
+      memberName: String(person.name || ""),
+      mustChangePassword: Boolean(person.mustChangePassword)
     });
     setSessionCookie(res, sid);
-    return sendJson(res, 200, { ok: true, memberSlug: person.slug, memberName: person.name });
+    return sendJson(res, 200, {
+      ok: true,
+      memberSlug: person.slug,
+      memberName: person.name,
+      mustChangePassword: Boolean(person.mustChangePassword)
+    });
   }
 
   if (req.method === "POST" && pathname === "/api/member/auth/logout") {
@@ -199,7 +231,8 @@ async function handleApi(req, res, pathname, url) {
     return sendJson(res, 200, {
       memberSlug: memberContext.memberSlug,
       memberName: memberContext.memberName,
-      actorRole: memberContext.actorRole
+      actorRole: memberContext.actorRole,
+      mustChangePassword: Boolean(memberContext.mustChangePassword)
     });
   }
 
@@ -475,6 +508,16 @@ async function handleApi(req, res, pathname, url) {
     };
     if (body.password !== undefined && String(body.password || "").trim()) {
       people[idx].passwordHash = createPasswordHash(String(body.password || ""));
+      people[idx].mustChangePassword = false;
+      people[idx].initialPasswordSeeded = people[idx].initialPasswordSeeded || new Date().toISOString();
+      const sid = getSessionId(req);
+      if (sid && sessions.has(sid)) {
+        const activeSession = sessions.get(sid);
+        if (activeSession && activeSession.role === "member" && String(activeSession.memberSlug || "") === String(memberContext.memberSlug || "")) {
+          activeSession.mustChangePassword = false;
+          sessions.set(sid, activeSession);
+        }
+      }
     }
     await writeData(PEOPLE_FILE, people);
     return sendJson(res, 200, sanitizePersonForClient(people[idx]));
@@ -738,7 +781,15 @@ async function handleApi(req, res, pathname, url) {
       portraitFocusY: normalizePortraitFocus(body.portraitFocusY),
       links
     };
-    if (password) newItem.passwordHash = createPasswordHash(password);
+    if (password) {
+      newItem.passwordHash = createPasswordHash(password);
+      newItem.mustChangePassword = false;
+      newItem.initialPasswordSeeded = new Date().toISOString();
+    } else if (email && !isPhilippMember(newItem)) {
+      newItem.passwordHash = createPasswordHash(email);
+      newItem.mustChangePassword = true;
+      newItem.initialPasswordSeeded = new Date().toISOString();
+    }
     people.push(newItem);
     await writeData(PEOPLE_FILE, people);
     return sendJson(res, 201, sanitizePersonForClient(newItem));
@@ -797,6 +848,8 @@ async function handleApi(req, res, pathname, url) {
     }
     if (body.password !== undefined && String(body.password || "").trim()) {
       updated.passwordHash = createPasswordHash(String(body.password || ""));
+      updated.mustChangePassword = false;
+      updated.initialPasswordSeeded = updated.initialPasswordSeeded || new Date().toISOString();
     }
 
     people[idx] = updated;
@@ -997,7 +1050,8 @@ async function requireMemberContext(req, res, options = {}) {
     return {
       actorRole: "member",
       memberSlug: String(session.memberSlug || ""),
-      memberName: String(session.memberName || "")
+      memberName: String(session.memberName || ""),
+      mustChangePassword: Boolean(session.mustChangePassword)
     };
   }
 
@@ -1024,7 +1078,8 @@ async function requireMemberContext(req, res, options = {}) {
   return {
     actorRole: "editor",
     memberSlug: String(member.slug || ""),
-    memberName: String(member.name || "")
+    memberName: String(member.name || ""),
+    mustChangePassword: Boolean(member.mustChangePassword)
   };
 }
 
@@ -1217,6 +1272,38 @@ async function migratePeopleData() {
   if (changed) await writeData(PEOPLE_FILE, next);
 }
 
+async function ensureInitialMemberPasswords() {
+  const people = await readData(PEOPLE_FILE);
+  if (!Array.isArray(people) || people.length === 0) return;
+  const nowIso = new Date().toISOString();
+  let changed = false;
+  const next = people.map((row) => {
+    const item = { ...(row || {}) };
+    const email = String(item.email || "").trim().toLowerCase();
+    if (isPhilippMember(item)) {
+      if (item.mustChangePassword === true) {
+        item.mustChangePassword = false;
+        changed = true;
+      }
+      return item;
+    }
+    if (!email) return item;
+    if (!item.initialPasswordSeeded) {
+      item.passwordHash = createPasswordHash(email);
+      item.mustChangePassword = true;
+      item.initialPasswordSeeded = nowIso;
+      changed = true;
+      return item;
+    }
+    if (item.mustChangePassword === undefined || item.mustChangePassword === null) {
+      item.mustChangePassword = false;
+      changed = true;
+    }
+    return item;
+  });
+  if (changed) await writeData(PEOPLE_FILE, next);
+}
+
 async function buildLocalPortraitMap() {
   const map = new Map();
   const dir = path.join(ROOT, "assets", "portraits");
@@ -1314,6 +1401,8 @@ function normalizePortraitFocus(value) {
 function sanitizePersonForClient(person) {
   const row = { ...(person || {}) };
   delete row.passwordHash;
+  delete row.mustChangePassword;
+  delete row.initialPasswordSeeded;
   row.hasPassword = Boolean(person && person.passwordHash);
   row.portraitFocusX = normalizePortraitFocus(row.portraitFocusX);
   row.portraitFocusY = normalizePortraitFocus(row.portraitFocusY);
@@ -1364,6 +1453,13 @@ function normalizeName(value) {
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim();
+}
+
+function isPhilippMember(person) {
+  const email = String((person && person.email) || "").trim().toLowerCase();
+  const slug = String((person && person.slug) || "").trim().toLowerCase();
+  const name = normalizeName((person && person.name) || "");
+  return email === "philipp@saetzerei.com" || slug === "philipp-tok" || name === "philipp tok";
 }
 
 function includesMember(hosts, memberName) {
@@ -1435,6 +1531,7 @@ async function deliverMemberMagicLink(email, person, loginUrl) {
   const apiKey = process.env.RESEND_API_KEY || "";
   const fromEmail = process.env.PUBLIC_SECRETE_FROM_EMAIL || "";
   const name = String(person.name || "Mitglied");
+  let deliveryError = "";
 
   if (apiKey && fromEmail) {
     try {
@@ -1442,7 +1539,8 @@ async function deliverMemberMagicLink(email, person, loginUrl) {
         from: fromEmail,
         to: [email],
         subject: "Dein Public Secrets Einmalzugang",
-        html: `<p>Hallo ${escapeHtmlForEmail(name)},</p><p>hier ist dein Einmalzugang für Public Secrets:</p><p><a href=\"${loginUrl}\">${loginUrl}</a></p><p>Der Link ist 15 Minuten gültig und nur einmal nutzbar.</p>`
+        html: `<p>Hallo ${escapeHtmlForEmail(name)},</p><p>hier ist dein Einmalzugang für Public Secrets:</p><p><a href=\"${loginUrl}\">${loginUrl}</a></p><p>Der Link ist 15 Minuten gültig und nur einmal nutzbar.</p>`,
+        text: `Hallo ${name},\n\nhier ist dein Einmalzugang für Public Secrets:\n${loginUrl}\n\nDer Link ist 15 Minuten gültig und nur einmal nutzbar.`
       };
       const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
@@ -1453,7 +1551,15 @@ async function deliverMemberMagicLink(email, person, loginUrl) {
         body: JSON.stringify(payload)
       });
       if (res.ok) return { mode: "email" };
-    } catch {}
+      const raw = await res.text().catch(() => "");
+      deliveryError = `resend_${res.status}${raw ? `: ${String(raw).slice(0, 300)}` : ""}`;
+      console.warn("Resend delivery failed:", deliveryError);
+    } catch (error) {
+      deliveryError = String(error && error.message ? error.message : "unknown_send_error");
+      console.warn("Resend delivery exception:", deliveryError);
+    }
+  } else {
+    deliveryError = "resend_credentials_missing";
   }
 
   const outbox = await readData(OUTBOX_FILE);
@@ -1461,10 +1567,11 @@ async function deliverMemberMagicLink(email, person, loginUrl) {
     email,
     memberSlug: String(person.slug || ""),
     createdAt: new Date().toISOString(),
-    loginUrl
+    loginUrl,
+    deliveryError
   });
   await writeData(OUTBOX_FILE, outbox.slice(-200));
-  return { mode: "outbox", previewUrl: loginUrl };
+  return { mode: "outbox", error: deliveryError };
 }
 
 function escapeHtmlForEmail(str) {
