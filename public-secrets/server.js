@@ -20,6 +20,7 @@ const OUTBOX_FILE = path.join(DATA_DIR, "member_login_outbox.json");
 const SESSION_TTL_MS = 1000 * 60 * 60 * 12;
 const MEMBER_TOKEN_TTL_MS = 1000 * 60 * 15;
 const COOKIE_NAME = "ps_session";
+const LOGIN_IDENTITY_ALIASES = loadLoginIdentityAliases();
 
 const sessions = new Map();
 const editors = loadEditors();
@@ -108,11 +109,11 @@ async function handleApi(req, res, pathname, url) {
 
   if (req.method === "POST" && pathname === "/api/member/auth/request") {
     const body = await readJsonBody(req);
-    const email = String(body.email || "").trim().toLowerCase();
+    const email = normalizeEmailAddress(body.email);
     if (!email) return sendJson(res, 400, { error: "E-Mail fehlt" });
 
     const people = await readData(PEOPLE_FILE);
-    const person = people.find((p) => String(p.email || "").trim().toLowerCase() === email);
+    const person = findPersonByLoginIdentity(people, email);
     if (!person) return sendJson(res, 200, { ok: true });
 
     const token = crypto.randomBytes(24).toString("hex");
@@ -158,12 +159,12 @@ async function handleApi(req, res, pathname, url) {
 
   if (req.method === "POST" && pathname === "/api/member/auth/password-login") {
     const body = await readJsonBody(req);
-    const identity = String(body.identity || body.email || "").trim().toLowerCase();
+    const identity = normalizeEmailAddress(body.identity || body.email || "");
     const password = String(body.password || "");
     if (!identity || !password) return sendJson(res, 400, { error: "E-Mail und Passwort sind erforderlich" });
 
     const people = await readData(PEOPLE_FILE);
-    const person = people.find((p) => String(p.email || "").trim().toLowerCase() === identity);
+    const person = findPersonByLoginIdentity(people, identity);
     if (!person) return sendJson(res, 401, { error: "Ungültige Anmeldedaten" });
     if (!verifyPasswordHash(password, String(person.passwordHash || ""))) {
       return sendJson(res, 401, { error: "Ungültige Anmeldedaten" });
@@ -781,6 +782,8 @@ async function handleApi(req, res, pathname, url) {
       portraitFocusY: normalizePortraitFocus(body.portraitFocusY),
       links
     };
+    const newAliases = normalizeLoginEmails(body.loginEmails).filter((entry) => entry !== normalizeEmailAddress(newItem.email));
+    if (newAliases.length) newItem.loginEmails = newAliases;
     if (password) {
       newItem.passwordHash = createPasswordHash(password);
       newItem.mustChangePassword = false;
@@ -839,6 +842,11 @@ async function handleApi(req, res, pathname, url) {
       portraitFocusY: body.portraitFocusY === undefined ? normalizePortraitFocus(people[idx].portraitFocusY) : normalizePortraitFocus(body.portraitFocusY),
       links: body.links === undefined ? normalizeLinks(people[idx].links || []) : normalizeLinks(body.links)
     };
+    const nextAliases = normalizeLoginEmails(
+      body.loginEmails === undefined ? updated.loginEmails : body.loginEmails
+    ).filter((entry) => entry !== normalizeEmailAddress(updated.email));
+    if (nextAliases.length) updated.loginEmails = nextAliases;
+    else delete updated.loginEmails;
     if (!updated.name) return sendJson(res, 400, { error: "Name ist Pflicht" });
 
     if (body.slug !== undefined) {
@@ -1247,6 +1255,15 @@ async function migratePeopleData() {
   let changed = false;
   const next = people.map((row) => {
     const item = { ...(row || {}) };
+    const loginEmails = normalizeLoginEmails(item.loginEmails);
+    const primaryEmail = normalizeEmailAddress(item.email);
+    const filteredAliases = loginEmails.filter((email) => email !== primaryEmail);
+    if (JSON.stringify(loginEmails) !== JSON.stringify(filteredAliases)) changed = true;
+    if (filteredAliases.length) item.loginEmails = filteredAliases;
+    else if (Object.prototype.hasOwnProperty.call(item, "loginEmails")) {
+      delete item.loginEmails;
+      changed = true;
+    }
     if (Object.prototype.hasOwnProperty.call(item, "bioShort")) {
       delete item.bioShort;
       changed = true;
@@ -1279,7 +1296,7 @@ async function ensureInitialMemberPasswords() {
   let changed = false;
   const next = people.map((row) => {
     const item = { ...(row || {}) };
-    const email = String(item.email || "").trim().toLowerCase();
+    const email = getPrimaryLoginEmail(item);
     if (isPhilippMember(item)) {
       if (item.mustChangePassword === true) {
         item.mustChangePassword = false;
@@ -1401,6 +1418,7 @@ function normalizePortraitFocus(value) {
 function sanitizePersonForClient(person) {
   const row = { ...(person || {}) };
   delete row.passwordHash;
+  delete row.loginEmails;
   delete row.mustChangePassword;
   delete row.initialPasswordSeeded;
   row.hasPassword = Boolean(person && person.passwordHash);
@@ -1453,6 +1471,47 @@ function normalizeName(value) {
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim();
+}
+
+function normalizeEmailAddress(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function normalizeLoginEmails(input) {
+  if (!Array.isArray(input)) return [];
+  const unique = [];
+  for (const entry of input) {
+    const email = normalizeEmailAddress(entry);
+    if (!email) continue;
+    if (!unique.includes(email)) unique.push(email);
+  }
+  return unique;
+}
+
+function collectLoginEmails(person) {
+  const base = normalizeEmailAddress(person && person.email);
+  const aliases = normalizeLoginEmails(person && person.loginEmails);
+  const all = [];
+  if (base) all.push(base);
+  for (const alias of aliases) {
+    if (!all.includes(alias)) all.push(alias);
+  }
+  return all;
+}
+
+function getPrimaryLoginEmail(person) {
+  const emails = collectLoginEmails(person);
+  return emails.length ? emails[0] : "";
+}
+
+function findPersonByLoginIdentity(people, identity) {
+  const key = normalizeEmailAddress(identity);
+  if (!key) return null;
+  const direct = people.find((person) => collectLoginEmails(person).includes(key));
+  if (direct) return direct;
+  const aliasSlug = String(LOGIN_IDENTITY_ALIASES[key] || "").trim();
+  if (!aliasSlug) return null;
+  return people.find((person) => String(person.slug || "") === aliasSlug) || null;
 }
 
 function isPhilippMember(person) {
@@ -1596,6 +1655,29 @@ function loadEditors() {
     }
   }
   return [{ username: "philipp@saetzerei.com", password: "public-secrets-123" }];
+}
+
+function loadLoginIdentityAliases() {
+  const defaults = {
+    "philipp@anderzeit.com": "philipp-tok"
+  };
+  const out = { ...defaults };
+  const fromEnv = String(process.env.PUBLIC_SECRETE_LOGIN_ALIASES || "").trim();
+  if (!fromEnv) return out;
+  try {
+    const parsed = JSON.parse(fromEnv);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return out;
+    for (const [rawEmail, rawSlug] of Object.entries(parsed)) {
+      const email = normalizeEmailAddress(rawEmail);
+      const slug = String(rawSlug || "").trim();
+      if (!email || !slug) continue;
+      out[email] = slug;
+    }
+    return out;
+  } catch {
+    console.warn("PUBLIC_SECRETE_LOGIN_ALIASES could not be parsed. Using defaults.");
+    return out;
+  }
 }
 
 function createHttpError(status, message) {
