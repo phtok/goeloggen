@@ -1,9 +1,0 @@
-{
-  "name": "public-secrets",
-  "version": "0.1.0",
-  "private": true,
-  "description": "Public Secrets web app",
-  "scripts": {
-    "start": "node server.js"
-  }
-}

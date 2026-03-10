@@ -1,6 +1,12 @@
 # macOS
 .DS_Store
 
+# Local machine tooling
+.brew-cache/
+.brew-local/
+.pydeps/
+.venv-font/
+
 # Editor / temp
 *.swp
 *.swo
@@ -17,6 +23,7 @@ ausgabe_zeichnungen/
 
 # Local experiment snapshots
 archive/
+fremdprojekte/
 
 # Cloudflare worker local state/config
 workers/.wrangler/
