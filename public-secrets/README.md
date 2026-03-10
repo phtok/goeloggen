@@ -41,6 +41,29 @@ Wichtig fuer Persistenz auf Render:
 - Falls deine Disk schon auf einem anderen Mount-Pfad haengt (z. B. `/opt/render/project/src/public-secrets/data`), setze `PUBLIC_SECRETE_DATA_DIR` genau auf diesen Pfad.
 - Ohne gesetzte Variable versucht der Server auf Render automatisch zuerst `/opt/render/project/src/public-secrets/data`, danach `/app/data`.
 
+## Backup & Restore
+Live-Daten sichern:
+
+```bash
+cd /Users/philipptok/goeloggen/public-secrets
+./scripts/backup_live_data.sh
+```
+
+Lokalen Datenstand sichern:
+
+```bash
+./scripts/backup_local_data.sh
+```
+
+Backup zurueckspielen (Notfall):
+
+```bash
+./scripts/restore_backup_to_data.sh backups/live/<timestamp>
+```
+
+Mehr Details und Langfrist-Plan:
+- `docs/ops-and-roadmap.md`
+
 ## Login (MVP)
 Standard-Zugang:
 - Benutzername: `editor`

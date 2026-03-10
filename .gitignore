@@ -21,3 +21,11 @@ archive/
 # Cloudflare worker local state/config
 workers/.wrangler/
 workers/wrangler.toml
+
+# Portrait Brand Generator local runtime files
+portrait_brand_generator/.env
+portrait_brand_generator/tmp/
+portrait_brand_generator/.hf-cache/
+portrait_brand_generator/data/storage/inputs/
+portrait_brand_generator/data/storage/outputs/
+portrait_brand_generator/data/storage/exports/
