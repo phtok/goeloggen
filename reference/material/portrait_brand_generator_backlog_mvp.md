@@ -1,7 +1,7 @@
 # Backlog: Brand Portrait Generator (MVP)
 
 Stand: 2026-02-25  
-Basis: `Material/portrait_brand_generator_pflichtenheft.md`
+Basis: `reference/material/portrait_brand_generator_pflichtenheft.md`
 
 ## Priorisierungslogik
 

@@ -22,17 +22,23 @@ hefte_pdf/
 ausgabe_zeichnungen/
 
 # Local experiment snapshots
-archive/
+archive/*
 fremdprojekte/
+!archive/legacy-entrypoints_2026-03-10/
+!archive/legacy-entrypoints_2026-03-10/**
 
 # Cloudflare worker local state/config
 workers/.wrangler/
 workers/wrangler.toml
 
-# Portrait Brand Generator local runtime files
-portrait_brand_generator/.env
-portrait_brand_generator/tmp/
-portrait_brand_generator/.hf-cache/
-portrait_brand_generator/data/storage/inputs/
-portrait_brand_generator/data/storage/outputs/
-portrait_brand_generator/data/storage/exports/
+# Brand Portrait tool local runtime files
+tools/brand-portrait/.env
+tools/brand-portrait/.venv/
+tools/brand-portrait/tmp/
+tools/brand-portrait/.hf-cache/
+tools/brand-portrait/data/storage/inputs/
+tools/brand-portrait/data/storage/outputs/
+tools/brand-portrait/data/storage/exports/
+tools/brand-portrait/portrait_brand_generator.egg-info/
+tools/brand-portrait/*.jpg
+tools/brand-portrait/*.png
