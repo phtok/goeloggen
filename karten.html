@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Goetheanum Kartentool</title>
+  <style>
+    @font-face {
+      font-family: "SourceSansPro-Regular";
+      src: url("https://goetheanum.ch/build/fonts/SourceSansPro/SourceSansPro-Regular.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "SourceSansPro-SemiBold";
+      src: url("https://goetheanum.ch/build/fonts/SourceSansPro/SourceSansPro-SemiBold.woff2") format("woff2");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Titillium-Upright";
+      src:
+        url("assets/fonts/Titillium-RegularUpright.otf") format("opentype"),
+        local("Titillium Regular Upright");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #24303c;
+      --bg-deep: #1b2530;
+      --panel: #313d49;
+      --panel-soft: #3a4855;
+      --line: rgba(219, 224, 228, 0.16);
+      --line-strong: rgba(219, 224, 228, 0.28);
+      --text: #eef2f5;
+      --muted: #9fb0bf;
+      --accent: #d1a15c;
+      --accent-soft: #edc27a;
+      --paper: #f7f6f1;
+      --ink: #444b54;
+      --map-water: #8ab2cb;
+      --map-land: #d7e1e8;
+      --map-road: #f8f8f4;
+      --building-default: #97bfd6;
+      --building-highlight: #16679e;
+      --building-muted: #97bfd6;
+      --legend-red: #e1616a;
+      --legend-blue: #5d97b4;
+      --safe: rgba(22, 103, 158, 0.2);
+      --bleed: rgba(209, 161, 92, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "SourceSansPro-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 6px;
+      background: var(--accent);
+      z-index: 999;
+    }
+
+    .page-head {
+      margin-top: 6px;
+      padding: 18px 24px;
+      background: var(--bg-deep);
+      border-bottom: 1px solid var(--line-strong);
+      position: sticky;
+      top: 6px;
+      z-index: 50;
+    }
+
+    .page-head-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 4px;
+    }
+
+    .brand-kicker {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+    }
+
+    .brand-title {
+      font-family: "Titillium-Upright", sans-serif;
+      font-size: clamp(1.7rem, 2vw, 2.2rem);
+      line-height: 0.95;
+    }
+
+    .brand-copy {
+      color: var(--muted);
+      font-size: 0.92rem;
+      max-width: 760px;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: minmax(330px, 380px) minmax(0, 1fr);
+      min-height: calc(100vh - 108px);
+    }
+
+    .controls {
+      background: rgba(15, 20, 26, 0.18);
+      border-right: 1px solid var(--line);
+      padding: 18px;
+      overflow: auto;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+    }
+
+    fieldset {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.035);
+      border-radius: 12px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    legend {
+      padding: 0 4px;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+    }
+
+    .row,
+    .stack {
+      display: grid;
+      gap: 6px;
+    }
+
+    .row-inline {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    label,
+    .meta-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    input,
+    select,
+    button,
+    textarea {
+      font: inherit;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(219, 224, 228, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    textarea {
+      min-height: 68px;
+      resize: vertical;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: var(--panel-soft);
+      color: var(--text);
+      cursor: pointer;
+      transition: 0.16s ease;
+    }
+
+    button:hover {
+      background: #455363;
+    }
+
+    button.primary {
+      background: var(--accent);
+      color: #1b2430;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+    }
+
+    button.primary:hover {
+      background: var(--accent-soft);
+    }
+
+    button.active {
+      background: var(--building-highlight);
+      color: #fff;
+    }
+
+    .segmented {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .segmented button {
+      padding-inline: 10px;
+      font-size: 0.82rem;
+    }
+
+    .building-list,
+    .legend-list,
+    .marker-list {
+      display: grid;
+      gap: 6px;
+      max-height: 240px;
+      overflow: auto;
+    }
+
+    .item-card {
+      border: 1px solid rgba(219, 224, 228, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .item-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .item-title {
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+      font-size: 0.95rem;
+    }
+
+    .item-sub {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 0.72rem;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+    }
+
+    .status-highlighted {
+      background: rgba(22, 103, 158, 0.2);
+      color: #b7deff;
+    }
+
+    .status-muted {
+      background: rgba(151, 191, 214, 0.14);
+      color: #d0e3ef;
+    }
+
+    .status-hidden {
+      background: rgba(225, 97, 106, 0.16);
+      color: #f8bec2;
+    }
+
+    .status-default {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+    }
+
+    .preview-shell {
+      padding: 18px;
+      overflow: auto;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      background:
+        radial-gradient(circle at top right, rgba(209, 161, 92, 0.15), transparent 26%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+    }
+
+    .preview-toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .paper-stage {
+      width: min(1120px, 100%);
+      aspect-ratio: 303 / 216;
+      background: #dfe5e8;
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 22px 64px rgba(0, 0, 0, 0.22);
+      position: relative;
+    }
+
+    .paper {
+      width: 100%;
+      height: 100%;
+      background: var(--paper);
+      border-radius: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .paper::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent 0, transparent calc(50% - 0.5px), rgba(68, 75, 84, 0.08) calc(50% - 0.5px), rgba(68, 75, 84, 0.08) calc(50% + 0.5px), transparent calc(50% + 0.5px), transparent 100%);
+      pointer-events: none;
+    }
+
+    .paper.bleed-on::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 12px solid var(--bleed);
+      pointer-events: none;
+    }
+
+    .safe-zone {
+      position: absolute;
+      inset: 28px;
+      border: 1px dashed var(--safe);
+      border-radius: 10px;
+      pointer-events: none;
+    }
+
+    .print-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 0.82rem;
+      padding: 8px;
+      border: 1px dashed rgba(219, 224, 228, 0.15);
+      border-radius: 10px;
+    }
+
+    .coords {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1080px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="brand">
+        <div class="brand-kicker">Goetheanum Grafik</div>
+        <h1 class="brand-title">Campus Kartentool</h1>
+        <p class="brand-copy">
+          Erste Arbeitsversion fuer Reader-Karten mit Gebaeudezustaenden, Marker-System, Legende und
+          druckorientierter Vorschau.
+        </p>
+      </div>
+      <div class="segmented" id="lang-toggle"></div>
+    </div>
+  </header>
+
+  <main class="app">
+    <aside class="controls">
+      <fieldset>
+        <legend>Vorlage</legend>
+        <div class="row">
+          <label for="map-title">Titel</label>
+          <input id="map-title" type="text" />
+        </div>
+        <div class="row">
+          <label for="map-subtitle">Untertitel</label>
+          <input id="map-subtitle" type="text" />
+        </div>
+        <div class="row">
+          <label for="map-notes">Hinweise</label>
+          <textarea id="map-notes"></textarea>
+        </div>
+        <div class="row-inline">
+          <button id="toggle-bleed" class="active" type="button">Beschnitt</button>
+          <button id="toggle-safe" class="active" type="button">Sicherheitszone</button>
+        </div>
+        <div class="hint">
+          V1-Export liefert ein druckorientiertes SVG mit Bleed- und Trim-Geometrie. PDF folgt im
+          naechsten Schritt auf Basis derselben Szenenlogik.
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Gebaeude</legend>
+        <div class="row">
+          <div class="meta-label">Selektiertes Gebaeude</div>
+          <div id="selected-building" class="empty">Noch kein Gebaeude ausgewaehlt.</div>
+        </div>
+        <div class="segmented" id="building-state-controls"></div>
+        <div class="building-list" id="building-list"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Marker</legend>
+        <div class="row-inline">
+          <select id="marker-kind"></select>
+          <button id="start-placement" class="primary" type="button">Marker setzen</button>
+        </div>
+        <div class="hint" id="placement-hint">
+          Waehle einen Typ und klicke dann in die Karte.
+        </div>
+        <div class="marker-list" id="marker-list"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Legende</legend>
+        <div class="legend-list" id="legend-list"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Export</legend>
+        <div class="row-inline">
+          <button id="download-svg" class="primary" type="button">Print SVG</button>
+          <button id="download-json" type="button">JSON</button>
+        </div>
+        <div class="hint">
+          Das SVG enthaelt Beschnitt, Trimkante und Schnittmarken. Es ist als Zwischenformat fuer die
+          Produktionspipeline gedacht.
+        </div>
+      </fieldset>
+    </aside>
+
+    <section class="preview-shell">
+      <div class="preview-toolbar">
+        <div>
+          <div class="brand-kicker">Vorschau</div>
+          <div class="hint">A4 quer, 3 mm Beschnitt, Mittelfalz eingeblendet</div>
+        </div>
+        <div class="coords" id="preview-meta"></div>
+      </div>
+
+      <div class="paper-stage">
+        <div class="paper bleed-on" id="paper">
+          <div class="safe-zone" id="safe-zone"></div>
+          <svg id="print-svg" class="print-svg" viewBox="0 0 297 210" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const UI = {
+      de: {
+        language: "DE",
+        english: "EN",
+        default: "Neutral",
+        highlighted: "Aktiv",
+        muted: "Abgeschwaecht",
+        hidden: "Aus",
+        number: "Nummer",
+        stairs: "Treppe",
+        lift: "Lift",
+        bus: "Bus",
+        train: "Bahn",
+        parking: "Parking",
+        custom: "Custom",
+        selectedBuildingEmpty: "Noch kein Gebaeude ausgewaehlt.",
+        placeReady: "Klicke in die Karte, um den Marker zu platzieren.",
+        placeIdle: "Waehle einen Typ und klicke dann in die Karte.",
+        untitledMarker: "Ort",
+        untitledGroup: "Legende",
+        noMarkers: "Noch keine Marker angelegt.",
+        noLegend: "Noch keine Legenden-Eintraege vorhanden.",
+        selectedPrefix: "Ausgewaehlt",
+        outputMeta: "Format A4 quer / Beschnitt 3 mm / Falz sichtbar"
+      },
+      en: {
+        language: "EN",
+        english: "DE",
+        default: "Default",
+        highlighted: "Highlighted",
+        muted: "Muted",
+        hidden: "Hidden",
+        number: "Number",
+        stairs: "Stairs",
+        lift: "Lift",
+        bus: "Bus",
+        train: "Train",
+        parking: "Parking",
+        custom: "Custom",
+        selectedBuildingEmpty: "No building selected yet.",
+        placeReady: "Click into the map to place the marker.",
+        placeIdle: "Choose a type and click into the map.",
+        untitledMarker: "Location",
+        untitledGroup: "Legend",
+        noMarkers: "No markers yet.",
+        noLegend: "No legend entries yet.",
+        selectedPrefix: "Selected",
+        outputMeta: "Format A4 landscape / bleed 3 mm / fold line visible"
+      }
+    };
+
+    const COLORS = {
+      paper: "#f7f6f1",
+      ink: "#444b54",
+      inkSoft: "rgba(68,75,84,0.74)",
+      land: "#d7e1e8",
+      water: "#8ab2cb",
+      road: "#f8f8f4",
+      buildingDefault: "#97bfd6",
+      buildingHighlight: "#16679e",
+      markerRed: "#e1616a",
+      markerBlue: "#5d97b4"
+    };
+
+    const BUILDINGS = [
+      { id: "goetheanum", label: "Goetheanum", points: "196,62 232,58 246,82 238,116 198,121 182,94" },
+      { id: "grundsteinsaal", label: "Grundsteinsaal", points: "171,74 186,71 189,84 176,89 166,82" },
+      { id: "terrassensaal", label: "Terrassensaal", points: "171,90 186,89 188,101 175,106 166,99" },
+      { id: "schreinerei", label: "Schreinerei", points: "230,26 251,22 259,44 243,55 225,47" },
+      { id: "atelier", label: "Rudolf Steiner Atelier", points: "258,123 272,123 276,136 264,144 254,137" },
+      { id: "glashaus", label: "Glashaus", points: "241,146 257,148 255,164 239,168 232,156" },
+      { id: "ostsaele", label: "Ostsaele 1-4", points: "207,130 224,126 228,145 211,150 202,140" },
+      { id: "trigon", label: "Trigon", points: "272,86 286,83 292,95 286,108 272,110 267,98" }
+    ];
+
+    const BASE_MARKERS = [
+      { id: "m10", kind: "number", x: 178, y: 79, label: "10", linkedLegendItemId: "l10", visible: true },
+      { id: "m20", kind: "number", x: 245, y: 38, label: "20", linkedLegendItemId: "l20", visible: true },
+      { id: "m32", kind: "number", x: 248, y: 154, label: "32", linkedLegendItemId: "l32", visible: true },
+      { id: "m46", kind: "train", x: 214, y: 188, label: "", linkedLegendItemId: "l46", visible: true }
+    ];
+
+    const state = {
+      uiLang: "de",
+      showBleed: true,
+      showSafeZone: true,
+      placementMode: false,
+      selectedMarkerKind: "number",
+      selectedBuildingId: null,
+      draggingMarkerId: null,
+      document: {
+        id: "campus-demo",
+        name: "LWT Reader",
+        language: "de",
+        title: "LWT Reader 2026",
+        subtitle: "Campuskarte und Legende",
+        notes: "A4 quer faltbar mit 3 mm Beschnitt",
+        buildings: BUILDINGS.map((building) => ({
+          id: building.id,
+          label: building.label,
+          state: building.id === "goetheanum" || building.id === "schreinerei" ? "highlighted" : "default"
+        })),
+        markers: BASE_MARKERS.map((marker) => ({ ...marker })),
+        legendGroups: [
+          {
+            id: "g1",
+            title: "Orte",
+            visible: true,
+            items: [
+              { id: "l10", markerId: "m10", number: "10", title: "Grundsteinsaal", subtitle: "" , visible: true },
+              { id: "l20", markerId: "m20", number: "20", title: "Schreinereisaal", subtitle: "" , visible: true },
+              { id: "l32", markerId: "m32", number: "32", title: "Glashaus", subtitle: "" , visible: true },
+              { id: "l46", markerId: "m46", number: "", title: "Train Station", subtitle: "" , visible: true }
+            ]
+          }
+        ]
+      }
+    };
+
+    const langToggle = document.getElementById("lang-toggle");
+    const buildingStateControls = document.getElementById("building-state-controls");
+    const buildingList = document.getElementById("building-list");
+    const markerList = document.getElementById("marker-list");
+    const legendList = document.getElementById("legend-list");
+    const selectedBuilding = document.getElementById("selected-building");
+    const markerKindSelect = document.getElementById("marker-kind");
+    const startPlacementButton = document.getElementById("start-placement");
+    const placementHint = document.getElementById("placement-hint");
+    const mapTitleInput = document.getElementById("map-title");
+    const mapSubtitleInput = document.getElementById("map-subtitle");
+    const mapNotesInput = document.getElementById("map-notes");
+    const printSvg = document.getElementById("print-svg");
+    const previewMeta = document.getElementById("preview-meta");
+    const paper = document.getElementById("paper");
+    const safeZone = document.getElementById("safe-zone");
+    const bleedButton = document.getElementById("toggle-bleed");
+    const safeButton = document.getElementById("toggle-safe");
+
+    function ui(key) {
+      return UI[state.uiLang][key] || key;
+    }
+
+    function getBuildingState(buildingId) {
+      return state.document.buildings.find((building) => building.id === buildingId);
+    }
+
+    function getLegendItemByMarker(markerId) {
+      for (const group of state.document.legendGroups) {
+        const item = group.items.find((entry) => entry.markerId === markerId);
+        if (item) return item;
+      }
+      return null;
+    }
+
+    function nextMarkerNumber() {
+      const values = state.document.markers
+        .filter((marker) => marker.kind === "number")
+        .map((marker) => Number(marker.label))
+        .filter((value) => Number.isFinite(value));
+      return String(values.length ? Math.max(...values) + 1 : 1);
+    }
+
+    function statusClass(status) {
+      return "status-" + status;
+    }
+
+    function renderLangToggle() {
+      langToggle.innerHTML = "";
+      ["de", "en"].forEach((lang) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = UI[lang].language;
+        if (lang === state.uiLang) button.classList.add("active");
+        button.addEventListener("click", () => {
+          state.uiLang = lang;
+          state.document.language = lang;
+          render();
+        });
+        langToggle.appendChild(button);
+      });
+    }
+
+    function renderBuildingControls() {
+      buildingStateControls.innerHTML = "";
+      ["default", "highlighted", "muted", "hidden"].forEach((status) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = ui(status);
+        const selected = state.selectedBuildingId ? getBuildingState(state.selectedBuildingId) : null;
+        if (selected && selected.state === status) button.classList.add("active");
+        button.disabled = !selected;
+        button.addEventListener("click", () => {
+          if (!state.selectedBuildingId) return;
+          getBuildingState(state.selectedBuildingId).state = status;
+          render();
+        });
+        buildingStateControls.appendChild(button);
+      });
+
+      const selected = state.selectedBuildingId ? getBuildingState(state.selectedBuildingId) : null;
+      if (!selected) {
+        selectedBuilding.className = "empty";
+        selectedBuilding.textContent = ui("selectedBuildingEmpty");
+      } else {
+        selectedBuilding.className = "item-card";
+        selectedBuilding.innerHTML = `
+          <div class="item-head">
+            <div>
+              <div class="item-title">${selected.label}</div>
+              <div class="item-sub">${ui("selectedPrefix")}</div>
+            </div>
+            <span class="badge ${statusClass(selected.state)}">${ui(selected.state)}</span>
+          </div>
+        `;
+      }
+
+      buildingList.innerHTML = "";
+      state.document.buildings.forEach((building) => {
+        const card = document.createElement("div");
+        card.className = "item-card";
+        card.innerHTML = `
+          <div class="item-head">
+            <div class="item-title">${building.label}</div>
+            <span class="badge ${statusClass(building.state)}">${ui(building.state)}</span>
+          </div>
+        `;
+        card.addEventListener("click", () => {
+          state.selectedBuildingId = building.id;
+          render();
+        });
+        buildingList.appendChild(card);
+      });
+    }
+
+    function renderMarkerControls() {
+      markerKindSelect.innerHTML = "";
+      ["number", "stairs", "lift", "bus", "train", "parking", "custom"].forEach((kind) => {
+        const option = document.createElement("option");
+        option.value = kind;
+        option.textContent = ui(kind);
+        if (kind === state.selectedMarkerKind) option.selected = true;
+        markerKindSelect.appendChild(option);
+      });
+
+      markerList.innerHTML = "";
+      if (!state.document.markers.length) {
+        markerList.innerHTML = `<div class="empty">${ui("noMarkers")}</div>`;
+      } else {
+        state.document.markers.forEach((marker) => {
+          const legendItem = getLegendItemByMarker(marker.id);
+          const card = document.createElement("div");
+          card.className = "item-card";
+          card.innerHTML = `
+            <div class="item-head">
+              <div>
+                <div class="item-title">${ui(marker.kind)}${marker.label ? " " + marker.label : ""}</div>
+                <div class="item-sub">${legendItem ? legendItem.title : ui("untitledMarker")}</div>
+              </div>
+              <button type="button">Loeschen</button>
+            </div>
+            <div class="coords">x ${marker.x.toFixed(1)} / y ${marker.y.toFixed(1)}</div>
+          `;
+          card.querySelector("button").addEventListener("click", () => {
+            state.document.markers = state.document.markers.filter((entry) => entry.id !== marker.id);
+            state.document.legendGroups.forEach((group) => {
+              group.items = group.items.filter((item) => item.markerId !== marker.id);
+            });
+            render();
+          });
+          markerList.appendChild(card);
+        });
+      }
+    }
+
+    function renderLegendControls() {
+      legendList.innerHTML = "";
+      const groups = state.document.legendGroups.filter((group) => group.visible);
+      const hasEntries = groups.some((group) => group.items.some((item) => item.visible));
+      if (!hasEntries) {
+        legendList.innerHTML = `<div class="empty">${ui("noLegend")}</div>`;
+        return;
+      }
+
+      groups.forEach((group) => {
+        group.items.filter((item) => item.visible).forEach((item) => {
+          const row = document.createElement("div");
+          row.className = "item-card";
+          row.innerHTML = `
+            <div class="item-head">
+              <div class="item-title">${item.number ? item.number + " " : ""}${item.title}</div>
+              <span class="badge">${group.title || ui("untitledGroup")}</span>
+            </div>
+            <input type="text" value="${item.title.replace(/"/g, "&quot;")}" />
+          `;
+          row.querySelector("input").addEventListener("input", (event) => {
+            item.title = event.target.value;
+            renderPrintSvg();
+          });
+          legendList.appendChild(row);
+        });
+      });
+    }
+
+    function buildingFill(building) {
+      if (building.state === "highlighted") return COLORS.buildingHighlight;
+      return COLORS.buildingDefault;
+    }
+
+    function buildingOpacity(building) {
+      if (building.state === "hidden") return 0;
+      if (building.state === "muted") return 0.28;
+      return 1;
+    }
+
+    function markerMarkup(marker) {
+      const palette = marker.kind === "number" ? COLORS.markerRed : COLORS.markerBlue;
+      if (marker.kind === "number") {
+        return `
+          <g data-marker-id="${marker.id}" class="marker" transform="translate(${marker.x} ${marker.y})">
+            <circle r="4.3" fill="${palette}" />
+            <text y="1.4" text-anchor="middle" font-size="3.2" font-family="SourceSansPro-SemiBold, sans-serif" fill="#ffffff">${marker.label}</text>
+          </g>
+        `;
+      }
+      const glyph = {
+        stairs: "S",
+        lift: "L",
+        bus: "B",
+        train: "T",
+        parking: "P",
+        custom: "*"
+      }[marker.kind] || "?";
+      return `
+        <g data-marker-id="${marker.id}" class="marker" transform="translate(${marker.x} ${marker.y})">
+          <circle r="4.1" fill="${palette}" />
+          <text y="1.4" text-anchor="middle" font-size="3.2" font-family="SourceSansPro-SemiBold, sans-serif" fill="#ffffff">${glyph}</text>
+        </g>
+      `;
+    }
+
+    function legendMarkup() {
+      const groups = state.document.legendGroups.filter((group) => group.visible);
+      let x = 16;
+      let y = 22;
+      let markup = "";
+      groups.forEach((group) => {
+        if (group.title) {
+          markup += `<text x="${x}" y="${y}" font-size="4.4" fill="${COLORS.ink}" font-family="SourceSansPro-SemiBold, sans-serif">${escapeXml(group.title)}</text>`;
+          y += 6;
+        }
+        group.items.filter((item) => item.visible).forEach((item) => {
+          const prefix = item.number ? item.number + " " : "";
+          markup += `<text x="${x}" y="${y}" font-size="3.7" fill="${COLORS.ink}" font-family="SourceSansPro-Regular, sans-serif">${escapeXml(prefix + item.title)}</text>`;
+          y += 5.3;
+        });
+        y += 4;
+      });
+      return markup;
+    }
+
+    function escapeXml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderPrintSvg() {
+      const buildingLayer = BUILDINGS.map((shape) => {
+        const building = getBuildingState(shape.id);
+        return `
+          <polygon
+            data-building-id="${shape.id}"
+            points="${shape.points}"
+            fill="${buildingFill(building)}"
+            opacity="${buildingOpacity(building)}"
+            stroke="rgba(68,75,84,0.28)"
+            stroke-width="0.7"
+          />
+        `;
+      }).join("");
+
+      const markerLayer = state.document.markers
+        .filter((marker) => marker.visible)
+        .map((marker) => markerMarkup(marker))
+        .join("");
+
+      printSvg.innerHTML = `
+        <defs>
+          <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="1.4" stdDeviation="1.4" flood-opacity="0.16" />
+          </filter>
+        </defs>
+        <rect x="0" y="0" width="297" height="210" fill="${COLORS.paper}" />
+        <rect x="3" y="3" width="291" height="204" fill="${COLORS.paper}" stroke="rgba(68,75,84,0.08)" />
+        <g stroke="rgba(68,75,84,0.3)" stroke-width="0.5">
+          <line x1="3" y1="8" x2="3" y2="0" />
+          <line x1="11" y1="3" x2="0" y2="3" />
+          <line x1="294" y1="8" x2="294" y2="0" />
+          <line x1="286" y1="3" x2="297" y2="3" />
+          <line x1="3" y1="202" x2="0" y2="202" />
+          <line x1="3" y1="210" x2="3" y2="198" />
+          <line x1="294" y1="202" x2="297" y2="202" />
+          <line x1="294" y1="210" x2="294" y2="198" />
+        </g>
+        <text x="16" y="14" font-size="6.6" fill="${COLORS.ink}" font-family="Titillium-Upright, sans-serif">${escapeXml(state.document.title)}</text>
+        <text x="16" y="19" font-size="3.7" fill="${COLORS.inkSoft}" font-family="SourceSansPro-Regular, sans-serif">${escapeXml(state.document.subtitle)}</text>
+        <g filter="url(#shadow)">
+          <path d="M177 18 L291 18 L271 191 L158 191 Q140 190 132 180 L117 157 L129 116 L145 95 L160 56 Z" fill="${COLORS.land}" />
+          <path d="M217 18 L291 18 L271 191 L214 191 L205 157 L213 132 L231 86 L236 52 Z" fill="${COLORS.water}" opacity="0.88" />
+          <path d="M233 18 L245 18 L222 191 L212 191 Z" fill="${COLORS.road}" />
+          <path d="M255 39 L289 105" stroke="${COLORS.road}" stroke-width="2.4" />
+          <path d="M240 66 L274 87" stroke="${COLORS.road}" stroke-width="2.2" />
+          <path d="M237 131 L264 149" stroke="${COLORS.road}" stroke-width="2" />
+          ${buildingLayer}
+          ${markerLayer}
+        </g>
+        ${legendMarkup()}
+        <text x="16" y="194" font-size="3.2" fill="rgba(68,75,84,0.72)" font-family="SourceSansPro-Regular, sans-serif">${escapeXml(state.document.notes)}</text>
+      `;
+
+      attachSvgEvents();
+      previewMeta.textContent = ui("outputMeta");
+    }
+
+    function render() {
+      renderLangToggle();
+      renderBuildingControls();
+      renderMarkerControls();
+      renderLegendControls();
+      renderPrintSvg();
+      mapTitleInput.value = state.document.title;
+      mapSubtitleInput.value = state.document.subtitle;
+      mapNotesInput.value = state.document.notes;
+      placementHint.textContent = state.placementMode ? ui("placeReady") : ui("placeIdle");
+      paper.classList.toggle("bleed-on", state.showBleed);
+      safeZone.style.display = state.showSafeZone ? "block" : "none";
+      bleedButton.classList.toggle("active", state.showBleed);
+      safeButton.classList.toggle("active", state.showSafeZone);
+    }
+
+    function pointerToSvg(event) {
+      const point = printSvg.createSVGPoint();
+      point.x = event.clientX;
+      point.y = event.clientY;
+      const ctm = printSvg.getScreenCTM();
+      if (!ctm) return null;
+      return point.matrixTransform(ctm.inverse());
+    }
+
+    function attachSvgEvents() {
+      printSvg.querySelectorAll("[data-building-id]").forEach((node) => {
+        node.style.cursor = "pointer";
+        node.addEventListener("click", (event) => {
+          state.selectedBuildingId = event.currentTarget.getAttribute("data-building-id");
+          render();
+        });
+      });
+
+      printSvg.querySelectorAll("[data-marker-id]").forEach((node) => {
+        node.style.cursor = "grab";
+        node.addEventListener("pointerdown", (event) => {
+          state.draggingMarkerId = event.currentTarget.getAttribute("data-marker-id");
+          printSvg.setPointerCapture(event.pointerId);
+        });
+      });
+
+    }
+
+    function handlePointerMove(event) {
+      if (!state.draggingMarkerId) return;
+      const point = pointerToSvg(event);
+      if (!point) return;
+      const marker = state.document.markers.find((entry) => entry.id === state.draggingMarkerId);
+      if (!marker) return;
+      marker.x = clamp(point.x, 118, 286);
+      marker.y = clamp(point.y, 24, 186);
+      renderPrintSvg();
+    }
+
+    function handlePointerUp() {
+      state.draggingMarkerId = null;
+    }
+
+    function handleSvgClick(event) {
+      if (!state.placementMode) return;
+      if (event.target.closest("[data-marker-id]")) return;
+      const point = pointerToSvg(event);
+      if (!point) return;
+      const markerId = "m" + Math.random().toString(36).slice(2, 7);
+      const label = state.selectedMarkerKind === "number" ? nextMarkerNumber() : "";
+      state.document.markers.push({
+        id: markerId,
+        kind: state.selectedMarkerKind,
+        x: clamp(point.x, 118, 286),
+        y: clamp(point.y, 24, 186),
+        label,
+        visible: true
+      });
+      const legendItemId = "l" + Math.random().toString(36).slice(2, 7);
+      state.document.legendGroups[0].items.push({
+        id: legendItemId,
+        markerId,
+        number: label,
+        title: `${ui("untitledMarker")} ${label || state.document.markers.length}`,
+        subtitle: "",
+        visible: true
+      });
+      state.document.markers[state.document.markers.length - 1].linkedLegendItemId = legendItemId;
+      state.placementMode = false;
+      render();
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function download(filename, content, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function createPrintSvgExport() {
+      return `
+<svg xmlns="http://www.w3.org/2000/svg" width="303mm" height="216mm" viewBox="0 0 303 216">
+  <rect width="303" height="216" fill="${COLORS.paper}" />
+  <g transform="translate(3 3)">
+    ${printSvg.innerHTML}
+  </g>
+</svg>`.trim();
+    }
+
+    mapTitleInput.addEventListener("input", (event) => {
+      state.document.title = event.target.value;
+      renderPrintSvg();
+    });
+    mapSubtitleInput.addEventListener("input", (event) => {
+      state.document.subtitle = event.target.value;
+      renderPrintSvg();
+    });
+    mapNotesInput.addEventListener("input", (event) => {
+      state.document.notes = event.target.value;
+      renderPrintSvg();
+    });
+
+    markerKindSelect.addEventListener("change", (event) => {
+      state.selectedMarkerKind = event.target.value;
+    });
+
+    startPlacementButton.addEventListener("click", () => {
+      state.placementMode = !state.placementMode;
+      render();
+    });
+
+    bleedButton.addEventListener("click", () => {
+      state.showBleed = !state.showBleed;
+      render();
+    });
+
+    safeButton.addEventListener("click", () => {
+      state.showSafeZone = !state.showSafeZone;
+      render();
+    });
+
+    document.getElementById("download-svg").addEventListener("click", () => {
+      download("goetheanum-campuskarte-print.svg", createPrintSvgExport(), "image/svg+xml");
+    });
+
+    document.getElementById("download-json").addEventListener("click", () => {
+      download("goetheanum-campuskarte.json", JSON.stringify(state.document, null, 2), "application/json");
+    });
+
+    printSvg.addEventListener("pointermove", handlePointerMove);
+    printSvg.addEventListener("pointerup", handlePointerUp);
+    printSvg.addEventListener("click", handleSvgClick);
+
+    render();
+  </script>
+</body>
+</html>

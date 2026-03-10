@@ -53,6 +53,11 @@ Ein interaktiver Web-Generator für Logos aller Goetheanum-Sektionen und -Organi
 
 Entwickelt für die digitale Markenführung des Goetheanum.
 
+## Konzepte
+
+- Konzeptdokument „Public Secrets – Die Frage“: `docs/public-secrets-web-konzept.md`
+- Pflichtenheft Campus-Kartentool: `docs/campus-kartentool-pflichtenheft.md`
+
 ## GitHub Pages Deployment
 
 Die Website kann direkt über GitHub Pages bereitgestellt werden.
