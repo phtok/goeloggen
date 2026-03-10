@@ -1,6 +1,6 @@
-# Goetheanum Logo Generator
+# Goetheanum Tools
 
-Ein interaktiver Web-Generator für Logos aller Goetheanum-Sektionen und -Organisationen.
+Sammlung von Goetheanum-Grafiktools, Produktionshilfen und Referenzmaterial.
 
 ## Features
 
@@ -19,13 +19,25 @@ Ein interaktiver Web-Generator für Logos aller Goetheanum-Sektionen und -Organi
 - Responsive Design (Desktop & Mobile)
 - Alle Glyphen für deutsche und englische Texte
 
-## Verwendung
+## Aktive Tools
 
-1. `index.html` in Browser öffnen
-2. Organisation auswählen
-3. Layout, Sprache und Farben anpassen
-4. Größe einstellen
-5. Als SVG/PNG/JPG exportieren
+- `index.html` - Logo-Generator
+- `visitenkarten.html` - Visitenkarten-Generator
+- `briefschaften.html` - Briefschaften
+- `karten.html` - Karten-Generator
+- `cover-generator.html` - TV Cover Generator
+- `tools/brand-portrait/` - Brand-Portrait-Generator
+
+## Repo-Struktur
+
+- `assets/` - gemeinsame Schriften, Glyphen, Logos, Vendor-Dateien und Cutouts
+- `workers/` - Cloudflare-Worker und Deploy-Helfer
+- `scripts/` - Build-, Release- und Produktionsskripte
+- `tools/` - eigenständige Unterprojekte wie Brand-Portrait und `gtv-subs`
+- `reference/` - Referenzstände, Altfassungen, Pflichtenhefte und Konzeptmaterial
+- `docs/specs/` - Spezifikationen, die zu aktiven Goetheanum-Tools gehören
+- `archive/` - archivierte Altversionen und Experimente
+- `hefte_pdf/`, `ausgabe_zeichnungen/` - Jahrgangs-PDFs und extrahierte Zeichnungsdaten
 
 ## Organisationen
 
@@ -53,20 +65,42 @@ Ein interaktiver Web-Generator für Logos aller Goetheanum-Sektionen und -Organi
 
 Entwickelt für die digitale Markenführung des Goetheanum.
 
-## Konzepte
+## Zeichnungen und Jahrgaenge
 
-- Pflichtenheft Campus-Kartentool: `docs/campus-kartentool-pflichtenheft.md`
+Die Sammlung der Zeichnungen und Texte aus den Jahrgaengen ist kein einzelnes Webtool, sondern eine Produktionspipeline:
+
+- Rohdaten: `hefte_pdf/`
+- extrahierte Zeichnungen und HTML-Ausgaben: `ausgabe_zeichnungen/`
+- Pipeline-Skripte: `scripts/`
+
+## Spezifikationen
+
+- Pflichtenheft Campus-Kartentool: `docs/specs/campus-kartentool-pflichtenheft.md`
 
 ## GitHub Pages Deployment
 
 Die Website kann direkt über GitHub Pages bereitgestellt werden.
 
-### Was wird veröffentlicht
+### Was aktuell ueber GitHub Pages veroeffentlicht wird
 
 - `index.html` (Logo-Generator)
 - `visitenkarten.html` (Visitenkarten-Tool)
-- `briefschaften.html` (Briefpapier/Kuvert/Signatur)
 - `assets/` (Schriften, Glyphen, Logos)
+
+Weitere Tools liegen im Repo, sind aber im aktuellen Workflow noch nicht im Pages-Bundle:
+
+- `cover-generator.html`
+- `briefschaften.html`
+- `karten.html`
+
+Rueckwaertskompatibilitaet:
+
+- `index-cover-generator.html` leitet auf `cover-generator.html` weiter
+- `index-goelogger-gci1.html` leitet auf `index.html` weiter
+
+Alte Einstiegsdateien liegen unter:
+
+- `archive/legacy-entrypoints_2026-03-10/`
 
 Optional für E-Mail-gesteuerte Visitenkarten-Downloads:
 
