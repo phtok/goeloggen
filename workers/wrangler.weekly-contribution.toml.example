@@ -1,0 +1,38 @@
+name = "goetheanum-weekly-contribution"
+main = "weekly-contribution-worker.js"
+compatibility_date = "2025-01-01"
+workers_dev = true
+
+# ── Cron-Trigger ────────────────────────────────────────────────────────────
+[triggers]
+crons = [
+  "0 9 * * 4",   # Donnerstag 09:00 UTC → Einladung vorbereiten
+  "0 7 * * 1"    # Montag 07:00 UTC → Einladung versenden
+]
+
+# ── KV-Namespace ────────────────────────────────────────────────────────────
+# Vorher anlegen: wrangler kv namespace create SCHEDULE_KV
+[[kv_namespaces]]
+binding = "SCHEDULE_KV"
+id = "DEINE_KV_NAMESPACE_ID"
+
+# ── Umgebungsvariablen ───────────────────────────────────────────────────────
+[vars]
+# Kommagetrennte Liste der Einladungs-Empfänger (Montag-Mail)
+RECIPIENTS = "info@goetheanum.ch,gemeinschaft@goetheanum.ch"
+
+# E-Mail-Adresse für Admin-Erinnerungen (Donnerstag, falls kein Eintrag)
+ADMIN_EMAIL = "philipp.tok@goetheanum.ch"
+
+# Absender-Adresse (Resend-Domain muss verifiziert sein)
+FROM_EMAIL = "Goetheanum <woche@goetheanum.ch>"
+
+# Optional: Reply-To
+REPLY_TO_EMAIL = "philipp.tok@goetheanum.ch"
+
+# Auf "1" setzen für Test-Modus (kein echter Versand)
+DRY_RUN = "0"
+
+# ── Secrets (nie in diese Datei eintragen) ───────────────────────────────────
+# wrangler secret put RESEND_API_KEY
+# wrangler secret put ADMIN_TOKEN
