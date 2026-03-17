@@ -6,54 +6,37 @@
   <title>Goetheanum Kartentool</title>
   <style>
     @font-face {
-      font-family: "SourceSansPro-Regular";
-      src: url("https://goetheanum.ch/build/fonts/SourceSansPro/SourceSansPro-Regular.woff2") format("woff2");
+      font-family: "Goetheanum-Deutsch";
+      src: url("assets/fonts/goetheanum-titel-deutsch.otf") format("opentype");
       font-weight: 400;
       font-style: normal;
       font-display: swap;
     }
 
     @font-face {
-      font-family: "SourceSansPro-SemiBold";
-      src: url("https://goetheanum.ch/build/fonts/SourceSansPro/SourceSansPro-SemiBold.woff2") format("woff2");
-      font-weight: 600;
-      font-style: normal;
-      font-display: swap;
-    }
-
-    @font-face {
-      font-family: "Titillium-Upright";
-      src:
-        url("assets/fonts/Titillium-RegularUpright.otf") format("opentype"),
-        local("Titillium Regular Upright");
+      font-family: "Goetheanum-English";
+      src: url("assets/fonts/goetheanum-titel-english.otf") format("opentype");
       font-weight: 400;
       font-style: normal;
       font-display: swap;
     }
 
     :root {
-      --bg: #24303c;
-      --bg-deep: #1b2530;
-      --panel: #313d49;
-      --panel-soft: #3a4855;
+      --bg: #1f2933;
+      --bg-deep: #172029;
+      --panel: #2c3844;
+      --panel-soft: #364452;
       --line: rgba(219, 224, 228, 0.16);
       --line-strong: rgba(219, 224, 228, 0.28);
-      --text: #eef2f5;
-      --muted: #9fb0bf;
-      --accent: #d1a15c;
-      --accent-soft: #edc27a;
-      --paper: #f7f6f1;
-      --ink: #444b54;
-      --map-water: #8ab2cb;
-      --map-land: #d7e1e8;
-      --map-road: #f8f8f4;
-      --building-default: #97bfd6;
-      --building-highlight: #16679e;
-      --building-muted: #97bfd6;
-      --legend-red: #e1616a;
-      --legend-blue: #5d97b4;
-      --safe: rgba(22, 103, 158, 0.2);
-      --bleed: rgba(209, 161, 92, 0.12);
+      --text: #edf1f4;
+      --muted: #afbcc8;
+      --accent: #d7ab68;
+      --paper: #ffffff;
+      --ink: #4e4f4a;
+      --venue: #df666a;
+      --facility: #6b9ab4;
+      --venue-invert-bg: #fffaf7;
+      --shadow: rgba(0, 0, 0, 0.22);
     }
 
     * {
@@ -67,7 +50,7 @@
       min-height: 100%;
       background: var(--bg);
       color: var(--text);
-      font-family: "SourceSansPro-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Goetheanum-Deutsch", "Goetheanum-English", serif;
     }
 
     body::before {
@@ -76,124 +59,128 @@
       inset: 0 0 auto 0;
       height: 6px;
       background: var(--accent);
-      z-index: 999;
+      z-index: 900;
     }
 
     .page-head {
       margin-top: 6px;
-      padding: 18px 24px;
       background: var(--bg-deep);
       border-bottom: 1px solid var(--line-strong);
       position: sticky;
       top: 6px;
-      z-index: 50;
+      z-index: 40;
     }
 
     .page-head-inner {
+      padding: 18px 24px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: end;
       gap: 16px;
     }
 
     .brand {
       display: grid;
-      gap: 4px;
+      gap: 5px;
     }
 
     .brand-kicker {
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
+      font-size: 0.78rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--accent-soft);
     }
 
     .brand-title {
-      font-family: "Titillium-Upright", sans-serif;
-      font-size: clamp(1.7rem, 2vw, 2.2rem);
-      line-height: 0.95;
+      font-size: clamp(1.8rem, 2.2vw, 2.5rem);
+      line-height: 0.96;
     }
 
     .brand-copy {
+      max-width: 780px;
       color: var(--muted);
       font-size: 0.92rem;
-      max-width: 760px;
+      line-height: 1.35;
     }
 
     .app {
-      display: grid;
-      grid-template-columns: minmax(330px, 380px) minmax(0, 1fr);
-      min-height: calc(100vh - 108px);
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 104px);
     }
 
     .controls {
-      background: rgba(15, 20, 26, 0.18);
-      border-right: 1px solid var(--line);
+      order: 2;
       padding: 18px;
-      overflow: auto;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
       display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       align-content: start;
-      gap: 10px;
+      gap: 12px;
+      overflow: auto;
     }
 
     fieldset {
       border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
       background: rgba(255, 255, 255, 0.035);
-      border-radius: 12px;
-      padding: 12px;
       display: grid;
       gap: 10px;
     }
 
     legend {
-      padding: 0 4px;
-      font-family: "SourceSansPro-SemiBold", sans-serif;
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
+      padding: 0 6px;
+      color: var(--accent);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--accent-soft);
     }
 
-    .row,
-    .stack {
-      display: grid;
-      gap: 6px;
-    }
-
-    .row-inline {
+    .button-row {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
       align-items: center;
     }
 
-    label,
-    .meta-label {
-      font-size: 0.72rem;
-      color: var(--muted);
+    .export-options {
+      display: grid;
+      gap: 8px;
     }
 
-    input,
-    select,
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+
+    .checkbox-row input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+    }
+
     button,
-    textarea {
+    input {
       font: inherit;
     }
 
-    input[type="text"],
-    select,
-    textarea {
+    input[type="text"] {
       width: 100%;
-      border: 1px solid rgba(219, 224, 228, 0.12);
+      border: 1px solid var(--line);
+      border-radius: 12px;
       background: rgba(255, 255, 255, 0.06);
       color: var(--text);
-      border-radius: 10px;
       padding: 10px 12px;
+      outline: none;
     }
 
-    textarea {
-      min-height: 68px;
-      resize: vertical;
+    input[type="text"]:focus {
+      border-color: rgba(215, 171, 104, 0.58);
     }
 
     button {
@@ -204,200 +191,184 @@
       color: var(--text);
       cursor: pointer;
       transition: 0.16s ease;
+      font-family: inherit;
     }
 
     button:hover {
-      background: #455363;
+      background: #435468;
     }
 
     button.primary {
       background: var(--accent);
-      color: #1b2430;
-      font-family: "SourceSansPro-SemiBold", sans-serif;
+      color: #1a2128;
     }
 
     button.primary:hover {
-      background: var(--accent-soft);
+      background: #ecc185;
     }
 
-    button.active {
-      background: var(--building-highlight);
+    button.on {
+      background: var(--venue);
       color: #fff;
     }
 
-    .segmented {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
+    .hint {
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
     }
 
-    .segmented button {
-      padding-inline: 10px;
-      font-size: 0.82rem;
+    .object-groups {
+      display: grid;
+      gap: 12px;
     }
 
-    .building-list,
-    .legend-list,
-    .marker-list {
+    .object-group {
       display: grid;
       gap: 6px;
-      max-height: 240px;
+    }
+
+    .object-group-title {
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+
+    .object-list {
+      display: grid;
+      gap: 6px;
+      max-height: 54vh;
       overflow: auto;
     }
 
-    .item-card {
+    .object-row {
       border: 1px solid rgba(219, 224, 228, 0.1);
       background: rgba(255, 255, 255, 0.04);
-      border-radius: 10px;
-      padding: 10px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .item-head {
+      border-radius: 12px;
+      padding: 10px 12px;
       display: flex;
       justify-content: space-between;
-      gap: 10px;
       align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: 0.16s ease;
     }
 
-    .item-title {
-      font-family: "SourceSansPro-SemiBold", sans-serif;
-      font-size: 0.95rem;
+    .object-row:hover {
+      border-color: rgba(219, 224, 228, 0.2);
+      background: rgba(255, 255, 255, 0.06);
     }
 
-    .item-sub {
+    .object-row.active {
+      border-color: rgba(223, 102, 106, 0.42);
+      background: rgba(223, 102, 106, 0.12);
+    }
+
+    .object-copy {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .object-title {
+      font-size: 0.92rem;
+      line-height: 1.18;
+    }
+
+    .object-meta {
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
-    .badge {
+    .state-pill {
+      padding: 5px 9px;
       border-radius: 999px;
-      padding: 4px 8px;
       font-size: 0.72rem;
       background: rgba(255, 255, 255, 0.08);
       color: var(--muted);
+      flex: 0 0 auto;
     }
 
-    .status-highlighted {
-      background: rgba(22, 103, 158, 0.2);
-      color: #b7deff;
-    }
-
-    .status-muted {
-      background: rgba(151, 191, 214, 0.14);
-      color: #d0e3ef;
-    }
-
-    .status-hidden {
-      background: rgba(225, 97, 106, 0.16);
-      color: #f8bec2;
-    }
-
-    .status-default {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--muted);
+    .object-row.active .state-pill {
+      background: rgba(223, 102, 106, 0.2);
+      color: #ffd8d9;
     }
 
     .preview-shell {
+      order: 1;
       padding: 18px;
-      overflow: auto;
       display: grid;
       align-content: start;
       gap: 12px;
-      background:
-        radial-gradient(circle at top right, rgba(209, 161, 92, 0.15), transparent 26%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+      overflow: auto;
+      background: transparent;
     }
 
-    .preview-toolbar {
+    .preview-top {
       display: flex;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
       align-items: center;
+    }
+
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
+    .zoom-value {
+      min-width: 3.8rem;
+      text-align: right;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .preview-canvas {
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: transparent;
+      padding-bottom: 10px;
+    }
+
+    .preview-note {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
     .paper-stage {
-      width: min(1120px, 100%);
-      aspect-ratio: 303 / 216;
-      background: #dfe5e8;
-      border-radius: 24px;
-      padding: 20px;
-      box-shadow: 0 22px 64px rgba(0, 0, 0, 0.22);
-      position: relative;
+      width: calc(1180px * var(--preview-zoom, 1));
+      aspect-ratio: 297 / 210;
+      background: transparent;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
     }
 
     .paper {
       width: 100%;
       height: 100%;
       background: var(--paper);
-      border-radius: 18px;
-      position: relative;
+      border-radius: 0;
+      border: 1px solid rgba(78, 79, 74, 0.38);
       overflow: hidden;
-    }
-
-    .paper::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, transparent 0, transparent calc(50% - 0.5px), rgba(68, 75, 84, 0.08) calc(50% - 0.5px), rgba(68, 75, 84, 0.08) calc(50% + 0.5px), transparent calc(50% + 0.5px), transparent 100%);
-      pointer-events: none;
-    }
-
-    .paper.bleed-on::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border: 12px solid var(--bleed);
-      pointer-events: none;
-    }
-
-    .safe-zone {
-      position: absolute;
-      inset: 28px;
-      border: 1px dashed var(--safe);
-      border-radius: 10px;
-      pointer-events: none;
+      position: relative;
     }
 
     .print-svg {
       width: 100%;
       height: 100%;
       display: block;
-      user-select: none;
-      touch-action: none;
-    }
-
-    .hint {
-      color: var(--muted);
-      font-size: 0.78rem;
-      line-height: 1.35;
-    }
-
-    .empty {
-      color: var(--muted);
-      font-size: 0.82rem;
-      padding: 8px;
-      border: 1px dashed rgba(219, 224, 228, 0.15);
-      border-radius: 10px;
-    }
-
-    .coords {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 0.74rem;
-      color: var(--muted);
     }
 
     @media (max-width: 1080px) {
-      .app {
-        grid-template-columns: 1fr;
-      }
-
-      .controls {
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
+      .paper-stage {
+        width: calc(980px * var(--preview-zoom, 1));
       }
     }
   </style>
@@ -409,457 +380,477 @@
         <div class="brand-kicker">Goetheanum Grafik</div>
         <h1 class="brand-title">Campus Kartentool</h1>
         <p class="brand-copy">
-          Erste Arbeitsversion fuer Reader-Karten mit Gebaeudezustaenden, Marker-System, Legende und
-          druckorientierter Vorschau.
+          Vorlagennahe Arbeitsbasis mit echter Campusgrafik, Aktivierungsliste und automatischer Legende.
+          V1 arbeitet nur mit den Zuständen <em>aktiv</em> und <em>neutral</em>.
         </p>
       </div>
-      <div class="segmented" id="lang-toggle"></div>
     </div>
   </header>
 
   <main class="app">
     <aside class="controls">
       <fieldset>
-        <legend>Vorlage</legend>
-        <div class="row">
-          <label for="map-title">Titel</label>
-          <input id="map-title" type="text" />
-        </div>
-        <div class="row">
-          <label for="map-subtitle">Untertitel</label>
-          <input id="map-subtitle" type="text" />
-        </div>
-        <div class="row">
-          <label for="map-notes">Hinweise</label>
-          <textarea id="map-notes"></textarea>
-        </div>
-        <div class="row-inline">
-          <button id="toggle-bleed" class="active" type="button">Beschnitt</button>
-          <button id="toggle-safe" class="active" type="button">Sicherheitszone</button>
-        </div>
+        <legend>Hinweis</legend>
         <div class="hint">
-          V1-Export liefert ein druckorientiertes SVG mit Bleed- und Trim-Geometrie. PDF folgt im
-          naechsten Schritt auf Basis derselben Szenenlogik.
+          Die Vorschau zeigt nur das Endformat. Beschnitt und PDF-Ausgabe werden erst im Export gesetzt.
         </div>
       </fieldset>
 
       <fieldset>
-        <legend>Gebaeude</legend>
-        <div class="row">
-          <div class="meta-label">Selektiertes Gebaeude</div>
-          <div id="selected-building" class="empty">Noch kein Gebaeude ausgewaehlt.</div>
-        </div>
-        <div class="segmented" id="building-state-controls"></div>
-        <div class="building-list" id="building-list"></div>
+        <legend>Titel</legend>
+        <input id="title-input" type="text" value="Landwirtschaftliche Tagung 2026" />
+        <div class="hint">Steht links oben ueber der Legende.</div>
       </fieldset>
 
       <fieldset>
-        <legend>Marker</legend>
-        <div class="row-inline">
-          <select id="marker-kind"></select>
-          <button id="start-placement" class="primary" type="button">Marker setzen</button>
-        </div>
-        <div class="hint" id="placement-hint">
-          Waehle einen Typ und klicke dann in die Karte.
-        </div>
-        <div class="marker-list" id="marker-list"></div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Legende</legend>
-        <div class="legend-list" id="legend-list"></div>
+        <legend>Optionen</legend>
+        <div id="object-groups" class="object-groups"></div>
       </fieldset>
 
       <fieldset>
         <legend>Export</legend>
-        <div class="row-inline">
-          <button id="download-svg" class="primary" type="button">Print SVG</button>
-          <button id="download-json" type="button">JSON</button>
+        <div class="export-options">
+          <label class="checkbox-row">
+            <input id="export-bleed" type="checkbox" checked />
+            <span>PDF mit 3 mm Beschnittrand</span>
+          </label>
+          <div class="button-row">
+            <button id="download-pdf" type="button" class="primary">PDF</button>
+            <button id="download-svg" type="button">SVG</button>
+            <button id="download-json" type="button">JSON</button>
+          </div>
         </div>
         <div class="hint">
-          Das SVG enthaelt Beschnitt, Trimkante und Schnittmarken. Es ist als Zwischenformat fuer die
-          Produktionspipeline gedacht.
+          Das PDF wird aus derselben Szene erzeugt. Ohne Beschnitt bleibt das Format bei A4 quer.
         </div>
       </fieldset>
     </aside>
 
     <section class="preview-shell">
-      <div class="preview-toolbar">
-        <div>
-          <div class="brand-kicker">Vorschau</div>
-          <div class="hint">A4 quer, 3 mm Beschnitt, Mittelfalz eingeblendet</div>
+      <div class="preview-top">
+        <div class="preview-note">A4 quer Vorschau ohne Schnittmarken. 3 mm Beschnitt optional nur im Export.</div>
+        <div class="zoom-controls">
+          <button id="zoom-out" type="button">-</button>
+          <button id="zoom-reset" type="button">100%</button>
+          <button id="zoom-in" type="button">+</button>
+          <div id="zoom-value" class="zoom-value">100%</div>
         </div>
-        <div class="coords" id="preview-meta"></div>
       </div>
-
-      <div class="paper-stage">
-        <div class="paper bleed-on" id="paper">
-          <div class="safe-zone" id="safe-zone"></div>
-          <svg id="print-svg" class="print-svg" viewBox="0 0 297 210" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="preview-canvas">
+        <div id="paper-stage" class="paper-stage">
+          <div id="paper" class="paper">
+            <svg id="print-svg" class="print-svg" viewBox="0 0 297 210" xmlns="http://www.w3.org/2000/svg"></svg>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
   <script>
-    const UI = {
-      de: {
-        language: "DE",
-        english: "EN",
-        default: "Neutral",
-        highlighted: "Aktiv",
-        muted: "Abgeschwaecht",
-        hidden: "Aus",
-        number: "Nummer",
-        stairs: "Treppe",
-        lift: "Lift",
-        bus: "Bus",
-        train: "Bahn",
-        parking: "Parking",
-        custom: "Custom",
-        selectedBuildingEmpty: "Noch kein Gebaeude ausgewaehlt.",
-        placeReady: "Klicke in die Karte, um den Marker zu platzieren.",
-        placeIdle: "Waehle einen Typ und klicke dann in die Karte.",
-        untitledMarker: "Ort",
-        untitledGroup: "Legende",
-        noMarkers: "Noch keine Marker angelegt.",
-        noLegend: "Noch keine Legenden-Eintraege vorhanden.",
-        selectedPrefix: "Ausgewaehlt",
-        outputMeta: "Format A4 quer / Beschnitt 3 mm / Falz sichtbar"
-      },
-      en: {
-        language: "EN",
-        english: "DE",
-        default: "Default",
-        highlighted: "Highlighted",
-        muted: "Muted",
-        hidden: "Hidden",
-        number: "Number",
-        stairs: "Stairs",
-        lift: "Lift",
-        bus: "Bus",
-        train: "Train",
-        parking: "Parking",
-        custom: "Custom",
-        selectedBuildingEmpty: "No building selected yet.",
-        placeReady: "Click into the map to place the marker.",
-        placeIdle: "Choose a type and click into the map.",
-        untitledMarker: "Location",
-        untitledGroup: "Legend",
-        noMarkers: "No markers yet.",
-        noLegend: "No legend entries yet.",
-        selectedPrefix: "Selected",
-        outputMeta: "Format A4 landscape / bleed 3 mm / fold line visible"
-      }
-    };
-
     const COLORS = {
-      paper: "#f7f6f1",
-      ink: "#444b54",
-      inkSoft: "rgba(68,75,84,0.74)",
-      land: "#d7e1e8",
-      water: "#8ab2cb",
-      road: "#f8f8f4",
-      buildingDefault: "#97bfd6",
-      buildingHighlight: "#16679e",
-      markerRed: "#e1616a",
-      markerBlue: "#5d97b4"
+      paper: "#ffffff",
+      ink: "#4e4f4a",
+      red: "#dd6a6c",
+      blue: "#6f9db5",
+      redLight: "#fffaf7"
     };
 
-    const BUILDINGS = [
-      { id: "goetheanum", label: "Goetheanum", points: "196,62 232,58 246,82 238,116 198,121 182,94" },
-      { id: "grundsteinsaal", label: "Grundsteinsaal", points: "171,74 186,71 189,84 176,89 166,82" },
-      { id: "terrassensaal", label: "Terrassensaal", points: "171,90 186,89 188,101 175,106 166,99" },
-      { id: "schreinerei", label: "Schreinerei", points: "230,26 251,22 259,44 243,55 225,47" },
-      { id: "atelier", label: "Rudolf Steiner Atelier", points: "258,123 272,123 276,136 264,144 254,137" },
-      { id: "glashaus", label: "Glashaus", points: "241,146 257,148 255,164 239,168 232,156" },
-      { id: "ostsaele", label: "Ostsaele 1-4", points: "207,130 224,126 228,145 211,150 202,140" },
-      { id: "trigon", label: "Trigon", points: "272,86 286,83 292,95 286,108 272,110 267,98" }
-    ];
+    const LAYOUT = {
+      sheetContentWidth: 296,
+      sheetOffsetX: 0.5,
+      foldX: 148.5,
+      legendFrameX: 10.5,
+      legendFrameY: 9,
+      legendColumnWidth: 51.75,
+      mapImageX: 35.94,
+      mapImageY: -13.74,
+      mapImageWidth: 335.62,
+      mapImageHeight: 309.09
+    };
 
-    const BASE_MARKERS = [
-      { id: "m10", kind: "number", x: 178, y: 79, label: "10", linkedLegendItemId: "l10", visible: true },
-      { id: "m20", kind: "number", x: 245, y: 38, label: "20", linkedLegendItemId: "l20", visible: true },
-      { id: "m32", kind: "number", x: 248, y: 154, label: "32", linkedLegendItemId: "l32", visible: true },
-      { id: "m46", kind: "train", x: 214, y: 188, label: "", linkedLegendItemId: "l46", visible: true }
+    const OBJECTS = [
+      { id: "o1", label: "Main Entrance", marker: "1", kind: "orientation", color: "blue", x: 198.52, y: 154.62, active: true, legendColumn: 0, legendOrder: 10 },
+      { id: "o2", label: "South Entrance", marker: "2", kind: "orientation", color: "blue", x: 222.42, y: 125.81, active: true, legendColumn: 0, legendOrder: 20 },
+      { id: "o3", label: "Reception/Empfang", marker: "3", kind: "orientation", color: "blue", x: 204.49, y: 148.27, active: true, legendColumn: 0, legendOrder: 30 },
+      { id: "o4", label: "Info Desk", marker: "4", kind: "orientation", color: "blue", x: 192.79, y: 147.97, active: true, legendColumn: 0, legendOrder: 40 },
+      { id: "o5", label: "Bookshop", marker: "5", kind: "orientation", color: "blue", x: 189.09, y: 142.03, active: true, legendColumn: 0, legendOrder: 50 },
+      { id: "o6", label: "North Gallery", marker: "6", kind: "orientation", color: "blue", x: 191.34, y: 132.49, active: true, legendColumn: 0, legendOrder: 60 },
+      { id: "o7", label: "Library", marker: "7", kind: "orientation", color: "blue", x: 193.14, y: 107.52, active: true, legendColumn: 0, legendOrder: 70 },
+
+      { id: "v10", label: "Grundsteinsaal", marker: "10", kind: "venue", color: "red", x: 198.52, y: 119.94, active: true, legendColumn: 0, legendOrder: 100 },
+      { id: "v11", label: "Terrassensaal", marker: "11", kind: "venue", color: "red", x: 182.28, y: 135.35, active: true, legendColumn: 0, legendOrder: 110 },
+      { id: "v12", label: "Wandelhalle", marker: "12", kind: "venue", color: "red", x: 213.9, y: 135.35, active: true, legendColumn: 0, legendOrder: 120 },
+      { id: "v13", label: "Im Hof", marker: "13", kind: "venue", color: "red", x: 203.96, y: 135.35, active: true, legendColumn: 0, legendOrder: 130 },
+      { id: "v14", label: "Ostsaele 1-4", marker: "14", kind: "venue", color: "red", x: 213.9, y: 119.94, active: true, legendColumn: 0, legendOrder: 140 },
+      { id: "v15", label: "Foyer", marker: "15", kind: "venue", color: "red", x: 198.4, y: 135.31, active: true, legendColumn: 0, legendOrder: 150 },
+
+      {
+        id: "m-main",
+        label: "Main Stairs",
+        marker: "M",
+        kind: "stairs",
+        color: "red",
+        x: 197.81,
+        y: 144.61,
+        active: true,
+        legendColumn: 0,
+        legendOrder: 180,
+        notes: [
+          { label: "Gallery · 1st Floor" },
+          { label: "Grosser Saal · 2nd Floor" }
+        ]
+      },
+      {
+        id: "m-north",
+        label: "North Stairs",
+        marker: "N",
+        kind: "stairs",
+        color: "red",
+        x: 183.39,
+        y: 124.2,
+        active: true,
+        legendColumn: 0,
+        legendOrder: 220,
+        notes: [
+          { label: "North Lift", badge: { style: "outline-red", marker: "N" } },
+          { label: "Gallery · 1st Floor" },
+          { label: "Grosser Saal · 2nd Floor" },
+          { label: "Nordsaal · 5th Floor" },
+          { label: "Nordatelier · 6th Floor" }
+        ]
+      },
+      {
+        id: "m-south",
+        label: "South Stairs",
+        marker: "S",
+        kind: "stairs",
+        color: "red",
+        x: 211.66,
+        y: 124.08,
+        active: true,
+        legendColumn: 0,
+        legendOrder: 270,
+        notes: [
+          { label: "South Lift", badge: { style: "outline-red", marker: "S" } },
+          { label: "Konferenzraum · 1st Floor" },
+          { label: "Gallery · 1st Floor" },
+          { label: "Grosser Saal · 2nd Floor" },
+          { label: "Seminarraum · 4th Floor" },
+          { label: "Wooden Sculpture · 5th Floor" },
+          { label: "Suedatelier · 6th Floor" }
+        ]
+      },
+
+      { id: "v20", label: "Schreinereisaal", marker: "20", kind: "venue", color: "red", x: 220.0, y: 87.72, active: true, legendColumn: 1, legendOrder: 10 },
+      { id: "v21", label: "Plastizierraum", marker: "21", kind: "venue", color: "red", x: 210.3, y: 90.32, active: true, legendColumn: 1, legendOrder: 20 },
+      { id: "v22", label: "Gartenatelier", marker: "22", kind: "venue", color: "red", x: 216.15, y: 75.87, active: true, legendColumn: 1, legendOrder: 30 },
+      { id: "v23", label: "Backofen", marker: "23", kind: "venue", color: "red", x: 235.45, y: 93.48, active: true, legendColumn: 1, legendOrder: 40 },
+      { id: "v24", label: "Schreinerei Suedsaal", marker: "24", kind: "venue", color: "red", x: 242.39, y: 100.84, active: true, legendColumn: 1, legendOrder: 50 },
+
+      { id: "v30", label: "English Studies", marker: "30", kind: "venue", color: "red", x: 157.3, y: 167.12, active: true, legendColumn: 1, legendOrder: 90 },
+      { id: "v31", label: "Halde", marker: "31", kind: "venue", color: "red", x: 145.39, y: 170.29, active: true, legendColumn: 1, legendOrder: 100 },
+      { id: "v32", label: "Glashaus", marker: "32", kind: "venue", color: "red", x: 128.95, y: 118.17, active: true, legendColumn: 1, legendOrder: 110 },
+      { id: "v33", label: "Studierendenwohnheim", marker: "33", kind: "venue", color: "red", x: 174.86, y: 4.46, active: true, legendColumn: 1, legendOrder: 120 },
+      { id: "v34", label: "Haus Schuurman", marker: "34", kind: "venue", color: "red", x: 222.63, y: 25.05, active: true, legendColumn: 1, legendOrder: 130 },
+      { id: "v35", label: "Faerberei", marker: "35", kind: "venue", color: "red", x: 248.14, y: 33.27, active: true, legendColumn: 1, legendOrder: 140 },
+      { id: "v36", label: "Holzhaus", marker: "36", kind: "venue", color: "red", x: 278.1, y: 39.05, active: true, legendColumn: 1, legendOrder: 150 },
+      { id: "v37", label: "AfaP", marker: "37", kind: "venue", color: "red", x: 285.45, y: 130.52, active: true, legendColumn: 1, legendOrder: 160, markerStyle: "arrow-right" },
+      { id: "v38", label: "Trigon", marker: "38", kind: "venue", color: "red", x: 285.45, y: 79.61, active: true, legendColumn: 1, legendOrder: 170, markerStyle: "arrow-right" },
+
+      { id: "o40", label: "Rudolf Steiner Atelier", marker: "40", kind: "orientation", color: "blue", x: 234.45, y: 98.18, active: true, legendColumn: 1, legendOrder: 210 },
+      { id: "o41", label: "1st Goetheanum Model", marker: "41", kind: "orientation", color: "blue", x: 241.2, y: 105.29, active: true, legendColumn: 1, legendOrder: 220 },
+      { id: "o42", label: "Hochatelier", marker: "42", kind: "orientation", color: "blue", x: 229.6, y: 109.29, active: true, legendColumn: 1, legendOrder: 230 },
+      { id: "o43", label: "Edith Maryon Flat", marker: "43", kind: "orientation", color: "blue", x: 271.5, y: 100.4, active: true, legendColumn: 1, legendOrder: 240 },
+      { id: "o44", label: "Rudolf Steiner Archive", marker: "44", kind: "orientation", color: "blue", x: 209.02, y: 195.41, active: true, legendColumn: 1, legendOrder: 250 },
+      { id: "o45", label: "Speisehaus · Schweizer\nLandesgesellschaft", marker: "45", kind: "orientation", color: "blue", x: 280.12, y: 199.57, active: true, legendColumn: 1, legendOrder: 260 },
+      { id: "f-bus", label: "Bus Stop", marker: "B", kind: "facility", color: "blue", x: 287.55, y: 222.68, active: true, legendColumn: 1, legendOrder: 270, fixedMarker: true, showOnMap: false },
+      { id: "f46", label: "Train Station", marker: "46", kind: "facility", color: "blue", x: 103.7, y: 197.36, active: true, legendColumn: 1, legendOrder: 280, markerStyle: "arrow-down-left" },
+      { id: "f-park", label: "Parking", marker: "P", kind: "facility", color: "blue", x: 159.1, y: 73.32, active: true, legendColumn: 1, legendOrder: 290, fixedMarker: true, showOnMap: false }
     ];
 
     const state = {
-      uiLang: "de",
-      showBleed: true,
-      showSafeZone: true,
-      placementMode: false,
-      selectedMarkerKind: "number",
-      selectedBuildingId: null,
-      draggingMarkerId: null,
-      document: {
-        id: "campus-demo",
-        name: "LWT Reader",
-        language: "de",
-        title: "LWT Reader 2026",
-        subtitle: "Campuskarte und Legende",
-        notes: "A4 quer faltbar mit 3 mm Beschnitt",
-        buildings: BUILDINGS.map((building) => ({
-          id: building.id,
-          label: building.label,
-          state: building.id === "goetheanum" || building.id === "schreinerei" ? "highlighted" : "default"
-        })),
-        markers: BASE_MARKERS.map((marker) => ({ ...marker })),
-        legendGroups: [
-          {
-            id: "g1",
-            title: "Orte",
-            visible: true,
-            items: [
-              { id: "l10", markerId: "m10", number: "10", title: "Grundsteinsaal", subtitle: "" , visible: true },
-              { id: "l20", markerId: "m20", number: "20", title: "Schreinereisaal", subtitle: "" , visible: true },
-              { id: "l32", markerId: "m32", number: "32", title: "Glashaus", subtitle: "" , visible: true },
-              { id: "l46", markerId: "m46", number: "", title: "Train Station", subtitle: "" , visible: true }
-            ]
-          }
-        ]
-      }
+      title: "Landwirtschaftliche Tagung 2026",
+      previewZoom: 1.15
     };
 
-    const langToggle = document.getElementById("lang-toggle");
-    const buildingStateControls = document.getElementById("building-state-controls");
-    const buildingList = document.getElementById("building-list");
-    const markerList = document.getElementById("marker-list");
-    const legendList = document.getElementById("legend-list");
-    const selectedBuilding = document.getElementById("selected-building");
-    const markerKindSelect = document.getElementById("marker-kind");
-    const startPlacementButton = document.getElementById("start-placement");
-    const placementHint = document.getElementById("placement-hint");
-    const mapTitleInput = document.getElementById("map-title");
-    const mapSubtitleInput = document.getElementById("map-subtitle");
-    const mapNotesInput = document.getElementById("map-notes");
     const printSvg = document.getElementById("print-svg");
-    const previewMeta = document.getElementById("preview-meta");
-    const paper = document.getElementById("paper");
-    const safeZone = document.getElementById("safe-zone");
-    const bleedButton = document.getElementById("toggle-bleed");
-    const safeButton = document.getElementById("toggle-safe");
+    const objectGroups = document.getElementById("object-groups");
+    const exportBleed = document.getElementById("export-bleed");
+    const titleInput = document.getElementById("title-input");
+    const zoomValue = document.getElementById("zoom-value");
 
-    function ui(key) {
-      return UI[state.uiLang][key] || key;
+    function activeObjects() {
+      return OBJECTS.filter((item) => item.active);
     }
 
-    function getBuildingState(buildingId) {
-      return state.document.buildings.find((building) => building.id === buildingId);
+    function displayMarker(item) {
+      return item.marker;
     }
 
-    function getLegendItemByMarker(markerId) {
-      for (const group of state.document.legendGroups) {
-        const item = group.items.find((entry) => entry.markerId === markerId);
-        if (item) return item;
-      }
-      return null;
+    function currentTitle() {
+      return state.title.trim();
     }
 
-    function nextMarkerNumber() {
-      const values = state.document.markers
-        .filter((marker) => marker.kind === "number")
-        .map((marker) => Number(marker.label))
-        .filter((value) => Number.isFinite(value));
-      return String(values.length ? Math.max(...values) + 1 : 1);
+    function applyPreviewZoom() {
+      document.documentElement.style.setProperty("--preview-zoom", String(state.previewZoom));
+      zoomValue.textContent = `${Math.round(state.previewZoom * 100)}%`;
     }
 
-    function statusClass(status) {
-      return "status-" + status;
+    function setPreviewZoom(nextZoom) {
+      state.previewZoom = Math.min(2.25, Math.max(0.75, nextZoom));
+      applyPreviewZoom();
     }
 
-    function renderLangToggle() {
-      langToggle.innerHTML = "";
-      ["de", "en"].forEach((lang) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.textContent = UI[lang].language;
-        if (lang === state.uiLang) button.classList.add("active");
-        button.addEventListener("click", () => {
-          state.uiLang = lang;
-          state.document.language = lang;
-          render();
-        });
-        langToggle.appendChild(button);
-      });
+    function groupsForOptions() {
+      return [
+        { title: "Orientierung", items: OBJECTS.filter((item) => item.kind === "orientation" || item.kind === "facility") },
+        { title: "Veranstaltungsorte", items: OBJECTS.filter((item) => item.kind === "venue") },
+        { title: "Treppenhaus", items: OBJECTS.filter((item) => item.kind === "stairs") }
+      ];
     }
 
-    function renderBuildingControls() {
-      buildingStateControls.innerHTML = "";
-      ["default", "highlighted", "muted", "hidden"].forEach((status) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.textContent = ui(status);
-        const selected = state.selectedBuildingId ? getBuildingState(state.selectedBuildingId) : null;
-        if (selected && selected.state === status) button.classList.add("active");
-        button.disabled = !selected;
-        button.addEventListener("click", () => {
-          if (!state.selectedBuildingId) return;
-          getBuildingState(state.selectedBuildingId).state = status;
-          render();
-        });
-        buildingStateControls.appendChild(button);
-      });
-
-      const selected = state.selectedBuildingId ? getBuildingState(state.selectedBuildingId) : null;
-      if (!selected) {
-        selectedBuilding.className = "empty";
-        selectedBuilding.textContent = ui("selectedBuildingEmpty");
-      } else {
-        selectedBuilding.className = "item-card";
-        selectedBuilding.innerHTML = `
-          <div class="item-head">
-            <div>
-              <div class="item-title">${selected.label}</div>
-              <div class="item-sub">${ui("selectedPrefix")}</div>
-            </div>
-            <span class="badge ${statusClass(selected.state)}">${ui(selected.state)}</span>
-          </div>
-        `;
-      }
-
-      buildingList.innerHTML = "";
-      state.document.buildings.forEach((building) => {
-        const card = document.createElement("div");
-        card.className = "item-card";
-        card.innerHTML = `
-          <div class="item-head">
-            <div class="item-title">${building.label}</div>
-            <span class="badge ${statusClass(building.state)}">${ui(building.state)}</span>
-          </div>
-        `;
-        card.addEventListener("click", () => {
-          state.selectedBuildingId = building.id;
-          render();
-        });
-        buildingList.appendChild(card);
-      });
+    function toggleObject(id) {
+      const object = OBJECTS.find((item) => item.id === id);
+      if (!object) return;
+      object.active = !object.active;
+      render();
     }
 
-    function renderMarkerControls() {
-      markerKindSelect.innerHTML = "";
-      ["number", "stairs", "lift", "bus", "train", "parking", "custom"].forEach((kind) => {
-        const option = document.createElement("option");
-        option.value = kind;
-        option.textContent = ui(kind);
-        if (kind === state.selectedMarkerKind) option.selected = true;
-        markerKindSelect.appendChild(option);
-      });
+    function renderOptions() {
+      objectGroups.innerHTML = "";
+      groupsForOptions().forEach((group) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "object-group";
+        wrapper.innerHTML = `<div class="object-group-title">${group.title}</div>`;
 
-      markerList.innerHTML = "";
-      if (!state.document.markers.length) {
-        markerList.innerHTML = `<div class="empty">${ui("noMarkers")}</div>`;
-      } else {
-        state.document.markers.forEach((marker) => {
-          const legendItem = getLegendItemByMarker(marker.id);
-          const card = document.createElement("div");
-          card.className = "item-card";
-          card.innerHTML = `
-            <div class="item-head">
-              <div>
-                <div class="item-title">${ui(marker.kind)}${marker.label ? " " + marker.label : ""}</div>
-                <div class="item-sub">${legendItem ? legendItem.title : ui("untitledMarker")}</div>
-              </div>
-              <button type="button">Loeschen</button>
-            </div>
-            <div class="coords">x ${marker.x.toFixed(1)} / y ${marker.y.toFixed(1)}</div>
-          `;
-          card.querySelector("button").addEventListener("click", () => {
-            state.document.markers = state.document.markers.filter((entry) => entry.id !== marker.id);
-            state.document.legendGroups.forEach((group) => {
-              group.items = group.items.filter((item) => item.markerId !== marker.id);
-            });
-            render();
-          });
-          markerList.appendChild(card);
-        });
-      }
-    }
+        const list = document.createElement("div");
+        list.className = "object-list";
 
-    function renderLegendControls() {
-      legendList.innerHTML = "";
-      const groups = state.document.legendGroups.filter((group) => group.visible);
-      const hasEntries = groups.some((group) => group.items.some((item) => item.visible));
-      if (!hasEntries) {
-        legendList.innerHTML = `<div class="empty">${ui("noLegend")}</div>`;
-        return;
-      }
-
-      groups.forEach((group) => {
-        group.items.filter((item) => item.visible).forEach((item) => {
+        group.items.forEach((item) => {
+          const marker = item.active ? displayMarker(item) : (item.fixedMarker || item.kind === "stairs" ? item.marker : "");
           const row = document.createElement("div");
-          row.className = "item-card";
+          row.className = "object-row" + (item.active ? " active" : "");
           row.innerHTML = `
-            <div class="item-head">
-              <div class="item-title">${item.number ? item.number + " " : ""}${item.title}</div>
-              <span class="badge">${group.title || ui("untitledGroup")}</span>
+            <div class="object-copy">
+              <div class="object-title">${item.label.split("\n").join(" / ")}</div>
+              <div class="object-meta">${item.color === "red" ? "rot" : "blau"}${marker ? ` / ${marker}` : ""}</div>
             </div>
-            <input type="text" value="${item.title.replace(/"/g, "&quot;")}" />
+            <div class="state-pill">${item.active ? "aktiv" : "neutral"}</div>
           `;
-          row.querySelector("input").addEventListener("input", (event) => {
-            item.title = event.target.value;
-            renderPrintSvg();
-          });
-          legendList.appendChild(row);
+          row.addEventListener("click", () => toggleObject(item.id));
+          list.appendChild(row);
         });
+
+        wrapper.appendChild(list);
+        objectGroups.appendChild(wrapper);
       });
     }
 
-    function buildingFill(building) {
-      if (building.state === "highlighted") return COLORS.buildingHighlight;
-      return COLORS.buildingDefault;
+    function textMetrics(marker, context) {
+      const value = String(marker);
+      const digits = /^\d+$/.test(value) ? value.length : 1;
+
+      if (context === "map-circle") {
+        if (digits === 1) return { size: 2.02, dy: 0.11 };
+        return { size: 1.68, dy: 0.1 };
+      }
+
+      if (context === "legend-circle") {
+        if (digits === 1) return { size: 1.72, dy: 0.09 };
+        return { size: 1.46, dy: 0.08 };
+      }
+
+      if (context === "map-stairs") return { size: 2.02, dy: 0.06 };
+      if (context === "legend-stairs") return { size: 1.56, dy: 0.06 };
+      if (context === "legend-outline") return { size: 1.38, dy: 0.06 };
+
+      return { size: 2.1, dy: 0.12 };
     }
 
-    function buildingOpacity(building) {
-      if (building.state === "hidden") return 0;
-      if (building.state === "muted") return 0.28;
-      return 1;
+    function circleFill(item) {
+      return item.color === "red" ? COLORS.red : COLORS.blue;
     }
 
-    function markerMarkup(marker) {
-      const palette = marker.kind === "number" ? COLORS.markerRed : COLORS.markerBlue;
-      if (marker.kind === "number") {
+    function markerShape(item) {
+      if (item.showOnMap === false) return "";
+      const pos = { x: item.x, y: item.y };
+
+      if (item.kind === "stairs") {
+        const metrics = textMetrics(item.marker, "map-stairs");
         return `
-          <g data-marker-id="${marker.id}" class="marker" transform="translate(${marker.x} ${marker.y})">
-            <circle r="4.3" fill="${palette}" />
-            <text y="1.4" text-anchor="middle" font-size="3.2" font-family="SourceSansPro-SemiBold, sans-serif" fill="#ffffff">${marker.label}</text>
+          <g transform="translate(${pos.x} ${pos.y})">
+            <rect x="-2.45" y="-1.82" width="4.9" height="3.64" rx="0.98" fill="${COLORS.red}" />
+            <text x="0" y="${metrics.dy}" text-anchor="middle" dominant-baseline="central" font-size="${metrics.size}" fill="#ffffff" font-family="Goetheanum-Deutsch, Goetheanum-English, serif">${item.marker}</text>
           </g>
         `;
       }
-      const glyph = {
-        stairs: "S",
-        lift: "L",
-        bus: "B",
-        train: "T",
-        parking: "P",
-        custom: "*"
-      }[marker.kind] || "?";
+
+      const marker = displayMarker(item);
+      const metrics = textMetrics(marker, "map-circle");
+      const circle = `
+        <circle r="2.03" fill="${circleFill(item)}" />
+        <text x="0" y="${metrics.dy}" text-anchor="middle" dominant-baseline="central" font-size="${metrics.size}" fill="#ffffff" font-family="Goetheanum-Deutsch, Goetheanum-English, serif">${marker}</text>
+      `;
+
+      if (item.markerStyle === "arrow-right") {
+        return `
+          <g transform="translate(${pos.x} ${pos.y})">
+            ${circle}
+            <line x1="2.38" y1="0" x2="6.05" y2="0" stroke="${circleFill(item)}" stroke-width="0.72" stroke-linecap="round" />
+            <path d="M5.06 -1.15 L6.45 0 L5.06 1.15" fill="none" stroke="${circleFill(item)}" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" />
+          </g>
+        `;
+      }
+
+      if (item.markerStyle === "arrow-down-left") {
+        return `
+          <g transform="translate(${pos.x} ${pos.y})">
+            ${circle}
+            <path d="M-0.7 2.38 L-2.55 5.18 L-1.22 5.18" fill="none" stroke="${circleFill(item)}" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" />
+          </g>
+        `;
+      }
+
       return `
-        <g data-marker-id="${marker.id}" class="marker" transform="translate(${marker.x} ${marker.y})">
-          <circle r="4.1" fill="${palette}" />
-          <text y="1.4" text-anchor="middle" font-size="3.2" font-family="SourceSansPro-SemiBold, sans-serif" fill="#ffffff">${glyph}</text>
+        <g transform="translate(${pos.x} ${pos.y})">
+          ${circle}
         </g>
       `;
     }
 
-    function legendMarkup() {
-      const groups = state.document.legendGroups.filter((group) => group.visible);
-      let x = 16;
-      let y = 22;
-      let markup = "";
-      groups.forEach((group) => {
-        if (group.title) {
-          markup += `<text x="${x}" y="${y}" font-size="4.4" fill="${COLORS.ink}" font-family="SourceSansPro-SemiBold, sans-serif">${escapeXml(group.title)}</text>`;
-          y += 6;
+    function legendBadge(style, marker, x, y) {
+      if (style === "stairs") {
+        const metrics = textMetrics(marker, "legend-stairs");
+        return `
+          <rect x="${x - 2.25}" y="${y - 1.76}" width="4.5" height="3.52" rx="1.1" fill="${COLORS.red}" />
+          <text x="${x}" y="${y + metrics.dy}" text-anchor="middle" dominant-baseline="central" font-size="${metrics.size}" fill="#ffffff" font-family="Goetheanum-Deutsch, Goetheanum-English, serif">${marker}</text>
+        `;
+      }
+
+      if (style === "outline-red") {
+        const metrics = textMetrics(marker, "legend-outline");
+        return `
+          <rect x="${x - 1.95}" y="${y - 1.52}" width="3.9" height="3.04" rx="0.95" fill="${COLORS.redLight}" stroke="${COLORS.red}" stroke-width="0.58" />
+          <text x="${x}" y="${y + metrics.dy}" text-anchor="middle" dominant-baseline="central" font-size="${metrics.size}" fill="${COLORS.red}" font-family="Goetheanum-Deutsch, Goetheanum-English, serif">${marker}</text>
+        `;
+      }
+
+      const metrics = textMetrics(marker, "legend-circle");
+      const fill = style === "red" ? COLORS.red : COLORS.blue;
+      return `
+        <circle cx="${x}" cy="${y}" r="2.03" fill="${fill}" />
+        <text x="${x}" y="${y + metrics.dy}" text-anchor="middle" dominant-baseline="central" font-size="${metrics.size}" fill="#ffffff" font-family="Goetheanum-Deutsch, Goetheanum-English, serif">${marker}</text>
+      `;
+    }
+
+    function buildLegendRows(column) {
+      const items = activeObjects()
+        .filter((item) => item.legendColumn === column)
+        .sort((a, b) => a.legendOrder - b.legendOrder);
+
+      const rows = [];
+
+      items.forEach((item, index) => {
+        rows.push({ type: "item", item });
+        if (item.notes) {
+          item.notes.forEach((note) => rows.push({ type: "note", note }));
         }
-        group.items.filter((item) => item.visible).forEach((item) => {
-          const prefix = item.number ? item.number + " " : "";
-          markup += `<text x="${x}" y="${y}" font-size="3.7" fill="${COLORS.ink}" font-family="SourceSansPro-Regular, sans-serif">${escapeXml(prefix + item.title)}</text>`;
-          y += 5.3;
-        });
-        y += 4;
+        if (index !== items.length - 1) {
+          rows.push({ type: "spacer" });
+        }
       });
+
+      return rows;
+    }
+
+    function textBlock(x, y, text, fontSize, lineHeight, color, weight = "400", tracking = 0) {
+      const lines = String(text).split("\n");
+      const tspans = lines.map((line, index) => {
+        const dy = index === 0 ? 0 : lineHeight;
+        return `<tspan x="${x}" dy="${dy}">${escapeXml(line)}</tspan>`;
+      }).join("");
+
+      return `<text x="${x}" y="${y}" font-size="${fontSize}" fill="${color}" font-weight="${weight}" letter-spacing="${tracking}" font-family="Goetheanum-Deutsch, Goetheanum-English, serif">${tspans}</text>`;
+    }
+
+    function legendColumnMarkup(column, x) {
+      const rows = buildLegendRows(column);
+      let y = currentTitle() ? 21.1 : 12.4;
+      let markup = "";
+
+      rows.forEach((row) => {
+        if (row.type === "spacer") {
+          y += 3.6;
+          return;
+        }
+
+        if (row.type === "item") {
+          const style = row.item.kind === "stairs" ? "stairs" : row.item.color;
+          markup += `<g>${legendBadge(style, displayMarker(row.item), x, y)}</g>`;
+          markup += textBlock(x + 4.95, y + 0.5, row.item.label, 3.08, 5.05, COLORS.ink, "400", 0.01);
+          const lineCount = String(row.item.label).split("\n").length;
+          y += lineCount > 1 ? 8.3 : 5.34;
+          return;
+        }
+
+        if (row.type === "note") {
+          if (row.note.badge) {
+            markup += `<g>${legendBadge(row.note.badge.style, row.note.badge.marker, x - 0.08, y - 0.12)}</g>`;
+          }
+          const textX = row.note.badge ? x + 4.15 : x + 1.86;
+          markup += textBlock(textX, y + 0.16, row.note.label, 2.28, 4.1, COLORS.ink, "400", 0.01);
+          y += 4.1;
+        }
+      });
+
       return markup;
+    }
+
+    function sceneMarkup() {
+      const markers = activeObjects().map((item) => markerShape(item)).join("");
+      const imageHref = escapeXml(new URL("assets/maps/campus-master.png", window.location.href).href);
+      const logoHref = escapeXml(new URL("assets/icons/goetheanum-icons/v0.1.0/src-repaired/goetheanum_icon_transparent_black_rgb.svg", window.location.href).href);
+      const title = currentTitle();
+      const titleMarkup = title
+        ? `<text x="${LAYOUT.legendFrameX}" y="13.1" font-size="5.3" fill="${COLORS.ink}" font-family="Goetheanum-Deutsch, Goetheanum-English, serif">${escapeXml(title)}</text>`
+        : "";
+
+      return `
+        <defs>
+          <clipPath id="map-sheet">
+            <rect x="0" y="0" width="297" height="210" />
+          </clipPath>
+        </defs>
+        <rect x="0" y="0" width="297" height="210" fill="${COLORS.paper}" />
+        <g clip-path="url(#map-sheet)">
+          <image href="${imageHref}" x="${LAYOUT.mapImageX}" y="${LAYOUT.mapImageY}" width="${LAYOUT.mapImageWidth}" height="${LAYOUT.mapImageHeight}" />
+          ${markers}
+        </g>
+        <g>
+          <line x1="${LAYOUT.foldX}" y1="0" x2="${LAYOUT.foldX}" y2="210" stroke="rgba(78,79,74,0.48)" stroke-width="0.18" />
+          ${titleMarkup}
+          ${legendColumnMarkup(0, LAYOUT.legendFrameX + 2.2)}
+          ${legendColumnMarkup(1, LAYOUT.legendFrameX + LAYOUT.legendColumnWidth + 2.2)}
+        </g>
+        <g opacity="0.86">
+          <g transform="translate(181.5 34.5)">
+            <circle cx="15.5" cy="0" r="3.25" fill="none" stroke="#ffffff" stroke-width="0.42" />
+            <line x1="7.5" y1="0" x2="23.5" y2="0" stroke="#ffffff" stroke-width="0.42" />
+            <line x1="15.5" y1="-3.9" x2="15.5" y2="3.9" stroke="#ffffff" stroke-width="0.42" />
+            <text x="5.4" y="0.65" font-size="3.5" fill="#ffffff" font-family="Goetheanum-Deutsch, Goetheanum-English, serif">N</text>
+            <text x="25.3" y="0.65" font-size="3.5" fill="#ffffff" font-family="Goetheanum-Deutsch, Goetheanum-English, serif">S</text>
+          </g>
+          <g transform="translate(253 8.6)">
+            <image href="${logoHref}" x="0" y="-2.4" width="6.2" height="8.8" />
+            <text x="7.2" y="2.3" font-size="3.55" fill="#6b6c67" font-family="Goetheanum-Deutsch, Goetheanum-English, serif">Goetheanum</text>
+            <text x="7.2" y="6.2" font-size="3.55" fill="#2376ba" font-family="Goetheanum-Deutsch, Goetheanum-English, serif">Campus</text>
+          </g>
+        </g>
+      `;
+    }
+
+    function renderSvg() {
+      printSvg.innerHTML = sceneMarkup();
     }
 
     function escapeXml(text) {
@@ -870,221 +861,174 @@
         .replace(/"/g, "&quot;");
     }
 
-    function renderPrintSvg() {
-      const buildingLayer = BUILDINGS.map((shape) => {
-        const building = getBuildingState(shape.id);
-        return `
-          <polygon
-            data-building-id="${shape.id}"
-            points="${shape.points}"
-            fill="${buildingFill(building)}"
-            opacity="${buildingOpacity(building)}"
-            stroke="rgba(68,75,84,0.28)"
-            stroke-width="0.7"
-          />
-        `;
-      }).join("");
-
-      const markerLayer = state.document.markers
-        .filter((marker) => marker.visible)
-        .map((marker) => markerMarkup(marker))
-        .join("");
-
-      printSvg.innerHTML = `
-        <defs>
-          <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="1.4" stdDeviation="1.4" flood-opacity="0.16" />
-          </filter>
-        </defs>
-        <rect x="0" y="0" width="297" height="210" fill="${COLORS.paper}" />
-        <rect x="3" y="3" width="291" height="204" fill="${COLORS.paper}" stroke="rgba(68,75,84,0.08)" />
-        <g stroke="rgba(68,75,84,0.3)" stroke-width="0.5">
-          <line x1="3" y1="8" x2="3" y2="0" />
-          <line x1="11" y1="3" x2="0" y2="3" />
-          <line x1="294" y1="8" x2="294" y2="0" />
-          <line x1="286" y1="3" x2="297" y2="3" />
-          <line x1="3" y1="202" x2="0" y2="202" />
-          <line x1="3" y1="210" x2="3" y2="198" />
-          <line x1="294" y1="202" x2="297" y2="202" />
-          <line x1="294" y1="210" x2="294" y2="198" />
-        </g>
-        <text x="16" y="14" font-size="6.6" fill="${COLORS.ink}" font-family="Titillium-Upright, sans-serif">${escapeXml(state.document.title)}</text>
-        <text x="16" y="19" font-size="3.7" fill="${COLORS.inkSoft}" font-family="SourceSansPro-Regular, sans-serif">${escapeXml(state.document.subtitle)}</text>
-        <g filter="url(#shadow)">
-          <path d="M177 18 L291 18 L271 191 L158 191 Q140 190 132 180 L117 157 L129 116 L145 95 L160 56 Z" fill="${COLORS.land}" />
-          <path d="M217 18 L291 18 L271 191 L214 191 L205 157 L213 132 L231 86 L236 52 Z" fill="${COLORS.water}" opacity="0.88" />
-          <path d="M233 18 L245 18 L222 191 L212 191 Z" fill="${COLORS.road}" />
-          <path d="M255 39 L289 105" stroke="${COLORS.road}" stroke-width="2.4" />
-          <path d="M240 66 L274 87" stroke="${COLORS.road}" stroke-width="2.2" />
-          <path d="M237 131 L264 149" stroke="${COLORS.road}" stroke-width="2" />
-          ${buildingLayer}
-          ${markerLayer}
-        </g>
-        ${legendMarkup()}
-        <text x="16" y="194" font-size="3.2" fill="rgba(68,75,84,0.72)" font-family="SourceSansPro-Regular, sans-serif">${escapeXml(state.document.notes)}</text>
-      `;
-
-      attachSvgEvents();
-      previewMeta.textContent = ui("outputMeta");
-    }
-
     function render() {
-      renderLangToggle();
-      renderBuildingControls();
-      renderMarkerControls();
-      renderLegendControls();
-      renderPrintSvg();
-      mapTitleInput.value = state.document.title;
-      mapSubtitleInput.value = state.document.subtitle;
-      mapNotesInput.value = state.document.notes;
-      placementHint.textContent = state.placementMode ? ui("placeReady") : ui("placeIdle");
-      paper.classList.toggle("bleed-on", state.showBleed);
-      safeZone.style.display = state.showSafeZone ? "block" : "none";
-      bleedButton.classList.toggle("active", state.showBleed);
-      safeButton.classList.toggle("active", state.showSafeZone);
+      renderOptions();
+      renderSvg();
+      applyPreviewZoom();
     }
 
-    function pointerToSvg(event) {
-      const point = printSvg.createSVGPoint();
-      point.x = event.clientX;
-      point.y = event.clientY;
-      const ctm = printSvg.getScreenCTM();
-      if (!ctm) return null;
-      return point.matrixTransform(ctm.inverse());
-    }
-
-    function attachSvgEvents() {
-      printSvg.querySelectorAll("[data-building-id]").forEach((node) => {
-        node.style.cursor = "pointer";
-        node.addEventListener("click", (event) => {
-          state.selectedBuildingId = event.currentTarget.getAttribute("data-building-id");
-          render();
-        });
-      });
-
-      printSvg.querySelectorAll("[data-marker-id]").forEach((node) => {
-        node.style.cursor = "grab";
-        node.addEventListener("pointerdown", (event) => {
-          state.draggingMarkerId = event.currentTarget.getAttribute("data-marker-id");
-          printSvg.setPointerCapture(event.pointerId);
-        });
-      });
-
-    }
-
-    function handlePointerMove(event) {
-      if (!state.draggingMarkerId) return;
-      const point = pointerToSvg(event);
-      if (!point) return;
-      const marker = state.document.markers.find((entry) => entry.id === state.draggingMarkerId);
-      if (!marker) return;
-      marker.x = clamp(point.x, 118, 286);
-      marker.y = clamp(point.y, 24, 186);
-      renderPrintSvg();
-    }
-
-    function handlePointerUp() {
-      state.draggingMarkerId = null;
-    }
-
-    function handleSvgClick(event) {
-      if (!state.placementMode) return;
-      if (event.target.closest("[data-marker-id]")) return;
-      const point = pointerToSvg(event);
-      if (!point) return;
-      const markerId = "m" + Math.random().toString(36).slice(2, 7);
-      const label = state.selectedMarkerKind === "number" ? nextMarkerNumber() : "";
-      state.document.markers.push({
-        id: markerId,
-        kind: state.selectedMarkerKind,
-        x: clamp(point.x, 118, 286),
-        y: clamp(point.y, 24, 186),
-        label,
-        visible: true
-      });
-      const legendItemId = "l" + Math.random().toString(36).slice(2, 7);
-      state.document.legendGroups[0].items.push({
-        id: legendItemId,
-        markerId,
-        number: label,
-        title: `${ui("untitledMarker")} ${label || state.document.markers.length}`,
-        subtitle: "",
-        visible: true
-      });
-      state.document.markers[state.document.markers.length - 1].linkedLegendItemId = legendItemId;
-      state.placementMode = false;
-      render();
-    }
-
-    function clamp(value, min, max) {
-      return Math.max(min, Math.min(max, value));
-    }
-
-    function download(filename, content, type) {
-      const blob = new Blob([content], { type });
-      const url = URL.createObjectURL(blob);
-      const anchor = document.createElement("a");
-      anchor.href = url;
-      anchor.download = filename;
-      document.body.appendChild(anchor);
-      anchor.click();
-      anchor.remove();
-      URL.revokeObjectURL(url);
-    }
-
-    function createPrintSvgExport() {
+    function exportSvgString(includeBleed) {
+      const pageWidth = includeBleed ? 303 : 297;
+      const pageHeight = includeBleed ? 216 : 210;
+      const offset = includeBleed ? 3 : 0;
       return `
-<svg xmlns="http://www.w3.org/2000/svg" width="303mm" height="216mm" viewBox="0 0 303 216">
-  <rect width="303" height="216" fill="${COLORS.paper}" />
-  <g transform="translate(3 3)">
-    ${printSvg.innerHTML}
+<svg xmlns="http://www.w3.org/2000/svg" width="${pageWidth}mm" height="${pageHeight}mm" viewBox="0 0 ${pageWidth} ${pageHeight}">
+  <rect width="${pageWidth}" height="${pageHeight}" fill="${COLORS.paper}" />
+  <g transform="translate(${offset} ${offset})">
+    ${sceneMarkup()}
   </g>
 </svg>`.trim();
     }
 
-    mapTitleInput.addEventListener("input", (event) => {
-      state.document.title = event.target.value;
-      renderPrintSvg();
-    });
-    mapSubtitleInput.addEventListener("input", (event) => {
-      state.document.subtitle = event.target.value;
-      renderPrintSvg();
-    });
-    mapNotesInput.addEventListener("input", (event) => {
-      state.document.notes = event.target.value;
-      renderPrintSvg();
-    });
+    function bytesFromBinaryString(value) {
+      const bytes = new Uint8Array(value.length);
+      for (let i = 0; i < value.length; i += 1) {
+        bytes[i] = value.charCodeAt(i) & 255;
+      }
+      return bytes;
+    }
 
-    markerKindSelect.addEventListener("change", (event) => {
-      state.selectedMarkerKind = event.target.value;
-    });
+    function bytesFromAscii(value) {
+      return new TextEncoder().encode(value);
+    }
 
-    startPlacementButton.addEventListener("click", () => {
-      state.placementMode = !state.placementMode;
-      render();
-    });
+    function buildPdfFromJpeg(jpegBytes, imageWidth, imageHeight, pageWidthMm, pageHeightMm) {
+      const mmToPt = (mm) => (mm * 72) / 25.4;
+      const pageWidthPt = mmToPt(pageWidthMm);
+      const pageHeightPt = mmToPt(pageHeightMm);
+      const contentStream = `q\n${pageWidthPt.toFixed(3)} 0 0 ${pageHeightPt.toFixed(3)} 0 0 cm\n/Im0 Do\nQ\n`;
 
-    bleedButton.addEventListener("click", () => {
-      state.showBleed = !state.showBleed;
-      render();
-    });
+      const objects = [
+        bytesFromAscii("<< /Type /Catalog /Pages 2 0 R >>"),
+        bytesFromAscii("<< /Type /Pages /Kids [3 0 R] /Count 1 >>"),
+        bytesFromAscii(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidthPt.toFixed(3)} ${pageHeightPt.toFixed(3)}] /Resources << /XObject << /Im0 5 0 R >> >> /Contents 4 0 R >>`),
+        bytesFromAscii(`<< /Length ${contentStream.length} >>\nstream\n${contentStream}endstream`),
+        null
+      ];
 
-    safeButton.addEventListener("click", () => {
-      state.showSafeZone = !state.showSafeZone;
-      render();
-    });
+      const imageHeader = bytesFromAscii(`<< /Type /XObject /Subtype /Image /Width ${imageWidth} /Height ${imageHeight} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\nstream\n`);
+      const imageFooter = bytesFromAscii("\nendstream");
+      const imageObject = new Uint8Array(imageHeader.length + jpegBytes.length + imageFooter.length);
+      imageObject.set(imageHeader, 0);
+      imageObject.set(jpegBytes, imageHeader.length);
+      imageObject.set(imageFooter, imageHeader.length + jpegBytes.length);
+      objects[4] = imageObject;
+
+      const parts = [bytesFromAscii("%PDF-1.4\n%\u00e2\u00e3\u00cf\u00d3\n")];
+      const offsets = [0];
+      let cursor = parts[0].length;
+
+      objects.forEach((objectBytes, index) => {
+        offsets.push(cursor);
+        const head = bytesFromAscii(`${index + 1} 0 obj\n`);
+        const tail = bytesFromAscii("\nendobj\n");
+        parts.push(head, objectBytes, tail);
+        cursor += head.length + objectBytes.length + tail.length;
+      });
+
+      const xrefStart = cursor;
+      const xrefLines = [`xref\n0 ${objects.length + 1}\n`, "0000000000 65535 f \n"];
+      for (let i = 1; i < offsets.length; i += 1) {
+        xrefLines.push(`${String(offsets[i]).padStart(10, "0")} 00000 n \n`);
+      }
+      const trailer = `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
+      parts.push(bytesFromAscii(xrefLines.join("")), bytesFromAscii(trailer));
+
+      return new Blob(parts, { type: "application/pdf" });
+    }
+
+    async function svgStringToCanvas(svgString, pageWidthMm, pageHeightMm) {
+      const pixelsPerMm = 300 / 25.4;
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(pageWidthMm * pixelsPerMm);
+      canvas.height = Math.round(pageHeightMm * pixelsPerMm);
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = COLORS.paper;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const svgUrl = URL.createObjectURL(new Blob([svgString], { type: "image/svg+xml;charset=utf-8" }));
+      try {
+        const image = new Image();
+        image.decoding = "sync";
+        const loaded = new Promise((resolve, reject) => {
+          image.onload = () => resolve();
+          image.onerror = () => reject(new Error("SVG konnte nicht geladen werden."));
+        });
+        image.src = svgUrl;
+        await loaded;
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        return canvas;
+      } finally {
+        URL.revokeObjectURL(svgUrl);
+      }
+    }
+
+    async function exportPdf(includeBleed) {
+      const pageWidthMm = includeBleed ? 303 : 297;
+      const pageHeightMm = includeBleed ? 216 : 210;
+      const svgString = exportSvgString(includeBleed);
+      const canvas = await svgStringToCanvas(svgString, pageWidthMm, pageHeightMm);
+      const jpegDataUrl = canvas.toDataURL("image/jpeg", 0.95);
+      const base64 = jpegDataUrl.split(",")[1];
+      const jpegBytes = bytesFromBinaryString(atob(base64));
+      const pdfBlob = buildPdfFromJpeg(jpegBytes, canvas.width, canvas.height, pageWidthMm, pageHeightMm);
+      download(includeBleed ? "goetheanum-campuskarte-a4-quer-3mm.pdf" : "goetheanum-campuskarte-a4-quer.pdf", pdfBlob, "application/pdf");
+    }
+
+    function download(name, content, type) {
+      const blob = content instanceof Blob ? content : new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = name;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
 
     document.getElementById("download-svg").addEventListener("click", () => {
-      download("goetheanum-campuskarte-print.svg", createPrintSvgExport(), "image/svg+xml");
+      const includeBleed = exportBleed.checked;
+      const fileName = includeBleed ? "goetheanum-campuskarte-a4-quer-3mm.svg" : "goetheanum-campuskarte-a4-quer.svg";
+      download(fileName, exportSvgString(includeBleed), "image/svg+xml");
+    });
+
+    document.getElementById("download-pdf").addEventListener("click", async () => {
+      const button = document.getElementById("download-pdf");
+      const label = button.textContent;
+      button.disabled = true;
+      button.textContent = "PDF wird erzeugt";
+      try {
+        await exportPdf(exportBleed.checked);
+      } catch (error) {
+        console.error(error);
+        window.alert("PDF-Export fehlgeschlagen. Bitte SVG exportieren und erneut pruefen.");
+      } finally {
+        button.disabled = false;
+        button.textContent = label;
+      }
     });
 
     document.getElementById("download-json").addEventListener("click", () => {
-      download("goetheanum-campuskarte.json", JSON.stringify(state.document, null, 2), "application/json");
+      download("goetheanum-campuskarte.json", JSON.stringify(OBJECTS, null, 2), "application/json");
     });
 
-    printSvg.addEventListener("pointermove", handlePointerMove);
-    printSvg.addEventListener("pointerup", handlePointerUp);
-    printSvg.addEventListener("click", handleSvgClick);
+    titleInput.addEventListener("input", (event) => {
+      state.title = event.target.value;
+      render();
+    });
+
+    document.getElementById("zoom-in").addEventListener("click", () => {
+      setPreviewZoom(state.previewZoom + 0.15);
+    });
+
+    document.getElementById("zoom-out").addEventListener("click", () => {
+      setPreviewZoom(state.previewZoom - 0.15);
+    });
+
+    document.getElementById("zoom-reset").addEventListener("click", () => {
+      setPreviewZoom(1);
+    });
 
     render();
   </script>
