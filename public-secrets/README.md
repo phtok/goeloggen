@@ -13,6 +13,17 @@ Schlankes Webprojekt fuer **"Public Secrets (Die Frage)"** mit Frontend und leic
 - Mitgliederbereich mit Einmalzugang (`/member-login.html`, `/member-area.html`)
 - CRUD fuer Fragen, Veranstaltungen und Initiativen
 
+
+## Umbau Richtung Social-App (2026-03-18)
+- Analyse, Empfehlungen und Umsetzungsplan: `docs/public-secrets-social-app-plan.md`
+- Backup des bisherigen Stands als Git-Tag: `backup/public-secrets-pre-socialmedia-2026-03-18`
+
+Restore-Beispiel:
+
+```bash
+git switch --detach backup/public-secrets-pre-socialmedia-2026-03-18
+```
+
 ## Start
 
 ```bash
