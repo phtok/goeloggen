@@ -1,0 +1,15 @@
+{
+  "id": "goe_brand_v1",
+  "aspect_ratio": "4:5",
+  "crop": {
+    "headroom_pct": 12,
+    "eye_line_pct": 42
+  },
+  "palette": ["#D9C7A1", "#F4EFE5", "#2E2A25"],
+  "background_modes": ["soft_gradient", "neutral_studio"],
+  "lighting": "soft_key_left",
+  "prompt_template": "brand-consistent portrait, neutral studio, soft light",
+  "negative_prompt": "hard shadows, noisy background, logo overlays",
+  "grading_lut": "goe_portrait_v1.cube",
+  "forbidden_elements": ["busy_patterns", "hard_shadow_chin"]
+}
