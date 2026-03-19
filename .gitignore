@@ -20,6 +20,10 @@ output/
 # Large local research/data folders (not for GitHub)
 hefte_pdf/
 ausgabe_zeichnungen/
+collections/jahrgaenge/pdfs/**
+!collections/jahrgaenge/pdfs/.gitkeep
+collections/jahrgaenge/zeichnungen/**
+!collections/jahrgaenge/zeichnungen/.gitkeep
 
 # Local experiment snapshots
 archive/*
@@ -32,13 +36,13 @@ workers/.wrangler/
 workers/wrangler.toml
 
 # Brand Portrait tool local runtime files
-tools/brand-portrait/.env
-tools/brand-portrait/.venv/
-tools/brand-portrait/tmp/
-tools/brand-portrait/.hf-cache/
-tools/brand-portrait/data/storage/inputs/
-tools/brand-portrait/data/storage/outputs/
-tools/brand-portrait/data/storage/exports/
-tools/brand-portrait/portrait_brand_generator.egg-info/
-tools/brand-portrait/*.jpg
-tools/brand-portrait/*.png
+services/brand-portrait/.env
+services/brand-portrait/.venv/
+services/brand-portrait/tmp/
+services/brand-portrait/.hf-cache/
+services/brand-portrait/data/storage/inputs/
+services/brand-portrait/data/storage/outputs/
+services/brand-portrait/data/storage/exports/
+services/brand-portrait/portrait_brand_generator.egg-info/
+services/brand-portrait/*.jpg
+services/brand-portrait/*.png
