@@ -1,0 +1,2288 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Goetheanum TV Cover Generator</title>
+  <script src="https://c.webfontfree.com/c.js?f=Titillium-SemiboldUpright" type="text/javascript"></script>
+  <script src="../../assets/vendor/goetheanum-title-font.js"></script>
+  <script src="../../assets/vendor/tv-cutouts.js"></script>
+  <script src="../../assets/vendor/ag-psd.local.js"></script>
+  <style>
+    @font-face {
+      font-family: "SourceSansPro-Regular";
+      src: url("https://goetheanum.ch/build/fonts/SourceSansPro/SourceSansPro-Regular.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "SourceSansPro-SemiBold";
+      src: url("https://goetheanum.ch/build/fonts/SourceSansPro/SourceSansPro-SemiBold.woff2") format("woff2");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Titillium-Semibold-UI";
+      src: url("../../assets/fonts/Titillium-SemiboldUpright.otf") format("opentype");
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #36424f;
+      --header: #1f2833;
+      --line: rgba(219, 224, 228, 0.15);
+      --line-strong: rgba(219, 224, 228, 0.22);
+      --text: #dbe0e4;
+      --muted: #a7b2bd;
+      --gold: #ebb565;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "SourceSansPro-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: var(--gold);
+      z-index: 999;
+    }
+
+    .head {
+      position: sticky;
+      top: 6px;
+      z-index: 50;
+      background: var(--header);
+      border-bottom: 1px solid var(--line-strong);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .head h1 {
+      margin: 0;
+      color: #fff;
+      font-size: 1.08rem;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+    }
+
+    .head .meta {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: minmax(310px, 390px) minmax(360px, 1fr);
+      min-height: calc(100vh - 64px);
+    }
+
+    .left {
+      border-right: 1px solid var(--line-strong);
+      background: rgba(20, 28, 38, 0.2);
+      padding: 12px;
+      overflow-y: auto;
+    }
+
+    .right {
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    .group {
+      margin: 0 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      padding: 10px;
+    }
+
+    .group h2 {
+      margin: 0 0 7px;
+      font-size: 0.74rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+    }
+
+    .field { margin-top: 7px; }
+
+    label {
+      display: block;
+      margin: 0 0 3px;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    input[type="text"],
+    input[type="file"],
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid rgba(219,224,228,0.13);
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+      border-radius: 6px;
+      padding: 7px 9px;
+      font: inherit;
+      min-height: 34px;
+    }
+
+    input[type="file"] {
+      font-size: 0.84rem;
+      padding: 6px 8px;
+    }
+
+    input[type="file"]::file-selector-button {
+      border: 1px solid rgba(219,224,228,0.2);
+      border-radius: 7px;
+      padding: 6px 10px;
+      margin-right: 8px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+      font-size: 0.84rem;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+      background: #fff;
+      color: #2a3542;
+    }
+
+    input[type="file"]::-webkit-file-upload-button {
+      border: 1px solid rgba(219,224,228,0.2);
+      border-radius: 7px;
+      padding: 6px 10px;
+      margin-right: 8px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+      font-size: 0.84rem;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+    }
+
+    textarea {
+      min-height: 62px;
+      resize: vertical;
+      line-height: 1.28;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #cfd9e4;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .checks {
+      display: grid;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .checks label {
+      margin: 0;
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .hint {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+
+    .control-details {
+      margin-top: 8px;
+      border: 1px solid rgba(219,224,228,0.13);
+      border-radius: 7px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .control-details summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 7px 9px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      user-select: none;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+      letter-spacing: 0.02em;
+    }
+
+    .control-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .control-details-body {
+      padding: 0 9px 9px;
+    }
+
+    .inline-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: 1px solid rgba(219,224,228,0.2);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.77rem;
+      line-height: 1;
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      cursor: pointer;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+    }
+
+    .chip.active {
+      background: rgba(235,181,101,0.92);
+      border-color: rgba(235,181,101,1);
+      color: #1f2833;
+    }
+
+    button {
+      border: 1px solid rgba(219,224,228,0.2);
+      border-radius: 7px;
+      padding: 8px 11px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      cursor: pointer;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+      letter-spacing: 0.01em;
+    }
+
+    button:hover { background: #fff; color: #2a3542; }
+
+    .gold {
+      background: var(--gold);
+      color: #1f2833;
+      border-color: transparent;
+    }
+
+    .preview-panel,
+    .export-wrap {
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      padding: 10px;
+    }
+
+    .preview-panel + .preview-panel {
+      margin-top: 10px;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 7px;
+    }
+
+    .panel-title {
+      margin: 0;
+      color: #fff;
+      font-size: 0.9rem;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+    }
+
+    .panel-info {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .preview-canvas {
+      width: min(100%, 620px);
+      display: block;
+      margin: 0 auto;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: #2a3441;
+    }
+
+    .thumb-strip {
+      margin-top: 8px;
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding-bottom: 3px;
+    }
+
+    .thumb-item {
+      flex: 0 0 auto;
+      width: 120px;
+      border: 1px solid rgba(219,224,228,0.15);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.03);
+      padding: 5px;
+      cursor: pointer;
+    }
+
+    .thumb-item.active {
+      border-color: rgba(235,181,101,0.9);
+      box-shadow: inset 0 0 0 1px rgba(235,181,101,0.65);
+    }
+
+    .thumb-label {
+      font-size: 0.71rem;
+      color: var(--muted);
+      line-height: 1.15;
+      min-height: 2.2em;
+      margin-bottom: 3px;
+    }
+
+    .thumb-item canvas {
+      width: 100%;
+      display: block;
+      border-radius: 4px;
+      border: 1px solid rgba(219,224,228,0.12);
+      background: #2a3441;
+    }
+
+    .panel-actions {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .panel-editor {
+      margin-top: 8px;
+      border: 1px solid rgba(219,224,228,0.14);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .panel-editor summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 6px 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .panel-editor summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .panel-editor-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 0 8px 8px;
+    }
+
+    .export-wrap {
+      margin-top: 12px;
+      margin-bottom: 8px;
+    }
+
+    .export-title {
+      margin: 0 0 8px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+    }
+
+    .episode-block {
+      border: 1px solid rgba(219,224,228,0.13);
+      border-radius: 7px;
+      padding: 8px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .episode-block + .episode-block {
+      margin-top: 8px;
+    }
+
+    .episode-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .episode-head h3 {
+      margin: 0;
+      font-size: 0.84rem;
+      color: #fff;
+      font-family: "SourceSansPro-SemiBold", sans-serif;
+    }
+
+    .remove-episode {
+      padding: 4px 8px;
+      font-size: 0.77rem;
+    }
+
+    @media (max-width: 760px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .left {
+        border-right: 0;
+        border-bottom: 1px solid var(--line-strong);
+      }
+
+      .head .meta {
+        display: none;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="head">
+    <h1>Goetheanum TV Cover-Generator</h1>
+  </header>
+
+  <main class="app">
+    <aside class="left">
+      <section class="group">
+        <h2>Reihe</h2>
+        <div class="field">
+          <label for="seriesDe">Reihentitel DE</label>
+          <textarea id="seriesDe">Lebenskraefte
+der Sprache</textarea>
+        </div>
+        <div class="field">
+          <label for="seriesEn">Reihentitel EN</label>
+          <textarea id="seriesEn">Life Forces
+of Language</textarea>
+        </div>
+        <div class="field">
+          <label for="backgroundUpload">Hintergrundbild hochladen</label>
+          <input id="backgroundUpload" type="file" accept="image/png,image/jpeg,image/webp" />
+        </div>
+
+        <details class="control-details">
+          <summary>Hintergrundoptionen</summary>
+          <div class="control-details-body">
+            <div class="row">
+              <div class="field">
+                <label for="bgZoom">Vergroesserung (%)</label>
+                <input id="bgZoom" type="number" min="100" max="240" step="1" value="100" />
+              </div>
+              <div class="field">
+                <label for="bgBlur">Blur (px)</label>
+                <input id="bgBlur" type="number" min="0" max="360" step="1" value="42" />
+                <div class="chip-row">
+                  <button type="button" class="chip" data-blur="90">Weich</button>
+                  <button type="button" class="chip" data-blur="170">Stark</button>
+                  <button type="button" class="chip" data-blur="280">Extrem</button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="bgDim">Verdunkelung (%)</label>
+                <input id="bgDim" type="number" min="0" max="60" step="1" value="16" />
+              </div>
+              <div class="field">
+                <label for="bgX">Position X (nur Quer, bei Zoom &gt; 100)</label>
+                <input id="bgX" type="number" min="-100" max="100" step="1" value="0" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="bgY">Position Y (nur Quer, bei Zoom &gt; 100)</label>
+                <input id="bgY" type="number" min="-100" max="100" step="1" value="0" />
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="control-details">
+          <summary>Rahmen-Optionen</summary>
+          <div class="control-details-body">
+            <div class="checks">
+              <label><input id="showFrame" type="checkbox" checked /> Rahmen-Linie</label>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="frameWidth">Linien-Dicke</label>
+                <input id="frameWidth" type="number" min="1" max="16" step="0.1" value="3.8" />
+              </div>
+              <div class="field">
+                <label for="frameInset">Linien-Abstand (%)</label>
+                <input id="frameInset" type="number" min="1.5" max="12" step="0.1" value="3.2" />
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="control-details">
+          <summary>Anordnung</summary>
+          <div class="control-details-body">
+            <div class="row">
+              <div class="field">
+                <label for="arrangement">Anordnung Folge (nur Querformat)</label>
+                <select id="arrangement">
+                  <option value="center" selected>Titel zentriert</option>
+                  <option value="topLeft">Titel links oben</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>&nbsp;</label>
+                <div class="checks" style="margin-top:0">
+                  <label><input id="swapSides" type="checkbox" /> Titel und Porträt tauschen</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <section class="group">
+        <h2>Folgen</h2>
+        <div id="episodesContainer"></div>
+        <div class="inline-actions">
+          <button id="addEpisode">Folge hinzufuegen</button>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Projekt</h2>
+        <div class="inline-actions">
+          <button id="saveProject">Projekt speichern</button>
+          <button id="loadProject">Projekt laden</button>
+        </div>
+        <input id="projectLoadInput" type="file" accept="application/json" hidden />
+      </section>
+    </aside>
+
+    <section class="right">
+      <div id="previewPanels"></div>
+
+      <div class="export-wrap">
+        <h3 class="export-title">Gesamtexport</h3>
+        <div class="inline-actions">
+          <button class="gold" id="downloadAllPdf">Gesamt-PDF</button>
+          <button id="downloadAllPng">Alle PNG (ZIP)</button>
+          <button id="downloadAllLayers">Alle Layer (ZIP)</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let pdfLibLoaderPromise = null;
+    let pdfFontBytesPromise = null;
+
+    function loadScriptTag(src) {
+      return new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = src;
+        s.async = true;
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error(`Script konnte nicht geladen werden: ${src}`));
+        document.head.appendChild(s);
+      });
+    }
+
+    async function loadFirstAvailable(urls) {
+      let lastError = null;
+      for (const src of urls) {
+        try {
+          await loadScriptTag(src);
+          return;
+        } catch (err) {
+          lastError = err;
+        }
+      }
+      throw lastError || new Error("Kein gueltiger Script-Source gefunden.");
+    }
+
+    async function ensurePdfLibLoaded() {
+      if (window.PDFLib && window.fontkit) return;
+      if (pdfLibLoaderPromise) return pdfLibLoaderPromise;
+      pdfLibLoaderPromise = (async () => {
+        if (!window.PDFLib) {
+          await loadFirstAvailable([
+            "../../assets/vendor/pdf-lib.min.js",
+            "https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js",
+            "https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"
+          ]);
+        }
+        if (!window.fontkit) {
+          await loadFirstAvailable([
+            "../../assets/vendor/fontkit.umd.min.js",
+            "https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js",
+            "https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"
+          ]);
+        }
+        if (!window.PDFLib || !window.fontkit) {
+          throw new Error("PDF-Bibliotheken nicht verfuegbar.");
+        }
+      })();
+      return pdfLibLoaderPromise;
+    }
+
+    function ensureAgPsdLoaded() {
+      if (window.agPsd?.writePsdBuffer) return;
+      throw new Error("Lokale PSD-Bibliothek fehlt: ../../assets/vendor/ag-psd.local.js");
+    }
+
+    async function loadBinaryAsset(url) {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return new Uint8Array(await response.arrayBuffer());
+      } catch (_) {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open("GET", url, true);
+          xhr.responseType = "arraybuffer";
+          xhr.onload = () => {
+            if (((xhr.status >= 200 && xhr.status < 300) || xhr.status === 0) && xhr.response) {
+              resolve(new Uint8Array(xhr.response));
+            } else {
+              reject(new Error(`Asset konnte nicht geladen werden: ${url}`));
+            }
+          };
+          xhr.onerror = () => reject(new Error(`Asset konnte nicht geladen werden: ${url}`));
+          xhr.send();
+        });
+      }
+    }
+
+    function base64ToBytes(b64) {
+      const clean = String(b64 || "").replace(/\s+/g, "");
+      const raw = atob(clean);
+      const out = new Uint8Array(raw.length);
+      for (let i = 0; i < raw.length; i += 1) out[i] = raw.charCodeAt(i);
+      return out;
+    }
+
+    async function getPdfTitleFontBytes() {
+      if (!pdfFontBytesPromise) {
+        pdfFontBytesPromise = (async () => {
+          const fontCandidates = [
+            "../../assets/fonts/Titillium-SemiboldUpright.otf",
+            "/assets/fonts/Titillium-SemiboldUpright.otf",
+            "Titillium-SemiboldUpright.otf"
+          ];
+          for (const url of fontCandidates) {
+            try {
+              return await loadBinaryAsset(url);
+            } catch (_) {}
+          }
+          if (!window.__GOE_TITLE_FONT_B64) {
+            try {
+              await loadScriptTag("../../assets/vendor/goetheanum-title-font.js");
+            } catch (_) {}
+          }
+          if (window.__GOE_TITLE_FONT_B64) {
+            return base64ToBytes(window.__GOE_TITLE_FONT_B64);
+          }
+          throw new Error("Schriftdatei konnte nicht geladen werden (Titillium-SemiboldUpright.otf).");
+        })();
+      }
+      return pdfFontBytesPromise;
+    }
+
+    const FORMATS = [
+      { key: "uscreen_banner", family: "Uscreen", variant: "banner", label: "Uscreen Banner", w: 1900, h: 800 },
+      { key: "uscreen_cover_quer", family: "Uscreen", variant: "cover_quer", label: "Uscreen Cover Quer", w: 1920, h: 1080 },
+      { key: "uscreen_cover_hoch", family: "Uscreen", variant: "cover_hoch", label: "Uscreen Cover Hoch", w: 1188, h: 1682 },
+      { key: "social_story", family: "Social", variant: "story", label: "Social Story", w: 1080, h: 1920 }
+    ];
+
+    const state = {
+      series: {
+        titleDe: "Lebenskraefte\nder Sprache",
+        titleEn: "Life Forces\nof Language",
+        arrangement: "center",
+        swapSides: false,
+        showFrame: true,
+        frameWidth: 3.8,
+        frameInset: 3.2,
+        bgZoom: 100,
+        bgBlur: 42,
+        bgDim: 16,
+        bgX: 0,
+        bgY: 0
+      },
+      episodes: [],
+      panelSelection: {},
+      panelAdjustments: {}
+    };
+
+    const assets = {
+      background: null,
+      backgroundDataUrl: null,
+      defaultPortraitSingle: null,
+      defaultPortraitDouble: null
+    };
+
+    const ui = {
+      seriesDe: document.getElementById("seriesDe"),
+      seriesEn: document.getElementById("seriesEn"),
+      backgroundUpload: document.getElementById("backgroundUpload"),
+      bgZoom: document.getElementById("bgZoom"),
+      bgBlur: document.getElementById("bgBlur"),
+      blurChips: Array.from(document.querySelectorAll(".chip[data-blur]")),
+      bgDim: document.getElementById("bgDim"),
+      bgX: document.getElementById("bgX"),
+      bgY: document.getElementById("bgY"),
+      arrangement: document.getElementById("arrangement"),
+      swapSides: document.getElementById("swapSides"),
+      showFrame: document.getElementById("showFrame"),
+      frameWidth: document.getElementById("frameWidth"),
+      frameInset: document.getElementById("frameInset"),
+      episodesContainer: document.getElementById("episodesContainer"),
+      addEpisode: document.getElementById("addEpisode"),
+      saveProject: document.getElementById("saveProject"),
+      loadProject: document.getElementById("loadProject"),
+      projectLoadInput: document.getElementById("projectLoadInput"),
+      previewPanels: document.getElementById("previewPanels"),
+      downloadAllPdf: document.getElementById("downloadAllPdf"),
+      downloadAllPng: document.getElementById("downloadAllPng"),
+      downloadAllLayers: document.getElementById("downloadAllLayers")
+    };
+
+    function makeEpisode(index) {
+      return {
+        id: `ep_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+        titleDe: index === 1 ? "Sprechen\nund Leben" : "",
+        titleEn: index === 1 ? "Speech\nand Life" : "",
+        portraitType: index === 1 ? "single" : "single",
+        portraitDataUrl: null,
+        portraitImg: null
+      };
+    }
+
+    function createCanvas(w, h) {
+      const c = document.createElement("canvas");
+      c.width = w;
+      c.height = h;
+      return c;
+    }
+
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function readFileImage(file) {
+      const dataUrl = await readFileAsDataUrl(file);
+      const img = await loadImage(dataUrl);
+      return { dataUrl, img };
+    }
+
+    async function loadDefaultPortraits() {
+      const singleData = window.__GOE_TV_CUTOUT_SINGLE_PNG_B64
+        ? `data:image/png;base64,${window.__GOE_TV_CUTOUT_SINGLE_PNG_B64}`
+        : "../../assets/tv_cutouts/single_person_cutout.png";
+      const doubleData = window.__GOE_TV_CUTOUT_DOUBLE_PNG_B64
+        ? `data:image/png;base64,${window.__GOE_TV_CUTOUT_DOUBLE_PNG_B64}`
+        : "../../assets/tv_cutouts/double_people_cutout.png";
+      const [single, double] = await Promise.all([
+        loadImage(singleData).catch(() => null),
+        loadImage(doubleData).catch(() => null)
+      ]);
+      assets.defaultPortraitSingle = single;
+      assets.defaultPortraitDouble = double;
+    }
+
+    function readSeriesInputs() {
+      state.series.titleDe = ui.seriesDe.value;
+      state.series.titleEn = ui.seriesEn.value;
+      state.series.arrangement = ui.arrangement.value;
+      state.series.swapSides = ui.swapSides.checked;
+      state.series.bgZoom = Math.max(100, Math.min(240, Number(ui.bgZoom.value) || 100));
+      state.series.bgBlur = Math.max(0, Math.min(360, Number(ui.bgBlur.value) || 42));
+      state.series.bgDim = Math.max(0, Math.min(60, Number(ui.bgDim.value) || 16));
+      state.series.bgX = Math.max(-100, Math.min(100, Number(ui.bgX.value) || 0));
+      state.series.bgY = Math.max(-100, Math.min(100, Number(ui.bgY.value) || 0));
+      state.series.showFrame = ui.showFrame.checked;
+      state.series.frameWidth = Math.max(1, Math.min(16, Number(ui.frameWidth.value) || 3.8));
+      state.series.frameInset = Math.max(1.5, Math.min(12, Number(ui.frameInset.value) || 3.2));
+      ui.bgZoom.value = String(state.series.bgZoom);
+      ui.bgBlur.value = String(state.series.bgBlur);
+      ui.bgDim.value = String(state.series.bgDim);
+      ui.bgX.value = String(state.series.bgX);
+      ui.bgY.value = String(state.series.bgY);
+      ui.frameWidth.value = String(state.series.frameWidth);
+      ui.frameInset.value = String(state.series.frameInset);
+      refreshBlurChips();
+    }
+
+    function syncSeriesInputs() {
+      ui.seriesDe.value = state.series.titleDe;
+      ui.seriesEn.value = state.series.titleEn;
+      ui.arrangement.value = state.series.arrangement || "center";
+      ui.swapSides.checked = !!state.series.swapSides;
+      ui.bgZoom.value = String(state.series.bgZoom ?? 100);
+      ui.bgBlur.value = String(state.series.bgBlur);
+      ui.bgDim.value = String(state.series.bgDim);
+      ui.bgX.value = String(state.series.bgX ?? 0);
+      ui.bgY.value = String(state.series.bgY ?? 0);
+      ui.showFrame.checked = !!state.series.showFrame;
+      ui.frameWidth.value = String(state.series.frameWidth);
+      ui.frameInset.value = String(state.series.frameInset);
+      refreshBlurChips();
+    }
+
+    function refreshBlurChips() {
+      const current = Number(ui.bgBlur.value || state.series.bgBlur || 0);
+      ui.blurChips.forEach((chip) => {
+        const v = Number(chip.dataset.blur || 0);
+        chip.classList.toggle("active", Math.abs(v - current) <= 3);
+      });
+    }
+
+    function blockDefs() {
+      return [
+        { kind: "series", id: "series", label: "Reihe", episodeIndex: -1 },
+        ...state.episodes.map((ep, idx) => ({
+          kind: "episode",
+          id: ep.id,
+          label: `Folge ${idx + 1}`,
+          episodeIndex: idx
+        }))
+      ];
+    }
+
+    function formatHasText(fmt) {
+      return fmt.variant !== "banner" && fmt.variant !== "story";
+    }
+
+    function variantsForBlock(block) {
+      const variants = [];
+      FORMATS.forEach((fmt) => {
+        if (formatHasText(fmt)) {
+          variants.push({ fmt, lang: "de" });
+          variants.push({ fmt, lang: "en" });
+        } else {
+          variants.push({ fmt, lang: "clean" });
+        }
+      });
+      return variants;
+    }
+
+    function ensurePanelSelection(block) {
+      const key = block.id;
+      if (!state.panelSelection[key]) {
+        state.panelSelection[key] = { fmtKey: "uscreen_cover_quer", lang: "de", editorOpen: false };
+      }
+      const sel = state.panelSelection[key];
+      if (typeof sel.editorOpen !== "boolean") sel.editorOpen = false;
+      const fmt = FORMATS.find((f) => f.key === sel.fmtKey) || FORMATS[0];
+      if (!formatHasText(fmt)) {
+        sel.lang = "clean";
+      }
+      return sel;
+    }
+
+    function selectedJobForBlock(block) {
+      const sel = ensurePanelSelection(block);
+      const fmt = FORMATS.find((f) => f.key === sel.fmtKey) || FORMATS[0];
+      const lang = formatHasText(fmt) ? (sel.lang === "en" ? "en" : "de") : "clean";
+      return {
+        kind: block.kind,
+        id: block.id,
+        label: block.label,
+        episodeIndex: block.episodeIndex,
+        fmt,
+        lang
+      };
+    }
+
+    function panelAdjustmentKey(job) {
+      return `${job.kind}:${job.id}:${job.fmt.key}:${job.lang}`;
+    }
+
+    function getPanelAdjustment(job) {
+      const key = panelAdjustmentKey(job);
+      const existing = state.panelAdjustments[key];
+      if (existing) return existing;
+      return {
+        textScale: 100,
+        wrapScale: 100,
+        portraitX: 0
+      };
+    }
+
+    function setPanelAdjustment(job, patch) {
+      const key = panelAdjustmentKey(job);
+      state.panelAdjustments[key] = { ...getPanelAdjustment(job), ...patch };
+    }
+
+    function allJobs() {
+      const jobs = [];
+      blockDefs().forEach((block) => {
+        variantsForBlock(block).forEach((v) => {
+          jobs.push({
+            kind: block.kind,
+            id: block.id,
+            label: block.label,
+            episodeIndex: block.episodeIndex,
+            fmt: v.fmt,
+            lang: v.lang
+          });
+        });
+      });
+      return jobs;
+    }
+
+    function buildGeneratedBackground(w, h) {
+      const c = createCanvas(w, h);
+      const ctx = c.getContext("2d");
+
+      ctx.fillStyle = "#2a3644";
+      ctx.fillRect(0, 0, w, h);
+
+      const blobs = [
+        { x: 0.18, y: 0.22, r: 0.58, c: "rgba(186,86,55,0.80)" },
+        { x: 0.62, y: 0.28, r: 0.52, c: "rgba(96,52,47,0.76)" },
+        { x: 0.80, y: 0.76, r: 0.48, c: "rgba(198,106,45,0.70)" },
+        { x: 0.35, y: 0.77, r: 0.40, c: "rgba(97,110,116,0.52)" }
+      ];
+
+      blobs.forEach((b) => {
+        const g = ctx.createRadialGradient(w * b.x, h * b.y, 0, w * b.x, h * b.y, Math.min(w, h) * b.r);
+        g.addColorStop(0, b.c);
+        g.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, w, h);
+      });
+
+      const floor = ctx.createLinearGradient(0, h * 0.84, 0, h);
+      floor.addColorStop(0, "rgba(228,132,18,0)");
+      floor.addColorStop(1, "rgba(228,132,18,0.78)");
+      ctx.fillStyle = floor;
+      ctx.fillRect(0, h * 0.78, w, h * 0.22);
+
+      return c;
+    }
+
+    function softenCanvas(input, blurPx) {
+      if (blurPx <= 0) return input;
+      const w = input.width;
+      const h = input.height;
+      const factor = Math.max(1, Math.min(26, 1 + (blurPx / 18)));
+      const dw = Math.max(24, Math.round(w / factor));
+      const dh = Math.max(24, Math.round(h / factor));
+
+      const down = createCanvas(dw, dh);
+      const dctx = down.getContext("2d");
+      dctx.imageSmoothingEnabled = true;
+      dctx.imageSmoothingQuality = "high";
+      dctx.drawImage(input, 0, 0, dw, dh);
+
+      const up = createCanvas(w, h);
+      const uctx = up.getContext("2d");
+      uctx.imageSmoothingEnabled = true;
+      uctx.imageSmoothingQuality = "high";
+      uctx.drawImage(down, 0, 0, dw, dh, 0, 0, w, h);
+
+      const p1 = createCanvas(w, h);
+      const c1 = p1.getContext("2d");
+      c1.imageSmoothingEnabled = true;
+      c1.imageSmoothingQuality = "high";
+      c1.filter = `blur(${Math.max(0, Math.round(blurPx * 0.55))}px)`;
+      c1.drawImage(up, 0, 0);
+
+      const out = createCanvas(w, h);
+      const octx = out.getContext("2d");
+      octx.imageSmoothingEnabled = true;
+      octx.imageSmoothingQuality = "high";
+      octx.filter = `blur(${Math.max(0, Math.round(blurPx * 0.95))}px)`;
+      octx.drawImage(p1, 0, 0);
+
+      if (blurPx >= 100) {
+        const wash = octx.createLinearGradient(0, 0, w, h);
+        wash.addColorStop(0, "rgba(130,84,58,0.14)");
+        wash.addColorStop(0.5, "rgba(90,92,103,0.12)");
+        wash.addColorStop(1, "rgba(174,110,52,0.14)");
+        octx.fillStyle = wash;
+        octx.fillRect(0, 0, w, h);
+      }
+      return out;
+    }
+
+    function drawBackgroundLayer(w, h, job) {
+      const c = createCanvas(w, h);
+      const ctx = c.getContext("2d");
+
+      if (assets.background) {
+        const base = createCanvas(w, h);
+        const bctx = base.getContext("2d");
+        const isLandscape = w >= h;
+        const zoom = Math.max(1, (state.series.bgZoom || 100) / 100);
+        const scale = Math.max(w / assets.background.width, h / assets.background.height) * zoom;
+        const tw = assets.background.width * scale;
+        const th = assets.background.height * scale;
+        const centerX = (w - tw) / 2;
+        const centerY = (h - th) / 2;
+        const maxShiftX = Math.max(0, (tw - w) / 2);
+        const maxShiftY = Math.max(0, (th - h) / 2);
+        const shiftX = (isLandscape && zoom > 1) ? (Math.max(-100, Math.min(100, state.series.bgX || 0)) / 100) * maxShiftX : 0;
+        const shiftY = (isLandscape && zoom > 1) ? (Math.max(-100, Math.min(100, state.series.bgY || 0)) / 100) * maxShiftY : 0;
+        const x = Math.max(w - tw, Math.min(0, centerX + shiftX));
+        const y = Math.max(h - th, Math.min(0, centerY + shiftY));
+        bctx.drawImage(assets.background, x, y, tw, th);
+        ctx.drawImage(softenCanvas(base, state.series.bgBlur), 0, 0);
+      } else {
+        ctx.drawImage(buildGeneratedBackground(w, h), 0, 0);
+      }
+
+      const dim = Math.max(0, Math.min(0.6, state.series.bgDim / 100));
+      if (dim > 0) {
+        ctx.fillStyle = `rgba(18,22,28,${dim})`;
+        ctx.fillRect(0, 0, w, h);
+      }
+      return c;
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      const r = Math.min(radius, width / 2, height / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + width, y, x + width, y + height, r);
+      ctx.arcTo(x + width, y + height, x, y + height, r);
+      ctx.arcTo(x, y + height, x, y, r);
+      ctx.arcTo(x, y, x + width, y, r);
+      ctx.closePath();
+    }
+
+    function frameGeometry(fmt, w, h) {
+      const minSide = Math.min(w, h);
+      const linePx = Math.max(1, Math.round((state.series.frameWidth / 1000) * minSide));
+      if (fmt.variant === "story") {
+        return {
+          x: Math.round(w * 0.0315),
+          y: Math.round(h * 0.1485),
+          width: w - (2 * Math.round(w * 0.0315)),
+          height: h - Math.round(h * 0.1485) - Math.round(h * 0.025),
+          radius: Math.round(minSide * 0.028),
+          lineWidth: Math.max(2, Math.round(linePx * 1.85))
+        };
+      }
+      const inset = Math.round(minSide * (state.series.frameInset / 100));
+      return {
+        x: inset,
+        y: inset,
+        width: w - (2 * inset),
+        height: h - (2 * inset),
+        radius: Math.round(minSide * 0.022),
+        lineWidth: linePx
+      };
+    }
+
+    function drawFrameLayer(w, h, fmt) {
+      const c = createCanvas(w, h);
+      const ctx = c.getContext("2d");
+      const g = frameGeometry(fmt, w, h);
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = g.lineWidth;
+      roundRect(ctx, g.x, g.y, g.width, g.height, g.radius);
+      ctx.stroke();
+      return c;
+    }
+
+    function drawStoryBadgeLayer(w, h) {
+      const c = createCanvas(w, h);
+      const ctx = c.getContext("2d");
+      const insetX = Math.round(w * 0.0315);
+      const insetTop = Math.round(h * 0.1485);
+      const logoW = Math.round(w * 0.288);
+      const logoH = Math.round(logoW * (28.35 / 54.01));
+      const x = insetX + Math.round(w * 0.093);
+      const y = insetTop + Math.round(h * 0.053);
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(logoW / 54.01, logoH / 28.35);
+      ctx.fillStyle = "rgba(239,245,252,0.96)";
+      ctx.fill(new Path2D("M14.17,0C6.35,0,0,6.35,0,14.17s6.35,14.17,14.17,14.17,14.17-6.35,14.17-14.17S22,0,14.17,0ZM9.65,22.25h-2.03s0-.49,0-.71c0-.39-.12-.71-.3-1.03-.09-.15-.49-.66-.57-.79l1.9-1.35s.89,1.49.97,2.01c.08.52.02,1.87.02,1.87ZM10.69,22.25l-.02-2.18c-.03-1.32-3.03-5.05-3.03-5.05l3.39-4s2.48,3.96,2.48,4.88l.04,6.34h-2.86ZM19.56,22.25h-4.85v-6.26c0-.41-.06-.78-.19-1.16-.38-1.16-3.13-6.81-3.13-6.81l8.17-2.81v17.04Z"));
+      ctx.fill(new Path2D("M37.42,10.68v6.5c0,1.02.12,1.74.93,1.74.99,0,2.09-.15,2.09-.15l.17,2.93s-1.86.52-2.84.52c-3.45,0-4.23-1.68-4.23-4.82v-6.73h-1.45v-3.31h1.45v-3.71h3.89v3.71h3.16v3.31h-3.16Z"));
+      ctx.fill(new Path2D("M45.25,7.37l2.2,11.28h.52l2.2-11.28h3.83l-3.36,14.5h-5.86l-3.36-14.5h3.83Z"));
+      ctx.restore();
+      return c;
+    }
+
+    function getPortraitImage(job) {
+      if (job.kind !== "episode") return null;
+      const ep = state.episodes[job.episodeIndex];
+      if (!ep) return null;
+      if (ep.portraitImg) return ep.portraitImg;
+      if (ep.portraitType === "double" || ep.portraitType === "group") return assets.defaultPortraitDouble;
+      return assets.defaultPortraitSingle;
+    }
+
+    function drawPortraitFallback(ctx, w, h, portraitType) {
+      const isDouble = portraitType !== "single";
+      const unit = Math.min(w, h) / 9.5;
+      const baseY = h;
+
+      function person(cx, scale, shirt) {
+        const s = unit * scale;
+        ctx.fillStyle = shirt;
+        ctx.fillRect(cx - 1.6 * s, baseY - 3.2 * s, 3.2 * s, 3.2 * s);
+        ctx.fillStyle = "#e5c5ad";
+        ctx.beginPath();
+        ctx.ellipse(cx, baseY - 4.0 * s, 0.72 * s, 0.82 * s, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#5b5f65";
+        ctx.beginPath();
+        ctx.ellipse(cx - 0.06 * s, baseY - 4.25 * s, 0.78 * s, 0.55 * s, 0, Math.PI, 0);
+        ctx.fill();
+      }
+
+      if (isDouble) {
+        person(w * 0.60, 1.0, "#973f3a");
+        person(w * 0.74, 1.0, "#355c93");
+      } else {
+        person(w * 0.69, 1.05, "#355c93");
+      }
+    }
+
+    function portraitPlacement(fmt, portraitType) {
+      const isDouble = portraitType !== "single";
+      const hSingle = {
+        banner: 0.93,
+        cover_quer: 0.90,
+        cover_hoch: 0.78,
+        story: 0.64
+      };
+      const hDouble = {
+        banner: 0.91,
+        cover_quer: 0.86,
+        cover_hoch: 0.75,
+        story: 0.60
+      };
+      const xSingle = {
+        banner: 0.68,
+        cover_quer: 0.73,
+        cover_hoch: 0.50,
+        story: 0.56
+      };
+      const xDouble = {
+        banner: 0.69,
+        cover_quer: 0.72,
+        cover_hoch: 0.50,
+        story: 0.55
+      };
+
+      const centerRaw = Math.round(fmt.w * (isDouble ? xDouble[fmt.variant] : xSingle[fmt.variant]));
+      const centerX = state.series.swapSides ? Math.round(fmt.w - centerRaw) : centerRaw;
+      return {
+        targetH: Math.round(fmt.h * (isDouble ? hDouble[fmt.variant] : hSingle[fmt.variant])),
+        centerX
+      };
+    }
+
+    function drawPortraitLayer(w, h, job) {
+      const c = createCanvas(w, h);
+      const ctx = c.getContext("2d");
+      const ep = state.episodes[job.episodeIndex];
+      const img = getPortraitImage(job);
+      if (!ep) return c;
+      if (!img) {
+        drawPortraitFallback(ctx, w, h, ep.portraitType);
+        return c;
+      }
+
+      const p = portraitPlacement(job.fmt, ep.portraitType);
+      const adj = getPanelAdjustment(job);
+      const scale = p.targetH / img.height;
+      const tw = Math.max(1, Math.round(img.width * scale));
+      const th = p.targetH;
+      const focusX = ep.portraitType === "single" ? 0.56 : 0.50;
+      const xShiftRange = Math.round(Math.min(w, h) * (job.fmt.variant === "cover_hoch" ? 0.34 : 0.24));
+      const rawX = p.centerX - Math.round(tw * focusX) + Math.round((Math.max(-100, Math.min(100, adj.portraitX || 0)) / 100) * xShiftRange);
+      const minVisible = Math.round(Math.max(26, Math.min(w, tw) * 0.28));
+      const minX = -tw + minVisible;
+      const maxX = w - minVisible;
+      const x = Math.max(minX, Math.min(maxX, rawX));
+      const y = h - th;
+
+      ctx.save();
+      ctx.globalAlpha = 0.28;
+      ctx.filter = `blur(${Math.max(5, Math.round(Math.min(w, h) / 150))}px)`;
+      ctx.drawImage(img, x + Math.round(w * 0.004), y + Math.round(h * 0.004), tw, th);
+      ctx.restore();
+
+      ctx.drawImage(img, x, y, tw, th);
+      return c;
+    }
+
+    function wrapTextLines(ctx, lines, maxWidth) {
+      const out = [];
+      lines.forEach((line) => {
+        const clean = String(line || "").trim();
+        if (!clean) return;
+        const words = clean.split(/\s+/);
+        let current = "";
+        words.forEach((word) => {
+          if (ctx.measureText(word).width > maxWidth) {
+            const chars = word.split("");
+            let chunk = "";
+            chars.forEach((ch) => {
+              const nextChunk = chunk + ch;
+              if (!chunk || ctx.measureText(nextChunk).width <= maxWidth) {
+                chunk = nextChunk;
+              } else {
+                if (current) out.push(current);
+                out.push(chunk);
+                current = "";
+                chunk = ch;
+              }
+            });
+            if (chunk) {
+              if (current) out.push(current);
+              current = chunk;
+            }
+            return;
+          }
+          const next = current ? `${current} ${word}` : word;
+          if (!current || ctx.measureText(next).width <= maxWidth) {
+            current = next;
+          } else {
+            out.push(current);
+            current = word;
+          }
+        });
+        if (current) out.push(current);
+      });
+      return out;
+    }
+
+    function fitTextToBox(ctx, rawLines, boxW, boxH, minFs, maxFs, lineHeightFactor = 0.95) {
+      const maxWidth = Math.max(40, Math.round(boxW));
+      const maxHeight = Math.max(20, Math.round(boxH));
+      const source = rawLines.filter(Boolean);
+
+      for (let fs = Math.round(maxFs); fs >= Math.round(minFs); fs -= 1) {
+        ctx.font = `${fs}px "Titillium-Semibold-UI"`;
+        const lines = wrapTextLines(ctx, source, maxWidth);
+        const lh = Math.round(fs * lineHeightFactor);
+        const totalH = lines.length * lh;
+        if (totalH <= maxHeight) {
+          return { fs, lines, lh, totalH, boxW: maxWidth };
+        }
+      }
+
+      const fallbackFs = Math.round(minFs);
+      ctx.font = `${fallbackFs}px "Titillium-Semibold-UI"`;
+      const lines = wrapTextLines(ctx, source, maxWidth);
+      const lh = Math.round(fallbackFs * lineHeightFactor);
+      return { fs: fallbackFs, lines, lh, totalH: lines.length * lh, boxW: maxWidth };
+    }
+
+    function jobText(job) {
+      if (job.lang === "clean") return "";
+      if (job.kind === "series") {
+        return job.lang === "en" ? state.series.titleEn : state.series.titleDe;
+      }
+      const ep = state.episodes[job.episodeIndex];
+      if (!ep) return "";
+      return job.lang === "en" ? ep.titleEn : ep.titleDe;
+    }
+
+    function seriesTextLayout(ctx, w, h, text, job) {
+      const base = text.split(/\r?\n/).filter(Boolean);
+      const adj = getPanelAdjustment(job);
+      const textScale = Math.max(70, Math.min(135, adj.textScale)) / 100;
+      const wrapScale = Math.max(70, Math.min(140, adj.wrapScale)) / 100;
+
+      const isLandscape = w / h >= 1.6;
+      const isHighPortrait = h / w > 1.35;
+      const baseW = isLandscape ? w * 0.62 : (isHighPortrait ? w * 0.80 : w * 0.68);
+      const baseH = isLandscape ? h * 0.42 : (isHighPortrait ? h * 0.34 : h * 0.38);
+      const maxFs = (isLandscape ? h * 0.21 : (isHighPortrait ? w * 0.155 : Math.min(w, h) * 0.20)) * textScale;
+      const fit = fitTextToBox(
+        ctx,
+        base,
+        baseW * wrapScale,
+        baseH,
+        62,
+        Math.max(72, Math.min(250, maxFs)),
+        0.95
+      );
+      return {
+        ...fit,
+        x: Math.round(w / 2),
+        y: Math.round((h - fit.totalH) / 2),
+        align: "center"
+      };
+    }
+
+    function episodeTextLayout(ctx, w, h, text, job) {
+      const base = text.split(/\r?\n/).filter(Boolean);
+      const adj = getPanelAdjustment(job);
+      const textScale = Math.max(70, Math.min(135, adj.textScale)) / 100;
+      const wrapScale = Math.max(70, Math.min(140, adj.wrapScale)) / 100;
+
+      const isLandscape = w / h >= 1.6;
+      const isHighPortrait = h / w > 1.35;
+      if (isHighPortrait) {
+        const ep = state.episodes[job.episodeIndex];
+        const p = portraitPlacement(job.fmt, ep?.portraitType || "single");
+        const portraitTop = h - p.targetH;
+        const topY = Math.round(h * 0.10);
+        const availableH = Math.max(120, Math.round(portraitTop - topY - (h * 0.035)));
+        const fitPortrait = fitTextToBox(
+          ctx,
+          base,
+          (w * 0.82) * wrapScale,
+          availableH,
+          40,
+          Math.max(52, Math.min(154, w * 0.13 * textScale)),
+          0.94
+        );
+        return {
+          ...fitPortrait,
+          x: Math.round(w / 2),
+          y: topY,
+          align: "center"
+        };
+      }
+
+      const baseW = isLandscape ? w * 0.47 : w * 0.54;
+      const baseH = isLandscape ? h * 0.34 : h * 0.33;
+      const maxFs = (isLandscape ? h * 0.125 : Math.min(w, h) * 0.12) * textScale;
+      const fit = fitTextToBox(
+        ctx,
+        base,
+        baseW * wrapScale,
+        baseH,
+        46,
+        Math.max(56, Math.min(176, maxFs)),
+        0.96
+      );
+      const leftX = Math.round(w * 0.10);
+      const rightX = Math.round(w - fit.boxW - (w * 0.10));
+      const useRight = !!state.series.swapSides;
+      const yLandscape = state.series.arrangement === "topLeft" ? Math.round(h * 0.10) : Math.round((h - fit.totalH) / 2);
+      return {
+        ...fit,
+        x: useRight ? rightX : leftX,
+        y: yLandscape,
+        align: "left"
+      };
+    }
+
+    function textLayoutForJob(ctx, job, text) {
+      if (!text || job.lang === "clean") return null;
+      const { w, h, variant } = job.fmt;
+      if (variant === "banner" || variant === "story") return null;
+      if (job.kind === "series") return seriesTextLayout(ctx, w, h, text, job);
+      return episodeTextLayout(ctx, w, h, text, job);
+    }
+
+    function drawSeriesText(ctx, w, h, text, job) {
+      const layout = seriesTextLayout(ctx, w, h, text, job);
+      ctx.font = `${layout.fs}px "Titillium-Semibold-UI"`;
+      ctx.fillStyle = "rgba(246,249,252,0.98)";
+      ctx.textAlign = layout.align;
+      ctx.textBaseline = "top";
+      let y = layout.y;
+      layout.lines.forEach((line) => {
+        ctx.fillText(line, layout.x, y);
+        y += layout.lh;
+      });
+    }
+
+    function drawEpisodeText(ctx, w, h, text, job) {
+      const layout = episodeTextLayout(ctx, w, h, text, job);
+      ctx.font = `${layout.fs}px "Titillium-Semibold-UI"`;
+      ctx.fillStyle = "rgba(246,249,252,0.98)";
+      ctx.textAlign = layout.align;
+      ctx.textBaseline = "top";
+      let y = layout.y;
+      layout.lines.forEach((line) => {
+        ctx.fillText(line, layout.x, y);
+        y += layout.lh;
+      });
+    }
+
+    function drawTextLayer(w, h, job) {
+      const c = createCanvas(w, h);
+      const ctx = c.getContext("2d");
+      const text = jobText(job);
+      if (!text) return c;
+
+      if (job.kind === "series") {
+        drawSeriesText(ctx, w, h, text, job);
+      } else {
+        drawEpisodeText(ctx, w, h, text, job);
+      }
+      return c;
+    }
+
+    function composeLayers(layers, w, h) {
+      const out = createCanvas(w, h);
+      const ctx = out.getContext("2d");
+      layers.forEach((layer) => ctx.drawImage(layer.canvas, 0, 0));
+      return out;
+    }
+
+    function renderJob(job) {
+      const { w, h, variant } = job.fmt;
+      const isBanner = variant === "banner";
+      const isStory = variant === "story";
+
+      const layers = [];
+      layers.push({ name: "background", canvas: drawBackgroundLayer(w, h, job) });
+      if (!isBanner && state.series.showFrame) {
+        layers.push({ name: "frame", canvas: drawFrameLayer(w, h, job.fmt) });
+      }
+
+      if (job.kind === "episode") {
+        layers.push({ name: "portrait_subject", canvas: drawPortraitLayer(w, h, job) });
+      }
+
+      if (!isBanner && !isStory && job.lang !== "clean") {
+        layers.push({ name: "title_text", canvas: drawTextLayer(w, h, job) });
+      }
+
+      if (isStory) {
+        layers.push({ name: "story_tv_badge", canvas: drawStoryBadgeLayer(w, h) });
+      }
+
+      const composite = composeLayers(layers, w, h);
+      return { job, layers, composite };
+    }
+
+    function drawScaled(src, target) {
+      const ctx = target.getContext("2d");
+      const w = target.width;
+      const h = target.height;
+      ctx.clearRect(0, 0, w, h);
+      const scale = Math.min(w / src.width, h / src.height);
+      const tw = Math.round(src.width * scale);
+      const th = Math.round(src.height * scale);
+      const x = Math.round((w - tw) / 2);
+      const y = Math.round((h - th) / 2);
+      ctx.drawImage(src, x, y, tw, th);
+    }
+
+    function renderEpisodesEditor() {
+      ui.episodesContainer.innerHTML = "";
+
+      state.episodes.forEach((ep, idx) => {
+        const block = document.createElement("div");
+        block.className = "episode-block";
+
+        const head = document.createElement("div");
+        head.className = "episode-head";
+        const title = document.createElement("h3");
+        title.textContent = `Folge ${idx + 1}`;
+        head.appendChild(title);
+
+        if (state.episodes.length > 1) {
+          const remove = document.createElement("button");
+          remove.className = "remove-episode";
+          remove.textContent = "Entfernen";
+          remove.addEventListener("click", () => {
+            state.episodes = state.episodes.filter((item) => item.id !== ep.id);
+            delete state.panelSelection[ep.id];
+            rerenderAll();
+          });
+          head.appendChild(remove);
+        }
+
+        block.appendChild(head);
+
+        const deField = document.createElement("div");
+        deField.className = "field";
+        deField.innerHTML = "<label>Folgentitel DE</label>";
+        const de = document.createElement("textarea");
+        de.value = ep.titleDe;
+        de.addEventListener("input", () => {
+          ep.titleDe = de.value;
+          rerenderAll(false);
+        });
+        deField.appendChild(de);
+        block.appendChild(deField);
+
+        const enField = document.createElement("div");
+        enField.className = "field";
+        enField.innerHTML = "<label>Folgentitel EN</label>";
+        const en = document.createElement("textarea");
+        en.value = ep.titleEn;
+        en.addEventListener("input", () => {
+          ep.titleEn = en.value;
+          rerenderAll(false);
+        });
+        enField.appendChild(en);
+        block.appendChild(enField);
+
+        const typeField = document.createElement("div");
+        typeField.className = "field";
+        typeField.innerHTML = "<label>Portrait</label>";
+        const sel = document.createElement("select");
+        [
+          ["single", "Single"],
+          ["double", "Double"],
+          ["group", "Gruppe"]
+        ].forEach(([val, txt]) => {
+          const o = document.createElement("option");
+          o.value = val;
+          o.textContent = txt;
+          sel.appendChild(o);
+        });
+        sel.value = ep.portraitType;
+        sel.addEventListener("change", () => {
+          ep.portraitType = sel.value;
+          rerenderAll(false);
+        });
+        typeField.appendChild(sel);
+        block.appendChild(typeField);
+
+        const uploadField = document.createElement("div");
+        uploadField.className = "field";
+        uploadField.innerHTML = "<label>Upload Portraet</label>";
+        const upload = document.createElement("input");
+        upload.type = "file";
+        upload.accept = "image/png,image/jpeg,image/webp";
+        upload.addEventListener("change", async (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          const loaded = await readFileImage(file);
+          ep.portraitDataUrl = loaded.dataUrl;
+          ep.portraitImg = loaded.img;
+          rerenderAll(false);
+        });
+        uploadField.appendChild(upload);
+        block.appendChild(uploadField);
+
+        ui.episodesContainer.appendChild(block);
+      });
+    }
+
+    function renderPanels() {
+      ui.previewPanels.innerHTML = "";
+      blockDefs().forEach((block) => {
+        const panel = document.createElement("section");
+        panel.className = "preview-panel";
+
+        const selected = selectedJobForBlock(block);
+        const renderedSelected = renderJob(selected);
+
+        const head = document.createElement("div");
+        head.className = "panel-head";
+        head.innerHTML = `<h3 class="panel-title">${block.label}</h3><div class="panel-info">${selected.fmt.w} x ${selected.fmt.h} px · ${selected.lang.toUpperCase()}</div>`;
+        panel.appendChild(head);
+
+        const canvas = document.createElement("canvas");
+        canvas.className = "preview-canvas";
+        canvas.width = selected.fmt.w;
+        canvas.height = selected.fmt.h;
+        drawScaled(renderedSelected.composite, canvas);
+        panel.appendChild(canvas);
+
+        const strip = document.createElement("div");
+        strip.className = "thumb-strip";
+        variantsForBlock(block).forEach((variant) => {
+          const thumbJob = {
+            kind: block.kind,
+            id: block.id,
+            label: block.label,
+            episodeIndex: block.episodeIndex,
+            fmt: variant.fmt,
+            lang: variant.lang
+          };
+          const thumb = document.createElement("div");
+          thumb.className = "thumb-item";
+          const active = selected.fmt.key === variant.fmt.key && selected.lang === variant.lang;
+          if (active) thumb.classList.add("active");
+
+          const label = document.createElement("div");
+          label.className = "thumb-label";
+          label.textContent = `${variant.lang.toUpperCase()} · ${variant.fmt.label}`;
+          thumb.appendChild(label);
+
+          const cv = document.createElement("canvas");
+          cv.width = variant.fmt.w >= variant.fmt.h ? 150 : 110;
+          cv.height = variant.fmt.w >= variant.fmt.h ? 82 : 160;
+          drawScaled(renderJob(thumbJob).composite, cv);
+          thumb.appendChild(cv);
+
+          thumb.addEventListener("click", () => {
+            const prevOpen = !!state.panelSelection[block.id]?.editorOpen;
+            state.panelSelection[block.id] = { fmtKey: variant.fmt.key, lang: variant.lang, editorOpen: prevOpen };
+            rerenderAll(false);
+          });
+
+          strip.appendChild(thumb);
+        });
+
+        panel.appendChild(strip);
+
+        const editor = document.createElement("details");
+        editor.className = "panel-editor";
+        editor.open = !!state.panelSelection[block.id]?.editorOpen;
+
+        const summary = document.createElement("summary");
+        summary.textContent = "Editor einblenden";
+        editor.appendChild(summary);
+
+        editor.addEventListener("toggle", () => {
+          ensurePanelSelection(block).editorOpen = editor.open;
+          autosave();
+        });
+
+        const editorGrid = document.createElement("div");
+        editorGrid.className = "panel-editor-grid";
+        const selectedAdj = getPanelAdjustment(selected);
+        const noText = selected.lang === "clean";
+
+        function makeEditorNumber(labelText, min, max, step, value, onCommit, suffix = "") {
+          const wrap = document.createElement("div");
+          const label = document.createElement("label");
+          label.textContent = `${labelText}${suffix ? ` (${suffix})` : ""}`;
+          const input = document.createElement("input");
+          input.type = "number";
+          input.min = String(min);
+          input.max = String(max);
+          input.step = String(step);
+          input.value = String(value);
+          input.addEventListener("change", () => {
+            const next = Math.max(min, Math.min(max, Number(input.value) || value));
+            input.value = String(next);
+            onCommit(next);
+          });
+          const actions = document.createElement("div");
+          actions.className = "inline-actions";
+          actions.style.marginTop = "6px";
+          const dec = document.createElement("button");
+          dec.type = "button";
+          dec.textContent = "−";
+          dec.addEventListener("click", () => {
+            const next = Math.max(min, Math.min(max, (Number(input.value) || value) - step));
+            input.value = String(next);
+            onCommit(next);
+          });
+          const inc = document.createElement("button");
+          inc.type = "button";
+          inc.textContent = "+";
+          inc.addEventListener("click", () => {
+            const next = Math.max(min, Math.min(max, (Number(input.value) || value) + step));
+            input.value = String(next);
+            onCommit(next);
+          });
+          actions.appendChild(dec);
+          actions.appendChild(inc);
+          wrap.appendChild(label);
+          wrap.appendChild(input);
+          wrap.appendChild(actions);
+          return wrap;
+        }
+
+        const textScaleControl = makeEditorNumber("Textgroesse", 70, 135, 1, selectedAdj.textScale, (v) => {
+          setPanelAdjustment(selected, { textScale: v });
+          rerenderAll(false);
+        }, "%");
+        const wrapScaleControl = makeEditorNumber("Umbruchbreite", 70, 140, 1, selectedAdj.wrapScale, (v) => {
+          setPanelAdjustment(selected, { wrapScale: v });
+          rerenderAll(false);
+        }, "%");
+        if (noText) {
+          textScaleControl.querySelector("input").disabled = true;
+          wrapScaleControl.querySelector("input").disabled = true;
+          textScaleControl.querySelectorAll("button").forEach((b) => { b.disabled = true; });
+          wrapScaleControl.querySelectorAll("button").forEach((b) => { b.disabled = true; });
+        }
+        editorGrid.appendChild(textScaleControl);
+        editorGrid.appendChild(wrapScaleControl);
+
+        if (selected.kind === "episode") {
+          editorGrid.appendChild(makeEditorNumber("Portraetposition X (Mitte=0)", -100, 100, 1, selectedAdj.portraitX || 0, (v) => {
+            setPanelAdjustment(selected, { portraitX: v });
+            rerenderAll(false);
+          }));
+        }
+
+        editor.appendChild(editorGrid);
+        panel.appendChild(editor);
+
+        const actions = document.createElement("div");
+        actions.className = "panel-actions";
+
+        const btnPng = document.createElement("button");
+        btnPng.textContent = "PNG";
+        btnPng.addEventListener("click", () => {
+          const j = selectedJobForBlock(block);
+          const r = renderJob(j);
+          downloadCanvas(r.composite, `${filenameBase(j)}.png`);
+        });
+
+        const btnLayers = document.createElement("button");
+        btnLayers.textContent = "Layer (ZIP)";
+        btnLayers.addEventListener("click", async () => {
+          try {
+            const j = selectedJobForBlock(block);
+            const r = renderJob(j);
+            const files = [];
+            for (const layer of r.layers) {
+              const bytes = await canvasToPngBytes(layer.canvas);
+              files.push({ name: `${filenameBase(j)}_${layer.name}.png`, bytes });
+            }
+            const zip = buildZipBlob(files);
+            downloadBlob(zip, `${filenameBase(j)}_layers.zip`);
+          } catch (err) {
+            alert("Layer-Export fehlgeschlagen.");
+            console.error(err);
+          }
+        });
+
+        const btnPdf = document.createElement("button");
+        btnPdf.textContent = "PDF";
+        btnPdf.addEventListener("click", async () => {
+          try {
+            const j = selectedJobForBlock(block);
+            const r = renderJob(j);
+            const pdf = await buildPdfBlob([r]);
+            downloadBlob(pdf, `${filenameBase(j)}.pdf`);
+          } catch (err) {
+            alert(`PDF-Export fehlgeschlagen: ${err?.message || err}`);
+            console.error(err);
+          }
+        });
+
+        const btnPsd = document.createElement("button");
+        btnPsd.textContent = "PSD";
+        btnPsd.addEventListener("click", async () => {
+          try {
+            const j = selectedJobForBlock(block);
+            const r = renderJob(j);
+            const psd = await buildPsdBlob(r);
+            downloadBlob(psd, `${filenameBase(j)}.psd`);
+          } catch (err) {
+            alert(`PSD-Export fehlgeschlagen: ${err?.message || err}`);
+            console.error(err);
+          }
+        });
+
+        actions.appendChild(btnPng);
+        actions.appendChild(btnLayers);
+        actions.appendChild(btnPdf);
+        actions.appendChild(btnPsd);
+        panel.appendChild(actions);
+
+        ui.previewPanels.appendChild(panel);
+      });
+    }
+
+    function seriesPrefix() {
+      const rawFirstWord = (state.series.titleDe || "Reihe").trim().split(/\s+/)[0] || "Reihe";
+      return rawFirstWord.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^A-Za-z0-9_-]/g, "") || "Reihe";
+    }
+
+    function filenameBase(job) {
+      const prefix = seriesPrefix();
+      const number = job.kind === "series" ? "00" : String(job.episodeIndex + 1).padStart(2, "0");
+      const lang = job.lang === "clean" ? "clean" : job.lang;
+      return `${prefix}_${number}_${lang}_${job.fmt.key}`;
+    }
+
+    function downloadCanvas(canvas, filename) {
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        downloadBlob(blob, filename);
+      }, "image/png");
+    }
+
+    function downloadBlob(blob, filename) {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(a.href), 400);
+    }
+
+    async function canvasToPngBytes(canvas) {
+      const blob = await new Promise((resolve, reject) => {
+        try {
+          canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("PNG-Blob leer"))), "image/png");
+        } catch (e) {
+          reject(e);
+        }
+      });
+      return new Uint8Array(await blob.arrayBuffer());
+    }
+
+    async function buildPsdBlob(rendered) {
+      await ensureAgPsdLoaded();
+      const doc = {
+        width: rendered.job.fmt.w,
+        height: rendered.job.fmt.h,
+        canvas: rendered.composite,
+        children: rendered.layers.map((layer) => ({
+          name: layer.name,
+          canvas: layer.canvas
+        }))
+      };
+      const out = window.agPsd.writePsdBuffer(doc);
+      const bytes = out instanceof Uint8Array ? out : new Uint8Array(out);
+      return new Blob([bytes], { type: "image/vnd.adobe.photoshop" });
+    }
+
+    function concatU8(parts) {
+      const total = parts.reduce((sum, p) => sum + p.length, 0);
+      const out = new Uint8Array(total);
+      let off = 0;
+      parts.forEach((p) => {
+        out.set(p, off);
+        off += p.length;
+      });
+      return out;
+    }
+
+    function u16(n) {
+      const b = new Uint8Array(2);
+      b[0] = n & 255;
+      b[1] = (n >>> 8) & 255;
+      return b;
+    }
+
+    function u32(n) {
+      const b = new Uint8Array(4);
+      b[0] = n & 255;
+      b[1] = (n >>> 8) & 255;
+      b[2] = (n >>> 16) & 255;
+      b[3] = (n >>> 24) & 255;
+      return b;
+    }
+
+    const crcTable = (() => {
+      const table = new Uint32Array(256);
+      for (let i = 0; i < 256; i += 1) {
+        let c = i;
+        for (let j = 0; j < 8; j += 1) {
+          c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
+        }
+        table[i] = c >>> 0;
+      }
+      return table;
+    })();
+
+    function crc32(bytes) {
+      let c = 0xffffffff;
+      for (let i = 0; i < bytes.length; i += 1) {
+        c = crcTable[(c ^ bytes[i]) & 255] ^ (c >>> 8);
+      }
+      return (c ^ 0xffffffff) >>> 0;
+    }
+
+    function buildZipBlob(files) {
+      const enc = new TextEncoder();
+      const localParts = [];
+      const centralParts = [];
+      let offset = 0;
+
+      files.forEach((file) => {
+        const name = enc.encode(file.name);
+        const data = file.bytes;
+        const size = data.length;
+        const crc = crc32(data);
+
+        const localHeader = concatU8([
+          u32(0x04034b50),
+          u16(20),
+          u16(0),
+          u16(0),
+          u16(0),
+          u16(0),
+          u32(crc),
+          u32(size),
+          u32(size),
+          u16(name.length),
+          u16(0)
+        ]);
+
+        localParts.push(localHeader, name, data);
+
+        const centralHeader = concatU8([
+          u32(0x02014b50),
+          u16(20),
+          u16(20),
+          u16(0),
+          u16(0),
+          u16(0),
+          u16(0),
+          u32(crc),
+          u32(size),
+          u32(size),
+          u16(name.length),
+          u16(0),
+          u16(0),
+          u16(0),
+          u16(0),
+          u32(0),
+          u32(offset)
+        ]);
+
+        centralParts.push(centralHeader, name);
+        offset += localHeader.length + name.length + data.length;
+      });
+
+      const centralData = concatU8(centralParts);
+      const localData = concatU8(localParts);
+      const end = concatU8([
+        u32(0x06054b50),
+        u16(0),
+        u16(0),
+        u16(files.length),
+        u16(files.length),
+        u32(centralData.length),
+        u32(localData.length),
+        u16(0)
+      ]);
+
+      return new Blob([localData, centralData, end], { type: "application/zip" });
+    }
+
+    function drawPdfVectorText(page, font, layout, pageHeight) {
+      const { rgb } = window.PDFLib;
+      const textColor = rgb(246 / 255, 249 / 255, 252 / 255);
+      layout.lines.forEach((line, lineIdx) => {
+        const lineTop = layout.y + lineIdx * layout.lh;
+        const textWidth = font.widthOfTextAtSize(line, layout.fs);
+        const textHeight = font.heightAtSize(layout.fs);
+        const x = layout.align === "center" ? layout.x - (textWidth / 2) : layout.x;
+        const y = pageHeight - lineTop - textHeight;
+        page.drawText(line, {
+          x,
+          y,
+          font,
+          size: layout.fs,
+          color: textColor
+        });
+      });
+    }
+
+    function roundedRectSvgPath(x, y, width, height, radius) {
+      const r = Math.max(0, Math.min(radius, width / 2, height / 2));
+      const x2 = x + width;
+      const y2 = y + height;
+      return `M ${x + r} ${y} L ${x2 - r} ${y} Q ${x2} ${y} ${x2} ${y + r} L ${x2} ${y2 - r} Q ${x2} ${y2} ${x2 - r} ${y2} L ${x + r} ${y2} Q ${x} ${y2} ${x} ${y2 - r} L ${x} ${y + r} Q ${x} ${y} ${x + r} ${y} Z`;
+    }
+
+    function drawPdfFrameVector(page, fmt, pageWidth, pageHeight) {
+      const g = frameGeometry(fmt, pageWidth, pageHeight);
+      const y = pageHeight - g.y - g.height;
+      const framePath = roundedRectSvgPath(g.x, y, g.width, g.height, g.radius);
+      page.drawSvgPath(framePath, {
+        borderColor: window.PDFLib.rgb(1, 1, 1),
+        borderWidth: g.lineWidth
+      });
+    }
+
+    async function buildPdfBlobVector(renderedList) {
+      await ensurePdfLibLoaded();
+      const { PDFDocument } = window.PDFLib;
+      const pdfDoc = await PDFDocument.create();
+      pdfDoc.registerFontkit(window.fontkit);
+
+      const fontBytes = await getPdfTitleFontBytes();
+      const titleFont = await pdfDoc.embedFont(fontBytes, { subset: false });
+
+      const measureCanvas = createCanvas(48, 48);
+      const measureCtx = measureCanvas.getContext("2d");
+      if (!measureCtx) throw new Error("Text-Messung fuer PDF nicht verfuegbar.");
+
+      for (const rendered of renderedList) {
+        const w = rendered.job.fmt.w;
+        const h = rendered.job.fmt.h;
+        const page = pdfDoc.addPage([w, h]);
+        const text = jobText(rendered.job);
+        const layout = textLayoutForJob(measureCtx, rendered.job, text);
+        let textDrawn = false;
+
+        for (const layer of rendered.layers) {
+          if (layer.name === "title_text") {
+            if (layout) {
+              drawPdfVectorText(page, titleFont, layout, h);
+              textDrawn = true;
+            }
+            continue;
+          }
+          if (layer.name === "frame") {
+            drawPdfFrameVector(page, rendered.job.fmt, w, h);
+            continue;
+          }
+          const bytes = await canvasToPngBytes(layer.canvas);
+          const png = await pdfDoc.embedPng(bytes);
+          page.drawImage(png, { x: 0, y: 0, width: w, height: h });
+        }
+
+        if (layout && !textDrawn) {
+          drawPdfVectorText(page, titleFont, layout, h);
+        }
+      }
+
+      const pdfBytes = await pdfDoc.save();
+      return new Blob([pdfBytes], { type: "application/pdf" });
+    }
+
+    async function buildPdfBlob(renderedList) {
+      return buildPdfBlobVector(renderedList);
+    }
+
+    function projectPayload() {
+      return {
+        version: 3,
+        savedAt: new Date().toISOString(),
+        series: { ...state.series },
+        episodes: state.episodes.map((ep) => ({
+          id: ep.id,
+          titleDe: ep.titleDe,
+          titleEn: ep.titleEn,
+          portraitType: ep.portraitType,
+          portraitDataUrl: ep.portraitDataUrl
+        })),
+        panelSelection: { ...state.panelSelection },
+        panelAdjustments: { ...state.panelAdjustments },
+        backgroundDataUrl: assets.backgroundDataUrl
+      };
+    }
+
+    async function applyPayload(payload) {
+      if (!payload || typeof payload !== "object") return;
+
+      state.series = {
+        titleDe: payload.series?.titleDe || state.series.titleDe,
+        titleEn: payload.series?.titleEn || state.series.titleEn,
+        arrangement: payload.series?.arrangement || "center",
+        swapSides: !!payload.series?.swapSides,
+        showFrame: payload.series?.showFrame ?? true,
+        frameWidth: Number(payload.series?.frameWidth || 3.8),
+        frameInset: Number(payload.series?.frameInset || 3.2),
+        bgZoom: Number(payload.series?.bgZoom || 100),
+        bgBlur: Number(payload.series?.bgBlur || 42),
+        bgDim: Number(payload.series?.bgDim || 16),
+        bgX: Number(payload.series?.bgX || 0),
+        bgY: Number(payload.series?.bgY || 0)
+      };
+
+      state.episodes = [];
+      const list = Array.isArray(payload.episodes) && payload.episodes.length ? payload.episodes : [makeEpisode(1)];
+      for (let i = 0; i < list.length; i += 1) {
+        const src = list[i];
+        const ep = makeEpisode(i + 1);
+        ep.id = src.id || ep.id;
+        ep.titleDe = src.titleDe || "";
+        ep.titleEn = src.titleEn || "";
+        ep.portraitType = src.portraitType || "single";
+        ep.portraitDataUrl = src.portraitDataUrl || null;
+        if (ep.portraitDataUrl) {
+          try {
+            ep.portraitImg = await loadImage(ep.portraitDataUrl);
+          } catch (_) {
+            ep.portraitImg = null;
+          }
+        }
+        state.episodes.push(ep);
+      }
+
+      state.panelSelection = payload.panelSelection && typeof payload.panelSelection === "object" ? { ...payload.panelSelection } : {};
+      state.panelAdjustments = payload.panelAdjustments && typeof payload.panelAdjustments === "object" ? { ...payload.panelAdjustments } : {};
+
+      assets.backgroundDataUrl = payload.backgroundDataUrl || null;
+      if (assets.backgroundDataUrl) {
+        try {
+          assets.background = await loadImage(assets.backgroundDataUrl);
+        } catch (_) {
+          assets.background = null;
+        }
+      }
+
+      syncSeriesInputs();
+      rerenderAll();
+    }
+
+    function autosave() {
+      try {
+        localStorage.setItem("goetheanum_tv_cover_project", JSON.stringify(projectPayload()));
+      } catch (_) {}
+    }
+
+    async function exportAllPdf() {
+      try {
+        const rendered = allJobs().map((job) => renderJob(job));
+        const pdf = await buildPdfBlob(rendered);
+        downloadBlob(pdf, `${seriesPrefix()}_gesamt_${Date.now()}.pdf`);
+      } catch (err) {
+        alert(`PDF-Export fehlgeschlagen: ${err?.message || err}`);
+        console.error(err);
+      }
+    }
+
+    async function exportAllPngZip() {
+      try {
+        const files = [];
+        for (const job of allJobs()) {
+          const rendered = renderJob(job);
+          const bytes = await canvasToPngBytes(rendered.composite);
+          files.push({ name: `${filenameBase(job)}.png`, bytes });
+        }
+        downloadBlob(buildZipBlob(files), `${seriesPrefix()}_png_${Date.now()}.zip`);
+      } catch (err) {
+        alert("Alle-PNG-Export fehlgeschlagen.");
+        console.error(err);
+      }
+    }
+
+    async function exportAllLayersZip() {
+      try {
+        const files = [];
+        for (const job of allJobs()) {
+          const rendered = renderJob(job);
+          for (const layer of rendered.layers) {
+            const bytes = await canvasToPngBytes(layer.canvas);
+            files.push({ name: `${filenameBase(job)}_${layer.name}.png`, bytes });
+          }
+        }
+        downloadBlob(buildZipBlob(files), `${seriesPrefix()}_layer_${Date.now()}.zip`);
+      } catch (err) {
+        alert("Alle-Layer-Export fehlgeschlagen.");
+        console.error(err);
+      }
+    }
+
+    function rerenderAll(rebuildEditors = true) {
+      readSeriesInputs();
+      if (rebuildEditors) renderEpisodesEditor();
+      renderPanels();
+      autosave();
+    }
+
+    function bindLeft() {
+      [ui.seriesDe, ui.seriesEn].forEach((el) => {
+        el.addEventListener("input", () => rerenderAll(false));
+      });
+      [ui.arrangement, ui.swapSides, ui.bgZoom, ui.bgBlur, ui.bgDim, ui.bgX, ui.bgY, ui.showFrame, ui.frameWidth, ui.frameInset].forEach((el) => {
+        el.addEventListener("change", () => rerenderAll(false));
+      });
+      ui.blurChips.forEach((chip) => {
+        chip.addEventListener("click", () => {
+          ui.bgBlur.value = chip.dataset.blur || "0";
+          rerenderAll(false);
+        });
+      });
+
+      ui.backgroundUpload.addEventListener("change", async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const loaded = await readFileImage(file);
+        assets.background = loaded.img;
+        assets.backgroundDataUrl = loaded.dataUrl;
+        rerenderAll(false);
+      });
+
+      ui.addEpisode.addEventListener("click", () => {
+        state.episodes.push(makeEpisode(state.episodes.length + 1));
+        rerenderAll(true);
+      });
+    }
+
+    function bindProject() {
+      ui.saveProject.addEventListener("click", () => {
+        const blob = new Blob([JSON.stringify(projectPayload(), null, 2)], { type: "application/json" });
+        downloadBlob(blob, `Reihe_projekt_${Date.now()}.json`);
+      });
+
+      ui.loadProject.addEventListener("click", () => ui.projectLoadInput.click());
+
+      ui.projectLoadInput.addEventListener("change", async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const txt = await file.text();
+        await applyPayload(JSON.parse(txt));
+        ui.projectLoadInput.value = "";
+      });
+    }
+
+    function bindExports() {
+      ui.downloadAllPdf.addEventListener("click", exportAllPdf);
+      ui.downloadAllPng.addEventListener("click", exportAllPngZip);
+      ui.downloadAllLayers.addEventListener("click", exportAllLayersZip);
+    }
+
+    async function init() {
+      state.episodes = [makeEpisode(1)];
+      syncSeriesInputs();
+      await loadDefaultPortraits();
+
+      try {
+        const saved = localStorage.getItem("goetheanum_tv_cover_project");
+        if (saved) {
+          await applyPayload(JSON.parse(saved));
+        }
+      } catch (_) {}
+
+      bindLeft();
+      bindProject();
+      bindExports();
+      rerenderAll(true);
+    }
+
+    init();
+  </script>
+</body>
+</html>

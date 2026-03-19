@@ -29,7 +29,7 @@ FastAPI + Redis + Worker implementation for brand-consistent portrait generation
 ## Quick start (Docker)
 
 ```bash
-cd /Users/philipptok/goeloggen/tools/brand-portrait
+cd /Users/philipptok/goeloggen/services/brand-portrait
 cp .env.example .env
 docker compose up --build
 ```
@@ -41,7 +41,7 @@ API docs:
 ## Local start (without Docker)
 
 ```bash
-cd /Users/philipptok/goeloggen/tools/brand-portrait
+cd /Users/philipptok/goeloggen/services/brand-portrait
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
@@ -52,7 +52,7 @@ uvicorn app.main:app --reload
 In another terminal:
 
 ```bash
-cd /Users/philipptok/goeloggen/tools/brand-portrait
+cd /Users/philipptok/goeloggen/services/brand-portrait
 source .venv/bin/activate
 python -m app.worker.main
 ```
