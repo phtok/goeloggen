@@ -1,6 +1,12 @@
 # macOS
 .DS_Store
 
+# Local machine tooling
+.brew-cache/
+.brew-local/
+.pydeps/
+.venv-font/
+
 # Editor / temp
 *.swp
 *.swo
@@ -14,10 +20,29 @@ output/
 # Large local research/data folders (not for GitHub)
 hefte_pdf/
 ausgabe_zeichnungen/
+collections/jahrgaenge/pdfs/**
+!collections/jahrgaenge/pdfs/.gitkeep
+collections/jahrgaenge/zeichnungen/**
+!collections/jahrgaenge/zeichnungen/.gitkeep
 
 # Local experiment snapshots
-archive/
+archive/*
+fremdprojekte/
+!archive/legacy-entrypoints_2026-03-10/
+!archive/legacy-entrypoints_2026-03-10/**
 
 # Cloudflare worker local state/config
 workers/.wrangler/
 workers/wrangler.toml
+
+# Brand Portrait tool local runtime files
+services/brand-portrait/.env
+services/brand-portrait/.venv/
+services/brand-portrait/tmp/
+services/brand-portrait/.hf-cache/
+services/brand-portrait/data/storage/inputs/
+services/brand-portrait/data/storage/outputs/
+services/brand-portrait/data/storage/exports/
+services/brand-portrait/portrait_brand_generator.egg-info/
+services/brand-portrait/*.jpg
+services/brand-portrait/*.png
