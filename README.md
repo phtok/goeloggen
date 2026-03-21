@@ -1,80 +1,87 @@
-# Goetheanum Logo Generator
+# Goetheanum Tools
 
-Ein interaktiver Web-Generator für Logos aller Goetheanum-Sektionen und -Organisationen.
+Dieses Repository enthaelt nur noch Goetheanum-Projekte.
 
-## Features
+## Schnellueberblick
 
-- **34 Organisationen** aus 3 Kategorien
-- **2 Layout-Varianten** (Desktop & Mobile)
-- **4 Sprachen** (DE, EN, FR, IT)
-- **5 Farbvarianten** + Custom Colors
-- **Live-Preview** mit Größenregler
-- **Export** als SVG, PNG, JPG
+### Apps
 
-## Technische Details
+Statische Onepager liegen unter `apps/`:
 
-- Pure HTML/CSS/JavaScript (keine Dependencies)
-- Embedded Font (Titillium Upright)
-- Text-to-Path Konvertierung für konsistente SVG-Exports
-- Responsive Design (Desktop & Mobile)
-- Alle Glyphen für deutsche und englische Texte
+- `apps/logo-generator/`
+- `apps/visitenkarten-generator/`
+- `apps/briefschaften/`
+- `apps/karten-generator/`
+- `apps/cover-generator/`
 
-## Verwendung
+### Services
 
-1. `index.html` in Browser öffnen
-2. Organisation auswählen
-3. Layout, Sprache und Farben anpassen
-4. Größe einstellen
-5. Als SVG/PNG/JPG exportieren
+Nicht-statische Unterprojekte sind unter `services/` bereits vorgesehen:
 
-## Organisationen
+- `services/brand-portrait/`
+- `services/gtv-subs/`
 
-### Freie Hochschule für Geisteswissenschaft
-- Allgemeine Anthroposophische Sektion
-- Jugendsektion
-- Medizinische Sektion
-- Naturwissenschaftliche Sektion
-- Pädagogische Sektion
-- Sektion für Redende und Musizierende Künste
-- Sektion für Schöne Wissenschaften
-- Sozialwissenschaftliche Sektion
+### Collections
 
-### Anthroposophische Gesellschaft
-- [21 weitere Organisationen]
+Materialsammlungen und Produktionsquellen liegen unter `collections/`:
 
-### Sonstige
-- [5 weitere Organisationen]
+- `collections/jahrgaenge/`
 
-## Lizenz
+### Gemeinsam genutzt
 
-© 2024 Goetheanum
+- `assets/` - gemeinsame Schriften, Maps, SVGs und minimale Vendor-Dateien fuer die statischen Tools
+- `workers/` - Cloudflare-Worker fuer Visitenkarten-Mailversand
+- `docs/` - Spezifikationen und Projektdokumentation
+- `reference/` - Referenzmaterial und Konzeptstaende
+- `archive/` - archivierte Altversionen und alte Einstiegspunkte
 
-## Entwicklung
+## Root-Einstiege
 
-Entwickelt für die digitale Markenführung des Goetheanum.
+Die Root-HTML-Dateien sind jetzt bewusst nur noch Launcher oder Rueckwaertskompatibilitaet:
 
-## GitHub Pages Deployment
+- `index.html` -> `logo-generator.html`
+- `logo-generator.html` -> `apps/logo-generator/`
+- `visitenkarten.html` -> `visitenkarten-generator.html`
+- `visitenkarten-generator.html` -> `apps/visitenkarten-generator/`
+- `briefschaften.html` -> `apps/briefschaften/`
+- `karten.html` -> `karten-generator.html`
+- `karten-generator.html` -> `apps/karten-generator/`
+- `cover-generator.html` -> `apps/cover-generator/`
+- `index-cover-generator.html` -> `cover-generator.html`
+- `index-goelogger-gci1.html` -> `logo-generator.html`
 
-Die Website kann direkt über GitHub Pages bereitgestellt werden.
+Damit bleiben alte Links stabil, waehrend die eigentlichen Apps klar in Ordnern liegen.
 
-### Was wird veröffentlicht
+## Jahrgaenge
 
-- `index.html` (Logo-Generator)
-- `visitenkarten.html` (Visitenkarten-Tool)
-- `briefschaften.html` (Briefpapier/Kuvert/Signatur)
-- `assets/` (Schriften, Glyphen, Logos)
+Die Sammlung der Zeichnungen und Texte aus den Jahrgaengen ist kein einzelnes Webtool.
 
-Optional für E-Mail-gesteuerte Visitenkarten-Downloads:
+Vorgesehener Ort:
 
-- `assets/vk-email-config.js` (Endpoint-Konfiguration)
-- `workers/visitenkarten-email-worker.js` (Cloudflare Worker)
+- `collections/jahrgaenge/pdfs/`
+- `collections/jahrgaenge/zeichnungen/`
 
-Der Deploy-Workflow liegt in:
+Die zugehoerigen Verarbeitungsskripte und groesseren Datensammlungen folgen spaeter in separaten Merges.
 
-- `.github/workflows/deploy-pages.yml`
+## Was aktuell online bleibt
 
-### Einmalig im GitHub-Repo aktivieren
+Der GitHub-Pages-Workflow publiziert weiter nur den stabilen oeffentlichen Satz:
 
-1. GitHub Repo öffnen: `Settings -> Pages`
-2. Bei `Build and deployment` als Source `GitHub Actions` wählen
-3. Auf `main` pushen (oder Workflow manuell via `Actions` starten)
+- Logo-Generator
+- Visitenkarten-Generator
+- gemeinsame `assets/`
+
+Das reduziert Risiko fuer laufende Veroeffentlichungen, obwohl die Repo-Struktur intern bereits aufgeraeumt ist.
+
+## Noch bewusst nicht in diesem kleinen Merge
+
+- grosse Script-Sammlungen
+- Schriften-Downloads und lokale Output-Bestaende
+- Service-Code fuer Brand Portrait und `gtv-subs`
+- grosse Icon-Pakete jenseits der fuer Karten/Cover noetigen Minimalassets
+
+## Repos daneben
+
+- `goeloggen` - Goetheanum-Tools
+- `publicsecrets` - eigenes Repo fuer Public Secrets
+- `personal-finance` - eigenes Repo fuer Finance
