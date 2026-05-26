@@ -33,7 +33,10 @@ fremdprojekte/
 
 # Cloudflare worker local state/config
 workers/.wrangler/
+workers/**/.wrangler/
 workers/wrangler.toml
+workers/**/.secrets.local
+workers/**/wrangler.toml
 
 # Brand Portrait tool local runtime files
 services/brand-portrait/.env
