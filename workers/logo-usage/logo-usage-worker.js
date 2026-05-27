@@ -188,24 +188,24 @@ async function usageSummary(url, env, cors) {
   );
   const byDevice = await grouped(env, "device", from, to, "1 = 1");
   const byUiLang = await grouped(env, "ui_lang", from, to, "1 = 1");
-  const selectedByOrg = await grouped(env, "org", from, to, "event_type IN ('ui_change', 'export')");
-  const selectedByCategory = await grouped(env, "category", from, to, "event_type IN ('ui_change', 'export')");
-  const selectedByLayout = await grouped(env, "layout", from, to, "event_type IN ('ui_change', 'export')");
-  const selectedByMode = await grouped(env, "color_mode", from, to, "event_type IN ('ui_change', 'export')");
-  const selectedByLanguage = await grouped(env, "logo_lang", from, to, "event_type IN ('ui_change', 'export')");
+  const selectedByOrg = await grouped(env, "org", from, to, "1 = 1");
+  const selectedByCategory = await grouped(env, "category", from, to, "1 = 1");
+  const selectedByLayout = await grouped(env, "layout", from, to, "1 = 1");
+  const selectedByMode = await grouped(env, "color_mode", from, to, "1 = 1");
+  const selectedByLanguage = await grouped(env, "logo_lang", from, to, "1 = 1");
   const selectedByAdvanced = await groupedExpression(
     env,
     "CASE WHEN advanced_open = 1 THEN 'advanced_open' ELSE 'standard' END",
     from,
     to,
-    "event_type IN ('ui_change', 'export')"
+    "1 = 1"
   );
   const selectedByCustomText = await groupedExpression(
     env,
     "CASE WHEN custom_text_length > 0 THEN 'custom_text' ELSE 'auto_text' END",
     from,
     to,
-    "event_type IN ('ui_change', 'export')"
+    "1 = 1"
   );
   const byCountry = await grouped(env, "country", from, to, "1 = 1");
   const byReferrer = await grouped(env, "referrer_host", from, to, "1 = 1");
@@ -245,17 +245,17 @@ async function usageSummary(url, env, cors) {
     .bind(from, to)
     .first();
   const advancedByFormat = await grouped(env, "export_format", from, to, "advanced_open = 1 AND event_type = 'export'");
-  const advancedByOrg = await grouped(env, "org", from, to, "advanced_open = 1 AND event_type IN ('ui_change', 'export')");
-  const advancedByCategory = await grouped(env, "category", from, to, "advanced_open = 1 AND event_type IN ('ui_change', 'export')");
-  const advancedByLayout = await grouped(env, "layout", from, to, "advanced_open = 1 AND event_type IN ('ui_change', 'export')");
-  const advancedByMode = await grouped(env, "color_mode", from, to, "advanced_open = 1 AND event_type IN ('ui_change', 'export')");
-  const advancedByLanguage = await grouped(env, "logo_lang", from, to, "advanced_open = 1 AND event_type IN ('ui_change', 'export')");
+  const advancedByOrg = await grouped(env, "org", from, to, "advanced_open = 1");
+  const advancedByCategory = await grouped(env, "category", from, to, "advanced_open = 1");
+  const advancedByLayout = await grouped(env, "layout", from, to, "advanced_open = 1");
+  const advancedByMode = await grouped(env, "color_mode", from, to, "advanced_open = 1");
+  const advancedByLanguage = await grouped(env, "logo_lang", from, to, "advanced_open = 1");
   const advancedByCustomText = await groupedExpression(
     env,
     "CASE WHEN custom_text_length > 0 THEN 'custom_text' ELSE 'auto_text' END",
     from,
     to,
-    "advanced_open = 1 AND event_type IN ('ui_change', 'export')"
+    "advanced_open = 1"
   );
   const recent = await all(
     env,
