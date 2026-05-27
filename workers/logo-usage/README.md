@@ -26,7 +26,6 @@ Put the returned D1 `database_id` into `wrangler.toml`, then run:
 ```bash
 npx --yes wrangler@4 d1 migrations apply goetheanum-logo-usage --remote
 npx --yes wrangler@4 secret put USAGE_HASH_SALT
-npx --yes wrangler@4 secret put REPORT_TOKEN
 npx --yes wrangler@4 deploy
 ```
 
@@ -40,12 +39,13 @@ window.GOE_LOGO_USAGE_ENDPOINT = "https://<worker-name>.<account>.workers.dev";
 ## Endpoints
 
 - `POST /collect` stores one event.
-- `GET /summary?from=YYYY-MM-DD&to=YYYY-MM-DD` returns aggregated statistics.
+- `GET /dashboard` shows the public HTML dashboard.
+- `GET /summary?from=YYYY-MM-DD&to=YYYY-MM-DD` returns public aggregated statistics as JSON.
 - `GET /health` checks the Worker.
 
-Reports require `REPORT_TOKEN`. Call them with:
+The static generator adds a transparent dashboard link in the lower right corner.
+Call the JSON endpoint directly with:
 
 ```bash
-curl -H "Authorization: Bearer <token>" \
-  "https://<worker>/summary?from=2026-01-01&to=2026-05-31"
+curl "https://<worker>/summary?from=2026-01-01&to=2026-05-31"
 ```

@@ -1,3 +1,5 @@
+import { dashboardHtml } from "./dashboard-html.js";
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -18,13 +20,16 @@ export default {
       return collectEvent(request, env, cors);
     }
 
-    if (url.pathname === "/summary") {
+    if (url.pathname === "/dashboard") {
       if (request.method !== "GET") {
         return json({ error: "Method not allowed" }, 405, cors);
       }
-      const auth = authorizeReport(request, env);
-      if (!auth.ok) {
-        return json({ error: auth.error }, auth.status, cors);
+      return html(dashboardHtml(url.origin), 200);
+    }
+
+    if (url.pathname === "/summary") {
+      if (request.method !== "GET") {
+        return json({ error: "Method not allowed" }, 405, cors);
       }
       return usageSummary(url, env, cors);
     }
@@ -118,8 +123,11 @@ async function usageSummary(url, env, cors) {
   const totals = await env.DB.prepare(
     `SELECT
       COUNT(*) AS events,
-      SUM(CASE WHEN event_type = 'pageview' THEN 1 ELSE 0 END) AS pageviews,
-      SUM(CASE WHEN event_type = 'export' THEN 1 ELSE 0 END) AS exports,
+      COALESCE(SUM(CASE WHEN event_type = 'pageview' THEN 1 ELSE 0 END), 0) AS pageviews,
+      COALESCE(SUM(CASE WHEN event_type = 'export' THEN 1 ELSE 0 END), 0) AS exports,
+      COALESCE(SUM(CASE WHEN event_type = 'ui_change' THEN 1 ELSE 0 END), 0) AS ui_changes,
+      COALESCE(SUM(CASE WHEN custom_text_length > 0 THEN 1 ELSE 0 END), 0) AS custom_text_events,
+      COALESCE(SUM(CASE WHEN event_type = 'export' AND custom_text_length > 0 THEN 1 ELSE 0 END), 0) AS custom_text_exports,
       COUNT(DISTINCT visitor_day_hash) AS visitor_days,
       COUNT(DISTINCT session_hash) AS sessions
     FROM logo_usage_events
@@ -139,14 +147,116 @@ async function usageSummary(url, env, cors) {
     to
   );
 
+  const dailyTotals = await all(
+    env,
+    `SELECT
+       event_date,
+       COUNT(*) AS events,
+       COALESCE(SUM(CASE WHEN event_type = 'pageview' THEN 1 ELSE 0 END), 0) AS pageviews,
+       COALESCE(SUM(CASE WHEN event_type = 'export' THEN 1 ELSE 0 END), 0) AS exports,
+       COALESCE(SUM(CASE WHEN event_type = 'ui_change' THEN 1 ELSE 0 END), 0) AS ui_changes,
+       COUNT(DISTINCT visitor_day_hash) AS visitor_days,
+       COUNT(DISTINCT session_hash) AS sessions
+     FROM logo_usage_events
+     WHERE event_date BETWEEN ? AND ?
+     GROUP BY event_date
+     ORDER BY event_date`,
+    from,
+    to
+  );
+
+  const byEventType = await grouped(env, "event_type", from, to, "1 = 1");
   const byFormat = await grouped(env, "export_format", from, to, "event_type = 'export'");
   const byOrg = await grouped(env, "org", from, to, "event_type = 'export'");
   const byCategory = await grouped(env, "category", from, to, "event_type = 'export'");
   const byLayout = await grouped(env, "layout", from, to, "event_type = 'export'");
   const byMode = await grouped(env, "color_mode", from, to, "event_type = 'export'");
   const byLanguage = await grouped(env, "logo_lang", from, to, "event_type = 'export'");
+  const byScale = await groupedExpression(
+    env,
+    "CASE WHEN scale_value = 0 THEN '' ELSE printf('%.1f', scale_value) END",
+    from,
+    to,
+    "event_type = 'export'"
+  );
+  const byAdvanced = await groupedExpression(
+    env,
+    "CASE WHEN advanced_open = 1 THEN 'advanced_open' ELSE 'standard' END",
+    from,
+    to,
+    "event_type = 'export'"
+  );
+  const byDevice = await grouped(env, "device", from, to, "1 = 1");
+  const byUiLang = await grouped(env, "ui_lang", from, to, "1 = 1");
+  const selectedByOrg = await grouped(env, "org", from, to, "event_type IN ('ui_change', 'export')");
+  const selectedByCategory = await grouped(env, "category", from, to, "event_type IN ('ui_change', 'export')");
+  const selectedByLayout = await grouped(env, "layout", from, to, "event_type IN ('ui_change', 'export')");
+  const selectedByMode = await grouped(env, "color_mode", from, to, "event_type IN ('ui_change', 'export')");
+  const selectedByLanguage = await grouped(env, "logo_lang", from, to, "event_type IN ('ui_change', 'export')");
+  const selectedByAdvanced = await groupedExpression(
+    env,
+    "CASE WHEN advanced_open = 1 THEN 'advanced_open' ELSE 'standard' END",
+    from,
+    to,
+    "event_type IN ('ui_change', 'export')"
+  );
+  const selectedByCustomText = await groupedExpression(
+    env,
+    "CASE WHEN custom_text_length > 0 THEN 'custom_text' ELSE 'auto_text' END",
+    from,
+    to,
+    "event_type IN ('ui_change', 'export')"
+  );
   const byCountry = await grouped(env, "country", from, to, "1 = 1");
   const byReferrer = await grouped(env, "referrer_host", from, to, "1 = 1");
+  const byPath = await grouped(env, "path", from, to, "1 = 1");
+  const byViewport = await groupedExpression(
+    env,
+    `CASE
+       WHEN viewport_width = 0 THEN ''
+       WHEN viewport_width < 700 THEN '<700'
+       WHEN viewport_width < 1024 THEN '700-1023'
+       WHEN viewport_width < 1440 THEN '1024-1439'
+       ELSE '1440+'
+     END`,
+    from,
+    to,
+    "1 = 1"
+  );
+  const byHourUtc = await groupedExpression(
+    env,
+    "substr(occurred_at, 12, 2)",
+    from,
+    to,
+    "1 = 1",
+    24
+  );
+  const advancedTotals = await env.DB.prepare(
+    `SELECT
+      COUNT(*) AS events,
+      COALESCE(SUM(CASE WHEN event_type = 'export' THEN 1 ELSE 0 END), 0) AS exports,
+      COALESCE(SUM(CASE WHEN event_type = 'ui_change' THEN 1 ELSE 0 END), 0) AS ui_changes,
+      COALESCE(SUM(CASE WHEN custom_text_length > 0 THEN 1 ELSE 0 END), 0) AS custom_text_events,
+      COALESCE(SUM(CASE WHEN event_type = 'export' AND custom_text_length > 0 THEN 1 ELSE 0 END), 0) AS custom_text_exports,
+      COUNT(DISTINCT session_hash) AS sessions
+    FROM logo_usage_events
+    WHERE event_date BETWEEN ? AND ? AND advanced_open = 1`
+  )
+    .bind(from, to)
+    .first();
+  const advancedByFormat = await grouped(env, "export_format", from, to, "advanced_open = 1 AND event_type = 'export'");
+  const advancedByOrg = await grouped(env, "org", from, to, "advanced_open = 1 AND event_type IN ('ui_change', 'export')");
+  const advancedByCategory = await grouped(env, "category", from, to, "advanced_open = 1 AND event_type IN ('ui_change', 'export')");
+  const advancedByLayout = await grouped(env, "layout", from, to, "advanced_open = 1 AND event_type IN ('ui_change', 'export')");
+  const advancedByMode = await grouped(env, "color_mode", from, to, "advanced_open = 1 AND event_type IN ('ui_change', 'export')");
+  const advancedByLanguage = await grouped(env, "logo_lang", from, to, "advanced_open = 1 AND event_type IN ('ui_change', 'export')");
+  const advancedByCustomText = await groupedExpression(
+    env,
+    "CASE WHEN custom_text_length > 0 THEN 'custom_text' ELSE 'auto_text' END",
+    from,
+    to,
+    "advanced_open = 1 AND event_type IN ('ui_change', 'export')"
+  );
   const recent = await all(
     env,
     `SELECT occurred_at, event_type, path, referrer_host, country, device, org, category,
@@ -165,17 +275,47 @@ async function usageSummary(url, env, cors) {
       range: { from, to },
       totals,
       daily,
+      dailyTotals,
+      engagement: {
+        byEventType,
+        byDevice,
+        byUiLang,
+        byPath,
+        byViewport,
+        byHourUtc
+      },
+      selections: {
+        byOrg: selectedByOrg,
+        byCategory: selectedByCategory,
+        byLayout: selectedByLayout,
+        byMode: selectedByMode,
+        byLanguage: selectedByLanguage,
+        byAdvanced: selectedByAdvanced,
+        byCustomText: selectedByCustomText
+      },
       exports: {
         byFormat,
         byOrg,
         byCategory,
         byLayout,
         byMode,
-        byLanguage
+        byLanguage,
+        byScale,
+        byAdvanced
       },
       audience: {
         byCountry,
         byReferrer
+      },
+      advanced: {
+        totals: advancedTotals,
+        byFormat: advancedByFormat,
+        byOrg: advancedByOrg,
+        byCategory: advancedByCategory,
+        byLayout: advancedByLayout,
+        byMode: advancedByMode,
+        byLanguage: advancedByLanguage,
+        byCustomText: advancedByCustomText
       },
       recent
     },
@@ -198,24 +338,24 @@ async function grouped(env, field, from, to, extraWhere) {
   );
 }
 
+async function groupedExpression(env, expression, from, to, extraWhere, limit) {
+  return all(
+    env,
+    `SELECT ${expression} AS key, COUNT(*) AS count
+     FROM logo_usage_events
+     WHERE event_date BETWEEN ? AND ? AND ${extraWhere}
+     GROUP BY key
+     HAVING key != ''
+     ORDER BY count DESC, key
+     LIMIT ${clampInt(limit || 50, 1, 100)}`,
+    from,
+    to
+  );
+}
+
 async function all(env, sql, ...params) {
   const result = await env.DB.prepare(sql).bind(...params).all();
   return result.results || [];
-}
-
-function authorizeReport(request, env) {
-  const token = String(env.REPORT_TOKEN || "").trim();
-  if (!token) {
-    return { ok: false, status: 503, error: "REPORT_TOKEN is not configured" };
-  }
-  const url = new URL(request.url);
-  const bearer = request.headers.get("authorization") || "";
-  const headerToken = bearer.toLowerCase().startsWith("bearer ") ? bearer.slice(7).trim() : "";
-  const queryToken = String(url.searchParams.get("token") || "").trim();
-  if (headerToken === token || queryToken === token) {
-    return { ok: true };
-  }
-  return { ok: false, status: 401, error: "Unauthorized" };
 }
 
 function corsHeaders(request, env) {
@@ -244,6 +384,15 @@ function json(payload, status, headers) {
   out.set("content-type", "application/json; charset=utf-8");
   out.set("cache-control", "no-store");
   return new Response(JSON.stringify(payload), { status, headers: out });
+}
+
+function html(body, status) {
+  const headers = new Headers();
+  headers.set("content-type", "text/html; charset=utf-8");
+  headers.set("cache-control", "no-store");
+  headers.set("x-robots-tag", "noindex, nofollow");
+  headers.set("referrer-policy", "no-referrer");
+  return new Response(body, { status, headers });
 }
 
 function cleanPath(value) {

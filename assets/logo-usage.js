@@ -135,6 +135,28 @@
     });
   }
 
+  function installDashboardLink() {
+    if (document.getElementById("goe-logo-stats-link")) {
+      return;
+    }
+
+    var style = document.createElement("style");
+    style.textContent =
+      "#goe-logo-stats-link{position:fixed;right:0;bottom:0;width:34px;height:34px;z-index:9998;opacity:0;background:rgba(235,181,101,.84);border-radius:8px 0 0 0;transition:opacity .15s ease;outline:none}" +
+      "#goe-logo-stats-link:hover,#goe-logo-stats-link:focus-visible{opacity:.28}" +
+      "#goe-logo-stats-link:focus-visible{box-shadow:0 0 0 3px rgba(235,181,101,.38)}";
+    document.head.appendChild(style);
+
+    var link = document.createElement("a");
+    link.id = "goe-logo-stats-link";
+    link.href = endpoint + "/dashboard";
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.setAttribute("aria-label", "Statistiken");
+    link.title = "Statistiken";
+    document.body.appendChild(link);
+  }
+
   function init() {
     sendPageviewOnce();
     lastStateKey = JSON.stringify(stateSnapshot());
@@ -145,6 +167,7 @@
     bindExport("exp-jpg", "jpg");
     bindExport("exp-pdf", "pdf");
     bindStateChanges();
+    installDashboardLink();
   }
 
   if (document.readyState === "loading") {
