@@ -48,9 +48,19 @@ verwendet.
 - **Vietnamesische Halb-Paare** (U+1EAB/1EB0/1EC5/1ED7 — Großbuchstaben fehlen
   auch in Titillium) aus der cmap genommen, damit die Groß/Klein-Zuordnung in
   sich konsistent ist. Symbol-Zeichen **µ ƒ π Ω bleiben erhalten**.
-- Variable Font: `OS/2.usWeightClass` 400 → 450 (= fvar-Default).
 - **SIL-OFL-Lizenzfelder** in allen Fonts gefüllt (Copyright, Lizenz, URL,
-  Hersteller, Designer), `OFL.txt` beigelegt.
+  Hersteller, Designer), `OFL.txt` mit voller Titillium-Autorenliste beigelegt.
+
+### Variable Font (CFF2)
+- `OS/2.usWeightClass` 400 → 450 (= fvar-Default).
+- **Gleiches Repertoire wie die Statics:** `! " §` als **echte, interpolierende
+  Blends** ergänzt; das **`&` variiert** jetzt über die `wght`-Achse (vorher in
+  allen Instanzen identisch) — per Instanziierung verifiziert (Flächen
+  280/450/600 = 113 383 / 173 201 / 211 653). `$` nicht-variabel (Klar-Gewicht,
+  da die Titillium-Master dafür nicht punktkompatibel sind), NBSP ergänzt.
+- **STAT-Tabelle** für die Gewichtsachse neu gebaut (Leise/Klar/Laut, Klar
+  elidiert); `.notdef`-Kästchen ergänzt; Default-Instanz-Namen korrigiert
+  (nameID 17 = „Klar", Verweis auf Familien-Default).
 
 Ergebnis fontbakery: **Textschnitte & Icons = 0 FAIL** (eine WARN „unreachable
 glyphs" verbleibt: legacy/feature-bezogene Glyphen, harmlos).
@@ -59,13 +69,14 @@ glyphs" verbleibt: legacy/feature-bezogene Glyphen, harmlos).
 - **Guillemets-Feinabstand:** aktuell nur spiegel-korrigiert, nicht enger
   gestellt. Falls insgesamt zu luftig empfunden, lege ich eine engere Variante
   an (für `‹ ›` und `« »` gemeinsam).
-- **Variable Font, Namens-Konvention:** fontbakery erwartet eine „Regular"-
-  Instanz und Default-Instanz-Namen nach Google-Fonts-Schema; das kollidiert mit
-  der Marken-Benennung Leise/Klar/Laut. Bewusst unverändert gelassen.
+- **Variable Font, „Regular"-Instanz:** fontbakery erwartet (Google-Fonts-
+  Konvention) eine Instanz namens „Regular" am Default. Das kollidiert mit dem
+  bewussten Marken-Schema Leise/Klar/Laut — daher belassen (1 verbleibender
+  FAIL). Die übrigen Variable-Font-Punkte sind behoben.
 - **`fi`/`fl`-Ligaturen** (`liga`): in den Titillium-Uprights nicht vorhanden;
   brauchen eine vollständigere Quelle oder eine Neuzeichnung.
-- **Variable Font auf Glyphenebene** (fehlende Interpunktion, `&`-Interpolation):
-  am saubersten in der Glyphs-Quelle zu lösen; hier nur Metadaten korrigiert.
+- **`$` im Variable Font** ist nicht-variabel (konstantes Klar-Gewicht), weil die
+  Titillium-`$`-Master über den Bereich nicht punktkompatibel sind.
 - **Master-Drift** (CapHeight 685/690/697): Outline-Thema der Quelle, nicht am
   Binary reparierbar.
 

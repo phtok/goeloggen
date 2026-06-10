@@ -24,6 +24,13 @@ from fontfix import (load_uprights, glyph_area, grec, area_of, pick_and_interp,
                      add_cid_glyph, replace_glyph_outline, _charstring)
 from fontTools.ttLib import TTFont
 from fontTools.pens.boundsPen import BoundsPen
+from fontTools.varLib.cff import CFF2CharStringMergePen
+from fontTools.varLib.models import VariationModel
+
+# Variable font: wght axis 280/450/600, no avar -> normalized 280=-1, 450=0, 600=+1.
+# Masters drawn into the merge pen in order [default(Klar), region -1 (Leise), region +1 (Laut)].
+VAR_TARGETS = {280: 87500, 450: 140000, 600: 177400}     # H-area weight targets
+_VMODEL = VariationModel([{}, {"wght": -1.0}, {"wght": 1.0}], axisOrder=["wght"])
 
 INPUT = os.path.join(HERE, "input")
 OUTROOT = os.path.normpath(os.path.join(HERE, "..", "..", "assets", "fonts", "goetheanum"))
@@ -145,10 +152,87 @@ def build_icons():
     print("  Fonts/%s" % os.path.basename(p))
 
 
-def build_variable():
+def _replay(pen, recv):
+    for c, p in recv:
+        getattr(pen, c)(*p) if p else getattr(pen, c)()
+
+
+def _cff2_blend(outl, priv, gsubrs):
+    """Build a CFF2 charstring that interpolates the three master outlines
+    (keys 450/280/600) across the wght axis."""
+    pen = CFF2CharStringMergePen([], "tmp", 3, 0)
+    _replay(pen, outl[450]); pen.restart(1); _replay(pen, outl[280]); pen.restart(2); _replay(pen, outl[600])
+    return pen.getCharString(private=priv, globalSubrs=gsubrs, var_model=_VMODEL, optimize=True)
+
+
+def _cff2_add(ft, uni, cs, adv, name):
+    cff = ft["CFF2"].cff; td = cff[cff.fontNames[0]]
+    cmap = ft.getBestCmap()
+    if uni in cmap:
+        name = cmap[uni]; td.CharStrings[name] = cs           # replace existing
+    else:
+        td.CharStrings.charStringsIndex.append(cs)
+        td.CharStrings.charStrings[name] = len(td.CharStrings.charStringsIndex) - 1
+        td.charset.append(name)
+        if hasattr(td, "FDSelect"): td.FDSelect.append(0)
+        ft.setGlyphOrder(list(td.charset))
+        for t in ft["cmap"].tables: t.cmap[uni] = name
+    ft["hmtx"].metrics[name] = (adv, 0)
+    ft["HVAR"].table.AdvWidthMap.mapping[name] = 0xFFFFFFFF    # constant advance for added glyph
+    return name
+
+
+def complete_variable(ft, M, H):
+    """Give the variable font the same glyph repertoire as the statics: import
+    ! " § as interpolating blends, rebuild the ampersand so it varies, add $
+    (non-varying: its Titillium masters are not point-compatible across the
+    range) and NBSP."""
+    cff = ft["CFF2"].cff; td = cff[cff.fontNames[0]]
+    priv = td.FDArray[0].Private; gsubrs = cff.GlobalSubrs
+
+    def outl(uni, w):
+        r, a, _ = pick_and_interp(M, H, uni, VAR_TARGETS[w]); return r, a
+
+    for uni, nm in [(0x26, None), (0x21, "uni0021"), (0x22, "uni0022"), (0xA7, "uni00A7")]:
+        ow = {w: outl(uni, w)[0] for w in (280, 450, 600)}
+        _cff2_add(ft, uni, _cff2_blend(ow, priv, gsubrs), outl(uni, 450)[1], nm)
+    dr, da = outl(0x24, 450)                                   # dollar: non-varying (Klar weight)
+    _cff2_add(ft, 0x24, _cff2_blend({280: dr, 450: dr, 600: dr}, priv, gsubrs), da, "dollar")
+    spn = ft.getBestCmap()[0x20]                               # NBSP: reuse the space charstring
+    _cff2_add(ft, 0xA0, td.CharStrings[spn], ft["hmtx"][spn][0], "uni00A0")
+
+
+def _cff2_notdef(ft):
+    cff = ft["CFF2"].cff; td = cff[cff.fontNames[0]]
+    box = [("moveTo", ((60, 0),)), ("lineTo", ((440, 0),)), ("lineTo", ((440, 700),)),
+           ("lineTo", ((60, 700),)), ("closePath", ()),
+           ("moveTo", ((120, 60),)), ("lineTo", ((120, 640),)), ("lineTo", ((380, 640),)),
+           ("lineTo", ((380, 60),)), ("closePath", ())]
+    td.CharStrings[".notdef"] = _cff2_blend({280: box, 450: box, 600: box},
+                                            td.FDArray[0].Private, cff.GlobalSubrs)
+    ft["hmtx"].metrics[".notdef"] = (500, 60)
+
+
+def build_variable(M, H):
+    from fontTools.otlLib.builder import buildStatTable
     p = glob.glob(os.path.join(INPUT, "Goetheanum-Variabel-*.otf"))[0]
     ft = TTFont(p)
+    complete_variable(ft, M, H)
+    _cff2_notdef(ft)
+    remove_case_orphans(ft)
     fix_meta(ft, "GoetheanumVariabel", "Goetheanum Variabel", weight_class=450)
+    # default (450) instance must carry the family default style/PS names
+    ft["name"].setName("Klar", 17, 3, 1, 0x409)
+    for inst in ft["fvar"].instances:
+        if abs(inst.coordinates.get("wght", 0) - 450) < 0.5:
+            inst.subfamilyNameID = 17
+            inst.postscriptNameID = 6
+    # proper STAT table for the weight axis (Klar elided as default)
+    buildStatTable(ft, [{"tag": "wght", "name": "Weight", "values": [
+        {"value": 280, "name": "Leise"},
+        {"value": 450, "name": "Klar", "flags": 0x2},
+        {"value": 600, "name": "Laut"}]}])
+    ft["name"].names = [r for r in ft["name"].names if r.platformID != 1]  # STAT re-adds Mac names
     ym, yn = gbbox(ft); set_win(ft, int(round(ym)), int(round(-yn)))
     ft.save(os.path.join(OUTROOT, "Variable", os.path.basename(p)))
     print("  Variable/%s" % os.path.basename(p))
@@ -171,7 +255,7 @@ def main():
     print("Building corrected Goetheanum Schriften ->", OUTROOT)
     build_statics(M, H)
     build_icons()
-    build_variable()
+    build_variable(M, H)
     build_webfonts()
     print("done.")
 
