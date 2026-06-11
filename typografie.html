@@ -25,17 +25,17 @@
   nav.top a:hover{color:var(--gold-deep)}
   .hero{padding:58px 0 8px}
   .kick{color:var(--gold-deep);font-size:14px;margin-bottom:14px}
-  h1{font-family:"G Laut";font-weight:400;font-size:clamp(36px,6vw,60px);line-height:1.1}
-  .lede{font-family:"G Leise";font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:560px;margin-top:14px}
+  h1{font-family:"G Klar";font-weight:400;font-size:clamp(36px,6vw,60px);line-height:1.1}
+  .lede{font-family:"G Klar";font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:560px;margin-top:14px}
   section{padding:42px 0;border-top:1px solid var(--line-soft)}
   .sec{color:var(--gold-deep);font-size:13px}
-  h2{font-family:"G Laut";font-weight:400;font-size:clamp(22px,3vw,30px);margin:4px 0 14px}
+  h2{font-family:"G Klar";font-weight:400;font-size:clamp(22px,3vw,30px);margin:4px 0 14px}
   h3{font-family:"G Laut";font-weight:400;font-size:17px;margin:22px 0 6px}
-  p{max-width:48ch}
+  p{max-width:46ch}
   p.dim{color:var(--muted)}
   .leise{font-family:"G Leise"}.laut{font-family:"G Laut"}
   .note{display:flex;gap:10px;align-items:baseline;border-left:2px solid var(--gold);background:var(--soft);
-        padding:10px 14px;border-radius:0 10px 10px 0;margin:14px 0;font-size:14px;color:var(--muted);max-width:48ch}
+        padding:10px 14px;border-radius:0 10px 10px 0;margin:14px 0;font-size:14px;color:var(--muted);max-width:46ch}
   .note .rid{font-size:11px;color:var(--gold-deep);white-space:nowrap}
   .ex{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;max-width:640px}
   @media(max-width:560px){.ex{grid-template-columns:1fr}}
@@ -96,8 +96,8 @@
     <p>Lesbarkeit ist ein Gleichgewicht aus vier Ecken: Schriftwahl, Zeilenlänge, Zeilenabstand und Umraum. Keine Ecke lässt sich allein optimieren – längere Zeilen verlangen mehr Durchschuss, eine offene Schrift wie die Goetheanum Klar verlangt mehr Umraum. Jede folgende Regel zieht an einer Ecke; gut ist der Satz erst, wenn alle vier in Balance stehen.</p>
     <div class="note"><span class="rid">G09</span>prinzip. Ändert sich eine Ecke, müssen die anderen nachgezogen werden. Lesekomfort ist die Summe, nicht ein Einzelwert.</div>
     <h3>Zeilenlänge</h3>
-    <p>Angenehm sind 45–75 Zeichen je Zeile, ideal etwa 67 – als Faustregel: neun deutsche Wörter. Diese Spalte misst 48ch und hält damit rund 67 Zeichen (zähl nach). Der Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit; Fliesstext 1.4–1.6.</p>
-    <div class="note"><span class="rid">G10</span>grenze. Das Mass ist hart: <span class="mono">min(48ch, 100%)</span> – die Einheit ch misst die ‹0›, Prosa läuft schmaler: 48ch ergeben in dieser Schrift ≈ 67 echte Zeichen. Ohne Grenze laufen breite Fenster auf 100 Zeichen davon.</div>
+    <p>Angenehm sind 45–75 Zeichen je Zeile, ideal etwa 67 – als Faustregel: neun deutsche Wörter. Diese Spalte misst 46ch – das sind in dieser schmalen Schrift rund 65 Zeichen (‹ch› = Breite der Ziffer 0, schriftrelativ). Der Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit; Fliesstext 1.4–1.6.</p>
+    <div class="note"><span class="rid">G10</span>grenze. Das Mass ist hart: <span class="mono">min(46ch, 100%)</span> – die Einheit ch misst die ‹0›, Prosa läuft schmaler: 46ch ergeben in dieser schmalen Schrift ≈ 65 echte Zeichen. Ohne Grenze laufen breite Fenster auf 100 Zeichen davon.</div>
     <p>Normalfall ist linksbündiger Flattersatz. Blocksatz nur mit Silbentrennung und Kontrolle. Keine einzelne Zeile eines Absatzes allein auf einer Seite.</p>
   </section>
 
@@ -121,19 +121,45 @@
     </div>
 
     <h3>Auslassung &amp; feste Spatien</h3>
-    <p>Auslassung ist <span class="laut">ein</span> Zeichen: … – nie drei Punkte. In ‹z.&#8239;B.›, vor&nbsp;%, vor Einheiten und im Datum stehen schmale, geschützte Leerzeichen: Sie atmen und brechen nie um.</p>
+    <p>Auslassung ist <span class="laut">ein</span> Zeichen: … – nie drei Punkte. In ‹z. B.›, vor&nbsp;%, vor Einheiten und im Datum stehen schmale, geschützte Leerzeichen: Sie atmen und brechen nie um.</p>
 
     <div class="ex">
       <div class="no"><div class="t">so nicht</div>Das kostet 10kg Geduld, z.B. morgens ... oder nie.</div>
-      <div class="yes"><div class="t">so</div>Das kostet 10&#8239;kg Geduld, z.&#8239;B. morgens&nbsp;… oder nie.</div>
+      <div class="yes"><div class="t">so</div>Das kostet 10 kg Geduld, z. B. morgens … oder nie.</div>
     </div>
 
     <h3>Zahlen, Datum, Zeit</h3>
-    <p>Vierstellig kompakt: 1318. Ab fünf Stellen Dreiergruppen mit schmalem geschütztem Leerzeichen: 10&#8239;000 · 1&#8239;000&#8239;000 (Bundeskanzlei-Norm, wie bei der Nationalbank; der Kaufmanns-Apostroph <code>10'000</code> ist nicht Hausnorm). Datum im Lesetext: 11. Juni 2026. Uhrzeit: 9.30 Uhr – keine führende Null.</p>
+    <p>Vierstellig kompakt: 1318. Ab fünf Stellen Dreiergruppen mit schmalem geschütztem Leerzeichen: 10 000 · 1 000 000 (Bundeskanzlei-Norm, wie bei der Nationalbank; der Kaufmanns-Apostroph <code>10'000</code> ist nicht Hausnorm). Datum im Lesetext: 11. Juni 2026. Uhrzeit: 9.30 Uhr – keine führende Null.</p>
     <div class="ex">
       <div class="no"><div class="t">so nicht</div>1.000.000 Besucher am 09:30 Uhr-Termin, Mike's Liste.</div>
       <div class="yes"><div class="t">so</div>1’000’000 Besucher am 9.30-Uhr-Termin, Mikes Liste (sonst: Mike’s → Mikes).</div>
     </div>
+    <h3>Strichlängen mit Namen</h3>
+    <table class="spick" style="max-width:560px">
+      <thead><tr><th>Name</th><th>Zeichen</th><th>wofür</th></tr></thead>
+      <tbody>
+        <tr><td>Bindestrich (Viertelgeviert)</td><td class="r">-</td><td>Schwarz-Weiss, Trennung</td></tr>
+        <tr><td>Halbgeviert (Gedanken-/Bis-Strich)</td><td class="r">–</td><td>Einschub – so · 9–17 Uhr</td></tr>
+        <tr><td>Geviertstrich</td><td class="r">—</td><td>im System <span class="leise">nicht</span> verwendet</td></tr>
+        <tr><td>Minus</td><td class="r">−</td><td>Zahlen: −5 °C</td></tr>
+        <tr><td>Geschützter Bindestrich</td><td class="r">‑</td><td>hält Wort-Bindestriche</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Abstände mit Namen</h3>
+    <p>Von breit nach schmal. Hausnorm vor Einheiten, %, in ‹z. B.› und in Zahlen ist das <b style="font-weight:400">schmale geschützte Leerzeichen</b> (U+202F, Achtelgeviert-Breite, bricht nie um) – nicht das volle geschützte (NBSP), das wirkt weitläufig.</p>
+    <table class="spick" style="max-width:560px">
+      <thead><tr><th>Name</th><th>Breite</th><th>Code</th></tr></thead>
+      <tbody>
+        <tr><td>Geviert</td><td>1/1 em</td><td class="r">U+2003</td></tr>
+        <tr><td>Halbgeviert</td><td>1/2 em</td><td class="r">U+2002</td></tr>
+        <tr><td>Viertelgeviert</td><td>1/4 em</td><td class="r">U+2005</td></tr>
+        <tr><td>Achtelgeviert (Schmalspatium)</td><td>1/8 em</td><td class="r">U+2009</td></tr>
+        <tr><td>geschützt, voll (NBSP)</td><td>Wortabstand</td><td class="r">U+00A0</td></tr>
+        <tr><td><b style="font-weight:400">geschützt, schmal · Hausnorm</b></td><td>≈ 1/8 em</td><td class="r">U+202F</td></tr>
+      </tbody>
+    </table>
+
     <div class="note"><span class="rid">G23</span>schrift. Die Goetheanum Schrift führt keine fi/fl-Ligaturen – keine erzwingen. Versalien per Laufweite sperren, nie mit Leertasten. Keine Kunst-Kapitälchen.</div>
   </section>
 
@@ -148,8 +174,8 @@
         <tr><td>Apostroph</td><td class="f">Mike's</td><td class="r">Mike’s</td></tr>
         <tr><td>Gedankenstrich</td><td class="f">Ja - sofort</td><td class="r">Ja – sofort</td></tr>
         <tr><td>Spanne</td><td class="f">10 - 12 Uhr</td><td class="r">10–12 Uhr</td></tr>
-        <tr><td>Abkürzung</td><td class="f">z.B.</td><td class="r">z.&#8239;B.</td></tr>
-        <tr><td>Einheit</td><td class="f">10kg · 10 %</td><td class="r">10&#8239;kg · 10&#8239;%</td></tr>
+        <tr><td>Abkürzung</td><td class="f">z.B.</td><td class="r">z. B.</td></tr>
+        <tr><td>Einheit</td><td class="f">10kg · 10 %</td><td class="r">10 kg · 10&#8239;%</td></tr>
         <tr><td>Tausender</td><td class="f">1.000.000</td><td class="r">1’000’000</td></tr>
         <tr><td>Auslassung</td><td class="f">...</td><td class="r">…</td></tr>
         <tr><td>mal</td><td class="f">4x5</td><td class="r">4&#8239;×&#8239;5</td></tr>

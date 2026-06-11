@@ -44,12 +44,12 @@
 - id: G21-gruppen-a
   regel: Tausendergruppen ab fünf Stellen mit schmalem geschütztem Leerzeichen (Bundeskanzlei/SNB)
   erkennen: '(\d)[’''.](\d{3})(?=[’''.]\d{3})'
-  korrektur: '$1 $2'
+  korrektur: '$1 $2'
   schwere: fehler
 - id: G21-gruppen-b
   regel: letzte Tausendergruppe bei fünf und mehr Stellen
   erkennen: '(\d{2,3})[’''.](\d{3})\b(?!\d)'
-  korrektur: '$1 $2'
+  korrektur: '$1 $2'
   schwere: fehler
 - id: G21-viersteller
   regel: vierstellige Zahlen kompakt, ohne Gruppierung (1318)
@@ -64,7 +64,7 @@
 - id: T01-doppelspatium
   regel: Nie zwei Leerzeichen
   erkennen: '(\S)  +(\S)'
-  korrektur: '$1 $2'
+  korrektur: '$1 $2'
   schwere: fehler
 - id: G18-minus
   regel: Echtes Minus − bei Zahlen, kein Bindestrich

@@ -108,8 +108,8 @@
   "mass": {
     "zeilenlaenge": {
       "$type": "dimension",
-      "$value": "48ch",
-      "$description": "Ziel ~67 Zeichen je Zeile (45–75 zulässig). Harte Grenze: min(Mass, 100%). Achtung: ch misst die ‹0›; in der Goetheanum Schrift entsprechen 48ch ≈ 67 Prosazeichen (Ø Zeichen = 0.72 × ‹0›).",
+      "$value": "46ch",
+      "$description": "Ziel ~65 Zeichen je Zeile (45–75 zulässig). CSS min(46ch,100%). Hinweis: ch = Breite der Ziffer 0 (schriftrelativ); die Goetheanum Schrift ist schmal, daher ≈ 65 Prosazeichen bei 46ch – empirisch bestimmt.",
       "$extensions": {
         "com.goetheanum.regel": "G10"
       }
@@ -137,10 +137,10 @@
     "G12": "Flattersatz linksbündig ist der Normalfall. Blocksatz nur mit Trennung und Kontrolle.",
     "G16": "Anführung: einfache Guillemets nach aussen – ‹…› für alles, auch die zweite Ebene. Keine \"...\", keine „…\".",
     "G17": "Keine echten Kapitälchen in der Schrift: Versal-Abkürzungen bleiben Versal, ohne Kunst-Kapitälchen.",
-    "G18": "Striche: Gedankenstrich = Halbgeviert mit Leerschritten (–), bis-Strich = Halbgeviert ohne (9–17 Uhr), Bindestrich kurz (-), Minus echt (−).",
+    "G18": "Striche mit Namen: Bindestrich/Viertelgeviert (-), Halbgeviert/Gedanken- und Bis-Strich (–, 1/2 em), Geviertstrich (—, im System ungenutzt), Minus (−). Gedankenstrich mit Leerschritten, Bis-Strich ohne.",
     "G19": "Auslassung: ein Zeichen ‹…›, nie drei Punkte.",
-    "G20": "Geschützte Leerzeichen: schmal & fest in ‹z. B.›, vor %, vor Einheiten, im Datum. Klebt, bricht nie um.",
-    "G21": "Zahlen: vierstellig kompakt (1318); ab fünf Stellen Dreiergruppen mit schmalem geschütztem Leerzeichen (10 000 · 1 000 000) – Bundeskanzlei-Norm, wie in SNB-Publikationen. Der Apostroph (10'000) ist Kaufmanns-/Archiv-Usus, nicht Hausnorm.",
+    "G20": "Geschützte Leerzeichen schmal & fest: das schmale geschützte Leerzeichen (U+202F, Achtelgeviert-Breite) vor Einheiten, %, in ‹z. B.› und in Zahlen – nicht das volle NBSP (wirkt weitläufig).",
+    "G21": "Zahlen: vierstellig kompakt (1318); ab fünf Stellen Dreiergruppen mit schmalem geschütztem Leerzeichen U+202F (10 000 · 1 000 000) – Bundeskanzlei-Norm, wie in SNB-Publikationen. Der Apostroph (10'000) ist Kaufmanns-/Archiv-Usus, nicht Hausnorm.",
     "G22": "Datum & Uhrzeit: 11. Juni 2026 · 9.30 Uhr. Keine führenden Nullen im Lesetext.",
     "G23": "Die Schrift führt keine fi/fl-Ligaturen – keine erzwingen. Versalien per Laufweite sperren, nie mit Leertasten.",
     "G24": "Sprachauszeichnung (de-CH) sitzt im Quelltext; sie steuert Trennung, Spatien, Zeichenwahl.",
