@@ -34,8 +34,8 @@ _VMODEL = VariationModel([{}, {"wght": -1.0}, {"wght": 1.0}], axisOrder=["wght"]
 
 INPUT = os.path.join(HERE, "input")
 OUTROOT = os.path.normpath(os.path.join(HERE, "..", "..", "assets", "fonts", "goetheanum"))
-VERSION = "2.2.1"                       # Q-fix: bounded extrapolation for single-sided glyph groups
-FREV = 2.2                              # head.fontRevision (Major.Minor; Patch im Versionsstring)
+VERSION = "2.3.0"                       # new weight anchors: Leise 265 / Klar 440 / Laut 680
+FREV = 2.3                              # head.fontRevision (Major.Minor; Patch im Versionsstring)
 SCHEMES = ["Leise", "Klar", "Laut"]
 IMPORTS = [("exclam", 0x21), ("quotedbl", 0x22), ("dollar", 0x24), ("section", 0xA7)]
 
@@ -176,7 +176,7 @@ def build_statics(M, H):
         office_names(ft, *OFFICE[sch][:2], sch, style=OFFICE[sch][2])
         fonts[sch] = ft
     from fontTools.otlLib.builder import buildStatTable
-    wghtval = {"Leise": 280, "Klar": 450, "Laut": 600}
+    wghtval = CUT_WEIGHTS
     wa = int(round(max(gbbox(f)[0] for f in fonts.values())))
     wd = int(round(-min(gbbox(f)[1] for f in fonts.values())))
     for sch, ft in fonts.items():
@@ -211,9 +211,10 @@ def build_icons():
 # placed on the wght axis by its H-area (fitted to the Leise/Klar/Laut anchors);
 # Flüstern (thin) and Schreien (black) extend the range past Leise/Laut.
 WIDE_MASTERS = [("Thin", 63006, 190), ("Light", 103435, 335), ("Regular", 126847, 420),
-                ("Klar", 140000, 450), ("Semibold", 177393, 600), ("Bold", 212760, 725)]
-WIDE_INSTANCES = [("Flüstern", 190), ("Leise", 280), ("Klar", 450), ("Laut", 600), ("Schreien", 725)]
-VAR_DEFAULT = 450
+                ("Klar", 135616, 440), ("Semibold", 177393, 600), ("Bold", 212760, 725)]
+WIDE_INSTANCES = [("Flüstern", 190), ("Leise", 265), ("Klar", 440), ("Laut", 680), ("Schreien", 725)]
+CUT_WEIGHTS = {"Leise": 265, "Klar": 440, "Laut": 680}     # chosen via tester (proposal B)
+VAR_DEFAULT = 440
 
 
 def _compat_group(M, H, uni):
@@ -263,6 +264,8 @@ def build_variable(M, H):
             gn_group.setdefault(gn, (cp, ns))
 
     def set_glyph(ft, gn, rec, adv):
+        if adv > 3000 or adv < 0:                              # broken Titillium 'fraction' advance
+            adv = 600
         td = ft["CFF "].cff[ft["CFF "].cff.fontNames[0]]
         td.CharStrings[gn] = _charstring(ft, [(c, p) for c, p in rec], adv)
         ft["hmtx"].metrics[gn] = (int(round(adv)), ft["hmtx"][gn][1])
@@ -305,7 +308,7 @@ def build_variable(M, H):
         ds.addInstanceDescriptor(familyName="Goetheanum Variabel", styleName=nm, location={"Weight": w})
     ft, _, _ = varLib.build(ds)
 
-    fix_meta(ft, "GoetheanumVariabel", "Goetheanum Variabel", weight_class=450)
+    fix_meta(ft, "GoetheanumVariabel", "Goetheanum Variabel", weight_class=440)
     nm = ft["name"]
     nm.setName("Goetheanum Variabel", 1, 3, 1, 0x409); nm.setName("Regular", 2, 3, 1, 0x409)
     nm.setName("Goetheanum Variabel", 16, 3, 1, 0x409); nm.setName("Klar", 17, 3, 1, 0x409)
@@ -325,15 +328,56 @@ def build_variable(M, H):
             inst.postscriptNameID = nextid; nextid += 1
     buildStatTable(ft, [{"tag": "wght", "name": "Weight", "values": [
         {"value": 190, "name": "Flüstern"},
-        {"value": 280, "name": "Leise"},
-        {"value": 450, "name": "Klar", "flags": 0x2},
-        {"value": 600, "name": "Laut"},
+        {"value": 265, "name": "Leise"},
+        {"value": 440, "name": "Klar", "flags": 0x2},
+        {"value": 680, "name": "Laut"},
         {"value": 725, "name": "Schreien"}]}])
     ft["name"].names = [r for r in ft["name"].names if r.platformID != 1]
     ym, yn = gbbox(ft); set_win(ft, int(round(ym)), int(round(-yn)))
     out = "Goetheanum-Variabel-v%s.otf" % VERSION
     ft.save(os.path.join(OUTROOT, "Variable", out))
     print("  Variable/%s (Flüstern–Schreien)" % out)
+
+
+def reweight_statics():
+    """Re-anchor the installable cuts at the chosen weights (CUT_WEIGHTS) by
+    instancing the variable: every varying glyph gets its outline/advance from
+    the instance; glyphs the variable holds constant keep the cut's own design."""
+    from fontTools.varLib.instancer import instantiateVariableFont
+    from fontTools.pens.recordingPen import RecordingPen
+    vfp = os.path.join(OUTROOT, "Variable", "Goetheanum-Variabel-v%s.otf" % VERSION)
+
+    def inst(w):
+        f = TTFont(vfp); instantiateVariableFont(f, {"wght": w}, inplace=True); return f
+
+    def rec(f, gn):
+        p = RecordingPen(); f.getGlyphSet()[gn].draw(p); return p.value
+
+    lo, hi = inst(WIDE_MASTERS[0][2]), inst(WIDE_MASTERS[-1][2])
+    locm = lo.getBestCmap()
+    constant = {cp for cp, gn in locm.items() if rec(lo, gn) == rec(hi, hi.getBestCmap()[cp])}
+    done = {}
+    for sch, w in CUT_WEIGHTS.items():
+        ft = TTFont(os.path.join(OUTROOT, "Fonts", static_out(sch)))
+        iv = inst(w); icmap = iv.getBestCmap()
+        td = ft["CFF "].cff[ft["CFF "].cff.fontNames[0]]
+        for cp, gn in ft.getBestCmap().items():
+            gi = icmap.get(cp)
+            if gi is None or cp in constant:
+                continue
+            r = rec(iv, gi)
+            if not r:
+                continue
+            td.CharStrings[gn] = _charstring(ft, r, iv["hmtx"][gi][0])
+            ft["hmtx"].metrics[gn] = (iv["hmtx"][gi][0], ft["hmtx"][gn][1])
+        ft["OS/2"].usWeightClass = w
+        done[sch] = ft
+    wa = int(round(max(gbbox(f)[0] for f in done.values())))   # family-wide win metrics
+    wd = int(round(-min(gbbox(f)[1] for f in done.values())))
+    for sch, ft in done.items():
+        set_win(ft, wa, wd)
+        ft.save(os.path.join(OUTROOT, "Fonts", static_out(sch)))
+        print("  Fonts/%s -> wght %d" % (static_out(sch), CUT_WEIGHTS[sch]))
 
 
 def build_webfonts():
@@ -494,6 +538,7 @@ def main():
     build_statics(M, H)
     build_icons()
     build_variable(M, H)
+    reweight_statics()
     build_webfonts()
     build_icon_exports()
     build_zip()

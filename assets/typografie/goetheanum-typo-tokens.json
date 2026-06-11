@@ -4,65 +4,127 @@
   "$extensions": {
     "com.goetheanum.meta": {
       "system": "Goetheanum Schriften",
-      "fassung": 1,
+      "fassung": 2,
       "stand": "2026-06",
       "basiert_auf": "RSA Typografisches System B, Fassung 13 (Architektur)",
       "lizenz": "Goetheanum Schrift (SIL OFL, abgeleitet aus Titillium)",
       "farbquelle": "Goetheanum-Gold als einziger Akzent-Buntton der Schriftseite.",
       "format": "DTCG 2025.10",
-      "hinweis": "Werte spiegeln das gesetzte Referenzdokument (typografie.html). $extensions tragen die Hausregeln, die kein Standard-Token-Typ abbildet."
+      "hinweis": "Gewichtsanker per Tester bestimmt (Vorschlag B): Leise 265, Klar 440, Laut 680. Werte spiegeln das gesetzte Referenzdokument (typografie.html). $extensions tragen die Hausregeln, die kein Standard-Token-Typ abbildet."
     }
   },
-
   "schrift": {
     "$description": "Eine Familie, drei Stimmen: Klar trägt alles, Laut betont, Leise ist der stille Kontrapunkt. Die Extreme Flüstern/Schreien existieren nur im Variable Font und sind der Grafik vorbehalten.",
     "familie": {
       "basis": {
         "$type": "fontFamily",
-        "$value": ["Goetheanum Schrift", "Helvetica Neue", "Arial", "sans-serif"],
+        "$value": [
+          "Goetheanum Schrift",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif"
+        ],
         "$description": "Trägt Headlines, Fliesstext, Tabellen, Adressen, Oberflächen. Office: Klar=Regular, Laut=Fett (Cmd+B), Leise=Kursiv (Cmd+I)."
       },
       "variabel": {
         "$type": "fontFamily",
-        "$value": ["Goetheanum Variabel"],
+        "$value": [
+          "Goetheanum Variabel"
+        ],
         "$description": "Gewichtsachse wght 190–725. Nur für Grafik/Websysteme; die Extreme sind kein Standardmittel."
       },
       "icons": {
         "$type": "fontFamily",
-        "$value": ["Goetheanum Icons"],
+        "$value": [
+          "Goetheanum Icons"
+        ],
         "$description": "Piktogramme per Tastatur-Belegung (Beipackzettel S. 2–4) oder als Einzel-SVG/PNG/PDF."
       }
     },
     "gewicht": {
-      "leise":  { "$type": "fontWeight", "$value": 280, "$description": "Leiser Kontrapunkt, Bildlegenden, Zitate. Nicht für Fliesstext-Mengen." },
-      "klar":   { "$type": "fontWeight", "$value": 450, "$description": "Der Fliesstext. Alles, was gelesen wird." },
-      "laut":   { "$type": "fontWeight", "$value": 600, "$description": "Betonung, Titel, Signaletik. Das Fett der Familie." },
-      "fluestern": { "$type": "fontWeight", "$value": 190, "$description": "NUR Variable Font, nur Grafik. Nie als Lesetext." },
-      "schreien":  { "$type": "fontWeight", "$value": 725, "$description": "NUR Variable Font, nur Grafik. Nie als Standard-Fett." }
+      "leise": {
+        "$type": "fontWeight",
+        "$value": 265,
+        "$description": "Leiser Kontrapunkt, Bildlegenden, Zitate. Nicht für Fliesstext-Mengen."
+      },
+      "klar": {
+        "$type": "fontWeight",
+        "$value": 440,
+        "$description": "Der Fliesstext. Alles, was gelesen wird."
+      },
+      "laut": {
+        "$type": "fontWeight",
+        "$value": 680,
+        "$description": "Betonung, Titel, Signaletik. Das Fett der Familie."
+      },
+      "fluestern": {
+        "$type": "fontWeight",
+        "$value": 190,
+        "$description": "NUR Variable Font, nur Grafik. Nie als Lesetext."
+      },
+      "schreien": {
+        "$type": "fontWeight",
+        "$value": 725,
+        "$description": "NUR Variable Font, nur Grafik. Nie als Standard-Fett."
+      }
     }
   },
-
   "farbe": {
-    "tinte":      { "$type": "color", "$value": "#23272b", "$description": "Lesetext." },
-    "tinte-leise":{ "$type": "color", "$value": "#737a80", "$description": "Meta, Legenden, Nebenstimmen." },
-    "gold":       { "$type": "color", "$value": "#d7ab68", "$description": "Akzent, Interaktion. Sparsam." },
-    "gold-tief":  { "$type": "color", "$value": "#a07a33", "$description": "Akzent auf hellem Grund (lesbar)." },
-    "papier":     { "$type": "color", "$value": "#ffffff" },
-    "flaeche":    { "$type": "color", "$value": "#faf8f4", "$description": "Zarte Karten-/Beispielflächen." },
-    "linie":      { "$type": "color", "$value": "#14181c1a", "$description": "Haarlinien, 10% Tinte." }
+    "tinte": {
+      "$type": "color",
+      "$value": "#23272b",
+      "$description": "Lesetext."
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#737a80",
+      "$description": "Meta, Legenden, Nebenstimmen."
+    },
+    "gold": {
+      "$type": "color",
+      "$value": "#d7ab68",
+      "$description": "Akzent, Interaktion. Sparsam."
+    },
+    "gold-tief": {
+      "$type": "color",
+      "$value": "#a07a33",
+      "$description": "Akzent auf hellem Grund (lesbar)."
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#ffffff"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#faf8f4",
+      "$description": "Zarte Karten-/Beispielflächen."
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#14181c1a",
+      "$description": "Haarlinien, 10% Tinte."
+    }
   },
-
   "mass": {
     "zeilenlaenge": {
       "$type": "dimension",
       "$value": "62ch",
       "$description": "Ziel ~66 Zeichen je Zeile (45–75 zulässig). Harte Grenze: min(Mass, 100%).",
-      "$extensions": { "com.goetheanum.regel": "G10" }
+      "$extensions": {
+        "com.goetheanum.regel": "G10"
+      }
     },
-    "zeilenabstand-text":  { "$type": "number", "$value": 1.5,  "$description": "Fliesstext." },
-    "zeilenabstand-titel": { "$type": "number", "$value": 1.1,  "$description": "Titelzeilen." }
+    "zeilenabstand-text": {
+      "$type": "number",
+      "$value": 1.5,
+      "$description": "Fliesstext."
+    },
+    "zeilenabstand-titel": {
+      "$type": "number",
+      "$value": 1.1,
+      "$description": "Titelzeilen."
+    }
   },
-
   "$regeln": {
     "$description": "Hausregeln mit IDs (G…), prüfbar via typo-regeln.yaml. Ebenen: anwendung (Lesetext) streng, meta (Marker, Labels, Tabellenköpfe) mit benanntem Spielraum.",
     "G01": "Einfachauszeichnung: Jede Abweichung vom Fliesstext ändert genau EIN Merkmal — Gewicht, Grösse, Farbe oder Einzug. Nie zwei zugleich. Raum und Zeilenabstand zählen nicht als Merkmal.",

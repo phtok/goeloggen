@@ -6,7 +6,7 @@
 <title>Goetheanum Schriften · Gewichts-Tester</title>
 <meta name="robots" content="noindex" />
 <style>
-  @font-face{font-family:"GV";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.2.1.woff2") format("woff2");font-weight:150 725;font-display:swap}
+  @font-face{font-family:"GV";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.3.0.woff2") format("woff2");font-weight:150 725;font-display:swap}
   :root{--ink:#23272b;--muted:#737a80;--line:rgba(20,24,28,.12);--gold:#d7ab68;--gold-deep:#a07a33;--soft:#faf8f4;--ok:#3f8f5f;--warn:#c2873a}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:"GV","Helvetica Neue",Arial,sans-serif;font-variation-settings:"wght" 450;color:var(--ink);background:#fff;line-height:1.5;-webkit-font-smoothing:antialiased}
@@ -60,9 +60,9 @@
 
   <div class="presets">
     <span>Vorschläge:</span>
-    <button data-p="280,450,600">heute</button>
+    <button data-p="280,450,600">alt (280/450/600)</button>
     <button data-p="280,450,690">A konservativ</button>
-    <button data-p="265,440,680">B ausgewogen</button>
+    <button data-p="265,440,680" class="on">B ausgewogen · Standard</button>
     <button data-p="250,420,690">C leichter</button>
     <button data-p="230,450,710">D gespreizt</button>
   </div>
@@ -84,19 +84,19 @@
 
     <div class="ctrls">
       <div class="ctrl">
-        <div class="role"><b>Leise</b> · leise Auszeichnung <span class="v" id="vLeise">280</span></div>
-        <input type="range" id="sLeise" min="150" max="450" value="280" step="1">
-        <div class="def">Default 280 · Achse ab 190</div>
+        <div class="role"><b>Leise</b> · leise Auszeichnung <span class="v" id="vLeise">265</span></div>
+        <input type="range" id="sLeise" min="150" max="450" value="265" step="1">
+        <div class="def">Standard 265 · Achse ab 190</div>
       </div>
       <div class="ctrl">
-        <div class="role"><b>Klar</b> · Regular / Fließtext <span class="v" id="vKlar">450</span></div>
-        <input type="range" id="sKlar" min="330" max="560" value="450" step="1">
-        <div class="def">Default 450</div>
+        <div class="role"><b>Klar</b> · Regular / Fließtext <span class="v" id="vKlar">440</span></div>
+        <input type="range" id="sKlar" min="330" max="560" value="440" step="1">
+        <div class="def">Standard 440</div>
       </div>
       <div class="ctrl">
-        <div class="role"><b>Laut</b> · Fett / Titel <span class="v" id="vLaut">600</span></div>
-        <input type="range" id="sLaut" min="500" max="725" value="600" step="1">
-        <div class="def">Default 600 · Achse bis 725</div>
+        <div class="role"><b>Laut</b> · Fett / Titel <span class="v" id="vLaut">680</span></div>
+        <input type="range" id="sLaut" min="500" max="725" value="680" step="1">
+        <div class="def">Standard 680 · Achse bis 725</div>
       </div>
     </div>
 
@@ -116,7 +116,7 @@
 
 <script>
   // wght -> geschätzte Stammbreite (Stützpunkte aus Messungen der Schrift)
-  var PTS=[[190,36],[280,51],[450,85],[600,112],[725,138]];
+  var PTS=[[190,36],[265,50],[440,82],[600,114],[725,138]];
   function stem(w){
     if(w<=PTS[0][0])return PTS[0][1];
     for(var i=1;i<PTS.length;i++){if(w<=PTS[i][0]){var a=PTS[i-1],b=PTS[i];return a[1]+(b[1]-a[1])*(w-a[0])/(b[0]-a[0]);}}
