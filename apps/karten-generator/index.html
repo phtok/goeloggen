@@ -867,18 +867,57 @@
       applyPreviewZoom();
     }
 
-    function exportSvgString(includeBleed) {
+    function exportSvgString(includeBleed, fontCss = "") {
       const pageWidth = includeBleed ? 303 : 297;
       const pageHeight = includeBleed ? 216 : 210;
       const offset = includeBleed ? 3 : 0;
       return `
 <svg xmlns="http://www.w3.org/2000/svg" width="${pageWidth}mm" height="${pageHeight}mm" viewBox="0 0 ${pageWidth} ${pageHeight}">
+  ${fontCss}
   <rect width="${pageWidth}" height="${pageHeight}" fill="${COLORS.paper}" />
   <g transform="translate(${offset} ${offset})">
     ${sceneMarkup()}
   </g>
 </svg>`.trim();
     }
+
+    // The map labels use the Goetheanum title fonts. A bare font-family reference
+    // does not survive once the SVG leaves this page (and an SVG rasterised via
+    // <img> for the PDF has no access to the page fonts either), so we inline the
+    // fonts as base64 data-URL @font-face rules. Data URLs are honoured even in
+    // isolated/<img>-mode SVG rendering, which fixes both the SVG and the PDF.
+    let embeddedFontCssPromise = null;
+
+    async function fontDataUrl(relPath) {
+      const url = new URL(relPath, window.location.href).href;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`${relPath}: ${response.status}`);
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      let binary = "";
+      for (let i = 0; i < bytes.length; i += 1) binary += String.fromCharCode(bytes[i]);
+      return `data:font/otf;base64,${btoa(binary)}`;
+    }
+
+    function loadEmbeddedFontCss() {
+      if (!embeddedFontCssPromise) {
+        embeddedFontCssPromise = (async () => {
+          const [deutsch, english] = await Promise.all([
+            fontDataUrl("../../assets/fonts/goetheanum-titel-deutsch.otf"),
+            fontDataUrl("../../assets/fonts/goetheanum-titel-english.otf"),
+          ]);
+          return `<defs><style type="text/css">
+@font-face { font-family: "Goetheanum-Deutsch"; src: url('${deutsch}') format('opentype'); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Goetheanum-English"; src: url('${english}') format('opentype'); font-weight: 400; font-style: normal; }
+</style></defs>`;
+        })().catch((error) => {
+          console.warn("Schrift konnte nicht eingebettet werden, Export ohne Einbettung:", error);
+          embeddedFontCssPromise = null; // allow a later retry
+          return "";
+        });
+      }
+      return embeddedFontCssPromise;
+    }
+
 
     function bytesFromBinaryString(value) {
       const bytes = new Uint8Array(value.length);
@@ -956,6 +995,7 @@
         });
         image.src = svgUrl;
         await loaded;
+        if (document.fonts && document.fonts.ready) await document.fonts.ready;
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
         return canvas;
       } finally {
@@ -966,7 +1006,8 @@
     async function exportPdf(includeBleed) {
       const pageWidthMm = includeBleed ? 303 : 297;
       const pageHeightMm = includeBleed ? 216 : 210;
-      const svgString = exportSvgString(includeBleed);
+      const fontCss = await loadEmbeddedFontCss();
+      const svgString = exportSvgString(includeBleed, fontCss);
       const canvas = await svgStringToCanvas(svgString, pageWidthMm, pageHeightMm);
       const jpegDataUrl = canvas.toDataURL("image/jpeg", 0.95);
       const base64 = jpegDataUrl.split(",")[1];
@@ -987,10 +1028,19 @@
       URL.revokeObjectURL(url);
     }
 
-    document.getElementById("download-svg").addEventListener("click", () => {
-      const includeBleed = exportBleed.checked;
-      const fileName = includeBleed ? "goetheanum-campuskarte-a4-quer-3mm.svg" : "goetheanum-campuskarte-a4-quer.svg";
-      download(fileName, exportSvgString(includeBleed), "image/svg+xml");
+    document.getElementById("download-svg").addEventListener("click", async () => {
+      const button = document.getElementById("download-svg");
+      const label = button.textContent;
+      button.disabled = true;
+      try {
+        const includeBleed = exportBleed.checked;
+        const fileName = includeBleed ? "goetheanum-campuskarte-a4-quer-3mm.svg" : "goetheanum-campuskarte-a4-quer.svg";
+        const fontCss = await loadEmbeddedFontCss();
+        download(fileName, exportSvgString(includeBleed, fontCss), "image/svg+xml");
+      } finally {
+        button.disabled = false;
+        button.textContent = label;
+      }
     });
 
     document.getElementById("download-pdf").addEventListener("click", async () => {

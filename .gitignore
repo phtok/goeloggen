@@ -49,3 +49,4 @@ services/brand-portrait/data/storage/exports/
 services/brand-portrait/portrait_brand_generator.egg-info/
 services/brand-portrait/*.jpg
 services/brand-portrait/*.png
+__pycache__/
