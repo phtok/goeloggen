@@ -108,8 +108,8 @@
   "mass": {
     "zeilenlaenge": {
       "$type": "dimension",
-      "$value": "46ch",
-      "$description": "Ziel ~65 Zeichen je Zeile (45–75 zulässig). CSS min(46ch,100%). Hinweis: ch = Breite der Ziffer 0 (schriftrelativ); die Goetheanum Schrift ist schmal, daher ≈ 65 Prosazeichen bei 46ch – empirisch bestimmt.",
+      "$value": "39ch",
+      "$description": "Ziel ~66 Zeichen je Zeile / neun Wörter (45–75 zulässig). CSS min(39ch,100%). Hinweis: ch = Breite der Ziffer 0; die Goetheanum Schrift ist schmal – empirisch gezählt sind 46ch = 78 Zeichen, also 39ch ≈ 66.",
       "$extensions": {
         "com.goetheanum.regel": "G10"
       }
@@ -132,7 +132,7 @@
     "G03": "Wer eine Auszeichnung weglassen kann, ohne dass Sinn verloren geht, lässt sie weg.",
     "G04": "Schwerer als Laut nie im Dokument. Flüstern und Schreien sind Grafikmittel im Variable Font, kein Bürosatz.",
     "G05": "Hervorhebung durch Laut – nicht durch Unterstreichen, Sperren oder VERSALIEN.",
-    "G10": "Zeilenlänge 45–75 Zeichen, Ziel ~67. Das Mass ist eine harte Grenze. In CSS: 48ch (ch misst die ‹0›, Prosa läuft schmaler).",
+    "G10": "Zeilenlänge 45–75 Zeichen, Ziel ~66 / neun Wörter. CSS min(39ch,100%); ch misst die 0, die schmale Schrift läuft enger (46ch = 78 gezählt).",
     "G11": "Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit (Fliesstext 1.4–1.6).",
     "G12": "Flattersatz linksbündig ist der Normalfall. Blocksatz nur mit Trennung und Kontrolle.",
     "G16": "Anführung: einfache Guillemets nach aussen – ‹…› für alles, auch die zweite Ebene. Keine \"...\", keine „…\".",

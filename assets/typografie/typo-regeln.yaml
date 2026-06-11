@@ -94,6 +94,6 @@
   pruefung: lm
   schwere: empfehlung
 - id: G10-zeilenlaenge
-  regel: 45–75 Zeichen je Zeile, Ziel ~67. In CSS 48ch (ch misst die ‹0›, Prosa läuft schmaler).
+  regel: 45–75 Zeichen je Zeile, Ziel ~66 / neun Wörter. CSS min(39ch,100%); ch misst die 0, schmale Schrift läuft enger (46ch = 78 gezählt).
   pruefung: lm
   schwere: empfehlung
