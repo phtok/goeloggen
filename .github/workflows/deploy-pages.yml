@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "index.html"
+      - "schriften.html"
       - "logo-generator.html"
       - "visitenkarten.html"
       - "visitenkarten-generator.html"
@@ -39,6 +40,7 @@ jobs:
           mkdir -p _site
           test -f index.html
           cp index.html _site/index.html
+          if [ -f schriften.html ]; then cp schriften.html _site/schriften.html; fi
           test -f logo-generator.html
           cp logo-generator.html _site/logo-generator.html
           if [ -f index-goelogger-gci1.html ]; then cp index-goelogger-gci1.html _site/index-goelogger-gci1.html; fi
