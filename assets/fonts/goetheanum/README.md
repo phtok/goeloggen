@@ -1,4 +1,4 @@
-# Goetheanum Schriften — `v2.2.0`
+# Goetheanum Schriften — `v2.3.0`
 
 Reparierte und optimierte Fassung des offiziellen Schriftpakets der Goetheanum
 Kommunikation (basierend auf der originalen v1.4.43, abgeleitet aus Titillium,
@@ -10,9 +10,9 @@ SIL OFL). Reparaturen und Begründung siehe
 
 | Schnitt | Gewicht | Einsatz (laut Beipackzettel) |
 |--------|---------|------------------------------|
-| **Leise** | 280 | Titel, Gegenstimme — nicht für Fließtext-Mengen |
-| **Klar**  | 450 | Standard: Korrespondenz, Formulare, Lauftext |
-| **Laut**  | 600 | Titel, **Wegleitung, Signaletik**, Hervorhebungen — Office-Fett (⌘B) von Klar |
+| **Leise** | 265 | Titel, Gegenstimme — nicht für Fließtext-Mengen |
+| **Klar**  | 440 | Standard: Korrespondenz, Formulare, Lauftext |
+| **Laut**  | 680 | Titel, **Wegleitung, Signaletik**, Hervorhebungen — Office-Fett (⌘B) von Klar |
 | **Icons** | — | Piktogramme & Logos (Tastatur-Belegung im Beipackzettel) |
 | **Variabel** | 190–725 | Gewichtsachse `wght` – inkl. der Extreme **Flüstern**/**Schreien** (nur hier, der Grafik vorbehalten) |
 
@@ -21,13 +21,13 @@ SIL OFL). Reparaturen und Begründung siehe
 ```css
 @font-face {
   font-family: "Goetheanum Schrift";
-  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.2.0-Klar.woff2") format("woff2");
-  font-weight: 450; font-style: normal; font-display: swap;
+  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.3.0-Klar.woff2") format("woff2");
+  font-weight: 440; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Goetheanum Schrift";
-  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.2.0-Laut.woff2") format("woff2");
-  font-weight: 600; font-style: normal; font-display: swap;
+  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.3.0-Laut.woff2") format("woff2");
+  font-weight: 680; font-style: normal; font-display: swap;
 }
 ```
 

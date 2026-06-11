@@ -4,14 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Goetheanum Schriften</title>
-<meta name="description" content="Goetheanum Schriften 2.2 – Leise, Klar, Laut, Variabel und Icons. Repariert, vervollständigt und optimiert." />
+<meta name="description" content="Goetheanum Schriften 2.3 – Leise, Klar, Laut, Variabel und Icons. Repariert, vervollständigt und optimiert." />
 <meta name="robots" content="noindex" />
 <style>
-  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.2.1-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
-  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.2.1-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
-  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.2.1-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
-  @font-face{font-family:"G Variabel";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.2.1.woff2") format("woff2");font-weight:190 725;font-display:swap}
-  @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.2.1.woff2") format("woff2");font-display:block}
+  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.3.0-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.3.0-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.3.0-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Variabel";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.3.0.woff2") format("woff2");font-weight:190 725;font-display:swap}
+  @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.3.0.woff2") format("woff2");font-display:block}
 
   :root{
     --ink:#23272b; --muted:#737a80; --line:rgba(20,24,28,.10); --line-soft:rgba(20,24,28,.055);
@@ -48,7 +48,7 @@
   .shead p{color:var(--muted);font-size:14px;max-width:380px}
 
   .vstage{border:1px solid var(--line);border-radius:16px;padding:26px 24px;background:var(--soft)}
-  .vsample{font-family:"G Variabel";font-variation-settings:"wght" 450;font-size:clamp(36px,8vw,88px);line-height:1.1;outline:none;word-break:break-word}
+  .vsample{font-family:"G Variabel";font-variation-settings:"wght" 440;font-size:clamp(36px,8vw,88px);line-height:1.1;outline:none;word-break:break-word}
   .controls{display:flex;align-items:center;gap:18px;margin-top:20px;flex-wrap:wrap}
   input[type=range]{-webkit-appearance:none;appearance:none;flex:1;min-width:200px;height:2px;background:var(--line);border-radius:2px}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18)}
@@ -118,7 +118,7 @@
 
 <main>
   <div class="wrap hero">
-    <div class="kick">Hausschrift · Version 2.2</div>
+    <div class="kick">Hausschrift · Version 2.3</div>
     <h1>Goetheanum Schriften</h1>
     <p class="lede">Fünf Schnitte von Flüstern bis Schreien – dazu ein Variable Font und ein Icon-Satz. Repariert, vervollständigt, sauber gesetzt.</p>
     <div class="meta">
@@ -135,8 +135,8 @@
     <div class="vstage">
       <div class="vsample" id="vsample" contenteditable="true" spellcheck="false">Lebendige Formen</div>
       <div class="controls">
-        <input type="range" id="wght" min="190" max="725" value="450" step="1" aria-label="Gewicht" />
-        <div class="readout">wght <b id="wval">450</b> · <span id="wname">Klar</span></div>
+        <input type="range" id="wght" min="190" max="725" value="440" step="1" aria-label="Gewicht" />
+        <div class="readout">wght <b id="wval">440</b> · <span id="wname">Klar</span></div>
       </div>
     </div>
   </div></section>
@@ -145,9 +145,9 @@
     <div class="shead"><h2>Fünf Schnitte.</h2>
       <p>Drei installierbare Schnitte – Leise, Klar, Laut. Die Extreme <b>Flüstern</b> und <b>Schreien</b> gibt es nur im Variable Font, bewusst der Grafik vorbehalten.</p></div>
     <div class="cuts">
-      <div class="cut"><div class="tag"><b>Leise</b><span>280 · Kursiv</span></div><div class="big leise">Handgesetzt</div></div>
-      <div class="cut"><div class="tag"><b>Klar</b><span>450 · Standard</span></div><div class="big klar">Handgesetzt</div></div>
-      <div class="cut"><div class="tag"><b>Laut</b><span>600 · Fett</span></div><div class="big laut">Handgesetzt</div></div>
+      <div class="cut"><div class="tag"><b>Leise</b><span>265 · Kursiv</span></div><div class="big leise">Handgesetzt</div></div>
+      <div class="cut"><div class="tag"><b>Klar</b><span>440 · Standard</span></div><div class="big klar">Handgesetzt</div></div>
+      <div class="cut"><div class="tag"><b>Laut</b><span>680 · Fett</span></div><div class="big laut">Handgesetzt</div></div>
     </div>
     <div class="office"><span>Im Office ohne Schriftwechsel: in Klar-Text holt <b>⌘B / Strg+B</b> das fette <b>Laut</b> und <b>⌘I / Strg+I</b> das leise <b>Leise</b>.</span></div>
     <div class="glyph" style="margin-top:26px">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890 &amp; € @ %</div>
@@ -171,11 +171,11 @@
       <p>OTF zum Installieren, Webfonts fürs Web, Icons einzeln oder als Set.</p></div>
     <div class="dl-cards">
       <div class="card"><h3>Komplettpaket</h3><p>Leise, Klar, Laut, Variable Font, Icons, Webfonts, Beipackzettel.</p>
-        <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Schriften-v2.2.1.zip" download>ZIP</a></div>
+        <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Schriften-v2.3.0.zip" download>ZIP</a></div>
       <div class="card"><h3>Icons als Set</h3><p>81 Icons als SVG, PNG und PDF in einem Archiv.</p>
-        <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Icons-v2.2.1-Einzeldateien.zip" download>Icon-ZIP</a></div>
+        <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Icons-v2.3.0-Einzeldateien.zip" download>Icon-ZIP</a></div>
       <div class="card"><h3>Variable Font</h3><p>Eine Datei, Achse 190–725.</p>
-        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.2.1.otf" download>OTF</a></div>
+        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.3.0.otf" download>OTF</a></div>
       <div class="card"><h3>Beipackzettel</h3><p>Übersicht &amp; Tastatur-Belegung der Icons.</p>
         <a class="btn" href="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf" download>PDF</a></div>
     </div>
@@ -189,7 +189,7 @@
 
 <footer><div class="wrap frow">
   <div style="max-width:540px;line-height:1.7">
-    <strong>Goetheanum Schriften 2.2</strong> · abgeleitet aus Titillium (SIL OFL).
+    <strong>Goetheanum Schriften 2.3</strong> · abgeleitet aus Titillium (SIL OFL).
     Fünf Schnitte (Flüstern–Schreien), breiter Variable Font, Office-Fett per ⌘B,
     Tastatur-Belegung der Icons erhalten, Metadaten korrigiert.
   </div>
@@ -199,7 +199,7 @@
 <script>
   (function(){
     var s=document.getElementById('wght'),v=document.getElementById('wval'),n=document.getElementById('wname'),sm=document.getElementById('vsample');
-    function nm(w){return w<235?'Flüstern':w<365?'Leise':w<525?'Klar':w<662?'Laut':'Schreien';}
+    function nm(w){return w<228?'Flüstern':w<353?'Leise':w<560?'Klar':w<703?'Laut':'Schreien';}
     function u(){var w=+s.value;sm.style.fontVariationSettings='"wght" '+w;v.textContent=w;n.textContent=nm(w);}
     s.addEventListener('input',u);u();
   })();
