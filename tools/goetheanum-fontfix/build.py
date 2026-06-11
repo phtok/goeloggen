@@ -140,9 +140,36 @@ def build_statics(M, H):
         print("  Fonts/%s" % STATICS[sch])
 
 
+def optimize_icons(ft):
+    """Make every real pictogram reachable and drop the garbage mapping.
+
+    The source maps ~50 ASCII codepoints onto a single glyph and leaves six
+    usable icons (the Goetheanum silhouette, its badge and the four cardinal
+    arrows) with no cmap entry at all. We give those six clean PUA slots and
+    rebuild the cmap to expose only space, NBSP and the real icons (U+E1xx/E2xx),
+    so typing text no longer yields random pictograms."""
+    rescue = {0xE270: "cid00063",     # Goetheanum silhouette
+              0xE271: "cid57964.1",   # arrow up
+              0xE272: "cid57965.1",   # arrow right
+              0xE273: "cid57966.1",   # arrow down
+              0xE274: "cid57967.1",   # arrow left
+              0xE275: "cid00064"}     # silhouette badge (was the ASCII sink)
+    order = set(ft.getGlyphOrder())
+    rescue = {cp: gn for cp, gn in rescue.items() if gn in order}
+    cmap = ft.getBestCmap()
+    keep = {cp: gn for cp, gn in cmap.items()
+            if cp in (0x20, 0xA0) or 0xE000 <= cp <= 0xF8FF}
+    keep.update(rescue)
+    for t in ft["cmap"].tables:
+        if t.platformID in (0, 3):
+            t.cmap = dict(keep)
+    return rescue
+
+
 def build_icons():
     p = glob.glob(os.path.join(INPUT, "Goetheanum-Icons-*.otf"))[0]
     ft = TTFont(p)
+    optimize_icons(ft)
     fix_meta(ft, "GoetheanumIcons", "Goetheanum Icons")
     add_notdef_box(ft)
     sp = ft.getBestCmap()[0x20]
@@ -248,6 +275,29 @@ def build_webfonts():
     print("  Webfonts/{woff,woff2}/*")
 
 
+def build_zip():
+    """Reproducible distribution bundle, mirroring the original v1.4.43 layout
+    (top folder Goetheanum-Schriften-v1.4.43/...) but with the repaired fonts."""
+    import zipfile
+    top = "Goetheanum-Schriften-v1.4.43"
+    members = (sorted(glob.glob(os.path.join(OUTROOT, "Fonts", "*.otf"))) +
+               sorted(glob.glob(os.path.join(OUTROOT, "Variable", "*.otf"))) +
+               sorted(glob.glob(os.path.join(OUTROOT, "Webfonts", "woff", "*.woff"))) +
+               sorted(glob.glob(os.path.join(OUTROOT, "Webfonts", "woff2", "*.woff2"))) +
+               [os.path.join(OUTROOT, f) for f in
+                ("Beipackzettel-Goetheanum-Schriften.pdf", "OFL.txt", "README.md")
+                if os.path.exists(os.path.join(OUTROOT, f))])
+    out = os.path.join(OUTROOT, top + ".zip")
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        for src in members:
+            arc = os.path.join(top, os.path.relpath(src, OUTROOT))
+            zi = zipfile.ZipInfo(arc, date_time=(1980, 1, 1, 0, 0, 0))  # deterministic
+            zi.compress_type = zipfile.ZIP_DEFLATED
+            with open(src, "rb") as fh:
+                z.writestr(zi, fh.read())
+    print("  %s.zip (%d files)" % (top, len(members)))
+
+
 def main():
     for sub in ("Fonts", "Variable", "Webfonts/woff", "Webfonts/woff2"):
         os.makedirs(os.path.join(OUTROOT, sub), exist_ok=True)
@@ -257,6 +307,7 @@ def main():
     build_icons()
     build_variable(M, H)
     build_webfonts()
+    build_zip()
     print("done.")
 
 
