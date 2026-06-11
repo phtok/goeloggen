@@ -34,8 +34,8 @@ _VMODEL = VariationModel([{}, {"wght": -1.0}, {"wght": 1.0}], axisOrder=["wght"]
 
 INPUT = os.path.join(HERE, "input")
 OUTROOT = os.path.normpath(os.path.join(HERE, "..", "..", "assets", "fonts", "goetheanum"))
-VERSION = "2.1.0"                       # wide variable (Flüstern–Schreien) + Office bold linking
-FREV = 2.1                              # head.fontRevision
+VERSION = "2.2.0"                       # extremes variable-only; Leise=Italic for Office Cmd+I
+FREV = 2.2                              # head.fontRevision
 SCHEMES = ["Leise", "Klar", "Laut"]
 IMPORTS = [("exclam", 0x21), ("quotedbl", 0x22), ("dollar", 0x24), ("section", 0xA7)]
 
@@ -101,24 +101,30 @@ def set_win(ft, wa, wd):
 # = "Goetheanum Schrift" + weight; the legacy RIBBI family (1/2) is what Office's
 # Cmd/Ctrl+B follows, so Klar/Laut form one Regular+Bold pair (bold toggles
 # Klar->Laut) while the other weights are their own Regular-only RIBBI families.
-def office_names(ft, ribbi_family, ribbi_style, typo_sub, bold=False):
+def office_names(ft, ribbi_family, ribbi_style, typo_sub, style="regular"):
     n = ft["name"]
 
     def setn(i, v): n.setName(v, i, 3, 1, 0x409)
     setn(1, ribbi_family); setn(2, ribbi_style)
     setn(16, "Goetheanum Schrift"); setn(17, typo_sub)
-    o = ft["OS/2"]                                             # bit0 ITALIC, bit5 BOLD, bit6 REGULAR
-    if bold:
-        o.fsSelection = (o.fsSelection & ~0x41) | 0x20         # clear REGULAR+ITALIC, set BOLD
-        ft["head"].macStyle |= 0x1
+    o = ft["OS/2"]; head = ft["head"]                          # bit0 ITALIC, bit5 BOLD, bit6 REGULAR
+    o.fsSelection &= ~0x61                                     # clear ITALIC/BOLD/REGULAR (keep USE_TYPO)
+    head.macStyle &= ~0x3
+    if style == "bold":
+        o.fsSelection |= 0x20; head.macStyle |= 0x1
+    elif style == "italic":                                    # Leise as the family's italic (Cmd+I); upright
+        o.fsSelection |= 0x01; head.macStyle |= 0x2; ft["post"].italicAngle = 0.0
     else:
-        o.fsSelection = (o.fsSelection & ~0x21) | 0x40         # clear BOLD+ITALIC, set REGULAR
-        ft["head"].macStyle &= ~0x1
+        o.fsSelection |= 0x40
 
 
-OFFICE = {"Leise": ("Goetheanum Schrift Leise", "Regular", False),
-          "Klar":  ("Goetheanum Schrift", "Regular", False),
-          "Laut":  ("Goetheanum Schrift", "Bold", True)}
+# Office style-linking within one family "Goetheanum Schrift":
+#   Klar = Regular, Laut = Bold (Cmd+B), Leise = Italic (Cmd+I).
+# Flüstern and Schreien are deliberately NOT installable statics — they live only
+# in the variable font, so the extremes stay reserved for expert/graphic use.
+OFFICE = {"Leise": ("Goetheanum Schrift", "Italic", "italic"),
+          "Klar":  ("Goetheanum Schrift", "Regular", "regular"),
+          "Laut":  ("Goetheanum Schrift", "Bold", "bold")}
 
 
 def add_notdef_box(ft):
@@ -167,12 +173,20 @@ def build_statics(M, H):
         add_notdef_box(ft)
         remove_case_orphans(ft)
         fix_meta(ft, f"GoetheanumSchrift-{sch}", f"Goetheanum Schrift {sch}")
-        office_names(ft, *OFFICE[sch][:2], sch, bold=OFFICE[sch][2])
+        office_names(ft, *OFFICE[sch][:2], sch, style=OFFICE[sch][2])
         fonts[sch] = ft
+    from fontTools.otlLib.builder import buildStatTable
+    wghtval = {"Leise": 280, "Klar": 450, "Laut": 600}
     wa = int(round(max(gbbox(f)[0] for f in fonts.values())))
     wd = int(round(-min(gbbox(f)[1] for f in fonts.values())))
     for sch, ft in fonts.items():
         set_win(ft, wa, wd)
+        ital = OFFICE[sch][2] == "italic"                      # ital axis declared last (RIBBI scheme)
+        ivals = [{"value": 1, "name": "Italic"}] if ital else [{"value": 0, "name": "Roman", "flags": 0x2}]
+        buildStatTable(ft, [
+            {"tag": "wght", "name": "Weight", "values": [{"value": wghtval[sch], "name": sch}]},
+            {"tag": "ital", "name": "Italic", "values": ivals}])
+        ft["name"].names = [r for r in ft["name"].names if r.platformID != 1]
         ft.save(os.path.join(OUTROOT, "Fonts", static_out(sch)))
         print("  Fonts/%s" % static_out(sch))
 
@@ -310,23 +324,6 @@ def build_variable(M, H):
     out = "Goetheanum-Variabel-v%s.otf" % VERSION
     ft.save(os.path.join(OUTROOT, "Variable", out))
     print("  Variable/%s (Flüstern–Schreien)" % out)
-
-
-def build_extra_statics():
-    """Flüstern (190) and Schreien (725) as installable statics, instanced from
-    the variable. Each is its own Regular-only RIBBI family; modern apps still
-    group them under 'Goetheanum Schrift' via the typographic names."""
-    from fontTools.varLib.instancer import instantiateVariableFont
-    vf = os.path.join(OUTROOT, "Variable", "Goetheanum-Variabel-v%s.otf" % VERSION)
-    for nm, w, ps in [("Flüstern", 190, "Fluestern"), ("Schreien", 725, "Schreien")]:
-        ft = TTFont(vf)
-        instantiateVariableFont(ft, {"wght": w}, inplace=True)
-        fix_meta(ft, "GoetheanumSchrift-%s" % ps, "Goetheanum Schrift %s" % nm, weight_class=w)
-        office_names(ft, "Goetheanum Schrift %s" % nm, "Regular", nm, bold=False)
-        ym, yn = gbbox(ft); set_win(ft, int(round(ym)), int(round(-yn)))
-        out = "Goetheanum-Schrift-v%s-%s.otf" % (VERSION, ps)
-        ft.save(os.path.join(OUTROOT, "Fonts", out))
-        print("  Fonts/%s" % out)
 
 
 def build_webfonts():
@@ -487,7 +484,6 @@ def main():
     build_statics(M, H)
     build_icons()
     build_variable(M, H)
-    build_extra_statics()
     build_webfonts()
     build_icon_exports()
     build_zip()
