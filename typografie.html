@@ -49,13 +49,18 @@
   .file h4{font-family:"G Laut";font-weight:400;font-size:15px;margin-bottom:4px}
   .file p{font-size:13.5px;color:var(--muted)}
   .file a{font-size:13px}
+  table.spick{border-collapse:collapse;width:100%;max-width:640px;font-size:14.5px;margin-top:14px}
+  .spick th{font-family:"G Laut";font-weight:400;text-align:left;font-size:12px;color:var(--muted);padding:6px 12px;border-bottom:1px solid var(--line)}
+  .spick td{padding:7px 12px;border-bottom:1px solid var(--line-soft)}
+  .spick td.f{color:var(--bad)} .spick td.r{color:var(--ink)}
+  .spick tr td:first-child{color:var(--muted);font-size:13px}
   footer{border-top:1px solid var(--line);padding:30px 0 60px;color:var(--muted);font-size:12.5px}
 </style>
 </head>
 <body>
 <header><div class="wrap bar">
   <a class="brand" href="https://grafik.goetheanum.ch" aria-label="Zur Grafikseite"><img src="assets/logos/am-goetheanum-dark.svg" alt="Am Goetheanum"></a>
-  <nav class="top"><a href="schriften.html">Schriften</a><a href="#mikro">Mikrotypografie</a><a href="#maschine">Maschine</a></nav>
+  <nav class="top"><a href="schriften.html">Schriften</a><a href="#mikro">Mikrotypografie</a><a href="#spickzettel">Spickzettel</a><a href="#maschine">Maschine</a></nav>
 </div></header>
 
 <main><div class="wrap">
@@ -77,6 +82,10 @@
       <div class="yes"><div class="t">so</div>Der Vortrag ist <span class="laut">wichtig</span> und beginnt pünktlich.</div>
     </div>
     <div class="note"><span class="rid">G04</span>schutz. Schwerer als Laut nie im Dokument. Flüstern und Schreien leben nur im Variable Font – sie sind Grafikmittel, kein Bürosatz.</div>
+    <div class="ex">
+      <div class="no"><div class="t">so nicht</div><span class="leise">Ein ganzer Absatz in Leise wirkt elegant, wird aber auf Dauer anstrengend und verliert gegen jede Umgebung.</span></div>
+      <div class="yes"><div class="t">so</div>Der Absatz steht in Klar. <span class="leise">Nur die Nebenstimme ist leise.</span></div>
+    </div>
     <div class="note"><span class="rid">G03</span>prinzip. Wer eine Auszeichnung weglassen kann, ohne dass Sinn verloren geht, lässt sie weg.</div>
   </section>
 
@@ -102,16 +111,52 @@
     <h3>Striche — drei Zeichen, klare Ämter</h3>
     <p>Gedankenstrich: Halbgeviert <span class="laut">mit</span> Leerschritten – so. Bis-Strich: dasselbe Zeichen <span class="laut">ohne</span> (9–17 Uhr, S. 4–12). Bindestrich kurz (Schrift-Paket). Echtes Minus bei Zahlen: −5°.</p>
 
+    <div class="ex">
+      <div class="no"><div class="t">so nicht</div>Ja - sofort. Geöffnet 10 - 12 Uhr. Temperatur: -5°.</div>
+      <div class="yes"><div class="t">so</div>Ja – sofort. Geöffnet 10–12 Uhr. Temperatur: −5°.</div>
+    </div>
+
     <h3>Auslassung &amp; feste Spatien</h3>
     <p>Auslassung ist <span class="laut">ein</span> Zeichen: … – nie drei Punkte. In ‹z.&#8239;B.›, vor&nbsp;%, vor Einheiten und im Datum stehen schmale, geschützte Leerzeichen: Sie atmen und brechen nie um.</p>
 
+    <div class="ex">
+      <div class="no"><div class="t">so nicht</div>Das kostet 10kg Geduld, z.B. morgens ... oder nie.</div>
+      <div class="yes"><div class="t">so</div>Das kostet 10&#8239;kg Geduld, z.&#8239;B. morgens&nbsp;… oder nie.</div>
+    </div>
+
     <h3>Zahlen, Datum, Zeit</h3>
     <p>Tausender mit Apostroph: 1’318 (Schweizer Usus). Datum im Lesetext: 11. Juni 2026. Uhrzeit: 9.30 Uhr – keine führende Null.</p>
+    <div class="ex">
+      <div class="no"><div class="t">so nicht</div>1.000.000 Besucher am 09:30 Uhr-Termin, Mike's Liste.</div>
+      <div class="yes"><div class="t">so</div>1’000’000 Besucher am 9.30-Uhr-Termin, Mikes Liste (sonst: Mike’s → Mikes).</div>
+    </div>
     <div class="note"><span class="rid">G23</span>schrift. Die Goetheanum Schrift führt keine fi/fl-Ligaturen – keine erzwingen. Versalien per Laufweite sperren, nie mit Leertasten. Keine Kunst-Kapitälchen.</div>
   </section>
 
+  <section id="spickzettel">
+    <span class="sec">§ 4 — Kurzreferenz</span>
+    <h2>Der Spickzettel.</h2>
+    <p class="dim">Die häufigsten Fälle auf einen Blick – zum Danebenlegen.</p>
+    <table class="spick">
+      <thead><tr><th>Fall</th><th>so nicht</th><th>so</th></tr></thead>
+      <tbody>
+        <tr><td>Zitat</td><td class="f">"so"</td><td class="r">‹so›</td></tr>
+        <tr><td>Apostroph</td><td class="f">Mike's</td><td class="r">Mike’s</td></tr>
+        <tr><td>Gedankenstrich</td><td class="f">Ja - sofort</td><td class="r">Ja – sofort</td></tr>
+        <tr><td>Spanne</td><td class="f">10 - 12 Uhr</td><td class="r">10–12 Uhr</td></tr>
+        <tr><td>Abkürzung</td><td class="f">z.B.</td><td class="r">z.&#8239;B.</td></tr>
+        <tr><td>Einheit</td><td class="f">10kg · 10 %</td><td class="r">10&#8239;kg · 10&#8239;%</td></tr>
+        <tr><td>Tausender</td><td class="f">1.000.000</td><td class="r">1’000’000</td></tr>
+        <tr><td>Auslassung</td><td class="f">...</td><td class="r">…</td></tr>
+        <tr><td>mal</td><td class="f">4x5</td><td class="r">4&#8239;×&#8239;5</td></tr>
+        <tr><td>Uhrzeit</td><td class="f">09:30 Uhr</td><td class="r">9.30 Uhr</td></tr>
+        <tr><td>Betonung</td><td class="f"><u>WICHTIG</u></td><td class="r"><span class="laut">wichtig</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
   <section id="maschine">
-    <span class="sec">§ 4 — Die Maschine</span>
+    <span class="sec">§ 5 — Die Maschine</span>
     <h2>Prüfbar, korrigierbar.</h2>
     <p>Eindeutiges automatisieren, Mehrdeutiges vorschlagen, Gestaltung dem Menschen lassen. Dafür liegt das System in zwei Dateien neben den Schriften:</p>
     <div class="files">
