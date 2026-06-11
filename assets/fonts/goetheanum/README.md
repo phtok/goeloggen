@@ -1,7 +1,8 @@
-# Goetheanum Schriften — `v1.4.43-fix1`
+# Goetheanum Schriften — `v2.0.0`
 
-Korrigierte Fassung des offiziellen Schriftpakets der Goetheanum Kommunikation
-(basierend auf Titillium, SIL OFL). Reparaturen und Begründung siehe
+Reparierte und optimierte Fassung des offiziellen Schriftpakets der Goetheanum
+Kommunikation (basierend auf der originalen v1.4.43, abgeleitet aus Titillium,
+SIL OFL). Reparaturen und Begründung siehe
 [`AUDIT.md`](./AUDIT.md); reproduzierbare Build-Pipeline unter
 [`tools/goetheanum-fontfix/`](../../../tools/goetheanum-fontfix/).
 
@@ -20,12 +21,12 @@ Korrigierte Fassung des offiziellen Schriftpakets der Goetheanum Kommunikation
 ```css
 @font-face {
   font-family: "Goetheanum Schrift";
-  src: url("Webfonts/woff2/Goetheanum-Schrift-v1.4.43-Klar.woff2") format("woff2");
+  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.0.0-Klar.woff2") format("woff2");
   font-weight: 450; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Goetheanum Schrift";
-  src: url("Webfonts/woff2/Goetheanum-Schrift-v1.4.43-Laut.woff2") format("woff2");
+  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.0.0-Laut.woff2") format("woff2");
   font-weight: 600; font-style: normal; font-display: swap;
 }
 ```
