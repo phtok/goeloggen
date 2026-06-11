@@ -1,4 +1,4 @@
-# Goetheanum Schriften — `v2.1.0`
+# Goetheanum Schriften — `v2.2.0`
 
 Reparierte und optimierte Fassung des offiziellen Schriftpakets der Goetheanum
 Kommunikation (basierend auf der originalen v1.4.43, abgeleitet aus Titillium,
@@ -10,25 +10,23 @@ SIL OFL). Reparaturen und Begründung siehe
 
 | Schnitt | Gewicht | Einsatz (laut Beipackzettel) |
 |--------|---------|------------------------------|
-| **Flüstern** | 190 | Sehr leise – feinste Textebenen, Auszeichnung |
 | **Leise** | 280 | Titel, Gegenstimme — nicht für Fließtext-Mengen |
 | **Klar**  | 450 | Standard: Korrespondenz, Formulare, Lauftext |
 | **Laut**  | 600 | Titel, **Wegleitung, Signaletik**, Hervorhebungen — Office-Fett (⌘B) von Klar |
-| **Schreien** | 725 | Maximaler Nachdruck, sehr fett |
 | **Icons** | — | Piktogramme & Logos (Tastatur-Belegung im Beipackzettel) |
-| **Variabel** | 190–725 | Gewichtsachse `wght` (Flüstern–Schreien) |
+| **Variabel** | 190–725 | Gewichtsachse `wght` – inkl. der Extreme **Flüstern**/**Schreien** (nur hier, der Grafik vorbehalten) |
 
 ## Verwendung im Web
 
 ```css
 @font-face {
   font-family: "Goetheanum Schrift";
-  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.1.0-Klar.woff2") format("woff2");
+  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.2.0-Klar.woff2") format("woff2");
   font-weight: 450; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Goetheanum Schrift";
-  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.1.0-Laut.woff2") format("woff2");
+  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.2.0-Laut.woff2") format("woff2");
   font-weight: 600; font-style: normal; font-display: swap;
 }
 ```
@@ -36,7 +34,8 @@ SIL OFL). Reparaturen und Begründung siehe
 Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
 
 ## Dateien
-- `Fonts/` — OTF (Desktop): Flüstern, Leise, Klar, Laut, Schreien, Icons
+- `Fonts/` — OTF (Desktop): Leise, Klar, Laut, Icons
+- Office-Verknüpfung: Klar=Regular, Laut=Fett (⌘B), Leise=Kursiv (⌘I) – eine Familie „Goetheanum Schrift"
 - `Variable/` — variable OTF (CFF2)
 - `Webfonts/woff` und `Webfonts/woff2` — Web
 - `OFL.txt` — Lizenz · `Beipackzettel-…pdf` — Original-Beipackzettel
