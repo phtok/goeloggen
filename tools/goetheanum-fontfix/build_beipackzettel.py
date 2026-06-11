@@ -3,12 +3,12 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.boundsPen import BoundsPen
 from fontTools.varLib.instancer import instantiateVariableFont
-FD="assets/fonts/goetheanum/Fonts/"; VF="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.3.0.otf"
+FD="assets/fonts/goetheanum/Fonts/"; VF="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.3.1.otf"
 def L(p): ft=TTFont(p);return (ft,ft.getGlyphSet(),ft.getBestCmap(),ft["head"].unitsPerEm)
-K=L(FD+"Goetheanum-Schrift-v2.3.0-Klar.otf"); LA=L(FD+"Goetheanum-Schrift-v2.3.0-Laut.otf"); LE=L(FD+"Goetheanum-Schrift-v2.3.0-Leise.otf")
+K=L(FD+"Goetheanum-Schrift-v2.3.1-Klar.otf"); LA=L(FD+"Goetheanum-Schrift-v2.3.1-Laut.otf"); LE=L(FD+"Goetheanum-Schrift-v2.3.1-Leise.otf")
 def varL(w):
     ft=TTFont(VF); instantiateVariableFont(ft,{"wght":w},inplace=True); return (ft,ft.getGlyphSet(),ft.getBestCmap(),ft["head"].unitsPerEm)
-IC=L(FD+"Goetheanum-Icons-v2.3.0.otf")
+IC=L(FD+"Goetheanum-Icons-v2.3.1.otf")
 S=[]
 def txt(F,s,size,x,y,fill="#23272b"):
     ft,gs,cmap,upm=F; sc=size/upm; cx=x
@@ -78,7 +78,7 @@ txt(K,"Tastatur-Belegung siehe Seite 2–4. Einzeln als SVG/PNG/PDF",9.5,RX+16,i
 
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
-txt(K,"Goetheanum Schriften Version 2.3.0 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
+txt(K,"Goetheanum Schriften Version 2.3.1 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
 txt(K,"Reparatur & Optimierung 2026. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p1.svg","w").write("".join(S))

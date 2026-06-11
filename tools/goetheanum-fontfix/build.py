@@ -34,7 +34,7 @@ _VMODEL = VariationModel([{}, {"wght": -1.0}, {"wght": 1.0}], axisOrder=["wght"]
 
 INPUT = os.path.join(HERE, "input")
 OUTROOT = os.path.normpath(os.path.join(HERE, "..", "..", "assets", "fonts", "goetheanum"))
-VERSION = "2.3.0"                       # new weight anchors: Leise 265 / Klar 440 / Laut 680
+VERSION = "2.3.1"                       # fix: › built as mirror of ‹ (Titillium pair is point-mismatched)
 FREV = 2.3                              # head.fontRevision (Major.Minor; Patch im Versionsstring)
 SCHEMES = ["Leise", "Klar", "Laut"]
 IMPORTS = [("exclam", 0x21), ("quotedbl", 0x22), ("dollar", 0x24), ("section", 0xA7)]
@@ -247,6 +247,16 @@ def _outline_at(M, H, uni, targetH, ns, clamp=False):
     return blend(rA, aA, rB, aB, t)
 
 
+
+def _mirror_rec(rec, adv):
+    """True mirror of an outline: x -> adv - x, contours re-reversed for winding."""
+    from fontTools.pens.recordingPen import RecordingPen
+    from fontTools.pens.reverseContourPen import ReverseContourPen
+    out = RecordingPen(); rp = ReverseContourPen(out)
+    for c, pts in rec:
+        getattr(rp, c)(*[(adv - x, y) for x, y in pts]) if pts else getattr(rp, c)()
+    return out.value
+
 def build_variable(M, H):
     import tempfile
     from fontTools.pens.recordingPen import RecordingPen
@@ -275,6 +285,9 @@ def build_variable(M, H):
         ft = TTFont(base)
         for gn, (cp, ns) in gn_group.items():
             set_glyph(ft, gn, *_outline_at(M, H, cp, Ht, ns))
+        if 0x2039 in cmap and 0x203A in cmap:                  # › = mirror of ‹ per master
+            rL, aL = _outline_at(M, H, 0x2039, Ht, gn_group[cmap[0x2039]][1])
+            set_glyph(ft, cmap[0x203A], _mirror_rec(rL, aL), aL)
         p = os.path.join(tmp, "m_%d.otf" % wght); ft.save(p); paths.append(p)
 
     fonts = [TTFont(p) for p in paths]; gsets = [f.getGlyphSet() for f in fonts]
