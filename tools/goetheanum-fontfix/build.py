@@ -21,7 +21,7 @@ import os, sys, glob
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from fontfix import (load_uprights, glyph_area, grec, area_of, pick_and_interp,
-                     add_cid_glyph, replace_glyph_outline, _charstring)
+                     add_cid_glyph, replace_glyph_outline, _charstring, sig, blend)
 from fontTools.ttLib import TTFont
 from fontTools.pens.boundsPen import BoundsPen
 from fontTools.varLib.cff import CFF2CharStringMergePen
@@ -34,8 +34,8 @@ _VMODEL = VariationModel([{}, {"wght": -1.0}, {"wght": 1.0}], axisOrder=["wght"]
 
 INPUT = os.path.join(HERE, "input")
 OUTROOT = os.path.normpath(os.path.join(HERE, "..", "..", "assets", "fonts", "goetheanum"))
-VERSION = "2.0.0"                       # repaired/optimized release (fresh major)
-FREV = 2.0                              # head.fontRevision
+VERSION = "2.1.0"                       # wide variable (Flüstern–Schreien) + Office bold linking
+FREV = 2.1                              # head.fontRevision
 SCHEMES = ["Leise", "Klar", "Laut"]
 IMPORTS = [("exclam", 0x21), ("quotedbl", 0x22), ("dollar", 0x24), ("section", 0xA7)]
 
@@ -86,11 +86,39 @@ def fix_meta(ft, ps, full, weight_class=None):
     if weight_class is not None: o.usWeightClass = weight_class
     o.sTypoAscender = 750; o.sTypoDescender = -250; o.sTypoLineGap = 0
     h.ascent = 750; h.descent = -250; h.lineGap = 0
+    hm = ft["hmtx"]                                            # clamp the broken Titillium 'fraction' advance
+    for gn, (aw, lsb) in list(hm.metrics.items()):
+        if aw > 3000 or aw < 0:
+            hm.metrics[gn] = (600, lsb)
     if "CFF " in ft: ft["CFF "].cff.fontNames = [ps]
 
 
 def set_win(ft, wa, wd):
     o = ft["OS/2"]; o.usWinAscent = wa; o.usWinDescent = wd
+
+
+# Office/Word style-linking. Modern apps group by the typographic family (16/17)
+# = "Goetheanum Schrift" + weight; the legacy RIBBI family (1/2) is what Office's
+# Cmd/Ctrl+B follows, so Klar/Laut form one Regular+Bold pair (bold toggles
+# Klar->Laut) while the other weights are their own Regular-only RIBBI families.
+def office_names(ft, ribbi_family, ribbi_style, typo_sub, bold=False):
+    n = ft["name"]
+
+    def setn(i, v): n.setName(v, i, 3, 1, 0x409)
+    setn(1, ribbi_family); setn(2, ribbi_style)
+    setn(16, "Goetheanum Schrift"); setn(17, typo_sub)
+    o = ft["OS/2"]                                             # bit0 ITALIC, bit5 BOLD, bit6 REGULAR
+    if bold:
+        o.fsSelection = (o.fsSelection & ~0x41) | 0x20         # clear REGULAR+ITALIC, set BOLD
+        ft["head"].macStyle |= 0x1
+    else:
+        o.fsSelection = (o.fsSelection & ~0x21) | 0x40         # clear BOLD+ITALIC, set REGULAR
+        ft["head"].macStyle &= ~0x1
+
+
+OFFICE = {"Leise": ("Goetheanum Schrift Leise", "Regular", False),
+          "Klar":  ("Goetheanum Schrift", "Regular", False),
+          "Laut":  ("Goetheanum Schrift", "Bold", True)}
 
 
 def add_notdef_box(ft):
@@ -139,6 +167,7 @@ def build_statics(M, H):
         add_notdef_box(ft)
         remove_case_orphans(ft)
         fix_meta(ft, f"GoetheanumSchrift-{sch}", f"Goetheanum Schrift {sch}")
+        office_names(ft, *OFFICE[sch][:2], sch, bold=OFFICE[sch][2])
         fonts[sch] = ft
     wa = int(round(max(gbbox(f)[0] for f in fonts.values())))
     wd = int(round(-min(gbbox(f)[1] for f in fonts.values())))
@@ -164,91 +193,140 @@ def build_icons():
     print("  Fonts/%s" % out)
 
 
-def _replay(pen, recv):
-    for c, p in recv:
-        getattr(pen, c)(*p) if p else getattr(pen, c)()
+# Wide variable font, derived from the Titillium upright masters. Each master is
+# placed on the wght axis by its H-area (fitted to the Leise/Klar/Laut anchors);
+# Flüstern (thin) and Schreien (black) extend the range past Leise/Laut.
+WIDE_MASTERS = [("Thin", 63006, 190), ("Light", 103435, 335), ("Regular", 126847, 420),
+                ("Klar", 140000, 450), ("Semibold", 177393, 600), ("Bold", 212760, 725)]
+WIDE_INSTANCES = [("Flüstern", 190), ("Leise", 280), ("Klar", 450), ("Laut", 600), ("Schreien", 725)]
+VAR_DEFAULT = 450
 
 
-def _cff2_blend(outl, priv, gsubrs):
-    """Build a CFF2 charstring that interpolates the three master outlines
-    (keys 450/280/600) across the wght axis."""
-    pen = CFF2CharStringMergePen([], "tmp", 3, 0)
-    _replay(pen, outl[450]); pen.restart(1); _replay(pen, outl[280]); pen.restart(2); _replay(pen, outl[600])
-    return pen.getCharString(private=priv, globalSubrs=gsubrs, var_model=_VMODEL, optimize=True)
+def _compat_group(M, H, uni):
+    """Largest point-compatible Titillium master group for this glyph."""
+    from collections import defaultdict
+    cand = [(n, grec(M[n], uni)[0]) for n in M]
+    cand = [(n, r) for n, r in cand if r is not None]
+    if not cand:
+        return None
+    groups = defaultdict(list)
+    for n, r in cand:
+        groups[sig(r)].append(n)
+    return max(groups.values(),
+               key=lambda ns: (len(ns), H[max(ns, key=lambda n: H[n])] - H[min(ns, key=lambda n: H[n])]))
 
 
-def _cff2_add(ft, uni, cs, adv, name):
-    cff = ft["CFF2"].cff; td = cff[cff.fontNames[0]]
-    cmap = ft.getBestCmap()
-    if uni in cmap:
-        name = cmap[uni]; td.CharStrings[name] = cs           # replace existing
-    else:
-        td.CharStrings.charStringsIndex.append(cs)
-        td.CharStrings.charStrings[name] = len(td.CharStrings.charStringsIndex) - 1
-        td.charset.append(name)
-        if hasattr(td, "FDSelect"): td.FDSelect.append(0)
-        ft.setGlyphOrder(list(td.charset))
-        for t in ft["cmap"].tables: t.cmap[uni] = name
-    ft["hmtx"].metrics[name] = (adv, 0)
-    ft["HVAR"].table.AdvWidthMap.mapping[name] = 0xFFFFFFFF    # constant advance for added glyph
-    return name
-
-
-def complete_variable(ft, M, H):
-    """Give the variable font the same glyph repertoire as the statics: import
-    ! " § as interpolating blends, rebuild the ampersand so it varies, add $
-    (non-varying: its Titillium masters are not point-compatible across the
-    range) and NBSP."""
-    cff = ft["CFF2"].cff; td = cff[cff.fontNames[0]]
-    priv = td.FDArray[0].Private; gsubrs = cff.GlobalSubrs
-
-    def outl(uni, w):
-        r, a, _ = pick_and_interp(M, H, uni, VAR_TARGETS[w]); return r, a
-
-    for uni, nm in [(0x26, None), (0x21, "uni0021"), (0x22, "uni0022"), (0xA7, "uni00A7")]:
-        ow = {w: outl(uni, w)[0] for w in (280, 450, 600)}
-        _cff2_add(ft, uni, _cff2_blend(ow, priv, gsubrs), outl(uni, 450)[1], nm)
-    dr, da = outl(0x24, 450)                                   # dollar: non-varying (Klar weight)
-    _cff2_add(ft, 0x24, _cff2_blend({280: dr, 450: dr, 600: dr}, priv, gsubrs), da, "dollar")
-    spn = ft.getBestCmap()[0x20]                               # NBSP: reuse the space charstring
-    _cff2_add(ft, 0xA0, td.CharStrings[spn], ft["hmtx"][spn][0], "uni00A0")
-
-
-def _cff2_notdef(ft):
-    cff = ft["CFF2"].cff; td = cff[cff.fontNames[0]]
-    box = [("moveTo", ((60, 0),)), ("lineTo", ((440, 0),)), ("lineTo", ((440, 700),)),
-           ("lineTo", ((60, 700),)), ("closePath", ()),
-           ("moveTo", ((120, 60),)), ("lineTo", ((120, 640),)), ("lineTo", ((380, 640),)),
-           ("lineTo", ((380, 60),)), ("closePath", ())]
-    td.CharStrings[".notdef"] = _cff2_blend({280: box, 450: box, 600: box},
-                                            td.FDArray[0].Private, cff.GlobalSubrs)
-    ft["hmtx"].metrics[".notdef"] = (500, 60)
+def _outline_at(M, H, uni, targetH, ns):
+    ns = sorted(ns, key=lambda n: H[n])
+    lo = max([n for n in ns if H[n] <= targetH], key=lambda n: H[n], default=ns[0])
+    hi = min([n for n in ns if H[n] >= targetH], key=lambda n: H[n], default=ns[-1])
+    if lo == hi:
+        if len(ns) == 1:
+            return grec(M[ns[0]], uni)
+        lo, hi = ns[0], ns[-1]
+    rA, aA = grec(M[lo], uni); rB, aB = grec(M[hi], uni)
+    t = (targetH - H[lo]) / (H[hi] - H[lo]) if H[hi] != H[lo] else 0.0
+    t = max(0.0, min(1.0, t))                                   # clamp: no extrapolation -> no degeneration
+    return blend(rA, aA, rB, aB, t)
 
 
 def build_variable(M, H):
+    import tempfile
+    from fontTools.pens.recordingPen import RecordingPen
+    from fontTools.designspaceLib import DesignSpaceDocument
+    from fontTools import varLib
     from fontTools.otlLib.builder import buildStatTable
-    src = glob.glob(os.path.join(INPUT, "Goetheanum-Variabel-*.otf"))[0]
-    p = "Goetheanum-Variabel-v%s.otf" % VERSION
-    ft = TTFont(src)
-    complete_variable(ft, M, H)
-    _cff2_notdef(ft)
-    remove_case_orphans(ft)
+
+    base = os.path.join(OUTROOT, "Fonts", static_out("Klar"))   # built by build_statics
+    cmap = TTFont(base).getBestCmap()
+    groups = {cp: _compat_group(M, H, cp) for cp in cmap}
+
+    tmp = tempfile.mkdtemp(); paths = []
+    for name, Ht, wght in WIDE_MASTERS:                          # one master per Titillium weight
+        ft = TTFont(base); td = ft["CFF "].cff[ft["CFF "].cff.fontNames[0]]
+        for cp, ns in groups.items():
+            gn = cmap.get(cp)
+            if gn is None or not ns:
+                continue
+            rec, adv = _outline_at(M, H, cp, Ht, ns)
+            td.CharStrings[gn] = _charstring(ft, [(c, p) for c, p in rec], adv)
+            ft["hmtx"].metrics[gn] = (int(round(adv)), ft["hmtx"][gn][1])
+        p = os.path.join(tmp, "m_%d.otf" % wght); ft.save(p); paths.append(p)
+
+    # force-constant any glyph whose drawn outline is not identical across all masters
+    fonts = [TTFont(p) for p in paths]; gsets = [f.getGlyphSet() for f in fonts]
+    di = [w for _, _, w in WIDE_MASTERS].index(VAR_DEFAULT)
+
+    def cmds(gs, gn):
+        r = RecordingPen(); gs[gn].draw(r); return tuple(c for c, _ in r.value)
+
+    for gn in fonts[0].getGlyphOrder():
+        if len({cmds(g, gn) for g in gsets}) != 1:
+            rd = RecordingPen(); gsets[di][gn].draw(rd); adv = fonts[di]["hmtx"][gn][0]
+            for f in fonts:
+                td = f["CFF "].cff[f["CFF "].cff.fontNames[0]]
+                td.CharStrings[gn] = _charstring(f, list(rd.value), adv)
+                f["hmtx"].metrics[gn] = (adv, f["hmtx"][gn][1])
+    for f, p in zip(fonts, paths):
+        f.save(p)
+
+    ds = DesignSpaceDocument()
+    ds.addAxisDescriptor(name="Weight", tag="wght", minimum=WIDE_MASTERS[0][2],
+                         default=VAR_DEFAULT, maximum=WIDE_MASTERS[-1][2])
+    for p, (name, Ht, wght) in zip(paths, WIDE_MASTERS):
+        s = ds.addSourceDescriptor(path=p, location={"Weight": wght})
+        if wght == VAR_DEFAULT:
+            s.copyInfo = True
+    for nm, w in WIDE_INSTANCES:
+        ds.addInstanceDescriptor(familyName="Goetheanum Variabel", styleName=nm, location={"Weight": w})
+    ft, _, _ = varLib.build(ds)
+
     fix_meta(ft, "GoetheanumVariabel", "Goetheanum Variabel", weight_class=450)
-    # default (450) instance must carry the family default style/PS names
-    ft["name"].setName("Klar", 17, 3, 1, 0x409)
-    for inst in ft["fvar"].instances:
-        if abs(inst.coordinates.get("wght", 0) - 450) < 0.5:
-            inst.subfamilyNameID = 17
-            inst.postscriptNameID = 6
-    # proper STAT table for the weight axis (Klar elided as default)
+    nm = ft["name"]
+    nm.setName("Goetheanum Variabel", 1, 3, 1, 0x409); nm.setName("Regular", 2, 3, 1, 0x409)
+    nm.setName("Goetheanum Variabel", 16, 3, 1, 0x409); nm.setName("Klar", 17, 3, 1, 0x409)
+    nm.names = [r for r in nm.names if r.nameID not in (21, 22)]   # drop WWS names from the Klar master
+
+    def _ascii(s):
+        return (s.replace("ü", "ue").replace("ö", "oe").replace("ä", "ae")
+                 .replace("ß", "ss").replace(" ", ""))
+
+    nextid = max(r.nameID for r in nm.names) + 1
+    for inst in ft["fvar"].instances:                          # every instance gets a PS name -> uniform records
+        if abs(inst.coordinates.get("wght", 0) - VAR_DEFAULT) < 0.5:
+            inst.subfamilyNameID = 17; inst.postscriptNameID = 6
+        else:
+            nm.setName("GoetheanumVariabel-" + _ascii(nm.getDebugName(inst.subfamilyNameID)),
+                       nextid, 3, 1, 0x409)
+            inst.postscriptNameID = nextid; nextid += 1
     buildStatTable(ft, [{"tag": "wght", "name": "Weight", "values": [
+        {"value": 190, "name": "Flüstern"},
         {"value": 280, "name": "Leise"},
         {"value": 450, "name": "Klar", "flags": 0x2},
-        {"value": 600, "name": "Laut"}]}])
-    ft["name"].names = [r for r in ft["name"].names if r.platformID != 1]  # STAT re-adds Mac names
+        {"value": 600, "name": "Laut"},
+        {"value": 725, "name": "Schreien"}]}])
+    ft["name"].names = [r for r in ft["name"].names if r.platformID != 1]
     ym, yn = gbbox(ft); set_win(ft, int(round(ym)), int(round(-yn)))
-    ft.save(os.path.join(OUTROOT, "Variable", os.path.basename(p)))
-    print("  Variable/%s" % os.path.basename(p))
+    out = "Goetheanum-Variabel-v%s.otf" % VERSION
+    ft.save(os.path.join(OUTROOT, "Variable", out))
+    print("  Variable/%s (Flüstern–Schreien)" % out)
+
+
+def build_extra_statics():
+    """Flüstern (190) and Schreien (725) as installable statics, instanced from
+    the variable. Each is its own Regular-only RIBBI family; modern apps still
+    group them under 'Goetheanum Schrift' via the typographic names."""
+    from fontTools.varLib.instancer import instantiateVariableFont
+    vf = os.path.join(OUTROOT, "Variable", "Goetheanum-Variabel-v%s.otf" % VERSION)
+    for nm, w, ps in [("Flüstern", 190, "Fluestern"), ("Schreien", 725, "Schreien")]:
+        ft = TTFont(vf)
+        instantiateVariableFont(ft, {"wght": w}, inplace=True)
+        fix_meta(ft, "GoetheanumSchrift-%s" % ps, "Goetheanum Schrift %s" % nm, weight_class=w)
+        office_names(ft, "Goetheanum Schrift %s" % nm, "Regular", nm, bold=False)
+        ym, yn = gbbox(ft); set_win(ft, int(round(ym)), int(round(-yn)))
+        out = "Goetheanum-Schrift-v%s-%s.otf" % (VERSION, ps)
+        ft.save(os.path.join(OUTROOT, "Fonts", out))
+        print("  Fonts/%s" % out)
 
 
 def build_webfonts():
@@ -391,6 +469,7 @@ def main():
     build_statics(M, H)
     build_icons()
     build_variable(M, H)
+    build_extra_statics()
     build_webfonts()
     build_icon_exports()
     build_zip()
