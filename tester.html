@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum Schriften · Gewichts-Tester</title>
+<meta name="robots" content="noindex" />
+<style>
+  @font-face{font-family:"GV";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.2.1.woff2") format("woff2");font-weight:150 725;font-display:swap}
+  :root{--ink:#23272b;--muted:#737a80;--line:rgba(20,24,28,.12);--gold:#d7ab68;--gold-deep:#a07a33;--soft:#faf8f4;--ok:#3f8f5f;--warn:#c2873a}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"GV","Helvetica Neue",Arial,sans-serif;font-variation-settings:"wght" 450;color:var(--ink);background:#fff;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:28px 26px 80px}
+  .kick{color:var(--gold-deep);font-size:13px;letter-spacing:.02em}
+  h1{font-variation-settings:"wght" 600;font-size:34px;line-height:1.1;margin:6px 0 4px}
+  .lede{color:var(--muted);max-width:640px;margin-bottom:26px}
+  .panel{border:1px solid var(--line);border-radius:16px;padding:30px;background:#fff}
+  /* live specimen */
+  .title{font-variation-settings:"wght" var(--w-laut,600);font-size:40px;line-height:1.08;margin-bottom:14px}
+  .body{font-variation-settings:"wght" var(--w-klar,450);font-size:18px;max-width:62ch}
+  .body .em{font-variation-settings:"wght" var(--w-laut,600)}
+  .caption{font-variation-settings:"wght" var(--w-leise,280);color:var(--muted);font-size:15px;margin-top:14px;max-width:62ch}
+  .small{font-size:11px}
+  .row{display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;margin-top:22px}
+  .row>.body{font-size:11px}.row>.title{font-size:11px;margin:0}
+  /* controls */
+  .ctrls{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:30px}
+  @media(max-width:760px){.ctrls{grid-template-columns:1fr}}
+  .ctrl b{font-variation-settings:"wght" 600;font-weight:normal}
+  .ctrl .v{float:right;color:var(--gold-deep)}
+  .ctrl .role{font-size:12px;color:var(--muted);margin-bottom:8px}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:var(--line);border-radius:2px;margin:6px 0}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .def{font-size:11px;color:var(--muted)}
+  .metrics{margin-top:26px;border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:var(--soft);font-size:14px}
+  .metrics div{display:flex;justify-content:space-between;padding:4px 0}
+  .metrics .lab{color:var(--muted)}
+  .metrics b{font-variation-settings:"wght" 600;font-weight:normal}
+  .verdict{font-size:13px}
+  .out{margin-top:24px;font-size:13px;color:var(--muted)}
+  .out code{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:2px 8px;color:var(--ink)}
+  .q{margin-top:30px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:14px}
+  .q b{font-variation-settings:"wght" 600;font-weight:normal;color:var(--ink)}
+  a{color:var(--gold-deep)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kick">Goetheanum Schriften · Werkzeug</div>
+  <h1>Gewichts-Tester</h1>
+  <p class="lede">Stell Leise, Klar und Laut frei ein und beurteile den Kontrast im echten Kontext – Fließtext mit fetter Hervorhebung und leiser Bildunterschrift. Der Stamm-Kontrast wird live geschätzt. Wenn du gute Werte gefunden hast, nenn sie mir, dann verankere ich sie in den Schnitten.</p>
+
+  <div class="panel">
+    <div class="title" contenteditable="true" spellcheck="false">Goetheanum Programm Heute</div>
+    <p class="body" contenteditable="true" spellcheck="false">Im Fließtext steht <span class="em">Klar</span>. Eine Hervorhebung wie <span class="em">dieses fette Wort</span> soll deutlich herausstechen, ohne zu schreien – das ist der Kontrast zwischen Klar und Laut. Lebendige Formen, ruhig gesetzt, gut lesbar von nah und auf Distanz.</p>
+    <p class="caption" contenteditable="true" spellcheck="false">Leise · eine zurückhaltende Bildunterschrift, die neben dem Klar-Text nicht mit ihm konkurriert.</p>
+
+    <div class="ctrls">
+      <div class="ctrl">
+        <div class="role"><b>Leise</b> · leise Auszeichnung <span class="v" id="vLeise">280</span></div>
+        <input type="range" id="sLeise" min="150" max="450" value="280" step="1">
+        <div class="def">Default 280 · Achse ab 190</div>
+      </div>
+      <div class="ctrl">
+        <div class="role"><b>Klar</b> · Regular / Fließtext <span class="v" id="vKlar">450</span></div>
+        <input type="range" id="sKlar" min="330" max="560" value="450" step="1">
+        <div class="def">Default 450</div>
+      </div>
+      <div class="ctrl">
+        <div class="role"><b>Laut</b> · Fett / Titel <span class="v" id="vLaut">600</span></div>
+        <input type="range" id="sLaut" min="500" max="725" value="600" step="1">
+        <div class="def">Default 600 · Achse bis 725</div>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div><span class="lab">Stamm (geschätzt) · Leise / Klar / Laut</span><b id="stems">51 / 85 / 112</b></div>
+      <div><span class="lab">Kontrast Klar → Laut (Fett)</span><b id="rLaut">1,32× —</b></div>
+      <div><span class="lab">Kontrast Leise → Klar</span><b id="rLeise">1,67×</b></div>
+      <div class="verdict" id="verdict"></div>
+    </div>
+    <div class="out">Deine Wahl: <code id="choice">Leise 280 · Klar 450 · Laut 600</code> — sag mir diese drei Zahlen.</div>
+  </div>
+
+  <div class="q">
+    <p><b>Leitfragen.</b> Ist Klar als Regular optimal – oder darf der Fließtext etwas leichter/schwerer? Kann Leise noch leiser (Achse erlaubt bis 190)? Welcher Laut-Wert gibt genug Fett-Kontrast? Faustregel: ein echtes Fett hat etwa das <b>1,5–1,8-fache</b> der Regular-Stammbreite.</p>
+  </div>
+</div>
+
+<script>
+  // wght -> geschätzte Stammbreite (Stützpunkte aus Messungen der Schrift)
+  var PTS=[[190,36],[280,51],[450,85],[600,112],[725,138]];
+  function stem(w){
+    if(w<=PTS[0][0])return PTS[0][1];
+    for(var i=1;i<PTS.length;i++){if(w<=PTS[i][0]){var a=PTS[i-1],b=PTS[i];return a[1]+(b[1]-a[1])*(w-a[0])/(b[0]-a[0]);}}
+    return PTS[PTS.length-1][1];
+  }
+  var root=document.documentElement;
+  var S={Leise:document.getElementById('sLeise'),Klar:document.getElementById('sKlar'),Laut:document.getElementById('sLaut')};
+  var V={Leise:document.getElementById('vLeise'),Klar:document.getElementById('vKlar'),Laut:document.getElementById('vLaut')};
+  function fmt(x){return x.toFixed(2).replace('.',',');}
+  function upd(){
+    var le=+S.Leise.value,kl=+S.Klar.value,la=+S.Laut.value;
+    V.Leise.textContent=le;V.Klar.textContent=kl;V.Laut.textContent=la;
+    root.style.setProperty('--w-leise',le);root.style.setProperty('--w-klar',kl);root.style.setProperty('--w-laut',la);
+    var sLe=stem(le),sKl=stem(kl),sLa=stem(la);
+    document.getElementById('stems').textContent=Math.round(sLe)+' / '+Math.round(sKl)+' / '+Math.round(sLa);
+    var rLa=sLa/sKl, rLe=sKl/sLe;
+    var tag=rLa>=1.5?' ✓ kräftig':(rLa>=1.35?' · grenzwertig':' · zu schwach');
+    document.getElementById('rLaut').textContent=fmt(rLa)+'×'+tag;
+    document.getElementById('rLaut').style.color=rLa>=1.5?'var(--ok)':(rLa>=1.35?'var(--warn)':'#c0473f');
+    document.getElementById('rLeise').textContent=fmt(rLe)+'×';
+    document.getElementById('choice').textContent='Leise '+le+' · Klar '+kl+' · Laut '+la;
+    var vd=document.getElementById('verdict');
+    vd.textContent = rLa>=1.5 ? 'Laut steht klar als Fett vom Fließtext ab.' :
+                     rLa>=1.35 ? 'Laut hebt sich, aber knapp – im Kleinen prüfen.' :
+                     'Laut zu nah an Klar – als Hervorhebung schwer erkennbar.';
+    vd.style.color='var(--muted)';
+  }
+  Object.values(S).forEach(function(s){s.addEventListener('input',upd);});upd();
+</script>
+</body>
+</html>

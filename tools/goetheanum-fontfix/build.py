@@ -34,8 +34,8 @@ _VMODEL = VariationModel([{}, {"wght": -1.0}, {"wght": 1.0}], axisOrder=["wght"]
 
 INPUT = os.path.join(HERE, "input")
 OUTROOT = os.path.normpath(os.path.join(HERE, "..", "..", "assets", "fonts", "goetheanum"))
-VERSION = "2.2.0"                       # extremes variable-only; Leise=Italic for Office Cmd+I
-FREV = 2.2                              # head.fontRevision
+VERSION = "2.2.1"                       # Q-fix: bounded extrapolation for single-sided glyph groups
+FREV = 2.2                              # head.fontRevision (Major.Minor; Patch im Versionsstring)
 SCHEMES = ["Leise", "Klar", "Laut"]
 IMPORTS = [("exclam", 0x21), ("quotedbl", 0x22), ("dollar", 0x24), ("section", 0xA7)]
 
@@ -230,7 +230,7 @@ def _compat_group(M, H, uni):
                key=lambda ns: (len(ns), H[max(ns, key=lambda n: H[n])] - H[min(ns, key=lambda n: H[n])]))
 
 
-def _outline_at(M, H, uni, targetH, ns):
+def _outline_at(M, H, uni, targetH, ns, clamp=False):
     ns = sorted(ns, key=lambda n: H[n])
     lo = max([n for n in ns if H[n] <= targetH], key=lambda n: H[n], default=ns[0])
     hi = min([n for n in ns if H[n] >= targetH], key=lambda n: H[n], default=ns[-1])
@@ -240,7 +240,9 @@ def _outline_at(M, H, uni, targetH, ns):
         lo, hi = ns[0], ns[-1]
     rA, aA = grec(M[lo], uni); rB, aB = grec(M[hi], uni)
     t = (targetH - H[lo]) / (H[hi] - H[lo]) if H[hi] != H[lo] else 0.0
-    t = max(0.0, min(1.0, t))                                   # clamp: no extrapolation -> no degeneration
+    # extrapolate so single-sided groups (Q) reach the extremes; clamp=True keeps
+    # it in range for glyphs that degenerate under extrapolation ($).
+    t = max(0.0, min(1.0, t)) if clamp else max(-0.85, min(1.85, t))
     return blend(rA, aA, rB, aB, t)
 
 
@@ -254,20 +256,24 @@ def build_variable(M, H):
     base = os.path.join(OUTROOT, "Fonts", static_out("Klar"))   # built by build_statics
     cmap = TTFont(base).getBestCmap()
     groups = {cp: _compat_group(M, H, cp) for cp in cmap}
+    gn_group = {}                                                # glyph name -> (codepoint, master group)
+    for cp, ns in groups.items():
+        gn = cmap.get(cp)
+        if gn and ns:
+            gn_group.setdefault(gn, (cp, ns))
+
+    def set_glyph(ft, gn, rec, adv):
+        td = ft["CFF "].cff[ft["CFF "].cff.fontNames[0]]
+        td.CharStrings[gn] = _charstring(ft, [(c, p) for c, p in rec], adv)
+        ft["hmtx"].metrics[gn] = (int(round(adv)), ft["hmtx"][gn][1])
 
     tmp = tempfile.mkdtemp(); paths = []
-    for name, Ht, wght in WIDE_MASTERS:                          # one master per Titillium weight
-        ft = TTFont(base); td = ft["CFF "].cff[ft["CFF "].cff.fontNames[0]]
-        for cp, ns in groups.items():
-            gn = cmap.get(cp)
-            if gn is None or not ns:
-                continue
-            rec, adv = _outline_at(M, H, cp, Ht, ns)
-            td.CharStrings[gn] = _charstring(ft, [(c, p) for c, p in rec], adv)
-            ft["hmtx"].metrics[gn] = (int(round(adv)), ft["hmtx"][gn][1])
+    for name, Ht, wght in WIDE_MASTERS:                          # first pass: extrapolated
+        ft = TTFont(base)
+        for gn, (cp, ns) in gn_group.items():
+            set_glyph(ft, gn, *_outline_at(M, H, cp, Ht, ns))
         p = os.path.join(tmp, "m_%d.otf" % wght); ft.save(p); paths.append(p)
 
-    # force-constant any glyph whose drawn outline is not identical across all masters
     fonts = [TTFont(p) for p in paths]; gsets = [f.getGlyphSet() for f in fonts]
     di = [w for _, _, w in WIDE_MASTERS].index(VAR_DEFAULT)
 
@@ -275,12 +281,16 @@ def build_variable(M, H):
         r = RecordingPen(); gs[gn].draw(r); return tuple(c for c, _ in r.value)
 
     for gn in fonts[0].getGlyphOrder():
-        if len({cmds(g, gn) for g in gsets}) != 1:
+        if len({cmds(g, gn) for g in gsets}) == 1:
+            continue
+        if gn in gn_group:                                      # extrapolation degenerated -> retry clamped (always compatible)
+            cp, ns = gn_group[gn]
+            for f, (name, Ht, wght) in zip(fonts, WIDE_MASTERS):
+                set_glyph(f, gn, *_outline_at(M, H, cp, Ht, ns, clamp=True))
+        else:                                                  # no group -> hold at the default outline
             rd = RecordingPen(); gsets[di][gn].draw(rd); adv = fonts[di]["hmtx"][gn][0]
             for f in fonts:
-                td = f["CFF "].cff[f["CFF "].cff.fontNames[0]]
-                td.CharStrings[gn] = _charstring(f, list(rd.value), adv)
-                f["hmtx"].metrics[gn] = (adv, f["hmtx"][gn][1])
+                set_glyph(f, gn, list(rd.value), adv)
     for f, p in zip(fonts, paths):
         f.save(p)
 

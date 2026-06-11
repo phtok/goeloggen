@@ -7,6 +7,7 @@ on:
     paths:
       - "index.html"
       - "schriften.html"
+      - "tester.html"
       - "logo-generator.html"
       - "visitenkarten.html"
       - "visitenkarten-generator.html"
@@ -41,6 +42,7 @@ jobs:
           test -f index.html
           cp index.html _site/index.html
           if [ -f schriften.html ]; then cp schriften.html _site/schriften.html; fi
+          if [ -f tester.html ]; then cp tester.html _site/tester.html; fi
           test -f logo-generator.html
           cp logo-generator.html _site/logo-generator.html
           if [ -f index-goelogger-gci1.html ]; then cp index-goelogger-gci1.html _site/index-goelogger-gci1.html; fi
