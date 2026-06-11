@@ -1,4 +1,4 @@
-# Goetheanum Typografie — prüfbare Hausregeln
+# Goetheanum Typografie – prüfbare Hausregeln
 # Quelle der Wahrheit: goetheanum-typo-tokens.json ($regeln). Diese Datei macht
 # die Regeln ausführbar: `erkennen` (Regex) findet Verstöße, `korrektur` behebt
 # Eindeutiges automatisch; `pruefung: lm` markiert Urteils-Regeln für ein
@@ -44,12 +44,12 @@
 - id: G21-gruppen-a
   regel: Tausendergruppen ab fünf Stellen mit schmalem geschütztem Leerzeichen (Bundeskanzlei/SNB)
   erkennen: '(\d)[’''.](\d{3})(?=[’''.]\d{3})'
-  korrektur: '$1 $2'
+  korrektur: '$1 $2'
   schwere: fehler
 - id: G21-gruppen-b
   regel: letzte Tausendergruppe bei fünf und mehr Stellen
   erkennen: '(\d{2,3})[’''.](\d{3})\b(?!\d)'
-  korrektur: '$1 $2'
+  korrektur: '$1 $2'
   schwere: fehler
 - id: G21-viersteller
   regel: vierstellige Zahlen kompakt, ohne Gruppierung (1318)
@@ -64,7 +64,7 @@
 - id: T01-doppelspatium
   regel: Nie zwei Leerzeichen
   erkennen: '(\S)  +(\S)'
-  korrektur: '$1 $2'
+  korrektur: '$1 $2'
   schwere: fehler
 - id: G18-minus
   regel: Echtes Minus − bei Zahlen, kein Bindestrich
@@ -72,7 +72,7 @@
   korrektur: '$1−$2'
   schwere: empfehlung
 
-# ——— Urteils-Regeln (für Sprachmodelle; nicht regex-sicher) ———
+# ––– Urteils-Regeln (für Sprachmodelle; nicht regex-sicher) –––
 - id: G01-einfachauszeichnung
   regel: Jede Hervorhebung ändert genau EIN Merkmal (Gewicht ODER Grösse ODER Farbe ODER Einzug), nie zwei.
   pruefung: lm
@@ -82,7 +82,7 @@
   pruefung: lm
   schwere: fehler
 - id: G05-hervorhebung
-  regel: Betont wird mit Laut — nicht mit Unterstreichung, Sperrung oder VERSALIEN.
+  regel: Betont wird mit Laut – nicht mit Unterstreichung, Sperrung oder VERSALIEN.
   pruefung: lm
   schwere: fehler
 - id: G03-sparsamkeit
@@ -90,7 +90,7 @@
   pruefung: lm
   schwere: empfehlung
 - id: G09-viereck
-  regel: Magisches Viereck — Schriftwahl, Zeilenlänge, Zeilenabstand, Umraum im Gleichgewicht; eine Änderung zieht die anderen nach.
+  regel: Magisches Viereck – Schriftwahl, Zeilenlänge, Zeilenabstand, Umraum im Gleichgewicht; eine Änderung zieht die anderen nach.
   pruefung: lm
   schwere: empfehlung
 - id: G10-zeilenlaenge
