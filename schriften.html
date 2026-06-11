@@ -80,9 +80,8 @@
   .igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(116px,1fr));gap:10px}
   .icell{position:relative;border:1px solid var(--line-soft);border-radius:12px;padding:14px 8px 10px;background:var(--soft);text-align:center;transition:border-color .15s,background .15s}
   .icell:hover{border-color:var(--gold);background:#fff}
-  .icell .gl{font-family:"G Icons";font-size:34px;line-height:1;display:block;color:var(--ink)}
-  .icell .nm{font-size:11.5px;color:var(--ink);margin-top:9px;line-height:1.25;min-height:1.25em}
-  .icell .key{position:absolute;top:6px;left:8px;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .icell img.gl{width:44px;height:44px;display:block;margin:2px auto 0;object-fit:contain}
+  .icell .nm{font-size:11.5px;color:var(--ink);margin-top:10px;line-height:1.25;min-height:1.25em}
   .icell .dl{display:flex;gap:7px;justify-content:center;margin-top:8px;opacity:0;transition:opacity .15s}
   .icell:hover .dl{opacity:1}
   .icell .dl a{font-size:10px;color:var(--gold-deep);text-decoration:none;letter-spacing:.02em}
@@ -162,8 +161,8 @@
     <div class="shead"><h2>Icons.</h2>
       <p>Per Tastatur gesetzt (siehe Beipackzettel). Jedes Icon einzeln als SVG, PNG und PDF.</p></div>
     <div class="tabs">
-      <button data-tab="named" class="on">Benannte Piktogramme</button>
-      <button data-tab="pua">Pfeile, Kompass &amp; weitere</button>
+      <button data-tab="piktogramm" class="on">Piktogramme</button>
+      <button data-tab="pfeil-kompass">Pfeile &amp; Kompass</button>
     </div>
     <div class="igrid" id="igrid"></div>
   </div></section>
@@ -202,23 +201,17 @@
   })();
 
   (function(){
-    var ICONS=[["bioabfall","Bioabfall","0x0068"],["bitte-anfassen","Bitte anfassen","0x0071"],["draussen-essen","Draussen essen","0x0075"],["eintritt","Eintritt","0x0065"],["fahrstuhl","Fahrstuhl","0x0061"],["garderobe","Garderobe","0x0066"],["geraete-abschalten","Geräte abschalten","0x006F"],["goetheanum-badge","Goetheanum Badge","0x0032"],["goetheanum-badge-invers","Goetheanum Badge invers","0x0022"],["hunde-anleinen","Hunde anleinen","0x0072"],["icon-0021","U+0021","0x0021"],["icon-003e","U+003E","0x003E"],["icon-0041","U+0041","0x0041"],["icon-0042","U+0042","0x0042"],["icon-0043","U+0043","0x0043"],["icon-0044","U+0044","0x0044"],["icon-0045","U+0045","0x0045"],["icon-0046","U+0046","0x0046"],["icon-0047","U+0047","0x0047"],["icon-0048","U+0048","0x0048"],["icon-0049","U+0049","0x0049"],["icon-004a","U+004A","0x004A"],["icon-004b","U+004B","0x004B"],["icon-004f","U+004F","0x004F"],["icon-0051","U+0051","0x0051"],["icon-0052","U+0052","0x0052"],["icon-0053","U+0053","0x0053"],["icon-0054","U+0054","0x0054"],["icon-0055","U+0055","0x0055"],["icon-0056","U+0056","0x0056"],["icon-0057","U+0057","0x0057"],["icon-0058","U+0058","0x0058"],["icon-0059","U+0059","0x0059"],["icon-005a","U+005A","0x005A"],["icon-e200","U+E200","0xE200"],["icon-e201","U+E201","0xE201"],["icon-e202","U+E202","0xE202"],["icon-e203","U+E203","0xE203"],["icon-e204","U+E204","0xE204"],["icon-e205","U+E205","0xE205"],["icon-e206","U+E206","0xE206"],["icon-e21d","U+E21D","0xE21D"],["icon-e240","U+E240","0xE240"],["icon-e241","U+E241","0xE241"],["icon-e242","U+E242","0xE242"],["icon-e243","U+E243","0xE243"],["icon-e244","U+E244","0xE244"],["icon-e245","U+E245","0xE245"],["icon-e246","U+E246","0xE246"],["icon-e25d","U+E25D","0xE25D"],["icon-e260","U+E260","0xE260"],["icon-e261","U+E261","0xE261"],["icon-e262","U+E262","0xE262"],["icon-e263","U+E263","0xE263"],["icon-e264","U+E264","0xE264"],["icon-e265","U+E265","0xE265"],["icon-e266","U+E266","0xE266"],["icon-e267","U+E267","0xE267"],["icon-e268","U+E268","0xE268"],["icon-e269","U+E269","0xE269"],["icon-e26a","U+E26A","0xE26A"],["icon-e26b","U+E26B","0xE26B"],["icon-e26c","U+E26C","0xE26C"],["icon-e26d","U+E26D","0xE26D"],["icon-e26e","U+E26E","0xE26E"],["icon-e26f","U+E26F","0xE26F"],["keine-fotos","Keine Fotos","0x007A"],["keine-hunde","Keine Hunde","0x0074"],["keine-taschen","Keine Taschen","0x0069"],["nur-mit-augen","Nur mit den Augen","0x0077"],["papier","Papier","0x006A"],["restmuell","Restmüll","0x006B"],["schliessfaecher","Schliessfächer","0x0064"],["treppe","Treppe","0x0073"],["wc-damen","WC Damen","0x0079"],["wc-familie","WC Familie","0x0062"],["wc-gruppe","WC Gruppe","0x0076"],["wc-herren","WC Herren","0x003C"],["wc-rollstuhl","WC Rollstuhl","0x0078"],["wickelraum","Wickelraum","0x0063"],["wlan","WLAN","0x0067"]];
+    var ICONS=[["bioabfall","Bioabfall","piktogramm"],["bitte-anfassen","Bitte anfassen","piktogramm"],["draussen-essen","Draussen essen","piktogramm"],["eintritt","Eintritt","piktogramm"],["fahrstuhl","Fahrstuhl","piktogramm"],["garderobe","Garderobe","piktogramm"],["geraete-abschalten","Geräte abschalten","piktogramm"],["goetheanum-badge","Goetheanum Badge","piktogramm"],["goetheanum-badge-invers","Goetheanum Badge invers","piktogramm"],["hunde-anleinen","Hunde anleinen","piktogramm"],["keine-fotos","Keine Fotos","piktogramm"],["keine-hunde","Keine Hunde","piktogramm"],["keine-taschen","Keine Taschen","piktogramm"],["nur-mit-augen","Nur mit den Augen","piktogramm"],["papier","Papier","piktogramm"],["restmuell","Restmüll","piktogramm"],["schliessfaecher","Schliessfächer","piktogramm"],["treppe","Treppe","piktogramm"],["wc-damen","WC Damen","piktogramm"],["wc-familie","WC Familie","piktogramm"],["wc-gruppe","WC Gruppe","piktogramm"],["wc-herren","WC Herren","piktogramm"],["wc-rollstuhl","WC Rollstuhl","piktogramm"],["wickelraum","Wickelraum","piktogramm"],["wlan","WLAN","piktogramm"],["kompass-1","Kompass","pfeil-kompass"],["kompass-2","Kompass","pfeil-kompass"],["kompass-3","Kompass","pfeil-kompass"],["kompass-4","Kompass","pfeil-kompass"],["pfeil-gebogen-1","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-2","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-3","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-4","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-5","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-6","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-7","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-8","Pfeil gebogen","pfeil-kompass"],["pfeil-hoch","Pfeil hoch","pfeil-kompass"],["pfeil-hoch-fett","Pfeil hoch (fett)","pfeil-kompass"],["pfeil-links","Pfeil links","pfeil-kompass"],["pfeil-links-fett","Pfeil links (fett)","pfeil-kompass"],["pfeil-rechts","Pfeil rechts","pfeil-kompass"],["pfeil-rechts-fett","Pfeil rechts (fett)","pfeil-kompass"],["pfeil-runter","Pfeil runter","pfeil-kompass"],["pfeil-runter-fett","Pfeil runter (fett)","pfeil-kompass"]];
     var BASE="assets/fonts/goetheanum/Icons-Einzeldateien/";
     var grid=document.getElementById('igrid');
-    function isNamed(it){return it[1].indexOf('U+')!==0;}
     function render(tab){
       grid.innerHTML="";
-      ICONS.filter(function(it){
-        var cp=parseInt(it[2],16);
-        return tab==='named' ? isNamed(it) : cp>=0xE000;
-      }).forEach(function(it){
-        var slug=it[0],label=it[1],cp=parseInt(it[2],16);
+      ICONS.filter(function(it){return it[2]===tab;}).forEach(function(it){
+        var slug=it[0],label=it[1];
         var cell=document.createElement('div');cell.className='icell';
-        var key=(cp<0x7f)?('Taste '+String.fromCharCode(cp)):('U+'+cp.toString(16).toUpperCase());
         cell.innerHTML=
-          '<span class="key">'+(isNamed(it)?key:'')+'</span>'+
-          '<span class="gl">'+String.fromCodePoint(cp)+'</span>'+
-          '<div class="nm">'+(isNamed(it)?label:'')+'</div>'+
+          '<img class="gl" src="'+BASE+'svg/'+slug+'.svg" alt="'+label+'" loading="lazy">'+
+          '<div class="nm">'+label+'</div>'+
           '<div class="dl">'+
             '<a download href="'+BASE+'svg/'+slug+'.svg">SVG</a>'+
             '<a download href="'+BASE+'png/'+slug+'.png">PNG</a>'+
@@ -233,7 +226,7 @@
         b.classList.add('on');render(b.dataset.tab);
       });
     });
-    render('named');
+    render('piktogramm');
   })();
 </script>
 </body>

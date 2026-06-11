@@ -369,6 +369,22 @@ ICON_KEYS = {
     "b": ("wc-familie", "WC Familie"),
 }
 
+# Curated arrows & compass (Beipackzettel page 4), deduplicated: the cardinal
+# thin/bold arrows, eight curved arrows and four compass dials. The redundant
+# second set (E200–E206 / E240–E242) and the wheelchair (E21D) are left out.
+ARROWS_COMPASS = {
+    0xE264: ("pfeil-hoch", "Pfeil hoch"), 0xE265: ("pfeil-rechts", "Pfeil rechts"),
+    0xE266: ("pfeil-runter", "Pfeil runter"), 0xE267: ("pfeil-links", "Pfeil links"),
+    0xE268: ("pfeil-hoch-fett", "Pfeil hoch (fett)"), 0xE269: ("pfeil-rechts-fett", "Pfeil rechts (fett)"),
+    0xE26A: ("pfeil-runter-fett", "Pfeil runter (fett)"), 0xE26B: ("pfeil-links-fett", "Pfeil links (fett)"),
+    0xE260: ("pfeil-gebogen-1", "Pfeil gebogen"), 0xE261: ("pfeil-gebogen-2", "Pfeil gebogen"),
+    0xE262: ("pfeil-gebogen-3", "Pfeil gebogen"), 0xE263: ("pfeil-gebogen-4", "Pfeil gebogen"),
+    0xE26C: ("pfeil-gebogen-5", "Pfeil gebogen"), 0xE26D: ("pfeil-gebogen-6", "Pfeil gebogen"),
+    0xE26E: ("pfeil-gebogen-7", "Pfeil gebogen"), 0xE26F: ("pfeil-gebogen-8", "Pfeil gebogen"),
+    0xE243: ("kompass-1", "Kompass"), 0xE244: ("kompass-2", "Kompass"),
+    0xE245: ("kompass-3", "Kompass"), 0xE246: ("kompass-4", "Kompass"),
+}
+
 
 def _glyph_svg(gs, gn, upm):
     from fontTools.pens.svgPathPen import SVGPathPen
@@ -398,7 +414,9 @@ def build_icon_exports():
         os.makedirs(d, exist_ok=True)
     ft = TTFont(os.path.join(OUTROOT, "Fonts", "Goetheanum-Icons-v%s.otf" % VERSION))
     cmap = ft.getBestCmap(); gs = ft.getGlyphSet(); upm = ft["head"].unitsPerEm
-    named = {cmap[ord(k)]: v for k, v in ICON_KEYS.items() if ord(k) in cmap}
+    # resolve curated names to glyphs (arrows first, pictograms win on overlap)
+    lookup = {cmap[cp]: (s, l, "pfeil-kompass") for cp, (s, l) in ARROWS_COMPASS.items() if cp in cmap}
+    lookup.update({cmap[ord(k)]: (v[0], v[1], "piktogramm") for k, v in ICON_KEYS.items() if ord(k) in cmap})
     manifest, seen = [], set()
     for cp, gn in sorted(cmap.items()):
         if cp in (0x20, 0xA0) or gn in seen:
@@ -407,13 +425,13 @@ def build_icon_exports():
         if svg is None:
             continue
         seen.add(gn)
-        slug, label = named.get(gn, ("icon-%04x" % cp, "U+%04X" % cp))
+        slug, label, group = lookup.get(gn, ("icon-%04x" % cp, "U+%04X" % cp, "weitere"))
         with open(os.path.join(base, "svg", slug + ".svg"), "w") as fh:
             fh.write(svg)
         cairosvg.svg2png(bytestring=svg.encode(), write_to=os.path.join(base, "png", slug + ".png"),
                          output_width=512, output_height=512, background_color="rgba(0,0,0,0)")
         cairosvg.svg2pdf(bytestring=svg.encode(), write_to=os.path.join(base, "pdf", slug + ".pdf"))
-        manifest.append({"slug": slug, "label": label, "codepoint": "U+%04X" % cp})
+        manifest.append({"slug": slug, "label": label, "codepoint": "U+%04X" % cp, "group": group})
     manifest.sort(key=lambda m: m["slug"])
     with open(os.path.join(base, "icons.json"), "w") as fh:
         json.dump(manifest, fh, ensure_ascii=False, indent=1)
