@@ -4,317 +4,228 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Goetheanum Schriften</title>
-<meta name="description" content="Die Goetheanum Schriften v1.4.43 – Leise, Klar, Laut, Variabel und Icons. Repariert, vervollständigt und für den täglichen Gebrauch optimiert." />
+<meta name="description" content="Goetheanum Schriften 2.0 – Leise, Klar, Laut, Variabel und Icons. Repariert, vervollständigt und optimiert." />
 <meta name="robots" content="noindex" />
 <style>
-  /* ---------- Webfonts (reparierte Fassung) ---------- */
-  @font-face{font-family:"Goetheanum Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v1.4.43-Leise.woff2") format("woff2"),url("assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Schrift-v1.4.43-Leise.woff") format("woff");font-weight:400;font-style:normal;font-display:swap}
-  @font-face{font-family:"Goetheanum Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v1.4.43-Klar.woff2") format("woff2"),url("assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Schrift-v1.4.43-Klar.woff") format("woff");font-weight:400;font-style:normal;font-display:swap}
-  @font-face{font-family:"Goetheanum Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v1.4.43-Laut.woff2") format("woff2"),url("assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Schrift-v1.4.43-Laut.woff") format("woff");font-weight:400;font-style:normal;font-display:swap}
-  @font-face{font-family:"Goetheanum Variabel";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v1.4.43.woff2") format("woff2");font-weight:280 600;font-style:normal;font-display:swap}
-  @font-face{font-family:"Goetheanum Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v0.3.35.woff2") format("woff2"),url("assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Icons-v0.3.35.woff") format("woff");font-display:block}
+  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.0.0-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.0.0-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.0.0-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Variabel";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.0.0.woff2") format("woff2");font-weight:280 600;font-display:swap}
+  @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.0.0.woff2") format("woff2");font-display:block}
 
   :root{
-    --ink:#23272b;          /* Text */
-    --muted:#71777e;        /* Sekundär */
-    --line:rgba(20,24,28,.10);
-    --line-soft:rgba(20,24,28,.06);
-    --accent:#2376ba;       /* Goetheanum-Blau */
-    --paper:#ffffff;
-    --soft:#f6f7f8;         /* zarte Flächen */
-    --maxw:1140px;
+    --ink:#23272b; --muted:#737a80; --line:rgba(20,24,28,.10); --line-soft:rgba(20,24,28,.055);
+    --gold:#d7ab68; --gold-deep:#a07a33; --paper:#fff; --soft:#faf8f4; --maxw:1080px;
   }
-
   *{box-sizing:border-box;margin:0;padding:0}
-  html{-webkit-text-size-adjust:100%}
-  body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:"Goetheanum Klar","Helvetica Neue",Arial,sans-serif;
-    /* Saubere Vorschau: keine künstlichen Engen, echte Metrik + Kerning */
-    letter-spacing:normal;
-    font-kerning:normal;
-    text-rendering:optimizeLegibility;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    line-height:1.5;
-  }
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  body{background:var(--paper);color:var(--ink);font-family:"G Klar","Helvetica Neue",Arial,sans-serif;
+       letter-spacing:normal;font-kerning:normal;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  a{color:inherit}
 
-  /* ---------- Header ---------- */
-  header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid var(--line)}
-  .bar{display:flex;align-items:center;justify-content:space-between;height:64px}
-  .brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit}
-  .brand img{height:26px;width:auto;display:block}
-  .brand .div{width:1px;height:22px;background:var(--line)}
-  .brand b{font-weight:400;font-size:15px;letter-spacing:.01em}
-  nav.top{display:flex;gap:26px}
-  nav.top a{color:var(--muted);text-decoration:none;font-size:14px}
-  nav.top a:hover{color:var(--ink)}
-  @media(max-width:680px){nav.top{display:none}}
+  header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;justify-content:space-between;height:58px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+  .brand img{height:22px}
+  .brand .div{width:1px;height:18px;background:var(--line)}
+  .brand b{font-weight:400;font-size:14px}
+  nav.top{display:flex;gap:22px}
+  nav.top a{color:var(--muted);text-decoration:none;font-size:13.5px}
+  nav.top a:hover{color:var(--gold-deep)}
+  @media(max-width:720px){nav.top{display:none}}
 
-  /* ---------- Hero ---------- */
-  .hero{padding:84px 0 56px}
-  .eyebrow{color:var(--accent);font-size:13px;letter-spacing:.14em;text-transform:uppercase}
-  h1{font-family:"Goetheanum Laut",sans-serif;font-weight:400;font-size:clamp(44px,8vw,92px);line-height:1.02;margin:14px 0 0}
-  .lede{font-family:"Goetheanum Leise",sans-serif;font-size:clamp(18px,2.4vw,24px);color:var(--muted);max-width:680px;margin:22px 0 0;line-height:1.45}
-  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
-  .chip{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--muted)}
+  .kick{color:var(--gold-deep);font-size:12px;letter-spacing:.13em;text-transform:uppercase}
+  h1{font-family:"G Laut";font-weight:400;font-size:clamp(40px,7vw,78px);line-height:1.02}
+  .hero{padding:64px 0 14px}
+  .lede{font-family:"G Leise";font-size:clamp(17px,2.1vw,21px);color:var(--muted);max-width:600px;margin-top:16px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .chip{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12.5px;color:var(--muted)}
+  .chip b{color:var(--gold-deep);font-weight:400}
 
-  /* ---------- Sections ---------- */
-  section{padding:64px 0;border-top:1px solid var(--line-soft)}
-  .shead{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin-bottom:30px}
-  .shead h2{font-family:"Goetheanum Laut",sans-serif;font-weight:400;font-size:clamp(26px,4vw,40px);line-height:1.05}
-  .shead p{color:var(--muted);font-size:15px;max-width:440px}
-  .kicker{color:var(--accent);font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+  section{padding:46px 0;border-top:1px solid var(--line-soft)}
+  .shead{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:22px;flex-wrap:wrap}
+  .shead h2{font-family:"G Laut";font-weight:400;font-size:clamp(23px,3.4vw,33px);line-height:1.05}
+  .shead p{color:var(--muted);font-size:14px;max-width:380px}
 
-  /* ---------- Variable / Slider ---------- */
-  .vstage{border:1px solid var(--line);border-radius:18px;padding:34px 30px;background:var(--paper)}
-  .vsample{font-family:"Goetheanum Variabel",sans-serif;font-variation-settings:"wght" 450;font-size:clamp(40px,9vw,108px);line-height:1.08;letter-spacing:normal;outline:none;word-break:break-word}
-  .vsample:focus{background:linear-gradient(transparent 78%,rgba(35,118,186,.10) 0)}
-  .controls{display:flex;align-items:center;gap:20px;margin-top:26px;flex-wrap:wrap}
-  .controls input[type=range]{-webkit-appearance:none;appearance:none;flex:1;min-width:220px;height:2px;background:var(--line);border-radius:2px;outline:none}
-  .controls input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-  .controls input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid #fff}
-  .readout{font-size:14px;color:var(--muted);min-width:188px;text-align:right}
+  .vstage{border:1px solid var(--line);border-radius:16px;padding:26px 24px;background:var(--soft)}
+  .vsample{font-family:"G Variabel";font-variation-settings:"wght" 450;font-size:clamp(36px,8vw,88px);line-height:1.1;outline:none;word-break:break-word}
+  .controls{display:flex;align-items:center;gap:18px;margin-top:20px;flex-wrap:wrap}
+  input[type=range]{-webkit-appearance:none;appearance:none;flex:1;min-width:200px;height:2px;background:var(--line);border-radius:2px}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid #fff}
+  .readout{font-size:13.5px;color:var(--muted);min-width:160px;text-align:right}
   .readout b{color:var(--ink);font-weight:400}
-  .stops{display:flex;justify-content:space-between;margin-top:12px;font-size:12px;color:var(--muted)}
 
-  /* ---------- Drei Schnitte ---------- */
-  .cuts{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-  @media(max-width:820px){.cuts{grid-template-columns:1fr}}
-  .cut{border:1px solid var(--line);border-radius:16px;padding:26px;display:flex;flex-direction:column;gap:14px;min-height:230px}
-  .cut .tag{display:flex;align-items:baseline;justify-content:space-between}
-  .cut .tag b{font-weight:400;font-size:18px}
-  .cut .tag span{font-size:12px;color:var(--muted)}
-  .cut .big{font-size:clamp(34px,5vw,52px);line-height:1.05;letter-spacing:normal;margin-top:auto}
-  .cut .desc{color:var(--muted);font-size:14px}
-  .leise{font-family:"Goetheanum Leise",sans-serif}
-  .klar{font-family:"Goetheanum Klar",sans-serif}
-  .laut{font-family:"Goetheanum Laut",sans-serif}
+  .cuts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:760px){.cuts{grid-template-columns:1fr}}
+  .cut{border:1px solid var(--line);border-radius:14px;padding:20px}
+  .cut .tag{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+  .cut .tag b{font-weight:400}.cut .tag span{font-size:12px;color:var(--muted)}
+  .cut .big{font-size:clamp(30px,4.4vw,42px);line-height:1.05}
+  .leise{font-family:"G Leise"} .klar{font-family:"G Klar"} .laut{font-family:"G Laut"}
 
-  /* ---------- Zeichensatz ---------- */
-  .glyphline{font-family:"Goetheanum Klar",sans-serif;font-size:clamp(22px,3.4vw,34px);letter-spacing:normal;line-height:1.7;word-spacing:.04em}
-  .glyphline.alt{font-family:"Goetheanum Leise",sans-serif}
-  .pangram{font-family:"Goetheanum Laut",sans-serif;font-size:clamp(24px,4vw,40px);line-height:1.2;letter-spacing:normal;margin-top:8px}
-  .newchars{display:inline-flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-  .newchars span{border:1px solid var(--line);border-radius:10px;min-width:46px;height:46px;display:inline-flex;align-items:center;justify-content:center;font-size:24px}
+  .glyph{font-size:clamp(19px,2.8vw,26px);line-height:1.7;color:var(--ink)}
+  .new{display:inline-flex;gap:5px;flex-wrap:wrap;margin-top:14px}
+  .new span{border:1px solid var(--line);border-radius:8px;min-width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;font-size:20px}
 
-  /* ---------- Icons ---------- */
-  .igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:10px}
-  .icell{aspect-ratio:1;border:1px solid var(--line-soft);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--soft);transition:border-color .15s,background .15s}
-  .icell:hover{border-color:var(--accent);background:#fff}
-  .icell .gly{font-family:"Goetheanum Icons";font-size:30px;line-height:1;color:var(--ink)}
-  .icell .cp{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
-  .icell.new{background:rgba(35,118,186,.07);border-color:rgba(35,118,186,.25)}
+  .tabs{display:flex;gap:8px;margin-bottom:18px}
+  .tabs button{font:inherit;font-size:13px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+  .tabs button.on{color:var(--gold-deep);border-color:var(--gold)}
+  .igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(116px,1fr));gap:10px}
+  .icell{position:relative;border:1px solid var(--line-soft);border-radius:12px;padding:14px 8px 10px;background:var(--soft);text-align:center;transition:border-color .15s,background .15s}
+  .icell:hover{border-color:var(--gold);background:#fff}
+  .icell .gl{font-family:"G Icons";font-size:34px;line-height:1;display:block;color:var(--ink)}
+  .icell .nm{font-size:11.5px;color:var(--ink);margin-top:9px;line-height:1.25;min-height:1.25em}
+  .icell .key{position:absolute;top:6px;left:8px;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .icell .dl{display:flex;gap:7px;justify-content:center;margin-top:8px;opacity:0;transition:opacity .15s}
+  .icell:hover .dl{opacity:1}
+  .icell .dl a{font-size:10px;color:var(--gold-deep);text-decoration:none;text-transform:uppercase;letter-spacing:.04em}
+  .icell .dl a:hover{text-decoration:underline}
+  @media(hover:none){.icell .dl{opacity:1}}
 
-  /* ---------- Downloads ---------- */
-  .dl{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-  @media(max-width:820px){.dl{grid-template-columns:1fr}}
-  .card{border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:10px}
-  .card h3{font-weight:400;font-size:18px}
-  .card p{color:var(--muted);font-size:14px;flex:1}
-  .card .files{font-size:12px;color:var(--muted);line-height:1.7}
-  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-  .btn{display:inline-block;text-decoration:none;font-size:14px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);color:var(--ink)}
-  .btn:hover{border-color:var(--ink)}
-  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-  .btn.primary:hover{background:#1c5e93}
+  .dl-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:820px){.dl-cards{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.dl-cards{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px}
+  .card h3{font-weight:400;font-size:16px}.card p{color:var(--muted);font-size:13px;flex:1}
+  .btn{display:inline-block;text-decoration:none;font-size:13px;padding:8px 14px;border-radius:9px;border:1px solid var(--line);color:var(--ink);text-align:center}
+  .btn:hover{border-color:var(--gold-deep)}
+  .btn.primary{background:var(--gold);border-color:var(--gold);color:#3a2d10}
+  .btn.primary:hover{background:#c59f56}
 
-  /* ---------- Footer ---------- */
-  footer{border-top:1px solid var(--line);padding:46px 0 70px;color:var(--muted);font-size:13px}
-  footer a{color:var(--muted)}
+  footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--muted);font-size:12.5px}
   .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-  .note{max-width:560px;line-height:1.7}
+  .frow strong{color:var(--ink);font-weight:400}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="wrap bar">
-    <a class="brand" href="https://www.goetheanum.ch" aria-label="Am Goetheanum">
-      <img src="assets/logos/am-goetheanum-dark.svg" alt="Am Goetheanum" />
-      <span class="div"></span>
-      <b>Schriften</b>
-    </a>
-    <nav class="top">
-      <a href="#variabel">Variabel</a>
-      <a href="#schnitte">Schnitte</a>
-      <a href="#zeichen">Zeichensatz</a>
-      <a href="#icons">Icons</a>
-      <a href="#download">Download</a>
-    </nav>
-  </div>
-</header>
+<header><div class="wrap bar">
+  <a class="brand" href="https://www.goetheanum.ch" aria-label="Am Goetheanum">
+    <img src="assets/logos/am-goetheanum-dark.svg" alt="Am Goetheanum" />
+    <span class="div"></span><b>Schriften</b>
+  </a>
+  <nav class="top">
+    <a href="#variabel">Variabel</a><a href="#schnitte">Schnitte</a>
+    <a href="#icons">Icons</a><a href="#download">Download</a>
+  </nav>
+</div></header>
 
 <main>
-  <div class="wrap">
-    <!-- HERO -->
-    <div class="hero">
-      <div class="eyebrow">Hausschrift · Version 1.4.43</div>
-      <h1>Goetheanum<br>Schriften</h1>
-      <p class="lede">Drei Schnitte für den täglichen Gebrauch – Leise, Klar, Laut – ergänzt um einen Variable Font und einen Icon-Satz. Repariert, vervollständigt und sauber gesetzt.</p>
-      <div class="meta">
-        <span class="chip">Leise · Klar · Laut</span>
-        <span class="chip">Variable Font 280–600</span>
-        <span class="chip">90 Icons</span>
-        <span class="chip">SIL Open Font License</span>
-      </div>
+  <div class="wrap hero">
+    <div class="kick">Hausschrift · Version 2.0</div>
+    <h1>Goetheanum Schriften</h1>
+    <p class="lede">Leise, Klar, Laut – dazu ein Variable Font und ein Icon-Satz. Repariert, vervollständigt, sauber gesetzt.</p>
+    <div class="meta">
+      <span class="chip">Drei Schnitte</span>
+      <span class="chip"><b>Variabel</b> 280–600</span>
+      <span class="chip"><b>81</b> Icons</span>
+      <span class="chip">SIL Open Font License</span>
     </div>
   </div>
 
-  <!-- VARIABEL -->
   <section id="variabel"><div class="wrap">
-    <div class="shead">
-      <div>
-        <div class="kicker">Variable Font</div>
-        <h2>Ein Gewicht, stufenlos.</h2>
-      </div>
-      <p>Von Leise (280) bis Laut (600) – jede Zwischenstufe ist live einstellbar. Text anklicken und selbst schreiben.</p>
-    </div>
+    <div class="shead"><h2>Ein Gewicht, stufenlos.</h2>
+      <p>Von Leise (280) bis Laut (600). Text anklicken und selbst schreiben.</p></div>
     <div class="vstage">
       <div class="vsample" id="vsample" contenteditable="true" spellcheck="false">Lebendige Formen</div>
       <div class="controls">
-        <input type="range" id="wght" min="280" max="600" value="450" step="1" aria-label="Schriftgewicht" />
+        <input type="range" id="wght" min="280" max="600" value="450" step="1" aria-label="Gewicht" />
         <div class="readout">wght <b id="wval">450</b> · <span id="wname">Klar</span></div>
       </div>
-      <div class="stops"><span>Leise 280</span><span>Klar 450</span><span>Laut 600</span></div>
     </div>
   </div></section>
 
-  <!-- SCHNITTE -->
   <section id="schnitte"><div class="wrap">
-    <div class="shead">
-      <div>
-        <div class="kicker">Drei Schnitte</div>
-        <h2>Für fast alles genügen drei.</h2>
-      </div>
-      <p>Klar für den Standard, Leise für ruhige Textebenen, Laut für markante Titel.</p>
-    </div>
+    <div class="shead"><h2>Drei Schnitte.</h2>
+      <p>Klar für den Standard, Leise für ruhige Ebenen, Laut für Titel.</p></div>
     <div class="cuts">
-      <div class="cut">
-        <div class="tag"><b>Leise</b><span>Ruhige Flächen</span></div>
-        <div class="desc">Zurückhaltend, für lange Texte und feine Hierarchien.</div>
-        <div class="big leise">Handgesetzt</div>
-      </div>
-      <div class="cut">
-        <div class="tag"><b>Klar</b><span>Standard</span></div>
-        <div class="desc">Der Arbeitsschnitt für den Alltag – Web, Print, Formulare.</div>
-        <div class="big klar">Handgesetzt</div>
-      </div>
-      <div class="cut">
-        <div class="tag"><b>Laut</b><span>Titel</span></div>
-        <div class="desc">Kräftig und präsent, für Überschriften und Akzente.</div>
-        <div class="big laut">Handgesetzt</div>
-      </div>
+      <div class="cut"><div class="tag"><b>Leise</b><span>Ruhige Ebenen</span></div><div class="big leise">Handgesetzt</div></div>
+      <div class="cut"><div class="tag"><b>Klar</b><span>Standard</span></div><div class="big klar">Handgesetzt</div></div>
+      <div class="cut"><div class="tag"><b>Laut</b><span>Titel</span></div><div class="big laut">Handgesetzt</div></div>
     </div>
-  </div></section>
-
-  <!-- ZEICHENSATZ -->
-  <section id="zeichen"><div class="wrap">
-    <div class="shead">
-      <div>
-        <div class="kicker">Zeichensatz</div>
-        <h2>Vollständig & sauber.</h2>
-      </div>
-      <p>Fehlende Interpunktion wurde gewichtsgenau ergänzt – ohne falsche Engen, mit echtem Kerning.</p>
-    </div>
-    <div class="glyphline">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>1234567890 &amp; € @ % ‰</div>
-    <p style="margin-top:18px;color:var(--muted);font-size:13px">Neu ergänzt:</p>
-    <div class="newchars">
+    <div class="glyph" style="margin-top:26px">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890 &amp; € @ %</div>
+    <div class="new">
       <span>!</span><span>&quot;</span><span>$</span><span>§</span><span>Ä</span><span>Ö</span><span>Ü</span><span>ß</span><span>«&nbsp;»</span><span>‹&nbsp;›</span>
     </div>
-    <div class="pangram">Zwölf Boxkämpfer jagen Viktor quer über den großen Sylter Deich.</div>
   </div></section>
 
-  <!-- ICONS -->
   <section id="icons"><div class="wrap">
-    <div class="shead">
-      <div>
-        <div class="kicker">Icons · v0.3.35</div>
-        <h2>90 Piktogramme.</h2>
-      </div>
-      <p>Jedes Icon ist über einen eigenen PUA-Codepunkt erreichbar. Sechs zuvor unzugängliche Zeichen (Silhouette, Badge, Pfeile) sind blau markiert.</p>
+    <div class="shead"><h2>Icons.</h2>
+      <p>Per Tastatur gesetzt (siehe Beipackzettel). Jedes Icon einzeln als SVG, PNG und PDF.</p></div>
+    <div class="tabs">
+      <button data-tab="named" class="on">Benannte Piktogramme</button>
+      <button data-tab="pua">Pfeile, Kompass &amp; weitere</button>
     </div>
     <div class="igrid" id="igrid"></div>
   </div></section>
 
-  <!-- DOWNLOAD -->
   <section id="download"><div class="wrap">
-    <div class="shead">
-      <div>
-        <div class="kicker">Download</div>
-        <h2>Alles an Bord.</h2>
-      </div>
-      <p>Ein Komplettpaket plus Einzeldateien. OTF zum Installieren, Webfonts (woff/woff2) fürs Web.</p>
-    </div>
-    <div class="dl">
-      <div class="card">
-        <h3>Komplettpaket</h3>
-        <p>Alle Schnitte, Variable Font, Icons, Webfonts und Beipackzettel.</p>
-        <div class="files">Goetheanum-Schriften-v1.4.43.zip · ~640&nbsp;KB</div>
-        <div class="btns">
-          <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Schriften-v1.4.43.zip" download>ZIP laden</a>
-          <a class="btn" href="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf" download>Beipackzettel</a>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Variable Font</h3>
-        <p>Eine Datei, Achse 280–600. Für Websysteme und fein abgestufte Anwendungen.</p>
-        <div class="files">Goetheanum-Variabel-v1.4.43.otf</div>
-        <div class="btns">
-          <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v1.4.43.otf" download>OTF</a>
-          <a class="btn" href="assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v1.4.43.woff2" download>woff2</a>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Icons</h3>
-        <p>Icon-Font mit 90 Piktogrammen, sauber über PUA belegt.</p>
-        <div class="files">Goetheanum-Icons-v0.3.35.otf</div>
-        <div class="btns">
-          <a class="btn" href="assets/fonts/goetheanum/Fonts/Goetheanum-Icons-v0.3.35.otf" download>OTF</a>
-          <a class="btn" href="assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v0.3.35.woff2" download>woff2</a>
-        </div>
-      </div>
+    <div class="shead"><h2>Download.</h2>
+      <p>OTF zum Installieren, Webfonts fürs Web, Icons einzeln oder als Set.</p></div>
+    <div class="dl-cards">
+      <div class="card"><h3>Komplettpaket</h3><p>Alle Schnitte, Variabel, Icons, Webfonts, Beipackzettel.</p>
+        <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Schriften-v2.0.0.zip" download>ZIP</a></div>
+      <div class="card"><h3>Icons als Set</h3><p>81 Icons als SVG, PNG und PDF in einem Archiv.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Icons-v2.0.0-Einzeldateien.zip" download>Icon-ZIP</a></div>
+      <div class="card"><h3>Variable Font</h3><p>Eine Datei, Achse 280–600.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.0.0.otf" download>OTF</a></div>
+      <div class="card"><h3>Beipackzettel</h3><p>Übersicht &amp; Tastatur-Belegung der Icons.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf" download>PDF</a></div>
     </div>
   </div></section>
 </main>
 
-<footer><div class="wrap">
-  <div class="frow">
-    <div class="note">
-      <strong style="color:var(--ink);font-weight:400">Goetheanum Schriften v1.4.43</strong><br>
-      Abgeleitet aus Titillium (SIL OFL). Reparierte Fassung: fehlende Zeichen ergänzt,
-      Variable Font vervollständigt, Icons sauber belegt, Metadaten und Lizenzfelder korrigiert.
-    </div>
-    <div>
-      <a href="assets/fonts/goetheanum/OFL.txt">SIL Open Font License 1.1</a><br>
-      <a href="https://www.goetheanum.ch">goetheanum.ch</a>
-    </div>
+<footer><div class="wrap frow">
+  <div style="max-width:540px;line-height:1.7">
+    <strong>Goetheanum Schriften 2.0</strong> · abgeleitet aus Titillium (SIL OFL).
+    Reparierte Fassung: fehlende Zeichen ergänzt, Variable Font vervollständigt,
+    Tastatur-Belegung der Icons erhalten, Metadaten korrigiert.
   </div>
+  <div><a href="assets/fonts/goetheanum/OFL.txt">SIL Open Font License 1.1</a><br><a href="https://www.goetheanum.ch">goetheanum.ch</a></div>
 </div></footer>
 
 <script>
-  // Variable Font Slider
   (function(){
-    var s=document.getElementById('wght'),v=document.getElementById('wval'),
-        n=document.getElementById('wname'),sample=document.getElementById('vsample');
-    function name(w){return w<=330?'Leise':(w<=515?'Klar':'Laut');}
-    function upd(){var w=+s.value;sample.style.fontVariationSettings='"wght" '+w;v.textContent=w;n.textContent=name(w);}
-    s.addEventListener('input',upd);upd();
+    var s=document.getElementById('wght'),v=document.getElementById('wval'),n=document.getElementById('wname'),sm=document.getElementById('vsample');
+    function nm(w){return w<=330?'Leise':(w<=515?'Klar':'Laut');}
+    function u(){var w=+s.value;sm.style.fontVariationSettings='"wght" '+w;v.textContent=w;n.textContent=nm(w);}
+    s.addEventListener('input',u);u();
   })();
 
-  // Icon-Galerie
   (function(){
-    var cps=[57600,57601,57602,57664,57665,57666,57856,57857,57858,57859,57860,57861,57862,57863,57864,57865,57866,57867,57868,57869,57870,57871,57872,57873,57874,57875,57876,57877,57878,57879,57880,57881,57882,57883,57884,57885,57886,57920,57921,57922,57923,57924,57925,57926,57927,57928,57929,57930,57931,57932,57933,57934,57935,57936,57937,57938,57939,57940,57941,57942,57943,57944,57945,57946,57947,57948,57949,57950,57952,57953,57954,57955,57956,57957,57958,57959,57960,57961,57962,57963,57964,57965,57966,57967,57968,57969,57970,57971,57972,57973];
-    var rescued={57968:1,57969:1,57970:1,57971:1,57972:1,57973:1}; // E270–E275
-    var g=document.getElementById('igrid');
-    cps.forEach(function(cp){
-      var c=document.createElement('div');c.className='icell'+(rescued[cp]?' new':'');
-      var gly=document.createElement('div');gly.className='gly';gly.textContent=String.fromCodePoint(cp);
-      var lab=document.createElement('div');lab.className='cp';lab.textContent='E'+(cp&0xFFF).toString(16).toUpperCase().padStart(3,'0');
-      c.appendChild(gly);c.appendChild(lab);g.appendChild(c);
+    var ICONS=[["bioabfall","Bioabfall","0x0068"],["bitte-anfassen","Bitte anfassen","0x0071"],["draussen-essen","Draussen essen","0x0075"],["eintritt","Eintritt","0x0065"],["fahrstuhl","Fahrstuhl","0x0061"],["garderobe","Garderobe","0x0066"],["geraete-abschalten","Geräte abschalten","0x006F"],["goetheanum-badge","Goetheanum Badge","0x0032"],["goetheanum-badge-invers","Goetheanum Badge invers","0x0022"],["hunde-anleinen","Hunde anleinen","0x0072"],["icon-0021","U+0021","0x0021"],["icon-003e","U+003E","0x003E"],["icon-0041","U+0041","0x0041"],["icon-0042","U+0042","0x0042"],["icon-0043","U+0043","0x0043"],["icon-0044","U+0044","0x0044"],["icon-0045","U+0045","0x0045"],["icon-0046","U+0046","0x0046"],["icon-0047","U+0047","0x0047"],["icon-0048","U+0048","0x0048"],["icon-0049","U+0049","0x0049"],["icon-004a","U+004A","0x004A"],["icon-004b","U+004B","0x004B"],["icon-004f","U+004F","0x004F"],["icon-0051","U+0051","0x0051"],["icon-0052","U+0052","0x0052"],["icon-0053","U+0053","0x0053"],["icon-0054","U+0054","0x0054"],["icon-0055","U+0055","0x0055"],["icon-0056","U+0056","0x0056"],["icon-0057","U+0057","0x0057"],["icon-0058","U+0058","0x0058"],["icon-0059","U+0059","0x0059"],["icon-005a","U+005A","0x005A"],["icon-e200","U+E200","0xE200"],["icon-e201","U+E201","0xE201"],["icon-e202","U+E202","0xE202"],["icon-e203","U+E203","0xE203"],["icon-e204","U+E204","0xE204"],["icon-e205","U+E205","0xE205"],["icon-e206","U+E206","0xE206"],["icon-e21d","U+E21D","0xE21D"],["icon-e240","U+E240","0xE240"],["icon-e241","U+E241","0xE241"],["icon-e242","U+E242","0xE242"],["icon-e243","U+E243","0xE243"],["icon-e244","U+E244","0xE244"],["icon-e245","U+E245","0xE245"],["icon-e246","U+E246","0xE246"],["icon-e25d","U+E25D","0xE25D"],["icon-e260","U+E260","0xE260"],["icon-e261","U+E261","0xE261"],["icon-e262","U+E262","0xE262"],["icon-e263","U+E263","0xE263"],["icon-e264","U+E264","0xE264"],["icon-e265","U+E265","0xE265"],["icon-e266","U+E266","0xE266"],["icon-e267","U+E267","0xE267"],["icon-e268","U+E268","0xE268"],["icon-e269","U+E269","0xE269"],["icon-e26a","U+E26A","0xE26A"],["icon-e26b","U+E26B","0xE26B"],["icon-e26c","U+E26C","0xE26C"],["icon-e26d","U+E26D","0xE26D"],["icon-e26e","U+E26E","0xE26E"],["icon-e26f","U+E26F","0xE26F"],["keine-fotos","Keine Fotos","0x007A"],["keine-hunde","Keine Hunde","0x0074"],["keine-taschen","Keine Taschen","0x0069"],["nur-mit-augen","Nur mit den Augen","0x0077"],["papier","Papier","0x006A"],["restmuell","Restmüll","0x006B"],["schliessfaecher","Schliessfächer","0x0064"],["treppe","Treppe","0x0073"],["wc-damen","WC Damen","0x0079"],["wc-familie","WC Familie","0x0062"],["wc-gruppe","WC Gruppe","0x0076"],["wc-herren","WC Herren","0x003C"],["wc-rollstuhl","WC Rollstuhl","0x0078"],["wickelraum","Wickelraum","0x0063"],["wlan","WLAN","0x0067"]];
+    var BASE="assets/fonts/goetheanum/Icons-Einzeldateien/";
+    var grid=document.getElementById('igrid');
+    function isNamed(it){return it[1].indexOf('U+')!==0;}
+    function render(tab){
+      grid.innerHTML="";
+      ICONS.filter(function(it){
+        var cp=parseInt(it[2],16);
+        return tab==='named' ? isNamed(it) : cp>=0xE000;
+      }).forEach(function(it){
+        var slug=it[0],label=it[1],cp=parseInt(it[2],16);
+        var cell=document.createElement('div');cell.className='icell';
+        var key=(cp<0x7f)?('Taste '+String.fromCharCode(cp)):('U+'+cp.toString(16).toUpperCase());
+        cell.innerHTML=
+          '<span class="key">'+(isNamed(it)?key:'')+'</span>'+
+          '<span class="gl">'+String.fromCodePoint(cp)+'</span>'+
+          '<div class="nm">'+(isNamed(it)?label:'')+'</div>'+
+          '<div class="dl">'+
+            '<a download href="'+BASE+'svg/'+slug+'.svg">SVG</a>'+
+            '<a download href="'+BASE+'png/'+slug+'.png">PNG</a>'+
+            '<a download href="'+BASE+'pdf/'+slug+'.pdf">PDF</a>'+
+          '</div>';
+        grid.appendChild(cell);
+      });
+    }
+    document.querySelectorAll('.tabs button').forEach(function(b){
+      b.addEventListener('click',function(){
+        document.querySelectorAll('.tabs button').forEach(function(x){x.classList.remove('on');});
+        b.classList.add('on');render(b.dataset.tab);
+      });
     });
+    render('named');
   })();
 </script>
 </body>

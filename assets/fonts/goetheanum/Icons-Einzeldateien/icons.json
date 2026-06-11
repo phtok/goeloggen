@@ -1,0 +1,407 @@
+[
+ {
+  "slug": "bioabfall",
+  "label": "Bioabfall",
+  "codepoint": "U+0068"
+ },
+ {
+  "slug": "bitte-anfassen",
+  "label": "Bitte anfassen",
+  "codepoint": "U+0071"
+ },
+ {
+  "slug": "draussen-essen",
+  "label": "Draussen essen",
+  "codepoint": "U+0075"
+ },
+ {
+  "slug": "eintritt",
+  "label": "Eintritt",
+  "codepoint": "U+0065"
+ },
+ {
+  "slug": "fahrstuhl",
+  "label": "Fahrstuhl",
+  "codepoint": "U+0061"
+ },
+ {
+  "slug": "garderobe",
+  "label": "Garderobe",
+  "codepoint": "U+0066"
+ },
+ {
+  "slug": "geraete-abschalten",
+  "label": "Geräte abschalten",
+  "codepoint": "U+006F"
+ },
+ {
+  "slug": "goetheanum-badge",
+  "label": "Goetheanum Badge",
+  "codepoint": "U+0032"
+ },
+ {
+  "slug": "goetheanum-badge-invers",
+  "label": "Goetheanum Badge invers",
+  "codepoint": "U+0022"
+ },
+ {
+  "slug": "hunde-anleinen",
+  "label": "Hunde anleinen",
+  "codepoint": "U+0072"
+ },
+ {
+  "slug": "icon-0021",
+  "label": "U+0021",
+  "codepoint": "U+0021"
+ },
+ {
+  "slug": "icon-003e",
+  "label": "U+003E",
+  "codepoint": "U+003E"
+ },
+ {
+  "slug": "icon-0041",
+  "label": "U+0041",
+  "codepoint": "U+0041"
+ },
+ {
+  "slug": "icon-0042",
+  "label": "U+0042",
+  "codepoint": "U+0042"
+ },
+ {
+  "slug": "icon-0043",
+  "label": "U+0043",
+  "codepoint": "U+0043"
+ },
+ {
+  "slug": "icon-0044",
+  "label": "U+0044",
+  "codepoint": "U+0044"
+ },
+ {
+  "slug": "icon-0045",
+  "label": "U+0045",
+  "codepoint": "U+0045"
+ },
+ {
+  "slug": "icon-0046",
+  "label": "U+0046",
+  "codepoint": "U+0046"
+ },
+ {
+  "slug": "icon-0047",
+  "label": "U+0047",
+  "codepoint": "U+0047"
+ },
+ {
+  "slug": "icon-0048",
+  "label": "U+0048",
+  "codepoint": "U+0048"
+ },
+ {
+  "slug": "icon-0049",
+  "label": "U+0049",
+  "codepoint": "U+0049"
+ },
+ {
+  "slug": "icon-004a",
+  "label": "U+004A",
+  "codepoint": "U+004A"
+ },
+ {
+  "slug": "icon-004b",
+  "label": "U+004B",
+  "codepoint": "U+004B"
+ },
+ {
+  "slug": "icon-004f",
+  "label": "U+004F",
+  "codepoint": "U+004F"
+ },
+ {
+  "slug": "icon-0051",
+  "label": "U+0051",
+  "codepoint": "U+0051"
+ },
+ {
+  "slug": "icon-0052",
+  "label": "U+0052",
+  "codepoint": "U+0052"
+ },
+ {
+  "slug": "icon-0053",
+  "label": "U+0053",
+  "codepoint": "U+0053"
+ },
+ {
+  "slug": "icon-0054",
+  "label": "U+0054",
+  "codepoint": "U+0054"
+ },
+ {
+  "slug": "icon-0055",
+  "label": "U+0055",
+  "codepoint": "U+0055"
+ },
+ {
+  "slug": "icon-0056",
+  "label": "U+0056",
+  "codepoint": "U+0056"
+ },
+ {
+  "slug": "icon-0057",
+  "label": "U+0057",
+  "codepoint": "U+0057"
+ },
+ {
+  "slug": "icon-0058",
+  "label": "U+0058",
+  "codepoint": "U+0058"
+ },
+ {
+  "slug": "icon-0059",
+  "label": "U+0059",
+  "codepoint": "U+0059"
+ },
+ {
+  "slug": "icon-005a",
+  "label": "U+005A",
+  "codepoint": "U+005A"
+ },
+ {
+  "slug": "icon-e200",
+  "label": "U+E200",
+  "codepoint": "U+E200"
+ },
+ {
+  "slug": "icon-e201",
+  "label": "U+E201",
+  "codepoint": "U+E201"
+ },
+ {
+  "slug": "icon-e202",
+  "label": "U+E202",
+  "codepoint": "U+E202"
+ },
+ {
+  "slug": "icon-e203",
+  "label": "U+E203",
+  "codepoint": "U+E203"
+ },
+ {
+  "slug": "icon-e204",
+  "label": "U+E204",
+  "codepoint": "U+E204"
+ },
+ {
+  "slug": "icon-e205",
+  "label": "U+E205",
+  "codepoint": "U+E205"
+ },
+ {
+  "slug": "icon-e206",
+  "label": "U+E206",
+  "codepoint": "U+E206"
+ },
+ {
+  "slug": "icon-e21d",
+  "label": "U+E21D",
+  "codepoint": "U+E21D"
+ },
+ {
+  "slug": "icon-e240",
+  "label": "U+E240",
+  "codepoint": "U+E240"
+ },
+ {
+  "slug": "icon-e241",
+  "label": "U+E241",
+  "codepoint": "U+E241"
+ },
+ {
+  "slug": "icon-e242",
+  "label": "U+E242",
+  "codepoint": "U+E242"
+ },
+ {
+  "slug": "icon-e243",
+  "label": "U+E243",
+  "codepoint": "U+E243"
+ },
+ {
+  "slug": "icon-e244",
+  "label": "U+E244",
+  "codepoint": "U+E244"
+ },
+ {
+  "slug": "icon-e245",
+  "label": "U+E245",
+  "codepoint": "U+E245"
+ },
+ {
+  "slug": "icon-e246",
+  "label": "U+E246",
+  "codepoint": "U+E246"
+ },
+ {
+  "slug": "icon-e25d",
+  "label": "U+E25D",
+  "codepoint": "U+E25D"
+ },
+ {
+  "slug": "icon-e260",
+  "label": "U+E260",
+  "codepoint": "U+E260"
+ },
+ {
+  "slug": "icon-e261",
+  "label": "U+E261",
+  "codepoint": "U+E261"
+ },
+ {
+  "slug": "icon-e262",
+  "label": "U+E262",
+  "codepoint": "U+E262"
+ },
+ {
+  "slug": "icon-e263",
+  "label": "U+E263",
+  "codepoint": "U+E263"
+ },
+ {
+  "slug": "icon-e264",
+  "label": "U+E264",
+  "codepoint": "U+E264"
+ },
+ {
+  "slug": "icon-e265",
+  "label": "U+E265",
+  "codepoint": "U+E265"
+ },
+ {
+  "slug": "icon-e266",
+  "label": "U+E266",
+  "codepoint": "U+E266"
+ },
+ {
+  "slug": "icon-e267",
+  "label": "U+E267",
+  "codepoint": "U+E267"
+ },
+ {
+  "slug": "icon-e268",
+  "label": "U+E268",
+  "codepoint": "U+E268"
+ },
+ {
+  "slug": "icon-e269",
+  "label": "U+E269",
+  "codepoint": "U+E269"
+ },
+ {
+  "slug": "icon-e26a",
+  "label": "U+E26A",
+  "codepoint": "U+E26A"
+ },
+ {
+  "slug": "icon-e26b",
+  "label": "U+E26B",
+  "codepoint": "U+E26B"
+ },
+ {
+  "slug": "icon-e26c",
+  "label": "U+E26C",
+  "codepoint": "U+E26C"
+ },
+ {
+  "slug": "icon-e26d",
+  "label": "U+E26D",
+  "codepoint": "U+E26D"
+ },
+ {
+  "slug": "icon-e26e",
+  "label": "U+E26E",
+  "codepoint": "U+E26E"
+ },
+ {
+  "slug": "icon-e26f",
+  "label": "U+E26F",
+  "codepoint": "U+E26F"
+ },
+ {
+  "slug": "keine-fotos",
+  "label": "Keine Fotos",
+  "codepoint": "U+007A"
+ },
+ {
+  "slug": "keine-hunde",
+  "label": "Keine Hunde",
+  "codepoint": "U+0074"
+ },
+ {
+  "slug": "keine-taschen",
+  "label": "Keine Taschen",
+  "codepoint": "U+0069"
+ },
+ {
+  "slug": "nur-mit-augen",
+  "label": "Nur mit den Augen",
+  "codepoint": "U+0077"
+ },
+ {
+  "slug": "papier",
+  "label": "Papier",
+  "codepoint": "U+006A"
+ },
+ {
+  "slug": "restmuell",
+  "label": "Restmüll",
+  "codepoint": "U+006B"
+ },
+ {
+  "slug": "schliessfaecher",
+  "label": "Schliessfächer",
+  "codepoint": "U+0064"
+ },
+ {
+  "slug": "treppe",
+  "label": "Treppe",
+  "codepoint": "U+0073"
+ },
+ {
+  "slug": "wc-damen",
+  "label": "WC Damen",
+  "codepoint": "U+0079"
+ },
+ {
+  "slug": "wc-familie",
+  "label": "WC Familie",
+  "codepoint": "U+0062"
+ },
+ {
+  "slug": "wc-gruppe",
+  "label": "WC Gruppe",
+  "codepoint": "U+0076"
+ },
+ {
+  "slug": "wc-herren",
+  "label": "WC Herren",
+  "codepoint": "U+003C"
+ },
+ {
+  "slug": "wc-rollstuhl",
+  "label": "WC Rollstuhl",
+  "codepoint": "U+0078"
+ },
+ {
+  "slug": "wickelraum",
+  "label": "Wickelraum",
+  "codepoint": "U+0063"
+ },
+ {
+  "slug": "wlan",
+  "label": "WLAN",
+  "codepoint": "U+0067"
+ }
+]
