@@ -1,0 +1,85 @@
+# Goetheanum Typografie — prüfbare Hausregeln
+# Quelle der Wahrheit: goetheanum-typo-tokens.json ($regeln). Diese Datei macht
+# die Regeln ausführbar: `erkennen` (Regex) findet Verstöße, `korrektur` behebt
+# Eindeutiges automatisch; `pruefung: lm` markiert Urteils-Regeln für ein
+# Sprachmodell (Prompt: „Wende die Regeln dieser Datei auf den Text an;
+# korrigiere automatisch, was eindeutig ist, schlage vor, was Urteil braucht.").
+# Geltungsbereich: deutscher Lesetext (de-CH). Code, URLs, E-Mails ausnehmen.
+
+- id: G16-anfuehrung
+  regel: Hausanführung sind einfache Guillemets nach aussen ‹…›
+  erkennen: '["„“”]([^"„“”\n]{1,200})["„“”]'
+  korrektur: '‹$1›'
+  schwere: fehler
+- id: G16-apostroph
+  regel: Echter Apostroph ’ statt Schreibmaschinen-Apostroph '
+  erkennen: "(\\w)'(\\w)"
+  korrektur: '$1’$2'
+  schwere: fehler
+- id: G18-gedankenstrich
+  regel: Gedankenstrich ist der Halbgeviertstrich mit Leerschritten
+  erkennen: '(\S) - (\S)'
+  korrektur: '$1 – $2'
+  schwere: fehler
+- id: G18-bis-strich
+  regel: Bereiche mit Halbgeviert ohne Leerschritte (9–17 Uhr, S. 4–12)
+  erkennen: '(\d)\s*-\s*(\d)'
+  korrektur: '$1–$2'
+  schwere: fehler
+- id: G19-auslassung
+  regel: Auslassungszeichen … statt dreier Punkte
+  erkennen: '\.\.\.'
+  korrektur: '…'
+  schwere: fehler
+- id: G20-abkuerzung
+  regel: In mehrgliedrigen Abkürzungen schmales geschütztes Spatium (z. B., d. h., u. a.)
+  erkennen: '\b(z|d|u)\.\s?(B|h|a)\.'
+  korrektur: '$1. $2.'
+  schwere: empfehlung
+- id: G20-prozent
+  regel: Geschütztes Spatium vor % und Einheiten
+  erkennen: '(\d) ?(%|CHF|EUR|kg|km|mm|cm|m2|Uhr)\b'
+  korrektur: '$1 $2'
+  schwere: empfehlung
+- id: G21-tausender
+  regel: Tausender mit Apostroph gruppieren (Schweizer Usus)
+  erkennen: '\b(\d{1,3})[.,](\d{3})\b(?![.,]\d)'
+  korrektur: "$1'$2"
+  schwere: empfehlung
+- id: G22-uhrzeit
+  regel: Uhrzeit mit Punkt, ohne führende Null (9.30 Uhr)
+  erkennen: '\b0?(\d{1,2}):(\d{2})\s?(Uhr|h)\b'
+  korrektur: '$1.$2 Uhr'
+  schwere: empfehlung
+- id: T01-doppelspatium
+  regel: Nie zwei Leerzeichen
+  erkennen: '(\S)  +(\S)'
+  korrektur: '$1 $2'
+  schwere: fehler
+- id: G18-minus
+  regel: Echtes Minus − bei Zahlen, kein Bindestrich
+  erkennen: '(^|[\s(])-(\d)'
+  korrektur: '$1−$2'
+  schwere: empfehlung
+
+# ——— Urteils-Regeln (für Sprachmodelle; nicht regex-sicher) ———
+- id: G01-einfachauszeichnung
+  regel: Jede Hervorhebung ändert genau EIN Merkmal (Gewicht ODER Grösse ODER Farbe ODER Einzug), nie zwei.
+  pruefung: lm
+  schwere: fehler
+- id: G04-extreme
+  regel: Kein Gewicht schwerer als Laut (600) im Dokument; Flüstern/Schreien nur in Grafikanwendungen.
+  pruefung: lm
+  schwere: fehler
+- id: G05-hervorhebung
+  regel: Betont wird mit Laut — nicht mit Unterstreichung, Sperrung oder VERSALIEN.
+  pruefung: lm
+  schwere: fehler
+- id: G03-sparsamkeit
+  regel: Auszeichnungen, die ohne Sinnverlust entfallen können, entfallen.
+  pruefung: lm
+  schwere: empfehlung
+- id: G10-zeilenlaenge
+  regel: 45–75 Zeichen je Zeile, Ziel ~66.
+  pruefung: lm
+  schwere: empfehlung

@@ -1,0 +1,87 @@
+{
+  "$schema": "https://www.designtokens.org/schema/",
+  "$description": "Goetheanum — Typografisches System. Marken-Typografie als herstellerneutrale Design Tokens nach W3C DTCG 2025.10, nach dem Vorbild des RSA-Systems B. Maschinenlesbar (jede KI), implementierbar (Style Dictionary, Tokens Studio, Terrazzo), Quelle der Wahrheit für Entwickler.",
+  "$extensions": {
+    "com.goetheanum.meta": {
+      "system": "Goetheanum Schriften",
+      "fassung": 1,
+      "stand": "2026-06",
+      "basiert_auf": "RSA Typografisches System B, Fassung 13 (Architektur)",
+      "lizenz": "Goetheanum Schrift (SIL OFL, abgeleitet aus Titillium)",
+      "farbquelle": "Goetheanum-Gold als einziger Akzent-Buntton der Schriftseite.",
+      "format": "DTCG 2025.10",
+      "hinweis": "Werte spiegeln das gesetzte Referenzdokument (typografie.html). $extensions tragen die Hausregeln, die kein Standard-Token-Typ abbildet."
+    }
+  },
+
+  "schrift": {
+    "$description": "Eine Familie, drei Stimmen: Klar trägt alles, Laut betont, Leise ist der stille Kontrapunkt. Die Extreme Flüstern/Schreien existieren nur im Variable Font und sind der Grafik vorbehalten.",
+    "familie": {
+      "basis": {
+        "$type": "fontFamily",
+        "$value": ["Goetheanum Schrift", "Helvetica Neue", "Arial", "sans-serif"],
+        "$description": "Trägt Headlines, Fliesstext, Tabellen, Adressen, Oberflächen. Office: Klar=Regular, Laut=Fett (Cmd+B), Leise=Kursiv (Cmd+I)."
+      },
+      "variabel": {
+        "$type": "fontFamily",
+        "$value": ["Goetheanum Variabel"],
+        "$description": "Gewichtsachse wght 190–725. Nur für Grafik/Websysteme; die Extreme sind kein Standardmittel."
+      },
+      "icons": {
+        "$type": "fontFamily",
+        "$value": ["Goetheanum Icons"],
+        "$description": "Piktogramme per Tastatur-Belegung (Beipackzettel S. 2–4) oder als Einzel-SVG/PNG/PDF."
+      }
+    },
+    "gewicht": {
+      "leise":  { "$type": "fontWeight", "$value": 280, "$description": "Leiser Kontrapunkt, Bildlegenden, Zitate. Nicht für Fliesstext-Mengen." },
+      "klar":   { "$type": "fontWeight", "$value": 450, "$description": "Der Fliesstext. Alles, was gelesen wird." },
+      "laut":   { "$type": "fontWeight", "$value": 600, "$description": "Betonung, Titel, Signaletik. Das Fett der Familie." },
+      "fluestern": { "$type": "fontWeight", "$value": 190, "$description": "NUR Variable Font, nur Grafik. Nie als Lesetext." },
+      "schreien":  { "$type": "fontWeight", "$value": 725, "$description": "NUR Variable Font, nur Grafik. Nie als Standard-Fett." }
+    }
+  },
+
+  "farbe": {
+    "tinte":      { "$type": "color", "$value": "#23272b", "$description": "Lesetext." },
+    "tinte-leise":{ "$type": "color", "$value": "#737a80", "$description": "Meta, Legenden, Nebenstimmen." },
+    "gold":       { "$type": "color", "$value": "#d7ab68", "$description": "Akzent, Interaktion. Sparsam." },
+    "gold-tief":  { "$type": "color", "$value": "#a07a33", "$description": "Akzent auf hellem Grund (lesbar)." },
+    "papier":     { "$type": "color", "$value": "#ffffff" },
+    "flaeche":    { "$type": "color", "$value": "#faf8f4", "$description": "Zarte Karten-/Beispielflächen." },
+    "linie":      { "$type": "color", "$value": "#14181c1a", "$description": "Haarlinien, 10% Tinte." }
+  },
+
+  "mass": {
+    "zeilenlaenge": {
+      "$type": "dimension",
+      "$value": "62ch",
+      "$description": "Ziel ~66 Zeichen je Zeile (45–75 zulässig). Harte Grenze: min(Mass, 100%).",
+      "$extensions": { "com.goetheanum.regel": "G10" }
+    },
+    "zeilenabstand-text":  { "$type": "number", "$value": 1.5,  "$description": "Fliesstext." },
+    "zeilenabstand-titel": { "$type": "number", "$value": 1.1,  "$description": "Titelzeilen." }
+  },
+
+  "$regeln": {
+    "$description": "Hausregeln mit IDs (G…), prüfbar via typo-regeln.yaml. Ebenen: anwendung (Lesetext) streng, meta (Marker, Labels, Tabellenköpfe) mit benanntem Spielraum.",
+    "G01": "Einfachauszeichnung: Jede Abweichung vom Fliesstext ändert genau EIN Merkmal — Gewicht, Grösse, Farbe oder Einzug. Nie zwei zugleich. Raum und Zeilenabstand zählen nicht als Merkmal.",
+    "G02": "Register: Laut betont (Cmd+B), Leise ist der stille Kontrapunkt (Cmd+I), Gold gliedert Meta. Nie zwei Ämter auf einem Wort.",
+    "G03": "Wer eine Auszeichnung weglassen kann, ohne dass Sinn verloren geht, lässt sie weg.",
+    "G04": "Schwerer als Laut nie im Dokument. Flüstern und Schreien sind Grafikmittel im Variable Font, kein Bürosatz.",
+    "G05": "Hervorhebung durch Laut — nicht durch Unterstreichen, Sperren oder VERSALIEN.",
+    "G10": "Zeilenlänge 45–75 Zeichen, Ziel ~66. Das Mass ist eine harte Grenze.",
+    "G11": "Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit (Fliesstext 1.4–1.6).",
+    "G12": "Flattersatz linksbündig ist der Normalfall. Blocksatz nur mit Trennung und Kontrolle.",
+    "G16": "Anführung: einfache Guillemets nach aussen — ‹…› für alles, auch die zweite Ebene. Keine \"...\", keine „…\".",
+    "G17": "Keine echten Kapitälchen in der Schrift: Versal-Abkürzungen bleiben Versal, ohne Kunst-Kapitälchen.",
+    "G18": "Striche: Gedankenstrich = Halbgeviert mit Leerschritten (–), bis-Strich = Halbgeviert ohne (9–17 Uhr), Bindestrich kurz (-), Minus echt (−).",
+    "G19": "Auslassung: ein Zeichen ‹…›, nie drei Punkte.",
+    "G20": "Geschützte Leerzeichen: schmal & fest in ‹z. B.›, vor %, vor Einheiten, im Datum. Klebt, bricht nie um.",
+    "G21": "Zahlen: vierstellig und länger mit Apostroph gruppieren (1'318), Schweizer Usus.",
+    "G22": "Datum & Uhrzeit: 11. Juni 2026 · 9.30 Uhr. Keine führenden Nullen im Lesetext.",
+    "G23": "Die Schrift führt keine fi/fl-Ligaturen — keine erzwingen. Versalien per Laufweite sperren, nie mit Leertasten.",
+    "G24": "Sprachauszeichnung (de-CH) sitzt im Quelltext; sie steuert Trennung, Spatien, Zeichenwahl.",
+    "G26": "Automaten-Prinzip: Eindeutiges automatisieren, Mehrdeutiges vorschlagen, Gestaltung dem Menschen lassen."
+  }
+}
