@@ -1,4 +1,4 @@
-# Goetheanum Typografie — prüfbare Hausregeln
+# Goetheanum Typografie – prüfbare Hausregeln
 # Quelle der Wahrheit: goetheanum-typo-tokens.json ($regeln). Diese Datei macht
 # die Regeln ausführbar: `erkennen` (Regex) findet Verstöße, `korrektur` behebt
 # Eindeutiges automatisch; `pruefung: lm` markiert Urteils-Regeln für ein
@@ -72,7 +72,7 @@
   korrektur: '$1−$2'
   schwere: empfehlung
 
-# ——— Urteils-Regeln (für Sprachmodelle; nicht regex-sicher) ———
+# ––– Urteils-Regeln (für Sprachmodelle; nicht regex-sicher) –––
 - id: G01-einfachauszeichnung
   regel: Jede Hervorhebung ändert genau EIN Merkmal (Gewicht ODER Grösse ODER Farbe ODER Einzug), nie zwei.
   pruefung: lm
@@ -82,7 +82,7 @@
   pruefung: lm
   schwere: fehler
 - id: G05-hervorhebung
-  regel: Betont wird mit Laut — nicht mit Unterstreichung, Sperrung oder VERSALIEN.
+  regel: Betont wird mit Laut – nicht mit Unterstreichung, Sperrung oder VERSALIEN.
   pruefung: lm
   schwere: fehler
 - id: G03-sparsamkeit
@@ -90,7 +90,7 @@
   pruefung: lm
   schwere: empfehlung
 - id: G09-viereck
-  regel: Magisches Viereck — Schriftwahl, Zeilenlänge, Zeilenabstand, Umraum im Gleichgewicht; eine Änderung zieht die anderen nach.
+  regel: Magisches Viereck – Schriftwahl, Zeilenlänge, Zeilenabstand, Umraum im Gleichgewicht; eine Änderung zieht die anderen nach.
   pruefung: lm
   schwere: empfehlung
 - id: G10-zeilenlaenge
