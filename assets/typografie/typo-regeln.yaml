@@ -41,10 +41,20 @@
   erkennen: '(\d) ?(%|CHF|EUR|kg|km|mm|cm|m2|Uhr)\b'
   korrektur: '$1 $2'
   schwere: empfehlung
-- id: G21-tausender
-  regel: Tausender mit Apostroph gruppieren (Schweizer Usus)
-  erkennen: '\b(\d{1,3})[.,](\d{3})\b(?![.,]\d)'
-  korrektur: "$1'$2"
+- id: G21-gruppen-a
+  regel: Tausendergruppen ab fünf Stellen mit schmalem geschütztem Leerzeichen (Bundeskanzlei/SNB)
+  erkennen: '(\d)[’''.](\d{3})(?=[’''.]\d{3})'
+  korrektur: '$1 $2'
+  schwere: fehler
+- id: G21-gruppen-b
+  regel: letzte Tausendergruppe bei fünf und mehr Stellen
+  erkennen: '(\d{2,3})[’''.](\d{3})\b(?!\d)'
+  korrektur: '$1 $2'
+  schwere: fehler
+- id: G21-viersteller
+  regel: vierstellige Zahlen kompakt, ohne Gruppierung (1318)
+  erkennen: '\b(\d)[’''.](\d{3})\b(?![’''.]?\d)'
+  korrektur: '$1$2'
   schwere: empfehlung
 - id: G22-uhrzeit
   regel: Uhrzeit mit Punkt, ohne führende Null (9.30 Uhr)
@@ -77,6 +87,10 @@
   schwere: fehler
 - id: G03-sparsamkeit
   regel: Auszeichnungen, die ohne Sinnverlust entfallen können, entfallen.
+  pruefung: lm
+  schwere: empfehlung
+- id: G09-viereck
+  regel: Magisches Viereck — Schriftwahl, Zeilenlänge, Zeilenabstand, Umraum im Gleichgewicht; eine Änderung zieht die anderen nach.
   pruefung: lm
   schwere: empfehlung
 - id: G10-zeilenlaenge
