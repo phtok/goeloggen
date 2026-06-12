@@ -73,8 +73,12 @@
   schwere: empfehlung
 
 # ––– Urteils-Regeln (für Sprachmodelle; nicht regex-sicher) –––
+- id: S01-schriftwahl
+  regel: Lesetext in der Goetheanum Schrift Klar (440); Betonung und Titel in Laut (680); Nebenstimmen, Legenden, Zitate in Leise (265). Nach aussen nur bei Festbreiten-Code (Monospace), fremden Schriftsystemen (Griechisch, Kyrillisch) oder langem immersivem Mengensatz. Keine echte Kursive, nur ein Ziffernsatz – das nicht vortäuschen.
+  pruefung: lm
+  schwere: fehler
 - id: G01-einfachauszeichnung
-  regel: Jede Hervorhebung ändert genau EIN Merkmal (Gewicht ODER Grösse ODER Farbe ODER Einzug), nie zwei.
+  regel: Hervorhebung IM Fliesstext ändert genau EIN Merkmal (Gewicht ODER Grösse ODER Farbe ODER Einzug), nie zwei. Strukturebenen (Titel, Lede, Legende, Tabellenkopf) sind eine eigene Hierarchie und davon ausgenommen.
   pruefung: lm
   schwere: fehler
 - id: G04-extreme
@@ -94,6 +98,18 @@
   pruefung: lm
   schwere: empfehlung
 - id: G10-zeilenlaenge
-  regel: 45–75 Zeichen je Zeile, Ziel ~66 / neun Wörter. CSS min(39ch,100%); ch misst die 0, schmale Schrift läuft enger (46ch = 78 gezählt).
+  regel: 45–75 Zeichen je Zeile, Ziel ~66 / neun Wörter. CSS min(39ch,100%); ch misst die 0, schmale Schrift läuft enger (46ch = 78 gezählt). Gilt der Lesetypografie; Tabellen/Signaletik haben eigenes Mass.
+  pruefung: lm
+  schwere: empfehlung
+- id: G25-ziffern
+  regel: Ein Ziffernsatz – Versalziffern, dicktengleich. In Tabellen rechtsbündig und exakt untereinander, nie mit Leerzeichen ausgerichtet. Keine Mediävalziffern durch Verkleinern vortäuschen.
+  pruefung: lm
+  schwere: empfehlung
+- id: G27-lesesituation
+  regel: Drei Situationen mit eigenem Mass – Lese (linearer Mengentext, hartes Mass), Konsultation (Tabelle/Formular, darf breiter), Schau (Signaletik, aus Distanz). Das harte Zeilenmass bindet nur den Lesesatz.
+  pruefung: lm
+  schwere: empfehlung
+- id: G28-kontrast
+  regel: Lesetext mindestens WCAG AA (4.5:1). tinte-leise (4.35:1) und Gold (3.94:1) nur für Meta, Akzent, grössere Grade. Sprache auszeichnen, Silbentrennung aktiv, keine verwaisten Zeilen.
   pruefung: lm
   schwere: empfehlung
