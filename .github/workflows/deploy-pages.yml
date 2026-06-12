@@ -7,6 +7,8 @@ on:
     paths:
       - "index.html"
       - "schriften.html"
+      - "statistik.html"
+      - "werkzeug.html"
       - "tester.html"
       - "typografie.html"
       - "vorschau.html"
@@ -44,6 +46,8 @@ jobs:
           test -f index.html
           cp index.html _site/index.html
           if [ -f schriften.html ]; then cp schriften.html _site/schriften.html; fi
+          if [ -f statistik.html ]; then cp statistik.html _site/statistik.html; fi
+          if [ -f werkzeug.html ]; then cp werkzeug.html _site/werkzeug.html; fi
           if [ -f tester.html ]; then cp tester.html _site/tester.html; fi
           if [ -f typografie.html ]; then cp typografie.html _site/typografie.html; fi
           if [ -f vorschau.html ]; then cp vorschau.html _site/vorschau.html; fi
