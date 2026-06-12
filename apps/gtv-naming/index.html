@@ -281,6 +281,33 @@ let cur=0, dot=false, sig=false, kurz=false;
 const chips=document.getElementById("chips");
 const elim=new Set();
 const EMBED=location.hash==="#embed";
+/* ---- anonyme Nutzungsstatistik (Supabase, Insert-only; nur Live-Site, nicht Embed) ---- */
+const TRACK_URL="https://dagcsnfrlbpxcmdimnrw.supabase.co/rest/v1/gtv_naming_events";
+const TRACK_KEY="sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY";
+const TRACK_ON=location.hostname==="phtok.github.io"&&!EMBED;
+const SID=(()=>{try{
+  let s=sessionStorage.getItem("gtvSid");
+  if(!s){s=Math.random().toString(36).slice(2)+Date.now().toString(36);sessionStorage.setItem("gtvSid",s);}
+  return s;
+}catch(e){return "x"+Date.now().toString(36);}})();
+function track(event,payload){
+  if(!TRACK_ON)return;
+  try{
+    fetch(TRACK_URL,{method:"POST",keepalive:true,
+      headers:{apikey:TRACK_KEY,"Content-Type":"application/json",Prefer:"return=minimal"},
+      body:JSON.stringify({session_id:SID,event:event,payload:payload||{}})
+    }).catch(()=>{});
+  }catch(e){}
+}
+let activeSec=0;
+if(TRACK_ON){
+  track("visit",{ref:(document.referrer||"").slice(0,200),lang:navigator.language||"",
+    w:screen.width,h:screen.height,mob:/Mobi|Android|iPhone|iPad/.test(navigator.userAgent)});
+  setInterval(()=>{
+    if(document.visibilityState==="visible"){activeSec+=30;track("heartbeat",{t:activeSec});}
+  },30000);
+  addEventListener("pagehide",()=>track("leave",{t:activeSec}));
+}
 /* ---- Persistenz: Vorschlaege, Ausgeschiedene und Toggles in localStorage ---- */
 const STORE="gtvNamingState_v1";
 const BASE_N=CANDIDATES.length;
@@ -311,10 +338,11 @@ function addChip(c,i){
   const t=document.createElement("span");t.textContent=c.label;
   const x=document.createElement("span");x.className="x";x.textContent="×";x.title="Kandidat ausscheiden";
   b.appendChild(t);b.appendChild(x);
-  b.onclick=()=>{cur=i;render();};
+  b.onclick=()=>{cur=i;render();track("interaction",{a:"select",w:c.word});};
   x.onclick=e=>{
     e.stopPropagation();
     if(elim.size>=CANDIDATES.length-1)return;
+    track("interaction",{a:"eliminate",w:c.word});
     elim.add(i);b.classList.add("gone");
     if(cur===i){cur=CANDIDATES.findIndex((_,j)=>!elim.has(j));}
     render();
@@ -345,6 +373,7 @@ function addCandidate(raw){
   cur=CANDIDATES.length-1;
   addChip(c,cur);
   render();
+  track("suggestion",{word:word,tld:tld});
 }
 const nn=document.getElementById("newname");
 nn.addEventListener("keydown",e=>{if(e.key==="Enter"){addCandidate(nn.value);nn.value="";}e.stopPropagation();});
@@ -354,6 +383,7 @@ function cycle(d){
   const pos=vis.indexOf(cur);
   cur=vis[(pos+d+vis.length)%vis.length];
   render();
+  track("interaction",{a:"cycle",w:CANDIDATES[cur].word});
 }
 document.getElementById("prevbtn").onclick=()=>cycle(-1);
 document.getElementById("nextbtn").onclick=()=>cycle(1);
@@ -366,10 +396,11 @@ document.getElementById("resetbtn").onclick=()=>{
   elim.clear();
   [...chips.children].forEach(b=>b.classList.remove("gone"));
   render();
+  track("interaction",{a:"reset"});
 };
-document.getElementById("dottoggle").onclick=e=>{e.preventDefault();dot=!dot;render();};
-document.getElementById("kreistoggle").onclick=e=>{e.preventDefault();sig=!sig;render();};
-document.getElementById("kurztoggle").onclick=e=>{e.preventDefault();kurz=!kurz;render();};
+document.getElementById("dottoggle").onclick=e=>{e.preventDefault();dot=!dot;render();track("interaction",{a:"dot",on:dot});};
+document.getElementById("kreistoggle").onclick=e=>{e.preventDefault();sig=!sig;render();track("interaction",{a:"sig",on:sig});};
+document.getElementById("kurztoggle").onclick=e=>{e.preventDefault();kurz=!kurz;render();track("interaction",{a:"kurz",on:kurz});};
 
 function render(){
   const c=CANDIDATES[cur];
@@ -429,6 +460,7 @@ pfBox.querySelectorAll(".pmodes button").forEach(b=>{
     pMode=b.dataset.m;
     pfBox.querySelectorAll(".pmodes button").forEach(x=>x.classList.toggle("on",x===b));
     applyPMode();
+    track("interaction",{a:"pmode",m:pMode});
   };
 });
 function applyPMode(){
@@ -479,6 +511,7 @@ function postState(){
 document.getElementById("phonetoggle").onclick=e=>{
   e.preventDefault();
   phoneOn=!phoneOn;
+  track("interaction",{a:"phone",on:phoneOn});
   document.getElementById("phonetoggle").classList.toggle("on",phoneOn);
   pfBox.style.display=phoneOn?"block":"none";
   const f=document.getElementById("pframe");
