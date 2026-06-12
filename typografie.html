@@ -7,9 +7,9 @@
 <meta name="description" content="Goetheanum Typografie – wenige Mittel, präzise gesetzt. Hausregeln als Handbuch und maschinenlesbares System (DTCG-Tokens + prüfbare Regeln)." />
 <meta name="robots" content="noindex" />
 <style>
-  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.3.1-Leise.woff2") format("woff2");font-display:swap}
-  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.3.1-Klar.woff2") format("woff2");font-display:swap}
-  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.3.1-Laut.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.0-Leise.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.0-Klar.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.0-Laut.woff2") format("woff2");font-display:swap}
   :root{--ink:#23272b;--muted:#737a80;--line:rgba(20,24,28,.10);--line-soft:rgba(20,24,28,.055);
         --gold:#d7ab68;--gold-deep:#a07a33;--paper:#fff;--soft:#faf8f4;--maxw:880px;--bad:#b3433c;--good:#3f8f5f}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -150,9 +150,9 @@
       <div class="no"><div class="t">so nicht</div>1.000.000 Besucher am 09:30 Uhr-Termin, Mike's Liste.</div>
       <div class="yes"><div class="t">so</div>1&#8239;000&#8239;000 Besucher am 9.30-Uhr-Termin, Mikes Liste (sonst: Mike’s → Mikes).</div>
     </div>
-    <h3>Ziffern – ein Satz, dicktengleich</h3>
-    <p>Die Schrift führt <span class="laut">einen</span> Ziffernsatz: Versalziffern, alle gleich breit (560 Einheiten). In Tabellen ein Vorzug – Zahlen stehen exakt untereinander, ohne mit Leerzeichen zu schieben; Beträge darum immer rechtsbündig. Mediävalziffern mit Ober- und Unterlängen gibt es nicht – im Lesetext nicht durch Verkleinern nachahmen.</p>
-    <div class="note"><span class="rid">G25</span>ziffern. Ein Satz für alles: Versalziffern, dicktengleich. Tabellen rechtsbündig, nie mit Leerzeichen ausgerichtet. Keine Mediävalziffern vortäuschen.</div>
+    <h3>Ziffern – dicktengleich als Grundton</h3>
+    <p>Standard sind Versalziffern, alle gleich breit (560 Einheiten). In Tabellen ein Vorzug – Zahlen stehen exakt untereinander, ohne mit Leerzeichen zu schieben; Beträge darum immer rechtsbündig. Ab v2.4.0 trägt die Schrift zwei Varianten: <span class="laut">pnum</span> (proportional, fürs Laufende) und <span class="laut">onum</span> (kurze Ziffern auf x-Höhe). Echte Mediävalziffern mit Ober- und Unterlängen sind gezeichnete Formen und bleiben ausstehend – nicht durch Verkleinern nachahmen.</p>
+    <div class="note"><span class="rid">G25</span>ziffern. Grundton dicktengleich (tnum/lnum). Proportional per pnum, kurze Ziffern per onum. Tabellen rechtsbündig, nie mit Leerzeichen ausgerichtet. Keine echten Mediävalziffern vortäuschen.</div>
     <h3>Strichlängen mit Namen</h3>
     <table class="spick" style="max-width:560px">
       <thead><tr><th>Name</th><th>Zeichen</th><th>wofür</th></tr></thead>
@@ -173,9 +173,10 @@
         <tr><td>Geviert</td><td>1/1 em</td><td class="r">U+2003</td></tr>
         <tr><td>Halbgeviert</td><td>1/2 em</td><td class="r">U+2002</td></tr>
         <tr><td>Viertelgeviert</td><td>1/4 em</td><td class="r">U+2005</td></tr>
-        <tr><td>Achtelgeviert (Schmalspatium)</td><td>1/8 em</td><td class="r">U+2009</td></tr>
+        <tr><td>Schmalspatium (Thin)</td><td>1/5 em</td><td class="r">U+2009</td></tr>
+        <tr><td>Ziffernspatie</td><td>Ziffernbreite</td><td class="r">U+2007</td></tr>
         <tr><td>geschützt, voll (NBSP)</td><td>Wortabstand</td><td class="r">U+00A0</td></tr>
-        <tr><td><span class="laut">geschützt, schmal · Hausnorm</span></td><td>≈ 1/8 em</td><td class="r">U+202F</td></tr>
+        <tr><td><span class="laut">geschützt, schmal · Hausnorm</span></td><td>1/8 em (Achtelgeviert)</td><td class="r">U+202F</td></tr>
       </tbody>
     </table>
 
