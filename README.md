@@ -9,6 +9,7 @@ Dieses Repository enthaelt nur noch Goetheanum-Projekte.
 Statische Onepager liegen unter `apps/`:
 
 - `apps/logo-generator/`
+- `apps/gtv-naming/` - GTV Naming – Renderings: Praesentationswerkzeug fuer die Umbenennung von Goetheanum TV mit umschaltbarer Wortmarke fuer alle Namenskandidaten
 - `apps/visitenkarten-generator/`
 - `apps/briefschaften/`
 - `apps/karten-generator/`
@@ -68,6 +69,7 @@ Die zugehoerigen Verarbeitungsskripte und groesseren Datensammlungen folgen spae
 Der GitHub-Pages-Workflow publiziert weiter nur den stabilen oeffentlichen Satz:
 
 - Logo-Generator
+- GTV Naming – Renderings
 - Visitenkarten-Generator
 - gemeinsame `assets/`
 

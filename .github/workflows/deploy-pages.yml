@@ -14,6 +14,7 @@ on:
       - "visitenkarten-generator.html"
       - "index-goelogger-gci1.html"
       - "apps/logo-generator/**"
+      - "apps/gtv-naming/**"
       - "apps/visitenkarten-generator/**"
       - "assets/**"
       - ".github/workflows/deploy-pages.yml"
@@ -52,6 +53,7 @@ jobs:
           if [ -f visitenkarten-generator.html ]; then cp visitenkarten-generator.html _site/visitenkarten-generator.html; fi
           mkdir -p _site/apps
           if [ -d apps/logo-generator ]; then cp -R apps/logo-generator _site/apps/; fi
+          if [ -d apps/gtv-naming ]; then cp -R apps/gtv-naming _site/apps/; fi
           if [ -d apps/visitenkarten-generator ]; then cp -R apps/visitenkarten-generator _site/apps/; fi
           if [ -d assets ]; then
             mkdir -p _site/assets
