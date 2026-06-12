@@ -14,8 +14,10 @@
 
   #presenter{position:sticky;top:0;z-index:50;background:#14202b;color:#e8ecef;padding:10px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px}
   #presenter .plabel{font-weight:700;letter-spacing:.04em;font-size:11px;color:#8da0ae;text-transform:uppercase}
-  #collapsebtn{background:transparent;border:1px solid #3c4d5b;color:#9fb4c2;border-radius:999px;width:30px;height:30px;font-size:13px;cursor:pointer;line-height:1;flex:0 0 auto}
+  #collapsebtn{background:transparent;border:1px solid #3c4d5b;color:#dfe6ea;border-radius:999px;width:30px;height:30px;cursor:pointer;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;padding:0}
   #collapsebtn:hover{border-color:#7e93a2;color:#fff}
+  #collapsebtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+  #presenter.collapsed #collapsebtn svg{transform:rotate(-90deg)}
   #pcollapsed{display:none;color:#dfe6ea;font-weight:600}
   #presenter.collapsed>*{display:none!important}
   #presenter.collapsed>#collapsebtn,#presenter.collapsed>.plabel{display:inline-flex!important;align-items:center}
@@ -138,7 +140,7 @@
 <body>
 
 <div id="presenter">
-  <button id="collapsebtn" title="Leiste ein-/ausklappen" aria-label="Leiste ein-/ausklappen">&#9662;</button>
+  <button id="collapsebtn" title="Leiste ein-/ausklappen" aria-label="Leiste ein-/ausklappen"><svg viewBox="0 0 24 24"><path d="m6 9.2 6 6 6-6"/></svg></button>
   <span class="plabel">Name</span>
   <span id="pcollapsed"></span>
   <button class="navarr" id="prevbtn" title="Voriger Kandidat" aria-label="Voriger Kandidat">&#8249;</button>
@@ -493,10 +495,8 @@ if(EMBED){
     cur=idx;dot=m.dot;sig=m.sig;kurz=!!m.kurz;render();
   });
 }
-const cbtn=document.getElementById("collapsebtn");
-cbtn.onclick=()=>{
-  const col=document.getElementById("presenter").classList.toggle("collapsed");
-  cbtn.innerHTML=col?"&#9656;":"&#9662;";
+document.getElementById("collapsebtn").onclick=()=>{
+  document.getElementById("presenter").classList.toggle("collapsed");
 };
 const _render=render;
 render=function(){
