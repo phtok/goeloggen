@@ -32,8 +32,14 @@ Optional in der goeloggen-Übersicht/Startseite verlinken (neben Logo-Generator)
 - **Kurzform**: zeigt nur den Zusatznamen neben dem Icon, ohne die
   „Goetheanum"-Zeile (z. B. Icon + „Studio"). Hat Vorrang vor Zweizeiler
   und Punkt-Sonderform; das gewählte Icon (Kreis/offen) gilt auch hier.
-- **iPhone**: schwebende Mobilvorschau unten rechts, synchron zum Hauptzustand
-  (iframe derselben Datei mit `#embed`, Sync via postMessage).
+- **iPhone**: schwebende Mobilvorschau unten rechts, synchron zum Hauptzustand,
+  mit drei Modi: **Web** (iframe derselben Datei mit `#embed`, Sync via
+  postMessage), **Splash** (App-Startbildschirm: Kreis-Icon + Kandidat auf
+  Schwarz) und **App** (Home-Screen-Nachbau der GTV-iOS-App mit vollem Namen
+  im Header, Pillen, Skeleton-Inhalten und Tabbar).
+- **▾-Knopf** (links in der Leiste): klappt die Presenter-Leiste auf eine
+  schmale Zeile zusammen – nützlich auf dem iPhone, wo die volle Leiste
+  sonst die halbe Sicht nimmt.
 
 ## Architektur-Notizen
 
