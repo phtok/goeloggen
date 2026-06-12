@@ -29,6 +29,9 @@ Optional in der goeloggen-Übersicht/Startseite verlinken (neben Logo-Generator)
   TLD wirksam, z. B. tv, studio, online, media).
 - **Icon (offene Form)**: schaltet den Zweizeiler vom Kreis-Icon (Default)
   auf das offene Icon um.
+- **Kurzform**: zeigt nur den Zusatznamen neben dem Icon, ohne die
+  „Goetheanum"-Zeile (z. B. Icon + „Studio"). Hat Vorrang vor Zweizeiler
+  und Punkt-Sonderform; das gewählte Icon (Kreis/offen) gilt auch hier.
 - **iPhone**: schwebende Mobilvorschau unten rechts, synchron zum Hauptzustand
   (iframe derselben Datei mit `#embed`, Sync via postMessage).
 
