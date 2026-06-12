@@ -288,6 +288,7 @@ def build_variable(M, H):
         if 0x2039 in cmap and 0x203A in cmap:                  # › = mirror of ‹ per master
             rL, aL = _outline_at(M, H, 0x2039, Ht, gn_group[cmap[0x2039]][1])
             set_glyph(ft, cmap[0x203A], _mirror_rec(rL, aL), aL)
+        add_spaces(ft)                                          # spatien + U+2011 in every master (2011 follows the weight)
         p = os.path.join(tmp, "m_%d.otf" % wght); ft.save(p); paths.append(p)
 
     fonts = [TTFont(p) for p in paths]; gsets = [f.getGlyphSet() for f in fonts]
@@ -404,6 +405,11 @@ import re as _re
 SPACES = {0x2002: 500, 0x2003: 1000, 0x2004: 333, 0x2005: 250, 0x2006: 167,
           0x2009: 200, 0x200A: 100, 0x202F: 125, 0x2060: 0, 0x200B: 0}
 
+# onum (short figures): anisotropic so the stems keep their weight – uniform
+# shrink-to-x-height made them too thin. ky lowers the height (just above
+# x-height), kx keeps almost full stem width so the colour matches the text.
+ONUM_KX, ONUM_KY = 0.97, 0.80
+
 
 def add_spaces(ft):
     cmap = ft.getBestCmap()
@@ -445,8 +451,9 @@ def _respace(recv, sb=40):
     return [(c, tuple((x + sh, y) for x, y in p)) for c, p in recv], (x1 - x0) + 2 * sb
 
 
-def _scale(recv, k):
-    return [(c, tuple((x * k, y * k) for x, y in p)) for c, p in recv]
+def _scale(recv, kx, ky=None):
+    ky = kx if ky is None else ky
+    return [(c, tuple((x * kx, y * ky) for x, y in p)) for c, p in recv]
 
 
 def _add_gsub_single(ft, tag, mapping):
@@ -471,7 +478,6 @@ def _add_gsub_single(ft, tag, mapping):
 
 
 def add_figure_features(ft):
-    o = ft["OS/2"]; cap = getattr(o, "sCapHeight", 690) or 690; xh = getattr(o, "sxHeight", 500) or 500
     cmap = ft.getBestCmap()
     pnum, onum = {}, {}
     for d in range(0x30, 0x3A):
@@ -479,8 +485,8 @@ def add_figure_features(ft):
         if not gn:
             continue
         rec, adv = grec(ft, d)
-        pr, pa = _respace(rec);                 pnum[gn] = _add_alt(ft, pr, pa)
-        sr, sa = _respace(_scale(rec, xh / cap)); onum[gn] = _add_alt(ft, sr, sa)
+        pr, pa = _respace(rec);                          pnum[gn] = _add_alt(ft, pr, pa)
+        sr, sa = _respace(_scale(rec, ONUM_KX, ONUM_KY)); onum[gn] = _add_alt(ft, sr, sa)
     ident = {cmap[d]: cmap[d] for d in range(0x30, 0x3A) if d in cmap}
     _add_gsub_single(ft, "pnum", pnum)          # proportional lining
     _add_gsub_single(ft, "onum", onum)          # oldstyle / short figures (x-height)
