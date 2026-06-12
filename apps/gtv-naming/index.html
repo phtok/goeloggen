@@ -14,6 +14,12 @@
 
   #presenter{position:sticky;top:0;z-index:50;background:#14202b;color:#e8ecef;padding:10px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px}
   #presenter .plabel{font-weight:700;letter-spacing:.04em;font-size:11px;color:#8da0ae;text-transform:uppercase}
+  #collapsebtn{background:transparent;border:1px solid #3c4d5b;color:#9fb4c2;border-radius:999px;width:30px;height:30px;font-size:13px;cursor:pointer;line-height:1;flex:0 0 auto}
+  #collapsebtn:hover{border-color:#7e93a2;color:#fff}
+  #pcollapsed{display:none;color:#dfe6ea;font-weight:600}
+  #presenter.collapsed>*{display:none!important}
+  #presenter.collapsed>#collapsebtn,#presenter.collapsed>.plabel{display:inline-flex!important;align-items:center}
+  #presenter.collapsed>#pcollapsed{display:inline!important}
   .chip{background:transparent;border:1px solid #3c4d5b;color:#dfe6ea;border-radius:999px;padding:5px 14px;font:600 13px 'Titillium Web';cursor:pointer;transition:all .15s}
   .chip:hover{border-color:#7e93a2}
   .chip.on{background:#fff;color:#14202b;border-color:#fff}
@@ -28,8 +34,36 @@
   #newname:focus{border-color:#7e93a2;border-style:solid}
   #newname::placeholder{color:#8da0ae}
   #phonefloat{position:fixed;right:26px;bottom:26px;z-index:60;background:#111418;border-radius:42px;padding:11px;box-shadow:0 26px 70px rgba(10,16,22,.4);display:none}
-  #phonefloat .pclip{width:274px;height:560px;overflow:hidden;border-radius:32px;background:#fff}
+  #phonefloat .pclip{position:relative;width:274px;height:560px;overflow:hidden;border-radius:32px;background:#fff}
   #pframe{width:392px;height:800px;border:0;transform:scale(0.699);transform-origin:top left}
+  .pmodes{display:flex;gap:6px;justify-content:center;margin-bottom:9px}
+  .pmodes button{background:#222a33;border:0;color:#9fb4c2;font:600 11px 'Titillium Web',sans-serif;padding:4px 12px;border-radius:999px;cursor:pointer}
+  .pmodes button.on{background:#fff;color:#111}
+  #psplash{display:none;position:absolute;inset:0;background:#000;align-items:center;justify-content:center;z-index:2}
+  #psplash .spl{display:flex;align-items:center;gap:9px;padding:0 18px}
+  #psplash .spl span{color:#fff;font-family:'Titillium Web',sans-serif;font-weight:700;line-height:1;letter-spacing:.5px}
+  #papp{display:none;position:absolute;inset:0;background:#fff;z-index:2;font-family:-apple-system,system-ui,'Segoe UI',sans-serif;color:#111}
+  #papp .ph-head{display:flex;align-items:center;justify-content:space-between;padding:18px 14px 8px}
+  #papp .ph-head b{font-size:16px;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:185px}
+  #papp .ph-head svg{width:18px;height:18px;margin-left:12px;stroke:#111;fill:none;stroke-width:1.8}
+  #papp .ph-pills{display:flex;gap:6px;padding:4px 14px 10px;overflow:hidden}
+  #papp .ph-pills span{flex:0 0 auto;font-size:10.5px;font-weight:600;padding:5px 11px;border-radius:999px;background:#f8f8f8;border:1px solid #e8e8e8;color:#222}
+  #papp .ph-pills span.on{background:#1c1c1e;border-color:#1c1c1e;color:#fff}
+  #papp .ph-body{padding:0 14px;overflow:hidden;height:418px}
+  #papp .ph-card{position:relative;background:#f1f1f1;border-radius:8px}
+  #papp .ph-card .dur{position:absolute;right:7px;bottom:7px;background:rgba(110,110,110,.85);color:#fff;font-size:8.5px;font-weight:600;padding:2px 5px;border-radius:4px}
+  #papp .ph-card.big{height:138px;margin-top:4px}
+  #papp .ph-cap{font-size:10.5px;font-weight:600;color:#222;padding:7px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #papp .ph-sec{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;font-weight:700;padding:13px 0 8px}
+  #papp .ph-sec i{font-style:normal;color:#999;font-weight:400}
+  #papp .ph-row{display:flex;gap:8px}
+  #papp .ph-row .ph-card{width:132px;height:78px;flex:0 0 auto}
+  #papp .ph-row .ph-cap{font-weight:400;color:#333}
+  #papp .ph-tab{position:absolute;left:0;right:0;bottom:0;height:58px;border-top:1px solid #ececec;background:#fff;display:flex}
+  #papp .ph-tab div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:8.5px;color:#8a8a8e}
+  #papp .ph-tab div.on{color:#111}
+  #papp .ph-tab div.on::after{content:"";position:absolute;bottom:0;width:48px;height:3px;background:#23323F;border-radius:2px 2px 0 0}
+  #papp .ph-tab svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.7}
   .ptoggle{display:flex;align-items:center;gap:8px;margin-left:auto;cursor:pointer;user-select:none}
   .ptoggle .track{width:38px;height:21px;border-radius:11px;background:#3c4d5b;position:relative;transition:background .15s}
   .ptoggle .track::after{content:"";position:absolute;width:15px;height:15px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .15s}
@@ -37,7 +71,7 @@
   .ptoggle.on .track::after{left:20px}
   #domline{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#bcc9d2}
   #tldflag{font-weight:700;border-radius:6px;padding:2px 8px;font-size:11.5px}
-  #tldflag.ok{background:#173f2b;color:#6fe0a8}
+  #tldflag.ok{background:#2c3b48;color:#9fb4c2}
   #tldflag.bad{background:#3a4651;color:#b9c5cd}
   #tldflag.neutral{background:#2c3b48;color:#9fb4c2}
 
@@ -104,7 +138,9 @@
 <body>
 
 <div id="presenter">
+  <button id="collapsebtn" title="Leiste ein-/ausklappen" aria-label="Leiste ein-/ausklappen">&#9662;</button>
   <span class="plabel">Name</span>
+  <span id="pcollapsed"></span>
   <button class="navarr" id="prevbtn" title="Voriger Kandidat" aria-label="Voriger Kandidat">&#8249;</button>
   <button class="navarr" id="nextbtn" title="N&#228;chster Kandidat" aria-label="N&#228;chster Kandidat">&#8250;</button>
   <span id="chips" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"></span>
@@ -345,9 +381,60 @@ function restart(){clearInterval(timer);timer=setInterval(()=>go(s+1),7000)}
 /* --- floating iPhone preview / embed mode --- */
 const pfBox=document.createElement("div");
 pfBox.id="phonefloat";
-pfBox.innerHTML='<div class="pclip"><iframe id="pframe" title="iPhone-Vorschau"></iframe></div>';
+pfBox.innerHTML='<div class="pmodes">'+
+  '<button data-m="web" class="on">Web</button>'+
+  '<button data-m="splash">Splash</button>'+
+  '<button data-m="app">App</button></div>'+
+  '<div class="pclip"><iframe id="pframe" title="iPhone-Vorschau"></iframe>'+
+  '<div id="psplash"></div><div id="papp"></div></div>';
 document.body.appendChild(pfBox);
-let phoneOn=false;
+let phoneOn=false, pMode="web";
+pfBox.querySelectorAll(".pmodes button").forEach(b=>{
+  b.onclick=()=>{
+    pMode=b.dataset.m;
+    pfBox.querySelectorAll(".pmodes button").forEach(x=>x.classList.toggle("on",x===b));
+    applyPMode();
+  };
+});
+function applyPMode(){
+  document.getElementById("pframe").style.visibility=pMode==="web"?"visible":"hidden";
+  document.getElementById("psplash").style.display=pMode==="splash"?"flex":"none";
+  document.getElementById("papp").style.display=pMode==="app"?"block":"none";
+  renderPhoneScreens();
+}
+const SK='<span class="dur">05:42</span>';
+function renderPhoneScreens(){
+  const c=CANDIDATES[cur];
+  if(pMode==="splash"){
+    const fs=Math.min(34,Math.floor(300/Math.max(5,c.word.length)));
+    document.getElementById("psplash").innerHTML='<div class="spl">'+
+      '<svg width="58" height="58" viewBox="0 0 28.379 28.3628" role="img" aria-label="'+c.name+'">'+
+      '<circle cx="14.2058" cy="14.1895" r="14.1733" fill="#ffffff"/>'+
+      '<path fill="#000000" d="'+POINT+'"/></svg>'+
+      '<span style="font-size:'+fs+'px">'+c.word+'</span></div>';
+  }else if(pMode==="app"){
+    const ico='<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>'+
+      '<svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 1 6 6c0 5 2 6 2 6H4s2-1 2-6a6 6 0 0 1 6-6Zm-2 15a2 2 0 0 0 4 0"/></svg>';
+    document.getElementById("papp").innerHTML=
+      '<div class="ph-head"><b>'+c.name+'</b><span style="display:flex">'+ico+'</span></div>'+
+      '<div class="ph-pills"><span class="on">Katalog</span><span>Favoriten</span><span>Wiedergabelisten</span><span>Downloads</span></div>'+
+      '<div class="ph-body">'+
+        '<div class="ph-card big">'+SK+'</div>'+
+        '<div class="ph-cap">Trailer | Die menschliche Organisation als In…</div>'+
+        '<div class="ph-sec">Diese Woche beliebt <i>›</i></div>'+
+        '<div class="ph-row"><div><div class="ph-card">'+SK+'</div><div class="ph-cap">Trailer | Die menschliche Org…</div></div>'+
+        '<div><div class="ph-card"></div><div class="ph-cap">Krieg am Golf – Ist…</div></div></div>'+
+        '<div class="ph-sec">Dialogabende <i>›</i></div>'+
+        '<div class="ph-row"><div class="ph-card"></div><div class="ph-card"></div></div>'+
+      '</div>'+
+      '<div class="ph-tab">'+
+        '<div class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m10 9 5 3-5 3z"/></svg>Videos</div>'+
+        '<div><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3.4"/><path d="M3.5 19c.7-3 3-4.5 5.5-4.5s4.8 1.5 5.5 4.5"/><circle cx="16.5" cy="9.5" r="2.6"/><path d="M16 14.7c2.2.2 4 1.5 4.5 4.3"/></svg>Community</div>'+
+        '<div><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="15" rx="2.5"/><path d="M4 10h16M8.5 3.5v3.5M15.5 3.5v3.5"/></svg>Kalender</div>'+
+        '<div><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Mehr</div>'+
+      '</div>';
+  }
+}
 function postState(){
   const f=document.getElementById("pframe");
   if(phoneOn&&f&&f.contentWindow){
@@ -373,8 +460,19 @@ if(EMBED){
     cur=idx;dot=m.dot;sig=m.sig;kurz=!!m.kurz;render();
   });
 }
+const cbtn=document.getElementById("collapsebtn");
+cbtn.onclick=()=>{
+  const col=document.getElementById("presenter").classList.toggle("collapsed");
+  cbtn.innerHTML=col?"&#9656;":"&#9662;";
+};
 const _render=render;
-render=function(){_render();if(!EMBED)postState();};
+render=function(){
+  _render();
+  if(EMBED)return;
+  document.getElementById("pcollapsed").textContent=CANDIDATES[cur].label;
+  postState();
+  renderPhoneScreens();
+};
 go(0);render();
 window.addEventListener("resize",render);
 </script>
