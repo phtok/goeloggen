@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum Schriften – Statistik</title>
+<meta name="robots" content="noindex" />
+<style>
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.0-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.0-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.0-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
+  :root{--ink:#23272b;--muted:#737a80;--line:rgba(20,24,28,.10);--line-soft:rgba(20,24,28,.055);
+        --gold:#d7ab68;--gold-deep:#a07a33;--paper:#fff;--soft:#faf8f4;--maxw:760px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:"G Klar","Helvetica Neue",Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  a{color:inherit}
+  header{border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;justify-content:space-between;height:58px}
+  .brand img{height:30px;display:block}
+  nav a{color:var(--muted);text-decoration:none;font-size:13.5px}
+  nav a:hover{color:var(--gold-deep)}
+  .hero{padding:48px 0 8px}
+  .kick{color:var(--gold-deep);font-size:14px;margin-bottom:14px}
+  h1{font-family:"G Laut";font-weight:400;font-size:clamp(32px,6vw,54px);line-height:1.08}
+  .lede{font-family:"G Leise";color:var(--muted);margin-top:14px;max-width:560px}
+  section{padding:34px 0;border-top:1px solid var(--line-soft)}
+  h2{font-family:"G Laut";font-weight:400;font-size:clamp(20px,3vw,27px);margin-bottom:8px}
+  .cards{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0 24px}
+  .stat{flex:1;min-width:180px;border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:var(--soft)}
+  .stat .num{font-family:"G Laut";font-size:clamp(34px,7vw,54px);line-height:1;font-feature-settings:"tnum" 1}
+  .stat .cap{color:var(--muted);font-size:13.5px;margin-top:8px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line-soft)}
+  th{color:var(--muted);font-weight:400;font-size:12.5px;letter-spacing:.02em}
+  td.n{text-align:right;font-feature-settings:"tnum" 1;color:var(--ink)}
+  td.lbl{color:var(--muted)}
+  .muted{color:var(--muted);font-size:13px}
+  .err{color:#9b2d2d;font-size:14px}
+  footer{border-top:1px solid var(--line);padding:30px 0 56px;color:var(--muted);font-size:12.5px;margin-top:20px}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <a href="https://grafik.goetheanum.ch" aria-label="Am Goetheanum"><img src="assets/logos/am-goetheanum-dark.svg" alt="Am Goetheanum" /></a>
+  <nav><a href="schriften.html">← Schriften</a></nav>
+</div></header>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="kick">Eigener Server · keine Cookies · keine Personendaten</div>
+    <h1>Statistik.</h1>
+    <p class="lede">Besuche und Downloads der Schriftenseite. Gezählt werden nur anonyme Summen – keine IP, kein Tracking, keine Drittdienste.</p>
+  </div>
+
+  <section>
+    <h2>Überblick</h2>
+    <div class="cards">
+      <div class="stat"><div class="num" id="sumViews">–</div><div class="cap">Seitenaufrufe</div></div>
+      <div class="stat"><div class="num" id="sumDls">–</div><div class="cap">Downloads gesamt</div></div>
+      <div class="stat"><div class="num" id="sumKinds">–</div><div class="cap">verschiedene Dateien</div></div>
+    </div>
+    <p class="muted" id="status">lädt …</p>
+  </section>
+
+  <section>
+    <h2>Downloads im Detail</h2>
+    <table>
+      <thead><tr><th>Datei</th><th style="text-align:right">Anzahl</th><th style="text-align:right">zuletzt</th></tr></thead>
+      <tbody id="dlBody"></tbody>
+    </table>
+  </section>
+</main>
+
+<footer><div class="wrap">Goetheanum Schriften · Statistik · anonyme Zählung über das eigene Supabase-Backend.</div></footer>
+
+<script>
+  var SB = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
+  var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
+  function fmt(n){ return (n||0).toLocaleString('de-CH'); }
+  function when(ts){ if(!ts) return '–'; var d=new Date(ts.replace(' ','T'));
+    return isNaN(d)?'–':d.toLocaleDateString('de-CH',{day:'2-digit',month:'2-digit',year:'2-digit'}); }
+  fetch(SB + '/rest/v1/rpc/schriften_stats', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
+    body: '{}'
+  })
+  .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+  .then(function(rows){
+    var views = 0, dls = 0, files = [];
+    rows.forEach(function(r){
+      if (r.kind === 'pageview') views += Number(r.n);
+      else if (r.kind === 'download') { dls += Number(r.n); files.push(r); }
+    });
+    document.getElementById('sumViews').textContent = fmt(views);
+    document.getElementById('sumDls').textContent = fmt(dls);
+    document.getElementById('sumKinds').textContent = fmt(files.length);
+    var tb = document.getElementById('dlBody');
+    files.sort(function(a,b){ return b.n - a.n; });
+    if (!files.length) tb.innerHTML = '<tr><td class="lbl" colspan="3">Noch keine Downloads.</td></tr>';
+    files.forEach(function(f){
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td class="lbl"></td><td class="n"></td><td class="n"></td>';
+      tr.children[0].textContent = f.label;
+      tr.children[1].textContent = fmt(Number(f.n));
+      tr.children[2].textContent = when(f.updated_at);
+      tb.appendChild(tr);
+    });
+    document.getElementById('status').textContent = 'Stand: ' + new Date().toLocaleString('de-CH');
+  })
+  .catch(function(e){
+    document.getElementById('status').className = 'err';
+    document.getElementById('status').textContent = 'Konnte Statistik nicht laden (' + e.message + ').';
+  });
+</script>
+</body>
+</html>

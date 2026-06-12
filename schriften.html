@@ -234,20 +234,29 @@
   })();
 </script>
 
-<!-- Statistik · GoatCounter (kostenlos, datenschutzfreundlich, keine Cookies, DSGVO-konform).
-     EINRICHTEN: kostenloses Konto auf https://www.goatcounter.com/ anlegen, einen Code
-     (Subdomain) wählen und unten beide Vorkommen von DEIN-CODE ersetzen. Seitenaufrufe
-     werden automatisch gezählt; das erste Skript zählt zusätzlich jeden Download-Klick. -->
+<!-- Statistik · eigener Supabase-Server (kein Fremddienst, keine Cookies, keine IP/Personendaten).
+     Zählt Seitenaufruf und jeden Download über die geschützte Funktion schriften_bump().
+     Auswertung: statistik.html -->
 <script>
-  window.goatcounter = window.goatcounter || {};
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest && e.target.closest('a[download]');
-    if (!a || !window.goatcounter.count) return;
-    var f = (a.getAttribute('href') || '').split('/').pop();
-    window.goatcounter.count({ path: 'download/' + f, title: 'Download ' + f, event: true });
-  });
+  (function () {
+    var SB = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
+    var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
+    function bump(kind, label) {
+      try {
+        fetch(SB + '/rest/v1/rpc/schriften_bump', {
+          method: 'POST', keepalive: true,
+          headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
+          body: JSON.stringify({ p_kind: kind, p_label: label })
+        }).catch(function () {});
+      } catch (e) {}
+    }
+    bump('pageview', 'schriften');
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[download]');
+      if (!a) return;
+      bump('download', (a.getAttribute('href') || '').split('/').pop());
+    });
+  })();
 </script>
-<script data-goatcounter="https://DEIN-CODE.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
