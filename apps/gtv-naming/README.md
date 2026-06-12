@@ -40,6 +40,12 @@ Optional in der goeloggen-Übersicht/Startseite verlinken (neben Logo-Generator)
 - **▾-Knopf** (links in der Leiste): klappt die Presenter-Leiste auf eine
   schmale Zeile zusammen – nützlich auf dem iPhone, wo die volle Leiste
   sonst die halbe Sicht nimmt.
+- **Speichern**: eigene Vorschläge, ausgeschiedene Kandidaten, Auswahl und
+  Toggle-Zustände werden automatisch in `localStorage` gesichert und beim
+  Neuladen wiederhergestellt (pro Browser/Gerät). Einen eigenen Vorschlag
+  dauerhaft löschen: mit **×** ausscheiden und neu laden – ausgeschiedene
+  Vorschläge werden nicht mitgespeichert. **↺** holt nur die
+  Standard-Kandidaten der laufenden Sitzung zurück.
 
 ## Architektur-Notizen
 
@@ -66,6 +72,4 @@ Optional in der goeloggen-Übersicht/Startseite verlinken (neben Logo-Generator)
 1. Refactor: Logo-Konstanten mit logo-generator teilen (s.o.).
 2. TLD-Liste (`const TLDS`) gelegentlich gegen
    https://data.iana.org/TLD/tlds-alpha-by-domain.txt aktualisieren.
-3. Optional: Zustand (ausgeschiedene Kandidaten, neue Vorschläge) in
-   localStorage persistieren, damit eine Sitzung wiederaufgenommen werden kann.
-4. Optional: Export-Knopf „aktuelle Ansicht als PNG" (html2canvas o.ä.).
+3. Optional: Export-Knopf „aktuelle Ansicht als PNG" (html2canvas o.ä.).
