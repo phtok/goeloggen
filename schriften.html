@@ -233,5 +233,21 @@
     render('piktogramm');
   })();
 </script>
+
+<!-- Statistik · GoatCounter (kostenlos, datenschutzfreundlich, keine Cookies, DSGVO-konform).
+     EINRICHTEN: kostenloses Konto auf https://www.goatcounter.com/ anlegen, einen Code
+     (Subdomain) wählen und unten beide Vorkommen von DEIN-CODE ersetzen. Seitenaufrufe
+     werden automatisch gezählt; das erste Skript zählt zusätzlich jeden Download-Klick. -->
+<script>
+  window.goatcounter = window.goatcounter || {};
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[download]');
+    if (!a || !window.goatcounter.count) return;
+    var f = (a.getAttribute('href') || '').split('/').pop();
+    window.goatcounter.count({ path: 'download/' + f, title: 'Download ' + f, event: true });
+  });
+</script>
+<script data-goatcounter="https://DEIN-CODE.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
