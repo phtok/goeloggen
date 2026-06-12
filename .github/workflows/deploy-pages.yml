@@ -7,8 +7,11 @@ on:
     paths:
       - "index.html"
       - "schriften.html"
+      - "statistik.html"
+      - "werkzeug.html"
       - "tester.html"
       - "typografie.html"
+      - "vorschau.html"
       - "logo-generator.html"
       - "visitenkarten.html"
       - "visitenkarten-generator.html"
@@ -44,8 +47,11 @@ jobs:
           test -f index.html
           cp index.html _site/index.html
           if [ -f schriften.html ]; then cp schriften.html _site/schriften.html; fi
+          if [ -f statistik.html ]; then cp statistik.html _site/statistik.html; fi
+          if [ -f werkzeug.html ]; then cp werkzeug.html _site/werkzeug.html; fi
           if [ -f tester.html ]; then cp tester.html _site/tester.html; fi
           if [ -f typografie.html ]; then cp typografie.html _site/typografie.html; fi
+          if [ -f vorschau.html ]; then cp vorschau.html _site/vorschau.html; fi
           test -f logo-generator.html
           cp logo-generator.html _site/logo-generator.html
           if [ -f index-goelogger-gci1.html ]; then cp index-goelogger-gci1.html _site/index-goelogger-gci1.html; fi

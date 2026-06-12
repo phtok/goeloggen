@@ -34,8 +34,8 @@ _VMODEL = VariationModel([{}, {"wght": -1.0}, {"wght": 1.0}], axisOrder=["wght"]
 
 INPUT = os.path.join(HERE, "input")
 OUTROOT = os.path.normpath(os.path.join(HERE, "..", "..", "assets", "fonts", "goetheanum"))
-VERSION = "2.3.1"                       # fix: › built as mirror of ‹ (Titillium pair is point-mismatched)
-FREV = 2.3                              # head.fontRevision (Major.Minor; Patch im Versionsstring)
+VERSION = "2.4.0"                       # add: typographic spaces (U+2002–202F, 2007/2011) + figure features
+FREV = 2.4                              # head.fontRevision (Major.Minor; Patch im Versionsstring)
 SCHEMES = ["Leise", "Klar", "Laut"]
 IMPORTS = [("exclam", 0x21), ("quotedbl", 0x22), ("dollar", 0x24), ("section", 0xA7)]
 
@@ -288,6 +288,7 @@ def build_variable(M, H):
         if 0x2039 in cmap and 0x203A in cmap:                  # › = mirror of ‹ per master
             rL, aL = _outline_at(M, H, 0x2039, Ht, gn_group[cmap[0x2039]][1])
             set_glyph(ft, cmap[0x203A], _mirror_rec(rL, aL), aL)
+        add_spaces(ft)                                          # spatien + U+2011 in every master (2011 follows the weight)
         p = os.path.join(tmp, "m_%d.otf" % wght); ft.save(p); paths.append(p)
 
     fonts = [TTFont(p) for p in paths]; gsets = [f.getGlyphSet() for f in fonts]
@@ -391,6 +392,119 @@ def reweight_statics():
         set_win(ft, wa, wd)
         ft.save(os.path.join(OUTROOT, "Fonts", static_out(sch)))
         print("  Fonts/%s -> wght %d" % (static_out(sch), CUT_WEIGHTS[sch]))
+
+
+# --- Typographic spaces + figure features (v2.4.0) --------------------------
+# The original family carried only the word space and NBSP; the house rules
+# (G20/G21) prescribe the narrow no-break space and its siblings, so the family
+# must actually contain them. Figures: the single tabular-lining set stays the
+# default; proportional (pnum) and oldstyle/short (onum) are derived alternates,
+# tnum/lnum expose the tabular-lining default explicitly.
+import re as _re
+
+SPACES = {0x2002: 500, 0x2003: 1000, 0x2004: 333, 0x2005: 250, 0x2006: 167,
+          0x2009: 200, 0x200A: 100, 0x202F: 125, 0x2060: 0, 0x200B: 0}
+
+# onum (short figures): anisotropic so the stems keep their weight – uniform
+# shrink-to-x-height made them too thin. ky lowers the height (just above
+# x-height), kx keeps almost full stem width so the colour matches the text.
+ONUM_KX, ONUM_KY = 0.97, 0.80
+
+
+def add_spaces(ft):
+    cmap = ft.getBestCmap()
+    fig = ft["hmtx"][cmap[0x30]][0] if 0x30 in cmap else 560   # figure space  = digit width
+    per = ft["hmtx"][cmap[0x2E]][0] if 0x2E in cmap else 250   # punctuation sp = period width
+    widths = dict(SPACES); widths[0x2007] = fig; widths[0x2008] = per
+    added = []
+    for uni, adv in sorted(widths.items()):
+        if uni in cmap:
+            continue
+        add_cid_glyph(ft, uni, [], adv); added.append(uni)
+    if 0x2011 not in cmap and 0x2D in cmap:                    # non-breaking hyphen = hyphen outline
+        rh, ah = grec(ft, 0x2D); add_cid_glyph(ft, 0x2011, rh, ah); added.append(0x2011)
+    return added
+
+
+def _add_alt(ft, recv, adv):
+    """Add an outline-only glyph (no cmap entry) for feature access; return name."""
+    cff = ft["CFF "].cff; td = cff[cff.fontNames[0]]
+    cs = _charstring(ft, recv, adv)
+    cids = [int(n[3:]) for n in td.charset if _re.fullmatch(r"cid\d+", n)]
+    name = "cid%05d" % (max(cids) + 1)
+    td.CharStrings.charStringsIndex.append(cs)
+    td.CharStrings.charStrings[name] = len(td.CharStrings.charStringsIndex) - 1
+    td.charset.append(name)
+    if hasattr(td, "FDSelect"):
+        td.FDSelect.append(0)
+    xs = [x for c, p in recv for x, _ in p]
+    ft["hmtx"].metrics[name] = (int(round(adv)), round(min(xs)) if xs else 0)
+    ft.setGlyphOrder(list(td.charset))
+    return name
+
+
+def _respace(recv, sb=40):
+    xs = [x for c, p in recv for x, _ in p]
+    if not xs:
+        return recv, 0
+    x0, x1 = min(xs), max(xs); sh = sb - x0
+    return [(c, tuple((x + sh, y) for x, y in p)) for c, p in recv], (x1 - x0) + 2 * sb
+
+
+def _scale(recv, kx, ky=None):
+    ky = kx if ky is None else ky
+    return [(c, tuple((x * kx, y * ky) for x, y in p)) for c, p in recv]
+
+
+def _add_gsub_single(ft, tag, mapping):
+    from fontTools.ttLib.tables import otTables as ot
+    from fontTools.otlLib.builder import buildSingleSubstSubtable, buildLookup
+    if not mapping or "GSUB" not in ft:
+        return
+    gsub = ft["GSUB"].table
+    gsub.LookupList.Lookup.append(buildLookup([buildSingleSubstSubtable(mapping)], flags=0))
+    gsub.LookupList.LookupCount = len(gsub.LookupList.Lookup)
+    lidx = gsub.LookupList.LookupCount - 1
+    feat = ot.Feature(); feat.FeatureParams = None
+    feat.LookupListIndex = [lidx]; feat.LookupCount = 1
+    fr = ot.FeatureRecord(); fr.FeatureTag = tag; fr.Feature = feat
+    gsub.FeatureList.FeatureRecord.append(fr)
+    gsub.FeatureList.FeatureCount = len(gsub.FeatureList.FeatureRecord)
+    fidx = gsub.FeatureList.FeatureCount - 1
+    for sr in gsub.ScriptList.ScriptRecord:
+        s = sr.Script
+        for ls in ([s.DefaultLangSys] if s.DefaultLangSys else []) + [r.LangSys for r in s.LangSysRecord]:
+            ls.FeatureIndex.append(fidx); ls.FeatureCount = len(ls.FeatureIndex)
+
+
+def add_figure_features(ft):
+    cmap = ft.getBestCmap()
+    pnum, onum = {}, {}
+    for d in range(0x30, 0x3A):
+        gn = cmap.get(d)
+        if not gn:
+            continue
+        rec, adv = grec(ft, d)
+        pr, pa = _respace(rec);                          pnum[gn] = _add_alt(ft, pr, pa)
+        sr, sa = _respace(_scale(rec, ONUM_KX, ONUM_KY)); onum[gn] = _add_alt(ft, sr, sa)
+    ident = {cmap[d]: cmap[d] for d in range(0x30, 0x3A) if d in cmap}
+    _add_gsub_single(ft, "pnum", pnum)          # proportional lining
+    _add_gsub_single(ft, "onum", onum)          # oldstyle / short figures (x-height)
+    _add_gsub_single(ft, "tnum", ident)         # tabular (= default)
+    _add_gsub_single(ft, "lnum", ident)         # lining  (= default)
+
+
+def enrich_statics():
+    """Give the installable cuts the typographic spaces, the non-breaking hyphen
+    and the figure features (pnum/onum + tnum/lnum). Default figures stay tabular
+    lining, so existing documents are unaffected."""
+    for sch in SCHEMES:
+        p = os.path.join(OUTROOT, "Fonts", static_out(sch))
+        ft = TTFont(p)
+        n = len(add_spaces(ft))
+        add_figure_features(ft)
+        ft.save(p)
+        print("  Fonts/%s  +%d Spatien/Zeichen  +pnum/onum/tnum/lnum" % (static_out(sch), n))
 
 
 def build_webfonts():
@@ -552,6 +666,7 @@ def main():
     build_icons()
     build_variable(M, H)
     reweight_statics()
+    enrich_statics()
     build_webfonts()
     build_icon_exports()
     build_zip()

@@ -10,7 +10,8 @@
       "lizenz": "Goetheanum Schrift (SIL OFL, abgeleitet aus Titillium)",
       "farbquelle": "Goetheanum-Gold als einziger Akzent-Buntton der Schriftseite.",
       "format": "DTCG 2025.10",
-      "hinweis": "Gewichtsanker per Tester bestimmt (Vorschlag B): Leise 265, Klar 440, Laut 680. Werte spiegeln das gesetzte Referenzdokument (typografie.html). $extensions tragen die Hausregeln, die kein Standard-Token-Typ abbildet."
+      "credo": "Diese Regeln verhindern den Fehler. Den guten Satz macht der Mensch.",
+      "hinweis": "Gewichtsanker per Tester bestimmt (Vorschlag B): Leise 265, Klar 440, Laut 680. Werte spiegeln das gesetzte Referenzdokument (typografie.html). $extensions tragen die Hausregeln, die kein Standard-Token-Typ abbildet. Fassung 2 nach strenger Fachprüfung erweitert: S01 Schriftwahl, G25 Ziffern, G27 Lesesituationen, G28 Kontrast/Zugänglichkeit; G01 auf Hervorhebung IM Fliesstext geschärft – Strukturebenen (Titel, Lede, Legende, Tabellenkopf) sind eine eigene Hierarchie."
     }
   },
   "schrift": {
@@ -78,7 +79,10 @@
     "tinte-leise": {
       "$type": "color",
       "$value": "#737a80",
-      "$description": "Meta, Legenden, Nebenstimmen."
+      "$description": "Meta, Legenden, Nebenstimmen. Kontrast auf Papier 4.35:1 – knapp unter WCAG AA (4.5) für Fliesstext, über AA für grosse Grade. Nur für Meta und grössere Grade, nie für lange Lesetexte in Kleingrad.",
+      "$extensions": {
+        "com.goetheanum.regel": "G28"
+      }
     },
     "gold": {
       "$type": "color",
@@ -88,7 +92,7 @@
     "gold-tief": {
       "$type": "color",
       "$value": "#a07a33",
-      "$description": "Akzent auf hellem Grund (lesbar)."
+      "$description": "Akzent auf hellem Grund. Kontrast 3.94:1 – nur für Akzent, Marken, grössere Grade; nicht für tragenden Kleingrad-Lesetext (unter WCAG AA)."
     },
     "papier": {
       "$type": "color",
@@ -109,7 +113,7 @@
     "zeilenlaenge": {
       "$type": "dimension",
       "$value": "39ch",
-      "$description": "Ziel ~66 Zeichen je Zeile / neun Wörter (45–75 zulässig). CSS min(39ch,100%). Hinweis: ch = Breite der Ziffer 0; die Goetheanum Schrift ist schmal – empirisch gezählt sind 46ch = 78 Zeichen, also 39ch ≈ 66.",
+      "$description": "Gilt der Lesetypografie (linearer Mengentext). Ziel ~66 Zeichen je Zeile / neun Wörter (45–75 zulässig). CSS min(39ch,100%). Hinweis: ch = Breite der Ziffer 0; die Goetheanum Schrift ist schmal – empirisch gezählt sind 46ch = 78 Zeichen, also 39ch ≈ 66. Konsultation (Tabellen, Verzeichnisse) und Schau (Signaletik) laufen nach eigenem Mass.",
       "$extensions": {
         "com.goetheanum.regel": "G10"
       }
@@ -117,7 +121,10 @@
     "zeilenabstand-text": {
       "$type": "number",
       "$value": 1.5,
-      "$description": "Fliesstext."
+      "$description": "Fliesstext, gekoppelt an die Zeilenlänge: 1.4 bei knapper, 1.6 bei breiter Spalte. Bei 39ch sitzt der Durchschuss am unteren Rand (1.5). Ändert sich die Zeilenlänge, wird der Durchschuss nachgezogen (G09/G11).",
+      "$extensions": {
+        "com.goetheanum.bereich": "1.4–1.6"
+      }
     },
     "zeilenabstand-titel": {
       "$type": "number",
@@ -126,25 +133,29 @@
     }
   },
   "$regeln": {
-    "$description": "Hausregeln mit IDs (G…), prüfbar via typo-regeln.yaml. Ebenen: anwendung (Lesetext) streng, meta (Marker, Labels, Tabellenköpfe) mit benanntem Spielraum.",
-    "G01": "Einfachauszeichnung: Jede Abweichung vom Fliesstext ändert genau EIN Merkmal – Gewicht, Grösse, Farbe oder Einzug. Nie zwei zugleich. Raum und Zeilenabstand zählen nicht als Merkmal.",
+    "$description": "Hausregeln mit IDs (S… Schriftwahl, G… Gestaltung), prüfbar via typo-regeln.yaml. Ebenen: anwendung (Lesetext) streng, meta (Marker, Labels, Tabellenköpfe) mit benanntem Spielraum.",
+    "S01": "Schriftwahl: Lesetext in der Goetheanum Schrift Klar (440); Betonung und Titel in Laut (680); Nebenstimmen, Legenden und Zitate in Leise (265). Eine Familie trägt alles. Nach aussen nur dort, wo die Schrift an ihre Grenze kommt: Festbreiten-Code im Monospace, fremde Schriftsysteme (Griechisch, Kyrillisch) und langer immersiver Mengensatz in einer dafür gebauten Leseschrift. Die Goetheanum Schrift ist Werk- und Auszeichnungs-Grotesk, kein Buchsatz; sie führt keine echte Kursive (Leise ist aufrechter Gegenton) und nur einen Ziffernsatz.",
+    "G01": "Einfachauszeichnung: Hervorhebung IM Fliesstext ändert genau EIN Merkmal – Gewicht, Grösse, Farbe oder Einzug. Nie zwei zugleich. Raum und Zeilenabstand zählen nicht als Merkmal. Strukturebenen (Titel, Lede, Bildlegende, Tabellenkopf) sind eine eigene Hierarchie, keine Auszeichnung, und dürfen sich in mehr als einem Merkmal absetzen.",
     "G02": "Register: Laut betont (Cmd+B), Leise ist der stille Kontrapunkt (Cmd+I), Gold gliedert Meta. Nie zwei Ämter auf einem Wort.",
     "G03": "Wer eine Auszeichnung weglassen kann, ohne dass Sinn verloren geht, lässt sie weg.",
     "G04": "Schwerer als Laut nie im Dokument. Flüstern und Schreien sind Grafikmittel im Variable Font, kein Bürosatz.",
     "G05": "Hervorhebung durch Laut – nicht durch Unterstreichen, Sperren oder VERSALIEN.",
     "G10": "Zeilenlänge 45–75 Zeichen, Ziel ~66 / neun Wörter. CSS min(39ch,100%); ch misst die 0, die schmale Schrift läuft enger (46ch = 78 gezählt).",
-    "G11": "Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit (Fliesstext 1.4–1.6).",
-    "G12": "Flattersatz linksbündig ist der Normalfall. Blocksatz nur mit Trennung und Kontrolle.",
+    "G11": "Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit (Fliesstext 1.4–1.6). Der Wert ist keine Konstante, sondern Funktion des Masses – ändert sich die Spalte, wird der Durchschuss nachgezogen.",
+    "G12": "Flattersatz linksbündig ist der Normalfall. Blocksatz nur mit Trennung und Kontrolle. Der Rand ist Handarbeit: keine zu kurzen Schlusszeilen, keine Lochzeilen, keine verwaiste Zeile am Spaltenfuss/-kopf (Schusterjunge, Hurenkind). Im Web: text-wrap pretty, widows/orphans ≥ 2, hyphens auto.",
     "G16": "Anführung: einfache Guillemets nach aussen – ‹…› für alles, auch die zweite Ebene. Keine \"...\", keine „…\".",
     "G17": "Keine echten Kapitälchen in der Schrift: Versal-Abkürzungen bleiben Versal, ohne Kunst-Kapitälchen.",
     "G18": "Striche mit Namen: Bindestrich/Viertelgeviert (-), Halbgeviert/Gedanken- und Bis-Strich (–, 1/2 em), Geviertstrich (—, im System ungenutzt), Minus (−). Gedankenstrich mit Leerschritten, Bis-Strich ohne.",
     "G19": "Auslassung: ein Zeichen ‹…›, nie drei Punkte.",
-    "G20": "Geschützte Leerzeichen schmal & fest: das schmale geschützte Leerzeichen (U+202F, Achtelgeviert-Breite) vor Einheiten, %, in ‹z. B.› und in Zahlen – nicht das volle NBSP (wirkt weitläufig).",
+    "G20": "Geschützte Leerzeichen schmal & fest: das schmale geschützte Leerzeichen (U+202F, Achtelgeviert/125 Einh.) vor Einheiten, %, in ‹z. B.› und in Zahlen – nicht das volle NBSP (wirkt weitläufig). Ab Schrift-v2.4.0 enthält die Schrift U+2002–200A, 2007, 2009, 202F sowie den geschützten Bindestrich U+2011.",
     "G21": "Zahlen: vierstellig kompakt (1318); ab fünf Stellen Dreiergruppen mit schmalem geschütztem Leerzeichen U+202F (10 000 · 1 000 000) – Bundeskanzlei-Norm, wie in SNB-Publikationen. Der Apostroph (10'000) ist Kaufmanns-/Archiv-Usus, nicht Hausnorm.",
     "G22": "Datum & Uhrzeit: 11. Juni 2026 · 9.30 Uhr. Keine führenden Nullen im Lesetext.",
     "G23": "Die Schrift führt keine fi/fl-Ligaturen – keine erzwingen. Versalien per Laufweite sperren, nie mit Leertasten.",
-    "G24": "Sprachauszeichnung (de-CH) sitzt im Quelltext; sie steuert Trennung, Spatien, Zeichenwahl.",
-    "G26": "Automaten-Prinzip: Eindeutiges automatisieren, Mehrdeutiges vorschlagen, Gestaltung dem Menschen lassen.",
+    "G24": "Sprachauszeichnung (de-CH) sitzt im Quelltext; sie steuert Trennung, Spatien, Zeichenwahl. Voraussetzung für sauberen Flatter- und Blocksatz in schmaler Spalte.",
+    "G25": "Ziffern: Grundton sind Versalziffern, dicktengleich (alle 560 Einheiten; tnum/lnum). Ab Schrift-v2.4.0 zusätzlich pnum (proportional, fürs Laufende) und onum (kurze Ziffern auf x-Höhe). In Tabellen Grundton, rechtsbündig, exakt untereinander, nie mit Leerzeichen ausgerichtet. Echte Mediävalziffern mit Ranging sind gezeichnete Formen, bleiben ausstehend – nicht durch Verkleinern vortäuschen.",
+    "G27": "Drei Lesesituationen: Das harte Mass (G10) bindet die Lesetypografie (linearer Mengentext). Konsultation (Tabelle, Formular, Verzeichnis) und Schau (Signaletik, Plakat) haben eigenes Mass; das magische Viereck wird je Situation neu gestimmt. Tabellen dürfen das Lese-Mass bewusst überschreiten.",
+    "G28": "Kontrast & Zugänglichkeit: Lesetext mindestens WCAG AA (4.5:1). Tinte (15:1) trägt; tinte-leise (4.35:1) und Gold (3.94:1) nur für Meta, Akzent und grössere Grade. Sprache auszeichnen (lang), Silbentrennung aktiv, keine verwaisten Zeilen.",
+    "G26": "Automaten-Prinzip: Eindeutiges automatisieren, Mehrdeutiges vorschlagen, Gestaltung dem Menschen lassen. Diese Regeln verhindern den Fehler; den guten Satz macht der Mensch.",
     "G09": "Magisches Viereck: Schriftwahl, Zeilenlänge, Zeilenabstand und Umraum sind ein Gleichgewicht. Ändert sich eine Ecke, müssen die anderen nachgezogen werden."
   }
 }

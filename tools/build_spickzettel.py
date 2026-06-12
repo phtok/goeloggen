@@ -5,7 +5,7 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 FD="assets/fonts/goetheanum/Fonts/"
 def L(p): ft=TTFont(p);return (ft,ft.getGlyphSet(),ft.getBestCmap(),ft["head"].unitsPerEm)
-K=L(FD+"Goetheanum-Schrift-v2.3.1-Klar.otf"); LA=L(FD+"Goetheanum-Schrift-v2.3.1-Laut.otf"); LE=L(FD+"Goetheanum-Schrift-v2.3.1-Leise.otf")
+K=L(FD+"Goetheanum-Schrift-v2.4.0-Klar.otf"); LA=L(FD+"Goetheanum-Schrift-v2.4.0-Laut.otf"); LE=L(FD+"Goetheanum-Schrift-v2.4.0-Leise.otf")
 S=[]
 def txt(F,s,size,x,y,fill="#23272b"):
     ft,gs,cmap,upm=F; sc=size/upm; cx=x

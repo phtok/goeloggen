@@ -7,14 +7,15 @@
 <meta name="description" content="Goetheanum Typografie – wenige Mittel, präzise gesetzt. Hausregeln als Handbuch und maschinenlesbares System (DTCG-Tokens + prüfbare Regeln)." />
 <meta name="robots" content="noindex" />
 <style>
-  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.3.1-Leise.woff2") format("woff2");font-display:swap}
-  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.3.1-Klar.woff2") format("woff2");font-display:swap}
-  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.3.1-Laut.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.0-Leise.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.0-Klar.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.0-Laut.woff2") format("woff2");font-display:swap}
   :root{--ink:#23272b;--muted:#737a80;--line:rgba(20,24,28,.10);--line-soft:rgba(20,24,28,.055);
         --gold:#d7ab68;--gold-deep:#a07a33;--paper:#fff;--soft:#faf8f4;--maxw:880px;--bad:#b3433c;--good:#3f8f5f}
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--paper);color:var(--ink);font-family:"G Klar","Helvetica Neue",Arial,sans-serif;
-       letter-spacing:normal;font-kerning:normal;-webkit-font-smoothing:antialiased;line-height:1.55;font-size:16.5px}
+       letter-spacing:normal;font-kerning:normal;-webkit-font-smoothing:antialiased;line-height:1.55;font-size:16.5px;
+       hyphens:auto;-webkit-hyphens:auto}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
   a{color:var(--gold-deep)}
   header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
@@ -25,13 +26,20 @@
   nav.top a:hover{color:var(--gold-deep)}
   .hero{padding:58px 0 8px}
   .kick{color:var(--gold-deep);font-size:14px;margin-bottom:14px}
-  h1{font-family:"G Klar";font-weight:400;font-size:clamp(36px,6vw,60px);line-height:1.1}
-  .lede{font-family:"G Klar";font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:560px;margin-top:14px}
+  h1{font-family:"G Klar";font-weight:400;font-size:clamp(36px,6vw,60px);line-height:1.1;text-wrap:balance}
+  .lede{font-family:"G Klar";font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:48ch;margin-top:14px;text-wrap:pretty}
   section{padding:42px 0;border-top:1px solid var(--line-soft)}
   .sec{color:var(--gold-deep);font-size:13px}
-  h2{font-family:"G Klar";font-weight:400;font-size:clamp(22px,3vw,30px);margin:4px 0 14px}
+  /* Marginalspalte (System B): die Paragraphen-Marke wandert auf breiten Schirmen
+     in eine eigene Randspalte, der Lesesatz bleibt unberührt bei seinem Mass. */
+  @media(min-width:940px){
+    section{display:grid;grid-template-columns:8rem minmax(0,1fr);column-gap:2.4rem}
+    section>:not(.sec){grid-column:2}
+    .sec{grid-column:1;grid-row:1;position:sticky;top:74px;align-self:start;line-height:1.35;text-align:right}
+  }
+  h2{font-family:"G Klar";font-weight:400;font-size:clamp(22px,3vw,30px);margin:4px 0 14px;text-wrap:balance}
   h3{font-family:"G Laut";font-weight:400;font-size:17px;margin:22px 0 6px}
-  p{max-width:39ch}
+  p{max-width:39ch;text-wrap:pretty;orphans:2;widows:2}
   p.dim{color:var(--muted)}
   .leise{font-family:"G Leise"}.laut{font-family:"G Laut"}
   .note{display:flex;gap:10px;align-items:baseline;border-left:2px solid var(--gold);background:var(--soft);
@@ -54,29 +62,33 @@
   .spick td{padding:7px 12px;border-bottom:1px solid var(--line-soft)}
   .spick td.f{color:var(--bad)} .spick td.r{color:var(--ink)}
   .spick tr td:first-child{color:var(--muted);font-size:13px}
+  .credo{font-family:"G Klar";font-size:clamp(19px,2.4vw,26px);line-height:1.3;color:var(--ink);max-width:none;margin-top:28px;text-wrap:balance}
   footer{border-top:1px solid var(--line);padding:30px 0 60px;color:var(--muted);font-size:12.5px}
 </style>
 </head>
 <body>
 <header><div class="wrap bar">
   <a class="brand" href="https://grafik.goetheanum.ch" aria-label="Zur Grafikseite"><img src="assets/logos/am-goetheanum-dark.svg" alt="Am Goetheanum"></a>
-  <nav class="top"><a href="schriften.html">Schriften</a><a href="#mikro">Mikrotypografie</a><a href="#spickzettel">Spickzettel</a><a href="#maschine">Maschine</a></nav>
+  <nav class="top"><a href="schriften.html">Schriften</a><a href="#mikro">Mikrotypografie</a><a href="#spickzettel">Spickzettel</a><a href="vorschau.html">Neu</a></nav>
 </div></header>
 
 <main><div class="wrap">
   <div class="hero">
-    <div class="kick">Typografisches System · Fassung 1 · nach dem Vorbild ‹Entwurf B›</div>
+    <div class="kick">Typografisches System · Fassung 2 · nach dem Vorbild ‹Entwurf B›</div>
     <h1>Wenige Mittel.<br><span class="laut">Präzise</span> gesetzt.</h1>
     <p class="lede">Ein Regelwerk für alle, die im Haus schreiben – kurz genug zum Lesen, präzise genug für die Maschine. Jede Regel hat eine Nummer; eine KI kann sie prüfen und korrigieren.</p>
   </div>
 
   <section id="auszeichnung">
-    <span class="sec">§ 1 – Auszeichnung</span>
+    <span class="sec">§ 1 · Auszeichnung</span>
     <h2>Eine Abweichung, ein Merkmal.</h2>
     <p>Hierarchie entsteht aus Raum und Mass, nicht aus Häufung. Die Grundregel: Jede Abweichung vom Fliesstext ändert genau <span class="laut">ein</span> Merkmal – Gewicht, Grösse, Farbe oder Einzug. Nie zwei zugleich. Ein Wort wird nur fetter, nicht zusätzlich grösser und farbig.</p>
-    <div class="note"><span class="rid">G01</span>regel. Anwendungssatz streng: genau ein Merkmal. Metasatz (Marker, Labels, Tabellenköpfe) darf benannte Kombinationen bündeln.</div>
+    <div class="note"><span class="rid">G01</span>regel. Gilt für Hervorhebung <span class="laut">im</span> Fliesstext: genau ein Merkmal. Strukturebenen – Titel, Lede, Bildlegende, Tabellenkopf – sind eine eigene Hierarchie und keine Auszeichnung; sie dürfen sich in mehr als einem Merkmal vom Text absetzen.</div>
     <h3>Die drei Stimmen</h3>
-    <p>Der Fliesstext steht in <b style="font-weight:400">Klar</b>. Betont wird mit <span class="laut">Laut</span> – im Office einfach <span class="mono">Cmd+B</span>. Der stille Kontrapunkt ist <span class="leise">Leise</span> – Bildlegenden, Zitate, Nebenstimmen, im Office <span class="mono">Cmd+I</span>. Nie zwei Ämter auf einem Wort.</p>
+    <p>Der Fliesstext steht in Klar. Betont wird mit <span class="laut">Laut</span> – im Office einfach <span class="mono">Cmd+B</span>. Der stille Kontrapunkt ist <span class="leise">Leise</span> – Bildlegenden, Zitate, Nebenstimmen, im Office <span class="mono">Cmd+I</span>. Nie zwei Ämter auf einem Wort.</p>
+    <div class="note"><span class="rid">S01</span>griff. Standardgriff: Lesetext in Klar, Betonung und Titel in Laut, Nebenstimmen in Leise. Eine Familie trägt alles – ausser dort, wo sie an ihre Grenze kommt.</div>
+    <h3>Wo die Schrift endet</h3>
+    <p>Die Goetheanum Schrift ist eine Werk- und Auszeichnungs-Grotesk, kein Buchsatz. Drei Grenzen sind zu kennen: Sie führt <span class="laut">keine</span> echte Kursive – Leise ist ein aufrechter Gegenton, kein laufender Schreibduktus. Sie kennt <span class="laut">einen</span> Ziffernsatz (Versalziffern, dicktengleich) – keine Mediävalziffern für lange Zahlentexte. Und sie deckt <span class="laut">Latein</span> ab – kein Griechisch, kein Kyrillisch. Für langen, immersiven Mengensatz, für fremde Schriftsysteme und für Festbreiten-Code (hier im <span class="mono">Monospace</span>) greift man bewusst nach aussen.</p>
     <div class="ex">
       <div class="no"><div class="t">so nicht</div>Der Vortrag ist <u><b>WICHTIG</b></u> und beginnt pünktlich.</div>
       <div class="yes"><div class="t">so</div>Der Vortrag ist <span class="laut">wichtig</span> und beginnt pünktlich.</div>
@@ -90,7 +102,7 @@
   </section>
 
   <section id="mass">
-    <span class="sec">§ 2 – Mass &amp; Rhythmus</span>
+    <span class="sec">§ 2 · Mass &amp; Rhythmus</span>
     <h2>Zeile, Abstand, Satz.</h2>
     <h3>Das magische Viereck</h3>
     <p>Lesbarkeit ist ein Gleichgewicht aus vier Ecken: Schriftwahl, Zeilenlänge, Zeilenabstand und Umraum. Keine Ecke lässt sich allein optimieren – längere Zeilen verlangen mehr Durchschuss, eine offene Schrift wie die Goetheanum Klar verlangt mehr Umraum. Jede folgende Regel zieht an einer Ecke; gut ist der Satz erst, wenn alle vier in Balance stehen.</p>
@@ -98,11 +110,15 @@
     <h3>Zeilenlänge</h3>
     <p>Angenehm sind 45–75 Zeichen je Zeile, ideal etwa 67 – als Faustregel: neun deutsche Wörter. Diese Spalte misst 39ch – das sind in dieser schmalen Schrift rund 66 Zeichen, etwa neun Wörter (empirisch gezählt, nicht gerechnet). Der Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit; Fliesstext 1.4–1.6.</p>
     <div class="note"><span class="rid">G10</span>grenze. Das Mass ist hart: <span class="mono">min(39ch, 100%)</span> – die Einheit ch misst die ‹0›, Prosa läuft schmaler: 39ch ergeben in dieser schmalen Schrift ≈ 66 echte Zeichen (gezählt: 46ch waren 78). Ohne Grenze laufen breite Fenster auf 100 Zeichen davon.</div>
-    <p>Normalfall ist linksbündiger Flattersatz. Blocksatz nur mit Silbentrennung und Kontrolle. Keine einzelne Zeile eines Absatzes allein auf einer Seite.</p>
+    <h3>Drei Lesesituationen</h3>
+    <p>Das Mass von 66 Zeichen gilt der <span class="laut">Lesetypografie</span> – dem ruhigen, linearen Lesen von Mengentext. Daneben stehen zwei eigene Situationen mit eigenem Mass: <span class="laut">Konsultation</span> (Tabelle, Formular, Verzeichnis – man springt und vergleicht, die Zeile darf breiter laufen) und <span class="laut">Schau</span> (Signaletik, Plakat – aus Distanz gelesen, in Laut oder im Variable Font). Die Tabellen dieser Seite sind Konsultation und überschreiten das Lese-Mass bewusst.</p>
+    <div class="note"><span class="rid">G27</span>geltung. Das harte Mass bindet den Lesesatz. Konsultation und Schau haben ihr eigenes Gleichgewicht – das magische Viereck wird je Situation neu gestimmt.</div>
+    <h3>Flattersatz</h3>
+    <p>Normalfall ist linksbündiger Flattersatz. Blocksatz nur mit Silbentrennung und Kontrolle. Der Rand ist Handarbeit: keine zu kurzen Schlusszeilen, keine Lochzeilen – und keine verwaiste Zeile allein am Spaltenfuss oder -kopf (Schusterjunge, Hurenkind).</p>
   </section>
 
   <section id="mikro">
-    <span class="sec">§ 3 – Mikrotypografie</span>
+    <span class="sec">§ 3 · Mikrotypografie</span>
     <h2>Zeichen für Zeichen.</h2>
 
     <h3>Anführung – einfache Guillemets, nach aussen</h3>
@@ -121,7 +137,7 @@
     </div>
 
     <h3>Auslassung &amp; feste Spatien</h3>
-    <p>Auslassung ist <span class="laut">ein</span> Zeichen: … – nie drei Punkte. In ‹z. B.›, vor&nbsp;%, vor Einheiten und im Datum stehen schmale, geschützte Leerzeichen: Sie atmen und brechen nie um.</p>
+    <p>Auslassung ist <span class="laut">ein</span> Zeichen: … – nie drei Punkte. In ‹z. B.›, vor&#8239;%, vor Einheiten und im Datum stehen schmale, geschützte Leerzeichen: Sie atmen und brechen nie um.</p>
 
     <div class="ex">
       <div class="no"><div class="t">so nicht</div>Das kostet 10kg Geduld, z.B. morgens ... oder nie.</div>
@@ -132,8 +148,11 @@
     <p>Vierstellig kompakt: 1318. Ab fünf Stellen Dreiergruppen mit schmalem geschütztem Leerzeichen: 10 000 · 1 000 000 (Bundeskanzlei-Norm, wie bei der Nationalbank; der Kaufmanns-Apostroph <code>10'000</code> ist nicht Hausnorm). Datum im Lesetext: 11. Juni 2026. Uhrzeit: 9.30 Uhr – keine führende Null.</p>
     <div class="ex">
       <div class="no"><div class="t">so nicht</div>1.000.000 Besucher am 09:30 Uhr-Termin, Mike's Liste.</div>
-      <div class="yes"><div class="t">so</div>1’000’000 Besucher am 9.30-Uhr-Termin, Mikes Liste (sonst: Mike’s → Mikes).</div>
+      <div class="yes"><div class="t">so</div>1&#8239;000&#8239;000 Besucher am 9.30-Uhr-Termin, Mikes Liste (sonst: Mike’s → Mikes).</div>
     </div>
+    <h3>Ziffern – dicktengleich als Grundton</h3>
+    <p>Standard sind Versalziffern, alle gleich breit (560 Einheiten). In Tabellen ein Vorzug – Zahlen stehen exakt untereinander, ohne mit Leerzeichen zu schieben; Beträge darum immer rechtsbündig. Ab v2.4.0 trägt die Schrift zwei Varianten: <span class="laut">pnum</span> (proportional, fürs Laufende) und <span class="laut">onum</span> (kurze Ziffern auf x-Höhe). Echte Mediävalziffern mit Ober- und Unterlängen sind gezeichnete Formen und bleiben ausstehend – nicht durch Verkleinern nachahmen.</p>
+    <div class="note"><span class="rid">G25</span>ziffern. Grundton dicktengleich (tnum/lnum). Proportional per pnum, kurze Ziffern per onum. Tabellen rechtsbündig, nie mit Leerzeichen ausgerichtet. Keine echten Mediävalziffern vortäuschen.</div>
     <h3>Strichlängen mit Namen</h3>
     <table class="spick" style="max-width:560px">
       <thead><tr><th>Name</th><th>Zeichen</th><th>wofür</th></tr></thead>
@@ -147,16 +166,17 @@
     </table>
 
     <h3>Abstände mit Namen</h3>
-    <p>Von breit nach schmal. Hausnorm vor Einheiten, %, in ‹z. B.› und in Zahlen ist das <b style="font-weight:400">schmale geschützte Leerzeichen</b> (U+202F, Achtelgeviert-Breite, bricht nie um) – nicht das volle geschützte (NBSP), das wirkt weitläufig.</p>
+    <p>Von breit nach schmal. Hausnorm vor Einheiten, %, in ‹z. B.› und in Zahlen ist das <span class="laut">schmale geschützte Leerzeichen</span> (U+202F, Achtelgeviert-Breite, bricht nie um) – nicht das volle geschützte (NBSP), das wirkt weitläufig.</p>
     <table class="spick" style="max-width:560px">
       <thead><tr><th>Name</th><th>Breite</th><th>Code</th></tr></thead>
       <tbody>
         <tr><td>Geviert</td><td>1/1 em</td><td class="r">U+2003</td></tr>
         <tr><td>Halbgeviert</td><td>1/2 em</td><td class="r">U+2002</td></tr>
         <tr><td>Viertelgeviert</td><td>1/4 em</td><td class="r">U+2005</td></tr>
-        <tr><td>Achtelgeviert (Schmalspatium)</td><td>1/8 em</td><td class="r">U+2009</td></tr>
+        <tr><td>Schmalspatium (Thin)</td><td>1/5 em</td><td class="r">U+2009</td></tr>
+        <tr><td>Ziffernspatie</td><td>Ziffernbreite</td><td class="r">U+2007</td></tr>
         <tr><td>geschützt, voll (NBSP)</td><td>Wortabstand</td><td class="r">U+00A0</td></tr>
-        <tr><td><b style="font-weight:400">geschützt, schmal · Hausnorm</b></td><td>≈ 1/8 em</td><td class="r">U+202F</td></tr>
+        <tr><td><span class="laut">geschützt, schmal · Hausnorm</span></td><td>1/8 em (Achtelgeviert)</td><td class="r">U+202F</td></tr>
       </tbody>
     </table>
 
@@ -164,7 +184,7 @@
   </section>
 
   <section id="spickzettel">
-    <span class="sec">§ 4 – Kurzreferenz</span>
+    <span class="sec">§ 4 · Kurzreferenz</span>
     <h2>Der Spickzettel.</h2>
     <p class="dim">Die häufigsten Fälle auf einen Blick – zum Danebenlegen.</p>
     <table class="spick">
@@ -176,7 +196,7 @@
         <tr><td>Spanne</td><td class="f">10 - 12 Uhr</td><td class="r">10–12 Uhr</td></tr>
         <tr><td>Abkürzung</td><td class="f">z.B.</td><td class="r">z. B.</td></tr>
         <tr><td>Einheit</td><td class="f">10kg · 10 %</td><td class="r">10 kg · 10&#8239;%</td></tr>
-        <tr><td>Tausender</td><td class="f">1.000.000</td><td class="r">1’000’000</td></tr>
+        <tr><td>Tausender</td><td class="f">1.000.000 · 1’000’000</td><td class="r">1&#8239;000&#8239;000</td></tr>
         <tr><td>Auslassung</td><td class="f">...</td><td class="r">…</td></tr>
         <tr><td>mal</td><td class="f">4x5</td><td class="r">4&#8239;×&#8239;5</td></tr>
         <tr><td>Uhrzeit</td><td class="f">09:30 Uhr</td><td class="r">9.30 Uhr</td></tr>
@@ -187,26 +207,27 @@
   </section>
 
   <section id="maschine">
-    <span class="sec">§ 5 – Die Maschine</span>
+    <span class="sec">§ 5 · Die Maschine</span>
     <h2>Prüfbar, korrigierbar.</h2>
     <p>Eindeutiges automatisieren, Mehrdeutiges vorschlagen, Gestaltung dem Menschen lassen. Dafür liegt das System in zwei Dateien neben den Schriften:</p>
     <div class="files">
       <div class="file"><h4>goetheanum-typo-tokens.json</h4>
         <p>Design Tokens (W3C DTCG) – Schriften, Gewichte, Farben, Masse, alle Hausregeln mit Nummern. Quelle der Wahrheit.</p>
-        <p><b style="font-weight:400;color:var(--ink)">Für:</b> Entwickler:innen (Style Dictionary, Tokens Studio), Designer, jede KI.</p>
+        <p><span style="color:var(--ink)">Für:</span> Entwickler:innen (Style Dictionary, Tokens Studio), Designer, jede KI.</p>
         <a href="assets/typografie/goetheanum-typo-tokens.json" download>herunterladen</a></div>
       <div class="file"><h4>typo-regeln.yaml</h4>
         <p>Die Regeln ausführbar: Regex erkennt und korrigiert Eindeutiges; Urteils-Regeln sind für Sprachmodelle markiert.</p>
-        <p><b style="font-weight:400;color:var(--ink)">Für:</b> Redaktion &amp; alle Mitarbeitenden – Datei einem LM mitgeben: ‹Wende diese Regeln auf meinen Text an›.</p>
+        <p><span style="color:var(--ink)">Für:</span> Redaktion &amp; alle Mitarbeitenden – Datei einem LM mitgeben: ‹Wende diese Regeln auf meinen Text an›.</p>
         <a href="assets/typografie/typo-regeln.yaml" download>herunterladen</a></div>
     </div>
     <p class="dim">So nutzt du es im Alltag: Text und <span class="mono">typo-regeln.yaml</span> in ein beliebiges KI-Werkzeug geben und schreiben: <i>‹Prüfe und korrigiere meinen Text nach diesen Regeln. Eindeutiges direkt beheben, Mehrdeutiges als Vorschlag markieren.›</i></p>
     <div class="note"><span class="rid">G26</span>kern. Eindeutiges automatisieren, Mehrdeutiges vorschlagen, Gestaltung dem Menschen lassen.</div>
+    <p class="credo">Diese Regeln verhindern den Fehler.<br>Den guten Satz macht der Mensch.</p>
   </section>
 </div></main>
 
 <footer><div class="wrap">
-  Goetheanum Typografie · Fassung 1 · nach dem Vorbild des RSA-Systems ‹Entwurf B› ·
+  Goetheanum Typografie · Fassung 2 · nach dem Vorbild des RSA-Systems ‹Entwurf B› ·
   <a href="schriften.html">Schriften</a> · <a href="assets/typografie/goetheanum-typo-tokens.json">Tokens</a> · <a href="assets/typografie/typo-regeln.yaml">Regeln</a>
 </div></footer>
 
