@@ -67,6 +67,24 @@ Optional in der goeloggen-Übersicht/Startseite verlinken (neben Logo-Generator)
   - Titillium Web (Google Fonts)
   Für volle Offline-Fähigkeit: Cover lokal ablegen, Font self-hosten.
 
+## Nutzungsstatistik
+
+Die Live-Site (nur `phtok.github.io`, nicht das Embed-iframe und nicht
+lokal) sendet anonyme Events an Supabase (Projekt „Public Secrets App",
+Tabelle `gtv_naming_events`, Insert-only per Publishable Key, RLS ohne
+Lese-Recht für Besucher):
+
+- `visit` (Referrer, Sprache, Bildschirm, mobil ja/nein),
+  `heartbeat` alle 30 s bei sichtbarem Tab, `leave` mit aktiver Gesamtzeit
+  → Besucherzahl und Verweildauer
+- `suggestion` (eingegebenes Wort + TLD-Einstufung) → was Nutzer vorschlagen
+- `interaction` (Kandidatenwahl, ×/↺, Toggles, iPhone-Modi) → womit gespielt wird
+
+Keine Cookies, keine personenbezogenen Daten; Session-ID ist zufällig und
+lebt nur im `sessionStorage`. Auswertung über die Views `gtv_naming_tage`,
+`gtv_naming_verweildauer` und `gtv_naming_vorschlaege` im
+Supabase-Dashboard (SQL-Editor).
+
 ## Offene Aufgaben (Vorschläge)
 
 1. Refactor: Logo-Konstanten mit logo-generator teilen (s.o.).
