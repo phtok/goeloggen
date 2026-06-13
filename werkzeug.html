@@ -91,6 +91,48 @@
     </div>
   </section>
 
+  <section class="panel" id="sup">
+    <h2>Hochstellung</h2>
+    <div class="hint">Fussnotenzeichen, Einheiten, Exponenten.</div>
+    <div class="stage">
+      <p class="line">Goethe<span class="sp su">1</span> mass am 28.<span class="sp su">8</span>. die Fläche 12 m<span class="sp su">2</span> und x<span class="sp su">3</span>.</p>
+      <p class="big">a<span class="sp su">2</span> + b<span class="sp su">2</span> = c<span class="sp su">2</span></p>
+      <p class="cmp">Grundziffern zum Vergleich: 1&nbsp;&nbsp;8&nbsp;&nbsp;2&nbsp;&nbsp;3</p>
+    </div>
+    <div class="ctrls">
+      <div class="ctrl"><label>Höhe <b><span id="supH-v">430</span></b></label><input type="range" id="supH" min="300" max="690" value="430"></div>
+      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="supW-v">530</span></b></label><input type="range" id="supW" min="190" max="725" value="530"></div>
+      <div class="ctrl"><label>Versatz (über Grundlinie) <b><span id="supO-v">+300</span></b></label><input type="range" id="supO" min="0" max="430" value="300"></div>
+      <div class="ctrl"><label>Laufweite <b><span id="supT-v">0</span></b></label><input type="range" id="supT" min="-30" max="160" value="0"></div>
+    </div>
+    <div class="readout">
+      <span class="code" id="supCode"></span>
+      <button class="btn" data-copy="supCode">Werte kopieren</button>
+      <button class="reset" data-reset="sup">zurücksetzen</button>
+    </div>
+  </section>
+
+  <section class="panel" id="sub">
+    <h2>Tiefstellung</h2>
+    <div class="hint">Indizes in Formeln (H₂O, CO₂).</div>
+    <div class="stage">
+      <p class="line">Wasser H<span class="sp sb">2</span>O, Kohlendioxid CO<span class="sp sb">2</span>, Reihe a<span class="sp sb">1</span> + a<span class="sp sb">2</span>.</p>
+      <p class="big">H<span class="sp sb">2</span>SO<span class="sp sb">4</span></p>
+      <p class="cmp">Grundziffern zum Vergleich: 2&nbsp;&nbsp;4&nbsp;&nbsp;1</p>
+    </div>
+    <div class="ctrls">
+      <div class="ctrl"><label>Höhe <b><span id="subH-v">430</span></b></label><input type="range" id="subH" min="300" max="690" value="430"></div>
+      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="subW-v">530</span></b></label><input type="range" id="subW" min="190" max="725" value="530"></div>
+      <div class="ctrl"><label>Versatz (unter Grundlinie) <b><span id="subO-v">-110</span></b></label><input type="range" id="subO" min="-300" max="60" value="-110"></div>
+      <div class="ctrl"><label>Laufweite <b><span id="subT-v">0</span></b></label><input type="range" id="subT" min="-30" max="160" value="0"></div>
+    </div>
+    <div class="readout">
+      <span class="code" id="subCode"></span>
+      <button class="btn" data-copy="subCode">Werte kopieren</button>
+      <button class="reset" data-reset="sub">zurücksetzen</button>
+    </div>
+  </section>
+
   <section class="panel" id="mix">
     <h2>Mischsatz</h2>
     <div class="hint">Freier Text – prüfe, wie Kurzziffern und Kapitälchen zusammen sitzen. <b>Ziffern</b> werden automatisch zu Kurzziffern; Text in <b>{geschweiften&nbsp;Klammern}</b> wird zu Kapitälchen. Beide folgen live den Reglern oben.</div>
@@ -104,31 +146,37 @@
 
 <script>
   var CAP = 690; // Versalhöhe in Fonteinheiten
+  function setTxt(id,t){ var e=document.getElementById(id); if(e) e.textContent=t; }
+  function sign(n){ return (n>0?"+":"")+n; }
   function apply(prefix, sel){
     var H = +document.getElementById(prefix+"H").value;
     var W = +document.getElementById(prefix+"W").value;
     var T = +document.getElementById(prefix+"T").value;
-    document.getElementById(prefix+"H-v").textContent = H;
-    document.getElementById(prefix+"W-v").textContent = W;
-    document.getElementById(prefix+"T-v").textContent = (T>0?"+":"")+T;
+    var Oel = document.getElementById(prefix+"O"), O = Oel ? +Oel.value : null;
+    setTxt(prefix+"H-v", H); setTxt(prefix+"W-v", W); setTxt(prefix+"T-v", sign(T));
+    if(Oel) setTxt(prefix+"O-v", sign(O));
     document.querySelectorAll(sel).forEach(function(el){
       var line = el.closest(".line, .big");
       var B = parseFloat(getComputedStyle(line).fontSize);
       el.style.fontSize = (B * H / CAP) + "px";
       el.style.letterSpacing = (B * T / 1000) + "px";
       el.style.fontVariationSettings = "'wght' " + W;
+      if(Oel){ el.style.display = "inline-block"; el.style.transform = "translateY(" + (-B * O / 1000) + "px)"; }
     });
-    var code = "Höhe " + H + " · Gewicht " + W + " · Laufweite " + (T>0?"+":"") + T;
-    document.getElementById(prefix+"Code").textContent = code;
+    var code = "Höhe " + H + " · Gewicht " + W + (Oel ? (" · Versatz " + sign(O)) : "") + " · Laufweite " + sign(T);
+    setTxt(prefix+"Code", code);
   }
   function bind(prefix, sel){
-    ["H","W","T"].forEach(function(k){
-      document.getElementById(prefix+k).addEventListener("input", function(){ apply(prefix, sel); });
+    ["H","W","T","O"].forEach(function(k){
+      var e = document.getElementById(prefix+k);
+      if(e) e.addEventListener("input", function(){ apply(prefix, sel); });
     });
     apply(prefix, sel);
   }
-  var defaults = {figH:580,figW:518,figT:0,capH:545,capW:548,capT:25};
-  bind("fig",".d"); bind("cap",".k");
+  var SEL = {fig:".d", cap:".k", sup:".su", sub:".sb"};
+  var defaults = {figH:580,figW:518,figT:0, capH:545,capW:548,capT:25,
+                  supH:430,supW:530,supO:300,supT:0, subH:430,subW:530,subO:-110,subT:0};
+  bind("fig",".d"); bind("cap",".k"); bind("sup",".su"); bind("sub",".sb");
   document.querySelectorAll("[data-copy]").forEach(function(b){
     b.addEventListener("click", function(){
       var t = document.getElementById(b.dataset.copy).textContent;
@@ -136,10 +184,11 @@
       var o=b.textContent; b.textContent="kopiert ✓"; setTimeout(function(){b.textContent=o;},1200);
     });
   });
+  var RMAP = {figs:"fig", caps:"cap", sup:"sup", sub:"sub"};
   document.querySelectorAll("[data-reset]").forEach(function(b){
     b.addEventListener("click", function(){
-      var p = b.dataset.reset==="figs"?"fig":"cap"; var sel=p==="fig"?".d":".k";
-      ["H","W","T"].forEach(function(k){ document.getElementById(p+k).value = defaults[p+k]; });
+      var p = RMAP[b.dataset.reset], sel = SEL[p];
+      ["H","W","T","O"].forEach(function(k){ var c=document.getElementById(p+k); if(c) c.value = defaults[p+k]; });
       apply(p, sel);
     });
   });
@@ -157,10 +206,11 @@
     mixOut.innerHTML = out.replace(/\n/g,"<br>");
     apply("fig",".d"); apply("cap",".k");
   }
+  function refreshAll(){ apply("sup",".su"); apply("sub",".sb"); renderMix(); }
   mixIn.addEventListener("input", renderMix);
-  renderMix();
-  window.addEventListener("resize", function(){ renderMix(); });
-  document.fonts && document.fonts.ready.then(function(){ renderMix(); });
+  refreshAll();
+  window.addEventListener("resize", refreshAll);
+  document.fonts && document.fonts.ready.then(refreshAll);
 </script>
 </body>
 </html>
