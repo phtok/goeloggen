@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Goetheanum Schriften – Statistik</title>
+<title>Goeloggen – Statistik</title>
 <meta name="robots" content="noindex" />
 <style>
   @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.0-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
@@ -17,26 +17,37 @@
   a{color:inherit}
   header{border-bottom:1px solid var(--line)}
   .bar{display:flex;align-items:center;justify-content:space-between;height:58px}
-  .brand img{height:30px;display:block}
+  header .bar a img{height:24px;width:auto;display:block}
   nav a{color:var(--muted);text-decoration:none;font-size:13.5px}
   nav a:hover{color:var(--gold-deep)}
   .hero{padding:48px 0 8px}
   .kick{color:var(--gold-deep);font-size:14px;margin-bottom:14px}
   h1{font-family:"G Laut";font-weight:400;font-size:clamp(32px,6vw,54px);line-height:1.08}
   .lede{font-family:"G Leise";color:var(--muted);margin-top:14px;max-width:560px}
-  section{padding:34px 0;border-top:1px solid var(--line-soft)}
-  h2{font-family:"G Laut";font-weight:400;font-size:clamp(20px,3vw,27px);margin-bottom:8px}
-  .cards{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0 24px}
-  .stat{flex:1;min-width:180px;border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:var(--soft)}
-  .stat .num{font-family:"G Laut";font-size:clamp(34px,7vw,54px);line-height:1;font-feature-settings:"tnum" 1}
+  section{padding:30px 0;border-top:1px solid var(--line-soft)}
+  .app-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px}
+  h2{font-family:"G Laut";font-weight:400;font-size:clamp(20px,3vw,27px)}
+  .app-h .meta{color:var(--muted);font-size:12.5px;white-space:nowrap}
+  .cards{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 6px}
+  .stat{flex:1;min-width:150px;border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:var(--soft)}
+  .stat .num{font-family:"G Laut";font-size:clamp(30px,6vw,46px);line-height:1;font-feature-settings:"tnum" 1}
   .stat .cap{color:var(--muted);font-size:13.5px;margin-top:8px}
-  table{width:100%;border-collapse:collapse;font-size:14px}
+  .chart-t{color:var(--muted);font-size:12.5px;letter-spacing:.02em;margin:22px 0 4px}
+  .bars{display:flex;flex-direction:column;gap:11px}
+  .barrow{display:grid;grid-template-columns:minmax(92px,148px) 1fr auto;gap:12px;align-items:center}
+  .barrow .bl{color:var(--ink);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bartrack{background:var(--line-soft);border-radius:7px;height:11px}
+  .bartrack>span{display:block;height:11px;border-radius:7px;background:linear-gradient(90deg,var(--gold),var(--gold-deep));min-width:3px;transition:width .55s ease}
+  .barval{font-feature-settings:"tnum" 1;font-size:13px;color:var(--ink);min-width:34px;text-align:right}
+  .barval .sub{color:var(--muted);font-size:11.5px;margin-left:5px}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
   th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line-soft)}
   th{color:var(--muted);font-weight:400;font-size:12.5px;letter-spacing:.02em}
   td.n{text-align:right;font-feature-settings:"tnum" 1;color:var(--ink)}
   td.lbl{color:var(--muted)}
+  .empty{color:var(--muted);font-size:14px;padding:4px 0}
   .muted{color:var(--muted);font-size:13px}
-  .err{color:#9b2d2d;font-size:14px}
+  .err{color:#9b2d2d;font-size:13.5px}
   footer{border-top:1px solid var(--line);padding:30px 0 56px;color:var(--muted);font-size:12.5px;margin-top:20px}
 </style>
 </head>
@@ -50,54 +61,87 @@
   <div class="hero">
     <div class="kick">Eigener Server · keine Cookies · keine Personendaten</div>
     <h1>Statistik.</h1>
-    <p class="lede">Besuche und Downloads der Schriftenseite. Gezählt werden nur anonyme Summen – keine IP, kein Tracking, keine Drittdienste.</p>
+    <p class="lede">Alle Goeloggen-Anwendungen an einem Ort. Gezählt werden nur anonyme Summen – keine IP, kein Tracking, keine Drittdienste. <span id="status" class="muted">lädt …</span></p>
   </div>
 
-  <section>
-    <h2>Überblick</h2>
+  <section id="sec-schriften">
+    <div class="app-h"><h2>Schriften</h2><span class="meta" id="schriftenMeta"></span></div>
     <div class="cards">
       <div class="stat"><div class="num" id="sumViews">–</div><div class="cap">Seitenaufrufe</div></div>
       <div class="stat"><div class="num" id="sumDls">–</div><div class="cap">Downloads gesamt</div></div>
       <div class="stat"><div class="num" id="sumKinds">–</div><div class="cap">verschiedene Dateien</div></div>
     </div>
-    <p class="muted" id="status">lädt …</p>
-  </section>
-
-  <section>
-    <h2>Downloads im Detail</h2>
+    <div class="chart-t">DOWNLOADS JE DATEI</div>
+    <div class="bars" id="dlBars"><div class="empty">lädt …</div></div>
     <table>
       <thead><tr><th>Datei</th><th style="text-align:right">Anzahl</th><th style="text-align:right">zuletzt</th></tr></thead>
       <tbody id="dlBody"></tbody>
     </table>
   </section>
+
+  <section id="sec-gtv">
+    <div class="app-h"><h2>GTV-Naming</h2><span class="meta" id="gtvMeta"></span></div>
+    <div class="cards">
+      <div class="stat"><div class="num" id="gVisits">–</div><div class="cap">Besuche</div></div>
+      <div class="stat"><div class="num" id="gInter">–</div><div class="cap">Interaktionen</div></div>
+      <div class="stat"><div class="num" id="gSessions">–</div><div class="cap">Besucher (Sessions)</div></div>
+    </div>
+    <div class="chart-t">EREIGNISSE</div>
+    <div class="bars" id="gBars"><div class="empty">lädt …</div></div>
+  </section>
 </main>
 
-<footer><div class="wrap">Goetheanum Schriften · Statistik · anonyme Zählung über das eigene Supabase-Backend.</div></footer>
+<footer><div class="wrap">Goeloggen · Statistik · anonyme Zählung über das eigene Supabase-Backend.</div></footer>
 
 <script>
   var SB = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
   var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
-  function fmt(n){ return (n||0).toLocaleString('de-CH'); }
-  function when(ts){ if(!ts) return '–'; var d=new Date(ts.replace(' ','T'));
+  function fmt(n){ return (Number(n)||0).toLocaleString('de-CH'); }
+  function when(ts){ if(!ts) return '–'; var d=new Date(String(ts).replace(' ','T'));
     return isNaN(d)?'–':d.toLocaleDateString('de-CH',{day:'2-digit',month:'2-digit',year:'2-digit'}); }
-  fetch(SB + '/rest/v1/rpc/schriften_stats', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
-    body: '{}'
-  })
-  .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
-  .then(function(rows){
-    var views = 0, dls = 0, files = [];
+  function rpc(name){
+    return fetch(SB + '/rest/v1/rpc/' + name, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body:'{}'
+    }).then(function(r){ if(!r.ok) throw new Error(name + ' ' + r.status); return r.json(); });
+  }
+  function bars(el, items){
+    el.innerHTML = '';
+    if(!items.length){ el.innerHTML = '<div class="empty">Noch keine Daten.</div>'; return; }
+    var max = items.reduce(function(m,i){ return Math.max(m, i.value); }, 0) || 1;
+    items.forEach(function(it){
+      var row = document.createElement('div'); row.className = 'barrow';
+      var bl = document.createElement('div'); bl.className = 'bl'; bl.textContent = it.label; bl.title = it.label;
+      var tr = document.createElement('div'); tr.className = 'bartrack';
+      var sp = document.createElement('span'); sp.style.width = Math.max(3, Math.round(it.value/max*100)) + '%'; tr.appendChild(sp);
+      var v = document.createElement('div'); v.className = 'barval'; v.textContent = fmt(it.value);
+      if(it.sub){ var s=document.createElement('span'); s.className='sub'; s.textContent=it.sub; v.appendChild(s); }
+      row.appendChild(bl); row.appendChild(tr); row.appendChild(v);
+      el.appendChild(row);
+    });
+  }
+  var done = 0, fail = 0;
+  function finish(){
+    var st = document.getElementById('status');
+    if(fail && done===0){ st.className='err'; st.textContent='Konnte Statistik nicht laden.'; }
+    else { st.className='muted'; st.textContent='Stand: ' + new Date().toLocaleString('de-CH'); }
+  }
+
+  // ---- Schriften ----
+  rpc('schriften_stats').then(function(rows){
+    var views=0, dls=0, files=[];
     rows.forEach(function(r){
-      if (r.kind === 'pageview') views += Number(r.n);
-      else if (r.kind === 'download') { dls += Number(r.n); files.push(r); }
+      if(r.kind==='pageview') views += Number(r.n);
+      else if(r.kind==='download'){ dls += Number(r.n); files.push(r); }
     });
     document.getElementById('sumViews').textContent = fmt(views);
-    document.getElementById('sumDls').textContent = fmt(dls);
+    document.getElementById('sumDls').textContent   = fmt(dls);
     document.getElementById('sumKinds').textContent = fmt(files.length);
-    var tb = document.getElementById('dlBody');
     files.sort(function(a,b){ return b.n - a.n; });
-    if (!files.length) tb.innerHTML = '<tr><td class="lbl" colspan="3">Noch keine Downloads.</td></tr>';
+    bars(document.getElementById('dlBars'), files.map(function(f){ return {label:f.label, value:Number(f.n)}; }));
+    var tb = document.getElementById('dlBody');
+    if(!files.length){ tb.innerHTML = '<tr><td class="lbl" colspan="3">Noch keine Downloads.</td></tr>'; }
     files.forEach(function(f){
       var tr = document.createElement('tr');
       tr.innerHTML = '<td class="lbl"></td><td class="n"></td><td class="n"></td>';
@@ -106,11 +150,31 @@
       tr.children[2].textContent = when(f.updated_at);
       tb.appendChild(tr);
     });
-    document.getElementById('status').textContent = 'Stand: ' + new Date().toLocaleString('de-CH');
-  })
-  .catch(function(e){
-    document.getElementById('status').className = 'err';
-    document.getElementById('status').textContent = 'Konnte Statistik nicht laden (' + e.message + ').';
+    var lastV = rows.reduce(function(m,r){ return (r.updated_at>m)?r.updated_at:m; }, '');
+    document.getElementById('schriftenMeta').textContent = lastV ? 'zuletzt ' + when(lastV) : '';
+    done++; finish();
+  }).catch(function(e){
+    document.getElementById('dlBars').innerHTML = '<div class="err">nicht ladbar</div>';
+    fail++; finish();
+  });
+
+  // ---- GTV-Naming ----
+  rpc('gtv_naming_stats').then(function(rows){
+    var by = {}; rows.forEach(function(r){ by[r.event] = r; });
+    var visit = by['visit'] || {n:0,sessions:0}, inter = by['interaction'] || {n:0,sessions:0};
+    document.getElementById('gVisits').textContent   = fmt(visit.n);
+    document.getElementById('gInter').textContent    = fmt(inter.n);
+    document.getElementById('gSessions').textContent = fmt(visit.sessions);
+    rows.sort(function(a,b){ return b.n - a.n; });
+    bars(document.getElementById('gBars'), rows.map(function(r){
+      return {label:r.event, value:Number(r.n), sub:(r.sessions ? fmt(r.sessions)+' S.' : '')};
+    }));
+    var lastG = rows.reduce(function(m,r){ return (r.last>m)?r.last:m; }, '');
+    document.getElementById('gtvMeta').textContent = lastG ? 'zuletzt ' + when(lastG) : '';
+    done++; finish();
+  }).catch(function(e){
+    document.getElementById('gBars').innerHTML = '<div class="err">nicht ladbar</div>';
+    fail++; finish();
   });
 </script>
 </body>
