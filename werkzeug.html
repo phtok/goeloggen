@@ -90,6 +90,15 @@
       <button class="reset" data-reset="caps">zurücksetzen</button>
     </div>
   </section>
+
+  <section class="panel" id="mix">
+    <h2>Mischsatz</h2>
+    <div class="hint">Freier Text – prüfe, wie Kurzziffern und Kapitälchen zusammen sitzen. <b>Ziffern</b> werden automatisch zu Kurzziffern; Text in <b>{geschweiften&nbsp;Klammern}</b> wird zu Kapitälchen. Beide folgen live den Reglern oben.</div>
+    <div class="stage">
+      <p class="line" id="mixOut" style="min-height:1.4em"></p>
+    </div>
+    <textarea id="mixIn" rows="3" spellcheck="false" style="width:100%;font-family:inherit;font-size:15px;color:inherit;background:var(--soft,#faf8f4);border:1px solid rgba(20,24,28,.14);border-radius:10px;padding:11px 13px;resize:vertical;line-height:1.5">Am 24. Juni 1923 bestätigte die {UNESCO} das {GOETHEANUM}; vgl. {Bd}. II, S. 36 – von 1922 auf 1487 Mitglieder.</textarea>
+  </section>
 </main>
 <footer><div class="wrap">Eingebettete Webfonts · alles lokal im Browser · keine Daten verlassen die Seite.</div></footer>
 
@@ -134,8 +143,24 @@
       apply(p, sel);
     });
   });
-  window.addEventListener("resize", function(){ apply("fig",".d"); apply("cap",".k"); });
-  document.fonts && document.fonts.ready.then(function(){ apply("fig",".d"); apply("cap",".k"); });
+  var mixIn=document.getElementById("mixIn"), mixOut=document.getElementById("mixOut");
+  function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function digify(t){ return esc(t).replace(/[0-9]+/g, function(d){ return '<span class="sp d">'+d+'</span>'; }); }
+  function renderMix(){
+    var raw=mixIn.value, out="", re=/\{([^}]*)\}/g, last=0, m;
+    while((m=re.exec(raw))){
+      out += digify(raw.slice(last, m.index));
+      out += '<span class="sp k">'+esc(m[1])+'</span>';
+      last = re.lastIndex;
+    }
+    out += digify(raw.slice(last));
+    mixOut.innerHTML = out.replace(/\n/g,"<br>");
+    apply("fig",".d"); apply("cap",".k");
+  }
+  mixIn.addEventListener("input", renderMix);
+  renderMix();
+  window.addEventListener("resize", function(){ renderMix(); });
+  document.fonts && document.fonts.ready.then(function(){ renderMix(); });
 </script>
 </body>
 </html>
