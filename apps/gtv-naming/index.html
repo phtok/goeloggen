@@ -35,6 +35,9 @@
   #newname{background:transparent;border:1px dashed #3c4d5b;color:#dfe6ea;border-radius:999px;padding:5px 14px;font:600 13px 'Titillium Web';width:120px;outline:none}
   #newname:focus{border-color:#7e93a2;border-style:solid}
   #newname::placeholder{color:#8da0ae}
+  #exportbtn{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid #3c4d5b;color:#dfe6ea;border-radius:999px;padding:5px 13px;font:600 13px 'Titillium Web';cursor:pointer;transition:all .15s}
+  #exportbtn:hover{border-color:#7e93a2;color:#fff}
+  #exportbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   #phonefloat{position:fixed;right:26px;bottom:26px;z-index:60;background:#111418;border-radius:42px;padding:11px;box-shadow:0 26px 70px rgba(10,16,22,.4);display:none}
   #phonefloat .pclip{position:relative;width:274px;height:560px;overflow:hidden;border-radius:32px;background:#fff}
   #pframe{width:392px;height:800px;border:0;transform:scale(0.699);transform-origin:top left}
@@ -164,6 +167,7 @@
     <span class="track"></span>
     <span style="font-weight:600">Kurzform</span>
   </label>
+  <button id="exportbtn" title="Aktuelles Logo als PNG speichern" aria-label="Logo als PNG speichern"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg>PNG</button>
   <span id="domline">goetheanum.tv</span>
   <span id="tldflag" class="ok">.tv existiert</span>
 </div>
@@ -262,6 +266,52 @@ function logoSonderform(word,dot,iconPx){
     '<circle cx="14.2058" cy="14.1895" r="14.1733" fill="#ffffff"/>'+
     '<path fill="#23323F" d="'+POINT+'"/></svg>'+
     '<span class="sword">'+(dot?'.':'')+word+'</span>';
+}
+/* Standalone-SVG des aktuellen Logos fuer den PNG-Export (selbsttragend, ohne
+   externe Bibliothek). Spiegelt die Logik aus render(); die Sonderform wird
+   dabei – wie der Zweizeiler-Zusatz – in den Goetheanum-Glyphen gesetzt
+   (statt der Bildschirm-Naeherung in Titillium Web). */
+function buildLogoSVG(bg){
+  const c=CANDIDATES[cur],fs=10.3,bc="#23323F",l1="#575756",H=22.24;
+  let kreis=!sig,twoLine=false,suffix;
+  if(kurz){suffix=c.l2;}
+  else if(c.word==="tv"){suffix="tv";kreis=true;}
+  else if(dot&&c.tld){suffix="."+c.word;kreis=true;}
+  else{suffix=c.l2;twoLine=true;}
+  const tx=kreis?26.1:19.5;
+  const textW=twoLine?Math.max(tw("Goetheanum",fs),tw(suffix,fs)):tw(suffix,fs);
+  const W=Math.ceil(tx-19.5+textW+25);
+  const vbW=W+1,vbH=H+1.6;
+  let icon=kreis
+    ?'<g transform="scale(0.78412)"><circle cx="14.2058" cy="14.1895" r="14.1733" fill="#ffffff"/><path fill="'+bc+'" d="'+POINT+'"/></g>'
+    :SIGNET.map(d=>'<path d="'+d+'" fill="'+bc+'"/>').join('');
+  let body;
+  if(twoLine){body=tp("Goetheanum",tx,10.05,fs,l1)+tp(suffix,tx,20.05,fs,bc);}
+  else{body=tp(suffix,tx,14.68,fs,bc);}
+  const rect=bg?'<rect x="-0.5" y="-0.8" width="'+vbW+'" height="'+vbH+'" fill="'+bg+'"/>':'';
+  return {svg:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.5 -0.8 '+vbW+' '+vbH+'">'+rect+icon+body+'</svg>',vbW:vbW,vbH:vbH,suffix:suffix};
+}
+function exportPNG(){
+  const {svg,vbW,vbH}=buildLogoSVG(null); // transparenter Hintergrund
+  const Hpx=400,Wpx=Hpx*vbW/vbH,SS=3;
+  const img=new Image();
+  img.onload=()=>{
+    const cv=document.createElement("canvas");
+    cv.width=Math.round(Wpx*SS);cv.height=Math.round(Hpx*SS);
+    const ctx=cv.getContext("2d");
+    ctx.drawImage(img,0,0,cv.width,cv.height);
+    cv.toBlob(blob=>{
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");
+      const name=(CANDIDATES[cur].word||"logo").replace(/[^a-z0-9]+/gi,"-");
+      a.href=url;a.download="goetheanum-"+name+".png";
+      document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),4000);
+    },"image/png");
+  };
+  img.onerror=()=>alert("Export fehlgeschlagen.");
+  img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+  track("interaction",{a:"export",w:CANDIDATES[cur].word});
 }
 
 const CANDIDATES=[
@@ -398,6 +448,7 @@ document.getElementById("resetbtn").onclick=()=>{
   render();
   track("interaction",{a:"reset"});
 };
+document.getElementById("exportbtn").onclick=exportPNG;
 document.getElementById("dottoggle").onclick=e=>{e.preventDefault();dot=!dot;render();track("interaction",{a:"dot",on:dot});};
 document.getElementById("kreistoggle").onclick=e=>{e.preventDefault();sig=!sig;render();track("interaction",{a:"sig",on:sig});};
 document.getElementById("kurztoggle").onclick=e=>{e.preventDefault();kurz=!kurz;render();track("interaction",{a:"kurz",on:kurz});};

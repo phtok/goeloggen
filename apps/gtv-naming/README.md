@@ -40,6 +40,12 @@ Optional in der goeloggen-Übersicht/Startseite verlinken (neben Logo-Generator)
 - **▾-Knopf** (links in der Leiste): klappt die Presenter-Leiste auf eine
   schmale Zeile zusammen – nützlich auf dem iPhone, wo die volle Leiste
   sonst die halbe Sicht nimmt.
+- **PNG**: speichert das aktuell gezeigte Logo (Zweizeiler, Sonderform, tv
+  oder Kurzform – inkl. gewählter Icon-Form) als transparentes PNG, hochauflösend
+  und ohne externe Bibliothek (Standalone-SVG → Canvas). Die Sonderform/tv wird
+  dabei in den Goetheanum-Glyphen gesetzt – konsistent zum Zweizeiler-Zusatz,
+  nicht in der Bildschirm-Näherung Titillium Web. Auf dem iPhone öffnet Safari
+  das Bild ggf. in einem neuen Tab; dort per Tippen-und-Halten sichern.
 - **Speichern**: eigene Vorschläge, ausgeschiedene Kandidaten, Auswahl und
   Toggle-Zustände werden automatisch in `localStorage` gesichert und beim
   Neuladen wiederhergestellt (pro Browser/Gerät). Einen eigenen Vorschlag
@@ -90,4 +96,3 @@ Supabase-Dashboard (SQL-Editor).
 1. Refactor: Logo-Konstanten mit logo-generator teilen (s.o.).
 2. TLD-Liste (`const TLDS`) gelegentlich gegen
    https://data.iana.org/TLD/tlds-alpha-by-domain.txt aktualisieren.
-3. Optional: Export-Knopf „aktuelle Ansicht als PNG" (html2canvas o.ä.).
