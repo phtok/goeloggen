@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="570" height="1120" viewBox="0 0 570 1120">
+<rect width="570" height="1120" fill="#fff"/>
+<g id="metriken" stroke="#cfcabe" stroke-width="1" fill="none">
+<line x1="0" y1="820" x2="570" y2="820"/>
+<line x1="0" y1="320" x2="570" y2="320"/>
+<line x1="0" y1="130" x2="570" y2="130"/>
+<line x1="0" y1="1040" x2="570" y2="1040"/>
+</g><g id="lira" fill="#111">
+<path d="M495.0 820.0L495.0 745.0L230.0 745.0L230.0 130.0L145.0 130.0L145.0 820.0Z"/>
+<path d="M110.0 570.0 L480.0 570.0 L480.0 498.0 L110.0 498.0Z"/>
+<path d="M110.0 420.0 L480.0 420.0 L480.0 348.0 L110.0 348.0Z"/>
+</g></svg>
