@@ -34,7 +34,7 @@ _VMODEL = VariationModel([{}, {"wght": -1.0}, {"wght": 1.0}], axisOrder=["wght"]
 
 INPUT = os.path.join(HERE, "input")
 OUTROOT = os.path.normpath(os.path.join(HERE, "..", "..", "assets", "fonts", "goetheanum"))
-VERSION = "2.4.0"                       # add: typographic spaces (U+2002–202F, 2007/2011) + figure features
+VERSION = "2.4.1"                      # add: Kapitälchen (smcp/c2sc) + Kurzziffern (onum, kalibriert) + Bindestriche (U+2010/00AD)
 FREV = 2.4                              # head.fontRevision (Major.Minor; Patch im Versionsstring)
 SCHEMES = ["Leise", "Klar", "Laut"]
 IMPORTS = [("exclam", 0x21), ("quotedbl", 0x22), ("dollar", 0x24), ("section", 0xA7)]
@@ -308,6 +308,9 @@ def build_variable(M, H):
             rd = RecordingPen(); gsets[di][gn].draw(rd); adv = fonts[di]["hmtx"][gn][0]
             for f in fonts:
                 set_glyph(f, gn, list(rd.value), adv)
+    vmaps, nsc = {}, {}                                       # v2.4.1: variable Kapitälchen + Kurzziffern
+    for f, (name, Ht, wght) in zip(fonts, WIDE_MASTERS):      # per-master, weight-shifted + scaled
+        _add_variable_alts(f, M, H, wght, nsc, vmaps)
     for f, p in zip(fonts, paths):
         f.save(p)
 
@@ -321,6 +324,8 @@ def build_variable(M, H):
     for nm, w in WIDE_INSTANCES:
         ds.addInstanceDescriptor(familyName="Goetheanum Variabel", styleName=nm, location={"Weight": w})
     ft, _, _ = varLib.build(ds)
+    for tag in ("onum", "smcp", "c2sc"):                      # v2.4.1 features on the variable font
+        _add_gsub_single(ft, tag, vmaps.get(tag, {}))
 
     fix_meta(ft, "GoetheanumVariabel", "Goetheanum Variabel", weight_class=440)
     nm = ft["name"]
@@ -410,6 +415,108 @@ SPACES = {0x2002: 500, 0x2003: 1000, 0x2004: 333, 0x2005: 250, 0x2006: 167,
 # x-height), kx keeps almost full stem width so the colour matches the text.
 ONUM_KX, ONUM_KY = 0.97, 0.80
 
+# --- v2.4.1: Kapitälchen + Kurzziffern (im Werkzeug kalibriert) -------------
+# Height referenced to cap height (690); weight relative to each cut's body
+# weight; same model as werkzeug.html. Glyphs are interpolated to the target
+# weight (statics: across the three cuts; variable: per master) then scaled.
+CAPH = 690.0
+FIG_HEIGHT, FIG_DW, FIG_TRACK = 533, 80, 10      # Kurzziffern: +80 wght über Körper
+CAP_HEIGHT, CAP_DW, CAP_TRACK = 511, 110, 30     # Kapitälchen: +110 wght über Körper
+S_FIG, S_CAP = FIG_HEIGHT / CAPH, CAP_HEIGHT / CAPH
+
+
+def _smcp_pairs(cmap):
+    """(lowercase_cp, source_capital_cp) pairs for small caps, plus & -> small-cap &."""
+    pairs = []
+    for cp in list(cmap):
+        ch = chr(cp)
+        if cp < 0x250 and ch.isalpha() and ch.islower() and len(ch.upper()) == 1:
+            up = ord(ch.upper())
+            if up in cmap:
+                pairs.append((cp, up))
+    pairs.append((0x26, 0x26))
+    return pairs
+
+
+def _scaled(rec, s, track):
+    sh = track / 2.0
+    return [(c, tuple((x * s + sh, y * s) for x, y in p)) for c, p in rec]
+
+
+def _interp_cut(masters, anchors, uni, target):
+    """Blend a glyph across the three finished cuts to a target weight."""
+    ws = anchors
+    if target <= ws[0]:
+        lo, hi = ws[0], ws[1]
+    elif target >= ws[-1]:
+        lo, hi = ws[-2], ws[-1]
+    else:
+        lo = max(w for w in ws if w <= target); hi = min(w for w in ws if w >= target)
+        if lo == hi:
+            i = ws.index(lo); hi = ws[i + 1] if i + 1 < len(ws) else ws[i - 1]
+    rA, aA = grec(masters[lo], uni); rB, aB = grec(masters[hi], uni)
+    if rA is None:
+        return None, 0
+    if rB is None or sig(rA) != sig(rB):
+        return rA, aA
+    return blend(rA, aA, rB, aB, (target - lo) / (hi - lo))
+
+
+def _mk_alt_static(ft, masters, anchors, src_uni, target_w, s, track):
+    rec, adv = _interp_cut(masters, anchors, src_uni, target_w)
+    if rec is None:
+        return None
+    return _add_alt(ft, _scaled(rec, s, track), adv * s + track)
+
+
+def _ht_for_weight(w):
+    """Map a weight to the H-area target used by the variable masters."""
+    pts = sorted((wt, ht) for _, ht, wt in WIDE_MASTERS)
+    if w <= pts[0][0]:
+        return pts[0][1]
+    if w >= pts[-1][0]:
+        return pts[-1][1]
+    for (w0, h0), (w1, h1) in zip(pts, pts[1:]):
+        if w0 <= w <= w1:
+            return h0 + (w - w0) / (w1 - w0) * (h1 - h0)
+    return pts[-1][1]
+
+
+def _mk_alt_var(ft, M, H, src_uni, target_w, s, track, nsc):
+    """Variable master alt: capital/digit at weight target_w (clamped, compatible) scaled."""
+    ns = nsc.get(src_uni)
+    if ns is None:
+        ns = _compat_group(M, H, src_uni); nsc[src_uni] = ns
+    if not ns:
+        return None
+    rec, adv = _outline_at(M, H, src_uni, _ht_for_weight(min(725, target_w)), ns, clamp=True)
+    if rec is None:
+        return None
+    return _add_alt(ft, _scaled(rec, s, track), adv * s + track)
+
+
+def _add_variable_alts(ft, M, H, wght, nsc, maps):
+    """Add onum + smcp/c2sc alt glyphs to one variable master; record name maps."""
+    cmap = ft.getBestCmap()
+    figW, capW = min(725, wght + FIG_DW), min(725, wght + CAP_DW)
+    onum, smcp, c2sc, seen = {}, {}, {}, {}
+    for d in range(0x30, 0x3A):
+        gn = cmap.get(d)
+        if gn:
+            a = _mk_alt_var(ft, M, H, d, figW, S_FIG, FIG_TRACK, nsc)
+            if a:
+                onum[gn] = a
+    for low, up in _smcp_pairs(cmap):
+        a = seen.get(up)
+        if a is None:
+            a = _mk_alt_var(ft, M, H, up, capW, S_CAP, CAP_TRACK, nsc); seen[up] = a
+        if not a:
+            continue
+        smcp[cmap[low]] = a
+        if up != 0x26 and up in cmap:
+            c2sc[cmap[up]] = a
+    maps["onum"], maps["smcp"], maps["c2sc"] = onum, smcp, c2sc
+
 
 def add_spaces(ft):
     cmap = ft.getBestCmap()
@@ -421,8 +528,11 @@ def add_spaces(ft):
         if uni in cmap:
             continue
         add_cid_glyph(ft, uni, [], adv); added.append(uni)
-    if 0x2011 not in cmap and 0x2D in cmap:                    # non-breaking hyphen = hyphen outline
-        rh, ah = grec(ft, 0x2D); add_cid_glyph(ft, 0x2011, rh, ah); added.append(0x2011)
+    if 0x2D in cmap:                                           # nb-hyphen, hyphen, soft hyphen = hyphen outline
+        rh, ah = grec(ft, 0x2D)
+        for u in (0x2011, 0x2010, 0x00AD):
+            if u not in cmap:
+                add_cid_glyph(ft, u, rh, ah); added.append(u)
     return added
 
 
@@ -477,34 +587,61 @@ def _add_gsub_single(ft, tag, mapping):
             ls.FeatureIndex.append(fidx); ls.FeatureCount = len(ls.FeatureIndex)
 
 
-def add_figure_features(ft):
+def add_figure_features(ft, masters, anchors, cut_w):
     cmap = ft.getBestCmap()
+    figW = min(725, cut_w + FIG_DW)
     pnum, onum = {}, {}
     for d in range(0x30, 0x3A):
         gn = cmap.get(d)
         if not gn:
             continue
         rec, adv = grec(ft, d)
-        pr, pa = _respace(rec);                          pnum[gn] = _add_alt(ft, pr, pa)
-        sr, sa = _respace(_scale(rec, ONUM_KX, ONUM_KY)); onum[gn] = _add_alt(ft, sr, sa)
+        pr, pa = _respace(rec); pnum[gn] = _add_alt(ft, pr, pa)
+        onum[gn] = _mk_alt_static(ft, masters, anchors, d, figW, S_FIG, FIG_TRACK)
+    onum = {k: v for k, v in onum.items() if v}
     ident = {cmap[d]: cmap[d] for d in range(0x30, 0x3A) if d in cmap}
     _add_gsub_single(ft, "pnum", pnum)          # proportional lining
-    _add_gsub_single(ft, "onum", onum)          # oldstyle / short figures (x-height)
+    _add_gsub_single(ft, "onum", onum)          # Kurzziffern (interpoliert + skaliert)
     _add_gsub_single(ft, "tnum", ident)         # tabular (= default)
     _add_gsub_single(ft, "lnum", ident)         # lining  (= default)
 
 
+def add_smallcaps_static(ft, masters, anchors, cut_w):
+    cmap = ft.getBestCmap()
+    capW = min(725, cut_w + CAP_DW)
+    smcp, c2sc, seen = {}, {}, {}
+    for low, up in _smcp_pairs(cmap):
+        a = seen.get(up)
+        if a is None:
+            a = _mk_alt_static(ft, masters, anchors, up, capW, S_CAP, CAP_TRACK); seen[up] = a
+        if not a:
+            continue
+        smcp[cmap[low]] = a
+        if up != 0x26 and up in cmap:
+            c2sc[cmap[up]] = a
+    _add_gsub_single(ft, "smcp", smcp)
+    _add_gsub_single(ft, "c2sc", c2sc)
+    return len(smcp)
+
+
 def enrich_statics():
-    """Give the installable cuts the typographic spaces, the non-breaking hyphen
-    and the figure features (pnum/onum + tnum/lnum). Default figures stay tabular
-    lining, so existing documents are unaffected."""
+    """Give the installable cuts the typographic spaces, the hyphens, the figure
+    features (pnum/onum + tnum/lnum) and the small caps (smcp/c2sc). Default
+    figures stay tabular lining, so existing documents are unaffected. Weight for
+    onum/smcp is interpolated across the three finished cuts (relative per cut)."""
+    paths = {sch: os.path.join(OUTROOT, "Fonts", static_out(sch)) for sch in SCHEMES}
+    masters = {}
     for sch in SCHEMES:
-        p = os.path.join(OUTROOT, "Fonts", static_out(sch))
-        ft = TTFont(p)
+        m = TTFont(paths[sch]); masters[m["OS/2"].usWeightClass] = m   # weight masters (pre-enrich)
+    anchors = sorted(masters)
+    for sch in SCHEMES:
+        ft = TTFont(paths[sch]); cut_w = ft["OS/2"].usWeightClass
         n = len(add_spaces(ft))
-        add_figure_features(ft)
-        ft.save(p)
-        print("  Fonts/%s  +%d Spatien/Zeichen  +pnum/onum/tnum/lnum" % (static_out(sch), n))
+        add_figure_features(ft, masters, anchors, cut_w)
+        ns = add_smallcaps_static(ft, masters, anchors, cut_w)
+        ft.save(paths[sch])
+        print("  Fonts/%s  +%d Spatien/Zeichen  +pnum/onum/tnum/lnum  +smcp/c2sc(%d)"
+              % (static_out(sch), n, ns))
 
 
 def build_webfonts():

@@ -7,7 +7,7 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.recordingPen import RecordingPen
 import cairosvg
 
-PATH = "/tmp/Klar-v241-test.otf"
+PATH = "../../assets/fonts/goetheanum/Fonts/Goetheanum-Schrift-v2.4.1-Klar.otf"
 data = open(PATH, "rb").read()
 face = hb.Face(data); HBF = hb.Font(face)
 ft = TTFont(PATH); gs = ft.getGlyphSet(); order = ft.getGlyphOrder()
