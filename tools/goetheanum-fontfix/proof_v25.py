@@ -95,14 +95,13 @@ cairosvg.svg2png(bytestring="\n".join(s).encode(), write_to="/tmp/v25_ligvariant
 
 # ===================== IMAGE B =====================
 HYW = 73
-def c_prime(dx=0):
-    q, _ = grec(fK, 0x27)                              # quotesingle -> sheared = prime
-    return [("g", shear(recmap(q, 1, dx, 0), 0.30, 462))]
+def c_prime(x0=0):                                     # erster Wurf: schlanker Keil
+    return [("p", [(x0, 430), (x0+85, 430), (x0+155, 690), (x0+70, 690)])]
 def c_doubleprime():
-    return c_prime(0) + c_prime(150)
+    return c_prime(0) + c_prime(170)
 def c_slashzero():
-    rec, adv = grec(fK, 0x30)
-    return [("g", rec), ("p", [(105, 0), (200, 0), (455, 640), (360, 640)])], adv  # overshooting slash
+    rec, adv = grec(fK, 0x30)                          # erster Wurf: Schrägstrich im Innern, ohne Eckchen
+    return [("g", rec), ("p", [(150, 55), (245, 55), (430, 600), (335, 600)])], adv
 def c_figuredash(): return [("p", [(70, 300), (490, 300), (490, 300+HYW), (70, 300+HYW)])], 560
 def c_numero():
     n, adv = grec(fK, 0x4E); o, _ = grec(fK, 0x6F)
@@ -145,4 +144,40 @@ for idx, (label, cont, w, status) in enumerate(cl):
     s.append(txt(cx + (CW-30)/2, cy + CH - 48, status, 24, GOLD if status != "kalibriert" else GREEN, "middle"))
 s.append("</svg>")
 cairosvg.svg2png(bytestring="\n".join(s).encode(), write_to="/tmp/v25_overview.png", output_width=int(WB*SCALE))
-print("wrote both")
+
+# ===================== editierbare SVG-Vektoren =====================
+ENTW = os.path.normpath(os.path.join(HERE, "..", "..", "assets", "entwuerfe"))
+os.makedirs(ENTW, exist_ok=True)
+
+def export_svg(name, contours, width):
+    BASE, LM, Hc = 820, 70, 1120
+    W = int(width) + 140
+    out = ['<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">' % (W, Hc, W, Hc),
+           '<rect width="%d" height="%d" fill="#fff"/>' % (W, Hc),
+           '<g id="metriken" stroke="#cfcabe" stroke-width="1" fill="none">']
+    for fy in (0, 500, 690, -220):
+        sy = BASE - fy; out.append('<line x1="0" y1="%.0f" x2="%d" y2="%.0f"/>' % (sy, W, sy))
+    out.append('</g><g id="%s" fill="#111">' % name)
+    for kind, data in contours:
+        if kind == "p":
+            q = [(LM + x, BASE - y) for x, y in data]
+            out.append('<path d="%s"/>' % ("M" + " L".join("%.1f %.1f" % t for t in q) + "Z"))
+        else:
+            d = []
+            for c, p in data:
+                q = [(LM + x, BASE - y) for x, y in p]
+                if c == "moveTo": d.append("M%.1f %.1f" % q[0])
+                elif c == "lineTo": d.append("L%.1f %.1f" % q[0])
+                elif c == "curveTo": d.append("C%.1f %.1f %.1f %.1f %.1f %.1f" % (q[0]+q[1]+q[2]))
+                elif c == "qCurveTo":
+                    for i in range(len(q)-1): d.append("Q%.1f %.1f %.1f %.1f" % (q[i]+q[i+1]))
+                elif c == "closePath": d.append("Z")
+            out.append('<path d="%s"/>' % "".join(d))
+    out.append('</g></svg>')
+    open(os.path.join(ENTW, name + ".svg"), "w").write("\n".join(out))
+
+for nm in ("fi", "fl", "ffi", "ffl"):
+    cont, w = lig(nm, True); export_svg(nm, cont, w)
+cn, wn = c_numero(); export_svg("numero", cn, wn)
+cli, wl = c_lira(); export_svg("lira", cli, wl)
+print("wrote PNGs + editable SVGs ->", ENTW)
