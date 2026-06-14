@@ -99,9 +99,9 @@
       <p class="cmp">Grundziffern zum Vergleich: 1&nbsp;&nbsp;8&nbsp;&nbsp;2&nbsp;&nbsp;3</p>
     </div>
     <div class="ctrls">
-      <div class="ctrl"><label>Höhe <b><span id="supH-v">430</span></b></label><input type="range" id="supH" min="300" max="690" value="430"></div>
-      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="supW-v">530</span></b></label><input type="range" id="supW" min="190" max="725" value="530"></div>
-      <div class="ctrl"><label>Versatz (über Grundlinie) <b><span id="supO-v">+300</span></b></label><input type="range" id="supO" min="0" max="430" value="300"></div>
+      <div class="ctrl"><label>Höhe <b><span id="supH-v">320</span></b></label><input type="range" id="supH" min="250" max="690" value="320"></div>
+      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="supW-v">590</span></b></label><input type="range" id="supW" min="190" max="725" value="590"></div>
+      <div class="ctrl"><label>Versatz (über Grundlinie) <b><span id="supO-v">+460</span></b></label><input type="range" id="supO" min="0" max="560" value="460"></div>
       <div class="ctrl"><label>Laufweite <b><span id="supT-v">0</span></b></label><input type="range" id="supT" min="-30" max="160" value="0"></div>
     </div>
     <div class="readout">
@@ -120,8 +120,8 @@
       <p class="cmp">Grundziffern zum Vergleich: 2&nbsp;&nbsp;4&nbsp;&nbsp;1</p>
     </div>
     <div class="ctrls">
-      <div class="ctrl"><label>Höhe <b><span id="subH-v">430</span></b></label><input type="range" id="subH" min="300" max="690" value="430"></div>
-      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="subW-v">530</span></b></label><input type="range" id="subW" min="190" max="725" value="530"></div>
+      <div class="ctrl"><label>Höhe <b><span id="subH-v">320</span></b></label><input type="range" id="subH" min="250" max="690" value="320"></div>
+      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="subW-v">590</span></b></label><input type="range" id="subW" min="190" max="725" value="590"></div>
       <div class="ctrl"><label>Versatz (unter Grundlinie) <b><span id="subO-v">-110</span></b></label><input type="range" id="subO" min="-300" max="60" value="-110"></div>
       <div class="ctrl"><label>Laufweite <b><span id="subT-v">0</span></b></label><input type="range" id="subT" min="-30" max="160" value="0"></div>
     </div>
@@ -130,6 +130,14 @@
       <button class="btn" data-copy="subCode">Werte kopieren</button>
       <button class="reset" data-reset="sub">zurücksetzen</button>
     </div>
+  </section>
+
+  <section class="panel" id="ref">
+    <h2>Referenz &amp; Entwürfe</h2>
+    <div class="hint">Hoch-/Tiefstellung nach den Referenzproportionen der Elternschrift <b>Titillium</b> (OFL): klein (~315), Oberkante zur Oberlänge, schwerer gezeichnet. Die Hebel oben stehen jetzt auf diesen Werten.</div>
+    <p style="margin:10px 0 0"><img src="assets/proofs/feat-supsub.png" alt="Schaubild Hoch-/Tiefstellung mit Referenzbändern" style="width:100%;height:auto;border:1px solid rgba(20,24,28,.10);border-radius:10px;display:block"></p>
+    <div class="hint" style="margin-top:22px"><b>Ligaturen</b> (fi · fl · ffi · ffl) sind gezeichnete <b>Entwürfe</b> – f + dotless-i / l, der Überhang tuckt unter den f-Bogen. Oben die Kollision ohne Ligatur, unten der Entwurf. Live-interaktiv mit eigenen Hebeln folgt eine Probe-Webfont.</div>
+    <p style="margin:10px 0 0"><img src="assets/proofs/feat-ligatures.png" alt="Ligatur-Entwürfe: ohne Kollision oben, Ligatur unten" style="width:100%;height:auto;border:1px solid rgba(20,24,28,.10);border-radius:10px;display:block"></p>
   </section>
 
 </main>
@@ -166,7 +174,7 @@
   }
   var SEL = {fig:".d", cap:".k", sup:".su", sub:".sb"};
   var defaults = {figH:515,figW:540,figT:0, capH:505,capW:550,capT:30,
-                  supH:430,supW:530,supO:300,supT:0, subH:430,subW:530,subO:-110,subT:0};
+                  supH:320,supW:590,supO:460,supT:0, subH:320,subW:590,subO:-110,subT:0};
   bind("fig",".d"); bind("cap",".k"); bind("sup",".su"); bind("sub",".sb");
   document.querySelectorAll("[data-copy]").forEach(function(b){
     b.addEventListener("click", function(){
