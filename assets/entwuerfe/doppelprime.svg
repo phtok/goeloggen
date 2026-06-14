@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="1120" viewBox="0 0 480 1120">
+<rect width="480" height="1120" fill="#fff"/>
+<g id="metriken" stroke="#cfcabe" stroke-width="1" fill="none">
+<line x1="0" y1="820" x2="480" y2="820"/>
+<line x1="0" y1="320" x2="480" y2="320"/>
+<line x1="0" y1="130" x2="480" y2="130"/>
+<line x1="0" y1="1040" x2="480" y2="1040"/>
+</g><g id="doppelprime" fill="#111">
+<path d="M70.0 390.0 L155.0 390.0 L225.0 130.0 L140.0 130.0Z"/>
+<path d="M240.0 390.0 L325.0 390.0 L395.0 130.0 L310.0 130.0Z"/>
+</g></svg>
