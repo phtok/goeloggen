@@ -104,5 +104,40 @@ for idx, w in enumerate(LIGS):
     svg.append('<text x="%d" y="%d" font-family="Helvetica,Arial" font-size="22" fill="#9aa0a6" text-anchor="middle">%s</text>' % (cx + CW/2, cy + CH - 30, w))
 svg.append("</svg>")
 cairosvg.svg2png(bytestring="\n".join(svg).encode(), write_to="/tmp/lig_sheet.png", output_width=WB//2)
-print("exported %d f-ligature SVGs + contact sheet ->" % len(LIGS), ENTW)
+
+# ---- one combined, editable SVG: every ligature its own named <g> (layer) ----
+def emit_rec(rec, ox, base):
+    d = []
+    for c, p in rec:
+        q = [(ox + x, base - y) for x, y in p]
+        if c == "moveTo": d.append("M%.1f %.1f" % q[0])
+        elif c == "lineTo": d.append("L%.1f %.1f" % q[0])
+        elif c == "curveTo": d.append("C%.1f %.1f %.1f %.1f %.1f %.1f" % (q[0]+q[1]+q[2]))
+        elif c == "qCurveTo":
+            for i in range(len(q)-1): d.append("Q%.1f %.1f %.1f %.1f" % (q[i]+q[i+1]))
+        elif c == "closePath": d.append("Z")
+    return "".join(d)
+
+gcols, cellW, cellH, mLM = 5, 1150, 1320, 80
+grows = (len(LIGS) + gcols - 1) // gcols
+GW, GH = mLM*2 + gcols*cellW, 200 + grows*cellH
+parts = ['<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">' % (GW, GH, GW, GH),
+         '<rect width="%d" height="%d" fill="#fff"/>' % (GW, GH),
+         '<text x="60" y="86" font-family="Helvetica,Arial" font-size="46" fill="#23272b">f-Ligaturen — editierbar, je Glyph eine Gruppe</text>']
+guides = ['<g id="metriken" stroke="#d8d2c4" stroke-width="1.5" fill="none">']
+groups = []
+for idx, w in enumerate(LIGS):
+    cont, width = build(w)
+    col, row = idx % gcols, idx // gcols
+    ox = mLM + col*cellW; base = 200 + row*cellH + 820
+    for fy in (0, 500, 690, -220):
+        guides.append('<line x1="%d" y1="%.0f" x2="%d" y2="%.0f"/>' % (ox-20, base-fy, ox+cellW-140, base-fy))
+    guides.append('<text x="%d" y="%d" stroke="none" fill="#9aa0a6" font-family="Helvetica,Arial" font-size="30">%s</text>' % (ox, base+300, w))
+    g = ['<g id="%s" fill="#111">' % w] + ['<path d="%s"/>' % emit_rec(rec, ox, base) for rec in cont] + ['</g>']
+    groups.append("".join(g))
+guides.append('</g>')
+parts.append("".join(guides)); parts.extend(groups); parts.append('</svg>')
+open(os.path.join(ENTW, "f-ligaturen.svg"), "w").write("\n".join(parts))
+
+print("exported %d f-ligature SVGs + contact sheet + combined f-ligaturen.svg ->" % len(LIGS), ENTW)
 print(" ".join(LIGS))
