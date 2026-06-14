@@ -118,5 +118,5 @@ for paths, w, kind in rows:
 svg.append("</svg>")
 svg = "\n".join(svg)
 out_png = "/tmp/v241_proof_klar.png"
-cairosvg.svg2png(bytestring=svg.encode("utf-8"), write_to=out_png, output_width=1800)
+cairosvg.svg2png(bytestring=svg.encode("utf-8"), write_to=out_png, output_width=3200)
 print("wrote", out_png)

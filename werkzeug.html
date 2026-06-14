@@ -46,48 +46,47 @@
 <header><div class="wrap bar"><b>Goetheanum Schriften · Kalibrierung</b><a href="schriften.html">Schriften →</a></div></header>
 <main class="wrap">
   <div class="hero">
-    <div class="kick">Werkzeug · Höhe · Dicke · Laufweite live einstellen</div>
-    <h1>Kurzziffern &amp; Kapitälchen kalibrieren.</h1>
-    <p class="lede">Schiebe die Regler, bis es im Satz stimmig sitzt. Unten erscheinen die exakten Werte (Höhe · Gewicht · Laufweite) – die sage mir, dann baue ich genau das in die Schrift. Höhe und Laufweite in Tausendstel-Geviert (Versalhöhe = 690), Gewicht = Achse 190–725.</p>
+    <div class="kick">Werkzeug · sechs Hebel · Kurzziffern und Kapitälchen gemeinsam</div>
+    <h1>Mischsatz kalibrieren.</h1>
+    <p class="lede">Tippe Text und Codes; <b>Ziffern</b> werden zu Kurzziffern, <b>{…}</b> zu Kapitälchen. Schiebe die sechs Hebel, bis Kürzel, Zahlen und Codes (z. B. {BE}3477) zusammen stimmig sitzen. Höhe/Laufweite in Tausendstel-Geviert (Versalhöhe = 690), Gewicht = Achse 190–725. <b>Achtung:</b> verkleinerte Glyphen wirken automatisch dünner – Gewicht ruhig höher ziehen.</p>
   </div>
 
-  <section class="panel" id="figs">
-    <h2>Kurzziffern</h2>
-    <div class="hint">Ziffern, die wie Minuskeln im Fliesstext liegen.</div>
+  <section class="panel" id="calib">
+    <h2>Mischsatz · Kurzziffern + Kapitälchen</h2>
+    <div class="hint">Ziffern werden zu <b>Kurzziffern</b>, Text in <b>{…}</b> zu <b>Kapitälchen</b>. Tippe eigene Codes und Zahlen (z. B. <b>{BE}3477</b>) und gleiche mit den sechs Hebeln ab, bis Buchstabe und Ziffer zusammen sitzen.</div>
     <div class="stage">
-      <p class="line">Am <span class="sp d">24</span>. Juni <span class="sp d">1923</span> kamen <span class="sp d">1487</span> Gäste, <span class="sp d">36</span> mehr als <span class="sp d">1922</span>.</p>
-      <p class="big sp d">0123456789</p>
-      <p class="cmp">Versalziffern zum Vergleich: 24&nbsp;&nbsp;1923&nbsp;&nbsp;1487</p>
+      <p class="big" id="mixBig"></p>
+      <p class="line" id="mixOut" style="min-height:1.4em"></p>
+      <p class="line" id="mixSmall" style="font-size:13.5px;line-height:1.75;color:#3a3f44;max-width:48ch;margin-top:14px"></p>
     </div>
-    <div class="ctrls">
-      <div class="ctrl"><label>Höhe <b><span id="figH-v">580</span></b></label><input type="range" id="figH" min="500" max="690" value="580"></div>
-      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="figW-v">518</span></b></label><input type="range" id="figW" min="190" max="725" value="518"></div>
-      <div class="ctrl"><label>Laufweite <b><span id="figT-v">0</span></b></label><input type="range" id="figT" min="-30" max="160" value="0"></div>
-    </div>
-    <div class="readout">
-      <span class="code" id="figCode"></span>
-      <button class="btn" data-copy="figCode">Werte kopieren</button>
-      <button class="reset" data-reset="figs">zurücksetzen</button>
-    </div>
-  </section>
-
-  <section class="panel" id="caps">
-    <h2>Kapitälchen</h2>
-    <div class="hint">Kleinkapitälchen für Akronyme und ruhige Auszeichnung.</div>
-    <div class="stage">
-      <p class="line">Aufnahme als <span class="sp k">UNESCO</span>-Welterbe; siehe <span class="sp k">Bd</span>. II.</p>
-      <p class="big"><span class="sp k">GOETHEANUM</span></p>
-      <p class="cmp">Versalien zum Vergleich: GOETHEANUM</p>
-    </div>
-    <div class="ctrls">
-      <div class="ctrl"><label>Höhe <b><span id="capH-v">545</span></b></label><input type="range" id="capH" min="500" max="690" value="545"></div>
-      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="capW-v">548</span></b></label><input type="range" id="capW" min="190" max="725" value="548"></div>
-      <div class="ctrl"><label>Laufweite <b><span id="capT-v">25</span></b></label><input type="range" id="capT" min="-30" max="160" value="25"></div>
-    </div>
-    <div class="readout">
-      <span class="code" id="capCode"></span>
-      <button class="btn" data-copy="capCode">Werte kopieren</button>
-      <button class="reset" data-reset="caps">zurücksetzen</button>
+    <textarea id="mixIn" rows="3" spellcheck="false" style="width:100%;font-family:inherit;font-size:15px;color:inherit;background:var(--soft,#faf8f4);border:1px solid rgba(20,24,28,.14);border-radius:10px;padding:11px 13px;resize:vertical;line-height:1.5">Mitglied {BE}3477 trat 1923 bei · {AGB} §3 · {ISBN} 978-3 · das {GOETHEANUM} zählte am 24.6.1923 genau 1487 Gäste; vgl. {Bd}. II, S. 36.</textarea>
+    <div class="sixgrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;margin-top:20px">
+      <div>
+        <div style="font-weight:600;margin-bottom:10px">Kurzziffern</div>
+        <div class="ctrls">
+          <div class="ctrl"><label>Höhe <b><span id="figH-v">515</span></b></label><input type="range" id="figH" min="460" max="690" value="515"></div>
+          <div class="ctrl"><label>Gewicht (Dicke) <b><span id="figW-v">540</span></b></label><input type="range" id="figW" min="190" max="725" value="540"></div>
+          <div class="ctrl"><label>Laufweite <b><span id="figT-v">0</span></b></label><input type="range" id="figT" min="-30" max="160" value="0"></div>
+        </div>
+        <div class="readout">
+          <span class="code" id="figCode"></span>
+          <button class="btn" data-copy="figCode">kopieren</button>
+          <button class="reset" data-reset="figs">zurücksetzen</button>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:600;margin-bottom:10px">Kapitälchen</div>
+        <div class="ctrls">
+          <div class="ctrl"><label>Höhe <b><span id="capH-v">505</span></b></label><input type="range" id="capH" min="460" max="690" value="505"></div>
+          <div class="ctrl"><label>Gewicht (Dicke) <b><span id="capW-v">550</span></b></label><input type="range" id="capW" min="190" max="725" value="550"></div>
+          <div class="ctrl"><label>Laufweite <b><span id="capT-v">30</span></b></label><input type="range" id="capT" min="-30" max="160" value="30"></div>
+        </div>
+        <div class="readout">
+          <span class="code" id="capCode"></span>
+          <button class="btn" data-copy="capCode">kopieren</button>
+          <button class="reset" data-reset="caps">zurücksetzen</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -133,14 +132,6 @@
     </div>
   </section>
 
-  <section class="panel" id="mix">
-    <h2>Mischsatz</h2>
-    <div class="hint">Freier Text – prüfe, wie Kurzziffern und Kapitälchen zusammen sitzen. <b>Ziffern</b> werden automatisch zu Kurzziffern; Text in <b>{geschweiften&nbsp;Klammern}</b> wird zu Kapitälchen. Beide folgen live den Reglern oben.</div>
-    <div class="stage">
-      <p class="line" id="mixOut" style="min-height:1.4em"></p>
-    </div>
-    <textarea id="mixIn" rows="3" spellcheck="false" style="width:100%;font-family:inherit;font-size:15px;color:inherit;background:var(--soft,#faf8f4);border:1px solid rgba(20,24,28,.14);border-radius:10px;padding:11px 13px;resize:vertical;line-height:1.5">Am 24. Juni 1923 bestätigte die {UNESCO} das {GOETHEANUM}; vgl. {Bd}. II, S. 36 – von 1922 auf 1487 Mitglieder.</textarea>
-  </section>
 </main>
 <footer><div class="wrap">Eingebettete Webfonts · alles lokal im Browser · keine Daten verlassen die Seite.</div></footer>
 
@@ -174,7 +165,7 @@
     apply(prefix, sel);
   }
   var SEL = {fig:".d", cap:".k", sup:".su", sub:".sb"};
-  var defaults = {figH:580,figW:518,figT:0, capH:545,capW:548,capT:25,
+  var defaults = {figH:515,figW:540,figT:0, capH:505,capW:550,capT:30,
                   supH:430,supW:530,supO:300,supT:0, subH:430,subW:530,subO:-110,subT:0};
   bind("fig",".d"); bind("cap",".k"); bind("sup",".su"); bind("sub",".sb");
   document.querySelectorAll("[data-copy]").forEach(function(b){
@@ -192,18 +183,22 @@
       apply(p, sel);
     });
   });
-  var mixIn=document.getElementById("mixIn"), mixOut=document.getElementById("mixOut");
+  var mixIn=document.getElementById("mixIn"), mixOut=document.getElementById("mixOut"), mixBig=document.getElementById("mixBig");
   function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
   function digify(t){ return esc(t).replace(/[0-9]+/g, function(d){ return '<span class="sp d">'+d+'</span>'; }); }
-  function renderMix(){
-    var raw=mixIn.value, out="", re=/\{([^}]*)\}/g, last=0, m;
-    while((m=re.exec(raw))){
-      out += digify(raw.slice(last, m.index));
-      out += '<span class="sp k">'+esc(m[1])+'</span>';
-      last = re.lastIndex;
-    }
+  function markup(raw){
+    var out="", re=/\{([^}]*)\}/g, last=0, m;
+    while((m=re.exec(raw))){ out += digify(raw.slice(last, m.index)); out += '<span class="sp k">'+esc(m[1])+'</span>'; last = re.lastIndex; }
     out += digify(raw.slice(last));
-    mixOut.innerHTML = out.replace(/\n/g,"<br>");
+    return out.replace(/\n/g,"<br>");
+  }
+  var BIG = "{BE}3477 · {MwSt} 7,7% · {II}/2024";
+  var SMALL = "Die Allgemeine Anthroposophische Gesellschaft am {GOETHEANUM} zählte 1923 rund 12 000 Mitglieder; bis 1925 wuchs sie auf 1487 Gruppen in 34 Ländern. Codes wie {BE}3477, {ZRH}8001 und Normen {ISO} 216, {DIN} 476 stehen mit Kurzziffern; Verweise auf {Bd}. II, {Nr}. 7 und §§ 3–9 ebenso. Telefon +41 61 706 42 42, {MwSt} 7,7%, Ausgabe {MMXXIV}.";
+  var mixSmall=document.getElementById("mixSmall");
+  function renderMix(){
+    mixOut.innerHTML = markup(mixIn.value);
+    if(mixBig) mixBig.innerHTML = markup(BIG);
+    if(mixSmall) mixSmall.innerHTML = markup(SMALL);
     apply("fig",".d"); apply("cap",".k");
   }
   function refreshAll(){ apply("sup",".su"); apply("sub",".sb"); renderMix(); }
