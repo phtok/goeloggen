@@ -64,9 +64,9 @@
       <div>
         <div style="font-weight:600;margin-bottom:10px">Kurzziffern</div>
         <div class="ctrls">
-          <div class="ctrl"><label>Höhe <b><span id="figH-v">515</span></b></label><input type="range" id="figH" min="460" max="690" value="515"></div>
-          <div class="ctrl"><label>Gewicht (Dicke) <b><span id="figW-v">540</span></b></label><input type="range" id="figW" min="190" max="725" value="540"></div>
-          <div class="ctrl"><label>Laufweite <b><span id="figT-v">0</span></b></label><input type="range" id="figT" min="-30" max="160" value="0"></div>
+          <div class="ctrl"><label>Höhe <b><span id="figH-v">533</span></b></label><input type="range" id="figH" min="460" max="690" value="533"></div>
+          <div class="ctrl"><label>Gewicht (Dicke) <b><span id="figW-v">520</span></b></label><input type="range" id="figW" min="190" max="725" value="520"></div>
+          <div class="ctrl"><label>Laufweite <b><span id="figT-v">+10</span></b></label><input type="range" id="figT" min="-30" max="160" value="10"></div>
         </div>
         <div class="readout">
           <span class="code" id="figCode"></span>
@@ -77,7 +77,7 @@
       <div>
         <div style="font-weight:600;margin-bottom:10px">Kapitälchen</div>
         <div class="ctrls">
-          <div class="ctrl"><label>Höhe <b><span id="capH-v">505</span></b></label><input type="range" id="capH" min="460" max="690" value="505"></div>
+          <div class="ctrl"><label>Höhe <b><span id="capH-v">511</span></b></label><input type="range" id="capH" min="460" max="690" value="511"></div>
           <div class="ctrl"><label>Gewicht (Dicke) <b><span id="capW-v">550</span></b></label><input type="range" id="capW" min="190" max="725" value="550"></div>
           <div class="ctrl"><label>Laufweite <b><span id="capT-v">30</span></b></label><input type="range" id="capT" min="-30" max="160" value="30"></div>
         </div>
@@ -100,7 +100,7 @@
     </div>
     <div class="ctrls">
       <div class="ctrl"><label>Höhe <b><span id="supH-v">320</span></b></label><input type="range" id="supH" min="250" max="690" value="320"></div>
-      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="supW-v">590</span></b></label><input type="range" id="supW" min="190" max="725" value="590"></div>
+      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="supW-v">700</span></b></label><input type="range" id="supW" min="190" max="725" value="700"></div>
       <div class="ctrl"><label>Versatz (über Grundlinie) <b><span id="supO-v">+460</span></b></label><input type="range" id="supO" min="0" max="560" value="460"></div>
       <div class="ctrl"><label>Laufweite <b><span id="supT-v">0</span></b></label><input type="range" id="supT" min="-30" max="160" value="0"></div>
     </div>
@@ -121,7 +121,7 @@
     </div>
     <div class="ctrls">
       <div class="ctrl"><label>Höhe <b><span id="subH-v">320</span></b></label><input type="range" id="subH" min="250" max="690" value="320"></div>
-      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="subW-v">590</span></b></label><input type="range" id="subW" min="190" max="725" value="590"></div>
+      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="subW-v">700</span></b></label><input type="range" id="subW" min="190" max="725" value="700"></div>
       <div class="ctrl"><label>Versatz (unter Grundlinie) <b><span id="subO-v">-110</span></b></label><input type="range" id="subO" min="-300" max="60" value="-110"></div>
       <div class="ctrl"><label>Laufweite <b><span id="subT-v">0</span></b></label><input type="range" id="subT" min="-30" max="160" value="0"></div>
     </div>
@@ -173,8 +173,8 @@
     apply(prefix, sel);
   }
   var SEL = {fig:".d", cap:".k", sup:".su", sub:".sb"};
-  var defaults = {figH:515,figW:540,figT:0, capH:505,capW:550,capT:30,
-                  supH:320,supW:590,supO:460,supT:0, subH:320,subW:590,subO:-110,subT:0};
+  var defaults = {figH:533,figW:520,figT:10, capH:511,capW:550,capT:30,
+                  supH:320,supW:700,supO:460,supT:0, subH:320,subW:700,subO:-110,subT:0};
   bind("fig",".d"); bind("cap",".k"); bind("sup",".su"); bind("sub",".sb");
   document.querySelectorAll("[data-copy]").forEach(function(b){
     b.addEventListener("click", function(){
