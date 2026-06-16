@@ -46,7 +46,7 @@ def build_bold(word):
     cont = []; px = 0.0; prev_f = False
     for ch in word:
         if ch == "f":
-            cont.append(ext_f(recmap(f, px)))
+            cont.append(recmap(f, px))          # fettes f unangetastet (keine Scherung)
             if prev_f:
                 cont.append([("moveTo", ((px-af+250, CB0),)), ("lineTo", ((px+150, CB0),)),
                              ("lineTo", ((px+150, CB1),)), ("lineTo", ((px-af+250, CB1),)), ("closePath", ())])
