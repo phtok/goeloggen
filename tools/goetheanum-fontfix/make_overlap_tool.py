@@ -54,6 +54,15 @@ def decompose(gid):
 MAP = {"ff": "ff", "fi": "fi", "fl": "fl", "ft": "ft", "fj": "fj", "fk": "fk"}
 DATA = {k: decompose(v) for k, v in MAP.items()}
 
+# natural right side-bearing of the trailing letter (from the font) -> default Nachabstand
+from fontfix import grec
+from fontTools.ttLib import TTFont
+import glob as _glob
+_fK = TTFont(_glob.glob(os.path.join(HERE, "input", "*-Klar.otf"))[0])
+for _k, _u in {"ff": 0x66, "fi": 0x131, "fl": 0x6C, "ft": 0x74, "fj": 0x6A, "fk": 0x6B}.items():
+    _r, _a = grec(_fK, _u)
+    DATA[_k]["rsb"] = round(_a - max(x for c, p in _r for x, y in p), 1)
+
 LIGSEQ = ["ff", "fi", "fl", "fj", "fk", "ft"]
 def esc(s): return s.replace("&", "&amp;").replace("<", "&lt;")
 def markup(text):
@@ -67,13 +76,17 @@ def markup(text):
 
 SAMPLE = ("Auffällige, fließende Schriftzüge: der Stoff, das Schiff, ein Pfiff, "
           "Koffer, schaffen, treffen, öffnen, die Auflage, das Pflaster, "
-          "Grafik, sanfte Kraft, oft geprüft, fünf.")
+          "Grafik, sanfte Kraft, oft geprüft, fünf — aufklären, Aufkleber, Fjord.")
 BODY = markup(SAMPLE)
 
-ctrls = "".join(
-    '<div class="ctrl"><label>%s · Überlappung <b><span id="v_%s">0</span></b></label>'
-    '<input type="range" id="s_%s" min="-220" max="120" value="0"></div>' % (k, k, k)
-    for k in ["ff", "fi", "fl", "ft", "fj", "fk"])
+def _cell(k):
+    rsb = int(round(DATA[k]["rsb"]))
+    return ('<div class="cell"><div class="ck">%s</div>'
+            '<label>Überlappung <b><span id="v_%s">0</span></b></label>'
+            '<input type="range" id="s_%s" min="-220" max="120" value="0">'
+            '<label style="margin-top:9px">Nachabstand <b><span id="n_%s">%d</span></b></label>'
+            '<input type="range" id="d_%s" min="-40" max="180" value="%d"></div>') % (k, k, k, k, rsb, k, rsb)
+ctrls = "".join(_cell(k) for k in ["ff", "fi", "fl", "ft", "fk", "fj"])
 
 HTML = """<!doctype html><html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Ligaturen ineinander</title>
@@ -86,12 +99,15 @@ h1{font-size:22px;margin:0 0 6px}.hint{color:#737a80;font-size:14px;margin:6px 0
 .sample{font-family:"G Klar";font-size:46px;line-height:1.55;color:#23272b}
 .lig{display:inline-block;vertical-align:-0.24em}
 .lig svg{height:1em;fill:currentColor}
-.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px 26px;margin-top:16px}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:16px}
 .ctrl label{display:flex;justify-content:space-between;font-size:13px;color:#3a3f44;margin-bottom:5px}
-.ctrl b{font-variant-numeric:tabular-nums}
+.cell{background:#fff;border:1px solid rgba(20,24,28,.12);border-radius:10px;padding:12px 14px}
+.cell .ck{font-weight:600;margin-bottom:7px;font-size:15px}
+.cell label{display:flex;justify-content:space-between;font-size:13px;color:#3a3f44;margin-bottom:4px}
+.cell b,.ctrl b{font-variant-numeric:tabular-nums}
 input[type=range]{width:100%}
 .readout{margin-top:16px;font-size:13px;color:#3a3f44;background:#f3efe7;border-radius:10px;padding:11px 13px}
-.code{font-family:ui-monospace,Menlo,monospace}
+.code{font-family:ui-monospace,Menlo,monospace;white-space:pre-wrap}
 .btn{font:inherit;font-size:13px;border:1px solid rgba(20,24,28,.18);background:#fff;border-radius:8px;padding:6px 11px;cursor:pointer;margin-right:8px}
 small{color:#9aa0a6}
 </style></head><body><div class="wrap">
@@ -106,25 +122,32 @@ small{color:#9aa0a6}
 </div>
 <script>
 var DATA=__DATA__;
-var OV={ff:0,fi:0,fl:0,ft:0,fj:0,fk:0};
+var LSB=29, KEYS=["ff","fi","fl","ft","fk","fj"];
+var OV={}, NA={};
+KEYS.forEach(function(k){OV[k]=0;NA[k]=DATA[k].rsb;});
 function svgFor(key){
- var d=DATA[key], ov=OV[key];
- var minx=Math.min(0, d.tlo+ov), maxx=Math.max(d.lx, d.thi+ov);
- var w=maxx-minx;
- return '<svg viewBox="'+minx.toFixed(1)+' 0 '+w.toFixed(1)+' 1000" style="width:'+(w/1000).toFixed(3)+'em">'
-  +'<path d="'+d.lead+'"/><g transform="translate('+ov+',0)"><path d="'+d.trail+'"/></g></svg>';
+ var d=DATA[key], ov=OV[key], na=NA[key];
+ var inkMin=Math.min(0,d.tlo+ov), inkMax=Math.max(d.lx,d.thi+ov);
+ var sh=LSB-inkMin, W=(inkMax-inkMin)+LSB+na;
+ return '<svg viewBox="0 0 '+W.toFixed(1)+' 1000" style="width:'+(W/1000).toFixed(3)+'em">'
+  +'<g transform="translate('+sh.toFixed(1)+',0)"><path d="'+d.lead+'"/>'
+  +'<g transform="translate('+ov+',0)"><path d="'+d.trail+'"/></g></g></svg>';
 }
 function renderAll(){
  [].forEach.call(document.querySelectorAll(".lig"),function(s){s.innerHTML=svgFor(s.dataset.l);});
  document.getElementById("code").textContent=
-  Object.keys(OV).map(function(k){return k+": "+(OV[k]>0?"+":"")+OV[k];}).join("   ·   ");
+  KEYS.map(function(k){return k+":  Überlappung "+(OV[k]>0?"+":"")+OV[k]+"   ·   Nachabstand "+NA[k];}).join("\\n");
 }
-["ff","fi","fl","ft","fj","fk"].forEach(function(k){
+KEYS.forEach(function(k){
  var s=document.getElementById("s_"+k);
  s.addEventListener("input",function(){OV[k]=+s.value;document.getElementById("v_"+k).textContent=(OV[k]>0?"+":"")+OV[k];renderAll();});
+ var dd=document.getElementById("d_"+k);
+ dd.addEventListener("input",function(){NA[k]=+dd.value;document.getElementById("n_"+k).textContent=NA[k];renderAll();});
 });
-document.getElementById("reset").onclick=function(){["ff","fi","fl","ft","fj","fk"].forEach(function(k){
- OV[k]=0;document.getElementById("s_"+k).value=0;document.getElementById("v_"+k).textContent="0";});renderAll();};
+document.getElementById("reset").onclick=function(){KEYS.forEach(function(k){
+ OV[k]=0;NA[k]=DATA[k].rsb;
+ document.getElementById("s_"+k).value=0;document.getElementById("v_"+k).textContent="0";
+ document.getElementById("d_"+k).value=DATA[k].rsb;document.getElementById("n_"+k).textContent=Math.round(DATA[k].rsb);});renderAll();};
 document.getElementById("copy").onclick=function(){navigator.clipboard&&navigator.clipboard.writeText(document.getElementById("code").textContent);
  var b=this;b.textContent="kopiert ✓";setTimeout(function(){b.textContent="Werte kopieren";},1200);};
 var sz=document.getElementById("s_size");
