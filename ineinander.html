@@ -21,6 +21,7 @@ small{color:#9aa0a6}
 <h1>Ligaturen ineinanderschieben</h1>
 <div class="hint">Deine Ligaturen liegen <b>zerlegt</b> (f + Folgebuchstabe) inline im echten Klar‑Satz. Jeder Regler schiebt den Folgebuchstaben <b>unter den f‑Bogen</b>: negativ = enger, positiv = lockerer. Du justierst, während du die Ligatur <b>im Gebrauch</b> siehst. Werte in Fonteinheiten.</div>
 <div class="stage"><div class="sample" id="sample">Au<span class="lig" data-l="ff"></span>ällige, <span class="lig" data-l="fl"></span>ießende Schri<span class="lig" data-l="ft"></span>züge: der Sto<span class="lig" data-l="ff"></span>, das Schi<span class="lig" data-l="ff"></span>, ein P<span class="lig" data-l="fi"></span><span class="lig" data-l="ff"></span>, Ko<span class="lig" data-l="ff"></span>er, scha<span class="lig" data-l="ff"></span>en, tre<span class="lig" data-l="ff"></span>en, ö<span class="lig" data-l="ff"></span>nen, die Au<span class="lig" data-l="fl"></span>age, das P<span class="lig" data-l="fl"></span>aster, Gra<span class="lig" data-l="fi"></span>k, san<span class="lig" data-l="ft"></span>e Kra<span class="lig" data-l="ft"></span>, o<span class="lig" data-l="ft"></span> geprü<span class="lig" data-l="ft"></span>, fünf.</div></div>
+<div class="ctrl" style="max-width:360px"><label>Schriftgrösse <b><span id="v_size">46</span> px</b></label><input type="range" id="s_size" min="16" max="110" value="46"></div>
 <div class="ctrls"><div class="ctrl"><label>ff · Überlappung <b><span id="v_ff">0</span></b></label><input type="range" id="s_ff" min="-220" max="120" value="0"></div><div class="ctrl"><label>fi · Überlappung <b><span id="v_fi">0</span></b></label><input type="range" id="s_fi" min="-220" max="120" value="0"></div><div class="ctrl"><label>fl · Überlappung <b><span id="v_fl">0</span></b></label><input type="range" id="s_fl" min="-220" max="120" value="0"></div><div class="ctrl"><label>ft · Überlappung <b><span id="v_ft">0</span></b></label><input type="range" id="s_ft" min="-220" max="120" value="0"></div><div class="ctrl"><label>fj · Überlappung <b><span id="v_fj">0</span></b></label><input type="range" id="s_fj" min="-220" max="120" value="0"></div><div class="ctrl"><label>fk · Überlappung <b><span id="v_fk">0</span></b></label><input type="range" id="s_fk" min="-220" max="120" value="0"></div></div>
 <div class="readout"><span class="code" id="code"></span>
 <div style="margin-top:9px"><button class="btn" id="copy">Werte kopieren</button><button class="btn" id="reset">zurücksetzen</button>
@@ -49,6 +50,8 @@ document.getElementById("reset").onclick=function(){["ff","fi","fl","ft","fj","f
  OV[k]=0;document.getElementById("s_"+k).value=0;document.getElementById("v_"+k).textContent="0";});renderAll();};
 document.getElementById("copy").onclick=function(){navigator.clipboard&&navigator.clipboard.writeText(document.getElementById("code").textContent);
  var b=this;b.textContent="kopiert ✓";setTimeout(function(){b.textContent="Werte kopieren";},1200);};
+var sz=document.getElementById("s_size");
+sz.addEventListener("input",function(){document.getElementById("sample").style.fontSize=sz.value+"px";document.getElementById("v_size").textContent=sz.value;});
 document.fonts&&document.fonts.ready.then(renderAll);
 renderAll();
 </script></body></html>

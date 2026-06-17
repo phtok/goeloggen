@@ -98,6 +98,7 @@ small{color:#9aa0a6}
 <h1>Ligaturen ineinanderschieben</h1>
 <div class="hint">Deine Ligaturen liegen <b>zerlegt</b> (f + Folgebuchstabe) inline im echten Klar‑Satz. Jeder Regler schiebt den Folgebuchstaben <b>unter den f‑Bogen</b>: negativ = enger, positiv = lockerer. Du justierst, während du die Ligatur <b>im Gebrauch</b> siehst. Werte in Fonteinheiten.</div>
 <div class="stage"><div class="sample" id="sample">__BODY__</div></div>
+<div class="ctrl" style="max-width:360px"><label>Schriftgrösse <b><span id="v_size">46</span> px</b></label><input type="range" id="s_size" min="16" max="110" value="46"></div>
 <div class="ctrls">__CTRLS__</div>
 <div class="readout"><span class="code" id="code"></span>
 <div style="margin-top:9px"><button class="btn" id="copy">Werte kopieren</button><button class="btn" id="reset">zurücksetzen</button>
@@ -126,6 +127,8 @@ document.getElementById("reset").onclick=function(){["ff","fi","fl","ft","fj","f
  OV[k]=0;document.getElementById("s_"+k).value=0;document.getElementById("v_"+k).textContent="0";});renderAll();};
 document.getElementById("copy").onclick=function(){navigator.clipboard&&navigator.clipboard.writeText(document.getElementById("code").textContent);
  var b=this;b.textContent="kopiert ✓";setTimeout(function(){b.textContent="Werte kopieren";},1200);};
+var sz=document.getElementById("s_size");
+sz.addEventListener("input",function(){document.getElementById("sample").style.fontSize=sz.value+"px";document.getElementById("v_size").textContent=sz.value;});
 document.fonts&&document.fonts.ready.then(renderAll);
 renderAll();
 </script></body></html>"""
