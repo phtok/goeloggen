@@ -11,7 +11,7 @@ from fontfix import grec
 from fontTools.ttLib import TTFont
 import glob
 
-SRC = "/tmp/ph_lig2"
+SRC = os.path.join(HERE, "..", "..", "assets", "entwuerfe", "ligaturen-v2")
 FILES = {"ff": "ff-standard.svg", "ffe": "ff-alternate-Wortende.svg",
          "fie": "fi-eng.svg", "fiw": "fi-weit.svg", "fl": "fl.svg", "ft": "ft.svg"}
 SHIFT = 750 - 726     # source baseline (svg-y 726) -> inline baseline (ascent 750)
@@ -52,21 +52,32 @@ LABELS = {"ff": "ff (Standard, wortintern)", "ffe": "ff (Wortende)", "fie": "fi 
 
 BOUND = set(" ,.;:!?—-–)„‑")
 def esc(s): return s.replace("&", "&amp;").replace("<", "&lt;")
-def markup(text, ff_force=None, fi_key="fie"):
+def span(k): return '<span class="lig" data-l="%s"></span>' % k
+def markup(text, ff_force=None, fi_force=None, toggleable=False):
     out = ""; i = 0; n = len(text)
     while i < n:
         if text[i:i+2] == "ff":
-            if ff_force: key = ff_force
+            if ff_force:
+                out += span(ff_force)
             else:
                 nxt = text[i+2] if i+2 < n else " "
-                key = "ffe" if nxt in BOUND else "ff"
-            out += '<span class="lig" data-l="%s"></span>' % key; i += 2; continue
+                if nxt in BOUND:
+                    out += ('<span class="lig" data-l="ffe" data-std="ff" data-alt="ffe"></span>'
+                            if toggleable else span("ffe"))
+                else:
+                    out += span("ff")
+            i += 2; continue
         if text[i:i+2] == "fi":
-            out += '<span class="lig" data-l="%s"></span>' % fi_key; i += 2; continue
+            if fi_force:
+                out += span(fi_force)
+            else:
+                out += ('<span class="lig" data-l="fie" data-eng="fie" data-weit="fiw"></span>'
+                        if toggleable else span("fie"))
+            i += 2; continue
         if text[i:i+2] == "fl":
-            out += '<span class="lig" data-l="fl"></span>'; i += 2; continue
+            out += span("fl"); i += 2; continue
         if text[i:i+2] == "ft":
-            out += '<span class="lig" data-l="ft"></span>'; i += 2; continue
+            out += span("ft"); i += 2; continue
         out += esc(text[i]); i += 1
     return out
 
@@ -75,13 +86,13 @@ SAMPLE = ("Auffällige, fließende Schriftzüge: der Stoff, das Schiff, ein Pfif
           "oft geprüft. Schifffahrt, Sauerstoffflasche.")
 FFW = "Stoff Schiff Pfiff schroff straff schlaff Riff"
 FIW = "fix fies Grafik Profil definitiv fit Fiktion"
-BODY = ('<p style="margin:0 0 .4em">' + markup(SAMPLE) + '</p>'
+BODY = ('<p style="margin:0 0 .4em">' + markup(SAMPLE, toggleable=True) + '</p>'
         '<div class="cmp"><div class="cl">ff am Wortende — Standard</div>'
         '<div class="row">' + markup(FFW, ff_force="ff") + '</div>'
         '<div class="cl">ff am Wortende — Alternate (gestreckt)</div>'
         '<div class="row">' + markup(FFW, ff_force="ffe") + '</div>'
-        '<div class="cl">fi — eng</div><div class="row">' + markup(FIW, fi_key="fie") + '</div>'
-        '<div class="cl">fi — weit</div><div class="row">' + markup(FIW, fi_key="fiw") + '</div></div>')
+        '<div class="cl">fi — eng</div><div class="row">' + markup(FIW, fi_force="fie") + '</div>'
+        '<div class="cl">fi — weit</div><div class="row">' + markup(FIW, fi_force="fiw") + '</div></div>')
 
 def cell(k):
     rsb = int(round(DATA[k]["rsb"]))
@@ -99,7 +110,10 @@ HTML = """<!doctype html><html lang="de"><head><meta charset="utf-8">
 :root{--va:-220}
 body{margin:0;background:#faf8f4;color:#23272b;font:15px/1.5 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
 .wrap{max-width:1040px;margin:0 auto;padding:26px 22px 80px}
-h1{font-size:22px;margin:0 0 6px}.hint{color:#737a80;font-size:14px;margin:6px 0 16px}
+h1{font-size:22px;margin:0 0 6px}.hint{color:#737a80;font-size:14px;margin:6px 0 12px}
+.toggles{display:flex;gap:28px;flex-wrap:wrap;font-size:14px;margin:0 0 6px}
+.toggles .tg label{margin-left:8px;cursor:pointer;color:#3a3f44}
+.toggles b{color:#23272b}
 .stage{background:#fff;border:1px solid rgba(20,24,28,.12);border-radius:14px;padding:26px 28px;margin:14px 0}
 .sample{font-family:"G Klar";font-size:46px;line-height:1.6;color:#23272b}
 .cmp{border-top:1px solid rgba(20,24,28,.1);margin-top:16px;padding-top:4px}
@@ -121,7 +135,15 @@ input[type=range]{width:100%}
 small{color:#9aa0a6}
 </style></head><body><div class="wrap">
 <h1>Ligaturen ineinanderschieben</h1>
-<div class="hint">Deine neu gezeichneten Ligaturen, zerlegt in f + Folgebuchstabe, inline im echten Klar-Satz. Pro Ligatur <b>Überlappung</b> (negativ enger) und <b>Nachabstand</b>. Unten der A/B-Vergleich (ff Standard/Wortende, fi eng/weit). Globale Regler: vertikale Lage &amp; Schriftgrösse.</div>
+<div class="hint">Deine neu gezeichneten Ligaturen, zerlegt in f + Folgebuchstabe, inline im echten Klar-Satz. Pro Ligatur <b>Überlappung</b> (negativ enger) und <b>Nachabstand</b>. Globale Regler: vertikale Lage &amp; Schriftgrösse.</div>
+<div class="toggles">
+ <span class="tg"><b>ff am Wortende:</b>
+  <label><input type="radio" name="ffe" value="ff"> Standard</label>
+  <label><input type="radio" name="ffe" value="ffe" checked> Alternate (gestreckt)</label></span>
+ <span class="tg"><b>fi:</b>
+  <label><input type="radio" name="fivar" value="fie" checked> eng</label>
+  <label><input type="radio" name="fivar" value="fiw"> weit</label></span>
+</div>
 <div class="stage"><div class="sample" id="sample">__BODY__</div></div>
 <div class="tools">
  <div class="tool"><label>vertikale Lage <b><span id="v_va">-220</span></b></label><input type="range" id="s_va" min="-360" max="-60" value="-220"></div>
@@ -165,8 +187,16 @@ document.getElementById("reset").onclick=function(){KEYS.forEach(function(k){
  va.value=-220;document.documentElement.style.setProperty("--va",-220);document.getElementById("v_va").textContent="-220";renderAll();};
 document.getElementById("copy").onclick=function(){navigator.clipboard&&navigator.clipboard.writeText(document.getElementById("code").textContent);
  var b=this;b.textContent="kopiert ✓";setTimeout(function(){b.textContent="Werte kopieren";},1200);};
-document.fonts&&document.fonts.ready.then(renderAll);
-renderAll();
+function applyToggles(){
+ var ffe=document.querySelector('input[name=ffe]:checked').value;
+ var fiv=document.querySelector('input[name=fivar]:checked').value;
+ [].forEach.call(document.querySelectorAll('.lig[data-alt]'),function(s){s.dataset.l=(ffe==='ff'?s.dataset.std:s.dataset.alt);});
+ [].forEach.call(document.querySelectorAll('.lig[data-eng]'),function(s){s.dataset.l=(fiv==='fie'?s.dataset.eng:s.dataset.weit);});
+ renderAll();
+}
+[].forEach.call(document.querySelectorAll('input[name=ffe],input[name=fivar]'),function(r){r.addEventListener('change',applyToggles);});
+document.fonts&&document.fonts.ready.then(applyToggles);
+applyToggles();
 </script></body></html>"""
 HTML = (HTML.replace("__BODY__", BODY).replace("__CTRLS__", ctrls).replace("__DATA__", json.dumps(DATA)))
 open("/home/user/goeloggen/ineinander.html", "w").write(HTML)
