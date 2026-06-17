@@ -12,6 +12,7 @@ on:
       - "proof.html"
       - "zuordnen.html"
       - "kerning.html"
+      - "ineinander.html"
       - "tester.html"
       - "typografie.html"
       - "vorschau.html"
@@ -55,6 +56,7 @@ jobs:
           if [ -f proof.html ]; then cp proof.html _site/proof.html; fi
           if [ -f zuordnen.html ]; then cp zuordnen.html _site/zuordnen.html; fi
           if [ -f kerning.html ]; then cp kerning.html _site/kerning.html; fi
+          if [ -f ineinander.html ]; then cp ineinander.html _site/ineinander.html; fi
           if [ -f tester.html ]; then cp tester.html _site/tester.html; fi
           if [ -f typografie.html ]; then cp typografie.html _site/typografie.html; fi
           if [ -f vorschau.html ]; then cp vorschau.html _site/vorschau.html; fi
