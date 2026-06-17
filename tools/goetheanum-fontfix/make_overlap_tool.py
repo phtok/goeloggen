@@ -51,7 +51,8 @@ def decompose(gid):
             "tlo": round(min(xs_trail), 1) if xs_trail else 0,
             "thi": round(max(xs_trail), 1) if xs_trail else 0}
 
-MAP = {"ff": "ff", "fi": "fi", "fl": "fl", "ft": "ft", "fj": "fj", "fk": "fk"}
+# key -> drawn group id   (ffe = word-end ff, fil = fi with long bow, fff = triple f)
+MAP = {"ff": "ff", "ffe": "ff5", "fi": "fi", "fil": "fi1", "fl": "fl", "ft": "ft", "fff": "ff1"}
 DATA = {k: decompose(v) for k, v in MAP.items()}
 
 # natural right side-bearing of the trailing letter (from the font) -> default Nachabstand
@@ -59,25 +60,39 @@ from fontfix import grec
 from fontTools.ttLib import TTFont
 import glob as _glob
 _fK = TTFont(_glob.glob(os.path.join(HERE, "input", "*-Klar.otf"))[0])
-for _k, _u in {"ff": 0x66, "fi": 0x131, "fl": 0x6C, "ft": 0x74, "fj": 0x6A, "fk": 0x6B}.items():
+TRAIL = {"ff": 0x66, "ffe": 0x66, "fi": 0x131, "fil": 0x131, "fl": 0x6C, "ft": 0x74, "fff": 0x66}
+for _k, _u in TRAIL.items():
     _r, _a = grec(_fK, _u)
     DATA[_k]["rsb"] = round(_a - max(x for c, p in _r for x, y in p), 1)
+KEYS = ["ff", "ffe", "fi", "fil", "fl", "ft", "fff"]
+LABELS = {"ff": "ff (wortintern)", "ffe": "ff (Wortende, gestreckt)", "fi": "fi",
+          "fil": "fi (langer Bogen)", "fl": "fl", "ft": "ft", "fff": "fff"}
 
-LIGSEQ = ["ff", "fi", "fl", "fj", "fk", "ft"]
+BOUND = set(" ,.;:!?—-–)„‑")
 def esc(s): return s.replace("&", "&amp;").replace("<", "&lt;")
-def markup(text):
-    out = ""; i = 0
-    while i < len(text):
-        seq = next((s for s in LIGSEQ if text[i:i+len(s)] == s and s in DATA), None)
-        if seq:
-            out += '<span class="lig" data-l="%s"></span>' % seq; i += len(seq); continue
+def markup(text, fi_key="fi"):
+    out = ""; i = 0; n = len(text)
+    while i < n:
+        if text[i:i+3] == "fff":
+            out += '<span class="lig" data-l="fff"></span>'; i += 3; continue
+        if text[i:i+2] == "ff":
+            nxt = text[i+2] if i+2 < n else " "
+            out += '<span class="lig" data-l="%s"></span>' % ("ffe" if nxt in BOUND else "ff"); i += 2; continue
+        if text[i:i+2] == "fi":
+            out += '<span class="lig" data-l="%s"></span>' % fi_key; i += 2; continue
+        if text[i:i+2] == "fl":
+            out += '<span class="lig" data-l="fl"></span>'; i += 2; continue
+        if text[i:i+2] == "ft":
+            out += '<span class="lig" data-l="ft"></span>'; i += 2; continue
         out += esc(text[i]); i += 1
     return out
 
 SAMPLE = ("Auffällige, fließende Schriftzüge: der Stoff, das Schiff, ein Pfiff, "
-          "Koffer, schaffen, treffen, öffnen, die Auflage, das Pflaster, "
-          "Grafik, sanfte Kraft, oft geprüft, fünf — aufklären, Aufkleber, Fjord.")
-BODY = markup(SAMPLE)
+          "Koffer, schaffen, öffnen, die Auflage, das Pflaster, Grafik, sanfte Kraft, "
+          "oft geprüft. Schifffahrt, Sauerstoffflasche, stofflich.")
+DEMO = "Alternatives fi mit langem Bogen: fix, fies, Grafik, definitiv, Profil."
+BODY = ('<p style="margin:0 0 .35em">' + markup(SAMPLE) + '</p>'
+        '<p style="margin:0;color:#6a7075;font-size:.8em">' + markup(DEMO, fi_key="fil") + '</p>')
 
 def _cell(k):
     rsb = int(round(DATA[k]["rsb"]))
@@ -85,8 +100,8 @@ def _cell(k):
             '<label>Überlappung <b><span id="v_%s">0</span></b></label>'
             '<input type="range" id="s_%s" min="-220" max="120" value="0">'
             '<label style="margin-top:9px">Nachabstand <b><span id="n_%s">%d</span></b></label>'
-            '<input type="range" id="d_%s" min="-40" max="180" value="%d"></div>') % (k, k, k, k, rsb, k, rsb)
-ctrls = "".join(_cell(k) for k in ["ff", "fi", "fl", "ft", "fk", "fj"])
+            '<input type="range" id="d_%s" min="-40" max="180" value="%d"></div>') % (LABELS[k], k, k, k, rsb, k, rsb)
+ctrls = "".join(_cell(k) for k in KEYS)
 
 HTML = """<!doctype html><html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Ligaturen ineinander</title>
@@ -122,7 +137,7 @@ small{color:#9aa0a6}
 </div>
 <script>
 var DATA=__DATA__;
-var LSB=29, KEYS=["ff","fi","fl","ft","fk","fj"];
+var LSB=29, KEYS=["ff","ffe","fi","fil","fl","ft","fff"];
 var OV={}, NA={};
 KEYS.forEach(function(k){OV[k]=0;NA[k]=DATA[k].rsb;});
 function svgFor(key){
