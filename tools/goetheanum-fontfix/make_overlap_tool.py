@@ -51,8 +51,8 @@ def decompose(gid):
             "tlo": round(min(xs_trail), 1) if xs_trail else 0,
             "thi": round(max(xs_trail), 1) if xs_trail else 0}
 
-# key -> drawn group id   (ffe = word-end ff, fil = fi with long bow, fff = triple f)
-MAP = {"ff": "ff", "ffe": "ff5", "fi": "fi", "fil": "fi1", "fl": "fl", "ft": "ft", "fff": "ff1"}
+# key -> drawn group id   (ffe = word-end ff, fil = fi with long bow)
+MAP = {"ff": "ff", "ffe": "ff5", "fi": "fi", "fil": "fi1", "fl": "fl", "ft": "ft"}
 DATA = {k: decompose(v) for k, v in MAP.items()}
 
 # natural right side-bearing of the trailing letter (from the font) -> default Nachabstand
@@ -60,24 +60,26 @@ from fontfix import grec
 from fontTools.ttLib import TTFont
 import glob as _glob
 _fK = TTFont(_glob.glob(os.path.join(HERE, "input", "*-Klar.otf"))[0])
-TRAIL = {"ff": 0x66, "ffe": 0x66, "fi": 0x131, "fil": 0x131, "fl": 0x6C, "ft": 0x74, "fff": 0x66}
+TRAIL = {"ff": 0x66, "ffe": 0x66, "fi": 0x131, "fil": 0x131, "fl": 0x6C, "ft": 0x74}
 for _k, _u in TRAIL.items():
     _r, _a = grec(_fK, _u)
     DATA[_k]["rsb"] = round(_a - max(x for c, p in _r for x, y in p), 1)
-KEYS = ["ff", "ffe", "fi", "fil", "fl", "ft", "fff"]
+KEYS = ["ff", "ffe", "fi", "fil", "fl", "ft"]
 LABELS = {"ff": "ff (wortintern)", "ffe": "ff (Wortende, gestreckt)", "fi": "fi",
-          "fil": "fi (langer Bogen)", "fl": "fl", "ft": "ft", "fff": "fff"}
+          "fil": "fi (langer Bogen)", "fl": "fl", "ft": "ft"}
 
 BOUND = set(" ,.;:!?—-–)„‑")
 def esc(s): return s.replace("&", "&amp;").replace("<", "&lt;")
-def markup(text, fi_key="fi"):
+def markup(text, fi_key="fi", ff_force=None):
     out = ""; i = 0; n = len(text)
     while i < n:
-        if text[i:i+3] == "fff":
-            out += '<span class="lig" data-l="fff"></span>'; i += 3; continue
         if text[i:i+2] == "ff":
-            nxt = text[i+2] if i+2 < n else " "
-            out += '<span class="lig" data-l="%s"></span>' % ("ffe" if nxt in BOUND else "ff"); i += 2; continue
+            if ff_force:
+                key = ff_force
+            else:
+                nxt = text[i+2] if i+2 < n else " "
+                key = "ffe" if nxt in BOUND else "ff"
+            out += '<span class="lig" data-l="%s"></span>' % key; i += 2; continue
         if text[i:i+2] == "fi":
             out += '<span class="lig" data-l="%s"></span>' % fi_key; i += 2; continue
         if text[i:i+2] == "fl":
@@ -91,8 +93,14 @@ SAMPLE = ("Auffällige, fließende Schriftzüge: der Stoff, das Schiff, ein Pfif
           "Koffer, schaffen, öffnen, die Auflage, das Pflaster, Grafik, sanfte Kraft, "
           "oft geprüft. Schifffahrt, Sauerstoffflasche, stofflich.")
 DEMO = "Alternatives fi mit langem Bogen: fix, fies, Grafik, definitiv, Profil."
+CMP = "Stoff Schiff Pfiff schroff straff schlaff Riff"
 BODY = ('<p style="margin:0 0 .35em">' + markup(SAMPLE) + '</p>'
-        '<p style="margin:0;color:#6a7075;font-size:.8em">' + markup(DEMO, fi_key="fil") + '</p>')
+        '<p style="margin:0;color:#6a7075;font-size:.8em">' + markup(DEMO, fi_key="fil") + '</p>'
+        '<div class="cmp">'
+        '<div class="cl">Wortende — einfaches ff (ohne Oberbogen-Verlängerung)</div>'
+        '<div class="row">' + markup(CMP, ff_force="ff") + '</div>'
+        '<div class="cl">Wortende — gestrecktes ff</div>'
+        '<div class="row">' + markup(CMP, ff_force="ffe") + '</div></div>')
 
 def _cell(k):
     rsb = int(round(DATA[k]["rsb"]))
@@ -112,6 +120,9 @@ body{margin:0;background:#faf8f4;color:#23272b;font:15px/1.5 -apple-system,"Sego
 h1{font-size:22px;margin:0 0 6px}.hint{color:#737a80;font-size:14px;margin:6px 0 16px}
 .stage{background:#fff;border:1px solid rgba(20,24,28,.12);border-radius:14px;padding:26px 28px;margin:14px 0}
 .sample{font-family:"G Klar";font-size:46px;line-height:1.55;color:#23272b}
+.cmp{border-top:1px solid rgba(20,24,28,.1);margin-top:18px;padding-top:4px}
+.cmp .cl{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;color:#9aa0a6;margin:12px 0 1px}
+.cmp .row{margin:0}
 .lig{display:inline-block;vertical-align:-0.24em}
 .lig svg{height:1em;fill:currentColor}
 .ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:16px}
@@ -137,7 +148,7 @@ small{color:#9aa0a6}
 </div>
 <script>
 var DATA=__DATA__;
-var LSB=29, KEYS=["ff","ffe","fi","fil","fl","ft","fff"];
+var LSB=29, KEYS=["ff","ffe","fi","fil","fl","ft"];
 var OV={}, NA={};
 KEYS.forEach(function(k){OV[k]=0;NA[k]=DATA[k].rsb;});
 function svgFor(key){
