@@ -58,12 +58,19 @@ def subpaths(r):
     if cur: subs.append(cur)
     return subs
 
-# Klar overlap offset (trailing-left minus lead-left), reused for all weights
-klar_off={}
+# Klar reference: the trailing letter's overlap UNDER the lead-f bow. Keep that
+# overlap (bow-tip minus trailing-left) constant across weights, so wider Laut
+# forms don't drift apart — the trailing letter always tucks the same depth.
+klar_off={}; klar_ov={}
 for k in KEYS:
     r = fy(elems[IDS["Klar"][k]], BASE_Y["Klar"]); r = shift(r, -minx(r))
     subs = sorted(subpaths(r), key=minx); lead = subs[0]
-    klar_off[k] = (min(minx(s) for s in subs[1:]) - minx(lead)) if len(subs)>1 else 0
+    if len(subs)>1:
+        tl = min(minx(s) for s in subs[1:])
+        klar_off[k] = tl - minx(lead)
+        klar_ov[k]  = maxx(lead) - tl          # bow-tip overlap (depth of tuck)
+    else:
+        klar_off[k] = 0; klar_ov[k] = 0
 
 def parts_for(weight, k):
     base = BASE_Y[weight]
@@ -71,11 +78,11 @@ def parts_for(weight, k):
         r = fy(elems[IDS["Klar"][k]], base); r = shift(r, -minx(r))
         subs = sorted(subpaths(r), key=minx)
         lead = subs[0]; trail = sum(subs[1:], [])
-    else:
-        lid, tid = IDS[weight][k]
-        lead = fy(elems[lid], base); lead = shift(lead, -minx(lead))
-        trail = fy(elems[tid], base); trail = shift(trail, -minx(trail))
-    trail = shift(trail, klar_off[k])
+        return lead + trail                    # already composed by hand
+    lid, tid = IDS[weight][k]
+    lead = fy(elems[lid], base); lead = shift(lead, -minx(lead))
+    trail = fy(elems[tid], base); trail = shift(trail, -minx(trail))
+    trail = shift(trail, maxx(lead) - klar_ov[k])   # tuck under this weight's bow tip
     return lead + trail
 
 # trailing RSB (nachabstand) from the Klar cut, constant across weights for preview
