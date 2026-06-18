@@ -147,7 +147,9 @@ BODY = markup(SAMPLE)
 HTML = """<!doctype html><html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Ligaturen variabel</title>
 <style>
-@font-face{font-family:"G Var";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.4.1.woff2") format("woff2");font-weight:190 725;font-display:swap}
+@font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Leise.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Klar.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Laut.woff2") format("woff2");font-display:swap}
 body{margin:0;background:#faf8f4;color:#23272b;font:15px/1.5 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
 .wrap{max-width:1040px;margin:0 auto;padding:26px 22px 70px}
 h1{font-size:22px;margin:0 0 6px}.hint{color:#737a80;font-size:14px;margin:6px 0 14px}
@@ -155,7 +157,7 @@ h1{font-size:22px;margin:0 0 6px}.hint{color:#737a80;font-size:14px;margin:6px 0
 .sw button{font:inherit;font-size:14px;border:1px solid rgba(20,24,28,.2);background:#fff;border-radius:9px;padding:7px 15px;cursor:pointer}
 .sw button.on{background:#23272b;color:#fff;border-color:#23272b}
 .stage{background:#fff;border:1px solid rgba(20,24,28,.12);border-radius:14px;padding:30px 30px;margin:8px 0 12px}
-.sample{font-family:"G Var";font-size:44px;line-height:1.6;color:#23272b}
+.sample{font-family:"G Klar";font-size:44px;line-height:1.6;color:#23272b}
 .lig{display:inline-block;vertical-align:-0.25em}
 .lig svg{height:1em;fill:currentColor}
 .tool{max-width:520px;margin-top:8px}.tool label{display:flex;justify-content:space-between;font-size:13px;color:#3a3f44;margin-bottom:5px}
@@ -163,34 +165,17 @@ h1{font-size:22px;margin:0 0 6px}.hint{color:#737a80;font-size:14px;margin:6px 0
 input[type=range]{width:100%}
 .ticks{display:flex;justify-content:space-between;font-size:11px;color:#9aa0a6;margin-top:2px}
 </style></head><body><div class="wrap">
-<h1>Ligaturen variabel — drei echte Master</h1>
-<div class="hint"><b>Leise, Klar und Laut</b> sind jetzt alle drei deine echten Zeichnungen (Klar als dritter Master, doppelter Knoten entfernt). Dazwischen wird <b>Punkt für Punkt</b> interpoliert; an den drei Schnitten liegt exakt deine Hand. Strichstärke an die Achse gekoppelt — wie der Brottext (Variable Font). Regler bewegt beides gemeinsam.</div>
+<h1>Ligaturen im Fließtext — gewichtsgleich</h1>
+<div class="hint"><b>Leise, Klar und Laut</b> sind deine echten Zeichnungen. Der Brottext steht jetzt im <b>passenden statischen Schnitt</b> (nicht mehr im Variable Font, dessen Laut ~12 % fetter lief) — so liegen Strichstärke <i>und</i> Detail von Ligatur und Brottext am jeweiligen Schnitt deckungsgleich.</div>
 <div class="sw" id="sw">
  <button data-w="265">Leise</button><button data-w="440" class="on">Klar</button><button data-w="680">Laut</button></div>
 <div class="stage"><div class="sample" id="sample">__BODY__</div></div>
-<div class="tool"><label>Gewicht <b><span id="v_w">440</span></b></label>
- <input type="range" id="s_w" min="190" max="725" value="440">
- <div class="ticks"><span>190 Flüstern</span><span>265 Leise</span><span>440 Klar</span><span>680 Laut</span><span>725 Schreien</span></div></div>
-<div class="tool" style="margin-top:14px"><label>Schriftgrösse <b><span id="v_size">44</span> px</b></label><input type="range" id="s_size" min="16" max="100" value="44"></div>
+<div class="tool" style="margin-top:6px"><label>Schriftgrösse <b><span id="v_size">44</span> px</b></label><input type="range" id="s_size" min="16" max="100" value="44"></div>
 </div>
 <script>
-var DATA=__DATA__, ANCH=[265,440,680], cur=440;
-// Three real masters (deine Leise/Klar/Laut-Zeichnungen). Piecewise-linear blend
-// between the bracketing anchors: an die Achse gekoppelt, an den drei Schnitten
-// exakt deine Hand, dazwischen sauber interpoliert. Außerhalb mild extrapoliert.
-function lerp(a,b,t){return a+(b-a)*t;}
-function bracket(w){
- var A=ANCH;
- if(w<=A[0]) return [A[0],A[1],(w-A[0])/(A[1]-A[0])];
- if(w>=A[A.length-1]){var n=A.length-1; return [A[n-1],A[n],(w-A[n-1])/(A[n]-A[n-1])];}
- for(var i=0;i<A.length-1;i++) if(w>=A[i]&&w<=A[i+1]) return [A[i],A[i+1],(w-A[i])/(A[i+1]-A[i])];
- return [A[0],A[1],0];
-}
-function coordsAt(g,w){
- var b=bracket(w), lo=g[b[0]], hi=g[b[1]], t=b[2], out=new Array(lo.c.length);
- for(var j=0;j<lo.c.length;j++) out[j]=lerp(lo.c[j],hi.c[j],t);
- return {c:out, adv:lerp(lo.adv,hi.adv,t)};
-}
+var DATA=__DATA__, cur=440;
+var FAM={265:'"G Leise"',440:'"G Klar"',680:'"G Laut"'};
+function coordsAt(g,w){return {c:g[w].c, adv:g[w].adv};}  // exact drawn master at the cut
 var BASE=750, LSB=29;
 function pathD(cmds,coords){
  var d=[],k=0;
@@ -205,17 +190,14 @@ function pathD(cmds,coords){
 }
 function render(){
  var W=cur;
- document.getElementById("sample").style.fontVariationSettings="'wght' "+W;
+ document.getElementById("sample").style.fontFamily=FAM[W];
  [].forEach.call(document.querySelectorAll(".lig"),function(s){
   var g=DATA[s.dataset.l], r=coordsAt(g,W), d=pathD(g.cmds,r.c);
   s.innerHTML='<svg viewBox="0 0 '+r.adv.toFixed(1)+' 1000" style="width:'+(r.adv/1000).toFixed(3)+'em"><path d="'+d+'"/></svg>';
  });
 }
-var sw=document.getElementById("s_w"), vw=document.getElementById("v_w");
-function setW(w){cur=w;sw.value=w;vw.textContent=Math.round(w);
+function setW(w){cur=w;
  [].forEach.call(document.querySelectorAll("#sw button"),function(b){b.classList.toggle("on",+b.dataset.w===w);});render();}
-sw.addEventListener("input",function(){cur=+sw.value;vw.textContent=cur;
- [].forEach.call(document.querySelectorAll("#sw button"),function(b){b.classList.toggle("on",+b.dataset.w===cur);});render();});
 [].forEach.call(document.querySelectorAll("#sw button"),function(b){b.addEventListener("click",function(){setW(+b.dataset.w);});});
 var sz=document.getElementById("s_size");
 sz.addEventListener("input",function(){document.getElementById("sample").style.fontSize=sz.value+"px";document.getElementById("v_size").textContent=sz.value;});
