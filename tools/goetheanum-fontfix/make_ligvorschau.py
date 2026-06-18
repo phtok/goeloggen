@@ -70,12 +70,27 @@ def inline_path(parts):
             elif c == "closePath": d.append("Z")
     return "".join(d)
 
+def user_inline(fname, tu):
+    """Philipp's EXACT Klar drawing -> inline path (all components, no recomposition)."""
+    root = ET.parse(os.path.join(SRC, fname)).getroot(); rps = []
+    for e in root.iter():
+        if e.tag.split('}')[-1] == 'path' and e.get('d'):
+            rp = RecordingPen(); parse_path(e.get('d'), rp); rps.append(rp)
+    recs = [[(c, tuple((x, 726-y) for x, y in q)) for c, q in rp.value] for rp in rps]  # font y-up
+    gmin = min(cmin(r) for r in recs); recs = [recshift(r, -gmin) for r in recs]
+    width = max(cmax(r) for r in recs)
+    tr, ta = grec(FONTS["Klar"], tu); rsb = ta - max(x for c, p in tr for x, y in p)
+    return {"d": inline_path(recs), "w": round(width + LSB + rsb, 1)}
+
 DATA = {}
 for wname in CUTS:
     DATA[wname] = {}
     for key, fn, unis in LIGS:
-        parts, width, rsb = compose(FONTS[wname], key, unis)
-        DATA[wname][key] = {"d": inline_path(parts), "w": round(width + LSB + rsb, 1)}
+        if wname == "Klar":
+            DATA[wname][key] = user_inline(fn, unis[-1])          # exact drawing
+        else:
+            parts, width, rsb = compose(FONTS[wname], key, unis)  # approximation (placeholder)
+            DATA[wname][key] = {"d": inline_path(parts), "w": round(width + LSB + rsb, 1)}
 
 BOUND = set(" ,.;:!?—-–)„‑")
 def esc(s): return s.replace("&", "&amp;").replace("<", "&lt;")
@@ -114,8 +129,8 @@ h1{font-size:22px;margin:0 0 6px}.hint{color:#737a80;font-size:14px;margin:6px 0
 input[type=range]{width:100%}
 </style></head><body><div class="wrap">
 <h1>Ligaturen über die Gewichte</h1>
-<div class="hint">Brottext = Variable Font; die Ligaturen sind aus dem Font-f (je Gewicht) + deinem Bogen-Überstand + Buchstabe komponiert. Schalte das Gewicht — sieh besonders, wie <b>Leise</b> im Fliesstext trägt.</div>
-<div class="sw" id="sw"><button data-w="Leise">Leise (dünn)</button><button data-w="Klar" class="on">Klar</button><button data-w="Laut">Laut (fett)</button></div>
+<div class="hint"><b>Klar = deine echte Zeichnung.</b> Laut/Leise sind vorerst nur eine <b>mechanische Näherung</b> (Font-f + parametrischer Bogen) — sie entsprechen <i>nicht</i> deiner Hand und werden durch deine gezeichneten Laut/Leise ersetzt. Brottext = Variable Font.</div>
+<div class="sw" id="sw"><button data-w="Leise">Leise (Näherung)</button><button data-w="Klar" class="on">Klar — deine Zeichnung</button><button data-w="Laut">Laut (Näherung)</button></div>
 <div class="stage"><div class="sample" id="sample">__BODY__</div></div>
 <div class="tool"><label>Schriftgrösse <b><span id="v_size">44</span> px</b></label><input type="range" id="s_size" min="16" max="100" value="44"></div>
 </div>
