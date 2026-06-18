@@ -15,11 +15,10 @@ from fontTools.pens.recordingPen import RecordingPen
 
 SVG = os.path.join(HERE, "..", "..", "assets", "entwuerfe", "ligatur-baukasten-ph.svg")
 BASE_Y = {"Leise": 5359.5, "Klar": 859.5, "Laut": 3859.5}   # svg-y baseline per weight band
-# Leise + Laut are drawn from individual letters and are point-compatible -> the
-# two interpolation masters. Klar's merged drawing has one extra node, so the
-# variable passes through Klar at the midpoint (the static Klar cut keeps the
-# exact approved drawing). Anchors at the cut weights.
-WEIGHT = {"Leise": 265, "Laut": 680}
+# Three real masters now: Klar's merged drawing is made point-compatible with the
+# clean Leise/Laut letters by dropping its doubled node, so Klar is the exact
+# hand-drawing at 440, not an interpolation. Anchors at the cut weights.
+WEIGHT = {"Leise": 265, "Klar": 440, "Laut": 680}
 KEYS = ["ff", "ffe", "fi", "fl", "ft"]
 # component ids per (weight, ligature): [lead_f, trailing]
 IDS = {
@@ -58,6 +57,22 @@ def subpaths(r):
     if cur: subs.append(cur)
     return subs
 
+def canon(sub):
+    """Remove degenerate zero-length line segments so the three hand-drawn weights
+    share one point structure (Klar's merged drawing carries a doubled node at the
+    crossbar/stem corner that Laut/Leise don't)."""
+    out=[]; last=None
+    for c,p in sub:
+        if c=="lineTo" and last is not None and abs(p[-1][0]-last[0])<0.6 and abs(p[-1][1]-last[1])<0.6:
+            continue
+        out.append((c,p))
+        if p: last=p[-1]
+    if len(out)>=2 and out[-1][0]=="lineTo":
+        sx,sy=out[0][1][-1]
+        if abs(out[-1][1][-1][0]-sx)<0.6 and abs(out[-1][1][-1][1]-sy)<0.6:
+            out=out[:-1]
+    return out
+
 # Klar reference: the trailing letter's overlap UNDER the lead-f bow. Keep that
 # overlap (bow-tip minus trailing-left) constant across weights, so wider Laut
 # forms don't drift apart — the trailing letter always tucks the same depth.
@@ -77,11 +92,11 @@ def parts_for(weight, k):
     if weight == "Klar":
         r = fy(elems[IDS["Klar"][k]], base); r = shift(r, -minx(r))
         subs = sorted(subpaths(r), key=minx)
-        lead = subs[0]; trail = sum(subs[1:], [])
+        lead = canon(subs[0]); trail = sum((canon(s) for s in subs[1:]), [])
         return lead + trail                    # already composed by hand
     lid, tid = IDS[weight][k]
-    lead = fy(elems[lid], base); lead = shift(lead, -minx(lead))
-    trail = fy(elems[tid], base); trail = shift(trail, -minx(trail))
+    lead = canon(fy(elems[lid], base)); lead = shift(lead, -minx(lead))
+    trail = canon(fy(elems[tid], base)); trail = shift(trail, -minx(trail))
     trail = shift(trail, maxx(lead) - klar_ov[k])   # tuck under this weight's bow tip
     return lead + trail
 
@@ -148,8 +163,8 @@ h1{font-size:22px;margin:0 0 6px}.hint{color:#737a80;font-size:14px;margin:6px 0
 input[type=range]{width:100%}
 .ticks{display:flex;justify-content:space-between;font-size:11px;color:#9aa0a6;margin-top:2px}
 </style></head><body><div class="wrap">
-<h1>Ligaturen variabel — deine Zeichnungen</h1>
-<div class="hint"><b>Leise</b> und <b>Laut</b> sind deine echten Einzelbuchstaben aus dem Baukasten; dazwischen wird <b>Punkt für Punkt</b> interpoliert. Die Interpolation ist <b>gewichtskorrigiert</b> an die Achse der Schrift gekoppelt — die Ligaturen haben darum dieselbe Strichstärke wie der Brottext (Variable Font). Regler bewegt beides gemeinsam.</div>
+<h1>Ligaturen variabel — drei echte Master</h1>
+<div class="hint"><b>Leise, Klar und Laut</b> sind jetzt alle drei deine echten Zeichnungen (Klar als dritter Master, doppelter Knoten entfernt). Dazwischen wird <b>Punkt für Punkt</b> interpoliert; an den drei Schnitten liegt exakt deine Hand. Strichstärke an die Achse gekoppelt — wie der Brottext (Variable Font). Regler bewegt beides gemeinsam.</div>
 <div class="sw" id="sw">
  <button data-w="265">Leise</button><button data-w="440" class="on">Klar</button><button data-w="680">Laut</button></div>
 <div class="stage"><div class="sample" id="sample">__BODY__</div></div>
@@ -159,26 +174,22 @@ input[type=range]{width:100%}
 <div class="tool" style="margin-top:14px"><label>Schriftgrösse <b><span id="v_size">44</span> px</b></label><input type="range" id="s_size" min="16" max="100" value="44"></div>
 </div>
 <script>
-var DATA=__DATA__, cur=440;
-// Weight-correct interpolation: the font's wght axis is non-linear, so a linear
-// blend of the Leise/Laut masters renders ~11% too light at mid weights. Map the
-// slider weight to the blend parameter t via the font's f-area curve, so the
-// ligatures match the body weight at every position (anchors: 265->0, 440->.595,
-// 680->1; piecewise-linear, mild extrapolation past the ends).
-var TMAP=[[265,0.0],[440,0.595],[680,1.0]];
-function tForW(w){
- var P=TMAP;
- if(w<=P[0][0]) return P[0][1]+(w-P[0][0])*(P[1][1]-P[0][1])/(P[1][0]-P[0][0]);
- if(w>=P[P.length-1][0]) {var n=P.length-1; return P[n][1]+(w-P[n][0])*(P[n][1]-P[n-1][1])/(P[n][0]-P[n-1][0]);}
- for(var i=0;i<P.length-1;i++){if(w>=P[i][0]&&w<=P[i+1][0])
-   return P[i][1]+(w-P[i][0])*(P[i+1][1]-P[i][1])/(P[i+1][0]-P[i][0]);}
- return 0;
-}
+var DATA=__DATA__, ANCH=[265,440,680], cur=440;
+// Three real masters (deine Leise/Klar/Laut-Zeichnungen). Piecewise-linear blend
+// between the bracketing anchors: an die Achse gekoppelt, an den drei Schnitten
+// exakt deine Hand, dazwischen sauber interpoliert. Außerhalb mild extrapoliert.
 function lerp(a,b,t){return a+(b-a)*t;}
+function bracket(w){
+ var A=ANCH;
+ if(w<=A[0]) return [A[0],A[1],(w-A[0])/(A[1]-A[0])];
+ if(w>=A[A.length-1]){var n=A.length-1; return [A[n-1],A[n],(w-A[n-1])/(A[n]-A[n-1])];}
+ for(var i=0;i<A.length-1;i++) if(w>=A[i]&&w<=A[i+1]) return [A[i],A[i+1],(w-A[i])/(A[i+1]-A[i])];
+ return [A[0],A[1],0];
+}
 function coordsAt(g,w){
- var t=tForW(w), ca=g[265].c, cb=g[680].c, out=new Array(ca.length);
- for(var j=0;j<ca.length;j++) out[j]=lerp(ca[j],cb[j],t);
- return {c:out, adv:lerp(g[265].adv,g[680].adv,t)};
+ var b=bracket(w), lo=g[b[0]], hi=g[b[1]], t=b[2], out=new Array(lo.c.length);
+ for(var j=0;j<lo.c.length;j++) out[j]=lerp(lo.c[j],hi.c[j],t);
+ return {c:out, adv:lerp(lo.adv,hi.adv,t)};
 }
 var BASE=750, LSB=29;
 function pathD(cmds,coords){
