@@ -148,8 +148,8 @@ h1{font-size:22px;margin:0 0 6px}.hint{color:#737a80;font-size:14px;margin:6px 0
 input[type=range]{width:100%}
 .ticks{display:flex;justify-content:space-between;font-size:11px;color:#9aa0a6;margin-top:2px}
 </style></head><body><div class="wrap">
-<h1>Ligaturen variabel — deine drei Zeichnungen</h1>
-<div class="hint">Leise, Klar und Laut sind jetzt <b>deine echten Zeichnungen</b> (aus dem Baukasten). Die Ligaturen werden <b>Punkt für Punkt interpoliert</b> und folgen dem Gewichtsregler — genau wie sie später variabel im Font sitzen. Brottext = Variable Font.</div>
+<h1>Ligaturen variabel — deine Zeichnungen</h1>
+<div class="hint"><b>Leise</b> und <b>Laut</b> sind deine echten Einzelbuchstaben aus dem Baukasten; dazwischen wird <b>Punkt für Punkt</b> interpoliert. Die Interpolation ist <b>gewichtskorrigiert</b> an die Achse der Schrift gekoppelt — die Ligaturen haben darum dieselbe Strichstärke wie der Brottext (Variable Font). Regler bewegt beides gemeinsam.</div>
 <div class="sw" id="sw">
  <button data-w="265">Leise</button><button data-w="440" class="on">Klar</button><button data-w="680">Laut</button></div>
 <div class="stage"><div class="sample" id="sample">__BODY__</div></div>
@@ -159,18 +159,26 @@ input[type=range]{width:100%}
 <div class="tool" style="margin-top:14px"><label>Schriftgrösse <b><span id="v_size">44</span> px</b></label><input type="range" id="s_size" min="16" max="100" value="44"></div>
 </div>
 <script>
-var DATA=__DATA__, ANCH=[265,680], cur=440;
+var DATA=__DATA__, cur=440;
+// Weight-correct interpolation: the font's wght axis is non-linear, so a linear
+// blend of the Leise/Laut masters renders ~11% too light at mid weights. Map the
+// slider weight to the blend parameter t via the font's f-area curve, so the
+// ligatures match the body weight at every position (anchors: 265->0, 440->.595,
+// 680->1; piecewise-linear, mild extrapolation past the ends).
+var TMAP=[[265,0.0],[440,0.595],[680,1.0]];
+function tForW(w){
+ var P=TMAP;
+ if(w<=P[0][0]) return P[0][1]+(w-P[0][0])*(P[1][1]-P[0][1])/(P[1][0]-P[0][0]);
+ if(w>=P[P.length-1][0]) {var n=P.length-1; return P[n][1]+(w-P[n][0])*(P[n][1]-P[n-1][1])/(P[n][0]-P[n-1][0]);}
+ for(var i=0;i<P.length-1;i++){if(w>=P[i][0]&&w<=P[i+1][0])
+   return P[i][1]+(w-P[i][0])*(P[i+1][1]-P[i][1])/(P[i+1][0]-P[i][0]);}
+ return 0;
+}
 function lerp(a,b,t){return a+(b-a)*t;}
 function coordsAt(g,w){
- var A=ANCH, lo=A[0], hi=A[A.length-1];
- if(w<=A[0]){lo=A[0];hi=A[1];}
- else if(w>=A[A.length-1]){lo=A[A.length-2];hi=A[A.length-1];}
- else{for(var i=0;i<A.length-1;i++){if(w>=A[i]&&w<=A[i+1]){lo=A[i];hi=A[i+1];break;}}}
- var t=(w-lo)/(hi-lo);
- var ca=g[lo].c, cb=g[hi].c, out=new Array(ca.length);
+ var t=tForW(w), ca=g[265].c, cb=g[680].c, out=new Array(ca.length);
  for(var j=0;j<ca.length;j++) out[j]=lerp(ca[j],cb[j],t);
- var adv=lerp(g[lo].adv,g[hi].adv,t);
- return {c:out, adv:adv};
+ return {c:out, adv:lerp(g[265].adv,g[680].adv,t)};
 }
 var BASE=750, LSB=29;
 function pathD(cmds,coords){
