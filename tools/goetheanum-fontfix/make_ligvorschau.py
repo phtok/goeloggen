@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-# ligvorschau.html — VARIABLE ligatures from Philipp's real 3-master drawings.
-# The baukasten gives ff/ffe/fi/fl/ft drawn at Leise/Klar/Laut. The lead-f and
-# trailing letter are each point-compatible across the three weights, so the
-# whole ligature interpolates per-point. A continuous weight slider drives both
-# the running body text (variable webfont) and the inline ligatures together —
-# Laut/Leise are now the actual hand-drawn forms, no longer a Näherung.
+# ligvorschau.html — full specimen of the finished f-ligatures:
+#   (1) jede Ligatur einzeln, je Schnitt
+#   (2) Varianten (ff wortintern vs ff Wortende) + Gewichtsvergleich
+#   (3) im Fließtext, Brottext im passenden statischen Schnitt (gewichtsgleich)
+# Sources: Laut = neu gezeichneter Baukasten (korrektes v2.4.1-Gewicht + Tuck),
+#          Klar = zusammengeführte r0-Zeichnung, Leise = Einzelbuchstaben r3.
 import os, sys, json, glob
 import xml.etree.ElementTree as ET
 HERE = "/home/user/goeloggen/tools/goetheanum-fontfix"; sys.path.insert(0, HERE)
@@ -13,198 +13,216 @@ from fontTools.ttLib import TTFont
 from fontTools.svgLib.path import parse_path
 from fontTools.pens.recordingPen import RecordingPen
 
-SVG = os.path.join(HERE, "..", "..", "assets", "entwuerfe", "ligatur-baukasten-ph.svg")
-BASE_Y = {"Leise": 5359.5, "Klar": 859.5, "Laut": 3859.5}   # svg-y baseline per weight band
-# Three real masters now: Klar's merged drawing is made point-compatible with the
-# clean Leise/Laut letters by dropping its doubled node, so Klar is the exact
-# hand-drawing at 440, not an interpolation. Anchors at the cut weights.
-WEIGHT = {"Leise": 265, "Klar": 440, "Laut": 680}
+REPO = "/home/user/goeloggen"
+OLD = os.path.join(REPO, "assets", "entwuerfe", "ligatur-baukasten-ph.svg")
+NEW = os.path.join(REPO, "assets", "entwuerfe", "laut-neu-baukasten-ph.svg")
 KEYS = ["ff", "ffe", "fi", "fl", "ft"]
-# component ids per (weight, ligature): [lead_f, trailing]
-IDS = {
- "Klar":  {"ff":"r0-ff-standard","ffe":"r0-ff-wortende","fi":"r0-fi-weit","fl":"r0-fl","ft":"r0-ft"},
- "Laut":  {"ff":["r2-f","r2-f1"],"ffe":["r2-f2","r2-f3"],"fi":["r2-f6","__rect"],
-           "fl":["r2-f4","r2-l"],"ft":["r2-f5","r2-t"]},
- "Leise": {"ff":["r3-f","r3-f1"],"ffe":["r3-f2","r3-f3"],"fi":["r3-f4","r3-dotlessi"],
-           "fl":["r3-f5","r3-l"],"ft":["r3-f6","r3-t"]},
-}
 TRAIL_UNI = {"ff": 0x66, "ffe": 0x66, "fi": 0x131, "fl": 0x6C, "ft": 0x74}
 
-# ---- parse baukasten ----
-root = ET.parse(SVG).getroot(); elems = {}
-def walk(e, gid=None):
-    for c in e:
-        i = c.get("id") or gid; tag = c.tag.split('}')[-1]
-        if tag == "path" and c.get("d"):
-            rp = RecordingPen(); parse_path(c.get("d"), rp); elems[i or "_a%d"%len(elems)] = rp.value
-        elif tag == "rect":
-            x=float(c.get("x")); y=float(c.get("y")); w=float(c.get("width")); h=float(c.get("height"))
-            yb=y+h  # match the dotless-i path point order: bottom-left, bottom-right, top-right, top-left, close
-            elems["__rect"] = [("moveTo",((x,yb),)),("lineTo",((x+w,yb),)),("lineTo",((x+w,y),)),
-                               ("lineTo",((x,y),)),("lineTo",((x,yb),)),("closePath",())]
-        walk(c, c.get("id") or gid)
-walk(root)
+def parse(path):
+    root = ET.parse(path).getroot(); elems = {}; anon = []
+    def walk(e, gid=None):
+        for c in e:
+            i = c.get("id") or gid; tag = c.tag.split('}')[-1]
+            if tag == "path" and c.get("d"):
+                rp = RecordingPen(); parse_path(c.get("d"), rp)
+                rec = rp.value
+                if i: elems[i] = (c.get("class"), rec)
+                anon.append((c.get("class"), rec))
+            walk(c, c.get("id") or gid)
+    walk(root)
+    return elems, anon
 
-def fy(value, base): return [(c, tuple((x, base-y) for x,y in p)) for c,p in value]
+oldE, _ = parse(OLD)
+_, newA = parse(NEW)
+
+def fy(v, base): return [(c, tuple((x, base-y) for x,y in p)) for c,p in v]
 def minx(r): return min(x for c,p in r for x,y in p)
 def maxx(r): return max(x for c,p in r for x,y in p)
 def shift(r,dx): return [(c, tuple((x+dx,y) for x,y in p)) for c,p in r]
 def subpaths(r):
-    subs=[]; cur=[]
+    out=[]; cur=[]
     for c,p in r:
-        if c=="moveTo" and cur: subs.append(cur); cur=[]
+        if c=="moveTo" and cur: out.append(cur); cur=[]
         cur.append((c,p))
-    if cur: subs.append(cur)
-    return subs
-
-def canon(sub):
-    """Remove degenerate zero-length line segments so the three hand-drawn weights
-    share one point structure (Klar's merged drawing carries a doubled node at the
-    crossbar/stem corner that Laut/Leise don't)."""
-    out=[]; last=None
-    for c,p in sub:
-        if c=="lineTo" and last is not None and abs(p[-1][0]-last[0])<0.6 and abs(p[-1][1]-last[1])<0.6:
-            continue
-        out.append((c,p))
-        if p: last=p[-1]
-    if len(out)>=2 and out[-1][0]=="lineTo":
-        sx,sy=out[0][1][-1]
-        if abs(out[-1][1][-1][0]-sx)<0.6 and abs(out[-1][1][-1][1]-sy)<0.6:
-            out=out[:-1]
+    if cur: out.append(cur)
     return out
 
-# Klar reference: the trailing letter's overlap UNDER the lead-f bow. Keep that
-# overlap (bow-tip minus trailing-left) constant across weights, so wider Laut
-# forms don't drift apart — the trailing letter always tucks the same depth.
-klar_off={}; klar_ov={}
+# ---------- Klar (r0 merged, with user tuck) ----------
+KLAR_ID = {"ff":"r0-ff-standard","ffe":"r0-ff-wortende","fi":"r0-fi-weit","fl":"r0-fl","ft":"r0-ft"}
+KLAR_BASE = 859.5
+def klar_parts(k):
+    rec = fy(oldE[KLAR_ID[k]][1], KLAR_BASE)
+    subs = sorted(subpaths(rec), key=minx)
+    return [subs[0]] + [sum(subs[1:], [])]      # lead, trailing (as drawn)
+
+# Klar tuck offset: trailing-left minus lead-bowtip (used to compose Leise consistently)
+klar_tuck={}
 for k in KEYS:
-    r = fy(elems[IDS["Klar"][k]], BASE_Y["Klar"]); r = shift(r, -minx(r))
-    subs = sorted(subpaths(r), key=minx); lead = subs[0]
-    if len(subs)>1:
-        tl = min(minx(s) for s in subs[1:])
-        klar_off[k] = tl - minx(lead)
-        klar_ov[k]  = maxx(lead) - tl          # bow-tip overlap (depth of tuck)
-    else:
-        klar_off[k] = 0; klar_ov[k] = 0
+    lead, trail = klar_parts(k)
+    klar_tuck[k] = minx(trail) - maxx(lead)
 
-def parts_for(weight, k):
-    base = BASE_Y[weight]
-    if weight == "Klar":
-        r = fy(elems[IDS["Klar"][k]], base); r = shift(r, -minx(r))
-        subs = sorted(subpaths(r), key=minx)
-        lead = canon(subs[0]); trail = sum((canon(s) for s in subs[1:]), [])
-        return lead + trail                    # already composed by hand
-    lid, tid = IDS[weight][k]
-    lead = canon(fy(elems[lid], base)); lead = shift(lead, -minx(lead))
-    trail = canon(fy(elems[tid], base)); trail = shift(trail, -minx(trail))
-    trail = shift(trail, maxx(lead) - klar_ov[k])   # tuck under this weight's bow tip
-    return lead + trail
+# ---------- Leise (r3 individual letters, composed with Klar tuck) ----------
+LEISE_ID = {"ff":["r3-f","r3-f1"],"ffe":["r3-f2","r3-f3"],"fi":["r3-f4","r3-dotlessi"],
+            "fl":["r3-f5","r3-l"],"ft":["r3-f6","r3-t"]}
+LEISE_BASE = 5359.5
+def leise_parts(k):
+    lid, tid = LEISE_ID[k]
+    lead = fy(oldE[lid][1], LEISE_BASE); lead = shift(lead, -minx(lead))
+    trail = fy(oldE[tid][1], LEISE_BASE); trail = shift(trail, -minx(trail))
+    trail = shift(trail, maxx(lead) + klar_tuck[k])   # same tuck relation as Klar
+    return [lead, trail]
 
-# trailing RSB (nachabstand) from the Klar cut, constant across weights for preview
-fK = TTFont(glob.glob(os.path.join(HERE, "input", "*-Klar.otf"))[0])
-RSB = {}
-for k in KEYS:
-    r,a = grec(fK, TRAIL_UNI[k]); RSB[k] = round(a - max(x for c,p in r for x,y in p), 1)
+# ---------- Laut (new baukasten, user weight + tuck) ----------
+LAUT_BASE = 772.9
+# black (st5) paths -> group into 5 columns by lead-f minx
+blk = [fy(rec, LAUT_BASE) for cls, rec in newA if cls == "st5"]
+blk.sort(key=minx)
+# column boundaries (x of the lead): col0<1100, col1<2110, col2<3000, col3<3975, else col4
+def colof(x):
+    return 0 if x<1100 else 1 if x<2110 else 2 if x<3000 else 3 if x<3975 else 4
+cols = {0:[],1:[],2:[],3:[],4:[]}
+for v in blk: cols[colof(minx(v))].append(v)
+laut_raw = {}
+for idx,k in enumerate(KEYS):
+    parts = sorted(cols[idx], key=minx)
+    laut_raw[k] = [parts[0], sum(parts[1:], [])]   # lead, trailing (as drawn, keeps tuck)
 
-# emit point-compatible masters: shared command list + per-weight coord arrays
+def laut_parts(k): return laut_raw[k]
+
+# ---------- assemble, normalize, advance ----------
+CUTS = {"Leise": leise_parts, "Klar": klar_parts, "Laut": laut_parts}
+CUTOTF = {n: TTFont(glob.glob(os.path.join(REPO, "assets","fonts","goetheanum","**","*v2.4.1-%s.otf"%n), recursive=True)[0]) for n in CUTS}
 LSB = 29
-def encode(k):
-    masters = {w: parts_for(w, k) for w in WEIGHT}
-    # command signature (assert identical across weights)
-    ref = parts_for("Leise", k)
-    cmds = [(c, len(p)) for c,p in ref]
-    out = {"cmds": [c for c,_ in ref]}
-    for w in WEIGHT:
-        rec = masters[w]
-        assert [(c,len(p)) for c,p in rec] == cmds, (k, w)
-        coords = []
+def rsb(cut, k):
+    r,a = grec(CUTOTF[cut], TRAIL_UNI[k]); return a - max(x for c,p in r for x,y in p)
+
+def emit_inline(parts):
+    gmin = min(minx(r) for r in parts)
+    parts = [shift(r, -gmin) for r in parts]
+    width = max(maxx(r) for r in parts)
+    return parts, width
+
+def pathd(parts):
+    BASE=750; d=[]
+    for rec in parts:
         for c,p in rec:
-            for (x,y) in p: coords += [round(x,1), round(y,1)]
-        width = max(maxx(rec) for rec in [masters[w]])
-        out[str(WEIGHT[w])] = {"c": coords, "adv": round(width + LSB + RSB[k], 1)}
-    return out
+            Q=[(LSB+x, BASE-y) for x,y in p]
+            if c=="moveTo": d.append("M%.1f %.1f"%Q[0])
+            elif c=="lineTo": d.append("L%.1f %.1f"%Q[0])
+            elif c=="curveTo": d.append("C%.1f %.1f %.1f %.1f %.1f %.1f"%(Q[0]+Q[1]+Q[2]))
+            elif c=="qCurveTo":
+                for i in range(len(Q)-1): d.append("Q%.1f %.1f %.1f %.1f"%(Q[i]+Q[i+1]))
+            elif c=="closePath": d.append("Z")
+    return "".join(d)
 
-DATA = {k: encode(k) for k in KEYS}
+DATA={}
+for cut, fn in CUTS.items():
+    DATA[cut]={}
+    for k in KEYS:
+        parts, width = emit_inline([list(x) for x in fn(k)])
+        adv = width + LSB + rsb(cut, k)
+        DATA[cut][k] = {"d": pathd(parts), "w": round(adv,1)}
 
-# ---- running-text markup ----
-BOUND = set(" ,.;:!?—-–)„‑")
+# ---------- running text markup ----------
+BOUND=set(" ,.;:!?—-–)„‑")
 def esc(s): return s.replace("&","&amp;").replace("<","&lt;")
 def markup(text):
-    out=""; i=0; n=len(text)
+    out="";i=0;n=len(text)
     while i<n:
         if text[i:i+2]=="ff":
-            nxt = text[i+2] if i+2<n else " "
-            out += '<span class="lig" data-l="%s"></span>'%("ffe" if nxt in BOUND else "ff"); i+=2; continue
+            nxt=text[i+2] if i+2<n else " "
+            out+='<span class="lig" data-l="%s"></span>'%("ffe" if nxt in BOUND else "ff");i+=2;continue
         if text[i:i+2] in ("fi","fl","ft"):
-            out += '<span class="lig" data-l="%s"></span>'%text[i:i+2]; i+=2; continue
-        out += esc(text[i]); i+=1
+            out+='<span class="lig" data-l="%s"></span>'%text[i:i+2];i+=2;continue
+        out+=esc(text[i]);i+=1
     return out
-SAMPLE = ("Auffällige, fließende Schriftzüge: der Stoff, das Schiff, ein Pfiff, "
-          "Koffer, schaffen, öffnen, die Auflage, das Pflaster, Grafik, "
-          "sanfte Kraft, oft geprüft, fünf Briefe — das schafft Vertrauen.")
-BODY = markup(SAMPLE)
+SAMPLE=("Auffällige, fließende Schriftzüge: der Stoff, das Schiff, ein Pfiff, "
+        "Koffer, schaffen, öffnen, die Auflage, das Pflaster, Grafik, "
+        "sanfte Kraft, oft geprüft, fünf Briefe — das schafft Vertrauen.")
+BODY=markup(SAMPLE)
+LABELS={"ff":"ff","ffe":"ff (Wortende)","fi":"fi","fl":"fl","ft":"ft"}
 
-HTML = """<!doctype html><html lang="de"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>Ligaturen variabel</title>
+HTML="""<!doctype html><html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Ligaturen — Werkschau</title>
 <style>
 @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Leise.woff2") format("woff2");font-display:swap}
 @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Klar.woff2") format("woff2");font-display:swap}
 @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Laut.woff2") format("woff2");font-display:swap}
-body{margin:0;background:#faf8f4;color:#23272b;font:15px/1.5 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
-.wrap{max-width:1040px;margin:0 auto;padding:26px 22px 70px}
-h1{font-size:22px;margin:0 0 6px}.hint{color:#737a80;font-size:14px;margin:6px 0 14px}
-.sw{display:flex;gap:8px;margin:0 0 8px;flex-wrap:wrap}
-.sw button{font:inherit;font-size:14px;border:1px solid rgba(20,24,28,.2);background:#fff;border-radius:9px;padding:7px 15px;cursor:pointer}
-.sw button.on{background:#23272b;color:#fff;border-color:#23272b}
-.stage{background:#fff;border:1px solid rgba(20,24,28,.12);border-radius:14px;padding:30px 30px;margin:8px 0 12px}
-.sample{font-family:"G Klar";font-size:44px;line-height:1.6;color:#23272b}
-.lig{display:inline-block;vertical-align:-0.25em}
-.lig svg{height:1em;fill:currentColor}
-.tool{max-width:520px;margin-top:8px}.tool label{display:flex;justify-content:space-between;font-size:13px;color:#3a3f44;margin-bottom:5px}
-.tool b{font-variant-numeric:tabular-nums}
+body{margin:0;background:#faf8f4;color:#23272b;font:15px/1.55 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:26px 22px 80px}
+h1{font-size:23px;margin:0 0 4px}h2{font-size:17px;margin:34px 0 12px;border-top:1px solid rgba(20,24,28,.12);padding-top:20px}
+.hint{color:#737a80;font-size:14px;margin:4px 0 12px}
+.card{background:#fff;border:1px solid rgba(20,24,28,.12);border-radius:14px;padding:20px 22px;margin:0 0 14px}
+.lig svg{fill:#23272b}
+.solo{display:grid;grid-template-columns:repeat(5,1fr);gap:6px 10px;align-items:end;text-align:center}
+.solo .h{font-size:12px;color:#9aa0a6}.solo .wn{font-size:12px;color:#737a80;text-align:left;align-self:center}
+.solo .cell{height:110px;display:flex;align-items:flex-end;justify-content:center}
+.solo .cell svg{height:92px}
+.cmp{display:flex;gap:30px;align-items:flex-end;flex-wrap:wrap}
+.cmp .g{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cmp .g svg{height:96px}.cmp .g .t{font-size:12px;color:#737a80}
+.flow .sw{display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap}
+.flow .sw button{font:inherit;font-size:14px;border:1px solid rgba(20,24,28,.2);background:#fff;border-radius:9px;padding:7px 15px;cursor:pointer}
+.flow .sw button.on{background:#23272b;color:#fff;border-color:#23272b}
+.sample{font-size:42px;line-height:1.6}
+.sample .lig{display:inline-block;vertical-align:-0.25em}.sample .lig svg{height:1em}
+.tool{max-width:420px;margin-top:14px}.tool label{display:flex;justify-content:space-between;font-size:13px;color:#3a3f44;margin-bottom:5px}
 input[type=range]{width:100%}
-.ticks{display:flex;justify-content:space-between;font-size:11px;color:#9aa0a6;margin-top:2px}
 </style></head><body><div class="wrap">
-<h1>Ligaturen im Fließtext — gewichtsgleich</h1>
-<div class="hint"><b>Leise, Klar und Laut</b> sind deine echten Zeichnungen. Der Brottext steht jetzt im <b>passenden statischen Schnitt</b> (nicht mehr im Variable Font, dessen Laut ~12 % fetter lief) — so liegen Strichstärke <i>und</i> Detail von Ligatur und Brottext am jeweiligen Schnitt deckungsgleich.</div>
-<div class="sw" id="sw">
- <button data-w="265">Leise</button><button data-w="440" class="on">Klar</button><button data-w="680">Laut</button></div>
-<div class="stage"><div class="sample" id="sample">__BODY__</div></div>
-<div class="tool" style="margin-top:6px"><label>Schriftgrösse <b><span id="v_size">44</span> px</b></label><input type="range" id="s_size" min="16" max="100" value="44"></div>
+<h1>f-Ligaturen — Werkschau</h1>
+<div class="hint">Alle fünf Ligaturen, wie sie geschnitten werden: <b>ff</b> (wortintern), <b>ff am Wortende</b> (gestreckt), <b>fi</b>, <b>fl</b>, <b>ft</b>. Leise/Klar/Laut sind deine Zeichnungen; Laut neu am korrekten v2.4.1-Gewicht. Brottext im passenden statischen Schnitt.</div>
+
+<h2>1 · Jede Ligatur einzeln, je Schnitt</h2>
+<div class="card"><div class="solo" id="solo"></div></div>
+
+<h2>2 · Varianten &amp; Gewichtsvergleich</h2>
+<div class="card"><div class="hint" style="margin-top:0">ff wortintern vs. ff am Wortende — je Schnitt direkt nebeneinander.</div>
+<div class="cmp" id="cmpvar"></div></div>
+<div class="card"><div class="hint" style="margin-top:0">Ein Schnitt, alle fünf — Rhythmus im Vergleich.</div>
+<div class="cmp" id="cmprow"></div>
+<div class="tool"><label>Schnitt</label>
+<div class="flow"><div class="sw" id="rowsw"><button data-w="Leise">Leise</button><button data-w="Klar" class="on">Klar</button><button data-w="Laut">Laut</button></div></div></div></div>
+
+<h2>3 · Im Fließtext</h2>
+<div class="card flow">
+<div class="sw" id="flowsw"><button data-w="Leise">Leise</button><button data-w="Klar" class="on">Klar</button><button data-w="Laut">Laut</button></div>
+<div class="sample" id="sample">__BODY__</div>
+<div class="tool"><label>Schriftgrösse <b><span id="vs">42</span> px</b></label><input type="range" id="sz" min="16" max="92" value="42"></div>
+</div>
 </div>
 <script>
-var DATA=__DATA__, cur=440;
-var FAM={265:'"G Leise"',440:'"G Klar"',680:'"G Laut"'};
-function coordsAt(g,w){return {c:g[w].c, adv:g[w].adv};}  // exact drawn master at the cut
-var BASE=750, LSB=29;
-function pathD(cmds,coords){
- var d=[],k=0;
- function P(){var x=LSB+coords[k++], y=BASE-coords[k++]; return x.toFixed(1)+" "+y.toFixed(1);}
- for(var i=0;i<cmds.length;i++){var c=cmds[i];
-  if(c=="moveTo")d.push("M"+P());
-  else if(c=="lineTo")d.push("L"+P());
-  else if(c=="curveTo")d.push("C"+P()+" "+P()+" "+P());
-  else if(c=="qCurveTo"){d.push("Q"+P()+" "+P());}
-  else if(c=="closePath")d.push("Z");}
- return d.join("");
-}
-function render(){
- var W=cur;
- document.getElementById("sample").style.fontFamily=FAM[W];
- [].forEach.call(document.querySelectorAll(".lig"),function(s){
-  var g=DATA[s.dataset.l], r=coordsAt(g,W), d=pathD(g.cmds,r.c);
-  s.innerHTML='<svg viewBox="0 0 '+r.adv.toFixed(1)+' 1000" style="width:'+(r.adv/1000).toFixed(3)+'em"><path d="'+d+'"/></svg>';
- });
-}
-function setW(w){cur=w;
- [].forEach.call(document.querySelectorAll("#sw button"),function(b){b.classList.toggle("on",+b.dataset.w===w);});render();}
-[].forEach.call(document.querySelectorAll("#sw button"),function(b){b.addEventListener("click",function(){setW(+b.dataset.w);});});
-var sz=document.getElementById("s_size");
-sz.addEventListener("input",function(){document.getElementById("sample").style.fontSize=sz.value+"px";document.getElementById("v_size").textContent=sz.value;});
-document.fonts&&document.fonts.ready.then(render);render();
+var DATA=__DATA__, KEYS=__KEYS__, LAB=__LAB__, CUTS=["Leise","Klar","Laut"], FAM={Leise:'"G Leise"',Klar:'"G Klar"',Laut:'"G Laut"'};
+function svg(cut,k,h){var g=DATA[cut][k];return '<svg viewBox="0 0 '+g.w+' 1000" style="height:'+h+'"><path d="'+g.d+'"/></svg>';}
+// section 1: solo grid
+(function(){var el=document.getElementById("solo");var html='<div></div>';
+ KEYS.forEach(function(k){html+='<div class="h">'+LAB[k]+'</div>';});
+ CUTS.forEach(function(cut){html+='<div class="wn">'+cut+'</div>';
+   KEYS.forEach(function(k){html+='<div class="cell">'+svg(cut,k,"92px")+'</div>';});});
+ el.innerHTML=html;})();
+// section 2a: ff vs ffe per cut
+(function(){var el=document.getElementById("cmpvar");var html='';
+ CUTS.forEach(function(cut){html+='<div class="g"><div style="display:flex;gap:10px;align-items:flex-end">'
+  +svg(cut,"ff","84px")+svg(cut,"ffe","84px")+'</div><div class="t">'+cut+'</div></div>';});
+ el.innerHTML=html;})();
+// section 2b: all five in one cut
+function renderRow(cut){var el=document.getElementById("cmprow");var html='';
+ KEYS.forEach(function(k){html+='<div class="g">'+svg(cut,k,"96px")+'<div class="t">'+LAB[k]+'</div></div>';});
+ el.innerHTML=html;}
+renderRow("Klar");
+document.querySelectorAll("#rowsw button").forEach(function(b){b.onclick=function(){
+ document.querySelectorAll("#rowsw button").forEach(function(x){x.classList.remove("on");});b.classList.add("on");renderRow(b.dataset.w);};});
+// section 3: flow
+var cur="Klar";
+function renderFlow(){document.getElementById("sample").style.fontFamily=FAM[cur];
+ document.querySelectorAll("#sample .lig").forEach(function(s){s.innerHTML=svg(cur,s.dataset.l,"1em");});}
+document.querySelectorAll("#flowsw button").forEach(function(b){b.onclick=function(){
+ document.querySelectorAll("#flowsw button").forEach(function(x){x.classList.remove("on");});b.classList.add("on");cur=b.dataset.w;renderFlow();};});
+var sz=document.getElementById("sz");sz.oninput=function(){document.getElementById("sample").style.fontSize=sz.value+"px";document.getElementById("vs").textContent=sz.value;};
+document.fonts&&document.fonts.ready.then(renderFlow);renderFlow();
 </script></body></html>"""
-HTML = HTML.replace("__BODY__", BODY).replace("__DATA__", json.dumps(DATA))
-open("/home/user/goeloggen/ligvorschau.html","w").write(HTML)
-print("wrote ligvorschau.html — variable from real masters (Leise+Laut)")
-print("klar_off:", {k:round(v,1) for k,v in klar_off.items()})
-print("advances Leise:", {k: DATA[k]["265"]["adv"] for k in KEYS})
+HTML=HTML.replace("__BODY__",BODY).replace("__DATA__",json.dumps(DATA)).replace("__KEYS__",json.dumps(KEYS)).replace("__LAB__",json.dumps(LABELS))
+open(os.path.join(REPO,"ligvorschau.html"),"w").write(HTML)
+print("wrote ligvorschau.html — Werkschau")
+print("Laut advances:", {k:DATA["Laut"][k]["w"] for k in KEYS})
+print("klar_tuck:", {k:round(v,1) for k,v in klar_tuck.items()})
