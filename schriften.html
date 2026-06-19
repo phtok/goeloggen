@@ -99,6 +99,13 @@
   .btn.primary{background:var(--gold);border-color:var(--gold);color:#3a2d10}
   .btn.primary:hover{background:#c59f56}
 
+  .webgrid{display:grid;grid-template-columns:1fr;gap:18px;align-items:start}
+  @media(min-width:820px){.webgrid{grid-template-columns:1.6fr 1fr}}
+  pre.code{position:relative;margin:0;background:#1f2428;color:#e8eef2;border-radius:14px;padding:18px 18px;overflow:auto;
+    font:12.5px/1.55 ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line)}
+  .copybtn{position:absolute;top:11px;right:11px;font:inherit;font-size:11.5px;border:1px solid #3a4148;background:#2b3137;color:#e8eef2;border-radius:8px;padding:5px 10px;cursor:pointer}
+  .copybtn:hover{background:#343b42}
+  .webaside{font-size:14.5px;line-height:1.6}
   footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--muted);font-size:12.5px}
   .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
   .frow strong{color:var(--ink);font-weight:400}
@@ -112,7 +119,7 @@
   </a>
   <nav class="top">
     <a href="#variabel">Variabel</a><a href="#schnitte">Schnitte</a>
-    <a href="#icons">Icons</a><a href="typografie.html">Typografie</a><a href="vorschau.html">Neu</a><a href="#download">Download</a>
+    <a href="#icons">Icons</a><a href="#web">Im&nbsp;Web</a><a href="typografie.html">Typografie</a><a href="vorschau.html">Neu</a><a href="#download">Download</a>
   </nav>
 </div></header>
 
@@ -166,6 +173,28 @@
     <div class="igrid" id="igrid"></div>
   </div></section>
 
+  <section id="web"><div class="wrap">
+    <div class="shead"><h2>Im Web einbinden.</h2>
+      <p>Eine Datei, alle fünf Schnitte – der Variable Font ist nur 66&nbsp;KB. Den <code>@font-face</code>-Block kopieren, fertig.</p></div>
+    <div class="webgrid">
+      <pre class="code"><button class="copybtn" id="copyff">kopieren</button><code id="ffcode">@font-face{
+  font-family:"Goetheanum";
+  src:url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.4.1.woff2") format("woff2"),
+      url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.4.1.woff") format("woff");
+  font-weight:190 725; font-style:normal; font-display:swap;
+}
+/* Verwendung */
+body{ font-family:"Goetheanum", system-ui, sans-serif; }
+.leise{ font-weight:265 } .klar{ font-weight:440 } .laut{ font-weight:680 }
+.frei{ font-variation-settings:"wght" 520 }  /* stufenlos */</code></pre>
+      <div class="webaside">
+        <p style="margin:0 0 12px">Schnitte über die Achse: <b>Flüstern 190 · Leise 265 · Klar 440 · Laut 680 · Schreien 725</b> – dazwischen alles stufenlos.</p>
+        <p style="margin:0 0 16px;font-size:13px;color:var(--muted)">Lädt cross-origin von GitHub Pages. Für volle Kontrolle die Dateien aus dem Webfont-Ordner selbst hosten und die URLs umbiegen.</p>
+        <a class="btn primary" href="schrift-webfont.html">Demo &amp; Code-Schnipsel</a>
+      </div>
+    </div>
+  </div></section>
+
   <section id="download"><div class="wrap">
     <div class="shead"><h2>Download.</h2>
       <p>OTF zum Installieren, Webfonts fürs Web, Icons einzeln oder als Set.</p></div>
@@ -202,6 +231,15 @@
     function nm(w){return w<228?'Flüstern':w<353?'Leise':w<560?'Klar':w<703?'Laut':'Schreien';}
     function u(){var w=+s.value;sm.style.fontVariationSettings='"wght" '+w;v.textContent=w;n.textContent=nm(w);}
     s.addEventListener('input',u);u();
+  })();
+
+  (function(){
+    var b=document.getElementById('copyff'); if(!b) return;
+    b.addEventListener('click',function(){
+      var t=document.getElementById('ffcode').innerText;
+      if(navigator.clipboard) navigator.clipboard.writeText(t);
+      var o=b.textContent; b.textContent='kopiert ✓'; setTimeout(function(){b.textContent=o;},1200);
+    });
   })();
 
   (function(){
