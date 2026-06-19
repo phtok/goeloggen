@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Goetheanum Schrift — als Webfont einbinden</title>
+<style>
+/* === Goetheanum Variable Font einbinden === */
+@font-face{
+  font-family:"Goetheanum";
+  src:url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.4.1.woff2") format("woff2"),
+      url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.4.1.woff") format("woff");
+  font-weight:190 725;font-style:normal;font-display:swap;
+}
+:root{--bg:#faf8f4;--ink:#23272b;--mut:#737a80;--line:rgba(20,24,28,.12)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:30px 22px 80px}
+h1{font-size:24px;margin:0 0 4px}
+h2{font-size:17px;margin:36px 0 12px;border-top:1px solid var(--line);padding-top:22px}
+.lead{color:var(--mut);font-size:15px;margin:4px 0 6px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:0 0 14px}
+.goe{font-family:"Goetheanum",system-ui,sans-serif;color:var(--ink)}
+.big{font-size:58px;line-height:1.2;margin:0}
+.row{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:baseline;margin:0}
+.row .s{font-family:"Goetheanum";font-size:40px;line-height:1.5}
+.tag{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,monospace}
+.ctl{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ctl input[type=range]{flex:1;min-width:220px}
+.ctl b{font-variant-numeric:tabular-nums}
+pre{position:relative;background:#1f2428;color:#e8eef2;border-radius:12px;padding:16px 16px;overflow:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;margin:0}
+pre .k{color:#9ecbff}pre .s{color:#c3e88d}pre .c{color:#7f868d}
+.copy{position:absolute;top:10px;right:10px;font:inherit;font-size:12px;border:1px solid #3a4148;background:#2b3137;color:#e8eef2;border-radius:8px;padding:5px 10px;cursor:pointer}
+.copy:hover{background:#343b42}
+.note{color:var(--mut);font-size:14px;margin:10px 0 0}
+.note code,p code{background:#eee7da;border-radius:5px;padding:1px 6px;font:12.5px ui-monospace,Menlo,monospace}
+.two{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:760px){.two{grid-template-columns:1fr 1fr}}
+.swatch{display:flex;flex-direction:column;gap:4px}
+.swatch .s{font-family:"Goetheanum";font-size:34px}
+</style></head>
+<body><div class="wrap">
+
+<h1 class="goe" style="font-weight:600">Goetheanum Schrift — als Webfont</h1>
+<p class="lead">Fertige Einbindung mit <code>@font-face</code>. Diese Seite lädt die Schrift selbst über die unten gezeigten Zeilen — was du siehst, ist die echte Webfont.</p>
+
+<div class="card">
+  <p class="big goe" id="hero" style="font-variation-settings:'wght' 440">Auffällige, fließende Schriftzüge</p>
+  <div class="ctl">
+    <label class="tag">wght <b id="wv">440</b></label>
+    <input type="range" id="w" min="190" max="725" value="440">
+  </div>
+</div>
+
+<h2>Die fünf Schnitte (Variable Font)</h2>
+<div class="card">
+  <div class="row">
+    <span class="s" style="font-variation-settings:'wght' 190">Flüstern</span><span class="tag">190</span>
+    <span class="s" style="font-variation-settings:'wght' 265">Leise</span><span class="tag">265</span>
+    <span class="s" style="font-variation-settings:'wght' 440">Klar</span><span class="tag">440</span>
+    <span class="s" style="font-variation-settings:'wght' 680">Laut</span><span class="tag">680</span>
+    <span class="s" style="font-variation-settings:'wght' 725">Schreien</span><span class="tag">725</span>
+  </div>
+</div>
+
+<h2>1 · Variable Font einbinden <span class="tag">empfohlen — eine Datei, 66 KB, alle Schnitte</span></h2>
+<div class="card">
+<pre><button class="copy" data-t="v">kopieren</button><code id="code-v"><span class="k">@font-face</span> {
+  <span class="k">font-family</span>: <span class="s">"Goetheanum"</span>;
+  <span class="k">src</span>: <span class="k">url</span>(<span class="s">"https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.4.1.woff2"</span>) <span class="k">format</span>(<span class="s">"woff2"</span>),
+       <span class="k">url</span>(<span class="s">"https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.4.1.woff"</span>) <span class="k">format</span>(<span class="s">"woff"</span>);
+  <span class="k">font-weight</span>: 190 725;     <span class="c">/* variable Gewichtsachse */</span>
+  <span class="k">font-style</span>: normal;
+  <span class="k">font-display</span>: swap;
+}
+
+<span class="c">/* Verwendung */</span>
+<span class="k">body</span> { <span class="k">font-family</span>: <span class="s">"Goetheanum"</span>, system-ui, sans-serif; }
+.leise { <span class="k">font-weight</span>: 265; }
+.klar  { <span class="k">font-weight</span>: 440; }   <span class="c">/* Standard */</span>
+.laut  { <span class="k">font-weight</span>: 680; }
+.frei  { <span class="k">font-variation-settings</span>: <span class="s">"wght"</span> 520; }  <span class="c">/* stufenlos */</span></code></pre>
+<p class="note">Schnitte: <b>Flüstern 190 · Leise 265 · Klar 440 · Laut 680 · Schreien 725</b>. Dazwischen alles stufenlos über <code>font-variation-settings:"wght" …</code>.</p>
+</div>
+
+<h2>2 · Einzelne Schnitte (statisch)</h2>
+<div class="card">
+<pre><button class="copy" data-t="s">kopieren</button><code id="code-s"><span class="k">@font-face</span>{<span class="k">font-family</span>:<span class="s">"Goetheanum Klar"</span>;
+  <span class="k">src</span>:<span class="k">url</span>(<span class="s">"https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Klar.woff2"</span>) <span class="k">format</span>(<span class="s">"woff2"</span>);
+  <span class="k">font-weight</span>:400;<span class="k">font-display</span>:swap}
+<span class="c">/* ebenso: …-Leise.woff2 als "Goetheanum Leise", …-Laut.woff2 als "Goetheanum Laut" */</span></code></pre>
+<p class="note">Nutzung: <code>font-family:"Goetheanum Klar"</code>. Verfügbar: <b>Leise · Klar · Laut</b>.</p>
+</div>
+
+<h2>3 · Selbst gesetzt — Probe</h2>
+<div class="card two">
+  <div class="swatch"><span class="tag">Überschrift · Klar 600</span><span class="s" style="font-variation-settings:'wght' 600">Dornach</span></div>
+  <div class="swatch"><span class="tag">Fließtext · Klar 440</span><span class="s" style="font-size:20px;font-variation-settings:'wght' 440">Die fließende Form des Wortes trägt den Gedanken.</span></div>
+  <div class="swatch"><span class="tag">Auszeichnung · Laut 680</span><span class="s" style="font-variation-settings:'wght' 680">Sauerstoffflasche</span></div>
+  <div class="swatch"><span class="tag">Leise 265</span><span class="s" style="font-variation-settings:'wght' 265">geprüft & gefällig</span></div>
+</div>
+
+<p class="note">Hosting: Diese URLs liegen auf GitHub Pages (mit <code>access-control-allow-origin: *</code>, lädt also cross-origin). Für volle Produktionskontrolle die Dateien aus <code>assets/fonts/goetheanum/Webfonts/</code> selbst hosten und die URLs umbiegen — der Code bleibt gleich.</p>
+
+</div>
+<script>
+var w=document.getElementById("w"),wv=document.getElementById("wv"),hero=document.getElementById("hero");
+w.addEventListener("input",function(){hero.style.fontVariationSettings="'wght' "+w.value;wv.textContent=w.value;});
+document.querySelectorAll(".copy").forEach(function(b){b.addEventListener("click",function(){
+  var t=document.getElementById("code-"+b.dataset.t).innerText;
+  navigator.clipboard&&navigator.clipboard.writeText(t);
+  var o=b.textContent;b.textContent="kopiert ✓";setTimeout(function(){b.textContent=o;},1200);
+});});
+</script>
+</body></html>
