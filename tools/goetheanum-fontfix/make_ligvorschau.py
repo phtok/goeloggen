@@ -51,27 +51,23 @@ def subpaths(r):
 # ---------- Klar (r0 merged, with user tuck) ----------
 KLAR_ID = {"ff":"r0-ff-standard","ffe":"r0-ff-wortende","fi":"r0-fi-weit","fl":"r0-fl","ft":"r0-ft"}
 KLAR_BASE = 859.5
+# Klar (r0 merged) carries Philipp's own composition (anlegen/verlängern/Distanz);
+# Leise (r3) and the new Laut are likewise drawn at the intended distance. We keep
+# the drawn relative positions at EVERY weight instead of imposing one tuck.
 def klar_parts(k):
     rec = fy(oldE[KLAR_ID[k]][1], KLAR_BASE)
     subs = sorted(subpaths(rec), key=minx)
     return [subs[0]] + [sum(subs[1:], [])]      # lead, trailing (as drawn)
 
-# Klar tuck offset: trailing-left minus lead-bowtip (used to compose Leise consistently)
-klar_tuck={}
-for k in KEYS:
-    lead, trail = klar_parts(k)
-    klar_tuck[k] = minx(trail) - maxx(lead)
-
-# ---------- Leise (r3 individual letters, composed with Klar tuck) ----------
+# ---------- Leise (r3 individual letters, keep Philipp's drawn distance) ----------
 LEISE_ID = {"ff":["r3-f","r3-f1"],"ffe":["r3-f2","r3-f3"],"fi":["r3-f4","r3-dotlessi"],
             "fl":["r3-f5","r3-l"],"ft":["r3-f6","r3-t"]}
 LEISE_BASE = 5359.5
 def leise_parts(k):
     lid, tid = LEISE_ID[k]
-    lead = fy(oldE[lid][1], LEISE_BASE); lead = shift(lead, -minx(lead))
-    trail = fy(oldE[tid][1], LEISE_BASE); trail = shift(trail, -minx(trail))
-    trail = shift(trail, maxx(lead) + klar_tuck[k])   # same tuck relation as Klar
-    return [lead, trail]
+    lead = fy(oldE[lid][1], LEISE_BASE); trail = fy(oldE[tid][1], LEISE_BASE)
+    off = minx(lead)                                   # keep the drawn lead→trail distance
+    return [shift(lead, -off), shift(trail, -off)]
 
 # ---------- Laut (new baukasten, user weight + tuck) ----------
 LAUT_BASE = 772.9
@@ -225,4 +221,3 @@ HTML=HTML.replace("__BODY__",BODY).replace("__DATA__",json.dumps(DATA)).replace(
 open(os.path.join(REPO,"ligvorschau.html"),"w").write(HTML)
 print("wrote ligvorschau.html — Werkschau")
 print("Laut advances:", {k:DATA["Laut"][k]["w"] for k in KEYS})
-print("klar_tuck:", {k:round(v,1) for k,v in klar_tuck.items()})
