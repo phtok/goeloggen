@@ -48,34 +48,28 @@ def build_specials(ft):
     rd,_=grec(ft,0x2013); d0=mny(rd); d1=mxy(rd); dth=d1-d0   # endash bar thickness & y
     xh=500
     out={}
+    # prime / doppelprime: the schrifteigene quoteright (raised comma) — gewichts-
+    # richtig, an der Versalhöhe, geneigt. Kurz, kein langer Strich.
+    rq, aq = grec(ft, 0x2019)
+    qx0 = mnx(rq); qx1 = mxx(rq); qw = qx1 - qx0
+    sb = stem * 0.42
+    p1 = sh(rq, sb - qx0)
+    padv = qw + 2*sb
+    out["prime"] = (0x2032, p1, int(round(padv)), int(round(sb)))
+    gap = stem * 0.55
+    dp = p1 + sh(p1, qw + gap)
+    out["doubleprime"] = (0x2033, dp, int(round(qw + gap + padv)), int(round(sb)))
     # figure dash: bar thickness=endash, width=digitW
     barw=digitW*0.62; x0=(digitW-barw)/2
     out["figuredash"]=(0x2012, rect(x0,d0,x0+barw,d1), digitW, int(x0))
-    # prime: slanted wedge, stem thick, from ~x-height to above cap
-    pw=stem*0.95; y0=xh*0.62; y1=cap+ (cap-xh)*0.18; slant=(y1-y0)*0.28
-    prime=para(0,y0,pw,y1,slant)
-    padv=pw+slant+stem*0.9
-    out["prime"]=(0x2032, sh(prime, stem*0.45), int(round(padv)), int(stem*0.45))
-    # double prime: two primes
-    gap=stem*1.25
-    dp=para(0,y0,pw,y1,slant)+sh(para(0,y0,pw,y1,slant), pw+gap)
-    dadv=pw+gap+pw+slant+stem*0.9
-    out["doubleprime"]=(0x2033, sh(dp, stem*0.45), int(round(dadv)), int(stem*0.45))
-    # zero.slash: cut 0 + diagonal slash parallelogram
+    # zero.slash: cut 0 + diagonal slash, ENDING INSIDE the zero (kein Überstand)
     z0,za=grec(ft,0x30); zx0=mnx(z0); zx1=mxx(z0); zy0=mny(z0); zy1=mxy(z0)
-    sw=stem*0.92; cxz=(zx0+zx1)/2; cyz=(zy0+zy1)/2
-    slope=1.05
-    # slash from lower-left to upper-right, overshoot top/bottom
-    yA=zy0-40; yB=zy1+40
-    xc=cxz; halfdx=(yB-yA)/2/slope*0  # vertical bar slanted
-    # build a slanted bar centered
-    bx0=cxz-sw/2 - (cyz-yA)/slope
-    sln=(yB-yA)/slope
-    slash=para(cxz-sw/2-(yB-yA)*0.30, yA, cxz+sw/2-(yB-yA)*0.30, yA, (yB-yA))
-    # rebuild simpler: parallelogram bottom (yA) to top (yB), slant right by (yB-yA)*0.34
-    sl=(yB-yA)*0.34; bw=sw
+    zh=zy1-zy0; cxz=(zx0+zx1)/2
+    yA=zy0+zh*0.13; yB=zy1-zh*0.13               # inset within the zero
+    bw=stem*0.92; sl=(yB-yA)*0.42
     bx=cxz - sl/2 - bw/2
-    slashc=[("moveTo",((bx,yA),)),("lineTo",((bx+bw,yA),)),("lineTo",((bx+bw+sl,yB),)),("lineTo",((bx+sl,yB),)),("closePath",())]
+    slashc=[("moveTo",((bx,yA),)),("lineTo",((bx+bw,yA),)),
+            ("lineTo",((bx+bw+sl,yB),)),("lineTo",((bx+sl,yB),)),("closePath",())]
     out["zeroslash"]=(None, list(z0)+slashc, za, ft["hmtx"][cmap[0x30]][1])
     # numero: cut N (cap) + superior geometric ring + underline bar
     rN,aN=grec(ft,0x4E); Nx0=mnx(rN); Nx1=mxx(rN)
