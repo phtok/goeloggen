@@ -27,10 +27,12 @@ def patch_cut(cut, src, out):
     L.inject(cut, src, tmp)
     ft = TTFont(tmp); cmap = ft.getBestCmap()
     ps = ft["name"].getDebugName(6) or ("Goetheanum-Schrift-%s" % cut)
-    # 2) specials
+    # 2) specials (Numero entfällt: im deutschen Satz gilt Nr.)
     sp = S.build_specials(ft)
     zeroname = None
     for key, (uni, recv, adv, lsb) in sp.items():
+        if key == "numero":
+            continue
         name = S.add_glyph(ft, recv, adv, lsb, uni)
         if key == "zeroslash": zeroname = name
     # 3) zero feature: 0 -> zero.slash
@@ -52,7 +54,7 @@ if __name__ == "__main__":
     from fontTools.pens.recordingPen import RecordingPen
     import cairosvg
     LINES = ["Auffällige, fließende Schriftzüge — der Stoff, das Schiff, schaffen, Auflage, Grafik, sanfte Kraft, oft geprüft.",
-             "№ 3477 · 47° 32′ 18″ · 1914‒1918 · Telefon 0761 · die schlummernde 0 (zero)"]
+             "Nr. 3477 · 47° 32′ 18″ · Strecke 1914‒1918 · die schlummernde 0 (zero) · 0,75 kg"]
     def line(path, txt, feats):
         face = hb.Face(hb.Blob.from_file_path(path)); font = hb.Font(face)
         buf = hb.Buffer(); buf.add_str(txt); buf.guess_segment_properties(); hb.shape(font, buf, feats)
