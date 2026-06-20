@@ -106,6 +106,22 @@
   .copybtn{position:absolute;top:11px;right:11px;font:inherit;font-size:11.5px;border:1px solid #3a4148;background:#2b3137;color:#e8eef2;border-radius:8px;padding:5px 10px;cursor:pointer}
   .copybtn:hover{background:#343b42}
   .webaside{font-size:14.5px;line-height:1.6}
+  .feat{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:#fff;overflow:hidden}
+  .feat summary{list-style:none;cursor:pointer;padding:15px 18px;font-size:15.5px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .feat summary::-webkit-details-marker{display:none}
+  .feat summary span{font-size:12px;color:var(--gold-deep);font-family:ui-monospace,Menlo,monospace}
+  .feat summary::after{content:"+";color:var(--muted);font-size:18px;line-height:1}
+  .feat[open] summary::after{content:"–"}
+  .feat[open] summary{border-bottom:1px solid var(--line-soft)}
+  .featbody{padding:14px 18px 20px}
+  .featbody p{color:var(--muted);font-size:13.5px;max-width:62ch;margin:0 0 12px}
+  .demo{font-size:clamp(22px,3.6vw,30px);line-height:1.5;color:var(--ink)}
+  .glyphover{margin-top:22px;border:1px solid var(--line);border-radius:12px;padding:18px;background:var(--soft)}
+  .goh{font-size:13px;color:var(--muted);margin-bottom:12px}
+  .gohrow{display:flex;flex-wrap:wrap;gap:8px}
+  .gohrow span{min-width:52px;height:52px;border:1px solid var(--line);border-radius:9px;background:#fff;
+    display:inline-flex;align-items:center;justify-content:center;font-size:26px}
+  .gohnote{font-size:12.5px;color:var(--muted);margin-top:12px;max-width:64ch}
   footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--muted);font-size:12.5px}
   .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
   .frow strong{color:var(--ink);font-weight:400}
@@ -119,7 +135,7 @@
   </a>
   <nav class="top">
     <a href="#variabel">Variabel</a><a href="#schnitte">Schnitte</a>
-    <a href="#icons">Icons</a><a href="#web">Im&nbsp;Web</a><a href="typografie.html">Typografie</a><a href="vorschau.html">Neu</a><a href="#download">Download</a>
+    <a href="#features">Features</a><a href="#icons">Icons</a><a href="#web">Im&nbsp;Web</a><a href="typografie.html">Typografie</a><a href="vorschau.html">Neu</a><a href="#download">Download</a>
   </nav>
 </div></header>
 
@@ -160,6 +176,70 @@
     <div class="glyph" style="margin-top:26px">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890 &amp; € @ %</div>
     <div class="new">
       <span>!</span><span>&quot;</span><span>$</span><span>§</span><span>Ä</span><span>Ö</span><span>Ü</span><span>ß</span><span>«&nbsp;»</span><span>‹&nbsp;›</span>
+    </div>
+  </div></section>
+
+  <section id="features"><div class="wrap">
+    <div class="shead"><h2>Neu in 2.5 &amp; Feinheiten.</h2>
+      <p>OpenType-Funktionen der Schrift – zum Aufklappen, mit lebendigem Beispiel im echten Schnitt (Klar).</p></div>
+
+    <details class="feat" open>
+      <summary>f-Ligaturen <span>liga · calt</span></summary>
+      <div class="featbody">
+        <p>ff, fi, fl, ft fließen ineinander; am <b>Wortende</b> schwingt das ff über (calt). Aus Philipps Zeichnungen, je Schnitt gewichtsrichtig.</p>
+        <div class="demo klar">schaffen · Auflage · Grafik · sanfte Kraft · der Stoff, das Schiff</div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Kapitälchen <span>smcp · c2sc</span></summary>
+      <div class="featbody">
+        <p>Echte Kapitälchen für Abkürzungen und Auszeichnung – inklusive Kapitälchen-&amp;.</p>
+        <div class="demo klar"><span style="font-feature-settings:'smcp'">goetheanum dornach</span> · <span style="font-feature-settings:'c2sc','smcp'">GmbH &amp; Co.</span></div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Kurzziffern <span>onum</span></summary>
+      <div class="featbody">
+        <p>Mediäval-/Kurzziffern für den Fließtext – mit Ober- und Unterlängen.</p>
+        <div class="demo klar"><span style="font-feature-settings:'onum'">0123456789 · im Jahr 1923</span></div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Prime &amp; Doppelprime <span>U+2032 · U+2033</span></summary>
+      <div class="featbody">
+        <p>Maßzeichen für Fuß/Zoll, Bogenminute/-sekunde, Koordinaten – das hochgestellte Komma der Schrift, geneigt. Kein Apostroph.</p>
+        <div class="demo klar">47° 32′ 18″ · 5′ 11″ · f′(x)</div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Schlummernde 0 <span>zero</span></summary>
+      <div class="featbody">
+        <p>Geschrägte Null gegen die Verwechslung mit O – als zuschaltbares Feature, die runde Null bleibt Standard.</p>
+        <div class="demo klar">0,75 kg · 0761 → <span style="font-feature-settings:'zero'">0,75 kg · 0761</span></div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Striche <span>Figure-Dash · Bindestriche</span></summary>
+      <div class="featbody">
+        <p>Figure-Dash ‒ auf Zifferbreite für Zahlenspannen; echte Bindestriche (U+2010) und weicher Trennstrich.</p>
+        <div class="demo klar">1914‒1918 · 0761‒44 33 · Schiff‑fahrt</div>
+      </div>
+    </details>
+
+    <div class="glyphover">
+      <div class="goh">Neue Zeichen im Überblick</div>
+      <div class="gohrow klar">
+        <span title="ff-Ligatur"></span>
+        <span>′</span><span>″</span><span>‒</span>
+        <span style="font-feature-settings:'zero'">0</span>
+        <span>‹&nbsp;›</span><span>«&nbsp;»</span><span>–</span><span>—</span>
+      </div>
+      <p class="gohnote">Voller Zeichensatz: Großbuchstaben, Kleinbuchstaben, Ziffern, Akzente, Währung, Satzzeichen, Kapitälchen, Kurzziffern, Ligaturen und Maßzeichen.</p>
     </div>
   </div></section>
 
