@@ -11,7 +11,7 @@ from fontTools.ttLib import TTFont
 from fontTools.otlLib import builder as ob
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
 FONTS = os.path.join(REPO, "assets/fonts/goetheanum")
-PAIRS = {("one","figuredash"): -120, ("figuredash","one"): -64}   # XAdvance on 1st glyph
+PAIRS = {("one","figuredash"): -145, ("figuredash","one"): -83}   # XAdvance on 1st glyph
 
 def kern(path):
     ft = TTFont(path); cmap = ft.getBestCmap()

@@ -17,7 +17,7 @@ def patch(path):
     ft = TTFont(path); cmap = ft.getBestCmap()
     rd,_ = grec(ft, 0x2013); d0 = min(y for c,p in rd for x,y in p); d1 = max(y for c,p in rd for x,y in p)
     _,digitW = grec(ft, 0x30)
-    barw = digitW*0.78; x0 = (digitW-barw)/2
+    barw = digitW*0.664; x0 = (digitW-barw)/2
     recv = rect(x0, d0, x0+barw, d1)
     cff = ft["CFF "].cff; td = cff[cff.fontNames[0]]
     name = cmap[0x2012]
