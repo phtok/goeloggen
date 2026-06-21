@@ -1,14 +1,20 @@
 import cairosvg, os, re
+import uharfbuzz as hb
 from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.boundsPen import BoundsPen
 from fontTools.varLib.instancer import instantiateVariableFont
-FD="assets/fonts/goetheanum/Fonts/"; VF="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.4.1.otf"
+FD="assets/fonts/goetheanum/Fonts/"; VF="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.5.otf"
 def L(p): ft=TTFont(p);return (ft,ft.getGlyphSet(),ft.getBestCmap(),ft["head"].unitsPerEm)
-K=L(FD+"Goetheanum-Schrift-v2.4.1-Klar.otf"); LA=L(FD+"Goetheanum-Schrift-v2.4.1-Laut.otf"); LE=L(FD+"Goetheanum-Schrift-v2.4.1-Leise.otf")
+KP=FD+"Goetheanum-Schrift-v2.5-Klar.otf"; LAP=FD+"Goetheanum-Schrift-v2.5-Laut.otf"; LEP=FD+"Goetheanum-Schrift-v2.5-Leise.otf"
+K=L(KP); LA=L(LAP); LE=L(LEP)
 def varL(w):
     ft=TTFont(VF); instantiateVariableFont(ft,{"wght":w},inplace=True); return (ft,ft.getGlyphSet(),ft.getBestCmap(),ft["head"].unitsPerEm)
-IC=L(FD+"Goetheanum-Icons-v2.4.1.otf")
+IC=L(FD+"Goetheanum-Icons-v2.5.otf")
+# HarfBuzz fonts for real shaping (ligatures + OT features)
+def hbfont(path):
+    blob=hb.Blob.from_file_path(path); face=hb.Face(blob); return hb.Font(face)
+HB={"Klar":hbfont(KP),"Laut":hbfont(LAP),"Leise":hbfont(LEP)}
 S=[]
 def txt(F,s,size,x,y,fill="#23272b"):
     ft,gs,cmap,upm=F; sc=size/upm; cx=x
@@ -27,6 +33,21 @@ def tw(F,string,size):
     return w
 def rtxt(F,string,size,xr,y,fill):
     txt(F,string,size,xr-tw(F,string,size),y,fill)
+def shape(F,hbf,s,size,feats):
+    # returns (glyph-draw list relative to x=0, total advance) at given size
+    ft,gs,cmap,upm=F; sc=size/upm
+    buf=hb.Buffer(); buf.add_str(s); buf.guess_segment_properties()
+    hb.shape(hbf,buf,feats); cx=0.0; out=[]
+    for inf,pos in zip(buf.glyph_infos,buf.glyph_positions):
+        gn=ft.getGlyphName(inf.codepoint); p=SVGPathPen(gs); gs[gn].draw(p); d=p.getCommands()
+        if d: out.append((cx+pos.x_offset*sc, pos.y_offset*sc, d))
+        cx+=pos.x_advance*sc
+    return out,cx
+def stxt(F,hbf,s,size,x,y,feats=None,fill="#23272b"):
+    parts,adv=shape(F,hbf,s,size,feats or {}); sc=size/(F[3])
+    for gx,gy,d in parts:
+        S.append(f'<g transform="translate({x+gx:.2f},{y-gy:.2f}) scale({sc:.5f},{-sc:.5f})"><path d="{d}" fill="{fill}"/></g>')
+    return x+adv
 def icon(slug,size,x,y):
     f=f"assets/fonts/goetheanum/Icons-Einzeldateien/svg/{slug}.svg"
     if not os.path.exists(f): return
@@ -37,7 +58,7 @@ W,H=842,595; M=48
 S.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}pt" height="{H}pt" viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="#ffffff"/>')
 # Title
 txt(LA,"Goetheanum Schriften",30,M,76,"#23272b")
-txt(K,"Hausschrift · Version 2.3 · reparierte & optimierte Fassung",10.5,M,95,"#a07a33")
+txt(K,"Hausschrift · Version 2.5 · mit Ligaturen & Sonderzeichen",10.5,M,95,"#a07a33")
 S.append(f'<line x1="{M}" y1="110" x2="{W-M}" y2="110" stroke="rgba(20,24,28,.12)"/>')
 
 # left column cards (3 statics)
@@ -74,11 +95,11 @@ txt(K,"Icons",12,RX+16,iy+26,"#23272b"); rtxt(K,"81 Piktogramme",9.5,RX+RW-16,iy
 demo=["goetheanum-badge","garderobe","wlan","treppe","wc-rollstuhl","keine-hunde","pfeil-hoch","kompass-1"]
 for i,sl in enumerate(demo):
     icon(sl,30,RX+16+i*42,iy+42)
-txt(K,"Tastatur-Belegung siehe Seite 2–4. Einzeln als SVG/PNG/PDF",9.5,RX+16,iy+ih-14,"#737a80")
+txt(K,"Tastatur-Belegung siehe Seite 3–5. Einzeln als SVG/PNG/PDF",9.5,RX+16,iy+ih-14,"#737a80")
 
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
-txt(K,"Goetheanum Schriften Version 2.4.1 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
+txt(K,"Goetheanum Schriften Version 2.5 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
 txt(K,"Reparatur & Optimierung 2026. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p1.svg","w").write("".join(S))
@@ -86,10 +107,65 @@ cairosvg.svg2pdf(url="/tmp/beipack_p1.svg",write_to="/tmp/beipack_p1.pdf")
 cairosvg.svg2png(url="/tmp/beipack_p1.svg",write_to="/tmp/beipack_p1.png",output_width=1100)
 print("page1 rendered")
 
-# splice: new page1 + original pages 2-4
+# ============================ PAGE 2 — Neu in 2.5 ============================
+S=[]
+S.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}pt" height="{H}pt" viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="#ffffff"/>')
+txt(LA,"Neu in Version 2.5",30,M,76,"#23272b")
+txt(K,"Ligaturen & Sonderzeichen · in den Schnitten Leise, Klar, Laut",10.5,M,95,"#a07a33")
+S.append(f'<line x1="{M}" y1="110" x2="{W-M}" y2="110" stroke="rgba(20,24,28,.12)"/>')
+
+# --- left: f-Ligaturen ---
+LX=M; LW=360; ly=128; lh=300
+card(LX,ly,LW,lh)
+txt(K,"f-Ligaturen",12,LX+16,ly+26,"#23272b"); rtxt(K,"liga · calt",9.5,LX+LW-16,ly+26,"#a07a33")
+# the four ligatures, large, shaped individually (liga on)
+cx=LX+18
+for lg in ["ff","fi","fl","ft"]:
+    cx=stxt(K,HB["Klar"],lg,40,cx,ly+82,{"liga":True}); cx+=22
+txt(K,"ff   fi   fl   ft — automatisch beim Tippen",9,LX+18,ly+104,"#9aa1a7")
+txt(K,"im Wort",9,LX+18,ly+140,"#737a80")
+stxt(K,HB["Klar"],"schaffen · Auflage · Grafik",21,LX+18,ly+166,{"liga":True,"calt":True})
+txt(K,"am Wortende (calt schwingt über)",9,LX+18,ly+200,"#737a80")
+stxt(K,HB["Klar"],"der Stoff, das Schiff, ein Pfiff.",21,LX+18,ly+226,{"liga":True,"calt":True})
+txt(K,"Standard-Ligaturen, automatisch aktiv. In InDesign:",9,LX+18,ly+264,"#737a80")
+txt(K,"OpenType › Ligaturen. Office setzt sie selbst.",9,LX+18,ly+278,"#737a80")
+
+# --- right: Sonderzeichen ---
+RX=M+LW+22; RW=360; ry=128; rh=300
+card(RX,ry,RW,rh)
+txt(K,"Sonderzeichen",12,RX+16,ry+26,"#23272b"); rtxt(K,"Maße · Ziffern · Striche",9.5,RX+RW-16,ry+26,"#a07a33")
+def row(yy,label,draw):
+    txt(K,label,9,RX+18,yy-14,"#9aa1a7"); draw(yy)
+row(ry+62,"Prime & Doppelprime — Fuß/Zoll, Bogenminute (kein Apostroph)",
+    lambda y: txt(K,"47° 32′ 18″  ·  5′ 11″  ·  f′(x)",19,RX+18,y,"#23272b"))
+def zline(y):
+    cx=txt(K,"0,75 kg · 0761",18,RX+18,y,"#23272b")
+    cx=txt(K,"  →  ",13,cx,y,"#a07a33")
+    stxt(K,HB["Klar"],"0,75 kg · 0761",18,cx,y,{"zero":True},"#23272b")
+row(ry+114,"Schlummernde 0 (zero) — gegen Verwechslung mit O",zline)
+row(ry+166,"Figure-Dash ‒ auf Zifferbreite, für Zahlenspannen",
+    lambda y: txt(K,"1914‒1918  ·  0761‒44 33",18,RX+18,y,"#23272b"))
+row(ry+218,"Kapitälchen (smcp / c2sc)",
+    lambda y: stxt(K,HB["Klar"],"Goetheanum Dornach",18,RX+18,y,{"smcp":True},"#23272b"))
+row(ry+262,"Kurzziffern (onum) — Mediävalziffern im Fließtext",
+    lambda y: stxt(K,HB["Klar"],"0123456789 · im Jahr 1923",18,RX+18,y,{"onum":True},"#23272b"))
+
+# footer
+S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
+txt(K,"Aktivierung: InDesign › Bedienfeld OpenType (Kapitälchen, Schrägziffern, Brüche …). Ligaturen sind überall Standard.",9,M,557,"#737a80")
+txt(K,"Numero-Zeichen bewusst weggelassen — im deutschen Satz gilt „Nr.“. Variable Font: Ligaturen folgen.",9,M,570,"#737a80")
+S.append("</svg>")
+open("/tmp/beipack_p2.svg","w").write("".join(S))
+cairosvg.svg2pdf(url="/tmp/beipack_p2.svg",write_to="/tmp/beipack_p2.pdf")
+cairosvg.svg2png(url="/tmp/beipack_p2.svg",write_to="/tmp/beipack_p2.png",output_width=1100)
+print("page2 rendered")
+
+# splice: new page1 + new page2 + pristine icon pages (3 Seiten, idempotente Quelle)
 from pypdf import PdfReader, PdfWriter
-new=PdfReader("/tmp/beipack_p1.pdf"); orig=PdfReader("assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf")
-w=PdfWriter(); w.add_page(new.pages[0])
-for i in (1,2,3): w.add_page(orig.pages[i])
-with open("/tmp/Beipackzettel-neu.pdf","wb") as f: w.write(f)
-print("merged ->",len(PdfReader('/tmp/Beipackzettel-neu.pdf').pages),"Seiten")
+p1=PdfReader("/tmp/beipack_p1.pdf"); p2=PdfReader("/tmp/beipack_p2.pdf")
+icons=PdfReader("tools/goetheanum-fontfix/beipack_icon_pages.pdf")
+w=PdfWriter(); w.add_page(p1.pages[0]); w.add_page(p2.pages[0])
+for pg in icons.pages: w.add_page(pg)
+out="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf"
+with open(out,"wb") as f: w.write(f)
+print("merged ->",len(PdfReader(out).pages),"Seiten ->",out)
