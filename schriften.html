@@ -7,11 +7,11 @@
 <meta name="description" content="Goetheanum Schriften 2.3 – Leise, Klar, Laut, Variabel und Icons. Repariert, vervollständigt und optimiert." />
 <meta name="robots" content="noindex" />
 <style>
-  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
-  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
-  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
-  @font-face{font-family:"G Variabel";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.4.1.woff2") format("woff2");font-weight:190 725;font-display:swap}
-  @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.4.1.woff2") format("woff2");font-display:block}
+  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Variabel";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.5.woff2") format("woff2");font-weight:190 725;font-display:swap}
+  @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.5.woff2") format("woff2");font-display:block}
 
   :root{
     --ink:#23272b; --muted:#737a80; --line:rgba(20,24,28,.10); --line-soft:rgba(20,24,28,.055);
@@ -106,6 +106,22 @@
   .copybtn{position:absolute;top:11px;right:11px;font:inherit;font-size:11.5px;border:1px solid #3a4148;background:#2b3137;color:#e8eef2;border-radius:8px;padding:5px 10px;cursor:pointer}
   .copybtn:hover{background:#343b42}
   .webaside{font-size:14.5px;line-height:1.6}
+  .feat{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:#fff;overflow:hidden}
+  .feat summary{list-style:none;cursor:pointer;padding:15px 18px;font-size:15.5px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .feat summary::-webkit-details-marker{display:none}
+  .feat summary span{font-size:12px;color:var(--gold-deep);font-family:ui-monospace,Menlo,monospace}
+  .feat summary::after{content:"+";color:var(--muted);font-size:18px;line-height:1}
+  .feat[open] summary::after{content:"–"}
+  .feat[open] summary{border-bottom:1px solid var(--line-soft)}
+  .featbody{padding:14px 18px 20px}
+  .featbody p{color:var(--muted);font-size:13.5px;max-width:62ch;margin:0 0 12px}
+  .demo{font-size:clamp(22px,3.6vw,30px);line-height:1.5;color:var(--ink)}
+  .glyphover{margin-top:22px;border:1px solid var(--line);border-radius:12px;padding:18px;background:var(--soft)}
+  .goh{font-size:13px;color:var(--muted);margin-bottom:12px}
+  .gohrow{display:flex;flex-wrap:wrap;gap:8px}
+  .gohrow span{min-width:52px;height:52px;border:1px solid var(--line);border-radius:9px;background:#fff;
+    display:inline-flex;align-items:center;justify-content:center;font-size:26px}
+  .gohnote{font-size:12.5px;color:var(--muted);margin-top:12px;max-width:64ch}
   footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--muted);font-size:12.5px}
   .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
   .frow strong{color:var(--ink);font-weight:400}
@@ -119,7 +135,7 @@
   </a>
   <nav class="top">
     <a href="#variabel">Variabel</a><a href="#schnitte">Schnitte</a>
-    <a href="#icons">Icons</a><a href="#web">Im&nbsp;Web</a><a href="typografie.html">Typografie</a><a href="vorschau.html">Neu</a><a href="#download">Download</a>
+    <a href="#features">Features</a><a href="#icons">Icons</a><a href="#web">Im&nbsp;Web</a><a href="typografie.html">Typografie</a><a href="vorschau.html">Neu</a><a href="#download">Download</a>
   </nav>
 </div></header>
 
@@ -163,6 +179,70 @@
     </div>
   </div></section>
 
+  <section id="features"><div class="wrap">
+    <div class="shead"><h2>Neu in 2.5 &amp; Feinheiten.</h2>
+      <p>OpenType-Funktionen der Schrift – zum Aufklappen, mit lebendigem Beispiel im echten Schnitt (Klar).</p></div>
+
+    <details class="feat" open>
+      <summary>f-Ligaturen <span>liga · calt</span></summary>
+      <div class="featbody">
+        <p>ff, fi, fl, ft fließen ineinander; am <b>Wortende</b> schwingt das ff über (calt). Aus Philipps Zeichnungen, je Schnitt gewichtsrichtig.</p>
+        <div class="demo klar">schaffen · Auflage · Grafik · sanfte Kraft · der Stoff, das Schiff</div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Kapitälchen <span>smcp · c2sc</span></summary>
+      <div class="featbody">
+        <p>Echte Kapitälchen für Abkürzungen und Auszeichnung – inklusive Kapitälchen-&amp;.</p>
+        <div class="demo klar"><span style="font-feature-settings:'smcp'">goetheanum dornach</span> · <span style="font-feature-settings:'c2sc','smcp'">GmbH &amp; Co.</span></div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Kurzziffern <span>onum</span></summary>
+      <div class="featbody">
+        <p>Mediäval-/Kurzziffern für den Fließtext – mit Ober- und Unterlängen.</p>
+        <div class="demo klar"><span style="font-feature-settings:'onum'">0123456789 · im Jahr 1923</span></div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Prime &amp; Doppelprime <span>U+2032 · U+2033</span></summary>
+      <div class="featbody">
+        <p>Maßzeichen für Fuß/Zoll, Bogenminute/-sekunde, Koordinaten – das hochgestellte Komma der Schrift, geneigt. Kein Apostroph.</p>
+        <div class="demo klar">47° 32′ 18″ · 5′ 11″ · f′(x)</div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Schlummernde 0 <span>zero</span></summary>
+      <div class="featbody">
+        <p>Geschrägte Null gegen die Verwechslung mit O – als zuschaltbares Feature, die runde Null bleibt Standard.</p>
+        <div class="demo klar">0,75 kg · 0761 → <span style="font-feature-settings:'zero'">0,75 kg · 0761</span></div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Striche <span>Figure-Dash · Bindestriche</span></summary>
+      <div class="featbody">
+        <p>Figure-Dash ‒ auf Zifferbreite für Zahlenspannen; echte Bindestriche (U+2010) und weicher Trennstrich.</p>
+        <div class="demo klar">1914‒1918 · 0761‒44 33 · Schiff‑fahrt</div>
+      </div>
+    </details>
+
+    <div class="glyphover">
+      <div class="goh">Neue Zeichen im Überblick</div>
+      <div class="gohrow klar">
+        <span title="ff-Ligatur"></span>
+        <span>′</span><span>″</span><span>‒</span>
+        <span style="font-feature-settings:'zero'">0</span>
+        <span>‹&nbsp;›</span><span>«&nbsp;»</span><span>–</span><span>—</span>
+      </div>
+      <p class="gohnote">Voller Zeichensatz: Großbuchstaben, Kleinbuchstaben, Ziffern, Akzente, Währung, Satzzeichen, Kapitälchen, Kurzziffern, Ligaturen und Maßzeichen.</p>
+    </div>
+  </div></section>
+
   <section id="icons"><div class="wrap">
     <div class="shead"><h2>Icons.</h2>
       <p>Per Tastatur gesetzt (siehe Beipackzettel). Jedes Icon einzeln als SVG, PNG und PDF.</p></div>
@@ -179,8 +259,8 @@
     <div class="webgrid">
       <pre class="code"><button class="copybtn" id="copyff">kopieren</button><code id="ffcode">@font-face{
   font-family:"Goetheanum";
-  src:url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.4.1.woff2") format("woff2"),
-      url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.4.1.woff") format("woff");
+  src:url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.5.woff2") format("woff2"),
+      url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.5.woff") format("woff");
   font-weight:190 725; font-style:normal; font-display:swap;
 }
 /* Verwendung */
@@ -200,11 +280,11 @@ body{ font-family:"Goetheanum", system-ui, sans-serif; }
       <p>OTF zum Installieren, Webfonts fürs Web, Icons einzeln oder als Set.</p></div>
     <div class="dl-cards">
       <div class="card"><h3>Komplettpaket</h3><p>Leise, Klar, Laut, Variable Font, Icons, Webfonts, Beipackzettel.</p>
-        <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Schriften-v2.4.1.zip" download>ZIP</a></div>
+        <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Schriften-v2.5.zip" download>ZIP</a></div>
       <div class="card"><h3>Icons als Set</h3><p>81 Icons als SVG, PNG und PDF in einem Archiv.</p>
-        <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Icons-v2.4.1-Einzeldateien.zip" download>Icon-ZIP</a></div>
+        <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Icons-v2.5-Einzeldateien.zip" download>Icon-ZIP</a></div>
       <div class="card"><h3>Variable Font</h3><p>Eine Datei, Achse 190–725.</p>
-        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.4.1.otf" download>OTF</a></div>
+        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.5.otf" download>OTF</a></div>
       <div class="card"><h3>Beipackzettel</h3><p>Übersicht &amp; Tastatur-Belegung der Icons.</p>
         <a class="btn" href="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf" download>PDF</a></div>
     </div>

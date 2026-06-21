@@ -3,7 +3,7 @@
 #   (1) jede Ligatur einzeln, je Schnitt
 #   (2) Varianten (ff wortintern vs ff Wortende) + Gewichtsvergleich
 #   (3) im Fließtext, Brottext im passenden statischen Schnitt (gewichtsgleich)
-# Sources: Laut = neu gezeichneter Baukasten (korrektes v2.4.1-Gewicht + Tuck),
+# Sources: Laut = neu gezeichneter Baukasten (korrektes v2.5-Gewicht + Tuck),
 #          Klar = zusammengeführte r0-Zeichnung, Leise = Einzelbuchstaben r3.
 import os, sys, json, glob
 import xml.etree.ElementTree as ET
@@ -88,7 +88,7 @@ def laut_parts(k): return laut_raw[k]
 
 # ---------- assemble, normalize, advance ----------
 CUTS = {"Leise": leise_parts, "Klar": klar_parts, "Laut": laut_parts}
-CUTOTF = {n: TTFont(glob.glob(os.path.join(REPO, "assets","fonts","goetheanum","**","*v2.4.1-%s.otf"%n), recursive=True)[0]) for n in CUTS}
+CUTOTF = {n: TTFont(glob.glob(os.path.join(REPO, "assets","fonts","goetheanum","**","*v2.5-%s.otf"%n), recursive=True)[0]) for n in CUTS}
 LSB = 29
 def rsb(cut, k):
     r,a = grec(CUTOTF[cut], TRAIL_UNI[k]); return a - max(x for c,p in r for x,y in p)
@@ -142,9 +142,9 @@ LABELS={"ff":"ff","ffe":"ff (Wortende)","fi":"fi","fl":"fl","ft":"ft"}
 HTML="""<!doctype html><html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Ligaturen — Werkschau</title>
 <style>
-@font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Leise.woff2") format("woff2");font-display:swap}
-@font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Klar.woff2") format("woff2");font-display:swap}
-@font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.4.1-Laut.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Leise.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Klar.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Laut.woff2") format("woff2");font-display:swap}
 body{margin:0;background:#faf8f4;color:#23272b;font:15px/1.55 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
 .wrap{max-width:1040px;margin:0 auto;padding:26px 22px 80px}
 h1{font-size:23px;margin:0 0 4px}h2{font-size:17px;margin:34px 0 12px;border-top:1px solid rgba(20,24,28,.12);padding-top:20px}
@@ -167,7 +167,7 @@ h1{font-size:23px;margin:0 0 4px}h2{font-size:17px;margin:34px 0 12px;border-top
 input[type=range]{width:100%}
 </style></head><body><div class="wrap">
 <h1>f-Ligaturen — Werkschau</h1>
-<div class="hint">Alle fünf Ligaturen, wie sie geschnitten werden: <b>ff</b> (wortintern), <b>ff am Wortende</b> (gestreckt), <b>fi</b>, <b>fl</b>, <b>ft</b>. Leise/Klar/Laut sind deine Zeichnungen; Laut neu am korrekten v2.4.1-Gewicht. Brottext im passenden statischen Schnitt.</div>
+<div class="hint">Alle fünf Ligaturen, wie sie geschnitten werden: <b>ff</b> (wortintern), <b>ff am Wortende</b> (gestreckt), <b>fi</b>, <b>fl</b>, <b>ft</b>. Leise/Klar/Laut sind deine Zeichnungen; Laut neu am korrekten v2.5-Gewicht. Brottext im passenden statischen Schnitt.</div>
 
 <h2>1 · Jede Ligatur einzeln, je Schnitt</h2>
 <div class="card"><div class="solo" id="solo"></div></div>
