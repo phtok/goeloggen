@@ -59,8 +59,9 @@ def build_specials(ft):
     gap = stem * 0.55
     dp = p1 + sh(p1, qw + gap)
     out["doubleprime"] = (0x2033, dp, int(round(qw + gap + padv)), int(round(sb)))
-    # figure dash: bar thickness=endash, width=digitW
-    barw=digitW*0.62; x0=(digitW-barw)/2
+    # figure dash: bar thickness=endash, width=digitW; Seitenrand ~ En-Dash (62),
+    # nicht doppelt so weit wie eine Ziffer (sonst wirkt die Lücke zu groß).
+    barw=digitW*0.78; x0=(digitW-barw)/2
     out["figuredash"]=(0x2012, rect(x0,d0,x0+barw,d1), digitW, int(x0))
     # zero.slash: cut 0 + diagonal slash, ENDING INSIDE the zero (kein Überstand)
     z0,za=grec(ft,0x30); zx0=mnx(z0); zx1=mxx(z0); zy0=mny(z0); zy1=mxy(z0)

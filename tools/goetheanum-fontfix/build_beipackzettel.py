@@ -78,23 +78,23 @@ for nm,F,sample,role,off in cards:
 
 # right column: Variable + Icons
 RX=M+LW+22; RW=360
-# Variable card
-vy=128; vh=200
+# Variable card — größer, mehr Luft zwischen den Schnitten
+vy=128; vh=250
 card(RX,vy,RW,vh)
 txt(K,"Variable Font",12,RX+16,vy+26,"#23272b"); rtxt(K,"Achse 190–725",9.5,RX+RW-16,vy+26,"#a07a33")
 for i,(w,lab) in enumerate([(190,"Flüstern"),(280,"Leise"),(450,"Klar"),(600,"Laut"),(725,"Schreien")]):
-    yy=vy+58+i*27
+    yy=vy+68+i*33
     txt(varL(w),"Goetheanum flexibel",16,RX+16,yy,"#23272b")
     rtxt(K,lab,8.5,RX+RW-16,yy,"#9aa1a7")
 txt(K,"Stufenlos. Die Extreme Flüstern & Schreien nur hier –",9.5,RX+16,vy+vh-22,"#737a80")
 txt(K,"der Grafik vorbehalten. Nur für Profis.",9.5,RX+16,vy+vh-9,"#737a80")
-# Icons card
-iy=vy+vh+12; ih=118
+# Icons card — unten bündig mit der Leise-Box (y=506)
+iy=vy+vh+12; ih=116
 card(RX,iy,RW,ih)
 txt(K,"Icons",12,RX+16,iy+26,"#23272b"); rtxt(K,"81 Piktogramme",9.5,RX+RW-16,iy+26,"#a07a33")
 demo=["goetheanum-badge","garderobe","wlan","treppe","wc-rollstuhl","keine-hunde","pfeil-hoch","kompass-1"]
 for i,sl in enumerate(demo):
-    icon(sl,30,RX+16+i*42,iy+42)
+    icon(sl,30,RX+16+i*42,iy+44)
 txt(K,"Tastatur-Belegung siehe Seite 3–5. Einzeln als SVG/PNG/PDF",9.5,RX+16,iy+ih-14,"#737a80")
 
 # footer
@@ -147,7 +147,7 @@ row(ry+166,"Figure-Dash ‒ auf Zifferbreite, für Zahlenspannen",
     lambda y: txt(K,"1914‒1918  ·  0761‒44 33",18,RX+18,y,"#23272b"))
 row(ry+218,"Kapitälchen (smcp / c2sc)",
     lambda y: stxt(K,HB["Klar"],"Goetheanum Dornach",18,RX+18,y,{"smcp":True},"#23272b"))
-row(ry+262,"Kurzziffern (onum) — Mediävalziffern im Fließtext",
+row(ry+270,"Kurzziffern (onum) — Mediävalziffern im Fließtext",
     lambda y: stxt(K,HB["Klar"],"0123456789 · im Jahr 1923",18,RX+18,y,{"onum":True},"#23272b"))
 
 # footer
