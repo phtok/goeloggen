@@ -58,7 +58,7 @@ W,H=842,595; M=48
 S.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}pt" height="{H}pt" viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="#ffffff"/>')
 # Title
 txt(LA,"Goetheanum Schriften",30,M,76,"#23272b")
-txt(K,"Hausschrift · Version 2.5 · mit Ligaturen & Sonderzeichen",10.5,M,95,"#a07a33")
+txt(K,"Die Hausschrift der Goetheanum Kommunikation",10.5,M,95,"#a07a33")
 S.append(f'<line x1="{M}" y1="110" x2="{W-M}" y2="110" stroke="rgba(20,24,28,.12)"/>')
 
 # left column cards (3 statics)
@@ -86,8 +86,7 @@ for i,(w,lab) in enumerate([(190,"Flüstern"),(280,"Leise"),(450,"Klar"),(600,"L
     yy=vy+68+i*33
     txt(varL(w),"Goetheanum flexibel",16,RX+16,yy,"#23272b")
     rtxt(K,lab,8.5,RX+RW-16,yy,"#9aa1a7")
-txt(K,"Stufenlos. Die Extreme Flüstern & Schreien nur hier –",9.5,RX+16,vy+vh-22,"#737a80")
-txt(K,"der Grafik vorbehalten. Nur für Profis.",9.5,RX+16,vy+vh-9,"#737a80")
+txt(K,"Stufenlos um die Extreme Flüstern und Schreien ergänzt.",9.5,RX+16,vy+vh-14,"#737a80")
 # Icons card — unten bündig mit der Leise-Box (y=506)
 iy=vy+vh+12; ih=116
 card(RX,iy,RW,ih)
@@ -100,7 +99,7 @@ txt(K,"Tastatur-Belegung siehe Seite 3–5. Einzeln als SVG/PNG/PDF",9.5,RX+16,i
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
 txt(K,"Goetheanum Schriften Version 2.5 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
-txt(K,"Reparatur & Optimierung 2026. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
+txt(K,"Ausbau & Optimierung 2026 durch Philipp Tok. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p1.svg","w").write("".join(S))
 cairosvg.svg2pdf(url="/tmp/beipack_p1.svg",write_to="/tmp/beipack_p1.pdf")
@@ -110,8 +109,8 @@ print("page1 rendered")
 # ============================ PAGE 2 — Neu in 2.5 ============================
 S=[]
 S.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}pt" height="{H}pt" viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="#ffffff"/>')
-txt(LA,"Neu in Version 2.5",30,M,76,"#23272b")
-txt(K,"Ligaturen & Sonderzeichen · in den Schnitten Leise, Klar, Laut",10.5,M,95,"#a07a33")
+txt(LA,"Ligaturen & Sonderzeichen",30,M,76,"#23272b")
+txt(K,"In den Schnitten Leise, Klar und Laut",10.5,M,95,"#a07a33")
 S.append(f'<line x1="{M}" y1="110" x2="{W-M}" y2="110" stroke="rgba(20,24,28,.12)"/>')
 
 # --- left: f-Ligaturen ---
@@ -144,7 +143,7 @@ def zline(y):
     stxt(K,HB["Klar"],"0,75 kg · 0761",18,cx,y,{"zero":True},"#23272b")
 row(ry+114,"Schlummernde 0 (zero) — gegen Verwechslung mit O",zline)
 row(ry+166,"Figure-Dash ‒ auf Zifferbreite, für Zahlenspannen",
-    lambda y: txt(K,"1914‒1918  ·  0761‒44 33",18,RX+18,y,"#23272b"))
+    lambda y: stxt(K,HB["Klar"],"1914‒1918 · 0761‒44 33",18,RX+18,y,{},"#23272b"))
 row(ry+218,"Kapitälchen (smcp / c2sc)",
     lambda y: stxt(K,HB["Klar"],"Goetheanum Dornach",18,RX+18,y,{"smcp":True},"#23272b"))
 row(ry+270,"Kurzziffern (onum) — Mediävalziffern im Fließtext",
@@ -153,7 +152,7 @@ row(ry+270,"Kurzziffern (onum) — Mediävalziffern im Fließtext",
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
 txt(K,"Aktivierung: InDesign › Bedienfeld OpenType (Kapitälchen, Schrägziffern, Brüche …). Ligaturen sind überall Standard.",9,M,557,"#737a80")
-txt(K,"Numero-Zeichen bewusst weggelassen — im deutschen Satz gilt „Nr.“. Variable Font: Ligaturen folgen.",9,M,570,"#737a80")
+txt(K,"Numero-Zeichen bewusst weggelassen — im deutschen Satz gilt „Nr.“.",9,M,570,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p2.svg","w").write("".join(S))
 cairosvg.svg2pdf(url="/tmp/beipack_p2.svg",write_to="/tmp/beipack_p2.pdf")
