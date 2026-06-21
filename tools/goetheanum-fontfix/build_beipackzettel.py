@@ -162,7 +162,7 @@ for i,(lab,_,dr) in enumerate(strokes):
 
 # footer
 S.append(f'<line x1="{M}" y1="548" x2="{W-M}" y2="548" stroke="rgba(20,24,28,.10)"/>')
-txt(K,"Sonderzeichen über die Glyphentabelle (InDesign › Schrift › Glyphen). Ligaturen, Kapitälchen & Ziffernsätze über OpenType — Ligaturen überall Standard.",9,M,563,"#737a80")
+txt(K,"Ziffern proportional im Satz, tabellarisch (gleiche Breiten) über tnum. Sonderzeichen über die Glyphentabelle. Ligaturen & Kapitälchen über OpenType, Ligaturen überall Standard.",9,M,563,"#737a80")
 txt(K,"Numero-Zeichen bewusst weggelassen — im deutschen Satz gilt „Nr.“.",9,M,576,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p2.svg","w").write("".join(S))
