@@ -1,0 +1,25 @@
+/* Nicht-Latein-Fallback für die Goetheanum-Schriften.
+   Kyrillisch lokal gebündelt; Griechisch/Arabisch via Google Fonts (OFL) –
+   oder ebenfalls selbst hosten und die @font-face entsprechend umstellen. */
+
+/* Kyrillisch – Titillium Web [RUS], gebündelt */
+@font-face{
+  font-family:"Titillium RUS";
+  src:url("TitilliumRUS-Regular.woff2") format("woff2");
+  font-weight:400; font-display:swap;
+  unicode-range:U+0400-04FF, U+0500-052F;   /* nur Kyrillisch */
+}
+
+/* Arabisch – Cairo (Titillium-Erweiterung), hier vom Google-Fonts-CDN.
+   Für Selbsthosting: Datei laden und src umstellen. */
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap");
+
+/* Griechisch – Source Sans 3 */
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;700&display=swap");
+
+/* Anwendung: Goetheanum zuerst, dann die Fallbacks. Der Browser greift
+   pro Zeichen auf die erste Schrift zu, die es abdeckt. */
+:root{
+  --goe-stack: "Goetheanum Klar", "Titillium RUS", "Cairo", "Source Sans 3", system-ui, sans-serif;
+}
+body{ font-family: var(--goe-stack); }
