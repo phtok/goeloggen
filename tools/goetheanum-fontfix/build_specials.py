@@ -64,11 +64,14 @@ def build_specials(ft):
     # Raum als zwei Ziffern). Die leichte „1" wird separat enger gekernt.
     barw=digitW*0.664; x0=(digitW-barw)/2
     out["figuredash"]=(0x2012, rect(x0,d0,x0+barw,d1), digitW, int(x0))
-    # zero.slash: cut 0 + diagonal slash, ENDING INSIDE the zero (kein Überstand)
+    # zero.slash: cut 0 + diagonal slash. Tips die INSIDE the black ring (not in
+    # the white counter, not poking past the outer edge) — so no negative-space
+    # wedges and no overhang. Inset 0.055 puts the flat ends below the counter,
+    # buried in the ring.
     z0,za=grec(ft,0x30); zx0=mnx(z0); zx1=mxx(z0); zy0=mny(z0); zy1=mxy(z0)
     zh=zy1-zy0; cxz=(zx0+zx1)/2
-    yA=zy0+zh*0.13; yB=zy1-zh*0.13               # inset within the zero
-    bw=stem*0.92; sl=(yB-yA)*0.42
+    yA=zy0+zh*0.055; yB=zy1-zh*0.055             # ends buried in the ring
+    bw=stem*0.80; sl=(yB-yA)*0.32
     bx=cxz - sl/2 - bw/2
     slashc=[("moveTo",((bx,yA),)),("lineTo",((bx+bw,yA),)),
             ("lineTo",((bx+bw+sl,yB),)),("lineTo",((bx+sl,yB),)),("closePath",())]
