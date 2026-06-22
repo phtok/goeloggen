@@ -120,6 +120,25 @@
   .png-opt{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);cursor:pointer}
   .png-opt input{width:16px;height:16px;accent-color:var(--gold)}
 
+  /* Anleitung: Entscheidungshilfe + Schritt-für-Schritt */
+  .choose{display:grid;gap:14px;grid-template-columns:1fr;margin-bottom:24px}
+  @media(min-width:760px){.choose{grid-template-columns:1fr 1fr}}
+  .choose .opt{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--soft)}
+  .choose .opt .who{color:var(--gold-deep);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+  .choose .opt h3{font-family:"Goetheanum";font-weight:680;font-size:17px;margin-bottom:8px}
+  .choose .opt p{font-size:13.5px;color:var(--muted);line-height:1.55}
+  .guide details{border-top:1px solid var(--line-soft);padding:14px 0}
+  .guide details:first-of-type{border-top:0;padding-top:0}
+  .guide summary{font-family:"Goetheanum";font-weight:680;font-size:16px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px}
+  .guide summary::-webkit-details-marker{display:none}
+  .guide summary .tag{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:400;font-size:12px;color:var(--muted);margin-left:auto}
+  .guide summary::after{content:"+";color:var(--muted);font-size:18px;width:1em;text-align:center}
+  .guide details[open] summary::after{content:"–"}
+  .guide ol{margin:14px 0 2px;padding-left:20px;display:grid;gap:8px}
+  .guide li{font-size:14px;line-height:1.5;color:var(--ink)}
+  .guide code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px}
+  .guide .note{font-size:13px;color:var(--muted);line-height:1.5;margin-top:6px}
+
   footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--muted);font-size:12.5px}
   .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
   .frow strong{color:var(--ink);font-weight:400}
@@ -132,6 +151,7 @@
     <span class="wm">Goetheanum</span>
   </a>
   <nav class="top">
+    <a href="#anleitung">Anleitung</a>
     <a href="../../schriften.html">Schriften</a>
     <a href="../../typografie.html">Typografie</a>
     <a href="https://grafik.goetheanum.ch/signatur">Signatur-Leitfaden</a>
@@ -241,10 +261,11 @@
           </div>
           <span class="sr-only" id="copyStatus" aria-live="polite"></span>
           <div class="hint">
-            ‹Signatur kopieren› legt die formatierte Signatur in die Zwischenablage – direkt in
-            die Signatur-Einstellung des Mailprogramms einfügbar. ‹.htm laden› ist für Outlook
-            (Windows): Datei nach <code>%APPDATA%\Microsoft\Signatures</code> legen. Für Apple
-            Mail bitte ‹Signatur kopieren› nutzen.
+            <strong style="color:var(--ink);font-weight:400">Welcher Knopf?</strong>
+            Im Normalfall ‹Signatur kopieren› und im Signatur-Editor des Mailprogramms einfügen
+            (Outlook Mac, Apple Mail, Gmail, auch Outlook Windows). ‹.htm laden› nur für
+            Outlook&nbsp;Windows. Schritt für Schritt:
+            <a href="#anleitung" style="color:var(--gold-deep);text-decoration:none">↓ So wird daraus eine Signatur</a>.
           </div>
 
           <details class="code-details">
@@ -260,6 +281,83 @@
           </details>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="anleitung">
+    <div class="shead">
+      <h2>So wird daraus eine Signatur</h2>
+      <p>Zwei Wege, ein Ergebnis. In den meisten Fällen genügt Kopieren.</p>
+    </div>
+
+    <div class="choose">
+      <div class="opt">
+        <div class="who">Normalfall</div>
+        <h3>‹Signatur kopieren›</h3>
+        <p>Für Outlook (Mac), Apple Mail, Gmail – und auch Outlook Windows. Legt die fertige,
+          formatierte Signatur in die Zwischenablage; du fügst sie im Signatur-Editor des
+          Programms ein (Strg/Cmd&nbsp;+&nbsp;V). Nichts wird verschickt, alles bleibt lokal.</p>
+      </div>
+      <div class="opt">
+        <div class="who">Nur Outlook Windows</div>
+        <h3>‹.htm laden›</h3>
+        <p>Lädt eine Datei, die du direkt in den Outlook-Signaturordner legst – nützlich, wenn
+          das Einfügen im Editor die Formatierung verliert. Für Apple Mail und Gmail ist die
+          Datei nutzlos; dort einfach kopieren.</p>
+      </div>
+    </div>
+
+    <div class="guide card">
+      <details open>
+        <summary>Outlook – Windows <span class="tag">‹.htm laden› empfohlen</span></summary>
+        <ol>
+          <li>‹.htm laden› klicken – es entsteht eine Datei wie <code>signatur-name.htm</code>.</li>
+          <li>Explorer öffnen, in die Adresszeile <code>%APPDATA%\Microsoft\Signatures</code>
+            eingeben, Enter.</li>
+          <li>Die <code>.htm</code>-Datei in diesen Ordner legen.</li>
+          <li>Outlook → Datei → Optionen → E-Mail → <em>Signaturen…</em> – die Signatur erscheint.
+            Für ‹Neue Nachrichten› und ‹Antworten/Weiterleitungen› auswählen.</li>
+        </ol>
+        <p class="note">Alternativ: ‹Signatur kopieren› und im Signatur-Editor direkt einfügen.</p>
+      </details>
+
+      <details>
+        <summary>Outlook – Mac <span class="tag">‹Signatur kopieren›</span></summary>
+        <ol>
+          <li>‹Signatur kopieren› klicken.</li>
+          <li>Outlook → Einstellungen → <em>Signaturen</em> → ‹+›.</li>
+          <li>In das Bearbeitungsfeld einfügen (Cmd&nbsp;+&nbsp;V).</li>
+          <li>Unter ‹Standardsignaturen› dem Konto für neue Mails/Antworten zuweisen.</li>
+        </ol>
+      </details>
+
+      <details>
+        <summary>Apple Mail <span class="tag">‹Signatur kopieren›</span></summary>
+        <ol>
+          <li>‹Signatur kopieren› klicken.</li>
+          <li>Mail → Einstellungen → <em>Signaturen</em> → Konto wählen → ‹+›.</li>
+          <li><strong>Wichtig:</strong> Häkchen ‹Standardschriftart immer verwenden› <em>entfernen</em> –
+            sonst geht die Formatierung verloren.</li>
+          <li>In das rechte Feld einfügen (Cmd&nbsp;+&nbsp;V).</li>
+        </ol>
+      </details>
+
+      <details>
+        <summary>Gmail – Web <span class="tag">‹Signatur kopieren›</span></summary>
+        <ol>
+          <li>‹Signatur kopieren› klicken.</li>
+          <li>Zahnrad → ‹Alle Einstellungen anzeigen› → Tab ‹Allgemein› → Abschnitt ‹Signatur›.</li>
+          <li>‹Neu erstellen›, Namen vergeben, ins Feld einfügen (Strg/Cmd&nbsp;+&nbsp;V).</li>
+          <li>Ganz unten ‹Änderungen speichern›.</li>
+        </ol>
+      </details>
+
+      <details>
+        <summary>Handy – iOS / Android <span class="tag">Hinweis</span></summary>
+        <p class="note">Mobile Mail-Apps zeigen formatierte Signaturen kaum zuverlässig.
+          Empfehlung: die <em>Kurz</em>-Variante als einfachen Text in der App-Signatur eintragen –
+          oder die Desktop-Signatur über das Konto synchronisieren lassen.</p>
+      </details>
     </div>
   </section>
 
