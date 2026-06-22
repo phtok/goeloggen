@@ -58,7 +58,7 @@ W,H=842,595; M=48
 S.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}pt" height="{H}pt" viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="#ffffff"/>')
 # Title
 txt(LA,"Goetheanum Schriften",30,M,76,"#23272b")
-txt(K,"Hausschrift · Version 2.5 · mit Ligaturen & Sonderzeichen",10.5,M,95,"#a07a33")
+txt(K,"Die Hausschrift der Goetheanum Kommunikation",10.5,M,95,"#a07a33")
 S.append(f'<line x1="{M}" y1="110" x2="{W-M}" y2="110" stroke="rgba(20,24,28,.12)"/>')
 
 # left column cards (3 statics)
@@ -78,29 +78,28 @@ for nm,F,sample,role,off in cards:
 
 # right column: Variable + Icons
 RX=M+LW+22; RW=360
-# Variable card
-vy=128; vh=200
+# Variable card — größer, mehr Luft zwischen den Schnitten
+vy=128; vh=250
 card(RX,vy,RW,vh)
 txt(K,"Variable Font",12,RX+16,vy+26,"#23272b"); rtxt(K,"Achse 190–725",9.5,RX+RW-16,vy+26,"#a07a33")
 for i,(w,lab) in enumerate([(190,"Flüstern"),(280,"Leise"),(450,"Klar"),(600,"Laut"),(725,"Schreien")]):
-    yy=vy+58+i*27
+    yy=vy+68+i*33
     txt(varL(w),"Goetheanum flexibel",16,RX+16,yy,"#23272b")
     rtxt(K,lab,8.5,RX+RW-16,yy,"#9aa1a7")
-txt(K,"Stufenlos. Die Extreme Flüstern & Schreien nur hier –",9.5,RX+16,vy+vh-22,"#737a80")
-txt(K,"der Grafik vorbehalten. Nur für Profis.",9.5,RX+16,vy+vh-9,"#737a80")
-# Icons card
-iy=vy+vh+12; ih=118
+txt(K,"Stufenlos um die Extreme Flüstern und Schreien ergänzt.",9.5,RX+16,vy+vh-14,"#737a80")
+# Icons card — unten bündig mit der Leise-Box (y=506)
+iy=vy+vh+12; ih=116
 card(RX,iy,RW,ih)
 txt(K,"Icons",12,RX+16,iy+26,"#23272b"); rtxt(K,"81 Piktogramme",9.5,RX+RW-16,iy+26,"#a07a33")
 demo=["goetheanum-badge","garderobe","wlan","treppe","wc-rollstuhl","keine-hunde","pfeil-hoch","kompass-1"]
 for i,sl in enumerate(demo):
-    icon(sl,30,RX+16+i*42,iy+42)
+    icon(sl,30,RX+16+i*42,iy+44)
 txt(K,"Tastatur-Belegung siehe Seite 3–5. Einzeln als SVG/PNG/PDF",9.5,RX+16,iy+ih-14,"#737a80")
 
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
 txt(K,"Goetheanum Schriften Version 2.5 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
-txt(K,"Reparatur & Optimierung 2026. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
+txt(K,"Ausbau & Optimierung 2026 durch Philipp Tok. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p1.svg","w").write("".join(S))
 cairosvg.svg2pdf(url="/tmp/beipack_p1.svg",write_to="/tmp/beipack_p1.pdf")
@@ -110,8 +109,8 @@ print("page1 rendered")
 # ============================ PAGE 2 — Neu in 2.5 ============================
 S=[]
 S.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}pt" height="{H}pt" viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="#ffffff"/>')
-txt(LA,"Neu in Version 2.5",30,M,76,"#23272b")
-txt(K,"Ligaturen & Sonderzeichen · in den Schnitten Leise, Klar, Laut",10.5,M,95,"#a07a33")
+txt(LA,"Ligaturen & Sonderzeichen",30,M,76,"#23272b")
+txt(K,"In den Schnitten Leise, Klar und Laut",10.5,M,95,"#a07a33")
 S.append(f'<line x1="{M}" y1="110" x2="{W-M}" y2="110" stroke="rgba(20,24,28,.12)"/>')
 
 # --- left: f-Ligaturen ---
@@ -130,30 +129,41 @@ stxt(K,HB["Klar"],"der Stoff, das Schiff, ein Pfiff.",21,LX+18,ly+226,{"liga":Tr
 txt(K,"Standard-Ligaturen, automatisch aktiv. In InDesign:",9,LX+18,ly+264,"#737a80")
 txt(K,"OpenType › Ligaturen. Office setzt sie selbst.",9,LX+18,ly+278,"#737a80")
 
-# --- right: Sonderzeichen ---
+# --- right: Sonderzeichen (4 Reihen, luftig; Label weit über der Zeile) ---
 RX=M+LW+22; RW=360; ry=128; rh=300
 card(RX,ry,RW,rh)
-txt(K,"Sonderzeichen",12,RX+16,ry+26,"#23272b"); rtxt(K,"Maße · Ziffern · Striche",9.5,RX+RW-16,ry+26,"#a07a33")
+txt(K,"Sonderzeichen",12,RX+16,ry+26,"#23272b"); rtxt(K,"Maße · Ziffern",9.5,RX+RW-16,ry+26,"#a07a33")
 def row(yy,label,draw):
-    txt(K,label,9,RX+18,yy-14,"#9aa1a7"); draw(yy)
-row(ry+62,"Prime & Doppelprime — Fuß/Zoll, Bogenminute (kein Apostroph)",
+    txt(K,label,9,RX+18,yy-22,"#9aa1a7"); draw(yy)
+row(ry+76,"Prime & Doppelprime — Fuß/Zoll, Bogenminute (kein Apostroph)",
     lambda y: txt(K,"47° 32′ 18″  ·  5′ 11″  ·  f′(x)",19,RX+18,y,"#23272b"))
 def zline(y):
     cx=txt(K,"0,75 kg · 0761",18,RX+18,y,"#23272b")
     cx=txt(K,"  →  ",13,cx,y,"#a07a33")
     stxt(K,HB["Klar"],"0,75 kg · 0761",18,cx,y,{"zero":True},"#23272b")
-row(ry+114,"Schlummernde 0 (zero) — gegen Verwechslung mit O",zline)
-row(ry+166,"Figure-Dash ‒ auf Zifferbreite, für Zahlenspannen",
-    lambda y: txt(K,"1914‒1918  ·  0761‒44 33",18,RX+18,y,"#23272b"))
-row(ry+218,"Kapitälchen (smcp / c2sc)",
+row(ry+142,"Schlummernde 0 (zero) — gegen Verwechslung mit O",zline)
+row(ry+208,"Kapitälchen (smcp / c2sc)",
     lambda y: stxt(K,HB["Klar"],"Goetheanum Dornach",18,RX+18,y,{"smcp":True},"#23272b"))
-row(ry+262,"Kurzziffern (onum) — Mediävalziffern im Fließtext",
+row(ry+274,"Kurzziffern (onum) — Mediävalziffern im Fließtext",
     lambda y: stxt(K,HB["Klar"],"0123456789 · im Jahr 1923",18,RX+18,y,{"onum":True},"#23272b"))
 
+# --- bottom: Strichvergleich (volle Breite) ---
+sy=440; sh=90
+card(M,sy,W-2*M,sh)
+txt(K,"Striche",12,M+16,sy+24,"#23272b"); rtxt(K,"vom Bindestrich bis zum Geviert",9.5,W-M-16,sy+24,"#a07a33")
+strokes=[("Bindestrich  -","blau-grün, Schiff-fahrt",lambda y,x: txt(K,"blau-grün, Schiff-fahrt",16,x,y,"#23272b")),
+         ("Halbgeviert  –","Seiten 12–18",lambda y,x: txt(K,"Seiten 12–18",16,x,y,"#23272b")),
+         ("Geviert  —","das Wort — der Gedanke",lambda y,x: txt(K,"das Wort — der Gedanke",16,x,y,"#23272b")),
+         ("Ziffernstrich  ‒","1914‒1918",lambda y,x: stxt(K,HB["Klar"],"1914‒1918",16,x,y,{},"#23272b"))]
+cw=(W-2*M)/4
+for i,(lab,_,dr) in enumerate(strokes):
+    x=M+16+i*cw
+    txt(K,lab,9,x,sy+48,"#9aa1a7"); dr(sy+74,x)
+
 # footer
-S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
-txt(K,"Aktivierung: InDesign › Bedienfeld OpenType (Kapitälchen, Schrägziffern, Brüche …). Ligaturen sind überall Standard.",9,M,557,"#737a80")
-txt(K,"Numero-Zeichen bewusst weggelassen — im deutschen Satz gilt „Nr.“. Variable Font: Ligaturen folgen.",9,M,570,"#737a80")
+S.append(f'<line x1="{M}" y1="548" x2="{W-M}" y2="548" stroke="rgba(20,24,28,.10)"/>')
+txt(K,"Ziffern proportional im Satz, tabellarisch (gleiche Breiten) über tnum. Sonderzeichen über die Glyphentabelle. Ligaturen & Kapitälchen über OpenType, Ligaturen überall Standard.",9,M,563,"#737a80")
+txt(K,"Numero-Zeichen bewusst weggelassen — im deutschen Satz gilt „Nr.“.",9,M,576,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p2.svg","w").write("".join(S))
 cairosvg.svg2pdf(url="/tmp/beipack_p2.svg",write_to="/tmp/beipack_p2.pdf")

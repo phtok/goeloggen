@@ -10,6 +10,7 @@
   @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Leise.woff2") format("woff2");font-display:swap}
   @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Klar.woff2") format("woff2");font-display:swap}
   @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Laut.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Variabel";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.5.woff2") format("woff2");font-weight:190 725;font-display:swap}
   :root{--ink:#23272b;--muted:#737a80;--line:rgba(20,24,28,.10);--line-soft:rgba(20,24,28,.055);
         --gold:#d7ab68;--gold-deep:#a07a33;--paper:#fff;--soft:#faf8f4;--maxw:880px;--bad:#b3433c;--good:#3f8f5f}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -46,6 +47,21 @@
   .tnum{font-feature-settings:"tnum" 1,"lnum" 1}
   .pnum{font-feature-settings:"pnum" 1,"lnum" 1}
   .onum{font-feature-settings:"onum" 1}
+  /* Variable stage */
+  .vstage{border:1px solid var(--line-soft);border-radius:14px;background:var(--soft);padding:24px 22px;margin:16px 0;max-width:760px}
+  .vsample{font-family:"G Variabel";font-weight:440;font-size:clamp(30px,6vw,52px);line-height:1.15;letter-spacing:.01em;
+           outline:none;text-wrap:balance;font-feature-settings:normal}
+  .vsample:focus{background:rgba(215,171,104,.08);border-radius:8px}
+  .vcontrols{display:flex;align-items:center;gap:18px 22px;flex-wrap:wrap;margin-top:20px}
+  .vcontrols input[type=range]{flex:1;min-width:200px;accent-color:var(--gold-deep);height:4px}
+  .vcontrols .readout{font-size:13.5px;color:var(--muted);white-space:nowrap}
+  .vcontrols .readout b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .vcontrols label{font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:7px;cursor:pointer;white-space:nowrap}
+  .vcontrols label input{accent-color:var(--gold-deep)}
+  .vfeat{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .vfeat button{font:inherit;font-size:12.5px;color:var(--muted);background:#fff;border:1px solid var(--line);
+                border-radius:20px;padding:4px 13px;cursor:pointer}
+  .vfeat button[aria-pressed=true]{color:var(--gold-deep);border-color:var(--gold);background:var(--soft)}
   /* tabular alignment demo */
   .align{display:inline-grid;gap:2px;border:1px solid var(--line-soft);border-radius:10px;padding:10px 16px;background:var(--soft);text-align:right;font-size:20px;min-width:160px}
   .twocol{display:flex;gap:18px;flex-wrap:wrap;align-items:start;margin-top:8px}
@@ -71,35 +87,57 @@
 <body>
 <header><div class="wrap bar">
   <a class="brand" href="https://grafik.goetheanum.ch" aria-label="Zur Grafikseite"><img src="assets/logos/am-goetheanum-dark.svg" alt="Am Goetheanum"></a>
-  <nav class="top"><a href="schriften.html">Schriften</a><a href="typografie.html">Typografie</a><a href="#ziffern">Ziffern</a><a href="#spatien">Spatien</a><a href="#handbuch">Handbuch</a></nav>
+  <nav class="top"><a href="schriften.html">Schriften</a><a href="typografie.html">Typografie</a><a href="#variabel">Variabel</a><a href="#ziffern">Ziffern</a><a href="#spatien">Spatien</a><a href="#handbuch">Handbuch</a></nav>
 </div></header>
 
 <main><div class="wrap">
   <div class="hero">
     <div class="kick">Goetheanum Schriften · Vorschau</div>
     <h1>Neuerungen in <span class="laut">v2.5</span>.</h1>
-    <p class="lede">Was die reparierte Schrift jetzt zusätzlich kann – live in der echten Schrift gesetzt: typografische Spatien, der geschützte Bindestrich und drei Ziffernsätze. Plus ein Entwurf, der noch nicht eingebaut ist.</p>
+    <p class="lede">Was die reparierte Schrift jetzt zusätzlich kann – live in der echten Schrift gesetzt: der Variable Font mit vollem Funktionsumfang, proportionale und tabellarische Ziffern, typografische Spatien und der geschützte Bindestrich.</p>
   </div>
+
+  <section id="variabel">
+    <span class="sec">Neu · Variable Font</span>
+    <h2>Ein Gewicht, stufenlos – jetzt mit allem.</h2>
+    <p>Der Variable Font trägt jetzt denselben Funktionsumfang wie die festen Schnitte: die <span class="laut">f-Ligaturen</span> – aus den originalen Zeichnungen gewichtsrichtig interpoliert –, proportionale und tabellarische Ziffern, die Maßzeichen und die schlummernde 0. Alles stufenlos von Flüstern (190) bis Schreien (725). Text anklicken und selbst schreiben.</p>
+    <div class="vstage">
+      <div class="vsample" id="vsample" contenteditable="true" spellcheck="false">schaffen · Auflage · Grafik · 1914‒1918</div>
+      <div class="vcontrols">
+        <input type="range" id="wght" min="190" max="725" value="440" step="1" aria-label="Gewicht">
+        <span class="readout">wght <b id="wval">440</b> · <span id="wname">Klar</span></span>
+        <label><input type="checkbox" id="zeroBox"> schlummernde 0 <code>zero</code></label>
+        <label><input type="checkbox" id="tnumBox"> tabellarisch <code>tnum</code></label>
+      </div>
+      <div class="vfeat" id="vfeat">
+        <button data-set="schaffen · Auflage · Grafik · 1914‒1918" aria-pressed="true">Ligaturen</button>
+        <button data-set="11.10 Uhr · 1.000 Plätze · 47° 32′ 18″">Ziffern &amp; Maße</button>
+        <button data-set="Lebendige Formen wachsen">Freier Satz</button>
+      </div>
+    </div>
+    <p class="dim">f-Ligaturen, das überschwingende Wortende-ff, Prime &amp; Doppelprime und die geschrägte 0 – live auf jedem Gewicht, in <em>einer</em> Datei.</p>
+    <div class="note">Im Web genügt <code>font-variation-settings:"wght" 440</code> (190–725). OpenType-Features wie <code>tnum</code> oder <code>zero</code> gelten gleichermaßen für den Variable Font.</div>
+  </section>
 
   <section id="ziffern">
     <span class="sec">Neu · Ziffern-Features</span>
     <h2>Drei Ziffernsätze.</h2>
-    <p>Der Grundton bleibt <span class="laut">dicktengleich</span> – jede Ziffer gleich breit, ideal für Tabellen. Neu schaltbar: proportionale Ziffern fürs Laufende (<code>pnum</code>) und kurze Ziffern auf x-Höhe (<code>onum</code>). Alles in einer Schrift, per OpenType-Feature.</p>
+    <p>Im Laufenden setzt die Schrift jetzt <span class="laut">proportionale</span> Ziffern – die schmale 1 drängelt nicht mehr, Jahres- und Geldzahlen wirken ruhiger. Für Tabellen schaltet <code>tnum</code> auf dicktengleiche Ziffern, die sauber untereinander stehen. Dazu Kurzziffern auf x-Höhe (<code>onum</code>). Alles in einer Schrift, per OpenType-Feature.</p>
     <div class="figs">
-      <div class="figcard"><div class="lab">STANDARD · dicktengleich · tnum / lnum</div>
+      <div class="figcard"><div class="lab">STANDARD · proportional · fürs Laufende</div>
+        <div class="figrow">0123456789&nbsp;&nbsp;<small>CHF 1487 · Seite 1234 · 2026</small></div></div>
+      <div class="figcard"><div class="lab">TABELLARISCH · tnum · für Tabellen</div>
         <div class="figrow tnum">0123456789&nbsp;&nbsp;<small>CHF 1487 · Seite 1234 · 2026</small></div></div>
-      <div class="figcard"><div class="lab">PROPORTIONAL · pnum</div>
-        <div class="figrow pnum">0123456789&nbsp;&nbsp;<small>CHF 1487 · Seite 1234 · 2026</small></div></div>
       <div class="figcard"><div class="lab">KURZZIFFERN · onum · gewichtskorrigiert</div>
         <div class="figrow onum">0123456789&nbsp;&nbsp;<small>CHF 1487 · Seite 1234 · 2026</small></div></div>
     </div>
-    <h3>Warum dicktengleich als Grundton?</h3>
-    <p>Damit Zahlenkolonnen ohne Tricks untereinander stehen. Links die Standard-Ziffern (tabellarisch, sie fluchten), rechts proportionale (sie fluchten nicht):</p>
+    <h3>Wann tabellarisch?</h3>
+    <p>Sobald Zahlen untereinander fluchten sollen. Links der Standard (proportional, fürs Laufende – fluchtet nicht), rechts mit <code>tnum</code> (dicktengleich, die Kolonne steht):</p>
     <div class="twocol">
+      <figure><div class="align">1487<br>23<br>1906<br>508</div><figcaption>Standard · fluchtet nicht</figcaption></figure>
       <figure><div class="align tnum">1487<br>23<br>1906<br>508</div><figcaption>tnum · fluchtet</figcaption></figure>
-      <figure><div class="align pnum">1487<br>23<br>1906<br>508</div><figcaption>pnum · fluchtet nicht</figcaption></figure>
     </div>
-    <div class="note">Im Web: <code>font-feature-settings:"pnum" 1</code> bzw. <code>"onum" 1</code>. In Office über die Schrift-Laufweite-Dialoge (OpenType-Ziffern), wo verfügbar. Standard ohne Angabe bleibt dicktengleich.</div>
+    <div class="note">Im Web: <code>font-feature-settings:"tnum" 1</code> für Tabellen, <code>"onum" 1</code> für Kurzziffern. In Office über die OpenType-Ziffern-Dialoge, wo verfügbar. Standard ohne Angabe ist proportional. Gilt für die festen Schnitte wie für den Variable Font.</div>
   </section>
 
   <section id="spatien">
@@ -140,5 +178,31 @@
   Goetheanum Schriften · Vorschau v2.5 · in der echten Schrift gesetzt ·
   <a href="schriften.html">Schriften</a> · <a href="typografie.html">Typografie</a>
 </div></footer>
+<script>
+(function(){
+  var s=document.getElementById('wght'), v=document.getElementById('vsample'),
+      wv=document.getElementById('wval'), wn=document.getElementById('wname'),
+      zb=document.getElementById('zeroBox'), tb=document.getElementById('tnumBox');
+  if(!s||!v) return;
+  function name(w){return w<=225?'Flüstern':w<=350?'Leise':w<=540?'Klar':w<=702?'Laut':'Schreien';}
+  function upd(){
+    v.style.fontVariationSettings='"wght" '+s.value;
+    wv.textContent=s.value; if(wn) wn.textContent=name(+s.value);
+    var f=[]; if(zb&&zb.checked) f.push('"zero" 1'); if(tb&&tb.checked) f.push('"tnum" 1');
+    v.style.fontFeatureSettings=f.length?f.join(','):'normal';
+  }
+  s.addEventListener('input',upd);
+  if(zb) zb.addEventListener('change',upd);
+  if(tb) tb.addEventListener('change',upd);
+  document.querySelectorAll('#vfeat button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#vfeat button').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');
+      v.textContent=b.getAttribute('data-set');
+    });
+  });
+  upd();
+})();
+</script>
 </body>
 </html>
