@@ -4,9 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Goetheanum E-Mail-Signatur</title>
-<meta name="description" content="E-Mail-Signatur-Generator – erzeugt table-basiertes HTML mit Inline-CSS nach der gemeinsamen Goetheanum-Vorlage." />
+<meta name="description" content="E-Mail-Signatur-Generator – erzeugt Outlook-robustes, table-basiertes HTML mit Inline-CSS nach der gemeinsamen Goetheanum-Vorlage." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../../assets/logos/am-goetheanum-dark.svg" />
+<script src="../../assets/data/goetheanum-orgs.js"></script>
 <style>
   /* Goetheanum Variable Font – gehostet von GitHub Pages (vgl. schriften.html#web) */
   @font-face{
@@ -19,14 +20,14 @@
   :root{
     --ink:#23272b; --muted:#737a80; --line:rgba(20,24,28,.10); --line-soft:rgba(20,24,28,.055);
     --gold:#d7ab68; --gold-deep:#a07a33; --paper:#fff; --soft:#faf8f4; --maxw:1080px;
-    /* Goetheanum-Blau fuer die Signatur selbst */
-    --sig-blue:#0061a9;
+    --bad:#b3261e;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--paper);color:var(--ink);font-family:"Goetheanum","Helvetica Neue",Arial,sans-serif;font-weight:440;
        letter-spacing:normal;font-kerning:normal;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;line-height:1.5}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
   a{color:inherit}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
   header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
   .bar{display:flex;align-items:center;justify-content:space-between;height:58px}
@@ -47,17 +48,15 @@
   .shead h2{font-family:"Goetheanum";font-weight:680;font-size:clamp(23px,3.4vw,33px);line-height:1.05}
   .shead p{color:var(--muted);font-size:14px;max-width:380px}
 
-  /* Zwei-Spalten-Arbeitsbereich */
   .work{display:grid;grid-template-columns:1fr;gap:22px;align-items:start}
   @media(min-width:880px){.work{grid-template-columns:minmax(320px,420px) 1fr}}
 
   .card{border:1px solid var(--line);border-radius:16px;padding:24px}
   .card.soft{background:var(--soft)}
 
-  /* Variante-Umschalter (Tabs-Stil) */
-  .tabs{display:flex;gap:8px;margin-bottom:22px}
+  .tabs{display:inline-flex;gap:8px;margin-bottom:22px}
   .tabs button{font:inherit;font-size:13.5px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer;transition:.15s}
-  .tabs button.on{color:var(--gold-deep);border-color:var(--gold)}
+  .tabs button[aria-pressed="true"]{color:var(--gold-deep);border-color:var(--gold)}
 
   /* Einklappbare Abschnitte (Organisation, Adresse) */
   .fold{border-top:1px solid var(--line-soft);margin-bottom:14px;padding-top:14px}
@@ -68,52 +67,51 @@
   .fold[open]>summary::after{content:"–"}
   .fold-body{display:grid;gap:14px;margin-top:14px}
 
-  /* Code-Anzeige (optional, eingeklappt) */
   .code-details{margin-top:18px}
   .code-details>summary{font-size:13px;color:var(--muted);cursor:pointer;list-style:none}
   .code-details>summary::-webkit-details-marker{display:none}
   .code-details>summary::before{content:"▸ ";color:var(--gold-deep)}
   .code-details[open]>summary::before{content:"▾ "}
 
-  /* Formular – bewusst gut lesbar: normale Strichstaerke, ruhige Sans */
   .fset{border:0;display:grid;gap:14px;margin-bottom:22px}
   .fset > legend{font-family:"Goetheanum";font-weight:680;font-size:16px;color:var(--ink);margin-bottom:4px}
   .field{display:grid;gap:6px}
   .field > .lab{font-size:13px;color:var(--muted);letter-spacing:.01em}
   .field input{
-    width:100%;
-    font-family:"Helvetica Neue",Arial,sans-serif;
+    width:100%;font-family:"Helvetica Neue",Arial,sans-serif;
     font-size:15.5px;font-weight:400;line-height:1.4;color:var(--ink);
     background:#fff;border:1px solid var(--line);border-radius:10px;
     padding:11px 13px;outline:none;transition:border-color .15s,box-shadow .15s;
   }
   .field input::placeholder{color:#aeb4b9;font-weight:400}
   .field input:focus{border-color:var(--gold-deep);box-shadow:0 0 0 3px rgba(215,171,104,.18)}
+  .field input.invalid{border-color:var(--bad);box-shadow:0 0 0 3px rgba(179,38,30,.14)}
+  .field-msg{font-size:12px;color:var(--bad);min-height:0}
   .field select{width:100%;font-family:"Helvetica Neue",Arial,sans-serif;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;outline:none;cursor:pointer}
   .field select:focus{border-color:var(--gold-deep);box-shadow:0 0 0 3px rgba(215,171,104,.18)}
 
-  .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:4px}
   .btn{display:inline-block;text-decoration:none;font:inherit;font-size:13.5px;padding:9px 15px;border-radius:9px;border:1px solid var(--line);color:var(--ink);background:#fff;text-align:center;cursor:pointer;transition:.15s}
   .btn:hover{border-color:var(--gold-deep)}
   .btn.primary{background:var(--gold);border-color:var(--gold);color:#3a2d10}
   .btn.primary:hover{background:#c59f56}
   .btn.ok{background:#3f7d46;border-color:#3f7d46;color:#fff}
+  .btn.ghost{font-size:12.5px;color:var(--muted);padding:7px 12px}
   .hint{font-size:13px;color:var(--muted);line-height:1.5;margin-top:12px}
+  .hint code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px}
 
-  /* Vorschau im weissen "Mailfenster" */
   .stage-lab{font-size:13px;color:var(--muted);margin-bottom:10px}
   .mail-stage{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 28px;box-shadow:0 10px 30px rgba(20,24,28,.06)}
   .mail-body{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#999;line-height:1.5}
   .mail-greeting{margin-bottom:14px}
   .sig-sep{color:#999;font-family:Arial,Helvetica,sans-serif;font-size:10pt;margin:6px 0 8px}
 
-  .code-wrap{position:relative;margin-top:22px}
+  .code-wrap{position:relative;margin-top:14px}
   pre.code{margin:0;background:#1f2428;color:#e8eef2;border-radius:14px;padding:18px;overflow:auto;
     font:12.5px/1.55 ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);white-space:pre-wrap;word-break:break-word;max-height:320px}
   .copybtn{position:absolute;top:11px;right:11px;font:inherit;font-size:11.5px;border:1px solid #3a4148;background:#2b3137;color:#e8eef2;border-radius:8px;padding:5px 10px;cursor:pointer}
   .copybtn:hover{background:#343b42}
 
-  /* PNG-Ausgabe (Name in Goetheanum-Schrift + Logo) */
   .png-preview{border:1px solid var(--line);border-radius:14px;padding:24px;background:var(--soft);display:flex;justify-content:center;align-items:center;min-height:120px;overflow:auto;
     background-image:linear-gradient(45deg,#eee 25%,transparent 25%),linear-gradient(-45deg,#eee 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#eee 75%),linear-gradient(-45deg,transparent 75%,#eee 75%);
     background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0}
@@ -145,29 +143,30 @@
     <div class="kick">Goetheanum Grafik</div>
     <h1>E-Mail-Signatur</h1>
     <p class="lede">
-      Eigene Angaben eintragen, fertige Signatur kopieren. Erzeugt table-basiertes HTML
-      mit Inline-CSS nach der gemeinsamen Vorlage – individuell gepflegt, einheitlich im Bild.
+      Eigene Angaben eintragen, fertige Signatur kopieren. Erzeugt Outlook-robustes,
+      table-basiertes HTML mit Inline-CSS nach der gemeinsamen Vorlage – individuell
+      gepflegt, einheitlich im Bild.
     </p>
   </div>
 
   <section>
     <div class="shead">
       <h2>Signatur erstellen</h2>
-      <p>Funktioniert in Outlook, Apple Mail und Gmail. Kein JavaScript, keine Web-Fonts.</p>
+      <p>Funktioniert in Outlook (Windows/Mac), Apple Mail und Gmail. Eingaben bleiben lokal im Browser.</p>
     </div>
 
     <div class="work">
       <!-- Formular -->
       <div class="card soft">
-        <div class="tabs" id="variant">
-          <button type="button" data-variant="long" class="on">Lang</button>
-          <button type="button" data-variant="short">Kurz (Antwort)</button>
+        <div class="tabs" id="variant" role="group" aria-label="Signatur-Variante">
+          <button type="button" data-variant="long" aria-pressed="true">Lang</button>
+          <button type="button" data-variant="short" aria-pressed="false">Kurz (Antwort)</button>
         </div>
 
         <fieldset class="fset">
           <legend>Person</legend>
           <label class="field"><span class="lab">Name</span>
-            <input type="text" id="name" placeholder="Edith Maryon" />
+            <input type="text" id="name" placeholder="Edith Maryon" autocomplete="name" />
           </label>
           <label class="field"><span class="lab">Funktion (Deutsch)</span>
             <input type="text" id="roleDe" placeholder="Sektion für Bildende Künste" />
@@ -180,10 +179,11 @@
         <fieldset class="fset">
           <legend>Kontakt</legend>
           <label class="field"><span class="lab">Telefon</span>
-            <input type="tel" id="phone" placeholder="+41 61 706 44 21" />
+            <input type="tel" id="phone" placeholder="+41 61 706 44 21" autocomplete="tel" />
           </label>
           <label class="field"><span class="lab">E-Mail</span>
-            <input type="email" id="email" placeholder="edith.maryon@goetheanum.ch" />
+            <input type="email" id="email" placeholder="edith.maryon@goetheanum.ch" autocomplete="email" aria-describedby="emailMsg" />
+            <span class="field-msg" id="emailMsg" role="alert"></span>
           </label>
           <label class="field"><span class="lab">Website</span>
             <input type="url" id="web" placeholder="www.goetheanum.org" />
@@ -216,6 +216,11 @@
             </label>
           </div>
         </details>
+
+        <div class="btnrow" style="margin-top:4px">
+          <button type="button" class="btn ghost" id="fillExample">Beispiel einfügen</button>
+          <button type="button" class="btn ghost" id="clearAll">Felder leeren</button>
+        </div>
       </div>
 
       <!-- Vorschau + Ausgabe -->
@@ -234,9 +239,12 @@
             <button type="button" class="btn primary" id="copyRich">Signatur kopieren</button>
             <button type="button" class="btn" id="download">.htm laden</button>
           </div>
+          <span class="sr-only" id="copyStatus" aria-live="polite"></span>
           <div class="hint">
-            „Signatur kopieren“ legt die formatierte Signatur in die Zwischenablage – direkt in
-            die Signatur-Einstellung des Mailprogramms einfügbar.
+            ‹Signatur kopieren› legt die formatierte Signatur in die Zwischenablage – direkt in
+            die Signatur-Einstellung des Mailprogramms einfügbar. ‹.htm laden› ist für Outlook
+            (Windows): Datei nach <code>%APPDATA%\Microsoft\Signatures</code> legen. Für Apple
+            Mail bitte ‹Signatur kopieren› nutzen.
           </div>
 
           <details class="code-details">
@@ -247,7 +255,7 @@
             </div>
             <div class="hint">
               Nur nötig, wenn das Mailprogramm kein direktes Einfügen erlaubt und stattdessen
-              den HTML-Quelltext braucht. Für die meisten reicht „Signatur kopieren“.
+              den HTML-Quelltext braucht. Für die meisten reicht ‹Signatur kopieren›.
             </div>
           </details>
         </div>
@@ -258,7 +266,7 @@
   <section id="png">
     <div class="shead">
       <h2>Als Bild</h2>
-      <p>Name in der Goetheanum-Schrift mit kleinem Logo – als PNG, z.&nbsp;B. für Folien, Profile oder Grafiken.</p>
+      <p>Alle Angaben in der Goetheanum-Schrift mit Logo-Wortmarke – als PNG, z.&nbsp;B. für Folien, Profile oder Grafiken.</p>
     </div>
 
     <div class="card">
@@ -279,9 +287,8 @@
         <button type="button" class="btn primary" id="pngDownload">PNG herunterladen</button>
       </div>
       <div class="hint">
-        Vollständige Angaben in der Goetheanum-Variabel-Schrift (Webfont) mit Logo-Wortmarke,
-        3× Auflösung für scharfe Kanten. Logoauswahl wie im Logo-Generator – im Zweifel das
-        blaue Goetheanum-Logo ohne Zusatz.
+        Gerendert in der Goetheanum-Variabel-Schrift (Webfont), 3× Auflösung für scharfe Kanten.
+        Logoauswahl wie im Logo-Generator – im Zweifel das blaue Goetheanum-Logo ohne Zusatz.
       </div>
     </div>
   </section>
@@ -293,350 +300,363 @@
 </div></footer>
 
 <script>
-  var state = { variant: "long" };
+"use strict";
 
-  var els = {
-    name: document.getElementById("name"),
-    roleDe: document.getElementById("roleDe"),
-    roleEn: document.getElementById("roleEn"),
-    org1: document.getElementById("org1"),
-    org2: document.getElementById("org2"),
-    street: document.getElementById("street"),
-    city: document.getElementById("city"),
-    country: document.getElementById("country"),
-    phone: document.getElementById("phone"),
-    email: document.getElementById("email"),
-    web: document.getElementById("web")
-  };
+/* ---------- Konstanten ---------- */
+// Markenblau: einzige Quelle ist das Org-/Logo-System (goetheanum-orgs.js).
+const BRAND_BLUE = (window.ORGS && ORGS.goetheanum && ORGS.goetheanum.color) || "#0061a9";
+// Neutrale Graustufen für den (Arial-)Signatur-Output – an einer Stelle gepflegt.
+const SIG = { name: "#1a1a1a", text: "#333333", sub: "#777777" };
 
-  // Vorbelegung = historisches Beispiel (Edith Maryon, Sektion für Bildende Künste)
-  // Telefon mit Fake-Endung, da Beispieldatensatz.
-  var defaults = {
-    name: "Edith Maryon",
-    roleDe: "Sektion für Bildende Künste",
-    roleEn: "Visual Art Section",
-    org1: "Allgemeine Anthroposophische Gesellschaft",
-    org2: "Goetheanum",
-    street: "Rüttiweg 45",
-    city: "4143 Dornach",
-    country: "Schweiz",
-    phone: "+41 61 706 44 21",
-    email: "edith.maryon@goetheanum.ch",
-    web: "www.goetheanum.org"
-  };
-  Object.keys(defaults).forEach(function (k) { els[k].value = defaults[k]; });
+const FIELDS = ["name","roleDe","roleEn","org1","org2","street","city","country","phone","email","web"];
+const STORE_KEY = "goe-signatur-v1";
 
-  var BLUE = "#0061a9"; // Goetheanum-Blau
-  var INK = "#333333";
-  var SUB = "#777777";
+const EXAMPLE = {
+  name: "Edith Maryon",
+  roleDe: "Sektion für Bildende Künste",
+  roleEn: "Visual Art Section",
+  org1: "Allgemeine Anthroposophische Gesellschaft",
+  org2: "Goetheanum",
+  street: "Rüttiweg 45",
+  city: "4143 Dornach",
+  country: "Schweiz",
+  phone: "+41 61 706 44 21",
+  email: "edith.maryon@goetheanum.ch",
+  web: "www.goetheanum.org"
+};
 
-  // Logo-Daten aus dem Logo-Generator (Schlüssel -> [Name DE, Farbe]), gruppiert via ORG_CATS.
-  var ORG_DATA={"goetheanum": ["Goetheanum", "#0061a9"], "aas": ["Allgemeine Anthroposophische Sektion", "#a24f8a"], "ps": ["Pädagogische Sektion", "#3b4881"], "ms": ["Medizinische Sektion", "#5f5599"], "nws": ["Naturwissenschaftliche Sektion", "#1e7b6e"], "lws": ["Sektion für Landwirtschaft", "#63b145"], "sbk": ["Sektion für Bildende Künste", "#d072a0"], "ssw": ["Sektion für Schöne Wissenschaften", "#5168c0"], "szw": ["Sektion für Sozialwissenschaft", "#df4164"], "js": ["Jugendsektion", "#ff675d"], "srmk": ["Sektion für Redende und Musizierende Künste", "#598ddc"], "mas": ["Mathematisch-Astronomische Sektion", "#2e54a4"], "hpise": ["Sektion für Heilpädagogik und inklusive soziale Entwicklung", "#f98a3c"], "bauadmin": ["Bau-Administration", "#b15359"], "buehne": ["Bühne", "#968250"], "dokumentation": ["Dokumentation", "#0061a9"], "empfang": ["Empfang", "#0061a9"], "kommunikation": ["Kommunikation", "#0061a9"], "studium": ["Studium", "#0061a9"], "campus": ["Campus", "#0061a9"], "archiv": ["Archiv", "#0061a9"], "personalwesen": ["Personalwesen", "#0061a9"], "kunstsammlung": ["Kunstsammlung", "#0061a9"], "finanzwesen": ["Finanzwesen", "#0061a9"], "betriebsdienst": ["Betriebsdienst", "#0061a9"], "bibliothek": ["Bibliothek", "#0061a9"], "gaertnerei": ["Gärtnerei", "#63b145"], "saaldienst": ["Saaldienst", "#0061a9"], "freiwilligenarbeit": ["Freiwilligenarbeit", "#0061a9"], "leitung": ["Leitung", "#0061a9"], "vorstand": ["Vorstand", "#0061a9"], "betriebsleitung": ["Betriebsleitung", "#0061a9"], "medienarbeit": ["Medienarbeit", "#0061a9"], "mitgliedersekretariat": ["Mitgliedersekretariat", "#0061a9"], "raumplanung": ["Raumplanung", "#0061a9"], "studio": ["Studio", "#0061a9"], "subscriptions": ["Abos · Subscriptions", "#0061a9"], "it": ["IT-Abteilung", "#0061a9"]};
-  var ORG_CATS={"allgemein": {"label": "Allgemein", "items": ["goetheanum", "buehne"]}, "sektionen": {"label": "Sektionen", "items": ["aas", "js", "mas", "ms", "nws", "ps", "sbk", "hpise", "lws", "srmk", "ssw", "szw"]}, "bereiche": {"label": "Bereiche", "items": ["bauadmin", "dokumentation", "empfang", "gaertnerei", "kommunikation", "studium"]}, "teilbereiche": {"label": "Teilbereiche", "items": ["archiv", "betriebsdienst", "betriebsleitung", "bibliothek", "campus", "finanzwesen", "freiwilligenarbeit", "it", "kunstsammlung", "leitung", "medienarbeit", "mitgliedersekretariat", "personalwesen", "raumplanung", "saaldienst", "studio", "subscriptions", "vorstand"]}};
+const state = { variant: "long" };
+const els = {};
+FIELDS.forEach(k => { els[k] = document.getElementById(k); });
 
-  // Logo-Auswahl füllen; Vorauswahl passend zum Beispiel (Bildende Künste).
-  (function fillLogoSelect() {
-    var sel = document.getElementById("pngLogo");
-    Object.keys(ORG_CATS).forEach(function (catKey) {
-      var cat = ORG_CATS[catKey];
-      var og = document.createElement("optgroup");
-      og.label = cat.label;
-      cat.items.forEach(function (key) {
-        if (!ORG_DATA[key]) return;
-        var o = document.createElement("option");
-        o.value = key;
-        o.textContent = key === "goetheanum" ? "Goetheanum (ohne Zusatz)" : ORG_DATA[key][0];
-        og.appendChild(o);
-      });
-      sel.appendChild(og);
+/* ---------- Helfer ---------- */
+function esc(s) {
+  return String(s || "")
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+const val = k => els[k].value.trim();
+const webHref = w => !w ? "" : (/^https?:\/\//i.test(w) ? w : "https://" + w);
+const telHref = p => "tel:" + String(p || "").replace(/[^\d+]/g, "");
+const isEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+
+/* ---------- Signatur-HTML (Outlook-robust: Spacer-Zellen, feste Breiten) ---------- */
+const FONT = "Arial,Helvetica,sans-serif";
+
+// Baut eine Spalte als verschachtelte Tabelle. items: {html} oder {gap:px}.
+function colTable(items) {
+  const rows = items.map(it =>
+    it.gap != null
+      ? `<tr><td height="${it.gap}" style="height:${it.gap}px;font-size:0;line-height:0;mso-line-height-rule:exactly;">&nbsp;</td></tr>`
+      : `<tr><td style="font-family:${FONT};font-size:10pt;line-height:1.45;color:${SIG.text};">${it.html}</td></tr>`
+  ).join("");
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">${rows}</table>`;
+}
+
+function phoneCell() {
+  return `<span style="color:${BRAND_BLUE};">T</span>&nbsp;&nbsp;` +
+    `<a href="${telHref(val("phone"))}" style="color:${SIG.text};text-decoration:none;">${esc(val("phone"))}</a>`;
+}
+
+function buildSignature() {
+  const name = val("name"), phone = val("phone");
+
+  if (state.variant === "short") {
+    const items = [];
+    if (name) items.push({ html: `<span style="font-size:10pt;font-weight:bold;color:${SIG.name};">${esc(name)}</span>` });
+    if (phone) items.push({ html: phoneCell() });
+    return colTable(items.length ? items : [{ html: "&nbsp;" }]);
+  }
+
+  // Linke Spalte: Person + Organisation
+  const L = [];
+  if (name) L.push({ html: `<span style="font-size:11pt;font-weight:bold;color:${SIG.name};">${esc(name)}</span>` });
+  if (val("roleDe")) L.push({ html: `<span style="color:${SIG.sub};">${esc(val("roleDe"))}</span>` });
+  if (val("roleEn")) L.push({ html: `<span style="color:${SIG.sub};">${esc(val("roleEn"))}</span>` });
+  if (val("org1") || val("org2")) {
+    L.push({ gap: 12 });
+    if (val("org1")) L.push({ html: esc(val("org1")) });
+    if (val("org2")) L.push({ html: esc(val("org2")) });
+  }
+
+  // Rechte Spalte: Adresse + Kontakt
+  const R = [];
+  if (val("street")) R.push({ html: esc(val("street")) });
+  if (val("city")) R.push({ html: esc(val("city")) });
+  if (val("country")) R.push({ html: esc(val("country")) });
+  const hasAddr = R.length > 0;
+  const contact = [];
+  if (phone) contact.push({ html: phoneCell() });
+  if (val("email")) contact.push({ html: `<a href="mailto:${esc(val("email"))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(val("email"))}</a>` });
+  if (val("web")) contact.push({ html: `<a href="${esc(webHref(val("web")))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(val("web"))}</a>` });
+  if (contact.length) {
+    if (hasAddr) R.push({ gap: 12 });
+    contact.forEach(c => R.push(c));
+  }
+
+  const LW = 300, RW = 250, PAD = 26;
+  const total = LW + RW + PAD * 2 + 2;
+  return (
+    `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="${total}" ` +
+    `style="border-collapse:collapse;font-family:${FONT};">` +
+    `<tr>` +
+    `<td width="${LW}" valign="top" style="width:${LW}px;padding:0 ${PAD}px 0 0;vertical-align:top;">${colTable(L)}</td>` +
+    `<td width="2" style="width:2px;min-width:2px;background:${BRAND_BLUE};font-size:0;line-height:0;mso-line-height-rule:exactly;">&nbsp;</td>` +
+    `<td width="${RW}" valign="top" style="width:${RW}px;padding:0 0 0 ${PAD}px;vertical-align:top;">${colTable(R)}</td>` +
+    `</tr></table>`
+  );
+}
+
+function render() {
+  const html = buildSignature();
+  document.getElementById("sigPreview").innerHTML = html;
+  document.getElementById("codeOut").textContent = html;
+}
+
+/* ---------- Persistenz + Prefill ---------- */
+function save() {
+  try {
+    const data = { variant: state.variant, logo: document.getElementById("pngLogo").value };
+    FIELDS.forEach(k => { data[k] = els[k].value; });
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+  } catch (e) { /* z. B. privater Modus – ignorieren */ }
+}
+function loadStored() {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+    if (!data) return;
+    FIELDS.forEach(k => { if (typeof data[k] === "string") els[k].value = data[k]; });
+    if (data.variant) setVariant(data.variant, false);
+    if (data.logo) state._logo = data.logo;
+  } catch (e) {}
+}
+function applyQuery() {
+  const q = new URLSearchParams(location.search);
+  FIELDS.forEach(k => { if (q.has(k)) els[k].value = q.get(k); });
+  if (q.has("variant")) setVariant(q.get("variant") === "short" ? "short" : "long", false);
+  if (q.has("logo")) state._logo = q.get("logo");
+}
+function setFields(obj) { FIELDS.forEach(k => { els[k].value = obj[k] || ""; }); }
+
+/* ---------- Variante ---------- */
+function setVariant(v, doRender) {
+  state.variant = (v === "short") ? "short" : "long";
+  document.querySelectorAll("#variant button").forEach(b => {
+    b.setAttribute("aria-pressed", b.getAttribute("data-variant") === state.variant ? "true" : "false");
+  });
+  if (doRender !== false) render();
+}
+document.getElementById("variant").addEventListener("click", e => {
+  const btn = e.target.closest("button[data-variant]");
+  if (!btn) return;
+  setVariant(btn.getAttribute("data-variant"));
+  save();
+});
+
+/* ---------- E-Mail-Validierung (sanft) ---------- */
+function validateEmail() {
+  const v = val("email"), msg = document.getElementById("emailMsg");
+  const bad = v && !isEmail(v);
+  els.email.classList.toggle("invalid", bad);
+  msg.textContent = bad ? "Bitte gültige E-Mail-Adresse prüfen." : "";
+}
+
+/* ---------- Eingaben verdrahten ---------- */
+function onInput() { render(); renderPNG(); validateEmail(); save(); }
+FIELDS.forEach(k => els[k].addEventListener("input", onInput));
+
+document.getElementById("fillExample").addEventListener("click", () => {
+  setFields(EXAMPLE);
+  document.getElementById("pngLogo").value = "sbk";
+  onInput();
+});
+document.getElementById("clearAll").addEventListener("click", () => {
+  setFields({});
+  onInput();
+});
+
+/* ---------- Status / Kopier-Feedback ---------- */
+function flash(btn, label) {
+  const old = btn.textContent;
+  btn.textContent = label;
+  btn.classList.add("ok");
+  document.getElementById("copyStatus").textContent = label;
+  setTimeout(() => { btn.textContent = old; btn.classList.remove("ok"); }, 1400);
+}
+
+document.getElementById("copyRich").addEventListener("click", function () {
+  const html = buildSignature();
+  if (navigator.clipboard && window.ClipboardItem) {
+    const item = new ClipboardItem({
+      "text/html": new Blob([html], { type: "text/html" }),
+      "text/plain": new Blob([document.getElementById("sigPreview").innerText], { type: "text/plain" })
     });
-    sel.value = "sbk";
-  })();
-
-  function esc(s) {
-    return String(s || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function val(k) { return els[k].value.trim(); }
-
-  function webHref(w) {
-    if (!w) return "";
-    return /^https?:\/\//i.test(w) ? w : "https://" + w;
-  }
-
-  // Erzeugt das table-basierte Signatur-HTML mit Inline-CSS
-  function buildSignature() {
-    var name = val("name");
-    var phone = val("phone");
-
-    if (state.variant === "short") {
-      var lines = [];
-      if (name) lines.push('<span style="font-weight:bold;color:' + INK + ';">' + esc(name) + "</span>");
-      if (phone) lines.push("T&nbsp;&nbsp;" + esc(phone));
-      return (
-        '<table cellpadding="0" cellspacing="0" border="0" ' +
-        'style="border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;' +
-        'font-size:10pt;line-height:1.45;color:' + INK + ';">' +
-        "<tr><td>" + lines.join("<br />") + "</td></tr></table>"
-      );
-    }
-
-    // Linke Spalte: Person + Organisation
-    var left = [];
-    if (name) left.push('<span style="font-size:11pt;font-weight:bold;color:#222222;">' + esc(name) + "</span>");
-    if (val("roleDe")) left.push('<span style="color:' + SUB + ';">' + esc(val("roleDe")) + "</span>");
-    if (val("roleEn")) left.push('<span style="color:' + SUB + ';">' + esc(val("roleEn")) + "</span>");
-    var orgBlock = [];
-    if (val("org1")) orgBlock.push(esc(val("org1")));
-    if (val("org2")) orgBlock.push(esc(val("org2")));
-    var leftHtml = left.join("<br />");
-    if (orgBlock.length) leftHtml += (left.length ? "<br /><br />" : "") + orgBlock.join("<br />");
-
-    // Rechte Spalte: Adresse + Kontakt, durch roten Balken getrennt
-    var right = [];
-    if (val("street")) right.push(esc(val("street")));
-    if (val("city")) right.push(esc(val("city")));
-    if (val("country")) right.push(esc(val("country")));
-    var addrCount = right.length;
-    var contact = [];
-    if (phone) contact.push('<span style="color:' + BLUE + ';">T</span>&nbsp;&nbsp;' + esc(phone));
-    if (val("email"))
-      contact.push(
-        '<a href="mailto:' + esc(val("email")) + '" style="color:' + BLUE + ';text-decoration:none;">' +
-        esc(val("email")) + "</a>"
-      );
-    if (val("web"))
-      contact.push(
-        '<a href="' + esc(webHref(val("web"))) + '" style="color:' + BLUE + ';text-decoration:none;">' +
-        esc(val("web")) + "</a>"
-      );
-    var rightHtml = right.join("<br />");
-    if (contact.length) rightHtml += (addrCount ? "<br /><br />" : "") + contact.join("<br />");
-
-    return (
-      '<table cellpadding="0" cellspacing="0" border="0" ' +
-      'style="border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;' +
-      'font-size:10pt;line-height:1.5;color:' + INK + ';">' +
-      "<tr>" +
-      '<td style="vertical-align:top;padding:0 26px 0 0;">' + leftHtml + "</td>" +
-      '<td style="vertical-align:top;border-left:2px solid ' + BLUE + ';padding:0 0 0 26px;">' +
-      rightHtml + "</td>" +
-      "</tr></table>"
+    navigator.clipboard.write([item]).then(
+      () => flash(this, "Kopiert ✓"),
+      () => flash(this, "Bitte HTML-Code nutzen")
     );
+  } else {
+    flash(this, "Bitte HTML-Code nutzen");
   }
+});
 
-  function render() {
-    var html = buildSignature();
-    document.getElementById("sigPreview").innerHTML = html;
-    document.getElementById("codeOut").textContent = html;
+function copyCode(btn) {
+  const text = document.getElementById("codeOut").textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => flash(btn, "Kopiert ✓"), () => selectFallback(btn));
+  } else {
+    selectFallback(btn);
   }
+}
+function selectFallback(btn) {
+  const r = document.createRange();
+  r.selectNodeContents(document.getElementById("codeOut"));
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(r);
+  let done = false;
+  try { done = document.execCommand("copy"); } catch (e) {}
+  flash(btn, done ? "Kopiert ✓" : "Markiert – Strg/Cmd+C");
+}
+document.getElementById("copyCode2").addEventListener("click", function () { copyCode(this); });
 
-  // Eingaben live verdrahten
-  Object.keys(els).forEach(function (k) { els[k].addEventListener("input", render); });
+document.getElementById("download").addEventListener("click", function () {
+  const doc = `<!doctype html><html><head><meta charset="utf-8"></head><body>${buildSignature()}</body></html>`;
+  const blob = new Blob([doc], { type: "text/html" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  const base = (val("name") || "signatur").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  a.download = "signatur-" + (base || "goetheanum") + ".htm";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  flash(this, "Geladen ✓");
+});
 
-  // Variante umschalten
-  var variantWrap = document.getElementById("variant");
-  variantWrap.addEventListener("click", function (e) {
-    var btn = e.target.closest("button[data-variant]");
-    if (!btn) return;
-    state.variant = btn.getAttribute("data-variant");
-    Array.prototype.forEach.call(variantWrap.querySelectorAll("button"), function (b) {
-      b.classList.toggle("on", b === btn);
+/* ---------- PNG-Ausgabe: vollständige Angaben + Logo-Wortmarke ---------- */
+const GFONT = '"Goetheanum","Helvetica Neue",Arial,sans-serif';
+
+(function fillLogoSelect() {
+  const sel = document.getElementById("pngLogo");
+  Object.keys(CATS).forEach(catKey => {
+    const cat = CATS[catKey];
+    const og = document.createElement("optgroup");
+    og.label = cat.label_de || catKey;
+    cat.items.forEach(key => {
+      if (!ORGS[key]) return;
+      const o = document.createElement("option");
+      o.value = key;
+      o.textContent = key === "goetheanum" ? "Goetheanum (ohne Zusatz)" : ORGS[key].name_de;
+      og.appendChild(o);
     });
-    render();
+    sel.appendChild(og);
   });
+  sel.value = state._logo && ORGS[state._logo] ? state._logo : "sbk";
+})();
 
-  function flash(btn, label) {
-    var old = btn.textContent;
-    btn.textContent = label;
-    btn.classList.add("ok");
-    setTimeout(function () {
-      btn.textContent = old;
-      btn.classList.remove("ok");
-    }, 1400);
-  }
+function pngLines() {
+  const key = document.getElementById("pngLogo").value || "goetheanum";
+  const org = ORGS[key] || ORGS.goetheanum;
+  const color = org.color;
+  const showRole = document.getElementById("pngRole").checked;
+  const lines = [];
 
-  // Formatiert kopieren (rich HTML) – direkt ins Mailprogramm einfuegbar
-  document.getElementById("copyRich").addEventListener("click", function () {
-    var btn = this;
-    var html = buildSignature();
-    if (navigator.clipboard && window.ClipboardItem) {
-      var item = new ClipboardItem({
-        "text/html": new Blob([html], { type: "text/html" }),
-        "text/plain": new Blob([document.getElementById("sigPreview").innerText], { type: "text/plain" })
-      });
-      navigator.clipboard.write([item]).then(
-        function () { flash(btn, "Kopiert ✓"); },
-        function () { flash(btn, "Bitte HTML-Code nutzen"); }
-      );
-    } else {
-      flash(btn, "Bitte HTML-Code nutzen");
-    }
+  lines.push({ t: "Goetheanum", s: 30, w: 500, c: color, gap: 0 });
+  if (key !== "goetheanum") lines.push({ t: org.name_de, s: 16, w: 440, c: color, gap: 5 });
+
+  lines.push({ t: val("name") || "Name", s: 30, w: 680, c: SIG.name, gap: 28 });
+  if (showRole && val("roleDe")) lines.push({ t: val("roleDe"), s: 17, w: 440, c: SIG.sub, gap: 7 });
+  if (showRole && val("roleEn")) lines.push({ t: val("roleEn"), s: 17, w: 440, c: SIG.sub, gap: 2 });
+
+  let first = true;
+  [val("org1"), val("org2")].forEach(t => { if (t) { lines.push({ t, s: 17, w: 440, c: SIG.name, gap: first ? 16 : 2 }); first = false; } });
+  first = true;
+  [val("street"), val("city"), val("country")].forEach(t => { if (t) { lines.push({ t, s: 17, w: 440, c: SIG.name, gap: first ? 16 : 2 }); first = false; } });
+  first = true;
+  [val("phone"), val("email"), val("web")].forEach(t => { if (t) { lines.push({ t, s: 17, w: 440, c: BRAND_BLUE, gap: first ? 16 : 2 }); first = false; } });
+
+  return lines;
+}
+
+function renderPNG() {
+  const canvas = document.getElementById("pngCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const scale = 3, pad = 16;
+  const transparent = document.getElementById("pngTransparent").checked;
+  const lines = pngLines();
+
+  let maxW = 0, H = pad;
+  lines.forEach(l => {
+    ctx.font = `${l.w} ${l.s}px ${GFONT}`;
+    maxW = Math.max(maxW, ctx.measureText(l.t).width);
+    H += l.gap + l.s * 1.18;
   });
+  H = Math.ceil(H + pad);
+  const W = Math.ceil(maxW + pad * 2);
 
-  // Rohen HTML-Code kopieren (beide Buttons)
-  function copyCode(btn) {
-    var text = document.getElementById("codeOut").textContent;
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(function () { flash(btn, "Kopiert ✓"); }, function () { selectFallback(btn); });
-    } else {
-      selectFallback(btn);
-    }
-  }
-  function selectFallback(btn) {
-    var r = document.createRange();
-    r.selectNodeContents(document.getElementById("codeOut"));
-    var sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(r);
-    var done = false;
-    try { done = document.execCommand("copy"); } catch (e) {}
-    flash(btn, done ? "Kopiert ✓" : "Markiert – Strg/Cmd+C");
-  }
-  document.getElementById("copyCode2").addEventListener("click", function () { copyCode(this); });
+  canvas.width = Math.round(W * scale);
+  canvas.height = Math.round(H * scale);
+  canvas.style.width = Math.min(W, 560) + "px";
+  canvas.style.height = "auto";
 
-  // Als .htm herunterladen
-  document.getElementById("download").addEventListener("click", function () {
-    var doc =
-      "<!doctype html><html><head><meta charset=\"utf-8\"></head><body>" +
-      buildSignature() + "</body></html>";
-    var blob = new Blob([doc], { type: "text/html" });
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    var base = (val("name") || "signatur").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    a.download = "signatur-" + (base || "goetheanum") + ".htm";
+  ctx.setTransform(scale, 0, 0, scale, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  if (!transparent) { ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H); }
+
+  ctx.textBaseline = "top";
+  let y = pad;
+  lines.forEach(l => {
+    y += l.gap;
+    ctx.fillStyle = l.c;
+    ctx.font = `${l.w} ${l.s}px ${GFONT}`;
+    ctx.fillText(l.t, pad, y);
+    y += l.s * 1.18;
+  });
+}
+
+function withFonts(cb) {
+  if (document.fonts && document.fonts.load) {
+    Promise.all([
+      document.fonts.load('680 30px "Goetheanum"'),
+      document.fonts.load('500 30px "Goetheanum"'),
+      document.fonts.load('440 17px "Goetheanum"')
+    ]).then(() => document.fonts.ready.then(cb), cb);
+  } else { cb(); }
+}
+
+document.getElementById("pngLogo").addEventListener("change", () => { renderPNG(); save(); });
+document.getElementById("pngTransparent").addEventListener("change", renderPNG);
+document.getElementById("pngRole").addEventListener("change", renderPNG);
+
+document.getElementById("pngDownload").addEventListener("click", function () {
+  const btn = this;
+  withFonts(() => {
+    renderPNG();
+    const canvas = document.getElementById("pngCanvas");
+    let url;
+    try { url = canvas.toDataURL("image/png"); }
+    catch (e) { flash(btn, "Export fehlgeschlagen"); return; }
+    const a = document.createElement("a");
+    a.href = url;
+    const base = (val("name") || "signatur").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    a.download = "signatur-" + (base || "goetheanum") + ".png";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    flash(btn, "Geladen ✓");
   });
+});
 
-  /* ---------- PNG-Ausgabe: vollständige Angaben in Goetheanum-Schrift + Logo ---------- */
-  var GFONT = '"Goetheanum","Helvetica Neue",Arial,sans-serif';
-
-  // Zeilenliste fürs PNG: Logo-Wortmarke (+ ggf. Sektion), dann alle Angaben.
-  function pngLines() {
-    var key = document.getElementById("pngLogo").value || "goetheanum";
-    var org = ORG_DATA[key] || ORG_DATA["goetheanum"];
-    var color = org[1];
-    var showRole = document.getElementById("pngRole").checked;
-    var lines = [];
-
-    // Logo-Lockup (Wortmarke, ggf. Sektionsname – in der Sektionsfarbe)
-    lines.push({ t: "Goetheanum", s: 30, w: 500, c: color, gap: 0 });
-    if (key !== "goetheanum") lines.push({ t: org[0], s: 16, w: 440, c: color, gap: 5 });
-
-    // Name
-    lines.push({ t: val("name") || "Name", s: 30, w: 680, c: "#1a1a1a", gap: 28 });
-
-    // Funktion
-    if (showRole && val("roleDe")) lines.push({ t: val("roleDe"), s: 17, w: 440, c: "#737a80", gap: 7 });
-    if (showRole && val("roleEn")) lines.push({ t: val("roleEn"), s: 17, w: 440, c: "#737a80", gap: 2 });
-
-    // Organisation
-    var first = true;
-    [val("org1"), val("org2")].forEach(function (t) {
-      if (t) { lines.push({ t: t, s: 17, w: 440, c: "#1a1a1a", gap: first ? 16 : 2 }); first = false; }
-    });
-
-    // Adresse
-    first = true;
-    [val("street"), val("city"), val("country")].forEach(function (t) {
-      if (t) { lines.push({ t: t, s: 17, w: 440, c: "#1a1a1a", gap: first ? 16 : 2 }); first = false; }
-    });
-
-    // Kontakt (in Goetheanum-Blau)
-    first = true;
-    [val("phone"), val("email"), val("web")].forEach(function (t) {
-      if (t) { lines.push({ t: t, s: 17, w: 440, c: BLUE, gap: first ? 16 : 2 }); first = false; }
-    });
-
-    return lines;
-  }
-
-  function renderPNG() {
-    var canvas = document.getElementById("pngCanvas");
-    if (!canvas) return;
-    var ctx = canvas.getContext("2d");
-    var scale = 3;
-    var pad = 16;
-    var transparent = document.getElementById("pngTransparent").checked;
-    var lines = pngLines();
-
-    var maxW = 0, H = pad;
-    lines.forEach(function (l) {
-      ctx.font = l.w + " " + l.s + "px " + GFONT;
-      maxW = Math.max(maxW, ctx.measureText(l.t).width);
-      H += l.gap + l.s * 1.18;
-    });
-    H += pad;
-    var W = Math.ceil(maxW + pad * 2);
-    H = Math.ceil(H);
-
-    canvas.width = Math.round(W * scale);
-    canvas.height = Math.round(H * scale);
-    canvas.style.width = Math.min(W, 560) + "px";
-    canvas.style.height = "auto";
-
-    ctx.setTransform(scale, 0, 0, scale, 0, 0);
-    ctx.clearRect(0, 0, W, H);
-    if (!transparent) { ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H); }
-
-    ctx.textBaseline = "top";
-    var y = pad;
-    lines.forEach(function (l) {
-      y += l.gap;
-      ctx.fillStyle = l.c;
-      ctx.font = l.w + " " + l.s + "px " + GFONT;
-      ctx.fillText(l.t, pad, y);
-      y += l.s * 1.18;
-    });
-  }
-
-  function withFonts(cb) {
-    if (document.fonts && document.fonts.load) {
-      Promise.all([
-        document.fonts.load('680 30px "Goetheanum"'),
-        document.fonts.load('500 30px "Goetheanum"'),
-        document.fonts.load('440 17px "Goetheanum"')
-      ]).then(function () { document.fonts.ready.then(cb); }, cb);
-    } else {
-      cb();
-    }
-  }
-
-  document.getElementById("pngLogo").addEventListener("change", renderPNG);
-  document.getElementById("pngTransparent").addEventListener("change", renderPNG);
-  document.getElementById("pngRole").addEventListener("change", renderPNG);
-  Object.keys(els).forEach(function (k) { els[k].addEventListener("input", renderPNG); });
-
-  document.getElementById("pngDownload").addEventListener("click", function () {
-    var btn = this;
-    withFonts(function () {
-      renderPNG();
-      var canvas = document.getElementById("pngCanvas");
-      var a = document.createElement("a");
-      try {
-        a.href = canvas.toDataURL("image/png");
-      } catch (e) {
-        flash(btn, "Export fehlgeschlagen");
-        return;
-      }
-      var base = (val("name") || "signatur").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-      a.download = "signatur-" + (base || "goetheanum") + ".png";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      flash(btn, "Geladen ✓");
-    });
-  });
-
-  render();
-  withFonts(renderPNG);
+/* ---------- Start ---------- */
+loadStored();
+applyQuery();
+if (state._logo && ORGS[state._logo]) document.getElementById("pngLogo").value = state._logo;
+setVariant(state.variant, false);
+validateEmail();
+render();
+withFonts(renderPNG);
 </script>
 </body>
 </html>
