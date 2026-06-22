@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum Schriften – Begleit-Antiqua & Fallback im Vergleich</title>
+<meta name="description" content="Vergleich: OFL-Begleit-Antiquas (Source Serif 4, Newsreader, Spectral, Literata) und Nicht-Latein-Fallbacks (Titillium RUS, Cairo, Source Sans 3) zur Goetheanum-Schrift." />
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Spectral:ital,wght@0,400;0,600;1,400&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Cairo:wght@400;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Klar.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Laut.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"Titillium RUS";src:url("assets/fonts/goetheanum/Fallback/TitilliumRUS-Regular.woff2") format("woff2");font-weight:400;font-display:swap;unicode-range:U+0400-04FF,U+0500-052F}
+  :root{--ink:#23272b;--muted:#737a80;--line:rgba(20,24,28,.10);--line-soft:rgba(20,24,28,.055);
+        --gold:#d7ab68;--gold-deep:#a07a33;--paper:#fff;--soft:#faf8f4;--maxw:980px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:"G Klar","Helvetica Neue",Arial,sans-serif;line-height:1.5;font-size:16.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  a{color:var(--gold-deep)}
+  header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;justify-content:space-between;height:58px}
+  nav.top a{color:var(--muted);text-decoration:none;font-size:13.5px;margin-left:20px}
+  .hero{padding:48px 0 6px}
+  .kick{color:var(--gold-deep);font-size:14px;margin-bottom:12px}
+  h1{font-family:"G Klar";font-weight:400;font-size:clamp(30px,5vw,48px);line-height:1.1}
+  .lede{font-size:18px;color:var(--muted);max-width:60ch;margin-top:12px}
+  section{padding:34px 0;border-top:1px solid var(--line-soft)}
+  .sec{color:var(--gold-deep);font-size:13px}
+  h2{font-family:"G Klar";font-weight:400;font-size:clamp(20px,3vw,28px);margin:4px 0 14px}
+  /* controls */
+  .ctrl{display:flex;gap:20px;flex-wrap:wrap;align-items:center;background:var(--soft);border:1px solid var(--line-soft);border-radius:12px;padding:14px 18px;margin-bottom:20px;position:sticky;top:58px;z-index:20}
+  .ctrl label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:10px}
+  .ctrl input[type=range]{accent-color:var(--gold-deep);width:160px}
+  .ctrl b{color:var(--ink);font-variant-numeric:tabular-nums}
+  /* serif card */
+  .card{border:1px solid var(--line-soft);border-radius:14px;padding:22px 24px;margin-bottom:18px;background:#fff}
+  .card .name{font-size:15px;color:var(--gold-deep);font-weight:600}
+  .card .desc{font-size:12.5px;color:#999;margin-bottom:14px}
+  .head{font-family:"G Klar";font-weight:400;line-height:1.1;margin-bottom:10px}
+  .body{margin-bottom:8px;text-wrap:pretty}
+  .ital{color:#555}
+  .s-sourceserif{font-family:"Source Serif 4",serif}
+  .s-newsreader{font-family:"Newsreader",serif}
+  .s-spectral{font-family:"Spectral",serif}
+  .s-literata{font-family:"Literata",serif}
+  /* script row */
+  .scriptrow{display:grid;grid-template-columns:120px 1fr;gap:8px 18px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+  .scriptrow .lab{font-size:12px;color:var(--gold-deep)}
+  .scriptrow .smp{font-size:30px;line-height:1.25}
+  .lat{font-family:"G Klar"} .cyr{font-family:"Titillium RUS"} .grk{font-family:"Source Sans 3"} .arb{font-family:"Cairo"}
+  footer{border-top:1px solid var(--line);padding:28px 0 56px;color:var(--muted);font-size:12.5px}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <strong style="font-family:'G Klar';font-weight:400">Goetheanum · Schrift-Vergleich</strong>
+  <nav class="top"><a href="schriften.html">Schriften</a><a href="vorschau.html">Neu</a><a href="#antiqua">Antiqua</a><a href="#fallback">Fallback</a></nav>
+</div></header>
+
+<main><div class="wrap">
+  <div class="hero">
+    <div class="kick">Intern · noindex</div>
+    <h1>Begleit-Antiqua &amp; Nicht-Latein-Fallback</h1>
+    <p class="lede">Die Goetheanum-Grotesk trägt Titel, Lede, Tabelle. Für lange Lesestrecken eine Antiqua mit echter Kursive – und für andere Schriftsysteme einen stimmigen Fallback. Alle Kandidaten sind <b>SIL OFL</b> (gleiche Rechtslage), nah an der Titillium-Basis.</p>
+  </div>
+
+  <section id="antiqua">
+    <span class="sec">Begleit-Antiqua · OFL · echte Kursive</span>
+    <h2>Vier Antiquas im Lauftext</h2>
+    <div class="ctrl">
+      <label>Grad <input type="range" id="sz" min="13" max="26" value="18" step="0.5"> <b id="szv">18</b> px</label>
+      <label>Gewicht <input type="range" id="wg" min="400" max="600" value="430" step="10"> <b id="wgv">430</b></label>
+      <label><input type="checkbox" id="dark"> dunkler Grund</label>
+    </div>
+    <div id="cards"></div>
+  </section>
+
+  <section id="fallback">
+    <span class="sec">Nicht-Latein-Fallback · Titillium-nah</span>
+    <h2>Kohärenz über die Schriftsysteme</h2>
+    <div class="scriptrow"><div class="lab">Latein · Goetheanum</div><div class="smp lat">Goetheanum Dornach — Schweiz · 1913</div></div>
+    <div class="scriptrow"><div class="lab">Kyrillisch · Titillium&nbsp;RUS</div><div class="smp cyr">Гётеанум Дорнах — Швейцария · 1913</div></div>
+    <div class="scriptrow"><div class="lab">Griechisch · Source&nbsp;Sans&nbsp;3</div><div class="smp grk">Γκαίτεανουμ Ντόρναχ — Ελβετία · 1913</div></div>
+    <div class="scriptrow"><div class="lab">Arabisch · Cairo</div><div class="smp arb" dir="rtl">غوتيانوم دورناخ — سويسرا · ١٩١٣</div></div>
+    <p style="font-size:13px;color:var(--muted);margin-top:14px;max-width:62ch">Kyrillisch (Titillium&nbsp;RUS) und Arabisch (Cairo) sind direkte Titillium-Erweiterungen; Griechisch über die humanistische Source&nbsp;Sans&nbsp;3. Einbindung als CSS-Stack: <code>"Goetheanum", "Titillium RUS", "Cairo", "Source Sans 3"</code>.</p>
+  </section>
+</div></main>
+
+<footer><div class="wrap">Goetheanum Schriften · interner Vergleich · alle Kandidaten SIL OFL · <a href="schriften.html">Schriften</a> · <a href="vorschau.html">Neuerungen</a></div></footer>
+
+<script>
+(function(){
+  var serifs=[
+    {cls:"s-sourceserif",name:"Source Serif 4",desc:"neutral · koheränt zur vorhandenen Source Sans · variabel"},
+    {cls:"s-newsreader",name:"Newsreader",desc:"für Wochen-/Magazinsatz gezeichnet · optische Grade · variabel"},
+    {cls:"s-spectral",name:"Spectral",desc:"ökonomisch · bildschirmtauglich (Google-Docs-Serife)"},
+    {cls:"s-literata",name:"Literata",desc:"warme Buchserife · optische Grade · variabel"}
+  ];
+  var body="Das Goetheanum in Dornach versammelt seit 1913 Bühne, Forschung und Hochschule unter einem Dach. Die Wochenschrift berichtet wöchentlich – genau, mit Haltung. Auflage 1487 · Seite 23 · 11.10 Uhr.";
+  var ital="Anthroposophie als Erkenntnisweg – ein Versuch in geprüfter Klarheit.";
+  var host=document.getElementById("cards");
+  serifs.forEach(function(s){
+    var c=document.createElement("div"); c.className="card";
+    c.innerHTML='<div class="name">'+s.name+'</div><div class="desc">'+s.desc+'</div>'+
+      '<div class="head">Wochenschrift am Goetheanum</div>'+
+      '<div class="body '+s.cls+'">'+body+'</div>'+
+      '<div class="ital '+s.cls+'" style="font-style:italic">'+ital+'</div>';
+    host.appendChild(c);
+  });
+  var sz=document.getElementById("sz"),wg=document.getElementById("wg"),
+      szv=document.getElementById("szv"),wgv=document.getElementById("wgv"),dark=document.getElementById("dark");
+  function upd(){
+    szv.textContent=sz.value; wgv.textContent=wg.value;
+    document.querySelectorAll(".card .body,.card .ital").forEach(function(e){
+      e.style.fontSize=sz.value+"px"; e.style.fontWeight=wg.value;
+    });
+    document.querySelectorAll(".card .head").forEach(function(e){ e.style.fontSize=(sz.value*1.7)+"px"; });
+    document.body.style.background=dark.checked?"#23272b":"#fff";
+    document.body.style.color=dark.checked?"#f3f0ea":"#23272b";
+    document.querySelectorAll(".card").forEach(function(e){ e.style.background=dark.checked?"#2c3035":"#fff"; e.style.borderColor=dark.checked?"#3a3f45":""; });
+  }
+  [sz,wg].forEach(function(e){e.addEventListener("input",upd)}); dark.addEventListener("change",upd); upd();
+})();
+</script>
+</body>
+</html>
