@@ -138,6 +138,8 @@
   .guide li{font-size:14px;line-height:1.5;color:var(--ink)}
   .guide code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px}
   .guide .note{font-size:13px;color:var(--muted);line-height:1.5;margin-top:6px}
+  .guide a{color:var(--gold-deep);text-decoration:none}
+  .guide a:hover{text-decoration:underline}
 
   footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--muted);font-size:12.5px}
   .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
@@ -294,45 +296,64 @@
       <div class="opt">
         <div class="who">Normalfall</div>
         <h3>‹Signatur kopieren›</h3>
-        <p>Für Outlook (Mac), Apple Mail, Gmail – und auch Outlook Windows. Legt die fertige,
+        <p>Für neues Outlook, Outlook (Mac), Apple Mail und Gmail. Legt die fertige,
           formatierte Signatur in die Zwischenablage; du fügst sie im Signatur-Editor des
           Programms ein (Strg/Cmd&nbsp;+&nbsp;V). Nichts wird verschickt, alles bleibt lokal.</p>
       </div>
       <div class="opt">
-        <div class="who">Nur Outlook Windows</div>
+        <div class="who">Nur klassisches Outlook (Windows)</div>
         <h3>‹.htm laden›</h3>
-        <p>Lädt eine Datei, die du direkt in den Outlook-Signaturordner legst – nützlich, wenn
-          das Einfügen im Editor die Formatierung verliert. Für Apple Mail und Gmail ist die
-          Datei nutzlos; dort einfach kopieren.</p>
+        <p>Lädt eine Datei für den Outlook-Signaturordner – nützlich, wenn das Einfügen die
+          Formatierung verliert. Achtung: Das <em>neue</em> Outlook und Apple Mail/Gmail nutzen
+          diese Datei nicht; dort einfach kopieren.</p>
       </div>
     </div>
 
     <div class="guide card">
+      <p class="note" style="margin:0 0 4px">Menübezeichnungen ändern sich je nach Version – bei
+        Abweichungen gilt die jeweils verlinkte Hersteller-Anleitung.</p>
+
       <details open>
-        <summary>Outlook – Windows <span class="tag">‹.htm laden› empfohlen</span></summary>
+        <summary>Neues Outlook – Windows <span class="tag">kopieren</span></summary>
         <ol>
-          <li>‹.htm laden› klicken – es entsteht eine Datei wie <code>signatur-name.htm</code>.</li>
-          <li>Explorer öffnen, in die Adresszeile <code>%APPDATA%\Microsoft\Signatures</code>
-            eingeben, Enter.</li>
-          <li>Die <code>.htm</code>-Datei in diesen Ordner legen.</li>
-          <li>Outlook → Datei → Optionen → E-Mail → <em>Signaturen…</em> – die Signatur erscheint.
-            Für ‹Neue Nachrichten› und ‹Antworten/Weiterleitungen› auswählen.</li>
+          <li>‹Signatur kopieren› klicken. <span class="note">(Neues Outlook erkennst du am Schalter ‹Neues Outlook› oben rechts.)</span></li>
+          <li>Einstellungen (Zahnrad) → <em>Konten</em> → <em>Signaturen</em>.</li>
+          <li>‹Neue Signatur›, Namen vergeben, ins Feld einfügen (Strg&nbsp;+&nbsp;V), speichern.</li>
+          <li>Als Standard für neue Mails und Antworten wählen.</li>
         </ol>
-        <p class="note">Alternativ: ‹Signatur kopieren› und im Signatur-Editor direkt einfügen.</p>
+        <p class="note">Das neue Outlook nutzt <strong>nicht</strong> den
+          <code>%APPDATA%</code>-Ordner – ‹.htm laden› funktioniert hier nicht.
+          Offizielle Anleitung:
+          <a href="https://support.microsoft.com/de-de/office/how-to-add-and-change-an-email-signature-in-outlook-8ee5d4f4-68fd-464a-a1c1-0e1c80bb27f2" target="_blank" rel="noopener">Microsoft Support</a>.</p>
       </details>
 
       <details>
-        <summary>Outlook – Mac <span class="tag">‹Signatur kopieren›</span></summary>
+        <summary>Klassisches Outlook – Windows <span class="tag">kopieren oder ‹.htm›</span></summary>
+        <ol>
+          <li><strong>Variante kopieren:</strong> neue Mail → Menü ‹Nachricht› → ‹Signatur› →
+            ‹Signaturen…› → ‹Neu› → einfügen (Strg&nbsp;+&nbsp;V).</li>
+          <li><strong>Variante Datei:</strong> ‹.htm laden›; Explorer öffnen, in die Adresszeile
+            <code>%APPDATA%\Microsoft\Signatures</code> eingeben, Datei dort ablegen.</li>
+          <li>Outlook → Datei → Optionen → E-Mail → ‹Signaturen…› – Signatur erscheint, als
+            Standard zuweisen.</li>
+        </ol>
+        <p class="note">Offizielle Anleitung:
+          <a href="https://support.microsoft.com/de-de/office/how-to-add-and-change-an-email-signature-in-outlook-8ee5d4f4-68fd-464a-a1c1-0e1c80bb27f2" target="_blank" rel="noopener">Microsoft Support</a>.</p>
+      </details>
+
+      <details>
+        <summary>Outlook – Mac <span class="tag">kopieren</span></summary>
         <ol>
           <li>‹Signatur kopieren› klicken.</li>
           <li>Outlook → Einstellungen → <em>Signaturen</em> → ‹+›.</li>
-          <li>In das Bearbeitungsfeld einfügen (Cmd&nbsp;+&nbsp;V).</li>
-          <li>Unter ‹Standardsignaturen› dem Konto für neue Mails/Antworten zuweisen.</li>
+          <li>In das Bearbeitungsfeld einfügen (Cmd&nbsp;+&nbsp;V), Konto zuweisen.</li>
         </ol>
+        <p class="note">Offizielle Anleitung:
+          <a href="https://support.microsoft.com/de-de/office/how-to-add-and-change-an-email-signature-in-outlook-8ee5d4f4-68fd-464a-a1c1-0e1c80bb27f2" target="_blank" rel="noopener">Microsoft Support</a>.</p>
       </details>
 
       <details>
-        <summary>Apple Mail <span class="tag">‹Signatur kopieren›</span></summary>
+        <summary>Apple Mail – Mac <span class="tag">kopieren</span></summary>
         <ol>
           <li>‹Signatur kopieren› klicken.</li>
           <li>Mail → Einstellungen → <em>Signaturen</em> → Konto wählen → ‹+›.</li>
@@ -340,16 +361,20 @@
             sonst geht die Formatierung verloren.</li>
           <li>In das rechte Feld einfügen (Cmd&nbsp;+&nbsp;V).</li>
         </ol>
+        <p class="note">Offizielle Anleitung:
+          <a href="https://support.apple.com/de-ch/guide/mail/create-and-use-email-signatures-mail11943/mac" target="_blank" rel="noopener">Apple Support</a>.</p>
       </details>
 
       <details>
-        <summary>Gmail – Web <span class="tag">‹Signatur kopieren›</span></summary>
+        <summary>Gmail – Web <span class="tag">kopieren</span></summary>
         <ol>
           <li>‹Signatur kopieren› klicken.</li>
           <li>Zahnrad → ‹Alle Einstellungen anzeigen› → Tab ‹Allgemein› → Abschnitt ‹Signatur›.</li>
           <li>‹Neu erstellen›, Namen vergeben, ins Feld einfügen (Strg/Cmd&nbsp;+&nbsp;V).</li>
           <li>Ganz unten ‹Änderungen speichern›.</li>
         </ol>
+        <p class="note">Offizielle Anleitung:
+          <a href="https://support.google.com/mail/answer/8395?hl=de&co=GENIE.Platform%3DDesktop" target="_blank" rel="noopener">Google Support</a>.</p>
       </details>
 
       <details>
