@@ -21,10 +21,12 @@ on:
       - "logo-generator.html"
       - "visitenkarten.html"
       - "visitenkarten-generator.html"
+      - "signatur-generator.html"
       - "index-goelogger-gci1.html"
       - "apps/logo-generator/**"
       - "apps/gtv-naming/**"
       - "apps/visitenkarten-generator/**"
+      - "apps/signatur-generator/**"
       - "assets/**"
       - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
@@ -69,10 +71,12 @@ jobs:
           if [ -f index-goelogger-gci1.html ]; then cp index-goelogger-gci1.html _site/index-goelogger-gci1.html; fi
           if [ -f visitenkarten.html ]; then cp visitenkarten.html _site/visitenkarten.html; fi
           if [ -f visitenkarten-generator.html ]; then cp visitenkarten-generator.html _site/visitenkarten-generator.html; fi
+          if [ -f signatur-generator.html ]; then cp signatur-generator.html _site/signatur-generator.html; fi
           mkdir -p _site/apps
           if [ -d apps/logo-generator ]; then cp -R apps/logo-generator _site/apps/; fi
           if [ -d apps/gtv-naming ]; then cp -R apps/gtv-naming _site/apps/; fi
           if [ -d apps/visitenkarten-generator ]; then cp -R apps/visitenkarten-generator _site/apps/; fi
+          if [ -d apps/signatur-generator ]; then cp -R apps/signatur-generator _site/apps/; fi
           if [ -d assets ]; then
             mkdir -p _site/assets
             cp -R assets/. _site/assets/

@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Goetheanum E-Mail-Signatur-Generator</title>
+  <style>
+    @font-face {
+      font-family: "Goetheanum-Deutsch";
+      src: url("../../assets/fonts/goetheanum-titel-deutsch.otf") format("opentype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Goetheanum-English";
+      src: url("../../assets/fonts/goetheanum-titel-english.otf") format("opentype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #1f2933;
+      --bg-deep: #172029;
+      --panel: #2c3844;
+      --panel-soft: #364452;
+      --line: rgba(219, 224, 228, 0.16);
+      --line-strong: rgba(219, 224, 228, 0.28);
+      --text: #edf1f4;
+      --muted: #afbcc8;
+      --accent: #d7ab68;
+      --venue: #df666a;
+      --shadow: rgba(0, 0, 0, 0.22);
+      /* Goetheanum-Rot fuer die Signatur selbst */
+      --sig-red: #9b1c20;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Goetheanum-Deutsch", "Goetheanum-English", serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 6px;
+      background: var(--accent);
+      z-index: 900;
+    }
+
+    .page-head {
+      margin-top: 6px;
+      background: var(--bg-deep);
+      border-bottom: 1px solid var(--line-strong);
+      position: sticky;
+      top: 6px;
+      z-index: 40;
+    }
+
+    .page-head-inner {
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 5px;
+    }
+
+    .brand-kicker {
+      font-size: 0.78rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .brand-title {
+      font-size: clamp(1.8rem, 2.2vw, 2.5rem);
+      line-height: 0.96;
+    }
+
+    .brand-copy {
+      max-width: 820px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: minmax(320px, 420px) 1fr;
+      align-items: start;
+      gap: 0;
+      min-height: calc(100vh - 104px);
+    }
+
+    .controls {
+      padding: 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      overflow: auto;
+    }
+
+    fieldset {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.035);
+      display: grid;
+      gap: 10px;
+    }
+
+    legend {
+      padding: 0 6px;
+      color: var(--accent);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    label.field {
+      display: grid;
+      gap: 4px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    input[type="tel"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      padding: 9px 12px;
+      outline: none;
+      font-family: "Goetheanum-Deutsch", sans-serif;
+    }
+
+    input:focus {
+      border-color: rgba(215, 171, 104, 0.58);
+    }
+
+    .seg {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .seg button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: 0.16s ease;
+    }
+
+    .seg button.on {
+      background: var(--accent);
+      color: #1a2128;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    button.act {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      background: var(--panel-soft);
+      color: var(--text);
+      cursor: pointer;
+      transition: 0.16s ease;
+    }
+
+    button.act:hover {
+      background: #435468;
+    }
+
+    button.act.primary {
+      background: var(--accent);
+      color: #1a2128;
+    }
+
+    button.act.primary:hover {
+      background: #ecc185;
+    }
+
+    button.act.ok {
+      background: #6fa86f;
+      color: #122012;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .preview-shell {
+      padding: 22px;
+      display: grid;
+      align-content: start;
+      gap: 16px;
+      overflow: auto;
+    }
+
+    .preview-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .preview-label {
+      color: var(--accent);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* weisses "Mailfenster" damit die Signatur wie im Client wirkt */
+    .mail-stage {
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      box-shadow: 0 18px 40px var(--shadow);
+      padding: 26px 28px;
+      max-width: 760px;
+    }
+
+    .mail-body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10pt;
+      color: #999;
+      line-height: 1.5;
+    }
+
+    .mail-greeting {
+      margin-bottom: 14px;
+    }
+
+    .sig-sep {
+      color: #999;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10pt;
+      margin: 6px 0 8px;
+    }
+
+    .code-card {
+      background: var(--bg-deep);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+      max-width: 760px;
+    }
+
+    .code-card textarea {
+      width: 100%;
+      min-height: 180px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #0f161d;
+      color: #cdd8e2;
+      padding: 12px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 920px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+      .controls {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="brand">
+        <div class="brand-kicker">Goetheanum Grafik</div>
+        <h1 class="brand-title">E-Mail-Signatur-Generator</h1>
+        <p class="brand-copy">
+          Eigene Angaben eintragen, fertige Signatur kopieren. Erzeugt table-basiertes HTML mit
+          Inline-CSS nach der gemeinsamen Vorlage – funktioniert in Outlook, Apple Mail und Gmail.
+          Individuell gepflegt, einheitlich im Erscheinungsbild.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <main class="app">
+    <aside class="controls">
+      <fieldset>
+        <legend>Variante</legend>
+        <div class="seg" id="variant">
+          <button type="button" data-variant="long" class="on">Lang</button>
+          <button type="button" data-variant="short">Kurz (Antwort)</button>
+        </div>
+        <div class="hint">Kurz = nur Name und Telefon, fuer Antworten innerhalb eines Verlaufs.</div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Person</legend>
+        <label class="field">Name
+          <input type="text" id="name" placeholder="Oliver Pauletto" />
+        </label>
+        <label class="field">Funktion (Deutsch)
+          <input type="text" id="roleDe" placeholder="Leiter IT-Abteilung" />
+        </label>
+        <label class="field">Funktion (English, optional)
+          <input type="text" id="roleEn" placeholder="Head of IT Department" />
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Organisation</legend>
+        <label class="field">Zeile 1
+          <input type="text" id="org1" placeholder="Allgemeine Anthroposophische Gesellschaft" />
+        </label>
+        <label class="field">Zeile 2
+          <input type="text" id="org2" placeholder="Goetheanum" />
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Adresse</legend>
+        <label class="field">Strasse / Nr.
+          <input type="text" id="street" placeholder="Ruettiweg 45" />
+        </label>
+        <label class="field">PLZ / Ort
+          <input type="text" id="city" placeholder="CH-4143 Dornach" />
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Kontakt</legend>
+        <label class="field">Telefon
+          <input type="tel" id="phone" placeholder="+41 61 706 44 94" />
+        </label>
+        <label class="field">E-Mail
+          <input type="email" id="email" placeholder="oliver.pauletto@goetheanum.ch" />
+        </label>
+        <label class="field">Website
+          <input type="url" id="web" placeholder="www.goetheanum.org" />
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Ausgabe</legend>
+        <div class="button-row">
+          <button type="button" class="act primary" id="copyRich">Signatur kopieren</button>
+          <button type="button" class="act" id="copyCode">HTML-Code kopieren</button>
+          <button type="button" class="act" id="download">.htm laden</button>
+        </div>
+        <div class="hint" id="copyHint">
+          „Signatur kopieren“ legt die formatierte Signatur in die Zwischenablage – direkt in die
+          Signatur-Einstellung des Mailprogramms einfuegbar.
+        </div>
+      </fieldset>
+    </aside>
+
+    <section class="preview-shell">
+      <div class="preview-top">
+        <span class="preview-label">Vorschau</span>
+      </div>
+
+      <div class="mail-stage">
+        <div class="mail-body">
+          <div class="mail-greeting">Mit besten Gruessen<br />…</div>
+          <div class="sig-sep">--</div>
+          <div id="sigPreview"></div>
+        </div>
+      </div>
+
+      <div class="code-card">
+        <span class="preview-label">HTML-Code (Inline-CSS, table-basiert)</span>
+        <textarea id="codeOut" readonly spellcheck="false"></textarea>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    var state = { variant: "long" };
+
+    var els = {
+      name: document.getElementById("name"),
+      roleDe: document.getElementById("roleDe"),
+      roleEn: document.getElementById("roleEn"),
+      org1: document.getElementById("org1"),
+      org2: document.getElementById("org2"),
+      street: document.getElementById("street"),
+      city: document.getElementById("city"),
+      phone: document.getElementById("phone"),
+      email: document.getElementById("email"),
+      web: document.getElementById("web")
+    };
+
+    // Vorbelegung = Vorlagenbeispiel aus dem Handout
+    var defaults = {
+      name: "Oliver Pauletto",
+      roleDe: "Leiter IT-Abteilung",
+      roleEn: "Head of IT Department",
+      org1: "Allgemeine Anthroposophische Gesellschaft",
+      org2: "Goetheanum",
+      street: "Ruettiweg 45",
+      city: "CH-4143 Dornach",
+      phone: "+41 61 706 44 94",
+      email: "oliver.pauletto@goetheanum.ch",
+      web: "www.goetheanum.org"
+    };
+    Object.keys(defaults).forEach(function (k) { els[k].value = defaults[k]; });
+
+    var RED = "#9b1c20";
+    var INK = "#333333";
+    var SUB = "#777777";
+
+    function esc(s) {
+      return String(s || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function val(k) { return els[k].value.trim(); }
+
+    function webHref(w) {
+      if (!w) return "";
+      return /^https?:\/\//i.test(w) ? w : "https://" + w;
+    }
+
+    // Erzeugt das table-basierte Signatur-HTML mit Inline-CSS
+    function buildSignature() {
+      var name = val("name");
+      var phone = val("phone");
+
+      if (state.variant === "short") {
+        var lines = [];
+        if (name) lines.push('<span style="font-weight:bold;color:' + INK + ';">' + esc(name) + "</span>");
+        if (phone) lines.push("T&nbsp;&nbsp;" + esc(phone));
+        return (
+          '<table cellpadding="0" cellspacing="0" border="0" ' +
+          'style="border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;' +
+          'font-size:10pt;line-height:1.45;color:' + INK + ';">' +
+          "<tr><td>" + lines.join("<br />") + "</td></tr></table>"
+        );
+      }
+
+      // Linke Spalte: Person + Organisation
+      var left = [];
+      if (name) left.push('<span style="font-size:11pt;font-weight:bold;color:#222222;">' + esc(name) + "</span>");
+      if (val("roleDe")) left.push('<span style="color:' + SUB + ';">' + esc(val("roleDe")) + "</span>");
+      if (val("roleEn")) left.push('<span style="color:' + SUB + ';">' + esc(val("roleEn")) + "</span>");
+      var orgBlock = [];
+      if (val("org1")) orgBlock.push(esc(val("org1")));
+      if (val("org2")) orgBlock.push(esc(val("org2")));
+      var leftHtml = left.join("<br />");
+      if (orgBlock.length) leftHtml += (left.length ? "<br /><br />" : "") + orgBlock.join("<br />");
+
+      // Rechte Spalte: Adresse + Kontakt, durch roten Balken getrennt
+      var right = [];
+      if (val("street")) right.push(esc(val("street")));
+      if (val("city")) right.push(esc(val("city")));
+      var addrCount = right.length;
+      var contact = [];
+      if (phone) contact.push('<span style="color:' + RED + ';">T</span>&nbsp;&nbsp;' + esc(phone));
+      if (val("email"))
+        contact.push(
+          '<span style="color:' + RED + ';">E</span>&nbsp;&nbsp;' +
+          '<a href="mailto:' + esc(val("email")) + '" style="color:' + RED + ';text-decoration:none;">' +
+          esc(val("email")) + "</a>"
+        );
+      if (val("web"))
+        contact.push(
+          '<span style="color:' + RED + ';">W</span>&nbsp;&nbsp;' +
+          '<a href="' + esc(webHref(val("web"))) + '" style="color:' + RED + ';text-decoration:none;">' +
+          esc(val("web")) + "</a>"
+        );
+      var rightHtml = right.join("<br />");
+      if (contact.length) rightHtml += (addrCount ? "<br /><br />" : "") + contact.join("<br />");
+
+      return (
+        '<table cellpadding="0" cellspacing="0" border="0" ' +
+        'style="border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;' +
+        'font-size:10pt;line-height:1.5;color:' + INK + ';">' +
+        "<tr>" +
+        '<td style="vertical-align:top;padding:0 26px 0 0;">' + leftHtml + "</td>" +
+        '<td style="vertical-align:top;border-left:2px solid ' + RED + ';padding:0 0 0 26px;">' +
+        rightHtml + "</td>" +
+        "</tr></table>"
+      );
+    }
+
+    function render() {
+      var html = buildSignature();
+      document.getElementById("sigPreview").innerHTML = html;
+      document.getElementById("codeOut").value = html;
+    }
+
+    // Eingaben live verdrahten
+    Object.keys(els).forEach(function (k) { els[k].addEventListener("input", render); });
+
+    // Variante umschalten
+    var variantWrap = document.getElementById("variant");
+    variantWrap.addEventListener("click", function (e) {
+      var btn = e.target.closest("button[data-variant]");
+      if (!btn) return;
+      state.variant = btn.getAttribute("data-variant");
+      Array.prototype.forEach.call(variantWrap.querySelectorAll("button"), function (b) {
+        b.classList.toggle("on", b === btn);
+      });
+      render();
+    });
+
+    function flash(btn, label) {
+      var old = btn.textContent;
+      btn.textContent = label;
+      btn.classList.add("ok");
+      setTimeout(function () {
+        btn.textContent = old;
+        btn.classList.remove("ok");
+      }, 1400);
+    }
+
+    // Formatiert kopieren (rich HTML) – direkt ins Mailprogramm einfuegbar
+    document.getElementById("copyRich").addEventListener("click", function () {
+      var btn = this;
+      var html = buildSignature();
+      if (navigator.clipboard && window.ClipboardItem) {
+        var item = new ClipboardItem({
+          "text/html": new Blob([html], { type: "text/html" }),
+          "text/plain": new Blob([document.getElementById("sigPreview").innerText], { type: "text/plain" })
+        });
+        navigator.clipboard.write([item]).then(
+          function () { flash(btn, "Kopiert ✓"); },
+          function () { flash(btn, "Bitte HTML-Code nutzen"); }
+        );
+      } else {
+        flash(btn, "Bitte HTML-Code nutzen");
+      }
+    });
+
+    // Rohen HTML-Code kopieren
+    document.getElementById("copyCode").addEventListener("click", function () {
+      var btn = this;
+      var ta = document.getElementById("codeOut");
+      ta.select();
+      var done = false;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(ta.value).then(function () { flash(btn, "Kopiert ✓"); }, fallback);
+      } else {
+        fallback();
+      }
+      function fallback() {
+        try { document.execCommand("copy"); done = true; } catch (e) {}
+        flash(btn, done ? "Kopiert ✓" : "Markiert – Strg/Cmd+C");
+      }
+    });
+
+    // Als .htm herunterladen
+    document.getElementById("download").addEventListener("click", function () {
+      var doc =
+        "<!doctype html><html><head><meta charset=\"utf-8\"></head><body>" +
+        buildSignature() + "</body></html>";
+      var blob = new Blob([doc], { type: "text/html" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      var base = (val("name") || "signatur").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      a.download = "signatur-" + (base || "goetheanum") + ".htm";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    });
+
+    render();
+  </script>
+</body>
+</html>

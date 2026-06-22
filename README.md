@@ -14,6 +14,7 @@ Statische Onepager liegen unter `apps/`:
 - `apps/briefschaften/`
 - `apps/karten-generator/`
 - `apps/cover-generator/`
+- `apps/signatur-generator/` - E-Mail-Signatur-Generator: erzeugt table-basiertes Signatur-HTML mit Inline-CSS nach gemeinsamer Vorlage
 
 ### Services
 
@@ -49,6 +50,7 @@ Die Root-HTML-Dateien sind jetzt bewusst nur noch Launcher oder Rueckwaertskompa
 - `karten-generator.html` -> `apps/karten-generator/`
 - `cover-generator.html` -> `apps/cover-generator/`
 - `index-cover-generator.html` -> `cover-generator.html`
+- `signatur-generator.html` -> `apps/signatur-generator/`
 - `index-goelogger-gci1.html` -> `logo-generator.html`
 
 Damit bleiben alte Links stabil, waehrend die eigentlichen Apps klar in Ordnern liegen.
