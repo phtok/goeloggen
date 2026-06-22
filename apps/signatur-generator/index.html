@@ -6,6 +6,7 @@
 <title>Goetheanum E-Mail-Signatur</title>
 <meta name="description" content="E-Mail-Signatur-Generator – erzeugt table-basiertes HTML mit Inline-CSS nach der gemeinsamen Goetheanum-Vorlage." />
 <meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/am-goetheanum-dark.svg" />
 <style>
   /* Goetheanum Variable Font – gehostet von GitHub Pages (vgl. schriften.html#web) */
   @font-face{
@@ -19,7 +20,7 @@
     --ink:#23272b; --muted:#737a80; --line:rgba(20,24,28,.10); --line-soft:rgba(20,24,28,.055);
     --gold:#d7ab68; --gold-deep:#a07a33; --paper:#fff; --soft:#faf8f4; --maxw:1080px;
     /* Goetheanum-Blau fuer die Signatur selbst */
-    --sig-blue:#005eb8;
+    --sig-blue:#0061a9;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--paper);color:var(--ink);font-family:"Goetheanum","Helvetica Neue",Arial,sans-serif;font-weight:440;
@@ -30,7 +31,7 @@
   header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
   .bar{display:flex;align-items:center;justify-content:space-between;height:58px}
   .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
-  .brand img{height:34px}
+  .brand .wm{font-family:"Goetheanum";font-weight:440;font-size:27px;line-height:1;color:#8a9097;letter-spacing:.005em}
   nav.top{display:flex;gap:22px}
   nav.top a{color:var(--muted);text-decoration:none;font-size:13.5px}
   nav.top a:hover{color:var(--gold-deep)}
@@ -58,6 +59,22 @@
   .tabs button{font:inherit;font-size:13.5px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer;transition:.15s}
   .tabs button.on{color:var(--gold-deep);border-color:var(--gold)}
 
+  /* Einklappbare Abschnitte (Organisation, Adresse) */
+  .fold{border-top:1px solid var(--line-soft);margin-bottom:14px;padding-top:14px}
+  .fold>summary{font-family:"Goetheanum";font-weight:680;font-size:16px;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .fold>summary::-webkit-details-marker{display:none}
+  .fold>summary .sub{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:400;font-size:12.5px;color:var(--muted);margin-left:auto}
+  .fold>summary::after{content:"+";color:var(--muted);font-size:18px;line-height:1;width:1em;text-align:center}
+  .fold[open]>summary::after{content:"–"}
+  .fold-body{display:grid;gap:14px;margin-top:14px}
+
+  /* Code-Anzeige (optional, eingeklappt) */
+  .code-details{margin-top:18px}
+  .code-details>summary{font-size:13px;color:var(--muted);cursor:pointer;list-style:none}
+  .code-details>summary::-webkit-details-marker{display:none}
+  .code-details>summary::before{content:"▸ ";color:var(--gold-deep)}
+  .code-details[open]>summary::before{content:"▾ "}
+
   /* Formular – bewusst gut lesbar: normale Strichstaerke, ruhige Sans */
   .fset{border:0;display:grid;gap:14px;margin-bottom:22px}
   .fset > legend{font-family:"Goetheanum";font-weight:680;font-size:16px;color:var(--ink);margin-bottom:4px}
@@ -72,6 +89,8 @@
   }
   .field input::placeholder{color:#aeb4b9;font-weight:400}
   .field input:focus{border-color:var(--gold-deep);box-shadow:0 0 0 3px rgba(215,171,104,.18)}
+  .field select{width:100%;font-family:"Helvetica Neue",Arial,sans-serif;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;outline:none;cursor:pointer}
+  .field select:focus{border-color:var(--gold-deep);box-shadow:0 0 0 3px rgba(215,171,104,.18)}
 
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
   .btn{display:inline-block;text-decoration:none;font:inherit;font-size:13.5px;padding:9px 15px;border-radius:9px;border:1px solid var(--line);color:var(--ink);background:#fff;text-align:center;cursor:pointer;transition:.15s}
@@ -112,7 +131,7 @@
 
 <header><div class="wrap bar">
   <a class="brand" href="https://grafik.goetheanum.ch" aria-label="Zur Grafikseite – grafik.goetheanum.ch">
-    <img src="../../assets/logos/am-goetheanum-dark.svg" alt="Am Goetheanum" />
+    <span class="wm">Goetheanum</span>
   </a>
   <nav class="top">
     <a href="../../schriften.html">Schriften</a>
@@ -148,67 +167,58 @@
         <fieldset class="fset">
           <legend>Person</legend>
           <label class="field"><span class="lab">Name</span>
-            <input type="text" id="name" placeholder="Oliver Pauletto" />
+            <input type="text" id="name" placeholder="Edith Maryon" />
           </label>
           <label class="field"><span class="lab">Funktion (Deutsch)</span>
-            <input type="text" id="roleDe" placeholder="Leiter IT-Abteilung" />
+            <input type="text" id="roleDe" placeholder="Sektion für Bildende Künste" />
           </label>
           <label class="field"><span class="lab">Funktion (English, optional)</span>
-            <input type="text" id="roleEn" placeholder="Head of IT Department" />
-          </label>
-        </fieldset>
-
-        <fieldset class="fset">
-          <legend>Organisation</legend>
-          <label class="field"><span class="lab">Zeile 1</span>
-            <input type="text" id="org1" placeholder="Allgemeine Anthroposophische Gesellschaft" />
-          </label>
-          <label class="field"><span class="lab">Zeile 2</span>
-            <input type="text" id="org2" placeholder="Goetheanum" />
-          </label>
-        </fieldset>
-
-        <fieldset class="fset">
-          <legend>Adresse</legend>
-          <label class="field"><span class="lab">Strasse / Nr.</span>
-            <input type="text" id="street" placeholder="Rüttiweg 45" />
-          </label>
-          <label class="field"><span class="lab">PLZ / Ort</span>
-            <input type="text" id="city" placeholder="4143 Dornach" />
-          </label>
-          <label class="field"><span class="lab">Land</span>
-            <input type="text" id="country" placeholder="Schweiz" />
+            <input type="text" id="roleEn" placeholder="Visual Art Section" />
           </label>
         </fieldset>
 
         <fieldset class="fset">
           <legend>Kontakt</legend>
           <label class="field"><span class="lab">Telefon</span>
-            <input type="tel" id="phone" placeholder="+41 61 706 44 94" />
+            <input type="tel" id="phone" placeholder="+41 61 706 44 21" />
           </label>
           <label class="field"><span class="lab">E-Mail</span>
-            <input type="email" id="email" placeholder="oliver.pauletto@goetheanum.ch" />
+            <input type="email" id="email" placeholder="edith.maryon@goetheanum.ch" />
           </label>
           <label class="field"><span class="lab">Website</span>
             <input type="url" id="web" placeholder="www.goetheanum.org" />
           </label>
         </fieldset>
 
-        <fieldset class="fset" style="margin-bottom:0">
-          <legend>Ausgabe</legend>
-          <div class="btnrow">
-            <button type="button" class="btn primary" id="copyRich">Signatur kopieren</button>
-            <button type="button" class="btn" id="copyCode">HTML-Code kopieren</button>
-            <button type="button" class="btn" id="download">.htm laden</button>
+        <details class="fold">
+          <summary>Organisation <span class="sub">meist unverändert</span></summary>
+          <div class="fold-body">
+            <label class="field"><span class="lab">Zeile 1</span>
+              <input type="text" id="org1" placeholder="Allgemeine Anthroposophische Gesellschaft" />
+            </label>
+            <label class="field"><span class="lab">Zeile 2</span>
+              <input type="text" id="org2" placeholder="Goetheanum" />
+            </label>
           </div>
-          <div class="hint">
-            „Signatur kopieren“ legt die formatierte Signatur in die Zwischenablage – direkt in
-            die Signatur-Einstellung des Mailprogramms einfügbar.
+        </details>
+
+        <details class="fold">
+          <summary>Adresse <span class="sub">meist unverändert</span></summary>
+          <div class="fold-body">
+            <label class="field"><span class="lab">Strasse / Nr.</span>
+              <input type="text" id="street" placeholder="Rüttiweg 45" />
+            </label>
+            <label class="field"><span class="lab">PLZ / Ort</span>
+              <input type="text" id="city" placeholder="4143 Dornach" />
+            </label>
+            <label class="field"><span class="lab">Land</span>
+              <input type="text" id="country" placeholder="Schweiz" />
+            </label>
           </div>
-        </fieldset>
+        </details>
       </div>
 
-      <!-- Vorschau + Code -->
+      <!-- Vorschau + Ausgabe -->
       <div>
         <div class="card">
           <div class="stage-lab">Vorschau</div>
@@ -220,10 +230,26 @@
             </div>
           </div>
 
-          <div class="code-wrap">
-            <pre class="code" id="codeOut"></pre>
-            <button type="button" class="copybtn" id="copyCode2">Kopieren</button>
+          <div class="btnrow" style="margin-top:20px">
+            <button type="button" class="btn primary" id="copyRich">Signatur kopieren</button>
+            <button type="button" class="btn" id="download">.htm laden</button>
           </div>
+          <div class="hint">
+            „Signatur kopieren“ legt die formatierte Signatur in die Zwischenablage – direkt in
+            die Signatur-Einstellung des Mailprogramms einfügbar.
+          </div>
+
+          <details class="code-details">
+            <summary>HTML-Code anzeigen</summary>
+            <div class="code-wrap">
+              <pre class="code" id="codeOut"></pre>
+              <button type="button" class="copybtn" id="copyCode2">Kopieren</button>
+            </div>
+            <div class="hint">
+              Nur nötig, wenn das Mailprogramm kein direktes Einfügen erlaubt und stattdessen
+              den HTML-Quelltext braucht. Für die meisten reicht „Signatur kopieren“.
+            </div>
+          </details>
         </div>
       </div>
     </div>
@@ -236,6 +262,11 @@
     </div>
 
     <div class="card">
+      <label class="field" style="max-width:440px;margin-bottom:18px">
+        <span class="lab">Logo</span>
+        <select id="pngLogo"></select>
+      </label>
+
       <div class="stage-lab">Vorschau (transparenter Hintergrund kariert dargestellt)</div>
       <div class="png-preview">
         <canvas id="pngCanvas"></canvas>
@@ -248,8 +279,9 @@
         <button type="button" class="btn primary" id="pngDownload">PNG herunterladen</button>
       </div>
       <div class="hint">
-        Gerendert in der Goetheanum-Variabel-Schrift (Webfont), 3× Auflösung für scharfe Kanten.
-        Das Bild nutzt Name und – optional – die deutsche Funktion.
+        Vollständige Angaben in der Goetheanum-Variabel-Schrift (Webfont) mit Logo-Wortmarke,
+        3× Auflösung für scharfe Kanten. Logoauswahl wie im Logo-Generator – im Zweifel das
+        blaue Goetheanum-Logo ohne Zusatz.
       </div>
     </div>
   </section>
@@ -277,25 +309,49 @@
     web: document.getElementById("web")
   };
 
-  // Vorbelegung = Vorlagenbeispiel aus dem Handout
+  // Vorbelegung = historisches Beispiel (Edith Maryon, Sektion für Bildende Künste)
+  // Telefon mit Fake-Endung, da Beispieldatensatz.
   var defaults = {
-    name: "Oliver Pauletto",
-    roleDe: "Leiter IT-Abteilung",
-    roleEn: "Head of IT Department",
+    name: "Edith Maryon",
+    roleDe: "Sektion für Bildende Künste",
+    roleEn: "Visual Art Section",
     org1: "Allgemeine Anthroposophische Gesellschaft",
     org2: "Goetheanum",
     street: "Rüttiweg 45",
     city: "4143 Dornach",
     country: "Schweiz",
-    phone: "+41 61 706 44 94",
-    email: "oliver.pauletto@goetheanum.ch",
+    phone: "+41 61 706 44 21",
+    email: "edith.maryon@goetheanum.ch",
     web: "www.goetheanum.org"
   };
   Object.keys(defaults).forEach(function (k) { els[k].value = defaults[k]; });
 
-  var BLUE = "#005eb8"; // Goetheanum-Blau
+  var BLUE = "#0061a9"; // Goetheanum-Blau
   var INK = "#333333";
   var SUB = "#777777";
+
+  // Logo-Daten aus dem Logo-Generator (Schlüssel -> [Name DE, Farbe]), gruppiert via ORG_CATS.
+  var ORG_DATA={"goetheanum": ["Goetheanum", "#0061a9"], "aas": ["Allgemeine Anthroposophische Sektion", "#a24f8a"], "ps": ["Pädagogische Sektion", "#3b4881"], "ms": ["Medizinische Sektion", "#5f5599"], "nws": ["Naturwissenschaftliche Sektion", "#1e7b6e"], "lws": ["Sektion für Landwirtschaft", "#63b145"], "sbk": ["Sektion für Bildende Künste", "#d072a0"], "ssw": ["Sektion für Schöne Wissenschaften", "#5168c0"], "szw": ["Sektion für Sozialwissenschaft", "#df4164"], "js": ["Jugendsektion", "#ff675d"], "srmk": ["Sektion für Redende und Musizierende Künste", "#598ddc"], "mas": ["Mathematisch-Astronomische Sektion", "#2e54a4"], "hpise": ["Sektion für Heilpädagogik und inklusive soziale Entwicklung", "#f98a3c"], "bauadmin": ["Bau-Administration", "#b15359"], "buehne": ["Bühne", "#968250"], "dokumentation": ["Dokumentation", "#0061a9"], "empfang": ["Empfang", "#0061a9"], "kommunikation": ["Kommunikation", "#0061a9"], "studium": ["Studium", "#0061a9"], "campus": ["Campus", "#0061a9"], "archiv": ["Archiv", "#0061a9"], "personalwesen": ["Personalwesen", "#0061a9"], "kunstsammlung": ["Kunstsammlung", "#0061a9"], "finanzwesen": ["Finanzwesen", "#0061a9"], "betriebsdienst": ["Betriebsdienst", "#0061a9"], "bibliothek": ["Bibliothek", "#0061a9"], "gaertnerei": ["Gärtnerei", "#63b145"], "saaldienst": ["Saaldienst", "#0061a9"], "freiwilligenarbeit": ["Freiwilligenarbeit", "#0061a9"], "leitung": ["Leitung", "#0061a9"], "vorstand": ["Vorstand", "#0061a9"], "betriebsleitung": ["Betriebsleitung", "#0061a9"], "medienarbeit": ["Medienarbeit", "#0061a9"], "mitgliedersekretariat": ["Mitgliedersekretariat", "#0061a9"], "raumplanung": ["Raumplanung", "#0061a9"], "studio": ["Studio", "#0061a9"], "subscriptions": ["Abos · Subscriptions", "#0061a9"], "it": ["IT-Abteilung", "#0061a9"]};
+  var ORG_CATS={"allgemein": {"label": "Allgemein", "items": ["goetheanum", "buehne"]}, "sektionen": {"label": "Sektionen", "items": ["aas", "js", "mas", "ms", "nws", "ps", "sbk", "hpise", "lws", "srmk", "ssw", "szw"]}, "bereiche": {"label": "Bereiche", "items": ["bauadmin", "dokumentation", "empfang", "gaertnerei", "kommunikation", "studium"]}, "teilbereiche": {"label": "Teilbereiche", "items": ["archiv", "betriebsdienst", "betriebsleitung", "bibliothek", "campus", "finanzwesen", "freiwilligenarbeit", "it", "kunstsammlung", "leitung", "medienarbeit", "mitgliedersekretariat", "personalwesen", "raumplanung", "saaldienst", "studio", "subscriptions", "vorstand"]}};
+
+  // Logo-Auswahl füllen; Vorauswahl passend zum Beispiel (Bildende Künste).
+  (function fillLogoSelect() {
+    var sel = document.getElementById("pngLogo");
+    Object.keys(ORG_CATS).forEach(function (catKey) {
+      var cat = ORG_CATS[catKey];
+      var og = document.createElement("optgroup");
+      og.label = cat.label;
+      cat.items.forEach(function (key) {
+        if (!ORG_DATA[key]) return;
+        var o = document.createElement("option");
+        o.value = key;
+        o.textContent = key === "goetheanum" ? "Goetheanum (ohne Zusatz)" : ORG_DATA[key][0];
+        og.appendChild(o);
+      });
+      sel.appendChild(og);
+    });
+    sel.value = "sbk";
+  })();
 
   function esc(s) {
     return String(s || "")
@@ -441,7 +497,6 @@
     try { done = document.execCommand("copy"); } catch (e) {}
     flash(btn, done ? "Kopiert ✓" : "Markiert – Strg/Cmd+C");
   }
-  document.getElementById("copyCode").addEventListener("click", function () { copyCode(this); });
   document.getElementById("copyCode2").addEventListener("click", function () { copyCode(this); });
 
   // Als .htm herunterladen
@@ -460,18 +515,47 @@
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
   });
 
-  /* ---------- PNG-Ausgabe: Name in Goetheanum-Schrift + kleines Logo ---------- */
-  var LOGO_RATIO = 202 / 48; // viewBox des Logos
-  var logoImg = new Image();
-  var logoReady = false;
-  logoImg.onload = function () { logoReady = true; renderPNG(); };
-  logoImg.src = "../../assets/logos/am-goetheanum-dark.svg";
+  /* ---------- PNG-Ausgabe: vollständige Angaben in Goetheanum-Schrift + Logo ---------- */
+  var GFONT = '"Goetheanum","Helvetica Neue",Arial,sans-serif';
 
-  function pngContent() {
-    var name = val("name") || "Name";
+  // Zeilenliste fürs PNG: Logo-Wortmarke (+ ggf. Sektion), dann alle Angaben.
+  function pngLines() {
+    var key = document.getElementById("pngLogo").value || "goetheanum";
+    var org = ORG_DATA[key] || ORG_DATA["goetheanum"];
+    var color = org[1];
     var showRole = document.getElementById("pngRole").checked;
-    var role = showRole ? (val("roleDe") || val("roleEn") || "") : "";
-    return { name: name, role: role };
+    var lines = [];
+
+    // Logo-Lockup (Wortmarke, ggf. Sektionsname – in der Sektionsfarbe)
+    lines.push({ t: "Goetheanum", s: 30, w: 500, c: color, gap: 0 });
+    if (key !== "goetheanum") lines.push({ t: org[0], s: 16, w: 440, c: color, gap: 5 });
+
+    // Name
+    lines.push({ t: val("name") || "Name", s: 30, w: 680, c: "#1a1a1a", gap: 28 });
+
+    // Funktion
+    if (showRole && val("roleDe")) lines.push({ t: val("roleDe"), s: 17, w: 440, c: "#737a80", gap: 7 });
+    if (showRole && val("roleEn")) lines.push({ t: val("roleEn"), s: 17, w: 440, c: "#737a80", gap: 2 });
+
+    // Organisation
+    var first = true;
+    [val("org1"), val("org2")].forEach(function (t) {
+      if (t) { lines.push({ t: t, s: 17, w: 440, c: "#1a1a1a", gap: first ? 16 : 2 }); first = false; }
+    });
+
+    // Adresse
+    first = true;
+    [val("street"), val("city"), val("country")].forEach(function (t) {
+      if (t) { lines.push({ t: t, s: 17, w: 440, c: "#1a1a1a", gap: first ? 16 : 2 }); first = false; }
+    });
+
+    // Kontakt (in Goetheanum-Blau)
+    first = true;
+    [val("phone"), val("email"), val("web")].forEach(function (t) {
+      if (t) { lines.push({ t: t, s: 17, w: 440, c: BLUE, gap: first ? 16 : 2 }); first = false; }
+    });
+
+    return lines;
   }
 
   function renderPNG() {
@@ -479,37 +563,23 @@
     if (!canvas) return;
     var ctx = canvas.getContext("2d");
     var scale = 3;
+    var pad = 16;
     var transparent = document.getElementById("pngTransparent").checked;
-    var c = pngContent();
+    var lines = pngLines();
 
-    // Logische Maße
-    var pad = 10;
-    var logoH = 26;
-    var gapLogoName = 18;
-    var nameSize = 52;
-    var roleSize = 19;
-    var gapNameRole = 10;
-
-    var nameFont = '680 ' + nameSize + 'px "Goetheanum","Helvetica Neue",Arial,sans-serif';
-    var roleFont = '440 ' + roleSize + 'px "Goetheanum","Helvetica Neue",Arial,sans-serif';
-
-    ctx.font = nameFont;
-    var nameW = ctx.measureText(c.name).width;
-    ctx.font = roleFont;
-    var roleW = c.role ? ctx.measureText(c.role).width : 0;
-
-    var logoW = logoH * LOGO_RATIO;
-    var contentW = Math.max(nameW, roleW, logoW);
-    var W = Math.ceil(contentW + pad * 2);
-    var H = Math.ceil(
-      pad + logoH + gapLogoName + nameSize +
-      (c.role ? gapNameRole + roleSize : 0) +
-      pad
-    );
+    var maxW = 0, H = pad;
+    lines.forEach(function (l) {
+      ctx.font = l.w + " " + l.s + "px " + GFONT;
+      maxW = Math.max(maxW, ctx.measureText(l.t).width);
+      H += l.gap + l.s * 1.18;
+    });
+    H += pad;
+    var W = Math.ceil(maxW + pad * 2);
+    H = Math.ceil(H);
 
     canvas.width = Math.round(W * scale);
     canvas.height = Math.round(H * scale);
-    canvas.style.width = Math.min(W, 540) + "px";
+    canvas.style.width = Math.min(W, 560) + "px";
     canvas.style.height = "auto";
 
     ctx.setTransform(scale, 0, 0, scale, 0, 0);
@@ -518,41 +588,31 @@
 
     ctx.textBaseline = "top";
     var y = pad;
-
-    if (logoReady) {
-      try { ctx.drawImage(logoImg, pad, y, logoW, logoH); } catch (e) {}
-    }
-    y += logoH + gapLogoName;
-
-    ctx.fillStyle = "#1a1a1a";
-    ctx.font = nameFont;
-    ctx.fillText(c.name, pad, y);
-    y += nameSize;
-
-    if (c.role) {
-      y += gapNameRole;
-      ctx.fillStyle = "#737a80";
-      ctx.font = roleFont;
-      ctx.fillText(c.role, pad, y);
-    }
+    lines.forEach(function (l) {
+      y += l.gap;
+      ctx.fillStyle = l.c;
+      ctx.font = l.w + " " + l.s + "px " + GFONT;
+      ctx.fillText(l.t, pad, y);
+      y += l.s * 1.18;
+    });
   }
 
   function withFonts(cb) {
     if (document.fonts && document.fonts.load) {
       Promise.all([
-        document.fonts.load('680 52px "Goetheanum"'),
-        document.fonts.load('440 19px "Goetheanum"')
+        document.fonts.load('680 30px "Goetheanum"'),
+        document.fonts.load('500 30px "Goetheanum"'),
+        document.fonts.load('440 17px "Goetheanum"')
       ]).then(function () { document.fonts.ready.then(cb); }, cb);
     } else {
       cb();
     }
   }
 
+  document.getElementById("pngLogo").addEventListener("change", renderPNG);
   document.getElementById("pngTransparent").addEventListener("change", renderPNG);
   document.getElementById("pngRole").addEventListener("change", renderPNG);
-  els.name.addEventListener("input", renderPNG);
-  els.roleDe.addEventListener("input", renderPNG);
-  els.roleEn.addEventListener("input", renderPNG);
+  Object.keys(els).forEach(function (k) { els[k].addEventListener("input", renderPNG); });
 
   document.getElementById("pngDownload").addEventListener("click", function () {
     var btn = this;
