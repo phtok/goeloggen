@@ -7,18 +7,22 @@
 <meta name="description" content="E-Mail-Signatur-Generator – erzeugt table-basiertes HTML mit Inline-CSS nach der gemeinsamen Goetheanum-Vorlage." />
 <meta name="robots" content="noindex" />
 <style>
-  @font-face{font-family:"G Leise";src:url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
-  @font-face{font-family:"G Klar";src:url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
-  @font-face{font-family:"G Laut";src:url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
+  /* Goetheanum Variable Font – gehostet von GitHub Pages (vgl. schriften.html#web) */
+  @font-face{
+    font-family:"Goetheanum";
+    src:url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.5.woff2") format("woff2"),
+        url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.5.woff") format("woff");
+    font-weight:190 725; font-style:normal; font-display:swap;
+  }
 
   :root{
     --ink:#23272b; --muted:#737a80; --line:rgba(20,24,28,.10); --line-soft:rgba(20,24,28,.055);
     --gold:#d7ab68; --gold-deep:#a07a33; --paper:#fff; --soft:#faf8f4; --maxw:1080px;
-    /* Goetheanum-Rot fuer die Signatur selbst */
-    --sig-red:#9b1c20;
+    /* Goetheanum-Blau fuer die Signatur selbst */
+    --sig-blue:#005eb8;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--paper);color:var(--ink);font-family:"G Klar","Helvetica Neue",Arial,sans-serif;
+  body{background:var(--paper);color:var(--ink);font-family:"Goetheanum","Helvetica Neue",Arial,sans-serif;font-weight:440;
        letter-spacing:normal;font-kerning:normal;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;line-height:1.5}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
   a{color:inherit}
@@ -33,13 +37,13 @@
   @media(max-width:720px){nav.top{display:none}}
 
   .kick{color:var(--gold-deep);font-size:14px;letter-spacing:.01em;margin-bottom:16px;line-height:1.5}
-  h1{font-family:"G Laut";font-weight:400;font-size:clamp(40px,7vw,78px);line-height:1.08}
+  h1{font-family:"Goetheanum";font-weight:680;font-size:clamp(40px,7vw,78px);line-height:1.08}
   .hero{padding:60px 0 14px}
-  .lede{font-family:"G Leise";font-size:clamp(17px,2.1vw,21px);color:var(--muted);max-width:620px;margin-top:16px}
+  .lede{font-family:"Goetheanum";font-weight:265;font-size:clamp(17px,2.1vw,21px);color:var(--muted);max-width:620px;margin-top:16px}
 
   section{padding:46px 0;border-top:1px solid var(--line-soft)}
   .shead{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:22px;flex-wrap:wrap}
-  .shead h2{font-family:"G Laut";font-weight:400;font-size:clamp(23px,3.4vw,33px);line-height:1.05}
+  .shead h2{font-family:"Goetheanum";font-weight:680;font-size:clamp(23px,3.4vw,33px);line-height:1.05}
   .shead p{color:var(--muted);font-size:14px;max-width:380px}
 
   /* Zwei-Spalten-Arbeitsbereich */
@@ -56,7 +60,7 @@
 
   /* Formular – bewusst gut lesbar: normale Strichstaerke, ruhige Sans */
   .fset{border:0;display:grid;gap:14px;margin-bottom:22px}
-  .fset > legend{font-family:"G Laut";font-weight:400;font-size:16px;color:var(--ink);margin-bottom:4px}
+  .fset > legend{font-family:"Goetheanum";font-weight:680;font-size:16px;color:var(--ink);margin-bottom:4px}
   .field{display:grid;gap:6px}
   .field > .lab{font-size:13px;color:var(--muted);letter-spacing:.01em}
   .field input{
@@ -89,6 +93,15 @@
     font:12.5px/1.55 ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);white-space:pre-wrap;word-break:break-word;max-height:320px}
   .copybtn{position:absolute;top:11px;right:11px;font:inherit;font-size:11.5px;border:1px solid #3a4148;background:#2b3137;color:#e8eef2;border-radius:8px;padding:5px 10px;cursor:pointer}
   .copybtn:hover{background:#343b42}
+
+  /* PNG-Ausgabe (Name in Goetheanum-Schrift + Logo) */
+  .png-preview{border:1px solid var(--line);border-radius:14px;padding:24px;background:var(--soft);display:flex;justify-content:center;align-items:center;min-height:120px;overflow:auto;
+    background-image:linear-gradient(45deg,#eee 25%,transparent 25%),linear-gradient(-45deg,#eee 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#eee 75%),linear-gradient(-45deg,transparent 75%,#eee 75%);
+    background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0}
+  .png-preview canvas{max-width:100%;height:auto}
+  .png-opts{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:16px}
+  .png-opt{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);cursor:pointer}
+  .png-opt input{width:16px;height:16px;accent-color:var(--gold)}
 
   footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--muted);font-size:12.5px}
   .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
@@ -215,6 +228,31 @@
       </div>
     </div>
   </section>
+
+  <section id="png">
+    <div class="shead">
+      <h2>Als Bild</h2>
+      <p>Name in der Goetheanum-Schrift mit kleinem Logo – als PNG, z.&nbsp;B. für Folien, Profile oder Grafiken.</p>
+    </div>
+
+    <div class="card">
+      <div class="stage-lab">Vorschau (transparenter Hintergrund kariert dargestellt)</div>
+      <div class="png-preview">
+        <canvas id="pngCanvas"></canvas>
+      </div>
+      <div class="png-opts">
+        <label class="png-opt"><input type="checkbox" id="pngTransparent" checked /> transparenter Hintergrund</label>
+        <label class="png-opt"><input type="checkbox" id="pngRole" checked /> Funktion mitzeigen</label>
+      </div>
+      <div class="btnrow" style="margin-top:16px">
+        <button type="button" class="btn primary" id="pngDownload">PNG herunterladen</button>
+      </div>
+      <div class="hint">
+        Gerendert in der Goetheanum-Variabel-Schrift (Webfont), 3× Auflösung für scharfe Kanten.
+        Das Bild nutzt Name und – optional – die deutsche Funktion.
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer><div class="wrap frow">
@@ -255,7 +293,7 @@
   };
   Object.keys(defaults).forEach(function (k) { els[k].value = defaults[k]; });
 
-  var RED = "#9b1c20";
+  var BLUE = "#005eb8"; // Goetheanum-Blau
   var INK = "#333333";
   var SUB = "#777777";
 
@@ -309,17 +347,15 @@
     if (val("country")) right.push(esc(val("country")));
     var addrCount = right.length;
     var contact = [];
-    if (phone) contact.push('<span style="color:' + RED + ';">T</span>&nbsp;&nbsp;' + esc(phone));
+    if (phone) contact.push('<span style="color:' + BLUE + ';">T</span>&nbsp;&nbsp;' + esc(phone));
     if (val("email"))
       contact.push(
-        '<span style="color:' + RED + ';">E</span>&nbsp;&nbsp;' +
-        '<a href="mailto:' + esc(val("email")) + '" style="color:' + RED + ';text-decoration:none;">' +
+        '<a href="mailto:' + esc(val("email")) + '" style="color:' + BLUE + ';text-decoration:none;">' +
         esc(val("email")) + "</a>"
       );
     if (val("web"))
       contact.push(
-        '<span style="color:' + RED + ';">W</span>&nbsp;&nbsp;' +
-        '<a href="' + esc(webHref(val("web"))) + '" style="color:' + RED + ';text-decoration:none;">' +
+        '<a href="' + esc(webHref(val("web"))) + '" style="color:' + BLUE + ';text-decoration:none;">' +
         esc(val("web")) + "</a>"
       );
     var rightHtml = right.join("<br />");
@@ -331,7 +367,7 @@
       'font-size:10pt;line-height:1.5;color:' + INK + ';">' +
       "<tr>" +
       '<td style="vertical-align:top;padding:0 26px 0 0;">' + leftHtml + "</td>" +
-      '<td style="vertical-align:top;border-left:2px solid ' + RED + ';padding:0 0 0 26px;">' +
+      '<td style="vertical-align:top;border-left:2px solid ' + BLUE + ';padding:0 0 0 26px;">' +
       rightHtml + "</td>" +
       "</tr></table>"
     );
@@ -424,7 +460,123 @@
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
   });
 
+  /* ---------- PNG-Ausgabe: Name in Goetheanum-Schrift + kleines Logo ---------- */
+  var LOGO_RATIO = 202 / 48; // viewBox des Logos
+  var logoImg = new Image();
+  var logoReady = false;
+  logoImg.onload = function () { logoReady = true; renderPNG(); };
+  logoImg.src = "../../assets/logos/am-goetheanum-dark.svg";
+
+  function pngContent() {
+    var name = val("name") || "Name";
+    var showRole = document.getElementById("pngRole").checked;
+    var role = showRole ? (val("roleDe") || val("roleEn") || "") : "";
+    return { name: name, role: role };
+  }
+
+  function renderPNG() {
+    var canvas = document.getElementById("pngCanvas");
+    if (!canvas) return;
+    var ctx = canvas.getContext("2d");
+    var scale = 3;
+    var transparent = document.getElementById("pngTransparent").checked;
+    var c = pngContent();
+
+    // Logische Maße
+    var pad = 10;
+    var logoH = 26;
+    var gapLogoName = 18;
+    var nameSize = 52;
+    var roleSize = 19;
+    var gapNameRole = 10;
+
+    var nameFont = '680 ' + nameSize + 'px "Goetheanum","Helvetica Neue",Arial,sans-serif';
+    var roleFont = '440 ' + roleSize + 'px "Goetheanum","Helvetica Neue",Arial,sans-serif';
+
+    ctx.font = nameFont;
+    var nameW = ctx.measureText(c.name).width;
+    ctx.font = roleFont;
+    var roleW = c.role ? ctx.measureText(c.role).width : 0;
+
+    var logoW = logoH * LOGO_RATIO;
+    var contentW = Math.max(nameW, roleW, logoW);
+    var W = Math.ceil(contentW + pad * 2);
+    var H = Math.ceil(
+      pad + logoH + gapLogoName + nameSize +
+      (c.role ? gapNameRole + roleSize : 0) +
+      pad
+    );
+
+    canvas.width = Math.round(W * scale);
+    canvas.height = Math.round(H * scale);
+    canvas.style.width = Math.min(W, 540) + "px";
+    canvas.style.height = "auto";
+
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    if (!transparent) { ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H); }
+
+    ctx.textBaseline = "top";
+    var y = pad;
+
+    if (logoReady) {
+      try { ctx.drawImage(logoImg, pad, y, logoW, logoH); } catch (e) {}
+    }
+    y += logoH + gapLogoName;
+
+    ctx.fillStyle = "#1a1a1a";
+    ctx.font = nameFont;
+    ctx.fillText(c.name, pad, y);
+    y += nameSize;
+
+    if (c.role) {
+      y += gapNameRole;
+      ctx.fillStyle = "#737a80";
+      ctx.font = roleFont;
+      ctx.fillText(c.role, pad, y);
+    }
+  }
+
+  function withFonts(cb) {
+    if (document.fonts && document.fonts.load) {
+      Promise.all([
+        document.fonts.load('680 52px "Goetheanum"'),
+        document.fonts.load('440 19px "Goetheanum"')
+      ]).then(function () { document.fonts.ready.then(cb); }, cb);
+    } else {
+      cb();
+    }
+  }
+
+  document.getElementById("pngTransparent").addEventListener("change", renderPNG);
+  document.getElementById("pngRole").addEventListener("change", renderPNG);
+  els.name.addEventListener("input", renderPNG);
+  els.roleDe.addEventListener("input", renderPNG);
+  els.roleEn.addEventListener("input", renderPNG);
+
+  document.getElementById("pngDownload").addEventListener("click", function () {
+    var btn = this;
+    withFonts(function () {
+      renderPNG();
+      var canvas = document.getElementById("pngCanvas");
+      var a = document.createElement("a");
+      try {
+        a.href = canvas.toDataURL("image/png");
+      } catch (e) {
+        flash(btn, "Export fehlgeschlagen");
+        return;
+      }
+      var base = (val("name") || "signatur").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      a.download = "signatur-" + (base || "goetheanum") + ".png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      flash(btn, "Geladen ✓");
+    });
+  });
+
   render();
+  withFonts(renderPNG);
 </script>
 </body>
 </html>
