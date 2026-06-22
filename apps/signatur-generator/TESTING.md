@@ -57,4 +57,5 @@ genannten Clients öffnen. Vorschau im Generator ≠ Realität im Client.
 ## Bekannte Grenzen
 
 - **Responsive** ist bewusst kein Ziel (Clients ignorieren `@media` weitgehend).
-- `.htm`-Download ist Outlook-Windows-spezifisch; für Apple Mail ‹Signatur kopieren› nutzen.
+- `.htm`-Download ist **klassisches** Outlook (Windows) spezifisch; das *neue* Outlook nutzt
+  den Signatures-Ordner nicht. Für neues Outlook, Apple Mail, Gmail: ‹Signatur kopieren›.
