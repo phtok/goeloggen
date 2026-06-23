@@ -203,10 +203,6 @@
           <label class="field"><span class="lab">Telefon</span>
             <input type="tel" id="phone" placeholder="+41 61 706 44 21" autocomplete="tel" />
           </label>
-          <label class="field"><span class="lab">E-Mail</span>
-            <input type="email" id="email" placeholder="edith.maryon@goetheanum.ch" autocomplete="email" aria-describedby="emailMsg" />
-            <span class="field-msg" id="emailMsg" role="alert"></span>
-          </label>
           <label class="field"><span class="lab">Website <span class="sublab">mehrere möglich, je Zeile</span></span>
             <textarea id="web" rows="2" placeholder="goetheanum.ch"></textarea>
           </label>
@@ -418,7 +414,7 @@ const BRAND_BLUE = (window.ORGS && ORGS.goetheanum && ORGS.goetheanum.color) || 
 // eine Schriftgrösse. Köpfe farbig (Name dunkel, Goetheanum/Verweise blau), Rest ruhig grau.
 const SIG = { name: "#1a1a1a", sub: "#767676" };
 
-const FIELDS = ["name","role","org1","org2","street","city","country","phone","email","web"];
+const FIELDS = ["name","role","org1","org2","street","city","country","phone","web"];
 const STORE_KEY = "goe-signatur-v2";
 
 const EXAMPLE = {
@@ -430,7 +426,6 @@ const EXAMPLE = {
   city: "4143 Dornach",
   country: "Schweiz",
   phone: "+41 61 706 44 21",
-  email: "edith.maryon@goetheanum.ch",
   web: "goetheanum.ch"
 };
 
@@ -447,7 +442,6 @@ function esc(s) {
 const val = k => els[k].value.trim();
 const webHref = w => !w ? "" : (/^https?:\/\//i.test(w) ? w : "https://" + w);
 const telHref = p => "tel:" + String(p || "").replace(/[^\d+]/g, "");
-const isEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 
 /* ---------- Signatur-HTML (Outlook-robust: Spacer-Zellen, feste Breiten) ---------- */
 const FONT = "Arial,Helvetica,sans-serif";
@@ -486,8 +480,7 @@ function buildSignature() {
   });
   const contact = [];
   if (phone) contact.push({ html: phoneCell() });
-  if (val("email")) contact.push({ html: `<a href="mailto:${esc(val("email"))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(val("email"))}</a>` });
-  // URLs: ‹www.› in der Anzeige weglassen (Link bleibt vollständig), kleiner Abstand zur E-Mail.
+  // URLs: ‹www.› in der Anzeige weglassen (Link bleibt vollständig), kleiner Abstand zum Telefon.
   const webs = val("web").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
   if (webs.length && contact.length) contact.push({ gap: 6 });
   webs.forEach(w => {
@@ -568,14 +561,6 @@ document.getElementById("variant").addEventListener("click", e => {
   save();
 });
 
-/* ---------- E-Mail-Validierung (sanft) ---------- */
-function validateEmail() {
-  const v = val("email"), msg = document.getElementById("emailMsg");
-  const bad = v && !isEmail(v);
-  els.email.classList.toggle("invalid", bad);
-  msg.textContent = bad ? "Bitte gültige E-Mail-Adresse prüfen." : "";
-}
-
 /* ---------- Eingaben verdrahten ---------- */
 // Mehrzeilige Felder (Funktion, mehrere URLs) wachsen mit dem Inhalt mit.
 function autoGrow(el) {
@@ -584,7 +569,7 @@ function autoGrow(el) {
   el.style.height = el.scrollHeight + "px";
 }
 function growAll() { autoGrow(els.role); autoGrow(els.web); }
-function onInput() { render(); validateEmail(); growAll(); save(); }
+function onInput() { render(); growAll(); save(); }
 FIELDS.forEach(k => els[k].addEventListener("input", onInput));
 
 document.getElementById("fillExample").addEventListener("click", () => {
@@ -697,7 +682,6 @@ const hadQuery = applyQuery();
 // Beim ersten Öffnen das Beispiel einfügen (frei änderbar); gespeicherte Daten haben Vorrang.
 if (!hadStored && !hadQuery) setFields(EXAMPLE);
 setVariant(state.variant, false);
-validateEmail();
 render();
 growAll();
 </script>
