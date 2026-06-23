@@ -573,7 +573,14 @@ function validateEmail() {
 }
 
 /* ---------- Eingaben verdrahten ---------- */
-function onInput() { render(); validateEmail(); save(); }
+// Mehrzeilige Felder (Funktion, mehrere URLs) wachsen mit dem Inhalt mit.
+function autoGrow(el) {
+  if (!el || el.tagName !== "TEXTAREA") return;
+  el.style.height = "auto";
+  el.style.height = el.scrollHeight + "px";
+}
+function growAll() { autoGrow(els.role); autoGrow(els.web); }
+function onInput() { render(); validateEmail(); growAll(); save(); }
 FIELDS.forEach(k => els[k].addEventListener("input", onInput));
 
 document.getElementById("fillExample").addEventListener("click", () => {
@@ -688,6 +695,7 @@ if (!hadStored && !hadQuery) setFields(EXAMPLE);
 setVariant(state.variant, false);
 validateEmail();
 render();
+growAll();
 </script>
 </body>
 </html>
