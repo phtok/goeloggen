@@ -77,12 +77,15 @@
 /* ---------- Übersicht aus dem Manifest rendern ---------- */
 const STATUS_LABEL = { beta: "Beta", entwurf: "Entwurf", geparkt: "Geparkt" };
 
+// Hub liegt in /start/ – Werkzeuge eine Ebene höher. Externe Links bleiben absolut.
+const BASE = "../";
+function url(h){ return /^https?:/.test(h) ? h : BASE + h; }
 function ext(a, href){ if(/^https?:/.test(href)){ a.target = "_blank"; a.rel = "noopener"; } }
 
 function tile(t){
   const a = document.createElement("a");
   a.className = "tile" + (t.status === "live" ? " is-live" : "");
-  a.href = t.href; a.dataset.slug = t.slug; a.dataset.cat = t.cat; ext(a, t.href);
+  a.href = url(t.href); a.dataset.slug = t.slug; a.dataset.cat = t.cat; ext(a, t.href);
   const badge = STATUS_LABEL[t.status]
     ? `<span class="badge ${t.status}">${STATUS_LABEL[t.status]}</span>` : "";
   a.innerHTML =
@@ -93,7 +96,7 @@ function tile(t){
 }
 function row(t){
   const a = document.createElement("a");
-  a.className = "row"; a.href = t.href; a.dataset.slug = t.slug; a.dataset.cat = t.cat; ext(a, t.href);
+  a.className = "row"; a.href = url(t.href); a.dataset.slug = t.slug; a.dataset.cat = t.cat; ext(a, t.href);
   a.innerHTML = `<span class="rt">${t.title}</span><span class="rd">${t.desc || ""}</span>`;
   return a;
 }
