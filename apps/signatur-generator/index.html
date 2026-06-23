@@ -50,20 +50,20 @@
   @media(min-width:880px){.preview-col{position:sticky;top:74px;align-self:start}}
 
   .card{border:1px solid var(--line);border-radius:16px;padding:24px}
-  .card.soft{background:var(--soft)}
+  .card.soft{background:var(--soft);padding:18px 20px}
 
-  .tabs{display:inline-flex;gap:8px;margin-bottom:22px}
+  .tabs{display:inline-flex;gap:8px;margin-bottom:14px}
   .tabs button{font:inherit;font-size:13.5px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer;transition:.15s}
   .tabs button[aria-pressed="true"]{color:var(--gold-deep);border-color:var(--gold)}
 
   /* Einklappbare Abschnitte (Organisation, Adresse) */
-  .fold{border-top:1px solid var(--line-soft);margin-bottom:14px;padding-top:14px}
-  .fold>summary{font-family:"Goetheanum";font-weight:680;font-size:16px;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .fold{border-top:1px solid var(--line-soft);margin-bottom:10px;padding-top:10px}
+  .fold>summary{font-family:"Goetheanum";font-weight:680;font-size:15px;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
   .fold>summary::-webkit-details-marker{display:none}
   .fold>summary .sub{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:400;font-size:12.5px;color:var(--muted);margin-left:auto}
   .fold>summary::after{content:"+";color:var(--muted);font-size:18px;line-height:1;width:1em;text-align:center}
   .fold[open]>summary::after{content:"–"}
-  .fold-body{display:grid;gap:14px;margin-top:14px}
+  .fold-body{display:grid;gap:10px;margin-top:10px}
 
   .code-details{margin-top:18px}
   .code-details>summary{font-size:13px;color:var(--muted);cursor:pointer;list-style:none}
@@ -71,25 +71,25 @@
   .code-details>summary::before{content:"▸ ";color:var(--gold-deep)}
   .code-details[open]>summary::before{content:"▾ "}
 
-  .fset{border:0;display:grid;gap:14px;margin-bottom:22px}
-  .fset > legend{font-family:"Goetheanum";font-weight:680;font-size:16px;color:var(--ink);margin-bottom:4px}
-  .field{display:grid;gap:6px}
-  .field > .lab{font-size:13px;color:var(--muted);letter-spacing:.01em}
+  .fset{border:0;display:grid;gap:10px;margin-bottom:12px}
+  .fset > legend{font-family:"Goetheanum";font-weight:680;font-size:15px;color:var(--ink);margin-bottom:2px}
+  .field{display:grid;gap:4px}
+  .field > .lab{font-size:12.5px;color:var(--muted);letter-spacing:.01em}
   .field input{
     width:100%;font-family:"Helvetica Neue",Arial,sans-serif;
-    font-size:15.5px;font-weight:400;line-height:1.4;color:var(--ink);
-    background:#fff;border:1px solid var(--line);border-radius:10px;
-    padding:11px 13px;outline:none;transition:border-color .15s,box-shadow .15s;
+    font-size:14.5px;font-weight:400;line-height:1.35;color:var(--ink);
+    background:#fff;border:1px solid var(--line);border-radius:9px;
+    padding:8px 11px;outline:none;transition:border-color .15s,box-shadow .15s;
   }
   .field input::placeholder{color:#aeb4b9;font-weight:400}
   .field input:focus{border-color:var(--gold-deep);box-shadow:0 0 0 3px rgba(215,171,104,.18)}
   .field input.invalid{border-color:var(--bad);box-shadow:0 0 0 3px rgba(179,38,30,.14)}
-  .field textarea{width:100%;font-family:"Helvetica Neue",Arial,sans-serif;font-size:15.5px;font-weight:400;line-height:1.4;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 13px;outline:none;resize:vertical;min-height:62px}
+  .field textarea{width:100%;font-family:"Helvetica Neue",Arial,sans-serif;font-size:14.5px;font-weight:400;line-height:1.35;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 11px;outline:none;resize:vertical;min-height:48px}
   .field textarea::placeholder{color:#aeb4b9;font-weight:400}
   .field textarea:focus{border-color:var(--gold-deep);box-shadow:0 0 0 3px rgba(215,171,104,.18)}
   .lab .sublab{font-weight:400;font-size:11.5px;color:var(--muted);margin-left:6px}
   .field-msg{font-size:12px;color:var(--bad);min-height:0}
-  .field select{width:100%;font-family:"Helvetica Neue",Arial,sans-serif;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;outline:none;cursor:pointer}
+  .field select{width:100%;font-family:"Helvetica Neue",Arial,sans-serif;font-size:14.5px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 11px;outline:none;cursor:pointer}
   .field select:focus{border-color:var(--gold-deep);box-shadow:0 0 0 3px rgba(215,171,104,.18)}
 
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:4px}
@@ -171,17 +171,12 @@
         </div>
 
         <fieldset class="fset">
-          <legend>Person</legend>
           <label class="field"><span class="lab">Name</span>
             <input type="text" id="name" placeholder="Edith Maryon" autocomplete="name" />
           </label>
           <label class="field"><span class="lab">Funktion / Bereich / Sektion <span class="sublab">zweizeilig möglich</span></span>
             <textarea id="role" rows="2" placeholder="Sektion für Bildende Künste&#10;Visual Art Section"></textarea>
           </label>
-        </fieldset>
-
-        <fieldset class="fset">
-          <legend>Kontakt</legend>
           <label class="field"><span class="lab">Telefon</span>
             <input type="tel" id="phone" placeholder="+41 61 706 44 21" autocomplete="tel" />
           </label>
@@ -195,20 +190,14 @@
         </fieldset>
 
         <details class="fold">
-          <summary>Organisation <span class="sub">meist unverändert</span></summary>
+          <summary>Standards <span class="sub">meist unverändert</span></summary>
           <div class="fold-body">
-            <label class="field"><span class="lab">Hauptzeile <span class="sublab">erscheint blau</span></span>
+            <label class="field"><span class="lab">Organisation – Hauptzeile <span class="sublab">erscheint blau</span></span>
               <input type="text" id="org1" placeholder="Goetheanum" />
             </label>
-            <label class="field"><span class="lab">Unterzeile</span>
+            <label class="field"><span class="lab">Organisation – Unterzeile</span>
               <input type="text" id="org2" placeholder="Allgemeine Anthroposophische Gesellschaft" />
             </label>
-          </div>
-        </details>
-
-        <details class="fold">
-          <summary>Adresse <span class="sub">meist unverändert</span></summary>
-          <div class="fold-body">
             <label class="field"><span class="lab">Strasse / Nr.</span>
               <input type="text" id="street" placeholder="Rüttiweg 45" />
             </label>
