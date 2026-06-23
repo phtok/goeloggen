@@ -48,7 +48,7 @@ Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
   Die Variable und die Icons sind unverändert.
 
 ## Dateien
-- `Fonts/` — OTF (Desktop): Leise, Klar, Laut, Icons
+- `Fonts/` — OTF (Desktop): Leise, Klar, Deutlich, Laut, Icons
 - Office-Verknüpfung: Klar=Regular, Laut=Fett (⌘B), Leise=Kursiv (⌘I) – eine Familie „Goetheanum Schrift"
 - `Variable/` — variable OTF (CFF2)
 - `Webfonts/woff` und `Webfonts/woff2` — Web
