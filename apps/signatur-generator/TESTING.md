@@ -28,14 +28,18 @@ genannten Clients öffnen. Vorschau im Generator ≠ Realität im Client.
 
 ## Prüfpunkte (das sind die bekannten Outlook-Bruchstellen)
 
+- [ ] **Layout**: Person links (Name → Funktion → Kontakt), Organisation rechts
+      (Goetheanum → Gesellschaft → Adresse), dazwischen der blaue Trennbalken.
 - [ ] **Blauer Trennbalken** ist sichtbar, durchgehend, 2px, klappt nicht weg
       (Spacer-Zelle, nicht `border`).
-- [ ] **Abstände** zwischen Person/Organisation bzw. Adresse/Kontakt stimmen
+- [ ] **Abstände** (Funktion → Kontakt) stimmen
       (Spacer-Zeilen, nicht `<br><br>` — Word staucht/dehnt sonst).
 - [ ] **Spaltenbreiten** stabil, kein Umbruch/Verrutschen, keine ungewollte
       Volldehnung über die Mailbreite.
-- [ ] **Schrift** = Arial 10pt, **kein** Goetheanum-Webfont im Output.
-- [ ] **Farben**: Name dunkel, Funktion grau, Kontakt-Links Goetheanum-Blau.
+- [ ] **Eine Grösse**: Arial 10.5pt durchgängig, **kein** Fett, **kein**
+      Goetheanum-Webfont im Output.
+- [ ] **Farben** (einziges Auszeichnungsmittel): Name dunkel, Funktion/Adresse grau,
+      Kontakt-Links **und** Organisations-Hauptzeile (Goetheanum) im Goetheanum-Blau.
 - [ ] **Links** funktionieren: `mailto:`, Website, `tel:` (auf Mobile).
 - [ ] **Lang- und Kurz-Variante** je einzeln prüfen.
 - [ ] **Dark Mode** des Clients: Signatur bleibt lesbar (Apple Mail/iOS invertieren gern).
@@ -44,7 +48,7 @@ genannten Clients öffnen. Vorschau im Generator ≠ Realität im Client.
 ## Funktion / Rollout
 
 - [ ] `localStorage`: Eingaben überstehen ein Reload.
-- [ ] Query-Prefill: `?name=Test&roleDe=Probe` füllt die Felder.
+- [ ] Query-Prefill: `?name=Test&role=Probe` füllt die Felder.
 - [ ] ‹Beispiel einfügen› / ‹Felder leeren› funktionieren.
 - [ ] E-Mail-Validierung markiert offensichtlich falsche Adressen.
 
