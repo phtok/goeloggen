@@ -41,12 +41,6 @@ genannten Clients öffnen. Vorschau im Generator ≠ Realität im Client.
 - [ ] **Dark Mode** des Clients: Signatur bleibt lesbar (Apple Mail/iOS invertieren gern).
 - [ ] **Antwort/Weiterleitung**: Signatur bleibt intakt (Outlook reflowt Tabellen).
 
-## PNG-Ausgabe
-
-- [ ] Logo-Wortmarke + Sektionsname in korrekter Farbe (aus `goetheanum-orgs.js`).
-- [ ] Transparenter Hintergrund sauber (kariert in der Vorschau = transparent).
-- [ ] Schrift scharf (3×-Auflösung), Webfont geladen.
-
 ## Funktion / Rollout
 
 - [ ] `localStorage`: Eingaben überstehen ein Reload.
