@@ -33,6 +33,7 @@
          color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:2px 9px}
   .badge.beta{color:var(--blue);border-color:rgba(0,97,169,.3)}
   .badge.entwurf{color:var(--gold-deep);border-color:rgba(160,122,51,.3)}
+  .badge.geparkt{color:var(--muted)}
 
   .list{display:grid;gap:0;grid-template-columns:1fr}
   @media(min-width:680px){.list{grid-template-columns:1fr 1fr}}
@@ -74,12 +75,17 @@
 "use strict";
 
 /* ---------- Übersicht aus dem Manifest rendern ---------- */
-const STATUS_LABEL = { beta: "Beta", entwurf: "Entwurf" };
+const STATUS_LABEL = { beta: "Beta", entwurf: "Entwurf", geparkt: "Geparkt" };
+
+// Hub liegt in /start/ – Werkzeuge eine Ebene höher. Externe Links bleiben absolut.
+const BASE = "../";
+function url(h){ return /^https?:/.test(h) ? h : BASE + h; }
+function ext(a, href){ if(/^https?:/.test(href)){ a.target = "_blank"; a.rel = "noopener"; } }
 
 function tile(t){
   const a = document.createElement("a");
   a.className = "tile" + (t.status === "live" ? " is-live" : "");
-  a.href = t.href; a.dataset.slug = t.slug; a.dataset.cat = t.cat;
+  a.href = url(t.href); a.dataset.slug = t.slug; a.dataset.cat = t.cat; ext(a, t.href);
   const badge = STATUS_LABEL[t.status]
     ? `<span class="badge ${t.status}">${STATUS_LABEL[t.status]}</span>` : "";
   a.innerHTML =
@@ -90,7 +96,7 @@ function tile(t){
 }
 function row(t){
   const a = document.createElement("a");
-  a.className = "row"; a.href = t.href; a.dataset.slug = t.slug; a.dataset.cat = t.cat;
+  a.className = "row"; a.href = url(t.href); a.dataset.slug = t.slug; a.dataset.cat = t.cat; ext(a, t.href);
   a.innerHTML = `<span class="rt">${t.title}</span><span class="rd">${t.desc || ""}</span>`;
   return a;
 }
@@ -108,8 +114,8 @@ function render(manifest){
     sec.id = cat.id;
     sec.innerHTML = `<div class="shead"><h2>${cat.title}</h2><p>${cat.intro || ""}</p></div>`;
 
-    // Werkstatt als ruhige Liste, sonst Karten-Raster
-    if(cat.id === "werkstatt"){
+    // Werkstatt & geparkte Projekte als ruhige Liste, sonst Karten-Raster
+    if(cat.id === "werkstatt" || cat.id === "geparkt"){
       const list = document.createElement("div"); list.className = "list";
       tools.forEach(t => list.appendChild(row(t)));
       sec.appendChild(list);
@@ -120,6 +126,22 @@ function render(manifest){
     }
     sections.appendChild(sec);
   });
+
+  // Konzepte & Dokumente (interner Hub – zum schnellen Einsehen)
+  if(Array.isArray(manifest.docs) && manifest.docs.length){
+    nav.insertAdjacentHTML("beforeend", `<a href="#dokumente">Dokumente</a>`);
+    const sec = document.createElement("section"); sec.id = "dokumente";
+    sec.innerHTML = `<div class="shead"><h2>Konzepte &amp; Dokumente</h2>` +
+      `<p>Strategie, Pflichtenhefte und Schrift-Dokumentation – öffnet auf GitHub.</p></div>`;
+    const list = document.createElement("div"); list.className = "list";
+    manifest.docs.forEach(d => {
+      const a = document.createElement("a"); a.className = "row"; a.href = d.href;
+      a.dataset.slug = "doc:" + (d.title || ""); a.dataset.cat = "dokumente"; ext(a, d.href);
+      a.innerHTML = `<span class="rt">${d.title}</span><span class="rd">${d.desc || ""}</span>`;
+      list.appendChild(a);
+    });
+    sec.appendChild(list); sections.appendChild(sec);
+  }
 
   // Hero-Kennzahlen aus dem Manifest
   const gen = manifest.tools.filter(t => t.cat === "generatoren").length;

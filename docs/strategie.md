@@ -193,10 +193,36 @@ interne Grafik, externe Dienstleister).
 
 ---
 
-## 6. Offene Entscheidungen
-- **Kernziel-Priorität** bestätigen (Wildwuchs stoppen / Autonomie / Markenwirkung /
-  Wissen bündeln – im Interview als „alle wichtig" gelesen).
-- **Zugang**: offen im Web vs. sanfter Zugangsschutz (z. B. später für Schreib-/Export-Rechte).
-- **Technikstufe** der gemeinsamen Schicht (reines Vanilla vs. statisches Framework) –
-  bewusst noch vertagt; Fundament ist framework-neutral.
-- **Stichtag/Anlass** für die Öffnung (im Interview keiner genannt).
+## 6. Getroffene Entscheidungen (2. Interview)
+- **Verhältnis zur bestehenden grafik.goetheanum.ch:** *mittelfristig ablösen* – unser
+  Frontend wird das Ziel-Portal (alles an einem Ort, eine Technik, ein Hausbild).
+  Heute verlinkt das offizielle Portal bereits in unsere Tools (Logo-Download,
+  Schriften, Signatur → `phtok.github.io/goeloggen/`).
+- **Zwei Oberflächen, ein Manifest:** *Front door* (`/`, bewusst **minimal**: nur
+  Generatoren + Schriften) für Mitarbeitende; *interner Hub* (`start/`, reichhaltig:
+  alle Werkzeuge, geparkte Projekte, Konzeptdokumente) für die Pflege. Beide speisen
+  sich aus `tools.json` (Pfade root-relativ, Basis je Oberfläche aufgelöst).
+- **Nächste zu entwickelnde Funktionen:** (1) Farben & Icons (Elemente vervollständigen),
+  (2) Brief/Briefbogen, (3) Social Media & PowerPoint.
+
+### Funktions-Landkarte aus grafik.goetheanum.ch (integrieren/übernehmen/entwickeln)
+| Rubrik | Status bei uns | To-do |
+|---|---|---|
+| Logos, Schriften, Signatur | ✅ live | bereits verlinkt; Logo-Pakete aus Generator statt logopackage.app |
+| Zeichen | 🟡 in Logo-Engine | Referenzseite |
+| Icons, Farben | 🟡 Assets da | Icon-Browser + Farben-Seite **(nächste Schritte)** |
+| Social Media, PowerPoint, Wallpaper, Mailer | ❌ | Generatoren/Vorlagen mit Leitplanken |
+| Videoreihen | 🟡 Cover-Generator (Entwurf) | fertigstellen |
+| Briefpapier | 🟡 Briefschaften (Entwurf) | Brief/Briefbogen **(nächster Schritt)** |
+| Leitsystem | ❌ | Schilder-Generator |
+| Kartierung | 🅿️ geparkt | Pflichtenheft liegt vor |
+| Druckauftrag (VK/Grusskarten/Couverts/Hausdruckerei) | 🟡 VK live + Mail-Worker | Grusskarten/Couverts; Druckanfrage-Anbindung |
+| Gestaltende/Übersetzungen/Anfragen | ❌ | Info-/Intake-Seiten |
+| Werkstatt | ✅ intern | aus Frontend heraushalten |
+
+### Weiter offen
+- **Zugang**: offen im Web vs. sanfter Schutz für Schreib-/Export-Rechte (später).
+- **Technikstufe** der gemeinsamen Schicht (Vanilla vs. statisches Framework) – vertagt.
+- **Stichtag/Anlass** für die Öffnung – keiner genannt.
+- **Wurzel-Umlegung live:** Front door ersetzt erst beim Merge die bisherige
+  Weiterleitung; Deep-Links (`/logo-generator.html` etc.) bleiben unverändert.
