@@ -38,15 +38,11 @@
   nav.top a:hover{color:var(--gold-deep)}
   @media(max-width:720px){nav.top{display:none}}
 
-  h1{font-family:"Goetheanum";font-weight:680;font-size:clamp(28px,3.4vw,42px);line-height:1.04;flex:0 0 auto}
-  .hero{padding:30px 0 8px}
-  .hero-row{display:flex;align-items:baseline;gap:30px;flex-wrap:wrap}
-  .lede{font-family:"Goetheanum";font-weight:265;font-size:clamp(15px,1.7vw,18px);color:var(--muted);max-width:52ch;margin-top:0;flex:1 1 340px}
-
   section{padding:30px 0;border-top:1px solid var(--line-soft)}
-  .shead{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:18px;flex-wrap:wrap}
-  .shead h2{font-family:"Goetheanum";font-weight:680;font-size:clamp(22px,3vw,30px);line-height:1.05}
-  .shead p{color:var(--muted);font-size:14px;max-width:380px}
+  main > section:first-of-type{border-top:0;padding-top:36px}
+  .shead{display:flex;align-items:baseline;justify-content:space-between;gap:30px;margin-bottom:18px;flex-wrap:wrap}
+  .shead h2{font-family:"Goetheanum";font-weight:680;font-size:clamp(22px,3vw,30px);line-height:1.05;flex:0 0 auto}
+  .shead p{color:var(--muted);font-size:14px;line-height:1.5;max-width:62ch;flex:1 1 360px}
 
   .work{display:grid;grid-template-columns:1fr;gap:24px;align-items:start}
   @media(min-width:880px){.work{grid-template-columns:minmax(360px,460px) 1fr}}
@@ -103,7 +99,7 @@
   .btn.primary:hover{background:#c59f56}
   .btn.ok{background:#3f7d46;border-color:#3f7d46;color:#fff}
   .btn.ghost{font-size:12.5px;color:var(--muted);padding:7px 12px}
-  .hint{font-size:13px;color:var(--muted);line-height:1.5;margin-top:12px}
+  .hint{font-size:14.5px;color:#565b60;line-height:1.55;margin-top:12px}
   .hint code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px}
 
   .stage-lab{font-size:13px;color:var(--muted);margin-bottom:10px}
@@ -157,19 +153,13 @@
 </div></header>
 
 <main class="wrap">
-  <div class="hero">
-    <div class="hero-row">
-      <h1>Signatur</h1>
-      <p class="lede">Eigene Angaben eintragen, fertige Signatur kopieren. Erzeugt Outlook-robustes,
-        table-basiertes HTML mit Inline-CSS nach der gemeinsamen Vorlage – individuell
-        gepflegt, einheitlich im Bild.</p>
-    </div>
-  </div>
-
   <section>
     <div class="shead">
       <h2>Signatur erstellen</h2>
-      <p>Funktioniert in Outlook (Windows/Mac), Apple Mail und Gmail. Eingaben bleiben lokal im Browser.</p>
+      <p>Eigene Angaben eintragen, fertige Signatur kopieren. Erzeugt Outlook-robustes,
+        table-basiertes HTML mit Inline-CSS nach der gemeinsamen Vorlage – individuell
+        gepflegt, einheitlich im Bild. Funktioniert in Outlook (Windows/Mac), Apple Mail
+        und Gmail. Eingaben bleiben lokal im Browser.</p>
     </div>
 
     <div class="work">
