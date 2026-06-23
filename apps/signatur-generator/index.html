@@ -42,7 +42,20 @@
   nav.top{display:flex;gap:22px}
   nav.top a{color:var(--muted);text-decoration:none;font-size:13.5px}
   nav.top a:hover{color:var(--gold-deep)}
-  @media(max-width:720px){nav.top{display:none}}
+  /* Mobil: kompakter, volle Breite, kein horizontales Überlaufen */
+  @media(max-width:560px){
+    .wrap{padding:0 16px}
+    section{padding:var(--s6) 0}
+    .shead{gap:var(--s2)}
+    .card{padding:var(--s4)}
+    .mail-stage{padding:var(--s4)}
+    .brand .wm{font-size:22px}
+    nav.top{gap:14px}
+    nav.top a{font-size:13px}
+    .nav-hide-sm{display:none}
+    /* iOS zoomt Felder mit Schrift < 16px beim Fokus – das verhindern */
+    .field input,.field textarea,.field select{font-size:16px}
+  }
 
   section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
   main > section:first-of-type{border-top:0}
@@ -111,7 +124,7 @@
   .hint code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px}
 
   .stage-lab{font-size:13px;color:var(--muted);margin-bottom:var(--s3)}
-  .mail-stage{background:#fff;border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:0 10px 30px rgba(20,24,28,.06)}
+  .mail-stage{background:#fff;border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:0 10px 30px rgba(20,24,28,.06);overflow-x:auto}
   .mail-body{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#999;line-height:1.5}
   .mail-greeting{margin-bottom:var(--s4)}
   .sig-sep{color:#999;font-family:Arial,Helvetica,sans-serif;font-size:10pt;margin:6px 0 8px}
@@ -155,7 +168,7 @@
     <span class="wm">Goetheanum</span>
   </a>
   <nav class="top">
-    <a href="#anleitung">Anleitung</a>
+    <a href="#anleitung" class="nav-hide-sm">Anleitung</a>
     <a href="https://grafik.goetheanum.ch">Weitere Werkzeuge</a>
   </nav>
 </div></header>
