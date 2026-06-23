@@ -208,7 +208,7 @@
             <span class="field-msg" id="emailMsg" role="alert"></span>
           </label>
           <label class="field"><span class="lab">Website <span class="sublab">mehrere möglich, je Zeile</span></span>
-            <textarea id="web" rows="2" placeholder="www.goetheanum.ch"></textarea>
+            <textarea id="web" rows="2" placeholder="goetheanum.ch"></textarea>
           </label>
         </fieldset>
 
@@ -431,7 +431,7 @@ const EXAMPLE = {
   country: "Schweiz",
   phone: "+41 61 706 44 21",
   email: "edith.maryon@goetheanum.ch",
-  web: "www.goetheanum.ch"
+  web: "goetheanum.ch"
 };
 
 const state = { variant: "long" };
@@ -487,8 +487,12 @@ function buildSignature() {
   const contact = [];
   if (phone) contact.push({ html: phoneCell() });
   if (val("email")) contact.push({ html: `<a href="mailto:${esc(val("email"))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(val("email"))}</a>` });
-  val("web").split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(w => {
-    contact.push({ html: `<a href="${esc(webHref(w))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(w)}</a>` });
+  // URLs: ‹www.› in der Anzeige weglassen (Link bleibt vollständig), kleiner Abstand zur E-Mail.
+  const webs = val("web").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  if (webs.length && contact.length) contact.push({ gap: 6 });
+  webs.forEach(w => {
+    const disp = w.replace(/^https?:\/\//i, "").replace(/^www\./i, "").replace(/\/+$/, "");
+    contact.push({ html: `<a href="${esc(webHref(w))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(disp)}</a>` });
   });
   if (contact.length) {
     if (L.length) L.push({ gap: 10 });
