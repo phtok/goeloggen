@@ -112,14 +112,6 @@
   .copybtn{position:absolute;top:11px;right:11px;font:inherit;font-size:11.5px;border:1px solid #3a4148;background:#2b3137;color:#e8eef2;border-radius:8px;padding:5px 10px;cursor:pointer}
   .copybtn:hover{background:#343b42}
 
-  .png-preview{border:1px solid var(--line);border-radius:14px;padding:24px;background:var(--soft);display:flex;justify-content:center;align-items:center;min-height:120px;overflow:auto;
-    background-image:linear-gradient(45deg,#eee 25%,transparent 25%),linear-gradient(-45deg,#eee 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#eee 75%),linear-gradient(-45deg,transparent 75%,#eee 75%);
-    background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0}
-  .png-preview canvas{max-width:100%;height:auto}
-  .png-opts{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:16px}
-  .png-opt{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);cursor:pointer}
-  .png-opt input{width:16px;height:16px;accent-color:var(--gold)}
-
   /* Anleitung: Entscheidungshilfe + Schritt-für-Schritt */
   .choose{display:grid;gap:14px;grid-template-columns:1fr;margin-bottom:24px}
   @media(min-width:760px){.choose{grid-template-columns:1fr 1fr}}
@@ -385,36 +377,6 @@
       </details>
     </div>
   </section>
-
-  <section id="png">
-    <div class="shead">
-      <h2>Als Bild</h2>
-      <p>Alle Angaben in der Goetheanum-Schrift mit Logo-Wortmarke – als PNG, z.&nbsp;B. für Folien, Profile oder Grafiken.</p>
-    </div>
-
-    <div class="card">
-      <label class="field" style="max-width:440px;margin-bottom:18px">
-        <span class="lab">Logo</span>
-        <select id="pngLogo"></select>
-      </label>
-
-      <div class="stage-lab">Vorschau (transparenter Hintergrund kariert dargestellt)</div>
-      <div class="png-preview">
-        <canvas id="pngCanvas"></canvas>
-      </div>
-      <div class="png-opts">
-        <label class="png-opt"><input type="checkbox" id="pngTransparent" checked /> transparenter Hintergrund</label>
-        <label class="png-opt"><input type="checkbox" id="pngRole" checked /> Funktion mitzeigen</label>
-      </div>
-      <div class="btnrow" style="margin-top:16px">
-        <button type="button" class="btn primary" id="pngDownload">PNG herunterladen</button>
-      </div>
-      <div class="hint">
-        Gerendert in der Goetheanum-Variabel-Schrift (Webfont), 3× Auflösung für scharfe Kanten.
-        Logoauswahl wie im Logo-Generator – im Zweifel das blaue Goetheanum-Logo ohne Zusatz.
-      </div>
-    </div>
-  </section>
 </main>
 
 <footer><div class="wrap frow">
@@ -539,7 +501,7 @@ function render() {
 /* ---------- Persistenz + Prefill ---------- */
 function save() {
   try {
-    const data = { variant: state.variant, logo: document.getElementById("pngLogo").value };
+    const data = { variant: state.variant };
     FIELDS.forEach(k => { data[k] = els[k].value; });
     localStorage.setItem(STORE_KEY, JSON.stringify(data));
   } catch (e) { /* z. B. privater Modus – ignorieren */ }
@@ -550,14 +512,12 @@ function loadStored() {
     if (!data) return;
     FIELDS.forEach(k => { if (typeof data[k] === "string") els[k].value = data[k]; });
     if (data.variant) setVariant(data.variant, false);
-    if (data.logo) state._logo = data.logo;
   } catch (e) {}
 }
 function applyQuery() {
   const q = new URLSearchParams(location.search);
   FIELDS.forEach(k => { if (q.has(k)) els[k].value = q.get(k); });
   if (q.has("variant")) setVariant(q.get("variant") === "short" ? "short" : "long", false);
-  if (q.has("logo")) state._logo = q.get("logo");
 }
 function setFields(obj) { FIELDS.forEach(k => { els[k].value = obj[k] || ""; }); }
 
@@ -585,12 +545,11 @@ function validateEmail() {
 }
 
 /* ---------- Eingaben verdrahten ---------- */
-function onInput() { render(); renderPNG(); validateEmail(); save(); }
+function onInput() { render(); validateEmail(); save(); }
 FIELDS.forEach(k => els[k].addEventListener("input", onInput));
 
 document.getElementById("fillExample").addEventListener("click", () => {
   setFields(EXAMPLE);
-  document.getElementById("pngLogo").value = "sbk";
   onInput();
 });
 document.getElementById("clearAll").addEventListener("click", () => {
@@ -657,129 +616,12 @@ document.getElementById("download").addEventListener("click", function () {
   flash(this, "Geladen ✓");
 });
 
-/* ---------- PNG-Ausgabe: vollständige Angaben + Logo-Wortmarke ---------- */
-const GFONT = '"Goetheanum","Helvetica Neue",Arial,sans-serif';
-
-(function fillLogoSelect() {
-  const sel = document.getElementById("pngLogo");
-  Object.keys(CATS).forEach(catKey => {
-    const cat = CATS[catKey];
-    const og = document.createElement("optgroup");
-    og.label = cat.label_de || catKey;
-    cat.items.forEach(key => {
-      if (!ORGS[key]) return;
-      const o = document.createElement("option");
-      o.value = key;
-      o.textContent = key === "goetheanum" ? "Goetheanum (ohne Zusatz)" : ORGS[key].name_de;
-      og.appendChild(o);
-    });
-    sel.appendChild(og);
-  });
-  sel.value = state._logo && ORGS[state._logo] ? state._logo : "sbk";
-})();
-
-function pngLines() {
-  const key = document.getElementById("pngLogo").value || "goetheanum";
-  const org = ORGS[key] || ORGS.goetheanum;
-  const color = org.color;
-  const showRole = document.getElementById("pngRole").checked;
-  const lines = [];
-
-  lines.push({ t: "Goetheanum", s: 30, w: 500, c: color, gap: 0 });
-  if (key !== "goetheanum") lines.push({ t: org.name_de, s: 16, w: 440, c: color, gap: 5 });
-
-  lines.push({ t: val("name") || "Name", s: 30, w: 680, c: SIG.name, gap: 28 });
-  if (showRole && val("roleDe")) lines.push({ t: val("roleDe"), s: 17, w: 440, c: SIG.sub, gap: 7 });
-  if (showRole && val("roleEn")) lines.push({ t: val("roleEn"), s: 17, w: 440, c: SIG.sub, gap: 2 });
-
-  let first = true;
-  [val("org1"), val("org2")].forEach(t => { if (t) { lines.push({ t, s: 17, w: 440, c: SIG.name, gap: first ? 16 : 2 }); first = false; } });
-  first = true;
-  [val("street"), val("city"), val("country")].forEach(t => { if (t) { lines.push({ t, s: 17, w: 440, c: SIG.name, gap: first ? 16 : 2 }); first = false; } });
-  first = true;
-  [val("phone"), val("email"), val("web")].forEach(t => { if (t) { lines.push({ t, s: 17, w: 440, c: BRAND_BLUE, gap: first ? 16 : 2 }); first = false; } });
-
-  return lines;
-}
-
-function renderPNG() {
-  const canvas = document.getElementById("pngCanvas");
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  const scale = 3, pad = 16;
-  const transparent = document.getElementById("pngTransparent").checked;
-  const lines = pngLines();
-
-  let maxW = 0, H = pad;
-  lines.forEach(l => {
-    ctx.font = `${l.w} ${l.s}px ${GFONT}`;
-    maxW = Math.max(maxW, ctx.measureText(l.t).width);
-    H += l.gap + l.s * 1.18;
-  });
-  H = Math.ceil(H + pad);
-  const W = Math.ceil(maxW + pad * 2);
-
-  canvas.width = Math.round(W * scale);
-  canvas.height = Math.round(H * scale);
-  canvas.style.width = Math.min(W, 560) + "px";
-  canvas.style.height = "auto";
-
-  ctx.setTransform(scale, 0, 0, scale, 0, 0);
-  ctx.clearRect(0, 0, W, H);
-  if (!transparent) { ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H); }
-
-  ctx.textBaseline = "top";
-  let y = pad;
-  lines.forEach(l => {
-    y += l.gap;
-    ctx.fillStyle = l.c;
-    ctx.font = `${l.w} ${l.s}px ${GFONT}`;
-    ctx.fillText(l.t, pad, y);
-    y += l.s * 1.18;
-  });
-}
-
-function withFonts(cb) {
-  if (document.fonts && document.fonts.load) {
-    Promise.all([
-      document.fonts.load('680 30px "Goetheanum"'),
-      document.fonts.load('500 30px "Goetheanum"'),
-      document.fonts.load('440 17px "Goetheanum"')
-    ]).then(() => document.fonts.ready.then(cb), cb);
-  } else { cb(); }
-}
-
-document.getElementById("pngLogo").addEventListener("change", () => { renderPNG(); save(); });
-document.getElementById("pngTransparent").addEventListener("change", renderPNG);
-document.getElementById("pngRole").addEventListener("change", renderPNG);
-
-document.getElementById("pngDownload").addEventListener("click", function () {
-  const btn = this;
-  withFonts(() => {
-    renderPNG();
-    const canvas = document.getElementById("pngCanvas");
-    let url;
-    try { url = canvas.toDataURL("image/png"); }
-    catch (e) { flash(btn, "Export fehlgeschlagen"); return; }
-    const a = document.createElement("a");
-    a.href = url;
-    const base = (val("name") || "signatur").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    a.download = "signatur-" + (base || "goetheanum") + ".png";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    flash(btn, "Geladen ✓");
-  });
-});
-
 /* ---------- Start ---------- */
 loadStored();
 applyQuery();
-if (state._logo && ORGS[state._logo]) document.getElementById("pngLogo").value = state._logo;
 setVariant(state.variant, false);
 validateEmail();
 render();
-withFonts(renderPNG);
 </script>
 </body>
 </html>
