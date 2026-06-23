@@ -89,6 +89,17 @@
     <div class="chart-t">EREIGNISSE</div>
     <div class="bars" id="gBars"><div class="empty">lädt …</div></div>
   </section>
+
+  <section id="sec-signatur">
+    <div class="app-h"><h2>Signatur</h2><span class="meta" id="sigMeta"></span></div>
+    <div class="cards">
+      <div class="stat"><div class="num" id="sigVisits">–</div><div class="cap">Besuche</div></div>
+      <div class="stat"><div class="num" id="sigCopies">–</div><div class="cap">Signaturen kopiert</div></div>
+      <div class="stat"><div class="num" id="sigSessions">–</div><div class="cap">Besucher (Sessions)</div></div>
+    </div>
+    <div class="chart-t">EREIGNISSE</div>
+    <div class="bars" id="sigBars"><div class="empty">lädt …</div></div>
+  </section>
 </main>
 
 <footer><div class="wrap">Goeloggen · Statistik · anonyme Zählung über das eigene Supabase-Backend.</div></footer>
@@ -174,6 +185,26 @@
     done++; finish();
   }).catch(function(e){
     document.getElementById('gBars').innerHTML = '<div class="err">nicht ladbar</div>';
+    fail++; finish();
+  });
+
+  // ---- Signatur ----
+  rpc('signatur_stats').then(function(rows){
+    var by = {}; rows.forEach(function(r){ by[r.event] = r; });
+    var visit = by['visit'] || {n:0,sessions:0};
+    var copies = Number((by['copy']||{}).n||0);
+    document.getElementById('sigVisits').textContent   = fmt(visit.n);
+    document.getElementById('sigCopies').textContent   = fmt(copies);
+    document.getElementById('sigSessions').textContent = fmt(visit.sessions);
+    rows.sort(function(a,b){ return b.n - a.n; });
+    bars(document.getElementById('sigBars'), rows.map(function(r){
+      return {label:r.event, value:Number(r.n), sub:(r.sessions ? fmt(r.sessions)+' S.' : '')};
+    }));
+    var lastS = rows.reduce(function(m,r){ return (r.last>m)?r.last:m; }, '');
+    document.getElementById('sigMeta').textContent = lastS ? 'zuletzt ' + when(lastS) : '';
+    done++; finish();
+  }).catch(function(e){
+    document.getElementById('sigBars').innerHTML = '<div class="err">nicht ladbar</div>';
     fail++; finish();
   });
 </script>

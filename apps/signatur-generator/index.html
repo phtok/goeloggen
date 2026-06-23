@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="de-CH">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -584,7 +584,7 @@ document.getElementById("copyRich").addEventListener("click", function () {
       "text/plain": new Blob([document.getElementById("sigPreview").innerText], { type: "text/plain" })
     });
     navigator.clipboard.write([item]).then(
-      () => flash(this, "Kopiert ✓"),
+      () => { flash(this, "Kopiert ✓"); track("copy", { variant: state.variant }); },
       () => flash(this, "Bitte HTML-Code nutzen")
     );
   } else {
@@ -610,7 +610,7 @@ function selectFallback(btn) {
   try { done = document.execCommand("copy"); } catch (e) {}
   flash(btn, done ? "Kopiert ✓" : "Markiert – Strg/Cmd+C");
 }
-document.getElementById("copyCode2").addEventListener("click", function () { copyCode(this); });
+document.getElementById("copyCode2").addEventListener("click", function () { copyCode(this); track("codecopy", {}); });
 
 document.getElementById("download").addEventListener("click", function () {
   const doc = `<!doctype html><html><head><meta charset="utf-8"></head><body>${buildSignature()}</body></html>`;
@@ -624,7 +624,43 @@ document.getElementById("download").addEventListener("click", function () {
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   flash(this, "Geladen ✓");
+  track("download", { variant: state.variant });
 });
+
+/* ---------- Anonyme Nutzungsstatistik (Supabase, insert-only) ---------- */
+// Nur auf der Live-Site. Gezählt werden anonyme Summen – keine Eingaben des
+// Nutzers, keine IP, kein Drittdienst (eigenes Backend). Vgl. statistik.html.
+const TRACK_URL = "https://dagcsnfrlbpxcmdimnrw.supabase.co/rest/v1/signatur_events";
+const TRACK_KEY = "sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY";
+const TRACK_ON = location.hostname === "phtok.github.io";
+const SID = (() => {
+  try {
+    let s = sessionStorage.getItem("goeSigSid");
+    if (!s) { s = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem("goeSigSid", s); }
+    return s;
+  } catch (e) { return "x" + Date.now().toString(36); }
+})();
+function track(event, payload) {
+  if (!TRACK_ON) return;
+  try {
+    fetch(TRACK_URL, {
+      method: "POST", keepalive: true,
+      headers: { apikey: TRACK_KEY, "Content-Type": "application/json", Prefer: "return=minimal" },
+      body: JSON.stringify({ session_id: SID, event: event, payload: payload || {} })
+    }).catch(() => {});
+  } catch (e) {}
+}
+let activeSec = 0;
+if (TRACK_ON) {
+  track("visit", {
+    ref: (document.referrer || "").slice(0, 200), lang: navigator.language || "",
+    w: screen.width, h: screen.height, mob: /Mobi|Android|iPhone|iPad/.test(navigator.userAgent)
+  });
+  setInterval(() => {
+    if (document.visibilityState === "visible") { activeSec += 30; track("heartbeat", { t: activeSec }); }
+  }, 30000);
+  addEventListener("pagehide", () => track("leave", { t: activeSec }));
+}
 
 /* ---------- Start ---------- */
 const hadStored = loadStored();
