@@ -64,6 +64,17 @@
     <p class="lede">Alle Goeloggen-Anwendungen an einem Ort. Gezählt werden nur anonyme Summen – keine IP, kein Tracking, keine Drittdienste. <span id="status" class="muted">lädt …</span></p>
   </div>
 
+  <section id="sec-landing">
+    <div class="app-h"><h2>Landing-Page</h2><span class="meta" id="landMeta"></span></div>
+    <div class="cards">
+      <div class="stat"><div class="num" id="landVisits">–</div><div class="cap">Besuche</div></div>
+      <div class="stat"><div class="num" id="landSessions">–</div><div class="cap">Besucher (Sessions)</div></div>
+      <div class="stat"><div class="num" id="landOpens">–</div><div class="cap">Werkzeug-Klicks</div></div>
+    </div>
+    <div class="chart-t">GEÖFFNETE WERKZEUGE</div>
+    <div class="bars" id="landBars"><div class="empty">lädt …</div></div>
+  </section>
+
   <section id="sec-schriften">
     <div class="app-h"><h2>Schriften</h2><span class="meta" id="schriftenMeta"></span></div>
     <div class="cards">
@@ -138,6 +149,27 @@
     if(fail && done===0){ st.className='err'; st.textContent='Konnte Statistik nicht laden.'; }
     else { st.className='muted'; st.textContent='Stand: ' + new Date().toLocaleString('de-CH'); }
   }
+
+  // ---- Landing-Page ----
+  Promise.all([rpc('landing_stats'), rpc('landing_tool_stats')]).then(function(res){
+    var ev = res[0], tools = res[1];
+    var by = {}; ev.forEach(function(r){ by[r.event] = r; });
+    var visit = by['visit'] || {n:0, sessions:0};
+    var opens = Number((by['open'] || {n:0}).n || 0);
+    document.getElementById('landVisits').textContent   = fmt(visit.n);
+    document.getElementById('landSessions').textContent = fmt(visit.sessions);
+    document.getElementById('landOpens').textContent    = fmt(opens);
+    tools.sort(function(a,b){ return b.n - a.n; });
+    bars(document.getElementById('landBars'), tools.map(function(t){
+      return {label:t.tool, value:Number(t.n), sub:(t.sessions ? fmt(t.sessions)+' S.' : '')};
+    }));
+    var lastL = ev.reduce(function(m,r){ return (r.last>m)?r.last:m; }, '');
+    document.getElementById('landMeta').textContent = lastL ? 'zuletzt ' + when(lastL) : '';
+    done++; finish();
+  }).catch(function(e){
+    document.getElementById('landBars').innerHTML = '<div class="err">nicht ladbar</div>';
+    fail++; finish();
+  });
 
   // ---- Schriften ----
   rpc('schriften_stats').then(function(rows){

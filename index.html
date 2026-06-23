@@ -217,5 +217,58 @@
   <span>Allgemeine Anthroposophische Gesellschaft · <a href="https://www.goetheanum.org">goetheanum.org</a></span>
 </div></footer>
 
+<script>
+"use strict";
+/* ---------- Anonyme Nutzungsstatistik (Supabase, insert-only) ----------
+   Gezählt werden anonyme Summen: Besuche, geöffnete Werkzeuge, Verweildauer.
+   Keine Eingaben, keine IP, keine Cookies, kein Drittdienst (eigenes Backend).
+   Nur auf der Live-Site aktiv. Auswertung unter statistik.html. Vgl. Signatur-Generator. */
+const TRACK_URL = "https://dagcsnfrlbpxcmdimnrw.supabase.co/rest/v1/landing_events";
+const TRACK_KEY = "sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY";
+const TRACK_ON  = location.hostname === "phtok.github.io";
+const SID = (() => {
+  try {
+    let s = sessionStorage.getItem("goeLandingSid");
+    if (!s) { s = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem("goeLandingSid", s); }
+    return s;
+  } catch (e) { return "x" + Date.now().toString(36); }
+})();
+function track(event, payload) {
+  if (!TRACK_ON) return;
+  try {
+    fetch(TRACK_URL, {
+      method: "POST", keepalive: true,
+      headers: { apikey: TRACK_KEY, "Content-Type": "application/json", Prefer: "return=minimal" },
+      body: JSON.stringify({ session_id: SID, event: event, payload: payload || {} })
+    }).catch(() => {});
+  } catch (e) {}
+}
+
+// "Was": Klick auf ein Werkzeug. Slug = Dateiname ohne .html (bzw. Ordnername).
+function toolSlug(href) {
+  try {
+    const p = new URL(href, location.href).pathname.replace(/\/+$/, "");
+    return (p.substring(p.lastIndexOf("/") + 1) || "index").replace(/\.html$/, "");
+  } catch (e) { return "?"; }
+}
+document.addEventListener("click", e => {
+  const a = e.target.closest("a.tile, a.row");
+  if (!a) return;
+  track("open", { tool: toolSlug(a.getAttribute("href") || ""), sec: a.closest("section") ? a.closest("section").id : "" });
+}, true);
+
+// "Wann/wie lange": Besuch, Herzschlag, Verlassen.
+let activeSec = 0;
+if (TRACK_ON) {
+  track("visit", {
+    ref: (document.referrer || "").slice(0, 200), lang: navigator.language || "",
+    w: screen.width, h: screen.height, mob: /Mobi|Android|iPhone|iPad/.test(navigator.userAgent)
+  });
+  setInterval(() => {
+    if (document.visibilityState === "visible") { activeSec += 30; track("heartbeat", { t: activeSec }); }
+  }, 30000);
+  addEventListener("pagehide", () => track("leave", { t: activeSec }));
+}
+</script>
 </body>
 </html>
