@@ -38,10 +38,10 @@
   nav.top a:hover{color:var(--gold-deep)}
   @media(max-width:720px){nav.top{display:none}}
 
-  .kick{color:var(--gold-deep);font-size:13px;letter-spacing:.01em;margin-bottom:8px;line-height:1.4}
-  h1{font-family:"Goetheanum";font-weight:680;font-size:clamp(30px,4.2vw,50px);line-height:1.04}
-  .hero{padding:28px 0 6px}
-  .lede{font-family:"Goetheanum";font-weight:265;font-size:clamp(15px,1.8vw,18px);color:var(--muted);max-width:600px;margin-top:10px}
+  h1{font-family:"Goetheanum";font-weight:680;font-size:clamp(28px,3.4vw,42px);line-height:1.04;flex:0 0 auto}
+  .hero{padding:30px 0 8px}
+  .hero-row{display:flex;align-items:baseline;gap:30px;flex-wrap:wrap}
+  .lede{font-family:"Goetheanum";font-weight:265;font-size:clamp(15px,1.7vw,18px);color:var(--muted);max-width:52ch;margin-top:0;flex:1 1 340px}
 
   section{padding:30px 0;border-top:1px solid var(--line-soft)}
   .shead{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:18px;flex-wrap:wrap}
@@ -158,13 +158,12 @@
 
 <main class="wrap">
   <div class="hero">
-    <div class="kick">Goetheanum Grafik</div>
-    <h1>E-Mail-Signatur</h1>
-    <p class="lede">
-      Eigene Angaben eintragen, fertige Signatur kopieren. Erzeugt Outlook-robustes,
-      table-basiertes HTML mit Inline-CSS nach der gemeinsamen Vorlage – individuell
-      gepflegt, einheitlich im Bild.
-    </p>
+    <div class="hero-row">
+      <h1>Signatur</h1>
+      <p class="lede">Eigene Angaben eintragen, fertige Signatur kopieren. Erzeugt Outlook-robustes,
+        table-basiertes HTML mit Inline-CSS nach der gemeinsamen Vorlage – individuell
+        gepflegt, einheitlich im Bild.</p>
+    </div>
   </div>
 
   <section>
