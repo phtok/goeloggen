@@ -100,6 +100,8 @@
     </div>
     <div class="chart-t">EREIGNISSE</div>
     <div class="bars" id="sigBars"><div class="empty">lädt …</div></div>
+    <div class="chart-t">DETAILS</div>
+    <div class="muted" id="sigDetail">lädt …</div>
   </section>
 </main>
 
@@ -207,6 +209,24 @@
   }).catch(function(e){
     document.getElementById('sigBars').innerHTML = '<div class="err">nicht ladbar</div>';
     fail++; finish();
+  });
+
+  // ---- Signatur: Details (Variante beim Kopieren, Verweildauer) ----
+  rpc('signatur_detail').then(function(d){
+    d = Array.isArray(d) ? d[0] : d;
+    if(!d){ document.getElementById('sigDetail').textContent = '–'; return; }
+    var copies = Number(d.copy_long||0) + Number(d.copy_short||0) + Number(d.copy_other||0);
+    var parts = [];
+    parts.push('Kopiert nach Variante: Lang ' + fmt(d.copy_long) + ' · Kurz ' + fmt(d.copy_short)
+      + (Number(d.copy_other) ? ' · ohne Angabe ' + fmt(d.copy_other) : '')
+      + (copies ? '' : ' (noch keine)'));
+    if(Number(d.avg_dwell_sec) > 0){
+      parts.push('Ø Verweildauer ' + fmt(d.avg_dwell_sec) + ' s (Median ' + fmt(d.median_dwell_sec)
+        + ' s, ' + fmt(d.dwell_sessions) + ' Sessions)');
+    }
+    document.getElementById('sigDetail').innerHTML = parts.join('<br>');
+  }).catch(function(){
+    document.getElementById('sigDetail').textContent = 'nicht ladbar';
   });
 </script>
 </body>
