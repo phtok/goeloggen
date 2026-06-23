@@ -50,7 +50,7 @@ genannten Clients öffnen. Vorschau im Generator ≠ Realität im Client.
 - [ ] `localStorage`: Eingaben überstehen ein Reload.
 - [ ] Query-Prefill: `?name=Test&role=Probe` füllt die Felder.
 - [ ] ‹Beispiel einfügen› / ‹Felder leeren› funktionieren.
-- [ ] E-Mail-Validierung markiert offensichtlich falsche Adressen.
+- [ ] Mehrere URLs (je Zeile eine) werden zu einzelnen Links; ‹www.› entfällt in der Anzeige.
 
 ## Bekannte Grenzen
 
