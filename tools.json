@@ -3,12 +3,14 @@
   "status": {
     "live":    "Im Einsatz, gepflegt",
     "beta":    "Nutzbar, in Überarbeitung",
-    "entwurf": "Grober Entwurf"
+    "entwurf": "Grober Entwurf",
+    "geparkt": "Konzept, später"
   },
   "categories": [
     { "id": "generatoren", "title": "Generatoren", "intro": "Eigene Angaben eintragen, fertiges Ergebnis übernehmen. Für den täglichen Gebrauch." },
     { "id": "schrift",     "title": "Schrift & Typografie", "intro": "Die Hausschrift v2.5 und die Regeln dazu – nachschlagen, vergleichen, einbinden." },
-    { "id": "werkstatt",   "title": "Werkstatt", "intro": "Werkschau und Prüfwerkzeuge rund um die Schriftentwicklung und -pflege." }
+    { "id": "werkstatt",   "title": "Werkstatt", "intro": "Werkschau und Prüfwerkzeuge rund um die Schriftentwicklung und -pflege." },
+    { "id": "geparkt",     "title": "Geparkte Projekte", "intro": "Durchdachte Konzepte, die später kommen – zum schnellen Einsehen der Spezifikation." }
   ],
   "tools": [
     { "slug": "logo-generator",    "cat": "generatoren", "status": "live",    "tag": "Logo",          "title": "Logo-Generator",     "href": "../logo-generator.html",          "desc": "Sektions- und Bereichslogos in der Hausschrift – korrekt gesetzt, als SVG zum Herunterladen." },
@@ -32,6 +34,20 @@
     { "slug": "zuordnen",          "cat": "werkstatt",   "status": "entwurf", "tag": "Ligaturen",     "title": "Ligaturen zuordnen", "href": "../zuordnen.html",                "desc": "Zeichen den Ligaturen zuweisen." },
     { "slug": "kerning",           "cat": "werkstatt",   "status": "entwurf", "tag": "Spacing",       "title": "Ligatur-Spacing",    "href": "../kerning.html",                 "desc": "Abstände feinjustieren." },
     { "slug": "werkzeug",          "cat": "werkstatt",   "status": "entwurf", "tag": "Kalibrierung",  "title": "Kalibrierung",       "href": "../werkzeug.html",                "desc": "Schrift-Werkzeug zur Kalibrierung." },
-    { "slug": "statistik",         "cat": "werkstatt",   "status": "beta",    "tag": "Zahlen",        "title": "Statistik",          "href": "../statistik.html",               "desc": "Anonyme Nutzungszahlen aller Werkzeuge." }
+    { "slug": "statistik",         "cat": "werkstatt",   "status": "beta",    "tag": "Zahlen",        "title": "Statistik",          "href": "../statistik.html",               "desc": "Anonyme Nutzungszahlen aller Werkzeuge." },
+
+    { "slug": "campus-karten",     "cat": "geparkt",     "status": "geparkt", "tag": "Kartierung",    "title": "Campus-Kartentool",  "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campus-kartentool-pflichtenheft.md", "desc": "Veranstaltungs-/Lagekarten des Geländes, A4 druckfertig. Pflichtenheft fertig, Bau steht aus." },
+    { "slug": "brand-portrait",    "cat": "geparkt",     "status": "geparkt", "tag": "KI / Porträt",  "title": "Brand-Portrait-Generator", "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_pflichtenheft.md", "desc": "KI-gestützte, markenkonforme Porträts. Eigener Schwerpunkt mit GPU-Infrastruktur." },
+    { "slug": "jahrgaenge",        "cat": "geparkt",     "status": "geparkt", "tag": "Sammlung",      "title": "Jahrgänge-Sammlung", "href": "https://github.com/phtok/goeloggen/blob/main/collections/jahrgaenge/README.md", "desc": "Produktionssammlung aus Jahrgängen (PDFs, Zeichnungen). Struktur vorbereitet." },
+    { "slug": "gtv-subs",          "cat": "geparkt",     "status": "geparkt", "tag": "Service",       "title": "GTV-Subs",           "href": "https://github.com/phtok/goeloggen/blob/main/services/gtv-subs/README.md", "desc": "Service-Skelett rund um Goetheanum TV. Platzhalter." }
+  ],
+  "docs": [
+    { "title": "Strategieblatt & Wesensanalyse", "tag": "Strategie",    "href": "https://github.com/phtok/goeloggen/blob/main/docs/strategie.md", "desc": "Strategieblatt nach Neumeier, Fundament, Architektur, Fahrplan." },
+    { "title": "Campus-Kartentool – Pflichtenheft", "tag": "Spec",      "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campus-kartentool-pflichtenheft.md", "desc": "Vollständiges Pflichtenheft des Kartentools." },
+    { "title": "Brand-Portrait – Pflichtenheft", "tag": "Spec",        "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_pflichtenheft.md", "desc": "Konzept des KI-Porträt-Generators (MVP)." },
+    { "title": "Brand-Portrait – Backlog", "tag": "Backlog",           "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_backlog_mvp.md", "desc": "Epics, User-Stories, Sprint-Vorschlag." },
+    { "title": "Hausschrift v2.5 – Dokumentation", "tag": "Schrift",   "href": "https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/README.md", "desc": "Schnitte, Variable Font, Neuerungen in v2.5." },
+    { "title": "Hausschrift – Audit", "tag": "Schrift",                "href": "https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/AUDIT.md", "desc": "Reparatur- und Qualitätsaudit der Schrift." },
+    { "title": "Baustelle / Design-System", "tag": "Aufbau",          "href": "https://github.com/phtok/goeloggen/blob/main/start/README.md", "desc": "Wie das Design-System aufgebaut ist und wächst." }
   ]
 }
