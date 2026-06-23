@@ -208,11 +208,11 @@
         <details class="fold">
           <summary>Organisation <span class="sub">meist unverändert</span></summary>
           <div class="fold-body">
-            <label class="field"><span class="lab">Zeile 1</span>
-              <input type="text" id="org1" placeholder="Allgemeine Anthroposophische Gesellschaft" />
+            <label class="field"><span class="lab">Hauptzeile <span class="sublab">erscheint blau</span></span>
+              <input type="text" id="org1" placeholder="Goetheanum" />
             </label>
-            <label class="field"><span class="lab">Zeile 2</span>
-              <input type="text" id="org2" placeholder="Goetheanum" />
+            <label class="field"><span class="lab">Unterzeile</span>
+              <input type="text" id="org2" placeholder="Allgemeine Anthroposophische Gesellschaft" />
             </label>
           </div>
         </details>
@@ -288,7 +288,7 @@
                   Empfängern nicht installiert und wird in E-Mails ohnehin durch eine Ersatzschrift ersetzt.
                   Eine systemsichere Schrift (Arial/Helvetica) sieht dafür überall zuverlässig gleich aus.</li>
                 <li><strong style="color:var(--ink);font-weight:400">Wiedererkennung</strong> entsteht hier
-                  robust über das Markenblau, klare Hierarchie und den Schriftzug «Goetheanum» – statt über
+                  robust über das Markenblau, klare Hierarchie und den Schriftzug ‹Goetheanum› – statt über
                   fragile Grafik.</li>
               </ul>
               Für echte Grafiken in der Hausschrift (Folien, Profile, Logos) gibt es die
@@ -412,17 +412,18 @@
 /* ---------- Konstanten ---------- */
 // Markenblau: einzige Quelle ist das Org-/Logo-System (goetheanum-orgs.js).
 const BRAND_BLUE = (window.ORGS && ORGS.goetheanum && ORGS.goetheanum.color) || "#0061a9";
-// Neutrale Graustufen für den (Arial-)Signatur-Output – an einer Stelle gepflegt.
-const SIG = { name: "#1a1a1a", text: "#333333", sub: "#777777" };
+// Farbsystem des Signatur-Outputs (Arial). Hausregel: eine Auszeichnung – nur Farbe,
+// eine Schriftgrösse. Köpfe farbig (Name dunkel, Goetheanum/Verweise blau), Rest ruhig grau.
+const SIG = { name: "#1a1a1a", sub: "#767676" };
 
 const FIELDS = ["name","role","org1","org2","street","city","country","phone","email","web"];
-const STORE_KEY = "goe-signatur-v1";
+const STORE_KEY = "goe-signatur-v2";
 
 const EXAMPLE = {
   name: "Edith Maryon",
   role: "Sektion für Bildende Künste\nVisual Art Section",
-  org1: "Allgemeine Anthroposophische Gesellschaft",
-  org2: "Goetheanum",
+  org1: "Goetheanum",
+  org2: "Allgemeine Anthroposophische Gesellschaft",
   street: "Rüttiweg 45",
   city: "4143 Dornach",
   country: "Schweiz",
@@ -450,57 +451,56 @@ const isEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 const FONT = "Arial,Helvetica,sans-serif";
 
 // Baut eine Spalte als verschachtelte Tabelle. items: {html} oder {gap:px}.
+// Eine Grösse für alles (10.5pt); Grundton grau, Köpfe/Verweise setzen ihre Farbe per span.
 function colTable(items) {
   const rows = items.map(it =>
     it.gap != null
       ? `<tr><td height="${it.gap}" style="height:${it.gap}px;font-size:0;line-height:0;mso-line-height-rule:exactly;">&nbsp;</td></tr>`
-      : `<tr><td style="font-family:${FONT};font-size:10pt;line-height:1.45;color:${SIG.text};">${it.html}</td></tr>`
+      : `<tr><td style="font-family:${FONT};font-size:10.5pt;line-height:1.5;color:${SIG.sub};">${it.html}</td></tr>`
   ).join("");
   return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">${rows}</table>`;
 }
 
 function phoneCell() {
-  return `<a href="${telHref(val("phone"))}" style="color:${SIG.text};text-decoration:none;">${esc(val("phone"))}</a>`;
+  return `<a href="${telHref(val("phone"))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(val("phone"))}</a>`;
 }
 
 function buildSignature() {
   const name = val("name"), phone = val("phone");
 
+  // Kurz (Antwort): Name + Telefon. Eine Grösse, Farbe als einziges Merkmal.
   if (state.variant === "short") {
     const items = [];
-    if (name) items.push({ html: `<span style="font-size:10pt;font-weight:bold;color:${SIG.name};">${esc(name)}</span>` });
+    if (name) items.push({ html: `<span style="color:${SIG.name};">${esc(name)}</span>` });
     if (phone) items.push({ html: phoneCell() });
     return colTable(items.length ? items : [{ html: "&nbsp;" }]);
   }
 
-  // Linke Spalte: Person + Organisation
+  // Linke Spalte: Person – Name (dunkel), Funktion (grau), Kontakt (blaue Verweise).
   const L = [];
-  if (name) L.push({ html: `<span style="font-size:11pt;font-weight:bold;color:${SIG.name};">${esc(name)}</span>` });
+  if (name) L.push({ html: `<span style="color:${SIG.name};">${esc(name)}</span>` });
   val("role").split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(line => {
-    L.push({ html: `<span style="color:${SIG.sub};">${esc(line)}</span>` });
+    L.push({ html: esc(line) });
   });
-  if (val("org1") || val("org2")) {
-    L.push({ gap: 12 });
-    if (val("org1")) L.push({ html: esc(val("org1")) });
-    if (val("org2")) L.push({ html: esc(val("org2")) });
-  }
-
-  // Rechte Spalte: Adresse + Kontakt
-  const R = [];
-  if (val("street")) R.push({ html: esc(val("street")) });
-  if (val("city")) R.push({ html: esc(val("city")) });
-  if (val("country")) R.push({ html: esc(val("country")) });
-  const hasAddr = R.length > 0;
   const contact = [];
   if (phone) contact.push({ html: phoneCell() });
   if (val("email")) contact.push({ html: `<a href="mailto:${esc(val("email"))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(val("email"))}</a>` });
   if (val("web")) contact.push({ html: `<a href="${esc(webHref(val("web")))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(val("web"))}</a>` });
   if (contact.length) {
-    if (hasAddr) R.push({ gap: 12 });
-    contact.forEach(c => R.push(c));
+    if (L.length) L.push({ gap: 10 });
+    contact.forEach(c => L.push(c));
   }
 
-  const LW = 300, RW = 250, PAD = 26;
+  // Rechte Spalte: Organisation – Hauptzeile (blau) + Unterzeile/Adresse (grau).
+  const R = [];
+  if (val("org1")) R.push({ html: `<span style="color:${BRAND_BLUE};">${esc(val("org1"))}</span>` });
+  if (val("org2")) R.push({ html: esc(val("org2")) });
+  [val("street"), val("city"), val("country")].forEach(t => { if (t) R.push({ html: esc(t) }); });
+
+  // Ohne Organisations-/Adressdaten: einspaltig, ohne Trennlinie.
+  if (!R.length) return colTable(L.length ? L : [{ html: "&nbsp;" }]);
+
+  const LW = 250, RW = 240, PAD = 24;
   const total = LW + RW + PAD * 2 + 2;
   return (
     `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="${total}" ` +
