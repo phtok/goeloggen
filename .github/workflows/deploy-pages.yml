@@ -1,35 +1,18 @@
 name: Deploy GitHub Pages
 
+# Einzige Quelle fuer das Pages-Deployment. (Die fruehere zweite Workflow-Datei
+# static.yml wurde entfernt – zwei Workflows mit derselben Concurrency-Gruppe
+# konnten sich gegenseitig ueberschreiben.)
+#
+# Veroeffentlicht wird ein kuratiertes Bundle: alle Tool-/Launcher-HTML im Root,
+# die Ordner apps/ (fertige Onepager), start/ + design-system/ (neue Baustelle),
+# das Manifest tools.json sowie die gemeinsamen assets/. Quellordner wie archive/,
+# reference/, docs/, todo/, collections/, services/, tools/, workers/ bleiben aussen vor.
+
 on:
   push:
     branches:
       - main
-    paths:
-      - "index.html"
-      - "schriften.html"
-      - "statistik.html"
-      - "werkzeug.html"
-      - "proof.html"
-      - "zuordnen.html"
-      - "kerning.html"
-      - "ineinander.html"
-      - "ligvorschau.html"
-      - "schrift-webfont.html"
-      - "tester.html"
-      - "typografie.html"
-      - "vorschau.html"
-      - "schrift-vergleich.html"
-      - "logo-generator.html"
-      - "visitenkarten.html"
-      - "visitenkarten-generator.html"
-      - "signatur-generator.html"
-      - "index-goelogger-gci1.html"
-      - "apps/logo-generator/**"
-      - "apps/gtv-naming/**"
-      - "apps/visitenkarten-generator/**"
-      - "apps/signatur-generator/**"
-      - "assets/**"
-      - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -53,36 +36,21 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p _site
-          test -f index.html
-          cp index.html _site/index.html
-          if [ -f schriften.html ]; then cp schriften.html _site/schriften.html; fi
-          if [ -f statistik.html ]; then cp statistik.html _site/statistik.html; fi
-          if [ -f werkzeug.html ]; then cp werkzeug.html _site/werkzeug.html; fi
-          if [ -f proof.html ]; then cp proof.html _site/proof.html; fi
-          if [ -f zuordnen.html ]; then cp zuordnen.html _site/zuordnen.html; fi
-          if [ -f kerning.html ]; then cp kerning.html _site/kerning.html; fi
-          if [ -f ineinander.html ]; then cp ineinander.html _site/ineinander.html; fi
-          if [ -f ligvorschau.html ]; then cp ligvorschau.html _site/ligvorschau.html; fi
-          if [ -f schrift-webfont.html ]; then cp schrift-webfont.html _site/schrift-webfont.html; fi
-          if [ -f tester.html ]; then cp tester.html _site/tester.html; fi
-          if [ -f typografie.html ]; then cp typografie.html _site/typografie.html; fi
-          if [ -f vorschau.html ]; then cp vorschau.html _site/vorschau.html; fi
-          if [ -f schrift-vergleich.html ]; then cp schrift-vergleich.html _site/schrift-vergleich.html; fi
-          test -f logo-generator.html
-          cp logo-generator.html _site/logo-generator.html
-          if [ -f index-goelogger-gci1.html ]; then cp index-goelogger-gci1.html _site/index-goelogger-gci1.html; fi
-          if [ -f visitenkarten.html ]; then cp visitenkarten.html _site/visitenkarten.html; fi
-          if [ -f visitenkarten-generator.html ]; then cp visitenkarten-generator.html _site/visitenkarten-generator.html; fi
-          if [ -f signatur-generator.html ]; then cp signatur-generator.html _site/signatur-generator.html; fi
-          mkdir -p _site/apps
-          if [ -d apps/logo-generator ]; then cp -R apps/logo-generator _site/apps/; fi
-          if [ -d apps/gtv-naming ]; then cp -R apps/gtv-naming _site/apps/; fi
-          if [ -d apps/visitenkarten-generator ]; then cp -R apps/visitenkarten-generator _site/apps/; fi
-          if [ -d apps/signatur-generator ]; then cp -R apps/signatur-generator _site/apps/; fi
-          if [ -d assets ]; then
-            mkdir -p _site/assets
-            cp -R assets/. _site/assets/
-          fi
+
+          # Alle Tool-/Launcher-HTML im Root (index.html = Weiterleitung bleibt erhalten).
+          shopt -s nullglob
+          for f in *.html; do cp "$f" "_site/$f"; done
+          test -f _site/index.html
+          test -f _site/logo-generator.html
+
+          # Ganze Ordner wholesale – so werden neue Tools automatisch mitveroeffentlicht.
+          for d in apps start design-system assets; do
+            if [ -d "$d" ]; then cp -R "$d" "_site/$d"; fi
+          done
+
+          # Manifest der Werkzeuge (treibt die Uebersicht).
+          if [ -f tools.json ]; then cp tools.json _site/tools.json; fi
+
           touch _site/.nojekyll
 
       - name: Setup Pages

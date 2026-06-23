@@ -1,0 +1,50 @@
+/* =============================================================================
+   Goetheanum CI – Design-Tokens (eine Quelle der Wahrheit)
+   -----------------------------------------------------------------------------
+   Farben, Typo, Abstaende, Radien und die Hausschrift als Webfont. Jedes Tool
+   bindet diese Datei ein und ist allein durch Wiederverwendung im Hausbild.
+   Extrahiert aus dem reifsten Tool (Signatur-Generator) und vereinheitlicht.
+
+   Maschinenlesbare Fassung derselben Werte: design-system/tokens.json (DTCG).
+   ============================================================================= */
+
+/* Hausschrift – Variable Font, gehostet auf GitHub Pages (vgl. schriften.html#web) */
+@font-face{
+  font-family:"Goetheanum";
+  src:url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.5.woff2") format("woff2"),
+      url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.5.woff") format("woff");
+  font-weight:190 725; font-style:normal; font-display:swap;
+}
+
+:root{
+  /* --- Markenfarben ------------------------------------------------------- */
+  --blue:#0061a9;        /* Markenblau – Zustand/Verweis (Quelle: goetheanum-orgs) */
+  --gold:#d7ab68;        /* Gold – Inhalts-Akzent */
+  --gold-deep:#a07a33;   /* Gold dunkel – Hover/Links auf hell */
+
+  /* --- Neutrale Töne ------------------------------------------------------ */
+  --ink:#23272b;         /* Text */
+  --muted:#737a80;       /* Sekundärtext */
+  --paper:#fff;          /* Grund */
+  --soft:#faf8f4;        /* gedämpfte Fläche (Karten) */
+  --line:rgba(20,24,28,.10);
+  --line-soft:rgba(20,24,28,.055);
+  --bad:#b3261e;         /* Fehler/Warnung */
+
+  /* --- Typografie --------------------------------------------------------- */
+  --font:"Goetheanum","Helvetica Neue",Arial,sans-serif;
+  --font-system:"Helvetica Neue",Arial,sans-serif;
+  --font-mono:ui-monospace,Menlo,Consolas,monospace;
+  --w-text:440;          /* Fliesstext */
+  --w-strong:680;        /* Titel/Hervorhebung */
+
+  /* --- Abstands-Skala (4/8/12/16/24/32) ---------------------------------- */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s6:24px; --s8:32px;
+
+  /* --- Radien & Maße ----------------------------------------------------- */
+  --r-control:10px; --r-card:14px; --r-pill:999px;
+  --header-h:58px; --maxw:1080px;
+
+  /* --- Schatten ---------------------------------------------------------- */
+  --shadow-card:0 10px 30px rgba(20,24,28,.06);
+}
