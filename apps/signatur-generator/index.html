@@ -48,7 +48,8 @@
     section{padding:var(--s6) 0}
     .shead{gap:var(--s2)}
     .card{padding:var(--s4)}
-    .mail-stage{padding:var(--s4)}
+    .mail-stage{padding:var(--s3)}
+    .scroll-hint{display:block;font-size:12px;color:var(--muted);margin-top:6px}
     .brand .wm{font-size:22px}
     nav.top{gap:14px}
     nav.top a{font-size:13px}
@@ -124,6 +125,7 @@
   .hint code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px}
 
   .stage-lab{font-size:13px;color:var(--muted);margin-bottom:var(--s3)}
+  .scroll-hint{display:none}
   .mail-stage{background:#fff;border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:0 10px 30px rgba(20,24,28,.06);overflow-x:auto}
   .mail-body{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#999;line-height:1.5}
   .mail-greeting{margin-bottom:var(--s4)}
@@ -205,8 +207,8 @@
             <input type="email" id="email" placeholder="edith.maryon@goetheanum.ch" autocomplete="email" aria-describedby="emailMsg" />
             <span class="field-msg" id="emailMsg" role="alert"></span>
           </label>
-          <label class="field"><span class="lab">Website</span>
-            <input type="url" id="web" placeholder="www.goetheanum.org" />
+          <label class="field"><span class="lab">Website <span class="sublab">mehrere möglich, je Zeile</span></span>
+            <textarea id="web" rows="2" placeholder="www.goetheanum.ch"></textarea>
           </label>
         </fieldset>
 
@@ -248,6 +250,7 @@
               <div id="sigPreview"></div>
             </div>
           </div>
+          <p class="scroll-hint" aria-hidden="true">↔ In Originalgrösse – seitwärts wischen für die rechte Spalte.</p>
 
           <div class="btnrow">
             <button type="button" class="btn primary" id="copyRich">Signatur kopieren</button>
@@ -428,7 +431,7 @@ const EXAMPLE = {
   country: "Schweiz",
   phone: "+41 61 706 44 21",
   email: "edith.maryon@goetheanum.ch",
-  web: "www.goetheanum.org"
+  web: "www.goetheanum.ch"
 };
 
 const state = { variant: "long" };
@@ -484,7 +487,9 @@ function buildSignature() {
   const contact = [];
   if (phone) contact.push({ html: phoneCell() });
   if (val("email")) contact.push({ html: `<a href="mailto:${esc(val("email"))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(val("email"))}</a>` });
-  if (val("web")) contact.push({ html: `<a href="${esc(webHref(val("web")))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(val("web"))}</a>` });
+  val("web").split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(w => {
+    contact.push({ html: `<a href="${esc(webHref(w))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(w)}</a>` });
+  });
   if (contact.length) {
     if (L.length) L.push({ gap: 10 });
     contact.forEach(c => L.push(c));
