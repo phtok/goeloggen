@@ -51,6 +51,10 @@ jobs:
           # Manifest der Werkzeuge (treibt die Uebersicht).
           if [ -f tools.json ]; then cp tools.json _site/tools.json; fi
 
+          # Sprechende Abschnitts-Pfade (saubere URLs -> Weiterleitung auf die
+          # Zielseite). Zentral gepflegt in sektionen.json.
+          if [ -f sektionen.json ]; then python3 tools/build_sections.py _site; fi
+
           touch _site/.nojekyll
 
       - name: Setup Pages
