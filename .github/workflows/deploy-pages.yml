@@ -51,6 +51,10 @@ jobs:
           # Manifest der Werkzeuge (treibt die Uebersicht).
           if [ -f tools.json ]; then cp tools.json _site/tools.json; fi
 
+          # Custom-Domain (werkzeuge.goetheanum.ch). Muss im veroeffentlichten
+          # Bundle-Root liegen, sonst verwirft Pages die Domain bei jedem Deploy.
+          if [ -f CNAME ]; then cp CNAME _site/CNAME; fi
+
           touch _site/.nojekyll
 
       - name: Setup Pages
