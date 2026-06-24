@@ -1,0 +1,29 @@
+name: Typografie-Linter
+
+# Prueft den sichtbaren deutschen Lesetext der HTML-Seiten gegen die Hausregeln
+# (assets/typografie/typo-regeln.yaml). Blockiert nur bei harten Fehlern
+# (schwere: fehler) – Empfehlungen erscheinen im Log, brechen den Build nicht.
+# Absichtliche Gegenbeispiele (Lehr-/Specimen-Seiten) mit data-typo-ignore
+# ausnehmen.
+
+on:
+  pull_request:
+    paths:
+      - "**/*.html"
+      - "assets/typografie/typo-regeln.yaml"
+      - "tools/typo_lint.py"
+      - ".github/workflows/typo-lint.yml"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Hausregeln pruefen
+        run: python3 tools/typo_lint.py

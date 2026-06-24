@@ -74,7 +74,7 @@ select{font:inherit;font-size:13px;width:100%;padding:6px;border-radius:8px;bord
 .btn{font:inherit;font-size:13px;border:1px solid rgba(20,24,28,.18);background:#fff;border-radius:8px;padding:7px 12px;cursor:pointer;margin-right:8px}
 </style></head><body><div class="wrap">
 <h1>Ligaturen zuordnen</h1>
-<div class="hint">Jede deiner Zeichnungen als Kachel. Wähle pro Kachel die <b>Rolle</b> (z. B. „ff (Wortende)"). Unten entsteht die Zuordnung zum Kopieren — die schickst du mir, dann baue ich genau diese.</div>
+<div class="hint">Jede deiner Zeichnungen als Kachel. Wähle pro Kachel die <b>Rolle</b> (z. B. ‹ff (Wortende)›). Unten entsteht die Zuordnung zum Kopieren — die schickst du mir, dann baue ich genau diese.</div>
 <div class="grid">__TILES__</div>
 <div class="sum"><div class="code" id="code">Noch nichts zugeordnet.</div>
 <div style="margin-top:10px"><button class="btn" id="copy">Zuordnung kopieren</button><button class="btn" id="reset">zurücksetzen</button></div></div>
