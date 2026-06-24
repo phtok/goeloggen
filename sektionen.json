@@ -1,0 +1,13 @@
+{
+  "$beschreibung": "Sprechende Abschnitts-Pfade (saubere URLs). Schlüssel = Pfad unter der Wurzel (z. B. /schriften/), Wert = Zielseite. Der Deploy erzeugt daraus je eine Weiterleitung (tools/build_sections.py). Neue Sektion: hier eine Zeile ergänzen.",
+  "schriften": "schriften.html",
+  "typografie": "typografie.html",
+  "logo": "logo-generator.html",
+  "signatur": "signatur-generator.html",
+  "visitenkarten": "visitenkarten-generator.html",
+  "karten": "karten-generator.html",
+  "cover": "cover-generator.html",
+  "briefe": "briefschaften.html",
+  "statistik": "statistik.html",
+  "hub": "start/"
+}
