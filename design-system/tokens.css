@@ -35,8 +35,9 @@
   --font:"Goetheanum","Helvetica Neue",Arial,sans-serif;
   --font-system:"Helvetica Neue",Arial,sans-serif;
   --font-mono:ui-monospace,Menlo,Consolas,monospace;
-  --w-text:440;          /* Fliesstext */
-  --w-strong:680;        /* Titel/Hervorhebung */
+  --w-text:440;          /* Fliesstext (Klar) */
+  --w-title:580;         /* Titel (Deutlich) – Hausschnitt für Überschriften */
+  --w-strong:680;        /* Hervorhebung/Inline-Fettung (Laut, ⌘B) – Hausmaximum */
 
   /* --- Abstands-Skala (4/8/12/16/24/32) ---------------------------------- */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s6:24px; --s8:32px;

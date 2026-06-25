@@ -12,6 +12,12 @@ Mockups, PDFs, Beipackzettel) zuerst die Hausregeln lesen und befolgen:
 **Beim Gestalten die betroffenen Regel-IDs nennen** (z. B. „Kicker normal,
 nicht versal — G05"). Im Zweifel **fragen**, nicht erfinden.
 
+**Prüfen statt hoffen:** `python3 tools/typo_lint.py` prüft den sichtbaren
+Lesetext aller Seiten gegen die regex-fähigen Regeln; die CI
+(`.github/workflows/typo-lint.yml`) blockiert PRs bei harten Fehlern.
+Absichtliche Gegenbeispiele (Lehr-/Specimen-Seiten) mit `data-typo-ignore` am
+umschließenden Element ausnehmen. Befund & offene Punkte: `docs/typografie-audit.md`.
+
 ### Kardinalregeln (nicht verletzen)
 - **G01** Einfachauszeichnung: Hervorhebung IM Fließtext ändert **genau ein**
   Merkmal (Gewicht ODER Größe ODER Farbe ODER Einzug). Strukturebenen (Titel,
