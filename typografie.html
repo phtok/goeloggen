@@ -10,6 +10,7 @@
 <style>
   @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Leise.woff2") format("woff2");font-display:swap}
   @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Klar.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Deutlich";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Deutlich.woff2") format("woff2");font-display:swap}
   @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Laut.woff2") format("woff2");font-display:swap}
   :root{--ink:#23272b;--muted:#737a80;--line:rgba(20,24,28,.10);--line-soft:rgba(20,24,28,.055);
         --gold:#d7ab68;--gold-deep:#a07a33;--paper:#fff;--soft:#faf8f4;--maxw:880px;--bad:#b3433c;--good:#3f8f5f}
@@ -42,7 +43,7 @@
   h3{font-family:"G Laut";font-weight:400;font-size:17px;margin:22px 0 6px}
   p{max-width:39ch;text-wrap:pretty;orphans:2;widows:2}
   p.dim{color:var(--muted)}
-  .leise{font-family:"G Leise"}.laut{font-family:"G Laut"}
+  .leise{font-family:"G Leise"}.deutlich{font-family:"G Deutlich"}.laut{font-family:"G Laut"}
   .note{display:flex;gap:10px;align-items:baseline;border-left:2px solid var(--gold);background:var(--soft);
         padding:10px 14px;border-radius:0 10px 10px 0;margin:14px 0;font-size:14px;color:var(--muted);max-width:39ch}
   .note .rid{font-size:11px;color:var(--gold-deep);white-space:nowrap}
@@ -87,9 +88,9 @@
     <div class="note"><span class="rid">G01</span>regel. Gilt für Hervorhebung <span class="laut">im</span> Fliesstext: genau ein Merkmal. Strukturebenen – Titel, Lede, Bildlegende, Tabellenkopf – sind eine eigene Hierarchie und keine Auszeichnung; sie dürfen sich in mehr als einem Merkmal vom Text absetzen.</div>
     <h3>Die drei Stimmen</h3>
     <p>Der Fliesstext steht in Klar. Betont wird mit <span class="laut">Laut</span> – im Office einfach <span class="mono">Cmd+B</span>. Der stille Kontrapunkt ist <span class="leise">Leise</span> – Bildlegenden, Zitate, Nebenstimmen, im Office <span class="mono">Cmd+I</span>. Nie zwei Ämter auf einem Wort.</p>
-    <div class="note"><span class="rid">S01</span>griff. Standardgriff: Lesetext in Klar, Betonung und Titel in Laut, Nebenstimmen in Leise. Eine Familie trägt alles – ausser dort, wo sie an ihre Grenze kommt.</div>
+    <div class="note"><span class="rid">S01</span>griff. Standardgriff: Lesetext in Klar – auch das Minimum für kleine Marginalien und Fussnoten. Titel in <span class="deutlich">Deutlich</span> (entschiedene Ausnahme für die Titelei), Betonung in Laut, Nebenstimmen in Leise – nie kleiner als der Lesetext. Eine Familie trägt alles – ausser dort, wo sie an ihre Grenze kommt.</div>
     <h3>Wo die Schrift endet</h3>
-    <p>Die Goetheanum Schrift ist eine Werk- und Auszeichnungs-Grotesk, kein Buchsatz. Drei Grenzen sind zu kennen: Sie führt <span class="laut">keine</span> echte Kursive – Leise ist ein aufrechter Gegenton, kein laufender Schreibduktus. Sie kennt <span class="laut">einen</span> Ziffernsatz (Versalziffern, dicktengleich) – keine Mediävalziffern für lange Zahlentexte. Und sie deckt <span class="laut">Latein</span> ab – kein Griechisch, kein Kyrillisch. Für langen, immersiven Mengensatz, für fremde Schriftsysteme und für Festbreiten-Code (hier im <span class="mono">Monospace</span>) greift man bewusst nach aussen.</p>
+    <p>Die Goetheanum Schrift ist eine Werk- und Auszeichnungs-Grotesk, kein Buchsatz. Drei Grenzen sind zu kennen: Sie führt <span class="laut">keine</span> echte Kursive – Leise ist ein aufrechter Gegenton, kein laufender Schreibduktus. Sie führt <span class="laut">mehrere</span> Ziffernsätze (proportional, tabellarisch, Kurzziffern) – aber keine echten Mediävalziffern mit Ranging für lange Zahlentexte; nicht durch Verkleinern vortäuschen. Und sie deckt <span class="laut">Latein</span> ab – kein Griechisch, kein Kyrillisch, kein Arabisch. Für langen, immersiven Mengensatz, für fremde Schriftsysteme und für Festbreiten-Code (hier im <span class="mono">Monospace</span>) greift man bewusst nach aussen.</p>
     <div class="ex">
       <div class="no"><div class="t">so nicht</div>Der Vortrag ist <u><b>WICHTIG</b></u> und beginnt pünktlich.</div>
       <div class="yes"><div class="t">so</div>Der Vortrag ist <span class="laut">wichtig</span> und beginnt pünktlich.</div>
