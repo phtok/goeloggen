@@ -31,6 +31,7 @@
 <!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN. -->
 <link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/tokens.css" />
 <link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/base.css" />
+<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/nav.css" />
 <!-- Lokal/offline stattdessen (Pfadtiefe anpassen):
 <link rel="stylesheet" href="design-system/tokens.css" />
 <link rel="stylesheet" href="design-system/base.css" /> -->
@@ -45,19 +46,11 @@
 </head>
 <body>
 
-<!-- Kopfzeile – aus base.css (.ds-header). Wortmarke + Navigation. -->
-<header class="ds-header">
-  <div class="wrap bar">
-    <a class="brand" href="https://phtok.github.io/goeloggen/" aria-label="Goetheanum Grafik – Startseite">
-      <img class="mk" src="https://phtok.github.io/goeloggen/assets/logos/goetheanum-mark-blue.svg" alt="" />
-      <span class="wm">Goetheanum</span>
-    </a>
-    <nav class="top">
-      <a href="https://phtok.github.io/goeloggen/schriften.html">Schriften</a>
-      <a href="https://phtok.github.io/goeloggen/design-system/">System</a>
-    </nav>
-  </div>
-</header>
+<!-- Globale Navigation: erzeugt Kopfzeile + klappbares Menü aus tools.json.
+     data-variant="werkzeug" zeigt zusätzlich ein sichtbares „← Übersicht". -->
+<script src="https://phtok.github.io/goeloggen/design-system/nav.js"
+        data-root="https://phtok.github.io/goeloggen/"
+        data-variant="werkzeug"></script>
 
 <main class="wrap">
 

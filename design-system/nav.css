@@ -1,0 +1,89 @@
+/* =============================================================================
+   Goetheanum CI – ds-nav: globale Kopfzeile + klappbares Schubladen-Menü
+   -----------------------------------------------------------------------------
+   Eine Navigation für alle Seiten, gespeist aus tools.json. Setzt tokens.css
+   und base.css voraus. Markup erzeugt nav.js; hier nur das Aussehen.
+   Akkordeon = native <details>/<summary> (klappbar, zugänglich, ohne Skript).
+   ============================================================================= */
+
+.dsnav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.92);
+  backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
+.dsnav .bar{display:flex;align-items:center;gap:var(--s4);height:var(--header-h);
+  max-width:var(--maxw);margin:0 auto;padding:0 26px}
+
+/* Wortmarke = das echte Goetheanum-Lockup (aus dem Logo-Generator), immer zurück zur Übersicht */
+.dsnav .brand{display:flex;align-items:center;gap:var(--s3);text-decoration:none;flex:0 0 auto}
+.dsnav .brand .lockup{height:34px;width:auto;display:block}
+.dsnav .brand .mk{width:24px;height:24px;border-radius:6px;display:block}
+.dsnav .brand .wm{font-family:var(--font);font-weight:var(--w-text);font-size:24px;line-height:1;color:#8a9097;letter-spacing:.005em}
+
+/* „← Übersicht" – nur in der Generator-Variante sichtbar */
+.dsnav .back{display:none;align-items:center;gap:6px;color:var(--muted);font-size:13.5px;text-decoration:none}
+.dsnav.is-werkzeug .back{display:inline-flex}
+.dsnav .back:hover{color:var(--gold-deep)}
+
+/* Primär-Welten */
+.dsnav .worlds{display:flex;gap:22px;margin-left:auto}
+.dsnav .worlds a,.dsnav .worlds button{font:inherit;font-size:13.5px;color:var(--muted);
+  background:none;border:0;cursor:pointer;padding:0;text-decoration:none}
+.dsnav .worlds a:hover,.dsnav .worlds button:hover{color:var(--gold-deep)}
+
+/* ☰ Alles */
+.dsnav .all{margin-left:22px;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:13.5px;
+  color:var(--ink);background:none;border:1px solid var(--line);border-radius:var(--r-pill);
+  padding:6px 14px;cursor:pointer;transition:border-color .15s}
+.dsnav .all:hover{border-color:var(--gold-deep)}
+.dsnav .all .ic{font-size:15px;line-height:1}
+
+@media(max-width:720px){
+  .dsnav .worlds{display:none}
+  .dsnav .all{margin-left:auto}
+}
+
+/* Kontext-Pfad (in welcher Welt bin ich) */
+.dsnav .path{max-width:var(--maxw);margin:0 auto;padding:6px 26px;font-size:12px;color:var(--muted);
+  border-top:1px solid var(--line-soft);display:none}
+.dsnav.has-path .path{display:block}
+.dsnav .path b{color:var(--ink);font-weight:var(--w-text)}
+
+/* --- Schublade ------------------------------------------------------------- */
+.dsnav-backdrop{position:fixed;inset:0;background:rgba(20,24,28,.32);opacity:0;visibility:hidden;
+  transition:opacity .18s,visibility .18s;z-index:45}
+.dsnav-backdrop.open{opacity:1;visibility:visible}
+
+.dsnav-drawer{position:fixed;top:0;right:0;z-index:46;width:min(420px,100%);height:100vh;
+  background:var(--paper);border-left:1px solid var(--line);box-shadow:var(--shadow-card);
+  transform:translateX(100%);transition:transform .22s ease;display:flex;flex-direction:column}
+.dsnav-drawer.open{transform:none}
+
+.dsnav-drawer .dhead{display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;height:var(--header-h);border-bottom:1px solid var(--line);flex:0 0 auto}
+.dsnav-drawer .dhead .t{font-weight:var(--w-strong);font-size:15px}
+.dsnav-drawer .close{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+.dsnav-drawer .close:hover{color:var(--ink)}
+
+.dsnav-drawer .body{overflow:auto;padding:var(--s2) 0 var(--s8)}
+
+.dsnav-group{border-bottom:1px solid var(--line-soft)}
+.dsnav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+  padding:var(--s4) 22px;font-weight:var(--w-strong);font-size:14.5px}
+.dsnav-group>summary::-webkit-details-marker{display:none}
+.dsnav-group>summary .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s}
+.dsnav-group[open]>summary .arr{transform:rotate(90deg)}
+.dsnav-group>summary .intro{display:block;color:var(--muted);font-weight:var(--w-text);font-size:12px;margin-top:3px;max-width:42ch}
+
+.dsnav-link{display:flex;align-items:baseline;gap:10px;padding:9px 22px;text-decoration:none;color:var(--ink)}
+.dsnav-link:hover{background:var(--soft)}
+.dsnav-link .tt{font-size:14px}
+.dsnav-link .dd{color:var(--muted);font-size:12px;margin-top:2px;line-height:1.4}
+.dsnav-link .txt{display:flex;flex-direction:column}
+
+/* Status-Punkt */
+.dsnav-link .st{width:8px;height:8px;border-radius:var(--r-pill);background:var(--muted);flex:0 0 auto;margin-top:7px}
+.dsnav-link .st.live{background:#3f7d46}
+.dsnav-link .st.beta{background:var(--blue)}
+.dsnav-link .st.entwurf{background:var(--gold-deep)}
+.dsnav-link .st.geparkt{background:#c2c7cc}
+
+.dsnav-drawer .foot{padding:var(--s4) 22px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;flex:0 0 auto}
+.dsnav-drawer .foot a{color:var(--gold-deep);text-decoration:none}
