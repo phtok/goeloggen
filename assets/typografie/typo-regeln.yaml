@@ -82,7 +82,7 @@
   pruefung: lm
   schwere: fehler
 - id: G04-extreme
-  regel: Kein Gewicht schwerer als Laut (600) im Dokument; Flüstern/Schreien nur in Grafikanwendungen.
+  regel: Kein Gewicht schwerer als Laut (680) im Dokument; Deutlich (580) ist für Titel zulässig. Flüstern/Schreien nur in Grafikanwendungen.
   pruefung: lm
   schwere: fehler
 - id: G05-hervorhebung
