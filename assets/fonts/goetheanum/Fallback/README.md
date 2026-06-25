@@ -1,37 +1,34 @@
-# Fallback-Schriften für Nicht-Latein
+# Begleitschrift & Nicht-Latein-Fallback
 
-Die Goetheanum-Schriften decken **Latein** ab (Basic + Extended-A). Für
-andere Schriftsysteme braucht es einen Fallback. Dieser Ordner enthält den
-**kyrillischen** Fallback gebündelt; für Griechisch und Arabisch sind die
-empfohlenen Schriften unten verlinkt (alle **SIL OFL**, dieselbe Rechtslage).
+Die Goetheanum-Schriften decken **Latein** ab (Display + Auszeichnung). Für
+**langen Mengentext** und für **andere Schriftsysteme** kommen hier zwei Dinge
+zusammen — alle **SIL OFL**, alle **selbst gehostet** (woff2), keine CDN-Abhängigkeit.
 
-Leitgedanke: möglichst nah an der Titillium-Basis der Goetheanum-Schrift bleiben.
+## Begleit-Grotesk (entschieden): Source Sans 3
+Die gesetzte **Lese-/Begleitschrift** für langen Mengentext. Humanistische
+Grotesk, ruhig im Satz, echte Kursive; deckt **Latein + Griechisch + Kyrillisch**.
+goetheanum.ch nutzt sie (als Source Sans Pro) bereits als Textschrift – die
+Mischung Goetheanum-Display + Source-Text ist gelebte Praxis.
+Dateien: `SourceSans3-Regular/-SemiBold/-Italic.woff2` (Web) · `SourceSans3-Variable.ttf` + `-Italic.ttf` (Desktop).
 
-| Schriftsystem | Empfehlung | Bezug zur Titillium-Basis |
+## Script-Fallback (Titillium-nah)
+| Schriftsystem | Schrift | Rolle |
 |---|---|---|
-| **Kyrillisch** | **Titillium Web [RUS]** (hier gebündelt) | direkte Kyrillisierung von Titillium (Daymarius) |
-| **Arabisch** | **Cairo** (Mohamed Gaber) | erweitert Titillium Web um Arabisch (Kufi-Duktus) |
-| **Griechisch** | **Source Sans 3** | humanistische Grotesk, nah an Titillium; bereits im Web-Stack |
+| **Kyrillisch** | **Titillium Web [RUS]** (Daymarius) | Display-Fallback für Titel in Hausschrift-Optik (Titillium-DNA) |
+| **Arabisch** | **Cairo** (Mohamed Gaber) | direkte Titillium-Erweiterung um Arabisch |
 
-## Gebündelt: Titillium Web [RUS]
-Kyrillische Erweiterung von Titillium Web durch **Daymarius**, Version 1.002
-(2018), SIL OFL 1.1. Vier Schnitte: Light (300), Regular (400), SemiBold (600),
-Bold (700). Nur Kyrillisch + Latein, statisch — als Fallback ausreichend.
-
-## Nicht gebündelt (Download bei Bedarf)
-- **Cairo** — https://fonts.google.com/specimen/Cairo (OFL)
-- **Source Sans 3** — https://fonts.google.com/specimen/Source+Sans+3 (OFL)
+Kyrillischer und griechischer **Mengentext** läuft in Source Sans 3 selbst;
+Titillium RUS ist für **Display/Titel** gedacht, wo die Hausschrift-Anmutung
+gewünscht ist. Arabisch deckt Cairo (Mengentext wie Titel).
 
 ## Einbindung (Web)
-Siehe `fallback.css`: zuerst die Goetheanum-Schrift, dann pro Schriftsystem
-der Fallback. Der Browser wählt je Zeichen automatisch die passende Schrift.
-
+`fallback.css` einbinden – enthält alle `@font-face` (lokal) und die Stacks:
 ```css
-font-family: "Goetheanum Klar", "Titillium RUS", "Cairo", "Source Sans 3", sans-serif;
+--goe-text:    "Source Sans 3", "Cairo", system-ui, sans-serif;          /* Lesetext */
+--goe-display: "Goetheanum Klar", "Titillium RUS", "Cairo", sans-serif;  /* Titel + Fallback */
 ```
 
 ## Lizenz
-Alle genannten Schriften stehen unter der SIL Open Font License 1.1 und dürfen
-frei weitergegeben werden. Die OFL der Goetheanum-Schriften liegt unter
-`../OFL.txt`; die OFL der Fallback-Schriften ist in den jeweiligen Font-Dateien
-(name table) hinterlegt.
+Alle Schriften stehen unter der **SIL Open Font License 1.1** und dürfen frei
+weitergegeben werden – siehe `OFL-FALLBACK.txt` (Quellen/Autoren) und die
+`name`-Tabellen der Font-Dateien.

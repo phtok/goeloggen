@@ -74,7 +74,7 @@
 
 # ––– Urteils-Regeln (für Sprachmodelle; nicht regex-sicher) –––
 - id: S01-schriftwahl
-  regel: Lesetext in Klar (440), zugleich Minimum für kleine Marginalien und Fussnoten; Titel/Header in Deutlich (580, entschiedene Ausnahme für die Titelei); Inline-Betonung und Office-Fett in Laut (680); Nebenstimmen, Legenden, Zitate in Leise (265, nie kleiner als der Lesetext). Nach aussen nur bei Festbreiten-Code (Monospace), fremden Schriftsystemen (Griechisch, Kyrillisch, Arabisch) oder langem immersivem Mengensatz. Keine echte Kursive; mehrere Ziffernsätze (proportional, tabellarisch, Kurzziffern), aber keine Mediävalziffern vortäuschen.
+  regel: Lesetext in Klar (440), zugleich Minimum für kleine Marginalien und Fussnoten; Titel/Header in Deutlich (580, entschiedene Ausnahme für die Titelei); Inline-Betonung und Office-Fett in Laut (680); Nebenstimmen, Legenden, Zitate in Leise (265, nie kleiner als der Lesetext). Nach aussen nur bei Festbreiten-Code (Monospace), fremden Schriftsystemen (Griechisch, Kyrillisch, Arabisch) oder langem immersivem Mengensatz (Begleitschrift Source Sans 3). Keine echte Kursive; mehrere Ziffernsätze (proportional, tabellarisch, Kurzziffern), aber keine Mediävalziffern vortäuschen.
   pruefung: lm
   schwere: fehler
 - id: G01-einfachauszeichnung
