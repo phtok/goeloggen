@@ -74,7 +74,7 @@
 
 # ––– Urteils-Regeln (für Sprachmodelle; nicht regex-sicher) –––
 - id: S01-schriftwahl
-  regel: Lesetext in der Goetheanum Schrift Klar (440); Betonung und Titel in Laut (680); Nebenstimmen, Legenden, Zitate in Leise (265). Nach aussen nur bei Festbreiten-Code (Monospace), fremden Schriftsystemen (Griechisch, Kyrillisch) oder langem immersivem Mengensatz. Keine echte Kursive, nur ein Ziffernsatz – das nicht vortäuschen.
+  regel: Lesetext in Klar (440), zugleich Minimum für kleine Marginalien und Fussnoten; Titel/Header in Deutlich (580, entschiedene Ausnahme für die Titelei); Inline-Betonung und Office-Fett in Laut (680); Nebenstimmen, Legenden, Zitate in Leise (265, nie kleiner als der Lesetext). Nach aussen nur bei Festbreiten-Code (Monospace), fremden Schriftsystemen (Griechisch, Kyrillisch, Arabisch) oder langem immersivem Mengensatz. Keine echte Kursive; mehrere Ziffernsätze (proportional, tabellarisch, Kurzziffern), aber keine Mediävalziffern vortäuschen.
   pruefung: lm
   schwere: fehler
 - id: G01-einfachauszeichnung
