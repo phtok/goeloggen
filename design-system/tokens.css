@@ -35,8 +35,10 @@
   --font:"Goetheanum","Helvetica Neue",Arial,sans-serif;
   --font-system:"Helvetica Neue",Arial,sans-serif;
   --font-mono:ui-monospace,Menlo,Consolas,monospace;
-  --w-text:440;          /* Fliesstext */
-  --w-strong:680;        /* Titel/Hervorhebung */
+  --w-leise:265;         /* Leise – Legenden, Zitate, stiller Gegenton (S01) */
+  --w-text:440;          /* Klar – Fliesstext, alles was gelesen wird */
+  --w-deutlich:580;      /* Deutlich – Titel-Schnitt (CLAUDE.md: Deutlich = Titel) */
+  --w-strong:680;        /* Laut – Inline-/Office-Fettung, Betonung (⌘B) */
 
   /* --- Abstands-Skala (4/8/12/16/24/32) ---------------------------------- */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s6:24px; --s8:32px;

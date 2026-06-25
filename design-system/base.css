@@ -71,3 +71,43 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .ds-footer .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .ds-footer .frow strong{color:var(--ink);font-weight:var(--w-text)}
 .ds-footer .frow a:hover{color:var(--gold-deep)}
+
+/* =============================================================================
+   Eingebaute Typografie – Hausregeln als Voreinstellung, nicht als Nachkontrolle
+   -----------------------------------------------------------------------------
+   Wer nichts tut, tut das Richtige (Mechanismus 2). Fürs Falsche gibt es kein
+   Werkzeug (Mechanismus 3). Quelle: assets/typografie/goetheanum-typo-tokens.json.
+   ============================================================================= */
+
+/* Lesefluss: Trennung, schöner Umbruch, keine verwaisten Zeilen (G12/G24/G28).
+   Greift, weil die Seite lang="de-CH" trägt (siehe starter.html). */
+body{hyphens:auto;-webkit-hyphens:auto;text-wrap:pretty;orphans:2;widows:2}
+
+/* Betonung hat genau zwei Ämter: Laut betont, Leise ist der stille Gegenton
+   (G02/G05/S01). Keine echte Kursive – Leise steht aufrecht. Unterstreichen und
+   Versalien als Hervorhebung gibt es bewusst NICHT als Utility (G05). */
+strong,b{font-weight:var(--w-strong)}
+em,i{font-style:normal;font-weight:var(--w-leise)}
+
+/* Hausanführung: ‹…› automatisch über <q> (G16) – einfache Guillemets nach aussen. */
+q{quotes:'\2039' '\203A' '\2039' '\203A'}
+
+/* Ziffern in Tabellen: Versalziffern, dicktengleich, exakt untereinander (G25).
+   Nie mit Leerzeichen ausgerichtet – das erledigt tabular-nums. */
+table{border-collapse:collapse;font-variant-numeric:tabular-nums lining-nums}
+th,td{text-align:left;padding:var(--s2) var(--s3);border-bottom:1px solid var(--line-soft)}
+th{font-weight:var(--w-strong);color:var(--ink)}
+td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:right;font-feature-settings:"tnum","lnum"}
+
+/* Schnitt-Utilities – die drei Stimmen der Familie, abrufbar ohne Nachdenken. */
+.leise{font-weight:var(--w-leise)}
+.klar{font-weight:var(--w-text)}
+.deutlich{font-weight:var(--w-deutlich)}
+.laut{font-weight:var(--w-strong)}
+
+/* Korrekter Kicker: getönt und leicht getrackt – aber NORMAL, nicht versal (G05). */
+.kicker{display:inline-block;color:var(--gold-deep);font-size:12.5px;letter-spacing:.04em;font-weight:var(--w-leise);margin-bottom:var(--s2)}
+
+/* Lesemass: ~66 Zeichen je Zeile für linearen Mengentext (G10). */
+.lese{max-width:min(39ch,100%)}
+.meta{color:var(--muted)}
