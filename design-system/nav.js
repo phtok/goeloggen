@@ -9,11 +9,12 @@
              data-variant="werkzeug"          (optional: zeigt „← Übersicht")
              data-path="Schrift › Tester"></script>  (optional: Kontext-Pfad)
 
-   Drei nutzernahe Welten – Werkzeuge · Schrift · Elemente – in Kopfzeile UND
-   Schublade. Über die technischen tools.json-Kategorien liegt nur eine
-   freundliche Sprachschicht (WORLDS). Werkstatt und Geparktes sind intern und
-   erscheinen NICHT im breiten Menü (sie leben im Hub start/).
-   Akkordeon = native <details>.
+   Kopfzeile: die vier meistgenutzten Werkzeuge beim Namen, plus „Mehr".
+     Logos · Schriften · Mail-Signatur · Visitenkarte · Mehr
+   Ein Tipp auf die vier führt direkt zum Ziel. „Mehr" öffnet die Schublade
+   mit dem ganzen Sortiment, in drei nutzernahe Welten gegliedert
+   (Werkzeuge · Schrift · Elemente). Werkstatt/Geparktes sind intern und NICHT
+   im Menü (sie leben im Hub start/). Akkordeon = native <details>.
    ============================================================================= */
 (function () {
   var s = document.currentScript;
@@ -24,8 +25,16 @@
   var VARIANT = (s && s.dataset.variant) || "";
   var PATH  = (s && s.dataset.path)  || "";
 
-  // Die drei Welten in nutzernaher Sprache. cats = welche tools.json-Kategorien
-  // hier hineinfallen. Werkstatt/Geparktes fehlen bewusst (intern, nur im Hub).
+  // Die vier Direkt-Sprünge der Kopfzeile (für die Breite der Mitarbeitenden).
+  // href kommt aus tools.json (per slug) – eine Quelle, keine doppelten Pfade.
+  var PRIMARY = [
+    { label: "Logos",        slug: "logo-generator" },
+    { label: "Schriften",    slug: "schriften" },
+    { label: "Mail-Signatur", slug: "signatur" },
+    { label: "Visitenkarte", slug: "visitenkarten" }
+  ];
+
+  // Die Schublade „Mehr" – das ganze Sortiment in drei nutzernahen Welten.
   var WORLDS = [
     { id: "werkzeuge", label: "Werkzeuge",
       intro: "Eintragen, fertiges Ergebnis übernehmen – für den täglichen Gebrauch.",
@@ -55,14 +64,13 @@
   var header = el("header", "dsnav" + (VARIANT === "werkzeug" ? " is-werkzeug" : "") + (PATH ? " has-path" : ""));
   header.innerHTML =
     '<div class="bar">' +
-      '<a class="brand" href="' + HOME + '" aria-label="Zur Übersicht">' +
-        '<img class="mk" src="' + ROOT + 'assets/logos/goetheanum-mark-blue.svg" alt="">' +
-        '<span class="wm">Goetheanum</span>' +
+      '<a class="brand" href="' + HOME + '" aria-label="Goetheanum Werkzeuge – zur Übersicht">' +
+        '<img class="lockup" src="' + ROOT + 'assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge">' +
       '</a>' +
       '<a class="back" href="' + HOME + '">← Übersicht</a>' +
       '<nav class="worlds"></nav>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false">' +
-        '<span class="ic">☰</span> Alles</button>' +
+        '<span class="ic">☰</span> Mehr</button>' +
     '</div>' +
     (PATH ? '<div class="path">' + PATH.replace(/›\s*([^›]+)$/, '› <b>$1</b>') + '</div>' : "");
   document.body.insertBefore(header, document.body.firstChild);
@@ -90,25 +98,23 @@
   drawer.querySelector(".close").addEventListener("click", closeDrawer);
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrawer(); });
 
-  // --- Aus dem Manifest füllen, gegliedert in die drei Welten ----------------
+  // --- Aus dem Manifest füllen -----------------------------------------------
   fetch(TOOLS).then(function (r) { return r.json(); }).then(function (m) {
     var allTools = m.tools || [];
+    function bySlug(slug) { return allTools.filter(function (t) { return t.slug === slug; })[0]; }
 
+    // Kopfzeile: vier Direkt-Sprünge
+    PRIMARY.forEach(function (p) {
+      var t = bySlug(p.slug);
+      var a = el("a", null, p.label);
+      a.href = t ? resolveHref(t.href) : HOME;
+      worldsNav.appendChild(a);
+    });
+
+    // Schublade: drei Welten mit dem ganzen Sortiment
     WORLDS.forEach(function (w) {
       var tools = allTools.filter(function (t) { return w.cats.indexOf(t.cat) !== -1; });
       if (!tools.length) return;
-
-      // Primär-Welt in die Kopfzeile
-      var btn = el("button", null, w.label);
-      btn.type = "button";
-      btn.addEventListener("click", function () {
-        openDrawer();
-        var grp = drawerBody.querySelector('[data-world="' + w.id + '"]');
-        if (grp) { grp.open = true; grp.scrollIntoView({ block: "start", behavior: "smooth" }); }
-      });
-      worldsNav.appendChild(btn);
-
-      // Schubladen-Gruppe (alle drei offen – es sind nur drei)
       var g = el("details", "dsnav-group");
       g.setAttribute("data-world", w.id);
       g.open = true;

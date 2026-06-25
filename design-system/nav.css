@@ -11,8 +11,9 @@
 .dsnav .bar{display:flex;align-items:center;gap:var(--s4);height:var(--header-h);
   max-width:var(--maxw);margin:0 auto;padding:0 26px}
 
-/* Wortmarke = immer zurück zur Übersicht */
+/* Wortmarke = das echte Goetheanum-Lockup (aus dem Logo-Generator), immer zurück zur Übersicht */
 .dsnav .brand{display:flex;align-items:center;gap:var(--s3);text-decoration:none;flex:0 0 auto}
+.dsnav .brand .lockup{height:34px;width:auto;display:block}
 .dsnav .brand .mk{width:24px;height:24px;border-radius:6px;display:block}
 .dsnav .brand .wm{font-family:var(--font);font-weight:var(--w-text);font-size:24px;line-height:1;color:#8a9097;letter-spacing:.005em}
 
