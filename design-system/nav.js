@@ -9,7 +9,11 @@
              data-variant="werkzeug"          (optional: zeigt „← Übersicht")
              data-path="Schrift › Tester"></script>  (optional: Kontext-Pfad)
 
-   Die Kopfzeile wird oben in <body> eingehängt. Akkordeon = native <details>.
+   Drei nutzernahe Welten – Werkzeuge · Schrift · Elemente – in Kopfzeile UND
+   Schublade. Über die technischen tools.json-Kategorien liegt nur eine
+   freundliche Sprachschicht (WORLDS). Werkstatt und Geparktes sind intern und
+   erscheinen NICHT im breiten Menü (sie leben im Hub start/).
+   Akkordeon = native <details>.
    ============================================================================= */
 (function () {
   var s = document.currentScript;
@@ -20,14 +24,19 @@
   var VARIANT = (s && s.dataset.variant) || "";
   var PATH  = (s && s.dataset.path)  || "";
 
-  // Welche Kategorien sind die breiten „Welten" (Primär-Navigation) und wie heissen sie kurz.
-  var PRIMARY = [
-    { id: "generatoren", label: "Werkzeuge" },
-    { id: "schrift",     label: "Schrift" },
-    { id: "system",      label: "Elemente" }
+  // Die drei Welten in nutzernaher Sprache. cats = welche tools.json-Kategorien
+  // hier hineinfallen. Werkstatt/Geparktes fehlen bewusst (intern, nur im Hub).
+  var WORLDS = [
+    { id: "werkzeuge", label: "Werkzeuge",
+      intro: "Eintragen, fertiges Ergebnis übernehmen – für den täglichen Gebrauch.",
+      cats: ["generatoren"] },
+    { id: "schrift", label: "Schrift",
+      intro: "Die Hausschrift und die Regeln dazu – ansehen, herunterladen, einbinden.",
+      cats: ["schrift"] },
+    { id: "elemente", label: "Elemente",
+      intro: "Farben, Logos und das Design-System – zum Nachschlagen und Holen.",
+      cats: ["system"] }
   ];
-  // Welche Gruppen in der Schublade offen starten (Breite sieht nur Relevantes).
-  var OPEN_BY_DEFAULT = { generatoren: true, schrift: true, system: true };
 
   function el(tag, cls, html) {
     var e = document.createElement(tag);
@@ -63,7 +72,7 @@
   drawer.setAttribute("role", "dialog");
   drawer.setAttribute("aria-label", "Alle Werkzeuge");
   drawer.innerHTML =
-    '<div class="dhead"><span class="t">Alle Werkzeuge</span>' +
+    '<div class="dhead"><span class="t">Alles</span>' +
       '<button class="close" type="button" aria-label="Schliessen">×</button></div>' +
     '<div class="body"></div>' +
     '<div class="foot">Goetheanum Hausgrafik · <a href="' + ROOT + 'design-system/">Design-System</a></div>';
@@ -81,34 +90,32 @@
   drawer.querySelector(".close").addEventListener("click", closeDrawer);
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrawer(); });
 
-  // --- Aus dem Manifest füllen ----------------------------------------------
+  // --- Aus dem Manifest füllen, gegliedert in die drei Welten ----------------
   fetch(TOOLS).then(function (r) { return r.json(); }).then(function (m) {
-    // Primär-Welten in die Kopfzeile
-    PRIMARY.forEach(function (w) {
-      var cat = (m.categories || []).filter(function (c) { return c.id === w.id; })[0];
-      if (!cat) return;
-      var a = el("button", null, w.label);
-      a.type = "button";
-      a.addEventListener("click", function () {
+    var allTools = m.tools || [];
+
+    WORLDS.forEach(function (w) {
+      var tools = allTools.filter(function (t) { return w.cats.indexOf(t.cat) !== -1; });
+      if (!tools.length) return;
+
+      // Primär-Welt in die Kopfzeile
+      var btn = el("button", null, w.label);
+      btn.type = "button";
+      btn.addEventListener("click", function () {
         openDrawer();
-        var grp = drawerBody.querySelector('[data-cat="' + w.id + '"]');
+        var grp = drawerBody.querySelector('[data-world="' + w.id + '"]');
         if (grp) { grp.open = true; grp.scrollIntoView({ block: "start", behavior: "smooth" }); }
       });
-      worldsNav.appendChild(a);
-    });
+      worldsNav.appendChild(btn);
 
-    // Schubladen-Gruppen je Kategorie
-    (m.categories || []).forEach(function (cat) {
-      var tools = (m.tools || []).filter(function (t) { return t.cat === cat.id; });
-      if (!tools.length) return;
+      // Schubladen-Gruppe (alle drei offen – es sind nur drei)
       var g = el("details", "dsnav-group");
-      g.setAttribute("data-cat", cat.id);
-      if (OPEN_BY_DEFAULT[cat.id]) g.open = true;
-      var sum = el("summary", null,
-        '<span><span class="ttl">' + cat.title + '</span>' +
-        (cat.intro ? '<span class="intro">' + cat.intro + '</span>' : "") + '</span>' +
-        '<span class="arr">›</span>');
-      g.appendChild(sum);
+      g.setAttribute("data-world", w.id);
+      g.open = true;
+      g.appendChild(el("summary", null,
+        '<span><span class="ttl">' + w.label + '</span>' +
+        '<span class="intro">' + w.intro + '</span></span>' +
+        '<span class="arr">›</span>'));
       tools.forEach(function (t) {
         var a = el("a", "dsnav-link");
         a.href = resolveHref(t.href);
