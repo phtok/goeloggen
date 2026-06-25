@@ -25,7 +25,6 @@
   var TOOLS = (s && s.dataset.tools) || ROOT + "tools.json";
   var HOME  = (s && s.dataset.home)  || ROOT;
   var VARIANT = (s && s.dataset.variant) || "";
-  var PATH  = (s && s.dataset.path)  || "";
   var KEY = "goeNavIntern";
 
   // Die vier meistgenutzten Werkzeuge – Kopfzeile UND prominent in der Schublade.
@@ -83,7 +82,7 @@
   })();
 
   // --- Kopfzeile -------------------------------------------------------------
-  var header = el("header", "dsnav" + (VARIANT === "werkzeug" ? " is-werkzeug" : "") + (PATH ? " has-path" : ""));
+  var header = el("header", "dsnav" + (VARIANT === "werkzeug" ? " is-werkzeug" : ""));
   header.innerHTML =
     '<div class="bar">' +
       '<a class="brand" href="' + HOME + '" aria-label="Goetheanum Werkzeuge – zur Übersicht">' +
@@ -93,8 +92,7 @@
       '<nav class="worlds"></nav>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
-    '</div>' +
-    (PATH ? '<div class="path">' + PATH.replace(/›\s*([^›]+)$/, '› <b>$1</b>') + '</div>' : "");
+    '</div>';
   document.body.insertBefore(header, document.body.firstChild);
 
   var backdrop = el("div", "dsnav-backdrop");
@@ -125,19 +123,33 @@
   drawer.querySelector(".close").addEventListener("click", closeDrawer);
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrawer(); });
 
-  // Unsichtbarer Schalter: das Wort „intern" tippen
+  // Unsichtbarer Schalter (zwei Wege, gleicher Effekt)
+  function toggleIntern() {
+    var now = !isIntern(); setIntern(now);
+    renderDrawer();
+    flash(now ? "Intern-Ansicht: an" : "Intern-Ansicht: aus");
+    if (now) openDrawer();
+  }
+
+  // (1) Desktop: das Wort „intern" tippen
   var buf = "";
   document.addEventListener("keydown", function (e) {
     var tag = (document.activeElement && document.activeElement.tagName) || "";
     if (tag === "INPUT" || tag === "TEXTAREA" || (e.key && e.key.length !== 1)) { return; }
     buf = (buf + e.key.toLowerCase()).slice(-6);
-    if (buf === "intern") {
-      buf = "";
-      var now = !isIntern(); setIntern(now);
-      renderDrawer();
-      flash(now ? "Intern-Ansicht: an" : "Intern-Ansicht: aus");
-      if (now) openDrawer();
-    }
+    if (buf === "intern") { buf = ""; toggleIntern(); }
+  });
+
+  // (2) Handy & Desktop: drei schnelle Tipps in die leere Mitte der Kopfzeile
+  // (alles, was kein Link/Knopf ist – also der Bereich zwischen Lockup und Navi).
+  var bar = header.querySelector(".bar");
+  var taps = [];
+  bar.addEventListener("click", function (e) {
+    if (e.target.closest("a,button")) return;        // echte Bedienelemente nicht zählen
+    var now = e.timeStamp;
+    taps.push(now);
+    taps = taps.filter(function (t) { return now - t < 800; });
+    if (taps.length >= 3) { taps = []; toggleIntern(); }
   });
 
   // --- Schublade rendern -----------------------------------------------------
