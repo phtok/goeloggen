@@ -28,12 +28,12 @@
   background:none;border:0;cursor:pointer;padding:0;text-decoration:none}
 .dsnav .worlds a:hover,.dsnav .worlds button:hover{color:var(--gold-deep)}
 
-/* ☰ Alles */
-.dsnav .all{margin-left:22px;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:13.5px;
-  color:var(--ink);background:none;border:1px solid var(--line);border-radius:var(--r-pill);
-  padding:6px 14px;cursor:pointer;transition:border-color .15s}
-.dsnav .all:hover{border-color:var(--gold-deep)}
-.dsnav .all .ic{font-size:15px;line-height:1}
+/* ☰ Burger – nur das Icon, keine Pille, kein Wort */
+.dsnav .all{margin-left:22px;display:inline-flex;align-items:center;gap:6px;font:inherit;
+  color:var(--ink);background:none;border:0;padding:4px;cursor:pointer;line-height:1}
+.dsnav .all .ic{font-size:23px;line-height:1}
+.dsnav .all:hover{color:var(--gold-deep)}
+.dsnav .all .idot{width:7px;height:7px;border-radius:var(--r-pill);background:var(--gold)}
 
 @media(max-width:720px){
   .dsnav .worlds{display:none}
@@ -63,6 +63,20 @@
 .dsnav-drawer .close:hover{color:var(--ink)}
 
 .dsnav-drawer .body{overflow:auto;padding:var(--s2) 0 var(--s8)}
+
+/* Die vier meistgenutzten – prominent ganz oben in der Schublade */
+.dsnav-quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px 22px var(--s2)}
+.dsnav-quick a{display:block;border:1px solid var(--line);border-radius:var(--r-card);padding:14px;
+  text-decoration:none;color:var(--ink);background:var(--soft);transition:border-color .15s,transform .15s,box-shadow .15s}
+.dsnav-quick a:hover{border-color:var(--gold);transform:translateY(-1px);box-shadow:var(--shadow-card)}
+.dsnav-quick .qt{display:block;font-weight:var(--w-strong);font-size:15px}
+.dsnav-quick .qd{display:block;color:var(--muted);font-size:12px;margin-top:3px;line-height:1.35}
+
+/* Toast für den unsichtbaren Intern-Schalter */
+.dsnav-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;
+  padding:8px 16px;border-radius:var(--r-pill);font-size:13px;opacity:0;visibility:hidden;
+  transition:opacity .2s,visibility .2s;z-index:60}
+.dsnav-toast.show{opacity:1;visibility:visible}
 
 .dsnav-group{border-bottom:1px solid var(--line-soft)}
 .dsnav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
