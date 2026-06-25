@@ -82,7 +82,7 @@
   pruefung: lm
   schwere: fehler
 - id: G04-extreme
-  regel: Kein Gewicht schwerer als Laut (600) im Dokument; Flüstern/Schreien nur in Grafikanwendungen.
+  regel: Kein Gewicht schwerer als Laut (680) im Dokument; Deutlich (580) ist für Titel zulässig. Flüstern/Schreien nur in Grafikanwendungen.
   pruefung: lm
   schwere: fehler
 - id: G05-hervorhebung
@@ -102,7 +102,7 @@
   pruefung: lm
   schwere: empfehlung
 - id: G25-ziffern
-  regel: Ein Ziffernsatz – Versalziffern, dicktengleich. In Tabellen rechtsbündig und exakt untereinander, nie mit Leerzeichen ausgerichtet. Keine Mediävalziffern durch Verkleinern vortäuschen.
+  regel: Grundton im Fliesstext proportionale Versalziffern; in Tabellen, Listen und Beträgen zwingend tnum (dicktengleich), rechtsbündig und exakt untereinander, nie mit Leerzeichen ausgerichtet. Kurzziffern (onum) für Mengentext mit vielen Zahlen. Keine Mediävalziffern durch Verkleinern vortäuschen.
   pruefung: lm
   schwere: empfehlung
 - id: G27-lesesituation
