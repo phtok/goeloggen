@@ -7,12 +7,15 @@
     "geparkt": "Konzept, später"
   },
   "categories": [
+    { "id": "system",      "title": "Design-System", "intro": "Das Fundament – Farben, Schrift, Regeln und Komponenten. Hier nachschlagen und von hier aus neue Werkzeuge bauen." },
     { "id": "generatoren", "title": "Generatoren", "intro": "Eigene Angaben eintragen, fertiges Ergebnis übernehmen. Für den täglichen Gebrauch." },
     { "id": "schrift",     "title": "Schrift & Typografie", "intro": "Die Hausschrift v2.5 und die Regeln dazu – nachschlagen, vergleichen, einbinden." },
     { "id": "werkstatt",   "title": "Werkstatt", "intro": "Werkschau und Prüfwerkzeuge rund um die Schriftentwicklung und -pflege." },
     { "id": "geparkt",     "title": "Geparkte Projekte", "intro": "Durchdachte Konzepte, die später kommen – zum schnellen Einsehen der Spezifikation." }
   ],
   "tools": [
+    { "slug": "design-system",     "cat": "system",      "status": "beta",    "tag": "Fundament",     "title": "Design-System",      "href": "design-system/",               "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Mit Starter und Bau-Workflow." },
+
     { "slug": "logo-generator",    "cat": "generatoren", "status": "live",    "tag": "Logo",          "title": "Logo-Generator",     "href": "logo-generator.html",          "desc": "Sektions- und Bereichslogos in der Hausschrift – korrekt gesetzt, als SVG zum Herunterladen." },
     { "slug": "visitenkarten",     "cat": "generatoren", "status": "live",    "tag": "Visitenkarten", "title": "Visitenkarten",      "href": "visitenkarten-generator.html", "desc": "Einheitliche Visitenkarten aus den eigenen Angaben – druckfertig, ohne Layoutprogramm." },
     { "slug": "signatur",          "cat": "generatoren", "status": "live",    "tag": "E-Mail",        "title": "Signatur",           "href": "signatur-generator.html",      "desc": "Outlook-robuste E-Mail-Signatur nach gemeinsamer Vorlage – kopieren und einsetzen." },

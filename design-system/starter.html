@@ -1,0 +1,114 @@
+<!doctype html>
+<!-- =============================================================================
+     Goetheanum-Werkzeug · STARTER
+     -----------------------------------------------------------------------------
+     So baust du ein neues Werkzeug oder eine neue Seite – schnell und regelkonform:
+
+       1. Diese Datei kopieren  →  z. B.  ./mein-werkzeug.html  (oder apps/mein-werkzeug/index.html)
+       2. Nur die mit «DEINE MITTE» markierte Stelle füllen.
+       3. Einen Eintrag in  tools.json  ergänzen  →  erscheint automatisch im Hub.
+       4. Committen  →  der Typo-Hook (tools/typo-check.py) lässt nur Konformes durch.
+
+     Warum hinterher nichts geprüft werden muss:
+       · Farben/Schnitte/Abstände/Komponenten kommen aus tokens.css + base.css
+         (EINGEBUNDEN, nicht kopiert) – sie können gar nicht abweichen.
+       · base.css stellt Hausregeln als Voreinstellung ein: Trennung, ‹…› über <q>,
+         tabellarische Ziffern, Betonung = Laut, Leise statt Kursive (G02/G05/G16/G25 …).
+       · Fürs Falsche (Unterstreichen/Versal-Hervorhebung/Sperren) gibt es kein Utility.
+
+     Pfad-Hinweis: Die zwei <link> unten laden das System per absoluter URL und
+     funktionieren von JEDEM Ort. Für lokale Arbeit ohne Netz die relative Variante
+     daneben (auskommentiert) nutzen und den Pfad an die Tiefe deiner Datei anpassen.
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Neues Werkzeug · Goetheanum</title>
+<meta name="description" content="Kurzbeschreibung des Werkzeugs – ein Satz, was es tut." />
+<link rel="icon" type="image/svg+xml" href="https://phtok.github.io/goeloggen/assets/logos/goetheanum-mark-blue.svg" />
+
+<!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN. -->
+<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/tokens.css" />
+<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/base.css" />
+<!-- Lokal/offline stattdessen (Pfadtiefe anpassen):
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" /> -->
+
+<style>
+  /* NUR werkzeug-eigene Gestaltung hierher. Alles Gemeinsame steht schon in base.css.
+     Greife auf die Tokens zu (var(--gold), var(--s6) …), erfinde keine neuen Werte. */
+  .hero{padding:clamp(40px,7vw,72px) 0 var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);line-height:1.05;letter-spacing:-.01em;max-width:18ch}
+  .hero .lede{margin-top:var(--s6);color:#565b60;font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+</style>
+</head>
+<body>
+
+<!-- Kopfzeile – aus base.css (.ds-header). Wortmarke + Navigation. -->
+<header class="ds-header">
+  <div class="wrap bar">
+    <a class="brand" href="https://phtok.github.io/goeloggen/" aria-label="Goetheanum Grafik – Startseite">
+      <img class="mk" src="https://phtok.github.io/goeloggen/assets/logos/goetheanum-mark-blue.svg" alt="" />
+      <span class="wm">Goetheanum</span>
+    </a>
+    <nav class="top">
+      <a href="https://phtok.github.io/goeloggen/schriften.html">Schriften</a>
+      <a href="https://phtok.github.io/goeloggen/design-system/">System</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <!-- Kicker: getönt, leicht getrackt – NORMAL, nicht versal (G05). -->
+    <span class="kicker">Bereich oder Sektion</span>
+    <h1>Titel des Werkzeugs</h1>
+    <p class="lede">Ein Satz, der sagt, was die Person hier in Minuten erreicht.</p>
+  </section>
+
+  <!-- ====================== DEINE MITTE – ab hier füllen ======================= -->
+  <section>
+    <div class="shead">
+      <h2>Abschnitt</h2>
+      <p>Knappe Einleitung. Wenige Mittel, präzise gesetzt.</p>
+    </div>
+
+    <div class="card soft" style="display:grid;gap:var(--s4);max-width:520px">
+      <label class="field">
+        <span class="lab">Beispiel-Eingabe</span>
+        <input type="text" placeholder="Eigene Angabe eintragen" />
+      </label>
+      <label class="field">
+        <span class="lab">Mehrzeilig</span>
+        <textarea placeholder="Längerer Text"></textarea>
+      </label>
+      <div style="display:flex;gap:var(--s2);flex-wrap:wrap">
+        <button class="btn primary" type="button">Übernehmen</button>
+        <button class="btn" type="button">Zurücksetzen</button>
+      </div>
+    </div>
+
+    <!-- Beispiel-Fliesstext im Lesemass (G10) – zeigt die eingebauten Defaults:
+         Betonung mit <strong>Laut</strong>, Gegenton mit <em>Leise</em>, ‹Guillemets›. -->
+    <p class="lese" style="margin-top:var(--s6);line-height:1.5">
+      Dies ist <strong>betont</strong> und dies ein <em>leiser Gegenton</em>.
+      Anführung sieht so aus: <q>ein Zitat im Haus</q>. Zahlen wie 10 000 stehen
+      tabellarisch, sobald sie in einer Tabelle sitzen.
+    </p>
+  </section>
+  <!-- ====================== DEINE MITTE – bis hier ============================= -->
+
+</main>
+
+<!-- Fusszeile – aus base.css (.ds-footer). -->
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Hausgrafik</span>
+    <span><a href="https://phtok.github.io/goeloggen/design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

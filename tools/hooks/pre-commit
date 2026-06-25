@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Goetheanum Typo-Hook – prüft die vorgemerkten Texte vor jedem Commit.
+# Aktivieren (einmalig, je Arbeitskopie):  git config core.hooksPath tools/hooks
+# Umgehen im Notfall:                       git commit --no-verify
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+PY="$(command -v python3 || command -v python || true)"
+if [ -z "$PY" ]; then
+  echo "Typo-Hook übersprungen: kein Python gefunden." >&2
+  exit 0
+fi
+exec "$PY" "$ROOT/tools/typo-check.py"

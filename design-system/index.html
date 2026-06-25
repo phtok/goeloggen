@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Design-System · Goetheanum Grafik</title>
+<meta name="description" content="Das lebende Design-System der Goetheanum-Hausgrafik: Farben, Schnitte, Typografie-Regeln, Komponenten und der Bau-Workflow – aus einer Quelle gerendert." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+
+<!-- Dogfooding: Diese Seite IST aus dem System gebaut. Sie bindet die echten
+     Token- und Komponenten-Dateien ein – dieselben, die jedes Werkzeug nutzt. -->
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+
+<style>
+  /* Nur schauseiten-eigene Gestaltung. Werte kommen aus den Tokens. */
+  .hero{padding:clamp(44px,8vw,88px) 0 var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(32px,6vw,60px);line-height:1.03;letter-spacing:-.01em;max-width:16ch}
+  .hero .lede{margin-top:var(--s6);color:#565b60;font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:60ch}
+  .hero .meta{margin-top:var(--s8);display:flex;gap:var(--s2);flex-wrap:wrap}
+
+  /* Auf dieser Seite ist der Titel-Schnitt Deutlich (580), wie für Titel vorgesehen. */
+  .shead h2{font-weight:var(--w-deutlich)}
+
+  .grid{display:grid;gap:var(--s4)}
+  .cols2{grid-template-columns:1fr}
+  .cols3{grid-template-columns:1fr}
+  @media(min-width:620px){.cols2{grid-template-columns:1fr 1fr}.cols3{grid-template-columns:1fr 1fr}}
+  @media(min-width:900px){.cols3{grid-template-columns:1fr 1fr 1fr}}
+
+  /* Farb-Swatches */
+  .sw{border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;background:var(--paper);cursor:pointer;text-align:left;font:inherit}
+  .sw .chip-c{height:84px}
+  .sw .body{padding:var(--s3) var(--s4)}
+  .sw .nm{font-weight:var(--w-strong);font-size:14px}
+  .sw .hx{color:var(--muted);font-size:12.5px;font-family:var(--font-mono)}
+  .sw .ds{color:var(--muted);font-size:12.5px;margin-top:4px;line-height:1.4}
+
+  /* Schnitt-Zeile */
+  .cut{border-top:1px solid var(--line-soft);padding:var(--s4) 0;display:grid;gap:6px;grid-template-columns:1fr;align-items:baseline}
+  @media(min-width:760px){.cut{grid-template-columns:170px 1fr}}
+  .cut .nm{font-size:13px;color:var(--muted)}
+  .cut .nm b{color:var(--ink);font-weight:var(--w-strong)}
+  .cut .samp{font-size:clamp(22px,3.4vw,30px);line-height:1.1}
+  .cut .ds{grid-column:1/-1;color:var(--muted);font-size:13px;max-width:64ch}
+  .cut .grafik{color:var(--gold-deep)}
+
+  /* Regeln */
+  .rules{display:grid;gap:0}
+  .rule{display:grid;grid-template-columns:54px 1fr;gap:var(--s4);padding:var(--s3) 0;border-top:1px solid var(--line-soft)}
+  .rule .id{font-weight:var(--w-strong);color:var(--gold-deep);font-variant-numeric:tabular-nums}
+  .rule .tx{color:#3d4348;font-size:14px;line-height:1.5;max-width:72ch}
+  .rule.card-rule .id{color:var(--blue)}
+
+  /* Abstands-Balken */
+  .scale .row{display:flex;align-items:center;gap:var(--s4);padding:6px 0}
+  .scale .bar{height:16px;background:var(--gold);border-radius:4px}
+  .scale .lab{width:96px;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+  .radii{display:flex;gap:var(--s4);flex-wrap:wrap}
+  .radii .r{width:120px;height:80px;background:var(--soft);border:1px solid var(--line)}
+  .radii .cap{color:var(--muted);font-size:12.5px;margin-top:6px}
+
+  /* Komponenten-Schau */
+  .demo{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center}
+  pre.code{background:#1c1f23;color:#e7e3da;border-radius:var(--r-control);padding:var(--s3) var(--s4);overflow:auto;font-family:var(--font-mono);font-size:12.5px;line-height:1.5;margin-top:var(--s3)}
+
+  /* Status digital/analog */
+  .status{display:grid;gap:8px}
+  .status li{list-style:none;display:flex;gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid var(--line-soft);font-size:14px}
+  .status .mk-ok{color:#3f7d46;font-weight:var(--w-strong)}
+  .status .mk-open{color:var(--gold-deep);font-weight:var(--w-strong)}
+
+  /* Bau-Workflow */
+  .steps{counter-reset:s;display:grid;gap:var(--s3)}
+  .steps li{list-style:none;display:grid;grid-template-columns:38px 1fr;gap:var(--s4);align-items:start}
+  .steps li::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:var(--r-pill);background:var(--gold);color:#3a2d10;font-weight:var(--w-strong)}
+  .steps b{font-weight:var(--w-strong)}
+  .steps .d{color:var(--muted);font-size:14px;line-height:1.5}
+
+  /* Drift-Wächter */
+  .guard{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s4) var(--s6);background:var(--soft)}
+  .guard .head{display:flex;align-items:center;gap:10px;font-weight:var(--w-strong)}
+  .guard .dot{width:10px;height:10px;border-radius:var(--r-pill);background:var(--muted)}
+  .guard.ok .dot{background:#3f7d46}
+  .guard.bad .dot{background:var(--bad)}
+  .guard .detail{margin-top:var(--s2);color:var(--muted);font-size:13px;line-height:1.5}
+  .guard table{margin-top:var(--s3);width:100%;font-size:13px}
+
+  .note{color:var(--muted);font-size:13px;line-height:1.5;max-width:72ch}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 16px;border-radius:var(--r-pill);font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<header class="ds-header">
+  <div class="wrap bar">
+    <a class="brand" href="../" aria-label="Goetheanum Grafik – Startseite">
+      <img class="mk" src="../assets/logos/goetheanum-mark-blue.svg" alt="" />
+      <span class="wm">Goetheanum</span>
+    </a>
+    <nav class="top">
+      <a href="#farben">Farben</a>
+      <a href="#schrift">Schrift</a>
+      <a href="#regeln">Regeln</a>
+      <a href="#komponenten">Komponenten</a>
+      <a href="#bauen">Bauen</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Design-System</span>
+    <h1>Ein Fundament, viele Werkzeuge.</h1>
+    <p class="lede">Farben, Schnitte, Typografie-Regeln und Komponenten der Goetheanum-Hausgrafik – an einem Ort, aus einer Quelle gerendert. Was hier steht, steht beim Bauen bereits parat und muss nicht hinterher geprüft werden.</p>
+    <div class="meta" id="heroMeta"></div>
+  </section>
+
+  <!-- ================= Drift-Wächter ================= -->
+  <section id="waechter">
+    <div class="shead">
+      <h2>Eine Quelle der Wahrheit</h2>
+      <p>Selbsttest beim Laden: stimmen die CSS-Tokens (tokens.css) und die maschinenlesbaren Tokens (tokens.json) überein? Weicht etwas ab, steht es hier rot.</p>
+    </div>
+    <div class="guard" id="guard">
+      <div class="head"><span class="dot"></span><span id="guardMsg">Prüfe Tokens …</span></div>
+      <div class="detail" id="guardDetail"></div>
+    </div>
+  </section>
+
+  <!-- ================= Farben ================= -->
+  <section id="farben">
+    <div class="shead">
+      <h2>Farben</h2>
+      <p>Markenblau gliedert Zustand und Verweis, Gold ist der einzige Inhalts-Akzent – sparsam. Klick auf ein Feld kopiert den Hex-Wert.</p>
+    </div>
+    <div class="grid cols3" id="swatches"></div>
+    <p class="note" style="margin-top:var(--s4)">Kontrast-Hinweise stammen aus den Typo-Tokens (G28): tinte-leise 4.35:1 und Gold 3.94:1 tragen nur Meta, Akzent und grössere Grade – nie langen Lesetext im Kleingrad.</p>
+  </section>
+
+  <!-- ================= Schrift & Schnitte ================= -->
+  <section id="schrift">
+    <div class="shead">
+      <h2>Schrift &amp; Schnitte</h2>
+      <p>Eine Familie, drei Stimmen: Klar trägt alles, Laut betont, Leise ist der stille Gegenton. Deutlich ist der Titel-Schnitt. Flüstern und Schreien leben nur im Variable Font und sind der Grafik vorbehalten (G04).</p>
+    </div>
+    <div id="cuts"></div>
+  </section>
+
+  <!-- ================= Typo-Regeln ================= -->
+  <section id="regeln">
+    <div class="shead">
+      <h2>Typografie-Regeln</h2>
+      <p>Die Hausregeln aus den Typo-Tokens – nachschlagbar und ankerbar. Blau markiert die Kardinalregeln, die nicht verletzt werden.</p>
+    </div>
+    <div class="rules" id="rules"></div>
+    <p class="note" style="margin-top:var(--s4)">Quelle: <code>assets/typografie/goetheanum-typo-tokens.json</code> (<code>$regeln</code>). Ausführbar als Prüfung über <code>assets/typografie/typo-regeln.yaml</code>.</p>
+  </section>
+
+  <!-- ================= Maße ================= -->
+  <section id="masse">
+    <div class="shead">
+      <h2>Maße &amp; Lesemass</h2>
+      <p>Abstände in der 4er-Skala, drei Radien – und das harte Lesemass von rund 66 Zeichen je Zeile (G10).</p>
+    </div>
+    <div class="grid cols2">
+      <div class="card">
+        <div class="scale" id="scale"></div>
+      </div>
+      <div class="card">
+        <div class="radii" id="radii"></div>
+      </div>
+    </div>
+    <div class="card soft" style="margin-top:var(--s4)">
+      <p class="lese" style="line-height:1.5">Diese Spalte steht im Lesemass <code>min(39ch, 100%)</code>. Sie zeigt, wie lang eine Zeile im linearen Mengentext höchstens werden soll – rund neun Wörter, damit das Auge den Zeilenanfang sicher zurückfindet. Tabellen und Signaletik haben ihr eigenes Mass (G27).</p>
+    </div>
+  </section>
+
+  <!-- ================= Komponenten ================= -->
+  <section id="komponenten">
+    <div class="shead">
+      <h2>Komponenten</h2>
+      <p>Die Bausteine aus <code>base.css</code> – live, nicht abgebildet. Genau diese erscheinen, sobald ein Werkzeug die Datei einbindet.</p>
+    </div>
+
+    <div class="grid cols2">
+      <div class="card">
+        <span class="kicker">Knöpfe</span>
+        <div class="demo" style="margin-top:var(--s3)">
+          <button class="btn primary">Primär</button>
+          <button class="btn">Normal</button>
+          <button class="btn ghost">Leise</button>
+          <button class="btn ok">Bestätigt</button>
+        </div>
+        <pre class="code">&lt;button class="btn primary"&gt;Primär&lt;/button&gt;</pre>
+      </div>
+
+      <div class="card">
+        <span class="kicker">Chips</span>
+        <div class="demo" style="margin-top:var(--s3)">
+          <span class="chip">Sektion <b>Allgemeine Anthroposophische</b></span>
+          <span class="chip">Status <b>live</b></span>
+        </div>
+        <pre class="code">&lt;span class="chip"&gt;Status &lt;b&gt;live&lt;/b&gt;&lt;/span&gt;</pre>
+      </div>
+
+      <div class="card">
+        <span class="kicker">Formularfelder</span>
+        <div style="display:grid;gap:var(--s3);margin-top:var(--s3)">
+          <label class="field"><span class="lab">Normal</span><input placeholder="Eigene Angabe"></label>
+          <label class="field"><span class="lab">Ungültig</span><input class="invalid" value="fehlt"></label>
+        </div>
+        <pre class="code">&lt;label class="field"&gt;
+  &lt;span class="lab"&gt;Normal&lt;/span&gt;
+  &lt;input placeholder="Eigene Angabe"&gt;
+&lt;/label&gt;</pre>
+      </div>
+
+      <div class="card">
+        <span class="kicker">Auszeichnung im Fliesstext</span>
+        <p class="lese" style="margin-top:var(--s3);line-height:1.5">Hier ist etwas <strong>betont</strong> (Laut), hier ein <em>stiller Gegenton</em> (Leise). Anführung: <q>so spricht das Haus</q>. Keine Unterstreichung, keine Versalien – dafür gibt es kein Utility.</p>
+        <pre class="code">&lt;strong&gt;betont&lt;/strong&gt; · &lt;em&gt;Gegenton&lt;/em&gt; · &lt;q&gt;Zitat&lt;/q&gt;</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Digital ↔ Analog ================= -->
+  <section id="medien">
+    <div class="shead">
+      <h2>Digital &amp; analog</h2>
+      <p>Das System trägt heute den Bildschirm vollständig. Für den Druck stehen die Gegenstücke noch aus – hier ehrlich ausgewiesen, nicht stillschweigend angenommen.</p>
+    </div>
+    <div class="grid cols2">
+      <div class="card">
+        <span class="kicker">Digital – vorhanden</span>
+        <ul class="status" style="margin-top:var(--s3)">
+          <li><span class="mk-ok">✓</span> Farben als Hex, Tokens in CSS und JSON</li>
+          <li><span class="mk-ok">✓</span> Hausschrift als Webfont (Variable, wght 190–725)</li>
+          <li><span class="mk-ok">✓</span> Komponenten, Abstände, Radien</li>
+          <li><span class="mk-ok">✓</span> Typo-Regeln maschinenlesbar und prüfbar</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="kicker">Analog / Druck – ausstehend</span>
+        <ul class="status" style="margin-top:var(--s3)">
+          <li><span class="mk-open">○</span> CMYK- und Sonderfarben-Gegenwerte zu den Hex-Farben</li>
+          <li><span class="mk-open">○</span> Maße in mm statt px für Satz und Beschnitt</li>
+          <li><span class="mk-open">○</span> Beschnitt, Schnittmarken, Sicherheitsabstand</li>
+          <li><span class="mk-open">○</span> PDF/X-Ausgabe mit eingebetteten Schriften</li>
+        </ul>
+        <p class="note" style="margin-top:var(--s3)">Eigener nächster Schritt – siehe Fahrplan im Strategieblatt (Export-Schicht).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Bau-Workflow ================= -->
+  <section id="bauen">
+    <div class="shead">
+      <h2>So baust du ein neues Werkzeug</h2>
+      <p>Schnell und regelkonform – weil das System eingebunden, nicht kopiert wird. Vier Schritte, und nichts muss hinterher geprüft werden.</p>
+    </div>
+    <ol class="steps">
+      <li><div><b>Starter kopieren.</b> <span class="d"><a href="starter.html">starter.html</a> ist ein leeres Werkzeug mit verdrahtetem Webfont, Tokens, Kopf, Fuss und korrektem Kicker. Du fängst nie bei null an.</span></div></li>
+      <li><div><b>Mitte füllen.</b> <span class="d">Nur den werkzeug-eigenen Teil setzen. Alles drumherum ist schon CI; greife auf die Tokens zu (<code>var(--gold)</code>, <code>var(--s6)</code>), erfinde keine neuen Werte.</span></div></li>
+      <li><div><b>Eintragen.</b> <span class="d">Eine Zeile in <code>tools.json</code> – das Werkzeug erscheint automatisch im Hub.</span></div></li>
+      <li><div><b>Committen.</b> <span class="d">Der Typo-Hook (<code>tools/typo-check.py</code>) prüft die geänderten Texte automatisch und lässt nur Konformes durch. Der Mensch prüft nie von Auge.</span></div></li>
+    </ol>
+    <div class="demo" style="margin-top:var(--s6)">
+      <a class="btn primary" href="starter.html">Starter öffnen</a>
+      <a class="btn" href="README.md">Workflow-Doku</a>
+      <a class="btn ghost" href="../tools.json">Manifest ansehen</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Design-System der Hausgrafik</span>
+    <span><a href="../start/">Interner Hub</a> · <a href="https://github.com/phtok/goeloggen/blob/main/docs/strategie.md">Strategieblatt</a></span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (s,r=document)=>r.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const toast=(m)=>{const t=$("#toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1100);};
+const norm=v=>{v=(v||"").trim().toLowerCase();const m=v.match(/^#([0-9a-f]{3})$/);return m?"#"+m[1].split("").map(c=>c+c).join(""):v;};
+
+Promise.all([
+  fetch("tokens.json").then(r=>r.json()),
+  fetch("../assets/typografie/goetheanum-typo-tokens.json").then(r=>r.json())
+]).then(([tok,typo])=>{
+  buildHero(tok);
+  buildSwatches(tok,typo);
+  buildCuts(typo);
+  buildRules(typo);
+  buildScale(tok);
+  guard(tok);
+}).catch(err=>{
+  $("#guardMsg").textContent = "Tokens konnten nicht geladen werden.";
+  $("#guardDetail").textContent = String(err);
+});
+
+function buildHero(tok){
+  const cuts = 4, rules = 0;
+  $("#heroMeta").innerHTML =
+    `<span class="chip"><b>4</b> installierbare Schnitte</span>`+
+    `<span class="chip"><b>Variable</b> wght 190–725</span>`+
+    `<span class="chip">Regeln <b>eingebaut</b></span>`;
+}
+
+function buildSwatches(tok,typo){
+  const wrap=$("#swatches");
+  const order=["blue","gold","gold-deep","ink","muted","soft","paper","bad"];
+  const kontrast={ "muted":"4.35:1 – nur Meta (G28)", "gold-deep":"3.94:1 – nur Akzent (G28)", "ink":"15:1 – trägt Lesetext" };
+  order.forEach(k=>{
+    const c=tok.color[k]; if(!c) return;
+    const hex=c.$value;
+    const b=el("button","sw");
+    b.innerHTML =
+      `<div class="chip-c" style="background:${hex}; ${k==='paper'?'border-bottom:1px solid var(--line)':''}"></div>`+
+      `<div class="body"><div class="nm">${k}</div><div class="hx">${hex}</div>`+
+      `<div class="ds">${c.$description||""}${kontrast[k]?" · "+kontrast[k]:""}</div></div>`;
+    b.addEventListener("click",()=>{navigator.clipboard?.writeText(hex);toast(hex+" kopiert");});
+    wrap.appendChild(b);
+  });
+}
+
+function buildCuts(typo){
+  const wrap=$("#cuts");
+  // Installierbare Schnitte (CLAUDE.md) + variable Extreme. Werte aus Typo-Tokens,
+  // Deutlich (580) ergänzt aus design-system/tokens.css.
+  const cuts=[
+    {nm:"Leise",  w:265, role:"Legenden, Zitate, stiller Gegenton", grafik:false},
+    {nm:"Klar",   w:440, role:"Fliesstext – alles, was gelesen wird", grafik:false},
+    {nm:"Deutlich",w:580, role:"Titel-Schnitt (zwischen Klar und Laut)", grafik:false},
+    {nm:"Laut",   w:680, role:"Betonung, Signaletik, Inline-Fettung (⌘B)", grafik:false},
+    {nm:"Flüstern",w:190, role:"nur Variable Font, nur Grafik – nie Lesetext", grafik:true},
+    {nm:"Schreien",w:725, role:"nur Variable Font, nur Grafik – nie Standard-Fett", grafik:true}
+  ];
+  cuts.forEach(c=>{
+    const row=el("div","cut");
+    row.innerHTML =
+      `<div class="nm"><b>${c.nm}</b> · wght ${c.w}</div>`+
+      `<div class="samp" style="font-variation-settings:'wght' ${c.w}">Würde, Klarheit, Eigenständigkeit</div>`+
+      `<div class="ds${c.grafik?' grafik':''}">${c.role}</div>`;
+    wrap.appendChild(row);
+  });
+}
+
+function buildRules(typo){
+  const wrap=$("#rules");
+  const regeln=typo.$regeln||{};
+  const kardinal=new Set(["G01","G03","G05","G23","G25"]);
+  Object.keys(regeln).filter(k=>k.startsWith("S")||k.startsWith("G"))
+    .sort((a,b)=>a.localeCompare(b,'en',{numeric:true}))
+    .forEach(id=>{
+      const r=el("div","rule"+(kardinal.has(id)?" card-rule":""));
+      r.id="regel-"+id;
+      r.innerHTML=`<div class="id">${id}</div><div class="tx">${regeln[id]}</div>`;
+      wrap.appendChild(r);
+    });
+}
+
+function buildScale(tok){
+  const sc=$("#scale");
+  Object.entries(tok.space).filter(([k])=>k!=="$type").forEach(([k,v])=>{
+    const px=parseInt(v.$value,10);
+    const row=el("div","row");
+    row.innerHTML=`<span class="lab">--s${k} · ${v.$value}</span><span class="bar" style="width:${px*3}px"></span>`;
+    sc.appendChild(row);
+  });
+  const rd=$("#radii");
+  Object.entries(tok.radius).filter(([k])=>k!=="$type").forEach(([k,v])=>{
+    const box=el("div");
+    box.innerHTML=`<div class="r" style="border-radius:${v.$value}"></div><div class="cap">--r-${k} · ${v.$value}</div>`;
+    rd.appendChild(box);
+  });
+}
+
+function guard(tok){
+  const cs=getComputedStyle(document.documentElement);
+  const cssVar=n=>cs.getPropertyValue(n);
+  // Abbildung Token → CSS-Custom-Property
+  const map=[
+    ["color.blue","--blue"],["color.gold","--gold"],["color.gold-deep","--gold-deep"],
+    ["color.ink","--ink"],["color.muted","--muted"],["color.paper","--paper"],
+    ["color.soft","--soft"],["color.bad","--bad"],
+    ["fontWeight.leise","--w-leise"],["fontWeight.text","--w-text"],
+    ["fontWeight.deutlich","--w-deutlich"],["fontWeight.strong","--w-strong"],
+    ["space.1","--s1"],["space.2","--s2"],["space.3","--s3"],["space.4","--s4"],["space.6","--s6"],["space.8","--s8"],
+    ["radius.control","--r-control"],["radius.card","--r-card"],["radius.pill","--r-pill"],
+    ["size.header","--header-h"],["size.maxw","--maxw"]
+  ];
+  const get=(path)=>{let o=tok;for(const p of path.split("."))o=o&&o[p];return o&&o.$value;};
+  const isColor=p=>p.startsWith("color.");
+  const diffs=[];
+  map.forEach(([path,cssName])=>{
+    let want=String(get(path)??"");
+    let have=String(cssVar(cssName)??"");
+    let w=isColor(path)?norm(want):want.trim();
+    let h=isColor(path)?norm(have):have.trim();
+    if(w!==h) diffs.push({path,cssName,want:w,have:h||"(leer)"});
+  });
+  const g=$("#guard"), msg=$("#guardMsg"), det=$("#guardDetail");
+  if(diffs.length===0){
+    g.classList.add("ok");
+    msg.textContent = `Stimmig – ${map.length} Tokens geprüft, kein Drift.`;
+    det.textContent = "tokens.css und tokens.json tragen dieselben Werte. Ändert sich eine Quelle ohne die andere, schlägt diese Prüfung beim nächsten Laden aus.";
+  } else {
+    g.classList.add("bad");
+    msg.textContent = `${diffs.length} Abweichung(en) gefunden.`;
+    const rows = diffs.map(d=>`<tr><td>${d.path}</td><td class="num">${d.want}</td><td>↔</td><td>${d.cssName}</td><td class="num">${d.have}</td></tr>`).join("");
+    det.innerHTML = `<table><thead><tr><th>Token</th><th>JSON</th><th></th><th>CSS</th><th>Wert</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+}
+</script>
+</body>
+</html>

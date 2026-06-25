@@ -33,6 +33,26 @@ Die v2.5-Schrift hat Funktionen erhalten, die ältere Regeln (noch) anders
 beschreiben. Solche Widersprüche **melden und vom Auftraggeber entscheiden
 lassen** — das Regelwerk **nicht** eigenmächtig umschreiben.
 
+## Bauen neuer Seiten und Werkzeuge — vom Fundament aus, nicht freihändig
+Konformität entsteht durch Konstruktion, nicht durch Nachkontrolle. Darum gilt
+für **jede** neue HTML-Seite oder jedes neue Werkzeug:
+
+1. **Vom Starter ausgehen:** `design-system/starter.html` kopieren — nicht bei
+   null beginnen. Das Schaufenster `design-system/` zeigt, was bereitsteht.
+2. **Einbinden statt kopieren:** `design-system/tokens.css` und
+   `design-system/base.css` per `<link>` einbinden. Tokens nutzen
+   (`var(--gold)`, `var(--s6)`, `var(--w-deutlich)` …), **keine** eigenen Farb-,
+   Schnitt- oder Abstandswerte erfinden. (Bestehende Apps mit kopiertem Block
+   werden schrittweise auf diese Schicht gehoben — neue Seiten starten richtig.)
+3. **Registrieren:** einen Eintrag in `tools.json` ergänzen (erscheint im Hub).
+4. **Hook aktiv halten:** `git config core.hooksPath tools/hooks` — `tools/typo-check.py`
+   prüft die geänderten HTML-Texte beim Commit und blockiert bei Schwere ‹fehler›.
+   Vor dem Commit gilt weiterhin: betroffene Regel-IDs nennen.
+
+Die eingebauten Defaults in `base.css` setzen die Hausregeln bereits um (Trennung,
+‹…› über `<q>`, tabellarische Ziffern, Betonung = Laut, Leise statt Kursive). Für
+Falsches (Unterstreichen, Versal-Hervorhebung, Sperren) gibt es **kein** Utility.
+
 ## Schnitt-System (Stand v2.5)
 - Installierbare statische Schnitte: **Leise (265) · Klar (440) · Deutlich
   (580) · Laut (680)**. Deutlich = Titel; Laut = Inline-/Office-Fettung (⌘B).
