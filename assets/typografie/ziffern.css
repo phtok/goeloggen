@@ -1,0 +1,43 @@
+/* Goetheanum · Ziffern-Sets umschalten je Einsatz — Werkzeug zu Regel G25.
+ * ----------------------------------------------------------------------------
+ * Grundton der Schrift v2.5 ist PROPORTIONAL (ruhig im Fliesstext). Diese
+ * Utility schaltet pro Kontext um — Tabellen automatisch dicktengleich, dazu
+ * Klassen für Kurzziffern und die schlummernde 0. Einbinden:
+ *     <link rel="stylesheet" href="assets/typografie/ziffern.css">
+ *
+ * Steuerung über font-variant-numeric (komponierbar, modern unterstützt) mit
+ * font-feature-settings als Rückfall für ältere Engines.
+ */
+
+/* — Tabellen automatisch tabellarisch (G25: Zahlen müssen fluchten) —
+ * Greift überall, wo Zahlen untereinanderstehen, ohne dass man dran denkt. */
+table,
+.tabellenziffern {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+/* Zahlenzellen rechtsbündig (Beträge, Spalten) — Klasse an td/th setzen. */
+.zahl {
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+/* — Explizite Schalter fürs Laufende — */
+.proportional {           /* = Grundton; nur falls in tabellarischem Umfeld nötig */
+  font-variant-numeric: proportional-nums lining-nums;
+  font-feature-settings: "pnum" 1, "lnum" 1;
+}
+.kurzziffern {            /* Kurz-/Mediävalziffern auf x-Höhe, Mengentext mit vielen Zahlen */
+  font-variant-numeric: oldstyle-nums;
+  font-feature-settings: "onum" 1;
+}
+.schlummernde-null {      /* geschrägte 0 gegen 0/O-Verwechslung (Codes, Kennungen) */
+  font-variant-numeric: slashed-zero;
+  font-feature-settings: "zero" 1;
+}
+
+/* Komponierbar: tabellarische Kurzziffern, durchgestrichene 0 in Tabellen … */
+.tabellenziffern.kurzziffern { font-variant-numeric: tabular-nums oldstyle-nums; }
+.tabellenziffern.schlummernde-null { font-variant-numeric: tabular-nums lining-nums slashed-zero; }
