@@ -16,7 +16,7 @@
   "tools": [
     { "slug": "design-system",     "cat": "system",      "status": "beta",    "tag": "Fundament",     "title": "Design-System",      "href": "design-system/",               "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Mit Starter und Bau-Workflow." },
 
-    { "slug": "logo-generator",    "cat": "generatoren", "status": "live",    "tag": "Logo",          "title": "Logo-Generator",     "href": "logo-generator.html",          "desc": "Sektions- und Bereichslogos in der Hausschrift – korrekt gesetzt, als SVG zum Herunterladen." },
+    { "slug": "logo-generator",    "cat": "generatoren", "status": "live",    "tag": "Logo",          "title": "Logos",              "href": "logo-generator.html",          "desc": "Sektions- und Bereichslogos in der Hausschrift – erklärt, mit Regeln, korrekt gesetzt und als SVG zum Herunterladen." },
     { "slug": "visitenkarten",     "cat": "generatoren", "status": "live",    "tag": "Visitenkarten", "title": "Visitenkarten",      "href": "visitenkarten-generator.html", "desc": "Einheitliche Visitenkarten aus den eigenen Angaben – druckfertig, ohne Layoutprogramm." },
     { "slug": "signatur",          "cat": "generatoren", "status": "live",    "tag": "E-Mail",        "title": "Signatur",           "href": "signatur-generator.html",      "desc": "Outlook-robuste E-Mail-Signatur nach gemeinsamer Vorlage – kopieren und einsetzen." },
     { "slug": "gtv-naming",        "cat": "generatoren", "status": "beta",    "tag": "Goetheanum TV", "title": "Namens-Renderings",  "href": "apps/gtv-naming/",             "desc": "Präsentationswerkzeug für die Umbenennung von Goetheanum TV mit umschaltbarer Wortmarke." },
