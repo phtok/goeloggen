@@ -1,32 +1,161 @@
 <!doctype html>
-<html lang="de">
+<html lang="de-CH">
 <head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Logos – Goetheanum</title>
+<meta name="description" content="Das Logo des Goetheanum: Bedeutung, Aufbau, Anwendungen, Regeln und Verbote – und das Werkzeug, mit dem jede Sektion und jeder Bereich ihr korrektes Logo in Minuten erzeugt." />
 <link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Weiterleitung zum Logo-Generator</title>
-  <meta http-equiv="refresh" content="0; url=./apps/logo-generator/" />
-  <script>
-    (function () {
-      var target = "./apps/logo-generator/";
-      if (location.pathname.endsWith("/apps/logo-generator/")) return;
-      location.replace(target + location.search + location.hash);
-    })();
-  </script>
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #36424f;
-      color: #dbe0e4;
-      font: 400 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-    a { color: #ebb565; }
-  </style>
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  .hero{padding:clamp(40px,7vw,80px) 0 var(--s8);display:grid;gap:var(--s8);grid-template-columns:1fr}
+  @media(min-width:820px){.hero{grid-template-columns:1.3fr .7fr;align-items:center}}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(32px,6vw,58px);line-height:1.03;letter-spacing:-.01em;max-width:15ch}
+  .hero .lede{margin-top:var(--s6);color:#565b60;font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:54ch}
+  .hero .cta{margin-top:var(--s6);display:flex;gap:var(--s3);flex-wrap:wrap}
+  .markstage{display:grid;place-items:center;background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);padding:clamp(28px,5vw,56px)}
+  .markstage img{width:min(180px,60%);height:auto}
+
+  .two{display:grid;gap:var(--s4);grid-template-columns:1fr}
+  @media(min-width:760px){.two{grid-template-columns:1fr 1fr}}
+
+  .chips{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s3)}
+
+  /* So / so nicht */
+  .dl{display:grid;gap:var(--s4);grid-template-columns:1fr}
+  @media(min-width:680px){.dl{grid-template-columns:1fr 1fr}}
+  .dl .col{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6)}
+  .dl .col.ja{background:var(--soft)}
+  .dl h3{display:flex;align-items:center;gap:8px;font-weight:var(--w-strong);font-size:15px;margin-bottom:var(--s3)}
+  .dl .ja h3{color:#3f7d46}.dl .nein h3{color:var(--bad)}
+  .dl li{list-style:none;display:flex;gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid var(--line-soft);font-size:14px;line-height:1.5}
+  .dl .mk{flex:0 0 auto;font-weight:var(--w-strong)}
+  .dl .ja .mk{color:#3f7d46}.dl .nein .mk{color:var(--bad)}
+
+  .note{color:var(--muted);font-size:13px;line-height:1.5;max-width:72ch}
+  .ref{color:var(--muted);font-size:12.5px}
+  .ref a{color:var(--gold-deep);text-decoration:none}
+</style>
 </head>
 <body>
-  <p>Weiterleitung zum Logo-Generator… <a href="./apps/logo-generator/">Falls noetig hier klicken</a>.</p>
+
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div>
+      <span class="kicker">Logos</span>
+      <h1>Das Logo des Goetheanum</h1>
+      <p class="lede">Ein Zeichen, das über sich hinausweist – aus dem Bau gewonnen. Hier steht, was es bedeutet, wie es aufgebaut ist und wohin es gehört. Und du erzeugst dein Sektions- oder Bereichslogo in Minuten, korrekt gesetzt.</p>
+      <div class="cta">
+        <a class="btn primary" href="apps/logo-generator/">Logo erstellen</a>
+        <a class="btn" href="#regeln">Regeln &amp; Verbote</a>
+      </div>
+    </div>
+    <div class="markstage">
+      <img src="assets/logos/goetheanum-mark-blue.svg" alt="Goetheanum-Zeichen" />
+    </div>
+  </section>
+
+  <!-- ABOUT: Was es ist -->
+  <section id="wesen">
+    <div class="shead">
+      <h2>Was es ist</h2>
+      <p>Kein Wappen, kein Siegel – ein Zeichen, das nach vorn weist.</p>
+    </div>
+    <div class="two">
+      <p class="lese" style="line-height:1.55">Das Goetheanum führt kein geschlossenes Wappen. Sein Zeichen geht auf Rudolf Steiner zurück und hat eine ungewöhnliche Eigenschaft: Es <strong>trägt sein Zentrum ausser sich</strong>. Wo ein klassisches Logo in sich ruht, weist Steiners Zeichen über sich hinaus – es geht etwas voraus und deutet auf ein Folgendes.</p>
+      <p class="lese" style="line-height:1.55">Steiner nannte sie eine Art <em>Meta-Initiale</em>: nicht nur dem Text, sondern dem ganzen Werk gibt sie eine Richtung. Die heutige Marke ist aus dem <strong>Goetheanum-Bau</strong> gewonnen; ihre Form nimmt dessen Linien auf. Ihr Prinzip ist die <em>Metamorphose</em> – die Wandlung vom Exzentrischen ins Konzentrische.</p>
+    </div>
+  </section>
+
+  <!-- ABOUT: Aufbau & Varianten -->
+  <section id="aufbau">
+    <div class="shead">
+      <h2>Aufbau &amp; Varianten</h2>
+      <p>Ein Bausatz, der zusammenpasst – Zeichen, Wortmarke, Sektion.</p>
+    </div>
+    <div class="two">
+      <div class="card">
+        <span class="kicker">Das Lockup</span>
+        <p style="margin-top:var(--s2);line-height:1.5">Zeichen (die Marke) · Wortmarke <q>Goetheanum</q> · optional der Name der Sektion oder des Bereichs. Die Wortmarke steht in der Hausschrift, der Sektionsname in der jeweiligen Hausfarbe.</p>
+      </div>
+      <div class="card">
+        <span class="kicker">Layout &amp; Farbe</span>
+        <p style="margin-top:var(--s2);line-height:1.5">Sechs Layouts für jede Lage – Lang, Kurz, Dreizeiler, Icon, Kreis, Quadrat. Vier Farbmodi – Original, Weiss, Schwarz, Grau. 34 Organisationen, je mit eigener Hausfarbe.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT: Anwendungen -->
+  <section id="anwendungen">
+    <div class="shead">
+      <h2>Anwendungen</h2>
+      <p>Wo das Zeichen hingehört.</p>
+    </div>
+    <div class="two">
+      <div class="card">
+        <span class="kicker">Zeichen &amp; Lockup</span>
+        <p style="margin-top:var(--s2);line-height:1.5">Steiners Zeichen (Hochschule, Gesellschaft, Bau-Administration) auf Briefpapier, Mitgliederkarten und zur Generalversammlung. Die Sektions- und Bereichslogos für alles Aussenwirksame – Karten, Briefe, Programme, Schilder.</p>
+      </div>
+      <div class="card">
+        <span class="kicker">Leitsystem am Bau</span>
+        <p style="margin-top:var(--s2);line-height:1.5">Am Gebäude hält sich die Beschriftung zurück und folgt dem Material. Zweisprachig: Deutsch in Medium, Englisch in Light. Das Logo tritt hier bewusst leise auf.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT: Regeln & Verbote -->
+  <section id="regeln">
+    <div class="shead">
+      <h2>Regeln &amp; Verbote</h2>
+      <p>Wenige, klare Leitplanken – das Werkzeug hält sie automatisch ein.</p>
+    </div>
+    <div class="dl">
+      <div class="col ja">
+        <h3>✓ So</h3>
+        <ul>
+          <li><span class="mk">✓</span> Das fertige SVG aus dem Werkzeug nehmen – nicht selbst nachbauen.</li>
+          <li><span class="mk">✓</span> Schutzraum wahren: das Zeichen braucht Luft ringsum.</li>
+          <li><span class="mk">✓</span> Genug Kontrast zum Untergrund; Original-Modus als Standard.</li>
+          <li><span class="mk">✓</span> Layout zur Lage wählen – Lang fürs Breite, Icon fürs Kleine.</li>
+          <li><span class="mk">✓</span> Wortmarke in der Hausschrift, Sektionsname in der Hausfarbe.</li>
+        </ul>
+      </div>
+      <div class="col nein">
+        <h3>✕ So nicht</h3>
+        <ul>
+          <li><span class="mk">✕</span> Nicht verzerren, stauchen oder drehen.</li>
+          <li><span class="mk">✕</span> Nicht umfärben ausserhalb der Modi; keine Verläufe, kein Schmuck.</li>
+          <li><span class="mk">✕</span> Nicht auf unruhigem oder zu kontrastarmem Grund.</li>
+          <li><span class="mk">✕</span> Das Zeichen nicht nachzeichnen, ersetzen oder <q>modernisieren</q>.</li>
+          <li><span class="mk">✕</span> An der Wortmarke keine Versalien, kein Sperren, kein Unterstreichen.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Exakte Masse – Schutzraum und Mindestgrösse in Millimetern – werden aus dem offiziellen Logopaket übernommen und hier ergänzt. <span class="ref">Grundlage: Werkstatt-Artikel <a href="https://grafik.goetheanum.ch/werkstatt">‹Zeichen, Bild- und Wortmarken›, ‹Logo-Perspektiven›, ‹Geschichte der Wortmarke›</a> sowie die Leitsystem-Grundsätze auf grafik.goetheanum.ch.</span></p>
+  </section>
+
+  <!-- CTA -->
+  <section id="erstellen">
+    <div class="shead">
+      <h2>Dein Logo holen</h2>
+      <p>Sektion oder Bereich wählen, Layout und Farbe einstellen, als SVG herunterladen.</p>
+    </div>
+    <a class="btn primary" href="apps/logo-generator/" style="font-size:15px;padding:12px 22px">Logo erstellen →</a>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Logos</span>
+    <span><a href="./">Übersicht</a> · <a href="schriften.html">Schriften</a></span>
+  </div>
+</footer>
+
 </body>
 </html>
