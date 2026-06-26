@@ -51,6 +51,10 @@ jobs:
           # Manifest der Werkzeuge (treibt die Uebersicht).
           if [ -f tools.json ]; then cp tools.json _site/tools.json; fi
 
+          # Eigene Domain: GitHub Pages liest die CNAME aus dem Artefakt. Ohne
+          # diese Zeile ginge die Domain-Anbindung beim naechsten Deploy verloren.
+          if [ -f CNAME ]; then cp CNAME _site/CNAME; fi
+
           # Sprechende Abschnitts-Pfade (saubere URLs -> Weiterleitung auf die
           # Zielseite). Zentral gepflegt in sektionen.json.
           if [ -f sektionen.json ]; then python3 tools/build_sections.py _site; fi
