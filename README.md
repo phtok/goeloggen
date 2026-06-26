@@ -41,7 +41,8 @@ Materialsammlungen und Produktionsquellen liegen unter `collections/`:
 
 Die Root-HTML-Dateien sind jetzt bewusst nur noch Launcher oder Rueckwaertskompatibilitaet:
 
-- `index.html` -> `logo-generator.html`
+- `index.html` -> Front door (Uebersicht der Werkzeuge; Wurzel umgelegt)
+- `portal.html` -> `index.html` (Alias, alte Links bleiben stabil)
 - `logo-generator.html` -> `apps/logo-generator/`
 - `visitenkarten.html` -> `visitenkarten-generator.html`
 - `visitenkarten-generator.html` -> `apps/visitenkarten-generator/`
