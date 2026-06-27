@@ -3,6 +3,8 @@
 <link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" /><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Goetheanum Schrift — als Webfont einbinden</title>
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
 <style>
 /* === Goetheanum Variable Font einbinden === */
 @font-face{
@@ -38,7 +40,9 @@ pre .k{color:#9ecbff}pre .s{color:#c3e88d}pre .c{color:#7f868d}
 .swatch{display:flex;flex-direction:column;gap:4px}
 .swatch .s{font-family:"Goetheanum";font-size:34px}
 </style></head>
-<body><div class="wrap">
+<body>
+<script src="design-system/nav.js" data-root="./" data-section="schrift" data-active="schrift-webfont"></script>
+<div class="wrap">
 
 <h1 class="goe" style="font-weight:600">Goetheanum Schrift — als Webfont</h1>
 <p class="lead">Fertige Einbindung mit <code>@font-face</code>. Diese Seite lädt die Schrift selbst über die unten gezeigten Zeilen — was du siehst, ist die echte Webfont.</p>

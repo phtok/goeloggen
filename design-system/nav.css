@@ -6,6 +6,10 @@
    Akkordeon = native <details>/<summary> (klappbar, zugänglich, ohne Skript).
    ============================================================================= */
 
+/* Die globale Navigation trägt immer die Hausschrift – unabhängig von der
+   Body-Schrift der Gastseite (sonst erbt sie z. B. Helvetica). */
+.dsnav,.dsnav-sub,.dsnav-drawer{font-family:var(--font)}
+
 .dsnav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.92);
   backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
 .dsnav .bar{display:flex;align-items:center;gap:var(--s4);height:var(--header-h);
