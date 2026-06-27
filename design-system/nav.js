@@ -51,10 +51,12 @@
       intro: "Farben, Logos und das Design-System – zum Nachschlagen und Holen.",
       cats: ["system"] }
   ];
-  // Nur intern zusätzlich (Pflege).
+  // Nur intern zusätzlich (Pflege & Backstage).
   var INTERN_EXTRA = [
     { id: "werkstatt", label: "Werkstatt",
       intro: "Werkschau und Prüfwerkzeuge der Schriftpflege – intern.", cats: ["werkstatt"] },
+    { id: "schau", label: "Schau & Mockups",
+      intro: "Präsentations-Mockups und Studien – kein öffentliches Werkzeug.", cats: ["schau"] },
     { id: "geparkt", label: "Geparktes",
       intro: "Durchdachte Konzepte, die später kommen – intern.", cats: ["geparkt"] }
   ];
