@@ -53,6 +53,12 @@ Die eingebauten Defaults in `base.css` setzen die Hausregeln bereits um (Trennun
 ‹…› über `<q>`, tabellarische Ziffern, Betonung = Laut, Leise statt Kursive). Für
 Falsches (Unterstreichen, Versal-Hervorhebung, Sperren) gibt es **kein** Utility.
 
+### Optimierungen fließen zurück ins Fundament
+Was an **einer** Seite am Design verbessert wird (z. B. die Gold/Weiss-Anwahl der
+Buttons und Pillen), gehört **sofort in `tokens.css`/`base.css`** und von dort in
+alle Werkzeuge — nicht lokal in einer Seite belassen. Eine Verbesserung am Rand
+ist erst fertig, wenn sie im Design-System steht und überall gilt.
+
 ## Schnitt-System (Stand v2.5)
 - Installierbare statische Schnitte: **Leise (265) · Klar (440) · Deutlich
   (580) · Laut (680)**. Deutlich = Titel; Laut = Inline-/Office-Fettung (⌘B).
