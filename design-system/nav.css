@@ -95,3 +95,25 @@
 
 .dsnav-drawer .foot{padding:var(--s4) 22px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;flex:0 0 auto}
 .dsnav-drawer .foot a{color:var(--gold-deep);text-decoration:none}
+
+/* --- Unterleiste einer Welt (zweite Ebene, z. B. Schrift) ------------------- */
+/* Klebt direkt unter der Kopfzeile. Links: der Weltname (Deutlich), rechts die
+   Geschwisterseiten. Aktiv = Gold mit feinem Gold-Strich – ruhig, kein Pillen-
+   Lärm (die Gold/Weiss-Pillen bleiben den Werkzeug-Steuerungen vorbehalten). */
+.dsnav-sub{position:sticky;top:var(--header-h);z-index:39;background:rgba(255,255,255,.92);
+  backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
+.dsnav-sub .bar{display:flex;align-items:center;gap:var(--s4);height:44px;
+  max-width:var(--maxw);margin:0 auto;padding:0 26px}
+.dsnav-sub .sec{flex:0 0 auto;font-weight:var(--w-deutlich);font-size:14px;color:var(--ink)}
+.dsnav-sub .lnks{display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.dsnav-sub .lnks::-webkit-scrollbar{display:none}
+.dsnav-sub .slnk{position:relative;flex:0 0 auto;font-size:13.5px;color:var(--muted);
+  text-decoration:none;padding:11px 0;white-space:nowrap;transition:color .15s}
+.dsnav-sub .slnk:hover{color:var(--gold-deep)}
+.dsnav-sub .slnk.is-active{color:var(--gold-deep)}
+.dsnav-sub .slnk.is-active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--gold-deep);border-radius:2px}
+
+@media(max-width:560px){
+  .dsnav-sub .sec{display:none}
+  .dsnav-sub .bar{gap:0}
+}
