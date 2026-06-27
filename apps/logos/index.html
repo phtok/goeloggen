@@ -20,7 +20,9 @@
   .controls{display:grid;gap:var(--s4)}
   .seg{display:flex;flex-wrap:wrap;gap:6px}
   .seg button{font:inherit;font-size:13px;padding:7px 12px;border:1px solid var(--line);border-radius:var(--r-pill);background:#fff;color:var(--ink);cursor:pointer}
-  .seg button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#3a2d10}
+  .seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .catbar{margin:var(--s2) 0 var(--s6)}
+  .catbar .seg{gap:8px}
   .stage{display:grid;place-items:center;min-height:280px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft);padding:clamp(24px,5vw,56px)}
   .stage.dark{background:#23272b}
   .stage svg{max-width:100%;height:auto;max-height:340px}
@@ -66,13 +68,13 @@
 
   <!-- ===================== WERKZEUG ===================== -->
   <section id="werkzeug">
-    <div class="shead"><h2>Logo holen</h2><p>Das fertige SVG kommt aus dieser Quelle – nie nachbauen.</p></div>
+    <div class="shead"><h2>Logo holen</h2></div>
+    <div class="field catbar">
+      <span class="lab">Kategorie</span>
+      <div class="seg" id="cat"></div>
+    </div>
     <div class="tool">
       <div class="controls">
-        <div class="field">
-          <span class="lab">Kategorie</span>
-          <div class="seg" id="cat"></div>
-        </div>
         <label class="field">
           <span class="lab">Sektion / Bereich</span>
           <select id="org"></select>
