@@ -53,6 +53,14 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .btn.ghost{color:var(--muted)}
 .btn.ok{background:#3f7d46;border-color:#3f7d46;color:#fff}
 
+/* --- Segmentierte Auswahl (Pillen) ----------------------------------------- */
+/* Anwahl = Gold/Weiss (--gold-deep auf Weiss) – der Hausfarbklang für Auswahl. */
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{font:inherit;font-size:13px;padding:7px 14px;border:1px solid var(--line);border-radius:var(--r-pill);
+  background:#fff;color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.seg button:hover{border-color:var(--gold-deep)}
+.seg button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-deep);color:#fff}
+
 /* --- Formularfelder -------------------------------------------------------- */
 .field{display:grid;gap:var(--s1)}
 .field>.lab{font-size:13px;color:var(--muted);letter-spacing:.01em}
