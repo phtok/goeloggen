@@ -27,6 +27,7 @@
   var VARIANT = (s && s.dataset.variant) || "";
   var SECTION = (s && s.dataset.section) || "";   // optional: Unterleiste einer Welt (z. B. „schrift")
   var ACTIVE  = (s && s.dataset.active)  || "";   // optional: aktiver Eintrag (slug); sonst aus der URL
+  var ONPAGE  = (s && s.dataset.onpage)  || "";   // optional: dritte Ebene „Label:#id|Label:#id"
   var KEY = "goeNavIntern";
 
   // Die vier meistgenutzten Werkzeuge – Kopfzeile UND prominent in der Schublade.
@@ -134,6 +135,41 @@
       box.appendChild(a);
     });
   }
+
+  // --- Auf dieser Seite (dritte Ebene) ---------------------------------------
+  // data-onpage="Variabel:#variabel|Ziffern:#ziffern" baut eine schmale dritte
+  // Leiste mit den Sprungzielen der Seite. Aktiv läuft per Scroll-Spy mit.
+  var onpageItems = ONPAGE.split("|").map(function (p) {
+    var i = p.indexOf(":"); return i < 0 ? null : { label: p.slice(0, i).trim(), hash: p.slice(i + 1).trim() };
+  }).filter(function (x) { return x && x.hash; });
+  var onpageLinks = [];
+  if (onpageItems.length) {
+    var ob = el("nav", "dsnav-onpage"); ob.setAttribute("aria-label", "Auf dieser Seite");
+    var obox = el("div", "lnks");
+    onpageItems.forEach(function (it) {
+      var a = el("a", "olnk"); a.href = it.hash; a.textContent = it.label; obox.appendChild(a); onpageLinks.push(a);
+    });
+    var oinner = el("div", "bar"); oinner.appendChild(obox); ob.appendChild(oinner);
+    var anchor = sub || header;                 // unter die Welt-Unterleiste (sonst unter die Kopfzeile)
+    anchor.parentNode.insertBefore(ob, anchor.nextSibling);
+  }
+  function setupSpy() {
+    if (!onpageItems.length || !("IntersectionObserver" in window)) return;
+    var targets = [], vis = {};
+    onpageItems.forEach(function (it, i) {
+      var t = document.querySelector(it.hash); if (t) { t.__olnk = onpageLinks[i]; targets.push(t); }
+    });
+    if (!targets.length) return;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { vis[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var bestId = null, best = -1;
+      targets.forEach(function (t) { var v = vis[t.id] || 0; if (v > best) { best = v; bestId = t.id; } });
+      onpageLinks.forEach(function (l) { l.classList.remove("is-active"); l.removeAttribute("aria-current"); });
+      if (bestId) { var t = document.getElementById(bestId); if (t && t.__olnk) { t.__olnk.classList.add("is-active"); t.__olnk.setAttribute("aria-current", "true"); } }
+    }, { rootMargin: "-150px 0px -55% 0px", threshold: [0, .2, .5, 1] });
+    targets.forEach(function (t) { obs.observe(t); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setupSpy); else setupSpy();
 
   var backdrop = el("div", "dsnav-backdrop");
   var drawer = el("aside", "dsnav-drawer");

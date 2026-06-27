@@ -46,6 +46,7 @@
   /* --- Radien & Maße ----------------------------------------------------- */
   --r-control:10px; --r-card:14px; --r-pill:999px;
   --header-h:58px; --maxw:1080px;
+  --ds-maxw:1080px;      /* feste Breite der globalen Navigation – von Seiten NICHT überschrieben (sonst springt die zentrierte Leiste) */
 
   /* --- Schatten ---------------------------------------------------------- */
   --shadow-card:0 10px 30px rgba(20,24,28,.06);
