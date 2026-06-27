@@ -8,8 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../design-system/tokens.css" />
-<link rel="stylesheet" href="../../design-system/nav.css" />
 <style>
   :root{--navy:#23323F;--ink:#1d2a35;--line:#e3e1dc;--muted:#6f7c87}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -176,9 +174,14 @@
 </div>
 
 <div class="site">
-  <script src="../../design-system/nav.js" data-root="../../" data-section="generatoren" data-active="gtv-naming"></script>
-
-  <a class="logo" id="logobox" href="#" onclick="return false"></a>
+  <header class="gtv">
+    <a class="logo" id="logobox" href="#" onclick="return false"></a>
+    <div class="hdr-actions">
+      <button class="btn">Einloggen</button>
+      <button class="btn primary">Gratis testen</button>
+      <button class="burger" aria-label="Menü"><span></span></button>
+    </div>
+  </header>
 
   <nav class="pills">
     <button class="pill"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a17 17 0 010 18M12 3a17 17 0 000 18"/></svg>Browse</button>
