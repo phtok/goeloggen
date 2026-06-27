@@ -25,6 +25,8 @@
   var TOOLS = (s && s.dataset.tools) || ROOT + "tools.json";
   var HOME  = (s && s.dataset.home)  || ROOT;
   var VARIANT = (s && s.dataset.variant) || "";
+  var SECTION = (s && s.dataset.section) || "";   // optional: Unterleiste einer Welt (z. B. „schrift")
+  var ACTIVE  = (s && s.dataset.active)  || "";   // optional: aktiver Eintrag (slug); sonst aus der URL
   var KEY = "goeNavIntern";
 
   // Die vier meistgenutzten Werkzeuge – Kopfzeile UND prominent in der Schublade.
@@ -72,6 +74,20 @@
   }
   function isExternal(h) { return /^https?:/i.test(h) && h.indexOf(ROOT) !== 0; }
 
+  // Welt (für die Beschriftung der Unterleiste) zu einer Kategorie-id finden.
+  function worldFor(id) {
+    var all = WORLDS.concat(INTERN_EXTRA);
+    for (var i = 0; i < all.length; i++) { if (all[i].cats.indexOf(id) !== -1) return all[i]; }
+    return null;
+  }
+  // Aktuelle Datei aus der URL (für die Hervorhebung des aktiven Eintrags).
+  function currentFile() { var p = location.pathname.replace(/\/+$/, ""); return p.slice(p.lastIndexOf("/") + 1); }
+  function isActiveTool(t) {
+    if (ACTIVE) return t.slug === ACTIVE;
+    var f = currentFile(); if (!f) return false;
+    return t.href.replace(/^\//, "") === f;
+  }
+
   // ?intern in der URL auswerten (einmalig aktivieren, dann säubern)
   (function () {
     var m = /[?&]intern(?:=([^&]*))?/.exec(location.search);
@@ -93,6 +109,31 @@
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
     '</div>';
   document.body.insertBefore(header, document.body.firstChild);
+
+  // --- Unterleiste einer Welt (zweite Ebene) ---------------------------------
+  // Optional: data-section="schrift" zeigt die Geschwisterseiten der Welt als
+  // schmale zweite Leiste unter der Kopfzeile. Inhalt kommt aus tools.json.
+  var sub = null;
+  if (SECTION) {
+    sub = el("nav", "dsnav-sub");
+    sub.setAttribute("aria-label", "Bereich");
+    sub.innerHTML = '<div class="bar"><span class="sec"></span><div class="lnks"></div></div>';
+    header.parentNode.insertBefore(sub, header.nextSibling);
+  }
+  function renderSub() {
+    if (!sub) return;
+    var w = worldFor(SECTION);
+    sub.querySelector(".sec").textContent = w ? w.label : "";
+    var box = sub.querySelector(".lnks"); box.innerHTML = "";
+    ALL.filter(function (t) { return t.cat === SECTION; }).forEach(function (t) {
+      var active = isActiveTool(t);
+      var a = el("a", "slnk" + (active ? " is-active" : ""));
+      a.href = resolveHref(t.href);
+      a.textContent = t.short || t.title;
+      if (active) a.setAttribute("aria-current", "page");
+      box.appendChild(a);
+    });
+  }
 
   var backdrop = el("div", "dsnav-backdrop");
   var drawer = el("aside", "dsnav-drawer");
@@ -216,6 +257,7 @@
       worldsNav.appendChild(a);
     });
     renderDrawer();
+    renderSub();
   }).catch(function () {
     drawerBody.innerHTML = '<p style="padding:22px;color:var(--muted)">Werkzeugliste konnte nicht geladen werden.</p>';
   });
