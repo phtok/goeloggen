@@ -5,6 +5,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Goetheanum Visitenkarten One-Pager</title>
+  <link rel="stylesheet" href="../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../design-system/nav.css" />
   <style>
     @font-face {
       font-family: "SourceSansPro-Regular";
@@ -891,18 +893,15 @@
   </style>
 </head>
 <body>
-  <header class="page-head">
-    <div class="page-head-inner">
-      <div class="brand-lockup">
-        <img class="brand-logo" src="../../assets/goe-visiten.svg" alt="Goetheanum Visitenkarten Logo" />
-      </div>
-      <button type="button" class="secret-toggle-header" id="ownerModeSwitch" aria-label="Owner Mode"></button>
-      <div class="ui-toggle" id="uiLangToggle" role="group" aria-label="Sprache / Language">
-        <button type="button" data-uilang="de" class="on">DE</button>
-        <button type="button" data-uilang="en">EN</button>
-      </div>
+  <script src="../../design-system/nav.js" data-root="../../" data-section="generatoren" data-active="visitenkarten"></script>
+
+  <div class="page-head-inner">
+    <button type="button" class="secret-toggle-header" id="ownerModeSwitch" aria-label="Owner Mode"></button>
+    <div class="ui-toggle" id="uiLangToggle" role="group" aria-label="Sprache / Language">
+      <button type="button" data-uilang="de" class="on">DE</button>
+      <button type="button" data-uilang="en">EN</button>
     </div>
-  </header>
+  </div>
 
   <main class="app">
     <section class="panel controls">
