@@ -1,6 +1,8 @@
 <!doctype html><html lang="de"><head>
 <link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" /><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Ligaturen ineinander</title>
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
 <style>
 @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
 :root{--va:-250}
@@ -23,7 +25,9 @@ input[type=range]{width:100%}
 .code{font-family:ui-monospace,Menlo,monospace;white-space:pre-wrap}
 .btn{font:inherit;font-size:13px;border:1px solid rgba(20,24,28,.18);background:#fff;border-radius:8px;padding:6px 11px;cursor:pointer;margin-right:8px}
 small{color:#9aa0a6}
-</style></head><body><div class="wrap">
+</style></head><body>
+<script src="design-system/nav.js" data-root="./" data-section="werkstatt" data-active="ineinander"></script>
+<div class="wrap">
 <h1>Ligaturen ineinanderschieben</h1>
 <div class="hint">Finaler Satz: ff (wortintern), ff (Wortende), fi (weit), fl, ft — zerlegt in f + Folgebuchstabe, inline im echten Klar-Satz. Pro Ligatur <b>Überlappung</b> (negativ enger) und <b>Nachabstand</b>. Global: vertikale Lage (Default −250 = Grundlinie) &amp; Schriftgrösse.</div>
 <div class="stage"><div class="sample" id="sample"><p style="margin:0">Au<span class="lig" data-l="ff"></span>ällige, <span class="lig" data-l="fl"></span>ießende Schri<span class="lig" data-l="ft"></span>züge: der Sto<span class="lig" data-l="ffe"></span>, das Schi<span class="lig" data-l="ffe"></span>, ein P<span class="lig" data-l="fi"></span><span class="lig" data-l="ffe"></span>, Ko<span class="lig" data-l="ff"></span>er, scha<span class="lig" data-l="ff"></span>en, ö<span class="lig" data-l="ff"></span>nen, die Au<span class="lig" data-l="fl"></span>age, das P<span class="lig" data-l="fl"></span>aster, Gra<span class="lig" data-l="fi"></span>k, de<span class="lig" data-l="fi"></span>nitiv, san<span class="lig" data-l="ft"></span>e Kra<span class="lig" data-l="ft"></span>, o<span class="lig" data-l="ft"></span> geprü<span class="lig" data-l="ft"></span>. Schi<span class="lig" data-l="ff"></span>fahrt, Sauersto<span class="lig" data-l="ff"></span><span class="lig" data-l="fl"></span>asche.</p></div></div>

@@ -123,10 +123,16 @@
   }
   function renderSub() {
     if (!sub) return;
+    var intern = isIntern();
     var w = worldFor(SECTION);
     sub.querySelector(".sec").textContent = w ? w.label : "";
     var box = sub.querySelector(".lnks"); box.innerHTML = "";
-    ALL.filter(function (t) { return t.cat === SECTION; }).forEach(function (t) {
+    // Öffentlich nur Fertiges (live/beta); Entwürfe & Geparktes bleiben verborgen –
+    // ausser intern oder es ist die gerade offene Seite (sonst fehlte ihr Eintrag).
+    ALL.filter(function (t) {
+      return t.cat === SECTION &&
+        (intern || t.status === "live" || t.status === "beta" || isActiveTool(t));
+    }).forEach(function (t) {
       var active = isActiveTool(t);
       var a = el("a", "slnk" + (active ? " is-active" : ""));
       a.href = resolveHref(t.href);
