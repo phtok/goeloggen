@@ -61,7 +61,7 @@
   <section class="hero">
     <span class="kicker">Logos</span>
     <h1>Das Logo des Goetheanum</h1>
-    <p class="lede">Sektion oder Bereich wählen, Layout und Farbe einstellen, herunterladen. Darunter das Begleitschreiben: wer welches Logo wie anwendet – samt Regeln und Verboten.</p>
+    <p class="lede">Das blaue Goetheanum-Logo herunterladen – oder für den Sondereinsatz Sektion, Layout und Farbe wählen. Darunter das Begleitschreiben: wer welches Logo wie anwendet, samt Regeln und Verboten.</p>
   </section>
 
   <!-- ===================== WERKZEUG ===================== -->
@@ -69,10 +69,10 @@
     <div class="shead"><h2>Logo holen</h2><p>Das fertige SVG kommt aus dieser Quelle – nie nachbauen.</p></div>
     <div class="tool">
       <div class="controls">
-        <label class="field">
+        <div class="field">
           <span class="lab">Kategorie</span>
-          <select id="cat"></select>
-        </label>
+          <div class="seg" id="cat"></div>
+        </div>
         <label class="field">
           <span class="lab">Sektion / Bereich</span>
           <select id="org"></select>
@@ -98,9 +98,13 @@
 
       <div>
         <div class="stage" id="stage"><span class="meta">…</span></div>
-        <div class="toolbar">
-          <button class="btn primary" id="dlSvg">SVG herunterladen</button>
-          <button class="btn" id="dlPng">PNG herunterladen</button>
+        <div class="toolbar" id="exports">
+          <button class="btn primary" data-fmt="svg"   title="Vektor – für Web und Druck">SVG</button>
+          <button class="btn"         data-fmt="svg48" title="Vektor, auf 48 px Höhe normiert">SVG 48</button>
+          <button class="btn"         data-fmt="png"   title="Empfohlen fürs Office: Word, PowerPoint, Outlook (transparent)">PNG</button>
+          <button class="btn"         data-fmt="webp"  title="Web, klein (transparent)">WebP</button>
+          <button class="btn"         data-fmt="jpg"   title="Mit weissem Grund">JPG</button>
+          <button class="btn"         data-fmt="pdf"   title="Vektor-PDF (weisser Grund)">PDF</button>
         </div>
         <div class="meta" id="dim"></div>
       </div>
@@ -117,7 +121,7 @@
     <div class="sheet">
       <!-- 1 Das Logo + Varianten-Visual -->
       <h3><span class="n">1</span> Das Logo &amp; seine Varianten</h3>
-      <p>Zeichen + Wortmarke ‹Goetheanum›, optional der Name der Sektion oder des Bereichs in der Hausfarbe. <strong>Immer die fertige Datei aus dem Werkzeug nehmen</strong> – nie nachzeichnen oder neu setzen.</p>
+      <p><strong>Das blaue, einzeilige Goetheanum-Logo ist das eigentliche Logo</strong> – für das breite Publikum immer dieses. Sektions- und Bereichslogos sowie Farb- und Icon-Varianten sind nur für den <strong>Sondereinsatz</strong>: eigene Webseiten, Fachveranstaltungen. Immer die fertige Datei aus dem Werkzeug nehmen – nie nachzeichnen oder neu setzen.</p>
       <div class="vstrip" id="vVariants"></div>
 
       <div class="num" style="margin-top:var(--s6)">
@@ -127,7 +131,7 @@
         </div>
         <div>
           <h3><span class="n">3</span> Wer nutzt was</h3>
-          <p>Goetheanum gesamt und Administration → das blaue Goetheanum-Lockup. Sektionen und Bereiche → ihr eigenes Lockup mit Name in der Hausfarbe. Hochschule, Gesellschaft und Bau-Administration → Steiners Zeichen, nur für Briefpapier, Mitgliederkarten und die Generalversammlung – nicht als Alltagslogo.</p>
+          <p><strong>Breites Publikum: immer das blaue Goetheanum-Basislogo.</strong> Sektionen und Bereiche setzen ihr eigenes Lockup nur im Sondereinsatz ein (eigene Webseiten, Fachveranstaltungen). Hochschule, Gesellschaft und Bau-Administration → Steiners Zeichen, nur für Briefpapier, Mitgliederkarten und Generalversammlung.</p>
         </div>
       </div>
 
@@ -189,11 +193,13 @@
 
 <script src="../../assets/data/goetheanum-orgs.js"></script>
 <script src="engine.js"></script>
+<script src="export.js"></script>
 <script>
 "use strict";
 (function(){
   var E = window.LogoEngine;
-  var sel = { cat:"sektionen", org:"aas", layout:"desktop", mode:"original", lang:"de", scale:2.635 };
+  // Default = das eigentliche Logo: blaues, einzeiliges Goetheanum-Basislogo.
+  var sel = { cat:"allgemein", org:"goetheanum", layout:"desktop", mode:"original", lang:"de", scale:2.635 };
 
   var LAYOUT_LABELS = [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"],["square","Quadrat"]];
   var MODE_LABELS   = [["original","Original"],["white","Weiss"],["black","Schwarz"],["gray","Grau"]];
@@ -202,13 +208,13 @@
 
   // Kategorie- und Org-Auswahl aus der Datenwurzel
   function fillCats(){
-    var c = $("cat"); c.innerHTML = "";
+    var box = $("cat"); box.innerHTML = "";
     Object.keys(CATS).forEach(function(k){
-      var o = document.createElement("option");
-      o.value = k; o.textContent = CATS[k].label_de + " (" + CATS[k].items.length + ")";
-      c.appendChild(o);
+      var b = document.createElement("button");
+      b.type = "button"; b.textContent = CATS[k].label_de; b.dataset.val = k;
+      b.setAttribute("aria-pressed", String(k === sel.cat));
+      box.appendChild(b);
     });
-    c.value = sel.cat;
   }
   function fillOrgs(){
     var o = $("org"); o.innerHTML = "";
@@ -244,29 +250,6 @@
 
   function fileBase(){ return "goetheanum-" + sel.org + "-" + sel.layout + "-" + sel.mode; }
 
-  function downloadSVG(){
-    var blob = new Blob([currentSVG()], { type:"image/svg+xml;charset=utf-8" });
-    triggerDownload(URL.createObjectURL(blob), fileBase() + ".svg");
-  }
-  function downloadPNG(){
-    var svg = currentSVG();
-    var m = svg.match(/width="(\d+)" height="(\d+)"/);
-    var w = m ? +m[1] : 1200, h = m ? +m[2] : 400;
-    var img = new Image();
-    img.onload = function(){
-      var cv = document.createElement("canvas"); cv.width = w; cv.height = h;
-      var ctx = cv.getContext("2d");
-      if (sel.mode === "white") { ctx.fillStyle = "#0061a9"; ctx.fillRect(0,0,w,h); }
-      ctx.drawImage(img, 0, 0, w, h);
-      triggerDownload(cv.toDataURL("image/png"), fileBase() + ".png");
-    };
-    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-  }
-  function triggerDownload(href, name){
-    var a = document.createElement("a"); a.href = href; a.download = name;
-    document.body.appendChild(a); a.click(); a.remove();
-  }
-
   // Begleitschreiben-Visuals aus der Engine
   function buildVisuals(){
     var vv = $("vVariants");
@@ -290,13 +273,12 @@
     fillCats(); fillOrgs();
     fillSeg("layout", LAYOUT_LABELS, sel.layout);
     fillSeg("mode", MODE_LABELS, sel.mode);
-    $("cat").addEventListener("change", function(){ sel.cat = this.value; fillOrgs(); sel.org = $("org").value; render(); });
+    $("cat").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.cat=b.dataset.val; fillCats(); fillOrgs(); sel.org=$("org").value; render(); });
     $("org").addEventListener("change", function(){ sel.org = this.value; render(); });
     $("lang").addEventListener("change", function(){ sel.lang = this.value; render(); });
     $("layout").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.layout=b.dataset.val; fillSeg("layout",LAYOUT_LABELS,sel.layout); render(); });
     $("mode").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.mode=b.dataset.val; fillSeg("mode",MODE_LABELS,sel.mode); render(); });
-    $("dlSvg").addEventListener("click", downloadSVG);
-    $("dlPng").addEventListener("click", downloadPNG);
+    $("exports").addEventListener("click", function(e){ var b=e.target.closest("button[data-fmt]"); if(!b)return; LogoExport[b.dataset.fmt](currentSVG(), fileBase()); });
     render();
     buildVisuals();
   }
