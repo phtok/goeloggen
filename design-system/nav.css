@@ -66,14 +66,6 @@ html{scrollbar-gutter:stable}
 
 .dsnav-drawer .body{overflow:auto;padding:var(--s2) 0 var(--s8)}
 
-/* Die vier meistgenutzten – prominent ganz oben in der Schublade */
-.dsnav-quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px 22px var(--s2)}
-.dsnav-quick a{display:block;border:1px solid var(--line);border-radius:var(--r-card);padding:14px;
-  text-decoration:none;color:var(--ink);background:var(--soft);transition:border-color .15s,transform .15s,box-shadow .15s}
-.dsnav-quick a:hover{border-color:var(--gold);transform:translateY(-1px);box-shadow:var(--shadow-card)}
-.dsnav-quick .qt{display:block;font-weight:var(--w-strong);font-size:15px}
-.dsnav-quick .qd{display:block;color:var(--muted);font-size:12px;margin-top:3px;line-height:1.35}
-
 /* Toast für den unsichtbaren Intern-Schalter */
 .dsnav-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;
   padding:8px 16px;border-radius:var(--r-pill);font-size:13px;opacity:0;visibility:hidden;
@@ -93,6 +85,9 @@ html{scrollbar-gutter:stable}
 .dsnav-link .tt{font-size:14px}
 .dsnav-link .dd{color:var(--muted);font-size:12px;margin-top:2px;line-height:1.4}
 .dsnav-link .txt{display:flex;flex-direction:column}
+/* Aktuelle Seite im Menü hervorheben – ruhig, mit Gold-Kante. */
+.dsnav-link.is-active{background:var(--soft);box-shadow:inset 3px 0 0 var(--gold-deep)}
+.dsnav-link.is-active .tt{color:var(--gold-deep);font-weight:var(--w-strong)}
 
 /* Status-Punkt */
 .dsnav-link .st{width:8px;height:8px;border-radius:var(--r-pill);background:var(--muted);flex:0 0 auto;margin-top:7px}
@@ -103,40 +98,3 @@ html{scrollbar-gutter:stable}
 
 .dsnav-drawer .foot{padding:var(--s4) 22px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;flex:0 0 auto}
 .dsnav-drawer .foot a{color:var(--gold-deep);text-decoration:none}
-
-/* --- Unterleiste einer Welt (zweite Ebene, z. B. Schrift) ------------------- */
-/* Klebt direkt unter der Kopfzeile. Links: der Weltname (Deutlich), rechts die
-   Geschwisterseiten. Aktiv = Gold mit feinem Gold-Strich – ruhig, kein Pillen-
-   Lärm (die Gold/Weiss-Pillen bleiben den Werkzeug-Steuerungen vorbehalten). */
-.dsnav-sub{position:sticky;top:var(--header-h);z-index:39;background:rgba(255,255,255,.92);
-  backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
-.dsnav-sub .bar{display:flex;align-items:center;gap:var(--s4);height:44px;
-  max-width:var(--ds-maxw);margin:0 auto;padding:0 26px}
-.dsnav-sub .sec{flex:0 0 auto;font-weight:var(--w-deutlich);font-size:14px;color:var(--ink)}
-.dsnav-sub .lnks{display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
-.dsnav-sub .lnks::-webkit-scrollbar{display:none}
-.dsnav-sub .slnk{position:relative;flex:0 0 auto;font-size:13.5px;color:var(--muted);
-  text-decoration:none;padding:11px 0;white-space:nowrap;transition:color .15s}
-.dsnav-sub .slnk:hover{color:var(--gold-deep)}
-.dsnav-sub .slnk.is-active{color:var(--gold-deep)}
-.dsnav-sub .slnk.is-active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--gold-deep);border-radius:2px}
-
-@media(max-width:560px){
-  .dsnav-sub .sec{display:none}
-  .dsnav-sub .bar{gap:0}
-}
-
-/* --- Auf dieser Seite (dritte Ebene) --------------------------------------- */
-/* Sprungziele der aktuellen Seite, klebt unter der Welt-Unterleiste. Leiser als
-   die zweite Ebene (kleiner, ohne Weltname); aktiv läuft per Scroll-Spy mit. */
-.dsnav-onpage{position:sticky;top:calc(var(--header-h) + 44px);z-index:38;background:rgba(255,255,255,.9);
-  backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line-soft)}
-.dsnav-onpage .bar{display:flex;align-items:center;height:38px;
-  max-width:var(--ds-maxw);margin:0 auto;padding:0 26px}
-.dsnav-onpage .lnks{display:flex;gap:18px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
-.dsnav-onpage .lnks::-webkit-scrollbar{display:none}
-.dsnav-onpage .olnk{position:relative;flex:0 0 auto;font-size:12.5px;color:var(--muted);
-  text-decoration:none;padding:9px 0;white-space:nowrap;transition:color .15s}
-.dsnav-onpage .olnk:hover{color:var(--gold-deep)}
-.dsnav-onpage .olnk.is-active{color:var(--gold-deep)}
-.dsnav-onpage .olnk.is-active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--gold);border-radius:2px}

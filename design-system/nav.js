@@ -1,22 +1,23 @@
 /* =============================================================================
-   Goetheanum CI – ds-nav (Prototyp)
+   Goetheanum CI – ds-nav: EINE Navigation, schlicht.
    -----------------------------------------------------------------------------
-   Eine globale Navigation für alle Seiten, gerendert aus tools.json. Einbinden:
+   Gerendert aus tools.json. Einbinden:
 
      <link rel="stylesheet" href="…/design-system/nav.css">
-     <script src="…/design-system/nav.js"
-             data-root="https://phtok.github.io/goeloggen/"
-             data-variant="werkzeug"          (optional: zeigt „← Übersicht")
-             data-path="Schrift › Tester"></script>  (optional: Kontext-Pfad)
+     <script src="…/design-system/nav.js" data-root="…/"></script>
 
-   Kopfzeile: Lockup · Logos · Schriften · Mail-Signatur · Visitenkarte · ☰
-   Der Burger (☰) öffnet die Schublade. Ganz oben darin: die vier meistgenutzten
-   Werkzeuge als prominente Kacheln (auch auf dem Handy gut sichtbar).
+   Bewusst nur ZWEI Dinge:
+   1) Kopfzeile: Lockup links, Burger (☰) rechts. Auf dem DESKTOP zusätzlich die
+      vier meistgenutzten Werkzeuge als Schnellzugriff (echter Mehrwert). Auf dem
+      HANDY verschwindet die Navigation ganz im Burger.
+   2) Schublade: EINE vertikale Liste mit aufklappbaren Bereichen (Welten). Der
+      Bereich der aktuellen Seite ist offen, die übrigen eingeklappt.
 
-   FOKUS: öffentlich nur fertige Werkzeuge (Status „live") – nicht übervoll.
-   INTERN (Pflege): unsichtbarer Schalter blendet ALLES ein (alle Status +
-   Werkstatt + Geparktes). Auslöser: das Wort „intern" tippen, oder einmalig
-   ?intern an die URL. Gemerkt im localStorage; ausschalten: erneut „intern".
+   Keine zweite/dritte Leiste mehr – das war zu viel.
+
+   FOKUS: öffentlich nur Fertiges (live/beta). INTERN (Pflege) blendet ALLES ein
+   (alle Status + Backstage-Welten). Auslöser: das Wort „intern" tippen, oder
+   einmalig ?intern an die URL. Gemerkt im localStorage; aus: erneut „intern".
    ============================================================================= */
 (function () {
   var s = document.currentScript;
@@ -24,48 +25,36 @@
   if (ROOT.slice(-1) !== "/") ROOT += "/";
   var TOOLS = (s && s.dataset.tools) || ROOT + "tools.json";
   var HOME  = (s && s.dataset.home)  || ROOT;
-  var VARIANT = (s && s.dataset.variant) || "";
-  var SECTION = (s && s.dataset.section) || "";   // optional: Unterleiste einer Welt (z. B. „schrift")
-  var ACTIVE  = (s && s.dataset.active)  || "";   // optional: aktiver Eintrag (slug); sonst aus der URL
-  var ONPAGE  = (s && s.dataset.onpage)  || "";   // optional: dritte Ebene „Label:#id|Label:#id"
+  var ACTIVE = (s && s.dataset.active) || "";   // optional: aktiver Eintrag (slug); sonst aus der URL
   var KEY = "goeNavIntern";
 
-  // Die vier meistgenutzten Werkzeuge – Kopfzeile UND prominent in der Schublade.
+  // Die vier meistgenutzten – nur als Desktop-Schnellzugriff in der Kopfzeile.
   var PRIMARY = [
-    { label: "Logos",        slug: "logo-generator" },
-    { label: "Schriften",    slug: "schriften" },
+    { label: "Logos",         slug: "logo-generator" },
+    { label: "Schriften",     slug: "schriften" },
     { label: "Mail-Signatur", slug: "signatur" },
-    { label: "Visitenkarte", slug: "visitenkarten" }
+    { label: "Visitenkarte",  slug: "visitenkarten" }
   ];
-  var PRIMARY_SLUGS = PRIMARY.map(function (p) { return p.slug; });
 
-  // Die drei öffentlichen Welten (öffentlich nur Status „live").
+  // Öffentliche Welten (für alle sichtbar). Reihenfolge = Nutzungsbreite.
   var WORLDS = [
     { id: "werkzeuge", label: "Werkzeuge",
-      intro: "Eintragen, fertiges Ergebnis übernehmen – für den täglichen Gebrauch.",
-      cats: ["generatoren"] },
+      intro: "Eintragen, fertiges Ergebnis übernehmen – täglicher Gebrauch.", cats: ["generatoren"] },
     { id: "schrift", label: "Schrift",
-      intro: "Die Hausschrift und die Regeln dazu – ansehen, herunterladen, einbinden.",
-      cats: ["schrift"] },
+      intro: "Hausschrift und Regeln – ansehen, herunterladen, einbinden.", cats: ["schrift"] },
     { id: "elemente", label: "Elemente",
-      intro: "Farben, Logos und das Design-System – zum Nachschlagen und Holen.",
-      cats: ["system"] }
+      intro: "Farben, Logos, Design-System – nachschlagen und holen.", cats: ["system"] }
   ];
-  // Nur intern zusätzlich – die Backstage-Welten (Stand A/B/C-Qualifizierung).
+  // Nur intern zusätzlich – die Backstage-Welten (A/B/C-Qualifizierung).
   var INTERN_EXTRA = [
-    { id: "vorbereitung", label: "In Vorbereitung",
-      intro: "In Arbeit – noch nicht für die Breite freigegeben.", cats: ["vorbereitung"] },
-    { id: "ligaturen", label: "Ligaturen",
-      intro: "Die Kiste nur für die Ligaturen – Werkschau, Überlagerung, Abstände.", cats: ["ligaturen"] },
-    { id: "schriftpflege", label: "Schriftpflege",
-      intro: "Begleit-Grotesk, Gewichte und Mischsatz prüfen und kalibrieren.", cats: ["schriftpflege"] },
-    { id: "statistik", label: "Statistik",
-      intro: "Nutzungszahlen aller Werkzeuge – nur der Gebrauch legitimiert den Bau.", cats: ["statistik"] },
-    { id: "schau", label: "Schau & Mockups",
-      intro: "Präsentations-Mockups und Studien – kein öffentliches Werkzeug.", cats: ["schau"] },
-    { id: "geparkt", label: "Geparktes",
-      intro: "Durchdachte Konzepte, die später kommen – intern.", cats: ["geparkt"] }
+    { id: "vorbereitung", label: "In Vorbereitung", intro: "In Arbeit – noch nicht freigegeben.", cats: ["vorbereitung"] },
+    { id: "ligaturen", label: "Ligaturen", intro: "Die Kiste nur für die Ligaturen.", cats: ["ligaturen"] },
+    { id: "schriftpflege", label: "Schriftpflege", intro: "Grotesk, Gewichte und Mischsatz prüfen.", cats: ["schriftpflege"] },
+    { id: "statistik", label: "Statistik", intro: "Nutzungszahlen aller Werkzeuge.", cats: ["statistik"] },
+    { id: "schau", label: "Schau & Mockups", intro: "Präsentations-Mockups und Studien.", cats: ["schau"] },
+    { id: "geparkt", label: "Geparktes", intro: "Konzepte, die später kommen.", cats: ["geparkt"] }
   ];
+  var PUBLIC_IDS = WORLDS.map(function (w) { return w.id; });
 
   function isIntern() { try { return localStorage.getItem(KEY) === "1"; } catch (e) { return false; } }
   function setIntern(v) { try { localStorage.setItem(KEY, v ? "1" : "0"); } catch (e) {} }
@@ -82,14 +71,11 @@
     return ROOT + h.replace(/^\//, "");
   }
   function isExternal(h) { return /^https?:/i.test(h) && h.indexOf(ROOT) !== 0; }
-
-  // Welt (für die Beschriftung der Unterleiste) zu einer Kategorie-id finden.
-  function worldFor(id) {
+  function worldFor(catId) {
     var all = WORLDS.concat(INTERN_EXTRA);
-    for (var i = 0; i < all.length; i++) { if (all[i].cats.indexOf(id) !== -1) return all[i]; }
+    for (var i = 0; i < all.length; i++) { if (all[i].cats.indexOf(catId) !== -1) return all[i]; }
     return null;
   }
-  // Aktuelle Datei aus der URL (für die Hervorhebung des aktiven Eintrags).
   function currentFile() { var p = location.pathname.replace(/\/+$/, ""); return p.slice(p.lastIndexOf("/") + 1); }
   function isActiveTool(t) {
     if (ACTIVE) return t.slug === ACTIVE;
@@ -107,7 +93,7 @@
   })();
 
   // --- Kopfzeile -------------------------------------------------------------
-  var header = el("header", "dsnav" + (VARIANT === "werkzeug" ? " is-werkzeug" : ""));
+  var header = el("header", "dsnav");
   header.innerHTML =
     '<div class="bar">' +
       '<a class="brand" href="' + HOME + '" aria-label="Goetheanum Werkzeuge – zur Übersicht">' +
@@ -119,78 +105,12 @@
     '</div>';
   document.body.insertBefore(header, document.body.firstChild);
 
-  // --- Unterleiste einer Welt (zweite Ebene) ---------------------------------
-  // Optional: data-section="schrift" zeigt die Geschwisterseiten der Welt als
-  // schmale zweite Leiste unter der Kopfzeile. Inhalt kommt aus tools.json.
-  var sub = null;
-  if (SECTION) {
-    sub = el("nav", "dsnav-sub");
-    sub.setAttribute("aria-label", "Bereich");
-    sub.innerHTML = '<div class="bar"><span class="sec"></span><div class="lnks"></div></div>';
-    header.parentNode.insertBefore(sub, header.nextSibling);
-  }
-  function renderSub() {
-    if (!sub) return;
-    var intern = isIntern();
-    var w = worldFor(SECTION);
-    sub.querySelector(".sec").textContent = w ? w.label : "";
-    var box = sub.querySelector(".lnks"); box.innerHTML = "";
-    // Öffentlich nur Fertiges (live/beta); Entwürfe & Geparktes bleiben verborgen –
-    // ausser intern oder es ist die gerade offene Seite (sonst fehlte ihr Eintrag).
-    ALL.filter(function (t) {
-      return t.cat === SECTION &&
-        (intern || t.status === "live" || t.status === "beta" || isActiveTool(t));
-    }).forEach(function (t) {
-      var active = isActiveTool(t);
-      var a = el("a", "slnk" + (active ? " is-active" : ""));
-      a.href = resolveHref(t.href);
-      a.textContent = t.short || t.title;
-      if (active) a.setAttribute("aria-current", "page");
-      box.appendChild(a);
-    });
-  }
-
-  // --- Auf dieser Seite (dritte Ebene) ---------------------------------------
-  // data-onpage="Variabel:#variabel|Ziffern:#ziffern" baut eine schmale dritte
-  // Leiste mit den Sprungzielen der Seite. Aktiv läuft per Scroll-Spy mit.
-  var onpageItems = ONPAGE.split("|").map(function (p) {
-    var i = p.indexOf(":"); return i < 0 ? null : { label: p.slice(0, i).trim(), hash: p.slice(i + 1).trim() };
-  }).filter(function (x) { return x && x.hash; });
-  var onpageLinks = [];
-  if (onpageItems.length) {
-    var ob = el("nav", "dsnav-onpage"); ob.setAttribute("aria-label", "Auf dieser Seite");
-    var obox = el("div", "lnks");
-    onpageItems.forEach(function (it) {
-      var a = el("a", "olnk"); a.href = it.hash; a.textContent = it.label; obox.appendChild(a); onpageLinks.push(a);
-    });
-    var oinner = el("div", "bar"); oinner.appendChild(obox); ob.appendChild(oinner);
-    var anchor = sub || header;                 // unter die Welt-Unterleiste (sonst unter die Kopfzeile)
-    anchor.parentNode.insertBefore(ob, anchor.nextSibling);
-  }
-  function setupSpy() {
-    if (!onpageItems.length || !("IntersectionObserver" in window)) return;
-    var targets = [], vis = {};
-    onpageItems.forEach(function (it, i) {
-      var t = document.querySelector(it.hash); if (t) { t.__olnk = onpageLinks[i]; targets.push(t); }
-    });
-    if (!targets.length) return;
-    var obs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { vis[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
-      var bestId = null, best = -1;
-      targets.forEach(function (t) { var v = vis[t.id] || 0; if (v > best) { best = v; bestId = t.id; } });
-      onpageLinks.forEach(function (l) { l.classList.remove("is-active"); l.removeAttribute("aria-current"); });
-      if (bestId) { var t = document.getElementById(bestId); if (t && t.__olnk) { t.__olnk.classList.add("is-active"); t.__olnk.setAttribute("aria-current", "true"); } }
-    }, { rootMargin: "-150px 0px -55% 0px", threshold: [0, .2, .5, 1] });
-    targets.forEach(function (t) { obs.observe(t); });
-  }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setupSpy); else setupSpy();
-
   var backdrop = el("div", "dsnav-backdrop");
   var drawer = el("aside", "dsnav-drawer");
   drawer.setAttribute("role", "dialog");
-  drawer.setAttribute("aria-label", "Werkzeuge");
+  drawer.setAttribute("aria-label", "Navigation");
   drawer.innerHTML =
-    '<div class="dhead"><span class="t">Werkzeuge</span>' +
+    '<div class="dhead"><span class="t">Navigation</span>' +
       '<button class="close" type="button" aria-label="Schliessen">×</button></div>' +
     '<div class="body"></div>' +
     '<div class="foot">Goetheanum Hausgrafik · <a href="' + ROOT + 'design-system/">Design-System</a></div>';
@@ -213,15 +133,13 @@
   drawer.querySelector(".close").addEventListener("click", closeDrawer);
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrawer(); });
 
-  // Unsichtbarer Schalter (zwei Wege, gleicher Effekt)
+  // Unsichtbarer Intern-Schalter
   function toggleIntern() {
     var now = !isIntern(); setIntern(now);
     renderDrawer();
     flash(now ? "Intern-Ansicht: an" : "Intern-Ansicht: aus");
     if (now) openDrawer();
   }
-
-  // (1) Desktop: das Wort „intern" tippen
   var buf = "";
   document.addEventListener("keydown", function (e) {
     var tag = (document.activeElement && document.activeElement.tagName) || "";
@@ -229,46 +147,38 @@
     buf = (buf + e.key.toLowerCase()).slice(-6);
     if (buf === "intern") { buf = ""; toggleIntern(); }
   });
-
-  // (2) Handy & Desktop: drei schnelle Tipps in die leere Mitte der Kopfzeile
-  // (alles, was kein Link/Knopf ist – also der Bereich zwischen Lockup und Navi).
-  var bar = header.querySelector(".bar");
-  var taps = [];
+  var bar = header.querySelector(".bar"), taps = [];
   bar.addEventListener("click", function (e) {
-    if (e.target.closest("a,button")) return;        // echte Bedienelemente nicht zählen
-    var now = e.timeStamp;
-    taps.push(now);
+    if (e.target.closest("a,button")) return;
+    var now = e.timeStamp; taps.push(now);
     taps = taps.filter(function (t) { return now - t < 800; });
     if (taps.length >= 3) { taps = []; toggleIntern(); }
   });
 
-  // --- Schublade rendern -----------------------------------------------------
+  // --- Schublade: eine vertikale Liste mit aufklappbaren Bereichen -----------
   var ALL = [];
   function bySlug(slug) { return ALL.filter(function (t) { return t.slug === slug; })[0]; }
 
-  function quickBlock() {
-    var q = el("div", "dsnav-quick");
-    PRIMARY.forEach(function (p) {
-      var t = bySlug(p.slug);
-      var a = el("a", null,
-        '<span class="qt">' + p.label + '</span>' +
-        (t && t.desc ? '<span class="qd">' + t.desc + '</span>' : ""));
-      a.href = t ? resolveHref(t.href) : HOME;
-      q.appendChild(a);
-    });
-    return q;
+  function currentWorldId() {
+    for (var i = 0; i < ALL.length; i++) {
+      if (isActiveTool(ALL[i])) { var w = worldFor(ALL[i].cat); return w ? w.id : null; }
+    }
+    return null;
   }
-  function groupEl(w, tools) {
+
+  function groupEl(w, tools, open) {
     var g = el("details", "dsnav-group");
     g.setAttribute("data-world", w.id);
-    g.open = true;
+    g.open = open;
     g.appendChild(el("summary", null,
       '<span><span class="ttl">' + w.label + '</span>' +
       '<span class="intro">' + w.intro + '</span></span><span class="arr">›</span>'));
     tools.forEach(function (t) {
-      var a = el("a", "dsnav-link");
+      var active = isActiveTool(t);
+      var a = el("a", "dsnav-link" + (active ? " is-active" : ""));
       a.href = resolveHref(t.href);
       if (isExternal(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
+      if (active) a.setAttribute("aria-current", "page");
       a.innerHTML =
         '<span class="st ' + (t.status || "") + '" title="' + (t.status || "") + '"></span>' +
         '<span class="txt"><span class="tt">' + t.title + '</span>' +
@@ -277,23 +187,23 @@
     });
     return g;
   }
+
   function renderDrawer() {
     var intern = isIntern();
     drawerBody.innerHTML = "";
-    drawerTitle.textContent = intern ? "Alles · intern" : "Werkzeuge";
+    drawerTitle.textContent = intern ? "Alles · intern" : "Navigation";
     idot.hidden = !intern;
-
-    // Ganz oben: die vier prominent
-    drawerBody.appendChild(quickBlock());
-
-    // Darunter der Rest (ohne die vier). Öffentlich nur „live"; intern alles + Extra.
+    var cur = currentWorldId();
     var groups = intern ? WORLDS.concat(INTERN_EXTRA) : WORLDS;
     groups.forEach(function (w) {
-      var tools = ALL.filter(function (t) {
-        return w.cats.indexOf(t.cat) !== -1 && PRIMARY_SLUGS.indexOf(t.slug) === -1;
-      });
-      if (!intern) tools = tools.filter(function (t) { return t.status === "live"; });
-      if (tools.length) drawerBody.appendChild(groupEl(w, tools));
+      var tools = ALL.filter(function (t) { return w.cats.indexOf(t.cat) !== -1; });
+      if (!intern) tools = tools.filter(function (t) { return t.status === "live" || t.status === "beta"; });
+      if (!tools.length) return;
+      // Offen: der Bereich der aktuellen Seite, sonst die öffentlichen Welten;
+      // Backstage-Welten bleiben eingeklappt (kurze, scannbare Liste).
+      var open = (w.id === cur) || (!intern && PUBLIC_IDS.indexOf(w.id) !== -1);
+      if (intern) open = (w.id === cur);
+      drawerBody.appendChild(groupEl(w, tools, open));
     });
   }
 
@@ -307,7 +217,6 @@
       worldsNav.appendChild(a);
     });
     renderDrawer();
-    renderSub();
   }).catch(function () {
     drawerBody.innerHTML = '<p style="padding:22px;color:var(--muted)">Werkzeugliste konnte nicht geladen werden.</p>';
   });
