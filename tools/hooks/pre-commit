@@ -9,4 +9,13 @@ if [ -z "$PY" ]; then
   echo "Typo-Hook übersprungen: kein Python gefunden." >&2
   exit 0
 fi
-exec "$PY" "$ROOT/tools/typo-check.py"
+
+# 1) Hausregeln auf den vorgemerkten HTML-Texten ausführen.
+"$PY" "$ROOT/tools/typo-check.py"
+
+# 2) Driftwächter Kanon ↔ Design-System – nur wenn eine der beteiligten
+#    Schichten betroffen ist (Tokens, Kanon, Regel-YAML, Handbuch).
+if git diff --cached --name-only \
+   | grep -Eq 'design-system/(tokens|base)\.css|assets/typografie/(goetheanum-typo-tokens\.json|typo-regeln\.yaml)|typografie\.html'; then
+  "$PY" "$ROOT/tools/typo-sync.py"
+fi
