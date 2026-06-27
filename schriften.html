@@ -7,6 +7,8 @@
 <title>Goetheanum Schriften</title>
 <meta name="description" content="Goetheanum Schriften 2.5 – Leise, Klar, Deutlich, Laut, Variabel und Icons. Repariert, vervollständigt und optimiert." />
 <meta name="robots" content="noindex" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
 <style>
   @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
   @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
@@ -131,15 +133,7 @@
 </head>
 <body>
 
-<header><div class="wrap bar">
-  <a class="brand" href="https://grafik.goetheanum.ch" aria-label="Zur Grafikseite – grafik.goetheanum.ch">
-    <img src="assets/logos/am-goetheanum-dark.svg" alt="Am Goetheanum" />
-  </a>
-  <nav class="top">
-    <a href="#variabel">Variabel</a><a href="#schnitte">Schnitte</a>
-    <a href="#features">Features</a><a href="#icons">Icons</a><a href="#web">Im&nbsp;Web</a><a href="typografie.html">Typografie</a><a href="vorschau.html">Neu</a><a href="#download">Download</a>
-  </nav>
-</div></header>
+<script src="design-system/nav.js" data-root="./" data-section="schrift" data-active="schriften"></script>
 
 <main>
   <div class="wrap hero">
@@ -300,7 +294,7 @@ body{ font-family:"Goetheanum", system-ui, sans-serif; }
         <a class="btn" href="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf" download>PDF</a></div>
     </div>
     <p style="margin-top:18px;font-size:13px;color:var(--muted)">
-      <b style="color:var(--ink);font-weight:400">Installieren (macOS):</b> ZIP entpacken → Doppelklick auf eine <code>.otf</code> → „Installieren". 
+      <b style="color:var(--ink);font-weight:400">Installieren (macOS):</b> ZIP entpacken → Doppelklick auf eine <code>.otf</code> → ‹Installieren›.
       Ausführliche Schritt-für-Schritt-Anleitung: <a style="color:var(--gold-deep)" href="https://support.apple.com/de-de/guide/font-book/fntbk1000/mac">Apple Schriftsammlung</a>.
       Fürs Office reichen Leise, Klar, Deutlich, Laut – ⌘B holt Laut, ⌘I holt Leise.
     </p>
