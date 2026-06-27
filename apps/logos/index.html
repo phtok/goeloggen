@@ -35,7 +35,8 @@
   .stage{display:grid;place-items:center;min-height:280px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft);padding:clamp(24px,5vw,56px)}
   .stage.dark{background:#23272b}
   .stage svg{max-width:100%;height:auto;max-height:340px}
-  .toolbar{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s4)}
+  .dlhead{display:block;color:var(--muted);font-size:12px;letter-spacing:.04em;margin:var(--s4) 0 var(--s2)}
+  .toolbar{display:flex;gap:var(--s2);flex-wrap:wrap}
   .meta{color:var(--muted);font-size:12.5px;margin-top:var(--s2)}
 
   /* Begleitschreiben */
@@ -106,13 +107,14 @@
 
       <div class="preview">
         <div class="stage" id="stage"><span class="meta">…</span></div>
+        <span class="dlhead">Herunterladen</span>
         <div class="toolbar" id="exports">
-          <button class="btn primary" data-fmt="svg"   title="Vektor – für Web und Druck">SVG</button>
-          <button class="btn"         data-fmt="svg48" title="Vektor, auf 48 px Höhe normiert">SVG 48</button>
-          <button class="btn"         data-fmt="png"   title="Empfohlen fürs Office: Word, PowerPoint, Outlook (transparent)">PNG</button>
-          <button class="btn"         data-fmt="webp"  title="Web, klein (transparent)">WebP</button>
-          <button class="btn"         data-fmt="jpg"   title="Mit weissem Grund">JPG</button>
-          <button class="btn"         data-fmt="pdf"   title="Vektor-PDF (weisser Grund)">PDF</button>
+          <button class="btn primary dl" data-fmt="svg"   title="Vektor – für Web und Druck">SVG</button>
+          <button class="btn dl"         data-fmt="svg48" title="Vektor, auf 48 px Höhe normiert">SVG 48</button>
+          <button class="btn dl"         data-fmt="png"   title="Empfohlen fürs Office: Word, PowerPoint, Outlook (transparent)">PNG</button>
+          <button class="btn dl"         data-fmt="webp"  title="Web, klein (transparent)">WebP</button>
+          <button class="btn dl"         data-fmt="jpg"   title="Mit weissem Grund">JPG</button>
+          <button class="btn dl"         data-fmt="pdf"   title="Vektor-PDF (weisser Grund)">PDF</button>
         </div>
         <div class="meta" id="dim"></div>
       </div>
