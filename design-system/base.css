@@ -61,6 +61,16 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .seg button:hover{border-color:var(--gold-deep)}
 .seg button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-deep);color:#fff}
 
+/* Auswahl vs. Aktion klar trennen: Pillen (.seg, Kapsel, gold-weiss = gewählt)
+   sind eine WAHL; Knöpfe (.btn, eckiger) sind ein TUN. Lade-Knöpfe tragen einen
+   Pfeil ↓, damit ‹Herunterladen› auf den ersten Blick keine Pille ist. */
+.btn.dl::before{content:"↓";margin-right:7px;font-weight:var(--w-strong);opacity:.9}
+
+/* Bequeme Fingerziele auf dem Handy. */
+@media(max-width:560px){
+  .seg button,.btn{min-height:42px}
+}
+
 /* --- Formularfelder -------------------------------------------------------- */
 .field{display:grid;gap:var(--s1)}
 .field>.lab{font-size:13px;color:var(--muted);letter-spacing:.01em}
