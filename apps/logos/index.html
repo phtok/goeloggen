@@ -17,6 +17,17 @@
   /* Werkzeug */
   .tool{display:grid;gap:var(--s6);grid-template-columns:1fr}
   @media(min-width:860px){.tool{grid-template-columns:320px 1fr;align-items:start}}
+  /* Auf schmalen Schirmen die Vorschau über die Auswahl heben (nicht darunter) */
+  @media(max-width:859px){.tool .preview{order:-1;margin-bottom:var(--s4)}}
+
+  /* Begleitschreiben als PDF drucken: nur das Blatt zeigen */
+  @media print{
+    .dsnav,.dsnav-drawer,.dsnav-backdrop,.dsnav-toast,.hero,#werkzeug,.ds-footer,.pdfbtn{display:none !important}
+    body{background:#fff}
+    main.wrap{max-width:none;padding:0}
+    #begleitschreiben .shead{display:block}
+    .sheet{border:none;padding:0;margin-top:0}
+  }
   .controls{display:grid;gap:var(--s4)}
   .seg{display:flex;flex-wrap:wrap;gap:6px}
   .seg button{font:inherit;font-size:13px;padding:7px 12px;border:1px solid var(--line);border-radius:var(--r-pill);background:#fff;color:var(--ink);cursor:pointer}
@@ -61,14 +72,12 @@
 <main class="wrap">
 
   <section class="hero">
-    <span class="kicker">Logos</span>
-    <h1>Das Logo des Goetheanum</h1>
-    <p class="lede">Das blaue Goetheanum-Logo herunterladen – oder für den Sondereinsatz Sektion, Layout und Farbe wählen. Darunter das Begleitschreiben: wer welches Logo wie anwendet, samt Regeln und Verboten.</p>
+    <h1>Goetheanum-Logo</h1>
+    <p class="lede">Hier das Logo herunterladen – oder für den Sondereinsatz Sektion, Layout und Farbe wählen. Hinweise zur Anwendung finden sich darunter und können als PDF heruntergeladen werden.</p>
   </section>
 
   <!-- ===================== WERKZEUG ===================== -->
   <section id="werkzeug">
-    <div class="shead"><h2>Logo holen</h2></div>
     <div class="field catbar">
       <span class="lab">Kategorie</span>
       <div class="seg" id="cat"></div>
@@ -98,7 +107,7 @@
         </label>
       </div>
 
-      <div>
+      <div class="preview">
         <div class="stage" id="stage"><span class="meta">…</span></div>
         <div class="toolbar" id="exports">
           <button class="btn primary" data-fmt="svg"   title="Vektor – für Web und Druck">SVG</button>
@@ -118,6 +127,7 @@
     <div class="shead">
       <h2>Begleitschreiben</h2>
       <p>Alles auf einer Seite – wer, was, wie. (Entwurf; wird noch ausgearbeitet.)</p>
+      <button class="btn pdfbtn" id="pdfSheet" type="button">Als PDF speichern</button>
     </div>
 
     <div class="sheet">
@@ -281,6 +291,7 @@
     $("layout").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.layout=b.dataset.val; fillSeg("layout",LAYOUT_LABELS,sel.layout); render(); });
     $("mode").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.mode=b.dataset.val; fillSeg("mode",MODE_LABELS,sel.mode); render(); });
     $("exports").addEventListener("click", function(e){ var b=e.target.closest("button[data-fmt]"); if(!b)return; LogoExport[b.dataset.fmt](currentSVG(), fileBase()); });
+    var pb = $("pdfSheet"); if (pb) pb.addEventListener("click", function(){ window.print(); });
     render();
     buildVisuals();
   }

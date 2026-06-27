@@ -48,8 +48,8 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 /* --- Knöpfe ---------------------------------------------------------------- */
 .btn{display:inline-block;font:inherit;font-size:13.5px;padding:9px 15px;border-radius:var(--r-control);border:1px solid var(--line);color:var(--ink);background:#fff;text-align:center;cursor:pointer;transition:.15s}
 .btn:hover{border-color:var(--gold-deep)}
-.btn.primary{background:var(--gold);border-color:var(--gold);color:#3a2d10}
-.btn.primary:hover{background:#c59f56}
+.btn.primary{background:var(--gold-deep);border-color:var(--gold-deep);color:#fff}
+.btn.primary:hover{background:#8a6a2c;border-color:#8a6a2c}
 .btn.ghost{color:var(--muted)}
 .btn.ok{background:#3f7d46;border-color:#3f7d46;color:#fff}
 
