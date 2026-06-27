@@ -3,124 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Goetheanum Grafik</title>
-<meta name="description" content="Werkzeuge für die Hausgrafik des Goetheanum – Logo, Visitenkarten, Signatur und die Hausschrift." />
-<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
-<link rel="stylesheet" href="design-system/tokens.css" />
-<link rel="stylesheet" href="design-system/base.css" />
-<style>
-  /* Front door – bewusst minimal */
-  .hero{padding:clamp(56px,11vw,120px) 0 var(--s8)}
-  .hero .kick{color:var(--gold-deep);font-size:13px;letter-spacing:.02em;margin-bottom:var(--s4)}
-  .hero h1{font-family:var(--font);font-weight:700;font-size:clamp(38px,7vw,72px);line-height:1.0;letter-spacing:-.01em;max-width:14ch}
-  .hero .lede{margin-top:var(--s6);color:#565b60;font-size:clamp(16px,2vw,20px);line-height:1.55;max-width:52ch}
-
-  .grid{display:grid;gap:var(--s4);grid-template-columns:1fr}
-  @media(min-width:620px){.grid{grid-template-columns:1fr 1fr}}
-  @media(min-width:920px){.grid.cols3{grid-template-columns:1fr 1fr 1fr}}
-  .tile{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);
-        background:var(--soft);transition:border-color .15s,box-shadow .15s,transform .15s;min-height:150px}
-  .tile:hover{border-color:var(--gold);box-shadow:var(--shadow-card);transform:translateY(-1px)}
-  .tile .tag{color:var(--gold-deep);font-size:12px;letter-spacing:.02em;margin-bottom:var(--s2)}
-  .tile h3{font-family:var(--font);font-weight:var(--w-strong);font-size:20px;line-height:1.15;display:flex;align-items:center;gap:8px}
-  .tile h3 .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s,color .15s}
-  .tile:hover h3 .arr{color:var(--gold-deep);transform:translateX(3px)}
-  .tile p{margin-top:var(--s2);color:var(--muted);font-size:14px;line-height:1.5}
-  .badge{position:absolute;top:var(--s4);right:var(--s4);font-size:11px;letter-spacing:.01em;
-         color:var(--blue);border:1px solid rgba(0,97,169,.3);border-radius:var(--r-pill);padding:2px 10px}
-</style>
+<title>Goetheanum-Logo</title>
+<meta http-equiv="refresh" content="0; url=./apps/logos/" />
+<link rel="canonical" href="./apps/logos/" />
+<script>location.replace("./apps/logos/" + location.search + location.hash);</script>
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;font:400 16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#565b60}a{color:#a07a33}</style>
 </head>
 <body>
-
-<header class="ds-header"><div class="wrap bar">
-  <a class="brand" href="./" aria-label="Goetheanum Grafik – Startseite">
-    <img class="mk" src="assets/logos/goetheanum-mark-blue.svg" alt="" />
-    <span class="wm">Goetheanum</span>
-  </a>
-  <nav class="top">
-    <a href="#generatoren">Generatoren</a>
-    <a href="schriften.html">Schriften</a>
-  </nav>
-</div></header>
-
-<main>
-  <div class="wrap hero">
-    <div class="kick">Goetheanum · Hausgrafik</div>
-    <h1>Material, das stimmt.</h1>
-    <p class="lede">Logo, Visitenkarte, Signatur und die Hausschrift – in Minuten korrekt
-      erstellt, ganz im Bild des Goetheanum. Ohne Layoutprogramm, ohne Designkenntnis.</p>
-  </div>
-
-  <div class="wrap" id="sections"></div>
-</main>
-
-<footer class="ds-footer"><div class="wrap frow">
-  <span><strong>Goetheanum Grafik</strong> · Werkzeuge für die Hausgrafik</span>
-  <span><a href="start/">Alle Werkzeuge &amp; Konzepte →</a></span>
-</div></footer>
-
-<script>
-"use strict";
-
-// Front door liegt im Wurzelverzeichnis – Manifest-Pfade sind root-relativ.
-const url = h => h;
-
-function tile(t){
-  const a = document.createElement("a");
-  a.className = "tile"; a.href = url(t.href); a.dataset.slug = t.slug;
-  const badge = t.status === "beta" ? '<span class="badge">Beta</span>' : "";
-  a.innerHTML = `${badge}<span class="tag">${t.tag || ""}</span>` +
-    `<h3>${t.title} <span class="arr">→</span></h3><p>${t.desc || ""}</p>`;
-  return a;
-}
-
-function render(m){
-  const root = document.getElementById("sections");
-
-  // Generatoren – nur einsatzbereite (live/beta), bewusst schlank
-  const gens = m.tools.filter(t => t.cat === "generatoren" && (t.status === "live" || t.status === "beta"));
-  const secG = document.createElement("section"); secG.id = "generatoren";
-  secG.innerHTML = `<div class="shead"><h2>Generatoren</h2>` +
-    `<p>Eigene Angaben eintragen, fertiges Ergebnis übernehmen.</p></div>`;
-  const grid = document.createElement("div"); grid.className = "grid cols3";
-  gens.forEach(t => grid.appendChild(tile(t)));
-  secG.appendChild(grid); root.appendChild(secG);
-
-  // Schriften – ein ruhiger Verweis auf die Übersicht
-  const s = m.tools.find(t => t.slug === "schriften");
-  if(s){
-    const secS = document.createElement("section"); secS.id = "schriften";
-    secS.innerHTML = `<div class="shead"><h2>Schriften</h2>` +
-      `<p>Die Hausschrift v2.5 – fünf Schnitte, Variable Font und Icons.</p></div>`;
-    const grid2 = document.createElement("div"); grid2.className = "grid";
-    grid2.appendChild(tile(s)); secS.appendChild(grid2); root.appendChild(secS);
-  }
-}
-
-fetch("tools.json").then(r => r.json()).then(render).catch(() => {
-  document.getElementById("sections").innerHTML =
-    '<section><p style="color:var(--muted)">Werkzeuge konnten nicht geladen werden. ' +
-    '<a href="logo-generator.html">Zum Logo-Generator →</a></p></section>';
-});
-
-/* ---------- Anonyme Nutzungsstatistik (wie übrige Suite, insert-only) ---------- */
-const TRACK_URL = "https://dagcsnfrlbpxcmdimnrw.supabase.co/rest/v1/landing_events";
-const TRACK_KEY = "sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY";
-const TRACK_ON  = /(^|\.)(github\.io|goetheanum\.ch)$/.test(location.hostname);
-const SID = (() => { try { let s = sessionStorage.getItem("goeLandingSid");
-  if(!s){ s = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem("goeLandingSid", s); }
-  return s; } catch(e){ return "x" + Date.now().toString(36); } })();
-function track(event, payload){ if(!TRACK_ON) return; try {
-  fetch(TRACK_URL, { method:"POST", keepalive:true,
-    headers:{ apikey:TRACK_KEY, "Content-Type":"application/json", Prefer:"return=minimal" },
-    body:JSON.stringify({ session_id:SID, event:event, payload:payload || {} }) }).catch(()=>{});
-} catch(e){} }
-document.addEventListener("click", e => {
-  const a = e.target.closest("a.tile"); if(!a) return;
-  track("open", { tool: a.dataset.slug || "?", sec: "frontdoor" });
-}, true);
-if(TRACK_ON){ track("visit", { ref:(document.referrer||"").slice(0,200), src:"frontdoor",
-  lang:navigator.language||"", w:screen.width, h:screen.height }); }
-</script>
+<p>Weiter zu den Logos – <a href="./apps/logos/">hier entlang</a>.</p>
 </body>
 </html>
