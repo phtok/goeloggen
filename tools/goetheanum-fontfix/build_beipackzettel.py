@@ -136,17 +136,22 @@ card(RX,ry,RW,rh)
 txt(K,"Sonderzeichen",12,RX+16,ry+26,"#23272b"); rtxt(K,"Maße · Ziffern",9.5,RX+RW-16,ry+26,"#a07a33")
 def row(yy,label,draw):
     txt(K,label,9,RX+18,yy-22,"#9aa1a7"); draw(yy)
-row(ry+76,"Prime & Doppelprime — Fuß/Zoll, Bogenminute (kein Apostroph)",
+def eszline(y):
+    cx=txt(K,"STRASSE",18,RX+18,y,"#23272b")
+    cx=txt(K,"  →  ",13,cx,y,"#a07a33")
+    txt(K,"STRAẞE",18,cx,y,"#23272b")
+row(ry+68,"Versaleszett ẞ (U+1E9E) — für den Versalsatz",eszline)
+row(ry+124,"Prime & Doppelprime — Fuß/Zoll, Bogenminute (kein Apostroph)",
     lambda y: txt(K,"47° 32′ 18″  ·  5′ 11″  ·  f′(x)",19,RX+18,y,"#23272b"))
 def zline(y):
     cx=txt(K,"0,75 kg · 0761",18,RX+18,y,"#23272b")
     cx=txt(K,"  →  ",13,cx,y,"#a07a33")
     stxt(K,HB["Klar"],"0,75 kg · 0761",18,cx,y,{"zero":True},"#23272b")
-row(ry+142,"Schlummernde 0 (zero) — gegen Verwechslung mit O",zline)
-row(ry+208,"Kapitälchen (smcp / c2sc)",
-    lambda y: stxt(K,HB["Klar"],"Goetheanum Dornach",18,RX+18,y,{"smcp":True},"#23272b"))
-row(ry+274,"Kurzziffern (onum) — Mediävalziffern im Fließtext",
+row(ry+180,"Schlummernde 0 (zero) — gegen Verwechslung mit O",zline)
+row(ry+236,"Kurzziffern (onum) — Mediävalziffern im Fließtext",
     lambda y: stxt(K,HB["Klar"],"0123456789 · im Jahr 1923",18,RX+18,y,{"onum":True},"#23272b"))
+row(ry+292,"Kapitälchen (smcp / c2sc)",
+    lambda y: stxt(K,HB["Klar"],"Goetheanum Dornach",18,RX+18,y,{"smcp":True},"#23272b"))
 
 # --- bottom: Strichvergleich (volle Breite) ---
 sy=440; sh=90
