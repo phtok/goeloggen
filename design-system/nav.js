@@ -51,10 +51,16 @@
       intro: "Farben, Logos und das Design-System – zum Nachschlagen und Holen.",
       cats: ["system"] }
   ];
-  // Nur intern zusätzlich (Pflege & Backstage).
+  // Nur intern zusätzlich – die Backstage-Welten (Stand A/B/C-Qualifizierung).
   var INTERN_EXTRA = [
-    { id: "werkstatt", label: "Werkstatt",
-      intro: "Werkschau und Prüfwerkzeuge der Schriftpflege – intern.", cats: ["werkstatt"] },
+    { id: "vorbereitung", label: "In Vorbereitung",
+      intro: "In Arbeit – noch nicht für die Breite freigegeben.", cats: ["vorbereitung"] },
+    { id: "ligaturen", label: "Ligaturen",
+      intro: "Die Kiste nur für die Ligaturen – Werkschau, Überlagerung, Abstände.", cats: ["ligaturen"] },
+    { id: "schriftpflege", label: "Schriftpflege",
+      intro: "Begleit-Grotesk, Gewichte und Mischsatz prüfen und kalibrieren.", cats: ["schriftpflege"] },
+    { id: "statistik", label: "Statistik",
+      intro: "Nutzungszahlen aller Werkzeuge – nur der Gebrauch legitimiert den Bau.", cats: ["statistik"] },
     { id: "schau", label: "Schau & Mockups",
       intro: "Präsentations-Mockups und Studien – kein öffentliches Werkzeug.", cats: ["schau"] },
     { id: "geparkt", label: "Geparktes",
