@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Goetheanum Visitenkarten One-Pager</title>
   <link rel="stylesheet" href="../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../design-system/base.css" />
   <link rel="stylesheet" href="../../design-system/nav.css" />
   <style>
     @font-face {
@@ -89,68 +90,32 @@
       --gci-stage-max: 420px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; }
 
-    html,
-    body {
-      height: 100%;
-      color: var(--text);
-      background: var(--bg);
-      font-family: "SourceSansPro-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.32;
-      overflow-x: hidden;
-    }
-
-    body {
-      min-height: 100%;
-      display: flex;
-      flex-direction: column;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 6px;
-      background: var(--accent);
-      z-index: 9999;
-    }
-
-    .page-head {
-      margin-top: 6px;
-      background: var(--soft);
-      border: 0;
-      border-bottom: 1px solid var(--line);
-      border-radius: 0;
-      width: 100%;
-      margin-left: 0;
-      margin-right: 0;
-      overflow: hidden;
-      box-shadow: none;
-      position: sticky;
-      top: 6px;
-      z-index: 500;
-    }
-
+    /* base.css trägt Grund, Schrift und Hell/Dunkel. Hier nur die seiten-eigene
+       Anordnung – zentriert in der Hausbreite wie die anderen Werkzeuge. Kein
+       Vollflächen-Layout, kein Goldstreifen, keine dunkle Eigenleiste mehr. */
     .page-head-inner {
-      width: 100%;
+      max-width: var(--maxw);
       margin: 0 auto;
-      min-height: 92px;
-      padding: 18px 22px;
+      padding: var(--s4) 26px 0;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       gap: 14px;
       position: relative;
     }
+
+    .hero {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: var(--s4) 26px var(--s2);
+    }
+    .hero h1 {
+      font-family: var(--font-display); font-weight: var(--w-deutlich);
+      font-size: var(--t-h1); line-height: 1.08; letter-spacing: -.005em;
+    }
+    .hero .lede { margin-top: var(--s3); color: var(--muted); max-width: 60ch; }
 
     .brand-lockup {
       display: flex;
@@ -217,43 +182,28 @@
     }
 
     .app {
-      width: 100%;
-      max-width: 100vw;
-      margin: 0;
-      padding: 0;
-      flex: 1;
-      min-height: calc(100vh - 98px);
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: var(--s4) 26px var(--s8);
       display: grid;
-      grid-template-columns: minmax(290px, var(--gci-left-col)) minmax(0, 1fr);
-      grid-template-areas: "controls preview";
-      gap: 6px;
-      justify-content: stretch;
+      gap: var(--s8);
+      grid-template-columns: 1fr;
       align-items: start;
-      overflow: visible;
+    }
+    @media (min-width: 860px) {
+      .app { grid-template-columns: minmax(290px, 360px) 1fr; }
     }
 
-    .panel {
-      border: none;
-      border-radius: 0;
-      background: transparent;
-      box-shadow: none;
-    }
+    .panel { border: 0; background: none; }
 
     .preview {
-      grid-area: preview;
       display: grid;
-      grid-template-rows: auto auto;
-      gap: 1px;
-      overflow: visible;
-      background: transparent;
-      height: auto;
-      width: 100%;
-      max-width: 100%;
-      justify-self: stretch;
-      min-width: 0;
-      padding: 14px 18px 18px;
-      align-content: start;
+      gap: var(--s4);
       justify-items: center;
+      align-content: start;
+    }
+    @media (min-width: 860px) {
+      .preview { position: sticky; top: calc(var(--header-h) + var(--s4)); }
     }
 
     .preview-actions {
@@ -320,7 +270,7 @@
 
     .email-gate-title {
       font-family: "SourceSansPro-SemiBold", sans-serif;
-      color: #eff2f4;
+      color: var(--ink);
       font-size: 0.98rem;
       letter-spacing: 0.01em;
     }
@@ -367,34 +317,29 @@
       padding: 0;
     }
 
+    /* Bühne wie bei Logos: weiche Fläche, die Karte ruht darauf. */
     .stage {
-      min-height: 0;
       display: grid;
       place-items: center;
-      padding: 18px;
-      background: var(--line);
+      padding: clamp(20px, 4vw, 44px);
+      background: var(--soft);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      margin: 0;
+      border-radius: var(--r-card);
       overflow: hidden;
-      box-shadow: none;
-      min-width: 0;
-      width: min(100%, calc((var(--card-w-mm) * 1mm) + 150px));
+      width: 100%;
       max-width: min(100%, var(--gci-stage-max));
       justify-self: center;
-      height: calc((var(--card-h-mm) * 1mm) + 132px);
-      max-height: min(78vh, 690px);
+      min-height: calc((var(--card-h-mm) * 1mm) + 96px);
+      max-height: min(74vh, 660px);
     }
 
     .preview-export {
-      width: min(100%, calc((var(--card-w-mm) * 1mm) + 150px));
+      width: 100%;
       max-width: min(100%, var(--gci-stage-max));
-      padding: 0;
       display: grid;
-      gap: 0;
+      gap: var(--s3);
       justify-items: center;
       justify-self: center;
-      margin-top: 8px;
     }
 
     .export-meta {
@@ -430,15 +375,15 @@
 
     .export-format-select {
       width: auto;
-      min-width: 116px;
+      min-width: 130px;
       border: 1px solid var(--line);
-      border-radius: 0.35rem;
-      padding: 5px 26px 5px 9px;
-      color: #f3f5f7;
-      background: var(--line-soft);
-      font-size: 0.74rem;
-      font-family: "SourceSansPro-Regular", sans-serif;
-      line-height: 1.15;
+      border-radius: var(--r-control);
+      padding: 7px 10px;
+      color: var(--ink);
+      background: var(--field-bg);
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.2;
     }
 
     .export-format-select:disabled {
@@ -464,7 +409,7 @@
       bottom: calc(100% + 8px);
       transform: translateX(-50%);
       background: var(--paper);
-      color: #f6f5f1;
+      color: var(--ink);
       border: 1px solid var(--line);
       padding: 6px 8px;
       border-radius: 6px;
@@ -497,132 +442,51 @@
       transition: transform 0.15s ease;
     }
 
+    /* Linke Spalte = gestapelte Felder wie bei Logos/Signatur, kein dunkles Panel. */
     .controls {
-      grid-area: controls;
-      padding: 16px 16px 20px;
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 0;
+      gap: var(--s6);
       align-content: start;
-      align-items: start;
-      background: rgba(24, 32, 41, 0.24);
-      min-height: calc(100vh - 98px);
-      height: 100%;
-      overflow: auto;
-      border-right: 1px solid var(--line);
     }
 
-    fieldset {
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 12px 10px 10px;
-      background: var(--line-soft);
-      display: grid;
-      gap: 9px;
-      box-shadow: none;
-      margin: 0;
-    }
+    fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: var(--s4); }
 
-    fieldset + fieldset {
-      margin-top: -1px;
-    }
-
+    /* Abschnittstitel = Kicker (getönt, normal – nicht versal, G05). */
     .fieldset-title {
-      padding: 0;
-      margin: 0 0 3px;
-      font-size: 0.69rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent2);
-      font-family: "SourceSansPro-SemiBold", sans-serif;
-      line-height: 1;
+      font-family: var(--font-display); color: var(--gold-ink);
+      font-size: 13.5px; letter-spacing: .03em; font-weight: var(--w-text); line-height: 1;
     }
 
-    .row {
-      display: grid;
-      gap: 6px;
+    .row { display: grid; gap: var(--s1); }
+
+    .row label {
+      font-size: var(--t-small); color: var(--muted); letter-spacing: .01em;
+      display: inline-flex; align-items: center; gap: 6px;
     }
 
-    label {
-      font-size: 0.7rem;
-      letter-spacing: 0.01em;
-      color: var(--muted);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      min-height: 17px;
-    }
-
-    input,
-    select,
-    textarea,
-    button {
-      font: inherit;
-    }
-
+    /* Felder = Design-System (16px gegen iOS-Zoom, blauer Fokus). */
     input[type="text"],
     select,
     textarea {
       width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 0.3rem;
-      padding: 8px 12px;
-      font-size: 0.8rem;
-      color: var(--ink);
-      background: var(--field-bg);
-      font-family: "SourceSansPro-Regular", sans-serif;
+      font-family: var(--font); font-size: 16px; font-weight: var(--w-text); line-height: 1.3;
+      color: var(--ink); background: var(--field-bg);
+      border: 1px solid var(--line); border-radius: var(--r-control);
+      padding: 11px 12px; outline: none;
+      transition: border-color .15s, box-shadow .15s;
     }
-
-    textarea {
-      min-height: 68px;
-      resize: vertical;
-      line-height: 1.3;
-    }
-
-    textarea.contact-block {
-      min-height: 212px;
-    }
-
+    textarea { min-height: 48px; resize: vertical; line-height: 1.45; }
+    textarea.contact-block { min-height: 200px; }
     input:focus,
     select:focus,
     textarea:focus {
-      outline: none;
-      box-shadow: 0 0 0 0.2rem rgba(235, 181, 101, 0.28);
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 22%, transparent);
     }
+    input[type="checkbox"] { margin: 0; width: auto; }
 
-    input[type="checkbox"] {
-      margin: 0;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 0.45rem;
-      background: var(--soft);
-      color: var(--ink);
-      padding: 7px 12px;
-      font-size: 0.74rem;
-      font-family: "SourceSansPro-SemiBold", sans-serif;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: 0.15s ease;
-    }
-
-    .btn:hover {
-      background: var(--line);
-      color: var(--ink);
-    }
-
-    .btn:disabled {
-      opacity: 0.58;
-      cursor: default;
-    }
-
-    /* Aktion = volles Blau + Weiss (B01: kein dunkler Text auf Farbe). */
-    .btn.primary {
-      background: var(--blue-solid);
-      color: var(--on-accent);
-    }
+    /* Knöpfe kommen aus base.css (.btn / .btn.primary). Nur die Tooltip-Schicht
+       der Export-Knöpfe bleibt weiter unten. */
 
     .business-card {
       width: calc(var(--card-w-mm) * 1mm);
@@ -756,104 +620,9 @@
       line-height: 1.3;
     }
 
-    @media (max-width: 1260px) {
-      .app {
-        width: 100%;
-        grid-template-columns: minmax(250px, clamp(260px, 34vw, 370px)) minmax(0, 1fr);
-      }
-    }
-
-    @media (max-width: 980px) {
-      .page-head-inner {
-        min-height: 82px;
-        padding: 14px 14px;
-      }
-
-      .brand-logo {
-        height: 40px;
-        max-width: min(100%, 330px);
-      }
-
-      .app {
-        width: 100%;
-        grid-template-columns: minmax(220px, clamp(228px, 40vw, 338px)) minmax(0, 1fr);
-        gap: 4px;
-      }
-
-      .controls {
-        border-right: 1px solid var(--line);
-        overflow: visible;
-        padding: 12px 12px 12px;
-      }
-
-      .preview {
-        padding: 10px 10px 12px;
-      }
-
-      .stage,
-      .preview-export {
-        width: 100%;
-        max-width: 100%;
-      }
-
-      .stage {
-        height: calc((var(--card-h-mm) * 1mm) + 112px);
-        max-height: min(74vh, 610px);
-        padding: 16px;
-      }
-
-    }
-
-    @media (max-width: 620px) {
-      .app {
-        width: 100%;
-        grid-template-columns: 1fr;
-        grid-template-areas:
-          "preview"
-          "controls";
-        min-height: auto;
-      }
-
-      .controls {
-        border-right: 0;
-        border-top: 1px solid var(--line);
-        min-height: 0;
-        height: auto;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .page-head-inner {
-        min-height: 72px;
-        padding: 10px 10px;
-      }
-
-      .brand-logo {
-        height: 30px;
-        max-width: min(100%, 230px);
-      }
-
-      .ui-toggle {
-        gap: 8px;
-      }
-
-      .ui-toggle button {
-        font-size: 0.62rem;
-        letter-spacing: 0.07em;
-      }
-
-      .preview {
-        padding: 10px 10px 12px;
-      }
-
-      .stage {
-        padding: 16px;
-      }
-
-      .preview-actions {
-        width: 100%;
-        justify-content: center;
-      }
+    /* Mobil: einspaltig; die Karten-Vorschau zuerst, die Eingaben darunter. */
+    @media (max-width: 859px) {
+      .preview { order: -1; }
     }
 
     @page {
@@ -867,16 +636,14 @@
         background: #fff;
       }
 
-      body::before {
-        display: none;
-      }
-
-      .app {
-        display: none;
-      }
-
-      .page-head {
-        display: none;
+      .app,
+      .page-head-inner,
+      .hero,
+      .dsnav,
+      .dsnav-drawer,
+      .dsnav-backdrop,
+      .ds-footer {
+        display: none !important;
       }
 
       .print-sheet {
@@ -903,6 +670,12 @@
       <button type="button" data-uilang="de" class="on">DE</button>
       <button type="button" data-uilang="en">EN</button>
     </div>
+  </div>
+
+  <div class="hero">
+    <div class="kicker">Goetheanum · Visitenkarten</div>
+    <h1>Visitenkarte</h1>
+    <p class="lede">Aus den eigenen Angaben eine druckfertige Visitenkarte im Hausbild – ohne Layoutprogramm.</p>
   </div>
 
   <main class="app">
