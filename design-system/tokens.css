@@ -39,9 +39,11 @@
 
 :root{
   /* --- Markenfarben ------------------------------------------------------- */
-  --blue:#0061a9;        /* Markenblau – Zustand/Verweis/Aktion */
+  --blue:#0061a9;        /* Markenblau – Zustand/Verweis/Link (hellt im Dunkel auf) */
+  --blue-solid:#0061a9;  /* Volles Blau für gefüllte Aktion-Knöpfe – immer Weiss drauf (6.4:1) */
   --gold:#d7ab68;        /* Gold – Inhalts-Akzent */
-  --gold-deep:#a07a33;   /* Gold dunkel – Auswahl/Hover auf hell */
+  --gold-deep:#94702e;   /* Gold dunkel – Auswahl-Fläche, Weiss drauf (4.55:1, WCAG AA) */
+  --gold-ink:#94702e;    /* Gold als TEXT (Kicker, Links) – hellt im Dunkel auf */
 
   /* --- Neutrale Töne ------------------------------------------------------ */
   --ink:#23272b;         /* Lesetext */
@@ -98,12 +100,15 @@
    (heller Text auf dunklem Grund „blutet"/wirkt fetter).
    ============================================================================= */
 :root[data-theme="dark"]{
-  --blue:#5aa6e0; --gold:#dfb87a; --gold-deep:#c79a4f;
+  --blue:#5aa6e0; --gold:#dfb87a;
+  /* Gesetz: NIE dunkle Schrift auf farbigem Grund. Gold-Pille bleibt dunkles Gold
+     mit weissem Text (4.55:1); Gold als TEXT hellt auf (gold-ink, 6.9:1 auf Dunkel). */
+  --gold-deep:#94702e; --gold-ink:#c79a4f;
   --ink:#e6e8ea; --muted:#9aa1a8;
   --paper:#16191c; --soft:#1e2329; --field-bg:#1e2329;
   --bar-bg:rgba(20,23,26,.85);
   --line:rgba(255,255,255,.14); --line-soft:rgba(255,255,255,.07);
-  --bad:#e0675e; --on-accent:#16191c;
+  --bad:#e0675e;        /* on-accent bleibt Weiss – kein dunkler Text auf Akzentflächen */
   --w-deutlich:540; --w-strong:620;     /* weniger Bleeding auf Dunkel */
   --shadow-card:0 10px 30px rgba(0,0,0,.45);
   color-scheme:dark;

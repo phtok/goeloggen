@@ -12,7 +12,7 @@
 <style>
   .hero{padding:clamp(32px,6vw,64px) 0 var(--s6)}
   .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.4vw,52px);line-height:1.04;letter-spacing:-.01em;max-width:16ch}
-  .hero .lede{margin-top:var(--s4);color:#565b60;font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:56ch}
+  .hero .lede{margin-top:var(--s4);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:56ch}
 
   /* Werkzeug – zwei Spalten, Vorschau OBEN-BÜNDIG mit der Auswahl und klebend. */
   .tool{display:grid;gap:var(--s6);grid-template-columns:1fr}
@@ -56,8 +56,8 @@
   .sheet .num{display:grid;gap:var(--s6);grid-template-columns:1fr}
   @media(min-width:720px){.sheet .num{grid-template-columns:1fr 1fr}}
   .sheet h3{display:flex;gap:8px;align-items:baseline;font-weight:var(--w-strong);font-size:15px;margin-bottom:6px}
-  .sheet h3 .n{color:var(--gold-deep);font-variant-numeric:tabular-nums}
-  .sheet p{color:#3d4348;font-size:14px;line-height:1.55;max-width:62ch}
+  .sheet h3 .n{color:var(--gold-ink);font-variant-numeric:tabular-nums}
+  .sheet p{color:var(--ink);font-size:var(--t-small);line-height:1.6;max-width:62ch}
   .vstrip{display:flex;gap:var(--s4);flex-wrap:wrap;align-items:flex-end;margin:var(--s3) 0}
   .vstrip figure{margin:0;text-align:center}
   .vstrip .box{border:1px solid var(--line);border-radius:10px;background:var(--soft);padding:14px;display:grid;place-items:center;min-height:84px}
@@ -90,22 +90,22 @@
   <section id="werkzeug">
     <div class="tool">
       <div class="controls">
-        <div class="field">
+        <label class="field">
           <span class="lab">Kategorie</span>
-          <div class="seg" id="cat"></div>
-        </div>
+          <select id="cat"></select>
+        </label>
         <label class="field" id="orgField">
           <span class="lab">Sektion / Bereich</span>
           <select id="org"></select>
         </label>
-        <div class="field">
+        <label class="field">
           <span class="lab">Layout</span>
-          <div class="seg" id="layout"></div>
-        </div>
-        <div class="field">
+          <select id="layout"></select>
+        </label>
+        <label class="field">
           <span class="lab">Farbe</span>
-          <div class="seg" id="mode"></div>
-        </div>
+          <select id="mode"></select>
+        </label>
         <label class="field">
           <span class="lab">Sprache</span>
           <select id="lang">
@@ -115,17 +115,17 @@
             <option value="es">Español</option>
           </select>
         </label>
-        <div class="field">
+        <label class="field">
           <span class="lab">Format</span>
-          <div class="seg" id="fmt"></div>
-        </div>
+          <select id="fmt"></select>
+        </label>
       </div>
 
       <div class="preview">
         <div class="stage" id="stage"><span class="meta">…</span></div>
         <div class="meta" id="dim"></div>
         <div class="download">
-          <button class="btn primary dl" id="dl" type="button">herunterladen</button>
+          <button class="btn primary" id="dl" type="button">herunterladen</button>
           <div class="dlhint" id="dlhint"></div>
         </div>
       </div>
@@ -135,7 +135,7 @@
   <!-- ===================== BEGLEITSCHREIBEN ===================== -->
   <section id="begleitschreiben">
     <div class="shead">
-      <h2>Begleitschreiben</h2>
+      <h2>Hinweise zur Anwendung</h2>
       <p>Alles auf einer Seite – wer, was, wie. (Entwurf; wird noch ausgearbeitet.)</p>
       <button class="btn pdfbtn" id="pdfSheet" type="button">Als PDF speichern</button>
     </div>
@@ -200,7 +200,7 @@
         </div>
       </div>
 
-      <p class="note"><span class="n" style="color:var(--gold-deep)">10</span> &nbsp;Holen: oben Sektion wählen und herunterladen. · Grundlage: Werkstatt-Artikel und Leitsystem-Grundsätze auf grafik.goetheanum.ch; Struktur nach gängigen Logo-Richtlinien (u. a. Smithsonian, UC Santa Barbara, Mailchimp).</p>
+      <p class="note"><span class="n" style="color:var(--gold-ink)">10</span> &nbsp;Holen: oben Sektion wählen und herunterladen. · Grundlage: Werkstatt-Artikel und Leitsystem-Grundsätze auf grafik.goetheanum.ch; Struktur nach gängigen Logo-Richtlinien (u. a. Smithsonian, UC Santa Barbara, Mailchimp).</p>
     </div>
   </section>
 
@@ -232,30 +232,23 @@
 
   var $ = function(id){ return document.getElementById(id); };
 
-  // Kategorie-Pillen: zwei Zeilen. Oben die zwei festen Allgemein-Logos
+  // Kategorie als Liste (Klappwahl): oben die zwei festen Allgemein-Logos
   // (Goetheanum, Bühne), darunter die drei wählbaren Kategorien.
-  var CAT_PILLS = [
+  var CAT_OPTS = [
     { label:"Allgemein",    cat:"allgemein",    org:"goetheanum" },
     { label:"Bühne",        cat:"allgemein",    org:"buehne" },
-    { brk:true },
     { label:"Sektionen",    cat:"sektionen" },
     { label:"Bereiche",     cat:"bereiche" },
     { label:"Teilbereiche", cat:"teilbereiche" }
   ];
-  function pillActive(p){
-    if (p.org) return sel.cat === p.cat && sel.org === p.org;   // feste Org
-    return sel.cat === p.cat && sel.cat !== "allgemein";        // wählbare Kategorie
-  }
+  function catVal(o){ return o.org ? (o.cat + ":" + o.org) : o.cat; }
   function fillCats(){
-    var box = $("cat"); box.innerHTML = "";
-    CAT_PILLS.forEach(function(p){
-      if (p.brk){ var s = document.createElement("span"); s.className = "brk"; box.appendChild(s); return; }
-      var b = document.createElement("button");
-      b.type = "button"; b.textContent = p.label;
-      b.dataset.cat = p.cat; if (p.org) b.dataset.org = p.org;
-      b.setAttribute("aria-pressed", String(pillActive(p)));
-      box.appendChild(b);
+    var s = $("cat"); s.innerHTML = "";
+    CAT_OPTS.forEach(function(o){
+      var op = document.createElement("option");
+      op.value = catVal(o); op.textContent = o.label; s.appendChild(op);
     });
+    s.value = (sel.cat === "allgemein") ? (sel.cat + ":" + sel.org) : sel.cat;
   }
   function fillOrgs(){
     var o = $("org"); o.innerHTML = "";
@@ -269,14 +262,13 @@
   }
   // Die Sektion/Bereich-Auswahl nur zeigen, wenn eine wählbare Kategorie aktiv ist.
   function syncOrgField(){ var f = $("orgField"); if (f) f.style.display = (sel.cat === "allgemein") ? "none" : ""; }
-  function fillSeg(id, pairs, current){
-    var box = $(id); box.innerHTML = "";
+  function fillSel(id, pairs, current){
+    var s = $(id); s.innerHTML = "";
     pairs.forEach(function(p){
-      var b = document.createElement("button");
-      b.type = "button"; b.textContent = p[1]; b.dataset.val = p[0];
-      b.setAttribute("aria-pressed", String(p[0] === current));
-      box.appendChild(b);
+      var op = document.createElement("option");
+      op.value = p[0]; op.textContent = p[1]; s.appendChild(op);
     });
+    s.value = current;
   }
 
   function currentSVG(){ return E.svg(sel); }
@@ -321,23 +313,22 @@
   function init(){
     if (!E || typeof ORGS === "undefined") { $("stage").innerHTML = '<span class="meta">Engine nicht geladen.</span>'; return; }
     fillCats(); fillOrgs(); syncOrgField();
-    fillSeg("layout", LAYOUT_LABELS, sel.layout);
-    fillSeg("mode", MODE_LABELS, sel.mode);
-    $("cat").addEventListener("click", function(e){
-      var b=e.target.closest("button"); if(!b)return;
-      sel.cat = b.dataset.cat;
-      if (b.dataset.org) sel.org = b.dataset.org;   // feste Org (Allgemein/Bühne)
-      fillOrgs();                                    // wählbare Kategorie: Standard-Org setzen
-      fillCats(); syncOrgField();
-      sel.org = (sel.cat === "allgemein") ? sel.org : $("org").value;
+    fillSel("layout", LAYOUT_LABELS, sel.layout);
+    fillSel("mode", MODE_LABELS, sel.mode);
+    fillSel("fmt", FMT_LABELS, sel.fmt); updateDl();
+    $("cat").addEventListener("change", function(){
+      var v = this.value, i = v.indexOf(":");
+      if (i >= 0){ sel.cat = "allgemein"; sel.org = v.slice(i + 1); }   // feste Org (Allgemein/Bühne)
+      else { sel.cat = v; }
+      fillOrgs(); syncOrgField();
+      if (sel.cat !== "allgemein") sel.org = $("org").value;
       render();
     });
     $("org").addEventListener("change", function(){ sel.org = this.value; render(); });
+    $("layout").addEventListener("change", function(){ sel.layout = this.value; render(); });
+    $("mode").addEventListener("change", function(){ sel.mode = this.value; render(); });
     $("lang").addEventListener("change", function(){ sel.lang = this.value; render(); });
-    $("layout").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.layout=b.dataset.val; fillSeg("layout",LAYOUT_LABELS,sel.layout); render(); });
-    $("mode").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.mode=b.dataset.val; fillSeg("mode",MODE_LABELS,sel.mode); render(); });
-    fillSeg("fmt", FMT_LABELS, sel.fmt); updateDl();
-    $("fmt").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.fmt=b.dataset.val; fillSeg("fmt",FMT_LABELS,sel.fmt); updateDl(); });
+    $("fmt").addEventListener("change", function(){ sel.fmt = this.value; updateDl(); });
     $("dl").addEventListener("click", function(){ LogoExport[sel.fmt](currentSVG(), fileBase()); });
     var pb = $("pdfSheet"); if (pb) pb.addEventListener("click", function(){ window.print(); });
     render();

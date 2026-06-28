@@ -38,7 +38,7 @@
   function updateThemeBtn() {
     if (!themeBtn) return;
     var dark = document.documentElement.getAttribute("data-theme") === "dark";
-    themeBtn.querySelector(".ic").textContent = dark ? "☀" : "☾";
+    themeBtn.querySelector(".ic").textContent = dark ? "☀" : "☾";  // ☀ U+2600 / ☾ U+263E
     themeBtn.setAttribute("aria-label", dark ? "Hell schalten" : "Dunkel schalten");
     themeBtn.setAttribute("aria-pressed", String(dark));
   }
@@ -198,9 +198,9 @@
     var g = el("details", "dsnav-group");
     g.setAttribute("data-world", w.id);
     g.open = open;
+    // Das Menü koordiniert, es erklärt nicht: nur Titel, kein Beiwerk-Text.
     g.appendChild(el("summary", null,
-      '<span><span class="ttl">' + w.label + '</span>' +
-      '<span class="intro">' + w.intro + '</span></span><span class="arr">›</span>'));
+      '<span class="ttl">' + w.label + '</span><span class="arr">›</span>'));
     tools.forEach(function (t) {
       var active = isActiveTool(t);
       var a = el("a", "dsnav-link" + (active ? " is-active" : ""));
@@ -209,8 +209,7 @@
       if (active) a.setAttribute("aria-current", "page");
       a.innerHTML =
         '<span class="st ' + (t.status || "") + '" title="' + (t.status || "") + '"></span>' +
-        '<span class="txt"><span class="tt">' + t.title + '</span>' +
-        (t.desc ? '<span class="dd">' + t.desc + '</span>' : "") + '</span>';
+        '<span class="tt">' + t.title + '</span>';
       g.appendChild(a);
     });
     return g;
