@@ -24,7 +24,9 @@
   .stage{display:grid;place-items:center;min-height:300px;border:1px solid var(--line);border-radius:var(--r-card);background:#faf8f4;padding:clamp(24px,5vw,56px)}
   .stage.dark{background:#23272b}
   .stage svg{max-width:100%;height:auto;max-height:340px}
-  #dim{color:var(--muted);font-size:var(--t-small);margin-top:var(--s2)}
+  /* Format-Pillen in zwei Reihen zu drei. */
+  #fmt{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  #fmt button{width:100%}
   /* EINE Aktion: gross, blau (= Tun), unverwechselbar mit den Gold-Pillen (= Wahl). */
   .download{margin-top:var(--s4)}
   .download .btn{width:100%;font-size:16px;padding:14px}
@@ -123,7 +125,6 @@
 
       <div class="preview">
         <div class="stage" id="stage"><span class="meta">…</span></div>
-        <div class="meta" id="dim"></div>
         <div class="download">
           <button class="btn primary" id="dl" type="button">herunterladen</button>
         </div>
@@ -222,11 +223,13 @@
   // Default = das eigentliche Logo: blaues, einzeiliges Goetheanum-Basislogo.
   var sel = { cat:"allgemein", org:"goetheanum", layout:"desktop", mode:"original", lang:"de", fmt:"svg", scale:2.635 };
 
-  var LAYOUT_LABELS = [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"],["square","Quadrat"]];
+  var LAYOUT_LABELS = [["desktop","Lang"],["mobile","Kurz"],["triline","Dreizeiler"],["icon","Icon"],["point","Kreis"],["square","Quadrat"]];
   var LANG_LABELS   = [["de","Deutsch"],["en","English"],["fr","Français"],["es","Español"]];
   // Farbkreise – feste Farben (zeigen die echte Logo-Farbe, unabhängig vom Theme).
+  // ‹Original› zeigt die jeweilige Organisationsfarbe (ORGS[org].color).
   var MODE_SWATCH   = [["original","Original","#0061a9"],["white","Weiss","#ffffff"],["black","Schwarz","#23272b"],["gray","Grau","#9aa0a6"]];
-  var FMT_LABELS    = [["svg","SVG"],["png","PNG"],["pdf","PDF"],["webp","WebP"],["jpg","JPG"],["svg48","SVG 48"]];
+  // Reihenfolge nach Gebrauch/Gewohnheit; Pillen 3 + 3.
+  var FMT_LABELS    = [["png","PNG"],["jpg","JPG"],["pdf","PDF"],["svg","SVG"],["svg48","SVG 48"],["webp","WebP"]];
   var FMT_HINT = { svg:"Vektor – für Web und Druck", png:"Pixel mit Transparenz – fürs Office (Word, PowerPoint, Outlook)",
     pdf:"Vektor-PDF auf weissem Grund", webp:"Pixel, klein, mit Transparenz – fürs Web",
     jpg:"Pixel auf weissem Grund", svg48:"Vektor, auf 48 px Höhe normiert" };
@@ -284,8 +287,14 @@
     var o = ORGS[org] || {};
     return ["de","en","fr","es"].some(function(l){ var s=o["short_"+l], n=o["name_"+l]; return s && n && s !== n; });
   }
+  // Dreizeiler nur, wo eine Vorlage existiert (alter Generator: srmk, hpise).
+  function hasTriline(org){ return sel.cat === "sektionen" && (org === "srmk" || org === "hpise"); }
   function orgLayouts(org){
-    return LAYOUT_LABELS.filter(function(p){ return p[0] !== "mobile" || hasKurz(org); });
+    return LAYOUT_LABELS.filter(function(p){
+      if (p[0] === "mobile")  return hasKurz(org);
+      if (p[0] === "triline") return hasTriline(org);
+      return true;
+    });
   }
   function fillLayout(){
     var opts = orgLayouts(sel.org);
@@ -302,7 +311,8 @@
     var box = $("mode"); box.innerHTML = "";
     MODE_SWATCH.forEach(function(p){
       var b = document.createElement("button");
-      b.type = "button"; b.title = p[1]; b.dataset.val = p[0]; b.style.background = p[2];
+      var col = (p[0] === "original" && ORGS[sel.org] && ORGS[sel.org].color) ? ORGS[sel.org].color : p[2];
+      b.type = "button"; b.title = p[1]; b.dataset.val = p[0]; b.style.background = col;
       b.setAttribute("aria-pressed", String(p[0] === sel.mode));
       box.appendChild(b);
     });
@@ -324,11 +334,7 @@
   function render(){
     var stage = $("stage");
     stage.classList.toggle("dark", sel.mode === "white");
-    var svg = currentSVG();
-    stage.innerHTML = svg;
-    // Maße aus dem viewBox lesen
-    var m = svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/);
-    $("dim").textContent = m ? ("Seitenverhältnis " + (+m[1]).toFixed(0) + " × " + (+m[2]).toFixed(0)) : "";
+    stage.innerHTML = currentSVG();
   }
 
   function fileBase(){ return "goetheanum-" + sel.org + "-" + sel.layout + "-" + sel.mode; }
@@ -368,10 +374,10 @@
       else { sel.cat = v; }
       fillOrgs(); syncOrgField();
       if (sel.cat !== "allgemein") sel.org = $("org").value;
-      fillLayout(); fillLang();                 // Optionen an die neue Org anpassen
+      fillLayout(); fillLang(); fillSwatch();   // Optionen + Org-Farbe an die neue Org anpassen
       render();
     });
-    $("org").addEventListener("change", function(){ sel.org = this.value; fillLayout(); fillLang(); render(); });
+    $("org").addEventListener("change", function(){ sel.org = this.value; fillLayout(); fillLang(); fillSwatch(); render(); });
     $("layout").addEventListener("change", function(){ sel.layout = this.value; render(); });
     $("lang").addEventListener("change", function(){ sel.lang = this.value; render(); });
     $("mode").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.mode=b.dataset.val; fillSwatch(); render(); });
@@ -385,5 +391,6 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();
 </script>
+<script src="../../design-system/select.js"></script>
 </body>
 </html>
