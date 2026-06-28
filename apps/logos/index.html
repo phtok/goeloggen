@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="../../design-system/nav.css" />
 <style>
   .hero{padding:clamp(32px,6vw,64px) 0 var(--s6)}
-  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.4vw,52px);line-height:1.04;letter-spacing:-.01em;max-width:16ch}
+  .hero h1{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h1);line-height:1.08;letter-spacing:-.005em;max-width:18ch}
   .hero .lede{margin-top:var(--s4);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:56ch}
 
   /* Werkzeug – zwei Spalten, Vorschau OBEN-BÜNDIG mit der Auswahl und klebend. */
@@ -28,7 +28,12 @@
   /* EINE Aktion: gross, blau (= Tun), unverwechselbar mit den Gold-Pillen (= Wahl). */
   .download{margin-top:var(--s4)}
   .download .btn{width:100%;font-size:16px;padding:14px}
-  .dlhint{color:var(--muted);font-size:var(--t-small);text-align:center;margin-top:8px}
+  /* Farbe als vier Kreise – lockert die Auswahl auf. */
+  .swatches{display:flex;gap:10px;flex-wrap:wrap}
+  .swatches button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);cursor:pointer;padding:0}
+  .swatches button[aria-pressed="true"]{outline:2px solid var(--gold-deep);outline-offset:2px}
+  /* Format-Hinweis erscheint bei Hover/Anwahl direkt unter den Pillen. */
+  .fmthint{color:var(--muted);font-size:var(--t-small);line-height:1.45;margin-top:8px;min-height:2.7em}
 
   /* Mobil: kompakte Mini-Vorschau klebt oben, Auswahl direkt darunter (beides
      zugleich sichtbar); die EINE Aktion in einer festen Leiste unten. */
@@ -39,7 +44,6 @@
     .stage{min-height:0;padding:var(--s3)}
     .stage svg{max-height:150px}
     .download{position:fixed;left:0;right:0;bottom:0;margin:0;z-index:30;background:var(--bar-bg);backdrop-filter:saturate(160%) blur(8px);border-top:1px solid var(--line);padding:10px 16px}
-    .dlhint{display:none}
   }
 
   /* Begleitschreiben als PDF drucken: nur das Blatt zeigen */
@@ -55,7 +59,7 @@
   .sheet{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:clamp(22px,4vw,40px);margin-top:var(--s4)}
   .sheet .num{display:grid;gap:var(--s6);grid-template-columns:1fr}
   @media(min-width:720px){.sheet .num{grid-template-columns:1fr 1fr}}
-  .sheet h3{display:flex;gap:8px;align-items:baseline;font-weight:var(--w-strong);font-size:15px;margin-bottom:6px}
+  .sheet h3{display:flex;gap:8px;align-items:baseline;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px;margin-bottom:6px}
   .sheet h3 .n{color:var(--gold-ink);font-variant-numeric:tabular-nums}
   .sheet p{color:var(--ink);font-size:var(--t-small);line-height:1.6;max-width:62ch}
   .vstrip{display:flex;gap:var(--s4);flex-wrap:wrap;align-items:flex-end;margin:var(--s3) 0}
@@ -98,27 +102,23 @@
           <span class="lab">Sektion / Bereich</span>
           <select id="org"></select>
         </label>
-        <label class="field">
+        <label class="field" id="layoutField">
           <span class="lab">Layout</span>
           <select id="layout"></select>
         </label>
-        <label class="field">
-          <span class="lab">Farbe</span>
-          <select id="mode"></select>
-        </label>
-        <label class="field">
+        <label class="field" id="langField">
           <span class="lab">Sprache</span>
-          <select id="lang">
-            <option value="de">Deutsch</option>
-            <option value="en">English</option>
-            <option value="fr">Français</option>
-            <option value="es">Español</option>
-          </select>
+          <select id="lang"></select>
         </label>
-        <label class="field">
+        <div class="field">
+          <span class="lab">Farbe</span>
+          <div class="swatches" id="mode"></div>
+        </div>
+        <div class="field">
           <span class="lab">Format</span>
-          <select id="fmt"></select>
-        </label>
+          <div class="seg" id="fmt"></div>
+          <div class="fmthint" id="fmthint"></div>
+        </div>
       </div>
 
       <div class="preview">
@@ -126,7 +126,6 @@
         <div class="meta" id="dim"></div>
         <div class="download">
           <button class="btn primary" id="dl" type="button">herunterladen</button>
-          <div class="dlhint" id="dlhint"></div>
         </div>
       </div>
     </div>
@@ -224,7 +223,9 @@
   var sel = { cat:"allgemein", org:"goetheanum", layout:"desktop", mode:"original", lang:"de", fmt:"svg", scale:2.635 };
 
   var LAYOUT_LABELS = [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"],["square","Quadrat"]];
-  var MODE_LABELS   = [["original","Original"],["white","Weiss"],["black","Schwarz"],["gray","Grau"]];
+  var LANG_LABELS   = [["de","Deutsch"],["en","English"],["fr","Français"],["es","Español"]];
+  // Farbkreise – feste Farben (zeigen die echte Logo-Farbe, unabhängig vom Theme).
+  var MODE_SWATCH   = [["original","Original","#0061a9"],["white","Weiss","#ffffff"],["black","Schwarz","#23272b"],["gray","Grau","#9aa0a6"]];
   var FMT_LABELS    = [["svg","SVG"],["png","PNG"],["pdf","PDF"],["webp","WebP"],["jpg","JPG"],["svg48","SVG 48"]];
   var FMT_HINT = { svg:"Vektor – für Web und Druck", png:"Pixel mit Transparenz – fürs Office (Word, PowerPoint, Outlook)",
     pdf:"Vektor-PDF auf weissem Grund", webp:"Pixel, klein, mit Transparenz – fürs Web",
@@ -271,6 +272,53 @@
     s.value = current;
   }
 
+  // --- Nur zeigen, was tatsächlich Option ist (Basis: alter Generator) -------
+  function orgLangs(org){
+    var o = ORGS[org] || {}, base = o.name_de;
+    return LANG_LABELS.filter(function(l){
+      var n = o["name_" + l[0]]; if (!n) return false;
+      return l[0] === "de" || n !== base;     // andere Sprache nur, wenn der Name abweicht
+    });
+  }
+  function hasKurz(org){
+    var o = ORGS[org] || {};
+    return ["de","en","fr","es"].some(function(l){ var s=o["short_"+l], n=o["name_"+l]; return s && n && s !== n; });
+  }
+  function orgLayouts(org){
+    return LAYOUT_LABELS.filter(function(p){ return p[0] !== "mobile" || hasKurz(org); });
+  }
+  function fillLayout(){
+    var opts = orgLayouts(sel.org);
+    if (!opts.some(function(p){ return p[0] === sel.layout; })) sel.layout = opts[0][0];
+    fillSel("layout", opts, sel.layout);
+  }
+  function fillLang(){
+    var opts = orgLangs(sel.org);
+    if (!opts.some(function(p){ return p[0] === sel.lang; })) sel.lang = (opts[0] || ["de"])[0];
+    fillSel("lang", opts, sel.lang);
+    $("langField").style.display = (opts.length > 1) ? "" : "none";   // nur eine Sprache = keine Wahl
+  }
+  function fillSwatch(){
+    var box = $("mode"); box.innerHTML = "";
+    MODE_SWATCH.forEach(function(p){
+      var b = document.createElement("button");
+      b.type = "button"; b.title = p[1]; b.dataset.val = p[0]; b.style.background = p[2];
+      b.setAttribute("aria-pressed", String(p[0] === sel.mode));
+      box.appendChild(b);
+    });
+  }
+  function fmtHint(code){ return FMT_HINT[code] || ""; }
+  function fillFmt(){
+    var box = $("fmt"); box.innerHTML = "";
+    FMT_LABELS.forEach(function(p){
+      var b = document.createElement("button");
+      b.type = "button"; b.textContent = p[1]; b.dataset.val = p[0]; b.title = fmtHint(p[0]);
+      b.setAttribute("aria-pressed", String(p[0] === sel.fmt));
+      b.addEventListener("mouseenter", function(){ $("fmthint").textContent = fmtHint(p[0]); });
+      box.appendChild(b);
+    });
+  }
+
   function currentSVG(){ return E.svg(sel); }
 
   function render(){
@@ -289,7 +337,7 @@
   function fmtLabel(){ var p = FMT_LABELS.filter(function(x){return x[0]===sel.fmt;})[0]; return p ? p[1] : "SVG"; }
   function updateDl(){
     var dl = $("dl"); if (dl) dl.textContent = "als " + fmtLabel() + " herunterladen";
-    var h = $("dlhint"); if (h) h.textContent = FMT_HINT[sel.fmt] || "";
+    var h = $("fmthint"); if (h) h.textContent = fmtHint(sel.fmt);
   }
 
   // Begleitschreiben-Visuals aus der Engine
@@ -313,22 +361,22 @@
   function init(){
     if (!E || typeof ORGS === "undefined") { $("stage").innerHTML = '<span class="meta">Engine nicht geladen.</span>'; return; }
     fillCats(); fillOrgs(); syncOrgField();
-    fillSel("layout", LAYOUT_LABELS, sel.layout);
-    fillSel("mode", MODE_LABELS, sel.mode);
-    fillSel("fmt", FMT_LABELS, sel.fmt); updateDl();
+    fillLayout(); fillLang(); fillSwatch(); fillFmt(); updateDl();
     $("cat").addEventListener("change", function(){
       var v = this.value, i = v.indexOf(":");
       if (i >= 0){ sel.cat = "allgemein"; sel.org = v.slice(i + 1); }   // feste Org (Allgemein/Bühne)
       else { sel.cat = v; }
       fillOrgs(); syncOrgField();
       if (sel.cat !== "allgemein") sel.org = $("org").value;
+      fillLayout(); fillLang();                 // Optionen an die neue Org anpassen
       render();
     });
-    $("org").addEventListener("change", function(){ sel.org = this.value; render(); });
+    $("org").addEventListener("change", function(){ sel.org = this.value; fillLayout(); fillLang(); render(); });
     $("layout").addEventListener("change", function(){ sel.layout = this.value; render(); });
-    $("mode").addEventListener("change", function(){ sel.mode = this.value; render(); });
     $("lang").addEventListener("change", function(){ sel.lang = this.value; render(); });
-    $("fmt").addEventListener("change", function(){ sel.fmt = this.value; updateDl(); });
+    $("mode").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.mode=b.dataset.val; fillSwatch(); render(); });
+    $("fmt").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.fmt=b.dataset.val; fillFmt(); updateDl(); });
+    $("fmt").addEventListener("mouseleave", function(){ $("fmthint").textContent = fmtHint(sel.fmt); });
     $("dl").addEventListener("click", function(){ LogoExport[sel.fmt](currentSVG(), fileBase()); });
     var pb = $("pdfSheet"); if (pb) pb.addEventListener("click", function(){ window.print(); });
     render();
