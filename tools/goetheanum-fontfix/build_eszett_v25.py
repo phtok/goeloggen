@@ -87,7 +87,7 @@ def replace_or_add(ft, rec, adv, lsb, uni=0x1E9E):
 def main():
     esz = Esz(MASTERS)
     for cut in CUTS:
-        p = os.path.join(FONTS, "Goetheanum-Schrift-v2.5-%s.otf" % cut)
+        p = os.path.join(FONTS, "Goetheanum-Schrift-v2.6-%s.otf" % cut)
         ft = TTFont(p)
         stem, cap, blsb, brsb = cut_metrics(ft)
         sg, adv, lsb = esz.fit(stem, cap, blsb, brsb)
@@ -97,7 +97,7 @@ def main():
               % (cut, nm, esz.stem_of(sg), esz.cap_of(sg), adv, lsb))
         for flv, sub in (("woff", "woff"), ("woff2", "woff2")):
             f = TTFont(p); f.flavor = flv
-            f.save(os.path.join(WF, sub, "Goetheanum-Schrift-v2.5-%s.%s" % (cut, flv)))
+            f.save(os.path.join(WF, sub, "Goetheanum-Schrift-v2.6-%s.%s" % (cut, flv)))
     print("statische Schnitte + Webfonts neu")
 
 if __name__ == "__main__":

@@ -17,7 +17,7 @@ from fontTools.pens.boundsPen import BoundsPen
 from build_eszett_v25 import Esz
 
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
-VAR = os.path.join(REPO, "assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.5.otf")
+VAR = os.path.join(REPO, "assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.6.otf")
 WF = os.path.join(REPO, "assets/fonts/goetheanum/Webfonts")
 MASTERS = os.path.join(HERE, "eszett-masters.json")
 # Die Master-Lagen des Variable Fonts (Regionen-Peaks) und ihre wght-Werte —

@@ -1,6 +1,6 @@
 # Ziffern-Sets schnell umschalten (Regel G25)
 
-Grundton der Goetheanum Schrift v2.5 ist **proportional** (ruhig im Fließtext).
+Grundton der Goetheanum Schrift v2.6 ist **proportional** (ruhig im Fließtext).
 Wo Zahlen **fluchten** müssen (Tabellen, Listen, Beträge), gilt **zwingend
 tabellarisch** (`tnum`). Dieses Werkzeug macht das Umschalten schnell und – wo
 möglich – automatisch.

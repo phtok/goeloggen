@@ -8,7 +8,7 @@
   },
   "categories": [
     { "id": "generatoren", "title": "Generatoren", "intro": "Eigene Angaben eintragen, fertiges Ergebnis übernehmen. Für den täglichen Gebrauch." },
-    { "id": "schrift",     "title": "Schrift & Typografie", "intro": "Die Hausschrift v2.5 und die Regeln dazu – nachschlagen, vergleichen, einbinden." },
+    { "id": "schrift",     "title": "Schrift & Typografie", "intro": "Die Hausschrift v2.6 und die Regeln dazu – nachschlagen, vergleichen, einbinden." },
     { "id": "werkstatt",   "title": "Werkstatt", "intro": "Werkschau und Prüfwerkzeuge rund um die Schriftentwicklung und -pflege." },
     { "id": "geparkt",     "title": "Geparkte Projekte", "intro": "Durchdachte Konzepte, die später kommen – zum schnellen Einsehen der Spezifikation." }
   ],
@@ -26,9 +26,9 @@
     { "slug": "schrift-webfont",   "cat": "schrift",     "status": "beta",    "tag": "Web",           "title": "Webfont einbinden",  "href": "schrift-webfont.html",         "desc": "Die Goetheanum-Schrift als Webfont auf eigenen Seiten verwenden – Schritt für Schritt." },
     { "slug": "schrift-vergleich", "cat": "schrift",     "status": "beta",    "tag": "Vergleich",     "title": "Schrift-Vergleich",  "href": "schrift-vergleich.html",       "desc": "Begleit-Antiquas und Nicht-Latein-Fallbacks im direkten Vergleich zur Hausschrift." },
     { "slug": "tester",            "cat": "schrift",     "status": "beta",    "tag": "Probe",         "title": "Gewichts-Tester",    "href": "tester.html",                  "desc": "Schnittstärken der Variable Font interaktiv durchspielen und Texte ausprobieren." },
-    { "slug": "vorschau",          "cat": "schrift",     "status": "beta",    "tag": "Neu in v2.5",   "title": "Neuerungen",         "href": "vorschau.html",                "desc": "Spatien, geschützter Bindestrich, Ziffern-Features und der Mediävalziffern-Entwurf." },
+    { "slug": "vorschau",          "cat": "schrift",     "status": "beta",    "tag": "Neu in v2.6",   "title": "Neuerungen",         "href": "vorschau.html",                "desc": "Spatien, geschützter Bindestrich, Ziffern-Features und der Mediävalziffern-Entwurf." },
 
-    { "slug": "proof",             "cat": "werkstatt",   "status": "entwurf", "tag": "Abnahme",       "title": "Proof",              "href": "proof.html",                   "desc": "Schrift v2.5 systematisch abnehmen." },
+    { "slug": "proof",             "cat": "werkstatt",   "status": "entwurf", "tag": "Abnahme",       "title": "Proof",              "href": "proof.html",                   "desc": "Schrift v2.6 systematisch abnehmen." },
     { "slug": "ligvorschau",       "cat": "werkstatt",   "status": "entwurf", "tag": "Ligaturen",     "title": "Ligaturen – Werkschau","href": "ligvorschau.html",           "desc": "Alle Ligaturen im Überblick." },
     { "slug": "ineinander",        "cat": "werkstatt",   "status": "entwurf", "tag": "Ligaturen",     "title": "Ligaturen ineinander","href": "ineinander.html",             "desc": "Überlagerung der Ligaturen prüfen." },
     { "slug": "zuordnen",          "cat": "werkstatt",   "status": "entwurf", "tag": "Ligaturen",     "title": "Ligaturen zuordnen", "href": "zuordnen.html",                "desc": "Zeichen den Ligaturen zuweisen." },
@@ -46,7 +46,7 @@
     { "title": "Campus-Kartentool – Pflichtenheft", "tag": "Spec",      "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campus-kartentool-pflichtenheft.md", "desc": "Vollständiges Pflichtenheft des Kartentools." },
     { "title": "Brand-Portrait – Pflichtenheft", "tag": "Spec",        "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_pflichtenheft.md", "desc": "Konzept des KI-Porträt-Generators (MVP)." },
     { "title": "Brand-Portrait – Backlog", "tag": "Backlog",           "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_backlog_mvp.md", "desc": "Epics, User-Stories, Sprint-Vorschlag." },
-    { "title": "Hausschrift v2.5 – Dokumentation", "tag": "Schrift",   "href": "https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/README.md", "desc": "Schnitte, Variable Font, Neuerungen in v2.5." },
+    { "title": "Hausschrift v2.6 – Dokumentation", "tag": "Schrift",   "href": "https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/README.md", "desc": "Schnitte, Variable Font, Neuerungen in v2.6." },
     { "title": "Hausschrift – Audit", "tag": "Schrift",                "href": "https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/AUDIT.md", "desc": "Reparatur- und Qualitätsaudit der Schrift." },
     { "title": "Baustelle / Design-System", "tag": "Aufbau",          "href": "https://github.com/phtok/goeloggen/blob/main/start/README.md", "desc": "Wie das Design-System aufgebaut ist und wächst." }
   ]

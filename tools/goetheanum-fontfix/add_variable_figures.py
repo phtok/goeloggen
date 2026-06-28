@@ -17,7 +17,7 @@ from fontTools.pens.recordingPen import RecordingPen
 from fontTools.otlLib import builder as ob
 import fontTools.ttLib.tables.otTables as ot
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
-VAR = os.path.join(REPO, "assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.5.otf")
+VAR = os.path.join(REPO, "assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.6.otf")
 WF = os.path.join(REPO, "assets/fonts/goetheanum/Webfonts")
 BASE = os.path.join(REPO, "assets/fonts/goetheanum/Fonts")
 CUTW = {265: "Leise", 440: "Klar", 680: "Laut"}
@@ -54,7 +54,7 @@ def main():
         print("pnum schon vorhanden — übersprungen"); return
     cff = ft["CFF2"].cff; td = cff[cff.fontNames[0]]
     cmap = ft.getBestCmap()
-    cutfonts = {w: TTFont(os.path.join(BASE, "Goetheanum-Schrift-v2.5-%s.otf" % nm)) for w, nm in CUTW.items()}
+    cutfonts = {w: TTFont(os.path.join(BASE, "Goetheanum-Schrift-v2.6-%s.otf" % nm)) for w, nm in CUTW.items()}
     pmaps = {w: pnum_map(cf) for w, cf in cutfonts.items()}
     # punktkompatible pnum-Umrisse + Vorschübe je Ziffer aus den drei Schnitten
     digits = list(range(0x30, 0x3A))

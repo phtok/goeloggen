@@ -29,11 +29,11 @@ Hervorhebung, zwei Merkmale gleichzeitig im Fließtext, Schmuck. **Wer eine
 Auszeichnung weglassen kann, lässt sie weg.**
 
 ### Wenn eine Regel der Schrift widerspricht
-Die v2.5-Schrift hat Funktionen erhalten, die ältere Regeln (noch) anders
+Die v2.6-Schrift hat Funktionen erhalten, die ältere Regeln (noch) anders
 beschreiben. Solche Widersprüche **melden und vom Auftraggeber entscheiden
 lassen** — das Regelwerk **nicht** eigenmächtig umschreiben.
 
-## Schnitt-System (Stand v2.5)
+## Schnitt-System (Stand v2.6)
 - Installierbare statische Schnitte: **Leise (265) · Klar (440) · Deutlich
   (580) · Laut (680)**. Deutlich = Titel; Laut = Inline-/Office-Fettung (⌘B).
 - Variable: 6 Named Instances **Flüstern 190 · Leise · Klar · Deutlich · Laut ·

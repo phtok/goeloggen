@@ -4,13 +4,13 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.boundsPen import BoundsPen
 from fontTools.varLib.instancer import instantiateVariableFont
-FD="assets/fonts/goetheanum/Fonts/"; VF="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.5.otf"
+FD="assets/fonts/goetheanum/Fonts/"; VF="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.6.otf"
 def L(p): ft=TTFont(p);return (ft,ft.getGlyphSet(),ft.getBestCmap(),ft["head"].unitsPerEm)
-KP=FD+"Goetheanum-Schrift-v2.5-Klar.otf"; LAP=FD+"Goetheanum-Schrift-v2.5-Laut.otf"; LEP=FD+"Goetheanum-Schrift-v2.5-Leise.otf"; DEP=FD+"Goetheanum-Schrift-v2.5-Deutlich.otf"
+KP=FD+"Goetheanum-Schrift-v2.6-Klar.otf"; LAP=FD+"Goetheanum-Schrift-v2.6-Laut.otf"; LEP=FD+"Goetheanum-Schrift-v2.6-Leise.otf"; DEP=FD+"Goetheanum-Schrift-v2.6-Deutlich.otf"
 K=L(KP); LA=L(LAP); LE=L(LEP); D=L(DEP)
 def varL(w):
     ft=TTFont(VF); instantiateVariableFont(ft,{"wght":w},inplace=True); return (ft,ft.getGlyphSet(),ft.getBestCmap(),ft["head"].unitsPerEm)
-IC=L(FD+"Goetheanum-Icons-v2.5.otf")
+IC=L(FD+"Goetheanum-Icons-v2.6.otf")
 # HarfBuzz fonts for real shaping (ligatures + OT features)
 def hbfont(path):
     blob=hb.Blob.from_file_path(path); face=hb.Face(blob); return hb.Font(face)
@@ -99,7 +99,7 @@ txt(K,"Tastatur-Belegung siehe Seite 3–5. Einzeln als SVG/PNG/PDF",9.5,RX+16,i
 
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
-txt(K,"Goetheanum Schriften Version 2.5 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
+txt(K,"Goetheanum Schriften Version 2.6 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
 txt(K,"Ausbau & Optimierung 2026 durch Philipp Tok. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p1.svg","w").write("".join(S))
@@ -107,7 +107,7 @@ cairosvg.svg2pdf(url="/tmp/beipack_p1.svg",write_to="/tmp/beipack_p1.pdf")
 cairosvg.svg2png(url="/tmp/beipack_p1.svg",write_to="/tmp/beipack_p1.png",output_width=1100)
 print("page1 rendered")
 
-# ============================ PAGE 2 — Neu in 2.5 ============================
+# ============================ PAGE 2 — Neu in 2.6 ============================
 S=[]
 S.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}pt" height="{H}pt" viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="#ffffff"/>')
 txt(LA,"Ligaturen & Sonderzeichen",30,M,76,"#23272b")
