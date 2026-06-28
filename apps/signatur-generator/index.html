@@ -111,9 +111,12 @@
   .stage-lab{font-size:13px;color:var(--muted);margin-bottom:var(--s3)}
   .scroll-hint{display:none}
   .mail-stage{background:#fff;border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:0 10px 30px rgba(20,24,28,.06);overflow-x:auto}
+  /* base.css setzt th,td (Padding, Rahmen) – das verfälscht die E-Mail-Tabellen der
+     Vorschau: die 2px-Trennlinie würde mit Padding zum blauen Rechteck. Hier zurücksetzen,
+     damit nur die Inline-Stile der echten Signatur-Tabelle gelten. */
+  .mail-stage table{border-collapse:collapse}
+  .mail-stage td,.mail-stage th{padding:0;border:0}
   .mail-body{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#999;line-height:1.5}
-  .mail-greeting{margin-bottom:var(--s4)}
-  .sig-sep{color:#999;font-family:Arial,Helvetica,sans-serif;font-size:10pt;margin:6px 0 8px}
 
   .code-wrap{position:relative;margin-top:var(--s3)}
   pre.code{margin:0;background:#1f2428;color:#e8eef2;border-radius:var(--r-card);padding:var(--s4);overflow:auto;
@@ -217,8 +220,6 @@
           <div class="stage-lab">Vorschau</div>
           <div class="mail-stage">
             <div class="mail-body">
-              <div class="mail-greeting">Mit besten Grüssen<br />…</div>
-              <div class="sig-sep">--</div>
               <div id="sigPreview"></div>
             </div>
           </div>
