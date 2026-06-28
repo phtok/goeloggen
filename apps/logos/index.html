@@ -20,38 +20,34 @@
   .controls{display:grid;gap:var(--s4)}
   .seg .brk{flex-basis:100%;height:0}
 
-  /* Rechte Spalte: Vorschau, darunter die Format-Wahl und die EINE Aktion –
-     die drei reisen zusammen (klebend), während links die Logo-Bestimmung scrollt. */
+  /* Rechte Spalte, von oben nach unten: Vorschau → Erklärzeile → Format → die EINE
+     Aktion. Alles reist zusammen (klebend), während links die Logo-Bestimmung scrollt. */
   .preview{position:sticky;top:calc(var(--header-h) + var(--s4))}
   .stage{display:grid;place-items:center;min-height:300px;border:1px solid var(--line);border-radius:var(--r-card);background:#faf8f4;padding:clamp(24px,5vw,56px)}
   .stage.dark{background:#23272b}
   .stage svg{max-width:100%;height:auto;max-height:340px}
-  .fmtfield{margin-top:var(--s4)}
-  /* Format-Pillen in zwei Reihen zu drei. */
-  #fmt{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  #fmt button{width:100%}
-  /* EINE Aktion: gross, blau (= Tun), unverwechselbar mit den Gold-Pillen (= Wahl). */
-  .download{margin-top:var(--s4)}
+  /* Erklärzeile direkt unter der Vorschau, ÜBER den Pillen (benennt das Format). */
+  .fmthint{color:var(--muted);font-size:var(--t-small);line-height:1.45;margin:var(--s3) 0 var(--s2);min-height:2.6em}
+  /* Alle sechs Formate nebeneinander – kompakt. */
+  #fmt{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+  #fmt button{width:100%;padding:8px 4px}
+  /* EINE Aktion direkt unter der Anwahl: gross, blau (= Tun), unverwechselbar mit den Gold-Pillen. */
+  .download{margin-top:var(--s3)}
   .download .btn{width:100%;font-size:16px;padding:14px}
   /* Farbe als vier Kreise – lockert die Auswahl auf. */
   .swatches{display:flex;gap:10px;flex-wrap:wrap}
   .swatches button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);cursor:pointer;padding:0}
   .swatches button[aria-pressed="true"]{outline:2px solid var(--gold-deep);outline-offset:2px}
-  /* Format-Hinweis erscheint bei Hover/Anwahl direkt unter den Pillen. */
-  .fmthint{color:var(--muted);font-size:var(--t-small);line-height:1.45;margin-top:8px;min-height:2.7em}
 
-  /* Mobil: kompakte Mini-Vorschau klebt oben, Auswahl direkt darunter (beides
-     zugleich sichtbar); die EINE Aktion in einer festen Leiste unten. */
+  /* Mobil: zuoberst Vorschau + Format + die EINE Aktion – primär lädt das gemeinsame
+     Logo zum Download ein. Die Sonderfassungen (Auswahl) stehen darunter. Nur die
+     Mini-Vorschau klebt, damit Format und Aktion mitscrollen. */
   @media(max-width:859px){
     .tool{grid-template-columns:1fr;gap:var(--s4)}
-    main.wrap{padding-bottom:88px}
-    /* Mini-Vorschau klebt oben; nur sie, damit die Format-Wahl darunter mitscrollt
-       (sonst frisst die klebende Zone zu viel Höhe). Aktion fest unten. */
     .preview{order:-1}
     .stage{position:sticky;top:var(--header-h);z-index:10;min-height:0;padding:var(--s3);background:var(--paper);border-bottom:1px solid var(--line-soft)}
     .stage svg{max-height:150px}
-    .fmtfield{margin-top:var(--s3)}
-    .download{position:fixed;left:0;right:0;bottom:0;margin:0;z-index:30;background:var(--bar-bg);backdrop-filter:saturate(160%) blur(8px);border-top:1px solid var(--line);padding:10px 16px}
+    #fmt{grid-template-columns:repeat(3,1fr)}
   }
 
   /* Begleitschreiben als PDF drucken: nur das Blatt zeigen */
@@ -126,12 +122,9 @@
 
       <div class="preview">
         <div class="stage" id="stage"><span class="meta">…</span></div>
-        <!-- Format = letzte WAHL, direkt bei der EINEN Aktion (herunterladen). -->
-        <div class="field fmtfield">
-          <span class="lab">Format</span>
-          <div class="seg" id="fmt"></div>
-          <div class="fmthint" id="fmthint"></div>
-        </div>
+        <!-- Erklärzeile unter der Vorschau, dann die sechs Formate, dann die EINE Aktion. -->
+        <p class="fmthint" id="fmthint"></p>
+        <div class="seg" id="fmt" role="group" aria-label="Format"></div>
         <div class="download">
           <button class="btn primary" id="dl" type="button">herunterladen</button>
         </div>
@@ -345,13 +338,16 @@
     });
   }
   function fmtHint(code){ return FMT_HINT[code] || ""; }
+  // Erklärzeile benennt das Format: „PNG — Pixel mit Transparenz …".
+  function fmtName(code){ var p = FMT_LABELS.filter(function(x){return x[0]===code;})[0]; return p ? p[1] : code; }
+  function fmtLine(code){ var h = fmtHint(code); return h ? (fmtName(code) + " — " + h) : fmtName(code); }
   function fillFmt(){
     var box = $("fmt"); box.innerHTML = "";
     FMT_LABELS.forEach(function(p){
       var b = document.createElement("button");
       b.type = "button"; b.textContent = p[1]; b.dataset.val = p[0]; b.title = fmtHint(p[0]);
       b.setAttribute("aria-pressed", String(p[0] === sel.fmt));
-      b.addEventListener("mouseenter", function(){ $("fmthint").textContent = fmtHint(p[0]); });
+      b.addEventListener("mouseenter", function(){ $("fmthint").textContent = fmtLine(p[0]); });
       box.appendChild(b);
     });
   }
@@ -373,7 +369,7 @@
   function fmtLabel(){ var p = FMT_LABELS.filter(function(x){return x[0]===sel.fmt;})[0]; return p ? p[1] : "SVG"; }
   function updateDl(){
     var dl = $("dl"); if (dl) dl.textContent = "als " + fmtLabel() + " herunterladen";
-    var h = $("fmthint"); if (h) h.textContent = fmtHint(sel.fmt);
+    var h = $("fmthint"); if (h) h.textContent = fmtLine(sel.fmt);
   }
 
   // Begleitschreiben-Visuals aus der Engine
@@ -412,7 +408,7 @@
     $("lang").addEventListener("change", function(){ sel.lang = this.value; fillLayout(); render(); });
     $("mode").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.mode=b.dataset.val; fillSwatch(); render(); });
     $("fmt").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.fmt=b.dataset.val; fillFmt(); updateDl(); });
-    $("fmt").addEventListener("mouseleave", function(){ $("fmthint").textContent = fmtHint(sel.fmt); });
+    $("fmt").addEventListener("mouseleave", function(){ $("fmthint").textContent = fmtLine(sel.fmt); });
     $("dl").addEventListener("click", function(){ LogoExport[sel.fmt](currentSVG(), fileBase()); });
     var pb = $("pdfSheet"); if (pb) pb.addEventListener("click", function(){ window.print(); });
     render();

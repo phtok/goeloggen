@@ -74,7 +74,8 @@
     { id: "schriftpflege", label: "Schriftpflege", intro: "Grotesk, Gewichte und Mischsatz prüfen.", cats: ["schriftpflege"] },
     { id: "statistik", label: "Statistik", intro: "Nutzungszahlen aller Werkzeuge.", cats: ["statistik"] },
     { id: "schau", label: "Schau & Mockups", intro: "Präsentations-Mockups und Studien.", cats: ["schau"] },
-    { id: "geparkt", label: "Geparktes", intro: "Konzepte, die später kommen.", cats: ["geparkt"] }
+    { id: "geparkt", label: "Geparktes", intro: "Konzepte, die später kommen.", cats: ["geparkt"] },
+    { id: "archiv", label: "Archiv", intro: "Frühere Stände, eingefroren.", cats: ["archiv"] }
   ];
   var PUBLIC_IDS = WORLDS.map(function (w) { return w.id; });
 

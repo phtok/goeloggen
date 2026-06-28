@@ -84,7 +84,7 @@
 
   /* --- Radien, Maße, Fingerziel ------------------------------------------ */
   --r-control:10px; --r-card:14px; --r-pill:999px;
-  --header-h:60px; --maxw:1080px; --ds-maxw:1080px;
+  --header-h:66px; --maxw:1080px; --ds-maxw:1080px;
   --tap:44px;            /* Mindest-Fingerziel (Apple 44, Material 48, WCAG 24) */
 
   /* --- Schatten ---------------------------------------------------------- */
