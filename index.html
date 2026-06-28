@@ -4,52 +4,55 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Goetheanum Werkzeuge – Hausgrafik</title>
-<meta name="description" content="Werkzeuge für die Hausgrafik des Goetheanum: Logos, Schriften, E-Mail-Signatur, Visitenkarten und das Design-System – schlank, im Browser, einheitlich im Bild." />
+<meta name="description" content="Werkzeuge für die Hausgrafik des Goetheanum: Logos, Schriften, E-Mail-Signatur, Visitenkarten und das Design-System." />
 <link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="design-system/tokens.css" />
 <link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
 <style>
-  /* Startseite: die Erklär-Ebene, die das Menü bewusst weglässt. */
-  .hero{padding:clamp(44px,8vw,92px) 0 var(--s8)}
-  .hero .kicker{margin-bottom:var(--s4)}
-  .hero h1{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h1);line-height:1.04;letter-spacing:-.01em;max-width:18ch}
-  .hero .lede{margin-top:var(--s6);max-width:60ch}
-  .hero .meta{margin-top:var(--s6);display:flex;gap:var(--s2);flex-wrap:wrap}
+  /* Startseite: nur die Karten – kein Hero, keine Überschriften, keine Erklärungen. */
+  main{padding:clamp(28px,5vw,48px) 0}
+  .grid{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
 
-  section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
-  section:first-of-type{border-top:0}
-
-  .grid{display:grid;gap:var(--s4);grid-template-columns:1fr}
-  @media(min-width:620px){.grid{grid-template-columns:1fr 1fr}}
-  @media(min-width:960px){.grid.cols3{grid-template-columns:1fr 1fr 1fr}}
-
-  /* Karte = Werkzeug, mit Erklärung. Live ruht auf weicher Fläche, Gold-Kante bei Hover. */
-  .tile{position:relative;display:flex;flex-direction:column;gap:var(--s2);border:1px solid var(--line);
+  .tile{position:relative;display:flex;flex-direction:column;gap:var(--s3);border:1px solid var(--line);
     border-radius:var(--r-card);padding:var(--s6);background:var(--paper);text-decoration:none;color:var(--ink);
-    min-height:150px;transition:border-color .15s,box-shadow .15s,transform .15s}
+    transition:border-color .15s,box-shadow .15s,transform .15s}
   .tile.is-live{background:var(--soft)}
   .tile:hover{border-color:var(--gold-ink);box-shadow:var(--shadow-card);transform:translateY(-1px)}
-  .tile .tag{font-family:var(--font-display);color:var(--gold-ink);font-size:12.5px;letter-spacing:.03em}
-  .tile h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:20px;line-height:1.15;display:flex;align-items:center;gap:9px}
+  .tile h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:20px;line-height:1.15;display:flex;align-items:center;gap:9px;margin:0}
   .tile h3 .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s,color .15s}
   .tile:hover h3 .arr{color:var(--gold-ink);transform:translateX(3px)}
-  .tile p{color:var(--muted);font-size:14.5px;line-height:1.55}
   .badge{position:absolute;top:var(--s4);right:var(--s4);font-size:11px;letter-spacing:.03em;
     color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:2px 10px}
 
-  /* Mini-Visual je Karte – ein ruhiges Erkennungszeichen, kein Schmuck. */
-  .tile .thumb{height:80px;display:grid;place-items:center;border-radius:10px;background:var(--paper);
-    border:1px solid var(--line-soft);margin-bottom:var(--s1);overflow:hidden}
-  .tile .thumb img{height:40px;width:auto;display:block}
-  .tile .spec{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:40px;line-height:1;color:var(--ink);letter-spacing:.02em}
-  .tile .spec.gold{color:var(--gold-ink)}
-  .tile .spec.mono{font-family:var(--font-mono);font-size:26px;font-weight:400;color:var(--muted)}
-  .tile .vk{width:52px;height:33px;border:1.6px solid var(--muted);border-radius:4px;display:grid;align-content:center;gap:5px;padding:7px}
+  /* Greifbare Mini-Werkzeuge je Karte – das Erzeugnis als Erkennungszeichen. */
+  .tile .thumb{height:96px;display:grid;place-items:center;border-radius:10px;background:var(--paper);
+    border:1px solid var(--line-soft);overflow:hidden}
+  .tile .thumb img{height:46px;width:auto;display:block}
+  /* Buchstaben-Probe (Schriften) */
+  .tile .spec{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:46px;line-height:1;color:var(--ink);letter-spacing:.02em}
+  /* Visitenkarte */
+  .tile .vk{width:58px;height:37px;border:1.6px solid var(--muted);border-radius:4px;display:grid;align-content:center;gap:5px;padding:8px}
   .tile .vk i{display:block;height:2px;background:var(--muted);border-radius:2px}
   .tile .vk i:nth-child(1){width:64%}.tile .vk i:nth-child(2){width:42%}
-  .tile .dots{display:flex;gap:9px}
-  .tile .dots i{width:17px;height:17px;border-radius:50%;display:block}
+  /* Signatur-Block: blaue Kante + Zeilen (wie die echte Trennlinie) */
+  .tile .sig{display:flex;gap:10px;align-items:center}
+  .tile .sig>b{width:3px;height:40px;background:var(--blue);border-radius:2px;display:block}
+  .tile .sig>span{display:grid;gap:6px}
+  .tile .sig i{display:block;height:2.5px;background:var(--muted);border-radius:2px}
+  .tile .sig i:nth-child(1){width:56px}.tile .sig i:nth-child(2){width:40px}.tile .sig i:nth-child(3){width:48px}
+  /* Webfont: Schrift im Browser-Fenster */
+  .tile .win{width:78px;height:58px;border:1.6px solid var(--muted);border-radius:6px;position:relative;display:grid;place-items:center;overflow:hidden}
+  .tile .win>b{position:absolute;top:0;left:0;right:0;height:14px;background:var(--line-soft);border-bottom:1.4px solid var(--muted)}
+  .tile .win>em{font-family:var(--font-display);font-weight:var(--w-deutlich);font-style:normal;font-size:26px;color:var(--ink);margin-top:11px}
+  /* Typografie: gesetzter Absatz, erste Zeile als goldene Überschrift */
+  .tile .para{display:grid;gap:6px;width:66px}
+  .tile .para i{display:block;height:3px;border-radius:2px;background:var(--muted)}
+  .tile .para i:nth-child(1){background:var(--gold-ink);width:72%;height:4.5px}
+  .tile .para i:nth-child(2){width:100%}.tile .para i:nth-child(3){width:100%}.tile .para i:nth-child(4){width:60%}
+  /* Design-System: Farbfelder */
+  .tile .sw{display:flex;gap:9px}
+  .tile .sw i{width:20px;height:20px;border-radius:5px;display:block}
 </style>
 </head>
 <body>
@@ -57,14 +60,7 @@
 <script src="design-system/nav.js" data-root="./" data-active="start"></script>
 
 <main class="wrap">
-  <section class="hero">
-    <div class="kicker">Goetheanum · Hausgrafik</div>
-    <h1>Werkzeuge für ein einheitliches Bild.</h1>
-    <p class="lede prose">Logo, Visitenkarte, E-Mail-Signatur, die Hausschrift mit ihren Regeln – und das Design-System dahinter. Schlank, im Browser, ohne Login: jeder pflegt seine eigenen Angaben, das Bild bleibt einheitlich.</p>
-    <div class="meta" id="heroMeta"></div>
-  </section>
-
-  <div id="sections"></div>
+  <div class="grid" id="cards"></div>
 </main>
 
 <footer class="ds-footer">
@@ -77,30 +73,23 @@
 <script>
 "use strict";
 (function(){
-  // Öffentliche Welten = die Erklär-Ebene der Startseite (Menü-Welten, aber mit Text).
-  var WORLDS = [
-    { id:"werkzeuge", title:"Werkzeuge", intro:"Eigene Angaben eintragen, fertiges Ergebnis übernehmen – für den täglichen Gebrauch.", cats:["generatoren"] },
-    { id:"schrift",   title:"Schrift & Typografie", intro:"Die Hausschrift v2.5 und ihre Regeln – ansehen, herunterladen, einbinden.", cats:["schrift"] },
-    { id:"elemente",  title:"Fundament", intro:"Farben, Schnitte und Komponenten – das Design-System, aus dem alles gebaut ist.", cats:["system"] }
-  ];
+  // Öffentliche Werkzeuge, in Welt-Reihenfolge; live vor beta. Nur die Karten.
+  var CATS = ["generatoren", "schrift", "system"];
   var STATUS_LABEL = { beta:"in Überarbeitung" };
-
-  // Erkennungszeichen je Werkzeug: Marke fürs Logo, Schrift-Probe für die Schrift-
-  // Welt, Karten-Form für Visitenkarten, Farbpunkte fürs Design-System.
+  // Greifbar: jedes Zeichen zeigt das DING, das das Werkzeug erzeugt.
   var VISUAL = {
-    "logo-generator":  '<img src="assets/logos/goetheanum-mark-blue.svg" alt="">',
-    "visitenkarten":   '<span class="vk"><i></i><i></i></span>',
-    "signatur":        '<span class="spec">@</span>',
-    "schriften":       '<span class="spec">Ag</span>',
-    "schrift-webfont": '<span class="spec mono">&lt;/&gt;</span>',
-    "typografie":      '<span class="spec gold">‹ ›</span>',
-    "design-system":   '<span class="dots"><i style="background:var(--blue)"></i><i style="background:var(--gold-deep)"></i><i style="background:var(--ink)"></i></span>'
+    "logo-generator":  '<img src="assets/logos/goetheanum-mark-blue.svg" alt="">',           // die Marke
+    "visitenkarten":   '<span class="vk"><i></i><i></i></span>',                               // eine Karte
+    "signatur":        '<span class="sig"><b></b><span><i></i><i></i><i></i></span></span>',   // Signatur-Block (blaue Kante + Zeilen)
+    "schriften":       '<span class="spec">Ag</span>',                                         // Buchstaben-Probe
+    "schrift-webfont": '<span class="win"><b></b><em>Aa</em></span>',                          // Schrift im Browser-Fenster
+    "typografie":      '<span class="para"><i></i><i></i><i></i><i></i></span>',               // gesetzter Absatz
+    "design-system":   '<span class="sw"><i style="background:var(--blue)"></i><i style="background:var(--gold-deep)"></i><i style="background:var(--ink)"></i></span>' // Farbfelder
   };
   function visual(t){
     var v = VISUAL[t.slug] || ('<span class="spec">' + (t.title || "?").slice(0, 1) + '</span>');
     return '<span class="thumb">' + v + '</span>';
   }
-
   function isExt(h){ return /^https?:/.test(h); }
   function tile(t){
     var a = document.createElement("a");
@@ -108,34 +97,21 @@
     a.href = t.href;
     if (isExt(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
     var badge = STATUS_LABEL[t.status] ? '<span class="badge">' + STATUS_LABEL[t.status] + '</span>' : "";
-    a.innerHTML = badge + visual(t) +
-      '<span class="tag">' + (t.tag || "") + '</span>' +
-      '<h3>' + t.title + ' <span class="arr">›</span></h3>' +
-      '<p>' + (t.desc || "") + '</p>';
+    a.innerHTML = badge + visual(t) + '<h3>' + t.title + ' <span class="arr">›</span></h3>';
     return a;
   }
   function render(man){
-    var host = document.getElementById("sections");
-    WORLDS.forEach(function(w){
-      var tools = (man.tools || []).filter(function(t){
-        return w.cats.indexOf(t.cat) !== -1 && (t.status === "live" || t.status === "beta");
-      });
-      if (!tools.length) return;
-      tools.sort(function(a,b){ return (a.status === "live" ? 0 : 1) - (b.status === "live" ? 0 : 1); });
-      var sec = document.createElement("section");
-      sec.innerHTML = '<div class="shead"><h2>' + w.title + '</h2><p>' + w.intro + '</p></div>';
-      var grid = document.createElement("div"); grid.className = "grid cols3";
-      tools.forEach(function(t){ grid.appendChild(tile(t)); });
-      sec.appendChild(grid); host.appendChild(sec);
+    var grid = document.getElementById("cards");
+    var tools = [];
+    CATS.forEach(function(cat){
+      (man.tools || []).filter(function(t){ return t.cat === cat && (t.status === "live" || t.status === "beta"); })
+        .sort(function(a,b){ return (a.status === "live" ? 0 : 1) - (b.status === "live" ? 0 : 1); })
+        .forEach(function(t){ tools.push(t); });
     });
-    var gen = (man.tools || []).filter(function(t){ return t.cat === "generatoren" && (t.status === "live" || t.status === "beta"); }).length;
-    document.getElementById("heroMeta").innerHTML =
-      '<span class="chip"><b>' + gen + '</b> Werkzeuge</span>' +
-      '<span class="chip"><b>Variable</b> Hausschrift</span>' +
-      '<span class="chip">Typografie als <b>System</b></span>';
+    tools.forEach(function(t){ grid.appendChild(tile(t)); });
   }
   fetch("tools.json").then(function(r){ return r.json(); }).then(render).catch(function(){
-    document.getElementById("sections").innerHTML = '<section><p class="meta">Werkzeugliste konnte nicht geladen werden.</p></section>';
+    document.getElementById("cards").innerHTML = '<p class="meta">Werkzeugliste konnte nicht geladen werden.</p>';
   });
 })();
 </script>
