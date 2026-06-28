@@ -58,7 +58,7 @@
   /* --- Schrift-Familien --------------------------------------------------- */
   --font-display:"Goetheanum","Helvetica Neue",Arial,sans-serif; /* Titel, Chrome */
   --font-text:"Source Sans 3","Helvetica Neue",Arial,sans-serif; /* Lesetext, klein/lang */
-  --font:var(--font-text);     /* Standard = Lesetext */
+  --font:var(--font-display);  /* Standard = Hausschrift (die Stimme bleibt Goetheanum). Source NUR für Langtext via .prose */
   --font-system:"Helvetica Neue",Arial,sans-serif;
   --font-mono:ui-monospace,Menlo,Consolas,monospace;
 

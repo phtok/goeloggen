@@ -15,10 +15,15 @@
 
 body{
   background:var(--paper); color:var(--ink);
-  font-family:var(--font-text); font-weight:400;
+  font-family:var(--font); font-weight:var(--w-text);
   font-size:var(--t-body); line-height:var(--lh-body);
   font-kerning:normal; text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased;
 }
+/* Langtext (Fliesstext über mehrere Absätze) bekommt die Lese-Grotesk – dort,
+   wo die Display-Schrift bei Menge und Kleingrad ermüdet. Bewusst opt-in, damit
+   die Hausschrift überall sonst die Stimme bleibt. */
+.prose{font-family:var(--font-text);max-width:min(var(--measure),100%)}
+.prose p{margin-bottom:.7em}
 a{color:inherit;text-decoration:none}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
 
@@ -86,7 +91,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .field{display:grid;gap:var(--s1)}
 .field>.lab{font-size:var(--t-small);color:var(--muted);letter-spacing:.01em}
 .field input,.field textarea,.field select{
-  width:100%;font-family:var(--font-text);font-size:var(--t-body);font-weight:400;line-height:1.4;color:var(--ink);
+  width:100%;font-family:var(--font);font-size:var(--t-body);font-weight:var(--w-text);line-height:1.4;color:var(--ink);
   background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:10px 12px;outline:none;
   transition:border-color .15s,box-shadow .15s;
 }
@@ -109,11 +114,9 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 /* Lesefluss: Trennung, schöner Umbruch, keine verwaisten Zeilen (G12/G24/G28). */
 body{hyphens:auto;-webkit-hyphens:auto;text-wrap:pretty;orphans:2;widows:2}
 
-/* Betonung: Laut betont (Source SemiBold). Leise ist der stille Gegenton – im
-   Lesetext (Source) zurückhaltender Ton; in der Display-Schrift ein leichteres
-   Gewicht. Unterstreichen/Versalien als Hervorhebung gibt es bewusst NICHT (G05). */
-strong,b{font-weight:var(--w-strong)}
-em,i{font-style:normal;font-weight:var(--w-leise);color:var(--muted)}
+/* Hervorhebung im Web nur durch LAUT (lauter/fetter) – kein leiser Gegenton hier.
+   Unterstreichen/Versalien als Hervorhebung gibt es bewusst NICHT (G05). */
+strong,b,em,i{font-style:normal;font-weight:var(--w-strong)}
 
 /* Hausanführung: ‹…› automatisch über <q> (G16). */
 q{quotes:'\2039' '\203A' '\2039' '\203A'}
