@@ -185,7 +185,7 @@
       wv=document.getElementById('wval'), wn=document.getElementById('wname'),
       zb=document.getElementById('zeroBox'), tb=document.getElementById('tnumBox');
   if(!s||!v) return;
-  function name(w){return w<=225?'Flüstern':w<=350?'Leise':w<=540?'Klar':w<=702?'Laut':'Schreien';}
+  function name(w){return w<=227?'Flüstern':w<=352?'Leise':w<=510?'Klar':w<=630?'Deutlich':w<=702?'Laut':'Schreien';}
   function upd(){
     v.style.fontVariationSettings='"wght" '+s.value;
     wv.textContent=s.value; if(wn) wn.textContent=name(+s.value);

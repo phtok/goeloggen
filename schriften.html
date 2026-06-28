@@ -279,7 +279,7 @@ body{ font-family:"Goetheanum", system-ui, sans-serif; }
 .leise{ font-weight:265 } .klar{ font-weight:440 } .deutlich{ font-weight:580 } .laut{ font-weight:680 }
 .frei{ font-variation-settings:"wght" 520 }  /* stufenlos */</code></pre>
       <div class="webaside">
-        <p style="margin:0 0 12px">Schnitte über die Achse: <b>Flüstern 190 · Leise 265 · Klar 440 · Laut 680 · Schreien 725</b> – dazwischen alles stufenlos.</p>
+        <p style="margin:0 0 12px">Schnitte über die Achse: <b>Flüstern 190 · Leise 265 · Klar 440 · Deutlich 580 · Laut 680 · Schreien 725</b> – dazwischen alles stufenlos.</p>
         <p style="margin:0 0 16px;font-size:13px;color:var(--muted)">Lädt cross-origin von GitHub Pages. Für volle Kontrolle die Dateien aus dem Webfont-Ordner selbst hosten und die URLs umbiegen.</p>
         <a class="btn primary" href="schrift-webfont.html">Demo &amp; Code-Schnipsel</a>
       </div>
@@ -319,7 +319,7 @@ body{ font-family:"Goetheanum", system-ui, sans-serif; }
 <script>
   (function(){
     var s=document.getElementById('wght'),v=document.getElementById('wval'),n=document.getElementById('wname'),sm=document.getElementById('vsample');
-    function nm(w){return w<228?'Flüstern':w<353?'Leise':w<560?'Klar':w<703?'Laut':'Schreien';}
+    function nm(w){return w<228?'Flüstern':w<353?'Leise':w<510?'Klar':w<631?'Deutlich':w<703?'Laut':'Schreien';}
     function u(){var w=+s.value;sm.style.fontVariationSettings='"wght" '+w;v.textContent=w;n.textContent=nm(w);}
     s.addEventListener('input',u);u();
   })();
