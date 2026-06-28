@@ -21,7 +21,7 @@ html{scrollbar-gutter:stable}
 
 /* Wortmarke = das echte Goetheanum-Lockup (aus dem Logo-Generator), immer zurück zur Übersicht */
 .dsnav .brand{display:flex;align-items:center;gap:var(--s3);text-decoration:none;flex:0 0 auto}
-.dsnav .brand .lockup{height:34px;width:auto;display:block}
+.dsnav .brand .lockup{height:38px;width:auto;display:block}
 .dsnav .brand .mk{width:24px;height:24px;border-radius:6px;display:block}
 .dsnav .brand .wm{font-family:var(--font);font-weight:var(--w-text);font-size:24px;line-height:1;color:#8a9097;letter-spacing:.005em}
 
@@ -30,9 +30,10 @@ html{scrollbar-gutter:stable}
 .dsnav.is-werkzeug .back{display:inline-flex}
 .dsnav .back:hover{color:var(--gold-ink)}
 
-/* Primär-Welten */
-.dsnav .worlds{display:flex;gap:22px;margin-left:auto}
-.dsnav .worlds a,.dsnav .worlds button{font:inherit;font-size:13.5px;color:var(--muted);
+/* Primär-Welten – die vier Schnellzugriffe sollen klar lesbar sein, nicht verblassen:
+   Lese-Ink statt Grau, etwas grösser, mehr Luft. */
+.dsnav .worlds{display:flex;gap:26px;margin-left:auto}
+.dsnav .worlds a,.dsnav .worlds button{font:inherit;font-size:15px;color:var(--ink);
   background:none;border:0;cursor:pointer;padding:0;text-decoration:none}
 .dsnav .worlds a:hover,.dsnav .worlds button:hover{color:var(--gold-ink)}
 
@@ -80,14 +81,14 @@ html{scrollbar-gutter:stable}
 
 .dsnav-group{border-bottom:1px solid var(--line-soft)}
 .dsnav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
-  padding:var(--s4) 22px;font-weight:var(--w-strong);font-size:14.5px}
+  padding:var(--s4) 22px;font-weight:var(--w-strong);font-size:16px}
 .dsnav-group>summary::-webkit-details-marker{display:none}
 .dsnav-group>summary .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s}
 .dsnav-group[open]>summary .arr{transform:rotate(90deg)}
 
 .dsnav-link{display:flex;align-items:center;gap:10px;min-height:var(--tap);padding:6px 22px;text-decoration:none;color:var(--ink)}
 .dsnav-link:hover{background:var(--soft)}
-.dsnav-link .tt{font-size:15px}
+.dsnav-link .tt{font-size:17px}
 /* Aktuelle Seite im Menü hervorheben – ruhig, mit Gold-Kante. */
 .dsnav-link.is-active{background:var(--soft);box-shadow:inset 3px 0 0 var(--gold-deep)}
 .dsnav-link.is-active .tt{color:var(--gold-ink);font-weight:var(--w-strong)}

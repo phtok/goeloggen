@@ -15,7 +15,8 @@
     { "id": "schriftpflege","title": "Schriftpflege", "intro": "Begleit-Grotesk, Gewichte und Mischsatz prüfen und kalibrieren." },
     { "id": "statistik",    "title": "Statistik", "intro": "Nutzungszahlen aller Werkzeuge – nur der Gebrauch legitimiert den Bau." },
     { "id": "schau",        "title": "Schau & Mockups", "intro": "Präsentations-Mockups und Studien – kein öffentliches Werkzeug." },
-    { "id": "geparkt",      "title": "Geparkte Projekte", "intro": "Durchdachte Konzepte, die später kommen – zum schnellen Einsehen der Spezifikation." }
+    { "id": "geparkt",      "title": "Geparkte Projekte", "intro": "Durchdachte Konzepte, die später kommen – zum schnellen Einsehen der Spezifikation." },
+    { "id": "archiv",       "title": "Archiv", "intro": "Frühere Stände – eingefroren zum Nachschlagen, nicht gepflegt." }
   ],
   "tools": [
     { "slug": "design-system",     "cat": "system",      "status": "beta",    "tag": "Fundament",     "title": "Design-System",      "href": "design-system/",               "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Mit Starter und Bau-Workflow." },
@@ -44,7 +45,9 @@
     { "slug": "campus-karten",     "cat": "geparkt",     "status": "geparkt", "tag": "Kartierung",    "title": "Campus-Kartentool",  "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campus-kartentool-pflichtenheft.md", "desc": "Veranstaltungs-/Lagekarten des Geländes, A4 druckfertig. Pflichtenheft fertig, Bau steht aus." },
     { "slug": "brand-portrait",    "cat": "geparkt",     "status": "geparkt", "tag": "KI / Porträt",  "title": "Brand-Portrait-Generator", "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_pflichtenheft.md", "desc": "KI-gestützte, markenkonforme Porträts. Eigener Schwerpunkt mit GPU-Infrastruktur." },
     { "slug": "jahrgaenge",        "cat": "geparkt",     "status": "geparkt", "tag": "Sammlung",      "title": "Jahrgänge-Sammlung", "href": "https://github.com/phtok/goeloggen/blob/main/collections/jahrgaenge/README.md", "desc": "Produktionssammlung aus Jahrgängen (PDFs, Zeichnungen). Struktur vorbereitet." },
-    { "slug": "gtv-subs",          "cat": "geparkt",     "status": "geparkt", "tag": "Service",       "title": "GTV-Subs",           "href": "https://github.com/phtok/goeloggen/blob/main/services/gtv-subs/README.md", "desc": "Service-Skelett rund um Goetheanum TV. Platzhalter." }
+    { "slug": "gtv-subs",          "cat": "geparkt",     "status": "geparkt", "tag": "Service",       "title": "GTV-Subs",           "href": "https://github.com/phtok/goeloggen/blob/main/services/gtv-subs/README.md", "desc": "Service-Skelett rund um Goetheanum TV. Platzhalter." },
+
+    { "slug": "logo-generator-alt", "cat": "archiv",     "status": "geparkt", "tag": "Archiv",        "title": "Logo-Generator (alt)", "short": "Logos alt",  "href": "archive/logo-generator-original_2026-06-27/", "desc": "Der ursprüngliche Logo-Generator, eingefroren als Referenz – dunkles UI, externe Schriften, nicht gepflegt." }
   ],
   "docs": [
     { "title": "Strategieblatt & Wesensanalyse", "tag": "Strategie",    "href": "https://github.com/phtok/goeloggen/blob/main/docs/strategie.md", "desc": "Strategieblatt nach Neumeier, Fundament, Architektur, Fahrplan." },
