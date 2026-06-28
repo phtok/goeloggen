@@ -42,7 +42,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,s
 .brand .wm{font-family:var(--font-display);font-weight:var(--w-text);font-size:27px;line-height:1;color:var(--muted);letter-spacing:.005em}
 nav.top{display:flex;gap:22px}
 nav.top a{color:var(--muted);font-size:var(--t-small)}
-nav.top a:hover{color:var(--gold-deep)}
+nav.top a:hover{color:var(--gold-ink)}
 @media(max-width:720px){nav.top{display:none}}
 
 /* --- Abschnitte ------------------------------------------------------------ */
@@ -66,20 +66,18 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
   padding:10px 16px;border-radius:var(--r-control);border:1px solid var(--line);color:var(--ink);
   background:var(--field-bg);text-align:center;cursor:pointer;transition:.15s}
 .btn:hover{border-color:var(--blue)}
-.btn.primary{background:var(--blue);border-color:var(--blue);color:var(--on-accent);font-weight:var(--w-strong)}
-.btn.primary:hover{filter:brightness(.93)}
+.btn.primary{background:var(--blue-solid);border-color:var(--blue-solid);color:var(--on-accent);font-weight:var(--w-strong)}
+.btn.primary:hover{filter:brightness(1.08)}
 .btn.ghost{color:var(--muted);background:none}
-.btn.ok{background:#3f7d46;border-color:#3f7d46;color:#fff}
-/* Lade-Knopf trägt einen Pfeil – ‹Herunterladen› ist auf den ersten Blick keine Pille. */
-.btn.dl::before{content:"↓";margin-right:8px;font-weight:var(--w-strong)}
+.btn.ok{background:#3f7d46;border-color:#3f7d46;color:var(--on-accent)}
 
 /* --- Segmentierte Auswahl (Pillen) = WAHL ---------------------------------- */
 /* Anwahl = Gold/Weiss – der Hausfarbklang für Auswahl. Kapselform, kein Pfeil. */
 .seg{display:flex;flex-wrap:wrap;gap:8px}
 .seg button{font:inherit;font-size:14.5px;padding:8px 15px;border:1px solid var(--line);border-radius:var(--r-pill);
   background:var(--field-bg);color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
-.seg button:hover{border-color:var(--gold-deep)}
-.seg button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent)}
+.seg button:hover{border-color:var(--gold-ink)}
+.seg button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent);font-weight:var(--w-strong)}
 
 /* Bequeme Fingerziele auf dem Handy (Apple 44 / Material 48 / WCAG 24). */
 @media(max-width:560px){
@@ -104,7 +102,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .ds-footer{border-top:1px solid var(--line);padding:var(--s8) 0 60px;color:var(--muted);font-size:var(--t-small);margin-top:var(--s8)}
 .ds-footer .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .ds-footer .frow strong{color:var(--ink);font-weight:var(--w-text)}
-.ds-footer .frow a:hover{color:var(--gold-deep)}
+.ds-footer .frow a:hover{color:var(--gold-ink)}
 
 /* =============================================================================
    Eingebaute Typografie – Hausregeln als Voreinstellung, nicht als Nachkontrolle
@@ -134,7 +132,8 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
 .laut{font-weight:var(--w-strong)}
 
 /* Kicker: getönt, leicht getrackt, Display-Schrift – NORMAL, nicht versal (G05). */
-.kicker{display:inline-block;font-family:var(--font-display);color:var(--gold-deep);font-size:13px;letter-spacing:.04em;font-weight:var(--w-leise);margin-bottom:var(--s2)}
+/* Kleine UI-Schrift: nie Leise (verschwimmt klein) – mindestens Klar. */
+.kicker{display:inline-block;font-family:var(--font-display);color:var(--gold-ink);font-size:13.5px;letter-spacing:.03em;font-weight:var(--w-text);margin-bottom:var(--s2)}
 
 /* Lesemass: ~66 Zeichen je Zeile für linearen Mengentext (G10). */
 .lese{max-width:min(var(--measure),100%)}
