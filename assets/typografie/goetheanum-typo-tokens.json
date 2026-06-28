@@ -78,8 +78,8 @@
     },
     "tinte-leise": {
       "$type": "color",
-      "$value": "#737a80",
-      "$description": "Meta, Legenden, Nebenstimmen. Kontrast auf Papier 4.35:1 – knapp unter WCAG AA (4.5) für Fliesstext, über AA für grosse Grade. Nur für Meta und grössere Grade, nie für lange Lesetexte in Kleingrad.",
+      "$value": "#6b7177",
+      "$description": "Meta, Legenden, Nebenstimmen. Kontrast auf Papier 4.9:1 – erfüllt WCAG AA (4.5) für Fliesstext. Dennoch sparsam: für Lesetext bleibt Tinte die erste Wahl.",
       "$extensions": {
         "com.goetheanum.regel": "G28"
       }
@@ -112,8 +112,8 @@
   "mass": {
     "zeilenlaenge": {
       "$type": "dimension",
-      "$value": "39ch",
-      "$description": "Gilt der Lesetypografie (linearer Mengentext). Ziel ~66 Zeichen je Zeile / neun Wörter (45–75 zulässig). CSS min(39ch,100%). Hinweis: ch = Breite der Ziffer 0; die Goetheanum Schrift ist schmal – empirisch gezählt sind 46ch = 78 Zeichen, also 39ch ≈ 66. Konsultation (Tabellen, Verzeichnisse) und Schau (Signaletik) laufen nach eigenem Mass.",
+      "$value": "62ch",
+      "$description": "Gilt der Lesetypografie (linearer Mengentext in Source Sans 3). Ziel ~66 Zeichen je Zeile (45–75 zulässig). CSS min(62ch,100%) über --measure. Hinweis: Lesetext läuft jetzt in Source (normalbreit) statt in der schmalen Display-Grotesk; 62ch ≈ 66 Zeichen. Konsultation (Tabellen) und Schau (Signaletik) nach eigenem Mass.",
       "$extensions": {
         "com.goetheanum.regel": "G10"
       }

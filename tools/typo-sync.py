@@ -66,7 +66,10 @@ def main():
     farbe = canon.get("farbe", {})
 
     tokens = read(TOKENS)
-    tokvars = dict(re.findall(r"(--[a-z-]+)\s*:\s*(#[0-9a-fA-F]{3,8})", tokens))
+    # Nur den hellen Basis-Block :root{…} lesen (nicht :root[data-theme="dark"]).
+    mblock = re.search(r":root\s*\{(.*?)\}", tokens, re.S)
+    base_block = mblock.group(1) if mblock else tokens
+    tokvars = dict(re.findall(r"(--[a-z-]+)\s*:\s*(#[0-9a-fA-F]{3,8})", base_block))
 
     # 1) Farben synchron
     for cname, var in COLOR_MAP.items():
@@ -91,10 +94,10 @@ def main():
     if gap:
         infos.append("Im Kanon, aber (noch) nicht im Handbuch dokumentiert: " + ", ".join(gap))
 
-    # 4) Zeilenlänge (G10) in base.css verankert
+    # 4) Zeilenlänge (G10) im Design-System verankert (Token oder .lese)
     zl = (canon.get("mass", {}).get("zeilenlaenge") or {}).get("$value")
-    if zl and zl not in read(BASE):
-        problems.append(f"Zeilenlänge {zl} (G10) nicht in base.css gefunden (.lese).")
+    if zl and zl not in (read(TOKENS) + "\n" + read(BASE)):
+        problems.append(f"Zeilenlänge {zl} (G10) nicht im Design-System gefunden (--measure / .lese).")
 
     # --- Bericht ---
     print("Goetheanum Typo-Sync — Kanon ↔ Design-System")

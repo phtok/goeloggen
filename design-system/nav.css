@@ -14,7 +14,7 @@
    zwischen kurzen und langen Seiten um die Balkenbreite nach rechts. */
 html{scrollbar-gutter:stable}
 
-.dsnav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.92);
+.dsnav{position:sticky;top:0;z-index:40;background:var(--bar-bg);
   backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
 .dsnav .bar{display:flex;align-items:center;gap:var(--s4);height:var(--header-h);
   max-width:var(--ds-maxw);margin:0 auto;padding:0 26px}
@@ -36,8 +36,14 @@ html{scrollbar-gutter:stable}
   background:none;border:0;cursor:pointer;padding:0;text-decoration:none}
 .dsnav .worlds a:hover,.dsnav .worlds button:hover{color:var(--gold-deep)}
 
+/* ☾/☀ Hell-Dunkel – nur das Icon */
+.dsnav .theme{margin-left:18px;display:inline-flex;align-items:center;justify-content:center;font:inherit;
+  color:var(--ink);background:none;border:0;padding:6px;cursor:pointer;line-height:1}
+.dsnav .theme .ic{font-size:18px;line-height:1}
+.dsnav .theme:hover{color:var(--gold-deep)}
+
 /* ☰ Burger – nur das Icon, keine Pille, kein Wort */
-.dsnav .all{margin-left:22px;display:inline-flex;align-items:center;gap:6px;font:inherit;
+.dsnav .all{margin-left:10px;display:inline-flex;align-items:center;gap:6px;font:inherit;
   color:var(--ink);background:none;border:0;padding:4px;cursor:pointer;line-height:1}
 .dsnav .all .ic{font-size:23px;line-height:1}
 .dsnav .all:hover{color:var(--gold-deep)}
@@ -45,7 +51,7 @@ html{scrollbar-gutter:stable}
 
 @media(max-width:720px){
   .dsnav .worlds{display:none}
-  .dsnav .all{margin-left:auto}
+  .dsnav .theme{margin-left:auto}
 }
 
 /* --- Schublade ------------------------------------------------------------- */
@@ -67,7 +73,7 @@ html{scrollbar-gutter:stable}
 .dsnav-drawer .body{overflow:auto;padding:var(--s2) 0 var(--s8)}
 
 /* Toast für den unsichtbaren Intern-Schalter */
-.dsnav-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;
+.dsnav-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);
   padding:8px 16px;border-radius:var(--r-pill);font-size:13px;opacity:0;visibility:hidden;
   transition:opacity .2s,visibility .2s;z-index:60}
 .dsnav-toast.show{opacity:1;visibility:visible}
