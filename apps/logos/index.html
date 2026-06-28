@@ -20,10 +20,13 @@
   .controls{display:grid;gap:var(--s4)}
   .seg .brk{flex-basis:100%;height:0}
 
+  /* Rechte Spalte: Vorschau, darunter die Format-Wahl und die EINE Aktion –
+     die drei reisen zusammen (klebend), während links die Logo-Bestimmung scrollt. */
   .preview{position:sticky;top:calc(var(--header-h) + var(--s4))}
   .stage{display:grid;place-items:center;min-height:300px;border:1px solid var(--line);border-radius:var(--r-card);background:#faf8f4;padding:clamp(24px,5vw,56px)}
   .stage.dark{background:#23272b}
   .stage svg{max-width:100%;height:auto;max-height:340px}
+  .fmtfield{margin-top:var(--s4)}
   /* Format-Pillen in zwei Reihen zu drei. */
   #fmt{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   #fmt button{width:100%}
@@ -42,9 +45,12 @@
   @media(max-width:859px){
     .tool{grid-template-columns:1fr;gap:var(--s4)}
     main.wrap{padding-bottom:88px}
-    .preview{order:-1;position:sticky;top:var(--header-h);z-index:10;background:var(--paper);padding-bottom:var(--s2);border-bottom:1px solid var(--line-soft)}
-    .stage{min-height:0;padding:var(--s3)}
+    /* Mini-Vorschau klebt oben; nur sie, damit die Format-Wahl darunter mitscrollt
+       (sonst frisst die klebende Zone zu viel Höhe). Aktion fest unten. */
+    .preview{order:-1}
+    .stage{position:sticky;top:var(--header-h);z-index:10;min-height:0;padding:var(--s3);background:var(--paper);border-bottom:1px solid var(--line-soft)}
     .stage svg{max-height:150px}
+    .fmtfield{margin-top:var(--s3)}
     .download{position:fixed;left:0;right:0;bottom:0;margin:0;z-index:30;background:var(--bar-bg);backdrop-filter:saturate(160%) blur(8px);border-top:1px solid var(--line);padding:10px 16px}
   }
 
@@ -116,15 +122,16 @@
           <span class="lab">Farbe</span>
           <div class="swatches" id="mode"></div>
         </div>
-        <div class="field">
-          <span class="lab">Format</span>
-          <div class="seg" id="fmt"></div>
-          <div class="fmthint" id="fmthint"></div>
-        </div>
       </div>
 
       <div class="preview">
         <div class="stage" id="stage"><span class="meta">…</span></div>
+        <!-- Format = letzte WAHL, direkt bei der EINEN Aktion (herunterladen). -->
+        <div class="field fmtfield">
+          <span class="lab">Format</span>
+          <div class="seg" id="fmt"></div>
+          <div class="fmthint" id="fmthint"></div>
+        </div>
         <div class="download">
           <button class="btn primary" id="dl" type="button">herunterladen</button>
         </div>
@@ -221,9 +228,9 @@
 (function(){
   var E = window.LogoEngine;
   // Default = das eigentliche Logo: blaues, einzeiliges Goetheanum-Basislogo.
-  var sel = { cat:"allgemein", org:"goetheanum", layout:"desktop", mode:"original", lang:"de", fmt:"svg", scale:2.635 };
+  var sel = { cat:"allgemein", org:"goetheanum", layout:"desktop", tribase:"desktop", mode:"original", lang:"de", fmt:"svg", scale:2.635 };
 
-  var LAYOUT_LABELS = [["desktop","Lang"],["mobile","Kurz"],["triline","Dreizeiler"],["icon","Icon"],["point","Kreis"],["square","Quadrat"]];
+  var LAYOUT_LABELS = [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"],["square","Quadrat"]];
   var LANG_LABELS   = [["de","Deutsch"],["en","English"],["fr","Français"],["es","Español"]];
   // Farbkreise – feste Farben (zeigen die echte Logo-Farbe, unabhängig vom Theme).
   // ‹Original› zeigt die jeweilige Organisationsfarbe (ORGS[org].color).
@@ -288,18 +295,38 @@
     return ["de","en","fr","es"].some(function(l){ var s=o["short_"+l], n=o["name_"+l]; return s && n && s !== n; });
   }
   // Dreizeiler nur, wo eine Vorlage existiert (alter Generator: srmk, hpise).
-  function hasTriline(org){ return sel.cat === "sektionen" && (org === "srmk" || org === "hpise"); }
+  // srmk hat eine Breite; hpise zwei (lang/kurz, in der Engine über tribase).
+  // Der Optionswert trägt die Breite mit: ‹triline› (lang) bzw. ‹triline:mobile› (kurz).
+  // Vorlagen gibt es nur für Deutsch und Englisch – nur dort den Dreizeiler zeigen
+  // (nichts erfinden, wo keine gesetzte Vorlage existiert).
+  var TRILINE_LANGS = { srmk:["de","en"], hpise:["de","en"] };
+  function trilineOpts(org){
+    if (sel.cat !== "sektionen") return [];
+    var langs = TRILINE_LANGS[org]; if (!langs || langs.indexOf(sel.lang) < 0) return [];
+    if (org === "srmk")  return [["triline","Dreizeiler"]];
+    if (org === "hpise") return [["triline","Dreizeiler lang"],["triline:mobile","Dreizeiler kurz"]];
+    return [];
+  }
   function orgLayouts(org){
-    return LAYOUT_LABELS.filter(function(p){
-      if (p[0] === "mobile")  return hasKurz(org);
-      if (p[0] === "triline") return hasTriline(org);
-      return true;
-    });
+    var out = [["desktop","Lang"]];
+    if (hasKurz(org)) out.push(["mobile","Kurz"]);
+    trilineOpts(org).forEach(function(p){ out.push(p); });
+    out.push(["icon","Icon"],["point","Kreis"],["square","Quadrat"]);
+    return out;
+  }
+  // Layout-Wert ↔ sel (layout + tribase) übersetzen.
+  function setLayoutFromValue(v){
+    var i = v.indexOf(":");
+    if (i >= 0){ sel.layout = v.slice(0, i); sel.tribase = v.slice(i + 1); }
+    else { sel.layout = v; sel.tribase = "desktop"; }
+  }
+  function layoutValue(){
+    return (sel.layout === "triline" && sel.tribase === "mobile") ? "triline:mobile" : sel.layout;
   }
   function fillLayout(){
-    var opts = orgLayouts(sel.org);
-    if (!opts.some(function(p){ return p[0] === sel.layout; })) sel.layout = opts[0][0];
-    fillSel("layout", opts, sel.layout);
+    var opts = orgLayouts(sel.org), cur = layoutValue();
+    if (!opts.some(function(p){ return p[0] === cur; })) { setLayoutFromValue(opts[0][0]); cur = layoutValue(); }
+    fillSel("layout", opts, cur);
   }
   function fillLang(){
     var opts = orgLangs(sel.org);
@@ -337,7 +364,10 @@
     stage.innerHTML = currentSVG();
   }
 
-  function fileBase(){ return "goetheanum-" + sel.org + "-" + sel.layout + "-" + sel.mode; }
+  function fileBase(){
+    var lay = (sel.layout === "triline" && sel.tribase === "mobile") ? "triline-kurz" : sel.layout;
+    return "goetheanum-" + sel.org + "-" + lay + "-" + sel.mode;
+  }
 
   // Format ist eine WAHL; das Herunterladen die EINE Aktion. Der Knopf nennt das gewählte Format.
   function fmtLabel(){ var p = FMT_LABELS.filter(function(x){return x[0]===sel.fmt;})[0]; return p ? p[1] : "SVG"; }
@@ -378,8 +408,8 @@
       render();
     });
     $("org").addEventListener("change", function(){ sel.org = this.value; fillLayout(); fillLang(); fillSwatch(); render(); });
-    $("layout").addEventListener("change", function(){ sel.layout = this.value; render(); });
-    $("lang").addEventListener("change", function(){ sel.lang = this.value; render(); });
+    $("layout").addEventListener("change", function(){ setLayoutFromValue(this.value); render(); });
+    $("lang").addEventListener("change", function(){ sel.lang = this.value; fillLayout(); render(); });
     $("mode").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.mode=b.dataset.val; fillSwatch(); render(); });
     $("fmt").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.fmt=b.dataset.val; fillFmt(); updateDl(); });
     $("fmt").addEventListener("mouseleave", function(){ $("fmthint").textContent = fmtHint(sel.fmt); });
