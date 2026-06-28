@@ -50,6 +50,31 @@
   // Sofort anwenden – vor dem Zeichnen, gegen Aufblitzen.
   document.documentElement.setAttribute("data-theme", getTheme());
 
+  // --- Anonyme Nutzungszählung (mitwachsend) ---------------------------------
+  // Zählt je Werkzeug (data-active) den Seitenaufruf und Download-Klicks – ohne
+  // Cookies, ohne IP/Personendaten, nur anonyme Summen über goeloggen_bump().
+  // Jedes Werkzeug mit nav.js zählt automatisch mit; neue brauchen nichts extra.
+  // Werkzeuge mit JS-Download rufen window.goeStat('download', name) selbst auf.
+  var STAT_SB = "https://dagcsnfrlbpxcmdimnrw.supabase.co";
+  var STAT_KEY = "sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY";
+  function goeStat(event, label) {
+    if (!ACTIVE || !event) return;
+    try {
+      fetch(STAT_SB + "/rest/v1/rpc/goeloggen_bump", {
+        method: "POST", keepalive: true,
+        headers: { "Content-Type": "application/json", "apikey": STAT_KEY, "Authorization": "Bearer " + STAT_KEY },
+        body: JSON.stringify({ p_tool: ACTIVE, p_event: event, p_label: (label || "").slice(0, 160) })
+      }).catch(function () {});
+    } catch (e) {}
+  }
+  window.goeStat = goeStat;
+  goeStat("view", "");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("a[download]");
+    if (!a) return;
+    goeStat("download", (a.getAttribute("download") || a.getAttribute("href") || "").split("/").pop());
+  });
+
   // Die vier meistgenutzten – nur als Desktop-Schnellzugriff in der Kopfzeile.
   var PRIMARY = [
     { label: "Logos",         slug: "logo-generator" },

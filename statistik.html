@@ -57,6 +57,12 @@
     <p class="lede">Alle Goeloggen-Anwendungen an einem Ort. Gezählt werden nur anonyme Summen – keine IP, kein Tracking, keine Drittdienste. <span id="status" class="muted">lädt …</span></p>
   </div>
 
+  <section id="sec-alle">
+    <div class="app-h"><h2>Alle Werkzeuge</h2><span class="meta" id="alleMeta"></span></div>
+    <div class="chart-t">SEITENAUFRUFE JE WERKZEUG · WÄCHST AUTOMATISCH MIT</div>
+    <div class="bars" id="alleBars"><div class="empty">lädt …</div></div>
+  </section>
+
   <section id="sec-landing">
     <div class="app-h"><h2>Landing-Page</h2><span class="meta" id="landMeta"></span></div>
     <div class="cards">
@@ -144,6 +150,34 @@
     if(fail && done===0){ st.className='err'; st.textContent='Konnte Statistik nicht laden.'; }
     else { st.className='muted'; st.textContent='Stand: ' + new Date().toLocaleString('de-CH'); }
   }
+
+  // ---- Alle Werkzeuge (generisch, mitwachsend) ----
+  Promise.all([
+    rpc('goeloggen_stats'),
+    fetch('tools.json').then(function(r){ return r.json(); }).catch(function(){ return null; })
+  ]).then(function(res){
+    var rows = res[0] || [], man = res[1], labels = {};
+    if (man && man.tools) man.tools.forEach(function(t){ labels[t.slug] = t.title; });
+    var byTool = {};
+    rows.forEach(function(r){
+      var t = byTool[r.tool] || (byTool[r.tool] = { views:0, downloads:0, last:'' });
+      if (r.event === 'view') t.views += Number(r.n);
+      else if (r.event === 'download') t.downloads += Number(r.n);
+      if (r.updated_at > t.last) t.last = r.updated_at;
+    });
+    var items = Object.keys(byTool).map(function(slug){
+      return { label: labels[slug] || slug, views: byTool[slug].views, downloads: byTool[slug].downloads };
+    }).sort(function(a,b){ return b.views - a.views; });
+    bars(document.getElementById('alleBars'), items.map(function(it){
+      return { label: it.label, value: it.views, sub: (it.downloads ? fmt(it.downloads) + ' DL' : '') };
+    }));
+    var lastA = rows.reduce(function(m,r){ return (r.updated_at > m) ? r.updated_at : m; }, '');
+    document.getElementById('alleMeta').textContent = lastA ? 'zuletzt ' + when(lastA) : 'noch keine Daten';
+    done++; finish();
+  }).catch(function(){
+    document.getElementById('alleBars').innerHTML = '<div class="err">nicht ladbar</div>';
+    fail++; finish();
+  });
 
   // ---- Landing-Page ----
   Promise.all([rpc('landing_stats'), rpc('landing_tool_stats')]).then(function(res){
