@@ -207,9 +207,7 @@
       a.href = resolveHref(t.href);
       if (isExternal(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
       if (active) a.setAttribute("aria-current", "page");
-      a.innerHTML =
-        '<span class="st ' + (t.status || "") + '" title="' + (t.status || "") + '"></span>' +
-        '<span class="tt">' + t.title + '</span>';
+      a.innerHTML = '<span class="tt">' + t.title + '</span>';
       g.appendChild(a);
     });
     return g;

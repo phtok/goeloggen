@@ -84,7 +84,6 @@ html{scrollbar-gutter:stable}
 .dsnav-group>summary::-webkit-details-marker{display:none}
 .dsnav-group>summary .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s}
 .dsnav-group[open]>summary .arr{transform:rotate(90deg)}
-.dsnav-group>summary .st{margin-top:0}
 
 .dsnav-link{display:flex;align-items:center;gap:10px;min-height:var(--tap);padding:6px 22px;text-decoration:none;color:var(--ink)}
 .dsnav-link:hover{background:var(--soft)}
@@ -92,13 +91,6 @@ html{scrollbar-gutter:stable}
 /* Aktuelle Seite im Menü hervorheben – ruhig, mit Gold-Kante. */
 .dsnav-link.is-active{background:var(--soft);box-shadow:inset 3px 0 0 var(--gold-deep)}
 .dsnav-link.is-active .tt{color:var(--gold-ink);font-weight:var(--w-strong)}
-
-/* Status-Punkt */
-.dsnav-link .st{width:8px;height:8px;border-radius:var(--r-pill);background:var(--muted);flex:0 0 auto}
-.dsnav-link .st.live{background:#3f7d46}
-.dsnav-link .st.beta{background:var(--blue)}
-.dsnav-link .st.entwurf{background:var(--gold-deep)}
-.dsnav-link .st.geparkt{background:#c2c7cc}
 
 .dsnav-drawer .foot{padding:var(--s4) 22px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;flex:0 0 auto}
 .dsnav-drawer .foot a{color:var(--gold-ink);text-decoration:none}
