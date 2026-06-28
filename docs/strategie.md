@@ -73,7 +73,7 @@ in Minuten · WANN = Zeit der gestalterischen Beliebigkeit.)*
 1. **Organisations- & Farbsystem** – `assets/data/goetheanum-orgs.js`: 34 Organisationen,
    je Hausfarbe, Namen in 4 Sprachen. **Die** Datenwurzel. Wird von Logo- und
    Signatur-Generator genutzt; jedes weitere Werkzeug zieht daraus.
-2. **Hausschrift v2.5** + Reparatur-Pipeline (`tools/goetheanum-fontfix/`) + Fallbacks.
+2. **Hausschrift v2.6** + Reparatur-Pipeline (`tools/goetheanum-fontfix/`) + Fallbacks.
    Auditiert, reproduzierbar, als Webfont gehostet. Die typografische Grundlage.
 3. **Design-Tokens** – `design-system/tokens.css` + `tokens.json` (DTCG). Eine Quelle
    für Farben, Typo, Abstände, Radien.

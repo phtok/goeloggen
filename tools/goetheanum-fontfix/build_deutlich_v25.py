@@ -16,7 +16,7 @@ from fontTools.cffLib.CFF2ToCFF import convertCFF2ToCFF
 from fontTools.ttLib.tables._f_v_a_r import NamedInstance
 import fontTools.ttLib.tables.otTables as ot
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
-VAR = os.path.join(REPO, "assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.5.otf")
+VAR = os.path.join(REPO, "assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.6.otf")
 FONTS = os.path.join(REPO, "assets/fonts/goetheanum/Fonts")
 WF = os.path.join(REPO, "assets/fonts/goetheanum/Webfonts")
 WGHT = 580; NAME = "Deutlich"
@@ -37,8 +37,8 @@ def build_static():
     def setn(nid, s):
         nm.setName(s, nid, 3, 1, 0x409); nm.setName(s, nid, 1, 0, 0)
     setn(1, "Goetheanum Schrift Deutlich"); setn(2, "Regular")
-    setn(3, "2.5;GOEA;GoetheanumSchrift-Deutlich"); setn(4, "Goetheanum Schrift Deutlich")
-    setn(5, "Version 2.5"); setn(6, "GoetheanumSchrift-Deutlich")
+    setn(3, "2.6;GOEA;GoetheanumSchrift-Deutlich"); setn(4, "Goetheanum Schrift Deutlich")
+    setn(5, "Version 2.6"); setn(6, "GoetheanumSchrift-Deutlich")
     setn(16, "Goetheanum Schrift"); setn(17, "Deutlich")
     ft["OS/2"].usWeightClass = WGHT
     ft["OS/2"].fsSelection = (ft["OS/2"].fsSelection & ~0b101) | 0b11000000  # REGULAR + USE_TYPO, clear bold/italic
@@ -49,7 +49,7 @@ def build_static():
     for attr in ("FullName", "FamilyName"):
         if hasattr(td, attr): setattr(td, attr, "Goetheanum Schrift Deutlich")
     if hasattr(td, "Weight"): td.Weight = "Regular"
-    out = os.path.join(FONTS, "Goetheanum-Schrift-v2.5-Deutlich.otf")
+    out = os.path.join(FONTS, "Goetheanum-Schrift-v2.6-Deutlich.otf")
     ft.save(out); webfonts(out); print("static Deutlich gebaut:", os.path.basename(out))
 
 def add_instance():
