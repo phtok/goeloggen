@@ -89,10 +89,12 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .field{display:grid;gap:var(--s1)}
 .field>.lab{font-size:var(--t-small);color:var(--muted);letter-spacing:.01em}
 .field input,.field textarea,.field select{
-  width:100%;font-family:var(--font);font-size:var(--t-body);font-weight:var(--w-text);line-height:1.4;color:var(--ink);
-  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:10px 12px;outline:none;
+  width:100%;font-family:var(--font);font-size:16px;font-weight:var(--w-text);line-height:1.25;color:var(--ink);
+  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 12px;outline:none;
   transition:border-color .15s,box-shadow .15s;
 }
+/* Aufklappliste in der Hausschrift, wo der Browser es zulässt (Firefox/Safari). */
+.field select option{font-family:var(--font);font-size:16px}
 .field textarea{resize:vertical;min-height:48px}
 .field input::placeholder,.field textarea::placeholder{color:var(--muted);opacity:.7}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
