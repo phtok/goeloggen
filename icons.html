@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="de">
+<head>
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum Icons</title>
+<meta name="description" content="Der Goetheanum Icon-Satz: 45 benannte Piktogramme, Pfeile und Kompass – als Webfont per Tastatur oder einzeln als SVG, PNG und PDF. Mit Anleitung für den Einsatz." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Farben, Schrift, Maße, Hell-Dunkel kommen aus tokens.css/base.css. Hier nur
+     das seiten-eigene Layout – keine eigenen Farbwerte, kein eigenes :root. */
+  @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.6.woff2") format("woff2");font-display:block}
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
+
+  body{font-family:"G Klar","Helvetica Neue",Arial,sans-serif}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+
+  .kick{color:var(--gold-ink);font-size:14px;letter-spacing:.01em;margin-bottom:16px;line-height:1.5}
+  h1{font-family:"G Laut";font-weight:400;font-size:clamp(40px,7vw,78px);line-height:1.08}
+  .hero{padding:60px 0 14px}
+  .lede{font-family:"G Leise";font-size:clamp(17px,2.1vw,21px);color:var(--muted);max-width:600px;margin-top:16px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .chip{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12.5px;color:var(--muted)}
+  .chip b{color:var(--gold-ink);font-weight:400}
+
+  section{padding:46px 0;border-top:1px solid var(--line-soft)}
+  .shead{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:22px;flex-wrap:wrap}
+  .shead h2{font-family:"G Laut";font-weight:400;font-size:clamp(23px,3.4vw,33px);line-height:1.05}
+  .shead p{color:var(--muted);font-size:14px;max-width:380px}
+
+  /* Werkzeugleiste: Gruppen-Reiter + Suche */
+  .toolbar{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .tabs button{font:inherit;font-size:13px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer;min-height:var(--tap)}
+  .tabs button.on{color:var(--gold-ink);border-color:var(--gold)}
+  .search{flex:1;min-width:180px;display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:var(--r-control);padding:0 12px;background:var(--field-bg)}
+  .search input{flex:1;border:0;background:none;color:var(--ink);font:inherit;font-size:16px;padding:11px 0;outline:none;min-height:var(--tap)}
+  .search input::placeholder{color:var(--muted)}
+
+  .igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px}
+  .icell{position:relative;border:1px solid var(--line-soft);border-radius:12px;padding:16px 8px 12px;background:var(--soft);text-align:center;transition:border-color .15s,background .15s}
+  .icell:hover{border-color:var(--gold);background:var(--paper)}
+  /* Icon LIVE aus dem Webfont gesetzt (currentColor → folgt Hell/Dunkel, B05). */
+  .icell .ico{font-family:"G Icons";font-size:46px;line-height:1;color:var(--ink);display:block;height:48px}
+  .icell .nm{font-size:11.5px;color:var(--ink);margin-top:12px;line-height:1.25;min-height:2.5em}
+  .icell .key{display:inline-flex;align-items:center;gap:5px;margin-top:4px;font-size:11px;color:var(--muted)}
+  .icell .key b{font-family:var(--font-mono);font-size:12px;color:var(--gold-ink);font-weight:400;border:1px solid var(--line);border-radius:5px;padding:1px 6px;background:var(--paper)}
+  .icell .dl{display:flex;gap:4px;justify-content:center;margin-top:10px}
+  .icell .dl a{font-size:11px;color:var(--gold-ink);text-decoration:none;letter-spacing:.02em;padding:6px 7px;border-radius:7px;line-height:1}
+  .icell .dl a:hover{text-decoration:underline;background:var(--paper)}
+  .empty{color:var(--muted);font-size:14px;padding:20px 0}
+
+  /* Einsatz */
+  .use{display:grid;grid-template-columns:1fr;gap:18px;align-items:start}
+  @media(min-width:820px){.use{grid-template-columns:1fr 1fr}}
+  .panel{border:1px solid var(--line);border-radius:var(--r-card);padding:20px 22px;background:var(--paper)}
+  .panel h3{font-weight:400;font-size:16px;margin:0 0 4px}
+  .panel p{color:var(--muted);font-size:13.5px;line-height:1.6;margin:0 0 14px;max-width:60ch}
+  pre.code{position:relative;margin:0 0 14px;background:#1f2428;color:#e8eef2;border-radius:12px;padding:16px;overflow:auto;
+    font:12.5px/1.55 ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line)}
+  .copybtn{position:absolute;top:10px;right:10px;font:inherit;font-size:11.5px;border:1px solid #3a4148;background:#2b3137;color:#e8eef2;border-radius:8px;padding:6px 11px;cursor:pointer;min-height:32px}
+  .copybtn:hover{background:#343b42}
+  /* Live: tippen → Icons (Webfont per Taste). */
+  .try{display:flex;flex-direction:column;gap:10px}
+  .try .out{font-family:"G Icons";font-size:40px;line-height:1.2;color:var(--ink);min-height:52px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--soft);word-break:break-word}
+  .try input{font:inherit;font-size:16px;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 14px;background:var(--field-bg);min-height:var(--tap)}
+  .formats{list-style:none;margin:0;padding:0}
+  .formats li{display:flex;gap:10px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line-soft);font-size:13.5px;color:var(--muted);line-height:1.5}
+  .formats li:first-child{border-top:0}
+  .formats b{color:var(--ink);font-weight:400;min-width:42px;font-family:var(--font-mono);font-size:12.5px}
+
+  .dl-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:820px){.dl-cards{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.dl-cards{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px}
+  .card h3{font-weight:400;font-size:16px}.card p{color:var(--muted);font-size:13px;flex:1}
+  .btn{display:inline-block;text-decoration:none;font-size:13px;padding:11px 16px;border-radius:9px;border:1px solid var(--line);color:var(--ink);text-align:center;min-height:var(--tap);box-sizing:border-box}
+  .btn:hover{border-color:var(--gold-ink)}
+  /* Aktion = volles Blau + Weiss (kein dunkler Text auf Farbe, B01). */
+  .btn.primary{background:var(--blue-solid);border-color:var(--blue-solid);color:var(--on-accent);font-weight:var(--w-strong)}
+  .btn.primary:hover{filter:brightness(1.08)}
+
+  footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--muted);font-size:12.5px}
+  .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .frow strong{color:var(--ink);font-weight:400}
+</style>
+</head>
+<body>
+
+<script src="design-system/nav.js" data-root="./" data-section="schrift" data-active="icons"
+        data-onpage="Übersicht:#uebersicht|Einsatz:#einsatz|Download:#download"></script>
+
+<main>
+  <div class="wrap hero">
+    <div class="kick">Hausgrafik · Icons</div>
+    <h1>Goetheanum Icons</h1>
+    <p class="lede">Ein Satz Piktogramme in der Sprache der Hausschrift – Wegweisung, Hinweise, Pfeile und Kompass. Als Webfont per Tastatur gesetzt oder einzeln als SVG, PNG und PDF.</p>
+    <div class="meta">
+      <span class="chip"><b>45</b> benannte Icons</span>
+      <span class="chip"><b>SVG</b> · PNG · PDF</span>
+      <span class="chip"><b>Webfont</b> per Taste</span>
+    </div>
+  </div>
+
+  <section id="uebersicht"><div class="wrap">
+    <div class="shead"><h2>Übersicht.</h2>
+      <p>Jedes Icon live aus dem Webfont gesetzt. Such-Feld filtert nach Name; jede Kachel zeigt die Taste und lädt einzeln.</p></div>
+    <div class="toolbar">
+      <div class="tabs">
+        <button data-tab="piktogramm" class="on">Piktogramme</button>
+        <button data-tab="pfeil-kompass">Pfeile &amp; Kompass</button>
+        <button data-tab="alle">Alle</button>
+      </div>
+      <label class="search">
+        <span aria-hidden="true" style="color:var(--muted)">⌕</span>
+        <input type="search" id="q" placeholder="Icon suchen – z. B. WC, Pfeil, WLAN" aria-label="Icon suchen" />
+      </label>
+    </div>
+    <div class="igrid" id="igrid"></div>
+    <p class="empty" id="empty" hidden>Kein Icon gefunden. Suchbegriff anpassen oder einen anderen Reiter wählen.</p>
+  </div></section>
+
+  <section id="einsatz"><div class="wrap">
+    <div class="shead"><h2>Einsatz.</h2>
+      <p>Zwei Wege: als Webfont (eine Datei, per Taste gesetzt) oder als Einzeldatei für Layout und Druck.</p></div>
+    <div class="use">
+
+      <div class="panel">
+        <h3>Als Webfont – per Taste</h3>
+        <p>Eine Datei trägt alle Icons. Den <code>@font-face</code>-Block einbinden, einem Element die Icon-Schrift geben – dann sitzt jedes Icon auf einer Taste. Die volle Belegung steht im Beipackzettel.</p>
+        <pre class="code"><button class="copybtn" id="copyff">kopieren</button><code id="ffcode">@font-face{
+  font-family:"Goetheanum Icons";
+  src:url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.6.woff2") format("woff2");
+  font-display:block;
+}
+.icon{ font-family:"Goetheanum Icons"; }
+/* &lt;span class="icon"&gt;h&lt;/span&gt; → Bioabfall */</code></pre>
+        <div class="try">
+          <label class="lab" for="tryin" style="font-size:13px;color:var(--muted)">Selbst probieren – Buchstaben tippen:</label>
+          <input id="tryin" type="text" value="heafu" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Tasten eingeben" />
+          <div class="out" id="tryout" aria-hidden="true">heafu</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Als Einzeldatei</h3>
+        <p>Jedes Icon liegt in drei Formaten bereit – fertig fürs Web, fürs Layout und für den Druck. Über jeder Kachel oben einzeln zu laden, alle zusammen im Download-Abschnitt.</p>
+        <ul class="formats">
+          <li><b>SVG</b><span>Fürs Web und für Vektor-Programme – frei skalierbar, in der CSS-Farbe einfärbbar.</span></li>
+          <li><b>PDF</b><span>Für den Druck und InDesign – vektorbasiert, verlustfrei in jeder Größe.</span></li>
+          <li><b>PNG</b><span>Für schnelle Verwendung in Office und Präsentationen – fester Pixelrahmen.</span></li>
+        </ul>
+        <p style="margin-top:14px">Im Fließtext oder als Aufzählungszeichen ist der Webfont am leichtesten; für ein einzelnes großes Symbol im Layout die SVG oder das PDF.</p>
+      </div>
+
+    </div>
+  </div></section>
+
+  <section id="download"><div class="wrap">
+    <div class="shead"><h2>Download.</h2>
+      <p>Alle Icons als Datei-Set, der Icon-Webfont fürs Web und der Beipackzettel mit der Tastatur-Belegung.</p></div>
+    <div class="dl-cards">
+      <div class="card"><h3>Icons als Set</h3><p>Alle Icons als SVG, PNG und PDF in einem Archiv.</p>
+        <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Icons-v2.6-Einzeldateien.zip" download>Icon-ZIP</a></div>
+      <div class="card"><h3>Icon-Webfont</h3><p>Eine Datei, alle Icons – fürs Web (woff2) und zum Installieren (otf).</p>
+        <a class="btn" href="assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.6.woff2" download>woff2</a>
+        <a class="btn" href="assets/fonts/goetheanum/Fonts/Goetheanum-Icons-v2.6.otf" download>OTF</a></div>
+      <div class="card"><h3>Beipackzettel</h3><p>Übersicht und vollständige Tastatur-Belegung der Icons.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf" download>PDF</a></div>
+    </div>
+    <p style="margin-top:18px;font-size:13px;color:var(--muted)">
+      <b style="color:var(--ink);font-weight:400">Teil der Hausschrift:</b> Die Icons stecken auch im Komplettpaket der
+      <a style="color:var(--gold-ink)" href="schriften.html">Goetheanum Schriften</a>. Lizenz: <a style="color:var(--gold-ink)" href="assets/fonts/goetheanum/OFL.txt">SIL Open Font License 1.1</a>.
+    </p>
+  </div></section>
+</main>
+
+<footer><div class="wrap frow">
+  <div style="max-width:540px;line-height:1.7">
+    <strong>Goetheanum Icons</strong> · Teil der Goetheanum Schriften 2.6 (SIL OFL).
+    45 benannte Piktogramme, Pfeile und Kompass – als Webfont per Tastatur und einzeln als SVG, PNG und PDF.
+  </div>
+  <div><a href="assets/fonts/goetheanum/OFL.txt">SIL Open Font License 1.1</a><br><a href="https://grafik.goetheanum.ch">grafik.goetheanum.ch</a></div>
+</div></footer>
+
+<script>
+  // Icon-Daten: eine Quelle der Wahrheit (icons.json). Pro Eintrag slug, label,
+  // codepoint (= Taste im Webfont), group. Nur benannte Icons werden gezeigt.
+  (function(){
+    var BASE="assets/fonts/goetheanum/Icons-Einzeldateien/";
+    var grid=document.getElementById('igrid'), empty=document.getElementById('empty'), q=document.getElementById('q');
+    var DATA=[], tab="piktogramm";
+    function key(cp){ try{ return String.fromCodePoint(parseInt(cp.replace("U+",""),16)); }catch(e){ return ""; } }
+    function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+    function render(){
+      var term=(q.value||"").trim().toLowerCase();
+      var rows=DATA.filter(function(it){
+        var inTab = tab==="alle" || it.group===tab;
+        var inTerm = !term || it.label.toLowerCase().indexOf(term)!==-1 || it.slug.indexOf(term)!==-1;
+        return inTab && inTerm;
+      });
+      grid.innerHTML="";
+      rows.forEach(function(it){
+        var k=key(it.codepoint);
+        var cell=document.createElement('div'); cell.className='icell';
+        cell.setAttribute('role','group'); cell.setAttribute('aria-label',it.label);
+        cell.innerHTML=
+          '<span class="ico" aria-hidden="true">'+esc(k)+'</span>'+
+          '<div class="nm">'+esc(it.label)+'</div>'+
+          (k ? '<div class="key">Taste <b>'+esc(k)+'</b></div>' : '')+
+          '<div class="dl">'+
+            '<a download href="'+BASE+'svg/'+it.slug+'.svg">SVG</a>'+
+            '<a download href="'+BASE+'png/'+it.slug+'.png">PNG</a>'+
+            '<a download href="'+BASE+'pdf/'+it.slug+'.pdf">PDF</a>'+
+          '</div>';
+        grid.appendChild(cell);
+      });
+      empty.hidden = rows.length>0;
+    }
+    document.querySelectorAll('.tabs button').forEach(function(b){
+      b.addEventListener('click',function(){
+        document.querySelectorAll('.tabs button').forEach(function(x){x.classList.remove('on');});
+        b.classList.add('on'); tab=b.dataset.tab; render();
+      });
+    });
+    q.addEventListener('input',render);
+    fetch(BASE+"icons.json").then(function(r){return r.json();}).then(function(d){
+      DATA=d.filter(function(it){ return !/^U\+/.test(it.label); });  // nur benannte
+      render();
+    }).catch(function(){
+      empty.hidden=false; empty.textContent="Icon-Liste konnte nicht geladen werden. Einzeldateien stehen im Download-Abschnitt bereit.";
+    });
+  })();
+
+  // Live-Demo: Eingabe spiegelt sich in der Icon-Schrift.
+  (function(){
+    var i=document.getElementById('tryin'), o=document.getElementById('tryout');
+    if(!i||!o) return;
+    function u(){ o.textContent=i.value; } i.addEventListener('input',u); u();
+  })();
+
+  // Code kopieren.
+  (function(){
+    var b=document.getElementById('copyff'); if(!b) return;
+    b.addEventListener('click',function(){
+      var t=document.getElementById('ffcode').innerText;
+      if(navigator.clipboard) navigator.clipboard.writeText(t);
+      var o=b.textContent; b.textContent='kopiert ✓'; setTimeout(function(){b.textContent=o;},1200);
+    });
+  })();
+</script>
+
+<!-- Statistik · eigener Supabase-Server (kein Fremddienst, keine Cookies, keine IP/Personendaten).
+     Zählt Seitenaufruf und jeden Download über die geschützte Funktion schriften_bump(). -->
+<script>
+  (function () {
+    var SB = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
+    var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
+    function bump(kind, label) {
+      try {
+        fetch(SB + '/rest/v1/rpc/schriften_bump', {
+          method: 'POST', keepalive: true,
+          headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
+          body: JSON.stringify({ p_kind: kind, p_label: label })
+        }).catch(function () {});
+      } catch (e) {}
+    }
+    bump('pageview', 'icons');
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[download]');
+      if (!a) return;
+      bump('download', (a.getAttribute('href') || '').split('/').pop());
+    });
+  })();
+</script>
+</body>
+</html>
