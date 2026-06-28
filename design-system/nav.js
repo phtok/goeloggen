@@ -27,6 +27,28 @@
   var HOME  = (s && s.dataset.home)  || ROOT;
   var ACTIVE = (s && s.dataset.active) || "";   // optional: aktiver Eintrag (slug); sonst aus der URL
   var KEY = "goeNavIntern";
+  var THEME_KEY = "goeTheme";
+
+  // --- Hell/Dunkel -----------------------------------------------------------
+  function prefersDark() { return !!(window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches); }
+  function getTheme() {
+    try { var t = localStorage.getItem(THEME_KEY); if (t === "light" || t === "dark") return t; } catch (e) {}
+    return prefersDark() ? "dark" : "light";
+  }
+  function updateThemeBtn() {
+    if (!themeBtn) return;
+    var dark = document.documentElement.getAttribute("data-theme") === "dark";
+    themeBtn.querySelector(".ic").textContent = dark ? "☀" : "☾";
+    themeBtn.setAttribute("aria-label", dark ? "Hell schalten" : "Dunkel schalten");
+    themeBtn.setAttribute("aria-pressed", String(dark));
+  }
+  function setTheme(t) {
+    try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
+    document.documentElement.setAttribute("data-theme", t);
+    updateThemeBtn();
+  }
+  // Sofort anwenden – vor dem Zeichnen, gegen Aufblitzen.
+  document.documentElement.setAttribute("data-theme", getTheme());
 
   // Die vier meistgenutzten – nur als Desktop-Schnellzugriff in der Kopfzeile.
   var PRIMARY = [
@@ -100,6 +122,7 @@
         '<img class="lockup" src="' + ROOT + 'assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge">' +
       '</a>' +
       '<nav class="worlds"></nav>' +
+      '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic">☾</span></button>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
     '</div>';
@@ -121,6 +144,11 @@
   function flash(msg) { toast.textContent = msg; toast.classList.add("show"); setTimeout(function () { toast.classList.remove("show"); }, 1400); }
 
   var btnAll = header.querySelector(".all");
+  var themeBtn = header.querySelector(".theme");
+  themeBtn.addEventListener("click", function () {
+    setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
+  });
+  updateThemeBtn();
   var worldsNav = header.querySelector(".worlds");
   var drawerBody = drawer.querySelector(".body");
   var drawerTitle = drawer.querySelector(".dhead .t");
