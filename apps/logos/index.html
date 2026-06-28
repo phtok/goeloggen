@@ -14,11 +14,33 @@
   .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.4vw,52px);line-height:1.04;letter-spacing:-.01em;max-width:16ch}
   .hero .lede{margin-top:var(--s4);color:#565b60;font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:56ch}
 
-  /* Werkzeug */
+  /* Werkzeug – zwei Spalten, Vorschau OBEN-BÜNDIG mit der Auswahl und klebend. */
   .tool{display:grid;gap:var(--s6);grid-template-columns:1fr}
-  @media(min-width:860px){.tool{grid-template-columns:320px 1fr;align-items:start}}
-  /* Auf schmalen Schirmen die Vorschau über die Auswahl heben (nicht darunter) */
-  @media(max-width:859px){.tool .preview{order:-1;margin-bottom:var(--s4)}}
+  @media(min-width:860px){.tool{grid-template-columns:minmax(290px,350px) 1fr;align-items:start}}
+  .controls{display:grid;gap:var(--s4)}
+  .seg .brk{flex-basis:100%;height:0}
+
+  .preview{position:sticky;top:calc(var(--header-h) + var(--s4))}
+  .stage{display:grid;place-items:center;min-height:300px;border:1px solid var(--line);border-radius:var(--r-card);background:#faf8f4;padding:clamp(24px,5vw,56px)}
+  .stage.dark{background:#23272b}
+  .stage svg{max-width:100%;height:auto;max-height:340px}
+  #dim{color:var(--muted);font-size:var(--t-small);margin-top:var(--s2)}
+  /* EINE Aktion: gross, blau (= Tun), unverwechselbar mit den Gold-Pillen (= Wahl). */
+  .download{margin-top:var(--s4)}
+  .download .btn{width:100%;font-size:16px;padding:14px}
+  .dlhint{color:var(--muted);font-size:var(--t-small);text-align:center;margin-top:8px}
+
+  /* Mobil: kompakte Mini-Vorschau klebt oben, Auswahl direkt darunter (beides
+     zugleich sichtbar); die EINE Aktion in einer festen Leiste unten. */
+  @media(max-width:859px){
+    .tool{grid-template-columns:1fr;gap:var(--s4)}
+    main.wrap{padding-bottom:88px}
+    .preview{order:-1;position:sticky;top:var(--header-h);z-index:10;background:var(--paper);padding-bottom:var(--s2);border-bottom:1px solid var(--line-soft)}
+    .stage{min-height:0;padding:var(--s3)}
+    .stage svg{max-height:150px}
+    .download{position:fixed;left:0;right:0;bottom:0;margin:0;z-index:30;background:var(--bar-bg);backdrop-filter:saturate(160%) blur(8px);border-top:1px solid var(--line);padding:10px 16px}
+    .dlhint{display:none}
+  }
 
   /* Begleitschreiben als PDF drucken: nur das Blatt zeigen */
   @media print{
@@ -28,16 +50,6 @@
     #begleitschreiben .shead{display:block}
     .sheet{border:none;padding:0;margin-top:0}
   }
-  .controls{display:grid;gap:var(--s4)}
-  /* .seg (Pillen) kommt jetzt aus base.css – Anwahl in Gold/Weiss */
-  .catbar{margin:var(--s2) 0 var(--s6)}
-  .catbar .brk{flex-basis:100%;height:0}
-  .stage{display:grid;place-items:center;min-height:280px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft);padding:clamp(24px,5vw,56px)}
-  .stage.dark{background:#23272b}
-  .stage svg{max-width:100%;height:auto;max-height:340px}
-  .dlhead{display:block;color:var(--muted);font-size:12px;letter-spacing:.04em;margin:var(--s4) 0 var(--s2)}
-  .toolbar{display:flex;gap:var(--s2);flex-wrap:wrap}
-  .meta{color:var(--muted);font-size:12.5px;margin-top:var(--s2)}
 
   /* Begleitschreiben */
   .sheet{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:clamp(22px,4vw,40px);margin-top:var(--s4)}
@@ -76,12 +88,12 @@
 
   <!-- ===================== WERKZEUG ===================== -->
   <section id="werkzeug">
-    <div class="field catbar">
-      <span class="lab">Kategorie</span>
-      <div class="seg" id="cat"></div>
-    </div>
     <div class="tool">
       <div class="controls">
+        <div class="field">
+          <span class="lab">Kategorie</span>
+          <div class="seg" id="cat"></div>
+        </div>
         <label class="field" id="orgField">
           <span class="lab">Sektion / Bereich</span>
           <select id="org"></select>
@@ -103,20 +115,19 @@
             <option value="es">Español</option>
           </select>
         </label>
+        <div class="field">
+          <span class="lab">Format</span>
+          <div class="seg" id="fmt"></div>
+        </div>
       </div>
 
       <div class="preview">
         <div class="stage" id="stage"><span class="meta">…</span></div>
-        <span class="dlhead">Herunterladen</span>
-        <div class="toolbar" id="exports">
-          <button class="btn primary dl" data-fmt="svg"   title="Vektor – für Web und Druck">SVG</button>
-          <button class="btn dl"         data-fmt="svg48" title="Vektor, auf 48 px Höhe normiert">SVG 48</button>
-          <button class="btn dl"         data-fmt="png"   title="Empfohlen fürs Office: Word, PowerPoint, Outlook (transparent)">PNG</button>
-          <button class="btn dl"         data-fmt="webp"  title="Web, klein (transparent)">WebP</button>
-          <button class="btn dl"         data-fmt="jpg"   title="Mit weissem Grund">JPG</button>
-          <button class="btn dl"         data-fmt="pdf"   title="Vektor-PDF (weisser Grund)">PDF</button>
-        </div>
         <div class="meta" id="dim"></div>
+        <div class="download">
+          <button class="btn primary dl" id="dl" type="button">herunterladen</button>
+          <div class="dlhint" id="dlhint"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -210,10 +221,14 @@
 (function(){
   var E = window.LogoEngine;
   // Default = das eigentliche Logo: blaues, einzeiliges Goetheanum-Basislogo.
-  var sel = { cat:"allgemein", org:"goetheanum", layout:"desktop", mode:"original", lang:"de", scale:2.635 };
+  var sel = { cat:"allgemein", org:"goetheanum", layout:"desktop", mode:"original", lang:"de", fmt:"svg", scale:2.635 };
 
   var LAYOUT_LABELS = [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"],["square","Quadrat"]];
   var MODE_LABELS   = [["original","Original"],["white","Weiss"],["black","Schwarz"],["gray","Grau"]];
+  var FMT_LABELS    = [["svg","SVG"],["png","PNG"],["pdf","PDF"],["webp","WebP"],["jpg","JPG"],["svg48","SVG 48"]];
+  var FMT_HINT = { svg:"Vektor – für Web und Druck", png:"Pixel mit Transparenz – fürs Office (Word, PowerPoint, Outlook)",
+    pdf:"Vektor-PDF auf weissem Grund", webp:"Pixel, klein, mit Transparenz – fürs Web",
+    jpg:"Pixel auf weissem Grund", svg48:"Vektor, auf 48 px Höhe normiert" };
 
   var $ = function(id){ return document.getElementById(id); };
 
@@ -278,6 +293,13 @@
 
   function fileBase(){ return "goetheanum-" + sel.org + "-" + sel.layout + "-" + sel.mode; }
 
+  // Format ist eine WAHL; das Herunterladen die EINE Aktion. Der Knopf nennt das gewählte Format.
+  function fmtLabel(){ var p = FMT_LABELS.filter(function(x){return x[0]===sel.fmt;})[0]; return p ? p[1] : "SVG"; }
+  function updateDl(){
+    var dl = $("dl"); if (dl) dl.textContent = "als " + fmtLabel() + " herunterladen";
+    var h = $("dlhint"); if (h) h.textContent = FMT_HINT[sel.fmt] || "";
+  }
+
   // Begleitschreiben-Visuals aus der Engine
   function buildVisuals(){
     var vv = $("vVariants");
@@ -314,7 +336,9 @@
     $("lang").addEventListener("change", function(){ sel.lang = this.value; render(); });
     $("layout").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.layout=b.dataset.val; fillSeg("layout",LAYOUT_LABELS,sel.layout); render(); });
     $("mode").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.mode=b.dataset.val; fillSeg("mode",MODE_LABELS,sel.mode); render(); });
-    $("exports").addEventListener("click", function(e){ var b=e.target.closest("button[data-fmt]"); if(!b)return; LogoExport[b.dataset.fmt](currentSVG(), fileBase()); });
+    fillSeg("fmt", FMT_LABELS, sel.fmt); updateDl();
+    $("fmt").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.fmt=b.dataset.val; fillSeg("fmt",FMT_LABELS,sel.fmt); updateDl(); });
+    $("dl").addEventListener("click", function(){ LogoExport[sel.fmt](currentSVG(), fileBase()); });
     var pb = $("pdfSheet"); if (pb) pb.addEventListener("click", function(){ window.print(); });
     render();
     buildVisuals();
