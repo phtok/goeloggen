@@ -10,8 +10,9 @@
 <link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
 <style>
-  /* Startseite: nur die Karten – kein Hero, keine Überschriften, keine Erklärungen. */
-  main{padding:clamp(28px,5vw,48px) 0}
+  /* Startseite: nur die Karten – kein Hero, keine Überschriften, keine Erklärungen.
+     Etwas Luft unter dem Header, bevor das Raster beginnt. */
+  main{padding:clamp(40px,6vw,72px) 0 clamp(32px,5vw,56px)}
   .grid{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
 
   .tile{position:relative;display:flex;flex-direction:column;gap:var(--s3);border:1px solid var(--line);
