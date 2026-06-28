@@ -25,12 +25,12 @@
   .preview{position:sticky;top:calc(var(--header-h) + var(--s4))}
   .stage{display:grid;place-items:center;min-height:300px;border:1px solid var(--line);border-radius:var(--r-card);background:#faf8f4;padding:clamp(24px,5vw,56px)}
   .stage.dark{background:#23272b}
-  .stage svg{max-width:100%;height:auto;max-height:340px}
-  /* Erklärzeile direkt unter der Vorschau, ÜBER den Pillen (benennt das Format). */
+  .stage svg,.stage img{max-width:100%;height:auto;max-height:340px;display:block}
+  /* Erklärzeile direkt unter der Vorschau, ÜBER den Pillen: erst wofür, dann womit. */
   .fmthint{color:var(--muted);font-size:var(--t-small);line-height:1.45;margin:var(--s3) 0 var(--s2);min-height:2.6em}
-  /* Alle sechs Formate nebeneinander – kompakt. */
-  #fmt{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
-  #fmt button{width:100%;padding:8px 4px}
+  /* Alle Formate in EINER Zeile – gleich breit, kein Umbruch. */
+  #fmt{display:flex;gap:6px}
+  #fmt button{flex:1 1 0;min-width:0;padding:8px 4px}
   /* EINE Aktion direkt unter der Anwahl: gross, blau (= Tun), unverwechselbar mit den Gold-Pillen. */
   .download{margin-top:var(--s3)}
   .download .btn{width:100%;font-size:16px;padding:14px}
@@ -46,8 +46,7 @@
     .tool{grid-template-columns:1fr;gap:var(--s4)}
     .preview{order:-1}
     .stage{position:sticky;top:var(--header-h);z-index:10;min-height:0;padding:var(--s3);background:var(--paper);border-bottom:1px solid var(--line-soft)}
-    .stage svg{max-height:150px}
-    #fmt{grid-template-columns:repeat(3,1fr)}
+    .stage svg,.stage img{max-height:150px}
   }
 
   /* Begleitschreiben als PDF drucken: nur das Blatt zeigen */
@@ -230,9 +229,15 @@
   var MODE_SWATCH   = [["original","Original","#0061a9"],["white","Weiss","#ffffff"],["black","Schwarz","#23272b"],["gray","Grau","#9aa0a6"]];
   // Reihenfolge nach Gebrauch/Gewohnheit; Pillen 3 + 3.
   var FMT_LABELS    = [["png","PNG"],["jpg","JPG"],["pdf","PDF"],["svg","SVG"],["svg48","SVG 48"],["webp","WebP"]];
-  var FMT_HINT = { svg:"Vektor – für Web und Druck", png:"Pixel mit Transparenz – fürs Office (Word, PowerPoint, Outlook)",
-    pdf:"Vektor-PDF auf weissem Grund", webp:"Pixel, klein, mit Transparenz – fürs Web",
-    jpg:"Pixel auf weissem Grund", svg48:"Vektor, auf 48 px Höhe normiert" };
+  // Erklärzeile: erst wofür (Anwendung), dann womit (Pixel/Vektor).
+  var FMT_HINT = {
+    png:"Geeignet für Office (Word, PowerPoint, Outlook) — Pixel mit Transparenz",
+    jpg:"Geeignet für Fotos und Mail — Pixel auf weissem Grund",
+    pdf:"Geeignet für den Druck — Vektor-PDF auf Weiss",
+    svg:"Geeignet für Web und Druck — skalierbarer Vektor",
+    svg48:"Geeignet für feste Höhen und Icons — Vektor auf 48 px normiert",
+    webp:"Geeignet für moderne Webseiten — kleiner Pixel mit Transparenz"
+  };
 
   var $ = function(id){ return document.getElementById(id); };
 
@@ -243,8 +248,55 @@
     { label:"Bühne",        cat:"allgemein",    org:"buehne" },
     { label:"Sektionen",    cat:"sektionen" },
     { label:"Bereiche",     cat:"bereiche" },
-    { label:"Teilbereiche", cat:"teilbereiche" }
+    { label:"Teilbereiche", cat:"teilbereiche" },
+    { label:"Medien",       cat:"medien" }
   ];
+
+  // --- Medien: eigenständige Markenzeichen, fertige Dateien (kein Engine-Satz) ---
+  // Geladen aus assets/logos/medien/manifest.json. Marke→Form→Farbe→[Formate].
+  var MEDIA = null;
+  var MEDIA_BASE = "../../assets/logos/medien/";
+  var MEDIA_FORM_LABELS = { "lockup":"Lockup", "icon-point":"Icon · Kreis", "icon-square":"Icon · Quadrat",
+    "icon-transparent":"Icon · frei", "full":"Voll", "short":"Kurz" };
+  var MEDIA_COLOR = [["farbe","Farbe","#0061a9"],["schwarz","Schwarz","#23272b"],["weiss","Weiss","#ffffff"],["grau","Grau","#9aa0a6"]];
+  var MEDIA_FMT = [["png","PNG"],["jpg","JPG"],["pdf","PDF"],["svg","SVG"]];
+  var MEDIA_FMT_HINT = {
+    png:"Geeignet für Web und Office — Pixel mit Transparenz",
+    jpg:"Geeignet für Fotos und Mail — Pixel auf weissem Grund",
+    pdf:"Geeignet für den Druck — Vektor-PDF (CMYK)",
+    svg:"Geeignet für Web und Druck — skalierbarer Vektor"
+  };
+  function isMedia(){ return sel.cat === "medien"; }
+  function mediaForms(brand){ return (MEDIA && MEDIA[brand]) ? Object.keys(MEDIA[brand].forms) : []; }
+  function mediaColors(brand, form){ var f = MEDIA && MEDIA[brand] && MEDIA[brand].forms[form]; return f ? Object.keys(f) : []; }
+  function mediaFmts(brand, form, color){ var f = MEDIA && MEDIA[brand] && MEDIA[brand].forms[form]; return (f && f[color]) ? f[color].slice() : []; }
+  function mediaFile(fmt){
+    var stem = (fmt === "pdf") ? "print." : "web.";
+    return MEDIA_BASE + sel.org + "/" + sel.layout + "/" + sel.mode + "/" + stem + fmt;
+  }
+  function mediaPreviewSrc(){
+    var av = mediaFmts(sel.org, sel.layout, sel.mode);
+    var f = (av.indexOf("svg") >= 0) ? "svg" : (av.indexOf("png") >= 0 ? "png" : av[0]);
+    return MEDIA_BASE + sel.org + "/" + sel.layout + "/" + sel.mode + "/web." + f;
+  }
+  // Beim Wechsel in/aus Medien die Auswahl auf gültige Werte bringen.
+  function mediaDefaults(){
+    if (!MEDIA) return;
+    if (mediaForms(sel.org).length === 0) sel.org = Object.keys(MEDIA)[0];
+    if (mediaForms(sel.org).indexOf(sel.layout) < 0) sel.layout = mediaForms(sel.org)[0];
+    if (mediaColors(sel.org, sel.layout).indexOf(sel.mode) < 0) sel.mode = mediaColors(sel.org, sel.layout)[0];
+    if (mediaFmts(sel.org, sel.layout, sel.mode).indexOf(sel.fmt) < 0) sel.fmt = mediaFmts(sel.org, sel.layout, sel.mode)[0];
+  }
+  function logoDefaults(){
+    if (["original","white","black","gray"].indexOf(sel.mode) < 0) sel.mode = "original";
+    if (["png","jpg","pdf","svg","svg48","webp"].indexOf(sel.fmt) < 0) sel.fmt = "svg";
+    sel.layout = "desktop"; sel.tribase = "desktop"; sel.lang = "de";
+  }
+  // Feld-Beschriftungen folgen dem Modus (Marke/Form bei Medien).
+  function syncLabels(){
+    var ol = document.querySelector("#orgField .lab"); if (ol) ol.textContent = isMedia() ? "Marke" : "Sektion / Bereich";
+    var ll = document.querySelector("#layoutField .lab"); if (ll) ll.textContent = isMedia() ? "Form" : "Layout";
+  }
   function catVal(o){ return o.org ? (o.cat + ":" + o.org) : o.cat; }
   function fillCats(){
     var s = $("cat"); s.innerHTML = "";
@@ -256,6 +308,14 @@
   }
   function fillOrgs(){
     var o = $("org"); o.innerHTML = "";
+    if (isMedia()){
+      Object.keys(MEDIA || {}).forEach(function(key){
+        var opt = document.createElement("option");
+        opt.value = key; opt.textContent = MEDIA[key].label; o.appendChild(opt);
+      });
+      if (mediaForms(sel.org).length === 0) sel.org = Object.keys(MEDIA)[0];
+      o.value = sel.org; return;
+    }
     (CATS[sel.cat].items || []).forEach(function(key){
       var opt = document.createElement("option");
       opt.value = key; opt.textContent = ORGS[key] ? ORGS[key].name_de : key;
@@ -317,11 +377,17 @@
     return (sel.layout === "triline" && sel.tribase === "mobile") ? "triline:mobile" : sel.layout;
   }
   function fillLayout(){
+    if (isMedia()){
+      var fopts = mediaForms(sel.org).map(function(k){ return [k, MEDIA_FORM_LABELS[k] || k]; });
+      if (!fopts.some(function(p){ return p[0] === sel.layout; })) sel.layout = fopts[0][0];
+      fillSel("layout", fopts, sel.layout); return;
+    }
     var opts = orgLayouts(sel.org), cur = layoutValue();
     if (!opts.some(function(p){ return p[0] === cur; })) { setLayoutFromValue(opts[0][0]); cur = layoutValue(); }
     fillSel("layout", opts, cur);
   }
   function fillLang(){
+    if (isMedia()){ $("langField").style.display = "none"; return; }   // Medien haben keine Sprachvarianten
     var opts = orgLangs(sel.org);
     if (!opts.some(function(p){ return p[0] === sel.lang; })) sel.lang = (opts[0] || ["de"])[0];
     fillSel("lang", opts, sel.lang);
@@ -329,6 +395,17 @@
   }
   function fillSwatch(){
     var box = $("mode"); box.innerHTML = "";
+    if (isMedia()){
+      var present = mediaColors(sel.org, sel.layout);
+      MEDIA_COLOR.forEach(function(p){
+        if (present.indexOf(p[0]) < 0) return;
+        var b = document.createElement("button");
+        b.type = "button"; b.title = p[1]; b.dataset.val = p[0]; b.style.background = p[2];
+        b.setAttribute("aria-pressed", String(p[0] === sel.mode));
+        box.appendChild(b);
+      });
+      return;
+    }
     MODE_SWATCH.forEach(function(p){
       var b = document.createElement("button");
       var col = (p[0] === "original" && ORGS[sel.org] && ORGS[sel.org].color) ? ORGS[sel.org].color : p[2];
@@ -337,13 +414,16 @@
       box.appendChild(b);
     });
   }
-  function fmtHint(code){ return FMT_HINT[code] || ""; }
-  // Erklärzeile benennt das Format: „PNG — Pixel mit Transparenz …".
-  function fmtName(code){ var p = FMT_LABELS.filter(function(x){return x[0]===code;})[0]; return p ? p[1] : code; }
-  function fmtLine(code){ var h = fmtHint(code); return h ? (fmtName(code) + " — " + h) : fmtName(code); }
+  function fmtHint(code){ return (isMedia() ? MEDIA_FMT_HINT[code] : FMT_HINT[code]) || ""; }
+  // Die Erklärzeile IST der Hinweis (beginnt mit „Geeignet für …"); das gewählte
+  // Format zeigt die goldene Pille – kein vorangestellter Name nötig.
+  function fmtLine(code){ return fmtHint(code); }
   function fillFmt(){
     var box = $("fmt"); box.innerHTML = "";
-    FMT_LABELS.forEach(function(p){
+    var pairs = isMedia() ? MEDIA_FMT : FMT_LABELS;
+    var present = isMedia() ? mediaFmts(sel.org, sel.layout, sel.mode) : null;
+    pairs.forEach(function(p){
+      if (present && present.indexOf(p[0]) < 0) return;
       var b = document.createElement("button");
       b.type = "button"; b.textContent = p[1]; b.dataset.val = p[0]; b.title = fmtHint(p[0]);
       b.setAttribute("aria-pressed", String(p[0] === sel.fmt));
@@ -356,25 +436,34 @@
 
   function render(){
     var stage = $("stage");
+    if (isMedia()){
+      stage.classList.toggle("dark", sel.mode === "weiss");
+      var img = document.createElement("img");
+      img.alt = (MEDIA[sel.org] ? MEDIA[sel.org].label : "") + " – " + (MEDIA_FORM_LABELS[sel.layout] || sel.layout);
+      img.src = mediaPreviewSrc();
+      stage.innerHTML = ""; stage.appendChild(img);
+      return;
+    }
     stage.classList.toggle("dark", sel.mode === "white");
     stage.innerHTML = currentSVG();
   }
 
   function fileBase(){
+    if (isMedia()) return "goetheanum-medien-" + sel.org + "-" + sel.layout + "-" + sel.mode;
     var lay = (sel.layout === "triline" && sel.tribase === "mobile") ? "triline-kurz" : sel.layout;
     return "goetheanum-" + sel.org + "-" + lay + "-" + sel.mode;
   }
 
   // Format ist eine WAHL; das Herunterladen die EINE Aktion. Der Knopf nennt das gewählte Format.
-  function fmtLabel(){ var p = FMT_LABELS.filter(function(x){return x[0]===sel.fmt;})[0]; return p ? p[1] : "SVG"; }
+  function fmtLabel(){ var pairs = isMedia() ? MEDIA_FMT : FMT_LABELS; var p = pairs.filter(function(x){return x[0]===sel.fmt;})[0]; return p ? p[1] : "SVG"; }
   function updateDl(){
     var dl = $("dl"); if (dl) dl.textContent = "als " + fmtLabel() + " herunterladen";
     var h = $("fmthint"); if (h) h.textContent = fmtLine(sel.fmt);
   }
 
-  // Begleitschreiben-Visuals aus der Engine
+  // Begleitschreiben-Visuals aus der Engine (defensiv: Abschnitt kann sich ändern).
   function buildVisuals(){
-    var vv = $("vVariants");
+    var vv = $("vVariants"); if (!vv || !$("vColors")) return;
     [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"]].forEach(function(p){
       vv.appendChild(figure(E.svg({cat:"sektionen",org:"aas",layout:p[0],mode:"original",lang:"de",scale:2.635}), p[1], false));
     });
@@ -390,29 +479,48 @@
   }
 
   // Verdrahtung
-  function init(){
-    if (!E || typeof ORGS === "undefined") { $("stage").innerHTML = '<span class="meta">Engine nicht geladen.</span>'; return; }
-    fillCats(); fillOrgs(); syncOrgField();
+  function wire(){
+    fillCats(); fillOrgs(); syncOrgField(); syncLabels();
     fillLayout(); fillLang(); fillSwatch(); fillFmt(); updateDl();
     $("cat").addEventListener("change", function(){
-      var v = this.value, i = v.indexOf(":");
+      var v = this.value, i = v.indexOf(":"), wasMedia = isMedia();
       if (i >= 0){ sel.cat = "allgemein"; sel.org = v.slice(i + 1); }   // feste Org (Allgemein/Bühne)
       else { sel.cat = v; }
+      if (!isMedia() && wasMedia) logoDefaults();
+      syncLabels();
       fillOrgs(); syncOrgField();
       if (sel.cat !== "allgemein") sel.org = $("org").value;
-      fillLayout(); fillLang(); fillSwatch();   // Optionen + Org-Farbe an die neue Org anpassen
+      if (isMedia()) mediaDefaults();
+      fillLayout(); fillLang(); fillSwatch(); fillFmt(); updateDl();
       render();
     });
-    $("org").addEventListener("change", function(){ sel.org = this.value; fillLayout(); fillLang(); fillSwatch(); render(); });
-    $("layout").addEventListener("change", function(){ setLayoutFromValue(this.value); render(); });
+    $("org").addEventListener("change", function(){ sel.org = this.value; if (isMedia()) mediaDefaults(); fillLayout(); fillLang(); fillSwatch(); fillFmt(); updateDl(); render(); });
+    $("layout").addEventListener("change", function(){
+      if (isMedia()){ sel.layout = this.value; mediaDefaults(); fillSwatch(); fillFmt(); updateDl(); }
+      else setLayoutFromValue(this.value);
+      render();
+    });
     $("lang").addEventListener("change", function(){ sel.lang = this.value; fillLayout(); render(); });
-    $("mode").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.mode=b.dataset.val; fillSwatch(); render(); });
+    $("mode").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.mode=b.dataset.val; fillSwatch(); if (isMedia()){ mediaDefaults(); fillFmt(); updateDl(); } render(); });
     $("fmt").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.fmt=b.dataset.val; fillFmt(); updateDl(); });
     $("fmt").addEventListener("mouseleave", function(){ $("fmthint").textContent = fmtLine(sel.fmt); });
-    $("dl").addEventListener("click", function(){ LogoExport[sel.fmt](currentSVG(), fileBase()); });
+    $("dl").addEventListener("click", function(){
+      if (isMedia()){
+        var a = document.createElement("a"); a.href = mediaFile(sel.fmt); a.download = fileBase() + "." + sel.fmt;
+        document.body.appendChild(a); a.click(); a.remove(); return;
+      }
+      LogoExport[sel.fmt](currentSVG(), fileBase());
+    });
     var pb = $("pdfSheet"); if (pb) pb.addEventListener("click", function(){ window.print(); });
     render();
     buildVisuals();
+  }
+  // Medien-Manifest laden (für die Kategorie ‹Medien›), dann verdrahten.
+  function init(){
+    if (!E || typeof ORGS === "undefined") { $("stage").innerHTML = '<span class="meta">Engine nicht geladen.</span>'; return; }
+    fetch(MEDIA_BASE + "manifest.json").then(function(r){ return r.json(); })
+      .then(function(m){ MEDIA = m; }).catch(function(){ MEDIA = null; })
+      .then(function(){ wire(); });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();
