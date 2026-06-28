@@ -8,6 +8,7 @@
 <meta name="description" content="Goetheanum Schriften 2.5 – Leise, Klar, Deutlich, Laut, Variabel und Icons. Repariert, vervollständigt und optimiert." />
 <meta name="robots" content="noindex" />
 <link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
 <style>
   @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.5-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
@@ -17,34 +18,18 @@
   @font-face{font-family:"G Variabel";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.5.woff2") format("woff2");font-weight:190 725;font-display:swap}
   @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.5.woff2") format("woff2");font-display:block}
 
-  :root{
-    --ink:#23272b; --muted:#737a80; --line:rgba(20,24,28,.10); --line-soft:rgba(20,24,28,.055);
-    --gold:#d7ab68; --gold-deep:#a07a33; --paper:#fff; --soft:#faf8f4; --maxw:1080px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--paper);color:var(--ink);font-family:"G Klar","Helvetica Neue",Arial,sans-serif;
-       letter-spacing:normal;font-kerning:normal;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;line-height:1.5}
+  /* Farben, Schrift, Maße, Hell-Dunkel kommen aus tokens.css/base.css. Hier nur
+     das seiten-eigene Specimen-Layout – keine eigenen Farbwerte, kein eigenes :root. */
+  body{font-family:"G Klar","Helvetica Neue",Arial,sans-serif}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
-  a{color:inherit}
 
-  header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
-  .bar{display:flex;align-items:center;justify-content:space-between;height:58px}
-  .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
-  .brand img{height:34px}
-  .brand .div{width:1px;height:18px;background:var(--line)}
-  .brand b{font-weight:400;font-size:14px}
-  nav.top{display:flex;gap:22px}
-  nav.top a{color:var(--muted);text-decoration:none;font-size:13.5px}
-  nav.top a:hover{color:var(--gold-deep)}
-  @media(max-width:720px){nav.top{display:none}}
-
-  .kick{color:var(--gold-deep);font-size:14px;letter-spacing:.01em;margin-bottom:16px;line-height:1.5}
+  .kick{color:var(--gold-ink);font-size:14px;letter-spacing:.01em;margin-bottom:16px;line-height:1.5}
   h1{font-family:"G Laut";font-weight:400;font-size:clamp(40px,7vw,78px);line-height:1.08}
   .hero{padding:60px 0 14px}
   .lede{font-family:"G Leise";font-size:clamp(17px,2.1vw,21px);color:var(--muted);max-width:600px;margin-top:16px}
   .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
   .chip{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12.5px;color:var(--muted)}
-  .chip b{color:var(--gold-deep);font-weight:400}
+  .chip b{color:var(--gold-ink);font-weight:400}
 
   section{padding:46px 0;border-top:1px solid var(--line-soft)}
   .shead{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:22px;flex-wrap:wrap}
@@ -55,8 +40,8 @@
   .vsample{font-family:"G Variabel";font-variation-settings:"wght" 440;font-size:clamp(36px,8vw,88px);line-height:1.1;outline:none;word-break:break-word}
   .controls{display:flex;align-items:center;gap:18px;margin-top:20px;flex-wrap:wrap}
   input[type=range]{-webkit-appearance:none;appearance:none;flex:1;min-width:200px;height:2px;background:var(--line);border-radius:2px}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18)}
-  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid #fff}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid var(--paper);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid var(--paper)}
   .readout{font-size:13.5px;color:var(--muted);min-width:160px;text-align:right}
   .readout b{color:var(--ink);font-weight:400}
 
@@ -70,10 +55,10 @@
   .leise{font-family:"G Leise"} .klar{font-family:"G Klar"} .deutlich{font-family:"G Deutlich"} .laut{font-family:"G Laut"}
   .fluestern{font-family:"G Variabel";font-variation-settings:"wght" 190} .schreien{font-family:"G Variabel";font-variation-settings:"wght" 725}
   .cut.var{background:linear-gradient(0deg,rgba(215,171,104,.05),transparent)}
-  .cut .vtag{font-size:10px;color:var(--gold-deep);border:1px solid var(--gold);border-radius:6px;padding:2px 6px}
+  .cut .vtag{font-size:10px;color:var(--gold-ink);border:1px solid var(--gold);border-radius:6px;padding:2px 6px}
   .office{display:flex;align-items:center;gap:14px;margin-top:24px;padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:var(--soft);font-size:14px;color:var(--muted)}
   .office>span{flex:1}.office b{color:var(--ink);font-weight:400}
-  .office::before{content:"⌘B ⌘I";font-size:13px;color:var(--gold-deep);border:1px solid var(--gold);border-radius:7px;padding:4px 8px;white-space:nowrap}
+  .office::before{content:"⌘B ⌘I";font-size:13px;color:var(--gold-ink);border:1px solid var(--gold);border-radius:7px;padding:4px 8px;white-space:nowrap}
 
   .glyph{font-size:clamp(19px,2.8vw,26px);line-height:1.7;color:var(--ink)}
   .new{display:inline-flex;gap:5px;flex-wrap:wrap;margin-top:14px}
@@ -81,15 +66,15 @@
 
   .tabs{display:flex;gap:8px;margin-bottom:18px}
   .tabs button{font:inherit;font-size:13px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
-  .tabs button.on{color:var(--gold-deep);border-color:var(--gold)}
+  .tabs button.on{color:var(--gold-ink);border-color:var(--gold)}
   .igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(116px,1fr));gap:10px}
   .icell{position:relative;border:1px solid var(--line-soft);border-radius:12px;padding:14px 8px 10px;background:var(--soft);text-align:center;transition:border-color .15s,background .15s}
-  .icell:hover{border-color:var(--gold);background:#fff}
+  .icell:hover{border-color:var(--gold);background:var(--paper)}
   .icell img.gl{width:44px;height:44px;display:block;margin:2px auto 0;object-fit:contain}
   .icell .nm{font-size:11.5px;color:var(--ink);margin-top:10px;line-height:1.25;min-height:1.25em}
   .icell .dl{display:flex;gap:7px;justify-content:center;margin-top:8px;opacity:0;transition:opacity .15s}
   .icell:hover .dl{opacity:1}
-  .icell .dl a{font-size:10px;color:var(--gold-deep);text-decoration:none;letter-spacing:.02em}
+  .icell .dl a{font-size:10px;color:var(--gold-ink);text-decoration:none;letter-spacing:.02em}
   .icell .dl a:hover{text-decoration:underline}
   @media(hover:none){.icell .dl{opacity:1}}
 
@@ -99,9 +84,10 @@
   .card{border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px}
   .card h3{font-weight:400;font-size:16px}.card p{color:var(--muted);font-size:13px;flex:1}
   .btn{display:inline-block;text-decoration:none;font-size:13px;padding:8px 14px;border-radius:9px;border:1px solid var(--line);color:var(--ink);text-align:center}
-  .btn:hover{border-color:var(--gold-deep)}
-  .btn.primary{background:var(--gold);border-color:var(--gold);color:#3a2d10}
-  .btn.primary:hover{background:#c59f56}
+  .btn:hover{border-color:var(--gold-ink)}
+  /* Aktion = volles Blau + Weiss (kein dunkler Text auf Farbe, B01). */
+  .btn.primary{background:var(--blue-solid);border-color:var(--blue-solid);color:var(--on-accent);font-weight:var(--w-strong)}
+  .btn.primary:hover{filter:brightness(1.08)}
 
   .webgrid{display:grid;grid-template-columns:1fr;gap:18px;align-items:start}
   @media(min-width:820px){.webgrid{grid-template-columns:1.6fr 1fr}}
@@ -110,10 +96,10 @@
   .copybtn{position:absolute;top:11px;right:11px;font:inherit;font-size:11.5px;border:1px solid #3a4148;background:#2b3137;color:#e8eef2;border-radius:8px;padding:5px 10px;cursor:pointer}
   .copybtn:hover{background:#343b42}
   .webaside{font-size:14.5px;line-height:1.6}
-  .feat{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:#fff;overflow:hidden}
+  .feat{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--paper);overflow:hidden}
   .feat summary{list-style:none;cursor:pointer;padding:15px 18px;font-size:15.5px;display:flex;justify-content:space-between;align-items:center;gap:14px}
   .feat summary::-webkit-details-marker{display:none}
-  .feat summary span{font-size:12px;color:var(--gold-deep);font-family:ui-monospace,Menlo,monospace}
+  .feat summary span{font-size:12px;color:var(--gold-ink);font-family:ui-monospace,Menlo,monospace}
   .feat summary::after{content:"+";color:var(--muted);font-size:18px;line-height:1}
   .feat[open] summary::after{content:"–"}
   .feat[open] summary{border-bottom:1px solid var(--line-soft)}
@@ -123,7 +109,7 @@
   .glyphover{margin-top:22px;border:1px solid var(--line);border-radius:12px;padding:18px;background:var(--soft)}
   .goh{font-size:13px;color:var(--muted);margin-bottom:12px}
   .gohrow{display:flex;flex-wrap:wrap;gap:8px}
-  .gohrow span{min-width:52px;height:52px;border:1px solid var(--line);border-radius:9px;background:#fff;
+  .gohrow span{min-width:52px;height:52px;border:1px solid var(--line);border-radius:9px;background:var(--paper);
     display:inline-flex;align-items:center;justify-content:center;font-size:26px}
   .gohnote{font-size:12.5px;color:var(--muted);margin-top:12px;max-width:64ch}
   footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--muted);font-size:12.5px}
@@ -296,7 +282,7 @@ body{ font-family:"Goetheanum", system-ui, sans-serif; }
     </div>
     <p style="margin-top:18px;font-size:13px;color:var(--muted)">
       <b style="color:var(--ink);font-weight:400">Installieren (macOS):</b> ZIP entpacken → Doppelklick auf eine <code>.otf</code> → ‹Installieren›.
-      Ausführliche Schritt-für-Schritt-Anleitung: <a style="color:var(--gold-deep)" href="https://support.apple.com/de-de/guide/font-book/fntbk1000/mac">Apple Schriftsammlung</a>.
+      Ausführliche Schritt-für-Schritt-Anleitung: <a style="color:var(--gold-ink)" href="https://support.apple.com/de-de/guide/font-book/fntbk1000/mac">Apple Schriftsammlung</a>.
       Fürs Office reichen Leise, Klar, Deutlich, Laut – ⌘B holt Laut, ⌘I holt Leise.
     </p>
   </div></section>

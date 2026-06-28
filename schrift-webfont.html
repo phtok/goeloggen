@@ -4,41 +4,35 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Goetheanum Schrift — als Webfont einbinden</title>
 <link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
 <style>
-/* === Goetheanum Variable Font einbinden === */
-@font-face{
-  font-family:"Goetheanum";
-  src:url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.5.woff2") format("woff2"),
-      url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.5.woff") format("woff");
-  font-weight:190 725;font-style:normal;font-display:swap;
-}
-:root{--bg:#faf8f4;--ink:#23272b;--mut:#737a80;--line:rgba(20,24,28,.12)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+/* Schrift-Webfont: nur Seiten-Layout. Farben/Schrift/Hell-Dunkel kommen aus den
+   Tokens (tokens.css) und Grund-Komponenten (base.css). Keine eigenen Farbwerte. */
 .wrap{max-width:980px;margin:0 auto;padding:30px 22px 80px}
-h1{font-size:24px;margin:0 0 4px}
-h2{font-size:17px;margin:36px 0 12px;border-top:1px solid var(--line);padding-top:22px}
-.lead{color:var(--mut);font-size:15px;margin:4px 0 6px}
-.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:0 0 14px}
-.goe{font-family:"Goetheanum",system-ui,sans-serif;color:var(--ink)}
+h1{font-size:var(--t-h1);margin:0 0 4px}
+h2{font-size:var(--t-h3);margin:var(--s8) 0 var(--s3);border-top:1px solid var(--line);padding-top:22px}
+.lead{color:var(--muted);font-size:var(--t-body);margin:4px 0 6px;max-width:62ch}
+.card{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);padding:22px 24px;margin:0 0 14px}
+.goe{font-family:var(--font-display);color:var(--ink)}
 .big{font-size:58px;line-height:1.2;margin:0}
 .row{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:baseline;margin:0}
-.row .s{font-family:"Goetheanum";font-size:40px;line-height:1.5}
-.tag{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,monospace}
+.row .s{font-family:var(--font-display);font-size:40px;line-height:1.5}
+.tag{font-size:12px;color:var(--muted);font-family:var(--font-mono)}
 .ctl{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:10px}
 .ctl input[type=range]{flex:1;min-width:220px}
 .ctl b{font-variant-numeric:tabular-nums}
-pre{position:relative;background:#1f2428;color:#e8eef2;border-radius:12px;padding:16px 16px;overflow:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;margin:0}
+/* Code-Block bewusst dunkel in beiden Themes (eigenständige Fläche). */
+pre{position:relative;background:#1f2428;color:#e8eef2;border-radius:var(--r-card);padding:16px;overflow:auto;font:13px/1.5 var(--font-mono);margin:0}
 pre .k{color:#9ecbff}pre .s{color:#c3e88d}pre .c{color:#7f868d}
 .copy{position:absolute;top:10px;right:10px;font:inherit;font-size:12px;border:1px solid #3a4148;background:#2b3137;color:#e8eef2;border-radius:8px;padding:5px 10px;cursor:pointer}
 .copy:hover{background:#343b42}
-.note{color:var(--mut);font-size:14px;margin:10px 0 0}
-.note code,p code{background:#eee7da;border-radius:5px;padding:1px 6px;font:12.5px ui-monospace,Menlo,monospace}
+.note{color:var(--muted);font-size:var(--t-small);margin:10px 0 0}
+.note code,p code{background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font:12.5px var(--font-mono)}
 .two{display:grid;grid-template-columns:1fr;gap:14px}
 @media(min-width:760px){.two{grid-template-columns:1fr 1fr}}
 .swatch{display:flex;flex-direction:column;gap:4px}
-.swatch .s{font-family:"Goetheanum";font-size:34px}
+.swatch .s{font-family:var(--font-display);font-size:34px}
 </style></head>
 <body>
 <script src="design-system/nav.js" data-root="./" data-section="schrift" data-active="schrift-webfont"></script>
