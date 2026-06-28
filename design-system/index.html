@@ -44,12 +44,12 @@
   .cut .nm b{color:var(--ink);font-weight:var(--w-strong)}
   .cut .samp{font-size:clamp(22px,3.4vw,30px);line-height:1.1}
   .cut .ds{grid-column:1/-1;color:var(--muted);font-size:13px;max-width:64ch}
-  .cut .grafik{color:var(--gold-deep)}
+  .cut .grafik{color:var(--gold-ink)}
 
   /* Regeln */
   .rules{display:grid;gap:0}
   .rule{display:grid;grid-template-columns:54px 1fr;gap:var(--s4);padding:var(--s3) 0;border-top:1px solid var(--line-soft)}
-  .rule .id{font-weight:var(--w-strong);color:var(--gold-deep);font-variant-numeric:tabular-nums}
+  .rule .id{font-weight:var(--w-strong);color:var(--gold-ink);font-variant-numeric:tabular-nums}
   .rule .tx{color:#3d4348;font-size:14px;line-height:1.5;max-width:72ch}
   .rule.card-rule .id{color:var(--blue)}
 
@@ -69,12 +69,12 @@
   .status{display:grid;gap:8px}
   .status li{list-style:none;display:flex;gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid var(--line-soft);font-size:14px}
   .status .mk-ok{color:#3f7d46;font-weight:var(--w-strong)}
-  .status .mk-open{color:var(--gold-deep);font-weight:var(--w-strong)}
+  .status .mk-open{color:var(--gold-ink);font-weight:var(--w-strong)}
 
   /* Bau-Workflow */
   .steps{counter-reset:s;display:grid;gap:var(--s3)}
   .steps li{list-style:none;display:grid;grid-template-columns:38px 1fr;gap:var(--s4);align-items:start}
-  .steps li::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:var(--r-pill);background:var(--gold);color:#3a2d10;font-weight:var(--w-strong)}
+  .steps li::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:var(--r-pill);background:var(--gold-deep);color:var(--on-accent);font-weight:var(--w-strong)}
   .steps b{font-weight:var(--w-strong)}
   .steps .d{color:var(--muted);font-size:14px;line-height:1.5}
 
