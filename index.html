@@ -37,6 +37,19 @@
   .tile p{color:var(--muted);font-size:14.5px;line-height:1.55}
   .badge{position:absolute;top:var(--s4);right:var(--s4);font-size:11px;letter-spacing:.03em;
     color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:2px 10px}
+
+  /* Mini-Visual je Karte – ein ruhiges Erkennungszeichen, kein Schmuck. */
+  .tile .thumb{height:80px;display:grid;place-items:center;border-radius:10px;background:var(--paper);
+    border:1px solid var(--line-soft);margin-bottom:var(--s1);overflow:hidden}
+  .tile .thumb img{height:40px;width:auto;display:block}
+  .tile .spec{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:40px;line-height:1;color:var(--ink);letter-spacing:.02em}
+  .tile .spec.gold{color:var(--gold-ink)}
+  .tile .spec.mono{font-family:var(--font-mono);font-size:26px;font-weight:400;color:var(--muted)}
+  .tile .vk{width:52px;height:33px;border:1.6px solid var(--muted);border-radius:4px;display:grid;align-content:center;gap:5px;padding:7px}
+  .tile .vk i{display:block;height:2px;background:var(--muted);border-radius:2px}
+  .tile .vk i:nth-child(1){width:64%}.tile .vk i:nth-child(2){width:42%}
+  .tile .dots{display:flex;gap:9px}
+  .tile .dots i{width:17px;height:17px;border-radius:50%;display:block}
 </style>
 </head>
 <body>
@@ -72,6 +85,22 @@
   ];
   var STATUS_LABEL = { beta:"in Überarbeitung" };
 
+  // Erkennungszeichen je Werkzeug: Marke fürs Logo, Schrift-Probe für die Schrift-
+  // Welt, Karten-Form für Visitenkarten, Farbpunkte fürs Design-System.
+  var VISUAL = {
+    "logo-generator":  '<img src="assets/logos/goetheanum-mark-blue.svg" alt="">',
+    "visitenkarten":   '<span class="vk"><i></i><i></i></span>',
+    "signatur":        '<span class="spec">@</span>',
+    "schriften":       '<span class="spec">Ag</span>',
+    "schrift-webfont": '<span class="spec mono">&lt;/&gt;</span>',
+    "typografie":      '<span class="spec gold">‹ ›</span>',
+    "design-system":   '<span class="dots"><i style="background:var(--blue)"></i><i style="background:var(--gold-deep)"></i><i style="background:var(--ink)"></i></span>'
+  };
+  function visual(t){
+    var v = VISUAL[t.slug] || ('<span class="spec">' + (t.title || "?").slice(0, 1) + '</span>');
+    return '<span class="thumb">' + v + '</span>';
+  }
+
   function isExt(h){ return /^https?:/.test(h); }
   function tile(t){
     var a = document.createElement("a");
@@ -79,7 +108,7 @@
     a.href = t.href;
     if (isExt(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
     var badge = STATUS_LABEL[t.status] ? '<span class="badge">' + STATUS_LABEL[t.status] + '</span>' : "";
-    a.innerHTML = badge +
+    a.innerHTML = badge + visual(t) +
       '<span class="tag">' + (t.tag || "") + '</span>' +
       '<h3>' + t.title + ' <span class="arr">›</span></h3>' +
       '<p>' + (t.desc || "") + '</p>';

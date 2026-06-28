@@ -507,8 +507,10 @@
     $("dl").addEventListener("click", function(){
       if (isMedia()){
         var a = document.createElement("a"); a.href = mediaFile(sel.fmt); a.download = fileBase() + "." + sel.fmt;
-        document.body.appendChild(a); a.click(); a.remove(); return;
+        document.body.appendChild(a); a.click(); a.remove();   // nav.js zählt den a[download]-Klick mit
+        return;
       }
+      if (window.goeStat) window.goeStat("download", sel.fmt);   // Engine-Download selbst melden
       LogoExport[sel.fmt](currentSVG(), fileBase());
     });
     var pb = $("pdfSheet"); if (pb) pb.addEventListener("click", function(){ window.print(); });
