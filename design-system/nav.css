@@ -1,0 +1,97 @@
+/* =============================================================================
+   Goetheanum CI – ds-nav: globale Kopfzeile + klappbares Schubladen-Menü
+   -----------------------------------------------------------------------------
+   Eine Navigation für alle Seiten, gespeist aus tools.json. Setzt tokens.css
+   und base.css voraus. Markup erzeugt nav.js; hier nur das Aussehen.
+   Akkordeon = native <details>/<summary> (klappbar, zugänglich, ohne Skript).
+   ============================================================================= */
+
+/* Die globale Navigation trägt immer die Hausschrift – unabhängig von der
+   Body-Schrift der Gastseite (sonst erbt sie z. B. Helvetica). */
+.dsnav,.dsnav-sub,.dsnav-drawer,.dsnav-onpage{font-family:var(--font)}
+
+/* Scrollbalken-Platz immer reservieren: sonst springt die zentrierte Navigation
+   zwischen kurzen und langen Seiten um die Balkenbreite nach rechts. */
+html{scrollbar-gutter:stable}
+
+.dsnav{position:sticky;top:0;z-index:40;background:var(--bar-bg);
+  backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
+.dsnav .bar{display:flex;align-items:center;gap:var(--s4);height:var(--header-h);
+  max-width:var(--ds-maxw);margin:0 auto;padding:0 26px}
+
+/* Wortmarke = das echte Goetheanum-Lockup (aus dem Logo-Generator), immer zurück zur Übersicht */
+.dsnav .brand{display:flex;align-items:center;gap:var(--s3);text-decoration:none;flex:0 0 auto}
+.dsnav .brand .lockup{height:38px;width:auto;display:block}
+.dsnav .brand .mk{width:24px;height:24px;border-radius:6px;display:block}
+.dsnav .brand .wm{font-family:var(--font);font-weight:var(--w-text);font-size:24px;line-height:1;color:#8a9097;letter-spacing:.005em}
+
+/* „← Übersicht" – nur in der Generator-Variante sichtbar */
+.dsnav .back{display:none;align-items:center;gap:6px;color:var(--muted);font-size:13.5px;text-decoration:none}
+.dsnav.is-werkzeug .back{display:inline-flex}
+.dsnav .back:hover{color:var(--gold-ink)}
+
+/* Primär-Welten – die vier Schnellzugriffe sollen klar lesbar sein, nicht verblassen:
+   Lese-Ink statt Grau, etwas grösser, mehr Luft. */
+.dsnav .worlds{display:flex;gap:26px;margin-left:auto}
+.dsnav .worlds a,.dsnav .worlds button{font:inherit;font-size:15px;color:var(--ink);
+  background:none;border:0;cursor:pointer;padding:0;text-decoration:none}
+.dsnav .worlds a:hover,.dsnav .worlds button:hover{color:var(--gold-ink)}
+
+/* ☾/☀ Hell-Dunkel – nur das Icon */
+.dsnav .theme{margin-left:18px;display:inline-flex;align-items:center;justify-content:center;font:inherit;
+  color:var(--ink);background:none;border:0;padding:6px;cursor:pointer;line-height:1}
+.dsnav .theme .ic{font-size:18px;line-height:1}
+.dsnav .theme:hover{color:var(--gold-ink)}
+
+/* ☰ Burger – nur das Icon, keine Pille, kein Wort */
+.dsnav .all{margin-left:10px;display:inline-flex;align-items:center;gap:6px;font:inherit;
+  color:var(--ink);background:none;border:0;padding:4px;cursor:pointer;line-height:1}
+.dsnav .all .ic{font-size:23px;line-height:1}
+.dsnav .all:hover{color:var(--gold-ink)}
+.dsnav .all .idot{width:7px;height:7px;border-radius:var(--r-pill);background:var(--gold)}
+
+@media(max-width:720px){
+  .dsnav .worlds{display:none}
+  .dsnav .theme{margin-left:auto}
+}
+
+/* --- Schublade ------------------------------------------------------------- */
+.dsnav-backdrop{position:fixed;inset:0;background:rgba(20,24,28,.32);opacity:0;visibility:hidden;
+  transition:opacity .18s,visibility .18s;z-index:45}
+.dsnav-backdrop.open{opacity:1;visibility:visible}
+
+.dsnav-drawer{position:fixed;top:0;right:0;z-index:46;width:min(420px,100%);height:100vh;
+  background:var(--paper);border-left:1px solid var(--line);box-shadow:var(--shadow-card);
+  transform:translateX(100%);transition:transform .22s ease;display:flex;flex-direction:column}
+.dsnav-drawer.open{transform:none}
+
+.dsnav-drawer .dhead{display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;height:var(--header-h);border-bottom:1px solid var(--line);flex:0 0 auto}
+.dsnav-drawer .dhead .t{font-weight:var(--w-strong);font-size:15px}
+.dsnav-drawer .close{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+.dsnav-drawer .close:hover{color:var(--ink)}
+
+.dsnav-drawer .body{overflow:auto;padding:var(--s2) 0 var(--s8)}
+
+/* Toast für den unsichtbaren Intern-Schalter */
+.dsnav-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);
+  padding:8px 16px;border-radius:var(--r-pill);font-size:13px;opacity:0;visibility:hidden;
+  transition:opacity .2s,visibility .2s;z-index:60}
+.dsnav-toast.show{opacity:1;visibility:visible}
+
+.dsnav-group{border-bottom:1px solid var(--line-soft)}
+.dsnav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+  padding:var(--s4) 22px;font-weight:var(--w-strong);font-size:16px}
+.dsnav-group>summary::-webkit-details-marker{display:none}
+.dsnav-group>summary .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s}
+.dsnav-group[open]>summary .arr{transform:rotate(90deg)}
+
+.dsnav-link{display:flex;align-items:center;gap:10px;min-height:var(--tap);padding:6px 22px;text-decoration:none;color:var(--ink)}
+.dsnav-link:hover{background:var(--soft)}
+.dsnav-link .tt{font-size:17px}
+/* Aktuelle Seite im Menü hervorheben – ruhig, mit Gold-Kante. */
+.dsnav-link.is-active{background:var(--soft);box-shadow:inset 3px 0 0 var(--gold-deep)}
+.dsnav-link.is-active .tt{color:var(--gold-ink);font-weight:var(--w-strong)}
+
+.dsnav-drawer .foot{padding:var(--s4) 22px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;flex:0 0 auto}
+.dsnav-drawer .foot a{color:var(--gold-ink);text-decoration:none}

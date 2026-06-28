@@ -1,50 +1,115 @@
 /* =============================================================================
    Goetheanum CI – Design-Tokens (eine Quelle der Wahrheit)
    -----------------------------------------------------------------------------
-   Farben, Typo, Abstaende, Radien und die Hausschrift als Webfont. Jedes Tool
-   bindet diese Datei ein und ist allein durch Wiederverwendung im Hausbild.
-   Extrahiert aus dem reifsten Tool (Signatur-Generator) und vereinheitlicht.
+   Farben, Typo, Maße, Radien, beide Schriften, Hell/Dunkel. Jedes Tool bindet
+   diese Datei ein und ist allein durch Wiederverwendung im Hausbild.
 
-   Maschinenlesbare Fassung derselben Werte: design-system/tokens.json (DTCG).
+   Schrift-Grundsatz (robust, mobil-first):
+   • Goetheanum = DISPLAY: Titel, Kicker, Navigation, Knöpfe – kurze, starke Texte.
+   • Source Sans 3 = LESETEXT: Fliesstext, Beschreibungen, Tabellen, kleine Grade,
+     Formularfelder. Die Display-Grotesk wird bei kleinen/langen Texten unleserlich
+     (dünne, kontrastreiche Striche brechen weg) – darum übernimmt eine echte
+     Textschrift alles, was gelesen statt geschaut wird.
+
+   Maschinenlesbare Fassung: design-system/tokens.json (DTCG). Kanon der Typo-
+   Regeln & Farben: assets/typografie/goetheanum-typo-tokens.json (Driftwächter:
+   tools/typo-sync.py).
    ============================================================================= */
 
-/* Hausschrift – Variable Font, gehostet auf GitHub Pages (vgl. schriften.html#web) */
+/* --- Hausschrift: Goetheanum Variable (Display) ---------------------------- */
 @font-face{
   font-family:"Goetheanum";
-  src:url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.6.woff2") format("woff2"),
-      url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.6.woff") format("woff");
+  src:url("../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.6.woff2") format("woff2"),
+      url("../assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.6.woff") format("woff");
   font-weight:190 725; font-style:normal; font-display:swap;
+}
+/* --- Lesetext: Source Sans 3 (selbst gehostet, OFL) ------------------------ */
+@font-face{
+  font-family:"Source Sans 3"; font-weight:400; font-style:normal; font-display:swap;
+  src:url("../assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Source Sans 3"; font-weight:600; font-style:normal; font-display:swap;
+  src:url("../assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Source Sans 3"; font-weight:400; font-style:italic; font-display:swap;
+  src:url("../assets/fonts/goetheanum/Fallback/SourceSans3-Italic.woff2") format("woff2");
 }
 
 :root{
   /* --- Markenfarben ------------------------------------------------------- */
-  --blue:#0061a9;        /* Markenblau – Zustand/Verweis (Quelle: goetheanum-orgs) */
+  --blue:#0061a9;        /* Markenblau – Zustand/Verweis/Link (hellt im Dunkel auf) */
+  --blue-solid:#0061a9;  /* Volles Blau für gefüllte Aktion-Knöpfe – immer Weiss drauf (6.4:1) */
   --gold:#d7ab68;        /* Gold – Inhalts-Akzent */
-  --gold-deep:#a07a33;   /* Gold dunkel – Hover/Links auf hell */
+  --gold-deep:#94702e;   /* Gold dunkel – Auswahl-Fläche, Weiss drauf (4.55:1, WCAG AA) */
+  --gold-ink:#94702e;    /* Gold als TEXT (Kicker, Links) – hellt im Dunkel auf */
 
   /* --- Neutrale Töne ------------------------------------------------------ */
-  --ink:#23272b;         /* Text */
-  --muted:#737a80;       /* Sekundärtext */
+  --ink:#23272b;         /* Lesetext */
+  --muted:#6b7177;       /* Sekundärtext – jetzt 4.9:1 auf Papier (WCAG AA) */
   --paper:#fff;          /* Grund */
   --soft:#faf8f4;        /* gedämpfte Fläche (Karten) */
+  --field-bg:#fff;       /* Eingabefelder, Knöpfe, Pillen */
+  --bar-bg:rgba(255,255,255,.9);  /* klebende Leisten (Kopf, Schublade) */
   --line:rgba(20,24,28,.10);
   --line-soft:rgba(20,24,28,.055);
   --bad:#b3261e;         /* Fehler/Warnung */
+  --on-accent:#fff;      /* Text auf Blau/Gold-Flächen */
 
-  /* --- Typografie --------------------------------------------------------- */
-  --font:"Goetheanum","Helvetica Neue",Arial,sans-serif;
+  /* --- Schrift-Familien --------------------------------------------------- */
+  --font-display:"Goetheanum","Helvetica Neue",Arial,sans-serif; /* Titel, Chrome */
+  --font-text:"Source Sans 3","Helvetica Neue",Arial,sans-serif; /* Lesetext, klein/lang */
+  --font:var(--font-display);  /* Standard = Hausschrift (die Stimme bleibt Goetheanum). Source NUR für Langtext via .prose */
   --font-system:"Helvetica Neue",Arial,sans-serif;
   --font-mono:ui-monospace,Menlo,Consolas,monospace;
-  --w-text:440;          /* Fliesstext */
-  --w-strong:680;        /* Titel/Hervorhebung */
 
-  /* --- Abstands-Skala (4/8/12/16/24/32) ---------------------------------- */
+  /* --- Schnitte (Goetheanum Variable) ------------------------------------- */
+  --w-leise:265; --w-text:440; --w-deutlich:580; --w-strong:680;
+
+  /* --- Typo-Skala (mobil-first, flüssig, nie zu klein) -------------------- */
+  /* Grund in rem → respektiert die Browser-Schriftgröße der Nutzer (Zugänglichkeit). */
+  --t-micro:0.8125rem;                                   /* 13px – nur Beiwerk (Status, Badges) */
+  --t-small:clamp(0.875rem, 0.84rem + 0.18vw, 0.9375rem);/* 14–15px – Meta, Legenden */
+  --t-body:clamp(1.0625rem, 1.01rem + 0.28vw, 1.1875rem);/* 17–19px – Fliesstext */
+  --t-lede:clamp(1.1875rem, 1.08rem + 0.5vw, 1.375rem);  /* 19–22px – Lede */
+  --t-h3:clamp(1.1875rem, 1.08rem + 0.5vw, 1.375rem);    /* 19–22px */
+  --t-h2:clamp(1.375rem, 1.22rem + 0.8vw, 1.7rem);       /* 22–27px – maßvoll */
+  --t-h1:clamp(1.75rem, 1.45rem + 1.5vw, 2.4rem);        /* 28–38px – kein Plakat */
+  --lh-body:1.6; --lh-tight:1.15;
+  --measure:62ch;        /* ~66 Zeichen in Source – lineares Lesemaß (G10) */
+
+  /* --- Abstände (4/8/12/16/24/32) ---------------------------------------- */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s6:24px; --s8:32px;
 
-  /* --- Radien & Maße ----------------------------------------------------- */
+  /* --- Radien, Maße, Fingerziel ------------------------------------------ */
   --r-control:10px; --r-card:14px; --r-pill:999px;
-  --header-h:58px; --maxw:1080px;
+  --header-h:74px; --maxw:1080px; --ds-maxw:1080px;
+  --tap:44px;            /* Mindest-Fingerziel (Apple 44, Material 48, WCAG 24) */
 
   /* --- Schatten ---------------------------------------------------------- */
   --shadow-card:0 10px 30px rgba(20,24,28,.06);
+
+  color-scheme:light;
+}
+
+/* =============================================================================
+   Dunkelmodus – per Schalter (data-theme) gesetzt; Voreinstellung folgt dem
+   System (nav.js setzt data-theme aus localStorage oder prefers-color-scheme).
+   Forschung: kein reines Schwarz/Weiss, Akzente entsättigen, Gewicht senken
+   (heller Text auf dunklem Grund „blutet"/wirkt fetter).
+   ============================================================================= */
+:root[data-theme="dark"]{
+  --blue:#5aa6e0; --gold:#dfb87a;
+  /* Gesetz: NIE dunkle Schrift auf farbigem Grund. Gold-Pille bleibt dunkles Gold
+     mit weissem Text (4.55:1); Gold als TEXT hellt auf (gold-ink, 6.9:1 auf Dunkel). */
+  --gold-deep:#94702e; --gold-ink:#c79a4f;
+  --ink:#e6e8ea; --muted:#9aa1a8;
+  --paper:#16191c; --soft:#1e2329; --field-bg:#1e2329;
+  --bar-bg:rgba(20,23,26,.85);
+  --line:rgba(255,255,255,.14); --line-soft:rgba(255,255,255,.07);
+  --bad:#e0675e;        /* on-accent bleibt Weiss – kein dunkler Text auf Akzentflächen */
+  --w-deutlich:540; --w-strong:620;     /* weniger Bleeding auf Dunkel */
+  --shadow-card:0 10px 30px rgba(0,0,0,.45);
+  color-scheme:dark;
 }

@@ -4,70 +4,155 @@
    Gemeinsame Grundlage für alle Werkzeuge: Grundlayout, Kopf-/Fusszeile,
    Abschnitte, Karten, Knöpfe, Formularfelder. Setzt design-system/tokens.css
    voraus (zuerst einbinden). Werkzeug-spezifisches gehört in die jeweilige Seite.
+
+   Schrift-Rollen (robust, mobil-first):
+   • Lesetext (Source Sans 3) trägt Fliesstext, Beschreibungen, Tabellen, Felder.
+   • Display (Goetheanum) trägt Titel, Kicker – das, was geschaut statt gelesen wird.
+   Hell/Dunkel kommt allein aus den Tokens (var(--paper)/--ink/… kippen mit dem Theme).
    ============================================================================= */
 
 *{box-sizing:border-box;margin:0;padding:0}
 
 body{
   background:var(--paper); color:var(--ink);
-  font-family:var(--font); font-weight:var(--w-text); line-height:1.5;
+  font-family:var(--font); font-weight:var(--w-text);
+  font-size:var(--t-body); line-height:var(--lh-body);
   font-kerning:normal; text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased;
 }
+/* Langtext (Fliesstext über mehrere Absätze) bekommt die Lese-Grotesk – dort,
+   wo die Display-Schrift bei Menge und Kleingrad ermüdet. Bewusst opt-in, damit
+   die Hausschrift überall sonst die Stimme bleibt. */
+.prose{font-family:var(--font-text);max-width:min(var(--measure),100%)}
+.prose p{margin-bottom:.7em}
 a{color:inherit;text-decoration:none}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
 
+/* Display-Schrift trägt die Titel. */
+h1,h2,h3,.h-display{font-family:var(--font-display);font-weight:var(--w-deutlich);line-height:var(--lh-tight)}
+
 /* Zugänglichkeit: Zustand = Blau */
-a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* --- Kopfzeile -------------------------------------------------------------- */
-.ds-header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
+.ds-header{position:sticky;top:0;z-index:30;background:var(--bar-bg);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
 .ds-header .bar{display:flex;align-items:center;justify-content:space-between;height:var(--header-h)}
 .brand{display:flex;align-items:center;gap:var(--s3)}
 .brand .mk{width:24px;height:24px;border-radius:6px;display:block}
-.brand .wm{font-family:var(--font);font-weight:var(--w-text);font-size:27px;line-height:1;color:#8a9097;letter-spacing:.005em}
+.brand .wm{font-family:var(--font-display);font-weight:var(--w-text);font-size:27px;line-height:1;color:var(--muted);letter-spacing:.005em}
 nav.top{display:flex;gap:22px}
-nav.top a{color:var(--muted);font-size:13.5px}
-nav.top a:hover{color:var(--gold-deep)}
+nav.top a{color:var(--muted);font-size:var(--t-small)}
+nav.top a:hover{color:var(--gold-ink)}
 @media(max-width:720px){nav.top{display:none}}
 
 /* --- Abschnitte ------------------------------------------------------------ */
 section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .shead{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s8);margin-bottom:var(--s6);flex-wrap:wrap}
-.shead h2{font-family:var(--font);font-weight:var(--w-strong);font-size:clamp(22px,3vw,30px);line-height:1.05;flex:0 0 auto}
-.shead p{color:var(--muted);font-size:14px;line-height:1.5;max-width:54ch;flex:1 1 320px}
+.shead h2{font-size:var(--t-h2);flex:0 0 auto}
+.shead p{color:var(--muted);font-size:var(--t-small);line-height:1.5;max-width:54ch;flex:1 1 320px}
 
 /* --- Karte ----------------------------------------------------------------- */
 .card{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);background:var(--paper)}
 .card.soft{background:var(--soft)}
 
 /* --- Chips ----------------------------------------------------------------- */
-.chip{font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:6px 14px}
+.chip{font-size:var(--t-small);color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:6px 14px}
 .chip b{color:var(--ink);font-weight:var(--w-strong)}
 
-/* --- Knöpfe ---------------------------------------------------------------- */
-.btn{display:inline-block;font:inherit;font-size:13.5px;padding:9px 15px;border-radius:var(--r-control);border:1px solid var(--line);color:var(--ink);background:#fff;text-align:center;cursor:pointer;transition:.15s}
-.btn:hover{border-color:var(--gold-deep)}
-.btn.primary{background:var(--gold);border-color:var(--gold);color:#3a2d10}
-.btn.primary:hover{background:#c59f56}
-.btn.ghost{color:var(--muted)}
-.btn.ok{background:#3f7d46;border-color:#3f7d46;color:#fff}
+/* --- Knöpfe = AKTION -------------------------------------------------------- */
+/* Aktion = Blau (Zustand/Tun); die primäre Aktion ist gefüllt. Klar getrennt von
+   der Auswahl-Pille (Gold). Mind. Fingerziel auf Touch. */
+.btn{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-size:15px;line-height:1.2;
+  padding:10px 16px;border-radius:var(--r-control);border:1px solid var(--line);color:var(--ink);
+  background:var(--field-bg);text-align:center;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--blue)}
+.btn.primary{background:var(--blue-solid);border-color:var(--blue-solid);color:var(--on-accent);font-weight:var(--w-strong)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{color:var(--muted);background:none}
+.btn.ok{background:#3f7d46;border-color:#3f7d46;color:var(--on-accent)}
+
+/* --- Segmentierte Auswahl (Pillen) = WAHL ---------------------------------- */
+/* Anwahl = Gold/Weiss – der Hausfarbklang für Auswahl. Kapselform, kein Pfeil. */
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{font:inherit;font-size:14.5px;padding:8px 15px;border:1px solid var(--line);border-radius:var(--r-pill);
+  background:var(--field-bg);color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.seg button:hover{border-color:var(--gold-ink)}
+.seg button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent);font-weight:var(--w-strong)}
+
+/* Bequeme Fingerziele auf dem Handy (Apple 44 / Material 48 / WCAG 24). */
+@media(max-width:560px){
+  .seg button,.btn{min-height:var(--tap)}
+}
 
 /* --- Formularfelder -------------------------------------------------------- */
+/* 16px+ verhindert das automatische Zoomen beim Fokus auf iOS. Lesetext-Schrift. */
 .field{display:grid;gap:var(--s1)}
-.field>.lab{font-size:13px;color:var(--muted);letter-spacing:.01em}
+.field>.lab{font-size:var(--t-small);color:var(--muted);letter-spacing:.01em}
 .field input,.field textarea,.field select{
-  width:100%;font-family:var(--font-system);font-size:14.5px;font-weight:400;line-height:1.35;color:var(--ink);
-  background:#fff;border:1px solid var(--line);border-radius:var(--r-control);padding:8px 11px;outline:none;
+  width:100%;font-family:var(--font);font-size:16px;font-weight:var(--w-text);line-height:1.25;color:var(--ink);
+  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 12px;outline:none;
   transition:border-color .15s,box-shadow .15s;
 }
+/* Aufklappliste in der Hausschrift, wo der Browser es zulässt (Firefox). */
+.field select option{font-family:var(--font);font-size:16px}
+
+/* Gestaltbare Klappliste (ds-select.js) – Hausschrift AUCH geöffnet (Desktop). */
+.ds-select{position:relative}
+.ds-select>select{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}  /* nativ versteckt, bleibt Quelle der Wahrheit */
+.ds-select__btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-family:var(--font);font-size:16px;font-weight:var(--w-text);line-height:1.25;color:var(--ink);text-align:left;
+  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 12px;cursor:pointer;min-height:var(--tap)}
+.ds-select__btn::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:translateY(-2px) rotate(45deg);flex:0 0 auto}
+.ds-select__btn:hover{border-color:var(--gold-deep)}
+.ds-select__list{position:absolute;z-index:50;left:0;right:0;top:calc(100% + 4px);margin:0;padding:6px;list-style:none;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--r-control);box-shadow:var(--shadow-card);max-height:300px;overflow:auto}
+.ds-select__opt{font-family:var(--font);font-size:16px;color:var(--ink);padding:9px 11px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.ds-select__opt:hover,.ds-select__opt:focus{background:var(--soft);outline:none}
+.ds-select__opt[aria-selected="true"]{color:var(--gold-ink);font-weight:var(--w-strong)}
 .field textarea{resize:vertical;min-height:48px}
-.field input::placeholder,.field textarea::placeholder{color:#aeb4b9}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,97,169,.16)}
-.field input.invalid{border-color:var(--bad);box-shadow:0 0 0 3px rgba(179,38,30,.14)}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted);opacity:.7}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
+.field input.invalid{border-color:var(--bad);box-shadow:0 0 0 3px color-mix(in srgb,var(--bad) 20%,transparent)}
 
 /* --- Fusszeile ------------------------------------------------------------- */
-.ds-footer{border-top:1px solid var(--line);padding:var(--s8) 0 60px;color:var(--muted);font-size:12.5px;margin-top:var(--s8)}
+.ds-footer{border-top:1px solid var(--line);padding:var(--s8) 0 60px;color:var(--muted);font-size:var(--t-small);margin-top:var(--s8)}
 .ds-footer .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .ds-footer .frow strong{color:var(--ink);font-weight:var(--w-text)}
-.ds-footer .frow a:hover{color:var(--gold-deep)}
+.ds-footer .frow a:hover{color:var(--gold-ink)}
+
+/* =============================================================================
+   Eingebaute Typografie – Hausregeln als Voreinstellung, nicht als Nachkontrolle
+   Quelle: assets/typografie/goetheanum-typo-tokens.json.
+   ============================================================================= */
+
+/* Lesefluss: Trennung, schöner Umbruch, keine verwaisten Zeilen (G12/G24/G28). */
+body{hyphens:auto;-webkit-hyphens:auto;text-wrap:pretty;orphans:2;widows:2}
+
+/* Hervorhebung im Web nur durch LAUT (lauter/fetter) – kein leiser Gegenton hier.
+   Unterstreichen/Versalien als Hervorhebung gibt es bewusst NICHT (G05). */
+strong,b,em,i{font-style:normal;font-weight:var(--w-strong)}
+
+/* Hausanführung: ‹…› automatisch über <q> (G16). */
+q{quotes:'\2039' '\203A' '\2039' '\203A'}
+
+/* Ziffern in Tabellen: Versalziffern, dicktengleich, exakt untereinander (G25). */
+table{border-collapse:collapse;font-variant-numeric:tabular-nums lining-nums}
+th,td{text-align:left;padding:var(--s2) var(--s3);border-bottom:1px solid var(--line-soft)}
+th{font-weight:var(--w-strong);color:var(--ink)}
+td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:right;font-feature-settings:"tnum","lnum"}
+
+/* Schnitt-Utilities. */
+.leise{font-weight:var(--w-leise)}
+.klar{font-weight:var(--w-text)}
+.deutlich{font-weight:var(--w-deutlich)}
+.laut{font-weight:var(--w-strong)}
+
+/* Kicker: getönt, leicht getrackt, Display-Schrift – NORMAL, nicht versal (G05). */
+/* Kleine UI-Schrift: nie Leise (verschwimmt klein) – mindestens Klar. */
+.kicker{display:inline-block;font-family:var(--font-display);color:var(--gold-ink);font-size:13.5px;letter-spacing:.03em;font-weight:var(--w-text);margin-bottom:var(--s2)}
+
+/* Lesemass: ~66 Zeichen je Zeile für linearen Mengentext (G10). */
+.lese{max-width:min(var(--measure),100%)}
+.meta{color:var(--muted);font-size:var(--t-small)}
+.lede{font-size:var(--t-lede);color:var(--muted);line-height:1.45;max-width:54ch}

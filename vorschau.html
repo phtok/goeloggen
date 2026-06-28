@@ -7,6 +7,8 @@
 <title>Goetheanum Schriften – Neuerungen v2.6</title>
 <meta name="description" content="Vorschau aller Neuerungen der Goetheanum Schriften v2.6: typografische Spatien, geschützter Bindestrich, Ziffern-Features (pnum/onum/tnum) und der Mediävalziffern-Entwurf." />
 <meta name="robots" content="noindex" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
 <style>
   @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Leise.woff2") format("woff2");font-display:swap}
   @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Klar.woff2") format("woff2");font-display:swap}
@@ -86,10 +88,8 @@
 </style>
 </head>
 <body>
-<header><div class="wrap bar">
-  <a class="brand" href="https://grafik.goetheanum.ch" aria-label="Zur Grafikseite"><img src="assets/logos/am-goetheanum-dark.svg" alt="Am Goetheanum"></a>
-  <nav class="top"><a href="schriften.html">Schriften</a><a href="typografie.html">Typografie</a><a href="#variabel">Variabel</a><a href="#ziffern">Ziffern</a><a href="#spatien">Spatien</a><a href="#handbuch">Handbuch</a></nav>
-</div></header>
+<script src="design-system/nav.js" data-root="./" data-section="schrift" data-active="vorschau"
+        data-onpage="Variabel:#variabel|Ziffern:#ziffern|Spatien:#spatien|Handbuch:#handbuch"></script>
 
 <main><div class="wrap">
   <div class="hero">

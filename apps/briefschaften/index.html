@@ -5,6 +5,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Goetheanum Briefschaften & Signatur</title>
+  <link rel="stylesheet" href="../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../design-system/nav.css" />
   <style>
     @font-face {
       font-family: "SourceSansPro-Regular";
@@ -442,17 +444,12 @@
   </style>
 </head>
 <body>
-  <header class="page-head">
-    <div class="page-head-inner">
-      <div class="brand-lockup">
-        <img class="brand-logo" src="../../assets/goe-briefe.svg" alt="Goetheanum Briefschaften" />
-      </div>
-      <div class="ui-toggle" id="uiLangToggle" role="group" aria-label="Sprache / Language">
-        <button type="button" data-uilang="de" class="on">DE</button>
-        <button type="button" data-uilang="en">EN</button>
-      </div>
-    </div>
-  </header>
+  <script src="../../design-system/nav.js" data-root="../../" data-section="vorbereitung" data-active="briefschaften"></script>
+
+  <div class="ui-toggle" id="uiLangToggle" role="group" aria-label="Sprache / Language">
+    <button type="button" data-uilang="de" class="on">DE</button>
+    <button type="button" data-uilang="en">EN</button>
+  </div>
 
   <main class="app">
     <section class="controls">

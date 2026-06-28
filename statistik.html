@@ -6,23 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Goeloggen – Statistik</title>
 <meta name="robots" content="noindex" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
 <style>
   @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
   @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
   @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
-  :root{--ink:#23272b;--muted:#737a80;--line:rgba(20,24,28,.10);--line-soft:rgba(20,24,28,.055);
-        --gold:#d7ab68;--gold-deep:#a07a33;--paper:#fff;--soft:#faf8f4;--maxw:760px}
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--paper);color:var(--ink);font-family:"G Klar","Helvetica Neue",Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
-  a{color:inherit}
-  header{border-bottom:1px solid var(--line)}
-  .bar{display:flex;align-items:center;justify-content:space-between;height:58px}
-  header .bar a img{height:24px;width:auto;display:block}
-  nav a{color:var(--muted);text-decoration:none;font-size:13.5px}
-  nav a:hover{color:var(--gold-deep)}
+  /* Farben/Schrift/Hell-Dunkel aus tokens.css/base.css – kein eigenes :root. */
+  body{font-family:"G Klar","Helvetica Neue",Arial,sans-serif}
+  .wrap{max-width:760px;margin:0 auto;padding:0 26px}
   .hero{padding:48px 0 8px}
-  .kick{color:var(--gold-deep);font-size:14px;margin-bottom:14px}
+  .kick{color:var(--gold-ink);font-size:14px;margin-bottom:14px}
   h1{font-family:"G Laut";font-weight:400;font-size:clamp(32px,6vw,54px);line-height:1.08}
   .lede{font-family:"G Leise";color:var(--muted);margin-top:14px;max-width:560px}
   section{padding:30px 0;border-top:1px solid var(--line-soft)}
@@ -38,7 +33,7 @@
   .barrow{display:grid;grid-template-columns:minmax(92px,148px) 1fr auto;gap:12px;align-items:center}
   .barrow .bl{color:var(--ink);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .bartrack{background:var(--line-soft);border-radius:7px;height:11px}
-  .bartrack>span{display:block;height:11px;border-radius:7px;background:linear-gradient(90deg,var(--gold),var(--gold-deep));min-width:3px;transition:width .55s ease}
+  .bartrack>span{display:block;height:11px;border-radius:7px;background:linear-gradient(90deg,var(--gold),var(--gold-ink));min-width:3px;transition:width .55s ease}
   .barval{font-feature-settings:"tnum" 1;font-size:13px;color:var(--ink);min-width:34px;text-align:right}
   .barval .sub{color:var(--muted);font-size:11.5px;margin-left:5px}
   table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
@@ -48,15 +43,12 @@
   td.lbl{color:var(--muted)}
   .empty{color:var(--muted);font-size:14px;padding:4px 0}
   .muted{color:var(--muted);font-size:13px}
-  .err{color:#9b2d2d;font-size:13.5px}
+  .err{color:var(--bad);font-size:13.5px}
   footer{border-top:1px solid var(--line);padding:30px 0 56px;color:var(--muted);font-size:12.5px;margin-top:20px}
 </style>
 </head>
 <body>
-<header><div class="wrap bar">
-  <a href="https://grafik.goetheanum.ch" aria-label="Am Goetheanum"><img src="assets/logos/am-goetheanum-dark.svg" alt="Am Goetheanum" /></a>
-  <nav><a href="schriften.html">← Schriften</a></nav>
-</div></header>
+<script src="design-system/nav.js" data-root="./" data-section="statistik" data-active="statistik"></script>
 
 <main class="wrap">
   <div class="hero">
@@ -64,6 +56,12 @@
     <h1>Statistik.</h1>
     <p class="lede">Alle Goeloggen-Anwendungen an einem Ort. Gezählt werden nur anonyme Summen – keine IP, kein Tracking, keine Drittdienste. <span id="status" class="muted">lädt …</span></p>
   </div>
+
+  <section id="sec-alle">
+    <div class="app-h"><h2>Alle Werkzeuge</h2><span class="meta" id="alleMeta"></span></div>
+    <div class="chart-t">SEITENAUFRUFE JE WERKZEUG · WÄCHST AUTOMATISCH MIT</div>
+    <div class="bars" id="alleBars"><div class="empty">lädt …</div></div>
+  </section>
 
   <section id="sec-landing">
     <div class="app-h"><h2>Landing-Page</h2><span class="meta" id="landMeta"></span></div>
@@ -152,6 +150,34 @@
     if(fail && done===0){ st.className='err'; st.textContent='Konnte Statistik nicht laden.'; }
     else { st.className='muted'; st.textContent='Stand: ' + new Date().toLocaleString('de-CH'); }
   }
+
+  // ---- Alle Werkzeuge (generisch, mitwachsend) ----
+  Promise.all([
+    rpc('goeloggen_stats'),
+    fetch('tools.json').then(function(r){ return r.json(); }).catch(function(){ return null; })
+  ]).then(function(res){
+    var rows = res[0] || [], man = res[1], labels = {};
+    if (man && man.tools) man.tools.forEach(function(t){ labels[t.slug] = t.title; });
+    var byTool = {};
+    rows.forEach(function(r){
+      var t = byTool[r.tool] || (byTool[r.tool] = { views:0, downloads:0, last:'' });
+      if (r.event === 'view') t.views += Number(r.n);
+      else if (r.event === 'download') t.downloads += Number(r.n);
+      if (r.updated_at > t.last) t.last = r.updated_at;
+    });
+    var items = Object.keys(byTool).map(function(slug){
+      return { label: labels[slug] || slug, views: byTool[slug].views, downloads: byTool[slug].downloads };
+    }).sort(function(a,b){ return b.views - a.views; });
+    bars(document.getElementById('alleBars'), items.map(function(it){
+      return { label: it.label, value: it.views, sub: (it.downloads ? fmt(it.downloads) + ' DL' : '') };
+    }));
+    var lastA = rows.reduce(function(m,r){ return (r.updated_at > m) ? r.updated_at : m; }, '');
+    document.getElementById('alleMeta').textContent = lastA ? 'zuletzt ' + when(lastA) : 'noch keine Daten';
+    done++; finish();
+  }).catch(function(){
+    document.getElementById('alleBars').innerHTML = '<div class="err">nicht ladbar</div>';
+    fail++; finish();
+  });
 
   // ---- Landing-Page ----
   Promise.all([rpc('landing_stats'), rpc('landing_tool_stats')]).then(function(res){

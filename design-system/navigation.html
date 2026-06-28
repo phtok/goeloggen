@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Navigation – Prototyp · Goetheanum Grafik</title>
+<meta name="description" content="Prototyp der globalen Kopfzeile und des klappbaren Schubladen-Menüs, gerendert aus tools.json." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+<link rel="stylesheet" href="nav.css" />
+<style>
+  .hero{padding:clamp(40px,7vw,80px) 0 var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.4vw,52px);line-height:1.04;letter-spacing:-.01em;max-width:17ch}
+  .hero .lede{margin-top:var(--s6);color:#565b60;font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:60ch}
+  .two{display:grid;gap:var(--s4);grid-template-columns:1fr}
+  @media(min-width:760px){.two{grid-template-columns:1fr 1fr}}
+  .tall{min-height:60vh}
+</style>
+</head>
+<body>
+
+<!-- Globale Navigation: erzeugt Kopfzeile + Schublade aus tools.json -->
+<script src="nav.js" data-root="../"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Prototyp</span>
+    <h1>Eine Navigation für alle.</h1>
+    <p class="lede">Die Kopfzeile oben steht künftig auf jeder Seite – aus <code>tools.json</code> gespeist. Die vier meistgenutzten Werkzeuge stehen direkt beim Namen (ein Tipp = am Ziel); das <strong>☰</strong>-Menü öffnet die Schublade – ganz oben dieselben vier, prominent fürs Handy und den schnellen Griff.</p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>So funktioniert es</h2>
+      <p>Drei Welten in der Kopfzeile, die ganze Werkzeugkiste eine Geste entfernt.</p>
+    </div>
+    <div class="two">
+      <div class="card">
+        <span class="kicker">Immer erreichbar</span>
+        <p class="lese" style="margin-top:var(--s2);line-height:1.5">Die Wortmarke <strong>Goetheanum</strong> führt von überall zurück zur Übersicht. In Generatoren steht zusätzlich ein sichtbares <q>← Übersicht</q>. Niemand bleibt stecken.</p>
+      </div>
+      <div class="card">
+        <span class="kicker">Vier, fokussiert</span>
+        <p class="lese" style="margin-top:var(--s2);line-height:1.5">Sichtbar ist nur, was gebraucht wird: <strong>Logos</strong>, <strong>Schriften</strong>, <strong>Mail-Signatur</strong>, <strong>Visitenkarte</strong> – in der Kopfzeile und prominent in der Schublade. Halbfertiges und interne Bereiche bleiben weg, nicht übervoll.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="tall">
+    <div class="shead">
+      <h2>Probier es</h2>
+      <p>Auf ☰ Alles tippen, eine Welt in der Kopfzeile wählen – die Schublade springt zur passenden Gruppe. Diese Fläche ist nur da, damit die Kopfzeile beim Scrollen kleben bleibt.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Navigation (Prototyp)</span>
+    <span><a href="./">Design-System</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

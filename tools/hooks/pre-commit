@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Goetheanum Typo-Hook – prüft die vorgemerkten Texte vor jedem Commit.
+# Aktivieren (einmalig, je Arbeitskopie):  git config core.hooksPath tools/hooks
+# Umgehen im Notfall:                       git commit --no-verify
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+PY="$(command -v python3 || command -v python || true)"
+if [ -z "$PY" ]; then
+  echo "Typo-Hook übersprungen: kein Python gefunden." >&2
+  exit 0
+fi
+
+# 1) Hausregeln auf den vorgemerkten HTML-Texten ausführen.
+"$PY" "$ROOT/tools/typo-check.py"
+
+# 2) Driftwächter Kanon ↔ Design-System – nur wenn eine der beteiligten
+#    Schichten betroffen ist (Tokens, Kanon, Regel-YAML, Handbuch).
+if git diff --cached --name-only \
+   | grep -Eq 'design-system/(tokens|base)\.css|assets/typografie/(goetheanum-typo-tokens\.json|typo-regeln\.yaml)|typografie\.html'; then
+  "$PY" "$ROOT/tools/typo-sync.py"
+fi
