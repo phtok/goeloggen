@@ -88,11 +88,11 @@ var ORGS={
   },
   "sbk": {
     "name_de": "Sektion für Bildende Künste",
-    "name_en": "Visual Art Section",
+    "name_en": "Visual Arts Section",
     "name_fr": "Section des arts plastiques",
     "name_es": "Sección de Artes Plásticas",
     "short_de": "Bildende Künste",
-    "short_en": "Visual Art",
+    "short_en": "Visual Arts",
     "short_fr": "Arts plastiques",
     "short_es": "Artes Plásticas",
     "color": "#d072a0"
@@ -100,7 +100,7 @@ var ORGS={
   "ssw": {
     "name_de": "Sektion für Schöne Wissenschaften",
     "name_en": "Section for the Literary Arts and Humanities",
-    "name_fr": "Section des Belles-Lettres",
+    "name_fr": "Belles-Lettres",
     "name_es": "Sección de Bellas Artes",
     "short_de": "Schöne Wissenschaften",
     "short_en": "Literary Arts and Humanities",
@@ -109,11 +109,11 @@ var ORGS={
     "color": "#5168c0"
   },
   "szw": {
-    "name_de": "Sektion für Sozialwissenschaft",
+    "name_de": "Sektion für Sozialwissenschaften",
     "name_en": "Section for Social Sciences",
     "name_fr": "Section des sciences sociales",
     "name_es": "Sección de Ciencias Sociales",
-    "short_de": "Sozialwissenschaft",
+    "short_de": "Sozialwissenschaften",
     "short_en": "Social Sciences",
     "short_fr": "Sciences sociales",
     "short_es": "Ciencias Sociales",
@@ -123,7 +123,7 @@ var ORGS={
     "name_de": "Jugendsektion",
     "name_en": "Youth Section",
     "name_fr": "Section jeunesse",
-    "name_es": "Sección de Juventud",
+    "name_es": "Sección de Jóvenes",
     "short_de": "Jugendsektion",
     "short_en": "Youth Section",
     "short_fr": "Section jeunesse",
@@ -133,8 +133,8 @@ var ORGS={
   "srmk": {
     "name_de": "Sektion für Redende und Musizierende Künste",
     "name_en": "Section for the Performing Arts",
-    "name_fr": "Section des arts de la parole et de la musique",
-    "name_es": "Sección de Artes de la Palabra y de la Música",
+    "name_fr": "Art de la parole et de la musique",
+    "name_es": "Sección de Artes de la Palabra y Música",
     "short_de": "Redende und Musizierende Künste",
     "short_en": "Performing Arts",
     "short_fr": "Arts de la parole et musique",
@@ -158,10 +158,10 @@ var ORGS={
     "short_de": "Heilpädagogik und inklusive soziale Entwicklung",
     "short_en": "Inclusive Social Development",
     "color": "#f98a3c",
-    "name_fr": "Section pour le développement social inclusif",
-    "name_es": "Sección de Educación Especial y Desarrollo Social Inclusivo",
+    "name_fr": "Pédagogie spécialisée et développement social inclusif",
+    "name_es": "Sección para el Desarrollo Social Inclusivo",
     "short_fr": "Développement social inclusif",
-    "short_es": "Educación Especial y Desarrollo Social Inclusivo"
+    "short_es": "Desarrollo Social Inclusivo"
   },
   "bauadmin": {
     "name_de": "Bau-Administration",
