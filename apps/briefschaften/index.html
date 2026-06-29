@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Goetheanum Briefschaften & Signatur</title>
   <link rel="stylesheet" href="../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../design-system/base.css" />
   <link rel="stylesheet" href="../../design-system/nav.css" />
   <style>
     @font-face {
@@ -54,15 +55,16 @@
       font-display: swap;
     }
 
+    /* Tool-Chrome folgt dem Theme: die lokalen Variablen sind nur noch ALIASE
+       auf die Design-System-Tokens (Hell/Dunkel, B05). Das gedruckte Blatt
+       (.doc-preview) bleibt als Artefakt weiss (# ds-ok), kippt NICHT mit. */
     :root {
-      --bg: #36424f;
-      --panel: #37404c;
-      --line: rgba(219, 224, 228, 0.15);
-      --line-strong: rgba(219, 224, 228, 0.26);
-      --text: #dbe0e4;
-      --muted: #a7b2bd;
-      --accent: #ebb565;
-      --preview-bg: #3d4957;
+      --bg: var(--paper);
+      --panel: var(--soft);
+      --line-strong: var(--line);
+      --text: var(--ink);
+      --accent: var(--gold);
+      --preview-bg: var(--soft);
       --doc-w-mm: 210;
       --doc-h-mm: 297;
       --left-col: clamp(300px, 31vw, 430px);
@@ -102,7 +104,7 @@
 
     .page-head {
       margin-top: 6px;
-      background: #1f2833;
+      background: var(--soft);
       border-bottom: 1px solid var(--line-strong);
       position: sticky;
       top: 6px;
@@ -142,17 +144,16 @@
     .ui-toggle button {
       border: 0;
       background: transparent;
-      color: rgba(219, 224, 228, 0.65);
+      color: var(--muted);
       font-family: "SourceSansPro-SemiBold", sans-serif;
-      font-size: 0.7rem;
+      font-size: var(--t-small);
       letter-spacing: 0.09em;
-      text-transform: uppercase;
       cursor: pointer;
     }
 
     .ui-toggle button.on,
     .ui-toggle button:hover {
-      color: #fff;
+      color: var(--ink);
     }
 
     .app {
@@ -167,8 +168,8 @@
     .controls {
       grid-area: controls;
       padding: 16px 16px 20px;
-      background: rgba(24, 32, 41, 0.24);
-      border-right: 1px solid rgba(219, 224, 228, 0.18);
+      background: var(--soft);
+      border-right: 1px solid var(--line);
       display: grid;
       gap: 0;
       align-content: start;
@@ -179,7 +180,7 @@
       border: 1px solid var(--line);
       border-radius: 6px;
       padding: 12px 10px 10px;
-      background: rgba(255, 255, 255, 0.04);
+      background: var(--paper);
       display: grid;
       gap: 9px;
       margin: 0;
@@ -191,12 +192,11 @@
 
     .fieldset-title {
       margin-bottom: 2px;
-      font-size: 0.69rem;
+      font-size: var(--t-small);
       font-family: "SourceSansPro-SemiBold", sans-serif;
-      text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: #dbe0e4;
-      line-height: 1;
+      color: var(--gold-ink);
+      line-height: 1.2;
     }
 
     .row {
@@ -205,7 +205,7 @@
     }
 
     label {
-      font-size: 0.7rem;
+      font-size: var(--t-small);
       color: var(--muted);
       min-height: 17px;
       display: inline-flex;
@@ -224,12 +224,12 @@
     select,
     textarea {
       width: 100%;
-      border: none;
+      border: 1px solid var(--line);
       border-radius: 0.3rem;
       padding: 8px 12px;
-      font-size: 0.8rem;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.12);
+      font-size: var(--t-small);
+      color: var(--ink);
+      background: var(--field-bg);
       font-family: "SourceSansPro-Regular", sans-serif;
     }
 
@@ -247,7 +247,7 @@
     select:focus,
     textarea:focus {
       outline: none;
-      box-shadow: 0 0 0 0.2rem rgba(235, 181, 101, 0.28);
+      box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--gold) 30%, transparent);
     }
 
     .preview {
@@ -265,7 +265,7 @@
       max-width: min(100%, var(--stage-max));
       height: min(74vh, 700px);
       min-height: 420px;
-      border: 1px solid rgba(219, 224, 228, 0.2);
+      border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--preview-bg);
       padding: 18px;
@@ -282,7 +282,7 @@
     .doc-preview {
       width: calc(var(--doc-w-mm) * 1mm);
       height: calc(var(--doc-h-mm) * 1mm);
-      background: #fff;
+      background: #fff; /* # ds-ok: gedrucktes Blatt ist immer weiss (Artefakt) */
       border-radius: 2px;
       box-shadow:
         0 1px 1px rgba(15, 22, 29, 0.18),
@@ -303,8 +303,8 @@
       width: min(100%, var(--stage-max));
       text-align: center;
       color: var(--muted);
-      font-size: 0.79rem;
-      line-height: 1.35;
+      font-size: var(--t-small);
+      line-height: 1.5;
       display: grid;
       gap: 2px;
       justify-items: center;
@@ -319,34 +319,10 @@
       align-items: center;
     }
 
+    /* .btn ist eine kanonische Rolle aus base.css (Pille, primary = volles Blau +
+       Weiss). Hier nur additive Eigenheiten: Position für den Tooltip. */
     .btn {
-      border: none;
-      border-radius: 0.45rem;
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-      padding: 7px 12px;
-      font-size: 0.74rem;
-      font-family: "SourceSansPro-SemiBold", sans-serif;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: 0.15s ease;
       position: relative;
-    }
-
-    .btn:hover {
-      background: #fff;
-      color: #37404c;
-    }
-
-    .btn.primary {
-      background: #fff;
-      color: #37404c;
-    }
-
-    .btn:disabled {
-      opacity: 0.58;
-      cursor: default;
     }
 
     .btn[data-tip]:hover::after {
@@ -355,20 +331,19 @@
       left: 50%;
       bottom: calc(100% + 8px);
       transform: translateX(-50%);
-      background: #1f2731;
-      color: #f6f5f1;
-      border: 1px solid rgba(219, 224, 228, 0.28);
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid var(--line);
       padding: 6px 8px;
       border-radius: 6px;
-      font-size: 0.65rem;
-      line-height: 1.2;
+      font-size: var(--t-micro);
+      line-height: 1.3;
       min-width: 165px;
       max-width: 220px;
       white-space: normal;
       pointer-events: none;
       z-index: 80;
       box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
-      text-transform: none;
       letter-spacing: 0.01em;
     }
 
@@ -379,7 +354,7 @@
       bottom: calc(100% + 3px);
       transform: translateX(-50%);
       border: 5px solid transparent;
-      border-top-color: #1f2731;
+      border-top-color: var(--ink);
       pointer-events: none;
       z-index: 81;
     }
@@ -389,7 +364,7 @@
       align-items: center;
       gap: 6px;
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: var(--t-small);
       justify-self: center;
     }
 
@@ -432,7 +407,7 @@
 
       .controls {
         border-right: 0;
-        border-top: 1px solid rgba(219, 224, 228, 0.16);
+        border-top: 1px solid var(--line);
         min-height: 0;
         height: auto;
       }
