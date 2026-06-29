@@ -224,6 +224,11 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
    skaliert ohnehin fluid (rem-Clamps); hier nur Touch- und Layout-Garantien.
    ============================================================================= */
 img,svg,canvas,video{max-width:100%}
+/* Einfarbige (schwarze) Strich-Icons als <img> folgen dem Theme: im Dunkelmodus
+   umkehren, sonst werden sie vom dunklen Grund verschluckt. Opt-in (.ico-invert),
+   weil es nur für monochrome Marken/Piktogramme gilt – nicht für Fotos/Farblogos.
+   Besser noch: Icons als Webfont/Inline-SVG mit currentColor setzen (folgt von selbst). */
+:root[data-theme="dark"] .ico-invert{filter:invert(1) brightness(.92)}
 @media(max-width:560px){
   /* Mobil bleibt der seitliche Rand grosszügig (Luft nach aussen, Lesbarkeit) –
      nicht verkleinern. 22px Untergrenze, damit Text nie am Glas klebt. */

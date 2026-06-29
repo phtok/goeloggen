@@ -30,12 +30,12 @@
 
   "groessen": {
     "ds_id": "DS03",
-    "regel": "Keine lesbare Schrift unter den B03-Untergrenzen. font-size in px: Fliesstext ≥16, Meta/Label ≥14, nichts Lesbares <13.",
-    "untergrenze_px": 13,
-    "warnen_unter_px": 13,
+    "regel": "Keine lesbare Schrift unter den Untergrenzen (Stand 2026, inklusiv). font-size in px: Fliesstext ≥18, Meta/Label ≥15, nichts Lesbares <14.",
+    "untergrenze_px": 14,
+    "warnen_unter_px": 14,
     "schwere": "fehler",
     "warn_schwere": "hinweis",
-    "hinweis": "B03 exakt: <13px = fehler. 13px ist erlaubt (=--t-micro). Bevorzugt die fluiden Skala-Tokens (--t-body/--t-small/--t-micro/--t-lede/--t-h*) statt fester px."
+    "hinweis": "Floor von 13 auf 14 angehoben (16px-Norm ‹bei 16 beginnen, hochskalieren›). 14px erlaubt (=--t-micro). Bevorzugt die fluiden Skala-Tokens (--t-body/--t-small/--t-micro/--t-lede/--t-h*) statt fester px."
   },
 
   "rollen": {
