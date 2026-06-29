@@ -108,7 +108,7 @@
   --t-h3:clamp(1.25rem, 1.15rem + 0.45vw, 1.45rem);      /* 20–23px */
   --t-h2:clamp(1.45rem, 1.28rem + 0.8vw, 1.8rem);        /* 23–29px – maßvoll */
   --t-h1:clamp(1.85rem, 1.5rem + 1.55vw, 2.45rem);       /* 30–39px – kein Plakat */
-  --lh-body:1.6; --lh-tight:1.15;
+  --lh-body:1.66; --lh-tight:1.15;   /* Display-als-Fliesstext braucht Luft (Zeilenabstand) */
   --measure:62ch;        /* ~66 Zeichen in Source – lineares Lesemaß (G10) */
 
   /* --- Abstände (4/8/12/16/24/32) ---------------------------------------- */

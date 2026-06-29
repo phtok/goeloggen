@@ -37,7 +37,7 @@
   .swatches button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);cursor:pointer;padding:0}
   .swatches button[aria-pressed="true"]{outline:2px solid var(--gold-deep);outline-offset:2px}
   /* Ausnahme-Kreis (frei umfärben) – Regenbogen zeigt: keine feste Hausfarbe. */
-  .swatches button.free{background:conic-gradient(#df4164,#f98a3c,#63b145,#2e54a4,#a24f8a,#df4164)}
+  .swatches button.free{background:conic-gradient(var(--sek-szw),var(--sek-hpise),var(--sek-lws),var(--sek-mas),var(--sek-aas),var(--sek-szw))}
 
   /* Versteckte Profi-Optionen (Backstage): erscheinen NUR mit der Intern-Ansicht
      (nav.js, „intern" tippen) – gleiches Schloss wie die Backstage-Welten. Bewusst
@@ -50,7 +50,7 @@
   .advinput{font:inherit;font-size:16px;padding:10px 12px;min-height:var(--tap);border:1px solid var(--line);border-radius:var(--r-control);background:var(--field-bg);color:var(--ink)}
   .advcolors{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .advcolors input[type=color]{width:var(--tap);height:var(--tap);padding:0;border:1px solid var(--line);border-radius:var(--r-control);background:none;cursor:pointer}
-  .advnote{font-size:12.5px;line-height:1.5;color:var(--muted);margin:0}
+  .advnote{font-size:var(--t-small);line-height:1.5;color:var(--muted);margin:0}
 
   /* Mobil: zuoberst Vorschau + Format + die EINE Aktion – primär lädt das gemeinsame
      Logo zum Download ein. Die Sonderfassungen (Auswahl) stehen darunter. Nur die

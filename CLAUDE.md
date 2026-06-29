@@ -51,11 +51,21 @@ Für jede Web-Oberfläche gilt, geprüft (Kontraste rechnen, nicht schätzen):
   (`--paper`/`--field-bg`/`--bar-bg`), nie `#fff` hart verdrahten.
 
 ### Grenzen der Hausschrift (bewusst einsetzen)
-Goetheanum ist **Display** – die Stimme. Sie hat zwei Grenzen:
-- **Textmasse:** ein paar gut gesetzte Zeilen (magisches Quadrat) sind kein
-  Problem; **echter Mengentext** läuft in **Source Sans 3** (`.prose`).
-- **Kleine UI-Schrift:** **Leise** verschwimmt klein – Minimum ist **Klar**,
-  Titel/Marken **Deutlich**. Kleine Labels nie in Leise setzen.
+Goetheanum ist **Display** – die **Stimme**. Sie trägt alles, was als **Sprache**
+gelesen wird: Titel, Kicker, Lede, **Fliesstext** und erklärende Hinweise. Die
+Lesbarkeit bei normalem Grad kommt aus den **Faktoren**, nicht aus einem
+Schriftwechsel: Zeilenhöhe **≥1.6** (`--lh-body` 1.66), Lesemass **~62ch**
+(`--measure`), Schnitt **Klar**, Betonung **Laut** (nie Leise im Lesetext).
+
+**Die Schrift-Grenze – wo Lesbarkeit über Identität geht:** wo Text zu **Funktion
+und Daten** wird und klein/konventionell gelesen wird, trägt die Lese-Grotesk
+**Source Sans 3** (`--font-text`): **Label, Wert/Readout, Meta/Legende,
+Badge/Chip, Formularfelder, Tabellen**. Das ist im Fundament (`base.css`) so
+verdrahtet – nicht je Seite entscheiden.
+- **Textmasse:** ein paar gut gesetzte Zeilen sind in der Hausschrift kein
+  Problem; **echter Mengentext** (lange Artikel) darf in `.prose` (Source) laufen.
+- **Kleine UI-Schrift:** **Leise** verschwimmt klein – Minimum **Klar**,
+  Titel/Marken **Deutlich**. Kleine Labels nie in Leise.
 Das Menü **koordiniert, es erklärt nicht**: nur Titel, kein Beiwerk-Text.
 
 ## Bauen neuer Seiten und Werkzeuge — vom Fundament aus, nicht freihändig
