@@ -54,9 +54,8 @@
   .icell .dl a:hover{text-decoration:underline;background:var(--paper)}
   .empty{color:var(--muted);font-size:14px;padding:20px 0}
 
-  /* Einsatz */
+  /* Einsatz – Panels gestapelt, volle Breite (die Tastatur braucht Platz). */
   .use{display:grid;grid-template-columns:1fr;gap:18px;align-items:start}
-  @media(min-width:820px){.use{grid-template-columns:1fr 1fr}}
   .panel{border:1px solid var(--line);border-radius:var(--r-card);padding:20px 22px;background:var(--paper)}
   .panel h3{font-weight:400;font-size:16px;margin:0 0 4px}
   .panel p{color:var(--muted);font-size:var(--t-small);line-height:1.6;margin:0 0 14px;max-width:60ch}
@@ -64,8 +63,18 @@
   pre.code{position:relative;margin:0 0 14px;border-radius:12px;padding:16px}
   .copybtn{position:absolute;top:10px;right:10px;font:inherit;font-size:var(--t-micro);border:1px solid var(--code-bg2);background:var(--code-bg2);color:var(--code-ink);border-radius:8px;padding:6px 11px;cursor:pointer;min-height:32px}
   .copybtn:hover{filter:brightness(1.25)}
+  /* Tastatur-Belegung: jede markierte Taste trägt ein Icon (wie im Beipackzettel). */
+  .kbd{display:flex;flex-direction:column;gap:6px;margin:2px 0 8px;overflow-x:auto;padding-bottom:6px}
+  .krow{display:flex;gap:6px}
+  .keycap{flex:0 0 auto;width:48px;height:52px;border:1px solid var(--line);border-radius:8px;background:var(--soft);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  .keycap .lk{font-family:var(--font-mono);font-size:14px;color:var(--muted)}
+  .keycap.has{border-color:var(--gold);background:var(--paper)}
+  .keycap.has .gl{font-family:"G Icons";font-size:26px;line-height:1;color:var(--ink);height:26px}
+  .keycap.has .lk{color:var(--gold-ink)}
+  .kbdcap{color:var(--muted);font-size:var(--t-small);line-height:1.6;margin:2px 0 0;max-width:60ch}
   /* Live: tippen → Icons (Webfont per Taste). */
-  .try{display:flex;flex-direction:column;gap:10px}
+  .try{display:flex;flex-direction:column;gap:10px;margin-top:16px}
   .try .out{font-family:"G Icons";font-size:40px;line-height:1.2;color:var(--ink);min-height:52px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--soft);word-break:break-word}
   .try input{font:inherit;font-size:16px;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 14px;background:var(--field-bg);min-height:var(--tap)}
   .formats{list-style:none;margin:0;padding:0}
@@ -127,7 +136,9 @@
 
       <div class="panel">
         <h3>Als Webfont – per Taste</h3>
-        <p>Eine Datei trägt alle Icons. Den <code>@font-face</code>-Block einbinden, einem Element die Icon-Schrift geben – dann sitzt jedes Icon auf einer Taste. Die volle Belegung steht im Beipackzettel.</p>
+        <p>Eine Datei trägt alle Icons. Den <code>@font-face</code>-Block einbinden, einem Element die Icon-Schrift geben – dann sitzt jedes Piktogramm auf einer Taste.</p>
+        <div class="kbd" id="kbd" aria-hidden="true"></div>
+        <p class="kbdcap">Tastatur-Belegung – jede <b style="color:var(--gold-ink);font-weight:400">goldene</b> Taste trägt ein Piktogramm. Pfeile und Kompass liegen im Zeichen-Privatbereich (PUA) und kommen über die Glyphen-Palette oder die Einzeldateien. Vollständig im Beipackzettel.</p>
         <pre class="code"><button class="copybtn" id="copyff">kopieren</button><code id="ffcode">@font-face{
   font-family:"Goetheanum Icons";
   src:url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.6.woff2") format("woff2");
@@ -217,6 +228,28 @@
       });
       empty.hidden = rows.length>0;
     }
+    // Tastatur (QWERTZ) – markiert die Tasten, die ein benanntes Piktogramm tragen.
+    function buildKbd(data){
+      var box=document.getElementById('kbd'); if(!box) return;
+      var byChar={}; data.forEach(function(it){ var k=key(it.codepoint); if(k) byChar[k]=it; });
+      var ROWS=[['1','2','3','4','5','6','7','8','9','0','ß'],
+                ['q','w','e','r','t','z','u','i','o','p','ü'],
+                ['a','s','d','f','g','h','j','k','l','ö','ä'],
+                ['<','y','x','c','v','b','n','m']];
+      box.innerHTML="";
+      ROWS.forEach(function(r){
+        var row=document.createElement('div'); row.className='krow';
+        r.forEach(function(ch){
+          var it=byChar[ch], cap=document.createElement('div');
+          cap.className='keycap'+(it?' has':'');
+          if(it){ cap.title=it.label;
+            cap.innerHTML='<span class="gl">'+esc(ch)+'</span><span class="lk">'+esc(ch.toUpperCase())+'</span>';
+          } else { cap.innerHTML='<span class="lk">'+esc(ch.toUpperCase())+'</span>'; }
+          row.appendChild(cap);
+        });
+        box.appendChild(row);
+      });
+    }
     document.querySelectorAll('.tabs button').forEach(function(b){
       b.addEventListener('click',function(){
         document.querySelectorAll('.tabs button').forEach(function(x){x.classList.remove('on');});
@@ -226,7 +259,7 @@
     q.addEventListener('input',render);
     fetch(BASE+"icons.json").then(function(r){return r.json();}).then(function(d){
       DATA=d.filter(function(it){ return !/^U\+/.test(it.label); });  // nur benannte
-      render();
+      render(); buildKbd(DATA);
     }).catch(function(){
       empty.hidden=false; empty.textContent="Icon-Liste konnte nicht geladen werden. Einzeldateien stehen im Download-Abschnitt bereit.";
     });
