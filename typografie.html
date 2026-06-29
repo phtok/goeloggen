@@ -9,32 +9,33 @@
 <meta name="robots" content="noindex" />
 <link rel="stylesheet" href="assets/typografie/ziffern.css" />
 <link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
 <style>
   @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Leise.woff2") format("woff2");font-display:swap}
   @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Klar.woff2") format("woff2");font-display:swap}
   @font-face{font-family:"G Deutlich";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Deutlich.woff2") format("woff2");font-display:swap}
   @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Laut.woff2") format("woff2");font-display:swap}
-  :root{--ink:#23272b;--muted:#737a80;--line:rgba(20,24,28,.10);--line-soft:rgba(20,24,28,.055);
-        --gold:#d7ab68;--gold-deep:#a07a33;--paper:#fff;--soft:#faf8f4;--maxw:880px;--bad:#b3433c;--good:#3f8f5f}
+  /* Farben/Schrift/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigene Werte hier. */
+  :root{--maxw:880px;--good:#3f8f5f}
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--paper);color:var(--ink);font-family:"G Klar","Helvetica Neue",Arial,sans-serif;
        letter-spacing:normal;font-kerning:normal;-webkit-font-smoothing:antialiased;line-height:1.55;font-size:16.5px;
        hyphens:auto;-webkit-hyphens:auto}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
-  a{color:var(--gold-deep)}
+  a{color:var(--gold-ink)}
   header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
   .bar{display:flex;align-items:center;justify-content:space-between;height:58px}
   .brand img{height:34px;display:block}
   nav.top{display:flex;gap:22px}
   nav.top a{color:var(--muted);text-decoration:none;font-size:13.5px}
-  nav.top a:hover{color:var(--gold-deep)}
+  nav.top a:hover{color:var(--gold-ink)}
   .hero{padding:58px 0 8px}
-  .kick{color:var(--gold-deep);font-size:14px;margin-bottom:14px}
-  h1{font-family:"G Klar";font-weight:400;font-size:clamp(36px,6vw,60px);line-height:1.1;text-wrap:balance}
+  .kick{color:var(--gold-ink);font-size:14px;margin-bottom:14px}
+  h1{text-wrap:balance}
   .lede{font-family:"G Klar";font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:48ch;margin-top:14px;text-wrap:pretty}
   section{padding:42px 0;border-top:1px solid var(--line-soft)}
-  .sec{color:var(--gold-deep);font-size:13px}
+  .sec{color:var(--gold-ink);font-size:13px}
   /* Marginalspalte (System B): die Paragraphen-Marke wandert auf breiten Schirmen
      in eine eigene Randspalte, der Lesesatz bleibt unberührt bei seinem Mass. */
   @media(min-width:940px){
@@ -42,14 +43,14 @@
     section>:not(.sec){grid-column:2}
     .sec{grid-column:1;grid-row:1;position:sticky;top:74px;align-self:start;line-height:1.35;text-align:right}
   }
-  h2{font-family:"G Klar";font-weight:400;font-size:clamp(22px,3vw,30px);margin:4px 0 14px;text-wrap:balance}
+  h2{margin:4px 0 14px;text-wrap:balance}
   h3{font-family:"G Laut";font-weight:400;font-size:17px;margin:22px 0 6px}
   p{max-width:39ch;text-wrap:pretty;orphans:2;widows:2}
   p.dim{color:var(--muted)}
   .leise{font-family:"G Leise"}.deutlich{font-family:"G Deutlich"}.laut{font-family:"G Laut"}
   .note{display:flex;gap:10px;align-items:baseline;border-left:2px solid var(--gold);background:var(--soft);
         padding:10px 14px;border-radius:0 10px 10px 0;margin:14px 0;font-size:14px;color:var(--muted);max-width:39ch}
-  .note .rid{font-size:11px;color:var(--gold-deep);white-space:nowrap}
+  .note .rid{font-size:11px;color:var(--gold-ink);white-space:nowrap}
   .ex{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;max-width:640px}
   @media(max-width:560px){.ex{grid-template-columns:1fr}}
   .ex>div{border:1px solid var(--line-soft);border-radius:10px;padding:10px 14px;background:var(--soft);font-size:15px}

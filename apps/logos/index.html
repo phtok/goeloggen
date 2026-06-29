@@ -23,7 +23,7 @@
   /* Rechte Spalte, von oben nach unten: Vorschau → Erklärzeile → Format → die EINE
      Aktion. Alles reist zusammen (klebend), während links die Logo-Bestimmung scrollt. */
   .preview{position:sticky;top:calc(var(--header-h) + var(--s4))}
-  .stage{display:grid;place-items:center;min-height:300px;border:1px solid var(--line);border-radius:var(--r-card);background:#faf8f4;padding:clamp(24px,5vw,56px)}
+  .stage{display:grid;place-items:center;min-height:300px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft);padding:clamp(24px,5vw,56px)}
   .stage.dark{background:#23272b}
   .stage svg,.stage img{max-width:100%;height:auto;max-height:340px;display:block}
   /* Erklärzeile direkt unter der Vorschau, ÜBER den Pillen: erst wofür, dann womit. */
@@ -52,7 +52,7 @@
   /* Begleitschreiben als PDF drucken: nur das Blatt zeigen */
   @media print{
     .dsnav,.dsnav-drawer,.dsnav-backdrop,.dsnav-toast,.hero,#werkzeug,.ds-footer,.pdfbtn{display:none !important}
-    body{background:#fff}
+    body{background:var(--paper)}
     main.wrap{max-width:none;padding:0}
     #begleitschreiben .shead{display:block}
     .sheet{border:none;padding:0;margin-top:0}

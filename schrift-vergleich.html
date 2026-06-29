@@ -11,40 +11,37 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Inter:ital,wght@0,400;0,600;1,400&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
 <style>
   @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Klar.woff2") format("woff2");font-display:swap}
   @font-face{font-family:"G Deutlich";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Deutlich.woff2") format("woff2");font-display:swap}
   @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Laut.woff2") format("woff2");font-display:swap}
   @font-face{font-family:"Titillium RUS";src:url("assets/fonts/goetheanum/Fallback/TitilliumRUS-Regular.woff2") format("woff2");font-weight:400;font-display:swap;unicode-range:U+0400-04FF,U+0500-052F}
-  :root{--ink:#23272b;--muted:#737a80;--line:rgba(20,24,28,.10);--line-soft:rgba(20,24,28,.06);
-        --gold:#d7ab68;--gold-deep:#a07a33;--paper:#fff;--soft:#faf8f4;--maxw:1040px;
-        --body:"Source Sans 3";--bsize:19px;--bweight:400;--measure:62ch}
+  /* Farben/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigene Werte hier. */
+  :root{--maxw:1040px;--body:"Source Sans 3";--bsize:19px;--bweight:400}
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--paper);color:var(--ink);font-family:"G Klar","Helvetica Neue",Arial,sans-serif;line-height:1.5;font-size:16.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
-  a{color:var(--gold-deep)}
-  header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-  .bar{display:flex;align-items:center;justify-content:space-between;height:56px}
-  nav.top a{color:var(--muted);text-decoration:none;font-size:13.5px;margin-left:18px}
+  a{color:var(--gold-ink)}
   .hero{padding:42px 0 4px}
-  .kick{color:var(--gold-deep);font-size:14px;margin-bottom:10px}
-  h1{font-family:"G Klar";font-weight:400;font-size:clamp(28px,5vw,46px);line-height:1.1}
+  .kick{color:var(--gold-ink);font-size:14px;margin-bottom:10px}
+  /* Überschriften aus dem Fundament. */
   .lede{font-size:17px;color:var(--muted);max-width:64ch;margin-top:12px}
   section{padding:30px 0;border-top:1px solid var(--line-soft)}
-  .sec{color:var(--gold-deep);font-size:13px}
-  h2{font-family:"G Klar";font-weight:400;font-size:clamp(20px,3vw,26px);margin:4px 0 14px}
+  .sec{color:var(--gold-ink);font-size:13px}
+  h2{margin:4px 0 14px}
   .ctrl{display:flex;gap:14px 22px;flex-wrap:wrap;align-items:center;background:var(--soft);border:1px solid var(--line-soft);border-radius:12px;padding:14px 18px;margin-bottom:22px;position:sticky;top:56px;z-index:20}
   .ctrl .grp{display:flex;gap:6px;flex-wrap:wrap}
-  .ctrl button{font:inherit;font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:20px;padding:5px 14px;cursor:pointer}
-  .ctrl button[aria-pressed=true]{color:var(--gold-deep);border-color:var(--gold);font-weight:600}
+  .ctrl button{font:inherit;font-size:13px;color:var(--muted);background:var(--field-bg);border:1px solid var(--line);border-radius:20px;padding:5px 14px;cursor:pointer}
+  .ctrl button[aria-pressed=true]{color:var(--gold-ink);border-color:var(--gold);font-weight:600}
   .ctrl label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
-  .ctrl input[type=range]{accent-color:var(--gold-deep);width:120px}
+  .ctrl input[type=range]{accent-color:var(--gold-ink);width:120px}
   .ctrl b{color:var(--ink);font-variant-numeric:tabular-nums}
   .article{max-width:var(--measure);margin:0 auto}
-  .a-kick{font-family:"G Klar";font-size:14px;color:var(--gold-deep);margin-bottom:10px}
+  .a-kick{font-family:"G Klar";font-size:14px;color:var(--gold-ink);margin-bottom:10px}
   .a-head{font-family:"G Klar";font-weight:400;font-size:calc(var(--bsize)*2.3);line-height:1.08;margin-bottom:6px;text-wrap:balance}
-  .a-sub{font-family:"G Deutlich";font-size:calc(var(--bsize)*1.15);line-height:1.25;color:#555;margin-bottom:20px}
+  .a-sub{font-family:"G Deutlich";font-size:calc(var(--bsize)*1.15);line-height:1.25;color:var(--muted);margin-bottom:20px}
   .a-body{font-family:var(--body),sans-serif;font-size:var(--bsize);font-weight:var(--bweight);line-height:1.62;text-wrap:pretty}
   .a-body p{margin-bottom:.9em}
   .a-body em{font-style:italic}
@@ -52,10 +49,10 @@
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   @media(max-width:680px){.cards{grid-template-columns:1fr}}
   .card{border:1px solid var(--line-soft);border-radius:12px;padding:16px 18px}
-  .card .nm{font-size:14px;color:var(--gold-deep);font-weight:600;margin-bottom:8px}
+  .card .nm{font-size:14px;color:var(--gold-ink);font-weight:600;margin-bottom:8px}
   .card .smp{font-size:17px;line-height:1.5}
   .scriptrow{display:grid;grid-template-columns:150px 1fr;gap:6px 18px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line-soft)}
-  .scriptrow .lab{font-size:12px;color:var(--gold-deep)}
+  .scriptrow .lab{font-size:12px;color:var(--gold-ink)}
   .scriptrow .smp{font-size:26px}
   .lat{font-family:"G Klar"} .cyr{font-family:"Titillium RUS"} .grk{font-family:"Source Sans 3"} .arb{font-family:"Cairo"}
   footer{border-top:1px solid var(--line);padding:26px 0 54px;color:var(--muted);font-size:12.5px}
@@ -145,7 +142,7 @@
     var d=document.createElement("div"); d.className="card";
     d.innerHTML='<div class="nm">'+f[0]+'</div>'+
       '<div class="smp" style="font-family:\''+f[0]+'\'">Lebendige Formen wachsen aus dem Schweigen. <em style="font-style:italic">Ein Versuch in Klarheit</em> – 1913 Plätze, 47° 32′.</div>'+
-      '<div style="font-size:11.5px;color:#999;margin-top:8px">'+f[1]+'</div>';
+      '<div style="font-size:11.5px;color:var(--muted);margin-top:8px">'+f[1]+'</div>';
     qc.appendChild(d);
   });
 })();

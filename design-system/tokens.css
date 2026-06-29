@@ -55,7 +55,30 @@
   --line:rgba(20,24,28,.10);
   --line-soft:rgba(20,24,28,.055);
   --bad:#b3261e;         /* Fehler/Warnung */
+  --ok:#3f7d46;          /* Erfolg/Bestätigung – Weiss drauf (--on-accent) */
   --on-accent:#fff;      /* Text auf Blau/Gold-Flächen */
+
+  /* --- Sektionsfarben (Identität der Schul-Sektionen) --------------------- */
+  /* Quelle der Wahrheit der Werte: assets/goe-orgs.js (speist die Logo-Engine).
+     Hier als Design-Tokens verfügbar gemacht, damit Sektions-Akzente überall im
+     System gleich heissen. MARKENFEST: kippen NICHT mit Hell/Dunkel – eine
+     Sektionsfarbe ist Identität, kein Flächenton. Als Fläche gilt B01: Text
+     darauf ist Weiss (--on-accent) NUR wo der Kontrast ≥4.5:1 (sonst dunkler
+     Ton der Sektion als Linie/Akzent, nicht als Textgrund). */
+  --sek-goetheanum:#0061a9;  /* = Markenblau */
+  --sek-aas:#a24f8a;         /* Allgemeine Anthroposophische Sektion */
+  --sek-ps:#3b4881;          /* Pädagogische Sektion */
+  --sek-ms:#5f5599;          /* Medizinische Sektion */
+  --sek-nws:#1e7b6e;         /* Naturwissenschaftliche Sektion */
+  --sek-lws:#63b145;         /* Sektion für Landwirtschaft */
+  --sek-sbk:#d072a0;         /* Sektion für Bildende Künste */
+  --sek-ssw:#5168c0;         /* Sektion für Schöne Wissenschaften */
+  --sek-szw:#df4164;         /* Sektion für Sozialwissenschaft */
+  --sek-js:#ff675d;          /* Jugendsektion */
+  --sek-srmk:#598ddc;        /* Sektion für Redende und Musizierende Künste */
+  --sek-mas:#2e54a4;         /* Mathematisch-Astronomische Sektion */
+  --sek-hpise:#f98a3c;       /* Sektion für Heilpädagogik und inklusive soziale Entwicklung */
+  --bereich:#005eb8;         /* Verwaltungs-/Bereichs-Standard (Empfang, Studium, Archiv …) */
 
   /* --- Schrift-Familien --------------------------------------------------- */
   --font-display:"Goetheanum","Helvetica Neue",Arial,sans-serif; /* Titel, Chrome */
@@ -108,7 +131,7 @@
   --paper:#16191c; --soft:#1e2329; --field-bg:#1e2329;
   --bar-bg:rgba(20,23,26,.85);
   --line:rgba(255,255,255,.14); --line-soft:rgba(255,255,255,.07);
-  --bad:#e0675e;        /* on-accent bleibt Weiss – kein dunkler Text auf Akzentflächen */
+  --bad:#e0675e; --ok:#5aa367;   /* on-accent bleibt Weiss – kein dunkler Text auf Akzentflächen */
   --w-deutlich:540; --w-strong:620;     /* weniger Bleeding auf Dunkel */
   --shadow-card:0 10px 30px rgba(0,0,0,.45);
   color-scheme:dark;
