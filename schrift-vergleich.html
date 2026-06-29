@@ -29,13 +29,13 @@
   /* Überschriften aus dem Fundament. */
   .lede{font-size:17px;color:var(--muted);max-width:64ch;margin-top:12px}
   section{padding:30px 0;border-top:1px solid var(--line-soft)}
-  .sec{color:var(--gold-ink);font-size:13px}
+  .sec{color:var(--gold-ink);font-size:var(--t-small)}
   h2{margin:4px 0 14px}
   .ctrl{display:flex;gap:14px 22px;flex-wrap:wrap;align-items:center;background:var(--soft);border:1px solid var(--line-soft);border-radius:12px;padding:14px 18px;margin-bottom:22px;position:sticky;top:56px;z-index:20}
   .ctrl .grp{display:flex;gap:6px;flex-wrap:wrap}
-  .ctrl button{font:inherit;font-size:13px;color:var(--muted);background:var(--field-bg);border:1px solid var(--line);border-radius:20px;padding:5px 14px;cursor:pointer}
+  .ctrl button{font:inherit;font-size:var(--t-small);color:var(--muted);background:var(--field-bg);border:1px solid var(--line);border-radius:20px;padding:5px 14px;cursor:pointer}
   .ctrl button[aria-pressed=true]{color:var(--gold-ink);border-color:var(--gold);font-weight:600}
-  .ctrl label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .ctrl label{font-size:var(--t-small);color:var(--muted);display:flex;align-items:center;gap:8px}
   .ctrl input[type=range]{accent-color:var(--gold-ink);width:120px}
   .ctrl b{color:var(--ink);font-variant-numeric:tabular-nums}
   .article{max-width:var(--measure);margin:0 auto}
@@ -52,10 +52,10 @@
   .card .nm{font-size:14px;color:var(--gold-ink);font-weight:600;margin-bottom:8px}
   .card .smp{font-size:17px;line-height:1.5}
   .scriptrow{display:grid;grid-template-columns:150px 1fr;gap:6px 18px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line-soft)}
-  .scriptrow .lab{font-size:12px;color:var(--gold-ink)}
+  .scriptrow .lab{font-size:var(--t-small);color:var(--gold-ink)}
   .scriptrow .smp{font-size:26px}
   .lat{font-family:"G Klar"} .cyr{font-family:"Titillium RUS"} .grk{font-family:"Source Sans 3"} .arb{font-family:"Cairo"}
-  footer{border-top:1px solid var(--line);padding:26px 0 54px;color:var(--muted);font-size:12.5px}
+  footer{border-top:1px solid var(--line);padding:26px 0 54px;color:var(--muted);font-size:var(--t-small)}
 </style>
 </head>
 <body>
@@ -108,7 +108,7 @@
     <div class="scriptrow"><div class="lab">Kyrillisch · Titillium&nbsp;RUS</div><div class="smp cyr">Гётеанум Дорнах — Швейцария · 1913</div></div>
     <div class="scriptrow"><div class="lab">Griechisch · Source&nbsp;Sans&nbsp;3</div><div class="smp grk">Γκαίτεανουμ Ντόρναχ — Ελβετία · 1913</div></div>
     <div class="scriptrow"><div class="lab">Arabisch · Cairo</div><div class="smp arb" dir="rtl">غوتيانوم دورناخ — سويسرا · ١٩١٣</div></div>
-    <p style="font-size:13px;color:var(--muted);margin-top:14px;max-width:64ch">Wählst du <b>IBM Plex Sans</b> als Lese-Grotesk, deckt die Plex-Superfamilie zugleich Latein/Griechisch/Kyrillisch <i>und</i> Arabisch – eine Schrift für Mengentext und alle Fallbacks.</p>
+    <p style="font-size:var(--t-small);color:var(--muted);margin-top:14px;max-width:64ch">Wählst du <b>IBM Plex Sans</b> als Lese-Grotesk, deckt die Plex-Superfamilie zugleich Latein/Griechisch/Kyrillisch <i>und</i> Arabisch – eine Schrift für Mengentext und alle Fallbacks.</p>
   </section>
 </div></main>
 
@@ -142,7 +142,7 @@
     var d=document.createElement("div"); d.className="card";
     d.innerHTML='<div class="nm">'+f[0]+'</div>'+
       '<div class="smp" style="font-family:\''+f[0]+'\'">Lebendige Formen wachsen aus dem Schweigen. <em style="font-style:italic">Ein Versuch in Klarheit</em> – 1913 Plätze, 47° 32′.</div>'+
-      '<div style="font-size:11.5px;color:var(--muted);margin-top:8px">'+f[1]+'</div>';
+      '<div style="font-size:var(--t-small);color:var(--muted);margin-top:8px">'+f[1]+'</div>';
     qc.appendChild(d);
   });
 })();
