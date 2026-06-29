@@ -68,6 +68,18 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
   Utility `.ico-invert` (Filter im Dunkelmodus) ins Fundament; auf die Schriften-
   Icons angewandt. Besser noch: Icons als Webfont/Inline-SVG mit currentColor.
 
+### Einbinden statt kopieren – eine Org-Quelle (Drift dauerhaft behoben)
+- Es gab DREI Org-Datensätze: `assets/goe-orgs.js` (36, Schaufenster), `assets/
+  data/goetheanum-orgs.js` (38 inkl. it/subscriptions, live: Logos+Signatur) und
+  eine **inline-Kopie** in Visitenkarten (abgewichen). Befund bei der Prüfung:
+  die *live*-Daten treffen goetheanum.ch besser (es ‹Bellas Artes›, ‹Jóvenes›).
+- **`assets/goe-orgs.js` ist jetzt die EINE Quelle** (38 Orgs der Live-Daten +
+  vollständige API: bare `ORGS`/`CATS` für die Logo-Engine & Signatur UND
+  `GCI_ORGS`/`window.GOE_*` fürs Schaufenster). Logos, Signatur, Visitenkarten,
+  Briefschaften, Schaufenster und Übersetzungen binden dieselbe Datei ein; die
+  Inline-Kopie ist raus, `assets/data/goetheanum-orgs.js` gelöscht. Verifiziert:
+  alle Dropdowns/Tabellen 38 Einträge, Logo rendert. Drift ist nicht mehr möglich.
+
 ### Neue Quelle & Werkzeug
 - **`assets/goe-terms.js`** (Begriffe & Übersetzungen) – auf goetheanum.ch
   geprüft: fr/es korrigiert (Hochschule = ‹Université libre de science de
