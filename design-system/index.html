@@ -61,7 +61,8 @@
 
   /* Komponenten-Schau */
   .demo{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center}
-  pre.code{background:var(--soft);color:var(--ink);border:1px solid var(--line-soft);border-radius:var(--r-control);padding:var(--s3) var(--s4);overflow:auto;font-family:var(--font-mono);font-size:var(--t-micro);line-height:1.55;margin-top:var(--s3)}
+  /* Code-Blöcke = kanonische Konsole aus base.css (pre.code); hier nur Abstand. */
+  pre.code{margin-top:var(--s3);font-size:var(--t-micro)}
 
   /* Status digital/analog */
   .status{display:grid;gap:8px}
@@ -116,6 +117,30 @@
     </div>
   </section>
 
+  <!-- ================= Konformitäts-Engine ================= -->
+  <section id="engine">
+    <div class="shead">
+      <h2>Die Konformitäts-Engine <span class="badge" id="dsversion"></span></h2>
+      <p>Das System prüft, korrigiert und atmet selbst. Symmetrisch zur sprachlichen Schleife (typo-check) erzwingt eine Gestalt-Schleife die Struktur – nach Vertrag, nicht von Auge.</p>
+    </div>
+    <div class="grid cols2">
+      <div class="card">
+        <span class="kicker">Der Vertrag · contract.json</span>
+        <div class="rules" id="ds-rules" style="margin-top:var(--s3)"></div>
+      </div>
+      <div class="card">
+        <span class="kicker">Die Schleife</span>
+        <ul class="status" style="margin-top:var(--s3)">
+          <li><span class="mk-ok">›</span> <b>Prüfen</b> – <code>tools/ds-lint.py</code> meldet je Regel + Datei:Zeile + Score</li>
+          <li><span class="mk-ok">›</span> <b>Korrigieren</b> – <code>tools/ds-fix.py</code> hebt die Hauspalette property-bewusst auf Tokens</li>
+          <li><span class="mk-ok">›</span> <b>Ratifizieren</b> – echte Ausnahmen (gedruckte Karte, Mockup) mit <code># ds-ok</code></li>
+          <li><span class="mk-ok">›</span> <b>Aufnehmen</b> – jede Verbesserung fliesst ins Fundament (<a href="CHANGELOG.md">CHANGELOG</a>)</li>
+        </ul>
+        <p class="note" style="margin-top:var(--s4)"><q>Wie weit weg</q> ist eine Zahl statt eines Gefühls: alle öffentlichen Seiten bei <b>100 %</b>, der Gesamt-Score wächst mit jedem Schritt (<code>ds-lint --score</code>).</p>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= Farben ================= -->
   <section id="farben">
     <div class="shead">
@@ -126,6 +151,26 @@
     <p class="note" style="margin-top:var(--s4)">Kontrast-Hinweise stammen aus den Typo-Tokens (G28): tinte-leise 4.35:1 und Gold 3.94:1 tragen nur Meta, Akzent und grössere Grade – nie langen Lesetext im Kleingrad.</p>
   </section>
 
+  <!-- ================= Sektionen & Bereiche (die Quelle) ================= -->
+  <section id="sektionen">
+    <div class="shead">
+      <h2>Sektionen &amp; Bereiche</h2>
+      <p>Die <b>eine Quelle</b> für Namen (vier Sprachen), Kürzel und Identitätsfarben aller Sektionen und Bereiche: <code>assets/goe-orgs.js</code>. Speist die Logo-Engine, die Formulare (Visitenkarte, Signatur) und die Tokens <code>--sek-*</code>. Hier live aus der Quelle gerendert – ändert sich die Datei, ändert sich diese Tabelle.</p>
+    </div>
+
+    <span class="kicker">Identitätsfarben · Tokens <code>--sek-*</code></span>
+    <div class="grid cols3" id="sektionen-sw" style="margin:var(--s3) 0 var(--s8)"></div>
+
+    <span class="kicker">Die ganze Tabelle · aus <code>goe-orgs.js</code></span>
+    <div class="card" style="margin-top:var(--s3);overflow-x:auto">
+      <table id="org-table">
+        <thead><tr><th>Farbe</th><th>Schlüssel</th><th>Name (de)</th><th>Kurz (de)</th><th>Name (en)</th><th>Gruppe</th></tr></thead>
+        <tbody id="org-body"><tr><td class="meta" colspan="6">lädt aus der Quelle …</td></tr></tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Korrigieren = die Quelle bearbeiten: <a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-orgs.js">goe-orgs.js auf GitHub</a>. Werkzeuge sollen diese Datei <b>einbinden</b>, nicht kopieren – sonst driftet das Bild (eine eingebettete Kopie ist bereits abgewichen; Konsolidierung steht an).</p>
+  </section>
+
   <!-- ================= Schrift & Schnitte ================= -->
   <section id="schrift">
     <div class="shead">
@@ -133,6 +178,35 @@
       <p>Eine Familie, drei Stimmen: Klar trägt alles, Laut betont, Leise ist der stille Gegenton. Deutlich ist der Titel-Schnitt. Flüstern und Schreien leben nur im Variable Font und sind der Grafik vorbehalten (G04).</p>
     </div>
     <div id="cuts"></div>
+  </section>
+
+  <!-- ================= Textrollen ================= -->
+  <section id="textrollen">
+    <div class="shead">
+      <h2>Textrollen</h2>
+      <p>Eine gemessene Grundlage für ALLE Texte – jede Seite nutzt diese Klassen statt eigener Grade. Hier live aus <code>base.css</code>, B03-sicher (nichts Lesbares unter 13px).</p>
+    </div>
+    <div class="grid cols2">
+      <div class="card">
+        <span class="kicker">Kicker · .kicker</span>
+        <h3 style="margin-top:6px">Titel · h1–h4</h3>
+        <p class="lede">Lede · <code>.lede</code> – der Anriss unter dem Titel, im Lese-Schnitt Klar.</p>
+        <p class="note" style="margin-top:var(--s4)">Hinweis · <code>.note</code> – erklärender Beisatz (auch <code>.hint</code>/<code>.help</code>/<code>.desc</code>).</p>
+        <p class="meta" style="margin-top:var(--s3)">Meta · <code>.meta</code> – Legende, Datum, Byline (auch <code>.cap</code>/<code>.caption</code>).</p>
+        <div style="margin-top:var(--s3);display:flex;gap:var(--s6);align-items:baseline;flex-wrap:wrap">
+          <span class="lab">Label · .lab</span>
+          <span class="readout">Wert · .readout 1 234</span>
+          <span class="badge">Marke · .badge</span>
+        </div>
+      </div>
+      <div class="card">
+        <span class="kicker">Code · .code / .code.block</span>
+        <p style="margin-top:var(--s3)">Inline-Auszeichnung mit <code>var(--gold)</code> – leise getönt. Block als theme-feste Konsole mit Syntaxpalette:</p>
+        <pre class="code"><span class="com">/* Code-Konsole · .code.block (--code-*) */</span>
+<span class="key">const</span> ton = <span class="str">"var(--gold)"</span>;
+<span class="key">const</span> rand = <span class="str">"var(--line)"</span>;  <span class="com">// nie #hex</span></pre>
+      </div>
+    </div>
   </section>
 
   <!-- ================= Typo-Regeln ================= -->
@@ -271,6 +345,8 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- Quelle der Sektionen/Bereiche – stellt window.GOE_GCI_ORGS + GOE_ORG_CATS bereit. -->
+<script src="../assets/goe-orgs.js"></script>
 <script>
 const $ = (s,r=document)=>r.querySelector(s);
 const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
@@ -279,13 +355,17 @@ const norm=v=>{v=(v||"").trim().toLowerCase();const m=v.match(/^#([0-9a-f]{3})$/
 
 Promise.all([
   fetch("tokens.json").then(r=>r.json()),
-  fetch("../assets/typografie/goetheanum-typo-tokens.json").then(r=>r.json())
-]).then(([tok,typo])=>{
+  fetch("../assets/typografie/goetheanum-typo-tokens.json").then(r=>r.json()),
+  fetch("contract.json").then(r=>r.json()).catch(()=>null)
+]).then(([tok,typo,contract])=>{
   buildHero(tok);
   buildSwatches(tok,typo);
+  buildSektion(tok);
+  buildOrgTable();
   buildCuts(typo);
   buildRules(typo);
   buildScale(tok);
+  buildEngine(contract);
   guard(tok);
 }).catch(err=>{
   $("#guardMsg").textContent = "Tokens konnten nicht geladen werden.";
@@ -302,7 +382,7 @@ function buildHero(tok){
 
 function buildSwatches(tok,typo){
   const wrap=$("#swatches");
-  const order=["blue","gold","gold-deep","ink","muted","soft","paper","bad"];
+  const order=["blue","gold","gold-deep","ink","muted","soft","paper","bad","ok"];
   const kontrast={ "muted":"4.35:1 – nur Meta (G28)", "gold-deep":"3.94:1 – nur Akzent (G28)", "ink":"15:1 – trägt Lesetext" };
   order.forEach(k=>{
     const c=tok.color[k]; if(!c) return;
@@ -315,6 +395,55 @@ function buildSwatches(tok,typo){
     b.addEventListener("click",()=>{navigator.clipboard?.writeText(hex);toast(hex+" kopiert");});
     wrap.appendChild(b);
   });
+}
+
+function buildSektion(tok){
+  const wrap=$("#sektionen-sw"); if(!wrap||!tok.color.sektion) return;
+  Object.entries(tok.color.sektion).filter(([k])=>!k.startsWith("$")).forEach(([k,v])=>{
+    const hex=v.$value;
+    const b=el("button","sw");
+    b.innerHTML =
+      `<div class="chip-c" style="background:${hex}"></div>`+
+      `<div class="body"><div class="nm">${v.$description||k}</div>`+
+      `<div class="hx">--sek-${k} · ${hex}</div></div>`;
+    b.addEventListener("click",()=>{navigator.clipboard?.writeText(hex);toast(hex+" kopiert");});
+    wrap.appendChild(b);
+  });
+}
+
+function buildOrgTable(){
+  const body=$("#org-body"); if(!body) return;
+  const ORGS=window.GOE_GCI_ORGS, CATS=window.GOE_GCI_CATS;
+  if(!ORGS){ body.innerHTML='<tr><td class="meta" colspan="6">goe-orgs.js nicht geladen.</td></tr>'; return; }
+  // Gruppe je Schlüssel aus den Kategorien ableiten.
+  const grp={};
+  if(CATS) Object.keys(CATS).forEach(g=>(CATS[g].items||[]).forEach(k=>{grp[k]=CATS[g].label_de||g;}));
+  body.innerHTML="";
+  Object.keys(ORGS).forEach(k=>{
+    const o=ORGS[k]||{};
+    const tr=el("tr");
+    tr.innerHTML =
+      `<td><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:1px solid var(--line);background:${o.color||'transparent'}"></span></td>`+
+      `<td class="mono">${k}</td>`+
+      `<td>${o.name_de||""}</td>`+
+      `<td class="meta">${o.short_de||""}</td>`+
+      `<td class="meta">${o.name_en||""}</td>`+
+      `<td class="meta">${grp[k]||"–"}</td>`;
+    body.appendChild(tr);
+  });
+}
+
+function buildEngine(contract){
+  const wrap=$("#ds-rules"); if(!wrap) return;
+  if(!contract){ wrap.innerHTML='<p class="note">contract.json nicht geladen.</p>'; return; }
+  const keys=["includes","farben","groessen","rollen","hervorhebung","kopfzeile","theme"];
+  keys.forEach(k=>{
+    const r=contract[k]; if(!r||!r.ds_id) return;
+    const row=el("div","rule");
+    row.innerHTML=`<div class="id">${r.ds_id}</div><div class="tx">${r.regel}</div>`;
+    wrap.appendChild(row);
+  });
+  const v=$("#dsversion"); if(v&&contract.version) v.textContent="v"+contract.version;
 }
 
 function buildCuts(typo){

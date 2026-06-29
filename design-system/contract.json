@@ -12,6 +12,7 @@
   },
 
   "includes": {
+    "regel": "Pflicht-Includes einbinden: tokens.css UND base.css (Reihenfolge: tokens VOR base; nav.css zusätzlich für Seiten mit globaler Kopfzeile).",
     "pflicht": ["design-system/tokens.css", "design-system/base.css"],
     "hinweis": "Reihenfolge: tokens.css VOR base.css. nav.css zusätzlich für Seiten mit globaler Kopfzeile.",
     "ds_id": "DS01",
