@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="de">
+<head>
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum – Übersetzungen</title>
+<meta name="description" content="Gängige Übersetzungen der Sektionen, Bereiche und institutionellen Begriffe (Freie Hochschule für Geisteswissenschaft, Allgemeine Anthroposophische Gesellschaft …) in Deutsch, Englisch, Französisch und Spanisch – für die Sekretariate." />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Farben/Schrift/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigenes Layout. */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  .hero{padding-block:60px 14px}
+  .lede{max-width:64ch;margin-top:var(--s4)}
+
+  /* Suchfeld für die Sekretariate. */
+  .find{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:var(--r-control);
+    padding:0 14px;background:var(--field-bg);max-width:440px;margin:var(--s6) 0 0}
+  .find input{flex:1;border:0;background:none;color:var(--ink);font:inherit;font-size:16px;padding:12px 0;outline:none;min-height:var(--tap)}
+  .find input::placeholder{color:var(--muted)}
+
+  .tablecard{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);overflow-x:auto;margin-top:var(--s4)}
+  table{width:100%}
+  th,td{vertical-align:top}
+  td{cursor:copy}                 /* Klick kopiert die Zelle */
+  td:hover{background:var(--soft)}
+  .sw-c{width:20px;height:20px;border-radius:5px;border:1px solid var(--line);display:inline-block}
+  caption{text-align:left;color:var(--muted);font-size:var(--t-small);padding:0 0 var(--s2)}
+  tr.hidden{display:none}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-section="generatoren" data-active="uebersetzungen"
+        data-onpage="Begriffe:#begriffe|Sektionen:#sektionen"></script>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="kicker">Hausgrafik · Sprache</div>
+    <h1>Übersetzungen</h1>
+    <p class="lede">Gängige Schreibweisen und Übersetzungen der Sektionen, Bereiche und der institutionellen Begriffe – Deutsch, English, Français, Español. Für Karten, Signaturen, Briefe und die Sekretariate. Klick auf eine Zelle kopiert sie.</p>
+    <div class="find">
+      <span class="meta" aria-hidden="true">⌕</span>
+      <input id="q" type="search" placeholder="Suchen – z. B. Hochschule, Medizin, Society …" aria-label="Übersetzungen durchsuchen">
+    </div>
+  </div>
+
+  <section id="begriffe">
+    <div class="shead"><h2>Institutionelle Begriffe</h2>
+      <p>Die wiederkehrenden Namen. Quelle: <code>assets/goe-terms.js</code>. Auf <a href="https://goetheanum.ch">goetheanum.ch</a> geprüft; <span class="badge">prüfen</span> = noch zu ratifizieren.</p></div>
+    <div class="tablecard">
+      <table>
+        <thead><tr><th>Deutsch</th><th>English</th><th>Français</th><th>Español</th><th>Status</th></tr></thead>
+        <tbody id="terms-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="sektionen">
+    <div class="shead"><h2>Sektionen &amp; Bereiche</h2>
+      <p>Volle Namen in vier Sprachen. Quelle: <code>assets/goe-orgs.js</code> (speist Logos und Formulare).</p></div>
+    <div class="tablecard">
+      <table>
+        <thead><tr><th>Farbe</th><th>Deutsch</th><th>English</th><th>Français</th><th>Español</th><th>Gruppe</th></tr></thead>
+        <tbody id="orgs-body"></tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Korrigieren = die Quelle bearbeiten (<a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-orgs.js">goe-orgs.js</a> · <a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-terms.js">goe-terms.js</a>). Einzelne französische/spanische Sektions-Kurznamen weichen noch leicht von goetheanum.ch ab (z. B. ‹Mathématiques et astronomie›) – Abgleich offen.</p>
+  </section>
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Übersetzungen für die Hausgrafik</span>
+    <span>Quelle <a href="https://goetheanum.ch">goetheanum.ch</a> · <a href="./">alle Werkzeuge</a></span>
+  </div>
+</footer>
+
+<div class="toast" id="toast" style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--on-accent);padding:8px 16px;border-radius:var(--r-pill);font-size:var(--t-small);opacity:0;transition:opacity .2s;pointer-events:none;z-index:60"></div>
+
+<script src="assets/goe-orgs.js"></script>
+<script src="assets/goe-terms.js"></script>
+<script>
+"use strict";
+var $=function(s){return document.querySelector(s);};
+function toast(m){var t=$("#toast");t.textContent=m;t.style.opacity="1";setTimeout(function(){t.style.opacity="0";},1100);}
+function cell(text){var td=document.createElement("td");td.textContent=text||"–";return td;}
+
+// Institutionelle Begriffe
+(function(){
+  var T=window.GOE_TERMS, body=$("#terms-body"); if(!T||!body) return;
+  Object.keys(T).forEach(function(k){
+    var t=T[k], pruefen=t.status!=="fest";
+    var tr=document.createElement("tr");
+    var de=cell(t.de); de.innerHTML="<b>"+(t.de||"")+"</b>";
+    tr.appendChild(de); tr.appendChild(cell(t.en));
+    var fr=cell(t.fr), es=cell(t.es);
+    if(pruefen){fr.className="meta";es.className="meta";}
+    tr.appendChild(fr); tr.appendChild(es);
+    var st=document.createElement("td"); st.style.cursor="default";
+    st.innerHTML=pruefen?'<span class="badge">prüfen</span>':'<span class="meta">fest</span>';
+    if(t.note) st.title=t.note;
+    tr.appendChild(st);
+    body.appendChild(tr);
+  });
+})();
+
+// Sektionen & Bereiche
+(function(){
+  var O=window.GOE_GCI_ORGS, C=window.GOE_GCI_CATS, body=$("#orgs-body"); if(!O||!body) return;
+  var grp={}; if(C) Object.keys(C).forEach(function(g){(C[g].items||[]).forEach(function(k){grp[k]=C[g].label_de||g;});});
+  Object.keys(O).forEach(function(k){
+    var o=O[k]||{};
+    var tr=document.createElement("tr");
+    var c=document.createElement("td"); c.style.cursor="default";
+    c.innerHTML='<span class="sw-c" style="background:'+(o.color||"transparent")+'"></span>';
+    tr.appendChild(c);
+    var de=document.createElement("td"); de.innerHTML="<b>"+(o.name_de||"")+"</b>"; tr.appendChild(de);
+    tr.appendChild(cell(o.name_en)); tr.appendChild(cell(o.name_fr)); tr.appendChild(cell(o.name_es));
+    var g=document.createElement("td"); g.className="meta"; g.style.cursor="default"; g.textContent=grp[k]||"–";
+    tr.appendChild(g);
+    body.appendChild(tr);
+  });
+})();
+
+// Klick kopiert die Zelle
+document.addEventListener("click",function(e){
+  var td=e.target.closest("td"); if(!td||td.style.cursor==="default") return;
+  var txt=td.textContent.trim(); if(!txt||txt==="–") return;
+  if(navigator.clipboard) navigator.clipboard.writeText(txt);
+  toast(txt.length>40?"kopiert":"„"+txt+"“ kopiert");
+});
+
+// Suche filtert beide Tabellen zeilenweise
+$("#q").addEventListener("input",function(){
+  var q=this.value.trim().toLowerCase();
+  document.querySelectorAll("tbody tr").forEach(function(tr){
+    tr.classList.toggle("hidden", q && tr.textContent.toLowerCase().indexOf(q)<0);
+  });
+});
+</script>
+</body>
+</html>

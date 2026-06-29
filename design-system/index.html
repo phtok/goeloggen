@@ -38,10 +38,10 @@
   /* Schnitt-Zeile */
   .cut{border-top:1px solid var(--line-soft);padding:var(--s4) 0;display:grid;gap:6px;grid-template-columns:1fr;align-items:baseline}
   @media(min-width:760px){.cut{grid-template-columns:170px 1fr}}
-  .cut .nm{font-size:13px;color:var(--muted)}
+  .cut .nm{font-size:var(--t-small);color:var(--muted)}
   .cut .nm b{color:var(--ink);font-weight:var(--w-strong)}
   .cut .samp{font-size:clamp(22px,3.4vw,30px);line-height:1.1}
-  .cut .ds{grid-column:1/-1;color:var(--muted);font-size:13px;max-width:64ch}
+  .cut .ds{grid-column:1/-1;color:var(--muted);font-size:var(--t-small);max-width:64ch}
   .cut .grafik{color:var(--gold-ink)}
 
   /* Regeln */
@@ -54,7 +54,7 @@
   /* Abstands-Balken */
   .scale .row{display:flex;align-items:center;gap:var(--s4);padding:6px 0}
   .scale .bar{height:16px;background:var(--gold);border-radius:4px}
-  .scale .lab{width:96px;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+  .scale .lab{width:96px;color:var(--muted);font-size:var(--t-small);font-variant-numeric:tabular-nums}
   .radii{display:flex;gap:var(--s4);flex-wrap:wrap}
   .radii .r{width:120px;height:80px;background:var(--soft);border:1px solid var(--line)}
   .radii .cap{color:var(--muted);font-size:var(--t-micro);margin-top:6px}
@@ -83,11 +83,11 @@
   .guard .dot{width:10px;height:10px;border-radius:var(--r-pill);background:var(--muted)}
   .guard.ok .dot{background:var(--ok)}
   .guard.bad .dot{background:var(--bad)}
-  .guard .detail{margin-top:var(--s2);color:var(--muted);font-size:13px;line-height:1.5}
-  .guard table{margin-top:var(--s3);width:100%;font-size:13px}
+  .guard .detail{margin-top:var(--s2);color:var(--muted);font-size:var(--t-small);line-height:1.5}
+  .guard table{margin-top:var(--s3);width:100%;font-size:var(--t-small)}
 
   /* .note kommt aus base.css (kanonische Hinweis-Rolle) – hier keine Eigenfassung. */
-  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--on-accent);padding:8px 16px;border-radius:var(--r-pill);font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--on-accent);padding:8px 16px;border-radius:var(--r-pill);font-size:var(--t-small);opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
   .toast.show{opacity:1}
 </style>
 </head>

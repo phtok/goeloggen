@@ -21,27 +21,28 @@ const GOE_TERMS = {
   "aag": {
     de: "Allgemeine Anthroposophische Gesellschaft",
     en: "General Anthroposophical Society",
-    fr: "Société anthroposophique universelle",
+    fr: "Société anthroposophique générale",
     es: "Sociedad Antroposófica General",
-    status: "pruefen", note: "de/en aus den Werkzeugen bestätigt; fr/es offizielle Namen – prüfen."
+    status: "pruefen",
+    note: "de/en/fr bestätigt auf goetheanum.ch. es: goetheanum.ch/es nutzt teils ‹Sociedad Antroposófica mundial› – ‹General› ist die geläufige Form; bitte ratifizieren."
   },
   "hochschule": {
     de: "Freie Hochschule für Geisteswissenschaft",
     en: "School of Spiritual Science",
-    fr: "École de science de l’esprit",
+    fr: "Université libre de science de l’esprit",
     es: "Escuela de Ciencia Espiritual",
-    status: "pruefen", note: "de/en bestätigt; fr/es prüfen."
+    status: "fest", note: "Alle vier auf goetheanum.ch bestätigt (en/fr/es-Sprachversionen)."
   },
   "geisteswissenschaft": {
     de: "Geisteswissenschaft",
     en: "Spiritual Science",
-    fr: "Science de l’esprit",
+    fr: "science de l’esprit",
     es: "Ciencia Espiritual",
-    status: "pruefen", note: "de/en bestätigt; fr/es prüfen."
+    status: "fest", note: "Auf goetheanum.ch bestätigt."
   },
   "sektion": {
     de: "Sektion", en: "Section", fr: "Section", es: "Sección",
-    status: "fest"
+    status: "fest", note: "Sektionsbezeichnung auf goetheanum.ch bestätigt."
   },
   "vorstand": {
     de: "Vorstand", en: "Executive Board", fr: "Comité directeur", es: "Junta directiva",

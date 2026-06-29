@@ -34,7 +34,7 @@
     .scroll-hint{display:block;font-size:var(--t-micro);color:var(--muted);margin-top:6px}
     .brand .wm{font-size:22px}
     nav.top{gap:14px}
-    nav.top a{font-size:13px}
+    nav.top a{font-size:var(--t-small)}
     .nav-hide-sm{display:none}
     /* iOS zoomt Felder mit Schrift < 16px beim Fokus – das verhindern */
     .field input,.field textarea,.field select{font-size:16px}
@@ -55,7 +55,7 @@
   .card.soft{background:var(--soft)}
 
   .tabs{display:inline-flex;gap:var(--s2);margin-bottom:var(--s6)}
-  .tabs button{font:inherit;font-size:13.5px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer;transition:.15s}
+  .tabs button{font:inherit;font-size:var(--t-small);color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer;transition:.15s}
   .tabs button[aria-pressed="true"]{color:var(--gold-ink);border-color:var(--gold)}
 
   /* Einklappbarer Abschnitt (Standards) */
@@ -68,14 +68,14 @@
   .fold-body{display:grid;gap:var(--s3);margin-top:var(--s3)}
 
   .code-details{margin-top:var(--s4)}
-  .code-details>summary{font-size:13px;color:var(--muted);cursor:pointer;list-style:none}
+  .code-details>summary{font-size:var(--t-small);color:var(--muted);cursor:pointer;list-style:none}
   .code-details>summary::-webkit-details-marker{display:none}
   .code-details>summary::before{content:"▸ ";color:var(--gold-ink)}
   .code-details[open]>summary::before{content:"▾ "}
 
   .fset{border:0;display:grid;gap:var(--s3);margin-bottom:var(--s3)}
   .field{display:grid;gap:var(--s1)}
-  .field > .lab{font-size:13px;color:var(--muted);letter-spacing:.01em}
+  .field > .lab{font-size:var(--t-small);color:var(--muted);letter-spacing:.01em}
   /* Felder: 16px (B03, kein iOS-Zoom), Fläche aus dem Token (kippt mit Hell/Dunkel). */
   .field input{
     width:100%;font-family:"Helvetica Neue",Arial,sans-serif;
@@ -102,7 +102,7 @@
   .hint ul{margin:var(--s3) 0 0;padding-left:18px;display:grid;gap:var(--s2)}
   .hint code{font-family:var(--font-mono);font-size:var(--t-micro);background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px}
 
-  .stage-lab{font-size:13px;color:var(--muted);margin-bottom:var(--s3)}
+  .stage-lab{font-size:var(--t-small);color:var(--muted);margin-bottom:var(--s3)}
   .scroll-hint{display:none}
   .mail-stage{background:#fff;border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:0 10px 30px rgba(20,24,28,.06);overflow-x:auto}  /* # ds-ok: E-Mail-Leinwand ist immer weiss (Artefakt) */
   /* base.css setzt th,td (Padding, Rahmen) – das verfälscht die E-Mail-Tabellen der
@@ -125,7 +125,7 @@
   /* Kicker-artiges Label – normal, nicht versal (G05). */
   .choose .opt .who{color:var(--gold-ink);font-size:var(--t-micro);letter-spacing:.04em;margin-bottom:6px}
   .choose .opt h3{font-family:"Goetheanum";font-weight:680;font-size:15px;margin-bottom:6px}
-  .choose .opt p{font-size:13.5px;color:var(--muted);line-height:1.55}
+  .choose .opt p{font-size:var(--t-small);color:var(--muted);line-height:1.55}
   .guide details{border-top:1px solid var(--line-soft);padding:var(--s4) 0}
   .guide details:first-of-type{border-top:0;padding-top:0}
   .guide summary{font-family:"Goetheanum";font-weight:680;font-size:15px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:var(--s2)}
@@ -136,7 +136,7 @@
   .guide ol{margin:var(--s4) 0 2px;padding-left:20px;display:grid;gap:var(--s2)}
   .guide li{font-size:14px;line-height:1.5;color:var(--ink)}
   .guide code{font-family:var(--font-mono);font-size:var(--t-micro);background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px}
-  .guide .note{font-size:13px;color:var(--muted);line-height:1.5;margin-top:6px}
+  .guide .note{font-size:var(--t-small);color:var(--muted);line-height:1.5;margin-top:6px}
   .guide a{color:var(--gold-ink);text-decoration:none}
   .guide a:hover{text-decoration:underline}
 

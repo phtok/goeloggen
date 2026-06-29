@@ -95,15 +95,19 @@
   /* --- Schnitte (Goetheanum Variable) ------------------------------------- */
   --w-leise:265; --w-text:440; --w-deutlich:580; --w-strong:680;
 
-  /* --- Typo-Skala (mobil-first, flüssig, nie zu klein) -------------------- */
-  /* Grund in rem → respektiert die Browser-Schriftgröße der Nutzer (Zugänglichkeit). */
-  --t-micro:0.8125rem;                                   /* 13px – nur Beiwerk (Status, Badges) */
-  --t-small:clamp(0.875rem, 0.84rem + 0.18vw, 0.9375rem);/* 14–15px – Meta, Legenden */
-  --t-body:clamp(1.0625rem, 1.01rem + 0.28vw, 1.1875rem);/* 17–19px – Fliesstext */
-  --t-lede:clamp(1.1875rem, 1.08rem + 0.5vw, 1.375rem);  /* 19–22px – Lede */
-  --t-h3:clamp(1.1875rem, 1.08rem + 0.5vw, 1.375rem);    /* 19–22px */
-  --t-h2:clamp(1.375rem, 1.22rem + 0.8vw, 1.7rem);       /* 22–27px – maßvoll */
-  --t-h1:clamp(1.75rem, 1.45rem + 1.5vw, 2.4rem);        /* 28–38px – kein Plakat */
+  /* --- Typo-Skala (mobil-first, flüssig, inklusiv) ------------------------ */
+  /* Grund in rem → respektiert die Browser-Schriftgröße der Nutzer (WCAG resize,
+     1.4.4). Stand der Erkenntnis 2026: 16px ist das Minimum für Fliesstext, Norm
+     ist ‹bei 16 beginnen und hochskalieren›. Darum: Fliesstext 18–20, Lede 20–23,
+     Beiwerk nie unter 14 (Floor von 13 auf 14 angehoben). Zeilenhöhe ≥1.5 (1.4.12),
+     Klick-/Tippziele ≥24px (2.5.8; wir nutzen 44px, --tap). */
+  --t-micro:0.875rem;                                    /* 14px – Floor, nur Beiwerk (Status, Badges) */
+  --t-small:clamp(0.9375rem, 0.9rem + 0.18vw, 1rem);     /* 15–16px – Meta, Label, Hinweis */
+  --t-body:clamp(1.125rem, 1.06rem + 0.3vw, 1.25rem);    /* 18–20px – Fliesstext */
+  --t-lede:clamp(1.25rem, 1.15rem + 0.45vw, 1.45rem);    /* 20–23px – Lede */
+  --t-h3:clamp(1.25rem, 1.15rem + 0.45vw, 1.45rem);      /* 20–23px */
+  --t-h2:clamp(1.45rem, 1.28rem + 0.8vw, 1.8rem);        /* 23–29px – maßvoll */
+  --t-h1:clamp(1.85rem, 1.5rem + 1.55vw, 2.45rem);       /* 30–39px – kein Plakat */
   --lh-body:1.6; --lh-tight:1.15;
   --measure:62ch;        /* ~66 Zeichen in Source – lineares Lesemaß (G10) */
 

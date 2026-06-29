@@ -40,9 +40,13 @@ Für jede Web-Oberfläche gilt, geprüft (Kontraste rechnen, nicht schätzen):
   Aktion = volles Blau + Weiss. Nie Schwarz auf Farbe.
 - **B02 Kontrast** (WCAG 1.4.3/1.4.11): Lesetext ≥ **4.5:1**, grosse/fette
   Schrift und UI-/Grafik-Ränder ≥ **3:1**. `--muted` nur dort, wo es das hält.
-- **B03 Mindestgrössen mobil:** Fliesstext **≥16px** (Standard 17–19), Meta
-  **≥14px**, nichts unter 13. Eingabefelder **≥16px** (sonst zoomt iOS).
-- **B04 Fingerziele ≥44px** (`--tap`); Zeilenhöhe Lesetext ≥1.5.
+- **B03 Mindestgrössen (inklusiv, Stand 2026):** Fliesstext **≥16px**
+  (Standard **18–20**, `--t-body`), Meta/Label **≥15** (`--t-small`), nichts
+  Lesbares **unter 14** (Floor `--t-micro`). Eingabefelder **≥16px** (sonst zoomt
+  iOS). Norm: ‹bei 16 beginnen und hochskalieren› – feste px unter 14 = DS03-Fehler.
+- **B04 Fingerziele ≥44px** (`--tap`; WCAG 2.2 SC 2.5.8 fordert ≥24, wir geben 44);
+  Zeilenhöhe Lesetext **≥1.5** (`--lh-body` 1.6). Layout muss erhöhte Laufweiten
+  überstehen (WCAG 1.4.12): Container in `ch`/`%`, nicht in festen px-Höhen.
 - **B05 Hell/Dunkel** kommt allein aus den Tokens; Flächen tokenisieren
   (`--paper`/`--field-bg`/`--bar-bg`), nie `#fff` hart verdrahten.
 

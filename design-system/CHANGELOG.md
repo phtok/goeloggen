@@ -56,6 +56,25 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
   korrigierbar. Befund dabei: die Visitenkarten-App trägt eine **abgewichene
   Kopie** der Tabelle – Konsolidierung (einbinden statt kopieren) steht an.
 
+### Lesbarkeit & Inklusivität fest verankert (recherchiert, Stand 2026)
+- **Typo-Skala einen Schritt grösser**: Floor 13→**14px**, Meta/Label 14→**15–16**
+  (`--t-small`), Fliesstext 17→**18–20** (`--t-body`), Lede 19→**20–23**. Grund:
+  16px ist die Norm-Untergrenze, Best Practice ‹bei 16 beginnen, hochskalieren›
+  (WCAG resize 1.4.4; rem-basiert). Contract-Floor (DS03) 13→14 nachgezogen; die
+  literalen 13px der öffentlichen Seiten auf `--t-small` gehoben.
+- **B04**: Bezug auf WCAG 2.2 SC 2.5.8 (Ziel ≥24px, wir geben 44) und 1.4.12
+  (Layout übersteht erhöhte Laufweiten) in den Hausregeln verankert.
+- **Icons im Dunkelmodus**: schwarze Strich-Icons als `<img>` wurden verschluckt.
+  Utility `.ico-invert` (Filter im Dunkelmodus) ins Fundament; auf die Schriften-
+  Icons angewandt. Besser noch: Icons als Webfont/Inline-SVG mit currentColor.
+
+### Neue Quelle & Werkzeug
+- **`assets/goe-terms.js`** (Begriffe & Übersetzungen) – auf goetheanum.ch
+  geprüft: fr/es korrigiert (Hochschule = ‹Université libre de science de
+  l’esprit›, Gesellschaft = ‹Société anthroposophique générale›), verifizierte
+  Zeilen auf `fest`. Neue Seite **uebersetzungen.html** (durchsuchbar, klick-
+  kopierbar, für die Sekretariate) + Eintrag in `tools.json` (Startkarte).
+
 ### Behoben (Mobil & Lesbarkeit – aus echtem Geräte-Befund)
 - **Seitenrand am Handy** war weg: `.hero{padding:X 0 Y}` setzte den seitlichen
   Rand auf 0 und überschrieb `.wrap` – Text klebte am Glas. Fundament-Fix:

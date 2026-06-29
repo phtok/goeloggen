@@ -60,6 +60,9 @@
   .tile .sw i{width:20px;height:20px;border-radius:5px;display:block}
   /* Icons: drei Piktogramme aus dem Icon-Webfont (currentColor – folgt Hell/Dunkel) */
   .tile .icons{font-family:"G Icons";font-size:36px;line-height:1;color:var(--ink);display:flex;gap:14px}
+  /* Übersetzungen: vier Sprach-Marken */
+  .tile .tr{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+  .tile .tr i{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:15px;font-style:normal;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 9px}
 </style>
 </head>
 <body>
@@ -92,7 +95,8 @@
     "icons":           '<span class="icons" aria-hidden="true">gfx</span>',                     // drei Piktogramme (WLAN · Garderobe · Rollstuhl)
     "schrift-webfont": '<span class="win"><b></b><em>Aa</em></span>',                          // Schrift im Browser-Fenster
     "typografie":      '<span class="para"><i></i><i></i><i></i><i></i></span>',               // gesetzter Absatz
-    "design-system":   '<span class="sw"><i style="background:var(--blue)"></i><i style="background:var(--gold-deep)"></i><i style="background:var(--ink)"></i></span>' // Farbfelder
+    "design-system":   '<span class="sw"><i style="background:var(--blue)"></i><i style="background:var(--gold-deep)"></i><i style="background:var(--ink)"></i></span>', // Farbfelder
+    "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>' // vier Sprachen
   };
   function visual(t){
     var v = VISUAL[t.slug] || ('<span class="spec">' + (t.title || "?").slice(0, 1) + '</span>');
