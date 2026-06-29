@@ -75,10 +75,11 @@
     goeStat("download", (a.getAttribute("download") || a.getAttribute("href") || "").split("/").pop());
   });
 
-  // Die vier meistgenutzten – nur als Desktop-Schnellzugriff in der Kopfzeile.
+  // Die meistgenutzten – nur als Desktop-Schnellzugriff in der Kopfzeile.
   var PRIMARY = [
     { label: "Logos",         slug: "logo-generator" },
     { label: "Schriften",     slug: "schriften" },
+    { label: "Icons",         slug: "icons" },
     { label: "Mail-Signatur", slug: "signatur" },
     { label: "Visitenkarte",  slug: "visitenkarten" }
   ];

@@ -10,6 +10,9 @@
 <link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
 <style>
+  /* Icon-Webfont nur fürs Karten-Mini-Visual (das Erzeugnis als Erkennungszeichen). */
+  @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.6.woff2") format("woff2");font-display:block}
+
   /* Startseite: nur die Karten – kein Hero, keine Überschriften, keine Erklärungen.
      Spürbar Atem unter dem Header. main.wrap, sonst gewinnt .wrap (0 26px) und der
      Abstand oben bliebe wirkungslos – nur top/bottom setzen, 26px seitlich bleiben. */
@@ -55,6 +58,8 @@
   /* Design-System: Farbfelder */
   .tile .sw{display:flex;gap:9px}
   .tile .sw i{width:20px;height:20px;border-radius:5px;display:block}
+  /* Icons: drei Piktogramme aus dem Icon-Webfont (currentColor – folgt Hell/Dunkel) */
+  .tile .icons{font-family:"G Icons";font-size:36px;line-height:1;color:var(--ink);display:flex;gap:14px}
 </style>
 </head>
 <body>
@@ -84,6 +89,7 @@
     "visitenkarten":   '<span class="vk"><i></i><i></i></span>',                               // eine Karte
     "signatur":        '<span class="sig"><b></b><span><i></i><i></i><i></i></span></span>',   // Signatur-Block (blaue Kante + Zeilen)
     "schriften":       '<span class="spec">Ag</span>',                                         // Buchstaben-Probe
+    "icons":           '<span class="icons" aria-hidden="true">gfx</span>',                     // drei Piktogramme (WLAN · Garderobe · Rollstuhl)
     "schrift-webfont": '<span class="win"><b></b><em>Aa</em></span>',                          // Schrift im Browser-Fenster
     "typografie":      '<span class="para"><i></i><i></i><i></i><i></i></span>',               // gesetzter Absatz
     "design-system":   '<span class="sw"><i style="background:var(--blue)"></i><i style="background:var(--gold-deep)"></i><i style="background:var(--ink)"></i></span>' // Farbfelder
