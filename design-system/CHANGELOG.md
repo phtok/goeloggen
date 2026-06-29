@@ -68,6 +68,15 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
   Utility `.ico-invert` (Filter im Dunkelmodus) ins Fundament; auf die Schriften-
   Icons angewandt. Besser noch: Icons als Webfont/Inline-SVG mit currentColor.
 
+### Die Schrift-Grenze gezogen – Source Sans 3 endlich im Einsatz
+- Die zweite Groteske (Source Sans 3) war geladen, aber ungenutzt. Jetzt verdrahtet:
+  **Funktion & Daten** tragen sie (Label, Wert/Readout, Meta/Legende, Badge/Chip,
+  Formularfelder, Tabellen) – klein & konventionell deutlich lesbarer.
+- **Identität bleibt Hausschrift**: Titel, Kicker, Lede, **Fliesstext und erklärende
+  Hinweise** (Sprache). Lesbarkeit dort aus den **Faktoren**: --lh-body 1.6 → **1.66**,
+  Mass ~62ch, Schnitt Klar, Betonung Laut. Die Grenze ‹wo Lesbarkeit über Identität
+  geht› in CLAUDE.md verankert.
+
 ### Backstage/Beta auf den 14px-Floor + Org-Farbe angeglichen
 - Acht Specimen-/Backstage-Seiten (Typografie, Tester, Grotesk+, Vorschau,
   Mischsatz, Ligaturen ×3) auf den neuen Floor gehoben: literale <14px → --t-small;
