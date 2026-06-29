@@ -18,6 +18,19 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Weitere Lücken vom alten Auftritt geschlossen: Zeichen · Wallpaper · PowerPoint · Feedback
+- **Zeichen** (`zeichen.html`) – die Zeichen von Rudolf Steiner (Hochschule, Gesellschaft,
+  Bau-Administration) als Vorschau + Anwendungshinweis + Zugang zu den vollständigen Paketen.
+  Die Marken stehen auf weissem Feld (`# ds-ok`: Briefpapier-Artefakt, in Hell wie Dunkel sichtbar).
+  Assets von grafik.goetheanum.ch gezogen, als echte PNG abgelegt (`assets/zeichen/`).
+- **Wallpaper** (`wallpaper.html`) – elf Desktop-Hintergründe (2500×1406) zum Herunterladen.
+  Von der CDN gezogen, als JPG q88 abgelegt (`assets/wallpaper/`, ~0,5 MB gesamt).
+- **PowerPoint** (`powerpoint.html`) – Platzhalterseite (Vorlage wird überarbeitet, Datei folgt).
+- **Neue Welt ‹Anwendungen›** (cat `anwendung`) in `nav.js`/`tools.json`/Startseite – für fertige
+  Vorlagen (Wallpaper, PowerPoint); **Pantone aus der Farbseite entfernt** (wird nicht mehr verwendet).
+- **Globaler Feedback-Button** (`✉`) in der Kopfzeile (`nav.js`/`nav.css`) – mailto an die Hausgrafik,
+  auf jeder Seite. Ein eigenes Anfrage-/Druckformular bleibt davon getrennt (Todo Druckauftrag).
+
 ### Neue Publikumsseite: Farben (Lücke vom alten Auftritt geschlossen)
 - **`farben.html`** – die Identitätsfarben auf einen Blick (Marke · Neutrale ·
   Sektionen). **Hex/RGB/HSB** werden im Browser exakt aus dem Token-Hex errechnet

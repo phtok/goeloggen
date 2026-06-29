@@ -91,7 +91,9 @@
     { id: "schrift", label: "Schrift",
       intro: "Hausschrift und Regeln – ansehen, herunterladen, einbinden.", cats: ["schrift"] },
     { id: "elemente", label: "Elemente",
-      intro: "Farben, Logos, Design-System – nachschlagen und holen.", cats: ["system"] }
+      intro: "Farben, Zeichen, Logos, Design-System – nachschlagen und holen.", cats: ["system"] },
+    { id: "anwendungen", label: "Anwendungen",
+      intro: "Fertige Vorlagen zum Übernehmen – Wallpaper, Präsentationen.", cats: ["anwendung"] }
   ];
   // Nur intern zusätzlich – die Backstage-Welten (A/B/C-Qualifizierung).
   var INTERN_EXTRA = [
@@ -164,6 +166,7 @@
         '<img class="lockup" src="' + ROOT + 'assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge">' +
       '</a>' +
       '<nav class="worlds"></nav>' + ctaHTML +
+      '<a class="feedback" href="mailto:philipp.tok@goetheanum.ch?subject=Feedback%20Goetheanum%20Werkzeuge" aria-label="Feedback geben" title="Feedback geben"><span class="ic">✉</span></a>' +
       '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic">☾</span></button>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +

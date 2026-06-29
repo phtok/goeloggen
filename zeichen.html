@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="de">
+<head>
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum – Zeichen</title>
+<meta name="description" content="Die Zeichen von Rudolf Steiner – Hochschulzeichen, Gesellschaftszeichen und das Zeichen der Bau-Administration. Mit Hinweisen zur Anwendung und Zugang zu den vollständigen Paketen." />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Farben/Schrift/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigenes Layout. */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  .hero{padding-block:60px 14px}
+  .lede{max-width:64ch;margin-top:var(--s4)}
+
+  .grid{display:grid;gap:var(--s6);grid-template-columns:1fr;margin-top:var(--s8)}
+  @media(min-width:680px){.grid{grid-template-columns:1fr 1fr 1fr}}
+
+  .card{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);
+    padding:var(--s4);display:flex;flex-direction:column;gap:var(--s4)}
+  /* Die Zeichen sind dunkle Strich-Marken für weisses Briefpapier – ein Artefakt:
+     stehen darum immer auf weissem Feld, damit sie in Hell wie Dunkel sichtbar sind. */
+  .mark{height:190px;border-radius:var(--r-control);overflow:hidden;
+    background:#fff;border:1px solid var(--line);padding:var(--s6)}  /* # ds-ok: weisses Briefpapier (Artefakt) */
+  .mark img{width:100%;height:100%;object-fit:contain;display:block}
+  .meta{display:flex;flex-direction:column;gap:var(--s1)}
+  .meta .nm{font-family:var(--font);font-weight:var(--w-deutlich);font-size:var(--t-h3)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-section="system" data-active="zeichen"></script>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="kicker">Hausgrafik · Elemente</div>
+    <h1>Zeichen</h1>
+    <p class="lede">Die Zeichen von Rudolf Steiner werden für Briefpapiere, Mitgliederkarten und die
+      Generalversammlung der Gesellschaft eingesetzt. Hier die Vorschau; das vollständige Paket
+      (alle Formate und Varianten) liegt im jeweiligen Download.</p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="mark"><img src="assets/zeichen/hochschulzeichen.png" alt="Hochschulzeichen" /></div>
+      <div class="meta"><span class="nm">Hochschulzeichen</span><span class="note">Freie Hochschule für Geisteswissenschaft</span></div>
+      <a class="btn primary" href="https://logopackage.app/app/project/f662a356-102c-4397-8c74-cba166a4b6f2" target="_blank" rel="noopener">Paket öffnen</a>
+    </div>
+    <div class="card">
+      <div class="mark"><img src="assets/zeichen/gesellschaftszeichen.png" alt="Gesellschaftszeichen" /></div>
+      <div class="meta"><span class="nm">Gesellschaftszeichen</span><span class="note">Allgemeine Anthroposophische Gesellschaft</span></div>
+      <a class="btn primary" href="https://logopackage.app/app/project/99ca8b68-84cd-471e-8268-619710977868" target="_blank" rel="noopener">Paket öffnen</a>
+    </div>
+    <div class="card">
+      <div class="mark"><img src="assets/zeichen/bau-administration.png" alt="Zeichen der Bau-Administration" /></div>
+      <div class="meta"><span class="nm">Bau-Administration</span><span class="note">Zeichen der Bau-Administration</span></div>
+      <a class="btn primary" href="https://logopackage.app/app/project/4b56007a-a29d-4a5e-a22b-da15d651b4a9" target="_blank" rel="noopener">Paket öffnen</a>
+    </div>
+  </div>
+
+  <p class="note" style="margin-top:var(--s8);max-width:64ch">Die Vorschau-Dateien liegen im Repo
+    (<code>assets/zeichen/</code>); die vollständigen, freigegebenen Pakete kommen aus dem Logo-Paket-Dienst.</p>
+</main>
+</body>
+</html>

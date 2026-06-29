@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="de">
+<head>
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum – Wallpaper</title>
+<meta name="description" content="Desktop-Hintergründe des Goetheanum (2500 × 1406) zum Herunterladen – elf Motive." />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Farben/Schrift/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigenes Layout. */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  .hero{padding-block:60px 14px}
+  .lede{max-width:64ch;margin-top:var(--s4)}
+
+  .grid{display:grid;gap:var(--s4);grid-template-columns:1fr;margin-top:var(--s8)}
+  @media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
+  @media(min-width:900px){.grid{grid-template-columns:1fr 1fr 1fr}}
+
+  .shot{display:block;border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;
+    background:var(--soft);text-decoration:none;color:var(--ink);transition:border-color .15s}
+  .shot:hover{border-color:var(--gold)}
+  .shot img{width:100%;aspect-ratio:2500/1406;object-fit:cover;display:block}
+  .shot .cap{display:flex;align-items:center;justify-content:space-between;gap:var(--s2);
+    padding:var(--s3) var(--s4);font-size:var(--t-small)}
+  .shot .cap .dl{color:var(--gold-ink)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-section="anwendung" data-active="wallpaper"></script>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="kicker">Hausgrafik · Anwendungen</div>
+    <h1>Wallpaper</h1>
+    <p class="lede">Desktop-Hintergründe in 2500 × 1406. Auf ein Motiv tippen lädt die Datei herunter.</p>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</main>
+
+<script>
+(function(){
+  var grid=document.getElementById("grid");
+  for(var n=46;n<=56;n++){
+    var file="assets/wallpaper/goetheanum-wallpaper-"+n+".jpg";
+    var a=document.createElement("a");
+    a.className="shot"; a.href=file; a.setAttribute("download","");
+    a.innerHTML='<img loading="lazy" src="'+file+'" alt="Goetheanum Wallpaper '+n+'">'+
+      '<span class="cap"><span>Motiv '+n+'</span><span class="dl">Herunterladen ↓</span></span>';
+    grid.appendChild(a);
+  }
+})();
+</script>
+</body>
+</html>
