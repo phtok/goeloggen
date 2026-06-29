@@ -36,6 +36,21 @@
   .swatches{display:flex;gap:10px;flex-wrap:wrap}
   .swatches button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);cursor:pointer;padding:0}
   .swatches button[aria-pressed="true"]{outline:2px solid var(--gold-deep);outline-offset:2px}
+  /* Ausnahme-Kreis (frei umfärben) – Regenbogen zeigt: keine feste Hausfarbe. */
+  .swatches button.free{background:conic-gradient(#df4164,#f98a3c,#63b145,#2e54a4,#a24f8a,#df4164)}
+
+  /* Versteckte Profi-Optionen (Backstage): erscheinen NUR mit der Intern-Ansicht
+     (nav.js, „intern" tippen) – gleiches Schloss wie die Backstage-Welten. Bewusst
+     abgesetzt (gestrichelt, Gold-Kicker), damit klar ist: Sonderfall, nicht Alltag. */
+  .adv{border:1px dashed var(--gold-deep);border-radius:var(--r-card);padding:var(--s4);display:grid;gap:var(--s3);background:var(--soft)}
+  .adv[hidden]{display:none}   /* sonst überstimmt .adv{display:grid} das hidden-Attribut */
+  .adv .lab{color:var(--gold-ink);font-weight:var(--w-strong)}
+  .advrow{display:grid;gap:6px}
+  .advlab{font-size:var(--t-small);color:var(--muted)}
+  .advinput{font:inherit;font-size:16px;padding:10px 12px;min-height:var(--tap);border:1px solid var(--line);border-radius:var(--r-control);background:var(--field-bg);color:var(--ink)}
+  .advcolors{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .advcolors input[type=color]{width:var(--tap);height:var(--tap);padding:0;border:1px solid var(--line);border-radius:var(--r-control);background:none;cursor:pointer}
+  .advnote{font-size:12.5px;line-height:1.5;color:var(--muted);margin:0}
 
   /* Mobil: zuoberst Vorschau + Format + die EINE Aktion – primär lädt das gemeinsame
      Logo zum Download ein. Die Sonderfassungen (Auswahl) stehen darunter. Nur die
@@ -114,6 +129,25 @@
         <div class="field">
           <span class="lab">Farbe</span>
           <div class="swatches" id="mode"></div>
+        </div>
+
+        <!-- Versteckt: erscheint nur in der Intern-/Backstage-Ansicht (nav.js).
+             Zwei Sonderfälle: Zeile 2 frei beschriften und frei umfärben. -->
+        <div class="field adv" id="advField" hidden>
+          <span class="lab">Backstage · frei</span>
+          <label class="advrow">
+            <span class="advlab">Eigener Text (Zeile 2)</span>
+            <input id="advtext" class="advinput" type="text" autocomplete="off" spellcheck="false" placeholder="Auto: Sektionsname" />
+          </label>
+          <div class="advrow">
+            <span class="advlab">Eigene Farbe (Zeile 2 / Bild · Goetheanum-Zeile)</span>
+            <div class="advcolors">
+              <input id="advBc" type="color" value="#0061a9" aria-label="Farbe Zeile 2 und Bildmarke" />
+              <input id="advL1c" type="color" value="#575756" aria-label="Farbe Goetheanum-Zeile" />
+              <button id="advReset" class="btn" type="button">zurück zu Original</button>
+            </div>
+          </div>
+          <p class="advnote">Frei umbenennen und umfärben weicht von den Hausregeln ab (<q>nie umfärben</q>, G03 Weglassen) – nur für Sonderfälle, bewusst und sparsam. Für die Breite gilt das fertige Logo.</p>
         </div>
       </div>
 
@@ -218,7 +252,7 @@
 (function(){
   var E = window.LogoEngine;
   // Default = das eigentliche Logo: blaues, einzeiliges Goetheanum-Basislogo.
-  var sel = { cat:"allgemein", org:"goetheanum", layout:"desktop", tribase:"desktop", mode:"original", lang:"de", fmt:"svg", scale:2.635 };
+  var sel = { cat:"allgemein", org:"goetheanum", layout:"desktop", tribase:"desktop", mode:"original", lang:"de", fmt:"svg", scale:2.635, txt:"", bc:"#0061a9", l1c:"#575756" };
 
   var LAYOUT_LABELS = [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"],["square","Quadrat"]];
   var LANG_LABELS   = [["de","Deutsch"],["en","English"],["fr","Français"],["es","Español"]];
@@ -411,6 +445,13 @@
       b.setAttribute("aria-pressed", String(p[0] === sel.mode));
       box.appendChild(b);
     });
+    // Ausnahme (frei umfärben) nur in der Backstage-Ansicht – als Regenbogen-Kreis.
+    if (advActive()){
+      var fb = document.createElement("button");
+      fb.type = "button"; fb.className = "free"; fb.title = "Ausnahme – frei umfärben"; fb.dataset.val = "ausnahme";
+      fb.setAttribute("aria-pressed", String(sel.mode === "ausnahme"));
+      box.appendChild(fb);
+    }
   }
   function fmtHint(code){ return (isMedia() ? MEDIA_FMT_HINT[code] : FMT_HINT[code]) || ""; }
   // Die Erklärzeile IST der Hinweis (beginnt mit „Geeignet für …"); das gewählte
@@ -428,6 +469,23 @@
       b.addEventListener("mouseenter", function(){ $("fmthint").textContent = fmtLine(p[0]); });
       box.appendChild(b);
     });
+  }
+
+  // --- Versteckte Profi-Optionen, gekoppelt an die Backstage-Ansicht ----------
+  // Sichtbar NUR, wenn die Intern-/Backstage-Ansicht an ist (nav.js: window.goeIntern).
+  // Die Engine kann beides bereits: Zeile-2-Text (sel.txt) und freie Farben über den
+  // Modus ‹ausnahme› (dann übernimmt sie sel.bc/sel.l1c unverändert).
+  function advActive(){ return !!(window.goeIntern && window.goeIntern()); }
+  function applyCustomColor(){ sel.mode = "ausnahme"; sel.bc = $("advBc").value; sel.l1c = $("advL1c").value; }
+  function syncAdvVisible(){
+    var f = $("advField"); if (!f) return;
+    f.hidden = !(advActive() && !isMedia());
+    if (!advActive()){            // Backstage aus → alle freien Eingaben zurücknehmen
+      var changed = false;
+      if (sel.txt){ sel.txt = ""; var t = $("advtext"); if (t) t.value = ""; changed = true; }
+      if (sel.mode === "ausnahme"){ sel.mode = "original"; changed = true; }
+      if (changed){ fillSwatch(); fillFmt(); updateDl(); render(); }
+    }
   }
 
   function currentSVG(){ return E.svg(sel); }
@@ -463,11 +521,11 @@
   function buildVisuals(){
     var vv = $("vVariants"); if (!vv || !$("vColors")) return;
     [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"]].forEach(function(p){
-      vv.appendChild(figure(E.svg({cat:"sektionen",org:"aas",layout:p[0],mode:"original",lang:"de",scale:2.635}), p[1], false));
+      vv.appendChild(figure(E.svg({cat:"sektionen",org:"aas",layout:p[0],mode:"original",lang:"de",scale:2.635,txt:""}), p[1], false));
     });
     var vc = $("vColors");
     [["original","Original",false],["white","Weiss",true],["black","Schwarz",false],["gray","Grau",false]].forEach(function(p){
-      vc.appendChild(figure(E.svg({cat:"sektionen",org:"aas",layout:"desktop",mode:p[0],lang:"de",scale:2.635}), p[1], p[2]));
+      vc.appendChild(figure(E.svg({cat:"sektionen",org:"aas",layout:"desktop",mode:p[0],lang:"de",scale:2.635,txt:""}), p[1], p[2]));
     });
   }
   function figure(svg, cap, dark){
@@ -490,6 +548,7 @@
       if (sel.cat !== "allgemein") sel.org = $("org").value;
       if (isMedia()) mediaDefaults();
       fillLayout(); fillLang(); fillSwatch(); fillFmt(); updateDl();
+      syncAdvVisible();
       render();
     });
     $("org").addEventListener("change", function(){ sel.org = this.value; if (isMedia()) mediaDefaults(); fillLayout(); fillLang(); fillSwatch(); fillFmt(); updateDl(); render(); });
@@ -499,7 +558,16 @@
       render();
     });
     $("lang").addEventListener("change", function(){ sel.lang = this.value; fillLayout(); render(); });
-    $("mode").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.mode=b.dataset.val; fillSwatch(); if (isMedia()){ mediaDefaults(); fillFmt(); updateDl(); } render(); });
+    $("mode").addEventListener("click", function(e){
+      var b=e.target.closest("button"); if(!b)return;
+      sel.mode=b.dataset.val;
+      if (sel.mode === "ausnahme"){   // Ausnahme-Kreis: Felder mit der Originalfarbe vorbelegen, dann frei
+        $("advBc").value = (ORGS[sel.org] && ORGS[sel.org].color) || "#0061a9";
+        $("advL1c").value = "#575756";
+        applyCustomColor();
+      }
+      fillSwatch(); if (isMedia()){ mediaDefaults(); fillFmt(); updateDl(); } render();
+    });
     $("fmt").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.fmt=b.dataset.val; fillFmt(); updateDl(); });
     $("fmt").addEventListener("mouseleave", function(){ $("fmthint").textContent = fmtLine(sel.fmt); });
     $("dl").addEventListener("click", function(){
@@ -511,6 +579,14 @@
       if (window.goeStat) window.goeStat("download", sel.fmt);   // Engine-Download selbst melden
       LogoExport[sel.fmt](currentSVG(), fileBase());
     });
+    // Versteckte Profi-Felder verdrahten.
+    $("advtext").addEventListener("input", function(){ sel.txt = this.value; render(); });
+    $("advBc").addEventListener("input", function(){ applyCustomColor(); fillSwatch(); render(); });
+    $("advL1c").addEventListener("input", function(){ applyCustomColor(); fillSwatch(); render(); });
+    $("advReset").addEventListener("click", function(){ sel.mode = "original"; fillSwatch(); render(); });
+    // An die Backstage-Ansicht koppeln: ein-/ausblenden mit „intern" (nav.js).
+    window.addEventListener("goe:intern", function(){ fillSwatch(); syncAdvVisible(); render(); });
+    syncAdvVisible();
     var pb = $("pdfSheet"); if (pb) pb.addEventListener("click", function(){ window.print(); });
     render();
     buildVisuals();
