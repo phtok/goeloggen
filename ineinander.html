@@ -2,29 +2,30 @@
 <link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" /><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Ligaturen ineinander</title>
 <link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
 <style>
 @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.6-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
 :root{--va:-250}
-body{margin:0;background:#faf8f4;color:#23272b;font:15px/1.5 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
 .wrap{max-width:1040px;margin:0 auto;padding:26px 22px 80px}
-h1{font-size:22px;margin:0 0 6px}.hint{color:#737a80;font-size:14px;margin:6px 0 14px}
-.stage{background:#fff;border:1px solid rgba(20,24,28,.12);border-radius:14px;padding:26px 28px;margin:14px 0}
-.sample{font-family:"G Klar";font-size:46px;line-height:1.6;color:#23272b}
+h1{margin:0 0 6px}.hint{color:var(--muted);font-size:14px;margin:6px 0 14px}
+.stage{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:26px 28px;margin:14px 0}
+.sample{font-family:"G Klar";font-size:46px;line-height:1.6;color:var(--ink)}
 .lig{display:inline-block;vertical-align:calc(var(--va)/1000*1em)}
 .lig svg{height:1em;fill:currentColor}
 .tools{display:flex;gap:24px;flex-wrap:wrap;margin-top:4px}
-.tool{min-width:230px}.tool label{display:flex;justify-content:space-between;font-size:13px;color:#3a3f44;margin-bottom:5px}
+.tool{min-width:230px}.tool label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:5px}
 .ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:16px}
-.cell{background:#fff;border:1px solid rgba(20,24,28,.12);border-radius:10px;padding:12px 14px}
+.cell{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .cell .ck{font-weight:600;margin-bottom:7px;font-size:15px}
-.cell label{display:flex;justify-content:space-between;font-size:13px;color:#3a3f44;margin-bottom:4px}
+.cell label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:4px}
 .cell b,.tool b{font-variant-numeric:tabular-nums}
 input[type=range]{width:100%}
-.readout{margin-top:16px;font-size:13px;color:#3a3f44;background:#f3efe7;border-radius:10px;padding:11px 13px}
+.readout{margin-top:16px;font-size:13px;color:var(--muted);background:var(--soft);border-radius:10px;padding:11px 13px}
 .code{font-family:ui-monospace,Menlo,monospace;white-space:pre-wrap}
-.btn{font:inherit;font-size:13px;border:1px solid rgba(20,24,28,.18);background:#fff;border-radius:8px;padding:6px 11px;cursor:pointer;margin-right:8px}
-small{color:#9aa0a6}
+.btn{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--soft);border-radius:8px;padding:6px 11px;cursor:pointer;margin-right:8px}
+small{color:var(--muted)}
 </style></head><body>
 <script src="design-system/nav.js" data-root="./" data-section="ligaturen" data-active="ineinander"></script>
 <div class="wrap">
