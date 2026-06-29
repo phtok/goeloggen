@@ -68,7 +68,7 @@
   .krow{display:flex;gap:6px}
   .keycap{flex:0 0 auto;width:48px;height:52px;border:1px solid var(--line);border-radius:8px;background:var(--soft);
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-  .keycap .lk{font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+  .keycap .lk{font-family:var(--font-mono);font-size:14px;color:var(--muted)}
   .keycap.has{border-color:var(--gold);background:var(--paper)}
   .keycap.has .gl{font-family:"G Icons";font-size:26px;line-height:1;color:var(--ink);height:26px}
   .keycap.has .lk{color:var(--gold-ink)}
@@ -244,7 +244,7 @@
           cap.className='keycap'+(it?' has':'');
           if(it){ cap.title=it.label;
             cap.innerHTML='<span class="gl">'+esc(ch)+'</span><span class="lk">'+esc(ch.toUpperCase())+'</span>';
-          } else { cap.innerHTML='<span class="lk" style="font-size:13px">'+esc(ch.toUpperCase())+'</span>'; }
+          } else { cap.innerHTML='<span class="lk">'+esc(ch.toUpperCase())+'</span>'; }
           row.appendChild(cap);
         });
         box.appendChild(row);
