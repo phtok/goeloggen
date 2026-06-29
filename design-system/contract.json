@@ -1,0 +1,77 @@
+{
+  "$schema": "https://goetheanum/design-system/contract.schema.json",
+  "version": "1.0.0",
+  "titel": "Goetheanum Design-System – Struktur-Vertrag",
+  "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
+
+  "geltungsbereich": {
+    "prüfe": "versionierte *.html mit einem <body> (publizierte Werkzeug- und Schau-Seiten)",
+    "ausgenommen_substr": ["/assets/", "/tools/goetheanum-fontfix/", "archive/", "vendor/"],
+    "ausgenommen_dateien": ["design-system/navigation.html"],
+    "weiterleitungs_stubs": "Root-Stubs ohne eigenes <style>/<link> (reine Redirects) werden übersprungen."
+  },
+
+  "includes": {
+    "pflicht": ["design-system/tokens.css", "design-system/base.css"],
+    "hinweis": "Reihenfolge: tokens.css VOR base.css. nav.css zusätzlich für Seiten mit globaler Kopfzeile.",
+    "ds_id": "DS01",
+    "schwere": "fehler"
+  },
+
+  "farben": {
+    "ds_id": "DS02",
+    "regel": "Farbwerte nur über Tokens (var(--…)). Hartverdrahtete Hex-/rgb()-Farben in color/background/border-color/fill/stroke sind verboten – ausser in Custom-Property-DEFINITIONEN (--x:…), @font-face und url().",
+    "schwere": "fehler",
+    "erlaubte_property_präfixe": ["--"],
+    "ignorierte_properties": ["box-shadow", "-webkit-box-shadow", "filter", "background-image", "text-shadow"],
+    "hinweis": "box-shadow/Filter dürfen rgba() für Schatten nutzen. Seiten-eigene Tokens (--good:#…) sind die seltene Ausnahme, kein Normalfall."
+  },
+
+  "groessen": {
+    "ds_id": "DS03",
+    "regel": "Keine lesbare Schrift unter den B03-Untergrenzen. font-size in px: Fliesstext ≥16, Meta/Label ≥14, nichts Lesbares <13.",
+    "untergrenze_px": 13,
+    "warnen_unter_px": 13,
+    "schwere": "fehler",
+    "warn_schwere": "hinweis",
+    "hinweis": "B03 exakt: <13px = fehler. 13px ist erlaubt (=--t-micro). Bevorzugt die fluiden Skala-Tokens (--t-body/--t-small/--t-micro/--t-lede/--t-h*) statt fester px."
+  },
+
+  "rollen": {
+    "ds_id": "DS04",
+    "regel": "Kanonische Textrollen (base.css) NICHT seiten-lokal mit eigener font-size/color redefinieren. Klasse verwenden, nicht neu erfinden.",
+    "schwere": "hinweis",
+    "kanonische_klassen": ["kicker", "kick", "lede", "note", "hint", "help", "desc", "subhead", "meta", "cap", "caption", "legend", "byline", "lab", "role", "readout", "mono", "code", "lese", "prose", "chip", "btn", "seg", "field", "shead", "hero", "card"],
+    "hinweis": "Treffer = Seite definiert .note/.hint/.lede/… selbst. ds-fix kann die lokale Regel entfernen, sobald base.css die Rolle trägt."
+  },
+
+  "hervorhebung": {
+    "ds_id": "DS05",
+    "regel": "Betonung nur über Gewicht/Laut. Verboten als Hervorhebung: Unterstreichen (text-decoration:underline auf em/strong/Fliesstext), Versalien (text-transform:uppercase auf Kicker/Titel/Betonung), Sperren über Leertasten.",
+    "schwere": "hinweis",
+    "verbotene_muster": ["text-decoration:underline", "text-transform:uppercase"],
+    "bezug": ["G05", "G23"],
+    "hinweis": "Links dürfen unterstrichen sein; Treffer auf Betonungs-Selektoren (strong/b/em/.kicker/h1..h4) sind der Verstoss."
+  },
+
+  "kopfzeile": {
+    "ds_id": "DS06",
+    "regel": "Keine eigene Kopfzeile/Fake-Logo. Die globale Leiste kommt aus nav.js (design-system/nav.js). Seiten setzen keine eigene sticky .ds-header / kein eigenes Marken-Logo im Kopf.",
+    "schwere": "hinweis",
+    "verdächtige_muster": ["class=\"ds-header\"", "class=\"page-head", "<header"],
+    "hinweis": "Treffer prüfen: nutzt die Seite nav.js? Eigener <header> mit Logo = Verstoss (siehe design-system/index.html, behoben in #161)."
+  },
+
+  "theme": {
+    "ds_id": "DS07",
+    "regel": "Flächen tokenisiert, damit Hell/Dunkel allein aus den Tokens kippt. Kein hartes #fff/#000/white/black als Flächen- oder Textfarbe.",
+    "schwere": "fehler",
+    "verbotene_literale": ["#fff", "#ffffff", "#000", "#000000", "white", "black"],
+    "hinweis": "Teilmenge von DS02, separat gemeldet, weil es der häufigste Dunkelmodus-Bruch ist (--paper/--ink/--soft/--field-bg statt #fff)."
+  },
+
+  "score": {
+    "definition": "konforme Seiten / geprüfte Seiten. Konform = kein Verstoss der Schwere ‹fehler›.",
+    "ziel": 1.0
+  }
+}

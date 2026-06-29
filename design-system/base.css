@@ -80,7 +80,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .btn.primary{background:var(--blue-solid);border-color:var(--blue-solid);color:var(--on-accent);font-weight:var(--w-strong)}
 .btn.primary:hover{filter:brightness(1.08)}
 .btn.ghost{color:var(--muted);background:none}
-.btn.ok{background:#3f7d46;border-color:#3f7d46;color:var(--on-accent)}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:var(--on-accent)}
 
 /* --- Segmentierte Auswahl (Pillen) = WAHL ---------------------------------- */
 /* Anwahl = Gold/Weiss – der Hausfarbklang für Auswahl. Kapselform, kein Pfeil. */
@@ -159,11 +159,69 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
 .deutlich{font-weight:var(--w-deutlich)}
 .laut{font-weight:var(--w-strong)}
 
-/* Kicker: getönt, leicht getrackt, Display-Schrift – NORMAL, nicht versal (G05). */
-/* Kleine UI-Schrift: nie Leise (verschwimmt klein) – mindestens Klar. */
-.kicker,.kick{display:inline-block;font-family:var(--font-display);color:var(--gold-ink);font-size:13.5px;letter-spacing:.03em;font-weight:var(--w-text);margin-bottom:var(--s2)}
+/* =============================================================================
+   Textrollen – gemessene Grundlage für ALLE Texte (eine Quelle der Wahrheit)
+   -----------------------------------------------------------------------------
+   Jede Seite verwendet diese Rollen statt eigener Grade/Farben/Schnitte. Keine
+   Seite setzt mehr font-size/color für Standardtext selbst – so kann keine aus-
+   scheren (Konformität durch Konstruktion). Mobil-sicher: Mengentext 17–19,
+   Meta/Label/Hinweis 14–15, nichts Lesbares unter 13 (B03). Farbe nur aus den
+   Tokens; Betonung nur über Gewicht (Laut), nie Versal/Sperren/Unterstrich (G05).
+
+     Rolle     Klasse(n)              Wofür                       Grad · Ton
+     ─────────────────────────────────────────────────────────────────────────
+     Kicker    .kicker .kick          Überzeile, getönt, normal   13.5 · Gold·Display
+     Titel     h1–h4 .h-display       geschaute Hierarchie        Skala · ink·Deutlich
+     Lede      .lede                  Anriss unter dem Titel      19–22 · muted
+     Fliess    <body> · .prose        Lese-/Mengentext            17–19 · ink
+     Hinweis   .note .hint .help …    erklärender Beisatz         14–15 · muted
+     Meta      .meta .cap .legend …   Legende, Datum, Byline      14–15 · muted
+     Label     .lab .role             Bedienelement-/Wert-Schild  14–15 · muted, getrackt
+     Wert      .readout               Live-Ausgabe/Ableseband     14–15 · ink, tnum
+     Code      .code .mono            technische Auszeichnung     mono · soft
+   ============================================================================= */
+
+/* Kicker: getönt, leicht getrackt, Display – NORMAL, nicht versal (G05).
+   Kleine UI-Schrift: nie Leise (verschwimmt klein) – mindestens Klar. */
+.kicker,.kick{display:inline-block;font-family:var(--font-display);color:var(--gold-ink);font-size:13.5px;letter-spacing:.03em;font-weight:var(--w-text);line-height:1.3;margin-bottom:var(--s2)}
+
+/* Anriss unter dem Titel. */
+.lede{font-size:var(--t-lede);color:var(--muted);line-height:1.45;max-width:54ch}
+
+/* Erklärender Beisatz (Hilfetext, Untertitel eines Abschnitts oder einer Karte).
+   Ein Grad, eine Farbe – egal auf welcher Seite. Löst hint/sub/desc/help ab. */
+.note,.hint,.help,.desc,.subhead{color:var(--muted);font-size:var(--t-small);line-height:1.5;max-width:60ch}
+
+/* Legende, Bildunterschrift, Datum, Byline – das knappe Beiwerk. */
+.meta,.cap,.caption,.legend,.byline{color:var(--muted);font-size:var(--t-small);line-height:1.45}
+
+/* Aufschrift eines Bedienelements oder Werts – getrackt, nie versal (G05). */
+.lab,.role{color:var(--muted);font-size:var(--t-small);letter-spacing:.01em;line-height:1.35}
+.lab b,.lab strong,.role b,.role strong{color:var(--ink);font-weight:var(--w-strong)}
+
+/* Live-Ausgabe / Ableseband – ruhig, Zahlen dicktengleich (G25). */
+.readout{color:var(--ink);font-size:var(--t-small);line-height:1.5;font-variant-numeric:tabular-nums lining-nums}
+
+/* Technische Auszeichnung – Monospace. Inline-Chip (.code) und Block (.code.block). */
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums lining-nums}
+.code{font-family:var(--font-mono);font-size:.85em;background:var(--soft);border:1px solid var(--line-soft);border-radius:6px;padding:2px 7px;color:var(--ink)}
+.code.block{display:block;padding:10px 13px;border-radius:var(--r-control);line-height:1.55;white-space:pre-wrap;overflow:auto}
 
 /* Lesemass: ~66 Zeichen je Zeile für linearen Mengentext (G10). */
 .lese{max-width:min(var(--measure),100%)}
-.meta{color:var(--muted);font-size:var(--t-small)}
-.lede{font-size:var(--t-lede);color:var(--muted);line-height:1.45;max-width:54ch}
+
+/* =============================================================================
+   Mobil-Baseline – ein Satz Leitplanken, damit JEDE Seite auf dem Handy trägt
+   (B03 Mindestgrössen, B04 Fingerziele, kein horizontaler Überlauf). Die Typo
+   skaliert ohnehin fluid (rem-Clamps); hier nur Touch- und Layout-Garantien.
+   ============================================================================= */
+img,svg,canvas,video{max-width:100%}
+@media(max-width:560px){
+  .wrap{padding-left:18px;padding-right:18px}
+  /* Fingerziele ≥44px auf Touch: Knöpfe, Pillen, Felder, Klapplisten (B04). */
+  .btn,.seg button{min-height:var(--tap)}
+  .field input,.field textarea,.field select,.ds-select__btn{min-height:var(--tap)}
+  /* Köpfe brechen um statt zu quetschen. */
+  .shead{gap:var(--s3)}
+  .ds-footer .frow{gap:var(--s3)}
+}
