@@ -7,20 +7,22 @@
 <title>Goetheanum Schriften · Gewichts-Tester</title>
 <meta name="robots" content="noindex" />
 <link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
 <style>
   @font-face{font-family:"GV";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.6.woff2") format("woff2");font-weight:150 725;font-display:swap}
-  :root{--ink:#23272b;--muted:#737a80;--line:rgba(20,24,28,.12);--gold:#d7ab68;--gold-deep:#a07a33;--soft:#faf8f4;--ok:#3f8f5f;--warn:#c2873a}
+  /* Farben/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigene Werte hier. */
+  :root{--ok:#3f8f5f;--warn:#c2873a}
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:"GV","Helvetica Neue",Arial,sans-serif;font-variation-settings:"wght" 450;color:var(--ink);background:#fff;line-height:1.5;-webkit-font-smoothing:antialiased}
+  body{font-family:"GV","Helvetica Neue",Arial,sans-serif;font-variation-settings:"wght" 450;color:var(--ink);background:var(--paper);line-height:1.5;-webkit-font-smoothing:antialiased}
   .wrap{max-width:1000px;margin:0 auto;padding:28px 26px 80px}
-  .kick{color:var(--gold-deep);font-size:13px;letter-spacing:.02em}
+  .kick{color:var(--gold-ink);font-size:13px;letter-spacing:.02em}
   h1{font-variation-settings:"wght" 600;font-size:34px;line-height:1.1;margin:6px 0 4px}
   .lede{color:var(--muted);max-width:640px;margin-bottom:26px}
-  .panel{border:1px solid var(--line);border-radius:16px;padding:30px;background:#fff}
+  .panel{border:1px solid var(--line);border-radius:16px;padding:30px;background:var(--paper)}
   .presets{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;font-size:13px;color:var(--muted)}
   .presets button{font:inherit;font-size:12.5px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
-  .presets button:hover,.presets button.on{color:var(--gold-deep);border-color:var(--gold)}
+  .presets button:hover,.presets button.on{color:var(--gold-ink);border-color:var(--gold)}
   .compare{display:flex;gap:34px;align-items:baseline;flex-wrap:wrap;font-size:clamp(28px,5vw,46px);line-height:1.1}
   .smallprobe{margin-top:14px;font-size:13px}
   .smallprobe .lab{color:var(--muted);font-size:11px;margin-right:10px}
@@ -38,10 +40,10 @@
   .ctrls{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:30px}
   @media(max-width:760px){.ctrls{grid-template-columns:1fr}}
   .ctrl b{font-variation-settings:"wght" 600;font-weight:normal}
-  .ctrl .v{float:right;color:var(--gold-deep)}
+  .ctrl .v{float:right;color:var(--gold-ink)}
   .ctrl .role{font-size:12px;color:var(--muted);margin-bottom:8px}
   input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:var(--line);border-radius:2px;margin:6px 0}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid var(--paper);box-shadow:0 1px 4px rgba(0,0,0,.2)}
   .def{font-size:11px;color:var(--muted)}
   .metrics{margin-top:26px;border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:var(--soft);font-size:14px}
   .metrics div{display:flex;justify-content:space-between;padding:4px 0}
@@ -52,7 +54,7 @@
   .out code{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:2px 8px;color:var(--ink)}
   .q{margin-top:30px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:14px}
   .q b{font-variation-settings:"wght" 600;font-weight:normal;color:var(--ink)}
-  a{color:var(--gold-deep)}
+  a{color:var(--gold-ink)}
 </style>
 </head>
 <body>
