@@ -8,116 +8,128 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
 <style>
-  :root{--navy:#23323F;--ink:#1d2a35;--line:#e3e1dc;--muted:#6f7c87}
+  /* Diese Seite ist zu grossen Teilen ein ARTEFAKT: ein Marken-Muster einer
+     HYPOTHETISCHEN ‹Goetheanum TV›-Plattform (eigene Bildsprache: Titillium,
+     Navy) samt Telefon-Mockup. Solche Muster sind laut Hausregel keine
+     Theme-Flächen – ihre Farben sind mit ‹# ds-ok› ratifiziert. Theme-aware
+     ist allein das Werkzeug-Chrome: die Präsentations-Leiste #presenter. */
+  :root{
+    --gtv-navy:#23323F;  /* # ds-ok: GTV-Markennavy (Artefakt-Muster) */
+    --gtv-line:#e3e1dc;  /* # ds-ok: GTV-Linie (Artefakt-Muster) */
+    --gtv-muted:#6f7c87; /* # ds-ok: GTV-Grau (Artefakt-Muster) */
+  }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Titillium Web',sans-serif;background:#fff;color:var(--navy)}
+  body{font-family:'Titillium Web',sans-serif;background:#fff;color:var(--gtv-navy)}  /* # ds-ok: GTV-Seite ist weiss (Artefakt) */
 
-  #presenter{position:sticky;top:0;z-index:50;background:#14202b;color:#e8ecef;padding:10px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px}
-  #presenter .plabel{font-weight:700;letter-spacing:.04em;font-size:11px;color:#8da0ae;text-transform:uppercase}
-  #collapsebtn{background:transparent;border:1px solid #3c4d5b;color:#dfe6ea;border-radius:999px;width:30px;height:30px;cursor:pointer;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;padding:0}
-  #collapsebtn:hover{border-color:#7e93a2;color:#fff}
+  /* Werkzeug-Chrome (Präsentations-Leiste) – folgt dem Theme über DS-Tokens. */
+  #presenter{position:sticky;top:0;z-index:50;background:var(--soft);color:var(--ink);padding:10px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:var(--t-small);border-bottom:1px solid var(--line)}
+  #presenter .plabel{font-weight:700;letter-spacing:.04em;font-size:var(--t-micro);color:var(--gold-ink)}
+  #collapsebtn{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:999px;width:30px;height:30px;cursor:pointer;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;padding:0}
+  #collapsebtn:hover{border-color:var(--gold);color:var(--ink)}
   #collapsebtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
   #presenter.collapsed #collapsebtn svg{transform:rotate(-90deg)}
-  #pcollapsed{display:none;color:#dfe6ea;font-weight:600}
+  #pcollapsed{display:none;color:var(--ink);font-weight:600}
   #presenter.collapsed>*{display:none!important}
   #presenter.collapsed>#collapsebtn,#presenter.collapsed>.plabel{display:inline-flex!important;align-items:center}
   #presenter.collapsed>#pcollapsed{display:inline!important}
-  .chip{background:transparent;border:1px solid #3c4d5b;color:#dfe6ea;border-radius:999px;padding:5px 14px;font:600 13px 'Titillium Web';cursor:pointer;transition:all .15s}
-  .chip:hover{border-color:#7e93a2}
-  .chip.on{background:#fff;color:#14202b;border-color:#fff}
+  .chip{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:5px 14px;font:600 var(--t-small) 'Titillium Web';cursor:pointer;transition:all .15s}
+  .chip:hover{border-color:var(--gold)}
+  .chip.on{background:var(--gold-deep);color:var(--on-accent);border-color:var(--gold-deep)}
   .chip .x{margin-left:8px;opacity:.5;font-weight:700;display:inline-block;transform:translateY(-0.5px)}
   .chip .x:hover{opacity:1}
   .chip.gone{display:none}
-  #resetbtn{background:transparent;border:1px dashed #3c4d5b;color:#9fb4c2;border-radius:999px;width:30px;height:30px;font-size:15px;cursor:pointer;line-height:1}
-  #resetbtn:hover{border-color:#7e93a2;color:#fff}
-  .navarr{background:transparent;border:1px solid #3c4d5b;color:#dfe6ea;border-radius:999px;width:30px;height:30px;font-size:16px;cursor:pointer;line-height:1}
-  .navarr:hover{border-color:#7e93a2}
-  #newname{background:transparent;border:1px dashed #3c4d5b;color:#dfe6ea;border-radius:999px;padding:5px 14px;font:600 13px 'Titillium Web';width:120px;outline:none}
-  #newname:focus{border-color:#7e93a2;border-style:solid}
-  #newname::placeholder{color:#8da0ae}
-  #exportbtn{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid #3c4d5b;color:#dfe6ea;border-radius:999px;padding:5px 13px;font:600 13px 'Titillium Web';cursor:pointer;transition:all .15s}
-  #exportbtn:hover{border-color:#7e93a2;color:#fff}
+  #resetbtn{background:transparent;border:1px dashed var(--line);color:var(--muted);border-radius:999px;width:30px;height:30px;font-size:15px;cursor:pointer;line-height:1}
+  #resetbtn:hover{border-color:var(--gold);color:var(--ink)}
+  .navarr{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:999px;width:30px;height:30px;font-size:16px;cursor:pointer;line-height:1}
+  .navarr:hover{border-color:var(--gold)}
+  #newname{background:var(--field-bg);border:1px dashed var(--line);color:var(--ink);border-radius:999px;padding:5px 14px;font:600 var(--t-small) 'Titillium Web';width:120px;outline:none}
+  #newname:focus{border-color:var(--gold);border-style:solid}
+  #newname::placeholder{color:var(--muted)}
+  #exportbtn{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:5px 13px;font:600 var(--t-small) 'Titillium Web';cursor:pointer;transition:all .15s}
+  #exportbtn:hover{border-color:var(--gold);color:var(--ink)}
   #exportbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  #phonefloat{position:fixed;right:26px;bottom:26px;z-index:60;background:#111418;border-radius:42px;padding:11px;box-shadow:0 26px 70px rgba(10,16,22,.4);display:none}
-  #phonefloat .pclip{position:relative;width:274px;height:560px;overflow:hidden;border-radius:32px;background:#fff}
+  #phonefloat{position:fixed;right:26px;bottom:26px;z-index:60;background:#111418;border-radius:42px;padding:11px;box-shadow:0 26px 70px rgba(10,16,22,.4);display:none}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  #phonefloat .pclip{position:relative;width:274px;height:560px;overflow:hidden;border-radius:32px;background:#fff}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   #pframe{width:392px;height:800px;border:0;transform:scale(0.699);transform-origin:top left}
   .pmodes{display:flex;gap:6px;justify-content:center;margin-bottom:9px}
-  .pmodes button{background:#222a33;border:0;color:#9fb4c2;font:600 11px 'Titillium Web',sans-serif;padding:4px 12px;border-radius:999px;cursor:pointer}
-  .pmodes button.on{background:#fff;color:#111}
-  #psplash{display:none;position:absolute;inset:0;background:#000;align-items:center;justify-content:center;z-index:2}
+  .pmodes button{background:#222a33;border:0;color:#9fb4c2;font:600 11px 'Titillium Web',sans-serif;padding:4px 12px;border-radius:999px;cursor:pointer}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  .pmodes button.on{background:#fff;color:#111}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  #psplash{display:none;position:absolute;inset:0;background:#000;align-items:center;justify-content:center;z-index:2}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   #psplash .spl{display:flex;align-items:center;gap:9px;padding:0 18px}
-  #psplash .spl span{color:#fff;font-family:'Titillium Web',sans-serif;font-weight:700;line-height:1;letter-spacing:.5px}
-  #papp{display:none;position:absolute;inset:0;background:#fff;z-index:2;font-family:-apple-system,system-ui,'Segoe UI',sans-serif;color:#111}
+  #psplash .spl span{color:#fff;font-family:'Titillium Web',sans-serif;font-weight:700;line-height:1;letter-spacing:.5px}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  #papp{display:none;position:absolute;inset:0;background:#fff;z-index:2;font-family:-apple-system,system-ui,'Segoe UI',sans-serif;color:#111}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   #papp .ph-head{display:flex;align-items:center;justify-content:space-between;padding:18px 14px 8px}
   #papp .ph-head b{font-size:16px;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:185px}
-  #papp .ph-head svg{width:18px;height:18px;margin-left:12px;stroke:#111;fill:none;stroke-width:1.8}
+  #papp .ph-head svg{width:18px;height:18px;margin-left:12px;stroke:#111;fill:none;stroke-width:1.8}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   #papp .ph-pills{display:flex;gap:6px;padding:4px 14px 10px;overflow:hidden}
-  #papp .ph-pills span{flex:0 0 auto;font-size:10.5px;font-weight:600;padding:5px 11px;border-radius:999px;background:#f8f8f8;border:1px solid #e8e8e8;color:#222}
-  #papp .ph-pills span.on{background:#1c1c1e;border-color:#1c1c1e;color:#fff}
+  #papp .ph-pills span{flex:0 0 auto;font-size:10.5px;font-weight:600;padding:5px 11px;border-radius:999px;background:#f8f8f8;border:1px solid #e8e8e8;color:#222}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  #papp .ph-pills span.on{background:#1c1c1e;border-color:#1c1c1e;color:#fff}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   #papp .ph-body{padding:0 14px;overflow:hidden;height:418px}
-  #papp .ph-card{position:relative;background:#f1f1f1;border-radius:8px}
-  #papp .ph-card .dur{position:absolute;right:7px;bottom:7px;background:rgba(110,110,110,.85);color:#fff;font-size:8.5px;font-weight:600;padding:2px 5px;border-radius:4px}
+  #papp .ph-card{position:relative;background:#f1f1f1;border-radius:8px}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  #papp .ph-card .dur{position:absolute;right:7px;bottom:7px;background:rgba(110,110,110,.85);color:#fff;font-size:8.5px;font-weight:600;padding:2px 5px;border-radius:4px}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   #papp .ph-card.big{height:138px;margin-top:4px}
-  #papp .ph-cap{font-size:10.5px;font-weight:600;color:#222;padding:7px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  #papp .ph-sec{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;font-weight:700;padding:13px 0 8px}
-  #papp .ph-sec i{font-style:normal;color:#999;font-weight:400}
+  #papp .ph-cap{font-size:10.5px;font-weight:600;color:#222;padding:7px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  #papp .ph-sec{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;font-weight:700;padding:13px 0 8px}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  #papp .ph-sec i{font-style:normal;color:#999;font-weight:400}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   #papp .ph-row{display:flex;gap:8px}
   #papp .ph-row .ph-card{width:132px;height:78px;flex:0 0 auto}
-  #papp .ph-row .ph-cap{font-weight:400;color:#333}
-  #papp .ph-tab{position:absolute;left:0;right:0;bottom:0;height:58px;border-top:1px solid #ececec;background:#fff;display:flex}
-  #papp .ph-tab div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:8.5px;color:#8a8a8e}
-  #papp .ph-tab div.on{color:#111}
-  #papp .ph-tab div.on::after{content:"";position:absolute;bottom:0;width:48px;height:3px;background:#23323F;border-radius:2px 2px 0 0}
+  #papp .ph-row .ph-cap{font-weight:400;color:#333}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  #papp .ph-tab{position:absolute;left:0;right:0;bottom:0;height:58px;border-top:1px solid #ececec;background:#fff;display:flex}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  #papp .ph-tab div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:8.5px;color:#8a8a8e}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  #papp .ph-tab div.on{color:#111}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  #papp .ph-tab div.on::after{content:"";position:absolute;bottom:0;width:48px;height:3px;background:#23323F;border-radius:2px 2px 0 0}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   #papp .ph-tab svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.7}
   .ptoggle{display:flex;align-items:center;gap:8px;margin-left:auto;cursor:pointer;user-select:none}
-  .ptoggle .track{width:38px;height:21px;border-radius:11px;background:#3c4d5b;position:relative;transition:background .15s}
-  .ptoggle .track::after{content:"";position:absolute;width:15px;height:15px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .15s}
-  .ptoggle.on .track{background:#6b7d8b}
+  .ptoggle .track{width:38px;height:21px;border-radius:11px;background:var(--muted);position:relative;transition:background .15s}
+  .ptoggle .track::after{content:"";position:absolute;width:15px;height:15px;border-radius:50%;background:var(--paper);top:3px;left:3px;transition:left .15s}
+  .ptoggle.on .track{background:var(--gold-deep)}
   .ptoggle.on .track::after{left:20px}
-  #domline{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#bcc9d2}
-  #tldflag{font-weight:700;border-radius:6px;padding:2px 8px;font-size:11.5px}
-  #tldflag.ok{background:#2c3b48;color:#9fb4c2}
-  #tldflag.bad{background:#3a4651;color:#b9c5cd}
-  #tldflag.neutral{background:#2c3b48;color:#9fb4c2}
+  #domline{font-family:ui-monospace,Menlo,monospace;font-size:var(--t-small);color:var(--muted)}
+  #tldflag{font-weight:700;border-radius:6px;padding:2px 8px;font-size:var(--t-micro)}
+  #tldflag.ok{background:var(--soft);color:var(--muted)}
+  #tldflag.bad{background:var(--soft);color:var(--ink)}
+  #tldflag.neutral{background:var(--soft);color:var(--muted)}
 
   header.gtv{display:flex;align-items:center;justify-content:space-between;padding:20px 44px 10px;min-height:96px}
   .logo{display:flex;align-items:center;gap:14px;text-decoration:none}
-  .logo .sword{font-weight:700;font-size:56px;line-height:1;color:var(--navy);letter-spacing:-0.01em;transform:translateY(-1px)}
+  .logo .sword{font-weight:700;font-size:56px;line-height:1;color:var(--gtv-navy);letter-spacing:-0.01em;transform:translateY(-1px)}
   .hdr-actions{display:flex;align-items:center;gap:12px}
-  .btn{font:600 16px 'Titillium Web';border-radius:10px;padding:11px 22px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--navy)}
-  .btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
-  .burger{width:46px;height:46px;border:1px solid var(--line);border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
-  .burger span{display:block;width:18px;height:2px;background:var(--navy);box-shadow:0 6px 0 var(--navy),0 -6px 0 var(--navy)}
+  .btn{font:600 16px 'Titillium Web';border-radius:10px;padding:11px 22px;cursor:pointer;border:1px solid var(--gtv-line);background:#fff;color:var(--gtv-navy)}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  .btn.primary{background:var(--gtv-navy);color:#fff;border-color:var(--gtv-navy)}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  .burger{width:46px;height:46px;border:1px solid var(--gtv-line);border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  .burger span{display:block;width:18px;height:2px;background:var(--gtv-navy);box-shadow:0 6px 0 var(--gtv-navy),0 -6px 0 var(--gtv-navy)}
 
-  nav.pills{display:flex;justify-content:center;gap:12px;padding:8px 20px 22px;border-bottom:1px solid #eceae6;flex-wrap:wrap}
-  .pill{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:11px;padding:10px 20px;font:600 15.5px 'Titillium Web';color:var(--navy);background:#fff;cursor:pointer}
-  .pill svg{width:17px;height:17px;stroke:var(--navy);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  nav.pills{display:flex;justify-content:center;gap:12px;padding:8px 20px 22px;border-bottom:1px solid #eceae6;flex-wrap:wrap}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  .pill{display:flex;align-items:center;gap:8px;border:1px solid var(--gtv-line);border-radius:11px;padding:10px 20px;font:600 15.5px 'Titillium Web';color:var(--gtv-navy);background:#fff;cursor:pointer}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  .pill svg{width:17px;height:17px;stroke:var(--gtv-navy);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
   .wrap{max-width:1280px;margin:0 auto;padding:34px 44px 0}
-  .hero{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:2.334;max-height:580px;background:#dfe7ea}
+  .hero{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:2.334;max-height:580px;background:#dfe7ea}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   .slide{position:absolute;inset:0;opacity:0;transition:opacity .5s;background-size:cover;background-position:center}
   .slide.on{opacity:1}
   .dots{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3}
-  .dots span{width:6px;height:6px;border-radius:3px;background:rgba(35,50,63,.32);cursor:pointer;transition:all .2s}
-  .dots span.on{width:18px;background:var(--navy)}
-  .arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.85);border:none;cursor:pointer;font:700 18px 'Titillium Web';color:var(--navy)}
+  .dots span{width:6px;height:6px;border-radius:3px;background:rgba(35,50,63,.32);cursor:pointer;transition:all .2s}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  .dots span.on{width:18px;background:var(--gtv-navy)}
+  .arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.85);border:none;cursor:pointer;font:700 18px 'Titillium Web';color:var(--gtv-navy)}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   .arrow.l{left:14px}.arrow.r{right:14px}
 
   .filters{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:14px;padding:26px 0 8px}
-  .field{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:9px;padding:13px 16px;font:400 15.5px 'Titillium Web';color:#8b958d;background:#fff}
-  .field.select{justify-content:space-between;color:#55616b}
-  .field svg{width:16px;height:16px;stroke:#8b958d;fill:none;stroke-width:1.8;flex:none}
+  .field{display:flex;align-items:center;gap:10px;border:1px solid var(--gtv-line);border-radius:9px;padding:13px 16px;font:400 15.5px 'Titillium Web';color:#8b958d;background:#fff}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  .field.select{justify-content:space-between;color:#55616b}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  .field svg{width:16px;height:16px;stroke:#8b958d;fill:none;stroke-width:1.8;flex:none}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
 
   .reihen{padding:34px 0 60px}
   .reihen h2{font-size:26px;font-weight:700;margin-bottom:18px}
   .rgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-  .rcard img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;display:block;background:#e8e6e1}
-  .rcard .rt{margin-top:10px;font:600 15.5px/1.3 'Titillium Web';color:var(--navy)}
-  .rcard .rm{font-size:13px;color:var(--muted);margin-top:2px}
+  .rcard img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;display:block;background:#e8e6e1}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  .rcard .rt{margin-top:10px;font:600 15.5px/1.3 'Titillium Web';color:var(--gtv-navy)}
+  .rcard .rm{font-size:13px;color:var(--gtv-muted);margin-top:2px}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
 
-  footer.gtv{border-top:1px solid #eceae6;padding:26px 44px;font-size:13.5px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap}
-  footer.gtv b{color:var(--navy);font-weight:600}
+  footer.gtv{border-top:1px solid #eceae6;padding:26px 44px;font-size:13.5px;color:var(--gtv-muted);display:flex;gap:8px;flex-wrap:wrap}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+  footer.gtv b{color:var(--gtv-navy);font-weight:600}
 
   @media(max-width:520px){
     header.gtv{padding:12px 16px 6px;min-height:70px}
@@ -127,7 +139,7 @@
     .btn.primary{display:inline-block;padding:9px 15px;font-size:14px}
     .burger{width:40px;height:40px}
     nav.pills{gap:8px;padding:6px 12px 14px}
-    .pill{padding:8px 13px;font-size:13px}
+    .pill{padding:8px 13px;font-size:13px}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
     .pill svg{width:14px;height:14px}
     .wrap{padding:16px 14px 0}
     .hero{aspect-ratio:auto;height:330px;border-radius:12px}
@@ -136,8 +148,8 @@
     .reihen{padding:24px 0 40px}
     .reihen h2{font-size:21px}
     .rgrid{grid-template-columns:1fr 1fr;gap:12px}
-    .rcard .rt{font-size:13.5px}
-    footer.gtv{padding:18px 16px;font-size:12px}
+    .rcard .rt{font-size:13.5px}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
+    footer.gtv{padding:18px 16px;font-size:12px}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   }
 </style>
 </head>

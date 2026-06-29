@@ -18,6 +18,33 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Generatorpass: die letzten vier Werkzeuge theme-aware – 100 %
+- Die vier Generatoren folgten eigenen, fest verdrahteten Dunkel-Paletten und
+  ignorierten Hell/Dunkel. Jetzt **theme-aware reskinnt**: ihre lokalen Variablen
+  sind nur noch **Aliase auf die DS-Tokens** (`--bg→--paper`, `--panel→--soft`,
+  `--text→--ink`, `--accent→--gold` …) – eine Kante, das ganze Chrome kippt mit.
+  - **karten-generator** · **cover-generator** · **briefschaften**: Chrome auf
+    Tokens, Aktion = volles Blau + Weiss (B01), Auswahl = dunkles Gold + Weiss,
+    Felder/Knöpfe/Pillen aus dem Fundament; base.css ergänzt wo es fehlte (DS01).
+  - **gtv-naming** ist zu grossen Teilen ein **Artefakt**: ein Marken-Muster einer
+    hypothetischen ‹Goetheanum TV›-Plattform samt **Telefon-Mockup** (eigene
+    Bildsprache: Titillium, Navy). Laut Hausregel kein Theme-Grund – darum
+    **ratifiziert** (`# ds-ok`, eigene `--gtv-*`-Palette). Theme-aware ist allein
+    das Werkzeug-Chrome, die Präsentations-Leiste `#presenter`.
+- **Gedruckte Artefakte bleiben fest**: das A4-Blatt (karten/briefschaften) und die
+  Cover-Leinwand bleiben weiss bzw. tragen die echten Druckfarben (`# ds-ok`),
+  kippen NICHT mit dem Theme.
+- **`start/index.html`** (alte Übersicht) mit auf den Floor gehoben (sub-14 → Tokens,
+  Versal-Kicker entfernt G05, Rest tokenisiert).
+- **Vertrag geschärft (v1.1.0)**: `reference/` zum Geltungsbereich-Ausschluss
+  ergänzt – eingefrorene Referenz-Schnappschüsse sind keine Live-Flächen (ds-fix
+  schloss sie längst aus; jetzt deckungsgleich). Score wird dadurch ehrlich.
+
+> Score-Verlauf (Fortsetzung): **76 %** → **92 %** (vier Generatoren auf 0 Fehler)
+> → **100 %** (`start/` + Vertrag-Geltungsbereich). **24/24 Seiten konform, 0
+> Fehler.** Verbleibend nur Hinweise (DS04 additive Eigenrollen, DS05/DS06 in den
+> bewusst eigenständigen Mockup-/Übersichtsköpfen).
+
 ### Aufgenommen
 - **Textrollen als gemessene Grundlage** (`base.css`) — Kicker · Lede · Hinweis
   (`.note`/`.hint`/`.help`/`.desc`) · Meta (`.cap`/`.caption`/`.legend`/`.byline`) ·
