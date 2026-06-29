@@ -109,11 +109,16 @@ def check_colors_sizes(body, base_off, full, findings, c, skip_lines):
     warnpx = c["groessen"]["warnen_unter_px"]
     # Deklarationen ~ getrennt durch ; (Körper enthält keine { } mehr)
     off = 0
-    for decl in body.split(";"):
+    for raw in body.split(";"):
         seg_off = base_off + off
-        off += len(decl) + 1
-        if ":" not in decl:
+        off += len(raw) + 1
+        if ":" not in raw:
             continue
+        # seg_off auf den Property-Anfang rücken (führende Zeilenumbrüche/Leerraum
+        # überspringen) – sonst landet die Zeile auf dem vorigen ‹;› (Mehrzeilen-CSS).
+        lead = len(raw) - len(raw.lstrip("\n\r\t "))
+        decl = raw.strip()
+        seg_off += lead
         prop, _, val = decl.partition(":")
         p = prop.strip().lower()
         if not p or p.startswith("--"):

@@ -43,10 +43,27 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 - **`tools/ds-fix.py`** — hebt die Hauspalette deterministisch auf Tokens (Codemod).
 - **Hook** — `ds-lint --staged` läuft mit (vorerst berichtend, nicht blockierend).
 
-> Ausgangs-Score bei Einführung der Engine: **9 % konform** (343 Fehler, 23 Seiten).
-> Nach Fundament + erster sicherer Anwendung (Schaufenster 100 %, Starter, Logos,
-> Karten): **17 %** (328 Fehler). Das ist die Messlatte, an der das Nachziehen
-> sichtbar wird – jeder weitere Schritt bewegt diese Zahl.
+> Score-Verlauf (die Messlatte): **9 %** (Engine-Einführung) → **17 %** (Fundament
+> + Schaufenster) → **35 %** (öffentliche Live-Seiten) → **46 %** (Generatoren +
+> Icons). 11/24 Seiten konform. Jeder Schritt bewegt diese Zahl.
+
+### Behoben (Mobil & Lesbarkeit – aus echtem Geräte-Befund)
+- **Seitenrand am Handy** war weg: `.hero{padding:X 0 Y}` setzte den seitlichen
+  Rand auf 0 und überschrieb `.wrap` – Text klebte am Glas. Fundament-Fix:
+  `.hero` nutzt nur noch `padding-block` (Seitenrand kommt aus `.wrap`); die 9
+  Seiten mit lokalem `.hero`-Override nachgezogen. Mobiler `.wrap`-Rand bleibt
+  grosszügig (`max(22px, safe-area)`), nicht verkleinert.
+- **Lede unlesbar** (in „G Leise" 265 + muted gesetzt) → auf den Lese-Schnitt
+  Klar gehoben (schriften, icons, statistik). Regelbezug: Leise verschwimmt klein,
+  Minimum ist Klar.
+
+### Engine geschärft (Lernen am Bestand)
+- **DS04** meldet nur noch Schlüssel-Selektoren, nicht kontextuelle Überschreibungen
+  (`.download .btn` ist Verortung). **Zeilen-Treffer** liegen jetzt korrekt auf der
+  Property-Zeile (Mehrzeilen-CSS) – damit greift `# ds-ok` auch in den Generatoren.
+- **Artefakt-Kategorien** ratifiziert (`# ds-ok`): gedrucktes Blatt/Karte, Schnitt-
+  marken, E-Mail-Leinwand, „Logo auf Dunkel"-Vorschau, Owner-Mode-Signal, Modal-Scrim.
+  Die Maschine schlägt vor, der Mensch ratifiziert – die Ausnahme wird Teil des Codes.
 
 ---
 

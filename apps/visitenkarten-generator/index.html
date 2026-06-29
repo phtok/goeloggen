@@ -220,7 +220,7 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      color: #86d97a;
+      color: #86d97a;  /* # ds-ok: Owner-Mode-Signal, bewusst eigenes Aktiv-Grün */
       font-size: 0.74rem;
       line-height: 1;
       font-family: "SourceSansPro-SemiBold", sans-serif;
@@ -235,7 +235,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: #59d66c;
+      background: #59d66c;  /* # ds-ok: Owner-Mode-Signalpunkt */
       box-shadow:
         0 0 0 1px rgba(19, 54, 26, 0.55),
         0 0 8px rgba(89, 214, 108, 0.75);
@@ -245,7 +245,7 @@
     .email-gate {
       position: fixed;
       inset: 0;
-      background: rgba(16, 22, 28, 0.72);
+      background: rgba(16, 22, 28, 0.72);  /* # ds-ok: Modal-Verdunkelung (Scrim), theme-fest */
       z-index: 900;
       display: none;
       align-items: center;
@@ -521,7 +521,7 @@
       margin: 0 auto;
       place-items: center;
       padding: 0;
-      background: #fff;
+      background: #fff;  /* # ds-ok: gedrucktes Blatt ist immer weiss (Artefakt) */
     }
 
     .print-artboard {
@@ -540,7 +540,7 @@
 
     .trim-line {
       position: absolute;
-      border: 0.2mm solid rgba(60, 66, 74, 0.4);
+      border: 0.2mm solid rgba(60, 66, 74, 0.4);  /* # ds-ok: Schnittmarke auf weisser Karte – muss dunkel bleiben */
       inset: 0;
       pointer-events: none;
     }
@@ -633,7 +633,7 @@
     @media print {
       body {
         display: block;
-        background: #fff;
+        background: #fff;  /* # ds-ok: Druck auf weissem Papier */
       }
 
       .app,
@@ -656,7 +656,7 @@
       }
 
       .trim-line {
-        border-color: rgba(0, 0, 0, 0.48);
+        border-color: rgba(0, 0, 0, 0.48);  /* # ds-ok: Schnittmarke im Druck */
       }
     }
   </style>
