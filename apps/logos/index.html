@@ -10,9 +10,7 @@
 <link rel="stylesheet" href="../../design-system/base.css" />
 <link rel="stylesheet" href="../../design-system/nav.css" />
 <style>
-  .hero{padding:clamp(32px,6vw,64px) 0 var(--s6)}
-  .hero h1{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h1);line-height:1.08;letter-spacing:-.005em;max-width:18ch}
-  .hero .lede{margin-top:var(--s4);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:56ch}
+  /* Seitenkopf (.hero/h1/.lede) kommt aus base.css – keine eigene Grösse/Farbe. */
 
   /* Werkzeug – zwei Spalten, Vorschau OBEN-BÜNDIG mit der Auswahl und klebend. */
   .tool{display:grid;gap:var(--s6);grid-template-columns:1fr}
@@ -24,7 +22,7 @@
      Aktion. Alles reist zusammen (klebend), während links die Logo-Bestimmung scrollt. */
   .preview{position:sticky;top:calc(var(--header-h) + var(--s4))}
   .stage{display:grid;place-items:center;min-height:300px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft);padding:clamp(24px,5vw,56px)}
-  .stage.dark{background:#23272b}
+  .stage.dark{background:#23272b}  /* # ds-ok: Logo-auf-Dunkel-Vorschau – feste Farbe, kein Theme-Ton */
   .stage svg,.stage img{max-width:100%;height:auto;max-height:340px;display:block}
   /* Erklärzeile direkt unter der Vorschau, ÜBER den Pillen: erst wofür, dann womit. */
   .fmthint{color:var(--muted);font-size:var(--t-small);line-height:1.45;margin:var(--s3) 0 var(--s2);min-height:2.6em}
@@ -68,19 +66,19 @@
   .vstrip{display:flex;gap:var(--s4);flex-wrap:wrap;align-items:flex-end;margin:var(--s3) 0}
   .vstrip figure{margin:0;text-align:center}
   .vstrip .box{border:1px solid var(--line);border-radius:10px;background:var(--soft);padding:14px;display:grid;place-items:center;min-height:84px}
-  .vstrip .box.dark{background:#23272b}
+  .vstrip .box.dark{background:#23272b}  /* # ds-ok: Logo-auf-Dunkel-Vorschau */
   .vstrip svg{height:46px;width:auto;max-width:200px}
-  .vstrip figcaption{color:var(--muted);font-size:11.5px;margin-top:6px}
+  .vstrip figcaption{color:var(--muted);font-size:var(--t-micro);margin-top:6px}
 
   .dl{display:grid;gap:var(--s4);grid-template-columns:1fr;margin-top:var(--s3)}
   @media(min-width:680px){.dl{grid-template-columns:1fr 1fr}}
   .dl .col{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s4)}
   .dl .col.ja{background:var(--soft)}
   .dl h4{display:flex;align-items:center;gap:8px;font-weight:var(--w-strong);font-size:14px;margin-bottom:var(--s2)}
-  .dl .ja h4{color:#3f7d46}.dl .nein h4{color:var(--bad)}
+  .dl .ja h4{color:var(--ok)}.dl .nein h4{color:var(--bad)}
   .dl li{list-style:none;display:flex;gap:9px;padding:5px 0;border-top:1px solid var(--line-soft);font-size:13.5px;line-height:1.45}
-  .dl .ja .mk{color:#3f7d46;font-weight:var(--w-strong)}.dl .nein .mk{color:var(--bad);font-weight:var(--w-strong)}
-  .note{color:var(--muted);font-size:12.5px;line-height:1.5;max-width:72ch;margin-top:var(--s3)}
+  .dl .ja .mk{color:var(--ok);font-weight:var(--w-strong)}.dl .nein .mk{color:var(--bad);font-weight:var(--w-strong)}
+  /* .note kommt aus base.css (kanonische Hinweis-Rolle). */
 </style>
 </head>
 <body>

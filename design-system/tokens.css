@@ -58,6 +58,11 @@
   --ok:#3f7d46;          /* Erfolg/Bestätigung – Weiss drauf (--on-accent) */
   --on-accent:#fff;      /* Text auf Blau/Gold-Flächen */
 
+  /* --- Code-Konsole (eigenständige, THEME-FESTE Fläche – gleich in Hell/Dunkel,
+     wie eine Entwickler-Konsole; Syntaxpalette für Dunkel ausgelegt). --------- */
+  --code-bg:#1f2428; --code-bg2:#2b3137; --code-ink:#e8eef2;
+  --code-key:#9ecbff; --code-str:#c3e88d; --code-comment:#7f868d;
+
   /* --- Sektionsfarben (Identität der Schul-Sektionen) --------------------- */
   /* Quelle der Wahrheit der Werte: assets/goe-orgs.js (speist die Logo-Engine).
      Hier als Design-Tokens verfügbar gemacht, damit Sektions-Akzente überall im

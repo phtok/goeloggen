@@ -18,17 +18,16 @@ h2{font-size:var(--t-h3);margin:var(--s8) 0 var(--s3);border-top:1px solid var(-
 .big{font-size:58px;line-height:1.2;margin:0}
 .row{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:baseline;margin:0}
 .row .s{font-family:var(--font-display);font-size:40px;line-height:1.5}
-.tag{font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+.tag{font-size:var(--t-micro);color:var(--muted);font-family:var(--font-mono)}
 .ctl{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:10px}
 .ctl input[type=range]{flex:1;min-width:220px}
 .ctl b{font-variant-numeric:tabular-nums}
-/* Code-Block bewusst dunkel in beiden Themes (eigenständige Fläche). */
-pre{position:relative;background:#1f2428;color:#e8eef2;border-radius:var(--r-card);padding:16px;overflow:auto;font:13px/1.5 var(--font-mono);margin:0}
-pre .k{color:#9ecbff}pre .s{color:#c3e88d}pre .c{color:#7f868d}
-.copy{position:absolute;top:10px;right:10px;font:inherit;font-size:12px;border:1px solid #3a4148;background:#2b3137;color:#e8eef2;border-radius:8px;padding:5px 10px;cursor:pointer}
-.copy:hover{background:#343b42}
-.note{color:var(--muted);font-size:var(--t-small);margin:10px 0 0}
-.note code,p code{background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font:12.5px var(--font-mono)}
+/* Code-Konsole: theme-feste Fläche aus den Tokens (--code-*). */
+pre{position:relative;background:var(--code-bg);color:var(--code-ink);border-radius:var(--r-card);padding:16px;overflow:auto;font:13px/1.5 var(--font-mono);margin:0}
+pre .k{color:var(--code-key)}pre .s{color:var(--code-str)}pre .c{color:var(--code-comment)}
+.copy{position:absolute;top:10px;right:10px;font:inherit;font-size:var(--t-micro);border:1px solid var(--code-bg2);background:var(--code-bg2);color:var(--code-ink);border-radius:8px;padding:5px 10px;cursor:pointer}
+.copy:hover{filter:brightness(1.25)}
+.note code,p code{background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font:var(--t-micro)/1 var(--font-mono)}
 .two{display:grid;grid-template-columns:1fr;gap:14px}
 @media(min-width:760px){.two{grid-template-columns:1fr 1fr}}
 .swatch{display:flex;flex-direction:column;gap:4px}
