@@ -36,8 +36,10 @@ h2{font-size:var(--t-h2)}
 h3{font-size:var(--t-h3)}
 h4{font-size:var(--t-h3)}
 
-/* Kanonischer Seitenkopf: Kicker · Titel · Lede – ein Baustein für alle Werkzeuge. */
-.hero{padding:clamp(40px,7vw,72px) 0 var(--s6)}
+/* Kanonischer Seitenkopf: Kicker · Titel · Lede – ein Baustein für alle Werkzeuge.
+   NUR vertikales Padding (padding-block): der seitliche Rand kommt aus .wrap. Sonst
+   würde `.wrap.hero` den seitlichen .wrap-Rand auf 0 setzen (Text klebt am Rand). */
+.hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
 .hero h1{max-width:20ch;letter-spacing:-.005em}
 .hero .lede{margin-top:var(--s4)}
 
@@ -223,7 +225,9 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
    ============================================================================= */
 img,svg,canvas,video{max-width:100%}
 @media(max-width:560px){
-  .wrap{padding-left:18px;padding-right:18px}
+  /* Mobil bleibt der seitliche Rand grosszügig (Luft nach aussen, Lesbarkeit) –
+     nicht verkleinern. 22px Untergrenze, damit Text nie am Glas klebt. */
+  .wrap{padding-left:max(22px,env(safe-area-inset-left));padding-right:max(22px,env(safe-area-inset-right))}
   /* Fingerziele ≥44px auf Touch: Knöpfe, Pillen, Felder, Klapplisten (B04). */
   .btn,.seg button{min-height:var(--tap)}
   .field input,.field textarea,.field select,.ds-select__btn{min-height:var(--tap)}
