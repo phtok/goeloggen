@@ -10,8 +10,13 @@ if [ -z "$PY" ]; then
   exit 0
 fi
 
-# 1) Hausregeln auf den vorgemerkten HTML-Texten ausführen.
+# 1) Hausregeln auf den vorgemerkten HTML-Texten ausführen (Sprache).
 "$PY" "$ROOT/tools/typo-check.py"
+
+# 1b) Struktur-Konformität der vorgemerkten Seiten (Gestalt) – DS-Lint.
+#     Vorläufig BERICHTEND (blockiert nicht), solange der Backlog abgebaut wird.
+#     Sobald der Score 100% erreicht, das `|| true` entfernen → dann gate-fähig.
+"$PY" "$ROOT/tools/ds-lint.py" --staged || true
 
 # 2) Driftwächter Kanon ↔ Design-System – nur wenn eine der beteiligten
 #    Schichten betroffen ist (Tokens, Kanon, Regel-YAML, Handbuch).

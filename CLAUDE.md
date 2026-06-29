@@ -66,9 +66,10 @@ für **jede** neue HTML-Seite oder jedes neue Werkzeug:
    Schnitt- oder Abstandswerte erfinden. (Bestehende Apps mit kopiertem Block
    werden schrittweise auf diese Schicht gehoben — neue Seiten starten richtig.)
 3. **Registrieren:** einen Eintrag in `tools.json` ergänzen (erscheint im Hub).
-4. **Hook aktiv halten:** `git config core.hooksPath tools/hooks` — `tools/typo-check.py`
-   prüft die geänderten HTML-Texte beim Commit und blockiert bei Schwere ‹fehler›.
-   Vor dem Commit gilt weiterhin: betroffene Regel-IDs nennen.
+4. **Hook aktiv halten:** `git config core.hooksPath tools/hooks` — beim Commit
+   laufen `tools/typo-check.py` (Sprache, blockiert bei ‹fehler›) **und**
+   `tools/ds-lint.py --staged` (Gestalt, vorerst berichtend). Vor dem Commit gilt
+   weiterhin: betroffene Regel-IDs nennen — sprachlich (G/B) wie strukturell (DS).
 
 Die eingebauten Defaults in `base.css` setzen die Hausregeln bereits um (Trennung,
 ‹…› über `<q>`, tabellarische Ziffern, Betonung = Laut, Leise statt Kursive). Für
@@ -79,6 +80,33 @@ Was an **einer** Seite am Design verbessert wird (z. B. die Gold/Weiss-Anwahl de
 Buttons und Pillen), gehört **sofort in `tokens.css`/`base.css`** und von dort in
 alle Werkzeuge — nicht lokal in einer Seite belassen. Eine Verbesserung am Rand
 ist erst fertig, wenn sie im Design-System steht und überall gilt.
+
+## Konformitäts-Engine — das System prüft, korrigiert, atmet selbst
+Konformität wird **konstruiert und durch eine Maschine erzwungen**, nicht von Hand
+nachkontrolliert. Symmetrisch zur sprachlichen Schleife (`typo-check`/`typo-sync`)
+gibt es die **Gestalt-Schleife**:
+
+- **Vertrag:** `design-system/contract.json` (Regeln DS01–DS07: Pflicht-Includes,
+  nur Token-Farben, Grössen-Untergrenze B03, kanonische Rollen, verbotene Muster).
+- **Prüfen:** `tools/ds-lint.py` — `ds-lint.py` (Audit + **Score**),
+  `--staged` (Hook), `--score`. Meldet Verstösse nach Regel-ID + `Datei:Zeile`.
+- **Korrigieren:** `tools/ds-fix.py` — hebt die Hauspalette **property-bewusst**
+  auf Tokens (weisse Schrift → `--on-accent`, weisse Fläche → `--paper`).
+  Vorschau ohne, schreiben mit `--apply`. Idempotent.
+
+**Artefakt-Farben schützen:** physische Farben (gedruckte Karte ist immer weiss,
+ein Telefon-Mockup zeigt die echte App) sind **keine** Theme-Flächen. Solche
+Literale mit `# ds-ok` in der Zeile markieren — Checker und Codemod lassen sie
+dann in Ruhe. Die Maschine *schlägt vor*, der Mensch *ratifiziert* die echte
+Ausnahme; diese Ratifizierung wird Teil des Codes.
+
+### Der Atem (Aufnahme-Schleife)
+Neue Lösung auf einer Seite → `ds-lint` erkennt die Abweichung (DS04) → **aufnehmen**
+(in `tokens.css`/`base.css` + ggf. `contract.json`, Eintrag in
+`design-system/CHANGELOG.md`, `version` erhöhen) **oder auflösen** (`ds-fix`).
+Aufgenommenes gilt ab dann überall. Der **Beschluss-Ledger**
+(`design-system/CHANGELOG.md`) ist das Gedächtnis; der Score (`ds-lint --score`)
+macht „wie weit weg" zu einer Zahl statt eines Gefühls.
 
 ## Schnitt-System (Stand v2.6)
 - Installierbare statische Schnitte: **Leise (265) · Klar (440) · Deutlich

@@ -32,8 +32,8 @@
   .sw .chip-c{height:84px}
   .sw .body{padding:var(--s3) var(--s4)}
   .sw .nm{font-weight:var(--w-strong);font-size:14px}
-  .sw .hx{color:var(--muted);font-size:12.5px;font-family:var(--font-mono)}
-  .sw .ds{color:var(--muted);font-size:12.5px;margin-top:4px;line-height:1.4}
+  .sw .hx{color:var(--muted);font-size:var(--t-micro);font-family:var(--font-mono)}
+  .sw .ds{color:var(--muted);font-size:var(--t-micro);margin-top:4px;line-height:1.4}
 
   /* Schnitt-Zeile */
   .cut{border-top:1px solid var(--line-soft);padding:var(--s4) 0;display:grid;gap:6px;grid-template-columns:1fr;align-items:baseline}
@@ -48,7 +48,7 @@
   .rules{display:grid;gap:0}
   .rule{display:grid;grid-template-columns:54px 1fr;gap:var(--s4);padding:var(--s3) 0;border-top:1px solid var(--line-soft)}
   .rule .id{font-weight:var(--w-strong);color:var(--gold-ink);font-variant-numeric:tabular-nums}
-  .rule .tx{color:#3d4348;font-size:14px;line-height:1.5;max-width:72ch}
+  .rule .tx{color:var(--ink);font-size:14px;line-height:1.5;max-width:72ch}
   .rule.card-rule .id{color:var(--blue)}
 
   /* Abstands-Balken */
@@ -57,16 +57,16 @@
   .scale .lab{width:96px;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
   .radii{display:flex;gap:var(--s4);flex-wrap:wrap}
   .radii .r{width:120px;height:80px;background:var(--soft);border:1px solid var(--line)}
-  .radii .cap{color:var(--muted);font-size:12.5px;margin-top:6px}
+  .radii .cap{color:var(--muted);font-size:var(--t-micro);margin-top:6px}
 
   /* Komponenten-Schau */
   .demo{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center}
-  pre.code{background:#1c1f23;color:#e7e3da;border-radius:var(--r-control);padding:var(--s3) var(--s4);overflow:auto;font-family:var(--font-mono);font-size:12.5px;line-height:1.5;margin-top:var(--s3)}
+  pre.code{background:var(--soft);color:var(--ink);border:1px solid var(--line-soft);border-radius:var(--r-control);padding:var(--s3) var(--s4);overflow:auto;font-family:var(--font-mono);font-size:var(--t-micro);line-height:1.55;margin-top:var(--s3)}
 
   /* Status digital/analog */
   .status{display:grid;gap:8px}
   .status li{list-style:none;display:flex;gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid var(--line-soft);font-size:14px}
-  .status .mk-ok{color:#3f7d46;font-weight:var(--w-strong)}
+  .status .mk-ok{color:var(--ok);font-weight:var(--w-strong)}
   .status .mk-open{color:var(--gold-ink);font-weight:var(--w-strong)}
 
   /* Bau-Workflow */
@@ -80,13 +80,13 @@
   .guard{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s4) var(--s6);background:var(--soft)}
   .guard .head{display:flex;align-items:center;gap:10px;font-weight:var(--w-strong)}
   .guard .dot{width:10px;height:10px;border-radius:var(--r-pill);background:var(--muted)}
-  .guard.ok .dot{background:#3f7d46}
+  .guard.ok .dot{background:var(--ok)}
   .guard.bad .dot{background:var(--bad)}
   .guard .detail{margin-top:var(--s2);color:var(--muted);font-size:13px;line-height:1.5}
   .guard table{margin-top:var(--s3);width:100%;font-size:13px}
 
-  .note{color:var(--muted);font-size:13px;line-height:1.5;max-width:72ch}
-  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 16px;border-radius:var(--r-pill);font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
+  /* .note kommt aus base.css (kanonische Hinweis-Rolle) – hier keine Eigenfassung. */
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--on-accent);padding:8px 16px;border-radius:var(--r-pill);font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
   .toast.show{opacity:1}
 </style>
 </head>
@@ -370,13 +370,18 @@ function buildScale(tok){
 }
 
 function guard(tok){
-  const cs=getComputedStyle(document.documentElement);
+  // tokens.json spiegelt die HELLE Quelle (:root). Darum gegen Hell prüfen –
+  // sonst meldet der Dunkelmodus seine bewussten Überschreibungen als Drift.
+  const root=document.documentElement;
+  const prevTheme=root.getAttribute("data-theme");
+  root.setAttribute("data-theme","light");
+  const cs=getComputedStyle(root);
   const cssVar=n=>cs.getPropertyValue(n);
   // Abbildung Token → CSS-Custom-Property
   const map=[
     ["color.blue","--blue"],["color.gold","--gold"],["color.gold-deep","--gold-deep"],
     ["color.ink","--ink"],["color.muted","--muted"],["color.paper","--paper"],
-    ["color.soft","--soft"],["color.bad","--bad"],
+    ["color.soft","--soft"],["color.bad","--bad"],["color.ok","--ok"],
     ["fontWeight.leise","--w-leise"],["fontWeight.text","--w-text"],
     ["fontWeight.deutlich","--w-deutlich"],["fontWeight.strong","--w-strong"],
     ["space.1","--s1"],["space.2","--s2"],["space.3","--s3"],["space.4","--s4"],["space.6","--s6"],["space.8","--s8"],
@@ -393,6 +398,8 @@ function guard(tok){
     let h=isColor(path)?norm(have):have.trim();
     if(w!==h) diffs.push({path,cssName,want:w,have:h||"(leer)"});
   });
+  // Theme zurücksetzen (synchron – kein sichtbares Flackern).
+  if(prevTheme) root.setAttribute("data-theme",prevTheme); else root.removeAttribute("data-theme");
   const g=$("#guard"), msg=$("#guardMsg"), det=$("#guardDetail");
   if(diffs.length===0){
     g.classList.add("ok");
