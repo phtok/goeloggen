@@ -43,10 +43,17 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 - **`tools/ds-fix.py`** — hebt die Hauspalette deterministisch auf Tokens (Codemod).
 - **Hook** — `ds-lint --staged` läuft mit (vorerst berichtend, nicht blockierend).
 
-> Ausgangs-Score bei Einführung der Engine: **9 % konform** (343 Fehler, 23 Seiten).
-> Nach Fundament + erster sicherer Anwendung (Schaufenster 100 %, Starter, Logos,
-> Karten): **17 %** (328 Fehler). Das ist die Messlatte, an der das Nachziehen
-> sichtbar wird – jeder weitere Schritt bewegt diese Zahl.
+> Score-Verlauf (die Messlatte): **9 %** (Engine-Einführung) → **17 %** (Fundament
+> + Schaufenster) → **35 %** (öffentliche Live-Seiten) → **46 %** (Generatoren +
+> Icons). 11/24 Seiten konform. Jeder Schritt bewegt diese Zahl.
+
+### Engine geschärft (Lernen am Bestand)
+- **DS04** meldet nur noch Schlüssel-Selektoren, nicht kontextuelle Überschreibungen
+  (`.download .btn` ist Verortung). **Zeilen-Treffer** liegen jetzt korrekt auf der
+  Property-Zeile (Mehrzeilen-CSS) – damit greift `# ds-ok` auch in den Generatoren.
+- **Artefakt-Kategorien** ratifiziert (`# ds-ok`): gedrucktes Blatt/Karte, Schnitt-
+  marken, E-Mail-Leinwand, „Logo auf Dunkel"-Vorschau, Owner-Mode-Signal, Modal-Scrim.
+  Die Maschine schlägt vor, der Mensch ratifiziert – die Ausnahme wird Teil des Codes.
 
 ---
 
