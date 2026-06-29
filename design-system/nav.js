@@ -106,6 +106,11 @@
 
   function isIntern() { try { return localStorage.getItem(KEY) === "1"; } catch (e) { return false; } }
   function setIntern(v) { try { localStorage.setItem(KEY, v ? "1" : "0"); } catch (e) {} }
+  // Die Intern-/Backstage-Ansicht ist EINE Wahrheit – Werkzeuge können sie abfragen
+  // (window.goeIntern()) und auf Wechsel reagieren (Event „goe:intern"). So koppeln
+  // sich versteckte Profi-Optionen ans selbe Schloss wie die Backstage-Welten.
+  window.goeIntern = isIntern;
+  function emitIntern(on) { try { window.dispatchEvent(new CustomEvent("goe:intern", { detail: { on: on } })); } catch (e) {} }
 
   function el(tag, cls, html) {
     var e = document.createElement(tag);
@@ -191,6 +196,7 @@
   function toggleIntern() {
     var now = !isIntern(); setIntern(now);
     renderDrawer();
+    emitIntern(now);
     flash(now ? "Intern-Ansicht: an" : "Intern-Ansicht: aus");
     if (now) openDrawer();
   }
