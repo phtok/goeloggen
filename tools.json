@@ -69,6 +69,15 @@
       "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Mit Starter und Bau-Workflow."
     },
     {
+      "slug": "farben",
+      "cat": "system",
+      "status": "beta",
+      "tag": "Elemente",
+      "title": "Farben",
+      "href": "farben.html",
+      "desc": "Alle Identitätsfarben auf einen Blick – Marke, Neutrale, Sektionen – mit Hex, RGB, HSB und CMYK (Richtwert), klick-kopierbar. Offizielle Pantone-/Druckwerte folgen."
+    },
+    {
       "slug": "logo-generator",
       "cat": "generatoren",
       "status": "live",

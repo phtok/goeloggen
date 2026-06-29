@@ -18,6 +18,18 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Neue Publikumsseite: Farben (Lücke vom alten Auftritt geschlossen)
+- **`farben.html`** – die Identitätsfarben auf einen Blick (Marke · Neutrale ·
+  Sektionen). **Hex/RGB/HSB** werden im Browser exakt aus dem Token-Hex errechnet
+  (eine Quelle: `tokens.css`; Sektionen aus `goe-orgs.js`), jede Zelle klick-kopierbar.
+- **Ehrlich statt erfunden** (Hausregel): **CMYK** steht als **rechnerischer Richtwert**
+  (sRGB→CMYK, geräteabhängig) klar markiert; **Pantone** und die offiziellen Druck-CMYK-/
+  Sonderfarben sind ‹—› (noch aus dem Marken-Handbuch zu erfassen). Damit ist der im
+  Schaufenster offene Punkt ‹CMYK-/Sonderfarben› sichtbar adressiert, ohne falsche Werte.
+- Registriert in `tools.json` (cat `system`, erscheint in der Welt **Elemente**) + Startkarte.
+- Aus dem Vergleich mit grafik.goetheanum.ch als ‹jetzt bauen› gewählt; Zeichen, PowerPoint,
+  Wallpaper und ein globaler Kontakt-/Feedback-Button sind als nächste Schritte vorgemerkt.
+
 ### Generatorpass: die letzten vier Werkzeuge theme-aware – 100 %
 - Die vier Generatoren folgten eigenen, fest verdrahteten Dunkel-Paletten und
   ignorierten Hell/Dunkel. Jetzt **theme-aware reskinnt**: ihre lokalen Variablen
