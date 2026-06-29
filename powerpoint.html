@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de">
+<head>
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum – PowerPoint-Vorlagen</title>
+<meta name="description" content="Präsentationsvorlagen im Hausbild des Goetheanum. Die Vorlage wird gerade überarbeitet – die Datei folgt." />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Farben/Schrift/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigenes Layout. */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  .hero{padding-block:60px 14px}
+  .lede{max-width:64ch;margin-top:var(--s4)}
+
+  .panel{margin-top:var(--s8);border:1px solid var(--line);border-radius:var(--r-card);
+    background:var(--soft);padding:var(--s8);max-width:64ch}
+  .panel .nm{font-family:var(--font);font-weight:var(--w-deutlich);font-size:var(--t-h3);
+    display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+  .panel p{margin-top:var(--s4);color:var(--muted)}
+  .btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-section="anwendung" data-active="powerpoint"></script>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="kicker">Hausgrafik · Anwendungen</div>
+    <h1>PowerPoint-Vorlagen</h1>
+    <p class="lede">Präsentationsvorlagen im Hausbild – Titel, Inhalts- und Bildfolien, abgestimmt auf
+      Schrift und Farben des Goetheanum.</p>
+  </div>
+
+  <div class="panel">
+    <span class="nm">Vorlage <span class="badge">wird überarbeitet</span></span>
+    <p>Die aktuelle <code>.pptx</code>-Vorlage wird gerade überarbeitet. Sobald die neue Datei vorliegt,
+      steht sie hier zum Download bereit – und später folgt voraussichtlich eine HTML-Variante.</p>
+    <p style="margin-top:var(--s6)"><a class="btn" aria-disabled="true" href="#">Download folgt</a></p>
+  </div>
+</main>
+</body>
+</html>

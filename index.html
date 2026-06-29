@@ -84,7 +84,7 @@
 "use strict";
 (function(){
   // Öffentliche Werkzeuge, in Welt-Reihenfolge; live vor beta. Nur die Karten.
-  var CATS = ["generatoren", "schrift", "system"];
+  var CATS = ["generatoren", "schrift", "system", "anwendung"];
   var STATUS_LABEL = { beta:"in Überarbeitung" };
   // Greifbar: jedes Zeichen zeigt das DING, das das Werkzeug erzeugt.
   var VISUAL = {
@@ -97,6 +97,8 @@
     "typografie":      '<span class="para"><i></i><i></i><i></i><i></i></span>',               // gesetzter Absatz
     "design-system":   '<span class="sw"><i style="background:var(--blue)"></i><i style="background:var(--gold-deep)"></i><i style="background:var(--ink)"></i></span>', // Farbfelder
     "farben":          '<span class="sw"><i style="background:var(--blue)"></i><i style="background:var(--gold)"></i><i style="background:var(--sek-lws)"></i><i style="background:var(--sek-szw)"></i></span>', // Identitätsfarben
+    "zeichen":         '<span style="background:#fff;border-radius:8px;width:100%;height:100%;display:grid;place-items:center"><img src="assets/zeichen/hochschulzeichen.png" alt="" style="max-height:66px;max-width:78%"></span>', // Rudolf-Steiner-Zeichen auf weissem Papier
+    "wallpaper":       '<img src="assets/wallpaper/goetheanum-wallpaper-48.jpg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px">', // ein Motiv
     "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>' // vier Sprachen
   };
   function visual(t){

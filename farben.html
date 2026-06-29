@@ -5,7 +5,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Goetheanum – Farben</title>
-<meta name="description" content="Die Identitätsfarben des Goetheanum auf einen Blick: Markenfarben, Neutrale und Sektionsfarben mit Hex, RGB, HSB und CMYK (Richtwert) – klick-kopierbar. Offizielle Pantone- und Druck-CMYK-Werte folgen." />
+<meta name="description" content="Die Identitätsfarben des Goetheanum auf einen Blick: Markenfarben, Neutrale und Sektionsfarben mit Hex, RGB, HSB und CMYK (Richtwert) – klick-kopierbar." />
 <link rel="stylesheet" href="design-system/tokens.css" />
 <link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
@@ -54,7 +54,7 @@
     <h2>Markenfarben</h2>
     <p>Blau trägt Zustand, Verweis und Aktion; Gold den Inhalts-Akzent. Auf Farbflächen steht Weiss (B01).</p>
     <div class="tablecard"><table><thead><tr>
-      <th></th><th>Name</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th><th>Pantone</th>
+      <th></th><th>Name</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th>
     </tr></thead><tbody id="marke-body"></tbody></table></div>
   </section>
 
@@ -62,7 +62,7 @@
     <h2>Neutrale</h2>
     <p>Tinte, Sekundärton und die Flächen. Hell/Dunkel kommt aus den Tokens – hier stehen die hellen Grundwerte.</p>
     <div class="tablecard"><table><thead><tr>
-      <th></th><th>Name</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th><th>Pantone</th>
+      <th></th><th>Name</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th>
     </tr></thead><tbody id="neutrale-body"></tbody></table></div>
   </section>
 
@@ -71,15 +71,15 @@
     <p>Die Identitätsfarben der Schul-Sektionen. Quelle: <code>assets/goe-orgs.js</code> (speist die Logo-Engine).
       Markenfest – sie kippen nicht mit Hell/Dunkel.</p>
     <div class="tablecard"><table><thead><tr>
-      <th></th><th>Sektion</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th><th>Pantone</th>
+      <th></th><th>Sektion</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th>
     </tr></thead><tbody id="sektionen-body"></tbody></table></div>
   </section>
 
   <p class="fineprint">
     <b>Hex · RGB · HSB</b> sind aus den Tokens errechnet und verbindlich für Bildschirm/Web.
     <b>CMYK</b> ist ein <b>rechnerischer Richtwert</b> (sRGB→CMYK, geräteabhängig) – <b>nicht</b> der
-    verbindliche Druckwert. <b>Pantone</b> und die offiziellen Druck-CMYK-/Sonderfarben sind noch zu
-    erfassen (aus dem Marken-Handbuch) und hier mit ‹—› markiert. Korrigieren = die Quelle bearbeiten
+    verbindliche Druckwert; die offiziellen Druck-CMYK-Werte folgen aus dem Marken-Handbuch.
+    Korrigieren = die Quelle bearbeiten
     (<a href="https://github.com/phtok/goeloggen/blob/main/design-system/tokens.css">tokens.css</a> ·
     <a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-orgs.js">goe-orgs.js</a>).
   </p>
@@ -146,7 +146,6 @@
     tr.appendChild(valCell(rgb.r+", "+rgb.g+", "+rgb.b));
     tr.appendChild(valCell(hsb.h+"°, "+hsb.s+"%, "+hsb.b+"%"));
     tr.appendChild(valCell(cmyk.c+", "+cmyk.m+", "+cmyk.y+", "+cmyk.k));
-    var pt=document.createElement("td"); pt.className="pend"; pt.textContent="—"; tr.appendChild(pt);
     tbody.appendChild(tr);
   }
 

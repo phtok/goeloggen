@@ -23,6 +23,11 @@
       "intro": "Die Hausschrift v2.6 und die Regeln dazu – nachschlagen, vergleichen, einbinden."
     },
     {
+      "id": "anwendung",
+      "title": "Anwendungen",
+      "intro": "Fertige Vorlagen zum Übernehmen – Wallpaper, Präsentationen."
+    },
+    {
       "id": "vorbereitung",
       "title": "In Vorbereitung",
       "intro": "In Arbeit – noch nicht für die Breite freigegeben. Intern sichtbar."
@@ -75,7 +80,34 @@
       "tag": "Elemente",
       "title": "Farben",
       "href": "farben.html",
-      "desc": "Alle Identitätsfarben auf einen Blick – Marke, Neutrale, Sektionen – mit Hex, RGB, HSB und CMYK (Richtwert), klick-kopierbar. Offizielle Pantone-/Druckwerte folgen."
+      "desc": "Alle Identitätsfarben auf einen Blick – Marke, Neutrale, Sektionen – mit Hex, RGB, HSB und CMYK (Richtwert), klick-kopierbar."
+    },
+    {
+      "slug": "zeichen",
+      "cat": "system",
+      "status": "beta",
+      "tag": "Elemente",
+      "title": "Zeichen",
+      "href": "zeichen.html",
+      "desc": "Die Zeichen von Rudolf Steiner – Hochschule, Gesellschaft, Bau-Administration. Vorschau, Anwendungshinweis und Zugang zu den vollständigen Paketen."
+    },
+    {
+      "slug": "wallpaper",
+      "cat": "anwendung",
+      "status": "live",
+      "tag": "Anwendungen",
+      "title": "Wallpaper",
+      "href": "wallpaper.html",
+      "desc": "Elf Desktop-Hintergründe des Goetheanum (2500 × 1406) zum Herunterladen."
+    },
+    {
+      "slug": "powerpoint",
+      "cat": "anwendung",
+      "status": "entwurf",
+      "tag": "Anwendungen",
+      "title": "PowerPoint-Vorlagen",
+      "href": "powerpoint.html",
+      "desc": "Präsentationsvorlagen im Hausbild. Die Vorlage wird gerade überarbeitet – die Datei folgt."
     },
     {
       "slug": "logo-generator",
