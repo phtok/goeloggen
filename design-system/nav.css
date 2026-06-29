@@ -37,6 +37,15 @@ html{scrollbar-gutter:stable}
   background:none;border:0;cursor:pointer;padding:0;text-decoration:none}
 .dsnav .worlds a:hover,.dsnav .worlds button:hover{color:var(--gold-ink)}
 
+/* Seiten-CTA in der Kopfzeile (data-cta) – Aktion = volles Blau + Weiss (B01),
+   immer sichtbar, auch mobil (kein langes Suchen). margin-left:auto hält ihn
+   rechts – auf Desktop hinter den Welten, mobil (Welten ausgeblendet) bündig. */
+.dsnav .cta{margin-left:auto;display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;
+  background:var(--blue-solid);color:var(--on-accent);font-weight:var(--w-strong);
+  font-size:14px;line-height:1;text-decoration:none;white-space:nowrap;
+  border-radius:var(--r-control);padding:11px 16px;min-height:40px}
+.dsnav .cta:hover{filter:brightness(1.08)}
+
 /* ☾/☀ Hell-Dunkel – nur das Icon */
 .dsnav .theme{margin-left:18px;display:inline-flex;align-items:center;justify-content:center;font:inherit;
   color:var(--ink);background:none;border:0;padding:6px;cursor:pointer;line-height:1}

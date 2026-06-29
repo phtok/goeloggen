@@ -147,13 +147,23 @@
   })();
 
   // --- Kopfzeile -------------------------------------------------------------
+  // Optionaler Seiten-CTA in der Kopfzeile: data-cta="Beschriftung:#anker"
+  // (Aktion = volles Blau + Weiss, B01). Immer sichtbar – keine Suchbewegung.
+  var CTA = (s && s.dataset.cta) || "";
+  var ctaHTML = "";
+  if (CTA) {
+    var ci = CTA.indexOf(":");
+    var clabel = ci > 0 ? CTA.slice(0, ci) : CTA;
+    var ctarget = ci > 0 ? CTA.slice(ci + 1) : "#";
+    ctaHTML = '<a class="cta" href="' + ctarget + '">' + clabel + '</a>';
+  }
   var header = el("header", "dsnav");
   header.innerHTML =
     '<div class="bar">' +
       '<a class="brand" href="' + HOME + '" aria-label="Goetheanum Werkzeuge – zur Übersicht">' +
         '<img class="lockup" src="' + ROOT + 'assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge">' +
       '</a>' +
-      '<nav class="worlds"></nav>' +
+      '<nav class="worlds"></nav>' + ctaHTML +
       '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic">☾</span></button>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
