@@ -12,13 +12,11 @@
      Token- und Komponenten-Dateien ein – dieselben, die jedes Werkzeug nutzt. -->
 <link rel="stylesheet" href="tokens.css" />
 <link rel="stylesheet" href="base.css" />
+<link rel="stylesheet" href="nav.css" />
 
 <style>
-  /* Nur schauseiten-eigene Gestaltung. Werte kommen aus den Tokens. */
-  .hero{padding:clamp(44px,8vw,88px) 0 var(--s8)}
-  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(32px,6vw,60px);line-height:1.03;letter-spacing:-.01em;max-width:16ch}
-  .hero .lede{margin-top:var(--s6);color:#565b60;font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:60ch}
-  .hero .meta{margin-top:var(--s8);display:flex;gap:var(--s2);flex-wrap:wrap}
+  /* Seitenkopf (Hero/H1/Lede) aus dem Fundament – keine eigene Grösse/Farbe. */
+  .hero .meta{margin-top:var(--s6);display:flex;gap:var(--s2);flex-wrap:wrap}
 
   /* Auf dieser Seite ist der Titel-Schnitt Deutlich (580), wie für Titel vorgesehen. */
   .shead h2{font-weight:var(--w-deutlich)}
@@ -94,21 +92,8 @@
 </head>
 <body>
 
-<header class="ds-header">
-  <div class="wrap bar">
-    <a class="brand" href="../" aria-label="Goetheanum Grafik – Startseite">
-      <img class="mk" src="../assets/logos/goetheanum-mark-blue.svg" alt="" />
-      <span class="wm">Goetheanum</span>
-    </a>
-    <nav class="top">
-      <a href="#farben">Farben</a>
-      <a href="#schrift">Schrift</a>
-      <a href="#regeln">Regeln</a>
-      <a href="#komponenten">Komponenten</a>
-      <a href="#bauen">Bauen</a>
-    </nav>
-  </div>
-</header>
+<!-- Globale Kopfzeile aus dem System – kein eigener Header, keine Fake-Wortmarke. -->
+<script src="nav.js" data-root="../" data-active="design-system"></script>
 
 <main class="wrap">
 

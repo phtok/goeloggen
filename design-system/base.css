@@ -27,8 +27,19 @@ body{
 a{color:inherit;text-decoration:none}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
 
-/* Display-Schrift trägt die Titel. */
-h1,h2,h3,.h-display{font-family:var(--font-display);font-weight:var(--w-deutlich);line-height:var(--lh-tight)}
+/* Display-Schrift trägt die Titel – mit fester, gemessener Skala aus EINER Quelle.
+   Seiten setzen KEINE eigenen Überschriften-Grössen oder -Schnitte mehr; so kann
+   keine Seite ausscheren (Konformität durch Konstruktion). Titel = Deutlich, nie Laut. */
+h1,h2,h3,h4,.h-display{font-family:var(--font-display);font-weight:var(--w-deutlich);line-height:var(--lh-tight)}
+h1{font-size:var(--t-h1)}
+h2{font-size:var(--t-h2)}
+h3{font-size:var(--t-h3)}
+h4{font-size:var(--t-h3)}
+
+/* Kanonischer Seitenkopf: Kicker · Titel · Lede – ein Baustein für alle Werkzeuge. */
+.hero{padding:clamp(40px,7vw,72px) 0 var(--s6)}
+.hero h1{max-width:20ch;letter-spacing:-.005em}
+.hero .lede{margin-top:var(--s4)}
 
 /* Zugänglichkeit: Zustand = Blau */
 a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
@@ -150,7 +161,7 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
 
 /* Kicker: getönt, leicht getrackt, Display-Schrift – NORMAL, nicht versal (G05). */
 /* Kleine UI-Schrift: nie Leise (verschwimmt klein) – mindestens Klar. */
-.kicker{display:inline-block;font-family:var(--font-display);color:var(--gold-ink);font-size:13.5px;letter-spacing:.03em;font-weight:var(--w-text);margin-bottom:var(--s2)}
+.kicker,.kick{display:inline-block;font-family:var(--font-display);color:var(--gold-ink);font-size:13.5px;letter-spacing:.03em;font-weight:var(--w-text);margin-bottom:var(--s2)}
 
 /* Lesemass: ~66 Zeichen je Zeile für linearen Mengentext (G10). */
 .lese{max-width:min(var(--measure),100%)}
