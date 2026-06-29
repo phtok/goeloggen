@@ -186,11 +186,14 @@ def lint_file(path, c):
             sel_ln = lineno(scriptless, off + rm.start(1))
             if sel_ln in skip_lines:
                 continue
-            # DS04 – kanonische Rolle lokal redefiniert?
+            # DS04 – kanonische Rolle lokal redefiniert? Nur SCHLÜSSEL-Selektoren
+            # (bare/compound), nicht kontextuelle Überschreibungen (`.download .btn`
+            # ist legitim – das ist Verortung, keine Neudefinition der Rolle).
             if "font-size" in body or re.search(r"\bcolor\s*:", body):
                 for part in sel.split(","):
-                    last = last_simple(part)
-                    classes = set(re.findall(r"\.([A-Za-z][\w-]*)", last))
+                    if re.search(r"[ >+~]", part.strip()):
+                        continue  # Nachfahren-Selektor = Verortung, kein Redefinieren
+                    classes = set(re.findall(r"\.([A-Za-z][\w-]*)", part))
                     if classes & canon:
                         hit = sorted(classes & canon)[0]
                         findings.append((sel_ln, "DS04", "hinweis",

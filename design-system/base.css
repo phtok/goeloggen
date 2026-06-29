@@ -66,9 +66,11 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .card{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);background:var(--paper)}
 .card.soft{background:var(--soft)}
 
-/* --- Chips ----------------------------------------------------------------- */
+/* --- Chips & Marken --------------------------------------------------------- */
 .chip{font-size:var(--t-small);color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:6px 14px}
 .chip b{color:var(--ink);font-weight:var(--w-strong)}
+/* Status-Marke (Live/Beta/Entwurf …) – Mikro-Pille, kleiner als .chip, nie versal (G05). */
+.badge{display:inline-block;font-size:var(--t-micro);letter-spacing:.03em;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:2px 10px}
 
 /* --- Knöpfe = AKTION -------------------------------------------------------- */
 /* Aktion = Blau (Zustand/Tun); die primäre Aktion ist gefüllt. Klar getrennt von
@@ -202,10 +204,14 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
 /* Live-Ausgabe / Ableseband – ruhig, Zahlen dicktengleich (G25). */
 .readout{color:var(--ink);font-size:var(--t-small);line-height:1.5;font-variant-numeric:tabular-nums lining-nums}
 
-/* Technische Auszeichnung – Monospace. Inline-Chip (.code) und Block (.code.block). */
+/* Technische Auszeichnung – Monospace. Inline-Chip (.code) = leise getönt;
+   Block (.code.block / pre.code) = theme-feste Konsole mit Syntaxpalette. */
 .mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums lining-nums}
 .code{font-family:var(--font-mono);font-size:.85em;background:var(--soft);border:1px solid var(--line-soft);border-radius:6px;padding:2px 7px;color:var(--ink)}
-.code.block{display:block;padding:10px 13px;border-radius:var(--r-control);line-height:1.55;white-space:pre-wrap;overflow:auto}
+.code.block,pre.code{display:block;background:var(--code-bg);color:var(--code-ink);border:0;border-radius:var(--r-control);padding:14px 16px;line-height:1.55;white-space:pre;overflow:auto;font-size:13px}
+.code .key,.code .k{color:var(--code-key)}
+.code .str,.code .s{color:var(--code-str)}
+.code .com,.code .c{color:var(--code-comment)}
 
 /* Lesemass: ~66 Zeichen je Zeile für linearen Mengentext (G10). */
 .lese{max-width:min(var(--measure),100%)}
