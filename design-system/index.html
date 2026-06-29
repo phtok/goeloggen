@@ -171,6 +171,21 @@
     <p class="note" style="margin-top:var(--s4)">Korrigieren = die Quelle bearbeiten: <a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-orgs.js">goe-orgs.js auf GitHub</a>. Werkzeuge sollen diese Datei <b>einbinden</b>, nicht kopieren – sonst driftet das Bild (eine eingebettete Kopie ist bereits abgewichen; Konsolidierung steht an).</p>
   </section>
 
+  <!-- ================= Begriffe & Übersetzungen ================= -->
+  <section id="begriffe">
+    <div class="shead">
+      <h2>Begriffe &amp; Übersetzungen</h2>
+      <p>Wiederkehrende institutionelle Begriffe – damit <q>Freie Hochschule für Geisteswissenschaft</q>, <q>Allgemeine Anthroposophische Gesellschaft</q> und Co. überall identisch und korrekt übersetzt erscheinen. Quelle: <code>assets/goe-terms.js</code>. de/en aus den Werkzeugen bestätigt; fr/es als Vorschlag, vom Auftraggeber zu ratifizieren.</p>
+    </div>
+    <div class="card" style="overflow-x:auto">
+      <table id="terms-table">
+        <thead><tr><th>Deutsch</th><th>English</th><th>Français</th><th>Español</th><th>Status</th></tr></thead>
+        <tbody id="terms-body"><tr><td class="meta" colspan="5">lädt aus der Quelle …</td></tr></tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Ratifizieren oder korrigieren = die Quelle bearbeiten: <a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-terms.js">goe-terms.js auf GitHub</a>. Status <code>prüfen</code> → nach Bestätigung auf <code>fest</code> setzen. Werkzeuge sollen die Datei einbinden, nicht kopieren.</p>
+  </section>
+
   <!-- ================= Schrift & Schnitte ================= -->
   <section id="schrift">
     <div class="shead">
@@ -345,8 +360,9 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- Quelle der Sektionen/Bereiche – stellt window.GOE_GCI_ORGS + GOE_ORG_CATS bereit. -->
+<!-- Quellen: Sektionen/Bereiche (GOE_GCI_ORGS) und Begriffe (GOE_TERMS). -->
 <script src="../assets/goe-orgs.js"></script>
+<script src="../assets/goe-terms.js"></script>
 <script>
 const $ = (s,r=document)=>r.querySelector(s);
 const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
@@ -362,6 +378,7 @@ Promise.all([
   buildSwatches(tok,typo);
   buildSektion(tok);
   buildOrgTable();
+  buildTerms();
   buildCuts(typo);
   buildRules(typo);
   buildScale(tok);
@@ -408,6 +425,23 @@ function buildSektion(tok){
       `<div class="hx">--sek-${k} · ${hex}</div></div>`;
     b.addEventListener("click",()=>{navigator.clipboard?.writeText(hex);toast(hex+" kopiert");});
     wrap.appendChild(b);
+  });
+}
+
+function buildTerms(){
+  const body=$("#terms-body"); if(!body) return;
+  const T=window.GOE_TERMS;
+  if(!T){ body.innerHTML='<tr><td class="meta" colspan="5">goe-terms.js nicht geladen.</td></tr>'; return; }
+  body.innerHTML="";
+  Object.keys(T).forEach(k=>{
+    const t=T[k], pruefen=t.status!=="fest";
+    const tr=el("tr");
+    tr.innerHTML =
+      `<td><b>${t.de||""}</b></td><td>${t.en||""}</td>`+
+      `<td class="${pruefen?'meta':''}">${t.fr||"–"}</td>`+
+      `<td class="${pruefen?'meta':''}">${t.es||"–"}</td>`+
+      `<td>${pruefen?'<span class="badge">prüfen</span>':'<span class="meta">fest</span>'}</td>`;
+    body.appendChild(tr);
   });
 }
 
