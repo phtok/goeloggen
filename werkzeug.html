@@ -18,14 +18,14 @@
   .wrap{max-width:980px;margin:0 auto;padding:0 22px}
   header{border-bottom:1px solid var(--line)}
   .bar{display:flex;align-items:center;justify-content:space-between;height:56px}
-  .bar b{font-weight:400}.bar a{color:var(--muted);text-decoration:none;font-size:13.5px}
+  .bar b{font-weight:400}.bar a{color:var(--muted);text-decoration:none;font-size:var(--t-small)}
   .hero{padding-block:34px 6px}
-  .kick{color:var(--gold-ink);font-size:13.5px;margin-bottom:10px}
+  .kick{color:var(--gold-ink);font-size:var(--t-small);margin-bottom:10px}
   /* h1 aus dem Fundament */
   .lede{color:var(--muted);margin-top:10px;max-width:620px;font-size:15px}
   .panel{border:1px solid var(--line);border-radius:16px;padding:22px;margin:22px 0;background:var(--soft)}
   .panel h2{font-weight:400;font-size:20px;margin-bottom:4px}
-  .panel .hint{color:var(--muted);font-size:13px;margin-bottom:16px}
+  .panel .hint{color:var(--muted);font-size:var(--t-small);margin-bottom:16px}
   .stage{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:22px 20px;margin-bottom:18px}
   .line{font-size:clamp(26px,4.4vw,40px);line-height:1.35}
   .big{font-size:clamp(40px,9vw,84px);line-height:1.2;margin-top:6px}
@@ -33,17 +33,17 @@
   .sp{font-family:"G Var";font-variation-settings:"wght" 518}
   .ctrls{display:grid;grid-template-columns:1fr 1fr;gap:14px 26px}
   @media(max-width:640px){.ctrls{grid-template-columns:1fr}}
-  .ctrl label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px}
+  .ctrl label{display:flex;justify-content:space-between;font-size:var(--t-small);color:var(--muted);margin-bottom:6px}
   .ctrl label b{color:var(--ink);font-weight:400;font-feature-settings:"tnum" 1}
   input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:var(--line);border-radius:2px;margin:6px 0}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid var(--paper);box-shadow:0 1px 4px rgba(0,0,0,.18)}
   input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid var(--paper)}
   .readout{margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:#1f2429;color:#e7ddc8;border-radius:9px;padding:9px 13px;letter-spacing:.02em}
-  .btn{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--field-bg);color:var(--ink);border-radius:9px;padding:8px 13px;cursor:pointer}
+  .code{font-family:var(--font-mono);font-size:var(--t-small);background:var(--code-bg);color:var(--code-ink);border-radius:9px;padding:9px 13px;letter-spacing:.02em}
+  .btn{font:inherit;font-size:var(--t-small);border:1px solid var(--line);background:var(--field-bg);color:var(--ink);border-radius:9px;padding:8px 13px;cursor:pointer}
   .btn:hover{border-color:var(--gold-ink)}
-  .reset{color:var(--muted);font-size:12.5px;background:none;border:none;cursor:pointer;text-decoration:underline}
-  footer{border-top:1px solid var(--line);padding:24px 0 50px;color:var(--muted);font-size:12.5px;margin-top:10px}
+  .reset{color:var(--muted);font-size:var(--t-small);background:none;border:none;cursor:pointer;text-decoration:underline}
+  footer{border-top:1px solid var(--line);padding:24px 0 50px;color:var(--muted);font-size:var(--t-small);margin-top:10px}
 </style>
 </head>
 <body>
@@ -61,7 +61,7 @@
     <div class="stage">
       <p class="big" id="mixBig"></p>
       <p class="line" id="mixOut" style="min-height:1.4em"></p>
-      <p class="line" id="mixSmall" style="font-size:13.5px;line-height:1.75;color:var(--muted);max-width:48ch;margin-top:14px"></p>
+      <p class="line" id="mixSmall" style="font-size:var(--t-small);line-height:1.75;color:var(--muted);max-width:48ch;margin-top:14px"></p>
     </div>
     <textarea id="mixIn" rows="3" spellcheck="false" style="width:100%;font-family:inherit;font-size:15px;color:inherit;background:var(--field-bg);border:1px solid var(--line);border-radius:10px;padding:11px 13px;resize:vertical;line-height:1.5">Mitglied {BE}3477 trat 1923 bei · {AGB} §3 · {ISBN} 978-3 · das {GOETHEANUM} zählte am 24.6.1923 genau 1487 Gäste; vgl. {Bd}. II, S. 36.</textarea>
     <div class="sixgrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;margin-top:20px">

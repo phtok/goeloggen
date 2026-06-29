@@ -68,6 +68,15 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
   Utility `.ico-invert` (Filter im Dunkelmodus) ins Fundament; auf die Schriften-
   Icons angewandt. Besser noch: Icons als Webfont/Inline-SVG mit currentColor.
 
+### Backstage/Beta auf den 14px-Floor + Org-Farbe angeglichen
+- Acht Specimen-/Backstage-Seiten (Typografie, Tester, Grotesk+, Vorschau,
+  Mischsatz, Ligaturen ×3) auf den neuen Floor gehoben: literale <14px → --t-small;
+  Reste tokenisiert (Bar-Hintergrund → --bar-bg, Gold-Tint → color-mix, Code-Chip
+  → --code-*). Alle 0 Fehler. Gesamt-Score **42 % → 72 %** (18/25 konform).
+- **Track 1**: `--bereich` von #005eb8 auf **#0061a9 = Markenblau** angeglichen
+  (so rendern es die Logo-Daten/goe-orgs.js schon). Sektionsnamen-Korrekturen aus
+  #164 (Team) übernommen; spanische Gesellschaft bleibt `prüfen`.
+
 ### Einbinden statt kopieren – eine Org-Quelle (Drift dauerhaft behoben)
 - Es gab DREI Org-Datensätze: `assets/goe-orgs.js` (36, Schaufenster), `assets/
   data/goetheanum-orgs.js` (38 inkl. it/subscriptions, live: Logos+Signatur) und
