@@ -47,6 +47,15 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 > + Schaufenster) → **35 %** (öffentliche Live-Seiten) → **46 %** (Generatoren +
 > Icons). 11/24 Seiten konform. Jeder Schritt bewegt diese Zahl.
 
+### Schaufenster bildet ab, was bereitliegt (Doku + Präsentation in einem)
+- Neue Abschnitte, live aus der Quelle gerendert: **Textrollen** (Kicker/Lede/
+  Hinweis/Meta/Label/Wert/Code/Badge), **Sektionen & Bereiche** (volle Tabelle
+  aus `goe-orgs.js` + `--sek-*`-Swatches), **Konformitäts-Engine** (Vertrag
+  DS01–07 aus `contract.json`, die Schleife, der Score).
+- `goe-orgs.js` ist damit im Design-System **sichtbar** und über die Quelle
+  korrigierbar. Befund dabei: die Visitenkarten-App trägt eine **abgewichene
+  Kopie** der Tabelle – Konsolidierung (einbinden statt kopieren) steht an.
+
 ### Behoben (Mobil & Lesbarkeit – aus echtem Geräte-Befund)
 - **Seitenrand am Handy** war weg: `.hero{padding:X 0 Y}` setzte den seitlichen
   Rand auf 0 und überschrieb `.wrap` – Text klebte am Glas. Fundament-Fix:
