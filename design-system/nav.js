@@ -249,16 +249,19 @@
   // Tippen filtert die Werkzeugliste; leere Bereiche werden ausgeblendet.
   function applySearch() {
     var q = (searchInput.value || "").trim().toLowerCase();
+    // Werkzeug-Links filtern (Startseite bleibt immer sichtbar).
+    var links = drawerBody.querySelectorAll(".dsnav-link:not(.dsnav-home)");
+    for (var j = 0; j < links.length; j++) {
+      var hit = !q || links[j].textContent.toLowerCase().indexOf(q) !== -1;
+      links[j].style.display = hit ? "" : "none";
+    }
+    // Bereiche (intern) ohne Treffer ausblenden, Treffer aufklappen.
     var groups = drawerBody.querySelectorAll(".dsnav-group");
     for (var i = 0; i < groups.length; i++) {
-      var g = groups[i], links = g.querySelectorAll(".dsnav-link"), any = false;
-      for (var j = 0; j < links.length; j++) {
-        var hit = !q || links[j].textContent.toLowerCase().indexOf(q) !== -1;
-        links[j].style.display = hit ? "" : "none";
-        if (hit) any = true;
-      }
-      g.style.display = any ? "" : "none";
-      if (q) g.open = true;
+      var gl = groups[i].querySelectorAll(".dsnav-link"), any = false;
+      for (var k = 0; k < gl.length; k++) { if (gl[k].style.display !== "none") any = true; }
+      groups[i].style.display = any ? "" : "none";
+      if (q) groups[i].open = true;
     }
   }
   searchInput.addEventListener("input", applySearch);
@@ -304,6 +307,16 @@
     return null;
   }
 
+  function linkEl(t) {
+    var active = isActiveTool(t);
+    var a = el("a", "dsnav-link" + (active ? " is-active" : ""));
+    a.href = resolveHref(t.href);
+    if (isExternal(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
+    if (active) a.setAttribute("aria-current", "page");
+    a.innerHTML = '<span class="tt">' + t.title + '</span>';
+    return a;
+  }
+
   function groupEl(w, tools, open) {
     var g = el("details", "dsnav-group");
     g.setAttribute("data-world", w.id);
@@ -311,35 +324,43 @@
     // Das Menü koordiniert, es erklärt nicht: nur Titel, kein Beiwerk-Text.
     g.appendChild(el("summary", null,
       '<span class="ttl">' + w.label + '</span><span class="arr">›</span>'));
-    tools.forEach(function (t) {
-      var active = isActiveTool(t);
-      var a = el("a", "dsnav-link" + (active ? " is-active" : ""));
-      a.href = resolveHref(t.href);
-      if (isExternal(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
-      if (active) a.setAttribute("aria-current", "page");
-      a.innerHTML = '<span class="tt">' + t.title + '</span>';
-      g.appendChild(a);
-    });
+    tools.forEach(function (t) { g.appendChild(linkEl(t)); });
     return g;
   }
+
+  // Öffentliche Reihenfolge (flach) – wie die Startseite. Unbekannte ans Ende.
+  var FLAT_ORDER = ["logo-generator", "signatur", "visitenkarten", "icons", "schriften",
+    "sektionsfarben", "uebersetzungen", "wallpaper", "powerpoint", "typografie", "design-system"];
+  var PUBLIC_CATS = WORLDS.reduce(function (a, w) { return a.concat(w.cats); }, []);
 
   function renderDrawer() {
     var intern = isIntern();
     drawerBody.innerHTML = "";
     drawerTitle.textContent = intern ? "Alles · intern" : "Navigation";
     idot.hidden = !intern;
-    var cur = currentWorldId();
-    var groups = intern ? WORLDS.concat(INTERN_EXTRA) : WORLDS;
-    groups.forEach(function (w) {
-      var tools = ALL.filter(function (t) { return w.cats.indexOf(t.cat) !== -1; });
-      if (!intern) tools = tools.filter(function (t) { return t.status === "live" || t.status === "beta"; });
-      if (!tools.length) return;
-      // Offen: der Bereich der aktuellen Seite, sonst die öffentlichen Welten;
-      // Backstage-Welten bleiben eingeklappt (kurze, scannbare Liste).
-      var open = (w.id === cur) || (!intern && PUBLIC_IDS.indexOf(w.id) !== -1);
-      if (intern) open = (w.id === cur);
-      drawerBody.appendChild(groupEl(w, tools, open));
-    });
+
+    // Startseite immer ganz oben (nicht von der Suche gefiltert).
+    var home = el("a", "dsnav-link dsnav-home" + (ACTIVE === "start" ? " is-active" : ""));
+    home.href = HOME; home.innerHTML = '<span class="tt">Startseite</span>';
+    drawerBody.appendChild(home);
+
+    if (!intern) {
+      // FLACH: eine priorisierte Liste aller öffentlichen Werkzeuge, keine Bereiche.
+      var pub = ALL.filter(function (t) {
+        return PUBLIC_CATS.indexOf(t.cat) !== -1 && (t.status === "live" || t.status === "beta");
+      });
+      var rank = function (t) { var k = FLAT_ORDER.indexOf(t.slug); return k < 0 ? 999 : k; };
+      pub.sort(function (a, b) { return rank(a) - rank(b); });
+      pub.forEach(function (t) { drawerBody.appendChild(linkEl(t)); });
+    } else {
+      // intern: nach Backstage-Welten gruppiert (kurze, scannbare Bereiche).
+      var cur = currentWorldId();
+      WORLDS.concat(INTERN_EXTRA).forEach(function (w) {
+        var tools = ALL.filter(function (t) { return w.cats.indexOf(t.cat) !== -1; });
+        if (!tools.length) return;
+        drawerBody.appendChild(groupEl(w, tools, w.id === cur));
+      });
+    }
     applySearch();
   }
 
