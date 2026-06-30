@@ -2036,6 +2036,10 @@
           refs.cardFormat.value = "portrait";
         }
         refs.cardFormat.disabled = !landscapeAllowed;
+        // Hochschule/Gesellschaft tragen das Zeichen und gibt es nur im Hochformat –
+        // der Format-Wähler ist dort überflüssig. Nur bei Bereichen zeigen.
+        const row = refs.cardFormat.closest(".export-format-row");
+        if (row) row.style.display = landscapeAllowed ? "" : "none";
       }
 
       function cardFormatForModel(model) {
