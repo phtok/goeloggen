@@ -46,8 +46,14 @@ html{scrollbar-gutter:stable}
   border-radius:var(--r-control);padding:11px 16px;min-height:40px}
 .dsnav .cta:hover{filter:brightness(1.08)}
 
+/* ✉ Feedback – nur das Icon (mailto, global) */
+.dsnav .feedback{margin-left:18px;display:inline-flex;align-items:center;justify-content:center;
+  color:var(--ink);background:none;border:0;padding:6px;cursor:pointer;line-height:1;text-decoration:none}
+.dsnav .feedback .ic{font-size:18px;line-height:1}
+.dsnav .feedback:hover{color:var(--gold-ink)}
+
 /* ☾/☀ Hell-Dunkel – nur das Icon */
-.dsnav .theme{margin-left:18px;display:inline-flex;align-items:center;justify-content:center;font:inherit;
+.dsnav .theme{margin-left:14px;display:inline-flex;align-items:center;justify-content:center;font:inherit;
   color:var(--ink);background:none;border:0;padding:6px;cursor:pointer;line-height:1}
 .dsnav .theme .ic{font-size:18px;line-height:1}
 .dsnav .theme:hover{color:var(--gold-ink)}
@@ -61,7 +67,7 @@ html{scrollbar-gutter:stable}
 
 @media(max-width:720px){
   .dsnav .worlds{display:none}
-  .dsnav .theme{margin-left:auto}
+  .dsnav .feedback{margin-left:auto}
 }
 
 /* --- Schublade ------------------------------------------------------------- */
