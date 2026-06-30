@@ -36,9 +36,15 @@ def otf_to_ttf(ft, max_err=1.0):
     if "CFF " in ft: del ft["CFF "]
     if "VORG" in ft: del ft["VORG"]
     # maxp v1.0 mit aus dem glyf berechneten Höchstwerten
+    # + hmtx-Vorbreite (lsb) aus dem echten xMin neu setzen: die OTF trägt teils
+    # eine lsb ≠ xMin (Überhang z. B. bei Guillemets); TrueType richtet an der
+    # lsb aus, sonst verschiebt sich die Glyphe. Vorschub (advance) bleibt.
+    hmtx = ft["hmtx"]
     maxPoints = maxContours = maxComp = 0
-    for g in glyf.glyphs.values():
+    for name, g in glyf.glyphs.items():
         g.recalcBounds(glyf)
+        xmin = g.xMin if g.numberOfContours != 0 else 0
+        hmtx[name] = (hmtx[name][0], xmin)
         if g.isComposite():
             maxComp = max(maxComp, len(g.components))
         elif g.numberOfContours > 0:
