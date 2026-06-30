@@ -18,6 +18,17 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Startseite: Entdecker-Karussell + Karten flach nach Priorität
+- **Karussell** oben (rotierend, pausiert bei Hover/Fokus, respektiert
+  `prefers-reduced-motion`, Pfeile · Punkte · Wisch): ein **Hinweis auf weniger
+  Bekanntes** (Sektionsfarben, Zeichen, Übersetzungen, Wallpaper, Typografie,
+  Design-System) – ‹Schon entdeckt?›.
+- **Karten flach nach Priorität** statt nach Kategorien gruppiert (Logos · Signatur
+  · Visitenkarten · Icons · Schriften · …). Backstage-Welten bleiben draussen
+  (öffentliche Kategorien-Schranke beibehalten).
+- Die Mini-Visuals der Karten von `.tile .x` auf `.thumb .x` generalisiert, damit
+  das Karussell dieselben Erkennungszeichen nutzt – eine Quelle, kein Duplikat.
+
 ### Schliff: Sektionsfarben-Seite · Design-System-Bild · Theme-Icon ohne Emoji
 - **Farben → Sektionsfarben**: die Sonderseite trägt jetzt **nur Sektions- und Bereichsfarben**
   (datengetrieben aus `goe-orgs.js`: 12 Sektionen + 6 Bereiche). Marken- und Neutralfarben wohnen
