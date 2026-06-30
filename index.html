@@ -58,6 +58,13 @@
   /* Design-System: Farbfelder */
   .tile .sw{display:flex;gap:9px}
   .tile .sw i{width:20px;height:20px;border-radius:5px;display:block}
+  /* Design-System: Mini-Bauplan – Struktur (Leiste, Zeilen) + Farbe (Chips) */
+  .tile .sys{display:grid;gap:6px;width:122px}
+  .tile .sys .bar{height:13px;border-radius:4px;background:var(--blue)}
+  .tile .sys .ln{height:7px;border-radius:3px;background:var(--line)}
+  .tile .sys .ln.s{width:60%}
+  .tile .sys .chips{display:flex;gap:6px;margin-top:3px}
+  .tile .sys .chips i{width:18px;height:18px;border-radius:5px;display:block}
   /* Icons: drei Piktogramme aus dem Icon-Webfont (currentColor – folgt Hell/Dunkel) */
   .tile .icons{font-family:"G Icons";font-size:36px;line-height:1;color:var(--ink);display:flex;gap:14px}
   /* Übersetzungen: vier Sprach-Marken */
@@ -95,8 +102,8 @@
     "icons":           '<span class="icons" aria-hidden="true">gfx</span>',                     // drei Piktogramme (WLAN · Garderobe · Rollstuhl)
     "schrift-webfont": '<span class="win"><b></b><em>Aa</em></span>',                          // Schrift im Browser-Fenster
     "typografie":      '<span class="para"><i></i><i></i><i></i><i></i></span>',               // gesetzter Absatz
-    "design-system":   '<span class="sw"><i style="background:var(--blue)"></i><i style="background:var(--gold-deep)"></i><i style="background:var(--ink)"></i></span>', // Farbfelder
-    "farben":          '<span class="sw"><i style="background:var(--blue)"></i><i style="background:var(--gold)"></i><i style="background:var(--sek-lws)"></i><i style="background:var(--sek-szw)"></i></span>', // Identitätsfarben
+    "design-system":   '<span class="sys"><i class="bar"></i><i class="ln"></i><i class="ln s"></i><span class="chips"><i style="background:var(--gold)"></i><i style="background:var(--sek-ms)"></i><i style="background:var(--gold-deep)"></i></span></span>', // Mini-Bauplan: Struktur + Farbe
+    "sektionsfarben":  '<span class="sw"><i style="background:var(--sek-szw)"></i><i style="background:var(--sek-lws)"></i><i style="background:var(--sek-ms)"></i><i style="background:var(--sek-js)"></i></span>', // vier Sektionsfarben
     "zeichen":         '<span style="background:#fff;border-radius:8px;width:100%;height:100%;display:grid;place-items:center"><img src="assets/zeichen/hochschulzeichen.png" alt="" style="max-height:66px;max-width:78%"></span>', // Rudolf-Steiner-Zeichen auf weissem Papier
     "wallpaper":       '<img src="assets/wallpaper/goetheanum-wallpaper-48.jpg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px">', // ein Motiv
     "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>' // vier Sprachen

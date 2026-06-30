@@ -74,13 +74,13 @@
       "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Mit Starter und Bau-Workflow."
     },
     {
-      "slug": "farben",
+      "slug": "sektionsfarben",
       "cat": "system",
       "status": "beta",
       "tag": "Elemente",
-      "title": "Farben",
-      "href": "farben.html",
-      "desc": "Alle Identitätsfarben auf einen Blick – Marke, Neutrale, Sektionen – mit Hex, RGB, HSB und CMYK (Richtwert), klick-kopierbar."
+      "title": "Sektionsfarben",
+      "href": "sektionsfarben.html",
+      "desc": "Die Identitätsfarben der Sektionen und Bereiche – mit Hex, RGB, HSB und CMYK (Richtwert), klick-kopierbar. Marken- und Neutralfarben wohnen im Design-System."
     },
     {
       "slug": "zeichen",

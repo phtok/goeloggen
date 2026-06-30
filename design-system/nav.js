@@ -35,10 +35,14 @@
     try { var t = localStorage.getItem(THEME_KEY); if (t === "light" || t === "dark") return t; } catch (e) {}
     return prefersDark() ? "dark" : "light";
   }
+  // Sonne/Mond als Inline-SVG (currentColor) – NICHT als Unicode, das iOS sonst
+  // zu Emoji umfärbt. Deterministisch in Hell wie Dunkel.
+  var MOON_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="currentColor"><path d="M20.7 13.3A8 8 0 1 1 10.7 3.3a6.3 6.3 0 1 0 10 10Z"/></svg>';
+  var SUN_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.1M12 19.3v2.1M2.6 12h2.1M19.3 12h2.1M5.2 5.2l1.5 1.5M17.3 17.3l1.5 1.5M18.8 5.2l-1.5 1.5M6.7 17.3l-1.5 1.5"/></svg>';
   function updateThemeBtn() {
     if (!themeBtn) return;
     var dark = document.documentElement.getAttribute("data-theme") === "dark";
-    themeBtn.querySelector(".ic").textContent = dark ? "☀" : "☾";  // ☀ U+2600 / ☾ U+263E
+    themeBtn.querySelector(".ic").innerHTML = dark ? SUN_SVG : MOON_SVG;
     themeBtn.setAttribute("aria-label", dark ? "Hell schalten" : "Dunkel schalten");
     themeBtn.setAttribute("aria-pressed", String(dark));
   }
@@ -166,7 +170,7 @@
         '<img class="lockup" src="' + ROOT + 'assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge">' +
       '</a>' +
       '<nav class="worlds"></nav>' + ctaHTML +
-      '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic">☾</span></button>' +
+      '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic"></span></button>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
     '</div>';

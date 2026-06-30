@@ -4,8 +4,8 @@
 <link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Goetheanum – Farben</title>
-<meta name="description" content="Die Identitätsfarben des Goetheanum auf einen Blick: Markenfarben, Neutrale und Sektionsfarben mit Hex, RGB, HSB und CMYK (Richtwert) – klick-kopierbar." />
+<title>Goetheanum – Sektionsfarben</title>
+<meta name="description" content="Die Identitätsfarben der Schul-Sektionen und der Bereiche mit Hex, RGB, HSB und CMYK (Richtwert) – klick-kopierbar. Marken- und Neutralfarben wohnen im Design-System." />
 <link rel="stylesheet" href="design-system/tokens.css" />
 <link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
@@ -27,7 +27,6 @@
   td.val{cursor:copy;font-variant-numeric:tabular-nums;white-space:nowrap}
   td.val:hover{background:var(--soft)}
   .name{font-family:var(--font);font-weight:var(--w-deutlich);font-size:var(--t-body)}
-  .cdesc{color:var(--muted);font-size:var(--t-small)}
   .pend{color:var(--muted)}
 
   .sw{width:42px;height:42px;border-radius:var(--r-control);border:1px solid var(--line);display:inline-block;vertical-align:middle}
@@ -38,50 +37,42 @@
 </style>
 </head>
 <body>
-<script src="design-system/nav.js" data-root="./" data-section="system" data-active="farben"
-        data-onpage="Marke:#marke|Neutrale:#neutrale|Sektionen:#sektionen"></script>
+<script src="design-system/nav.js" data-root="./" data-section="system" data-active="sektionsfarben"
+        data-onpage="Sektionen:#sektionen|Bereiche:#bereiche"></script>
 
 <main class="wrap">
   <div class="hero">
     <div class="kicker">Hausgrafik · Elemente</div>
-    <h1>Farben</h1>
-    <p class="lede">Die Identitätsfarben auf einen Blick. Hex, RGB und HSB sind exakt aus dem
-      Design-System abgeleitet (eine Quelle der Wahrheit: <code>design-system/tokens.css</code>).
-      Jede Zelle ist klick-kopierbar.</p>
+    <h1>Sektionsfarben</h1>
+    <p class="lede">Die Identitätsfarben der Schul-Sektionen und der Bereiche – Hex, RGB und HSB exakt
+      aus der Quelle (<code>assets/goe-orgs.js</code>, speist die Logo-Engine). Jede Zelle ist
+      klick-kopierbar. Marken- und Neutralfarben wohnen im
+      <a href="design-system/">Design-System</a>.</p>
   </div>
 
-  <section class="grp" id="marke">
-    <h2>Markenfarben</h2>
-    <p>Blau trägt Zustand, Verweis und Aktion; Gold den Inhalts-Akzent. Auf Farbflächen steht Weiss (B01).</p>
-    <div class="tablecard"><table><thead><tr>
-      <th></th><th>Name</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th>
-    </tr></thead><tbody id="marke-body"></tbody></table></div>
-  </section>
-
-  <section class="grp" id="neutrale">
-    <h2>Neutrale</h2>
-    <p>Tinte, Sekundärton und die Flächen. Hell/Dunkel kommt aus den Tokens – hier stehen die hellen Grundwerte.</p>
-    <div class="tablecard"><table><thead><tr>
-      <th></th><th>Name</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th>
-    </tr></thead><tbody id="neutrale-body"></tbody></table></div>
-  </section>
-
   <section class="grp" id="sektionen">
-    <h2>Sektionsfarben</h2>
-    <p>Die Identitätsfarben der Schul-Sektionen. Quelle: <code>assets/goe-orgs.js</code> (speist die Logo-Engine).
-      Markenfest – sie kippen nicht mit Hell/Dunkel.</p>
+    <h2>Sektionen</h2>
+    <p>Die Identitätsfarben der Sektionen der Freien Hochschule für Geisteswissenschaft. Markenfest –
+      sie kippen nicht mit Hell/Dunkel.</p>
     <div class="tablecard"><table><thead><tr>
       <th></th><th>Sektion</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th>
     </tr></thead><tbody id="sektionen-body"></tbody></table></div>
   </section>
 
+  <section class="grp" id="bereiche">
+    <h2>Bereiche</h2>
+    <p>Die Bereiche tragen den Standard – Markenblau – oder eine eigene Bereichsfarbe.</p>
+    <div class="tablecard"><table><thead><tr>
+      <th></th><th>Bereich</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th>
+    </tr></thead><tbody id="bereiche-body"></tbody></table></div>
+  </section>
+
   <p class="fineprint">
-    <b>Hex · RGB · HSB</b> sind aus den Tokens errechnet und verbindlich für Bildschirm/Web.
+    <b>Hex · RGB · HSB</b> sind aus der Quelle errechnet und verbindlich für Bildschirm/Web.
     <b>CMYK</b> ist ein <b>rechnerischer Richtwert</b> (sRGB→CMYK, geräteabhängig) – <b>nicht</b> der
     verbindliche Druckwert; die offiziellen Druck-CMYK-Werte folgen aus dem Marken-Handbuch.
     Korrigieren = die Quelle bearbeiten
-    (<a href="https://github.com/phtok/goeloggen/blob/main/design-system/tokens.css">tokens.css</a> ·
-    <a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-orgs.js">goe-orgs.js</a>).
+    (<a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-orgs.js">goe-orgs.js</a>).
   </p>
 </main>
 
@@ -93,7 +84,7 @@
   "use strict";
   function $(s,r){return (r||document).querySelector(s);}
 
-  // --- Farbwert-Umrechnung aus dem Hex (eine Quelle: der Token-Hex) ----------
+  // --- Farbwert-Umrechnung aus dem Hex (eine Quelle: der goe-orgs-Hex) -------
   function hexToRgb(hex){
     var h=hex.replace("#","");
     if(h.length===3) h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
@@ -131,16 +122,14 @@
     return td;
   }
 
-  function row(tbody, hex, name, role){
+  function row(tbody, hex, name){
     var rgb=hexToRgb(hex), hsb=rgbToHsb(rgb.r,rgb.g,rgb.b), cmyk=rgbToCmyk(rgb.r,rgb.g,rgb.b);
     var tr=document.createElement("tr");
     var swc=document.createElement("td"); swc.className="swc";
     var sw=document.createElement("span"); sw.className="sw"; sw.style.background=hex; swc.appendChild(sw);
     tr.appendChild(swc);
     var nc=document.createElement("td");
-    nc.innerHTML='<div class="name"></div>'+(role?'<div class="cdesc"></div>':"");
-    nc.querySelector(".name").textContent=name;
-    if(role) nc.querySelector(".cdesc").textContent=role;
+    nc.innerHTML='<span class="name"></span>'; nc.querySelector(".name").textContent=name;
     tr.appendChild(nc);
     tr.appendChild(valCell(hex.toUpperCase()));
     tr.appendChild(valCell(rgb.r+", "+rgb.g+", "+rgb.b));
@@ -149,30 +138,17 @@
     tbody.appendChild(tr);
   }
 
-  var MARKE=[
-    {hex:"#0061a9", name:"Markenblau", role:"Zustand · Verweis · Aktion"},
-    {hex:"#d7ab68", name:"Gold", role:"Inhalts-Akzent"},
-    {hex:"#94702e", name:"Gold dunkel", role:"Auswahl-Fläche (Weiss drauf, ≥4.5:1)"}
-  ];
-  var NEUTRAL=[
-    {hex:"#23272b", name:"Tinte", role:"Lesetext"},
-    {hex:"#6b7177", name:"Sekundär", role:"gedämpfter Text (4.9:1)"},
-    {hex:"#faf8f4", name:"Sanft", role:"gedämpfte Fläche, Karten"},
-    {hex:"#ffffff", name:"Papier", role:"Grund"}
-  ];
-  // Reihenfolge der Schul-Sektionen (Schlüssel in goe-orgs.js)
-  var SEK_KEYS=["aas","ps","ms","nws","lws","sbk","ssw","szw","js","srmk","mas","hpise"];
-
+  function renderGroup(catKey, bodyId){
+    var O=window.GOE_GCI_ORGS, C=window.GOE_GCI_CATS, body=$("#"+bodyId);
+    if(!O||!C||!C[catKey]||!body) return;
+    C[catKey].items.forEach(function(k){
+      var o=O[k]; if(!o||!o.color) return;
+      row(body, o.color, o.name_de);
+    });
+  }
   function render(){
-    MARKE.forEach(function(c){row($("#marke-body"),c.hex,c.name,c.role);});
-    NEUTRAL.forEach(function(c){row($("#neutrale-body"),c.hex,c.name,c.role);});
-    var O=window.GOE_GCI_ORGS;
-    if(O){
-      SEK_KEYS.forEach(function(k){
-        var o=O[k]; if(!o||!o.color) return;
-        row($("#sektionen-body"), o.color, o.name_de, "");
-      });
-    }
+    renderGroup("sektionen","sektionen-body");
+    renderGroup("bereiche","bereiche-body");
   }
   if(document.readyState!=="loading") render();
   else document.addEventListener("DOMContentLoaded", render);

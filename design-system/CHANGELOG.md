@@ -18,6 +18,16 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Schliff: Sektionsfarben-Seite · Design-System-Bild · Theme-Icon ohne Emoji
+- **Farben → Sektionsfarben**: die Sonderseite trägt jetzt **nur Sektions- und Bereichsfarben**
+  (datengetrieben aus `goe-orgs.js`: 12 Sektionen + 6 Bereiche). Marken- und Neutralfarben wohnen
+  im **Design-System** (Schaufenster `#swatches`) – keine Doppelpflege. Datei, Karte und Slug heissen
+  jetzt `sektionsfarben`. Pantone war schon raus.
+- **Startkarte Design-System** bekommt ein **eigenes Bild**: ein Mini-Bauplan (Leiste + Textzeilen +
+  Farb-Chips = Struktur **und** Farbe) statt der Farbfelder – klar unterscheidbar von den Sektionsfarben.
+- **Theme-Schalter ohne Emoji**: Sonne/Mond sind jetzt **Inline-SVG** (currentColor) statt der
+  Unicode-Glyphen ☀/☾, die iOS zu Emoji umfärbte. Deterministisch in Hell wie Dunkel.
+
 ### Weitere Lücken vom alten Auftritt geschlossen: Zeichen · Wallpaper · PowerPoint · Feedback
 - **Zeichen** (`zeichen.html`) – die Zeichen von Rudolf Steiner (Hochschule, Gesellschaft,
   Bau-Administration) als Vorschau + Anwendungshinweis + Zugang zu den vollständigen Paketen.
