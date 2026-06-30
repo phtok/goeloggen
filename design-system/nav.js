@@ -210,10 +210,26 @@
   drawer.innerHTML =
     '<div class="dhead"><span class="t">Navigation</span>' +
       '<button class="close" type="button" aria-label="Schliessen">×</button></div>' +
+    '<div class="dsearch"><input type="search" class="dsnav-q" placeholder="Werkzeug suchen …" aria-label="Werkzeug suchen" autocomplete="off"></div>' +
     '<div class="body"></div>' +
     '<div class="foot"><a href="mailto:philipp.tok@goetheanum.ch?subject=Feedback%20Goetheanum%20Werkzeuge">Feedback geben</a> · <a href="' + ROOT + 'design-system/">Design-System</a></div>';
   document.body.appendChild(backdrop);
   document.body.appendChild(drawer);
+
+  // Globaler Beta-Einblender (unten, dezent, wegklickbar – merkt sich „gesehen").
+  var BETA_KEY = "goeBetaSeen";
+  var betaSeen = false; try { betaSeen = localStorage.getItem(BETA_KEY) === "1"; } catch (e) {}
+  if (!betaSeen) {
+    var beta = el("div", "dsnav-beta");
+    beta.innerHTML =
+      '<span class="t"><b>Beta</b> – die Werkzeuge wachsen noch.</span>' +
+      '<a class="fb" href="mailto:philipp.tok@goetheanum.ch?subject=Feedback%20Goetheanum%20Werkzeuge">Feedback geben</a>' +
+      '<button class="x" type="button" aria-label="Hinweis schliessen">×</button>';
+    document.body.appendChild(beta);
+    beta.querySelector(".x").addEventListener("click", function () {
+      beta.remove(); try { localStorage.setItem(BETA_KEY, "1"); } catch (e) {}
+    });
+  }
 
   var toast = el("div", "dsnav-toast"); document.body.appendChild(toast);
   function flash(msg) { toast.textContent = msg; toast.classList.add("show"); setTimeout(function () { toast.classList.remove("show"); }, 1400); }
@@ -228,6 +244,24 @@
   var drawerBody = drawer.querySelector(".body");
   var drawerTitle = drawer.querySelector(".dhead .t");
   var idot = btnAll.querySelector(".idot");
+  var searchInput = drawer.querySelector(".dsnav-q");
+
+  // Tippen filtert die Werkzeugliste; leere Bereiche werden ausgeblendet.
+  function applySearch() {
+    var q = (searchInput.value || "").trim().toLowerCase();
+    var groups = drawerBody.querySelectorAll(".dsnav-group");
+    for (var i = 0; i < groups.length; i++) {
+      var g = groups[i], links = g.querySelectorAll(".dsnav-link"), any = false;
+      for (var j = 0; j < links.length; j++) {
+        var hit = !q || links[j].textContent.toLowerCase().indexOf(q) !== -1;
+        links[j].style.display = hit ? "" : "none";
+        if (hit) any = true;
+      }
+      g.style.display = any ? "" : "none";
+      if (q) g.open = true;
+    }
+  }
+  searchInput.addEventListener("input", applySearch);
 
   function openDrawer() { backdrop.classList.add("open"); drawer.classList.add("open"); btnAll.setAttribute("aria-expanded", "true"); }
   function closeDrawer() { backdrop.classList.remove("open"); drawer.classList.remove("open"); btnAll.setAttribute("aria-expanded", "false"); }
@@ -306,6 +340,7 @@
       if (intern) open = (w.id === cur);
       drawerBody.appendChild(groupEl(w, tools, open));
     });
+    applySearch();
   }
 
   // --- Manifest laden --------------------------------------------------------
