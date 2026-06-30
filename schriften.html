@@ -263,23 +263,25 @@ body{ font-family:"Goetheanum", system-ui, sans-serif; }
 
   <section id="download"><div class="wrap">
     <div class="shead"><h2>Download.</h2>
-      <p>OTF zum Installieren, Webfonts fürs Web, Icons einzeln oder als Set.</p></div>
+      <p>Nach Verwendung wählen, nicht nach Format. Installiert wird nur OTF (Design) oder TTF (Office) – Webfonts werden eingebunden, nie installiert.</p></div>
     <div class="dl-cards">
-      <div class="card"><h3>Komplettpaket</h3><p>Leise, Klar, Deutlich, Laut, Variable Font, Icons, Webfonts, Beipackzettel.</p>
-        <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Schriften-v2.6.zip" download>ZIP</a></div>
+      <div class="card"><h3>Office · PowerPoint &amp; Word</h3><p><b style="color:var(--ink);font-weight:400">Installieren.</b> TrueType, jeder Schnitt im Namen wählbar (Klar/Laut/Leise/Deutlich, Icons) und in der Datei einbettbar – mit fertiger PPT-Vorlage.</p>
+        <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Office-TTF.zip" download>TTF-Set</a>
+        <a class="btn" href="assets/templates/GoetheanumVorlageA4.pptx" download>PPT-Vorlage</a></div>
+      <div class="card"><h3>Design · InDesign &amp; Co.</h3><p><b style="color:var(--ink);font-weight:400">Installieren.</b> Die OTF-Familie ‹Goetheanum Schrift› (⌘B = Laut, ⌘I = Leise) und der Variable Font für die stufenlose Achse. Statische OTF-Schnitte im Komplettpaket.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.6.otf" download>Variable OTF</a></div>
+      <div class="card"><h3>Web · Entwickler</h3><p><b style="color:var(--ink);font-weight:400">Nicht installieren.</b> woff2 per <code>@font-face</code> einbinden – Anleitung mit Code-Schnipsel.</p>
+        <a class="btn" href="schrift-webfont.html">Web-Anleitung</a></div>
+      <div class="card"><h3>Komplettpaket</h3><p>Alles in einem: OTF, TTF, Variable, Webfonts, Icons, Vorlage, Beipackzettel.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Schriften-v2.6.zip" download>ZIP</a></div>
       <div class="card"><h3>Icons als Set</h3><p>81 Icons als SVG, PNG und PDF in einem Archiv.</p>
         <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Icons-v2.6-Einzeldateien.zip" download>Icon-ZIP</a></div>
-      <div class="card"><h3>Variable Font</h3><p>Eine Datei, Achse 190–725. Fürs Web/Design – nicht für Office.</p>
-        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.6.otf" download>OTF</a></div>
-      <div class="card"><h3>Office &amp; PowerPoint</h3><p>TrueType-Schnitte mit flachen Namen – je Schnitt direkt wählbar und in PPT/Word einbettbar. Dazu die PPT-Vorlage mit eingebetteten Schriften.</p>
-        <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Office-TTF.zip" download>TTF-Set</a>
-        <a class="btn" href="assets/templates/GoetheanumVorlageA4.pptx" download>PPT-Vorlage</a></div>
       <div class="card"><h3>Beipackzettel</h3><p>Übersicht, Ligaturen &amp; Sonderzeichen, Tastatur-Belegung der Icons.</p>
         <a class="btn" href="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf" download>PDF</a></div>
     </div>
     <p style="margin-top:18px;font-size:var(--t-small);color:var(--muted)">
-      <b style="color:var(--ink);font-weight:400">Installieren:</b> ZIP entpacken → Doppelklick auf eine Schriftdatei → ‹Installieren› (macOS Schriftsammlung / Windows rechtsklick).
-      <b style="color:var(--ink);font-weight:400">Für Office/PowerPoint die TTF</b> – jeder Schnitt ist im Namen wählbar (Goetheanum Schrift Klar/Laut/Leise/Deutlich) und lässt sich in der Datei einbetten; OTF und der Variable Font betten dort nicht zuverlässig ein.
+      <b style="color:var(--ink);font-weight:400">Installieren:</b> Datei doppelklicken → ‹Installieren› (macOS Schriftsammlung / Windows Rechtsklick), dann das Programm neu starten.
+      <b style="color:var(--ink);font-weight:400">Nicht installierbar:</b> WOFF/WOFF2 sind Web-Dateien (nur <code>@font-face</code>); der Variable Font ist fürs Web/Design, nicht fürs Office.
     </p>
   </div></section>
 </main>
