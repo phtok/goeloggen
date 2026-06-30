@@ -103,11 +103,11 @@
     {
       "slug": "powerpoint",
       "cat": "anwendung",
-      "status": "entwurf",
+      "status": "live",
       "tag": "Anwendungen",
       "title": "PowerPoint-Vorlagen",
       "href": "powerpoint.html",
-      "desc": "Präsentationsvorlagen im Hausbild. Die Vorlage wird gerade überarbeitet – die Datei folgt."
+      "desc": "Präsentationsvorlage (A4) im Hausbild mit eingebetteten Schriften – plus die TrueType-Schriften fürs Office zum Installieren."
     },
     {
       "slug": "logo-generator",

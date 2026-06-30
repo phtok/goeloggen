@@ -16,6 +16,7 @@ def members():
     out += [os.path.join(ROOT, "Beipackzettel-Goetheanum-Schriften.pdf")]
     out += g("Fallback", "*")
     out += g("Fonts", "*.otf")
+    out += g("Office", "*.ttf")
     out += [os.path.join(ROOT, "OFL.txt"), os.path.join(ROOT, "README.md")]
     out += g("Variable", "*.otf")
     out += g("Webfonts", "woff", "*.woff")
