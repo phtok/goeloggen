@@ -67,6 +67,11 @@
   .thumb .sys .chips i{width:18px;height:18px;border-radius:5px;display:block}
   /* Icons: drei Piktogramme aus dem Icon-Webfont (currentColor – folgt Hell/Dunkel) */
   .thumb .icons{font-family:"G Icons";font-size:36px;line-height:1;color:var(--ink);display:flex;gap:14px}
+  /* PowerPoint: eine Folie mit Titelzeile (statt mehrdeutigem „P") */
+  .thumb .ppt{width:76px;height:56px;border:1.6px solid var(--muted);border-radius:5px;display:grid;align-content:start;gap:6px;padding:9px}
+  .thumb .ppt b{display:block;height:7px;width:62%;background:var(--gold-ink);border-radius:2px}
+  .thumb .ppt i{display:block;height:3px;background:var(--muted);border-radius:2px}
+  .thumb .ppt i:nth-child(2){width:100%}.thumb .ppt i:nth-child(3){width:76%}
   /* Übersetzungen: vier Sprach-Marken */
   .thumb .tr{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
   .thumb .tr i{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:15px;font-style:normal;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 9px}
@@ -76,11 +81,11 @@
     border-radius:var(--r-card);background:var(--soft);overflow:hidden}
   .carousel .track{display:flex;transition:transform .45s ease}
   @media(prefers-reduced-motion:reduce){.carousel .track{transition:none}}
-  .carousel .slide{flex:0 0 100%;min-width:0;box-sizing:border-box;display:grid;
-    grid-template-columns:auto 1fr;gap:var(--s6);align-items:center;
+  .carousel .slide{flex:0 0 100%;min-width:0;box-sizing:border-box;display:flex;
+    align-items:center;justify-content:center;gap:var(--s6);
     padding:var(--s6) clamp(var(--s6),5vw,var(--s8));text-decoration:none;color:var(--ink)}
-  .carousel .slide .thumb{width:132px;height:104px}
-  .carousel .slide .copy{min-width:0}
+  .carousel .slide .thumb{width:132px;height:104px;flex:0 0 auto}
+  .carousel .slide .copy{min-width:0;max-width:520px}
   .carousel .slide .kick{color:var(--gold-ink);font-size:var(--t-small);letter-spacing:.04em}
   .carousel .slide h2{font-family:var(--font-display);font-weight:var(--w-deutlich);
     font-size:clamp(21px,3vw,29px);line-height:1.1;margin:2px 0 0}
@@ -96,8 +101,9 @@
     cursor:pointer;padding:0;transition:width .2s,background .2s}
   .carousel .dots button.on{background:var(--gold-deep);width:22px}
   @media(max-width:560px){
-    .carousel .slide{grid-template-columns:1fr;gap:var(--s4);padding:var(--s6)}
+    .carousel .slide{flex-direction:column;align-items:flex-start;gap:var(--s4);padding:var(--s6)}
     .carousel .slide .thumb{width:100%;height:120px}
+    .carousel .slide .copy{max-width:none}
     .carousel .arrow{display:none}
   }
 </style>
@@ -147,6 +153,7 @@
     "sektionsfarben":  '<span class="sw"><i style="background:var(--sek-szw)"></i><i style="background:var(--sek-lws)"></i><i style="background:var(--sek-ms)"></i><i style="background:var(--sek-js)"></i></span>', // vier Sektionsfarben
     "zeichen":         '<span style="background:#fff;border-radius:8px;width:100%;height:100%;display:grid;place-items:center"><img src="assets/zeichen/hochschulzeichen.png" alt="" style="max-height:66px;max-width:78%"></span>', // Rudolf-Steiner-Zeichen auf weissem Papier
     "wallpaper":       '<img src="assets/wallpaper/goetheanum-wallpaper-48.jpg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px">', // ein Motiv
+    "powerpoint":      '<span class="ppt"><b></b><i></i><i></i></span>', // eine Folie mit Titel
     "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>' // vier Sprachen
   };
   function visual(t){

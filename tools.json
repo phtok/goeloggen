@@ -71,7 +71,8 @@
       "tag": "Fundament",
       "title": "Design-System",
       "href": "design-system/",
-      "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Mit Starter und Bau-Workflow."
+      "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Mit Starter und Bau-Workflow.",
+      "such": "Farben Palette Tokens Hex RGB CMYK Markenfarben Neutrale Komponenten Fundament"
     },
     {
       "slug": "sektionsfarben",
@@ -80,7 +81,8 @@
       "tag": "Elemente",
       "title": "Sektionsfarben",
       "href": "sektionsfarben.html",
-      "desc": "Die Identitätsfarben der Sektionen und Bereiche – mit Hex, RGB, HSB und CMYK (Richtwert), klick-kopierbar. Marken- und Neutralfarben wohnen im Design-System."
+      "desc": "Die Identitätsfarben der Sektionen und Bereiche – mit Hex, RGB, HSB und CMYK (Richtwert), klick-kopierbar. Marken- und Neutralfarben wohnen im Design-System.",
+      "such": "Farben Identitätsfarben Sektionsfarben Bereichsfarben Hex RGB HSB CMYK Palette"
     },
     {
       "slug": "wallpaper",
@@ -89,7 +91,8 @@
       "tag": "Anwendungen",
       "title": "Wallpaper",
       "href": "wallpaper.html",
-      "desc": "Elf Desktop-Hintergründe des Goetheanum (2500 × 1406) zum Herunterladen."
+      "desc": "Elf Desktop-Hintergründe des Goetheanum (2500 × 1406) zum Herunterladen.",
+      "such": "Wallpaper Hintergrund Desktop Bild"
     },
     {
       "slug": "powerpoint",
@@ -98,7 +101,8 @@
       "tag": "Anwendungen",
       "title": "PowerPoint-Vorlagen",
       "href": "powerpoint.html",
-      "desc": "Präsentationsvorlage (A4) im Hausbild mit eingebetteten Schriften – plus die TrueType-Schriften fürs Office zum Installieren."
+      "desc": "Präsentationsvorlage (A4) im Hausbild mit eingebetteten Schriften – plus die TrueType-Schriften fürs Office zum Installieren.",
+      "such": "PowerPoint Präsentation Folien PPT Vorlage Keynote"
     },
     {
       "slug": "logo-generator",
@@ -108,7 +112,8 @@
       "title": "Logos",
       "short": "Logos",
       "href": "apps/logos/",
-      "desc": "Sektions-, Bereichs- und Medienlogos in der Hausschrift – erklärt, mit Regeln, korrekt gesetzt und zum Herunterladen."
+      "desc": "Sektions-, Bereichs- und Medienlogos in der Hausschrift – erklärt, mit Regeln, korrekt gesetzt und zum Herunterladen.",
+      "such": "Logo Marke Sektionslogo Bereichslogo Medienlogo Zeichen"
     },
     {
       "slug": "visitenkarten",
@@ -118,7 +123,8 @@
       "title": "Visitenkarten",
       "short": "Visitenkarten",
       "href": "apps/visitenkarten-generator/",
-      "desc": "Einheitliche Visitenkarten aus den eigenen Angaben – druckfertig, ohne Layoutprogramm."
+      "desc": "Einheitliche Visitenkarten aus den eigenen Angaben – druckfertig, ohne Layoutprogramm.",
+      "such": "Visitenkarte Karte Kontakt Druck"
     },
     {
       "slug": "signatur",
@@ -128,7 +134,8 @@
       "title": "Signatur",
       "short": "Signatur",
       "href": "apps/signatur-generator/",
-      "desc": "Outlook-robuste E-Mail-Signatur nach gemeinsamer Vorlage – kopieren und einsetzen."
+      "desc": "Outlook-robuste E-Mail-Signatur nach gemeinsamer Vorlage – kopieren und einsetzen.",
+      "such": "E-Mail Mail Outlook Signatur Fusszeile"
     },
     {
       "slug": "uebersetzungen",
@@ -138,7 +145,8 @@
       "title": "Übersetzungen",
       "short": "Übersetzungen",
       "href": "uebersetzungen.html",
-      "desc": "Sektionen, Bereiche und institutionelle Begriffe in vier Sprachen – geprüft auf goetheanum.ch, durchsuchbar, klick-kopierbar. Für die Sekretariate."
+      "desc": "Sektionen, Bereiche und institutionelle Begriffe in vier Sprachen – geprüft auf goetheanum.ch, durchsuchbar, klick-kopierbar. Für die Sekretariate.",
+      "such": "Übersetzung Sprachen Englisch Französisch Spanisch Begriffe Sektionen"
     },
     {
       "slug": "gtv-naming",
@@ -188,7 +196,8 @@
       "title": "Schriften",
       "short": "Überblick",
       "href": "schriften.html",
-      "desc": "Sechs Schnitte von Leise bis Laut, Variable Font und Icon-Satz – mit Download."
+      "desc": "Sechs Schnitte von Leise bis Laut, Variable Font und Icon-Satz – mit Download.",
+      "such": "Schrift Font Hausschrift Variable Webfont Gewichte Icons"
     },
     {
       "slug": "icons",
@@ -198,7 +207,8 @@
       "title": "Icons",
       "short": "Icons",
       "href": "icons.html",
-      "desc": "45 benannte Piktogramme, Pfeile und Kompass – als Webfont per Taste oder einzeln als SVG, PNG und PDF."
+      "desc": "45 benannte Piktogramme, Pfeile und Kompass – als Webfont per Taste oder einzeln als SVG, PNG und PDF.",
+      "such": "Icon Piktogramme Symbole Webfont Zeichen"
     },
     {
       "slug": "typografie",
@@ -208,7 +218,8 @@
       "title": "Typografie",
       "short": "Typografie",
       "href": "typografie.html",
-      "desc": "Wenige Mittel, präzise gesetzt – als Handbuch und maschinenlesbares Token-System."
+      "desc": "Wenige Mittel, präzise gesetzt – als Handbuch und maschinenlesbares Token-System.",
+      "such": "Typografie Satz Regeln Hausregeln Mikrotypografie"
     },
     {
       "slug": "schrift-vergleich",
