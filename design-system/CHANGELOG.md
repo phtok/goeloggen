@@ -18,6 +18,17 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Beta-Einblender + Suche im Menü; Karten-Pillen abgelöst
+- **Beta-Einblender** (`nav.js`/`nav.css`): ein dezenter, schwebender Hinweis unten –
+  ‹Beta – die Werkzeuge wachsen noch. Feedback geben ✕›, wegklickbar (merkt sich
+  ‹gesehen› in localStorage). Löst die per-Karte-Pillen ab; ein Ort statt zwölf Marker.
+- **Suche im Menü**: Tippfeld oben in der Schublade filtert die Werkzeugliste live;
+  leere Bereiche blenden aus, Treffer-Bereiche klappen auf.
+- Startseite: ‹Schon entdeckt?› klein/fein über das Karussell gehoben; Karussell-Inhalt
+  Wallpaper · Schriften · PowerPoint · Icons · Logos; Karten ohne Pillen, eine Fläche.
+- Konsolidiert: Webfont in Schriften (Abschnitt + Sprunglink), Zeichen in Logos (Link) –
+  keine eigenen Karten mehr.
+
 ### Startseite: Entdecker-Karussell + Karten flach nach Priorität
 - **Karussell** oben (rotierend, pausiert bei Hover/Fokus, respektiert
   `prefers-reduced-motion`, Pfeile · Punkte · Wisch): ein **Hinweis auf weniger
