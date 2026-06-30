@@ -176,6 +176,22 @@
     '</div>';
   document.body.insertBefore(header, document.body.firstChild);
 
+  // Optionale Seiten-Sprungleiste unter der Kopfzeile: data-onpage="Label:#anker|…".
+  // Auf jeder Breite sichtbar (auch mobil, wo die Welten-Navigation ausgeblendet ist).
+  var ONPAGE = (s && s.dataset.onpage) || "";
+  if (ONPAGE) {
+    var sub = el("nav", "dsnav-onpage");
+    sub.setAttribute("aria-label", "Auf dieser Seite");
+    sub.innerHTML = '<div class="row">' + ONPAGE.split("|").map(function (pair) {
+      var ci = pair.indexOf(":");
+      var label = ci > 0 ? pair.slice(0, ci) : pair;
+      var anchor = ci > 0 ? pair.slice(ci + 1) : "#";
+      return '<a href="' + anchor + '">' + label + '</a>';
+    }).join("") + '</div>';
+    header.insertAdjacentElement("afterend", sub);
+    document.documentElement.classList.add("has-onpage");
+  }
+
   var backdrop = el("div", "dsnav-backdrop");
   var drawer = el("aside", "dsnav-drawer");
   drawer.setAttribute("role", "dialog");
