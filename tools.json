@@ -83,15 +83,6 @@
       "desc": "Die Identitätsfarben der Sektionen und Bereiche – mit Hex, RGB, HSB und CMYK (Richtwert), klick-kopierbar. Marken- und Neutralfarben wohnen im Design-System."
     },
     {
-      "slug": "zeichen",
-      "cat": "system",
-      "status": "beta",
-      "tag": "Elemente",
-      "title": "Zeichen",
-      "href": "zeichen.html",
-      "desc": "Die Zeichen von Rudolf Steiner – Hochschule, Gesellschaft, Bau-Administration. Vorschau, Anwendungshinweis und Zugang zu den vollständigen Paketen."
-    },
-    {
       "slug": "wallpaper",
       "cat": "anwendung",
       "status": "live",
@@ -218,16 +209,6 @@
       "short": "Typografie",
       "href": "typografie.html",
       "desc": "Wenige Mittel, präzise gesetzt – als Handbuch und maschinenlesbares Token-System."
-    },
-    {
-      "slug": "schrift-webfont",
-      "cat": "schrift",
-      "status": "live",
-      "tag": "Web",
-      "title": "Webfont einbinden",
-      "short": "Webfont",
-      "href": "schrift-webfont.html",
-      "desc": "Die Goetheanum-Schrift als Webfont auf eigenen Seiten verwenden – Schritt für Schritt."
     },
     {
       "slug": "schrift-vergleich",
