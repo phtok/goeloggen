@@ -18,6 +18,12 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Burger flach (Modell B) – keine Kategorien öffentlich
+- Das Menü zeigt öffentlich **eine priorisierte Liste** (wie die Startseite), mit
+  ‹Startseite› oben – keine aufklappbaren Welten mehr. Die Suche übernimmt das Finden.
+- **Backstage** bleibt unverändert nach Welten gruppiert hinter dem geheimen
+  Dreifach-Klick. Reihenfolge in `FLAT_ORDER` (deckungsgleich mit der Startseite).
+
 ### Beta-Einblender + Suche im Menü; Karten-Pillen abgelöst
 - **Beta-Einblender** (`nav.js`/`nav.css`): ein dezenter, schwebender Hinweis unten –
   ‹Beta – die Werkzeuge wachsen noch. Feedback geben ✕›, wegklickbar (merkt sich
