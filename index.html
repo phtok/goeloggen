@@ -22,13 +22,13 @@
   .tile{position:relative;display:flex;flex-direction:column;gap:var(--s3);border:1px solid var(--line);
     border-radius:var(--r-card);padding:var(--s6);background:var(--paper);text-decoration:none;color:var(--ink);
     transition:border-color .15s,box-shadow .15s,transform .15s}
-  .tile.is-live{background:var(--soft)}
   .tile:hover{border-color:var(--gold-ink);box-shadow:var(--shadow-card);transform:translateY(-1px)}
   .tile h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:20px;line-height:1.15;display:flex;align-items:center;gap:9px;margin:0}
   .tile h3 .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s,color .15s}
   .tile:hover h3 .arr{color:var(--gold-ink);transform:translateX(3px)}
-  /* .badge-Aussehen kommt aus base.css – hier nur die Platzierung in der Kachel. */
-  .badge{position:absolute;top:var(--s4);right:var(--s4)}
+
+  /* Kleiner, feiner Hinweis über dem Karussell. */
+  .discover{font-size:var(--t-small);letter-spacing:.07em;color:var(--gold-ink);margin:0 0 var(--s3)}
 
   /* Greifbare Mini-Werkzeuge je Karte – das Erzeugnis als Erkennungszeichen. */
   .thumb{height:96px;display:grid;place-items:center;border-radius:10px;background:var(--paper);
@@ -122,19 +122,18 @@
 "use strict";
 (function(){
   // Karten flach nach Priorität (keine Kategorien); Unbekannte ans Ende.
+  // Webfont wohnt jetzt in Schriften, Zeichen in Logos – darum keine eigene Karte.
   var ORDER = ["logo-generator","signatur","visitenkarten","icons","schriften",
-    "sektionsfarben","uebersetzungen","zeichen","wallpaper","powerpoint",
-    "typografie","design-system","schrift-webfont"];
-  // Entdecker-Karussell: weniger bekannte Werkzeuge, je ein Teaser.
+    "sektionsfarben","uebersetzungen","wallpaper","powerpoint",
+    "typografie","design-system"];
+  // Entdecker-Karussell: ausgewählte Werkzeuge, je ein Teaser.
   var DISCOVER = [
-    {slug:"sektionsfarben", line:"Alle Identitätsfarben der Sektionen und Bereiche – Hex, RGB, HSB, klick-kopierbar."},
-    {slug:"zeichen",        line:"Die Zeichen von Rudolf Steiner – Hochschule, Gesellschaft, Bau-Administration."},
-    {slug:"uebersetzungen", line:"Sektionen und Begriffe in vier Sprachen – auf goetheanum.ch geprüft, für die Sekretariate."},
     {slug:"wallpaper",      line:"Elf Goetheanum-Hintergründe für den Desktop, frei zum Herunterladen."},
-    {slug:"typografie",     line:"Die Hausregeln des Satzes – wenige Mittel, präzise gesetzt."},
-    {slug:"design-system",  line:"Das Fundament: Farben, Schnitte und Komponenten aus einer Quelle."}
+    {slug:"schriften",      line:"Sechs Schnitte von Flüstern bis Schreien, Variable Font und Icon-Satz."},
+    {slug:"powerpoint",     line:"Präsentationsvorlage im Hausbild – mit eingebetteten Schriften."},
+    {slug:"icons",          line:"45 Piktogramme als Webfont oder einzeln – per Taste gesetzt."},
+    {slug:"logo-generator", line:"Sektions-, Bereichs- und Medienlogos in der Hausschrift, korrekt gesetzt."}
   ];
-  var STATUS_LABEL = { beta:"in Überarbeitung" };
   // Greifbar: jedes Zeichen zeigt das DING, das das Werkzeug erzeugt.
   var VISUAL = {
     "logo-generator":  '<img src="assets/logos/goetheanum-mark-blue.svg" alt="">',           // die Marke
@@ -157,11 +156,10 @@
   function isExt(h){ return /^https?:/.test(h); }
   function tile(t){
     var a = document.createElement("a");
-    a.className = "tile" + (t.status === "live" ? " is-live" : "");
+    a.className = "tile";
     a.href = t.href;
     if (isExt(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
-    var badge = STATUS_LABEL[t.status] ? '<span class="badge">' + STATUS_LABEL[t.status] + '</span>' : "";
-    a.innerHTML = badge + visual(t) + '<h3>' + t.title + ' <span class="arr">›</span></h3>';
+    a.innerHTML = visual(t) + '<h3>' + t.title + ' <span class="arr">›</span></h3>';
     return a;
   }
   function buildCarousel(byslug){
@@ -170,13 +168,15 @@
                         .filter(function(x){ return x.t; });
     if (items.length < 2) { car.remove(); return; }   // Karussell erst ab zwei Folien
 
+    // Kleiner, feiner Hinweis ÜBER dem Karussell (nicht je Folie).
+    car.insertAdjacentHTML("beforebegin", '<p class="discover">Schon entdeckt?</p>');
+
     var track = document.createElement("div"); track.className = "track";
     items.forEach(function(x){
       var a = document.createElement("a"); a.className = "slide"; a.href = x.t.href;
       if (isExt(x.t.href)) { a.target = "_blank"; a.rel = "noopener"; }
       a.innerHTML = visual(x.t) +
-        '<span class="copy"><span class="kick">Schon entdeckt?</span>' +
-        '<h2>' + x.t.title + '</h2><p>' + x.d.line + '</p>' +
+        '<span class="copy"><h2>' + x.t.title + '</h2><p>' + x.d.line + '</p>' +
         '<span class="go">Ansehen ›</span></span>';
       track.appendChild(a);
     });
