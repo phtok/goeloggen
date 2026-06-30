@@ -252,7 +252,8 @@
     // Werkzeug-Links filtern (Startseite bleibt immer sichtbar).
     var links = drawerBody.querySelectorAll(".dsnav-link:not(.dsnav-home)");
     for (var j = 0; j < links.length; j++) {
-      var hit = !q || links[j].textContent.toLowerCase().indexOf(q) !== -1;
+      var hay = (links[j].textContent + " " + (links[j].dataset.such || "")).toLowerCase();
+      var hit = !q || hay.indexOf(q) !== -1;
       links[j].style.display = hit ? "" : "none";
     }
     // Bereiche (intern) ohne Treffer ausblenden, Treffer aufklappen.
@@ -313,6 +314,8 @@
     a.href = resolveHref(t.href);
     if (isExternal(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
     if (active) a.setAttribute("aria-current", "page");
+    // Suchbegriffe (Synonyme) fürs Filtern – „Farben" findet so auch das Design-System.
+    if (t.such) a.dataset.such = t.such;
     a.innerHTML = '<span class="tt">' + t.title + '</span>';
     return a;
   }

@@ -18,6 +18,14 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Feinschliff: Karussell zentriert · Such-Synonyme · PowerPoint-Bild
+- **Karussell-Inhalt zentriert** (Thumb + Text als Gruppe mittig) statt linksbündig.
+- **Suche mit Synonymen**: pro Werkzeug `such`-Begriffe in `tools.json`; die Menü-Suche
+  matcht Titel **und** Synonyme. So findet ‹Farben› jetzt Sektionsfarben **und**
+  Design-System (wo Marken-/Neutralfarben wohnen).
+- **PowerPoint** bekommt ein eindeutiges Bild (Mini-Folie mit Titelzeile) statt des
+  mehrdeutigen ‹P›.
+
 ### Burger flach (Modell B) – keine Kategorien öffentlich
 - Das Menü zeigt öffentlich **eine priorisierte Liste** (wie die Startseite), mit
   ‹Startseite› oben – keine aufklappbaren Welten mehr. Die Suche übernimmt das Finden.
