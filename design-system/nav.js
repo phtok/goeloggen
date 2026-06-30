@@ -176,8 +176,9 @@
     '</div>';
   document.body.insertBefore(header, document.body.firstChild);
 
-  // Optionale Seiten-Sprungleiste unter der Kopfzeile: data-onpage="Label:#anker|…".
-  // Auf jeder Breite sichtbar (auch mobil, wo die Welten-Navigation ausgeblendet ist).
+  // Optionale Seiten-Sprungleiste: data-onpage="Label:#anker|…". Sie sitzt UNTER
+  // dem Hero/der Lede (nicht über dem Titel) und klebt beim Scrollen unter der
+  // Kopfzeile. Auf jeder Breite sichtbar (auch mobil), horizontal scrollbar.
   var ONPAGE = (s && s.dataset.onpage) || "";
   if (ONPAGE) {
     var sub = el("nav", "dsnav-onpage");
@@ -188,7 +189,17 @@
       var anchor = ci > 0 ? pair.slice(ci + 1) : "#";
       return '<a href="' + anchor + '">' + label + '</a>';
     }).join("") + '</div>';
-    header.insertAdjacentElement("afterend", sub);
+    // Unter den Hero/die Lede hängen; wenn es keinen gibt, direkt unter die Kopfzeile.
+    // nav.js läuft oft VOR <main> – darum die Platzierung bis DOM-ready aufschieben.
+    var placeOnpage = function () {
+      var heroEl = document.querySelector("main .hero, .hero, main .lede");
+      (heroEl || header).insertAdjacentElement("afterend", sub);
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", placeOnpage);
+    } else {
+      placeOnpage();
+    }
     document.documentElement.classList.add("has-onpage");
   }
 
