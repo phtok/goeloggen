@@ -28,8 +28,9 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 - **PowerPoint** (`powerpoint.html`) – Platzhalterseite (Vorlage wird überarbeitet, Datei folgt).
 - **Neue Welt ‹Anwendungen›** (cat `anwendung`) in `nav.js`/`tools.json`/Startseite – für fertige
   Vorlagen (Wallpaper, PowerPoint); **Pantone aus der Farbseite entfernt** (wird nicht mehr verwendet).
-- **Globaler Feedback-Button** (`✉`) in der Kopfzeile (`nav.js`/`nav.css`) – mailto an die Hausgrafik,
-  auf jeder Seite. Ein eigenes Anfrage-/Druckformular bleibt davon getrennt (Todo Druckauftrag).
+- **Globaler Feedback-Link** im Menü (Schubladen-Fuss, `nav.js`) – mailto an die Hausgrafik, auf jeder
+  Seite erreichbar. Bewusst NICHT in der Kopfzeile: dort frass ein Icon die leere Fläche an, über die
+  der (geheime) Dreifach-Klick die Intern-Ansicht schaltet. Anfrage-/Druckformular bleibt getrennt (Todo).
 
 ### Neue Publikumsseite: Farben (Lücke vom alten Auftritt geschlossen)
 - **`farben.html`** – die Identitätsfarben auf einen Blick (Marke · Neutrale ·

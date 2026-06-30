@@ -166,7 +166,6 @@
         '<img class="lockup" src="' + ROOT + 'assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge">' +
       '</a>' +
       '<nav class="worlds"></nav>' + ctaHTML +
-      '<a class="feedback" href="mailto:philipp.tok@goetheanum.ch?subject=Feedback%20Goetheanum%20Werkzeuge" aria-label="Feedback geben" title="Feedback geben"><span class="ic">✉</span></a>' +
       '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic">☾</span></button>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
@@ -181,7 +180,7 @@
     '<div class="dhead"><span class="t">Navigation</span>' +
       '<button class="close" type="button" aria-label="Schliessen">×</button></div>' +
     '<div class="body"></div>' +
-    '<div class="foot">Goetheanum Hausgrafik · <a href="' + ROOT + 'design-system/">Design-System</a></div>';
+    '<div class="foot"><a href="mailto:philipp.tok@goetheanum.ch?subject=Feedback%20Goetheanum%20Werkzeuge">Feedback geben</a> · <a href="' + ROOT + 'design-system/">Design-System</a></div>';
   document.body.appendChild(backdrop);
   document.body.appendChild(drawer);
 
