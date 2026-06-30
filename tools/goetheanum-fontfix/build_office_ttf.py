@@ -6,7 +6,7 @@
 # PostScript-/Unique-IDs, damit sie neben der konzeptuellen OTF (RIBBI-Familie
 # ‹Goetheanum Schrift›) installiert sein können. fsType = installierbar.
 # TTF bettet PowerPoint zuverlässig ein (OTF/CFF nicht).
-import os, sys
+import os, sys, glob
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 from fontTools.ttLib import TTFont, newTable
 from fontTools.pens.cu2quPen import Cu2QuPen
@@ -75,6 +75,42 @@ def setname(ft, family, ps):
     os2.fsType = 0                                            # installierbar einbettbar
     head.macStyle = 0
 
+LIESMICH = """Goetheanum-Schriften fürs Office (Word, PowerPoint, Outlook)
+==============================================================
+
+Installieren:
+  - Mac:     Doppelklick auf jede .ttf  ->  Installieren
+  - Windows: Rechtsklick auf jede .ttf  ->  Installieren
+Danach das Office-Programm neu starten.
+
+Im Schrift-Menue heissen sie:
+  Goetheanum Schrift Klar / Laut / Leise / Deutlich  und  Goetheanum Icons
+
+Der Beipackzettel (PDF) zeigt Zeichensatz, Funktionen und die Tastatur-
+Belegung der Piktogramme.
+
+WOFF/WOFF2 sind reine Web-Dateien und lassen sich NICHT installieren.
+"""
+
+def pack_zip():
+    """Office-TTF-ZIP reproduzierbar: die fünf TTF + Beipackzettel + LIESMICH."""
+    import zipfile
+    root = os.path.join(REPO, "assets/fonts/goetheanum")
+    beipack = os.path.join(root, "Beipackzettel-Goetheanum-Schriften.pdf")
+    out = os.path.join(root, "Goetheanum-Office-TTF.zip")
+    members = sorted(glob.glob(os.path.join(OUT, "*.ttf")))
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        for p in members:
+            zi = zipfile.ZipInfo(os.path.basename(p), date_time=(1980, 1, 1, 0, 0, 0))
+            zi.compress_type = zipfile.ZIP_DEFLATED
+            with open(p, "rb") as fh: z.writestr(zi, fh.read())
+        if os.path.isfile(beipack):
+            zi = zipfile.ZipInfo("Beipackzettel-Goetheanum-Schriften.pdf", date_time=(1980, 1, 1, 0, 0, 0))
+            zi.compress_type = zipfile.ZIP_DEFLATED
+            with open(beipack, "rb") as fh: z.writestr(zi, fh.read())
+        z.writestr(zipfile.ZipInfo("LIESMICH.txt", date_time=(1980, 1, 1, 0, 0, 0)), LIESMICH)
+    print("  Goetheanum-Office-TTF.zip (%d TTF + Beipackzettel + LIESMICH)" % len(members))
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     for src, family, ps in JOBS:
@@ -86,6 +122,7 @@ def main():
         r = TTFont(out)                                       # Reload-Probe
         print("  %-30s -> %-28s glyf:%s ng:%d" % (
             src, os.path.basename(out), "glyf" in r, len(r.getGlyphOrder())))
+    pack_zip()
     print("Office-TTF gebaut ->", OUT)
 
 if __name__ == "__main__":
