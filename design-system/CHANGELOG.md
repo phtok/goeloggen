@@ -18,6 +18,23 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Neues Werkzeug: Goetheanum Editor (v1) – die Typografie-Engine läuft im Browser
+- **`assets/typografie/goe-typo.js`** (neu, wiederverwendbar): führt
+  `typo-regeln.yaml` clientseitig aus – lädt und parst die Regeln (derselbe
+  Mini-Parser wie `tools/typo-check.py`, eine Quelle der Wahrheit), behebt
+  ‹fehler›-Regeln automatisch und findet ‹empfehlung›-Regeln als offene Fragen
+  mit Kontext-Ausschnitt fürs Verständnis. Kein Rendering/DOM – reine Engine,
+  gedacht als Baustein fürs Backend weiterer Goe-Webseiten (v3-Ziel).
+- **`apps/editor/`**: Text einfügen, ‹Prüfen› klicken – Eindeutiges (Anführung,
+  Striche, Auslassung, Ziffern-Gruppierung, Leerzeichen) wird sofort gesetzt und
+  im Protokoll ‹Angewandt› nachvollziehbar; offene Fragen (Abkürzungs-Spatium,
+  Prozent/Einheiten-Spatium, Uhrzeit, Minus) erscheinen als Marginal-Karten mit
+  Übernehmen/Lassen und Sammel-Übernahme. Die 10 Urteils-Regeln (`pruefung: lm`
+  – Schriftwahl, Auszeichnung, Zeilenmass, Kontrast …) sind ausgewiesen, aber
+  noch nicht automatisiert (kein LLM in v1) – folgt als Lektorat-Pass (v2).
+- Eintrag in `tools.json`/Startseite/Menü (Kategorie Werkzeuge, Priorität nach
+  Signatur). Score bleibt 100 % (28/28 konform).
+
 ### Feinschliff: Karussell zentriert · Such-Synonyme · PowerPoint-Bild
 - **Karussell-Inhalt zentriert** (Thumb + Text als Gruppe mittig) statt linksbündig.
 - **Suche mit Synonymen**: pro Werkzeug `such`-Begriffe in `tools.json`; die Menü-Suche
