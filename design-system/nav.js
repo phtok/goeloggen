@@ -332,7 +332,7 @@
   }
 
   // Öffentliche Reihenfolge (flach) – wie die Startseite. Unbekannte ans Ende.
-  var FLAT_ORDER = ["logo-generator", "signatur", "visitenkarten", "icons", "schriften",
+  var FLAT_ORDER = ["logo-generator", "signatur", "editor", "visitenkarten", "icons", "schriften",
     "sektionsfarben", "uebersetzungen", "wallpaper", "powerpoint", "typografie", "design-system"];
   var PUBLIC_CATS = WORLDS.reduce(function (a, w) { return a.concat(w.cats); }, []);
 

@@ -138,6 +138,17 @@
       "such": "E-Mail Mail Outlook Signatur Fusszeile"
     },
     {
+      "slug": "editor",
+      "cat": "generatoren",
+      "status": "beta",
+      "tag": "Lektorat",
+      "title": "Goetheanum Editor",
+      "short": "Editor",
+      "href": "apps/editor/",
+      "desc": "Text einfügen, prüfen lassen: Eindeutiges wird automatisch nach den Hausregeln korrigiert, offene Fragen erscheinen zur Bestätigung.",
+      "such": "Editor Lektorat Korrektur Korrekturmaschine Typografie Text Schreiben Prüfung Regeln"
+    },
+    {
       "slug": "uebersetzungen",
       "cat": "generatoren",
       "status": "beta",

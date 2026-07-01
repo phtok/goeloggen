@@ -18,6 +18,30 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Neues Werkzeug: Goetheanum Editor (v1) – die Typografie-Engine läuft im Browser
+- **`assets/typografie/goe-typo.js`** (neu, wiederverwendbar): führt
+  `typo-regeln.yaml` clientseitig aus – lädt und parst die Regeln (derselbe
+  Mini-Parser wie `tools/typo-check.py`, eine Quelle der Wahrheit), behebt
+  ‹fehler›-Regeln automatisch und findet ‹empfehlung›-Regeln als offene Fragen
+  mit Kontext-Ausschnitt fürs Verständnis. Kein Rendering/DOM – reine Engine,
+  gedacht als Baustein fürs Backend weiterer Goe-Webseiten (v3-Ziel).
+- **`apps/editor/`**: Text einfügen, ‹Prüfen› klicken – Eindeutiges (Anführung,
+  Striche, Auslassung, Ziffern-Gruppierung, Leerzeichen) wird sofort gesetzt und
+  im Protokoll ‹Angewandt› nachvollziehbar; offene Fragen (Abkürzungs-Spatium,
+  Prozent/Einheiten-Spatium, Uhrzeit, Minus) erscheinen als Marginal-Karten mit
+  Übernehmen/Lassen und Sammel-Übernahme. Die 10 Urteils-Regeln (`pruefung: lm`
+  – Schriftwahl, Auszeichnung, Zeilenmass, Kontrast …) sind ausgewiesen, aber
+  noch nicht automatisiert (kein LLM in v1) – folgt als Lektorat-Pass (v2).
+- Eintrag in `tools.json`/Startseite/Menü (Kategorie Werkzeuge, Priorität nach
+  Signatur). Score bleibt 100 % (konform).
+
+### Icons-Tastatur: das Piktogramm wird zum Held der Taste
+- Die Icons standen mit 26px verloren in 48px-Tasten, der Buchstabe konkurrierte
+  darunter. Jetzt: ruhigere Tasten (62px), Icon mittig bei 40px, Buchstabe als
+  kleine Legende in der unteren rechten Ecke (wie das Zweitzeichen echter Tasten),
+  leere Tasten treten zurück (`opacity`). *Wirkung:* die Piktogramme führen den
+  Blick statt zu verschwimmen; hell/dunkel bleibt tokengetrieben (`--ink`).
+
 ### `.step-num` optisch nachjustiert · Links im Fliesstext sichtbar
 - **`.step-num` neu vermessen** (`base.css`): der erste Fix (line-height:1 +
   Flex-Zentrierung) zentrierte die *Line Box*, nicht die Zeichen-Tinte – Nutzer-
