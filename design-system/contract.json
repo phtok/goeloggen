@@ -1,6 +1,6 @@
 {
   "$schema": "https://goetheanum/design-system/contract.schema.json",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "titel": "Goetheanum Design-System – Struktur-Vertrag",
   "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
 
@@ -41,7 +41,7 @@
     "ds_id": "DS04",
     "regel": "Kanonische Textrollen (base.css) NICHT seiten-lokal mit eigener font-size/color redefinieren. Klasse verwenden, nicht neu erfinden.",
     "schwere": "hinweis",
-    "kanonische_klassen": ["kicker", "kick", "lede", "note", "hint", "help", "desc", "subhead", "meta", "cap", "caption", "legend", "byline", "lab", "role", "readout", "mono", "code", "lese", "prose", "chip", "btn", "seg", "field", "shead", "hero", "card"],
+    "kanonische_klassen": ["kicker", "kick", "lede", "note", "hint", "help", "desc", "subhead", "meta", "cap", "caption", "legend", "byline", "lab", "role", "readout", "mono", "code", "lese", "prose", "chip", "btn", "seg", "field", "shead", "hero", "card", "step-num"],
     "hinweis": "Treffer = Seite definiert .note/.hint/.lede/… selbst. ds-fix kann die lokale Regel entfernen, sobald base.css die Rolle trägt."
   },
 

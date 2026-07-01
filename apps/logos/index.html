@@ -54,21 +54,39 @@
     main.wrap{max-width:none;padding:0}
     #begleitschreiben .shead{display:block}
     .sheet{border:none;padding:0;margin-top:0}
+    #zeichen{border-top:none}
   }
 
   /* Begleitschreiben */
   .sheet{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:clamp(22px,4vw,40px);margin-top:var(--s4)}
   .sheet .num{display:grid;gap:var(--s6);grid-template-columns:1fr}
   @media(min-width:720px){.sheet .num{grid-template-columns:1fr 1fr}}
-  .sheet h3{display:flex;gap:8px;align-items:baseline;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px;margin-bottom:6px}
-  .sheet h3 .n{color:var(--gold-ink);font-variant-numeric:tabular-nums}
+  .sheet h3{display:flex;gap:8px;align-items:center;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px;margin-bottom:6px}
   .sheet p{color:var(--ink);font-size:var(--t-small);line-height:1.6;max-width:62ch}
+  .sheet p.lead{font-size:var(--t-body);max-width:66ch}
   .vstrip{display:flex;gap:var(--s4);flex-wrap:wrap;align-items:flex-end;margin:var(--s3) 0}
   .vstrip figure{margin:0;text-align:center}
   .vstrip .box{border:1px solid var(--line);border-radius:10px;background:var(--soft);padding:14px;display:grid;place-items:center;min-height:84px}
   .vstrip .box.dark{background:#23272b}  /* # ds-ok: Logo-auf-Dunkel-Vorschau */
   .vstrip svg{height:46px;width:auto;max-width:200px}
   .vstrip figcaption{color:var(--muted);font-size:var(--t-micro);margin-top:6px}
+
+  /* Drei Stufen (Logo · Fachlogo · Zeichen): Text links, Visual rechts. */
+  .tier{display:grid;gap:var(--s3);grid-template-columns:1fr;margin-top:var(--s6)}
+  @media(min-width:720px){.tier{grid-template-columns:1fr 230px;align-items:center;gap:var(--s4)}}
+  .tier .vstrip{margin:0;align-items:center}
+  @media(min-width:720px){.tier .vstrip{justify-content:flex-end}}
+  .tier .vstrip .box{min-height:64px;padding:10px}
+  .tier .vstrip svg{height:40px}
+
+  /* Zeichen – Unterabteilung: drei Karten, ein Zeichen je Karte. */
+  .zeichen-grid{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-top:var(--s4)}
+  .zeichen-grid .card{text-align:center}
+  .zeichen-grid .box{border:1px solid var(--line);border-radius:10px;background:var(--soft);padding:18px;display:grid;place-items:center;min-height:132px;margin-bottom:var(--s3)}
+  .zeichen-grid svg{height:96px;width:auto;max-width:100%}
+  .zeichen-grid h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px;margin:0 0 4px}
+  .zeichen-grid .btn{margin-top:var(--s3);font-size:13.5px;padding:8px 14px}
+  .zeichen-mark{fill:var(--ink)}
 
   .dl{display:grid;gap:var(--s4);grid-template-columns:1fr;margin-top:var(--s3)}
   @media(min-width:680px){.dl{grid-template-columns:1fr 1fr}}
@@ -133,72 +151,92 @@
   <section id="begleitschreiben">
     <div class="shead">
       <h2>Hinweise zur Anwendung</h2>
-      <p>Alles auf einer Seite – wer, was, wie. (Entwurf; wird noch ausgearbeitet.)</p>
+      <p>Welches Zeichen — wann, wo, in welchem Format.</p>
       <button class="btn pdfbtn" id="pdfSheet" type="button">Als PDF speichern</button>
     </div>
 
     <div class="sheet">
-      <!-- 1 Das Logo + Varianten-Visual -->
-      <h3><span class="n">1</span> Das Logo &amp; seine Varianten</h3>
-      <p><strong>Das blaue, einzeilige Goetheanum-Logo ist das eigentliche Logo</strong> – für das breite Publikum immer dieses. Sektions- und Bereichslogos sowie Farb- und Icon-Varianten sind nur für den <strong>Sondereinsatz</strong>: eigene Webseiten, Fachveranstaltungen. Immer die fertige Datei aus dem Werkzeug nehmen – nie nachzeichnen oder neu setzen.</p>
-      <div class="vstrip" id="vVariants"></div>
+      <p class="lead">Unser Logo ist das Goetheanum, wo wir nicht selbst im Raum stehen. <strong>Wiedererkennen schafft Vertrauen</strong> — darum überall dasselbe, fertig aus diesem Werkzeug. Nie nachbauen, nie neu setzen.</p>
+
+      <div class="tier">
+        <div>
+          <h3><span class="step-num">1</span> Das allgemeine Logo grüsst</h3>
+          <p>Fürs breite Publikum, in allen Medien — im Zweifel dieses. Wortmarke in der Hausschrift (<strong>variables Gewicht 400</strong>), dazu das Icon fürs Kleine.</p>
+        </div>
+        <div class="vstrip" id="vTier1"></div>
+      </div>
+
+      <div class="tier">
+        <div>
+          <h3><span class="step-num">2</span> Das Fachlogo ordnet zu</h3>
+          <p>Sektion oder Bereich als <strong>Absender</strong> — fürs Fachliche: Kolloquium, Briefschaften, Visitenkarten, eigene Webseiten. Öffentliche Anlässe tragen das allgemeine Logo. <span class="note" style="display:inline">Tipp: Schauseite allgemeines Logo, Rückseite das Sektionslogo als Absender.</span></p>
+        </div>
+        <div class="vstrip" id="vTier2"></div>
+      </div>
+
+      <div class="tier">
+        <div>
+          <h3><span class="step-num gold">3</span> Das Zeichen eröffnet</h3>
+          <p>Steiners <a href="#zeichen">Zeichen für Hochschule, Gesellschaft und Bau-Administration</a> sind ein <strong>Erbe</strong>: Sie tragen ihr Zentrum ausser sich und schenken dem Folgenden Raum. <strong>Nur auf Papier und im Hochformat</strong>, festlich — nie anstatt des Logos, nur dazu.</p>
+        </div>
+        <div class="vstrip" id="vTier3"></div>
+      </div>
 
       <div class="num" style="margin-top:var(--s6)">
         <div>
-          <h3><span class="n">2</span> Wann welche Variante</h3>
-          <p><strong>Lang</strong> ist der Standard, wo Platz ist. <strong>Kurz</strong> an engen Stellen oder bei langem Namen. <strong>Icon · Kreis · Quadrat</strong> für App-Symbol, Social-Avatar, Favicon, Wasserzeichen – nur wo der Kontext schon ‹Goetheanum› sagt. <strong>Goetheanum allein</strong>, wo keine Sektion gemeint ist.</p>
+          <h3>Formen</h3>
+          <p>Lang ist der Standard, wo Platz ist. Kurz an engen Stellen oder bei langem Namen. Icon · Kreis · Quadrat für App-Symbol, Social-Avatar, Favicon – nur wo der Kontext schon ‹Goetheanum› sagt.</p>
+          <div class="vstrip" id="vVariants"></div>
         </div>
         <div>
-          <h3><span class="n">3</span> Wer nutzt was</h3>
-          <p><strong>Breites Publikum: immer das blaue Goetheanum-Basislogo.</strong> Sektionen und Bereiche setzen ihr eigenes Lockup nur im Sondereinsatz ein (eigene Webseiten, Fachveranstaltungen). Hochschule, Gesellschaft und Bau-Administration → Steiners Zeichen, nur für Briefpapier, Mitgliederkarten und Generalversammlung.</p>
+          <h3>Farbe</h3>
+          <p>Original (Hausfarbe auf hell) · Weiss (auf dunkel oder Bild) · Schwarz (einfarbig) · Grau (Ausnahme). Nie umfärben, keine Verläufe.</p>
+          <div class="vstrip" id="vColors"></div>
         </div>
       </div>
-
-      <!-- 4 Farbe -->
-      <h3 style="margin-top:var(--s6)"><span class="n">4</span> Farbe</h3>
-      <p>Original (Hausfarbe auf hell) · Weiss (auf dunkel oder Bild) · Schwarz (einfarbig) · Grau (Ausnahme). Nie umfärben, keine Verläufe.</p>
-      <div class="vstrip" id="vColors"></div>
 
       <div class="num" style="margin-top:var(--s6)">
         <div>
-          <h3><span class="n">5</span> Schutzraum</h3>
-          <p>Rundum Luft in Höhe des Zeichens – nichts dringt ein: kein Text, keine Grafik, kein zweites Logo.</p>
-          <h3 style="margin-top:var(--s4)"><span class="n">6</span> Mindestgrösse</h3>
-          <p>Richtwert ~25 mm oder ~120 px Breite. <span class="note" style="display:inline">Exakte Werte aus dem Logopaket.</span></p>
+          <h3>Raum &amp; Grösse</h3>
+          <p>Rundum Luft in Höhe des Zeichens – nichts dringt ein: kein Text, keine Grafik, kein zweites Logo. Richtwert ~25 mm oder ~120 px Breite. <span class="note" style="display:inline">Exakte Werte aus dem Logopaket.</span></p>
         </div>
         <div>
-          <h3><span class="n">7</span> Hintergrund</h3>
-          <p>Ruhiger Grund mit genug Kontrast. Auf Foto oder Dunkel die Weiss-Variante.</p>
-          <h3 style="margin-top:var(--s4)"><span class="n">8</span> Dateien</h3>
-          <p>SVG für Web und Druck (Vektor), PNG für Pixel. Beides aus diesem Werkzeug.</p>
+          <h3>Dateien</h3>
+          <p>SVG für Web und Druck (Vektor), PNG für Pixel. Beides aus diesem Werkzeug. Ruhiger Grund mit genug Kontrast; auf Foto oder Dunkel die Weiss-Variante.</p>
         </div>
       </div>
 
-      <!-- 9 So nicht -->
-      <h3 style="margin-top:var(--s6)"><span class="n">9</span> So nicht</h3>
+      <h3 style="margin-top:var(--s6)">So / So nicht</h3>
       <div class="dl">
         <div class="col ja">
           <h4>✓ So</h4>
           <ul>
             <li><span class="mk">✓</span> Fertiges SVG aus dem Werkzeug.</li>
+            <li><span class="mk">✓</span> Öffentlich das allgemeine Logo, fachlich das Fachlogo.</li>
             <li><span class="mk">✓</span> Schutzraum wahren, genug Kontrast.</li>
-            <li><span class="mk">✓</span> Original als Standard, Weiss auf Dunkel.</li>
-            <li><span class="mk">✓</span> Layout zur Lage – Lang fürs Breite, Icon fürs Kleine.</li>
           </ul>
         </div>
         <div class="col nein">
           <h4>✕ So nicht</h4>
           <ul>
-            <li><span class="mk">✕</span> Verzerren, drehen, beschneiden.</li>
-            <li><span class="mk">✕</span> Umfärben, Verläufe, Schatten, Effekte.</li>
             <li><span class="mk">✕</span> Wortmarke neu setzen, Lockup umbauen.</li>
-            <li><span class="mk">✕</span> Auf unruhigem oder kontrastarmem Grund.</li>
+            <li><span class="mk">✕</span> Zeichen quetschen, verzerren, einfärben, als Mini-Icon.</li>
+            <li><span class="mk">✕</span> Logo aus altem Dokument herauskopieren.</li>
           </ul>
         </div>
       </div>
 
-      <p class="note"><span class="n" style="color:var(--gold-ink)">10</span> &nbsp;Holen: oben Sektion wählen und herunterladen. · Grundlage: Werkstatt-Artikel und Leitsystem-Grundsätze auf grafik.goetheanum.ch; Struktur nach gängigen Logo-Richtlinien (u. a. Smithsonian, UC Santa Barbara, Mailchimp).</p>
+      <p class="note" style="margin-top:var(--s4)">Holen: oben Sektion wählen und herunterladen. Die Zeichen stehen unten als eigener Abschnitt. · Grundlage: Werkstatt-Artikel und Leitsystem-Grundsätze auf grafik.goetheanum.ch; Struktur nach gängigen Logo-Richtlinien (u. a. Smithsonian, UC Santa Barbara, Mailchimp).</p>
     </div>
+  </section>
+
+  <!-- ===================== ZEICHEN (Unterabteilung) ===================== -->
+  <section id="zeichen">
+    <div class="shead">
+      <h2>Die Zeichen — ein Erbe</h2>
+      <p>Rudolf Steiners Zeichen für Hochschule, Gesellschaft und Bau-Administration. Nur auf Papier, nur im Hochformat, nur festlich — nie anstatt des Logos.</p>
+    </div>
+    <div class="zeichen-grid" id="vZeichen"></div>
   </section>
 
 </main>
@@ -211,6 +249,7 @@
 </footer>
 
 <script src="../../assets/data/goetheanum-orgs.js"></script>
+<script src="../../assets/brief-symbols.js"></script>
 <script src="engine.js"></script>
 <script src="export.js"></script>
 <script>
@@ -476,6 +515,57 @@
     return f;
   }
 
+  // Die drei Stufen (Hinweise): echtes Basislogo, echte Fachlogos, echte Zeichen –
+  // nie nachgezeichnet, nie erfunden.
+  function buildTierVisuals(){
+    var t1 = $("vTier1"), t2 = $("vTier2"), t3 = $("vTier3");
+    if (t1){
+      t1.appendChild(figure(E.svg({cat:"allgemein",org:"goetheanum",layout:"desktop",mode:"original",scale:2.635}), "Logo", false));
+      t1.appendChild(figure(E.svg({cat:"allgemein",org:"goetheanum",layout:"icon",mode:"original",scale:2.635}), "Icon", false));
+    }
+    if (t2){
+      t2.appendChild(figure(E.svg({cat:"sektionen",org:"ps",layout:"mobile",mode:"original",lang:"de",scale:2.635}), "Pädagogik", false));
+      t2.appendChild(figure(E.svg({cat:"sektionen",org:"sbk",layout:"mobile",mode:"original",lang:"de",scale:2.635}), "Bildende Künste", false));
+    }
+    if (t3){
+      ZEICHEN.forEach(function(z){ t3.appendChild(figure(zeichenSvg(z.key), z.label, false)); });
+    }
+  }
+
+  // --- Die Zeichen (Unterabteilung): echte Steiner-Zeichen aus der einen Quelle
+  // (assets/brief-symbols.js, auch von den Briefschaften genutzt) – kein Nachbau. ---
+  var ZEICHEN = [
+    { key:"hochschule",   label:"Hochschule",        who:"Sektionen der Freien Hochschule für Geisteswissenschaft" },
+    { key:"gesellschaft", label:"Gesellschaft",      who:"Allgemeine Anthroposophische Gesellschaft" },
+    { key:"bau",          label:"Bau-Administration", who:"Administration des Goetheanum-Baues" }
+  ];
+  function zeichenSvg(key){
+    var lib = window.BRIEF_SYMBOL_LIBRARY || {};
+    var spec = lib[key]; if (!spec) return "";
+    var vb = spec.viewBox.split(/\s+/).map(Number);
+    var shapes = (spec.paths || []).map(function(d){ return '<path d="' + d + '"/>'; }).join("")
+      + (spec.polygons || []).map(function(pts){ return '<polygon points="' + pts + '"/>'; }).join("");
+    return '<svg xmlns="http://www.w3.org/2000/svg" class="zeichen-mark" viewBox="' + spec.viewBox + '" width="' + vb[2] + '" height="' + vb[3] + '">' + shapes + '</svg>';
+  }
+  function buildZeichenCards(){
+    var wrap = $("vZeichen"); if (!wrap) return;
+    ZEICHEN.forEach(function(z){
+      var card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = '<div class="box">' + zeichenSvg(z.key) + '</div>'
+        + '<h3>' + z.label + '</h3>'
+        + '<p class="note">' + z.who + '</p>'
+        + '<button class="btn ghost" type="button" data-zsvg="' + z.key + '">als SVG herunterladen</button>';
+      wrap.appendChild(card);
+    });
+    wrap.addEventListener("click", function(e){
+      var b = e.target.closest("button[data-zsvg]"); if (!b) return;
+      var key = b.dataset.zsvg;
+      if (window.goeStat) window.goeStat("download", "zeichen-" + key);
+      LogoExport.svg(zeichenSvg(key), "goetheanum-zeichen-" + key);
+    });
+  }
+
   // Verdrahtung
   function wire(){
     fillCats(); fillOrgs(); syncOrgField(); syncLabels();
@@ -514,6 +604,8 @@
     var pb = $("pdfSheet"); if (pb) pb.addEventListener("click", function(){ window.print(); });
     render();
     buildVisuals();
+    buildTierVisuals();
+    buildZeichenCards();
   }
   // Medien-Manifest laden (für die Kategorie ‹Medien›), dann verdrahten.
   function init(){
