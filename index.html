@@ -75,6 +75,12 @@
   /* Übersetzungen: vier Sprach-Marken */
   .thumb .tr{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
   .thumb .tr i{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:15px;font-style:normal;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 9px}
+  /* Editor: Text mit einer offenen Frage (Gold-Markierung), wie in der Marginalspalte */
+  .thumb .ed{display:grid;gap:6px;width:66px}
+  .thumb .ed i{display:block;height:3px;border-radius:2px;background:var(--muted)}
+  .thumb .ed i:nth-child(1){width:100%}
+  .thumb .ed i.mk{background:var(--gold-ink);width:44%}
+  .thumb .ed i:nth-child(3){width:82%}
 
   /* Entdecker-Karussell – Hinweis auf weniger Bekanntes, oben über den Karten. */
   .carousel{position:relative;margin-bottom:var(--s8);border:1px solid var(--line);
@@ -129,7 +135,7 @@
 (function(){
   // Karten flach nach Priorität (keine Kategorien); Unbekannte ans Ende.
   // Webfont wohnt jetzt in Schriften, Zeichen in Logos – darum keine eigene Karte.
-  var ORDER = ["logo-generator","signatur","visitenkarten","icons","schriften",
+  var ORDER = ["logo-generator","signatur","editor","visitenkarten","icons","schriften",
     "sektionsfarben","uebersetzungen","wallpaper","powerpoint",
     "typografie","design-system"];
   // Entdecker-Karussell: ausgewählte Werkzeuge, je ein Teaser.
@@ -153,7 +159,8 @@
     "zeichen":         '<span style="background:#fff;border-radius:8px;width:100%;height:100%;display:grid;place-items:center"><img src="assets/zeichen/hochschulzeichen.png" alt="" style="max-height:66px;max-width:78%"></span>', // Rudolf-Steiner-Zeichen auf weissem Papier
     "wallpaper":       '<img src="assets/wallpaper/goetheanum-wallpaper-48.jpg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px">', // ein Motiv
     "powerpoint":      '<span class="ppt"><b></b><i></i><i></i></span>', // eine Folie mit Titel
-    "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>' // vier Sprachen
+    "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>', // vier Sprachen
+    "editor":          '<span class="ed"><i></i><i class="mk"></i><i></i></span>' // Text mit offener Frage
   };
   function visual(t){
     var v = VISUAL[t.slug] || ('<span class="spec">' + (t.title || "?").slice(0, 1) + '</span>');
