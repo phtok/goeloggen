@@ -68,15 +68,20 @@
     body{background:var(--paper)}
     main.wrap{max-width:none;padding:0}
     #begleitschreiben .shead{display:block}
-    .sheet{border:none;padding:0;margin-top:0}
+    .sheet{margin-top:0}
   }
 
   /* Begleitschreiben */
-  .sheet{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:clamp(22px,4vw,40px);margin-top:var(--s4)}
-  .sheet .num{display:grid;gap:var(--s6);grid-template-columns:1fr}
-  @media(min-width:720px){.sheet .num{grid-template-columns:1fr 1fr}}
+  /* Kein Rahmen-Kasten mehr ums Blatt (verschlang mobil Bildschirm bei noch
+     kleinem Text) – der Inhalt steht direkt in der Sektion wie überall sonst. */
+  .sheet{margin-top:var(--s4)}
+  /* Zweispaltiges Textpaar (Formen/Farbe, Raum & Grösse/Dateien). Eigener Name,
+     NICHT ‹.num› – die kanonische Klasse ‹.num› ist rechtsbündige Tabellenziffer
+     (base.css), eine Namensgleichheit hätte hier Fliesstext rechtsbündig gemacht. */
+  .sheet .pair{display:grid;gap:var(--s6);grid-template-columns:1fr}
+  @media(min-width:720px){.sheet .pair{grid-template-columns:1fr 1fr}}
   .sheet h3{display:flex;gap:8px;align-items:center;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px;margin-bottom:6px}
-  .sheet p{color:var(--ink);font-size:var(--t-small);line-height:1.6;max-width:62ch}
+  .sheet p{color:var(--ink);font-size:var(--t-small);line-height:1.6;max-width:62ch;text-align:left}
   .sheet p.lead{font-size:var(--t-body);max-width:66ch}
   .vstrip{display:flex;gap:var(--s4);flex-wrap:wrap;align-items:flex-end;margin:var(--s3) 0}
   .vstrip figure{margin:0;text-align:center}
@@ -85,13 +90,12 @@
   .vstrip svg{height:46px;width:auto;max-width:200px}
   .vstrip figcaption{color:var(--muted);font-size:var(--t-micro);margin-top:6px}
 
-  /* Drei Stufen (Logo · Fachlogo · Zeichen): Text links, Visual rechts. */
-  .tier{display:grid;gap:var(--s3);grid-template-columns:1fr;margin-top:var(--s6)}
-  @media(min-width:720px){.tier{grid-template-columns:1fr 230px;align-items:center;gap:var(--s4)}}
-  .tier .vstrip{margin:0;align-items:center}
-  @media(min-width:720px){.tier .vstrip{justify-content:flex-end}}
-  .tier .vstrip .box{min-height:64px;padding:10px}
-  .tier .vstrip svg,.tier .vstrip img{height:40px;width:auto;max-width:56px;display:block}
+  /* Drei Stufen (Logo · Fachlogo · Zeichen): Titel, dann grosses Visual, dann
+     Text – gleiche Reihenfolge auf allen Breiten (kein Umschichten nötig). */
+  .tier{margin-top:var(--s6)}
+  .tier .vstrip{margin:var(--s3) 0}
+  .tier .vstrip .box{min-height:120px;padding:18px;flex:1 1 0}
+  .tier .vstrip svg,.tier .vstrip img{height:68px;width:auto;max-width:100%;display:block}
 
   .dl{display:grid;gap:var(--s4);grid-template-columns:1fr;margin-top:var(--s3)}
   @media(min-width:680px){.dl{grid-template-columns:1fr 1fr}}
@@ -183,30 +187,24 @@
       <p class="lead">Unser Logo ist das Goetheanum, wo wir nicht selbst im Raum stehen. <strong>Wiedererkennen schafft Vertrauen</strong> — darum überall dasselbe, fertig aus diesem Werkzeug. Nie nachbauen, nie neu setzen.</p>
 
       <div class="tier">
-        <div>
-          <h3><span class="step-num">1</span> Das allgemeine Logo grüsst</h3>
-          <p>Fürs breite Publikum, in allen Medien — im Zweifel dieses. Wortmarke in der Hausschrift (<strong>variables Gewicht 400</strong>), dazu das Icon fürs Kleine.</p>
-        </div>
+        <h3><span class="step-num"><span>1</span></span> Das allgemeine Logo grüsst</h3>
         <div class="vstrip" id="vTier1"></div>
+        <p>Fürs breite Publikum, in allen Medien — im Zweifel dieses. Wortmarke in der Hausschrift (<strong>variables Gewicht 400</strong>), dazu das Icon fürs Kleine.</p>
       </div>
 
       <div class="tier">
-        <div>
-          <h3><span class="step-num">2</span> Das Fachlogo ordnet zu</h3>
-          <p>Sektion oder Bereich als <strong>Absender</strong> — fürs Fachliche: Kolloquium, Briefschaften, Visitenkarten, eigene Webseiten. Öffentliche Anlässe tragen das allgemeine Logo. <span class="note" style="display:inline">Tipp: Schauseite allgemeines Logo, Rückseite das Sektionslogo als Absender.</span></p>
-        </div>
+        <h3><span class="step-num"><span>2</span></span> Das Fachlogo ordnet zu</h3>
         <div class="vstrip" id="vTier2"></div>
+        <p>Sektion oder Bereich als <strong>Absender</strong> — fürs Fachliche: Kolloquium, Briefschaften, Visitenkarten, eigene Webseiten. Öffentliche Anlässe tragen das allgemeine Logo. <span class="note" style="display:inline">Tipp: Schauseite allgemeines Logo, Rückseite das Sektionslogo als Absender.</span></p>
       </div>
 
       <div class="tier">
-        <div>
-          <h3><span class="step-num gold">3</span> Das Zeichen eröffnet</h3>
-          <p>Steiners <a href="../../zeichen.html">Zeichen für Hochschule, Gesellschaft und Bau-Administration</a> sind ein <strong>Erbe</strong>: Sie tragen ihr Zentrum ausser sich und schenken dem Folgenden Raum. <strong>Nur auf Papier und im Hochformat</strong>, festlich — nie anstatt des Logos, nur dazu.</p>
-        </div>
+        <h3><span class="step-num"><span>3</span></span> Das Zeichen eröffnet</h3>
         <div class="vstrip" id="vTier3"></div>
+        <p>Steiners <a href="../../zeichen.html">Zeichen für Hochschule, Gesellschaft und Bau-Administration</a> sind ein <strong>Erbe</strong>: Sie tragen ihr Zentrum ausser sich und schenken dem Folgenden Raum. <strong>Nur auf Papier und im Hochformat</strong>, festlich — nie anstatt des Logos, nur dazu.</p>
       </div>
 
-      <div class="num" style="margin-top:var(--s6)">
+      <div class="pair" style="margin-top:var(--s6)">
         <div>
           <h3>Formen</h3>
           <p>Lang ist der Standard, wo Platz ist. Kurz an engen Stellen oder bei langem Namen. Icon · Kreis · Quadrat für App-Symbol, Social-Avatar, Favicon – nur wo der Kontext schon ‹Goetheanum› sagt.</p>
@@ -219,7 +217,7 @@
         </div>
       </div>
 
-      <div class="num" style="margin-top:var(--s6)">
+      <div class="pair" style="margin-top:var(--s6)">
         <div>
           <h3>Raum &amp; Grösse</h3>
           <p>Rundum Luft in Höhe des Zeichens – nichts dringt ein: kein Text, keine Grafik, kein zweites Logo. Richtwert ~25 mm oder ~120 px Breite. <span class="note" style="display:inline">Exakte Werte aus dem Logopaket.</span></p>
@@ -537,14 +535,19 @@
   }
 
   // Begleitschreiben-Visuals aus der Engine (defensiv: Abschnitt kann sich ändern).
+  // Farbe braucht kein volles Lockup je Modus (das Lockup zeigt schon ‹Formen›) –
+  // ein Punkt-Icon genügt, um die Farbe selbst zu zeigen.
   function buildVisuals(){
     var vv = $("vVariants"); if (!vv || !$("vColors")) return;
     [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"]].forEach(function(p){
       vv.appendChild(figure(E.svg({cat:"sektionen",org:"aas",layout:p[0],mode:"original",lang:"de",scale:2.635,txt:""}), p[1], false));
     });
+    // Kreis (layout:"point") – dieselbe Icon-in-Kreis-Variante, die das Werkzeug
+    // selbst anbietet. Zeigt die Farbe AM Icon statt als loser Punkt; Weiss
+    // braucht den dunklen Kasten, sonst unsichtbar (wie schon bei ‹Formen›).
     var vc = $("vColors");
-    [["original","Original",false],["white","Weiss",true],["black","Schwarz",false],["gray","Grau",false]].forEach(function(p){
-      vc.appendChild(figure(E.svg({cat:"sektionen",org:"aas",layout:"desktop",mode:p[0],lang:"de",scale:2.635,txt:""}), p[1], p[2]));
+    MODE_SWATCH.forEach(function(p){
+      vc.appendChild(figure(E.svg({cat:"allgemein",org:"goetheanum",layout:"point",mode:p[0],scale:2.635}), p[1], p[0] === "white"));
     });
   }
   function figure(svg, cap, dark){
