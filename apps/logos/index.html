@@ -97,13 +97,6 @@
   .tier .vstrip .box{min-height:120px;padding:18px;flex:1 1 0}
   .tier .vstrip svg,.tier .vstrip img{height:68px;width:auto;max-width:100%;display:block}
 
-  /* Farbe: Punkt-Icons statt vollem Logo je Modus – die Aussage ist die Farbe,
-     nicht das Lockup (das steht schon bei ‹Formen›). */
-  .dotstrip{display:flex;gap:var(--s4);flex-wrap:wrap;margin:var(--s3) 0}
-  .dotstrip figure{margin:0;text-align:center}
-  .dotstrip .dot{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);margin:0 auto}
-  .dotstrip figcaption{color:var(--muted);font-size:var(--t-micro);margin-top:6px}
-
   .dl{display:grid;gap:var(--s4);grid-template-columns:1fr;margin-top:var(--s3)}
   @media(min-width:680px){.dl{grid-template-columns:1fr 1fr}}
   .dl .col{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s4)}
@@ -220,7 +213,7 @@
         <div>
           <h3>Farbe</h3>
           <p>Original (Hausfarbe auf hell) · Weiss (auf dunkel oder Bild) · Schwarz (einfarbig) · Grau (Ausnahme). Nie umfärben, keine Verläufe.</p>
-          <div class="dotstrip" id="vColors"></div>
+          <div class="vstrip" id="vColors"></div>
         </div>
       </div>
 
@@ -549,17 +542,17 @@
     [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"]].forEach(function(p){
       vv.appendChild(figure(E.svg({cat:"sektionen",org:"aas",layout:p[0],mode:"original",lang:"de",scale:2.635,txt:""}), p[1], false));
     });
+    // Kreis (layout:"point") – dieselbe Icon-in-Kreis-Variante, die das Werkzeug
+    // selbst anbietet. Zeigt die Farbe AM Icon statt als loser Punkt; Weiss
+    // braucht den dunklen Kasten, sonst unsichtbar (wie schon bei ‹Formen›).
     var vc = $("vColors");
-    MODE_SWATCH.forEach(function(p){ vc.appendChild(dot(p[2], p[1])); });
+    MODE_SWATCH.forEach(function(p){
+      vc.appendChild(figure(E.svg({cat:"allgemein",org:"goetheanum",layout:"point",mode:p[0],scale:2.635}), p[1], p[0] === "white"));
+    });
   }
   function figure(svg, cap, dark){
     var f = document.createElement("figure");
     f.innerHTML = '<div class="box'+(dark?' dark':'')+'">'+svg+'</div><figcaption>'+cap+'</figcaption>';
-    return f;
-  }
-  function dot(color, cap){
-    var f = document.createElement("figure");
-    f.innerHTML = '<div class="dot" style="background:'+color+'"></div><figcaption>'+cap+'</figcaption>';
     return f;
   }
 
