@@ -43,6 +43,10 @@ Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
   (I-Stamm 67 gegenüber 50 bei Leise und 82 bei Klar). Installierbar als
   statischer Schnitt, im Variable Font als benannte Stufe **Ruhig** und im
   Office-Paket als eigene TrueType. Die übrige Familie bleibt unverändert.
+- **Schlummernde Null (`zero`) gesäubert.** In den statischen Schnitten lag der
+  Schrägstrich als roh überlappende Kontur über dem Oval; an den Überschneidungen
+  entstanden an kleinen Graden Knoten. Die Konturen sind jetzt überschneidungsfrei
+  vereinigt – die Silhouette bleibt, die Kerbe an der Schräg-Spitze ist weg.
 
 ## Neu in v2.6
 
@@ -57,6 +61,20 @@ Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
   `pnum` (proportional) und `onum` (kurze Ziffern auf x-Höhe). Echte
   Mediävalziffern mit Ranging sind gezeichnete Formen und bleiben ausstehend.
   Die Variable und die Icons sind unverändert.
+
+## Versionshistorie (grob)
+
+Zum Unterscheiden der Fassungen – welche Datei welchen Stand trägt:
+
+| Version | Kurz |
+|---------|------|
+| **v2.7** | Siebter Schnitt **Ruhig** (wght 350), die Buch-Zwischenstimme zwischen Leise und Klar. Schlummernde Null (`zero`) in den Überschneidungen gesäubert. |
+| **v2.6** | **Versaleszett ẞ**; typografische Spatien + geschützter Bindestrich (U+2011); Ziffern **proportional** (`pnum`) und Kurzziffern (`onum`), volle Ziffern-Parität; **f-Ligaturen** und **Kapitälchen** (smcp/c2sc). Versionssprung 2.5 → 2.6. |
+| **v2.5** | Titel-/Auszeichnungsschnitt **Deutlich** (wght 580). |
+| **v2.4.1** | Grundreparatur aus der Original-v1.4.43: Zeichensatz, Kerning, Maßzeichen (Prime/Doppelprime, Striche, schlummernde Null). |
+
+Der jeweils aktuelle Stand steht als **`Neu in …`** oben; im Beipackzettel (PDF)
+sind Zeichensatz und Funktionen der aktuellen Fassung abgebildet.
 
 ## Dateien
 - `Fonts/` — OTF (Desktop): Leise, Ruhig, Klar, Deutlich, Laut, Icons
