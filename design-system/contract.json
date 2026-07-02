@@ -42,7 +42,7 @@
     "ds_id": "DS04",
     "regel": "Kanonische Textrollen (base.css) NICHT seiten-lokal mit eigener font-size/color redefinieren. Klasse verwenden, nicht neu erfinden.",
     "schwere": "hinweis",
-    "kanonische_klassen": ["kicker", "kick", "lede", "note", "hint", "help", "desc", "subhead", "meta", "cap", "caption", "legend", "byline", "lab", "role", "readout", "mono", "code", "lese", "prose", "chip", "btn", "seg", "field", "shead", "hero", "card"],
+    "kanonische_klassen": ["kicker", "kick", "lede", "note", "hint", "help", "desc", "subhead", "meta", "cap", "caption", "legend", "byline", "lab", "role", "readout", "mono", "code", "lese", "prose", "chip", "btn", "seg", "field", "shead", "hero", "card", "step-num"],
     "hinweis": "Treffer = Seite definiert .note/.hint/.lede/… selbst. ds-fix kann die lokale Regel entfernen, sobald base.css die Rolle trägt."
   },
 

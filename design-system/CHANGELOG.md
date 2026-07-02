@@ -118,6 +118,13 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 > bewusst eigenständigen Mockup-/Übersichtsköpfen).
 
 ### Aufgenommen
+- **`.step-num`** (`base.css`, `contract.json` DS04) — runde Schritt-Nummer vor
+  nummerierten Zwischentiteln (fixe Höhe *und* Breite statt nur `min-width`,
+  `line-height:1`, tabular-nums). *Warum:* eine Seite (Logo-Hinweise) erfand
+  Kreis-Badges lokal; die Ziffer sass optisch nicht mittig, weil `min-width`
+  allein plus `align-items:baseline` im Elternflex die Kreisgeometrie und die
+  Zentrierung dem Zufall überliess. *Wirkung:* eine Quelle für nummerierte
+  Schritte, verlässlich rund und mittig, ab jetzt überall (`step-num` in DS04).
 - **Textrollen als gemessene Grundlage** (`base.css`) — Kicker · Lede · Hinweis
   (`.note`/`.hint`/`.help`/`.desc`) · Meta (`.cap`/`.caption`/`.legend`/`.byline`) ·
   Label (`.lab`/`.role`) · Wert (`.readout`) · Code (`.code`/`.mono`).

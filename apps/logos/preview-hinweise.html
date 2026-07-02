@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hinweise — Vergleich (Aktuell · Vorschlag)</title>
+<link rel="stylesheet" href="../../design-system/tokens.css">
+<link rel="stylesheet" href="../../design-system/base.css">
+<style>
+  body{margin:0;background:var(--field-bg,#f3efe8);color:var(--ink)}
+  .wrap{max-width:1180px;margin:0 auto;padding:var(--s6) var(--s4) var(--s8)}
+  .top{margin:0 0 var(--s6)}
+  .top h1{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h2);margin:0 0 var(--s2)}
+  .top p{color:var(--soft);max-width:62ch;margin:0}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:var(--s6);align-items:start}
+  @media (max-width:820px){.cols{grid-template-columns:1fr}}
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-card,12px);padding:var(--s6);box-shadow:var(--shadow-card,none)}
+  .tag{display:inline-block;font-size:var(--t-micro);font-weight:var(--w-strong);letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin:0 0 var(--s2)}
+  .panel.neu .tag{color:var(--gold-ink)}
+  .panel h2{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);margin:0 0 var(--s4)}
+  .panel h3{font-size:var(--t-small);font-weight:var(--w-strong);margin:var(--s4) 0 var(--s1);display:flex;gap:.5em;align-items:center}
+  /* Kreis-Zahl vor Zwischentiteln: .step-num aus base.css (kanonisch, DS04) – nicht lokal neu erfinden. */
+  .panel p{font-size:var(--t-small);line-height:var(--lh-body,1.5);margin:.2em 0 var(--s2)}
+  .panel p.lead{font-size:var(--t-body);color:var(--ink)}
+  .muted{color:var(--soft)}
+  .hr{height:1px;background:var(--line);border:0;margin:var(--s4) 0}
+
+  /* visuals */
+  .strip{display:flex;flex-wrap:wrap;gap:var(--s2);margin:var(--s2) 0 var(--s2)}
+  figure{margin:0;flex:1 1 0;min-width:74px;text-align:center}
+  .box{display:flex;align-items:center;justify-content:center;height:62px;padding:8px 10px;background:#fff;border:1px solid var(--line);border-radius:var(--r-control,8px)}
+  .box.hero{height:84px}
+  .box.dark{background:#23272b;border-color:#23272b}
+  .box svg{max-width:100%;max-height:100%;height:auto;display:block}
+  figcaption{font-size:var(--t-micro);color:var(--soft);margin-top:4px}
+
+  /* tier rows (neu) */
+  .tier{display:grid;grid-template-columns:1fr 150px;gap:var(--s4);align-items:center;margin:var(--s2) 0}
+  @media (max-width:520px){.tier{grid-template-columns:1fr}}
+  .tier .vis{display:flex;gap:6px;align-items:center;justify-content:center}
+
+  /* honest paper mock for the Zeichen */
+  .sheetmock{width:62px;height:88px;background:#fff;border:1px solid var(--line);border-radius:3px;padding:8px 7px;display:flex;flex-direction:column;gap:5px}
+  .sheetmock .mark{height:22px;border:1px dashed var(--soft);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:6.5px;line-height:1.1;color:var(--soft);text-align:center;padding:2px}
+  .sheetmock .ln{height:3px;background:#eceae5;border-radius:2px}
+  .sheetmock .ln.s{width:55%}.sheetmock .ln.m{width:80%}
+
+  /* do/don't */
+  .dl{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4);margin-top:var(--s2)}
+  .dl h4{font-size:var(--t-small);margin:0 0 var(--s1)}
+  .dl ul{margin:0;padding:0;list-style:none;font-size:var(--t-small)}
+  .dl li{margin:.35em 0;padding-left:1.4em;position:relative;line-height:1.35}
+  .dl .ja li::before{content:"✓";position:absolute;left:0;color:var(--ok,#2f7d4f);font-weight:700}
+  .dl .nein li::before{content:"✕";position:absolute;left:0;color:var(--bad,#b3261e);font-weight:700}
+
+  .note{font-size:var(--t-micro);color:var(--soft);margin-top:var(--s4)}
+  .why{background:var(--field-bg,#f7f2ea);border:1px dashed var(--line);border-radius:var(--r-control,8px);padding:var(--s2) var(--s4);font-size:var(--t-micro);color:var(--soft);margin:var(--s2) 0}
+  .why b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>Hinweise zur Anwendung — Vergleich</h1>
+    <p style="color:var(--ink)">Links die heutige Fassung (10 Punkte). Rechts der Vorschlag: erst das Warum, dann drei Stufen, dann das Handwerk. Alle Logos sind echt aus <code>engine.js</code> gerendert — die Zeichen (Stufe 3) bewusst <strong>nicht</strong> nachgezeichnet.</p>
+  </div>
+
+  <div class="cols">
+
+    <!-- ============ AKTUELL ============ -->
+    <section class="panel akt">
+      <span class="tag">Aktuell</span>
+      <h2>Hinweise zur Anwendung</h2>
+      <p class="muted">Alles auf einer Seite – wer, was, wie. (Entwurf; wird noch ausgearbeitet.)</p>
+
+      <h3><span class="step-num">1</span> Das Logo &amp; seine Varianten</h3>
+      <p><strong>Das blaue, einzeilige Goetheanum-Logo ist das eigentliche Logo</strong> – für das breite Publikum immer dieses. Sektions- und Bereichslogos sowie Farb- und Icon-Varianten sind nur für den <strong>Sondereinsatz</strong>: eigene Webseiten, Fachveranstaltungen. Immer die fertige Datei aus dem Werkzeug nehmen – nie nachzeichnen oder neu setzen.</p>
+      <div class="strip" id="aVariants"></div>
+
+      <h3><span class="step-num">2</span> Wann welche Variante</h3>
+      <p><strong>Lang</strong> ist der Standard, wo Platz ist. <strong>Kurz</strong> an engen Stellen oder bei langem Namen. <strong>Icon · Kreis · Quadrat</strong> für App-Symbol, Social-Avatar, Favicon, Wasserzeichen – nur wo der Kontext schon ‹Goetheanum› sagt. <strong>Goetheanum allein</strong>, wo keine Sektion gemeint ist.</p>
+
+      <h3><span class="step-num">3</span> Wer nutzt was</h3>
+      <p><strong>Breites Publikum: immer das blaue Goetheanum-Basislogo.</strong> Sektionen und Bereiche setzen ihr eigenes Lockup nur im Sondereinsatz ein (eigene Webseiten, Fachveranstaltungen). Hochschule, Gesellschaft und Bau-Administration → Steiners Zeichen, nur für Briefpapier, Mitgliederkarten und Generalversammlung.</p>
+
+      <h3><span class="step-num">4</span> Farbe</h3>
+      <p>Original (Hausfarbe auf hell) · Weiss (auf dunkel oder Bild) · Schwarz (einfarbig) · Grau (Ausnahme). Nie umfärben, keine Verläufe.</p>
+      <div class="strip" id="aColors"></div>
+
+      <h3><span class="step-num">5</span> Schutzraum · <span class="step-num">6</span> Mindestgrösse</h3>
+      <p>Rundum Luft in Höhe des Zeichens. Richtwert ~25 mm oder ~120 px Breite. <span class="muted">Exakte Werte aus dem Logopaket.</span></p>
+      <h3><span class="step-num">7</span> Hintergrund · <span class="step-num">8</span> Dateien</h3>
+      <p>Ruhiger Grund mit genug Kontrast; auf Foto/Dunkel die Weiss-Variante. SVG für Web und Druck, PNG für Pixel.</p>
+
+      <h3><span class="step-num">9</span> So nicht</h3>
+      <div class="dl">
+        <div class="ja"><h4>✓ So</h4><ul>
+          <li>Fertiges SVG aus dem Werkzeug.</li>
+          <li>Schutzraum wahren, genug Kontrast.</li>
+          <li>Original als Standard, Weiss auf Dunkel.</li>
+          <li>Layout zur Lage.</li>
+        </ul></div>
+        <div class="nein"><h4>✕ So nicht</h4><ul>
+          <li>Verzerren, drehen, beschneiden.</li>
+          <li>Umfärben, Verläufe, Schatten.</li>
+          <li>Wortmarke neu setzen, Lockup umbauen.</li>
+          <li>Unruhiger/kontrastarmer Grund.</li>
+        </ul></div>
+      </div>
+      <p class="note"><strong>10</strong>&nbsp; Holen: oben Sektion wählen und herunterladen.</p>
+    </section>
+
+    <!-- ============ NEU ============ -->
+    <section class="panel neu">
+      <span class="tag">Vorschlag — griffig</span>
+      <h2>Hinweise zur Anwendung</h2>
+      <p class="lead">Unser Logo ist das Goetheanum, wo wir nicht selbst im Raum stehen. <strong>Wiedererkennen schafft Vertrauen</strong> — darum überall dasselbe, fertig aus diesem Werkzeug. Nie nachbauen, nie neu setzen.</p>
+
+      <hr class="hr">
+
+      <div class="tier">
+        <div>
+          <h3><span class="step-num gold">1</span> Das allgemeine Logo grüsst</h3>
+          <p>Fürs breite Publikum, in allen Medien — im Zweifel dieses. Wortmarke in der Hausschrift (<strong>variables Gewicht 400</strong>), dazu das Icon fürs Kleine.</p>
+        </div>
+        <div class="vis" id="vTier1"></div>
+      </div>
+
+      <div class="tier">
+        <div>
+          <h3><span class="step-num gold">2</span> Das Fachlogo ordnet zu</h3>
+          <p>Sektion oder Bereich als <strong>Absender</strong> — fürs Fachliche: Kolloquium, Briefschaften, Visitenkarten, eigene Webseiten. Öffentliche Anlässe tragen das allgemeine Logo. <span class="muted">Tipp: Schauseite allgemeines Logo, Rückseite das Sektionslogo als Absender.</span></p>
+        </div>
+        <div class="vis" id="vTier2"></div>
+      </div>
+
+      <div class="tier">
+        <div>
+          <h3><span class="step-num gold">3</span> Das Zeichen eröffnet</h3>
+          <p>Steiners Zeichen (Hochschule, Gesellschaft, Bau-Administration) sind ein <strong>Erbe</strong>: Sie tragen ihr Zentrum ausser sich und schenken dem Folgenden Raum. <strong>Nur auf Papier und im Hochformat</strong>, festlich — nie anstatt des Logos, nur dazu.</p>
+        </div>
+        <div class="vis" id="vTier3"></div>
+      </div>
+
+      <hr class="hr">
+
+      <h3>Formen</h3>
+      <p>Lang (Standard) · Kurz (eng/langer Name) · Icon · Kreis · Quadrat fürs Kleine · Goetheanum allein, wo keine Sektion gemeint ist.</p>
+      <div class="strip" id="vFormen"></div>
+
+      <h3>Farbe</h3>
+      <p>Original · Weiss (auf Dunkel/Bild) · Schwarz · Grau (Ausnahme). Nie umfärben, keine Verläufe.</p>
+      <div class="strip" id="vFarbe"></div>
+
+      <h3>Raum &amp; Grösse · Dateien</h3>
+      <p>Rundum Luft in Zeichenhöhe; Richtwert ~25 mm / ~120 px (exakt im Logopaket). SVG für Web und Druck, PNG für Pixel — beides hier.</p>
+
+      <h3>So / So nicht</h3>
+      <div class="dl">
+        <div class="ja"><h4>✓ So</h4><ul>
+          <li>Fertiges SVG aus dem Werkzeug.</li>
+          <li>Öffentlich das allgemeine Logo, fachlich das Fachlogo.</li>
+          <li>Schutzraum und Kontrast wahren.</li>
+        </ul></div>
+        <div class="nein"><h4>✕ So nicht</h4><ul>
+          <li>Wortmarke neu setzen, Lockup umbauen.</li>
+          <li>Zeichen quetschen, verzerren, einfärben, als Mini-Icon.</li>
+          <li>Logo aus altem Dokument herauskopieren.</li>
+        </ul></div>
+      </div>
+
+      <p class="note"><strong>Holen:</strong> oben Sektion wählen, Format, herunterladen.</p>
+
+      <div class="why">
+        <b>Was sich an den Visuals ändert:</b> Stufe 1 zeigt das echte blaue Basislogo + Icon (heute fehlt der Held). Stufe 2 zeigt echte Fachlogos in ihren Sektionsfarben. Stufe 3 zeigt die <b>Regel</b> — Hochformat-Papier mit ehrlichem Platzhalter, weil der Generator keine Steiner-Zeichen erzeugt; ein nachgezeichnetes Zeichen wäre selbst ein No-Go. „Formen“ und „Farbe“ bleiben als Werkzeug-Strips, aber kuratiert (Weiss auf Dunkel, damit es sichtbar ist).
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script src="../../assets/goe-orgs.js"></script>
+<script src="engine.js"></script>
+<script>
+"use strict";
+(function(){
+  var E = window.LogoEngine;
+  function fig(svg, cap, dark, hero){
+    var f = document.createElement("figure");
+    f.innerHTML = '<div class="box'+(dark?' dark':'')+(hero?' hero':'')+'">'+svg+'</div>'+(cap?'<figcaption>'+cap+'</figcaption>':'');
+    return f;
+  }
+  function svg(opts){ try { return E.svg(opts); } catch(e){ return '<span style="font:11px sans-serif;color:#b3261e">SVG?</span>'; } }
+  function add(id, node){ var el=document.getElementById(id); if(el) el.appendChild(node); }
+
+  if (!E || typeof ORGS === "undefined"){
+    document.body.insertAdjacentHTML("afterbegin","<p style='color:#b3261e;padding:16px'>Engine/Daten nicht geladen.</p>");
+    return;
+  }
+
+  var S = 2.4;
+
+  // ---- AKTUELL: heutige Strips (originalgetreu: Sektion aas) ----
+  [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"]].forEach(function(p){
+    add("aVariants", fig(svg({cat:"sektionen",org:"aas",layout:p[0],mode:"original",lang:"de",scale:S}), p[1], false));
+  });
+  [["original","Original",false],["white","Weiss",true],["black","Schwarz",false],["gray","Grau",false]].forEach(function(p){
+    add("aColors", fig(svg({cat:"sektionen",org:"aas",layout:"desktop",mode:p[0],lang:"de",scale:S}), p[1], p[2]));
+  });
+
+  // ---- NEU ----
+  // Stufe 1: echtes Basislogo + Icon
+  add("vTier1", fig(svg({cat:"allgemein",org:"goetheanum",layout:"desktop",mode:"original",scale:S}), "", false, true));
+  add("vTier1", fig(svg({cat:"allgemein",org:"goetheanum",layout:"icon",mode:"original",scale:S}), "", false, true));
+
+  // Stufe 2: echte Fachlogos in Sektionsfarben (kurz, damit sie in die Spalte passen)
+  add("vTier2", fig(svg({cat:"sektionen",org:"ps",layout:"mobile",mode:"original",lang:"de",scale:S}), "", false, true));
+  add("vTier2", fig(svg({cat:"sektionen",org:"sbk",layout:"mobile",mode:"original",lang:"de",scale:S}), "", false, true));
+
+  // Stufe 3: ehrlicher Papier-/Hochformat-Mock (KEIN nachgezeichnetes Zeichen)
+  (function(){
+    var f = document.createElement("figure");
+    f.innerHTML = '<div class="sheetmock">'
+      + '<div class="mark">Steiner-Zeichen<br>offizielles Asset</div>'
+      + '<div class="ln m"></div><div class="ln s"></div><div class="ln m"></div><div class="ln s"></div>'
+      + '</div><figcaption>Papier · Hochformat</figcaption>';
+    add("vTier3", f);
+  })();
+
+  // Formen-Strip: Sektion mit Lang≠Kurz (nws), alle Formen
+  [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"],["square","Quadrat"]].forEach(function(p){
+    add("vFormen", fig(svg({cat:"sektionen",org:"nws",layout:p[0],mode:"original",lang:"de",scale:S}), p[1], false));
+  });
+  // Farbe-Strip: das Basislogo selbst, Weiss auf Dunkel
+  [["original","Original",false],["white","Weiss",true],["black","Schwarz",false],["gray","Grau",false]].forEach(function(p){
+    add("vFarbe", fig(svg({cat:"allgemein",org:"goetheanum",layout:"desktop",mode:p[0],scale:S}), p[1], p[2]));
+  });
+})();
+</script>
+</body>
+</html>
