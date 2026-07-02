@@ -1,4 +1,4 @@
-# Goetheanum Schriften — `v2.6`
+# Goetheanum Schriften — `v2.7`
 
 Reparierte und optimierte Fassung des offiziellen Schriftpakets der Goetheanum
 Kommunikation (basierend auf der originalen v1.4.43, abgeleitet aus Titillium,
@@ -10,8 +10,10 @@ SIL OFL). Reparaturen und Begründung siehe
 
 | Schnitt | Gewicht | Einsatz (laut Beipackzettel) |
 |--------|---------|------------------------------|
-| **Leise** | 265 | Titel, Gegenstimme — nicht für Fließtext-Mengen |
+| **Leise** | 265 | Leise Auszeichnung, Gegenstimme — nicht für Fließtext-Mengen — Office-Kursiv (⌘I) von Klar |
+| **Ruhig** | 350 | Ruhiger Lese- und Lauftext — die Buch-Zwischenstimme zwischen Leise und Klar |
 | **Klar**  | 440 | Standard: Korrespondenz, Formulare, Lauftext |
+| **Deutlich** | 580 | Titel und Header — die ruhige Auszeichnung |
 | **Laut**  | 680 | Titel, **Wegleitung, Signaletik**, Hervorhebungen — Office-Fett (⌘B) von Klar |
 | **Icons** | — | Piktogramme & Logos (Tastatur-Belegung im Beipackzettel) |
 | **Variabel** | 190–725 | Gewichtsachse `wght` – inkl. der Extreme **Flüstern**/**Schreien** (nur hier, der Grafik vorbehalten) |
@@ -21,17 +23,26 @@ SIL OFL). Reparaturen und Begründung siehe
 ```css
 @font-face {
   font-family: "Goetheanum Schrift";
-  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.6-Klar.woff2") format("woff2");
+  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.7-Klar.woff2") format("woff2");
   font-weight: 440; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Goetheanum Schrift";
-  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.6-Laut.woff2") format("woff2");
+  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2") format("woff2");
   font-weight: 680; font-style: normal; font-display: swap;
 }
 ```
 
 Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
+
+## Neu in v2.7
+
+- **Siebter Schnitt „Ruhig" (wght 350).** Er füllt den grössten Sprung der
+  Leiter – zwischen Leise (265) und Klar (440) – als ruhige Buch-Zwischenstimme:
+  fester als die leise Nebenstimme, zurückgenommener als die volle Lesestimme
+  (I-Stamm 67 gegenüber 50 bei Leise und 82 bei Klar). Installierbar als
+  statischer Schnitt, im Variable Font als benannte Stufe **Ruhig** und im
+  Office-Paket als eigene TrueType. Die übrige Familie bleibt unverändert.
 
 ## Neu in v2.6
 
@@ -48,7 +59,7 @@ Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
   Die Variable und die Icons sind unverändert.
 
 ## Dateien
-- `Fonts/` — OTF (Desktop): Leise, Klar, Deutlich, Laut, Icons
+- `Fonts/` — OTF (Desktop): Leise, Ruhig, Klar, Deutlich, Laut, Icons
 - Office-Verknüpfung: Klar=Regular, Laut=Fett (⌘B), Leise=Kursiv (⌘I) – eine Familie „Goetheanum Schrift"
 - `Variable/` — variable OTF (CFF2)
 - `Webfonts/woff` und `Webfonts/woff2` — Web

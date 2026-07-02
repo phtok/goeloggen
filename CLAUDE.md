@@ -29,7 +29,7 @@ Hervorhebung, zwei Merkmale gleichzeitig im Fließtext, Schmuck. **Wer eine
 Auszeichnung weglassen kann, lässt sie weg.**
 
 ### Wenn eine Regel der Schrift widerspricht
-Die v2.6-Schrift hat Funktionen erhalten, die ältere Regeln (noch) anders
+Die v2.7-Schrift hat Funktionen erhalten, die ältere Regeln (noch) anders
 beschreiben. Solche Widersprüche **melden und vom Auftraggeber entscheiden
 lassen** — das Regelwerk **nicht** eigenmächtig umschreiben.
 
@@ -122,11 +122,12 @@ Aufgenommenes gilt ab dann überall. Der **Beschluss-Ledger**
 (`design-system/CHANGELOG.md`) ist das Gedächtnis; der Score (`ds-lint --score`)
 macht „wie weit weg" zu einer Zahl statt eines Gefühls.
 
-## Schnitt-System (Stand v2.6)
-- Installierbare statische Schnitte: **Leise (265) · Klar (440) · Deutlich
-  (580) · Laut (680)**. Deutlich = Titel; Laut = Inline-/Office-Fettung (⌘B).
-- Variable: 6 Named Instances **Flüstern 190 · Leise · Klar · Deutlich · Laut ·
-  Schreien 725**.
+## Schnitt-System (Stand v2.7)
+- Installierbare statische Schnitte: **Leise (265) · Ruhig (350) · Klar (440) ·
+  Deutlich (580) · Laut (680)**. Ruhig = ruhiger Lese-/Buchschnitt (füllt den
+  Sprung Leise→Klar); Deutlich = Titel; Laut = Inline-/Office-Fettung (⌘B).
+- Variable: 7 Named Instances **Flüstern 190 · Leise · Ruhig · Klar · Deutlich ·
+  Laut · Schreien 725**.
 Bei Änderungen an der Schnittzahl **alle** Beschreibungen mitziehen
 (schriften.html, schrift-webfont.html, README, tools.json, Beipackzettel).
 

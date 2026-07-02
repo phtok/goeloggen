@@ -17,11 +17,12 @@ OUT = os.path.join(REPO, "assets/fonts/goetheanum/Office")
 
 # Quelle  ->  (sichtbarer Familienname, eindeutiger PostScript/ID-Stamm)
 JOBS = [
-    ("Goetheanum-Schrift-v2.6-Klar.otf",     "Goetheanum Schrift Klar",     "GoetheanumSchriftKlar"),
-    ("Goetheanum-Schrift-v2.6-Laut.otf",     "Goetheanum Schrift Laut",     "GoetheanumSchriftLaut"),
-    ("Goetheanum-Schrift-v2.6-Leise.otf",    "Goetheanum Schrift Leise",    "GoetheanumSchriftLeise"),
-    ("Goetheanum-Schrift-v2.6-Deutlich.otf", "Goetheanum Schrift Deutlich", "GoetheanumSchriftDeutlichOffice"),
-    ("Goetheanum-Icons-v2.6.otf",            "Goetheanum Icons",            "GoetheanumIconsOffice"),
+    ("Goetheanum-Schrift-v2.7-Leise.otf",    "Goetheanum Schrift Leise",    "GoetheanumSchriftLeise"),
+    ("Goetheanum-Schrift-v2.7-Ruhig.otf",    "Goetheanum Schrift Ruhig",    "GoetheanumSchriftRuhig"),
+    ("Goetheanum-Schrift-v2.7-Klar.otf",     "Goetheanum Schrift Klar",     "GoetheanumSchriftKlar"),
+    ("Goetheanum-Schrift-v2.7-Deutlich.otf", "Goetheanum Schrift Deutlich", "GoetheanumSchriftDeutlichOffice"),
+    ("Goetheanum-Schrift-v2.7-Laut.otf",     "Goetheanum Schrift Laut",     "GoetheanumSchriftLaut"),
+    ("Goetheanum-Icons-v2.7.otf",            "Goetheanum Icons",            "GoetheanumIconsOffice"),
 ]
 
 def otf_to_ttf(ft, max_err=1.0):
@@ -68,7 +69,7 @@ def setname(ft, family, ps):
         nm.setName(v, i, 3, 1, 0x409); nm.setName(v, i, 1, 0, 0)
     nm.removeNames(nameID=16); nm.removeNames(nameID=17)   # keine Typo-Gruppierung → eigene Familie
     S(1, family); S(2, "Regular"); S(4, family); S(6, ps)
-    S(3, "2.6;GOEA;" + ps)
+    S(3, "2.7;GOEA;" + ps)
     os2 = ft["OS/2"]; head = ft["head"]
     os2.fsSelection = (os2.fsSelection & ~0b100001) | 0x40   # nur REGULAR (Bold/Italic aus)
     os2.usWeightClass = 400
@@ -84,7 +85,7 @@ Installieren:
 Danach das Office-Programm neu starten.
 
 Im Schrift-Menue heissen sie:
-  Goetheanum Schrift Klar / Laut / Leise / Deutlich  und  Goetheanum Icons
+  Goetheanum Schrift Leise / Ruhig / Klar / Deutlich / Laut  und  Goetheanum Icons
 
 Der Beipackzettel (PDF) zeigt Zeichensatz, Funktionen und die Tastatur-
 Belegung der Piktogramme.
@@ -93,7 +94,7 @@ WOFF/WOFF2 sind reine Web-Dateien und lassen sich NICHT installieren.
 """
 
 def pack_zip():
-    """Office-TTF-ZIP reproduzierbar: die fünf TTF + Beipackzettel + LIESMICH."""
+    """Office-TTF-ZIP reproduzierbar: die TTF + Beipackzettel + LIESMICH."""
     import zipfile
     root = os.path.join(REPO, "assets/fonts/goetheanum")
     beipack = os.path.join(root, "Beipackzettel-Goetheanum-Schriften.pdf")
