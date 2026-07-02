@@ -4,13 +4,13 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.boundsPen import BoundsPen
 from fontTools.varLib.instancer import instantiateVariableFont
-FD="assets/fonts/goetheanum/Fonts/"; VF="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.6.otf"
+FD="assets/fonts/goetheanum/Fonts/"; VF="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.7.otf"
 def L(p): ft=TTFont(p);return (ft,ft.getGlyphSet(),ft.getBestCmap(),ft["head"].unitsPerEm)
-KP=FD+"Goetheanum-Schrift-v2.6-Klar.otf"; LAP=FD+"Goetheanum-Schrift-v2.6-Laut.otf"; LEP=FD+"Goetheanum-Schrift-v2.6-Leise.otf"; DEP=FD+"Goetheanum-Schrift-v2.6-Deutlich.otf"
-K=L(KP); LA=L(LAP); LE=L(LEP); D=L(DEP)
+KP=FD+"Goetheanum-Schrift-v2.7-Klar.otf"; LAP=FD+"Goetheanum-Schrift-v2.7-Laut.otf"; LEP=FD+"Goetheanum-Schrift-v2.7-Leise.otf"; DEP=FD+"Goetheanum-Schrift-v2.7-Deutlich.otf"; RUP=FD+"Goetheanum-Schrift-v2.7-Ruhig.otf"
+K=L(KP); LA=L(LAP); LE=L(LEP); D=L(DEP); RU=L(RUP)
 def varL(w):
     ft=TTFont(VF); instantiateVariableFont(ft,{"wght":w},inplace=True); return (ft,ft.getGlyphSet(),ft.getBestCmap(),ft["head"].unitsPerEm)
-IC=L(FD+"Goetheanum-Icons-v2.6.otf")
+IC=L(FD+"Goetheanum-Icons-v2.7.otf")
 # HarfBuzz fonts for real shaping (ligatures + OT features)
 def hbfont(path):
     blob=hb.Blob.from_file_path(path); face=hb.Face(blob); return hb.Font(face)
@@ -65,17 +65,19 @@ S.append(f'<line x1="{M}" y1="110" x2="{W-M}" y2="110" stroke="rgba(20,24,28,.12
 LX=M; LW=360
 def card(x,y,w,h):
     S.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="9" fill="none" stroke="rgba(20,24,28,.14)"/>')
-cards=[("Klar",K,"‹Goetheanum Kommunikation im Alltag›","Standard: Korrespondenz, Formulare, Lauftext.","Office · Regular"),
+# fünf Schnitte in der Leiter-Ordnung: Leise · Ruhig · Klar · Deutlich · Laut
+cards=[("Leise",LE,"‹Goetheanum Kultur und Dialog›","Leise Auszeichnung – nicht für Fließtext-Mengen.","Office · Cmd+I"),
+       ("Ruhig",RU,"‹Goetheanum Lesestimme im Text›","Ruhiger Lese- und Lauftext – die Buch-Zwischenstimme.","Lesetext · 350"),
+       ("Klar",K,"‹Goetheanum Kommunikation im Alltag›","Standard: Korrespondenz, Formulare, Lauftext.","Office · Regular"),
        ("Deutlich",D,"‹Goetheanum Programm Heute›","Titel und Header – die ruhige Auszeichnung.","Titel · 580"),
-       ("Laut",LA,"‹Goetheanum Achtung Hinweis›","Inline-Fett, Hervorhebung, Signaletik.","Office · Cmd+B"),
-       ("Leise",LE,"‹Goetheanum Kultur und Dialog›","Leise Auszeichnung – nicht für Fließtext-Mengen.","Office · Cmd+I")]
+       ("Laut",LA,"‹Goetheanum Achtung Hinweis›","Inline-Fett, Hervorhebung, Signaletik.","Office · Cmd+B")]
 y=128
 for nm,F,sample,role,off in cards:
-    card(LX,y,LW,84)
-    txt(K,nm,11.5,LX+16,y+22,"#23272b"); rtxt(K,off,9,LX+LW-16,y+22,"#a07a33")
-    txt(F,sample,18,LX+16,y+56,"#23272b")
-    txt(K,role,9,LX+16,y+74,"#737a80")
-    y+=96
+    card(LX,y,LW,70)
+    txt(K,nm,11.5,LX+16,y+20,"#23272b"); rtxt(K,off,9,LX+LW-16,y+20,"#a07a33")
+    txt(F,sample,17,LX+16,y+48,"#23272b")
+    txt(K,role,9,LX+16,y+63,"#737a80")
+    y+=80
 
 # right column: Variable + Icons
 RX=M+LW+22; RW=360
@@ -83,11 +85,11 @@ RX=M+LW+22; RW=360
 vy=128; vh=250
 card(RX,vy,RW,vh)
 txt(K,"Variable Font",12,RX+16,vy+26,"#23272b"); rtxt(K,"Achse 190–725",9.5,RX+RW-16,vy+26,"#a07a33")
-for i,(w,lab) in enumerate([(190,"Flüstern"),(280,"Leise"),(450,"Klar"),(525,"Deutlich"),(600,"Laut"),(725,"Schreien")]):
-    yy=vy+62+i*28
-    txt(varL(w),"Goetheanum flexibel",16,RX+16,yy,"#23272b")
+for i,(w,lab) in enumerate([(190,"Flüstern"),(280,"Leise"),(365,"Ruhig"),(450,"Klar"),(525,"Deutlich"),(600,"Laut"),(725,"Schreien")]):
+    yy=vy+58+i*26
+    txt(varL(w),"Goetheanum flexibel",15,RX+16,yy,"#23272b")
     rtxt(K,lab,8.5,RX+RW-16,yy,"#9aa1a7")
-txt(K,"Stufenlos um die Extreme Flüstern und Schreien ergänzt.",9.5,RX+16,vy+vh-14,"#737a80")
+txt(K,"Sieben benannte Schnitte, stufenlos von Flüstern bis Schreien.",9.5,RX+16,vy+vh-14,"#737a80")
 # Icons card — unten bündig mit der Leise-Box (y=506)
 iy=vy+vh+12; ih=116
 card(RX,iy,RW,ih)
@@ -99,7 +101,7 @@ txt(K,"Tastatur-Belegung siehe Seite 3–5. Einzeln als SVG/PNG/PDF",9.5,RX+16,i
 
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
-txt(K,"Goetheanum Schriften Version 2.6 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
+txt(K,"Goetheanum Schriften Version 2.7 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
 txt(K,"Ausbau & Optimierung 2026 durch Philipp Tok. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p1.svg","w").write("".join(S))
@@ -111,7 +113,7 @@ print("page1 rendered")
 S=[]
 S.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}pt" height="{H}pt" viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="#ffffff"/>')
 txt(LA,"Ligaturen & Sonderzeichen",30,M,76,"#23272b")
-txt(K,"In den Schnitten Leise, Klar, Deutlich und Laut",10.5,M,95,"#a07a33")
+txt(K,"In den Schnitten Leise, Ruhig, Klar, Deutlich und Laut",10.5,M,95,"#a07a33")
 S.append(f'<line x1="{M}" y1="110" x2="{W-M}" y2="110" stroke="rgba(20,24,28,.12)"/>')
 
 # --- left: f-Ligaturen ---

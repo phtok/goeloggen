@@ -20,7 +20,7 @@
     {
       "id": "schrift",
       "title": "Schrift & Typografie",
-      "intro": "Die Hausschrift v2.6 und die Regeln dazu – nachschlagen, vergleichen, einbinden."
+      "intro": "Die Hausschrift v2.7 und die Regeln dazu – nachschlagen, vergleichen, einbinden."
     },
     {
       "id": "anwendung",
@@ -196,7 +196,7 @@
       "title": "Schriften",
       "short": "Überblick",
       "href": "schriften.html",
-      "desc": "Sechs Schnitte von Leise bis Laut, Variable Font und Icon-Satz – mit Download.",
+      "desc": "Sieben Schnitte von Flüstern bis Schreien, Variable Font und Icon-Satz – mit Download.",
       "such": "Schrift Font Hausschrift Variable Webfont Gewichte Icons"
     },
     {
@@ -370,10 +370,10 @@
       "desc": "Epics, User-Stories, Sprint-Vorschlag."
     },
     {
-      "title": "Hausschrift v2.6 – Dokumentation",
+      "title": "Hausschrift v2.7 – Dokumentation",
       "tag": "Schrift",
       "href": "https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/README.md",
-      "desc": "Schnitte, Variable Font, Neuerungen in v2.6."
+      "desc": "Schnitte, Variable Font, Neuerungen in v2.7."
     },
     {
       "title": "Hausschrift – Audit",
