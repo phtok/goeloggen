@@ -757,7 +757,13 @@ def build_icon_exports():
             zi.compress_type = zipfile.ZIP_DEFLATED
             with open(src, "rb") as fh:
                 z.writestr(zi, fh.read())
-    print("  Icons-Einzeldateien/{svg,png,pdf}/* (%d Icons) + ZIP" % len(manifest))
+        bp = os.path.join(OUTROOT, "Beipackzettel-Goetheanum-Schriften.pdf")  # Tastatur-Belegung
+        if os.path.isfile(bp):
+            zi = zipfile.ZipInfo("Beipackzettel-Goetheanum-Schriften.pdf", date_time=(1980, 1, 1, 0, 0, 0))
+            zi.compress_type = zipfile.ZIP_DEFLATED
+            with open(bp, "rb") as fh:
+                z.writestr(zi, fh.read())
+    print("  Icons-Einzeldateien/{svg,png,pdf}/* (%d Icons) + Beipackzettel + ZIP" % len(manifest))
 
 
 def build_zip():

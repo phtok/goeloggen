@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="de">
+<head>
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum – PowerPoint-Vorlagen</title>
+<meta name="description" content="Präsentationsvorlage im Hausbild des Goetheanum als PowerPoint (A4), mit eingebetteten Schriften – plus die TrueType-Schriften fürs Office zum Installieren." />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Farben/Schrift/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigenes Layout. */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  .hero{padding-block:60px 14px}
+  .lede{max-width:64ch;margin-top:var(--s4)}
+
+  .panel{margin-top:var(--s8);border:1px solid var(--line);border-radius:var(--r-card);
+    background:var(--soft);padding:var(--s8);max-width:64ch}
+  .panel .nm{font-family:var(--font);font-weight:var(--w-deutlich);font-size:var(--t-h3);
+    display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+  .panel p{margin-top:var(--s4);color:var(--muted)}
+  .btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-section="anwendung" data-active="powerpoint"></script>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="kicker">Hausgrafik · Anwendungen</div>
+    <h1>PowerPoint-Vorlagen</h1>
+    <p class="lede">Präsentationsvorlagen im Hausbild – Titel, Inhalts- und Bildfolien, abgestimmt auf
+      Schrift und Farben des Goetheanum.</p>
+  </div>
+
+  <div class="panel">
+    <span class="nm">Vorlage A4</span>
+    <p>Titel-, Inhalts- und Bildfolien im Hausbild – mit der Hausschrift und den Piktogrammen.
+      Die Schriften sind in der Datei eingebettet; verlässlich sitzen sie, sobald sie installiert sind.</p>
+    <p style="margin-top:var(--s6);display:flex;gap:var(--s2);flex-wrap:wrap">
+      <a class="btn primary" href="assets/templates/GoetheanumVorlageA4.pptx" download>PPT-Vorlage (A4)</a>
+      <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Office-TTF.zip" download>Schriften (TTF)</a>
+      <a class="btn" href="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf" download>Beipackzettel</a>
+    </p>
+  </div>
+
+  <div class="panel">
+    <span class="nm">Vorlage für deinen Inhalt</span>
+    <p>Brauchst du einen Foliensatz für einen bestimmten Anlass oder Bereich – Tagung, Bericht, Sektion,
+      Programm? Wir entwickeln die Vorlage passend zu deinem Inhalt im Hausbild weiter: eigene Folientypen,
+      Diagramme, Bildwelten. Schreib kurz, worum es geht.</p>
+    <p style="margin-top:var(--s6)"><a class="btn primary" href="mailto:philipp.tok@goetheanum.ch?subject=Pr%C3%A4sentation%20%E2%80%93%20spezifischer%20Inhalt">Anfrage senden</a></p>
+  </div>
+
+  <div class="panel">
+    <span class="nm">So sitzt die Schrift</span>
+    <p>PowerPoint zeigt die Hausschrift zuverlässig nur, wenn sie installiert ist (das Einbetten greift
+      auf dem Mac nicht sicher). Darum einmalig:</p>
+    <ol style="margin-top:var(--s4);padding-left:1.2em;color:var(--ink)">
+      <li>Die fünf <b>TrueType</b>-Schriften aus dem Set installieren (Doppelklick → ‹Installieren›).</li>
+      <li>PowerPoint komplett schliessen und neu starten.</li>
+      <li>Die Vorlage öffnen – Titel in der Hausschrift, Piktogramme als Piktogramme.</li>
+    </ol>
+    <p style="margin-top:var(--s4)">Im Menü heissen sie <b>Goetheanum Schrift Klar/Laut/Leise/Deutlich</b>
+      und <b>Goetheanum Icons</b>. WOFF/WOFF2 sind Web-Dateien und lassen sich nicht installieren.</p>
+  </div>
+</main>
+</body>
+</html>

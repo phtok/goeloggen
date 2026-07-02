@@ -3,7 +3,7 @@
    -----------------------------------------------------------------------------
    WORTGETREU aus dem bisherigen Logo-Generator übernommen (garantiert identische
    Logos). Datenblöcke (GLYPHS, ICON, ONELOGO, TRILINE) sind Pfad-Daten; die
-   Logik (textToPath, genSVG …) ist die bewährte. Setzt ORGS/CATS aus
+   Logik (textToPath, genSVG …) ist die bewährte. Setzt ORGS/CATS aus assets/goe-orgs.js (frueher data/goetheanum-orgs.js)
    assets/data/goetheanum-orgs.js voraus (vorher laden).
 
    Öffentliche API am Ende: window.LogoEngine.

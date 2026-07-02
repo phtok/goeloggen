@@ -22,44 +22,90 @@
   .tile{position:relative;display:flex;flex-direction:column;gap:var(--s3);border:1px solid var(--line);
     border-radius:var(--r-card);padding:var(--s6);background:var(--paper);text-decoration:none;color:var(--ink);
     transition:border-color .15s,box-shadow .15s,transform .15s}
-  .tile.is-live{background:var(--soft)}
   .tile:hover{border-color:var(--gold-ink);box-shadow:var(--shadow-card);transform:translateY(-1px)}
   .tile h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:20px;line-height:1.15;display:flex;align-items:center;gap:9px;margin:0}
   .tile h3 .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s,color .15s}
   .tile:hover h3 .arr{color:var(--gold-ink);transform:translateX(3px)}
-  /* .badge-Aussehen kommt aus base.css – hier nur die Platzierung in der Kachel. */
-  .badge{position:absolute;top:var(--s4);right:var(--s4)}
+
+  /* Kleiner, feiner Hinweis über dem Karussell. */
+  .discover{font-size:var(--t-small);letter-spacing:.07em;color:var(--gold-ink);margin:0 0 var(--s3)}
 
   /* Greifbare Mini-Werkzeuge je Karte – das Erzeugnis als Erkennungszeichen. */
-  .tile .thumb{height:96px;display:grid;place-items:center;border-radius:10px;background:var(--paper);
+  .thumb{height:96px;display:grid;place-items:center;border-radius:10px;background:var(--paper);
     border:1px solid var(--line-soft);overflow:hidden}
-  .tile .thumb img{height:46px;width:auto;display:block}
+  .thumb img{height:46px;width:auto;display:block}
   /* Buchstaben-Probe (Schriften) */
-  .tile .spec{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:46px;line-height:1;color:var(--ink);letter-spacing:.02em}
+  .thumb .spec{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:46px;line-height:1;color:var(--ink);letter-spacing:.02em}
   /* Visitenkarte */
-  .tile .vk{width:58px;height:37px;border:1.6px solid var(--muted);border-radius:4px;display:grid;align-content:center;gap:5px;padding:8px}
-  .tile .vk i{display:block;height:2px;background:var(--muted);border-radius:2px}
-  .tile .vk i:nth-child(1){width:64%}.tile .vk i:nth-child(2){width:42%}
+  .thumb .vk{width:58px;height:37px;border:1.6px solid var(--muted);border-radius:4px;display:grid;align-content:center;gap:5px;padding:8px}
+  .thumb .vk i{display:block;height:2px;background:var(--muted);border-radius:2px}
+  .thumb .vk i:nth-child(1){width:64%}.thumb .vk i:nth-child(2){width:42%}
   /* Signatur-Block: blaue Kante + Zeilen (wie die echte Trennlinie) */
-  .tile .sig{display:flex;gap:10px;align-items:center}
-  .tile .sig>b{width:3px;height:40px;background:var(--blue);border-radius:2px;display:block}
-  .tile .sig>span{display:grid;gap:6px}
-  .tile .sig i{display:block;height:2.5px;background:var(--muted);border-radius:2px}
-  .tile .sig i:nth-child(1){width:56px}.tile .sig i:nth-child(2){width:40px}.tile .sig i:nth-child(3){width:48px}
+  .thumb .sig{display:flex;gap:10px;align-items:center}
+  .thumb .sig>b{width:3px;height:40px;background:var(--blue);border-radius:2px;display:block}
+  .thumb .sig>span{display:grid;gap:6px}
+  .thumb .sig i{display:block;height:2.5px;background:var(--muted);border-radius:2px}
+  .thumb .sig i:nth-child(1){width:56px}.thumb .sig i:nth-child(2){width:40px}.thumb .sig i:nth-child(3){width:48px}
   /* Webfont: Schrift im Browser-Fenster */
-  .tile .win{width:78px;height:58px;border:1.6px solid var(--muted);border-radius:6px;position:relative;display:grid;place-items:center;overflow:hidden}
-  .tile .win>b{position:absolute;top:0;left:0;right:0;height:14px;background:var(--line-soft);border-bottom:1.4px solid var(--muted)}
-  .tile .win>em{font-family:var(--font-display);font-weight:var(--w-deutlich);font-style:normal;font-size:26px;color:var(--ink);margin-top:11px}
+  .thumb .win{width:78px;height:58px;border:1.6px solid var(--muted);border-radius:6px;position:relative;display:grid;place-items:center;overflow:hidden}
+  .thumb .win>b{position:absolute;top:0;left:0;right:0;height:14px;background:var(--line-soft);border-bottom:1.4px solid var(--muted)}
+  .thumb .win>em{font-family:var(--font-display);font-weight:var(--w-deutlich);font-style:normal;font-size:26px;color:var(--ink);margin-top:11px}
   /* Typografie: gesetzter Absatz, erste Zeile als goldene Überschrift */
-  .tile .para{display:grid;gap:6px;width:66px}
-  .tile .para i{display:block;height:3px;border-radius:2px;background:var(--muted)}
-  .tile .para i:nth-child(1){background:var(--gold-ink);width:72%;height:4.5px}
-  .tile .para i:nth-child(2){width:100%}.tile .para i:nth-child(3){width:100%}.tile .para i:nth-child(4){width:60%}
+  .thumb .para{display:grid;gap:6px;width:66px}
+  .thumb .para i{display:block;height:3px;border-radius:2px;background:var(--muted)}
+  .thumb .para i:nth-child(1){background:var(--gold-ink);width:72%;height:4.5px}
+  .thumb .para i:nth-child(2){width:100%}.thumb .para i:nth-child(3){width:100%}.thumb .para i:nth-child(4){width:60%}
   /* Design-System: Farbfelder */
-  .tile .sw{display:flex;gap:9px}
-  .tile .sw i{width:20px;height:20px;border-radius:5px;display:block}
+  .thumb .sw{display:flex;gap:9px}
+  .thumb .sw i{width:20px;height:20px;border-radius:5px;display:block}
+  /* Design-System: Mini-Bauplan – Struktur (Leiste, Zeilen) + Farbe (Chips) */
+  .thumb .sys{display:grid;gap:6px;width:122px}
+  .thumb .sys .bar{height:13px;border-radius:4px;background:var(--blue)}
+  .thumb .sys .ln{height:7px;border-radius:3px;background:var(--line)}
+  .thumb .sys .ln.s{width:60%}
+  .thumb .sys .chips{display:flex;gap:6px;margin-top:3px}
+  .thumb .sys .chips i{width:18px;height:18px;border-radius:5px;display:block}
   /* Icons: drei Piktogramme aus dem Icon-Webfont (currentColor – folgt Hell/Dunkel) */
-  .tile .icons{font-family:"G Icons";font-size:36px;line-height:1;color:var(--ink);display:flex;gap:14px}
+  .thumb .icons{font-family:"G Icons";font-size:36px;line-height:1;color:var(--ink);display:flex;gap:14px}
+  /* PowerPoint: eine Folie mit Titelzeile (statt mehrdeutigem „P") */
+  .thumb .ppt{width:76px;height:56px;border:1.6px solid var(--muted);border-radius:5px;display:grid;align-content:start;gap:6px;padding:9px}
+  .thumb .ppt b{display:block;height:7px;width:62%;background:var(--gold-ink);border-radius:2px}
+  .thumb .ppt i{display:block;height:3px;background:var(--muted);border-radius:2px}
+  .thumb .ppt i:nth-child(2){width:100%}.thumb .ppt i:nth-child(3){width:76%}
+  /* Übersetzungen: vier Sprach-Marken */
+  .thumb .tr{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+  .thumb .tr i{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:15px;font-style:normal;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 9px}
+
+  /* Entdecker-Karussell – Hinweis auf weniger Bekanntes, oben über den Karten. */
+  .carousel{position:relative;margin-bottom:var(--s8);border:1px solid var(--line);
+    border-radius:var(--r-card);background:var(--soft);overflow:hidden}
+  .carousel .track{display:flex;transition:transform .45s ease}
+  @media(prefers-reduced-motion:reduce){.carousel .track{transition:none}}
+  .carousel .slide{flex:0 0 100%;min-width:0;box-sizing:border-box;display:flex;
+    align-items:center;justify-content:center;gap:var(--s6);
+    padding:var(--s6) clamp(var(--s6),5vw,var(--s8));text-decoration:none;color:var(--ink)}
+  .carousel .slide .thumb{width:132px;height:104px;flex:0 0 auto}
+  .carousel .slide .copy{min-width:0;max-width:520px}
+  .carousel .slide .kick{color:var(--gold-ink);font-size:var(--t-small);letter-spacing:.04em}
+  .carousel .slide h2{font-family:var(--font-display);font-weight:var(--w-deutlich);
+    font-size:clamp(21px,3vw,29px);line-height:1.1;margin:2px 0 0}
+  .carousel .slide p{color:var(--muted);max-width:54ch;margin:6px 0 0;line-height:1.5}
+  .carousel .slide .go{display:inline-block;margin-top:10px;color:var(--gold-ink);font-weight:var(--w-deutlich)}
+  .carousel .arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;
+    border-radius:var(--r-pill);border:1px solid var(--line);background:var(--paper);color:var(--ink);
+    cursor:pointer;display:grid;place-items:center;font-size:20px;line-height:1;padding:0;z-index:2}
+  .carousel .arrow:hover{border-color:var(--gold-ink);color:var(--gold-ink)}
+  .carousel .arrow.l{left:12px}.carousel .arrow.r{right:12px}
+  .carousel .dots{position:absolute;bottom:11px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:2}
+  .carousel .dots button{width:8px;height:8px;border-radius:var(--r-pill);border:0;background:var(--line);
+    cursor:pointer;padding:0;transition:width .2s,background .2s}
+  .carousel .dots button.on{background:var(--gold-deep);width:22px}
+  @media(max-width:560px){
+    .carousel .slide{flex-direction:column;align-items:flex-start;gap:var(--s4);padding:var(--s6)}
+    .carousel .slide .thumb{width:100%;height:120px}
+    .carousel .slide .copy{max-width:none}
+    .carousel .arrow{display:none}
+  }
 </style>
 </head>
 <body>
@@ -67,22 +113,32 @@
 <script src="design-system/nav.js" data-root="./" data-active="start"></script>
 
 <main class="wrap">
+  <section class="carousel" id="carousel" aria-roledescription="Karussell" aria-label="Entdecken" hidden></section>
   <div class="grid" id="cards"></div>
 </main>
 
 <footer class="ds-footer">
   <div class="wrap frow">
     <span><strong>Goetheanum</strong> · Werkzeuge für die Hausgrafik</span>
-    <span>Allgemeine Anthroposophische Gesellschaft · <a href="https://www.goetheanum.org">goetheanum.org</a></span>
+    <span>Allgemeine Anthroposophische Gesellschaft · <a href="https://www.goetheanum.ch">goetheanum.ch</a></span>
   </div>
 </footer>
 
 <script>
 "use strict";
 (function(){
-  // Öffentliche Werkzeuge, in Welt-Reihenfolge; live vor beta. Nur die Karten.
-  var CATS = ["generatoren", "schrift", "system"];
-  var STATUS_LABEL = { beta:"in Überarbeitung" };
+  // Karten flach nach Priorität (keine Kategorien); Unbekannte ans Ende.
+  // Webfont wohnt jetzt in Schriften, Zeichen in Logos – darum keine eigene Karte.
+  var ORDER = ["logo-generator","signatur","visitenkarten","icons","schriften",
+    "sektionsfarben","uebersetzungen","wallpaper","powerpoint",
+    "typografie","design-system"];
+  // Entdecker-Karussell: ausgewählte Werkzeuge, je ein Teaser.
+  var DISCOVER = [
+    {slug:"wallpaper",      line:"Elf Goetheanum-Hintergründe für den Desktop, frei zum Herunterladen."},
+    {slug:"schriften",      line:"Sechs Schnitte von Flüstern bis Schreien, Variable Font und Icon-Satz."},
+    {slug:"powerpoint",     line:"Präsentationsvorlage im Hausbild – mit eingebetteten Schriften."},
+    {slug:"icons",          line:"45 Piktogramme als Webfont oder einzeln – per Taste gesetzt."}
+  ];
   // Greifbar: jedes Zeichen zeigt das DING, das das Werkzeug erzeugt.
   var VISUAL = {
     "logo-generator":  '<img src="assets/logos/goetheanum-mark-blue.svg" alt="">',           // die Marke
@@ -92,7 +148,12 @@
     "icons":           '<span class="icons" aria-hidden="true">gfx</span>',                     // drei Piktogramme (WLAN · Garderobe · Rollstuhl)
     "schrift-webfont": '<span class="win"><b></b><em>Aa</em></span>',                          // Schrift im Browser-Fenster
     "typografie":      '<span class="para"><i></i><i></i><i></i><i></i></span>',               // gesetzter Absatz
-    "design-system":   '<span class="sw"><i style="background:var(--blue)"></i><i style="background:var(--gold-deep)"></i><i style="background:var(--ink)"></i></span>' // Farbfelder
+    "design-system":   '<span class="sys"><i class="bar"></i><i class="ln"></i><i class="ln s"></i><span class="chips"><i style="background:var(--gold)"></i><i style="background:var(--sek-ms)"></i><i style="background:var(--gold-deep)"></i></span></span>', // Mini-Bauplan: Struktur + Farbe
+    "sektionsfarben":  '<span class="sw"><i style="background:var(--sek-szw)"></i><i style="background:var(--sek-lws)"></i><i style="background:var(--sek-ms)"></i><i style="background:var(--sek-js)"></i></span>', // vier Sektionsfarben
+    "zeichen":         '<span style="background:#fff;border-radius:8px;width:100%;height:100%;display:grid;place-items:center"><img src="assets/zeichen/hochschulzeichen.png" alt="" style="max-height:66px;max-width:78%"></span>', // Rudolf-Steiner-Zeichen auf weissem Papier
+    "wallpaper":       '<img src="assets/wallpaper/goetheanum-wallpaper-48.jpg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px">', // ein Motiv
+    "powerpoint":      '<span class="ppt"><b></b><i></i><i></i></span>', // eine Folie mit Titel
+    "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>' // vier Sprachen
   };
   function visual(t){
     var v = VISUAL[t.slug] || ('<span class="spec">' + (t.title || "?").slice(0, 1) + '</span>');
@@ -101,21 +162,78 @@
   function isExt(h){ return /^https?:/.test(h); }
   function tile(t){
     var a = document.createElement("a");
-    a.className = "tile" + (t.status === "live" ? " is-live" : "");
+    a.className = "tile";
     a.href = t.href;
     if (isExt(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
-    var badge = STATUS_LABEL[t.status] ? '<span class="badge">' + STATUS_LABEL[t.status] + '</span>' : "";
-    a.innerHTML = badge + visual(t) + '<h3>' + t.title + ' <span class="arr">›</span></h3>';
+    a.innerHTML = visual(t) + '<h3>' + t.title + ' <span class="arr">›</span></h3>';
     return a;
   }
-  function render(man){
-    var grid = document.getElementById("cards");
-    var tools = [];
-    CATS.forEach(function(cat){
-      (man.tools || []).filter(function(t){ return t.cat === cat && (t.status === "live" || t.status === "beta"); })
-        .sort(function(a,b){ return (a.status === "live" ? 0 : 1) - (b.status === "live" ? 0 : 1); })
-        .forEach(function(t){ tools.push(t); });
+  function buildCarousel(byslug){
+    var car = document.getElementById("carousel");
+    var items = DISCOVER.map(function(d){ return { d:d, t:byslug[d.slug] }; })
+                        .filter(function(x){ return x.t; });
+    if (items.length < 2) { car.remove(); return; }   // Karussell erst ab zwei Folien
+
+    // Kleiner, feiner Hinweis ÜBER dem Karussell (nicht je Folie).
+    car.insertAdjacentHTML("beforebegin", '<p class="discover">Schon entdeckt?</p>');
+
+    var track = document.createElement("div"); track.className = "track";
+    items.forEach(function(x){
+      var a = document.createElement("a"); a.className = "slide"; a.href = x.t.href;
+      if (isExt(x.t.href)) { a.target = "_blank"; a.rel = "noopener"; }
+      a.innerHTML = visual(x.t) +
+        '<span class="copy"><h2>' + x.t.title + '</h2><p>' + x.d.line + '</p>' +
+        '<span class="go">Ansehen ›</span></span>';
+      track.appendChild(a);
     });
+    var prev = document.createElement("button"); prev.className = "arrow l"; prev.type = "button"; prev.setAttribute("aria-label","Zurück"); prev.textContent = "‹";
+    var next = document.createElement("button"); next.className = "arrow r"; next.type = "button"; next.setAttribute("aria-label","Weiter"); next.textContent = "›";
+    var dots = document.createElement("div"); dots.className = "dots";
+    car.appendChild(track); car.appendChild(prev); car.appendChild(next); car.appendChild(dots);
+    car.hidden = false;
+
+    var i = 0, n = items.length, timer = null;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+    for (var k = 0; k < n; k++) {
+      (function(k){
+        var b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label","Folie " + (k+1));
+        b.addEventListener("click", function(){ go(k); start(); });
+        dots.appendChild(b);
+      })(k);
+    }
+    function paint(){
+      track.style.transform = "translateX(-" + (i*100) + "%)";
+      var ds = dots.children; for (var k = 0; k < ds.length; k++) ds[k].className = (k === i ? "on" : "");
+    }
+    function go(k){ i = (k + n) % n; paint(); }
+    function start(){ if (reduce) return; stop(); timer = setInterval(function(){ go(i+1); }, 6500); }
+    function stop(){ if (timer) { clearInterval(timer); timer = null; } }
+    prev.addEventListener("click", function(){ go(i-1); start(); });
+    next.addEventListener("click", function(){ go(i+1); start(); });
+    car.addEventListener("mouseenter", stop); car.addEventListener("mouseleave", start);
+    car.addEventListener("focusin", stop); car.addEventListener("focusout", start);
+    var x0 = null;
+    car.addEventListener("touchstart", function(e){ x0 = e.touches[0].clientX; stop(); }, {passive:true});
+    car.addEventListener("touchend", function(e){
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1));
+      x0 = null; start();
+    }, {passive:true});
+    paint(); start();
+  }
+
+  function render(man){
+    // Öffentliche Welten (Backstage wie schau/schriftpflege/statistik bleibt draussen).
+    var PUBLIC = ["generatoren", "schrift", "system", "anwendung"];
+    var tools = (man.tools || []).filter(function(t){
+      return PUBLIC.indexOf(t.cat) >= 0 && (t.status === "live" || t.status === "beta");
+    });
+    var byslug = {}; tools.forEach(function(t){ byslug[t.slug] = t; });
+    buildCarousel(byslug);
+    var rank = function(t){ var k = ORDER.indexOf(t.slug); return k < 0 ? 999 : k; };
+    tools.sort(function(a,b){ return rank(a) - rank(b); });
+    var grid = document.getElementById("cards");
     tools.forEach(function(t){ grid.appendChild(tile(t)); });
   }
   fetch("tools.json").then(function(r){ return r.json(); }).then(render).catch(function(){

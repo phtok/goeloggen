@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="de">
+<head>
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum – Sektionsfarben</title>
+<meta name="description" content="Die Identitätsfarben der Schul-Sektionen und der Bereiche mit Hex, RGB, HSB und CMYK (Richtwert) – klick-kopierbar. Marken- und Neutralfarben wohnen im Design-System." />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Farben/Schrift/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigenes Layout. */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  .hero{padding-block:60px 14px}
+  .lede{max-width:64ch;margin-top:var(--s4)}
+
+  .grp{margin-top:var(--s8)}
+  .grp > h2{font-size:var(--t-h3);font-family:var(--font);font-weight:var(--w-deutlich);margin-bottom:var(--s2)}
+  .grp > p{color:var(--muted);font-size:var(--t-small);max-width:62ch}
+
+  .tablecard{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);overflow-x:auto;margin-top:var(--s4)}
+  table{width:100%;border-collapse:collapse}
+  th,td{vertical-align:middle;text-align:left;padding:var(--s3) var(--s4);border-top:1px solid var(--line-soft)}
+  thead th{border-top:0;color:var(--muted);font-size:var(--t-small);font-weight:var(--w-text);white-space:nowrap}
+  tbody td{font-size:var(--t-small)}
+  td.val{cursor:copy;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.val:hover{background:var(--soft)}
+  .name{font-family:var(--font);font-weight:var(--w-deutlich);font-size:var(--t-body)}
+  .pend{color:var(--muted)}
+
+  .sw{width:42px;height:42px;border-radius:var(--r-control);border:1px solid var(--line);display:inline-block;vertical-align:middle}
+  td.swc{width:42px}
+
+  .fineprint{margin-top:var(--s8);color:var(--muted);font-size:var(--t-small);max-width:64ch}
+  .fineprint b{color:var(--ink);font-weight:var(--w-deutlich)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-section="system" data-active="sektionsfarben"
+        data-onpage="Sektionen:#sektionen|Bereiche:#bereiche"></script>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="kicker">Hausgrafik · Elemente</div>
+    <h1>Sektionsfarben</h1>
+    <p class="lede">Die Identitätsfarben der Schul-Sektionen und der Bereiche – Hex, RGB und HSB exakt
+      aus der Quelle (<code>assets/goe-orgs.js</code>, speist die Logo-Engine). Jede Zelle ist
+      klick-kopierbar. Marken- und Neutralfarben wohnen im
+      <a href="design-system/">Design-System</a>.</p>
+  </div>
+
+  <section class="grp" id="sektionen">
+    <h2>Sektionen</h2>
+    <p>Die Identitätsfarben der Sektionen der Freien Hochschule für Geisteswissenschaft. Markenfest –
+      sie kippen nicht mit Hell/Dunkel.</p>
+    <div class="tablecard"><table><thead><tr>
+      <th></th><th>Sektion</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th>
+    </tr></thead><tbody id="sektionen-body"></tbody></table></div>
+  </section>
+
+  <section class="grp" id="bereiche">
+    <h2>Bereiche</h2>
+    <p>Die Bereiche tragen den Standard – Markenblau – oder eine eigene Bereichsfarbe.</p>
+    <div class="tablecard"><table><thead><tr>
+      <th></th><th>Bereich</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th>
+    </tr></thead><tbody id="bereiche-body"></tbody></table></div>
+  </section>
+
+  <p class="fineprint">
+    <b>Hex · RGB · HSB</b> sind aus der Quelle errechnet und verbindlich für Bildschirm/Web.
+    <b>CMYK</b> ist ein <b>rechnerischer Richtwert</b> (sRGB→CMYK, geräteabhängig) – <b>nicht</b> der
+    verbindliche Druckwert; die offiziellen Druck-CMYK-Werte folgen aus dem Marken-Handbuch.
+    Korrigieren = die Quelle bearbeiten
+    (<a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-orgs.js">goe-orgs.js</a>).
+  </p>
+</main>
+
+<div class="toast" id="toast" style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--on-accent);padding:8px 16px;border-radius:var(--r-pill);font-size:var(--t-small);opacity:0;transition:opacity .2s;pointer-events:none;z-index:60"></div>
+
+<script src="assets/goe-orgs.js"></script>
+<script>
+(function(){
+  "use strict";
+  function $(s,r){return (r||document).querySelector(s);}
+
+  // --- Farbwert-Umrechnung aus dem Hex (eine Quelle: der goe-orgs-Hex) -------
+  function hexToRgb(hex){
+    var h=hex.replace("#","");
+    if(h.length===3) h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    return {r:parseInt(h.slice(0,2),16), g:parseInt(h.slice(2,4),16), b:parseInt(h.slice(4,6),16)};
+  }
+  function rgbToHsb(r,g,b){
+    r/=255; g/=255; b/=255;
+    var max=Math.max(r,g,b), min=Math.min(r,g,b), d=max-min, h=0;
+    if(d!==0){
+      if(max===r) h=((g-b)/d)%6;
+      else if(max===g) h=(b-r)/d+2;
+      else h=(r-g)/d+4;
+      h*=60; if(h<0) h+=360;
+    }
+    var s=max===0?0:d/max;
+    return {h:Math.round(h), s:Math.round(s*100), b:Math.round(max*100)};
+  }
+  function rgbToCmyk(r,g,b){
+    r/=255; g/=255; b/=255;
+    var k=1-Math.max(r,g,b);
+    if(k===1) return {c:0,m:0,y:0,k:100};
+    var c=(1-r-k)/(1-k), m=(1-g-k)/(1-k), y=(1-b-k)/(1-k);
+    return {c:Math.round(c*100), m:Math.round(m*100), y:Math.round(y*100), k:Math.round(k*100)};
+  }
+
+  function copy(txt){
+    if(navigator.clipboard) navigator.clipboard.writeText(txt);
+    var t=$("#toast"); t.textContent="„"+txt+"“ kopiert"; t.style.opacity="1";
+    setTimeout(function(){t.style.opacity="0";},1100);
+  }
+  function valCell(txt){
+    var td=document.createElement("td");
+    td.className="val"; td.textContent=txt; td.title="Klick kopiert";
+    td.addEventListener("click",function(){copy(txt);});
+    return td;
+  }
+
+  function row(tbody, hex, name){
+    var rgb=hexToRgb(hex), hsb=rgbToHsb(rgb.r,rgb.g,rgb.b), cmyk=rgbToCmyk(rgb.r,rgb.g,rgb.b);
+    var tr=document.createElement("tr");
+    var swc=document.createElement("td"); swc.className="swc";
+    var sw=document.createElement("span"); sw.className="sw"; sw.style.background=hex; swc.appendChild(sw);
+    tr.appendChild(swc);
+    var nc=document.createElement("td");
+    nc.innerHTML='<span class="name"></span>'; nc.querySelector(".name").textContent=name;
+    tr.appendChild(nc);
+    tr.appendChild(valCell(hex.toUpperCase()));
+    tr.appendChild(valCell(rgb.r+", "+rgb.g+", "+rgb.b));
+    tr.appendChild(valCell(hsb.h+"°, "+hsb.s+"%, "+hsb.b+"%"));
+    tr.appendChild(valCell(cmyk.c+", "+cmyk.m+", "+cmyk.y+", "+cmyk.k));
+    tbody.appendChild(tr);
+  }
+
+  function renderGroup(catKey, bodyId){
+    var O=window.GOE_GCI_ORGS, C=window.GOE_GCI_CATS, body=$("#"+bodyId);
+    if(!O||!C||!C[catKey]||!body) return;
+    C[catKey].items.forEach(function(k){
+      var o=O[k]; if(!o||!o.color) return;
+      row(body, o.color, o.name_de);
+    });
+  }
+  function render(){
+    renderGroup("sektionen","sektionen-body");
+    renderGroup("bereiche","bereiche-body");
+  }
+  if(document.readyState!=="loading") render();
+  else document.addEventListener("DOMContentLoaded", render);
+})();
+</script>
+</body>
+</html>

@@ -12,9 +12,9 @@
 <style>
   /* Übersicht-spezifisch (Hero, Karten-Raster, Werkstatt-Liste) */
   .hero{padding:clamp(48px,9vw,96px) 0 var(--s8)}
-  .hero .kick{color:var(--gold-deep);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:var(--s4)}
+  .hero .kick{color:var(--gold-ink);font-size:var(--t-small);letter-spacing:.08em;margin-bottom:var(--s4)}
   .hero h1{font-family:var(--font);font-weight:700;font-size:clamp(34px,6.4vw,64px);line-height:1.02;letter-spacing:-.01em;max-width:16ch}
-  .hero .lede{margin-top:var(--s6);color:#565b60;font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+  .hero .lede{margin-top:var(--s6);color:var(--ink);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
   .hero .meta{margin-top:var(--s8);display:flex;gap:var(--s2);flex-wrap:wrap}
 
   .grid{display:grid;gap:var(--s4);grid-template-columns:1fr}
@@ -24,15 +24,15 @@
         background:var(--paper);transition:border-color .15s,box-shadow .15s,transform .15s;min-height:148px}
   .tile:hover{border-color:var(--gold);box-shadow:var(--shadow-card);transform:translateY(-1px)}
   .tile.is-live{background:var(--soft)}
-  .tile .tag{color:var(--gold-deep);font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:var(--s2)}
+  .tile .tag{color:var(--gold-ink);font-size:var(--t-micro);letter-spacing:.06em;margin-bottom:var(--s2)}
   .tile h3{font-family:var(--font);font-weight:var(--w-strong);font-size:19px;line-height:1.15;display:flex;align-items:center;gap:8px}
   .tile h3 .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s,color .15s}
   .tile:hover h3 .arr{color:var(--gold-deep);transform:translateX(3px)}
   .tile p{margin-top:var(--s2);color:var(--muted);font-size:14px;line-height:1.5}
-  .badge{position:absolute;top:var(--s4);right:var(--s4);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;
+  .badge{position:absolute;top:var(--s4);right:var(--s4);font-size:var(--t-micro);letter-spacing:.04em;
          color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:2px 9px}
-  .badge.beta{color:var(--blue);border-color:rgba(0,97,169,.3)}
-  .badge.entwurf{color:var(--gold-deep);border-color:rgba(160,122,51,.3)}
+  .badge.beta{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 30%,transparent)}
+  .badge.entwurf{color:var(--gold-ink);border-color:color-mix(in srgb,var(--gold) 30%,transparent)}
   .badge.geparkt{color:var(--muted)}
 
   .list{display:grid;gap:0;grid-template-columns:1fr}
@@ -40,7 +40,7 @@
   .row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s4);padding:var(--s3) 0;border-top:1px solid var(--line-soft)}
   .row:hover .rt{color:var(--gold-deep)}
   .rt{font-family:var(--font);font-weight:var(--w-strong);font-size:15px}
-  .rd{color:var(--muted);font-size:13px;text-align:right;flex:1 1 auto}
+  .rd{color:var(--muted);font-size:var(--t-small);text-align:right;flex:1 1 auto}
 </style>
 </head>
 <body>
@@ -68,7 +68,7 @@
 
 <footer class="ds-footer"><div class="wrap frow">
   <span><strong>Goetheanum Grafik</strong> · Werkzeuge für die Hausgrafik</span>
-  <span>Allgemeine Anthroposophische Gesellschaft · <a href="https://www.goetheanum.org">goetheanum.org</a></span>
+  <span>Allgemeine Anthroposophische Gesellschaft · <a href="https://www.goetheanum.ch">goetheanum.ch</a></span>
 </div></footer>
 
 <script>

@@ -6,12 +6,13 @@
 
   "geltungsbereich": {
     "prüfe": "versionierte *.html mit einem <body> (publizierte Werkzeug- und Schau-Seiten)",
-    "ausgenommen_substr": ["/assets/", "/tools/goetheanum-fontfix/", "archive/", "vendor/"],
+    "ausgenommen_substr": ["/assets/", "/tools/goetheanum-fontfix/", "archive/", "reference/", "vendor/"],
     "ausgenommen_dateien": ["design-system/navigation.html"],
     "weiterleitungs_stubs": "Root-Stubs ohne eigenes <style>/<link> (reine Redirects) werden übersprungen."
   },
 
   "includes": {
+    "regel": "Pflicht-Includes einbinden: tokens.css UND base.css (Reihenfolge: tokens VOR base; nav.css zusätzlich für Seiten mit globaler Kopfzeile).",
     "pflicht": ["design-system/tokens.css", "design-system/base.css"],
     "hinweis": "Reihenfolge: tokens.css VOR base.css. nav.css zusätzlich für Seiten mit globaler Kopfzeile.",
     "ds_id": "DS01",
@@ -29,12 +30,12 @@
 
   "groessen": {
     "ds_id": "DS03",
-    "regel": "Keine lesbare Schrift unter den B03-Untergrenzen. font-size in px: Fliesstext ≥16, Meta/Label ≥14, nichts Lesbares <13.",
-    "untergrenze_px": 13,
-    "warnen_unter_px": 13,
+    "regel": "Keine lesbare Schrift unter den Untergrenzen (Stand 2026, inklusiv). font-size in px: Fliesstext ≥18, Meta/Label ≥15, nichts Lesbares <14.",
+    "untergrenze_px": 14,
+    "warnen_unter_px": 14,
     "schwere": "fehler",
     "warn_schwere": "hinweis",
-    "hinweis": "B03 exakt: <13px = fehler. 13px ist erlaubt (=--t-micro). Bevorzugt die fluiden Skala-Tokens (--t-body/--t-small/--t-micro/--t-lede/--t-h*) statt fester px."
+    "hinweis": "Floor von 13 auf 14 angehoben (16px-Norm ‹bei 16 beginnen, hochskalieren›). 14px erlaubt (=--t-micro). Bevorzugt die fluiden Skala-Tokens (--t-body/--t-small/--t-micro/--t-lede/--t-h*) statt fester px."
   },
 
   "rollen": {

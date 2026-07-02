@@ -24,8 +24,8 @@
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
 
   /* Kicker/Lede/Chip-Aussehen aus base.css – hier nur Specimen-Besonderheiten. */
-  .hero{padding:60px 0 14px}
-  .lede{font-family:"G Leise";max-width:600px;margin-top:var(--s4)}  /* Lede im Specimen in Leise */
+  .hero{padding-block:60px 14px}
+  .lede{max-width:600px;margin-top:var(--s4)}  /* Grösse/Schnitt/Farbe aus base.css (Klar – lesbar, nicht Leise) */
   .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
   .chip b{color:var(--gold-ink);font-weight:400}
 
@@ -55,14 +55,14 @@
   .cut .vtag{font-size:var(--t-micro);color:var(--gold-ink);border:1px solid var(--gold);border-radius:6px;padding:2px 6px}
   .office{display:flex;align-items:center;gap:14px;margin-top:24px;padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:var(--soft);font-size:14px;color:var(--muted)}
   .office>span{flex:1}.office b{color:var(--ink);font-weight:400}
-  .office::before{content:"⌘B ⌘I";font-size:13px;color:var(--gold-ink);border:1px solid var(--gold);border-radius:7px;padding:4px 8px;white-space:nowrap}
+  .office::before{content:"⌘B ⌘I";font-size:var(--t-small);color:var(--gold-ink);border:1px solid var(--gold);border-radius:7px;padding:4px 8px;white-space:nowrap}
 
   .glyph{font-size:clamp(19px,2.8vw,26px);line-height:1.7;color:var(--ink)}
   .new{display:inline-flex;gap:5px;flex-wrap:wrap;margin-top:14px}
   .new span{border:1px solid var(--line);border-radius:8px;min-width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;font-size:20px}
 
   .tabs{display:flex;gap:8px;margin-bottom:18px}
-  .tabs button{font:inherit;font-size:13px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+  .tabs button{font:inherit;font-size:var(--t-small);color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
   .tabs button.on{color:var(--gold-ink);border-color:var(--gold)}
   .igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(116px,1fr));gap:10px}
   .icell{position:relative;border:1px solid var(--line-soft);border-radius:12px;padding:14px 8px 10px;background:var(--soft);text-align:center;transition:border-color .15s,background .15s}
@@ -79,7 +79,7 @@
   @media(max-width:820px){.dl-cards{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:480px){.dl-cards{grid-template-columns:1fr}}
   .card{border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px}
-  .card h3{font-weight:400;font-size:16px}.card p{color:var(--muted);font-size:13px;flex:1}
+  .card h3{font-weight:400;font-size:16px}.card p{color:var(--muted);font-size:var(--t-small);flex:1}
   /* .btn (inkl. .primary, Hover) kommt vollständig aus base.css. */
 
   .webgrid{display:grid;grid-template-columns:1fr;gap:18px;align-items:start}
@@ -97,10 +97,10 @@
   .feat[open] summary::after{content:"–"}
   .feat[open] summary{border-bottom:1px solid var(--line-soft)}
   .featbody{padding:14px 18px 20px}
-  .featbody p{color:var(--muted);font-size:13.5px;max-width:62ch;margin:0 0 12px}
+  .featbody p{color:var(--muted);font-size:var(--t-small);max-width:62ch;margin:0 0 12px}
   .demo{font-size:clamp(22px,3.6vw,30px);line-height:1.5;color:var(--ink)}
   .glyphover{margin-top:22px;border:1px solid var(--line);border-radius:12px;padding:18px;background:var(--soft)}
-  .goh{font-size:13px;color:var(--muted);margin-bottom:12px}
+  .goh{font-size:var(--t-small);color:var(--muted);margin-bottom:12px}
   .gohrow{display:flex;flex-wrap:wrap;gap:8px}
   .gohrow span{min-width:52px;height:52px;border:1px solid var(--line);border-radius:9px;background:var(--paper);
     display:inline-flex;align-items:center;justify-content:center;font-size:26px}
@@ -113,19 +113,14 @@
 <body>
 
 <script src="design-system/nav.js" data-root="./" data-section="schrift" data-active="schriften"
-        data-onpage="Variabel:#variabel|Schnitte:#schnitte|Features:#features|Icons:#icons|Im Web:#web|Download:#download"></script>
+        data-cta="Download:#download"
+        data-onpage="Variabel:#variabel|Schnitte:#schnitte|Features:#features|Icons:#icons|Webfont:#web|Download:#download"></script>
 
 <main>
   <div class="wrap hero">
     <div class="kick">Hausschrift · Version 2.6</div>
     <h1>Goetheanum Schriften</h1>
     <p class="lede">Sechs Schnitte von Flüstern bis Schreien – dazu ein Variable Font und ein Icon-Satz. Repariert, vervollständigt, sauber gesetzt.</p>
-    <div class="meta">
-      <span class="chip"><b>4</b> Schnitte + Variabel</span>
-      <span class="chip"><b>Variabel</b> 190–725</span>
-      <span class="chip"><b>81</b> Icons</span>
-      <span class="chip">⌘B im Office</span>
-    </div>
   </div>
 
   <section id="variabel"><div class="wrap">
@@ -239,7 +234,7 @@
   </div></section>
 
   <section id="web"><div class="wrap">
-    <div class="shead"><h2>Im Web einbinden.</h2>
+    <div class="shead"><h2>Webfont einbinden.</h2>
       <p>Eine Datei, alle sechs Schnitte – der Variable Font ist nur 66&nbsp;KB. Den <code>@font-face</code>-Block kopieren, fertig.</p></div>
     <div class="webgrid">
       <pre class="code"><button class="copybtn" id="copyff">kopieren</button><code id="ffcode">@font-face{
@@ -254,7 +249,7 @@ body{ font-family:"Goetheanum", system-ui, sans-serif; }
 .frei{ font-variation-settings:"wght" 520 }  /* stufenlos */</code></pre>
       <div class="webaside">
         <p style="margin:0 0 12px">Schnitte über die Achse: <b>Flüstern 190 · Leise 265 · Klar 440 · Deutlich 580 · Laut 680 · Schreien 725</b> – dazwischen alles stufenlos.</p>
-        <p style="margin:0 0 16px;font-size:13px;color:var(--muted)">Lädt cross-origin von GitHub Pages. Für volle Kontrolle die Dateien aus dem Webfont-Ordner selbst hosten und die URLs umbiegen.</p>
+        <p style="margin:0 0 16px;font-size:var(--t-small);color:var(--muted)">Lädt cross-origin von GitHub Pages. Für volle Kontrolle die Dateien aus dem Webfont-Ordner selbst hosten und die URLs umbiegen.</p>
         <a class="btn primary" href="schrift-webfont.html">Demo &amp; Code-Schnipsel</a>
       </div>
     </div>
@@ -262,21 +257,25 @@ body{ font-family:"Goetheanum", system-ui, sans-serif; }
 
   <section id="download"><div class="wrap">
     <div class="shead"><h2>Download.</h2>
-      <p>OTF zum Installieren, Webfonts fürs Web, Icons einzeln oder als Set.</p></div>
+      <p>Nach Verwendung wählen, nicht nach Format. Installiert wird nur OTF (Design) oder TTF (Office) – Webfonts werden eingebunden, nie installiert.</p></div>
     <div class="dl-cards">
-      <div class="card"><h3>Komplettpaket</h3><p>Leise, Klar, Deutlich, Laut, Variable Font, Icons, Webfonts, Beipackzettel.</p>
-        <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Schriften-v2.6.zip" download>ZIP</a></div>
+      <div class="card"><h3>Office · Word &amp; PowerPoint</h3><p><b style="color:var(--ink);font-weight:400">Installieren.</b> TrueType, jeder Schnitt im Namen wählbar (Klar/Laut/Leise/Deutlich, Icons) und in der Datei einbettbar. Mit Beipackzettel im Set.</p>
+        <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Office-TTF.zip" download>TTF-Set</a>
+        <a class="btn" href="powerpoint.html">PowerPoint-Vorlagen →</a></div>
+      <div class="card"><h3>Design · InDesign &amp; Co.</h3><p><b style="color:var(--ink);font-weight:400">Installieren.</b> Die OTF-Familie ‹Goetheanum Schrift› (⌘B = Laut, ⌘I = Leise) und der Variable Font für die stufenlose Achse. Statische OTF-Schnitte im Komplettpaket.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.6.otf" download>Variable OTF</a></div>
+      <div class="card"><h3>Web · Entwickler</h3><p><b style="color:var(--ink);font-weight:400">Nicht installieren.</b> woff2 per <code>@font-face</code> einbinden – Anleitung mit Code-Schnipsel.</p>
+        <a class="btn" href="schrift-webfont.html">Web-Anleitung</a></div>
+      <div class="card"><h3>Komplettpaket</h3><p>Alles in einem: OTF, TTF, Variable, Webfonts, Icons, Vorlage, Beipackzettel.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Schriften-v2.6.zip" download>ZIP</a></div>
       <div class="card"><h3>Icons als Set</h3><p>81 Icons als SVG, PNG und PDF in einem Archiv.</p>
         <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Icons-v2.6-Einzeldateien.zip" download>Icon-ZIP</a></div>
-      <div class="card"><h3>Variable Font</h3><p>Eine Datei, Achse 190–725.</p>
-        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.6.otf" download>OTF</a></div>
       <div class="card"><h3>Beipackzettel</h3><p>Übersicht, Ligaturen &amp; Sonderzeichen, Tastatur-Belegung der Icons.</p>
         <a class="btn" href="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf" download>PDF</a></div>
     </div>
-    <p style="margin-top:18px;font-size:13px;color:var(--muted)">
-      <b style="color:var(--ink);font-weight:400">Installieren (macOS):</b> ZIP entpacken → Doppelklick auf eine <code>.otf</code> → ‹Installieren›.
-      Ausführliche Schritt-für-Schritt-Anleitung: <a style="color:var(--gold-ink)" href="https://support.apple.com/de-de/guide/font-book/fntbk1000/mac">Apple Schriftsammlung</a>.
-      Fürs Office reichen Leise, Klar, Deutlich, Laut – ⌘B holt Laut, ⌘I holt Leise.
+    <p style="margin-top:18px;font-size:var(--t-small);color:var(--muted)">
+      <b style="color:var(--ink);font-weight:400">Installieren:</b> Datei doppelklicken → ‹Installieren› (macOS Schriftsammlung / Windows Rechtsklick), dann das Programm neu starten.
+      <b style="color:var(--ink);font-weight:400">Nicht installierbar:</b> WOFF/WOFF2 sind Web-Dateien (nur <code>@font-face</code>); der Variable Font ist fürs Web/Design, nicht fürs Office.
     </p>
   </div></section>
 </main>
@@ -317,7 +316,7 @@ body{ font-family:"Goetheanum", system-ui, sans-serif; }
         var slug=it[0],label=it[1];
         var cell=document.createElement('div');cell.className='icell';
         cell.innerHTML=
-          '<img class="gl" src="'+BASE+'svg/'+slug+'.svg" alt="'+label+'" loading="lazy">'+
+          '<img class="gl ico-invert" src="'+BASE+'svg/'+slug+'.svg" alt="'+label+'" loading="lazy">'+
           '<div class="nm">'+label+'</div>'+
           '<div class="dl">'+
             '<a download href="'+BASE+'svg/'+slug+'.svg">SVG</a>'+

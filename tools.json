@@ -1,62 +1,391 @@
 {
   "$description": "Manifest aller Goetheanum-Grafik-Werkzeuge. Einzige Quelle für Front door (/) und internen Hub (start/). Neues Werkzeug = ein Eintrag hier. Pfade root-relativ; jede Oberfläche löst ihre Basis selbst auf (Hub voran './../', Front door ''). Externe Links (https) bleiben unverändert.",
   "status": {
-    "live":    "Im Einsatz, gepflegt",
-    "beta":    "Nutzbar, in Überarbeitung",
+    "live": "Im Einsatz, gepflegt",
+    "beta": "Nutzbar, in Überarbeitung",
     "entwurf": "Grober Entwurf",
     "geparkt": "Konzept, später"
   },
   "categories": [
-    { "id": "system",       "title": "Design-System", "intro": "Das Fundament – Farben, Schrift, Regeln und Komponenten. Hier nachschlagen und von hier aus neue Werkzeuge bauen." },
-    { "id": "generatoren",  "title": "Werkzeuge", "intro": "Eigene Angaben eintragen, fertiges Ergebnis übernehmen. Für den täglichen Gebrauch." },
-    { "id": "schrift",      "title": "Schrift & Typografie", "intro": "Die Hausschrift v2.6 und die Regeln dazu – nachschlagen, vergleichen, einbinden." },
-    { "id": "vorbereitung", "title": "In Vorbereitung", "intro": "In Arbeit – noch nicht für die Breite freigegeben. Intern sichtbar." },
-    { "id": "ligaturen",    "title": "Ligaturen", "intro": "Die Kiste nur für die Ligaturen – Werkschau, Überlagerung, Abstände." },
-    { "id": "schriftpflege","title": "Schriftpflege", "intro": "Begleit-Grotesk, Gewichte und Mischsatz prüfen und kalibrieren." },
-    { "id": "statistik",    "title": "Statistik", "intro": "Nutzungszahlen aller Werkzeuge – nur der Gebrauch legitimiert den Bau." },
-    { "id": "schau",        "title": "Schau & Mockups", "intro": "Präsentations-Mockups und Studien – kein öffentliches Werkzeug." },
-    { "id": "geparkt",      "title": "Geparkte Projekte", "intro": "Durchdachte Konzepte, die später kommen – zum schnellen Einsehen der Spezifikation." },
-    { "id": "archiv",       "title": "Archiv", "intro": "Frühere Stände – eingefroren zum Nachschlagen, nicht gepflegt." }
+    {
+      "id": "system",
+      "title": "Design-System",
+      "intro": "Das Fundament – Farben, Schrift, Regeln und Komponenten. Hier nachschlagen und von hier aus neue Werkzeuge bauen."
+    },
+    {
+      "id": "generatoren",
+      "title": "Werkzeuge",
+      "intro": "Eigene Angaben eintragen, fertiges Ergebnis übernehmen. Für den täglichen Gebrauch."
+    },
+    {
+      "id": "schrift",
+      "title": "Schrift & Typografie",
+      "intro": "Die Hausschrift v2.6 und die Regeln dazu – nachschlagen, vergleichen, einbinden."
+    },
+    {
+      "id": "anwendung",
+      "title": "Anwendungen",
+      "intro": "Fertige Vorlagen zum Übernehmen – Wallpaper, Präsentationen."
+    },
+    {
+      "id": "vorbereitung",
+      "title": "In Vorbereitung",
+      "intro": "In Arbeit – noch nicht für die Breite freigegeben. Intern sichtbar."
+    },
+    {
+      "id": "ligaturen",
+      "title": "Ligaturen",
+      "intro": "Die Kiste nur für die Ligaturen – Werkschau, Überlagerung, Abstände."
+    },
+    {
+      "id": "schriftpflege",
+      "title": "Schriftpflege",
+      "intro": "Begleit-Grotesk, Gewichte und Mischsatz prüfen und kalibrieren."
+    },
+    {
+      "id": "statistik",
+      "title": "Statistik",
+      "intro": "Nutzungszahlen aller Werkzeuge – nur der Gebrauch legitimiert den Bau."
+    },
+    {
+      "id": "schau",
+      "title": "Schau & Mockups",
+      "intro": "Präsentations-Mockups und Studien – kein öffentliches Werkzeug."
+    },
+    {
+      "id": "geparkt",
+      "title": "Geparkte Projekte",
+      "intro": "Durchdachte Konzepte, die später kommen – zum schnellen Einsehen der Spezifikation."
+    },
+    {
+      "id": "archiv",
+      "title": "Archiv",
+      "intro": "Frühere Stände – eingefroren zum Nachschlagen, nicht gepflegt."
+    }
   ],
   "tools": [
-    { "slug": "design-system",     "cat": "system",      "status": "beta",    "tag": "Fundament",     "title": "Design-System",      "href": "design-system/",               "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Mit Starter und Bau-Workflow." },
-
-    { "slug": "logo-generator",    "cat": "generatoren", "status": "live",    "tag": "Logo",          "title": "Logos",              "short": "Logos",         "href": "apps/logos/",                   "desc": "Sektions-, Bereichs- und Medienlogos in der Hausschrift – erklärt, mit Regeln, korrekt gesetzt und zum Herunterladen." },
-    { "slug": "visitenkarten",     "cat": "generatoren", "status": "live",    "tag": "Visitenkarten", "title": "Visitenkarten",      "short": "Visitenkarten", "href": "apps/visitenkarten-generator/", "desc": "Einheitliche Visitenkarten aus den eigenen Angaben – druckfertig, ohne Layoutprogramm." },
-    { "slug": "signatur",          "cat": "generatoren", "status": "live",    "tag": "E-Mail",        "title": "Signatur",           "short": "Signatur",      "href": "apps/signatur-generator/",      "desc": "Outlook-robuste E-Mail-Signatur nach gemeinsamer Vorlage – kopieren und einsetzen." },
-    { "slug": "gtv-naming",        "cat": "schau",       "status": "beta",    "tag": "Goetheanum TV", "title": "Namens-Renderings",  "short": "GTV-Namen",     "href": "apps/gtv-naming/",              "desc": "Mockup zur Vorbereitung der Goetheanum-TV-Umbenennung – kein öffentliches Werkzeug, eigene Welt." },
-    { "slug": "karten",            "cat": "vorbereitung", "status": "entwurf", "tag": "Campus",        "title": "Kartentool",         "short": "Karten",        "href": "apps/karten-generator/",        "desc": "Lagepläne des Goetheanum-Geländes zusammenstellen und im Hausbild ausgeben." },
-    { "slug": "cover",             "cat": "vorbereitung", "status": "entwurf", "tag": "Goetheanum TV", "title": "Cover-Generator",    "short": "Cover",         "href": "apps/cover-generator/",         "desc": "Einheitliche Cover-Bilder für Goetheanum-TV-Beiträge – Titel eintragen, Bild laden." },
-    { "slug": "briefschaften",     "cat": "vorbereitung", "status": "entwurf", "tag": "Korrespondenz", "title": "Briefschaften",      "short": "Briefe",        "href": "apps/briefschaften/",           "desc": "Briefbogen und Briefschaften im Hausbild – als Vorlage für die eigene Korrespondenz." },
-
-    { "slug": "schriften",         "cat": "schrift",     "status": "live",    "tag": "Übersicht",     "title": "Schriften",          "short": "Überblick",  "href": "schriften.html",               "desc": "Sechs Schnitte von Leise bis Laut, Variable Font und Icon-Satz – mit Download." },
-    { "slug": "icons",             "cat": "schrift",     "status": "live",    "tag": "Piktogramme",   "title": "Icons",              "short": "Icons",      "href": "icons.html",                   "desc": "45 benannte Piktogramme, Pfeile und Kompass – als Webfont per Taste oder einzeln als SVG, PNG und PDF." },
-    { "slug": "typografie",        "cat": "schrift",     "status": "beta",    "tag": "Hausregeln",    "title": "Typografie",         "short": "Typografie", "href": "typografie.html",              "desc": "Wenige Mittel, präzise gesetzt – als Handbuch und maschinenlesbares Token-System." },
-    { "slug": "schrift-webfont",   "cat": "schrift",     "status": "live",    "tag": "Web",           "title": "Webfont einbinden",  "short": "Webfont",    "href": "schrift-webfont.html",         "desc": "Die Goetheanum-Schrift als Webfont auf eigenen Seiten verwenden – Schritt für Schritt." },
-    { "slug": "schrift-vergleich", "cat": "schriftpflege",   "status": "beta",    "tag": "Grotesk",       "title": "Grotesk+",           "short": "Grotesk+",   "href": "schrift-vergleich.html",       "desc": "Begleit-Grotesk und Nicht-Latein-Fallbacks im direkten Vergleich zur Hausschrift." },
-    { "slug": "tester",            "cat": "schriftpflege",   "status": "beta",    "tag": "Probe",         "title": "Gewichts-Tester",    "short": "Tester",     "href": "tester.html",                  "desc": "Schnittstärken der Variable Font interaktiv durchspielen und Texte ausprobieren." },
-    { "slug": "vorschau",          "cat": "schrift",     "status": "entwurf",    "tag": "Neu in v2.6",   "title": "Neuerungen",         "short": "Neu",        "href": "vorschau.html",                "desc": "Spatien, geschützter Bindestrich, Ziffern-Features und der Mediävalziffern-Entwurf." },
-
-    { "slug": "ligvorschau",       "cat": "ligaturen",   "status": "entwurf", "tag": "Ligaturen",     "title": "Ligaturen – Werkschau","href": "ligvorschau.html",           "desc": "Alle Ligaturen im Überblick." },
-    { "slug": "ineinander",        "cat": "ligaturen",   "status": "entwurf", "tag": "Ligaturen",     "title": "Ligaturen ineinander","href": "ineinander.html",             "desc": "Überlagerung der Ligaturen prüfen." },
-    { "slug": "kerning",           "cat": "ligaturen",   "status": "entwurf", "tag": "Spacing",       "title": "Ligatur-Spacing",    "href": "kerning.html",                 "desc": "Abstände feinjustieren." },
-    { "slug": "werkzeug",          "cat": "schriftpflege",   "status": "entwurf", "tag": "Mischsatz",     "title": "Mischsatz",          "short": "Mischsatz",  "href": "werkzeug.html",                "desc": "Mischsatz aus Hausschrift und Begleit-Grotesk kalibrieren." },
-    { "slug": "statistik",         "cat": "statistik",   "status": "beta",    "tag": "Zahlen",        "title": "Statistik",          "href": "statistik.html",               "desc": "Anonyme Nutzungszahlen aller Werkzeuge." },
-
-    { "slug": "campus-karten",     "cat": "geparkt",     "status": "geparkt", "tag": "Kartierung",    "title": "Campus-Kartentool",  "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campus-kartentool-pflichtenheft.md", "desc": "Veranstaltungs-/Lagekarten des Geländes, A4 druckfertig. Pflichtenheft fertig, Bau steht aus." },
-    { "slug": "brand-portrait",    "cat": "geparkt",     "status": "geparkt", "tag": "KI / Porträt",  "title": "Brand-Portrait-Generator", "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_pflichtenheft.md", "desc": "KI-gestützte, markenkonforme Porträts. Eigener Schwerpunkt mit GPU-Infrastruktur." },
-    { "slug": "jahrgaenge",        "cat": "geparkt",     "status": "geparkt", "tag": "Sammlung",      "title": "Jahrgänge-Sammlung", "href": "https://github.com/phtok/goeloggen/blob/main/collections/jahrgaenge/README.md", "desc": "Produktionssammlung aus Jahrgängen (PDFs, Zeichnungen). Struktur vorbereitet." },
-    { "slug": "gtv-subs",          "cat": "geparkt",     "status": "geparkt", "tag": "Service",       "title": "GTV-Subs",           "href": "https://github.com/phtok/goeloggen/blob/main/services/gtv-subs/README.md", "desc": "Service-Skelett rund um Goetheanum TV. Platzhalter." },
-
-    { "slug": "logo-generator-alt", "cat": "archiv",     "status": "geparkt", "tag": "Archiv",        "title": "Logo-Generator (alt)", "short": "Logos alt",  "href": "archive/logo-generator-original_2026-06-27/", "desc": "Der ursprüngliche Logo-Generator, eingefroren als Referenz – dunkles UI, externe Schriften, nicht gepflegt." }
+    {
+      "slug": "design-system",
+      "cat": "system",
+      "status": "beta",
+      "tag": "Fundament",
+      "title": "Design-System",
+      "href": "design-system/",
+      "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Mit Starter und Bau-Workflow.",
+      "such": "Farben Palette Tokens Hex RGB CMYK Markenfarben Neutrale Komponenten Fundament"
+    },
+    {
+      "slug": "sektionsfarben",
+      "cat": "system",
+      "status": "beta",
+      "tag": "Elemente",
+      "title": "Sektionsfarben",
+      "href": "sektionsfarben.html",
+      "desc": "Die Identitätsfarben der Sektionen und Bereiche – mit Hex, RGB, HSB und CMYK (Richtwert), klick-kopierbar. Marken- und Neutralfarben wohnen im Design-System.",
+      "such": "Farben Identitätsfarben Sektionsfarben Bereichsfarben Hex RGB HSB CMYK Palette"
+    },
+    {
+      "slug": "wallpaper",
+      "cat": "anwendung",
+      "status": "live",
+      "tag": "Anwendungen",
+      "title": "Wallpaper",
+      "href": "wallpaper.html",
+      "desc": "Elf Desktop-Hintergründe des Goetheanum (2500 × 1406) zum Herunterladen.",
+      "such": "Wallpaper Hintergrund Desktop Bild"
+    },
+    {
+      "slug": "powerpoint",
+      "cat": "anwendung",
+      "status": "live",
+      "tag": "Anwendungen",
+      "title": "PowerPoint-Vorlagen",
+      "href": "powerpoint.html",
+      "desc": "Präsentationsvorlage (A4) im Hausbild mit eingebetteten Schriften – plus die TrueType-Schriften fürs Office zum Installieren.",
+      "such": "PowerPoint Präsentation Folien PPT Vorlage Keynote"
+    },
+    {
+      "slug": "logo-generator",
+      "cat": "generatoren",
+      "status": "live",
+      "tag": "Logo",
+      "title": "Logos",
+      "short": "Logos",
+      "href": "apps/logos/",
+      "desc": "Sektions-, Bereichs- und Medienlogos in der Hausschrift – erklärt, mit Regeln, korrekt gesetzt und zum Herunterladen.",
+      "such": "Logo Marke Sektionslogo Bereichslogo Medienlogo Zeichen"
+    },
+    {
+      "slug": "visitenkarten",
+      "cat": "generatoren",
+      "status": "live",
+      "tag": "Visitenkarten",
+      "title": "Visitenkarten",
+      "short": "Visitenkarten",
+      "href": "apps/visitenkarten-generator/",
+      "desc": "Einheitliche Visitenkarten aus den eigenen Angaben – druckfertig, ohne Layoutprogramm.",
+      "such": "Visitenkarte Karte Kontakt Druck"
+    },
+    {
+      "slug": "signatur",
+      "cat": "generatoren",
+      "status": "live",
+      "tag": "E-Mail",
+      "title": "Signatur",
+      "short": "Signatur",
+      "href": "apps/signatur-generator/",
+      "desc": "Outlook-robuste E-Mail-Signatur nach gemeinsamer Vorlage – kopieren und einsetzen.",
+      "such": "E-Mail Mail Outlook Signatur Fusszeile"
+    },
+    {
+      "slug": "uebersetzungen",
+      "cat": "generatoren",
+      "status": "beta",
+      "tag": "Übersetzungen",
+      "title": "Übersetzungen",
+      "short": "Übersetzungen",
+      "href": "uebersetzungen.html",
+      "desc": "Sektionen, Bereiche und institutionelle Begriffe in vier Sprachen – geprüft auf goetheanum.ch, durchsuchbar, klick-kopierbar. Für die Sekretariate.",
+      "such": "Übersetzung Sprachen Englisch Französisch Spanisch Begriffe Sektionen"
+    },
+    {
+      "slug": "gtv-naming",
+      "cat": "schau",
+      "status": "beta",
+      "tag": "Goetheanum TV",
+      "title": "Namens-Renderings",
+      "short": "GTV-Namen",
+      "href": "apps/gtv-naming/",
+      "desc": "Mockup zur Vorbereitung der Goetheanum-TV-Umbenennung – kein öffentliches Werkzeug, eigene Welt."
+    },
+    {
+      "slug": "karten",
+      "cat": "vorbereitung",
+      "status": "entwurf",
+      "tag": "Campus",
+      "title": "Kartentool",
+      "short": "Karten",
+      "href": "apps/karten-generator/",
+      "desc": "Lagepläne des Goetheanum-Geländes zusammenstellen und im Hausbild ausgeben."
+    },
+    {
+      "slug": "cover",
+      "cat": "vorbereitung",
+      "status": "entwurf",
+      "tag": "Goetheanum TV",
+      "title": "Cover-Generator",
+      "short": "Cover",
+      "href": "apps/cover-generator/",
+      "desc": "Einheitliche Cover-Bilder für Goetheanum-TV-Beiträge – Titel eintragen, Bild laden."
+    },
+    {
+      "slug": "briefschaften",
+      "cat": "vorbereitung",
+      "status": "entwurf",
+      "tag": "Korrespondenz",
+      "title": "Briefschaften",
+      "short": "Briefe",
+      "href": "apps/briefschaften/",
+      "desc": "Briefbogen und Briefschaften im Hausbild – als Vorlage für die eigene Korrespondenz."
+    },
+    {
+      "slug": "schriften",
+      "cat": "schrift",
+      "status": "live",
+      "tag": "Übersicht",
+      "title": "Schriften",
+      "short": "Überblick",
+      "href": "schriften.html",
+      "desc": "Sechs Schnitte von Leise bis Laut, Variable Font und Icon-Satz – mit Download.",
+      "such": "Schrift Font Hausschrift Variable Webfont Gewichte Icons"
+    },
+    {
+      "slug": "icons",
+      "cat": "schrift",
+      "status": "live",
+      "tag": "Piktogramme",
+      "title": "Icons",
+      "short": "Icons",
+      "href": "icons.html",
+      "desc": "45 benannte Piktogramme, Pfeile und Kompass – als Webfont per Taste oder einzeln als SVG, PNG und PDF.",
+      "such": "Icon Piktogramme Symbole Webfont Zeichen"
+    },
+    {
+      "slug": "typografie",
+      "cat": "schrift",
+      "status": "beta",
+      "tag": "Hausregeln",
+      "title": "Typografie",
+      "short": "Typografie",
+      "href": "typografie.html",
+      "desc": "Wenige Mittel, präzise gesetzt – als Handbuch und maschinenlesbares Token-System.",
+      "such": "Typografie Satz Regeln Hausregeln Mikrotypografie"
+    },
+    {
+      "slug": "schrift-vergleich",
+      "cat": "schriftpflege",
+      "status": "beta",
+      "tag": "Grotesk",
+      "title": "Grotesk+",
+      "short": "Grotesk+",
+      "href": "schrift-vergleich.html",
+      "desc": "Begleit-Grotesk und Nicht-Latein-Fallbacks im direkten Vergleich zur Hausschrift."
+    },
+    {
+      "slug": "tester",
+      "cat": "schriftpflege",
+      "status": "beta",
+      "tag": "Probe",
+      "title": "Gewichts-Tester",
+      "short": "Tester",
+      "href": "tester.html",
+      "desc": "Schnittstärken der Variable Font interaktiv durchspielen und Texte ausprobieren."
+    },
+    {
+      "slug": "vorschau",
+      "cat": "schrift",
+      "status": "entwurf",
+      "tag": "Neu in v2.6",
+      "title": "Neuerungen",
+      "short": "Neu",
+      "href": "vorschau.html",
+      "desc": "Spatien, geschützter Bindestrich, Ziffern-Features und der Mediävalziffern-Entwurf."
+    },
+    {
+      "slug": "ligvorschau",
+      "cat": "ligaturen",
+      "status": "entwurf",
+      "tag": "Ligaturen",
+      "title": "Ligaturen – Werkschau",
+      "href": "ligvorschau.html",
+      "desc": "Alle Ligaturen im Überblick."
+    },
+    {
+      "slug": "ineinander",
+      "cat": "ligaturen",
+      "status": "entwurf",
+      "tag": "Ligaturen",
+      "title": "Ligaturen ineinander",
+      "href": "ineinander.html",
+      "desc": "Überlagerung der Ligaturen prüfen."
+    },
+    {
+      "slug": "kerning",
+      "cat": "ligaturen",
+      "status": "entwurf",
+      "tag": "Spacing",
+      "title": "Ligatur-Spacing",
+      "href": "kerning.html",
+      "desc": "Abstände feinjustieren."
+    },
+    {
+      "slug": "werkzeug",
+      "cat": "schriftpflege",
+      "status": "entwurf",
+      "tag": "Mischsatz",
+      "title": "Mischsatz",
+      "short": "Mischsatz",
+      "href": "werkzeug.html",
+      "desc": "Mischsatz aus Hausschrift und Begleit-Grotesk kalibrieren."
+    },
+    {
+      "slug": "statistik",
+      "cat": "statistik",
+      "status": "beta",
+      "tag": "Zahlen",
+      "title": "Statistik",
+      "href": "statistik.html",
+      "desc": "Anonyme Nutzungszahlen aller Werkzeuge."
+    },
+    {
+      "slug": "campus-karten",
+      "cat": "geparkt",
+      "status": "geparkt",
+      "tag": "Kartierung",
+      "title": "Campus-Kartentool",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campus-kartentool-pflichtenheft.md",
+      "desc": "Veranstaltungs-/Lagekarten des Geländes, A4 druckfertig. Pflichtenheft fertig, Bau steht aus."
+    },
+    {
+      "slug": "brand-portrait",
+      "cat": "geparkt",
+      "status": "geparkt",
+      "tag": "KI / Porträt",
+      "title": "Brand-Portrait-Generator",
+      "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_pflichtenheft.md",
+      "desc": "KI-gestützte, markenkonforme Porträts. Eigener Schwerpunkt mit GPU-Infrastruktur."
+    },
+    {
+      "slug": "jahrgaenge",
+      "cat": "geparkt",
+      "status": "geparkt",
+      "tag": "Sammlung",
+      "title": "Jahrgänge-Sammlung",
+      "href": "https://github.com/phtok/goeloggen/blob/main/collections/jahrgaenge/README.md",
+      "desc": "Produktionssammlung aus Jahrgängen (PDFs, Zeichnungen). Struktur vorbereitet."
+    },
+    {
+      "slug": "gtv-subs",
+      "cat": "geparkt",
+      "status": "geparkt",
+      "tag": "Service",
+      "title": "GTV-Subs",
+      "href": "https://github.com/phtok/goeloggen/blob/main/services/gtv-subs/README.md",
+      "desc": "Service-Skelett rund um Goetheanum TV. Platzhalter."
+    },
+    {
+      "slug": "logo-generator-alt",
+      "cat": "archiv",
+      "status": "geparkt",
+      "tag": "Archiv",
+      "title": "Logo-Generator (alt)",
+      "short": "Logos alt",
+      "href": "archive/logo-generator-original_2026-06-27/",
+      "desc": "Der ursprüngliche Logo-Generator, eingefroren als Referenz – dunkles UI, externe Schriften, nicht gepflegt."
+    }
   ],
   "docs": [
-    { "title": "Strategieblatt & Wesensanalyse", "tag": "Strategie",    "href": "https://github.com/phtok/goeloggen/blob/main/docs/strategie.md", "desc": "Strategieblatt nach Neumeier, Fundament, Architektur, Fahrplan." },
-    { "title": "Campus-Kartentool – Pflichtenheft", "tag": "Spec",      "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campus-kartentool-pflichtenheft.md", "desc": "Vollständiges Pflichtenheft des Kartentools." },
-    { "title": "Brand-Portrait – Pflichtenheft", "tag": "Spec",        "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_pflichtenheft.md", "desc": "Konzept des KI-Porträt-Generators (MVP)." },
-    { "title": "Brand-Portrait – Backlog", "tag": "Backlog",           "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_backlog_mvp.md", "desc": "Epics, User-Stories, Sprint-Vorschlag." },
-    { "title": "Hausschrift v2.6 – Dokumentation", "tag": "Schrift",   "href": "https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/README.md", "desc": "Schnitte, Variable Font, Neuerungen in v2.6." },
-    { "title": "Hausschrift – Audit", "tag": "Schrift",                "href": "https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/AUDIT.md", "desc": "Reparatur- und Qualitätsaudit der Schrift." },
-    { "title": "Baustelle / Design-System", "tag": "Aufbau",          "href": "https://github.com/phtok/goeloggen/blob/main/start/README.md", "desc": "Wie das Design-System aufgebaut ist und wächst." }
+    {
+      "title": "Strategieblatt & Wesensanalyse",
+      "tag": "Strategie",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/strategie.md",
+      "desc": "Strategieblatt nach Neumeier, Fundament, Architektur, Fahrplan."
+    },
+    {
+      "title": "Campus-Kartentool – Pflichtenheft",
+      "tag": "Spec",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campus-kartentool-pflichtenheft.md",
+      "desc": "Vollständiges Pflichtenheft des Kartentools."
+    },
+    {
+      "title": "Brand-Portrait – Pflichtenheft",
+      "tag": "Spec",
+      "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_pflichtenheft.md",
+      "desc": "Konzept des KI-Porträt-Generators (MVP)."
+    },
+    {
+      "title": "Brand-Portrait – Backlog",
+      "tag": "Backlog",
+      "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_backlog_mvp.md",
+      "desc": "Epics, User-Stories, Sprint-Vorschlag."
+    },
+    {
+      "title": "Hausschrift v2.6 – Dokumentation",
+      "tag": "Schrift",
+      "href": "https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/README.md",
+      "desc": "Schnitte, Variable Font, Neuerungen in v2.6."
+    },
+    {
+      "title": "Hausschrift – Audit",
+      "tag": "Schrift",
+      "href": "https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/AUDIT.md",
+      "desc": "Reparatur- und Qualitätsaudit der Schrift."
+    },
+    {
+      "title": "Baustelle / Design-System",
+      "tag": "Aufbau",
+      "href": "https://github.com/phtok/goeloggen/blob/main/start/README.md",
+      "desc": "Wie das Design-System aufgebaut ist und wächst."
+    }
   ]
 }

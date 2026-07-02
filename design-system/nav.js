@@ -35,10 +35,14 @@
     try { var t = localStorage.getItem(THEME_KEY); if (t === "light" || t === "dark") return t; } catch (e) {}
     return prefersDark() ? "dark" : "light";
   }
+  // Sonne/Mond als Inline-SVG (currentColor) – NICHT als Unicode, das iOS sonst
+  // zu Emoji umfärbt. Deterministisch in Hell wie Dunkel.
+  var MOON_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="currentColor"><path d="M20.7 13.3A8 8 0 1 1 10.7 3.3a6.3 6.3 0 1 0 10 10Z"/></svg>';
+  var SUN_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.1M12 19.3v2.1M2.6 12h2.1M19.3 12h2.1M5.2 5.2l1.5 1.5M17.3 17.3l1.5 1.5M18.8 5.2l-1.5 1.5M6.7 17.3l-1.5 1.5"/></svg>';
   function updateThemeBtn() {
     if (!themeBtn) return;
     var dark = document.documentElement.getAttribute("data-theme") === "dark";
-    themeBtn.querySelector(".ic").textContent = dark ? "☀" : "☾";  // ☀ U+2600 / ☾ U+263E
+    themeBtn.querySelector(".ic").innerHTML = dark ? SUN_SVG : MOON_SVG;
     themeBtn.setAttribute("aria-label", dark ? "Hell schalten" : "Dunkel schalten");
     themeBtn.setAttribute("aria-pressed", String(dark));
   }
@@ -91,7 +95,9 @@
     { id: "schrift", label: "Schrift",
       intro: "Hausschrift und Regeln – ansehen, herunterladen, einbinden.", cats: ["schrift"] },
     { id: "elemente", label: "Elemente",
-      intro: "Farben, Logos, Design-System – nachschlagen und holen.", cats: ["system"] }
+      intro: "Farben, Zeichen, Logos, Design-System – nachschlagen und holen.", cats: ["system"] },
+    { id: "anwendungen", label: "Anwendungen",
+      intro: "Fertige Vorlagen zum Übernehmen – Wallpaper, Präsentationen.", cats: ["anwendung"] }
   ];
   // Nur intern zusätzlich – die Backstage-Welten (A/B/C-Qualifizierung).
   var INTERN_EXTRA = [
@@ -107,6 +113,11 @@
 
   function isIntern() { try { return localStorage.getItem(KEY) === "1"; } catch (e) { return false; } }
   function setIntern(v) { try { localStorage.setItem(KEY, v ? "1" : "0"); } catch (e) {} }
+  // Die Intern-/Backstage-Ansicht ist EINE Wahrheit – Werkzeuge können sie abfragen
+  // (window.goeIntern()) und auf Wechsel reagieren (Event „goe:intern"). So koppeln
+  // sich versteckte Profi-Optionen ans selbe Schloss wie die Backstage-Welten.
+  window.goeIntern = isIntern;
+  function emitIntern(on) { try { window.dispatchEvent(new CustomEvent("goe:intern", { detail: { on: on } })); } catch (e) {} }
 
   function el(tag, cls, html) {
     var e = document.createElement(tag);
@@ -142,18 +153,55 @@
   })();
 
   // --- Kopfzeile -------------------------------------------------------------
+  // Optionaler Seiten-CTA in der Kopfzeile: data-cta="Beschriftung:#anker"
+  // (Aktion = volles Blau + Weiss, B01). Immer sichtbar – keine Suchbewegung.
+  var CTA = (s && s.dataset.cta) || "";
+  var ctaHTML = "";
+  if (CTA) {
+    var ci = CTA.indexOf(":");
+    var clabel = ci > 0 ? CTA.slice(0, ci) : CTA;
+    var ctarget = ci > 0 ? CTA.slice(ci + 1) : "#";
+    ctaHTML = '<a class="cta" href="' + ctarget + '">' + clabel + '</a>';
+  }
   var header = el("header", "dsnav");
   header.innerHTML =
     '<div class="bar">' +
       '<a class="brand" href="' + HOME + '" aria-label="Goetheanum Werkzeuge – zur Übersicht">' +
         '<img class="lockup" src="' + ROOT + 'assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge">' +
       '</a>' +
-      '<nav class="worlds"></nav>' +
-      '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic">☾</span></button>' +
+      '<nav class="worlds"></nav>' + ctaHTML +
+      '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic"></span></button>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
     '</div>';
   document.body.insertBefore(header, document.body.firstChild);
+
+  // Optionale Seiten-Sprungleiste: data-onpage="Label:#anker|…". Sie sitzt UNTER
+  // dem Hero/der Lede (nicht über dem Titel) und klebt beim Scrollen unter der
+  // Kopfzeile. Auf jeder Breite sichtbar (auch mobil), horizontal scrollbar.
+  var ONPAGE = (s && s.dataset.onpage) || "";
+  if (ONPAGE) {
+    var sub = el("nav", "dsnav-onpage");
+    sub.setAttribute("aria-label", "Auf dieser Seite");
+    sub.innerHTML = '<div class="row">' + ONPAGE.split("|").map(function (pair) {
+      var ci = pair.indexOf(":");
+      var label = ci > 0 ? pair.slice(0, ci) : pair;
+      var anchor = ci > 0 ? pair.slice(ci + 1) : "#";
+      return '<a href="' + anchor + '">' + label + '</a>';
+    }).join("") + '</div>';
+    // Unter den Hero/die Lede hängen; wenn es keinen gibt, direkt unter die Kopfzeile.
+    // nav.js läuft oft VOR <main> – darum die Platzierung bis DOM-ready aufschieben.
+    var placeOnpage = function () {
+      var heroEl = document.querySelector("main .hero, .hero, main .lede");
+      (heroEl || header).insertAdjacentElement("afterend", sub);
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", placeOnpage);
+    } else {
+      placeOnpage();
+    }
+    document.documentElement.classList.add("has-onpage");
+  }
 
   var backdrop = el("div", "dsnav-backdrop");
   var drawer = el("aside", "dsnav-drawer");
@@ -162,10 +210,26 @@
   drawer.innerHTML =
     '<div class="dhead"><span class="t">Navigation</span>' +
       '<button class="close" type="button" aria-label="Schliessen">×</button></div>' +
+    '<div class="dsearch"><input type="search" class="dsnav-q" placeholder="Werkzeug suchen …" aria-label="Werkzeug suchen" autocomplete="off"></div>' +
     '<div class="body"></div>' +
-    '<div class="foot">Goetheanum Hausgrafik · <a href="' + ROOT + 'design-system/">Design-System</a></div>';
+    '<div class="foot"><a href="mailto:philipp.tok@goetheanum.ch?subject=Feedback%20Goetheanum%20Werkzeuge">Feedback geben</a> · <a href="' + ROOT + 'design-system/">Design-System</a></div>';
   document.body.appendChild(backdrop);
   document.body.appendChild(drawer);
+
+  // Globaler Beta-Einblender (unten, dezent, wegklickbar – merkt sich „gesehen").
+  var BETA_KEY = "goeBetaSeen";
+  var betaSeen = false; try { betaSeen = localStorage.getItem(BETA_KEY) === "1"; } catch (e) {}
+  if (!betaSeen) {
+    var beta = el("div", "dsnav-beta");
+    beta.innerHTML =
+      '<span class="t"><b>Beta</b> – die Werkzeuge wachsen noch.</span>' +
+      '<a class="fb" href="mailto:philipp.tok@goetheanum.ch?subject=Feedback%20Goetheanum%20Werkzeuge">Feedback geben</a>' +
+      '<button class="x" type="button" aria-label="Hinweis schliessen">×</button>';
+    document.body.appendChild(beta);
+    beta.querySelector(".x").addEventListener("click", function () {
+      beta.remove(); try { localStorage.setItem(BETA_KEY, "1"); } catch (e) {}
+    });
+  }
 
   var toast = el("div", "dsnav-toast"); document.body.appendChild(toast);
   function flash(msg) { toast.textContent = msg; toast.classList.add("show"); setTimeout(function () { toast.classList.remove("show"); }, 1400); }
@@ -180,6 +244,28 @@
   var drawerBody = drawer.querySelector(".body");
   var drawerTitle = drawer.querySelector(".dhead .t");
   var idot = btnAll.querySelector(".idot");
+  var searchInput = drawer.querySelector(".dsnav-q");
+
+  // Tippen filtert die Werkzeugliste; leere Bereiche werden ausgeblendet.
+  function applySearch() {
+    var q = (searchInput.value || "").trim().toLowerCase();
+    // Werkzeug-Links filtern (Startseite bleibt immer sichtbar).
+    var links = drawerBody.querySelectorAll(".dsnav-link:not(.dsnav-home)");
+    for (var j = 0; j < links.length; j++) {
+      var hay = (links[j].textContent + " " + (links[j].dataset.such || "")).toLowerCase();
+      var hit = !q || hay.indexOf(q) !== -1;
+      links[j].style.display = hit ? "" : "none";
+    }
+    // Bereiche (intern) ohne Treffer ausblenden, Treffer aufklappen.
+    var groups = drawerBody.querySelectorAll(".dsnav-group");
+    for (var i = 0; i < groups.length; i++) {
+      var gl = groups[i].querySelectorAll(".dsnav-link"), any = false;
+      for (var k = 0; k < gl.length; k++) { if (gl[k].style.display !== "none") any = true; }
+      groups[i].style.display = any ? "" : "none";
+      if (q) groups[i].open = true;
+    }
+  }
+  searchInput.addEventListener("input", applySearch);
 
   function openDrawer() { backdrop.classList.add("open"); drawer.classList.add("open"); btnAll.setAttribute("aria-expanded", "true"); }
   function closeDrawer() { backdrop.classList.remove("open"); drawer.classList.remove("open"); btnAll.setAttribute("aria-expanded", "false"); }
@@ -192,6 +278,7 @@
   function toggleIntern() {
     var now = !isIntern(); setIntern(now);
     renderDrawer();
+    emitIntern(now);
     flash(now ? "Intern-Ansicht: an" : "Intern-Ansicht: aus");
     if (now) openDrawer();
   }
@@ -221,6 +308,18 @@
     return null;
   }
 
+  function linkEl(t) {
+    var active = isActiveTool(t);
+    var a = el("a", "dsnav-link" + (active ? " is-active" : ""));
+    a.href = resolveHref(t.href);
+    if (isExternal(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
+    if (active) a.setAttribute("aria-current", "page");
+    // Suchbegriffe (Synonyme) fürs Filtern – „Farben" findet so auch das Design-System.
+    if (t.such) a.dataset.such = t.such;
+    a.innerHTML = '<span class="tt">' + t.title + '</span>';
+    return a;
+  }
+
   function groupEl(w, tools, open) {
     var g = el("details", "dsnav-group");
     g.setAttribute("data-world", w.id);
@@ -228,35 +327,44 @@
     // Das Menü koordiniert, es erklärt nicht: nur Titel, kein Beiwerk-Text.
     g.appendChild(el("summary", null,
       '<span class="ttl">' + w.label + '</span><span class="arr">›</span>'));
-    tools.forEach(function (t) {
-      var active = isActiveTool(t);
-      var a = el("a", "dsnav-link" + (active ? " is-active" : ""));
-      a.href = resolveHref(t.href);
-      if (isExternal(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
-      if (active) a.setAttribute("aria-current", "page");
-      a.innerHTML = '<span class="tt">' + t.title + '</span>';
-      g.appendChild(a);
-    });
+    tools.forEach(function (t) { g.appendChild(linkEl(t)); });
     return g;
   }
+
+  // Öffentliche Reihenfolge (flach) – wie die Startseite. Unbekannte ans Ende.
+  var FLAT_ORDER = ["logo-generator", "signatur", "visitenkarten", "icons", "schriften",
+    "sektionsfarben", "uebersetzungen", "wallpaper", "powerpoint", "typografie", "design-system"];
+  var PUBLIC_CATS = WORLDS.reduce(function (a, w) { return a.concat(w.cats); }, []);
 
   function renderDrawer() {
     var intern = isIntern();
     drawerBody.innerHTML = "";
     drawerTitle.textContent = intern ? "Alles · intern" : "Navigation";
     idot.hidden = !intern;
-    var cur = currentWorldId();
-    var groups = intern ? WORLDS.concat(INTERN_EXTRA) : WORLDS;
-    groups.forEach(function (w) {
-      var tools = ALL.filter(function (t) { return w.cats.indexOf(t.cat) !== -1; });
-      if (!intern) tools = tools.filter(function (t) { return t.status === "live" || t.status === "beta"; });
-      if (!tools.length) return;
-      // Offen: der Bereich der aktuellen Seite, sonst die öffentlichen Welten;
-      // Backstage-Welten bleiben eingeklappt (kurze, scannbare Liste).
-      var open = (w.id === cur) || (!intern && PUBLIC_IDS.indexOf(w.id) !== -1);
-      if (intern) open = (w.id === cur);
-      drawerBody.appendChild(groupEl(w, tools, open));
-    });
+
+    // Startseite immer ganz oben (nicht von der Suche gefiltert).
+    var home = el("a", "dsnav-link dsnav-home" + (ACTIVE === "start" ? " is-active" : ""));
+    home.href = HOME; home.innerHTML = '<span class="tt">Startseite</span>';
+    drawerBody.appendChild(home);
+
+    if (!intern) {
+      // FLACH: eine priorisierte Liste aller öffentlichen Werkzeuge, keine Bereiche.
+      var pub = ALL.filter(function (t) {
+        return PUBLIC_CATS.indexOf(t.cat) !== -1 && (t.status === "live" || t.status === "beta");
+      });
+      var rank = function (t) { var k = FLAT_ORDER.indexOf(t.slug); return k < 0 ? 999 : k; };
+      pub.sort(function (a, b) { return rank(a) - rank(b); });
+      pub.forEach(function (t) { drawerBody.appendChild(linkEl(t)); });
+    } else {
+      // intern: nach Backstage-Welten gruppiert (kurze, scannbare Bereiche).
+      var cur = currentWorldId();
+      WORLDS.concat(INTERN_EXTRA).forEach(function (w) {
+        var tools = ALL.filter(function (t) { return w.cats.indexOf(t.cat) !== -1; });
+        if (!tools.length) return;
+        drawerBody.appendChild(groupEl(w, tools, w.id === cur));
+      });
+    }
+    applySearch();
   }
 
   // --- Manifest laden --------------------------------------------------------

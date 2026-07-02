@@ -24,18 +24,18 @@
        hyphens:auto;-webkit-hyphens:auto}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
   a{color:var(--gold-ink)}
-  header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  header{position:sticky;top:0;z-index:30;background:var(--bar-bg);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
   .bar{display:flex;align-items:center;justify-content:space-between;height:58px}
   .brand img{height:34px;display:block}
   nav.top{display:flex;gap:22px}
-  nav.top a{color:var(--muted);text-decoration:none;font-size:13.5px}
+  nav.top a{color:var(--muted);text-decoration:none;font-size:var(--t-small)}
   nav.top a:hover{color:var(--gold-ink)}
-  .hero{padding:58px 0 8px}
+  .hero{padding-block:58px 8px}
   .kick{color:var(--gold-ink);font-size:14px;margin-bottom:14px}
   h1{text-wrap:balance}
   .lede{font-family:"G Klar";font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:48ch;margin-top:14px;text-wrap:pretty}
   section{padding:42px 0;border-top:1px solid var(--line-soft)}
-  .sec{color:var(--gold-ink);font-size:13px}
+  .sec{color:var(--gold-ink);font-size:var(--t-small)}
   /* Marginalspalte (System B): die Paragraphen-Marke wandert auf breiten Schirmen
      in eine eigene Randspalte, der Lesesatz bleibt unberührt bei seinem Mass. */
   @media(min-width:940px){
@@ -50,26 +50,26 @@
   .leise{font-family:"G Leise"}.deutlich{font-family:"G Deutlich"}.laut{font-family:"G Laut"}
   .note{display:flex;gap:10px;align-items:baseline;border-left:2px solid var(--gold);background:var(--soft);
         padding:10px 14px;border-radius:0 10px 10px 0;margin:14px 0;font-size:14px;color:var(--muted);max-width:39ch}
-  .note .rid{font-size:11px;color:var(--gold-ink);white-space:nowrap}
+  .note .rid{font-size:var(--t-small);color:var(--gold-ink);white-space:nowrap}
   .ex{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;max-width:640px}
   @media(max-width:560px){.ex{grid-template-columns:1fr}}
   .ex>div{border:1px solid var(--line-soft);border-radius:10px;padding:10px 14px;background:var(--soft);font-size:15px}
-  .ex .t{font-size:10.5px;letter-spacing:.02em;margin-bottom:4px}
+  .ex .t{font-size:var(--t-small);letter-spacing:.02em;margin-bottom:4px}
   .ex .no .t{color:var(--bad)} .ex .yes .t{color:var(--good)}
   code,.mono{font-family:ui-monospace,Menlo,monospace;font-size:.86em;background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 6px}
   .files{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0;max-width:760px}
   @media(max-width:640px){.files{grid-template-columns:1fr}}
   .file{border:1px solid var(--line);border-radius:12px;padding:16px}
   .file h4{font-family:"G Laut";font-weight:400;font-size:15px;margin-bottom:4px}
-  .file p{font-size:13.5px;color:var(--muted)}
-  .file a{font-size:13px}
+  .file p{font-size:var(--t-small);color:var(--muted)}
+  .file a{font-size:var(--t-small)}
   table.spick{border-collapse:collapse;width:100%;max-width:640px;font-size:14.5px;margin-top:14px}
-  .spick th{font-family:"G Laut";font-weight:400;text-align:left;font-size:12px;color:var(--muted);padding:6px 12px;border-bottom:1px solid var(--line)}
+  .spick th{font-family:"G Laut";font-weight:400;text-align:left;font-size:var(--t-small);color:var(--muted);padding:6px 12px;border-bottom:1px solid var(--line)}
   .spick td{padding:7px 12px;border-bottom:1px solid var(--line-soft)}
   .spick td.f{color:var(--bad)} .spick td.r{color:var(--ink)}
-  .spick tr td:first-child{color:var(--muted);font-size:13px}
+  .spick tr td:first-child{color:var(--muted);font-size:var(--t-small)}
   .credo{font-family:"G Klar";font-size:clamp(19px,2.4vw,26px);line-height:1.3;color:var(--ink);max-width:none;margin-top:28px;text-wrap:balance}
-  footer{border-top:1px solid var(--line);padding:30px 0 60px;color:var(--muted);font-size:12.5px}
+  footer{border-top:1px solid var(--line);padding:30px 0 60px;color:var(--muted);font-size:var(--t-small)}
 </style>
 </head>
 <body>
