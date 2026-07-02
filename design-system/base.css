@@ -116,7 +116,9 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 /* --- Segmentierte Auswahl (Pillen) = WAHL ---------------------------------- */
 /* Anwahl = Gold/Weiss – der Hausfarbklang für Auswahl. Kapselform, kein Pfeil. */
 .seg{display:flex;flex-wrap:wrap;gap:8px}
-.seg button{font:inherit;font-size:14.5px;padding:8px 15px;border:1px solid var(--line);border-radius:var(--r-pill);
+/* line-height:var(--lh-tight) statt geerbtem --lh-body (1.66, für Lesetext) –
+   sonst reisst ein zweizeiliges Pillen-Label (z. B. ‹SVG 48›) weit auseinander. */
+.seg button{font:inherit;font-size:14.5px;line-height:var(--lh-tight);padding:8px 15px;border:1px solid var(--line);border-radius:var(--r-pill);
   background:var(--field-bg);color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
 .seg button:hover{border-color:var(--gold-ink)}
 .seg button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent);font-weight:var(--w-strong)}
