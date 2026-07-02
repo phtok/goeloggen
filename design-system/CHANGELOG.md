@@ -18,6 +18,29 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### `.step-num` optisch nachjustiert · Links im Fliesstext sichtbar
+- **`.step-num` neu vermessen** (`base.css`): der erste Fix (line-height:1 +
+  Flex-Zentrierung) zentrierte die *Line Box*, nicht die Zeichen-Tinte – Nutzer-
+  Feedback bestätigte, dass Ziffern sichtbar zu hoch sassen. Per Pixel-Analyse
+  (Screenshot der echten Schrift, Tinten-Bounding-Box vs. geometrische Kreismitte)
+  UND Font-Metriken (hhea ascent 750/descent −250 vs. Ziffern-Tintenmitte ≈ 330/1000)
+  übereinstimmend auf **8 % `translateY`** des inneren Zahl-Elements bestimmt –
+  zwei unabhängige Methoden, ein Ergebnis. *Wirkung:* Ziffer sitzt jetzt tatsächlich
+  mittig, nicht nur nach CSS-Theorie.
+- **`.step-num` Gold als Hausfarbe**, `.blue` als benannte Ausnahme (vorher
+  umgekehrt). *Warum:* Gold ist bereits die Auswahl-/Markierungsfarbe im System
+  (Auswahl-Pille, `.seg button[aria-pressed]`) – zwei blaue Kugeln neben einer
+  goldenen wirkten wie ein Fehler, nicht wie Absicht. *Wirkung:* Schritt-Marken
+  sind einheitlich Gold; Blau bleibt für Vergleichsseiten verfügbar, die Alt/Neu
+  bewusst farblich trennen wollen.
+- **Links im Fliesstext sichtbar** (`base.css`): der globale Reset (`a{color:
+  inherit;text-decoration:none}`) machte Links in Absätzen/Listen/Hinweisen
+  farblich und optisch identisch mit umgebendem Text – ein Link in den
+  Logo-Hinweisen wurde dadurch für nicht vorhanden gehalten. *Wirkung:* `p a`,
+  `li a`, `.note a` etc. bekommen Gold + dezente Unterstreichung (DS05 nimmt
+  Links vom Unterstreich-Verbot ausdrücklich aus – das ist Link-Konvention,
+  keine Betonung).
+
 ### Feinschliff: Karussell zentriert · Such-Synonyme · PowerPoint-Bild
 - **Karussell-Inhalt zentriert** (Thumb + Text als Gruppe mittig) statt linksbündig.
 - **Suche mit Synonymen**: pro Werkzeug `such`-Begriffe in `tools.json`; die Menü-Suche
