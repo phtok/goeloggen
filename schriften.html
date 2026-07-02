@@ -100,6 +100,12 @@
   .featbody{padding:14px 18px 20px}
   .featbody p{color:var(--muted);font-size:var(--t-small);max-width:62ch;margin:0 0 12px}
   .demo{font-size:clamp(22px,3.6vw,30px);line-height:1.5;color:var(--ink)}
+  .numgrid{display:grid;grid-template-columns:1fr;gap:18px}
+  @media(min-width:680px){.numgrid{grid-template-columns:1.5fr 1fr}}
+  .numlbl{font-size:var(--t-micro);color:var(--muted);margin-bottom:8px;letter-spacing:.02em}
+  .numcmp{display:flex;gap:22px}
+  .numsub{font-size:var(--t-micro);color:var(--gold-ink);margin-bottom:4px}
+  .numcol{font-size:clamp(20px,2.6vw,26px);line-height:1.35;color:var(--ink);text-align:right}
   .glyphover{margin-top:22px;border:1px solid var(--line);border-radius:12px;padding:18px;background:var(--soft)}
   .goh{font-size:var(--t-small);color:var(--muted);margin-bottom:12px}
   .gohrow{display:flex;flex-wrap:wrap;gap:8px}
@@ -154,22 +160,22 @@
   </div></section>
 
   <section id="features"><div class="wrap">
-    <div class="shead"><h2>Neu in 2.7 &amp; Feinheiten.</h2>
-      <p>Neu der siebte Schnitt <b>Ruhig</b> – dazu die OpenType-Funktionen der Schrift, zum Aufklappen, mit lebendigem Beispiel im echten Schnitt (Klar).</p></div>
+    <div class="shead"><h2>Feinheiten.</h2>
+      <p>Die OpenType-Funktionen und Sonderzeichen der Schrift – zum Aufklappen, mit lebendigem Beispiel im echten Schnitt (Klar).</p></div>
 
     <details class="feat" open>
-      <summary>Ruhig <span>der siebte Schnitt · 350</span></summary>
-      <div class="featbody">
-        <p>Zwischen <b>Leise</b> (265) und <b>Klar</b> (440) klaffte der grösste Sprung der Leiter. <b>Ruhig</b> (350) füllt ihn – die ruhige Buch-Zwischenstimme: fester als die leise Nebenstimme, zurückgenommener als die volle Lesestimme. Installierbar und im Variable Font als benannte Stufe.</p>
-        <div class="demo ruhig">Ruhiger Lauftext, der lange Strecken trägt.</div>
-      </div>
-    </details>
-
-    <details class="feat">
       <summary>f-Ligaturen <span>liga · calt</span></summary>
       <div class="featbody">
         <p>ff, fi, fl, ft fließen ineinander; am <b>Wortende</b> schwingt das ff über (calt). Aus Philipps Zeichnungen, je Schnitt gewichtsrichtig.</p>
         <div class="demo klar">schaffen · Auflage · Grafik · sanfte Kraft · der Stoff, das Schiff</div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Versaleszett ẞ <span>U+1E9E</span></summary>
+      <div class="featbody">
+        <p>Das grosse Eszett für den Versalsatz – <b>STRASSE</b> bleibt ein Wort und fällt nicht auf SS zurück. Von Hand gezeichnet, je Schnitt gewichtsrichtig.</p>
+        <div class="demo klar">STRASSE · MASSNAHME&nbsp; →&nbsp; STRAẞE · MAẞNAHME</div>
       </div>
     </details>
 
@@ -192,8 +198,20 @@
     <details class="feat">
       <summary>Ziffern proportional &amp; tabellarisch <span>Standard · tnum</span></summary>
       <div class="featbody">
-        <p>Im Satz laufen die Ziffern jetzt <b>proportional</b> – die schmale 1 drängelt nicht mehr. Für Tabellen und Spalten schaltet <b>tnum</b> auf feste, gleiche Ziffernbreiten, damit Zahlen sauber untereinander stehen.</p>
-        <div class="demo klar">im Jahr 1911 · 1.000 Plätze<br><span style="font-feature-settings:'tnum'">11.10 Uhr<br>09.30 Uhr</span></div>
+        <p>Ziffern laufen <b>proportional</b> – jede so breit, wie ihre Form verlangt; die schmale 1 drängelt im Fließtext nicht. Für Spalten schaltet <b>tabellarisch</b> (tnum) auf feste, gleiche Breiten, damit gleichrangige Stellen exakt untereinander stehen.</p>
+        <div class="numgrid">
+          <div>
+            <div class="numlbl">Im Fließtext · proportional</div>
+            <div class="demo klar" style="margin:0">Am 1. Juli 1918 kamen 337 Gäste zur 11-Uhr-Führung.</div>
+          </div>
+          <div>
+            <div class="numlbl">In der Spalte · tabellarisch richtet aus</div>
+            <div class="numcmp">
+              <div><div class="numsub">proportional</div><div class="numcol klar">1408,00<br>177,50<br>9,05</div></div>
+              <div><div class="numsub">tabellarisch</div><div class="numcol klar" style="font-feature-settings:'tnum'">1408,00<br>177,50<br>9,05</div></div>
+            </div>
+          </div>
+        </div>
       </div>
     </details>
 
@@ -222,14 +240,16 @@
     </details>
 
     <div class="glyphover">
-      <div class="goh">Neue Zeichen im Überblick</div>
+      <div class="goh">Sonderzeichen im Überblick</div>
       <div class="gohrow klar">
         <span title="ff-Ligatur">ff</span>
-        <span>′</span><span>″</span><span>‒</span>
-        <span style="font-feature-settings:'zero'">0</span>
-        <span>‹&nbsp;›</span><span>«&nbsp;»</span><span>–</span><span>—</span>
+        <span title="Versaleszett">ẞ</span>
+        <span title="Prime">′</span><span title="Doppelprime">″</span>
+        <span title="Schlummernde Null" style="font-feature-settings:'zero'">0</span>
+        <span title="Figure-Dash">‒</span><span title="Halbgeviert">–</span><span title="Geviert">—</span>
+        <span title="Guillemets einfach">‹&nbsp;›</span><span title="Guillemets">«&nbsp;»</span>
       </div>
-      <p class="gohnote">Voller Zeichensatz: Großbuchstaben, Kleinbuchstaben, Ziffern, Akzente, Währung, Satzzeichen, Kapitälchen, Kurzziffern, Ligaturen und Maßzeichen.</p>
+      <p class="gohnote">Voller Zeichensatz: Großbuchstaben, Kleinbuchstaben, Ziffern, Akzente, Währung, Satzzeichen, Kapitälchen, Kurzziffern, Ligaturen, Versaleszett und Maßzeichen.</p>
     </div>
   </div></section>
 
