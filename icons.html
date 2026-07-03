@@ -85,19 +85,15 @@
   .try{display:flex;flex-direction:column;gap:10px;margin-top:16px}
   .try .out{font-family:"G Icons";font-size:40px;line-height:1.2;color:var(--ink);min-height:52px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--soft);word-break:break-word}
   .try input{font:inherit;font-size:16px;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 14px;background:var(--field-bg);min-height:var(--tap)}
-  /* Pfeile & Kompass liegen im Privatbereich (PUA) – keine Taste erreicht sie.
-     Darum eine Palette zum Anklicken statt Tippen: ein Klick kopiert das Zeichen. */
-  .pua{margin-top:18px}
-  .pua .lab{display:block;font-size:var(--t-small);color:var(--muted);line-height:1.55;margin:0 0 10px;max-width:60ch}
-  .palette{display:flex;flex-wrap:wrap;gap:8px;position:relative}
-  .palette button{flex:0 0 auto;width:54px;height:54px;border:1px solid var(--line);border-radius:10px;
-    background:var(--paper);color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:border-color .15s,color .15s}
-  .palette button:hover{border-color:var(--gold);color:var(--gold-ink)}
-  .palette button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-  .palette button .g{font-family:"G Icons";font-size:30px;line-height:1}
-  .palette .toast{position:absolute;left:0;top:calc(100% + 8px);font-size:var(--t-micro);color:var(--gold-ink);
-    opacity:0;transition:opacity .18s;pointer-events:none}
-  .palette .toast.show{opacity:1}
+  /* Ebenen-Umschalter: Grundebene (Buchstaben → Piktogramme) / Option-Alt (Pfeile & Kompass). */
+  .kbd-layer{margin:6px 0 12px}
+  /* Tasten mit Zeichen sind Knöpfe – ein Klick kopiert das Zeichen (fürs Web). */
+  button.keycap{font:inherit;padding:0;color:inherit;-webkit-appearance:none;appearance:none}
+  .keycap.has{cursor:pointer}
+  .keycap.has:hover{border-color:var(--gold-ink)}
+  .keycap.has:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .kbd-toast{display:block;min-height:1.3em;font-size:var(--t-small);color:var(--gold-ink);opacity:0;transition:opacity .18s;margin:0 0 6px}
+  .kbd-toast.show{opacity:1}
   .formats{list-style:none;margin:0;padding:0}
   .formats li{display:flex;gap:10px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line-soft);font-size:var(--t-small);color:var(--muted);line-height:1.5}
   .formats li:first-child{border-top:0}
@@ -158,8 +154,13 @@
       <div class="panel">
         <h3>Als Webfont – per Taste</h3>
         <p>Eine Datei trägt alle Icons. Den <code>@font-face</code>-Block einbinden, einem Element die Icon-Schrift geben – dann sitzt jedes Piktogramm auf einer Taste.</p>
-        <div class="kbd" id="kbd" aria-hidden="true"></div>
-        <p class="kbdcap">Tastatur-Belegung – jede <b style="color:var(--gold-ink);font-weight:400">goldene</b> Taste trägt ein Piktogramm. Pfeile und Kompass liegen im Zeichen-Privatbereich (PUA) und kommen über die Glyphen-Palette oder die Einzeldateien. Vollständig im Beipackzettel.</p>
+        <div class="seg kbd-layer" role="tablist" aria-label="Tastaturebene">
+          <button type="button" data-layer="base" aria-pressed="true">Grundebene</button>
+          <button type="button" data-layer="option" aria-pressed="false">Option / Alt</button>
+        </div>
+        <div class="kbd" id="kbd"></div>
+        <span class="kbd-toast" id="kbdtoast" aria-live="polite"></span>
+        <p class="kbdcap" id="kbdcap"></p>
         <pre class="code"><button class="copybtn" id="copyff">kopieren</button><code id="ffcode">@font-face{
   font-family:"Goetheanum Icons";
   src:url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2") format("woff2");
@@ -171,10 +172,6 @@
           <label class="lab" for="tryin" style="font-size:var(--t-small);color:var(--muted)">Selbst probieren – Buchstaben tippen:</label>
           <input id="tryin" type="text" value="heafu" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Tasten eingeben" />
           <div class="out" id="tryout" aria-hidden="true">heafu</div>
-        </div>
-        <div class="pua">
-          <span class="lab">Pfeile &amp; Kompass liegen im Privatbereich der Schrift – keine Taste erreicht sie. Hier per Klick kopieren (fürs Web, in einem Element mit der Icon-Schrift); fürs Layout und den Druck einzeln als SVG oder PDF aus der Übersicht.</span>
-          <div class="palette" id="palette"></div>
         </div>
       </div>
 
@@ -253,49 +250,61 @@
       });
       empty.hidden = rows.length>0;
     }
-    // Tastatur (QWERTZ) – markiert die Tasten, die ein benanntes Piktogramm tragen.
-    function buildKbd(data){
+    // Zwei Tastaturebenen wie im Beipackzettel: Grundebene (Buchstaben → Piktogramme)
+    // und Option/Alt (→ Pfeile & Kompass). Die Pfeil-/Kompass-Zeichen liegen im
+    // Privatbereich (PUA); ihre Tastenlage kommt aus der dokumentierten Belegung
+    // (Beipackzettel Seite 3) – geradlinige Pfeile und Kompass semantisch verankert,
+    // die acht gebogenen in Belegungsreihenfolge.
+    var OPTION_KEYS={ '6':'pfeil-hoch','t':'pfeil-links','u':'pfeil-rechts','h':'pfeil-runter',
+      'y':'kompass-1','x':'kompass-2','c':'kompass-3','v':'kompass-4',
+      '2':'pfeil-gebogen-1','0':'pfeil-gebogen-2','q':'pfeil-gebogen-3','e':'pfeil-gebogen-4',
+      'o':'pfeil-gebogen-5','ü':'pfeil-gebogen-6','s':'pfeil-gebogen-7','ö':'pfeil-gebogen-8' };
+    var ROWS=[['1','2','3','4','5','6','7','8','9','0','ß'],
+              ['q','w','e','r','t','z','u','i','o','p','ü'],
+              ['a','s','d','f','g','h','j','k','l','ö','ä'],
+              ['<','y','x','c','v','b','n','m']];
+    var kbdLayer='base', copyTimer;
+    function copyGlyph(g,label){
+      if(navigator.clipboard) navigator.clipboard.writeText(g);
+      var t=document.getElementById('kbdtoast'); if(!t) return;
+      t.textContent=label+' kopiert'; t.classList.add('show');
+      clearTimeout(copyTimer); copyTimer=setTimeout(function(){ t.classList.remove('show'); },1400);
+    }
+    function buildKbd(){
       var box=document.getElementById('kbd'); if(!box) return;
-      var byChar={}; data.forEach(function(it){ var k=key(it.codepoint); if(k) byChar[k]=it; });
-      var ROWS=[['1','2','3','4','5','6','7','8','9','0','ß'],
-                ['q','w','e','r','t','z','u','i','o','p','ü'],
-                ['a','s','d','f','g','h','j','k','l','ö','ä'],
-                ['<','y','x','c','v','b','n','m']];
+      var byChar={}, bySlug={};
+      DATA.forEach(function(it){ var k=key(it.codepoint); if(k) byChar[k]=it; bySlug[it.slug]=it; });
       box.innerHTML="";
       ROWS.forEach(function(r){
         var row=document.createElement('div'); row.className='krow';
         r.forEach(function(ch){
-          var it=byChar[ch], cap=document.createElement('div');
-          cap.className='keycap'+(it?' has':'');
-          if(it){ cap.title=it.label;
-            cap.innerHTML='<span class="gl">'+esc(ch)+'</span><span class="lk">'+esc(ch.toUpperCase())+'</span>';
-          } else { cap.innerHTML='<span class="lk">'+esc(ch.toUpperCase())+'</span>'; }
-          row.appendChild(cap);
+          var it = kbdLayer==='base' ? byChar[ch] : bySlug[OPTION_KEYS[ch]];
+          if(it){
+            var g=key(it.codepoint), legend=(kbdLayer==='option'?'⌥':'')+ch.toUpperCase();
+            var b=document.createElement('button'); b.type='button'; b.className='keycap has';
+            b.title=it.label+' – kopieren'; b.setAttribute('aria-label',it.label+' kopieren');
+            b.innerHTML='<span class="gl" aria-hidden="true">'+esc(g)+'</span><span class="lk">'+esc(legend)+'</span>';
+            b.addEventListener('click',(function(gg,lab){ return function(){ copyGlyph(gg,lab); }; })(g,it.label));
+            row.appendChild(b);
+          } else {
+            var cap=document.createElement('div'); cap.className='keycap';
+            cap.innerHTML='<span class="lk">'+esc(ch.toUpperCase())+'</span>';
+            row.appendChild(cap);
+          }
         });
         box.appendChild(row);
       });
+      var cap=document.getElementById('kbdcap');
+      if(cap) cap.innerHTML = kbdLayer==='base'
+        ? 'Grundebene – jede <b style="color:var(--gold-ink);font-weight:400">goldene</b> Taste trägt ein Piktogramm; ein Klick kopiert das Zeichen. Pfeile und Kompass liegen auf der <b style="color:var(--gold-ink);font-weight:400">Option/Alt</b>-Ebene (Reiter oben).'
+        : 'Option/Alt-Ebene – Pfeile und Kompass. Am Rechner mit der Wahltaste ⌥ getippt (⌥T = Pfeil links); hier per Klick kopiert. Vollständig im Beipackzettel.';
     }
-    // Palette der nicht-tippbaren Zeichen (Pfeile & Kompass, PUA): Klick kopiert das Zeichen.
-    function buildPalette(data){
-      var box=document.getElementById('palette'); if(!box) return;
-      var extras=data.filter(function(it){ return it.group!=='piktogramm'; });
-      box.innerHTML="";
-      var toast=document.createElement('span'); toast.className='toast'; toast.setAttribute('aria-live','polite');
-      var timer;
-      extras.forEach(function(it){
-        var g=key(it.codepoint); if(!g) return;
-        var b=document.createElement('button'); b.type='button';
-        b.title=it.label+' – kopieren'; b.setAttribute('aria-label',it.label+' kopieren');
-        b.innerHTML='<span class="g" aria-hidden="true">'+esc(g)+'</span>';
-        b.addEventListener('click',function(){
-          if(navigator.clipboard) navigator.clipboard.writeText(g);
-          toast.textContent=it.label+' kopiert'; toast.classList.add('show');
-          clearTimeout(timer); timer=setTimeout(function(){ toast.classList.remove('show'); },1400);
-        });
-        box.appendChild(b);
+    document.querySelectorAll('.kbd-layer button').forEach(function(b){
+      b.addEventListener('click',function(){
+        document.querySelectorAll('.kbd-layer button').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+        b.setAttribute('aria-pressed','true'); kbdLayer=b.dataset.layer; buildKbd();
       });
-      box.appendChild(toast);
-    }
+    });
     document.querySelectorAll('.tabs button').forEach(function(b){
       b.addEventListener('click',function(){
         document.querySelectorAll('.tabs button').forEach(function(x){x.classList.remove('on');});
@@ -305,7 +314,7 @@
     q.addEventListener('input',render);
     fetch(BASE+"icons.json").then(function(r){return r.json();}).then(function(d){
       DATA=d.filter(function(it){ return !/^U\+/.test(it.label); });  // nur benannte
-      render(); buildKbd(DATA); buildPalette(DATA);
+      render(); buildKbd();
     }).catch(function(){
       empty.hidden=false; empty.textContent="Icon-Liste konnte nicht geladen werden. Einzeldateien stehen im Download-Abschnitt bereit.";
     });
