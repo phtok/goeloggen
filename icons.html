@@ -63,15 +63,23 @@
   pre.code{position:relative;margin:0 0 14px;border-radius:12px;padding:16px}
   .copybtn{position:absolute;top:10px;right:10px;font:inherit;font-size:var(--t-micro);border:1px solid var(--code-bg2);background:var(--code-bg2);color:var(--code-ink);border-radius:8px;padding:6px 11px;cursor:pointer;min-height:32px}
   .copybtn:hover{filter:brightness(1.25)}
-  /* Tastatur-Belegung: jede markierte Taste trägt ein Icon (wie im Beipackzettel). */
-  .kbd{display:flex;flex-direction:column;gap:6px;margin:2px 0 8px;overflow-x:auto;padding-bottom:6px}
-  .krow{display:flex;gap:6px}
-  .keycap{flex:0 0 auto;width:48px;height:52px;border:1px solid var(--line);border-radius:8px;background:var(--soft);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-  .keycap .lk{font-family:var(--font-mono);font-size:14px;color:var(--muted)}
-  .keycap.has{border-color:var(--gold);background:var(--paper)}
-  .keycap.has .gl{font-family:"G Icons";font-size:26px;line-height:1;color:var(--ink);height:26px}
-  .keycap.has .lk{color:var(--gold-ink)}
+  /* Tastatur-Belegung: das Icon ist der Held der Taste, der Buchstabe nur die
+     kleine Legende in der Ecke (wie das Zweitzeichen auf einer echten Taste).
+     Leere Tasten treten zurück, damit die Piktogramme den Blick führen. */
+  .kbd{display:flex;flex-direction:column;gap:8px;margin:6px 0 12px;overflow-x:auto;padding-bottom:8px}
+  .krow{display:flex;gap:8px}
+  .keycap{position:relative;flex:0 0 auto;width:62px;height:62px;border:1px solid var(--line);border-radius:12px;
+    background:var(--soft);display:flex;align-items:center;justify-content:center}
+  .keycap .lk{font-family:var(--font-mono);font-size:var(--t-micro);line-height:1;color:var(--muted)}
+  .keycap:not(.has){opacity:.5}
+  .keycap.has{border-color:var(--gold);background:var(--paper);box-shadow:0 1px 2px rgba(20,24,28,.05)}
+  .keycap.has .gl{font-family:"G Icons";font-size:40px;line-height:1;color:var(--ink)}
+  /* Buchstaben-Legende: auf belegten Tasten klein in die untere rechte Ecke. */
+  .keycap.has .lk{position:absolute;right:7px;bottom:5px;color:var(--gold-ink)}
+  @media(max-width:560px){
+    .keycap{width:52px;height:52px;border-radius:10px}
+    .keycap.has .gl{font-size:33px}
+  }
   .kbdcap{color:var(--muted);font-size:var(--t-small);line-height:1.6;margin:2px 0 0;max-width:60ch}
   /* Live: tippen → Icons (Webfont per Taste). */
   .try{display:flex;flex-direction:column;gap:10px;margin-top:16px}

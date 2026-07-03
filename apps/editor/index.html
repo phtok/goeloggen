@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum Editor</title>
+<meta name="description" content="Text einfügen, prüfen lassen: die eindeutigen Hausregeln der Typografie werden automatisch gesetzt, offene Fragen erscheinen in der Marginalspalte zur Bestätigung." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<style>
+  /* Nur seiten-eigenes Layout – Farben/Schrift/Abstände kommen aus tokens.css/base.css. */
+  .hero{padding-block:clamp(36px,6vw,60px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(28px,4.6vw,44px);line-height:1.08;letter-spacing:-.01em;max-width:20ch}
+  .hero .lede{margin-top:var(--s4);color:var(--muted);font-size:var(--t-body);line-height:1.55;max-width:60ch}
+
+  .work{display:grid;grid-template-columns:1fr;gap:var(--s6);align-items:start;padding-bottom:var(--s8)}
+  @media(min-width:960px){.work{grid-template-columns:minmax(0,1fr) minmax(280px,340px)}}
+
+  .stage{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s6)}
+  .stage .toolbar{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;margin-bottom:var(--s4)}
+  .stage .toolbar .count{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);font-variant-numeric:tabular-nums}
+  .stage .toolbar .btns{display:flex;gap:var(--s2);flex-wrap:wrap}
+
+  .edit{min-height:320px;max-width:var(--measure);outline:none;font-size:var(--t-body);line-height:var(--lh-body);white-space:pre-wrap;word-break:break-word}
+  .edit:empty::before{content:attr(data-placeholder);color:var(--muted)}
+  .edit mark.goe-mark{background:color-mix(in srgb, var(--gold) 26%, transparent);border-radius:3px;padding:0 1px;cursor:pointer}
+  .edit mark.goe-mark.is-active{background:color-mix(in srgb, var(--gold) 48%, transparent)}
+
+  .margin{display:grid;gap:var(--s6);position:sticky;top:calc(var(--header-h) + var(--s4))}
+  .margin .lab{margin-bottom:var(--s2);display:flex;align-items:center;gap:var(--s2)}
+  .margin .empty{color:var(--muted);font-size:var(--t-small)}
+
+  .qitem{border:1px solid var(--line);border-radius:var(--r-control);padding:var(--s3);margin-bottom:var(--s2);background:var(--soft)}
+  .qitem .id{font-family:var(--font-text);font-size:var(--t-micro);color:var(--gold-ink);letter-spacing:.02em}
+  .qitem p{font-size:var(--t-small);color:var(--ink);margin:var(--s1) 0 var(--s2)}
+  .qitem .diff{font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;word-break:break-word}
+  .qitem .diff .von{color:var(--muted)}
+  .qitem .diff .nach{color:var(--ok);font-weight:600}
+  .qitem .row{display:flex;gap:var(--s2);margin-top:var(--s2)}
+  .qitem .row button{flex:1 1 auto}
+
+  .aitem{border-bottom:1px solid var(--line-soft);padding:var(--s2) 0;font-size:var(--t-small)}
+  .aitem:last-child{border-bottom:0}
+  .aitem .id{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);letter-spacing:.02em;display:block;margin-bottom:2px}
+  .aitem .diff{font-family:var(--font-text);line-height:1.5;word-break:break-word}
+  .aitem .diff .von{color:var(--muted)}
+  .aitem .diff .nach{color:var(--ink);font-weight:600}
+
+  .lm-note{margin-top:var(--s2);color:var(--muted);font-size:var(--t-small);max-width:64ch}
+  .lm-note b{color:var(--ink);font-weight:var(--w-deutlich)}
+  .lm-note .ids{font-family:var(--font-text);font-size:var(--t-micro);letter-spacing:.02em}
+
+  @media(max-width:560px){
+    .stage{padding:var(--s4)}
+    .margin{position:static}
+  }
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-section="generatoren" data-active="editor"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Werkzeug</span>
+    <h1>Goetheanum Editor</h1>
+    <p class="lede">Text einfügen, <q>Prüfen</q> klicken: Eindeutiges wird automatisch nach den Hausregeln korrigiert, offene Fragen erscheinen in der Marginalspalte zur Bestätigung.</p>
+  </section>
+
+  <section class="work">
+    <div class="stage">
+      <div class="toolbar">
+        <div class="btns">
+          <button class="btn primary" type="button" id="btn-pruefen">Prüfen</button>
+          <button class="btn" type="button" id="btn-kopieren">Kopieren</button>
+          <button class="btn" type="button" id="btn-datei">Als Datei</button>
+        </div>
+        <span class="count" id="zaehler">0 Zeichen · 0 Wörter</span>
+      </div>
+      <div class="edit lese" id="edit" contenteditable="true" data-placeholder="Text einfügen oder schreiben …" role="textbox" aria-multiline="true" aria-label="Text"></div>
+    </div>
+
+    <aside class="margin">
+      <div>
+        <span class="lab">Offene Fragen <span id="offen-zahl" class="chip" style="display:none"></span></span>
+        <div id="offen-liste"><p class="empty">Noch nichts geprüft.</p></div>
+        <button class="btn ghost" type="button" id="btn-alle" style="display:none;width:100%;margin-top:var(--s2)">Alle übernehmen</button>
+      </div>
+      <div>
+        <span class="lab">Angewandt</span>
+        <div id="angewandt-liste"><p class="empty">–</p></div>
+      </div>
+    </aside>
+  </section>
+
+  <p class="lm-note">Diese Prüfung deckt die eindeutigen Regeln ab (Anführung, Striche, Auslassung, Ziffern-Gruppierung, Leerzeichen). Fragen aus Urteil und Lektorat – Schriftwahl, Auszeichnung, Zeilenmass, Kontrast – <b>folgen mit dem nächsten Schritt</b>: <span class="ids">S01 · G01 · G03 · G04 · G05 · G09 · G10 · G25 · G27 · G28</span>.</p>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Werkzeuge für die Hausgrafik</span>
+    <span>Allgemeine Anthroposophische Gesellschaft · <a href="https://www.goetheanum.ch">goetheanum.ch</a></span>
+  </div>
+</footer>
+
+<script src="../../assets/typografie/goe-typo.js"></script>
+<script>
+"use strict";
+(function(){
+  var RULES_URL = "../../assets/typografie/typo-regeln.yaml";
+  var edit = document.getElementById("edit");
+  var zaehlerEl = document.getElementById("zaehler");
+  var offenListe = document.getElementById("offen-liste");
+  var offenZahl = document.getElementById("offen-zahl");
+  var angewandtListe = document.getElementById("angewandt-liste");
+  var btnPruefen = document.getElementById("btn-pruefen");
+  var btnAlle = document.getElementById("btn-alle");
+  var btnKopieren = document.getElementById("btn-kopieren");
+  var btnDatei = document.getElementById("btn-datei");
+
+  var rules = null;
+  var angewandtLog = []; // {ruleId, regel, vorher, nachher}
+
+  function escapeHtml(s){
+    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  // Baut die Diff-Zeile mit Satzkontext: „…Kontext {alt} → {neu} Kontext…"
+  function diffHtml(kontextVor, von, nach, kontextNach){
+    return escapeHtml(kontextVor||"")+'<span class="von">'+escapeHtml(von)+'</span> → '+
+      '<span class="nach">'+escapeHtml(nach)+'</span>'+escapeHtml(kontextNach||"");
+  }
+
+  function zaehlen(){
+    var z = window.GoeTypo.zeichenzahl(edit.innerText || "");
+    zaehlerEl.textContent = z.zeichen + " Zeichen · " + z.woerter + " Wörter";
+  }
+
+  function renderAngewandt(){
+    if(!angewandtLog.length){ angewandtListe.innerHTML = '<p class="empty">–</p>'; return; }
+    angewandtListe.innerHTML = angewandtLog.map(function(a){
+      return '<div class="aitem"><span class="id">'+escapeHtml(a.ruleId)+'</span>'+
+        '<span class="diff">'+diffHtml(a.kontextVor, a.vorher, a.nachher, a.kontextNach)+'</span></div>';
+    }).join("");
+  }
+
+  function offeneMarks(){
+    return Array.prototype.slice.call(edit.querySelectorAll("mark.goe-mark"));
+  }
+
+  function renderOffenListe(){
+    var marks = offeneMarks();
+    if(!marks.length){
+      offenListe.innerHTML = '<p class="empty">Keine offenen Fragen.</p>';
+      offenZahl.style.display = "none";
+      btnAlle.style.display = "none";
+      return;
+    }
+    offenZahl.style.display = "";
+    offenZahl.textContent = String(marks.length);
+    btnAlle.style.display = "";
+    offenListe.innerHTML = "";
+    marks.forEach(function(markEl){
+      var item = document.createElement("div");
+      item.className = "qitem";
+      item.dataset.goeIdx = markEl.dataset.goeIdx;
+      item.innerHTML = '<span class="id">'+escapeHtml(markEl.dataset.goeRule)+'</span>'+
+        '<p>'+escapeHtml(markEl.dataset.goeRegel)+'</p>'+
+        '<div class="diff">'+diffHtml(markEl.dataset.goeKontextVor, markEl.dataset.goeOriginal, markEl.dataset.goeKorrektur, markEl.dataset.goeKontextNach)+'</div>'+
+        '<div class="row"><button class="btn ok" type="button" data-aktion="uebernehmen">Übernehmen</button>'+
+        '<button class="btn ghost" type="button" data-aktion="lassen">Lassen</button></div>';
+      item.addEventListener("mouseenter", function(){ markEl.classList.add("is-active"); });
+      item.addEventListener("mouseleave", function(){ markEl.classList.remove("is-active"); });
+      offenListe.appendChild(item);
+    });
+  }
+
+  function loeseMark(markEl, uebernehmen){
+    var vorher = markEl.dataset.goeOriginal;
+    var nachher = uebernehmen ? markEl.dataset.goeKorrektur : vorher;
+    if(uebernehmen){
+      angewandtLog.push({ruleId:markEl.dataset.goeRule, regel:markEl.dataset.goeRegel, vorher:vorher, nachher:nachher,
+        kontextVor:markEl.dataset.goeKontextVor, kontextNach:markEl.dataset.goeKontextNach});
+    }
+    markEl.replaceWith(document.createTextNode(nachher));
+    edit.normalize();
+    renderAngewandt();
+    renderOffenListe();
+    zaehlen();
+  }
+
+  offenListe.addEventListener("click", function(ev){
+    var btn = ev.target.closest("button[data-aktion]");
+    if(!btn) return;
+    var item = btn.closest(".qitem");
+    var markEl = edit.querySelector('mark.goe-mark[data-goe-idx="'+item.dataset.goeIdx+'"]');
+    if(!markEl) return;
+    loeseMark(markEl, btn.dataset.aktion === "uebernehmen");
+  });
+
+  btnAlle.addEventListener("click", function(){
+    offeneMarks().forEach(function(markEl){ loeseMark(markEl, true); });
+  });
+
+  function pruefen(){
+    if(!rules || !rules.length) return;
+    var roh = edit.innerText || "";
+    if(!roh.trim()) return;
+
+    var fehlerErgebnis = window.GoeTypo.pruefeFehler(roh, rules);
+    angewandtLog = angewandtLog.concat(fehlerErgebnis.log);
+
+    var text = fehlerErgebnis.text;
+    var funde = window.GoeTypo.findeEmpfehlungen(text, rules);
+    if(!funde.length){
+      edit.textContent = text;
+    } else {
+      var html = "", pos = 0;
+      funde.forEach(function(f, i){
+        html += escapeHtml(text.slice(pos, f.start));
+        html += '<mark class="goe-mark" data-goe-idx="'+i+'" data-goe-rule="'+escapeHtml(f.ruleId)+'" '+
+          'data-goe-regel="'+escapeHtml(f.regel)+'" data-goe-original="'+escapeHtml(f.original)+'" '+
+          'data-goe-korrektur="'+escapeHtml(f.korrektur)+'" data-goe-kontext-vor="'+escapeHtml(f.kontextVor)+'" '+
+          'data-goe-kontext-nach="'+escapeHtml(f.kontextNach)+'">'+escapeHtml(f.original)+'</mark>';
+        pos = f.end;
+      });
+      html += escapeHtml(text.slice(pos));
+      edit.innerHTML = html;
+    }
+    renderAngewandt();
+    renderOffenListe();
+    zaehlen();
+  }
+
+  btnPruefen.addEventListener("click", pruefen);
+
+  btnKopieren.addEventListener("click", function(){
+    navigator.clipboard.writeText(edit.innerText || "").then(function(){
+      var alt = btnKopieren.textContent;
+      btnKopieren.textContent = "Kopiert";
+      setTimeout(function(){ btnKopieren.textContent = alt; }, 1500);
+    });
+  });
+
+  btnDatei.addEventListener("click", function(){
+    var blob = new Blob([edit.innerText || ""], {type:"text/plain;charset=utf-8"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "text.txt";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  edit.addEventListener("input", zaehlen);
+
+  window.GoeTypo.laden(RULES_URL).then(function(r){ rules = r; });
+
+  zaehlen();
+})();
+</script>
+
+</body>
+</html>
