@@ -85,6 +85,19 @@
   .try{display:flex;flex-direction:column;gap:10px;margin-top:16px}
   .try .out{font-family:"G Icons";font-size:40px;line-height:1.2;color:var(--ink);min-height:52px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--soft);word-break:break-word}
   .try input{font:inherit;font-size:16px;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 14px;background:var(--field-bg);min-height:var(--tap)}
+  /* Pfeile & Kompass liegen im Privatbereich (PUA) – keine Taste erreicht sie.
+     Darum eine Palette zum Anklicken statt Tippen: ein Klick kopiert das Zeichen. */
+  .pua{margin-top:18px}
+  .pua .lab{display:block;font-size:var(--t-small);color:var(--muted);line-height:1.55;margin:0 0 10px;max-width:60ch}
+  .palette{display:flex;flex-wrap:wrap;gap:8px;position:relative}
+  .palette button{flex:0 0 auto;width:54px;height:54px;border:1px solid var(--line);border-radius:10px;
+    background:var(--paper);color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:border-color .15s,color .15s}
+  .palette button:hover{border-color:var(--gold);color:var(--gold-ink)}
+  .palette button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .palette button .g{font-family:"G Icons";font-size:30px;line-height:1}
+  .palette .toast{position:absolute;left:0;top:calc(100% + 8px);font-size:var(--t-micro);color:var(--gold-ink);
+    opacity:0;transition:opacity .18s;pointer-events:none}
+  .palette .toast.show{opacity:1}
   .formats{list-style:none;margin:0;padding:0}
   .formats li{display:flex;gap:10px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line-soft);font-size:var(--t-small);color:var(--muted);line-height:1.5}
   .formats li:first-child{border-top:0}
@@ -158,6 +171,10 @@
           <label class="lab" for="tryin" style="font-size:var(--t-small);color:var(--muted)">Selbst probieren – Buchstaben tippen:</label>
           <input id="tryin" type="text" value="heafu" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Tasten eingeben" />
           <div class="out" id="tryout" aria-hidden="true">heafu</div>
+        </div>
+        <div class="pua">
+          <span class="lab">Pfeile &amp; Kompass liegen im Privatbereich der Schrift – keine Taste erreicht sie. Hier per Klick kopieren (fürs Web, in einem Element mit der Icon-Schrift); fürs Layout und den Druck einzeln als SVG oder PDF aus der Übersicht.</span>
+          <div class="palette" id="palette"></div>
         </div>
       </div>
 
@@ -258,6 +275,27 @@
         box.appendChild(row);
       });
     }
+    // Palette der nicht-tippbaren Zeichen (Pfeile & Kompass, PUA): Klick kopiert das Zeichen.
+    function buildPalette(data){
+      var box=document.getElementById('palette'); if(!box) return;
+      var extras=data.filter(function(it){ return it.group!=='piktogramm'; });
+      box.innerHTML="";
+      var toast=document.createElement('span'); toast.className='toast'; toast.setAttribute('aria-live','polite');
+      var timer;
+      extras.forEach(function(it){
+        var g=key(it.codepoint); if(!g) return;
+        var b=document.createElement('button'); b.type='button';
+        b.title=it.label+' – kopieren'; b.setAttribute('aria-label',it.label+' kopieren');
+        b.innerHTML='<span class="g" aria-hidden="true">'+esc(g)+'</span>';
+        b.addEventListener('click',function(){
+          if(navigator.clipboard) navigator.clipboard.writeText(g);
+          toast.textContent=it.label+' kopiert'; toast.classList.add('show');
+          clearTimeout(timer); timer=setTimeout(function(){ toast.classList.remove('show'); },1400);
+        });
+        box.appendChild(b);
+      });
+      box.appendChild(toast);
+    }
     document.querySelectorAll('.tabs button').forEach(function(b){
       b.addEventListener('click',function(){
         document.querySelectorAll('.tabs button').forEach(function(x){x.classList.remove('on');});
@@ -267,7 +305,7 @@
     q.addEventListener('input',render);
     fetch(BASE+"icons.json").then(function(r){return r.json();}).then(function(d){
       DATA=d.filter(function(it){ return !/^U\+/.test(it.label); });  // nur benannte
-      render(); buildKbd(DATA);
+      render(); buildKbd(DATA); buildPalette(DATA);
     }).catch(function(){
       empty.hidden=false; empty.textContent="Icon-Liste konnte nicht geladen werden. Einzeldateien stehen im Download-Abschnitt bereit.";
     });
