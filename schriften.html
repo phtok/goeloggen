@@ -269,8 +269,9 @@
     <div class="webgrid">
       <pre class="code"><button class="copybtn" id="copyff">kopieren</button><code id="ffcode">@font-face{
   font-family:"Goetheanum";
-  src:url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.7.woff2") format("woff2"),
-      url("https://phtok.github.io/goeloggen/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.7.woff") format("woff");
+  /* A · Hausadresse — oder B: url("/fonts/Goetheanum-Variabel-v2.7.woff2") */
+  src:url("https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.7.woff2") format("woff2"),
+      url("https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.7.woff") format("woff");
   font-weight:190 725; font-style:normal; font-display:swap;
 }
 /* Verwendung */
@@ -279,8 +280,9 @@ body{ font-family:"Goetheanum", system-ui, sans-serif; }
 .frei{ font-variation-settings:"wght" 520 }  /* stufenlos */</code></pre>
       <div class="webaside">
         <p style="margin:0 0 12px">Schnitte über die Achse: <b>Flüstern 190 · Leise 265 · Ruhig 350 · Klar 440 · Deutlich 580 · Laut 680 · Schreien 725</b> – dazwischen alles stufenlos.</p>
-        <p style="margin:0 0 16px;font-size:var(--t-small);color:var(--muted)">Lädt cross-origin von GitHub Pages. Für volle Kontrolle die Dateien aus dem Webfont-Ordner selbst hosten und die URLs umbiegen.</p>
-        <a class="btn primary" href="schrift-webfont.html">Demo &amp; Code-Schnipsel</a>
+        <p style="margin:0 0 8px;font-size:var(--t-small);color:var(--muted)"><b style="color:var(--ink);font-weight:400">A · Hausadresse</b> (oben, durchgehend https) oder <b style="color:var(--ink);font-weight:400">B · selbst hosten</b> (Datei ins Projekt, relative URL – für Produktion empfohlen).</p>
+        <p style="margin:0 0 16px;font-size:var(--t-micro);color:var(--muted)">Nicht <code>phtok.github.io</code> und nie <code>http://</code> – das leitet auf http um, https-Seiten blockieren es (‹Mixed Content›).</p>
+        <a class="btn primary" href="schrift-webfont.html">Beide Wege &amp; Code-Schnipsel</a>
       </div>
     </div>
   </div></section>
