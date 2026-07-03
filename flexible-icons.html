@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="de">
+<head>
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Goetheanum – Flexible Icons (Pilot)</title>
+<meta name="description" content="Pilot: ein variabler Icon-Font mit echter Gewichtsachse – Piktogramme, die in derselben Lautstärke sprechen wie die Schrift. Fünf Zeichen, stufenlos von leicht bis fett." />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Farben/Schrift/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigenes Layout. */
+  @font-face{font-family:"IconsFlex";src:url("assets/fonts/goetheanum/Flex-Pilot/Goetheanum-Icons-Flex-Pilot.woff2") format("woff2");font-weight:300 700;font-display:swap}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  .hero{padding-block:60px 12px}
+  .lede{max-width:64ch;margin-top:var(--s4)}
+  .pilotchip{display:inline-block;font-family:var(--font-text);font-size:var(--t-small);color:var(--on-accent);
+    background:var(--gold-deep);border-radius:999px;padding:3px 12px;margin-bottom:var(--s3)}
+
+  .stage{margin-top:var(--s8);border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft);padding:var(--s8)}
+  .icons{display:flex;flex-wrap:wrap;gap:clamp(18px,5vw,54px);align-items:center;justify-content:center;padding:var(--s6) 0}
+  .ic{font-family:"IconsFlex";font-size:clamp(64px,12vw,104px);line-height:1;color:var(--ink);
+    font-variation-settings:"wght" var(--w,440)}
+  .ctrl{display:flex;align-items:center;gap:var(--s4);margin-top:var(--s6);flex-wrap:wrap}
+  .ctrl input[type=range]{flex:1;min-width:220px;accent-color:var(--gold-deep)}
+  .readout{font-family:var(--font-text);font-variant-numeric:tabular-nums;min-width:190px;text-align:right;color:var(--muted)}
+  .readout b{color:var(--ink);font-weight:600}
+  .steps{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s4)}
+  .steps button{font:inherit;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
+    background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+  .steps button.on{color:var(--on-accent);background:var(--gold-deep);border-color:var(--gold-deep)}
+
+  .match{margin-top:var(--s8);display:flex;align-items:center;gap:var(--s5);flex-wrap:wrap}
+  .match .ic{font-size:clamp(44px,7vw,66px)}
+  .match .word{font-family:var(--font);font-size:clamp(30px,5vw,52px);line-height:1;
+    font-variation-settings:"wght" var(--w,440)}
+  .match .cap{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
+
+  .why{margin-top:var(--s8);display:grid;grid-template-columns:1fr;gap:var(--s5)}
+  @media(min-width:760px){.why{grid-template-columns:repeat(3,1fr)}}
+  .why .card h3{font-family:var(--font);font-weight:var(--w-deutlich);font-size:var(--t-h3);margin-bottom:var(--s2)}
+  .why .card p{color:var(--muted)}
+
+  .how{margin-top:var(--s8);border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6) var(--s7);background:var(--paper)}
+  .how h3{font-family:var(--font);font-weight:var(--w-deutlich);font-size:var(--t-h3)}
+  .how p{color:var(--muted);margin-top:var(--s3);max-width:78ch}
+  .how code{font-family:var(--font-text);background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:.92em}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-section="vorbereitung" data-active="flexible-icons"></script>
+
+<main class="wrap">
+  <div class="hero">
+    <span class="pilotchip">Pilot · Prototyp</span>
+    <div class="kicker">Hausgrafik · Idee</div>
+    <h1>Flexible Icons</h1>
+    <p class="lede">Was die Schrift schon kann, können die Piktogramme auch: <b>eine Gewichtsachse</b>.
+      Ein Icon spricht dann in derselben Lautstärke wie der Text daneben – leise im Fließtext, laut in
+      der Signaletik. Fünf Zeichen als echter variabler Font, stufenlos von leicht bis fett.</p>
+  </div>
+
+  <div class="stage">
+    <div class="icons" id="icons">
+      <span class="ic">w</span><span class="ic">g</span><span class="ic">u</span><span class="ic">r</span><span class="ic">f</span>
+    </div>
+    <div class="ctrl">
+      <input type="range" id="wght" min="300" max="700" value="440" step="1" aria-label="Gewicht" />
+      <div class="readout">Gewicht <b id="wval">440</b> · <span id="wname">Klar</span></div>
+    </div>
+    <div class="steps" id="steps">
+      <button data-w="300">Leicht</button>
+      <button data-w="440" class="on">Klar</button>
+      <button data-w="680">Laut</button>
+    </div>
+  </div>
+
+  <div class="match">
+    <span class="ic" id="mic">u</span>
+    <span class="word" id="mword">Aufgang</span>
+    <span class="cap">Icon und Wort auf derselben Achse – sie ziehen mit.</span>
+  </div>
+
+  <div class="why">
+    <div class="card"><h3>Harmonie</h3><p>Das Icon nimmt das Gewicht seines Schnitts an – neben Leise fein, neben Laut kräftig. Kein Bruch mehr zwischen Wort und Zeichen.</p></div>
+    <div class="card"><h3>Ein Prinzip</h3><p>Wie der Variable Font: eine Datei, eine Achse. Der Setzer wählt kein zweites Icon-Set, er dreht am selben Regler.</p></div>
+    <div class="card"><h3>Erweiterbar</h3><p>Neben dem Gewicht sind weitere Achsen denkbar – optische Grösse (weniger Detail im Kleinen), Füllung (Linie ↔ Fläche).</p></div>
+  </div>
+
+  <div class="how">
+    <h3>So entsteht der Pilot</h3>
+    <p>Jedes Icon hat zwei <b>Master</b>: den gezeichneten Umriss (leicht) und einen verstärkten (fett).
+      Für diesen Prototyp ist der fette Master <b>programmatisch</b> erzeugt – jeder Konturpunkt entlang seiner
+      Normalen nach aussen versetzt, also punktkompatibel und damit interpolierbar. <code>varLib</code> verwebt
+      beide zur <code>wght</code>-Achse. Im Produktivfall kämen die Master aus <b>gezeichneten</b> Vorlagen
+      (die Pfeile liegen z. B. schon in leicht und fett vor). Reproduzierbar über
+      <code>tools/goetheanum-fontfix/build_icons_variable_pilot.py</code>.</p>
+  </div>
+</main>
+
+<script>
+  var s=document.getElementById('wght'), v=document.getElementById('wval'), n=document.getElementById('wname');
+  var root=document.documentElement;
+  function nm(w){return w<390?'Leicht':w<560?'Klar':'Laut';}
+  function apply(){var w=+s.value;root.style.setProperty('--w',w);v.textContent=w;n.textContent=nm(w);
+    document.querySelectorAll('#steps button').forEach(function(b){b.classList.toggle('on', Math.abs(+b.dataset.w-w)<8);});}
+  s.addEventListener('input',apply);
+  document.querySelectorAll('#steps button').forEach(function(b){
+    b.addEventListener('click',function(){s.value=b.dataset.w;apply();});});
+  apply();
+</script>
+</body>
+</html>
