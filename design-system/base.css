@@ -116,9 +116,14 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 /* --- Segmentierte Auswahl (Pillen) = WAHL ---------------------------------- */
 /* Anwahl = Gold/Weiss – der Hausfarbklang für Auswahl. Kapselform, kein Pfeil. */
 .seg{display:flex;flex-wrap:wrap;gap:8px}
-/* line-height:var(--lh-tight) statt geerbtem --lh-body (1.66, für Lesetext) –
-   sonst reisst ein zweizeiliges Pillen-Label (z. B. ‹SVG 48›) weit auseinander. */
-.seg button{font:inherit;font-size:14.5px;line-height:var(--lh-tight);padding:8px 15px;border:1px solid var(--line);border-radius:var(--r-pill);
+/* Wie .btn: display:inline-flex + align-items:center statt nativer Button-
+   Zentrierung über Padding/line-height – native <button>-Vertikalzentrierung
+   ist zwischen Browsern (v. a. iOS Safari vs. Chromium) nicht verlässlich
+   gleich, padding-basiertes Zentrieren zeigte dort sichtbar zu tief sitzende
+   Schrift. line-height:var(--lh-tight) bleibt zusätzlich nötig, sonst reisst
+   ein zweizeiliges Pillen-Label (z. B. ‹SVG 48›) weit auseinander. */
+.seg button{display:inline-flex;align-items:center;justify-content:center;text-align:center;
+  font:inherit;font-size:14.5px;line-height:var(--lh-tight);padding:8px 15px;border:1px solid var(--line);border-radius:var(--r-pill);
   background:var(--field-bg);color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
 .seg button:hover{border-color:var(--gold-ink)}
 .seg button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent);font-weight:var(--w-strong)}
