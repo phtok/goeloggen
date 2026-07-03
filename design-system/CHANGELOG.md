@@ -18,6 +18,17 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Icons-Tastatur: Option/Alt-Ebene wiederhergestellt (Pfeile & Kompass)
+- Die Web-Tastatur zeigte nur die **Grundebene** (Buchstaben → Piktogramme) und
+  liess die 20 Pfeil-/Kompass-Zeichen fallen: ihre Codepoints liegen im Privat-
+  bereich (PUA), passen also auf keine Buchstabentaste – und ihre **dokumentierte
+  Tastenlage (Beipackzettel Seite 3: Option/Alt) war nie in Daten kodiert**, nur
+  im PDF. Jetzt ein **Ebenen-Umschalter** (Grundebene ⇄ Option/Alt): die zweite
+  Ebene setzt Pfeile und Kompass auf ihre belegten Tasten (⌥6=↑, ⌥T=←, ⌥U=→,
+  ⌥H=↓, ⌥2/0/Q/E/O/Ü/S/Ö=gebogen, ⌥Y/X/C/V=Kompass). Jede Zeichen-Taste ist ein
+  Knopf – **ein Klick kopiert das Zeichen** (fürs Web), Rückmeldung per Toast.
+  Ersetzt die vorige Behelfs-Palette; das Verlorene ist zurück auf der Tastatur.
+
 ### Neues Werkzeug: Goetheanum Editor (v1) – die Typografie-Engine läuft im Browser
 - **`assets/typografie/goe-typo.js`** (neu, wiederverwendbar): führt
   `typo-regeln.yaml` clientseitig aus – lädt und parst die Regeln (derselbe
