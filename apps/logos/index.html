@@ -621,7 +621,10 @@
         return;
       }
       if (window.goeStat) window.goeStat("download", sel.fmt);   // Engine-Download selbst melden
-      LogoExport[sel.fmt](currentSVG(), fileBase());
+      // SVG48 dient festen Höhen/Icons; die Sprache im Dateinamen hält Sprachvarianten auseinander.
+      var outBase = fileBase();
+      if (sel.fmt === "svg48") outBase += "-" + sel.lang;
+      LogoExport[sel.fmt](currentSVG(), outBase);
     });
     // Versteckte Profi-Felder verdrahten.
     $("advtext").addEventListener("input", function(){ sel.txt = this.value; render(); });
