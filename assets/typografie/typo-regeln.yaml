@@ -33,7 +33,7 @@
   schwere: fehler
 - id: G20-abkuerzung
   regel: In mehrgliedrigen Abkürzungen schmales geschütztes Spatium (z. B., d. h., u. a.)
-  erkennen: '\b(z|d|u)\.\s?(B|h|a)\.'
+  erkennen: '\b(z|d|u)\.[  ]?(B|h|a)\.'
   korrektur: '$1. $2.'
   schwere: empfehlung
 - id: G20-prozent
