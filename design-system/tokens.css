@@ -43,7 +43,7 @@
   --blue-solid:#0061a9;  /* Volles Blau für gefüllte Aktion-Knöpfe – immer Weiss drauf (6.4:1) */
   --gold:#d7ab68;        /* Gold – Inhalts-Akzent */
   --gold-deep:#94702e;   /* Gold dunkel – Auswahl-Fläche, Weiss drauf (4.55:1, WCAG AA) */
-  --gold-ink:#94702e;    /* Gold als TEXT (Kicker, Links) – hellt im Dunkel auf */
+  --gold-ink:#8a6728;    /* Gold als TEXT (Kicker, Links) – 4.89:1 auf --soft, 5.18:1 auf Weiss (WCAG AA); hellt im Dunkel auf */
 
   /* --- Neutrale Töne ------------------------------------------------------ */
   --ink:#23272b;         /* Lesetext */
