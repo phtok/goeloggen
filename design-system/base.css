@@ -282,3 +282,9 @@ img,svg,canvas,video{max-width:100%}
   .shead{gap:var(--s3)}
   .ds-footer .frow{gap:var(--s3)}
 }
+
+/* Bewegung reduzieren (WCAG 2.3.3): auf Wunsch Übergänge und weiches Scrollen
+   global aus. Seiten-eigene Bewegungen (Karussell, .tile-Hover) ziehen nach. */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+}

@@ -86,7 +86,7 @@
   .carousel{position:relative;margin-bottom:var(--s8);border:1px solid var(--line);
     border-radius:var(--r-card);background:var(--soft);overflow:hidden}
   .carousel .track{display:flex;transition:transform .45s ease}
-  @media(prefers-reduced-motion:reduce){.carousel .track{transition:none}}
+  @media(prefers-reduced-motion:reduce){.carousel .track{transition:none}.tile:hover{transform:none}}
   .carousel .slide{flex:0 0 100%;min-width:0;box-sizing:border-box;display:flex;
     align-items:center;justify-content:center;gap:var(--s6);
     padding:var(--s6) clamp(var(--s6),5vw,var(--s8));text-decoration:none;color:var(--ink)}
