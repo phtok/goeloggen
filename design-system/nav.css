@@ -14,6 +14,13 @@
    zwischen kurzen und langen Seiten um die Balkenbreite nach rechts. */
 html{scrollbar-gutter:stable}
 
+/* Sprunglink „Zum Inhalt" – ausserhalb des Bildes, bis er den Fokus bekommt (WCAG 2.4.1). */
+.skip{position:absolute;left:-9999px;top:0;z-index:100;
+  background:var(--blue-solid);color:var(--on-accent);font-family:var(--font);
+  padding:10px 16px;border-radius:0 0 var(--r-control) 0;text-decoration:none}
+.skip:focus{left:0}
+.skip:focus-visible{outline:2px solid var(--on-accent);outline-offset:-4px}
+
 .dsnav{position:sticky;top:0;z-index:40;background:var(--bar-bg);
   backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
 

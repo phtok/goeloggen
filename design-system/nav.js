@@ -176,6 +176,20 @@
     '</div>';
   document.body.insertBefore(header, document.body.firstChild);
 
+  // Sprunglink „Zum Inhalt" (WCAG 2.4.1, Verbesserung): erstes fokussierbares
+  // Element im Body, springt zur Hauptregion. main bekommt id=inhalt, falls es
+  // nicht schon eine trägt (die Startseite setzt sie z. B. selbst). Erst nach
+  // DOM-Ready, da nav.js vor <main> im Markup steht.
+  var placeSkip = function () {
+    var mainEl = document.querySelector("main");
+    if (!mainEl || document.querySelector(".skip")) return;
+    if (!mainEl.id) mainEl.id = "inhalt";
+    var skip = el("a", "skip"); skip.href = "#" + mainEl.id; skip.textContent = "Zum Inhalt";
+    document.body.insertBefore(skip, document.body.firstChild);
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", placeSkip);
+  else placeSkip();
+
   // Optionale Seiten-Sprungleiste: data-onpage="Label:#anker|…". Sie sitzt UNTER
   // dem Hero/der Lede (nicht über dem Titel) und klebt beim Scrollen unter der
   // Kopfzeile. Auf jeder Breite sichtbar (auch mobil), horizontal scrollbar.
