@@ -1,11 +1,19 @@
 // =============================================================================
 // ingest-uscreen · Supabase Edge Function
-// Nimmt Uscreen-Webhooks (goetheanum.tv) entgegen und schreibt sie in
-// public.sommer2026_signups. Loggt jeden Payload PII-redigiert in
-// public.sommer2026_ingest_raw (nur Service-Role liest ihn) – so lässt sich das
-// Mapping am ersten echten Event verfeinern.
+// Nimmt Uscreen-Webhooks (goetheanum.tv) entgegen und schreibt die Sommer-Aktion
+// nach public.sommer2026_signups. Jeder Payload wird PII-redigiert in
+// public.sommer2026_ingest_raw geloggt (nur Service-Role liest ihn).
 //
-// Auth: ?key=<webhook_secret> (liegt in public.sommer2026_config). Kein JWT.
+// Aktions-Isolierung: «3 Monate gratis» = Neuzuweisung OHNE Sofortzahlung
+// (transaction_id leer) → status 'neu'. Vollzahler-Neukäufe und Verlängerungen
+// (Normalgeschäft) werden NICHT gezählt. Zahlung eines Aktions-Users → 'bleibt',
+// Kündigung → 'gekuendigt'. Optional schärfer via aktion_coupon / aktion_plan.
+//
+// Entdopplung: dedup_key = <produkt>:<gesalzener E-Mail-Hash> (Person je Produkt,
+// auch über Quellen hinweg), Fallback <source>:<ext_id>. Upsert/Update laufen
+// über dedup_key – dieselbe Person zählt nie doppelt, auch bei mehreren Events.
+//
+// Scharf nur wenn sommer2026_config.aktion_aktiv = 'true'. Auth: ?key=<secret>.
 // =============================================================================
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
@@ -21,7 +29,6 @@ function pick(o: any, keys: string[]): any {
   return undefined;
 }
 
-// PII (E-Mail, Name, Telefon, Adresse, IP) vor dem Loggen entfernen.
 function redact(o: any): any {
   if (Array.isArray(o)) return o.map(redact);
   if (o && typeof o === "object") {
@@ -30,6 +37,11 @@ function redact(o: any): any {
     return r;
   }
   return o;
+}
+
+async function sha256Hex(s: string): Promise<string> {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 function mapPlan(title: string) {
@@ -63,74 +75,88 @@ async function log(event: string, ok: boolean, note: string, payload: unknown) {
   }).catch(() => {});
 }
 
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+}
+
+async function patchStatus(dedupKey: string, status: string) {
+  await fetch(`${SB}/rest/v1/sommer2026_signups?dedup_key=eq.${encodeURIComponent(dedupKey)}`, {
+    method: "PATCH",
+    headers: { ...H, Prefer: "return=minimal" },
+    body: JSON.stringify({ status }),
+  }).catch(() => {});
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("ok", { status: 200 });
 
-  // Secret prüfen (Query ?key= oder Header x-webhook-key)
   const u = new URL(req.url);
   const key = u.searchParams.get("key") || req.headers.get("x-webhook-key") || "";
-  const cfgRows = await fetch(`${SB}/rest/v1/sommer2026_config?key=in.(webhook_secret,aktion_coupon,aktion_plan)&select=key,value`, { headers: H })
+  const cfgRows = await fetch(`${SB}/rest/v1/sommer2026_config?key=in.(webhook_secret,hash_salt,aktion_aktiv,aktion_coupon,aktion_plan)&select=key,value`, { headers: H })
     .then((r) => r.json()).catch(() => []);
   const cfg: Record<string, string> = {};
   if (Array.isArray(cfgRows)) for (const r of cfgRows) cfg[r.key] = r.value;
   const secret = cfg["webhook_secret"] || null;
   if (!secret || key !== secret) return new Response("unauthorized", { status: 401 });
-  // Aktions-Filter: nur zählen, was zur Sommer-Aktion gehört. Solange weder
-  // aktion_coupon noch aktion_plan gesetzt ist, läuft die Function im Log-Modus.
+
+  const armed = (cfg["aktion_aktiv"] || "").toLowerCase() === "true";
+  const salt = cfg["hash_salt"] || "";
   const aktionCoupon = (cfg["aktion_coupon"] || "").toLowerCase();
   const aktionPlan = (cfg["aktion_plan"] || "").toLowerCase();
-  const filterConfigured = !!(aktionCoupon || aktionPlan);
 
   let body: any = {};
-  try { body = await req.json(); } catch { /* leerer Body */ }
+  try { body = await req.json(); } catch { /* leer */ }
 
   const event = (pick(body, ["event", "type", "event_type"]) || "").toString();
   const data = body.data && typeof body.data === "object" ? body.data : body;
   await log(event, true, "empfangen", body);
 
-  const ext = pick(data, ["subscription_id", "subscription.id", "transaction_id", "id", "user_id", "user.id"]);
-  if (ext === undefined) {
-    return new Response(JSON.stringify({ ok: true, skipped: "kein subscription_id" }),
-      { status: 200, headers: { "Content-Type": "application/json" } });
-  }
+  if (!armed) return json({ ok: true, mode: "log" });
 
-  const title = (pick(data, ["subscription_title", "plan_title", "plan_name", "subscription.title", "product_title"]) || "").toString();
+  const ext = String(pick(data, ["user_id", "user.id", "subscription_id", "transaction_id", "id"]) ?? "");
+  if (!ext) return json({ ok: true, skipped: "kein user_id" });
 
-  // Log-Modus: ohne Aktions-Filter wird geloggt, aber nichts gezählt.
-  if (!filterConfigured) {
-    return new Response(JSON.stringify({ ok: true, mode: "log" }),
-      { status: 200, headers: { "Content-Type": "application/json" } });
-  }
+  // Entdopplung: Person je Produkt über gesalzenen E-Mail-Hash (Fallback ext_id).
+  const email = (pick(data, ["customer_email", "user_email", "email"]) || "").toString().toLowerCase();
+  const person = email ? await sha256Hex(salt + email) : "";
+  const dedupKey = person ? `gtv:${person}` : `uscreen:${ext}`;
+
+  const title = (pick(data, ["subscription_title", "plan_title", "plan_name", "subscription.title", "product_title", "offer_title", "title"]) || "").toString();
+  const e = event.toLowerCase();
+  const isNew = /(assign|subscribed|created|trial|start)/.test(e);
+  const isPay = /(order_paid|paid|recurring|renew|charge|payment|convert)/.test(e);
+  const isCancel = /(cancel|refund|expire|churn|delet)/.test(e);
+
+  if (isCancel) { await patchStatus(dedupKey, "gekuendigt"); return json({ ok: true, status: "gekuendigt" }); }
+  if (isPay && !isNew) { await patchStatus(dedupKey, "bleibt"); return json({ ok: true, status: "bleibt" }); }
+
+  if (!isNew) return json({ ok: true, skipped: "event ignoriert" });
+
+  const txn = pick(data, ["transaction_id"]);
+  const istTrial = txn === undefined || txn === null || txn === "";
   const coupon = (pick(data, ["coupon_code", "coupon", "discount_code", "code"]) || "").toString().toLowerCase();
-  const matchesAktion = (aktionCoupon && coupon.includes(aktionCoupon)) || (aktionPlan && title.toLowerCase().includes(aktionPlan));
-  if (!matchesAktion) {
-    return new Response(JSON.stringify({ ok: true, skipped: "nicht Aktion" }),
-      { status: 200, headers: { "Content-Type": "application/json" } });
-  }
+  let istAktion: boolean;
+  if (aktionCoupon) istAktion = coupon.includes(aktionCoupon);
+  else if (aktionPlan) istAktion = title.toLowerCase().includes(aktionPlan);
+  else istAktion = istTrial;
+  if (!istAktion) return json({ ok: true, skipped: "Normalgeschäft (kein Gratis-Trial)" });
 
   const { sprache, intervall, tarif } = mapPlan(title);
   const kanal = mapKanal(pick(data, ["utm_source", "source", "custom_fields.utm_source", "referral_source", "user_fields.0.value", "user_field_1"]));
   const when = pick(data, ["created_at", "subscribed_at", "started_at", "date"]) || new Date().toISOString();
 
-  const e = event.toLowerCase();
-  let status = "neu";
-  if (/(cancel|refund|expire|churn|delet)/.test(e)) status = "gekuendigt";       // verlässt vor/bei Umwandlung
-  else if (/(renew|payment|charge|paid|convert)/.test(e)) status = "bleibt";     // erste Abbuchung = umgewandelt
-
   const row = {
     signed_up_at: when, produkt: "gtv", sprache, format: "stream",
-    tarif, intervall, status, kanal, source: "uscreen", ext_id: String(ext),
+    tarif, intervall, status: "neu", kanal, source: "uscreen", ext_id: ext, dedup_key: dedupKey,
   };
-
-  const res = await fetch(`${SB}/rest/v1/sommer2026_signups?on_conflict=source,ext_id`, {
+  const res = await fetch(`${SB}/rest/v1/sommer2026_signups?on_conflict=dedup_key`, {
     method: "POST",
     headers: { ...H, Prefer: "resolution=merge-duplicates,return=minimal" },
     body: JSON.stringify(row),
   });
   if (!res.ok) {
     await log(event, false, `upsert ${res.status} ${(await res.text()).slice(0, 300)}`, row);
-    return new Response(JSON.stringify({ ok: false }), { status: 200, headers: { "Content-Type": "application/json" } });
+    return json({ ok: false }, 200);
   }
-  return new Response(JSON.stringify({ ok: true, status, sprache, tarif, intervall, kanal }),
-    { status: 200, headers: { "Content-Type": "application/json" } });
+  return json({ ok: true, status: "neu", sprache, tarif, intervall, kanal });
 });

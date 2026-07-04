@@ -19,11 +19,13 @@ create table if not exists public.sommer2026_signups (
   tarif         text not null check (tarif   in ('standard','ermaessigt')),
   intervall     text not null check (intervall in ('monatlich','jaehrlich')),
   status        text not null default 'neu'    check (status in ('neu','bleibt','gekuendigt','laeuft-aus')),
-  kanal         text not null default 'andere' check (kanal in ('newsletter','mailer','social','popup','website','empfehlung','andere')),  -- Herkunftsweg (Attribution), aus UTM
+  kanal         text not null default 'andere' check (kanal in ('newsletter','mailer','social','popup','website','empfehlung','andere')),  -- Herkunftsweg (Attribution)
   source        text not null default 'manual' check (source in ('uscreen','zoho','paperform','manual')),
-  ext_id        text,                                 -- Dedup-Schlüssel je Quelle (verhindert Doppelzählung)
-  unique (source, ext_id)
+  ext_id        text,                                 -- Fremd-ID der Quelle (z. B. user_id/submission_id)
+  dedup_key     text                                  -- Entdopplung: <produkt>:<E-Mail-Hash> bzw. <source>:<ext_id>
 );
+-- Entdopplung strikt über dedup_key (Person je Produkt, auch über Quellen hinweg)
+create unique index if not exists sommer2026_signups_dedup_uk on public.sommer2026_signups (dedup_key);
 
 comment on table public.sommer2026_signups is
   'Sommer-Aktion 2026: eine Zeile je Anmeldung im Gratis-Zeitraum. status = Bleibe-Zustand nach 3 Monaten. Nur Aggregate verlassen die DB (RPCs).';
@@ -107,4 +109,9 @@ create table if not exists public.sommer2026_config (
 );
 alter table public.sommer2026_config enable row level security;
 revoke all on table public.sommer2026_config from anon, authenticated;
--- insert into public.sommer2026_config(key,value) values ('webhook_secret','<zufälliger-wert>');
+-- Schlüssel in sommer2026_config:
+--   webhook_secret : Secret für ?key= der Ingestion-Functions
+--   hash_salt      : Salt für den E-Mail-Hash (Entdopplung)
+--   aktion_aktiv   : 'true' = zählen, sonst nur loggen
+--   aktion_coupon  : optional – Aktions-Coupon-Code (statt Trial-Heuristik)
+--   aktion_plan    : optional – Aktions-Plan-Titel (statt Trial-Heuristik)
