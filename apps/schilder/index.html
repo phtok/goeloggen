@@ -1,0 +1,549 @@
+<!doctype html>
+<!-- =============================================================================
+     Goetheanum-Werkzeug · SCHILDER
+     -----------------------------------------------------------------------------
+     Editor für Orientierungs- und Türschilder im Hausbild. Vom Fundament aus
+     gebaut: tokens.css + base.css + nav.css EINGEBUNDEN (nicht kopiert), Farben,
+     Schnitte und Abstände ausschliesslich aus den Tokens.
+
+     Stand (Entwurf): der Editor ersetzt zunächst nur einzelne Zeilen und Zeichen.
+     Vorlagen (feste Türschilder für Namen und Funktionen) folgen, sobald die
+     genauen Masse vorliegen. Auf dem Schild kommt ausschliesslich die Hausschrift
+     zum Einsatz, dazu die Haus-Icons und -Pfeile (Webfont, per Zeichen gesetzt).
+
+     Regel-IDs, die hier tragen:
+       · G05  Betonung mit Laut, nie Versalien/Unterstreichen/Sperren.
+       · B01  auf Farbe steht Weiss – hier steht dunkle Schrift auf weissem Schild.
+       · B03/B04 Mindestgrössen und Fingerziele der BEDIENUNG (das Schild selbst
+             ist ein Druck-Artefakt in Millimetern, kein Bildschirm-Text).
+       · DS01/DS02/DS07 Pflicht-Includes, nur Token-Farben, Flächen tokenisiert.
+             Die weisse Schild-Fläche ist ein physisches Artefakt (# ds-ok).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Schilder · Goetheanum</title>
+<meta name="description" content="Orientierungs- und Türschilder im Hausbild setzen – Zeilen und Zeichen einsetzen, mit Haus-Icons und -Pfeilen, A5 quer drucken." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN. -->
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  /* Haus-Icons als Webfont – deckt Piktogramme UND Pfeile/Kompass ab (per
+     Codepoint gesetzt, currentColor → folgt der Schildfarbe). */
+  @font-face{font-family:"G Icons";src:url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2") format("woff2");font-display:block}
+
+  /* Nur werkzeug-eigenes Layout. Farbe/Schnitt/Abstand kommen aus den Tokens. */
+  .hero{padding-block:clamp(40px,7vw,64px) var(--s4)}
+  .hero .lede{margin-top:var(--s4);max-width:60ch}
+
+  /* Format-Wahl (Pillen aus base.css .seg). Gesperrte Formate treten zurück. */
+  .fmt-note{margin-top:var(--s3)}
+  .seg button[disabled]{opacity:.5;cursor:not-allowed}
+  .seg button[disabled]:hover{border-color:var(--line)}
+
+  /* Zwei Spalten: links die Bedienung, rechts die Vorschau. Mobil gestapelt,
+     Vorschau zuerst (WYSIWYG). Container in %/ch, keine festen px-Höhen (B04). */
+  .work{display:grid;grid-template-columns:minmax(320px,1fr) minmax(340px,1.15fr);
+    gap:var(--s8);align-items:start}
+  @media(max-width:900px){.work{grid-template-columns:1fr}.preview{order:-1}}
+
+  /* --- Zeilen-Editor -------------------------------------------------------- */
+  .rows{display:grid;gap:var(--s3)}
+  .row{display:grid;grid-template-columns:auto auto 1fr auto;gap:var(--s2);align-items:center;
+    padding:var(--s2);border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft)}
+  .row .drag{color:var(--muted);font-size:var(--t-small);cursor:default;user-select:none;padding:0 2px}
+  /* Symbol-Knopf: zeigt das gewählte Zeichen (Icon-Font) oder ein Leerzeichen. */
+  .symbtn{display:inline-flex;align-items:center;justify-content:center;width:var(--tap);height:var(--tap);
+    flex:none;border:1px solid var(--line);border-radius:var(--r-control);background:var(--field-bg);
+    color:var(--ink);cursor:pointer;font-family:"G Icons";font-size:24px;line-height:1;transition:border-color .15s}
+  .symbtn:hover{border-color:var(--gold-ink)}
+  .symbtn.empty{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
+  .row input.linetext{width:100%;font-family:var(--font-text);font-size:16px;font-weight:400;line-height:1.3;
+    color:var(--ink);background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:10px 12px;outline:none;transition:border-color .15s,box-shadow .15s}
+  .row input.linetext:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
+  .rowtools{display:flex;gap:2px;align-items:center}
+  .iconbtn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;
+    border:1px solid transparent;border-radius:8px;background:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;transition:.15s}
+  .iconbtn:hover{color:var(--ink);border-color:var(--line)}
+  .iconbtn:disabled{opacity:.35;cursor:not-allowed}
+  .iconbtn:disabled:hover{color:var(--muted);border-color:transparent}
+  /* Symbol-Seite (links/rechts) je Zeile – kleine Pillen. */
+  .sidewrap{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:var(--s2)}
+
+  .addrow{margin-top:var(--s3)}
+
+  /* Feld-Gruppe für Schild-Optionen. */
+  .opts{display:grid;gap:var(--s4);margin-top:var(--s6)}
+  .optline{display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap;justify-content:space-between}
+  .optline .lab{flex:0 0 auto}
+
+  /* --- Vorschau: das Schild in echten Millimetern, für die Anzeige skaliert --- */
+  .preview .frame{border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft);
+    padding:var(--s6);overflow:hidden}
+  .stage{display:flex;justify-content:center}
+  .sheetscale{transform-origin:top center}
+  /* Das physische Schild: fixe Artefakt-Farben (weisses Papier), unabhängig vom
+     App-Theme – WYSIWYG für den Druck. Masse in mm → druckt in Originalgrösse. */
+  .sheet{--sheet-bg:#ffffff;      /* # ds-ok: weisses Schild (Druck-Artefakt) */
+    --sheet-ink:#23272b;          /* # ds-ok: dunkle Schrift auf weissem Schild */
+    width:var(--sheet-w,210mm);height:var(--sheet-h,148mm);background:var(--sheet-bg);color:var(--sheet-ink);
+    box-shadow:0 6px 24px rgba(20,24,28,.14);position:relative;overflow:hidden}
+  .sheet .pad{position:absolute;inset:12mm;display:flex;flex-direction:column;justify-content:center;gap:0}
+  .sheet.align-center .pad{align-items:stretch}
+  .sline{display:flex;align-items:center;gap:.5em;min-height:1em;padding:.18em 0}
+  .sline.pos-right{flex-direction:row-reverse;justify-content:flex-start}
+  .sheet.align-center .sline{justify-content:center}
+  .sheet.align-center .sline.pos-right{justify-content:center}
+  .sline .sym{font-family:"G Icons";line-height:1;flex:none;font-size:1.25em}
+  /* Schild-Text: Hausschrift, Schnitt Deutlich (Wegweisung = geschaute Hierarchie,
+     kein Fliesstext). Betonung nie über Versalien (G05). */
+  .sline .txt{font-family:var(--font-display);font-weight:var(--w-deutlich);line-height:1.1;letter-spacing:-.005em;
+    white-space:pre-wrap;word-break:break-word}
+  .sline .txt:empty::after{content:"\00a0"}
+
+  .size-s .pad{font-size:9mm}
+  .size-m .pad{font-size:13mm}
+  .size-l .pad{font-size:18mm}
+
+  .prevfoot{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s4)}
+  .dims{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
+  .actions{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s4)}
+
+  /* --- Zeichen-Wähler (Icons & Pfeile) -------------------------------------- */
+  dialog.picker{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);color:var(--ink);
+    padding:0;width:min(640px,92vw);max-height:86vh;box-shadow:var(--shadow-card)}
+  dialog.picker::backdrop{background:color-mix(in srgb,var(--ink) 45%,transparent)}
+  .picker .phead{position:sticky;top:0;background:var(--bar-bg);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);padding:var(--s4) var(--s6);display:flex;gap:var(--s4);align-items:center;justify-content:space-between}
+  .picker .phead h3{font-size:var(--t-h3)}
+  .picker .pbody{padding:var(--s4) var(--s6) var(--s6);overflow:auto}
+  .picker .psearch{margin:var(--s4) 0}
+  .picker .psearch input{width:100%;font-family:var(--font-text);font-size:16px;color:var(--ink);background:var(--field-bg);
+    border:1px solid var(--line);border-radius:var(--r-control);padding:11px 12px;outline:none}
+  .picker .psearch input:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
+  .picker h4{font-family:var(--font-text);font-weight:600;font-size:var(--t-small);color:var(--muted);
+    margin:var(--s4) 0 var(--s2);letter-spacing:.01em}
+  .glyphgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px}
+  .glyphcell{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px 8px;
+    border:1px solid var(--line-soft);border-radius:12px;background:var(--soft);cursor:pointer;transition:border-color .15s,background .15s}
+  .glyphcell:hover,.glyphcell:focus-visible{border-color:var(--gold-ink);background:var(--paper);outline:none}
+  .glyphcell .g{font-family:"G Icons";font-size:38px;line-height:1;color:var(--ink);height:40px}
+  .glyphcell .n{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);text-align:center;line-height:1.2;min-height:2.4em}
+  .pnone{margin-top:var(--s2)}
+  .empty{color:var(--muted);font-size:var(--t-small);padding:var(--s4) 0}
+</style>
+</head>
+<body>
+
+<!-- Globale Navigation aus tools.json. -->
+<script src="../../design-system/nav.js" data-root="../../" data-section="vorbereitung" data-active="schilder"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Goetheanum · Orientierung</span>
+    <h1>Schilder</h1>
+    <p class="lede">Orientierungs- und Türschilder im Hausbild setzen: Zeilen und Zeichen einsetzen,
+      mit den Haus-Icons und -Pfeilen, in der Hausschrift – und A5 quer ausdrucken.</p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Format</h2>
+      <p>Zurzeit steht das Orientierungsschild A5 quer bereit. Feste Türschilder für Namen und
+        Funktionen kommen als Vorlagen, sobald die genauen Masse vorliegen.</p>
+    </div>
+
+    <div class="seg" id="formats" role="group" aria-label="Format wählen">
+      <button type="button" data-fmt="a5q" aria-pressed="true">Orientierung · A5 quer</button>
+      <button type="button" data-fmt="tuer-name" disabled aria-disabled="true">Türschild · Name — bald</button>
+      <button type="button" data-fmt="tuer-funktion" disabled aria-disabled="true">Türschild · Funktion — bald</button>
+    </div>
+    <p class="note fmt-note">Der Editor ersetzt zunächst nur einzelne Zeilen und Zeichen. Vorlagen mit
+      fest gesetzten Feldern folgen.</p>
+  </section>
+
+  <section>
+    <div class="work">
+
+      <!-- ============================ BEDIENUNG ============================= -->
+      <div class="editor">
+        <div class="shead">
+          <h2>Zeilen</h2>
+          <p>Je Zeile ein Ziel: Text eintragen, Symbol wählen und seine Seite bestimmen. Ein Symbol
+            ist ein Zeichen aus dem Haus-Icon- oder -Pfeil-Satz.</p>
+        </div>
+
+        <div class="rows" id="rows"></div>
+
+        <div class="addrow">
+          <button type="button" class="btn" id="addRow">Zeile hinzufügen</button>
+        </div>
+
+        <div class="opts">
+          <div class="optline">
+            <span class="lab" id="lab-align">Ausrichtung</span>
+            <div class="seg" role="group" aria-labelledby="lab-align" id="align">
+              <button type="button" data-align="left" aria-pressed="true">Links</button>
+              <button type="button" data-align="center" aria-pressed="false">Mittig</button>
+            </div>
+          </div>
+          <div class="optline">
+            <span class="lab" id="lab-size">Schriftgrösse</span>
+            <div class="seg" role="group" aria-labelledby="lab-size" id="size">
+              <button type="button" data-size="s" aria-pressed="false">Klein</button>
+              <button type="button" data-size="m" aria-pressed="true">Mittel</button>
+              <button type="button" data-size="l" aria-pressed="false">Gross</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================ VORSCHAU ============================== -->
+      <div class="preview">
+        <div class="shead">
+          <h2>Vorschau</h2>
+          <p>So wird gedruckt – in Originalgrösse.</p>
+        </div>
+
+        <div class="frame">
+          <div class="stage" id="stage">
+            <div class="sheetscale" id="sheetscale">
+              <div class="sheet size-m align-left" id="sheet">
+                <div class="pad" id="pad"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="prevfoot">
+          <span class="dims" id="dims">A5 quer · 210&#8239;×&#8239;148&#8239;mm</span>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn primary" id="print">Drucken / als PDF</button>
+          <button type="button" class="btn" id="reset">Zurücksetzen</button>
+        </div>
+        <p class="note" style="margin-top:var(--s3)">Im Druckdialog Format A5, Ausrichtung Querformat und
+          Ränder ‹keine› wählen; als PDF sichern über ‹Als PDF speichern›.</p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- Zeichen-Wähler: Haus-Icons und -Pfeile. -->
+<dialog class="picker" id="picker" aria-label="Zeichen wählen">
+  <div class="phead">
+    <h3>Zeichen wählen</h3>
+    <button type="button" class="btn ghost" id="pickerClose" aria-label="Schliessen">Schliessen</button>
+  </div>
+  <div class="pbody">
+    <div class="psearch">
+      <input type="search" id="pickerSearch" placeholder="Suchen – z. B. Pfeil, WC, WLAN" aria-label="Zeichen suchen" />
+    </div>
+    <div class="pnone">
+      <button type="button" class="btn" id="pickNone">Kein Symbol</button>
+    </div>
+    <div id="pickerBody"></div>
+  </div>
+</dialog>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Hausgrafik</span>
+    <span><a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var ICONS_URL = "../../assets/fonts/goetheanum/Icons-Einzeldateien/icons.json";
+
+  // Fallback-Auswahl, falls die icons.json nicht geladen werden kann (offline):
+  // die gebräuchlichsten Wegweiser-Zeichen. group = Anzeige-Rubrik.
+  var FALLBACK = [
+    {slug:"pfeil-links",  label:"Pfeil links",  codepoint:"U+E267", group:"pfeil-kompass"},
+    {slug:"pfeil-rechts", label:"Pfeil rechts", codepoint:"U+E265", group:"pfeil-kompass"},
+    {slug:"pfeil-hoch",   label:"Pfeil hoch",   codepoint:"U+E264", group:"pfeil-kompass"},
+    {slug:"pfeil-runter", label:"Pfeil runter", codepoint:"U+E266", group:"pfeil-kompass"},
+    {slug:"eintritt",     label:"Eintritt",     codepoint:"U+0065", group:"piktogramm"},
+    {slug:"garderobe",    label:"Garderobe",    codepoint:"U+0066", group:"piktogramm"},
+    {slug:"fahrstuhl",    label:"Fahrstuhl",    codepoint:"U+0061", group:"piktogramm"},
+    {slug:"treppe",       label:"Treppe",       codepoint:"U+0073", group:"piktogramm"},
+    {slug:"wc-damen",     label:"WC Damen",     codepoint:"U+0079", group:"piktogramm"},
+    {slug:"wc-herren",    label:"WC Herren",    codepoint:"U+003C", group:"piktogramm"},
+    {slug:"wc-rollstuhl", label:"WC Rollstuhl", codepoint:"U+0078", group:"piktogramm"},
+    {slug:"wlan",         label:"WLAN",         codepoint:"U+0067", group:"piktogramm"}
+  ];
+
+  var GROUP_TITLE = {"pfeil-kompass":"Pfeile & Kompass","piktogramm":"Piktogramme"};
+  var GROUP_ORDER = ["pfeil-kompass","piktogramm"];
+
+  function cpChar(cp){
+    try{ return String.fromCodePoint(parseInt(String(cp).replace(/^U\+/i,""),16)); }
+    catch(e){ return ""; }
+  }
+
+  // Zustand des Schildes. Symbol = {char, label} oder null.
+  function defaultLines(){
+    return [
+      {sym:{char:cpChar("U+E265"),label:"Pfeil rechts"}, pos:"left", text:"Grosser Saal"},
+      {sym:{char:cpChar("U+E267"),label:"Pfeil links"},  pos:"left", text:"Garderobe"},
+      {sym:{char:cpChar("U+0079"),label:"WC Damen"},     pos:"left", text:"WC"}
+    ];
+  }
+  var state = {lines:defaultLines(), align:"left", size:"m"};
+  var symbols = FALLBACK.slice();
+
+  // --- Rendering ------------------------------------------------------------
+  var rowsEl   = document.getElementById("rows");
+  var padEl    = document.getElementById("pad");
+  var sheetEl  = document.getElementById("sheet");
+
+  function renderRows(){
+    rowsEl.innerHTML = "";
+    state.lines.forEach(function(line, i){
+      var row = document.createElement("div");
+      row.className = "row";
+
+      var grip = document.createElement("span");
+      grip.className = "drag"; grip.setAttribute("aria-hidden","true"); grip.textContent = (i+1)+".";
+
+      var sym = document.createElement("button");
+      sym.type = "button";
+      sym.className = "symbtn" + (line.sym ? "" : " empty");
+      sym.textContent = line.sym ? line.sym.char : "Symbol";
+      sym.setAttribute("aria-label", "Symbol für Zeile "+(i+1)+ (line.sym ? " – "+line.sym.label : " wählen"));
+      sym.addEventListener("click", function(){ openPicker(i); });
+
+      var input = document.createElement("input");
+      input.type = "text"; input.className = "linetext"; input.value = line.text;
+      input.placeholder = "Beschriftung"; input.setAttribute("aria-label","Text Zeile "+(i+1));
+      input.addEventListener("input", function(){ state.lines[i].text = input.value; renderSheet(); });
+
+      var tools = document.createElement("div");
+      tools.className = "rowtools";
+
+      var up = mkIconBtn("↑","Zeile nach oben", i===0, function(){ move(i,-1); });
+      var dn = mkIconBtn("↓","Zeile nach unten", i===state.lines.length-1, function(){ move(i,1); });
+      var side = mkIconBtn(line.pos==="right" ? "⇥" : "⇤",
+        "Symbol-Seite: "+(line.pos==="right"?"rechts":"links"), false, function(){
+          state.lines[i].pos = line.pos==="right" ? "left" : "right"; render();
+        });
+      var del = mkIconBtn("✕","Zeile entfernen", state.lines.length<=1, function(){ removeLine(i); });
+
+      tools.appendChild(up); tools.appendChild(dn); tools.appendChild(side); tools.appendChild(del);
+
+      row.appendChild(grip); row.appendChild(sym); row.appendChild(input); row.appendChild(tools);
+      rowsEl.appendChild(row);
+    });
+  }
+
+  function mkIconBtn(glyph, label, disabled, fn){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "iconbtn"; b.textContent = glyph;
+    b.title = label; b.setAttribute("aria-label", label);
+    if(disabled){ b.disabled = true; } else { b.addEventListener("click", fn); }
+    return b;
+  }
+
+  function renderSheet(){
+    padEl.innerHTML = "";
+    state.lines.forEach(function(line){
+      var l = document.createElement("div");
+      l.className = "sline pos-" + (line.pos==="right" ? "right":"left");
+      if(line.sym){
+        var s = document.createElement("span");
+        s.className = "sym"; s.setAttribute("aria-hidden","true"); s.textContent = line.sym.char;
+        l.appendChild(s);
+      }
+      var t = document.createElement("span");
+      t.className = "txt"; t.textContent = line.text || "";
+      l.appendChild(t);
+      padEl.appendChild(l);
+    });
+    sheetEl.className = "sheet size-"+state.size+" align-"+state.align;
+    fit();
+  }
+
+  function render(){ renderRows(); renderSheet(); }
+
+  function move(i, d){
+    var j = i + d;
+    if(j < 0 || j >= state.lines.length) return;
+    var t = state.lines[i]; state.lines[i] = state.lines[j]; state.lines[j] = t;
+    render();
+  }
+  function removeLine(i){
+    if(state.lines.length<=1) return;
+    state.lines.splice(i,1); render();
+  }
+
+  document.getElementById("addRow").addEventListener("click", function(){
+    state.lines.push({sym:null, pos:"left", text:""});
+    render();
+    var inputs = rowsEl.querySelectorAll("input.linetext");
+    if(inputs.length) inputs[inputs.length-1].focus();
+  });
+
+  // --- Seg-Umschalter (Ausrichtung, Grösse) ---------------------------------
+  function wireSeg(id, key, apply){
+    var group = document.getElementById(id);
+    group.addEventListener("click", function(e){
+      var btn = e.target.closest("button"); if(!btn) return;
+      Array.prototype.forEach.call(group.querySelectorAll("button"), function(b){
+        b.setAttribute("aria-pressed", String(b===btn));
+      });
+      state[key] = btn.getAttribute(apply);
+      renderSheet();
+    });
+  }
+  wireSeg("align","align","data-align");
+  wireSeg("size","size","data-size");
+
+  // --- Skalierung der Vorschau ----------------------------------------------
+  var stageEl = document.getElementById("stage");
+  var scaleEl = document.getElementById("sheetscale");
+  function fit(){
+    // reale Pixelbreite des Schildes (mm → px) an die Bühne anpassen.
+    var natural = sheetEl.getBoundingClientRect().width / (currentScale || 1);
+    var avail = stageEl.clientWidth;
+    var s = avail > 0 ? Math.min(1, avail / natural) : 1;
+    currentScale = s;
+    scaleEl.style.transform = "scale("+s+")";
+    // Höhe der skalierten Bühne mitführen, damit der Rahmen nicht überläuft.
+    scaleEl.style.height = (sheetEl.offsetHeight * s) + "px";
+  }
+  var currentScale = 1;
+  if(window.ResizeObserver){ new ResizeObserver(fit).observe(stageEl); }
+  window.addEventListener("resize", fit);
+  window.addEventListener("load", fit);
+
+  // --- Zeichen-Wähler -------------------------------------------------------
+  var picker = document.getElementById("picker");
+  var pickerBody = document.getElementById("pickerBody");
+  var pickerSearch = document.getElementById("pickerSearch");
+  var activeLine = -1;
+
+  function buildPicker(filter){
+    pickerBody.innerHTML = "";
+    var q = (filter||"").trim().toLowerCase();
+    var any = false;
+    GROUP_ORDER.forEach(function(g){
+      var items = symbols.filter(function(it){
+        if(it.group !== g) return false;
+        if(!q) return true;
+        return it.label.toLowerCase().indexOf(q) >= 0 || it.slug.toLowerCase().indexOf(q) >= 0;
+      });
+      if(!items.length) return;
+      any = true;
+      var h = document.createElement("h4"); h.textContent = GROUP_TITLE[g] || g;
+      pickerBody.appendChild(h);
+      var grid = document.createElement("div"); grid.className = "glyphgrid";
+      items.forEach(function(it){
+        var ch = cpChar(it.codepoint);
+        var cell = document.createElement("button");
+        cell.type = "button"; cell.className = "glyphcell";
+        cell.setAttribute("aria-label", it.label);
+        var g1 = document.createElement("span"); g1.className = "g"; g1.setAttribute("aria-hidden","true"); g1.textContent = ch;
+        var n1 = document.createElement("span"); n1.className = "n"; n1.textContent = it.label;
+        cell.appendChild(g1); cell.appendChild(n1);
+        cell.addEventListener("click", function(){ chooseSymbol({char:ch, label:it.label}); });
+        grid.appendChild(cell);
+      });
+      pickerBody.appendChild(grid);
+    });
+    if(!any){
+      var e = document.createElement("p"); e.className = "empty"; e.textContent = "Kein Zeichen gefunden.";
+      pickerBody.appendChild(e);
+    }
+  }
+
+  function openPicker(i){
+    activeLine = i;
+    pickerSearch.value = "";
+    buildPicker("");
+    if(typeof picker.showModal === "function"){ picker.showModal(); }
+    else { picker.setAttribute("open",""); }
+    setTimeout(function(){ pickerSearch.focus(); }, 30);
+  }
+  function closePicker(){
+    if(typeof picker.close === "function" && picker.open){ picker.close(); }
+    else { picker.removeAttribute("open"); }
+  }
+  function chooseSymbol(sym){
+    if(activeLine>=0 && activeLine<state.lines.length){ state.lines[activeLine].sym = sym; render(); }
+    closePicker();
+  }
+  document.getElementById("pickerClose").addEventListener("click", closePicker);
+  document.getElementById("pickNone").addEventListener("click", function(){
+    if(activeLine>=0 && activeLine<state.lines.length){ state.lines[activeLine].sym = null; render(); }
+    closePicker();
+  });
+  pickerSearch.addEventListener("input", function(){ buildPicker(pickerSearch.value); });
+  picker.addEventListener("click", function(e){ if(e.target===picker) closePicker(); });
+  picker.addEventListener("cancel", function(){ closePicker(); });
+
+  // --- Aktionen -------------------------------------------------------------
+  document.getElementById("print").addEventListener("click", function(){ window.print(); });
+  document.getElementById("reset").addEventListener("click", function(){
+    state.lines = defaultLines(); state.align = "left"; state.size = "m";
+    resetSeg("align","left"); resetSeg("size","m");
+    render();
+  });
+  function resetSeg(id, val){
+    var group = document.getElementById(id);
+    Array.prototype.forEach.call(group.querySelectorAll("button"), function(b){
+      var k = id==="align" ? "data-align" : "data-size";
+      b.setAttribute("aria-pressed", String(b.getAttribute(k)===val));
+    });
+  }
+
+  // Türschild-Formate sind noch gesperrt – Klick meldet den Stand.
+  document.getElementById("formats").addEventListener("click", function(e){
+    var btn = e.target.closest("button"); if(!btn || !btn.disabled) return;
+  });
+
+  // --- Icon-Daten laden (mit Fallback) --------------------------------------
+  fetch(ICONS_URL).then(function(r){ return r.ok ? r.json() : null; }).then(function(data){
+    if(Array.isArray(data) && data.length){
+      // Nur benannte Wegweiser-Zeichen: Piktogramme und Pfeile/Kompass. Die
+      // Platzhalter-Gruppe ‹weitere› (unbenannte Slots) bleibt aussen vor.
+      symbols = data.filter(function(it){ return it.group==="piktogramm" || it.group==="pfeil-kompass"; });
+    }
+  }).catch(function(){ /* Fallback bleibt bestehen */ });
+
+  // Start
+  render();
+})();
+</script>
+
+<!-- Druck: nur das Schild, in Originalgrösse. A5 quer, ohne Ränder. -->
+<style>
+  @page{ size:A5 landscape; margin:0; }
+  @media print{
+    .ds-header,.dsnav,.dsnav-drawer,.dsnav-backdrop,.ds-footer,
+    .hero,.editor,.prevfoot,.actions,.shead,.fmt-note,.seg,
+    section > .shead, #formats, .note, dialog.picker{ display:none !important; }
+    body{ background:#ffffff; }        /* # ds-ok: Druck auf weissem Papier */
+    main.wrap, section, .work, .preview, .frame, .stage{
+      max-width:none;margin:0;padding:0;border:0;background:none;display:block;overflow:visible;
+    }
+    .frame{box-shadow:none}
+    .sheetscale{ transform:none !important; height:auto !important; }
+    .sheet{ box-shadow:none !important; }
+  }
+</style>
+
+</body>
+</html>
