@@ -105,6 +105,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 /* Aktion = Blau (Zustand/Tun); die primäre Aktion ist gefüllt. Klar getrennt von
    der Auswahl-Pille (Gold). Mind. Fingerziel auf Touch. */
 .btn{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-size:15px;line-height:1.2;
+  font-weight:var(--w-deutlich);   /* B2: Goetheanum-Label <18px braucht Deutlich (Beier) */
   padding:10px 16px;border-radius:var(--r-control);border:1px solid var(--line);color:var(--ink);
   background:var(--field-bg);text-align:center;cursor:pointer;transition:.15s}
 .btn:hover{border-color:var(--blue)}
@@ -123,7 +124,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
    Schrift. line-height:var(--lh-tight) bleibt zusätzlich nötig, sonst reisst
    ein zweizeiliges Pillen-Label (z. B. ‹SVG 48›) weit auseinander. */
 .seg button{display:inline-flex;align-items:center;justify-content:center;text-align:center;
-  font:inherit;font-size:14.5px;line-height:var(--lh-tight);padding:8px 15px;border:1px solid var(--line);border-radius:var(--r-pill);
+  font:inherit;font-size:14.5px;font-weight:var(--w-deutlich);line-height:var(--lh-tight);padding:8px 15px;border:1px solid var(--line);border-radius:var(--r-pill);
   background:var(--field-bg);color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
 .seg button:hover{border-color:var(--gold-ink)}
 .seg button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent);font-weight:var(--w-strong)}
@@ -221,7 +222,7 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
 
 /* Kicker: getönt, leicht getrackt, Display – NORMAL, nicht versal (G05).
    Kleine UI-Schrift: nie Leise (verschwimmt klein) – mindestens Klar. */
-.kicker,.kick{display:inline-block;font-family:var(--font-display);color:var(--gold-ink);font-size:13.5px;letter-spacing:.03em;font-weight:var(--w-text);line-height:1.3;margin-bottom:var(--s2)}
+.kicker,.kick{display:inline-block;font-family:var(--font-display);color:var(--gold-ink);font-size:13.5px;letter-spacing:.03em;font-weight:var(--w-deutlich);line-height:1.3;margin-bottom:var(--s2)}
 
 /* Anriss unter dem Titel. */
 .lede{font-size:var(--t-lede);color:var(--muted);line-height:1.45;max-width:54ch}
