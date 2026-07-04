@@ -18,12 +18,14 @@
 <title>Sommer-Zähler 2026 · Goetheanum</title>
 <meta name="description" content="Aktions-Cockpit der Sommer-Aktion 2026 – neue Abos der Wochenschrift und von goetheanum.tv, live und motivierend." />
 <meta name="robots" content="noindex" />
-<link rel="icon" type="image/svg+xml" href="https://phtok.github.io/goeloggen/assets/logos/goetheanum-mark-blue.svg" />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
 
-<!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN. -->
-<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/tokens.css" />
-<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/base.css" />
-<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/nav.css" />
+<!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN.
+     Relativ (../../) wie die anderen Apps: die absolute phtok-URL leitet auf der
+     Domain per 301 auf http:// um und wird als Mixed Content blockiert. -->
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
 
 <style>
   /* Nur cockpit-eigene Gestalt. Alles Gemeinsame kommt aus base.css.
@@ -141,8 +143,8 @@
 <body>
 
 <!-- Globale Navigation: Kopfzeile + Menü aus tools.json, mit «← Übersicht». -->
-<script src="https://phtok.github.io/goeloggen/design-system/nav.js"
-        data-root="https://phtok.github.io/goeloggen/"
+<script src="../../design-system/nav.js"
+        data-root="../../"
         data-variant="werkzeug"></script>
 
 <main class="wrap">
@@ -262,7 +264,7 @@
     </div>
     <div class="frow">
       <span><strong>Sommer-Zähler 2026</strong> · live aus dem Werkzeug-Backend · nur Summen, keine Personendaten</span>
-      <span><a href="https://phtok.github.io/goeloggen/design-system/">Design-System</a></span>
+      <span><a href="../../design-system/">Design-System</a></span>
     </div>
   </div>
 </footer>
