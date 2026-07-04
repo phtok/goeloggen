@@ -14,6 +14,7 @@
   /* Farben, Schrift, Maße, Hell-Dunkel kommen aus tokens.css/base.css. Hier nur
      das seiten-eigene Layout – keine eigenen Farbwerte, kein eigenes :root. */
   @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2") format("woff2");font-display:block}
+  @font-face{font-family:"G Pfeile";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Pfeile-v2.7.woff2") format("woff2");font-display:block}
   @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
   @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
   @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
@@ -74,6 +75,7 @@
   .keycap:not(.has){opacity:.5}
   .keycap.has{border-color:var(--gold);background:var(--paper);box-shadow:0 1px 2px rgba(20,24,28,.05)}
   .keycap.has .gl{font-family:"G Icons";font-size:40px;line-height:1;color:var(--ink)}
+  .keycap.has .gl.pf{font-family:"G Pfeile"}  /* Pfeile-Ebene: eigener Font, Grundtaste getippt */
   /* Buchstaben-Legende: auf belegten Tasten klein in die untere rechte Ecke. */
   .keycap.has .lk{position:absolute;right:7px;bottom:5px;color:var(--gold-ink)}
   @media(max-width:560px){
@@ -155,8 +157,8 @@
         <h3>Als Webfont – per Taste</h3>
         <p>Eine Datei trägt alle Icons. Den <code>@font-face</code>-Block einbinden, einem Element die Icon-Schrift geben – dann sitzt jedes Piktogramm auf einer Taste.</p>
         <div class="seg kbd-layer" role="tablist" aria-label="Tastaturebene">
-          <button type="button" data-layer="base" aria-pressed="true">Grundebene</button>
-          <button type="button" data-layer="option" aria-pressed="false">Option / Alt</button>
+          <button type="button" data-layer="base" aria-pressed="true">Piktogramme</button>
+          <button type="button" data-layer="pfeile" aria-pressed="false">Pfeile &amp; Kompass</button>
         </div>
         <div class="kbd" id="kbd"></div>
         <span class="kbd-toast" id="kbdtoast" aria-live="polite"></span>
@@ -199,6 +201,9 @@
       <div class="card"><h3>Icon-Webfont</h3><p>Eine Datei, alle Icons – fürs Web (woff2) und zum Installieren (otf).</p>
         <a class="btn" href="assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2" download>woff2</a>
         <a class="btn" href="assets/fonts/goetheanum/Fonts/Goetheanum-Icons-v2.7.otf" download>OTF</a></div>
+      <div class="card"><h3>Pfeile &amp; Kompass</h3><p>Eigener Font: Pfeile und Kompass auf normalen Tasten – Schrift wählen, tippen (Umschalt = fett).</p>
+        <a class="btn" href="assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Pfeile-v2.7.woff2" download>woff2</a>
+        <a class="btn" href="assets/fonts/goetheanum/Fonts/Goetheanum-Pfeile-v2.7.otf" download>OTF</a></div>
       <div class="card"><h3>Beipackzettel</h3><p>Übersicht und vollständige Tastatur-Belegung der Icons.</p>
         <a class="btn" href="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf" download>PDF</a></div>
     </div>
@@ -251,12 +256,11 @@
       });
       empty.hidden = rows.length>0;
     }
-    // Zwei Tastaturebenen wie im Beipackzettel: Grundebene (Buchstaben → Piktogramme)
-    // und Option/Alt (→ Pfeile & Kompass). Die Pfeil-/Kompass-Zeichen liegen im
-    // Privatbereich (PUA); ihre Tastenlage kommt aus der dokumentierten Belegung
-    // (Beipackzettel Seite 3) – geradlinige Pfeile und Kompass semantisch verankert,
-    // die acht gebogenen in Belegungsreihenfolge.
-    var OPTION_KEYS={ '6':'pfeil-hoch','t':'pfeil-links','u':'pfeil-rechts','h':'pfeil-runter',
+    // Zwei Ebenen: Piktogramme (Icon-Font, Buchstaben → Zeichen) und Pfeile & Kompass.
+    // Die Pfeile haben einen EIGENEN Font «Goetheanum Pfeile»: dieselben Zeichen auf
+    // normalen Tasten – tippen, kein Option, kein PUA. Belegung A (Beipackzettel-treu),
+    // Umschalt = fett. Die Tasten hier zeigen die Zeichen aus dem Pfeile-Webfont.
+    var PFEIL_KEYS={ '6':'pfeil-hoch','t':'pfeil-links','u':'pfeil-rechts','h':'pfeil-runter',
       'y':'kompass-1','x':'kompass-2','c':'kompass-3','v':'kompass-4',
       '2':'pfeil-gebogen-1','0':'pfeil-gebogen-2','q':'pfeil-gebogen-3','e':'pfeil-gebogen-4',
       'o':'pfeil-gebogen-5','ü':'pfeil-gebogen-6','s':'pfeil-gebogen-7','ö':'pfeil-gebogen-8' };
@@ -279,12 +283,15 @@
       ROWS.forEach(function(r){
         var row=document.createElement('div'); row.className='krow';
         r.forEach(function(ch){
-          var it = kbdLayer==='base' ? byChar[ch] : bySlug[OPTION_KEYS[ch]];
+          var pfeile = kbdLayer==='pfeile';
+          var it = pfeile ? bySlug[PFEIL_KEYS[ch]] : byChar[ch];
           if(it){
-            var g=key(it.codepoint), legend=(kbdLayer==='option'?'⌥':'')+ch.toUpperCase();
+            var g=key(it.codepoint), legend=ch.toUpperCase();
+            // Piktogramme: Zeichen aus dem Icon-Font. Pfeile: die GRUNDTASTE im Pfeile-Font.
+            var glClass = pfeile ? 'gl pf' : 'gl', glChar = pfeile ? ch : g;
             var b=document.createElement('button'); b.type='button'; b.className='keycap has';
             b.title=it.label+' – kopieren'; b.setAttribute('aria-label',it.label+' kopieren');
-            b.innerHTML='<span class="gl" aria-hidden="true">'+esc(g)+'</span><span class="lk">'+esc(legend)+'</span>';
+            b.innerHTML='<span class="'+glClass+'" aria-hidden="true">'+esc(glChar)+'</span><span class="lk">'+esc(legend)+'</span>';
             b.addEventListener('click',(function(gg,lab){ return function(){ copyGlyph(gg,lab); }; })(g,it.label));
             row.appendChild(b);
           } else {
@@ -297,8 +304,8 @@
       });
       var cap=document.getElementById('kbdcap');
       if(cap) cap.innerHTML = kbdLayer==='base'
-        ? 'Grundebene – jede <b style="color:var(--gold-ink);font-weight:400">goldene</b> Taste trägt ein Piktogramm; ein Klick kopiert das Zeichen. Pfeile und Kompass liegen auf der <b style="color:var(--gold-ink);font-weight:400">Option/Alt</b>-Ebene (Reiter oben).'
-        : 'Option/Alt-Ebene – Pfeile und Kompass. Am Rechner mit der Wahltaste ⌥ getippt (⌥T = Pfeil links); hier per Klick kopiert. Vollständig im Beipackzettel.';
+        ? 'Piktogramme – jede <b style="color:var(--gold-ink);font-weight:400">goldene</b> Taste trägt ein Zeichen; ein Klick kopiert es. Pfeile und Kompass haben einen <b style="color:var(--gold-ink);font-weight:400">eigenen Font</b> (Reiter oben).'
+        : 'Pfeile & Kompass – eigener Font <b style="color:var(--gold-ink);font-weight:400">‹Goetheanum Pfeile›</b>: Schrift wählen, Taste tippen (Umschalt = fett) – kein Option nötig. Oder hier per Klick kopieren; Download unten.';
     }
     document.querySelectorAll('.kbd-layer button').forEach(function(b){
       b.addEventListener('click',function(){
