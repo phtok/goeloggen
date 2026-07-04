@@ -23,9 +23,9 @@
     border-radius:var(--r-card);padding:var(--s6);background:var(--paper);text-decoration:none;color:var(--ink);
     transition:border-color .15s,box-shadow .15s,transform .15s}
   .tile:hover{border-color:var(--gold-ink);box-shadow:var(--shadow-card);transform:translateY(-1px)}
-  .tile h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:20px;line-height:1.15;display:flex;align-items:center;gap:9px;margin:0}
-  .tile h3 .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s,color .15s}
-  .tile:hover h3 .arr{color:var(--gold-ink);transform:translateX(3px)}
+  .tile h2{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:20px;line-height:1.15;display:flex;align-items:center;gap:9px;margin:0}
+  .tile h2 .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s,color .15s}
+  .tile:hover h2 .arr{color:var(--gold-ink);transform:translateX(3px)}
 
   /* Kleiner, feiner Hinweis über dem Karussell. */
   .discover{font-size:var(--t-small);letter-spacing:.07em;color:var(--gold-ink);margin:0 0 var(--s3)}
@@ -86,7 +86,7 @@
   .carousel{position:relative;margin-bottom:var(--s8);border:1px solid var(--line);
     border-radius:var(--r-card);background:var(--soft);overflow:hidden}
   .carousel .track{display:flex;transition:transform .45s ease}
-  @media(prefers-reduced-motion:reduce){.carousel .track{transition:none}}
+  @media(prefers-reduced-motion:reduce){.carousel .track{transition:none}.tile:hover{transform:none}}
   .carousel .slide{flex:0 0 100%;min-width:0;box-sizing:border-box;display:flex;
     align-items:center;justify-content:center;gap:var(--s6);
     padding:var(--s6) clamp(var(--s6),5vw,var(--s8));text-decoration:none;color:var(--ink)}
@@ -102,9 +102,13 @@
     cursor:pointer;display:grid;place-items:center;font-size:20px;line-height:1;padding:0;z-index:2}
   .carousel .arrow:hover{border-color:var(--gold-ink);color:var(--gold-ink)}
   .carousel .arrow.l{left:12px}.carousel .arrow.r{right:12px}
+  /* Anhalten/Weiter unten links – eigener, zustandsfester Schalter (WCAG 2.2.2). */
+  .carousel .arrow.pause{left:12px;right:auto;top:auto;bottom:11px;transform:none;width:30px;height:30px;font-size:var(--t-micro)}
   .carousel .dots{position:absolute;bottom:11px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:2}
-  .carousel .dots button{width:8px;height:8px;border-radius:var(--r-pill);border:0;background:var(--line);
+  .carousel .dots button{position:relative;width:8px;height:8px;border-radius:var(--r-pill);border:0;background:var(--line);
     cursor:pointer;padding:0;transition:width .2s,background .2s}
+  /* sichtbarer Punkt bleibt 8 px, Trefferfläche ≥ 24 px (WCAG 2.5.8). */
+  .carousel .dots button::before{content:"";position:absolute;inset:-9px}
   .carousel .dots button.on{background:var(--gold-deep);width:22px}
   @media(max-width:560px){
     .carousel .slide{flex-direction:column;align-items:flex-start;gap:var(--s4);padding:var(--s6)}
@@ -118,7 +122,8 @@
 
 <script src="design-system/nav.js" data-root="./" data-active="start"></script>
 
-<main class="wrap">
+<main class="wrap" id="inhalt">
+  <h1 class="sr-only">Goetheanum Werkzeuge – Hausgrafik</h1>
   <section class="carousel" id="carousel" aria-roledescription="Karussell" aria-label="Entdecken" hidden></section>
   <div class="grid" id="cards"></div>
 </main>
@@ -172,7 +177,7 @@
     a.className = "tile";
     a.href = t.href;
     if (isExt(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
-    a.innerHTML = visual(t) + '<h3>' + t.title + ' <span class="arr">›</span></h3>';
+    a.innerHTML = visual(t) + '<h2>' + t.title + ' <span class="arr">›</span></h2>';
     return a;
   }
   function buildCarousel(byslug){
@@ -201,6 +206,7 @@
 
     var i = 0, n = items.length, timer = null;
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+    var paused = reduce;   // bei prefers-reduced-motion von Anfang an gestoppt
     for (var k = 0; k < n; k++) {
       (function(k){
         var b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label","Folie " + (k+1));
@@ -210,13 +216,27 @@
     }
     function paint(){
       track.style.transform = "translateX(-" + (i*100) + "%)";
-      var ds = dots.children; for (var k = 0; k < ds.length; k++) ds[k].className = (k === i ? "on" : "");
+      var ds = dots.children;
+      for (var k = 0; k < ds.length; k++) {
+        ds[k].className = (k === i ? "on" : "");
+        if (k === i) ds[k].setAttribute("aria-current","true"); else ds[k].removeAttribute("aria-current");
+      }
     }
     function go(k){ i = (k + n) % n; paint(); }
-    function start(){ if (reduce) return; stop(); timer = setInterval(function(){ go(i+1); }, 6500); }
+    function start(){ if (reduce || paused) return; stop(); timer = setInterval(function(){ go(i+1); }, 6500); }
     function stop(){ if (timer) { clearInterval(timer); timer = null; } }
     prev.addEventListener("click", function(){ go(i-1); start(); });
     next.addEventListener("click", function(){ go(i+1); start(); });
+    // Sichtbarer, zustandsfester Halt/Weiter-Schalter (WCAG 2.2.2). Hält dauerhaft:
+    // solange paused, startet der Timer nicht wieder (auch nicht bei mouseleave/focusout).
+    var pauseBtn = document.createElement("button"); pauseBtn.type = "button"; pauseBtn.className = "arrow pause";
+    function syncPause(){
+      pauseBtn.setAttribute("aria-pressed", String(paused));
+      pauseBtn.setAttribute("aria-label", paused ? "Automatischen Wechsel starten" : "Automatischen Wechsel anhalten");
+      pauseBtn.textContent = paused ? "▶" : "❚❚";
+    }
+    pauseBtn.addEventListener("click", function(){ paused = !paused; syncPause(); if (paused) stop(); else start(); });
+    syncPause(); car.appendChild(pauseBtn);
     car.addEventListener("mouseenter", stop); car.addEventListener("mouseleave", start);
     car.addEventListener("focusin", stop); car.addEventListener("focusout", start);
     var x0 = null;

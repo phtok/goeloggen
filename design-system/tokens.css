@@ -22,18 +22,30 @@
   src:url("../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.7.woff2") format("woff2"),
       url("../assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.7.woff") format("woff");
   font-weight:190 725; font-style:normal; font-display:swap;
+  /* B5: Zeilenbox auf die Typo-Metrik normieren (750/-250). Die Schrift trägt
+     usWinAscent 1114 (hohe Streukontur) – ohne Override entstünde je Face ein
+     anderer Durchschuss und versetzte Grundlinien. Werte für BEIDE Faces gleich,
+     damit Goetheanum und Source auf derselben Grundlinie sitzen. Der Font-Bug
+     selbst ist separat behoben (U+01FA, #213/#218), damit PPTX/E-Mail-Export
+     ohne dieses CSS ebenfalls stimmt. */
+  ascent-override:75%; descent-override:25%; line-gap-override:0%;
 }
 /* --- Lesetext: Source Sans 3 (selbst gehostet, OFL) ------------------------ */
+/* B4: size-adjust:103% (500/486) gleicht die x-Höhe an Goetheanum an – gleiche px
+   ergeben gleiche wahrgenommene Grösse, und der Fallback springt beim Laden nicht. */
 @font-face{
   font-family:"Source Sans 3"; font-weight:400; font-style:normal; font-display:swap;
+  size-adjust:103%; ascent-override:75%; descent-override:25%; line-gap-override:0%;
   src:url("../assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2") format("woff2");
 }
 @font-face{
   font-family:"Source Sans 3"; font-weight:600; font-style:normal; font-display:swap;
+  size-adjust:103%; ascent-override:75%; descent-override:25%; line-gap-override:0%;
   src:url("../assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2") format("woff2");
 }
 @font-face{
   font-family:"Source Sans 3"; font-weight:400; font-style:italic; font-display:swap;
+  size-adjust:103%; ascent-override:75%; descent-override:25%; line-gap-override:0%;
   src:url("../assets/fonts/goetheanum/Fallback/SourceSans3-Italic.woff2") format("woff2");
 }
 
@@ -43,7 +55,7 @@
   --blue-solid:#0061a9;  /* Volles Blau für gefüllte Aktion-Knöpfe – immer Weiss drauf (6.4:1) */
   --gold:#d7ab68;        /* Gold – Inhalts-Akzent */
   --gold-deep:#94702e;   /* Gold dunkel – Auswahl-Fläche, Weiss drauf (4.55:1, WCAG AA) */
-  --gold-ink:#94702e;    /* Gold als TEXT (Kicker, Links) – hellt im Dunkel auf */
+  --gold-ink:#8a6728;    /* Gold als TEXT (Kicker, Links) – 4.89:1 auf --soft, 5.18:1 auf Weiss (WCAG AA); hellt im Dunkel auf */
 
   /* --- Neutrale Töne ------------------------------------------------------ */
   --ink:#23272b;         /* Lesetext */
@@ -84,6 +96,18 @@
   --sek-mas:#2e54a4;         /* Mathematisch-Astronomische Sektion */
   --sek-hpise:#f98a3c;       /* Sektion für Heilpädagogik und inklusive soziale Entwicklung */
   --bereich:#0061a9;         /* Verwaltungs-/Bereichs-Standard = Markenblau (wie die Logo-Daten, goe-orgs.js) */
+
+  /* Vordergrund AUF der jeweiligen Sektionsfläche (WCAG 1.4.3): Weiss nur, wo es
+     ≥ 4.5:1 hält – sonst ein dunkler Sektionston. Werkzeuge nutzen ausschliesslich
+     --on-sek-*, nie hart #fff. Werte gegen ihre Fläche gerechnet (tools/check-on-sek.py). */
+  --on-sek-goetheanum:#fff;  --on-sek-aas:#fff;    --on-sek-ps:#fff;   --on-sek-ms:#fff;
+  --on-sek-nws:#fff;         --on-sek-ssw:#fff;    --on-sek-mas:#fff;   /* Weiss ≥ 4.5:1 */
+  --on-sek-lws:#12351d;      /* Weiss nur 2.66 → dunkelgrün 5.09:1 */
+  --on-sek-sbk:#46172e;      /* Weiss nur 3.18 → dunkelrosa 4.64:1 */
+  --on-sek-szw:#23060c;      /* Weiss nur 4.14 → dunkelrot 4.60:1 */
+  --on-sek-js:#4a0f0c;       /* Weiss nur 2.86 → dunkelrot 5.39:1 */
+  --on-sek-srmk:#0f2445;     /* Weiss nur 3.35 → dunkelblau 4.61:1 */
+  --on-sek-hpise:#3c2408;    /* Weiss nur 2.41 → dunkelbraun 6.03:1 */
 
   /* --- Schrift-Familien --------------------------------------------------- */
   --font-display:"Goetheanum","Helvetica Neue",Arial,sans-serif; /* Titel, Chrome */
@@ -141,7 +165,10 @@
   --bar-bg:rgba(20,23,26,.85);
   --line:rgba(255,255,255,.14); --line-soft:rgba(255,255,255,.07);
   --bad:#e0675e; --ok:#5aa367;   /* on-accent bleibt Weiss – kein dunkler Text auf Akzentflächen */
-  --w-deutlich:540; --w-strong:620;     /* weniger Bleeding auf Dunkel */
+  /* B7: keine pauschale Gewichtsabsenkung mehr – kleiner Lese-/UI-Text (Knöpfe,
+     Label, Meta, Betonung) behält im Dunkeln sein Hell-Gewicht (Beier). Die
+     Halations-Absenkung greift NUR an grossen Display-Rollen (siehe base.css). */
+  --w-deutlich:580; --w-strong:680;
   --shadow-card:0 10px 30px rgba(0,0,0,.45);
   color-scheme:dark;
 }

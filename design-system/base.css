@@ -17,6 +17,7 @@ body{
   background:var(--paper); color:var(--ink);
   font-family:var(--font); font-weight:var(--w-text);
   font-size:var(--t-body); line-height:var(--lh-body);
+  letter-spacing:.02em;   /* B3: leichtes Tracking hilft Lese-/Kleingraden (Beier) */
   font-kerning:normal; text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased;
 }
 /* Langtext (Fliesstext über mehrere Absätze) bekommt die Lese-Grotesk – dort,
@@ -40,6 +41,10 @@ p a:hover,li a:hover,.note a:hover,.hint a:hover,.help a:hover,.desc a:hover{tex
    Seiten setzen KEINE eigenen Überschriften-Grössen oder -Schnitte mehr; so kann
    keine Seite ausscheren (Konformität durch Konstruktion). Titel = Deutlich, nie Laut. */
 h1,h2,h3,h4,.h-display{font-family:var(--font-display);font-weight:var(--w-deutlich);line-height:var(--lh-tight)}
+h1,h2{letter-spacing:0}   /* B3: grosse Display-Grade bleiben eng (Tracking nur an Lesegraden) */
+/* B7: Halations-Absenkung im Dunkeln NUR an grossen Display-Rollen – gegen das
+   Bleeding heller, fetter Grossbuchstaben. Fliess-/Kleintext behält sein Gewicht. */
+:root[data-theme="dark"] h1,:root[data-theme="dark"] h2,:root[data-theme="dark"] .h-display{font-weight:540}
 h1{font-size:var(--t-h1)}
 h2{font-size:var(--t-h2)}
 h3{font-size:var(--t-h3)}
@@ -105,6 +110,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 /* Aktion = Blau (Zustand/Tun); die primäre Aktion ist gefüllt. Klar getrennt von
    der Auswahl-Pille (Gold). Mind. Fingerziel auf Touch. */
 .btn{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-size:15px;line-height:1.2;
+  font-weight:var(--w-deutlich);   /* B2: Goetheanum-Label <18px braucht Deutlich (Beier) */
   padding:10px 16px;border-radius:var(--r-control);border:1px solid var(--line);color:var(--ink);
   background:var(--field-bg);text-align:center;cursor:pointer;transition:.15s}
 .btn:hover{border-color:var(--blue)}
@@ -123,7 +129,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
    Schrift. line-height:var(--lh-tight) bleibt zusätzlich nötig, sonst reisst
    ein zweizeiliges Pillen-Label (z. B. ‹SVG 48›) weit auseinander. */
 .seg button{display:inline-flex;align-items:center;justify-content:center;text-align:center;
-  font:inherit;font-size:14.5px;line-height:var(--lh-tight);padding:8px 15px;border:1px solid var(--line);border-radius:var(--r-pill);
+  font:inherit;font-size:14.5px;font-weight:var(--w-deutlich);line-height:var(--lh-tight);padding:8px 15px;border:1px solid var(--line);border-radius:var(--r-pill);
   background:var(--field-bg);color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
 .seg button:hover{border-color:var(--gold-ink)}
 .seg button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent);font-weight:var(--w-strong)}
@@ -221,7 +227,7 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
 
 /* Kicker: getönt, leicht getrackt, Display – NORMAL, nicht versal (G05).
    Kleine UI-Schrift: nie Leise (verschwimmt klein) – mindestens Klar. */
-.kicker,.kick{display:inline-block;font-family:var(--font-display);color:var(--gold-ink);font-size:13.5px;letter-spacing:.03em;font-weight:var(--w-text);line-height:1.3;margin-bottom:var(--s2)}
+.kicker,.kick{display:inline-block;font-family:var(--font-display);color:var(--gold-ink);font-size:13.5px;letter-spacing:.03em;font-weight:var(--w-deutlich);line-height:1.3;margin-bottom:var(--s2)}
 
 /* Anriss unter dem Titel. */
 .lede{font-size:var(--t-lede);color:var(--muted);line-height:1.45;max-width:54ch}
@@ -236,7 +242,7 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
    Formularfelder, Tabellen. Dort geht Lesbarkeit über Identität. */
 
 /* Erklärender Beisatz (Hilfetext, Untertitel) – Sprache, darum Hausschrift. */
-.note,.hint,.help,.desc,.subhead{color:var(--muted);font-size:var(--t-small);line-height:1.6;max-width:62ch}
+.note,.hint,.help,.desc,.subhead{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);line-height:1.6;max-width:62ch}
 
 /* Legende, Bildunterschrift, Datum, Byline – das knappe Beiwerk. */
 .meta,.cap,.caption,.legend,.byline{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);line-height:1.45}
@@ -282,3 +288,20 @@ img,svg,canvas,video{max-width:100%}
   .shead{gap:var(--s3)}
   .ds-footer .frow{gap:var(--s3)}
 }
+
+/* Bewegung reduzieren (WCAG 2.3.3): auf Wunsch Übergänge und weiches Scrollen
+   global aus. Seiten-eigene Bewegungen (Karussell, .tile-Hover) ziehen nach. */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+}
+
+/* Block C – Lesemodus (opt-in, Kopfzeilen-Schalter, Zustand data-read="easy"):
+   tauscht NUR Textkörper + Lede + Erklärtexte auf die Leseschrift und erhöht das
+   Spacing. Titel/Kicker/Marke bleiben Goetheanum (Identität); die Chrome-Leiste
+   pinnt ihre Schrift ohnehin selbst. Grösse ist über size-adjust (B4) geregelt,
+   darum kein Grössensprung; A7 (min-height) fängt den ~7% breiteren Reflow. */
+:root[data-read="easy"] body{font-family:var(--font-text);letter-spacing:.03em;word-spacing:.06em}
+:root[data-read="easy"] .lede{font-family:var(--font-text)}
+/* Titel, Kicker und die Kopfzeile bleiben ausdrücklich Goetheanum (Identität). */
+:root[data-read="easy"] h1,:root[data-read="easy"] h2,:root[data-read="easy"] h3,:root[data-read="easy"] h4,
+:root[data-read="easy"] .kicker,:root[data-read="easy"] .kick{font-family:var(--font-display)}

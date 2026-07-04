@@ -54,6 +54,26 @@
   // Sofort anwenden – vor dem Zeichnen, gegen Aufblitzen.
   document.documentElement.setAttribute("data-theme", getTheme());
 
+  // --- Lesemodus (Block C) ---------------------------------------------------
+  // Opt-in: tauscht NUR Textkörper + Erklärtexte Display→Source und erhöht das
+  // Spacing (Regeln in base.css). Titel/Kicker/Marke bleiben Goetheanum. Zustand
+  // in localStorage('goeRead'), VOR dem ersten Paint gesetzt – kein Aufblitzen.
+  var READ_KEY = "goeRead", readBtn = null;
+  function getRead() { try { return localStorage.getItem(READ_KEY) === "easy" ? "easy" : ""; } catch (e) { return ""; } }
+  function updateReadBtn() {
+    if (!readBtn) return;
+    var on = document.documentElement.getAttribute("data-read") === "easy";
+    readBtn.setAttribute("aria-pressed", String(on));
+    readBtn.setAttribute("aria-label", on ? "Lesemodus ausschalten" : "Lesemodus – Fliesstext in der Leseschrift");
+  }
+  function setRead(on) {
+    try { localStorage.setItem(READ_KEY, on ? "easy" : "off"); } catch (e) {}
+    if (on) document.documentElement.setAttribute("data-read", "easy");
+    else document.documentElement.removeAttribute("data-read");
+    updateReadBtn();
+  }
+  if (getRead() === "easy") document.documentElement.setAttribute("data-read", "easy");
+
   // --- Anonyme Nutzungszählung (mitwachsend) ---------------------------------
   // Zählt je Werkzeug (data-active) den Seitenaufruf und Download-Klicks – ohne
   // Cookies, ohne IP/Personendaten, nur anonyme Summen über goeloggen_bump().
@@ -170,11 +190,26 @@
         '<img class="lockup" src="' + ROOT + 'assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge">' +
       '</a>' +
       '<nav class="worlds"></nav>' + ctaHTML +
+      '<button class="read" type="button" aria-pressed="false" aria-label="Lesemodus – Fliesstext in der Leseschrift"><span class="ic" aria-hidden="true">A</span></button>' +
       '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic"></span></button>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
     '</div>';
   document.body.insertBefore(header, document.body.firstChild);
+
+  // Sprunglink „Zum Inhalt" (WCAG 2.4.1, Verbesserung): erstes fokussierbares
+  // Element im Body, springt zur Hauptregion. main bekommt id=inhalt, falls es
+  // nicht schon eine trägt (die Startseite setzt sie z. B. selbst). Erst nach
+  // DOM-Ready, da nav.js vor <main> im Markup steht.
+  var placeSkip = function () {
+    var mainEl = document.querySelector("main");
+    if (!mainEl || document.querySelector(".skip")) return;
+    if (!mainEl.id) mainEl.id = "inhalt";
+    var skip = el("a", "skip"); skip.href = "#" + mainEl.id; skip.textContent = "Zum Inhalt";
+    document.body.insertBefore(skip, document.body.firstChild);
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", placeSkip);
+  else placeSkip();
 
   // Optionale Seiten-Sprungleiste: data-onpage="Label:#anker|…". Sie sitzt UNTER
   // dem Hero/der Lede (nicht über dem Titel) und klebt beim Scrollen unter der
@@ -242,6 +277,11 @@
     setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
   });
   updateThemeBtn();
+  readBtn = header.querySelector(".read");
+  readBtn.addEventListener("click", function () {
+    setRead(document.documentElement.getAttribute("data-read") !== "easy");
+  });
+  updateReadBtn();
   var worldsNav = header.querySelector(".worlds");
   var drawerBody = drawer.querySelector(".body");
   var drawerTitle = drawer.querySelector(".dhead .t");
@@ -269,12 +309,36 @@
   }
   searchInput.addEventListener("input", applySearch);
 
-  function openDrawer() { backdrop.classList.add("open"); drawer.classList.add("open"); btnAll.setAttribute("aria-expanded", "true"); }
-  function closeDrawer() { backdrop.classList.remove("open"); drawer.classList.remove("open"); btnAll.setAttribute("aria-expanded", "false"); }
+  // Fokusführung nach ARIA-Dialog-Pattern (WCAG 2.4.3): beim Öffnen den Fokus in
+  // den Dialog (erstes Ziel = Schliessen-Knopf, kein Auto-Fokus ins Suchfeld),
+  // Tab zirkuliert nur im Dialog, beim Schliessen zurück auf den Auslöser (Burger).
+  var lastFocus = null;
+  function focusables(r) {
+    var all = r.querySelectorAll('a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])');
+    return Array.prototype.filter.call(all, function (el) { return el.offsetParent !== null; });
+  }
+  function openDrawer() {
+    lastFocus = document.activeElement;
+    backdrop.classList.add("open"); drawer.classList.add("open");
+    btnAll.setAttribute("aria-expanded", "true"); drawer.setAttribute("aria-modal", "true");
+    var f = focusables(drawer); if (f.length) f[0].focus();
+  }
+  function closeDrawer() {
+    backdrop.classList.remove("open"); drawer.classList.remove("open");
+    btnAll.setAttribute("aria-expanded", "false"); drawer.removeAttribute("aria-modal");
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
   btnAll.addEventListener("click", function () { drawer.classList.contains("open") ? closeDrawer() : openDrawer(); });
   backdrop.addEventListener("click", closeDrawer);
   drawer.querySelector(".close").addEventListener("click", closeDrawer);
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrawer(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && drawer.classList.contains("open")) closeDrawer(); });
+  drawer.addEventListener("keydown", function (e) {
+    if (e.key !== "Tab") return;
+    var f = focusables(drawer); if (!f.length) return;
+    var a = f[0], z = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+    else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+  });
 
   // Unsichtbarer Intern-Schalter
   function toggleIntern() {
