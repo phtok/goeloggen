@@ -236,7 +236,7 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
    Formularfelder, Tabellen. Dort geht Lesbarkeit über Identität. */
 
 /* Erklärender Beisatz (Hilfetext, Untertitel) – Sprache, darum Hausschrift. */
-.note,.hint,.help,.desc,.subhead{color:var(--muted);font-size:var(--t-small);line-height:1.6;max-width:62ch}
+.note,.hint,.help,.desc,.subhead{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);line-height:1.6;max-width:62ch}
 
 /* Legende, Bildunterschrift, Datum, Byline – das knappe Beiwerk. */
 .meta,.cap,.caption,.legend,.byline{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);line-height:1.45}
