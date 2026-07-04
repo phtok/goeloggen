@@ -63,9 +63,8 @@ pre .k{color:var(--code-key)}pre .s{color:var(--code-str)}pre .c{color:var(--cod
 
 <h2>Zwei Wege, die Schrift zu laden</h2>
 <div class="card">
-  <p class="lead" style="margin-top:0"><b>A · Von der Hausadresse laden.</b> Am schnellsten: die Dateien direkt von <code>werkzeuge.goetheanum.ch</code> ziehen. Die Adresse liefert über <b>https</b> mit <code>access-control-allow-origin: *</code> – lädt also von jeder Domain (kein CORS-Problem). Der Code steht unten.</p>
-  <p class="lead"><b>B · Selbst hosten</b> <span class="tag">für Produktion empfohlen</span><br>Die <code>.woff2</code> aus dem Download-Paket (Ordner <code>Webfonts/woff2/</code>) ins eigene Projekt legen – etwa <code>/fonts/</code> – und die <code>src</code>-URL relativ setzen: <code>url("/fonts/Goetheanum-Variabel-v2.7.woff2")</code>. Kein Fremd-Server, kein CORS, kein Ausfallrisiko – die robusteste Wahl für eine echte Website.</p>
-  <p class="note" style="border-left:3px solid var(--gold);padding-left:12px;margin-top:14px"><b>Nicht</b> <code>phtok.github.io</code> verwenden und <b>nie</b> <code>http://</code>: diese Adresse leitet auf unverschlüsseltes http um, und https-Seiten blockieren das (‹Mixed Content›) – dann lädt die Schrift stumm nicht.</p>
+  <p class="lead" style="margin-top:0"><b>A · Von der Hausadresse laden.</b> Am schnellsten: die Dateien direkt von <code>werkzeuge.goetheanum.ch</code> laden – über https, von jeder Domain nutzbar. Der Code steht unten.</p>
+  <p class="lead"><b>B · Selbst hosten</b> <span class="tag">für Produktion empfohlen</span><br>Die <code>.woff2</code> aus dem Download-Paket (Ordner <code>Webfonts/woff2/</code>) ins eigene Projekt legen – etwa <code>/fonts/</code> – und die <code>src</code>-URL relativ setzen: <code>url("/fonts/Goetheanum-Variabel-v2.7.woff2")</code>. Alles aus einer Herkunft, die robusteste Wahl für eine echte Website.</p>
 </div>
 
 <h2>1 · Variable Font einbinden <span class="tag">empfohlen — eine Datei, 66 KB, alle Schnitte</span></h2>
@@ -106,12 +105,6 @@ pre .k{color:var(--code-key)}pre .s{color:var(--code-str)}pre .c{color:var(--cod
   <div class="swatch"><span class="tag">Fließtext · Klar 440</span><span class="s" style="font-size:20px;font-variation-settings:'wght' 440">Die fließende Form des Wortes trägt den Gedanken.</span></div>
   <div class="swatch"><span class="tag">Auszeichnung · Laut 680</span><span class="s" style="font-variation-settings:'wght' 680">Sauerstoffflasche</span></div>
   <div class="swatch"><span class="tag">Leise 265</span><span class="s" style="font-variation-settings:'wght' 265">geprüft & gefällig</span></div>
-</div>
-
-<h2>Warum überhaupt zwei Wege?</h2>
-<div class="card">
-  <p class="lead" style="margin-top:0"><b>CORS</b> ist die Regel, dass ein Browser eine Schrift von einer fremden Domain nur lädt, wenn diese per Kopfzeile zustimmt (<code>access-control-allow-origin</code>). <code>werkzeuge.goetheanum.ch</code> sendet <code>*</code> – erlaubt also alle. CORS ist hier <b>kein</b> Hindernis.</p>
-  <p class="lead"><b>Mixed Content</b> ist die eigentliche Falle: eine <b>https</b>-Seite darf nichts über <b>http</b> nachladen. Die alte Beispiel-Adresse <code>phtok.github.io</code> leitet intern auf <code>http://…</code> um – der Browser blockiert das, und die Schrift lädt stumm nicht. Darum oben die Hausadresse (durchgehend https) oder – am saubersten – selbst hosten.</p>
 </div>
 
 </div>
