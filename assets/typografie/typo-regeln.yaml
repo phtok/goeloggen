@@ -6,10 +6,14 @@
 # korrigiere automatisch, was eindeutig ist, schlage vor, was Urteil braucht.").
 # Geltungsbereich: deutscher Lesetext (de-CH). Code, URLs, E-Mails ausnehmen.
 
+# G16: verankert an Wortgrenzen, damit unpaarige gerade Zeichen (Zoll: 5")
+# nicht über das eigentliche Zitat hinweg paaren und echte Paare zerreissen.
+# Öffnend nur nach Anfang/Leerraum/öffnender Klammer/Strich, schliessend nur
+# vor Leerraum/Satzzeichen/Ende (Lookahead – kein Lookbehind, Python-kompatibel).
 - id: G16-anfuehrung
   regel: Hausanführung sind einfache Guillemets nach aussen ‹…›
-  erkennen: '["„“”]([^"„“”\n]{1,200})["„“”]'
-  korrektur: '‹$1›'
+  erkennen: '(^|[\s([{–—-])["„“]([^"„“”\n]{1,200}?)["“”](?=[\s.,;:!?)\]}…]|$)'
+  korrektur: '$1‹$2›'
   schwere: fehler
 - id: G16-apostroph
   regel: Echter Apostroph ’ statt Schreibmaschinen-Apostroph '
