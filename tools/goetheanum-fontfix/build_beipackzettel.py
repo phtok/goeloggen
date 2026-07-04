@@ -97,7 +97,8 @@ txt(K,"Icons",12,RX+16,iy+26,"#23272b"); rtxt(K,"81 Piktogramme",9.5,RX+RW-16,iy
 demo=["goetheanum-badge","garderobe","wlan","treppe","wc-rollstuhl","keine-hunde","pfeil-hoch","kompass-1"]
 for i,sl in enumerate(demo):
     icon(sl,30,RX+16+i*42,iy+44)
-txt(K,"Tastatur-Belegung siehe Seite 3–5. Einzeln als SVG/PNG/PDF",9.5,RX+16,iy+ih-14,"#737a80")
+txt(K,"Tastatur-Belegung Seite 3–4. Einzeln als SVG/PNG/PDF.",9.5,RX+16,iy+ih-28,"#737a80")
+txt(K,"Pfeile & Kompass: eigener Font ‹Goetheanum Pfeile›, Seite 5.",9.5,RX+16,iy+ih-14,"#737a80")
 
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
@@ -178,12 +179,118 @@ cairosvg.svg2pdf(url="/tmp/beipack_p2.svg",write_to="/tmp/beipack_p2.pdf")
 cairosvg.svg2png(url="/tmp/beipack_p2.svg",write_to="/tmp/beipack_p2.png",output_width=1100)
 print("page2 rendered")
 
-# splice: new page1 + new page2 + pristine icon pages (3 Seiten, idempotente Quelle)
+# ============================ PAGES 3–5 — Tastatur-Belegung ============================
+# Reproduzierbar aus den Schriften gerendert (früher eine statische PDF ohne Quelle).
+# Quelle der Belegung: icons.json (Piktogramme) und das SCHEMA des Pfeile-Fonts.
+# Basis-Ebene und Umschalt-Ebene der Icons; Pfeile & Kompass aus dem eigenen Font
+# ‹Goetheanum Pfeile› – der liegt auf normalen Tasten, nicht mehr auf Option/Alt.
+import json as _json
+ICON_JSON={x["codepoint"]:x for x in _json.load(open("assets/fonts/goetheanum/Icons-Einzeldateien/icons.json"))}
+HAVE_ICON=set(int(cp[2:],16) for cp in ICON_JSON)
+PF=L(FD+"Goetheanum-Pfeile-v2.7.otf")
+
+# QWERTZ (DE) – (Basiszeichen, Umschaltzeichen) je Taste, Zeilen mit Versatz.
+KB_ROWS=[
+  (0,  [("1","!"),("2",chr(34)),("3","§"),("4","$"),("5","%"),("6","&"),("7","/"),("8","("),("9",")"),("0","="),("ß","?"),("´","`")]),
+  (22, [("q","Q"),("w","W"),("e","E"),("r","R"),("t","T"),("z","Z"),("u","U"),("i","I"),("o","O"),("p","P"),("ü","Ü"),("+","*")]),
+  (34, [("a","A"),("s","S"),("d","D"),("f","F"),("g","G"),("h","H"),("j","J"),("k","K"),("l","L"),("ö","Ö"),("ä","Ä"),("#","'")]),
+  (58, [("<",">"),("y","Y"),("x","X"),("c","C"),("v","V"),("b","B"),("n","N"),("m","M"),(",",";"),(".",":"),("-","_")]),
+]
+KW,KH,KG=52,52,7; KB_TOP=176; KB_LEFT=M
+
+def cap(x,y,active):
+    stroke="rgba(160,122,51,.55)" if active else "rgba(20,24,28,.16)"
+    fill="rgba(250,248,244,.7)" if active else "#ffffff"
+    S.append(f'<rect x="{x}" y="{y}" width="{KW}" height="{KH}" rx="8" fill="{fill}" stroke="{stroke}"/>')
+
+def gcenter(F,cp,bx,by,bw,bh,target,fill):
+    ft,gs,cmap,upm=F; gn=cmap.get(cp)
+    if not gn: return False
+    bpp=BoundsPen(gs); gs[gn].draw(bpp)
+    if not bpp.bounds: return False
+    xmin,ymin,xmax,ymax=bpp.bounds; sc=target/upm
+    wpx=(xmax-xmin)*sc; hpx=(ymax-ymin)*sc
+    # In die Kachel einpassen: übergroße (z. B. Wortmarken) schrumpfen, nie überlaufen.
+    maxw=bw-6; maxh=bh-2
+    if wpx>maxw: f=maxw/wpx; sc*=f; wpx*=f; hpx*=f
+    if hpx>maxh: f=maxh/hpx; sc*=f; wpx*=f; hpx*=f
+    cx=bx+(bw-wpx)/2-xmin*sc; yy=by+(bh-hpx)/2+ymax*sc
+    p=SVGPathPen(gs); gs[gn].draw(p); d=p.getCommands()
+    if not d: return False
+    S.append(f'<g transform="translate({cx:.2f},{yy:.2f}) scale({sc:.5f},{-sc:.5f})"><path d="{d}" fill="{fill}"/></g>')
+    return True
+
+def keyboard(F, layer, only_have=None, target=30, fill="#23272b"):
+    for ri,(off,row) in enumerate(KB_ROWS):
+        y=KB_TOP+ri*(KH+KG)
+        for ci,(bc,sh) in enumerate(row):
+            x=KB_LEFT+off+ci*(KW+KG)
+            ch=bc if layer=="base" else sh; cp=ord(ch)
+            allow=(only_have is None) or (cp in only_have)
+            active=allow and (F[2].get(cp) is not None)
+            cap(x,y,active)
+            txt(K,bc,7,x+6,y+13,"#b0b6bc")            # kleine Tasten-Marke (Grundzeichen)
+            if active: gcenter(F,cp,x,y+10,KW,KH-14,target,fill)
+
+def kbpage(title,sub,render,foot1,foot2=None):
+    global S; S=[]
+    S.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}pt" height="{H}pt" viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="#ffffff"/>')
+    txt(LA,title,30,M,76,"#23272b"); txt(K,sub,10.5,M,95,"#a07a33")
+    S.append(f'<line x1="{M}" y1="110" x2="{W-M}" y2="110" stroke="rgba(20,24,28,.12)"/>')
+    render()
+    S.append(f'<line x1="{M}" y1="548" x2="{W-M}" y2="548" stroke="rgba(20,24,28,.10)"/>')
+    txt(K,foot1,9,M,563,"#737a80")
+    if foot2: txt(K,foot2,9,M,576,"#737a80")
+    S.append("</svg>")
+
+# --- Seite 3: Icons auf den Umschalt-Tasten (Großbuchstaben-Ebene) ---
+def render3():
+    keyboard(IC,"shift",only_have=HAVE_ICON)
+    txt(K,"Gold umrandet = belegt. Umschalt (Shift) halten und die Taste tippen.",9.5,M,458,"#737a80")
+kbpage("Icons – Umschalt-Ebene","Piktogramme auf den Großbuchstaben-Tasten (Shift)",render3,
+       "Font ‹Goetheanum Icons› aktiv setzen, dann tippen. Gleiche Belegung wie die Einzeldateien (SVG/PNG/PDF).",
+       "Quelle der Belegung: icons.json. Leere Tasten tragen kein Piktogramm.")
+open("/tmp/beipack_p3.svg","w").write("".join(S))
+cairosvg.svg2pdf(url="/tmp/beipack_p3.svg",write_to="/tmp/beipack_p3.pdf")
+cairosvg.svg2png(url="/tmp/beipack_p3.svg",write_to="/tmp/beipack_p3.png",output_width=1100)
+print("page3 rendered")
+
+# --- Seite 4: Icons auf den Grund-Tasten (Kleinbuchstaben-Ebene) ---
+def render4():
+    keyboard(IC,"base",only_have=HAVE_ICON)
+    txt(K,"Gold umrandet = belegt. Ohne Umschalt tippen. Badge invers liegt auf ‹1›, Badge auf ‹2›.",9.5,M,458,"#737a80")
+kbpage("Icons – Grund-Ebene","Piktogramme auf den Kleinbuchstaben- und Ziffern-Tasten",render4,
+       "Font ‹Goetheanum Icons› aktiv setzen, dann tippen. Gleiche Belegung wie die Einzeldateien (SVG/PNG/PDF).",
+       "Quelle der Belegung: icons.json. Leere Tasten tragen kein Piktogramm.")
+open("/tmp/beipack_p4.svg","w").write("".join(S))
+cairosvg.svg2pdf(url="/tmp/beipack_p4.svg",write_to="/tmp/beipack_p4.pdf")
+cairosvg.svg2png(url="/tmp/beipack_p4.svg",write_to="/tmp/beipack_p4.png",output_width=1100)
+print("page4 rendered")
+
+# --- Seite 5: Pfeile & Kompass aus dem eigenen Font auf normalen Tasten ---
+def render5():
+    keyboard(PF,"base")                      # Pfeile-Font: cmap liegt nur auf den belegten Tasten
+    ly=452
+    txt(K,"Eigener Font ‹Goetheanum Pfeile› – keine Option/Alt-Griffe mehr: einfach die Taste tippen.",9.5,M,ly,"#737a80")
+    # Umschalt-Legende: die vier fetten Pfeile (& T U H)
+    txt(K,"Umschalt = fett:",9,M,ly+26,"#9aa1a7")
+    lx=M+96
+    for ch,lab in [("&","Shift 6"),("T","Shift t"),("U","Shift u"),("H","Shift h")]:
+        gcenter(PF,ord(ch),lx,ly+8,26,26,22,"#23272b")
+        txt(K,lab,8,lx+30,ly+26,"#9aa1a7"); lx+=118
+kbpage("Pfeile & Kompass","Eigener Font ‹Goetheanum Pfeile› – auf normalen Tasten, nicht Option/Alt",render5,
+       "Grund: dünne Pfeile (6 t u h), gebogene (2 0 q e o ü s ö), Kompass (y x c v). Umschalt: fette Pfeile (& T U H).",
+       "Installieren wie die anderen Schnitte. Web: eingebettet, direkt tippbar – siehe icons.html.")
+open("/tmp/beipack_p5.svg","w").write("".join(S))
+cairosvg.svg2pdf(url="/tmp/beipack_p5.svg",write_to="/tmp/beipack_p5.pdf")
+cairosvg.svg2png(url="/tmp/beipack_p5.svg",write_to="/tmp/beipack_p5.png",output_width=1100)
+print("page5 rendered")
+
+# splice: alle fünf Seiten frisch gerendert (voll reproduzierbar, keine Fremd-PDF mehr)
 from pypdf import PdfReader, PdfWriter
-p1=PdfReader("/tmp/beipack_p1.pdf"); p2=PdfReader("/tmp/beipack_p2.pdf")
-icons=PdfReader("tools/goetheanum-fontfix/beipack_icon_pages.pdf")
-w=PdfWriter(); w.add_page(p1.pages[0]); w.add_page(p2.pages[0])
-for pg in icons.pages: w.add_page(pg)
+w=PdfWriter()
+for n in (1,2,3,4,5):
+    w.add_page(PdfReader(f"/tmp/beipack_p{n}.pdf").pages[0])
 out="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf"
 with open(out,"wb") as f: w.write(f)
 print("merged ->",len(PdfReader(out).pages),"Seiten ->",out)
