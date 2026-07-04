@@ -19,6 +19,7 @@ create table if not exists public.sommer2026_signups (
   tarif         text not null check (tarif   in ('standard','ermaessigt')),
   intervall     text not null check (intervall in ('monatlich','jaehrlich')),
   status        text not null default 'neu'    check (status in ('neu','bleibt','gekuendigt','laeuft-aus')),
+  kanal         text not null default 'andere' check (kanal in ('newsletter','mailer','social','popup','website','empfehlung','andere')),  -- Herkunftsweg (Attribution), aus UTM
   source        text not null default 'manual' check (source in ('uscreen','zoho','paperform','manual')),
   ext_id        text,                                 -- Dedup-Schlüssel je Quelle (verhindert Doppelzählung)
   unique (source, ext_id)
@@ -67,6 +68,17 @@ language sql security definer set search_path to 'public' as $$
    order by kohorte;
 $$;
 
+-- 4) Attribution: Anmeldungen je Herkunftsweg
+create or replace function public.sommer2026_kanaele()
+returns table(kanal text, n bigint)
+language sql security definer set search_path to 'public' as $$
+  select kanal, count(*)::bigint as n
+    from public.sommer2026_signups
+   group by kanal
+   order by n desc;
+$$;
+
 grant execute on function public.sommer2026_stats()    to anon, authenticated;
 grant execute on function public.sommer2026_timeline() to anon, authenticated;
 grant execute on function public.sommer2026_kohorten() to anon, authenticated;
+grant execute on function public.sommer2026_kanaele()  to anon, authenticated;

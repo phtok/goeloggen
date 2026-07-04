@@ -189,6 +189,11 @@
   </section>
 
   <section>
+    <div class="shead"><h2>Woher kommen die Abos?</h2><p>Herkunftsweg der Anmeldungen – aus den UTM-Parametern am Anmelde-Link. So wird sichtbar, welcher Kanal trägt.</p></div>
+    <div id="kanalBars"><div class="empty">lädt …</div></div>
+  </section>
+
+  <section>
     <div class="shead"><h2>Momentum</h2><p>Neue Abos je Tag – hier wird sichtbar, wann ein Aufruf, ein Newsletter oder ein Beitrag Wirkung zeigt.</p></div>
     <div class="spark" id="spark"><div class="empty">lädt …</div></div>
   </section>
@@ -212,6 +217,23 @@
         <div class="pn" id="projNote">Projektion auf Basis der angenommenen Bleibe-Quote und der hinterlegten Preise.</div>
       </div>
     </div>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Kosten und Wirkung</h2><p>Was die Aktion kostet – und was voraussichtlich zurückkommt. Kosten je Weg und je Abo.</p></div>
+    <div class="tiles">
+      <div class="tile"><div class="n gold" id="costTotal">–</div><div class="l">Kosten gesamt</div><div class="s" id="costSub">inkl. Fixkosten</div></div>
+      <div class="tile"><div class="n blue" id="costCpa">–</div><div class="l">Kosten je Abo</div><div class="s">Schnitt über alle Wege</div></div>
+      <div class="tile"><div class="n ok" id="costRoi">–</div><div class="l">Rückfluss je € Kosten</div><div class="s">projizierter Folgejahr-Umsatz</div></div>
+    </div>
+    <div class="tablewrap" style="margin-top:var(--s5)">
+      <table class="tarif">
+        <thead><tr><th>Weg</th><th class="num">Abos</th><th class="num">Kosten</th><th class="num">€ je Abo</th></tr></thead>
+        <tbody id="costBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+        <tfoot id="costFoot"></tfoot>
+      </table>
+    </div>
+    <p class="provisorisch">Kosten sind Beispielwerte – bitte die echten Ausgaben je Weg und die Fixkosten der Aktion setzen.</p>
   </section>
 
   <section>
@@ -255,6 +277,17 @@
       wos: { standard:{monatlich:14.9, jaehrlich:149}, ermaessigt:{monatlich:7.9, jaehrlich:79} },
       gtv: { standard:{monatlich:12,   jaehrlich:120}, ermaessigt:{monatlich:8,   jaehrlich:80} }
     },
+    // Herkunftswege (Attribution) mit den Beispielausgaben der Aktion (Euro) – bitte ersetzen.
+    kanaele: [
+      { key:'newsletter', label:'Newsletter',    kosten: 0 },
+      { key:'mailer',     label:'Mailing',        kosten: 1800 },
+      { key:'social',     label:'Social Media',   kosten: 2400 },
+      { key:'popup',      label:'Popup',          kosten: 600 },
+      { key:'website',    label:'Website direkt', kosten: 0 },
+      { key:'empfehlung', label:'Empfehlung',     kosten: 0 },
+      { key:'andere',     label:'Andere',         kosten: 0 }
+    ],
+    fixkosten: 1200,               // Gestaltung, Landingpages u. Ä.
     zahlenProvisorisch: true       // blendet den Hinweis auf Beispielwerte ein
   };
 
@@ -331,6 +364,65 @@
         host.appendChild(row);
       });
     });
+  }
+
+  // ── Woher (Attribution) ────────────────────────────────────────────────────
+  function renderKanaele(kanaele, total){
+    var host = el('kanalBars'); host.innerHTML = '';
+    var byKanal = {}; kanaele.forEach(function(r){ byKanal[r.kanal] = Number(r.n); });
+    var items = CONFIG.kanaele.map(function(k){ return { label:k.label, n:byKanal[k.key] || 0 }; })
+                              .filter(function(x){ return x.n > 0; })
+                              .sort(function(a, b){ return b.n - a.n; });
+    if(!items.length){ host.innerHTML = '<div class="empty">Noch keine Anmeldungen.</div>'; return; }
+    var max = items.reduce(function(m, x){ return Math.max(m, x.n); }, 0) || 1;
+    items.forEach(function(x){
+      var anteil = total > 0 ? Math.round(x.n / total * 100) : 0;
+      var row = document.createElement('div'); row.className = 'stream';
+      row.innerHTML = '<div class="top2"><span class="name"></span>' +
+        '<span class="val"><b></b> <span class="g"></span></span></div>' +
+        '<div class="track"><span></span></div>';
+      row.querySelector('.name').textContent = x.label;
+      row.querySelector('.val b').textContent = fmt(x.n);
+      row.querySelector('.val .g').textContent = anteil + ' %';
+      row.querySelector('.track > span').style.width = Math.max(3, Math.round(x.n / max * 100)) + '%';
+      host.appendChild(row);
+    });
+  }
+
+  // ── Kosten und Wirkung ─────────────────────────────────────────────────────
+  function renderKosten(kanaele, total, revenue){
+    var byKanal = {}; kanaele.forEach(function(r){ byKanal[r.kanal] = Number(r.n); });
+    var kostenSumme = CONFIG.fixkosten || 0;
+    CONFIG.kanaele.forEach(function(k){ kostenSumme += (k.kosten || 0); });
+    el('costTotal').textContent = eur(kostenSumme);
+    el('costCpa').textContent   = total > 0 ? eur(kostenSumme / total) : '–';
+    el('costRoi').textContent   = kostenSumme > 0 ? (revenue / kostenSumme).toFixed(1) + '×' : '–';
+
+    var body = el('costBody'); body.innerHTML = '';
+    CONFIG.kanaele.forEach(function(k){
+      var n = byKanal[k.key] || 0, ko = k.kosten || 0;
+      if(n === 0 && ko === 0) return;
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
+      tr.children[0].textContent = k.label;
+      tr.children[1].textContent = fmt(n);
+      tr.children[2].textContent = ko > 0 ? eur(ko) : '–';
+      tr.children[3].textContent = (ko > 0 && n > 0) ? eur(ko / n) : '–';
+      body.appendChild(tr);
+    });
+    if(CONFIG.fixkosten > 0){
+      var fr = document.createElement('tr');
+      fr.innerHTML = '<td></td><td class="num">–</td><td class="num"></td><td class="num">–</td>';
+      fr.children[0].textContent = 'Fixkosten';
+      fr.children[2].textContent = eur(CONFIG.fixkosten);
+      body.appendChild(fr);
+    }
+    var foot = el('costFoot');
+    foot.innerHTML = '<tr><td>Summe</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>';
+    var c = foot.querySelector('tr').children;
+    c[1].textContent = fmt(total);
+    c[2].textContent = eur(kostenSumme);
+    c[3].textContent = total > 0 ? eur(kostenSumme / total) : '–';
   }
 
   // ── Tarif-Tabelle ──────────────────────────────────────────────────────────
@@ -470,22 +562,25 @@
     if(CONFIG.zahlenProvisorisch){
       el('provisorisch').textContent = 'Zielmarken, Preise und die Bleibe-Quote sind vorläufig hinterlegt – sobald die echten Werte gesetzt sind, rechnet das Cockpit unverändert weiter.';
     }
-    Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten') ])
+    Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten'), rpc('sommer2026_kanaele') ])
       .then(function(res){
-        var stats = res[0] || [], timeline = res[1] || [], kohorten = res[2] || [];
+        var stats = res[0] || [], timeline = res[1] || [], kohorten = res[2] || [], kanaele = res[3] || [];
         var total = stats.reduce(function(s, r){ return s + Number(r.n); }, 0);
+        var revenue = projectRevenue(stats);
         var mo = renderSpark(timeline);
         renderTiles(total, mo.avg, mo.days);
         renderStreams(stats);
+        renderKanaele(kanaele, total);
         renderTarif(stats);
         renderMilestones(total);
-        renderCohort(kohorten, projectRevenue(stats));
+        renderCohort(kohorten, revenue);
+        renderKosten(kanaele, total, revenue);
         if(total === 0){ el('status').className = 'status empty'; }
         setStatus('ok', new Date());
       })
       .catch(function(){
         setStatus('err');
-        ['wosStreams','gtvStreams'].forEach(function(id){ el(id).innerHTML = '<div class="err">nicht ladbar</div>'; });
+        ['wosStreams','gtvStreams','kanalBars'].forEach(function(id){ el(id).innerHTML = '<div class="err">nicht ladbar</div>'; });
         el('spark').innerHTML = '<div class="err">nicht ladbar</div>';
       });
   }

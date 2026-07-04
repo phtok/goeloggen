@@ -14,7 +14,18 @@ Dimensionen: `produkt` (wos/gtv) · `sprache` (de/en) · `format`
 
 RPCs (für `anon` per Publishable-Key aufrufbar, wie in `statistik.html`):
 `sommer2026_stats` (Breakdown), `sommer2026_timeline` (Momentum je Tag),
-`sommer2026_kohorten` (der 3-Monats-Moment).
+`sommer2026_kohorten` (der 3-Monats-Moment), `sommer2026_kanaele` (Attribution
+je Herkunftsweg).
+
+## Attribution (Woher) und Kosten
+
+`kanal` (newsletter / mailer / social / popup / website / empfehlung / andere)
+hält den **Herkunftsweg** je Anmeldung. Er kommt aus den **UTM-Parametern**
+(`utm_source` / `utm_medium`) am Anmelde-Link und muss von Paperform / Uscreen /
+Zoho beim Signup mitgeschrieben und in `kanal` gemappt werden. Die **Kosten je
+Weg** und die **Fixkosten** der Aktion liegen (wie Preise und Zielmarken) im
+`CONFIG`-Block der Seite; daraus rechnet das Cockpit Kosten je Abo (CPA) und den
+Rückfluss je € Kosten.
 
 ## Ströme und Tarife
 
