@@ -82,3 +82,29 @@ grant execute on function public.sommer2026_stats()    to anon, authenticated;
 grant execute on function public.sommer2026_timeline() to anon, authenticated;
 grant execute on function public.sommer2026_kohorten() to anon, authenticated;
 grant execute on function public.sommer2026_kanaele()  to anon, authenticated;
+
+-- =============================================================================
+-- Ingestion (Webhooks) – siehe ingest-uscreen/index.ts
+-- =============================================================================
+
+-- Roh-Log jedes eingehenden Webhooks (PII-redigiert), nur Service-Role liest ihn
+create table if not exists public.sommer2026_ingest_raw (
+  id          bigint generated always as identity primary key,
+  received_at timestamptz not null default now(),
+  source      text not null default 'uscreen',
+  event       text,
+  ok          boolean not null default true,
+  note        text,
+  payload     jsonb
+);
+alter table public.sommer2026_ingest_raw enable row level security;
+revoke all on table public.sommer2026_ingest_raw from anon, authenticated;
+
+-- Konfig-Speicher (u. a. webhook_secret) – nur Service-Role
+create table if not exists public.sommer2026_config (
+  key   text primary key,
+  value text not null
+);
+alter table public.sommer2026_config enable row level security;
+revoke all on table public.sommer2026_config from anon, authenticated;
+-- insert into public.sommer2026_config(key,value) values ('webhook_secret','<zufälliger-wert>');

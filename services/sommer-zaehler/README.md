@@ -59,6 +59,26 @@ Geplant je Quelle eine Ingestion (Supabase Edge Function + `pg_cron`), die nach
 - **Paperform:** API-Key **oder** Webhook je Formular (DE/EN) — nur als
   Echtzeitpuls «gerade angemeldet»; entprellt gegen Zoho.
 
+## Uscreen-Webhook (aktiv)
+
+Edge Function [`ingest-uscreen/index.ts`](./ingest-uscreen/index.ts) nimmt
+Uscreen-Webhooks entgegen (kein API-Key nötig) und upsertet nach
+`sommer2026_signups` (`source='uscreen'`, Dedup über `ext_id` =
+`subscription_id`). Jeder Payload wird PII-redigiert (E-Mail/Name → `***`) in
+`sommer2026_ingest_raw` geloggt, um das Mapping am ersten echten Event zu
+verfeinern.
+
+- **URL:** `…/functions/v1/ingest-uscreen?key=<webhook_secret>`
+  (Secret liegt in `sommer2026_config`, nicht im Code/Repo).
+- **In Uscreen:** Settings → Webhooks → obige URL; Events *subscription
+  created / canceled* (und *payment/charge* für die Umwandlung `bleibt`).
+- **Attribution:** Settings → User fields → verstecktes Feld `utm_source` am
+  Checkout; die Function mappt es auf `kanal`.
+- **Aktions-Filter (offen):** Damit nur die Sommer-Aktion zählt (nicht das
+  ganze GTV-Geschäft), filtert die Function auf den **Aktions-Plan/-Coupon**.
+  Sobald Plan-Titel bzw. Coupon-Code der «3 Monate gratis»-Aktion bekannt sind,
+  werden sie in der Function hinterlegt.
+
 ## Fest im Cockpit hinterlegt (bis echte Werte vorliegen)
 
 In `apps/sommer-zaehler/index.html` im `CONFIG`-Block: Zielmarken je Strom,
