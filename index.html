@@ -27,9 +27,6 @@
   .tile h2 .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s,color .15s}
   .tile:hover h2 .arr{color:var(--gold-ink);transform:translateX(3px)}
 
-  /* Kleiner, feiner Hinweis über dem Karussell. */
-  .discover{font-size:var(--t-small);letter-spacing:.07em;color:var(--gold-ink);margin:0 0 var(--s3)}
-
   /* Greifbare Mini-Werkzeuge je Karte – das Erzeugnis als Erkennungszeichen. */
   .thumb{height:96px;display:grid;place-items:center;border-radius:10px;background:var(--paper);
     border:1px solid var(--line-soft);overflow:hidden}
@@ -185,9 +182,6 @@
     var items = DISCOVER.map(function(d){ return { d:d, t:byslug[d.slug] }; })
                         .filter(function(x){ return x.t; });
     if (items.length < 2) { car.remove(); return; }   // Karussell erst ab zwei Folien
-
-    // Kleiner, feiner Hinweis ÜBER dem Karussell (nicht je Folie).
-    car.insertAdjacentHTML("beforebegin", '<p class="discover">Schon entdeckt?</p>');
 
     var track = document.createElement("div"); track.className = "track";
     items.forEach(function(x){

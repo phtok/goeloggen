@@ -190,7 +190,7 @@
         '<img class="lockup" src="' + ROOT + 'assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge">' +
       '</a>' +
       '<nav class="worlds"></nav>' + ctaHTML +
-      '<button class="read" type="button" aria-pressed="false" aria-label="Lesemodus – Fliesstext in der Leseschrift"><span class="ic" aria-hidden="true">A</span></button>' +
+      '<button class="read" type="button" aria-pressed="false" aria-label="Lesemodus – Fliesstext in der Leseschrift"><span class="ic" aria-hidden="true">a</span></button>' +
       '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic"></span></button>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
