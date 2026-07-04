@@ -242,12 +242,22 @@
       grid.innerHTML="";
       rows.forEach(function(it){
         var k=key(it.codepoint);
+        // Pfeile/Kompass liegen im EIGENEN Font «Goetheanum Pfeile» auf Buchstaben-
+        // tasten (nicht auf dem PUA-Codepoint). Darum dort die echte Pfeile-Taste
+        // zeigen – sonst stünde das untypbare PUA-Zeichen (Tofu) im Feld.
+        var pf = it.group==='pfeil-kompass';
+        var taste = k, fett = false;
+        if (pf) {
+          var base = it.slug.replace(/-fett$/,''); fett = /-fett$/.test(it.slug);
+          var bk = PFEIL_REV[base];
+          taste = bk ? (fett ? '⇧'+bk : bk) : '';
+        }
         var cell=document.createElement('div'); cell.className='icell';
         cell.setAttribute('role','group'); cell.setAttribute('aria-label',it.label);
         cell.innerHTML=
           '<span class="ico" aria-hidden="true">'+esc(k)+'</span>'+
           '<div class="nm">'+esc(it.label)+'</div>'+
-          (k ? '<div class="key">Taste <b>'+esc(k)+'</b></div>' : '')+
+          (taste ? '<div class="key">'+(pf?'Pfeile-Taste':'Taste')+' <b>'+esc(taste)+'</b></div>' : '')+
           '<div class="dl">'+
             '<a download href="'+BASE+'svg/'+it.slug+'.svg">SVG</a>'+
             '<a download href="'+BASE+'png/'+it.slug+'.png">PNG</a>'+
@@ -265,6 +275,8 @@
       'y':'kompass-1','x':'kompass-2','c':'kompass-3','v':'kompass-4',
       '2':'pfeil-gebogen-1','0':'pfeil-gebogen-2','q':'pfeil-gebogen-3','e':'pfeil-gebogen-4',
       'o':'pfeil-gebogen-5','ü':'pfeil-gebogen-6','s':'pfeil-gebogen-7','ö':'pfeil-gebogen-8' };
+    // Umkehrung slug → Taste, für die Kachel-Anzeige im Reiter «Pfeile & Kompass».
+    var PFEIL_REV={}; Object.keys(PFEIL_KEYS).forEach(function(t){ PFEIL_REV[PFEIL_KEYS[t]]=t; });
     var ROWS=[['1','2','3','4','5','6','7','8','9','0','ß'],
               ['q','w','e','r','t','z','u','i','o','p','ü'],
               ['a','s','d','f','g','h','j','k','l','ö','ä'],
