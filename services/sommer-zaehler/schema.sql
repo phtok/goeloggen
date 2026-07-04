@@ -113,5 +113,7 @@ revoke all on table public.sommer2026_config from anon, authenticated;
 --   webhook_secret : Secret für ?key= der Ingestion-Functions
 --   hash_salt      : Salt für den E-Mail-Hash (Entdopplung)
 --   aktion_aktiv   : 'true' = zählen, sonst nur loggen
+--   aktion_start   : Zeitgrenze (Anmeldungen davor zählen nicht), z. B.
+--                    '2026-07-03T12:00:00+02:00'
 --   aktion_coupon  : optional – Aktions-Coupon-Code (statt Trial-Heuristik)
 --   aktion_plan    : optional – Aktions-Plan-Titel (statt Trial-Heuristik)

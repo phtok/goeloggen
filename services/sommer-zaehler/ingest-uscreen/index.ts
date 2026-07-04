@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
 
   const u = new URL(req.url);
   const key = u.searchParams.get("key") || req.headers.get("x-webhook-key") || "";
-  const cfgRows = await fetch(`${SB}/rest/v1/sommer2026_config?key=in.(webhook_secret,hash_salt,aktion_aktiv,aktion_coupon,aktion_plan)&select=key,value`, { headers: H })
+  const cfgRows = await fetch(`${SB}/rest/v1/sommer2026_config?key=in.(webhook_secret,hash_salt,aktion_aktiv,aktion_start,aktion_coupon,aktion_plan)&select=key,value`, { headers: H })
     .then((r) => r.json()).catch(() => []);
   const cfg: Record<string, string> = {};
   if (Array.isArray(cfgRows)) for (const r of cfgRows) cfg[r.key] = r.value;
@@ -101,6 +101,7 @@ Deno.serve(async (req) => {
 
   const armed = (cfg["aktion_aktiv"] || "").toLowerCase() === "true";
   const salt = cfg["hash_salt"] || "";
+  const aktionStart = cfg["aktion_start"] || "";
   const aktionCoupon = (cfg["aktion_coupon"] || "").toLowerCase();
   const aktionPlan = (cfg["aktion_plan"] || "").toLowerCase();
 
@@ -144,6 +145,11 @@ Deno.serve(async (req) => {
   const { sprache, intervall, tarif } = mapPlan(title);
   const kanal = mapKanal(pick(data, ["utm_source", "source", "custom_fields.utm_source", "referral_source", "user_fields.0.value", "user_field_1"]));
   const when = pick(data, ["created_at", "subscribed_at", "started_at", "date"]) || new Date().toISOString();
+
+  // Aktions-Grenze: Anmeldungen vor dem Start (Nachmittag 3. Juli) zählen nicht.
+  if (aktionStart && !isNaN(Date.parse(when)) && new Date(when) < new Date(aktionStart)) {
+    return json({ ok: true, skipped: "vor Aktionsstart" });
+  }
 
   const row = {
     signed_up_at: when, produkt: "gtv", sprache, format: "stream",
