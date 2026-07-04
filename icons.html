@@ -86,6 +86,7 @@
   /* Live: tippen → Icons (Webfont per Taste). */
   .try{display:flex;flex-direction:column;gap:10px;margin-top:16px}
   .try .out{font-family:"G Icons";font-size:40px;line-height:1.2;color:var(--ink);min-height:52px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--soft);word-break:break-word}
+  .try .out.pf{font-family:"G Pfeile"}   /* Pfeil-/Kompass-Ebene: das Tippfeld zeigt den Pfeile-Font */
   .try input{font:inherit;font-size:16px;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 14px;background:var(--field-bg);min-height:var(--tap)}
   /* Ebenen-Umschalter: Grundebene (Buchstaben → Piktogramme) / Pfeile & Kompass (eigener Font, normale Tasten). */
   .kbd-layer{margin:6px 0 12px}
@@ -307,10 +308,26 @@
         ? 'Piktogramme – jede <b style="color:var(--gold-ink);font-weight:400">goldene</b> Taste trägt ein Zeichen; ein Klick kopiert es. Pfeile und Kompass haben einen <b style="color:var(--gold-ink);font-weight:400">eigenen Font</b> (Reiter oben).'
         : 'Pfeile & Kompass – eigener Font <b style="color:var(--gold-ink);font-weight:400">‹Goetheanum Pfeile›</b>: Schrift wählen, Taste tippen (Umschalt = fett) – kein Option nötig. Oder hier per Klick kopieren; Download unten.';
     }
+    // Das Tippfeld folgt der Ebene: auf der Pfeil-/Kompass-Ebene zeigt es den
+    // Pfeile-Font, damit die Grundtasten (6 t u h · y x c v …) wirklich Pfeile und
+    // Kompass ergeben – im Icon-Font lägen dort Piktogramme, die Pfeile wären
+    // unerreichbar. Beispiel und Beschriftung wechseln mit.
+    function syncTry(){
+      var out=document.getElementById('tryout'), inp=document.getElementById('tryin'),
+          lab=document.querySelector('.try .lab');
+      if(!out||!inp) return;
+      var pf = kbdLayer==='pfeile';
+      out.classList.toggle('pf', pf);
+      inp.value = pf ? '6tuh yxcv' : 'heafu';
+      out.textContent = inp.value;
+      if(lab) lab.textContent = pf
+        ? 'Selbst probieren – Pfeil- und Kompass-Tasten tippen (6 t u h · y x c v):'
+        : 'Selbst probieren – Buchstaben tippen:';
+    }
     document.querySelectorAll('.kbd-layer button').forEach(function(b){
       b.addEventListener('click',function(){
         document.querySelectorAll('.kbd-layer button').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
-        b.setAttribute('aria-pressed','true'); kbdLayer=b.dataset.layer; buildKbd();
+        b.setAttribute('aria-pressed','true'); kbdLayer=b.dataset.layer; buildKbd(); syncTry();
       });
     });
     document.querySelectorAll('.tabs button').forEach(function(b){
