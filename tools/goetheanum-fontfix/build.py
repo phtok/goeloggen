@@ -21,7 +21,8 @@ import os, sys, glob
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from fontfix import (load_uprights, glyph_area, grec, area_of, pick_and_interp,
-                     add_cid_glyph, replace_glyph_outline, _charstring, sig, blend)
+                     add_cid_glyph, replace_glyph_outline, _charstring, sig, blend,
+                     add_badge_invers)
 from fontTools.ttLib import TTFont
 from fontTools.pens.boundsPen import BoundsPen
 from fontTools.varLib.cff import CFF2CharStringMergePen
@@ -201,6 +202,9 @@ def build_icons():
     add_notdef_box(ft)
     sp = ft.getBestCmap()[0x20]
     add_cid_glyph(ft, 0xA0, [], ft["hmtx"][sp][0], prefer_name="uni00A0")
+    # Restore the missing invers (circle) badge on '1'; the source master never
+    # carried a distinct glyph (fell back to the filler). See fontfix.add_badge_invers.
+    add_badge_invers(ft, os.path.join(OUTROOT, "Icons-Einzeldateien", "svg", "goetheanum-badge-invers.svg"))
     ym, yn = gbbox(ft); set_win(ft, int(round(ym)), int(round(-yn)))
     out = "Goetheanum-Icons-v%s.otf" % VERSION
     ft.save(os.path.join(OUTROOT, "Fonts", out))
