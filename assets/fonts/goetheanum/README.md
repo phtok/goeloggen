@@ -47,6 +47,13 @@ Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
   Schrägstrich als roh überlappende Kontur über dem Oval; an den Überschneidungen
   entstanden an kleinen Graden Knoten. Die Konturen sind jetzt überschneidungsfrei
   vereinigt – die Silhouette bleibt, die Kerbe an der Schräg-Spitze ist weg.
+- **Vertikale Metriken geradegezogen.** Eine kaputte Glyphe hatte `usWinAscent`
+  auf 1722 aufgebläht (2.17× Zeilenhöhe in Apps ohne `USE_TYPO_METRICS`). Jetzt
+  `win` = echte Tintengrenzen (1126/306), `USE_TYPO_METRICS` an → 1.0× em in
+  konformen Apps, 1.43× in Legacy-Apps.
+- **Ǻ (U+01FA) repariert.** Die Akzente waren in Leise/Ruhig/Klar/Variabel
+  verrissen (Konturen bis y 1722). Ǻ ist neu und gewichtsrichtig aus dem gesunden
+  Å und dem Akut zusammengesetzt – statisch je Schnitt und geblendet in der Variable.
 
 ## Neu in v2.6
 
