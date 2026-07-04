@@ -17,6 +17,7 @@ body{
   background:var(--paper); color:var(--ink);
   font-family:var(--font); font-weight:var(--w-text);
   font-size:var(--t-body); line-height:var(--lh-body);
+  letter-spacing:.02em;   /* B3: leichtes Tracking hilft Lese-/Kleingraden (Beier) */
   font-kerning:normal; text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased;
 }
 /* Langtext (Fliesstext über mehrere Absätze) bekommt die Lese-Grotesk – dort,
@@ -40,6 +41,7 @@ p a:hover,li a:hover,.note a:hover,.hint a:hover,.help a:hover,.desc a:hover{tex
    Seiten setzen KEINE eigenen Überschriften-Grössen oder -Schnitte mehr; so kann
    keine Seite ausscheren (Konformität durch Konstruktion). Titel = Deutlich, nie Laut. */
 h1,h2,h3,h4,.h-display{font-family:var(--font-display);font-weight:var(--w-deutlich);line-height:var(--lh-tight)}
+h1,h2{letter-spacing:0}   /* B3: grosse Display-Grade bleiben eng (Tracking nur an Lesegraden) */
 h1{font-size:var(--t-h1)}
 h2{font-size:var(--t-h2)}
 h3{font-size:var(--t-h3)}
