@@ -107,6 +107,20 @@ pre .k{color:var(--code-key)}pre .s{color:var(--code-str)}pre .c{color:var(--cod
   <div class="swatch"><span class="tag">Leise 265</span><span class="s" style="font-variation-settings:'wght' 265">geprüft & gefällig</span></div>
 </div>
 
+<h2>4 · Icons &amp; Pfeile <span class="tag">zwei eigene Fonts, per Taste</span></h2>
+<div class="card">
+<p class="lead" style="margin-top:0">Piktogramme und Pfeile liegen in <b>zwei eigenen Fonts</b> – nicht im Textfont. Man setzt sie nicht über ein Gewicht, sondern indem man einer Fläche die Icon- oder Pfeile-Schrift gibt und die passende <b>Taste</b> tippt. Welche Taste welches Zeichen ergibt (und jedes einzeln als SVG/PNG/PDF), zeigt die <a href="icons.html">Icon-Seite</a>.</p>
+<pre><button class="copy" data-t="i">kopieren</button><code id="code-i"><span class="k">@font-face</span>{ <span class="k">font-family</span>:<span class="s">"Goetheanum Icons"</span>;
+  <span class="k">src</span>:<span class="k">url</span>(<span class="s">"https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2"</span>) <span class="k">format</span>(<span class="s">"woff2"</span>); <span class="k">font-display</span>:block }
+<span class="k">@font-face</span>{ <span class="k">font-family</span>:<span class="s">"Goetheanum Pfeile"</span>;
+  <span class="k">src</span>:<span class="k">url</span>(<span class="s">"https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Pfeile-v2.7.woff2"</span>) <span class="k">format</span>(<span class="s">"woff2"</span>); <span class="k">font-display</span>:block }
+
+<span class="c">/* Verwendung – Zeichen per Taste, nicht per Gewicht */</span>
+.icon  { <span class="k">font-family</span>:<span class="s">"Goetheanum Icons"</span>; }   <span class="c">/* &lt;span class="icon"&gt;h&lt;/span&gt;  → Piktogramm */</span>
+.pfeil { <span class="k">font-family</span>:<span class="s">"Goetheanum Pfeile"</span>; }  <span class="c">/* &lt;span class="pfeil"&gt;u&lt;/span&gt; → Pfeil (Grossbuchstabe = fett) */</span></code></pre>
+<p class="note">Beide Wege gelten auch hier: von der Hausadresse laden (oben) oder <b>selbst hosten</b> – Dateien ins Projekt, <code>src</code>-URL relativ.</p>
+</div>
+
 </div>
 <script>
 var w=document.getElementById("w"),wv=document.getElementById("wv"),hero=document.getElementById("hero");
