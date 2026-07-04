@@ -267,12 +267,36 @@
   }
   searchInput.addEventListener("input", applySearch);
 
-  function openDrawer() { backdrop.classList.add("open"); drawer.classList.add("open"); btnAll.setAttribute("aria-expanded", "true"); }
-  function closeDrawer() { backdrop.classList.remove("open"); drawer.classList.remove("open"); btnAll.setAttribute("aria-expanded", "false"); }
+  // Fokusführung nach ARIA-Dialog-Pattern (WCAG 2.4.3): beim Öffnen den Fokus in
+  // den Dialog (erstes Ziel = Schliessen-Knopf, kein Auto-Fokus ins Suchfeld),
+  // Tab zirkuliert nur im Dialog, beim Schliessen zurück auf den Auslöser (Burger).
+  var lastFocus = null;
+  function focusables(r) {
+    var all = r.querySelectorAll('a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])');
+    return Array.prototype.filter.call(all, function (el) { return el.offsetParent !== null; });
+  }
+  function openDrawer() {
+    lastFocus = document.activeElement;
+    backdrop.classList.add("open"); drawer.classList.add("open");
+    btnAll.setAttribute("aria-expanded", "true"); drawer.setAttribute("aria-modal", "true");
+    var f = focusables(drawer); if (f.length) f[0].focus();
+  }
+  function closeDrawer() {
+    backdrop.classList.remove("open"); drawer.classList.remove("open");
+    btnAll.setAttribute("aria-expanded", "false"); drawer.removeAttribute("aria-modal");
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
   btnAll.addEventListener("click", function () { drawer.classList.contains("open") ? closeDrawer() : openDrawer(); });
   backdrop.addEventListener("click", closeDrawer);
   drawer.querySelector(".close").addEventListener("click", closeDrawer);
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrawer(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && drawer.classList.contains("open")) closeDrawer(); });
+  drawer.addEventListener("keydown", function (e) {
+    if (e.key !== "Tab") return;
+    var f = focusables(drawer); if (!f.length) return;
+    var a = f[0], z = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+    else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+  });
 
   // Unsichtbarer Intern-Schalter
   function toggleIntern() {
