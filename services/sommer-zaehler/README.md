@@ -72,12 +72,34 @@ verfeinern.
   (Secret liegt in `sommer2026_config`, nicht im Code/Repo).
 - **In Uscreen:** Settings → Webhooks → obige URL; Events *subscription
   created / canceled* (und *payment/charge* für die Umwandlung `bleibt`).
-- **Attribution:** Settings → User fields → verstecktes Feld `utm_source` am
-  Checkout; die Function mappt es auf `kanal`.
-- **Aktions-Filter (offen):** Damit nur die Sommer-Aktion zählt (nicht das
-  ganze GTV-Geschäft), filtert die Function auf den **Aktions-Plan/-Coupon**.
-  Sobald Plan-Titel bzw. Coupon-Code der «3 Monate gratis»-Aktion bekannt sind,
-  werden sie in der Function hinterlegt.
+- **Attribution:** Settings → Custom user fields → «Wie sind Sie auf uns
+  aufmerksam geworden?»; die Function mappt die Antwort auf `kanal`.
+- **Aktions-Isolierung:** «3 Monate gratis» = Neuzuweisung ohne Sofortzahlung
+  (`transaction_id` leer) → `neu`. Vollzahler-Neukäufe und Verlängerungen
+  (Normalgeschäft) zählen nicht. Zahlung → `bleibt`, Kündigung → `gekuendigt`.
+  Schärfer stellbar über `sommer2026_config.aktion_coupon` / `aktion_plan`.
+- **Scharf/Log:** zählt nur wenn `sommer2026_config.aktion_aktiv = 'true'`,
+  sonst reiner Log-Modus.
+
+## Paperform-Webhook (Wochenschrift, aktiv)
+
+Edge Function [`ingest-paperform/index.ts`](./ingest-paperform/index.ts) nimmt die
+Formular-Einreichungen entgegen (Paperform → After submission → Webhook, **kein
+API-Key nötig**). Das Formular ist die Aktion – jede Einreichung zählt als `neu`
+(`produkt='wos'`). Sprache/Format je Formular über die URL:
+`…/ingest-paperform?key=<secret>&sprache=de` (bzw. `&sprache=en`, optional
+`&format=papier|digital`); Tarif/Intervall werden aus den Feldern erraten und am
+ersten echten Payload verfeinert (Roh-Log).
+
+## Entdopplung (Dupletten filtern)
+
+Strikt über `dedup_key`:
+- Innerhalb einer Quelle: eine Zeile je Abonnent (mehrere Events derselben
+  Person – Anmeldung, Zahlung, Verlängerung, Kündigung – aktualisieren dieselbe
+  Zeile, statt neue anzulegen).
+- Über Quellen hinweg (Paperform **und** Zoho für dieselbe WoS-Person):
+  `dedup_key = <produkt>:<gesalzener E-Mail-Hash>` – E-Mail wird **nur gehasht**
+  gespeichert (Salt in `sommer2026_config.hash_salt`), nie im Klartext.
 
 ## Fest im Cockpit hinterlegt (bis echte Werte vorliegen)
 

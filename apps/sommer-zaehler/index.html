@@ -117,6 +117,8 @@
   .provisorisch{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s4);line-height:1.55}
   .empty{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
   .err{font-family:var(--font-text);color:var(--bad);font-size:var(--t-small)}
+  .landing{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5);align-items:baseline;font-family:var(--font-text);font-size:var(--t-small);margin-bottom:var(--s4)}
+  .landing a{color:var(--blue)}
 
   @media (max-width:720px){
     .tiles{grid-template-columns:1fr} .board{grid-template-columns:1fr} .stay{grid-template-columns:1fr}
@@ -251,9 +253,17 @@
 </main>
 
 <footer class="ds-footer">
-  <div class="wrap frow">
-    <span><strong>Sommer-Zähler 2026</strong> · live aus dem Werkzeug-Backend · nur Summen, keine Personendaten</span>
-    <span><a href="https://phtok.github.io/goeloggen/design-system/">Design-System</a></span>
+  <div class="wrap" style="display:flex;flex-direction:column;gap:var(--s2)">
+    <div class="landing">
+      <span class="meta">Aktionsseiten</span>
+      <a href="https://global-sommer2026.goetheanum.online" target="_blank" rel="noopener">Übersicht · 3 Monate gratis</a>
+      <a href="https://ws-sommer2026.dasgoetheanum.com" target="_blank" rel="noopener">Wochenschrift</a>
+      <a href="https://tv-sommer2026.goetheanum.tv" target="_blank" rel="noopener">goetheanum.tv</a>
+    </div>
+    <div class="frow">
+      <span><strong>Sommer-Zähler 2026</strong> · live aus dem Werkzeug-Backend · nur Summen, keine Personendaten</span>
+      <span><a href="https://phtok.github.io/goeloggen/design-system/">Design-System</a></span>
+    </div>
   </div>
 </footer>
 
