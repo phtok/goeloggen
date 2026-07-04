@@ -216,18 +216,20 @@
   document.body.appendChild(backdrop);
   document.body.appendChild(drawer);
 
-  // Globaler Beta-Einblender (unten, dezent, wegklickbar – merkt sich „gesehen").
-  var BETA_KEY = "goeBetaSeen";
-  var betaSeen = false; try { betaSeen = localStorage.getItem(BETA_KEY) === "1"; } catch (e) {}
-  if (!betaSeen) {
-    var beta = el("div", "dsnav-beta");
-    beta.innerHTML =
-      '<span class="t"><b>Beta</b> – die Werkzeuge wachsen noch.</span>' +
-      '<a class="fb" href="mailto:philipp.tok@goetheanum.ch?subject=Feedback%20Goetheanum%20Werkzeuge">Feedback geben</a>' +
-      '<button class="x" type="button" aria-label="Hinweis schliessen">×</button>';
-    document.body.appendChild(beta);
-    beta.querySelector(".x").addEventListener("click", function () {
-      beta.remove(); try { localStorage.setItem(BETA_KEY, "1"); } catch (e) {}
+  // Globaler Feedback-Einblender (unten, dezent, wegklickbar). Eine einladende
+  // Frage statt Beta-Hinweis: motiviert zur Rückmeldung und öffnet die Mail mit
+  // vorbereitetem Betreff samt aktueller Seite – niedrige Schwelle.
+  var INVITE_KEY = "goeInviteSeen";
+  var inviteSeen = false; try { inviteSeen = localStorage.getItem(INVITE_KEY) === "1"; } catch (e) {}
+  if (!inviteSeen) {
+    var subj = encodeURIComponent("Rückmeldung – " + (document.title || "Goetheanum Werkzeuge"));
+    var invite = el("div", "dsnav-invite");
+    invite.innerHTML =
+      '<a class="ask" href="mailto:philipp.tok@goetheanum.ch?subject=' + subj + '">Fehlt Dir etwas? <b>Sag es uns</b></a>' +
+      '<button class="x" type="button" aria-label="Ausblenden">×</button>';
+    document.body.appendChild(invite);
+    invite.querySelector(".x").addEventListener("click", function () {
+      invite.remove(); try { localStorage.setItem(INVITE_KEY, "1"); } catch (e) {}
     });
   }
 
