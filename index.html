@@ -141,11 +141,22 @@
     "sektionsfarben","uebersetzungen","wallpaper","powerpoint",
     "typografie","design-system"];
   // Entdecker-Karussell: ausgewählte Werkzeuge, je ein Teaser.
+  // Alle öffentlichen Karten als Reihenfolge des Entdeckens: vom Fundament über die
+  // Identität und die Stimme zu den Alltagswerkzeugen und den fertigen Anwendungen.
+  // Der Kicker benennt die Station – gleiche Station = zusammengehörige Karten.
   var DISCOVER = [
-    {slug:"wallpaper",      line:"Elf Goetheanum-Hintergründe für den Desktop, frei zum Herunterladen."},
-    {slug:"schriften",      line:"Sechs Schnitte von Flüstern bis Schreien, Variable Font und Icon-Satz."},
-    {slug:"powerpoint",     line:"Präsentationsvorlage im Hausbild – mit eingebetteten Schriften."},
-    {slug:"icons",          line:"45 Piktogramme als Webfont oder einzeln – per Taste gesetzt."}
+    {slug:"design-system",  kick:"Zuerst · das Fundament", line:"Farben, Schnitte und Regeln aus einer Quelle – hier nachschlagen, von hier aus bauen."},
+    {slug:"logo-generator", kick:"Die Identität",          line:"Das Logo für jede Sektion und jeden Bereich setzen und sauber exportieren."},
+    {slug:"sektionsfarben", kick:"Die Identität",          line:"Die Farben der Schul-Sektionen – Werte, Anwendung und wo Weiss darauf steht."},
+    {slug:"schriften",      kick:"Die Stimme",             line:"Die Hausschrift v2.7: fünf Schnitte von Leise bis Laut, Variable Font und Icon-Satz."},
+    {slug:"icons",          kick:"Die Stimme",             line:"45 Piktogramme, Pfeile und Kompass – als Webfont per Taste oder einzeln als SVG, PNG, PDF."},
+    {slug:"typografie",     kick:"Die Stimme",             line:"Die Satzregeln des Hauses – Auszeichnung, Ziffern, Striche, Anführungen; nachschlagen und prüfen."},
+    {slug:"editor",         kick:"Die Stimme",             line:"Text im Hausbild setzen – die Regeln greifen beim Tippen, fertig zum Übernehmen."},
+    {slug:"visitenkarten",  kick:"Für den Alltag",         line:"Die eigene Visitenkarte im Hausbild – ausfüllen, Vorschau, Druckdatei."},
+    {slug:"signatur",       kick:"Für den Alltag",         line:"Die Mail-Signatur im Hausbild – Angaben eintragen, Block kopieren, einsetzen."},
+    {slug:"uebersetzungen", kick:"Für den Alltag",         line:"Sektionen und Begriffe in vier Sprachen – für Karten, Briefe und die Sekretariate."},
+    {slug:"powerpoint",     kick:"Zum Mitnehmen",          line:"Präsentationsvorlage im Hausbild – mit eingebetteten Schriften, sofort loslegen."},
+    {slug:"wallpaper",      kick:"Zum Mitnehmen",          line:"Elf Goetheanum-Hintergründe für den Desktop, frei zum Herunterladen."}
   ];
   // Greifbar: jedes Zeichen zeigt das DING, das das Werkzeug erzeugt.
   var VISUAL = {
@@ -188,7 +199,8 @@
       var a = document.createElement("a"); a.className = "slide"; a.href = x.t.href;
       if (isExt(x.t.href)) { a.target = "_blank"; a.rel = "noopener"; }
       a.innerHTML = visual(x.t) +
-        '<span class="copy"><h2>' + x.t.title + '</h2><p>' + x.d.line + '</p>' +
+        '<span class="copy">' + (x.d.kick ? '<span class="kick">' + x.d.kick + '</span>' : '') +
+        '<h2>' + x.t.title + '</h2><p>' + x.d.line + '</p>' +
         '<span class="go">Ansehen ›</span></span>';
       track.appendChild(a);
     });
