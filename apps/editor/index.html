@@ -255,6 +255,58 @@
     URL.revokeObjectURL(a.href);
   });
 
+  // Einfügen normalisiert auf echten Klartext: der Editor arbeitet mit Text,
+  // nicht mit Fremd-Markup. Ein <q> aus der Zwischenablage wird zu ECHTEN
+  // ‹…›-Zeichen materialisiert – sonst ist die Hausanführung nur CSS (base.css
+  // rendert <q> über die quotes-Eigenschaft, G16) und verschwindet beim ersten
+  // Prüfen spurlos, ohne dass am Klartext etwas geschieht. Blockgrenzen werden
+  // zu Zeilenumbrüchen, sonst fiele der ganze Satzbau zu einer Zeile zusammen.
+  function htmlZuText(html){
+    var tpl = document.createElement("template");
+    tpl.innerHTML = html;
+    var root = tpl.content;
+    var q;
+    while((q = root.querySelector("q"))){
+      var innerst = q, tiefer; // innerste Anführung zuerst, damit Verschachtelung ‹‹…›› erhalten bleibt
+      while((tiefer = innerst.querySelector("q"))) innerst = tiefer;
+      innerst.replaceWith(document.createTextNode("‹" + innerst.textContent + "›"));
+    }
+    Array.prototype.forEach.call(root.querySelectorAll("br"), function(br){
+      br.replaceWith(document.createTextNode("\n"));
+    });
+    Array.prototype.forEach.call(root.querySelectorAll("p,div,li,tr,h1,h2,h3,h4,h5,h6,blockquote"), function(b){
+      b.appendChild(document.createTextNode("\n"));
+    });
+    return (root.textContent || "").replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").replace(/^\n+|\n+$/g, "");
+  }
+
+  function textEinfuegen(text){
+    if(!text) return;
+    // insertText hält Cursor und Undo-Verlauf und erzeugt reinen Text.
+    if(document.execCommand && document.execCommand("insertText", false, text)) return;
+    var sel = window.getSelection();
+    if(sel && sel.rangeCount){
+      var range = sel.getRangeAt(0);
+      range.deleteContents();
+      var node = document.createTextNode(text);
+      range.insertNode(node);
+      range.setStartAfter(node); range.setEndAfter(node);
+      sel.removeAllRanges(); sel.addRange(range);
+    } else {
+      edit.appendChild(document.createTextNode(text));
+    }
+  }
+
+  edit.addEventListener("paste", function(ev){
+    var cd = ev.clipboardData || window.clipboardData;
+    if(!cd) return;
+    ev.preventDefault();
+    var html = cd.getData("text/html");
+    var text = html ? htmlZuText(html) : (cd.getData("text/plain") || "");
+    textEinfuegen(text);
+    zaehlen();
+  });
+
   edit.addEventListener("input", zaehlen);
 
   window.GoeTypo.laden(RULES_URL).then(function(r){ rules = r; });
