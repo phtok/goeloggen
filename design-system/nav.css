@@ -103,20 +103,21 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 
 .dsnav-drawer .body{overflow:auto;padding:var(--s2) 0 var(--s8)}
 
-/* Globaler Beta-Einblender (unten, dezent, wegklickbar) */
-.dsnav-beta{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:44;
-  display:flex;align-items:center;gap:14px;max-width:calc(100% - 28px);
+/* Globaler Feedback-Einblender (unten, dezent, wegklickbar) – eine einladende Frage.
+   Die ganze Pille ist der Aufruf; ein Klick öffnet die Mail. Kein Beta-Hinweis mehr. */
+.dsnav-invite{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:44;
+  display:flex;align-items:center;gap:4px;max-width:calc(100% - 28px);
   background:var(--bar-bg);backdrop-filter:saturate(160%) blur(10px);
   border:1px solid var(--line);border-radius:var(--r-pill);
-  padding:9px 10px 9px 18px;box-shadow:var(--shadow-card);font-size:var(--t-small)}
-.dsnav-beta .t{color:var(--ink)}
-.dsnav-beta .t b{color:var(--gold-ink);font-weight:var(--w-deutlich)}
-.dsnav-beta .fb{color:var(--blue);text-decoration:none;font-weight:var(--w-deutlich);white-space:nowrap}
-.dsnav-beta .fb:hover{text-decoration:underline}
-.dsnav-beta .x{border:0;background:none;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;
+  padding:5px 6px;box-shadow:var(--shadow-card);font-size:var(--t-small)}
+.dsnav-invite .ask{display:inline-flex;align-items:center;gap:7px;color:var(--ink);text-decoration:none;
+  white-space:nowrap;padding:7px 14px;border-radius:var(--r-pill)}
+.dsnav-invite .ask b{color:var(--gold-ink);font-weight:var(--w-deutlich)}
+.dsnav-invite .ask:hover{background:var(--soft)}
+.dsnav-invite .x{border:0;background:none;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;
   width:30px;height:30px;border-radius:var(--r-pill);flex:0 0 auto}
-.dsnav-beta .x:hover{color:var(--ink);background:var(--soft)}
-@media(max-width:480px){.dsnav-beta{gap:10px;padding:8px 8px 8px 14px}}
+.dsnav-invite .x:hover{color:var(--ink);background:var(--soft)}
+@media(max-width:480px){.dsnav-invite .ask{padding:7px 12px}}
 
 /* Toast für den unsichtbaren Intern-Schalter */
 .dsnav-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);
