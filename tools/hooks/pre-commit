@@ -30,3 +30,9 @@ fi
 if git diff --cached --name-only | grep -Eq 'design-system/tokens\.css'; then
   "$PY" "$ROOT/tools/check-on-sek.py"
 fi
+
+# 4) Typo-Leiter (B6, Beier): Goetheanum-Rolle <18px braucht Deutlich; Leise ≥22px.
+#    Vorläufig BERICHTEND (wie ds-lint), sobald base.css/Leiter vorgemerkt ist.
+if git diff --cached --name-only | grep -Eq 'design-system/(base\.css|type-scale\.json)'; then
+  "$PY" "$ROOT/tools/check-type-scale.py" || true
+fi
