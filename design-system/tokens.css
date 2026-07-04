@@ -85,6 +85,18 @@
   --sek-hpise:#f98a3c;       /* Sektion für Heilpädagogik und inklusive soziale Entwicklung */
   --bereich:#0061a9;         /* Verwaltungs-/Bereichs-Standard = Markenblau (wie die Logo-Daten, goe-orgs.js) */
 
+  /* Vordergrund AUF der jeweiligen Sektionsfläche (WCAG 1.4.3): Weiss nur, wo es
+     ≥ 4.5:1 hält – sonst ein dunkler Sektionston. Werkzeuge nutzen ausschliesslich
+     --on-sek-*, nie hart #fff. Werte gegen ihre Fläche gerechnet (tools/check-on-sek.py). */
+  --on-sek-goetheanum:#fff;  --on-sek-aas:#fff;    --on-sek-ps:#fff;   --on-sek-ms:#fff;
+  --on-sek-nws:#fff;         --on-sek-ssw:#fff;    --on-sek-mas:#fff;   /* Weiss ≥ 4.5:1 */
+  --on-sek-lws:#12351d;      /* Weiss nur 2.66 → dunkelgrün 5.09:1 */
+  --on-sek-sbk:#46172e;      /* Weiss nur 3.18 → dunkelrosa 4.64:1 */
+  --on-sek-szw:#23060c;      /* Weiss nur 4.14 → dunkelrot 4.60:1 */
+  --on-sek-js:#4a0f0c;       /* Weiss nur 2.86 → dunkelrot 5.39:1 */
+  --on-sek-srmk:#0f2445;     /* Weiss nur 3.35 → dunkelblau 4.61:1 */
+  --on-sek-hpise:#3c2408;    /* Weiss nur 2.41 → dunkelbraun 6.03:1 */
+
   /* --- Schrift-Familien --------------------------------------------------- */
   --font-display:"Goetheanum","Helvetica Neue",Arial,sans-serif; /* Titel, Chrome */
   --font-text:"Source Sans 3","Helvetica Neue",Arial,sans-serif; /* Lesetext, klein/lang */
