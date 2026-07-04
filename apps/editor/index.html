@@ -18,10 +18,16 @@
   .work{display:grid;grid-template-columns:1fr;gap:var(--s6);align-items:start;padding-bottom:var(--s8)}
   @media(min-width:960px){.work{grid-template-columns:minmax(0,1fr) minmax(280px,340px)}}
 
-  .stage{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s6)}
-  .stage .toolbar{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;margin-bottom:var(--s4)}
-  .stage .toolbar .count{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);font-variant-numeric:tabular-nums}
-  .stage .toolbar .btns{display:flex;gap:var(--s2);flex-wrap:wrap}
+  /* Bühne als Grid: Hauptaktion oben, Textfeld als grösste Fläche, Ausgaben
+     und Zähler leise darunter/daneben. Mobil rückt ‹Prüfen› über das Feld
+     (volle Breite), Ausgaben + Zähler wandern unter das Feld. */
+  .stage{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s6);
+    display:grid;grid-template-columns:1fr auto;gap:var(--s4);align-items:center;
+    grid-template-areas:"check outs" "edit edit" "count count"}
+  .stage>#btn-pruefen{grid-area:check;justify-self:start}
+  .stage .outs{grid-area:outs;display:flex;gap:var(--s2);flex-wrap:wrap;justify-self:end}
+  .stage .count{grid-area:count;justify-self:end;font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);font-variant-numeric:tabular-nums}
+  .edit{grid-area:edit}
 
   .edit{min-height:320px;max-width:var(--measure);outline:none;font-size:var(--t-body);line-height:var(--lh-body);white-space:pre-wrap;word-break:break-word}
   .edit:empty::before{content:attr(data-placeholder);color:var(--muted)}
@@ -54,7 +60,10 @@
   .lm-note .ids{font-family:var(--font-text);font-size:var(--t-micro);letter-spacing:.02em}
 
   @media(max-width:560px){
-    .stage{padding:var(--s4)}
+    .stage{padding:var(--s4);grid-template-areas:"check check" "edit edit" "outs outs" "count count"}
+    .stage>#btn-pruefen{justify-self:stretch}
+    .stage .outs{justify-self:stretch}
+    .stage .outs .btn{flex:1 1 auto}
     .margin{position:static}
   }
 </style>
@@ -73,15 +82,13 @@
 
   <section class="work">
     <div class="stage">
-      <div class="toolbar">
-        <div class="btns">
-          <button class="btn primary" type="button" id="btn-pruefen">Prüfen</button>
-          <button class="btn" type="button" id="btn-kopieren">Kopieren</button>
-          <button class="btn" type="button" id="btn-datei">Als Datei</button>
-        </div>
-        <span class="count" id="zaehler">0 Zeichen · 0 Wörter</span>
+      <button class="btn primary" type="button" id="btn-pruefen">Prüfen</button>
+      <div class="outs">
+        <button class="btn ghost" type="button" id="btn-kopieren">Kopieren</button>
+        <button class="btn ghost" type="button" id="btn-datei">Als Datei</button>
       </div>
       <div class="edit lese" id="edit" contenteditable="true" data-placeholder="Text einfügen oder schreiben …" role="textbox" aria-multiline="true" aria-label="Text"></div>
+      <span class="count" id="zaehler">0 Zeichen · 0 Wörter</span>
     </div>
 
     <aside class="margin">
