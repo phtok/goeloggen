@@ -75,6 +75,8 @@ Deno.serve(async (req) => {
     : /papier|print|gedruckt|\bpaper\b|frei haus/.test(blob) ? "papier" : "papier";
   const tarif = /erm(ä|ae)ss|reduc|student|reduziert/.test(blob) ? "ermaessigt" : "standard";
   const intervall = /(monat|month|mensuel)/.test(blob) ? "monatlich" : /(jähr|jahr|year|annual)/.test(blob) ? "jaehrlich" : "jaehrlich";
+  const waehrungQ = (u.searchParams.get("waehrung") || "").toLowerCase();
+  const waehrung = waehrungQ === "eur" || waehrungQ === "chf" ? waehrungQ : (/\bchf\b|fr\.?\b/.test(blob) ? "chf" : /\beur\b|€/.test(blob) ? "eur" : null);
 
   // E-Mail für Entdopplung (aus rohem Body, vor Redaktion).
   const emailMatch = JSON.stringify(body).match(EMAIL_RE);
@@ -85,7 +87,7 @@ Deno.serve(async (req) => {
 
   const row = {
     signed_up_at: new Date().toISOString(), produkt: "wos", sprache, format,
-    tarif, intervall, status: "neu", kanal: "andere", source: "paperform", ext_id: String(subId || ""), dedup_key: dedupKey,
+    tarif, intervall, waehrung, status: "neu", kanal: "andere", source: "paperform", ext_id: String(subId || ""), dedup_key: dedupKey,
   };
   const res = await fetch(`${SB}/rest/v1/sommer2026_signups?on_conflict=dedup_key`, {
     method: "POST",
@@ -99,5 +101,5 @@ Deno.serve(async (req) => {
     }).catch(() => {});
     return json({ ok: false }, 200);
   }
-  return json({ ok: true, produkt: "wos", sprache, format, tarif, intervall });
+  return json({ ok: true, produkt: "wos", sprache, format, tarif, intervall, waehrung });
 });

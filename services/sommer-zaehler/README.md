@@ -86,10 +86,11 @@ verfeinern.
 Edge Function [`ingest-paperform/index.ts`](./ingest-paperform/index.ts) nimmt die
 Formular-Einreichungen entgegen (Paperform → After submission → Webhook, **kein
 API-Key nötig**). Das Formular ist die Aktion – jede Einreichung zählt als `neu`
-(`produkt='wos'`). Sprache/Format je Formular über die URL:
-`…/ingest-paperform?key=<secret>&sprache=de` (bzw. `&sprache=en`, optional
-`&format=papier|digital`); Tarif/Intervall werden aus den Feldern erraten und am
-ersten echten Payload verfeinert (Roh-Log).
+(`produkt='wos'`). Es gibt **vier Formulare** (Währung EUR/CHF × Sprache DE/EN);
+Sprache, Währung und Format je Formular über die URL:
+`…/ingest-paperform?key=<secret>&sprache=de&waehrung=eur` (bzw. `&sprache=en`,
+`&waehrung=chf`, optional `&format=papier|digital`). Tarif/Intervall werden aus
+den Feldern erraten und am ersten echten Payload verfeinert (Roh-Log).
 
 ## Entdopplung (Dupletten filtern)
 

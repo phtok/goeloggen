@@ -18,6 +18,7 @@ create table if not exists public.sommer2026_signups (
   format        text not null check (format  in ('papier','digital','stream')),   -- WoS: papier/digital · GTV: stream
   tarif         text not null check (tarif   in ('standard','ermaessigt')),
   intervall     text not null check (intervall in ('monatlich','jaehrlich')),
+  waehrung      text check (waehrung in ('eur','chf')),  -- Zahlungswährung (für Umsatz)
   status        text not null default 'neu'    check (status in ('neu','bleibt','gekuendigt','laeuft-aus')),
   kanal         text not null default 'andere' check (kanal in ('newsletter','mailer','social','popup','website','empfehlung','andere')),  -- Herkunftsweg (Attribution)
   source        text not null default 'manual' check (source in ('uscreen','zoho','paperform','manual')),
