@@ -309,6 +309,17 @@
       "desc": "Anonyme Nutzungszahlen aller Werkzeuge."
     },
     {
+      "slug": "sommer-zaehler",
+      "cat": "statistik",
+      "status": "beta",
+      "tag": "Aktion",
+      "title": "Sommer-Zähler 2026",
+      "short": "Sommer-Zähler",
+      "href": "apps/sommer-zaehler/",
+      "desc": "Aktions-Cockpit der Sommer-Aktion – neue Abos der Wochenschrift und von goetheanum.tv, live aus dem Backend, mit Zielmarken, Momentum und dem Drei-Monats-Moment.",
+      "such": "Sommer Aktion Kampagne Abo Zähler Counter Wochenschrift GTV goetheanum.tv Cockpit Zahlen"
+    },
+    {
       "slug": "campus-karten",
       "cat": "geparkt",
       "status": "geparkt",
