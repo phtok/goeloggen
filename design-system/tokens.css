@@ -22,23 +22,30 @@
   src:url("../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.7.woff2") format("woff2"),
       url("../assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.7.woff") format("woff");
   font-weight:190 725; font-style:normal; font-display:swap;
+  /* B5: Zeilenbox auf die Typo-Metrik normieren (750/-250). Die Schrift trägt
+     usWinAscent 1114 (hohe Streukontur) – ohne Override entstünde je Face ein
+     anderer Durchschuss und versetzte Grundlinien. Werte für BEIDE Faces gleich,
+     damit Goetheanum und Source auf derselben Grundlinie sitzen. Der Font-Bug
+     selbst ist separat behoben (U+01FA, #213/#218), damit PPTX/E-Mail-Export
+     ohne dieses CSS ebenfalls stimmt. */
+  ascent-override:75%; descent-override:25%; line-gap-override:0%;
 }
 /* --- Lesetext: Source Sans 3 (selbst gehostet, OFL) ------------------------ */
 /* B4: size-adjust:103% (500/486) gleicht die x-Höhe an Goetheanum an – gleiche px
    ergeben gleiche wahrgenommene Grösse, und der Fallback springt beim Laden nicht. */
 @font-face{
   font-family:"Source Sans 3"; font-weight:400; font-style:normal; font-display:swap;
-  size-adjust:103%;
+  size-adjust:103%; ascent-override:75%; descent-override:25%; line-gap-override:0%;
   src:url("../assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2") format("woff2");
 }
 @font-face{
   font-family:"Source Sans 3"; font-weight:600; font-style:normal; font-display:swap;
-  size-adjust:103%;
+  size-adjust:103%; ascent-override:75%; descent-override:25%; line-gap-override:0%;
   src:url("../assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2") format("woff2");
 }
 @font-face{
   font-family:"Source Sans 3"; font-weight:400; font-style:italic; font-display:swap;
-  size-adjust:103%;
+  size-adjust:103%; ascent-override:75%; descent-override:25%; line-gap-override:0%;
   src:url("../assets/fonts/goetheanum/Fallback/SourceSans3-Italic.woff2") format("woff2");
 }
 
