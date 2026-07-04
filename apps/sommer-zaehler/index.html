@@ -34,7 +34,7 @@
   .lead{padding:clamp(28px,6vw,52px) 0 var(--s6)}
   .lead .status{margin-left:8px}
   .lead-title{font-family:var(--font-display);font-weight:var(--w-deutlich);color:var(--gold-ink);font-size:clamp(32px,7vw,58px);line-height:1.02;letter-spacing:-.01em;margin:8px 0 0;max-width:18ch}
-  .heroline{display:flex;flex-wrap:wrap;align-items:flex-end;gap:clamp(16px,5vw,48px);margin-top:var(--s5)}
+  .heroline{display:flex;flex-wrap:wrap;align-items:flex-end;gap:clamp(16px,5vw,48px);margin-top:var(--s8)}
   .figure{display:flex;flex-direction:column}
   .figure .big{font-family:var(--font-display);font-weight:var(--w-strong);
     font-size:clamp(72px,17vw,128px);line-height:.9;letter-spacing:-.02em;
@@ -49,8 +49,8 @@
   .meter{height:12px;border-radius:var(--r-pill);background:var(--line-soft);overflow:hidden}
   .meter>span{display:block;height:100%;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--gold),var(--gold-ink));transition:width .6s ease}
 
-  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:var(--s3)}
-  .tile{background:var(--card,var(--paper));border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s5);box-shadow:var(--shadow-card)}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:var(--s6) var(--s8)}
+  .tile{padding:0}
   .tile .n{font-family:var(--font-display);font-weight:var(--w-strong);font-size:clamp(30px,5vw,44px);line-height:1;font-variant-numeric:tabular-nums lining-nums}
   .tile .n.blue{color:var(--blue)} .tile .n.gold{color:var(--gold-ink)} .tile .n.ok{color:var(--ok)}
   .tile .n .u{font-family:var(--font-text);font-size:var(--t-lede)}
@@ -134,7 +134,6 @@
     .deadline{min-width:0;width:100%}
     section{padding:var(--s6) 0}
     .shead{margin-bottom:var(--s4)}
-    .tile{padding:var(--s5)}
     .spark{height:132px;gap:4px}
     .conv{gap:var(--s4)}
     .ring{width:88px;height:88px} .ring .inner{width:64px;height:64px}
@@ -156,7 +155,7 @@
     <div class="heroline">
       <div class="figure">
         <div class="big" id="total">–</div>
-        <div class="cap">neue Abos seit Aktionsstart · <b>3 Monate gratis</b> <span class="status readout" id="status">lädt …</span></div>
+        <div class="cap">neue Abos seit Aktionsstart<br><b>3 Monate gratis</b> <span class="status readout" id="status">lädt …</span></div>
       </div>
       <div class="deadline">
         <div class="drow"><span class="dlab">Fortschritt bis Aktionsende</span><span class="dd" id="ddText">–</span></div>
