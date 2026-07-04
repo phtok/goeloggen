@@ -110,4 +110,45 @@ def replace_glyph_outline(ft, uni, recv, adv):
 def set_advance_lsb(ft, uni, adv, lsb):
     name=ft.getBestCmap()[uni]; ft["hmtx"].metrics[name]=(adv,lsb); return name
 
+# ---- Icon font: restore the missing "Goetheanum Badge invers" glyph ----
+# The source icon master never carried a distinct invers (circle) badge: U+0031
+# ('1', the documented key on Beipackzettel p.2) fell back to the generic filler
+# glyph. We import the outline from the shipped single file (…/svg/goetheanum-
+# badge-invers.svg) — its 'd' is authored in y-up font space (the SVG's own
+# scale(1,-1) flips it to y-down for display), so it imports with the identity
+# transform, exactly like the positive badge on '2'. Idempotent.
+BADGE_INVERS_UNI = 0x31   # '1' – circle badge; '2' stays the square badge
+
+def _invers_recording(svg_path):
+    from fontTools.svgLib.path import parse_path
+    d=re.search(r'd="([^"]+)"', open(svg_path, encoding="utf-8").read()).group(1)
+    rec=RecordingPen(); parse_path(d, rec)       # identity: 'd' already in y-up font space
+    return rec
+
+def add_badge_invers(ft, svg_path, uni=BADGE_INVERS_UNI, name="goetheanumbadgeinvers"):
+    """CFF (OTF/woff/woff2): import the invers badge and map `uni`. Idempotent."""
+    cmap=ft.getBestCmap()
+    filler=cmap.get(0x4C)                        # 'L' → generic filler; anything else on uni is real
+    if cmap.get(uni) not in (None, filler):
+        return None
+    add_cid_glyph(ft, uni, _invers_recording(svg_path).value, 1000, prefer_name=name)
+    return name
+
+def add_badge_invers_ttf(ft, svg_path, uni=BADGE_INVERS_UNI, name="goetheanumbadgeinvers"):
+    """TrueType (glyf, e.g. the Office TTF): import the invers badge via cu2qu. Idempotent."""
+    from fontTools.pens.cu2quPen import Cu2QuPen
+    from fontTools.pens.ttGlyphPen import TTGlyphPen
+    cmap=ft.getBestCmap()
+    filler=cmap.get(0x4C)
+    if cmap.get(uni) not in (None, filler):
+        return None
+    tt=TTGlyphPen(None); cu=Cu2QuPen(tt, 1.0)
+    for c,p in _invers_recording(svg_path).value:
+        (getattr(cu,c)(*p) if p else getattr(cu,c)())
+    ft["glyf"].glyphs[name]=tt.glyph()
+    go=ft.getGlyphOrder()+[name]; ft.setGlyphOrder(go); ft["glyf"].glyphOrder=go
+    ft["hmtx"].metrics[name]=(1000, 0); ft["maxp"].numGlyphs=len(go)
+    for t in ft["cmap"].tables: t.cmap[uni]=name
+    return name
+
 print("module ok")

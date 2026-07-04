@@ -18,6 +18,28 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Icon-Font: fehlende Glyphe «Goetheanum Badge invers» repariert
+- Ein Font-Audit (alle Schriftdateien, nicht nur die eine) zeigte: 44 von 45
+  benannten Icons waren korrekt belegt, aber **«Goetheanum Badge invers» hatte in
+  keiner Datei einen eigenen Glyph** — U+0031 (`1`, die im Beipackzettel S.2
+  dokumentierte Taste) fiel auf den generischen Füll-Glyph zurück; der Fehler
+  steckte schon im Quell-Master `v0.3.35.otf`. `icons.json` wies das Zeichen zudem
+  falsch auf U+0022 aus (Widerspruch zu Beipackzettel und `build.py`).
+- **Repariert über die Font-Skripte** (nicht freihändig): `fontfix.add_badge_invers`
+  (CFF) und `add_badge_invers_ttf` (glyf/cu2qu) holen die Kontur aus der Einzeldatei
+  `goetheanum-badge-invers.svg` (deren `d` liegt in y-oben-Fontraum, importiert also
+  mit Identität wie der positive Badge auf `2`). `apply_badge_invers.py` setzt sie
+  idempotent in **otf · woff · woff2 · Office-TTF** und packt **Office-TTF.zip** und
+  **Schriften-v2.7.zip** neu; `build_icons()` ruft die Reparatur mit, damit ein
+  Voll-Rebuild korrekt bleibt. `icons.json` auf U+0031 berichtigt.
+- Verifiziert: alle 8 Font-Artefakte 45/45, U+0031 belegt; im Web zeigt Taste `1`
+  jetzt den Kreis-Badge (invers), `2` den Quadrat-Badge — Beipackzettel-treu.
+
+### Aufgeräumt: interne Vergleichsstudie entfernt
+- `apps/logos/preview-hinweise.html` gelöscht — eine nirgends verlinkte Studie
+  (‹Aktuell · Vorschlag›), die als einzige Seite den ds-lint-Score auf 97 % zog
+  (var()-Fallbacks, Artefaktfarben, ein 6.5px-Text). Score wieder **100 %**.
+
 ### Icons-Tastatur: Option/Alt-Ebene wiederhergestellt (Pfeile & Kompass)
 - Die Web-Tastatur zeigte nur die **Grundebene** (Buchstaben → Piktogramme) und
   liess die 20 Pfeil-/Kompass-Zeichen fallen: ihre Codepoints liegen im Privat-
