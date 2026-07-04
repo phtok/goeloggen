@@ -23,9 +23,9 @@
     border-radius:var(--r-card);padding:var(--s6);background:var(--paper);text-decoration:none;color:var(--ink);
     transition:border-color .15s,box-shadow .15s,transform .15s}
   .tile:hover{border-color:var(--gold-ink);box-shadow:var(--shadow-card);transform:translateY(-1px)}
-  .tile h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:20px;line-height:1.15;display:flex;align-items:center;gap:9px;margin:0}
-  .tile h3 .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s,color .15s}
-  .tile:hover h3 .arr{color:var(--gold-ink);transform:translateX(3px)}
+  .tile h2{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:20px;line-height:1.15;display:flex;align-items:center;gap:9px;margin:0}
+  .tile h2 .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s,color .15s}
+  .tile:hover h2 .arr{color:var(--gold-ink);transform:translateX(3px)}
 
   /* Kleiner, feiner Hinweis über dem Karussell. */
   .discover{font-size:var(--t-small);letter-spacing:.07em;color:var(--gold-ink);margin:0 0 var(--s3)}
@@ -118,7 +118,8 @@
 
 <script src="design-system/nav.js" data-root="./" data-active="start"></script>
 
-<main class="wrap">
+<main class="wrap" id="inhalt">
+  <h1 class="sr-only">Goetheanum Werkzeuge – Hausgrafik</h1>
   <section class="carousel" id="carousel" aria-roledescription="Karussell" aria-label="Entdecken" hidden></section>
   <div class="grid" id="cards"></div>
 </main>
@@ -172,7 +173,7 @@
     a.className = "tile";
     a.href = t.href;
     if (isExt(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
-    a.innerHTML = visual(t) + '<h3>' + t.title + ' <span class="arr">›</span></h3>';
+    a.innerHTML = visual(t) + '<h2>' + t.title + ' <span class="arr">›</span></h2>';
     return a;
   }
   function buildCarousel(byslug){
