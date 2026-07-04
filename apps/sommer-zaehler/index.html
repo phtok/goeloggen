@@ -33,6 +33,7 @@
 
   .lead{padding:clamp(28px,6vw,52px) 0 var(--s6)}
   .lead .status{margin-left:8px}
+  .lead-title{font-family:var(--font-display);font-weight:var(--w-deutlich);color:var(--gold-ink);font-size:clamp(32px,7vw,58px);line-height:1.02;letter-spacing:-.01em;margin:8px 0 0;max-width:18ch}
   .heroline{display:flex;flex-wrap:wrap;align-items:flex-end;gap:clamp(16px,5vw,48px);margin-top:var(--s5)}
   .figure{display:flex;flex-direction:column}
   .figure .big{font-family:var(--font-display);font-weight:var(--w-strong);
@@ -48,8 +49,8 @@
   .meter{height:12px;border-radius:var(--r-pill);background:var(--line-soft);overflow:hidden}
   .meter>span{display:block;height:100%;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--gold),var(--gold-ink));transition:width .6s ease}
 
-  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4)}
-  .tile{background:var(--card,var(--paper));border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card)}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:var(--s3)}
+  .tile{background:var(--card,var(--paper));border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s5);box-shadow:var(--shadow-card)}
   .tile .n{font-family:var(--font-display);font-weight:var(--w-strong);font-size:clamp(30px,5vw,44px);line-height:1;font-variant-numeric:tabular-nums lining-nums}
   .tile .n.blue{color:var(--blue)} .tile .n.gold{color:var(--gold-ink)} .tile .n.ok{color:var(--ok)}
   .tile .n .u{font-family:var(--font-text);font-size:var(--t-lede)}
@@ -123,7 +124,7 @@
   .landing a{color:var(--blue)}
 
   @media (max-width:720px){
-    .tiles{grid-template-columns:1fr} .board{grid-template-columns:1fr} .stay{grid-template-columns:1fr}
+    .board{grid-template-columns:1fr} .stay{grid-template-columns:1fr}
   }
   /* Handy: enger gesetzt, Held-Zahl und Deadline gestapelt, Momentum kompakt */
   @media (max-width:480px){
@@ -150,7 +151,8 @@
 <main class="wrap">
 
   <section class="lead">
-    <span class="kick">Sommer-Aktion 2026 · Team-Cockpit</span>
+    <span class="kick">Team-Cockpit · 3 Monate gratis</span>
+    <h1 class="lead-title">Sommer-Aktion 2026</h1>
     <div class="heroline">
       <div class="figure">
         <div class="big" id="total">–</div>
@@ -173,11 +175,11 @@
   </section>
 
   <section>
-    <div class="shead"><h2>Sechs Ströme</h2><p>Balken zeigt den Stand, der Strich die Zielmarke. Ein Klick auf die Aktion wird zur Zahl.</p></div>
+    <div class="shead"><h2>Fünf Ströme</h2><p>Balken zeigt den Stand, der Strich die Zielmarke. Ein Klick auf die Aktion wird zur Zahl.</p></div>
     <div class="board">
       <div class="panel">
         <h3>Wochenschrift <q>Das Goetheanum</q></h3>
-        <div class="sub">Lesen · Papier und Digital · Deutsch und Englisch · Abo-Verwaltung auf Zoho</div>
+        <div class="sub">Lesen · Deutsch: Papier und Digital · Englisch: nur Digital · Abo-Verwaltung auf Zoho</div>
         <div id="wosStreams"><div class="empty">lädt …</div></div>
       </div>
       <div class="panel">
@@ -224,20 +226,20 @@
   </section>
 
   <section>
-    <div class="shead"><h2>Kosten und Wirkung</h2><p>Was die Aktion kostet – und was voraussichtlich zurückkommt. Kosten je Weg und je Abo.</p></div>
+    <div class="shead"><h2>Kosten und Wirkung</h2><p>Was die Aktion kostet – und was voraussichtlich zurückkommt.</p></div>
     <div class="tiles">
-      <div class="tile"><div class="n gold" id="costTotal">–</div><div class="l">Kosten gesamt</div><div class="s" id="costSub">inkl. Fixkosten</div></div>
-      <div class="tile"><div class="n blue" id="costCpa">–</div><div class="l">Kosten je Abo</div><div class="s">Schnitt über alle Wege</div></div>
+      <div class="tile"><div class="n gold" id="costTotal">–</div><div class="l">Kosten gesamt</div><div class="s" id="costSub">Stunden, Social Media, Infrastruktur</div></div>
+      <div class="tile"><div class="n blue" id="costCpa">–</div><div class="l">Kosten je Abo</div><div class="s">sobald Kosten erfasst</div></div>
       <div class="tile"><div class="n ok" id="costRoi">–</div><div class="l">Rückfluss je € Kosten</div><div class="s">projizierter Folgejahr-Umsatz</div></div>
     </div>
     <div class="tablewrap" style="margin-top:var(--s5)">
       <table class="tarif">
-        <thead><tr><th>Weg</th><th class="num">Abos</th><th class="num">Kosten</th><th class="num">€ je Abo</th></tr></thead>
-        <tbody id="costBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+        <thead><tr><th>Kostenart</th><th class="num">Betrag</th></tr></thead>
+        <tbody id="costBody"><tr><td class="empty" colspan="2">lädt …</td></tr></tbody>
         <tfoot id="costFoot"></tfoot>
       </table>
     </div>
-    <p class="provisorisch">Kosten sind Beispielwerte – bitte die echten Ausgaben je Weg und die Fixkosten der Aktion setzen.</p>
+    <p class="provisorisch">Kosten stehen auf 0 – die echten Zahlen werden erfragt. Hauptposten: Stunden intern, Social Media, Infrastruktur.</p>
   </section>
 
   <section>
@@ -279,27 +281,33 @@
     ende:  '2026-08-08',            // Aktionsende
     bleibeQuote: 0.62,             // Annahme, bis Erfahrungswerte vorliegen
     meilensteine: [100, 250, 500, 1000],
-    ziele: {                        // Zielmarke je Strom
-      'wos.de.papier': 120, 'wos.de.digital': 150,
-      'wos.en.papier': 40,  'wos.en.digital': 80,
-      'gtv.de': 130, 'gtv.en': 90
+    zielGesamt: 1000,               // Gesamtziel der Aktion (neue Abos)
+    ziele: {                        // Zielmarke je Strom (Zwischenmarken, Summe = Gesamtziel)
+      'wos.de.papier': 200, 'wos.de.digital': 250,
+      'wos.en.digital': 120,
+      'gtv.de': 250, 'gtv.en': 180
     },
     // Beispielpreise (Vollpreis der wiederkehrenden Zahlung, Euro) – bitte ersetzen.
     preise: {
       wos: { standard:{monatlich:14.9, jaehrlich:149}, ermaessigt:{monatlich:7.9, jaehrlich:79} },
       gtv: { standard:{monatlich:12,   jaehrlich:120}, ermaessigt:{monatlich:8,   jaehrlich:80} }
     },
-    // Herkunftswege (Attribution) mit den Beispielausgaben der Aktion (Euro) – bitte ersetzen.
+    // Herkunftswege (Attribution) – nur Beschriftung, Zählung kommt live.
     kanaele: [
-      { key:'newsletter', label:'Newsletter',    kosten: 0 },
-      { key:'mailer',     label:'Mailing',        kosten: 1800 },
-      { key:'social',     label:'Social Media',   kosten: 2400 },
-      { key:'popup',      label:'Popup',          kosten: 600 },
-      { key:'website',    label:'Website direkt', kosten: 0 },
-      { key:'empfehlung', label:'Empfehlung',     kosten: 0 },
-      { key:'andere',     label:'Andere',         kosten: 0 }
+      { key:'newsletter', label:'Newsletter' },
+      { key:'mailer',     label:'Mailing' },
+      { key:'social',     label:'Social Media' },
+      { key:'popup',      label:'Popup' },
+      { key:'website',    label:'Website direkt' },
+      { key:'empfehlung', label:'Empfehlung' },
+      { key:'andere',     label:'Andere' }
     ],
-    fixkosten: 1200,               // Gestaltung, Landingpages u. Ä.
+    // Kosten der Aktion (Euro) – stehen auf 0, echte Zahlen werden erfragt.
+    kosten: [
+      { label:'Stunden intern', wert: 0 },
+      { label:'Social Media',   wert: 0 },
+      { label:'Infrastruktur',  wert: 0 }
+    ],
     zahlenProvisorisch: true       // blendet den Hinweis auf Beispielwerte ein
   };
 
@@ -310,7 +318,6 @@
   var STREAMS = [
     { key:'wos.de.papier',  produkt:'wos', sprache:'de', format:'papier',  name:'Deutsch · Papier',  panel:'wos' },
     { key:'wos.de.digital', produkt:'wos', sprache:'de', format:'digital', name:'Deutsch · Digital', panel:'wos' },
-    { key:'wos.en.papier',  produkt:'wos', sprache:'en', format:'papier',  name:'Englisch · Papier',  panel:'wos' },
     { key:'wos.en.digital', produkt:'wos', sprache:'en', format:'digital', name:'Englisch · Digital', panel:'wos' },
     { key:'gtv.de',         produkt:'gtv', sprache:'de', format:'stream',  name:'Deutsch',  panel:'gtv' },
     { key:'gtv.en',         produkt:'gtv', sprache:'en', format:'stream',  name:'Englisch', panel:'gtv' }
@@ -402,39 +409,24 @@
   }
 
   // ── Kosten und Wirkung ─────────────────────────────────────────────────────
-  function renderKosten(kanaele, total, revenue){
-    var byKanal = {}; kanaele.forEach(function(r){ byKanal[r.kanal] = Number(r.n); });
-    var kostenSumme = CONFIG.fixkosten || 0;
-    CONFIG.kanaele.forEach(function(k){ kostenSumme += (k.kosten || 0); });
-    el('costTotal').textContent = eur(kostenSumme);
-    el('costCpa').textContent   = total > 0 ? eur(kostenSumme / total) : '–';
-    el('costRoi').textContent   = kostenSumme > 0 ? (revenue / kostenSumme).toFixed(1) + '×' : '–';
+  function renderKosten(total, revenue){
+    var kosten = CONFIG.kosten || [];
+    var summe = kosten.reduce(function(s, k){ return s + (Number(k.wert) || 0); }, 0);
+    el('costTotal').textContent = eur(summe);
+    el('costCpa').textContent   = (summe > 0 && total > 0) ? eur(summe / total) : '–';
+    el('costRoi').textContent   = summe > 0 ? (revenue / summe).toFixed(1) + '×' : '–';
 
     var body = el('costBody'); body.innerHTML = '';
-    CONFIG.kanaele.forEach(function(k){
-      var n = byKanal[k.key] || 0, ko = k.kosten || 0;
-      if(n === 0 && ko === 0) return;
+    kosten.forEach(function(k){
       var tr = document.createElement('tr');
-      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
+      tr.innerHTML = '<td></td><td class="num"></td>';
       tr.children[0].textContent = k.label;
-      tr.children[1].textContent = fmt(n);
-      tr.children[2].textContent = ko > 0 ? eur(ko) : '–';
-      tr.children[3].textContent = (ko > 0 && n > 0) ? eur(ko / n) : '–';
+      tr.children[1].textContent = eur(k.wert);
       body.appendChild(tr);
     });
-    if(CONFIG.fixkosten > 0){
-      var fr = document.createElement('tr');
-      fr.innerHTML = '<td></td><td class="num">–</td><td class="num"></td><td class="num">–</td>';
-      fr.children[0].textContent = 'Fixkosten';
-      fr.children[2].textContent = eur(CONFIG.fixkosten);
-      body.appendChild(fr);
-    }
     var foot = el('costFoot');
-    foot.innerHTML = '<tr><td>Summe</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>';
-    var c = foot.querySelector('tr').children;
-    c[1].textContent = fmt(total);
-    c[2].textContent = eur(kostenSumme);
-    c[3].textContent = total > 0 ? eur(kostenSumme / total) : '–';
+    foot.innerHTML = '<tr><td>Summe</td><td class="num"></td></tr>';
+    foot.querySelector('tr').children[1].textContent = eur(summe);
   }
 
   // ── Tarif-Tabelle ──────────────────────────────────────────────────────────
@@ -490,10 +482,10 @@
     el('kTotal').textContent = fmt(total);
     el('kAvg').textContent = fmt(avg);
     el('kAvgSub').textContent = 'letzte ' + avgDays + ' Tage';
-    var zielSumme = STREAMS.reduce(function(s, x){ return s + (CONFIG.ziele[x.key] || 0); }, 0);
-    var goalPct = zielSumme > 0 ? Math.round(total / zielSumme * 100) : 0;
+    var ziel = CONFIG.zielGesamt || STREAMS.reduce(function(s, x){ return s + (CONFIG.ziele[x.key] || 0); }, 0);
+    var goalPct = ziel > 0 ? Math.round(total / ziel * 100) : 0;
     el('kGoal').innerHTML = goalPct + '<span class="u"> %</span>';
-    el('kGoalSub').textContent = fmt(total) + ' von ' + fmt(zielSumme) + ' · Ziel 8. August';
+    el('kGoalSub').textContent = fmt(total) + ' von ' + fmt(ziel) + ' · Ziel 8. August';
   }
 
   function renderMilestones(total){
@@ -586,7 +578,7 @@
         renderTarif(stats);
         renderMilestones(total);
         renderCohort(kohorten, revenue);
-        renderKosten(kanaele, total, revenue);
+        renderKosten(total, revenue);
         if(total === 0){ el('status').className = 'status empty'; }
         setStatus('ok', new Date());
       })
