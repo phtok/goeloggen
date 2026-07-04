@@ -165,7 +165,10 @@
   --bar-bg:rgba(20,23,26,.85);
   --line:rgba(255,255,255,.14); --line-soft:rgba(255,255,255,.07);
   --bad:#e0675e; --ok:#5aa367;   /* on-accent bleibt Weiss – kein dunkler Text auf Akzentflächen */
-  --w-deutlich:540; --w-strong:620;     /* weniger Bleeding auf Dunkel */
+  /* B7: keine pauschale Gewichtsabsenkung mehr – kleiner Lese-/UI-Text (Knöpfe,
+     Label, Meta, Betonung) behält im Dunkeln sein Hell-Gewicht (Beier). Die
+     Halations-Absenkung greift NUR an grossen Display-Rollen (siehe base.css). */
+  --w-deutlich:580; --w-strong:680;
   --shadow-card:0 10px 30px rgba(0,0,0,.45);
   color-scheme:dark;
 }

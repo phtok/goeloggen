@@ -42,6 +42,9 @@ p a:hover,li a:hover,.note a:hover,.hint a:hover,.help a:hover,.desc a:hover{tex
    keine Seite ausscheren (Konformität durch Konstruktion). Titel = Deutlich, nie Laut. */
 h1,h2,h3,h4,.h-display{font-family:var(--font-display);font-weight:var(--w-deutlich);line-height:var(--lh-tight)}
 h1,h2{letter-spacing:0}   /* B3: grosse Display-Grade bleiben eng (Tracking nur an Lesegraden) */
+/* B7: Halations-Absenkung im Dunkeln NUR an grossen Display-Rollen – gegen das
+   Bleeding heller, fetter Grossbuchstaben. Fliess-/Kleintext behält sein Gewicht. */
+:root[data-theme="dark"] h1,:root[data-theme="dark"] h2,:root[data-theme="dark"] .h-display{font-weight:540}
 h1{font-size:var(--t-h1)}
 h2{font-size:var(--t-h2)}
 h3{font-size:var(--t-h3)}
