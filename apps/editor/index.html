@@ -60,10 +60,17 @@
   .lm-note .ids{font-family:var(--font-text);font-size:var(--t-micro);letter-spacing:.02em}
 
   @media(max-width:560px){
-    .stage{padding:var(--s4);grid-template-areas:"check check" "edit edit" "outs outs" "count count"}
-    .stage>#btn-pruefen{justify-self:stretch}
-    .stage .outs{justify-self:stretch}
+    /* ‹Prüfen› klebt am unteren Bildschirmrand (Daumen-Bereich) und wandert
+       bei langem Text nicht mit; sein Ruheplatz liegt direkt unter dem Feld.
+       Flex statt Grid: als Grid-Zelle hätte sticky keinen Spielraum – der
+       Klebe-Rahmen muss die ganze Bühne sein. */
+    .stage{padding:var(--s4);display:flex;flex-direction:column;align-items:stretch}
+    .edit{order:1}
+    .stage>#btn-pruefen{order:2;position:sticky;z-index:2;
+      bottom:calc(env(safe-area-inset-bottom, 0px) + var(--s3))}
+    .stage .outs{order:3;justify-self:auto}
     .stage .outs .btn{flex:1 1 auto}
+    .stage .count{order:4;align-self:flex-end}
     .margin{position:static}
   }
 </style>
