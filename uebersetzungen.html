@@ -85,7 +85,9 @@
 "use strict";
 var $=function(s){return document.querySelector(s);};
 function toast(m){var t=$("#toast");t.textContent=m;t.style.opacity="1";setTimeout(function(){t.style.opacity="0";},1100);}
-function cell(text){var td=document.createElement("td");td.textContent=text||"â€“";return td;}
+// lang je Zelle: fremdsprachige Zellen tragen ihre Sprache (WCAG 3.1.2), damit
+// Screenreader/Ausspracheregeln stimmen. Die Seite ist de; en/fr/es-Zellen weichen ab.
+function cell(text,lang){var td=document.createElement("td");td.textContent=text||"â€“";if(lang)td.lang=lang;return td;}
 
 // Institutionelle Begriffe
 (function(){
@@ -94,8 +96,8 @@ function cell(text){var td=document.createElement("td");td.textContent=text||"â€
     var t=T[k], pruefen=t.status!=="fest";
     var tr=document.createElement("tr");
     var de=cell(t.de); de.innerHTML="<b>"+(t.de||"")+"</b>";
-    tr.appendChild(de); tr.appendChild(cell(t.en));
-    var fr=cell(t.fr), es=cell(t.es);
+    tr.appendChild(de); tr.appendChild(cell(t.en,"en"));
+    var fr=cell(t.fr,"fr"), es=cell(t.es,"es");
     if(pruefen){fr.className="meta";es.className="meta";}
     tr.appendChild(fr); tr.appendChild(es);
     var st=document.createElement("td"); st.style.cursor="default";
@@ -117,7 +119,7 @@ function cell(text){var td=document.createElement("td");td.textContent=text||"â€
     c.innerHTML='<span class="sw-c" style="background:'+(o.color||"transparent")+'"></span>';
     tr.appendChild(c);
     var de=document.createElement("td"); de.innerHTML="<b>"+(o.name_de||"")+"</b>"; tr.appendChild(de);
-    tr.appendChild(cell(o.name_en)); tr.appendChild(cell(o.name_fr)); tr.appendChild(cell(o.name_es));
+    tr.appendChild(cell(o.name_en,"en")); tr.appendChild(cell(o.name_fr,"fr")); tr.appendChild(cell(o.name_es,"es"));
     var g=document.createElement("td"); g.className="meta"; g.style.cursor="default"; g.textContent=grp[k]||"â€“";
     tr.appendChild(g);
     body.appendChild(tr);
