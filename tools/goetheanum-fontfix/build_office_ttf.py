@@ -23,6 +23,7 @@ JOBS = [
     ("Goetheanum-Schrift-v2.7-Deutlich.otf", "Goetheanum Schrift Deutlich", "GoetheanumSchriftDeutlichOffice"),
     ("Goetheanum-Schrift-v2.7-Laut.otf",     "Goetheanum Schrift Laut",     "GoetheanumSchriftLaut"),
     ("Goetheanum-Icons-v2.7.otf",            "Goetheanum Icons",            "GoetheanumIconsOffice"),
+    ("Goetheanum-Pfeile-v2.7.otf",           "Goetheanum Pfeile",           "GoetheanumPfeileOffice"),
 ]
 
 def otf_to_ttf(ft, max_err=1.0):

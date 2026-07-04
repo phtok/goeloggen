@@ -18,6 +18,25 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Neuer Font «Goetheanum Pfeile» – Pfeile & Kompass ohne PUA-Umweg
+- Die Pfeile/Kompass lagen im Icon-Font im **Zeichen-Privatbereich (PUA)** und waren
+  nur über Option/Alt oder die Glyphenpalette erreichbar; eine installierbare
+  Tastaturbelegung dafür existierte nie (sie stand nur im Beipackzettel). Statt eine
+  fehleranfällige, hier nicht testbare `.keylayout`/`.klc` zu erfinden: **ein eigener,
+  schlanker Font**, der dieselben 20 Zeichen auf **normale Tasten** legt (Belegung ‹A›,
+  Beipackzettel-treu; Umschalt = fett). Schrift wählen, Taste tippen – kein Option,
+  kein PUA, keine Belegungsdatei. Die PUA-Codepoints bleiben zusätzlich erhalten.
+- **Reproduzierbar über die Font-Skripte**: `tools/goetheanum-fontfix/build_pfeile.py`
+  leitet «Goetheanum Pfeile» aus dem Icon-OTF ab (Subset auf 20 Glyphen, Grundtasten +
+  PUA belegt, Metadaten/Lizenz/Version aus dem Icon-Font geerbt), baut otf · woff ·
+  woff2 · Office-TTF und legt alle vier Dateien ins Office-ZIP und ins Komplett-Bündel
+  `Goetheanum-Schriften-v2.7.zip`. `build_office_ttf.py` kennt den Font jetzt (JOBS).
+- **Web** (`icons.html`): der zweite Tastatur-Reiter heisst statt ‹Option/Alt› nun
+  **‹Pfeile & Kompass›** und rendert die Zeichen aus dem neuen Webfont auf ihren
+  Grundtasten (Klick kopiert weiterhin). Eigene Download-Karte (woff2/OTF).
+- Verifiziert: Font lädt im Browser, `6 t u h` → ↑ ← → ↓, `T` kopiert U+E267; Office-TTF
+  (glyf) und beide ZIPs enthalten den Font; Score 100 %.
+
 ### Icon-Font: fehlende Glyphe «Goetheanum Badge invers» repariert
 - Ein Font-Audit (alle Schriftdateien, nicht nur die eine) zeigte: 44 von 45
   benannten Icons waren korrekt belegt, aber **«Goetheanum Badge invers» hatte in
