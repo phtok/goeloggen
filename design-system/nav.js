@@ -54,6 +54,26 @@
   // Sofort anwenden – vor dem Zeichnen, gegen Aufblitzen.
   document.documentElement.setAttribute("data-theme", getTheme());
 
+  // --- Lesemodus (Block C) ---------------------------------------------------
+  // Opt-in: tauscht NUR Textkörper + Erklärtexte Display→Source und erhöht das
+  // Spacing (Regeln in base.css). Titel/Kicker/Marke bleiben Goetheanum. Zustand
+  // in localStorage('goeRead'), VOR dem ersten Paint gesetzt – kein Aufblitzen.
+  var READ_KEY = "goeRead", readBtn = null;
+  function getRead() { try { return localStorage.getItem(READ_KEY) === "easy" ? "easy" : ""; } catch (e) { return ""; } }
+  function updateReadBtn() {
+    if (!readBtn) return;
+    var on = document.documentElement.getAttribute("data-read") === "easy";
+    readBtn.setAttribute("aria-pressed", String(on));
+    readBtn.setAttribute("aria-label", on ? "Lesemodus ausschalten" : "Lesemodus – Fliesstext in der Leseschrift");
+  }
+  function setRead(on) {
+    try { localStorage.setItem(READ_KEY, on ? "easy" : "off"); } catch (e) {}
+    if (on) document.documentElement.setAttribute("data-read", "easy");
+    else document.documentElement.removeAttribute("data-read");
+    updateReadBtn();
+  }
+  if (getRead() === "easy") document.documentElement.setAttribute("data-read", "easy");
+
   // --- Anonyme Nutzungszählung (mitwachsend) ---------------------------------
   // Zählt je Werkzeug (data-active) den Seitenaufruf und Download-Klicks – ohne
   // Cookies, ohne IP/Personendaten, nur anonyme Summen über goeloggen_bump().
@@ -170,6 +190,7 @@
         '<img class="lockup" src="' + ROOT + 'assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge">' +
       '</a>' +
       '<nav class="worlds"></nav>' + ctaHTML +
+      '<button class="read" type="button" aria-pressed="false" aria-label="Lesemodus – Fliesstext in der Leseschrift"><span class="ic" aria-hidden="true">A</span></button>' +
       '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic"></span></button>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
@@ -254,6 +275,11 @@
     setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
   });
   updateThemeBtn();
+  readBtn = header.querySelector(".read");
+  readBtn.addEventListener("click", function () {
+    setRead(document.documentElement.getAttribute("data-read") !== "easy");
+  });
+  updateReadBtn();
   var worldsNav = header.querySelector(".worlds");
   var drawerBody = drawer.querySelector(".body");
   var drawerTitle = drawer.querySelector(".dhead .t");

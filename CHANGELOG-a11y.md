@@ -30,7 +30,10 @@ Branch `a11y-typo-refactor`, ein Commit pro Aufgabe. Nachweis je Aufgabe:
 | B7 | Dunkelmodus-Gewichtsabsenkung nur an grossen Display-Rollen (h1/h2/`.h-display`→540); Kleintext/UI behält Hell-Gewicht | `design-system/tokens.css`, `design-system/base.css` | Beier – Fettung hilft klein; kleiner Text soll im Dunkeln nicht dünner werden. Verifiziert: h1 580→540, Kicker/Knopf/Body unverändert. **Abweichung:** Kicker (klein) bleibt Deutlich statt reduziert – erfüllt die Abnahme „kleiner Text nicht leichter" und wahrt B2 |
 
 ## Block C — Leseschrift-Umschalter
-Optional, **nur nach Rückfrage** (noch offen).
+
+| ID | Was | Datei | Begründung |
+|----|-----|-------|------------|
+| C | Kopfzeilen-Schalter „Lesemodus" neben Hell/Dunkel (A-Icon, das die Leseschrift zeigt + Gold-Ring als Zustand); tauscht `body` + `.lede` Display→Source, erhöht Spacing; Titel/Kicker/Kopfzeile bleiben Goetheanum; Zustand in `localStorage('goeRead')`, vor dem Paint gesetzt | `design-system/nav.js`, `design-system/nav.css`, `design-system/base.css` | Nutzerkontrolle ist der best belegte inklusive Faktor. Verifiziert: aus→body Goetheanum; ein→body/lede Source, h1/Kicker bleiben Goetheanum, Icon-A wird Source, Zustand überlebt Reload (kein FOUC). Grösse via B4 stabil; Reflow durch A7 abgesichert. **Symbol:** A mit Font-Wechsel + Gold-Ring statt reiner Buchstabenform (bei 17 px sonst zu subtil) |
 
 ## Bewahrt (nicht angefasst)
 Fluide rem-Skala · Zeilenhöhe 1.66 · Mass ~62 ch · Betonung nur über Gewicht ·

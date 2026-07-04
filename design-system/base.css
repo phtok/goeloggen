@@ -294,3 +294,14 @@ img,svg,canvas,video{max-width:100%}
 @media(prefers-reduced-motion:reduce){
   *{transition:none!important;scroll-behavior:auto!important}
 }
+
+/* Block C – Lesemodus (opt-in, Kopfzeilen-Schalter, Zustand data-read="easy"):
+   tauscht NUR Textkörper + Lede + Erklärtexte auf die Leseschrift und erhöht das
+   Spacing. Titel/Kicker/Marke bleiben Goetheanum (Identität); die Chrome-Leiste
+   pinnt ihre Schrift ohnehin selbst. Grösse ist über size-adjust (B4) geregelt,
+   darum kein Grössensprung; A7 (min-height) fängt den ~7% breiteren Reflow. */
+:root[data-read="easy"] body{font-family:var(--font-text);letter-spacing:.03em;word-spacing:.06em}
+:root[data-read="easy"] .lede{font-family:var(--font-text)}
+/* Titel, Kicker und die Kopfzeile bleiben ausdrücklich Goetheanum (Identität). */
+:root[data-read="easy"] h1,:root[data-read="easy"] h2,:root[data-read="easy"] h3,:root[data-read="easy"] h4,
+:root[data-read="easy"] .kicker,:root[data-read="easy"] .kick{font-family:var(--font-display)}
