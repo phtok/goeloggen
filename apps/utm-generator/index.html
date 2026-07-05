@@ -82,12 +82,19 @@
 
     <div class="card soft">
       <div class="grid">
-        <label class="field span2">
-          <span class="lab">Ziel-Landingpage</span>
-          <select id="landing">
-            <option value="global|https://global-sommer2026.goetheanum.online">Übersicht · 3 Monate gratis</option>
-            <option value="ws|https://ws-sommer2026.dasgoetheanum.com">Wochenschrift</option>
-            <option value="tv|https://tv-sommer2026.goetheanum.tv">goetheanum.tv</option>
+        <label class="field">
+          <span class="lab">Angebot</span>
+          <select id="angebot">
+            <option value="uebersicht">Übersicht · 3 Monate gratis</option>
+            <option value="wos">Wochenschrift</option>
+            <option value="tv">goetheanum.tv</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="lab">Sprache der Landingpage</span>
+          <select id="sprache">
+            <option value="de">Deutsch</option>
+            <option value="en">English</option>
           </select>
         </label>
 
@@ -189,23 +196,32 @@
 
   function el(id){ return document.getElementById(id); }
 
+  // Die sechs echten Landingpages: Angebot × Sprache (aus der universellen LP recherchiert).
+  var LANDINGS = {
+    uebersicht: { de:'https://global-sommer2026.goetheanum.online',    en:'https://global-sommer2026.goetheanum.online/en' },
+    wos:        { de:'https://ws-sommer2026.dasgoetheanum.com',        en:'https://ws-en-sommer2026.dasgoetheanum.com' },
+    tv:         { de:'https://tv-sommer2026.goetheanum.tv',            en:'https://tv-en-sommer2026.goetheanum.tv' }
+  };
+  var ANGEBOT_LABEL = { uebersicht:'Übersicht', wos:'Wochenschrift', tv:'goetheanum.tv' };
+
   // Konvention erzwingen: klein, Umlaute auflösen, nur [a-z0-9_-], Rest → _
   function slug(s){
     return (s || '').toLowerCase()
       .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
       .replace(/[^a-z0-9_-]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
   }
-  function landingParts(){ return el('landing').value.split('|'); }
 
   function buildUrl(){
     var src = slug(el('source').value), med = slug(el('medium').value), con = slug(el('content').value);
     if(!src || !med) return null;
-    var base = landingParts()[1];
+    var angebot = el('angebot').value, sprache = el('sprache').value;
+    var base = (LANDINGS[angebot] || {})[sprache];
+    if(!base) return null;
     var u = base + '?utm_source=' + encodeURIComponent(src) +
             '&utm_medium=' + encodeURIComponent(med) +
             '&utm_campaign=' + CAMPAIGN;
     if(con) u += '&utm_content=' + encodeURIComponent(con);
-    return { url:u, src:src, med:med, con:con };
+    return { url:u, src:src, med:med, con:con, angebot:angebot, sprache:sprache };
   }
 
   var current = null;
@@ -226,7 +242,7 @@
     } catch(e){ qr.innerHTML = '<span class="empty">QR</span>'; }
   }
 
-  ['source','medium','content','landing','rolle','ersteller'].forEach(function(id){
+  ['source','medium','content','angebot','sprache','rolle','ersteller'].forEach(function(id){
     el(id).addEventListener('input', render);
     el(id).addEventListener('change', render);
   });
@@ -257,7 +273,7 @@
     if(!current){ say('Erst Quelle und Medium wählen.', true); return; }
     var row = {
       kampagne: CAMPAIGN, utm_source: current.src, utm_medium: current.med, utm_campaign: CAMPAIGN,
-      utm_content: current.con || null, landing: landingParts()[0], url: current.url,
+      utm_content: current.con || null, landing: current.angebot, sprache: current.sprache, url: current.url,
       rolle: el('rolle').value, ersteller: slug(el('ersteller').value) || null
     };
     fetch(SB + '/rest/v1/sommer2026_links', {
@@ -286,7 +302,9 @@
           var q = document.createElement('span'); q.className = 'q';
           q.textContent = x.url; mot.appendChild(q);
           tr.children[1].textContent = [x.utm_source, x.utm_medium].filter(Boolean).join(' · ');
-          tr.children[2].textContent = x.landing || '';
+          var ziel = ANGEBOT_LABEL[x.landing] || x.landing || '';
+          if(x.sprache) ziel += ' · ' + x.sprache.toUpperCase();
+          tr.children[2].textContent = ziel;
           var n = Number(x.abschluesse) || 0;
           tr.children[3].textContent = n.toLocaleString('de-CH');
           if(n === 0) tr.children[3].className = 'num zero';

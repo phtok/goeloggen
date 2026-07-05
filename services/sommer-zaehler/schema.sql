@@ -172,7 +172,8 @@ create table if not exists public.sommer2026_links (
   utm_medium   text not null,
   utm_campaign text not null default 'summer26_trial',
   utm_content  text,
-  landing      text,          -- welche Landingpage (global/ws/tv)
+  landing      text,          -- Angebot der Landingpage (uebersicht/wos/tv)
+  sprache      text,          -- Sprache der Landingpage (de/en)
   url          text not null, -- fertiger Link
   rolle        text,          -- Hauptaufgabe (sichtbarkeit/aktivierung/wirkung/bindung)
   ersteller    text           -- optionales Kürzel, kein Pflichtfeld
@@ -187,9 +188,9 @@ create policy sommer2026_links_insert on public.sommer2026_links
 -- Soll/Ist: je registriertem Link die Zahl der Anmeldungen über genau dieses UTM-Tupel
 create or replace function public.sommer2026_links_public()
 returns table(created_at timestamptz, utm_source text, utm_medium text, utm_content text,
-              landing text, url text, rolle text, ersteller text, abschluesse bigint)
+              landing text, sprache text, url text, rolle text, ersteller text, abschluesse bigint)
 language sql security definer set search_path to 'public' as $$
-  select l.created_at, l.utm_source, l.utm_medium, l.utm_content, l.landing, l.url, l.rolle, l.ersteller,
+  select l.created_at, l.utm_source, l.utm_medium, l.utm_content, l.landing, l.sprache, l.url, l.rolle, l.ersteller,
          count(s.id)::bigint as abschluesse
     from public.sommer2026_links l
     left join public.sommer2026_signups s
@@ -197,7 +198,7 @@ language sql security definer set search_path to 'public' as $$
       and s.utm_source   is not distinct from l.utm_source
       and s.utm_medium   is not distinct from l.utm_medium
       and s.utm_content  is not distinct from l.utm_content
-   group by l.id, l.created_at, l.utm_source, l.utm_medium, l.utm_content, l.landing, l.url, l.rolle, l.ersteller
+   group by l.id, l.created_at, l.utm_source, l.utm_medium, l.utm_content, l.landing, l.sprache, l.url, l.rolle, l.ersteller
    order by abschluesse desc, l.created_at desc;
 $$;
 grant execute on function public.sommer2026_links_public() to anon, authenticated;

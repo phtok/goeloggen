@@ -28,14 +28,20 @@ Regeln: nur Kleinbuchstaben, keine Umlaute (`ue/oe/ae`), keine Leerzeichen. Der
 Rohwerte bleiben erhalten, damit «Nach Motiv» das einzelne Reel vom Footer-Link
 unterscheidet.
 
-## Die drei Landingpages (Ziel des Links)
+## Die sechs Landingpages (Angebot × Sprache)
 
-- Übersicht · 3 Monate gratis → `https://global-sommer2026.goetheanum.online`
-- Wochenschrift → `https://ws-sommer2026.dasgoetheanum.com`
-- goetheanum.tv → `https://tv-sommer2026.goetheanum.tv`
+Drei Angebote, je Deutsch und English (EN = eigene Subdomain `…-en-…`, bei der
+Übersicht der Pfad `/en`):
+
+| Angebot | Deutsch | English |
+|---|---|---|
+| Übersicht · 3 Monate gratis | `https://global-sommer2026.goetheanum.online` | `https://global-sommer2026.goetheanum.online/en` |
+| Wochenschrift | `https://ws-sommer2026.dasgoetheanum.com` | `https://ws-en-sommer2026.dasgoetheanum.com` |
+| goetheanum.tv | `https://tv-sommer2026.goetheanum.tv` | `https://tv-en-sommer2026.goetheanum.tv` |
 
 Ein Link führt **nie** auf die nackte Startseite, sondern immer auf eine dieser
-drei Seiten – mit angehängtem UTM-Block.
+sechs Seiten – mit angehängtem UTM-Block. Der Generator wählt sie über
+Angebot + Sprache und führt die Sprache als Dimension ins Register.
 
 ## Wer erhält wo wie welchen Link
 
