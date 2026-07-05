@@ -23,7 +23,15 @@ create table if not exists public.sommer2026_signups (
   kanal         text not null default 'andere' check (kanal in ('newsletter','mailer','social','popup','website','empfehlung','andere')),  -- Herkunftsweg (Attribution)
   source        text not null default 'manual' check (source in ('uscreen','zoho','paperform','manual')),
   ext_id        text,                                 -- Fremd-ID der Quelle (z. B. user_id/submission_id)
-  dedup_key     text                                  -- Entdopplung: <produkt>:<E-Mail-Hash> bzw. <source>:<ext_id>
+  dedup_key     text,                                 -- Entdopplung: <produkt>:<E-Mail-Hash> bzw. <source>:<ext_id>
+  -- Attribution (Wirkungskette): volles UTM-Tupel + Landingpage + offene Selbstauskunft.
+  kampagne      text default 'summer26_trial',        -- Kampagnen-ID (eine Aktion, eine Kennung)
+  utm_source    text,                                 -- z. B. instagram / newsletter / google
+  utm_medium    text,                                 -- z. B. social / email / organic
+  utm_campaign  text,                                 -- i. d. R. = kampagne
+  utm_content   text,                                 -- konkretes Motiv (z. B. reel_ernst_zuercher)
+  landing_path  text,                                 -- Pfad der genutzten Landingpage
+  selbstauskunft text                                 -- «Wie aufmerksam geworden?», E-Mail-redigiert (O-Ton)
 );
 -- Entdopplung strikt über dedup_key (Person je Produkt, auch über Quellen hinweg)
 create unique index if not exists sommer2026_signups_dedup_uk on public.sommer2026_signups (dedup_key);
@@ -85,6 +93,71 @@ grant execute on function public.sommer2026_stats()    to anon, authenticated;
 grant execute on function public.sommer2026_timeline() to anon, authenticated;
 grant execute on function public.sommer2026_kohorten() to anon, authenticated;
 grant execute on function public.sommer2026_kanaele()  to anon, authenticated;
+
+-- =============================================================================
+-- Wirkungskette: Massnahmen-Protokoll + feinere Attribution + Trichter
+-- (Migration «sommer2026_attribution_und_massnahmen»)
+-- =============================================================================
+
+-- Massnahmen-Protokoll: eine Zeile je Kampagnen-Massnahme (Newsletter, Inserat, Post …).
+-- Freitext (beobachtung/entscheidung) bleibt INTERN – nicht im öffentlichen RPC.
+create table if not exists public.sommer2026_massnahmen (
+  id          bigint generated always as identity primary key,
+  created_at  timestamptz not null default now(),
+  tag         date not null,                              -- Datum der Massnahme
+  massnahme   text not null,                              -- z. B. «Auftaktnewsletter»
+  kanal       text not null default 'andere' check (kanal in ('newsletter','mailer','social','popup','website','empfehlung','andere')),
+  rolle       text not null default 'wirkung' check (rolle in ('sichtbarkeit','aktivierung','wirkung','bindung')),  -- Hauptaufgabe
+  zielgruppe  text,
+  botschaft   text,
+  code        text,                                       -- Link/UTM/QR-Code der Massnahme
+  kosten      numeric,                                    -- Aufwand
+  reichweite  bigint,                                     -- Sichtbarkeit (Impressionen)
+  klicks      bigint,                                     -- Aktivierung
+  beobachtung text,                                       -- INTERN (nicht im RPC)
+  entscheidung text                                       -- INTERN (nicht im RPC)
+);
+alter table public.sommer2026_massnahmen enable row level security;
+revoke all on table public.sommer2026_massnahmen from anon, authenticated;
+
+-- Feinere Attribution (unter dem kanal-Bucket): welches Motiv brachte Anmeldungen?
+create or replace function public.sommer2026_attribution()
+returns table(kanal text, utm_source text, utm_medium text, utm_campaign text, utm_content text, n bigint)
+language sql security definer set search_path to 'public' as $$
+  select kanal, utm_source, utm_medium, utm_campaign, utm_content, count(*)::bigint as n
+    from public.sommer2026_signups
+   group by kanal, utm_source, utm_medium, utm_campaign, utm_content
+   order by n desc;
+$$;
+
+-- Massnahmen-Protokoll, kuratiert (ohne interne Freitext-Spalten)
+create or replace function public.sommer2026_massnahmen_public()
+returns table(tag date, massnahme text, kanal text, rolle text, kosten numeric, reichweite bigint, klicks bigint)
+language sql security definer set search_path to 'public' as $$
+  select tag, massnahme, kanal, rolle, kosten, reichweite, klicks
+    from public.sommer2026_massnahmen
+   order by tag, id;
+$$;
+
+-- Wirkungstrichter: Sichtbarkeit → Aktivierung → Wirkung → Bindung
+create or replace function public.sommer2026_trichter()
+returns table(stufe text, wert bigint, ord int)
+language sql security definer set search_path to 'public' as $$
+  select * from (
+    select 'sichtbarkeit'::text as stufe, coalesce(sum(reichweite),0)::bigint as wert, 1 as ord from public.sommer2026_massnahmen
+    union all
+    select 'aktivierung', coalesce(sum(klicks),0)::bigint, 2 from public.sommer2026_massnahmen
+    union all
+    select 'wirkung', count(*)::bigint, 3 from public.sommer2026_signups
+    union all
+    select 'bindung', count(*) filter (where status = 'bleibt')::bigint, 4 from public.sommer2026_signups
+  ) t
+  order by t.ord;
+$$;
+
+grant execute on function public.sommer2026_attribution()       to anon, authenticated;
+grant execute on function public.sommer2026_massnahmen_public() to anon, authenticated;
+grant execute on function public.sommer2026_trichter()          to anon, authenticated;
 
 -- =============================================================================
 -- Ingestion (Webhooks) – siehe ingest-uscreen/index.ts

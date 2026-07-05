@@ -27,6 +27,23 @@ async function sha256Hex(s: string): Promise<string> {
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+// UTM-Tupel + Landingpage aus einer im Body eingebetteten URL (Paperform trägt die
+// Herkunfts-URL mit; die Anmelde-Links tragen die UTM-Parameter der Massnahme).
+function utmFromBody(body: any): { src: string | null; med: string | null; camp: string | null; cont: string | null; land: string | null } {
+  const out = { src: null as string | null, med: null as string | null, camp: null as string | null, cont: null as string | null, land: null as string | null };
+  const urls = (JSON.stringify(body).match(/https?:\/\/[^\s"'<>\\]+/gi) || []);
+  for (const u of urls) {
+    try {
+      const url = new URL(u);
+      const q = url.searchParams;
+      out.src = out.src || q.get("utm_source"); out.med = out.med || q.get("utm_medium");
+      out.camp = out.camp || q.get("utm_campaign"); out.cont = out.cont || q.get("utm_content");
+      if ((q.get("utm_source") || q.get("utm_campaign")) && !out.land) out.land = url.pathname;
+    } catch { /* keine URL */ }
+  }
+  return out;
+}
+
 // PII entfernen: nach Schlüsselname UND E-Mail-artige Werte.
 function redact(o: any): any {
   if (typeof o === "string") return EMAIL_RE.test(o) ? "***" : o;
@@ -85,9 +102,13 @@ Deno.serve(async (req) => {
   const subId = body?.submission_id || body?.id || body?.data?.submission_id || "";
   const dedupKey = email ? `wos:${await sha256Hex(salt + email)}` : `paperform:${subId || (await sha256Hex(blob)).slice(0, 24)}`;
 
+  const utm = utmFromBody(body);
   const row = {
     signed_up_at: new Date().toISOString(), produkt: "wos", sprache, format,
     tarif, intervall, waehrung, status: "neu", kanal: "andere", source: "paperform", ext_id: String(subId || ""), dedup_key: dedupKey,
+    kampagne: utm.camp || "summer26_trial",
+    utm_source: utm.src, utm_medium: utm.med, utm_campaign: utm.camp, utm_content: utm.cont,
+    landing_path: utm.land ? utm.land.slice(0, 200) : null,
   };
   const res = await fetch(`${SB}/rest/v1/sommer2026_signups?on_conflict=dedup_key`, {
     method: "POST",

@@ -4,10 +4,15 @@
 // nach public.sommer2026_signups. Jeder Payload wird PII-redigiert in
 // public.sommer2026_ingest_raw geloggt (nur Service-Role liest ihn).
 //
-// Aktions-Isolierung: «3 Monate gratis» = Neuzuweisung OHNE Sofortzahlung
-// (transaction_id leer) → status 'neu'. Vollzahler-Neukäufe und Verlängerungen
-// (Normalgeschäft) werden NICHT gezählt. Zahlung eines Aktions-Users → 'bleibt',
-// Kündigung → 'gekuendigt'. Optional schärfer via aktion_coupon / aktion_plan.
+// Aktions-Isolierung: jede Neuanmeldung im Aktionszeitraum → status 'neu' (jeder
+// Trial hinterlegt eine Karte, darum ist transaction_id KEIN Unterscheidungsmerkmal).
+// Verlängerungen legen nichts an. Zahlungen setzen (noch) KEIN 'bleibt' – die
+// Umwandlung wird erst nach der 3-Monats-Frist bestimmt. Kündigung → 'gekuendigt'.
+// Optional schärfer via aktion_coupon / aktion_plan.
+//
+// Attribution: volles UTM-Tupel (source/medium/campaign/content) + Landingpage-Pfad
+// + offene Selbstauskunft (E-Mail-redigiert) werden je Anmeldung mitgeschrieben; der
+// grobe kanal-Bucket bleibt als Zusammenfassung.
 //
 // Entdopplung: dedup_key = <produkt>:<gesalzener E-Mail-Hash> (Person je Produkt,
 // auch über Quellen hinweg), Fallback <source>:<ext_id>. Upsert/Update laufen
@@ -42,6 +47,29 @@ function redact(o: any): any {
 async function sha256Hex(s: string): Promise<string> {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// E-Mail-artige Werte aus Freitext entfernen (Selbstauskunft ist qualitativ, nicht personenbezogen).
+function scrubEmail(s: string): string {
+  return s.replace(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi, "***");
+}
+
+// Volles UTM-Tupel + Landingpage: direkte Felder, sonst aus einer eingebetteten URL nachziehen.
+function utmFrom(data: any): { src: any; med: any; camp: any; cont: any; land: any } {
+  const g = (k: string) => pick(data, [k, "custom_fields." + k, "utm." + k.replace("utm_", ""), "query." + k]);
+  let src = g("utm_source"), med = g("utm_medium"), camp = g("utm_campaign"), cont = g("utm_content");
+  let land = pick(data, ["landing_path", "landing_page", "page"]);
+  const urlish = pick(data, ["landing_url", "page_url", "signup_url", "url", "referrer_url", "referrer"]);
+  if (urlish) {
+    try {
+      const url = new URL(String(urlish));
+      const q = url.searchParams;
+      src = src || q.get("utm_source"); med = med || q.get("utm_medium");
+      camp = camp || q.get("utm_campaign"); cont = cont || q.get("utm_content");
+      if (!land) land = url.pathname;
+    } catch { /* keine URL */ }
+  }
+  return { src, med, camp, cont, land };
 }
 
 function mapPlan(title: string) {
@@ -146,7 +174,11 @@ Deno.serve(async (req) => {
   if (!istAktion) return json({ ok: true, skipped: "nicht Aktion (Coupon/Plan)" });
 
   const { sprache, intervall, tarif } = mapPlan(title);
-  const kanal = mapKanal(pick(data, ["utm_source", "source", "custom_fields.utm_source", "referral_source", "user_fields.0.value", "user_field_1"]));
+  const { src, med, camp, cont, land } = utmFrom(data);
+  // Offene Selbstauskunft «Wie sind Sie aufmerksam geworden?» (Custom User Field) – O-Ton, E-Mail-redigiert.
+  const selbst0 = pick(data, ["referral_source", "how_heard", "how_did_you_hear", "custom_fields.how_did_you_hear", "user_field_1", "user_fields.0.value"]);
+  const selbst = selbst0 ? scrubEmail(String(selbst0)).slice(0, 300) : null;
+  const kanal = mapKanal(src || pick(data, ["source", "referral_source"]) || selbst0);
   const when = pick(data, ["created_at", "subscribed_at", "started_at", "date"]) || new Date().toISOString();
 
   // Aktions-Grenze: Anmeldungen vor dem Start (Nachmittag 3. Juli) zählen nicht.
@@ -157,6 +189,10 @@ Deno.serve(async (req) => {
   const row = {
     signed_up_at: when, produkt: "gtv", sprache, format: "stream",
     tarif, intervall, status: "neu", kanal, source: "uscreen", ext_id: ext, dedup_key: dedupKey,
+    kampagne: (camp ? String(camp) : "summer26_trial"),
+    utm_source: src ? String(src) : null, utm_medium: med ? String(med) : null,
+    utm_campaign: camp ? String(camp) : null, utm_content: cont ? String(cont) : null,
+    landing_path: land ? String(land).slice(0, 200) : null, selbstauskunft: selbst,
   };
   const res = await fetch(`${SB}/rest/v1/sommer2026_signups?on_conflict=dedup_key`, {
     method: "POST",
