@@ -94,6 +94,36 @@ nachgezogen», ohne sie mit dem eigentlichen Aktions-Newsletter zu vermischen.
   Massnahmen-Protokoll, Abschlüsse aus den Anmeldungen.
 - **Woher** (`sommer2026_kanaele`): der grobe Bucket mit Hauptaufgabe je Kanal.
 
+## Paperform: damit die UTMs im Webhook ankommen
+
+Die Kette ist **UTM-Link → Landingpage → Paperform-Formular → Webhook**; die UTMs
+müssen sie ganz überleben. Zwei Stellen:
+
+**1. Landingpage → Formular (Web-Seite):** Die Landingpage (`*-sommer2026…`) muss
+die eingehenden `?utm_*` an das Formular weiterreichen – am «3 Monate gratis»-
+Button (UTMs an die Formular-URL hängen) oder, bei eingebettetem Formular, die
+Query-Parameter an den Embed durchreichen. Ohne diesen Schritt sieht Paperform
+keine UTMs, egal wie sauber der Link war.
+
+**2. In Paperform, je Formular (der eigentliche To-do):** vier **versteckte
+Prefill-Felder** anlegen, deren **Key** exakt so heisst:
+
+| Feld-Key | füllt |
+|---|---|
+| `utm_source` | Quelle (instagram, nl-ws …) |
+| `utm_medium` | Art (social, email, print …) |
+| `utm_campaign` | `summer26_trial` |
+| `utm_content` | Motiv (reel_…, qr_inserat …) |
+
+Feld hinzufügen → als *Hidden* setzen → unter *Advanced/Prefilling* den **Key** auf
+`utm_source` usw. Paperform befüllt sie aus der Formular-URL. Die Function liest
+diese Felder direkt (`data[]`) **und** zusätzlich Paperforms eigenes
+`device.utm_*` – kommt die Spur über einen der Wege an, greift die Attribution.
+
+Test: einen generierten Link mit `utm_*` öffnen, Formular abschicken → in
+`sommer2026_signups` steht die Zeile mit gefüllten `utm_*`, im Cockpit unter
+«Nach Motiv».
+
 ## Pflege
 
 Neue Massnahme → Zeile im Massnahmen-Protokoll (`sommer2026_massnahmen`, Service-
