@@ -1,0 +1,374 @@
+<!doctype html>
+<!-- =============================================================================
+     Goetheanum-Werkzeug · BEWEGTE SCHRIFT (Erprobung)
+     -----------------------------------------------------------------------------
+     Erprobungsfläche: welche dezenten Schrift-Animationen könnten ins System?
+     Die Hausschrift ist variabel auf EINER Achse – wght 190–725 (Flüstern …
+     Schreien). Also bewegt sich hier NUR das Gewicht: animierte Betonung mit
+     Laut/Leise (G05) – die Betonung des Hauses, nur in der Zeit.
+
+     Vom Starter/Fundament gebaut: tokens.css + base.css EINGEBUNDEN, keine
+     eigene Palette, keine eigenen Grade. GSAP nur als Motor; die Schrift kommt
+     aus dem Haus. Bewegung respektiert prefers-reduced-motion (WCAG 2.3.3) –
+     das muss der Motor selbst prüfen (base.css stoppt nur CSS-Transitions).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bewegte Schrift · Goetheanum</title>
+<meta name="description" content="Erprobung dezenter Schrift-Animationen auf der Gewichtsachse der Hausschrift – live, mit Code zum Übernehmen." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN. -->
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  /* NUR werkzeug-eigene Gestalt. Alles Gemeinsame steht in base.css; Werte aus
+     den Tokens (var(--…)), keine eigenen Farben/Grade/Abstände. */
+  .work{display:grid;gap:var(--s8);grid-template-columns:minmax(0,360px) minmax(0,1fr);align-items:start}
+  @media(max-width:860px){.work{grid-template-columns:1fr}}
+
+  /* Bühne: grosse, ruhige Fläche fürs Wort. --soft/--ink halten B01/B02. */
+  .stage{position:relative;min-height:clamp(280px,42vh,460px);display:grid;place-items:center;
+    background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);
+    padding:var(--s8) var(--s6);overflow:hidden;text-align:center}
+  /* Sog: feste Höhe, damit der hohe Track überläuft und die Fläche selbst scrollt. */
+  .stage.scroll{overflow-y:auto;display:block;height:clamp(280px,42vh,460px)}
+  .stage.scroll .track{display:grid;place-items:center;padding-block:60%} /* Scrollweg für Sog */
+
+  /* Das Wort selbst – Hausschrift (Display, geschaut). Nur das Gewicht bewegt sich. */
+  .demo{font-family:var(--font-display);font-weight:var(--w-text);
+    font-size:clamp(40px,8.5vw,104px);line-height:1.04;letter-spacing:-.01em;
+    color:var(--ink);margin:0;max-width:15ch}
+  .demo .ltr{display:inline-block;will-change:font-weight}
+  .demo .sp{display:inline-block;width:.28em}
+
+  /* Zwei Gewichts-Regler nebeneinander. */
+  .range2{display:grid;gap:var(--s6);grid-template-columns:1fr 1fr}
+  @media(max-width:420px){.range2{grid-template-columns:1fr}}
+  input[type=range]{width:100%;accent-color:var(--blue)}
+
+  .readout .nm{color:var(--gold-ink);font-weight:var(--w-strong)}
+  .code.block{margin-top:var(--s4);max-height:340px}
+  .rm-note{margin-top:var(--s4)}
+</style>
+</head>
+<body>
+
+<!-- Globale Navigation aus tools.json (Kopfzeile + Menü, ← Übersicht). -->
+<script src="../../design-system/nav.js" data-root="../../" data-section="vorbereitung" data-active="bewegte-schrift"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Design-System · Erprobung</span>
+    <h1>Bewegte Schrift</h1>
+    <p class="lede">Die Hausschrift ist auf einer Achse variabel – dem Gewicht. Hier lässt sich
+      ausprobieren, welche dezente Bewegung darauf trägt: animierte Betonung mit Laut und Leise,
+      nur in der Zeit. Wähle einen Effekt, stelle Gewicht und Tempo, übernimm den Code.</p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Erproben</h2>
+      <p>Wenig Mittel, ruhig gesetzt. Alle Effekte bewegen ausschliesslich das Gewicht
+        (wght 190–725). Bewegung schaltet sich bei ‹Bewegung reduzieren› im System selbst ab.</p>
+    </div>
+
+    <div class="work">
+      <!-- Steuerung ---------------------------------------------------------- -->
+      <div class="card soft" style="display:grid;gap:var(--s6)">
+        <label class="field">
+          <span class="lab">Vorschautext</span>
+          <input id="txt" type="text" value="Bewegte Schrift" maxlength="40" />
+        </label>
+
+        <div class="field">
+          <span class="lab">Effekt</span>
+          <div class="seg" id="fx" role="group" aria-label="Effekt">
+            <button type="button" data-fx="auftakt" aria-pressed="true">Auftakt</button>
+            <button type="button" data-fx="naehe" aria-pressed="false">Nähe</button>
+            <button type="button" data-fx="sog" aria-pressed="false">Sog</button>
+            <button type="button" data-fx="atem" aria-pressed="false">Atem</button>
+            <button type="button" data-fx="welle" aria-pressed="false">Welle</button>
+          </div>
+          <span class="note" id="fxNote"></span>
+        </div>
+
+        <div class="range2">
+          <label class="field">
+            <span class="lab">Gewicht von</span>
+            <input id="von" type="range" min="190" max="725" step="1" value="190" />
+            <span class="readout"><b id="vonV">190</b> · <span class="nm" id="vonN">Flüstern</span></span>
+          </label>
+          <label class="field">
+            <span class="lab">Gewicht bis</span>
+            <input id="bis" type="range" min="190" max="725" step="1" value="580" />
+            <span class="readout"><b id="bisV">580</b> · <span class="nm" id="bisN">Deutlich</span></span>
+          </label>
+        </div>
+
+        <div class="range2">
+          <label class="field">
+            <span class="lab">Tempo (Sekunden)</span>
+            <input id="dur" type="range" min="0.2" max="4" step="0.1" value="1.1" />
+            <span class="readout"><b id="durV">1.1</b> s</span>
+          </label>
+          <label class="field">
+            <span class="lab">Verlauf</span>
+            <select id="ease">
+              <option value="sine.inOut">sine.inOut – ruhig</option>
+              <option value="power2.out">power2.out – weich</option>
+              <option value="power3.out">power3.out – bestimmt</option>
+              <option value="expo.out">expo.out – schnell aus</option>
+              <option value="back.out(1.4)">back.out – Nachschwung</option>
+              <option value="none">linear</option>
+            </select>
+          </label>
+        </div>
+
+        <div style="display:flex;gap:var(--s2);flex-wrap:wrap">
+          <button class="btn primary" id="play" type="button">Neu abspielen</button>
+          <button class="btn" id="copy" type="button">Code kopieren</button>
+        </div>
+      </div>
+
+      <!-- Bühne + Code ------------------------------------------------------- -->
+      <div style="display:grid;gap:var(--s6)">
+        <div class="stage" id="stage" aria-label="Vorschau">
+          <p class="demo" id="demo">Bewegte Schrift</p>
+        </div>
+        <p class="rm-note note" id="rmNote" hidden>
+          ‹Bewegung reduzieren› ist aktiv – die Vorschau steht still, das Gewicht ruht auf dem Zielwert.
+          So verhält sich der Effekt auch im System (WCAG 2.3.3).
+        </p>
+
+        <div>
+          <span class="lab">Code zum Übernehmen</span>
+          <pre class="code block" id="code" aria-label="Generierter Code"></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Hausgrafik</span>
+    <span><a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<!-- GSAP nur als Motor (Core reicht für die Vorschau). Der Sog-Effekt liest den
+     eigenen Scrollstand der Fläche – ScrollTrigger braucht erst die echte Seite,
+     darum steht es nur im ausgegebenen Code, nicht hier. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(() => {
+  "use strict";
+
+  // Installierte Named Instances der Hausschrift – die Ankerpunkte der Achse.
+  const NAMED = [[190,"Flüstern"],[265,"Leise"],[350,"Ruhig"],[440,"Klar"],
+                 [580,"Deutlich"],[680,"Laut"],[725,"Schreien"]];
+  const nameOf = w => NAMED.reduce((a,b)=> Math.abs(b[0]-w) < Math.abs(a[0]-w) ? b : a)[1];
+
+  const $ = id => document.getElementById(id);
+  const stage = $("stage"), demo = $("demo");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+
+  // Kurzbeschreibungen – helfen beim Ausprobieren, was trägt.
+  const NOTE = {
+    auftakt:"Beim Erscheinen wächst jedes Zeichen vom leichten zum vollen Gewicht – ein ruhiger Antritt.",
+    naehe:"Zeichen unter dem Zeiger werden schwerer und fallen wieder zurück – die Schrift folgt der Hand.",
+    sog:"Beim Scrollen der Fläche wandert das Gewicht von leicht nach voll – Bewegung aus dem Lesen.",
+    atem:"Das ganze Wort atmet langsam zwischen zwei Gewichten – kaum merklich, nie fertig.",
+    welle:"Eine Gewichtswelle läuft Zeichen für Zeichen durch das Wort."
+  };
+
+  const state = { fx:"auftakt", von:190, bis:580, dur:1.1, ease:"sine.inOut", text:"Bewegte Schrift" };
+  let teardown = () => {};
+
+  // --- Wort in Zeichen zerlegen (für Zeichen-Effekte) ----------------------
+  function build(text){
+    demo.textContent = "";
+    const frag = document.createDocumentFragment();
+    [...text].forEach(ch => {
+      const s = document.createElement("span");
+      if (ch === " ") { s.className = "sp"; s.setAttribute("aria-hidden","true"); }
+      else { s.className = "ltr"; s.textContent = ch; }
+      frag.appendChild(s);
+    });
+    demo.appendChild(frag);
+    demo.setAttribute("aria-label", text);
+    return [...demo.querySelectorAll(".ltr")];
+  }
+
+  // --- Effekt-Motor: jeder Effekt baut sich auf und gibt seinen Abbau zurück -
+  const EFFECTS = {
+    auftakt(L,v){
+      gsap.set(L, { fontWeight: v.von });
+      const t = gsap.to(L, { fontWeight: v.bis, duration: v.dur, ease: v.ease, stagger: 0.06 });
+      return () => t.kill();
+    },
+    atem(L,v){
+      gsap.set(L, { fontWeight: v.von });
+      const t = gsap.to(L, { fontWeight: v.bis, duration: v.dur, ease: "sine.inOut",
+        yoyo:true, repeat:-1, stagger:{ each:0.04, from:"center" } });
+      return () => t.kill();
+    },
+    welle(L,v){
+      gsap.set(L, { fontWeight: v.von });
+      const t = gsap.to(L, { fontWeight: v.bis, duration: v.dur, ease: "sine.inOut",
+        yoyo:true, repeat:-1, stagger:{ each:0.08, from:"start" } });
+      return () => t.kill();
+    },
+    naehe(L,v){
+      gsap.set(L, { fontWeight: v.von });
+      const setters = L.map(el => gsap.quickTo(el, "fontWeight", { duration:0.4, ease:"power3.out" }));
+      const R = 140; // Wirkradius um den Zeiger (px)
+      const move = e => {
+        L.forEach((el,i) => {
+          const b = el.getBoundingClientRect();
+          const dx = e.clientX - (b.left + b.width/2), dy = e.clientY - (b.top + b.height/2);
+          const f = Math.max(0, 1 - Math.hypot(dx,dy)/R);
+          setters[i](Math.round(v.von + (v.bis - v.von) * f));
+        });
+      };
+      const leave = () => setters.forEach(s => s(v.von));
+      stage.addEventListener("pointermove", move, { passive:true });
+      stage.addEventListener("pointerleave", leave);
+      return () => { stage.removeEventListener("pointermove", move); stage.removeEventListener("pointerleave", leave); };
+    },
+    sog(L,v){
+      // Bühne wird zum Scroller; das Wort sitzt in einem hohen Track. Das Gewicht
+      // folgt direkt dem Scrollanteil (0…1) – voller Weg von leicht nach voll.
+      stage.classList.add("scroll");
+      const track = document.createElement("div");
+      track.className = "track";
+      demo.replaceWith(track); track.appendChild(demo);
+      gsap.set(L, { fontWeight: v.von });
+      const onScroll = () => {
+        const max = stage.scrollHeight - stage.clientHeight;
+        const p = max > 0 ? stage.scrollTop / max : 0;
+        gsap.set(L, { fontWeight: Math.round(v.von + (v.bis - v.von) * p) });
+      };
+      stage.addEventListener("scroll", onScroll, { passive:true });
+      onScroll();
+      return () => {
+        stage.removeEventListener("scroll", onScroll);
+        stage.classList.remove("scroll");
+        track.replaceWith(demo); // Track wieder auflösen
+      };
+    }
+  };
+
+  // --- Effekt (neu) aufsetzen ----------------------------------------------
+  function mount(){
+    teardown();
+    // Reste eines vorigen Scroll-Effekts sicher auflösen.
+    if (stage.classList.contains("scroll")) { stage.classList.remove("scroll"); const t = stage.querySelector(".track"); if (t) t.replaceWith(demo); }
+    const L = build(state.text);
+    $("rmNote").hidden = !reduce.matches;
+    if (reduce.matches){
+      gsap.set(L, { fontWeight: state.bis }); // Bewegung aus: Zielgewicht ruhen lassen.
+      teardown = () => {};
+    } else {
+      teardown = EFFECTS[state.fx](L, state);
+    }
+    writeCode();
+  }
+
+  // --- Code-Ausgabe (Zeichen-Split + der eine Effekt) ----------------------
+  function writeCode(){
+    const v = state, esc = s => String(s);
+    const stagger = { auftakt:"0.06", atem:"{ each: 0.04, from: 'center' }", welle:"{ each: 0.08, from: 'start' }" }[v.fx];
+    let body;
+    if (v.fx === "naehe"){
+      body =
+`// Zeichen einzeln ansprechbar machen (einmalig):
+const L = [...el.querySelectorAll(".ltr")];
+gsap.set(L, { fontWeight: ${v.von} });
+const set = L.map(x => gsap.quickTo(x, "fontWeight", { duration: 0.4, ease: "power3.out" }));
+
+el.addEventListener("pointermove", e => {
+  L.forEach((x,i) => {
+    const b = x.getBoundingClientRect();
+    const d = Math.hypot(e.clientX-(b.left+b.width/2), e.clientY-(b.top+b.height/2));
+    const f = Math.max(0, 1 - d/140);           // Wirkradius 140 px
+    set[i](Math.round(${v.von} + (${v.bis}-${v.von}) * f));
+  });
+});
+el.addEventListener("pointerleave", () => set.forEach(s => s(${v.von})));`;
+    } else if (v.fx === "sog"){
+      body =
+`gsap.registerPlugin(ScrollTrigger);
+const L = [...el.querySelectorAll(".ltr")];
+gsap.set(L, { fontWeight: ${v.von} });
+
+ScrollTrigger.create({
+  trigger: el, start: "top bottom", end: "bottom top", scrub: true,
+  onUpdate: self => gsap.set(L, { fontWeight: Math.round(${v.von} + (${v.bis}-${v.von}) * self.progress) })
+});`;
+    } else {
+      const rep = (v.fx === "atem" || v.fx === "welle") ? "\n  yoyo: true, repeat: -1," : "";
+      const ease = (v.fx === "auftakt") ? v.ease : "sine.inOut";
+      body =
+`const L = [...el.querySelectorAll(".ltr")];   // Wort in Zeichen zerlegt
+gsap.set(L, { fontWeight: ${v.von} });
+
+gsap.to(L, {
+  fontWeight: ${v.bis},
+  duration: ${v.dur},
+  ease: "${ease}",${rep}
+  stagger: ${stagger}
+});`;
+    }
+    const head =
+`/* Hausschrift: font-family:var(--font-display); die Achse ist wght (190–725).
+   font-weight (numerisch) steuert wght direkt – kein font-variation-settings nötig.
+   Bewegung immer gegen prefers-reduced-motion absichern (WCAG 2.3.3). */
+`;
+    $("code").textContent = head + "\n" + body;
+  }
+
+  // --- Bedienung ------------------------------------------------------------
+  function syncLabels(){
+    $("vonV").textContent = state.von; $("vonN").textContent = nameOf(state.von);
+    $("bisV").textContent = state.bis; $("bisN").textContent = nameOf(state.bis);
+    $("durV").textContent = state.dur.toFixed(1);
+    $("fxNote").textContent = NOTE[state.fx];
+  }
+
+  $("fx").addEventListener("click", e => {
+    const b = e.target.closest("button[data-fx]"); if (!b) return;
+    state.fx = b.dataset.fx;
+    [...e.currentTarget.children].forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    syncLabels(); mount();
+  });
+
+  const onInput = () => {
+    state.text = $("txt").value || "Bewegte Schrift";
+    state.von = +$("von").value; state.bis = +$("bis").value;
+    state.dur = +$("dur").value; state.ease = $("ease").value;
+    if (state.von > state.bis){ $("bis").value = state.von; state.bis = state.von; }
+    syncLabels(); mount();
+  };
+  ["txt","von","bis","dur","ease"].forEach(id => $(id).addEventListener("input", onInput));
+
+  $("play").addEventListener("click", mount);
+  $("copy").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText($("code").textContent);
+      const b = $("copy"); b.textContent = "Kopiert"; setTimeout(() => b.textContent = "Code kopieren", 900);
+    } catch { /* still */ }
+  });
+  reduce.addEventListener?.("change", mount);
+
+  syncLabels(); mount();
+})();
+</script>
+</body>
+</html>

@@ -200,6 +200,17 @@
       "desc": "Briefbogen und Briefschaften im Hausbild – als Vorlage für die eigene Korrespondenz."
     },
     {
+      "slug": "bewegte-schrift",
+      "cat": "vorbereitung",
+      "status": "entwurf",
+      "tag": "Erprobung",
+      "title": "Bewegte Schrift",
+      "short": "Animation",
+      "href": "apps/bewegte-schrift/",
+      "desc": "Erprobung dezenter Schrift-Animationen auf der Gewichtsachse der Hausschrift – live mit Code zum Übernehmen.",
+      "such": "Animation bewegte Schrift Typo GSAP wght Gewicht variable Font Auftakt Nähe Sog Atem Welle Bewegung"
+    },
+    {
       "slug": "schriften",
       "cat": "schrift",
       "status": "live",
