@@ -15,17 +15,36 @@ Dimensionen: `produkt` (wos/gtv) · `sprache` (de/en) · `format`
 RPCs (für `anon` per Publishable-Key aufrufbar, wie in `statistik.html`):
 `sommer2026_stats` (Breakdown), `sommer2026_timeline` (Momentum je Tag),
 `sommer2026_kohorten` (der 3-Monats-Moment), `sommer2026_kanaele` (Attribution
-je Herkunftsweg).
+je Herkunftsweg), `sommer2026_attribution` (feiner: je UTM-Motiv),
+`sommer2026_trichter` (Wirkungskette Sichtbarkeit→Bindung),
+`sommer2026_massnahmen_public` (Massnahmen-Protokoll, kuratiert).
 
 ## Attribution (Woher) und Kosten
 
 `kanal` (newsletter / mailer / social / popup / website / empfehlung / andere)
-hält den **Herkunftsweg** je Anmeldung. Er kommt aus den **UTM-Parametern**
-(`utm_source` / `utm_medium`) am Anmelde-Link und muss von Paperform / Uscreen /
-Zoho beim Signup mitgeschrieben und in `kanal` gemappt werden. Die **Kosten je
-Weg** und die **Fixkosten** der Aktion liegen (wie Preise und Zielmarken) im
-`CONFIG`-Block der Seite; daraus rechnet das Cockpit Kosten je Abo (CPA) und den
-Rückfluss je € Kosten.
+hält den **Herkunftsweg** je Anmeldung als groben Bucket. Darunter wird das
+**volle UTM-Tupel** roh gespeichert (`utm_source` / `utm_medium` / `utm_campaign`
+/ `utm_content`) plus `landing_path` und die offene `selbstauskunft` («Wie sind
+Sie aufmerksam geworden?», E-Mail-redigiert). So bleibt sichtbar, welches
+**Motiv** (z. B. `reel_ernst_zuercher` vs. `footer_link`) getragen hat, nicht nur
+welcher Kanal. Die Ingestion (Paperform / Uscreen) schreibt das mit; der
+`kanal`-Bucket wird daraus abgeleitet. Die **Kosten** liegen (wie Preise und
+Zielmarken) im `CONFIG`-Block der Seite; daraus rechnet das Cockpit Kosten je Abo
+(CPA) und den Rückfluss je € Kosten.
+
+## Wirkungskette und Massnahmen-Protokoll
+
+Das Cockpit liest die Aktion als **Kette**, nicht als Einzelzahlen:
+**Sichtbarkeit → Aktivierung → Wirkung → Bindung** (`sommer2026_trichter`).
+Sichtbarkeit (Reichweite) und Aktivierung (Klicks) kommen aus dem
+**Massnahmen-Protokoll** `sommer2026_massnahmen` – eine Zeile je Massnahme
+(Newsletter, Inserat, Post) mit Datum, `rolle` (Hauptaufgabe), Kosten, Reichweite,
+Klicks und **internen** Notizen (`beobachtung` / `entscheidung`). Die internen
+Freitext-Spalten verlassen die DB **nie**: der öffentliche RPC
+`sommer2026_massnahmen_public` gibt nur die kuratierten Zahlen zurück. So wird CPA
+je **Massnahme** rechenbar (nicht nur je Bucket), und aus der Aktion wird eine
+lesbare Geschichte statt eines Datenhaufens. Pflege per `insert`/`update` (Service-
+Role), kein Commit je Aktualisierung.
 
 ## Ströme und Tarife
 

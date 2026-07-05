@@ -120,6 +120,35 @@
   .provisorisch{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s4);line-height:1.55}
   .empty{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
   .err{font-family:var(--font-text);color:var(--bad);font-size:var(--t-small)}
+
+  /* Wirkungsmodell: ein Satz, der die ganze Kette rahmt (Ziel der Aktion). */
+  .modell{font-family:var(--font-display);font-weight:var(--w-text);font-size:var(--t-lede);
+    line-height:1.4;color:var(--ink);max-width:var(--measure);margin:var(--s5) 0 0}
+  .modell .k{color:var(--gold-ink)}
+  .kampagne{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s4)}
+  .kampagne code{font-family:var(--font-mono,var(--font-text));color:var(--ink)}
+
+  /* Wirkungskette (Trichter): Sichtbarkeit → Aktivierung → Wirkung → Bindung. */
+  .funnel .lvl{margin-bottom:var(--s5)} .funnel .lvl:last-child{margin-bottom:0}
+  .funnel .l2{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:7px}
+  .funnel .fname{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink)}
+  .funnel .fname .r{color:var(--muted);font-size:var(--t-micro);margin-left:7px}
+  .funnel .fval{font-family:var(--font-text);font-variant-numeric:tabular-nums lining-nums;font-size:var(--t-small);color:var(--ink);font-weight:600}
+  .funnel .ftrack{height:16px;border-radius:var(--r-pill);background:var(--line-soft);overflow:hidden}
+  .funnel .ftrack>span{display:block;height:100%;border-radius:var(--r-pill);transition:width .6s ease;min-width:3px}
+  .funnel .s1>span{background:color-mix(in srgb,var(--blue) 42%,transparent)}
+  .funnel .s2>span{background:color-mix(in srgb,var(--blue) 70%,transparent)}
+  .funnel .s3>span{background:linear-gradient(90deg,var(--gold),var(--gold-ink))}
+  .funnel .s4>span{background:var(--ok)}
+  .funnel .fnote{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s5);line-height:1.5}
+
+  /* Attribution nach Motiv (utm_content) – feiner als der kanal-Bucket. */
+  .motive{margin-top:var(--s6)}
+  .motive .mh{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);font-weight:600;margin-bottom:var(--s4)}
+  .motrow{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line-soft);font-family:var(--font-text);font-size:var(--t-small)}
+  .motrow .mc{color:var(--ink)} .motrow .mc .ms{color:var(--muted);font-size:var(--t-micro);margin-left:7px}
+  .motrow .mn{font-variant-numeric:tabular-nums lining-nums;color:var(--ink);font-weight:600}
+  .kanal-rolle{color:var(--muted);font-size:var(--t-micro);margin-left:7px}
   .landing{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5);align-items:baseline;font-family:var(--font-text);font-size:var(--t-small);margin-bottom:var(--s4)}
   .landing a{color:var(--blue)}
 
@@ -152,6 +181,8 @@
   <section class="lead">
     <span class="kick">Team-Cockpit · 3 Monate gratis</span>
     <h1 class="lead-title">Sommer-Aktion 2026</h1>
+    <p class="modell">Wir wollen, dass kulturinteressierte Menschen bis zum <span class="k">8. August</span> ein Gratis-Abo starten – und danach als zahlende Leser und Zuschauer bleiben. Jede Massnahme hat darin ihre Aufgabe.</p>
+    <p class="kampagne">Kampagne <code>summer26_trial</code> · 3. Juli bis 8. August 2026</p>
     <div class="heroline">
       <div class="figure">
         <div class="big" id="total">–</div>
@@ -194,8 +225,19 @@
   </section>
 
   <section>
-    <div class="shead"><h2>Woher kommen die Abos?</h2><p>Herkunftsweg der Anmeldungen – aus den UTM-Parametern am Anmelde-Link. So wird sichtbar, welcher Kanal trägt.</p></div>
+    <div class="shead"><h2>Wirkungskette</h2><p>Von der Sichtbarkeit zur Bindung. Nicht jeder Kanal verkauft – erst die Kette macht Wirkung lesbar. Reichweite und Klicks stammen aus dem Massnahmen-Protokoll, die Abschlüsse aus den Anmeldungen.</p></div>
+    <div class="panel">
+      <div class="funnel" id="funnel"><div class="empty">lädt …</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Woher kommen die Abos?</h2><p>Herkunftsweg der Anmeldungen – aus den UTM-Parametern am Anmelde-Link. So wird sichtbar, welcher Kanal trägt und mit welcher Aufgabe.</p></div>
     <div id="kanalBars"><div class="empty">lädt …</div></div>
+    <div class="motive" id="motive" hidden>
+      <div class="mh">Nach Motiv</div>
+      <div id="motiveList"></div>
+    </div>
   </section>
 
   <section>
@@ -239,6 +281,17 @@
       </table>
     </div>
     <p class="provisorisch">Kosten stehen auf 0 – die echten Zahlen werden erfragt. Hauptposten: Stunden intern, Social Media, Infrastruktur.</p>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Massnahmen-Protokoll</h2><p>Jede Massnahme mit Datum, Aufgabe, Kosten, Reichweite und Klicks – damit aus der Aktion eine lesbare Geschichte wird statt eines Datenhaufens.</p></div>
+    <div class="tablewrap">
+      <table class="tarif">
+        <thead><tr><th>Datum</th><th>Massnahme</th><th>Kanal</th><th class="num">Kosten</th><th class="num">Reichweite</th><th class="num">Klicks</th></tr></thead>
+        <tbody id="massnahmenBody"><tr><td class="empty" colspan="6">lädt …</td></tr></tbody>
+      </table>
+    </div>
+    <p class="provisorisch">Interne Beobachtungen und Entscheidungen liegen im Backend – hier erscheinen nur die Zahlen je Massnahme.</p>
   </section>
 
   <section>
@@ -291,15 +344,17 @@
       wos: { standard:{monatlich:14.9, jaehrlich:149}, ermaessigt:{monatlich:7.9, jaehrlich:79} },
       gtv: { standard:{monatlich:12,   jaehrlich:120}, ermaessigt:{monatlich:8,   jaehrlich:80} }
     },
-    // Herkunftswege (Attribution) – nur Beschriftung, Zählung kommt live.
+    // Herkunftswege (Attribution) mit Hauptaufgabe – nicht jeder Kanal verkauft.
+    // Social stiftet Aufmerksamkeit, der Newsletter Beziehung, das Mailing die
+    // Entscheidung. Die Rolle sagt, gegen welche Aufgabe man den Kanal fair liest.
     kanaele: [
-      { key:'newsletter', label:'Newsletter' },
-      { key:'mailer',     label:'Mailing' },
-      { key:'social',     label:'Social Media' },
-      { key:'popup',      label:'Popup' },
-      { key:'website',    label:'Website direkt' },
-      { key:'empfehlung', label:'Empfehlung' },
-      { key:'andere',     label:'Andere' }
+      { key:'newsletter', label:'Newsletter',     rolle:'Beziehung' },
+      { key:'mailer',     label:'Mailing',        rolle:'Entscheidung' },
+      { key:'social',     label:'Social Media',   rolle:'Aufmerksamkeit' },
+      { key:'popup',      label:'Popup',          rolle:'Entscheidung' },
+      { key:'website',    label:'Website direkt', rolle:'Orientierung' },
+      { key:'empfehlung', label:'Empfehlung',     rolle:'Vertrauen' },
+      { key:'andere',     label:'Andere',         rolle:'' }
     ],
     // Kosten der Aktion (Euro) – stehen auf 0, echte Zahlen werden erfragt.
     kosten: [
@@ -388,7 +443,7 @@
   function renderKanaele(kanaele, total){
     var host = el('kanalBars'); host.innerHTML = '';
     var byKanal = {}; kanaele.forEach(function(r){ byKanal[r.kanal] = Number(r.n); });
-    var items = CONFIG.kanaele.map(function(k){ return { label:k.label, n:byKanal[k.key] || 0 }; })
+    var items = CONFIG.kanaele.map(function(k){ return { label:k.label, rolle:k.rolle, n:byKanal[k.key] || 0 }; })
                               .filter(function(x){ return x.n > 0; })
                               .sort(function(a, b){ return b.n - a.n; });
     if(!items.length){ host.innerHTML = '<div class="empty">Noch keine Anmeldungen.</div>'; return; }
@@ -400,10 +455,90 @@
         '<span class="val"><b></b> <span class="g"></span></span></div>' +
         '<div class="track"><span></span></div>';
       row.querySelector('.name').textContent = x.label;
+      if(x.rolle){
+        var r = document.createElement('span'); r.className = 'kanal-rolle';
+        r.textContent = x.rolle; row.querySelector('.name').appendChild(r);
+      }
       row.querySelector('.val b').textContent = fmt(x.n);
-      row.querySelector('.val .g').textContent = anteil + ' %';
+      row.querySelector('.val .g').textContent = anteil + ' %';
       row.querySelector('.track > span').style.width = Math.max(3, Math.round(x.n / max * 100)) + '%';
       host.appendChild(row);
+    });
+  }
+
+  // ── Wirkungskette (Trichter) ───────────────────────────────────────────────
+  var TRICHTER = {
+    sichtbarkeit: { name:'Sichtbarkeit', frage:'wahrgenommen',        cls:'s1' },
+    aktivierung:  { name:'Aktivierung',  frage:'Interesse, Klick',    cls:'s2' },
+    wirkung:      { name:'Wirkung',      frage:'Abschluss',           cls:'s3' },
+    bindung:      { name:'Bindung',      frage:'bleibt zahlend',      cls:'s4' }
+  };
+  function renderFunnel(trichter){
+    var host = el('funnel'); host.innerHTML = '';
+    var vals = {}; (trichter || []).forEach(function(r){ vals[r.stufe] = Number(r.wert) || 0; });
+    var order = ['sichtbarkeit','aktivierung','wirkung','bindung'];
+    var max = order.reduce(function(m, s){ return Math.max(m, vals[s] || 0); }, 0) || 1;
+    order.forEach(function(s){
+      var meta = TRICHTER[s]; var v = vals[s] || 0;
+      var lvl = document.createElement('div'); lvl.className = 'lvl';
+      lvl.innerHTML = '<div class="l2"><span class="fname"></span><span class="fval"></span></div>' +
+        '<div class="ftrack ' + meta.cls + '"><span></span></div>';
+      var nm = lvl.querySelector('.fname'); nm.textContent = meta.name;
+      var rr = document.createElement('span'); rr.className = 'r'; rr.textContent = meta.frage; nm.appendChild(rr);
+      lvl.querySelector('.fval').textContent = fmt(v);
+      lvl.querySelector('.ftrack > span').style.width = Math.max(3, Math.round(v / max * 100)) + '%';
+      host.appendChild(lvl);
+    });
+    if((vals.sichtbarkeit || 0) === 0 && (vals.aktivierung || 0) === 0){
+      var note = document.createElement('div'); note.className = 'fnote';
+      note.textContent = 'Sichtbarkeit und Aktivierung erscheinen, sobald Reichweite und Klicks im Massnahmen-Protokoll erfasst sind. Wirkung und Bindung zählen bereits live aus den Anmeldungen.';
+      host.appendChild(note);
+    }
+  }
+
+  // ── Attribution nach Motiv (utm_content) ───────────────────────────────────
+  function renderMotive(attribution){
+    var items = (attribution || []).filter(function(r){ return r.utm_content || r.utm_campaign || r.utm_source; })
+      .map(function(r){
+        var label = r.utm_content || r.utm_campaign || r.utm_source;
+        var quelle = [r.utm_source, r.utm_medium].filter(Boolean).join(' · ');
+        return { label:label, quelle:quelle, n:Number(r.n) || 0 };
+      })
+      .sort(function(a, b){ return b.n - a.n; }).slice(0, 12);
+    var wrap = el('motive'), list = el('motiveList');
+    if(!items.length){ wrap.hidden = true; return; }
+    wrap.hidden = false; list.innerHTML = '';
+    items.forEach(function(x){
+      var row = document.createElement('div'); row.className = 'motrow';
+      row.innerHTML = '<span class="mc"></span><span class="mn"></span>';
+      var mc = row.querySelector('.mc'); mc.textContent = x.label;
+      if(x.quelle){ var s = document.createElement('span'); s.className = 'ms'; s.textContent = x.quelle; mc.appendChild(s); }
+      row.querySelector('.mn').textContent = fmt(x.n);
+      list.appendChild(row);
+    });
+  }
+
+  // ── Massnahmen-Protokoll ────────────────────────────────────────────────────
+  var ROLLE_LABEL = { sichtbarkeit:'Sichtbarkeit', aktivierung:'Aktivierung', wirkung:'Wirkung', bindung:'Bindung' };
+  var KANAL_LABEL = { newsletter:'Newsletter', mailer:'Mailing', social:'Social Media', popup:'Popup', website:'Website', empfehlung:'Empfehlung', andere:'Andere' };
+  function renderMassnahmen(rows){
+    var body = el('massnahmenBody'); body.innerHTML = '';
+    if(!rows || !rows.length){
+      body.innerHTML = '<tr><td class="empty" colspan="6">Noch keine Massnahmen erfasst – das Protokoll wird gepflegt, sobald die Aktionen laufen.</td></tr>';
+      return;
+    }
+    rows.forEach(function(r){
+      var tag = r.tag ? new Date(r.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) : '–';
+      var kanal = (KANAL_LABEL[r.kanal] || r.kanal || '') + (r.rolle && ROLLE_LABEL[r.rolle] ? ' · ' + ROLLE_LABEL[r.rolle] : '');
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td></td><td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
+      tr.children[0].textContent = tag;
+      tr.children[1].textContent = r.massnahme || '';
+      tr.children[2].textContent = kanal;
+      tr.children[3].textContent = (r.kosten != null) ? eur(r.kosten) : '–';
+      tr.children[4].textContent = (r.reichweite != null) ? fmt(r.reichweite) : '–';
+      tr.children[5].textContent = (r.klicks != null) ? fmt(r.klicks) : '–';
+      body.appendChild(tr);
     });
   }
 
@@ -552,7 +687,7 @@
       cell.innerHTML = '<div class="bv"></div><div class="barcell"><div class="bar"></div></div><div class="dl"></div>';
       cell.querySelector('.bv').textContent = fmt(v);
       cell.querySelector('.bar').style.height = Math.max(3, Math.round(v / max * 100)) + '%';
-      cell.querySelector('.dl').textContent = date.toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) + '.';
+      cell.querySelector('.dl').textContent = date.toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
       host.appendChild(cell);
     });
     var sum = recent.reduce(function(s, d){ return s + byDay[d]; }, 0);
@@ -565,25 +700,30 @@
     if(CONFIG.zahlenProvisorisch){
       el('provisorisch').textContent = 'Zielmarken, Preise und die Bleibe-Quote sind vorläufig hinterlegt – sobald die echten Werte gesetzt sind, rechnet das Cockpit unverändert weiter.';
     }
-    Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten'), rpc('sommer2026_kanaele') ])
+    Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten'), rpc('sommer2026_kanaele'),
+                  rpc('sommer2026_trichter'), rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public') ])
       .then(function(res){
         var stats = res[0] || [], timeline = res[1] || [], kohorten = res[2] || [], kanaele = res[3] || [];
+        var trichter = res[4] || [], attribution = res[5] || [], massnahmen = res[6] || [];
         var total = stats.reduce(function(s, r){ return s + Number(r.n); }, 0);
         var revenue = projectRevenue(stats);
         var mo = renderSpark(timeline);
         renderTiles(total, mo.avg, mo.days);
         renderStreams(stats);
+        renderFunnel(trichter);
         renderKanaele(kanaele, total);
+        renderMotive(attribution);
         renderTarif(stats);
         renderMilestones(total);
         renderCohort(kohorten, revenue);
         renderKosten(total, revenue);
+        renderMassnahmen(massnahmen);
         if(total === 0){ el('status').className = 'status empty'; }
         setStatus('ok', new Date());
       })
       .catch(function(){
         setStatus('err');
-        ['wosStreams','gtvStreams','kanalBars'].forEach(function(id){ el(id).innerHTML = '<div class="err">nicht ladbar</div>'; });
+        ['wosStreams','gtvStreams','kanalBars','funnel'].forEach(function(id){ el(id).innerHTML = '<div class="err">nicht ladbar</div>'; });
         el('spark').innerHTML = '<div class="err">nicht ladbar</div>';
       });
   }
