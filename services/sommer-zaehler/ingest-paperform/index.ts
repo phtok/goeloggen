@@ -36,11 +36,24 @@ async function sha256Hex(s: string): Promise<string> {
 // Landingpage (auch bei eingebetteten Formularen). Fallback: UTMs aus einer im
 // Body eingebetteten URL.
 function utmFromBody(body: any): { src: string | null; med: string | null; camp: string | null; cont: string | null; land: string | null } {
+  const out = { src: null as string | null, med: null as string | null, camp: null as string | null, cont: null as string | null, land: null as string | null };
+  // 1) Versteckte Formularfelder mit Key utm_source/… (Prefill aus der URL).
+  const data = Array.isArray(body?.data) ? body.data : [];
+  for (const f of data) {
+    const k = String(f?.custom_key || f?.key || f?.title || "").toLowerCase();
+    const v = (f?.value ?? "").toString();
+    if (!v) continue;
+    if (k === "utm_source") out.src = out.src || v;
+    else if (k === "utm_medium") out.med = out.med || v;
+    else if (k === "utm_campaign") out.camp = out.camp || v;
+    else if (k === "utm_content") out.cont = out.cont || v;
+  }
+  // 2) Paperform-eigenes Tracking (device.utm_*), das die URL automatisch aufnimmt.
   const d = (body && typeof body.device === "object") ? body.device : {};
-  const out = {
-    src: d.utm_source || null, med: d.utm_medium || null,
-    camp: d.utm_campaign || null, cont: d.utm_content || null, land: null as string | null,
-  };
+  out.src = out.src || d.utm_source || null;
+  out.med = out.med || d.utm_medium || null;
+  out.camp = out.camp || d.utm_campaign || null;
+  out.cont = out.cont || d.utm_content || null;
   try {
     if (d.url) { const url = new URL(String(d.url)); out.land = url.searchParams.get("_d") || (url.host + (url.pathname === "/" ? "" : url.pathname)); }
   } catch { /* keine URL */ }
