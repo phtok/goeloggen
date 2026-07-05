@@ -5,6 +5,15 @@ wahrscheinlicher gemacht hat**, braucht jeder Link nach draussen eine eindeutige
 Spur. Diese Datei ist die verbindliche Namenskonvention – wer setzt wo welchen
 Link. Ohne sie entsteht ein Datenhaufen statt einer lesbaren Geschichte.
 
+> **Am einfachsten mit dem Generator:** `apps/utm-generator/` baut die Links nach
+> genau dieser Konvention (klein, ohne Umlaute/Leerzeichen), inkl. QR-Code, und
+> legt sie ins Register `sommer2026_links` – so zeigt das Cockpit auch Links mit
+> **null Abschlüssen** (Soll/Ist). Das Register speist die Attribution nicht
+> direkt: eine Spur wird erst gelesen, wenn sie bei einer echten Anmeldung im
+> Webhook mitreist (Landingpage → Formular). Dafür braucht Paperform je Formular
+> versteckte Felder `utm_source/medium/campaign/content`, die sich aus der URL
+> vorbefüllen – sonst kommen die UTMs nicht im Webhook an.
+
 ## Die vier Parameter (immer klein, ohne Leer-/Sonderzeichen, `_` als Trenner)
 
 | Parameter | Frage | Werte (Beispiele) |

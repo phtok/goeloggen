@@ -160,6 +160,49 @@ grant execute on function public.sommer2026_massnahmen_public() to anon, authent
 grant execute on function public.sommer2026_trichter()          to anon, authenticated;
 
 -- =============================================================================
+-- Link-Register (Migration «sommer2026_links_register»)
+-- Erzeugte UTM-Links (aus apps/utm-generator/) sammeln → Soll/Ist im Cockpit.
+-- Anon darf nur anlegen (Generator, Publishable-Key), Lesen nur über RPC.
+-- =============================================================================
+create table if not exists public.sommer2026_links (
+  id           bigint generated always as identity primary key,
+  created_at   timestamptz not null default now(),
+  kampagne     text not null default 'summer26_trial',
+  utm_source   text not null,
+  utm_medium   text not null,
+  utm_campaign text not null default 'summer26_trial',
+  utm_content  text,
+  landing      text,          -- welche Landingpage (global/ws/tv)
+  url          text not null, -- fertiger Link
+  rolle        text,          -- Hauptaufgabe (sichtbarkeit/aktivierung/wirkung/bindung)
+  ersteller    text           -- optionales Kürzel, kein Pflichtfeld
+);
+create unique index if not exists sommer2026_links_url_uk on public.sommer2026_links (url);
+alter table public.sommer2026_links enable row level security;
+revoke all on table public.sommer2026_links from anon, authenticated;
+grant insert on table public.sommer2026_links to anon, authenticated;
+create policy sommer2026_links_insert on public.sommer2026_links
+  for insert to anon, authenticated with check (kampagne = 'summer26_trial');
+
+-- Soll/Ist: je registriertem Link die Zahl der Anmeldungen über genau dieses UTM-Tupel
+create or replace function public.sommer2026_links_public()
+returns table(created_at timestamptz, utm_source text, utm_medium text, utm_content text,
+              landing text, url text, rolle text, ersteller text, abschluesse bigint)
+language sql security definer set search_path to 'public' as $$
+  select l.created_at, l.utm_source, l.utm_medium, l.utm_content, l.landing, l.url, l.rolle, l.ersteller,
+         count(s.id)::bigint as abschluesse
+    from public.sommer2026_links l
+    left join public.sommer2026_signups s
+      on  s.utm_campaign is not distinct from l.utm_campaign
+      and s.utm_source   is not distinct from l.utm_source
+      and s.utm_medium   is not distinct from l.utm_medium
+      and s.utm_content  is not distinct from l.utm_content
+   group by l.id, l.created_at, l.utm_source, l.utm_medium, l.utm_content, l.landing, l.url, l.rolle, l.ersteller
+   order by abschluesse desc, l.created_at desc;
+$$;
+grant execute on function public.sommer2026_links_public() to anon, authenticated;
+
+-- =============================================================================
 -- Ingestion (Webhooks) – siehe ingest-uscreen/index.ts
 -- =============================================================================
 

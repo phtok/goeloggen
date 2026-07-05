@@ -331,6 +331,17 @@
       "such": "Sommer Aktion Kampagne Abo Zähler Counter Wochenschrift GTV goetheanum.tv Cockpit Zahlen"
     },
     {
+      "slug": "utm-generator",
+      "cat": "statistik",
+      "status": "beta",
+      "tag": "Aktion",
+      "title": "UTM-Link-Generator",
+      "short": "UTM-Generator",
+      "href": "apps/utm-generator/",
+      "desc": "Saubere, konventionskonforme Anmelde-Links der Sommer-Aktion bauen – mit QR und Link-Register, damit das Cockpit auch Links mit null Abschlüssen zeigt.",
+      "such": "UTM Link Generator Kampagne Attribution Tracking QR Quelle Medium Content Sommer Aktion"
+    },
+    {
       "slug": "campus-karten",
       "cat": "geparkt",
       "status": "geparkt",
