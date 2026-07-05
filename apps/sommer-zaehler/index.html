@@ -121,9 +121,17 @@
   .empty{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
   .err{font-family:var(--font-text);color:var(--bad);font-size:var(--t-small)}
 
-  /* Wirkungsmodell: ein Satz, der die ganze Kette rahmt (Ziel der Aktion). */
+  /* Wirkungsmodell: ein Satz, der die ganze Kette rahmt – einklappbar. */
+  .modell-box{margin-top:var(--s4)}
+  .modell-box>summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--gold-ink);padding:2px 0}
+  .modell-box>summary::-webkit-details-marker{display:none}
+  .modell-box>summary::before{content:"";width:8px;height:8px;flex:none;
+    border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+    transform:rotate(-45deg);transition:transform .2s}
+  .modell-box[open]>summary::before{transform:rotate(45deg)}
   .modell{font-family:var(--font-display);font-weight:var(--w-text);font-size:var(--t-lede);
-    line-height:1.4;color:var(--ink);max-width:var(--measure);margin:var(--s5) 0 0}
+    line-height:1.4;color:var(--ink);max-width:var(--measure);margin:var(--s4) 0 0}
   .modell .k{color:var(--gold-ink)}
   .kampagne{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s4)}
   .kampagne code{font-family:var(--font-mono,var(--font-text));color:var(--ink)}
@@ -181,7 +189,10 @@
   <section class="lead">
     <span class="kick">Team-Cockpit · 3 Monate gratis</span>
     <h1 class="lead-title">Sommer-Aktion 2026</h1>
-    <p class="modell">Wir wollen, dass kulturinteressierte Menschen bis zum <span class="k">8. August</span> ein Gratis-Abo starten – und danach als zahlende Leser und Zuschauer bleiben. Jede Massnahme hat darin ihre Aufgabe.</p>
+    <details class="modell-box">
+      <summary>Wozu diese Aktion?</summary>
+      <p class="modell">Wir wollen, dass kulturinteressierte Menschen bis zum <span class="k">8. August</span> ein Gratis-Abo starten – und danach als zahlende Leser und Zuschauer bleiben. Jede Massnahme hat darin ihre Aufgabe.</p>
+    </details>
     <p class="kampagne">Kampagne <code>summer26_trial</code> · 3. Juli bis 8. August 2026 · <a href="../utm-generator/">UTM-Links für die Aktion bauen →</a></p>
     <div class="heroline">
       <div class="figure">
