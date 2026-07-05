@@ -129,18 +129,21 @@ Deno.serve(async (req) => {
   const isCancel = /(cancel|refund|expire|churn|delet)/.test(e);
 
   if (isCancel) { await patchStatus(dedupKey, "gekuendigt"); return json({ ok: true, status: "gekuendigt" }); }
-  if (isPay && !isNew) { await patchStatus(dedupKey, "bleibt"); return json({ ok: true, status: "bleibt" }); }
+  // Jeder Trial hinterlegt eine Karte → Zahlung fällt sofort an. Darum setzt eine
+  // Zahlung (noch) KEIN 'bleibt': die echte Umwandlung wird erst nach der
+  // 3-Monats-Frist bestimmt (separater Schritt im Oktober).
+  if (isPay && !isNew) return json({ ok: true, note: "Zahlung ignoriert (Umwandlung erst nach 3 Monaten)" });
 
   if (!isNew) return json({ ok: true, skipped: "event ignoriert" });
 
-  const txn = pick(data, ["transaction_id"]);
-  const istTrial = txn === undefined || txn === null || txn === "";
+  // Aktion = jede Neuanmeldung im Aktionszeitraum (aktion_start begrenzt es zeitlich).
+  // Optional schärfer über aktion_coupon / aktion_plan.
   const coupon = (pick(data, ["coupon_code", "coupon", "discount_code", "code"]) || "").toString().toLowerCase();
   let istAktion: boolean;
   if (aktionCoupon) istAktion = coupon.includes(aktionCoupon);
   else if (aktionPlan) istAktion = title.toLowerCase().includes(aktionPlan);
-  else istAktion = istTrial;
-  if (!istAktion) return json({ ok: true, skipped: "Normalgeschäft (kein Gratis-Trial)" });
+  else istAktion = true;
+  if (!istAktion) return json({ ok: true, skipped: "nicht Aktion (Coupon/Plan)" });
 
   const { sprache, intervall, tarif } = mapPlan(title);
   const kanal = mapKanal(pick(data, ["utm_source", "source", "custom_fields.utm_source", "referral_source", "user_fields.0.value", "user_field_1"]));
