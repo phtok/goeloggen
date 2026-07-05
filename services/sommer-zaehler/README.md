@@ -74,10 +74,12 @@ verfeinern.
   created / canceled* (und *payment/charge* für die Umwandlung `bleibt`).
 - **Attribution:** Settings → Custom user fields → «Wie sind Sie auf uns
   aufmerksam geworden?»; die Function mappt die Antwort auf `kanal`.
-- **Aktions-Isolierung:** «3 Monate gratis» = Neuzuweisung ohne Sofortzahlung
-  (`transaction_id` leer) → `neu`. Vollzahler-Neukäufe und Verlängerungen
-  (Normalgeschäft) zählen nicht. Zahlung → `bleibt`, Kündigung → `gekuendigt`.
-  Schärfer stellbar über `sommer2026_config.aktion_coupon` / `aktion_plan`.
+- **Aktions-Isolierung:** jede Neuanmeldung (`subscription_assigned` u. ä.) im
+  Aktionszeitraum zählt als `neu`. Trials hinterlegen eine Kreditkarte, darum ist
+  `transaction_id` **kein** Unterscheidungsmerkmal. Verlängerungen legen nichts an
+  (nur Neuanmeldungen). Kündigung → `gekuendigt`. **Zahlungen setzen vorerst kein
+  `bleibt`** – die Umwandlung wird erst nach der 3-Monats-Frist bestimmt. Zeitlich
+  begrenzt durch `aktion_start`; schärfer stellbar über `aktion_coupon` / `aktion_plan`.
 - **Scharf/Log:** zählt nur wenn `sommer2026_config.aktion_aktiv = 'true'`,
   sonst reiner Log-Modus.
 
