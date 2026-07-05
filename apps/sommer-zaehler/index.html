@@ -103,7 +103,7 @@
   .conv .txt{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);min-width:190px;flex:1}
   .conv .txt b{font-weight:600}
   .conv .txt .m{color:var(--muted);font-size:var(--t-micro)}
-  .pill{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);padding:4px 11px;border-radius:var(--r-pill);background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold-ink);margin-top:var(--s4)}
+  .pill{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);line-height:1.45;padding:6px 13px;border-radius:var(--r-control);background:color-mix(in srgb,var(--gold) 15%,transparent);color:var(--gold-ink);margin-top:var(--s4);max-width:100%}
   .proj{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6)}
   .proj .pl{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
   .proj .pv{font-family:var(--font-display);font-weight:var(--w-strong);font-size:clamp(30px,5vw,42px);color:var(--ok);font-variant-numeric:tabular-nums;line-height:1;margin-top:6px}
@@ -529,11 +529,11 @@
     card.querySelector('.ring .inner').textContent = quote + '%';
     card.querySelector('.txt b').textContent = '~' + fmt(projektiert) + ' bleiben voraussichtlich zahlend';
     card.querySelector('.txt .m').textContent = fmt(offen) + ' Entscheidungen noch offen · ' + fmt(bleibt) + ' bereits umgewandelt';
-    card.querySelector('.pill').textContent = 'Projektion · Annahme ' + Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote';
+    card.querySelector('.pill').textContent = 'Projektion · Annahme ' + Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote';
 
     el('projValue').textContent = eur(revenue);
     el('projNote').textContent = 'Hochgerechnet: bleibende Abos zum Vollpreis über alle Tarife, bei ' +
-      Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote.';
+      Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote.';
   }
 
   // ── Momentum ───────────────────────────────────────────────────────────────
