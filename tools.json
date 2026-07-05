@@ -347,15 +347,6 @@
       "desc": "Produktionssammlung aus Jahrgängen (PDFs, Zeichnungen). Struktur vorbereitet."
     },
     {
-      "slug": "gtv-subs",
-      "cat": "geparkt",
-      "status": "geparkt",
-      "tag": "Service",
-      "title": "GTV-Subs",
-      "href": "https://github.com/phtok/goeloggen/blob/main/services/gtv-subs/README.md",
-      "desc": "Service-Skelett rund um Goetheanum TV. Platzhalter."
-    },
-    {
       "slug": "logo-generator-alt",
       "cat": "archiv",
       "status": "geparkt",
