@@ -21,34 +21,52 @@ const SB = Deno.env.get("SUPABASE_URL")!;
 const KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const H = { "Content-Type": "application/json", apikey: KEY, Authorization: `Bearer ${KEY}` };
 const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
+// PII an der Paperform-Feldbeschriftung (data[].title/custom_key) erkennen …
+const PII_LABEL = /(name|vorname|nachname|first.?name|last.?name|e-?mail|phone|tel|mobil|strasse|street|address|adresse|\bzip\b|\bplz\b|city|\bort\b|company|unternehmen|country|\bland\b)/i;
+// … und an PII-tragenden Werten (z. B. Zoho-Checkout-URL mit ?first_name=&email=…).
+const PII_STR = /@|%40|(first_name|last_name|[?&]email=|street=|billing_|shipping_)/i;
 
 async function sha256Hex(s: string): Promise<string> {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-// UTM-Tupel + Landingpage aus einer im Body eingebetteten URL (Paperform trägt die
-// Herkunfts-URL mit; die Anmelde-Links tragen die UTM-Parameter der Massnahme).
+// UTM-Tupel + Landingpage. Paperform legt die Herkunft in `device` ab
+// (device.utm_source/…); ausserdem trägt device.url bzw. der ?_d=-Parameter die
+// Landingpage (auch bei eingebetteten Formularen). Fallback: UTMs aus einer im
+// Body eingebetteten URL.
 function utmFromBody(body: any): { src: string | null; med: string | null; camp: string | null; cont: string | null; land: string | null } {
-  const out = { src: null as string | null, med: null as string | null, camp: null as string | null, cont: null as string | null, land: null as string | null };
-  const urls = (JSON.stringify(body).match(/https?:\/\/[^\s"'<>\\]+/gi) || []);
-  for (const u of urls) {
-    try {
-      const url = new URL(u);
-      const q = url.searchParams;
-      out.src = out.src || q.get("utm_source"); out.med = out.med || q.get("utm_medium");
-      out.camp = out.camp || q.get("utm_campaign"); out.cont = out.cont || q.get("utm_content");
-      if ((q.get("utm_source") || q.get("utm_campaign")) && !out.land) out.land = url.pathname;
-    } catch { /* keine URL */ }
+  const d = (body && typeof body.device === "object") ? body.device : {};
+  const out = {
+    src: d.utm_source || null, med: d.utm_medium || null,
+    camp: d.utm_campaign || null, cont: d.utm_content || null, land: null as string | null,
+  };
+  try {
+    if (d.url) { const url = new URL(String(d.url)); out.land = url.searchParams.get("_d") || (url.host + (url.pathname === "/" ? "" : url.pathname)); }
+  } catch { /* keine URL */ }
+  if (!out.src && !out.camp) {
+    const urls = (JSON.stringify(body).match(/https?:\/\/[^\s"'<>\\]+/gi) || []);
+    for (const u of urls) {
+      try {
+        const q = new URL(u).searchParams;
+        out.src = out.src || q.get("utm_source"); out.med = out.med || q.get("utm_medium");
+        out.camp = out.camp || q.get("utm_campaign"); out.cont = out.cont || q.get("utm_content");
+      } catch { /* keine URL */ }
+    }
   }
   return out;
 }
 
-// PII entfernen: nach Schlüsselname UND E-Mail-artige Werte.
+// PII entfernen – Paperform-tauglich: nach Schlüsselname, nach Feldbeschriftung
+// (data[].title/custom_key) UND nach PII-tragenden Werten (E-Mail, Checkout-URL).
 function redact(o: any): any {
-  if (typeof o === "string") return EMAIL_RE.test(o) ? "***" : o;
+  if (typeof o === "string") return (EMAIL_RE.test(o) || PII_STR.test(o)) ? "***" : o;
   if (Array.isArray(o)) return o.map(redact);
   if (o && typeof o === "object") {
+    if (Object.prototype.hasOwnProperty.call(o, "value") && ("title" in o || "custom_key" in o)) {
+      const label = `${o.title ?? ""} ${o.custom_key ?? ""}`;
+      if (o.type === "email" || PII_LABEL.test(label)) return { ...o, value: "***" };
+    }
     const r: any = {};
     for (const k of Object.keys(o)) r[k] = /(email|name|phone|address|\bip\b|vorname|nachname|strasse)/i.test(k) ? "***" : redact(o[k]);
     return r;
@@ -87,9 +105,10 @@ Deno.serve(async (req) => {
   // Sprache/Format: URL-Vorgabe je Formular hat Vorrang, sonst aus Inhalt geraten.
   const sprache = (u.searchParams.get("sprache") || (/english|englisch/.test(blob) ? "en" : "de")).toLowerCase() === "en" ? "en" : "de";
   const formatQ = (u.searchParams.get("format") || "").toLowerCase();
+  // «Papier & Online» ist das Papier-Abo (inkl. Online) → papier hat Vorrang.
   const format = formatQ === "papier" || formatQ === "digital" ? formatQ
-    : /digital|online|e-?paper|\bpdf\b/.test(blob) ? "digital"
-    : /papier|print|gedruckt|\bpaper\b|frei haus/.test(blob) ? "papier" : "papier";
+    : /papier|print|gedruckt|\bpaper\b|frei haus/.test(blob) ? "papier"
+    : /digital|online|e-?paper|\bpdf\b/.test(blob) ? "digital" : "papier";
   const tarif = /erm(ä|ae)ss|reduc|student|reduziert/.test(blob) ? "ermaessigt" : "standard";
   const intervall = /(monat|month|mensuel)/.test(blob) ? "monatlich" : /(jähr|jahr|year|annual)/.test(blob) ? "jaehrlich" : "jaehrlich";
   const waehrungQ = (u.searchParams.get("waehrung") || "").toLowerCase();

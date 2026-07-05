@@ -203,6 +203,14 @@ language sql security definer set search_path to 'public' as $$
 $$;
 grant execute on function public.sommer2026_links_public() to anon, authenticated;
 
+-- Kontrolliertes Löschen eines registrierten Links (nur über RPC, per URL) –
+-- kein offenes DELETE für anon; begrenzt auf die Aktion.
+create or replace function public.sommer2026_link_loeschen(p_url text)
+returns void language sql security definer set search_path to 'public' as $$
+  delete from public.sommer2026_links where url = p_url and kampagne = 'summer26_trial';
+$$;
+grant execute on function public.sommer2026_link_loeschen(text) to anon, authenticated;
+
 -- =============================================================================
 -- Ingestion (Webhooks) – siehe ingest-uscreen/index.ts
 -- =============================================================================
