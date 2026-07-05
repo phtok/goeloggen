@@ -47,7 +47,9 @@
   .said{font-family:var(--font-text);font-size:var(--t-micro);color:var(--ok);min-height:1.4em;margin-top:var(--s2)}
 
   .reg{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);table-layout:fixed;min-width:520px}
-  .reg col.cMot{width:50%} .reg col.cQm{width:22%} .reg col.cZiel{width:12%} .reg col.cAb{width:16%}
+  .reg col.cMot{width:44%} .reg col.cQm{width:20%} .reg col.cZiel{width:12%} .reg col.cAb{width:12%} .reg col.cAct{width:12%}
+  .reg .del{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 6px;min-height:var(--tap)}
+  .reg .del:hover{color:var(--bad)} .reg td.act{text-align:right}
   .reg th,.reg td{padding:10px 12px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top}
   .reg thead th{color:var(--muted);font-weight:600;font-size:var(--t-micro)}
   .reg td.num,.reg th.num{text-align:right;font-variant-numeric:tabular-nums lining-nums}
@@ -174,9 +176,9 @@
     </div>
     <div class="tablewrap">
       <table class="reg">
-        <colgroup><col class="cMot" /><col class="cQm" /><col class="cZiel" /><col class="cAb" /></colgroup>
-        <thead><tr><th>Motiv</th><th>Quelle · Medium</th><th>Ziel</th><th class="num">Abschlüsse</th></tr></thead>
-        <tbody id="regBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+        <colgroup><col class="cMot" /><col class="cQm" /><col class="cZiel" /><col class="cAb" /><col class="cAct" /></colgroup>
+        <thead><tr><th>Motiv</th><th>Quelle · Medium</th><th>Ziel</th><th class="num">Abschlüsse</th><th></th></tr></thead>
+        <tbody id="regBody"><tr><td class="empty" colspan="5">lädt …</td></tr></tbody>
       </table>
     </div>
   </section>
@@ -314,16 +316,25 @@
     }).catch(function(){ say('Register nicht erreichbar.', true); });
   });
 
+  function loescheLink(url){
+    if(!window.confirm('Diesen Link wirklich aus dem Register löschen?')) return;
+    fetch(SB + '/rest/v1/rpc/sommer2026_link_loeschen', {
+      method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({ p_url: url })
+    }).then(function(r){ if(r.ok){ say('Link gelöscht.'); loadRegister(); } else { say('Löschen nicht möglich (' + r.status + ').', true); } })
+      .catch(function(){ say('Löschen nicht erreichbar.', true); });
+  }
+
   function loadRegister(){
     fetch(SB + '/rest/v1/rpc/sommer2026_links_public', {
       method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY }, body:'{}'
     }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(rows){
         var body = el('regBody'); body.innerHTML = '';
-        if(!rows || !rows.length){ body.innerHTML = '<tr><td class="empty" colspan="4">Noch keine Links registriert.</td></tr>'; return; }
+        if(!rows || !rows.length){ body.innerHTML = '<tr><td class="empty" colspan="5">Noch keine Links registriert.</td></tr>'; return; }
         rows.forEach(function(x){
           var tr = document.createElement('tr');
-          tr.innerHTML = '<td class="mot"></td><td></td><td></td><td class="num"></td>';
+          tr.innerHTML = '<td class="mot"></td><td></td><td></td><td class="num"></td><td class="act"></td>';
           var mot = tr.children[0];
           mot.textContent = x.utm_content || '—';
           var q = document.createElement('span'); q.className = 'q';
@@ -335,10 +346,15 @@
           var n = Number(x.abschluesse) || 0;
           tr.children[3].textContent = n.toLocaleString('de-CH');
           if(n === 0) tr.children[3].className = 'num zero';
+          var del = document.createElement('button');
+          del.type = 'button'; del.className = 'del'; del.textContent = 'Löschen';
+          del.setAttribute('aria-label', 'Link löschen');
+          del.addEventListener('click', function(){ loescheLink(x.url); });
+          tr.children[4].appendChild(del);
           body.appendChild(tr);
         });
       })
-      .catch(function(){ el('regBody').innerHTML = '<tr><td class="empty" colspan="4">Register nicht ladbar.</td></tr>'; });
+      .catch(function(){ el('regBody').innerHTML = '<tr><td class="empty" colspan="5">Register nicht ladbar.</td></tr>'; });
   }
 
   render();
