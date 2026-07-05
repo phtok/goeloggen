@@ -226,6 +226,33 @@
     return { url:u, src:src, med:med, con:con, angebot:angebot, sprache:sprache };
   }
 
+  // QR mit weichen Punkten + gerundeten Augen (wie im Inserat). Artefakt-Farben:
+  // ein QR braucht festen dunklen Vordergrund auf hellem Grund, theme-unabhängig.
+  var QR_FG = '#141414';   // QR-Modulfarbe (Artefakt, nicht Theme)  # ds-ok
+  var QR_BG = '#ffffff';   // QR-Ruhezone weiss, muss scannbar bleiben  # ds-ok
+  function softQrSvg(text){
+    // Fehlerkorrektur Q (robust für Druck), Punkte berühren sich (r=0.5) → scannbar.
+    var q = qrcode(0, 'Q'); q.addData(text); q.make();
+    var n = q.getModuleCount(), pad = 4, S = n + pad * 2, p = [];
+    function inFinder(r, c){ return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7); }
+    p.push('<rect width="' + S + '" height="' + S + '" fill="' + QR_BG + '"/>');
+    for(var r = 0; r < n; r++){
+      for(var c = 0; c < n; c++){
+        if(!q.isDark(r, c) || inFinder(r, c)) continue;
+        p.push('<circle cx="' + (c + pad + 0.5) + '" cy="' + (r + pad + 0.5) + '" r="0.5" fill="' + QR_FG + '"/>');
+      }
+    }
+    // Die drei Finder-Augen als gerundete Quadrate (dunkel · hell · dunkel).
+    [[0, 0], [0, n - 7], [n - 7, 0]].forEach(function(e){
+      var y = e[0] + pad, x = e[1] + pad;
+      p.push('<rect x="' + x + '" y="' + y + '" width="7" height="7" rx="2.3" fill="' + QR_FG + '"/>');
+      p.push('<rect x="' + (x + 1) + '" y="' + (y + 1) + '" width="5" height="5" rx="1.7" fill="' + QR_BG + '"/>');
+      p.push('<rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3" rx="1.0" fill="' + QR_FG + '"/>');
+    });
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + S + ' ' + S + '" ' +
+           'preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision">' + p.join('') + '</svg>';
+  }
+
   var current = null;
   function render(){
     // Eingaben normalisieren, ohne den Cursor zu stören (nur bei Bedarf)
@@ -238,10 +265,8 @@
       return;
     }
     box.textContent = b.url;
-    try {
-      var q = qrcode(0, 'M'); q.addData(b.url); q.make();
-      qr.innerHTML = q.createSvgTag({ cellSize:4, margin:2, scalable:true });
-    } catch(e){ qr.innerHTML = '<span class="empty">QR</span>'; }
+    try { qr.innerHTML = softQrSvg(b.url); }
+    catch(e){ qr.innerHTML = '<span class="empty">QR</span>'; }
   }
 
   ['source','medium','content','angebot','sprache','rolle','ersteller'].forEach(function(id){
