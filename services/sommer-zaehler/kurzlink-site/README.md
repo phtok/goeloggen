@@ -19,10 +19,11 @@ keine Link-Liste; neue Kurzlinks entstehen im Generator und wirken sofort.
 
 ## Wie ein neuer Kurzlink entsteht
 
-Nicht hier im Repo, sondern im **UTM-Generator**:
+Nicht hier im Repo, sondern im **UTM-Generator** (nur intern gelistet):
 `werkzeuge.goetheanum.ch/apps/utm-generator/` → Ziel-URL + UTM-Merkmale
 eintragen, Kurznamen wählen, ins Register schreiben. Der Kurzname wird zum
-Pfad `/s/<kurzname>`.
+Pfad `/s/<kurzname>`. Anlegen und Löschen im Register verlangen den
+**Team-Schlüssel** (einmal im Generator eingeben, der Browser merkt ihn).
 
 **Slug-Stil:** kurz, klein, ein zweisilbiger Tiername mit Bild (`otter`,
 `biber`, `reiher` …). Menschlich abtippbar aus Bio, Caption oder Papier.
@@ -39,13 +40,17 @@ Pfad `/s/<kurzname>`.
 
 ## Inhalt
 
-- `index.html` — Startseite (verweist auf Generator und Cockpit).
-- `404.html` — die Weiterleitungs-Brücke.
+- `index.html` — die Wurzel leitet auf die Aktions-Landingpage weiter.
+  **Kein Schaufenster:** die internen Werkzeuge (Generator, Cockpit) werden
+  hier bewusst nicht verlinkt — die Wurzel eines Kürzers zeigt nie das
+  Werkzeug. Nach dem 8. August 2026 das Ziel auf `goetheanum.ch` umstellen.
+- `404.html` — die Weiterleitungs-Brücke; leere und unbekannte Pfade landen
+  ebenfalls auf der Aktions-Landingpage.
 - `CNAME` — `tools.goetheanum.ch` (von GitHub Pages gesetzt).
 
 ## Gestalt
 
-Bindet Tokens und Basis des Goetheanum-Design-Systems absolut von
+`404.html` bindet Tokens und Basis des Goetheanum-Design-Systems absolut von
 `werkzeuge.goetheanum.ch/design-system/` ein — keine eigenen Farb-, Schnitt-
 oder Abstandswerte. Hausregeln: siehe `CLAUDE.md` in
 [`phtok/goeloggen`](https://github.com/phtok/goeloggen).

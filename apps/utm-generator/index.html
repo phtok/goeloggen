@@ -356,33 +356,61 @@
 
   el('slugNew').addEventListener('click', function(){ el('slug').value = neuerKurzname(); });
 
+  // Schreiben ins Register verlangt den Team-Schlüssel (einmal eingeben, der
+  // Browser merkt ihn sich). Lesen bleibt frei – es fliessen keine Personendaten.
+  function teamSchluessel(){
+    var s = '';
+    try { s = localStorage.getItem('sommer26_schluessel') || ''; } catch(e){}
+    if(!s){
+      s = window.prompt('Team-Schlüssel (einmalig – für Anlegen und Löschen im Register):') || '';
+      s = s.trim();
+      if(s){ try { localStorage.setItem('sommer26_schluessel', s); } catch(e){} }
+    }
+    return s;
+  }
+  function schluesselVerwerfen(){
+    try { localStorage.removeItem('sommer26_schluessel'); } catch(e){}
+  }
+
   el('regBtn').addEventListener('click', function(){
     if(!current){ say('Erst Quelle und Medium wählen.', true); return; }
     var code = slugCode(el('slug').value) || neuerKurzname();
     el('slug').value = code;
     if(usedCodes[code]){ say('Kurzname „' + code + '“ ist schon vergeben – bitte ein anderes Tier.', true); return; }
-    var row = {
-      kampagne: CAMPAIGN, utm_source: current.src, utm_medium: current.med, utm_campaign: CAMPAIGN,
-      utm_content: current.con || null, landing: current.angebot, sprache: current.sprache, url: current.url,
-      code: code, rolle: el('rolle').value, ersteller: slug(el('ersteller').value) || null
-    };
-    fetch(SB + '/rest/v1/sommer2026_links', {
+    var s = teamSchluessel();
+    if(!s){ say('Ohne Team-Schlüssel kein Eintrag.', true); return; }
+    fetch(SB + '/rest/v1/rpc/sommer2026_link_anlegen', {
       method:'POST',
-      headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY, 'Prefer':'return=minimal' },
-      body: JSON.stringify(row)
-    }).then(function(r){
-      if(r.status === 201){ say('Im Register gespeichert.'); zeigeKurzlink(code); loadRegister(); }
-      else if(r.status === 409){ say('Kurzname oder Link schon vergeben – bitte ein anderes Tier.', true); }
-      else { say('Register nicht erreichbar (' + r.status + ').', true); }
-    }).catch(function(){ say('Register nicht erreichbar.', true); });
+      headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({
+        p_schluessel: s, p_source: current.src, p_medium: current.med,
+        p_content: current.con || null, p_landing: current.angebot, p_sprache: current.sprache,
+        p_url: current.url, p_code: code, p_rolle: el('rolle').value,
+        p_ersteller: slug(el('ersteller').value) || null
+      })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(ergebnis){
+        if(ergebnis === 'ok'){ say('Im Register gespeichert.'); zeigeKurzlink(code); loadRegister(); }
+        else if(ergebnis === 'vergeben'){ say('Kurzname oder Link schon vergeben – bitte ein anderes Tier.', true); }
+        else if(ergebnis === 'schluessel'){ schluesselVerwerfen(); say('Team-Schlüssel stimmt nicht – beim nächsten Versuch neu eingeben.', true); }
+        else { say('Eintrag unvollständig – Quelle, Medium und Link prüfen.', true); }
+      })
+      .catch(function(){ say('Register nicht erreichbar.', true); });
   });
 
   function loescheLink(url){
     if(!window.confirm('Diesen Link wirklich aus dem Register löschen?')) return;
+    var s = teamSchluessel();
+    if(!s){ say('Ohne Team-Schlüssel kein Löschen.', true); return; }
     fetch(SB + '/rest/v1/rpc/sommer2026_link_loeschen', {
       method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
-      body: JSON.stringify({ p_url: url })
-    }).then(function(r){ if(r.ok){ say('Link gelöscht.'); loadRegister(); } else { say('Löschen nicht möglich (' + r.status + ').', true); } })
+      body: JSON.stringify({ p_url: url, p_schluessel: s })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(ergebnis){
+        if(ergebnis === 'ok'){ say('Link gelöscht.'); loadRegister(); }
+        else if(ergebnis === 'schluessel'){ schluesselVerwerfen(); say('Team-Schlüssel stimmt nicht – beim nächsten Versuch neu eingeben.', true); }
+        else { say('Löschen nicht möglich.', true); }
+      })
       .catch(function(){ say('Löschen nicht erreichbar.', true); });
   }
 
