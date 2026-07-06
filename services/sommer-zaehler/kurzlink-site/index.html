@@ -1,0 +1,78 @@
+<!doctype html>
+<!-- =============================================================================
+     tools.goetheanum.ch · Startseite der Kurzlink-Bruecke
+     -----------------------------------------------------------------------------
+     Diese Domain macht lange UTM-Links kurz und vertrauenswuerdig:
+     tools.goetheanum.ch/s/<tier> → 302 auf die volle Kampagnen-URL.
+     Gebaut wird ein Kurzlink im Generator (im Werkzeug-Hub), verfolgt wird die
+     Wirkung im Aktions-Cockpit. Diese Seite verweist nur dorthin – sie haelt
+     keine eigene Logik, damit es eine Quelle der Wahrheit gibt.
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kurzlinks · Goetheanum</title>
+<meta name="description" content="tools.goetheanum.ch verkuerzt lange UTM-Links zu kurzen, vertrauenswuerdigen Adressen fuer die Sommer-Aktion." />
+<link rel="icon" type="image/svg+xml" href="https://werkzeuge.goetheanum.ch/assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/tokens.css" />
+<link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/base.css" />
+<style>
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s7)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);line-height:1.05;letter-spacing:-.01em;max-width:16ch}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:56ch}
+  .beispiel{margin-top:var(--s6);font-family:var(--font-text);font-size:var(--t-body);display:flex;gap:var(--s3);align-items:baseline;flex-wrap:wrap}
+  .beispiel .kurz{color:var(--accent);font-weight:var(--w-deutlich)}
+  .beispiel .pfeil{color:var(--muted)}
+  .wege{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:var(--s6)}
+  .wege .card h3{font-size:var(--t-h3);margin-bottom:var(--s2)}
+  .wege .card p{color:var(--muted);line-height:1.55;margin-bottom:var(--s4)}
+</style>
+</head>
+<body>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Goetheanum · Sommer-Aktion 2026</span>
+    <h1>Kurze Adressen für lange Links</h1>
+    <p class="lede">Diese Domain macht aus einem langen UTM-Link eine kurze,
+      merkbare Adresse. Sie steht in Bio, Inserat oder auf Papier — und führt
+      unverändert auf die richtige Landingpage mit allen Kampagnen-Merkmalen.</p>
+    <p class="beispiel">
+      <span class="kurz">tools.goetheanum.ch/s/otter</span>
+      <span class="pfeil">→</span>
+      <span>global-sommer2026.goetheanum.online?utm_source=…</span>
+    </p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Zwei Wege</h2>
+      <p>Kurzlinks entstehen im Generator und wirken sofort. Die Wirkung liest das Cockpit.</p>
+    </div>
+    <div class="wege">
+      <div class="card soft">
+        <h3>Kurzlink anlegen</h3>
+        <p>Ziel und Kampagnen-Merkmale eintragen, Kurznamen wählen — fertig ist die kurze Adresse samt QR-Code.</p>
+        <a class="btn primary" href="https://werkzeuge.goetheanum.ch/apps/utm-generator/">Zum Generator</a>
+      </div>
+      <div class="card soft">
+        <h3>Wirkung verfolgen</h3>
+        <p>Anmeldungen je Kanal, Motiv und Kurzlink — live im Team-Cockpit der Sommer-Aktion.</p>
+        <a class="btn" href="https://werkzeuge.goetheanum.ch/apps/sommer-zaehler/">Zum Cockpit</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Kurzlinks</span>
+    <span><a href="https://werkzeuge.goetheanum.ch/">Werkzeuge</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
