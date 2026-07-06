@@ -233,6 +233,26 @@
             <a href="#anleitung">↓ So wird daraus eine Signatur</a>.
           </div>
 
+          <details class="code-details" id="carryover">
+            <summary>Design kommt nicht mit?</summary>
+            <div class="hint">
+              Kommt beim Empfänger nur nackter Text an, liegt es fast immer an einer dieser drei
+              Stellen – der Reihe nach prüfen:
+              <ul>
+                <li><strong>Formatierung beim Einfügen behalten.</strong> Normal einfügen mit
+                  <code>Strg</code>/<code>Cmd&nbsp;+&nbsp;V</code> – <em>nicht</em>
+                  <code>Umschalt&nbsp;+&nbsp;Cmd&nbsp;+&nbsp;V</code> und kein ‹Als Text einfügen›.
+                  Ohne Formatierung kommen nur die Wörter, ohne Farben und Aufbau.</li>
+                <li><strong>Apple Mail.</strong> In den Signatur-Einstellungen das Häkchen
+                  ‹Standardschriftart immer verwenden› <em>entfernen</em> – sonst überschreibt Mail
+                  die Signatur mit der Standardschrift und das Design geht verloren.</li>
+                <li><strong>Klassisches Outlook (Windows).</strong> Verliert das Einfügen die
+                  Formatierung, stattdessen ‹.htm laden› und die Datei in den Signaturordner legen
+                  (<a href="#anleitung">Schritt für Schritt</a>).</li>
+              </ul>
+            </div>
+          </details>
+
           <details class="code-details">
             <summary>HTML-Code anzeigen</summary>
             <div class="code-wrap">
@@ -562,17 +582,36 @@ function flash(btn, label) {
   setTimeout(() => { btn.textContent = old; btn.classList.remove("ok"); }, 1400);
 }
 
+// Rückfall ohne ClipboardItem: die gerenderte Vorschau als Auswahl kopieren. Der Browser
+// serialisiert die Auswahl mitsamt Inline-Stilen als text/html – das Design bleibt erhalten
+// (anders als beim blossen HTML-Quelltext). Nur im direkten Klick zuverlässig (Nutzergeste).
+function copyRenderedRich() {
+  const node = document.getElementById("sigPreview");
+  const r = document.createRange();
+  r.selectNodeContents(node);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(r);
+  let done = false;
+  try { done = document.execCommand("copy"); } catch (e) {}
+  sel.removeAllRanges();
+  return done;
+}
+
 document.getElementById("copyRich").addEventListener("click", function () {
   const html = buildSignature();
+  const ok = () => { flash(this, "Kopiert ✓"); track("copy", { variant: state.variant }); };
   if (navigator.clipboard && window.ClipboardItem) {
     const item = new ClipboardItem({
       "text/html": new Blob([html], { type: "text/html" }),
       "text/plain": new Blob([document.getElementById("sigPreview").innerText], { type: "text/plain" })
     });
     navigator.clipboard.write([item]).then(
-      () => { flash(this, "Kopiert ✓"); track("copy", { variant: state.variant }); },
-      () => flash(this, "Bitte HTML-Code nutzen")
+      ok,
+      () => { if (copyRenderedRich()) ok(); else flash(this, "Bitte HTML-Code nutzen"); }
     );
+  } else if (copyRenderedRich()) {
+    ok();
   } else {
     flash(this, "Bitte HTML-Code nutzen");
   }
