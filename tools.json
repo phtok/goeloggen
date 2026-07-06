@@ -170,6 +170,16 @@
       "desc": "Mockup zur Vorbereitung der Goetheanum-TV-Umbenennung – kein öffentliches Werkzeug, eigene Welt."
     },
     {
+      "slug": "perspektiven",
+      "cat": "schau",
+      "status": "beta",
+      "tag": "Webfamilie",
+      "title": "Perspektiven (Webfamilie)",
+      "href": "design-system/#perspektiven",
+      "desc": "Vier Testseiten zeigen, wie das Design-System goetheanum.ch, dasgoetheanum.com, goetheanum.tv und anthroposophie.org verändern würde – Nachbau, gerechneter Befund, Einbau-Weg.",
+      "such": "Perspektiven Webfamilie Testseiten goetheanum.ch dasgoetheanum goetheanum.tv anthroposophie Befund"
+    },
+    {
       "slug": "karten",
       "cat": "vorbereitung",
       "status": "entwurf",
