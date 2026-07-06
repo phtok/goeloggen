@@ -28,8 +28,10 @@
   .site-head .mainnav a:hover{color:var(--gold-ink)}
 
   .hero{padding-block:clamp(36px,6vw,64px) var(--s4)}
+  @media(min-width:760px){.hero{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) !important}}
   .rubrik{display:grid;gap:var(--s3);max-width:820px}
   .heft{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--s4);margin-top:var(--s3)}
+  .heft .thumb{aspect-ratio:3/4 !important}
 </style>
 </head>
 <body>
@@ -56,12 +58,21 @@
 
 <main class="wrap" id="top">
 
-  <section class="hero">
-    <span class="kicker">Nachrichtenblatt der Allgemeinen Anthroposophischen Gesellschaft</span>
-    <h1>Anthroposophie weltweit</h1>
-    <p class="lede">Was Mitglieder und Freunde der anthroposophischen Bewegung
-      auf allen Kontinenten arbeiten — in vier Sprachen, monatlich als Heft
-      und fortlaufend hier.</p>
+  <section class="hero" style="display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s6);align-items:center">
+    <!-- Bilder: site-eigenes CDN (static.goetheanum.ch) – echte Heft-Cover -->
+    <div>
+      <span class="kicker">Nachrichtenblatt der Allgemeinen Anthroposophischen Gesellschaft</span>
+      <h1>Anthroposophie weltweit</h1>
+      <p class="lede">Was Mitglieder und Freunde der anthroposophischen Bewegung
+        auf allen Kontinenten arbeiten — in vier Sprachen, monatlich als Heft
+        und fortlaufend hier.</p>
+      <a class="btn primary" href="#heft" style="margin-top:var(--s4)">Aktuelle Ausgabe lesen</a>
+    </div>
+    <a href="#heft" style="justify-self:center" aria-label="Aktuelle Ausgabe Nr. 7–8/2026">
+      <img src="https://static.goetheanum.ch/assets/archiv/Weltweit/_600x800_crop_center-center_75_none/AWD2026_7-8_Cover.jpg"
+           alt="Cover der Ausgabe Nr. 7–8/2026 von Anthroposophie Weltweit" loading="eager"
+           style="display:block;max-width:min(300px,100%);border-radius:var(--r-card);border:1px solid var(--line);box-shadow:var(--shadow-card)" />
+    </a>
   </section>
 
   <section id="gesellschaft">
@@ -99,12 +110,12 @@
   <section id="heft">
     <div class="shead"><h2>Das Heft</h2><p>PDF-Archiv der aktuellen Ausgaben.</p></div>
     <div class="heft">
-      <a class="teaser stack" href="#heft"><span class="thumb" aria-hidden="true" style="background:var(--gold)"></span>
+      <a class="teaser stack" href="#heft"><span class="thumb" aria-hidden="true"><img src="https://static.goetheanum.ch/assets/archiv/Weltweit/_600x800_crop_center-center_75_none/AWD2026_7-8_Cover.jpg" alt="" loading="lazy" /></span>
         <span><span class="kick">Aktuelle Ausgabe</span><h3>Nr. 7–8/2026</h3>
         <p class="ex">Als PDF lesen oder das Heft bestellen.</p></span></a>
-      <a class="teaser stack" href="#heft"><span class="thumb" aria-hidden="true" style="background:var(--soft)"></span>
+      <a class="teaser stack" href="#heft"><span class="thumb" aria-hidden="true"><img src="https://static.goetheanum.ch/assets/archiv/Weltweit/_600x800_crop_center-center_75_none/AWD2026_6_Cover.jpg" alt="" loading="lazy" /></span>
         <span><span class="kick">Archiv</span><h3>Nr. 6/2026</h3></span></a>
-      <a class="teaser stack" href="#heft"><span class="thumb" aria-hidden="true" style="background:var(--soft)"></span>
+      <a class="teaser stack" href="#heft"><span class="thumb" aria-hidden="true"><img src="https://static.goetheanum.ch/assets/archiv/Weltweit/_600x800_crop_center-center_75_none/AWD2026_5_Cover.jpg" alt="" loading="lazy" /></span>
         <span><span class="kick">Archiv</span><h3>Nr. 5/2026</h3></span></a>
     </div>
     <form class="subscribe" onsubmit="return false" style="margin-top:var(--s6)">

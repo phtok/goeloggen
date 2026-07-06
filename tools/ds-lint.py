@@ -181,6 +181,16 @@ def lint_file(path, c):
             findings.append((header_ln,
                              "DS06", "hinweis", "eigene <header>-Kopfzeile ohne nav.js – Fundament-Leiste nutzen"))
 
+    # DS08 – Marke aus dem Generator: das Favicon (Kachel) steht nie als <img>.
+    marke = c.get("marke")
+    if marke:
+        for pat in marke.get("verbotene_muster", []):
+            for m in re.finditer(pat, full, re.I):
+                m_ln = lineno(full, m.start())
+                if m_ln not in skip_lines:
+                    findings.append((m_ln, marke["ds_id"], marke.get("schwere", "hinweis"),
+                                     "Favicon-Kachel als <img> – Marke aus dem Logo-Generator nutzen (DS08)"))
+
     # CSS-Kontexte (Blöcke + inline) – ohne <script>
     scriptless = RE_SCRIPT.sub(lambda m: "\n" * m.group(0).count("\n"), full)
     canon = set(c["rollen"]["kanonische_klassen"])
