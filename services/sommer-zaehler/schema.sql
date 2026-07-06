@@ -183,9 +183,8 @@ create unique index if not exists sommer2026_links_url_uk  on public.sommer2026_
 create unique index if not exists sommer2026_links_code_uk on public.sommer2026_links (code);
 alter table public.sommer2026_links enable row level security;
 revoke all on table public.sommer2026_links from anon, authenticated;
-grant insert on table public.sommer2026_links to anon, authenticated;
-create policy sommer2026_links_insert on public.sommer2026_links
-  for insert to anon, authenticated with check (kampagne = 'summer26_trial');
+-- Schreiben NUR über die Schlüssel-RPCs unten (Migration
+-- «sommer2026_links_schreibschutz») – kein offenes anon-INSERT mehr.
 
 -- Soll/Ist: je registriertem Link die Zahl der Anmeldungen über genau dieses UTM-Tupel
 create or replace function public.sommer2026_links_public()
@@ -208,13 +207,62 @@ grant execute on function public.sommer2026_links_public() to anon, authenticate
 -- Kurzlink-Weiterleitung: Edge Function `go` liest sommer2026_links.code (Service-Role)
 -- und leitet per 302 auf die volle UTM-URL. Siehe go/index.ts.
 
--- Kontrolliertes Löschen eines registrierten Links (nur über RPC, per URL) –
--- kein offenes DELETE für anon; begrenzt auf die Aktion.
-create or replace function public.sommer2026_link_loeschen(p_url text)
-returns void language sql security definer set search_path to 'public' as $$
-  delete from public.sommer2026_links where url = p_url and kampagne = 'summer26_trial';
+-- Schreibschutz (Migration «sommer2026_links_schreibschutz»): Anlegen und
+-- Löschen verlangen den Team-Schlüssel. Sein SHA-256-Hash liegt in
+-- sommer2026_config unter «links_schluessel_hash» (Präfix 'goe-links:');
+-- Schlüsselwechsel = diese eine Config-Zeile neu setzen.
+create or replace function public.sommer2026_links_schluessel_ok(p_schluessel text)
+returns boolean language sql security definer set search_path to 'public' as $$
+  select exists (
+    select 1 from public.sommer2026_config
+     where key = 'links_schluessel_hash'
+       and value = encode(extensions.digest('goe-links:' || coalesce(p_schluessel, ''), 'sha256'), 'hex')
+  );
 $$;
-grant execute on function public.sommer2026_link_loeschen(text) to anon, authenticated;
+revoke execute on function public.sommer2026_links_schluessel_ok(text) from public, anon, authenticated;
+
+-- Anlegen nur per RPC: prüft Schlüssel, meldet 'ok' | 'schluessel' |
+-- 'vergeben' (unique) | 'unvollstaendig' als Text an den Generator.
+create or replace function public.sommer2026_link_anlegen(
+  p_schluessel text, p_source text, p_medium text, p_content text,
+  p_landing text, p_sprache text, p_url text, p_code text,
+  p_rolle text, p_ersteller text)
+returns text language plpgsql security definer set search_path to 'public' as $$
+begin
+  if not public.sommer2026_links_schluessel_ok(p_schluessel) then
+    return 'schluessel';
+  end if;
+  if coalesce(p_source, '') = '' or coalesce(p_medium, '') = '' or coalesce(p_url, '') = '' then
+    return 'unvollstaendig';
+  end if;
+  begin
+    insert into public.sommer2026_links
+      (kampagne, utm_source, utm_medium, utm_campaign, utm_content,
+       landing, sprache, url, code, rolle, ersteller)
+    values
+      ('summer26_trial', p_source, p_medium, 'summer26_trial', nullif(p_content, ''),
+       nullif(p_landing, ''), nullif(p_sprache, ''), p_url, nullif(p_code, ''),
+       nullif(p_rolle, ''), nullif(p_ersteller, ''));
+  exception when unique_violation then
+    return 'vergeben';
+  end;
+  return 'ok';
+end;
+$$;
+grant execute on function public.sommer2026_link_anlegen(text, text, text, text, text, text, text, text, text, text) to anon, authenticated;
+
+-- Kontrolliertes Löschen (per URL), ebenfalls nur mit Schlüssel.
+create or replace function public.sommer2026_link_loeschen(p_url text, p_schluessel text)
+returns text language plpgsql security definer set search_path to 'public' as $$
+begin
+  if not public.sommer2026_links_schluessel_ok(p_schluessel) then
+    return 'schluessel';
+  end if;
+  delete from public.sommer2026_links where url = p_url and kampagne = 'summer26_trial';
+  return 'ok';
+end;
+$$;
+grant execute on function public.sommer2026_link_loeschen(text, text) to anon, authenticated;
 
 -- =============================================================================
 -- Ingestion (Webhooks) – siehe ingest-uscreen/index.ts
@@ -243,6 +291,8 @@ revoke all on table public.sommer2026_config from anon, authenticated;
 -- Schlüssel in sommer2026_config:
 --   webhook_secret : Secret für ?key= der Ingestion-Functions
 --   hash_salt      : Salt für den E-Mail-Hash (Entdopplung)
+--   links_schluessel_hash : SHA-256 des Team-Schlüssels (Präfix 'goe-links:')
+--                    fürs Link-Register (Anlegen/Löschen)
 --   aktion_aktiv   : 'true' = zählen, sonst nur loggen
 --   aktion_start   : Zeitgrenze (Anmeldungen davor zählen nicht), z. B.
 --                    '2026-07-03T12:00:00+02:00'

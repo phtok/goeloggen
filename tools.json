@@ -4,7 +4,8 @@
     "live": "Im Einsatz, gepflegt",
     "beta": "Nutzbar, in Überarbeitung",
     "entwurf": "Grober Entwurf",
-    "geparkt": "Konzept, später"
+    "geparkt": "Konzept, später",
+    "intern": "Nur im Backstage-Modus gelistet – Direktlink funktioniert"
   },
   "categories": [
     {
@@ -332,7 +333,7 @@
     {
       "slug": "sommer-zaehler",
       "cat": "statistik",
-      "status": "beta",
+      "status": "intern",
       "tag": "Aktion",
       "title": "Sommer-Zähler 2026",
       "short": "Sommer-Zähler",
@@ -343,24 +344,13 @@
     {
       "slug": "utm-generator",
       "cat": "statistik",
-      "status": "beta",
+      "status": "intern",
       "tag": "Aktion",
       "title": "UTM-Link-Generator",
       "short": "UTM-Generator",
       "href": "apps/utm-generator/",
       "desc": "Saubere, konventionskonforme Anmelde-Links der Sommer-Aktion bauen – mit QR und Link-Register, damit das Cockpit auch Links mit null Abschlüssen zeigt.",
       "such": "UTM Link Generator Kampagne Attribution Tracking QR Quelle Medium Content Sommer Aktion"
-    },
-    {
-      "slug": "kurzlinks",
-      "cat": "statistik",
-      "status": "beta",
-      "tag": "Aktion",
-      "title": "Kurzlinks",
-      "short": "Kurzlinks",
-      "href": "https://tools.goetheanum.ch/",
-      "desc": "Kurze, vertrauenswürdige Adressen für lange UTM-Links: tools.goetheanum.ch/s/‹tier› leitet auf die volle Kampagnen-URL. Für Bio, Inserat und Papier.",
-      "such": "Kurzlink Shortlink URL Weiterleitung tools.goetheanum.ch UTM Sommer Aktion Instagram Bio QR abtippen"
     },
     {
       "slug": "campus-karten",
