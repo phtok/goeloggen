@@ -34,6 +34,7 @@
   .grid .span2{grid-column:1 / -1}
   .field .hint{margin-top:6px}
   .backlink{margin-top:var(--s4);font-family:var(--font-text);font-size:var(--t-small)}
+  .kurzrow{display:flex;gap:var(--s2);align-items:stretch} .kurzrow input{flex:1}
 
   .out{margin-top:var(--s6);display:grid;grid-template-columns:1fr auto;gap:var(--s4);align-items:start}
   .urlbox{font-family:var(--font-mono,var(--font-text));font-size:var(--t-small);color:var(--ink);
@@ -156,6 +157,15 @@
           <span class="lab">Kürzel Erstellerin (optional)</span>
           <input id="ersteller" placeholder="z. B. pt" autocomplete="off" maxlength="24" />
         </label>
+
+        <label class="field span2">
+          <span class="lab">Kurzname · tools.goetheanum.ch/s/…</span>
+          <span class="kurzrow">
+            <input id="slug" autocomplete="off" maxlength="24" placeholder="otter" />
+            <button class="btn ghost" type="button" id="slugNew">anderes Tier</button>
+          </span>
+          <span class="hint">Zweisilbiger Tiername – merkbar und leicht abzutippen (z. B. in einer Instagram-Bio).</span>
+        </label>
       </div>
 
       <div class="out">
@@ -208,15 +218,32 @@
   var SB  = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
   var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
   var CAMPAIGN = 'summer26_trial';
-  var SHORTBASE = SB + '/functions/v1/go/';   // Kurzlink-Weiterleitung: SHORTBASE + code
+  var SHORTBASE = 'https://tools.goetheanum.ch/s/';   // Kurzlink: SHORTBASE + kurzname
 
   function el(id){ return document.getElementById(id); }
 
-  // Deterministischer Kurzcode aus der URL (FNV-1a → base36). Gleiche URL → gleicher Code.
-  function shortCode(str){
-    var h = 0x811c9dc5;
-    for(var i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
-    return (h >>> 0).toString(36).padStart(7, '0').slice(0, 7);
+  // Kurznamen sind zweisilbige Tiernamen – vertrauenswürdig, merkbar, tippbar
+  // (wichtig auf Instagram, wo Links in Bio/Caption abgetippt werden müssen).
+  var TIERE = ['otter','biber','reiher','marder','hummel','igel','wiesel','robbe','falke','taube',
+    'amsel','meise','schwalbe','moewe','hase','esel','ziege','katze','eule','kraehe','elster','wachtel',
+    'adler','unke','uhu','kranich','dohle','drossel','gecko','koala','panda','puma','tiger','zebra',
+    'kroete','spinne','schnecke','delfin','kamel','lama','luchs','dachs','fuchs','specht','fink','star'];
+  var usedCodes = {};   // aus dem Register gefüllt, damit kein Tier doppelt vorgeschlagen wird
+
+  // Slug säubern: klein, Umlaute auflösen, nur [a-z0-9-].
+  function slugCode(s){
+    return (s || '').toLowerCase()
+      .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+      .replace(/[^a-z0-9-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  }
+
+  // Freies (nicht vergebenes) Tier vorschlagen; sonst mit -2, -3 … anhängen.
+  function neuerKurzname(){
+    var frei = TIERE.filter(function(t){ return !usedCodes[t]; });
+    if(frei.length){ return frei[Math.floor((Date.now() >> 4) % frei.length)]; }
+    var t = TIERE[Math.floor((Date.now() >> 4) % TIERE.length)];
+    for(var i = 2; usedCodes[t + '-' + i]; i++){ /* nächste freie Nummer */ }
+    return t + '-' + i;
   }
 
   // Die sechs echten Landingpages: Angebot × Sprache (aus der universellen LP recherchiert).
@@ -327,9 +354,13 @@
     };
   }
 
+  el('slugNew').addEventListener('click', function(){ el('slug').value = neuerKurzname(); });
+
   el('regBtn').addEventListener('click', function(){
     if(!current){ say('Erst Quelle und Medium wählen.', true); return; }
-    var code = shortCode(current.url);
+    var code = slugCode(el('slug').value) || neuerKurzname();
+    el('slug').value = code;
+    if(usedCodes[code]){ say('Kurzname „' + code + '“ ist schon vergeben – bitte ein anderes Tier.', true); return; }
     var row = {
       kampagne: CAMPAIGN, utm_source: current.src, utm_medium: current.med, utm_campaign: CAMPAIGN,
       utm_content: current.con || null, landing: current.angebot, sprache: current.sprache, url: current.url,
@@ -341,7 +372,7 @@
       body: JSON.stringify(row)
     }).then(function(r){
       if(r.status === 201){ say('Im Register gespeichert.'); zeigeKurzlink(code); loadRegister(); }
-      else if(r.status === 409){ say('Dieser Link ist schon registriert.'); zeigeKurzlink(code); }
+      else if(r.status === 409){ say('Kurzname oder Link schon vergeben – bitte ein anderes Tier.', true); }
       else { say('Register nicht erreichbar (' + r.status + ').', true); }
     }).catch(function(){ say('Register nicht erreichbar.', true); });
   });
@@ -361,6 +392,8 @@
     }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(rows){
         var body = el('regBody'); body.innerHTML = '';
+        usedCodes = {}; (rows || []).forEach(function(x){ if(x.code) usedCodes[x.code] = true; });
+        if(!el('slug').value || usedCodes[slugCode(el('slug').value)]) el('slug').value = neuerKurzname();
         if(!rows || !rows.length){ body.innerHTML = '<tr><td class="empty" colspan="5">Noch keine Links registriert.</td></tr>'; return; }
         rows.forEach(function(x){
           var tr = document.createElement('tr');
@@ -392,6 +425,7 @@
       .catch(function(){ el('regBody').innerHTML = '<tr><td class="empty" colspan="5">Register nicht ladbar.</td></tr>'; });
   }
 
+  el('slug').value = neuerKurzname();
   render();
   loadRegister();
 </script>
