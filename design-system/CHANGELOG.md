@@ -16,6 +16,26 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.5.0] – 2026-07-06
+
+### Bild-Ebene + Logo-Disziplin (DS08)
+- **Was:** Neue Rollen für Fotografie in `base.css` — `hero-bild` (Bild-Hero,
+  Text nur auf dem theme-festen dunklen Schleier, Kontrast gerechnet),
+  Bild-Träger in `teaser .thumb`, `event .thumb` und `poster` (object-fit,
+  Fläche `--soft` als Rückfall). Dazu `brand .lockup` (erzeugtes Logo) und
+  zwei neue Marken-Assets aus der Logo-Engine: `assets/logos/goetheanum-logo.svg`
+  (das offizielle Logo) und `goetheanum-marke.svg` (blanke Marke). Neue Regel
+  **DS08**: Die Marke kommt aus dem Logo-Generator — das Favicon
+  (`goetheanum-mark-blue.svg`, Kachel) steht nie als `<img>`; `ds-lint` prüft das.
+- **Warum:** Auftraggeber-Befund — die Nachbauten waren bildlos und ohne Heros
+  (<q>zu viel System-Indiz, wenig Gestaltung</q>), und Seitenköpfe erfanden
+  Marken-Lockups (Favicon-Kachel + Text) statt den Logo-Generator zu nutzen.
+- **Wirkung:** Die vier Perspektivseiten tragen die echten Motive ihrer
+  Startseiten (site-eigene CDNs: Hero, Veranstaltungs-, Artikel- und
+  Poster-Bilder, Heft-Cover); goetheanum.ch-Nachbau und interner Hub führen
+  das erzeugte Logo/Lockup. `contract.json` → Version 1.5.0, Rolle
+  `hero-bild` + Regel DS08 ergänzt.
+
 ## [1.4.0] – 2026-07-06
 
 ### Perspektiven als Vollnachbauten + schwebende Leiste
