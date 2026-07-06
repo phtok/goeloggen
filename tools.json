@@ -386,6 +386,17 @@
       "short": "Logos alt",
       "href": "archive/logo-generator-original_2026-06-27/",
       "desc": "Der ursprüngliche Logo-Generator, eingefroren als Referenz – dunkles UI, externe Schriften, nicht gepflegt."
+    },
+    {
+      "slug": "marketing-maschine",
+      "cat": "statistik",
+      "status": "entwurf",
+      "tag": "Strategie",
+      "title": "Marketing-Maschine",
+      "short": "Marketing-Maschine",
+      "href": "marketing-maschine.html",
+      "desc": "Gesetzte Zusammenfassung des Marketing-Konzepts: Jahresrad, Kennzahlen, die zwei Stimmen und die drei Wachstums-Wege — auf einer Seite. Volltext im Konzeptdokument.",
+      "such": "Marketing Maschine Kampagne Jahresrad Abo Wachstum Wochenschrift goetheanum.tv Leads Strategie Neumeier Newsletter Michaeli"
     }
   ],
   "docs": [
@@ -430,6 +441,12 @@
       "tag": "Aufbau",
       "href": "https://github.com/phtok/goeloggen/blob/main/start/README.md",
       "desc": "Wie das Design-System aufgebaut ist und wächst."
+    },
+    {
+      "title": "Marketing-Maschine — Konzept",
+      "tag": "Strategie",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/marketing-maschine.md",
+      "desc": "Jahreszyklus, Kampagnen, Leads: Konzept der weitgehend automatisierten Marketing-Maschine für die Wochenschrift und goetheanum.tv."
     }
   ]
 }
