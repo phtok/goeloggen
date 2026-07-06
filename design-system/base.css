@@ -402,6 +402,14 @@ img,svg,canvas,video{max-width:100%}
   color:var(--ink);margin-bottom:var(--s2)}
 .ds-footer .fcols a{display:block;padding:3px 0}
 
+/* --- Schwebende Perspektiven-Leiste ------------------------------------------
+   Für Vollnachbauten fremder Startseiten: führt zurück ins System und öffnet
+   das Original in einem neuen Fenster — der einzige Rahmen, den so eine
+   Erlebnis-Seite trägt. Fingerziele ≥44px (B04). */
+.fab{position:fixed;right:var(--s4);bottom:var(--s4);z-index:70;
+  display:flex;flex-direction:column;gap:var(--s2);align-items:flex-end}
+.fab .btn{box-shadow:var(--shadow-card);min-height:var(--tap)}
+
 /* --- Gegenüberstellung (Perspektiven: heute ↔ mit dem System) ----------------
    Zwei Fenster auf dieselbe Startseite. Das Ist-Fenster (.mock.ist) zeigt den
    heutigen Zustand als Artefakt — fremde Schriften/Farben dort sind Abbild,

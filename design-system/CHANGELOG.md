@@ -16,6 +16,24 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.4.0] – 2026-07-06
+
+### Perspektiven als Vollnachbauten + schwebende Leiste
+- **Was:** Neue Rolle `fab` in `base.css` — schwebende Leiste unten rechts
+  (zurück ins System · Original in neuem Fenster, Fingerziele ≥44px).
+  Die vier Perspektivseiten sind jetzt **vollständige Nachbauten der echten
+  Startseiten** (Inhalte von goetheanum.ch, dasgoetheanum.com, goetheanum.tv,
+  anthroposophie.org, Stand 6. Juli 2026): ganze Webseite mit Kopfzeile,
+  Aufmacher, Rubriken/Kalender/Katalog und Fusszeile — ausschliesslich aus
+  Fundament-Rollen gesetzt.
+- **Warum:** Auftraggeber-Entscheid — keine Beispiele, keine Reduktionen,
+  keine erfundenen Inhalte: ein Erlebnis-Eindruck, wie die Seite mit dem
+  System durchgearbeitet aussähe; das Original ist einen Klick daneben.
+- **Wirkung:** `perspektiven/*.html` sind Erlebnis-Seiten ohne Hub-Rahmen
+  (Nachbau-Kopfzeile je Seite mit `# ds-ok` ratifiziert). Die
+  Gegenüberstellungs-Rollen `mockpair`/`mock` (1.3.0) bleiben im Fundament
+  verfügbar. `contract.json` → Version 1.4.0, Rolle `fab` ergänzt.
+
 ## [1.3.0] – 2026-07-06
 
 ### Gegenüberstellung «heute ↔ mit dem System» (aus den Perspektivseiten aufgenommen)
