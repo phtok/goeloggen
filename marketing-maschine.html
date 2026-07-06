@@ -1,0 +1,186 @@
+<!doctype html>
+<!-- =============================================================================
+     Marketing-Maschine · gesetzte Zusammenfassung (Einseiter)
+     Volltext: docs/marketing-maschine.md
+     Gebaut aus design-system/starter.html – nur Tokens + base.css (DS01–DS07).
+     Regel-IDs: Kicker normal statt versal (G05); Betonung = Laut (G01/G05);
+     Zahlen tabellarisch in Tabellen (G25); Weiss auf Farbe (B01); Grössen ≥ B03.
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Marketing-Maschine · Goetheanum</title>
+<meta name="description" content="Jahreszyklus, Kampagnen, Leads: die weitgehend automatisierte Marketing-Maschine für die Wochenschrift und goetheanum.tv – auf einer Seite." />
+<link rel="icon" type="image/svg+xml" href="https://phtok.github.io/goeloggen/assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/tokens.css" />
+<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/base.css" />
+<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/nav.css" />
+
+<style>
+  /* Nur seiteneigene Feinheiten – alles Gemeinsame steht in base.css. Tokens statt Werte. */
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);line-height:1.05;letter-spacing:-.01em;max-width:20ch}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:60ch}
+
+  /* Zwei-Stimmen-Karten */
+  .duo{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin-top:var(--s5)}
+
+  /* Kennzahlen-Reihe */
+  .zahlen{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-top:var(--s5)}
+  .zahl .readout{font-family:var(--font-text);font-weight:var(--w-deutlich);font-size:clamp(24px,4vw,34px);line-height:1.05}
+  .zahl .cap{margin-top:var(--s2)}
+
+  /* Jahresrad-Tabelle: scrollbar auf schmalen Schirmen, nie Seiten-Scroll (WCAG 1.4.10) */
+  .rad-scroll{overflow-x:auto;margin-top:var(--s5)}
+  table.rad{border-collapse:collapse;width:100%;min-width:560px}
+  table.rad th,table.rad td{text-align:left;padding:var(--s2) var(--s3);border-bottom:1px solid var(--line)}
+  table.rad th{font-family:var(--font-text);font-weight:var(--w-deutlich);font-size:var(--t-small)}
+</style>
+</head>
+<body>
+
+<script src="https://phtok.github.io/goeloggen/design-system/nav.js"
+        data-root="https://phtok.github.io/goeloggen/"
+        data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Strategie · Wochenschrift & goetheanum.tv</span>
+    <h1>Die Marketing-Maschine</h1>
+    <p class="lede">Aus der einmaligen Sommer-Aktion wird ein Jahresrad, aus dem
+      Cockpit ein Regelkreis. Kampagnen im Jahreslauf, Leads in Strecken, jede
+      Ausgabe mit Wirkungsnachweis — ohne Produktänderung, zuerst ohne Geld.</p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Der Kern in einem Satz</h2>
+      <p>Es gibt keine Maschine zu bauen — es gibt eine zu verstetigen.</p>
+    </div>
+    <p class="lese">Die Sommer-Aktion 2026 ist bereits die erste Umdrehung:
+      Lead-Erfassung, Attribution je Motiv, die Wirkungskette
+      <strong>Sichtbarkeit → Aktivierung → Wirkung → Bindung</strong>, Kosten je
+      Massnahme, Webhooks live. Dieses Blatt macht daraus ein Jahresrad. Der
+      Volltext mit Quellen liegt im Konzept
+      <q>Die Marketing-Maschine</q> (docs/marketing-maschine.md).</p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Was der Markt hergibt</h2>
+      <p>Nüchterne Anker aus geprüften Primärquellen — der Rahmen für jedes Ziel.</p>
+    </div>
+    <div class="zahlen">
+      <div class="card soft zahl">
+        <div class="readout">903 000</div>
+        <p class="cap">zahlende Mitglieder bei Gaia, dem grössten Nischen-Streamingdienst — die Grössenordnung des Möglichen.</p>
+      </div>
+      <div class="card soft zahl">
+        <div class="readout">≈36 000</div>
+        <p class="cap">Abos der Republik: Beleg, dass werbefreier deutschsprachiger Nischen-Journalismus fünfstellig trägt.</p>
+      </div>
+      <div class="card soft zahl">
+        <div class="readout">13–22 %</div>
+        <p class="cap">Zahlungsbereitschaft für Online-Journalismus (DE–CH) — der harte Konversionsdeckel.</p>
+      </div>
+      <div class="card soft zahl">
+        <div class="readout">3,3 %</div>
+        <p class="cap">monatliche Churn im Schnitt; ein Viertel davon technisch, ohne Inhaltsarbeit rückholbar.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Zwei Stimmen, ein Haus</h2>
+      <p>Getrennt, weil die <q>Jobs</q> verschieden sind — verbunden, weil das Publikum eines ist.</p>
+    </div>
+    <div class="duo">
+      <div class="card soft">
+        <span class="kicker">goetheanum.tv</span>
+        <p class="lese">Der einzige Bewegtbild-Ort, an dem hundert Jahre
+          Geisteswissenschaft <strong>aus der Quelle</strong> sprechen — für
+          Menschen, die der Anthroposophie begegnen, nicht über sie lesen wollen.
+          Wo Achtsamkeits-Apps auf Reduktion setzen, setzt goetheanum.tv auf
+          Fülle und Herkunft.</p>
+      </div>
+      <div class="card soft">
+        <span class="kicker">Wochenschrift</span>
+        <p class="lese">Die einzige Stimme, die das anthroposophische Weltgeschehen
+          <strong>wöchentlich und aus dem Zentrum</strong> verdichtet — kein
+          Archiv, kein Feed, sondern ein verlässlicher Takt. Gegen die
+          Beschleunigung ist die Wöchentlichkeit selbst der Wert.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Das Jahresrad</h2>
+      <p>Ein Evergreen-Sockel, der immer läuft — und vier Kampagnenfenster im Jahreslauf.</p>
+    </div>
+    <div class="rad-scroll">
+      <table class="rad">
+        <thead>
+          <tr><th>Fenster</th><th>Anlass</th><th>Hebel</th><th>Schwerpunkt</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Januar</td><td>Jahresbeginn, Dreikönig</td><td>Neujahrs-Vorsatz (stärkstes Abo-Fenster)</td><td>Newsletter, Win-back</td></tr>
+          <tr><td>April</td><td>Ostern</td><td>Oster-Impuls</td><td>Social, Newsletter</td></tr>
+          <tr><td>Juli–August</td><td>Sommer</td><td>Sommer-Aktion (bestehend: 3 Monate gratis)</td><td>alle Kanäle, Landingpages</td></tr>
+          <tr><td>September</td><td>Michaeli (Kernfest)</td><td>Hauptkampagne, Jahresthema</td><td>alle Kanäle, Live-Event</td></tr>
+          <tr><td>Dezember</td><td>Weihnacht, Heilige Nächte</td><td>Geschenk-Abo (2. starkes Fenster)</td><td>Social, Print-QR</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap" style="margin-top:var(--s3)">Januar und das Geschenkquartal sind
+      marktweit die stärksten Abo-Fenster; Michaeli ist der natürliche Ort der
+      Hauptkampagne. Jedes Fenster ist eine Massnahme im Protokoll.</p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Die drei Wege zum Ziel</h2>
+      <p>Fünfstellig ist erreichbar — der obere Bereich hängt an einer klaren Wette.</p>
+    </div>
+    <div class="rad-scroll">
+      <table class="rad">
+        <thead>
+          <tr><th>Szenario</th><th>Treiber</th><th>Grössenordnung</th><th>Bricht, wenn …</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Konservativ</td><td>Kern + DACH, organisch</td><td>vierstelliger Zuwachs je Jahr</td><td>Newsletter stagniert</td></tr>
+          <tr><td>Plan</td><td>+ Partnernetz, Geschenk, Win-back, Reinvest</td><td>mittlerer fünfstelliger Bereich</td><td>Partner tragen nicht</td></tr>
+          <tr><td>Kühn</td><td>+ englische Schiene, YouTube/SEO</td><td>oberer fünfstelliger Bereich</td><td>EN-Markt bleibt aus</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Würde als Methode</h2>
+      <p>Die Haltung des Hauses ist kein Hindernis — sie ist das Differenzierungsmerkmal.</p>
+    </div>
+    <p class="lese">Gehashte E-Mails, nur Summen verlassen die Datenbank,
+      Einwilligung per Double-Opt-in — <strong>würdige Werbung</strong> gegen die
+      Überwachungs-Werbung des Marktes. Keine falsche Verknappung, keine
+      Kündigungs-Labyrinthe, keine Angst-Rhetorik. Echte Fristen ja, Dark Patterns
+      nein. Und: <em>ohne Geld heisst nicht umsonst</em> — jede organische
+      Massnahme kostet Pflege-Stunden, die wie Geld ins Protokoll gehören.</p>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Hausgrafik</span>
+    <span><a href="https://github.com/phtok/goeloggen/blob/main/docs/marketing-maschine.md">Konzept im Volltext</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
