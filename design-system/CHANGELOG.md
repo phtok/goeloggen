@@ -16,6 +16,22 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.3.0] – 2026-07-06
+
+### Gegenüberstellung «heute ↔ mit dem System» (aus den Perspektivseiten aufgenommen)
+- **Was:** Neue Rollen `mockpair`/`mock` (+ `.ist`/`.soll`, `figcaption`, `.screen`)
+  in `base.css` — zwei Fenster auf dieselbe Startseite, links der heutige Zustand
+  als Artefakt (fremde Schriften/Farben mit `# ds-ok` ratifiziert), rechts derselbe
+  Inhalt aus den Fundament-Rollen.
+- **Warum:** Die Perspektivseiten waren einseitig Befund und Analyse. Ihre Aufgabe
+  ist zu **zeigen**, wie die Seiten aussähen, wenn sie mit dem Design-System
+  durchgearbeitet würden — der direkte Ist↔Könnte-Vergleich je Startseite leistet
+  das; die Befund-Zahlen bleiben als Beleg darunter.
+- **Wirkung:** Alle vier `perspektiven/*.html` beginnen mit der Gegenüberstellung
+  ihrer Startseite. Der Bau-Workflow («So baust du ein neues Werkzeug») zog von der
+  Schauseite in den internen Hub (`start/#bauen`) — die Schauseite zeigt das System,
+  die Werkstatt zeigt das Bauen. `contract.json` → Version 1.3.0, Rollen ergänzt.
+
 ## [1.2.0] – 2026-07-06
 
 ### Webfamilie-Komponenten + Bühne (aus dem Vier-Seiten-Befund aufgenommen)

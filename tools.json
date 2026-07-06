@@ -71,7 +71,7 @@
       "tag": "Fundament",
       "title": "Design-System",
       "href": "design-system/",
-      "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Mit Starter und Bau-Workflow.",
+      "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Der Bau-Workflow steht im internen Hub.",
       "such": "Farben Palette Tokens Hex RGB CMYK Markenfarben Neutrale Komponenten Fundament"
     },
     {
@@ -176,7 +176,7 @@
       "tag": "Webfamilie",
       "title": "Perspektiven (Webfamilie)",
       "href": "design-system/#perspektiven",
-      "desc": "Vier Testseiten zeigen, wie das Design-System goetheanum.ch, dasgoetheanum.com, goetheanum.tv und anthroposophie.org verändern würde – Nachbau, gerechneter Befund, Einbau-Weg.",
+      "desc": "Vier Testseiten zeigen die Startseiten von goetheanum.ch, dasgoetheanum.com, goetheanum.tv und anthroposophie.org heute ↔ mit dem Design-System – dazu Kernstücke und Einbau-Weg.",
       "such": "Perspektiven Webfamilie Testseiten goetheanum.ch dasgoetheanum goetheanum.tv anthroposophie Befund"
     },
     {
