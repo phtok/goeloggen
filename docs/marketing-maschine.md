@@ -43,12 +43,20 @@ Drei-Monats-Moment als Kohorten-Entscheid (`bleibt` / `gekuendigt` /
 laufenden, datensparsamen Messmaschine (nur Summen verlassen die Datenbank,
 E-Mails nur gehasht). Details: `services/sommer-zaehler/README.md`.
 
-**Die heutigen Kanäle** (in §Recherche R1 zu vervollständigen): Websites
+**Die heutigen Kanäle & Preise (R1, erhoben 6. Juli 2026).** Websites
 `dasgoetheanum.com` und `goetheanum.tv`, die Portal-Seite `goetheanum.ch`,
 Redaktions-Newsletter, YouTube (Live-Streams), Instagram/Facebook/LinkedIn,
-Print als eigenes Reichweitenmedium. Die Sommer-Aktion 2026 fährt sechs
-Landingpages auf eigenen Subdomains (`tv-sommer2026.goetheanum.tv`,
-`ws-sommer2026.dasgoetheanum.com`, je DE/EN).
+Print als eigenes Reichweitenmedium. **Preisanker:** WoS-Jahresabo **€80** für
+~42 Ausgaben **[belegt]**; goetheanum.tv wirbt derzeit mit **drei Monaten
+Probezeit** **[belegt]**. **Ein aufschlussreicher Befund:** die Abo-Seite
+`dasgoetheanum.com/subscribe` leitet aktuell **direkt auf die
+Sommer-Aktions-Landingpage** um (`ws-en-sommer2026…`) — der reguläre Weg zum Abo
+führt also mitten durch die Kampagne. Das ist gut fürs Aktionsfenster, aber es
+fehlt der **immer geöffnete** Standard-Abo-Weg (Evergreen, §8) für die 49 Wochen
+ausserhalb des Fensters. Die Sommer-Aktion 2026 fährt sechs Landingpages auf
+eigenen Subdomains (`tv-sommer2026.goetheanum.tv`, `ws-sommer2026.dasgoetheanum.com`,
+je DE/EN). *(YouTube-/Social-Reichweiten waren zum Redaktionszeitpunkt nicht
+belastbar abrufbar — als konkrete Ist-Zahl nachzutragen.)*
 
 ---
 
@@ -59,16 +67,24 @@ gehört an den Anfang, nicht ans Ende — weil sie die ganze Strategie bestimmt.
 
 **Die Fermi-Rechnung, nüchtern.** Drei Ringe:
 
-1. **Kernmilieu** (anthroposophisch gebunden): Mitglieder der Allgemeinen
-   Anthroposophischen Gesellschaft, aktive Zweige, Wochenschrift-Stammleser.
-   Grössenordnung Zehntausende weltweit — aber grösstenteils bereits erreicht
-   oder bewusst nicht abonnierend. Hier liegt **Bindung und Rückgewinnung**,
-   kaum noch Neuwachstum.
-2. **Angrenzende Milieus** (anthroposophisch berührt): Waldorf-Elternschaft
-   weltweit, Demeter-Kundschaft, Weleda-Verwenderinnen, anthroposophische
-   Medizin, Christengemeinschaft. Hunderttausende bis Millionen Menschen mit
-   **latentem** Interesse, die WoS/GTV nicht kennen oder nie einen Anlass zum
-   Probieren hatten. **Hier liegt das realistische Neuwachstum.**
+1. **Kernmilieu** (anthroposophisch gebunden): die Allgemeine Anthroposophische
+   Gesellschaft zählt rund **46 157 Mitglieder** in 35 Landesgesellschaften und
+   39 Gruppen (2013 noch ~52 000) **[belegt, Sekundärquelle]** — dazu aktive
+   Zweige und Wochenschrift-Stammleser. Grössenordnung mittlerer fünfstelliger
+   Bereich weltweit, aber grösstenteils bereits erreicht oder bewusst nicht
+   abonnierend. Hier liegt **Bindung und Rückgewinnung**, kaum Neuwachstum.
+   *Ernüchternd:* das ganze Kernmilieu ist kleiner als die Zielmarke — sie ist
+   allein aus dem Kern **nicht** erreichbar.
+2. **Angrenzende Milieus** (anthroposophisch berührt): **über 1200 Waldorfschulen
+   in ~80 Ländern plus ~1900 Waldorfkindergärten**, allein im europäischen Raum
+   **~190 000 Schülerinnen und Schüler** (ihre Eltern sind der grösste warme
+   Ring) **[belegt]**; die **Weleda**-Gruppe setzte 2024 **€456,2 Mio.** um
+   (zweistelliges Wachstum in Asien/USA) **[belegt]** — ein Millionenpublikum,
+   das anthroposophische Produkte kauft, ohne die Quelle zu kennen; dazu Demeter,
+   anthroposophische Medizin, Christengemeinschaft. **Hunderttausende bis
+   Millionen** Menschen mit **latentem** Interesse, die WoS/GTV nicht kennen.
+   **Hier liegt das realistische Neuwachstum** — und es ist gross genug, die
+   Zielmarke zu tragen.
 3. **Weiter Markt** («spiritually curious», kontemplativ Interessierte,
    englischsprachig): der grösste, aber unschärfste Ring. Nur über die
    **englische Schiene** und über Plattform-Sichtbarkeit (YouTube, SEO)
@@ -309,6 +325,17 @@ verallgemeinert, das **jedes** Kampagnenfenster des Jahresrads aufnimmt. Kein
 Code in diesem Wurf — aber die Datenmodell-Kontinuität ist der Grund, warum die
 Maschine nicht neu gebaut, sondern nur geöffnet werden muss.
 
+**Machbarkeit im vorhandenen Stack — geprüft, nicht vermutet.** Die zentralen
+Strecken sind ohne Zusatzkosten möglich: **Uscreen** hat eine **eingebaute
+Abandoned-Cart-Automation** (drei Mails nach 15 Minuten / +6 Stunden / +24 Stunden,
+Rabatt 10–15 % empfohlen) **[belegt]** und **Coupons** in zwei Formen (fester
+Betrag oder Prozent) mit drei Laufzeiten — **Once / Forever / Repeating** —, womit
+Intro-Rahmung (§12) und Win-back technisch abgedeckt sind **[belegt]**. **Zoho
+Campaigns** unterstützt **Double-Opt-in** (einwilligungsbasiert, §11b) **[belegt]**.
+Was **nicht** belegt geklärt ist: ob eine mehrstufige, verhaltensgetriggerte
+Nurture-Strecke rein in Uscreen/Zoho läuft oder einen separaten ESP braucht — das
+ist die eine offene Vorab-Entscheidung vor Phase 1 (§13).
+
 ---
 
 ## 8. Die Null-Budget-Phase — Organik zuerst
@@ -451,12 +478,13 @@ hochfahren — der Weg in den oberen fünfstelligen Bereich. *Austritt:* Zielmar
 
 ## 13. Offene Entscheidungen
 
-- **E-Mail-Werkzeug (ESP):** Welche Automation trägt die Strecken — Zoho
-  Campaigns (GDPR/Double-Opt-in vorhanden **[plausibel]**), Uscreens eingebaute
-  Automationen, oder ein separater ESP? **Vor Phase 1 zu klären** (§10-Recherche).
-- **Uscreen/Zoho-Machbarkeit:** Welche Trigger/Coupons/Pausen-Angebote der
-  vorhandene Stack **ohne** Zusatzkosten hergibt — das Konzept darf keine
-  Strecke versprechen, die der Stack nicht kann.
+- **E-Mail-Werkzeug (ESP):** Double-Opt-in (Zoho) und Uscreens Abandoned-Cart/
+  Coupons sind belegt vorhanden (§7); **offen bleibt**, ob eine mehrstufige,
+  verhaltensgetriggerte Nurture-Strecke rein im Bestand läuft oder einen
+  separaten ESP braucht. **Vor Phase 1 zu klären.**
+- **Standard-Abo-Weg (Evergreen):** Der reguläre Abo-Link führt derzeit auf die
+  Kampagnen-Landingpage (§1) — braucht es einen immer geöffneten, kampagnen-
+  unabhängigen Abo-Pfad für die Wochen ausserhalb des Fensters?
 - **Englische Priorität:** Wie früh und wie stark die EN-Schiene? (Trägt das kühne
   Szenario.)
 - **Verhältnis zu bestehenden Redaktions-Newslettern:** ein Absender-Haus oder
@@ -486,10 +514,18 @@ bestätigen**.
   recurly.com/research/churn-rate-benchmarks/. **[belegt]**
 - Recurly, Subscriber-Acquisition (Jahresabo-Umsatz, Win-back-Anteil,
   Pausen-Angebot): recurly.com/research/subscriber-acquisition-benchmarks/. **[plausibel, nicht gegengeprüft]**
-- Uscreen-Hilfe (Abandoned-Cart-Automation, Coupon-Typen/-Dauern):
-  help.uscreen.tv/…/4316101, /…/4316098. **[plausibel, nicht gegengeprüft]**
-- Zoho Campaigns (GDPR/Double-Opt-in): zoho.com/campaigns/gdpr/features.html;
-  help.zoho.com/…/manage-double-opt-in. **[plausibel]**
+- Uscreen-Hilfe (Abandoned-Cart 15 Min/+6 h/+24 h; Coupons fest/prozent ×
+  Once/Forever/Repeating): help.uscreen.tv/…/4316101, /…/4316098. **[belegt, Primärdoku, direkt geprüft 6.7.2026]**
+- Zoho Campaigns (Double-Opt-in): help.zoho.com/…/manage-double-opt-in;
+  zoho.com/campaigns/gdpr/features.html. **[belegt, Primärdoku]**
+- Anthroposophische Gesellschaft (46 157 Mitglieder; ~52 000 im Jahr 2013):
+  en.wikipedia.org/wiki/Anthroposophical_Society. **[belegt, Sekundärquelle]**
+- Waldorf-Weltliste (>1200 Schulen/~80 Länder, ~1900 Kindergärten; ~190 000
+  Schüler ECSWE-Raum): freunde-waldorf.de/…/waldorf-world-list; ecswe.eu. **[belegt]**
+- Weleda-Gruppe (€456,2 Mio. Umsatz 2024, +8,3 %): weleda.de (Geschäftsbericht 2024). **[belegt]**
+- Wochenschrift-Jahresabo (€80, ~42 Ausgaben): waldorfshop.eu (Jahresabo);
+  dasgoetheanum.com/subscribe (leitet auf Sommer-Landingpage um). **[belegt, beobachtet 6.7.2026]**
+- goetheanum.tv (drei Monate Probezeit): goetheanum.tv. **[belegt, beobachtet 6.7.2026]**
 - Platformer/Casey Newton (Free→Paid ~5 %): simonowens.substack.com/…. **[anekdotisch]**
 - Morning Brew (Empfehlungsprogramm >30 %): referralcandy.com/blog/morning-brew-referral-program;
   medium.com/the-mission/…. **[plausibel]**
@@ -498,7 +534,12 @@ bestätigen**.
 - Neumeier — *Zag*, *The Brand Gap*, *The Brand Flip* (Onliness/Zag/Tribes):
   Sekundäranwendung wie in `docs/strategie.md`. **[etabliert]**
 
-*Hinweis: Die als **[plausibel]** / **[anekdotisch]** markierten Aussagen wurden
-recherchiert, aber wegen eines abgebrochenen Prüflaufs nicht adversarisch
-gegengeprüft. Vor operativem Einsatz (v. a. Stack-Machbarkeit §10/§13) direkt an
-der Primärquelle verifizieren.*
+*Hinweis zum Prüfstand (nachgeführt 6. Juli 2026): Die zuerst offen gebliebenen
+Punkte sind nachrecherchiert und, wo möglich, an der Primärquelle bestätigt —
+Milieu-Marktgrösse (Waldorf, AAG, Weleda), Stack-Machbarkeit (Uscreen, Zoho),
+Preisanker beider Produkte. Verbleibende **[plausibel]**/**[anekdotisch]**-Marken
+(Recurly Jahresabo/Win-back/Pause, Morning-Brew-Anteil, Sharp-Übertragung,
+Platformer-Konversion) stützen sich auf reputable, aber nicht adversarisch
+gegengeprüfte Quellen — vor operativem Einsatz an der Primärquelle verifizieren.
+Konkret noch zu erheben: aktuelle YouTube-/Social-Ist-Reichweiten und die
+Detailzahlen der Recurly-Retention-Reports.*
