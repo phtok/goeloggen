@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Perspektive: anthroposophie.org im Hausbild</title>
+<meta name="description" content="Testseite der Webfamilie: die Rubrikseite von ‹Anthroposophie Weltweit› mit Teaser-Liste, vier Sprachen und Newsletter – gesetzt mit dem Goetheanum-Design-System." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../design-system/tokens.css" />
+<link rel="stylesheet" href="../design-system/base.css" />
+<link rel="stylesheet" href="../design-system/nav.css" />
+<style>
+  .rubrik{display:grid;gap:var(--s3);max-width:760px}
+  .sprachen{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+  .mehr{display:flex;justify-content:center;margin-top:var(--s6)}
+  .vergleich{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s4)}
+  .vergleich .card p{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.6;margin:0 0 .5em}
+  .vergleich .card p b{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+<script src="../design-system/nav.js" data-root="../"
+        data-onpage="Rubrik:#rubrik|Sprachen &amp; Newsletter:#sprachen|Befund:#befund|Der Weg:#weg"></script>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Perspektive · Webfamilie</span>
+    <h1>anthroposophie.org im Hausbild</h1>
+    <p class="lede">Das Nachrichtenblatt <q>Anthroposophie Weltweit</q> pflegt als
+      Einziges vier vollständige Sprachausgaben — auf einem zwölf Jahre alten
+      Gratis-Template mit Phantom-Schriften und 574 Teasern auf einer Seite.
+      Hier die Rubrikseite, wie das System sie setzt.</p>
+  </section>
+
+  <section id="rubrik">
+    <div class="shead"><h2>Rubrik <q>Gesellschaft</q></h2>
+      <p>Teaser-Liste mit klarer Hierarchie — und <b style="font-weight:var(--w-deutlich)">Mehr laden</b> statt 670 KB Endlosliste.</p></div>
+    <div class="rubrik">
+      <a class="teaser" href="#rubrik"><span class="thumb" aria-hidden="true" style="background:var(--sek-aas)"></span>
+        <span><span class="kick">Gesellschaft</span><h3>Die Weltkonferenz lädt ein</h3>
+        <p class="ex">Im Herbst treffen sich die Landesgesellschaften in Dornach — Programm und Anmeldung.</p>
+        <span class="byline"><b>Beispiel-Autor</b> <span>2. Juli 2026</span></span></span></a>
+      <a class="teaser" href="#rubrik"><span class="thumb" aria-hidden="true" style="background:var(--sek-ssw)"></span>
+        <span><span class="kick">Gesellschaft</span><h3>Neue Arbeitsgruppen in drei Ländern</h3>
+        <p class="ex">Von Lima bis Helsinki: wie Initiativen entstehen und was sie tragen.</p>
+        <span class="byline"><b>Beispiel-Autorin</b> <span>28. Juni 2026</span></span></span></a>
+      <a class="teaser" href="#rubrik"><span class="thumb" aria-hidden="true" style="background:var(--gold)"></span>
+        <span><span class="kick">Gesellschaft</span><h3>Aus dem Heft: Ausgabe 7–8/2026</h3>
+        <p class="ex">Die neue Ausgabe ist erschienen — Überblick und Bezugswege.</p>
+        <span class="byline"><b>Redaktion</b> <span>21. Juni 2026</span></span></span></a>
+    </div>
+    <div class="mehr"><button class="btn" type="button">Mehr laden</button></div>
+  </section>
+
+  <section id="sprachen">
+    <div class="shead"><h2>Vier Sprachen &amp; Newsletter</h2>
+      <p>Die Stärke der Seite bleibt: das saubere /de·/en·/fr·/es-Schema — hier als Rolle, dazu der Newsletter-Einstieg.</p></div>
+    <div class="sprachen" style="margin-bottom:var(--s6)">
+      <span class="meta" style="font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)">Sprache:</span>
+      <div class="seg" role="group" aria-label="Sprache wählen">
+        <button type="button" aria-pressed="true" lang="de">Deutsch</button>
+        <button type="button" aria-pressed="false" lang="en">English</button>
+        <button type="button" aria-pressed="false" lang="fr">Français</button>
+        <button type="button" aria-pressed="false" lang="es">Español</button>
+      </div>
+    </div>
+    <form class="subscribe" onsubmit="return false">
+      <label class="sr-only" for="nl">E-Mail-Adresse</label>
+      <input id="nl" type="email" placeholder="E-Mail-Adresse" autocomplete="email" />
+      <button class="btn primary" type="submit">Newsletter erhalten</button>
+    </form>
+  </section>
+
+  <section id="befund">
+    <div class="shead"><h2>Befund: vorher → nachher</h2>
+      <p>Gerechnet am Original (Juli 2026) — Regel-IDs in Klammern.</p></div>
+    <div class="vergleich">
+      <div class="card"><p><b>6 deklarierte Schriftfamilien, 2 laden nie → eine Hausschrift + eine Leseschrift</b>, selbst gehostet statt Google Fonts.</p></div>
+      <div class="card"><p><b>Weiss auf Gelb 1.6:1, Meta-Grau 2.1:1 → Tokens mit gerechneten Kontrasten</b> (B01/B02).</p></div>
+      <div class="card"><p><b>574 × alt="Image", outline:none → beschriebene Bilder, sichtbarer Fokus</b> (WCAG 1.1.1/2.4.7).</p></div>
+      <div class="card"><p><b>670-KB-Rubrikseite ohne Pagination → Mehr-laden-Muster</b>; 11–12px-Kleintext → ≥14px (B03).</p></div>
+      <div class="card"><p><b>Bootstrap-Regenbogen → Hauspalette</b> (DS02); das verwandte Gold #B19F7C dockt an unser Gold-Token an.</p></div>
+      <div class="card"><p><b>noindex auf der Startseite → die Maschine prüft</b>: genau solche stillen Fehler findet die Konformitäts-Engine.</p></div>
+    </div>
+  </section>
+
+  <section id="weg">
+    <div class="shead"><h2>Der Weg dorthin</h2>
+      <p>Auch hier Craft CMS — dasselbe Partial wie für goetheanum.ch, verteilt über static.goetheanum.ch.</p></div>
+    <pre class="code"><code>{# _layouts/base.twig – Fundament einbinden (tokens VOR base) #}
+&lt;link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/tokens.css"&gt;
+&lt;link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/base.css"&gt;</code></pre>
+    <p class="note">Vollständiger Befund: <a href="https://github.com/phtok/goeloggen/blob/main/docs/webfamilie-befund.md">docs/webfamilie-befund.md</a></p>
+  </section>
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Perspektiven der Webfamilie</span>
+    <span><a href="../design-system/">Design-System</a> · <a href="../">alle Werkzeuge</a></span>
+  </div>
+</footer>
+</body>
+</html>

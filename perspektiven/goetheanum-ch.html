@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Perspektive: goetheanum.ch im Hausbild</title>
+<meta name="description" content="Testseite der Webfamilie: Veranstaltungskalender, Teaser und Fusszeile der Hauptseite, gesetzt mit dem Goetheanum-Design-System." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../design-system/tokens.css" />
+<link rel="stylesheet" href="../design-system/base.css" />
+<link rel="stylesheet" href="../design-system/nav.css" />
+<style>
+  .events{display:grid;gap:var(--s3);max-width:760px}
+  .trow{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:var(--s4)}
+  .vergleich{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s4)}
+  .vergleich .card p{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.6;margin:0 0 .5em}
+  .vergleich .card p b{color:var(--ink);font-weight:600}
+  .fdemo{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);background:var(--soft)}
+  .fdemo .fcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--s6)}
+  .fdemo .ft{font-weight:var(--w-deutlich);margin-bottom:var(--s2)}
+  .fdemo a{display:block;padding:3px 0;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .fdemo a:hover{color:var(--gold-ink)}
+</style>
+</head>
+<body>
+<script src="../design-system/nav.js" data-root="../"
+        data-onpage="Kalender:#kalender|Teaser:#teaser|Fusszeile:#fuss|Befund:#befund|Der Weg:#weg"></script>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Perspektive · Webfamilie</span>
+    <h1>goetheanum.ch im Hausbild</h1>
+    <p class="lede">Die Hauptseite hat den reifsten Betrieb der Familie — vier
+      Sprachen, ein grosser Kalender, ein Bild-CDN. Was ihr fehlt, ist die
+      Token-Schicht: Hier stehen ihre Kernstücke, gesetzt aus einer Quelle.</p>
+  </section>
+
+  <section id="kalender">
+    <div class="shead"><h2>Veranstaltungen</h2>
+      <p>Das Herzstück der Seite: Filterleiste + Veranstaltungs-Karte. Ziffern
+         tabellarisch im Datumsblock (G25), alles ≥14px (B03 — im Original 12.5–13px).</p></div>
+    <div class="filterbar">
+      <label class="field"><span class="lab">Suchen</span><input type="search" placeholder="Titel, Thema, Ort" /></label>
+      <label class="field"><span class="lab">Zeitraum</span><input type="text" placeholder="Juli 2026" /></label>
+      <label class="field"><span class="lab">Art</span><input type="text" placeholder="Alle Veranstaltungen" /></label>
+      <button class="btn" type="button">Filtern</button>
+    </div>
+    <div class="events">
+      <article class="event">
+        <div class="edate"><b>11</b><span>Juli</span></div>
+        <div><span class="kick">Bühne · Eurythmie</span>
+          <h3>Sommer der Formen — Eurythmie-Aufführung</h3>
+          <p class="emeta">19.30&nbsp;Uhr · Grosser Saal · Eintritt frei</p></div>
+      </article>
+      <article class="event">
+        <div class="edate"><b>14</b><span>Juli</span></div>
+        <div><span class="kick">Hochschule · Vortrag</span>
+          <h3>Die Pflanze im Licht — Beobachten als Methode</h3>
+          <p class="emeta">17.00&nbsp;Uhr · Terrassensaal · mit Übersetzung</p></div>
+      </article>
+      <article class="event">
+        <div class="edate"><b>21</b><span>Juli</span></div>
+        <div><span class="kick">Jugendsektion · Werkstatt</span>
+          <h3>Zukunft tragen — offene Werkstatt für Studierende</h3>
+          <p class="emeta">10.00–16.00&nbsp;Uhr · Nordatelier · Anmeldung nötig</p></div>
+      </article>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Dazu gehörten: ICS-Export je Eintrag und die Gruppierung <q>Heute · Morgen · Datum</q> — beides bleibt Datenarbeit des CMS, die Gestalt kommt von hier.</p>
+  </section>
+
+  <section id="teaser">
+    <div class="shead"><h2>Teaser</h2>
+      <p>Bild · Kicker · Titel · Vorspann — die Hierarchie der Startseite als Rolle statt als Einzelfall.</p></div>
+    <div class="trow">
+      <a class="teaser stack" href="#teaser"><span class="thumb" aria-hidden="true" style="background:var(--sek-nws)"></span>
+        <span><span class="kick">Sektionen</span><h3>Naturwissenschaft am Berg</h3>
+        <p class="ex">Die Sektion öffnet ihr Labor — ein Rundgang.</p></span></a>
+      <a class="teaser stack" href="#teaser"><span class="thumb" aria-hidden="true" style="background:var(--sek-srmk)"></span>
+        <span><span class="kick">Bühne</span><h3>Der Sommer-Spielplan ist da</h3>
+        <p class="ex">Eurythmie, Sprache, Musik — alle Termine bis September.</p></span></a>
+      <a class="teaser stack" href="#teaser"><span class="thumb" aria-hidden="true" style="background:var(--gold)"></span>
+        <span><span class="kick">Haus</span><h3>Das Goetheanum besuchen</h3>
+        <p class="ex">Führungen, Öffnungszeiten und der Weg nach Dornach.</p></span></a>
+    </div>
+  </section>
+
+  <section id="fuss">
+    <div class="shead"><h2>Fusszeile</h2>
+      <p>Der Sieben-Block-Footer der Hauptseite — als Rolle .fcols, hier mit vier Blöcken gezeigt.</p></div>
+    <div class="fdemo">
+      <div class="fcols">
+        <div><p class="ft">Goetheanum</p><a href="#fuss">Rüttiweg 45, Dornach</a><a href="#fuss">Kontakt</a></div>
+        <div><p class="ft">Besuch</p><a href="#fuss">Öffnungszeiten</a><a href="#fuss">Führungen</a></div>
+        <div><p class="ft">Karten</p><a href="#fuss">Vorverkauf</a><a href="#fuss">Abendkasse</a></div>
+        <div><p class="ft">Direkt</p><a href="#fuss">Newsletter</a><a href="#fuss">Spenden</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="befund">
+    <div class="shead"><h2>Befund: vorher → nachher</h2>
+      <p>Gerechnet am Original (Juli 2026) — Regel-IDs in Klammern.</p></div>
+    <div class="vergleich">
+      <div class="card"><p><b>Gold #ebb565 + Weiss 1.85:1 → Gold-Pille 4.55:1</b> (B01/B02: Auswahl = dunkles Gold + Weiss).</p></div>
+      <div class="card"><p><b>Kalender-UI 12.5–13px → ≥14/15px</b> (B03); Grautöne 2.15–3.1:1 → --muted 4.9:1 (B02).</p></div>
+      <div class="card"><p><b>15× outline:none → sichtbarer Fokus</b>, Skip-Link aus nav.js (WCAG 2.4.1/2.4.7).</p></div>
+      <div class="card"><p><b>74 Hex-Literale + CMS-Inline-Gradients → Tokens</b> (DS02); damit wird Hell/Dunkel überhaupt erst möglich (B05).</p></div>
+      <div class="card"><p><b>11 Schnitt-Dateien als Fake-Familien → ein Variable Font</b>; Titillium-Titel → Hausschrift (die Stimme).</p></div>
+      <div class="card"><p><b>Zeilenhöhe 1.4 (leading-normal) → 1.66</b> im Lesetext (B04).</p></div>
+    </div>
+  </section>
+
+  <section id="weg">
+    <div class="shead"><h2>Der Weg dorthin</h2>
+      <p>Craft CMS — ein Twig-Partial im Layout, verteilt über das schon gemeinsame static.goetheanum.ch.</p></div>
+    <pre class="code"><code>{# _layouts/base.twig – Fundament einbinden (tokens VOR base) #}
+&lt;link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/tokens.css"&gt;
+&lt;link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/base.css"&gt;</code></pre>
+    <p class="note">Vollständiger Befund: <a href="https://github.com/phtok/goeloggen/blob/main/docs/webfamilie-befund.md">docs/webfamilie-befund.md</a></p>
+  </section>
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Perspektiven der Webfamilie</span>
+    <span><a href="../design-system/">Design-System</a> · <a href="../">alle Werkzeuge</a></span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Perspektive: goetheanum.tv im Hausbild</title>
+<meta name="description" content="Testseite der Webfamilie: der Streaming-Katalog auf der dunklen Bühne des Design-Systems – Medienkacheln, Reihen, Live." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../design-system/tokens.css" />
+<link rel="stylesheet" href="../design-system/base.css" />
+<link rel="stylesheet" href="../design-system/nav.css" />
+<style>
+  .stage .reihe{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);margin:var(--s6) 0 var(--s2)}
+  .stage .reihe:first-of-type{margin-top:var(--s2)}
+  .poster .pmark{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:15px;opacity:.92}
+  .vergleich{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s4)}
+  .vergleich .card p{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.6;margin:0 0 .5em}
+  .vergleich .card p b{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+<script src="../design-system/nav.js" data-root="../"
+        data-onpage="Katalog:#katalog|Befund:#befund|Der Weg:#weg"></script>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Perspektive · Webfamilie</span>
+    <h1>goetheanum.tv im Hausbild</h1>
+    <p class="lede">Der Streaming-Katalog kennt weder Goetheanum-Blau noch Gold
+      noch die Hausschrift — Titillium wird dort per Gewalt über den
+      Plattform-Font geflickt. Hier derselbe Katalog auf der <q>Bühne</q>:
+      theme-fest dunkel, Kontraste gerechnet, Marke hörbar.</p>
+  </section>
+
+  <section id="katalog">
+    <div class="shead"><h2>Der Katalog</h2>
+      <p>Bühne (.stage) + Medienkacheln (.mtile) + Reihen (.mrow). Die Fläche bleibt
+         in Hell wie Dunkel gleich — wie eine Konsole; die Poster tragen die
+         Sektionsfarben mit gerechnetem Text darauf (B01).</p></div>
+
+    <div class="stage">
+      <span class="live">Live</span>
+      <p class="reihe">Alma Humana — die Konferenz</p>
+      <div class="mrow">
+        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-ms);color:var(--on-sek-ms)"><span class="pmark">Eröffnung</span><span class="dur">1:12:40</span></span>
+          <span class="mt">Eröffnungsabend</span><span class="ms">Vortrag · Deutsch/Englisch</span></a>
+        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-srmk);color:var(--on-sek-srmk)"><span class="pmark">Bühne</span><span class="dur">48:15</span></span>
+          <span class="mt">Eurythmie am Abend</span><span class="ms">Aufführung</span></a>
+        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-js);color:var(--on-sek-js)"><span class="pmark">Gespräch</span><span class="dur">26:03</span></span>
+          <span class="mt">Jugend im Gespräch</span><span class="ms">Reihe · Teil 3</span></a>
+        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-nws);color:var(--on-sek-nws)"><span class="pmark">Labor</span><span class="dur">33:47</span></span>
+          <span class="mt">Beobachten als Methode</span><span class="ms">Werkstatt</span></a>
+      </div>
+      <p class="reihe">Greening the Desert</p>
+      <div class="mrow">
+        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-lws);color:var(--on-sek-lws)"><span class="pmark">Folge 1</span><span class="dur">52:19</span></span>
+          <span class="mt">Der Boden lebt</span><span class="ms">Dokumentation</span></a>
+        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-hpise);color:var(--on-sek-hpise)"><span class="pmark">Folge 2</span><span class="dur">47:02</span></span>
+          <span class="mt">Wasser halten</span><span class="ms">Dokumentation</span></a>
+        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-mas);color:var(--on-sek-mas)"><span class="pmark">Folge 3</span><span class="dur">41:33</span></span>
+          <span class="mt">Rechnen mit dem Klima</span><span class="ms">Dokumentation</span></a>
+        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-sbk);color:var(--on-sek-sbk)"><span class="pmark">Extra</span><span class="dur">12:58</span></span>
+          <span class="mt">Hinter den Kulissen</span><span class="ms">Kurzfilm</span></a>
+      </div>
+      <p class="smeta">Dauer-Angaben tabellarisch (G25) · Kacheltitel in der Hausschrift, Meta in der Leseschrift (Schrift-Grenze) · Fokusring sichtbar.</p>
+    </div>
+  </section>
+
+  <section id="befund">
+    <div class="shead"><h2>Befund: vorher → nachher</h2>
+      <p>Gerechnet am Original (Juli 2026) — Regel-IDs in Klammern.</p></div>
+    <div class="vergleich">
+      <div class="card"><p><b>Grau #6e6e6e auf #121212 = 3.67:1 → --stage-muted 8.2:1</b> (B02, gerechnet statt geschätzt).</p></div>
+      <div class="card"><p><b>Titillium per !important über Inter → Hausschrift als Quelle</b>; VERSAL-Knöpfe → normale Beschriftung (G05/G23).</p></div>
+      <div class="card"><p><b>Schiefer #23323F ohne Marke → Blau/Gold-Tokens</b>; Licht/Dunkel als duplizierte Literale → eine Token-Schicht (DS02/B05).</p></div>
+      <div class="card"><p><b>Kein :focus-visible, kein Skip-Link → Fokus-Defaults + Sprunglink</b> aus base.css/nav.js (WCAG 2.4.1/2.4.7).</p></div>
+      <div class="card"><p><b>Google Fonts + vier Fremd-CDNs → Selbst-Hosting</b> (Datenschutz, Reproduzierbarkeit).</p></div>
+      <div class="card"><p><b>Gelernt in Gegenrichtung:</b> die Reihen-Kacheln und die abgeleiteten Töne per Formel — beides ist jetzt Teil des Fundaments (--stage-*).</p></div>
+    </div>
+  </section>
+
+  <section id="weg">
+    <div class="shead"><h2>Der Weg dorthin</h2>
+      <p>Uscreen erlaubt eigenes CSS und eigene Head-Snippets — derselbe Kanal, der heute die !important-Flicken trägt.</p></div>
+    <pre class="code"><code>&lt;!-- Uscreen · Theme-Einstellungen · Custom Code (Head) --&gt;
+&lt;link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/tokens.css"&gt;
+&lt;link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/base.css"&gt;
+&lt;style&gt;
+  /* Plattform-Variablen auf die Tokens heben – statt Schrift per !important zu flicken */
+  :root{ --ds-fg-default:var(--stage-ink); --ds-fg-muted:var(--stage-muted) }
+  body{ font-family:var(--font) }
+&lt;/style&gt;</code></pre>
+    <p class="note">Vollständiger Befund: <a href="https://github.com/phtok/goeloggen/blob/main/docs/webfamilie-befund.md">docs/webfamilie-befund.md</a></p>
+  </section>
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Perspektiven der Webfamilie</span>
+    <span><a href="../design-system/">Design-System</a> · <a href="../">alle Werkzeuge</a></span>
+  </div>
+</footer>
+</body>
+</html>

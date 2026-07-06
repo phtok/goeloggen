@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Perspektive: dasgoetheanum.com im Hausbild</title>
+<meta name="description" content="Testseite der Webfamilie: die Artikel-Anatomie der Wochenschrift, gesetzt mit dem Goetheanum-Design-System – Hausschrift, Lesemass, gerechnete Kontraste." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../design-system/tokens.css" />
+<link rel="stylesheet" href="../design-system/base.css" />
+<link rel="stylesheet" href="../design-system/nav.css" />
+<style>
+  .artkopf{padding-block:var(--s8) var(--s6);max-width:min(72ch,100%)}
+  .artkopf h1{max-width:24ch}
+  .artkopf .byline{margin-top:var(--s4)}
+  .vergleich{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s4)}
+  .vergleich .card p{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.6;margin:0 0 .5em}
+  .vergleich .card p b{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+<script src="../design-system/nav.js" data-root="../"
+        data-onpage="Nachbau:#nachbau|Befund:#befund|Der Weg:#weg"></script>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Perspektive · Webfamilie</span>
+    <h1>dasgoetheanum.com im Hausbild</h1>
+    <p class="lede">Die Wochenschrift hat die reifste Artikelseite der Familie —
+      aber Zeilenhöhe 1.4, ein Lesemass von ~78 Zeichen und Faux-Fett aus zwei
+      statischen Schnitten. So sähe derselbe Artikel mit dem Design-System aus.</p>
+  </section>
+
+  <section id="nachbau">
+    <div class="shead"><h2>Der Nachbau</h2>
+      <p>Die komplette Artikel-Kette (Brotkrumen → Titel → Byline → Lede → Langtext
+         → Literatur → Bio → Verwandtes) — Vorlage: <a href="../design-system/starter-artikel.html">starter-artikel.html</a>.</p></div>
+
+    <header class="artkopf" style="padding-top:0">
+      <nav class="crumbs" aria-label="Pfad">
+        <a href="#nachbau">Startseite</a> <span aria-hidden="true">›</span>
+        <a href="#nachbau">Essay</a> <span aria-hidden="true">›</span>
+        <span aria-current="page">Die Stimme des Hauses</span>
+      </nav>
+      <span class="kicker" style="margin-top:var(--s4);display:inline-block">Essay · Ausgabe 27–28/2026</span>
+      <h1>Die Stimme des Hauses</h1>
+      <p class="lede">Warum eine Schrift mehr ist als eine Wahl der Ästhetik —
+        und was geschieht, wenn ein Haus beginnt, mit einer Stimme zu sprechen.</p>
+      <p class="byline"><b>Beispiel-Autorin</b> <span>6. Juli 2026</span> <span>4 Min. Lesezeit</span></p>
+    </header>
+
+    <article class="prose">
+      <p>Wer die vier grossen Webseiten des Goetheanum nebeneinanderlegt, hört
+        vier Stimmen. Drei davon tasten nach derselben Schrift — nach Titillium,
+        der Basis der Hausschrift. Die Suche ist also längst im Gang; nur das
+        Finden steht noch aus. <strong>Eine Stimme ist kein Stilmittel, sondern
+        eine Haltung:</strong> Sie sagt, dass hinter allen Fenstern dasselbe Haus wohnt.</p>
+      <h3>Was langes Lesen wirklich trägt</h3>
+      <p>Nicht der Schriftwechsel macht einen Text lesbar, sondern zwei stille
+        Faktoren: eine Zeilenhöhe von mindestens 1.6 und ein Lesemass um die
+        62 Zeichen. Beides fehlt dem heutigen Artikel-Layout — und beides kostet
+        nichts als eine Entscheidung. Dazu kommt der echte Fettdruck: Wer nur
+        zwei Schnitte lädt, betont mit <em>synthetischem</em> Fett, das die
+        Formen verschmiert. Ein Variable Font trägt alle Grade in einer Datei.</p>
+      <p>Die Byline dieses Nachbaus steht normal, nicht versal — Betonung kommt
+        aus Gewicht und Farbe, nie aus Grossbuchstaben. Und die Bildunterschrift,
+        die im Original bei 13 Pixeln lag, hat hier eine Untergrenze: nichts
+        Lesbares unter 14.</p>
+    </article>
+
+    <aside class="lit" aria-label="Literatur">
+      <p><b style="color:var(--ink)">Literatur</b></p>
+      <p>Webfamilie-Befund, <q>Was das Design-System von den vier grossen Seiten lernt</q>, Dornach 2026.</p>
+      <p>Sofie Beier, Reading Letters. Designing for legibility, Amsterdam 2012.</p>
+    </aside>
+
+    <div class="bio">
+      <span class="person"><span class="pv" aria-hidden="true">BA</span></span>
+      <p class="btext"><b>Beispiel-Autorin</b> schreibt hier stellvertretend —
+        dieser Text ist eigens für die Testseite verfasst, kein Original der
+        Wochenschrift.</p>
+    </div>
+
+    <div style="margin-top:var(--s8)">
+      <div class="shead"><h2>Verwandt</h2><p>Drei Wege weiter.</p></div>
+      <div class="related">
+        <a class="teaser stack" href="goetheanum-ch.html"><span class="thumb" aria-hidden="true"></span>
+          <span><span class="kick">Perspektive</span><h3>goetheanum.ch im Hausbild</h3>
+          <p class="ex">Kalender, Teaser und der Sieben-Block-Footer.</p></span></a>
+        <a class="teaser stack" href="goetheanum-tv.html"><span class="thumb" aria-hidden="true"></span>
+          <span><span class="kick">Perspektive</span><h3>goetheanum.tv im Hausbild</h3>
+          <p class="ex">Die dunkle Bühne mit Medienkacheln.</p></span></a>
+        <a class="teaser stack" href="anthroposophie-org.html"><span class="thumb" aria-hidden="true"></span>
+          <span><span class="kick">Perspektive</span><h3>anthroposophie.org im Hausbild</h3>
+          <p class="ex">Rubrik, vier Sprachen, Newsletter.</p></span></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="befund">
+    <div class="shead"><h2>Befund: vorher → nachher</h2>
+      <p>Gerechnet am Original (Juli 2026), behoben durch Konstruktion — Regel-IDs in Klammern.</p></div>
+    <div class="vergleich">
+      <div class="card"><p><b>Zeilenhöhe 1.4 → 1.66</b> im Mengentext (B04); Lesemass ~78 → ~62 Zeichen (G10).</p></div>
+      <div class="card"><p><b>Byline 12px versal → 15px normal</b> (B03, G05/G23); Bildunterschrift 13 → ≥14px (B03).</p></div>
+      <div class="card"><p><b>Faux-Fett → echte Schnitte</b>: zwei statische Dateien → Variable Font 190–725; Betonung = Laut (G05).</p></div>
+      <div class="card"><p><b>`outline:0!important` → sichtbarer Fokus</b> (WCAG 2.4.7); mobiler Fliesstext 15 → ≥16px (B03).</p></div>
+    </div>
+  </section>
+
+  <section id="weg">
+    <div class="shead"><h2>Der Weg dorthin</h2>
+      <p>WordPress mit Child-Theme (zeen-child existiert) — das Fundament ist ein Enqueue.</p></div>
+    <pre class="code"><code>// functions.php des Child-Themes – Fundament einbinden (tokens VOR base)
+add_action('wp_enqueue_scripts', function () {
+  wp_enqueue_style('goe-tokens', 'https://werkzeuge.goetheanum.ch/design-system/tokens.css');
+  wp_enqueue_style('goe-base',   'https://werkzeuge.goetheanum.ch/design-system/base.css', ['goe-tokens']);
+});</code></pre>
+    <p class="note">Vollständiger Befund: <a href="https://github.com/phtok/goeloggen/blob/main/docs/webfamilie-befund.md">docs/webfamilie-befund.md</a> ·
+      Vorlage: <a href="../design-system/starter-artikel.html">starter-artikel.html</a></p>
+  </section>
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Perspektiven der Webfamilie</span>
+    <span><a href="../design-system/">Design-System</a> · <a href="../">alle Werkzeuge</a></span>
+  </div>
+</footer>
+</body>
+</html>

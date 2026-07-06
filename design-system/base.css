@@ -305,3 +305,99 @@ img,svg,canvas,video{max-width:100%}
 /* Titel, Kicker und die Kopfzeile bleiben ausdrücklich Goetheanum (Identität). */
 :root[data-read="easy"] h1,:root[data-read="easy"] h2,:root[data-read="easy"] h3,:root[data-read="easy"] h4,
 :root[data-read="easy"] .kicker,:root[data-read="easy"] .kick{font-family:var(--font-display)}
+
+/* =============================================================================
+   Webfamilie-Komponenten (Juli 2026) — aus dem Vier-Seiten-Befund
+   (docs/webfamilie-befund.md §3) ins Fundament aufgenommen: Artikel-Anatomie,
+   Teaser, Veranstaltung + Filterleiste, Bühne/Medienkachel, Person, Newsletter,
+   Fusszeilen-Spalten. Regeln: Funktion/Daten in der Lese-Grotesk (Schrift-
+   Grenze), B02 gerechnet, B03 ≥14px, B04 Ziele ≥44px, G05 nie versal.
+   ============================================================================= */
+
+/* --- Brotkrumen & Byline (Funktion → Lese-Grotesk, nie versal) -------------- */
+.crumbs{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline}
+.crumbs a{color:var(--muted)}
+.crumbs a:hover{color:var(--gold-ink)}
+.byline{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline}
+.byline b{color:var(--ink);font-weight:600}
+
+/* --- Artikel-Anatomie (Vorbild Wochenschrift, mit unseren Faktoren) --------- */
+.lit{border-top:1px solid var(--line);margin-top:var(--s8);padding-top:var(--s4);
+  font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
+  max-width:min(var(--measure),100%)}
+.lit p{margin:0 0 .5em}
+.bio{display:flex;gap:var(--s4);align-items:flex-start;border-top:1px solid var(--line);
+  margin-top:var(--s6);padding-top:var(--s6)}
+.bio .btext{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.6}
+.bio .btext b{color:var(--ink);font-weight:600}
+.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--s4)}
+
+/* --- Teaser (Startseiten-Hierarchie: Bild · Kicker · Titel · Vorspann · Meta) */
+.teaser{display:flex;gap:var(--s4);align-items:flex-start;padding:var(--s4);
+  border:1px solid var(--line-soft);border-radius:var(--r-card);background:var(--paper);
+  color:var(--ink);text-decoration:none}
+.teaser:hover{border-color:var(--gold)}
+.teaser .thumb{flex:0 0 auto;width:116px;aspect-ratio:4/3;border-radius:10px;background:var(--soft);
+  border:1px solid var(--line-soft)}
+.teaser h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);
+  line-height:var(--lh-tight);margin:2px 0 6px}
+.teaser .ex{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.55;margin:0 0 8px}
+.teaser.stack{flex-direction:column}
+.teaser.stack .thumb{width:100%;aspect-ratio:16/9}
+
+/* --- Veranstaltung + Filterleiste (Vorbild goetheanum.ch, Ziffern G25) ------ */
+.filterbar{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:flex-end;margin-bottom:var(--s6)}
+.filterbar .field{min-width:160px;flex:1 1 160px}
+.event{display:flex;gap:var(--s4);align-items:flex-start;padding:var(--s4);
+  border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper)}
+.event .edate{flex:0 0 auto;min-width:64px;text-align:center;border:1px solid var(--line);
+  border-radius:10px;padding:8px 10px;font-family:var(--font-text);font-variant-numeric:tabular-nums}
+.event .edate b{display:block;font-size:24px;line-height:1.1;color:var(--ink);font-weight:600}
+.event .edate span{font-size:var(--t-micro);color:var(--muted)}
+.event h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);
+  line-height:var(--lh-tight);margin:0 0 4px}
+.event .emeta{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+
+/* --- Bühne + Medienkachel (theme-feste Katalogfläche, Vorbild goetheanum.tv) - */
+.stage{background:var(--stage-bg);color:var(--stage-ink);border-radius:var(--r-card);
+  padding:var(--s6);color-scheme:dark}
+.stage .smeta{font-family:var(--font-text);font-size:var(--t-small);color:var(--stage-muted)}
+.mrow{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,240px);gap:var(--s4);
+  overflow-x:auto;scroll-snap-type:x proximity;padding:var(--s2) 2px var(--s3)}
+.mtile{scroll-snap-align:start;color:var(--stage-ink);text-decoration:none;display:block}
+.mtile .poster{position:relative;aspect-ratio:16/9;border-radius:10px;background:var(--stage-bg2);
+  display:grid;place-items:center;overflow:hidden}
+.mtile .dur{position:absolute;right:8px;bottom:8px;font-family:var(--font-text);
+  font-size:var(--t-micro);font-variant-numeric:tabular-nums;color:var(--stage-ink);
+  background:var(--stage-veil);border-radius:6px;padding:2px 8px}
+.mtile .mt{display:block;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px;
+  line-height:1.25;margin-top:8px}
+.mtile .ms{display:block;font-family:var(--font-text);font-size:var(--t-micro);color:var(--stage-muted);margin-top:2px}
+.mtile:hover .poster{outline:2px solid var(--gold)}
+.live{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);
+  background:var(--gold-deep);color:var(--on-accent);border-radius:var(--r-pill);padding:2px 10px}
+
+/* --- Person / Kontakt -------------------------------------------------------- */
+.person{display:flex;gap:var(--s3);align-items:center}
+.person .pv{flex:0 0 auto;width:44px;height:44px;border-radius:var(--r-pill);
+  background:var(--gold-deep);color:var(--on-accent);display:grid;place-items:center;
+  font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px}
+.person .pn{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:17px;line-height:1.2}
+.person .pr{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+.person a{color:var(--gold-ink)}
+
+/* --- Newsletter-Einstieg (ein Feld, ein Knopf – B03: Eingabe ≥16px) ---------- */
+.subscribe{display:flex;gap:var(--s2);flex-wrap:wrap;max-width:460px}
+.subscribe input{flex:1 1 220px;font-family:var(--font-text);font-size:16px;color:var(--ink);
+  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);
+  padding:10px 14px;min-height:var(--tap);outline:none}
+.subscribe input:focus{border-color:var(--gold)}
+
+/* --- Fusszeile mit Spalten (Vorbild 7-Block-Footer goetheanum.ch) ------------ */
+.ds-footer .fcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:var(--s6);margin-bottom:var(--s6)}
+.ds-footer .fcols .ft{font-family:var(--font-display);font-weight:var(--w-deutlich);
+  color:var(--ink);margin-bottom:var(--s2)}
+.ds-footer .fcols a{display:block;padding:3px 0}

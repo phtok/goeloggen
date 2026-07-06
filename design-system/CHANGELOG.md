@@ -16,6 +16,25 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.2.0] – 2026-07-06
+
+### Webfamilie-Komponenten + Bühne (aus dem Vier-Seiten-Befund aufgenommen)
+- **Was:** Neue kanonische Rollen in `base.css` — Artikel-Anatomie (`crumbs`,
+  `byline`, `lit`, `bio`, `related` + `starter-artikel.html`), `teaser` (+ `.stack`),
+  `event` + `filterbar`, `stage`/`mrow`/`mtile`/`live` (Medienkatalog),
+  `person`, `subscribe`, `.ds-footer .fcols`. Neue theme-feste Tokens
+  `--stage-bg/-bg2/-ink/-muted/-veil` (Kontraste gerechnet: ink 15.3:1,
+  muted 8.2:1).
+- **Warum:** Analyse der vier grossen Goetheanum-Webseiten
+  (`docs/webfamilie-befund.md`): ihre Inhaltsmuster (Artikel, Kalender,
+  Medienkacheln, Newsletter) fehlten dem Fundament; ihre wiederkehrenden
+  Fehler (Versal-Bylines, <14px, Kontrast-Fails, lh 1.4) zeigen, welche
+  Regeln die Rollen einbauen müssen.
+- **Wirkung:** Vier Testseiten unter `perspektiven/` zeigen je Original den
+  Nachbau, den gerechneten Vorher-nachher-Befund und den Einbau-Weg
+  (Craft/WordPress/Uscreen). Schaufenster-Abschnitt «Perspektiven des
+  Design-Systems». `contract.json` → Version 1.2.0, Rollen ergänzt.
+
 ## [Unveröffentlicht]
 
 ### Neuer Font «Goetheanum Pfeile» – Pfeile & Kompass ohne PUA-Umweg
