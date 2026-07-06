@@ -342,6 +342,17 @@
       "such": "UTM Link Generator Kampagne Attribution Tracking QR Quelle Medium Content Sommer Aktion"
     },
     {
+      "slug": "kurzlinks",
+      "cat": "statistik",
+      "status": "beta",
+      "tag": "Aktion",
+      "title": "Kurzlinks",
+      "short": "Kurzlinks",
+      "href": "https://tools.goetheanum.ch/",
+      "desc": "Kurze, vertrauenswürdige Adressen für lange UTM-Links: tools.goetheanum.ch/s/‹tier› leitet auf die volle Kampagnen-URL. Für Bio, Inserat und Papier.",
+      "such": "Kurzlink Shortlink URL Weiterleitung tools.goetheanum.ch UTM Sommer Aktion Instagram Bio QR abtippen"
+    },
+    {
       "slug": "campus-karten",
       "cat": "geparkt",
       "status": "geparkt",
