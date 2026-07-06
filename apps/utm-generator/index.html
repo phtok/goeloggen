@@ -45,6 +45,11 @@
   .qr svg{display:block;width:100%;height:100%}
   .actions{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s4)}
   .said{font-family:var(--font-text);font-size:var(--t-micro);color:var(--ok);min-height:1.4em;margin-top:var(--s2)}
+  .shortbox{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s2) var(--s4);margin-top:var(--s4);
+    font-family:var(--font-text);font-size:var(--t-small)}
+  .shortbox[hidden]{display:none}
+  .shortbox .sl{color:var(--muted);font-size:var(--t-micro)}
+  .shortbox .su{font-family:var(--font-mono,var(--font-text));color:var(--blue);word-break:break-all}
 
   .reg{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);table-layout:fixed;min-width:520px}
   .reg col.cMot{width:44%} .reg col.cQm{width:20%} .reg col.cZiel{width:12%} .reg col.cAb{width:12%} .reg col.cAct{width:12%}
@@ -54,6 +59,7 @@
   .reg thead th{color:var(--muted);font-weight:600;font-size:var(--t-micro)}
   .reg td.num,.reg th.num{text-align:right;font-variant-numeric:tabular-nums lining-nums}
   .reg .mot{color:var(--ink)} .reg .mot .q{color:var(--muted);font-size:var(--t-micro);display:block;word-break:break-all;margin-top:2px}
+  .reg .mot .q a{color:var(--blue);font-family:var(--font-mono,var(--font-text))}
   .reg .zero{color:var(--muted)}
   .tablewrap{overflow-x:auto;margin-top:var(--s4)}
   .empty{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
@@ -161,6 +167,11 @@
             <button class="btn ghost" type="button" id="qrBtn">QR laden</button>
           </div>
           <div class="said" id="said"></div>
+          <div class="shortbox" id="shortbox" hidden>
+            <span class="sl">Kurzlink (leitet weiter):</span>
+            <a class="su" id="shortUrl" target="_blank" rel="noopener"></a>
+            <button class="btn ghost" type="button" id="shortCopy">Kopieren</button>
+          </div>
         </div>
         <div class="qrwrap">
           <div class="qr" id="qr"><span class="empty">QR</span></div>
@@ -197,8 +208,16 @@
   var SB  = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
   var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
   var CAMPAIGN = 'summer26_trial';
+  var SHORTBASE = SB + '/functions/v1/go/';   // Kurzlink-Weiterleitung: SHORTBASE + code
 
   function el(id){ return document.getElementById(id); }
+
+  // Deterministischer Kurzcode aus der URL (FNV-1a → base36). Gleiche URL → gleicher Code.
+  function shortCode(str){
+    var h = 0x811c9dc5;
+    for(var i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+    return (h >>> 0).toString(36).padStart(7, '0').slice(0, 7);
+  }
 
   // Die sechs echten Landingpages: Angebot × Sprache (aus der universellen LP recherchiert).
   var LANDINGS = {
@@ -298,20 +317,31 @@
     say('QR geladen.');
   });
 
+  function zeigeKurzlink(code){
+    var kurz = SHORTBASE + code;
+    el('shortbox').hidden = false;
+    el('shortUrl').textContent = kurz;
+    el('shortUrl').href = kurz;
+    el('shortCopy').onclick = function(){
+      navigator.clipboard.writeText(kurz).then(function(){ say('Kurzlink kopiert.'); }, function(){ say('Kopieren nicht möglich.', true); });
+    };
+  }
+
   el('regBtn').addEventListener('click', function(){
     if(!current){ say('Erst Quelle und Medium wählen.', true); return; }
+    var code = shortCode(current.url);
     var row = {
       kampagne: CAMPAIGN, utm_source: current.src, utm_medium: current.med, utm_campaign: CAMPAIGN,
       utm_content: current.con || null, landing: current.angebot, sprache: current.sprache, url: current.url,
-      rolle: el('rolle').value, ersteller: slug(el('ersteller').value) || null
+      code: code, rolle: el('rolle').value, ersteller: slug(el('ersteller').value) || null
     };
     fetch(SB + '/rest/v1/sommer2026_links', {
       method:'POST',
       headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY, 'Prefer':'return=minimal' },
       body: JSON.stringify(row)
     }).then(function(r){
-      if(r.status === 201){ say('Im Register gespeichert.'); loadRegister(); }
-      else if(r.status === 409){ say('Dieser Link ist schon registriert.'); }
+      if(r.status === 201){ say('Im Register gespeichert.'); zeigeKurzlink(code); loadRegister(); }
+      else if(r.status === 409){ say('Dieser Link ist schon registriert.'); zeigeKurzlink(code); }
       else { say('Register nicht erreichbar (' + r.status + ').', true); }
     }).catch(function(){ say('Register nicht erreichbar.', true); });
   });
@@ -338,7 +368,12 @@
           var mot = tr.children[0];
           mot.textContent = x.utm_content || '—';
           var q = document.createElement('span'); q.className = 'q';
-          q.textContent = x.url; mot.appendChild(q);
+          // Kurzlink zeigen (aufgeräumt für die Veröffentlichung), Titel = volle URL.
+          if(x.code){ var a = document.createElement('a'); a.href = SHORTBASE + x.code;
+            a.target = '_blank'; a.rel = 'noopener'; a.textContent = SHORTBASE + x.code;
+            a.title = x.url; q.appendChild(a); }
+          else { q.textContent = x.url; }
+          mot.appendChild(q);
           tr.children[1].textContent = [x.utm_source, x.utm_medium].filter(Boolean).join(' · ');
           var ziel = ANGEBOT_LABEL[x.landing] || x.landing || '';
           if(x.sprache) ziel += ' · ' + x.sprache.toUpperCase();
