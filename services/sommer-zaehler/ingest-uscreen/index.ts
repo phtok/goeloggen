@@ -54,6 +54,13 @@ function scrubEmail(s: string): string {
   return s.replace(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi, "***");
 }
 
+// Platzhalter-Werte (Feld-Default «none», leer, «n/a» …) NICHT als UTM werten.
+function cleanUtm(v: any): string | null {
+  if (v == null) return null;
+  const s = String(v).trim();
+  return (s === "" || /^(none|n\/?a|null|undefined|-)$/i.test(s)) ? null : s;
+}
+
 // Volles UTM-Tupel + Landingpage: direkte Felder, sonst aus einer eingebetteten URL nachziehen.
 function utmFrom(data: any): { src: any; med: any; camp: any; cont: any; land: any } {
   const g = (k: string) => pick(data, [k, "custom_fields." + k, "utm." + k.replace("utm_", ""), "query." + k]);
@@ -174,7 +181,8 @@ Deno.serve(async (req) => {
   if (!istAktion) return json({ ok: true, skipped: "nicht Aktion (Coupon/Plan)" });
 
   const { sprache, intervall, tarif } = mapPlan(title);
-  const { src, med, camp, cont, land } = utmFrom(data);
+  const utmRaw = utmFrom(data);
+  const src = cleanUtm(utmRaw.src), med = cleanUtm(utmRaw.med), camp = cleanUtm(utmRaw.camp), cont = cleanUtm(utmRaw.cont), land = utmRaw.land;
   // Offene Selbstauskunft «Wie sind Sie aufmerksam geworden?» (Custom User Field) – O-Ton, E-Mail-redigiert.
   const selbst0 = pick(data, ["referral_source", "how_heard", "how_did_you_hear", "custom_fields.how_did_you_hear", "user_field_1", "user_fields.0.value"]);
   const selbst = selbst0 ? scrubEmail(String(selbst0)).slice(0, 300) : null;

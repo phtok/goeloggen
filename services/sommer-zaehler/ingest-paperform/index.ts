@@ -31,6 +31,13 @@ async function sha256Hex(s: string): Promise<string> {
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+// Platzhalter-Werte (Feld-Default «none», leer, «n/a» …) NICHT als UTM werten.
+function cleanUtm(v: any): string | null {
+  if (v == null) return null;
+  const s = String(v).trim();
+  return (s === "" || /^(none|n\/?a|null|undefined|-)$/i.test(s)) ? null : s;
+}
+
 // UTM-Tupel + Landingpage. Paperform legt die Herkunft in `device` ab
 // (device.utm_source/…); ausserdem trägt device.url bzw. der ?_d=-Parameter die
 // Landingpage (auch bei eingebetteten Formularen). Fallback: UTMs aus einer im
@@ -67,6 +74,8 @@ function utmFromBody(body: any): { src: string | null; med: string | null; camp:
       } catch { /* keine URL */ }
     }
   }
+  out.src = cleanUtm(out.src); out.med = cleanUtm(out.med);
+  out.camp = cleanUtm(out.camp); out.cont = cleanUtm(out.cont);
   return out;
 }
 
