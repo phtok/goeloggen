@@ -4,13 +4,29 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Perspektive: goetheanum.tv im Hausbild</title>
-<meta name="description" content="Testseite der Webfamilie: der Streaming-Katalog auf der dunklen Bühne des Design-Systems – Medienkacheln, Reihen, Live." />
+<meta name="description" content="Testseite der Webfamilie: die Startseite des Streaming-Katalogs heute und im Hausbild – die dunkle Bühne des Design-Systems mit Medienkacheln, Reihen und Live." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="../design-system/tokens.css" />
 <link rel="stylesheet" href="../design-system/base.css" />
 <link rel="stylesheet" href="../design-system/nav.css" />
 <style>
+  /* ---- Ist-Fenster: Abbild der heutigen Startseite (Artefakt, dunkle
+     Plattform-Fläche). Grade, Grau und der Versal-Knopf wie gemessen;
+     das Fenster bleibt in Hell wie Dunkel gleich. Alle Literale ratifiziert. */
+  .mock.ist .screen{background:#121212;color:#e5e5e5;font-family:Inter,Helvetica,Arial,sans-serif;line-height:1.45}  /* # ds-ok Abbild goetheanum.tv */
+  .itv-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid #2a2a2a;padding-bottom:10px}  /* # ds-ok */
+  .itv-top .wm{font-weight:700;font-size:15px;color:#e5e5e5}  /* # ds-ok */
+  .itv-top nav{display:flex;gap:10px;font-size:13px;color:#6e6e6e;flex-wrap:wrap}  /* # ds-ok Grau 3.67:1 wie gemessen */
+  .itv-hero{padding:16px 0 4px}
+  .itv-hero h4{font-weight:700;font-size:22px;line-height:1.15;color:#e5e5e5;margin:0 0 6px}  /* # ds-ok */
+  .itv-hero p{font-size:13px;color:#6e6e6e;max-width:60ch;margin:0 0 12px}  /* # ds-ok 13px · Grau 3.67:1 */
+  .itv-btn{display:inline-block;background:#23323F;color:#fff;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:3px}  /* # ds-ok Versal-Knopf 12px wie im Original */
+  .itv-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+  .itv-row .po{aspect-ratio:16/9;background:#1f1f1f;border-radius:4px}  /* # ds-ok */
+  .itv-row b{display:block;font-size:13px;font-weight:700;color:#e5e5e5;margin-top:6px}  /* # ds-ok */
+  .itv-row span{font-size:11px;color:#6e6e6e}  /* # ds-ok 11px · Grau 3.67:1 wie gemessen */
+
   .stage .reihe{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);margin:var(--s6) 0 var(--s2)}
   .stage .reihe:first-of-type{margin-top:var(--s2)}
   .poster .pmark{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:15px;opacity:.92}
@@ -21,16 +37,62 @@
 </head>
 <body>
 <script src="../design-system/nav.js" data-root="../"
-        data-onpage="Katalog:#katalog|Befund:#befund|Der Weg:#weg"></script>
+        data-onpage="Startseite:#startseite|Katalog:#katalog|In Zahlen:#zahlen|Der Weg:#weg"></script>
 
 <main class="wrap">
   <section class="hero">
     <span class="kicker">Perspektive · Webfamilie</span>
     <h1>goetheanum.tv im Hausbild</h1>
-    <p class="lede">Der Streaming-Katalog kennt weder Goetheanum-Blau noch Gold
-      noch die Hausschrift — Titillium wird dort per Gewalt über den
-      Plattform-Font geflickt. Hier derselbe Katalog auf der <q>Bühne</q>:
-      theme-fest dunkel, Kontraste gerechnet, Marke hörbar.</p>
+    <p class="lede">Der Streaming-Katalog ist komplett — was fehlt, sind Marke
+      und Mass. Diese Seite zeigt, wie seine Startseite aussähe, mit dem
+      Design-System durchgearbeitet: dieselbe dunkle Fläche, aber mit Hausschrift,
+      Sektionsfarben und gerechneten Kontrasten.</p>
+  </section>
+
+  <section id="startseite">
+    <div class="shead"><h2>Die Startseite: heute ↔ mit dem System</h2>
+      <p>Zwei Fenster auf denselben Katalog. Links das Abbild des heutigen
+         Zustands (Grade, Grau und Versal-Knopf wie gemessen), rechts dieselbe
+         Startseite auf der <q>Bühne</q> des Fundaments.</p></div>
+    <div class="mockpair">
+      <figure class="mock ist">
+        <figcaption><b>Heute</b><span>goetheanum.tv · Juli 2026</span></figcaption>
+        <div class="screen">
+          <div class="itv-top"><span class="wm">goetheanum.tv</span>
+            <nav><span>Programm</span><span>Reihen</span><span>Live</span></nav></div>
+          <div class="itv-hero">
+            <h4>Alma Humana — die Konferenz</h4>
+            <p>Alle Beiträge der Konferenz als Aufzeichnung — Vorträge, Bühne und Gespräche.</p>
+            <span class="itv-btn">JETZT ANSEHEN</span>
+          </div>
+          <div class="itv-row">
+            <div><span class="po"></span><b>Eröffnungsabend</b><span>1:12:40</span></div>
+            <div><span class="po"></span><b>Eurythmie am Abend</b><span>48:15</span></div>
+            <div><span class="po"></span><b>Jugend im Gespräch</b><span>26:03</span></div>
+          </div>
+        </div>
+      </figure>
+      <figure class="mock soll">
+        <figcaption><b>Mit dem Design-System</b><span>dieselbe Startseite</span></figcaption>
+        <div class="screen" style="padding:0">
+          <div class="stage" style="border-radius:0;min-height:100%">
+            <span class="live">Live</span>
+            <p class="reihe">Alma Humana — die Konferenz</p>
+            <p class="smeta" style="margin:0 0 var(--s3)">Alle Beiträge der Konferenz als Aufzeichnung — Vorträge, Bühne und Gespräche.</p>
+            <a class="btn primary" href="#startseite">Jetzt ansehen</a>
+            <div class="mrow" style="margin-top:var(--s4)">
+              <a class="mtile" href="#startseite"><span class="poster" style="background:var(--sek-ms);color:var(--on-sek-ms)"><span class="pmark">Eröffnung</span><span class="dur">1:12:40</span></span>
+                <span class="mt">Eröffnungsabend</span><span class="ms">Vortrag · Deutsch/Englisch</span></a>
+              <a class="mtile" href="#startseite"><span class="poster" style="background:var(--sek-srmk);color:var(--on-sek-srmk)"><span class="pmark">Bühne</span><span class="dur">48:15</span></span>
+                <span class="mt">Eurythmie am Abend</span><span class="ms">Aufführung</span></a>
+              <a class="mtile" href="#startseite"><span class="poster" style="background:var(--sek-js);color:var(--on-sek-js)"><span class="pmark">Gespräch</span><span class="dur">26:03</span></span>
+                <span class="mt">Jugend im Gespräch</span><span class="ms">Reihe · Teil 3</span></a>
+            </div>
+          </div>
+        </div>
+      </figure>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Der Knopf spricht normal statt versal (G05), die Meta-Grade tragen 8.2:1 statt 3.67:1, die Poster tragen die Sektionsfarben — mehr dazu <a href="#zahlen">in Zahlen</a>.</p>
   </section>
 
   <section id="katalog">
@@ -67,12 +129,12 @@
     </div>
   </section>
 
-  <section id="befund">
-    <div class="shead"><h2>Befund: vorher → nachher</h2>
-      <p>Gerechnet am Original (Juli 2026) — Regel-IDs in Klammern.</p></div>
+  <section id="zahlen">
+    <div class="shead"><h2>Der Vergleich in Zahlen</h2>
+      <p>Was zwischen links und rechts liegt — gerechnet am Original (Juli 2026), Regel-IDs in Klammern.</p></div>
     <div class="vergleich">
       <div class="card"><p><b>Grau #6e6e6e auf #121212 = 3.67:1 → --stage-muted 8.2:1</b> (B02, gerechnet statt geschätzt).</p></div>
-      <div class="card"><p><b>Titillium per !important über Inter → Hausschrift als Quelle</b>; VERSAL-Knöpfe → normale Beschriftung (G05/G23).</p></div>
+      <div class="card"><p><b>Titillium per !important über Inter → Hausschrift als Quelle</b>; Versal-Knöpfe → normale Beschriftung (G05/G23).</p></div>
       <div class="card"><p><b>Schiefer #23323F ohne Marke → Blau/Gold-Tokens</b>; Licht/Dunkel als duplizierte Literale → eine Token-Schicht (DS02/B05).</p></div>
       <div class="card"><p><b>Kein :focus-visible, kein Skip-Link → Fokus-Defaults + Sprunglink</b> aus base.css/nav.js (WCAG 2.4.1/2.4.7).</p></div>
       <div class="card"><p><b>Google Fonts + vier Fremd-CDNs → Selbst-Hosting</b> (Datenschutz, Reproduzierbarkeit).</p></div>
@@ -82,7 +144,7 @@
 
   <section id="weg">
     <div class="shead"><h2>Der Weg dorthin</h2>
-      <p>Uscreen erlaubt eigenes CSS und eigene Head-Snippets — derselbe Kanal, der heute die !important-Flicken trägt.</p></div>
+      <p>Uscreen erlaubt eigenes CSS und eigene Head-Snippets — derselbe Kanal, der heute die Schrift flickt, trägt die Tokens.</p></div>
     <pre class="code"><code>&lt;!-- Uscreen · Theme-Einstellungen · Custom Code (Head) --&gt;
 &lt;link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/tokens.css"&gt;
 &lt;link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/base.css"&gt;

@@ -4,13 +4,36 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Perspektive: goetheanum.ch im Hausbild</title>
-<meta name="description" content="Testseite der Webfamilie: Veranstaltungskalender, Teaser und Fusszeile der Hauptseite, gesetzt mit dem Goetheanum-Design-System." />
+<meta name="description" content="Testseite der Webfamilie: die Startseite von goetheanum.ch heute und im Hausbild – dazu Kalender, Teaser und Fusszeile, gesetzt mit dem Goetheanum-Design-System." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="../design-system/tokens.css" />
 <link rel="stylesheet" href="../design-system/base.css" />
 <link rel="stylesheet" href="../design-system/nav.css" />
 <style>
+  /* ---- Ist-Fenster: Abbild der heutigen Startseite (Artefakt, keine Theme-
+     Flächen). Schrift: Titillium – die Seite nutzt sie wirklich; Grössen und
+     Farben sind die gemessenen Original-Werte. Alle Literale ratifiziert. */
+  @font-face{font-family:"Titillium Abbild";src:url("../assets/fonts/goetheanum/Fallback/TitilliumRUS-Regular.woff2") format("woff2");font-display:swap}
+  .mock.ist .screen{background:#fff;color:#3c3c3b;font-family:"Titillium Abbild",Arial,sans-serif;line-height:1.4}  /* # ds-ok Abbild goetheanum.ch */
+  .ich-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid #e3e3e3;padding-bottom:10px}  /* # ds-ok */
+  .ich-top .wm{font-weight:700;letter-spacing:.14em;font-size:14px;color:#37404c}  /* # ds-ok Wortmarke versal wie im Original */
+  .ich-top nav{display:flex;gap:10px;font-size:13px;color:#37404c;flex-wrap:wrap}  /* # ds-ok 13px wie gemessen */
+  .ich-hero{padding:18px 0 6px}
+  .ich-hero h4{font-family:"Titillium Abbild",Arial,sans-serif;font-weight:700;font-size:24px;line-height:1.15;color:#37404c;margin:0 0 6px}  /* # ds-ok */
+  .ich-hero p{font-size:13px;line-height:1.4;color:#6f6f6f;max-width:78ch;margin:0 0 12px}  /* # ds-ok 13px · lh 1.4 · Grau 3.1:1 wie gemessen */
+  .ich-btn{display:inline-block;background:#ebb565;color:#fff;font-size:13px;padding:7px 14px;border-radius:3px}  /* # ds-ok Gold+Weiss 1.85:1 – der gemessene Original-Knopf */
+  .ich-ev{border-top:1px solid #e3e3e3;padding:8px 0}  /* # ds-ok */
+  .ich-ev b{display:block;font-size:14px;font-weight:700;color:#37404c}  /* # ds-ok */
+  .ich-ev span{font-size:12.5px;color:#8a8a8a}  /* # ds-ok 12.5px Kalender-UI wie gemessen */
+  .ich-foot{margin-top:14px;background:#37404c;color:#fff;font-size:11px;padding:8px 10px;border-radius:3px;display:flex;gap:12px;flex-wrap:wrap}  /* # ds-ok */
+
+  /* ---- Soll-Fenster: nur Fundament-Rollen, keine Eigenwerte. */
+  .soll-brand{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);border-bottom:1px solid var(--line-soft);padding-bottom:var(--s2);flex-wrap:wrap}
+  .soll-brand .wm{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:19px}
+  .soll-brand nav{display:flex;gap:var(--s3);font-family:var(--font-display);font-size:var(--t-small);flex-wrap:wrap}
+  .soll-foot{margin-top:var(--s4);border-top:1px solid var(--line);padding-top:var(--s3)}
+
   .events{display:grid;gap:var(--s3);max-width:760px}
   .trow{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:var(--s4)}
   .vergleich{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s4)}
@@ -25,21 +48,70 @@
 </head>
 <body>
 <script src="../design-system/nav.js" data-root="../"
-        data-onpage="Kalender:#kalender|Teaser:#teaser|Fusszeile:#fuss|Befund:#befund|Der Weg:#weg"></script>
+        data-onpage="Startseite:#startseite|Kalender:#kalender|Teaser:#teaser|Fusszeile:#fuss|In Zahlen:#zahlen|Der Weg:#weg"></script>
 
 <main class="wrap">
   <section class="hero">
     <span class="kicker">Perspektive · Webfamilie</span>
     <h1>goetheanum.ch im Hausbild</h1>
     <p class="lede">Die Hauptseite hat den reifsten Betrieb der Familie — vier
-      Sprachen, ein grosser Kalender, ein Bild-CDN. Was ihr fehlt, ist die
-      Token-Schicht: Hier stehen ihre Kernstücke, gesetzt aus einer Quelle.</p>
+      Sprachen, ein grosser Kalender, ein Bild-CDN. Diese Seite zeigt, wie ihre
+      Startseite aussähe, mit dem Design-System durchgearbeitet: links heute,
+      rechts derselbe Inhalt aus einer Quelle gesetzt.</p>
+  </section>
+
+  <section id="startseite">
+    <div class="shead"><h2>Die Startseite: heute ↔ mit dem System</h2>
+      <p>Zwei Fenster auf denselben Inhalt. Links das Abbild des heutigen
+         Zustands (Schrift, Grade und Farben wie gemessen), rechts dieselbe
+         Startseite aus den Fundament-Rollen — Hausschrift, gerechnete
+         Kontraste, nichts Lesbares unter 14 Pixeln.</p></div>
+    <div class="mockpair">
+      <figure class="mock ist">
+        <figcaption><b>Heute</b><span>goetheanum.ch · Juli 2026</span></figcaption>
+        <div class="screen">
+          <div class="ich-top"><span class="wm">GOETHEANUM</span>
+            <nav><span>Veranstaltungen</span><span>Bühne</span><span>Sektionen</span><span>Besuch</span></nav></div>
+          <div class="ich-hero">
+            <h4>Willkommen am Goetheanum</h4>
+            <p>Das Goetheanum in Dornach ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft — mit Bühne, Tagungen und Führungen über das ganze Jahr.</p>
+            <span class="ich-btn">Programm ansehen</span>
+          </div>
+          <div class="ich-ev"><b>Sommer der Formen — Eurythmie-Aufführung</b><span>11. Juli · 19.30&nbsp;Uhr · Grosser Saal</span></div>
+          <div class="ich-ev"><b>Die Pflanze im Licht — Vortrag</b><span>14. Juli · 17.00&nbsp;Uhr · Terrassensaal</span></div>
+          <div class="ich-foot"><span>Kontakt</span><span>Öffnungszeiten</span><span>Newsletter</span><span>Spenden</span></div>
+        </div>
+      </figure>
+      <figure class="mock soll">
+        <figcaption><b>Mit dem Design-System</b><span>dieselbe Startseite</span></figcaption>
+        <div class="screen">
+          <div class="soll-brand"><span class="wm">Goetheanum</span>
+            <nav><a href="#startseite">Veranstaltungen</a><a href="#startseite">Bühne</a><a href="#startseite">Sektionen</a><a href="#startseite">Besuch</a></nav></div>
+          <div style="padding:var(--s6) 0 var(--s2)">
+            <span class="kicker">Dornach · das Haus</span>
+            <h3 style="max-width:18ch">Willkommen am Goetheanum</h3>
+            <p class="note" style="margin-top:var(--s2)">Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft — mit Bühne, Tagungen und Führungen über das ganze Jahr.</p>
+            <a class="btn primary" href="#startseite" style="margin-top:var(--s3)">Programm ansehen</a>
+          </div>
+          <div class="events" style="margin-top:var(--s4)">
+            <article class="event">
+              <div class="edate"><b>11</b><span>Juli</span></div>
+              <div><span class="kick">Bühne · Eurythmie</span>
+                <h3>Sommer der Formen</h3>
+                <p class="emeta">19.30&nbsp;Uhr · Grosser Saal</p></div>
+            </article>
+          </div>
+          <div class="soll-foot"><nav class="crumbs" aria-label="Fusszeile (Auszug)"><a href="#startseite">Kontakt</a> · <a href="#startseite">Öffnungszeiten</a> · <a href="#startseite">Newsletter</a> · <a href="#startseite">Spenden</a></nav></div>
+        </div>
+      </figure>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Was sich im Vergleich ändert, steht unten <a href="#zahlen">in Zahlen</a> — hier zählt der Eindruck: dieselben Inhalte, eine Stimme, lesbare Grade.</p>
   </section>
 
   <section id="kalender">
     <div class="shead"><h2>Veranstaltungen</h2>
       <p>Das Herzstück der Seite: Filterleiste + Veranstaltungs-Karte. Ziffern
-         tabellarisch im Datumsblock (G25), alles ≥14px (B03 — im Original 12.5–13px).</p></div>
+         tabellarisch im Datumsblock (G25), alles ≥14px (B03).</p></div>
     <div class="filterbar">
       <label class="field"><span class="lab">Suchen</span><input type="search" placeholder="Titel, Thema, Ort" /></label>
       <label class="field"><span class="lab">Zeitraum</span><input type="text" placeholder="Juli 2026" /></label>
@@ -98,16 +170,16 @@
     </div>
   </section>
 
-  <section id="befund">
-    <div class="shead"><h2>Befund: vorher → nachher</h2>
-      <p>Gerechnet am Original (Juli 2026) — Regel-IDs in Klammern.</p></div>
+  <section id="zahlen">
+    <div class="shead"><h2>Der Vergleich in Zahlen</h2>
+      <p>Was zwischen links und rechts liegt — gerechnet am Original (Juli 2026), Regel-IDs in Klammern.</p></div>
     <div class="vergleich">
       <div class="card"><p><b>Gold #ebb565 + Weiss 1.85:1 → Gold-Pille 4.55:1</b> (B01/B02: Auswahl = dunkles Gold + Weiss).</p></div>
       <div class="card"><p><b>Kalender-UI 12.5–13px → ≥14/15px</b> (B03); Grautöne 2.15–3.1:1 → --muted 4.9:1 (B02).</p></div>
       <div class="card"><p><b>15× outline:none → sichtbarer Fokus</b>, Skip-Link aus nav.js (WCAG 2.4.1/2.4.7).</p></div>
       <div class="card"><p><b>74 Hex-Literale + CMS-Inline-Gradients → Tokens</b> (DS02); damit wird Hell/Dunkel überhaupt erst möglich (B05).</p></div>
-      <div class="card"><p><b>11 Schnitt-Dateien als Fake-Familien → ein Variable Font</b>; Titillium-Titel → Hausschrift (die Stimme).</p></div>
-      <div class="card"><p><b>Zeilenhöhe 1.4 (leading-normal) → 1.66</b> im Lesetext (B04).</p></div>
+      <div class="card"><p><b>11 Schnitt-Dateien → ein Variable Font</b>; Titillium-Titel → Hausschrift, die zu Ende gebaute Titillium.</p></div>
+      <div class="card"><p><b>Zeilenhöhe 1.4 → 1.66</b> im Lesetext (B04).</p></div>
     </div>
   </section>
 

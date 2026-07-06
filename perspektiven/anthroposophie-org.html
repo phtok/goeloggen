@@ -4,13 +4,29 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Perspektive: anthroposophie.org im Hausbild</title>
-<meta name="description" content="Testseite der Webfamilie: die Rubrikseite von ‹Anthroposophie Weltweit› mit Teaser-Liste, vier Sprachen und Newsletter – gesetzt mit dem Goetheanum-Design-System." />
+<meta name="description" content="Testseite der Webfamilie: die Startseite von ‹Anthroposophie Weltweit› heute und im Hausbild – Teaser-Liste, vier Sprachen und Newsletter, gesetzt mit dem Goetheanum-Design-System." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="../design-system/tokens.css" />
 <link rel="stylesheet" href="../design-system/base.css" />
 <link rel="stylesheet" href="../design-system/nav.css" />
 <style>
+  /* ---- Ist-Fenster: Abbild der heutigen Startseite (Artefakt). Yrsa nähern
+     wir mit der System-Serife an; Grade, Grau und das helle Gold sind die
+     gemessenen Original-Werte. Alle Literale ratifiziert. */
+  .mock.ist .screen{background:#fff;color:#333;font-family:Georgia,serif;line-height:1.43}  /* # ds-ok Abbild anthroposophie.org */
+  .iao-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid #ddd;padding-bottom:8px;font-family:Helvetica,Arial,sans-serif}  /* # ds-ok */
+  .iao-top .wm{font-weight:700;font-size:14px;color:#333}  /* # ds-ok */
+  .iao-top nav{display:flex;gap:8px;font-size:12px;color:#337ab7;flex-wrap:wrap}  /* # ds-ok Bootstrap-Blau wie im Original */
+  .iao-banner{margin-top:12px;background:#B19F7C;color:#fff;padding:12px 14px;border-radius:2px}  /* # ds-ok Weiss auf Gold 1.6:1 – der gemessene Banner */
+  .iao-banner b{display:block;font-family:Helvetica,Arial,sans-serif;font-size:18px;line-height:1.2}  /* # ds-ok */
+  .iao-banner span{font-size:12px}  /* # ds-ok */
+  .iao-item{display:flex;gap:10px;border-top:1px solid #eee;padding:10px 0}  /* # ds-ok */
+  .iao-item .im{flex:0 0 64px;height:44px;background:#d8d8d8;display:grid;place-items:center;font-family:Helvetica,Arial,sans-serif;font-size:10px;color:#888}  /* # ds-ok alt=„Image" wie im Original */
+  .iao-item b{display:block;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#333}  /* # ds-ok */
+  .iao-item p{font-size:12px;color:#b0b0b0;margin:2px 0 0}  /* # ds-ok 12px · Grau 2.1:1 wie gemessen */
+  .iao-langs{margin-top:10px;font-family:Helvetica,Arial,sans-serif;font-size:11px;color:#337ab7;display:flex;gap:8px}  /* # ds-ok 11px wie gemessen */
+
   .rubrik{display:grid;gap:var(--s3);max-width:760px}
   .sprachen{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
   .mehr{display:flex;justify-content:center;margin-top:var(--s6)}
@@ -21,21 +37,69 @@
 </head>
 <body>
 <script src="../design-system/nav.js" data-root="../"
-        data-onpage="Rubrik:#rubrik|Sprachen &amp; Newsletter:#sprachen|Befund:#befund|Der Weg:#weg"></script>
+        data-onpage="Startseite:#startseite|Rubrik:#rubrik|Sprachen &amp; Newsletter:#sprachen|In Zahlen:#zahlen|Der Weg:#weg"></script>
 
 <main class="wrap">
   <section class="hero">
     <span class="kicker">Perspektive · Webfamilie</span>
     <h1>anthroposophie.org im Hausbild</h1>
     <p class="lede">Das Nachrichtenblatt <q>Anthroposophie Weltweit</q> pflegt als
-      Einziges vier vollständige Sprachausgaben — auf einem zwölf Jahre alten
-      Gratis-Template mit Phantom-Schriften und 574 Teasern auf einer Seite.
-      Hier die Rubrikseite, wie das System sie setzt.</p>
+      Einziges vier vollständige Sprachausgaben. Diese Seite zeigt, wie seine
+      Startseite aussähe, mit dem Design-System durchgearbeitet — die Stärke
+      (vier Sprachen) bleibt, die Gestalt kommt aus einer Quelle.</p>
+  </section>
+
+  <section id="startseite">
+    <div class="shead"><h2>Die Startseite: heute ↔ mit dem System</h2>
+      <p>Zwei Fenster auf denselben Inhalt. Links das Abbild des heutigen
+         Zustands (Grade, Grau und das helle Gold wie gemessen), rechts dieselbe
+         Startseite aus den Fundament-Rollen.</p></div>
+    <div class="mockpair">
+      <figure class="mock ist">
+        <figcaption><b>Heute</b><span>anthroposophie.org · Juli 2026</span></figcaption>
+        <div class="screen">
+          <div class="iao-top"><span class="wm">Anthroposophie Weltweit</span>
+            <nav><span>Gesellschaft</span><span>Hochschule</span><span>Heft</span></nav></div>
+          <div class="iao-banner"><b>Die Weltkonferenz lädt ein</b><span>Im Herbst treffen sich die Landesgesellschaften in Dornach.</span></div>
+          <div style="margin-top:10px">
+            <div class="iao-item"><span class="im">Image</span><span><b>Neue Arbeitsgruppen in drei Ländern</b><p>Von Lima bis Helsinki: wie Initiativen entstehen.</p></span></div>
+            <div class="iao-item"><span class="im">Image</span><span><b>Aus dem Heft: Ausgabe 7–8/2026</b><p>Die neue Ausgabe ist erschienen.</p></span></div>
+          </div>
+          <div class="iao-langs"><span>DE</span><span>EN</span><span>FR</span><span>ES</span></div>
+        </div>
+      </figure>
+      <figure class="mock soll">
+        <figcaption><b>Mit dem Design-System</b><span>dieselbe Startseite</span></figcaption>
+        <div class="screen">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);border-bottom:1px solid var(--line-soft);padding-bottom:var(--s2);flex-wrap:wrap">
+            <span style="font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:17px">Anthroposophie Weltweit</span>
+            <nav style="display:flex;gap:var(--s3);font-family:var(--font-display);font-size:var(--t-small)"><a href="#startseite">Gesellschaft</a><a href="#startseite">Hochschule</a><a href="#startseite">Heft</a></nav>
+          </div>
+          <div style="display:grid;gap:var(--s3);padding-top:var(--s4)">
+            <a class="teaser" href="#startseite"><span class="thumb" aria-hidden="true" style="background:var(--sek-aas)"></span>
+              <span><span class="kick">Gesellschaft</span><h3 style="font-size:18px">Die Weltkonferenz lädt ein</h3>
+              <p class="ex">Im Herbst treffen sich die Landesgesellschaften in Dornach.</p></span></a>
+            <a class="teaser" href="#startseite"><span class="thumb" aria-hidden="true" style="background:var(--sek-ssw)"></span>
+              <span><span class="kick">Gesellschaft</span><h3 style="font-size:18px">Neue Arbeitsgruppen in drei Ländern</h3>
+              <p class="ex">Von Lima bis Helsinki: wie Initiativen entstehen.</p></span></a>
+          </div>
+          <div class="sprachen" style="margin-top:var(--s4)">
+            <div class="seg" role="group" aria-label="Sprache wählen">
+              <button type="button" aria-pressed="true" lang="de">Deutsch</button>
+              <button type="button" aria-pressed="false" lang="en">English</button>
+              <button type="button" aria-pressed="false" lang="fr">Français</button>
+              <button type="button" aria-pressed="false" lang="es">Español</button>
+            </div>
+          </div>
+        </div>
+      </figure>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Der Aufmacher trägt Weiss auf gerechnetem Grund statt 1.6:1, die Bilder bekommen Beschreibungen, die Sprachwahl wird ein bedienbares Element — mehr dazu <a href="#zahlen">in Zahlen</a>.</p>
   </section>
 
   <section id="rubrik">
     <div class="shead"><h2>Rubrik <q>Gesellschaft</q></h2>
-      <p>Teaser-Liste mit klarer Hierarchie — und <b style="font-weight:var(--w-deutlich)">Mehr laden</b> statt 670 KB Endlosliste.</p></div>
+      <p>Teaser-Liste mit klarer Hierarchie — und <b style="font-weight:var(--w-deutlich)">Mehr laden</b> statt einer Endlosliste.</p></div>
     <div class="rubrik">
       <a class="teaser" href="#rubrik"><span class="thumb" aria-hidden="true" style="background:var(--sek-aas)"></span>
         <span><span class="kick">Gesellschaft</span><h3>Die Weltkonferenz lädt ein</h3>
@@ -72,15 +136,15 @@
     </form>
   </section>
 
-  <section id="befund">
-    <div class="shead"><h2>Befund: vorher → nachher</h2>
-      <p>Gerechnet am Original (Juli 2026) — Regel-IDs in Klammern.</p></div>
+  <section id="zahlen">
+    <div class="shead"><h2>Der Vergleich in Zahlen</h2>
+      <p>Was zwischen links und rechts liegt — gerechnet am Original (Juli 2026), Regel-IDs in Klammern.</p></div>
     <div class="vergleich">
       <div class="card"><p><b>6 deklarierte Schriftfamilien, 2 laden nie → eine Hausschrift + eine Leseschrift</b>, selbst gehostet statt Google Fonts.</p></div>
-      <div class="card"><p><b>Weiss auf Gelb 1.6:1, Meta-Grau 2.1:1 → Tokens mit gerechneten Kontrasten</b> (B01/B02).</p></div>
+      <div class="card"><p><b>Weiss auf Gold 1.6:1, Meta-Grau 2.1:1 → Tokens mit gerechneten Kontrasten</b> (B01/B02).</p></div>
       <div class="card"><p><b>574 × alt="Image", outline:none → beschriebene Bilder, sichtbarer Fokus</b> (WCAG 1.1.1/2.4.7).</p></div>
       <div class="card"><p><b>670-KB-Rubrikseite ohne Pagination → Mehr-laden-Muster</b>; 11–12px-Kleintext → ≥14px (B03).</p></div>
-      <div class="card"><p><b>Bootstrap-Regenbogen → Hauspalette</b> (DS02); das verwandte Gold #B19F7C dockt an unser Gold-Token an.</p></div>
+      <div class="card"><p><b>Bootstrap-Palette → Hauspalette</b> (DS02); das verwandte Gold #B19F7C dockt an unser Gold-Token an.</p></div>
       <div class="card"><p><b>noindex auf der Startseite → die Maschine prüft</b>: genau solche stillen Fehler findet die Konformitäts-Engine.</p></div>
     </div>
   </section>

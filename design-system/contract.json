@@ -1,6 +1,6 @@
 {
   "$schema": "https://goetheanum/design-system/contract.schema.json",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "titel": "Goetheanum Design-System – Struktur-Vertrag",
   "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
   "geltungsbereich": {
@@ -98,7 +98,9 @@
       "lit",
       "bio",
       "related",
-      "fcols"
+      "fcols",
+      "mockpair",
+      "mock"
     ],
     "hinweis": "Treffer = Seite definiert .note/.hint/.lede/… selbst. ds-fix kann die lokale Regel entfernen, sobald base.css die Rolle trägt."
   },

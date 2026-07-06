@@ -401,3 +401,18 @@ img,svg,canvas,video{max-width:100%}
 .ds-footer .fcols .ft{font-family:var(--font-display);font-weight:var(--w-deutlich);
   color:var(--ink);margin-bottom:var(--s2)}
 .ds-footer .fcols a{display:block;padding:3px 0}
+
+/* --- Gegenüberstellung (Perspektiven: heute ↔ mit dem System) ----------------
+   Zwei Fenster auf dieselbe Startseite. Das Ist-Fenster (.mock.ist) zeigt den
+   heutigen Zustand als Artefakt — fremde Schriften/Farben dort sind Abbild,
+   keine Theme-Flächen (je Seite mit  # ds-ok  ratifiziert). Das Soll-Fenster
+   (.mock.soll) ist ausschliesslich aus den Rollen dieses Fundaments gebaut. */
+.mockpair{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--s4);align-items:stretch}
+.mock{display:flex;flex-direction:column;margin:0;border:1px solid var(--line);
+  border-radius:var(--r-card);overflow:hidden;background:var(--paper)}
+.mock>figcaption{display:flex;justify-content:space-between;gap:var(--s3);align-items:baseline;
+  padding:var(--s2) var(--s4);border-bottom:1px solid var(--line-soft);
+  font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+.mock>figcaption b{font-weight:600;color:var(--ink)}
+.mock.soll>figcaption b{color:var(--gold-ink)}
+.mock .screen{flex:1;padding:var(--s4)}

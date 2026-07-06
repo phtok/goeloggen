@@ -4,13 +4,29 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Perspektive: dasgoetheanum.com im Hausbild</title>
-<meta name="description" content="Testseite der Webfamilie: die Artikel-Anatomie der Wochenschrift, gesetzt mit dem Goetheanum-Design-System – Hausschrift, Lesemass, gerechnete Kontraste." />
+<meta name="description" content="Testseite der Webfamilie: die Startseite der Wochenschrift heute und im Hausbild – dazu die Artikel-Anatomie, gesetzt mit dem Goetheanum-Design-System." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="../design-system/tokens.css" />
 <link rel="stylesheet" href="../design-system/base.css" />
 <link rel="stylesheet" href="../design-system/nav.css" />
 <style>
+  /* ---- Ist-Fenster: Abbild der heutigen Startseite (Artefakt). Fazeta Sans
+     nähern wir mit der System-Grotesk an; Grade, Zeilenhöhe und die
+     Versal-Byline sind die gemessenen Original-Werte. Alle Literale ratifiziert. */
+  .mock.ist .screen{background:#fff;color:#222;font-family:Helvetica,Arial,sans-serif;line-height:1.4}  /* # ds-ok Abbild dasgoetheanum.com */
+  .iwg-mast{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:2px solid #222;padding-bottom:8px}  /* # ds-ok */
+  .iwg-mast .wm{font-weight:700;font-size:18px;color:#222}  /* # ds-ok */
+  .iwg-mast nav{display:flex;gap:10px;font-size:12px;color:#666;flex-wrap:wrap}  /* # ds-ok 12px wie gemessen */
+  .iwg-art{padding:14px 0 0}  /* # ds-ok Abbild */
+  .iwg-art .rub{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#ac9f84}  /* # ds-ok Versal-Rubrik 11px wie im Original */
+  .iwg-art h4{font-family:Helvetica,Arial,sans-serif;font-weight:700;font-size:22px;line-height:1.15;color:#222;margin:4px 0 6px}  /* # ds-ok Faux-Bold: die Seite lädt nur 2 Schnitte */
+  .iwg-art .by{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#999}  /* # ds-ok 12px-Versal-Byline · Grau 2.8:1 wie gemessen */
+  .iwg-art p{font-size:15px;line-height:1.4;color:#444;max-width:78ch;margin:8px 0 0}  /* # ds-ok lh 1.4 · Mass ~78ch wie gemessen */
+  .iwg-more{border-top:1px solid #e5e5e5;margin-top:12px;padding-top:8px;display:grid;gap:6px}  /* # ds-ok */
+  .iwg-more b{font-size:14px;font-weight:700;color:#222}  /* # ds-ok */
+  .iwg-more span{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#999}  /* # ds-ok */
+
   .artkopf{padding-block:var(--s8) var(--s6);max-width:min(72ch,100%)}
   .artkopf h1{max-width:24ch}
   .artkopf .byline{margin-top:var(--s4)}
@@ -21,19 +37,67 @@
 </head>
 <body>
 <script src="../design-system/nav.js" data-root="../"
-        data-onpage="Nachbau:#nachbau|Befund:#befund|Der Weg:#weg"></script>
+        data-onpage="Startseite:#startseite|Artikel:#nachbau|In Zahlen:#zahlen|Der Weg:#weg"></script>
 
 <main class="wrap">
   <section class="hero">
     <span class="kicker">Perspektive · Webfamilie</span>
     <h1>dasgoetheanum.com im Hausbild</h1>
-    <p class="lede">Die Wochenschrift hat die reifste Artikelseite der Familie —
-      aber Zeilenhöhe 1.4, ein Lesemass von ~78 Zeichen und Faux-Fett aus zwei
-      statischen Schnitten. So sähe derselbe Artikel mit dem Design-System aus.</p>
+    <p class="lede">Die Wochenschrift hat die reifste Artikelseite der Familie.
+      Diese Seite zeigt, wie ihre Startseite und ihr Artikel aussähen, mit dem
+      Design-System durchgearbeitet — Hausschrift, Lesemass, echte Schnitte.</p>
+  </section>
+
+  <section id="startseite">
+    <div class="shead"><h2>Die Startseite: heute ↔ mit dem System</h2>
+      <p>Zwei Fenster auf denselben Aufmacher. Links das Abbild des heutigen
+         Zustands (Grade, Zeilenhöhe und Versal-Byline wie gemessen), rechts
+         derselbe Inhalt als Teaser-Rolle aus dem Fundament.</p></div>
+    <div class="mockpair">
+      <figure class="mock ist">
+        <figcaption><b>Heute</b><span>dasgoetheanum.com · Juli 2026</span></figcaption>
+        <div class="screen">
+          <div class="iwg-mast"><span class="wm">das Goetheanum</span>
+            <nav><span>Ausgaben</span><span>Rubriken</span><span>Abo</span></nav></div>
+          <div class="iwg-art">
+            <span class="rub">Essay</span>
+            <h4>Die Stimme des Hauses</h4>
+            <span class="by">Beispiel-Autorin · 6. Juli 2026</span>
+            <p>Warum eine Schrift mehr ist als eine Wahl der Ästhetik — und was geschieht, wenn ein Haus beginnt, mit einer Stimme zu sprechen. Die Zeile läuft hier auf rund achtundsiebzig Zeichen, das Auge verliert den Anfang.</p>
+          </div>
+          <div class="iwg-more">
+            <div><b>Der Sommer der Formen</b> <span>Bühne</span></div>
+            <div><b>Beobachten als Methode</b> <span>Wissenschaft</span></div>
+          </div>
+        </div>
+      </figure>
+      <figure class="mock soll">
+        <figcaption><b>Mit dem Design-System</b><span>dieselbe Startseite</span></figcaption>
+        <div class="screen">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);border-bottom:1px solid var(--line-soft);padding-bottom:var(--s2);flex-wrap:wrap">
+            <span style="font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:19px">das Goetheanum</span>
+            <nav style="display:flex;gap:var(--s3);font-family:var(--font-display);font-size:var(--t-small)"><a href="#startseite">Ausgaben</a><a href="#startseite">Rubriken</a><a href="#startseite">Abo</a></nav>
+          </div>
+          <div style="padding:var(--s6) 0 var(--s2)">
+            <span class="kicker">Essay · Ausgabe 27–28/2026</span>
+            <h3 style="max-width:20ch">Die Stimme des Hauses</h3>
+            <p class="byline" style="margin:var(--s2) 0"><b>Beispiel-Autorin</b> <span>6. Juli 2026</span> <span>4 Min. Lesezeit</span></p>
+            <p class="note">Warum eine Schrift mehr ist als eine Wahl der Ästhetik — und was geschieht, wenn ein Haus beginnt, mit einer Stimme zu sprechen.</p>
+          </div>
+          <div style="display:grid;gap:var(--s2);border-top:1px solid var(--line-soft);padding-top:var(--s3)">
+            <a class="teaser" href="#startseite" style="border:0;padding:var(--s2) 0">
+              <span><span class="kick">Bühne</span><h3 style="font-size:17px">Der Sommer der Formen</h3></span></a>
+            <a class="teaser" href="#startseite" style="border:0;padding:var(--s2) 0">
+              <span><span class="kick">Wissenschaft</span><h3 style="font-size:17px">Beobachten als Methode</h3></span></a>
+          </div>
+        </div>
+      </figure>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Die Byline steht normal statt versal (G05/G23), die Rubrik ist ein Kicker, betont wird mit Gewicht — was sich sonst ändert, steht <a href="#zahlen">in Zahlen</a>.</p>
   </section>
 
   <section id="nachbau">
-    <div class="shead"><h2>Der Nachbau</h2>
+    <div class="shead"><h2>Der Artikel</h2>
       <p>Die komplette Artikel-Kette (Brotkrumen → Titel → Byline → Lede → Langtext
          → Literatur → Bio → Verwandtes) — Vorlage: <a href="../design-system/starter-artikel.html">starter-artikel.html</a>.</p></div>
 
@@ -59,14 +123,13 @@
       <h3>Was langes Lesen wirklich trägt</h3>
       <p>Nicht der Schriftwechsel macht einen Text lesbar, sondern zwei stille
         Faktoren: eine Zeilenhöhe von mindestens 1.6 und ein Lesemass um die
-        62 Zeichen. Beides fehlt dem heutigen Artikel-Layout — und beides kostet
-        nichts als eine Entscheidung. Dazu kommt der echte Fettdruck: Wer nur
-        zwei Schnitte lädt, betont mit <em>synthetischem</em> Fett, das die
-        Formen verschmiert. Ein Variable Font trägt alle Grade in einer Datei.</p>
+        62 Zeichen. Beides kostet nichts als eine Entscheidung. Dazu kommt der
+        echte Fettdruck: Wer nur zwei Schnitte lädt, betont mit
+        <em>synthetischem</em> Fett, das die Formen verschmiert. Ein Variable
+        Font trägt alle Grade in einer Datei.</p>
       <p>Die Byline dieses Nachbaus steht normal, nicht versal — Betonung kommt
-        aus Gewicht und Farbe, nie aus Grossbuchstaben. Und die Bildunterschrift,
-        die im Original bei 13 Pixeln lag, hat hier eine Untergrenze: nichts
-        Lesbares unter 14.</p>
+        aus Gewicht und Farbe, nie aus Grossbuchstaben. Und die Bildunterschrift
+        hat hier eine Untergrenze: nichts Lesbares unter 14.</p>
     </article>
 
     <aside class="lit" aria-label="Literatur">
@@ -98,9 +161,9 @@
     </div>
   </section>
 
-  <section id="befund">
-    <div class="shead"><h2>Befund: vorher → nachher</h2>
-      <p>Gerechnet am Original (Juli 2026), behoben durch Konstruktion — Regel-IDs in Klammern.</p></div>
+  <section id="zahlen">
+    <div class="shead"><h2>Der Vergleich in Zahlen</h2>
+      <p>Was zwischen links und rechts liegt — gerechnet am Original (Juli 2026), Regel-IDs in Klammern.</p></div>
     <div class="vergleich">
       <div class="card"><p><b>Zeilenhöhe 1.4 → 1.66</b> im Mengentext (B04); Lesemass ~78 → ~62 Zeichen (G10).</p></div>
       <div class="card"><p><b>Byline 12px versal → 15px normal</b> (B03, G05/G23); Bildunterschrift 13 → ≥14px (B03).</p></div>
