@@ -280,7 +280,7 @@
   <section>
     <div class="shead"><h2>Kosten und Wirkung</h2><p>Was die Aktion kostet – und was voraussichtlich zurückkommt.</p></div>
     <div class="tiles">
-      <div class="tile"><div class="n gold" id="costTotal">–</div><div class="l">Kosten gesamt</div><div class="s" id="costSub">Stunden, Social Media, Infrastruktur</div></div>
+      <div class="tile"><div class="n gold" id="costTotal">–</div><div class="l">Kosten gesamt</div><div class="s" id="costSub">Stunden, Social Media, Druck & Versand, Infrastruktur</div></div>
       <div class="tile"><div class="n blue" id="costCpa">–</div><div class="l">Kosten je Abo</div><div class="s">sobald Kosten erfasst</div></div>
       <div class="tile"><div class="n ok" id="costRoi">–</div><div class="l">Rückfluss je € Kosten</div><div class="s">projizierter Folgejahr-Umsatz</div></div>
     </div>
@@ -291,7 +291,7 @@
         <tfoot id="costFoot"></tfoot>
       </table>
     </div>
-    <p class="provisorisch">Kosten stehen auf 0 – die echten Zahlen werden erfragt. Hauptposten: Stunden intern, Social Media, Infrastruktur.</p>
+    <p class="provisorisch">Kosten stehen auf 0 – die echten Zahlen werden erfragt. Hauptposten: Stunden intern, Social Media, Druck & Versand, Infrastruktur.</p>
   </section>
 
   <section>
@@ -369,9 +369,10 @@
     ],
     // Kosten der Aktion (Euro) – stehen auf 0, echte Zahlen werden erfragt.
     kosten: [
-      { label:'Stunden intern', wert: 0 },
-      { label:'Social Media',   wert: 0 },
-      { label:'Infrastruktur',  wert: 0 }
+      { label:'Stunden intern',  wert: 0 },
+      { label:'Social Media',    wert: 0 },
+      { label:'Druck & Versand', wert: 0 },
+      { label:'Infrastruktur',   wert: 0 }
     ],
     zahlenProvisorisch: true       // blendet den Hinweis auf Beispielwerte ein
   };
