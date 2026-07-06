@@ -4,192 +4,169 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Perspektive: dasgoetheanum.com im Hausbild</title>
-<meta name="description" content="Testseite der Webfamilie: die Startseite der Wochenschrift heute und im Hausbild – dazu die Artikel-Anatomie, gesetzt mit dem Goetheanum-Design-System." />
+<meta name="description" content="Die Startseite der Wochenschrift ‹Das Goetheanum›, vollständig nachgebaut mit dem Goetheanum-Design-System – echte Inhalte vom 6. Juli 2026, als ganze Webseite erlebbar." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="../design-system/tokens.css" />
 <link rel="stylesheet" href="../design-system/base.css" />
-<link rel="stylesheet" href="../design-system/nav.css" />
 <style>
-  /* ---- Ist-Fenster: Abbild der heutigen Startseite (Artefakt). Fazeta Sans
-     nähern wir mit der System-Grotesk an; Grade, Zeilenhöhe und die
-     Versal-Byline sind die gemessenen Original-Werte. Alle Literale ratifiziert. */
-  .mock.ist .screen{background:#fff;color:#222;font-family:Helvetica,Arial,sans-serif;line-height:1.4}  /* # ds-ok Abbild dasgoetheanum.com */
-  .iwg-mast{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:2px solid #222;padding-bottom:8px}  /* # ds-ok */
-  .iwg-mast .wm{font-weight:700;font-size:18px;color:#222}  /* # ds-ok */
-  .iwg-mast nav{display:flex;gap:10px;font-size:12px;color:#666;flex-wrap:wrap}  /* # ds-ok 12px wie gemessen */
-  .iwg-art{padding:14px 0 0}  /* # ds-ok Abbild */
-  .iwg-art .rub{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#ac9f84}  /* # ds-ok Versal-Rubrik 11px wie im Original */
-  .iwg-art h4{font-family:Helvetica,Arial,sans-serif;font-weight:700;font-size:22px;line-height:1.15;color:#222;margin:4px 0 6px}  /* # ds-ok Faux-Bold: die Seite lädt nur 2 Schnitte */
-  .iwg-art .by{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#999}  /* # ds-ok 12px-Versal-Byline · Grau 2.8:1 wie gemessen */
-  .iwg-art p{font-size:15px;line-height:1.4;color:#444;max-width:78ch;margin:8px 0 0}  /* # ds-ok lh 1.4 · Mass ~78ch wie gemessen */
-  .iwg-more{border-top:1px solid #e5e5e5;margin-top:12px;padding-top:8px;display:grid;gap:6px}  /* # ds-ok */
-  .iwg-more b{font-size:14px;font-weight:700;color:#222}  /* # ds-ok */
-  .iwg-more span{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#999}  /* # ds-ok */
+  /* Nachbau-Kopfzeile der Wochenschrift – ganz aus Tokens/Rollen gesetzt. */
+  .site-head{border-bottom:2px solid var(--ink);background:var(--paper)}
+  .site-head .util{display:flex;justify-content:flex-end;align-items:center;gap:var(--s4);flex-wrap:wrap;
+    padding:var(--s2) 0;font-family:var(--font-text);font-size:var(--t-small)}
+  .site-head .util a{color:var(--muted)}
+  .site-head .util a:hover{color:var(--gold-ink)}
+  .site-head .bar{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s6);
+    padding:var(--s3) 0 var(--s4);flex-wrap:wrap}
+  .site-head .brand{color:var(--ink);text-decoration:none}
+  .site-head .brand .wm{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:30px;line-height:1}
+  .site-head .brand .datum{display:block;margin-top:4px;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .site-head .mainnav{display:flex;gap:var(--s4);flex-wrap:wrap;font-family:var(--font-display);
+    font-weight:var(--w-deutlich);font-size:16px}
+  .site-head .mainnav a{color:var(--ink);padding:6px 0}
+  .site-head .mainnav a:hover{color:var(--gold-ink)}
 
-  .artkopf{padding-block:var(--s8) var(--s6);max-width:min(72ch,100%)}
-  .artkopf h1{max-width:24ch}
-  .artkopf .byline{margin-top:var(--s4)}
-  .vergleich{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s4)}
-  .vergleich .card p{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.6;margin:0 0 .5em}
-  .vergleich .card p b{color:var(--ink);font-weight:600}
+  .lead{padding-block:var(--s8) var(--s6);border-bottom:1px solid var(--line);max-width:min(72ch,100%)}
+  .lead h1{max-width:22ch}
+  .lead .byline{margin-top:var(--s3)}
+  .lead .ex{font-family:var(--font-text);color:var(--muted);font-size:var(--t-lede);line-height:1.6;margin-top:var(--s3);max-width:62ch}
+
+  .agrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s4)}
+  .rubrik-liste{display:grid;gap:0;max-width:760px}
+  .rubrik-liste a{display:block;padding:var(--s3) 0;border-top:1px solid var(--line-soft);color:var(--ink);text-decoration:none}
+  .rubrik-liste a:hover h3{color:var(--gold-ink)}
+  .rubrik-liste h3{font-size:var(--t-h3);margin:0}
 </style>
 </head>
 <body>
-<script src="../design-system/nav.js" data-root="../"
-        data-onpage="Startseite:#startseite|Artikel:#nachbau|In Zahlen:#zahlen|Der Weg:#weg"></script>
 
-<main class="wrap">
-  <section class="hero">
-    <span class="kicker">Perspektive · Webfamilie</span>
-    <h1>dasgoetheanum.com im Hausbild</h1>
-    <p class="lede">Die Wochenschrift hat die reifste Artikelseite der Familie.
-      Diese Seite zeigt, wie ihre Startseite und ihr Artikel aussähen, mit dem
-      Design-System durchgearbeitet — Hausschrift, Lesemass, echte Schnitte.</p>
-  </section>
-
-  <section id="startseite">
-    <div class="shead"><h2>Die Startseite: heute ↔ mit dem System</h2>
-      <p>Zwei Fenster auf denselben Aufmacher. Links das Abbild des heutigen
-         Zustands (Grade, Zeilenhöhe und Versal-Byline wie gemessen), rechts
-         derselbe Inhalt als Teaser-Rolle aus dem Fundament.</p></div>
-    <div class="mockpair">
-      <figure class="mock ist">
-        <figcaption><b>Heute</b><span>dasgoetheanum.com · Juli 2026</span></figcaption>
-        <div class="screen">
-          <div class="iwg-mast"><span class="wm">das Goetheanum</span>
-            <nav><span>Ausgaben</span><span>Rubriken</span><span>Abo</span></nav></div>
-          <div class="iwg-art">
-            <span class="rub">Essay</span>
-            <h4>Die Stimme des Hauses</h4>
-            <span class="by">Beispiel-Autorin · 6. Juli 2026</span>
-            <p>Warum eine Schrift mehr ist als eine Wahl der Ästhetik — und was geschieht, wenn ein Haus beginnt, mit einer Stimme zu sprechen. Die Zeile läuft hier auf rund achtundsiebzig Zeichen, das Auge verliert den Anfang.</p>
-          </div>
-          <div class="iwg-more">
-            <div><b>Der Sommer der Formen</b> <span>Bühne</span></div>
-            <div><b>Beobachten als Methode</b> <span>Wissenschaft</span></div>
-          </div>
-        </div>
-      </figure>
-      <figure class="mock soll">
-        <figcaption><b>Mit dem Design-System</b><span>dieselbe Startseite</span></figcaption>
-        <div class="screen">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);border-bottom:1px solid var(--line-soft);padding-bottom:var(--s2);flex-wrap:wrap">
-            <span style="font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:19px">das Goetheanum</span>
-            <nav style="display:flex;gap:var(--s3);font-family:var(--font-display);font-size:var(--t-small)"><a href="#startseite">Ausgaben</a><a href="#startseite">Rubriken</a><a href="#startseite">Abo</a></nav>
-          </div>
-          <div style="padding:var(--s6) 0 var(--s2)">
-            <span class="kicker">Essay · Ausgabe 27–28/2026</span>
-            <h3 style="max-width:20ch">Die Stimme des Hauses</h3>
-            <p class="byline" style="margin:var(--s2) 0"><b>Beispiel-Autorin</b> <span>6. Juli 2026</span> <span>4 Min. Lesezeit</span></p>
-            <p class="note">Warum eine Schrift mehr ist als eine Wahl der Ästhetik — und was geschieht, wenn ein Haus beginnt, mit einer Stimme zu sprechen.</p>
-          </div>
-          <div style="display:grid;gap:var(--s2);border-top:1px solid var(--line-soft);padding-top:var(--s3)">
-            <a class="teaser" href="#startseite" style="border:0;padding:var(--s2) 0">
-              <span><span class="kick">Bühne</span><h3 style="font-size:17px">Der Sommer der Formen</h3></span></a>
-            <a class="teaser" href="#startseite" style="border:0;padding:var(--s2) 0">
-              <span><span class="kick">Wissenschaft</span><h3 style="font-size:17px">Beobachten als Methode</h3></span></a>
-          </div>
-        </div>
-      </figure>
+<header class="site-head"><!-- # ds-ok Nachbau: die Kopfzeile der Zielseite ist hier der Inhalt -->
+  <div class="wrap">
+    <div class="util">
+      <a href="#fussnote">Inserieren</a><a href="#fussnote">Beitragen</a><a href="#fussnote">Newsletter</a>
+      <a href="#fussnote">Schenken</a><a class="btn primary" href="#fussnote" style="padding:6px 16px">Abonnieren</a>
+      <a href="#fussnote" lang="en">English</a><a href="#fussnote">Login</a>
     </div>
-    <p class="note" style="margin-top:var(--s4)">Die Byline steht normal statt versal (G05/G23), die Rubrik ist ein Kicker, betont wird mit Gewicht — was sich sonst ändert, steht <a href="#zahlen">in Zahlen</a>.</p>
-  </section>
-
-  <section id="nachbau">
-    <div class="shead"><h2>Der Artikel</h2>
-      <p>Die komplette Artikel-Kette (Brotkrumen → Titel → Byline → Lede → Langtext
-         → Literatur → Bio → Verwandtes) — Vorlage: <a href="../design-system/starter-artikel.html">starter-artikel.html</a>.</p></div>
-
-    <header class="artkopf" style="padding-top:0">
-      <nav class="crumbs" aria-label="Pfad">
-        <a href="#nachbau">Startseite</a> <span aria-hidden="true">›</span>
-        <a href="#nachbau">Essay</a> <span aria-hidden="true">›</span>
-        <span aria-current="page">Die Stimme des Hauses</span>
+    <div class="bar">
+      <a class="brand" href="#top"><span class="wm">Das Goetheanum</span>
+        <span class="datum">Wochenschrift für Anthroposophie · 6. Juli 2026</span></a>
+      <nav class="mainnav" aria-label="Hauptnavigation">
+        <a href="#top">Home</a>
+        <a href="#aufsaetze">Aufsätze</a>
+        <a href="#zeitsymptome">Zeitsymptome</a>
+        <a href="#forum">Forum</a>
+        <a href="#worte">Worte</a>
+        <a href="#fussnote">Ausgaben</a>
       </nav>
-      <span class="kicker" style="margin-top:var(--s4);display:inline-block">Essay · Ausgabe 27–28/2026</span>
-      <h1>Die Stimme des Hauses</h1>
-      <p class="lede">Warum eine Schrift mehr ist als eine Wahl der Ästhetik —
-        und was geschieht, wenn ein Haus beginnt, mit einer Stimme zu sprechen.</p>
-      <p class="byline"><b>Beispiel-Autorin</b> <span>6. Juli 2026</span> <span>4 Min. Lesezeit</span></p>
-    </header>
-
-    <article class="prose">
-      <p>Wer die vier grossen Webseiten des Goetheanum nebeneinanderlegt, hört
-        vier Stimmen. Drei davon tasten nach derselben Schrift — nach Titillium,
-        der Basis der Hausschrift. Die Suche ist also längst im Gang; nur das
-        Finden steht noch aus. <strong>Eine Stimme ist kein Stilmittel, sondern
-        eine Haltung:</strong> Sie sagt, dass hinter allen Fenstern dasselbe Haus wohnt.</p>
-      <h3>Was langes Lesen wirklich trägt</h3>
-      <p>Nicht der Schriftwechsel macht einen Text lesbar, sondern zwei stille
-        Faktoren: eine Zeilenhöhe von mindestens 1.6 und ein Lesemass um die
-        62 Zeichen. Beides kostet nichts als eine Entscheidung. Dazu kommt der
-        echte Fettdruck: Wer nur zwei Schnitte lädt, betont mit
-        <em>synthetischem</em> Fett, das die Formen verschmiert. Ein Variable
-        Font trägt alle Grade in einer Datei.</p>
-      <p>Die Byline dieses Nachbaus steht normal, nicht versal — Betonung kommt
-        aus Gewicht und Farbe, nie aus Grossbuchstaben. Und die Bildunterschrift
-        hat hier eine Untergrenze: nichts Lesbares unter 14.</p>
-    </article>
-
-    <aside class="lit" aria-label="Literatur">
-      <p><b style="color:var(--ink)">Literatur</b></p>
-      <p>Webfamilie-Befund, <q>Was das Design-System von den vier grossen Seiten lernt</q>, Dornach 2026.</p>
-      <p>Sofie Beier, Reading Letters. Designing for legibility, Amsterdam 2012.</p>
-    </aside>
-
-    <div class="bio">
-      <span class="person"><span class="pv" aria-hidden="true">BA</span></span>
-      <p class="btext"><b>Beispiel-Autorin</b> schreibt hier stellvertretend —
-        dieser Text ist eigens für die Testseite verfasst, kein Original der
-        Wochenschrift.</p>
     </div>
+  </div>
+</header>
 
-    <div style="margin-top:var(--s8)">
-      <div class="shead"><h2>Verwandt</h2><p>Drei Wege weiter.</p></div>
-      <div class="related">
-        <a class="teaser stack" href="goetheanum-ch.html"><span class="thumb" aria-hidden="true"></span>
-          <span><span class="kick">Perspektive</span><h3>goetheanum.ch im Hausbild</h3>
-          <p class="ex">Kalender, Teaser und der Sieben-Block-Footer.</p></span></a>
-        <a class="teaser stack" href="goetheanum-tv.html"><span class="thumb" aria-hidden="true"></span>
-          <span><span class="kick">Perspektive</span><h3>goetheanum.tv im Hausbild</h3>
-          <p class="ex">Die dunkle Bühne mit Medienkacheln.</p></span></a>
-        <a class="teaser stack" href="anthroposophie-org.html"><span class="thumb" aria-hidden="true"></span>
-          <span><span class="kick">Perspektive</span><h3>anthroposophie.org im Hausbild</h3>
-          <p class="ex">Rubrik, vier Sprachen, Newsletter.</p></span></a>
-      </div>
+<main class="wrap" id="top">
+
+  <article class="lead">
+    <span class="kicker">Essay · Schwerpunkt</span>
+    <h1>Die Jugend trägt das Vermächtnis der Zukunft</h1>
+    <p class="byline"><b>Nathaniel Williams</b> <span>2. Juli 2026</span> <span>18 Min. Lesezeit</span></p>
+    <p class="ex">Wenn wir gross werden, erleben wir die Welt erhaben und doch
+      wie eine Nussschale. Wir wollen echt sein und Brücken schlagen, wenn
+      Maschinen die Führung übernehmen, wenn Nationalismus und Krieg ihr Fest
+      feiern. Die Jugend…</p>
+  </article>
+
+  <section id="aufsaetze">
+    <div class="shead"><h2>Aufsätze</h2><p>Schwerpunktbeiträge</p></div>
+    <div class="agrid">
+      <a class="teaser stack" href="#aufsaetze">
+        <span class="thumb" aria-hidden="true" style="background:var(--sek-srmk)"></span>
+        <span><span class="kick">Faust · 14 Min.</span><h3><q>Wir werden Mensch nicht ohne den Teufel</q></h3>
+        <p class="ex">Gespräch vor den <q>Faust</q>-Sommerfestspielen mit Andrea Pfaehler (Inszenierung) und Rafael Tavares (Eurythmieregie) zur Inszenierung 2026.</p>
+        <span class="byline"><b>Andrea Pfaehler, Rafael Tavares und Louis Defèche</b> <span>17. Juni 2026</span></span></span></a>
+      <a class="teaser stack" href="#aufsaetze">
+        <span class="thumb" aria-hidden="true" style="background:var(--sek-ssw)"></span>
+        <span><span class="kick">Essay · 12 Min.</span><h3>Goethe von innen</h3>
+        <p class="ex">Harzreise, Italienreise, Ilmenau und Frankreichfeldzug — eine seminaristische Annäherung an den verborgenen Goethe für das Faust-Ensemble in vier Bildern.</p>
+        <span class="byline"><b>Marcus Schneider</b> <span>17. Juni 2026</span></span></span></a>
+      <a class="teaser stack" href="#aufsaetze">
+        <span class="thumb" aria-hidden="true" style="background:var(--sek-szw)"></span>
+        <span><span class="kick">Gespräch · 11 Min.</span><h3>Ein Gefühl für die Menschheit entwickeln</h3>
+        <p class="ex">Wirtschaftliche Gesundheit ist ein Spiegel gesellschaftlicher Gesundheit. Die World Goetheanum Association sieht im Assoziativen einen Schlüssel.</p>
+        <span class="byline"><b>Karin Michael und Friederike Mainz</b> <span>10. Juni 2026</span></span></span></a>
     </div>
   </section>
 
-  <section id="zahlen">
-    <div class="shead"><h2>Der Vergleich in Zahlen</h2>
-      <p>Was zwischen links und rechts liegt — gerechnet am Original (Juli 2026), Regel-IDs in Klammern.</p></div>
-    <div class="vergleich">
-      <div class="card"><p><b>Zeilenhöhe 1.4 → 1.66</b> im Mengentext (B04); Lesemass ~78 → ~62 Zeichen (G10).</p></div>
-      <div class="card"><p><b>Byline 12px versal → 15px normal</b> (B03, G05/G23); Bildunterschrift 13 → ≥14px (B03).</p></div>
-      <div class="card"><p><b>Faux-Fett → echte Schnitte</b>: zwei statische Dateien → Variable Font 190–725; Betonung = Laut (G05).</p></div>
-      <div class="card"><p><b>`outline:0!important` → sichtbarer Fokus</b> (WCAG 2.4.7); mobiler Fliesstext 15 → ≥16px (B03).</p></div>
+  <section id="zeitsymptome">
+    <div class="shead"><h2>Zeitsymptome</h2><p>Gegenwart sehen</p></div>
+    <div class="agrid">
+      <a class="teaser stack" href="#zeitsymptome">
+        <span class="thumb" aria-hidden="true" style="background:var(--sek-js)"></span>
+        <span><span class="kick">Gespräch · 3 Min.</span><h3>Lied vom Wasser</h3>
+        <p class="ex">Musik, Bewegung und die Kraft des Wassers versetzten tausend junge Menschen aus aller Welt während der diesjährigen Internationalen Studentenkonferenz in Staunen.</p>
+        <span class="byline"><b>Gareth Dicker und Ashton Arnoldy</b> <span>2. Juli 2026</span></span></span></a>
+      <a class="teaser stack" href="#zeitsymptome">
+        <span class="thumb" aria-hidden="true" style="background:var(--sek-mas)"></span>
+        <span><span class="kick">Essay · 4 Min.</span><h3>KI und die Frage nach dem Menschlichen</h3>
+        <p class="ex">Zur Enzyklika von Papst Leo XIV. <q>Magnifica Humanitas — über die Bewahrung des Menschen im Zeitalter künstlicher Intelligenz</q>.</p>
+        <span class="byline"><b>Johannes Kronenberg</b> <span>17. Juni 2026</span></span></span></a>
+      <a class="teaser stack" href="#zeitsymptome">
+        <span class="thumb" aria-hidden="true" style="background:var(--sek-aas)"></span>
+        <span><span class="kick">Ethik · 4 Min.</span><h3>Edgar Morin — Denker der Komplexität, Freund des Menschlichen</h3>
+        <p class="ex">Er hat sehr lange gelebt — 104 Jahre. Und er hat sehr viel beigetragen — zur Menschlichkeit. Als Edgar Nahoum wurde er 1921 geboren.</p>
+        <span class="byline"><b>Bodo von Plato</b> <span>10. Juni 2026</span></span></span></a>
     </div>
   </section>
 
-  <section id="weg">
-    <div class="shead"><h2>Der Weg dorthin</h2>
-      <p>WordPress mit Child-Theme (zeen-child existiert) — das Fundament ist ein Enqueue.</p></div>
-    <pre class="code"><code>// functions.php des Child-Themes – Fundament einbinden (tokens VOR base)
-add_action('wp_enqueue_scripts', function () {
-  wp_enqueue_style('goe-tokens', 'https://werkzeuge.goetheanum.ch/design-system/tokens.css');
-  wp_enqueue_style('goe-base',   'https://werkzeuge.goetheanum.ch/design-system/base.css', ['goe-tokens']);
-});</code></pre>
-    <p class="note">Vollständiger Befund: <a href="https://github.com/phtok/goeloggen/blob/main/docs/webfamilie-befund.md">docs/webfamilie-befund.md</a> ·
-      Vorlage: <a href="../design-system/starter-artikel.html">starter-artikel.html</a></p>
+  <section id="forum">
+    <div class="shead"><h2>Forum</h2><p>Dialoge · Rückblicke · Hinweise</p></div>
+    <div class="rubrik-liste">
+      <a href="#forum"><h3>Die Spiritualität der Freiheit</h3></a>
+      <a href="#forum"><h3>Deine Entscheidung verändert die Wirtschaft</h3></a>
+      <a href="#forum"><h3>Im Uhrwerk der Welt</h3></a>
+      <a href="#forum"><h3>Lernen, in der Fantasie zu leben</h3></a>
+    </div>
   </section>
+
+  <section id="worte">
+    <div class="shead"><h2>Worte</h2><p>Sprüche · Kolumne</p></div>
+    <div class="rubrik-liste">
+      <a href="#worte"><h3>Dein Ort in der Welt</h3></a>
+      <a href="#worte"><h3>Jung bleiben</h3></a>
+      <a href="#worte"><h3>Unvollkommene Welt</h3></a>
+      <a href="#worte"><h3>Ein Meisterroman</h3></a>
+      <a href="#worte"><h3>Auge, Ohr und Herz der Gemeinschaft</h3></a>
+    </div>
+    <div style="margin-top:var(--s6)"><a class="btn" href="#worte">Mehr laden</a></div>
+  </section>
+
 </main>
 
-<footer class="ds-footer">
-  <div class="wrap frow">
-    <span><strong>Goetheanum</strong> · Perspektiven der Webfamilie</span>
-    <span><a href="../design-system/">Design-System</a> · <a href="../">alle Werkzeuge</a></span>
+<footer class="ds-footer" id="fussnote">
+  <div class="wrap">
+    <div class="fcols">
+      <div><p class="ft">Das Goetheanum</p>
+        <a href="#fussnote">Kontakt</a>
+        <a href="#fussnote">Team</a>
+        <a href="#fussnote">Autorenschaft</a></div>
+      <div><p class="ft">Abo</p>
+        <a href="#fussnote">Abonnieren</a>
+        <a href="#fussnote">Schenken</a>
+        <a href="#fussnote">Bankverbindungen</a></div>
+      <div><p class="ft">Rechtliches</p>
+        <a href="#fussnote">AGB</a>
+        <a href="#fussnote">Impressum</a>
+        <a href="#fussnote">Datenschutz</a></div>
+    </div>
+    <div class="frow">
+      <span><strong>Das Goetheanum</strong> · Nachbau der Startseite im Design-System · Inhalte: dasgoetheanum.com, 6. Juli 2026</span>
+      <span><a href="../design-system/">Design-System</a></span>
+    </div>
   </div>
 </footer>
+
+<div class="fab" role="navigation" aria-label="Perspektive">
+  <a class="btn primary" href="../design-system/#perspektiven">‹ Zurück zum Design-System</a>
+  <a class="btn" href="https://dasgoetheanum.com" target="_blank" rel="noopener">Original öffnen&nbsp;↗</a>
+</div>
+
 </body>
 </html>

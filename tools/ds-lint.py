@@ -171,11 +171,15 @@ def lint_file(path, c):
         if not re.search(r'href\s*=\s*["\'][^"\']*' + re.escape(base), full):
             findings.append((1, "DS01", "fehler", f"Pflicht-Include fehlt: {inc}"))
 
-    # DS06 – eigene Kopfzeile / Fake-Logo (nur wenn nav.js NICHT eingebunden)
+    # DS06 – eigene Kopfzeile / Fake-Logo (nur wenn nav.js NICHT eingebunden).
+    # `# ds-ok` auf der <header>-Zeile ratifiziert die Ausnahme (z. B. der
+    # Nachbau einer fremden Kopfzeile auf den Perspektiven-Seiten).
     has_nav = bool(re.search(r'nav\.js', full))
     if not has_nav and re.search(r"<header\b", full, re.I):
-        findings.append((lineno(full, re.search(r"<header\b", full, re.I).start()),
-                         "DS06", "hinweis", "eigene <header>-Kopfzeile ohne nav.js – Fundament-Leiste nutzen"))
+        header_ln = lineno(full, re.search(r"<header\b", full, re.I).start())
+        if header_ln not in skip_lines:
+            findings.append((header_ln,
+                             "DS06", "hinweis", "eigene <header>-Kopfzeile ohne nav.js – Fundament-Leiste nutzen"))
 
     # CSS-Kontexte (Blöcke + inline) – ohne <script>
     scriptless = RE_SCRIPT.sub(lambda m: "\n" * m.group(0).count("\n"), full)

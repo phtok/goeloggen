@@ -4,200 +4,213 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Perspektive: goetheanum.ch im Hausbild</title>
-<meta name="description" content="Testseite der Webfamilie: die Startseite von goetheanum.ch heute und im Hausbild – dazu Kalender, Teaser und Fusszeile, gesetzt mit dem Goetheanum-Design-System." />
+<meta name="description" content="Die Startseite von goetheanum.ch, vollständig nachgebaut mit dem Goetheanum-Design-System – echte Inhalte vom 6. Juli 2026, als ganze Webseite erlebbar." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="../design-system/tokens.css" />
 <link rel="stylesheet" href="../design-system/base.css" />
-<link rel="stylesheet" href="../design-system/nav.css" />
 <style>
-  /* ---- Ist-Fenster: Abbild der heutigen Startseite (Artefakt, keine Theme-
-     Flächen). Schrift: Titillium – die Seite nutzt sie wirklich; Grössen und
-     Farben sind die gemessenen Original-Werte. Alle Literale ratifiziert. */
-  @font-face{font-family:"Titillium Abbild";src:url("../assets/fonts/goetheanum/Fallback/TitilliumRUS-Regular.woff2") format("woff2");font-display:swap}
-  .mock.ist .screen{background:#fff;color:#3c3c3b;font-family:"Titillium Abbild",Arial,sans-serif;line-height:1.4}  /* # ds-ok Abbild goetheanum.ch */
-  .ich-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid #e3e3e3;padding-bottom:10px}  /* # ds-ok */
-  .ich-top .wm{font-weight:700;letter-spacing:.14em;font-size:14px;color:#37404c}  /* # ds-ok Wortmarke versal wie im Original */
-  .ich-top nav{display:flex;gap:10px;font-size:13px;color:#37404c;flex-wrap:wrap}  /* # ds-ok 13px wie gemessen */
-  .ich-hero{padding:18px 0 6px}
-  .ich-hero h4{font-family:"Titillium Abbild",Arial,sans-serif;font-weight:700;font-size:24px;line-height:1.15;color:#37404c;margin:0 0 6px}  /* # ds-ok */
-  .ich-hero p{font-size:13px;line-height:1.4;color:#6f6f6f;max-width:78ch;margin:0 0 12px}  /* # ds-ok 13px · lh 1.4 · Grau 3.1:1 wie gemessen */
-  .ich-btn{display:inline-block;background:#ebb565;color:#fff;font-size:13px;padding:7px 14px;border-radius:3px}  /* # ds-ok Gold+Weiss 1.85:1 – der gemessene Original-Knopf */
-  .ich-ev{border-top:1px solid #e3e3e3;padding:8px 0}  /* # ds-ok */
-  .ich-ev b{display:block;font-size:14px;font-weight:700;color:#37404c}  /* # ds-ok */
-  .ich-ev span{font-size:12.5px;color:#8a8a8a}  /* # ds-ok 12.5px Kalender-UI wie gemessen */
-  .ich-foot{margin-top:14px;background:#37404c;color:#fff;font-size:11px;padding:8px 10px;border-radius:3px;display:flex;gap:12px;flex-wrap:wrap}  /* # ds-ok */
+  /* Nachbau-Kopfzeile der Zielseite – ganz aus Tokens/Rollen gesetzt. */
+  .site-head{border-bottom:1px solid var(--line);background:var(--paper)}
+  .site-head .util{display:flex;justify-content:flex-end;align-items:center;gap:var(--s4);flex-wrap:wrap;
+    padding:var(--s2) 0;font-family:var(--font-text);font-size:var(--t-small)}
+  .site-head .util a{color:var(--muted)}
+  .site-head .util a:hover{color:var(--gold-ink)}
+  .site-head .util .langs{display:flex;gap:var(--s2)}
+  .site-head .util .langs b{color:var(--ink);font-weight:600}
+  .site-head .bar{display:flex;align-items:center;justify-content:space-between;gap:var(--s6);
+    padding:var(--s3) 0;flex-wrap:wrap}
+  .site-head .brand{display:flex;align-items:center;gap:var(--s3);color:var(--ink);text-decoration:none}
+  .site-head .brand img{height:34px}
+  .site-head .brand .wm{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:24px;line-height:1}
+  .site-head .mainnav{display:flex;gap:var(--s4);flex-wrap:wrap;font-family:var(--font-display);
+    font-weight:var(--w-deutlich);font-size:16px}
+  .site-head .mainnav a{color:var(--ink);padding:6px 0}
+  .site-head .mainnav a:hover{color:var(--gold-ink)}
 
-  /* ---- Soll-Fenster: nur Fundament-Rollen, keine Eigenwerte. */
-  .soll-brand{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);border-bottom:1px solid var(--line-soft);padding-bottom:var(--s2);flex-wrap:wrap}
-  .soll-brand .wm{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:19px}
-  .soll-brand nav{display:flex;gap:var(--s3);font-family:var(--font-display);font-size:var(--t-small);flex-wrap:wrap}
-  .soll-foot{margin-top:var(--s4);border-top:1px solid var(--line);padding-top:var(--s3)}
-
-  .events{display:grid;gap:var(--s3);max-width:760px}
-  .trow{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:var(--s4)}
-  .vergleich{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s4)}
-  .vergleich .card p{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.6;margin:0 0 .5em}
-  .vergleich .card p b{color:var(--ink);font-weight:600}
-  .fdemo{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);background:var(--soft)}
-  .fdemo .fcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--s6)}
-  .fdemo .ft{font-weight:var(--w-deutlich);margin-bottom:var(--s2)}
-  .fdemo a{display:block;padding:3px 0;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
-  .fdemo a:hover{color:var(--gold-ink)}
+  .hero{padding-block:clamp(40px,7vw,80px) var(--s6)}
+  .events{display:grid;gap:var(--s3);max-width:820px}
+  .event .reihe{margin-left:var(--s2)}
+  .mehr{margin-top:var(--s6)}
+  .trow{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--s4)}
+  .news{display:grid;gap:var(--s3);max-width:820px}
 </style>
 </head>
 <body>
-<script src="../design-system/nav.js" data-root="../"
-        data-onpage="Startseite:#startseite|Kalender:#kalender|Teaser:#teaser|Fusszeile:#fuss|In Zahlen:#zahlen|Der Weg:#weg"></script>
 
-<main class="wrap">
-  <section class="hero">
-    <span class="kicker">Perspektive · Webfamilie</span>
-    <h1>goetheanum.ch im Hausbild</h1>
-    <p class="lede">Die Hauptseite hat den reifsten Betrieb der Familie — vier
-      Sprachen, ein grosser Kalender, ein Bild-CDN. Diese Seite zeigt, wie ihre
-      Startseite aussähe, mit dem Design-System durchgearbeitet: links heute,
-      rechts derselbe Inhalt aus einer Quelle gesetzt.</p>
+<header class="site-head"><!-- # ds-ok Nachbau: die Kopfzeile der Zielseite ist hier der Inhalt -->
+  <div class="wrap">
+    <div class="util">
+      <a href="#gesellschaft">Mitglied werden</a><a href="#fussnote">Offene Stellen</a><a href="#fussnote">Spenden</a><a href="#fussnote">Login</a>
+      <span class="langs" aria-label="Sprache"><b>DE</b><a href="#fussnote" lang="en">EN</a><a href="#fussnote" lang="fr">FR</a><a href="#fussnote" lang="es">ES</a></span>
+    </div>
+    <div class="bar">
+      <a class="brand" href="#top" aria-label="Goetheanum – Startseite">
+        <img src="../assets/logos/goetheanum-mark-blue.svg" alt="" />
+        <span class="wm">Goetheanum</span>
+      </a>
+      <nav class="mainnav" aria-label="Hauptnavigation">
+        <a href="#demnaechst">Veranstaltungen</a>
+        <a href="#studieren">Hochschule</a>
+        <a href="#fussnote">Sektionen</a>
+        <a href="#gesellschaft">Gesellschaft</a>
+        <a href="#besuchen">Campus</a>
+        <a href="#nachrichten">Medien</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <section class="hero" id="gesellschaft">
+    <h1>Willkommen am Goetheanum!</h1>
+    <p class="lede">Freie Hochschule für Geisteswissenschaft und Sitz der
+      Allgemeinen Anthroposophischen Gesellschaft</p>
   </section>
 
-  <section id="startseite">
-    <div class="shead"><h2>Die Startseite: heute ↔ mit dem System</h2>
-      <p>Zwei Fenster auf denselben Inhalt. Links das Abbild des heutigen
-         Zustands (Schrift, Grade und Farben wie gemessen), rechts dieselbe
-         Startseite aus den Fundament-Rollen — Hausschrift, gerechnete
-         Kontraste, nichts Lesbares unter 14 Pixeln.</p></div>
-    <div class="mockpair">
-      <figure class="mock ist">
-        <figcaption><b>Heute</b><span>goetheanum.ch · Juli 2026</span></figcaption>
-        <div class="screen">
-          <div class="ich-top"><span class="wm">GOETHEANUM</span>
-            <nav><span>Veranstaltungen</span><span>Bühne</span><span>Sektionen</span><span>Besuch</span></nav></div>
-          <div class="ich-hero">
-            <h4>Willkommen am Goetheanum</h4>
-            <p>Das Goetheanum in Dornach ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft — mit Bühne, Tagungen und Führungen über das ganze Jahr.</p>
-            <span class="ich-btn">Programm ansehen</span>
-          </div>
-          <div class="ich-ev"><b>Sommer der Formen — Eurythmie-Aufführung</b><span>11. Juli · 19.30&nbsp;Uhr · Grosser Saal</span></div>
-          <div class="ich-ev"><b>Die Pflanze im Licht — Vortrag</b><span>14. Juli · 17.00&nbsp;Uhr · Terrassensaal</span></div>
-          <div class="ich-foot"><span>Kontakt</span><span>Öffnungszeiten</span><span>Newsletter</span><span>Spenden</span></div>
-        </div>
-      </figure>
-      <figure class="mock soll">
-        <figcaption><b>Mit dem Design-System</b><span>dieselbe Startseite</span></figcaption>
-        <div class="screen">
-          <div class="soll-brand"><span class="wm">Goetheanum</span>
-            <nav><a href="#startseite">Veranstaltungen</a><a href="#startseite">Bühne</a><a href="#startseite">Sektionen</a><a href="#startseite">Besuch</a></nav></div>
-          <div style="padding:var(--s6) 0 var(--s2)">
-            <span class="kicker">Dornach · das Haus</span>
-            <h3 style="max-width:18ch">Willkommen am Goetheanum</h3>
-            <p class="note" style="margin-top:var(--s2)">Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft — mit Bühne, Tagungen und Führungen über das ganze Jahr.</p>
-            <a class="btn primary" href="#startseite" style="margin-top:var(--s3)">Programm ansehen</a>
-          </div>
-          <div class="events" style="margin-top:var(--s4)">
-            <article class="event">
-              <div class="edate"><b>11</b><span>Juli</span></div>
-              <div><span class="kick">Bühne · Eurythmie</span>
-                <h3>Sommer der Formen</h3>
-                <p class="emeta">19.30&nbsp;Uhr · Grosser Saal</p></div>
-            </article>
-          </div>
-          <div class="soll-foot"><nav class="crumbs" aria-label="Fusszeile (Auszug)"><a href="#startseite">Kontakt</a> · <a href="#startseite">Öffnungszeiten</a> · <a href="#startseite">Newsletter</a> · <a href="#startseite">Spenden</a></nav></div>
-        </div>
-      </figure>
-    </div>
-    <p class="note" style="margin-top:var(--s4)">Was sich im Vergleich ändert, steht unten <a href="#zahlen">in Zahlen</a> — hier zählt der Eindruck: dieselben Inhalte, eine Stimme, lesbare Grade.</p>
-  </section>
-
-  <section id="kalender">
-    <div class="shead"><h2>Veranstaltungen</h2>
-      <p>Das Herzstück der Seite: Filterleiste + Veranstaltungs-Karte. Ziffern
-         tabellarisch im Datumsblock (G25), alles ≥14px (B03).</p></div>
-    <div class="filterbar">
-      <label class="field"><span class="lab">Suchen</span><input type="search" placeholder="Titel, Thema, Ort" /></label>
-      <label class="field"><span class="lab">Zeitraum</span><input type="text" placeholder="Juli 2026" /></label>
-      <label class="field"><span class="lab">Art</span><input type="text" placeholder="Alle Veranstaltungen" /></label>
-      <button class="btn" type="button">Filtern</button>
-    </div>
+  <section id="demnaechst">
+    <div class="shead"><h2>Demnächst</h2><p>Veranstaltungen der kommenden Tage am Goetheanum.</p></div>
     <div class="events">
       <article class="event">
+        <div class="edate"><b>9</b><span>Juli</span></div>
+        <div><span class="kick">Vortrag · Allgemeine Anthroposophische Sektion</span>
+          <h3>Rudolf Steiner liest Plato</h3>
+          <p class="emeta">Vortrag Salvatore Lavecchia · 19.00&nbsp;Uhr</p></div>
+      </article>
+      <article class="event">
+        <div class="edate"><b>9</b><span>Juli</span></div>
+        <div><span class="kick">Vortrag · Mathematisch-Astronomische Sektion</span>
+          <h3>Das Sommerdreieck</h3>
+          <p class="emeta">Anleitung zur Beobachtung von aktuellen Himmelserscheinungen · 22.00&nbsp;Uhr</p></div>
+      </article>
+      <article class="event">
+        <div class="edate"><b>10</b><span>Juli</span></div>
+        <div><span class="kick">Vortrag · Goetheanum-Bühne</span>
+          <h3>Der Pakt mit dem Bösen — bei Faust? Bei uns?</h3>
+          <p class="emeta">Einleitung von Philipp Reubke und Gespräch · 14.00&nbsp;Uhr</p></div>
+      </article>
+      <article class="event">
+        <div class="edate"><b>10</b><span>Juli</span></div>
+        <div><span class="kick">Vortrag · Goetheanum-Bühne</span>
+          <h3><q>Auf freiem Grund mit freiem Volke stehen</q></h3>
+          <p class="emeta">Vortrag von Gerald Häfner · 15.00&nbsp;Uhr</p></div>
+      </article>
+      <article class="event">
+        <div class="edate"><b>10</b><span>Juli</span></div>
+        <div><span class="kick">Aufführung · Goetheanum-Bühne</span>
+          <h3>Faust 1</h3>
+          <p class="emeta">16.30&nbsp;Uhr · ganze Reihe</p></div>
+      </article>
+      <article class="event">
         <div class="edate"><b>11</b><span>Juli</span></div>
-        <div><span class="kick">Bühne · Eurythmie</span>
-          <h3>Sommer der Formen — Eurythmie-Aufführung</h3>
-          <p class="emeta">19.30&nbsp;Uhr · Grosser Saal · Eintritt frei</p></div>
-      </article>
-      <article class="event">
-        <div class="edate"><b>14</b><span>Juli</span></div>
-        <div><span class="kick">Hochschule · Vortrag</span>
-          <h3>Die Pflanze im Licht — Beobachten als Methode</h3>
-          <p class="emeta">17.00&nbsp;Uhr · Terrassensaal · mit Übersetzung</p></div>
-      </article>
-      <article class="event">
-        <div class="edate"><b>21</b><span>Juli</span></div>
-        <div><span class="kick">Jugendsektion · Werkstatt</span>
-          <h3>Zukunft tragen — offene Werkstatt für Studierende</h3>
-          <p class="emeta">10.00–16.00&nbsp;Uhr · Nordatelier · Anmeldung nötig</p></div>
+        <div><span class="kick">Vortrag · Goetheanum-Bühne</span>
+          <h3>Führt Technik notwendig zu Zerstörung? Ist lebensfördernde Technik möglich?</h3>
+          <p class="emeta">Einleitung von Nathaniel Williams und Gespräch · 9.30&nbsp;Uhr</p></div>
       </article>
     </div>
-    <p class="note" style="margin-top:var(--s4)">Dazu gehörten: ICS-Export je Eintrag und die Gruppierung <q>Heute · Morgen · Datum</q> — beides bleibt Datenarbeit des CMS, die Gestalt kommt von hier.</p>
+    <div class="mehr"><a class="btn primary" href="#demnaechst">Mehr Veranstaltungen</a></div>
   </section>
 
-  <section id="teaser">
-    <div class="shead"><h2>Teaser</h2>
-      <p>Bild · Kicker · Titel · Vorspann — die Hierarchie der Startseite als Rolle statt als Einzelfall.</p></div>
+  <section id="besuchen">
+    <div class="shead"><h2>Das Goetheanum erleben</h2><p>Besuch, Studium und Führungen.</p></div>
     <div class="trow">
-      <a class="teaser stack" href="#teaser"><span class="thumb" aria-hidden="true" style="background:var(--sek-nws)"></span>
-        <span><span class="kick">Sektionen</span><h3>Naturwissenschaft am Berg</h3>
-        <p class="ex">Die Sektion öffnet ihr Labor — ein Rundgang.</p></span></a>
-      <a class="teaser stack" href="#teaser"><span class="thumb" aria-hidden="true" style="background:var(--sek-srmk)"></span>
-        <span><span class="kick">Bühne</span><h3>Der Sommer-Spielplan ist da</h3>
-        <p class="ex">Eurythmie, Sprache, Musik — alle Termine bis September.</p></span></a>
-      <a class="teaser stack" href="#teaser"><span class="thumb" aria-hidden="true" style="background:var(--gold)"></span>
-        <span><span class="kick">Haus</span><h3>Das Goetheanum besuchen</h3>
-        <p class="ex">Führungen, Öffnungszeiten und der Weg nach Dornach.</p></span></a>
+      <a class="teaser stack" href="#besuchen">
+        <span class="thumb" aria-hidden="true" style="background:var(--gold)"></span>
+        <span><span class="kick">Campus</span><h3>Besuchen Sie uns!</h3>
+        <p class="ex">Gelegen in der Juralandschaft, 10 Kilometer südlich von Basel, erhebt sich das Goetheanum in seiner expressiven Architektur auf dem Dornacher Hügel — mit malerischem Gartenpark, Café und Buchhandlung.</p>
+        <span class="byline"><b>Öffnungszeiten</b></span></span></a>
+      <a class="teaser stack" href="#studieren" id="studieren">
+        <span class="thumb" aria-hidden="true" style="background:var(--blue-solid)"></span>
+        <span><span class="kick">Hochschule</span><h3>Am Goetheanum studieren</h3>
+        <p class="ex">Die Abteilung für Weiterbildung bietet Vollzeit- und Teilzeitstudiengänge vor Ort und online für alle an, die sich für die Anthroposophie und ihre Relevanz in unterschiedlichen Praxisfeldern interessieren.</p>
+        <span class="byline"><b>Programme entdecken</b></span></span></a>
+      <a class="teaser stack" href="#besuchen">
+        <span class="thumb" aria-hidden="true" style="background:var(--sek-sbk)"></span>
+        <span><span class="kick">Campus</span><h3>Führungen</h3>
+        <p class="ex">Wir zeigen Ihnen die Geschichte des Goetheanum, erzählen von Rudolf Steiner und erklären die Anthroposophie — mit Architektur, Grossem Saal und Ausstellungsraum. Auch als Themen-, Kinder- und Schulführung.</p>
+        <span class="byline"><b>Alle Führungen</b></span></span></a>
     </div>
   </section>
 
-  <section id="fuss">
-    <div class="shead"><h2>Fusszeile</h2>
-      <p>Der Sieben-Block-Footer der Hauptseite — als Rolle .fcols, hier mit vier Blöcken gezeigt.</p></div>
-    <div class="fdemo">
-      <div class="fcols">
-        <div><p class="ft">Goetheanum</p><a href="#fuss">Rüttiweg 45, Dornach</a><a href="#fuss">Kontakt</a></div>
-        <div><p class="ft">Besuch</p><a href="#fuss">Öffnungszeiten</a><a href="#fuss">Führungen</a></div>
-        <div><p class="ft">Karten</p><a href="#fuss">Vorverkauf</a><a href="#fuss">Abendkasse</a></div>
-        <div><p class="ft">Direkt</p><a href="#fuss">Newsletter</a><a href="#fuss">Spenden</a></div>
-      </div>
+  <section id="nachrichten">
+    <div class="shead"><h2>Nachrichten</h2><p>Aus dem Haus und der Wochenschrift.</p></div>
+    <div class="news">
+      <a class="teaser" href="#nachrichten">
+        <span class="thumb" aria-hidden="true" style="background:var(--sek-aas)"></span>
+        <span><span class="kick">29. Juni 2026</span><h3>Studien- und Lernort Goetheanum</h3>
+        <p class="ex">Das Goetheanum entwickelt sich mehr als ein Jahrhundert nach seiner Gründung durch das Studium und Erforschen der Anthroposophie weiter.</p></span></a>
+      <a class="teaser" href="#nachrichten">
+        <span class="thumb" aria-hidden="true" style="background:var(--sek-srmk)"></span>
+        <span><span class="kick">26. Juni 2026</span><h3><q>Faust</q> — 99., 100. und 101. Aufführung: Feier mit Picknickdecke im Gartenpark</h3>
+        <p class="ex">Drei Sommerfestivals mit Johann Wolfgang Goethes <q>Faust 1 und 2</q> im Juli am Goetheanum: Nach Marie Steiners Uraufführung 1938 gibt es jetzt die 100. Aufführung.</p>
+        <span class="byline"><b>Wolfgang Held</b></span></span></a>
+      <a class="teaser" href="#nachrichten">
+        <span class="thumb" aria-hidden="true" style="background:var(--sek-ps)"></span>
+        <span><span class="kick">26. Juni 2026</span><h3>Das Unerwartete erwarten, das Gewohnte neu befragen</h3>
+        <p class="ex">Ob Eltern, Büromensch oder Lehrkraft: Wer das Staunen übt, kann aus Verhaltensmustern ausbrechen und sich dem öffnen, was man noch nicht kennt.</p>
+        <span class="byline"><b>Sebastian Jüngel</b></span></span></a>
+      <a class="teaser" href="#nachrichten">
+        <span class="thumb" aria-hidden="true" style="background:var(--sek-js)"></span>
+        <span><span class="kick">22. Juni 2026</span><h3>Faust: Japanischer Auftakt</h3>
+        <p class="ex">Zum Beginn der Probenzeit für die <q>Faust</q>-Aufführung hat Yuma Ito, Eurythmist im Ensemble, seinen Vater Tomokazu mit dessen Frau empfangen.</p></span></a>
     </div>
   </section>
 
-  <section id="zahlen">
-    <div class="shead"><h2>Der Vergleich in Zahlen</h2>
-      <p>Was zwischen links und rechts liegt — gerechnet am Original (Juli 2026), Regel-IDs in Klammern.</p></div>
-    <div class="vergleich">
-      <div class="card"><p><b>Gold #ebb565 + Weiss 1.85:1 → Gold-Pille 4.55:1</b> (B01/B02: Auswahl = dunkles Gold + Weiss).</p></div>
-      <div class="card"><p><b>Kalender-UI 12.5–13px → ≥14/15px</b> (B03); Grautöne 2.15–3.1:1 → --muted 4.9:1 (B02).</p></div>
-      <div class="card"><p><b>15× outline:none → sichtbarer Fokus</b>, Skip-Link aus nav.js (WCAG 2.4.1/2.4.7).</p></div>
-      <div class="card"><p><b>74 Hex-Literale + CMS-Inline-Gradients → Tokens</b> (DS02); damit wird Hell/Dunkel überhaupt erst möglich (B05).</p></div>
-      <div class="card"><p><b>11 Schnitt-Dateien → ein Variable Font</b>; Titillium-Titel → Hausschrift, die zu Ende gebaute Titillium.</p></div>
-      <div class="card"><p><b>Zeilenhöhe 1.4 → 1.66</b> im Lesetext (B04).</p></div>
-    </div>
-  </section>
-
-  <section id="weg">
-    <div class="shead"><h2>Der Weg dorthin</h2>
-      <p>Craft CMS — ein Twig-Partial im Layout, verteilt über das schon gemeinsame static.goetheanum.ch.</p></div>
-    <pre class="code"><code>{# _layouts/base.twig – Fundament einbinden (tokens VOR base) #}
-&lt;link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/tokens.css"&gt;
-&lt;link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/base.css"&gt;</code></pre>
-    <p class="note">Vollständiger Befund: <a href="https://github.com/phtok/goeloggen/blob/main/docs/webfamilie-befund.md">docs/webfamilie-befund.md</a></p>
-  </section>
 </main>
 
-<footer class="ds-footer">
-  <div class="wrap frow">
-    <span><strong>Goetheanum</strong> · Perspektiven der Webfamilie</span>
-    <span><a href="../design-system/">Design-System</a> · <a href="../">alle Werkzeuge</a></span>
+<footer class="ds-footer" id="fussnote">
+  <div class="wrap">
+    <div class="fcols">
+      <div><p class="ft">Goetheanum</p>
+        <a href="#fussnote">Rüttiweg 45, 4143 Dornach, Schweiz</a>
+        <a href="#fussnote">+41 61 706 42 42</a>
+        <a href="#fussnote">info@goetheanum.ch</a>
+        <a href="#fussnote">Kontakte &amp; Telefonzeiten</a>
+        <a href="#fussnote">Plan &amp; Zufahrt</a></div>
+      <div><p class="ft">Öffnungszeiten</p>
+        <a href="#fussnote">Täglich 9–20&nbsp;Uhr</a>
+        <a href="#fussnote">Bei Veranstaltungen erweitert</a>
+        <a href="#fussnote">Eine Führung buchen</a>
+        <a href="#fussnote">Unterkünfte</a></div>
+      <div><p class="ft">Ticketverkauf</p>
+        <a href="#fussnote">Am Empfang: Di.–So. 9–18&nbsp;Uhr</a>
+        <a href="#fussnote">Telefon: Di.–Sa. 14–18&nbsp;Uhr</a>
+        <a href="#fussnote">+41 61 706 44 44</a>
+        <a href="#fussnote">tickets@goetheanum.ch</a></div>
+      <div><p class="ft">Administration</p>
+        <a href="#fussnote">Mitgliedersekretariat</a>
+        <a href="#fussnote">Hochschulsekretariat</a>
+        <a href="#fussnote">Bühne</a>
+        <a href="#fussnote">Offene Stellen</a>
+        <a href="#fussnote">Freiwilligenarbeit</a></div>
+      <div><p class="ft">Informationen</p>
+        <a href="#fussnote">Impressum</a>
+        <a href="#fussnote">Datenschutz</a>
+        <a href="#fussnote">Nachhaltigkeit</a>
+        <a href="#fussnote">Hausordnung</a></div>
+      <div><p class="ft">Schnellzugriff</p>
+        <a href="#fussnote">Spenden</a>
+        <a href="#fussnote">Mitglied werden</a>
+        <a href="#fussnote">Medienstelle</a>
+        <a href="#fussnote">Newsletter</a></div>
+      <div><p class="ft">Soziale Medien</p>
+        <a href="#fussnote">Facebook</a>
+        <a href="#fussnote">Instagram</a>
+        <a href="#fussnote">Youtube</a>
+        <a href="#fussnote">Telegram</a></div>
+    </div>
+    <div class="frow">
+      <span><strong>Goetheanum</strong> · Nachbau der Startseite im Design-System · Inhalte: goetheanum.ch, 6. Juli 2026</span>
+      <span><a href="../design-system/">Design-System</a></span>
+    </div>
   </div>
 </footer>
+
+<div class="fab" role="navigation" aria-label="Perspektive">
+  <a class="btn primary" href="../design-system/#perspektiven">‹ Zurück zum Design-System</a>
+  <a class="btn" href="https://goetheanum.ch/de" target="_blank" rel="noopener">Original öffnen&nbsp;↗</a>
+</div>
+
 </body>
 </html>

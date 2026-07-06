@@ -4,164 +4,122 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Perspektive: goetheanum.tv im Hausbild</title>
-<meta name="description" content="Testseite der Webfamilie: die Startseite des Streaming-Katalogs heute und im Hausbild – die dunkle Bühne des Design-Systems mit Medienkacheln, Reihen und Live." />
+<meta name="description" content="Die Startseite von Goetheanum TV, vollständig nachgebaut mit dem Goetheanum-Design-System – echte Reihen und Videos vom 6. Juli 2026, als ganze dunkle Bühne erlebbar." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="../design-system/tokens.css" />
 <link rel="stylesheet" href="../design-system/base.css" />
-<link rel="stylesheet" href="../design-system/nav.css" />
 <style>
-  /* ---- Ist-Fenster: Abbild der heutigen Startseite (Artefakt, dunkle
-     Plattform-Fläche). Grade, Grau und der Versal-Knopf wie gemessen;
-     das Fenster bleibt in Hell wie Dunkel gleich. Alle Literale ratifiziert. */
-  .mock.ist .screen{background:#121212;color:#e5e5e5;font-family:Inter,Helvetica,Arial,sans-serif;line-height:1.45}  /* # ds-ok Abbild goetheanum.tv */
-  .itv-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid #2a2a2a;padding-bottom:10px}  /* # ds-ok */
-  .itv-top .wm{font-weight:700;font-size:15px;color:#e5e5e5}  /* # ds-ok */
-  .itv-top nav{display:flex;gap:10px;font-size:13px;color:#6e6e6e;flex-wrap:wrap}  /* # ds-ok Grau 3.67:1 wie gemessen */
-  .itv-hero{padding:16px 0 4px}
-  .itv-hero h4{font-weight:700;font-size:22px;line-height:1.15;color:#e5e5e5;margin:0 0 6px}  /* # ds-ok */
-  .itv-hero p{font-size:13px;color:#6e6e6e;max-width:60ch;margin:0 0 12px}  /* # ds-ok 13px · Grau 3.67:1 */
-  .itv-btn{display:inline-block;background:#23323F;color:#fff;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:3px}  /* # ds-ok Versal-Knopf 12px wie im Original */
-  .itv-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
-  .itv-row .po{aspect-ratio:16/9;background:#1f1f1f;border-radius:4px}  /* # ds-ok */
-  .itv-row b{display:block;font-size:13px;font-weight:700;color:#e5e5e5;margin-top:6px}  /* # ds-ok */
-  .itv-row span{font-size:11px;color:#6e6e6e}  /* # ds-ok 11px · Grau 3.67:1 wie gemessen */
+  /* Ganze Seite = Bühne (theme-fest dunkel, wie der Katalog selbst). */
+  body{background:var(--stage-bg);color:var(--stage-ink);color-scheme:dark}
 
-  .stage .reihe{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);margin:var(--s6) 0 var(--s2)}
-  .stage .reihe:first-of-type{margin-top:var(--s2)}
-  .poster .pmark{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:15px;opacity:.92}
-  .vergleich{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s4)}
-  .vergleich .card p{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.6;margin:0 0 .5em}
-  .vergleich .card p b{color:var(--ink);font-weight:600}
+  /* Nachbau-Kopfzeile der Zielseite – ganz aus Tokens/Rollen gesetzt. */
+  .site-head{border-bottom:1px solid var(--stage-veil);position:sticky;top:0;background:var(--stage-bg);z-index:50}
+  .site-head .bar{display:flex;align-items:center;justify-content:space-between;gap:var(--s6);
+    padding:var(--s3) 0;flex-wrap:wrap}
+  .site-head .brand{color:var(--stage-ink);text-decoration:none;
+    font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:22px;line-height:1}
+  .site-head .mainnav{display:flex;gap:var(--s4);flex-wrap:wrap;align-items:center;
+    font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px}
+  .site-head .mainnav a{color:var(--stage-ink);padding:6px 0}
+  .site-head .mainnav a:hover{color:var(--gold)}
+  .site-head .cta{display:flex;gap:var(--s2);align-items:center}
+  .site-head .cta .ghostl{color:var(--stage-muted);font-family:var(--font-text);font-size:var(--t-small);padding:10px 8px}
+
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+  .hero h1{color:var(--stage-ink)}
+  .hero .lede{color:var(--stage-muted)}
+  .reihe{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);margin:var(--s8) 0 var(--s2)}
+  .poster .pmark{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:15px;opacity:.92;padding:0 10px;text-align:center}
+  .smeta{margin-top:var(--s6)}
+
+  .site-foot{border-top:1px solid var(--stage-veil);margin-top:var(--s8);padding:var(--s6) 0}
+  .site-foot .frow{display:flex;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--stage-muted)}
+  .site-foot a{color:var(--stage-muted)}
+  .site-foot a:hover{color:var(--gold)}
 </style>
 </head>
 <body>
-<script src="../design-system/nav.js" data-root="../"
-        data-onpage="Startseite:#startseite|Katalog:#katalog|In Zahlen:#zahlen|Der Weg:#weg"></script>
 
-<main class="wrap">
+<header class="site-head"><!-- # ds-ok Nachbau: die Kopfzeile der Zielseite ist hier der Inhalt -->
+  <div class="wrap bar">
+    <a class="brand" href="#top">Goetheanum&nbsp;TV</a>
+    <nav class="mainnav" aria-label="Hauptnavigation">
+      <a href="#videothek">Videothek</a>
+      <a href="#fussnote">Community</a>
+      <a href="#fussnote">Shop</a>
+      <a href="#fussnote">Über uns</a>
+    </nav>
+    <span class="cta">
+      <a class="ghostl" href="#fussnote">Einloggen</a>
+      <a class="btn primary" href="#fussnote">Gratis testen</a>
+    </span>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
   <section class="hero">
-    <span class="kicker">Perspektive · Webfamilie</span>
-    <h1>goetheanum.tv im Hausbild</h1>
-    <p class="lede">Der Streaming-Katalog ist komplett — was fehlt, sind Marke
-      und Mass. Diese Seite zeigt, wie seine Startseite aussähe, mit dem
-      Design-System durchgearbeitet: dieselbe dunkle Fläche, aber mit Hausschrift,
-      Sektionsfarben und gerechneten Kontrasten.</p>
-  </section>
-
-  <section id="startseite">
-    <div class="shead"><h2>Die Startseite: heute ↔ mit dem System</h2>
-      <p>Zwei Fenster auf denselben Katalog. Links das Abbild des heutigen
-         Zustands (Grade, Grau und Versal-Knopf wie gemessen), rechts dieselbe
-         Startseite auf der <q>Bühne</q> des Fundaments.</p></div>
-    <div class="mockpair">
-      <figure class="mock ist">
-        <figcaption><b>Heute</b><span>goetheanum.tv · Juli 2026</span></figcaption>
-        <div class="screen">
-          <div class="itv-top"><span class="wm">goetheanum.tv</span>
-            <nav><span>Programm</span><span>Reihen</span><span>Live</span></nav></div>
-          <div class="itv-hero">
-            <h4>Alma Humana — die Konferenz</h4>
-            <p>Alle Beiträge der Konferenz als Aufzeichnung — Vorträge, Bühne und Gespräche.</p>
-            <span class="itv-btn">JETZT ANSEHEN</span>
-          </div>
-          <div class="itv-row">
-            <div><span class="po"></span><b>Eröffnungsabend</b><span>1:12:40</span></div>
-            <div><span class="po"></span><b>Eurythmie am Abend</b><span>48:15</span></div>
-            <div><span class="po"></span><b>Jugend im Gespräch</b><span>26:03</span></div>
-          </div>
-        </div>
-      </figure>
-      <figure class="mock soll">
-        <figcaption><b>Mit dem Design-System</b><span>dieselbe Startseite</span></figcaption>
-        <div class="screen" style="padding:0">
-          <div class="stage" style="border-radius:0;min-height:100%">
-            <span class="live">Live</span>
-            <p class="reihe">Alma Humana — die Konferenz</p>
-            <p class="smeta" style="margin:0 0 var(--s3)">Alle Beiträge der Konferenz als Aufzeichnung — Vorträge, Bühne und Gespräche.</p>
-            <a class="btn primary" href="#startseite">Jetzt ansehen</a>
-            <div class="mrow" style="margin-top:var(--s4)">
-              <a class="mtile" href="#startseite"><span class="poster" style="background:var(--sek-ms);color:var(--on-sek-ms)"><span class="pmark">Eröffnung</span><span class="dur">1:12:40</span></span>
-                <span class="mt">Eröffnungsabend</span><span class="ms">Vortrag · Deutsch/Englisch</span></a>
-              <a class="mtile" href="#startseite"><span class="poster" style="background:var(--sek-srmk);color:var(--on-sek-srmk)"><span class="pmark">Bühne</span><span class="dur">48:15</span></span>
-                <span class="mt">Eurythmie am Abend</span><span class="ms">Aufführung</span></a>
-              <a class="mtile" href="#startseite"><span class="poster" style="background:var(--sek-js);color:var(--on-sek-js)"><span class="pmark">Gespräch</span><span class="dur">26:03</span></span>
-                <span class="mt">Jugend im Gespräch</span><span class="ms">Reihe · Teil 3</span></a>
-            </div>
-          </div>
-        </div>
-      </figure>
-    </div>
-    <p class="note" style="margin-top:var(--s4)">Der Knopf spricht normal statt versal (G05), die Meta-Grade tragen 8.2:1 statt 3.67:1, die Poster tragen die Sektionsfarben — mehr dazu <a href="#zahlen">in Zahlen</a>.</p>
-  </section>
-
-  <section id="katalog">
-    <div class="shead"><h2>Der Katalog</h2>
-      <p>Bühne (.stage) + Medienkacheln (.mtile) + Reihen (.mrow). Die Fläche bleibt
-         in Hell wie Dunkel gleich — wie eine Konsole; die Poster tragen die
-         Sektionsfarben mit gerechnetem Text darauf (B01).</p></div>
-
-    <div class="stage">
-      <span class="live">Live</span>
-      <p class="reihe">Alma Humana — die Konferenz</p>
-      <div class="mrow">
-        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-ms);color:var(--on-sek-ms)"><span class="pmark">Eröffnung</span><span class="dur">1:12:40</span></span>
-          <span class="mt">Eröffnungsabend</span><span class="ms">Vortrag · Deutsch/Englisch</span></a>
-        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-srmk);color:var(--on-sek-srmk)"><span class="pmark">Bühne</span><span class="dur">48:15</span></span>
-          <span class="mt">Eurythmie am Abend</span><span class="ms">Aufführung</span></a>
-        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-js);color:var(--on-sek-js)"><span class="pmark">Gespräch</span><span class="dur">26:03</span></span>
-          <span class="mt">Jugend im Gespräch</span><span class="ms">Reihe · Teil 3</span></a>
-        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-nws);color:var(--on-sek-nws)"><span class="pmark">Labor</span><span class="dur">33:47</span></span>
-          <span class="mt">Beobachten als Methode</span><span class="ms">Werkstatt</span></a>
-      </div>
-      <p class="reihe">Greening the Desert</p>
-      <div class="mrow">
-        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-lws);color:var(--on-sek-lws)"><span class="pmark">Folge 1</span><span class="dur">52:19</span></span>
-          <span class="mt">Der Boden lebt</span><span class="ms">Dokumentation</span></a>
-        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-hpise);color:var(--on-sek-hpise)"><span class="pmark">Folge 2</span><span class="dur">47:02</span></span>
-          <span class="mt">Wasser halten</span><span class="ms">Dokumentation</span></a>
-        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-mas);color:var(--on-sek-mas)"><span class="pmark">Folge 3</span><span class="dur">41:33</span></span>
-          <span class="mt">Rechnen mit dem Klima</span><span class="ms">Dokumentation</span></a>
-        <a class="mtile" href="#katalog"><span class="poster" style="background:var(--sek-sbk);color:var(--on-sek-sbk)"><span class="pmark">Extra</span><span class="dur">12:58</span></span>
-          <span class="mt">Hinter den Kulissen</span><span class="ms">Kurzfilm</span></a>
-      </div>
-      <p class="smeta">Dauer-Angaben tabellarisch (G25) · Kacheltitel in der Hausschrift, Meta in der Leseschrift (Schrift-Grenze) · Fokusring sichtbar.</p>
+    <span class="live">Jetzt: Drei Monate Probezeit</span>
+    <h1 style="margin-top:var(--s4)">Anthroposophie in Videos</h1>
+    <p class="lede">Vorträge, Reihen, Livestreams und die Arbeit der Sektionen —
+      der Medienkatalog des Goetheanum.</p>
+    <div style="margin-top:var(--s4);display:flex;gap:var(--s3);flex-wrap:wrap">
+      <a class="btn primary" href="#videothek">Gratis testen</a>
+      <a class="btn" href="#videothek">Alle Videos</a>
     </div>
   </section>
 
-  <section id="zahlen">
-    <div class="shead"><h2>Der Vergleich in Zahlen</h2>
-      <p>Was zwischen links und rechts liegt — gerechnet am Original (Juli 2026), Regel-IDs in Klammern.</p></div>
-    <div class="vergleich">
-      <div class="card"><p><b>Grau #6e6e6e auf #121212 = 3.67:1 → --stage-muted 8.2:1</b> (B02, gerechnet statt geschätzt).</p></div>
-      <div class="card"><p><b>Titillium per !important über Inter → Hausschrift als Quelle</b>; Versal-Knöpfe → normale Beschriftung (G05/G23).</p></div>
-      <div class="card"><p><b>Schiefer #23323F ohne Marke → Blau/Gold-Tokens</b>; Licht/Dunkel als duplizierte Literale → eine Token-Schicht (DS02/B05).</p></div>
-      <div class="card"><p><b>Kein :focus-visible, kein Skip-Link → Fokus-Defaults + Sprunglink</b> aus base.css/nav.js (WCAG 2.4.1/2.4.7).</p></div>
-      <div class="card"><p><b>Google Fonts + vier Fremd-CDNs → Selbst-Hosting</b> (Datenschutz, Reproduzierbarkeit).</p></div>
-      <div class="card"><p><b>Gelernt in Gegenrichtung:</b> die Reihen-Kacheln und die abgeleiteten Töne per Formel — beides ist jetzt Teil des Fundaments (--stage-*).</p></div>
+  <section id="videothek">
+    <p class="reihe">Reihen</p>
+    <div class="mrow">
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-ms);color:var(--on-sek-ms)"><span class="pmark">Alma Humana</span></span>
+        <span class="mt">Alma Humana</span><span class="ms">Konferenz-Reihe</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-lws);color:var(--on-sek-lws)"><span class="pmark">Greening the Desert</span></span>
+        <span class="mt">Greening the Desert</span><span class="ms">Dokumentar-Reihe</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-aas);color:var(--on-sek-aas)"><span class="pmark">Rudolf Steiner</span></span>
+        <span class="mt">Das Leben Rudolf Steiners</span><span class="ms">Biografische Reihe</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-nws);color:var(--on-sek-nws)"><span class="pmark">Erde</span></span>
+        <span class="mt">Die Erde als Lebewesen</span><span class="ms">Reihe</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-hpise);color:var(--on-sek-hpise)"><span class="pmark">Heilen</span></span>
+        <span class="mt">Die Kunst des Heilens</span><span class="ms">Reihe</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-sbk);color:var(--on-sek-sbk)"><span class="pmark">Gesamtkunstwerk</span></span>
+        <span class="mt">Das erste Goetheanum als Gesamtkunstwerk</span><span class="ms">Reihe</span></a>
     </div>
+
+    <p class="reihe">Aus der Videothek</p>
+    <div class="mrow">
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-szw);color:var(--on-sek-szw)"><span class="pmark">Wasser</span></span>
+        <span class="mt">Was tun wir für das Wasser?</span><span class="ms">Herbert Dreiseitl</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-srmk);color:var(--on-sek-srmk)"><span class="pmark">Bühne</span></span>
+        <span class="mt">Chaos und Form</span><span class="ms">Eurythmie</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-mas);color:var(--on-sek-mas)"><span class="pmark">Musik</span></span>
+        <span class="mt">Stille und Schrei</span><span class="ms">Kaija Saariaho</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-ps);color:var(--on-sek-ps)"><span class="pmark">Pädagogik</span></span>
+        <span class="mt">Die digitalen Herausforderungen in der Pädagogik</span><span class="ms">Vortrag</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-lws);color:var(--on-sek-lws)"><span class="pmark">Ernährung</span></span>
+        <span class="mt">Gesunde Lebensmittel machen gesund</span><span class="ms">Jasmin Peschke</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-nws);color:var(--on-sek-nws)"><span class="pmark">Tier</span></span>
+        <span class="mt">Unser neues Verhältnis zum Tier</span><span class="ms">Ueli Hurter</span></a>
+    </div>
+
+    <p class="smeta">Videothek: Alle Videos · Kalender · Reihen · Livestreams · Sektionen — Titel und Reihen: goetheanum.tv, 6. Juli 2026.</p>
   </section>
 
-  <section id="weg">
-    <div class="shead"><h2>Der Weg dorthin</h2>
-      <p>Uscreen erlaubt eigenes CSS und eigene Head-Snippets — derselbe Kanal, der heute die Schrift flickt, trägt die Tokens.</p></div>
-    <pre class="code"><code>&lt;!-- Uscreen · Theme-Einstellungen · Custom Code (Head) --&gt;
-&lt;link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/tokens.css"&gt;
-&lt;link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/base.css"&gt;
-&lt;style&gt;
-  /* Plattform-Variablen auf die Tokens heben – statt Schrift per !important zu flicken */
-  :root{ --ds-fg-default:var(--stage-ink); --ds-fg-muted:var(--stage-muted) }
-  body{ font-family:var(--font) }
-&lt;/style&gt;</code></pre>
-    <p class="note">Vollständiger Befund: <a href="https://github.com/phtok/goeloggen/blob/main/docs/webfamilie-befund.md">docs/webfamilie-befund.md</a></p>
-  </section>
 </main>
 
-<footer class="ds-footer">
+<footer class="site-foot" id="fussnote">
   <div class="wrap frow">
-    <span><strong>Goetheanum</strong> · Perspektiven der Webfamilie</span>
-    <span><a href="../design-system/">Design-System</a> · <a href="../">alle Werkzeuge</a></span>
+    <span>© 2026 Goetheanum&nbsp;TV · <a href="#fussnote">AGB</a> · <a href="#fussnote">Privatsphäre</a> · <a href="#fussnote">Impressum</a> · <a href="#fussnote">Kontakt</a> · <a href="#fussnote" lang="de">Deutsch</a> · <a href="#fussnote" lang="en">English</a></span>
+    <span>Nachbau der Startseite im <a href="../design-system/">Design-System</a></span>
   </div>
 </footer>
+
+<div class="fab" role="navigation" aria-label="Perspektive">
+  <a class="btn primary" href="../design-system/#perspektiven">‹ Zurück zum Design-System</a>
+  <a class="btn" href="https://www.goetheanum.tv" target="_blank" rel="noopener">Original öffnen&nbsp;↗</a>
+</div>
+
 </body>
 </html>
