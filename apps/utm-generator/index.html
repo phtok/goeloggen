@@ -321,6 +321,23 @@
     el(id).addEventListener('input', render);
     el(id).addEventListener('change', render);
   });
+
+  // Medium aus der Quelle vorschlagen: Quelle = wo genau, Medium = Kanal-Gattung.
+  // Nur setzen, solange das Medium leer ist oder zuletzt automatisch kam –
+  // eine Handeingabe wird nie überschrieben.
+  var MEDIUM_VORSCHLAG = {
+    instagram:'social', facebook:'social', linkedin:'social', youtube:'social',
+    'nl-ws':'email', 'nl-tv':'email', mailing:'email',
+    inserat:'print', google:'cpc'
+  };
+  var mediumWarAutomatisch = false;
+  el('medium').addEventListener('input', function(){ mediumWarAutomatisch = false; });
+  el('source').addEventListener('input', function(){
+    var v = MEDIUM_VORSCHLAG[slug(el('source').value)];
+    if(v && (!el('medium').value || mediumWarAutomatisch)){
+      el('medium').value = v; mediumWarAutomatisch = true; render();
+    }
+  });
   // Beim Verlassen die Slug-Form sichtbar zurückschreiben.
   ['source','medium','content'].forEach(function(id){
     el(id).addEventListener('blur', function(){ el(id).value = slug(el(id).value); render(); });
