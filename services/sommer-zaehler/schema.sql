@@ -183,8 +183,7 @@ create unique index if not exists sommer2026_links_url_uk  on public.sommer2026_
 create unique index if not exists sommer2026_links_code_uk on public.sommer2026_links (code);
 alter table public.sommer2026_links enable row level security;
 revoke all on table public.sommer2026_links from anon, authenticated;
--- Schreiben NUR über die Schlüssel-RPCs unten (Migration
--- «sommer2026_links_schreibschutz») – kein offenes anon-INSERT mehr.
+-- Schreiben über die RPCs unten (kein direktes anon-INSERT auf die Tabelle).
 
 -- Soll/Ist: je registriertem Link die Zahl der Anmeldungen über genau dieses UTM-Tupel
 create or replace function public.sommer2026_links_public()
@@ -207,31 +206,16 @@ grant execute on function public.sommer2026_links_public() to anon, authenticate
 -- Kurzlink-Weiterleitung: Edge Function `go` liest sommer2026_links.code (Service-Role)
 -- und leitet per 302 auf die volle UTM-URL. Siehe go/index.ts.
 
--- Schreibschutz (Migration «sommer2026_links_schreibschutz»): Anlegen und
--- Löschen verlangen den Team-Schlüssel. Sein SHA-256-Hash liegt in
--- sommer2026_config unter «links_schluessel_hash» (Präfix 'goe-links:');
--- Schlüsselwechsel = diese eine Config-Zeile neu setzen.
-create or replace function public.sommer2026_links_schluessel_ok(p_schluessel text)
-returns boolean language sql security definer set search_path to 'public' as $$
-  select exists (
-    select 1 from public.sommer2026_config
-     where key = 'links_schluessel_hash'
-       and value = encode(extensions.digest('goe-links:' || coalesce(p_schluessel, ''), 'sha256'), 'hex')
-  );
-$$;
-revoke execute on function public.sommer2026_links_schluessel_ok(text) from public, anon, authenticated;
-
--- Anlegen nur per RPC: prüft Schlüssel, meldet 'ok' | 'schluessel' |
--- 'vergeben' (unique) | 'unvollstaendig' als Text an den Generator.
+-- Anlegen per RPC: meldet 'ok' | 'vergeben' (unique) | 'unvollstaendig'
+-- als Text an den Generator. Der einst eingeführte Team-Schlüssel wurde am
+-- 6.7.2026 wieder entfernt (Migration «sommer2026_links_schluessel_entfernen»);
+-- p_schluessel bleibt aus Kompatibilität in der Signatur und wird ignoriert.
 create or replace function public.sommer2026_link_anlegen(
   p_schluessel text, p_source text, p_medium text, p_content text,
   p_landing text, p_sprache text, p_url text, p_code text,
   p_rolle text, p_ersteller text)
 returns text language plpgsql security definer set search_path to 'public' as $$
 begin
-  if not public.sommer2026_links_schluessel_ok(p_schluessel) then
-    return 'schluessel';
-  end if;
   if coalesce(p_source, '') = '' or coalesce(p_medium, '') = '' or coalesce(p_url, '') = '' then
     return 'unvollstaendig';
   end if;
@@ -251,13 +235,10 @@ end;
 $$;
 grant execute on function public.sommer2026_link_anlegen(text, text, text, text, text, text, text, text, text, text) to anon, authenticated;
 
--- Kontrolliertes Löschen (per URL), ebenfalls nur mit Schlüssel.
+-- Kontrolliertes Löschen (per URL, nur RPC – p_schluessel wird ignoriert).
 create or replace function public.sommer2026_link_loeschen(p_url text, p_schluessel text)
 returns text language plpgsql security definer set search_path to 'public' as $$
 begin
-  if not public.sommer2026_links_schluessel_ok(p_schluessel) then
-    return 'schluessel';
-  end if;
   delete from public.sommer2026_links where url = p_url and kampagne = 'summer26_trial';
   return 'ok';
 end;
@@ -291,8 +272,6 @@ revoke all on table public.sommer2026_config from anon, authenticated;
 -- Schlüssel in sommer2026_config:
 --   webhook_secret : Secret für ?key= der Ingestion-Functions
 --   hash_salt      : Salt für den E-Mail-Hash (Entdopplung)
---   links_schluessel_hash : SHA-256 des Team-Schlüssels (Präfix 'goe-links:')
---                    fürs Link-Register (Anlegen/Löschen)
 --   aktion_aktiv   : 'true' = zählen, sonst nur loggen
 --   aktion_start   : Zeitgrenze (Anmeldungen davor zählen nicht), z. B.
 --                    '2026-07-03T12:00:00+02:00'

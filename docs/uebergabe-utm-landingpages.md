@@ -107,9 +107,8 @@ Popup-Öffnen per `history.replaceState` zurück auf die URL schreiben und
 ## Randbedingungen
 
 - **Keine Personendaten** ins Repo oder in Screenshots; E-Mails liegen nur
-  gehasht in der Datenbank. Secrets (Webhook-Secret, Team-Schlüssel des
-  Link-Registers) stehen **nicht** in diesem Brief — beim Auftraggeber
-  erfragen.
+  gehasht in der Datenbank. Secrets (Webhook-Secret) stehen **nicht** in diesem
+  Brief — beim Auftraggeber erfragen.
 - Lovable-Projekte gehören dem Auftraggeber (Zugang via lovable.dev).
   Königsweg für präzise Arbeit: **GitHub-Sync** des Lovable-Projekts
   aktivieren, dann kann eine Claude-Code-Session den Landing-Code direkt

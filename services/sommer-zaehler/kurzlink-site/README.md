@@ -22,8 +22,7 @@ keine Link-Liste; neue Kurzlinks entstehen im Generator und wirken sofort.
 Nicht hier im Repo, sondern im **UTM-Generator** (nur intern gelistet):
 `werkzeuge.goetheanum.ch/apps/utm-generator/` → Ziel-URL + UTM-Merkmale
 eintragen, Kurznamen wählen, ins Register schreiben. Der Kurzname wird zum
-Pfad `/s/<kurzname>`. Anlegen und Löschen im Register verlangen den
-**Team-Schlüssel** (einmal im Generator eingeben, der Browser merkt ihn).
+Pfad `/s/<kurzname>`.
 
 **Slug-Stil:** kurz, klein, ein zweisilbiger Tiername mit Bild (`otter`,
 `biber`, `reiher` …). Menschlich abtippbar aus Bio, Caption oder Papier.
