@@ -182,11 +182,11 @@
     },
     {
       "slug": "karten",
-      "cat": "vorbereitung",
-      "status": "beta",
+      "cat": "generatoren",
+      "status": "live",
       "tag": "Campus",
-      "title": "Kartentool",
-      "short": "Karten",
+      "title": "Campus-Karte",
+      "short": "Campus-Karte",
       "href": "apps/karten-generator/",
       "desc": "Lagepläne des Goetheanum-Geländes von Fall zu Fall beschriften und als Vektor-PDF ausgeben — A4/A3 quer, wahlweise mit Beschnitt und Schnittmarken, Kartenfarben je Variante, Parkflächen einfärbbar.",
       "such": "Karte Kartierung Campus Gelände Lageplan PDF A3 Schnittmarken Beschnitt Parkflächen"
@@ -413,7 +413,7 @@
     {
       "slug": "seelenkalender",
       "cat": "anwendung",
-      "status": "beta",
+      "status": "intern",
       "tag": "Neu",
       "title": "Seelenkalender",
       "short": "Seelenkalender",
