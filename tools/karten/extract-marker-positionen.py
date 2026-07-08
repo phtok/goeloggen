@@ -111,6 +111,14 @@ LEGENDE = [
 # gelten nur x > 100 als Kartenmarken.
 KARTENBEREICH_X = {0: 100.0, 1: 0.0}
 
+# Ratifizierte Ausnahmen gegenüber der Quelle: (marker, x, y, Toleranz mm).
+# Die LT25-Vorlage trägt die ‹5› (Bookshop) zweimal — die Zweitmarke auf dem
+# Südweg ist dort falsch gesetzt und wird nicht übernommen
+# (Entscheid Auftraggeber, 8. Juli 2026).
+AUSNAHMEN = [
+    ("5", 198.99, 172.47, 1.0),
+]
+
 
 def pfadpunkte(pfad):
     punkte = []
@@ -239,7 +247,13 @@ def marken_extrahieren(seiten):
                     "marker": text, "farbe": None, "form": "wort",
                     "x": round(blatt_x, 2), "y": round(cy * MM, 2),
                 })
-    return funde
+    def ratifiziert(fund):
+        for marker, x, y, toleranz in AUSNAHMEN:
+            if fund["marker"] == marker and abs(fund["x"] - x) < toleranz and abs(fund["y"] - y) < toleranz:
+                print(f"  Ausnahme angewandt: {marker} bei ({fund['x']}, {fund['y']}) nicht übernommen")
+                return False
+        return True
+    return [f for f in funde if ratifiziert(f)]
 
 
 def orte_bauen(funde):

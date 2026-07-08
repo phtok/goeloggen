@@ -101,6 +101,7 @@ let gelaendeInhalt = null;   // SVG-Inhalt ohne Wurzel/<style>
 let gelaendeMasse = { breite: 1006.3, hoehe: 651.968 };
 let parkAnzahl = 0;
 let logoInhalt = null;       // Campus-Wortmarke aus dem Logogenerator (reine Pfade)
+let kompassInhalt = null;    // Kompassrose aus den Icons v2.7 (kompass-2)
 
 async function ladeGelaende() {
   const antwort = await fetch("assets/gelaende.svg");
@@ -132,6 +133,19 @@ function logoErzeugen() {
   }
 }
 
+async function ladeKompass() {
+  try {
+    const antwort = await fetch("../../assets/fonts/goetheanum/Icons-Einzeldateien/svg/kompass-2.svg");
+    const text = await antwort.text();
+    kompassInhalt = text
+      .replace(/^[\s\S]*?<svg[^>]*>/, "")
+      .replace(/<\/svg>\s*$/, "")
+      .replace(/ fill="#1a1a1a"/g, ""); // Farbe kommt von der Gruppe (weiss wie in der Vorlage)
+  } catch (fehler) {
+    console.warn("Kompass-Icon nicht ladbar:", fehler);
+  }
+}
+
 function gelaendeMarkup() {
   let inhalt = gelaendeInhalt;
   // Parkflächen zuerst (tragen class + id), gewählte Farben halbtransparent.
@@ -144,6 +158,11 @@ function gelaendeMarkup() {
   });
   inhalt = inhalt.replace(/class="k-([a-z-]+)"/g, (voll, rolle) => {
     return `fill="${state.farben[rolle] || "#cccccc"}"`;
+  });
+  // Striche folgen denselben Rollen wie die Füllungen — sonst zeichnen die
+  // Original-Strichfarben Konturen an Flächen, die flach gemeint sind.
+  inhalt = inhalt.replace(/data-ks="([a-z-]+)"/g, (voll, rolle) => {
+    return `stroke="${state.farben[rolle] || "#cccccc"}"`;
   });
   return inhalt;
 }
@@ -342,15 +361,14 @@ function legendeMarkup() {
 /* ---------- Szene ---------- */
 
 function kompassMarkup() {
-  // Kompassfarbe folgt der dunkelsten Kartenrolle, wie in den Beispielen.
-  const hex = state.farben.goetheanum;
-  return `<g opacity="0.9">
-    <circle cx="171" cy="33.5" r="3.25" fill="none" stroke="${hex}" stroke-width="0.42" />
-    <line x1="163" y1="33.5" x2="179" y2="33.5" stroke="${hex}" stroke-width="0.42" />
-    <line x1="171" y1="29.6" x2="171" y2="37.4" stroke="${hex}" stroke-width="0.42" />
-    <text x="160.9" y="34.15" font-size="3.5" fill="${hex}" font-family="${SCHRIFT_WERT}">N</text>
-    <text x="180.8" y="34.15" font-size="3.5" fill="${hex}" font-family="${SCHRIFT_WERT}">S</text>
-  </g>`;
+  // Kompassrose = Icon ‹kompass-2› (Icons v2.7), weiss wie in der Vorlage.
+  // Platzierung aus dem LT25-Original gemessen: Nadel 174.6–187.5 mm,
+  // Mitte (181.05, 34.0); Icon-Nadel liegt bei x 248–761, y-Mitte -500.
+  if (!kompassInhalt) return "";
+  const skala = 12.9 / 513;
+  const tx = 181.05 - skala * 504.5;
+  const ty = 34.0 + skala * 500;
+  return `<g transform="translate(${tx} ${ty}) scale(${skala})" fill="#ffffff">${kompassInhalt}</g>`;
 }
 
 function logoMarkup() {
@@ -799,7 +817,7 @@ function render() {
 (async function start() {
   laden();
   logoErzeugen();
-  await ladeGelaende();
+  await Promise.all([ladeGelaende(), ladeKompass()]);
   setzeZoom(state.zoom);
   render();
 })();
