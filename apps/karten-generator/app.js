@@ -85,6 +85,7 @@ const state = {
   positionen: {},      // Ort-id -> [x, y] (verschobene Marke, Standardlage)
   eigene: [],          // { id, label, farbe, x, y, marker } — x/y in Blatt-mm der Standardlage
   wiesen: { klein: false, gross: false },
+  kompakt: false,       // kompakte Legende (kleinerer Grad, engere Zeilen)
   ausschnitt: { skala: 1, dx: 0, dy: 0 },  // Kartenausschnitt relativ zur Standardlage
   preset: "hell",
   farben: { ...PRESETS["hell"] },
@@ -141,7 +142,7 @@ async function ladeIkone(name) {
 }
 
 async function ladeIkonen() {
-  const namen = ["kompass-2", "treppe", "fahrstuhl", "pfeil-rechts-fett"];
+  const namen = ["kompass-2", "treppe", "fahrstuhl", "pfeil-rechts-fett", "wc-rollstuhl"];
   await Promise.all(namen.map(async (name) => {
     try {
       ikonen[name] = await ladeIkone(name);
@@ -194,8 +195,15 @@ function gelaendeMarkup() {
     const farbe = state.wiesen[name] ? state.farben.wiese : state.farben.campus;
     return `stroke="${farbe}"`;
   });
-  inhalt = inhalt.replace(/<g data-wiese-halter="(klein|gross)">/g,
-    '<g clip-path="url(#wiese-clip)">');
+  // Der beschnittene Südzipfel bleibt Campus-blau: unter die geclippte
+  // (grüne) Fläche legt sich eine ungeclippte Kopie in Campus-Farbe.
+  inhalt = inhalt.replace(/<g data-wiese-halter="(klein|gross)">([\s\S]*?)<\/g>/g,
+    (voll, name, kern) => {
+      const basis = kern
+        .replace(/fill="[^"]*" id="wiese-(?:klein|gross)"/, `fill="${state.farben.campus}"`)
+        .replace(/stroke="[^"]*"/, `stroke="${state.farben.campus}"`);
+      return basis + `<g clip-path="url(#wiese-clip)">${kern}</g>`;
+    });
   // Campus-Gebäude aktiv/passiv (id steht vor der Klasse im Tag).
   inhalt = inhalt.replace(
     /<path id="(campusbau-\d+)"([^>]*?)class="k-(goetheanum|gebaeude-campus|akzent)"/g,
@@ -330,7 +338,7 @@ function ortMarker(ort) {
 // Beweglich sind nur der Infotisch und die eigenen Marken — alles andere
 // ist aus den Vorlagen fixiert; für Einmaliges gibt es die eigene Marke.
 function ortBeweglich(ort) {
-  return ort.id === "o4" || ort.art === "eigene";
+  return ort.id === "o4" || ort.id === "b-zugang" || ort.art === "eigene";
 }
 
 /* ---------- SVG-Bausteine der Szene ---------- */
@@ -345,9 +353,14 @@ function textGroesse(text, basis) {
   return String(text).length >= 2 ? basis * 0.85 : basis;
 }
 
-function markenKreis(x, y, hex, text, r) {
+function markenKreis(x, y, hex, text, r, symbol) {
   // Nummern wie im Original: Grotesk halbfett, ~0.7 des Kreisdurchmessers;
   // Grundlinie um ZIFFERN_SITZ unter der Kreismitte (optischer Sitz, DS).
+  // Symbol-Marken (z. B. barrierefreier Zugang) tragen ein Icon statt Ziffer.
+  if (symbol) {
+    return `<circle cx="${x}" cy="${y}" r="${r}" fill="${hex}" />`
+      + ikonMarkup(symbol, x, y, r * 1.7, "#ffffff");
+  }
   const groesse = textGroesse(text, r * 1.4);
   return `<circle cx="${x}" cy="${y}" r="${r}" fill="${hex}" />`
     + `<text x="${x}" y="${y + groesse * ZIFFERN_SITZ}" text-anchor="middle" font-size="${groesse}"`
@@ -416,7 +429,7 @@ function ortMarkup(ort) {
   }
   ortPositionen(ort).forEach(([px, py]) => {
     const [x, y] = anp(px, py);
-    teile += markenKreis(x, y, hex, ortMarker(ort), 2.03);
+    teile += markenKreis(x, y, hex, ortMarker(ort), 2.03, ort.symbol);
     if (ort.pfeil) teile += pfeilMarkup(x, y, 2.03, hex, ort.pfeil);
   });
   return teile;
@@ -424,7 +437,7 @@ function ortMarkup(ort) {
 
 /* ---------- Legende ---------- */
 
-const LEGENDE_LAYOUT = {
+const LEGENDE_NORMAL = {
   spaltenX: [12.53, 64.28],
   startOhneTitel: 14.0,
   startMitTitel: 26.0,     // Luft unter dem Veranstaltungstitel
@@ -436,6 +449,17 @@ const LEGENDE_LAYOUT = {
   labelGroesse: 3.35,      // wie die Vorlage: Titelschnitt 9.5 pt
   notizGroesse: 3.0
 };
+// Kompakte Legende: gewinnt Platz bei vielen Orten (kleinerer Grad,
+// engere Zeilen — fürs Druckblatt, nicht für Bildschirm-UI).
+const LEGENDE_KOMPAKT = {
+  ...LEGENDE_NORMAL,
+  zeile: 4.9, notiz: 4.1, extraZeile: 3.7, gruppe: 4.0,
+  labelGroesse: 2.9, notizGroesse: 2.6
+};
+
+function LEGENDE_LAYOUT_aktiv() {
+  return state.kompakt ? LEGENDE_KOMPAKT : LEGENDE_NORMAL;
+}
 
 function legendeZeilen() {
   const zeilen = [];
@@ -443,17 +467,17 @@ function legendeZeilen() {
   alleOrte().filter(ortAktiv).forEach((ort) => {
     if (vorher) {
       const treppen = vorher.art === "treppe" && ort.art === "treppe";
-      if (vorher.art !== ort.art || treppen) zeilen.push({ typ: "abstand", hoehe: LEGENDE_LAYOUT.gruppe });
+      if (vorher.art !== ort.art || treppen) zeilen.push({ typ: "abstand", hoehe: LEGENDE_LAYOUT_aktiv().gruppe });
     }
     const zeilenTexte = ortLabel(ort).split("\n");
     zeilen.push({
       typ: "ort", ort, zeilenTexte,
-      hoehe: LEGENDE_LAYOUT.zeile + (zeilenTexte.length - 1) * LEGENDE_LAYOUT.extraZeile
+      hoehe: LEGENDE_LAYOUT_aktiv().zeile + (zeilenTexte.length - 1) * LEGENDE_LAYOUT_aktiv().extraZeile
     });
     // (Abstände nur bei Art-Wechseln — feste Dekaden gibt es nicht mehr.)
     if (ort.art === "treppe") {
       aktiveNotizen(ort).forEach(({ notiz }) => {
-        zeilen.push({ typ: "notiz", notiz, ort, hoehe: LEGENDE_LAYOUT.notiz });
+        zeilen.push({ typ: "notiz", notiz, ort, hoehe: LEGENDE_LAYOUT_aktiv().notiz });
       });
     }
     vorher = ort;
@@ -464,7 +488,7 @@ function legendeZeilen() {
 function legendeMarkup() {
   // Fliess-Layout: erst füllt sich Spalte 1, dann Spalte 2 —
   // die Spaltenzuteilung der Vorlage gilt nicht mehr.
-  const L = LEGENDE_LAYOUT;
+  const L = LEGENDE_LAYOUT_aktiv();
   const start = state.titel.trim() ? L.startMitTitel : L.startOhneTitel;
   const untergrenze = SZENE.hoehe - 12;
   let teile = "";
@@ -492,7 +516,7 @@ function legendeMarkup() {
     if (ort.art === "treppe") {
       teile += treppenBadge(x, y - 0.9, ort.marker, "treppe", hex, true);
     } else {
-      teile += markenKreis(x, y - 0.9, hex, ortMarker(ort), 2.03);
+      teile += markenKreis(x, y - 0.9, hex, ortMarker(ort), 2.03, ort.symbol);
     }
     zeile.zeilenTexte.forEach((text, index) => {
       teile += `<text x="${x + L.labelAbstand}" y="${y + index * L.extraZeile}"`
@@ -532,10 +556,13 @@ function szeneMarkup(anschnitt) {
   const titel = state.titel.trim();
   nummernBerechnen();
   const marker = alleOrte().filter(ortAktiv).map(ortMarkup).join("");
+  // Blatt-Clip mit ausgesparter Ecke oben rechts: die Karte endet dort,
+  // das Papier bleibt weiss — Grund für das Logo, keine Überlagerung.
+  const B = SZENE.breite + b, H = SZENE.hoehe + b;
   return `
     <defs>
       <clipPath id="blatt-clip">
-        <rect x="${-b}" y="${-b}" width="${SZENE.breite + 2 * b}" height="${SZENE.hoehe + 2 * b}" />
+        <polygon points="${-b},${-b} 244,${-b} 244,20 ${B},20 ${B},${H} ${-b},${H}" />
       </clipPath>
       ${wieseClipMarkup()}
     </defs>
@@ -546,7 +573,6 @@ function szeneMarkup(anschnitt) {
         ${gebaeudeLabelMarkup()}
         ${kompassMarkup()}
       </g>
-      <rect x="244" y="${-b}" width="${SZENE.breite - 244 + b}" height="${20 + b}" rx="3" fill="#ffffff" />
       ${marker}
     </g>
     <line x1="${KARTE.falz}" y1="0" x2="${KARTE.falz}" y2="${SZENE.hoehe}" stroke="${TINTE}" stroke-opacity="0.4" stroke-width="0.18" />
@@ -635,12 +661,13 @@ function ortZeile(ort, loeschbar) {
     eingabe.className = "label-edit";
     eingabe.value = ortLabel(ort).replace(/\n/g, " / ");
     const uebernehmen = () => {
+      if (state.bearbeiten !== ort.id) return; // ‹Esc› hat schon abgebrochen
       const wert = eingabe.value.trim();
       state.bearbeiten = null;
       if (ort.art === "eigene") {
         const eintrag = state.eigene.find((e) => e.id === ort.id);
         if (eintrag && wert) eintrag.label = wert;
-      } else if (!wert || wert === ort.label.replace(/\n/g, " / ")) {
+      } else if (!wert || wert === sprachText(ort.label).replace(/\n/g, " / ")) {
         delete state.labels[ort.id];
       } else {
         state.labels[ort.id] = wert;
@@ -681,18 +708,6 @@ function ortZeile(ort, loeschbar) {
   });
   zeile.appendChild(farbKnopf);
 
-  const stift = document.createElement("button");
-  stift.type = "button";
-  stift.className = "row-btn";
-  stift.title = "Beschriftung ändern";
-  stift.textContent = "✎";
-  stift.addEventListener("click", (e) => {
-    e.stopPropagation();
-    state.bearbeiten = ort.id;
-    render();
-  });
-  zeile.appendChild(stift);
-
   if (ortBeweglich(ort)) {
     const verschieben = document.createElement("button");
     verschieben.type = "button";
@@ -725,10 +740,25 @@ function ortZeile(ort, loeschbar) {
     zeile.appendChild(weg);
   }
 
-  zeile.addEventListener("click", () => {
-    if (state.an[ort.id]) delete state.an[ort.id];
-    else state.an[ort.id] = true;
-    render();
+  // Klick schaltet den Ort; Doppelklick (versteckte Option) ändert die
+  // Beschriftung. Der Schaltklick wartet kurz, damit der zweite Klick den
+  // ersten noch abfangen kann — sonst baut render() die Zeile schon neu.
+  let klickTimer = null;
+  zeile.title = "Klick: auf die Karte / herunter. Doppelklick: Beschriftung ändern.";
+  zeile.addEventListener("click", (e) => {
+    if (e.detail === 2) {
+      clearTimeout(klickTimer);
+      klickTimer = null;
+      state.bearbeiten = ort.id;
+      render();
+      return;
+    }
+    if (e.detail > 2 || klickTimer) return;
+    klickTimer = setTimeout(() => {
+      if (state.an[ort.id]) delete state.an[ort.id];
+      else state.an[ort.id] = true;
+      render();
+    }, 280);
   });
   return zeile;
 }
@@ -780,14 +810,36 @@ const aufgeklappt = {};
 GRUPPEN.forEach(([titel], index) => { aufgeklappt[titel] = index === 0; });
 let gebaeudeAufgeklappt = false;
 
+// Gruppenkopf mit Sammelschalter: ein Klick aktiviert bzw. deaktiviert
+// alle Einträge der Kategorie (‹Auch Kategorienweise!›).
+function gruppenKopf(kopfKnopf, kannAn, schalten) {
+  const zeile = document.createElement("div");
+  zeile.className = "group-head";
+  zeile.appendChild(kopfKnopf);
+  const schalter = document.createElement("button");
+  schalter.type = "button";
+  schalter.className = "group-toggle";
+  schalter.textContent = kannAn ? "alle an" : "alle aus";
+  schalter.title = kannAn
+    ? "Alle Einträge dieser Gruppe aktivieren"
+    : "Alle Einträge dieser Gruppe deaktivieren";
+  schalter.addEventListener("click", (e) => {
+    e.stopPropagation();
+    schalten(kannAn);
+  });
+  zeile.appendChild(schalter);
+  return zeile;
+}
+
 function renderOrte() {
   document.querySelectorAll("#sprache-row [data-sprache]").forEach((knopf) => {
     knopf.setAttribute("aria-pressed", knopf.dataset.sprache === state.sprache ? "true" : "false");
   });
   orteGruppen.innerHTML = "";
   GRUPPEN.forEach(([titel, filter]) => {
-    const gruppe = document.createElement("div");
     const eintraege = ORTE.filter(filter);
+    if (!eintraege.length) return; // leere Kategorien nicht anbieten
+    const gruppe = document.createElement("div");
     const aktiv = eintraege.filter(ortAktiv).length;
     const offen = aufgeklappt[titel];
 
@@ -802,7 +854,13 @@ function renderOrte() {
       aufgeklappt[titel] = !offen;
       renderOrte();
     });
-    gruppe.appendChild(kopf);
+    gruppe.appendChild(gruppenKopf(kopf, eintraege.length > aktiv, (an) => {
+      eintraege.forEach((ort) => {
+        if (an) state.an[ort.id] = true;
+        else delete state.an[ort.id];
+      });
+      render();
+    }));
 
     if (offen) {
       const liste = document.createElement("div");
@@ -855,7 +913,11 @@ function renderGebaeude() {
     gebaeudeAufgeklappt = !gebaeudeAufgeklappt;
     renderGebaeude();
   });
-  halter.appendChild(kopf);
+  halter.appendChild(gruppenKopf(kopf, aktiv < einheiten.size, (an) => {
+    if (an) einheiten.forEach((name, einheit) => { state.gebaeudeAn[einheit] = true; });
+    else state.gebaeudeAn = {}; // Gebäude mit aktivem Marker bleiben dunkel
+    render();
+  }));
   if (!gebaeudeAufgeklappt) return;
 
   einheiten.forEach((name, einheit) => {
@@ -954,6 +1016,7 @@ function renderOptionen() {
 
   document.getElementById("opt-wiese-klein").checked = state.wiesen.klein;
   document.getElementById("opt-wiese-gross").checked = state.wiesen.gross;
+  document.getElementById("opt-kompakt").checked = state.kompakt;
 }
 
 /* ---------- Zoom (nur Bildschirm-Vorschau) ---------- */
@@ -975,7 +1038,7 @@ function speichern() {
       gebaeudeAn: Object.keys(state.gebaeudeAn),
       teileAus: state.teileAus, notizenAus: state.notizenAus,
       markerFarben: state.markerFarben, positionen: state.positionen,
-      eigene: state.eigene, wiesen: state.wiesen, ausschnitt: state.ausschnitt,
+      eigene: state.eigene, wiesen: state.wiesen, kompakt: state.kompakt, ausschnitt: state.ausschnitt,
       preset: state.preset, farben: state.farben
     }));
   } catch (fehler) {
@@ -1004,6 +1067,7 @@ function laden() {
     state.positionen = s.positionen || {};
     state.eigene = Array.isArray(s.eigene) ? s.eigene : [];
     if (s.wiesen) state.wiesen = { klein: Boolean(s.wiesen.klein), gross: Boolean(s.wiesen.gross) };
+    state.kompakt = Boolean(s.kompakt);
     if (s.ausschnitt && typeof s.ausschnitt.skala === "number") {
       state.ausschnitt = {
         skala: Math.min(1.8, Math.max(0.7, s.ausschnitt.skala)),
@@ -1119,6 +1183,20 @@ document.getElementById("opt-wiese-klein").addEventListener("change", (e) => {
 });
 document.getElementById("opt-wiese-gross").addEventListener("change", (e) => {
   state.wiesen.gross = e.target.checked;
+  render();
+});
+
+document.getElementById("opt-kompakt").addEventListener("change", (e) => {
+  state.kompakt = e.target.checked;
+  render();
+});
+
+document.getElementById("orte-alle-an").addEventListener("click", () => {
+  alleOrte().forEach((ort) => { state.an[ort.id] = true; });
+  render();
+});
+document.getElementById("orte-alle-aus").addEventListener("click", () => {
+  state.an = {};
   render();
 });
 

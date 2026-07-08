@@ -103,7 +103,12 @@ LEGENDE = [
     ("v23", "23", "ort", {"de": "Backofen", "en": "Backofen"}),
     ("v24", "24", "ort", {"de": "Schreinerei Südsaal", "en": "Schreinerei Südsaal"}),
     ("v30", "30", "ort", {"de": "English Studies", "en": "English Studies"}),
-    ("v31", "31", "ort", {"de": "Halde", "en": "Halde"}),
+    ("v31", "31", "ort", {"de": "Rudolf Steiner Halde", "en": "Rudolf Steiner Halde"}, {
+        "teile": [
+            {"de": "Rudolf Steiner Halde", "en": "Rudolf Steiner Halde"},
+            {"de": "Puppentheater Felicia", "en": "Puppet Theatre Felicia"},
+        ],
+    }),
     ("v32", "32", "ort", {"de": "Glashaus", "en": "Glashaus"}),
     ("v33", "33", "ort", {"de": "Studierendenwohnheim", "en": "Students Residence"}),
     ("v34", "34", "ort", {"de": "Haus Schuurman", "en": "Haus Schuurman"}),
@@ -112,14 +117,14 @@ LEGENDE = [
     ("v37", "37", "ort", {"de": "AfaP", "en": "AfaP"}, {"pfeil": "rechts"}),
     ("v38", "38", "ort", {"de": "Trigon", "en": "Trigon"}, {"pfeil": "rechts"}),
     ("o40", "40", "orientierung", {"de": "Rudolf-Steiner-Atelier", "en": "Rudolf Steiner Atelier"}),
-    ("o41", "41", "orientierung", {"de": "Modell Erstes Goetheanum", "en": "1st Goetheanum Model"}),
+    ("o41", "41", "orientierung", {"de": "Baugeschichte + Modell Erstes Goetheanum", "en": "Building History + 1st Goetheanum Model"}),
     ("o42", "42", "orientierung", {"de": "Hochatelier", "en": "Hochatelier"}),
     ("o43", "43", "orientierung", {"de": "Edith-Maryon-Zimmer", "en": "Edith Maryon Flat"}),
-    ("o44", "44", "orientierung", {"de": "Rudolf-Steiner-Archiv", "en": "Rudolf Steiner Archive"}),
-    ("o45", "45", "orientierung", {"de": "Speisehaus", "en": "Speisehaus"}, {
+    ("o44", "44", "orientierung", {"de": "Haus Duldeck · Rudolf-Steiner-Archiv", "en": "Haus Duldeck · Rudolf Steiner Archive"}),
+    ("o45", "45", "orientierung", {"de": "Speisehaus · Laden", "en": "Restaurant · Shop"}, {
         "pfeil": "unten-rechts",
         "teile": [
-            {"de": "Speisehaus", "en": "Speisehaus"},
+            {"de": "Speisehaus · Laden", "en": "Restaurant · Shop"},
             {"de": "Schweizer Landesgesellschaft", "en": "Schweizer Landesgesellschaft"},
             {"de": "Bushaltestelle", "en": "Bus Stop"},
         ],
@@ -143,38 +148,22 @@ KATEGORIE_JE_ORT = {
     "o44": "haeuser", "o45": "haeuser",
 }
 
-# Zusätzliche Orte aus dem Willkommensplan (assets/maps/src/Willkommensplan-A4.pdf,
-# ‹Willkommensschilder gequetscht auf A4›, Kartenlage identisch mit der
-# Standardlage — Form-Abgleich). Positionen per Kreis-Erkennung extrahiert und
-# per Pixel-Sichtbarkeitstest gegen das gequetschte Zweitpanel verifiziert.
-# Die Jugendsektion (e) trägt in der Vorlage zwei Marken.
+# Sektionen, Gärten und Gästehaus Friedwart: WARTEN auf eine verlässliche
+# Positions-Quelle. Der Willkommensplan des Beispielpakets ist ‹gequetscht›
+# (anisotrop skaliert, 90° genordet, zwei gemischte Panels) — weder Form-
+# noch Anker-Fit liefern mm-genaue Lagen (Residuen bis 5 mm, Ausreisser
+# ausserhalb des Blatts). Sobald der aktuelle Willkommensbanner als
+# PDF-Export vorliegt, greift die bewährte Extraktion (Kreis-Erkennung +
+# Form-Abgleich) und die Einträge kommen mm-genau zurück.
 WILLKOMMEN = [
-    ("s-a", "a", "sektionen", {"de": "Allgemeine Anthroposophische Sektion", "en": "General Anthroposophical Section"}, [[107.52, 110.65]]),
-    ("s-b", "b", "sektionen", {"de": "Naturwissenschaftliche Sektion", "en": "Natural Science Section"}, [[93.72, 151.41]]),
-    ("s-c", "c", "sektionen", {"de": "Pädagogische Sektion", "en": "Pedagogical Section"}, [[107.52, 102.32]]),
-    ("s-d", "d", "sektionen", {"de": "Sektion für Schöne Wissenschaften", "en": "Section for the Literary Arts and Humanities"}, [[134.24, 133.41]]),
-    ("s-e", "e", "sektionen", {"de": "Jugendsektion", "en": "Youth Section"}, [[91.92, 104.80], [163.12, 22.73]]),
-    ("s-f", "f", "sektionen", {"de": "Medizinische Sektion", "en": "Medical Section"}, [[107.57, 23.93]]),
-    ("s-g", "g", "sektionen", {"de": "Sektion für Landwirtschaft", "en": "Section for Agriculture"}, [[99.17, 152.09]]),
-    ("s-h", "h", "sektionen", {"de": "Sektion für Bildende Künste", "en": "Visual Arts Section"}, [[120.83, 162.83]]),
-    ("s-i", "i", "sektionen", {"de": "Sektion für Redende und Musizierende Künste", "en": "Section for the Performing Arts"}, [[102.38, 91.06]]),
-    ("s-j", "j", "sektionen", {"de": "Sektion für Sozialwissenschaften", "en": "Section for Social Sciences"}, [[53.89, 121.84]]),
-    ("s-k", "k", "sektionen", {"de": "Mathematisch-Astronomische Sektion", "en": "Section for Mathematics and Astronomy"}, [[31.78, 59.74]]),
-    ("s-m", "m", "sektionen", {"de": "Sektion für Heilpädagogik und inklusive soziale Entwicklung", "en": "Section for Inclusive Social Development"}, [[107.57, 20.50]]),
-    ("g-10", "10", "gaerten", {"de": "Felsli", "en": "Felsli"}, [[164.32, 64.64]]),
-    ("g-11", "11", "gaerten", {"de": "Wasserspiel", "en": "Flowforms"}, [[106.10, 159.06]]),
-    ("g-12", "12", "gaerten", {"de": "Gedenkhain", "en": "Memorial Grove"}, [[140.67, 124.05]]),
-    ("g-13", "13", "gaerten", {"de": "Heilkräutergarten", "en": "Medicinal Plant Garden"}, [[82.50, 61.97]]),
-    ("g-14", "14", "gaerten", {"de": "Färberpflanzengarten", "en": "Plant Dye Garden"}, [[31.53, 64.63]]),
-    ("g-15", "15", "gaerten", {"de": "Schnittblumengarten", "en": "Cut Flower Garden"}, [[28.44, 74.90]]),
-    ("g-16", "16", "gaerten", {"de": "Duftkräutergarten", "en": "Fragrant Herb Garden"}, [[38.62, 67.25]]),
-    ("g-17", "17", "gaerten", {"de": "Bienenskulptur", "en": "Bee Sculpture"}, [[38.84, 47.95]]),
-    ("g-18", "18", "gaerten", {"de": "Präparatepavillon", "en": "Präparatepavillon"}, [[55.43, 83.33]]),
-    ("h-friedwart", "H", "haeuser", {"de": "Gästehaus Friedwart", "en": "Guesthouse Friedwart"}, [[167.69, 149.01]]),
+    # Barrierefreier Zugang (aktueller Banner): Marke mit Rollstuhl-Symbol,
+    # am Haupteingang platziert und bewusst verschiebbar (ortBeweglich).
+    ("b-zugang", "BF", "eingaenge",
+     {"de": "Barrierefreier Zugang", "en": "Barrier-free access"},
+     [[201.8, 152.3]], {"symbol": "wc-rollstuhl"}),
 ]
 
-# Marker-Standardfarben der neuen Kategorien (Vorlagen-Töne).
-WILLKOMMEN_FARBEN = {"sektionen": "grau", "gaerten": "gruen", "haeuser": "blau"}
+WILLKOMMEN_FARBEN = {"eingaenge": "blau", "sektionen": "grau", "gaerten": "gruen", "haeuser": "blau"}
 
 # Ort → Campus-Gebäude (ids aus build-gelaende-svg.py). Per Treffer-Test der
 # Markerpositionen gegen die Gebäudepfade ermittelt (Suchradius ≤ 4.5 mm),
@@ -375,14 +364,18 @@ def orte_bauen(funde):
             ort["gebaeude"] = GEBAEUDE_JE_ORT[oid]
         orte.append(ort)
 
-    for oid, marker, kategorie, label, positionen in WILLKOMMEN:
-        orte.append({
+    for eintrag in WILLKOMMEN:
+        oid, marker, kategorie, label, positionen = eintrag[:5]
+        extra = eintrag[5] if len(eintrag) > 5 else {}
+        ort = {
             "id": oid, "marker": marker, "art": "orientierung",
             "kategorie": kategorie,
             "farbe": WILLKOMMEN_FARBEN.get(kategorie, "blau"),
             "label": label,
             "positionen": positionen,
-        })
+        }
+        ort.update(extra)
+        orte.append(ort)
 
     reihenfolge = {schluessel: index for index, (schluessel, _) in enumerate(KATEGORIEN)}
     orte.sort(key=lambda o: reihenfolge.get(o["kategorie"], 99))
