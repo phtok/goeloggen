@@ -215,7 +215,7 @@ const ORTE = [
         197.44
       ]
     ],
-    "pfeil": "unten-links"
+    "pfeil": 105
   },
   {
     "id": "f-p",
@@ -1067,8 +1067,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        124.0,
-        113.5
+        125.88,
+        113.88
       ]
     ],
     "gebaeude": "campusbau-46"
@@ -1085,8 +1085,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        189.5,
-        128.5
+        189.14,
+        131.87
       ]
     ],
     "gebaeude": "campusbau-53"
@@ -1103,8 +1103,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        142.0,
-        165.5
+        149.93,
+        170.31
       ]
     ],
     "gebaeude": "campusbau-41"
@@ -1121,8 +1121,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        288.5,
-        196.5
+        192.92,
+        109.33
       ]
     ]
   },
@@ -1138,11 +1138,10 @@ const ORTE = [
     },
     "positionen": [
       [
-        285.5,
-        104.0
+        270.95,
+        125.81
       ]
-    ],
-    "pfeil": "rechts"
+    ]
   },
   {
     "id": "s-landwirtschaft",
@@ -1156,8 +1155,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        124.5,
-        121.5
+        124.94,
+        121.64
       ]
     ],
     "gebaeude": "campusbau-46"
@@ -1174,8 +1173,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        104.5,
-        149.0
+        109.98,
+        151.18
       ]
     ]
   },
@@ -1191,8 +1190,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        207.9,
-        123.4
+        193.3,
+        136.41
       ]
     ],
     "gebaeude": "campusbau-53"
@@ -1209,8 +1208,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        164.3,
-        62.3
+        167.74,
+        61.04
       ]
     ],
     "gebaeude": "campusbau-9"
@@ -1227,8 +1226,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        255.5,
-        31.8
+        251.82,
+        32.06
       ]
     ],
     "gebaeude": "campusbau-15"
@@ -1245,8 +1244,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        285.5,
-        111.0
+        291.97,
+        133.19
       ]
     ],
     "pfeil": "rechts"
@@ -1263,8 +1262,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        230.5,
-        196.0
+        232.12,
+        193.41
       ]
     ]
   },
@@ -1297,8 +1296,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        157.3,
-        175.4
+        165.65,
+        178.45
       ]
     ]
   },
@@ -1331,8 +1330,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        242.9,
-        31.6
+        243.87,
+        29.79
       ]
     ]
   },
@@ -1348,8 +1347,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        228.7,
-        26.1
+        229.09,
+        25.06
       ]
     ]
   },
@@ -1382,8 +1381,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        266.0,
-        43.5
+        264.89,
+        41.53
       ]
     ]
   },
@@ -1399,8 +1398,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        219.0,
-        62.1
+        219.62,
+        62.18
       ]
     ]
   }
