@@ -21,6 +21,9 @@ const MARKER_FARBEN = {
 };
 const FARB_ZYKLUS = ["rot", "blau", "gruen", "grau", "gold"];
 const TINTE = "#4e4f4a";
+// Leise Druck-Tinte für Strukturbeiwerk (Kategorie-Titel der Legende):
+// gerechnet 5.07:1 auf Weiss (B02, ≥4.5:1 für Lesetext).
+const TINTE_LEISE = "#6e6f6a";
 
 // Schriftrollen: Sprache (Titel, Legende, Gebäudenamen) in der Hausschrift
 // (Titelschnitt = Deutlich); die Kreiszahlen der Marker sind das
@@ -145,7 +148,7 @@ async function ladeIkone(name) {
 }
 
 async function ladeIkonen() {
-  const namen = ["kompass-2", "pfeil-rechts-fett", "wc-rollstuhl"];
+  const namen = ["kompass-2", "pfeil-rechts-fett", "wc-rollstuhl", "wc-gruppe"];
   await Promise.all(namen.map(async (name) => {
     try {
       ikonen[name] = await ladeIkone(name);
@@ -394,16 +397,19 @@ function ortMarker(ort) {
 // Ausnahme auf Zeit: Sektionen und Gärten stammen vom gequetschten
 // Willkommensschild und dürfen von Hand justiert werden; die justierten
 // Lagen lassen sich exportieren und wandern dann in die Vorlage.
+function ortJustierbar(ort) {
+  return ort.kategorie === "sektionen" || ort.kategorie === "gaerten"
+    || ort.id.indexOf("wc-") === 0;
+}
+
 function ortBeweglich(ort) {
-  return ort.id === "o4" || ort.art === "eigene"
-    || ort.kategorie === "sektionen" || ort.kategorie === "gaerten";
+  return ort.id === "o4" || ort.art === "eigene" || ortJustierbar(ort);
 }
 
 function justierteLagen() {
   const lagen = {};
   ORTE.forEach((ort) => {
-    if ((ort.kategorie === "sektionen" || ort.kategorie === "gaerten")
-      && state.positionen[ort.id]) {
+    if (ortJustierbar(ort) && state.positionen[ort.id]) {
       lagen[ort.id] = state.positionen[ort.id];
     }
   });
@@ -532,10 +538,22 @@ const GEBAEUDE_LABELS = [
   { text: "Schreinerei", x: 224.4, y: 93.2, groesse: 3.18, winkel: -76 }
 ];
 
+// Textbreite in mm, mit der geladenen Webschrift gemessen — die Labels
+// werden start-verankert selbst zentriert. text-anchor="middle" misst der
+// PDF-Renderer mit fremden Metriken, und die Namen verrutschen im Druck.
+let messKontext = null;
+
+function textBreiteMm(text, familie, groesseMm) {
+  if (!messKontext) messKontext = document.createElement("canvas").getContext("2d");
+  messKontext.font = `100px ${familie}`;
+  return messKontext.measureText(text).width / 100 * groesseMm;
+}
+
 function gebaeudeLabelMarkup() {
   return GEBAEUDE_LABELS.map((l) => {
     const drehung = l.winkel ? ` transform="rotate(${l.winkel} ${l.x} ${l.y})"` : "";
-    return `<text x="${l.x}" y="${l.y}" font-size="${l.groesse}" fill="#ffffff" text-anchor="middle"`
+    const links = l.x - textBreiteMm(l.text, SCHRIFT_SPRACHE, l.groesse) / 2;
+    return `<text x="${links.toFixed(3)}" y="${l.y}" font-size="${l.groesse}" fill="#ffffff"`
       + ` font-family="${SCHRIFT_SPRACHE}"${drehung}>${escapeXml(l.text)}</text>`;
   }).join("");
 }
@@ -658,11 +676,12 @@ function legendeMarkup() {
     const x = L.spaltenX[spalte];
     if (zeile.typ === "abstand") { y += zeile.hoehe; return; }
     if (zeile.typ === "kopf") {
-      // Gruppenname der Kategorie — Sprache, darum Hausschrift; eigene
-      // Strukturebene (G01), unterschieden allein über Grad und Abstand,
-      // volle Tinte (B02 gilt auch im Druck).
-      teile += `<text x="${x}" y="${y}" font-size="${L.notizGroesse}"`
-        + ` fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(zeile.text)}</text>`;
+      // Gruppenname der Kategorie — Sprache, darum Hausschrift; beginnt
+      // auf der Einrückung der Ortsnamen. Unterschieden wird mit GENAU
+      // einem Merkmal (G01): leiser (TINTE_LEISE, gerechnet B02-fest) —
+      // gleicher Grad wie die Einträge.
+      teile += `<text x="${x + L.labelAbstand}" y="${y}" font-size="${L.labelGroesse}"`
+        + ` fill="${TINTE_LEISE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(zeile.text)}</text>`;
       y += zeile.hoehe;
       return;
     }
@@ -737,7 +756,6 @@ function szeneMarkup(anschnitt) {
       </g>
       ${marker}
     </g>
-    <line x1="${KARTE.falz}" y1="0" x2="${KARTE.falz}" y2="${SZENE.hoehe}" stroke="${TINTE}" stroke-opacity="0.4" stroke-width="0.18" />
     ${titel ? `<text x="10.5" y="14.2" font-size="5.3" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(titel)}</text>` : ""}
     ${titel && state.untertitel.trim() ? `<text x="10.5" y="20.2" font-size="3.35" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(state.untertitel.trim())}</text>` : ""}
     ${legendeMarkup()}
@@ -1559,6 +1577,14 @@ function render() {
   laden();
   logoErzeugen();
   await Promise.all([ladeGelaende(), ladeIkonen()]);
+  // Schriften vor dem ersten Satz laden — die Label-Zentrierung misst
+  // mit der echten Hausschrift, nicht mit der Ausweichschrift.
+  try {
+    await Promise.all([
+      document.fonts.load(`100px ${SCHRIFT_SPRACHE}`),
+      document.fonts.load(`100px ${SCHRIFT_ZAHL}`)
+    ]);
+  } catch (fehler) { /* Messung fällt auf die Systemschrift zurück */ }
   renderVarianten();
   render();
   zoomEinpassen();
