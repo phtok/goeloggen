@@ -175,8 +175,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        197.5,
-        125.5
+        197.46,
+        125.56
       ]
     ],
     "symbol": "wc-gruppe",
@@ -195,8 +195,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        224.5,
-        83.5
+        218.69,
+        83.73
       ]
     ],
     "legendeText": "WC"

@@ -95,6 +95,7 @@ const state = {
   kompakt: false,       // kompakte Legende (kleinerer Grad, engere Zeilen)
   ausschnitt: { skala: 1, dx: 0, dy: 0 },  // Kartenausschnitt relativ zur Standardlage
   logo: { x: null, y: null, skala: 1 },    // Campus-Logo: Mitte (mm) + Grösse
+  titelLogo: null,     // { markup, verhaeltnis, breite } — Sonderlogo statt Titel
   preset: "gedeckt",   // Standard; Anpassung je Rolle bleibt möglich
   farben: { ...PRESETS["gedeckt"] },
   platzieren: null,    // { label, farbe } während der Platzierung (neue Marke)
@@ -419,11 +420,15 @@ function ortBeweglich(ort) {
 }
 
 function justierteLagen() {
+  // Nur echte Abweichungen von der Vorlage — bereits übernommene
+  // Justagen (identische Lage) verstopfen den Export nicht mehr.
   const lagen = {};
   ORTE.forEach((ort) => {
-    if (ortJustierbar(ort) && state.positionen[ort.id]) {
-      lagen[ort.id] = state.positionen[ort.id];
-    }
+    const p = state.positionen[ort.id];
+    if (!ortJustierbar(ort) || !p) return;
+    const vorlage = (ort.positionen || [])[0];
+    if (vorlage && Math.abs(p[0] - vorlage[0]) < 0.05 && Math.abs(p[1] - vorlage[1]) < 0.05) return;
+    lagen[ort.id] = p;
   });
   return lagen;
 }
@@ -723,6 +728,7 @@ function legendeMarkup() {
   const L = LEGENDE_LAYOUT_aktiv();
   let start = state.titel.trim() ? L.startMitTitel : L.startOhneTitel;
   if (state.titel.trim() && state.untertitel.trim()) start += 5.2;
+  if (state.titelLogo) start = Math.max(L.startOhneTitel, 5.5 + titelLogoHoehe() + 7);
   const untergrenze = SZENE.hoehe - 12;
   let teile = "";
   let spalte = 0;
@@ -801,17 +807,33 @@ function kompassMarkup() {
   return `<g transform="translate(${tx} ${ty}) scale(${skala})" fill="#ffffff">${kompassInhalt}</g>`;
 }
 
+// Standardlage des Campus-Logos: vom Auftraggeber eingemessen und fixiert
+// (8. Juli 2026) — Mitte 274.1 × 12.2 mm, Breite 31.7 mm (24 mm × 132 %).
+// Für andere Anschnitte bleibt die Justage als Backend-Funktion (#justage).
+const LOGO_STANDARD = { x: 274.1, y: 12.2, breite: 31.7 };
+
+// Sonderlogo statt Titel (Backend-Funktion): hochgeladenes SVG links
+// oben; reine Pfade empfohlen — Text im SVG braucht eingebettete Schriften.
+function titelLogoMarkup() {
+  const l = state.titelLogo;
+  if (!l) return "";
+  const skala = l.breite / l.vbBreite;
+  return `<g transform="translate(10.5 5.5) scale(${skala.toFixed(5)})">${l.markup}</g>`;
+}
+
+function titelLogoHoehe() {
+  const l = state.titelLogo;
+  return l ? l.breite * l.vbHoehe / l.vbBreite : 0;
+}
+
 function logoMarkup() {
   if (!logoInhalt) return "";
-  // Grundbreite 24 mm (minimal grösser, Entscheid 8. Juli 2026), per
-  // Regler skalierbar; Lage per Klick setzbar (state.logo = Mitte in mm),
-  // Standard rechtsbündig oben mit Rand wie die Legende links (10.5).
-  const breite = 24 * state.logo.skala;
+  const breite = LOGO_STANDARD.breite * state.logo.skala;
   const hoehe = breite * logoInhalt.hoehe / logoInhalt.breite;
   const skala = breite / logoInhalt.breite;
-  const x = state.logo.x != null ? state.logo.x - breite / 2 : SZENE.breite - 10.5 - breite;
-  const y = state.logo.y != null ? state.logo.y - hoehe / 2 : 6.5;
-  return `<g transform="translate(${x.toFixed(2)} ${y.toFixed(2)}) scale(${skala})">${logoInhalt.markup}</g>`;
+  const mx = state.logo.x != null ? state.logo.x : LOGO_STANDARD.x;
+  const my = state.logo.y != null ? state.logo.y : LOGO_STANDARD.y;
+  return `<g transform="translate(${(mx - breite / 2).toFixed(2)} ${(my - hoehe / 2).toFixed(2)}) scale(${skala})">${logoInhalt.markup}</g>`;
 }
 
 function szeneMarkup(anschnitt) {
@@ -838,8 +860,9 @@ function szeneMarkup(anschnitt) {
       </g>
       ${marker}
     </g>
-    ${titel ? `<text x="10.5" y="14.2" font-size="5.3" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(titel)}</text>` : ""}
-    ${titel && state.untertitel.trim() ? `<text x="10.5" y="20.2" font-size="3.35" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(state.untertitel.trim())}</text>` : ""}
+    ${state.titelLogo ? titelLogoMarkup()
+      : (titel ? `<text x="10.5" y="14.2" font-size="5.3" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(titel)}</text>` : "")
+        + (titel && state.untertitel.trim() ? `<text x="10.5" y="20.2" font-size="3.35" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(state.untertitel.trim())}</text>` : "")}
     ${legendeMarkup()}
     ${logoMarkup()}
   `;
@@ -1321,8 +1344,12 @@ function renderOptionen() {
 
   document.getElementById("logo-skala").value = String(Math.round(state.logo.skala * 100));
   document.getElementById("logo-wert").textContent = `${Math.round(state.logo.skala * 100)}%`;
+  document.getElementById("titellogo-breite").value = String(state.titelLogo ? state.titelLogo.breite : 45);
+  document.getElementById("titellogo-status").textContent = state.titelLogo
+    ? "Sonderlogo aktiv — ersetzt Titel und Untertitel auf dem Blatt."
+    : "Kein Sonderlogo geladen.";
   document.getElementById("logo-lage").textContent = state.logo.x == null
-    ? "Standard (rechts oben)"
+    ? `Standard (${LOGO_STANDARD.x} × ${LOGO_STANDARD.y} mm)`
     : `${state.logo.x.toFixed(1)} × ${state.logo.y.toFixed(1)} mm`;
 }
 
@@ -1349,6 +1376,7 @@ function standAlsJson() {
     markerFarben: state.markerFarben, positionen: state.positionen,
     eigene: state.eigene, wiesen: state.wiesen, kompakt: state.kompakt, ausschnitt: state.ausschnitt,
     logo: state.logo,
+    titelLogo: state.titelLogo,
     preset: state.preset, farben: state.farben
   };
 }
@@ -1392,6 +1420,7 @@ function standAnwenden(s) {
         dy: Number(s.ausschnitt.dy) || 0
       };
     }
+    state.titelLogo = s.titelLogo && typeof s.titelLogo.markup === "string" ? s.titelLogo : null;
     state.logo = s.logo && typeof s.logo === "object"
       ? { x: typeof s.logo.x === "number" ? s.logo.x : null,
           y: typeof s.logo.y === "number" ? s.logo.y : null,
@@ -1647,10 +1676,8 @@ document.getElementById("logo-skala").addEventListener("change", () => {
 function logoVerschieben(dx, dy) {
   if (!logoInhalt) return;
   if (state.logo.x == null || state.logo.y == null) {
-    const breite = 24 * state.logo.skala;
-    const hoehe = breite * logoInhalt.hoehe / logoInhalt.breite;
-    state.logo.x = SZENE.breite - 10.5 - breite / 2;
-    state.logo.y = 6.5 + hoehe / 2;
+    state.logo.x = LOGO_STANDARD.x;
+    state.logo.y = LOGO_STANDARD.y;
   }
   state.logo.x = Math.round((state.logo.x + dx) * 10) / 10;
   state.logo.y = Math.round((state.logo.y + dy) * 10) / 10;
@@ -1665,6 +1692,54 @@ document.getElementById("logo-reset").addEventListener("click", () => {
   state.logo = { x: null, y: null, skala: 1 };
   render();
 });
+
+// Backend-Modus: Justage-Funktionen (Logo, Titellogo) erscheinen nur
+// mit ?justage bzw. #justage in der Adresse — im Alltag unsichtbar.
+if (window.location.hash === "#justage" || window.location.search.indexOf("justage") >= 0) {
+  document.body.classList.add("backend");
+}
+
+document.getElementById("titellogo-datei").addEventListener("change", (ereignis) => {
+  const datei = ereignis.target.files && ereignis.target.files[0];
+  ereignis.target.value = "";
+  if (!datei) return;
+  const leser = new FileReader();
+  leser.onload = () => {
+    try {
+      const doc = new DOMParser().parseFromString(leser.result, "image/svg+xml");
+      if (doc.querySelector("parsererror")) throw new Error("SVG unlesbar");
+      const svg = doc.documentElement;
+      const vb = (svg.getAttribute("viewBox") || "").split(/[\s,]+/).map(Number);
+      let vbBreite = vb.length === 4 ? vb[2] : parseFloat(svg.getAttribute("width")) || 100;
+      let vbHoehe = vb.length === 4 ? vb[3] : parseFloat(svg.getAttribute("height")) || 30;
+      const versatz = vb.length === 4 ? `translate(${-vb[0]} ${-vb[1]})` : "";
+      state.titelLogo = {
+        markup: versatz ? `<g transform="${versatz}">${svg.innerHTML}</g>` : svg.innerHTML,
+        vbBreite, vbHoehe, breite: 45
+      };
+      render();
+    } catch (fehler) {
+      window.alert("SVG nicht lesbar — bitte eine reine Vektor-SVG-Datei laden.");
+    }
+  };
+  leser.readAsText(datei);
+});
+
+document.getElementById("titellogo-laden").addEventListener("click", () => {
+  document.getElementById("titellogo-datei").click();
+});
+
+document.getElementById("titellogo-weg").addEventListener("click", () => {
+  state.titelLogo = null;
+  render();
+});
+
+document.getElementById("titellogo-breite").addEventListener("input", (e) => {
+  if (!state.titelLogo) return;
+  state.titelLogo.breite = Math.min(90, Math.max(20, Number(e.target.value)));
+  renderVorschau();
+});
+document.getElementById("titellogo-breite").addEventListener("change", () => speichern());
 
 document.getElementById("opt-kompakt").addEventListener("change", (e) => {
   state.kompakt = e.target.checked;

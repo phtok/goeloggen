@@ -186,12 +186,15 @@ WILLKOMMEN = [
     # dem Text ‹Toiletten› (gleiche Zeilen legt die Legende zusammen).
     # Gold wie die Kategorie; justierbar (✥), Lagen-Export liefert
     # die Feinkoordinaten zurück.
+    # Goetheanum exakt mittig auf der Zeile der beiden Lifte
+    # ((188.58+206.34)/2, (125.68+125.44)/2); Schreinerei vom
+    # Auftraggeber justiert (Lagen-Export, 8. Juli 2026).
     ("wc-goetheanum", "WC", "eingaenge",
      {"de": "Toiletten", "en": "Toilets"},
-     [[197.5, 125.5]], {"symbol": "wc-gruppe", "feldBreite": 13, "legendeText": "WC"}),
+     [[197.46, 125.56]], {"symbol": "wc-gruppe", "feldBreite": 13, "legendeText": "WC"}),
     ("wc-schreinerei", "WC", "eingaenge",
      {"de": "Toiletten", "en": "Toilets"},
-     [[224.5, 83.5]], {"legendeText": "WC"}),
+     [[218.69, 83.73]], {"legendeText": "WC"}),
 
     # Sektionen (Buchstaben wie auf dem Willkommensschild):
     ("s-allgemein", "a", "sektionen",
