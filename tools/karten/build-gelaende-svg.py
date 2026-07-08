@@ -44,6 +44,19 @@ ROLLEN = {
     "#c2afbd": "akzent",          # Akzentgebäude (z. B. Rundbauten)
 }
 
+# Strichfarben der Quelle gehören zu denselben Rollen — die Original-
+# Varianten (LT25 usw.) färben Striche mit der Palette um, sonst entstehen
+# beim Umfärben Konturen an Flächen, die flach gemeint sind.
+STRICH_ROLLEN = {
+    "#d9e5ec": "umgebung-hell",
+    "#ffffff": "wege",
+    "#a2b1c9": "campus",          # Strichton der Campusfläche
+    "#455055": "gebaeude",
+    "#4f7095": "gebaeude-campus",
+    "#a2b7ce": "campus",
+    "#737e8f": "gebaeude",
+}
+
 # Standardfarben = Original 2022 (die Presets liegen in app.js).
 STANDARD = {rolle: hexwert for hexwert, rolle in ROLLEN.items()}
 
@@ -83,6 +96,14 @@ def main() -> int:
 
     svg = re.sub(r'fill="(#[0-9a-fA-F]{6})"', ersetze, svg)
 
+    def ersetze_strich(match: re.Match) -> str:
+        rolle = STRICH_ROLLEN.get(match.group(1).lower())
+        if not rolle:
+            return match.group(0)
+        return f'data-ks="{rolle}"'
+
+    svg = re.sub(r'stroke="(#[0-9a-fA-F]{6})"', ersetze_strich, svg)
+
     # Parkflächen einzeln adressierbar machen (Lesereihenfolge = Dokument-
     # reihenfolge; IDs stabil, solange die Quelle unverändert ist).
     zaehler = [0]
@@ -96,6 +117,9 @@ def main() -> int:
     stil = "\n".join(
         f".k-{rolle} {{ fill: var(--karte-{rolle}, {farbe}); }}"
         for rolle, farbe in STANDARD.items()
+    ) + "\n" + "\n".join(
+        f'[data-ks="{rolle}"] {{ stroke: var(--karte-{rolle}, {STANDARD[rolle]}); }}'
+        for rolle in sorted(set(STRICH_ROLLEN.values()))
     )
     svg = svg.replace("<defs>", f"<style>\n{stil}\n</style>\n<defs>", 1)
 
