@@ -74,7 +74,6 @@ const state = {
   format: "a4",
   beschnitt: true,
   marken: false,
-  nummerierung: "fortlaufend",   // oder "vorlage" (feste Nummern der Beispiele)
   zoom: 1.15,
   an: {},              // Ort-id -> true = auf der Karte (Start: leeres Blatt)
   teileAus: {},        // Ort-id -> { Teil-Index: true } (abgewählte Teil-Orte)
@@ -247,10 +246,9 @@ function naechsteEigeneNummer() {
 
 // Fortlaufende Nummerierung: aktive Orte zählen in Legendenreihenfolge ab 1;
 // Buchstabenmarken (Treppen, P) behalten ihre Buchstaben.
-let nummern = null;
+let nummern = {};
 
 function nummernBerechnen() {
-  if (state.nummerierung !== "fortlaufend") { nummern = null; return; }
   nummern = {};
   let n = 1;
   alleOrte().filter(ortAktiv).forEach((ort) => {
@@ -261,8 +259,13 @@ function nummernBerechnen() {
 }
 
 function ortMarker(ort) {
-  if (nummern && nummern[ort.id]) return nummern[ort.id];
-  return ort.marker;
+  return nummern[ort.id] || ort.marker;
+}
+
+// Beweglich sind nur der Infotisch und die eigenen Marken — alles andere
+// ist aus den Vorlagen fixiert; für Einmaliges gibt es die eigene Marke.
+function ortBeweglich(ort) {
+  return ort.id === "o4" || ort.art === "eigene";
 }
 
 /* ---------- SVG-Bausteine der Szene ---------- */
@@ -391,17 +394,15 @@ function legendeZeilen() {
   let vorher = null;
   alleOrte().filter(ortAktiv).forEach((ort) => {
     if (vorher) {
-      const a = parseInt(vorher.marker, 10), b = parseInt(ort.marker, 10);
-      const dekade = state.nummerierung === "vorlage"
-        && !Number.isNaN(a) && !Number.isNaN(b) && Math.floor(a / 10) !== Math.floor(b / 10);
       const treppen = vorher.art === "treppe" && ort.art === "treppe";
-      if (vorher.art !== ort.art || dekade || treppen) zeilen.push({ typ: "abstand", hoehe: LEGENDE_LAYOUT.gruppe });
+      if (vorher.art !== ort.art || treppen) zeilen.push({ typ: "abstand", hoehe: LEGENDE_LAYOUT.gruppe });
     }
     const zeilenTexte = ortLabel(ort).split("\n");
     zeilen.push({
       typ: "ort", ort, zeilenTexte,
       hoehe: LEGENDE_LAYOUT.zeile + (zeilenTexte.length - 1) * LEGENDE_LAYOUT.extraZeile
     });
+    // (Abstände nur bei Art-Wechseln — feste Dekaden gibt es nicht mehr.)
     if (ort.art === "treppe") {
       aktiveNotizen(ort).forEach(({ notiz }) => {
         zeilen.push({ typ: "notiz", notiz, ort, hoehe: LEGENDE_LAYOUT.notiz });
@@ -623,7 +624,7 @@ function ortZeile(ort, loeschbar) {
 
   const markerSpan = document.createElement("span");
   markerSpan.className = "object-marker";
-  markerSpan.textContent = ortAktiv(ort) ? ortMarker(ort) : (state.nummerierung === "vorlage" ? ort.marker : "–");
+  markerSpan.textContent = ortAktiv(ort) ? ortMarker(ort) : "–";
   zeile.appendChild(markerSpan);
 
   const stift = document.createElement("button");
@@ -638,21 +639,23 @@ function ortZeile(ort, loeschbar) {
   });
   zeile.appendChild(stift);
 
-  const verschieben = document.createElement("button");
-  verschieben.type = "button";
-  verschieben.className = "row-btn";
-  verschieben.title = "Marke auf der Karte verschieben";
-  verschieben.textContent = "✥";
-  verschieben.addEventListener("click", (e) => {
-    e.stopPropagation();
-    state.an[ort.id] = true;
-    state.platzierenOrt = ort.id;
-    state.platzieren = null;
-    renderVorschau();
-    eigeneHint.textContent = `‹${ortLabel(ort).split("\n")[0]}› — neue Stelle in der Vorschau anklicken. ‹Esc› bricht ab.`;
-    printSvg.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  });
-  zeile.appendChild(verschieben);
+  if (ortBeweglich(ort)) {
+    const verschieben = document.createElement("button");
+    verschieben.type = "button";
+    verschieben.className = "row-btn";
+    verschieben.title = "Marke auf der Karte verschieben";
+    verschieben.textContent = "✥";
+    verschieben.addEventListener("click", (e) => {
+      e.stopPropagation();
+      state.an[ort.id] = true;
+      state.platzierenOrt = ort.id;
+      state.platzieren = null;
+      renderVorschau();
+      eigeneHint.textContent = `‹${ortLabel(ort).split("\n")[0]}› — neue Stelle in der Vorschau anklicken. ‹Esc› bricht ab.`;
+      printSvg.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+    zeile.appendChild(verschieben);
+  }
 
   if (loeschbar) {
     const weg = document.createElement("button");
@@ -716,21 +719,40 @@ function ortMitUnterzeilen(ort, loeschbar) {
   return halter;
 }
 
+// Hauptkategorien einklappbar — Übersicht in den Editing-Werkzeugen;
+// zugeklappt zeigt der Kopf, wie viele Orte aktiv sind.
+const aufgeklappt = { Orientierung: false, Veranstaltungsorte: false, Treppenhaus: false };
+
 function renderOrte() {
-  document.querySelectorAll("#nummerierung-row [data-nummerierung]").forEach((knopf) => {
-    knopf.setAttribute("aria-pressed", knopf.dataset.nummerierung === state.nummerierung ? "true" : "false");
-  });
   document.querySelectorAll("#sprache-row [data-sprache]").forEach((knopf) => {
     knopf.setAttribute("aria-pressed", knopf.dataset.sprache === state.sprache ? "true" : "false");
   });
   orteGruppen.innerHTML = "";
   GRUPPEN.forEach(([titel, filter]) => {
     const gruppe = document.createElement("div");
-    gruppe.innerHTML = `<div class="object-group-title">${titel}</div>`;
-    const liste = document.createElement("div");
-    liste.className = "object-list";
-    ORTE.filter(filter).forEach((ort) => liste.appendChild(ortMitUnterzeilen(ort, false)));
-    gruppe.appendChild(liste);
+    const eintraege = ORTE.filter(filter);
+    const aktiv = eintraege.filter(ortAktiv).length;
+    const offen = aufgeklappt[titel];
+
+    const kopf = document.createElement("button");
+    kopf.type = "button";
+    kopf.className = "object-group-title";
+    kopf.setAttribute("aria-expanded", offen ? "true" : "false");
+    kopf.innerHTML = `<span class="chevron">${offen ? "▾" : "▸"}</span>`
+      + `<span>${titel}</span>`
+      + `<span class="zaehler">${aktiv ? `${aktiv} aktiv` : ""}</span>`;
+    kopf.addEventListener("click", () => {
+      aufgeklappt[titel] = !offen;
+      renderOrte();
+    });
+    gruppe.appendChild(kopf);
+
+    if (offen) {
+      const liste = document.createElement("div");
+      liste.className = "object-list";
+      eintraege.forEach((ort) => liste.appendChild(ortMitUnterzeilen(ort, false)));
+      gruppe.appendChild(liste);
+    }
     orteGruppen.appendChild(gruppe);
   });
 
@@ -831,7 +853,6 @@ function speichern() {
     localStorage.setItem(SPEICHER_SCHLUESSEL, JSON.stringify({
       titel: state.titel, sprache: state.sprache, format: state.format,
       beschnitt: state.beschnitt, marken: state.marken,
-      nummerierung: state.nummerierung,
       an: Object.keys(state.an), labels: state.labels,
       teileAus: state.teileAus, notizenAus: state.notizenAus,
       markerFarben: state.markerFarben, positionen: state.positionen,
@@ -853,7 +874,6 @@ function laden() {
     if (s.format === "a3") state.format = "a3";
     state.beschnitt = s.beschnitt !== false;
     state.marken = Boolean(s.marken);
-    if (s.nummerierung === "vorlage") state.nummerierung = "vorlage";
     if (s.sprache === "en") state.sprache = "en";
     (s.an || []).forEach((id) => { state.an[id] = true; });
     state.labels = s.labels || {};
@@ -878,7 +898,7 @@ function laden() {
   }
 }
 
-/* ---------- Interaktion Vorschau: Platzieren und Ausschnitt ziehen ---------- */
+/* ---------- Interaktion Vorschau: Platzieren; Ausschnitt über Pfeile ---------- */
 
 function svgPunkt(clientX, clientY) {
   const punkt = new DOMPoint(clientX, clientY);
@@ -888,45 +908,19 @@ function svgPunkt(clientX, clientY) {
   return { x: p.x, y: p.y };
 }
 
-let ziehen = null;
+// Karte in Blatt-Millimetern verschieben (Pfeilknöpfe und Pfeiltasten).
+const AUSSCHNITT_SCHRITT = 5;
 
-printSvg.addEventListener("pointerdown", (ereignis) => {
-  if (state.platzieren || state.platzierenOrt || ereignis.button !== 0) return;
-  ziehen = {
-    startX: ereignis.clientX, startY: ereignis.clientY,
-    dx: state.ausschnitt.dx, dy: state.ausschnitt.dy,
-    bewegt: false
-  };
-  printSvg.setPointerCapture(ereignis.pointerId);
-});
-
-printSvg.addEventListener("pointermove", (ereignis) => {
-  if (!ziehen) return;
-  const matrix = printSvg.getScreenCTM();
-  if (!matrix) return;
-  const proMm = matrix.a; // Pixel je Blatt-mm
-  const dxMm = (ereignis.clientX - ziehen.startX) / proMm;
-  const dyMm = (ereignis.clientY - ziehen.startY) / proMm;
-  if (!ziehen.bewegt && Math.hypot(dxMm, dyMm) < 0.5) return;
-  ziehen.bewegt = true;
-  state.ausschnitt.dx = ziehen.dx + dxMm;
-  state.ausschnitt.dy = ziehen.dy + dyMm;
+function karteVerschieben(dx, dy) {
+  state.ausschnitt.dx += dx;
+  state.ausschnitt.dy += dy;
   renderVorschau();
-});
-
-printSvg.addEventListener("pointerup", () => {
-  if (ziehen && ziehen.bewegt) {
-    renderOptionen();
-    speichern();
-  }
-  ziehen = ziehen && ziehen.bewegt ? { fertig: true } : null;
-  setTimeout(() => { ziehen = null; }, 0);
-});
+  speichern();
+}
 
 const EIGENE_HINT_STANDARD = "Erst Beschriftung eingeben, dann in der Vorschau die Stelle anklicken. ‹Esc› bricht ab.";
 
 printSvg.addEventListener("click", (ereignis) => {
-  if (ziehen && ziehen.fertig) return; // Klick am Ende einer Zieh-Geste
   if (!state.platzieren && !state.platzierenOrt) return;
   const p = svgPunkt(ereignis.clientX, ereignis.clientY);
   if (!p) return;
@@ -991,13 +985,6 @@ document.querySelectorAll("#format-row [data-format]").forEach((knopf) => {
   });
 });
 
-document.querySelectorAll("#nummerierung-row [data-nummerierung]").forEach((knopf) => {
-  knopf.addEventListener("click", () => {
-    state.nummerierung = knopf.dataset.nummerierung;
-    render();
-  });
-});
-
 document.querySelectorAll("#sprache-row [data-sprache]").forEach((knopf) => {
   knopf.addEventListener("click", () => {
     state.sprache = knopf.dataset.sprache;
@@ -1035,6 +1022,26 @@ document.getElementById("ausschnitt-skala").addEventListener("change", () => {
 document.getElementById("ausschnitt-reset").addEventListener("click", () => {
   state.ausschnitt = { skala: 1, dx: 0, dy: 0 };
   render();
+});
+
+document.getElementById("karte-links").addEventListener("click", () => karteVerschieben(-AUSSCHNITT_SCHRITT, 0));
+document.getElementById("karte-rechts").addEventListener("click", () => karteVerschieben(AUSSCHNITT_SCHRITT, 0));
+document.getElementById("karte-hoch").addEventListener("click", () => karteVerschieben(0, -AUSSCHNITT_SCHRITT));
+document.getElementById("karte-runter").addEventListener("click", () => karteVerschieben(0, AUSSCHNITT_SCHRITT));
+
+// Pfeiltasten verschieben die Karte, solange kein Eingabefeld den Fokus hat.
+document.addEventListener("keydown", (ereignis) => {
+  const ziel = ereignis.target;
+  if (ziel && /^(INPUT|TEXTAREA|SELECT)$/.test(ziel.tagName)) return;
+  const richtung = {
+    ArrowLeft: [-AUSSCHNITT_SCHRITT, 0],
+    ArrowRight: [AUSSCHNITT_SCHRITT, 0],
+    ArrowUp: [0, -AUSSCHNITT_SCHRITT],
+    ArrowDown: [0, AUSSCHNITT_SCHRITT]
+  }[ereignis.key];
+  if (!richtung) return;
+  ereignis.preventDefault();
+  karteVerschieben(richtung[0], richtung[1]);
 });
 
 document.getElementById("zuruecksetzen").addEventListener("click", () => {

@@ -86,9 +86,19 @@
     .button-row { display: flex; flex-wrap: wrap; gap: var(--s2); }
 
     .object-group-title {
-      font-size: var(--t-small);
+      display: flex; align-items: center; gap: var(--s2);
+      width: 100%;
+      min-height: var(--tap);                     /* B04 */
+      border: 0; background: none; color: var(--ink);
+      font: inherit; font-size: var(--t-small);
       font-weight: var(--w-strong);
-      margin: var(--s2) 0 var(--s1);
+      cursor: pointer; padding: 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .object-group-title .chevron { color: var(--muted); width: 1em; }
+    .object-group-title .zaehler {
+      margin-left: auto; color: var(--muted);
+      font-weight: normal; font-variant-numeric: tabular-nums;  /* G25 */
     }
     .object-list { display: flex; flex-direction: column; }
     .object-row {
@@ -178,9 +188,17 @@
       background: #ffffff; /* # ds-ok: gedrucktes Blatt ist physisch weiss, keine Theme-Flaeche */
       box-shadow: 0 2px 14px rgba(0,0,0,.18);
     }
-    .print-svg { display: block; width: 100%; height: auto; cursor: grab; }
-    .print-svg:active { cursor: grabbing; }
+    .print-svg { display: block; width: 100%; height: auto; }
     .print-svg.platzieren { cursor: crosshair; }
+    .ausschnitt-panel {
+      display: flex; align-items: center; flex-wrap: wrap;
+      gap: var(--s3);
+    }
+    .ausschnitt-panel input[type="range"] {
+      flex: 1; min-width: 160px; min-height: var(--tap);  /* B04 */
+      accent-color: var(--blue-solid);
+    }
+    .ausschnitt-panel .button-row button { min-width: var(--tap); }
     /* Blatt-Text darf keine Seiten-Typografie erben: das globale Tracking
        (base.css letter-spacing) würde im SVG in Blatt-Millimetern wirken
        und den Satz sperren — Export und Vorschau müssen identisch sein. */
@@ -206,25 +224,7 @@
           <button type="button" data-sprache="de" aria-pressed="true">Deutsch</button>
           <button type="button" data-sprache="en" aria-pressed="false">English</button>
         </div>
-        <div class="seg" id="nummerierung-row">
-          <button type="button" data-nummerierung="fortlaufend" aria-pressed="true">Nummern fortlaufend</button>
-          <button type="button" data-nummerierung="vorlage" aria-pressed="false">wie Vorlage</button>
-        </div>
         <div id="orte-gruppen"></div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Kartenausschnitt</legend>
-        <div class="hint">Karte in der Vorschau ziehen, um den Ausschnitt zu verschieben.
-          Die Marker wandern mit.</div>
-        <div class="farb-reihe">
-          <label for="ausschnitt-skala">Grösse</label>
-          <input id="ausschnitt-skala" type="range" min="70" max="180" step="5" value="100" />
-          <span id="ausschnitt-wert" class="zoom-value">100%</span>
-        </div>
-        <div class="button-row">
-          <button id="ausschnitt-reset" type="button" class="btn">Standardlage</button>
-        </div>
       </fieldset>
 
       <fieldset>
@@ -294,6 +294,20 @@
             <svg id="print-svg" class="print-svg" viewBox="0 0 297 210" xmlns="http://www.w3.org/2000/svg"></svg>
           </div>
         </div>
+      </div>
+      <div class="ausschnitt-panel">
+        <span class="hint">Kartenausschnitt</span>
+        <input id="ausschnitt-skala" type="range" min="70" max="180" step="5" value="100"
+               title="Grösse des Kartenausschnitts" />
+        <span id="ausschnitt-wert" class="zoom-value">100%</span>
+        <div class="button-row">
+          <button id="karte-links" type="button" class="btn" title="Karte nach links">←</button>
+          <button id="karte-hoch" type="button" class="btn" title="Karte nach oben">↑</button>
+          <button id="karte-runter" type="button" class="btn" title="Karte nach unten">↓</button>
+          <button id="karte-rechts" type="button" class="btn" title="Karte nach rechts">→</button>
+          <button id="ausschnitt-reset" type="button" class="btn">Standardlage</button>
+        </div>
+        <span class="hint">Auch mit den Pfeiltasten verschiebbar.</span>
       </div>
     </section>
   </main>
