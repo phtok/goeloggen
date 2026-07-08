@@ -135,12 +135,15 @@ LEGENDE = [
         "teile": [
             {"de": "Speisehaus · Laden", "en": "Restaurant · Shop"},
             {"de": "Schweizer Landesgesellschaft", "en": "Schweizer Landesgesellschaft"},
-            {"de": "Bushaltestelle", "en": "Bus Stop"},
         ],
     }),
+    # Verkehr trägt Buchstaben statt Zahlen: S Bahnhof, P Parkplatz,
+    # B Bus (Entscheid Auftraggeber, 8. Juli 2026). Der Bahnhof behält
+    # seine Quellposition aus dem Beispiel (dort als ‹46› gesetzt).
     # Pfeil als Gradzahl: entlang der Strasse zum Bahnhof (an der
     # Strassen-Mittellinie gemessen, ~105°).
-    ("f46", "46", "orientierung", {"de": "Bahnhof", "en": "Train Station"}, {"pfeil": 105}),
+    ("f46", "S", "orientierung", {"de": "Bahnhof", "en": "Train Station"},
+     {"pfeil": 105, "quellmarker": "46"}),
     ("f-p", "P", "orientierung", {"de": "Parkplatz", "en": "Parking"}),
 ]
 
@@ -195,6 +198,13 @@ WILLKOMMEN = [
     ("wc-schreinerei", "WC", "eingaenge",
      {"de": "Toiletten", "en": "Toilets"},
      [[218.69, 83.73]], {"legendeText": "WC"}),
+
+    # Bushaltestelle ‹Goetheanum› an der Dorneckstrasse beim Speisehaus —
+    # eigener Verkehrs-Ort mit Buchstabe B (Entscheid Auftraggeber,
+    # 8. Juli 2026); bisher nur Beiwerk-Zeile des Speisehauses.
+    ("f-bus", "B", "verkehr",
+     {"de": "Bushaltestelle", "en": "Bus Stop"},
+     [[285.0, 196.0]]),
 
     # Sektionen (Buchstaben wie auf dem Willkommensschild):
     ("s-allgemein", "a", "sektionen",
@@ -454,8 +464,11 @@ def orte_bauen(funde):
     orte = []
     for eintrag in LEGENDE:
         oid, marker, art, label = eintrag[:4]
-        extra = eintrag[4] if len(eintrag) > 4 else {}
-        passend = [f for f in funde if f["marker"] == marker]
+        extra = dict(eintrag[4]) if len(eintrag) > 4 else {}
+        # quellmarker: Position stammt aus dem Beispiel-PDF unter anderem
+        # Markertext (z. B. Bahnhof ‹S›, in der Quelle als ‹46› gesetzt).
+        quelle = extra.pop("quellmarker", marker)
+        passend = [f for f in funde if f["marker"] == quelle]
         if art == "treppe":
             badges = ([{"x": f["x"], "y": f["y"], "form": "treppe"}
                        for f in passend if f["form"] == "kreis"]
