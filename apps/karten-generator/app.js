@@ -43,56 +43,52 @@ const ROLLEN = [
   ["goetheanum", "Goetheanum"],
   ["wege", "Wege und Plätze"],
   ["parkflaeche", "Parkflächen"],
-  ["akzent", "Akzente"]
+  ["akzent", "Akzente"],
+  ["wiese", "Wiesen (eingefärbt)"]
 ];
 
-// Voreinstellungen: aus den Original-Varianten der Kartierungsseite abgeleitet
-// (Form-Abgleich identischer Pfade).
+// Zwei Voreinstellungen: ‹hell› (Tagung/LT25) und ‹gedeckt› (Recolor 2023),
+// aus den Original-Varianten abgeleitet (Form-Abgleich identischer Pfade).
+// ‹wiese› greift nur auf eingefärbte Wiesenflächen (stimmiger Grünton).
 const PRESETS = {
-  "Tagung hell": {
+  "hell": {
     umgebung: "#edf6fb", "umgebung-hell": "#edf6fb", campus: "#9fccec",
     gebaeude: "#737e8f", "gebaeude-campus": "#67a8da", goetheanum: "#006eb4",
-    wege: "#ffffff", parkflaeche: "#edf6fb", akzent: "#006eb4"
+    wege: "#ffffff", parkflaeche: "#edf6fb", akzent: "#006eb4",
+    wiese: "#a6d19b"
   },
-  "Campusfest": {
-    umgebung: "#e5f2f9", "umgebung-hell": "#e5f2f9", campus: "#90acc6",
-    gebaeude: "#657489", "gebaeude-campus": "#436990", goetheanum: "#004071",
-    wege: "#ffffff", parkflaeche: "#e5f2f9", akzent: "#004071"
-  },
-  "Original 2022": {
-    umgebung: "#c5d1d9", "umgebung-hell": "#d9e5ec", campus: "#a2b7ce",
-    gebaeude: "#455055", "gebaeude-campus": "#4f7095", goetheanum: "#004070",
-    wege: "#ffffff", parkflaeche: "#e7e7e7", akzent: "#c2afbd"
-  },
-  "Hellgrau": {
-    umgebung: "#edf6fb", "umgebung-hell": "#edf6fb", campus: "#a2b7ce",
-    gebaeude: "#737e8f", "gebaeude-campus": "#4f7095", goetheanum: "#004070",
-    wege: "#ffffff", parkflaeche: "#edf6fb", akzent: "#c6c6c6"
-  },
-  "Recolor 2023": {
+  "gedeckt": {
     umgebung: "#edf5fa", "umgebung-hell": "#edf5fa", campus: "#8abfe5",
     gebaeude: "#5298cc", "gebaeude-campus": "#5298cc", goetheanum: "#0067b2",
-    wege: "#ffffff", parkflaeche: "#edf5fa", akzent: "#0067b2"
+    wege: "#ffffff", parkflaeche: "#edf5fa", akzent: "#0067b2",
+    wiese: "#96c68c"
   }
 };
+const PRESET_MIGRATION = { "Tagung hell": "hell", "Recolor 2023": "gedeckt" };
 
 const SPEICHER_SCHLUESSEL = "goetheanum-karten-v2";
 
 const state = {
   titel: "Herzlich Willkommen",
+  sprache: "de",
   format: "a4",
   beschnitt: true,
   marken: false,
   nummerierung: "fortlaufend",   // oder "vorlage" (feste Nummern der Beispiele)
   zoom: 1.15,
   an: {},              // Ort-id -> true = auf der Karte (Start: leeres Blatt)
+  teileAus: {},        // Ort-id -> { Teil-Index: true } (abgewählte Teil-Orte)
+  notizenAus: {},      // Ort-id -> { Notiz-Index: true } (abgewählte Etagen/Lifte)
   labels: {},          // Ort-id -> geänderte Beschriftung
   markerFarben: {},    // Ort-id -> Farbname (überschreibt die Vorlagen-Farbe)
+  positionen: {},      // Ort-id -> [x, y] (verschobene Marke, Standardlage)
   eigene: [],          // { id, label, farbe, x, y, marker } — x/y in Blatt-mm der Standardlage
+  wiesen: { klein: false, gross: false },
   ausschnitt: { skala: 1, dx: 0, dy: 0 },  // Kartenausschnitt relativ zur Standardlage
-  preset: "Tagung hell",
-  farben: { ...PRESETS["Tagung hell"] },
-  platzieren: null,    // { label, farbe } während der Platzierung
+  preset: "hell",
+  farben: { ...PRESETS["hell"] },
+  platzieren: null,    // { label, farbe } während der Platzierung (neue Marke)
+  platzierenOrt: null, // Ort-id, deren Marke gerade verschoben wird
   bearbeiten: null     // Ort-id, deren Beschriftung gerade editiert wird
 };
 
@@ -150,6 +146,11 @@ function gelaendeMarkup() {
   inhalt = inhalt.replace(/class="k-parkflaeche" id="parkflaeche-(\d+)"/g, (voll, nr) => {
     return `fill="${state.farben.parkflaeche}" id="parkflaeche-${nr}"`;
   });
+  // Wiesenflächen: eingefärbt im Wiesen-Grün, sonst wie das Campus-Gelände.
+  inhalt = inhalt.replace(/class="k-wiese" id="wiese-(klein|gross)"/g, (voll, name) => {
+    const farbe = state.wiesen[name] ? state.farben.wiese : state.farben.campus;
+    return `fill="${farbe}" id="wiese-${name}"`;
+  });
   inhalt = inhalt.replace(/class="k-([a-z-]+)"/g, (voll, rolle) => {
     return `fill="${state.farben[rolle] || "#cccccc"}"`;
   });
@@ -198,11 +199,35 @@ function alleOrte() {
 }
 
 function ortAktiv(ort) {
-  return Boolean(state.an[ort.id]);
+  if (!state.an[ort.id]) return false;
+  if (ort.teile) return aktiveTeile(ort).length > 0;
+  return true;
+}
+
+function sprachText(wert) {
+  if (wert && typeof wert === "object") return wert[state.sprache] || wert.de;
+  return wert;
+}
+
+function aktiveTeile(ort) {
+  const aus = state.teileAus[ort.id] || {};
+  return (ort.teile || []).map((teil, index) => ({ teil, index }))
+    .filter(({ index }) => !aus[index]);
+}
+
+function aktiveNotizen(ort) {
+  const aus = state.notizenAus[ort.id] || {};
+  return (ort.notizen || []).map((notiz, index) => ({ notiz, index }))
+    .filter(({ index }) => !aus[index]);
 }
 
 function ortLabel(ort) {
-  return state.labels[ort.id] != null ? state.labels[ort.id] : ort.label;
+  if (state.labels[ort.id] != null) return state.labels[ort.id];
+  if (ort.teile) {
+    const teile = aktiveTeile(ort).map(({ teil }) => sprachText(teil));
+    return (teile.length ? teile : [sprachText(ort.label)]).join("\n");
+  }
+  return sprachText(ort.label);
 }
 
 function ortFarbe(ort) {
@@ -317,17 +342,28 @@ function gebaeudeLabelMarkup() {
   }).join("");
 }
 
+function ortPositionen(ort) {
+  if (state.positionen[ort.id]) return [state.positionen[ort.id]];
+  return ort.positionen || [];
+}
+
 function ortMarkup(ort) {
   const hex = ortFarbeHex(ort);
   let teile = "";
   if (ort.art === "treppe") {
-    (ort.badges || []).forEach((b) => {
-      const [x, y] = anp(b.x, b.y);
+    const liftAktiv = aktiveNotizen(ort).some(({ notiz }) => notiz.badge === "lift");
+    const verschoben = state.positionen[ort.id];
+    (ort.badges || []).forEach((b, index) => {
+      if (b.form === "lift" && !liftAktiv) return;
+      const basis = verschoben
+        ? [verschoben[0] + (b.x - ort.badges[0].x), verschoben[1] + (b.y - ort.badges[0].y)]
+        : [b.x, b.y];
+      const [x, y] = anp(basis[0], basis[1]);
       teile += treppenBadge(x, y, ort.marker, b.form, hex);
     });
     return teile;
   }
-  (ort.positionen || []).forEach(([px, py]) => {
+  ortPositionen(ort).forEach(([px, py]) => {
     const [x, y] = anp(px, py);
     teile += markenKreis(x, y, hex, ortMarker(ort), 2.03);
     if (ort.pfeil) teile += pfeilMarkup(x, y, 2.03, hex, ort.pfeil);
@@ -350,20 +386,26 @@ const LEGENDE_LAYOUT = {
   notizGroesse: 3.0
 };
 
-function legendeZeilen(spalte) {
+function legendeZeilen() {
   const zeilen = [];
   let vorher = null;
-  alleOrte().filter((o) => o.spalte === spalte && ortAktiv(o)).forEach((ort) => {
+  alleOrte().filter(ortAktiv).forEach((ort) => {
     if (vorher) {
       const a = parseInt(vorher.marker, 10), b = parseInt(ort.marker, 10);
       const dekade = state.nummerierung === "vorlage"
         && !Number.isNaN(a) && !Number.isNaN(b) && Math.floor(a / 10) !== Math.floor(b / 10);
       const treppen = vorher.art === "treppe" && ort.art === "treppe";
-      if (vorher.art !== ort.art || dekade || treppen) zeilen.push({ typ: "abstand" });
+      if (vorher.art !== ort.art || dekade || treppen) zeilen.push({ typ: "abstand", hoehe: LEGENDE_LAYOUT.gruppe });
     }
-    zeilen.push({ typ: "ort", ort });
+    const zeilenTexte = ortLabel(ort).split("\n");
+    zeilen.push({
+      typ: "ort", ort, zeilenTexte,
+      hoehe: LEGENDE_LAYOUT.zeile + (zeilenTexte.length - 1) * LEGENDE_LAYOUT.extraZeile
+    });
     if (ort.art === "treppe") {
-      (ort.notizen || []).forEach((n) => zeilen.push({ typ: "notiz", notiz: n, ort }));
+      aktiveNotizen(ort).forEach(({ notiz }) => {
+        zeilen.push({ typ: "notiz", notiz, ort, hoehe: LEGENDE_LAYOUT.notiz });
+      });
     }
     vorher = ort;
   });
@@ -371,38 +413,43 @@ function legendeZeilen(spalte) {
 }
 
 function legendeMarkup() {
+  // Fliess-Layout: erst füllt sich Spalte 1, dann Spalte 2 —
+  // die Spaltenzuteilung der Vorlage gilt nicht mehr.
   const L = LEGENDE_LAYOUT;
   const start = state.titel.trim() ? L.startMitTitel : L.startOhneTitel;
+  const untergrenze = SZENE.hoehe - 12;
   let teile = "";
-  [0, 1].forEach((spalte) => {
+  let spalte = 0;
+  let y = start;
+  legendeZeilen().forEach((zeile) => {
+    if (zeile.typ !== "abstand" && y + zeile.hoehe > untergrenze && spalte < L.spaltenX.length - 1) {
+      spalte += 1;
+      y = start;
+    }
     const x = L.spaltenX[spalte];
-    let y = start;
-    legendeZeilen(spalte).forEach((zeile) => {
-      if (zeile.typ === "abstand") { y += L.gruppe; return; }
-      if (zeile.typ === "notiz") {
-        const n = zeile.notiz;
-        if (n.badge === "lift") {
-          teile += treppenBadge(x, y - 0.9, zeile.ort.marker, "lift", ortFarbeHex(zeile.ort));
-        }
-        teile += `<text x="${x + L.labelAbstand}" y="${y}" font-size="${L.notizGroesse}"`
-          + ` fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(n.label)}</text>`;
-        y += L.notiz;
-        return;
+    if (zeile.typ === "abstand") { y += zeile.hoehe; return; }
+    if (zeile.typ === "notiz") {
+      const n = zeile.notiz;
+      if (n.badge === "lift") {
+        teile += treppenBadge(x, y - 0.9, zeile.ort.marker, "lift", ortFarbeHex(zeile.ort));
       }
-      const ort = zeile.ort;
-      const hex = ortFarbeHex(ort);
-      const zeilenTexte = ortLabel(ort).split("\n");
-      if (ort.art === "treppe") {
-        teile += treppenBadge(x, y - 0.9, ort.marker, "treppe", hex);
-      } else {
-        teile += markenKreis(x, y - 0.9, hex, ortMarker(ort), 2.03);
-      }
-      zeilenTexte.forEach((text, index) => {
-        teile += `<text x="${x + L.labelAbstand}" y="${y + index * L.extraZeile}"`
-          + ` font-size="${L.labelGroesse}" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(text)}</text>`;
-      });
-      y += L.zeile + (zeilenTexte.length - 1) * L.extraZeile;
+      teile += `<text x="${x + L.labelAbstand}" y="${y}" font-size="${L.notizGroesse}"`
+        + ` fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(sprachText(n))}</text>`;
+      y += zeile.hoehe;
+      return;
+    }
+    const ort = zeile.ort;
+    const hex = ortFarbeHex(ort);
+    if (ort.art === "treppe") {
+      teile += treppenBadge(x, y - 0.9, ort.marker, "treppe", hex);
+    } else {
+      teile += markenKreis(x, y - 0.9, hex, ortMarker(ort), 2.03);
+    }
+    zeile.zeilenTexte.forEach((text, index) => {
+      teile += `<text x="${x + L.labelAbstand}" y="${y + index * L.extraZeile}"`
+        + ` font-size="${L.labelGroesse}" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(text)}</text>`;
     });
+    y += zeile.hoehe;
   });
   return teile;
 }
@@ -492,7 +539,7 @@ function renderVorschau() {
   previewNote.textContent = marken
     ? `${format} · gestrichelt = Endformat, aussen Beschnitt und Schnittmarken.`
     : `${format} · Vorschau im Endformat.`;
-  printSvg.classList.toggle("platzieren", Boolean(state.platzieren));
+  printSvg.classList.toggle("platzieren", Boolean(state.platzieren || state.platzierenOrt));
 }
 
 /* ---------- Seitenleiste ---------- */
@@ -591,6 +638,22 @@ function ortZeile(ort, loeschbar) {
   });
   zeile.appendChild(stift);
 
+  const verschieben = document.createElement("button");
+  verschieben.type = "button";
+  verschieben.className = "row-btn";
+  verschieben.title = "Marke auf der Karte verschieben";
+  verschieben.textContent = "✥";
+  verschieben.addEventListener("click", (e) => {
+    e.stopPropagation();
+    state.an[ort.id] = true;
+    state.platzierenOrt = ort.id;
+    state.platzieren = null;
+    renderVorschau();
+    eigeneHint.textContent = `‹${ortLabel(ort).split("\n")[0]}› — neue Stelle in der Vorschau anklicken. ‹Esc› bricht ab.`;
+    printSvg.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+  zeile.appendChild(verschieben);
+
   if (loeschbar) {
     const weg = document.createElement("button");
     weg.type = "button";
@@ -613,9 +676,52 @@ function ortZeile(ort, loeschbar) {
   return zeile;
 }
 
+// Unterzeilen für Teil-Orte (z. B. Speisehaus-Gruppe) und Treppen-Etagen:
+// einzeln zu- und abschaltbar, eingerückt unter der Hauptzeile.
+function unterZeile(ort, sammlung, index, text) {
+  const zeile = document.createElement("div");
+  const aus = (state[sammlung][ort.id] || {})[index];
+  zeile.className = "object-row object-sub" + (aus ? " aus" : "");
+  const platz = document.createElement("span");
+  platz.className = "object-dot sub-dot" + (aus ? "" : " an");
+  zeile.appendChild(platz);
+  const titelSpan = document.createElement("span");
+  titelSpan.className = "object-title";
+  titelSpan.textContent = text;
+  zeile.appendChild(titelSpan);
+  zeile.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const eintraege = state[sammlung][ort.id] || {};
+    if (eintraege[index]) delete eintraege[index];
+    else eintraege[index] = true;
+    state[sammlung][ort.id] = eintraege;
+    render();
+  });
+  return zeile;
+}
+
+function ortMitUnterzeilen(ort, loeschbar) {
+  const halter = document.createDocumentFragment();
+  halter.appendChild(ortZeile(ort, loeschbar));
+  if (state.an[ort.id]) {
+    (ort.teile || []).forEach((teil, index) => {
+      halter.appendChild(unterZeile(ort, "teileAus", index, sprachText(teil)));
+    });
+    if (ort.art === "treppe") {
+      (ort.notizen || []).forEach((notiz, index) => {
+        halter.appendChild(unterZeile(ort, "notizenAus", index, sprachText(notiz)));
+      });
+    }
+  }
+  return halter;
+}
+
 function renderOrte() {
   document.querySelectorAll("#nummerierung-row [data-nummerierung]").forEach((knopf) => {
     knopf.setAttribute("aria-pressed", knopf.dataset.nummerierung === state.nummerierung ? "true" : "false");
+  });
+  document.querySelectorAll("#sprache-row [data-sprache]").forEach((knopf) => {
+    knopf.setAttribute("aria-pressed", knopf.dataset.sprache === state.sprache ? "true" : "false");
   });
   orteGruppen.innerHTML = "";
   GRUPPEN.forEach(([titel, filter]) => {
@@ -623,7 +729,7 @@ function renderOrte() {
     gruppe.innerHTML = `<div class="object-group-title">${titel}</div>`;
     const liste = document.createElement("div");
     liste.className = "object-list";
-    ORTE.filter(filter).forEach((ort) => liste.appendChild(ortZeile(ort, false)));
+    ORTE.filter(filter).forEach((ort) => liste.appendChild(ortMitUnterzeilen(ort, false)));
     gruppe.appendChild(liste);
     orteGruppen.appendChild(gruppe);
   });
@@ -705,6 +811,9 @@ function renderOptionen() {
   const regler = document.getElementById("ausschnitt-skala");
   regler.value = String(Math.round(state.ausschnitt.skala * 100));
   document.getElementById("ausschnitt-wert").textContent = `${Math.round(state.ausschnitt.skala * 100)}%`;
+
+  document.getElementById("opt-wiese-klein").checked = state.wiesen.klein;
+  document.getElementById("opt-wiese-gross").checked = state.wiesen.gross;
 }
 
 /* ---------- Zoom (nur Bildschirm-Vorschau) ---------- */
@@ -720,12 +829,13 @@ function setzeZoom(wert) {
 function speichern() {
   try {
     localStorage.setItem(SPEICHER_SCHLUESSEL, JSON.stringify({
-      titel: state.titel, format: state.format,
+      titel: state.titel, sprache: state.sprache, format: state.format,
       beschnitt: state.beschnitt, marken: state.marken,
       nummerierung: state.nummerierung,
       an: Object.keys(state.an), labels: state.labels,
-      markerFarben: state.markerFarben,
-      eigene: state.eigene, ausschnitt: state.ausschnitt,
+      teileAus: state.teileAus, notizenAus: state.notizenAus,
+      markerFarben: state.markerFarben, positionen: state.positionen,
+      eigene: state.eigene, wiesen: state.wiesen, ausschnitt: state.ausschnitt,
       preset: state.preset, farben: state.farben
     }));
   } catch (fehler) {
@@ -744,10 +854,15 @@ function laden() {
     state.beschnitt = s.beschnitt !== false;
     state.marken = Boolean(s.marken);
     if (s.nummerierung === "vorlage") state.nummerierung = "vorlage";
+    if (s.sprache === "en") state.sprache = "en";
     (s.an || []).forEach((id) => { state.an[id] = true; });
     state.labels = s.labels || {};
+    state.teileAus = s.teileAus || {};
+    state.notizenAus = s.notizenAus || {};
     state.markerFarben = s.markerFarben || {};
+    state.positionen = s.positionen || {};
     state.eigene = Array.isArray(s.eigene) ? s.eigene : [];
+    if (s.wiesen) state.wiesen = { klein: Boolean(s.wiesen.klein), gross: Boolean(s.wiesen.gross) };
     if (s.ausschnitt && typeof s.ausschnitt.skala === "number") {
       state.ausschnitt = {
         skala: Math.min(1.8, Math.max(0.7, s.ausschnitt.skala)),
@@ -755,8 +870,9 @@ function laden() {
         dy: Number(s.ausschnitt.dy) || 0
       };
     }
-    if (typeof s.preset === "string") state.preset = s.preset;
-    if (s.farben) state.farben = { ...PRESETS["Tagung hell"], ...s.farben };
+    if (typeof s.preset === "string") state.preset = PRESET_MIGRATION[s.preset] || s.preset;
+    if (!PRESETS[state.preset] && state.preset !== "eigene Mischung") state.preset = "hell";
+    if (s.farben) state.farben = { ...PRESETS["hell"], ...s.farben };
   } catch (fehler) {
     console.warn("Gespeicherter Stand unlesbar, Standard geladen:", fehler);
   }
@@ -775,7 +891,7 @@ function svgPunkt(clientX, clientY) {
 let ziehen = null;
 
 printSvg.addEventListener("pointerdown", (ereignis) => {
-  if (state.platzieren || ereignis.button !== 0) return;
+  if (state.platzieren || state.platzierenOrt || ereignis.button !== 0) return;
   ziehen = {
     startX: ereignis.clientX, startY: ereignis.clientY,
     dx: state.ausschnitt.dx, dy: state.ausschnitt.dy,
@@ -807,31 +923,44 @@ printSvg.addEventListener("pointerup", () => {
   setTimeout(() => { ziehen = null; }, 0);
 });
 
+const EIGENE_HINT_STANDARD = "Erst Beschriftung eingeben, dann in der Vorschau die Stelle anklicken. ‹Esc› bricht ab.";
+
 printSvg.addEventListener("click", (ereignis) => {
   if (ziehen && ziehen.fertig) return; // Klick am Ende einer Zieh-Geste
-  if (!state.platzieren) return;
+  if (!state.platzieren && !state.platzierenOrt) return;
   const p = svgPunkt(ereignis.clientX, ereignis.clientY);
   if (!p) return;
   const [x, y] = anpZurueck(p.x, p.y);
-  state.eigene.push({
-    id: `eigen-${Date.now()}`,
-    label: state.platzieren.label,
-    farbe: state.platzieren.farbe,
-    marker: String(naechsteEigeneNummer()),
-    x: Math.round(x * 100) / 100,
-    y: Math.round(y * 100) / 100
-  });
-  const neue = state.eigene[state.eigene.length - 1];
-  state.an[neue.id] = true;
-  state.platzieren = null;
-  eigeneHint.textContent = "Erst Beschriftung eingeben, dann in der Vorschau die Stelle anklicken. ‹Esc› bricht ab.";
+  const gerundet = [Math.round(x * 100) / 100, Math.round(y * 100) / 100];
+  if (state.platzierenOrt) {
+    const eintrag = state.eigene.find((e) => e.id === state.platzierenOrt);
+    if (eintrag) {
+      eintrag.x = gerundet[0];
+      eintrag.y = gerundet[1];
+    } else {
+      state.positionen[state.platzierenOrt] = gerundet;
+    }
+    state.platzierenOrt = null;
+  } else {
+    state.eigene.push({
+      id: `eigen-${Date.now()}`,
+      label: state.platzieren.label,
+      farbe: state.platzieren.farbe,
+      marker: String(naechsteEigeneNummer()),
+      x: gerundet[0], y: gerundet[1]
+    });
+    state.an[state.eigene[state.eigene.length - 1].id] = true;
+    state.platzieren = null;
+  }
+  eigeneHint.textContent = EIGENE_HINT_STANDARD;
   render();
 });
 
 document.addEventListener("keydown", (ereignis) => {
-  if (ereignis.key === "Escape" && state.platzieren) {
+  if (ereignis.key === "Escape" && (state.platzieren || state.platzierenOrt)) {
     state.platzieren = null;
-    eigeneHint.textContent = "Erst Beschriftung eingeben, dann in der Vorschau die Stelle anklicken. ‹Esc› bricht ab.";
+    state.platzierenOrt = null;
+    eigeneHint.textContent = EIGENE_HINT_STANDARD;
     render();
   }
 });
@@ -867,6 +996,22 @@ document.querySelectorAll("#nummerierung-row [data-nummerierung]").forEach((knop
     state.nummerierung = knopf.dataset.nummerierung;
     render();
   });
+});
+
+document.querySelectorAll("#sprache-row [data-sprache]").forEach((knopf) => {
+  knopf.addEventListener("click", () => {
+    state.sprache = knopf.dataset.sprache;
+    render();
+  });
+});
+
+document.getElementById("opt-wiese-klein").addEventListener("change", (e) => {
+  state.wiesen.klein = e.target.checked;
+  render();
+});
+document.getElementById("opt-wiese-gross").addEventListener("change", (e) => {
+  state.wiesen.gross = e.target.checked;
+  render();
 });
 
 document.getElementById("opt-beschnitt").addEventListener("change", (e) => {

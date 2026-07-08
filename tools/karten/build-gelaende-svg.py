@@ -114,13 +114,35 @@ def main() -> int:
 
     svg = re.sub(r'(class="k-parkflaeche")', nummeriere, svg)
 
+    # Die zwei Wiesenflächen vor dem Haupteingang (einfärbbar; identifiziert
+    # per Treffer-Test an den beschrifteten Punkten des Auftraggebers):
+    # ‹Wiese klein› westlich des Hauptwegs, ‹Wiese gross› mit dem
+    # Rudolf-Steiner-Archiv-Umfeld östlich davon.
+    WIESEN = {
+        "wiese-klein": "M0 0 .784-57.775 .849-61.683",
+        "wiese-gross": "M0 0-2.46-5.55-12.039-1.456-18.235",
+    }
+    for wiesen_id, d_signatur in WIESEN.items():
+        anfang = svg.find(d_signatur)
+        if anfang < 0:
+            print(f"Warnung: Wiesenpfad {wiesen_id} nicht gefunden", file=sys.stderr)
+            continue
+        pfad_anfang = svg.rfind("<path", 0, anfang)
+        pfad_ende = svg.find(">", anfang)
+        segment = svg[pfad_anfang:pfad_ende]
+        neues_segment = segment.replace('class="k-campus"', f'class="k-wiese" id="{wiesen_id}"')
+        if neues_segment == segment:
+            print(f"Warnung: {wiesen_id} trägt nicht die Campus-Rolle", file=sys.stderr)
+            continue
+        svg = svg[:pfad_anfang] + neues_segment + svg[pfad_ende:]
+
     stil = "\n".join(
         f".k-{rolle} {{ fill: var(--karte-{rolle}, {farbe}); }}"
         for rolle, farbe in STANDARD.items()
     ) + "\n" + "\n".join(
         f'[data-ks="{rolle}"] {{ stroke: var(--karte-{rolle}, {STANDARD[rolle]}); }}'
         for rolle in sorted(set(STRICH_ROLLEN.values()))
-    )
+    ) + "\n.k-wiese { fill: var(--karte-campus, #a2b7ce); }"
     svg = svg.replace("<defs>", f"<style>\n{stil}\n</style>\n<defs>", 1)
 
     ZIEL.parent.mkdir(parents=True, exist_ok=True)
