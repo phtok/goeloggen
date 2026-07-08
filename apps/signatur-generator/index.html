@@ -86,12 +86,17 @@
   .empf-item h3{font-family:var(--font-display);font-weight:var(--w-strong);font-size:var(--t-h3);margin:0 0 var(--s2);display:flex;gap:.5ch;align-items:baseline}
   .empf-item .num{color:var(--gold-ink)}
   .empf-item p{font-size:var(--t-small);line-height:1.6;color:var(--ink);margin:0 0 var(--s2);max-width:46ch}
+  .pikto{width:38px;height:38px;display:block;margin-bottom:var(--s2);fill:none;stroke:var(--muted);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .pikto .acc{stroke:var(--gold-ink)}
+  .pikto .slash{stroke:var(--bad);opacity:.75}
+  .pikto text{stroke:none;fill:var(--muted);font-family:var(--font-text)}
+  .pikto .ps{font-size:11px}
 
   /* Apple-Mail-Skizze (eigenständige Farben = Artefakt/Screenshot). */
   .amv{width:100%;max-width:600px;height:auto;display:block;margin-top:var(--s4)} /* ds-ok */
 
   /* Empfehlungs-Vergleich: aufgeräumt vs. überladen (theme-aware) */
-  .empf-ill{width:100%;max-width:760px;height:auto;display:block;margin:var(--s4) 0 var(--s6)}
+  .empf-ill{width:100%;max-width:760px;height:auto;display:block;margin:var(--s8) 0 0}
   .empf-ill .win{fill:var(--paper);stroke:var(--line);stroke-width:1.5}
   .empf-ill .ln{stroke:var(--muted);stroke-width:5;stroke-linecap:round;opacity:.33}
   .empf-ill .ln.b{stroke:var(--ink);opacity:.82;stroke-width:6}
@@ -269,48 +274,71 @@
     <div class="empf-head">
       <span class="kicker">E-Mail am Goetheanum</span>
       <h2>Diese Mail wird gelesen</h2>
-      <p>Wenige Mittel, präzise gesetzt – damit ankommt, was du sagen willst.</p>
+      <p>Jede E-Mail aus dem Goetheanum ist ein Auftritt des Goetheanum — und zugleich die Stimme eines
+        Menschen. Diese Empfehlungen sorgen für eine sichtbare, öffentliche Haltung und geben Dir
+        persönliche Freiheit im Detail.</p>
+      <div class="btnrow" style="margin-top:var(--s4)">
+        <button type="button" class="btn" id="pdfBtn">Als PDF laden (A4)</button>
+      </div>
     </div>
-    <svg class="empf-ill" viewBox="0 0 756 548" role="img" aria-label="Vergleich: links eine aufgeraeumte E-Mail mit einer klaren Botschaft, rechts eine ueberladene, in der die Botschaft zwischen Werbebildern, Spruechen und ueberladener Signatur verschwindet."><rect x="22" y="20" width="328" height="486" rx="12" class="win" /><line x1="44" y1="54" x2="132" y2="54" class="lnm"/><line x1="162" y1="54" x2="292" y2="54" class="ln"/><line x1="44" y1="82" x2="252" y2="82" class="ln b"/><rect x="52" y="204" width="268" height="64" rx="8" class="msghl" /><line x1="70" y1="230" x2="302" y2="230" class="msg"/><line x1="70" y1="250" x2="254" y2="250" class="msg"/><line x1="70" y1="266" x2="172" y2="266" class="under"/><line x1="44" y1="410" x2="82" y2="410" class="lnfaint"/><line x1="44" y1="434" x2="172" y2="434" class="ln b"/><line x1="44" y1="454" x2="142" y2="454" class="ln blue"/><circle cx="320" cy="42" r="14" class="badge-ok"/><path class="badge-p" d="M314 42 l4 5 l8 -10"/><text x="186.0" y="532" font-size="16" class="cap ok" text-anchor="middle" font-weight="700">Eine klare Botschaft</text><rect x="406" y="20" width="328" height="486" rx="12" class="win" /><line x1="428" y1="54" x2="516" y2="54" class="lnm"/><line x1="546" y1="54" x2="676" y2="54" class="ln"/><rect x="428" y="72" width="284" height="24" rx="5" class="banner" /><text x="440" y="89" font-size="13" class="bnr" text-anchor="start" font-weight="700">AKTION!!!</text><rect x="428" y="110" width="284" height="66" rx="6" class="img" /><path class="glyph" d="M436 168 l85.2 -33.0 l62.48 18.48 l45.44 -13.200000000000001 l79.52000000000001 26.400000000000002"/><circle cx="496.15999999999997" cy="129.8" r="4" class="glyphdot"/><text x="430" y="206" font-size="13" class="quote">„Sei du selbst die Änderung…"</text><rect x="428" y="224" width="284" height="18" rx="4" class="banner2" /><g opacity="0.28"><line x1="428" y1="264" x2="556" y2="264" class="lost"/><line x1="428" y1="278" x2="526" y2="278" class="lost"/></g><text x="568" y="276" font-size="11" class="lostcap" text-anchor="start">↑ die Botschaft</text><rect x="428" y="296" width="284" height="58" rx="6" class="img" /><path class="glyph" d="M436 346 l85.2 -29.0 l62.48 16.240000000000002 l45.44 -11.600000000000001 l79.52000000000001 23.200000000000003"/><circle cx="496.15999999999997" cy="313.4" r="4" class="glyphdot"/><rect x="428" y="372" width="44" height="44" rx="6" class="logo" /><text x="450" y="399" font-size="9" class="logot" text-anchor="middle" font-weight="700">LOGO</text><line x1="484" y1="380" x2="636" y2="380" class="ln b"/><line x1="484" y1="396" x2="606" y2="396" class="ln blue"/><line x1="484" y1="412" x2="656" y2="412" class="ln"/><circle cx="702" cy="392" r="7" class="soc"/><circle cx="682" cy="392" r="7" class="soc"/><circle cx="662" cy="392" r="7" class="soc"/><circle cx="642" cy="392" r="7" class="soc"/><line x1="428" y1="434" x2="664" y2="434" class="lnfaint"/><line x1="428" y1="446" x2="708" y2="446" class="lnfaint"/><line x1="428" y1="458" x2="664" y2="458" class="lnfaint"/><line x1="428" y1="470" x2="708" y2="470" class="lnfaint"/><line x1="428" y1="482" x2="664" y2="482" class="lnfaint"/><circle cx="704" cy="42" r="14" class="badge-bad"/><path class="badge-p" d="M698 37 l12 10 M710 37 l-12 10"/><text x="570.0" y="532" font-size="16" class="cap bad" text-anchor="middle" font-weight="700">Wo ist die Botschaft?</text></svg>
     <div class="empf">
       <div class="empf-item">
-        <h3><span class="num">1</span> Wer sind wir?</h3>
-        <p>Jede E-Mail aus dem Goetheanum ist ein Auftritt des Goetheanum — und zugleich die Stimme eines Menschen. Diese Empfehlungen sorgen für eine sichtbare, öffentliche Haltung und lassen persönliche Freiheit im Detail.</p>
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="10" width="36" height="28" rx="4"/><circle cx="16" cy="21" r="4"/><path d="M10.5 32c1.5-4.5 9.5-4.5 11 0"/><line x1="27" y1="18" x2="38" y2="18"/><line x1="27" y1="25" x2="36" y2="25" class="acc"/></svg>
+        <h3><span class="num">1</span> Das bin ich</h3>
+        <p>Es gibt eine Signatur — deine. Zwei Zeilen gehören dazu, alles Weitere wählst du selbst: <strong>Der Kern</strong> — Name und Goetheanum. Das genügt bereits. <strong>Die Wahlmodule</strong> — Funktion, Sektion oder Abteilung, Telefon, Mobil, Website. Du entscheidest, welche Angaben du mitschickst. Eine Telefonnummer, die du nicht in jeder Mail sehen willst, gehört nicht in die Signatur.</p>
       </div>
       <div class="empf-item">
-        <h3><span class="num">2</span> Das bin ich</h3>
-        <p>Es gibt eine Signatur — deine. Zwei Zeilen gehören dazu, alles Weitere wählst du selbst.</p>
-        <p><strong>Der Kern</strong> — Name und Goetheanum. Das genügt bereits.</p>
-        <p><strong>Die Wahlmodule</strong> — Funktion, Sektion oder Abteilung, Telefon, Mobil, Website. Du entscheidest, welche Angaben du mitschickst. Eine Telefonnummer, die du nicht in jeder Mail sehen willst, gehört nicht in die Signatur.</p>
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 24c5.5-8 13-12 19-12s13.5 4 19 12c-5.5 8-13 12-19 12S10.5 32 5 24z"/><circle cx="24" cy="24" r="5" class="acc"/></svg>
+        <h3><span class="num">2</span> Meistgelesen</h3>
+        <p>Wer auf eine Veranstaltung oder ein Angebot hinweisen möchte, tut das in einer PS-Zeile — direkt unter dem Mailtext, über den Adressdaten. Diese wird statistisch meist als Erstes gelesen. Je kürzer die Zeile und die ganze Mail, umso stärker wirkt sie. Die Form: <strong>ein Satz, ein Link, kein Bild, befristet.</strong> Das PS pflegst du selbst im Generator, passend zu deinen Anlässen und Empfängern. Setz ein Ablaufdatum — der Generator legt dir dazu eine Erinnerung in deinen Kalender. Ein aktuelles PS wirkt.</p>
       </div>
       <div class="empf-item">
-        <h3><span class="num">3</span> Meistgelesen</h3>
-        <p>Wer auf eine Veranstaltung oder ein Angebot hinweisen möchte, tut das in einer PS-Zeile — direkt unter dem Mailtext, über den Adressdaten.</p>
-        <p>Die Form: <strong>ein Satz, ein Link, kein Bild, befristet.</strong></p>
-        <p>Das PS pflegst du selbst im Generator, passend zu deinen Anlässen und Empfängern. Setze ein Ablaufdatum — der Generator legt dir dazu eine Erinnerung in deinen Kalender. Ein aktuelles PS wirkt.</p>
-      </div>
-      <div class="empf-item">
-        <h3><span class="num">4</span> Bildersturm?</h3>
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="12" width="24" height="19" rx="3"/><path d="M10 28l6-7 4 4 3-3 5 6"/><path class="acc" d="M40 13v15a5 5 0 0 1-10 0V16a3 3 0 0 1 6 0v11"/><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
+        <h3><span class="num">3</span> Bildersturm?</h3>
         <p>Bilder in Signaturen erscheinen in Apple Mail als Anhang — mit Büroklammer, bei jeder einzelnen Mail. Doch die Büroklammer soll etwas anderes versprechen: <em>Hier ist ein Dokument für dich.</em> Diese Sphäre halten wir frei. Dazu kommt: Bilder brechen im Dark Mode, blähen jede Mail auf und werden von vielen Programmen blockiert. Eine reine Text-Signatur kommt überall so an, wie sie gemeint ist — hell wie dunkel.</p>
       </div>
       <div class="empf-item">
-        <h3><span class="num">5</span> Nicht nötig?</h3>
-        <p><strong>Juristerei.</strong> Rechtserklärungen und Vertraulichkeitshinweise sind für uns rechtlich nicht erforderlich und sagen dem Empfänger nichts — sie machen Mails nur länger.</p>
-        <p><strong>Zahlenkolonnen.</strong> Amtsnummern und Registerangaben gehören auf Briefpapier und Website, nicht unter jede Nachricht.</p>
-        <p><strong>Sinnsprüche.</strong> Zitate, Sprüche, Banner: Die Signatur bleibt schlank. Was du sagen willst, gehört in die Mail — oder ins PS.</p>
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><text x="15" y="35" class="pt" font-size="30">§</text><line x1="9" y1="40" x2="39" y2="8" class="slash"/></svg>
+        <h3><span class="num">4</span> Juristerei</h3>
+        <p>Rechtserklärungen und Vertraulichkeitshinweise sind für uns rechtlich nicht erforderlich und sagen dem Empfänger nichts — sie machen Mails nur länger.</p>
       </div>
       <div class="empf-item">
-        <h3><span class="num">6</span> Bevor du sendest</h3>
-        <p><strong>Wiedergefunden!</strong> Der Betreff sagt, worum es geht — konkret genug, dass die Mail in einem Jahr wiedergefunden wird. Bewährt haben sich Zusätze wie <em>[Info]</em> oder <em>[Bitte um Antwort bis …]</em>, wenn sie stimmen.</p>
-        <p><strong>Ein Anliegen kommt an.</strong> Eine Sache pro Mail. Zwei Anliegen sind zwei Mails — sie lassen sich getrennt beantworten, weiterleiten und erledigen.</p>
-        <p><strong>Du musst nicht antworten.</strong> An heisst: von dir wird etwas erwartet. CC heisst: zur Kenntnis. Wer im CC steht, muss nicht antworten.</p>
-        <p><strong>Sag, was du brauchst.</strong> Eine Antwort? Bis wann? Oder nur Information? Ein Halbsatz am Ende erspart Nachfragen.</p>
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><text x="8" y="18" class="ps">012</text><text x="8" y="30" class="ps">345</text><text x="8" y="42" class="ps">678</text><line x1="34" y1="42" x2="44" y2="8" class="slash"/></svg>
+        <h3><span class="num">5</span> Zahlenkolonnen</h3>
+        <p>Amtsnummern und Registerangaben gehören auf Briefpapier und Website, nicht unter jede Nachricht.</p>
       </div>
       <div class="empf-item">
-        <h3><span class="num">7</span> Ausschalten</h3>
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h32v20H25l-9 9v-9H8z"/><text x="15" y="26" class="pt" font-size="15">„…"</text><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
+        <h3><span class="num">6</span> Sinnsprüche?</h3>
+        <p>Zitate, Sprüche, Banner: Die Signatur bleibt schlank. Was du sagen willst, gehört in die Mail — oder ins PS.</p>
+      </div>
+      <div class="empf-item">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="13" width="21" height="15" rx="2"/><path d="M5 14l10.5 8L26 14"/><circle cx="33" cy="30" r="8" class="acc"/><line x1="39" y1="36" x2="45" y2="42" class="acc"/></svg>
+        <h3><span class="num">7</span> Wiedergefunden!</h3>
+        <p>Der Betreff sagt, worum es geht — konkret genug, dass die Mail in einem Jahr wiedergefunden wird. Bewährt haben sich Zusätze wie <em>[Info]</em> oder <em>[Bitte um Antwort bis …]</em>, wenn sie stimmen.</p>
+      </div>
+      <div class="empf-item">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><circle cx="29" cy="26" r="13"/><circle cx="29" cy="26" r="4" class="acc"/><line x1="4" y1="7" x2="23" y2="21"/><path d="M6 14L4 7l7 1"/></svg>
+        <h3><span class="num">8</span> Ein Anliegen kommt an</h3>
+        <p>Eine Sache pro Mail. Zwei Anliegen sind zwei Mails — sie lassen sich getrennt beantworten, weiterleiten und erledigen.</p>
+      </div>
+      <div class="empf-item">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="16" width="27" height="19" rx="2"/><path d="M6 17l13.5 9L33 17"/><text x="35" y="18" class="ps">z</text><text x="40" y="12" class="ps">z</text></svg>
+        <h3><span class="num">9</span> Du musst nicht antworten</h3>
+        <p>An heisst: von dir wird etwas erwartet. CC heisst: zur Kenntnis. Wer im CC steht, muss nicht antworten.</p>
+      </div>
+      <div class="empf-item">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 9h32v22H26l-9 9v-9H8z"/><text x="15" y="26" class="pt" font-size="16">?!</text></svg>
+        <h3><span class="num">10</span> Sag, was du brauchst!</h3>
+        <p>Eine Antwort? Bis wann? Oder nur Information? Ein Halbsatz am Ende erspart Nachfragen.</p>
+      </div>
+      <div class="empf-item">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><line x1="24" y1="7" x2="24" y2="20"/><path d="M16 13a13 13 0 1 0 16 0" class="acc"/></svg>
+        <h3><span class="num">11</span> Ausschalten</h3>
         <p>Antworten und interne Mails dürfen ohne Signatur ausgehen: Wer miteinander im Austausch steht, kennt sich. In Outlook lässt sich das für Antworten fest einstellen; in Apple Mail ist es ein Handgriff beim Schreiben.</p>
       </div>
     </div>
+    <svg class="empf-ill" viewBox="0 0 756 548" role="img" aria-label="Vergleich: links ein ruhiger Brief mit einer klaren Botschaft, rechts eine ueberladene E-Mail, in der die Botschaft zwischen Werbung und ueberladener Signatur verschwindet."><rect x="22" y="20" width="328" height="486" rx="12" class="win" /><line x1="46" y1="56" x2="132" y2="56" class="lnm"/><line x1="162" y1="56" x2="272" y2="56" class="ln"/><line x1="46" y1="84" x2="222" y2="84" class="ln b"/><line x1="46" y1="138" x2="142" y2="138" class="ln"/><line x1="46" y1="172" x2="246" y2="172" class="ln"/><line x1="46" y1="194" x2="231" y2="194" class="ln"/><line x1="46" y1="216" x2="238" y2="216" class="ln"/><line x1="46" y1="238" x2="166" y2="238" class="ln"/><line x1="46" y1="282" x2="226" y2="282" class="ln"/><line x1="46" y1="304" x2="196" y2="304" class="ln"/><line x1="46" y1="350" x2="132" y2="350" class="ln"/><line x1="46" y1="394" x2="78" y2="394" class="lnfaint"/><line x1="46" y1="418" x2="172" y2="418" class="ln b"/><line x1="46" y1="440" x2="142" y2="440" class="ln blue"/><circle cx="320" cy="42" r="14" class="badge-ok"/><path class="badge-p" d="M314 42 l4 5 l8 -10"/><text x="186.0" y="532" font-size="16" class="cap ok" text-anchor="middle" font-weight="700">Eine klare Botschaft</text><rect x="406" y="20" width="328" height="486" rx="12" class="win" /><line x1="428" y1="54" x2="516" y2="54" class="lnm"/><line x1="546" y1="54" x2="676" y2="54" class="ln"/><rect x="428" y="72" width="284" height="24" rx="5" class="banner" /><text x="440" y="89" font-size="13" class="bnr" text-anchor="start" font-weight="700">AKTION!!!</text><rect x="428" y="110" width="284" height="66" rx="6" class="img" /><path class="glyph" d="M436 168 l85.2 -33.0 l62.48 18.48 l45.44 -13.200000000000001 l79.52000000000001 26.400000000000002"/><circle cx="496.15999999999997" cy="129.8" r="4" class="glyphdot"/><text x="430" y="206" font-size="13" class="quote">„Sei du selbst die Änderung…"</text><rect x="428" y="224" width="284" height="18" rx="4" class="banner2" /><g opacity="0.28"><line x1="428" y1="264" x2="556" y2="264" class="lost"/><line x1="428" y1="278" x2="526" y2="278" class="lost"/></g><text x="568" y="276" font-size="11" class="lostcap" text-anchor="start">↑ die Botschaft</text><rect x="428" y="296" width="284" height="58" rx="6" class="img" /><path class="glyph" d="M436 346 l85.2 -29.0 l62.48 16.240000000000002 l45.44 -11.600000000000001 l79.52000000000001 23.200000000000003"/><circle cx="496.15999999999997" cy="313.4" r="4" class="glyphdot"/><rect x="428" y="372" width="44" height="44" rx="6" class="logo" /><text x="450" y="399" font-size="9" class="logot" text-anchor="middle" font-weight="700">LOGO</text><line x1="484" y1="380" x2="636" y2="380" class="ln b"/><line x1="484" y1="396" x2="606" y2="396" class="ln blue"/><line x1="484" y1="412" x2="656" y2="412" class="ln"/><circle cx="702" cy="392" r="7" class="soc"/><circle cx="682" cy="392" r="7" class="soc"/><circle cx="662" cy="392" r="7" class="soc"/><circle cx="642" cy="392" r="7" class="soc"/><line x1="428" y1="434" x2="664" y2="434" class="lnfaint"/><line x1="428" y1="446" x2="708" y2="446" class="lnfaint"/><line x1="428" y1="458" x2="664" y2="458" class="lnfaint"/><line x1="428" y1="470" x2="708" y2="470" class="lnfaint"/><line x1="428" y1="482" x2="664" y2="482" class="lnfaint"/><circle cx="704" cy="42" r="14" class="badge-bad"/><path class="badge-p" d="M698 37 l12 10 M710 37 l-12 10"/><text x="570.0" y="532" font-size="16" class="cap bad" text-anchor="middle" font-weight="700">Wo ist die Botschaft?</text></svg>
   </section>
 </main>
 
@@ -563,6 +591,128 @@ document.getElementById("copyPlain").addEventListener("click", function () {
   } else { flash(this, "Nicht möglich"); }
 });
 
+
+
+/* ---------- PDF (A4, zweispaltig, selbst erzeugt – keine Druckfunktion) ---------- */
+/* PDF-START */
+function pdfWin(t) {
+  // Unicode -> WinAnsi-Byte; unbekannte Zeichen degradieren lesbar.
+  const M = {8218:130,8222:132,8230:133,8224:134,8225:135,8240:137,8249:139,8216:145,8217:146,
+             8220:147,8221:148,8226:149,8211:150,8212:151,8250:155,8364:128,338:140,339:156,376:159};
+  let r = "";
+  for (const ch of t) {
+    const c = ch.codePointAt(0);
+    if (c < 256) r += ch;
+    else if (M[c]) r += String.fromCharCode(M[c]);
+    else if (c === 8594) r += "->";
+    else r += "?";
+  }
+  return r.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
+}
+function pdfChW(ch, b) {
+  let w;
+  if ("ijl".includes(ch)) w = 222;
+  else if (" .,:;!|'ft()[]".includes(ch)) w = 278;
+  else if ('r-"/'.includes(ch)) w = 333;
+  else if ("cksvxyz".includes(ch)) w = 500;
+  else if ("mM".includes(ch)) w = 833;
+  else if (ch === "w") w = 722;
+  else if (ch === "W") w = 944;
+  else if (ch === "I") w = 278;
+  else if (/[A-ZÄÖÜ]/.test(ch)) w = 700;
+  else w = 556;
+  return w * (b ? 1.06 : 1);
+}
+function pdfStrW(t, size, b) { let x = 0; for (const c of t) x += pdfChW(c, b); return x * size / 1000; }
+function pdfWrap(t, maxW, size, b) {
+  const words = t.split(" "), lines = []; let cur = "";
+  for (const w of words) {
+    const test = cur ? cur + " " + w : w;
+    if (pdfStrW(test, size, b) <= maxW || !cur) cur = test; else { lines.push(cur); cur = w; }
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+function buildEmpfPdf(d) {
+  const W = 595.28, H = 841.89, M = 48, GAP = 26, colW = (W - 2 * M - GAP) / 2;
+  const INK = "0.14 0.15 0.17 rg", MUT = "0.42 0.44 0.47 rg", GOLD = "0.54 0.40 0.16 rg", BLUE = "0 0.38 0.66 rg";
+  const ops = [];
+  const T = (x, y, t, size, bold, color) =>
+    ops.push("BT /" + (bold ? "F2" : "F1") + " " + size + " Tf " + color +
+      " 1 0 0 1 " + x.toFixed(2) + " " + y.toFixed(2) + " Tm (" + pdfWin(t) + ") Tj ET");
+
+  let y = H - M - 6;
+  T(M, y, d.kicker.toUpperCase(), 8, true, GOLD); y -= 24;
+  T(M, y, d.title, 20, true, INK); y -= 16;
+  for (const l of pdfWrap(d.lede, W - 2 * M, 9.4, false)) { T(M, y, l, 9.4, false, MUT); y -= 13; }
+  y -= 10;
+  const top = y, bottom = M + 22;
+  let cx = M, cy = top;
+  for (const it of d.items) {
+    const bodyLines = it.body.flatMap(p => pdfWrap(p, colW, 8.6, false).concat(["\u0000"])); bodyLines.pop();
+    const blockH = 15 + bodyLines.length * 11.4 + 11;
+    if (cy - blockH < bottom && cx === M) { cx = M + colW + GAP; cy = top; }
+    T(cx, cy, it.num, 10.5, true, GOLD);
+    T(cx + pdfStrW(it.num, 10.5, true) + 6, cy, it.title, 10.5, true, INK);
+    cy -= 15;
+    for (const l of bodyLines) {
+      if (l === "\u0000") { cy -= 4; continue; }
+      T(cx, cy, l, 8.6, false, INK); cy -= 11.4;
+    }
+    cy -= 11;
+  }
+  T(M, M - 14, "werkzeuge.goetheanum.ch/apps/signatur-generator", 7.5, false, MUT);
+  T(W - M, M - 14, "Stand Juli 2026", 7.5, false, MUT.replace(" rg", " rg")); // rechtsbuendig grob:
+  ops.pop();
+  const stamp = "Stand Juli 2026";
+  T(W - M - pdfStrW(stamp, 7.5, false), M - 14, stamp, 7.5, false, MUT);
+
+  const content = ops.join("\n");
+  const objs = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 " + W + " " + H + "] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>",
+    "<< /Length " + content.length + " >>\nstream\n" + content + "\nendstream",
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>"
+  ];
+  let pdf = "%PDF-1.4\n", offs = [];
+  objs.forEach((o, i) => { offs.push(pdf.length); pdf += (i + 1) + " 0 obj\n" + o + "\nendobj\n"; });
+  const xref = pdf.length;
+  pdf += "xref\n0 " + (objs.length + 1) + "\n0000000000 65535 f \n" +
+    offs.map(o => String(o).padStart(10, "0") + " 00000 n \n").join("") +
+    "trailer\n<< /Size " + (objs.length + 1) + " /Root 1 0 R >>\nstartxref\n" + xref + "\n%%EOF";
+  const bytes = new Uint8Array(pdf.length);
+  for (let i = 0; i < pdf.length; i++) bytes[i] = pdf.charCodeAt(i) & 0xff;
+  return bytes;
+}
+/* PDF-END */
+function collectEmpf() {
+  const head = document.querySelector("#empfehlungen .empf-head");
+  return {
+    kicker: head.querySelector(".kicker").textContent.trim(),
+    title: head.querySelector("h2").textContent.trim(),
+    lede: head.querySelector("p").textContent.replace(/\s+/g, " ").trim(),
+    items: [...document.querySelectorAll("#empfehlungen .empf-item")].map(it => {
+      const h = it.querySelector("h3"), num = h.querySelector(".num").textContent.trim();
+      return {
+        num: num,
+        title: h.textContent.replace(num, "").replace(/\s+/g, " ").trim(),
+        body: [...it.querySelectorAll("p")].map(p => p.textContent.replace(/\s+/g, " ").trim())
+      };
+    })
+  };
+}
+document.getElementById("pdfBtn").addEventListener("click", function () {
+  const bytes = buildEmpfPdf(collectEmpf());
+  const blob = new Blob([bytes], { type: "application/pdf" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "goetheanum-email-empfehlungen.pdf";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  flash(this, "Geladen \u2713");
+  track("pdf", {});
+});
 
 /* ---------- Anonyme Nutzungsstatistik (Supabase, insert-only) ---------- */
 const TRACK_URL = "https://dagcsnfrlbpxcmdimnrw.supabase.co/rest/v1/signatur_events";
