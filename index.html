@@ -244,7 +244,7 @@
       }
     }
     function go(k){ i = (k + n) % n; paint(); }
-    function start(){ if (reduce || paused) return; stop(); timer = setInterval(function(){ go(i+1); }, 6500); }
+    function start(){ if (reduce || paused) return; stop(); timer = setInterval(function(){ go(i+1); }, 11000); }
     function stop(){ if (timer) { clearInterval(timer); timer = null; } }
     prev.addEventListener("click", function(){ go(i-1); start(); });
     next.addEventListener("click", function(){ go(i+1); start(); });
