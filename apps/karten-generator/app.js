@@ -408,11 +408,12 @@ function ortMarker(ort) {
 // Beweglich sind der Infotisch und die eigenen Marken — alles andere
 // ist fixiert (auch der barrierefreie Zugang: er sitzt am Südeingang).
 // Ausnahme auf Zeit: Sektionen und Gärten stammen vom gequetschten
-// Willkommensschild und dürfen von Hand justiert werden; die justierten
-// Lagen lassen sich exportieren und wandern dann in die Vorlage.
+// Willkommensschild und dürfen von Hand justiert werden; ebenso die
+// WCs und die Verkehrsmarken (Bushaltestelle von Hand gesetzt). Die
+// justierten Lagen lassen sich exportieren und wandern in die Vorlage.
 function ortJustierbar(ort) {
   return ort.kategorie === "sektionen" || ort.kategorie === "gaerten"
-    || ort.id.indexOf("wc-") === 0;
+    || ort.kategorie === "verkehr" || ort.id.indexOf("wc-") === 0;
 }
 
 function ortBeweglich(ort) {
@@ -486,7 +487,7 @@ function markenBreite(ort, r) {
   return rr * 1.55 * (ort.symbol.length - 1) + 2 * rr;
 }
 
-function markenKreis(x, y, hex, text, r, symbol, feldBreite) {
+function markenKreis(x, y, hex, text, r, symbol, feldBreite, liste) {
   // Kreiszahl nach dem Sonderelement des Design-Systems (.step-num):
   // Hausschrift Laut, fester Kreis, Tintenmitte der Ziffern auf der
   // Kreismitte (ZIFFERN_SITZ). Grad = 0.5 × Durchmesser — eine Spur
@@ -507,8 +508,10 @@ function markenKreis(x, y, hex, text, r, symbol, feldBreite) {
     const symbole = Array.isArray(symbol) ? symbol : [symbol];
     const rr = r * SYMBOL_FAKTOR;
     if (symbole.length === 1) {
+      // In der Liste läuft der kleinere Kreis — das Pikto braucht dort
+      // mehr Luft zum Rand, sonst wirkt es eingeklemmt.
       return `<circle cx="${x}" cy="${y}" r="${rr}" fill="${hex}" />`
-        + symbolMarkup(symbole[0], x, y, rr * 1.5, "#ffffff");
+        + symbolMarkup(symbole[0], x, y, rr * (liste ? 1.26 : 1.5), "#ffffff");
     }
     const schritt = rr * 1.55;
     const breite = schritt * (symbole.length - 1) + 2 * rr;
@@ -806,7 +809,7 @@ function legendeMarkup() {
       const r = symbol ? 2.03 / SYMBOL_FAKTOR : 2.03;
       const b = markenBreite(ort, r);
       teile += markenKreis(x - 2.03 + b / 2, y - 0.9, hex,
-        ort.legendeText || ortMarker(ort), r, symbol);
+        ort.legendeText || ortMarker(ort), r, symbol, null, true);
       textX = x + Math.max(L.labelAbstand, b - 2.03 + 1.6);
     }
     zeile.zeilenTexte.forEach((text, index) => {
