@@ -139,6 +139,18 @@ Deno.serve(async (req) => {
   // E-Mail für Entdopplung (aus rohem Body, vor Redaktion).
   const emailMatch = JSON.stringify(body).match(EMAIL_RE);
   const email = emailMatch ? emailMatch[0].toLowerCase() : "";
+
+  // Test-Anmeldungen des Buchhalters (Adressen mit «hao.bu») zählen nie als
+  // Abo: nur ins Roh-Protokoll (zur Verifikation der Attribution), kein Upsert.
+  if (email.includes("hao.bu")) {
+    const utmTest = utmFromBody(body);
+    await fetch(`${SB}/rest/v1/sommer2026_ingest_raw`, {
+      method: "POST", headers: { ...H, Prefer: "return=minimal" },
+      body: JSON.stringify({ source: "paperform", event: "submission", ok: true, note: "test (hao.bu) – nicht gezaehlt", payload: redact(body) }),
+    }).catch(() => {});
+    return json({ ok: true, test: true, utm: utmTest });
+  }
+
   const salt = cfg["hash_salt"] || "";
   const subId = body?.submission_id || body?.id || body?.data?.submission_id || "";
   const dedupKey = email ? `wos:${await sha256Hex(salt + email)}` : `paperform:${subId || (await sha256Hex(blob)).slice(0, 24)}`;
