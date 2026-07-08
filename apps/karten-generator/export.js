@@ -38,7 +38,12 @@ function exportGeometrie() {
 
 function dateiname(endung) {
   const g = exportGeometrie();
-  const teile = ["goetheanum-campuskarte", state.format, "quer"];
+  // Der Veranstaltungstitel benennt die Datei (Umlaute vereinfacht);
+  // ohne Titel bleibt der generische Name.
+  const slug = state.titel.trim().toLowerCase()
+    .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const teile = [slug || "goetheanum-campuskarte", state.format, "quer"];
   if (g.beschnitt) teile.push("3mm");
   if (g.marken) teile.push("marken");
   return `${teile.join("-")}.${endung}`;

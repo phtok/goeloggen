@@ -18,35 +18,59 @@ const KARTE = {
 const KATEGORIEN = [
   {
     "id": "eingaenge",
-    "name": "Eingänge & Empfang"
+    "name": {
+      "de": "Eingänge & Empfang",
+      "en": "Entrances & Reception"
+    }
   },
   {
     "id": "verkehr",
-    "name": "Verkehr & Anreise"
+    "name": {
+      "de": "Verkehr & Anreise",
+      "en": "Transport & Arrival"
+    }
   },
   {
     "id": "treppen",
-    "name": "Treppenhäuser"
+    "name": {
+      "de": "Treppenhäuser",
+      "en": "Staircases"
+    }
   },
   {
     "id": "saele",
-    "name": "Säle & Veranstaltungsräume"
+    "name": {
+      "de": "Säle & Veranstaltungsräume",
+      "en": "Halls & Event Rooms"
+    }
   },
   {
     "id": "ausstellung",
-    "name": "Ausstellung & Orientierung"
+    "name": {
+      "de": "Ausstellung & Orientierung",
+      "en": "Exhibition & Orientation"
+    }
   },
   {
     "id": "haeuser",
-    "name": "Häuser auf dem Campus"
+    "name": {
+      "de": "Häuser auf dem Campus",
+      "en": "Houses on Campus"
+    }
   },
   {
     "id": "sektionen",
-    "name": "Sektionen"
+    "name": {
+      "de": "Sektionen",
+      "en": "Sections"
+    }
   },
   {
     "id": "gaerten",
-    "name": "Gärten & Orte im Grünen"
+    "name": {
+      "de": "Gärten & Orte im Grünen",
+      "en": "Gardens & Green Spaces"
+    }
   }
 ];
 
@@ -56,7 +80,7 @@ const ORTE = [
     "marker": "1",
     "art": "orientierung",
     "kategorie": "eingaenge",
-    "farbe": "blau",
+    "farbe": "gold",
     "label": {
       "de": "Haupteingang",
       "en": "Main Entrance"
@@ -73,7 +97,7 @@ const ORTE = [
     "marker": "2",
     "art": "orientierung",
     "kategorie": "eingaenge",
-    "farbe": "blau",
+    "farbe": "gold",
     "label": {
       "de": "Südeingang",
       "en": "South Entrance"
@@ -90,7 +114,7 @@ const ORTE = [
     "marker": "3",
     "art": "orientierung",
     "kategorie": "eingaenge",
-    "farbe": "blau",
+    "farbe": "gold",
     "label": {
       "de": "Empfang",
       "en": "Reception"
@@ -108,7 +132,7 @@ const ORTE = [
     "marker": "4",
     "art": "orientierung",
     "kategorie": "eingaenge",
-    "farbe": "blau",
+    "farbe": "gold",
     "label": {
       "de": "Infotisch",
       "en": "Info Desk"
@@ -126,7 +150,7 @@ const ORTE = [
     "marker": "BF",
     "art": "orientierung",
     "kategorie": "eingaenge",
-    "farbe": "blau",
+    "farbe": "gold",
     "label": {
       "de": "Barrierefreier Zugang",
       "en": "Barrier-free access"
@@ -960,6 +984,24 @@ const ORTE = [
     "pfeil": "unten-links"
   },
   {
+    "id": "h-kristall",
+    "marker": "56",
+    "art": "orientierung",
+    "kategorie": "haeuser",
+    "farbe": "blau",
+    "label": {
+      "de": "Kristallisationslabor",
+      "en": "Kristallisationslabor"
+    },
+    "positionen": [
+      [
+        168.0,
+        60.3
+      ]
+    ],
+    "gebaeude": "campusbau-9"
+  },
+  {
     "id": "s-allgemein",
     "marker": "a",
     "art": "orientierung",
@@ -1131,8 +1173,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        166.0,
-        61.5
+        164.3,
+        62.3
       ]
     ],
     "gebaeude": "campusbau-9"
