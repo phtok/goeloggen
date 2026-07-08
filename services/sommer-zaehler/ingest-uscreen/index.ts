@@ -154,6 +154,17 @@ Deno.serve(async (req) => {
 
   // Entdopplung: Person je Produkt über gesalzenen E-Mail-Hash (Fallback ext_id).
   const email = (pick(data, ["customer_email", "user_email", "email"]) || "").toString().toLowerCase();
+
+  // Test-Anmeldungen des Buchhalters (Adressen mit «hao.bu») zählen nie als
+  // Abo: nur ins Roh-Protokoll (zur Verifikation), kein Upsert, kein Status.
+  if (email.includes("hao.bu")) {
+    await fetch(`${SB}/rest/v1/sommer2026_ingest_raw`, {
+      method: "POST", headers: { ...H, Prefer: "return=minimal" },
+      body: JSON.stringify({ source: "uscreen", event, ok: true, note: "test (hao.bu) – nicht gezaehlt", payload: redact(body) }),
+    }).catch(() => {});
+    return json({ ok: true, test: true });
+  }
+
   const person = email ? await sha256Hex(salt + email) : "";
   const dedupKey = person ? `gtv:${person}` : `uscreen:${ext}`;
 
