@@ -10,15 +10,16 @@
 const SZENE = { breite: KARTE.blatt.breite, hoehe: KARTE.blatt.hoehe };
 const EIGENE_START_NR = 60; // feste Nummern (Modus ‹wie Vorlage›)
 
-// Markerfarben wie in den Beispielkarten (LT25-Reader) plus Hauspalette
-// (dunkles Gold und Grün, damit Weiss darauf lesbar bleibt — B01).
+// Markerfarben aus den Beispielkarten (LT25 rot/blau, Willkommensplan
+// grau/gartengrün) plus dunkles Hausgold (Weiss bleibt lesbar — B01).
 const MARKER_FARBEN = {
   rot: "#ec5f6c",
   blau: "#81b2cb",
-  gold: "#94702e",
-  gruen: "#3e7d4e"
+  gruen: "#369e7a",
+  grau: "#949596",
+  gold: "#94702e"
 };
-const FARB_ZYKLUS = ["rot", "blau", "gold", "gruen"];
+const FARB_ZYKLUS = ["rot", "blau", "gruen", "grau", "gold"];
 const TINTE = "#4e4f4a";
 
 // Schriftrollen: Sprache (Titel, Legende, Gebäudenamen) in der Hausschrift
@@ -75,7 +76,8 @@ const state = {
   beschnitt: true,
   marken: false,
   zoom: 1.15,
-  an: {},              // Ort-id -> true = auf der Karte (Start: leeres Blatt)
+  an: { o1: true, o2: true, o3: true },  // Start: die ersten drei als Beispiel
+  gebaeudeAn: {},      // Campus-Gebäude, von Hand aktiviert (zusätzlich zu Markern)
   teileAus: {},        // Ort-id -> { Teil-Index: true } (abgewählte Teil-Orte)
   notizenAus: {},      // Ort-id -> { Notiz-Index: true } (abgewählte Etagen/Lifte)
   labels: {},          // Ort-id -> geänderte Beschriftung
@@ -97,6 +99,7 @@ let gelaendeInhalt = null;   // SVG-Inhalt ohne Wurzel/<style>
 let gelaendeMasse = { breite: 1006.3, hoehe: 651.968 };
 let logoInhalt = null;       // Campus-Wortmarke aus dem Logogenerator (reine Pfade)
 let kompassInhalt = null;    // Kompassrose aus den Icons v2.7 (kompass-2)
+const ikonen = {};           // weitere Icons v2.7 (treppe, fahrstuhl, pfeil)
 
 async function ladeGelaende() {
   const antwort = await fetch("assets/gelaende.svg");
@@ -127,17 +130,52 @@ function logoErzeugen() {
   }
 }
 
-async function ladeKompass() {
-  try {
-    const antwort = await fetch("../../assets/fonts/goetheanum/Icons-Einzeldateien/svg/kompass-2.svg");
-    const text = await antwort.text();
-    kompassInhalt = text
-      .replace(/^[\s\S]*?<svg[^>]*>/, "")
-      .replace(/<\/svg>\s*$/, "")
-      .replace(/ fill="#1a1a1a"/g, ""); // Farbe kommt von der Gruppe (weiss wie in der Vorlage)
-  } catch (fehler) {
-    console.warn("Kompass-Icon nicht ladbar:", fehler);
-  }
+async function ladeIkone(name) {
+  const antwort = await fetch(`../../assets/fonts/goetheanum/Icons-Einzeldateien/svg/${name}.svg`);
+  const text = await antwort.text();
+  // Farbe kommt jeweils von der einbettenden Gruppe.
+  return text
+    .replace(/^[\s\S]*?<svg[^>]*>/, "")
+    .replace(/<\/svg>\s*$/, "")
+    .replace(/ fill="#1a1a1a"/g, "");
+}
+
+async function ladeIkonen() {
+  const namen = ["kompass-2", "treppe", "fahrstuhl", "pfeil-rechts-fett"];
+  await Promise.all(namen.map(async (name) => {
+    try {
+      ikonen[name] = await ladeIkone(name);
+    } catch (fehler) {
+      console.warn(`Icon ${name} nicht ladbar:`, fehler);
+    }
+  }));
+  kompassInhalt = ikonen["kompass-2"] || null;
+}
+
+// Icons v2.7: viewBox "16.2 -983.8 967.6 967.6", Inhalt y-gespiegelt.
+// Einbettung: Zielgrösse in mm, zentriert auf (x, y).
+function ikonMarkup(name, x, y, groesse, farbe, drehung) {
+  const inhalt = ikonen[name];
+  if (!inhalt) return "";
+  const skala = groesse / 967.6;
+  const dreh = drehung ? ` rotate(${drehung})` : "";
+  return `<g transform="translate(${x} ${y})${dreh} scale(${skala}) translate(-500 500)" fill="${farbe}">${inhalt}</g>`;
+}
+
+// Campus-Gebäude: aktiv (dunkel) durch Handschaltung oder einen aktiven
+// zugehörigen Marker; passiv = helleres Campus-Gebäude-Blau.
+// Die beiden Goetheanum-Schalen schalten als Einheit.
+const BAU_ALIAS = { "campusbau-52": "goetheanum-bau", "campusbau-53": "goetheanum-bau" };
+
+function bauEinheit(bauId) {
+  return BAU_ALIAS[bauId] || bauId;
+}
+
+function bauAktiv(bauId) {
+  const einheit = bauEinheit(bauId);
+  if (state.gebaeudeAn[einheit]) return true;
+  return alleOrte().some((ort) => ort.gebaeude
+    && bauEinheit(ort.gebaeude) === einheit && ortAktiv(ort));
 }
 
 function gelaendeMarkup() {
@@ -145,11 +183,27 @@ function gelaendeMarkup() {
   inhalt = inhalt.replace(/class="k-parkflaeche" id="parkflaeche-(\d+)"/g, (voll, nr) => {
     return `fill="${state.farben.parkflaeche}" id="parkflaeche-${nr}"`;
   });
-  // Wiesenflächen: eingefärbt im Wiesen-Grün, sonst wie das Campus-Gelände.
+  // Wiesenflächen: eingefärbt im Wiesen-Grün, sonst wie das Campus-Gelände;
+  // der Strich-Zwilling folgt der Fläche, die Halter beschneiden die
+  // Quellpolygone am Weg vor dem Rondell (Südzipfel gehört nicht dazu).
   inhalt = inhalt.replace(/class="k-wiese" id="wiese-(klein|gross)"/g, (voll, name) => {
     const farbe = state.wiesen[name] ? state.farben.wiese : state.farben.campus;
     return `fill="${farbe}" id="wiese-${name}"`;
   });
+  inhalt = inhalt.replace(/data-wiese-strich="(klein|gross)"/g, (voll, name) => {
+    const farbe = state.wiesen[name] ? state.farben.wiese : state.farben.campus;
+    return `stroke="${farbe}"`;
+  });
+  inhalt = inhalt.replace(/<g data-wiese-halter="(klein|gross)">/g,
+    '<g clip-path="url(#wiese-clip)">');
+  // Campus-Gebäude aktiv/passiv (id steht vor der Klasse im Tag).
+  inhalt = inhalt.replace(
+    /<path id="(campusbau-\d+)"([^>]*?)class="k-(goetheanum|gebaeude-campus|akzent)"/g,
+    (voll, bauId, mitte) => {
+      const farbe = bauAktiv(bauId) ? state.farben.goetheanum : state.farben["gebaeude-campus"];
+      return `<path id="${bauId}"${mitte}fill="${farbe}"`;
+    }
+  );
   inhalt = inhalt.replace(/class="k-([a-z-]+)"/g, (voll, rolle) => {
     return `fill="${state.farben[rolle] || "#cccccc"}"`;
   });
@@ -159,6 +213,17 @@ function gelaendeMarkup() {
     return `stroke="${state.farben[rolle] || "#cccccc"}"`;
   });
   return inhalt;
+}
+
+// Beschnitt der Wiesenpolygone (Gelände-Koordinaten aus Blatt-mm gerechnet).
+function wieseClipMarkup() {
+  const g = KARTE.gelaende;
+  const s = g.breite / gelaendeMasse.breite;
+  const punkte = [[150, 40], [250, 40], [250, 212], [216, 212], [216, 192],
+    [196, 190], [176, 167], [150, 148]]
+    .map(([x, y]) => `${((x - g.x) / s).toFixed(1)},${((y - g.y) / s).toFixed(1)}`)
+    .join(" ");
+  return `<clipPath id="wiese-clip"><polygon points="${punkte}" /></clipPath>`;
 }
 
 /* ---------- Kartenausschnitt ----------
@@ -290,51 +355,34 @@ function markenKreis(x, y, hex, text, r) {
 }
 
 function pfeilMarkup(x, y, r, hex, richtung) {
-  const laenge = 3.4, kopf = 1.5;
-  let dx = 1, dy = 0;
-  if (richtung === "unten-links") { dx = -0.7071; dy = 0.7071; }
-  if (richtung === "unten-rechts") { dx = 0.7071; dy = 0.7071; }
-  const x1 = x + dx * r, y1 = y + dy * r;
-  const x2 = x + dx * (r + laenge), y2 = y + dy * (r + laenge);
-  const winkel = Math.atan2(dy, dx);
-  const s1 = winkel + 2.6, s2 = winkel - 2.6;
-  const spitze = `${x2 + dx * kopf},${y2 + dy * kopf} `
-    + `${x2 + Math.cos(s1) * kopf},${y2 + Math.sin(s1) * kopf} `
-    + `${x2 + Math.cos(s2) * kopf},${y2 + Math.sin(s2) * kopf}`;
-  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${hex}" stroke-width="0.55" />`
-    + `<polygon points="${spitze}" fill="${hex}" />`;
+  // Richtungs-Pfeil = Original-Icon ‹pfeil-rechts-fett›, gedreht —
+  // der fette Schnitt entspricht den Vorlagenpfeilen an den Aussenmarken.
+  const winkel = { rechts: 0, "unten-rechts": 45, "unten-links": 135 }[richtung] || 0;
+  const abstand = r + 2.6;
+  const dx = Math.cos(winkel * Math.PI / 180), dy = Math.sin(winkel * Math.PI / 180);
+  return ikonMarkup("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 4.4, hex, winkel);
 }
 
-function treppenGlyph(x, y, hex, skala) {
-  const s = skala;
-  const d = `M ${x - 1.05 * s} ${y + 0.75 * s}`
-    + ` h ${0.7 * s} v ${-0.5 * s} h ${0.7 * s} v ${-0.5 * s} h ${0.7 * s} v ${-0.5 * s}`;
-  return `<path d="${d}" fill="none" stroke="${hex}" stroke-width="${0.34 * s}" />`;
-}
-
-function liftGlyph(x, y, hex, skala) {
-  const s = skala;
-  return `<polygon points="${x - 0.55 * s},${y - 0.15 * s} ${x + 0.55 * s},${y - 0.15 * s} ${x},${y - 1.05 * s}" fill="${hex}" />`
-    + `<polygon points="${x - 0.55 * s},${y + 0.15 * s} ${x + 0.55 * s},${y + 0.15 * s} ${x},${y + 1.05 * s}" fill="${hex}" />`;
-}
-
-function treppenBadge(x, y, buchstabe, form, hex) {
+function treppenBadge(x, y, buchstabe, form, hex, mitRand) {
+  // Wie die Vorlage: weisse Badge (auf der Karte randlos, in der Legende
+  // mit Ring), Treppen-/Fahrstuhl-Symbol aus den Icons v2.7, Buchstabe oben.
   const farbe = hex || MARKER_FARBEN.rot;
+  const rand = mitRand ? ` stroke="${farbe}" stroke-width="0.18"` : "";
   if (form === "lift") {
-    return `<rect x="${x - 1.45}" y="${y - 2.15}" width="2.9" height="4.3" rx="0.7" fill="#ffffff" stroke="${farbe}" stroke-width="0.18" />`
-      + `<text x="${x}" y="${y - 0.35}" text-anchor="middle" font-size="1.85" fill="${farbe}" font-family="${SCHRIFT_WERT}">${buchstabe}</text>`
-      + liftGlyph(x, y + 1.1, farbe, 0.9);
+    return `<rect x="${x - 1.45}" y="${y - 2.15}" width="2.9" height="4.3" rx="0.9" fill="#ffffff"${rand} />`
+      + `<text x="${x}" y="${y - 0.55}" text-anchor="middle" font-size="2.0" fill="${farbe}" font-family="${SCHRIFT_WERT}">${buchstabe}</text>`
+      + ikonMarkup("fahrstuhl", x, y + 1.0, 2.6, farbe);
   }
-  return `<circle cx="${x}" cy="${y}" r="2.22" fill="#ffffff" stroke="${farbe}" stroke-width="0.18" />`
-    + `<text x="${x - 0.9}" y="${y + 0.85}" text-anchor="middle" font-size="2.5" fill="${farbe}" font-family="${SCHRIFT_WERT}">${buchstabe}</text>`
-    + treppenGlyph(x + 0.95, y, farbe, 1.05);
+  return `<circle cx="${x}" cy="${y}" r="2.22" fill="#ffffff"${rand} />`
+    + ikonMarkup("treppe", x - 0.4, y + 0.35, 3.0, farbe)
+    + `<text x="${x + 1.3}" y="${y - 0.55}" text-anchor="middle" font-size="2.5" fill="${farbe}" font-family="${SCHRIFT_WERT}">${buchstabe}</text>`;
 }
 
 // Gebäudenamen in der Hausschrift (Deutlich), optisch mittig in die Fläche
-// gesetzt (Anker = Flächenmitte, aus der Vorlage gemessen).
+// gesetzt (Anker = Flächenmitte).
 const GEBAEUDE_LABELS = [
   { text: "Goetheanum", x: 198.6, y: 115.0, groesse: 4.23, winkel: 0 },
-  { text: "Schreinerei", x: 226.7, y: 95.4, groesse: 3.18, winkel: -76 }
+  { text: "Schreinerei", x: 224.4, y: 93.2, groesse: 3.18, winkel: -76 }
 ];
 
 function gebaeudeLabelMarkup() {
@@ -432,7 +480,7 @@ function legendeMarkup() {
     if (zeile.typ === "notiz") {
       const n = zeile.notiz;
       if (n.badge === "lift") {
-        teile += treppenBadge(x, y - 0.9, zeile.ort.marker, "lift", ortFarbeHex(zeile.ort));
+        teile += treppenBadge(x, y - 0.9, zeile.ort.marker, "lift", ortFarbeHex(zeile.ort), true);
       }
       teile += `<text x="${x + L.labelAbstand}" y="${y}" font-size="${L.notizGroesse}"`
         + ` fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(sprachText(n))}</text>`;
@@ -442,7 +490,7 @@ function legendeMarkup() {
     const ort = zeile.ort;
     const hex = ortFarbeHex(ort);
     if (ort.art === "treppe") {
-      teile += treppenBadge(x, y - 0.9, ort.marker, "treppe", hex);
+      teile += treppenBadge(x, y - 0.9, ort.marker, "treppe", hex, true);
     } else {
       teile += markenKreis(x, y - 0.9, hex, ortMarker(ort), 2.03);
     }
@@ -489,6 +537,7 @@ function szeneMarkup(anschnitt) {
       <clipPath id="blatt-clip">
         <rect x="${-b}" y="${-b}" width="${SZENE.breite + 2 * b}" height="${SZENE.hoehe + 2 * b}" />
       </clipPath>
+      ${wieseClipMarkup()}
     </defs>
     <rect x="${-b}" y="${-b}" width="${SZENE.breite + 2 * b}" height="${SZENE.hoehe + 2 * b}" fill="#ffffff" />
     <g clip-path="url(#blatt-clip)">
@@ -497,6 +546,7 @@ function szeneMarkup(anschnitt) {
         ${gebaeudeLabelMarkup()}
         ${kompassMarkup()}
       </g>
+      <rect x="244" y="${-b}" width="${SZENE.breite - 244 + b}" height="${20 + b}" rx="3" fill="#ffffff" />
       ${marker}
     </g>
     <line x1="${KARTE.falz}" y1="0" x2="${KARTE.falz}" y2="${SZENE.hoehe}" stroke="${TINTE}" stroke-opacity="0.4" stroke-width="0.18" />
@@ -551,11 +601,8 @@ const eigeneHint = document.getElementById("eigene-hint");
 const farbRollen = document.getElementById("farb-rollen");
 const presetRow = document.getElementById("preset-row");
 
-const GRUPPEN = [
-  ["Orientierung", (o) => o.art === "orientierung"],
-  ["Veranstaltungsorte", (o) => o.art === "ort"],
-  ["Treppenhaus", (o) => o.art === "treppe"]
-];
+// Kategorien aus orte.js (kuratierte Reihenfolge = Legenden-Sortierung).
+const GRUPPEN = KATEGORIEN.map((k) => [k.name, (o) => o.kategorie === k.id]);
 
 function farbeWeiterschalten(ort) {
   const aktuelle = ortFarbe(ort);
@@ -573,21 +620,14 @@ function farbeWeiterschalten(ort) {
 
 function ortZeile(ort, loeschbar) {
   const zeile = document.createElement("div");
-  zeile.className = "object-row" + (ortAktiv(ort) ? "" : " aus");
+  const an = ortAktiv(ort);
+  zeile.className = "object-row" + (an ? "" : " aus");
 
-  const farbKnopf = document.createElement("button");
-  farbKnopf.type = "button";
-  farbKnopf.className = "row-btn";
-  farbKnopf.title = "Markerfarbe wechseln (Rot → Blau → Gold → Grün)";
-  const punkt = document.createElement("span");
-  punkt.className = "object-dot";
-  punkt.style.background = ortFarbeHex(ort);
-  farbKnopf.appendChild(punkt);
-  farbKnopf.addEventListener("click", (e) => {
-    e.stopPropagation();
-    farbeWeiterschalten(ort);
-  });
-  zeile.appendChild(farbKnopf);
+  // Häkchen am Zeilenanfang: eindeutig ‹auf der Karte / nicht auf der Karte›.
+  const haken = document.createElement("span");
+  haken.className = "check" + (an ? " an" : "");
+  haken.textContent = an ? "✓" : "";
+  zeile.appendChild(haken);
 
   if (state.bearbeiten === ort.id) {
     const eingabe = document.createElement("input");
@@ -626,6 +666,20 @@ function ortZeile(ort, loeschbar) {
   markerSpan.className = "object-marker";
   markerSpan.textContent = ortAktiv(ort) ? ortMarker(ort) : "–";
   zeile.appendChild(markerSpan);
+
+  const farbKnopf = document.createElement("button");
+  farbKnopf.type = "button";
+  farbKnopf.className = "row-btn";
+  farbKnopf.title = "Markerfarbe wechseln (Rot → Blau → Grün → Grau → Gold)";
+  const punkt = document.createElement("span");
+  punkt.className = "object-dot";
+  punkt.style.background = ortFarbeHex(ort);
+  farbKnopf.appendChild(punkt);
+  farbKnopf.addEventListener("click", (e) => {
+    e.stopPropagation();
+    farbeWeiterschalten(ort);
+  });
+  zeile.appendChild(farbKnopf);
 
   const stift = document.createElement("button");
   stift.type = "button";
@@ -721,7 +775,10 @@ function ortMitUnterzeilen(ort, loeschbar) {
 
 // Hauptkategorien einklappbar — Übersicht in den Editing-Werkzeugen;
 // zugeklappt zeigt der Kopf, wie viele Orte aktiv sind.
-const aufgeklappt = { Orientierung: false, Veranstaltungsorte: false, Treppenhaus: false };
+// Die erste Kategorie startet geöffnet (Beispiel für Erstnutzer).
+const aufgeklappt = {};
+GRUPPEN.forEach(([titel], index) => { aufgeklappt[titel] = index === 0; });
+let gebaeudeAufgeklappt = false;
 
 function renderOrte() {
   document.querySelectorAll("#sprache-row [data-sprache]").forEach((knopf) => {
@@ -759,6 +816,67 @@ function renderOrte() {
   eigeneListe.innerHTML = "";
   alleOrte().filter((o) => o.art === "eigene").forEach((ort) => {
     eigeneListe.appendChild(ortZeile(ort, true));
+  });
+
+  renderGebaeude();
+}
+
+/* ---------- Campus-Gebäude (aktiv/passiv) ---------- */
+
+// Benannte Gebäude-Einheiten: Name = erster zugeordneter Ort;
+// Goetheanum und Schreinerei tragen ihre eigenen Namen.
+const BAU_NAMEN = { "goetheanum-bau": { de: "Goetheanum", en: "Goetheanum" },
+  "campusbau-19": { de: "Schreinerei", en: "Schreinerei" } };
+
+function gebaeudeEinheiten() {
+  const einheiten = new Map();
+  alleOrte().forEach((ort) => {
+    if (!ort.gebaeude) return;
+    const einheit = bauEinheit(ort.gebaeude);
+    if (!einheiten.has(einheit)) {
+      einheiten.set(einheit, BAU_NAMEN[einheit] || ort.label);
+    }
+  });
+  return einheiten;
+}
+
+function renderGebaeude() {
+  const halter = document.getElementById("gebaeude-liste");
+  halter.innerHTML = "";
+  const kopf = document.createElement("button");
+  kopf.type = "button";
+  kopf.className = "object-group-title";
+  const einheiten = gebaeudeEinheiten();
+  const aktiv = [...einheiten.keys()].filter((e) => bauAktiv(e)).length;
+  kopf.innerHTML = `<span class="chevron">${gebaeudeAufgeklappt ? "▾" : "▸"}</span>`
+    + `<span>Gebäude</span>`
+    + `<span class="zaehler">${aktiv ? `${aktiv} aktiv` : ""}</span>`;
+  kopf.addEventListener("click", () => {
+    gebaeudeAufgeklappt = !gebaeudeAufgeklappt;
+    renderGebaeude();
+  });
+  halter.appendChild(kopf);
+  if (!gebaeudeAufgeklappt) return;
+
+  einheiten.forEach((name, einheit) => {
+    const durchMarker = !state.gebaeudeAn[einheit] && bauAktiv(einheit);
+    const zeile = document.createElement("div");
+    zeile.className = "object-row" + (bauAktiv(einheit) ? "" : " aus");
+    const haken = document.createElement("span");
+    haken.className = "check" + (bauAktiv(einheit) ? " an" : "");
+    haken.textContent = bauAktiv(einheit) ? "✓" : "";
+    zeile.appendChild(haken);
+    const titelSpan = document.createElement("span");
+    titelSpan.className = "object-title";
+    titelSpan.textContent = sprachText(name) + (durchMarker ? " (durch Marker)" : "");
+    zeile.appendChild(titelSpan);
+    zeile.addEventListener("click", () => {
+      if (durchMarker) return; // folgt den Markern, solange einer aktiv ist
+      if (state.gebaeudeAn[einheit]) delete state.gebaeudeAn[einheit];
+      else state.gebaeudeAn[einheit] = true;
+      render();
+    });
+    halter.appendChild(zeile);
   });
 }
 
@@ -854,6 +972,7 @@ function speichern() {
       titel: state.titel, sprache: state.sprache, format: state.format,
       beschnitt: state.beschnitt, marken: state.marken,
       an: Object.keys(state.an), labels: state.labels,
+      gebaeudeAn: Object.keys(state.gebaeudeAn),
       teileAus: state.teileAus, notizenAus: state.notizenAus,
       markerFarben: state.markerFarben, positionen: state.positionen,
       eigene: state.eigene, wiesen: state.wiesen, ausschnitt: state.ausschnitt,
@@ -875,7 +994,9 @@ function laden() {
     state.beschnitt = s.beschnitt !== false;
     state.marken = Boolean(s.marken);
     if (s.sprache === "en") state.sprache = "en";
+    state.an = {};  // Beispiel-Vorauswahl gilt nur ohne gespeicherten Stand
     (s.an || []).forEach((id) => { state.an[id] = true; });
+    (s.gebaeudeAn || []).forEach((id) => { state.gebaeudeAn[id] = true; });
     state.labels = s.labels || {};
     state.teileAus = s.teileAus || {};
     state.notizenAus = s.notizenAus || {};
@@ -1069,7 +1190,7 @@ function render() {
 (async function start() {
   laden();
   logoErzeugen();
-  await Promise.all([ladeGelaende(), ladeKompass()]);
+  await Promise.all([ladeGelaende(), ladeIkonen()]);
   setzeZoom(state.zoom);
   render();
 })();

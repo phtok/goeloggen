@@ -123,18 +123,55 @@ def main() -> int:
         "wiese-gross": "M0 0-2.46-5.55-12.039-1.456-18.235",
     }
     for wiesen_id, d_signatur in WIESEN.items():
-        anfang = svg.find(d_signatur)
-        if anfang < 0:
+        kurz = wiesen_id.replace("wiese-", "")
+        # Alle Vorkommen: der Füllpfad und sein Strich-Zwilling (identische
+        # Geometrie, nur Kontur) — beide müssen der Wiesenfarbe folgen und
+        # werden für den Beschnitt des Südzipfels in einen Halter gehüllt
+        # (die Quellpolygone laufen unter dem Weg am Rondell weiter).
+        suchpos = 0
+        gefunden = 0
+        while True:
+            anfang = svg.find(d_signatur, suchpos)
+            if anfang < 0:
+                break
+            pfad_anfang = svg.rfind("<path", 0, anfang)
+            pfad_ende = svg.find("/>", anfang) + 2
+            segment = svg[pfad_anfang:pfad_ende]
+            if 'class="k-campus"' in segment:
+                segment = segment.replace('class="k-campus"', f'class="k-wiese" id="{wiesen_id}"')
+            elif 'data-ks="campus"' in segment:
+                segment = segment.replace('data-ks="campus"', f'data-wiese-strich="{kurz}"')
+            neu = f'<g data-wiese-halter="{kurz}">{segment}</g>'
+            svg = svg[:pfad_anfang] + neu + svg[pfad_ende:]
+            suchpos = pfad_anfang + len(neu)
+            gefunden += 1
+        if not gefunden:
             print(f"Warnung: Wiesenpfad {wiesen_id} nicht gefunden", file=sys.stderr)
-            continue
-        pfad_anfang = svg.rfind("<path", 0, anfang)
-        pfad_ende = svg.find(">", anfang)
-        segment = svg[pfad_anfang:pfad_ende]
-        neues_segment = segment.replace('class="k-campus"', f'class="k-wiese" id="{wiesen_id}"')
-        if neues_segment == segment:
-            print(f"Warnung: {wiesen_id} trägt nicht die Campus-Rolle", file=sys.stderr)
-            continue
-        svg = svg[:pfad_anfang] + neues_segment + svg[pfad_ende:]
+
+    # Dunkle Gebäudeflächen sind flach gemeint — weisse Quell-Striche
+    # (Wege-Strichrolle) an ihnen zeichnen Konturen: Strich entfernen.
+    def strich_von_dunklen(match: re.Match) -> str:
+        tag = match.group(0)
+        if re.search(r'class="k-(akzent|goetheanum|gebaeude-campus|gebaeude)"', tag):
+            return tag.replace(' data-ks="wege"', "")
+        return tag
+
+    svg = re.sub(r"<path[^>]*>", strich_von_dunklen, svg)
+
+    # Campus-Gebäude einzeln adressierbar (Aktiv-/Passiv-Schaltung):
+    bau_zaehler = [0]
+
+    def bau_nummerieren(match: re.Match) -> str:
+        tag = match.group(0)
+        if "id=" in tag:
+            return tag
+        if re.search(r'class="k-(akzent|goetheanum|gebaeude-campus)"', tag):
+            bau_zaehler[0] += 1
+            return tag.replace("<path", f'<path id="campusbau-{bau_zaehler[0]}"', 1)
+        return tag
+
+    svg = re.sub(r"<path[^>]*>", bau_nummerieren, svg)
+    print(f"Campus-Gebäude nummeriert: {bau_zaehler[0]}")
 
     stil = "\n".join(
         f".k-{rolle} {{ fill: var(--karte-{rolle}, {farbe}); }}"
