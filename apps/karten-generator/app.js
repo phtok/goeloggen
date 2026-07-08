@@ -185,11 +185,12 @@ function ikonBoxenMessen() {
 
 // Symbol in Zielgrösse (mm, längere Tintenkante) mit Tintenmitte auf (x, y);
 // leichter Konturauftrag in gleicher Farbe kräftigt die feinen Stege.
-function symbolMarkup(name, x, y, groesse, farbe) {
+function symbolMarkup(name, x, y, groesse, farbe, maxHoehe) {
   const inhalt = ikonen[name];
   const box = ikonBoxen[name];
   if (!inhalt || !box) return "";
-  const skala = groesse / Math.max(box.width, box.height);
+  let skala = groesse / Math.max(box.width, box.height);
+  if (maxHoehe) skala = Math.min(groesse / box.width, maxHoehe / box.height);
   const tx = x - (box.x + box.width / 2) * skala;
   const ty = y - (box.y + box.height / 2) * skala;
   const auftrag = (0.09 / skala).toFixed(1);  // ~0.09 mm Fettung
@@ -444,7 +445,7 @@ const LAUT_VORSCHUB = {
   "5": 0.577, "6": 0.609, "7": 0.539, "8": 0.62, "9": 0.609,
   "a": 0.509, "b": 0.508, "c": 0.402, "d": 0.509, "e": 0.463,
   "f": 0.324, "g": 0.479, "h": 0.518, "i": 0.239, "j": 0.239,
-  "k": 0.475, "l": 0.24, "m": 0.789, "P": 0.546
+  "k": 0.475, "l": 0.24, "m": 0.789, "P": 0.546, "W": 0.858, "C": 0.497
 };
 
 function zentrierterText(x, y, text, groesse, farbe) {
@@ -468,12 +469,14 @@ function zentrierterText(x, y, text, groesse, farbe) {
 const SYMBOL_FAKTOR = 1.25;
 
 function markenBreite(ort, r) {
+  if (ort.legendeText) return 2 * r;      // Legende zeigt die Textmarke
+  if (ort.symbol && ort.feldBreite) return ort.feldBreite * (r / 2.03);
   if (!ort.symbol || !Array.isArray(ort.symbol)) return 2 * r * (ort.symbol ? SYMBOL_FAKTOR : 1);
   const rr = r * SYMBOL_FAKTOR;
   return rr * 1.55 * (ort.symbol.length - 1) + 2 * rr;
 }
 
-function markenKreis(x, y, hex, text, r, symbol) {
+function markenKreis(x, y, hex, text, r, symbol, feldBreite) {
   // Kreiszahl nach dem Sonderelement des Design-Systems (.step-num):
   // Hausschrift Laut, fester Kreis, Tintenmitte der Ziffern auf der
   // Kreismitte (ZIFFERN_SITZ). Grad = 0.5 × Durchmesser — eine Spur
@@ -481,6 +484,15 @@ function markenKreis(x, y, hex, text, r, symbol) {
   // den Kreis, ohne ihn zu sprengen (Entscheid Auftraggeber, 8. Juli 2026).
   // Symbol-Marken (z. B. WCs) tragen Piktos statt Ziffer — einzeln im
   // grösseren Kreis, mehrere nebeneinander in einer Pille.
+  if (symbol && feldBreite) {
+    // Breites Feld (z. B. Toiletten): das fertige Gruppen-Icon läuft
+    // eingepasst über die ganze Pille — Figuren bleiben erkennbar.
+    const b = feldBreite * (r / 2.03);
+    const h = r * 2.75;
+    return `<rect x="${(x - b / 2).toFixed(3)}" y="${(y - h / 2).toFixed(3)}"`
+      + ` width="${b.toFixed(3)}" height="${h.toFixed(3)}" rx="${(h / 2).toFixed(3)}" fill="${hex}" />`
+      + symbolMarkup(symbol, x, y, b - h * 0.7, "#ffffff", h * 0.72);
+  }
   if (symbol) {
     const symbole = Array.isArray(symbol) ? symbol : [symbol];
     const rr = r * SYMBOL_FAKTOR;
@@ -619,7 +631,7 @@ function ortMarkup(ort) {
   }
   ortPositionen(ort).forEach(([px, py]) => {
     const [x, y] = anp(px, py);
-    teile += markenKreis(x, y, hex, ortMarker(ort), 2.03, ort.symbol);
+    teile += markenKreis(x, y, hex, ortMarker(ort), 2.03, ort.symbol, ort.feldBreite);
     if (ort.pfeil) teile += pfeilMarkup(x, y, 2.03, hex, ort.pfeil);
   });
   return teile;
@@ -667,6 +679,14 @@ function legendeZeilen() {
   const mitKoepfen = kategorien.size > 1;
   aktive.forEach((ort) => {
     const kategorie = ort.kategorie || "eigene";
+    // Gleiche Zeilen zusammenlegen: zwei Toiletten-Marker auf der Karte
+    // brauchen nur EINE Legendenzeile (gleicher Text, gleiche Marke).
+    if (vorher && (vorher.kategorie || "eigene") === kategorie
+      && ortLabel(vorher) === ortLabel(ort)
+      && (vorher.legendeText || vorher.marker) === (ort.legendeText || ort.marker)) {
+      vorher = ort;
+      return;
+    }
     if (mitKoepfen && (!vorher || (vorher.kategorie || "eigene") !== kategorie)) {
       if (vorher) zeilen.push({ typ: "abstand", hoehe: L.gruppe * 0.6 });
       // Eigene (veranstaltungsspezifische) Marken beginnen in Spalte 2 —
@@ -750,9 +770,13 @@ function legendeMarkup() {
     if (ort.art === "treppe") {
       teile += treppenBadge(x, y - 0.9, ort.marker, "treppe", hex, true);
     } else {
-      // Breite Symbol-Pillen linksbündig zur Spalte, Text weicht aus.
+      // Breite Symbol-Pillen linksbündig zur Spalte, Text weicht aus;
+      // Orte mit legendeText (Toiletten) zeigen in der Liste die
+      // schlichte Textmarke statt des Kartenfelds.
       const b = markenBreite(ort, 2.03);
-      teile += markenKreis(x - 2.03 + b / 2, y - 0.9, hex, ortMarker(ort), 2.03, ort.symbol);
+      teile += markenKreis(x - 2.03 + b / 2, y - 0.9, hex,
+        ort.legendeText || ortMarker(ort), 2.03,
+        ort.legendeText ? null : ort.symbol);
       textX = x + Math.max(L.labelAbstand, b - 2.03 + 1.6);
     }
     zeile.zeilenTexte.forEach((text, index) => {
@@ -1297,6 +1321,9 @@ function renderOptionen() {
 
   document.getElementById("logo-skala").value = String(Math.round(state.logo.skala * 100));
   document.getElementById("logo-wert").textContent = `${Math.round(state.logo.skala * 100)}%`;
+  document.getElementById("logo-lage").textContent = state.logo.x == null
+    ? "Standard (rechts oben)"
+    : `${state.logo.x.toFixed(1)} × ${state.logo.y.toFixed(1)} mm`;
 }
 
 /* ---------- Zoom (nur Bildschirm-Vorschau) ---------- */
@@ -1615,14 +1642,25 @@ document.getElementById("logo-skala").addEventListener("change", () => {
   renderOptionen();
   speichern();
 });
-document.getElementById("logo-platzieren").addEventListener("click", () => {
-  state.platzierenLogo = true;
-  state.platzieren = null;
-  state.platzierenOrt = null;
-  renderVorschau();
-  eigeneHint.textContent = "Logo — neue Stelle in der Vorschau anklicken (Mitte). ‹Esc› bricht ab.";
-  printSvg.scrollIntoView({ behavior: "smooth", block: "nearest" });
-});
+// Logo mit Pfeiltasten verschieben (1-mm-Schritte); die Anzeige nennt die
+// Mitte in Blatt-mm — so lassen sich finale Koordinaten durchgeben.
+function logoVerschieben(dx, dy) {
+  if (!logoInhalt) return;
+  if (state.logo.x == null || state.logo.y == null) {
+    const breite = 24 * state.logo.skala;
+    const hoehe = breite * logoInhalt.hoehe / logoInhalt.breite;
+    state.logo.x = SZENE.breite - 10.5 - breite / 2;
+    state.logo.y = 6.5 + hoehe / 2;
+  }
+  state.logo.x = Math.round((state.logo.x + dx) * 10) / 10;
+  state.logo.y = Math.round((state.logo.y + dy) * 10) / 10;
+  render();
+}
+
+document.getElementById("logo-links").addEventListener("click", () => logoVerschieben(-1, 0));
+document.getElementById("logo-rechts").addEventListener("click", () => logoVerschieben(1, 0));
+document.getElementById("logo-hoch").addEventListener("click", () => logoVerschieben(0, -1));
+document.getElementById("logo-runter").addEventListener("click", () => logoVerschieben(0, 1));
 document.getElementById("logo-reset").addEventListener("click", () => {
   state.logo = { x: null, y: null, skala: 1 };
   render();

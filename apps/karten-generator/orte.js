@@ -164,134 +164,42 @@ const ORTE = [
     "symbol": "wc-rollstuhl"
   },
   {
-    "id": "wc-g-herren",
+    "id": "wc-goetheanum",
     "marker": "WC",
     "art": "orientierung",
     "kategorie": "eingaenge",
-    "farbe": "blau",
+    "farbe": "gold",
     "label": {
-      "de": "WC Herren (Goetheanum)",
-      "en": "WC Men (Goetheanum)"
+      "de": "Toiletten",
+      "en": "Toilets"
     },
     "positionen": [
       [
-        188.5,
-        150.8
+        197.5,
+        125.5
       ]
     ],
-    "symbol": "wc-herren"
+    "symbol": "wc-gruppe",
+    "feldBreite": 13,
+    "legendeText": "WC"
   },
   {
-    "id": "wc-g-damen",
+    "id": "wc-schreinerei",
     "marker": "WC",
     "art": "orientierung",
     "kategorie": "eingaenge",
-    "farbe": "blau",
+    "farbe": "gold",
     "label": {
-      "de": "WC Damen (Goetheanum)",
-      "en": "WC Women (Goetheanum)"
+      "de": "Toiletten",
+      "en": "Toilets"
     },
     "positionen": [
       [
-        192.5,
-        145.5
+        224.5,
+        83.5
       ]
     ],
-    "symbol": "wc-damen"
-  },
-  {
-    "id": "wc-g-rollstuhl",
-    "marker": "WC",
-    "art": "orientierung",
-    "kategorie": "eingaenge",
-    "farbe": "blau",
-    "label": {
-      "de": "WC barrierefrei (Goetheanum)",
-      "en": "Accessible WC (Goetheanum)"
-    },
-    "positionen": [
-      [
-        196.0,
-        142.0
-      ]
-    ],
-    "symbol": "wc-rollstuhl"
-  },
-  {
-    "id": "wc-g-wickeltisch",
-    "marker": "WC",
-    "art": "orientierung",
-    "kategorie": "eingaenge",
-    "farbe": "blau",
-    "label": {
-      "de": "Wickeltisch (Goetheanum)",
-      "en": "Baby Changing (Goetheanum)"
-    },
-    "positionen": [
-      [
-        199.5,
-        138.5
-      ]
-    ],
-    "symbol": "wickelraum"
-  },
-  {
-    "id": "wc-g-kombi",
-    "marker": "WC",
-    "art": "orientierung",
-    "kategorie": "eingaenge",
-    "farbe": "blau",
-    "label": {
-      "de": "WC Damen · barrierefrei · Wickeltisch (Goetheanum)",
-      "en": "WC Women · Accessible · Baby Changing (Goetheanum)"
-    },
-    "positionen": [
-      [
-        192.5,
-        141.0
-      ]
-    ],
-    "symbol": [
-      "wc-damen",
-      "wc-rollstuhl",
-      "wickelraum"
-    ]
-  },
-  {
-    "id": "wc-s-herren",
-    "marker": "WC",
-    "art": "orientierung",
-    "kategorie": "eingaenge",
-    "farbe": "blau",
-    "label": {
-      "de": "WC Herren (Schreinerei)",
-      "en": "WC Men (Schreinerei)"
-    },
-    "positionen": [
-      [
-        222.0,
-        82.0
-      ]
-    ],
-    "symbol": "wc-herren"
-  },
-  {
-    "id": "wc-s-damen",
-    "marker": "WC",
-    "art": "orientierung",
-    "kategorie": "eingaenge",
-    "farbe": "blau",
-    "label": {
-      "de": "WC Damen (Schreinerei)",
-      "en": "WC Women (Schreinerei)"
-    },
-    "positionen": [
-      [
-        227.0,
-        85.5
-      ]
-    ],
-    "symbol": "wc-damen"
+    "legendeText": "WC"
   },
   {
     "id": "f46",
