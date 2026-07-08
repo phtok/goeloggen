@@ -17,10 +17,12 @@
       src: url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2") format("woff2");
       font-weight: 400; font-style: normal; font-display: swap;
     }
+    /* Werte/Badges auf der Karte: Lese-Grotesk (Hausregel Label/Wert/Badge);
+       die Beispielkarten setzten dafür die damalige Grotesk in Bold. */
     @font-face {
-      font-family: "GoetheanumKlar";
-      src: url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Klar.woff2") format("woff2");
-      font-weight: 400; font-style: normal; font-display: swap;
+      font-family: "SourceSans3Semibold";
+      src: url("../../assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2") format("woff2");
+      font-weight: 600; font-style: normal; font-display: swap;
     }
 
     .app {
@@ -124,6 +126,28 @@
       background: var(--field-bg); padding: 2px; cursor: pointer;
     }
 
+    .park-chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+    .park-chip {
+      min-width: var(--tap); min-height: var(--tap);   /* B04 */
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      border: 1px solid var(--line); border-radius: var(--r-control);
+      background: var(--field-bg); color: var(--ink);
+      font-size: var(--t-small); font-variant-numeric: tabular-nums;  /* G25 */
+      cursor: pointer; padding: 0 var(--s2);
+    }
+    .park-chip:hover { border-color: var(--gold-ink); }
+    .park-punkt {
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 1px solid var(--line); flex: none;
+    }
+    /* Affordanz: beim Arbeiten im Parkflächen-Abschnitt alle Flächen umranden */
+    .print-svg.zeige-park [id^="parkflaeche-"] {
+      stroke: var(--gold-deep); stroke-width: 0.5; stroke-dasharray: 1 0.6;
+    }
+    .print-svg [id^="parkflaeche-"].park-fokus {
+      stroke: var(--gold-deep); stroke-width: 0.9;
+    }
+
     .marken-farben { display: flex; gap: var(--s2); }
     .marken-farbe {
       width: var(--tap); height: var(--tap);      /* B04 */
@@ -190,9 +214,12 @@
         <div id="farb-rollen"></div>
       </fieldset>
 
-      <fieldset>
+      <fieldset id="park-fieldset">
         <legend>Parkflächen</legend>
-        <div class="hint">Parkfläche in der Vorschau anklicken: Gold → Blau → Grün → Rot → aus.</div>
+        <div class="hint">Knopf antippen oder Fläche in der Vorschau anklicken —
+          jeder Tipp schaltet weiter: Gold → Blau → Grün → Rot → aus.
+          Solange der Zeiger hier steht, sind alle Parkflächen in der Vorschau umrandet.</div>
+        <div id="park-chips" class="park-chips"></div>
         <div class="button-row">
           <button id="park-reset" type="button" class="btn">Alle Parkflächen zurücksetzen</button>
         </div>
@@ -244,6 +271,8 @@
     </section>
   </main>
 
+  <script src="../../assets/goe-orgs.js"></script>
+  <script src="../logos/engine.js"></script>
   <script src="orte.js"></script>
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/svg2pdf.umd.min.js"></script>
