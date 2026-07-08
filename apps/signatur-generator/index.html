@@ -505,7 +505,7 @@ document.getElementById("icsBtn").addEventListener("click", function () {
 /* ---------- Eingaben verdrahten ---------- */
 function autoGrow(el) { if (!el || el.tagName !== "TEXTAREA") return; el.style.height = "auto"; el.style.height = el.scrollHeight + "px"; }
 function growAll() { autoGrow(els.role); autoGrow(els.web); autoGrow(els.ps); }
-function onInput() { render(); growAll(); checkExpiry(); save(); }
+function onInput() { resetCopied(); render(); growAll(); checkExpiry(); save(); }
 FIELDS.forEach(k => els[k].addEventListener("input", onInput));
 
 document.getElementById("fillExample").addEventListener("click", () => { setFields(EXAMPLE); onInput(); });
@@ -519,6 +519,23 @@ function flash(btn, label) {
   setTimeout(() => { btn.textContent = old; btn.classList.remove("ok"); }, 1400);
 }
 
+// Kopier-Bestätigung bleibt bestehen (grün + Häkchen), bis der Inhalt sich ändert.
+let copiedBtn = null;
+function markCopied(btn) {
+  resetCopied();
+  btn.dataset.orig = btn.dataset.orig || btn.textContent;
+  btn.textContent = "Kopiert ✓";
+  btn.classList.add("ok");
+  copiedBtn = btn;
+  document.getElementById("copyStatus").textContent = "In die Zwischenablage kopiert – bleibt bereit, bis du etwas änderst.";
+}
+function resetCopied() {
+  if (!copiedBtn) return;
+  if (copiedBtn.dataset.orig) copiedBtn.textContent = copiedBtn.dataset.orig;
+  copiedBtn.classList.remove("ok");
+  copiedBtn = null;
+}
+
 document.getElementById("copyRich").addEventListener("click", function () {
   const sig = buildSignature();
   if (navigator.clipboard && window.ClipboardItem) {
@@ -527,7 +544,7 @@ document.getElementById("copyRich").addEventListener("click", function () {
       "text/plain": new Blob([sig.text], { type: "text/plain" })
     });
     navigator.clipboard.write([item]).then(
-      () => { flash(this, "Kopiert ✓"); track("copy", {}); },
+      () => { markCopied(this); track("copy", {}); },
       () => flash(this, "Bitte HTML-Code nutzen")
     );
   } else {
@@ -537,7 +554,7 @@ document.getElementById("copyRich").addEventListener("click", function () {
 document.getElementById("copyPlain").addEventListener("click", function () {
   const t = buildSignature().text;
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(t).then(() => { flash(this, "Kopiert ✓"); track("plaincopy", {}); }, () => flash(this, "Nicht möglich"));
+    navigator.clipboard.writeText(t).then(() => { markCopied(this); track("plaincopy", {}); }, () => flash(this, "Nicht möglich"));
   } else { flash(this, "Nicht möglich"); }
 });
 
