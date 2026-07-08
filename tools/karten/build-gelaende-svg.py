@@ -113,6 +113,15 @@ def main() -> int:
     KONTUR_ROLLEN = ("campus", "gebaeude", "gebaeude-campus")
     konturen = [0]
 
+    # Auch weisse Wege-Striche können Kontur-Zwillinge sein (weisse Ränder
+    # an einzelnen Häusern): ein Strichpfad, dessen Geometrie (transform+d)
+    # ein Füllpfad-Duplikat ist, ist Kontur — echte Fusswege haben keinen
+    # Füll-Zwilling und bleiben.
+    fuellformen = set(re.findall(
+        r'<path transform="([^"]+)"[^>]*?class="k-[a-z-]+"[^>]*? d="([^"]+)"', svg))
+    fuellformen |= set(re.findall(
+        r'<path transform="([^"]+)" d="([^"]+)"[^>]*?class="k-[a-z-]+"', svg))
+
     def konturen_entfernen(match: re.Match) -> str:
         tag = match.group(0)
         if 'fill="none"' not in tag:
@@ -120,6 +129,21 @@ def main() -> int:
         if any(f'data-ks="{rolle}"' in tag for rolle in KONTUR_ROLLEN) or 'stroke="#' in tag:
             konturen[0] += 1
             return ""
+        if 'data-ks="wege"' in tag:
+            form = re.search(r'transform="([^"]+)"[^>]*? d="([^"]+)"', tag)
+            if form and (form.group(1), form.group(2)) in fuellformen:
+                konturen[0] += 1
+                return ""
+            # Kleine weisse Strichstücke (< ~10 mm) sind Kontur-Reste an
+            # Häusern, keine Wege — Sichtabgleich: ihr Wegfall ändert das
+            # Wegenetz nicht (die Wege selbst sind Füllflächen oder lang).
+            if form:
+                # auch ‹-.255›/‹.091› (führender Dezimalpunkt) korrekt lesen
+                zahlen = [float(z) for z in re.findall(r"-?(?:\d+\.?\d*|\.\d+)", form.group(2))]
+                xs, ys = zahlen[0::2], zahlen[1::2]
+                if xs and ys and max(max(xs) - min(xs), max(ys) - min(ys)) < 20.1:
+                    konturen[0] += 1
+                    return ""
         return tag
 
     svg = re.sub(r"<path[^>]*/>", konturen_entfernen, svg)

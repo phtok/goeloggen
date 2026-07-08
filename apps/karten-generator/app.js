@@ -76,6 +76,7 @@ const SPEICHER_SCHLUESSEL = "goetheanum-karten-v2";
 const state = {
   titel: "",           // Kurztitel der Tagung samt Jahr (Platzhalter im Feld)
   untertitel: "",      // Datum der Veranstaltung, z. B. ‹1. bis 5. Juli 2026›
+  eigeneTitel: "",     // Gruppentitel der eigenen Marken in der Legende
   sprache: "de",
   format: "a4",
   beschnitt: true,
@@ -233,17 +234,24 @@ function bauAktiv(bauId) {
     && ortGebaeude(ort).some((g) => bauEinheit(g) === einheit));
 }
 
+// Fugendichtung: jede Fläche trägt eine Eigenkontur in ihrer Füllfarbe
+// (0.35 pt ≈ 0.12 mm). Sie deckt die haarfeinen weissen Fugen, wo
+// angrenzende Flächen beim Rastern nicht ganz schliessen — unsichtbar,
+// weil Ton in Ton, und sie folgt jeder Umfärbung (auch aktiven Gebäuden).
+function flaechenFarbe(farbe) {
+  return `fill="${farbe}" stroke="${farbe}" stroke-width="0.35"`;
+}
+
 function gelaendeMarkup() {
   let inhalt = gelaendeInhalt;
   inhalt = inhalt.replace(/class="k-parkflaeche" id="parkflaeche-(\d+)"/g, (voll, nr) => {
-    return `fill="${state.farben.parkflaeche}" id="parkflaeche-${nr}"`;
+    return `${flaechenFarbe(state.farben.parkflaeche)} id="parkflaeche-${nr}"`;
   });
   // Wiesenflächen: eingefärbt im Wiesen-Grün, sonst wie das Campus-Gelände;
-  // der Strich-Zwilling folgt der Fläche, die Halter beschneiden die
-  // Quellpolygone am Weg vor dem Rondell (Südzipfel gehört nicht dazu).
+  // die Halter beschneiden die Quellpolygone am Weg vor dem Rondell.
   inhalt = inhalt.replace(/class="k-wiese" id="wiese-(klein|gross)"/g, (voll, name) => {
     const farbe = state.wiesen[name] ? state.farben.wiese : state.farben.campus;
-    return `fill="${farbe}" id="wiese-${name}"`;
+    return `${flaechenFarbe(farbe)} id="wiese-${name}"`;
   });
   inhalt = inhalt.replace(/data-wiese-strich="(klein|gross)"/g, (voll, name) => {
     const farbe = state.wiesen[name] ? state.farben.wiese : state.farben.campus;
@@ -257,8 +265,9 @@ function gelaendeMarkup() {
     (voll, name, kern) => {
       if (name === "klein") return kern;
       const basis = kern
-        .replace(/fill="[^"]*" id="wiese-(?:klein|gross)"/, `fill="${state.farben.campus}"`)
-        .replace(/stroke="[^"]*"/, `stroke="${state.farben.campus}"`);
+        .replace(/fill="[^"]*"/, `fill="${state.farben.campus}"`)
+        .replace(/stroke="[^"]*"/, `stroke="${state.farben.campus}"`)
+        .replace(/ id="wiese-(?:klein|gross)"/, "");
       return basis + `<g clip-path="url(#wiese-clip)">${kern}</g>`;
     });
   // Campus-Gebäude aktiv/passiv (id steht vor der Klasse im Tag).
@@ -266,11 +275,11 @@ function gelaendeMarkup() {
     /<path id="(campusbau-\d+)"([^>]*?)class="k-(goetheanum|gebaeude-campus|akzent)"/g,
     (voll, bauId, mitte) => {
       const farbe = bauAktiv(bauId) ? state.farben.goetheanum : state.farben["gebaeude-campus"];
-      return `<path id="${bauId}"${mitte}fill="${farbe}"`;
+      return `<path id="${bauId}"${mitte}${flaechenFarbe(farbe)}`;
     }
   );
   inhalt = inhalt.replace(/class="k-([a-z-]+)"/g, (voll, rolle) => {
-    return `fill="${state.farben[rolle] || "#cccccc"}"`;
+    return flaechenFarbe(state.farben[rolle] || "#cccccc");
   });
   // Striche folgen denselben Rollen wie die Füllungen — sonst zeichnen die
   // Original-Strichfarben Konturen an Flächen, die flach gemeint sind.
@@ -471,7 +480,10 @@ function markenKreis(x, y, hex, text, r, symbol) {
 function pfeilMarkup(x, y, r, hex, richtung) {
   // Richtungs-Pfeil = Original-Icon ‹pfeil-rechts-fett›, gedreht —
   // der fette Schnitt entspricht den Vorlagenpfeilen an den Aussenmarken.
-  const winkel = { rechts: 0, "unten-rechts": 45, "unten-links": 135 }[richtung] || 0;
+  // Richtung wahlweise benannt oder als Gradzahl (z. B. entlang einer Strasse).
+  const winkel = typeof richtung === "number"
+    ? richtung
+    : ({ rechts: 0, "unten-rechts": 45, "unten-links": 135 }[richtung] || 0);
   const abstand = r + 2.6;
   const dx = Math.cos(winkel * Math.PI / 180), dy = Math.sin(winkel * Math.PI / 180);
   return ikonMarkup("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 4.4, hex, winkel);
@@ -631,8 +643,9 @@ function legendeZeilen() {
     const kategorie = ort.kategorie || "eigene";
     if (mitKoepfen && (!vorher || (vorher.kategorie || "eigene") !== kategorie)) {
       if (vorher) zeilen.push({ typ: "abstand", hoehe: L.gruppe * 0.6 });
+      const eigener = state.eigeneTitel.trim();
       const name = ort.art === "eigene"
-        ? { de: "Eigene Marken", en: "Own Markers" }
+        ? (eigener ? { de: eigener, en: eigener } : { de: "Eigene Marken", en: "Own Markers" })
         : namen[kategorie];
       if (name) zeilen.push({ typ: "kopf", text: sprachText(name), hoehe: L.zeile });
     } else if (vorher && vorher.art === "treppe" && ort.art === "treppe") {
@@ -912,6 +925,26 @@ function ortZeile(ort, loeschbar) {
   }
 
   if (loeschbar) {
+    // Reihenfolge der eigenen Marken = Reihenfolge in der Legende;
+    // ▲/▼ sortieren nachträglich.
+    const schieben = (richtung) => (e) => {
+      e.stopPropagation();
+      const index = state.eigene.findIndex((eintrag) => eintrag.id === ort.id);
+      const ziel = index + richtung;
+      if (index < 0 || ziel < 0 || ziel >= state.eigene.length) return;
+      const [eintrag] = state.eigene.splice(index, 1);
+      state.eigene.splice(ziel, 0, eintrag);
+      render();
+    };
+    [["▲", -1, "In der Legende nach oben"], ["▼", 1, "In der Legende nach unten"]].forEach(([zeichen, richtung, titelText]) => {
+      const knopf = document.createElement("button");
+      knopf.type = "button";
+      knopf.className = "row-btn";
+      knopf.title = titelText;
+      knopf.textContent = zeichen;
+      knopf.addEventListener("click", schieben(richtung));
+      zeile.appendChild(knopf);
+    });
     const weg = document.createElement("button");
     weg.type = "button";
     weg.className = "row-btn";
@@ -1198,6 +1231,7 @@ function renderOptionen() {
   document.getElementById("row-marken").classList.toggle("aus", !state.beschnitt);
   document.getElementById("titel-input").value = state.titel;
   document.getElementById("untertitel-input").value = state.untertitel;
+  document.getElementById("eigene-titel").value = state.eigeneTitel;
 
   const regler = document.getElementById("ausschnitt-skala");
   regler.value = String(Math.round(state.ausschnitt.skala * 100));
@@ -1221,6 +1255,7 @@ function setzeZoom(wert) {
 function standAlsJson() {
   return {
     titel: state.titel, untertitel: state.untertitel,
+    eigeneTitel: state.eigeneTitel,
     sprache: state.sprache, format: state.format,
     beschnitt: state.beschnitt, marken: state.marken,
     an: Object.keys(state.an), labels: state.labels,
@@ -1244,6 +1279,7 @@ function speichern() {
 function standAnwenden(s) {
     if (typeof s.titel === "string") state.titel = s.titel;
     state.untertitel = typeof s.untertitel === "string" ? s.untertitel : "";
+    state.eigeneTitel = typeof s.eigeneTitel === "string" ? s.eigeneTitel : "";
     state.format = s.format === "a3" ? "a3" : "a4";
     state.beschnitt = s.beschnitt !== false;
     state.marken = Boolean(s.marken);
@@ -1288,16 +1324,26 @@ function laden() {
   }
 }
 
-/* ---------- Gespeicherte Karten (Konfigurationen je Titel) ----------
-   Jeder Download legt den Stand unter seinem Titel ab (gleicher Titel
-   überschreibt) — so bleibt z. B. ‹Landwirte 2025› fürs nächste Jahr
-   abrufbar. Die Liste steht unten in der Seitenleiste. */
+/* ---------- Gespeicherte Karten ----------
+   Jeder Download legt den Stand unter Titel UND Datum ab (je Titel und
+   Tag ein Eintrag; ein Stand braucht nur ~2 KB — der Verlauf kostet
+   praktisch nichts und schützt vor versehentlichem Überschreiben).
+   Zusätzlich: Sichern/Laden als JSON-Datei, für Kollegen und als Backup. */
 
 const VARIANTEN_SCHLUESSEL = "goetheanum-karten-varianten";
+const VARIANTEN_MAX = 80;   // ältester Eintrag fällt zuerst
 
 function variantenLesen() {
   try {
-    return JSON.parse(localStorage.getItem(VARIANTEN_SCHLUESSEL)) || {};
+    const roh = JSON.parse(localStorage.getItem(VARIANTEN_SCHLUESSEL)) || {};
+    // Altbestand (Schlüssel = Titel ohne Datum) einmalig überführen.
+    Object.keys(roh).forEach((schluessel) => {
+      const e = roh[schluessel];
+      if (e && e.stand && !e.titel) {
+        roh[schluessel] = { titel: schluessel, stand: e.stand, gespeichert: e.gespeichert || "" };
+      }
+    });
+    return roh;
   } catch (fehler) {
     return {};
   }
@@ -1308,7 +1354,15 @@ function varianteAblegen() {
   if (!titel) return;
   try {
     const varianten = variantenLesen();
-    varianten[titel] = { stand: standAlsJson(), gespeichert: new Date().toISOString().slice(0, 10) };
+    const jetzt = new Date();
+    const tag = jetzt.toISOString().slice(0, 10);
+    varianten[`${titel}|${tag}`] = {
+      titel, stand: standAlsJson(),
+      gespeichert: jetzt.toISOString().slice(0, 16).replace("T", " ")
+    };
+    const schluessel = Object.keys(varianten)
+      .sort((a, b) => (varianten[a].gespeichert || "").localeCompare(varianten[b].gespeichert || ""));
+    while (schluessel.length > VARIANTEN_MAX) delete varianten[schluessel.shift()];
     localStorage.setItem(VARIANTEN_SCHLUESSEL, JSON.stringify(varianten));
   } catch (fehler) {
     console.warn("Variante nicht speicherbar:", fehler);
@@ -1324,11 +1378,12 @@ function renderVarianten() {
   if (!eintraege.length) {
     const hinweis = document.createElement("div");
     hinweis.className = "hint";
-    hinweis.textContent = "Noch keine gespeicherten Karten — jeder Download legt den Stand unter seinem Titel ab.";
+    hinweis.textContent = "Noch keine gespeicherten Karten — jeder Download legt den Stand unter Titel und Datum ab.";
     halter.appendChild(hinweis);
     return;
   }
-  eintraege.forEach(([titel, eintrag]) => {
+  eintraege.forEach(([schluessel, eintrag]) => {
+    const titel = eintrag.titel || schluessel;
     const zeile = document.createElement("div");
     zeile.className = "object-row";
     zeile.title = `‹${titel}› laden (ersetzt die aktuelle Ansicht)`;
@@ -1338,7 +1393,7 @@ function renderVarianten() {
     zeile.appendChild(titelSpan);
     const datum = document.createElement("span");
     datum.className = "object-marker";
-    datum.textContent = eintrag.gespeichert || "";
+    datum.textContent = (eintrag.gespeichert || "").slice(0, 10);
     zeile.appendChild(datum);
     const weg = document.createElement("button");
     weg.type = "button";
@@ -1347,15 +1402,15 @@ function renderVarianten() {
     weg.textContent = "✕";
     weg.addEventListener("click", (e) => {
       e.stopPropagation();
-      if (!window.confirm(`Gespeicherte Karte ‹${titel}› löschen?`)) return;
+      if (!window.confirm(`Gespeicherte Karte ‹${titel}› (${(eintrag.gespeichert || "").slice(0, 10)}) löschen?`)) return;
       const varianten = variantenLesen();
-      delete varianten[titel];
+      delete varianten[schluessel];
       try { localStorage.setItem(VARIANTEN_SCHLUESSEL, JSON.stringify(varianten)); } catch (fehler) { /* egal */ }
       renderVarianten();
     });
     zeile.appendChild(weg);
     zeile.addEventListener("click", () => {
-      if (!window.confirm(`Karte ‹${titel}› laden? Die aktuelle Ansicht wird ersetzt.`)) return;
+      if (!window.confirm(`Karte ‹${titel}› vom ${(eintrag.gespeichert || "").slice(0, 10)} laden? Die aktuelle Ansicht wird ersetzt.`)) return;
       standAnwenden(eintrag.stand || {});
       render();
     });
@@ -1434,6 +1489,12 @@ document.getElementById("titel-input").addEventListener("input", (ereignis) => {
 
 document.getElementById("untertitel-input").addEventListener("input", (ereignis) => {
   state.untertitel = ereignis.target.value;
+  renderVorschau();
+  speichern();
+});
+
+document.getElementById("eigene-titel").addEventListener("input", (ereignis) => {
+  state.eigeneTitel = ereignis.target.value;
   renderVorschau();
   speichern();
 });
@@ -1538,6 +1599,33 @@ document.getElementById("zuruecksetzen").addEventListener("click", () => {
 document.getElementById("zoom-in").addEventListener("click", () => setzeZoom(state.zoom + 0.15));
 document.getElementById("zoom-out").addEventListener("click", () => setzeZoom(state.zoom - 0.15));
 document.getElementById("zoom-reset").addEventListener("click", () => setzeZoom(1));
+
+// Karte als Datei sichern / aus Datei laden — für Kollegen (Netzlaufwerk,
+// Mail) und als Backup; der Browser-Speicher bleibt lokal je Rechner.
+document.getElementById("karte-sichern").addEventListener("click", () => {
+  const slug = state.titel.trim() ? state.titel.trim().replace(/[^\wäöüÄÖÜß-]+/g, "-") : "campuskarte";
+  herunterladen(`${slug}.karte.json`, JSON.stringify(standAlsJson(), null, 2), "application/json");
+});
+
+document.getElementById("karte-laden-datei").addEventListener("change", (ereignis) => {
+  const datei = ereignis.target.files && ereignis.target.files[0];
+  ereignis.target.value = "";
+  if (!datei) return;
+  const leser = new FileReader();
+  leser.onload = () => {
+    try {
+      standAnwenden(JSON.parse(leser.result));
+      render();
+    } catch (fehler) {
+      window.alert("Datei nicht lesbar — ist es eine .karte.json aus diesem Werkzeug?");
+    }
+  };
+  leser.readAsText(datei);
+});
+
+document.getElementById("karte-laden").addEventListener("click", () => {
+  document.getElementById("karte-laden-datei").click();
+});
 
 // Justierte Sektionen/Gärten-Lagen exportieren (fliessen in die Vorlage).
 document.getElementById("lagen-export").addEventListener("click", () => {

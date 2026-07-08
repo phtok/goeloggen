@@ -286,6 +286,9 @@
         </div>
         <div class="hint" id="eigene-hint">Erst Beschriftung eingeben, dann in der Vorschau die Stelle anklicken. ‹Esc› bricht ab.</div>
         <div class="object-list" id="eigene-liste"></div>
+        <input id="eigene-titel" type="text" placeholder="Eigene Marken" />
+        <div class="hint">Gruppentitel dieser Einträge in der Legende — frei benennbar,
+          z. B. ‹Festorte›. ▲▼ an den Einträgen sortiert die Reihenfolge.</div>
       </fieldset>
 
       <fieldset>
@@ -334,12 +337,17 @@
       <fieldset>
         <legend>Gespeicherte Karten</legend>
         <div class="hint">Die Arbeit bleibt beim Neuladen erhalten; jeder Download
-          legt den Stand zusätzlich unter seinem Titel hier ab (gleicher Titel
-          überschreibt). Klick lädt die Karte wieder.</div>
+          legt den Stand hier unter Titel und Datum ab (je Titel und Tag ein
+          Eintrag — nichts wird überschrieben). Klick lädt die Karte wieder.
+          Gespeichert wird im Browser dieses Rechners; für Kollegen die Karte
+          als Datei sichern und weitergeben.</div>
         <div class="object-list" id="varianten-liste"></div>
         <div class="button-row">
+          <button id="karte-sichern" type="button" class="btn">Als Datei sichern</button>
+          <button id="karte-laden" type="button" class="btn">Aus Datei laden</button>
           <button id="zuruecksetzen" type="button" class="btn">Neu beginnen (zurücksetzen)</button>
         </div>
+        <input id="karte-laden-datei" type="file" accept=".json,application/json" hidden />
       </fieldset>
     </aside>
 
