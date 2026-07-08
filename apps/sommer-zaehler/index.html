@@ -157,8 +157,9 @@
   .motrow .mc{color:var(--ink)} .motrow .mc .ms{color:var(--muted);font-size:var(--t-micro);margin-left:7px}
   .motrow .mn{font-variant-numeric:tabular-nums lining-nums;color:var(--ink);font-weight:600}
   .kanal-rolle{color:var(--muted);font-size:var(--t-micro);margin-left:7px}
-  .landing{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5);align-items:baseline;font-family:var(--font-text);font-size:var(--t-small);margin-bottom:var(--s4)}
-  .landing a{color:var(--blue)}
+  /* Aktionsseiten als Buttons – Fingerziele statt klebender Textlinks (B04, DS02) */
+  .landing{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3);align-items:center;font-family:var(--font-text);font-size:var(--t-small);margin-bottom:var(--s4)}
+  .landing .meta{margin-right:var(--s2)}
 
   @media (max-width:720px){
     .board{grid-template-columns:1fr} .stay{grid-template-columns:1fr}
@@ -323,9 +324,9 @@
   <div class="wrap" style="display:flex;flex-direction:column;gap:var(--s2)">
     <div class="landing">
       <span class="meta">Aktionsseiten</span>
-      <a href="https://global-sommer2026.goetheanum.online" target="_blank" rel="noopener">Übersicht · 3 Monate gratis</a>
-      <a href="https://ws-sommer2026.dasgoetheanum.com" target="_blank" rel="noopener">Wochenschrift</a>
-      <a href="https://tv-sommer2026.goetheanum.tv" target="_blank" rel="noopener">goetheanum.tv</a>
+      <a class="btn" href="https://global-sommer2026.goetheanum.online" target="_blank" rel="noopener">Übersicht · 3 Monate gratis</a>
+      <a class="btn" href="https://ws-sommer2026.dasgoetheanum.com" target="_blank" rel="noopener">Wochenschrift</a>
+      <a class="btn" href="https://tv-sommer2026.goetheanum.tv" target="_blank" rel="noopener">goetheanum.tv</a>
     </div>
     <div class="frow">
       <span><strong>Sommer-Zähler 2026</strong> · live aus dem Werkzeug-Backend · nur Summen, keine Personendaten</span>
