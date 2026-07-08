@@ -98,7 +98,8 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
    Ascent/Descent-Ungleichgewichts der Schrift optisch zu hoch. 8% ist am
    Goetheanum-Schriftschnitt (Laut/680) empirisch vermessen (Pixel-Analyse der
    Tinten-Bounding-Box gegen die geometrische Kreismitte) und deckt sich mit den
-   Font-Metriken (hhea ascent 750 / descent −250 vs. Ziffern-Tintenmitte ≈ 330/1000). */
+   Font-Metriken (hhea ascent 750 / descent −250 vs. Ziffern-Tintenmitte ≈ 330/1000).
+   Unabhängig pixelverifiziert im Kartentool (7/2026, docs/werkzeugwissen.md). */
 .step-num{display:inline-flex;align-items:center;justify-content:center;flex:none;
   width:1.6em;height:1.6em;min-width:1.6em;border-radius:999px;
   font-weight:var(--w-strong);font-size:.72em;

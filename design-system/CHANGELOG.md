@@ -37,6 +37,26 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ## [Unveröffentlicht]
 
+### Kartentool-Learnings aufgenommen (Werkzeugwissen + belegte Werte)
+- **Was:** Neues Nachschlagewerk `docs/werkzeugwissen.md` (SVG-/Druck-Export-/
+  UI-Bauwissen); Quelle `docs/learnings-kartentool.md` (14 verifizierte
+  Testrunden). Kernregeln: Icons auf die **Tintenbox** zentrieren (Einzeldateien
+  tragen keine einheitliche viewBox — nachgeprüft: nur 46 von 81 Dateien haben
+  die Standardbox); in Export-SVGs **kein `text-anchor="middle"`** und **keine
+  OpenType-Feature-Abhängigkeit** (PDF-Renderer ignorieren beides — Breiten und
+  Ziffern-Slots selbst setzen); Kontur-Zwillinge entfernen, Fugen mit
+  Eigenkontur in Füllfarbe dichten.
+- **Belegte Werte:** Druck-Tinten auf Papierweiss gerechnet — `#4e4f4a` 8.26:1,
+  `#6e6f6a` 5.07:1 (Token-Kandidat `--ink-print-leise`, aufgenommen sobald ein
+  zweites Druckwerkzeug ihn braucht), `#767771` 4.52:1. Die Hausschrift führt
+  `tnum`/`lnum` als GSUB-Features — G25 über `font-variant-numeric` greift auch
+  in der Hausschrift (nur nicht im PDF-Export).
+- **Bestätigt:** Die `.step-num`-Sitzkorrektur (translateY 8 %) wurde im
+  Kartentool unabhängig pixelverifiziert; Vermerk am Kommentar in `base.css`.
+- **Offen (Ratifizierung):** Normalisierung der Icon-Einzeldateien auf eine
+  einheitliche viewBox über die fontfix-Pipeline — als Aufgabe vermerkt; bis
+  dahin gilt die Tintenbox-Regel für Konsumenten.
+
 ### Neuer Font «Goetheanum Pfeile» – Pfeile & Kompass ohne PUA-Umweg
 - Die Pfeile/Kompass lagen im Icon-Font im **Zeichen-Privatbereich (PUA)** und waren
   nur über Option/Alt oder die Glyphenpalette erreichbar; eine installierbare
