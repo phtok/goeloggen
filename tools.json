@@ -397,6 +397,17 @@
       "href": "marketing-maschine.html",
       "desc": "Gesetzte Zusammenfassung des Marketing-Konzepts: Jahresrad, Kennzahlen, die zwei Stimmen und die drei Wachstums-Wege — auf einer Seite. Volltext im Konzeptdokument.",
       "such": "Marketing Maschine Kampagne Jahresrad Abo Wachstum Wochenschrift goetheanum.tv Leads Strategie Neumeier Newsletter Michaeli"
+    },
+    {
+      "slug": "seelenkalender",
+      "cat": "anwendung",
+      "status": "beta",
+      "tag": "Neu",
+      "title": "Seelenkalender",
+      "short": "Seelenkalender",
+      "href": "apps/seelenkalender/",
+      "desc": "Der Wochenspruch des Anthroposophischen Seelenkalenders — jede Woche neu, mit Blättern, Teilen und Vertiefungs-Verweisen. Erste Schleife der Lead-Maschine.",
+      "such": "Seelenkalender Wochenspruch Steiner Spruch Woche Ostern Michaeli Johanni Kalender Lead"
     }
   ],
   "docs": [
@@ -447,6 +458,12 @@
       "tag": "Strategie",
       "href": "https://github.com/phtok/goeloggen/blob/main/docs/marketing-maschine.md",
       "desc": "Jahreszyklus, Kampagnen, Leads: Konzept der weitgehend automatisierten Marketing-Maschine für die Wochenschrift und goetheanum.tv."
+    },
+    {
+      "title": "Lead-Maschine — Pflichtenheft",
+      "tag": "Spec",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/lead-maschine.md",
+      "desc": "Ausführungs-Spezifikation der fünf Lead-Schleifen: Seelenkalender, Archiv-Sog, Partner-Kit, Atomisierung, Schenken."
     }
   ]
 }
