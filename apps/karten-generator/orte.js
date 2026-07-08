@@ -164,6 +164,42 @@ const ORTE = [
     "symbol": "wc-rollstuhl"
   },
   {
+    "id": "wc-goetheanum",
+    "marker": "WC",
+    "art": "orientierung",
+    "kategorie": "eingaenge",
+    "farbe": "blau",
+    "label": {
+      "de": "WC Goetheanum",
+      "en": "WC Goetheanum"
+    },
+    "positionen": [
+      [
+        188.5,
+        150.8
+      ]
+    ],
+    "symbol": "wc-gruppe"
+  },
+  {
+    "id": "wc-schreinerei",
+    "marker": "WC",
+    "art": "orientierung",
+    "kategorie": "eingaenge",
+    "farbe": "blau",
+    "label": {
+      "de": "WC Schreinerei",
+      "en": "WC Schreinerei"
+    },
+    "positionen": [
+      [
+        224.5,
+        83.5
+      ]
+    ],
+    "symbol": "wc-gruppe"
+  },
+  {
     "id": "f46",
     "marker": "46",
     "art": "orientierung",

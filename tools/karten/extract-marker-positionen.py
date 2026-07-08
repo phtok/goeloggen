@@ -176,6 +176,15 @@ WILLKOMMEN = [
      {"de": "Barrierefreier Zugang", "en": "Barrier-free access"},
      [[222.5, 130.6]], {"symbol": "wc-rollstuhl"}),
 
+    # WCs (Icon ‹wc-gruppe›, blau statt Eingangs-Gold): Startlagen sind
+    # Setzungen — wie Sektionen/Gärten justierbar, bis Feinlagen bestätigt.
+    ("wc-goetheanum", "WC", "eingaenge",
+     {"de": "WC Goetheanum", "en": "WC Goetheanum"},
+     [[188.5, 150.8]], {"symbol": "wc-gruppe", "farbe": "blau"}),
+    ("wc-schreinerei", "WC", "eingaenge",
+     {"de": "WC Schreinerei", "en": "WC Schreinerei"},
+     [[224.5, 83.5]], {"symbol": "wc-gruppe", "farbe": "blau"}),
+
     # Sektionen (Buchstaben wie auf dem Willkommensschild):
     ("s-allgemein", "a", "sektionen",
      {"de": "Allgemeine Anthroposophische Sektion", "en": "General Anthroposophical Section"},
