@@ -17,6 +17,13 @@
       src: url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2") format("woff2");
       font-weight: 400; font-style: normal; font-display: swap;
     }
+    /* Kreiszahlen der Marker = Design-System-Sonderelement (.step-num):
+       Hausschrift Laut (680 = --w-strong), dort vermessen. */
+    @font-face {
+      font-family: "GoetheanumLaut";
+      src: url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2") format("woff2");
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
     /* Werte/Badges auf der Karte: Lese-Grotesk (Hausregel Label/Wert/Badge);
        die Beispielkarten setzten dafür die damalige Grotesk in Bold. */
     @font-face {
@@ -241,7 +248,7 @@
       <fieldset>
         <legend>Orte</legend>
         <div class="hint">Häkchen/Zeile = auf die Karte. Farbpunkt (rechts) = Markerfarbe.
-          ✥ = verschieben (Infotisch, barrierefreier Zugang, eigene Marken).
+          ✥ = verschieben (Infotisch und eigene Marken).
           Doppelklick auf eine Zeile ändert die Beschriftung.</div>
         <div class="seg" id="sprache-row">
           <button type="button" data-sprache="de" aria-pressed="true">Deutsch</button>
@@ -303,11 +310,21 @@
         <div class="button-row">
           <button id="download-pdf" type="button" class="btn primary">PDF</button>
           <button id="download-svg" type="button" class="btn">SVG</button>
-          <button id="zuruecksetzen" type="button" class="btn">Zurücksetzen</button>
         </div>
         <div class="hint">
           Das PDF ist vektoriell (Text bleibt Text, Karte bleibt Pfad) und trägt
           Trim- und Bleed-Box für die Druckerei.
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Gespeicherte Karten</legend>
+        <div class="hint">Die Arbeit bleibt beim Neuladen erhalten; jeder Download
+          legt den Stand zusätzlich unter seinem Titel hier ab (gleicher Titel
+          überschreibt). Klick lädt die Karte wieder.</div>
+        <div class="object-list" id="varianten-liste"></div>
+        <div class="button-row">
+          <button id="zuruecksetzen" type="button" class="btn">Neu beginnen (zurücksetzen)</button>
         </div>
       </fieldset>
     </aside>
