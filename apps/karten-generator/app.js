@@ -416,7 +416,11 @@ function ortJustierbar(ort) {
 }
 
 function ortBeweglich(ort) {
-  return ort.id === "o4" || ort.art === "eigene" || ortJustierbar(ort);
+  // Gärten/Sektionen/WCs sind fixiert — verschiebbar nur im Backend-
+  // Modus, um Überlagerungen auszugleichen (Feinlagen wandern dann
+  // über den Lagen-Export in die Vorlage).
+  return ort.id === "o4" || ort.art === "eigene"
+    || (ortJustierbar(ort) && backendAktiv());
 }
 
 function justierteLagen() {
@@ -728,7 +732,10 @@ function legendeMarkup() {
   const L = LEGENDE_LAYOUT_aktiv();
   let start = state.titel.trim() ? L.startMitTitel : L.startOhneTitel;
   if (state.titel.trim() && state.untertitel.trim()) start += 5.2;
-  if (state.titelLogo) start = Math.max(L.startOhneTitel, 5.5 + titelLogoHoehe() + 7);
+  if (state.titelLogo) {
+    // Luft unter dem Sonderlogo (und ggf. dem Untertitel darunter).
+    start = 5.5 + titelLogoHoehe() + (state.untertitel.trim() ? 5.6 + 4 : 0) + 9;
+  }
   const untergrenze = SZENE.hoehe - 12;
   let teile = "";
   let spalte = 0;
@@ -818,7 +825,8 @@ function titelLogoMarkup() {
   const l = state.titelLogo;
   if (!l) return "";
   const skala = l.breite / l.vbBreite;
-  return `<g transform="translate(10.5 5.5) scale(${skala.toFixed(5)})">${l.markup}</g>`;
+  const vx = l.vbX || 0, vy = l.vbY || 0;
+  return `<g transform="translate(${(10.5 - vx * skala).toFixed(3)} ${(5.5 - vy * skala).toFixed(3)}) scale(${skala.toFixed(5)})">${l.markup}</g>`;
 }
 
 function titelLogoHoehe() {
@@ -860,7 +868,9 @@ function szeneMarkup(anschnitt) {
       </g>
       ${marker}
     </g>
-    ${state.titelLogo ? titelLogoMarkup()
+    ${state.titelLogo
+      ? titelLogoMarkup()
+        + (state.untertitel.trim() ? `<text x="10.5" y="${(5.5 + titelLogoHoehe() + 5.6).toFixed(2)}" font-size="3.35" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(state.untertitel.trim())}</text>` : "")
       : (titel ? `<text x="10.5" y="14.2" font-size="5.3" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(titel)}</text>` : "")
         + (titel && state.untertitel.trim() ? `<text x="10.5" y="20.2" font-size="3.35" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(state.untertitel.trim())}</text>` : "")}
     ${legendeMarkup()}
@@ -1375,7 +1385,7 @@ function standAlsJson() {
     teileAus: state.teileAus, notizenAus: state.notizenAus,
     markerFarben: state.markerFarben, positionen: state.positionen,
     eigene: state.eigene, wiesen: state.wiesen, kompakt: state.kompakt, ausschnitt: state.ausschnitt,
-    logo: state.logo,
+    logo: { ...state.logo, basis: LOGO_STANDARD.breite },
     titelLogo: state.titelLogo,
     preset: state.preset, farben: state.farben
   };
@@ -1421,11 +1431,21 @@ function standAnwenden(s) {
       };
     }
     state.titelLogo = s.titelLogo && typeof s.titelLogo.markup === "string" ? s.titelLogo : null;
-    state.logo = s.logo && typeof s.logo === "object"
-      ? { x: typeof s.logo.x === "number" ? s.logo.x : null,
-          y: typeof s.logo.y === "number" ? s.logo.y : null,
-          skala: Math.min(2, Math.max(0.6, Number(s.logo.skala) || 1)) }
-      : { x: null, y: null, skala: 1 };
+    if (s.logo && typeof s.logo === "object") {
+      let skala = Number(s.logo.skala) || 1;
+      // Altbestand: Skala bezog sich auf die alte Grundbreite 24 mm —
+      // seit die Standardbreite 31.7 mm ist, sonst doppelt vergrössert.
+      if (!s.logo.basis) skala = skala * 24 / LOGO_STANDARD.breite;
+      let x = typeof s.logo.x === "number" ? s.logo.x : null;
+      let y = typeof s.logo.y === "number" ? s.logo.y : null;
+      // Von Hand gesetzte Lagen, die dem neuen Standard entsprechen,
+      // werden wieder Standard (folgen künftigen Feinkorrekturen).
+      if (x != null && Math.abs(x - LOGO_STANDARD.x) < 0.6
+        && y != null && Math.abs(y - LOGO_STANDARD.y) < 0.6) { x = null; y = null; }
+      state.logo = { x, y, skala: Math.min(2, Math.max(0.6, skala)) };
+    } else {
+      state.logo = { x: null, y: null, skala: 1 };
+    }
     if (typeof s.preset === "string") state.preset = PRESET_MIGRATION[s.preset] || s.preset;
     if (!PRESETS[state.preset] && state.preset !== "eigene Mischung") state.preset = "gedeckt";
     if (s.farben) state.farben = { ...PRESETS["gedeckt"], ...s.farben };
@@ -1693,11 +1713,22 @@ document.getElementById("logo-reset").addEventListener("click", () => {
   render();
 });
 
-// Backend-Modus: Justage-Funktionen (Logo, Titellogo) erscheinen nur
-// mit ?justage bzw. #justage in der Adresse — im Alltag unsichtbar.
-if (window.location.hash === "#justage" || window.location.search.indexOf("justage") >= 0) {
-  document.body.classList.add("backend");
+// Backend-Modus: Justage-Funktionen (Logo, Titellogo, Marker-Feinlagen)
+// folgen dem universellen Intern-Schalter der Werkzeugfamilie (nav.js:
+// Dreifachklick auf die Kopfleiste oder Tastenfolge ‹intern›); zusätzlich
+// öffnet #justage/?justage in der Adresse den Modus direkt.
+function backendAktiv() {
+  if (typeof window.goeIntern === "function" && window.goeIntern()) return true;
+  return window.location.hash === "#justage" || window.location.search.indexOf("justage") >= 0;
 }
+
+function backendAnwenden() {
+  document.body.classList.toggle("backend", backendAktiv());
+  renderOrte();  // ✥ der justierbaren Marker folgt dem Modus
+}
+
+window.addEventListener("goe:intern", backendAnwenden);
+if (backendAktiv()) document.body.classList.add("backend");
 
 document.getElementById("titellogo-datei").addEventListener("change", (ereignis) => {
   const datei = ereignis.target.files && ereignis.target.files[0];
@@ -1709,13 +1740,22 @@ document.getElementById("titellogo-datei").addEventListener("change", (ereignis)
       const doc = new DOMParser().parseFromString(leser.result, "image/svg+xml");
       if (doc.querySelector("parsererror")) throw new Error("SVG unlesbar");
       const svg = doc.documentElement;
-      const vb = (svg.getAttribute("viewBox") || "").split(/[\s,]+/).map(Number);
-      let vbBreite = vb.length === 4 ? vb[2] : parseFloat(svg.getAttribute("width")) || 100;
-      let vbHoehe = vb.length === 4 ? vb[3] : parseFloat(svg.getAttribute("height")) || 30;
-      const versatz = vb.length === 4 ? `translate(${-vb[0]} ${-vb[1]})` : "";
+      // Tintenbox messen (robust gegen fehlende/krumme viewBoxen):
+      const ns = "http://www.w3.org/2000/svg";
+      const mess = document.createElementNS(ns, "svg");
+      mess.style.position = "absolute";
+      mess.style.visibility = "hidden";
+      const gruppe = document.createElementNS(ns, "g");
+      gruppe.innerHTML = svg.innerHTML;
+      mess.appendChild(gruppe);
+      document.body.appendChild(mess);
+      const box = gruppe.getBBox();
+      mess.remove();
+      if (!box.width || !box.height) throw new Error("SVG ohne sichtbare Tinte");
       state.titelLogo = {
-        markup: versatz ? `<g transform="${versatz}">${svg.innerHTML}</g>` : svg.innerHTML,
-        vbBreite, vbHoehe, breite: 45
+        markup: svg.innerHTML,
+        vbX: box.x, vbY: box.y, vbBreite: box.width, vbHoehe: box.height,
+        breite: 45
       };
       render();
     } catch (fehler) {
