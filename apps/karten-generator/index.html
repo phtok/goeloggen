@@ -129,6 +129,12 @@
       cursor: pointer;
     }
     .object-row:last-child { border-bottom: 0; }
+    /* Eigene Marken: Titelzeile oben, Werkzeuge (Farbe, Verschieben,
+       Sortieren, Entfernen) in der zweiten Zeile — die Beschriftung
+       behält volle Breite statt in Buchstabentürme zu brechen. */
+    .object-row.zweizeilig { flex-wrap: wrap; padding: var(--s1) 0; }
+    .object-row.zweizeilig .zeilen-umbruch { flex-basis: 100%; height: 0; }
+    .object-row.zweizeilig .object-title { min-width: 0; }
     .object-dot {
       width: 14px; height: 14px; border-radius: 50%;
       flex: none;
@@ -304,6 +310,21 @@
           <span>Wiese gross einfärben (mit Rudolf-Steiner-Archiv)</span>
         </label>
         <div id="farb-rollen"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Logo</legend>
+        <div class="farb-reihe">
+          <label for="logo-skala">Grösse</label>
+          <input id="logo-skala" type="range" min="60" max="200" value="100" />
+          <span class="zoom-value" id="logo-wert">100%</span>
+        </div>
+        <div class="button-row">
+          <button id="logo-platzieren" type="button" class="btn">Logo platzieren</button>
+          <button id="logo-reset" type="button" class="btn">Standardlage</button>
+        </div>
+        <div class="hint">Klick auf ‹Logo platzieren›, dann in der Vorschau die
+          neue Mitte anklicken. Standard: rechts oben.</div>
       </fieldset>
 
       <fieldset>

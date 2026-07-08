@@ -178,14 +178,33 @@ WILLKOMMEN = [
      {"de": "Barrierefreier Zugang", "en": "Barrier-free access"},
      [[222.5, 130.6]], {"symbol": "wc-rollstuhl"}),
 
-    # WCs (Icon ‹wc-gruppe›, blau statt Eingangs-Gold): Startlagen sind
-    # Setzungen — wie Sektionen/Gärten justierbar, bis Feinlagen bestätigt.
-    ("wc-goetheanum", "WC", "eingaenge",
-     {"de": "WC Goetheanum", "en": "WC Goetheanum"},
-     [[188.5, 150.8]], {"symbol": "wc-gruppe", "farbe": "blau"}),
-    ("wc-schreinerei", "WC", "eingaenge",
-     {"de": "WC Schreinerei", "en": "WC Schreinerei"},
-     [[224.5, 83.5]], {"symbol": "wc-gruppe", "farbe": "blau"}),
+    # WCs (Original-Piktos, blau statt Eingangs-Gold): Goetheanum trennt
+    # Herren von Damen/barrierefrei/Wickeltisch — die drei versuchsweise
+    # einzeln UND kombiniert (Platzprobe des Auftraggebers); Schreinerei
+    # klassisch getrennt. Startlagen sind Setzungen — alle justierbar
+    # (✥), der Lagen-Export liefert die Feinkoordinaten zurück.
+    ("wc-g-herren", "WC", "eingaenge",
+     {"de": "WC Herren (Goetheanum)", "en": "WC Men (Goetheanum)"},
+     [[188.5, 150.8]], {"symbol": "wc-herren", "farbe": "blau"}),
+    ("wc-g-damen", "WC", "eingaenge",
+     {"de": "WC Damen (Goetheanum)", "en": "WC Women (Goetheanum)"},
+     [[192.5, 145.5]], {"symbol": "wc-damen", "farbe": "blau"}),
+    ("wc-g-rollstuhl", "WC", "eingaenge",
+     {"de": "WC barrierefrei (Goetheanum)", "en": "Accessible WC (Goetheanum)"},
+     [[196.0, 142.0]], {"symbol": "wc-rollstuhl", "farbe": "blau"}),
+    ("wc-g-wickeltisch", "WC", "eingaenge",
+     {"de": "Wickeltisch (Goetheanum)", "en": "Baby Changing (Goetheanum)"},
+     [[199.5, 138.5]], {"symbol": "wickelraum", "farbe": "blau"}),
+    ("wc-g-kombi", "WC", "eingaenge",
+     {"de": "WC Damen · barrierefrei · Wickeltisch (Goetheanum)",
+      "en": "WC Women · Accessible · Baby Changing (Goetheanum)"},
+     [[192.5, 141.0]], {"symbol": ["wc-damen", "wc-rollstuhl", "wickelraum"], "farbe": "blau"}),
+    ("wc-s-herren", "WC", "eingaenge",
+     {"de": "WC Herren (Schreinerei)", "en": "WC Men (Schreinerei)"},
+     [[222.0, 82.0]], {"symbol": "wc-herren", "farbe": "blau"}),
+    ("wc-s-damen", "WC", "eingaenge",
+     {"de": "WC Damen (Schreinerei)", "en": "WC Women (Schreinerei)"},
+     [[227.0, 85.5]], {"symbol": "wc-damen", "farbe": "blau"}),
 
     # Sektionen (Buchstaben wie auf dem Willkommensschild):
     ("s-allgemein", "a", "sektionen",
@@ -203,10 +222,11 @@ WILLKOMMEN = [
     ("s-jugend", "e", "sektionen",
      {"de": "Jugendsektion", "en": "Youth Section"},
      [[192.92, 109.33]]),
-    # Vom Auftraggeber aufs Blatt justiert (8. Juli 2026) — Pfeil entfällt.
+    # Lage vom Auftraggeber justiert; der Pfeil bleibt — das Haus wird vom
+    # Blatt angeschnitten und liegt weiter hinten im Weg.
     ("s-medizin", "f", "sektionen",
      {"de": "Medizinische Sektion", "en": "Medical Section"},
-     [[270.95, 125.81]]),
+     [[270.95, 125.81]], {"pfeil": "rechts"}),
     ("s-landwirtschaft", "g", "sektionen",
      {"de": "Sektion für Landwirtschaft", "en": "Section for Agriculture"},
      [[124.94, 121.64]], {"gebaeude": "campusbau-46"}),
