@@ -456,7 +456,7 @@ const LAUT_VORSCHUB = {
   "a": 0.509, "b": 0.508, "c": 0.402, "d": 0.509, "e": 0.463,
   "f": 0.324, "g": 0.479, "h": 0.518, "i": 0.239, "j": 0.239,
   "k": 0.475, "l": 0.24, "m": 0.789, "P": 0.546, "W": 0.858, "C": 0.497,
-  "S": 0.503, "B": 0.563
+  "S": 0.503, "B": 0.563, "V": 0.553
 };
 
 function zentrierterText(x, y, text, groesse, farbe) {
@@ -487,7 +487,7 @@ function markenBreite(ort, r) {
   return rr * 1.55 * (ort.symbol.length - 1) + 2 * rr;
 }
 
-function markenKreis(x, y, hex, text, r, symbol, feldBreite, liste) {
+function markenKreis(x, y, hex, text, r, symbol, feldBreite) {
   // Kreiszahl nach dem Sonderelement des Design-Systems (.step-num):
   // Hausschrift Laut, fester Kreis, Tintenmitte der Ziffern auf der
   // Kreismitte (ZIFFERN_SITZ). Grad = 0.5 × Durchmesser — eine Spur
@@ -508,10 +508,10 @@ function markenKreis(x, y, hex, text, r, symbol, feldBreite, liste) {
     const symbole = Array.isArray(symbol) ? symbol : [symbol];
     const rr = r * SYMBOL_FAKTOR;
     if (symbole.length === 1) {
-      // In der Liste läuft der kleinere Kreis — das Pikto braucht dort
-      // mehr Luft zum Rand, sonst wirkt es eingeklemmt.
+      // Das Pikto braucht Luft zum Kreisrand (Karte wie Liste) — 1.26 ×
+      // Radius entspricht optisch dem Sitz der Ziffern im Zahlkreis.
       return `<circle cx="${x}" cy="${y}" r="${rr}" fill="${hex}" />`
-        + symbolMarkup(symbole[0], x, y, rr * (liste ? 1.26 : 1.5), "#ffffff");
+        + symbolMarkup(symbole[0], x, y, rr * 1.26, "#ffffff");
     }
     const schritt = rr * 1.55;
     const breite = schritt * (symbole.length - 1) + 2 * rr;
@@ -809,7 +809,7 @@ function legendeMarkup() {
       const r = symbol ? 2.03 / SYMBOL_FAKTOR : 2.03;
       const b = markenBreite(ort, r);
       teile += markenKreis(x - 2.03 + b / 2, y - 0.9, hex,
-        ort.legendeText || ortMarker(ort), r, symbol, null, true);
+        ort.legendeText || ortMarker(ort), r, symbol);
       textX = x + Math.max(L.labelAbstand, b - 2.03 + 1.6);
     }
     zeile.zeilenTexte.forEach((text, index) => {
@@ -1180,17 +1180,30 @@ function gruppenKopf(kopfKnopf, kannAn, schalten) {
   return zeile;
 }
 
+// Suche über alle Kategorien (die Ortsliste ist inzwischen lang):
+// trifft Beschriftung (beide Sprachen, samt Umbenennung), Teil-Orte
+// und Markerzeichen. Während der Suche öffnen sich die Treffer-Gruppen.
+let orteSuchbegriff = "";
+
+function ortPasstZurSuche(ort) {
+  const texte = [ortLabel(ort), ort.marker || ""];
+  if (ort.label && typeof ort.label === "object") texte.push(ort.label.de || "", ort.label.en || "");
+  (ort.teile || []).forEach((teil) => texte.push(teil.de || "", teil.en || ""));
+  return texte.join("\n").toLowerCase().includes(orteSuchbegriff);
+}
+
 function renderOrte() {
   document.querySelectorAll("#sprache-row [data-sprache]").forEach((knopf) => {
     knopf.setAttribute("aria-pressed", knopf.dataset.sprache === state.sprache ? "true" : "false");
   });
   orteGruppen.innerHTML = "";
   GRUPPEN.forEach(([id, name, filter]) => {
-    const eintraege = ORTE.filter(filter);
+    let eintraege = ORTE.filter(filter);
+    if (orteSuchbegriff) eintraege = eintraege.filter(ortPasstZurSuche);
     if (!eintraege.length) return; // leere Kategorien nicht anbieten
     const gruppe = document.createElement("div");
     const aktiv = eintraege.filter(ortAktiv).length;
-    const offen = aufgeklappt[id];
+    const offen = orteSuchbegriff ? true : aufgeklappt[id];
 
     const kopf = document.createElement("button");
     kopf.type = "button";
@@ -1813,6 +1826,19 @@ document.getElementById("orte-alle-an").addEventListener("click", () => {
 document.getElementById("orte-alle-aus").addEventListener("click", () => {
   state.an = {};
   render();
+});
+
+const orteSucheFeld = document.getElementById("orte-suche");
+orteSucheFeld.addEventListener("input", () => {
+  orteSuchbegriff = orteSucheFeld.value.trim().toLowerCase();
+  renderOrte();
+});
+orteSucheFeld.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    orteSucheFeld.value = "";
+    orteSuchbegriff = "";
+    renderOrte();
+  }
 });
 
 document.getElementById("opt-beschnitt").addEventListener("change", (e) => {
