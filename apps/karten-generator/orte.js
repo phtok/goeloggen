@@ -164,14 +164,14 @@ const ORTE = [
     "symbol": "wc-rollstuhl"
   },
   {
-    "id": "wc-goetheanum",
+    "id": "wc-g-herren",
     "marker": "WC",
     "art": "orientierung",
     "kategorie": "eingaenge",
     "farbe": "blau",
     "label": {
-      "de": "WC Goetheanum",
-      "en": "WC Goetheanum"
+      "de": "WC Herren (Goetheanum)",
+      "en": "WC Men (Goetheanum)"
     },
     "positionen": [
       [
@@ -179,25 +179,119 @@ const ORTE = [
         150.8
       ]
     ],
-    "symbol": "wc-gruppe"
+    "symbol": "wc-herren"
   },
   {
-    "id": "wc-schreinerei",
+    "id": "wc-g-damen",
     "marker": "WC",
     "art": "orientierung",
     "kategorie": "eingaenge",
     "farbe": "blau",
     "label": {
-      "de": "WC Schreinerei",
-      "en": "WC Schreinerei"
+      "de": "WC Damen (Goetheanum)",
+      "en": "WC Women (Goetheanum)"
     },
     "positionen": [
       [
-        224.5,
-        83.5
+        192.5,
+        145.5
       ]
     ],
-    "symbol": "wc-gruppe"
+    "symbol": "wc-damen"
+  },
+  {
+    "id": "wc-g-rollstuhl",
+    "marker": "WC",
+    "art": "orientierung",
+    "kategorie": "eingaenge",
+    "farbe": "blau",
+    "label": {
+      "de": "WC barrierefrei (Goetheanum)",
+      "en": "Accessible WC (Goetheanum)"
+    },
+    "positionen": [
+      [
+        196.0,
+        142.0
+      ]
+    ],
+    "symbol": "wc-rollstuhl"
+  },
+  {
+    "id": "wc-g-wickeltisch",
+    "marker": "WC",
+    "art": "orientierung",
+    "kategorie": "eingaenge",
+    "farbe": "blau",
+    "label": {
+      "de": "Wickeltisch (Goetheanum)",
+      "en": "Baby Changing (Goetheanum)"
+    },
+    "positionen": [
+      [
+        199.5,
+        138.5
+      ]
+    ],
+    "symbol": "wickelraum"
+  },
+  {
+    "id": "wc-g-kombi",
+    "marker": "WC",
+    "art": "orientierung",
+    "kategorie": "eingaenge",
+    "farbe": "blau",
+    "label": {
+      "de": "WC Damen · barrierefrei · Wickeltisch (Goetheanum)",
+      "en": "WC Women · Accessible · Baby Changing (Goetheanum)"
+    },
+    "positionen": [
+      [
+        192.5,
+        141.0
+      ]
+    ],
+    "symbol": [
+      "wc-damen",
+      "wc-rollstuhl",
+      "wickelraum"
+    ]
+  },
+  {
+    "id": "wc-s-herren",
+    "marker": "WC",
+    "art": "orientierung",
+    "kategorie": "eingaenge",
+    "farbe": "blau",
+    "label": {
+      "de": "WC Herren (Schreinerei)",
+      "en": "WC Men (Schreinerei)"
+    },
+    "positionen": [
+      [
+        222.0,
+        82.0
+      ]
+    ],
+    "symbol": "wc-herren"
+  },
+  {
+    "id": "wc-s-damen",
+    "marker": "WC",
+    "art": "orientierung",
+    "kategorie": "eingaenge",
+    "farbe": "blau",
+    "label": {
+      "de": "WC Damen (Schreinerei)",
+      "en": "WC Women (Schreinerei)"
+    },
+    "positionen": [
+      [
+        227.0,
+        85.5
+      ]
+    ],
+    "symbol": "wc-damen"
   },
   {
     "id": "f46",
@@ -1141,7 +1235,8 @@ const ORTE = [
         270.95,
         125.81
       ]
-    ]
+    ],
+    "pfeil": "rechts"
   },
   {
     "id": "s-landwirtschaft",

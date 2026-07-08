@@ -94,10 +94,12 @@ const state = {
   wiesen: { klein: false, gross: false },
   kompakt: false,       // kompakte Legende (kleinerer Grad, engere Zeilen)
   ausschnitt: { skala: 1, dx: 0, dy: 0 },  // Kartenausschnitt relativ zur Standardlage
+  logo: { x: null, y: null, skala: 1 },    // Campus-Logo: Mitte (mm) + Grösse
   preset: "gedeckt",   // Standard; Anpassung je Rolle bleibt möglich
   farben: { ...PRESETS["gedeckt"] },
   platzieren: null,    // { label, farbe } während der Platzierung (neue Marke)
   platzierenOrt: null, // Ort-id, deren Marke gerade verschoben wird
+  platzierenLogo: false, // Logo wird gerade neu platziert
   bearbeiten: null     // Ort-id, deren Beschriftung gerade editiert wird
 };
 
@@ -149,7 +151,7 @@ async function ladeIkone(name) {
 }
 
 async function ladeIkonen() {
-  const namen = ["kompass-2", "pfeil-rechts-fett", "wc-rollstuhl", "wc-gruppe"];
+  const namen = ["kompass-2", "pfeil-rechts-fett", "wc-rollstuhl", "wc-gruppe", "wc-herren", "wc-damen", "wickelraum"];
   await Promise.all(namen.map(async (name) => {
     try {
       ikonen[name] = await ladeIkone(name);
@@ -461,16 +463,40 @@ function zentrierterText(x, y, text, groesse, farbe) {
   }).join("");
 }
 
+// Symbol-Marken sind eine Spur grösser als Zahlkreise (Piktos brauchen
+// Fläche); mehrere Piktos teilen sich eine Pille.
+const SYMBOL_FAKTOR = 1.25;
+
+function markenBreite(ort, r) {
+  if (!ort.symbol || !Array.isArray(ort.symbol)) return 2 * r * (ort.symbol ? SYMBOL_FAKTOR : 1);
+  const rr = r * SYMBOL_FAKTOR;
+  return rr * 1.55 * (ort.symbol.length - 1) + 2 * rr;
+}
+
 function markenKreis(x, y, hex, text, r, symbol) {
   // Kreiszahl nach dem Sonderelement des Design-Systems (.step-num):
   // Hausschrift Laut, fester Kreis, Tintenmitte der Ziffern auf der
   // Kreismitte (ZIFFERN_SITZ). Grad = 0.5 × Durchmesser — eine Spur
   // kräftiger als die 0.72/1.6-Proportion, zweistellige Zahlen füllen
   // den Kreis, ohne ihn zu sprengen (Entscheid Auftraggeber, 8. Juli 2026).
-  // Symbol-Marken (z. B. barrierefreier Zugang) tragen ein Icon statt Ziffer.
+  // Symbol-Marken (z. B. WCs) tragen Piktos statt Ziffer — einzeln im
+  // grösseren Kreis, mehrere nebeneinander in einer Pille.
   if (symbol) {
-    return `<circle cx="${x}" cy="${y}" r="${r}" fill="${hex}" />`
-      + symbolMarkup(symbol, x, y, r * 1.35, "#ffffff");
+    const symbole = Array.isArray(symbol) ? symbol : [symbol];
+    const rr = r * SYMBOL_FAKTOR;
+    if (symbole.length === 1) {
+      return `<circle cx="${x}" cy="${y}" r="${rr}" fill="${hex}" />`
+        + symbolMarkup(symbole[0], x, y, rr * 1.5, "#ffffff");
+    }
+    const schritt = rr * 1.55;
+    const breite = schritt * (symbole.length - 1) + 2 * rr;
+    let aus = `<rect x="${(x - breite / 2).toFixed(3)}" y="${(y - rr).toFixed(3)}"`
+      + ` width="${breite.toFixed(3)}" height="${(2 * rr).toFixed(3)}" rx="${rr}" fill="${hex}" />`;
+    symbole.forEach((s, index) => {
+      const cx = x + (index - (symbole.length - 1) / 2) * schritt;
+      aus += symbolMarkup(s, cx, y, rr * 1.5, "#ffffff");
+    });
+    return aus;
   }
   const groesse = r;
   return `<circle cx="${x}" cy="${y}" r="${r}" fill="${hex}" />`
@@ -643,6 +669,11 @@ function legendeZeilen() {
     const kategorie = ort.kategorie || "eigene";
     if (mitKoepfen && (!vorher || (vorher.kategorie || "eigene") !== kategorie)) {
       if (vorher) zeilen.push({ typ: "abstand", hoehe: L.gruppe * 0.6 });
+      // Eigene (veranstaltungsspezifische) Marken beginnen in Spalte 2 —
+      // klar getrennt vom Standard-Inventar der Karte.
+      if (ort.art === "eigene" && (!vorher || vorher.art !== "eigene")) {
+        zeilen.push({ typ: "umbruch" });
+      }
       const eigener = state.eigeneTitel.trim();
       const name = ort.art === "eigene"
         ? (eigener ? { de: eigener, en: eigener } : { de: "Eigene Marken", en: "Own Markers" })
@@ -680,6 +711,11 @@ function legendeMarkup() {
   legendeZeilen().forEach((zeile) => {
     // Gruppenköpfe binden sich an ihren ersten Eintrag: reicht der Platz
     // nicht für Kopf UND eine Zeile, bricht die Spalte vor dem Kopf um.
+    if (zeile.typ === "umbruch") {
+      // manueller Spaltenwechsel (eigene Marken beginnen in Spalte 2)
+      if (spalte < L.spaltenX.length - 1) { spalte += 1; y = start; }
+      return;
+    }
     const bedarf = zeile.hoehe + (zeile.typ === "kopf" ? L.zeile : 0);
     if (zeile.typ !== "abstand" && y + bedarf > untergrenze && spalte < L.spaltenX.length - 1) {
       spalte += 1;
@@ -710,13 +746,17 @@ function legendeMarkup() {
     }
     const ort = zeile.ort;
     const hex = ortFarbeHex(ort);
+    let textX = x + L.labelAbstand;
     if (ort.art === "treppe") {
       teile += treppenBadge(x, y - 0.9, ort.marker, "treppe", hex, true);
     } else {
-      teile += markenKreis(x, y - 0.9, hex, ortMarker(ort), 2.03, ort.symbol);
+      // Breite Symbol-Pillen linksbündig zur Spalte, Text weicht aus.
+      const b = markenBreite(ort, 2.03);
+      teile += markenKreis(x - 2.03 + b / 2, y - 0.9, hex, ortMarker(ort), 2.03, ort.symbol);
+      textX = x + Math.max(L.labelAbstand, b - 2.03 + 1.6);
     }
     zeile.zeilenTexte.forEach((text, index) => {
-      teile += `<text x="${x + L.labelAbstand}" y="${y + index * L.extraZeile}"`
+      teile += `<text x="${textX}" y="${y + index * L.extraZeile}"`
         + ` font-size="${L.labelGroesse}" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(text)}</text>`;
     });
     y += zeile.hoehe;
@@ -739,10 +779,15 @@ function kompassMarkup() {
 
 function logoMarkup() {
   if (!logoInhalt) return "";
-  const breite = 22; // mm — rechtsbündig, Rand wie die Legende links (10.5)
+  // Grundbreite 24 mm (minimal grösser, Entscheid 8. Juli 2026), per
+  // Regler skalierbar; Lage per Klick setzbar (state.logo = Mitte in mm),
+  // Standard rechtsbündig oben mit Rand wie die Legende links (10.5).
+  const breite = 24 * state.logo.skala;
+  const hoehe = breite * logoInhalt.hoehe / logoInhalt.breite;
   const skala = breite / logoInhalt.breite;
-  const x = SZENE.breite - 10.5 - breite;
-  return `<g transform="translate(${x} 6.5) scale(${skala})">${logoInhalt.markup}</g>`;
+  const x = state.logo.x != null ? state.logo.x - breite / 2 : SZENE.breite - 10.5 - breite;
+  const y = state.logo.y != null ? state.logo.y - hoehe / 2 : 6.5;
+  return `<g transform="translate(${x.toFixed(2)} ${y.toFixed(2)}) scale(${skala})">${logoInhalt.markup}</g>`;
 }
 
 function szeneMarkup(anschnitt) {
@@ -815,7 +860,7 @@ function renderVorschau() {
       ? " ⚠ Legende voll — bitte Orte reduzieren."
       : " ⚠ Legende voll — kompakte Legende einschalten oder Orte reduzieren.";
   }
-  printSvg.classList.toggle("platzieren", Boolean(state.platzieren || state.platzierenOrt));
+  printSvg.classList.toggle("platzieren", Boolean(state.platzieren || state.platzierenOrt || state.platzierenLogo));
 }
 
 /* ---------- Seitenleiste ---------- */
@@ -891,6 +936,15 @@ function ortZeile(ort, loeschbar) {
   markerSpan.className = "object-marker";
   markerSpan.textContent = ortAktiv(ort) ? ortMarker(ort) : "–";
   zeile.appendChild(markerSpan);
+
+  // Eigene Marken tragen viele Knöpfe (Farbe, ✥, ▲▼, ✕) — die Zeile
+  // bricht dafür in zwei Zeilen um: oben Titel, unten die Werkzeuge.
+  if (loeschbar) {
+    zeile.classList.add("zweizeilig");
+    const umbruch = document.createElement("span");
+    umbruch.className = "zeilen-umbruch";
+    zeile.appendChild(umbruch);
+  }
 
   const farbKnopf = document.createElement("button");
   farbKnopf.type = "button";
@@ -1240,6 +1294,9 @@ function renderOptionen() {
   document.getElementById("opt-wiese-klein").checked = state.wiesen.klein;
   document.getElementById("opt-wiese-gross").checked = state.wiesen.gross;
   document.getElementById("opt-kompakt").checked = state.kompakt;
+
+  document.getElementById("logo-skala").value = String(Math.round(state.logo.skala * 100));
+  document.getElementById("logo-wert").textContent = `${Math.round(state.logo.skala * 100)}%`;
 }
 
 /* ---------- Zoom (nur Bildschirm-Vorschau) ---------- */
@@ -1264,6 +1321,7 @@ function standAlsJson() {
     teileAus: state.teileAus, notizenAus: state.notizenAus,
     markerFarben: state.markerFarben, positionen: state.positionen,
     eigene: state.eigene, wiesen: state.wiesen, kompakt: state.kompakt, ausschnitt: state.ausschnitt,
+    logo: state.logo,
     preset: state.preset, farben: state.farben
   };
 }
@@ -1307,6 +1365,11 @@ function standAnwenden(s) {
         dy: Number(s.ausschnitt.dy) || 0
       };
     }
+    state.logo = s.logo && typeof s.logo === "object"
+      ? { x: typeof s.logo.x === "number" ? s.logo.x : null,
+          y: typeof s.logo.y === "number" ? s.logo.y : null,
+          skala: Math.min(2, Math.max(0.6, Number(s.logo.skala) || 1)) }
+      : { x: null, y: null, skala: 1 };
     if (typeof s.preset === "string") state.preset = PRESET_MIGRATION[s.preset] || s.preset;
     if (!PRESETS[state.preset] && state.preset !== "eigene Mischung") state.preset = "gedeckt";
     if (s.farben) state.farben = { ...PRESETS["gedeckt"], ...s.farben };
@@ -1441,9 +1504,18 @@ function karteVerschieben(dx, dy) {
 const EIGENE_HINT_STANDARD = "Erst Beschriftung eingeben, dann in der Vorschau die Stelle anklicken. ‹Esc› bricht ab.";
 
 printSvg.addEventListener("click", (ereignis) => {
-  if (!state.platzieren && !state.platzierenOrt) return;
+  if (!state.platzieren && !state.platzierenOrt && !state.platzierenLogo) return;
   const p = svgPunkt(ereignis.clientX, ereignis.clientY);
   if (!p) return;
+  if (state.platzierenLogo) {
+    // Logo liegt fest auf dem Blatt (nicht im Ausschnitt): rohe Blatt-mm.
+    state.logo.x = Math.round(p.x * 10) / 10;
+    state.logo.y = Math.round(p.y * 10) / 10;
+    state.platzierenLogo = false;
+    eigeneHint.textContent = EIGENE_HINT_STANDARD;
+    render();
+    return;
+  }
   const [x, y] = anpZurueck(p.x, p.y);
   const gerundet = [Math.round(x * 100) / 100, Math.round(y * 100) / 100];
   if (state.platzierenOrt) {
@@ -1471,9 +1543,10 @@ printSvg.addEventListener("click", (ereignis) => {
 });
 
 document.addEventListener("keydown", (ereignis) => {
-  if (ereignis.key === "Escape" && (state.platzieren || state.platzierenOrt)) {
+  if (ereignis.key === "Escape" && (state.platzieren || state.platzierenOrt || state.platzierenLogo)) {
     state.platzieren = null;
     state.platzierenOrt = null;
+    state.platzierenLogo = false;
     eigeneHint.textContent = EIGENE_HINT_STANDARD;
     render();
   }
@@ -1530,6 +1603,28 @@ document.getElementById("opt-wiese-klein").addEventListener("change", (e) => {
 });
 document.getElementById("opt-wiese-gross").addEventListener("change", (e) => {
   state.wiesen.gross = e.target.checked;
+  render();
+});
+
+document.getElementById("logo-skala").addEventListener("input", (e) => {
+  state.logo.skala = Math.min(2, Math.max(0.6, Number(e.target.value) / 100));
+  document.getElementById("logo-wert").textContent = `${Math.round(state.logo.skala * 100)}%`;
+  renderVorschau();
+});
+document.getElementById("logo-skala").addEventListener("change", () => {
+  renderOptionen();
+  speichern();
+});
+document.getElementById("logo-platzieren").addEventListener("click", () => {
+  state.platzierenLogo = true;
+  state.platzieren = null;
+  state.platzierenOrt = null;
+  renderVorschau();
+  eigeneHint.textContent = "Logo — neue Stelle in der Vorschau anklicken (Mitte). ‹Esc› bricht ab.";
+  printSvg.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+document.getElementById("logo-reset").addEventListener("click", () => {
+  state.logo = { x: null, y: null, skala: 1 };
   render();
 });
 
