@@ -36,8 +36,8 @@
     .app {
       display: grid;
       grid-template-columns: minmax(300px, 380px) 1fr;
-      gap: var(--s5);
-      padding: var(--s5);
+      gap: var(--s8);
+      padding: var(--s6);
       align-items: start;
       max-width: 1600px;
       margin: 0 auto;
@@ -46,18 +46,16 @@
       .app { grid-template-columns: 1fr; }
     }
 
-    /* Editor-Spalte in sich scrollbar, Vorschau bleibt stehen — so ist bei
-       den unteren Funktionen sichtbar, was sich auf dem Blatt ändert. */
+    /* Editor-Spalte läuft normal mit dem Seiten-Scroll (kein eigener
+       Innen-Scroll — der liess die Spalte ‹hochgerutscht› stehen);
+       die Vorschau bleibt sticky, so ist bei den unteren Funktionen
+       sichtbar, was sich auf dem Blatt ändert. */
     .controls {
       display: flex; flex-direction: column; gap: var(--s4);
-      position: sticky; top: var(--s4);
-      max-height: calc(100vh - 2 * var(--s4));
-      overflow-y: auto;
-      padding-right: var(--s1);
+      min-width: 0;
     }
     .preview-shell { position: sticky; top: var(--s4); }
     @media (max-width: 900px) {
-      .controls { position: static; max-height: none; overflow: visible; }
       .preview-shell { position: static; }
     }
     .controls fieldset {
@@ -219,13 +217,12 @@
     .zoom-controls button { min-width: var(--tap); min-height: var(--tap); }
     .zoom-value { font-size: var(--t-small); color: var(--muted); min-width: 4ch; font-variant-numeric: tabular-nums; }
 
+    /* Kein Rahmenkasten um die Vorschau — das Blatt (mit Schatten) trägt
+       sich selbst; der Container scrollt nur, wenn der Zoom es braucht. */
     .preview-canvas {
       overflow: auto;
-      border: 1px solid var(--line);
-      border-radius: var(--r-card);
-      background: var(--field-bg);
-      padding: var(--s5);
-      max-height: calc(100vh - 180px);
+      max-height: calc(100vh - 120px);
+      padding: var(--s4);  /* Luft für den Blattschatten, kein sichtbarer Kasten */
     }
     .paper-stage { width: calc(100% * var(--preview-zoom, 1)); margin: 0 auto; }
     .paper {
