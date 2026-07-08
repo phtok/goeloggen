@@ -71,7 +71,8 @@ const PRESET_MIGRATION = { "Tagung hell": "hell", "Recolor 2023": "gedeckt" };
 const SPEICHER_SCHLUESSEL = "goetheanum-karten-v2";
 
 const state = {
-  titel: "Herzlich Willkommen",
+  titel: "",           // Kurztitel der Tagung samt Jahr (Platzhalter im Feld)
+  untertitel: "",      // Datum der Veranstaltung, z. B. ‹1. bis 5. Juli 2026›
   sprache: "de",
   format: "a4",
   beschnitt: true,
@@ -89,8 +90,8 @@ const state = {
   wiesen: { klein: false, gross: false },
   kompakt: false,       // kompakte Legende (kleinerer Grad, engere Zeilen)
   ausschnitt: { skala: 1, dx: 0, dy: 0 },  // Kartenausschnitt relativ zur Standardlage
-  preset: "hell",
-  farben: { ...PRESETS["hell"] },
+  preset: "gedeckt",   // Standard; Anpassung je Rolle bleibt möglich
+  farben: { ...PRESETS["gedeckt"] },
   platzieren: null,    // { label, farbe } während der Platzierung (neue Marke)
   platzierenOrt: null, // Ort-id, deren Marke gerade verschoben wird
   bearbeiten: null     // Ort-id, deren Beschriftung gerade editiert wird
@@ -144,7 +145,7 @@ async function ladeIkone(name) {
 }
 
 async function ladeIkonen() {
-  const namen = ["kompass-2", "treppe", "fahrstuhl", "pfeil-rechts-fett", "wc-rollstuhl"];
+  const namen = ["kompass-2", "pfeil-rechts-fett", "wc-rollstuhl"];
   await Promise.all(namen.map(async (name) => {
     try {
       ikonen[name] = await ladeIkone(name);
@@ -153,6 +154,41 @@ async function ladeIkonen() {
     }
   }));
   kompassInhalt = ikonen["kompass-2"] || null;
+  ikonBoxenMessen();
+}
+
+// Tinten-Boxen der Icons vermessen (die Einzeldateien tragen je eigene
+// viewBoxen und Versätze — Symbol-Marken werden auf die Tinte zentriert).
+const ikonBoxen = {};
+
+function ikonBoxenMessen() {
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.style.position = "absolute";
+  svg.style.visibility = "hidden";
+  document.body.appendChild(svg);
+  Object.entries(ikonen).forEach(([name, inhalt]) => {
+    const g = document.createElementNS(ns, "g");
+    g.innerHTML = inhalt;
+    svg.appendChild(g);
+    try { ikonBoxen[name] = g.getBBox(); } catch (fehler) { /* bleibt ohne Box */ }
+    g.remove();
+  });
+  svg.remove();
+}
+
+// Symbol in Zielgrösse (mm, längere Tintenkante) mit Tintenmitte auf (x, y);
+// leichter Konturauftrag in gleicher Farbe kräftigt die feinen Stege.
+function symbolMarkup(name, x, y, groesse, farbe) {
+  const inhalt = ikonen[name];
+  const box = ikonBoxen[name];
+  if (!inhalt || !box) return "";
+  const skala = groesse / Math.max(box.width, box.height);
+  const tx = x - (box.x + box.width / 2) * skala;
+  const ty = y - (box.y + box.height / 2) * skala;
+  const auftrag = (0.09 / skala).toFixed(1);  // ~0.09 mm Fettung
+  return `<g transform="translate(${tx.toFixed(3)} ${ty.toFixed(3)}) scale(${skala.toFixed(5)})"`
+    + ` fill="${farbe}" stroke="${farbe}" stroke-width="${auftrag}">${inhalt}</g>`;
 }
 
 // Icons v2.7: viewBox "16.2 -983.8 967.6 967.6", Inhalt y-gespiegelt.
@@ -353,11 +389,25 @@ function ortMarker(ort) {
   return nummern[ort.id] || ort.marker;
 }
 
-// Beweglich sind nur der Infotisch und die eigenen Marken — alles andere
-// ist fixiert (auch der barrierefreie Zugang: er sitzt am Südeingang);
-// für Einmaliges gibt es die eigene Marke.
+// Beweglich sind der Infotisch und die eigenen Marken — alles andere
+// ist fixiert (auch der barrierefreie Zugang: er sitzt am Südeingang).
+// Ausnahme auf Zeit: Sektionen und Gärten stammen vom gequetschten
+// Willkommensschild und dürfen von Hand justiert werden; die justierten
+// Lagen lassen sich exportieren und wandern dann in die Vorlage.
 function ortBeweglich(ort) {
-  return ort.id === "o4" || ort.art === "eigene";
+  return ort.id === "o4" || ort.art === "eigene"
+    || ort.kategorie === "sektionen" || ort.kategorie === "gaerten";
+}
+
+function justierteLagen() {
+  const lagen = {};
+  ORTE.forEach((ort) => {
+    if ((ort.kategorie === "sektionen" || ort.kategorie === "gaerten")
+      && state.positionen[ort.id]) {
+      lagen[ort.id] = state.positionen[ort.id];
+    }
+  });
+  return lagen;
 }
 
 /* ---------- SVG-Bausteine der Szene ---------- */
@@ -368,22 +418,48 @@ function escapeXml(wert) {
     .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+// Vorschübe der Laut-Glyphen in em (aus der TTF vermessen, upm 1000).
+// Die Zeichen werden damit SELBST zentriert (Start-Anker, berechnete x) —
+// text-anchor="middle" misst der PDF-Renderer sonst mit fremden Metriken,
+// und zweistellige Zahlen rutschen im Druck nach links.
+const LAUT_VORSCHUB = {
+  "0": 0.615, "1": 0.433, "2": 0.553, "3": 0.563, "4": 0.603,
+  "5": 0.577, "6": 0.609, "7": 0.539, "8": 0.62, "9": 0.609,
+  "a": 0.509, "b": 0.508, "c": 0.402, "d": 0.509, "e": 0.463,
+  "f": 0.324, "g": 0.479, "h": 0.518, "i": 0.239, "j": 0.239,
+  "k": 0.475, "l": 0.24, "m": 0.789, "P": 0.546
+};
+
+function zentrierterText(x, y, text, groesse, farbe) {
+  const zeichen = String(text).split("");
+  if (!zeichen.every((z) => LAUT_VORSCHUB[z] != null)) {
+    return `<text x="${x}" y="${y}" text-anchor="middle" font-size="${groesse}"`
+      + ` fill="${farbe}" font-family="${SCHRIFT_ZAHL}">${escapeXml(text)}</text>`;
+  }
+  const gesamt = zeichen.reduce((summe, z) => summe + LAUT_VORSCHUB[z], 0) * groesse;
+  let lauf = x - gesamt / 2;
+  return zeichen.map((z) => {
+    const teil = `<text x="${lauf.toFixed(3)}" y="${y}" font-size="${groesse}"`
+      + ` fill="${farbe}" font-family="${SCHRIFT_ZAHL}">${escapeXml(z)}</text>`;
+    lauf += LAUT_VORSCHUB[z] * groesse;
+    return teil;
+  }).join("");
+}
+
 function markenKreis(x, y, hex, text, r, symbol) {
-  // Kreiszahl = Sonderelement des Design-Systems (.step-num, kopiert):
-  // Grad = 0.45 × Kreisdurchmesser (0.72em im 1.6em-Kreis), Hausschrift
-  // Laut, tabellarisch-liniierte Ziffern — ein- wie zweistellige Zahlen
-  // sitzen so im selben festen Kreis; Grundlinie um ZIFFERN_SITZ unter
-  // der Kreismitte (Tintenmitte der Ziffern auf die Kreismitte).
+  // Kreiszahl nach dem Sonderelement des Design-Systems (.step-num):
+  // Hausschrift Laut, fester Kreis, Tintenmitte der Ziffern auf der
+  // Kreismitte (ZIFFERN_SITZ). Grad = 0.5 × Durchmesser — eine Spur
+  // kräftiger als die 0.72/1.6-Proportion, zweistellige Zahlen füllen
+  // den Kreis, ohne ihn zu sprengen (Entscheid Auftraggeber, 8. Juli 2026).
   // Symbol-Marken (z. B. barrierefreier Zugang) tragen ein Icon statt Ziffer.
   if (symbol) {
     return `<circle cx="${x}" cy="${y}" r="${r}" fill="${hex}" />`
-      + ikonMarkup(symbol, x, y, r * 1.7, "#ffffff");
+      + symbolMarkup(symbol, x, y, r * 1.35, "#ffffff");
   }
-  const groesse = r * 0.9;
+  const groesse = r;
   return `<circle cx="${x}" cy="${y}" r="${r}" fill="${hex}" />`
-    + `<text x="${x}" y="${y + groesse * ZIFFERN_SITZ}" text-anchor="middle" font-size="${groesse}"`
-    + ` style="font-variant-numeric: tabular-nums lining-nums"`
-    + ` fill="#ffffff" font-family="${SCHRIFT_ZAHL}">${escapeXml(text)}</text>`;
+    + zentrierterText(x, y + groesse * ZIFFERN_SITZ, text, groesse, "#ffffff");
 }
 
 function pfeilMarkup(x, y, r, hex, richtung) {
@@ -523,22 +599,35 @@ function LEGENDE_LAYOUT_aktiv() {
 let legendeUeberlauf = false;
 
 function legendeZeilen() {
+  const L = LEGENDE_LAYOUT_aktiv();
   const zeilen = [];
   let vorher = null;
-  alleOrte().filter(ortAktiv).forEach((ort) => {
-    if (vorher) {
-      const treppen = vorher.art === "treppe" && ort.art === "treppe";
-      if (vorher.art !== ort.art || treppen) zeilen.push({ typ: "abstand", hoehe: LEGENDE_LAYOUT_aktiv().gruppe });
+  const namen = {};
+  KATEGORIEN.forEach((k) => { namen[k.id] = k.name; });
+  const aktive = alleOrte().filter(ortAktiv);
+  // Gruppenköpfe nur, wenn mehr als eine Kategorie vertreten ist —
+  // eine kleine Karte mit drei Orten braucht keine Zwischenzeile.
+  const kategorien = new Set(aktive.map((o) => o.kategorie || "eigene"));
+  const mitKoepfen = kategorien.size > 1;
+  aktive.forEach((ort) => {
+    const kategorie = ort.kategorie || "eigene";
+    if (mitKoepfen && (!vorher || (vorher.kategorie || "eigene") !== kategorie)) {
+      if (vorher) zeilen.push({ typ: "abstand", hoehe: L.gruppe * 0.6 });
+      const name = ort.art === "eigene"
+        ? { de: "Eigene Marken", en: "Own Markers" }
+        : namen[kategorie];
+      if (name) zeilen.push({ typ: "kopf", text: sprachText(name), hoehe: L.zeile });
+    } else if (vorher && vorher.art === "treppe" && ort.art === "treppe") {
+      zeilen.push({ typ: "abstand", hoehe: L.gruppe });
     }
     const zeilenTexte = ortLabel(ort).split("\n");
     zeilen.push({
       typ: "ort", ort, zeilenTexte,
-      hoehe: LEGENDE_LAYOUT_aktiv().zeile + (zeilenTexte.length - 1) * LEGENDE_LAYOUT_aktiv().extraZeile
+      hoehe: L.zeile + (zeilenTexte.length - 1) * L.extraZeile
     });
-    // (Abstände nur bei Art-Wechseln — feste Dekaden gibt es nicht mehr.)
     if (ort.art === "treppe") {
       aktiveNotizen(ort).forEach(({ notiz }) => {
-        zeilen.push({ typ: "notiz", notiz, ort, hoehe: LEGENDE_LAYOUT_aktiv().notiz });
+        zeilen.push({ typ: "notiz", notiz, ort, hoehe: L.notiz });
       });
     }
     vorher = ort;
@@ -550,20 +639,33 @@ function legendeMarkup() {
   // Fliess-Layout: erst füllt sich Spalte 1, dann Spalte 2 —
   // die Spaltenzuteilung der Vorlage gilt nicht mehr.
   const L = LEGENDE_LAYOUT_aktiv();
-  const start = state.titel.trim() ? L.startMitTitel : L.startOhneTitel;
+  let start = state.titel.trim() ? L.startMitTitel : L.startOhneTitel;
+  if (state.titel.trim() && state.untertitel.trim()) start += 5.2;
   const untergrenze = SZENE.hoehe - 12;
   let teile = "";
   let spalte = 0;
   let y = start;
   legendeUeberlauf = false;
   legendeZeilen().forEach((zeile) => {
-    if (zeile.typ !== "abstand" && y + zeile.hoehe > untergrenze && spalte < L.spaltenX.length - 1) {
+    // Gruppenköpfe binden sich an ihren ersten Eintrag: reicht der Platz
+    // nicht für Kopf UND eine Zeile, bricht die Spalte vor dem Kopf um.
+    const bedarf = zeile.hoehe + (zeile.typ === "kopf" ? L.zeile : 0);
+    if (zeile.typ !== "abstand" && y + bedarf > untergrenze && spalte < L.spaltenX.length - 1) {
       spalte += 1;
       y = start;
     }
     if (zeile.typ !== "abstand" && y + zeile.hoehe > untergrenze) legendeUeberlauf = true;
     const x = L.spaltenX[spalte];
     if (zeile.typ === "abstand") { y += zeile.hoehe; return; }
+    if (zeile.typ === "kopf") {
+      // Gruppenname der Kategorie — Sprache, darum Hausschrift; eigene
+      // Strukturebene (G01), unterschieden allein über Grad und Abstand,
+      // volle Tinte (B02 gilt auch im Druck).
+      teile += `<text x="${x}" y="${y}" font-size="${L.notizGroesse}"`
+        + ` fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(zeile.text)}</text>`;
+      y += zeile.hoehe;
+      return;
+    }
     if (zeile.typ === "notiz") {
       const n = zeile.notiz;
       if (n.badge === "lift") {
@@ -637,6 +739,7 @@ function szeneMarkup(anschnitt) {
     </g>
     <line x1="${KARTE.falz}" y1="0" x2="${KARTE.falz}" y2="${SZENE.hoehe}" stroke="${TINTE}" stroke-opacity="0.4" stroke-width="0.18" />
     ${titel ? `<text x="10.5" y="14.2" font-size="5.3" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(titel)}</text>` : ""}
+    ${titel && state.untertitel.trim() ? `<text x="10.5" y="20.2" font-size="3.35" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(state.untertitel.trim())}</text>` : ""}
     ${legendeMarkup()}
     ${logoMarkup()}
   `;
@@ -690,10 +793,9 @@ const orteGruppen = document.getElementById("orte-gruppen");
 const eigeneListe = document.getElementById("eigene-liste");
 const eigeneHint = document.getElementById("eigene-hint");
 const farbRollen = document.getElementById("farb-rollen");
-const presetRow = document.getElementById("preset-row");
 
 // Kategorien aus orte.js (kuratierte Reihenfolge = Legenden-Sortierung).
-const GRUPPEN = KATEGORIEN.map((k) => [k.name, (o) => o.kategorie === k.id]);
+const GRUPPEN = KATEGORIEN.map((k) => [k.id, k.name, (o) => o.kategorie === k.id]);
 
 function farbeWeiterschalten(ort) {
   const aktuelle = ortFarbe(ort);
@@ -872,7 +974,7 @@ function ortMitUnterzeilen(ort, loeschbar) {
 // zugeklappt zeigt der Kopf, wie viele Orte aktiv sind.
 // Die erste Kategorie startet geöffnet (Beispiel für Erstnutzer).
 const aufgeklappt = {};
-GRUPPEN.forEach(([titel], index) => { aufgeklappt[titel] = index === 0; });
+GRUPPEN.forEach(([id], index) => { aufgeklappt[id] = index === 0; });
 let gebaeudeAufgeklappt = false;
 
 // Gruppenkopf mit Sammelschalter: ein Klick aktiviert bzw. deaktiviert
@@ -901,22 +1003,22 @@ function renderOrte() {
     knopf.setAttribute("aria-pressed", knopf.dataset.sprache === state.sprache ? "true" : "false");
   });
   orteGruppen.innerHTML = "";
-  GRUPPEN.forEach(([titel, filter]) => {
+  GRUPPEN.forEach(([id, name, filter]) => {
     const eintraege = ORTE.filter(filter);
     if (!eintraege.length) return; // leere Kategorien nicht anbieten
     const gruppe = document.createElement("div");
     const aktiv = eintraege.filter(ortAktiv).length;
-    const offen = aufgeklappt[titel];
+    const offen = aufgeklappt[id];
 
     const kopf = document.createElement("button");
     kopf.type = "button";
     kopf.className = "object-group-title";
     kopf.setAttribute("aria-expanded", offen ? "true" : "false");
     kopf.innerHTML = `<span class="chevron">${offen ? "▾" : "▸"}</span>`
-      + `<span>${titel}</span>`
+      + `<span>${sprachText(name)}</span>`
       + `<span class="zaehler">${aktiv ? `${aktiv} aktiv` : ""}</span>`;
     kopf.addEventListener("click", () => {
-      aufgeklappt[titel] = !offen;
+      aufgeklappt[id] = !offen;
       renderOrte();
     });
     gruppe.appendChild(gruppenKopf(kopf, eintraege.length > aktiv, (an) => {
@@ -952,7 +1054,9 @@ function renderOrte() {
 const BAU_NAMEN = { "goetheanum-bau": { de: "Goetheanum", en: "Goetheanum" },
   "campusbau-19": { de: "Schreinerei", en: "Schreinerei" },
   "campusbau-41": { de: "Rudolf Steiner Halde", en: "Rudolf Steiner Halde" },
-  "campusbau-6": { de: "Puppentheater Felicia", en: "Puppet Theatre Felicia" } };
+  "campusbau-6": { de: "Puppentheater Felicia", en: "Puppet Theatre Felicia" },
+  // Sitz der Sektion für Sozialwissenschaften, auch Seminarhaus.
+  "campusbau-9": { de: "Kristallisationslabor", en: "Kristallisationslabor" } };
 
 function gebaeudeEinheiten() {
   const einheiten = new Map();
@@ -1037,20 +1141,8 @@ function renderEigeneFarben() {
 }
 
 function renderFarben() {
-  presetRow.innerHTML = "";
-  Object.keys(PRESETS).forEach((name) => {
-    const knopf = document.createElement("button");
-    knopf.type = "button";
-    knopf.setAttribute("aria-pressed", state.preset === name ? "true" : "false");
-    knopf.textContent = name;
-    knopf.addEventListener("click", () => {
-      state.preset = name;
-      state.farben = { ...PRESETS[name] };
-      render();
-    });
-    presetRow.appendChild(knopf);
-  });
-
+  // ‹gedeckt› ist der Standard (keine Preset-Wahl mehr) —
+  // die Rollenfarben bleiben einzeln anpassbar.
   farbRollen.innerHTML = "";
   ROLLEN.forEach(([rolle, name]) => {
     const reihe = document.createElement("div");
@@ -1087,6 +1179,7 @@ function renderOptionen() {
   marken.disabled = !state.beschnitt;
   document.getElementById("row-marken").classList.toggle("aus", !state.beschnitt);
   document.getElementById("titel-input").value = state.titel;
+  document.getElementById("untertitel-input").value = state.untertitel;
 
   const regler = document.getElementById("ausschnitt-skala");
   regler.value = String(Math.round(state.ausschnitt.skala * 100));
@@ -1109,7 +1202,8 @@ function setzeZoom(wert) {
 
 function standAlsJson() {
   return {
-    titel: state.titel, sprache: state.sprache, format: state.format,
+    titel: state.titel, untertitel: state.untertitel,
+    sprache: state.sprache, format: state.format,
     beschnitt: state.beschnitt, marken: state.marken,
     an: Object.keys(state.an), labels: state.labels,
     gebaeudeAn: Object.keys(state.gebaeudeAn),
@@ -1131,6 +1225,7 @@ function speichern() {
 
 function standAnwenden(s) {
     if (typeof s.titel === "string") state.titel = s.titel;
+    state.untertitel = typeof s.untertitel === "string" ? s.untertitel : "";
     state.format = s.format === "a3" ? "a3" : "a4";
     state.beschnitt = s.beschnitt !== false;
     state.marken = Boolean(s.marken);
@@ -1159,8 +1254,8 @@ function standAnwenden(s) {
       };
     }
     if (typeof s.preset === "string") state.preset = PRESET_MIGRATION[s.preset] || s.preset;
-    if (!PRESETS[state.preset] && state.preset !== "eigene Mischung") state.preset = "hell";
-    if (s.farben) state.farben = { ...PRESETS["hell"], ...s.farben };
+    if (!PRESETS[state.preset] && state.preset !== "eigene Mischung") state.preset = "gedeckt";
+    if (s.farben) state.farben = { ...PRESETS["gedeckt"], ...s.farben };
     state.ausschnitt = state.ausschnitt || { skala: 1, dx: 0, dy: 0 };
 }
 
@@ -1319,6 +1414,12 @@ document.getElementById("titel-input").addEventListener("input", (ereignis) => {
   speichern();
 });
 
+document.getElementById("untertitel-input").addEventListener("input", (ereignis) => {
+  state.untertitel = ereignis.target.value;
+  renderVorschau();
+  speichern();
+});
+
 document.getElementById("eigene-setzen").addEventListener("click", () => {
   const eingabe = document.getElementById("eigene-label");
   const label = eingabe.value.trim();
@@ -1420,6 +1521,28 @@ document.getElementById("zoom-in").addEventListener("click", () => setzeZoom(sta
 document.getElementById("zoom-out").addEventListener("click", () => setzeZoom(state.zoom - 0.15));
 document.getElementById("zoom-reset").addEventListener("click", () => setzeZoom(1));
 
+// Justierte Sektionen/Gärten-Lagen exportieren (fliessen in die Vorlage).
+document.getElementById("lagen-export").addEventListener("click", () => {
+  const lagen = justierteLagen();
+  if (!Object.keys(lagen).length) {
+    window.alert("Noch nichts justiert — Sektionen und Gärten erst mit ✥ verschieben.");
+    return;
+  }
+  herunterladen("marker-korrekturen.json", JSON.stringify(lagen, null, 2), "application/json");
+});
+
+// Beim Öffnen passt sich die Vorschau dem Fenster an: das ganze Blatt
+// ist sichtbar, unabhängig von Monitor- und Fenstergrösse.
+function zoomEinpassen() {
+  const rahmen = document.querySelector(".preview-canvas");
+  if (!rahmen || !rahmen.clientWidth) return;
+  const seite = state.beschnitt && state.marken ? 226 / 313 : 210 / 297;
+  const innenBreite = rahmen.clientWidth - 48;          // Innenmass (2 × --s5)
+  const verfuegbar = window.innerHeight - rahmen.getBoundingClientRect().top - 72;
+  if (innenBreite <= 0 || verfuegbar <= 100) return;
+  setzeZoom(Math.min(1.2, verfuegbar / (innenBreite * seite)));
+}
+
 /* ---------- Start ---------- */
 
 function render() {
@@ -1436,7 +1559,7 @@ function render() {
   laden();
   logoErzeugen();
   await Promise.all([ladeGelaende(), ladeIkonen()]);
-  setzeZoom(state.zoom);
   renderVarianten();
   render();
+  zoomEinpassen();
 })();

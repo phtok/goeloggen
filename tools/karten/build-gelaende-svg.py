@@ -104,6 +104,42 @@ def main() -> int:
 
     svg = re.sub(r'stroke="(#[0-9a-fA-F]{6})"', ersetze_strich, svg)
 
+    # Die visuelle Sprache der Karte kennt keine Linien, nur Flächen-
+    # kontraste (Entscheid Auftraggeber, 8. Juli 2026): die Strich-
+    # Zwillinge um Häuser und Campusflächen (Kontur-Duplikate der Füll-
+    # pfade) entfallen ersatzlos; ebenso nicht zugeordnete Restlinien.
+    # Es bleiben die weissen Wege (Karteninhalt, lesen sich als Flächen)
+    # und die helle Baum-Textur der Umgebung.
+    KONTUR_ROLLEN = ("campus", "gebaeude", "gebaeude-campus")
+    konturen = [0]
+
+    def konturen_entfernen(match: re.Match) -> str:
+        tag = match.group(0)
+        if 'fill="none"' not in tag:
+            return tag
+        if any(f'data-ks="{rolle}"' in tag for rolle in KONTUR_ROLLEN) or 'stroke="#' in tag:
+            konturen[0] += 1
+            return ""
+        return tag
+
+    svg = re.sub(r"<path[^>]*/>", konturen_entfernen, svg)
+    print(f"Kontur-Zwillinge entfernt: {konturen[0]}")
+
+    # Die Umgebungsfläche nördlich von Holzhaus und Studierendenwohnheim
+    # liest papierweiss (Entscheid Auftraggeber, 8. Juli 2026) — sie folgt
+    # der Wege-Rolle (weiss in allen Varianten).
+    NORDFELD_SIGNATUR = "M0 0-13.446-14.817-21.558-33.096"
+    anfang = svg.find(NORDFELD_SIGNATUR)
+    if anfang >= 0:
+        pfad_anfang = svg.rfind("<path", 0, anfang)
+        pfad_ende = svg.find("/>", anfang) + 2
+        segment = svg[pfad_anfang:pfad_ende]
+        neu = segment.replace('class="k-umgebung"', 'class="k-wege" id="nordfeld"')
+        svg = svg[:pfad_anfang] + neu + svg[pfad_ende:]
+        print("Nordfeld auf Wege-Rolle (weiss) gesetzt")
+    else:
+        print("Warnung: Nordfeld-Pfad nicht gefunden", file=sys.stderr)
+
     # Parkflächen einzeln adressierbar machen (Lesereihenfolge = Dokument-
     # reihenfolge; IDs stabil, solange die Quelle unverändert ist).
     zaehler = [0]

@@ -44,16 +44,17 @@ FALZ = 148.5
 # auf dem 297-mm-Blatt), rechte an der Falzlinie minus Bundversatz.
 SEITEN_OFFSET = {0: 0.5, 1: 148.49}
 
-# Kategorien der Editor-Liste (Reihenfolge = Reihenfolge in Liste und Legende).
+# Kategorien der Editor-Liste (Reihenfolge = Reihenfolge in Liste und
+# Legende); zweisprachig, weil die Legende die Gruppen benennt.
 KATEGORIEN = [
-    ("eingaenge", "Eingänge & Empfang"),
-    ("verkehr", "Verkehr & Anreise"),
-    ("treppen", "Treppenhäuser"),
-    ("saele", "Säle & Veranstaltungsräume"),
-    ("ausstellung", "Ausstellung & Orientierung"),
-    ("haeuser", "Häuser auf dem Campus"),
-    ("sektionen", "Sektionen"),
-    ("gaerten", "Gärten & Orte im Grünen"),
+    ("eingaenge", {"de": "Eingänge & Empfang", "en": "Entrances & Reception"}),
+    ("verkehr", {"de": "Verkehr & Anreise", "en": "Transport & Arrival"}),
+    ("treppen", {"de": "Treppenhäuser", "en": "Staircases"}),
+    ("saele", {"de": "Säle & Veranstaltungsräume", "en": "Halls & Event Rooms"}),
+    ("ausstellung", {"de": "Ausstellung & Orientierung", "en": "Exhibition & Orientation"}),
+    ("haeuser", {"de": "Häuser auf dem Campus", "en": "Houses on Campus"}),
+    ("sektionen", {"de": "Sektionen", "en": "Sections"}),
+    ("gaerten", {"de": "Gärten & Orte im Grünen", "en": "Gardens & Green Spaces"}),
 ]
 
 # Legende aus dem LT25-Reader (Reihenfolge wie gedruckt), Beschriftungen
@@ -205,7 +206,7 @@ WILLKOMMEN = [
      [[207.9, 123.4]], {"gebaeude": "campusbau-53"}),
     ("s-sozial", "j", "sektionen",
      {"de": "Sektion für Sozialwissenschaften", "en": "Section for Social Sciences"},
-     [[166.0, 61.5]], {"gebaeude": "campusbau-9"}),
+     [[164.3, 62.3]], {"gebaeude": "campusbau-9"}),
     ("s-mathematik", "k", "sektionen",
      {"de": "Mathematisch-Astronomische Sektion", "en": "Section for Mathematics and Astronomy"},
      [[255.5, 31.8]], {"gebaeude": "campusbau-15"}),
@@ -251,9 +252,16 @@ WILLKOMMEN = [
     ("h-friedwart", "55", "haeuser",
      {"de": "Gästehaus Friedwart", "en": "Guesthouse Friedwart"},
      [[118.0, 202.5]], {"pfeil": "unten-links"}),
+    # Sitz der Sektion für Sozialwissenschaften; wird auch für Seminare
+    # genutzt — darum eigener Ort samt Gebäude.
+    ("h-kristall", "56", "haeuser",
+     {"de": "Kristallisationslabor", "en": "Kristallisationslabor"},
+     [[168.0, 60.3]], {"gebaeude": "campusbau-9"}),
 ]
 
-WILLKOMMEN_FARBEN = {"eingaenge": "blau", "sektionen": "grau", "gaerten": "gruen", "haeuser": "blau"}
+# Eingänge & Empfang tragen standardmässig Gold (Entscheid Auftraggeber,
+# 8. Juli 2026); dunkles Hausgold hält Weiss lesbar (B01).
+WILLKOMMEN_FARBEN = {"eingaenge": "gold", "sektionen": "grau", "gaerten": "gruen", "haeuser": "blau"}
 
 # Ort → Campus-Gebäude (ids aus build-gelaende-svg.py). Per Treffer-Test der
 # Markerpositionen gegen die Gebäudepfade ermittelt (Suchradius ≤ 4.5 mm),
@@ -440,10 +448,14 @@ def orte_bauen(funde):
             positionen = [[f["x"], f["y"]] for f in gewaehlt]
         if not positionen and not badges:
             print(f"  ! {marker} ({label['de']}): keine Kartenmarke gefunden")
+        kategorie = KATEGORIE_JE_ORT.get(oid, "haeuser")
+        # Eingänge & Empfang standardmässig Gold (B01: dunkles Hausgold).
+        farbe = "gold" if kategorie == "eingaenge" \
+            else ("rot" if art in ("ort", "treppe") else "blau")
         ort = {
             "id": oid, "marker": marker, "art": art,
-            "kategorie": KATEGORIE_JE_ORT.get(oid, "haeuser"),
-            "farbe": "rot" if art in ("ort", "treppe") else "blau",
+            "kategorie": kategorie,
+            "farbe": farbe,
             "label": label,
             "positionen": positionen,
         }

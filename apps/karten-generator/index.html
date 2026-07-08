@@ -241,8 +241,12 @@
     <aside class="controls">
       <fieldset>
         <legend>Titel</legend>
-        <input id="titel-input" type="text" value="Herzlich Willkommen" />
-        <div class="hint">Steht links oben über der Legende.</div>
+        <input id="titel-input" type="text" placeholder="Kurzer Veranstaltungsname" />
+        <div class="hint">Hier den Kurztitel der Tagung samt Jahr eintragen,
+          z. B. ‹Landwirtschaftliche Tagung 2026›. Steht links oben über der
+          Legende und benennt das PDF und die gespeicherte Karte.</div>
+        <input id="untertitel-input" type="text" placeholder="1. bis 5. Juli 2026" />
+        <div class="hint">Datum der Veranstaltung — steht unter dem Titel.</div>
       </fieldset>
 
       <fieldset>
@@ -259,9 +263,18 @@
           <button id="orte-alle-aus" type="button" class="btn">Alle aus</button>
         </div>
         <div id="orte-gruppen"></div>
+        <div class="hint">Sektionen und Gärten lassen sich mit ✥ justieren,
+          bis die Feinlagen in der Vorlage stehen.</div>
+        <div class="button-row">
+          <button id="lagen-export" type="button" class="btn">Justierte Lagen exportieren</button>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Gebäude</legend>
         <div id="gebaeude-liste"></div>
-        <div class="hint">Gebäude mit aktivem Marker werden automatisch dunkel;
-          weitere lassen sich in der Gebäude-Liste von Hand schalten.</div>
+        <div class="hint">Gebäude mit aktivem Marker werden automatisch dunkel
+          (‹durch Marker›); jeder Klick schaltet von Hand um — auch dagegen.</div>
       </fieldset>
 
       <fieldset>
@@ -277,7 +290,8 @@
 
       <fieldset>
         <legend>Kartenfarben</legend>
-        <div class="seg" id="preset-row"></div>
+        <div class="hint">Standard ist die gedeckte Hauspalette; jede Rolle
+          lässt sich einzeln anpassen.</div>
         <label class="checkbox-row">
           <input id="opt-wiese-klein" type="checkbox" />
           <span>Wiese klein einfärben (westlich des Hauptwegs)</span>
