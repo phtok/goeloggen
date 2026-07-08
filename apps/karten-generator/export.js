@@ -16,8 +16,8 @@ const FORMATE = {
 };
 
 const PDF_SCHRIFTEN = [
-  ["GoetheanumKlar", "../../assets/fonts/goetheanum/Office/GoetheanumSchriftKlar.ttf"],
-  ["GoetheanumDeutlich", "../../assets/fonts/goetheanum/Office/GoetheanumSchriftDeutlich.ttf"]
+  ["GoetheanumDeutlich", "../../assets/fonts/goetheanum/Office/GoetheanumSchriftDeutlich.ttf"],
+  ["SourceSans3Semibold", "assets/fonts/SourceSans3-SemiBold.ttf"]
 ];
 
 function exportGeometrie() {
@@ -93,13 +93,13 @@ let svgFontCssPromise = null;
 function svgFontCss() {
   if (!svgFontCssPromise) {
     svgFontCssPromise = (async () => {
-      const [deutlich, klar] = await Promise.all([
+      const [deutlich, wert] = await Promise.all([
         dateiAlsBase64("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2"),
-        dateiAlsBase64("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Klar.woff2")
+        dateiAlsBase64("../../assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2")
       ]);
       return `<defs><style>
 @font-face { font-family: "GoetheanumDeutlich"; src: url('data:font/woff2;base64,${deutlich}') format('woff2'); }
-@font-face { font-family: "GoetheanumKlar"; src: url('data:font/woff2;base64,${klar}') format('woff2'); }
+@font-face { font-family: "SourceSans3Semibold"; src: url('data:font/woff2;base64,${wert}') format('woff2'); }
 </style></defs>`;
     })().catch((fehler) => {
       console.warn("Schrift nicht einbettbar, SVG ohne Schrift-Einbettung:", fehler);

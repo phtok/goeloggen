@@ -14,6 +14,13 @@ const EIGENE_START_NR = 60; // Bestand endet bei 46 — keine Kollision
 const MARKER_FARBEN = { rot: "#ec5f6c", blau: "#81b2cb" };
 const TINTE = "#4e4f4a";
 
+// Schriftrollen wie in den Beispielkarten: Sprache (Titel, Legende) in der
+// Hausschrift (Titelschnitt = Deutlich), Werte/Badges (Markernummern,
+// Treppen-Buchstaben, Gebäudenamen, Kompass) in der Lese-Grotesk —
+// die Vorlagen setzten dafür Titillium Bold/Semibold, heute Source Sans 3.
+const SCHRIFT_SPRACHE = "GoetheanumDeutlich";
+const SCHRIFT_WERT = "SourceSans3Semibold";
+
 // Wahlfarben für eigene Marken: Beispiel-Rot/-Blau plus Hauspalette
 // (dunkles Gold und Grün, damit Weiss darauf lesbar bleibt — B01).
 const EIGENE_FARBEN = {
@@ -92,7 +99,8 @@ const state = {
 
 let gelaendeInhalt = null;   // SVG-Inhalt ohne Wurzel/<style>
 let gelaendeMasse = { breite: 1006.3, hoehe: 651.968 };
-let iconPfad = null;         // Goetheanum-Zeichen als Pfad (für das Logo)
+let parkAnzahl = 0;
+let logoInhalt = null;       // Campus-Wortmarke aus dem Logogenerator (reine Pfade)
 
 async function ladeGelaende() {
   const antwort = await fetch("assets/gelaende.svg");
@@ -105,15 +113,22 @@ async function ladeGelaende() {
     .replace(/^[\s\S]*?<svg[^>]*>/, "")
     .replace(/<\/svg>\s*$/, "")
     .replace(/<style>[\s\S]*?<\/style>/, "");
+  parkAnzahl = (gelaendeInhalt.match(/id="parkflaeche-/g) || []).length;
 }
 
-async function ladeIcon() {
+// Das Logo kommt aus dem Logogenerator (LogoEngine) — dieselben Pfaddaten
+// wie bei allen anderen Anwendungen, dadurch vektor-exportierbar.
+function logoErzeugen() {
   try {
-    const antwort = await fetch("../../assets/icons/goetheanum-icons/v0.1.0/src-repaired/goetheanum_icon_transparent_black_rgb.svg");
-    const text = await antwort.text();
-    iconPfad = (text.match(/<path d="([^"]+)"/) || [])[1] || null;
+    const svgText = window.LogoEngine.svg({
+      cat: "teilbereiche", org: "campus", layout: "desktop",
+      lang: "de", mode: "original", txt: ""
+    });
+    const element = new DOMParser().parseFromString(svgText, "image/svg+xml").documentElement;
+    const vb = (element.getAttribute("viewBox") || "0 0 1 1").split(/\s+/).map(Number);
+    logoInhalt = { breite: vb[2], hoehe: vb[3], markup: element.innerHTML };
   } catch (fehler) {
-    console.warn("Goetheanum-Zeichen nicht ladbar:", fehler);
+    console.warn("Logogenerator nicht verfügbar, Karte ohne Logo:", fehler);
   }
 }
 
@@ -171,14 +186,15 @@ function escapeXml(wert) {
 }
 
 function textGroesse(text, basis) {
-  return String(text).length >= 2 ? basis * 0.82 : basis;
+  return String(text).length >= 2 ? basis * 0.85 : basis;
 }
 
 function markenKreis(x, y, hex, text, r) {
-  const groesse = textGroesse(text, r * 0.99);
+  // Nummern wie im Original: Grotesk halbfett, ~0.7 des Kreisdurchmessers.
+  const groesse = textGroesse(text, r * 1.4);
   return `<circle cx="${x}" cy="${y}" r="${r}" fill="${hex}" />`
-    + `<text x="${x}" y="${y + groesse * 0.35}" text-anchor="middle" font-size="${groesse}"`
-    + ` fill="#ffffff" font-family="GoetheanumKlar">${escapeXml(text)}</text>`;
+    + `<text x="${x}" y="${y + groesse * 0.36}" text-anchor="middle" font-size="${groesse}"`
+    + ` fill="#ffffff" font-family="${SCHRIFT_WERT}">${escapeXml(text)}</text>`;
 }
 
 function pfeilMarkup(x, y, r, hex, richtung) {
@@ -215,11 +231,11 @@ function treppenBadge(x, y, buchstabe, form) {
   const hex = MARKER_FARBEN.rot;
   if (form === "lift") {
     return `<rect x="${x - 1.45}" y="${y - 2.15}" width="2.9" height="4.3" rx="0.7" fill="#ffffff" stroke="${hex}" stroke-width="0.18" />`
-      + `<text x="${x}" y="${y - 0.35}" text-anchor="middle" font-size="1.9" fill="${hex}" font-family="GoetheanumKlar">${buchstabe}</text>`
+      + `<text x="${x}" y="${y - 0.35}" text-anchor="middle" font-size="1.85" fill="${hex}" font-family="${SCHRIFT_WERT}">${buchstabe}</text>`
       + liftGlyph(x, y + 1.1, hex, 0.9);
   }
   return `<circle cx="${x}" cy="${y}" r="2.22" fill="#ffffff" stroke="${hex}" stroke-width="0.18" />`
-    + `<text x="${x - 0.9}" y="${y + 0.82}" text-anchor="middle" font-size="2.35" fill="${hex}" font-family="GoetheanumKlar">${buchstabe}</text>`
+    + `<text x="${x - 0.9}" y="${y + 0.85}" text-anchor="middle" font-size="2.5" fill="${hex}" font-family="${SCHRIFT_WERT}">${buchstabe}</text>`
     + treppenGlyph(x + 0.95, y, hex, 1.05);
 }
 
@@ -234,7 +250,7 @@ function gebaeudeLabelMarkup() {
   return GEBAEUDE_LABELS.map((l) => {
     const drehung = l.winkel ? ` transform="rotate(${l.winkel} ${l.x} ${l.y})"` : "";
     return `<text x="${l.x}" y="${l.y}" font-size="${l.groesse}" fill="#ffffff"`
-      + ` font-family="GoetheanumDeutlich"${drehung}>${escapeXml(l.text)}</text>`;
+      + ` font-family="${SCHRIFT_WERT}"${drehung}>${escapeXml(l.text)}</text>`;
   }).join("");
 }
 
@@ -264,8 +280,8 @@ const LEGENDE_LAYOUT = {
   extraZeile: 4.2,
   gruppe: 5.0,
   labelAbstand: 4.2,
-  labelGroesse: 3.0,
-  notizGroesse: 2.8
+  labelGroesse: 3.35,   // wie die Vorlage: Titelschnitt 9.5 pt
+  notizGroesse: 3.0
 };
 
 function legendeZeilen(spalte) {
@@ -301,7 +317,7 @@ function legendeMarkup() {
           teile += treppenBadge(x, y - 0.9, zeile.ort.marker, "lift");
         }
         teile += `<text x="${x + L.labelAbstand}" y="${y}" font-size="${L.notizGroesse}"`
-          + ` fill="${TINTE}" font-family="GoetheanumKlar">${escapeXml(n.label)}</text>`;
+          + ` fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(n.label)}</text>`;
         y += L.notiz;
         return;
       }
@@ -315,7 +331,7 @@ function legendeMarkup() {
       }
       zeilenTexte.forEach((text, index) => {
         teile += `<text x="${x + L.labelAbstand}" y="${y + index * L.extraZeile}"`
-          + ` font-size="${L.labelGroesse}" fill="${TINTE}" font-family="GoetheanumKlar">${escapeXml(text)}</text>`;
+          + ` font-size="${L.labelGroesse}" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(text)}</text>`;
       });
       y += L.zeile + (zeilenTexte.length - 1) * L.extraZeile;
     });
@@ -332,20 +348,17 @@ function kompassMarkup() {
     <circle cx="171" cy="33.5" r="3.25" fill="none" stroke="${hex}" stroke-width="0.42" />
     <line x1="163" y1="33.5" x2="179" y2="33.5" stroke="${hex}" stroke-width="0.42" />
     <line x1="171" y1="29.6" x2="171" y2="37.4" stroke="${hex}" stroke-width="0.42" />
-    <text x="160.9" y="34.15" font-size="3.5" fill="${hex}" font-family="GoetheanumKlar">N</text>
-    <text x="180.8" y="34.15" font-size="3.5" fill="${hex}" font-family="GoetheanumKlar">S</text>
+    <text x="160.9" y="34.15" font-size="3.5" fill="${hex}" font-family="${SCHRIFT_WERT}">N</text>
+    <text x="180.8" y="34.15" font-size="3.5" fill="${hex}" font-family="${SCHRIFT_WERT}">S</text>
   </g>`;
 }
 
 function logoMarkup() {
-  const zeichen = iconPfad
-    ? `<g transform="translate(253 6.2) scale(0.0062)"><path d="${iconPfad}" fill="#2376ba" /></g>`
-    : "";
-  return `<g>
-    ${zeichen}
-    <text x="260.4" y="10.1" font-size="3.55" fill="#6b6c67" font-family="GoetheanumDeutlich">Goetheanum</text>
-    <text x="260.4" y="14.0" font-size="3.55" fill="#2376ba" font-family="GoetheanumDeutlich">Campus</text>
-  </g>`;
+  if (!logoInhalt) return "";
+  const breite = 22; // mm — rechtsbündig, Rand wie die Legende links (10.5)
+  const skala = breite / logoInhalt.breite;
+  const x = SZENE.breite - 10.5 - breite;
+  return `<g transform="translate(${x} 6.5) scale(${skala})">${logoInhalt.markup}</g>`;
 }
 
 function szeneMarkup(anschnitt) {
@@ -577,6 +590,44 @@ function renderFarben() {
   });
 }
 
+/* ---------- Parkflächen ---------- */
+
+function parkWeiterschalten(nr) {
+  const bisher = state.parkflaechen[nr];
+  const index = bisher ? PARK_ZYKLUS.indexOf(bisher) + 1 : 0;
+  if (index >= PARK_ZYKLUS.length) delete state.parkflaechen[nr];
+  else state.parkflaechen[nr] = PARK_ZYKLUS[index];
+  render();
+}
+
+function parkFokus(nr, an) {
+  const pfad = document.getElementById(`parkflaeche-${nr}`);
+  if (pfad) pfad.classList.toggle("park-fokus", an);
+}
+
+function renderParkflaechen() {
+  const halter = document.getElementById("park-chips");
+  halter.innerHTML = "";
+  for (let nr = 1; nr <= parkAnzahl; nr += 1) {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "park-chip";
+    chip.title = `Parkfläche ${nr} umschalten`;
+    const punkt = document.createElement("span");
+    punkt.className = "park-punkt";
+    const wahl = state.parkflaechen[nr];
+    punkt.style.background = wahl ? PARK_FARBEN[wahl] : "transparent";
+    chip.appendChild(punkt);
+    chip.appendChild(document.createTextNode(String(nr)));
+    chip.addEventListener("click", () => parkWeiterschalten(nr));
+    chip.addEventListener("mouseenter", () => parkFokus(nr, true));
+    chip.addEventListener("mouseleave", () => parkFokus(nr, false));
+    chip.addEventListener("focus", () => parkFokus(nr, true));
+    chip.addEventListener("blur", () => parkFokus(nr, false));
+    halter.appendChild(chip);
+  }
+}
+
 /* ---------- Format / Optionen ---------- */
 
 function renderOptionen() {
@@ -668,15 +719,12 @@ printSvg.addEventListener("click", (ereignis) => {
   // deshalb alle Elemente unter dem Zeiger prüfen, nicht nur das oberste.
   const park = document.elementsFromPoint(ereignis.clientX, ereignis.clientY)
     .find((el) => el.id && el.id.startsWith("parkflaeche-"));
-  if (park) {
-    const nr = park.id.replace("parkflaeche-", "");
-    const bisher = state.parkflaechen[nr];
-    const index = bisher ? PARK_ZYKLUS.indexOf(bisher) + 1 : 0;
-    if (index >= PARK_ZYKLUS.length) delete state.parkflaechen[nr];
-    else state.parkflaechen[nr] = PARK_ZYKLUS[index];
-    render();
-  }
+  if (park) parkWeiterschalten(park.id.replace("parkflaeche-", ""));
 });
+
+const parkFieldset = document.getElementById("park-fieldset");
+parkFieldset.addEventListener("mouseenter", () => printSvg.classList.add("zeige-park"));
+parkFieldset.addEventListener("mouseleave", () => printSvg.classList.remove("zeige-park"));
 
 document.addEventListener("keydown", (ereignis) => {
   if (ereignis.key === "Escape" && state.platzieren) {
@@ -742,6 +790,7 @@ function render() {
   renderOrte();
   renderEigeneFarben();
   renderFarben();
+  renderParkflaechen();
   renderOptionen();
   renderVorschau();
   speichern();
@@ -749,7 +798,8 @@ function render() {
 
 (async function start() {
   laden();
-  await Promise.all([ladeGelaende(), ladeIcon()]);
+  logoErzeugen();
+  await ladeGelaende();
   setzeZoom(state.zoom);
   render();
 })();
