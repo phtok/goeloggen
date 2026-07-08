@@ -113,6 +113,14 @@
       flex: none;
       border: 1px solid var(--line);
     }
+    .check {
+      width: 20px; height: 20px; flex: none;
+      border: 1px solid var(--line); border-radius: 5px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 14px; color: var(--on-accent);
+      background: var(--field-bg);
+    }
+    .check.an { background: var(--gold-deep); border-color: var(--gold-deep); } /* B01 */
     .object-title { flex: 1; font-size: var(--t-small); }
     .object-row.aus .object-title { color: var(--muted); }
     .object-row.aus .object-dot { opacity: .35; }
@@ -218,13 +226,16 @@
 
       <fieldset>
         <legend>Orte</legend>
-        <div class="hint">Zeile anklicken = auf die Karte. Farbpunkt = Markerfarbe wechseln.
-          Stift = Beschriftung ändern. ✥ = Marke verschieben.</div>
+        <div class="hint">Häkchen/Zeile = auf die Karte. Farbpunkt (rechts) = Markerfarbe.
+          Stift = Beschriftung. ✥ = verschieben (Infotisch und eigene Marken).</div>
         <div class="seg" id="sprache-row">
           <button type="button" data-sprache="de" aria-pressed="true">Deutsch</button>
           <button type="button" data-sprache="en" aria-pressed="false">English</button>
         </div>
         <div id="orte-gruppen"></div>
+        <div id="gebaeude-liste"></div>
+        <div class="hint">Gebäude mit aktivem Marker werden automatisch dunkel;
+          weitere lassen sich in der Gebäude-Liste von Hand schalten.</div>
       </fieldset>
 
       <fieldset>

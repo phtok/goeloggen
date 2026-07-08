@@ -40,6 +40,18 @@ FALZ = 148.5
 # auf dem 297-mm-Blatt), rechte an der Falzlinie minus Bundversatz.
 SEITEN_OFFSET = {0: 0.5, 1: 148.49}
 
+# Kategorien der Editor-Liste (Reihenfolge = Reihenfolge in Liste und Legende).
+KATEGORIEN = [
+    ("eingaenge", "Eingänge & Empfang"),
+    ("verkehr", "Verkehr & Anreise"),
+    ("treppen", "Treppenhäuser"),
+    ("saele", "Säle & Veranstaltungsräume"),
+    ("ausstellung", "Ausstellung & Orientierung"),
+    ("haeuser", "Häuser auf dem Campus"),
+    ("sektionen", "Sektionen"),
+    ("gaerten", "Gärten & Orte im Grünen"),
+]
+
 # Legende aus dem LT25-Reader (Reihenfolge wie gedruckt), Beschriftungen
 # zweisprachig: en wörtlich aus der Vorlage, de nach den deutschen
 # Beschriftungen der Weltkonferenz-Karte bzw. Hausgebrauch.
@@ -115,6 +127,70 @@ LEGENDE = [
     ("f46", "46", "orientierung", {"de": "Bahnhof", "en": "Train Station"}, {"pfeil": "unten-links"}),
     ("f-p", "P", "orientierung", {"de": "Parkplatz", "en": "Parking"}),
 ]
+
+# Kategorie je Ort (Editor-Liste und Legenden-Sortierung).
+KATEGORIE_JE_ORT = {
+    "o1": "eingaenge", "o2": "eingaenge", "o3": "eingaenge", "o4": "eingaenge",
+    "f-p": "verkehr", "f46": "verkehr",
+    "t-main": "treppen", "t-nord": "treppen", "t-sued": "treppen",
+    "v10": "saele", "v11": "saele", "v12": "saele", "v13": "saele",
+    "v14": "saele", "v15": "saele", "v20": "saele", "v21": "saele",
+    "v22": "saele", "v23": "saele", "v24": "saele", "v30": "saele",
+    "o5": "ausstellung", "o6": "ausstellung", "o7": "ausstellung",
+    "o40": "ausstellung", "o41": "ausstellung", "o42": "ausstellung", "o43": "ausstellung",
+    "v31": "haeuser", "v32": "haeuser", "v33": "haeuser", "v34": "haeuser",
+    "v35": "haeuser", "v36": "haeuser", "v37": "haeuser", "v38": "haeuser",
+    "o44": "haeuser", "o45": "haeuser",
+}
+
+# Zusätzliche Orte aus dem Willkommensplan (assets/maps/src/Willkommensplan-A4.pdf,
+# ‹Willkommensschilder gequetscht auf A4›, Kartenlage identisch mit der
+# Standardlage — Form-Abgleich). Positionen per Kreis-Erkennung extrahiert und
+# per Pixel-Sichtbarkeitstest gegen das gequetschte Zweitpanel verifiziert.
+# Die Jugendsektion (e) trägt in der Vorlage zwei Marken.
+WILLKOMMEN = [
+    ("s-a", "a", "sektionen", {"de": "Allgemeine Anthroposophische Sektion", "en": "General Anthroposophical Section"}, [[107.52, 110.65]]),
+    ("s-b", "b", "sektionen", {"de": "Naturwissenschaftliche Sektion", "en": "Natural Science Section"}, [[93.72, 151.41]]),
+    ("s-c", "c", "sektionen", {"de": "Pädagogische Sektion", "en": "Pedagogical Section"}, [[107.52, 102.32]]),
+    ("s-d", "d", "sektionen", {"de": "Sektion für Schöne Wissenschaften", "en": "Section for the Literary Arts and Humanities"}, [[134.24, 133.41]]),
+    ("s-e", "e", "sektionen", {"de": "Jugendsektion", "en": "Youth Section"}, [[91.92, 104.80], [163.12, 22.73]]),
+    ("s-f", "f", "sektionen", {"de": "Medizinische Sektion", "en": "Medical Section"}, [[107.57, 23.93]]),
+    ("s-g", "g", "sektionen", {"de": "Sektion für Landwirtschaft", "en": "Section for Agriculture"}, [[99.17, 152.09]]),
+    ("s-h", "h", "sektionen", {"de": "Sektion für Bildende Künste", "en": "Visual Arts Section"}, [[120.83, 162.83]]),
+    ("s-i", "i", "sektionen", {"de": "Sektion für Redende und Musizierende Künste", "en": "Section for the Performing Arts"}, [[102.38, 91.06]]),
+    ("s-j", "j", "sektionen", {"de": "Sektion für Sozialwissenschaften", "en": "Section for Social Sciences"}, [[53.89, 121.84]]),
+    ("s-k", "k", "sektionen", {"de": "Mathematisch-Astronomische Sektion", "en": "Section for Mathematics and Astronomy"}, [[31.78, 59.74]]),
+    ("s-m", "m", "sektionen", {"de": "Sektion für Heilpädagogik und inklusive soziale Entwicklung", "en": "Section for Inclusive Social Development"}, [[107.57, 20.50]]),
+    ("g-10", "10", "gaerten", {"de": "Felsli", "en": "Felsli"}, [[164.32, 64.64]]),
+    ("g-11", "11", "gaerten", {"de": "Wasserspiel", "en": "Flowforms"}, [[106.10, 159.06]]),
+    ("g-12", "12", "gaerten", {"de": "Gedenkhain", "en": "Memorial Grove"}, [[140.67, 124.05]]),
+    ("g-13", "13", "gaerten", {"de": "Heilkräutergarten", "en": "Medicinal Plant Garden"}, [[82.50, 61.97]]),
+    ("g-14", "14", "gaerten", {"de": "Färberpflanzengarten", "en": "Plant Dye Garden"}, [[31.53, 64.63]]),
+    ("g-15", "15", "gaerten", {"de": "Schnittblumengarten", "en": "Cut Flower Garden"}, [[28.44, 74.90]]),
+    ("g-16", "16", "gaerten", {"de": "Duftkräutergarten", "en": "Fragrant Herb Garden"}, [[38.62, 67.25]]),
+    ("g-17", "17", "gaerten", {"de": "Bienenskulptur", "en": "Bee Sculpture"}, [[38.84, 47.95]]),
+    ("g-18", "18", "gaerten", {"de": "Präparatepavillon", "en": "Präparatepavillon"}, [[55.43, 83.33]]),
+    ("h-friedwart", "H", "haeuser", {"de": "Gästehaus Friedwart", "en": "Guesthouse Friedwart"}, [[167.69, 149.01]]),
+]
+
+# Marker-Standardfarben der neuen Kategorien (Vorlagen-Töne).
+WILLKOMMEN_FARBEN = {"sektionen": "grau", "gaerten": "gruen", "haeuser": "blau"}
+
+# Ort → Campus-Gebäude (ids aus build-gelaende-svg.py). Per Treffer-Test der
+# Markerpositionen gegen die Gebäudepfade ermittelt (Suchradius ≤ 4.5 mm),
+# kuratiert. Die beiden Goetheanum-Schalen (52/53) schalten als Einheit.
+GEBAEUDE_JE_ORT = {
+    "o3": "campusbau-52", "o4": "campusbau-52", "o5": "campusbau-52",
+    "o6": "campusbau-53", "o7": "campusbau-52",
+    "t-main": "campusbau-53", "t-nord": "campusbau-53", "t-sued": "campusbau-53",
+    "v10": "campusbau-53", "v11": "campusbau-52", "v12": "campusbau-52",
+    "v13": "campusbau-53", "v14": "campusbau-52", "v15": "campusbau-53",
+    "v20": "campusbau-19", "v21": "campusbau-19", "v22": "campusbau-19",
+    "v23": "campusbau-19", "v24": "campusbau-19",
+    "v30": "campusbau-6", "v31": "campusbau-41", "v32": "campusbau-46",
+    "v33": "campusbau-10", "v34": "campusbau-44", "v35": "campusbau-16",
+    "o40": "campusbau-19", "o41": "campusbau-19", "o42": "campusbau-19",
+}
 
 # Kartenbereich je Halbseite (Blatt-mm): links liegt die Legende, dort
 # gelten nur x > 100 als Kartenmarken.
@@ -287,6 +363,7 @@ def orte_bauen(funde):
             print(f"  ! {marker} ({label['de']}): keine Kartenmarke gefunden")
         ort = {
             "id": oid, "marker": marker, "art": art,
+            "kategorie": KATEGORIE_JE_ORT.get(oid, "haeuser"),
             "farbe": "rot" if art in ("ort", "treppe") else "blau",
             "label": label,
             "positionen": positionen,
@@ -294,7 +371,21 @@ def orte_bauen(funde):
         ort.update(extra)
         if badges:
             ort["badges"] = badges
+        if oid in GEBAEUDE_JE_ORT:
+            ort["gebaeude"] = GEBAEUDE_JE_ORT[oid]
         orte.append(ort)
+
+    for oid, marker, kategorie, label, positionen in WILLKOMMEN:
+        orte.append({
+            "id": oid, "marker": marker, "art": "orientierung",
+            "kategorie": kategorie,
+            "farbe": WILLKOMMEN_FARBEN.get(kategorie, "blau"),
+            "label": label,
+            "positionen": positionen,
+        })
+
+    reihenfolge = {schluessel: index for index, (schluessel, _) in enumerate(KATEGORIEN)}
+    orte.sort(key=lambda o: reihenfolge.get(o["kategorie"], 99))
     return orte
 
 
@@ -321,6 +412,8 @@ def main() -> int:
     body = (
         kopf
         + "const KARTE = " + json.dumps(karte, ensure_ascii=False, indent=2) + ";\n\n"
+        + "const KATEGORIEN = " + json.dumps(
+            [{"id": k, "name": n} for k, n in KATEGORIEN], ensure_ascii=False, indent=2) + ";\n\n"
         + "const ORTE = " + json.dumps(orte, ensure_ascii=False, indent=2) + ";\n"
     )
     ZIEL.write_text(body, encoding="utf-8")
