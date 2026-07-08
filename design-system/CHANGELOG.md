@@ -16,6 +16,27 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.6.0] – 2026-07-08
+
+### Werkzeugwissen + Druck-Tinte (Rückfluss aus dem Kartentool)
+- **Was:** Neues Dokument `design-system/werkzeugwissen.md` — Konstruktions-
+  regeln für Werkzeuge, die drucken und zeichnen: kein `text-anchor="middle"`
+  in Export-SVGs (Breiten selbst messen: TTF-Vorschubtabellen, Canvas nur als
+  Rückfall), Icons auf die Tintenbox statt die viewBox zentrieren,
+  Kontur-Zwillinge entfernen + Fugendichtung (`stroke` = `fill`) für
+  Flächengrafik, `.step-num`-Masse im Kartenmassstab (Grad 0.5 × ⌀,
+  Piktos 1.26 × r), Token-Treue auch für Abstände (erfundene `var(--…)`
+  fallen still auf 0). Dazu neues Token **`--ink-print-leise:#6e6f6a`** —
+  leises Strukturbeiwerk auf Papierweiss, gerechnet 5.07:1 (B02-fest).
+- **Warum:** 18 Rückmelderunden Kartentool haben Bauwissen erzeugt, das
+  sonst in der Session verloren ginge (Entscheid Auftraggeber, 8. Juli 2026:
+  ‹direkt einarbeiten›). Der `--s5`-Vorfall (nicht existierendes
+  Abstands-Token, still auf 0 zurückgefallen) zeigt eine DS02-Lücke —
+  Kandidat für `ds-lint`: unbekannte `var(--…)`-Namen melden.
+- **Wirkung:** Werkzeugwissen ist Fundament (gilt für jedes künftige
+  Druck-/Grafik-Werkzeug); `--ink-print-leise` ersetzt den bisher nur im
+  Kartentool notierten Hex-Wert. `contract.json` → Version 1.6.0.
+
 ## [1.5.0] – 2026-07-06
 
 ### Bild-Ebene + Logo-Disziplin (DS08)

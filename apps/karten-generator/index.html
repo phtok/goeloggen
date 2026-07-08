@@ -211,8 +211,10 @@
     .marken-farbe.gewaehlt { border-color: var(--ink); }
 
     .preview-shell { display: flex; flex-direction: column; gap: var(--s3); min-width: 0; }
-    .preview-top { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
-    .preview-note { font-size: var(--t-small); color: var(--muted); }
+    /* Format-Notiz rechtsbündig an die Zoom-Knöpfe angeschlossen
+       (Entscheid Auftraggeber, 8. Juli 2026) — etwas Luft dazwischen. */
+    .preview-top { display: flex; align-items: center; justify-content: flex-end; gap: var(--s4); flex-wrap: wrap; }
+    .preview-note { font-size: var(--t-small); color: var(--muted); text-align: right; }
     .zoom-controls { display: flex; align-items: center; gap: var(--s2); }
     .zoom-controls button { min-width: var(--tap); min-height: var(--tap); }
     .zoom-value { font-size: var(--t-small); color: var(--muted); min-width: 4ch; font-variant-numeric: tabular-nums; }

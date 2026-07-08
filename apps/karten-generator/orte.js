@@ -248,8 +248,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        285.0,
-        196.0
+        281.24,
+        201.56
       ]
     ],
     "pfeil": "unten-rechts"
