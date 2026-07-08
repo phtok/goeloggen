@@ -4,6 +4,10 @@
 Quelle:  assets/maps/src/LT25-Reader-Kartenseiten.pdf
          (Doppelseite der Landwirtschaftlichen Tagung 2025, A5-Falz —
          zusammen die A4-quer-Karte, von grafik.goetheanum.ch/kartierung)
+         Ergänzend: assets/maps/src/Karten-mit-spezifischen-
+         Lokalisierungen-231106.pdf (gleiche Sammlung; Seite 4 liefert
+         Kepler-Sternwarte, Helene Finckh Häuschen, Haus de Jaager und
+         Eurythmiehaus in exakter Form-Passung — siehe WILLKOMMEN).
 Ziel:    apps/karten-generator/orte.js
 
 Was passiert:
@@ -103,11 +107,15 @@ LEGENDE = [
     ("v23", "23", "ort", {"de": "Backofen", "en": "Backofen"}),
     ("v24", "24", "ort", {"de": "Schreinerei Südsaal", "en": "Schreinerei Südsaal"}),
     ("v30", "30", "ort", {"de": "English Studies", "en": "English Studies"}),
+    # Halde und Puppentheater sind zwei ineinander gebaute Gebäude —
+    # die Teile schalten ihre Gebäude einzeln (gebaeudeTeile, Reihenfolge
+    # wie die Teile; Ids aus dem Treffer-Test der Gebäudepfade).
     ("v31", "31", "ort", {"de": "Rudolf Steiner Halde", "en": "Rudolf Steiner Halde"}, {
         "teile": [
             {"de": "Rudolf Steiner Halde", "en": "Rudolf Steiner Halde"},
             {"de": "Puppentheater Felicia", "en": "Puppet Theatre Felicia"},
         ],
+        "gebaeudeTeile": ["campusbau-41", "campusbau-6"],
     }),
     ("v32", "32", "ort", {"de": "Glashaus", "en": "Glashaus"}),
     ("v33", "33", "ort", {"de": "Studierendenwohnheim", "en": "Students Residence"}),
@@ -148,19 +156,101 @@ KATEGORIE_JE_ORT = {
     "o44": "haeuser", "o45": "haeuser",
 }
 
-# Sektionen, Gärten und Gästehaus Friedwart: WARTEN auf eine verlässliche
-# Positions-Quelle. Der Willkommensplan des Beispielpakets ist ‹gequetscht›
-# (anisotrop skaliert, 90° genordet, zwei gemischte Panels) — weder Form-
-# noch Anker-Fit liefern mm-genaue Lagen (Residuen bis 5 mm, Ausreisser
-# ausserhalb des Blatts). Sobald der aktuelle Willkommensbanner als
-# PDF-Export vorliegt, greift die bewährte Extraktion (Kreis-Erkennung +
-# Form-Abgleich) und die Einträge kommen mm-genau zurück.
+# Sektionen, Gärten und weitere Häuser. Quellen und Methode:
+# - Karten-mit-spezifischen-Lokalisierungen-231106.pdf Seite 4 (Nachtwache)
+#   liegt exakt in Form-Passung zur Grundkarte (Residuum 0.000 mm) —
+#   Kepler-Sternwarte, Helene Finckh Häuschen, Haus de Jaager und
+#   Eurythmiehaus sind daraus mm-genau übernommen (Kontrolle: die ‹19›
+#   Eurythmiehaus trifft die bestehende o43-Marke auf 0.1 mm).
+# - Seite 1 (Willkommensschilder, ‹gequetscht auf A4›) ist anisotrop
+#   verzerrt UND gedreht — kein mm-genauer Fit möglich (Affin-Residuen
+#   ≥ 5 mm). Die Sektionen/Gärten daraus sind darum GEBÄUDE-genau gesetzt:
+#   lokale Passung plus Sichtabgleich mit den Gebäudepfaden der Grundkarte
+#   (Treffer-Test). Feinlagen folgen aus dem PDF-Export des aktuellen
+#   Willkommensbanners, sobald er vorliegt.
 WILLKOMMEN = [
-    # Barrierefreier Zugang (aktueller Banner): Marke mit Rollstuhl-Symbol,
-    # am Haupteingang platziert und bewusst verschiebbar (ortBeweglich).
+    # Barrierefreier Zugang: fixiert am Südeingang (Entscheid Auftraggeber,
+    # 8. Juli 2026), Marke mit Rollstuhl-Symbol.
     ("b-zugang", "BF", "eingaenge",
      {"de": "Barrierefreier Zugang", "en": "Barrier-free access"},
-     [[201.8, 152.3]], {"symbol": "wc-rollstuhl"}),
+     [[222.5, 130.6]], {"symbol": "wc-rollstuhl"}),
+
+    # Sektionen (Buchstaben wie auf dem Willkommensschild):
+    ("s-allgemein", "a", "sektionen",
+     {"de": "Allgemeine Anthroposophische Sektion", "en": "General Anthroposophical Section"},
+     [[179.5, 131.5]], {"gebaeude": "campusbau-52"}),
+    ("s-natur", "b", "sektionen",
+     {"de": "Naturwissenschaftliche Sektion", "en": "Natural Science Section"},
+     [[124.0, 113.5]], {"gebaeude": "campusbau-46"}),
+    ("s-paedagogik", "c", "sektionen",
+     {"de": "Pädagogische Sektion", "en": "Pedagogical Section"},
+     [[189.5, 128.5]], {"gebaeude": "campusbau-53"}),
+    ("s-schoene", "d", "sektionen",
+     {"de": "Sektion für Schöne Wissenschaften", "en": "Section for the Literary Arts and Humanities"},
+     [[142.0, 165.5]], {"gebaeude": "campusbau-41"}),
+    ("s-jugend", "e", "sektionen",
+     {"de": "Jugendsektion", "en": "Youth Section"},
+     [[288.5, 196.5]]),
+    ("s-medizin", "f", "sektionen",
+     {"de": "Medizinische Sektion", "en": "Medical Section"},
+     [[285.5, 104.0]], {"pfeil": "rechts"}),
+    ("s-landwirtschaft", "g", "sektionen",
+     {"de": "Sektion für Landwirtschaft", "en": "Section for Agriculture"},
+     [[124.5, 121.5]], {"gebaeude": "campusbau-46"}),
+    ("s-bildende", "h", "sektionen",
+     {"de": "Sektion für Bildende Künste", "en": "Visual Art Section"},
+     [[104.5, 149.0]]),
+    ("s-redende", "i", "sektionen",
+     {"de": "Sektion für Redende und Musizierende Künste", "en": "Section for the Performing Arts"},
+     [[207.9, 123.4]], {"gebaeude": "campusbau-53"}),
+    ("s-sozial", "j", "sektionen",
+     {"de": "Sektion für Sozialwissenschaften", "en": "Section for Social Sciences"},
+     [[166.0, 61.5]], {"gebaeude": "campusbau-9"}),
+    ("s-mathematik", "k", "sektionen",
+     {"de": "Mathematisch-Astronomische Sektion", "en": "Section for Mathematics and Astronomy"},
+     [[255.5, 31.8]], {"gebaeude": "campusbau-15"}),
+    ("s-heilpaedagogik", "m", "sektionen",
+     {"de": "Sektion für Heilpädagogik und inklusive soziale Entwicklung",
+      "en": "Section for Inclusive Social Development"},
+     [[285.5, 111.0]], {"pfeil": "rechts"}),
+
+    # Gärten (Nummern wie auf dem Willkommensschild; fortlaufende
+    # Nummerierung des Werkzeugs zählt aktive Orte ohnehin neu):
+    ("g-felsli", "10", "gaerten", {"de": "Felsli", "en": "Felsli"}, [[230.5, 196.0]]),
+    ("g-wasserspiel", "11", "gaerten", {"de": "Wasserspiel", "en": "Flowforms"}, [[107.9, 129.6]]),
+    ("g-gedenkhain", "12", "gaerten", {"de": "Gedenkhain", "en": "Memorial Grove"}, [[157.3, 175.4]]),
+    ("g-heilkraeuter", "13", "gaerten",
+     {"de": "Heilkräutergarten", "en": "Medicinal Plant Garden"}, [[247.2, 94.2]]),
+    ("g-faerberpflanzen", "14", "gaerten",
+     {"de": "Färberpflanzengarten", "en": "Plant Dye Garden"}, [[242.9, 31.6]]),
+    ("g-schnittblumen", "15", "gaerten",
+     {"de": "Schnittblumengarten", "en": "Cut Flower Garden"}, [[228.7, 26.1]]),
+    ("g-duftkraeuter", "16", "gaerten",
+     {"de": "Duftkräutergarten", "en": "Fragrant Herb Garden"}, [[239.3, 39.0]]),
+    ("g-bienen", "17", "gaerten",
+     {"de": "Bienenskulptur", "en": "Bee Sculpture"}, [[266.0, 43.5]]),
+    ("g-praeparate", "18", "gaerten",
+     {"de": "Präparatepavillon", "en": "Präparatepavillon"}, [[219.0, 62.1]]),
+
+    # Weitere Häuser (Seite 4 der Beispielkarten, mm-genau):
+    ("h-kepler", "50", "haeuser",
+     {"de": "Kepler-Sternwarte", "en": "Kepler Observatory"},
+     [[255.47, 36.32]], {"gebaeude": "campusbau-15"}),
+    ("h-finckh", "51", "haeuser",
+     {"de": "Helene Finckh Häuschen", "en": "Helene Finckh Häuschen"},
+     [[190.85, 67.22]]),
+    ("h-jaager", "52", "haeuser",
+     {"de": "Haus de Jaager", "en": "Haus de Jaager"},
+     [[266.08, 134.87]]),
+    ("h-eurythmie", "53", "haeuser",
+     {"de": "Eurythmiehaus", "en": "Eurythmiehaus"},
+     [[268.5, 97.0]]),
+    ("h-jugendhaus", "54", "haeuser",
+     {"de": "Jugendsektionshaus", "en": "House of the Youth Section"},
+     [[292.0, 192.5]]),
+    ("h-friedwart", "55", "haeuser",
+     {"de": "Gästehaus Friedwart", "en": "Guesthouse Friedwart"},
+     [[118.0, 202.5]], {"pfeil": "unten-links"}),
 ]
 
 WILLKOMMEN_FARBEN = {"eingaenge": "blau", "sektionen": "grau", "gaerten": "gruen", "haeuser": "blau"}

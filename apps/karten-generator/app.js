@@ -23,10 +23,11 @@ const FARB_ZYKLUS = ["rot", "blau", "gruen", "grau", "gold"];
 const TINTE = "#4e4f4a";
 
 // Schriftrollen: Sprache (Titel, Legende, Gebäudenamen) in der Hausschrift
-// (Titelschnitt = Deutlich), Werte/Badges (Markernummern, Treppen-Buchstaben,
-// Kompass) in der Lese-Grotesk (Source Sans 3 halbfett).
+// (Titelschnitt = Deutlich); die Kreiszahlen der Marker sind das
+// Sonderelement des Design-Systems (.step-num) und laufen in der
+// Hausschrift Laut (680 = --w-strong, dort vermessen).
 const SCHRIFT_SPRACHE = "GoetheanumDeutlich";
-const SCHRIFT_WERT = "SourceSans3Semibold";
+const SCHRIFT_ZAHL = "GoetheanumLaut";
 
 // Optischer Sitz von Ziffern im Kreis: reine Zentrierung zentriert die
 // Zeilenbox, nicht die Zeichen-Tinte — Tintenmitte der Ziffern liegt bei
@@ -78,6 +79,7 @@ const state = {
   zoom: 1.15,
   an: { o1: true, o2: true, o3: true },  // Start: die ersten drei als Beispiel
   gebaeudeAn: {},      // Campus-Gebäude, von Hand aktiviert (zusätzlich zu Markern)
+  gebaeudeAus: {},     // Campus-Gebäude, von Hand passiviert (übersteuert Marker)
   teileAus: {},        // Ort-id -> { Teil-Index: true } (abgewählte Teil-Orte)
   notizenAus: {},      // Ort-id -> { Notiz-Index: true } (abgewählte Etagen/Lifte)
   labels: {},          // Ort-id -> geänderte Beschriftung
@@ -172,11 +174,24 @@ function bauEinheit(bauId) {
   return BAU_ALIAS[bauId] || bauId;
 }
 
+// Gebäude eines Orts: bei geteilten Orten (Halde/Puppentheater) schaltet
+// jeder aktive Teil sein eigenes Gebäude (gebaeudeTeile, Index = Teil).
+function ortGebaeude(ort, alleTeile) {
+  if (ort.gebaeudeTeile) {
+    const indizes = alleTeile
+      ? ort.gebaeudeTeile.map((g, index) => ({ index }))
+      : aktiveTeile(ort);
+    return indizes.map(({ index }) => ort.gebaeudeTeile[index]).filter(Boolean);
+  }
+  return ort.gebaeude ? [ort.gebaeude] : [];
+}
+
 function bauAktiv(bauId) {
   const einheit = bauEinheit(bauId);
+  if (state.gebaeudeAus[einheit]) return false;  // Handschaltung schlägt Marker
   if (state.gebaeudeAn[einheit]) return true;
-  return alleOrte().some((ort) => ort.gebaeude
-    && bauEinheit(ort.gebaeude) === einheit && ortAktiv(ort));
+  return alleOrte().some((ort) => ortAktiv(ort)
+    && ortGebaeude(ort).some((g) => bauEinheit(g) === einheit));
 }
 
 function gelaendeMarkup() {
@@ -197,8 +212,11 @@ function gelaendeMarkup() {
   });
   // Der beschnittene Südzipfel bleibt Campus-blau: unter die geclippte
   // (grüne) Fläche legt sich eine ungeclippte Kopie in Campus-Farbe.
+  // Der Beschnitt gilt nur der grossen Wiese (ihr Quellpolygon läuft unter
+  // dem Weg am Rondell weiter) — die kleine Wiese bleibt ungeteilt grün.
   inhalt = inhalt.replace(/<g data-wiese-halter="(klein|gross)">([\s\S]*?)<\/g>/g,
     (voll, name, kern) => {
+      if (name === "klein") return kern;
       const basis = kern
         .replace(/fill="[^"]*" id="wiese-(?:klein|gross)"/, `fill="${state.farben.campus}"`)
         .replace(/stroke="[^"]*"/, `stroke="${state.farben.campus}"`);
@@ -336,9 +354,10 @@ function ortMarker(ort) {
 }
 
 // Beweglich sind nur der Infotisch und die eigenen Marken — alles andere
-// ist aus den Vorlagen fixiert; für Einmaliges gibt es die eigene Marke.
+// ist fixiert (auch der barrierefreie Zugang: er sitzt am Südeingang);
+// für Einmaliges gibt es die eigene Marke.
 function ortBeweglich(ort) {
-  return ort.id === "o4" || ort.id === "b-zugang" || ort.art === "eigene";
+  return ort.id === "o4" || ort.art === "eigene";
 }
 
 /* ---------- SVG-Bausteine der Szene ---------- */
@@ -349,22 +368,22 @@ function escapeXml(wert) {
     .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function textGroesse(text, basis) {
-  return String(text).length >= 2 ? basis * 0.85 : basis;
-}
-
 function markenKreis(x, y, hex, text, r, symbol) {
-  // Nummern wie im Original: Grotesk halbfett, ~0.7 des Kreisdurchmessers;
-  // Grundlinie um ZIFFERN_SITZ unter der Kreismitte (optischer Sitz, DS).
+  // Kreiszahl = Sonderelement des Design-Systems (.step-num, kopiert):
+  // Grad = 0.45 × Kreisdurchmesser (0.72em im 1.6em-Kreis), Hausschrift
+  // Laut, tabellarisch-liniierte Ziffern — ein- wie zweistellige Zahlen
+  // sitzen so im selben festen Kreis; Grundlinie um ZIFFERN_SITZ unter
+  // der Kreismitte (Tintenmitte der Ziffern auf die Kreismitte).
   // Symbol-Marken (z. B. barrierefreier Zugang) tragen ein Icon statt Ziffer.
   if (symbol) {
     return `<circle cx="${x}" cy="${y}" r="${r}" fill="${hex}" />`
       + ikonMarkup(symbol, x, y, r * 1.7, "#ffffff");
   }
-  const groesse = textGroesse(text, r * 1.4);
+  const groesse = r * 0.9;
   return `<circle cx="${x}" cy="${y}" r="${r}" fill="${hex}" />`
     + `<text x="${x}" y="${y + groesse * ZIFFERN_SITZ}" text-anchor="middle" font-size="${groesse}"`
-    + ` fill="#ffffff" font-family="${SCHRIFT_WERT}">${escapeXml(text)}</text>`;
+    + ` style="font-variant-numeric: tabular-nums lining-nums"`
+    + ` fill="#ffffff" font-family="${SCHRIFT_ZAHL}">${escapeXml(text)}</text>`;
 }
 
 function pfeilMarkup(x, y, r, hex, richtung) {
@@ -376,19 +395,58 @@ function pfeilMarkup(x, y, r, hex, richtung) {
   return ikonMarkup("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 4.4, hex, winkel);
 }
 
-function treppenBadge(x, y, buchstabe, form, hex, mitRand) {
-  // Wie die Vorlage: weisse Badge (auf der Karte randlos, in der Legende
-  // mit Ring), Treppen-/Fahrstuhl-Symbol aus den Icons v2.7, Buchstabe oben.
-  const farbe = hex || MARKER_FARBEN.rot;
-  const rand = mitRand ? ` stroke="${farbe}" stroke-width="0.18"` : "";
-  if (form === "lift") {
-    return `<rect x="${x - 1.45}" y="${y - 2.15}" width="2.9" height="4.3" rx="0.9" fill="#ffffff"${rand} />`
-      + `<text x="${x}" y="${y - 0.55}" text-anchor="middle" font-size="2.0" fill="${farbe}" font-family="${SCHRIFT_WERT}">${buchstabe}</text>`
-      + ikonMarkup("fahrstuhl", x, y + 1.0, 2.6, farbe);
+/* Treppen- und Lift-Badges: exakte Vektorgeometrie der Vorlage
+   (Karten-mit-spezifischen-Lokalisierungen, Kartenmarken Seite 2 —
+   badge-lokal in mm ausgelesen, Zentrum = Kreis- bzw. Boxmitte).
+   Treppe: weisser Kreis r 2.39, Zickzack-Lauflinie 1.2 pt, Buchstabe
+   oben links als Original-Pfad. Lift: weisses Rundrechteck, Doppel-
+   Chevron 1.2 pt, Buchstabe mittig. Legende = 0.85-fach mit Ring 0.25 pt. */
+const BADGE_STRICH = 0.4247;   // 1.204 pt der Vorlage in mm
+const BADGE_RING = 0.088;      // 0.25 pt Legenden-Ring in mm
+const TREPPEN_BADGES = {
+  M: {
+    zug: "M-1.633 .998 H-.527 V.043 H.519 V-.911 H1.63",
+    buchstabe: "M-1.26 -.478 H-1.024 V-1.377 H-.999 L-.771 -.529 H-.535 L-.307 -1.377 H-.282 V-.478 H-.046 V-1.64 H-.448 L-.653 -.793 L-.858 -1.64 H-1.26 Z"
+  },
+  N: {
+    zug: "M-1.567 .858 H-.461 V-.097 H.585 V-1.051 H1.696",
+    buchstabe: "M-1.085 -.653 H-.818 V-1.738 H-.799 L-.47 -.653 H-.03 V-1.97 H-.297 V-.886 H-.317 L-.634 -1.97 H-1.085 Z"
+  },
+  S: {
+    zug: "M-1.861 .965 H-.755 V.01 H.291 V-.944 H1.402",
+    buchstabe: "M-.34 -1.868 C-.34 -1.868 -.568 -1.917 -.725 -1.917 C-.962 -1.917 -1.123 -1.806 -1.123 -1.546 C-1.123 -1.346 -1.023 -1.25 -.761 -1.17 C-.592 -1.118 -.551 -1.083 -.551 -1.006 C-.551 -.909 -.606 -.844 -.734 -.844 C-.856 -.844 -1.086 -.877 -1.086 -.877 L-1.11 -.681 C-1.11 -.681 -.88 -.624 -.72 -.624 C-.489 -.624 -.316 -.751 -.316 -1.022 C-.316 -1.23 -.393 -1.306 -.646 -1.392 C-.842 -1.458 -.888 -1.486 -.888 -1.565 C-.888 -1.648 -.828 -1.697 -.701 -1.697 C-.601 -1.697 -.359 -1.668 -.359 -1.668 L-.34 -1.868 Z"
   }
-  return `<circle cx="${x}" cy="${y}" r="2.22" fill="#ffffff"${rand} />`
-    + ikonMarkup("treppe", x - 0.4, y + 0.35, 3.0, farbe)
-    + `<text x="${x + 1.3}" y="${y - 0.55}" text-anchor="middle" font-size="2.5" fill="${farbe}" font-family="${SCHRIFT_WERT}">${buchstabe}</text>`;
+};
+const LIFT_BADGES = {
+  N: {
+    chevrons: "M-.778 -.91 L.032 -1.54 L.842 -.91 M.842 1.123 L.032 1.753 L-.778 1.123",
+    buchstabe: "M-.444 .724 H-.212 V-.219 H-.195 L.092 .724 H.474 V-.421 H.242 V.522 H.225 L-.051 -.421 H-.444 Z"
+  },
+  S: {
+    chevrons: "M-.798 -.683 L.013 -1.313 L.822 -.683 M.823 1.35 L.012 1.98 L-.798 1.35",
+    buchstabe: "M.375 -.238 C.375 -.237 .147 -.287 -.009 -.287 C-.246 -.287 -.408 -.175 -.408 .084 C-.408 .284 -.308 .38 -.045 .461 C.123 .512 .164 .547 .164 .624 C.164 .722 .109 .786 -.018 .786 C-.14 .786 -.37 .753 -.37 .753 L-.394 .949 C-.394 .949 -.164 1.006 -.004 1.006 C.226 1.006 .399 .879 .399 .608 C.399 .4 .322 .325 .07 .238 C-.126 .172 -.172 .145 -.172 .066 C-.172 -.017 -.112 -.067 .015 -.067 C.114 -.067 .356 -.037 .356 -.037 L.375 -.238 Z"
+  }
+};
+
+function treppenBadge(x, y, buchstabe, form, hex, mitRand) {
+  const farbe = hex || MARKER_FARBEN.rot;
+  const skala = mitRand ? 0.85 : 1;    // Legende wie die Vorlage kleiner
+  const ring = mitRand ? ` stroke="${farbe}" stroke-width="${(BADGE_RING / skala).toFixed(3)}"` : "";
+  const strich = `fill="none" stroke="${farbe}" stroke-width="${BADGE_STRICH}"`;
+  let kern;
+  if (form === "lift") {
+    const b = LIFT_BADGES[buchstabe] || LIFT_BADGES.N;
+    const mitte = buchstabe === "S" ? 0.334 : 0.107;  // Chevron-Mitte der Vorlage
+    kern = `<rect x="-1.33" y="${(mitte - 2.45).toFixed(3)}" width="2.66" height="4.9" rx="0.26" fill="#ffffff"${ring} />`
+      + `<path d="${b.chevrons}" ${strich} />`
+      + `<path d="${b.buchstabe}" fill="${farbe}" />`;
+  } else {
+    const b = TREPPEN_BADGES[buchstabe] || TREPPEN_BADGES.M;
+    kern = `<circle cx="0" cy="0" r="2.39" fill="#ffffff"${ring} />`
+      + `<path d="${b.zug}" ${strich} />`
+      + `<path d="${b.buchstabe}" fill="${farbe}" />`;
+  }
+  return `<g transform="translate(${x} ${y})${skala === 1 ? "" : ` scale(${skala})`}">${kern}</g>`;
 }
 
 // Gebäudenamen in der Hausschrift (Deutlich), optisch mittig in die Fläche
@@ -461,6 +519,9 @@ function LEGENDE_LAYOUT_aktiv() {
   return state.kompakt ? LEGENDE_KOMPAKT : LEGENDE_NORMAL;
 }
 
+// Wird von legendeMarkup gesetzt: Zeilen passen nicht mehr aufs Blatt.
+let legendeUeberlauf = false;
+
 function legendeZeilen() {
   const zeilen = [];
   let vorher = null;
@@ -494,11 +555,13 @@ function legendeMarkup() {
   let teile = "";
   let spalte = 0;
   let y = start;
+  legendeUeberlauf = false;
   legendeZeilen().forEach((zeile) => {
     if (zeile.typ !== "abstand" && y + zeile.hoehe > untergrenze && spalte < L.spaltenX.length - 1) {
       spalte += 1;
       y = start;
     }
+    if (zeile.typ !== "abstand" && y + zeile.hoehe > untergrenze) legendeUeberlauf = true;
     const x = L.spaltenX[spalte];
     if (zeile.typ === "abstand") { y += zeile.hoehe; return; }
     if (zeile.typ === "notiz") {
@@ -556,13 +619,10 @@ function szeneMarkup(anschnitt) {
   const titel = state.titel.trim();
   nummernBerechnen();
   const marker = alleOrte().filter(ortAktiv).map(ortMarkup).join("");
-  // Blatt-Clip mit ausgesparter Ecke oben rechts: die Karte endet dort,
-  // das Papier bleibt weiss — Grund für das Logo, keine Überlagerung.
-  const B = SZENE.breite + b, H = SZENE.hoehe + b;
   return `
     <defs>
       <clipPath id="blatt-clip">
-        <polygon points="${-b},${-b} 244,${-b} 244,20 ${B},20 ${B},${H} ${-b},${H}" />
+        <rect x="${-b}" y="${-b}" width="${SZENE.breite + 2 * b}" height="${SZENE.hoehe + 2 * b}" />
       </clipPath>
       ${wieseClipMarkup()}
     </defs>
@@ -616,6 +676,11 @@ function renderVorschau() {
   previewNote.textContent = marken
     ? `${format} · gestrichelt = Endformat, aussen Beschnitt und Schnittmarken.`
     : `${format} · Vorschau im Endformat.`;
+  if (legendeUeberlauf) {
+    previewNote.textContent += state.kompakt
+      ? " ⚠ Legende voll — bitte Orte reduzieren."
+      : " ⚠ Legende voll — kompakte Legende einschalten oder Orte reduzieren.";
+  }
   printSvg.classList.toggle("platzieren", Boolean(state.platzieren || state.platzierenOrt));
 }
 
@@ -882,18 +947,22 @@ function renderOrte() {
 /* ---------- Campus-Gebäude (aktiv/passiv) ---------- */
 
 // Benannte Gebäude-Einheiten: Name = erster zugeordneter Ort;
-// Goetheanum und Schreinerei tragen ihre eigenen Namen.
+// Goetheanum, Schreinerei und der Halde-Komplex tragen eigene Namen
+// (Halde und Puppentheater sind zwei ineinander gebaute Gebäude).
 const BAU_NAMEN = { "goetheanum-bau": { de: "Goetheanum", en: "Goetheanum" },
-  "campusbau-19": { de: "Schreinerei", en: "Schreinerei" } };
+  "campusbau-19": { de: "Schreinerei", en: "Schreinerei" },
+  "campusbau-41": { de: "Rudolf Steiner Halde", en: "Rudolf Steiner Halde" },
+  "campusbau-6": { de: "Puppentheater Felicia", en: "Puppet Theatre Felicia" } };
 
 function gebaeudeEinheiten() {
   const einheiten = new Map();
   alleOrte().forEach((ort) => {
-    if (!ort.gebaeude) return;
-    const einheit = bauEinheit(ort.gebaeude);
-    if (!einheiten.has(einheit)) {
-      einheiten.set(einheit, BAU_NAMEN[einheit] || ort.label);
-    }
+    ortGebaeude(ort, true).forEach((g) => {
+      const einheit = bauEinheit(g);
+      if (!einheiten.has(einheit)) {
+        einheiten.set(einheit, BAU_NAMEN[einheit] || ort.label);
+      }
+    });
   });
   return einheiten;
 }
@@ -914,28 +983,37 @@ function renderGebaeude() {
     renderGebaeude();
   });
   halter.appendChild(gruppenKopf(kopf, aktiv < einheiten.size, (an) => {
+    state.gebaeudeAn = {};
+    state.gebaeudeAus = {};
     if (an) einheiten.forEach((name, einheit) => { state.gebaeudeAn[einheit] = true; });
-    else state.gebaeudeAn = {}; // Gebäude mit aktivem Marker bleiben dunkel
+    else einheiten.forEach((name, einheit) => { state.gebaeudeAus[einheit] = true; });
     render();
   }));
   if (!gebaeudeAufgeklappt) return;
 
   einheiten.forEach((name, einheit) => {
-    const durchMarker = !state.gebaeudeAn[einheit] && bauAktiv(einheit);
+    const an = bauAktiv(einheit);
+    const durchMarker = an && !state.gebaeudeAn[einheit];
     const zeile = document.createElement("div");
-    zeile.className = "object-row" + (bauAktiv(einheit) ? "" : " aus");
+    zeile.className = "object-row" + (an ? "" : " aus");
     const haken = document.createElement("span");
-    haken.className = "check" + (bauAktiv(einheit) ? " an" : "");
-    haken.textContent = bauAktiv(einheit) ? "✓" : "";
+    haken.className = "check" + (an ? " an" : "");
+    haken.textContent = an ? "✓" : "";
     zeile.appendChild(haken);
     const titelSpan = document.createElement("span");
     titelSpan.className = "object-title";
     titelSpan.textContent = sprachText(name) + (durchMarker ? " (durch Marker)" : "");
     zeile.appendChild(titelSpan);
+    // Klick schaltet immer — auch gegen aktive Marker (verschiedene
+    // Betonungen): aktiv -> von Hand aus; aus -> von Hand an.
     zeile.addEventListener("click", () => {
-      if (durchMarker) return; // folgt den Markern, solange einer aktiv ist
-      if (state.gebaeudeAn[einheit]) delete state.gebaeudeAn[einheit];
-      else state.gebaeudeAn[einheit] = true;
+      if (an) {
+        delete state.gebaeudeAn[einheit];
+        state.gebaeudeAus[einheit] = true;
+      } else {
+        delete state.gebaeudeAus[einheit];
+        state.gebaeudeAn[einheit] = true;
+      }
       render();
     });
     halter.appendChild(zeile);
@@ -1029,44 +1107,49 @@ function setzeZoom(wert) {
 
 /* ---------- Speichern / Laden ---------- */
 
+function standAlsJson() {
+  return {
+    titel: state.titel, sprache: state.sprache, format: state.format,
+    beschnitt: state.beschnitt, marken: state.marken,
+    an: Object.keys(state.an), labels: state.labels,
+    gebaeudeAn: Object.keys(state.gebaeudeAn),
+    gebaeudeAus: Object.keys(state.gebaeudeAus),
+    teileAus: state.teileAus, notizenAus: state.notizenAus,
+    markerFarben: state.markerFarben, positionen: state.positionen,
+    eigene: state.eigene, wiesen: state.wiesen, kompakt: state.kompakt, ausschnitt: state.ausschnitt,
+    preset: state.preset, farben: state.farben
+  };
+}
+
 function speichern() {
   try {
-    localStorage.setItem(SPEICHER_SCHLUESSEL, JSON.stringify({
-      titel: state.titel, sprache: state.sprache, format: state.format,
-      beschnitt: state.beschnitt, marken: state.marken,
-      an: Object.keys(state.an), labels: state.labels,
-      gebaeudeAn: Object.keys(state.gebaeudeAn),
-      teileAus: state.teileAus, notizenAus: state.notizenAus,
-      markerFarben: state.markerFarben, positionen: state.positionen,
-      eigene: state.eigene, wiesen: state.wiesen, kompakt: state.kompakt, ausschnitt: state.ausschnitt,
-      preset: state.preset, farben: state.farben
-    }));
+    localStorage.setItem(SPEICHER_SCHLUESSEL, JSON.stringify(standAlsJson()));
   } catch (fehler) {
     console.warn("Zustand nicht speicherbar:", fehler);
   }
 }
 
-function laden() {
-  let roh = null;
-  try { roh = localStorage.getItem(SPEICHER_SCHLUESSEL); } catch (fehler) { return; }
-  if (!roh) return;
-  try {
-    const s = JSON.parse(roh);
+function standAnwenden(s) {
     if (typeof s.titel === "string") state.titel = s.titel;
-    if (s.format === "a3") state.format = "a3";
+    state.format = s.format === "a3" ? "a3" : "a4";
     state.beschnitt = s.beschnitt !== false;
     state.marken = Boolean(s.marken);
-    if (s.sprache === "en") state.sprache = "en";
+    state.sprache = s.sprache === "en" ? "en" : "de";
     state.an = {};  // Beispiel-Vorauswahl gilt nur ohne gespeicherten Stand
     (s.an || []).forEach((id) => { state.an[id] = true; });
+    state.gebaeudeAn = {};
+    state.gebaeudeAus = {};
     (s.gebaeudeAn || []).forEach((id) => { state.gebaeudeAn[id] = true; });
+    (s.gebaeudeAus || []).forEach((id) => { state.gebaeudeAus[id] = true; });
     state.labels = s.labels || {};
     state.teileAus = s.teileAus || {};
     state.notizenAus = s.notizenAus || {};
     state.markerFarben = s.markerFarben || {};
     state.positionen = s.positionen || {};
     state.eigene = Array.isArray(s.eigene) ? s.eigene : [];
-    if (s.wiesen) state.wiesen = { klein: Boolean(s.wiesen.klein), gross: Boolean(s.wiesen.gross) };
+    state.wiesen = s.wiesen
+      ? { klein: Boolean(s.wiesen.klein), gross: Boolean(s.wiesen.gross) }
+      : { klein: false, gross: false };
     state.kompakt = Boolean(s.kompakt);
     if (s.ausschnitt && typeof s.ausschnitt.skala === "number") {
       state.ausschnitt = {
@@ -1078,9 +1161,93 @@ function laden() {
     if (typeof s.preset === "string") state.preset = PRESET_MIGRATION[s.preset] || s.preset;
     if (!PRESETS[state.preset] && state.preset !== "eigene Mischung") state.preset = "hell";
     if (s.farben) state.farben = { ...PRESETS["hell"], ...s.farben };
+    state.ausschnitt = state.ausschnitt || { skala: 1, dx: 0, dy: 0 };
+}
+
+function laden() {
+  let roh = null;
+  try { roh = localStorage.getItem(SPEICHER_SCHLUESSEL); } catch (fehler) { return; }
+  if (!roh) return;
+  try {
+    standAnwenden(JSON.parse(roh));
   } catch (fehler) {
     console.warn("Gespeicherter Stand unlesbar, Standard geladen:", fehler);
   }
+}
+
+/* ---------- Gespeicherte Karten (Konfigurationen je Titel) ----------
+   Jeder Download legt den Stand unter seinem Titel ab (gleicher Titel
+   überschreibt) — so bleibt z. B. ‹Landwirte 2025› fürs nächste Jahr
+   abrufbar. Die Liste steht unten in der Seitenleiste. */
+
+const VARIANTEN_SCHLUESSEL = "goetheanum-karten-varianten";
+
+function variantenLesen() {
+  try {
+    return JSON.parse(localStorage.getItem(VARIANTEN_SCHLUESSEL)) || {};
+  } catch (fehler) {
+    return {};
+  }
+}
+
+function varianteAblegen() {
+  const titel = state.titel.trim();
+  if (!titel) return;
+  try {
+    const varianten = variantenLesen();
+    varianten[titel] = { stand: standAlsJson(), gespeichert: new Date().toISOString().slice(0, 10) };
+    localStorage.setItem(VARIANTEN_SCHLUESSEL, JSON.stringify(varianten));
+  } catch (fehler) {
+    console.warn("Variante nicht speicherbar:", fehler);
+  }
+  renderVarianten();
+}
+
+function renderVarianten() {
+  const halter = document.getElementById("varianten-liste");
+  const eintraege = Object.entries(variantenLesen())
+    .sort((a, b) => (b[1].gespeichert || "").localeCompare(a[1].gespeichert || ""));
+  halter.innerHTML = "";
+  if (!eintraege.length) {
+    const hinweis = document.createElement("div");
+    hinweis.className = "hint";
+    hinweis.textContent = "Noch keine gespeicherten Karten — jeder Download legt den Stand unter seinem Titel ab.";
+    halter.appendChild(hinweis);
+    return;
+  }
+  eintraege.forEach(([titel, eintrag]) => {
+    const zeile = document.createElement("div");
+    zeile.className = "object-row";
+    zeile.title = `‹${titel}› laden (ersetzt die aktuelle Ansicht)`;
+    const titelSpan = document.createElement("span");
+    titelSpan.className = "object-title";
+    titelSpan.textContent = titel;
+    zeile.appendChild(titelSpan);
+    const datum = document.createElement("span");
+    datum.className = "object-marker";
+    datum.textContent = eintrag.gespeichert || "";
+    zeile.appendChild(datum);
+    const weg = document.createElement("button");
+    weg.type = "button";
+    weg.className = "row-btn";
+    weg.title = "Gespeicherte Karte löschen";
+    weg.textContent = "✕";
+    weg.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!window.confirm(`Gespeicherte Karte ‹${titel}› löschen?`)) return;
+      const varianten = variantenLesen();
+      delete varianten[titel];
+      try { localStorage.setItem(VARIANTEN_SCHLUESSEL, JSON.stringify(varianten)); } catch (fehler) { /* egal */ }
+      renderVarianten();
+    });
+    zeile.appendChild(weg);
+    zeile.addEventListener("click", () => {
+      if (!window.confirm(`Karte ‹${titel}› laden? Die aktuelle Ansicht wird ersetzt.`)) return;
+      standAnwenden(eintrag.stand || {});
+      render();
+    });
+    halter.appendChild(zeile);
+  });
 }
 
 /* ---------- Interaktion Vorschau: Platzieren; Ausschnitt über Pfeile ---------- */
@@ -1270,5 +1437,6 @@ function render() {
   logoErzeugen();
   await Promise.all([ladeGelaende(), ladeIkonen()]);
   setzeZoom(state.zoom);
+  renderVarianten();
   render();
 })();

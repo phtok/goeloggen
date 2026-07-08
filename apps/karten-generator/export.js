@@ -17,6 +17,7 @@ const FORMATE = {
 
 const PDF_SCHRIFTEN = [
   ["GoetheanumDeutlich", "../../assets/fonts/goetheanum/Office/GoetheanumSchriftDeutlich.ttf"],
+  ["GoetheanumLaut", "../../assets/fonts/goetheanum/Office/GoetheanumSchriftLaut.ttf"],
   ["SourceSans3Semibold", "assets/fonts/SourceSans3-SemiBold.ttf"]
 ];
 
@@ -93,12 +94,14 @@ let svgFontCssPromise = null;
 function svgFontCss() {
   if (!svgFontCssPromise) {
     svgFontCssPromise = (async () => {
-      const [deutlich, wert] = await Promise.all([
+      const [deutlich, laut, wert] = await Promise.all([
         dateiAlsBase64("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2"),
+        dateiAlsBase64("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2"),
         dateiAlsBase64("../../assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2")
       ]);
       return `<defs><style>
 @font-face { font-family: "GoetheanumDeutlich"; src: url('data:font/woff2;base64,${deutlich}') format('woff2'); }
+@font-face { font-family: "GoetheanumLaut"; src: url('data:font/woff2;base64,${laut}') format('woff2'); }
 @font-face { font-family: "SourceSans3Semibold"; src: url('data:font/woff2;base64,${wert}') format('woff2'); }
 </style></defs>`;
     })().catch((fehler) => {
@@ -234,6 +237,7 @@ document.getElementById("download-pdf").addEventListener("click", async () => {
   knopf.textContent = "PDF wird erzeugt …";
   try {
     await exportPdf();
+    varianteAblegen();  // Download legt den Stand unter seinem Titel ab
   } catch (fehler) {
     console.error(fehler);
     window.alert("PDF-Export fehlgeschlagen. Bitte Konsole prüfen oder SVG exportieren.");
@@ -249,6 +253,7 @@ document.getElementById("download-svg").addEventListener("click", async () => {
   try {
     const fontCss = await svgFontCss();
     herunterladen(dateiname("svg"), exportSvgString(fontCss), "image/svg+xml");
+    varianteAblegen();  // Download legt den Stand unter seinem Titel ab
   } finally {
     knopf.disabled = false;
   }
