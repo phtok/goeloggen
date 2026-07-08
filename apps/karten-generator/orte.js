@@ -122,6 +122,24 @@ const ORTE = [
     "gebaeude": "campusbau-52"
   },
   {
+    "id": "b-zugang",
+    "marker": "BF",
+    "art": "orientierung",
+    "kategorie": "eingaenge",
+    "farbe": "blau",
+    "label": {
+      "de": "Barrierefreier Zugang",
+      "en": "Barrier-free access"
+    },
+    "positionen": [
+      [
+        201.8,
+        152.3
+      ]
+    ],
+    "symbol": "wc-rollstuhl"
+  },
+  {
     "id": "f46",
     "marker": "46",
     "art": "orientierung",
@@ -585,8 +603,8 @@ const ORTE = [
     "kategorie": "ausstellung",
     "farbe": "blau",
     "label": {
-      "de": "Modell Erstes Goetheanum",
-      "en": "1st Goetheanum Model"
+      "de": "Baugeschichte + Modell Erstes Goetheanum",
+      "en": "Building History + 1st Goetheanum Model"
     },
     "positionen": [
       [
@@ -638,14 +656,24 @@ const ORTE = [
     "kategorie": "haeuser",
     "farbe": "rot",
     "label": {
-      "de": "Halde",
-      "en": "Halde"
+      "de": "Rudolf Steiner Halde",
+      "en": "Rudolf Steiner Halde"
     },
     "positionen": [
       [
         145.47,
         170.38
       ]
+    ],
+    "teile": [
+      {
+        "de": "Rudolf Steiner Halde",
+        "en": "Rudolf Steiner Halde"
+      },
+      {
+        "de": "Puppentheater Felicia",
+        "en": "Puppet Theatre Felicia"
+      }
     ],
     "gebaeude": "campusbau-41"
   },
@@ -781,8 +809,8 @@ const ORTE = [
     "kategorie": "haeuser",
     "farbe": "blau",
     "label": {
-      "de": "Rudolf-Steiner-Archiv",
-      "en": "Rudolf Steiner Archive"
+      "de": "Haus Duldeck · Rudolf-Steiner-Archiv",
+      "en": "Haus Duldeck · Rudolf Steiner Archive"
     },
     "positionen": [
       [
@@ -798,8 +826,8 @@ const ORTE = [
     "kategorie": "haeuser",
     "farbe": "blau",
     "label": {
-      "de": "Speisehaus",
-      "en": "Speisehaus"
+      "de": "Speisehaus · Laden",
+      "en": "Restaurant · Shop"
     },
     "positionen": [
       [
@@ -810,8 +838,8 @@ const ORTE = [
     "pfeil": "unten-rechts",
     "teile": [
       {
-        "de": "Speisehaus",
-        "en": "Speisehaus"
+        "de": "Speisehaus · Laden",
+        "en": "Restaurant · Shop"
       },
       {
         "de": "Schweizer Landesgesellschaft",
@@ -821,384 +849,6 @@ const ORTE = [
         "de": "Bushaltestelle",
         "en": "Bus Stop"
       }
-    ]
-  },
-  {
-    "id": "h-friedwart",
-    "marker": "H",
-    "art": "orientierung",
-    "kategorie": "haeuser",
-    "farbe": "blau",
-    "label": {
-      "de": "Gästehaus Friedwart",
-      "en": "Guesthouse Friedwart"
-    },
-    "positionen": [
-      [
-        167.69,
-        149.01
-      ]
-    ]
-  },
-  {
-    "id": "s-a",
-    "marker": "a",
-    "art": "orientierung",
-    "kategorie": "sektionen",
-    "farbe": "grau",
-    "label": {
-      "de": "Allgemeine Anthroposophische Sektion",
-      "en": "General Anthroposophical Section"
-    },
-    "positionen": [
-      [
-        107.52,
-        110.65
-      ]
-    ]
-  },
-  {
-    "id": "s-b",
-    "marker": "b",
-    "art": "orientierung",
-    "kategorie": "sektionen",
-    "farbe": "grau",
-    "label": {
-      "de": "Naturwissenschaftliche Sektion",
-      "en": "Natural Science Section"
-    },
-    "positionen": [
-      [
-        93.72,
-        151.41
-      ]
-    ]
-  },
-  {
-    "id": "s-c",
-    "marker": "c",
-    "art": "orientierung",
-    "kategorie": "sektionen",
-    "farbe": "grau",
-    "label": {
-      "de": "Pädagogische Sektion",
-      "en": "Pedagogical Section"
-    },
-    "positionen": [
-      [
-        107.52,
-        102.32
-      ]
-    ]
-  },
-  {
-    "id": "s-d",
-    "marker": "d",
-    "art": "orientierung",
-    "kategorie": "sektionen",
-    "farbe": "grau",
-    "label": {
-      "de": "Sektion für Schöne Wissenschaften",
-      "en": "Section for the Literary Arts and Humanities"
-    },
-    "positionen": [
-      [
-        134.24,
-        133.41
-      ]
-    ]
-  },
-  {
-    "id": "s-e",
-    "marker": "e",
-    "art": "orientierung",
-    "kategorie": "sektionen",
-    "farbe": "grau",
-    "label": {
-      "de": "Jugendsektion",
-      "en": "Youth Section"
-    },
-    "positionen": [
-      [
-        91.92,
-        104.8
-      ],
-      [
-        163.12,
-        22.73
-      ]
-    ]
-  },
-  {
-    "id": "s-f",
-    "marker": "f",
-    "art": "orientierung",
-    "kategorie": "sektionen",
-    "farbe": "grau",
-    "label": {
-      "de": "Medizinische Sektion",
-      "en": "Medical Section"
-    },
-    "positionen": [
-      [
-        107.57,
-        23.93
-      ]
-    ]
-  },
-  {
-    "id": "s-g",
-    "marker": "g",
-    "art": "orientierung",
-    "kategorie": "sektionen",
-    "farbe": "grau",
-    "label": {
-      "de": "Sektion für Landwirtschaft",
-      "en": "Section for Agriculture"
-    },
-    "positionen": [
-      [
-        99.17,
-        152.09
-      ]
-    ]
-  },
-  {
-    "id": "s-h",
-    "marker": "h",
-    "art": "orientierung",
-    "kategorie": "sektionen",
-    "farbe": "grau",
-    "label": {
-      "de": "Sektion für Bildende Künste",
-      "en": "Visual Arts Section"
-    },
-    "positionen": [
-      [
-        120.83,
-        162.83
-      ]
-    ]
-  },
-  {
-    "id": "s-i",
-    "marker": "i",
-    "art": "orientierung",
-    "kategorie": "sektionen",
-    "farbe": "grau",
-    "label": {
-      "de": "Sektion für Redende und Musizierende Künste",
-      "en": "Section for the Performing Arts"
-    },
-    "positionen": [
-      [
-        102.38,
-        91.06
-      ]
-    ]
-  },
-  {
-    "id": "s-j",
-    "marker": "j",
-    "art": "orientierung",
-    "kategorie": "sektionen",
-    "farbe": "grau",
-    "label": {
-      "de": "Sektion für Sozialwissenschaften",
-      "en": "Section for Social Sciences"
-    },
-    "positionen": [
-      [
-        53.89,
-        121.84
-      ]
-    ]
-  },
-  {
-    "id": "s-k",
-    "marker": "k",
-    "art": "orientierung",
-    "kategorie": "sektionen",
-    "farbe": "grau",
-    "label": {
-      "de": "Mathematisch-Astronomische Sektion",
-      "en": "Section for Mathematics and Astronomy"
-    },
-    "positionen": [
-      [
-        31.78,
-        59.74
-      ]
-    ]
-  },
-  {
-    "id": "s-m",
-    "marker": "m",
-    "art": "orientierung",
-    "kategorie": "sektionen",
-    "farbe": "grau",
-    "label": {
-      "de": "Sektion für Heilpädagogik und inklusive soziale Entwicklung",
-      "en": "Section for Inclusive Social Development"
-    },
-    "positionen": [
-      [
-        107.57,
-        20.5
-      ]
-    ]
-  },
-  {
-    "id": "g-10",
-    "marker": "10",
-    "art": "orientierung",
-    "kategorie": "gaerten",
-    "farbe": "gruen",
-    "label": {
-      "de": "Felsli",
-      "en": "Felsli"
-    },
-    "positionen": [
-      [
-        164.32,
-        64.64
-      ]
-    ]
-  },
-  {
-    "id": "g-11",
-    "marker": "11",
-    "art": "orientierung",
-    "kategorie": "gaerten",
-    "farbe": "gruen",
-    "label": {
-      "de": "Wasserspiel",
-      "en": "Flowforms"
-    },
-    "positionen": [
-      [
-        106.1,
-        159.06
-      ]
-    ]
-  },
-  {
-    "id": "g-12",
-    "marker": "12",
-    "art": "orientierung",
-    "kategorie": "gaerten",
-    "farbe": "gruen",
-    "label": {
-      "de": "Gedenkhain",
-      "en": "Memorial Grove"
-    },
-    "positionen": [
-      [
-        140.67,
-        124.05
-      ]
-    ]
-  },
-  {
-    "id": "g-13",
-    "marker": "13",
-    "art": "orientierung",
-    "kategorie": "gaerten",
-    "farbe": "gruen",
-    "label": {
-      "de": "Heilkräutergarten",
-      "en": "Medicinal Plant Garden"
-    },
-    "positionen": [
-      [
-        82.5,
-        61.97
-      ]
-    ]
-  },
-  {
-    "id": "g-14",
-    "marker": "14",
-    "art": "orientierung",
-    "kategorie": "gaerten",
-    "farbe": "gruen",
-    "label": {
-      "de": "Färberpflanzengarten",
-      "en": "Plant Dye Garden"
-    },
-    "positionen": [
-      [
-        31.53,
-        64.63
-      ]
-    ]
-  },
-  {
-    "id": "g-15",
-    "marker": "15",
-    "art": "orientierung",
-    "kategorie": "gaerten",
-    "farbe": "gruen",
-    "label": {
-      "de": "Schnittblumengarten",
-      "en": "Cut Flower Garden"
-    },
-    "positionen": [
-      [
-        28.44,
-        74.9
-      ]
-    ]
-  },
-  {
-    "id": "g-16",
-    "marker": "16",
-    "art": "orientierung",
-    "kategorie": "gaerten",
-    "farbe": "gruen",
-    "label": {
-      "de": "Duftkräutergarten",
-      "en": "Fragrant Herb Garden"
-    },
-    "positionen": [
-      [
-        38.62,
-        67.25
-      ]
-    ]
-  },
-  {
-    "id": "g-17",
-    "marker": "17",
-    "art": "orientierung",
-    "kategorie": "gaerten",
-    "farbe": "gruen",
-    "label": {
-      "de": "Bienenskulptur",
-      "en": "Bee Sculpture"
-    },
-    "positionen": [
-      [
-        38.84,
-        47.95
-      ]
-    ]
-  },
-  {
-    "id": "g-18",
-    "marker": "18",
-    "art": "orientierung",
-    "kategorie": "gaerten",
-    "farbe": "gruen",
-    "label": {
-      "de": "Präparatepavillon",
-      "en": "Präparatepavillon"
-    },
-    "positionen": [
-      [
-        55.43,
-        83.33
-      ]
     ]
   }
 ];

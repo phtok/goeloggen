@@ -96,6 +96,20 @@
       border-bottom: 1px solid var(--line);
     }
     .object-group-title .chevron { color: var(--muted); width: 1em; }
+    .group-head {
+      display: flex; align-items: center; gap: var(--s2);
+      border-bottom: 1px solid var(--line);
+    }
+    .group-head .object-group-title { flex: 1; border-bottom: 0; }
+    .group-toggle {
+      flex: none;
+      min-height: var(--tap);                     /* B04 */
+      border: 0; background: none; color: var(--muted);
+      font: inherit; font-size: var(--t-small);   /* B03: Label ≥15 */
+      cursor: pointer; border-radius: var(--r-control);
+      padding: 0 var(--s2);
+    }
+    .group-toggle:hover { background: var(--field-bg); color: var(--ink); }
     .object-group-title .zaehler {
       margin-left: auto; color: var(--muted);
       font-weight: normal; font-variant-numeric: tabular-nums;  /* G25 */
@@ -227,10 +241,15 @@
       <fieldset>
         <legend>Orte</legend>
         <div class="hint">Häkchen/Zeile = auf die Karte. Farbpunkt (rechts) = Markerfarbe.
-          Stift = Beschriftung. ✥ = verschieben (Infotisch und eigene Marken).</div>
+          ✥ = verschieben (Infotisch, barrierefreier Zugang, eigene Marken).
+          Doppelklick auf eine Zeile ändert die Beschriftung.</div>
         <div class="seg" id="sprache-row">
           <button type="button" data-sprache="de" aria-pressed="true">Deutsch</button>
           <button type="button" data-sprache="en" aria-pressed="false">English</button>
+        </div>
+        <div class="button-row">
+          <button id="orte-alle-an" type="button" class="btn">Alle an</button>
+          <button id="orte-alle-aus" type="button" class="btn">Alle aus</button>
         </div>
         <div id="orte-gruppen"></div>
         <div id="gebaeude-liste"></div>
@@ -276,6 +295,10 @@
         <label class="checkbox-row" id="row-marken">
           <input id="opt-marken" type="checkbox" />
           <span>Schnittränder und Schnittmarken einblenden</span>
+        </label>
+        <label class="checkbox-row">
+          <input id="opt-kompakt" type="checkbox" />
+          <span>Kompakte Legende (kleinerer Grad, mehr Zeilen je Spalte)</span>
         </label>
         <div class="button-row">
           <button id="download-pdf" type="button" class="btn primary">PDF</button>
