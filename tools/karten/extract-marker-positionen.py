@@ -40,71 +40,80 @@ FALZ = 148.5
 # auf dem 297-mm-Blatt), rechte an der Falzlinie minus Bundversatz.
 SEITEN_OFFSET = {0: 0.5, 1: 148.49}
 
-# Legende wörtlich aus dem LT25-Reader (Spalte, Reihenfolge wie gedruckt).
-# art: orientierung (blau) | ort (rot) | treppe | hinweis (nur Legende).
+# Legende aus dem LT25-Reader (Reihenfolge wie gedruckt), Beschriftungen
+# zweisprachig: en wörtlich aus der Vorlage, de nach den deutschen
+# Beschriftungen der Weltkonferenz-Karte bzw. Hausgebrauch.
+# art: orientierung (blau) | ort (rot) | treppe.
+# ‹teile›: gemeinsame Marke, aber einzeln zu- und abschaltbare Orte.
 LEGENDE = [
-    ("o1", "1", "orientierung", "Main Entrance", 0),
-    ("o2", "2", "orientierung", "South Entrance", 0),
-    ("o3", "3", "orientierung", "Reception/Empfang", 0),
-    ("o4", "4", "orientierung", "Info Desk", 0),
-    ("o5", "5", "orientierung", "Bookshop", 0),
-    ("o6", "6", "orientierung", "North Gallery", 0),
-    ("o7", "7", "orientierung", "Library", 0),
-    ("v10", "10", "ort", "Grundsteinsaal", 0),
-    ("v11", "11", "ort", "Terrassensaal", 0),
-    ("v12", "12", "ort", "Wandelhalle", 0),
-    ("v13", "13", "ort", "Im Hof", 0),
-    ("v14", "14", "ort", "Ostsäle 1-4", 0),
-    ("v15", "15", "ort", "Foyer", 0),
-    ("t-main", "M", "treppe", "Main Stairs", 0, {
+    ("o1", "1", "orientierung", {"de": "Haupteingang", "en": "Main Entrance"}),
+    ("o2", "2", "orientierung", {"de": "Südeingang", "en": "South Entrance"}),
+    ("o3", "3", "orientierung", {"de": "Empfang", "en": "Reception"}),
+    ("o4", "4", "orientierung", {"de": "Infotisch", "en": "Info Desk"}),
+    ("o5", "5", "orientierung", {"de": "Buchhandlung", "en": "Bookshop"}),
+    ("o6", "6", "orientierung", {"de": "Nordgalerie", "en": "North Gallery"}),
+    ("o7", "7", "orientierung", {"de": "Bibliothek", "en": "Library"}),
+    ("v10", "10", "ort", {"de": "Grundsteinsaal", "en": "Grundsteinsaal"}),
+    ("v11", "11", "ort", {"de": "Terrassensaal", "en": "Terrassensaal"}),
+    ("v12", "12", "ort", {"de": "Wandelhalle", "en": "Wandelhalle"}),
+    ("v13", "13", "ort", {"de": "Im Hof", "en": "Im Hof"}),
+    ("v14", "14", "ort", {"de": "Ostsäle 1-4", "en": "Ostsäle 1-4"}),
+    ("v15", "15", "ort", {"de": "Foyer", "en": "Foyer"}),
+    ("t-main", "M", "treppe", {"de": "Haupttreppe", "en": "Main Stairs"}, {
         "notizen": [
-            {"label": "Gallery · 1st Floor"},
-            {"label": "Grosser Saal · 2nd Floor"},
+            {"de": "Galerie · 1. Etage", "en": "Gallery · 1st Floor"},
+            {"de": "Grosser Saal · 2. Etage", "en": "Grosser Saal · 2nd Floor"},
         ],
     }),
-    ("t-nord", "N", "treppe", "North Stairs", 0, {
+    ("t-nord", "N", "treppe", {"de": "Nordtreppe", "en": "North Stairs"}, {
         "notizen": [
-            {"label": "North Lift", "badge": "lift"},
-            {"label": "Gallery · 1st Floor"},
-            {"label": "Grosser Saal · 2nd Floor"},
-            {"label": "Nordsaal · 5th Floor"},
-            {"label": "Nordatelier · 6th Floor"},
+            {"de": "Nord-Lift", "en": "North Lift", "badge": "lift"},
+            {"de": "Galerie · 1. Etage", "en": "Gallery · 1st Floor"},
+            {"de": "Grosser Saal · 2. Etage", "en": "Grosser Saal · 2nd Floor"},
+            {"de": "Nordsaal · 5. Etage", "en": "Nordsaal · 5th Floor"},
+            {"de": "Nordatelier · 6. Etage", "en": "Nordatelier · 6th Floor"},
         ],
     }),
-    ("t-sued", "S", "treppe", "South Stairs", 0, {
+    ("t-sued", "S", "treppe", {"de": "Südtreppe", "en": "South Stairs"}, {
         "notizen": [
-            {"label": "South Lift", "badge": "lift"},
-            {"label": "Konferenzraum · 1st Floor"},
-            {"label": "Gallery · 1st Floor"},
-            {"label": "Grosser Saal · 2nd Floor"},
-            {"label": "Seminarraum · 4th Floor"},
-            {"label": "Wooden Sculpture · 5th Floor"},
-            {"label": "Südatelier · 6th Floor"},
+            {"de": "Süd-Lift", "en": "South Lift", "badge": "lift"},
+            {"de": "Konferenzraum · 1. Etage", "en": "Konferenzraum · 1st Floor"},
+            {"de": "Galerie · 1. Etage", "en": "Gallery · 1st Floor"},
+            {"de": "Grosser Saal · 2. Etage", "en": "Grosser Saal · 2nd Floor"},
+            {"de": "Seminarraum · 4. Etage", "en": "Seminarraum · 4th Floor"},
+            {"de": "Holzplastik · 5. Etage", "en": "Wooden Sculpture · 5th Floor"},
+            {"de": "Südatelier · 6. Etage", "en": "Südatelier · 6th Floor"},
         ],
     }),
-    ("v20", "20", "ort", "Schreinereisaal", 1),
-    ("v21", "21", "ort", "Plastizierraum", 1),
-    ("v22", "22", "ort", "Gartenatelier", 1),
-    ("v23", "23", "ort", "Backofen", 1),
-    ("v24", "24", "ort", "Schreinerei Südsaal", 1),
-    ("v30", "30", "ort", "English Studies", 1),
-    ("v31", "31", "ort", "Halde", 1),
-    ("v32", "32", "ort", "Glashaus", 1),
-    ("v33", "33", "ort", "Studierendenwohnheim", 1),
-    ("v34", "34", "ort", "Haus Schuurman", 1),
-    ("v35", "35", "ort", "Färberei", 1),
-    ("v36", "36", "ort", "Holzhaus", 1),
-    ("v37", "37", "ort", "AfaP", 1, {"pfeil": "rechts"}),
-    ("v38", "38", "ort", "Trigon", 1, {"pfeil": "rechts"}),
-    ("o40", "40", "orientierung", "Rudolf Steiner Atelier", 1),
-    ("o41", "41", "orientierung", "1st Goetheanum Model", 1),
-    ("o42", "42", "orientierung", "Hochatelier", 1),
-    ("o43", "43", "orientierung", "Edith Maryon Flat", 1),
-    ("o44", "44", "orientierung", "Rudolf Steiner Archive", 1),
-    ("o45", "45", "orientierung", "Speisehaus · Schweizer\nLandesgesellschaft\nBus Stop", 1,
-     {"pfeil": "unten-rechts"}),
-    ("f46", "46", "orientierung", "Train Station", 1, {"pfeil": "unten-links"}),
-    ("f-p", "P", "orientierung", "Parking", 1),
+    ("v20", "20", "ort", {"de": "Schreinereisaal", "en": "Schreinereisaal"}),
+    ("v21", "21", "ort", {"de": "Plastizierraum", "en": "Plastizierraum"}),
+    ("v22", "22", "ort", {"de": "Gartenatelier", "en": "Gartenatelier"}),
+    ("v23", "23", "ort", {"de": "Backofen", "en": "Backofen"}),
+    ("v24", "24", "ort", {"de": "Schreinerei Südsaal", "en": "Schreinerei Südsaal"}),
+    ("v30", "30", "ort", {"de": "English Studies", "en": "English Studies"}),
+    ("v31", "31", "ort", {"de": "Halde", "en": "Halde"}),
+    ("v32", "32", "ort", {"de": "Glashaus", "en": "Glashaus"}),
+    ("v33", "33", "ort", {"de": "Studierendenwohnheim", "en": "Students Residence"}),
+    ("v34", "34", "ort", {"de": "Haus Schuurman", "en": "Haus Schuurman"}),
+    ("v35", "35", "ort", {"de": "Färberei", "en": "Färberei"}),
+    ("v36", "36", "ort", {"de": "Holzhaus", "en": "Holzhaus"}),
+    ("v37", "37", "ort", {"de": "AfaP", "en": "AfaP"}, {"pfeil": "rechts"}),
+    ("v38", "38", "ort", {"de": "Trigon", "en": "Trigon"}, {"pfeil": "rechts"}),
+    ("o40", "40", "orientierung", {"de": "Rudolf-Steiner-Atelier", "en": "Rudolf Steiner Atelier"}),
+    ("o41", "41", "orientierung", {"de": "Modell Erstes Goetheanum", "en": "1st Goetheanum Model"}),
+    ("o42", "42", "orientierung", {"de": "Hochatelier", "en": "Hochatelier"}),
+    ("o43", "43", "orientierung", {"de": "Edith-Maryon-Zimmer", "en": "Edith Maryon Flat"}),
+    ("o44", "44", "orientierung", {"de": "Rudolf-Steiner-Archiv", "en": "Rudolf Steiner Archive"}),
+    ("o45", "45", "orientierung", {"de": "Speisehaus", "en": "Speisehaus"}, {
+        "pfeil": "unten-rechts",
+        "teile": [
+            {"de": "Speisehaus", "en": "Speisehaus"},
+            {"de": "Schweizer Landesgesellschaft", "en": "Schweizer Landesgesellschaft"},
+            {"de": "Bushaltestelle", "en": "Bus Stop"},
+        ],
+    }),
+    ("f46", "46", "orientierung", {"de": "Bahnhof", "en": "Train Station"}, {"pfeil": "unten-links"}),
+    ("f-p", "P", "orientierung", {"de": "Parkplatz", "en": "Parking"}),
 ]
 
 # Kartenbereich je Halbseite (Blatt-mm): links liegt die Legende, dort
@@ -259,8 +268,8 @@ def marken_extrahieren(seiten):
 def orte_bauen(funde):
     orte = []
     for eintrag in LEGENDE:
-        oid, marker, art, label, spalte = eintrag[:5]
-        extra = eintrag[5] if len(eintrag) > 5 else {}
+        oid, marker, art, label = eintrag[:4]
+        extra = eintrag[4] if len(eintrag) > 4 else {}
         passend = [f for f in funde if f["marker"] == marker]
         if art == "treppe":
             badges = ([{"x": f["x"], "y": f["y"], "form": "treppe"}
@@ -275,11 +284,11 @@ def orte_bauen(funde):
             gewaehlt = kreise or woerter
             positionen = [[f["x"], f["y"]] for f in gewaehlt]
         if not positionen and not badges:
-            print(f"  ! {marker} ({label.splitlines()[0]}): keine Kartenmarke gefunden")
+            print(f"  ! {marker} ({label['de']}): keine Kartenmarke gefunden")
         ort = {
             "id": oid, "marker": marker, "art": art,
             "farbe": "rot" if art in ("ort", "treppe") else "blau",
-            "label": label, "spalte": spalte,
+            "label": label,
             "positionen": positionen,
         }
         ort.update(extra)

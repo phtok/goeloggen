@@ -106,6 +106,13 @@
     .object-title { flex: 1; font-size: var(--t-small); }
     .object-row.aus .object-title { color: var(--muted); }
     .object-row.aus .object-dot { opacity: .35; }
+    .object-row.object-sub { padding-left: var(--s6); min-height: var(--tap); } /* B04 */
+    .object-row.object-sub .object-title { font-size: var(--t-small); }
+    .sub-dot {
+      width: 10px; height: 10px;
+      background: transparent;
+    }
+    .sub-dot.an { background: var(--gold-deep); border-color: var(--gold-deep); }
     .object-marker {
       font-size: var(--t-micro); color: var(--muted);
       font-variant-numeric: tabular-nums;        /* G25 */
@@ -194,7 +201,11 @@
       <fieldset>
         <legend>Orte</legend>
         <div class="hint">Zeile anklicken = auf die Karte. Farbpunkt = Markerfarbe wechseln.
-          Stift = Beschriftung ändern.</div>
+          Stift = Beschriftung ändern. ✥ = Marke verschieben.</div>
+        <div class="seg" id="sprache-row">
+          <button type="button" data-sprache="de" aria-pressed="true">Deutsch</button>
+          <button type="button" data-sprache="en" aria-pressed="false">English</button>
+        </div>
         <div class="seg" id="nummerierung-row">
           <button type="button" data-nummerierung="fortlaufend" aria-pressed="true">Nummern fortlaufend</button>
           <button type="button" data-nummerierung="vorlage" aria-pressed="false">wie Vorlage</button>
@@ -230,6 +241,14 @@
       <fieldset>
         <legend>Kartenfarben</legend>
         <div class="seg" id="preset-row"></div>
+        <label class="checkbox-row">
+          <input id="opt-wiese-klein" type="checkbox" />
+          <span>Wiese klein einfärben (westlich des Hauptwegs)</span>
+        </label>
+        <label class="checkbox-row">
+          <input id="opt-wiese-gross" type="checkbox" />
+          <span>Wiese gross einfärben (mit Rudolf-Steiner-Archiv)</span>
+        </label>
         <div id="farb-rollen"></div>
       </fieldset>
 

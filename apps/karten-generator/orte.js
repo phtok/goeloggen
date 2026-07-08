@@ -21,8 +21,10 @@ const ORTE = [
     "marker": "1",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "Main Entrance",
-    "spalte": 0,
+    "label": {
+      "de": "Haupteingang",
+      "en": "Main Entrance"
+    },
     "positionen": [
       [
         198.59,
@@ -35,8 +37,10 @@ const ORTE = [
     "marker": "2",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "South Entrance",
-    "spalte": 0,
+    "label": {
+      "de": "Südeingang",
+      "en": "South Entrance"
+    },
     "positionen": [
       [
         222.49,
@@ -49,8 +53,10 @@ const ORTE = [
     "marker": "3",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "Reception/Empfang",
-    "spalte": 0,
+    "label": {
+      "de": "Empfang",
+      "en": "Reception"
+    },
     "positionen": [
       [
         204.56,
@@ -63,8 +69,10 @@ const ORTE = [
     "marker": "4",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "Info Desk",
-    "spalte": 0,
+    "label": {
+      "de": "Infotisch",
+      "en": "Info Desk"
+    },
     "positionen": [
       [
         192.86,
@@ -77,8 +85,10 @@ const ORTE = [
     "marker": "5",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "Bookshop",
-    "spalte": 0,
+    "label": {
+      "de": "Buchhandlung",
+      "en": "Bookshop"
+    },
     "positionen": [
       [
         189.16,
@@ -91,8 +101,10 @@ const ORTE = [
     "marker": "6",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "North Gallery",
-    "spalte": 0,
+    "label": {
+      "de": "Nordgalerie",
+      "en": "North Gallery"
+    },
     "positionen": [
       [
         191.33,
@@ -105,8 +117,10 @@ const ORTE = [
     "marker": "7",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "Library",
-    "spalte": 0,
+    "label": {
+      "de": "Bibliothek",
+      "en": "Library"
+    },
     "positionen": [
       [
         193.21,
@@ -119,8 +133,10 @@ const ORTE = [
     "marker": "10",
     "art": "ort",
     "farbe": "rot",
-    "label": "Grundsteinsaal",
-    "spalte": 0,
+    "label": {
+      "de": "Grundsteinsaal",
+      "en": "Grundsteinsaal"
+    },
     "positionen": [
       [
         198.59,
@@ -133,8 +149,10 @@ const ORTE = [
     "marker": "11",
     "art": "ort",
     "farbe": "rot",
-    "label": "Terrassensaal",
-    "spalte": 0,
+    "label": {
+      "de": "Terrassensaal",
+      "en": "Terrassensaal"
+    },
     "positionen": [
       [
         182.35,
@@ -147,8 +165,10 @@ const ORTE = [
     "marker": "12",
     "art": "ort",
     "farbe": "rot",
-    "label": "Wandelhalle",
-    "spalte": 0,
+    "label": {
+      "de": "Wandelhalle",
+      "en": "Wandelhalle"
+    },
     "positionen": [
       [
         213.98,
@@ -161,8 +181,10 @@ const ORTE = [
     "marker": "13",
     "art": "ort",
     "farbe": "rot",
-    "label": "Im Hof",
-    "spalte": 0,
+    "label": {
+      "de": "Im Hof",
+      "en": "Im Hof"
+    },
     "positionen": [
       [
         204.03,
@@ -175,8 +197,10 @@ const ORTE = [
     "marker": "14",
     "art": "ort",
     "farbe": "rot",
-    "label": "Ostsäle 1-4",
-    "spalte": 0,
+    "label": {
+      "de": "Ostsäle 1-4",
+      "en": "Ostsäle 1-4"
+    },
     "positionen": [
       [
         213.98,
@@ -189,8 +213,10 @@ const ORTE = [
     "marker": "15",
     "art": "ort",
     "farbe": "rot",
-    "label": "Foyer",
-    "spalte": 0,
+    "label": {
+      "de": "Foyer",
+      "en": "Foyer"
+    },
     "positionen": [
       [
         198.47,
@@ -203,15 +229,19 @@ const ORTE = [
     "marker": "M",
     "art": "treppe",
     "farbe": "rot",
-    "label": "Main Stairs",
-    "spalte": 0,
+    "label": {
+      "de": "Haupttreppe",
+      "en": "Main Stairs"
+    },
     "positionen": [],
     "notizen": [
       {
-        "label": "Gallery · 1st Floor"
+        "de": "Galerie · 1. Etage",
+        "en": "Gallery · 1st Floor"
       },
       {
-        "label": "Grosser Saal · 2nd Floor"
+        "de": "Grosser Saal · 2. Etage",
+        "en": "Grosser Saal · 2nd Floor"
       }
     ],
     "badges": [
@@ -227,25 +257,32 @@ const ORTE = [
     "marker": "N",
     "art": "treppe",
     "farbe": "rot",
-    "label": "North Stairs",
-    "spalte": 0,
+    "label": {
+      "de": "Nordtreppe",
+      "en": "North Stairs"
+    },
     "positionen": [],
     "notizen": [
       {
-        "label": "North Lift",
+        "de": "Nord-Lift",
+        "en": "North Lift",
         "badge": "lift"
       },
       {
-        "label": "Gallery · 1st Floor"
+        "de": "Galerie · 1. Etage",
+        "en": "Gallery · 1st Floor"
       },
       {
-        "label": "Grosser Saal · 2nd Floor"
+        "de": "Grosser Saal · 2. Etage",
+        "en": "Grosser Saal · 2nd Floor"
       },
       {
-        "label": "Nordsaal · 5th Floor"
+        "de": "Nordsaal · 5. Etage",
+        "en": "Nordsaal · 5th Floor"
       },
       {
-        "label": "Nordatelier · 6th Floor"
+        "de": "Nordatelier · 6. Etage",
+        "en": "Nordatelier · 6th Floor"
       }
     ],
     "badges": [
@@ -266,31 +303,40 @@ const ORTE = [
     "marker": "S",
     "art": "treppe",
     "farbe": "rot",
-    "label": "South Stairs",
-    "spalte": 0,
+    "label": {
+      "de": "Südtreppe",
+      "en": "South Stairs"
+    },
     "positionen": [],
     "notizen": [
       {
-        "label": "South Lift",
+        "de": "Süd-Lift",
+        "en": "South Lift",
         "badge": "lift"
       },
       {
-        "label": "Konferenzraum · 1st Floor"
+        "de": "Konferenzraum · 1. Etage",
+        "en": "Konferenzraum · 1st Floor"
       },
       {
-        "label": "Gallery · 1st Floor"
+        "de": "Galerie · 1. Etage",
+        "en": "Gallery · 1st Floor"
       },
       {
-        "label": "Grosser Saal · 2nd Floor"
+        "de": "Grosser Saal · 2. Etage",
+        "en": "Grosser Saal · 2nd Floor"
       },
       {
-        "label": "Seminarraum · 4th Floor"
+        "de": "Seminarraum · 4. Etage",
+        "en": "Seminarraum · 4th Floor"
       },
       {
-        "label": "Wooden Sculpture · 5th Floor"
+        "de": "Holzplastik · 5. Etage",
+        "en": "Wooden Sculpture · 5th Floor"
       },
       {
-        "label": "Südatelier · 6th Floor"
+        "de": "Südatelier · 6. Etage",
+        "en": "Südatelier · 6th Floor"
       }
     ],
     "badges": [
@@ -311,8 +357,10 @@ const ORTE = [
     "marker": "20",
     "art": "ort",
     "farbe": "rot",
-    "label": "Schreinereisaal",
-    "spalte": 1,
+    "label": {
+      "de": "Schreinereisaal",
+      "en": "Schreinereisaal"
+    },
     "positionen": [
       [
         220.07,
@@ -325,8 +373,10 @@ const ORTE = [
     "marker": "21",
     "art": "ort",
     "farbe": "rot",
-    "label": "Plastizierraum",
-    "spalte": 1,
+    "label": {
+      "de": "Plastizierraum",
+      "en": "Plastizierraum"
+    },
     "positionen": [
       [
         210.37,
@@ -339,8 +389,10 @@ const ORTE = [
     "marker": "22",
     "art": "ort",
     "farbe": "rot",
-    "label": "Gartenatelier",
-    "spalte": 1,
+    "label": {
+      "de": "Gartenatelier",
+      "en": "Gartenatelier"
+    },
     "positionen": [
       [
         216.22,
@@ -353,8 +405,10 @@ const ORTE = [
     "marker": "23",
     "art": "ort",
     "farbe": "rot",
-    "label": "Backofen",
-    "spalte": 1,
+    "label": {
+      "de": "Backofen",
+      "en": "Backofen"
+    },
     "positionen": [
       [
         235.52,
@@ -367,8 +421,10 @@ const ORTE = [
     "marker": "24",
     "art": "ort",
     "farbe": "rot",
-    "label": "Schreinerei Südsaal",
-    "spalte": 1,
+    "label": {
+      "de": "Schreinerei Südsaal",
+      "en": "Schreinerei Südsaal"
+    },
     "positionen": [
       [
         242.46,
@@ -381,8 +437,10 @@ const ORTE = [
     "marker": "30",
     "art": "ort",
     "farbe": "rot",
-    "label": "English Studies",
-    "spalte": 1,
+    "label": {
+      "de": "English Studies",
+      "en": "English Studies"
+    },
     "positionen": [
       [
         157.37,
@@ -395,8 +453,10 @@ const ORTE = [
     "marker": "31",
     "art": "ort",
     "farbe": "rot",
-    "label": "Halde",
-    "spalte": 1,
+    "label": {
+      "de": "Halde",
+      "en": "Halde"
+    },
     "positionen": [
       [
         145.47,
@@ -409,8 +469,10 @@ const ORTE = [
     "marker": "32",
     "art": "ort",
     "farbe": "rot",
-    "label": "Glashaus",
-    "spalte": 1,
+    "label": {
+      "de": "Glashaus",
+      "en": "Glashaus"
+    },
     "positionen": [
       [
         129.03,
@@ -423,8 +485,10 @@ const ORTE = [
     "marker": "33",
     "art": "ort",
     "farbe": "rot",
-    "label": "Studierendenwohnheim",
-    "spalte": 1,
+    "label": {
+      "de": "Studierendenwohnheim",
+      "en": "Students Residence"
+    },
     "positionen": [
       [
         174.94,
@@ -437,8 +501,10 @@ const ORTE = [
     "marker": "34",
     "art": "ort",
     "farbe": "rot",
-    "label": "Haus Schuurman",
-    "spalte": 1,
+    "label": {
+      "de": "Haus Schuurman",
+      "en": "Haus Schuurman"
+    },
     "positionen": [
       [
         222.72,
@@ -451,8 +517,10 @@ const ORTE = [
     "marker": "35",
     "art": "ort",
     "farbe": "rot",
-    "label": "Färberei",
-    "spalte": 1,
+    "label": {
+      "de": "Färberei",
+      "en": "Färberei"
+    },
     "positionen": [
       [
         248.22,
@@ -465,8 +533,10 @@ const ORTE = [
     "marker": "36",
     "art": "ort",
     "farbe": "rot",
-    "label": "Holzhaus",
-    "spalte": 1,
+    "label": {
+      "de": "Holzhaus",
+      "en": "Holzhaus"
+    },
     "positionen": [
       [
         278.18,
@@ -479,8 +549,10 @@ const ORTE = [
     "marker": "37",
     "art": "ort",
     "farbe": "rot",
-    "label": "AfaP",
-    "spalte": 1,
+    "label": {
+      "de": "AfaP",
+      "en": "AfaP"
+    },
     "positionen": [
       [
         285.52,
@@ -494,8 +566,10 @@ const ORTE = [
     "marker": "38",
     "art": "ort",
     "farbe": "rot",
-    "label": "Trigon",
-    "spalte": 1,
+    "label": {
+      "de": "Trigon",
+      "en": "Trigon"
+    },
     "positionen": [
       [
         285.52,
@@ -509,8 +583,10 @@ const ORTE = [
     "marker": "40",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "Rudolf Steiner Atelier",
-    "spalte": 1,
+    "label": {
+      "de": "Rudolf-Steiner-Atelier",
+      "en": "Rudolf Steiner Atelier"
+    },
     "positionen": [
       [
         234.52,
@@ -523,8 +599,10 @@ const ORTE = [
     "marker": "41",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "1st Goetheanum Model",
-    "spalte": 1,
+    "label": {
+      "de": "Modell Erstes Goetheanum",
+      "en": "1st Goetheanum Model"
+    },
     "positionen": [
       [
         241.27,
@@ -537,8 +615,10 @@ const ORTE = [
     "marker": "42",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "Hochatelier",
-    "spalte": 1,
+    "label": {
+      "de": "Hochatelier",
+      "en": "Hochatelier"
+    },
     "positionen": [
       [
         229.67,
@@ -551,8 +631,10 @@ const ORTE = [
     "marker": "43",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "Edith Maryon Flat",
-    "spalte": 1,
+    "label": {
+      "de": "Edith-Maryon-Zimmer",
+      "en": "Edith Maryon Flat"
+    },
     "positionen": [
       [
         271.58,
@@ -565,8 +647,10 @@ const ORTE = [
     "marker": "44",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "Rudolf Steiner Archive",
-    "spalte": 1,
+    "label": {
+      "de": "Rudolf-Steiner-Archiv",
+      "en": "Rudolf Steiner Archive"
+    },
     "positionen": [
       [
         209.09,
@@ -579,23 +663,41 @@ const ORTE = [
     "marker": "45",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "Speisehaus · Schweizer\nLandesgesellschaft\nBus Stop",
-    "spalte": 1,
+    "label": {
+      "de": "Speisehaus",
+      "en": "Speisehaus"
+    },
     "positionen": [
       [
         280.19,
         199.65
       ]
     ],
-    "pfeil": "unten-rechts"
+    "pfeil": "unten-rechts",
+    "teile": [
+      {
+        "de": "Speisehaus",
+        "en": "Speisehaus"
+      },
+      {
+        "de": "Schweizer Landesgesellschaft",
+        "en": "Schweizer Landesgesellschaft"
+      },
+      {
+        "de": "Bushaltestelle",
+        "en": "Bus Stop"
+      }
+    ]
   },
   {
     "id": "f46",
     "marker": "46",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "Train Station",
-    "spalte": 1,
+    "label": {
+      "de": "Bahnhof",
+      "en": "Train Station"
+    },
     "positionen": [
       [
         103.78,
@@ -609,8 +711,10 @@ const ORTE = [
     "marker": "P",
     "art": "orientierung",
     "farbe": "blau",
-    "label": "Parking",
-    "spalte": 1,
+    "label": {
+      "de": "Parkplatz",
+      "en": "Parking"
+    },
     "positionen": [
       [
         159.07,
