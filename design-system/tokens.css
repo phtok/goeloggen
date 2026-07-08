@@ -69,6 +69,11 @@
   --bad:#b3261e;         /* Fehler/Warnung */
   --ok:#3f7d46;          /* Erfolg/Bestätigung – Weiss drauf (--on-accent) */
   --on-accent:#fff;      /* Text auf Blau/Gold-Flächen */
+  --ink-print-leise:#6e6f6a; /* leises Strukturbeiwerk auf PAPIERWEISS (Druckwerke:
+                                Kategorie-Titel in Legenden u. ä.) – 5.07:1, B02-fest
+                                für Lesetext; gerechnet im Kartentool, Juli 2026.
+                                Theme-fest: gilt fürs gedruckte Blatt, nicht für
+                                Bildschirmflächen (dort --muted). */
 
   /* --- Code-Konsole (eigenständige, THEME-FESTE Fläche – gleich in Hell/Dunkel,
      wie eine Entwickler-Konsole; Syntaxpalette für Dunkel ausgelegt). --------- */

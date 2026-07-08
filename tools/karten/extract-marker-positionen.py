@@ -203,9 +203,10 @@ WILLKOMMEN = [
     # eigener Verkehrs-Ort mit Buchstabe B (Entscheid Auftraggeber,
     # 8. Juli 2026); bisher nur Beiwerk-Zeile des Speisehauses. Der Pfeil
     # zeigt nach aussen (die Haltestelle liegt Richtung Blattrand).
+    # Lage vom Auftraggeber justiert (Faust-Karte, 8. Juli 2026).
     ("f-bus", "B", "verkehr",
      {"de": "Bushaltestelle", "en": "Bus Stop"},
-     [[285.0, 196.0]], {"pfeil": "unten-rechts"}),
+     [[281.24, 201.56]], {"pfeil": "unten-rechts"}),
 
     # Vitalshop (der Laden im Speisehaus) — eigener Verkehrs-Ort mit
     # Buchstabe V (Entscheid Auftraggeber, 8. Juli 2026); Lage beim

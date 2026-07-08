@@ -22,7 +22,9 @@ const MARKER_FARBEN = {
 const FARB_ZYKLUS = ["rot", "blau", "gruen", "grau", "gold"];
 const TINTE = "#4e4f4a";
 // Leise Druck-Tinte für Strukturbeiwerk (Kategorie-Titel der Legende):
-// gerechnet 5.07:1 auf Weiss (B02, ≥4.5:1 für Lesetext).
+// = Token --ink-print-leise (tokens.css, seit v1.6.0), gerechnet 5.07:1
+// auf Weiss (B02, ≥4.5:1 für Lesetext); hier als Hex, weil der Wert in
+// den PDF-Export wandert (Print-SVG kennt keine CSS-Variablen).
 const TINTE_LEISE = "#6e6f6a";
 
 // Schriftrollen: Sprache (Titel, Legende, Gebäudenamen) in der Hausschrift
@@ -413,7 +415,8 @@ function ortMarker(ort) {
 // justierten Lagen lassen sich exportieren und wandern in die Vorlage.
 function ortJustierbar(ort) {
   return ort.kategorie === "sektionen" || ort.kategorie === "gaerten"
-    || ort.kategorie === "verkehr" || ort.id.indexOf("wc-") === 0;
+    || ort.kategorie === "verkehr" || ort.id.indexOf("wc-") === 0
+    || ort.id === "b-zugang";  // Überlappung mit dem Südeingang ausgleichbar
 }
 
 function ortBeweglich(ort) {
