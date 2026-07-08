@@ -397,9 +397,12 @@
     return g;
   }
 
-  // Öffentliche Reihenfolge (flach) – wie die Startseite. Unbekannte ans Ende.
-  var FLAT_ORDER = ["logo-generator", "signatur", "editor", "visitenkarten", "icons", "schriften",
-    "sektionsfarben", "uebersetzungen", "wallpaper", "powerpoint", "typografie", "design-system"];
+  // Öffentliche Reihenfolge (flach) – wie die Startseite; nur der Editor
+  // steht tiefer, direkt vor Wallpaper (noch nicht reif — Entscheid
+  // Auftraggeber, 8. Juli 2026). Unbekannte ans Ende.
+  var FLAT_ORDER = ["logo-generator", "signatur", "visitenkarten", "schriften", "icons",
+    "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint",
+    "editor", "wallpaper", "design-system"];
   var PUBLIC_CATS = WORLDS.reduce(function (a, w) { return a.concat(w.cats); }, []);
 
   function renderDrawer() {
@@ -442,6 +445,14 @@
       a.href = t ? resolveHref(t.href) : HOME;
       worldsNav.appendChild(a);
     });
+    // Beta-Kennzeichen in der Kopfzeile: folgt dem Status im Manifest —
+    // Seiten mit status "beta" tragen die Marke neben dem Lockup, ohne
+    // dass die Seite selbst etwas setzen muss (eine Wahrheit: tools.json).
+    var active = ACTIVE && bySlug(ACTIVE);
+    if (active && active.status === "beta") {
+      var chip = el("span", "beta-chip", "Beta");
+      header.querySelector(".brand").insertAdjacentElement("afterend", chip);
+    }
     renderDrawer();
   }).catch(function () {
     drawerBody.innerHTML = '<p style="padding:22px;color:var(--muted)">Werkzeugliste konnte nicht geladen werden.</p>';
