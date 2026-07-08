@@ -1029,10 +1029,11 @@ const ORTE = [
     },
     "positionen": [
       [
-        292.0,
-        192.5
+        289.6,
+        202.2
       ]
-    ]
+    ],
+    "pfeil": "unten-rechts"
   },
   {
     "id": "h-friedwart",

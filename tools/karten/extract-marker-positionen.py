@@ -287,9 +287,12 @@ WILLKOMMEN = [
     ("h-eurythmie", "53", "haeuser",
      {"de": "Eurythmiehaus", "en": "Eurythmiehaus"},
      [[268.5, 97.0]]),
+    # Das Haus selbst liegt ausserhalb des Blatts — Marke am Strassen-
+    # Anschnitt unten rechts (wie die Bushaltestelle), Pfeil nach aussen
+    # (Entscheid Auftraggeber, 8. Juli 2026).
     ("h-jugendhaus", "54", "haeuser",
      {"de": "Jugendsektionshaus", "en": "House of the Youth Section"},
-     [[292.0, 192.5]]),
+     [[289.6, 202.2]], {"pfeil": "unten-rechts"}),
     ("h-friedwart", "55", "haeuser",
      {"de": "Gästehaus Friedwart", "en": "Guesthouse Friedwart"},
      [[118.0, 202.5]], {"pfeil": "unten-links"}),
