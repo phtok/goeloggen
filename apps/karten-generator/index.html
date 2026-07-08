@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kartentool · Goetheanum Campus</title>
 
+  <link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
   <link rel="stylesheet" href="../../design-system/tokens.css" />
   <link rel="stylesheet" href="../../design-system/base.css" />
   <link rel="stylesheet" href="../../design-system/nav.css" />
@@ -91,6 +92,13 @@
     .checkbox-row.aus { opacity: .5; }
 
     .button-row { display: flex; flex-wrap: wrap; gap: var(--s2); }
+
+    /* Justage-Funktionen (Logo, Titellogo) nur im Backend-Modus
+       (?justage bzw. #justage in der Adresse). */
+    .backend-only, .controls fieldset.backend-only { display: none; }
+    body.backend .controls fieldset.backend-only { display: flex; }
+    body.backend .backend-only { display: block; }
+    body.backend .controls div.backend-only { display: flex; flex-direction: column; gap: var(--s3); }
 
     .object-group-title {
       display: flex; align-items: center; gap: var(--s2);
@@ -253,6 +261,21 @@
           Legende und benennt das PDF und die gespeicherte Karte.</div>
         <input id="untertitel-input" type="text" placeholder="1. bis 5. Juli 2026" />
         <div class="hint">Datum der Veranstaltung — steht unter dem Titel.</div>
+        <div class="backend-only">
+          <div class="hint" id="titellogo-status">Kein Sonderlogo geladen.</div>
+          <div class="button-row">
+            <button id="titellogo-laden" type="button" class="btn">Sonderlogo (SVG) laden</button>
+            <button id="titellogo-weg" type="button" class="btn">Entfernen</button>
+          </div>
+          <div class="farb-reihe">
+            <label for="titellogo-breite">Breite</label>
+            <input id="titellogo-breite" type="range" min="20" max="90" value="45" />
+          </div>
+          <div class="hint">Ersetzt Titel und Untertitel auf dem Blatt (der Titel
+            benennt weiterhin Datei und gespeicherte Karte). Reine Pfad-SVGs
+            verwenden — Text im SVG braucht eingebettete Schriften.</div>
+          <input id="titellogo-datei" type="file" accept=".svg,image/svg+xml" hidden />
+        </div>
       </fieldset>
 
       <fieldset>
@@ -313,8 +336,8 @@
         <div id="farb-rollen"></div>
       </fieldset>
 
-      <fieldset>
-        <legend>Logo</legend>
+      <fieldset class="backend-only">
+        <legend>Logo (Justage)</legend>
         <div class="farb-reihe">
           <label for="logo-skala">Grösse</label>
           <input id="logo-skala" type="range" min="60" max="200" value="100" />
