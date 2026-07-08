@@ -454,7 +454,8 @@ const LAUT_VORSCHUB = {
   "5": 0.577, "6": 0.609, "7": 0.539, "8": 0.62, "9": 0.609,
   "a": 0.509, "b": 0.508, "c": 0.402, "d": 0.509, "e": 0.463,
   "f": 0.324, "g": 0.479, "h": 0.518, "i": 0.239, "j": 0.239,
-  "k": 0.475, "l": 0.24, "m": 0.789, "P": 0.546, "W": 0.858, "C": 0.497
+  "k": 0.475, "l": 0.24, "m": 0.789, "P": 0.546, "W": 0.858, "C": 0.497,
+  "S": 0.503, "B": 0.563
 };
 
 function zentrierterText(x, y, text, groesse, farbe) {
@@ -597,12 +598,25 @@ const GEBAEUDE_LABELS = [
   { text: "Schreinerei", x: 224.4, y: 93.2, groesse: 3.18, winkel: -76 }
 ];
 
-// Textbreite in mm, mit der geladenen Webschrift gemessen — die Labels
-// werden start-verankert selbst zentriert. text-anchor="middle" misst der
-// PDF-Renderer mit fremden Metriken, und die Namen verrutschen im Druck.
+// Textbreite in mm — die Labels werden start-verankert selbst zentriert.
+// text-anchor="middle" misst der PDF-Renderer mit fremden Metriken, und
+// die Namen verrutschen im Druck. Erste Quelle ist die Vorschubtabelle
+// (aus der TTF vermessen, upm 1000) — sie ist ladeunabhängig; die Canvas-
+// Messung bleibt Rückfall für Zeichen ausserhalb der Tabelle, misst aber
+// falsch, solange die Webschrift (noch) nicht geladen ist.
+const DEUTLICH_VORSCHUB = {
+  "G": 0.573, "S": 0.502, "a": 0.504, "c": 0.401, "e": 0.459, "h": 0.512,
+  "i": 0.228, "m": 0.785, "n": 0.512, "o": 0.486, "r": 0.323, "t": 0.328,
+  "u": 0.513
+};
+
 let messKontext = null;
 
 function textBreiteMm(text, familie, groesseMm) {
+  const zeichen = String(text).split("");
+  if (familie === SCHRIFT_SPRACHE && zeichen.every((z) => DEUTLICH_VORSCHUB[z] != null)) {
+    return zeichen.reduce((summe, z) => summe + DEUTLICH_VORSCHUB[z], 0) * groesseMm;
+  }
   if (!messKontext) messKontext = document.createElement("canvas").getContext("2d");
   messKontext.font = `100px ${familie}`;
   return messKontext.measureText(text).width / 100 * groesseMm;
@@ -785,11 +799,14 @@ function legendeMarkup() {
     } else {
       // Breite Symbol-Pillen linksbündig zur Spalte, Text weicht aus;
       // Orte mit legendeText (Toiletten) zeigen in der Liste die
-      // schlichte Textmarke statt des Kartenfelds.
-      const b = markenBreite(ort, 2.03);
+      // schlichte Textmarke statt des Kartenfelds. Symbol-Marken laufen
+      // in der Liste im GLEICHEN Kreisdurchmesser wie die Zahlkreise —
+      // der Grössenzuschlag (SYMBOL_FAKTOR) gilt nur auf der Karte.
+      const symbol = ort.legendeText ? null : ort.symbol;
+      const r = symbol ? 2.03 / SYMBOL_FAKTOR : 2.03;
+      const b = markenBreite(ort, r);
       teile += markenKreis(x - 2.03 + b / 2, y - 0.9, hex,
-        ort.legendeText || ortMarker(ort), 2.03,
-        ort.legendeText ? null : ort.symbol);
+        ort.legendeText || ortMarker(ort), r, symbol);
       textX = x + Math.max(L.labelAbstand, b - 2.03 + 1.6);
     }
     zeile.zeilenTexte.forEach((text, index) => {

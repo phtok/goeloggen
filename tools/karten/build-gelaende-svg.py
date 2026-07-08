@@ -130,6 +130,13 @@ def main() -> int:
             konturen[0] += 1
             return ""
         if 'data-ks="wege"' in tag:
+            # Haarlinien (Strichstärke ≤ 0.5 pt) sind Kontur-Zeichnung an
+            # Häusern (Glashaus, Heizhaus, Halde …) — echte Fusswege tragen
+            # ≥ 0.769 pt. Sichtabgleich 8. Juli 2026: Wegenetz unverändert.
+            staerke = re.search(r'stroke-width="([.\d]+)"', tag)
+            if staerke and float(staerke.group(1)) <= 0.5:
+                konturen[0] += 1
+                return ""
             form = re.search(r'transform="([^"]+)"[^>]*? d="([^"]+)"', tag)
             if form and (form.group(1), form.group(2)) in fuellformen:
                 konturen[0] += 1

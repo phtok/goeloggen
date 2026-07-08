@@ -203,7 +203,7 @@ const ORTE = [
   },
   {
     "id": "f46",
-    "marker": "46",
+    "marker": "S",
     "art": "orientierung",
     "kategorie": "verkehr",
     "farbe": "blau",
@@ -233,6 +233,23 @@ const ORTE = [
       [
         159.07,
         73.4
+      ]
+    ]
+  },
+  {
+    "id": "f-bus",
+    "marker": "B",
+    "art": "orientierung",
+    "kategorie": "verkehr",
+    "farbe": "blau",
+    "label": {
+      "de": "Bushaltestelle",
+      "en": "Bus Stop"
+    },
+    "positionen": [
+      [
+        285.0,
+        196.0
       ]
     ]
   },
@@ -910,10 +927,6 @@ const ORTE = [
       {
         "de": "Schweizer Landesgesellschaft",
         "en": "Schweizer Landesgesellschaft"
-      },
-      {
-        "de": "Bushaltestelle",
-        "en": "Bus Stop"
       }
     ]
   },
