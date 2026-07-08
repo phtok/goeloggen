@@ -73,7 +73,8 @@
       padding: 0 var(--s2);
     }
 
-    .controls input[type="text"] {
+    .controls input[type="text"],
+    .controls input[type="search"] {
       font: inherit; font-size: 1rem;            /* B03: Eingaben ≥16px */
       min-height: var(--tap);                     /* B04 */
       padding: 0 var(--s3);
@@ -291,10 +292,12 @@
           <button id="orte-alle-an" type="button" class="btn">Alle an</button>
           <button id="orte-alle-aus" type="button" class="btn">Alle aus</button>
         </div>
+        <input id="orte-suche" type="search" placeholder="Ort suchen …" autocomplete="off" />
         <div id="orte-gruppen"></div>
         <div class="backend-only">
-          <div class="hint">Backend: Sektionen, Gärten und WCs lassen sich mit ✥
-            justieren — die Feinlagen wandern über den Export in die Vorlage.</div>
+          <div class="hint">Backend: Sektionen, Gärten, WCs und Verkehrsmarken
+            lassen sich mit ✥ justieren — die Feinlagen wandern über den
+            Export in die Vorlage.</div>
           <div class="button-row">
             <button id="lagen-export" type="button" class="btn">Justierte Lagen exportieren</button>
           </div>

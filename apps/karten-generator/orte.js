@@ -251,6 +251,24 @@ const ORTE = [
         285.0,
         196.0
       ]
+    ],
+    "pfeil": "unten-rechts"
+  },
+  {
+    "id": "f-vital",
+    "marker": "V",
+    "art": "orientierung",
+    "kategorie": "verkehr",
+    "farbe": "blau",
+    "label": {
+      "de": "Vitalshop",
+      "en": "Vital Shop"
+    },
+    "positionen": [
+      [
+        274.8,
+        199.6
+      ]
     ]
   },
   {

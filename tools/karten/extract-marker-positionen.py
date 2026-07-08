@@ -201,10 +201,18 @@ WILLKOMMEN = [
 
     # Bushaltestelle ‹Goetheanum› an der Dorneckstrasse beim Speisehaus —
     # eigener Verkehrs-Ort mit Buchstabe B (Entscheid Auftraggeber,
-    # 8. Juli 2026); bisher nur Beiwerk-Zeile des Speisehauses.
+    # 8. Juli 2026); bisher nur Beiwerk-Zeile des Speisehauses. Der Pfeil
+    # zeigt nach aussen (die Haltestelle liegt Richtung Blattrand).
     ("f-bus", "B", "verkehr",
      {"de": "Bushaltestelle", "en": "Bus Stop"},
-     [[285.0, 196.0]]),
+     [[285.0, 196.0]], {"pfeil": "unten-rechts"}),
+
+    # Vitalshop (der Laden im Speisehaus) — eigener Verkehrs-Ort mit
+    # Buchstabe V (Entscheid Auftraggeber, 8. Juli 2026); Lage beim
+    # Speisehaus, im Backend justierbar wie alle Verkehrsmarken.
+    ("f-vital", "V", "verkehr",
+     {"de": "Vitalshop", "en": "Vital Shop"},
+     [[274.8, 199.6]]),
 
     # Sektionen (Buchstaben wie auf dem Willkommensschild):
     ("s-allgemein", "a", "sektionen",
