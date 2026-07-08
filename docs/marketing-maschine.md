@@ -4,7 +4,7 @@
 2026), das Strategieblatt (`docs/strategie.md`), sowie eine mehrsträngige,
 quellengeprüfte Recherche zu Vergleichsprodukten, Abo-Ökonomie, dem empirischen
 Marketing-Kanon (Sharp/Ehrenberg-Bass, Binet & Field), Marty Neumeier und
-Null-Budget-Wachstum. Belegte Zahlen sind mit Quelle und Abrufdatum in §14
+Null-Budget-Wachstum. Belegte Zahlen sind mit Quelle und Abrufdatum in §15
 geführt; jede Aussage trägt einen Evidenzgrad: **[belegt]** (Primärquelle,
 adversarisch geprüft), **[plausibel]** (Quelle vorhanden, nicht gegengeprüft),
 **[anekdotisch]** (Einzelfall, illustrativ).*
@@ -52,7 +52,7 @@ Probezeit** **[belegt]**. **Ein aufschlussreicher Befund:** die Abo-Seite
 `dasgoetheanum.com/subscribe` leitet aktuell **direkt auf die
 Sommer-Aktions-Landingpage** um (`ws-en-sommer2026…`) — der reguläre Weg zum Abo
 führt also mitten durch die Kampagne. Das ist gut fürs Aktionsfenster, aber es
-fehlt der **immer geöffnete** Standard-Abo-Weg (Evergreen, §8) für die 49 Wochen
+fehlt der **immer geöffnete** Standard-Abo-Weg (Evergreen, §9) für die 49 Wochen
 ausserhalb des Fensters. Die Sommer-Aktion 2026 fährt sechs Landingpages auf
 eigenen Subdomains (`tv-sommer2026.goetheanum.tv`, `ws-sommer2026.dasgoetheanum.com`,
 je DE/EN). *(YouTube-/Social-Reichweiten waren zum Redaktionszeitpunkt nicht
@@ -106,7 +106,7 @@ Kaufrate der Bestehenden **[plausibel]**. Marketing allein bringt uns die ersten
 Vervielfachungen (bis in den mittleren fünfstelligen Bereich — vgl. Republik mit
 ~36 000 Abos, werbefrei, deutschsprachig, aus dem Stand in wenigen Jahren
 **[belegt]**). Der Sprung in den **oberen** fünfstelligen Bereich ist ein
-Mehrjahres-Zinseszins und hängt an der englischen Schiene (§10).
+Mehrjahres-Zinseszins und hängt an der englischen Schiene (§11).
 
 ---
 
@@ -166,8 +166,8 @@ Artikeln.
 
 **Cross-Selling-Grundlage:** WoS-Leser und GTV-Zuschauer sind weitgehend
 **dasselbe Publikum in zwei Zuständen** — lesend und schauend. Wer den einen Job
-mietet, hat oft auch den anderen. Das begründet die Bündel-Kommunikation (§7, §12),
-verlangt aber Frequenz-Disziplin (§11), damit dasselbe Publikum nicht doppelt
+mietet, hat oft auch den anderen. Das begründet die Bündel-Kommunikation (§8, §13),
+verlangt aber Frequenz-Disziplin (§12), damit dasselbe Publikum nicht doppelt
 bespielt und müde wird.
 
 ---
@@ -190,7 +190,7 @@ Binet & Field.
 **Binet & Field — 60/40.** Langfristiger Markenaufbau (~60 % des Aufwands) und
 kurzfristige Aktivierung (~40 %) müssen im Gleichgewicht stehen; reine
 Aktivierung (Rabatte, Countdown) verpufft langfristig. *Für uns:* die
-Kampagnenfenster (§6) sind die 40 %; der Evergreen-Sockel aus Archiv-SEO,
+Kampagnenfenster (§7) sind die 40 %; der Evergreen-Sockel aus Archiv-SEO,
 YouTube-Präsenz und Newsletter ist die 60 %. **[plausibel]**
 
 **Abo-Ökonomie — Churn, LTV, Payback.** Plattformweiter Benchmark:
@@ -199,7 +199,7 @@ unfreiwillig (Zahlungsausfälle) **[belegt]**. Rund ein Viertel der Abwanderung
 ist also **technisch** (Karte abgelaufen, Zahlung fehlgeschlagen) und ohne jede
 Inhaltsarbeit durch **Dunning/Zahlungs-Retry** rückholbar. Jahresabos bringen
 deutlich mehr Umsatz je Nutzer als Monatsabos **[plausibel]** — die Verschiebung
-zur Jahreszahlweise ist eine **Rahmung**, keine Produktänderung (§12).
+zur Jahreszahlweise ist eine **Rahmung**, keine Produktänderung (§13).
 
 **Newsletter-first & Konversion.** Realistische Free→Paid-Konversion liegt
 niedriger als erhofft: Platformer erreichte **~5 %** statt der angenommenen
@@ -253,11 +253,77 @@ Transparenz-Cockpit** — genau das, was der Sommer-Zähler im Ansatz schon ist.
 
 ---
 
-## 6. Der Jahreszyklus — das Jahresrad
+## 6. Die Lead-Maschine — fünf Schleifen, die von selbst laufen
 
-Kern-Artefakt. Das Jahr hat einen **Evergreen-Sockel** (läuft immer: Archiv-SEO,
-YouTube, Newsletter, Empfehlung) und **drei bis vier Kampagnenfenster**, die auf
-den anthroposophischen Jahreslauf und die Abo-Saisonalität gelegt sind.
+Das Herzstück — vor dem Kalender, denn der Kalender verstärkt nur, was hier
+dauernd läuft. Eine Schleife ist etwas anderes als eine Massnahme: sie wird
+**einmal gebaut**, läuft dann **ohne wöchentliches Zutun**, und jede Umdrehung
+erzeugt Leads, die die nächste Umdrehung billiger machen. Fünf Schleifen, alle
+aus dem eigenen Bestand, alle ohne Werbebudget:
+
+**Schleife 1 — Der Seelenkalender-Keil.** Steiners 52 Wochensprüche (1912/13,
+gemeinfrei) sind *die* anthroposophische Wochenrhythmik — **im selben Takt wie
+die Wochenschrift**. Als freier Wochenspruch (Web + E-Mail, hausgesetzt) ist er
+der perfekte Einstieg: minimale Hürde, echter Wert, und er selektiert exakt das
+eigene Publikum — Menschen aus Ring 2, die nie kalt ein Bezahl-Trial starten,
+nehmen einen freien Wochenspruch. Jeder Spruch verlinkt die Vertiefung
+(WoS-Artikel, GTV-Beitrag). *Automatik:* Woche wechselt von selbst
+(Oster-Anker), Versand per Vorlage + Zeitplan. *Messpunkt:*
+Newsletter-Netto-Wachstum, Klicks zur Vertiefung. **Status: gebaut** —
+`apps/seelenkalender/` zeigt den Spruch der laufenden Woche; die
+Versand-Strecke ist der nächste Bauschritt (Spec: `docs/specs/lead-maschine.md`).
+
+**Schleife 2 — Das Archiv als Sog.** 100 Jahrgänge + ~500 Aufnahmen sind der
+grösste ungehobene Schatz: **«Vor 100 Jahren»** (automatisch tagesgenau ein
+Archivstück), öffentliche Volltextsuche mit Volltext hinter E-Mail/Abo (jeder
+historische Artikel wird ein Sucheintrag), und **«Frag das Archiv»**
+(semantische Suche über hundert Jahre — ein Werkzeug, das nur dieses Haus haben
+kann). *Automatik:* einmal indexiert, wächst die Sichtbarkeit kumulativ ohne
+Kampagne. *Messpunkt:* Suche-Einstiege, E-Mail-Freischaltungen. **Status:
+spezifiziert** (`docs/specs/lead-maschine.md`).
+
+**Schleife 3 — Das Netzwerk als Kanal (Partner-Kit).** Die Zielmarke wird nicht
+durch eigenes Posten erreicht, sondern durch die **über 1200 Waldorfschulen,
+Weleda, Demeter, Kliniken, Zweige und die Christengemeinschaft**, die die
+Beziehungen zu Ring 2 bereits halten. Jede Institution erhält monatlich ein
+fertiges, hausgesetztes Stück (Spruch-Kachel, Archiv-Perle, Clip) mit
+getracktem Rücklink — **1200 Institutionen werden zu automatischen
+Verteilknoten.** *Automatik:* Kit wird aus der Atomisierung (Schleife 4)
+gespeist; Versandliste statt Einzelarbeit. *Messpunkt:* Rücklink-Konversionen
+je Partner (UTM-Konvention besteht). **Status: spezifiziert.**
+
+**Schleife 4 — Die Atomisierungs-Pipeline.** *Ein* Artikel oder *eine* Aufnahme
+wird automatisch zu **fünf Lead-Flächen**: Zitat-Kachel in der Hausschrift
+(über die **bestehenden Generatoren**), 60-Sekunden-Clip, Newsletter-Anriss,
+Archiv-SEO-Seite, Seelenkalender-Bezug. Redaktionsarbeit bleibt eine Einheit —
+die Maschine vervielfältigt die Oberfläche. *Messpunkt:* Lead-Flächen je
+Redaktions-Einheit, Konversion je Fläche (Attribution je Motiv besteht).
+**Status: spezifiziert.**
+
+**Schleife 5 — Würdevolles Schenken.** Kein «wirb einen Freund»-Rabatt, sondern
+**«Schenke einen Monat»**: Abonnenten verschenken einen Gratismonat, der
+Empfänger erhält eine persönliche Übergabe. Jedes Geschenk ist ein
+vorqualifizierter Lead, überbracht von einer vertrauten Person — kulturell
+stimmig (Weihnacht, Gedenken). *Automatik:* Uscreen-Coupons
+(Once/Repeating, belegt in §8) tragen die Mechanik ohne Zusatzkosten.
+*Messpunkt:* K-Faktor (Geschenke je 100 Abonnenten, Einlösung, Bleibe-Quote).
+**Status: spezifiziert.**
+
+**Die Logik dahinter:** Schleifen 1–2 stellen **mentale Verfügbarkeit** her
+(die 60 % nach Binet & Field), Schleife 3 kauft **Reichweite mit Vertrauen
+statt Geld**, Schleife 4 senkt die **Kosten je Kontakt** gegen null, Schleife 5
+macht aus **Bindung Akquise**. Der Kalender (§7) sagt nur noch, wann man diese
+Maschine lauter dreht.
+
+---
+
+## 7. Der Jahreszyklus — das Jahresrad
+
+Der Kalender ist **nicht** die Maschine — er ist ihr **Verstärker**: Der
+Evergreen-Sockel sind die fünf Schleifen aus §6, die immer laufen; die **drei
+bis vier Kampagnenfenster** sind die Momente, in denen das Haus dieselben
+Schleifen lauter dreht, gelegt auf den anthroposophischen Jahreslauf und die
+Abo-Saisonalität.
 
 | Monat | Anlass / Jahreslauf | WoS-Themenanlass | Kampagnenfenster | Kanal-Schwerpunkt |
 |---:|---|---|---|---|
@@ -285,7 +351,7 @@ Wirkung → Ist, Entscheid). Das Rad dreht sich, das Cockpit misst jede Umdrehun
 
 ---
 
-## 7. Die Maschine — Automatisierungs-Architektur
+## 8. Die Maschine — Automatisierungs-Architektur
 
 Auf dem bestehenden Fundament (`services/sommer-zaehler/`, `apps/utm-generator/`).
 Fünf Bauteile.
@@ -297,7 +363,7 @@ Herkunfts-**Motiv** (volles UTM-Tupel), Interessens-Signal (WoS/GTV, DE/EN).
 Capture-Punkte: Newsletter-Formular, Trial-Checkout, Landingpages, Print-QR,
 Live-Event-Anmeldung.
 
-**(b) Nurture-Strecken** (getaktete E-Mail-Folgen, im vorhandenen Stack, §10):
+**(b) Nurture-Strecken** (getaktete E-Mail-Folgen, im vorhandenen Stack, §11):
 - **Willkommen** (neuer Newsletter-Leser): Bestes aus dem Archiv, sanfte
   Hinführung zum ersten Trial.
 - **Trial-Begleitung Tag 1–7** (GTV): drei Impulse, die zum Schauen führen —
@@ -316,7 +382,7 @@ Kündigung, Zahlungsausfall (→ Dunning, holt bis zu ~0,86 %-Punkte Churn zurü
 Erscheinungsformen: **Artikel (WoS) → Clip/Aufnahme (GTV) → Newsletter-Anriss →
 Landingpage.** Jeder Kanal trägt jeden. Ein WoS-Leser bekommt gelegentlich den
 passenden GTV-Beitrag, ein GTV-Zuschauer den vertiefenden WoS-Artikel — **mit
-Frequenz-Deckel** (§11).
+Frequenz-Deckel** (§12).
 
 **(e) Verstetigung `sommer2026_*` → `marketing_*`** *(Folge-Bauvorhaben, hier nur
 als Prinzip).* Das Aktions-Schema (signups, Massnahmen-Protokoll, Trichter-RPCs)
@@ -330,15 +396,15 @@ Strecken sind ohne Zusatzkosten möglich: **Uscreen** hat eine **eingebaute
 Abandoned-Cart-Automation** (drei Mails nach 15 Minuten / +6 Stunden / +24 Stunden,
 Rabatt 10–15 % empfohlen) **[belegt]** und **Coupons** in zwei Formen (fester
 Betrag oder Prozent) mit drei Laufzeiten — **Once / Forever / Repeating** —, womit
-Intro-Rahmung (§12) und Win-back technisch abgedeckt sind **[belegt]**. **Zoho
-Campaigns** unterstützt **Double-Opt-in** (einwilligungsbasiert, §11b) **[belegt]**.
+Intro-Rahmung (§13) und Win-back technisch abgedeckt sind **[belegt]**. **Zoho
+Campaigns** unterstützt **Double-Opt-in** (einwilligungsbasiert, §12b) **[belegt]**.
 Was **nicht** belegt geklärt ist: ob eine mehrstufige, verhaltensgetriggerte
 Nurture-Strecke rein in Uscreen/Zoho läuft oder einen separaten ESP braucht — das
-ist die eine offene Vorab-Entscheidung vor Phase 1 (§13).
+ist die eine offene Vorab-Entscheidung vor Phase 1 (§14).
 
 ---
 
-## 8. Die Null-Budget-Phase — Organik zuerst
+## 9. Die Null-Budget-Phase — Organik zuerst
 
 Alles hier kostet **Zeit, kein Geld**. Reihenfolge nach Hebel.
 
@@ -360,11 +426,11 @@ Alles hier kostet **Zeit, kein Geld**. Reihenfolge nach Hebel.
    **Verteil-Multiplikatoren** (Empfehlung an ihre Kreise), nicht als Werbekauf.
 6. **Angebots-Rahmungen ohne Produktänderung:** Geschenk-, Gemeinschafts- und
    Klassensatz-Abos sind **Kommunikation und Bündelung** bestehender Tarife
-   (§12), kein neues Produkt.
+   (§13), kein neues Produkt.
 
 ---
 
-## 9. Die 10-Prozent-Regel — Experiment-Governance
+## 10. Die 10-Prozent-Regel — Experiment-Governance
 
 Ab dem ersten Gewinn dürfen 10 % in Services/Ads/Werkzeuge fliessen — **aber nur
 belegt auf Wirkung, nichts läuft unbeaufsichtigt.** Der Mechanismus existiert
@@ -384,7 +450,7 @@ Quartals-Prüfung. So bleibt das Reinvest ein Regelkreis, kein Fass ohne Boden.
 
 ---
 
-## 10. KPI-System & Wachstumsmodell
+## 11. KPI-System & Wachstumsmodell
 
 **North-Star je Produkt:** zahlende Abos (WoS / GTV, netto nach Churn).
 **Hilfsgrössen:** Newsletter-Netto-Wachstum · Trial-Starts · Trial→Paid ·
@@ -412,14 +478,14 @@ kippt. Ehrlich benannt, nicht versteckt.
 
 ---
 
-## 11. Spannungen & Grundsätze
+## 12. Spannungen & Grundsätze
 
 Kein Anhang — ein eigenes Kapitel, weil hier die Haltung des Hauses auf die
 Marktlogik trifft.
 
 **(a) Wachstum ohne Produktänderung.** 10–20× kommt aus **Publikums-Erweiterung**
 (Positionierung für Ring 2/3), nicht aus Produktumbau. Grenze der Aussage: ohne
-englische Schiene ist der obere fünfstellige Bereich nicht erreichbar (§10) —
+englische Schiene ist der obere fünfstellige Bereich nicht erreichbar (§11) —
 das ist Reichweitenarbeit, keine Produktarbeit, aber sie braucht Jahre.
 
 **(b) Datensparsamkeit vs. Automation.** Das Haus führt Datensparsamkeit als
@@ -445,7 +511,7 @@ Cross-Selling die Bindung.
 
 ---
 
-## 12. Fahrplan in Phasen
+## 13. Fahrplan in Phasen
 
 Jede Phase mit Eintritts-/Austrittskriterium in Zahlen.
 
@@ -466,9 +532,12 @@ gezielt 10 % des Gewinns in die wirksamsten Kanäle, jede Ausgabe im Protokoll.
 **Phase 3 — Skalierung EN/Partner.** Englische Schiene und Partnernetz
 hochfahren — der Weg in den oberen fünfstelligen Bereich. *Austritt:* Zielmarke.
 
-**Umsetzungs-Backlog (priorisiert, als Folgearbeit):**
+**Umsetzungs-Backlog (priorisiert, als Folgearbeit; Schleifen-Details in
+`docs/specs/lead-maschine.md`):**
+0. ~~Seelenkalender-Werkzeug~~ **gebaut** (`apps/seelenkalender/`); als Nächstes
+   die Versand-Strecke (Schleife 1).
 1. `marketing_*`-Schema aus `sommer2026_*` ableiten (Datenkontinuität).
-2. Nurture-Strecken in Uscreen/Zoho konfigurieren (§10-Machbarkeit zuerst klären).
+2. Nurture-Strecken in Uscreen/Zoho konfigurieren (Stack-Machbarkeit belegt, §8).
 3. Jahresrad als HTML-Werkzeug aus `design-system/starter.html` (heute nur als
    Tabelle in diesem Dokument und im Einseiter `marketing-maschine.html`).
 4. Empfehlungsprogramm-Mechanik (doppelseitig, würdig).
@@ -476,10 +545,10 @@ hochfahren — der Weg in den oberen fünfstelligen Bereich. *Austritt:* Zielmar
 
 ---
 
-## 13. Offene Entscheidungen
+## 14. Offene Entscheidungen
 
 - **E-Mail-Werkzeug (ESP):** Double-Opt-in (Zoho) und Uscreens Abandoned-Cart/
-  Coupons sind belegt vorhanden (§7); **offen bleibt**, ob eine mehrstufige,
+  Coupons sind belegt vorhanden (§8); **offen bleibt**, ob eine mehrstufige,
   verhaltensgetriggerte Nurture-Strecke rein im Bestand läuft oder einen
   separaten ESP braucht. **Vor Phase 1 zu klären.**
 - **Standard-Abo-Weg (Evergreen):** Der reguläre Abo-Link führt derzeit auf die
@@ -489,13 +558,13 @@ hochfahren — der Weg in den oberen fünfstelligen Bereich. *Austritt:* Zielmar
   Szenario.)
 - **Verhältnis zu bestehenden Redaktions-Newslettern:** ein Absender-Haus oder
   getrennte Stimmen?
-- **Zuständigkeit & Betriebsstunden:** wer pflegt die Maschine (Zeit-Budget, §11d)?
+- **Zuständigkeit & Betriebsstunden:** wer pflegt die Maschine (Zeit-Budget, §12d)?
 - **Zahlweise-Verschiebung:** Umstellung auf Jahreszahlweise aktiv bewerben
-  (Rahmung, §4/§12) — ab wann?
+  (Rahmung, §4/§13) — ab wann?
 
 ---
 
-## 14. Quellen
+## 15. Quellen
 
 Belegte externe Zahlen mit Abrufdatum **6. Juli 2026**. Interne Zahlen (4650 /
 15 000 / ~500) sind aus Mediadaten/Aufgabenstellung übernommen und **zu
