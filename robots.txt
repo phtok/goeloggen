@@ -1,0 +1,81 @@
+# werkzeuge.goetheanum.ch — interne Werkzeuge der Goetheanum-Hausgrafik.
+# Nicht für Suchtreffer und nicht als Material für KI-Crawler gedacht.
+#
+# Arbeitsteilung (bewusst so, nicht anders):
+#   1) Jede Seite trägt <meta name="robots" content="noindex">.
+#   2) Klassische Suchmaschinen DÜRFEN crawlen — nur so lesen sie das
+#      noindex überhaupt. Ein pauschales Disallow würde es unsichtbar
+#      machen und URL-only-Treffer erlauben.
+#   3) KI-/Daten-Crawler werden hier per Disallow ausgeschlossen.
+
+# --- KI- und Daten-Crawler: kein Zugriff -------------------------------
+User-agent: GPTBot
+Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Claude-User
+Disallow: /
+
+User-agent: Claude-SearchBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: Perplexity-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: omgili
+Disallow: /
+
+User-agent: Timpibot
+Disallow: /
+
+User-agent: AI2Bot
+Disallow: /
+
+User-agent: MistralAI-User
+Disallow: /
+
+# --- Klassische Suchmaschinen: crawlen erlaubt, indexieren verboten
+#     (das Verbot steht als noindex-Meta in jeder Seite) ----------------
+User-agent: *
+Disallow:
