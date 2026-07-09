@@ -160,6 +160,7 @@
   // Design-System steht bewusst am Ende (kleinste, spezialisierte Gruppe).
   var DISCOVER = [
     {slug:"signatur",       line:"Die Mail-Signatur im Hausbild – Angaben eintragen, Block kopieren, einsetzen."},
+    {slug:"empfehlungen",   line:"Elf Empfehlungen für E-Mails, die gelesen werden – mit PS-Zeile, Kalender-Erinnerung und A4-PDF."},
     {slug:"karten",         line:"Die Campus-Karte für Veranstaltungen – Orte wählen, eigene Marken setzen, druckfertiges Vektor-PDF in A4 oder A3."},
     {slug:"wallpaper",      line:"Elf Goetheanum-Hintergründe für den Desktop, frei zum Herunterladen."},
     {slug:"powerpoint",     line:"Präsentationsvorlage im Hausbild – mit eingebetteten Schriften, sofort loslegen."},
@@ -189,7 +190,8 @@
     "powerpoint":      '<span class="ppt"><b></b><i></i><i></i></span>', // eine Folie mit Titel
     "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>', // vier Sprachen
     "editor":          '<span class="ed"><i></i><i class="mk"></i><i></i></span>', // Text mit offener Frage
-    "karten":          '<span class="map"><b></b><b></b><span class="bau"></span><i class="m1"></i><i class="m2"></i></span>' // Mini-Campus mit Marken
+    "karten":          '<span class="map"><b></b><b></b><span class="bau"></span><i class="m1"></i><i class="m2"></i></span>', // Mini-Campus mit Marken
+    "empfehlungen":    '<span class="spec" style="color:var(--gold-ink)">11</span>' // die elf Gebote
   };
   function visual(t){
     var v = VISUAL[t.slug] || ('<span class="spec">' + (t.title || "?").slice(0, 1) + '</span>');
@@ -205,6 +207,11 @@
     return a;
   }
   function buildCarousel(byslug){
+    // Karussell-Extra (kein eigenes Werkzeug): die elf E-Mail-Gebote.
+    byslug["empfehlungen"] = byslug["empfehlungen"] || {
+      slug: "empfehlungen", title: "Diese Mail wird gelesen",
+      href: "apps/signatur-generator/#empfehlungen"
+    };
     var car = document.getElementById("carousel");
     var items = DISCOVER.map(function(d){ return { d:d, t:byslug[d.slug] }; })
                         .filter(function(x){ return x.t; });
