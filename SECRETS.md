@@ -36,7 +36,7 @@ Einmal setzen, dauerhaft wiederverwenden.
 | **Google Drive** | Connector | — | — | verbunden |
 | **ActiveCampaign** | Connector | — | — | installiert, **Auth erneuern** |
 | **GitHub** | Connector/Proxy | (`GH_TOKEN` nur für `gh`-CLI) | `repo`, `read:org` | über Proxy |
-| **Resend** | Env-Variable | `RESEND_API_KEY` | nur Senden (`sending`) | einzutragen |
+| **Resend** | Supabase-Config-Tabelle (`seelenkalender_config`, nur Service-Role) | `resend_api_key` | nur Senden (`sending`) | per SQL-Editor setzen (`services/seelenkalender/README.md`) — **nicht** als Claude-Env nötig |
 | *(Alternative: Brevo)* | Connector | — | — | im Verzeichnis, nicht installiert |
 
 ## Env-Variablen setzen (Web-UI)
