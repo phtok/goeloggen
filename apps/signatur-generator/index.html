@@ -462,6 +462,9 @@ function buildSignature() {
   const addr = [val("street"), val("city"), val("country")].filter(Boolean).join(" · ");
   if (addr) push(esc(addr), addr);
 
+  // Kontaktblock (Telefon/Mobil/Web) mit Leerzeile von Organisation/Adresse absetzen
+  if ((val("phone") || val("mobile") || val("web").trim()) && rows.some(r => !r.gap)) gap();
+
   // Kontakt: Telefonnummern als tel:-Link, aber Theme-Farbe (inherit) – dark-mode-fest
   if (val("phone")) push("<a href=\"" + telHref(val("phone")) + "\" style=\"color:inherit;text-decoration:none;\">" + esc(val("phone")) + "</a>", val("phone"));
   if (val("mobile")) push("<a href=\"" + telHref(val("mobile")) + "\" style=\"color:inherit;text-decoration:none;\">" + esc(val("mobile")) + "</a>", val("mobile"));
@@ -477,7 +480,7 @@ function buildSignature() {
   while (hl.length && hl[0] === "") { hl.shift(); tl.shift(); }
   while (hl.length && hl[hl.length - 1] === "") { hl.pop(); tl.pop(); }
 
-  const html = "<div style=\"font-family:" + CFONT + ";font-size:12px;line-height:1.5;\">" + (hl.join("<br>") || "&nbsp;") + "</div>";
+  const html = "<div style=\"font-family:" + CFONT + ";font-size:12px;line-height:1.3;\">" + (hl.join("<br>") || "&nbsp;") + "</div>";
   const text = tl.join("\n");
   return { html, text };
 }
