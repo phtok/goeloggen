@@ -103,7 +103,10 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 
 @media(max-width:720px){
   .dsnav .worlds{display:none}
-  .dsnav .read{margin-left:auto}   /* Schalter-Cluster (Lesemodus·Theme·Menü) zusammen nach rechts */
+  /* Fingerziel-Luft (B04): die drei Modi-Schalter ziehen in die Schublade
+     (.dmodes) – die Leiste behält nur Marke + Menü. */
+  .dsnav .read,.dsnav .share,.dsnav .theme{display:none}
+  .dsnav .all{margin-left:auto}
 }
 
 /* --- Schublade ------------------------------------------------------------- */
@@ -121,6 +124,23 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 .dsnav-drawer .dhead .t{font-weight:var(--w-strong);font-size:15px}
 .dsnav-drawer .close{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
 .dsnav-drawer .close:hover{color:var(--ink)}
+
+/* Modi-Schalter oben in der Schublade (Lesemodus · Hell/Dunkel · Teilen):
+   nur auf schmalen Schirmen sichtbar – dort ersetzen sie die Leisten-Icons.
+   Wort + Zeichen, Ziele ≥44px (B04), Zustand wie in der Leiste (Gold-Ring). */
+.dsnav-drawer .dmodes{display:none;gap:var(--s2);padding:var(--s3) 22px;
+  border-bottom:1px solid var(--line);flex:0 0 auto}
+.dsnav-drawer .dmodes button{flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;
+  gap:7px;font:inherit;font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);
+  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);
+  padding:9px 6px;min-height:var(--tap);cursor:pointer}
+.dsnav-drawer .dmodes button:hover{border-color:var(--gold)}
+.dsnav-drawer .dmodes button[aria-pressed="true"]{color:var(--gold-ink);box-shadow:inset 0 0 0 2px var(--gold)}
+.dsnav-drawer .dmodes .read .ic{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:19px;line-height:1}
+.dsnav-drawer .dmodes .read[aria-pressed="true"] .ic{font-family:var(--font-text)}
+.dsnav-drawer .dmodes .theme .ic,.dsnav-drawer .dmodes .share .ic{font-size:17px;line-height:1;display:inline-flex}
+.dsnav-drawer .dmodes .share.ok{color:var(--ok)}
+@media(max-width:720px){.dsnav-drawer .dmodes{display:flex}}
 
 /* Suche im Menü – filtert die Werkzeugliste live */
 .dsnav-drawer .dsearch{padding:var(--s3) 22px;border-bottom:1px solid var(--line);flex:0 0 auto}
