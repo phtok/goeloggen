@@ -44,6 +44,11 @@
       "intro": "Begleit-Grotesk, Gewichte und Mischsatz prüfen und kalibrieren."
     },
     {
+      "id": "kampagne",
+      "title": "Kampagne",
+      "intro": "Werkzeuge der Kampagnenarbeit – planen, verlinken, mailen, zählen. Gebaut für die Sommer-Aktion, wiederverwendbar für jede dreistufige Kampagne."
+    },
+    {
       "id": "statistik",
       "title": "Statistik",
       "intro": "Nutzungszahlen aller Werkzeuge – nur der Gebrauch legitimiert den Bau."
@@ -333,7 +338,7 @@
     },
     {
       "slug": "sommer-zaehler",
-      "cat": "statistik",
+      "cat": "kampagne",
       "status": "intern",
       "tag": "Aktion",
       "title": "Sommer-Zähler 2026",
@@ -344,7 +349,7 @@
     },
     {
       "slug": "utm-generator",
-      "cat": "statistik",
+      "cat": "kampagne",
       "status": "intern",
       "tag": "Aktion",
       "title": "UTM-Link-Generator",
@@ -352,6 +357,17 @@
       "href": "apps/utm-generator/",
       "desc": "Saubere, konventionskonforme Anmelde-Links der Sommer-Aktion bauen – mit QR und Link-Register, damit das Cockpit auch Links mit null Abschlüssen zeigt.",
       "such": "UTM Link Generator Kampagne Attribution Tracking QR Quelle Medium Content Sommer Aktion"
+    },
+    {
+      "slug": "mail-editor",
+      "cat": "kampagne",
+      "status": "intern",
+      "tag": "Aktion",
+      "title": "Mail-Editor",
+      "short": "Mail-Editor",
+      "href": "apps/mail-editor/",
+      "desc": "Alle Wellen-Mails der Sommer-Aktion zum Gegenlesen – drei Segmente × Wellen × zwei Sprachen, je Feld kommentierbar, Kommentare ins Werkzeug-Backend. Gebaut aus einer Quelle (heroes.json).",
+      "such": "Mail Editor Mailing Newsletter Kampagne Wellen Segmente Betreff Gegenlesen Kommentar Sommer Aktion E-Mail"
     },
     {
       "slug": "campus-karten",
@@ -401,7 +417,7 @@
     },
     {
       "slug": "marketing-maschine",
-      "cat": "statistik",
+      "cat": "kampagne",
       "status": "entwurf",
       "tag": "Strategie",
       "title": "Marketing-Maschine",
