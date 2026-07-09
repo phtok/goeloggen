@@ -145,8 +145,9 @@ def esc(s): return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&g
 
 
 def commentable(key, label, value_html):
-    return f"""<div class="fld" data-key="{esc(key)}"><div class="fh"><span class="lbl">{label}</span>
-<button class="cbtn" onclick="toggle(this)">💬 <span class="cc" data-cc="{esc(key)}">0</span></button></div>
+    # Die ganze Kopfzeile klappt den Kommentarbereich auf/zu (grosses Ziel, B04).
+    return f"""<div class="fld" data-key="{esc(key)}"><div class="fh" onclick="toggle(this)"><span class="lbl">{label}</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="{esc(key)}">0</span></button></div>
 <div class="val">{value_html}</div>
 <div class="cpanel" hidden><ul class="clist" data-cl="{esc(key)}"></ul>
 <div class="cin"><input placeholder="Kommentar …"><button onclick="send(this,'{esc(key)}')">senden</button></div></div></div>"""
@@ -240,17 +241,26 @@ def main():
 .cc.has{{background:var(--gold-deep);color:var(--on-accent);border-radius:10px;padding:0 7px}}
 .val{{font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;margin-top:4px;color:var(--ink)}}
 .val code{{font-family:var(--font-mono);font-size:var(--t-micro);color:var(--muted);word-break:break-all}}
-.cpanel{{margin-top:var(--s2);background:var(--field-bg);border-radius:8px;padding:var(--s2)}}
-.clist{{list-style:none;margin:0 0 var(--s2);padding:0;font-family:var(--font-text);font-size:var(--t-small)}}
-.clist li{{display:flex;gap:8px;align-items:baseline;padding:5px 8px;background:var(--paper);border-radius:6px;margin-bottom:4px}}
+.fh{{cursor:pointer}}
+.cpanel{{margin-top:var(--s2);background:var(--field-bg);border-radius:8px;padding:6px}}
+.clist{{list-style:none;margin:0;padding:0;font-family:var(--font-text);font-size:var(--t-small)}}
+.clist:not(:empty){{margin-bottom:6px}}
+/* Untereinander, nicht nebeneinander: Kopfzeile klein, Text volle Breite. */
+.clist li{{display:block;padding:4px 7px;background:var(--paper);border-radius:6px;margin-bottom:3px}}
+.khead{{display:flex;gap:8px;align-items:baseline}}
+.khead b{{color:var(--gold-ink);font-size:var(--t-micro)}}
+.kzeit{{font-size:var(--t-micro);color:var(--muted);white-space:nowrap;margin-left:auto}}
+.ktxt{{display:block;line-height:1.45}}
 .clist li.done .ktxt{{text-decoration:line-through;color:var(--muted)}}
-.clist b{{color:var(--gold-ink)}} .clist .kzeit{{font-size:var(--t-micro);color:var(--muted);white-space:nowrap}}
-.clist .ktxt{{flex:1}}
-.kdone{{min-height:var(--tap);background:none;border:1px solid var(--line-soft);border-radius:999px;padding:0 10px;font:inherit;font-size:var(--t-micro);color:var(--muted);cursor:pointer}}
-.kdone:hover{{border-color:var(--gold-deep);color:var(--gold-ink)}}
-.cin{{display:flex;gap:var(--s2)}}
-.cin input{{flex:1;min-height:var(--tap);font:inherit;font-size:var(--t-small);padding:6px 10px;border:1px solid var(--line);border-radius:var(--r-control);background:var(--paper);color:var(--ink)}}
-.cin button{{min-height:var(--tap);background:var(--blue-solid);color:var(--on-accent);border:0;border-radius:var(--r-control);padding:6px 14px;font:inherit;font-size:var(--t-small);cursor:pointer}}
+/* Kleines Zeichen, grosses Fingerziel: unsichtbare Trefferfläche ≥44px (B04). */
+.kdone{{position:relative;background:none;border:0;padding:0 2px;font:inherit;font-size:var(--t-micro);color:var(--muted);cursor:pointer;line-height:1}}
+.kdone::after{{content:"";position:absolute;inset:-13px}}
+.kdone:hover{{color:var(--gold-ink)}}
+.cin{{display:flex;gap:6px}}
+.cin input{{flex:1;min-height:var(--tap);font:inherit;font-size:var(--t-small);padding:4px 10px;border:1px solid var(--line);border-radius:var(--r-control);background:var(--paper);color:var(--ink);min-width:0}}
+.cin button{{min-height:var(--tap);background:var(--blue-solid);color:var(--on-accent);border:0;border-radius:var(--r-control);padding:4px 12px;font:inherit;font-size:var(--t-small);cursor:pointer}}
+/* Global ausblenden: Schalter «Kommentare» in der Kopfleiste. */
+body.nocmt .cbtn,body.nocmt .cpanel{{display:none}}
 .shared .fld{{background:var(--paper);border:1px solid var(--line-soft);border-radius:8px;padding:var(--s2) var(--s3)}}
 .subline{{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin:0 0 var(--s3)}}
 </style></head><body>
@@ -269,6 +279,7 @@ def main():
     <span class="lab" style="margin-left:var(--s3)">Ihr Kürzel</span>
     <input id="autor" placeholder="z. B. ph">
     <button id="b-done" class="pill" onclick="toggleDone()">Erledigte zeigen</button>
+    <button id="b-cmt" class="pill on" onclick="toggleComments()" aria-pressed="true">Kommentare</button>
     <span id="status" style="margin-left:auto">verbinde …</span>
   </div>
 </section>
@@ -293,15 +304,18 @@ const st=t=>document.getElementById('status').textContent=t;
 function setLang(l){{document.getElementById('b-de').classList.toggle('on',l=='de');document.getElementById('b-en').classList.toggle('on',l=='en');
  document.querySelectorAll('.mail').forEach(m=>m.style.display=(m.dataset.lang==l?'':'none'));}}
 function toggleDone(){{SHOW_DONE=!SHOW_DONE;document.getElementById('b-done').classList.toggle('on',SHOW_DONE);render();}}
-function toggle(b){{const p=b.closest('.fld').querySelector('.cpanel');p.hidden=!p.hidden;}}
+function toggleComments(){{const b=document.getElementById('b-cmt'),an=document.body.classList.toggle('nocmt');
+ b.classList.toggle('on',!an);b.setAttribute('aria-pressed',String(!an));}}
+function toggle(el){{const p=el.closest('.fld').querySelector('.cpanel');p.hidden=!p.hidden;}}
 function esc(s){{const d=document.createElement('div');d.textContent=s;return d.innerHTML;}}
-function zeit(iso){{try{{return new Date(iso).toLocaleString('de-CH',{{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}});}}catch(e){{return '';}}}}
+function zeit(iso){{try{{return new Date(iso).toLocaleString('de-CH',{{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}}).replace(', ',' ');}}catch(e){{return '';}}}}
 function render(){{
  document.querySelectorAll('.clist').forEach(ul=>{{
    const items=(COMMENTS[ul.dataset.cl]||[]).filter(c=>SHOW_DONE||!c.erledigt);
-   ul.innerHTML=items.map(c=>'<li class="'+(c.erledigt?'done':'')+'"><b>'+esc(c.autor||'?')+'</b>'
-     +'<span class="ktxt">'+esc(c.kommentar)+'</span><span class="kzeit">'+zeit(c.created_at)+'</span>'
-     +'<button class="kdone" onclick="erledigt('+c.id+','+(!c.erledigt)+')">'+(c.erledigt?'wieder öffnen':'erledigt ✓')+'</button></li>').join('');}});
+   ul.innerHTML=items.map(c=>'<li class="'+(c.erledigt?'done':'')+'">'
+     +'<div class="khead"><b>'+esc(c.autor||'?')+'</b><span class="kzeit">'+zeit(c.created_at)+'</span>'
+     +'<button class="kdone" onclick="erledigt('+c.id+','+(!c.erledigt)+')" title="'+(c.erledigt?'wieder öffnen':'erledigt')+'" aria-label="'+(c.erledigt?'wieder öffnen':'erledigt')+'">'+(c.erledigt?'↩':'✓')+'</button></div>'
+     +'<span class="ktxt">'+esc(c.kommentar)+'</span></li>').join('');}});
  document.querySelectorAll('.cc').forEach(s=>{{const n=(COMMENTS[s.dataset.cc]||[]).filter(c=>!c.erledigt).length;
    s.textContent=n;s.classList.toggle('has',n>0);}});
 }}
