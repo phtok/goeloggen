@@ -20,14 +20,18 @@ kopieren/teilen, Vertiefungs-Verweise mit UTM (`utm_campaign=evergreen`,
 anthro.world, alle 52 eindeutig extrahiert; Stichproben (1, 12, 26, 40, 52)
 verifiziert.
 
-**Baustufe B — Versand-Strecke:**
-1. Anmeldung: Formular (Paperform-Muster wie Sommer-Aktion) → Webhook →
-   `marketing_leads` (gehashte E-Mail, Einwilligung Double-Opt-in, Herkunfts-Motiv).
-2. Versand: wöchentlich (So/Mo früh) per Edge Function + `pg_cron`; Inhalt =
-   Spruch der Woche + **ein** Vertiefungs-Verweis (WoS oder GTV, alternierend,
-   Frequenz-Deckel beachten). ESP-Entscheid (Zoho Campaigns vs. schlanker
-   SMTP-Dienst) = offene Entscheidung im Konzept §14.
+**Baustufe B — Versand-Strecke (gebaut; ESP-Entscheid: Resend):**
+1. Anmeldung: Formular auf der Seite → Edge Function `seelenkalender`
+   (`services/seelenkalender/`) → `seelenkalender_abo` mit Double-Opt-in
+   (Bestätigungs-Brief), Honigtopf-Feld, keine Nutzer-Enumeration. E-Mail liegt
+   **zweckgebunden** für den Versand (RLS ohne anon-Zugriff), Entdopplung über
+   gesalzenen Hash; Auswertung nur über Summen (`seelenkalender_stats()`).
+2. Versand: `pg_cron` Montag 05.07 UTC → Edge Function → Resend (Batch,
+   `List-Unsubscribe` One-Click); Doppel-Versand durch `unique (jahr, woche)`
+   ausgeschlossen. Vertiefung im Wechsel (gerade Woche GTV, ungerade WoS).
 3. Jede Ausgabe trägt UTM je Motiv (`vers_NN`), Attribution besteht.
+4. **Offen (manuell, einmalig):** Resend-Domain verifizieren + API-Key per
+   SQL-Editor in `seelenkalender_config` setzen (`services/seelenkalender/README.md`).
 
 **Baustufe C — Verbreitung:** einbettbares Widget (ein `<script>`-Einzeiler für
 Partnerseiten, Schleife 3) + Spruch-Kachel als Bild (Schleife 4, Cover-Generator-

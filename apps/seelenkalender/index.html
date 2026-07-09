@@ -12,7 +12,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="robots" content="noindex" />
+<meta name="robots" content="noindex" />
 <title>Seelenkalender · Goetheanum</title>
 <meta name="description" content="Der Wochenspruch des Anthroposophischen Seelenkalenders – jede Woche neu, im Takt der Wochenschrift." />
 <link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
@@ -92,9 +92,18 @@
       </div>
       <div class="card soft">
         <span class="kicker">Wöchentlich per E-Mail</span>
-        <p class="desc">Der Spruch der Woche als stiller Wochengruss ins Postfach —
-          die Versand-Strecke ist in Vorbereitung.</p>
-        <p><span class="badge">in Vorbereitung</span></p>
+        <p class="desc">Der Spruch der Woche als stiller Wochengruss ins Postfach.
+          Anmeldung mit Bestätigung, Abmeldung mit einem Klick.</p>
+        <form id="abo-form" style="display:grid;gap:var(--s3);margin-top:var(--s3)">
+          <label class="field">
+            <span class="lab">E-Mail-Adresse</span>
+            <input type="email" id="abo-email" name="email" required autocomplete="email" placeholder="name@beispiel.ch" />
+          </label>
+          <!-- Honigtopf: bleibt für Menschen unsichtbar und leer -->
+          <input type="text" name="website" id="abo-website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
+          <button class="btn primary" type="submit" id="abo-senden">Wochenspruch abonnieren</button>
+        </form>
+        <p class="hint" id="abo-echo" hidden></p>
       </div>
     </div>
   </section>
@@ -211,6 +220,27 @@ $('teilen').addEventListener('click',async()=>{
   }catch(e){}
 });
 zeige();
+
+/* Abo: Double-Opt-in über die Edge Function; Antwort bewusst immer gleich. */
+const ABO_URL='https://dagcsnfrlbpxcmdimnrw.supabase.co/functions/v1/seelenkalender?aktion=anmelden';
+function echoAbo(text){const e=$('abo-echo');e.textContent=text;e.hidden=false;}
+$('abo-form').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  const knopf=$('abo-senden'); knopf.disabled=true;
+  const utm={}; new URLSearchParams(location.search).forEach((v,k)=>{if(k.startsWith('utm_'))utm[k]=v;});
+  try{
+    await fetch(ABO_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:$('abo-email').value,website:$('abo-website').value,sprache:'de',utm})});
+    echoAbo('Fast geschafft — bitte den Bestätigungs-Brief im Postfach öffnen.');
+    $('abo-form').reset();
+  }catch(e){
+    echoAbo('Das hat gerade nicht geklappt — bitte später noch einmal versuchen.');
+  }finally{knopf.disabled=false;}
+});
+/* Rückkehr von Bestätigen/Abmelden (Weiterleitung der Function) */
+if(location.hash==='#bestaetigt') echoAbo('Angemeldet — der nächste Wochenspruch kommt zu Ihnen.');
+if(location.hash==='#beendet')   echoAbo('Abgemeldet — still und ohne Rückfrage. Der Spruch bleibt hier frei lesbar.');
+if(location.hash==='#fehler')    echoAbo('Dieser Verweis war nicht (mehr) gültig.');
 </script>
 
 </body>
