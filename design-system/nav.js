@@ -39,6 +39,8 @@
   // zu Emoji umfärbt. Deterministisch in Hell wie Dunkel.
   var MOON_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="currentColor"><path d="M20.7 13.3A8 8 0 1 1 10.7 3.3a6.3 6.3 0 1 0 10 10Z"/></svg>';
   var SUN_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.1M12 19.3v2.1M2.6 12h2.1M19.3 12h2.1M5.2 5.2l1.5 1.5M17.3 17.3l1.5 1.5M18.8 5.2l-1.5 1.5M6.7 17.3l-1.5 1.5"/></svg>';
+  var SHARE_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14V3.6M8.2 7.2 12 3.4l3.8 3.8"/><path d="M5.5 11.5v8h13v-8"/></svg>';
+  var CHECK_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
   function updateThemeBtn() {
     if (!themeBtn) return;
     var dark = document.documentElement.getAttribute("data-theme") === "dark";
@@ -191,6 +193,7 @@
       '</a>' +
       '<nav class="worlds"></nav>' + ctaHTML +
       '<button class="read" type="button" aria-pressed="false" aria-label="Lesemodus – Fliesstext in der Leseschrift"><span class="ic" aria-hidden="true">a</span></button>' +
+      '<button class="share" type="button" aria-label="Seite teilen – Link kopieren" title="Link kopieren"><span class="ic">' + SHARE_SVG + '</span></button>' +
       '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic"></span></button>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
@@ -272,6 +275,31 @@
   function flash(msg) { toast.textContent = msg; toast.classList.add("show"); setTimeout(function () { toast.classList.remove("show"); }, 1400); }
 
   var btnAll = header.querySelector(".all");
+  // --- Teilen: kopiert die KURZE Adresse des Werkzeugs (Alias /<slug>/) -------
+  function shareUrl() {
+    if (location.hostname === "werkzeuge.goetheanum.ch" && ACTIVE && location.pathname.indexOf("/apps/") === 0) {
+      return "https://werkzeuge.goetheanum.ch/" + ACTIVE + "/";
+    }
+    return location.href.split("#")[0];
+  }
+  var shareBtn = header.querySelector(".share");
+  shareBtn.addEventListener("click", function () {
+    var url = shareUrl();
+    var done = function () {
+      shareBtn.querySelector(".ic").innerHTML = CHECK_SVG;
+      shareBtn.classList.add("ok");
+      setTimeout(function () {
+        shareBtn.querySelector(".ic").innerHTML = SHARE_SVG;
+        shareBtn.classList.remove("ok");
+      }, 1400);
+    };
+    if (navigator.share && window.matchMedia && matchMedia("(pointer:coarse)").matches) {
+      navigator.share({ title: document.title, url: url }).catch(function () {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(done, function () {});
+    }
+  });
+
   var themeBtn = header.querySelector(".theme");
   themeBtn.addEventListener("click", function () {
     setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");

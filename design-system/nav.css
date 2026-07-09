@@ -82,10 +82,11 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 .dsnav .read[aria-pressed="true"] .ic{font-family:var(--font-text)}
 
 /* ☾/☀ Hell-Dunkel – nur das Icon */
-.dsnav .theme{margin-left:8px;display:inline-flex;align-items:center;justify-content:center;font:inherit;
+.dsnav .theme,.dsnav .share{margin-left:8px;display:inline-flex;align-items:center;justify-content:center;font:inherit;
   color:var(--ink);background:none;border:0;padding:6px;cursor:pointer;line-height:1}
-.dsnav .theme .ic{font-size:18px;line-height:1}
-.dsnav .theme:hover{color:var(--gold-ink)}
+.dsnav .theme .ic,.dsnav .share .ic{font-size:18px;line-height:1}
+.dsnav .theme:hover,.dsnav .share:hover{color:var(--gold-ink)}
+.dsnav .share.ok{color:var(--ok)}
 
 /* ☰ Burger – nur das Icon, keine Pille, kein Wort */
 .dsnav .all{margin-left:10px;display:inline-flex;align-items:center;gap:6px;font:inherit;
