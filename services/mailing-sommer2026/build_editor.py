@@ -231,7 +231,7 @@ def main():
 .waves{{display:flex;gap:var(--s6);overflow-x:auto;padding:var(--s2) 0 var(--s5)}}
 .wave{{display:flex;gap:var(--s3)}}
 .mail{{width:340px;flex:0 0 auto;background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden}}
-.mhd{{background:var(--bar-bg);color:var(--on-accent);font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;padding:6px 12px}}
+.mhd{{background:var(--ink);color:var(--paper);font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;padding:6px 12px}}
 .mail iframe{{width:100%;height:520px;border:0;display:block;background:#F6F4F2}} /* # ds-ok Mail-Grund (Artefakt) */
 .flds{{padding:var(--s2) var(--s3)}}
 .fld{{border-top:1px solid var(--line-soft);padding:8px 4px}} .fld:first-child{{border-top:0}}
@@ -261,6 +261,8 @@ def main():
 .cin button{{min-height:var(--tap);background:var(--blue-solid);color:var(--on-accent);border:0;border-radius:var(--r-control);padding:4px 12px;font:inherit;font-size:var(--t-small);cursor:pointer}}
 /* Global ausblenden: Schalter «Kommentare» in der Kopfleiste. */
 body.nocmt .cbtn,body.nocmt .cpanel{{display:none}}
+/* «Nur Mails»: alle Einzelelemente weg — reine Galerie der Vorschauen. */
+body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
 .shared .fld{{background:var(--paper);border:1px solid var(--line-soft);border-radius:8px;padding:var(--s2) var(--s3)}}
 .subline{{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin:0 0 var(--s3)}}
 </style></head><body>
@@ -280,11 +282,12 @@ body.nocmt .cbtn,body.nocmt .cpanel{{display:none}}
     <input id="autor" placeholder="z. B. ph">
     <button id="b-done" class="pill" onclick="toggleDone()">Erledigte zeigen</button>
     <button id="b-cmt" class="pill on" onclick="toggleComments()" aria-pressed="true">Kommentare</button>
+    <button id="b-nur" class="pill" onclick="toggleNur()" aria-pressed="false">Nur Mails</button>
     <span id="status" style="margin-left:auto">verbinde …</span>
   </div>
 </section>
 
-<section class="segment"><h2>Gemeinsame Elemente</h2>
+<section class="segment shared-sec"><h2>Gemeinsame Elemente</h2>
 <p class="subline">Einmal kommentieren — gilt für alle Mails.</p>
 <div class="shared">{shared_html}</div></section>
 {''.join(seg_blocks)}
@@ -306,6 +309,8 @@ function setLang(l){{document.getElementById('b-de').classList.toggle('on',l=='d
 function toggleDone(){{SHOW_DONE=!SHOW_DONE;document.getElementById('b-done').classList.toggle('on',SHOW_DONE);render();}}
 function toggleComments(){{const b=document.getElementById('b-cmt'),an=document.body.classList.toggle('nocmt');
  b.classList.toggle('on',!an);b.setAttribute('aria-pressed',String(!an));}}
+function toggleNur(){{const b=document.getElementById('b-nur'),an=document.body.classList.toggle('nurmails');
+ b.classList.toggle('on',an);b.setAttribute('aria-pressed',String(an));}}
 function toggle(el){{const p=el.closest('.fld').querySelector('.cpanel');p.hidden=!p.hidden;}}
 function esc(s){{const d=document.createElement('div');d.textContent=s;return d.innerHTML;}}
 function zeit(iso){{try{{return new Date(iso).toLocaleString('de-CH',{{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}}).replace(', ',' ');}}catch(e){{return '';}}}}
