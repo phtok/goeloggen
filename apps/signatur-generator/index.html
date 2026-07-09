@@ -38,6 +38,11 @@
   .counter.over{color:var(--bad)}
   .expiry-note{font-family:var(--font-text);font-size:var(--t-small);color:var(--gold-ink);background:var(--soft);
     border:1px solid var(--line);border-radius:var(--r-control);padding:var(--s2) var(--s3);margin-bottom:var(--s3)}
+  .apple-note{font-family:var(--font-text);font-size:var(--t-small);line-height:1.55;color:var(--gold-ink);
+    background:var(--soft);border:1px solid var(--gold);border-radius:var(--r-control);
+    padding:var(--s2) var(--s3);margin-top:var(--s3);max-width:64ch}
+  .apple-note strong{font-weight:600}
+  .apple-note a{color:var(--gold-ink);text-decoration:underline}
 
   .fold{border-top:1px solid var(--line-soft);margin-bottom:var(--s3);padding-top:var(--s3)}
   .fold>summary{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-small);color:var(--ink);
@@ -254,8 +259,13 @@
             <button type="button" class="btn ghost" id="copyPlain">Nur Text kopieren</button>
           </div>
           <span class="sr-only" id="copyStatus" aria-live="polite"></span>
+          <div class="apple-note" id="appleNote" hidden role="status">
+            <strong>Gleich in Apple Mail einfügen?</strong> Fettung und Farben erscheinen nur,
+            wenn unter dem Signaturfeld das Häkchen ‹Standardschriftart für E-Mails verwenden›
+            <strong>entfernt</strong> ist. <a href="#anleitungFold" id="appleNoteMore">Skizze ansehen</a>
+          </div>
 
-          <details class="code-details">
+          <details class="code-details" id="anleitungFold">
             <summary>Anleitung</summary>
             <div class="hint">
               <strong>Kopieren → im Mailprogramm unter Einstellungen → Signaturen einfügen → fertig.</strong>
@@ -593,11 +603,22 @@ function markCopied(btn) {
   document.getElementById("copyStatus").textContent = "In die Zwischenablage kopiert – bleibt bereit, bis du etwas änderst.";
 }
 function resetCopied() {
+  const note = document.getElementById("appleNote");
+  if (note) note.hidden = true;
   if (!copiedBtn) return;
   if (copiedBtn.dataset.orig) copiedBtn.textContent = copiedBtn.dataset.orig;
   copiedBtn.classList.remove("ok");
   copiedBtn = null;
 }
+function showAppleNote() {
+  // Nur wo Apple Mail wahrscheinlich ist – der Hinweis erscheint im Moment des Einfuegens.
+  if (!/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) return;
+  document.getElementById("appleNote").hidden = false;
+}
+document.getElementById("appleNoteMore").addEventListener("click", function () {
+  const fold = document.getElementById("anleitungFold");
+  fold.open = true;
+});
 
 document.getElementById("copyRich").addEventListener("click", function () {
   const sig = buildSignature();
@@ -607,7 +628,7 @@ document.getElementById("copyRich").addEventListener("click", function () {
       "text/plain": new Blob([sig.text], { type: "text/plain" })
     });
     navigator.clipboard.write([item]).then(
-      () => { markCopied(this); track("copy", {}); },
+      () => { markCopied(this); showAppleNote(); track("copy", {}); },
       () => flash(this, "Bitte HTML-Code nutzen")
     );
   } else {
