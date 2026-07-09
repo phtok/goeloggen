@@ -196,6 +196,47 @@ end;
 $$;
 grant execute on function public.sommer2026_massnahme_aendern(bigint, date, text, text, text, text, numeric, bigint, bigint) to anon, authenticated;
 
+-- Kosten-Einzelposten (Migration «sommer2026_kosten_posten»): das Team traegt
+-- Posten mit Kuerzel ein, das Cockpit summiert je Kostenart (Uebersicht bleibt,
+-- Details klappen auf). Muster wie Massnahmen: Tabelle zu, RPCs offen.
+create table if not exists public.sommer2026_kosten (
+  id         bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  tag        date not null,
+  posten     text not null,
+  kategorie  text not null default 'andere' check (kategorie in ('stunden','social','druck','infrastruktur','andere')),
+  betrag     numeric not null check (betrag >= 0),
+  ersteller  text
+);
+alter table public.sommer2026_kosten enable row level security;
+revoke all on table public.sommer2026_kosten from anon, authenticated;
+
+create or replace function public.sommer2026_kosten_public()
+returns table(id bigint, tag date, posten text, kategorie text, betrag numeric, ersteller text)
+language sql security definer set search_path to 'public' as $$
+  select id, tag, posten, kategorie, betrag, ersteller
+    from public.sommer2026_kosten
+   order by tag, id;
+$$;
+grant execute on function public.sommer2026_kosten_public() to anon, authenticated;
+
+create or replace function public.sommer2026_kosten_eintragen(
+  p_tag date, p_posten text, p_kategorie text, p_betrag numeric, p_ersteller text)
+returns text language plpgsql security definer set search_path to 'public' as $$
+declare v_kat text;
+begin
+  if p_tag is null or coalesce(trim(p_posten), '') = '' or p_betrag is null or p_betrag < 0 then
+    return 'unvollstaendig';
+  end if;
+  v_kat := lower(coalesce(p_kategorie, ''));
+  if v_kat not in ('stunden','social','druck','infrastruktur','andere') then v_kat := 'andere'; end if;
+  insert into public.sommer2026_kosten (tag, posten, kategorie, betrag, ersteller)
+  values (p_tag, trim(p_posten), v_kat, p_betrag, nullif(trim(coalesce(p_ersteller,'')), ''));
+  return 'ok';
+end;
+$$;
+grant execute on function public.sommer2026_kosten_eintragen(date, text, text, numeric, text) to anon, authenticated;
+
 -- Wirkungstrichter: Sichtbarkeit → Aktivierung → Wirkung → Bindung
 create or replace function public.sommer2026_trichter()
 returns table(stufe text, wert bigint, ord int)
