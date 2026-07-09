@@ -173,6 +173,8 @@
   .zr.sichtbarkeit{background:var(--gold)} .zr.aktivierung{background:var(--blue)}
   .zr.wirkung{background:var(--ok)} .zr.bindung{background:var(--muted)}
   .zb-legende{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);margin-top:var(--s3);font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
+  .medit{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 6px;min-height:var(--tap)}
+  .medit:hover{color:var(--blue)} td.act{text-align:right;white-space:nowrap}
   .zb-form{margin-top:var(--s5)}
   .zb-form summary{cursor:pointer;font-family:var(--font-text);font-weight:600;color:var(--ink);min-height:var(--tap);display:flex;align-items:center}
   .zb-form .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);margin-top:var(--s4)}
@@ -326,7 +328,7 @@
     </div>
     <div class="zb-legende" id="zbLegende"></div>
 
-    <details class="zb-form">
+    <details class="zb-form" id="mfForm">
       <summary>Massnahme eintragen</summary>
       <div class="card soft">
         <div class="grid">
@@ -340,6 +342,7 @@
               <option value="social">Social Media</option>
               <option value="newsletter">Newsletter</option>
               <option value="mailer">Mailing / Post</option>
+              <option value="flyer">Flyer</option>
               <option value="popup">Popup</option>
               <option value="website">Website</option>
               <option value="empfehlung">Empfehlung</option>
@@ -360,23 +363,15 @@
             <input type="text" id="mfTitel" placeholder="z. B. Reel Ernst Zürcher · Instagram" />
           </label>
           <label class="field">
-            <span class="lab">Reichweite (optional)</span>
-            <input type="number" id="mfReichweite" min="0" placeholder="Impressionen" />
-          </label>
-          <label class="field">
-            <span class="lab">Klicks (optional)</span>
-            <input type="number" id="mfKlicks" min="0" placeholder="Klicks" />
-          </label>
-          <label class="field">
-            <span class="lab">Kosten in CHF (optional)</span>
-            <input type="number" id="mfKosten" min="0" step="0.01" placeholder="0.00" />
+            <span class="lab">Kürzel – wer steht dahinter?</span>
+            <input type="text" id="mfWer" placeholder="z. B. pt" autocomplete="off" />
           </label>
         </div>
         <div style="display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;margin-top:var(--s4)">
           <button class="btn primary" type="button" id="mfBtn">Eintragen</button>
           <span class="said" id="mfSaid"></span>
         </div>
-        <p class="provisorisch" style="margin-top:var(--s3)">Für alle Kampagnen-Beteiligten offen – Social trägt Posts und Reichweiten ein, Redaktion Newsletter und Inserate. Zahlen dürfen später nachgetragen werden (einfach denselben Eintrag ergänzen lassen oder Philipp melden).</p>
+        <p class="provisorisch" style="margin-top:var(--s3)">Für alle Kampagnen-Beteiligten offen. Reichweite, Klicks und Kosten werden gesammelt nachgetragen (CSV an Philipp oder per Bearbeiten-Knopf im Protokoll unten).</p>
       </div>
     </details>
   </section>
@@ -385,7 +380,7 @@
     <div class="shead"><h2>Massnahmen-Protokoll</h2><p>Jede Massnahme mit Datum, Aufgabe, Kosten, Reichweite und Klicks – damit aus der Aktion eine lesbare Geschichte wird statt eines Datenhaufens.</p></div>
     <div class="tablewrap">
       <table class="tarif">
-        <thead><tr><th>Datum</th><th>Massnahme</th><th>Kanal</th><th class="num">Kosten</th><th class="num">Reichweite</th><th class="num">Klicks</th></tr></thead>
+        <thead><tr><th>Datum</th><th>Massnahme</th><th>Kanal</th><th class="num">Kosten</th><th class="num">Reichweite</th><th class="num">Klicks</th><th></th></tr></thead>
         <tbody id="massnahmenBody"><tr><td class="empty" colspan="6">lädt …</td></tr></tbody>
       </table>
     </div>
@@ -628,7 +623,7 @@
     { name: 'Schlussspurt',  von: '2026-08-03', bis: '2026-08-08' }
   ];
   var ZB_KANAELE = [
-    ['social', 'Social'], ['newsletter', 'Newsletter'], ['mailer', 'Mailing/Post'],
+    ['social', 'Social'], ['newsletter', 'Newsletter'], ['mailer', 'Mailing/Post'], ['flyer', 'Flyer'],
     ['popup', 'Popup'], ['website', 'Website'], ['empfehlung', 'Empfehlung'], ['andere', 'Anderes']
   ];
   var ROLLEN_LABEL = { sichtbarkeit:'Sichtbarkeit', aktivierung:'Aktivierung', wirkung:'Wirkung', bindung:'Bindung' };
@@ -693,6 +688,7 @@
           var d = new Date(m.tag + 'T00:00:00');
           if (d < von || d > bis) return;
           var det = [ROLLEN_LABEL[m.rolle] || ''];
+          if (m.ersteller) det.push('Kürzel ' + m.ersteller);
           if (m.reichweite) det.push('Reichweite ' + Number(m.reichweite).toLocaleString('de-CH'));
           if (m.klicks) det.push('Klicks ' + Number(m.klicks).toLocaleString('de-CH'));
           if (m.kosten) det.push('Kosten ' + Number(m.kosten).toLocaleString('de-CH'));
@@ -714,53 +710,82 @@
     }).join('') + '<span>Jeder Punkt = eine Massnahme; Details beim Überfahren.</span>';
   }
 
-  // Eintragen: offener Schreibweg (Muster Link-Register), erscheint sofort überall.
+  // Eintragen/Bearbeiten: offener Schreibweg (Muster Link-Register),
+  // erscheint sofort überall. Bearbeiten lädt die Zeile über den Knopf im Protokoll.
   el('mfTag').value = new Date().toISOString().slice(0, 10);
   el('mfBtn').addEventListener('click', function(){
     var sagen = function(msg, bad){ var s = el('mfSaid'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; };
     var titel = (el('mfTitel').value || '').trim();
-    if (!el('mfTag').value || !titel){ sagen('Datum und Massnahme sind Pflicht.', true); return; }
-    fetch(SB + '/rest/v1/rpc/sommer2026_massnahme_eintragen', {
+    var wer = (el('mfWer').value || '').trim();
+    if (!el('mfTag').value || !titel || !wer){ sagen('Datum, Massnahme und Kürzel sind Pflicht.', true); return; }
+    var istEdit = mfEditId != null;
+    var params = {
+      p_tag: el('mfTag').value, p_massnahme: titel,
+      p_kanal: el('mfKanal').value, p_rolle: el('mfRolle').value,
+      p_ersteller: wer, p_kosten: null, p_reichweite: null, p_klicks: null
+    };
+    if (istEdit) { params.p_id = mfEditId; } else { params.p_zielgruppe = null; }
+    fetch(SB + '/rest/v1/rpc/' + (istEdit ? 'sommer2026_massnahme_aendern' : 'sommer2026_massnahme_eintragen'), {
       method: 'POST',
       headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
-      body: JSON.stringify({
-        p_tag: el('mfTag').value, p_massnahme: titel,
-        p_kanal: el('mfKanal').value, p_rolle: el('mfRolle').value,
-        p_zielgruppe: null,
-        p_kosten: el('mfKosten').value ? Number(el('mfKosten').value) : null,
-        p_reichweite: el('mfReichweite').value ? Number(el('mfReichweite').value) : null,
-        p_klicks: el('mfKlicks').value ? Number(el('mfKlicks').value) : null
-      })
+      body: JSON.stringify(params)
     }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(ergebnis){
         if (ergebnis === 'ok'){
-          sagen('Eingetragen – erscheint im Zeitband und im Protokoll.');
-          el('mfTitel').value = ''; el('mfReichweite').value = ''; el('mfKlicks').value = ''; el('mfKosten').value = '';
+          sagen(istEdit ? 'Geändert.' : 'Eingetragen – erscheint im Zeitband und im Protokoll.');
+          mfZuruecksetzen();
           rpc('sommer2026_massnahmen_public').then(function(rows){ renderZeitband(rows); renderMassnahmen(rows); }).catch(function(){});
         } else { sagen('Datum und Massnahme prüfen.', true); }
       })
-      .catch(function(){ sagen('Eintragen nicht erreichbar.', true); });
+      .catch(function(){ sagen(istEdit ? 'Ändern nicht erreichbar.' : 'Eintragen nicht erreichbar.', true); });
   });
 
   function renderMassnahmen(rows){
     var body = el('massnahmenBody'); body.innerHTML = '';
     if(!rows || !rows.length){
-      body.innerHTML = '<tr><td class="empty" colspan="6">Noch keine Massnahmen erfasst – das Protokoll wird gepflegt, sobald die Aktionen laufen.</td></tr>';
+      body.innerHTML = '<tr><td class="empty" colspan="7">Noch keine Massnahmen erfasst – das Protokoll wird gepflegt, sobald die Aktionen laufen.</td></tr>';
       return;
     }
     rows.forEach(function(r){
       var tag = r.tag ? new Date(r.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) : '–';
       var kanal = (KANAL_LABEL[r.kanal] || r.kanal || '') + (r.rolle && ROLLE_LABEL[r.rolle] ? ' · ' + ROLLE_LABEL[r.rolle] : '');
       var tr = document.createElement('tr');
-      tr.innerHTML = '<td></td><td></td><td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
+      tr.innerHTML = '<td></td><td></td><td></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="act"></td>';
       tr.children[0].textContent = tag;
-      tr.children[1].textContent = r.massnahme || '';
+      tr.children[1].textContent = (r.massnahme || '') + (r.ersteller ? ' · ' + r.ersteller : '');
       tr.children[2].textContent = kanal;
       tr.children[3].textContent = (r.kosten != null) ? eur(r.kosten) : '–';
       tr.children[4].textContent = (r.reichweite != null) ? fmt(r.reichweite) : '–';
       tr.children[5].textContent = (r.klicks != null) ? fmt(r.klicks) : '–';
+      var edit = document.createElement('button');
+      edit.type = 'button'; edit.className = 'medit'; edit.textContent = 'Bearbeiten';
+      edit.addEventListener('click', function(){ massnahmeBearbeiten(r); });
+      tr.children[6].appendChild(edit);
       body.appendChild(tr);
     });
+  }
+
+  // Bearbeiten: Zeile in die Maske laden; Speichern ändert nur die Kernfelder,
+  // vorhandene Zahlen (Kosten/Reichweite/Klicks) bleiben unangetastet.
+  var mfEditId = null;
+  function massnahmeBearbeiten(r){
+    mfEditId = r.id;
+    var d = el('mfForm'); if (d) d.open = true;
+    el('mfTag').value = r.tag || '';
+    el('mfTitel').value = r.massnahme || '';
+    el('mfKanal').value = r.kanal || 'andere';
+    el('mfRolle').value = r.rolle || 'wirkung';
+    el('mfWer').value = r.ersteller || '';
+    el('mfBtn').textContent = 'Änderung speichern';
+    el('mfSaid').textContent = 'Bearbeitung von «' + (r.massnahme || '') + '» – Speichern übernimmt.';
+    el('mfSaid').style.color = 'var(--muted)';
+    d.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function mfZuruecksetzen(){
+    mfEditId = null;
+    el('mfTitel').value = ''; el('mfWer').value = '';
+    el('mfTag').value = new Date().toISOString().slice(0, 10);
+    el('mfBtn').textContent = 'Eintragen';
   }
 
   // ── Kosten und Wirkung ─────────────────────────────────────────────────────

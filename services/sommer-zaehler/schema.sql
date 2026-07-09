@@ -106,7 +106,7 @@ create table if not exists public.sommer2026_massnahmen (
   created_at  timestamptz not null default now(),
   tag         date not null,                              -- Datum der Massnahme
   massnahme   text not null,                              -- z. B. «Auftaktnewsletter»
-  kanal       text not null default 'andere' check (kanal in ('newsletter','mailer','social','popup','website','empfehlung','andere')),
+  kanal       text not null default 'andere' check (kanal in ('newsletter','mailer','flyer','social','popup','website','empfehlung','andere')),
   rolle       text not null default 'wirkung' check (rolle in ('sichtbarkeit','aktivierung','wirkung','bindung')),  -- Hauptaufgabe
   zielgruppe  text,
   botschaft   text,
@@ -114,6 +114,7 @@ create table if not exists public.sommer2026_massnahmen (
   kosten      numeric,                                    -- Aufwand
   reichweite  bigint,                                     -- Sichtbarkeit (Impressionen)
   klicks      bigint,                                     -- Aktivierung
+  ersteller   text,                                       -- Kürzel: wer steht dahinter
   beobachtung text,                                       -- INTERN (nicht im RPC)
   entscheidung text                                       -- INTERN (nicht im RPC)
 );
@@ -132,9 +133,9 @@ $$;
 
 -- Massnahmen-Protokoll, kuratiert (ohne interne Freitext-Spalten)
 create or replace function public.sommer2026_massnahmen_public()
-returns table(tag date, massnahme text, kanal text, rolle text, kosten numeric, reichweite bigint, klicks bigint)
+returns table(id bigint, tag date, massnahme text, kanal text, rolle text, ersteller text, kosten numeric, reichweite bigint, klicks bigint)
 language sql security definer set search_path to 'public' as $$
-  select tag, massnahme, kanal, rolle, kosten, reichweite, klicks
+  select id, tag, massnahme, kanal, rolle, ersteller, kosten, reichweite, klicks
     from public.sommer2026_massnahmen
    order by tag, id;
 $$;
@@ -145,7 +146,8 @@ $$;
 -- und Wirkungskette im Cockpit.
 create or replace function public.sommer2026_massnahme_eintragen(
   p_tag date, p_massnahme text, p_kanal text, p_rolle text,
-  p_zielgruppe text, p_kosten numeric, p_reichweite bigint, p_klicks bigint)
+  p_zielgruppe text, p_kosten numeric, p_reichweite bigint, p_klicks bigint,
+  p_ersteller text default null)
 returns text language plpgsql security definer set search_path to 'public' as $$
 declare
   v_kanal text; v_rolle text;
@@ -154,15 +156,45 @@ begin
     return 'unvollstaendig';
   end if;
   v_kanal := lower(coalesce(p_kanal, ''));
-  if v_kanal not in ('newsletter','mailer','social','popup','website','empfehlung','andere') then v_kanal := 'andere'; end if;
+  if v_kanal not in ('newsletter','mailer','flyer','social','popup','website','empfehlung','andere') then v_kanal := 'andere'; end if;
   v_rolle := lower(coalesce(p_rolle, ''));
   if v_rolle not in ('sichtbarkeit','aktivierung','wirkung','bindung') then v_rolle := 'wirkung'; end if;
-  insert into public.sommer2026_massnahmen (tag, massnahme, kanal, rolle, zielgruppe, kosten, reichweite, klicks)
-  values (p_tag, trim(p_massnahme), v_kanal, v_rolle, nullif(trim(coalesce(p_zielgruppe,'')), ''), p_kosten, p_reichweite, p_klicks);
+  insert into public.sommer2026_massnahmen (tag, massnahme, kanal, rolle, zielgruppe, kosten, reichweite, klicks, ersteller)
+  values (p_tag, trim(p_massnahme), v_kanal, v_rolle, nullif(trim(coalesce(p_zielgruppe,'')), ''), p_kosten, p_reichweite, p_klicks,
+          nullif(trim(coalesce(p_ersteller,'')), ''));
   return 'ok';
 end;
 $$;
-grant execute on function public.sommer2026_massnahme_eintragen(date, text, text, text, text, numeric, bigint, bigint) to anon, authenticated;
+grant execute on function public.sommer2026_massnahme_eintragen(date, text, text, text, text, numeric, bigint, bigint, text) to anon, authenticated;
+
+-- Bearbeiten (Migration «sommer2026_massnahmen_kuerzel_flyer_bearbeiten»):
+-- nur übergebene Werte ändern, vorhandene Zahlen bleiben erhalten.
+create or replace function public.sommer2026_massnahme_aendern(
+  p_id bigint, p_tag date, p_massnahme text, p_kanal text, p_rolle text,
+  p_ersteller text, p_kosten numeric, p_reichweite bigint, p_klicks bigint)
+returns text language plpgsql security definer set search_path to 'public' as $$
+declare
+  v_kanal text; v_rolle text; n int;
+begin
+  v_kanal := lower(coalesce(p_kanal, ''));
+  if v_kanal not in ('newsletter','mailer','flyer','social','popup','website','empfehlung','andere') then v_kanal := null; end if;
+  v_rolle := lower(coalesce(p_rolle, ''));
+  if v_rolle not in ('sichtbarkeit','aktivierung','wirkung','bindung') then v_rolle := null; end if;
+  update public.sommer2026_massnahmen set
+    tag        = coalesce(p_tag, tag),
+    massnahme  = coalesce(nullif(trim(coalesce(p_massnahme,'')), ''), massnahme),
+    kanal      = coalesce(v_kanal, kanal),
+    rolle      = coalesce(v_rolle, rolle),
+    ersteller  = coalesce(nullif(trim(coalesce(p_ersteller,'')), ''), ersteller),
+    kosten     = coalesce(p_kosten, kosten),
+    reichweite = coalesce(p_reichweite, reichweite),
+    klicks     = coalesce(p_klicks, klicks)
+  where id = p_id;
+  get diagnostics n = row_count;
+  return case when n > 0 then 'ok' else 'unbekannt' end;
+end;
+$$;
+grant execute on function public.sommer2026_massnahme_aendern(bigint, date, text, text, text, text, numeric, bigint, bigint) to anon, authenticated;
 
 -- Wirkungstrichter: Sichtbarkeit → Aktivierung → Wirkung → Bindung
 create or replace function public.sommer2026_trichter()

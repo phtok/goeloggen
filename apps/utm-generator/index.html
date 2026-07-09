@@ -117,7 +117,8 @@
             <option value="linkedin"></option><option value="youtube"></option>
             <option value="nl-ws"></option><option value="nl-tv"></option>
             <option value="mailing"></option><option value="inserat"></option>
-            <option value="google"></option>
+            <option value="google"></option><option value="goetheanum"></option>
+            <option value="dasgoetheanum"></option><option value="flyer"></option>
           </datalist>
         </label>
 
@@ -328,7 +329,8 @@
   var MEDIUM_VORSCHLAG = {
     instagram:'social', facebook:'social', linkedin:'social', youtube:'social',
     'nl-ws':'email', 'nl-tv':'email', mailing:'email',
-    inserat:'print', google:'cpc'
+    inserat:'print', flyer:'print', google:'cpc',
+    goetheanum:'popup', dasgoetheanum:'popup'
   };
   var mediumWarAutomatisch = false;
   el('medium').addEventListener('input', function(){ mediumWarAutomatisch = false; });
