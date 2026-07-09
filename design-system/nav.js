@@ -46,6 +46,7 @@
     var dark = document.documentElement.getAttribute("data-theme") === "dark";
     themeBtn.querySelector(".ic").innerHTML = dark ? SUN_SVG : MOON_SVG;
     themeBtn.setAttribute("aria-label", dark ? "Hell schalten" : "Dunkel schalten");
+    themeBtn.setAttribute("title", dark ? "Hellmodus" : "Dunkelmodus");
     themeBtn.setAttribute("aria-pressed", String(dark));
   }
   function setTheme(t) {
@@ -192,8 +193,8 @@
         '<img class="lockup" src="' + ROOT + 'assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge">' +
       '</a>' +
       '<nav class="worlds"></nav>' + ctaHTML +
-      '<button class="read" type="button" aria-pressed="false" aria-label="Lesemodus – Fliesstext in der Leseschrift"><span class="ic" aria-hidden="true">a</span></button>' +
-      '<button class="share" type="button" aria-label="Seite teilen – Link kopieren" title="Link kopieren"><span class="ic">' + SHARE_SVG + '</span></button>' +
+      '<button class="read" type="button" aria-pressed="false" aria-label="Lesemodus – Fliesstext in der Leseschrift" title="Lesemodus"><span class="ic" aria-hidden="true">a</span></button>' +
+      '<button class="share" type="button" aria-label="Seite teilen – Link kopieren" title="Teilen"><span class="ic">' + SHARE_SVG + '</span></button>' +
       '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic"></span></button>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
