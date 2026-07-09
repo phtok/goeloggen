@@ -123,10 +123,13 @@
       intro: "Fertige Vorlagen zum Übernehmen – Wallpaper, Präsentationen.", cats: ["anwendung"] }
   ];
   // Nur intern zusätzlich – die Backstage-Welten (A/B/C-Qualifizierung).
+  // Kuratierte Reihenfolge; Manifest-Kategorien, die hier fehlen, laufen beim
+  // Laden automatisch als eigene Backstage-Welt hinten nach (Sicherheitsnetz).
   var INTERN_EXTRA = [
     { id: "vorbereitung", label: "In Vorbereitung", intro: "In Arbeit – noch nicht freigegeben.", cats: ["vorbereitung"] },
     { id: "ligaturen", label: "Ligaturen", intro: "Die Kiste nur für die Ligaturen.", cats: ["ligaturen"] },
     { id: "schriftpflege", label: "Schriftpflege", intro: "Grotesk, Gewichte und Mischsatz prüfen.", cats: ["schriftpflege"] },
+    { id: "kampagne", label: "Kampagne", intro: "Kampagnen planen, verlinken, mailen, zählen.", cats: ["kampagne"] },
     { id: "statistik", label: "Statistik", intro: "Nutzungszahlen aller Werkzeuge.", cats: ["statistik"] },
     { id: "schau", label: "Schau & Mockups", intro: "Präsentations-Mockups und Studien.", cats: ["schau"] },
     { id: "geparkt", label: "Geparktes", intro: "Konzepte, die später kommen.", cats: ["geparkt"] },
@@ -468,6 +471,15 @@
   // --- Manifest laden --------------------------------------------------------
   fetch(TOOLS).then(function (r) { return r.json(); }).then(function (m) {
     ALL = m.tools || [];
+    // Sicherheitsnetz: Manifest-Kategorien ohne Welt werden automatisch eigene
+    // Backstage-Welten (Titel/Intro aus tools.json) — eine neue Kategorie im
+    // Manifest verschwindet damit nie mehr stillschweigend aus dem Menü.
+    var known = WORLDS.concat(INTERN_EXTRA).reduce(function (a, w) { return a.concat(w.cats); }, []);
+    (m.categories || []).forEach(function (c) {
+      if (c && c.id && known.indexOf(c.id) === -1) {
+        INTERN_EXTRA.push({ id: c.id, label: c.title || c.id, intro: c.intro || "", cats: [c.id] });
+      }
+    });
     PRIMARY.forEach(function (p) {
       var t = bySlug(p.slug);
       var a = el("a", null, p.label);
