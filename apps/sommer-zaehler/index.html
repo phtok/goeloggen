@@ -316,7 +316,50 @@
         <tfoot id="costFoot"></tfoot>
       </table>
     </div>
-    <p class="provisorisch">Kosten stehen auf 0 – die echten Zahlen werden erfragt. Hauptposten: Stunden intern, Social Media, Druck & Versand, Infrastruktur.</p>
+    <details class="zb-form">
+      <summary>Einzelposten anzeigen und eintragen</summary>
+      <div class="tablewrap" style="margin-top:var(--s4)">
+        <table class="tarif">
+          <thead><tr><th>Datum</th><th>Posten</th><th>Kostenart</th><th class="num">Betrag</th></tr></thead>
+          <tbody id="kostenPostenBody"><tr><td class="empty" colspan="4">Noch keine Einzelposten erfasst.</td></tr></tbody>
+        </table>
+      </div>
+      <div class="card soft" style="margin-top:var(--s4)">
+        <div class="grid">
+          <label class="field">
+            <span class="lab">Datum</span>
+            <input type="date" id="kfTag" />
+          </label>
+          <label class="field">
+            <span class="lab">Kostenart</span>
+            <select id="kfKategorie">
+              <option value="stunden">Stunden intern</option>
+              <option value="social">Social Media</option>
+              <option value="druck">Druck &amp; Versand</option>
+              <option value="infrastruktur">Infrastruktur</option>
+              <option value="andere">Andere</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="lab">Betrag in Euro</span>
+            <input type="number" id="kfBetrag" min="0" step="0.01" placeholder="0.00" />
+          </label>
+          <label class="field span3">
+            <span class="lab">Posten</span>
+            <input type="text" id="kfPosten" placeholder="z. B. Inserat BZ Basel, halbe Seite" />
+          </label>
+          <label class="field">
+            <span class="lab">Kürzel – wer trägt ein?</span>
+            <input type="text" id="kfWer" placeholder="z. B. hao" autocomplete="off" />
+          </label>
+        </div>
+        <div style="display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;margin-top:var(--s4)">
+          <button class="btn primary" type="button" id="kfBtn">Eintragen</button>
+          <span class="said" id="kfSaid"></span>
+        </div>
+      </div>
+    </details>
+    <p class="provisorisch">Jeder Posten zählt sofort in Summe, Kosten je Abo und Rückfluss. Eintragen dürfen alle Beteiligten – das Kürzel sagt, wer.</p>
   </section>
 
   <section>
@@ -342,7 +385,7 @@
               <option value="social">Social Media</option>
               <option value="newsletter">Newsletter</option>
               <option value="mailer">Mailing / Post</option>
-              <option value="flyer">Flyer</option>
+              <option value="flyer">Flyer / Stand</option>
               <option value="popup">Popup</option>
               <option value="website">Website</option>
               <option value="empfehlung">Empfehlung</option>
@@ -450,12 +493,6 @@
       { key:'andere',     label:'Andere',         rolle:'' }
     ],
     // Kosten der Aktion (Euro) – stehen auf 0, echte Zahlen werden erfragt.
-    kosten: [
-      { label:'Stunden intern',  wert: 0 },
-      { label:'Social Media',    wert: 0 },
-      { label:'Druck & Versand', wert: 0 },
-      { label:'Infrastruktur',   wert: 0 }
-    ],
     zahlenProvisorisch: true       // blendet den Hinweis auf Beispielwerte ein
   };
 
@@ -614,7 +651,7 @@
 
   // ── Massnahmen-Protokoll ────────────────────────────────────────────────────
   var ROLLE_LABEL = { sichtbarkeit:'Sichtbarkeit', aktivierung:'Aktivierung', wirkung:'Wirkung', bindung:'Bindung' };
-  var KANAL_LABEL = { newsletter:'Newsletter', mailer:'Mailing', social:'Social Media', popup:'Popup', website:'Website', empfehlung:'Empfehlung', andere:'Andere' };
+  var KANAL_LABEL = { newsletter:'Newsletter', mailer:'Mailing', flyer:'Flyer/Stand', social:'Social Media', popup:'Popup', website:'Website', empfehlung:'Empfehlung', andere:'Andere' };
   // ── Zeitband: Phasen × Wochen × Kanäle ─────────────────────────────────────
   // Phasen der Aktion (anpassbar): Auftakt → Verdichtung → Schlussspurt.
   var PHASEN = [
@@ -623,7 +660,7 @@
     { name: 'Schlussspurt',  von: '2026-08-03', bis: '2026-08-08' }
   ];
   var ZB_KANAELE = [
-    ['social', 'Social'], ['newsletter', 'Newsletter'], ['mailer', 'Mailing/Post'], ['flyer', 'Flyer'],
+    ['social', 'Social'], ['newsletter', 'Newsletter'], ['mailer', 'Mailing/Post'], ['flyer', 'Flyer/Stand'],
     ['popup', 'Popup'], ['website', 'Website'], ['empfehlung', 'Empfehlung'], ['andere', 'Anderes']
   ];
   var ROLLEN_LABEL = { sichtbarkeit:'Sichtbarkeit', aktivierung:'Aktivierung', wirkung:'Wirkung', bindung:'Bindung' };
@@ -789,25 +826,68 @@
   }
 
   // ── Kosten und Wirkung ─────────────────────────────────────────────────────
-  function renderKosten(total, revenue){
-    var kosten = CONFIG.kosten || [];
-    var summe = kosten.reduce(function(s, k){ return s + (Number(k.wert) || 0); }, 0);
+  var KAT_LABEL = { stunden:'Stunden intern', social:'Social Media', druck:'Druck & Versand', infrastruktur:'Infrastruktur', andere:'Andere' };
+  var lastTotal = 0, lastRevenue = 0;
+  function renderKosten(total, revenue, posten){
+    lastTotal = total; lastRevenue = revenue;
+    posten = posten || [];
+    var jeKat = {}; var summe = 0;
+    posten.forEach(function(k){ var b = Number(k.betrag) || 0; summe += b; jeKat[k.kategorie] = (jeKat[k.kategorie] || 0) + b; });
     el('costTotal').textContent = eur(summe);
     el('costCpa').textContent   = (summe > 0 && total > 0) ? eur(summe / total) : '–';
     el('costRoi').textContent   = summe > 0 ? (revenue / summe).toFixed(1) + '×' : '–';
 
     var body = el('costBody'); body.innerHTML = '';
-    kosten.forEach(function(k){
+    Object.keys(KAT_LABEL).forEach(function(kat){
+      if (kat === 'andere' && !jeKat[kat]) return;
       var tr = document.createElement('tr');
       tr.innerHTML = '<td></td><td class="num"></td>';
-      tr.children[0].textContent = k.label;
-      tr.children[1].textContent = eur(k.wert);
+      tr.children[0].textContent = KAT_LABEL[kat];
+      tr.children[1].textContent = eur(jeKat[kat] || 0);
       body.appendChild(tr);
     });
     var foot = el('costFoot');
     foot.innerHTML = '<tr><td>Summe</td><td class="num"></td></tr>';
     foot.querySelector('tr').children[1].textContent = eur(summe);
+
+    var pb = el('kostenPostenBody'); pb.innerHTML = '';
+    if (!posten.length){
+      pb.innerHTML = '<tr><td class="empty" colspan="4">Noch keine Einzelposten erfasst.</td></tr>';
+    } else {
+      posten.forEach(function(k){
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td></td><td></td><td></td><td class="num"></td>';
+        tr.children[0].textContent = k.tag ? new Date(k.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) : '–';
+        tr.children[1].textContent = (k.posten || '') + (k.ersteller ? ' · ' + k.ersteller : '');
+        tr.children[2].textContent = KAT_LABEL[k.kategorie] || k.kategorie || '';
+        tr.children[3].textContent = eur(k.betrag);
+        pb.appendChild(tr);
+      });
+    }
   }
+
+  // Kosten eintragen: offener Schreibweg mit Pflicht-Kuerzel.
+  el('kfTag').value = new Date().toISOString().slice(0, 10);
+  el('kfBtn').addEventListener('click', function(){
+    var sagen = function(msg, bad){ var s = el('kfSaid'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; };
+    var posten = (el('kfPosten').value || '').trim();
+    var wer = (el('kfWer').value || '').trim();
+    var betrag = el('kfBetrag').value;
+    if (!el('kfTag').value || !posten || !wer || betrag === '' || Number(betrag) < 0){ sagen('Datum, Posten, Betrag und Kürzel sind Pflicht.', true); return; }
+    fetch(SB + '/rest/v1/rpc/sommer2026_kosten_eintragen', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({ p_tag: el('kfTag').value, p_posten: posten, p_kategorie: el('kfKategorie').value, p_betrag: Number(betrag), p_ersteller: wer })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(ergebnis){
+        if (ergebnis === 'ok'){
+          sagen('Eingetragen – Summe, Kosten je Abo und Rückfluss sind aktualisiert.');
+          el('kfPosten').value = ''; el('kfBetrag').value = '';
+          rpc('sommer2026_kosten_public').then(function(rows){ renderKosten(lastTotal, lastRevenue, rows); }).catch(function(){});
+        } else { sagen('Angaben prüfen.', true); }
+      })
+      .catch(function(){ sagen('Eintragen nicht erreichbar.', true); });
+  });
 
   // ── Tarif-Tabelle ──────────────────────────────────────────────────────────
   function renderTarif(rows){
@@ -947,10 +1027,10 @@
       el('provisorisch').textContent = 'Zielmarken, Preise und die Bleibe-Quote sind vorläufig hinterlegt – sobald die echten Werte gesetzt sind, rechnet das Cockpit unverändert weiter.';
     }
     Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten'), rpc('sommer2026_kanaele'),
-                  rpc('sommer2026_trichter'), rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public') ])
+                  rpc('sommer2026_trichter'), rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public'), rpc('sommer2026_kosten_public') ])
       .then(function(res){
         var stats = res[0] || [], timeline = res[1] || [], kohorten = res[2] || [], kanaele = res[3] || [];
-        var trichter = res[4] || [], attribution = res[5] || [], massnahmen = res[6] || [];
+        var trichter = res[4] || [], attribution = res[5] || [], massnahmen = res[6] || [], kostenPosten = res[7] || [];
         var total = stats.reduce(function(s, r){ return s + Number(r.n); }, 0);
         var revenue = projectRevenue(stats);
         var mo = renderSpark(timeline);
@@ -962,7 +1042,7 @@
         renderTarif(stats);
         renderMilestones(total);
         renderCohort(kohorten, revenue);
-        renderKosten(total, revenue);
+        renderKosten(total, revenue, kostenPosten);
         renderMassnahmen(massnahmen);
         renderZeitband(massnahmen);
         if(total === 0){ el('status').className = 'status empty'; }
