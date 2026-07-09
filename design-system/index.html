@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Design-System · Goetheanum Grafik</title>
-<meta name="description" content="Das lebende Design-System der Goetheanum-Hausgrafik: Farben, Schnitte, Typografie-Regeln, Komponenten und der Bau-Workflow – aus einer Quelle gerendert." />
+<meta name="description" content="Das lebende Design-System der Goetheanum-Hausgrafik: Farben, Schnitte, Typografie-Regeln und Komponenten – aus einer Quelle gerendert." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
 
@@ -51,6 +51,20 @@
   .rule .tx{color:var(--ink);font-size:14px;line-height:1.5;max-width:72ch}
   .rule.card-rule .id{color:var(--blue)}
 
+  /* Sektionen & Bereiche: Liste statt breiter Tabelle – trägt alle vier
+     Sprachen und bleibt auf dem Telefon einspaltig lesbar (B03/B04). */
+  .orglist{margin-top:var(--s3)}
+  .org{display:grid;grid-template-columns:24px minmax(0,1fr);gap:var(--s2) var(--s4);padding:var(--s4) 0;border-top:1px solid var(--line-soft);font-family:var(--font-text)}
+  @media(min-width:760px){.org{grid-template-columns:24px minmax(0,1fr) minmax(0,1fr) 150px}}
+  .org .oc{width:22px;height:22px;border-radius:5px;border:1px solid var(--line);margin-top:2px}
+  .org .ode b{font-weight:600;font-size:var(--t-body)}
+  .org .ode .okurz{color:var(--muted);font-size:var(--t-small)}
+  .org .olang{display:grid;gap:2px;font-size:var(--t-small);color:var(--muted)}
+  .org .olang .lg{display:inline-block;width:3ch;color:var(--gold-ink);font-size:var(--t-micro);letter-spacing:.04em}
+  .org .ogrp{color:var(--muted);font-size:var(--t-small)}
+  .org .ogrp code{font-size:var(--t-micro)}
+  @media(max-width:759px){.org .olang,.org .ogrp{grid-column:2}}
+
   /* Abstands-Balken */
   .scale .row{display:flex;align-items:center;gap:var(--s4);padding:6px 0}
   .scale .bar{height:16px;background:var(--gold);border-radius:4px}
@@ -69,13 +83,6 @@
   .status li{list-style:none;display:flex;gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid var(--line-soft);font-size:14px}
   .status .mk-ok{color:var(--ok);font-weight:var(--w-strong)}
   .status .mk-open{color:var(--gold-ink);font-weight:var(--w-strong)}
-
-  /* Bau-Workflow */
-  .steps{counter-reset:s;display:grid;gap:var(--s3)}
-  .steps li{list-style:none;display:grid;grid-template-columns:38px 1fr;gap:var(--s4);align-items:start}
-  .steps li::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:var(--r-pill);background:var(--gold-deep);color:var(--on-accent);font-weight:var(--w-strong)}
-  .steps b{font-weight:var(--w-strong)}
-  .steps .d{color:var(--muted);font-size:14px;line-height:1.5}
 
   /* Drift-Wächter */
   .guard{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s4) var(--s6);background:var(--soft)}
@@ -155,20 +162,15 @@
   <section id="sektionen">
     <div class="shead">
       <h2>Sektionen &amp; Bereiche</h2>
-      <p>Die <b>eine Quelle</b> für Namen (vier Sprachen), Kürzel und Identitätsfarben aller Sektionen und Bereiche: <code>assets/goe-orgs.js</code>. Speist die Logo-Engine, die Formulare (Visitenkarte, Signatur) und die Tokens <code>--sek-*</code>. Hier live aus der Quelle gerendert – ändert sich die Datei, ändert sich diese Tabelle.</p>
+      <p>Die <b>eine Quelle</b> für Namen (Deutsch, English, Français, Español), Kürzel und Identitätsfarben aller Sektionen und Bereiche: <code>assets/goe-orgs.js</code>. Speist die Logo-Engine, die Formulare (Visitenkarte, Signatur) und die Tokens <code>--sek-*</code>. Hier live aus der Quelle gerendert – ändert sich die Datei, ändert sich diese Liste.</p>
     </div>
 
     <span class="kicker">Identitätsfarben · Tokens <code>--sek-*</code></span>
     <div class="grid cols3" id="sektionen-sw" style="margin:var(--s3) 0 var(--s8)"></div>
 
-    <span class="kicker">Die ganze Tabelle · aus <code>goe-orgs.js</code></span>
-    <div class="card" style="margin-top:var(--s3);overflow-x:auto">
-      <table id="org-table">
-        <thead><tr><th>Farbe</th><th>Schlüssel</th><th>Name (de)</th><th>Kurz (de)</th><th>Name (en)</th><th>Gruppe</th></tr></thead>
-        <tbody id="org-body"><tr><td class="meta" colspan="6">lädt aus der Quelle …</td></tr></tbody>
-      </table>
-    </div>
-    <p class="note" style="margin-top:var(--s4)">Korrigieren = die Quelle bearbeiten: <a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-orgs.js">goe-orgs.js auf GitHub</a>. Werkzeuge sollen diese Datei <b>einbinden</b>, nicht kopieren – sonst driftet das Bild (eine eingebettete Kopie ist bereits abgewichen; Konsolidierung steht an).</p>
+    <span class="kicker">Die ganze Quelle · alle vier Sprachen</span>
+    <div class="orglist" id="org-list"><p class="meta">lädt aus der Quelle …</p></div>
+    <p class="note" style="margin-top:var(--s4)">Zum Nachschlagen und Kopieren gibt es dieselben Namen als Arbeitsseite: <a href="../uebersetzungen.html">Übersetzungen</a>. Korrigieren = die Quelle bearbeiten: <a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-orgs.js">goe-orgs.js auf GitHub</a>. Werkzeuge sollen diese Datei <b>einbinden</b>, nicht kopieren – sonst driftet das Bild (eine eingebettete Kopie ist bereits abgewichen; Konsolidierung steht an).</p>
   </section>
 
   <!-- ================= Begriffe & Übersetzungen ================= -->
@@ -330,22 +332,46 @@
     </div>
   </section>
 
-  <!-- ================= Bau-Workflow ================= -->
-  <section id="bauen">
+  <!-- Der Bau-Workflow («So baust du ein neues Werkzeug») lebt im internen
+       Hub (../start/#bauen) – diese Schauseite zeigt das System, nicht die Werkstatt. -->
+
+  <!-- ================= Perspektiven ================= -->
+  <section id="perspektiven">
     <div class="shead">
-      <h2>So baust du ein neues Werkzeug</h2>
-      <p>Schnell und regelkonform – weil das System eingebunden, nicht kopiert wird. Vier Schritte, und nichts muss hinterher geprüft werden.</p>
+      <h2>Perspektiven des Design-Systems</h2>
+      <p>Von und miteinander lernen.</p>
     </div>
-    <ol class="steps">
-      <li><div><b>Starter kopieren.</b> <span class="d"><a href="starter.html">starter.html</a> ist ein leeres Werkzeug mit verdrahtetem Webfont, Tokens, Kopf, Fuss und korrektem Kicker. Du fängst nie bei null an.</span></div></li>
-      <li><div><b>Mitte füllen.</b> <span class="d">Nur den werkzeug-eigenen Teil setzen. Alles drumherum ist schon CI; greife auf die Tokens zu (<code>var(--gold)</code>, <code>var(--s6)</code>), erfinde keine neuen Werte.</span></div></li>
-      <li><div><b>Eintragen.</b> <span class="d">Eine Zeile in <code>tools.json</code> – das Werkzeug erscheint automatisch im Hub.</span></div></li>
-      <li><div><b>Committen.</b> <span class="d">Der Typo-Hook (<code>tools/typo-check.py</code>) prüft die geänderten Texte automatisch und lässt nur Konformes durch. Der Mensch prüft nie von Auge.</span></div></li>
-    </ol>
-    <div class="demo" style="margin-top:var(--s6)">
-      <a class="btn primary" href="starter.html">Starter öffnen</a>
-      <a class="btn" href="README.md">Workflow-Doku</a>
-      <a class="btn ghost" href="../tools.json">Manifest ansehen</a>
+    <p class="note" style="max-width:64ch">
+      Vier Erlebnis-Seiten: die Startseiten der grossen Goetheanum-Webseiten,
+      <b style="font-weight:var(--w-deutlich)">vollständig nachgebaut</b> mit
+      diesem Design-System — echte Inhalte (Stand 6. Juli 2026), ganze Webseite,
+      kein Ausschnitt. Ein schwebender Knopf führt zurück hierher und öffnet das
+      Original in einem neuen Fenster, für den direkten Vergleich. Die
+      gerechneten Zahlen dahinter stehen in
+      <a href="https://github.com/phtok/goeloggen/blob/main/docs/webfamilie-befund.md">docs/webfamilie-befund.md</a>;
+      der <b style="font-weight:var(--w-deutlich)">maschinelle Schnellbefund</b>
+      (<code>tools/ds-extern.py</code>, zwölf belegbare Prüfungen je URL, Score) liegt in
+      <a href="https://github.com/phtok/goeloggen/blob/main/docs/webfamilie-konformitaet.md">docs/webfamilie-konformitaet.md</a>
+      — Stand Juli 2026: goetheanum.ch 50 % · anthroposophie.org 8 % ·
+      dasgoetheanum.com 25 % · goetheanum.tv 33 %.
+    </p>
+    <div class="grid4" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--s4);margin-top:var(--s6)">
+      <a class="teaser stack" href="../perspektiven/goetheanum-ch.html">
+        <span class="thumb" aria-hidden="true" style="background:var(--blue-solid)"></span>
+        <span><span class="kick">Hauptseite</span><h3>goetheanum.ch</h3>
+        <p class="ex">Die Startseite im Hausbild — Kalender, Teaser und der Sieben-Block-Footer, komplett.</p></span></a>
+      <a class="teaser stack" href="../perspektiven/dasgoetheanum.html">
+        <span class="thumb" aria-hidden="true" style="background:var(--gold-deep)"></span>
+        <span><span class="kick">Wochenschrift</span><h3>dasgoetheanum.com</h3>
+        <p class="ex">Die Startseite im Hausbild — Aufmacher, Rubriken und Abo-Leiste, komplett.</p></span></a>
+      <a class="teaser stack" href="../perspektiven/goetheanum-tv.html">
+        <span class="thumb" aria-hidden="true" style="background:var(--stage-bg2)"></span>
+        <span><span class="kick">Streaming</span><h3>goetheanum.tv</h3>
+        <p class="ex">Die Startseite im Hausbild — die ganze dunkle Bühne mit echten Reihen.</p></span></a>
+      <a class="teaser stack" href="../perspektiven/anthroposophie-org.html">
+        <span class="thumb" aria-hidden="true" style="background:var(--sek-aas)"></span>
+        <span><span class="kick">Weltweit</span><h3>anthroposophie.org</h3>
+        <p class="ex">Die Startseite im Hausbild — Rubrik, Heft-Archiv und Newsletter, komplett.</p></span></a>
     </div>
   </section>
 
@@ -446,24 +472,28 @@ function buildTerms(){
 }
 
 function buildOrgTable(){
-  const body=$("#org-body"); if(!body) return;
+  const wrap=$("#org-list"); if(!wrap) return;
   const ORGS=window.GOE_GCI_ORGS, CATS=window.GOE_GCI_CATS;
-  if(!ORGS){ body.innerHTML='<tr><td class="meta" colspan="6">goe-orgs.js nicht geladen.</td></tr>'; return; }
+  if(!ORGS){ wrap.innerHTML='<p class="meta">goe-orgs.js nicht geladen.</p>'; return; }
   // Gruppe je Schlüssel aus den Kategorien ableiten.
   const grp={};
   if(CATS) Object.keys(CATS).forEach(g=>(CATS[g].items||[]).forEach(k=>{grp[k]=CATS[g].label_de||g;}));
-  body.innerHTML="";
+  wrap.innerHTML="";
+  // lang je Zeile (WCAG 3.1.2), Kurzname als Beisatz, Gruppe + Schlüssel rechts.
   Object.keys(ORGS).forEach(k=>{
     const o=ORGS[k]||{};
-    const tr=el("tr");
-    tr.innerHTML =
-      `<td><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:1px solid var(--line);background:${o.color||'transparent'}"></span></td>`+
-      `<td class="mono">${k}</td>`+
-      `<td>${o.name_de||""}</td>`+
-      `<td class="meta">${o.short_de||""}</td>`+
-      `<td class="meta">${o.name_en||""}</td>`+
-      `<td class="meta">${grp[k]||"–"}</td>`;
-    body.appendChild(tr);
+    const row=el("div","org");
+    const kurz=(o.short_de&&o.short_de!==o.name_de)?` <span class="okurz">· kurz: ${o.short_de}</span>`:"";
+    row.innerHTML =
+      `<span class="oc" style="background:${o.color||'transparent'}" aria-hidden="true"></span>`+
+      `<div class="ode"><b lang="de">${o.name_de||""}</b>${kurz}</div>`+
+      `<div class="olang">`+
+        `<span lang="en"><span class="lg" aria-hidden="true">en</span>${o.name_en||"–"}</span>`+
+        `<span lang="fr"><span class="lg" aria-hidden="true">fr</span>${o.name_fr||"–"}</span>`+
+        `<span lang="es"><span class="lg" aria-hidden="true">es</span>${o.name_es||"–"}</span>`+
+      `</div>`+
+      `<div class="ogrp">${grp[k]||"–"} · <code>${k}</code></div>`;
+    wrap.appendChild(row);
   });
 }
 

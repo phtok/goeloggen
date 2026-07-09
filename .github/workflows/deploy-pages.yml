@@ -51,6 +51,10 @@ jobs:
           # Manifest der Werkzeuge (treibt die Uebersicht).
           if [ -f tools.json ]; then cp tools.json _site/tools.json; fi
 
+          # Crawler-Politik: KI-Bots blockieren, Suchmaschinen lesen das
+          # noindex in den Seiten (Details im Kopf der robots.txt).
+          if [ -f robots.txt ]; then cp robots.txt _site/robots.txt; fi
+
           # Eigene Domain: GitHub Pages liest die CNAME aus dem Artefakt. Ohne
           # diese Zeile ginge die Domain-Anbindung beim naechsten Deploy verloren.
           if [ -f CNAME ]; then cp CNAME _site/CNAME; fi
@@ -58,6 +62,9 @@ jobs:
           # Sprechende Abschnitts-Pfade (saubere URLs -> Weiterleitung auf die
           # Zielseite). Zentral gepflegt in sektionen.json.
           if [ -f sektionen.json ]; then python3 tools/build_sections.py _site; fi
+
+          # Kurz-URLs je Werkzeug: /<slug>/ -> /apps/<ordner>/ (aus tools.json).
+          if [ -f tools/build_tool_aliases.py ]; then python3 tools/build_tool_aliases.py _site; fi
 
           touch _site/.nojekyll
 

@@ -69,11 +69,22 @@
   --bad:#b3261e;         /* Fehler/Warnung */
   --ok:#3f7d46;          /* Erfolg/Bestätigung – Weiss drauf (--on-accent) */
   --on-accent:#fff;      /* Text auf Blau/Gold-Flächen */
+  --ink-print-leise:#6e6f6a; /* leises Strukturbeiwerk auf PAPIERWEISS (Druckwerke:
+                                Kategorie-Titel in Legenden u. ä.) – 5.07:1, B02-fest
+                                für Lesetext; gerechnet im Kartentool, Juli 2026.
+                                Theme-fest: gilt fürs gedruckte Blatt, nicht für
+                                Bildschirmflächen (dort --muted). */
 
   /* --- Code-Konsole (eigenständige, THEME-FESTE Fläche – gleich in Hell/Dunkel,
      wie eine Entwickler-Konsole; Syntaxpalette für Dunkel ausgelegt). --------- */
   --code-bg:#1f2428; --code-bg2:#2b3137; --code-ink:#e8eef2;
   --code-key:#9ecbff; --code-str:#c3e88d; --code-comment:#7f868d;
+
+  /* --- Bühne (Medien-/Katalogfläche, THEME-FEST dunkel wie die Konsole) -----
+     Für Video-Kacheln und Katalog-Bänder (Webfamilie-Befund §3/§4, Vorbild
+     goetheanum.tv). Kontraste gerechnet: ink 15.3:1, muted 8.2:1 auf stage-bg. */
+  --stage-bg:#14171a; --stage-bg2:#232830; --stage-ink:#e9edf1;
+  --stage-muted:#a9b0b7; --stage-veil:rgba(8,10,12,.62);
 
   /* --- Sektionsfarben (Identität der Schul-Sektionen) --------------------- */
   /* Quelle der Wahrheit der Werte: assets/goe-orgs.js (speist die Logo-Engine).

@@ -16,25 +16,29 @@
          tabellarische Ziffern, Betonung = Laut, Leise statt Kursive (G02/G05/G16/G25 …).
        · Fürs Falsche (Unterstreichen/Versal-Hervorhebung/Sperren) gibt es kein Utility.
 
-     Pfad-Hinweis: Die zwei <link> unten laden das System per absoluter URL und
-     funktionieren von JEDEM Ort. Für lokale Arbeit ohne Netz die relative Variante
-     daneben (auskommentiert) nutzen und den Pfad an die Tiefe deiner Datei anpassen.
+     Pfad-Hinweis: Das Fundament wird RELATIV eingebunden – das trägt auf der
+     Custom-Domain (werkzeuge.goetheanum.ch, Auslieferung im Root) UND unter
+     phtok.github.io/goeloggen/. KEINE absoluten https://phtok.github.io/goeloggen/-URLs:
+     die greifen auf der Custom-Domain nicht (kein /goeloggen/-Präfix → 404 → ungestylt).
+     Pfadtiefe an den ORT deiner Datei anpassen (siehe unten).
      ============================================================================= -->
 <html lang="de-CH">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
 <title>Neues Werkzeug · Goetheanum</title>
 <meta name="description" content="Kurzbeschreibung des Werkzeugs – ein Satz, was es tut." />
-<link rel="icon" type="image/svg+xml" href="https://phtok.github.io/goeloggen/assets/logos/goetheanum-mark-blue.svg" />
+<!-- Pfadtiefe an den Ort DEINER Datei anpassen:
+       · Root (./mein-werkzeug.html):   design-system/… · assets/… · data-root="./"
+       · App  (apps/x/index.html):      ../../design-system/… · ../../assets/… · data-root="../../"
+     Diese Vorlage steht als Root-Beispiel. -->
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
 
-<!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN. -->
-<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/tokens.css" />
-<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/base.css" />
-<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/nav.css" />
-<!-- Lokal/offline stattdessen (Pfadtiefe anpassen):
+<!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN. RELATIV, nie absolut. -->
 <link rel="stylesheet" href="design-system/tokens.css" />
-<link rel="stylesheet" href="design-system/base.css" /> -->
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
 
 <style>
   /* NUR werkzeug-eigene Gestaltung hierher. Alles Gemeinsame steht schon in base.css.
@@ -48,9 +52,7 @@
 
 <!-- Globale Navigation: erzeugt Kopfzeile + klappbares Menü aus tools.json.
      data-variant="werkzeug" zeigt zusätzlich ein sichtbares „← Übersicht". -->
-<script src="https://phtok.github.io/goeloggen/design-system/nav.js"
-        data-root="https://phtok.github.io/goeloggen/"
-        data-variant="werkzeug"></script>
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
 
 <main class="wrap">
 
@@ -99,7 +101,7 @@
 <footer class="ds-footer">
   <div class="wrap frow">
     <span><strong>Goetheanum</strong> · Hausgrafik</span>
-    <span><a href="https://phtok.github.io/goeloggen/design-system/">Design-System</a></span>
+    <span><a href="design-system/">Design-System</a></span>
   </div>
 </footer>
 

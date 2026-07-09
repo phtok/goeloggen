@@ -1,33 +1,48 @@
 {
   "$schema": "https://goetheanum/design-system/contract.schema.json",
-  "version": "1.1.1",
+  "version": "1.7.2",
   "titel": "Goetheanum Design-System – Struktur-Vertrag",
   "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
-
   "geltungsbereich": {
     "prüfe": "versionierte *.html mit einem <body> (publizierte Werkzeug- und Schau-Seiten)",
-    "ausgenommen_substr": ["/assets/", "/tools/goetheanum-fontfix/", "archive/", "reference/", "vendor/"],
-    "ausgenommen_dateien": ["design-system/navigation.html"],
+    "ausgenommen_substr": [
+      "/assets/",
+      "/tools/goetheanum-fontfix/",
+      "archive/",
+      "reference/",
+      "vendor/"
+    ],
+    "ausgenommen_dateien": [
+      "design-system/navigation.html"
+    ],
     "weiterleitungs_stubs": "Root-Stubs ohne eigenes <style>/<link> (reine Redirects) werden übersprungen."
   },
-
   "includes": {
     "regel": "Pflicht-Includes einbinden: tokens.css UND base.css (Reihenfolge: tokens VOR base; nav.css zusätzlich für Seiten mit globaler Kopfzeile).",
-    "pflicht": ["design-system/tokens.css", "design-system/base.css"],
+    "pflicht": [
+      "design-system/tokens.css",
+      "design-system/base.css"
+    ],
     "hinweis": "Reihenfolge: tokens.css VOR base.css. nav.css zusätzlich für Seiten mit globaler Kopfzeile.",
     "ds_id": "DS01",
     "schwere": "fehler"
   },
-
   "farben": {
     "ds_id": "DS02",
     "regel": "Farbwerte nur über Tokens (var(--…)). Hartverdrahtete Hex-/rgb()-Farben in color/background/border-color/fill/stroke sind verboten – ausser in Custom-Property-DEFINITIONEN (--x:…), @font-face und url().",
     "schwere": "fehler",
-    "erlaubte_property_präfixe": ["--"],
-    "ignorierte_properties": ["box-shadow", "-webkit-box-shadow", "filter", "background-image", "text-shadow"],
+    "erlaubte_property_präfixe": [
+      "--"
+    ],
+    "ignorierte_properties": [
+      "box-shadow",
+      "-webkit-box-shadow",
+      "filter",
+      "background-image",
+      "text-shadow"
+    ],
     "hinweis": "box-shadow/Filter dürfen rgba() für Schatten nutzen. Seiten-eigene Tokens (--good:#…) sind die seltene Ausnahme, kein Normalfall."
   },
-
   "groessen": {
     "ds_id": "DS03",
     "regel": "Keine lesbare Schrift unter den Untergrenzen (Stand 2026, inklusiv). font-size in px: Fliesstext ≥18, Meta/Label ≥15, nichts Lesbares <14.",
@@ -37,42 +52,117 @@
     "warn_schwere": "hinweis",
     "hinweis": "Floor von 13 auf 14 angehoben (16px-Norm ‹bei 16 beginnen, hochskalieren›). 14px erlaubt (=--t-micro). Bevorzugt die fluiden Skala-Tokens (--t-body/--t-small/--t-micro/--t-lede/--t-h*) statt fester px."
   },
-
   "rollen": {
     "ds_id": "DS04",
     "regel": "Kanonische Textrollen (base.css) NICHT seiten-lokal mit eigener font-size/color redefinieren. Klasse verwenden, nicht neu erfinden.",
     "schwere": "hinweis",
-    "kanonische_klassen": ["kicker", "kick", "lede", "note", "hint", "help", "desc", "subhead", "meta", "cap", "caption", "legend", "byline", "lab", "role", "readout", "mono", "code", "lese", "prose", "chip", "btn", "seg", "field", "shead", "hero", "card", "step-num"],
+    "kanonische_klassen": [
+      "kicker",
+      "kick",
+      "lede",
+      "note",
+      "hint",
+      "help",
+      "desc",
+      "subhead",
+      "meta",
+      "cap",
+      "caption",
+      "legend",
+      "byline",
+      "lab",
+      "role",
+      "readout",
+      "mono",
+      "code",
+      "lese",
+      "prose",
+      "chip",
+      "btn",
+      "seg",
+      "field",
+      "shead",
+      "hero",
+      "card",
+      "step-num",
+      "crumbs",
+      "teaser",
+      "event",
+      "filterbar",
+      "stage",
+      "mrow",
+      "mtile",
+      "live",
+      "person",
+      "subscribe",
+      "lit",
+      "bio",
+      "related",
+      "fcols",
+      "mockpair",
+      "mock",
+      "fab",
+      "hero-bild"
+    ],
     "hinweis": "Treffer = Seite definiert .note/.hint/.lede/… selbst. ds-fix kann die lokale Regel entfernen, sobald base.css die Rolle trägt."
   },
-
   "hervorhebung": {
     "ds_id": "DS05",
     "regel": "Betonung nur über Gewicht/Laut. Verboten als Hervorhebung: Unterstreichen (text-decoration:underline auf em/strong/Fliesstext), Versalien (text-transform:uppercase auf Kicker/Titel/Betonung), Sperren über Leertasten.",
     "schwere": "hinweis",
-    "verbotene_muster": ["text-decoration:underline", "text-transform:uppercase"],
-    "bezug": ["G05", "G23"],
+    "verbotene_muster": [
+      "text-decoration:underline",
+      "text-transform:uppercase"
+    ],
+    "bezug": [
+      "G05",
+      "G23"
+    ],
     "hinweis": "Links dürfen unterstrichen sein; Treffer auf Betonungs-Selektoren (strong/b/em/.kicker/h1..h4) sind der Verstoss."
   },
-
   "kopfzeile": {
     "ds_id": "DS06",
     "regel": "Keine eigene Kopfzeile/Fake-Logo. Die globale Leiste kommt aus nav.js (design-system/nav.js). Seiten setzen keine eigene sticky .ds-header / kein eigenes Marken-Logo im Kopf.",
     "schwere": "hinweis",
-    "verdächtige_muster": ["class=\"ds-header\"", "class=\"page-head", "<header"],
+    "verdächtige_muster": [
+      "class=\"ds-header\"",
+      "class=\"page-head",
+      "<header"
+    ],
     "hinweis": "Treffer prüfen: nutzt die Seite nav.js? Eigener <header> mit Logo = Verstoss (siehe design-system/index.html, behoben in #161)."
   },
-
   "theme": {
     "ds_id": "DS07",
     "regel": "Flächen tokenisiert, damit Hell/Dunkel allein aus den Tokens kippt. Kein hartes #fff/#000/white/black als Flächen- oder Textfarbe.",
     "schwere": "fehler",
-    "verbotene_literale": ["#fff", "#ffffff", "#000", "#000000", "white", "black"],
+    "verbotene_literale": [
+      "#fff",
+      "#ffffff",
+      "#000",
+      "#000000",
+      "white",
+      "black"
+    ],
     "hinweis": "Teilmenge von DS02, separat gemeldet, weil es der häufigste Dunkelmodus-Bruch ist (--paper/--ink/--soft/--field-bg statt #fff)."
   },
-
+  "marke": {
+    "ds_id": "DS08",
+    "regel": "Die Marke kommt aus dem Logo-Generator: Seitenköpfe tragen das erzeugte Logo/Lockup (assets/logos/goetheanum-logo.svg, goetheanum-werkzeuge.svg) oder die blanke Marke (goetheanum-marke.svg). Das Favicon (goetheanum-mark-blue.svg, Kachel mit Kasten) ist kein Logo und steht nie als <img>.",
+    "schwere": "hinweis",
+    "verbotene_muster": [
+      "<img[^>]*goetheanum-mark-blue"
+    ],
+    "hinweis": "Ausnahme mit  # ds-ok  auf der Zeile ratifizieren. rel=icon (Favicon) ist der einzige vorgesehene Ort der Kachel."
+  },
   "score": {
     "definition": "konforme Seiten / geprüfte Seiten. Konform = kein Verstoss der Schwere ‹fehler›.",
     "ziel": 1.0
+  },
+  "einbindung": {
+    "ds_id": "DS09",
+    "regel": "Fundament und Assets RELATIV einbinden – absolute phtok.github.io/goeloggen-URLs brechen auf der Custom-Domain (Auslieferung im Root, kein /goeloggen/-Präfix → 404 → ungestylt).",
+    "schwere": "fehler",
+    "verbotenes_muster": "[\"']https://phtok\\.github\\.io/goeloggen/(?:design-system|assets)/|data-root\\s*=\\s*[\"']https://phtok\\.github\\.io/goeloggen/",
+    "hinweis": "Quelle: Vorfall Signatur-Generator (PR #291) – Seite erschien auf werkzeuge.goetheanum.ch ungestylt. Pfadtiefe je Ort: Root design-system/…, App ../../design-system/…"
   }
 }

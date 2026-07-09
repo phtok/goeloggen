@@ -135,3 +135,12 @@ Bei Änderungen an der Schnittzahl **alle** Beschreibungen mitziehen
 Änderungen an Schriftdateien über die Skripte in `tools/goetheanum-fontfix/`
 (idempotent, aus sauberem Stand) — nicht freihändig Binärdateien patchen.
 Nach Font-Änderungen Webfonts (woff/woff2) und das Komplett-ZIP neu packen.
+
+## Pull Requests: direkt mergen, nicht liegen lassen
+Von Claude erstellte PRs werden **automatisch gemerged** (Beschluss vom
+6. Juli 2026, «ab jetzt immer automatisch»): nicht als Draft parken, nicht
+auf Freigabe warten — wenn die Prüfmaschinen grün sind (typo-check, ds-lint,
+ggf. CI), als **Squash** mergen (Titel + PR-Nummer, wie im Verlauf üblich)
+und den Arbeits-Branch für Folgearbeit frisch von `main` starten.
+Ausnahme: der PR berührt Secrets-/Zahlungs-Konfiguration oder löscht
+Daten — dann vor dem Merge fragen.

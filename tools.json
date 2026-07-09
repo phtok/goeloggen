@@ -4,7 +4,8 @@
     "live": "Im Einsatz, gepflegt",
     "beta": "Nutzbar, in Überarbeitung",
     "entwurf": "Grober Entwurf",
-    "geparkt": "Konzept, später"
+    "geparkt": "Konzept, später",
+    "intern": "Nur im Backstage-Modus gelistet – Direktlink funktioniert"
   },
   "categories": [
     {
@@ -43,6 +44,11 @@
       "intro": "Begleit-Grotesk, Gewichte und Mischsatz prüfen und kalibrieren."
     },
     {
+      "id": "kampagne",
+      "title": "Kampagne",
+      "intro": "Werkzeuge der Kampagnenarbeit – planen, verlinken, mailen, zählen. Gebaut für die Sommer-Aktion, wiederverwendbar für jede dreistufige Kampagne."
+    },
+    {
       "id": "statistik",
       "title": "Statistik",
       "intro": "Nutzungszahlen aller Werkzeuge – nur der Gebrauch legitimiert den Bau."
@@ -71,7 +77,7 @@
       "tag": "Fundament",
       "title": "Design-System",
       "href": "design-system/",
-      "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Mit Starter und Bau-Workflow.",
+      "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Der Bau-Workflow steht im internen Hub.",
       "such": "Farben Palette Tokens Hex RGB CMYK Markenfarben Neutrale Komponenten Fundament"
     },
     {
@@ -140,7 +146,7 @@
     {
       "slug": "editor",
       "cat": "generatoren",
-      "status": "beta",
+      "status": "intern",
       "tag": "Lektorat",
       "title": "Goetheanum Editor",
       "short": "Editor",
@@ -170,14 +176,25 @@
       "desc": "Mockup zur Vorbereitung der Goetheanum-TV-Umbenennung – kein öffentliches Werkzeug, eigene Welt."
     },
     {
+      "slug": "perspektiven",
+      "cat": "schau",
+      "status": "beta",
+      "tag": "Webfamilie",
+      "title": "Perspektiven (Webfamilie)",
+      "href": "design-system/#perspektiven",
+      "desc": "Die Startseiten von goetheanum.ch, dasgoetheanum.com, goetheanum.tv und anthroposophie.org – vollständig nachgebaut im Design-System, mit echten Inhalten und Sprung zum Original.",
+      "such": "Perspektiven Webfamilie Testseiten goetheanum.ch dasgoetheanum goetheanum.tv anthroposophie Befund"
+    },
+    {
       "slug": "karten",
-      "cat": "vorbereitung",
-      "status": "entwurf",
+      "cat": "generatoren",
+      "status": "live",
       "tag": "Campus",
-      "title": "Kartentool",
-      "short": "Karten",
+      "title": "Campus-Karte",
+      "short": "Campus-Karte",
       "href": "apps/karten-generator/",
-      "desc": "Lagepläne des Goetheanum-Geländes zusammenstellen und im Hausbild ausgeben."
+      "desc": "Lagepläne des Goetheanum-Geländes von Fall zu Fall beschriften und als Vektor-PDF ausgeben — A4/A3 quer, wahlweise mit Beschnitt und Schnittmarken, Kartenfarben je Variante, Parkflächen einfärbbar.",
+      "such": "Karte Kartierung Campus Gelände Lageplan PDF A3 Schnittmarken Beschnitt Parkflächen"
     },
     {
       "slug": "cover",
@@ -321,8 +338,8 @@
     },
     {
       "slug": "sommer-zaehler",
-      "cat": "statistik",
-      "status": "beta",
+      "cat": "kampagne",
+      "status": "intern",
       "tag": "Aktion",
       "title": "Sommer-Zähler 2026",
       "short": "Sommer-Zähler",
@@ -332,8 +349,8 @@
     },
     {
       "slug": "utm-generator",
-      "cat": "statistik",
-      "status": "beta",
+      "cat": "kampagne",
+      "status": "intern",
       "tag": "Aktion",
       "title": "UTM-Link-Generator",
       "short": "UTM-Generator",
@@ -342,13 +359,24 @@
       "such": "UTM Link Generator Kampagne Attribution Tracking QR Quelle Medium Content Sommer Aktion"
     },
     {
+      "slug": "mail-editor",
+      "cat": "kampagne",
+      "status": "intern",
+      "tag": "Aktion",
+      "title": "Mail-Editor",
+      "short": "Mail-Editor",
+      "href": "apps/mail-editor/",
+      "desc": "Alle Wellen-Mails der Sommer-Aktion zum Gegenlesen – drei Segmente × Wellen × zwei Sprachen, je Feld kommentierbar, Kommentare ins Werkzeug-Backend. Gebaut aus einer Quelle (heroes.json).",
+      "such": "Mail Editor Mailing Newsletter Kampagne Wellen Segmente Betreff Gegenlesen Kommentar Sommer Aktion E-Mail"
+    },
+    {
       "slug": "campus-karten",
       "cat": "geparkt",
       "status": "geparkt",
       "tag": "Kartierung",
       "title": "Campus-Kartentool",
       "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campus-kartentool-pflichtenheft.md",
-      "desc": "Veranstaltungs-/Lagekarten des Geländes, A4 druckfertig. Pflichtenheft fertig, Bau steht aus."
+      "desc": "Pflichtenheft zum Kartentool. Der Bau ist erfolgt — das laufende Werkzeug heisst ‹Kartentool› (Kachel Campus/Karten)."
     },
     {
       "slug": "brand-portrait",
@@ -389,7 +417,7 @@
     },
     {
       "slug": "marketing-maschine",
-      "cat": "statistik",
+      "cat": "kampagne",
       "status": "entwurf",
       "tag": "Strategie",
       "title": "Marketing-Maschine",
@@ -401,7 +429,7 @@
     {
       "slug": "seelenkalender",
       "cat": "anwendung",
-      "status": "beta",
+      "status": "intern",
       "tag": "Neu",
       "title": "Seelenkalender",
       "short": "Seelenkalender",

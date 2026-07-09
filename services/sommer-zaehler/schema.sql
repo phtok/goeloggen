@@ -106,7 +106,7 @@ create table if not exists public.sommer2026_massnahmen (
   created_at  timestamptz not null default now(),
   tag         date not null,                              -- Datum der Massnahme
   massnahme   text not null,                              -- z. B. «Auftaktnewsletter»
-  kanal       text not null default 'andere' check (kanal in ('newsletter','mailer','social','popup','website','empfehlung','andere')),
+  kanal       text not null default 'andere' check (kanal in ('newsletter','mailer','flyer','social','popup','website','empfehlung','andere')),
   rolle       text not null default 'wirkung' check (rolle in ('sichtbarkeit','aktivierung','wirkung','bindung')),  -- Hauptaufgabe
   zielgruppe  text,
   botschaft   text,
@@ -114,6 +114,7 @@ create table if not exists public.sommer2026_massnahmen (
   kosten      numeric,                                    -- Aufwand
   reichweite  bigint,                                     -- Sichtbarkeit (Impressionen)
   klicks      bigint,                                     -- Aktivierung
+  ersteller   text,                                       -- Kürzel: wer steht dahinter
   beobachtung text,                                       -- INTERN (nicht im RPC)
   entscheidung text                                       -- INTERN (nicht im RPC)
 );
@@ -132,12 +133,109 @@ $$;
 
 -- Massnahmen-Protokoll, kuratiert (ohne interne Freitext-Spalten)
 create or replace function public.sommer2026_massnahmen_public()
-returns table(tag date, massnahme text, kanal text, rolle text, kosten numeric, reichweite bigint, klicks bigint)
+returns table(id bigint, tag date, massnahme text, kanal text, rolle text, ersteller text, kosten numeric, reichweite bigint, klicks bigint)
 language sql security definer set search_path to 'public' as $$
-  select tag, massnahme, kanal, rolle, kosten, reichweite, klicks
+  select id, tag, massnahme, kanal, rolle, ersteller, kosten, reichweite, klicks
     from public.sommer2026_massnahmen
    order by tag, id;
 $$;
+
+-- Massnahme eintragen (Migration «sommer2026_massnahme_eintragen»): offener
+-- Schreibweg fürs Team (Muster Link-Register) – nur kuratierte Felder, die
+-- internen Freitext-Spalten bleiben der Redaktion. Speist Zeitband, Protokoll
+-- und Wirkungskette im Cockpit.
+create or replace function public.sommer2026_massnahme_eintragen(
+  p_tag date, p_massnahme text, p_kanal text, p_rolle text,
+  p_zielgruppe text, p_kosten numeric, p_reichweite bigint, p_klicks bigint,
+  p_ersteller text default null)
+returns text language plpgsql security definer set search_path to 'public' as $$
+declare
+  v_kanal text; v_rolle text;
+begin
+  if p_tag is null or coalesce(trim(p_massnahme), '') = '' then
+    return 'unvollstaendig';
+  end if;
+  v_kanal := lower(coalesce(p_kanal, ''));
+  if v_kanal not in ('newsletter','mailer','flyer','social','popup','website','empfehlung','andere') then v_kanal := 'andere'; end if;
+  v_rolle := lower(coalesce(p_rolle, ''));
+  if v_rolle not in ('sichtbarkeit','aktivierung','wirkung','bindung') then v_rolle := 'wirkung'; end if;
+  insert into public.sommer2026_massnahmen (tag, massnahme, kanal, rolle, zielgruppe, kosten, reichweite, klicks, ersteller)
+  values (p_tag, trim(p_massnahme), v_kanal, v_rolle, nullif(trim(coalesce(p_zielgruppe,'')), ''), p_kosten, p_reichweite, p_klicks,
+          nullif(trim(coalesce(p_ersteller,'')), ''));
+  return 'ok';
+end;
+$$;
+grant execute on function public.sommer2026_massnahme_eintragen(date, text, text, text, text, numeric, bigint, bigint, text) to anon, authenticated;
+
+-- Bearbeiten (Migration «sommer2026_massnahmen_kuerzel_flyer_bearbeiten»):
+-- nur übergebene Werte ändern, vorhandene Zahlen bleiben erhalten.
+create or replace function public.sommer2026_massnahme_aendern(
+  p_id bigint, p_tag date, p_massnahme text, p_kanal text, p_rolle text,
+  p_ersteller text, p_kosten numeric, p_reichweite bigint, p_klicks bigint)
+returns text language plpgsql security definer set search_path to 'public' as $$
+declare
+  v_kanal text; v_rolle text; n int;
+begin
+  v_kanal := lower(coalesce(p_kanal, ''));
+  if v_kanal not in ('newsletter','mailer','flyer','social','popup','website','empfehlung','andere') then v_kanal := null; end if;
+  v_rolle := lower(coalesce(p_rolle, ''));
+  if v_rolle not in ('sichtbarkeit','aktivierung','wirkung','bindung') then v_rolle := null; end if;
+  update public.sommer2026_massnahmen set
+    tag        = coalesce(p_tag, tag),
+    massnahme  = coalesce(nullif(trim(coalesce(p_massnahme,'')), ''), massnahme),
+    kanal      = coalesce(v_kanal, kanal),
+    rolle      = coalesce(v_rolle, rolle),
+    ersteller  = coalesce(nullif(trim(coalesce(p_ersteller,'')), ''), ersteller),
+    kosten     = coalesce(p_kosten, kosten),
+    reichweite = coalesce(p_reichweite, reichweite),
+    klicks     = coalesce(p_klicks, klicks)
+  where id = p_id;
+  get diagnostics n = row_count;
+  return case when n > 0 then 'ok' else 'unbekannt' end;
+end;
+$$;
+grant execute on function public.sommer2026_massnahme_aendern(bigint, date, text, text, text, text, numeric, bigint, bigint) to anon, authenticated;
+
+-- Kosten-Einzelposten (Migration «sommer2026_kosten_posten»): das Team traegt
+-- Posten mit Kuerzel ein, das Cockpit summiert je Kostenart (Uebersicht bleibt,
+-- Details klappen auf). Muster wie Massnahmen: Tabelle zu, RPCs offen.
+create table if not exists public.sommer2026_kosten (
+  id         bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  tag        date not null,
+  posten     text not null,
+  kategorie  text not null default 'andere' check (kategorie in ('stunden','social','druck','infrastruktur','andere')),
+  betrag     numeric not null check (betrag >= 0),
+  ersteller  text
+);
+alter table public.sommer2026_kosten enable row level security;
+revoke all on table public.sommer2026_kosten from anon, authenticated;
+
+create or replace function public.sommer2026_kosten_public()
+returns table(id bigint, tag date, posten text, kategorie text, betrag numeric, ersteller text)
+language sql security definer set search_path to 'public' as $$
+  select id, tag, posten, kategorie, betrag, ersteller
+    from public.sommer2026_kosten
+   order by tag, id;
+$$;
+grant execute on function public.sommer2026_kosten_public() to anon, authenticated;
+
+create or replace function public.sommer2026_kosten_eintragen(
+  p_tag date, p_posten text, p_kategorie text, p_betrag numeric, p_ersteller text)
+returns text language plpgsql security definer set search_path to 'public' as $$
+declare v_kat text;
+begin
+  if p_tag is null or coalesce(trim(p_posten), '') = '' or p_betrag is null or p_betrag < 0 then
+    return 'unvollstaendig';
+  end if;
+  v_kat := lower(coalesce(p_kategorie, ''));
+  if v_kat not in ('stunden','social','druck','infrastruktur','andere') then v_kat := 'andere'; end if;
+  insert into public.sommer2026_kosten (tag, posten, kategorie, betrag, ersteller)
+  values (p_tag, trim(p_posten), v_kat, p_betrag, nullif(trim(coalesce(p_ersteller,'')), ''));
+  return 'ok';
+end;
+$$;
+grant execute on function public.sommer2026_kosten_eintragen(date, text, text, numeric, text) to anon, authenticated;
 
 -- Wirkungstrichter: Sichtbarkeit → Aktivierung → Wirkung → Bindung
 create or replace function public.sommer2026_trichter()
@@ -175,22 +273,22 @@ create table if not exists public.sommer2026_links (
   landing      text,          -- Angebot der Landingpage (uebersicht/wos/tv)
   sprache      text,          -- Sprache der Landingpage (de/en)
   url          text not null, -- fertiger Link
+  code         text,          -- Kurzcode für die Weiterleitung (Function go)
   rolle        text,          -- Hauptaufgabe (sichtbarkeit/aktivierung/wirkung/bindung)
   ersteller    text           -- optionales Kürzel, kein Pflichtfeld
 );
-create unique index if not exists sommer2026_links_url_uk on public.sommer2026_links (url);
+create unique index if not exists sommer2026_links_url_uk  on public.sommer2026_links (url);
+create unique index if not exists sommer2026_links_code_uk on public.sommer2026_links (code);
 alter table public.sommer2026_links enable row level security;
 revoke all on table public.sommer2026_links from anon, authenticated;
-grant insert on table public.sommer2026_links to anon, authenticated;
-create policy sommer2026_links_insert on public.sommer2026_links
-  for insert to anon, authenticated with check (kampagne = 'summer26_trial');
+-- Schreiben über die RPCs unten (kein direktes anon-INSERT auf die Tabelle).
 
 -- Soll/Ist: je registriertem Link die Zahl der Anmeldungen über genau dieses UTM-Tupel
 create or replace function public.sommer2026_links_public()
 returns table(created_at timestamptz, utm_source text, utm_medium text, utm_content text,
-              landing text, sprache text, url text, rolle text, ersteller text, abschluesse bigint)
+              landing text, sprache text, url text, code text, rolle text, ersteller text, abschluesse bigint)
 language sql security definer set search_path to 'public' as $$
-  select l.created_at, l.utm_source, l.utm_medium, l.utm_content, l.landing, l.sprache, l.url, l.rolle, l.ersteller,
+  select l.created_at, l.utm_source, l.utm_medium, l.utm_content, l.landing, l.sprache, l.url, l.code, l.rolle, l.ersteller,
          count(s.id)::bigint as abschluesse
     from public.sommer2026_links l
     left join public.sommer2026_signups s
@@ -198,18 +296,52 @@ language sql security definer set search_path to 'public' as $$
       and s.utm_source   is not distinct from l.utm_source
       and s.utm_medium   is not distinct from l.utm_medium
       and s.utm_content  is not distinct from l.utm_content
-   group by l.id, l.created_at, l.utm_source, l.utm_medium, l.utm_content, l.landing, l.sprache, l.url, l.rolle, l.ersteller
+   group by l.id, l.created_at, l.utm_source, l.utm_medium, l.utm_content, l.landing, l.sprache, l.url, l.code, l.rolle, l.ersteller
    order by abschluesse desc, l.created_at desc;
 $$;
 grant execute on function public.sommer2026_links_public() to anon, authenticated;
 
--- Kontrolliertes Löschen eines registrierten Links (nur über RPC, per URL) –
--- kein offenes DELETE für anon; begrenzt auf die Aktion.
-create or replace function public.sommer2026_link_loeschen(p_url text)
-returns void language sql security definer set search_path to 'public' as $$
-  delete from public.sommer2026_links where url = p_url and kampagne = 'summer26_trial';
+-- Kurzlink-Weiterleitung: Edge Function `go` liest sommer2026_links.code (Service-Role)
+-- und leitet per 302 auf die volle UTM-URL. Siehe go/index.ts.
+
+-- Anlegen per RPC: meldet 'ok' | 'vergeben' (unique) | 'unvollstaendig'
+-- als Text an den Generator. Der einst eingeführte Team-Schlüssel wurde am
+-- 6.7.2026 wieder entfernt (Migration «sommer2026_links_schluessel_entfernen»);
+-- p_schluessel bleibt aus Kompatibilität in der Signatur und wird ignoriert.
+create or replace function public.sommer2026_link_anlegen(
+  p_schluessel text, p_source text, p_medium text, p_content text,
+  p_landing text, p_sprache text, p_url text, p_code text,
+  p_rolle text, p_ersteller text)
+returns text language plpgsql security definer set search_path to 'public' as $$
+begin
+  if coalesce(p_source, '') = '' or coalesce(p_medium, '') = '' or coalesce(p_url, '') = '' then
+    return 'unvollstaendig';
+  end if;
+  begin
+    insert into public.sommer2026_links
+      (kampagne, utm_source, utm_medium, utm_campaign, utm_content,
+       landing, sprache, url, code, rolle, ersteller)
+    values
+      ('summer26_trial', p_source, p_medium, 'summer26_trial', nullif(p_content, ''),
+       nullif(p_landing, ''), nullif(p_sprache, ''), p_url, nullif(p_code, ''),
+       nullif(p_rolle, ''), nullif(p_ersteller, ''));
+  exception when unique_violation then
+    return 'vergeben';
+  end;
+  return 'ok';
+end;
 $$;
-grant execute on function public.sommer2026_link_loeschen(text) to anon, authenticated;
+grant execute on function public.sommer2026_link_anlegen(text, text, text, text, text, text, text, text, text, text) to anon, authenticated;
+
+-- Kontrolliertes Löschen (per URL, nur RPC – p_schluessel wird ignoriert).
+create or replace function public.sommer2026_link_loeschen(p_url text, p_schluessel text)
+returns text language plpgsql security definer set search_path to 'public' as $$
+begin
+  delete from public.sommer2026_links where url = p_url and kampagne = 'summer26_trial';
+  return 'ok';
+end;
+$$;
+grant execute on function public.sommer2026_link_loeschen(text, text) to anon, authenticated;
 
 -- =============================================================================
 -- Ingestion (Webhooks) – siehe ingest-uscreen/index.ts

@@ -41,6 +41,11 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 
 /* Wortmarke = das echte Goetheanum-Lockup (aus dem Logo-Generator), immer zurück zur Übersicht */
 .dsnav .brand{display:flex;align-items:center;gap:var(--s3);text-decoration:none;flex:0 0 auto}
+/* Beta-Kennzeichen neben dem Lockup – folgt dem Werkzeug-Status im Manifest.
+   Baut auf dem .badge-Rezept aus base.css auf (Sitz im Oval, Lese-Grotesk);
+   hier nur die Einfärbung: Gold statt Grau (genau ein Merkmal, G01).
+   Grösse hält den 14px-Floor (B03). */
+.dsnav .beta-chip{font-weight:var(--w-strong);color:var(--gold-ink);border-color:currentColor;flex:0 0 auto}
 .dsnav .brand .lockup{height:38px;width:auto;display:block}
 .dsnav .brand .mk{width:24px;height:24px;border-radius:6px;display:block}
 .dsnav .brand .wm{font-family:var(--font);font-weight:var(--w-text);font-size:24px;line-height:1;color:#8a9097;letter-spacing:.005em}
@@ -78,10 +83,17 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 .dsnav .read[aria-pressed="true"] .ic{font-family:var(--font-text)}
 
 /* ☾/☀ Hell-Dunkel – nur das Icon */
-.dsnav .theme{margin-left:8px;display:inline-flex;align-items:center;justify-content:center;font:inherit;
+.dsnav .theme,.dsnav .share{margin-left:8px;display:inline-flex;align-items:center;justify-content:center;font:inherit;
   color:var(--ink);background:none;border:0;padding:6px;cursor:pointer;line-height:1}
-.dsnav .theme .ic{font-size:18px;line-height:1}
-.dsnav .theme:hover{color:var(--gold-ink)}
+.dsnav .theme .ic,.dsnav .share .ic{font-size:18px;line-height:1}
+.dsnav .theme:hover,.dsnav .share:hover{color:var(--gold-ink)}
+.dsnav .share.ok{color:var(--ok)}
+/* Sofort-Tooltips (native title-Hovers erscheinen erst nach ~1s) */
+.dsnav [data-tip]{position:relative}
+.dsnav [data-tip]::after{content:attr(data-tip);position:absolute;top:calc(100% + 7px);right:0;z-index:60;
+  background:var(--ink);color:var(--paper);font-size:12px;line-height:1;padding:5px 9px;border-radius:7px;
+  white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s ease .1s}
+.dsnav [data-tip]:hover::after,.dsnav [data-tip]:focus-visible::after{opacity:1}
 
 /* ☰ Burger – nur das Icon, keine Pille, kein Wort */
 .dsnav .all{margin-left:10px;display:inline-flex;align-items:center;gap:6px;font:inherit;
@@ -92,7 +104,10 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 
 @media(max-width:720px){
   .dsnav .worlds{display:none}
-  .dsnav .read{margin-left:auto}   /* Schalter-Cluster (Lesemodus·Theme·Menü) zusammen nach rechts */
+  /* Fingerziel-Luft (B04): die drei Modi-Schalter ziehen in die Schublade
+     (.dmodes) – die Leiste behält nur Marke + Menü. */
+  .dsnav .read,.dsnav .share,.dsnav .theme{display:none}
+  .dsnav .all{margin-left:auto}
 }
 
 /* --- Schublade ------------------------------------------------------------- */
@@ -110,6 +125,27 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 .dsnav-drawer .dhead .t{font-weight:var(--w-strong);font-size:15px}
 .dsnav-drawer .close{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
 .dsnav-drawer .close:hover{color:var(--ink)}
+
+/* Modi-Schalter oben in der Schublade (Lesemodus · Hell/Dunkel · Teilen):
+   nur auf schmalen Schirmen sichtbar – dort ersetzen sie die Leisten-Icons.
+   Leise: Konturen auf Papier statt Füllflächen, aktiver Zustand = Gold statt
+   Grau (ein Merkmal, kein Doppel-Ring — G01/G03). Wort + Zeichen,
+   Ziele ≥44px (B04). */
+.dsnav-drawer .dmodes{display:none;gap:var(--s3);padding:var(--s4) 22px;
+  border-bottom:1px solid var(--line);flex:0 0 auto}
+.dsnav-drawer .dmodes button{flex:1 1 auto;display:inline-flex;align-items:center;justify-content:center;
+  gap:8px;font:inherit;font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);
+  background:none;border:1px solid var(--line);border-radius:var(--r-control);
+  padding:10px 8px;min-height:var(--tap);cursor:pointer}
+/* Das Zeichen darf nie dem Platz geopfert werden (Flex-Kinder schrumpfen sonst auf 0). */
+.dsnav-drawer .dmodes .ic{flex:0 0 auto}
+.dsnav-drawer .dmodes button:hover{border-color:var(--gold)}
+.dsnav-drawer .dmodes button[aria-pressed="true"]{color:var(--gold-ink);border-color:var(--gold)}
+.dsnav-drawer .dmodes .read .ic{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:19px;line-height:1}
+.dsnav-drawer .dmodes .read[aria-pressed="true"] .ic{font-family:var(--font-text)}
+.dsnav-drawer .dmodes .theme .ic,.dsnav-drawer .dmodes .share .ic{font-size:17px;line-height:1;display:inline-flex}
+.dsnav-drawer .dmodes .share.ok{color:var(--ok)}
+@media(max-width:720px){.dsnav-drawer .dmodes{display:flex}}
 
 /* Suche im Menü – filtert die Werkzeugliste live */
 .dsnav-drawer .dsearch{padding:var(--s3) 22px;border-bottom:1px solid var(--line);flex:0 0 auto}
