@@ -42,12 +42,16 @@
   var SHARE_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14V3.6M8.2 7.2 12 3.4l3.8 3.8"/><path d="M5.5 11.5v8h13v-8"/></svg>';
   var CHECK_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
   function updateThemeBtn() {
-    if (!themeBtn) return;
     var dark = document.documentElement.getAttribute("data-theme") === "dark";
-    themeBtn.querySelector(".ic").innerHTML = dark ? SUN_SVG : MOON_SVG;
-    themeBtn.setAttribute("aria-label", dark ? "Hell schalten" : "Dunkel schalten");
-    themeBtn.setAttribute("data-tip", dark ? "Hellmodus" : "Dunkelmodus");
-    themeBtn.setAttribute("aria-pressed", String(dark));
+    var alle = document.querySelectorAll(".dsnav .theme, .dsnav-drawer .theme");
+    for (var i = 0; i < alle.length; i++) {
+      alle[i].querySelector(".ic").innerHTML = dark ? SUN_SVG : MOON_SVG;
+      alle[i].setAttribute("aria-label", dark ? "Hell schalten" : "Dunkel schalten");
+      if (alle[i].hasAttribute("data-tip")) alle[i].setAttribute("data-tip", dark ? "Hellmodus" : "Dunkelmodus");
+      alle[i].setAttribute("aria-pressed", String(dark));
+      var lb = alle[i].querySelector(".lb");
+      if (lb) lb.textContent = dark ? "Hellmodus" : "Dunkelmodus";
+    }
   }
   function setTheme(t) {
     try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
@@ -64,10 +68,12 @@
   var READ_KEY = "goeRead", readBtn = null;
   function getRead() { try { return localStorage.getItem(READ_KEY) === "easy" ? "easy" : ""; } catch (e) { return ""; } }
   function updateReadBtn() {
-    if (!readBtn) return;
     var on = document.documentElement.getAttribute("data-read") === "easy";
-    readBtn.setAttribute("aria-pressed", String(on));
-    readBtn.setAttribute("aria-label", on ? "Lesemodus ausschalten" : "Lesemodus – Fliesstext in der Leseschrift");
+    var alle = document.querySelectorAll(".dsnav .read, .dsnav-drawer .read");
+    for (var i = 0; i < alle.length; i++) {
+      alle[i].setAttribute("aria-pressed", String(on));
+      alle[i].setAttribute("aria-label", on ? "Lesemodus ausschalten" : "Lesemodus – Fliesstext in der Leseschrift");
+    }
   }
   function setRead(on) {
     try { localStorage.setItem(READ_KEY, on ? "easy" : "off"); } catch (e) {}
@@ -249,6 +255,14 @@
   drawer.innerHTML =
     '<div class="dhead"><span class="t">Navigation</span>' +
       '<button class="close" type="button" aria-label="Schliessen">×</button></div>' +
+    // Modi-Schalter (Lesemodus · Hell/Dunkel · Teilen): auf schmalen Schirmen
+    // ziehen sie aus der Kopfzeile hierher – die Leiste behält nur Marke + Menü
+    // (Fingerziel-Luft, B04); mit Wortmarke statt blossem Zeichen.
+    '<div class="dmodes" role="group" aria-label="Anzeige-Modi">' +
+      '<button class="read" type="button" aria-pressed="false" aria-label="Lesemodus – Fliesstext in der Leseschrift"><span class="ic" aria-hidden="true">a</span><span class="lb">Lesemodus</span></button>' +
+      '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic"></span><span class="lb">Dunkelmodus</span></button>' +
+      '<button class="share" type="button" aria-label="Seite teilen – Link kopieren"><span class="ic">' + SHARE_SVG + '</span><span class="lb">Teilen</span></button>' +
+    '</div>' +
     '<div class="dsearch"><input type="search" class="dsnav-q" placeholder="Werkzeug suchen …" aria-label="Werkzeug suchen" autocomplete="off"></div>' +
     '<div class="body"></div>' +
     '<div class="foot"><a href="mailto:philipp.tok@goetheanum.ch?subject=Feedback%20Goetheanum%20Werkzeuge">Feedback geben</a> · <a href="' + ROOT + 'design-system/">Design-System</a></div>';
@@ -283,7 +297,7 @@
     }
     return location.href.split("#")[0];
   }
-  var shareBtn = header.querySelector(".share");
+  function wireShare(shareBtn) {
   shareBtn.addEventListener("click", function () {
     var url = shareUrl();
     var done = function () {
@@ -300,16 +314,21 @@
       navigator.clipboard.writeText(url).then(done, function () {});
     }
   });
+  }
+  wireShare(header.querySelector(".share"));
+  wireShare(drawer.querySelector(".dmodes .share"));
 
-  var themeBtn = header.querySelector(".theme");
-  themeBtn.addEventListener("click", function () {
+  function toggleTheme() {
     setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
-  });
+  }
+  header.querySelector(".theme").addEventListener("click", toggleTheme);
+  drawer.querySelector(".dmodes .theme").addEventListener("click", toggleTheme);
   updateThemeBtn();
-  readBtn = header.querySelector(".read");
-  readBtn.addEventListener("click", function () {
+  function toggleRead() {
     setRead(document.documentElement.getAttribute("data-read") !== "easy");
-  });
+  }
+  header.querySelector(".read").addEventListener("click", toggleRead);
+  drawer.querySelector(".dmodes .read").addEventListener("click", toggleRead);
   updateReadBtn();
   var worldsNav = header.querySelector(".worlds");
   var drawerBody = drawer.querySelector(".body");

@@ -16,6 +16,19 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.7.1] – 2026-07-09
+
+### Mobil-Kopfzeile entlastet: Modi-Schalter ziehen in die Schublade
+- **Was:** Auf ≤720px verlassen die drei Modi-Schalter (Lesemodus ·
+  Hell/Dunkel · Teilen) die Leiste und stehen als eigene Reihe `.dmodes`
+  ganz oben in der Schublade — mit Wort **und** Zeichen beschriftet,
+  Ziele ≥44px (B04), Beschriftung `--t-small` (B03). Die Leiste trägt
+  mobil nur noch Marke + Menü. `nav.js` hält beide Button-Sätze
+  (Leiste/Schublade) im selben Zustand; Desktop unverändert.
+- **Warum:** Nach dem Zuwachs auf drei Schalter blieb zwischen Marke und
+  Menüknopf kein Platz mehr zum Dreifachtipp (Feedback-Geste); die
+  reinen Zeichen-Knöpfe waren mobil zudem schwer deutbar.
+
 ## [1.7.0] – 2026-07-09
 
 ### DS09: Fundament relativ einbinden – Wächter gegen den Custom-Domain-Bruch
