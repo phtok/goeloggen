@@ -110,6 +110,11 @@
   .pikto .ps{font-size:11px}
   .empf-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s6)}
   .empf-ps{font-family:var(--font-text);color:var(--gold-ink);font-size:var(--t-small);margin:0}
+  .empf-fn{margin-top:var(--s6);padding-top:var(--s4);border-top:1px solid var(--line)}
+  .empf-fn .fn-body{font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;color:var(--ink);margin-top:var(--s3)}
+  .empf-fn .fn-body p{max-width:62ch;margin:0 0 var(--s2)}
+  .empf-fn ul{margin:0;padding-left:1.1em}
+  .empf-fn li{max-width:62ch;margin-bottom:var(--s2)}
 
   /* Apple-Mail-Skizze (eigenständige Farben = Artefakt/Screenshot). */
   .amv{width:100%;max-width:600px;height:auto;display:block;margin-top:var(--s4)} /* ds-ok */
@@ -321,7 +326,7 @@
         <p>Es gibt eine Signatur – deine. Zwei Zeilen gehören dazu, alles Weitere wählst du selbst: Name und Goetheanum. Das genügt bereits. Du entscheidest, welche Angaben du noch mitschickst.</p>
       </div>
       <div class="empf-item" data-ico="6">
-        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h32v20H25l-9 9v-9H8z"/><text x="15" y="26" class="pt" font-size="15">„…"</text><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h32v20H25l-9 9v-9H8z"/><text x="15" y="26" class="pt" font-size="15">‹…›</text><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
         <h3>Sinnsprüche?</h3>
         <p>Zitate, Sprüche, Banner: Was du sagen willst, wirkt in der Mail – oder im PS. In der Signatur verblasst es, weil es unter jeder Nachricht gleich aussieht.</p>
       </div>
@@ -376,6 +381,39 @@
       <p class="empf-ps">PS: Die kürzeste Mail ist oft die freundlichste.</p>
       <button type="button" class="btn primary" id="pdfBtn">Als PDF laden (A4)</button>
     </div>
+
+    <details class="code-details empf-fn">
+      <summary>Fussnote: Was in der Schweiz gilt</summary>
+      <div class="fn-body">
+        <p>Die Empfehlungen können so entspannt ausfallen, weil das schweizerische
+          Recht ihnen nicht im Weg steht:</p>
+        <ul>
+          <li><strong>Keine Pflichtangaben.</strong> Die Schweiz kennt keine Vorschrift,
+            welche Angaben eine geschäftliche E-Mail tragen muss. Was in der Signatur
+            steht, ist eine Frage der Höflichkeit, nicht des Rechts.</li>
+          <li><strong>Die Firma wird vollständig geführt</strong> (Art. 954a OR):
+            Wer im Handelsregister eingetragen ist, verwendet die eingetragene
+            Bezeichnung vollständig und unverändert – darum steht <q>Allgemeine
+            Anthroposophische Gesellschaft</q> ausgeschrieben in der Signatur.</li>
+          <li><strong>Registernummern:</strong> Die UID (CHE-Nummer) gehört auf
+            Rechnungen mit Mehrwertsteuer, nicht unter jede Nachricht – siehe
+            <q>Zahlenkolonnen</q>.</li>
+          <li><strong>Vertraulichkeitshinweise</strong> entfalten keine rechtliche
+            Wirkung: Ein einseitiger Hinweis bindet den Empfänger nicht – siehe
+            <q>Juristerei</q>.</li>
+          <li><strong>Werbung hat Regeln, Korrespondenz nicht</strong>
+            (Art. 3 Abs. 1 lit. o UWG): Massenwerbung verlangt korrekte
+            Absenderangaben und eine Abmeldemöglichkeit – das betrifft den
+            Newsletter-Versand, nicht die persönliche Mail.</li>
+          <li><strong>Datenschutz</strong> (DSG): verlangt in der Signatur nichts;
+            die Datenschutzerklärung gehört auf die Website.</li>
+          <li><strong>Elektronische Signatur ist nicht E-Mail-Signatur:</strong>
+            Die qualifizierte elektronische Signatur (ZertES) ist ein
+            kryptografisches Siegel für Verträge – mit dem Textblock unter der
+            Mail teilt sie nur den Namen.</li>
+        </ul>
+      </div>
+    </details>
     </div>
   </section>
 </main>
