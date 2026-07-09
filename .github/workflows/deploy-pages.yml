@@ -59,6 +59,9 @@ jobs:
           # Zielseite). Zentral gepflegt in sektionen.json.
           if [ -f sektionen.json ]; then python3 tools/build_sections.py _site; fi
 
+          # Kurz-URLs je Werkzeug: /<slug>/ -> /apps/<ordner>/ (aus tools.json).
+          if [ -f tools/build_tool_aliases.py ]; then python3 tools/build_tool_aliases.py _site; fi
+
           touch _site/.nojekyll
 
       - name: Setup Pages
