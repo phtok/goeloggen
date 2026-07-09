@@ -28,6 +28,9 @@
   .fset{border:0;display:grid;gap:var(--s3);margin-bottom:var(--s3)}
   .field > .lab{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s2)}
   .lab .sublab{font-family:var(--font-text);font-weight:400;font-size:var(--t-micro);color:var(--muted)}
+  .btn-mini{font-family:var(--font-text);font-size:12px;line-height:1;color:var(--on-accent);background:var(--blue-solid);
+    border-radius:var(--r-pill);padding:3px 9px;text-decoration:none;white-space:nowrap}
+  .btn-mini:hover{filter:brightness(1.12)}
   .counter{font-family:var(--font-text);font-variant-numeric:tabular-nums;font-size:var(--t-micro);color:var(--muted)}
   .counter.over{color:var(--bad)}
   .expiry-note{font-family:var(--font-text);font-size:var(--t-small);color:var(--gold-ink);background:var(--soft);
@@ -187,7 +190,9 @@
             <label class="field"><span class="lab"><span>Strasse / Nr.</span></span>
               <input type="text" id="street" placeholder="Rüttiweg 45" />
             </label>
-            <label class="field"><span class="lab"><span>PLZ / Ort</span></span>
+            <label class="field"><span class="lab"><span>PLZ / Ort</span>
+              <a class="btn-mini" href="../../assets/merkblaetter/das-kuerzel-vor-der-zahl.pdf" target="_blank" rel="noopener"
+                 title="Merkblatt: Das Kürzel vor der Zahl – warum CH-4143 nicht ins Adressfeld gehört (PDF)">beachten</a></span>
               <input type="text" id="city" placeholder="4143 Dornach" />
             </label>
             <label class="field"><span class="lab"><span>Land</span></span>
@@ -362,7 +367,6 @@
 
 <footer class="ds-footer"><div class="wrap frow">
   <span><strong>Goetheanum</strong> · Hausgrafik · E-Mail-Signatur</span>
-  <span><a href="https://grafik.goetheanum.ch">Weitere Werkzeuge</a></span>
 </div></footer>
 
 <script>
@@ -433,12 +437,12 @@ function buildSignature() {
   // Organisation – Goetheanum fett und blau (wie der Name im Gewicht)
   const hasPerson = rows.some(r => !r.gap && r.text !== "_");
   if (val("org1") || val("org2")) { if (hasPerson) gap(); }
-  if (val("org1")) push("<span style=\"font-weight:600;color:" + MAIL_BLUE + ";\">" + esc(val("org1")) + "</span>", val("org1"));
+  if (val("org1")) push("<span style=\"color:" + MAIL_BLUE + ";\">" + esc(val("org1")) + "</span>", val("org1"));
   if (val("org2")) push(esc(val("org2")), val("org2"));
 
   // Adresse auf EINER Zeile (mit Mittelpunkt), eine Stufe kleiner
   const addr = [val("street"), val("city"), val("country")].filter(Boolean).join(" · ");
-  if (addr) push("<span style=\"font-size:12px;\">" + esc(addr) + "</span>", addr);
+  if (addr) push(esc(addr), addr);
 
   // Kontakt: Telefonnummern als tel:-Link, aber Theme-Farbe (inherit) – dark-mode-fest
   if (val("phone")) push("<a href=\"" + telHref(val("phone")) + "\" style=\"color:inherit;text-decoration:none;\">" + esc(val("phone")) + "</a>", val("phone"));
@@ -455,7 +459,7 @@ function buildSignature() {
   while (hl.length && hl[0] === "") { hl.shift(); tl.shift(); }
   while (hl.length && hl[hl.length - 1] === "") { hl.pop(); tl.pop(); }
 
-  const html = "<div style=\"font-family:" + CFONT + ";font-size:13px;line-height:1.5;\">" + (hl.join("<br>") || "&nbsp;") + "</div>";
+  const html = "<div style=\"font-family:" + CFONT + ";font-size:12pt;line-height:1.5;\">" + (hl.join("<br>") || "&nbsp;") + "</div>";
   const text = tl.join("\n");
   return { html, text };
 }
