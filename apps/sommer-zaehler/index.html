@@ -157,6 +157,28 @@
   .motrow .mc{color:var(--ink)} .motrow .mc .ms{color:var(--muted);font-size:var(--t-micro);margin-left:7px}
   .motrow .mn{font-variant-numeric:tabular-nums lining-nums;color:var(--ink);font-weight:600}
   .kanal-rolle{color:var(--muted);font-size:var(--t-micro);margin-left:7px}
+
+  /* Zeitband: Phasen × Wochen × Kanäle (nur Tokens, DS02; Ziffern tnum, G25) */
+  .zb{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);min-width:720px}
+  .zb th,.zb td{border:1px solid var(--line-soft);padding:8px 10px;vertical-align:top;text-align:left}
+  .zb thead .ph th{font-weight:600;color:var(--on-accent);background:var(--blue-solid);border-color:var(--blue-solid)}
+  .zb thead .wk th{font-weight:600;color:var(--muted);font-size:var(--t-micro);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .zb thead .wk th.heute{color:var(--gold-ink);border-bottom:2px solid var(--gold)}
+  .zb .kz{white-space:nowrap;color:var(--ink);font-weight:600;background:var(--soft)}
+  .zb td{min-width:104px}
+  .zb-chip{display:block;margin:2px 0;padding:4px 8px;border:1px solid var(--line);border-radius:var(--r-control);
+    background:var(--field-bg);color:var(--ink);font-size:var(--t-micro);line-height:1.35;overflow-wrap:anywhere}
+  .zb-chip .zt{color:var(--muted);font-variant-numeric:tabular-nums;margin-right:5px}
+  .zb-chip .zr{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:baseline}
+  .zr.sichtbarkeit{background:var(--gold)} .zr.aktivierung{background:var(--blue)}
+  .zr.wirkung{background:var(--ok)} .zr.bindung{background:var(--muted)}
+  .zb-legende{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);margin-top:var(--s3);font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
+  .zb-form{margin-top:var(--s5)}
+  .zb-form summary{cursor:pointer;font-family:var(--font-text);font-weight:600;color:var(--ink);min-height:var(--tap);display:flex;align-items:center}
+  .zb-form .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);margin-top:var(--s4)}
+  .zb-form .span3{grid-column:1 / -1}
+  @media (max-width:640px){ .zb-form .grid{grid-template-columns:1fr} }
+
   /* Aktionsseiten als Buttons – Fingerziele statt klebender Textlinks (B04, DS02) */
   .landing{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3);align-items:center;font-family:var(--font-text);font-size:var(--t-small);margin-bottom:var(--s4)}
   .landing .meta{margin-right:var(--s2)}
@@ -293,6 +315,70 @@
       </table>
     </div>
     <p class="provisorisch">Kosten stehen auf 0 – die echten Zahlen werden erfragt. Hauptposten: Stunden intern, Social Media, Druck & Versand, Infrastruktur.</p>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Zeitband der Aktion</h2><p>Alle Massnahmen aller Akteure auf einen Blick – nach Phase, Woche und Kanal. Was unten eingetragen wird, erscheint sofort hier, im Protokoll und in der Wirkungskette.</p></div>
+    <div class="tablewrap">
+      <table class="zb" id="zeitband">
+        <tbody><tr><td class="empty">lädt …</td></tr></tbody>
+      </table>
+    </div>
+    <div class="zb-legende" id="zbLegende"></div>
+
+    <details class="zb-form">
+      <summary>Massnahme eintragen</summary>
+      <div class="card soft">
+        <div class="grid">
+          <label class="field">
+            <span class="lab">Datum</span>
+            <input type="date" id="mfTag" />
+          </label>
+          <label class="field">
+            <span class="lab">Kanal</span>
+            <select id="mfKanal">
+              <option value="social">Social Media</option>
+              <option value="newsletter">Newsletter</option>
+              <option value="mailer">Mailing / Post</option>
+              <option value="popup">Popup</option>
+              <option value="website">Website</option>
+              <option value="empfehlung">Empfehlung</option>
+              <option value="andere">Anderes</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="lab">Aufgabe der Massnahme</span>
+            <select id="mfRolle">
+              <option value="sichtbarkeit">Sichtbarkeit (gesehen werden)</option>
+              <option value="aktivierung">Aktivierung (Klicks holen)</option>
+              <option value="wirkung" selected>Wirkung (Abos bringen)</option>
+              <option value="bindung">Bindung (halten)</option>
+            </select>
+          </label>
+          <label class="field span3">
+            <span class="lab">Massnahme</span>
+            <input type="text" id="mfTitel" placeholder="z. B. Reel Ernst Zürcher · Instagram" />
+          </label>
+          <label class="field">
+            <span class="lab">Reichweite (optional)</span>
+            <input type="number" id="mfReichweite" min="0" placeholder="Impressionen" />
+          </label>
+          <label class="field">
+            <span class="lab">Klicks (optional)</span>
+            <input type="number" id="mfKlicks" min="0" placeholder="Klicks" />
+          </label>
+          <label class="field">
+            <span class="lab">Kosten in CHF (optional)</span>
+            <input type="number" id="mfKosten" min="0" step="0.01" placeholder="0.00" />
+          </label>
+        </div>
+        <div style="display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;margin-top:var(--s4)">
+          <button class="btn primary" type="button" id="mfBtn">Eintragen</button>
+          <span class="said" id="mfSaid"></span>
+        </div>
+        <p class="provisorisch" style="margin-top:var(--s3)">Für alle Kampagnen-Beteiligten offen – Social trägt Posts und Reichweiten ein, Redaktion Newsletter und Inserate. Zahlen dürfen später nachgetragen werden (einfach denselben Eintrag ergänzen lassen oder Philipp melden).</p>
+      </div>
+    </details>
   </section>
 
   <section>
@@ -534,6 +620,128 @@
   // ── Massnahmen-Protokoll ────────────────────────────────────────────────────
   var ROLLE_LABEL = { sichtbarkeit:'Sichtbarkeit', aktivierung:'Aktivierung', wirkung:'Wirkung', bindung:'Bindung' };
   var KANAL_LABEL = { newsletter:'Newsletter', mailer:'Mailing', social:'Social Media', popup:'Popup', website:'Website', empfehlung:'Empfehlung', andere:'Andere' };
+  // ── Zeitband: Phasen × Wochen × Kanäle ─────────────────────────────────────
+  // Phasen der Aktion (anpassbar): Auftakt → Verdichtung → Schlussspurt.
+  var PHASEN = [
+    { name: 'Auftakt',       von: '2026-06-29', bis: '2026-07-19' },
+    { name: 'Verdichtung',   von: '2026-07-20', bis: '2026-08-02' },
+    { name: 'Schlussspurt',  von: '2026-08-03', bis: '2026-08-08' }
+  ];
+  var ZB_KANAELE = [
+    ['social', 'Social'], ['newsletter', 'Newsletter'], ['mailer', 'Mailing/Post'],
+    ['popup', 'Popup'], ['website', 'Website'], ['empfehlung', 'Empfehlung'], ['andere', 'Anderes']
+  ];
+  var ROLLEN_LABEL = { sichtbarkeit:'Sichtbarkeit', aktivierung:'Aktivierung', wirkung:'Wirkung', bindung:'Bindung' };
+
+  function zbWochen(){
+    // Montagsraster über den Aktionszeitraum.
+    var start = new Date(CONFIG.start + 'T00:00:00');
+    var ende  = new Date(CONFIG.ende  + 'T00:00:00');
+    var mo = new Date(start); mo.setDate(mo.getDate() - ((mo.getDay() + 6) % 7));
+    var wochen = [];
+    while (mo <= ende){
+      var so = new Date(mo); so.setDate(so.getDate() + 6);
+      wochen.push({ von: new Date(mo), bis: so });
+      mo = new Date(mo); mo.setDate(mo.getDate() + 7);
+    }
+    return wochen;
+  }
+  function zbTag(d){ return d.getDate() + '.' + (d.getMonth() + 1) + '.'; }
+
+  function renderZeitband(rows){
+    var tbl = el('zeitband'); if(!tbl) return;
+    var wochen = zbWochen();
+    var heute = new Date(); heute.setHours(0,0,0,0);
+
+    // Kopf 1: Phasen (Zellen je Woche, gleiche Phase = zusammenhängende Färbung)
+    var h1 = '<tr class="ph"><th></th>';
+    var i, w, ph;
+    var phasenJeWoche = wochen.map(function(wo){
+      var mitte = new Date(wo.von); mitte.setDate(mitte.getDate() + 3);
+      for (var p = 0; p < PHASEN.length; p++){
+        if (mitte >= new Date(PHASEN[p].von + 'T00:00:00') && mitte <= new Date(PHASEN[p].bis + 'T23:59:59')) return PHASEN[p].name;
+      }
+      return '';
+    });
+    i = 0;
+    while (i < phasenJeWoche.length){
+      var span = 1;
+      while (i + span < phasenJeWoche.length && phasenJeWoche[i + span] === phasenJeWoche[i]) span++;
+      h1 += '<th colspan="' + span + '">' + (phasenJeWoche[i] || '·') + '</th>';
+      i += span;
+    }
+    h1 += '</tr>';
+
+    // Kopf 2: Wochen (heutige Woche markiert)
+    var h2 = '<tr class="wk"><th>Kanal</th>';
+    for (i = 0; i < wochen.length; i++){
+      w = wochen[i];
+      var istHeute = heute >= w.von && heute <= w.bis;
+      h2 += '<th' + (istHeute ? ' class="heute"' : '') + '>' + zbTag(w.von) + '–' + zbTag(w.bis) + '</th>';
+    }
+    h2 += '</tr>';
+
+    // Zeilen: je Kanal, Chips je Woche
+    var body = '';
+    ZB_KANAELE.forEach(function(k){
+      var zeile = '<tr><td class="kz">' + k[1] + '</td>';
+      for (var wi = 0; wi < wochen.length; wi++){
+        var von = wochen[wi].von, bis = wochen[wi].bis;
+        var chips = '';
+        (rows || []).forEach(function(m){
+          if ((m.kanal || 'andere') !== k[0] || !m.tag) return;
+          var d = new Date(m.tag + 'T00:00:00');
+          if (d < von || d > bis) return;
+          var det = [ROLLEN_LABEL[m.rolle] || ''];
+          if (m.reichweite) det.push('Reichweite ' + Number(m.reichweite).toLocaleString('de-CH'));
+          if (m.klicks) det.push('Klicks ' + Number(m.klicks).toLocaleString('de-CH'));
+          if (m.kosten) det.push('Kosten ' + Number(m.kosten).toLocaleString('de-CH'));
+          var span = document.createElement('span');
+          span.className = 'zb-chip';
+          span.title = m.massnahme + ' – ' + det.filter(Boolean).join(' · ');
+          span.innerHTML = '<span class="zr ' + (m.rolle || 'wirkung') + '"></span><span class="zt">' + zbTag(d) + '</span>';
+          span.appendChild(document.createTextNode(m.massnahme));
+          chips += span.outerHTML;
+        });
+        zeile += '<td>' + chips + '</td>';
+      }
+      body += zeile + '</tr>';
+    });
+
+    tbl.innerHTML = '<thead>' + h1 + h2 + '</thead><tbody>' + body + '</tbody>';
+    el('zbLegende').innerHTML = Object.keys(ROLLEN_LABEL).map(function(r){
+      return '<span><span class="zr ' + r + '" style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px"></span>' + ROLLEN_LABEL[r] + '</span>';
+    }).join('') + '<span>Jeder Punkt = eine Massnahme; Details beim Überfahren.</span>';
+  }
+
+  // Eintragen: offener Schreibweg (Muster Link-Register), erscheint sofort überall.
+  el('mfTag').value = new Date().toISOString().slice(0, 10);
+  el('mfBtn').addEventListener('click', function(){
+    var sagen = function(msg, bad){ var s = el('mfSaid'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; };
+    var titel = (el('mfTitel').value || '').trim();
+    if (!el('mfTag').value || !titel){ sagen('Datum und Massnahme sind Pflicht.', true); return; }
+    fetch(SB + '/rest/v1/rpc/sommer2026_massnahme_eintragen', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({
+        p_tag: el('mfTag').value, p_massnahme: titel,
+        p_kanal: el('mfKanal').value, p_rolle: el('mfRolle').value,
+        p_zielgruppe: null,
+        p_kosten: el('mfKosten').value ? Number(el('mfKosten').value) : null,
+        p_reichweite: el('mfReichweite').value ? Number(el('mfReichweite').value) : null,
+        p_klicks: el('mfKlicks').value ? Number(el('mfKlicks').value) : null
+      })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(ergebnis){
+        if (ergebnis === 'ok'){
+          sagen('Eingetragen – erscheint im Zeitband und im Protokoll.');
+          el('mfTitel').value = ''; el('mfReichweite').value = ''; el('mfKlicks').value = ''; el('mfKosten').value = '';
+          rpc('sommer2026_massnahmen_public').then(function(rows){ renderZeitband(rows); renderMassnahmen(rows); }).catch(function(){});
+        } else { sagen('Datum und Massnahme prüfen.', true); }
+      })
+      .catch(function(){ sagen('Eintragen nicht erreichbar.', true); });
+  });
+
   function renderMassnahmen(rows){
     var body = el('massnahmenBody'); body.innerHTML = '';
     if(!rows || !rows.length){
@@ -731,6 +939,7 @@
         renderCohort(kohorten, revenue);
         renderKosten(total, revenue);
         renderMassnahmen(massnahmen);
+        renderZeitband(massnahmen);
         if(total === 0){ el('status').className = 'status empty'; }
         setStatus('ok', new Date());
       })

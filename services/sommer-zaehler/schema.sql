@@ -139,6 +139,31 @@ language sql security definer set search_path to 'public' as $$
    order by tag, id;
 $$;
 
+-- Massnahme eintragen (Migration «sommer2026_massnahme_eintragen»): offener
+-- Schreibweg fürs Team (Muster Link-Register) – nur kuratierte Felder, die
+-- internen Freitext-Spalten bleiben der Redaktion. Speist Zeitband, Protokoll
+-- und Wirkungskette im Cockpit.
+create or replace function public.sommer2026_massnahme_eintragen(
+  p_tag date, p_massnahme text, p_kanal text, p_rolle text,
+  p_zielgruppe text, p_kosten numeric, p_reichweite bigint, p_klicks bigint)
+returns text language plpgsql security definer set search_path to 'public' as $$
+declare
+  v_kanal text; v_rolle text;
+begin
+  if p_tag is null or coalesce(trim(p_massnahme), '') = '' then
+    return 'unvollstaendig';
+  end if;
+  v_kanal := lower(coalesce(p_kanal, ''));
+  if v_kanal not in ('newsletter','mailer','social','popup','website','empfehlung','andere') then v_kanal := 'andere'; end if;
+  v_rolle := lower(coalesce(p_rolle, ''));
+  if v_rolle not in ('sichtbarkeit','aktivierung','wirkung','bindung') then v_rolle := 'wirkung'; end if;
+  insert into public.sommer2026_massnahmen (tag, massnahme, kanal, rolle, zielgruppe, kosten, reichweite, klicks)
+  values (p_tag, trim(p_massnahme), v_kanal, v_rolle, nullif(trim(coalesce(p_zielgruppe,'')), ''), p_kosten, p_reichweite, p_klicks);
+  return 'ok';
+end;
+$$;
+grant execute on function public.sommer2026_massnahme_eintragen(date, text, text, text, text, numeric, bigint, bigint) to anon, authenticated;
+
 -- Wirkungstrichter: Sichtbarkeit → Aktivierung → Wirkung → Bindung
 create or replace function public.sommer2026_trichter()
 returns table(stufe text, wert bigint, ord int)
