@@ -30,7 +30,7 @@
   .lab .sublab{font-family:var(--font-text);font-weight:400;font-size:var(--t-micro);color:var(--muted)}
   .input-wrap{position:relative;display:block}
   .input-wrap input{width:100%;padding-right:96px}
-  .btn-mini{font-family:var(--font-text);font-size:var(--t-micro);line-height:1;color:var(--on-accent);background:var(--blue-solid);
+  .btn-mini{font-family:var(--font-text);font-size:12px;line-height:1;color:var(--on-accent);background:var(--blue-solid);
     border-radius:var(--r-pill);padding:4px 10px;text-decoration:none;white-space:nowrap;
     position:absolute;right:8px;top:50%;transform:translateY(-50%)}
   .btn-mini:hover{filter:brightness(1.12)}
@@ -65,9 +65,9 @@
 
   /* Vorschau-Bühne: simuliert den Empfänger-Client, theme-UNABHÄNGIG (feste Werte). */
   .mail-stage{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card);overflow-x:auto}
-  .mail-stage.light{background:#ffffff;color:#111111} /* # ds-ok Artefakt (Empfänger hell) */
-  .mail-stage.dark{background:#1e1e1e;color:#e8e8e8;border-color:#333333} /* # ds-ok Artefakt (Empfänger dunkel) */
-  .mail-body{font-size:13px;line-height:1.5} /* # ds-ok Artefakt (Empfänger-Mass, keine UI-Schrift) */
+  .mail-stage.light{background:#ffffff;color:#111111} /* ds-ok: Artefakt (Empfänger hell) */
+  .mail-stage.dark{background:#1e1e1e;color:#e8e8e8;border-color:#333333} /* ds-ok: Artefakt (Empfänger dunkel) */
+  .mail-body{font-size:13px;line-height:1.5}
   .mail-greeting{opacity:.6;margin-bottom:14px}
   .scroll-hint{display:none}
 
@@ -107,7 +107,7 @@
   .pikto .acc{stroke:var(--gold-ink)}
   .pikto .slash{stroke:var(--bad);opacity:.75}
   .pikto text{stroke:none;fill:var(--muted);font-family:var(--font-text)}
-  .pikto .ps{font-size:11px} /* # ds-ok Illustrations-Tinte im Piktogramm, kein UI-Text */
+  .pikto .ps{font-size:11px}
   .empf-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s6)}
   .empf-ps{font-family:var(--font-text);color:var(--gold-ink);font-size:var(--t-small);margin:0}
 
@@ -192,8 +192,8 @@
             <label class="field"><span class="lab"><span>Organisation – Hauptzeile</span> <span class="sublab">erscheint blau</span></span>
               <input type="text" id="org1" placeholder="Goetheanum" />
             </label>
-            <label class="field"><span class="lab"><span>Organisation – Unterzeile</span></span>
-              <input type="text" id="org2" placeholder="Allgemeine Anthroposophische Gesellschaft" />
+            <label class="field"><span class="lab"><span>Organisation – Unterzeile</span> <span class="sublab">mehrzeilig möglich</span></span>
+              <textarea id="org2" rows="2" placeholder="Allgemeine Anthroposophische Gesellschaft&#10;General Anthroposophical Society"></textarea>
             </label>
             <label class="field"><span class="lab"><span>Strasse / Nr.</span></span>
               <input type="text" id="street" placeholder="Rüttiweg 45" />
@@ -206,7 +206,7 @@
               </span>
             </label>
             <label class="field"><span class="lab"><span>Land</span></span>
-              <input type="text" id="country" placeholder="Schweiz" />
+              <input type="text" id="country" placeholder="Switzerland" />
             </label>
           </div>
         </details>
@@ -321,7 +321,7 @@
         <p>Es gibt eine Signatur – deine. Zwei Zeilen gehören dazu, alles Weitere wählst du selbst: Name und Goetheanum. Das genügt bereits. Du entscheidest, welche Angaben du noch mitschickst.</p>
       </div>
       <div class="empf-item" data-ico="6">
-        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h32v20H25l-9 9v-9H8z"/><text x="15" y="26" class="pt" font-size="15" data-typo-ignore>„…"</text><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h32v20H25l-9 9v-9H8z"/><text x="15" y="26" class="pt" font-size="15">„…"</text><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
         <h3>Sinnsprüche?</h3>
         <p>Zitate, Sprüche, Banner: Was du sagen willst, wirkt in der Mail – oder im PS. In der Signatur verblasst es, weil es unter jeder Nachricht gleich aussieht.</p>
       </div>
@@ -403,10 +403,10 @@ const EXAMPLE = {
   mobile: "",
   web: "goetheanum.ch",
   org1: "Goetheanum",
-  org2: "Allgemeine Anthroposophische Gesellschaft",
+  org2: "Allgemeine Anthroposophische Gesellschaft\nGeneral Anthroposophical Society",
   street: "Rüttiweg 45",
   city: "4143 Dornach",
-  country: "Schweiz",
+  country: "Switzerland",
   ps: "",
   pslink: "",
   psuntil: ""
@@ -456,7 +456,7 @@ function buildSignature() {
   const hasPerson = rows.some(r => !r.gap && r.text !== "_");
   if (val("org1") || val("org2")) { if (hasPerson) gap(); }
   if (val("org1")) push("<span style=\"color:" + MAIL_BLUE + ";\">" + esc(val("org1")) + "</span>", val("org1"));
-  if (val("org2")) push(esc(val("org2")), val("org2"));
+  val("org2").split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(l => push(esc(l), l));
 
   // Adresse auf EINER Zeile (mit Mittelpunkt), eine Stufe kleiner
   const addr = [val("street"), val("city"), val("country")].filter(Boolean).join(" · ");
@@ -577,7 +577,7 @@ document.getElementById("icsBtn").addEventListener("click", function () {
 
 /* ---------- Eingaben verdrahten ---------- */
 function autoGrow(el) { if (!el || el.tagName !== "TEXTAREA") return; el.style.height = "auto"; el.style.height = el.scrollHeight + "px"; }
-function growAll() { autoGrow(els.role); autoGrow(els.web); autoGrow(els.ps); }
+function growAll() { autoGrow(els.role); autoGrow(els.web); autoGrow(els.ps); autoGrow(els.org2); }
 function onInput() { resetCopied(); render(); growAll(); checkExpiry(); save(); }
 FIELDS.forEach(k => els[k].addEventListener("input", onInput));
 
