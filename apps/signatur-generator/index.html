@@ -28,8 +28,11 @@
   .fset{border:0;display:grid;gap:var(--s3);margin-bottom:var(--s3)}
   .field > .lab{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s2)}
   .lab .sublab{font-family:var(--font-text);font-weight:400;font-size:var(--t-micro);color:var(--muted)}
+  .input-wrap{position:relative;display:block}
+  .input-wrap input{width:100%;padding-right:96px}
   .btn-mini{font-family:var(--font-text);font-size:12px;line-height:1;color:var(--on-accent);background:var(--blue-solid);
-    border-radius:var(--r-pill);padding:3px 9px;text-decoration:none;white-space:nowrap}
+    border-radius:var(--r-pill);padding:4px 10px;text-decoration:none;white-space:nowrap;
+    position:absolute;right:8px;top:50%;transform:translateY(-50%)}
   .btn-mini:hover{filter:brightness(1.12)}
   .counter{font-family:var(--font-text);font-variant-numeric:tabular-nums;font-size:var(--t-micro);color:var(--muted)}
   .counter.over{color:var(--bad)}
@@ -83,10 +86,10 @@
 
   /* Empfehlungen: Lesetext, linksbündig (Titel NICHT rechts). */
   .empf-card{border-top:3px solid var(--gold)}
-  .empf-top{display:flex;gap:var(--s8);align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
-  .empf-head{flex:1 1 340px;max-width:46ch}
+  .empf-top{display:flex;gap:var(--s8);align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:var(--s8)}
+  .empf-head{flex:0 1 calc(50% - var(--s8))}    /* exakt so breit wie eine Textspalte */
   .empf-head h2{font-size:var(--t-h2)}
-  .empf-head p{color:var(--muted);font-size:var(--t-small);margin-top:var(--s1)}
+  .empf-head p{font-family:var(--font-text);color:var(--ink);font-size:var(--t-small);line-height:1.6;margin-top:var(--s1);max-width:46ch}
   .empf{font-family:var(--font-text);margin-top:var(--s2)}
   .empf a{color:var(--gold-ink);text-decoration:none}
   .empf a:hover{text-decoration:underline}
@@ -190,10 +193,12 @@
             <label class="field"><span class="lab"><span>Strasse / Nr.</span></span>
               <input type="text" id="street" placeholder="Rüttiweg 45" />
             </label>
-            <label class="field"><span class="lab"><span>PLZ / Ort</span>
-              <a class="btn-mini" href="../../assets/merkblaetter/das-kuerzel-vor-der-zahl.pdf" target="_blank" rel="noopener"
-                 title="Merkblatt: Das Kürzel vor der Zahl – warum CH-4143 nicht ins Adressfeld gehört (PDF)">beachten</a></span>
-              <input type="text" id="city" placeholder="4143 Dornach" />
+            <label class="field"><span class="lab"><span>PLZ / Ort</span></span>
+              <span class="input-wrap">
+                <input type="text" id="city" placeholder="4143 Dornach" />
+                <a class="btn-mini" href="../../assets/merkblaetter/das-kuerzel-vor-der-zahl.pdf" target="_blank" rel="noopener"
+                   title="Merkblatt: Das Kürzel vor der Zahl – warum CH-4143 nicht ins Adressfeld gehört (PDF)">beachten</a>
+              </span>
             </label>
             <label class="field"><span class="lab"><span>Land</span></span>
               <input type="text" id="country" placeholder="Schweiz" />
@@ -300,60 +305,60 @@
       <svg class="empf-ill" viewBox="0 0 400 205" role="img" aria-label="Links: eine E-Mail mit einer Botschaft. Rechts: eine ueberladene E-Mail, in der die Botschaft untergeht."><rect x="22" y="12" width="166" height="150" rx="14" class="win" /><line x1="52" y1="40" x2="96" y2="40" class="ln goldb"/><line x1="52" y1="74" x2="158" y2="74" class="ln bb"/><line x1="52" y1="104" x2="118" y2="104" class="ln blueb"/><circle cx="162" cy="38" r="13" class="badge-ok"/><path class="badge-p" d="M156 38 l4 5 l8 -10"/><text x="105.0" y="195" font-size="14" class="cap ok" text-anchor="middle" font-weight="700">Eine Botschaft</text><rect x="212" y="12" width="166" height="150" rx="14" class="win" /><rect x="234" y="34" width="122" height="18" rx="5" class="banner" /><rect x="234" y="62" width="52" height="36" rx="6" class="img" /><path class="glyph" d="M239 92 l14 -16 l9 8 l8 -8 l12 16"/><line x1="296" y1="70" x2="354" y2="70" class="ln"/><line x1="296" y1="88" x2="340" y2="88" class="ln"/><line x1="234" y1="114" x2="354" y2="114" class="ln"/><rect x="234" y="128" width="22" height="22" rx="5" class="logo" /><circle cx="350" cy="139" r="6" class="soc"/><circle cx="332" cy="139" r="6" class="soc"/><circle cx="314" cy="139" r="6" class="soc"/><circle cx="352" cy="38" r="13" class="badge-bad"/><path class="badge-p" d="M346 33 l12 10 M358 33 l-12 10"/><text x="295.0" y="195" font-size="14" class="cap bad" text-anchor="middle" font-weight="700">Wo ist die Botschaft?</text></svg>
     </div>
     <div class="empf">
-      <div class="empf-item">
+      <div class="empf-item" data-ico="1">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="10" width="36" height="28" rx="4"/><circle cx="16" cy="21" r="4"/><path d="M10.5 32c1.5-4.5 9.5-4.5 11 0"/><line x1="27" y1="18" x2="38" y2="18"/><line x1="27" y1="25" x2="36" y2="25" class="acc"/></svg>
         <h3>Das bin ich</h3>
         <p>Es gibt eine Signatur – deine. Zwei Zeilen gehören dazu, alles Weitere wählst du selbst: Name und Goetheanum. Das genügt bereits. Du entscheidest, welche Angaben du noch mitschickst.</p>
       </div>
-      <div class="empf-item">
-        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 24c5.5-8 13-12 19-12s13.5 4 19 12c-5.5 8-13 12-19 12S10.5 32 5 24z"/><circle cx="24" cy="24" r="5" class="acc"/></svg>
-        <h3>Meistgelesen</h3>
-        <p>Das PS wird meist als Erstes gelesen. Hier ist der beste Platz für den Hinweis auf eine Veranstaltung. Setz Dir ein Ablaufdatum – der Generator legt eine Erinnerung in deinen Kalender.</p>
-      </div>
-      <div class="empf-item">
-        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="12" width="24" height="19" rx="3"/><path d="M10 28l6-7 4 4 3-3 5 6"/><path class="acc" d="M40 13v15a5 5 0 0 1-10 0V16a3 3 0 0 1 6 0v11"/><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
-        <h3>Bildersturm?</h3>
-        <p>Bilder in Signaturen erscheinen als Anhang. Der Subtext verspricht: <em>Hier ist ein Dokument für dich.</em> Eine Text-Signatur hält dieses Versprechen: Hier wartet wirklich ein Dokument und keine Werbung.</p>
-      </div>
-      <div class="empf-item">
-        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><text x="15" y="35" class="pt" font-size="30">§</text><line x1="9" y1="40" x2="39" y2="8" class="slash"/></svg>
-        <h3>Juristerei</h3>
-        <p>Rechtserklärungen und Vertraulichkeitshinweise sind für das Goetheanum rechtlich nicht erforderlich und sagen dem Empfänger nichts – sie machen Mails nur länger.</p>
-      </div>
-      <div class="empf-item">
-        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><text x="8" y="18" class="ps">012</text><text x="8" y="30" class="ps">345</text><text x="8" y="42" class="ps">678</text><line x1="34" y1="42" x2="44" y2="8" class="slash"/></svg>
-        <h3>Zahlenkolonnen</h3>
-        <p>Amtsnummern und Registerangaben gehören auf Briefpapier und Website, nicht unter jede Nachricht.</p>
-      </div>
-      <div class="empf-item">
+      <div class="empf-item" data-ico="6">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h32v20H25l-9 9v-9H8z"/><text x="15" y="26" class="pt" font-size="15">„…"</text><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
         <h3>Sinnsprüche?</h3>
         <p>Zitate, Sprüche, Banner: Was du sagen willst, wirkt in der Mail – oder im PS. In der Signatur verblasst es, weil es unter jeder Nachricht gleich aussieht.</p>
       </div>
-      <div class="empf-item">
+      <div class="empf-item" data-ico="2">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 24c5.5-8 13-12 19-12s13.5 4 19 12c-5.5 8-13 12-19 12S10.5 32 5 24z"/><circle cx="24" cy="24" r="5" class="acc"/></svg>
+        <h3>Meistgelesen</h3>
+        <p>Das PS wird meist als Erstes gelesen. Hier ist der beste Platz für den Hinweis auf eine Veranstaltung. Setz Dir ein Ablaufdatum – der Generator legt eine Erinnerung in deinen Kalender.</p>
+      </div>
+      <div class="empf-item" data-ico="3">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="12" width="24" height="19" rx="3"/><path d="M10 28l6-7 4 4 3-3 5 6"/><path class="acc" d="M40 13v15a5 5 0 0 1-10 0V16a3 3 0 0 1 6 0v11"/><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
+        <h3>Bildersturm?</h3>
+        <p>Bilder in Signaturen erscheinen als Anhang. Die Mail verspricht: <em>Hier ist ein Dokument für dich.</em> Eine Text-Signatur hält dieses Versprechen: Hier wartet wirklich ein Dokument und keine Werbung.</p>
+      </div>
+      <div class="empf-item" data-ico="7">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="13" width="21" height="15" rx="2"/><path d="M5 14l10.5 8L26 14"/><circle cx="33" cy="30" r="8" class="acc"/><line x1="39" y1="36" x2="45" y2="42" class="acc"/></svg>
         <h3>Wiedergefunden!</h3>
         <p>Der Betreff sagt, worum es geht – konkret genug, dass die Mail in einem Jahr wiedergefunden wird.</p>
       </div>
-      <div class="empf-item">
-        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><circle cx="29" cy="26" r="13"/><circle cx="29" cy="26" r="4" class="acc"/><line x1="4" y1="7" x2="23" y2="21"/><path d="M6 14L4 7l7 1"/></svg>
-        <h3>Ein Anliegen kommt an</h3>
-        <p>Eine Sache pro Mail. Zwei Anliegen sind zwei Mails – sie lassen sich getrennt beantworten, weiterleiten und erledigen.</p>
+      <div class="empf-item" data-ico="4">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><text x="15" y="35" class="pt" font-size="30">§</text><line x1="9" y1="40" x2="39" y2="8" class="slash"/></svg>
+        <h3>Juristerei</h3>
+        <p>Rechtserklärungen und Vertraulichkeitshinweise sind für das Goetheanum rechtlich nicht erforderlich und sagen dem Empfänger nichts – sie machen Mails nur länger.</p>
       </div>
-      <div class="empf-item">
+      <div class="empf-item" data-ico="9">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="16" width="27" height="19" rx="2"/><path d="M6 17l13.5 9L33 17"/><text x="35" y="18" class="ps">z</text><text x="40" y="12" class="ps">z</text></svg>
         <h3>Du musst nicht antworten</h3>
         <p>An heisst: von dir wird etwas erwartet. CC heisst: zur Kenntnis. Wer im CC steht, muss nicht antworten.</p>
       </div>
-      <div class="empf-item">
+      <div class="empf-item" data-ico="5">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><text x="8" y="18" class="ps">012</text><text x="8" y="30" class="ps">345</text><text x="8" y="42" class="ps">678</text><line x1="34" y1="42" x2="44" y2="8" class="slash"/></svg>
+        <h3>Zahlenkolonnen</h3>
+        <p>Amtsnummern und Registerangaben gehören auf Briefpapier und Website, nicht unter jede Nachricht.</p>
+      </div>
+      <div class="empf-item" data-ico="8">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><circle cx="29" cy="26" r="13"/><circle cx="29" cy="26" r="4" class="acc"/><line x1="4" y1="7" x2="23" y2="21"/><path d="M6 14L4 7l7 1"/></svg>
+        <h3>Ein Anliegen kommt an</h3>
+        <p>Eine Sache pro Mail. Zwei Anliegen sind zwei Mails – sie lassen sich getrennt beantworten, weiterleiten und erledigen.</p>
+      </div>
+      <div class="empf-item" data-ico="10">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 9h32v22H26l-9 9v-9H8z"/><text x="15" y="26" class="pt" font-size="16">?!</text></svg>
         <h3>Sag, was du brauchst!</h3>
         <p>Eine Antwort? Bis wann? Oder nur Information? Ein Halbsatz am Ende erspart Nachfragen.</p>
       </div>
-      <div class="empf-item">
+      <div class="empf-item" data-ico="11">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><line x1="24" y1="7" x2="24" y2="20"/><path d="M16 13a13 13 0 1 0 16 0" class="acc"/></svg>
         <h3>Ausschalten</h3>
-        <p>Antworten und interne Mails dürfen ohne Signatur ausgehen: Wer miteinander im Austausch steht, kennt sich. In Outlook lässt sich das für Antworten fest einstellen; in Apple Mail ist es ein Handgriff beim Schreiben.</p>
+        <p>Antworten und interne Mails dürfen ohne Signatur ausgehen. In Outlook lässt sich das für Antworten fest einstellen; in Apple Mail ist es ein Handgriff beim Schreiben.</p>
       </div>
     </div>
     
@@ -459,7 +464,7 @@ function buildSignature() {
   while (hl.length && hl[0] === "") { hl.shift(); tl.shift(); }
   while (hl.length && hl[hl.length - 1] === "") { hl.pop(); tl.pop(); }
 
-  const html = "<div style=\"font-family:" + CFONT + ";font-size:12pt;line-height:1.5;\">" + (hl.join("<br>") || "&nbsp;") + "</div>";
+  const html = "<div style=\"font-family:" + CFONT + ";font-size:12px;line-height:1.5;\">" + (hl.join("<br>") || "&nbsp;") + "</div>";
   const text = tl.join("\n");
   return { html, text };
 }
@@ -809,7 +814,7 @@ function collectEmpf() {
     lede: head.querySelector("p").textContent.replace(/\s+/g, " ").trim(),
     ps: psEl ? psEl.textContent.replace(/\s+/g, " ").trim() : "",
     items: [...document.querySelectorAll("#empfehlungen .empf-item")].map((it, i) => ({
-      num: String(i + 1),
+      num: it.dataset.ico || String(i + 1),
       title: it.querySelector("h3").textContent.replace(/\s+/g, " ").trim(),
       body: [...it.querySelectorAll("p")].map(p => p.textContent.replace(/\s+/g, " ").trim())
     }))
