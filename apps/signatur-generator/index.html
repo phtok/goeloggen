@@ -91,8 +91,16 @@
 
   /* Empfehlungen: Lesetext, linksbündig (Titel NICHT rechts). */
   .empf-card{border-top:3px solid var(--gold)}
-  .empf-top{display:flex;gap:var(--s8);align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:var(--s8)}
-  .empf-head{flex:0 1 calc(50% - var(--s8))}    /* exakt so breit wie eine Textspalte */
+  /* Mobil: Illu zuerst, Intro danach auf voller Breite. Erst ab 720px
+     (gleicher Breakpoint wie die zwei Empfehlungs-Spalten) nebeneinander. */
+  .empf-top{display:flex;flex-direction:column;gap:var(--s6);margin-bottom:var(--s8)}
+  .empf-head{order:2}
+  .empf-ill{order:1}
+  @media(min-width:720px){
+    .empf-top{flex-direction:row;gap:var(--s8);align-items:flex-start;justify-content:space-between}
+    .empf-head{order:0;flex:0 1 calc(50% - var(--s8))}   /* exakt so breit wie eine Textspalte */
+    .empf-ill{order:0}
+  }
   .empf-head h2{font-size:var(--t-h2)}
   .empf-head p{font-family:var(--font-text);color:var(--ink);font-size:var(--t-small);line-height:1.6;margin-top:var(--s1);max-width:46ch}
   .empf{font-family:var(--font-text);margin-top:var(--s2)}
@@ -120,7 +128,8 @@
   .amv{width:100%;max-width:600px;height:auto;display:block;margin-top:var(--s4)} /* ds-ok */
 
   /* Empfehlungs-Vergleich: aufgeräumt vs. überladen (theme-aware) */
-  .empf-ill{flex:0 1 340px;width:100%;max-width:340px;height:auto;display:block;margin:0}
+  .empf-ill{flex:none;width:100%;max-width:340px;height:auto;display:block;margin:0}
+  @media(min-width:720px){.empf-ill{flex:0 1 340px}}
   .empf-ill .win{fill:var(--paper);stroke:var(--line);stroke-width:1.5}
   .empf-ill .ln{stroke:var(--muted);stroke-width:5;stroke-linecap:round;opacity:.33}
   .empf-ill .ln.b{stroke:var(--ink);opacity:.82;stroke-width:6}
