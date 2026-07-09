@@ -79,6 +79,8 @@
     background:var(--code-bg2);color:var(--code-ink);border-radius:var(--r-control);padding:5px 10px;cursor:pointer}
 
   /* Empfehlungen: Lesetext, linksbündig (Titel NICHT rechts). */
+  .empf-top{display:flex;gap:var(--s8);align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+  .empf-head{flex:1 1 340px;max-width:52ch}
   .empf-head h2{font-size:var(--t-h2)}
   .empf-head p{color:var(--muted);font-size:var(--t-small);margin-top:var(--s1)}
   .empf{font-family:var(--font-text);margin-top:var(--s2)}
@@ -94,13 +96,14 @@
   .pikto .slash{stroke:var(--bad);opacity:.75}
   .pikto text{stroke:none;fill:var(--muted);font-family:var(--font-text)}
   .pikto .ps{font-size:11px}
-  .empf-ps{font-family:var(--font-text);color:var(--gold-ink);font-size:var(--t-small);margin-top:var(--s6)}
+  .empf-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s6)}
+  .empf-ps{font-family:var(--font-text);color:var(--gold-ink);font-size:var(--t-small);margin:0}
 
   /* Apple-Mail-Skizze (eigenständige Farben = Artefakt/Screenshot). */
   .amv{width:100%;max-width:600px;height:auto;display:block;margin-top:var(--s4)} /* ds-ok */
 
   /* Empfehlungs-Vergleich: aufgeräumt vs. überladen (theme-aware) */
-  .empf-ill{width:100%;max-width:420px;height:auto;display:block;margin:var(--s6) auto 0}
+  .empf-ill{flex:0 1 340px;width:100%;max-width:340px;height:auto;display:block;margin:0}
   .empf-ill .win{fill:var(--paper);stroke:var(--line);stroke-width:1.5}
   .empf-ill .ln{stroke:var(--muted);stroke-width:5;stroke-linecap:round;opacity:.33}
   .empf-ill .ln.b{stroke:var(--ink);opacity:.82;stroke-width:6}
@@ -279,15 +282,15 @@
 
   <section id="empfehlungen">
     <div class="card soft">
-    <div class="empf-head">
-      <span class="kicker">E-Mail am Goetheanum</span>
-      <h2>Diese Mail wird gelesen</h2>
-      <p>Jede E-Mail aus dem Goetheanum ist ein Auftritt des Goetheanum – und zugleich die Stimme eines
-        Menschen. Diese Empfehlungen sorgen für eine sichtbare, öffentliche Haltung und geben Dir
-        persönliche Freiheit im Detail.</p>
-      <div class="btnrow" style="margin-top:var(--s4)">
-        <button type="button" class="btn" id="pdfBtn">Als PDF laden (A4)</button>
+    <div class="empf-top">
+      <div class="empf-head">
+        <span class="kicker">E-Mail am Goetheanum</span>
+        <h2>Diese Mail wird gelesen</h2>
+        <p>Jede E-Mail aus dem Goetheanum ist ein Auftritt des Goetheanum – und zugleich
+          die Stimme eines Menschen. Diese Empfehlungen sorgen für eine sichtbare,
+          öffentliche Haltung und geben Dir persönliche Freiheit im Detail.</p>
       </div>
+      <svg class="empf-ill" viewBox="0 0 400 205" role="img" aria-label="Links: eine E-Mail mit einer Botschaft. Rechts: eine ueberladene E-Mail, in der die Botschaft untergeht."><rect x="22" y="12" width="166" height="150" rx="14" class="win" /><line x1="52" y1="74" x2="158" y2="74" class="ln bb"/><line x1="52" y1="104" x2="118" y2="104" class="ln blueb"/><circle cx="162" cy="38" r="13" class="badge-ok"/><path class="badge-p" d="M156 38 l4 5 l8 -10"/><text x="105.0" y="195" font-size="14" class="cap ok" text-anchor="middle" font-weight="700">Eine Botschaft</text><rect x="212" y="12" width="166" height="150" rx="14" class="win" /><rect x="234" y="34" width="122" height="18" rx="5" class="banner" /><rect x="234" y="62" width="52" height="36" rx="6" class="img" /><path class="glyph" d="M239 92 l14 -16 l9 8 l8 -8 l12 16"/><line x1="296" y1="70" x2="354" y2="70" class="ln"/><line x1="296" y1="88" x2="340" y2="88" class="ln"/><line x1="234" y1="114" x2="354" y2="114" class="ln"/><rect x="234" y="128" width="22" height="22" rx="5" class="logo" /><circle cx="350" cy="139" r="6" class="soc"/><circle cx="332" cy="139" r="6" class="soc"/><circle cx="314" cy="139" r="6" class="soc"/><circle cx="352" cy="38" r="13" class="badge-bad"/><path class="badge-p" d="M346 33 l12 10 M358 33 l-12 10"/><text x="295.0" y="195" font-size="14" class="cap bad" text-anchor="middle" font-weight="700">Wo ist die Botschaft?</text></svg>
     </div>
     <div class="empf">
       <div class="empf-item">
@@ -346,8 +349,11 @@
         <p>Antworten und interne Mails dürfen ohne Signatur ausgehen: Wer miteinander im Austausch steht, kennt sich. In Outlook lässt sich das für Antworten fest einstellen; in Apple Mail ist es ein Handgriff beim Schreiben.</p>
       </div>
     </div>
-    <svg class="empf-ill" viewBox="0 0 400 205" role="img" aria-label="Links: eine E-Mail mit einer Botschaft. Rechts: eine ueberladene E-Mail, in der die Botschaft untergeht."><rect x="22" y="12" width="166" height="150" rx="14" class="win" /><line x1="52" y1="74" x2="158" y2="74" class="ln bb"/><line x1="52" y1="104" x2="118" y2="104" class="ln blueb"/><circle cx="162" cy="38" r="13" class="badge-ok"/><path class="badge-p" d="M156 38 l4 5 l8 -10"/><text x="105.0" y="195" font-size="14" class="cap ok" text-anchor="middle" font-weight="700">Eine Botschaft</text><rect x="212" y="12" width="166" height="150" rx="14" class="win" /><rect x="234" y="34" width="122" height="18" rx="5" class="banner" /><rect x="234" y="62" width="52" height="36" rx="6" class="img" /><path class="glyph" d="M239 92 l14 -16 l9 8 l8 -8 l12 16"/><line x1="296" y1="70" x2="354" y2="70" class="ln"/><line x1="296" y1="88" x2="340" y2="88" class="ln"/><line x1="234" y1="114" x2="354" y2="114" class="ln"/><rect x="234" y="128" width="22" height="22" rx="5" class="logo" /><circle cx="350" cy="139" r="6" class="soc"/><circle cx="332" cy="139" r="6" class="soc"/><circle cx="314" cy="139" r="6" class="soc"/><circle cx="352" cy="38" r="13" class="badge-bad"/><path class="badge-p" d="M346 33 l12 10 M358 33 l-12 10"/><text x="295.0" y="195" font-size="14" class="cap bad" text-anchor="middle" font-weight="700">Wo ist die Botschaft?</text></svg>
-    <p class="empf-ps">PS: Die kürzeste Mail ist oft die freundlichste.</p>
+    
+    <div class="empf-foot">
+      <p class="empf-ps">PS: Die kürzeste Mail ist oft die freundlichste.</p>
+      <button type="button" class="btn primary" id="pdfBtn">Als PDF laden (A4)</button>
+    </div>
     </div>
   </section>
 </main>
@@ -529,7 +535,7 @@ function icsFor(dateStr) {
     "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Goetheanum//Signatur-Generator//DE",
     "BEGIN:VEVENT", "UID:" + uid, "DTSTAMP:" + stamp, "DTSTART;VALUE=DATE:" + dt,
     "SUMMARY:PS in der E-Mail-Signatur aktualisieren",
-    "DESCRIPTION:Dein PS ist heute abgelaufen. Aktualisieren: https://werkzeuge.goetheanum.ch/apps/signatur-generator/",
+    "DESCRIPTION:Dein PS ist heute abgelaufen. Aktualisieren: https://werkzeuge.goetheanum.ch/apps/signatur",
     "BEGIN:VALARM", "TRIGGER:-PT9H", "ACTION:DISPLAY", "DESCRIPTION:PS in der E-Mail-Signatur aktualisieren",
     "END:VALARM", "END:VEVENT", "END:VCALENDAR"
   ].join("\r\n");
@@ -653,12 +659,51 @@ function buildEmpfPdf(d, fontBytes) {
     ops.push("BT /" + font + " " + size + " Tf " + (tc || 0) + " Tc " + color +
       " 1 0 0 1 " + x.toFixed(2) + " " + y.toFixed(2) + " Tm (" + pdfWin(t) + ") Tj ET");
 
+  const fxn = v => +v.toFixed(2);
+  const fR  = (x, yy, w, h, c) => ops.push(c + " rg " + fxn(x) + " " + fxn(yy) + " " + fxn(w) + " " + fxn(h) + " re f");
+  const sRt = (x, yy, w, h, c, lw) => ops.push(c + " RG " + (lw || 1) + " w " + fxn(x) + " " + fxn(yy) + " " + fxn(w) + " " + fxn(h) + " re S");
+  const sLn = (x1, y1, x2, y2, lw, c) => ops.push(c + " RG " + lw + " w 1 J " + fxn(x1) + " " + fxn(y1) + " m " + fxn(x2) + " " + fxn(y2) + " l S");
+  const fCirc = (cx, cy, r, c) => { const k = 0.5523 * r; ops.push(c + " rg " +
+    fxn(cx - r) + " " + fxn(cy) + " m " +
+    fxn(cx - r) + " " + fxn(cy + k) + " " + fxn(cx - k) + " " + fxn(cy + r) + " " + fxn(cx) + " " + fxn(cy + r) + " c " +
+    fxn(cx + k) + " " + fxn(cy + r) + " " + fxn(cx + r) + " " + fxn(cy + k) + " " + fxn(cx + r) + " " + fxn(cy) + " c " +
+    fxn(cx + r) + " " + fxn(cy - k) + " " + fxn(cx + k) + " " + fxn(cy - r) + " " + fxn(cx) + " " + fxn(cy - r) + " c " +
+    fxn(cx - k) + " " + fxn(cy - r) + " " + fxn(cx - r) + " " + fxn(cy - k) + " " + fxn(cx - r) + " " + fxn(cy) + " c f"); };
+  const GREEN = "0.25 0.56 0.37", RED = "0.75 0.27 0.23", BLUEC = "0 0.38 0.66",
+        INKS = "0.14 0.15 0.17", GRAYL = "0.80 0.81 0.83", BORD = "0.87 0.88 0.89",
+        GOLDF = "0.91 0.82 0.69", IMGF = "0.93 0.93 0.94";
+
+  // Illustration oben rechts – dasselbe Motiv wie auf der Seite (eine Botschaft vs. Gedraenge)
+  const IW = 86, IH = 74, IGAP = 14;
+  const ix = W - M - (2 * IW + IGAP), iyT = H - M - 2;
+  sRt(ix, iyT - IH, IW, IH, BORD, 1.2);
+  sLn(ix + 16, iyT - 32, ix + 70, iyT - 32, 5, INKS);
+  sLn(ix + 16, iyT - 48, ix + 46, iyT - 48, 4.5, BLUEC);
+  fCirc(ix + IW - 14, iyT - 14, 7, GREEN);
+  ops.push("1 1 1 RG 1.6 w 1 J 1 j " + fxn(ix + IW - 17.5) + " " + fxn(iyT - 14) + " m " + fxn(ix + IW - 15) + " " + fxn(iyT - 16.5) + " l " + fxn(ix + IW - 10.5) + " " + fxn(iyT - 10) + " l S");
+  const rx2 = ix + IW + IGAP;
+  sRt(rx2, iyT - IH, IW, IH, BORD, 1.2);
+  fR(rx2 + 10, iyT - 20, IW - 20, 8, GOLDF);
+  fR(rx2 + 10, iyT - 46, 26, 18, IMGF); sRt(rx2 + 10, iyT - 46, 26, 18, BORD, 0.8);
+  sLn(rx2 + 42, iyT - 33, rx2 + 76, iyT - 33, 3.5, GRAYL);
+  sLn(rx2 + 42, iyT - 41, rx2 + 68, iyT - 41, 3.5, GRAYL);
+  sLn(rx2 + 10, iyT - 55, rx2 + 76, iyT - 55, 3.5, GRAYL);
+  sRt(rx2 + 10, iyT - 68, 9, 9, BLUEC, 0.9);
+  fCirc(rx2 + 56, iyT - 64, 2.8, GRAYL); fCirc(rx2 + 64, iyT - 64, 2.8, GRAYL); fCirc(rx2 + 72, iyT - 64, 2.8, GRAYL);
+  fCirc(rx2 + IW - 14, iyT - 14, 7, RED);
+  ops.push("1 1 1 RG 1.6 w 1 J " + fxn(rx2 + IW - 17) + " " + fxn(iyT - 11) + " m " + fxn(rx2 + IW - 11) + " " + fxn(iyT - 17) + " l S");
+  ops.push("1 1 1 RG 1.6 w 1 J " + fxn(rx2 + IW - 11) + " " + fxn(iyT - 11) + " m " + fxn(rx2 + IW - 17) + " " + fxn(iyT - 17) + " l S");
+  const cap1 = "Eine Botschaft", cap2 = "Wo ist die Botschaft?";
+  T(ix + IW / 2 - hStrW(cap1, 6.4, false) / 2, iyT - IH - 11, cap1, 6.4, "F1", GREEN + " rg");
+  T(rx2 + IW / 2 - hStrW(cap2, 6.4, false) / 2, iyT - IH - 11, cap2, 6.4, "F1", RED + " rg");
+  const illuBottom = iyT - IH - 18;
+
+  // Titelei links: Dachzeile ELF EMPFEHLUNGEN, Titel wie auf der Seite
   let y = H - M - 8;
-  T(M, y, "E-MAIL AM GOETHEANUM", 8.5, HAUS, GOLD, 0.9); y -= 34;
-  T(M, y, "Elf Empfehlungen", 26, HAUS, INK); y -= 24;
-  for (const l of pdfWrap(d.lede, 320, 9.5, false)) { T(M, y, l, 9.5, "F1", MUT); y -= 14; }
-  y -= 26;
-  const top = y, bottom = M + 34;
+  T(M, y, "ELF EMPFEHLUNGEN", 8.5, HAUS, GOLD, 0.9); y -= 32;
+  T(M, y, "Diese Mail wird gelesen", 22, HAUS, INK); y -= 22;
+  for (const l of pdfWrap(d.lede, 268, 9.5, false)) { T(M, y, l, 9.5, "F1", MUT); y -= 14; }
+  const top = Math.min(y, illuBottom) - 22, bottom = M + 34;
   let cx = M, cy = top;
   for (const it of d.items) {
     const bodyLines = it.body.flatMap(p => pdfWrap(p, colW, 8.8, false).concat(["\u0000"])); bodyLines.pop();
@@ -674,7 +719,7 @@ function buildEmpfPdf(d, fontBytes) {
     cy -= 16;
   }
   if (d.ps) T(cx, cy, d.ps, 8.8, "F1", GOLD);
-  T(M, M - 20, "werkzeuge.goetheanum.ch/apps/signatur-generator", 7.5, "F1", MUT);
+  T(M, M - 20, "werkzeuge.goetheanum.ch/apps/signatur", 7.5, "F1", MUT);
   const stamp = "Stand Juli 2026";
   T(W - M - hStrW(stamp, 7.5, false), M - 20, stamp, 7.5, "F1", MUT);
 
