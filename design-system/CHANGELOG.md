@@ -129,7 +129,7 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 ## [Unveröffentlicht]
 
 ### Kartentool-Learnings aufgenommen (Werkzeugwissen + belegte Werte)
-- **Was:** Neues Nachschlagewerk `docs/werkzeugwissen.md` (SVG-/Druck-Export-/
+- **Was:** Nachschlagewerk Werkzeugwissen (SVG-/Druck-Export-/
   UI-Bauwissen); Quelle `docs/learnings-kartentool.md` (14 verifizierte
   Testrunden). Kernregeln: Icons auf die **Tintenbox** zentrieren (Einzeldateien
   tragen keine einheitliche viewBox — nachgeprüft: nur 46 von 81 Dateien haben
@@ -144,9 +144,13 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
   in der Hausschrift (nur nicht im PDF-Export).
 - **Bestätigt:** Die `.step-num`-Sitzkorrektur (translateY 8 %) wurde im
   Kartentool unabhängig pixelverifiziert; Vermerk am Kommentar in `base.css`.
-- **Offen (Ratifizierung):** Normalisierung der Icon-Einzeldateien auf eine
-  einheitliche viewBox über die fontfix-Pipeline — als Aufgabe vermerkt; bis
-  dahin gilt die Tintenbox-Regel für Konsumenten.
+- **Ratifiziert und umgesetzt (9. Juli 2026):** Icon-Einzeldateien per
+  `normalize_icon_svgs.py` aus dem Font regeneriert — einheitliche Em-Box
+  `-2 -1002 1004 1004` (Ausnahme Wortmarke, proportional), ‹mit Text›-Waisen
+  entfernt (nur Webfont), PNG/PDF/ZIP neu, idempotent (Hash-verifiziert).
+  Sichtprüfung: Rollstuhl jetzt font-wahr statt eigenbox-vergrössert.
+  Die parallel entstandenen zwei Werkzeugwissen-Papiere (docs/ und
+  design-system/) sind zu EINEM konsolidiert: design-system/werkzeugwissen.md.
 
 ### Neuer Font «Goetheanum Pfeile» – Pfeile & Kompass ohne PUA-Umweg
 - Die Pfeile/Kompass lagen im Icon-Font im **Zeichen-Privatbereich (PUA)** und waren

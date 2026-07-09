@@ -25,10 +25,15 @@ oder `end` — Breiten selbst messen, start-verankert selbst zentrieren.**
 
 ## 2. Icons v2.7: auf die Tintenbox zentrieren, nicht auf die viewBox
 
-Die Icon-Einzeldateien sind nicht einheitlich normiert (Standard-viewBox
-`16.2 -983.8 967.6 967.6`, aber z. B. `wc-rollstuhl.svg` trägt
-`-0.6 -845.1 817.5 817.5`). Wer stur auf die Standardbox skaliert, setzt
-solche Icons schief und zu klein. **Regel: Konsumenten zentrieren Icons
+**Stand seit 9. Juli 2026: normalisiert.** Die Einzeldateien werden per
+`tools/goetheanum-fontfix/normalize_icon_svgs.py` idempotent aus dem
+Icon-Font regeneriert — alle Piktogramme tragen die einheitliche Em-Box
+`viewBox="-2 -1002 1004 1004"` (einzige Ausnahme: die Wortmarke
+`icon-0021`, proportional 5970×1000); die ‹mit Text›-Varianten sind bewusst
+nur Webfont, keine Einzeldateien. Historischer Befund: die Dateien waren
+nicht einheitlich normiert (Standard-viewBox `16.2 -983.8 967.6 967.6`,
+aber z. B. `wc-rollstuhl.svg` trug `-0.6 -845.1 817.5 817.5`) — wer stur
+auf die Standardbox skalierte, setzte solche Icons schief und zu klein. **Regel: Konsumenten zentrieren Icons
 auf ihre Tintenbox** — Inhalt in ein `<g>` laden, `getBBox()` messen,
 Skala = Zielmass / max(Tintenbreite, Tintenhöhe), Tintenmitte auf den
 Zielpunkt. Feine Strichzeichnungen mit Konturauftrag in gleicher Farbe
