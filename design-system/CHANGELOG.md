@@ -16,6 +16,22 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.7.0] – 2026-07-09
+
+### DS09: Fundament relativ einbinden – Wächter gegen den Custom-Domain-Bruch
+- **Was:** `starter.html` und `starter-artikel.html` binden das Fundament jetzt
+  RELATIV ein (Root-Beispiel, Pfadtiefen dokumentiert); der irreführende
+  Kommentar («funktioniert von JEDEM Ort») ist korrigiert. Neuer Vertrags-Punkt
+  **DS09** (fehler): absolute `phtok.github.io/goeloggen/(design-system|assets)`-
+  URLs und absolute `data-root` meldet der Checker.
+- **Warum:** Vorfall Signatur-Generator (PR #291) – die aus dem Starter
+  übernommenen Absolut-URLs laufen auf der Custom-Domain ins Leere
+  (Auslieferung im Root, kein /goeloggen/-Präfix) → Seite komplett ungestylt.
+  Übergabe-Papier: `docs/learnings-starter-pfade.md`.
+- **Nebenbefund:** Die Artefakt-Marker der Signatur-Vorschaubühne standen im
+  falschen Format (`/* ds-ok: … */` statt `# ds-ok`) – der Checker sah die
+  Ratifizierung nicht. Format korrigiert; Audit wieder 100 % über 40 Seiten.
+
 ## [1.6.0] – 2026-07-08
 
 ### Werkzeugwissen + Druck-Tinte (Rückfluss aus dem Kartentool)

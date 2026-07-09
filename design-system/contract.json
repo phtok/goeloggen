@@ -1,6 +1,6 @@
 {
   "$schema": "https://goetheanum/design-system/contract.schema.json",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "titel": "Goetheanum Design-System – Struktur-Vertrag",
   "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
   "geltungsbereich": {
@@ -157,5 +157,12 @@
   "score": {
     "definition": "konforme Seiten / geprüfte Seiten. Konform = kein Verstoss der Schwere ‹fehler›.",
     "ziel": 1.0
+  },
+  "einbindung": {
+    "ds_id": "DS09",
+    "regel": "Fundament und Assets RELATIV einbinden – absolute phtok.github.io/goeloggen-URLs brechen auf der Custom-Domain (Auslieferung im Root, kein /goeloggen/-Präfix → 404 → ungestylt).",
+    "schwere": "fehler",
+    "verbotenes_muster": "[\"']https://phtok\\.github\\.io/goeloggen/(?:design-system|assets)/|data-root\\s*=\\s*[\"']https://phtok\\.github\\.io/goeloggen/",
+    "hinweis": "Quelle: Vorfall Signatur-Generator (PR #291) – Seite erschien auf werkzeuge.goetheanum.ch ungestylt. Pfadtiefe je Ort: Root design-system/…, App ../../design-system/…"
   }
 }

@@ -191,6 +191,17 @@ def lint_file(path, c):
                     findings.append((m_ln, marke["ds_id"], marke.get("schwere", "hinweis"),
                                      "Favicon-Kachel als <img> – Marke aus dem Logo-Generator nutzen (DS08)"))
 
+    # DS09 – Fundament/Assets nie absolut über phtok.github.io einbinden: auf der
+    # Custom-Domain (Auslieferung im Root, ohne /goeloggen/-Präfix) laufen die
+    # URLs ins Leere → Seite ungestylt (Vorfall Signatur-Generator, PR #291).
+    einb = c.get("einbindung")
+    if einb:
+        for m in re.finditer(einb["verbotenes_muster"], full, re.I):
+            m_ln = lineno(full, m.start())
+            if m_ln not in skip_lines:
+                findings.append((m_ln, einb["ds_id"], einb.get("schwere", "fehler"),
+                                 "Fundament/Assets absolut (phtok.github.io/goeloggen/…) – relativ einbinden; bricht auf der Custom-Domain"))
+
     # CSS-Kontexte (Blöcke + inline) – ohne <script>
     scriptless = RE_SCRIPT.sub(lambda m: "\n" * m.group(0).count("\n"), full)
     canon = set(c["rollen"]["kanonische_klassen"])
