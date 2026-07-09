@@ -3,6 +3,17 @@
 *Für eine neue Claude-Session (Chat oder Code). Dieser Brief ist selbsttragend —
 er setzt kein Wissen aus früheren Sitzungen voraus. Stand: 6. Juli 2026.*
 
+> **ERLEDIGT — Schlussstand 9. Juli 2026.** Die gesamte Kette ist bewiesen:
+> Kurzlink → Landing (alle fünf: WoS DE/EN, TV DE/EN, Übersicht mit
+> delegiertem Klick-Handler) → Paperform-Prefill bzw. Uscreen-Checkout-URL →
+> Webhook → Zähler. Belege: echte Newsletter-Abos mit Attribution (WoS DE),
+> Buchhalter-Tests über die EN-Landing (Felder tragen das volle Tupel),
+> Sichtprüfungen der Checkout-URLs (TV DE/EN) und der Übersichts-Weiche.
+> Test-Anmeldungen mit «hao.bu» in der Adresse filtert der Webhook
+> automatisch (nur Roh-Protokoll, nie gezählt). Einzige Kür: die Pre-fill-Keys
+> des Formulars sommer2026-eur-en umbenennen (Server-Fallback deckt es ab).
+> Die Abschnitte unten bleiben als Anleitung für künftige Kampagnen stehen.
+
 ## Auftrag
 
 Sicherstellen, dass die UTM-Parameter (`utm_source`, `utm_medium`,
