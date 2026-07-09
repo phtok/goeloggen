@@ -173,6 +173,17 @@
   .zr.sichtbarkeit{background:var(--gold)} .zr.aktivierung{background:var(--blue)}
   .zr.wirkung{background:var(--ok)} .zr.bindung{background:var(--muted)}
   .zb-legende{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);margin-top:var(--s3);font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
+  /* Multiplikatoren: Status-Wortlabel, Verlaufszeile, Mini-Maske (DS02, G25) */
+  .mstat{font-family:var(--font-text);font-size:var(--t-small);white-space:nowrap;color:var(--muted)}
+  .mstat.zugesagt{color:var(--ok);font-weight:600} .mstat.abgesagt{color:var(--bad)}
+  .mstat.erreicht{color:var(--blue)} .mstat.spaeter{color:var(--gold-ink)}
+  .mv td{background:var(--soft)}
+  .mvrow{display:flex;gap:var(--s2) var(--s4);padding:7px 0;border-bottom:1px solid var(--line-soft);
+    font-family:var(--font-text);font-size:var(--t-small);flex-wrap:wrap;align-items:baseline}
+  .mvrow .mvmeta{color:var(--muted);font-size:var(--t-micro);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mvform{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3);margin-top:var(--s4)}
+  .mvform .mvspan{grid-column:1 / -1}
+  @media (max-width:720px){ .mvform{grid-template-columns:1fr 1fr} }
   .medit{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 6px;min-height:var(--tap)}
   .medit:hover{color:var(--blue)} td.act{text-align:right;white-space:nowrap}
   .zb-form{margin-top:var(--s5)}
@@ -428,6 +439,44 @@
       </table>
     </div>
     <p class="provisorisch">Interne Beobachtungen und Entscheidungen liegen im Backend – hier erscheinen nur die Zahlen je Massnahme.</p>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Multiplikatoren</h2><p>Wer hat wen wann kontaktiert – und was kam heraus? Eine Liste zum Fortschreiben. Namen sind verdeckt (M-01 …); das kleine Passwort blendet sie ein.</p></div>
+    <div style="display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;margin-bottom:var(--s4)">
+      <button class="btn" type="button" id="muNamenBtn">Namen einblenden</button>
+      <span class="said" id="muSaid"></span>
+    </div>
+    <div class="tablewrap">
+      <table class="tarif">
+        <thead><tr><th>Multiplikator</th><th>Rolle / Funktion</th><th>Letzter Kontakt</th><th>Status</th><th class="num">Kontakte</th><th></th></tr></thead>
+        <tbody id="muBody"><tr><td class="empty" colspan="6">lädt …</td></tr></tbody>
+      </table>
+    </div>
+    <details class="zb-form">
+      <summary>Multiplikator anlegen</summary>
+      <div class="card soft">
+        <div class="grid">
+          <label class="field">
+            <span class="lab">Name (nur mit Passwort sichtbar)</span>
+            <input type="text" id="muName" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span class="lab">Rolle / Funktion / Organisation</span>
+            <input type="text" id="muRolle" placeholder="z. B. Redaktion Tageszeitung" />
+          </label>
+          <label class="field">
+            <span class="lab">Kürzel – wer legt an?</span>
+            <input type="text" id="muWer" placeholder="z. B. pt" autocomplete="off" />
+          </label>
+        </div>
+        <div style="display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;margin-top:var(--s4)">
+          <button class="btn primary" type="button" id="muAnlegenBtn">Anlegen</button>
+          <span class="said" id="muASaid"></span>
+        </div>
+        <p class="provisorisch" style="margin-top:var(--s3)">Der Name verlässt die Datenbank nur nach Passworteingabe – öffentlich erscheint die M-Nummer. Rolle und Verlauf sind offen sichtbar: dort keine Klarnamen notieren.</p>
+      </div>
+    </details>
   </section>
 
   <section>
@@ -825,6 +874,158 @@
     el('mfBtn').textContent = 'Eintragen';
   }
 
+  // ── Multiplikatoren: Liste, Verlauf, Passwort-Schleier ─────────────────────
+  var MU_ART = { anruf:'Anruf', mail:'Mail', treffen:'Treffen', andere:'Anderes' };
+  var MU_STATUS = { offen:'offen', erreicht:'erreicht', zugesagt:'zugesagt', abgesagt:'abgesagt', spaeter:'später' };
+  var muListe = [], muProto = [], muNamen = {}, muOffen = null;
+
+  function muSag(msg, bad){ var s = el('muSaid'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; }
+  function muPwGespeichert(){ try { return sessionStorage.getItem('sommer26_multi_pw') || ''; } catch(e){ return ''; } }
+
+  function muNamenLaden(pw, still){
+    return fetch(SB + '/rest/v1/rpc/sommer2026_multi_namen', {
+      method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({ p_passwort: pw })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(rows){
+        if (rows && rows.length){
+          muNamen = {}; rows.forEach(function(x){ muNamen[x.id] = x.name; });
+          try { sessionStorage.setItem('sommer26_multi_pw', pw); } catch(e){}
+          el('muNamenBtn').textContent = 'Namen ausblenden';
+          if (!still) muSag('Namen eingeblendet – nur in diesem Browser.');
+          renderMultis();
+        } else if (!still){
+          try { sessionStorage.removeItem('sommer26_multi_pw'); } catch(e){}
+          muSag('Passwort stimmt nicht.', true);
+        }
+      }).catch(function(){ if (!still) muSag('Nicht erreichbar.', true); });
+  }
+
+  el('muNamenBtn').addEventListener('click', function(){
+    if (Object.keys(muNamen).length){
+      muNamen = {}; try { sessionStorage.removeItem('sommer26_multi_pw'); } catch(e){}
+      el('muNamenBtn').textContent = 'Namen einblenden';
+      muSag('Namen ausgeblendet.');
+      renderMultis(); return;
+    }
+    var pw = (window.prompt('Passwort für die Klarnamen:') || '').trim();
+    if (pw) muNamenLaden(pw, false);
+  });
+
+  function muDatum(d){ return d ? new Date(d + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) : '–'; }
+
+  function renderMultis(){
+    var body = el('muBody'); body.innerHTML = '';
+    if (!muListe.length){
+      body.innerHTML = '<tr><td class="empty" colspan="6">Noch keine Multiplikatoren erfasst – unten anlegen.</td></tr>';
+      return;
+    }
+    muListe.forEach(function(m){
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td></td><td></td><td></td><td class="num"></td><td class="act"></td>';
+      tr.children[0].textContent = muNamen[m.id] || m.alias;
+      tr.children[1].textContent = m.rolle_funktion || '–';
+      var letzter = muProto.filter(function(k){ return k.multiplikator_id === m.id; })[0];
+      tr.children[2].textContent = m.letzter_tag ? (muDatum(m.letzter_tag) + (letzter ? ' · ' + letzter.wer : '')) : '–';
+      var st = document.createElement('span');
+      st.className = 'mstat ' + (m.letzter_status || '');
+      st.textContent = MU_STATUS[m.letzter_status] || '–';
+      tr.children[3].appendChild(st);
+      tr.children[4].textContent = m.kontakte_n || 0;
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'medit';
+      btn.textContent = (muOffen === m.id) ? 'Schliessen' : 'Verlauf';
+      btn.addEventListener('click', function(){ muOffen = (muOffen === m.id) ? null : m.id; renderMultis(); });
+      tr.children[5].appendChild(btn);
+      body.appendChild(tr);
+
+      if (muOffen === m.id){
+        var vr = document.createElement('tr'); vr.className = 'mv';
+        var td = document.createElement('td'); td.colSpan = 6;
+        var eintraege = muProto.filter(function(k){ return k.multiplikator_id === m.id; });
+        if (!eintraege.length){
+          var leer = document.createElement('p'); leer.className = 'empty'; leer.textContent = 'Noch kein Kontakt protokolliert.';
+          td.appendChild(leer);
+        }
+        eintraege.forEach(function(k){
+          var row = document.createElement('div'); row.className = 'mvrow';
+          var meta = document.createElement('span'); meta.className = 'mvmeta';
+          meta.textContent = muDatum(k.tag) + ' · ' + k.wer + ' · ' + (MU_ART[k.art] || k.art);
+          var stx = document.createElement('span'); stx.className = 'mstat ' + (k.status || '');
+          stx.textContent = MU_STATUS[k.status] || '';
+          var erg = document.createElement('span'); erg.textContent = k.ergebnis || '';
+          row.appendChild(meta); row.appendChild(stx); row.appendChild(erg);
+          td.appendChild(row);
+        });
+        // Mini-Maske: Kontakt nachtragen
+        var f = document.createElement('div'); f.className = 'mvform';
+        function feld(labelText, elx){
+          var l = document.createElement('label'); l.className = 'field';
+          var s = document.createElement('span'); s.className = 'lab'; s.textContent = labelText;
+          l.appendChild(s); l.appendChild(elx); return l;
+        }
+        var iTag = document.createElement('input'); iTag.type = 'date'; iTag.value = new Date().toISOString().slice(0, 10);
+        var iWer = document.createElement('input'); iWer.type = 'text'; iWer.placeholder = 'z. B. pt'; iWer.autocomplete = 'off';
+        var sArt = document.createElement('select');
+        Object.keys(MU_ART).forEach(function(a){ var o = document.createElement('option'); o.value = a; o.textContent = MU_ART[a]; sArt.appendChild(o); });
+        var sSt = document.createElement('select');
+        Object.keys(MU_STATUS).forEach(function(a){ var o = document.createElement('option'); o.value = a; o.textContent = MU_STATUS[a]; sSt.appendChild(o); });
+        var iErg = document.createElement('input'); iErg.type = 'text'; iErg.placeholder = 'Ergebnis – keine Klarnamen (offen sichtbar)';
+        f.appendChild(feld('Datum', iTag)); f.appendChild(feld('Kürzel', iWer));
+        f.appendChild(feld('Art', sArt)); f.appendChild(feld('Status', sSt));
+        var ergWrap = feld('Ergebnis', iErg); ergWrap.className = 'field mvspan'; f.appendChild(ergWrap);
+        var aktion = document.createElement('div'); aktion.className = 'mvspan';
+        aktion.style.cssText = 'display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap';
+        var kBtn = document.createElement('button'); kBtn.type = 'button'; kBtn.className = 'btn primary'; kBtn.textContent = 'Kontakt nachtragen';
+        var kSaid = document.createElement('span'); kSaid.className = 'said';
+        aktion.appendChild(kBtn); aktion.appendChild(kSaid);
+        f.appendChild(aktion);
+        kBtn.addEventListener('click', function(){
+          var wer = (iWer.value || '').trim();
+          if (!iTag.value || !wer){ kSaid.textContent = 'Datum und Kürzel sind Pflicht.'; kSaid.style.color = 'var(--bad)'; return; }
+          fetch(SB + '/rest/v1/rpc/sommer2026_multi_kontakt_anlegen', {
+            method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+            body: JSON.stringify({ p_multiplikator: m.id, p_tag: iTag.value, p_wer: wer, p_art: sArt.value, p_ergebnis: (iErg.value || '').trim() || null, p_status: sSt.value })
+          }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+            .then(function(ergebnis){
+              if (ergebnis === 'ok'){ muNeuLaden(); }
+              else { kSaid.textContent = 'Angaben prüfen.'; kSaid.style.color = 'var(--bad)'; }
+            })
+            .catch(function(){ kSaid.textContent = 'Nicht erreichbar.'; kSaid.style.color = 'var(--bad)'; });
+        });
+        td.appendChild(f);
+        vr.appendChild(td);
+        body.appendChild(vr);
+      }
+    });
+  }
+
+  function muNeuLaden(){
+    Promise.all([rpc('sommer2026_multi_liste'), rpc('sommer2026_multi_protokoll')])
+      .then(function(res){ muListe = res[0] || []; muProto = res[1] || []; renderMultis(); })
+      .catch(function(){});
+  }
+
+  el('muAnlegenBtn').addEventListener('click', function(){
+    var sag = function(msg, bad){ var s = el('muASaid'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; };
+    var name = (el('muName').value || '').trim();
+    var wer = (el('muWer').value || '').trim();
+    if (!name || !wer){ sag('Name und Kürzel sind Pflicht.', true); return; }
+    fetch(SB + '/rest/v1/rpc/sommer2026_multi_anlegen', {
+      method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({ p_name: name, p_rolle: (el('muRolle').value || '').trim() || null, p_ersteller: wer })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(ergebnis){
+        if (ergebnis === 'ok'){
+          sag('Angelegt – erscheint in der Liste als M-Nummer.');
+          el('muName').value = ''; el('muRolle').value = '';
+          muNeuLaden();
+          if (muPwGespeichert()) muNamenLaden(muPwGespeichert(), true);
+        } else { sag('Name und Kürzel prüfen.', true); }
+      })
+      .catch(function(){ sag('Anlegen nicht erreichbar.', true); });
+  });
+
   // ── Kosten und Wirkung ─────────────────────────────────────────────────────
   var KAT_LABEL = { stunden:'Stunden intern', social:'Social Media', druck:'Druck & Versand', infrastruktur:'Infrastruktur', andere:'Andere' };
   var lastTotal = 0, lastRevenue = 0;
@@ -1027,10 +1228,11 @@
       el('provisorisch').textContent = 'Zielmarken, Preise und die Bleibe-Quote sind vorläufig hinterlegt – sobald die echten Werte gesetzt sind, rechnet das Cockpit unverändert weiter.';
     }
     Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten'), rpc('sommer2026_kanaele'),
-                  rpc('sommer2026_trichter'), rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public'), rpc('sommer2026_kosten_public') ])
+                  rpc('sommer2026_trichter'), rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public'), rpc('sommer2026_kosten_public'), rpc('sommer2026_multi_liste'), rpc('sommer2026_multi_protokoll') ])
       .then(function(res){
         var stats = res[0] || [], timeline = res[1] || [], kohorten = res[2] || [], kanaele = res[3] || [];
         var trichter = res[4] || [], attribution = res[5] || [], massnahmen = res[6] || [], kostenPosten = res[7] || [];
+        muListe = res[8] || []; muProto = res[9] || [];
         var total = stats.reduce(function(s, r){ return s + Number(r.n); }, 0);
         var revenue = projectRevenue(stats);
         var mo = renderSpark(timeline);
@@ -1045,6 +1247,8 @@
         renderKosten(total, revenue, kostenPosten);
         renderMassnahmen(massnahmen);
         renderZeitband(massnahmen);
+        renderMultis();
+        if (muPwGespeichert()) muNamenLaden(muPwGespeichert(), true);
         if(total === 0){ el('status').className = 'status empty'; }
         setStatus('ok', new Date());
       })

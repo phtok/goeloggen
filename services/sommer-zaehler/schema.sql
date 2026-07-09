@@ -237,6 +237,40 @@ end;
 $$;
 grant execute on function public.sommer2026_kosten_eintragen(date, text, text, numeric, text) to anon, authenticated;
 
+-- Multiplikatoren-Kontaktprotokoll (Migration «sommer2026_multiplikatoren»):
+-- wer hat wen wann kontaktiert, mit welchem Ergebnis. Klarnamen liegen in der
+-- geschlossenen Tabelle und verlassen die DB NUR über sommer2026_multi_namen
+-- (Passwort-Hash «multiplikatoren_pw_hash» in sommer2026_config, Präfix
+-- 'goe-multi:'). Rolle, Verlauf und Status sind offen (Beschluss 9.7.2026);
+-- darum gilt: keine Klarnamen in rolle_funktion/ergebnis notieren.
+create table if not exists public.sommer2026_multiplikatoren (
+  id             bigint generated always as identity primary key,
+  created_at     timestamptz not null default now(),
+  name           text not null,          -- Klarname: nur via Passwort-RPC
+  rolle_funktion text,                   -- Rolle/Funktion/Organisation (offen)
+  ersteller      text                    -- Kürzel: wer hat angelegt
+);
+alter table public.sommer2026_multiplikatoren enable row level security;
+revoke all on table public.sommer2026_multiplikatoren from anon, authenticated;
+
+create table if not exists public.sommer2026_multi_kontakte (
+  id               bigint generated always as identity primary key,
+  created_at       timestamptz not null default now(),
+  multiplikator_id bigint not null references public.sommer2026_multiplikatoren(id) on delete cascade,
+  tag              date not null,
+  wer              text not null,        -- Team-Kürzel
+  art              text not null default 'andere' check (art in ('anruf','mail','treffen','andere')),
+  ergebnis         text,                 -- Freitext, KEINE Klarnamen (offen)
+  status           text not null default 'offen' check (status in ('offen','erreicht','zugesagt','abgesagt','spaeter'))
+);
+alter table public.sommer2026_multi_kontakte enable row level security;
+revoke all on table public.sommer2026_multi_kontakte from anon, authenticated;
+
+-- RPCs: multi_liste() (Alias statt Name), multi_protokoll() (alle Kontakte),
+-- multi_namen(p_passwort) (Klarnamen nur bei korrektem Hash),
+-- multi_anlegen(name, rolle, ersteller), multi_kontakt_anlegen(...).
+-- Volltext siehe Migration «sommer2026_multiplikatoren».
+
 -- Wirkungstrichter: Sichtbarkeit → Aktivierung → Wirkung → Bindung
 create or replace function public.sommer2026_trichter()
 returns table(stufe text, wert bigint, ord int)
