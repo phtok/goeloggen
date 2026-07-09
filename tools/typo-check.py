@@ -100,6 +100,11 @@ def visible_text(path, raw):
     # HTML: Code-/Skript-Blöcke und Kommentare entfernen, dann Tags.
     cleaned = STRIP_BLOCKS.sub(_keep_lines, raw)
     cleaned = COMMENTS.sub(_keep_lines, cleaned)
+    # Absichtliche Gegenbeispiele (data-typo-ignore, Konvention wie typo_lint.py):
+    # das Element samt Inhalt ausnehmen – z. B. eine durchgestrichene
+    # Falsch-Anführung in einem Empfehlungs-Piktogramm.
+    cleaned = re.sub(r"<(\w+)([^>]*\bdata-typo-ignore\b[^>]*)>.*?</\1>",
+                     _keep_lines, cleaned, flags=re.S)
     out = []
     for i, ln in enumerate(cleaned.splitlines()):
         t = html.unescape(TAGS.sub(" ", ln))

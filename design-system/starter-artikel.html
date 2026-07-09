@@ -9,7 +9,9 @@
      wo sie Daten sind (G25); alles Lesbare ≥14px (B03).
 
      Verwenden: Datei kopieren, die mit «DEIN ARTIKEL» markierte Mitte füllen,
-     in tools.json registrieren. Includes sind absolut — funktioniert von überall.
+     in tools.json registrieren. Fundament RELATIV einbinden (trägt auf der
+     Custom-Domain UND unter phtok.github.io/goeloggen/); Pfadtiefe an den Ort
+     der Datei anpassen — Root: design-system/…, App: ../../design-system/…
      ============================================================================= -->
 <html lang="de-CH">
 <head>
@@ -17,10 +19,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Artikel-Titel · Goetheanum</title>
 <meta name="description" content="Vorspann des Artikels in einem Satz." />
-<link rel="icon" type="image/svg+xml" href="https://phtok.github.io/goeloggen/assets/logos/goetheanum-mark-blue.svg" />
-<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/tokens.css" />
-<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/base.css" />
-<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/nav.css" />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN. RELATIV, nie absolut. -->
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
 <style>
   /* Nur Artikel-Layout; Rollen (crumbs/byline/lit/bio/related) kommen aus base.css. */
   .artkopf{padding-block:clamp(36px,6vw,64px) var(--s6);max-width:min(72ch,100%)}
@@ -30,8 +33,7 @@
 </style>
 </head>
 <body>
-<script src="https://phtok.github.io/goeloggen/design-system/nav.js"
-        data-root="https://phtok.github.io/goeloggen/" data-variant="werkzeug"></script>
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
 
 <main class="wrap">
 
@@ -97,7 +99,7 @@
 <footer class="ds-footer">
   <div class="wrap frow">
     <span><strong>Goetheanum</strong> · Hausgrafik</span>
-    <span><a href="https://phtok.github.io/goeloggen/design-system/">Design-System</a></span>
+    <span><a href="design-system/">Design-System</a></span>
   </div>
 </footer>
 </body>
