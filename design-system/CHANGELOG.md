@@ -16,6 +16,23 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.7.2] – 2026-07-09
+
+### Badge-Sitz + leisere Modi-Reihe (Rückfluss aus der Kopfzeile)
+- **Was:** Das `.badge`-Rezept in `base.css` setzt die Tinte jetzt optisch
+  mittig ins Oval: `line-height:1` plus ein Hauch mehr Luft oben — Statuswörter
+  haben meist keine Unterlängen, zentriert man das Geviert, hängt die Tinte
+  oben (nachgemessen: vorher 26/36, jetzt 30/32 Gerätepixel bei 4×). Die
+  Beta-Pille der Kopfzeile baut nun auf diesem Rezept auf und läuft in der
+  Lese-Grotesk statt der Display-Schrift (Badge/Chip-Regel des Fundaments);
+  eigen bleibt nur die Gold-Färbung (ein Merkmal, G01).
+- **Ausserdem:** Die Modi-Reihe in der Schublade ist leiser und luftiger —
+  Konturen auf Papier statt Füllflächen, aktiver Zustand = Gold-Kontur +
+  Gold-Tinte statt Doppel-Ring (G03), mehr Abstand (`--s3`/`--s4`). Die
+  Theme-Taste heisst kurz «Dunkel»/«Hell» (im Gruppenkontext ‹Anzeige-Modi›
+  eindeutig), Zeichen sind vor Flex-Schwund geschützt — so trägt die Reihe
+  auch 320px-Schirme ohne Überlauf.
+
 ## [1.7.1] – 2026-07-09
 
 ### Mobil-Kopfzeile entlastet: Modi-Schalter ziehen in die Schublade

@@ -50,7 +50,7 @@
       if (alle[i].hasAttribute("data-tip")) alle[i].setAttribute("data-tip", dark ? "Hellmodus" : "Dunkelmodus");
       alle[i].setAttribute("aria-pressed", String(dark));
       var lb = alle[i].querySelector(".lb");
-      if (lb) lb.textContent = dark ? "Hellmodus" : "Dunkelmodus";
+      if (lb) lb.textContent = dark ? "Hell" : "Dunkel";
     }
   }
   function setTheme(t) {
@@ -263,7 +263,9 @@
     // (Fingerziel-Luft, B04); mit Wortmarke statt blossem Zeichen.
     '<div class="dmodes" role="group" aria-label="Anzeige-Modi">' +
       '<button class="read" type="button" aria-pressed="false" aria-label="Lesemodus – Fliesstext in der Leseschrift"><span class="ic" aria-hidden="true">a</span><span class="lb">Lesemodus</span></button>' +
-      '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic"></span><span class="lb">Dunkelmodus</span></button>' +
+      // Kurzes Wort («Dunkel»/«Hell») – im Gruppenkontext ‹Anzeige-Modi› eindeutig,
+      // und die Reihe trägt so auch 320px-Schirme ohne Gedränge.
+      '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic"></span><span class="lb">Dunkel</span></button>' +
       '<button class="share" type="button" aria-label="Seite teilen – Link kopieren"><span class="ic">' + SHARE_SVG + '</span><span class="lb">Teilen</span></button>' +
     '</div>' +
     '<div class="dsearch"><input type="search" class="dsnav-q" placeholder="Werkzeug suchen …" aria-label="Werkzeug suchen" autocomplete="off"></div>' +
@@ -510,7 +512,7 @@
     // dass die Seite selbst etwas setzen muss (eine Wahrheit: tools.json).
     var active = ACTIVE && bySlug(ACTIVE);
     if (active && active.status === "beta") {
-      var chip = el("span", "beta-chip", "Beta");
+      var chip = el("span", "badge beta-chip", "Beta");
       header.querySelector(".brand").insertAdjacentElement("afterend", chip);
     }
     renderDrawer();
