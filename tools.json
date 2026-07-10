@@ -159,6 +159,17 @@
       "such": "E-Mail Mail Outlook Signatur Fusszeile"
     },
     {
+      "slug": "qr-generator",
+      "cat": "generatoren",
+      "status": "live",
+      "tag": "QR",
+      "title": "QR-Code-Generator",
+      "short": "QR-Codes",
+      "href": "apps/qr-generator/",
+      "desc": "QR-Codes für Link, WLAN, Kontakt, E-Mail und Text – im Hausstil, mit Kurzlink und einfacher Scan-Statistik, ohne Fremddienst.",
+      "such": "QR Code Generator Kurzlink WLAN WiFi vCard Kontakt E-Mail Statistik Scans"
+    },
+    {
       "slug": "editor",
       "cat": "generatoren",
       "status": "intern",
