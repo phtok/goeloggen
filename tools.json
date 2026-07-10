@@ -254,6 +254,17 @@
       "desc": "Briefbogen und Briefschaften im Hausbild – als Vorlage für die eigene Korrespondenz."
     },
     {
+      "slug": "schilder",
+      "cat": "vorbereitung",
+      "status": "entwurf",
+      "tag": "Orientierung",
+      "title": "Schilder",
+      "short": "Schilder",
+      "href": "apps/schilder/",
+      "desc": "Orientierungs- und Türschilder im Hausbild – Zeilen und Zeichen einsetzen, mit Haus-Icons und -Pfeilen, A5 quer drucken. Feste Vorlagen folgen.",
+      "such": "Schild Schilder Orientierung Türschild Wegweiser Wegweisung Piktogramm Pfeil A5 Namensschild"
+    },
+    {
       "slug": "bewegte-schrift",
       "cat": "vorbereitung",
       "status": "entwurf",
