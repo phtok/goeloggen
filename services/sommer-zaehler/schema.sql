@@ -266,6 +266,9 @@ create table if not exists public.sommer2026_multi_kontakte (
 alter table public.sommer2026_multi_kontakte enable row level security;
 revoke all on table public.sommer2026_multi_kontakte from anon, authenticated;
 
+-- Passwort-Prüfung ist gross/klein- und leerzeichen-unabhängig
+-- (Migration «sommer2026_multi_pw_case_insensitive»: lower(trim(...)) vor
+-- dem Hash-Vergleich – Handy-Autokorrektur macht sonst aus «pw» ein «Pw»).
 -- RPCs: multi_liste() (Alias statt Name), multi_protokoll() (alle Kontakte),
 -- multi_namen(p_passwort) (Klarnamen nur bei korrektem Hash),
 -- multi_anlegen(name, rolle, ersteller), multi_kontakt_anlegen(...).
