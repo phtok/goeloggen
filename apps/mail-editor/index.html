@@ -18,8 +18,8 @@
 /* Nur editor-eigene Gestalt; alles Gemeinsame aus base.css, nur Tokens (DS02). */
 /* Arbeitsfläche statt Lesespalte: die Galerie darf das Fenster nutzen (Lede
    behält ihr Lesemass); Karten wachsen mit dem Schirm mit. */
-main.wrap{max-width:min(1760px,96vw)}
-main{--mailw:clamp(340px,24vw,480px)}
+main.wrap{max-width:min(1960px,96vw)}
+main{--mailw:clamp(340px,30vw,600px)} /* 600 = native Mail-Breite: Vorschau in Originalgrösse */
 .lead{padding:clamp(24px,5vw,44px) 0 var(--s4)}
 .controls{display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap;margin-top:var(--s4)}
 .controls .lab{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
@@ -90,7 +90,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   <span class="kicker">Sommer-Aktion 2026</span>
   <h1>Mail-Editor</h1>
   <p class="lede" style="max-width:var(--measure)">Alle Wellen-Mails der drei Segmente zum Gegenlesen — je Feld kommentierbar, Kommentare landen im Werkzeug-Backend. Korrigiert wird in <code>heroes.json</code>, dann wird neu gebaut.</p>
-  <p class="subline">Stand dieses Builds: 10.07.2026, 22.28 Uhr · <code>a157c73</code></p>
+  <p class="subline">Stand dieses Builds: 10.07.2026, 22.33 Uhr · <code>f71801f</code></p>
   <div class="controls">
     <span class="lab">Sprache</span>
     <button id="b-de" class="pill on" onclick="setLang('de')">Deutsch</button>
@@ -315,7 +315,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Jede Woche ein Stück weiter sehen.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Jede Woche ein Stück weiter&#160;sehen.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -618,7 +620,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>See a little further every week.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>See a little further every&#160;week.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -921,7 +925,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Lesen, wo der Abend am schönsten ist.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Lesen, wo der Abend am schönsten&#160;ist.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -1224,7 +1230,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Read where the evening is at its best.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Read where the evening is at its&#160;best.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -1527,7 +1535,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Bis Samstag bleibt die Tür offen.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Bis Samstag bleibt die Tür&#160;offen.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -1830,7 +1840,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>The door stays open until Saturday.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>The door stays open until&#160;Saturday.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -2133,7 +2145,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Die Bühne kommt in Ihren Garten.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Die Bühne kommt in Ihren&#160;Garten.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -2436,7 +2450,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>The stage comes to your garden.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>The stage comes to your&#160;garden.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -2739,7 +2755,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Setzen Sie sich dazu.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Setzen Sie sich&#160;dazu.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -3042,7 +3060,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Pull up a chair.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Pull up a&#160;chair.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -3345,7 +3365,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Der Vorhang fällt am Samstag.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Der Vorhang fällt am&#160;Samstag.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -3648,7 +3670,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>The curtain falls on Saturday.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>The curtain falls on&#160;Saturday.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -3951,7 +3975,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Zwei Fenster auf, den ganzen Sommer.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Zwei Fenster auf, den ganzen&#160;Sommer.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -4254,7 +4280,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Two windows open, all summer long.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Two windows open, all summer&#160;long.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -4557,7 +4585,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Wählen Sie, was Ihr Sommer braucht.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Wählen Sie, was Ihr Sommer&#160;braucht.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -4860,7 +4890,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Choose what your summer needs.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Choose what your summer&#160;needs.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -5163,7 +5195,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Lesen, sehen oder beides — Ihre Wahl.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Lesen, sehen oder beides — Ihre&#160;Wahl.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -5466,7 +5500,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Reading, watching or both — your choice.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Reading, watching or both — your&#160;choice.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -5769,7 +5805,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>Sie waren schon da — ein Schritt fehlt noch.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Sie waren schon da — ein Schritt fehlt&#160;noch.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -6072,7 +6110,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>You’ve already had a look — one step to go.</div>
+                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>You’ve already had a look — one step to&#160;go.</div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
