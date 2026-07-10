@@ -428,7 +428,7 @@
   </section>
 
   <section id="multis">
-    <div class="shead"><h2>Multiplikatoren</h2><p>Wer hat wen wann kontaktiert – und was kam heraus? Eine Liste zum Fortschreiben. Namen sind verdeckt (M-01 …); das kleine Passwort blendet sie ein.</p></div>
+    <div class="shead"><h2>Multiplikatoren</h2><p>Wer hat wen wann kontaktiert – und was kam heraus? Erst den Multiplikator anlegen, dann über <q>Verlauf &amp; Kontakt</q> je Zeile jede Kontaktaufnahme nachtragen. Namen sind verdeckt (M-01 …); das kleine Passwort blendet sie ein.</p></div>
     <div style="display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;margin-bottom:var(--s4)">
       <button class="btn" type="button" id="muNamenBtn">Namen einblenden</button>
       <span class="said" id="muSaid"></span>
@@ -916,7 +916,7 @@
       muSag('Namen ausgeblendet.');
       renderMultis(); return;
     }
-    var pw = (window.prompt('Passwort für die Klarnamen:') || '').trim();
+    var pw = (window.prompt('Passwort für die Klarnamen:') || '').trim().toLowerCase();
     if (pw) muNamenLaden(pw, false);
   });
 
@@ -942,7 +942,7 @@
       tr.children[4].textContent = m.kontakte_n || 0;
       var btn = document.createElement('button');
       btn.type = 'button'; btn.className = 'medit';
-      btn.textContent = (muOffen === m.id) ? 'Schliessen' : 'Verlauf';
+      btn.textContent = (muOffen === m.id) ? 'Schliessen' : 'Verlauf & Kontakt';
       btn.addEventListener('click', function(){ muOffen = (muOffen === m.id) ? null : m.id; renderMultis(); });
       tr.children[5].appendChild(btn);
       body.appendChild(tr);
