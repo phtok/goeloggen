@@ -232,7 +232,7 @@
           <summary>Meistgelesen <span class="sub">Platz für eine Veranstaltung</span></summary>
           <div class="fold-body">
             <label class="field"><span class="lab"><span>PS-Text</span> <span class="counter" id="psCount">0/120</span></span>
-              <textarea id="ps" rows="2" maxlength="120" placeholder="Faust 1+2 · drei mal im Sommer 2027"></textarea>
+              <textarea id="ps" rows="2" maxlength="120" placeholder="Faust 1+2 · Drei mal im Sommer 2027"></textarea>
             </label>
             <label class="field"><span class="lab"><span>Link</span> <span class="sublab">optional</span></span>
               <input type="url" id="pslink" placeholder="www.faust.jetzt" />
@@ -460,8 +460,8 @@ const EXAMPLE = {
   city: "4143 Dornach",
   country: "Switzerland",
   // Haus-PS: gehört allen Abteilungen, hält bis Ende Juli 2027.
-  ps: "Faust 1+2 · drei mal im Sommer 2027",
-  pslink: "faust.jetzt",
+  ps: "Faust 1+2 · Drei mal im Sommer 2027",
+  pslink: "www.faust.jetzt",
   psuntil: "2027-07-31"
 };
 
@@ -495,7 +495,9 @@ function buildSignature() {
   if (ps) {
     let h = "PS: " + esc(ps), t = "PS: " + ps;
     if (pslink) {
-      const d = stripWww(pslink);
+      // PS-Link erscheint wie eingetippt (nur Protokoll/Schluss-Slash fallen weg):
+      // bei Adressen wie www.faust.jetzt trägt das www die Erkennbarkeit.
+      const d = pslink.replace(/^https?:\/\//i, "").replace(/\/+$/, "");
       h += " – <a href=\"" + esc(webHref(pslink)) + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" + esc(d) + "</a>";
       t += " – " + d;
     }
