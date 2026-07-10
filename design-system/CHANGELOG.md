@@ -16,6 +16,19 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.9.2] – 2026-07-10
+
+### Engine geschärft: Vertrags-Ausnahmen greifen auch für Wurzel-Ordner
+- **Was:** `ds-lint` prüfte Dateien unter `assets/` trotz Ausnahme im Vertrag –
+  die Staged-Pfade kommen relativ (`assets/…`), die Substring-Ausnahme stand
+  absolut (`/assets/`). Der Checker normalisiert Pfade jetzt vor dem Abgleich;
+  auch die neuen Versand-Ausnahmen (`mails/`, `export/`) greifen damit in
+  beiden Pfadformen.
+- **Warum:** Aufgefallen an der neuen Druckquelle
+  `assets/merkblaetter/src/warum-ohne-bilder.html` (Druck-Artefakt: Papier ist
+  immer weiss, gehört nicht in den Theme-Geltungsbereich).
+- **Wirkung:** Geltungsbereich verhält sich wie beschlossen; keine neue Regel.
+
 ## [1.9.1] – 2026-07-10
 
 ### Die Maschinen bekommen Zähne: CI-Gate + blockierender Hook + Export-Konvention

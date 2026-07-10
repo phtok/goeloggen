@@ -118,6 +118,9 @@
   .pikto .ps{font-size:11px}  /* # ds-ok Piktogramm-Beischrift in SVG-Einheiten, aria-hidden – kein Lesetext */
   .empf-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s6)}
   .empf-ps{font-family:var(--font-text);color:var(--gold-ink);font-size:var(--t-small);margin:0}
+  .empf-mb{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);margin:var(--s4) 0 0}
+  .empf-mb a{color:var(--gold-ink);text-decoration:none}
+  .empf-mb a:hover{text-decoration:underline}
   .empf-fn{margin-top:var(--s6);padding-top:var(--s4);border-top:1px solid var(--line)}
   .empf-fn .fn-body{font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;color:var(--ink);margin-top:var(--s3)}
   .empf-fn .fn-body p{max-width:62ch;margin:0 0 var(--s2)}
@@ -225,8 +228,8 @@
           </div>
         </details>
 
-        <details class="fold">
-          <summary>PS – befristeter Hinweis <span class="sub">optional</span></summary>
+        <details class="fold" id="psFold">
+          <summary>PS – meistgelesen <span class="sub">Platz für eine Veranstaltung</span></summary>
           <div class="fold-body">
             <label class="field"><span class="lab"><span>PS-Text</span> <span class="counter" id="psCount">0/120</span></span>
               <textarea id="ps" rows="2" maxlength="120" placeholder="Faust 1+2 · drei mal im Sommer 2027"></textarea>
@@ -342,7 +345,7 @@
       <div class="empf-item" data-ico="2">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 24c5.5-8 13-12 19-12s13.5 4 19 12c-5.5 8-13 12-19 12S10.5 32 5 24z"/><circle cx="24" cy="24" r="5" class="acc"/></svg>
         <h3>Meistgelesen</h3>
-        <p>Das PS wird meist als Erstes gelesen. Hier ist der beste Platz für den Hinweis auf eine Veranstaltung. Setz Dir ein Ablaufdatum – der Generator legt eine Erinnerung in deinen Kalender.</p>
+        <p>Das PS wird meist als Erstes gelesen. Hier ist der beste Platz für den Hinweis auf eine Veranstaltung. Setz Dir ein Ablaufdatum – der Generator legt eine Erinnerung in deinen Kalender. <a href="#psFold" id="empfPsJump">→ PS eintragen</a></p>
       </div>
       <div class="empf-item" data-ico="3">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="12" width="24" height="19" rx="3"/><path d="M10 28l6-7 4 4 3-3 5 6"/><path class="acc" d="M40 13v15a5 5 0 0 1-10 0V16a3 3 0 0 1 6 0v11"/><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
@@ -390,6 +393,8 @@
       <p class="empf-ps">PS: Die kürzeste Mail ist oft die freundlichste.</p>
       <button type="button" class="btn primary" id="pdfBtn">Als PDF laden (A4)</button>
     </div>
+
+    <p class="empf-mb">Für Gespräche im Haus: <a href="../../assets/merkblaetter/warum-ohne-bilder.pdf">Argumentarium ‹Warum unsere Mails ohne Bilder auskommen›</a> – sieben Gründe und die Einwände samt Antworten, als A4-PDF.</p>
 
     <details class="code-details empf-fn">
       <summary>Fussnote: Was in der Schweiz gilt</summary>
@@ -454,9 +459,10 @@ const EXAMPLE = {
   street: "Rüttiweg 45",
   city: "4143 Dornach",
   country: "Switzerland",
-  ps: "",
-  pslink: "",
-  psuntil: ""
+  // Haus-PS: gehört allen Abteilungen, hält bis zum Sommerfestival 2027.
+  ps: "Faust 1+2 · drei mal im Sommer 2027",
+  pslink: "goetheanum.ch/faust",
+  psuntil: "2027-08-31"
 };
 
 const state = { mode: "light", plain: "" };
@@ -637,6 +643,12 @@ function onInput() { resetCopied(); render(); growAll(); checkExpiry(); save(); 
 FIELDS.forEach(k => els[k].addEventListener("input", onInput));
 
 document.getElementById("fillExample").addEventListener("click", () => { setFields(EXAMPLE); onInput(); });
+
+// Brücke aus der Empfehlung ‹Meistgelesen›: Fold öffnen, hinspringen, Feld fokussieren.
+document.getElementById("empfPsJump").addEventListener("click", () => {
+  document.getElementById("psFold").open = true;
+  setTimeout(() => els.ps.focus({ preventScroll: true }), 250);
+});
 document.getElementById("clearAll").addEventListener("click", () => { setFields({}); onInput(); });
 
 /* ---------- Status / Kopier-Feedback ---------- */
@@ -967,6 +979,8 @@ if (location.hostname === "werkzeuge.goetheanum.ch" && location.pathname.indexOf
 const hadStored = loadStored();
 const hadQuery = applyQuery();
 if (!hadStored && !hadQuery) setFields(EXAMPLE);
+// Ein gefülltes PS zeigt sich auch im Formular – der Fold klappt dann auf.
+if (val("ps") || val("pslink")) document.getElementById("psFold").open = true;
 setMode(state.mode, false);
 render();
 growAll();
