@@ -3,203 +3,246 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Goetheanum E-Mail-Signatur</title>
-<meta name="description" content="E-Mail-Signatur-Generator – erzeugt Outlook-robustes, table-basiertes HTML mit Inline-CSS nach der gemeinsamen Goetheanum-Vorlage." />
+<title>E-Mail-Signatur · Goetheanum</title>
+<meta name="description" content="E-Mail-Signatur-Generator – schlichte, Dark-Mode-feste Text-Signatur nach der gemeinsamen Goetheanum-Vorlage. Kein Bild, keine Tabelle." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
-<script src="../../assets/goe-orgs.js"></script>
+
+<!-- Fundament – eine Quelle der Wahrheit (Schriften v2.7, Tokens, Hell/Dunkel, Navigation).
+     Relative Pfade: funktionieren auf der Custom-Domain (Root) UND unter phtok.github.io/goeloggen/. -->
 <link rel="stylesheet" href="../../design-system/tokens.css" />
 <link rel="stylesheet" href="../../design-system/base.css" />
 <link rel="stylesheet" href="../../design-system/nav.css" />
+
 <style>
-  /* Goetheanum Variable Font – gleiche Herkunft (relativ), kein Fremd-Host/Redirect. */
-  @font-face{
-    font-family:"Goetheanum";
-    src:url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.7.woff2") format("woff2"),
-        url("../../assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.7.woff") format("woff");
-    font-weight:190 725; font-style:normal; font-display:swap;
-  }
+  /* Nur werkzeug-eigene Gestaltung; alles Gemeinsame kommt aus base.css/tokens.css. */
+  html{scroll-behavior:smooth}
+  #empfehlungen{scroll-margin-top:calc(var(--header-h) + var(--s4))}
+  .shead .btn{flex:0 0 auto}
+  .lede{max-width:60ch}
 
-  /* Farben, Schrift, Maße, Hell-Dunkel kommen aus tokens.css/base.css.
-     Hier nur das werkzeug-eigene Layout – keine eigenen Farbwerte, kein eigenes :root.
-     Ausnahme: die Signatur-Vorschau (.mail-stage) bleibt bewusst weiss/fest, weil sie
-     eine E-Mail abbildet (die beim Empfänger immer auf Weiss steht). */
-  /* Mobil: kompakter, volle Breite, kein horizontales Überlaufen */
-  @media(max-width:560px){
-    .wrap{padding:0 16px}
-    section{padding:var(--s6) 0}
-    .shead{gap:var(--s2)}
-    .card{padding:var(--s4)}
-    .mail-stage{padding:var(--s3)}
-    .scroll-hint{display:block;font-size:var(--t-micro);color:var(--muted);margin-top:6px}
-    .brand .wm{font-size:22px}
-    nav.top{gap:14px}
-    nav.top a{font-size:var(--t-small)}
-    .nav-hide-sm{display:none}
-    /* iOS zoomt Felder mit Schrift < 16px beim Fokus – das verhindern */
-    .field input,.field textarea,.field select{font-size:16px}
-  }
-
-  section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
-  main > section:first-of-type{border-top:0}
-  .shead{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s8);margin-bottom:var(--s4);flex-wrap:wrap}
-  .shead h2{flex:0 0 auto}
-  .shead p{color:var(--muted);font-size:14px;line-height:1.5;max-width:62ch;flex:1 1 360px}
-
-  .work{display:grid;grid-template-columns:1fr;gap:var(--s6);align-items:start}
+  .work{display:grid;grid-template-columns:1fr;gap:var(--s6);align-items:start;margin-top:var(--s6)}
   @media(min-width:880px){.work{grid-template-columns:minmax(360px,460px) 1fr}}
-  /* Vorschau bleibt beim Scrollen der Eingabemaske sichtbar */
   @media(min-width:880px){.preview-col{position:sticky;top:calc(var(--header-h) + var(--s4));align-self:start}}
 
-  .card{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6)}
-  .card.soft{background:var(--soft)}
+  .fset{border:0;display:grid;gap:var(--s3);margin-bottom:var(--s3)}
+  .field > .lab{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s2)}
+  .lab .sublab{font-family:var(--font-text);font-weight:400;font-size:var(--t-micro);color:var(--muted)}
+  .input-wrap{position:relative;display:block}
+  .input-wrap input{width:100%;padding-right:96px}
+  .btn-mini{font-family:var(--font-text);font-size:var(--t-micro);line-height:1;color:var(--on-accent);background:var(--blue-solid);
+    border-radius:var(--r-pill);padding:4px 10px;text-decoration:none;white-space:nowrap;
+    position:absolute;right:8px;top:50%;transform:translateY(-50%)}
+  .btn-mini:hover{filter:brightness(1.12)}
+  .counter{font-family:var(--font-text);font-variant-numeric:tabular-nums;font-size:var(--t-micro);color:var(--muted)}
+  .counter.over{color:var(--bad)}
+  .expiry-note{font-family:var(--font-text);font-size:var(--t-small);color:var(--gold-ink);background:var(--soft);
+    border:1px solid var(--line);border-radius:var(--r-control);padding:var(--s2) var(--s3);margin-bottom:var(--s3)}
+  .apple-note{font-family:var(--font-text);font-size:var(--t-small);line-height:1.55;color:var(--gold-ink);
+    background:var(--soft);border:1px solid var(--gold);border-radius:var(--r-control);
+    padding:var(--s2) var(--s3);margin-top:var(--s3);max-width:64ch}
+  .apple-note strong{font-weight:600}
+  .apple-note a{color:var(--gold-ink);text-decoration:underline}
 
-  .tabs{display:inline-flex;gap:var(--s2);margin-bottom:var(--s6)}
-  .tabs button{font:inherit;font-size:var(--t-small);color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer;transition:.15s}
-  .tabs button[aria-pressed="true"]{color:var(--gold-ink);border-color:var(--gold)}
-
-  /* Einklappbarer Abschnitt (Standards) */
   .fold{border-top:1px solid var(--line-soft);margin-bottom:var(--s3);padding-top:var(--s3)}
-  .fold>summary{font-family:"Goetheanum";font-weight:680;font-size:15px;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:var(--s2)}
+  .fold>summary{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-small);color:var(--ink);
+    cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:var(--s2)}
   .fold>summary::-webkit-details-marker{display:none}
-  .fold>summary .sub{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:400;font-size:var(--t-micro);color:var(--muted);margin-left:auto}
+  .fold>summary .sub{font-family:var(--font-text);font-weight:400;font-size:var(--t-micro);color:var(--muted);margin-left:auto}
   .fold>summary::after{content:"+";color:var(--muted);font-size:18px;line-height:1;width:1em;text-align:center}
   .fold[open]>summary::after{content:"–"}
   .fold-body{display:grid;gap:var(--s3);margin-top:var(--s3)}
 
+  .btnrow{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center;margin-top:var(--s6)}
+  .btn.small{font-size:var(--t-micro);padding:7px 12px;min-height:0}
+
+  .stage-head{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);margin-bottom:var(--s3);flex-wrap:wrap}
+  .stage-lab{color:var(--muted);font-size:var(--t-small)}
+  .tabs{display:inline-flex;gap:var(--s2)}
+  .tabs button{font:inherit;font-size:var(--t-micro);color:var(--muted);background:none;border:1px solid var(--line);
+    border-radius:var(--r-pill);padding:5px 13px;cursor:pointer;transition:.15s}
+  .tabs button[aria-pressed="true"]{color:var(--gold-ink);border-color:var(--gold)}
+
+  /* Vorschau-Bühne: simuliert den Empfänger-Client, theme-UNABHÄNGIG (feste Werte). */
+  .mail-stage{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card);overflow-x:auto}
+  .mail-stage.light{background:#ffffff;color:#111111} /* # ds-ok Artefakt (Empfänger hell) */
+  .mail-stage.dark{background:#1e1e1e;color:#e8e8e8;border-color:#333333} /* # ds-ok Artefakt (Empfänger dunkel) */
+  .mail-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.5} /* # ds-ok Artefakt: simuliert den Mail-Client */
+  .mail-greeting{opacity:.6;margin-bottom:14px}
+  .scroll-hint{display:none}
+
+  .hint{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.55;max-width:64ch}
+  .hint strong{color:var(--ink);font-weight:600}
+  .hint a{color:var(--gold-ink);text-decoration:none}
+  .hint a:hover{text-decoration:underline}
+  .hint ul{margin:var(--s2) 0 0;padding-left:18px;display:grid;gap:var(--s2)}
+
   .code-details{margin-top:var(--s4)}
-  .code-details>summary{font-size:var(--t-small);color:var(--muted);cursor:pointer;list-style:none}
+  .code-details>summary{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-small);color:var(--ink);cursor:pointer;list-style:none;display:flex;align-items:center;gap:var(--s2)}
   .code-details>summary::-webkit-details-marker{display:none}
   .code-details>summary::before{content:"▸ ";color:var(--gold-ink)}
   .code-details[open]>summary::before{content:"▾ "}
-
-  .fset{border:0;display:grid;gap:var(--s3);margin-bottom:var(--s3)}
-  .field{display:grid;gap:var(--s1)}
-  .field > .lab{font-size:var(--t-small);color:var(--muted);letter-spacing:.01em}
-  /* Felder: 16px (B03, kein iOS-Zoom), Fläche aus dem Token (kippt mit Hell/Dunkel). */
-  .field input{
-    width:100%;font-family:"Helvetica Neue",Arial,sans-serif;
-    font-size:16px;font-weight:400;line-height:1.35;color:var(--ink);
-    background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);
-    padding:9px 11px;outline:none;transition:border-color .15s,box-shadow .15s;
-  }
-  .field input::placeholder{color:var(--muted);font-weight:400;opacity:.7}
-  .field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
-  .field input.invalid{border-color:var(--bad);box-shadow:0 0 0 3px color-mix(in srgb,var(--bad) 20%,transparent)}
-  .field textarea{width:100%;font-family:"Helvetica Neue",Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.35;color:var(--ink);background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:9px 11px;outline:none;resize:vertical;min-height:48px;transition:border-color .15s,box-shadow .15s}
-  .field textarea::placeholder{color:var(--muted);font-weight:400;opacity:.7}
-  .field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
-  .lab .sublab{font-weight:400;font-size:var(--t-micro);color:var(--muted);margin-left:6px}
-  .field-msg{font-size:var(--t-micro);color:var(--bad);min-height:0}
-  .field select{width:100%;font-family:"Helvetica Neue",Arial,sans-serif;font-size:16px;color:var(--ink);background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:9px 11px;outline:none;cursor:pointer;transition:border-color .15s,box-shadow .15s}
-  .field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
-
-  .btnrow{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center;margin-top:var(--s6)}
-  /* .btn (inkl. .primary/.ok/.ghost + Hover) kommt vollständig aus base.css. */
-  .hint{margin-top:var(--s3);max-width:64ch}  /* Grösse/Farbe aus base.css */
-  .hint strong{color:var(--ink);font-weight:440}
-  .hint a{color:var(--gold-ink);text-decoration:none}
-  .hint ul{margin:var(--s3) 0 0;padding-left:18px;display:grid;gap:var(--s2)}
-  .hint code{font-family:var(--font-mono);font-size:var(--t-micro);background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px}
-
-  .stage-lab{font-size:var(--t-small);color:var(--muted);margin-bottom:var(--s3)}
-  .scroll-hint{display:none}
-  .mail-stage{background:#fff;border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:0 10px 30px rgba(20,24,28,.06);overflow-x:auto}  /* # ds-ok: E-Mail-Leinwand ist immer weiss (Artefakt) */
-  /* base.css setzt th,td (Padding, Rahmen) – das verfälscht die E-Mail-Tabellen der
-     Vorschau: die 2px-Trennlinie würde mit Padding zum blauen Rechteck. Hier zurücksetzen,
-     damit nur die Inline-Stile der echten Signatur-Tabelle gelten. */
-  .mail-stage table{border-collapse:collapse}
-  .mail-stage td,.mail-stage th{padding:0;border:0}
-  .mail-body{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#999;line-height:1.5}  /* # ds-ok: Signaturtext wie in der echten E-Mail (Artefakt) */
-
+  .code-details .hint{margin-top:var(--s3)}
   .code-wrap{position:relative;margin-top:var(--s3)}
-  /* Konsole (Fläche/Farbe/Schrift) aus base.css pre.code – hier nur Verortung. */
-  pre.code{margin:0;border-radius:var(--r-card);padding:var(--s4);white-space:pre-wrap;word-break:break-word;max-height:320px}
-  .copybtn{position:absolute;top:11px;right:11px;font:inherit;font-size:var(--t-micro);border:1px solid var(--code-bg2);background:var(--code-bg2);color:var(--code-ink);border-radius:var(--r-control);padding:5px 10px;cursor:pointer}
-  .copybtn:hover{filter:brightness(1.25)}
+  pre.code{margin:0;background:var(--code-bg);color:var(--code-ink);border-radius:var(--r-card);padding:var(--s4);overflow:auto;
+    font:12.5px/1.55 var(--font-mono);white-space:pre-wrap;word-break:break-word;max-height:320px}
+  .copybtn{position:absolute;top:11px;right:11px;font:inherit;font-size:var(--t-micro);border:1px solid var(--code-bg2);
+    background:var(--code-bg2);color:var(--code-ink);border-radius:var(--r-control);padding:5px 10px;cursor:pointer}
 
-  /* Anleitung: Entscheidungshilfe + Schritt-für-Schritt */
-  .choose{display:grid;gap:var(--s4);grid-template-columns:1fr;margin-bottom:var(--s6)}
-  @media(min-width:760px){.choose{grid-template-columns:1fr 1fr}}
-  .choose .opt{border:1px solid var(--line);border-radius:var(--r-card);padding:16px 18px;background:var(--soft)}
-  /* Kicker-artiges Label – normal, nicht versal (G05). */
-  .choose .opt .who{color:var(--gold-ink);font-size:var(--t-micro);letter-spacing:.04em;margin-bottom:6px}
-  .choose .opt h3{font-family:"Goetheanum";font-weight:680;font-size:15px;margin-bottom:6px}
-  .choose .opt p{font-size:var(--t-small);color:var(--muted);line-height:1.55}
-  .guide details{border-top:1px solid var(--line-soft);padding:var(--s4) 0}
-  .guide details:first-of-type{border-top:0;padding-top:0}
-  .guide summary{font-family:"Goetheanum";font-weight:680;font-size:15px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:var(--s2)}
-  .guide summary::-webkit-details-marker{display:none}
-  .guide summary .tag{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:400;font-size:var(--t-micro);color:var(--muted);margin-left:auto}
-  .guide summary::after{content:"+";color:var(--muted);font-size:18px;width:1em;text-align:center}
-  .guide details[open] summary::after{content:"–"}
-  .guide ol{margin:var(--s4) 0 2px;padding-left:20px;display:grid;gap:var(--s2)}
-  .guide li{font-size:14px;line-height:1.5;color:var(--ink)}
-  .guide code{font-family:var(--font-mono);font-size:var(--t-micro);background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px}
-  .guide .note{font-size:var(--t-small);color:var(--muted);line-height:1.5;margin-top:6px}
-  .guide a{color:var(--gold-ink);text-decoration:none}
-  .guide a:hover{text-decoration:underline}
+  /* Empfehlungen: Lesetext, linksbündig (Titel NICHT rechts). */
+  .empf-card{border-top:3px solid var(--gold)}
+  /* Mobil: Illu zuerst, Intro danach auf voller Breite. Erst ab 720px
+     (gleicher Breakpoint wie die zwei Empfehlungs-Spalten) nebeneinander. */
+  .empf-top{display:flex;flex-direction:column;gap:var(--s6);margin-bottom:var(--s8)}
+  .empf-head{order:2}
+  .empf-ill{order:1}
+  @media(min-width:720px){
+    .empf-top{flex-direction:row;gap:var(--s8);align-items:flex-start;justify-content:space-between}
+    .empf-head{order:0;flex:0 1 calc(50% - var(--s8))}   /* exakt so breit wie eine Textspalte */
+    .empf-ill{order:0}
+  }
+  .empf-head h2{font-size:var(--t-h2)}
+  .empf-head p{font-family:var(--font-text);color:var(--ink);font-size:var(--t-small);line-height:1.6;margin-top:var(--s1);max-width:46ch}
+  .empf{font-family:var(--font-text);margin-top:var(--s2)}
+  .empf a{color:var(--gold-ink);text-decoration:none}
+  .empf a:hover{text-decoration:underline}
+  @media(min-width:720px){.empf{columns:2;column-gap:var(--s8)}}
+  .empf-item{break-inside:avoid;margin:0 0 var(--s6)}
+  .empf-item h3{font-family:var(--font-display);font-weight:var(--w-strong);font-size:var(--t-h3);margin:0 0 var(--s2);display:flex;gap:.5ch;align-items:baseline}
+  .empf-item .num{color:var(--gold-ink)}
+  .empf-item p{font-size:var(--t-small);line-height:1.6;color:var(--ink);margin:0 0 var(--s2);max-width:46ch}
+  .pikto{width:52px;height:52px;display:block;margin-bottom:var(--s2);fill:none;stroke:var(--muted);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .pikto .acc{stroke:var(--gold-ink)}
+  .pikto .slash{stroke:var(--bad);opacity:.75}
+  .pikto text{stroke:none;fill:var(--muted);font-family:var(--font-text)}
+  .pikto .ps{font-size:11px}  /* # ds-ok Piktogramm-Beischrift in SVG-Einheiten, aria-hidden – kein Lesetext */
+  .empf-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s6)}
+  .empf-ps{font-family:var(--font-text);color:var(--gold-ink);font-size:var(--t-small);margin:0}
+  .empf-mb{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);margin:var(--s4) 0 0}
+  .empf-mb a{color:var(--gold-ink);text-decoration:none}
+  .empf-mb a:hover{text-decoration:underline}
+  .empf-fn{margin-top:var(--s6);padding-top:var(--s4);border-top:1px solid var(--line)}
+  .empf-fn .fn-body{font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;color:var(--ink);margin-top:var(--s3)}
+  .empf-fn .fn-body p{max-width:62ch;margin:0 0 var(--s2)}
+  .empf-fn ul{margin:0;padding-left:1.1em}
+  .empf-fn li{max-width:62ch;margin-bottom:var(--s2)}
 
-  footer{border-top:1px solid var(--line);padding:var(--s8) 0 60px;color:var(--muted);font-size:var(--t-small)}
-  .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-  .frow strong{color:var(--ink);font-weight:400}
+  /* Apple-Mail-Skizze (eigenständige Farben = Artefakt/Screenshot). */
+  .amv{width:100%;max-width:600px;height:auto;display:block;margin-top:var(--s4)} /* # ds-ok */
+
+  /* Empfehlungs-Vergleich: aufgeräumt vs. überladen (theme-aware) */
+  .empf-ill{flex:none;width:100%;max-width:340px;height:auto;display:block;margin:0}
+  @media(min-width:720px){.empf-ill{flex:0 1 340px}}
+  .empf-ill .win{fill:var(--paper);stroke:var(--line);stroke-width:1.5}
+  .empf-ill .ln{stroke:var(--muted);stroke-width:5;stroke-linecap:round;opacity:.33}
+  .empf-ill .ln.b{stroke:var(--ink);opacity:.82;stroke-width:6}
+  .empf-ill .ln.blue{stroke:var(--blue);opacity:.9}
+  .empf-ill .ln.bb{stroke:var(--ink);stroke-width:9;opacity:.9}
+  .empf-ill .ln.blueb{stroke:var(--blue);stroke-width:8;opacity:.95}
+  .empf-ill .ln.goldb{stroke:var(--gold-ink);stroke-width:6;opacity:.9}
+  .empf-ill .lnm{stroke:var(--muted);stroke-width:5;stroke-linecap:round;opacity:.6}
+  .empf-ill .lnfaint{stroke:var(--muted);stroke-width:4;stroke-linecap:round;opacity:.18}
+  .empf-ill .img{fill:color-mix(in srgb,var(--muted) 16%,transparent);stroke:var(--line)}
+  .empf-ill .glyph{stroke:var(--muted);fill:none;opacity:.55;stroke-width:2}
+  .empf-ill .glyphdot{fill:var(--muted);opacity:.5}
+  .empf-ill .banner{fill:color-mix(in srgb,var(--gold) 50%,transparent)}
+  .empf-ill .bnr{fill:var(--gold-ink);font-family:var(--font-text)}
+  .empf-ill .banner2{fill:color-mix(in srgb,var(--blue) 20%,transparent)}
+  .empf-ill .logo{fill:color-mix(in srgb,var(--blue) 14%,transparent);stroke:var(--blue);stroke-opacity:.4}
+  .empf-ill .logot{fill:var(--blue);opacity:.75;font-family:var(--font-text)}
+  .empf-ill .soc{fill:color-mix(in srgb,var(--muted) 30%,transparent)}
+  .empf-ill .quote{fill:var(--muted);font-style:italic}
+  .empf-ill .badge-ok{fill:var(--ok)} .empf-ill .badge-bad{fill:var(--bad)}
+  .empf-ill .badge-p{stroke:var(--on-accent);stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .empf-ill .cap{font-family:var(--font-display);font-weight:var(--w-deutlich)}
+  .empf-ill .cap.ok{fill:var(--ok)} .empf-ill .cap.bad{fill:var(--bad)}
+  .empf-ill .msghl{fill:color-mix(in srgb,var(--gold) 16%,transparent)}
+  .empf-ill .msg{stroke:var(--ink);stroke-width:7;stroke-linecap:round;opacity:.9}
+  .empf-ill .under{stroke:var(--gold-ink);stroke-width:4;stroke-linecap:round}
+  .empf-ill .lost{stroke:var(--muted);stroke-width:3;stroke-linecap:round}
+  .empf-ill .lostcap{fill:var(--bad);font-family:var(--font-text);opacity:.85}
+
+  .privacy{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.5;margin-top:var(--s3)}
+
+  @media(max-width:560px){
+    .mail-stage{padding:var(--s4)}
+    .scroll-hint{display:block;font-size:var(--t-micro);color:var(--muted);margin-top:6px}
+  }
 </style>
 </head>
 <body>
 
+<!-- Globale Navigation (Kopf + Menü + Hell/Dunkel) aus dem Fundament. -->
 <script src="../../design-system/nav.js" data-root="../../" data-section="generatoren" data-active="signatur"></script>
 
 <main class="wrap">
   <section>
     <div class="shead">
       <h2>Signatur erstellen</h2>
-      <p>Eigene Angaben eintragen, fertige Signatur kopieren. Erzeugt Outlook-robustes,
-        table-basiertes HTML mit Inline-CSS nach der gemeinsamen Vorlage – individuell
-        gepflegt, einheitlich im Bild. Funktioniert in Outlook (Windows/Mac), Apple Mail
-        und Gmail. Eingaben bleiben lokal im Browser.</p>
+      <a class="btn primary" href="#empfehlungen">Empfehlungen</a>
     </div>
 
     <div class="work">
       <!-- Formular -->
       <div class="card soft">
-        <div class="tabs" id="variant" role="group" aria-label="Signatur-Variante">
-          <button type="button" data-variant="long" aria-pressed="true">Lang</button>
-          <button type="button" data-variant="short" aria-pressed="false">Kurz (Antwort)</button>
-        </div>
-
         <fieldset class="fset">
-          <label class="field"><span class="lab">Name</span>
+          <label class="field"><span class="lab"><span>Name</span></span>
             <input type="text" id="name" placeholder="Edith Maryon" autocomplete="name" />
           </label>
-          <label class="field"><span class="lab">Funktion / Bereich / Sektion <span class="sublab">zweizeilig möglich</span></span>
+          <label class="field"><span class="lab"><span>Funktion / Bereich / Sektion</span> <span class="sublab">optional, je Zeile eine</span></span>
             <textarea id="role" rows="2" placeholder="Sektion für Bildende Künste&#10;Visual Art Section"></textarea>
           </label>
-          <label class="field"><span class="lab">Telefon</span>
+          <label class="field"><span class="lab"><span>Telefon</span> <span class="sublab">optional</span></span>
             <input type="tel" id="phone" placeholder="+41 61 706 44 21" autocomplete="tel" />
           </label>
-          <label class="field"><span class="lab">Website <span class="sublab">mehrere möglich, je Zeile</span></span>
+          <label class="field"><span class="lab"><span>Mobil</span> <span class="sublab">optional</span></span>
+            <input type="tel" id="mobile" placeholder="+41 79 000 00 00" autocomplete="tel" />
+          </label>
+          <label class="field"><span class="lab"><span>Website</span> <span class="sublab">optional, mehrere je Zeile</span></span>
             <textarea id="web" rows="2" placeholder="goetheanum.ch"></textarea>
           </label>
         </fieldset>
 
         <details class="fold">
-          <summary>Standards <span class="sub">meist unverändert</span></summary>
+          <summary>Organisation &amp; Adresse <span class="sub">meist unverändert</span></summary>
           <div class="fold-body">
-            <label class="field"><span class="lab">Organisation – Hauptzeile <span class="sublab">erscheint blau</span></span>
+            <label class="field"><span class="lab"><span>Organisation – Hauptzeile</span> <span class="sublab">erscheint blau</span></span>
               <input type="text" id="org1" placeholder="Goetheanum" />
             </label>
-            <label class="field"><span class="lab">Organisation – Unterzeile</span>
-              <input type="text" id="org2" placeholder="Allgemeine Anthroposophische Gesellschaft" />
+            <label class="field"><span class="lab"><span>Organisation – Unterzeile</span> <span class="sublab">mehrzeilig möglich</span></span>
+              <textarea id="org2" rows="2" placeholder="Allgemeine Anthroposophische Gesellschaft&#10;General Anthroposophical Society"></textarea>
             </label>
-            <label class="field"><span class="lab">Strasse / Nr.</span>
+            <label class="field"><span class="lab"><span>Strasse / Nr.</span></span>
               <input type="text" id="street" placeholder="Rüttiweg 45" />
             </label>
-            <label class="field"><span class="lab">PLZ / Ort</span>
-              <input type="text" id="city" placeholder="4143 Dornach" />
+            <label class="field"><span class="lab"><span>PLZ / Ort</span></span>
+              <span class="input-wrap">
+                <input type="text" id="city" placeholder="4143 Dornach" />
+                <a class="btn-mini" href="../../assets/merkblaetter/das-kuerzel-vor-der-zahl.pdf" target="_blank" rel="noopener"
+                   title="Merkblatt: Das Kürzel vor der Zahl – warum CH-4143 nicht ins Adressfeld gehört (PDF)">beachten</a>
+              </span>
             </label>
-            <label class="field"><span class="lab">Land</span>
-              <input type="text" id="country" placeholder="Schweiz" />
+            <label class="field"><span class="lab"><span>Land</span></span>
+              <input type="text" id="country" placeholder="Switzerland" />
             </label>
+          </div>
+        </details>
+
+        <details class="fold" id="psFold">
+          <summary>Meistgelesen <span class="sub">Platz für eine Veranstaltung</span></summary>
+          <div class="fold-body">
+            <label class="field"><span class="lab"><span>PS-Text</span> <span class="counter" id="psCount">0/120</span></span>
+              <textarea id="ps" rows="2" maxlength="120" placeholder="Faust 1+2 · Drei mal im Sommer 2027"></textarea>
+            </label>
+            <label class="field"><span class="lab"><span>Link</span> <span class="sublab">optional</span></span>
+              <input type="url" id="pslink" placeholder="www.faust.jetzt" />
+            </label>
+            <label class="field"><span class="lab"><span>Gültig bis</span> <span class="sublab">für die Erinnerung</span></span>
+              <input type="date" id="psuntil" />
+            </label>
+            <div class="btnrow" style="margin-top:0">
+              <button type="button" class="btn small" id="icsBtn">Erinnerung in den Kalender</button>
+            </div>
           </div>
         </details>
 
@@ -207,305 +250,322 @@
           <button type="button" class="btn ghost" id="fillExample">Beispiel einfügen</button>
           <button type="button" class="btn ghost" id="clearAll">Felder leeren</button>
         </div>
+        <p class="privacy">Deine Eingaben bleiben in deinem Browser gespeichert – nichts verlässt dein Gerät.</p>
       </div>
 
       <!-- Vorschau + Ausgabe -->
       <div class="preview-col">
         <div class="card">
-          <div class="stage-lab">Vorschau</div>
-          <div class="mail-stage">
+          <div class="stage-head">
+            <span class="stage-lab">Vorschau</span>
+            <div class="tabs" id="mode" role="group" aria-label="Vorschau-Hintergrund">
+              <button type="button" data-mode="light" aria-pressed="true">Hell</button>
+              <button type="button" data-mode="dark" aria-pressed="false">Dunkel</button>
+            </div>
+          </div>
+          <div class="mail-stage light" id="mailStage">
             <div class="mail-body">
+              <div class="mail-greeting">Mit besten Grüssen<br />…</div>
               <div id="sigPreview"></div>
             </div>
           </div>
-          <p class="scroll-hint" aria-hidden="true">↔ In Originalgrösse – seitwärts wischen für die rechte Spalte.</p>
+          <p class="scroll-hint" aria-hidden="true">↔ In Originalgrösse – seitwärts wischen, falls nötig.</p>
 
           <div class="btnrow">
             <button type="button" class="btn primary" id="copyRich">Signatur kopieren</button>
-            <button type="button" class="btn" id="download">.htm laden</button>
+            <button type="button" class="btn ghost" id="copyPlain">Nur Text kopieren</button>
           </div>
           <span class="sr-only" id="copyStatus" aria-live="polite"></span>
-          <div class="hint">
-            <strong>Welcher Knopf?</strong>
-            Im Normalfall ‹Signatur kopieren› und im Signatur-Editor des Mailprogramms einfügen
-            (Outlook Mac, Apple Mail, Gmail, auch Outlook Windows). ‹.htm laden› nur für
-            Outlook&nbsp;Windows. Schritt für Schritt:
-            <a href="#anleitung">↓ So wird daraus eine Signatur</a>.
+          <div class="apple-note" id="appleNote" hidden role="status">
+            <strong>Gleich in Apple Mail einfügen?</strong> Fettung und Farben erscheinen nur,
+            wenn unter dem Signaturfeld das Häkchen ‹Standardschriftart für E-Mails verwenden›
+            <strong>entfernt</strong> ist. <a href="#anleitungFold" id="appleNoteMore">Skizze ansehen</a>
           </div>
 
-          <details class="code-details">
-            <summary>HTML-Code anzeigen</summary>
-            <div class="code-wrap">
-              <pre class="code" id="codeOut"></pre>
-              <button type="button" class="copybtn" id="copyCode2">Kopieren</button>
+          <details class="code-details" id="anleitungFold">
+            <summary>Anleitung</summary>
+            <div class="hint">
+              <strong>Kopieren → im Mailprogramm unter Einstellungen → Signaturen einfügen → fertig.</strong>
+              Detaillierte Anleitungen:
+              <a href="https://support.apple.com/de-ch/guide/mail/mail11943/mac" target="_blank" rel="noopener">Apple Mail (Mac)</a> ·
+              <a href="https://support.microsoft.com/de-de/office/8ee5d4f4-68fd-464a-a1c1-0e1c80bb27f2" target="_blank" rel="noopener">Outlook</a>.
             </div>
             <div class="hint">
-              Nur nötig, wenn das Mailprogramm kein direktes Einfügen erlaubt und stattdessen
-              den HTML-Quelltext braucht. Für die meisten reicht ‹Signatur kopieren›.
+              <strong>Apple Mail:</strong> Damit Fettung und Farben erscheinen, muss die Standardschrift aus sein –
+              Mail → Einstellungen → Signaturen; unter der Vorschau das Häkchen
+              ‹Standardschriftart für E-Mails verwenden› entfernen.
+              <svg class="amv" viewBox="0 0 780 450" font-family="-apple-system,Helvetica,Arial,sans-serif" role="img" aria-label="Apple Mail, Einstellungen, Signaturen: das blaue Kaestchen ‹Standardschriftart fuer E-Mails verwenden› unter der Vorschau abwaehlen – Haeckchen entfernen.">
+<defs><filter id="g" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur stdDeviation="4"/></filter></defs>
+<rect x="6" y="6" width="768" height="438" rx="14" fill="#f5f5f7" stroke="#c9ccd0" stroke-width="1.5" /><circle cx="30" cy="30" r="7" fill="#ff5f57"/><circle cx="50" cy="30" r="7" fill="#febc2e"/><circle cx="70" cy="30" r="7" fill="#28c840"/><text x="390.0" y="35" font-size="13" fill="#8a8f96" font-weight="600" text-anchor="middle">Signaturen</text><rect x="51.66666666666666" y="58" width="26" height="18" rx="5" fill="none" stroke="#c2c6cc" stroke-width="1.6" /><rect x="133.0" y="58" width="26" height="18" rx="5" fill="none" stroke="#c2c6cc" stroke-width="1.6" /><rect x="214.33333333333331" y="58" width="26" height="18" rx="5" fill="none" stroke="#c2c6cc" stroke-width="1.6" /><rect x="295.6666666666667" y="58" width="26" height="18" rx="5" fill="none" stroke="#c2c6cc" stroke-width="1.6" /><rect x="377.0" y="58" width="26" height="18" rx="5" fill="none" stroke="#c2c6cc" stroke-width="1.6" /><rect x="438.66666666666663" y="52" width="65.33333333333333" height="34" rx="7" fill="#e6e7ea" stroke="none" stroke-width="1" /><rect x="458.3333333333333" y="58" width="26" height="18" rx="5" fill="none" stroke="#8a8f96" stroke-width="1.6" /><rect x="539.6666666666666" y="58" width="26" height="18" rx="5" fill="none" stroke="#c2c6cc" stroke-width="1.6" /><rect x="620.9999999999999" y="58" width="26" height="18" rx="5" fill="none" stroke="#c2c6cc" stroke-width="1.6" /><rect x="702.3333333333333" y="58" width="26" height="18" rx="5" fill="none" stroke="#c2c6cc" stroke-width="1.6" /><text x="471.3333333333333" y="98" font-size="10.5" fill="#1d1d1f" font-weight="600" text-anchor="middle">Signaturen</text><line x1="18" y1="110" x2="762" y2="110" stroke="#dcdee2" stroke-width="1" stroke-linecap="round" opacity="1"/><rect x="22" y="124" width="200" height="232" rx="8" fill="#ffffff" stroke="#dcdee2" stroke-width="1" /><rect x="28" y="132" width="188" height="66.0" rx="7" fill="#d9e7fb" stroke="none" stroke-width="1" /><rect x="36" y="153.0" width="30" height="30" rx="7" fill="#e6ac55" stroke="none" stroke-width="1" /><line x1="76" y1="162.0" x2="202" y2="162.0" stroke="#1d1d1f" stroke-width="6" stroke-linecap="round" opacity="0.85"/><line x1="76" y1="179.0" x2="166" y2="179.0" stroke="#8a8f96" stroke-width="5" stroke-linecap="round" opacity="0.5"/><rect x="36" y="225.0" width="30" height="30" rx="7" fill="#cdd1d6" stroke="none" stroke-width="1" /><line x1="76" y1="234.0" x2="202" y2="234.0" stroke="#b9bec4" stroke-width="6" stroke-linecap="round" opacity="0.4"/><line x1="76" y1="251.0" x2="166" y2="251.0" stroke="#8a8f96" stroke-width="5" stroke-linecap="round" opacity="0.5"/><rect x="36" y="297.0" width="30" height="30" rx="7" fill="#cdd1d6" stroke="none" stroke-width="1" /><line x1="76" y1="306.0" x2="202" y2="306.0" stroke="#b9bec4" stroke-width="6" stroke-linecap="round" opacity="0.4"/><line x1="76" y1="323.0" x2="166" y2="323.0" stroke="#8a8f96" stroke-width="5" stroke-linecap="round" opacity="0.5"/><rect x="232" y="124" width="150" height="232" rx="8" fill="#ffffff" stroke="#dcdee2" stroke-width="1" /><rect x="234" y="126" width="146" height="34" rx="0" fill="#d9e7fb" stroke="none" stroke-width="1" /><line x1="246" y1="144.0" x2="360" y2="144.0" stroke="#1d1d1f" stroke-width="6" stroke-linecap="round" opacity="0.85"/><line x1="234" y1="160" x2="380" y2="160" stroke="#eef0f2" stroke-width="1" stroke-linecap="round" opacity="1"/><line x1="246" y1="178.0" x2="360" y2="178.0" stroke="#b9bec4" stroke-width="6" stroke-linecap="round" opacity="0.5"/><line x1="234" y1="194" x2="380" y2="194" stroke="#eef0f2" stroke-width="1" stroke-linecap="round" opacity="1"/><rect x="234" y="364" width="28" height="22" rx="6" fill="#f0f1f3" stroke="#dcdee2" stroke-width="1" /><text x="248" y="380" font-size="15" fill="#8a8f96" font-weight="400" text-anchor="middle">+</text><rect x="264" y="364" width="28" height="22" rx="6" fill="#f0f1f3" stroke="#dcdee2" stroke-width="1" /><text x="278" y="379" font-size="15" fill="#8a8f96" font-weight="400" text-anchor="middle">–</text><rect x="396" y="124" width="362" height="232" rx="8" fill="#ffffff" stroke="#dcdee2" stroke-width="1" /><line x1="412" y1="150" x2="646" y2="150" stroke="#b9bec4" stroke-width="5" stroke-linecap="round" opacity="0.35"/><line x1="412" y1="172" x2="566" y2="172" stroke="#b9bec4" stroke-width="5" stroke-linecap="round" opacity="0.35"/><line x1="412" y1="198" x2="526" y2="198" stroke="#1d1d1f" stroke-width="6" stroke-linecap="round" opacity="0.82"/><line x1="412" y1="220" x2="606" y2="220" stroke="#b9bec4" stroke-width="5" stroke-linecap="round" opacity="0.35"/><line x1="412" y1="246" x2="516" y2="246" stroke="#2f6fc0" stroke-width="6" stroke-linecap="round" opacity="0.9"/><line x1="412" y1="268" x2="646" y2="268" stroke="#b9bec4" stroke-width="5" stroke-linecap="round" opacity="0.35"/><line x1="412" y1="286" x2="586" y2="286" stroke="#b9bec4" stroke-width="5" stroke-linecap="round" opacity="0.35"/><line x1="412" y1="308" x2="526" y2="308" stroke="#2f6fc0" stroke-width="6" stroke-linecap="round" opacity="0.9"/><g filter="url(#g)"><rect x="392" y="352" width="370" height="40" rx="10" fill="none" stroke="#ff9500" stroke-width="3.5"/></g><rect x="392" y="352" width="370" height="40" rx="10" fill="none" stroke="#ff9500" stroke-width="2.5" /><rect x="398" y="360" width="20" height="20" rx="4" fill="#1a73e8" stroke="none" stroke-width="1" /><path d="M403 370 l4 4 l8 -9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text x="428" y="375" font-size="14" fill="#1d1d1f" font-weight="400" text-anchor="start">Standardschrift für E-Mails verwenden</text><text x="392" y="414" font-size="15" fill="#b4560a" font-weight="700" text-anchor="start">→ Häkchen entfernen</text>
+</svg>
             </div>
           </details>
 
           <details class="code-details">
-            <summary>Warum kein Logo, kein Bild, keine Hausschrift?</summary>
+            <summary>Warum reiner Text – kein Bild?</summary>
             <div class="hint">
-              Bewusst schlicht – damit die Signatur überall ankommt:
+              Bewusst schlicht – damit die Signatur überall gleich ankommt:
               <ul>
-                <li><strong>Logos &amp; Bilder</strong> werden von
-                  Mailprogrammen standardmässig blockiert und erscheinen dann als leerer Platzhalter; sie
-                  blähen jede Nachricht auf, rutschen in den Anhang und brechen in Dark&nbsp;Mode, Antworten
-                  und auf dem Handy.</li>
-                <li><strong>Die Hausschrift</strong> ist bei den
-                  Empfängern nicht installiert und wird in E-Mails ohnehin durch eine Ersatzschrift ersetzt.
-                  Eine systemsichere Schrift (Arial/Helvetica) sieht dafür überall zuverlässig gleich aus.</li>
-                <li><strong>Wiedererkennung</strong> entsteht hier
-                  robust über das Markenblau, klare Hierarchie und den Schriftzug ‹Goetheanum› – statt über
-                  fragile Grafik.</li>
+                <li><strong>Bilder</strong> erscheinen in Apple Mail als Anhang (Büroklammer), brechen im Dark Mode,
+                  blähen jede Mail auf und werden vielerorts blockiert.</li>
+                <li><strong>Keine festen Textfarben:</strong> der Text erbt die Theme-Farbe des Programms und bleibt
+                  hell wie dunkel lesbar; das Markenblau ist eine mailtaugliche, kontraststarke Variante.</li>
               </ul>
-              Für echte Grafiken in der Hausschrift (Folien, Profile, Logos) gibt es die
-              <a href="https://grafik.goetheanum.ch">weiteren Werkzeuge</a>.
             </div>
           </details>
+
         </div>
       </div>
     </div>
   </section>
 
-  <section id="anleitung">
-    <div class="shead">
-      <h2>So wird daraus eine Signatur</h2>
-      <p>Zwei Wege, ein Ergebnis. In den meisten Fällen genügt Kopieren.</p>
+  <section id="empfehlungen">
+    <div class="card soft empf-card">
+    <div class="empf-top">
+      <div class="empf-head">
+        <span class="kicker">E-Mail am Goetheanum</span>
+        <h2>Diese Mail wird gelesen</h2>
+        <p>Jede E-Mail aus dem Goetheanum ist ein Auftritt des Goetheanum – und zugleich
+          die Stimme eines Menschen. Diese elf Empfehlungen sorgen für eine sichtbare,
+          öffentliche Haltung und wahren Dir persönliche Freiheit im Detail.</p>
+      </div>
+      <svg class="empf-ill" viewBox="0 0 400 205" role="img" aria-label="Links: eine E-Mail mit einer Botschaft. Rechts: eine ueberladene E-Mail, in der die Botschaft untergeht."><rect x="22" y="12" width="166" height="150" rx="14" class="win" /><line x1="52" y1="40" x2="96" y2="40" class="ln goldb"/><line x1="52" y1="74" x2="158" y2="74" class="ln bb"/><line x1="52" y1="104" x2="118" y2="104" class="ln blueb"/><circle cx="162" cy="38" r="13" class="badge-ok"/><path class="badge-p" d="M156 38 l4 5 l8 -10"/><text x="105.0" y="195" font-size="14" class="cap ok" text-anchor="middle" font-weight="700">Eine Botschaft</text><rect x="212" y="12" width="166" height="150" rx="14" class="win" /><rect x="234" y="34" width="122" height="18" rx="5" class="banner" /><rect x="234" y="62" width="52" height="36" rx="6" class="img" /><path class="glyph" d="M239 92 l14 -16 l9 8 l8 -8 l12 16"/><line x1="296" y1="70" x2="354" y2="70" class="ln"/><line x1="296" y1="88" x2="340" y2="88" class="ln"/><line x1="234" y1="114" x2="354" y2="114" class="ln"/><rect x="234" y="128" width="22" height="22" rx="5" class="logo" /><circle cx="350" cy="139" r="6" class="soc"/><circle cx="332" cy="139" r="6" class="soc"/><circle cx="314" cy="139" r="6" class="soc"/><circle cx="352" cy="38" r="13" class="badge-bad"/><path class="badge-p" d="M346 33 l12 10 M358 33 l-12 10"/><text x="295.0" y="195" font-size="14" class="cap bad" text-anchor="middle" font-weight="700">Wo ist die Botschaft?</text></svg>
+    </div>
+    <div class="empf">
+      <div class="empf-item" data-ico="1">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="10" width="36" height="28" rx="4"/><circle cx="16" cy="21" r="4"/><path d="M10.5 32c1.5-4.5 9.5-4.5 11 0"/><line x1="27" y1="18" x2="38" y2="18"/><line x1="27" y1="25" x2="36" y2="25" class="acc"/></svg>
+        <h3>Das bin ich</h3>
+        <p>Es gibt eine Signatur – deine. Zwei Zeilen gehören dazu, alles Weitere wählst du selbst: Name und Goetheanum. Das genügt bereits. Du entscheidest, welche Angaben du noch mitschickst.</p>
+      </div>
+      <div class="empf-item" data-ico="6">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h32v20H25l-9 9v-9H8z"/><text x="15" y="26" class="pt" font-size="15">‹…›</text><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
+        <h3>Sinnsprüche?</h3>
+        <p>Zitate, Sprüche, Banner: Was du sagen willst, wirkt in der Mail – oder im PS. In der Signatur verblasst es, weil es unter jeder Nachricht gleich aussieht.</p>
+      </div>
+      <div class="empf-item" data-ico="2">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 24c5.5-8 13-12 19-12s13.5 4 19 12c-5.5 8-13 12-19 12S10.5 32 5 24z"/><circle cx="24" cy="24" r="5" class="acc"/></svg>
+        <h3>Meistgelesen</h3>
+        <p>Das PS wird meist als Erstes gelesen. Hier ist der beste Platz für den Hinweis auf eine Veranstaltung. Setz Dir ein Ablaufdatum – der Generator legt eine Erinnerung in deinen Kalender. <a href="#psFold" id="empfPsJump">→ PS eintragen</a></p>
+      </div>
+      <div class="empf-item" data-ico="3">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="12" width="24" height="19" rx="3"/><path d="M10 28l6-7 4 4 3-3 5 6"/><path class="acc" d="M40 13v15a5 5 0 0 1-10 0V16a3 3 0 0 1 6 0v11"/><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
+        <h3>Bildersturm?</h3>
+        <p>Bilder in Signaturen erscheinen als Anhang. Die Mail verspricht: <em>Hier ist ein Dokument für dich.</em> Eine Text-Signatur hält dieses Versprechen: Hier wartet wirklich ein Dokument und keine Werbung.</p>
+      </div>
+      <div class="empf-item" data-ico="7">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="13" width="21" height="15" rx="2"/><path d="M5 14l10.5 8L26 14"/><circle cx="33" cy="30" r="8" class="acc"/><line x1="39" y1="36" x2="45" y2="42" class="acc"/></svg>
+        <h3>Wiedergefunden!</h3>
+        <p>Der Betreff sagt, worum es geht – konkret genug, dass die Mail in einem Jahr wiedergefunden wird.</p>
+      </div>
+      <div class="empf-item" data-ico="4">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><text x="15" y="35" class="pt" font-size="30">§</text><line x1="9" y1="40" x2="39" y2="8" class="slash"/></svg>
+        <h3>Juristerei</h3>
+        <p>Rechtserklärungen und Vertraulichkeitshinweise sind für das Goetheanum rechtlich nicht erforderlich und sagen dem Empfänger nichts – sie machen Mails nur länger.</p>
+      </div>
+      <div class="empf-item" data-ico="9">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="16" width="27" height="19" rx="2"/><path d="M6 17l13.5 9L33 17"/><text x="35" y="18" class="ps">z</text><text x="40" y="12" class="ps">z</text></svg>
+        <h3>Du musst nicht antworten</h3>
+        <p>An heisst: von dir wird etwas erwartet. CC heisst: zur Kenntnis. Wer im CC steht, muss nicht antworten.</p>
+      </div>
+      <div class="empf-item" data-ico="5">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><text x="8" y="18" class="ps">012</text><text x="8" y="30" class="ps">345</text><text x="8" y="42" class="ps">678</text><line x1="34" y1="42" x2="44" y2="8" class="slash"/></svg>
+        <h3>Zahlenkolonnen</h3>
+        <p>Amtsnummern und Registerangaben gehören auf Briefpapier und Website, nicht unter jede Nachricht.</p>
+      </div>
+      <div class="empf-item" data-ico="8">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><circle cx="29" cy="26" r="13"/><circle cx="29" cy="26" r="4" class="acc"/><line x1="4" y1="7" x2="23" y2="21"/><path d="M6 14L4 7l7 1"/></svg>
+        <h3>Ein Anliegen kommt an</h3>
+        <p>Eine Sache pro Mail. Zwei Anliegen sind zwei Mails – sie lassen sich getrennt beantworten, weiterleiten und erledigen.</p>
+      </div>
+      <div class="empf-item" data-ico="10">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 9h32v22H26l-9 9v-9H8z"/><text x="15" y="26" class="pt" font-size="16">?!</text></svg>
+        <h3>Sag, was du brauchst!</h3>
+        <p>Eine Antwort? Bis wann? Oder nur Information? Ein Halbsatz am Ende erspart Nachfragen.</p>
+      </div>
+      <div class="empf-item" data-ico="11">
+        <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><line x1="24" y1="7" x2="24" y2="20"/><path d="M16 13a13 13 0 1 0 16 0" class="acc"/></svg>
+        <h3>Ausschalten</h3>
+        <p>Antworten und interne Mails dürfen ohne Signatur ausgehen. In Outlook lässt sich das für Antworten fest einstellen; in Apple Mail ist es ein Handgriff beim Schreiben.</p>
+      </div>
+    </div>
+    
+    <div class="empf-foot">
+      <p class="empf-ps">PS: Die kürzeste Mail ist oft die freundlichste.</p>
+      <button type="button" class="btn primary" id="pdfBtn">Als PDF laden (A4)</button>
     </div>
 
-    <div class="choose">
-      <div class="opt">
-        <div class="who">Normalfall</div>
-        <h3>‹Signatur kopieren›</h3>
-        <p>Für neues Outlook, Outlook (Mac), Apple Mail und Gmail. Legt die fertige,
-          formatierte Signatur in die Zwischenablage; du fügst sie im Signatur-Editor des
-          Programms ein (Strg/Cmd&nbsp;+&nbsp;V). Nichts wird verschickt, alles bleibt lokal.</p>
+    <p class="empf-mb">Für Gespräche im Haus: <a href="../../assets/merkblaetter/warum-ohne-bilder.pdf">Argumentarium ‹Warum unsere Mails ohne Bilder auskommen›</a> – sieben Gründe und die Einwände samt Antworten, als A4-PDF.</p>
+
+    <details class="code-details empf-fn">
+      <summary>Fussnote: Was in der Schweiz gilt</summary>
+      <div class="fn-body">
+        <p>Die Empfehlungen können so entspannt ausfallen, weil das schweizerische
+          Recht ihnen nicht im Weg steht:</p>
+        <ul>
+          <li><strong>Keine Pflichtangaben.</strong> Die Schweiz kennt keine Vorschrift,
+            welche Angaben eine geschäftliche E-Mail tragen muss. Was in der Signatur
+            steht, ist eine Frage der Höflichkeit, nicht des Rechts.</li>
+          <li><strong>Die Firma wird vollständig geführt</strong> (Art. 954a OR):
+            Wer im Handelsregister eingetragen ist, verwendet die eingetragene
+            Bezeichnung vollständig und unverändert – darum steht <q>Allgemeine
+            Anthroposophische Gesellschaft</q> ausgeschrieben in der Signatur.</li>
+          <li><strong>Registernummern:</strong> Die UID (CHE-Nummer) gehört auf
+            Rechnungen mit Mehrwertsteuer, nicht unter jede Nachricht – siehe
+            <q>Zahlenkolonnen</q>.</li>
+          <li><strong>Vertraulichkeitshinweise</strong> entfalten keine rechtliche
+            Wirkung: Ein einseitiger Hinweis bindet den Empfänger nicht – siehe
+            <q>Juristerei</q>.</li>
+          <li><strong>Werbung hat Regeln, Korrespondenz nicht</strong>
+            (Art. 3 Abs. 1 lit. o UWG): Massenwerbung verlangt korrekte
+            Absenderangaben und eine Abmeldemöglichkeit – das betrifft den
+            Newsletter-Versand, nicht die persönliche Mail.</li>
+          <li><strong>Datenschutz</strong> (DSG): verlangt in der Signatur nichts;
+            die Datenschutzerklärung gehört auf die Website.</li>
+          <li><strong>Elektronische Signatur ist nicht E-Mail-Signatur:</strong>
+            Die qualifizierte elektronische Signatur (ZertES) ist ein
+            kryptografisches Siegel für Verträge – mit dem Textblock unter der
+            Mail teilt sie nur den Namen.</li>
+        </ul>
       </div>
-      <div class="opt">
-        <div class="who">Nur klassisches Outlook (Windows)</div>
-        <h3>‹.htm laden›</h3>
-        <p>Lädt eine Datei für den Outlook-Signaturordner – nützlich, wenn das Einfügen die
-          Formatierung verliert. Achtung: Das <em>neue</em> Outlook und Apple Mail/Gmail nutzen
-          diese Datei nicht; dort einfach kopieren.</p>
-      </div>
-    </div>
-
-    <div class="guide card">
-      <p class="note" style="margin:0 0 4px">Menübezeichnungen ändern sich je nach Version – bei
-        Abweichungen gilt die jeweils verlinkte Hersteller-Anleitung.</p>
-
-      <details open>
-        <summary>Neues Outlook – Windows <span class="tag">kopieren</span></summary>
-        <ol>
-          <li>‹Signatur kopieren› klicken. <span class="note">(Neues Outlook erkennst du am Schalter ‹Neues Outlook› oben rechts.)</span></li>
-          <li>Einstellungen (Zahnrad) → <em>Konten</em> → <em>Signaturen</em>.</li>
-          <li>‹Neue Signatur›, Namen vergeben, ins Feld einfügen (Strg&nbsp;+&nbsp;V), speichern.</li>
-          <li>Als Standard für neue Mails und Antworten wählen.</li>
-        </ol>
-        <p class="note">Das neue Outlook nutzt <strong>nicht</strong> den
-          <code>%APPDATA%</code>-Ordner – ‹.htm laden› funktioniert hier nicht.
-          Offizielle Anleitung:
-          <a href="https://support.microsoft.com/de-de/office/how-to-add-and-change-an-email-signature-in-outlook-8ee5d4f4-68fd-464a-a1c1-0e1c80bb27f2" target="_blank" rel="noopener">Microsoft Support</a>.</p>
-      </details>
-
-      <details>
-        <summary>Klassisches Outlook – Windows <span class="tag">kopieren oder ‹.htm›</span></summary>
-        <ol>
-          <li><strong>Variante kopieren:</strong> neue Mail → Menü ‹Nachricht› → ‹Signatur› →
-            ‹Signaturen…› → ‹Neu› → einfügen (Strg&nbsp;+&nbsp;V).</li>
-          <li><strong>Variante Datei:</strong> ‹.htm laden›; Explorer öffnen, in die Adresszeile
-            <code>%APPDATA%\Microsoft\Signatures</code> eingeben, Datei dort ablegen.</li>
-          <li>Outlook → Datei → Optionen → E-Mail → ‹Signaturen…› – Signatur erscheint, als
-            Standard zuweisen.</li>
-        </ol>
-        <p class="note">Offizielle Anleitung:
-          <a href="https://support.microsoft.com/de-de/office/how-to-add-and-change-an-email-signature-in-outlook-8ee5d4f4-68fd-464a-a1c1-0e1c80bb27f2" target="_blank" rel="noopener">Microsoft Support</a>.</p>
-      </details>
-
-      <details>
-        <summary>Outlook – Mac <span class="tag">kopieren</span></summary>
-        <ol>
-          <li>‹Signatur kopieren› klicken.</li>
-          <li>Outlook → Einstellungen → <em>Signaturen</em> → ‹+›.</li>
-          <li>In das Bearbeitungsfeld einfügen (Cmd&nbsp;+&nbsp;V), Konto zuweisen.</li>
-        </ol>
-        <p class="note">Offizielle Anleitung:
-          <a href="https://support.microsoft.com/de-de/office/how-to-add-and-change-an-email-signature-in-outlook-8ee5d4f4-68fd-464a-a1c1-0e1c80bb27f2" target="_blank" rel="noopener">Microsoft Support</a>.</p>
-      </details>
-
-      <details>
-        <summary>Apple Mail – Mac <span class="tag">kopieren</span></summary>
-        <ol>
-          <li>‹Signatur kopieren› klicken.</li>
-          <li>Mail → Einstellungen → <em>Signaturen</em> → Konto wählen → ‹+›.</li>
-          <li><strong>Wichtig:</strong> Häkchen ‹Standardschriftart immer verwenden› <em>entfernen</em> –
-            sonst geht die Formatierung verloren.</li>
-          <li>In das rechte Feld einfügen (Cmd&nbsp;+&nbsp;V).</li>
-        </ol>
-        <p class="note">Offizielle Anleitung:
-          <a href="https://support.apple.com/de-ch/guide/mail/create-and-use-email-signatures-mail11943/mac" target="_blank" rel="noopener">Apple Support</a>.</p>
-      </details>
-
-      <details>
-        <summary>Gmail – Web <span class="tag">kopieren</span></summary>
-        <ol>
-          <li>‹Signatur kopieren› klicken.</li>
-          <li>Zahnrad → ‹Alle Einstellungen anzeigen› → Tab ‹Allgemein› → Abschnitt ‹Signatur›.</li>
-          <li>‹Neu erstellen›, Namen vergeben, ins Feld einfügen (Strg/Cmd&nbsp;+&nbsp;V).</li>
-          <li>Ganz unten ‹Änderungen speichern›.</li>
-        </ol>
-        <p class="note">Offizielle Anleitung:
-          <a href="https://support.google.com/mail/answer/8395?hl=de&co=GENIE.Platform%3DDesktop" target="_blank" rel="noopener">Google Support</a>.</p>
-      </details>
-
-      <details>
-        <summary>Handy – iOS / Android <span class="tag">Hinweis</span></summary>
-        <p class="note">Mobile Mail-Apps zeigen formatierte Signaturen kaum zuverlässig.
-          Empfehlung: die <em>Kurz</em>-Variante als einfachen Text in der App-Signatur eintragen –
-          oder die Desktop-Signatur über das Konto synchronisieren lassen.</p>
-      </details>
+    </details>
     </div>
   </section>
 </main>
 
-<footer><div class="wrap frow">
-  <span><strong>Goetheanum Grafik</strong> · E-Mail-Signatur-Generator</span>
-  <span>Allgemeine Anthroposophische Gesellschaft</span>
+<footer class="ds-footer"><div class="wrap frow">
+  <span><strong>Goetheanum</strong> · Hausgrafik · E-Mail-Signatur</span>
 </div></footer>
 
 <script>
 "use strict";
 
 /* ---------- Konstanten ---------- */
-// Markenblau: einzige Quelle ist das Org-/Logo-System (goetheanum-orgs.js).
-const BRAND_BLUE = (window.ORGS && ORGS.goetheanum && ORGS.goetheanum.color) || "#0061a9";
-// Farbsystem des Signatur-Outputs (Arial). Hausregel: eine Auszeichnung – nur Farbe,
-// eine Schriftgrösse. Köpfe farbig (Name dunkel, Goetheanum/Verweise blau), Rest ruhig grau.
-const SIG = { name: "#1a1a1a", sub: "#767676" };
+// Mail-Blau: aufgehellte Variante des Goetheanum-Markenblaus #0061a9 (gleicher Farbton).
+// WCAG-Kontrast 4.09:1 gegen #FFFFFF und 4.07:1 gegen #1E1E1E – lesbar auf hellem UND dunklem Grund.
+const MAIL_BLUE = "#4183B4"; // ds-ok: Artefakt-Farbe im Mail-Output (theme-unabhängig)
+const CFONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
 
-const FIELDS = ["name","role","org1","org2","street","city","country","phone","web"];
-const STORE_KEY = "goe-signatur-v2";
+const FIELDS = ["name","role","phone","mobile","web","org1","org2","street","city","country","ps","pslink","psuntil"];
+const STORE_KEY = "goe-signatur-v3";
 
 const EXAMPLE = {
   name: "Edith Maryon",
   role: "Sektion für Bildende Künste\nVisual Art Section",
+  phone: "+41 61 706 44 21",
+  mobile: "",
+  web: "goetheanum.ch",
   org1: "Goetheanum",
-  org2: "Allgemeine Anthroposophische Gesellschaft",
+  org2: "Allgemeine Anthroposophische Gesellschaft\nGeneral Anthroposophical Society",
   street: "Rüttiweg 45",
   city: "4143 Dornach",
-  country: "Schweiz",
-  phone: "+41 61 706 44 21",
-  web: "goetheanum.ch"
+  country: "Switzerland",
+  // Haus-PS: gehört allen Abteilungen, hält bis Ende Juli 2027.
+  ps: "Faust 1+2 · Drei mal im Sommer 2027",
+  pslink: "www.faust.jetzt",
+  psuntil: "2027-07-31"
 };
 
-const state = { variant: "long" };
+const state = { mode: "light", plain: "" };
 const els = {};
 FIELDS.forEach(k => { els[k] = document.getElementById(k); });
 
 /* ---------- Helfer ---------- */
 function esc(s) {
-  return String(s || "")
-    .replace(/&/g, "&amp;").replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 const val = k => els[k].value.trim();
 const webHref = w => !w ? "" : (/^https?:\/\//i.test(w) ? w : "https://" + w);
 const telHref = p => "tel:" + String(p || "").replace(/[^\d+]/g, "");
+const stripWww = w => String(w).replace(/^https?:\/\//i, "").replace(/^www\./i, "").replace(/\/+$/, "");
 
-/* ---------- Signatur-HTML (Outlook-robust: Spacer-Zellen, feste Breiten) ---------- */
-const FONT = "Arial,Helvetica,sans-serif";
-
-// Baut eine Spalte als verschachtelte Tabelle. items: {html} oder {gap:px}.
-// Eine Grösse für alles (10.5pt); Grundton grau, Köpfe/Verweise setzen ihre Farbe per span.
-function colTable(items) {
-  const rows = items.map(it =>
-    it.gap != null
-      ? `<tr><td height="${it.gap}" style="height:${it.gap}px;font-size:0;line-height:0;mso-line-height-rule:exactly;">&nbsp;</td></tr>`
-      : `<tr><td style="font-family:${FONT};font-size:10.5pt;line-height:1.5;color:${SIG.sub};">${it.html}</td></tr>`
-  ).join("");
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">${rows}</table>`;
-}
-
-function phoneCell() {
-  return `<a href="${telHref(val("phone"))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(val("phone"))}</a>`;
-}
-
+/* ---------- Signatur: einfaches div/br-Markup, alle Stile inline ---------- */
+// Keine Tabellen, keine <p>, kein Bild, keine Hintergrundfarbe. Fliesstext ohne color
+// (erbt Theme des Mailprogramms → Dark-Mode-fest); Mail-Blau nur für Goetheanum und Web-Links.
 function buildSignature() {
-  const name = val("name"), phone = val("phone");
+  const rows = []; // {html, text} oder {gap:true}
+  const push = (html, text) => rows.push({ html, text });
+  const gap = () => rows.push({ gap: true });
 
-  // Kurz (Antwort): Name + Telefon. Eine Grösse, Farbe als einziges Merkmal.
-  if (state.variant === "short") {
-    const items = [];
-    if (name) items.push({ html: `<span style="color:${SIG.name};">${esc(name)}</span>` });
-    if (phone) items.push({ html: phoneCell() });
-    return colTable(items.length ? items : [{ html: "&nbsp;" }]);
+  // PS zuoberst – es gehört zum Anschreiben, nicht zur Signatur. Deshalb OHNE
+  // eigene Schrift/Grösse: Es erbt den Mailtext des Clients und steht so in
+  // jedem Programm auf Augenhöhe (Apple Mail 16px, Outlook ~15px, Gmail 13px).
+  const ps = val("ps"), pslink = val("pslink");
+  let psHtml = "";
+  const psText = [];
+  if (ps) {
+    let h = "PS: " + esc(ps), t = "PS: " + ps;
+    if (pslink) {
+      // PS-Link erscheint wie eingetippt (nur Protokoll/Schluss-Slash fallen weg):
+      // bei Adressen wie www.faust.jetzt trägt das www die Erkennbarkeit.
+      const d = pslink.replace(/^https?:\/\//i, "").replace(/\/+$/, "");
+      h += " – <a href=\"" + esc(webHref(pslink)) + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" + esc(d) + "</a>";
+      t += " – " + d;
+    }
+    psHtml = "<div>" + h + "</div><div><br></div>";
+    psText.push(t, "");
   }
 
-  // Linke Spalte: Person – Name (dunkel), Funktion (grau), Kontakt (blaue Verweise).
-  const L = [];
-  if (name) L.push({ html: `<span style="color:${SIG.name};">${esc(name)}</span>` });
-  val("role").split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(line => {
-    L.push({ html: esc(line) });
+  // Abgrenzender Unterstrich – immer, auch ohne PS (trennt Mailtext und Signatur).
+  push("_", "_"); gap();
+
+  // Person
+  if (val("name")) push("<span style=\"font-weight:600;\">" + esc(val("name")) + "</span>", val("name"));
+  val("role").split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(l => push(esc(l), l));
+
+  // Organisation – Goetheanum fett und blau (wie der Name im Gewicht)
+  const hasPerson = rows.some(r => !r.gap && r.text !== "_");
+  if (val("org1") || val("org2")) { if (hasPerson) gap(); }
+  if (val("org1")) push("<span style=\"color:" + MAIL_BLUE + ";\">" + esc(val("org1")) + "</span>", val("org1"));
+  val("org2").split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(l => push(esc(l), l));
+
+  // Adresse auf EINER Zeile (mit Mittelpunkt), eine Stufe kleiner
+  const addr = [val("street"), val("city"), val("country")].filter(Boolean).join(" · ");
+  if (addr) push(esc(addr), addr);
+
+  // Kontaktblock (Telefon/Mobil/Web) mit Leerzeile von Organisation/Adresse absetzen
+  if ((val("phone") || val("mobile") || val("web").trim()) && rows.some(r => !r.gap)) gap();
+
+  // Kontakt: Telefonnummern als tel:-Link, aber Theme-Farbe (inherit) – dark-mode-fest
+  if (val("phone")) push("<a href=\"" + telHref(val("phone")) + "\" style=\"color:inherit;text-decoration:none;\">" + esc(val("phone")) + "</a>", val("phone"));
+  if (val("mobile")) push("<a href=\"" + telHref(val("mobile")) + "\" style=\"color:inherit;text-decoration:none;\">" + esc(val("mobile")) + "</a>", val("mobile"));
+
+  // Web-Links in Mail-Blau, www entfällt in der Anzeige
+  val("web").split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(w => {
+    const d = stripWww(w);
+    push("<a href=\"" + esc(webHref(w)) + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" + esc(d) + "</a>", d);
   });
-  const contact = [];
-  if (phone) contact.push({ html: phoneCell() });
-  // URLs: ‹www.› in der Anzeige weglassen (Link bleibt vollständig), kleiner Abstand zum Telefon.
-  const webs = val("web").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-  if (webs.length && contact.length) contact.push({ gap: 6 });
-  webs.forEach(w => {
-    const disp = w.replace(/^https?:\/\//i, "").replace(/^www\./i, "").replace(/\/+$/, "");
-    contact.push({ html: `<a href="${esc(webHref(w))}" style="color:${BRAND_BLUE};text-decoration:none;">${esc(disp)}</a>` });
-  });
-  if (contact.length) {
-    if (L.length) L.push({ gap: 10 });
-    contact.forEach(c => L.push(c));
-  }
 
-  // Rechte Spalte: Organisation – Hauptzeile (blau) + Unterzeile/Adresse (grau).
-  const R = [];
-  if (val("org1")) R.push({ html: `<span style="color:${BRAND_BLUE};">${esc(val("org1"))}</span>` });
-  if (val("org2")) R.push({ html: esc(val("org2")) });
-  [val("street"), val("city"), val("country")].forEach(t => { if (t) R.push({ html: esc(t) }); });
+  const hl = [], tl = [];
+  rows.forEach(r => { if (r.gap) { hl.push(""); tl.push(""); } else { hl.push(r.html); tl.push(r.text); } });
+  while (hl.length && hl[0] === "") { hl.shift(); tl.shift(); }
+  while (hl.length && hl[hl.length - 1] === "") { hl.pop(); tl.pop(); }
 
-  // Ohne Organisations-/Adressdaten: einspaltig, ohne Trennlinie.
-  if (!R.length) return colTable(L.length ? L : [{ html: "&nbsp;" }]);
-
-  const LW = 250, RW = 240, PAD = 24;
-  const total = LW + RW + PAD * 2 + 2;
-  return (
-    `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="${total}" ` +
-    `style="border-collapse:collapse;font-family:${FONT};">` +
-    `<tr>` +
-    `<td width="${LW}" valign="top" style="width:${LW}px;padding:0 ${PAD}px 0 0;vertical-align:top;">${colTable(L)}</td>` +
-    `<td width="2" style="width:2px;min-width:2px;background:${BRAND_BLUE};font-size:0;line-height:0;mso-line-height-rule:exactly;">&nbsp;</td>` +
-    `<td width="${RW}" valign="top" style="width:${RW}px;padding:0 0 0 ${PAD}px;vertical-align:top;">${colTable(R)}</td>` +
-    `</tr></table>`
-  );
+  const html = psHtml + "<div style=\"font-family:" + CFONT + ";font-size:12px;line-height:1.3;\">" + (hl.join("<br>") || "&nbsp;") + "</div>";
+  const text = psText.concat(tl).join("\n");
+  return { html, text };
 }
 
 function render() {
-  const html = buildSignature();
-  document.getElementById("sigPreview").innerHTML = html;
-  document.getElementById("codeOut").textContent = html;
+  const sig = buildSignature();
+  state.plain = sig.text;
+  document.getElementById("sigPreview").innerHTML = sig.html;
+  updatePsCount();
 }
 
 /* ---------- Persistenz + Prefill ---------- */
 function save() {
   try {
-    const data = { variant: state.variant };
+    const data = { mode: state.mode };
     FIELDS.forEach(k => { data[k] = els[k].value; });
     localStorage.setItem(STORE_KEY, JSON.stringify(data));
-  } catch (e) { /* z. B. privater Modus – ignorieren */ }
+  } catch (e) {}
 }
 function loadStored() {
   try {
     const data = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
     if (!data) return false;
     FIELDS.forEach(k => { if (typeof data[k] === "string") els[k].value = data[k]; });
-    if (data.variant) setVariant(data.variant, false);
+    if (data.mode) setMode(data.mode, false);
     return true;
   } catch (e) { return false; }
 }
@@ -513,109 +573,378 @@ function applyQuery() {
   const q = new URLSearchParams(location.search);
   let any = false;
   FIELDS.forEach(k => { if (q.has(k)) { els[k].value = q.get(k); any = true; } });
-  if (q.has("variant")) { setVariant(q.get("variant") === "short" ? "short" : "long", false); any = true; }
   return any;
 }
 function setFields(obj) { FIELDS.forEach(k => { els[k].value = obj[k] || ""; }); }
 
-/* ---------- Variante ---------- */
-function setVariant(v, doRender) {
-  state.variant = (v === "short") ? "short" : "long";
-  document.querySelectorAll("#variant button").forEach(b => {
-    b.setAttribute("aria-pressed", b.getAttribute("data-variant") === state.variant ? "true" : "false");
-  });
-  if (doRender !== false) render();
+/* ---------- Vorschau hell/dunkel (unabhängig vom Seiten-Theme) ---------- */
+function setMode(m, doSave) {
+  state.mode = (m === "dark") ? "dark" : "light";
+  const stage = document.getElementById("mailStage");
+  stage.classList.toggle("dark", state.mode === "dark");
+  stage.classList.toggle("light", state.mode === "light");
+  document.querySelectorAll("#mode button").forEach(b =>
+    b.setAttribute("aria-pressed", b.getAttribute("data-mode") === state.mode ? "true" : "false"));
+  if (doSave !== false) save();
 }
-document.getElementById("variant").addEventListener("click", e => {
-  const btn = e.target.closest("button[data-variant]");
-  if (!btn) return;
-  setVariant(btn.getAttribute("data-variant"));
-  save();
+document.getElementById("mode").addEventListener("click", e => {
+  const b = e.target.closest("button[data-mode]"); if (!b) return;
+  setMode(b.getAttribute("data-mode"));
+});
+
+/* ---------- PS: Zähler, Ablauf-Hinweis, .ics ---------- */
+function updatePsCount() {
+  const n = els.ps.value.length, el = document.getElementById("psCount");
+  el.textContent = n + "/120";
+  el.classList.toggle("over", n >= 120);
+}
+function todayISO() {
+  const d = new Date(); const p = x => String(x).padStart(2, "0");
+  return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+}
+function checkExpiry() {
+  const until = val("psuntil");
+  const old = document.getElementById("expiryNote");
+  if (old) old.remove();
+  if (until && val("ps") && until < todayISO()) {
+    const note = document.createElement("div");
+    note.className = "expiry-note"; note.id = "expiryNote";
+    note.textContent = "Dein PS ist abgelaufen – aktualisieren oder das PS-Modul leeren?";
+    const form = document.querySelector(".card.soft");
+    form.insertBefore(note, form.firstChild);
+  }
+}
+function icsFor(dateStr) {
+  const dt = dateStr.replace(/-/g, "");
+  const uid = Math.random().toString(36).slice(2) + Date.now().toString(36) + "@werkzeuge.goetheanum.ch";
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
+  return [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Goetheanum//Signatur-Generator//DE",
+    "BEGIN:VEVENT", "UID:" + uid, "DTSTAMP:" + stamp, "DTSTART;VALUE=DATE:" + dt,
+    "SUMMARY:PS in der E-Mail-Signatur aktualisieren",
+    "DESCRIPTION:Dein PS ist heute abgelaufen. Aktualisieren: https://werkzeuge.goetheanum.ch/signatur",
+    "BEGIN:VALARM", "TRIGGER:-PT9H", "ACTION:DISPLAY", "DESCRIPTION:PS in der E-Mail-Signatur aktualisieren",
+    "END:VALARM", "END:VEVENT", "END:VCALENDAR"
+  ].join("\r\n");
+}
+document.getElementById("icsBtn").addEventListener("click", function () {
+  const until = val("psuntil");
+  if (!until) { flash(this, "Bitte Datum wählen"); return; }
+  const blob = new Blob([icsFor(until)], { type: "text/calendar" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "ps-erinnerung.ics";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  flash(this, "Geladen ✓");
 });
 
 /* ---------- Eingaben verdrahten ---------- */
-// Mehrzeilige Felder (Funktion, mehrere URLs) wachsen mit dem Inhalt mit.
-function autoGrow(el) {
-  if (!el || el.tagName !== "TEXTAREA") return;
-  el.style.height = "auto";
-  el.style.height = el.scrollHeight + "px";
-}
-function growAll() { autoGrow(els.role); autoGrow(els.web); }
-function onInput() { render(); growAll(); save(); }
+function autoGrow(el) { if (!el || el.tagName !== "TEXTAREA") return; el.style.height = "auto"; el.style.height = el.scrollHeight + "px"; }
+function growAll() { autoGrow(els.role); autoGrow(els.web); autoGrow(els.ps); autoGrow(els.org2); }
+function onInput() { resetCopied(); render(); growAll(); checkExpiry(); save(); }
 FIELDS.forEach(k => els[k].addEventListener("input", onInput));
 
-document.getElementById("fillExample").addEventListener("click", () => {
-  setFields(EXAMPLE);
-  onInput();
+document.getElementById("fillExample").addEventListener("click", () => { setFields(EXAMPLE); onInput(); });
+
+// Brücke aus der Empfehlung ‹Meistgelesen›: Fold öffnen, hinspringen, Feld fokussieren.
+document.getElementById("empfPsJump").addEventListener("click", () => {
+  document.getElementById("psFold").open = true;
+  setTimeout(() => els.ps.focus({ preventScroll: true }), 250);
 });
-document.getElementById("clearAll").addEventListener("click", () => {
-  setFields({});
-  onInput();
-});
+document.getElementById("clearAll").addEventListener("click", () => { setFields({}); onInput(); });
 
 /* ---------- Status / Kopier-Feedback ---------- */
 function flash(btn, label) {
   const old = btn.textContent;
-  btn.textContent = label;
-  btn.classList.add("ok");
+  btn.textContent = label; btn.classList.add("ok");
   document.getElementById("copyStatus").textContent = label;
   setTimeout(() => { btn.textContent = old; btn.classList.remove("ok"); }, 1400);
 }
 
+// Kopier-Bestätigung bleibt bestehen (grün + Häkchen), bis der Inhalt sich ändert.
+let copiedBtn = null;
+function markCopied(btn) {
+  resetCopied();
+  btn.dataset.orig = btn.dataset.orig || btn.textContent;
+  btn.textContent = "Kopiert ✓";
+  btn.classList.add("ok");
+  copiedBtn = btn;
+  document.getElementById("copyStatus").textContent = "In die Zwischenablage kopiert – bleibt bereit, bis du etwas änderst.";
+}
+function resetCopied() {
+  const note = document.getElementById("appleNote");
+  if (note) note.hidden = true;
+  if (!copiedBtn) return;
+  if (copiedBtn.dataset.orig) copiedBtn.textContent = copiedBtn.dataset.orig;
+  copiedBtn.classList.remove("ok");
+  copiedBtn = null;
+}
+function showAppleNote() {
+  // Nur wo Apple Mail wahrscheinlich ist – der Hinweis erscheint im Moment des Einfuegens.
+  if (!/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) return;
+  document.getElementById("appleNote").hidden = false;
+}
+document.getElementById("appleNoteMore").addEventListener("click", function () {
+  const fold = document.getElementById("anleitungFold");
+  fold.open = true;
+});
+
 document.getElementById("copyRich").addEventListener("click", function () {
-  const html = buildSignature();
+  const sig = buildSignature();
   if (navigator.clipboard && window.ClipboardItem) {
     const item = new ClipboardItem({
-      "text/html": new Blob([html], { type: "text/html" }),
-      "text/plain": new Blob([document.getElementById("sigPreview").innerText], { type: "text/plain" })
+      "text/html": new Blob([sig.html], { type: "text/html" }),
+      "text/plain": new Blob([sig.text], { type: "text/plain" })
     });
     navigator.clipboard.write([item]).then(
-      () => { flash(this, "Kopiert ✓"); track("copy", { variant: state.variant }); },
+      () => { markCopied(this); showAppleNote(); track("copy", {}); },
       () => flash(this, "Bitte HTML-Code nutzen")
     );
   } else {
     flash(this, "Bitte HTML-Code nutzen");
   }
 });
-
-function copyCode(btn) {
-  const text = document.getElementById("codeOut").textContent;
+document.getElementById("copyPlain").addEventListener("click", function () {
+  const t = buildSignature().text;
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => flash(btn, "Kopiert ✓"), () => selectFallback(btn));
-  } else {
-    selectFallback(btn);
-  }
-}
-function selectFallback(btn) {
-  const r = document.createRange();
-  r.selectNodeContents(document.getElementById("codeOut"));
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(r);
-  let done = false;
-  try { done = document.execCommand("copy"); } catch (e) {}
-  flash(btn, done ? "Kopiert ✓" : "Markiert – Strg/Cmd+C");
-}
-document.getElementById("copyCode2").addEventListener("click", function () { copyCode(this); track("codecopy", {}); });
-
-document.getElementById("download").addEventListener("click", function () {
-  const doc = `<!doctype html><html><head><meta charset="utf-8"></head><body>${buildSignature()}</body></html>`;
-  const blob = new Blob([doc], { type: "text/html" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  const base = (val("name") || "signatur").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-  a.download = "signatur-" + (base || "goetheanum") + ".htm";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-  flash(this, "Geladen ✓");
-  track("download", { variant: state.variant });
+    navigator.clipboard.writeText(t).then(() => { markCopied(this); track("plaincopy", {}); }, () => flash(this, "Nicht möglich"));
+  } else { flash(this, "Nicht möglich"); }
 });
 
+
+
+/* ---------- PDF (A4, zweispaltig, selbst erzeugt – keine Druckfunktion) ---------- */
+/* PDF-START */
+const PDF_WINMAP = {8218:130,8222:132,8230:133,8224:134,8225:135,8240:137,8249:139,8216:145,8217:146,
+                    8220:147,8221:148,8226:149,8211:150,8212:151,8250:155,8364:128,338:140,339:156,376:159};
+function pdfByte(ch) { const c = ch.codePointAt(0); if (c < 256) return c; return PDF_WINMAP[c] || 63; }
+function pdfWin(t) {
+  let r = "";
+  for (const ch of t) r += String.fromCharCode(pdfByte(ch));
+  return r.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
+}
+// Vorschubbreiten (WinAnsi 32..255), exakt aus den TTFs gerechnet
+const GW = [220,250,368,560,560,560,638,209,269,268,407,560,227,369,220,415,597,388,551,555,595,564,590,529,617,589,220,246,560,560,560,417,917,552,566,498,595,504,486,573,616,250,275,538,431,782,640,601,547,601,563,502,464,598,549,848,521,501,491,320,480,320,560,617,518,504,503,401,504,459,319,475,512,228,228,467,230,785,512,486,503,503,323,430,328,513,451,742,426,452,419,333,238,332,560,220,560,220,213,560,370,686,447,480,791,832,502,283,845,220,491,220,220,213,213,390,388,447,613,1113,437,651,430,283,779,220,419,501,220,233,560,560,560,560,242,473,590,630,391,526,560,369,630,451,560,560,280,280,553,560,557,221,791,280,378,540,604,632,622,411,552,552,552,552,552,552,762,499,504,504,504,504,250,250,250,250,600,640,601,601,601,601,601,560,601,598,598,598,598,501,552,545,504,504,504,504,504,504,732,402,459,459,459,459,228,228,228,228,521,512,486,486,486,486,486,560,485,513,513,513,513,452,502,452];   // Goetheanum Deutlich
+const KW = [220,234,350,560,560,560,636,198,252,252,406,560,211,375,204,395,597,388,551,555,595,564,590,529,617,589,204,233,560,560,560,410,920,553,569,500,598,506,487,574,619,233,269,527,437,777,631,610,548,610,566,500,470,597,544,834,519,499,494,310,456,310,560,625,518,495,496,399,495,454,312,471,503,211,211,456,218,779,503,486,494,494,316,428,325,504,448,731,419,449,421,332,221,332,560,220,560,220,197,560,339,675,445,484,791,826,500,279,856,220,494,220,220,202,202,365,363,458,624,1124,429,660,428,279,796,220,421,499,220,217,560,560,560,560,225,466,664,632,380,504,560,375,632,441,560,560,280,280,547,560,555,205,791,280,364,514,573,597,595,405,553,553,553,553,553,553,773,501,506,506,506,506,233,233,233,233,603,631,610,610,610,610,610,560,610,597,597,597,597,499,554,535,495,495,495,495,495,495,747,399,454,454,454,454,211,211,211,211,516,503,486,486,486,486,486,560,486,504,504,504,504,449,495,449];   // Goetheanum Klar
+const SW = [200,289,426,497,497,824,609,249,303,303,418,497,249,311,249,350,497,497,497,497,497,497,497,497,497,497,249,249,497,497,497,425,847,543,588,571,615,527,494,617,652,263,479,579,486,727,647,664,566,664,569,534,536,645,515,786,513,476,539,303,350,303,497,500,542,504,553,456,555,496,292,504,544,246,247,495,255,829,547,542,555,555,347,419,338,544,467,719,446,467,425,303,241,303,497,200,497,200,249,292,426,948,454,454,542,1194,534,271,847,200,539,200,200,249,249,426,426,304,480,800,542,637,419,271,839,200,425,476,200,289,497,497,497,497,241,497,542,744,345,429,497,311,423,542,331,497,367,367,542,562,560,249,542,367,365,429,781,808,796,425,544,544,544,544,544,544,822,571,527,527,527,527,263,263,263,263,639,647,664,664,664,664,664,497,664,645,645,645,645,476,583,576,504,504,504,504,504,504,778,456,496,496,496,496,246,246,246,246,544,547,542,542,542,542,542,497,542,544,544,544,544,467,555,467];   // Source Sans 3 Regular
+function hChW(ch, b) {
+  let w;
+  if ("ijl".includes(ch)) w = 222;
+  else if (" .,:;!|'ft()[]".includes(ch)) w = 278;
+  else if ('r-"/'.includes(ch)) w = 333;
+  else if ("cksvxyz".includes(ch)) w = 500;
+  else if ("mM".includes(ch)) w = 833;
+  else if (ch === "w") w = 722;
+  else if (ch === "W") w = 944;
+  else if (ch === "I") w = 278;
+  else if (/[A-ZÄÖÜ]/.test(ch)) w = 700;
+  else w = 556;
+  return w * (b ? 1.06 : 1);
+}
+function strW(t, size, tab) {
+  let x = 0;
+  for (const c of t) { const b = pdfByte(c); x += tab ? (b >= 32 ? tab[b - 32] : 500) : hChW(c, false); }
+  return x * size / 1000;
+}
+function pdfWrap(t, maxW, size, tab) {
+  const words = t.split(" "), lines = []; let cur = "";
+  for (const w of words) {
+    const test = cur ? cur + " " + w : w;
+    if (strW(test, size, tab) <= maxW || !cur) cur = test; else { lines.push(cur); cur = w; }
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+function buildEmpfPdf(d, F) {
+  const W = 595.28, H = 841.89, M = 56, GAP = 30, colW = (W - 2 * M - GAP) / 2;
+  const INK = "0.14 0.15 0.17 rg", MUT = "0.42 0.44 0.47 rg", GOLD = "0.54 0.40 0.16 rg";
+  const hausTab = F.deutlich ? GW : null, ledeTab = F.klar ? KW : null, bodyTab = F.source ? SW : null;
+  const ops = [];
+  const T = (x, y, t, size, font, color, tc) =>
+    ops.push("BT /" + font + " " + size + " Tf " + (tc || 0) + " Tc " + color +
+      " 1 0 0 1 " + (+x.toFixed(2)) + " " + (+y.toFixed(2)) + " Tm (" + pdfWin(t) + ") Tj ET");
+  const fxn = v => +v.toFixed(2);
+  const fR  = (x, yy, w, h, c) => ops.push(c + " rg " + fxn(x) + " " + fxn(yy) + " " + fxn(w) + " " + fxn(h) + " re f");
+  const sRt = (x, yy, w, h, c, lw) => ops.push(c + " RG " + (lw || 1) + " w " + fxn(x) + " " + fxn(yy) + " " + fxn(w) + " " + fxn(h) + " re S");
+  const sLn = (x1, y1, x2, y2, lw, c) => ops.push(c + " RG " + lw + " w 1 J " + fxn(x1) + " " + fxn(y1) + " m " + fxn(x2) + " " + fxn(y2) + " l S");
+  const circOps = (cx, cy, r, tail) => { const k = 0.5523 * r; return fxn(cx - r) + " " + fxn(cy) + " m " +
+    fxn(cx - r) + " " + fxn(cy + k) + " " + fxn(cx - k) + " " + fxn(cy + r) + " " + fxn(cx) + " " + fxn(cy + r) + " c " +
+    fxn(cx + k) + " " + fxn(cy + r) + " " + fxn(cx + r) + " " + fxn(cy + k) + " " + fxn(cx + r) + " " + fxn(cy) + " c " +
+    fxn(cx + r) + " " + fxn(cy - k) + " " + fxn(cx + k) + " " + fxn(cy - r) + " " + fxn(cx) + " " + fxn(cy - r) + " c " +
+    fxn(cx - k) + " " + fxn(cy - r) + " " + fxn(cx - r) + " " + fxn(cy - k) + " " + fxn(cx - r) + " " + fxn(cy) + " c " + tail; };
+  const fCirc = (cx, cy, r, c) => ops.push(c + " rg " + circOps(cx, cy, r, "f"));
+  const sCirc = (cx, cy, r, c, lw) => ops.push(c + " RG " + (lw || 1) + " w " + circOps(cx, cy, r, "S"));
+  const GREEN = "0.25 0.56 0.37", RED = "0.75 0.27 0.23", BLUEC = "0 0.38 0.66",
+        INKS = "0.14 0.15 0.17", GRAYL = "0.80 0.81 0.83", BORD = "0.87 0.88 0.89",
+        GOLDF = "0.91 0.82 0.69", IMGF = "0.93 0.93 0.94",
+        GRAYI = "0.55 0.57 0.60", GOLDS = "0.54 0.40 0.16";
+
+  // Mini-Piktogramme (ersetzen die Zaehlung; 1.3-fach skaliert, auf der Zeile sitzend)
+  const icon = (n, x, yb) => {
+    ops.push("q 1.3 0 0 1.3 " + fxn(x) + " " + fxn(yb - 1.5) + " cm");
+    switch (n) {
+      case "1": sRt(0, 0, 12, 9, GRAYI, 0.9); fCirc(3, 4.5, 1.4, GRAYI);
+        sLn(6.5, 6, 10.5, 6, 0.9, GRAYI); sLn(6.5, 3, 9.5, 3, 0.9, GOLDS); break;
+      case "2": ops.push(GRAYI + " RG 0.9 w 0 4.5 m 3 9 9 9 12 4.5 c S");
+        ops.push(GRAYI + " RG 0.9 w 0 4.5 m 3 0 9 0 12 4.5 c S");
+        fCirc(6, 4.5, 1.6, GOLDS); break;
+      case "3": sRt(0, 0, 11, 8, GRAYI, 0.9); sLn(-0.5, -1, 12, 9.5, 1, RED); break;
+      case "4": T(2, 0, "§", 10, "F1", GRAYI + " rg"); sLn(0, -1.5, 10, 9, 1, RED); break;
+      case "5": T(0.5, 4.5, "012", 5, "F1", GRAYI + " rg"); T(0.5, -0.5, "345", 5, "F1", GRAYI + " rg");
+        sLn(9.5, -1.5, 13, 9, 1, RED); break;
+      case "6": sRt(0, 1.5, 11, 7, GRAYI, 0.9); sLn(2.5, 1.5, 2.5, -0.8, 0.9, GRAYI);
+        fCirc(4, 5, 0.9, GRAYI); fCirc(7, 5, 0.9, GRAYI);
+        sLn(-0.5, -1.5, 12, 10, 1, RED); break;
+      case "7": sCirc(4.5, 5, 3.2, GOLDS, 1.1); sLn(7, 2.5, 10.5, -0.5, 1.3, GOLDS); break;
+      case "8": sCirc(6.5, 4, 4, GRAYI, 0.9); fCirc(6.5, 4, 1.3, GOLDS);
+        sLn(-1, 10, 4.5, 6, 1, GRAYI); break;
+      case "9": sRt(0, 0, 11, 7.5, GRAYI, 0.9);
+        ops.push(GRAYI + " RG 0.9 w 1 J 0 7.5 m 5.5 3.5 l 11 7.5 l S"); break;
+      case "10": sRt(0, 1, 11, 7.5, GRAYI, 0.9); T(2.6, 3, "?!", 5.5, "F2", GRAYI + " rg"); break;
+      case "11": sCirc(6, 3.5, 4, GOLDS, 1.2); sLn(6, 5, 6, 9.5, 1.2, GRAYI); break;
+    }
+    ops.push("Q");
+  };
+
+  // Illustration oben rechts – gleiches Motiv wie auf der Seite, mit goldener Kopfzeile links
+  const IW = 86, IH = 74, IGAP = 14;
+  const ix = W - M - (2 * IW + IGAP), iyT = H - M - 2;
+  sRt(ix, iyT - IH, IW, IH, BORD, 1.2);
+  sLn(ix + 16, iyT - 16, ix + 42, iyT - 16, 3, GOLDS);
+  sLn(ix + 16, iyT - 34, ix + 70, iyT - 34, 5, INKS);
+  sLn(ix + 16, iyT - 50, ix + 46, iyT - 50, 4.5, BLUEC);
+  fCirc(ix + IW - 14, iyT - 14, 7, GREEN);
+  ops.push("1 1 1 RG 1.6 w 1 J 1 j " + fxn(ix + IW - 17.5) + " " + fxn(iyT - 14) + " m " + fxn(ix + IW - 15) + " " + fxn(iyT - 16.5) + " l " + fxn(ix + IW - 10.5) + " " + fxn(iyT - 10) + " l S");
+  const rx2 = ix + IW + IGAP;
+  sRt(rx2, iyT - IH, IW, IH, BORD, 1.2);
+  fR(rx2 + 10, iyT - 20, IW - 20, 8, GOLDF);
+  fR(rx2 + 10, iyT - 46, 26, 18, IMGF); sRt(rx2 + 10, iyT - 46, 26, 18, BORD, 0.8);
+  sLn(rx2 + 42, iyT - 33, rx2 + 76, iyT - 33, 3.5, GRAYL);
+  sLn(rx2 + 42, iyT - 41, rx2 + 68, iyT - 41, 3.5, GRAYL);
+  sLn(rx2 + 10, iyT - 55, rx2 + 76, iyT - 55, 3.5, GRAYL);
+  sRt(rx2 + 10, iyT - 68, 9, 9, BLUEC, 0.9);
+  fCirc(rx2 + 56, iyT - 64, 2.8, GRAYL); fCirc(rx2 + 64, iyT - 64, 2.8, GRAYL); fCirc(rx2 + 72, iyT - 64, 2.8, GRAYL);
+  fCirc(rx2 + IW - 14, iyT - 14, 7, RED);
+  ops.push("1 1 1 RG 1.6 w 1 J " + fxn(rx2 + IW - 17) + " " + fxn(iyT - 11) + " m " + fxn(rx2 + IW - 11) + " " + fxn(iyT - 17) + " l S");
+  ops.push("1 1 1 RG 1.6 w 1 J " + fxn(rx2 + IW - 11) + " " + fxn(iyT - 11) + " m " + fxn(rx2 + IW - 17) + " " + fxn(iyT - 17) + " l S");
+  const cap1 = "Eine Botschaft", cap2 = "Wo ist die Botschaft?";
+  T(ix + IW / 2 - strW(cap1, 6.4, bodyTab) / 2, iyT - IH - 11, cap1, 6.4, "F1", GREEN + " rg");
+  T(rx2 + IW / 2 - strW(cap2, 6.4, bodyTab) / 2, iyT - IH - 11, cap2, 6.4, "F1", RED + " rg");
+  const illuBottom = iyT - IH - 18;
+
+  // Titelei links
+  let y = H - M - 8;
+  T(M, y, "ELF EMPFEHLUNGEN", 8.5, "F3", GOLD, 0.9); y -= 32;
+  T(M, y, "Diese Mail wird gelesen", 22, "F3", INK); y -= 24;
+  for (const l of pdfWrap(d.lede, colW, 10, ledeTab)) { T(M, y, l, 10, "F4", MUT); y -= 15; }
+  const top = Math.min(y, illuBottom) - 26, bottom = M + 34;
+  let cx = M, cy = top;
+  d.items.forEach((it, idx) => {
+    if (idx === 6) { cx = M + colW + GAP; cy = top; }   // Umbruch nach der 6. Empfehlung
+    const bodyLines = it.body.flatMap(p => pdfWrap(p, colW, 9.2, bodyTab).concat([" "])); bodyLines.pop();
+    const blockH = 18 + bodyLines.length * 13.4 + 24;
+    if (cy - blockH < bottom && cx === M) { cx = M + colW + GAP; cy = top; }
+    icon(it.num, cx, cy);
+    T(cx + 22, cy, it.title, 11.5, "F3", INK);
+    cy -= 18;
+    for (const l of bodyLines) {
+      if (l === " ") { cy -= 5; continue; }
+      T(cx, cy, l, 9.2, "F1", INK); cy -= 13.4;
+    }
+    cy -= 24;
+  });
+  if (d.ps) T(cx, cy, d.ps, 9.2, "F1", GOLD);
+  T(M, M - 20, "werkzeuge.goetheanum.ch/signatur", 7.5, "F1", MUT);
+  const stamp = "Stand Juli 2026";
+  T(W - M - strW(stamp, 7.5, bodyTab), M - 20, stamp, 7.5, "F1", MUT);
+
+  // ---- Objekte (dynamisch: eingebettete Fonts brauchen je 3 Objekte) ----
+  const content = ops.join("\n");
+  const latin = str => { const u = new Uint8Array(str.length); for (let i = 0; i < str.length; i++) u[i] = str.charCodeAt(i) & 0xff; return u; };
+  const chunks = []; let pos = 0; const offs = [];
+  const push = u => { chunks.push(u); pos += u.length; };
+  const pushObj = (idx, body) => { offs[idx] = pos; push(latin(idx + " 0 obj\n" + body + "\nendobj\n")); };
+
+  const FONTDEFS = [
+    { res: "F1", bytes: F.source,   ps: "SourceSans3-Regular",        widths: SW, bbox: "[-614 -295 2159 958]",  asc: 1024, dsc: -400, cap: 660, fb: "Helvetica" },
+    { res: "F2", bytes: null,       fb: "Helvetica-Bold" },
+    { res: "F3", bytes: F.deutlich, ps: "GoetheanumSchrift-Deutlich", widths: GW, bbox: "[-161 -298 1061 1095]", asc: 750,  dsc: -250, cap: 690, fb: "Helvetica-Bold" },
+    { res: "F4", bytes: F.klar,     ps: "GoetheanumSchrift-Klar",     widths: KW, bbox: "[-160 -286 1062 1095]", asc: 750,  dsc: -250, cap: 690, fb: "Helvetica" }
+  ];
+  let next = 5;
+  for (const fd of FONTDEFS) { fd.obj = next; next += fd.bytes ? 3 : 1; }
+  const nObjs = next - 1;
+  const resStr = FONTDEFS.map(fd => "/" + fd.res + " " + fd.obj + " 0 R").join(" ");
+
+  push(latin("%PDF-1.4\n"));
+  pushObj(1, "<< /Type /Catalog /Pages 2 0 R >>");
+  pushObj(2, "<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
+  pushObj(3, "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 " + W + " " + H + "] /Resources << /Font << " + resStr + " >> >> /Contents 4 0 R >>");
+  pushObj(4, "<< /Length " + content.length + " >>\nstream\n" + content + "\nendstream");
+  for (const fd of FONTDEFS) {
+    if (!fd.bytes) { pushObj(fd.obj, "<< /Type /Font /Subtype /Type1 /BaseFont /" + fd.fb + " /Encoding /WinAnsiEncoding >>"); continue; }
+    pushObj(fd.obj, "<< /Type /Font /Subtype /TrueType /BaseFont /" + fd.ps + " /FirstChar 32 /LastChar 255 /Widths [" + fd.widths.join(" ") + "] /Encoding /WinAnsiEncoding /FontDescriptor " + (fd.obj + 1) + " 0 R >>");
+    pushObj(fd.obj + 1, "<< /Type /FontDescriptor /FontName /" + fd.ps + " /Flags 32 /FontBBox " + fd.bbox + " /ItalicAngle 0 /Ascent " + fd.asc + " /Descent " + fd.dsc + " /CapHeight " + fd.cap + " /StemV 92 /FontFile2 " + (fd.obj + 2) + " 0 R >>");
+    offs[fd.obj + 2] = pos;
+    push(latin((fd.obj + 2) + " 0 obj\n<< /Length " + fd.bytes.length + " /Length1 " + fd.bytes.length + " >>\nstream\n"));
+    push(fd.bytes);
+    push(latin("\nendstream\nendobj\n"));
+  }
+  const xref = pos;
+  let xr = "xref\n0 " + (nObjs + 1) + "\n0000000000 65535 f \n";
+  for (let i = 1; i <= nObjs; i++) xr += String(offs[i]).padStart(10, "0") + " 00000 n \n";
+  push(latin(xr + "trailer\n<< /Size " + (nObjs + 1) + " /Root 1 0 R >>\nstartxref\n" + xref + "\n%%EOF"));
+
+  const out = new Uint8Array(pos); let o = 0;
+  for (const c of chunks) { out.set(c, o); o += c.length; }
+  return out;
+}
+/* PDF-END */
+function collectEmpf() {
+  const head = document.querySelector("#empfehlungen .empf-head");
+  const psEl = document.querySelector("#empfehlungen .empf-ps");
+  return {
+    lede: head.querySelector("p").textContent.replace(/\s+/g, " ").trim(),
+    ps: psEl ? psEl.textContent.replace(/\s+/g, " ").trim() : "",
+    items: [...document.querySelectorAll("#empfehlungen .empf-item")].map((it, i) => ({
+      num: it.dataset.ico || String(i + 1),
+      title: it.querySelector("h3").textContent.replace(/\s+/g, " ").trim(),
+      body: [...it.querySelectorAll("p")].map(p => p.textContent.replace(/\s+/g, " ").trim())
+    }))
+  };
+}
+const HAUS_FONTS = { deutlich: null, klar: null, source: null };
+async function fetchFont(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(url + " " + r.status);
+  return new Uint8Array(await r.arrayBuffer());
+}
+async function ensureFonts() {
+  const base = "../../assets/fonts/goetheanum/";
+  const want = [
+    ["deutlich", base + "Office/GoetheanumSchriftDeutlich.ttf"],
+    ["klar",     base + "Office/GoetheanumSchriftKlar.ttf"],
+    ["source",   base + "Fallback/SourceSans3-Regular.ttf"]
+  ];
+  await Promise.all(want.map(([k, u]) =>
+    HAUS_FONTS[k] ? null : fetchFont(u).then(b => { HAUS_FONTS[k] = b; }).catch(() => {})));
+  return HAUS_FONTS;
+}
+document.getElementById("pdfBtn").addEventListener("click", async function () {
+  const fonts = await ensureFonts();
+  const bytes = buildEmpfPdf(collectEmpf(), fonts);
+  const blob = new Blob([bytes], { type: "application/pdf" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "goetheanum-email-empfehlungen.pdf";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  flash(this, "Geladen ✓");
+  track("pdf", {});
+});
+
+
+
 /* ---------- Anonyme Nutzungsstatistik (Supabase, insert-only) ---------- */
-// Nur auf der Live-Site. Gezählt werden anonyme Summen – keine Eingaben des
-// Nutzers, keine IP, kein Drittdienst (eigenes Backend). Vgl. statistik.html.
 const TRACK_URL = "https://dagcsnfrlbpxcmdimnrw.supabase.co/rest/v1/signatur_events";
 const TRACK_KEY = "sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY";
 const TRACK_ON = location.hostname === "phtok.github.io";
@@ -638,24 +967,26 @@ function track(event, payload) {
 }
 let activeSec = 0;
 if (TRACK_ON) {
-  track("visit", {
-    ref: (document.referrer || "").slice(0, 200), lang: navigator.language || "",
-    w: screen.width, h: screen.height, mob: /Mobi|Android|iPhone|iPad/.test(navigator.userAgent)
-  });
-  setInterval(() => {
-    if (document.visibilityState === "visible") { activeSec += 30; track("heartbeat", { t: activeSec }); }
-  }, 30000);
+  track("visit", { ref: (document.referrer || "").slice(0, 200), lang: navigator.language || "", w: screen.width, h: screen.height, mob: /Mobi|Android|iPhone|iPad/.test(navigator.userAgent) });
+  setInterval(() => { if (document.visibilityState === "visible") { activeSec += 30; track("heartbeat", { t: activeSec }); } }, 30000);
   addEventListener("pagehide", () => track("leave", { t: activeSec }));
 }
 
 /* ---------- Start ---------- */
+// Adresszeile zeigt die Kurz-URL (nur Custom-Domain; relative Pfade bleiben gueltig).
+if (location.hostname === "werkzeuge.goetheanum.ch" && location.pathname.indexOf("/apps/signatur-generator") === 0) {
+  try { history.replaceState(null, "", "/signatur/" + location.search + location.hash); } catch (e) {}
+}
+
 const hadStored = loadStored();
 const hadQuery = applyQuery();
-// Beim ersten Öffnen das Beispiel einfügen (frei änderbar); gespeicherte Daten haben Vorrang.
 if (!hadStored && !hadQuery) setFields(EXAMPLE);
-setVariant(state.variant, false);
+// Ein gefülltes PS zeigt sich auch im Formular – der Fold klappt dann auf.
+if (val("ps") || val("pslink")) document.getElementById("psFold").open = true;
+setMode(state.mode, false);
 render();
 growAll();
+checkExpiry();
 </script>
 </body>
 </html>

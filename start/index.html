@@ -41,14 +41,21 @@
   .row:hover .rt{color:var(--gold-deep)}
   .rt{font-family:var(--font);font-weight:var(--w-strong);font-size:15px}
   .rd{color:var(--muted);font-size:var(--t-small);text-align:right;flex:1 1 auto}
+
+  /* Bau-Workflow (hier in der Werkstatt, nicht auf der Schauseite) */
+  .steps{counter-reset:s;display:grid;gap:var(--s3)}
+  .steps li{list-style:none;display:grid;grid-template-columns:38px 1fr;gap:var(--s4);align-items:start}
+  .steps li::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:var(--r-pill);background:var(--gold-deep);color:var(--on-accent);font-weight:var(--w-strong)}
+  .steps b{font-weight:var(--w-strong)}
+  .steps .d{color:var(--muted);font-size:14px;line-height:1.5}
+  .demo{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center}
 </style>
 </head>
 <body>
 
-<header class="ds-header"><div class="wrap bar">
+<header class="ds-header"><!-- # ds-ok Hub hat eigene Leiste mit Manifest-Nav --><div class="wrap bar">
   <a class="brand" href="./" aria-label="Goetheanum Grafik – Startseite">
-    <img class="mk" src="../assets/logos/goetheanum-mark-blue.svg" alt="" />
-    <span class="wm">Goetheanum</span>
+    <img class="lockup" src="../assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge" />
   </a>
   <nav class="top" id="nav"></nav>
 </div></header>
@@ -64,6 +71,27 @@
   </div>
 
   <div class="wrap" id="sections"></div>
+
+  <div class="wrap">
+    <section id="bauen">
+      <div class="shead">
+        <h2>So baust du ein neues Werkzeug</h2>
+        <p>Schnell und regelkonform – weil das System eingebunden, nicht kopiert wird. Vier Schritte, und nichts muss hinterher geprüft werden. Was bereitsteht, zeigt das <a href="../design-system/">Design-System</a>.</p>
+      </div>
+      <ol class="steps">
+        <li><div><b>Starter kopieren.</b> <span class="d"><a href="../design-system/starter.html">starter.html</a> ist ein leeres Werkzeug mit verdrahtetem Webfont, Tokens, Kopf, Fuss und korrektem Kicker. Du fängst nie bei null an.</span></div></li>
+        <li><div><b>Mitte füllen.</b> <span class="d">Nur den werkzeug-eigenen Teil setzen. Alles drumherum ist schon CI; greife auf die Tokens zu (<code>var(--gold)</code>, <code>var(--s6)</code>), erfinde keine neuen Werte.</span></div></li>
+        <li><div><b>Eintragen.</b> <span class="d">Eine Zeile in <code>tools.json</code> – das Werkzeug erscheint automatisch in diesem Hub.</span></div></li>
+        <li><div><b>Committen.</b> <span class="d">Beim Commit prüfen die Hooks automatisch: <code>tools/typo-check.py</code> die Sprache, <code>tools/ds-lint.py</code> die Gestalt. Der Mensch prüft nie von Auge.</span></div></li>
+      </ol>
+      <div class="demo" style="margin-top:var(--s6)">
+        <a class="btn primary" href="../design-system/starter.html">Starter öffnen</a>
+        <a class="btn" href="../design-system/starter-artikel.html">Artikel-Starter öffnen</a>
+        <a class="btn" href="../design-system/README.md">Workflow-Doku</a>
+        <a class="btn ghost" href="../tools.json">Manifest ansehen</a>
+      </div>
+    </section>
+  </div>
 </main>
 
 <footer class="ds-footer"><div class="wrap frow">
@@ -142,6 +170,9 @@ function render(manifest){
     });
     sec.appendChild(list); sections.appendChild(sec);
   }
+
+  // Der statische Bau-Workflow steht nach den Manifest-Sektionen – Nav-Eintrag dazu.
+  nav.insertAdjacentHTML("beforeend", `<a href="#bauen">Bauen</a>`);
 
   // Hero-Kennzahlen aus dem Manifest
   const gen = manifest.tools.filter(t => t.cat === "generatoren").length;

@@ -1,0 +1,247 @@
+<!doctype html>
+<!-- =============================================================================
+     Seelenkalender · der Wochenspruch als Eintrittstür (Lead-Schleife 1)
+     Konzept: docs/marketing-maschine.md · Spec: docs/specs/lead-maschine.md
+     Gebaut aus design-system/starter.html – nur Tokens + base.css (DS01–DS07).
+     Regel-IDs: Kicker normal (G05) · Vers = Stimme in Hausschrift · Betonung Laut
+     (G01/G05) · Ziffern tabellarisch (G25) · B01–B05 über Tokens.
+     Verstexte: Rudolf Steiner, Anthroposophischer Seelenkalender (1912/13),
+     gemeinfrei; Quelle anthro.world, abgerufen 8.7.2026.
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Seelenkalender · Goetheanum</title>
+<meta name="description" content="Der Wochenspruch des Anthroposophischen Seelenkalenders – jede Woche neu, im Takt der Wochenschrift." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  /* Nur seiteneigene Gestaltung – alles Gemeinsame kommt aus base.css. */
+  .hero{padding-block:clamp(36px,6vw,60px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(28px,4.6vw,44px);line-height:1.06;letter-spacing:-.01em;max-width:20ch}
+  .hero .lede{margin-top:var(--s4);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+
+  /* Der Spruch – die Stimme des Hauses, gross und ruhig */
+  .spruch-card{max-width:720px;margin-top:var(--s5);padding:clamp(24px,4vw,44px)}
+  .spruch-meta{display:flex;align-items:baseline;gap:var(--s3);flex-wrap:wrap}
+  .spruch-meta .readout{font-variant-numeric:tabular-nums}
+  .vers{margin:var(--s5) 0 0;font-family:var(--font);font-weight:var(--w-text);font-size:clamp(20px,2.8vw,27px);line-height:1.6;letter-spacing:.002em;white-space:pre-line}
+  .byline{margin-top:var(--s5)}
+
+  .blaettern{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s5)}
+
+  .weiter{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:var(--s5);max-width:720px}
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-section="anwendung" data-active="seelenkalender"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Anthroposophischer Seelenkalender</span>
+    <h1>Der Wochenspruch</h1>
+    <p class="lede">Zweiundfünfzig Sprüche, einer je Woche, im Gang des Jahres —
+      von Ostern zu Ostern. Jede Woche erscheint hier der Spruch der laufenden
+      Woche, im selben Takt wie die Wochenschrift.</p>
+  </section>
+
+  <section>
+    <div class="card soft spruch-card">
+      <div class="spruch-meta">
+        <span class="readout" id="wo-nr">—</span>
+        <span class="meta" id="wo-datum">wird berechnet …</span>
+        <span class="badge" id="wo-stimmung" hidden></span>
+      </div>
+      <blockquote class="vers" id="vers">…</blockquote>
+      <p class="byline">Rudolf Steiner · Anthroposophischer Seelenkalender (1912/13)</p>
+      <div class="blaettern">
+        <button class="btn" type="button" id="zurueck">← vorige Woche</button>
+        <button class="btn" type="button" id="heute">aktuelle Woche</button>
+        <button class="btn" type="button" id="vor">nächste Woche →</button>
+        <button class="btn ghost" type="button" id="teilen">Spruch kopieren</button>
+      </div>
+      <p class="hint" id="teilen-echo" hidden>Kopiert — zum Weitergeben bereit.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Im Takt bleiben</h2>
+      <p>Der Spruch ist der Anfang — die Vertiefung erscheint wöchentlich.</p>
+    </div>
+    <div class="weiter">
+      <div class="card soft">
+        <span class="kicker">Wochenschrift</span>
+        <p class="desc">Das anthroposophische Weltgeschehen, wöchentlich verdichtet
+          — seit 1921, im selben Rhythmus wie der Seelenkalender.</p>
+        <p><a class="btn primary" href="https://dasgoetheanum.com/?utm_source=werkzeuge&amp;utm_medium=web&amp;utm_campaign=evergreen&amp;utm_content=seelenkalender">Zur Wochenschrift</a></p>
+      </div>
+      <div class="card soft">
+        <span class="kicker">goetheanum.tv</span>
+        <p class="desc">Vorträge, Gespräche und Kunst aus dem Goetheanum — die
+          Vertiefung zum Spruch in Bewegtbild.</p>
+        <p><a class="btn primary" href="https://goetheanum.tv/?utm_source=werkzeuge&amp;utm_medium=web&amp;utm_campaign=evergreen&amp;utm_content=seelenkalender">Zu goetheanum.tv</a></p>
+      </div>
+      <div class="card soft">
+        <span class="kicker">Wöchentlich per E-Mail</span>
+        <p class="desc">Der Spruch der Woche als stiller Wochengruss ins Postfach.
+          Anmeldung mit Bestätigung, Abmeldung mit einem Klick.</p>
+        <form id="abo-form" style="display:grid;gap:var(--s3);margin-top:var(--s3)">
+          <label class="field">
+            <span class="lab">E-Mail-Adresse</span>
+            <input type="email" id="abo-email" name="email" required autocomplete="email" placeholder="name@beispiel.ch" />
+          </label>
+          <!-- Honigtopf: bleibt für Menschen unsichtbar und leer -->
+          <input type="text" name="website" id="abo-website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
+          <button class="btn primary" type="submit" id="abo-senden">Wochenspruch abonnieren</button>
+        </form>
+        <p class="hint" id="abo-echo" hidden></p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Hausgrafik</span>
+    <span><a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script>
+/* Verstexte: gemeinfrei (Steiner, 1912/13). Woche 1 beginnt mit der Osterwoche. */
+const SPRUECHE = {
+ "1": "Wenn aus den Weltenweiten\nDie Sonne spricht zum Menschensinn\nUnd Freude aus den Seelentiefen\nDem Licht sich eint im Schauen,\nDann ziehen aus der Selbstheit Hülle\nGedanken in die Raumesfernen\nUnd binden dumpf\nDes Menschen Wesen an des Geistes Sein.",
+ "2": "Ins Äußere des Sinnesalls\nVerliert Gedankenmacht ihr Eigensein;\nEs finden Geisteswelten\nDen Menschensprossen wieder,\nDer seinen Keim in ihnen,\nDoch seine Seelenfrucht\nIn sich muss finden.",
+ "3": "Es spricht zum Weltenall,\nSich selbst vergessend\nUnd seines Urstands eingedenk,\nDes Menschen wachsend Ich:\nIn dir, befreiend mich\nAus meiner Eigenheiten Fessel,\nErgründe ich mein echtes Wesen.",
+ "4": "Ich fühle Wesen meines Wesens:\nSo spricht Empfindung,\nDie in der sonnerhellten Welt\nMit Lichtesfluten sich vereint;\nSie will dem Denken\nZur Klarheit Wärme schenken\nUnd Mensch und Welt in Einheit fest verbinden.",
+ "5": "Im Lichte das aus Geistestiefen\nIm Raume fruchtbar webend\nDer Götter Schaffen offenbart:\nIn ihm erscheint der Seele Wesen\nGeweitet zu dem Weltensein\nUnd auferstanden\nAus enger Selbstheit Innenmacht.",
+ "6": "Es ist erstanden aus der Eigenheit\nMein Selbst und findet sich\nAls Weltenoffenbarung\nIn Zeit- und Raumeskräften;\nDie Welt, sie zeigt mir überall\nAls göttlich Urbild\nDes eignen Abbilds Wahrheit.",
+ "7": "Mein Selbst, es drohet zu entfliehen,\nVom Weltenlichte mächtig angezogen;\nNun trete du mein Ahnen\nIn deine Rechte kräftig ein,\nErsetze mir des Denkens Macht,\nDas in der Sinne Schein\nSich selbst verlieren will.",
+ "8": "Es wächst der Sinne Macht\nIm Bunde mit der Götter Schaffen,\nSie drückt des Denkens Kraft\nZur Traumes Dumpfheit mir herab.\nWenn göttlich Wesen\nSich meiner Seele einen will,\nMuss menschlich Denken\nIm Traumessein sich still bescheiden.",
+ "9": "Vergessend meine Willenseigenheit\nErfüllet Weltenwärme sommerkündend\nMir Geist und Seelenwesen;\nIm Licht mich zu verlieren\nGebietet mir das Geistesschauen,\nUnd kraftvoll kündet Ahnung mir:\nVerliere dich, um dich zu finden.",
+ "10": "Zu sommerlichen Höhen\nErhebt der Sonne leuchtend Wesen sich,\nEs nimmt mein menschlich Fühlen\nIn seine Raumesweiten mit,\nErahnend regt im Inneren sich\nEmpfindung, dumpf mir kündend,\nErkennen wirst du einst:\nDich fühlte jetzt ein Gotteswesen.",
+ "11": "Es ist in dieser Sonnenstunde\nAn dir, die weise Kunde zu erkennen:\nAn Weltenschönheit hingegeben,\nIn dir dich fühlend zu durchleben:\nVerlieren kann das Menschen-Ich\nUnd finden sich im Welten-Ich.",
+ "12": "Der Welten Schönheitsglanz\nEr zwinget mich aus Seelentiefen\nDes Eigenlebens Götterkräfte\nZum Weltenfluge zu entbinden;\nMich selber zu verlassen,\nVertrauend nur mich suchend\nIn Weltenlicht und Weltenwärme.",
+ "13": "Und bin ich in den Sinneshöhen,\nSo flammt in meinen Seelentiefen\nAus Geistes Feuerwelten\nDer Götter Wahrheitswort:\nIn Geistesgründen suche ahnend\nDich geistverwandt zu finden.",
+ "14": "An Sinnesoffenbarung hingegeben\nVerlor ich Eigenwesens Trieb,\nGedankentraum, er schien\nBetäubend mir das Selbst zu rauben,\nDoch weckend nahet schon\nIm Sinnenschein mir Weltendenken.",
+ "15": "Ich fühle wie verzaubert\nim Weltenschein des Geistes Weben,\nEs hat in Sinnesdumpfheit\nGehüllt mein Eigenwesen,\nZu schenken mir die Kraft,\nDie ohnmächtig sich selbst zu geben\nMein Ich in seinen Schranken ist.",
+ "16": "Zu bergen Geistgeschenk im Innern\nGebietet Strenge mir mein Ahnen,\nDass reifend Gottesgaben\nIn Seelengründen fruchtend\nDer Selbstheit Früchte bringen.",
+ "17": "Es spricht das Weltenwort,\nDas ich durch Sinnestore\nIn Seelengründe durfte führen:\nErfülle deine Geistestiefen\nMit meinen Weltenweiten\nZu finden einstens mich in dir.",
+ "18": "Kann ich die Seele weiten,\nDass sie sich selbst verbindet\nEmpfangenem Welten-Keimesworte?\nIch ahne, dass ich Kraft muss finden\nDie Seele würdig zu gestalten,\nZum Geisteskleide sich zu bilden.",
+ "19": "Geheimnisvoll das Neu-Empfang’ne\nMit der Erinn’rung zu umschließen,\nSei meines Strebens weitrer Sinn:\nEs soll erstarkend Eigenkräfte\nIn meinem Innern wecken\nUnd werdend mich mir selber geben.",
+ "20": "So fühl’ ich erst mein Sein,\nDas fern vom Welten-Dasein\nIn sich, sich selbst erlöschen\nUnd bauend nur auf eignem Grunde\nIn sich, sich selbst ertöten müsste.",
+ "21": "Ich fühle fruchtend fremde Macht\nSich stärkend mir mich selbst verleihn,\nDen Keim empfind ich reifend\nUnd Ahnung lichtvoll weben\nIm Innern an der Selbstheit Macht.",
+ "22": "Das Licht aus Weltenweiten,\nIm Innern lebt es kräftig fort,\nEs wird zum Seelenlichte\nUnd leuchtet in die Geistestiefen,\nU m Früchte zu entbinden,\nDie Menschenselbst aus Weltenselbst\nIm Zeitenlaufe reifen lassen.",
+ "23": "Es dämpfet herbstlich sich\nDer Sinne Reizesstreben,\nIn Lichtesoffenbarung mischen\nDer Nebel dumpfe Schleier sich,\nIch selber schau in Raumesweiten\nDes Herbstes Weltenschlaf,\nDer Sommer hat an mich\nSich selber hingegeben.",
+ "24": "Sich selbst erschaffend stets\nWird Seelensein sich selbst gewahr;\nDer Weltengeist, er strebet fort\nIn Selbsterkenntnis neu belebt\nUnd schafft aus Seelenfinsternis\nDes Selbstsinns Willensfrucht.",
+ "25": "Ich darf nun mir gehören\nUnd leuchtend breiten Innenlicht\nIn Raumes- und in Zeitenfinsternis.\nZum Schlafe drängt natürlich Wesen,\nDer Seele Tiefen sollen wachen\nUnd wachend tragen Sonnengluten\nIn kalte Winterfluten.",
+ "26": "Natur, dein mütterliches Sein,\nIch trage es in meinem Willenswesen;\nUnd meines Willens Feuermacht,\nSie stählet meines Geistes Triebe,\nDass sie gebären Selbstgefühl,\nZu tragen mich in mir.",
+ "27": "In meines Wesens Tiefen dringen\nErregt ein ahnungsvolles Sehnen,\nDass ich mich selbstbetrachtend finde\nAls Sommersonnengabe, die als Keim\nIn Herbstesstimmung wärmend lebt\nAls meiner Seele Kräftetrieb.",
+ "28": "Ich kann im Innern neu belebt\nErfühlen eignen Wesens Weiten\nUnd krafterfüllt Gedankenstrahlen\nAus Seelensonnenmacht\nDen Lebensrätseln lösend spenden,\nErfüllung manchem Wunsche leihen,\nDem Hoffnung schon die Schwingen lähmte.",
+ "29": "Sich selbst des Denkens Leuchten\nIm Innern kraftvoll zu entfachen,\nErlebtes sinnvoll deutend\nAus Weltengeistes Kräftequell,\nIst mir nun Sommererbe\nIst Herbstesruhe und auch Winterhoffnung.",
+ "30": "Es sprießen mir im Seelensonnenlicht\nDes Denkens reife Früchte,\nIn Selbstbewußtseins Sicherheit\nVerwandelt alles Fühlen sich,\nEmpfinden kann ich freudevoll\nDes Herbstes Geisterwachen,\nDer Winter wird in mir\nDen Seelensommer wecken.",
+ "31": "Das Licht aus Geistestiefen,\nNach außen strebt es sonnenhaft,\nEs wird zur Lebenswillenskraft\nUnd leuchtet in der Sinne Dumpfheit,\nUm Kräfte zu entbinden,\nDie Schaffensmächte aus Seelentrieben\nIm Menschenwerke reifen lassen.",
+ "32": "Ich fühle fruchtend eigne Kraft\nSich stärkend mich der Welt verleihn,\nMein Eigenwesen fühl ich kraftend\nZur Klarheit sich zu wenden\nIm Lebens-Schicksalsweben.",
+ "33": "So fühl’ ich erst die Welt,\nDie außer meiner Seele Miterleben\nAn sich nur frostig leeres Leben\nUnd ohne Macht sich offenbarend\nIn Seelen sich von neuem schaffend\nIn sich den Tod nur finden könnte.",
+ "34": "Geheimnisvoll das Alt-Bewahrte\nMit neu erstandnem Eigensein\nIm Innern sich belebend fühlen:\nEs soll erweckend Weltenkräfte\nIn meines Lebens Außenwerk ergießen\nUnd werdend mich ins Dasein prägen.",
+ "35": "Kann ich das Sein erkennen,\nDass es sich wiederfindet\nIm Seelen-Schaffens-Drange?\nIch fühle, dass mir Macht verlieh’n\nDas eigne Selbst dem Weltenselbst\nAls Glied bescheiden einzuleben.",
+ "36": "In meines Wesens Tiefen spricht\nZur Offenbarung drängend\nGeheimnisvoll das Weltenwort:\nErfülle deiner Arbeit Ziele\nMit meinem Geisteslichte\nZu opfern dich durch mich.",
+ "37": "Zu tragen Geisteslicht in Weltenwinternacht\nErstrebet selig meines Herzens Trieb,\nDass leuchtend Seelenkeime\nIn Weltengründen wurzeln\nUnd Gotteswort im Sinnesdunkel\nVerklärend alles Sein durchtönt.",
+ "38": "Ich fühle wie entzaubert\nDas Geisteskind im Seelenschoß,\nEs hat in Herzenshelligkeit\nGezeugt das heil’ge Weltenwort\nDer Hoffnung Himmelsfrucht,\nDie jubelnd wächst in Weltenfernen\nAus meines Wesens Gottesgrund.",
+ "39": "An Geistesoffenbarung hingegeben\nGewinne ich des Weltenwesens Licht,\nGedankenkraft, sie wächst\nSich klärend mir mich selbst zu geben\nUnd weckend löst sich mir\nAus Denkermacht das Selbstgefühl.",
+ "40": "Und bin ich in den Geistestiefen,\nErfüllt in meinen Seelengründen\nAus Herzens Liebewelten\nDer Eigenheiten leerer Wahn\nSich mit des Weltenwortes Feuerkraft.",
+ "41": "Der Seele Schaffensmacht\nSie strebet aus dem Herzensgrunde\nIm Menschenleben Götterkräfte\nZu rechtem Wirken zu entflammen,\nSich selber zu gestalten\nIn Menschenliebe und im Menschenwerke.",
+ "42": "Es ist in diesem Winterdunkel\nDie Offenbarung eigner Kraft\nDer Seele starker Trieb,\nIn Finsternisse sie zu lenken\nUnd ahnend vorzufühlen\nDurch Herzenswärme Sinnesoffenbarung.",
+ "43": "In winterlichen Tiefen\nErwärmt des Geistes wahres Sein,\nEs gibt dem Weltenscheine\nDurch Herzenskräfte Daseinsmächte;\nDer Weltenkälte trotzt erstarkend\nDas Seelenfeuer im Menscheninnern.",
+ "44": "Ergreifend neue Sinnesreize\nErfüllet Seelenklarheit,\nEingedenk vollzogner Geistgeburt,\nVerwirrend sprossend Weltenwerden\nMit meines Denkens Schöpferwillen.",
+ "45": "Es festigt sich Gedankenmacht\nIm Bunde mit der Geistgeburt,\nSie hellt der Sinne dumpfe Reize\nZur vollen Klarheit auf.\nWenn Seelenfülle\nSich mit dem Weltenwerden einen will,\nMuss Sinnesoffenbarung\nDes Denkens Licht empfangen.",
+ "46": "Die Welt, sie drohet zu betäuben\nDer Seele eingeborne Kraft;\nNun trete du, Erinnerung,\nAus Geistestiefen leuchtend auf\nUnd stärke mir das Schauen,\nDas nur durch Willenskräfte\nSich selbst erhalten kann.",
+ "47": "Es will erstehen aus dem Weltenschoße,\nDen Sinnenschein erquickend, Werdelust,\nSie finde meines Denkens Kraft\nGerüstet durch die Gotteskräfte\nDie kräftig mir im Innern leben.",
+ "48": "Im Lichte das aus Weltenhöhen\nDer Seele machtvoll fließen will\nErscheine, lösend Seelenrätsel,\nDes Weltendenkens Sicherheit\nVersammelnd seiner Strahlen Macht\nIm Menschenherzen Liebe weckend.",
+ "49": "Ich fühle Kraft des Weltenseins:\nSo spricht Gedankenklarheit,\nGedenkend eignen Geistes Wachsen\nIn finstern Weltennächten\nUnd neigt dem nahen Weltentage\nDes Innern Hoffnungsstrahlen.",
+ "50": "Es spricht zum Menschen-Ich,\nSich machtvoll offenbarend\nUnd seines Wesens Kräfte lösend,\nDes Weltendaseins Werdelust:\nIn dich mein Leben tragend\nAus seinem Zauberbanne\nErreiche ich mein wahres Ziel.",
+ "51": "Ins Innre des Menschenwesens\nErgießt der Sinne Reichtum sich,\nEs findet sich der Weltengeist\nIm Spiegelbild des Menschenauges,\nDas seine Kraft aus ihm\nSich neu erschaffen muss.",
+ "52": "Wenn aus den Seelentiefen\nDer Geist sich wendet zu dem Weltensein\nUnd Schönheit quillt aus Raumesweiten,\nDann zieht aus Himmelsfernen\nDes Lebens Kraft in Menschenleiber\nUnd einet, machtvoll wirkend,\nDes Geistes Wesen mit dem Menschensein."
+};
+const STIMMUNG = {1:'Oster-Stimmung',12:'Johanni-Stimmung',26:'Michaeli-Stimmung',38:'Weihnacht-Stimmung'};
+
+/* Ostersonntag (gregorianisch), Anonymous-Gauss */
+function ostern(j){
+  const a=j%19,b=Math.floor(j/100),c=j%100,d=Math.floor(b/4),e=b%4,
+        f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),
+        h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,
+        l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),
+        mo=Math.floor((h+l-7*m+114)/31),ta=((h+l-7*m+114)%31)+1;
+  return new Date(j,mo-1,ta);
+}
+function wocheHeute(){
+  const heute=new Date(); heute.setHours(12,0,0,0);
+  let o=ostern(heute.getFullYear());
+  if(heute<o) o=ostern(heute.getFullYear()-1);
+  const w=Math.floor((heute-o)/(7*24*3600*1000))+1;
+  return {nr:Math.min(Math.max(w,1),52), ostern:o};
+}
+function datumsSpanne(o,nr){
+  const von=new Date(o.getTime()+(nr-1)*7*24*3600*1000);
+  const bis=new Date(von.getTime()+6*24*3600*1000);
+  const f=d=>d.toLocaleDateString('de-CH',{day:'numeric',month:'long'});
+  return f(von)+' – '+f(bis);
+}
+
+const st={...wocheHeute()};
+let nr=st.nr;
+const $=id=>document.getElementById(id);
+function zeige(){
+  $('wo-nr').textContent=nr+'. Woche';
+  $('wo-datum').textContent=(nr===st.nr?'':'') + datumsSpanne(st.ostern,nr) + (nr===st.nr?' · diese Woche':'');
+  $('vers').textContent=SPRUECHE[nr];
+  const s=STIMMUNG[nr];
+  $('wo-stimmung').hidden=!s; if(s) $('wo-stimmung').textContent=s;
+  $('teilen-echo').hidden=true;
+}
+$('zurueck').addEventListener('click',()=>{nr=nr>1?nr-1:52;zeige();});
+$('vor').addEventListener('click',()=>{nr=nr<52?nr+1:1;zeige();});
+$('heute').addEventListener('click',()=>{nr=st.nr;zeige();});
+$('teilen').addEventListener('click',async()=>{
+  const t=SPRUECHE[nr]+'\n\n— Rudolf Steiner, Seelenkalender, '+nr+'. Woche\n'+location.href;
+  try{
+    if(navigator.share){await navigator.share({text:t});}
+    else{await navigator.clipboard.writeText(t);$('teilen-echo').hidden=false;}
+  }catch(e){}
+});
+zeige();
+
+/* Abo: Double-Opt-in über die Edge Function; Antwort bewusst immer gleich. */
+const ABO_URL='https://dagcsnfrlbpxcmdimnrw.supabase.co/functions/v1/seelenkalender?aktion=anmelden';
+function echoAbo(text){const e=$('abo-echo');e.textContent=text;e.hidden=false;}
+$('abo-form').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  const knopf=$('abo-senden'); knopf.disabled=true;
+  const utm={}; new URLSearchParams(location.search).forEach((v,k)=>{if(k.startsWith('utm_'))utm[k]=v;});
+  try{
+    await fetch(ABO_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:$('abo-email').value,website:$('abo-website').value,sprache:'de',utm})});
+    echoAbo('Fast geschafft — bitte den Bestätigungs-Brief im Postfach öffnen.');
+    $('abo-form').reset();
+  }catch(e){
+    echoAbo('Das hat gerade nicht geklappt — bitte später noch einmal versuchen.');
+  }finally{knopf.disabled=false;}
+});
+/* Rückkehr von Bestätigen/Abmelden (Weiterleitung der Function) */
+if(location.hash==='#bestaetigt') echoAbo('Angemeldet — der nächste Wochenspruch kommt zu Ihnen.');
+if(location.hash==='#beendet')   echoAbo('Abgemeldet — still und ohne Rückfrage. Der Spruch bleibt hier frei lesbar.');
+if(location.hash==='#fehler')    echoAbo('Dieser Verweis war nicht (mehr) gültig.');
+</script>
+
+</body>
+</html>

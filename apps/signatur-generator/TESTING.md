@@ -1,59 +1,48 @@
-# Signatur-Generator — Test-Matrix
+# Signatur-Generator v2 — Test-Matrix
 
-Das Tool verspricht: funktioniert in Outlook (Windows/Mac), Apple Mail und Gmail.
-Diese Datei deckt das ab. E-Mail-HTML rendert in jedem Client anders — vor
-grösseren Änderungen am Signatur-Output (`buildSignature()`) bitte real gegenprüfen.
+Das Tool erzeugt eine **reine Text-Signatur** (`div`/`<br>`, alle Stile inline,
+kein Bild, keine Tabelle, kein `<style>`, keine Hintergrundfarbe). Ziel: übersteht
+das Einfügen unverändert und bleibt **hell wie dunkel** lesbar.
 
-Kurz testen heisst: **echte E-Mail an sich selbst senden** und in den unten
-genannten Clients öffnen. Vorschau im Generator ≠ Realität im Client.
+E-Mail-HTML rendert je Client anders — vor grösseren Änderungen an
+`buildSignature()` bitte real gegenprüfen: **echte Testmail an sich selbst**,
+in den unten genannten Clients öffnen. Vorschau ≠ Realität.
 
-## Clients (Minimal-Matrix)
+## Akzeptanz je Client (einfügen + Testmail, hell UND dunkel)
 
-| # | Client | Engine | Priorität |
-|---|--------|--------|-----------|
-| 1 | Outlook 365 **Windows** | Word | **kritisch** (häufigste Brüche) |
-| 2 | Outlook **Mac** | WebKit | hoch |
-| 3 | Apple Mail (macOS) | WebKit | hoch |
-| 4 | Gmail **Web** | eigenes Sanitizing | hoch |
-| 5 | Gmail **App** (iOS/Android) | — | mittel |
-| 6 | iOS Mail | WebKit | mittel |
+| Client | Einfügen | Empfang Hell | Empfang Dunkel |
+|---|---|---|---|
+| Apple Mail (macOS) | ☐ | ☐ | ☐ |
+| Mail (iOS/iPadOS) | ☐ | ☐ | ☐ |
+| Outlook neu (Mac/Windows) | ☐ | ☐ | ☐ |
+| Outlook klassisch (Windows) | ☐ | ☐ | ☐ |
+| Outlook Web | ☐ | ☐ | ☐ |
+| Gmail Web | ☐ | ☐ | ☐ |
 
-## Workflow pro Client
+Workflow: ‹Signatur kopieren› → im Client unter Einstellungen → Signaturen
+einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deaktivieren.
 
-1. ‹Signatur kopieren› klicken.
-2. In den Signatur-Einstellungen des Clients einfügen
-   (Outlook Win alternativ: ‹.htm laden› → Datei nach
-   `%APPDATA%\Microsoft\Signatures`).
-3. Neue Mail + Antwort erstellen, an sich selbst senden, im Zielclient öffnen.
+## Prüfpunkte
 
-## Prüfpunkte (das sind die bekannten Outlook-Bruchstellen)
-
-- [ ] **Layout**: Person links (Name → Funktion → Kontakt), Organisation rechts
-      (Goetheanum → Gesellschaft → Adresse), dazwischen der blaue Trennbalken.
-- [ ] **Blauer Trennbalken** ist sichtbar, durchgehend, 2px, klappt nicht weg
-      (Spacer-Zelle, nicht `border`).
-- [ ] **Abstände** (Funktion → Kontakt) stimmen
-      (Spacer-Zeilen, nicht `<br><br>` — Word staucht/dehnt sonst).
-- [ ] **Spaltenbreiten** stabil, kein Umbruch/Verrutschen, keine ungewollte
-      Volldehnung über die Mailbreite.
-- [ ] **Eine Grösse**: Arial 10.5pt durchgängig, **kein** Fett, **kein**
-      Goetheanum-Webfont im Output.
-- [ ] **Farben** (einziges Auszeichnungsmittel): Name dunkel, Funktion/Adresse grau,
-      Kontakt-Links **und** Organisations-Hauptzeile (Goetheanum) im Goetheanum-Blau.
-- [ ] **Links** funktionieren: `mailto:`, Website, `tel:` (auf Mobile).
-- [ ] **Lang- und Kurz-Variante** je einzeln prüfen.
-- [ ] **Dark Mode** des Clients: Signatur bleibt lesbar (Apple Mail/iOS invertieren gern).
-- [ ] **Antwort/Weiterleitung**: Signatur bleibt intakt (Outlook reflowt Tabellen).
+- [ ] **Kein Anhang-Symbol (Büroklammer)** beim Empfänger — d. h. wirklich kein Bild im Markup.
+- [ ] **Fliesstext ohne feste Farbe:** Name/Funktion/Adresse erscheinen im Dark Mode hell, im Light Mode dunkel (erben Theme).
+- [ ] **Keine Grautöne**, keine Trennlinie, keine Hintergrundfarbe.
+- [ ] **Mail-Blau** (`#4183B4`) für ‹Goetheanum› und Web-Links — lesbar auf hellem UND dunklem Grund (Kontrast 4.09:1 / 4.07:1, im Code dokumentiert).
+- [ ] **Hierarchie** über Grösse/Gewicht: Name in 600, Adresse eine Stufe kleiner.
+- [ ] **Links** funktionieren: Website (`https`), Telefon/Mobil (`tel:`), PS-Link.
+- [ ] **‹Nur Text kopieren›** liefert saubere Klartext-Fassung (Zeilenumbrüche, keine HTML-Reste).
+- [ ] **PS-Modul:** 120-Zeichen-Zähler, Darstellung `PS: … — Link`, ‹Erinnerung in den Kalender› lädt eine `.ics`, die in Apple Kalender und Outlook korrekt öffnet; abgelaufenes PS zeigt beim Laden einen Hinweis.
+- [ ] **Vorschau Hell/Dunkel** schaltet den Bühnen-Hintergrund; gerendert wird exakt das kopierte Markup.
 
 ## Funktion / Rollout
 
-- [ ] `localStorage`: Eingaben überstehen ein Reload.
+- [ ] `localStorage` (`goe-signatur-v3`): Eingaben überstehen ein Reload; alte Versionen erzeugen keinen kaputten Zustand.
 - [ ] Query-Prefill: `?name=Test&role=Probe` füllt die Felder.
 - [ ] ‹Beispiel einfügen› / ‹Felder leeren› funktionieren.
-- [ ] Mehrere URLs (je Zeile eine) werden zu einzelnen Links; ‹www.› entfällt in der Anzeige.
+- [ ] Mehrzeilige Felder (Funktion, Website, PS) wachsen mit dem Inhalt.
+- [ ] Empfehlungen erscheinen als Textabschnitt unter dem Generator.
 
-## Bekannte Grenzen
+## Nicht-Ziele
 
-- **Responsive** ist bewusst kein Ziel (Clients ignorieren `@media` weitgehend).
-- `.htm`-Download ist **klassisches** Outlook (Windows) spezifisch; das *neue* Outlook nutzt
-  den Signatures-Ordner nicht. Für neues Outlook, Apple Mail, Gmail: ‹Signatur kopieren›.
+- Kein Backend für die Signatur, keine Datenübertragung von Eingaben (nur anonyme, insert-only Nutzungsstatistik ohne Eingaben).
+- Keine Mehrfach-/Kurzvariante, kein `.htm`-Download, kein Logo-/Bild-Upload.

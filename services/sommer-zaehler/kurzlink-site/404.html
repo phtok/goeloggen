@@ -1,0 +1,62 @@
+<!doctype html>
+<!-- =============================================================================
+     tools.goetheanum.ch · Kurzlink-Weiterleitung (GitHub Pages 404-Bruecke)
+     -----------------------------------------------------------------------------
+     GitHub Pages liefert diese Seite fuer jeden unbekannten Pfad aus. Sie liest
+     den Kurznamen aus dem Pfad (z. B. /s/otter → «otter») und uebergibt an die
+     Supabase-Function «go», die in der Tabelle sommer2026_links nachschlaegt und
+     per 302 auf die volle Ziel-URL samt UTM-Parametern weiterleitet.
+
+     Quelle der Wahrheit bleibt die Datenbank (kein doppeltes links.json). Neue
+     Kurzlinks entstehen im Generator (werkzeuge.goetheanum.ch/apps/utm-generator/)
+     und wirken hier sofort – ohne Aenderung an diesem Repo. Leere und
+     unbekannte Pfade landen auf der Aktions-Landingpage – nie auf den
+     internen Werkzeugen.
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Weiterleitung · Goetheanum</title>
+<link rel="icon" type="image/svg+xml" href="https://werkzeuge.goetheanum.ch/assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/tokens.css" />
+<link rel="stylesheet" href="https://werkzeuge.goetheanum.ch/design-system/base.css" />
+<style>
+  .weiter{min-height:70vh;display:grid;place-content:center;justify-items:center;gap:var(--s5);text-align:center;padding-block:var(--s8)}
+  .weiter h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(26px,4vw,40px);line-height:1.1}
+  .weiter p{color:var(--muted);max-width:52ch;line-height:1.6}
+  .weiter .fallback{font-size:var(--t-small)}
+</style>
+</head>
+<body>
+
+<main class="wrap">
+  <section class="weiter">
+    <span class="kicker">Goetheanum · Kurzlink</span>
+    <h1>Einen Moment – wir leiten weiter</h1>
+    <p>Der Kurzlink wird nachgeschlagen und du landest gleich auf der richtigen
+      Seite. Passiert nichts, hilft der Weg von Hand:</p>
+    <p class="fallback"><a id="direkt" href="https://global-sommer2026.goetheanum.online">weiter zur Aktionsseite</a></p>
+  </section>
+</main>
+
+<script>
+  // Kurznamen aus dem Pfad ziehen: letztes nicht-leeres Segment.
+  // /s/otter → otter · /otter → otter · / → leer (dann auf die Aktionsseite).
+  (function () {
+    var GO = "https://dagcsnfrlbpxcmdimnrw.supabase.co/functions/v1/go/";
+    var LANDING = "https://global-sommer2026.goetheanum.online";
+    var segs = location.pathname.split("/").filter(Boolean);
+    var code = segs.length ? segs[segs.length - 1] : "";
+    // «s» ist nur das Verzeichnis, kein Kurzname.
+    if (code === "s") code = "";
+    var ziel = code ? GO + encodeURIComponent(code) : LANDING;
+    var a = document.getElementById("direkt");
+    if (a) a.setAttribute("href", ziel);
+    location.replace(ziel);
+  })();
+</script>
+
+</body>
+</html>

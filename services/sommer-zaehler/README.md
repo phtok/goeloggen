@@ -4,6 +4,20 @@ Backend des Aktions-Cockpits [`apps/sommer-zaehler/`](../../apps/sommer-zaehler/
 Zieht live aus dem Werkzeug-Supabase (`dagcsnfrlbpxcmdimnrw`) über drei
 Aggregat-RPCs. Es verlassen **nur Summen** die Datenbank, keine Personendaten.
 
+## Aufbau der App (mehrseitig)
+
+Die Kampagne ist eine mehrseitige App in `apps/sommer-zaehler/`, geklammert
+durch die gemeinsame Unter-Leiste (`data-onpage` von `nav.js`):
+**Cockpit** (`index.html`) · **Aktivitäten** (`aktivitaeten.html`, Zeitband +
+Protokoll) · **Kosten** (`kosten.html`) · **Multiplikatoren**
+(`multiplikatoren.html`) — dazu verlinkt **Links** (`../utm-generator/`) und
+**Mail** (`../mail-editor/`). (Im Backend heisst die Tabelle weiterhin
+`sommer2026_massnahmen`; „Aktivität" ist nur die Oberflächen-Benennung.)
+Geteiltes CSS/JS liegt in `campaign.css` und `campaign.js`; jede Seite bindet
+beide ein und rendert per Element-Guards nur ihre eigenen Abschnitte, so bleibt
+der Code einfach (eine Datei, aus dem Cache). Der Hub-Eintrag `sommer-zaehler`
+bleibt die Startseite; die Unterseiten sind nur über die Leiste erreichbar.
+
 ## Datenmodell
 
 Eine Zeile in `public.sommer2026_signups` = eine Anmeldung im Gratis-Zeitraum.
@@ -15,17 +29,53 @@ Dimensionen: `produkt` (wos/gtv) · `sprache` (de/en) · `format`
 RPCs (für `anon` per Publishable-Key aufrufbar, wie in `statistik.html`):
 `sommer2026_stats` (Breakdown), `sommer2026_timeline` (Momentum je Tag),
 `sommer2026_kohorten` (der 3-Monats-Moment), `sommer2026_kanaele` (Attribution
-je Herkunftsweg).
+je Herkunftsweg), `sommer2026_attribution` (feiner: je UTM-Motiv),
+`sommer2026_trichter` (Wirkungskette Sichtbarkeit→Bindung),
+`sommer2026_massnahmen_public` (Massnahmen-Protokoll, kuratiert).
 
 ## Attribution (Woher) und Kosten
 
 `kanal` (newsletter / mailer / social / popup / website / empfehlung / andere)
-hält den **Herkunftsweg** je Anmeldung. Er kommt aus den **UTM-Parametern**
-(`utm_source` / `utm_medium`) am Anmelde-Link und muss von Paperform / Uscreen /
-Zoho beim Signup mitgeschrieben und in `kanal` gemappt werden. Die **Kosten je
-Weg** und die **Fixkosten** der Aktion liegen (wie Preise und Zielmarken) im
-`CONFIG`-Block der Seite; daraus rechnet das Cockpit Kosten je Abo (CPA) und den
-Rückfluss je € Kosten.
+hält den **Herkunftsweg** je Anmeldung als groben Bucket. Darunter wird das
+**volle UTM-Tupel** roh gespeichert (`utm_source` / `utm_medium` / `utm_campaign`
+/ `utm_content`) plus `landing_path` und die offene `selbstauskunft` («Wie sind
+Sie aufmerksam geworden?», E-Mail-redigiert). So bleibt sichtbar, welches
+**Motiv** (z. B. `reel_ernst_zuercher` vs. `footer_link`) getragen hat, nicht nur
+welcher Kanal. Die Ingestion (Paperform / Uscreen) schreibt das mit; der
+`kanal`-Bucket wird daraus abgeleitet. Die **Kosten** liegen (wie Preise und
+Zielmarken) im `CONFIG`-Block der Seite; daraus rechnet das Cockpit Kosten je Abo
+(CPA) und den Rückfluss je € Kosten.
+
+## Wirkungskette und Aktivitäten-Protokoll
+
+Das Cockpit liest die Aktion als **Kette gemessener Zahlen**, nicht als
+Einzelwerte: **Reichweite → Klicks → Abschlüsse → Geblieben**
+(`sommer2026_trichter`). Alle vier Stufen sind gemessen, **nicht** eine im
+Eintrag gewählte Kategorie: Reichweite = Summe der `reichweite`, Klicks = Summe
+der `klicks` (beide aus den Aktivitäten); Abschlüsse = Anzahl Anmeldungen,
+Geblieben = Anmeldungen mit Status `bleibt` (beide live aus `sommer2026_signups`).
+Darum zeigt der Trichter zusätzlich die **Reichweite je Kanal** (Social,
+Newsletter, Popup …), client-seitig aus den Aktivitäten summiert. Reichweite und
+Klicks werden direkt beim Eintrag der Aktivität erfasst (oder später über
+Bearbeiten). Das frühere Feld „Aufgabe der Aktivität" (`rolle`) ist aus der
+Oberfläche entfernt, weil es dieselben vier Wörter trug wie die Trichterstufen
+und so den Eindruck erweckte, es steuere die Zählung – die Spalte bleibt in der
+DB, wird aber nicht mehr gepflegt.
+
+Quelle ist das **Aktivitäten-Protokoll** `sommer2026_massnahmen` – eine Zeile je
+Aktivität (Newsletter, Inserat, Post) mit Datum, Kanal, Kosten, Reichweite,
+Klicks, einer öffentlichen **`notiz`** (klärende Präzisierung, z. B. „Reichweite =
+geöffnete Mails, nicht versendete") und **internen** Notizen (`beobachtung` /
+`entscheidung`). Die internen Freitext-Spalten verlassen die DB **nie**: der
+öffentliche RPC `sommer2026_massnahmen_public` gibt nur die kuratierten Zahlen
+plus `notiz` zurück. So wird CPA je **Aktivität** rechenbar (nicht nur je Bucket),
+und aus der Aktion wird eine lesbare Geschichte statt eines Datenhaufens.
+
+**Eintragen und Bearbeiten** über die RPCs `sommer2026_massnahme_eintragen` und
+`…_aendern` (offener Schreibweg fürs Team, Muster Link-Register; `notiz` ist
+Bestandteil beider). Im Cockpit lässt sich jede Aktivität **direkt im Zeitband
+anklicken** – der Chip lädt die Zeile in die Bearbeiten-Maske. Chips mit Notiz
+tragen sie als Zeile im Chip und einen goldenen Rand.
 
 ## Ströme und Tarife
 

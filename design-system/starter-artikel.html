@@ -1,0 +1,107 @@
+<!doctype html>
+<!-- =============================================================================
+     Goetheanum-Werkzeug · STARTER ARTIKEL
+     -----------------------------------------------------------------------------
+     Kanonische Artikelseite für echten Mengentext (Webfamilie-Befund §4, Vorbild
+     Wochenschrift — aber mit unseren Faktoren): Brotkrumen → Kicker → Titel →
+     Byline → Lede → Langtext (.prose, ~62ch, lh 1.66) → Literatur → Autoren-Bio
+     → Verwandte Artikel. Byline normal, nie versal (G05); Ziffern tabellarisch,
+     wo sie Daten sind (G25); alles Lesbare ≥14px (B03).
+
+     Verwenden: Datei kopieren, die mit «DEIN ARTIKEL» markierte Mitte füllen,
+     in tools.json registrieren. Fundament RELATIV einbinden (trägt auf der
+     Custom-Domain UND unter phtok.github.io/goeloggen/); Pfadtiefe an den Ort
+     der Datei anpassen — Root: design-system/…, App: ../../design-system/…
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+<title>Artikel-Titel · Goetheanum</title>
+<meta name="description" content="Vorspann des Artikels in einem Satz." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN. RELATIV, nie absolut. -->
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Nur Artikel-Layout; Rollen (crumbs/byline/lit/bio/related) kommen aus base.css. */
+  .artkopf{padding-block:clamp(36px,6vw,64px) var(--s6);max-width:min(72ch,100%)}
+  .artkopf h1{max-width:24ch}
+  .artkopf .lede{margin-top:var(--s4)}
+  .artkopf .byline{margin-top:var(--s4)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <header class="artkopf">
+    <nav class="crumbs" aria-label="Pfad">
+      <a href="./">Startseite</a> <span aria-hidden="true">›</span>
+      <a href="./">Rubrik</a> <span aria-hidden="true">›</span>
+      <span aria-current="page">Artikel-Titel</span>
+    </nav>
+    <span class="kicker" style="margin-top:var(--s4);display:inline-block">Rubrik · Thema</span>
+    <h1>Artikel-Titel: klar, konkret, ohne Plakat</h1>
+    <p class="lede">Der Vorspann sagt in zwei, drei Zeilen, worum es geht und warum
+      es die Leserin angeht — die Lede trägt die Hausschrift, der Langtext darunter
+      die Leseschrift.</p>
+    <p class="byline"><b>Vorname Name</b> <span>6. Juli 2026</span> <span>8 Min. Lesezeit</span></p>
+  </header>
+
+  <!-- ====================== DEIN ARTIKEL – ab hier füllen ====================== -->
+  <article class="prose">
+    <p>Erster Absatz. Echter Mengentext läuft in der Leseschrift (Source Sans 3)
+      im Lesemass von rund 62 Zeichen mit Zeilenhöhe 1.66 — die zwei Faktoren,
+      die langes Lesen tragen. Betont wird mit <strong>Laut</strong>, der
+      Gegenton steht <em>leise</em>, nie unterstrichen, nie versal.</p>
+    <h3>Zwischentitel gliedern, alle vier bis sechs Absätze</h3>
+    <p>Zweiter Absatz. Anführungen im Haus sehen so aus: <q>ein wörtliches
+      Zitat</q>. Zahlen wie 10 000 oder Daten wie 6. 7. 2026 stehen im Text
+      proportional; erst in Tabellen werden sie tabellarisch und rechtsbündig.</p>
+    <p>Dritter Absatz. Ein Artikel endet nicht abrupt: Literatur, die
+      Autorenzeile und Verwandtes geben dem Text ein Nachwort — die Rollen dafür
+      stehen bereit und müssen nicht erfunden werden.</p>
+  </article>
+
+  <aside class="lit" aria-label="Literatur">
+    <p><b style="color:var(--ink)">Literatur</b></p>
+    <p>Autorin, Titel des Werks, Ort 2026.</p>
+    <p>Autor, <q>Aufsatztitel</q>, in: Zeitschrift 27/2026.</p>
+  </aside>
+
+  <div class="bio">
+    <span class="person"><span class="pv" aria-hidden="true">VN</span></span>
+    <p class="btext"><b>Vorname Name</b> ist … — zwei Sätze zur Person, was sie
+      mit dem Thema verbindet und wo man mehr von ihr liest.</p>
+  </div>
+
+  <section aria-label="Verwandte Artikel">
+    <div class="shead"><h2>Verwandt</h2><p>Drei Wege weiter — gleiche Rubrik, gleiches Thema.</p></div>
+    <div class="related">
+      <a class="teaser stack" href="#"><span class="thumb" aria-hidden="true"></span>
+        <span><span class="kick">Rubrik</span><h3>Verwandter Titel eins</h3>
+        <p class="ex">Ein Satz Vorspann.</p></span></a>
+      <a class="teaser stack" href="#"><span class="thumb" aria-hidden="true"></span>
+        <span><span class="kick">Rubrik</span><h3>Verwandter Titel zwei</h3>
+        <p class="ex">Ein Satz Vorspann.</p></span></a>
+      <a class="teaser stack" href="#"><span class="thumb" aria-hidden="true"></span>
+        <span><span class="kick">Rubrik</span><h3>Verwandter Titel drei</h3>
+        <p class="ex">Ein Satz Vorspann.</p></span></a>
+    </div>
+  </section>
+  <!-- ====================== DEIN ARTIKEL – bis hier ============================ -->
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Hausgrafik</span>
+    <span><a href="design-system/">Design-System</a></span>
+  </div>
+</footer>
+</body>
+</html>

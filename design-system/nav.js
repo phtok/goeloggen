@@ -39,12 +39,19 @@
   // zu Emoji umfärbt. Deterministisch in Hell wie Dunkel.
   var MOON_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="currentColor"><path d="M20.7 13.3A8 8 0 1 1 10.7 3.3a6.3 6.3 0 1 0 10 10Z"/></svg>';
   var SUN_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.1M12 19.3v2.1M2.6 12h2.1M19.3 12h2.1M5.2 5.2l1.5 1.5M17.3 17.3l1.5 1.5M18.8 5.2l-1.5 1.5M6.7 17.3l-1.5 1.5"/></svg>';
+  var SHARE_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14V3.6M8.2 7.2 12 3.4l3.8 3.8"/><path d="M5.5 11.5v8h13v-8"/></svg>';
+  var CHECK_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
   function updateThemeBtn() {
-    if (!themeBtn) return;
     var dark = document.documentElement.getAttribute("data-theme") === "dark";
-    themeBtn.querySelector(".ic").innerHTML = dark ? SUN_SVG : MOON_SVG;
-    themeBtn.setAttribute("aria-label", dark ? "Hell schalten" : "Dunkel schalten");
-    themeBtn.setAttribute("aria-pressed", String(dark));
+    var alle = document.querySelectorAll(".dsnav .theme, .dsnav-drawer .theme");
+    for (var i = 0; i < alle.length; i++) {
+      alle[i].querySelector(".ic").innerHTML = dark ? SUN_SVG : MOON_SVG;
+      alle[i].setAttribute("aria-label", dark ? "Hell schalten" : "Dunkel schalten");
+      if (alle[i].hasAttribute("data-tip")) alle[i].setAttribute("data-tip", dark ? "Hellmodus" : "Dunkelmodus");
+      alle[i].setAttribute("aria-pressed", String(dark));
+      var lb = alle[i].querySelector(".lb");
+      if (lb) lb.textContent = dark ? "Hell" : "Dunkel";
+    }
   }
   function setTheme(t) {
     try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
@@ -61,10 +68,12 @@
   var READ_KEY = "goeRead", readBtn = null;
   function getRead() { try { return localStorage.getItem(READ_KEY) === "easy" ? "easy" : ""; } catch (e) { return ""; } }
   function updateReadBtn() {
-    if (!readBtn) return;
     var on = document.documentElement.getAttribute("data-read") === "easy";
-    readBtn.setAttribute("aria-pressed", String(on));
-    readBtn.setAttribute("aria-label", on ? "Lesemodus ausschalten" : "Lesemodus – Fliesstext in der Leseschrift");
+    var alle = document.querySelectorAll(".dsnav .read, .dsnav-drawer .read");
+    for (var i = 0; i < alle.length; i++) {
+      alle[i].setAttribute("aria-pressed", String(on));
+      alle[i].setAttribute("aria-label", on ? "Lesemodus ausschalten" : "Lesemodus – Fliesstext in der Leseschrift");
+    }
   }
   function setRead(on) {
     try { localStorage.setItem(READ_KEY, on ? "easy" : "off"); } catch (e) {}
@@ -120,14 +129,18 @@
       intro: "Fertige Vorlagen zum Übernehmen – Wallpaper, Präsentationen.", cats: ["anwendung"] }
   ];
   // Nur intern zusätzlich – die Backstage-Welten (A/B/C-Qualifizierung).
+  // Kuratierte Reihenfolge; Manifest-Kategorien, die hier fehlen, laufen beim
+  // Laden automatisch als eigene Backstage-Welt hinten nach (Sicherheitsnetz).
   var INTERN_EXTRA = [
     { id: "vorbereitung", label: "In Vorbereitung", intro: "In Arbeit – noch nicht freigegeben.", cats: ["vorbereitung"] },
     { id: "ligaturen", label: "Ligaturen", intro: "Die Kiste nur für die Ligaturen.", cats: ["ligaturen"] },
     { id: "schriftpflege", label: "Schriftpflege", intro: "Grotesk, Gewichte und Mischsatz prüfen.", cats: ["schriftpflege"] },
+    { id: "kampagne", label: "Kampagne", intro: "Kampagnen planen, verlinken, mailen, zählen.", cats: ["kampagne"] },
     { id: "statistik", label: "Statistik", intro: "Nutzungszahlen aller Werkzeuge.", cats: ["statistik"] },
     { id: "schau", label: "Schau & Mockups", intro: "Präsentations-Mockups und Studien.", cats: ["schau"] },
     { id: "geparkt", label: "Geparktes", intro: "Konzepte, die später kommen.", cats: ["geparkt"] },
-    { id: "archiv", label: "Archiv", intro: "Frühere Stände, eingefroren.", cats: ["archiv"] }
+    { id: "archiv", label: "Archiv", intro: "Frühere Stände, eingefroren.", cats: ["archiv"] },
+    { id: "labor", label: "Labor", intro: "Skizzen und Spezialtools – zum Ausprobieren vor dem Teilen.", cats: ["labor"] }
   ];
   var PUBLIC_IDS = WORLDS.map(function (w) { return w.id; });
 
@@ -190,7 +203,8 @@
         '<img class="lockup" src="' + ROOT + 'assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge">' +
       '</a>' +
       '<nav class="worlds"></nav>' + ctaHTML +
-      '<button class="read" type="button" aria-pressed="false" aria-label="Lesemodus – Fliesstext in der Leseschrift"><span class="ic" aria-hidden="true">a</span></button>' +
+      '<button class="read" type="button" aria-pressed="false" aria-label="Lesemodus – Fliesstext in der Leseschrift" data-tip="Lesemodus"><span class="ic" aria-hidden="true">a</span></button>' +
+      '<button class="share" type="button" aria-label="Seite teilen – Link kopieren" data-tip="Teilen"><span class="ic">' + SHARE_SVG + '</span></button>' +
       '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic"></span></button>' +
       '<button class="all" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Menü">' +
         '<span class="ic">☰</span><span class="idot" hidden></span></button>' +
@@ -216,18 +230,30 @@
   // Kopfzeile. Auf jeder Breite sichtbar (auch mobil), horizontal scrollbar.
   var ONPAGE = (s && s.dataset.onpage) || "";
   if (ONPAGE) {
-    var sub = el("nav", "dsnav-onpage");
-    sub.setAttribute("aria-label", "Auf dieser Seite");
-    sub.innerHTML = '<div class="row">' + ONPAGE.split("|").map(function (pair) {
+    var pairs = ONPAGE.split("|").map(function (pair) {
       var ci = pair.indexOf(":");
-      var label = ci > 0 ? pair.slice(0, ci) : pair;
-      var anchor = ci > 0 ? pair.slice(ci + 1) : "#";
-      return '<a href="' + anchor + '">' + label + '</a>';
+      return { label: ci > 0 ? pair.slice(0, ci) : pair, target: ci > 0 ? pair.slice(ci + 1) : "#" };
+    });
+    // Eine reine Seiten-Leiste (kein einziges #-Ziel) ist die Klammer über mehrere
+    // Seiten und gehört direkt unter die Kopfzeile, immer sichtbar. Sobald ein
+    // #-Anker dabei ist, ist es eine Sprungleiste und sitzt unter dem Hero/der Lede.
+    var isPageNav = pairs.every(function (p) { return p.target.charAt(0) !== "#"; });
+    // Aktive Seite markieren: Ziel-URL relativ auflösen (über ein <a>) und mit der
+    // aktuellen Seite vergleichen (index.html und Schrägstrich normalisiert). So
+    // trifft es auch nachbarschaftliche Ziele wie „../utm-generator/".
+    var canon = function (p) { return p.replace(/index\.html$/, "").replace(/\/+$/, "/"); };
+    var herePath = canon(location.pathname);
+    var resolve = function (t) { var a = document.createElement("a"); a.href = t; return canon(a.pathname); };
+    var sub = el("nav", "dsnav-onpage");
+    sub.setAttribute("aria-label", isPageNav ? "Kampagne – Seiten" : "Auf dieser Seite");
+    sub.innerHTML = '<div class="row">' + pairs.map(function (p) {
+      var self = isPageNav && p.target.charAt(0) !== "#" && resolve(p.target) === herePath;
+      return '<a href="' + p.target + '"' + (self ? ' aria-current="page"' : '') + '>' + p.label + '</a>';
     }).join("") + '</div>';
-    // Unter den Hero/die Lede hängen; wenn es keinen gibt, direkt unter die Kopfzeile.
+    // Reine Seiten-Leiste: direkt unter die Kopfzeile. Sonst unter den Hero/die Lede.
     // nav.js läuft oft VOR <main> – darum die Platzierung bis DOM-ready aufschieben.
     var placeOnpage = function () {
-      var heroEl = document.querySelector("main .hero, .hero, main .lede");
+      var heroEl = isPageNav ? null : document.querySelector("main .hero, .hero, main .lede");
       (heroEl || header).insertAdjacentElement("afterend", sub);
     };
     if (document.readyState === "loading") {
@@ -245,6 +271,16 @@
   drawer.innerHTML =
     '<div class="dhead"><span class="t">Navigation</span>' +
       '<button class="close" type="button" aria-label="Schliessen">×</button></div>' +
+    // Modi-Schalter (Lesemodus · Hell/Dunkel · Teilen): auf schmalen Schirmen
+    // ziehen sie aus der Kopfzeile hierher – die Leiste behält nur Marke + Menü
+    // (Fingerziel-Luft, B04); mit Wortmarke statt blossem Zeichen.
+    '<div class="dmodes" role="group" aria-label="Anzeige-Modi">' +
+      '<button class="read" type="button" aria-pressed="false" aria-label="Lesemodus – Fliesstext in der Leseschrift"><span class="ic" aria-hidden="true">a</span><span class="lb">Lesemodus</span></button>' +
+      // Kurzes Wort («Dunkel»/«Hell») – im Gruppenkontext ‹Anzeige-Modi› eindeutig,
+      // und die Reihe trägt so auch 320px-Schirme ohne Gedränge.
+      '<button class="theme" type="button" aria-label="Dunkel schalten"><span class="ic"></span><span class="lb">Dunkel</span></button>' +
+      '<button class="share" type="button" aria-label="Seite teilen – Link kopieren"><span class="ic">' + SHARE_SVG + '</span><span class="lb">Teilen</span></button>' +
+    '</div>' +
     '<div class="dsearch"><input type="search" class="dsnav-q" placeholder="Werkzeug suchen …" aria-label="Werkzeug suchen" autocomplete="off"></div>' +
     '<div class="body"></div>' +
     '<div class="foot"><a href="mailto:philipp.tok@goetheanum.ch?subject=Feedback%20Goetheanum%20Werkzeuge">Feedback geben</a> · <a href="' + ROOT + 'design-system/">Design-System</a></div>';
@@ -272,15 +308,45 @@
   function flash(msg) { toast.textContent = msg; toast.classList.add("show"); setTimeout(function () { toast.classList.remove("show"); }, 1400); }
 
   var btnAll = header.querySelector(".all");
-  var themeBtn = header.querySelector(".theme");
-  themeBtn.addEventListener("click", function () {
+  // --- Teilen: kopiert die KURZE Adresse des Werkzeugs (Alias /<slug>/) -------
+  function shareUrl() {
+    if (location.hostname === "werkzeuge.goetheanum.ch" && ACTIVE && location.pathname.indexOf("/apps/") === 0) {
+      return "https://werkzeuge.goetheanum.ch/" + ACTIVE + "/";
+    }
+    return location.href.split("#")[0];
+  }
+  function wireShare(shareBtn) {
+  shareBtn.addEventListener("click", function () {
+    var url = shareUrl();
+    var done = function () {
+      shareBtn.querySelector(".ic").innerHTML = CHECK_SVG;
+      shareBtn.classList.add("ok");
+      setTimeout(function () {
+        shareBtn.querySelector(".ic").innerHTML = SHARE_SVG;
+        shareBtn.classList.remove("ok");
+      }, 1400);
+    };
+    if (navigator.share && window.matchMedia && matchMedia("(pointer:coarse)").matches) {
+      navigator.share({ title: document.title, url: url }).catch(function () {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(done, function () {});
+    }
+  });
+  }
+  wireShare(header.querySelector(".share"));
+  wireShare(drawer.querySelector(".dmodes .share"));
+
+  function toggleTheme() {
     setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
-  });
+  }
+  header.querySelector(".theme").addEventListener("click", toggleTheme);
+  drawer.querySelector(".dmodes .theme").addEventListener("click", toggleTheme);
   updateThemeBtn();
-  readBtn = header.querySelector(".read");
-  readBtn.addEventListener("click", function () {
+  function toggleRead() {
     setRead(document.documentElement.getAttribute("data-read") !== "easy");
-  });
+  }
+  header.querySelector(".read").addEventListener("click", toggleRead);
+  drawer.querySelector(".dmodes .read").addEventListener("click", toggleRead);
   updateReadBtn();
   var worldsNav = header.querySelector(".worlds");
   var drawerBody = drawer.querySelector(".body");
@@ -397,9 +463,12 @@
     return g;
   }
 
-  // Öffentliche Reihenfolge (flach) – wie die Startseite. Unbekannte ans Ende.
-  var FLAT_ORDER = ["logo-generator", "signatur", "editor", "visitenkarten", "icons", "schriften",
-    "sektionsfarben", "uebersetzungen", "wallpaper", "powerpoint", "typografie", "design-system"];
+  // Öffentliche Reihenfolge (flach) – wie die Startseite; nur der Editor
+  // steht tiefer, direkt vor Wallpaper (noch nicht reif — Entscheid
+  // Auftraggeber, 8. Juli 2026). Unbekannte ans Ende.
+  var FLAT_ORDER = ["logo-generator", "signatur", "visitenkarten", "schriften", "icons",
+    "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint",
+    "editor", "wallpaper", "design-system"];
   var PUBLIC_CATS = WORLDS.reduce(function (a, w) { return a.concat(w.cats); }, []);
 
   function renderDrawer() {
@@ -436,12 +505,29 @@
   // --- Manifest laden --------------------------------------------------------
   fetch(TOOLS).then(function (r) { return r.json(); }).then(function (m) {
     ALL = m.tools || [];
+    // Sicherheitsnetz: Manifest-Kategorien ohne Welt werden automatisch eigene
+    // Backstage-Welten (Titel/Intro aus tools.json) — eine neue Kategorie im
+    // Manifest verschwindet damit nie mehr stillschweigend aus dem Menü.
+    var known = WORLDS.concat(INTERN_EXTRA).reduce(function (a, w) { return a.concat(w.cats); }, []);
+    (m.categories || []).forEach(function (c) {
+      if (c && c.id && known.indexOf(c.id) === -1) {
+        INTERN_EXTRA.push({ id: c.id, label: c.title || c.id, intro: c.intro || "", cats: [c.id] });
+      }
+    });
     PRIMARY.forEach(function (p) {
       var t = bySlug(p.slug);
       var a = el("a", null, p.label);
       a.href = t ? resolveHref(t.href) : HOME;
       worldsNav.appendChild(a);
     });
+    // Beta-Kennzeichen in der Kopfzeile: folgt dem Status im Manifest —
+    // Seiten mit status "beta" tragen die Marke neben dem Lockup, ohne
+    // dass die Seite selbst etwas setzen muss (eine Wahrheit: tools.json).
+    var active = ACTIVE && bySlug(ACTIVE);
+    if (active && active.status === "beta") {
+      var chip = el("span", "badge beta-chip", "Beta");
+      header.querySelector(".brand").insertAdjacentElement("afterend", chip);
+    }
     renderDrawer();
   }).catch(function () {
     drawerBody.innerHTML = '<p style="padding:22px;color:var(--muted)">Werkzeugliste konnte nicht geladen werden.</p>';

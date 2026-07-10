@@ -14,9 +14,9 @@ fi
 "$PY" "$ROOT/tools/typo-check.py"
 
 # 1b) Struktur-Konformität der vorgemerkten Seiten (Gestalt) – DS-Lint.
-#     Vorläufig BERICHTEND (blockiert nicht), solange der Backlog abgebaut wird.
-#     Sobald der Score 100% erreicht, das `|| true` entfernen → dann gate-fähig.
-"$PY" "$ROOT/tools/ds-lint.py" --staged || true
+#     BLOCKIEREND seit 10. Juli 2026 (Score 100 %, Beschluss Auftraggeber):
+#     Verstösse der Schwere ‹fehler› stoppen den Commit; Hinweise melden nur.
+"$PY" "$ROOT/tools/ds-lint.py" --staged
 
 # 2) Driftwächter Kanon ↔ Design-System – nur wenn eine der beteiligten
 #    Schichten betroffen ist (Tokens, Kanon, Regel-YAML, Handbuch).

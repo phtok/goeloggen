@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kampagne · Multiplikatoren · Goetheanum</title>
+<meta name="description" content="Kontaktprotokoll der Multiplikatoren – wer wen wann, mit Ergebnis und Status." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<link rel="stylesheet" href="campaign.css" />
+</head>
+<body>
+
+<!-- Kopfzeile + gemeinsame Kampagnen-Unterleiste (data-onpage). -->
+<script src="../../design-system/nav.js"
+        data-root="../../"
+        data-variant="werkzeug"
+        data-onpage="Cockpit:./|Aktivitäten:aktivitaeten.html|Kosten:kosten.html|Multiplikatoren:multiplikatoren.html|Links:../utm-generator/|Mail:../mail-editor/"></script>
+
+<main class="wrap">
+
+  <section class="lead">
+    <span class="kick">Kampagne · Sommer-Aktion 2026</span>
+    <h1 class="lead-title">Multiplikatoren</h1>
+    <p class="kampagne">Beziehungen pflegen und fortschreiben. Namen verdeckt, per Passwort sichtbar.</p>
+  </section>
+
+
+  <section id="multis">
+    <div class="shead"><h2>Multiplikatoren</h2><p>Wer hat wen wann kontaktiert – und was kam heraus? Erst den Multiplikator anlegen, dann über <q>Verlauf &amp; Kontakt</q> je Zeile jede Kontaktaufnahme nachtragen. Namen sind verdeckt (M-01 …); das kleine Passwort blendet sie ein.</p></div>
+    <div style="display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;margin-bottom:var(--s4)">
+      <button class="btn" type="button" id="muNamenBtn">Namen einblenden</button>
+      <span class="said" id="muSaid"></span>
+    </div>
+    <div class="tablewrap">
+      <table class="tarif">
+        <thead><tr><th>Multiplikator</th><th>Rolle / Funktion</th><th>Letzter Kontakt</th><th>Status</th><th class="num">Kontakte</th><th></th></tr></thead>
+        <tbody id="muBody"><tr><td class="empty" colspan="6">lädt …</td></tr></tbody>
+      </table>
+    </div>
+    <details class="zb-form">
+      <summary>Multiplikator anlegen</summary>
+      <div class="card soft">
+        <div class="grid">
+          <label class="field">
+            <span class="lab">Name (nur mit Passwort sichtbar)</span>
+            <input type="text" id="muName" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span class="lab">Rolle / Funktion / Organisation</span>
+            <input type="text" id="muRolle" placeholder="z. B. Redaktion Tageszeitung" />
+          </label>
+          <label class="field">
+            <span class="lab">Kürzel – wer legt an?</span>
+            <input type="text" id="muWer" placeholder="z. B. pt" autocomplete="off" />
+          </label>
+        </div>
+        <div style="display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;margin-top:var(--s4)">
+          <button class="btn primary" type="button" id="muAnlegenBtn">Anlegen</button>
+          <span class="said" id="muASaid"></span>
+        </div>
+        <p class="provisorisch" style="margin-top:var(--s3)">Der Name verlässt die Datenbank nur nach Passworteingabe – öffentlich erscheint die M-Nummer. Rolle und Verlauf sind offen sichtbar: dort keine Klarnamen notieren.</p>
+      </div>
+    </details>
+  </section>
+
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap" style="display:flex;flex-direction:column;gap:var(--s2)">
+    <div class="landing">
+      <span class="meta">Aktionsseiten</span>
+      <a class="btn" href="https://global-sommer2026.goetheanum.online" target="_blank" rel="noopener">Übersicht · 3 Monate gratis</a>
+      <a class="btn" href="https://ws-sommer2026.dasgoetheanum.com" target="_blank" rel="noopener">Wochenschrift</a>
+      <a class="btn" href="https://tv-sommer2026.goetheanum.tv" target="_blank" rel="noopener">goetheanum.tv</a>
+    </div>
+    <div class="frow">
+      <span><strong>Sommer-Zähler 2026</strong> · live aus dem Werkzeug-Backend · nur Summen, keine Personendaten</span>
+      <span><a href="../../design-system/">Design-System</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="campaign.js"></script>
+</body>
+</html>
