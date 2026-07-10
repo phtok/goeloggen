@@ -16,6 +16,44 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.9.1] – 2026-07-10
+
+### Die Maschinen bekommen Zähne: CI-Gate + blockierender Hook + Export-Konvention
+- **Was:** (1) **CI-Gate** `.github/workflows/pruefmaschinen.yml` — typo-check
+  (`--all`) und ds-lint laufen auf jedem PR und auf `main`; Schwere ‹fehler›
+  macht den Lauf rot. (2) Der Commit-Hook führt `ds-lint --staged` jetzt
+  **blockierend** (das vorgesehene `|| true` ist entfernt — der Score stand
+  bei 100 %). (3) **Export-Konvention:** erzeugte Versand-/Export-Artefakte
+  wohnen in Ordnern namens `mails/` oder `export/`; diese sind generell vom
+  Vertrag ausgenommen (ersetzt die Einzel-Ausnahme für den Mail-Editor).
+- **Warum:** Beschluss Auftraggeber, 10. Juli 2026, nach dem Score-Einbruch
+  durch die publizierten Versand-Mails: <q>automatisch mergen, wenn die
+  Prüfmaschinen grün sind</q> ist erst durchsetzbar, wenn die Maschinen
+  unabhängig vom lokalen Hook auf jedem PR laufen.
+
+## [1.9.0] – 2026-07-10
+
+### Spielraum & Welten + warme Stilprobe + Geltungsbereich Versand-Artefakte
+- **Was:** (1) Neuer Schaufenster-Abschnitt <q>Spielraum &amp; Welten</q> —
+  Dramaturgie-Leitsatz (ein Hero, eine Primärhandlung je Blick, eine
+  Akzentfläche je Bildschirmhöhe) und die Fest/Frei-Tabelle je Rolle
+  (Varianz-Entwurf, Ansätze 1–3, Beschluss 10. Juli 2026). (2) Welten-Mechanik
+  in `tokens.css`: `data-welt` schaltet Stimmungs-Tokens, nie Regeln; erste
+  Welt **warm** als Stilprobe (`stilprobe-warm.html`, Experiment): warmes
+  Papier #fbf7ee/#f3edde mit nachgedunkelten Tinten (muted 5.0:1, gold-ink
+  5.1:1 auf der Karte — ohne Nachdunkeln fielen beide unter 4.5:1).
+  (3) `geltungsbereich`: `apps/mail-editor/mails/` sind Versand-Artefakte
+  (E-Mail-HTML kann keine Includes tragen) — ausgenommen wie /assets/.
+  (4) `ds-lint` meldet ds-ok-Marker im falschen Format (DS00-Hinweis);
+  Signatur-Generator-Marker korrigiert, `btn-mini` auf ≥14px.
+- **Warum:** Score-Einbruch auf 67 % durch 20 publizierte Versand-Mails
+  (PR #341) + Marker-Wiederholungsfehler — der Vertrag kannte die
+  Artefakt-Klasse ‹Versand-HTML› nicht. Warme Flächen: Auftraggeber-Wunsch
+  nach einer Stimmungs-Variante aus dem My-Goetheanum-Entwurf.
+- **Ausserdem:** Die Perspektive `my-goetheanum.html` und das Lockup
+  `goetheanum-my.svg` sind entfernt (Entscheid: noch zu intern); die
+  App-Schale-Rollen bleiben im Fundament.
+
 ## [1.8.0] – 2026-07-10
 
 ### App-Schale (aus dem My-Goetheanum-Entwurf aufgenommen)

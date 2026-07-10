@@ -165,6 +165,13 @@ def lint_file(path, c):
     findings = []
     skip_lines = {lineno(full, m.start()) for m in re.finditer(r"#\s*ds-ok", full)}
 
+    # Ratifizierungs-Marker im FALSCHEN Format melden (»/* ds-ok: … */« ohne #):
+    # der Checker sieht so eine Ratifizierung nicht – Wiederholungsfehler (1.7.0).
+    for m in re.finditer(r"/\*\s*ds-ok", full):
+        if lineno(full, m.start()) not in skip_lines:
+            findings.append((lineno(full, m.start()), "DS00", "hinweis",
+                             "ds-ok-Marker im falschen Format – »# ds-ok« schreiben, sonst wirkungslos"))
+
     # DS01 – Pflicht-Includes
     for inc in c["includes"]["pflicht"]:
         base = os.path.basename(inc)

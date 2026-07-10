@@ -183,3 +183,19 @@
   --shadow-card:0 10px 30px rgba(0,0,0,.45);
   color-scheme:dark;
 }
+
+/* --- Welten (Dialekte) – erlaubte Varianz, Ansatz 1 ---------------------------
+   Eine Welt schaltet STIMMUNGS-Tokens um (Flächen, abgeleitete Tinten) – nie
+   Regeln, nie Grade, nie Abstände. Kontraste jeder Welt sind gerechnet, nicht
+   geschätzt (B02). Welten gelten nur im Hellen; Dunkel bleibt die eine Bühne.
+   Erste Welt: ‹warm› — Stilprobe (Experiment, nicht ratifiziert; siehe
+   design-system/stilprobe-warm.html und CHANGELOG). */
+:root[data-welt="warm"]:not([data-theme="dark"]){
+  --paper:#fbf7ee;              /* warmes Papier – ink 14.1:1 */
+  --soft:#f3edde;               /* warme Karte – ink 12.9:1 */
+  --field-bg:#fdfaf2;
+  --bar-bg:rgba(251,247,238,.9);
+  --line:rgba(74,58,26,.14); --line-soft:rgba(74,58,26,.08);
+  --muted:#616669;              /* nachgedunkelt: 4.98:1 auf --soft, 5.44:1 auf --paper */
+  --gold-ink:#7f5e22;           /* nachgedunkelt: 5.10:1 auf --soft, 5.57:1 auf --paper */
+}

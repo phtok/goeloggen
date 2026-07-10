@@ -86,6 +86,16 @@
       "such": "Farben Palette Tokens Hex RGB CMYK Markenfarben Neutrale Komponenten Fundament"
     },
     {
+      "slug": "stilprobe-warm",
+      "cat": "schau",
+      "status": "entwurf",
+      "tag": "Stilprobe",
+      "title": "Warme Flächen (Welt ‹warm›)",
+      "href": "design-system/stilprobe-warm.html",
+      "desc": "Experiment: das Fundament auf warmen Farbflächen – ein data-welt-Attribut, Kontraste gerechnet. Nichts davon ist beschlossen.",
+      "such": "Stilprobe warm Welt Flächen Farbklima Variante Dialekt"
+    },
+    {
       "slug": "sektionsfarben",
       "cat": "system",
       "status": "beta",

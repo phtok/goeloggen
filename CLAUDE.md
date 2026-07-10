@@ -81,8 +81,10 @@ für **jede** neue HTML-Seite oder jedes neue Werkzeug:
    werden schrittweise auf diese Schicht gehoben — neue Seiten starten richtig.)
 3. **Registrieren:** einen Eintrag in `tools.json` ergänzen (erscheint im Hub).
 4. **Hook aktiv halten:** `git config core.hooksPath tools/hooks` — beim Commit
-   laufen `tools/typo-check.py` (Sprache, blockiert bei ‹fehler›) **und**
-   `tools/ds-lint.py --staged` (Gestalt, vorerst berichtend). Vor dem Commit gilt
+   laufen `tools/typo-check.py` (Sprache) **und** `tools/ds-lint.py --staged`
+   (Gestalt) — beide **blockieren** bei ‹fehler› (Beschluss 10. Juli 2026).
+   Zusätzlich läuft dieselbe Prüfung als CI-Gate auf jedem PR
+   (`.github/workflows/pruefmaschinen.yml`). Vor dem Commit gilt
    weiterhin: betroffene Regel-IDs nennen — sprachlich (G/B) wie strukturell (DS).
 
 Die eingebauten Defaults in `base.css` setzen die Hausregeln bereits um (Trennung,
