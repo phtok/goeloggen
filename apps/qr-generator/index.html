@@ -79,6 +79,7 @@
   .codes .act{text-align:right;white-space:nowrap}
   .codes .mini{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 6px;min-height:var(--tap)}
   .codes .mini:hover{color:var(--blue)}
+  .codes .mini.weg:hover{color:var(--bad)}
   .codes td.dat{font-variant-numeric:tabular-nums;white-space:nowrap}
   .tablewrap{overflow-x:auto;margin-top:var(--s4)}
   .empty{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
@@ -234,6 +235,7 @@
             <span class="lab">Modulstil</span>
             <div class="seg" id="stilSeg" role="group" aria-label="Modulstil">
               <button type="button" data-stil="punkte" aria-pressed="true">Punkte</button>
+              <button type="button" data-stil="fliessend" aria-pressed="false">Fliessend</button>
               <button type="button" data-stil="weich" aria-pressed="false">Weich</button>
               <button type="button" data-stil="kanten" aria-pressed="false">Kanten</button>
             </div>
@@ -410,18 +412,48 @@
 
   // --- Gestalt: QR als SVG ------------------------------------------------------
   // Fehlerkorrektur Q (robust für Druck). Punkte berühren sich (r=0.5) → scannbar;
+  // Fliessend verschmilzt Nachbarn zu runden Formen (aussen wie innen gerundet);
   // Weich lässt minimale Fugen (0.94er-Module), Kanten ist der klassische Vollblock.
   function qrSvg(text, stilWahl, fg){
     var q = qrcode(0, 'Q'); q.addData(text); q.make();
     var n = q.getModuleCount(), pad = 4, S = n + pad * 2, p = [];
     function inFinder(r, c){ return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7); }
+    // Dunkel im Sinn der Modulfläche (Finder-Augen zählen nicht mit – die werden
+    // separat gesetzt und sollen nicht mit den Modulen verschmelzen).
+    function dunkel(r, c){ return r >= 0 && c >= 0 && r < n && c < n && q.isDark(r, c) && !inFinder(r, c); }
+    // Einheitszelle mit wählbaren Eckradien (im/gegen den Nachbarschaftsverbund).
+    function zelle(x, y, tl, tr, br, bl){
+      return 'M' + (x + tl) + ' ' + y +
+        'H' + (x + 1 - tr) + (tr ? 'A' + tr + ' ' + tr + ' 0 0 1 ' + (x + 1) + ' ' + (y + tr) : '') +
+        'V' + (y + 1 - br) + (br ? 'A' + br + ' ' + br + ' 0 0 1 ' + (x + 1 - br) + ' ' + (y + 1) : '') +
+        'H' + (x + bl)     + (bl ? 'A' + bl + ' ' + bl + ' 0 0 1 ' + x + ' ' + (y + 1 - bl) : '') +
+        'V' + (y + tl)     + (tl ? 'A' + tl + ' ' + tl + ' 0 0 1 ' + (x + tl) + ' ' + y : '') + 'Z';
+    }
     p.push('<rect width="' + S + '" height="' + S + '" fill="' + QR_BG + '"/>');
+    var teile = [], R = 0.5;
     for(var r = 0; r < n; r++){
       for(var c = 0; c < n; c++){
-        if(!q.isDark(r, c) || inFinder(r, c)) continue;
         var x = c + pad, y = r + pad;
+        if(stilWahl === 'fliessend' && !dunkel(r, c) && !inFinder(r, c)){
+          // Innenecken glätten: liegt eine helle Zelle im Winkel dreier dunkler
+          // Nachbarn, wird ihre Ecke konkav gefüllt – die Form fliesst.
+          if(dunkel(r - 1, c) && dunkel(r, c - 1) && dunkel(r - 1, c - 1))
+            teile.push('M' + x + ' ' + y + 'L' + (x + R) + ' ' + y + 'A' + R + ' ' + R + ' 0 0 0 ' + x + ' ' + (y + R) + 'Z');
+          if(dunkel(r - 1, c) && dunkel(r, c + 1) && dunkel(r - 1, c + 1))
+            teile.push('M' + (x + 1) + ' ' + y + 'L' + (x + 1) + ' ' + (y + R) + 'A' + R + ' ' + R + ' 0 0 0 ' + (x + 1 - R) + ' ' + y + 'Z');
+          if(dunkel(r + 1, c) && dunkel(r, c - 1) && dunkel(r + 1, c - 1))
+            teile.push('M' + x + ' ' + (y + 1) + 'L' + x + ' ' + (y + 1 - R) + 'A' + R + ' ' + R + ' 0 0 0 ' + (x + R) + ' ' + (y + 1) + 'Z');
+          if(dunkel(r + 1, c) && dunkel(r, c + 1) && dunkel(r + 1, c + 1))
+            teile.push('M' + (x + 1) + ' ' + (y + 1) + 'L' + (x + 1 - R) + ' ' + (y + 1) + 'A' + R + ' ' + R + ' 0 0 0 ' + (x + 1) + ' ' + (y + 1 - R) + 'Z');
+          continue;
+        }
+        if(!dunkel(r, c)) continue;
         if(stilWahl === 'punkte'){
           p.push('<circle cx="' + (x + 0.5) + '" cy="' + (y + 0.5) + '" r="0.5" fill="' + fg + '"/>');
+        } else if(stilWahl === 'fliessend'){
+          // Aussenecken nur runden, wo kein dunkler Nachbar anschliesst.
+          var o = dunkel(r - 1, c), u = dunkel(r + 1, c), li = dunkel(r, c - 1), re = dunkel(r, c + 1);
+          teile.push(zelle(x, y, (!o && !li) ? R : 0, (!o && !re) ? R : 0, (!u && !re) ? R : 0, (!u && !li) ? R : 0));
         } else if(stilWahl === 'weich'){
           p.push('<rect x="' + (x + 0.03) + '" y="' + (y + 0.03) + '" width="0.94" height="0.94" rx="0.28" fill="' + fg + '"/>');
         } else {
@@ -429,6 +461,7 @@
         }
       }
     }
+    if(teile.length) p.push('<path d="' + teile.join('') + '" fill="' + fg + '"/>');
     // Die drei Finder-Augen (dunkel · hell · dunkel); gerundet ausser bei Kanten.
     var rund = stilWahl === 'kanten' ? [0, 0, 0] : [2.3, 1.7, 1.0];
     [[0, 0], [0, n - 7], [n - 7, 0]].forEach(function(e){
@@ -661,12 +694,28 @@
   el('statBtn').addEventListener('click', function(){ zeigeStats(el('statCode').value); });
   el('statCode').addEventListener('keydown', function(ev){ if(ev.key === 'Enter') zeigeStats(this.value); });
 
+  // Löschen: Knopf nur im Backstage-Modus (Schalter aus nav.js), der echte
+  // Riegel ist das Team-Passwort in der RPC qr_link_loeschen.
+  function imBackstage(){ try { return localStorage.getItem('goeNavIntern') === '1'; } catch(e){ return false; } }
+  function loescheCode(code){
+    var pw = window.prompt('Team-Passwort, um „' + code + '“ endgültig zu löschen (Kurzlink und Zählung):');
+    if(pw === null || pw === '') return;
+    rpc('qr_link_loeschen', { p_code: code, p_passwort: pw })
+      .then(function(ergebnis){
+        if(ergebnis === 'ok'){ statSay('Code „' + code + '“ gelöscht.'); el('statDetail').hidden = true; ladeRegister(); }
+        else if(ergebnis === 'passwort'){ statSay('Falsches Passwort – nichts gelöscht.', true); }
+        else { statSay('Code „' + code + '“ nicht gefunden.', true); }
+      })
+      .catch(function(){ statSay('Löschen nicht erreichbar.', true); });
+  }
+
   // Das offene Register: alle angelegten Kurzlinks mit Zählung (eine RPC-Runde).
   function ladeRegister(){
     var body = el('codesBody');
     rpc('qr_links_public').then(function(rows){
       body.innerHTML = '';
       if(!rows || !rows.length){ body.innerHTML = '<tr><td class="empty" colspan="6">Noch keine Codes angelegt.</td></tr>'; return; }
+      var backstage = imBackstage();
       rows.forEach(function(x){
         var tr = document.createElement('tr');
         tr.innerHTML = '<td class="cd"></td><td class="zi"></td><td class="dat"></td><td class="num"></td><td class="dat"></td><td class="act"></td>';
@@ -681,6 +730,13 @@
         zeig.type = 'button'; zeig.className = 'mini'; zeig.textContent = 'Verlauf';
         zeig.addEventListener('click', function(){ zeigeStats(x.code); el('statDetail').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
         tr.children[5].appendChild(zeig);
+        if(backstage){
+          var weg = document.createElement('button');
+          weg.type = 'button'; weg.className = 'mini weg'; weg.textContent = 'Löschen';
+          weg.setAttribute('aria-label', 'Kurzlink löschen (Team-Passwort nötig)');
+          weg.addEventListener('click', function(){ loescheCode(x.code); });
+          tr.children[5].appendChild(weg);
+        }
         body.appendChild(tr);
       });
     }).catch(function(){ body.innerHTML = '<tr><td class="empty" colspan="6">Register nicht ladbar.</td></tr>'; });
