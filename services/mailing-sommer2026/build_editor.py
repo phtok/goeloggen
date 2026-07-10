@@ -239,6 +239,10 @@ def main():
 <link rel="stylesheet" href="../../design-system/nav.css">
 <style>
 /* Nur editor-eigene Gestalt; alles Gemeinsame aus base.css, nur Tokens (DS02). */
+/* Arbeitsfläche statt Lesespalte: die Galerie darf das Fenster nutzen (Lede
+   behält ihr Lesemass); Karten wachsen mit dem Schirm mit. */
+main.wrap{{max-width:min(1760px,96vw)}}
+main{{--mailw:clamp(340px,24vw,480px)}}
 .lead{{padding:clamp(24px,5vw,44px) 0 var(--s4)}}
 .controls{{display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap;margin-top:var(--s4)}}
 .controls .lab{{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}}
@@ -252,11 +256,11 @@ def main():
 .shared{{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--s3);margin-bottom:var(--s4)}}
 .waves{{display:flex;gap:var(--s6);overflow-x:auto;padding:var(--s2) 0 var(--s5)}}
 .wave{{display:flex;gap:var(--s3)}}
-.mail{{width:340px;flex:0 0 auto;background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden}}
+.mail{{width:var(--mailw);flex:0 0 auto;background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden}}
 .mhd{{display:flex;align-items:center;background:var(--ink);color:var(--paper);font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;padding:6px 12px}}
 .mhd a{{margin-left:auto;color:inherit;text-decoration:none;border:1px solid var(--paper);border-radius:999px;padding:1px 9px;font-weight:400}}
 .mhd a:hover{{background:var(--paper);color:var(--ink)}}
-.mail iframe{{width:100%;height:520px;border:0;display:block;background:#F6F4F2}} /* # ds-ok Mail-Grund (Artefakt) */
+.mail iframe{{width:100%;height:calc(var(--mailw)*1.55);border:0;display:block;background:#F6F4F2}} /* # ds-ok Mail-Grund (Artefakt) */
 .flds{{padding:var(--s2) var(--s3)}}
 .fld{{border-top:1px solid var(--line-soft);padding:8px 4px}} .fld:first-child{{border-top:0}}
 .fh{{display:flex;align-items:center;gap:var(--s2)}}
