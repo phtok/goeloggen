@@ -47,9 +47,12 @@ Zählung. Wer hier einen Kurzlink anlegt, veröffentlicht ihn – für nicht
 
 ## Bewusste Entscheide (v1)
 
-- **Keine Lösch-RPC:** ein offener Löschweg würde gedruckte Codes gefährden.
-  Falls nötig, später als geschützter Weg (Muster Passwort-Hash wie bei den
-  Multiplikatoren).
+- **Keine Lösch-RPC, Löschen auf Zuruf** (Beschluss 10.7.2026): ein offener
+  Löschweg würde gedruckte Codes gefährden. Codes werden bei Bedarf direkt im
+  Backend gelöscht (Supabase-SQL: `delete from qr_links where code = '…'`;
+  zugehörige Zählung in `link_hits` gleich mit). Falls später doch ein Knopf
+  gewünscht ist: geschützter Weg nach dem Muster Passwort-Hash der
+  Multiplikatoren.
 - **Fallback unbekannter Codes:** bleibt vorerst die Sommer-Landingpage (in
   `go/index.ts`); nach der Kampagne auf eine neutrale Seite stellen.
 - **Geparkt für v2:** Logo in der QR-Mitte (erzwingt Fehlerkorrektur H und
