@@ -6,9 +6,11 @@ Link und Anmeldung AUSSCHLIESSLICH ueber vier Felder:
     utm_campaign + utm_source + utm_medium + utm_content
 landing/sprache/url sind reine Register-Etiketten und zaehlen NICHT mit.
 
-utm_content-Regel (deckungsgleich mit den bereits eingespielten 24 Zeilen):
-    "w{n}_{segment}"                      bei einem Button
-    "w{n}_{segment}_{ws|tv}"              bei zwei Buttons (nur noabo w1/w3)
+utm_content-Regel (deckungsgleich mit dem eingespielten Register):
+    "w{n}_{segment}"                      bei einem Button (Stand 10.7.: überall)
+    "w{n}_{segment}_{ws|tv}"              bei zwei Buttons (Altbestand noabo w1/w3;
+                                          Zeilen bleiben im Register, Mails nutzen
+                                          seit dem Ein-Button-Entscheid die Übersicht)
 
 `python3 links.py` leitet alle Register-Zeilen aus heroes.json/config.json ab
 (Wellenplan × CTA-Ziele je Welle × Sprachen) — zum Abgleich mit dem Register.

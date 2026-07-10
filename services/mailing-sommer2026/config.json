@@ -54,11 +54,19 @@
         "gtv"
       ],
       "wellen_ctas": {
-        "_hinweis": "CTA-Ziele je Welle — deckungsgleich mit dem eingespielten Register (w1/w3 zwei Buttons ws+tv, w2/w3b ein Button Übersicht). Nicht ändern, ohne das Register mitzuziehen.",
-        "w1": ["wos", "gtv"],
-        "w2": ["uebersicht"],
-        "w3": ["wos", "gtv"],
-        "w3b": ["uebersicht"]
+        "_hinweis": "EIN Button je Welle -> Übersicht (Entscheid 10.7.: die Wahl wandert aus der Mail in den Browser). Register um w1_noabo/w3_noabo erweitert; die alten Zwei-Button-Zeilen (w1/w3_noabo_ws|tv) bleiben als Altbestand stehen. VORAUSSETZUNG: die Übersichts-Seite muss utm_* an die Zielseiten weiterreichen, sonst ist die gesamte NoAbo-Attribution blind.",
+        "w1": [
+          "uebersicht"
+        ],
+        "w2": [
+          "uebersicht"
+        ],
+        "w3": [
+          "uebersicht"
+        ],
+        "w3b": [
+          "uebersicht"
+        ]
       }
     },
     "nurtv": {

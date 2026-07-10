@@ -48,11 +48,13 @@ Betreff-Alternativen (`wellen.*.alt`) = Munition für AC-Split (Nicht-Öffner).
 ## Attribution / Links (verifiziert 9.7. gegen das Live-Register)
 Cockpit `sommer2026_links_public()` matcht nur über utm_campaign+utm_source+utm_medium+utm_content.
 Fix: utm_source=mailing, utm_medium=email, utm_campaign=summer26_trial. `links.py` erzeugt sie aus
-(segment, welle, ziel, sprache); `python3 links.py` leitet die 24 Registerzeilen ab — deckungsgleich
-mit dem eingespielten Register. **noabo w1/w3 haben ZWEI Buttons** (`w{n}_noabo_ws` + `w{n}_noabo_tv`),
-w2/w3b einen (Übersicht) — das Register kennt kein `w1_noabo`/`w3_noabo`, also nie auf einen Button
-reduzieren, ohne das Register mitzuziehen. **make-or-break vor Versand:** Landingpage muss die vier
-utm_* an das Paperform weiterreichen (Hidden Fields), sonst 0 Abschlüsse trotz Anmeldungen.
+(segment, welle, ziel, sprache); `python3 links.py` leitet die 20 aktiven Registerzeilen ab.
+**Ein-Button-Entscheid (10.7.):** noabo führt in ALLEN Wellen genau einen Button zur Übersicht
+(`w{n}_noabo`); das Register wurde um `w1_noabo`/`w3_noabo` erweitert, die alten Zwei-Button-Zeilen
+(`w{n}_noabo_ws|tv`) bleiben als Altbestand stehen. **make-or-break vor Versand:** (1) Die WS-Seite
+reicht utm_* via Paperform `prefill-inherit` weiter (verifiziert 10.7.). (2) Die **Übersichts-Seite
+muss utm_* an ihre zwei Ausgangs-Links anhängen** — ohne diesen Fix ist die gesamte NoAbo-Attribution
+blind (Snippet siehe To-do). (3) GTV-Anmeldedialog: utm-Durchreichung unverifiziert.
 
 ## Der Editor (Gegenlesen)
 `apps/mail-editor/` (Hub-Kategorie «Kampagne», intern): DE/EN-Umschalter, oben **Sammelansicht
@@ -76,25 +78,24 @@ Versand ab Engagement-Segment, gestaffelt; Nicht-Öffner >12 Mt. weglassen.
 Merge-Tags/Abmeldelink in AC ersetzen `%UNSUBSCRIBELINK%`.
 
 ## Offen
-- [ ] **Attribution NoAbo w2/w3b (make-or-break):** Die Übersichts-Landingpage
+- [ ] **VORAUSSETZUNG NoAbo (make-or-break, vor 14.7.):** Die Übersichts-Landingpage
       (global-sommer2026.goetheanum.online) reicht die utm_* NICHT an die verlinkten
-      Zielseiten weiter (nackte hrefs, kein Query-Forwarding; geprüft 10.7.) — Anmeldungen
-      aus w2/w3b sind so im Cockpit unsichtbar. Fix auf der Übersicht: `location.search`
-      an beide Ausgangs-Links anhängen. (WS-Seite selbst ist sauber: Paperform-Buttons
-      mit `prefill-inherit`.)
+      Zielseiten weiter (nackte hrefs; geprüft 10.7.). Seit dem Ein-Button-Entscheid
+      hängt daran die GESAMTE NoAbo-Attribution. Fix dort (beide Sprachfassungen):
+      `location.search` an die zwei Ausgangs-Links anhängen — Snippet liegt im
+      Zusatz-Auftrag für Chrome-Claude. Danach Klickpfad einmal live testen.
 - [ ] **Attribution GTV prüfen:** tv-sommer2026 hat kein Paperform; der Anmelde-Dialog
       (uscreen/goetheanum.tv) ist clientseitig — ob utm_* den Abschluss erreichen, ist
       unverifiziert. Ohne das bleiben alle gtv-Register-Zeilen ohne Abschlüsse.
-- [ ] **Kleinzeilen an echte Mechanik angleichen** (Entscheid Ph ausstehend): WS-Seite =
-      Kündigungsmodell («die ersten drei Monate in jedem Fall kostenlos, jederzeit kündbar»);
-      die Übersicht behauptet dagegen «enden ohne Verpflichtung» — Landingpage-Widerspruch
-      dort auflösen, Mails auf die eine wahre Formel ziehen.
+- [ ] **Landingpage-Widerspruch Übersicht:** Dort steht «enden ohne Verpflichtung — oder
+      Sie bleiben dabei» neben «jederzeit kündbar»; die WS-Seite ist eindeutig
+      Kündigungsmodell. Die Mails folgen seit 10.7. der einen Formel («Die ersten drei
+      Monate kostenlos · jederzeit kündbar») — die Übersichts-Zeile entsprechend anpassen.
 - [ ] **Onboarding-Strecke nach dem 8. August** (Trial→Paid, August–November): Willkommen
       mit Inhalts-Empfehlungen → Mid-Trial-Impuls → Erinnerung vor Ablauf. Grösster
       Conversion-Hebel laut INMA/NZZ-Learnings; als neue heroes.json/config.json auf
       derselben Fabrik bauen.
 - [ ] Wellen-Copy w2/w3/w3b feinschleifen (Kolleg:innen via Editor).
-- [ ] Zwei-Button-Labels noabo w1/w3 gegenlesen («Lesen wählen →» / «Sehen wählen →»).
 - [ ] Segment `beides` = geparkte Empfehlungsmail für Doppelabonnenten (später).
 - [ ] Nach Merge: `python3 build_editor.py --verify` (prüft Editor + alle Bild-URLs live),
       dann AC bestücken.
