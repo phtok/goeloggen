@@ -87,13 +87,25 @@ Merge-Tags/Abmeldelink in AC ersetzen `%UNSUBSCRIBELINK%`.
 - [ ] **Klick-Test im echten Browser** (Rest der Voraussetzung): Übersicht mit utm-Test-URL
       öffnen, beide Angebots-Links müssen die vier Parameter tragen (Schritt 5 des
       Paperform-Prüfauftrags deckt das mit ab). Erst danach Bulk-Tag «S26-Start».
-- [ ] **Attribution GTV — halb verifiziert (10.7.):** Der Anmelde-Dialog führt in den
-      uscreen-Checkout (goetheanum.tv/checkout/new?o=84317 monatlich CHF 14 / o=84322
-      jährlich CHF 140) und die utm_* werden in die Checkout-URL übernommen. OFFEN: ob
-      uscreen die Parameter beim Abschluss speichert/weitergibt (uscreen↔AC-Integration) —
-      beim Betreiber der Integration klären, sonst bleiben gtv-Registerzeilen ohne Abschlüsse.
-- [ ] **Paperform verifizieren:** Hidden Fields utm_* + URL-Prefill + Integrations-Mapping
-      in sommer2026-eur-de/-en prüfen, Ende-zu-Ende-Testeintrag (Prompt liegt bereit).
+- [x] **Paperform-Kette PRODUKTIV BEWIESEN (10.7., ohne Testeintrag):**
+      `sommer2026_signups` enthält echte Paperform-Anmeldungen MIT utm-Werten
+      (instagram/facebook/Newsletter, jüngste 10.7.) — Hidden Fields → Webhook →
+      Cockpit funktioniert Ende-zu-Ende. Es gibt VIER Formulare (chf/eur × de/en,
+      alle mit korrekten utm-Hidden-Fields); die Seite wählt zur Laufzeit nach Geo
+      ({CH: chf, INTL: eur}). Prefill ist auf BEIDEN Seiten korrekt gebaut:
+      DE-Popup mit `prefill-inherit` (leeres Attribut = aktiv, embed.js liest beide
+      Schreibweisen), EN via JS-API (`prefillInherit:true` + explizite Werte;
+      nackter <a> nur No-JS-Fallback). Kein Testeintrag nötig.
+- [ ] **Attribution GTV — Stand 10.7.:** uscreen-Anmeldungen fliessen bereits ins
+      Cockpit (source=uscreen in signups/ingest_raw), aber der uscreen-Webhook trägt
+      KEIN utm (Payload-Keys geprüft; `offer_id` ist enthalten — auch 85071/85142 im
+      Feed, Kampagnen-Exklusivität von 84317/84322 also KLÄREN). utm liegt laut
+      Uscreen-Doku am Kundendatensatz (People-CSV-Export, first touch, nur Web) —
+      Wellen-Zuordnung TV = nach dem 8.8. per CSV-Export/E-Mail-Join oder Advanced
+      Analytics. Uscreen-Prüfauftrag (Prompt) klärt Offers + AC-Tag-Latenz.
+- [ ] **AC-Mapping der utm-Felder** in der Paperform-Integration («Failed to load»
+      beim Prüfen) — erneut laden; für die Attribution unkritisch (läuft über
+      Supabase), fürs AC-Reporting nice-to-have.
 - [x] GTV-FAQ bestätigt Kündigungsmodell («läuft Ihr Abo regulär weiter … Kündigung vor
       Ablauf der Testphase») — deckungsgleich mit WS-Seite und den Mail-Kleinzeilen.
 - [ ] **Onboarding-Strecke nach dem 8. August** (Trial→Paid, August–November): Willkommen
