@@ -79,18 +79,22 @@ Merge-Tags/Abmeldelink in AC ersetzen `%UNSUBSCRIBELINK%`.
 
 ## Offen
 - [ ] **VORAUSSETZUNG NoAbo (make-or-break, vor 14.7.):** Die Übersichts-Landingpage
-      (global-sommer2026.goetheanum.online) reicht die utm_* NICHT an die verlinkten
-      Zielseiten weiter (nackte hrefs; geprüft 10.7.). Seit dem Ein-Button-Entscheid
-      hängt daran die GESAMTE NoAbo-Attribution. Fix dort (beide Sprachfassungen):
-      `location.search` an die zwei Ausgangs-Links anhängen — Snippet liegt im
-      Zusatz-Auftrag für Chrome-Claude. Danach Klickpfad einmal live testen.
-- [ ] **Attribution GTV prüfen:** tv-sommer2026 hat kein Paperform; der Anmelde-Dialog
-      (uscreen/goetheanum.tv) ist clientseitig — ob utm_* den Abschluss erreichen, ist
-      unverifiziert. Ohne das bleiben alle gtv-Register-Zeilen ohne Abschlüsse.
-- [ ] **Landingpage-Widerspruch Übersicht:** Dort steht «enden ohne Verpflichtung — oder
-      Sie bleiben dabei» neben «jederzeit kündbar»; die WS-Seite ist eindeutig
-      Kündigungsmodell. Die Mails folgen seit 10.7. der einen Formel («Die ersten drei
-      Monate kostenlos · jederzeit kündbar») — die Übersichts-Zeile entsprechend anpassen.
+      (global-sommer2026.goetheanum.online, gebaut mit Lovable) reicht die utm_* NICHT
+      an die Zielseiten weiter — bestätigt 10.7. im Browser: alle vier Angebots-Links je
+      Sprachseite (Karten + Footer) sind nackte hrefs. Seit dem Ein-Button-Entscheid hängt
+      daran die GESAMTE NoAbo-Attribution. **Fix im Lovable-Backend** (Prompt liegt bereit):
+      Query-Weitergabe an alle Angebots-Links + Satz-Korrektur («enden ohne Verpflichtung»
+      → «jederzeit kündbar») + **/en-Bug**: die EN-Übersicht verlinkt heute die DEUTSCHEN
+      Zielseiten statt ws-en-/tv-en-. Danach Klickpfad Ende-zu-Ende testen.
+- [ ] **Attribution GTV — halb verifiziert (10.7.):** Der Anmelde-Dialog führt in den
+      uscreen-Checkout (goetheanum.tv/checkout/new?o=84317 monatlich CHF 14 / o=84322
+      jährlich CHF 140) und die utm_* werden in die Checkout-URL übernommen. OFFEN: ob
+      uscreen die Parameter beim Abschluss speichert/weitergibt (uscreen↔AC-Integration) —
+      beim Betreiber der Integration klären, sonst bleiben gtv-Registerzeilen ohne Abschlüsse.
+- [ ] **Paperform verifizieren:** Hidden Fields utm_* + URL-Prefill + Integrations-Mapping
+      in sommer2026-eur-de/-en prüfen, Ende-zu-Ende-Testeintrag (Prompt liegt bereit).
+- [x] GTV-FAQ bestätigt Kündigungsmodell («läuft Ihr Abo regulär weiter … Kündigung vor
+      Ablauf der Testphase») — deckungsgleich mit WS-Seite und den Mail-Kleinzeilen.
 - [ ] **Onboarding-Strecke nach dem 8. August** (Trial→Paid, August–November): Willkommen
       mit Inhalts-Empfehlungen → Mid-Trial-Impuls → Erinnerung vor Ablauf. Grösster
       Conversion-Hebel laut INMA/NZZ-Learnings; als neue heroes.json/config.json auf
