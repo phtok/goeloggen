@@ -46,13 +46,24 @@ welcher Kanal. Die Ingestion (Paperform / Uscreen) schreibt das mit; der
 Zielmarken) im `CONFIG`-Block der Seite; daraus rechnet das Cockpit Kosten je Abo
 (CPA) und den Rückfluss je € Kosten.
 
-## Wirkungskette und Massnahmen-Protokoll
+## Wirkungskette und Aktivitäten-Protokoll
 
-Das Cockpit liest die Aktion als **Kette**, nicht als Einzelzahlen:
-**Sichtbarkeit → Aktivierung → Wirkung → Bindung** (`sommer2026_trichter`).
-Sichtbarkeit (Reichweite) und Aktivierung (Klicks) kommen aus dem
-**Massnahmen-Protokoll** `sommer2026_massnahmen` – eine Zeile je Massnahme
-(Newsletter, Inserat, Post) mit Datum, `rolle` (Hauptaufgabe), Kosten, Reichweite,
+Das Cockpit liest die Aktion als **Kette gemessener Zahlen**, nicht als
+Einzelwerte: **Reichweite → Klicks → Abschlüsse → Geblieben**
+(`sommer2026_trichter`). Alle vier Stufen sind gemessen, **nicht** eine im
+Eintrag gewählte Kategorie: Reichweite = Summe der `reichweite`, Klicks = Summe
+der `klicks` (beide aus den Aktivitäten); Abschlüsse = Anzahl Anmeldungen,
+Geblieben = Anmeldungen mit Status `bleibt` (beide live aus `sommer2026_signups`).
+Darum zeigt der Trichter zusätzlich die **Reichweite je Kanal** (Social,
+Newsletter, Popup …), client-seitig aus den Aktivitäten summiert. Reichweite und
+Klicks werden direkt beim Eintrag der Aktivität erfasst (oder später über
+Bearbeiten). Das frühere Feld „Aufgabe der Aktivität" (`rolle`) ist aus der
+Oberfläche entfernt, weil es dieselben vier Wörter trug wie die Trichterstufen
+und so den Eindruck erweckte, es steuere die Zählung – die Spalte bleibt in der
+DB, wird aber nicht mehr gepflegt.
+
+Quelle ist das **Aktivitäten-Protokoll** `sommer2026_massnahmen` – eine Zeile je
+Aktivität (Newsletter, Inserat, Post) mit Datum, Kanal, Kosten, Reichweite,
 Klicks und **internen** Notizen (`beobachtung` / `entscheidung`). Die internen
 Freitext-Spalten verlassen die DB **nie**: der öffentliche RPC
 `sommer2026_massnahmen_public` gibt nur die kuratierten Zahlen zurück. So wird CPA

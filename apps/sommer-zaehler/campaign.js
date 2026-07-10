@@ -145,19 +145,26 @@
     });
   }
 
-  // ── Wirkungskette (Trichter) ───────────────────────────────────────────────
+  // ── Wirkungskette: Reichweite → Klicks → Abschlüsse → Geblieben ─────────────
+  // Alle vier Stufen sind GEMESSENE Zahlen, nicht die im Eintrag gewählte Aufgabe:
+  // Reichweite/Klicks summiert aus den Aktivitäten, Abschlüsse/Geblieben live aus
+  // den Anmeldungen. Darum tragen Kanäle mit Reichweite direkt hier bei.
   var TRICHTER = {
-    sichtbarkeit: { name:'Sichtbarkeit', frage:'wahrgenommen',        cls:'s1' },
-    aktivierung:  { name:'Aktivierung',  frage:'Interesse, Klick',    cls:'s2' },
-    wirkung:      { name:'Wirkung',      frage:'Abschluss',           cls:'s3' },
-    bindung:      { name:'Bindung',      frage:'bleibt zahlend',      cls:'s4' }
+    sichtbarkeit: { name:'Reichweite', frage:'Menschen erreicht',   cls:'s1' },
+    aktivierung:  { name:'Klicks',     frage:'haben geklickt',       cls:'s2' },
+    wirkung:      { name:'Abschlüsse', frage:'Abo gestartet',        cls:'s3' },
+    bindung:      { name:'Geblieben',  frage:'nach 3 Monaten dabei', cls:'s4' }
   };
-  function renderFunnel(trichter){
+  function renderFunnel(trichter, massnahmen){
     if (!el('funnel')) return;
     var host = el('funnel'); host.innerHTML = '';
     var vals = {}; (trichter || []).forEach(function(r){ vals[r.stufe] = Number(r.wert) || 0; });
     var order = ['sichtbarkeit','aktivierung','wirkung','bindung'];
     var max = order.reduce(function(m, s){ return Math.max(m, vals[s] || 0); }, 0) || 1;
+    // Umwandlung je Stufe gegen die vorige gemessene Grösse (Klickrate, Abschlussrate, Bleibequote).
+    var rate = { aktivierung: vals.sichtbarkeit > 0 ? vals.aktivierung / vals.sichtbarkeit : null,
+                 wirkung:     vals.aktivierung  > 0 ? vals.wirkung / vals.aktivierung   : null,
+                 bindung:     vals.wirkung      > 0 ? vals.bindung / vals.wirkung       : null };
     order.forEach(function(s){
       var meta = TRICHTER[s]; var v = vals[s] || 0;
       var lvl = document.createElement('div'); lvl.className = 'lvl';
@@ -165,15 +172,42 @@
         '<div class="ftrack ' + meta.cls + '"><span></span></div>';
       var nm = lvl.querySelector('.fname'); nm.textContent = meta.name;
       var rr = document.createElement('span'); rr.className = 'r'; rr.textContent = meta.frage; nm.appendChild(rr);
-      lvl.querySelector('.fval').textContent = fmt(v);
+      var vtxt = fmt(v);
+      if (rate[s] != null) vtxt += '  ·  ' + Math.round(rate[s] * 100) + ' %';
+      lvl.querySelector('.fval').textContent = vtxt;
       lvl.querySelector('.ftrack > span').style.width = Math.max(3, Math.round(v / max * 100)) + '%';
       host.appendChild(lvl);
     });
-    if((vals.sichtbarkeit || 0) === 0 && (vals.aktivierung || 0) === 0){
-      var note = document.createElement('div'); note.className = 'fnote';
-      note.textContent = 'Sichtbarkeit und Aktivierung erscheinen, sobald Reichweite und Klicks im Aktivitäten-Protokoll erfasst sind. Wirkung und Bindung zählen bereits live aus den Anmeldungen.';
-      host.appendChild(note);
+    // Reichweite je Kanal – aus den Aktivitäten summiert (Social, Newsletter, …).
+    var reach = {}, klick = {};
+    (massnahmen || []).forEach(function(m){
+      var r = Number(m.reichweite) || 0, k = Number(m.klicks) || 0, kn = m.kanal || 'andere';
+      if (r) reach[kn] = (reach[kn] || 0) + r;
+      if (k) klick[kn] = (klick[kn] || 0) + k;
+    });
+    var kanalItems = Object.keys(reach).map(function(kn){ return { kanal:kn, reach:reach[kn], klick:klick[kn] || 0 }; })
+                                       .sort(function(a, b){ return b.reach - a.reach; });
+    if (kanalItems.length){
+      var kmax = kanalItems.reduce(function(m, x){ return Math.max(m, x.reach); }, 0) || 1;
+      var box = document.createElement('div'); box.className = 'reach-kanal';
+      var head = document.createElement('div'); head.className = 'rk-h'; head.textContent = 'Reichweite je Kanal';
+      box.appendChild(head);
+      kanalItems.forEach(function(x){
+        var row = document.createElement('div'); row.className = 'stream';
+        row.innerHTML = '<div class="top2"><span class="name"></span>' +
+          '<span class="val"><b></b> <span class="g"></span></span></div>' +
+          '<div class="track"><span></span></div>';
+        row.querySelector('.name').textContent = KANAL_LABEL[x.kanal] || x.kanal;
+        row.querySelector('.val b').textContent = fmt(x.reach);
+        row.querySelector('.val .g').textContent = x.klick ? (fmt(x.klick) + ' Klicks') : '';
+        row.querySelector('.track > span').style.width = Math.max(3, Math.round(x.reach / kmax * 100)) + '%';
+        box.appendChild(row);
+      });
+      host.appendChild(box);
     }
+    var note = document.createElement('div'); note.className = 'fnote';
+    note.textContent = 'Reichweite und Klicks kommen aus den Aktivitäten – je Eintrag erfassen (auch später über Bearbeiten). Abschlüsse und Geblieben zählt das Cockpit live aus den Anmeldungen.';
+    host.appendChild(note);
   }
 
   // ── Attribution nach Motiv (utm_content) ───────────────────────────────────
@@ -199,8 +233,7 @@
     });
   }
 
-  // ── Massnahmen-Protokoll ────────────────────────────────────────────────────
-  var ROLLE_LABEL = { sichtbarkeit:'Sichtbarkeit', aktivierung:'Aktivierung', wirkung:'Wirkung', bindung:'Bindung' };
+  // ── Aktivitäten-Protokoll ───────────────────────────────────────────────────
   var KANAL_LABEL = { newsletter:'Newsletter', mailer:'Mailing', flyer:'Flyer/Stand', social:'Social Media', popup:'Popup', website:'Website', empfehlung:'Empfehlung', andere:'Andere' };
   // ── Zeitband: Phasen × Wochen × Kanäle ─────────────────────────────────────
   // Phasen der Aktion (anpassbar): Auftakt → Verdichtung → Schlussspurt.
@@ -213,7 +246,6 @@
     ['social', 'Social'], ['newsletter', 'Newsletter'], ['mailer', 'Mailing/Post'], ['flyer', 'Flyer/Stand'],
     ['popup', 'Popup'], ['website', 'Website'], ['empfehlung', 'Empfehlung'], ['andere', 'Anderes']
   ];
-  var ROLLEN_LABEL = { sichtbarkeit:'Sichtbarkeit', aktivierung:'Aktivierung', wirkung:'Wirkung', bindung:'Bindung' };
 
   function zbWochen(){
     // Montagsraster über den Aktionszeitraum.
@@ -275,7 +307,7 @@
           if ((m.kanal || 'andere') !== k[0] || !m.tag) return;
           var d = new Date(m.tag + 'T00:00:00');
           if (d < von || d > bis) return;
-          var det = [ROLLEN_LABEL[m.rolle] || ''];
+          var det = [];
           if (m.ersteller) det.push('Kürzel ' + m.ersteller);
           if (m.reichweite) det.push('Reichweite ' + Number(m.reichweite).toLocaleString('de-CH'));
           if (m.klicks) det.push('Klicks ' + Number(m.klicks).toLocaleString('de-CH'));
@@ -283,7 +315,7 @@
           var span = document.createElement('span');
           span.className = 'zb-chip';
           span.title = m.massnahme + ' – ' + det.filter(Boolean).join(' · ');
-          span.innerHTML = '<span class="zr ' + (m.rolle || 'wirkung') + '"></span><span class="zt">' + zbTag(d) + '</span>';
+          span.innerHTML = '<span class="zr"></span><span class="zt">' + zbTag(d) + '</span>';
           span.appendChild(document.createTextNode(m.massnahme));
           chips += span.outerHTML;
         });
@@ -293,9 +325,7 @@
     });
 
     tbl.innerHTML = '<thead>' + h1 + h2 + '</thead><tbody>' + body + '</tbody>';
-    el('zbLegende').innerHTML = Object.keys(ROLLEN_LABEL).map(function(r){
-      return '<span><span class="zr ' + r + '" style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px"></span>' + ROLLEN_LABEL[r] + '</span>';
-    }).join('') + '<span>Jeder Punkt = eine Aktivität; Details beim Überfahren.</span>';
+    el('zbLegende').innerHTML = '<span>Zeilen = Kanal, Spalten = Woche. Jeder Punkt eine Aktivität; Reichweite, Klicks und Kosten beim Überfahren.</span>';
   }
 
   // Eintragen/Bearbeiten: offener Schreibweg (Muster Link-Register),
@@ -306,11 +336,13 @@
     var titel = (el('mfTitel').value || '').trim();
     var wer = (el('mfWer').value || '').trim();
     if (!el('mfTag').value || !titel || !wer){ sagen('Datum, Aktivität und Kürzel sind Pflicht.', true); return; }
+    var zahl = function(id){ var e = el(id); return (e && e.value !== '') ? Math.max(0, Math.round(Number(e.value) || 0)) : null; };
     var istEdit = mfEditId != null;
     var params = {
       p_tag: el('mfTag').value, p_massnahme: titel,
-      p_kanal: el('mfKanal').value, p_rolle: el('mfRolle').value,
-      p_ersteller: wer, p_kosten: null, p_reichweite: null, p_klicks: null
+      p_kanal: el('mfKanal').value, p_rolle: null,
+      p_ersteller: wer, p_kosten: null,
+      p_reichweite: zahl('mfReichweite'), p_klicks: zahl('mfKlicks')
     };
     if (istEdit) { params.p_id = mfEditId; } else { params.p_zielgruppe = null; }
     fetch(SB + '/rest/v1/rpc/' + (istEdit ? 'sommer2026_massnahme_aendern' : 'sommer2026_massnahme_eintragen'), {
@@ -320,9 +352,12 @@
     }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(ergebnis){
         if (ergebnis === 'ok'){
-          sagen(istEdit ? 'Geändert.' : 'Eingetragen – erscheint im Zeitband und im Protokoll.');
+          sagen(istEdit ? 'Geändert.' : 'Eingetragen – erscheint im Zeitband, im Protokoll und in der Reichweite.');
           mfZuruecksetzen();
-          rpc('sommer2026_massnahmen_public').then(function(rows){ renderZeitband(rows); renderMassnahmen(rows); }).catch(function(){});
+          // Reichweite/Klicks fliessen in die Wirkungskette – darum Zeitband, Protokoll UND Trichter neu laden.
+          Promise.all([rpc('sommer2026_massnahmen_public'), rpc('sommer2026_trichter')])
+            .then(function(res){ var rows = res[0] || []; renderZeitband(rows); renderMassnahmen(rows); renderFunnel(res[1] || [], rows); })
+            .catch(function(){});
         } else { sagen('Datum und Aktivität prüfen.', true); }
       })
       .catch(function(){ sagen(istEdit ? 'Ändern nicht erreichbar.' : 'Eintragen nicht erreichbar.', true); });
@@ -337,7 +372,7 @@
     }
     rows.forEach(function(r){
       var tag = r.tag ? new Date(r.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) : '–';
-      var kanal = (KANAL_LABEL[r.kanal] || r.kanal || '') + (r.rolle && ROLLE_LABEL[r.rolle] ? ' · ' + ROLLE_LABEL[r.rolle] : '');
+      var kanal = KANAL_LABEL[r.kanal] || r.kanal || '';
       var tr = document.createElement('tr');
       tr.innerHTML = '<td></td><td></td><td></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="act"></td>';
       tr.children[0].textContent = tag;
@@ -354,8 +389,8 @@
     });
   }
 
-  // Bearbeiten: Zeile in die Maske laden; Speichern ändert nur die Kernfelder,
-  // vorhandene Zahlen (Kosten/Reichweite/Klicks) bleiben unangetastet.
+  // Bearbeiten: Zeile in die Maske laden; Speichern übernimmt auch nachgetragene
+  // Reichweite und Klicks (Kosten bleiben dem Kosten-Modul vorbehalten).
   var mfEditId = null;
   function massnahmeBearbeiten(r){
     mfEditId = r.id;
@@ -363,7 +398,8 @@
     el('mfTag').value = r.tag || '';
     el('mfTitel').value = r.massnahme || '';
     el('mfKanal').value = r.kanal || 'andere';
-    el('mfRolle').value = r.rolle || 'wirkung';
+    if (el('mfReichweite')) el('mfReichweite').value = (r.reichweite != null) ? r.reichweite : '';
+    if (el('mfKlicks')) el('mfKlicks').value = (r.klicks != null) ? r.klicks : '';
     el('mfWer').value = r.ersteller || '';
     el('mfBtn').textContent = 'Änderung speichern';
     el('mfSaid').textContent = 'Bearbeitung von «' + (r.massnahme || '') + '» – Speichern übernimmt.';
@@ -373,6 +409,8 @@
   function mfZuruecksetzen(){
     mfEditId = null;
     el('mfTitel').value = ''; el('mfWer').value = '';
+    if (el('mfReichweite')) el('mfReichweite').value = '';
+    if (el('mfKlicks')) el('mfKlicks').value = '';
     el('mfTag').value = new Date().toISOString().slice(0, 10);
     el('mfBtn').textContent = 'Eintragen';
   }
@@ -743,7 +781,7 @@
         var mo = renderSpark(timeline);
         renderTiles(total, mo.avg, mo.days);
         renderStreams(stats);
-        renderFunnel(trichter);
+        renderFunnel(trichter, massnahmen);
         renderKanaele(kanaele, total);
         renderMotive(attribution);
         renderTarif(stats);
