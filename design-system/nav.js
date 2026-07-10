@@ -139,7 +139,8 @@
     { id: "statistik", label: "Statistik", intro: "Nutzungszahlen aller Werkzeuge.", cats: ["statistik"] },
     { id: "schau", label: "Schau & Mockups", intro: "Präsentations-Mockups und Studien.", cats: ["schau"] },
     { id: "geparkt", label: "Geparktes", intro: "Konzepte, die später kommen.", cats: ["geparkt"] },
-    { id: "archiv", label: "Archiv", intro: "Frühere Stände, eingefroren.", cats: ["archiv"] }
+    { id: "archiv", label: "Archiv", intro: "Frühere Stände, eingefroren.", cats: ["archiv"] },
+    { id: "labor", label: "Labor", intro: "Skizzen und Spezialtools – zum Ausprobieren vor dem Teilen.", cats: ["labor"] }
   ];
   var PUBLIC_IDS = WORLDS.map(function (w) { return w.id; });
 

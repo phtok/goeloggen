@@ -4,6 +4,18 @@ Backend des Aktions-Cockpits [`apps/sommer-zaehler/`](../../apps/sommer-zaehler/
 Zieht live aus dem Werkzeug-Supabase (`dagcsnfrlbpxcmdimnrw`) über drei
 Aggregat-RPCs. Es verlassen **nur Summen** die Datenbank, keine Personendaten.
 
+## Aufbau der App (mehrseitig)
+
+Die Kampagne ist eine mehrseitige App in `apps/sommer-zaehler/`, geklammert
+durch die gemeinsame Unter-Leiste (`data-onpage` von `nav.js`):
+**Cockpit** (`index.html`) · **Massnahmen** (`massnahmen.html`, Zeitband +
+Protokoll + Kosten) · **Multiplikatoren** (`multiplikatoren.html`) — dazu
+verlinkt **Links** (`../utm-generator/`) und **Mail** (`../mail-editor/`).
+Geteiltes CSS/JS liegt in `campaign.css` und `campaign.js`; jede Seite bindet
+beide ein und rendert per Element-Guards nur ihre eigenen Abschnitte, so bleibt
+der Code einfach (eine Datei, aus dem Cache). Der Hub-Eintrag `sommer-zaehler`
+bleibt die Startseite; die Unterseiten sind nur über die Leiste erreichbar.
+
 ## Datenmodell
 
 Eine Zeile in `public.sommer2026_signups` = eine Anmeldung im Gratis-Zeitraum.
