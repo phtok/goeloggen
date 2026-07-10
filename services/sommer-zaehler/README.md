@@ -64,12 +64,18 @@ DB, wird aber nicht mehr gepflegt.
 
 Quelle ist das **Aktivitäten-Protokoll** `sommer2026_massnahmen` – eine Zeile je
 Aktivität (Newsletter, Inserat, Post) mit Datum, Kanal, Kosten, Reichweite,
-Klicks und **internen** Notizen (`beobachtung` / `entscheidung`). Die internen
-Freitext-Spalten verlassen die DB **nie**: der öffentliche RPC
-`sommer2026_massnahmen_public` gibt nur die kuratierten Zahlen zurück. So wird CPA
-je **Massnahme** rechenbar (nicht nur je Bucket), und aus der Aktion wird eine
-lesbare Geschichte statt eines Datenhaufens. Pflege per `insert`/`update` (Service-
-Role), kein Commit je Aktualisierung.
+Klicks, einer öffentlichen **`notiz`** (klärende Präzisierung, z. B. „Reichweite =
+geöffnete Mails, nicht versendete") und **internen** Notizen (`beobachtung` /
+`entscheidung`). Die internen Freitext-Spalten verlassen die DB **nie**: der
+öffentliche RPC `sommer2026_massnahmen_public` gibt nur die kuratierten Zahlen
+plus `notiz` zurück. So wird CPA je **Aktivität** rechenbar (nicht nur je Bucket),
+und aus der Aktion wird eine lesbare Geschichte statt eines Datenhaufens.
+
+**Eintragen und Bearbeiten** über die RPCs `sommer2026_massnahme_eintragen` und
+`…_aendern` (offener Schreibweg fürs Team, Muster Link-Register; `notiz` ist
+Bestandteil beider). Im Cockpit lässt sich jede Aktivität **direkt im Zeitband
+anklicken** – der Chip lädt die Zeile in die Bearbeiten-Maske. Chips mit Notiz
+tragen sie als Zeile im Chip und einen goldenen Rand.
 
 ## Ströme und Tarife
 
