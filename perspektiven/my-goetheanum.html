@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>my.goetheanum im Einsatz · Goetheanum</title>
+<meta name="description" content="Die gewählte my.goetheanum-Fassung (Kleinschreibung, Icon im Kreis, Schnitt Deutlich) auf allen Gründen und in echten Umgebungen: hell, dunkel, gross, klein, Webseite, App." />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../design-system/tokens.css" />
+<link rel="stylesheet" href="../design-system/base.css" />
+<link rel="stylesheet" href="../design-system/nav.css" />
+<style>
+  /* Nur Seiten-Eigenes; alles Gemeinsame kommt aus tokens.css/base.css. */
+
+  /* Logo-Proben: feste Artefakt-Gründe (zeigen das Logo auf SEINEM Grund,
+     unabhängig vom Seiten-Thema) – wie die Vorschau im Logo-Werkzeug. */
+  .proben{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .probe{margin:0}
+  .probe .flaeche{display:grid;place-items:center;min-height:150px;padding:var(--s6);border-radius:var(--r-card);border:1px solid var(--line)}
+  .probe img{width:min(100%,340px);height:auto;display:block}
+  .probe figcaption{margin-top:var(--s2);color:var(--muted);font-size:var(--t-small);line-height:1.5}
+  .g-hell{background:#ffffff}    /* # ds-ok: Logo-auf-Weiss-Probe – physischer Grund, keine Theme-Fläche */
+  .g-dunkel{background:#23272b}  /* # ds-ok: Logo-auf-Dunkel-Probe – fester Grund wie im Logo-Werkzeug */
+  .g-blau{background:var(--sek-goetheanum)}
+  .g-gold{background:var(--gold-deep)}
+
+  /* Grössenleiter: dieselbe Datei, nur die Höhe wechselt. */
+  .leiter{display:grid;gap:var(--s4)}
+  .leiter .stufe{display:flex;align-items:center;gap:var(--s6);border:1px solid var(--line-soft);border-radius:var(--r-card);background:var(--soft);padding:var(--s4) var(--s6);flex-wrap:wrap}
+  .leiter .stufe img{display:block;width:auto}
+  .leiter .mass{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);min-width:12ch}
+  .ikonen{display:flex;align-items:flex-end;gap:var(--s6);flex-wrap:wrap}
+  .ikonen figure{margin:0;text-align:center}
+  .ikonen img{display:block;margin:0 auto}
+  .ikonen figcaption{margin-top:var(--s2);font-size:var(--t-small);color:var(--muted)}
+
+  /* Browser-Mockup: Rahmen aus Tokens, damit er im Dunkelmodus mitkippt. */
+  .browser{border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;box-shadow:var(--shadow-card);background:var(--paper)}
+  .browser .leiste{display:flex;align-items:center;gap:var(--s3);padding:var(--s2) var(--s4);background:var(--soft);border-bottom:1px solid var(--line)}
+  .browser .knoepfe{display:flex;gap:6px}
+  .browser .knoepfe i{width:10px;height:10px;border-radius:50%;background:var(--line);display:block}
+  .browser .adresse{flex:1;max-width:420px;margin-inline:auto;text-align:center;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);background:var(--field-bg);border:1px solid var(--line-soft);border-radius:var(--r-pill);padding:6px var(--s4)}
+  .site-kopf{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);padding:var(--s3) var(--s6);border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+  .site-kopf img{height:36px;width:auto;display:block}
+  .site-kopf .zeile{display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px}
+  .site-kopf .zeile a{color:var(--ink);text-decoration:none;padding:10px 2px}
+  .site-kopf .zeile a:hover{color:var(--gold-ink)}
+  .site-mitte{padding:clamp(28px,5vw,56px) var(--s6) var(--s8)}
+  .site-mitte h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:clamp(24px,3.4vw,34px);line-height:1.1;margin:0 0 var(--s3)}
+  .site-mitte .satz{color:var(--muted);max-width:52ch;line-height:1.6;margin:0 0 var(--s6)}
+  .site-karten{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(180px,1fr));max-width:640px}
+
+  /* Telefon-Mockups: Gehäuse ist Artefakt (dunkle Hardware), Innenleben aus Tokens. */
+  .telefone{display:grid;gap:var(--s6);grid-template-columns:repeat(auto-fit,minmax(260px,1fr));max-width:720px}
+  .telefon{margin:0;max-width:320px}
+  .telefon .geraet{border-radius:36px;padding:10px;background:#23272b;box-shadow:var(--shadow-card)}  /* # ds-ok: Hardware-Gehäuse, fester Gegenstand */
+  .telefon .schirm{border-radius:28px;overflow:hidden;background:var(--paper)}
+  .telefon figcaption{margin-top:var(--s2);text-align:center;color:var(--muted);font-size:var(--t-small)}
+  .status{display:flex;justify-content:space-between;font-family:var(--font-text);font-size:14px;color:var(--muted);padding:10px var(--s4) 6px}
+  .app-kopf{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);padding:var(--s3) var(--s4);border-bottom:1px solid var(--line-soft)}
+  .app-kopf img{height:26px;width:auto;display:block}
+  .app-kopf .kreis-knopf{width:34px;height:34px;border-radius:50%;background:var(--gold-deep);color:var(--on-accent);display:grid;place-items:center;font-family:var(--font-text);font-size:14px;font-weight:600}
+  .app-mitte{padding:var(--s4);display:grid;gap:var(--s3)}
+  .app-mitte .gruss{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:22px;line-height:1.15;margin:var(--s2) 0 var(--s1)}
+  .app-karte{border:1px solid var(--line-soft);border-radius:var(--r-control);background:var(--soft);padding:var(--s3) var(--s4)}
+  .app-karte .titel{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px}
+  .app-karte .meta{font-family:var(--font-text);font-size:14px;color:var(--muted);margin-top:2px}
+  .tabzeile{display:flex;justify-content:space-around;border-top:1px solid var(--line-soft);padding:var(--s3) var(--s2) var(--s4);font-family:var(--font-text);font-size:14px;color:var(--muted)}
+  .tabzeile b{color:var(--blue);font-weight:600}
+
+  /* Home-Screen: dunkle Tapete (Artefakt), Kacheln neutral, unsere Kachel echt. */
+  .home{background:#23272b;padding:var(--s6) var(--s4) var(--s4)}  /* # ds-ok: Tapete der Home-Ansicht, fester Grund */
+  .home .gitter{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s4)}
+  .home .kachel{aspect-ratio:1;border-radius:22%;background:var(--stage-muted,var(--line))}
+  .home .kachel.unsere{display:grid;place-items:center;background:var(--sek-goetheanum)}
+  .home .kachel.unsere img{width:62%;height:auto}
+  .home .name{grid-column:1/-1;text-align:center;font-family:var(--font-text);font-size:14px;color:var(--on-accent);margin-top:calc(-1*var(--s2))}
+  .home .dock{margin-top:var(--s6);border-radius:var(--r-card);background:var(--stage-bg,var(--soft));opacity:.25;height:64px}
+
+  /* Themenwechsel in den Mockups: hell zeigt die blaue, dunkel die weisse Fassung. */
+  .nur-dunkel{display:none}
+  :root[data-theme="dark"] .nur-hell{display:none}
+  :root[data-theme="dark"] .nur-dunkel{display:block}
+</style>
+</head>
+<body>
+
+<script src="../design-system/nav.js" data-root="../" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Sonderaufgabe · Logo</span>
+    <h1>my.goetheanum im Einsatz</h1>
+    <p class="lede">Die gewählte Fassung — Kleinschreibung, Icon im Kreis, Schnitt <strong>Deutlich</strong> (580) — auf ihren Gründen und in den Umgebungen, in denen sie leben wird: hell und dunkel, gross und klein, auf der Webseite und in der App.</p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Auf den Gründen</h2>
+      <p>Hell trägt Blau, alles andere trägt Weiss. Kontraste sind gerechnet, nicht geschätzt.</p>
+    </div>
+    <div class="proben">
+      <figure class="probe">
+        <div class="flaeche g-hell"><img src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="my.goetheanum, blau auf Weiss" /></div>
+        <figcaption>Auf Weiss: Original-Blau, Kontrast 6.4:1.</figcaption>
+      </figure>
+      <figure class="probe">
+        <div class="flaeche g-dunkel"><img src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="my.goetheanum, weiss auf Dunkel" /></div>
+        <figcaption>Auf Dunkel: Weiss, Kontrast 15.0:1. Das Icon bleibt offen und zeigt den Grund.</figcaption>
+      </figure>
+      <figure class="probe">
+        <div class="flaeche g-blau"><img src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="my.goetheanum, weiss auf Hausblau" /></div>
+        <figcaption>Auf Hausblau: Weiss, Kontrast 6.4:1.</figcaption>
+      </figure>
+      <figure class="probe">
+        <div class="flaeche g-gold"><img src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="my.goetheanum, weiss auf dunklem Gold" /></div>
+        <figcaption>Auf dunklem Gold: Weiss, Kontrast 4.6:1. Auf <em>hellem</em> Gold hält Weiss nur 2.1:1 — dort steht kein Logo.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Gross und klein</h2>
+      <p>Eine Datei, jede Grösse — Vektor. Unter etwa 120 Pixel Breite übernimmt das Kreis-Icon allein.</p>
+    </div>
+    <div class="leiter">
+      <div class="stufe"><span class="mass">Auftritt · 64 px</span><img class="nur-hell" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="my.goetheanum gross" style="height:64px" /><img class="nur-dunkel" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="my.goetheanum gross, Weiss-Fassung" style="height:64px" /></div>
+      <div class="stufe"><span class="mass">Kopfzeile · 40 px</span><img class="nur-hell" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="my.goetheanum mittel" style="height:40px" /><img class="nur-dunkel" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="my.goetheanum mittel, Weiss-Fassung" style="height:40px" /></div>
+      <div class="stufe"><span class="mass">Kompakt · 26 px</span><img class="nur-hell" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="my.goetheanum klein" style="height:26px" /><img class="nur-dunkel" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="my.goetheanum klein, Weiss-Fassung" style="height:26px" /></div>
+      <div class="stufe">
+        <span class="mass">Nur das Icon</span>
+        <div class="ikonen">
+          <figure><img src="../assets/logos/goetheanum-icon-kreis.svg" alt="Kreis-Icon 48 Pixel" style="height:48px" /><figcaption>48 px · App</figcaption></figure>
+          <figure><img src="../assets/logos/goetheanum-icon-kreis.svg" alt="Kreis-Icon 32 Pixel" style="height:32px" /><figcaption>32 px · Avatar</figcaption></figure>
+          <figure><img src="../assets/logos/goetheanum-icon-kreis.svg" alt="Kreis-Icon 24 Pixel" style="height:24px" /><figcaption>24 px · Favicon</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Auf der Webseite</h2>
+      <p>Kopfzeile mit dem Logo in Kopfzeilen-Grösse; im Dunkelmodus wechselt die Fassung.</p>
+    </div>
+    <div class="browser">
+      <div class="leiste"><span class="knoepfe"><i></i><i></i><i></i></span><span class="adresse">my.goetheanum.ch</span></div>
+      <div class="site-kopf">
+        <img class="nur-hell" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="my.goetheanum" />
+        <img class="nur-dunkel" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="my.goetheanum, Weiss-Fassung" />
+        <div class="zeile">
+          <a href="#werkzeug-hinweis">Veranstaltungen</a>
+          <a href="#werkzeug-hinweis">Beiträge</a>
+          <a href="#werkzeug-hinweis">Konto</a>
+          <span class="btn primary" role="presentation">Anmelden</span>
+        </div>
+      </div>
+      <div class="site-mitte">
+        <h3>Mein Goetheanum, ein Ort.</h3>
+        <p class="satz">Kurse und Tickets, Mitgliedschaft und Spenden, Beiträge und Post — alles Persönliche an einer Adresse, mit einem Konto.</p>
+        <div class="site-karten">
+          <div class="app-karte"><div class="titel">Meine Tickets</div><div class="meta">2 kommende</div></div>
+          <div class="app-karte"><div class="titel">Mitgliedschaft</div><div class="meta">aktiv seit 2019</div></div>
+          <div class="app-karte"><div class="titel">Beiträge</div><div class="meta">3 ungelesen</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>In der App</h2>
+      <p>Links der Auftritt auf dem Home-Screen — das Kreis-Icon ist die Kachel. Rechts die App selbst mit dem Logo im Kopf.</p>
+    </div>
+    <div class="telefone">
+      <figure class="telefon">
+        <div class="geraet"><div class="schirm">
+          <div class="home">
+            <div class="gitter">
+              <span class="kachel"></span><span class="kachel"></span><span class="kachel"></span><span class="kachel"></span>
+              <span class="kachel"></span>
+              <span class="kachel unsere"><img src="../assets/logos/goetheanum-icon-kreis.svg" alt="my.goetheanum-App-Icon" /></span>
+              <span class="kachel"></span><span class="kachel"></span>
+              <span class="name">my.goetheanum</span>
+            </div>
+            <div class="dock"></div>
+          </div>
+        </div></div>
+        <figcaption>Home-Screen: die Kachel trägt das Kreis-Icon, der Name steht darunter.</figcaption>
+      </figure>
+      <figure class="telefon">
+        <div class="geraet"><div class="schirm">
+          <div class="status"><span>9:41</span><span>◦◦◦</span></div>
+          <div class="app-kopf">
+            <img class="nur-hell" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="my.goetheanum" />
+            <img class="nur-dunkel" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="my.goetheanum, Weiss-Fassung" />
+            <span class="kreis-knopf" role="presentation">PT</span>
+          </div>
+          <div class="app-mitte">
+            <div class="gruss">Guten Abend, Philipp</div>
+            <div class="app-karte"><div class="titel">Faust I · Premiere</div><div class="meta">Sa 18. Juli, 19&nbsp;Uhr · Grosser Saal</div></div>
+            <div class="app-karte"><div class="titel">Mein Konto</div><div class="meta">Mitgliedschaft, Zahlungen, Post</div></div>
+            <div class="app-karte"><div class="titel">Das Goetheanum</div><div class="meta">Wochenschrift · neuste Ausgabe</div></div>
+          </div>
+          <div class="tabzeile"><b>Heute</b><span>Suchen</span><span>Tickets</span><span>Konto</span></div>
+        </div></div>
+        <figcaption>In der App: Logo in Kopfzeilen-Grösse, im Dunkelmodus die Weiss-Fassung.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="werkzeug-hinweis">
+    <p class="note">Dateien: <a href="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich.svg">Original Blau</a> · <a href="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg">Weiss für dunkle Gründe</a> · <a href="../assets/logos/goetheanum-icon-kreis.svg">Kreis-Icon einzeln</a>. Wortmarke aus den Generator-Glyphen im Schnitt Deutlich (580), Metrik des Hauptlogos; alle weiteren Fassungen im <a href="../apps/logos/">Logo-Werkzeug</a>.</p>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · my.goetheanum</span>
+    <span><a href="../">Übersicht</a> · <a href="../apps/logos/">Logos</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
