@@ -16,6 +16,7 @@
   /* Logo-Proben: feste Artefakt-Gründe (zeigen das Logo auf SEINEM Grund,
      unabhängig vom Seiten-Thema) – wie die Vorschau im Logo-Werkzeug. */
   .proben{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .proben.zwei-spalten{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
   .probe{margin:0}
   .probe .flaeche{display:grid;place-items:center;min-height:150px;padding:var(--s6);border-radius:var(--r-card);border:1px solid var(--line)}
   .probe img{width:min(100%,340px);height:auto;display:block}
@@ -78,10 +79,10 @@
   .home .name{grid-column:1/-1;text-align:center;font-family:var(--font-text);font-size:14px;color:var(--on-accent);margin-top:calc(-1*var(--s2))}
   .home .dock{margin-top:var(--s6);border-radius:var(--r-card);background:var(--stage-bg,var(--soft));opacity:.25;height:64px}
 
-  /* Themenwechsel in den Mockups: hell zeigt die blaue, dunkel die weisse Fassung. */
-  .nur-dunkel{display:none}
+  /* Themenwechsel in den Mockups: hell zeigt die blaue, dunkel die weisse Fassung.
+     Beide Regeln über :root, damit sie jede Bild-Regel der Mockups schlagen. */
+  :root:not([data-theme="dark"]) .nur-dunkel{display:none}
   :root[data-theme="dark"] .nur-hell{display:none}
-  :root[data-theme="dark"] .nur-dunkel{display:block}
 </style>
 </head>
 <body>
@@ -139,6 +140,46 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Die Mitte-Fassung im Vergleich</h2>
+      <p>Der Kreis als Bindeglied zwischen den Wörtern, neben der vorangestellten Fassung — auf heller und dunkler Bühne, wie im Logo-Werkzeug.</p>
+    </div>
+    <div class="proben zwei-spalten">
+      <figure class="probe">
+        <div class="flaeche g-hell"><img src="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich.svg" alt="my goetheanum mit Kreis in der Mitte, blau auf Weiss" /></div>
+        <figcaption><strong>Mitte</strong> auf Hell — der Kreis ersetzt den Punkt, Oberlängen-Grösse.</figcaption>
+      </figure>
+      <figure class="probe">
+        <div class="flaeche g-hell"><img src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="my.goetheanum mit vorangestelltem Kreis, blau auf Weiss" /></div>
+        <figcaption><strong>Vorangestellt</strong> auf Hell — Zeichen und Name getrennt.</figcaption>
+      </figure>
+      <figure class="probe">
+        <div class="flaeche g-dunkel"><img src="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich-weiss.svg" alt="my goetheanum mit Kreis in der Mitte, weiss auf Dunkel" /></div>
+        <figcaption><strong>Mitte</strong> auf Dunkel — Weiss, das Icon bleibt als Durchbruch offen.</figcaption>
+      </figure>
+      <figure class="probe">
+        <div class="flaeche g-dunkel"><img src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="my.goetheanum mit vorangestelltem Kreis, weiss auf Dunkel" /></div>
+        <figcaption><strong>Vorangestellt</strong> auf Dunkel.</figcaption>
+      </figure>
+    </div>
+    <div class="leiter" style="margin-top:var(--s6)">
+      <div class="stufe"><span class="mass">Auftritt · 64 px</span>
+        <img class="nur-hell" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich.svg" alt="Mitte-Fassung gross" style="height:64px" />
+        <img class="nur-dunkel" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich-weiss.svg" alt="Mitte-Fassung gross, Weiss" style="height:64px" />
+      </div>
+      <div class="stufe"><span class="mass">Kopfzeile · 40 px</span>
+        <img class="nur-hell" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich.svg" alt="Mitte-Fassung mittel" style="height:40px" />
+        <img class="nur-dunkel" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich-weiss.svg" alt="Mitte-Fassung mittel, Weiss" style="height:40px" />
+      </div>
+      <div class="stufe"><span class="mass">Kompakt · 26 px</span>
+        <img class="nur-hell" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich.svg" alt="Mitte-Fassung klein" style="height:26px" />
+        <img class="nur-dunkel" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich-weiss.svg" alt="Mitte-Fassung klein, Weiss" style="height:26px" />
+      </div>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Die Mitte-Fassung macht das Zeichen zum Teil des Namens — stark im grossen Auftritt. Wo das Icon allein stehen muss (Kachel, Avatar, Favicon) oder der Platz schmal wird, trägt die vorangestellte Fassung.</p>
   </section>
 
   <section>
@@ -213,7 +254,7 @@
   </section>
 
   <section id="werkzeug-hinweis">
-    <p class="note">Dateien: <a href="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich.svg">Original Blau</a> · <a href="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg">Weiss für dunkle Gründe</a> · <a href="../assets/logos/goetheanum-icon-kreis.svg">Kreis-Icon einzeln</a>. Wortmarke aus den Generator-Glyphen im Schnitt Deutlich (580), Metrik des Hauptlogos; alle weiteren Fassungen im <a href="../apps/logos/">Logo-Werkzeug</a>.</p>
+    <p class="note">Dateien: <a href="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich.svg">Original Blau</a> · <a href="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg">Weiss für dunkle Gründe</a> · <a href="../assets/logos/goetheanum-icon-kreis.svg">Kreis-Icon einzeln</a> · <a href="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich.svg">Mitte-Fassung Blau</a> · <a href="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich-weiss.svg">Mitte-Fassung Weiss</a>. Wortmarke aus den Generator-Glyphen im Schnitt Deutlich (580), Metrik des Hauptlogos; alle weiteren Fassungen im <a href="../apps/logos/">Logo-Werkzeug</a>.</p>
   </section>
 
 </main>
