@@ -194,6 +194,10 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 /* Aktuelle Seite im Menü hervorheben – ruhig, mit Gold-Kante. */
 .dsnav-link.is-active{background:var(--soft);box-shadow:inset 3px 0 0 var(--gold-deep)}
 .dsnav-link.is-active .tt{color:var(--gold-ink);font-weight:var(--w-strong)}
+/* Status-Marker (nur Intern-Schublade): leises Wort rechts – Meta-Rolle in der
+   Lese-Grotesk (B03-Floor), Live bleibt unmarkiert (G03). */
+.dsnav-link .st{margin-left:auto;flex:0 0 auto;font-family:var(--font-text);
+  font-size:var(--t-micro);color:var(--muted)}
 
 .dsnav-drawer .foot{padding:var(--s4) 22px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;flex:0 0 auto}
 .dsnav-drawer .foot a{color:var(--gold-ink);text-decoration:none}

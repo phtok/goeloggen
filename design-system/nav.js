@@ -449,6 +449,12 @@
     // Suchbegriffe (Synonyme) fürs Filtern – „Farben" findet so auch das Design-System.
     if (t.such) a.dataset.such = t.such;
     a.innerHTML = '<span class="tt">' + t.title + '</span>';
+    // Status-Marker, nur in der Intern-Schublade: Live bleibt unmarkiert (G03 –
+    // der Normalfall trägt kein Zeichen), alles andere sagt leise, was es ist.
+    if (isIntern() && t.status && t.status !== "live") {
+      var wort = { beta: "Beta", entwurf: "Entwurf", intern: "intern", geparkt: "geparkt" }[t.status] || t.status;
+      a.insertAdjacentHTML("beforeend", '<span class="st">' + wort + '</span>');
+    }
     return a;
   }
 

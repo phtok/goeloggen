@@ -16,6 +16,17 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.9.3] – 2026-07-10
+
+### Status-Marker in der Intern-Schublade
+- **Was:** Im Intern-Modus zeigt jeder Menü-Eintrag rechts leise seinen
+  Manifest-Status (Beta · Entwurf · intern · geparkt) — Meta-Rolle in der
+  Lese-Grotesk, `--t-micro`, gedeckt. **Live bleibt unmarkiert** (G03: der
+  Normalfall trägt kein Zeichen — was live ist, erkennt man am reinen Titel).
+  Das öffentliche Menü bleibt wortlos («koordiniert, erklärt nicht»).
+- **Warum:** In der Pflege-Ansicht war nicht unterscheidbar, was draussen
+  sichtbar ist und was noch Werkstatt ist.
+
 ## [1.9.2] – 2026-07-10
 
 ### Engine geschärft: Vertrags-Ausnahmen greifen auch für Wurzel-Ordner
