@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Perspektive: My Goetheanum im Hausbild</title>
+<meta name="description" content="Der Entwicklerentwurf des Mitglieder-Portals ‹My Goetheanum›, nachgebaut mit dem Goetheanum-Design-System – App-Schale, Karten-Dashboard, gerechnete Kontraste." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../design-system/tokens.css" />
+<link rel="stylesheet" href="../design-system/base.css" />
+<style>
+  /* Portal-eigenes Feinlayout – alles aus Tokens/Rollen. */
+  body{margin:0}
+  .side .brand .lockup{height:40px}
+  .profilkopf{display:flex;gap:var(--s4);align-items:center}
+  .profilkopf h3{margin:0}
+  .profilkopf .meta{margin-top:2px}
+  .zeile{display:flex;justify-content:space-between;gap:var(--s4);border-top:1px solid var(--line-soft);
+    margin-top:var(--s4);padding-top:var(--s3);font-family:var(--font-text);font-size:var(--t-small)}
+  .zeile .lab{flex:0 0 auto}
+  .zeile b{color:var(--ink);font-weight:600;text-align:right}
+  .abo .readout{display:block;margin-top:var(--s3)}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="side" aria-label="Portal-Navigation">
+    <a class="brand" href="#einstieg" aria-label="My Goetheanum – Einstieg">
+      <img class="lockup" src="../assets/logos/goetheanum-my.svg" alt="My Goetheanum" />
+    </a>
+    <nav class="sidenav" aria-label="Bereiche">
+      <a href="#einstieg" aria-current="page">Einstieg</a>
+      <a href="#einstieg">Mitgliedschaft</a>
+      <a href="#einstieg">Zeitschriften</a>
+      <span class="kicker grp">Externe Links</span>
+      <a href="#einstieg">Startseite <span class="ext" aria-hidden="true">↗</span></a>
+      <a href="#einstieg">Tickets <span class="ext" aria-hidden="true">↗</span></a>
+      <a href="#einstieg">Wochenschrift <span class="ext" aria-hidden="true">↗</span></a>
+    </nav>
+    <div class="user">
+      <span class="person"><span class="pv" aria-hidden="true">BP</span></span>
+      <span><b style="font-weight:var(--w-strong);display:block">Beispiel-Person</b>
+        <span class="meta">beispiel@goetheanum.ch</span></span>
+    </div>
+  </aside>
+
+  <main class="main" id="einstieg">
+    <h1>Einstieg</h1>
+
+    <section style="margin-top:var(--s6)">
+      <span class="kicker">Persönliche Kopfzeile</span>
+      <div class="cardgrid" style="margin-top:var(--s3)">
+        <div class="card">
+          <span class="lab">Profil</span>
+          <div class="profilkopf" style="margin-top:var(--s4)">
+            <span class="person"><span class="pv" aria-hidden="true">BP</span></span>
+            <div><h3>Beispiel-Person</h3><p class="meta">beispiel@goetheanum.ch</p></div>
+          </div>
+          <div class="zeile"><span class="lab">Hauptadresse</span><b>Frankfurt am Main, Deutschland</b></div>
+          <div class="cfoot"><a class="btn" href="#einstieg">Meine Daten bearbeiten</a></div>
+        </div>
+        <div class="card">
+          <span class="lab">Mitgliedschaft</span>
+          <p class="leer">Sie sind derzeit nicht als Mitglied verknüpft.</p>
+          <div class="cfoot"><a class="btn primary" href="#einstieg">Mitgliedschaft verwalten</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top:var(--s8)">
+      <span class="kicker">Abonnements</span>
+      <div class="cardgrid" style="margin-top:var(--s3)">
+        <div class="card abo">
+          <h3>Rundbrief SRMK Online gratis</h3>
+          <span class="chip" style="margin-top:var(--s3)">Status <b>aktiv</b></span>
+          <span class="readout">Verlängerung: 22. Juni 2027</span>
+          <div class="cfoot"><a class="btn" href="#einstieg">Abo verwalten</a></div>
+        </div>
+        <div class="card abo">
+          <h3>Kostenlos für Mitarbeitende</h3>
+          <span class="chip" style="margin-top:var(--s3)">Status <b>aktiv</b></span>
+          <span class="readout">Verlängerung: 22. Juni 2027</span>
+          <div class="cfoot"><a class="btn" href="#einstieg">Abo verwalten</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top:var(--s8)">
+      <span class="kicker">Aktivitätsverlauf</span>
+      <div class="card" style="margin-top:var(--s3)">
+        <span class="lab">Neueste Rechnungen zuerst</span>
+        <p class="leer">Noch keine Rechnungen vorhanden.</p>
+      </div>
+    </section>
+
+    <p class="note" style="margin-top:var(--s8)">Perspektive: der Entwicklerentwurf
+      des Mitglieder-Portals, gesetzt mit dem Design-System — App-Schale und
+      Karten aus dem Fundament, Zwischentitel als Kicker statt versal (G05),
+      Kontraste gerechnet (B01/B02), Auswahl in dunklem Gold mit Weiss,
+      Lockup aus dem Logo-Generator (DS08). Daten sind Beispieldaten.</p>
+  </main>
+</div>
+
+<div class="fab" role="navigation" aria-label="Perspektive">
+  <a class="btn primary" href="../design-system/#perspektiven">‹ Zurück zum Design-System</a>
+</div>
+
+</body>
+</html>

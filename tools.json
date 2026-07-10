@@ -497,6 +497,11 @@
       "tag": "Spec",
       "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/lead-maschine.md",
       "desc": "Ausführungs-Spezifikation der fünf Lead-Schleifen: Seelenkalender, Archiv-Sog, Partner-Kit, Atomisierung, Schenken."
+    },
+    {
+      "title": "Gestaltungsspielraum (Entwurf)",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/gestaltungsspielraum-entwurf.md",
+      "desc": "Foto-Richtlinie in drei Richtungen und vier Ansätze zu erlaubter Varianz – zur Ratifizierung."
     }
   ]
 }
