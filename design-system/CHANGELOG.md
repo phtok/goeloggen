@@ -16,6 +16,24 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.8.0] – 2026-07-10
+
+### App-Schale (aus dem My-Goetheanum-Entwurf aufgenommen)
+- **Was:** Neue Rollen in `base.css` — `app` (Seitenleiste + Inhaltsfläche,
+  mobil als Band), `sidenav` (Bereichs-Navigation; Auswahl = dunkles Gold +
+  Weiss, B01; Gruppen-Etikett als Kicker, G05), `cardgrid`, `card .cfoot`,
+  `leer` (Leerzustand). Neues Lockup `assets/logos/goetheanum-my.svg` aus der
+  Logo-Engine (DS08).
+- **Warum:** Der Entwicklerentwurf des Mitglieder-Portals ‹My Goetheanum›
+  zeigt einen echten Bedarf, den das Fundament nicht deckte — und riet darum
+  die Gestalt: Versal-Zwischentitel (G05), Gold-Etiketten bei ≈2:1 (B02),
+  Weiss auf Hellgrün ≈2:1 (B01/B02), erfundenes Marken-Lockup (DS08).
+- **Wirkung:** `perspektiven/my-goetheanum.html` setzt denselben Schirm aus
+  den Fundament-Rollen — regelkonform durch Konstruktion. Dazu
+  `docs/gestaltungsspielraum-entwurf.md` (Foto-Richtlinie in drei Richtungen,
+  vier Varianz-Ansätze — Entwurf, zu ratifizieren). `contract.json` →
+  Version 1.8.0, Rollen ergänzt.
+
 ## [1.7.2] – 2026-07-09
 
 ### Badge-Sitz + leisere Modi-Reihe (Rückfluss aus der Kopfzeile)
@@ -82,7 +100,6 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 - **Wirkung:** Werkzeugwissen ist Fundament (gilt für jedes künftige
   Druck-/Grafik-Werkzeug); `--ink-print-leise` ersetzt den bisher nur im
   Kartentool notierten Hex-Wert. `contract.json` → Version 1.6.0.
-
 ## [1.5.0] – 2026-07-06
 
 ### Bild-Ebene + Logo-Disziplin (DS08)
