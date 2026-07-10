@@ -20,8 +20,11 @@ bleibt unangetastet.
 heroes.json ─┐
 config.json ─┼─► build_editor.py ─► dist/mail_{motiv}_{welle}_{sprache}.html (20, versandfähig)
 links.py    ─┘        --publish  ─► ../../apps/mail-editor/ (Editor + gehostete Assets, GitHub Pages)
+                      --verify   ─► Live-Check nach dem Merge: Editor + alle Asset-URLs erreichbar?
 ```
 Bauen: `pip install -r requirements.txt` · `npm i -g mjml` · `python3 build_editor.py --publish`
+Wortmarke = offizielles Logo (`assets/logos/goetheanum-logo.svg` → PNG via cairosvg), Badge =
+HTML-Text in der Mail-Grundschrift — beide so beschlossen im Gegenlesen (Kommentare 9.7.).
 
 ## Segmente ↔ Motive ↔ Wellenplan
 - **lesen** → Segment `nurtv` (Cross-sell WS): w1 garten · w2 abendlicht · w3 see
@@ -51,13 +54,19 @@ reduzieren, ohne das Register mitzuziehen. **make-or-break vor Versand:** Landin
 utm_* an das Paperform weiterreichen (Hidden Fields), sonst 0 Abschlüsse trotz Anmeldungen.
 
 ## Der Editor (Gegenlesen)
-`apps/mail-editor/` (Hub-Kategorie «Kampagne», intern): DE/EN-Umschalter, oben gemeinsame Elemente,
-darunter je Segment die Wellen als Mail-Vorschau, je Feld kommentierbar (Motiv, Betreff, Botschaft,
-Text, CTA, Alt-Betreff, Link, ganze Mail). Kommentare → Supabase `sommer2026_mail_comments`,
-key = element-id (`shared#x` oder `{motiv}_{welle}_{lang}#feld`), Sprache wird mitgeschrieben.
-**Erledigt-Haken direkt im Editor** (RPC `sommer2026_comment_erledigt`, security definer;
-`supabase/comment_erledigt_rpc.sql`, angewendet). Rücklauf: offene Kommentare lesen → in
-heroes.json korrigieren → neu bauen (`--publish`).
+`apps/mail-editor/` (Hub-Kategorie «Kampagne», intern): DE/EN-Umschalter, oben **Sammelansicht
+«Offene Kommentare»** (To-do-Liste; anklicken springt zum Feld, schaltet ggf. die Sprache um und
+öffnet das Panel), dann gemeinsame Elemente, darunter je Segment die Wellen als Mail-Vorschau,
+je Feld kommentierbar (Motiv, Betreff, Botschaft, Text, CTA, Alt-Betreff, Link, ganze Mail).
+Der ✎-Knopf im Kommentarfeld übernimmt den aktuellen Feldtext — Gegenleser schreiben direkt die
+gewünschte Fassung statt vager Kritik. Kopfzeile zeigt Build-Stand (Datum + Git-Rev) gegen
+Stale-Reviews. Die Vorschauen sind **exakt die Versand-Mails** (gehostete Bilder — kein
+Doppel-Rendering, Seite ~0.5 MB statt 4 MB); offline-einbettbar nur mit leerer `asset_base_url`.
+Kommentare → Supabase `sommer2026_mail_comments`, key = element-id (`shared#x` oder
+`{motiv}_{welle}_{lang}#feld`), Sprache wird mitgeschrieben. **Erledigt-Haken direkt im Editor**
+(RPC `sommer2026_comment_erledigt`, security definer; `supabase/comment_erledigt_rpc.sql`,
+angewendet). Rücklauf: offene Kommentare lesen → in heroes.json korrigieren → neu bauen
+(`--publish`) → nach dem Merge `--verify`.
 
 ## ActiveCampaign (via Cowork)
 Automation einmal im UI bauen: If/Else-Split auf Abo-Tags (nurtv/nurws/noabo; beides ausgeschlossen),
@@ -69,5 +78,7 @@ Merge-Tags/Abmeldelink in AC ersetzen `%UNSUBSCRIBELINK%`.
 - [ ] Wellen-Copy w2/w3/w3b feinschleifen (Kolleg:innen via Editor).
 - [ ] Zwei-Button-Labels noabo w1/w3 gegenlesen («Lesen wählen →» / «Sehen wählen →»).
 - [ ] Segment `beides` = geparkte Empfehlungsmail für Doppelabonnenten (später).
-- [ ] Nach Merge: Editor unter https://werkzeuge.goetheanum.ch/apps/mail-editor/ prüfen,
-      Bild-URLs live testen, dann AC bestücken.
+- [ ] Nach Merge: `python3 build_editor.py --verify` (prüft Editor + alle Bild-URLs live),
+      dann AC bestücken.
+- [ ] Offener Kommentar zu `lesen_w1_de#Betreff` («macht vielleicht mehr Sinn», 9.7.) —
+      unklar, was gemeint ist; im Editor nachfassen (✎ liefert künftig konkrete Fassungen).

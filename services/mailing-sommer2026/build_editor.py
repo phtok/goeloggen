@@ -3,16 +3,18 @@
 Gegenlese-Editor (dist/editor.html; Kommentare -> Supabase, key = element-id).
 
 Zwei Bild-Modi (config.json / asset_base_url):
-  leer    -> Data-URIs in den Mails (nur Vorschau; Gmail clippt >102 KB und blockt Data-URIs)
-  gesetzt -> gehostete URLs in dist/mail_*.html (versandfähig, Ziel < 100 KB je Mail)
-Der Editor bettet die Vorschauen immer ein (eine Datei, offline teilbar).
+  leer    -> Data-URIs überall (nur Vorschau; Gmail clippt >102 KB und blockt Data-URIs)
+  gesetzt -> gehostete URLs in Mails UND Editor-Vorschauen (versandfähig, < 100 KB je Mail;
+             der Editor zeigt exakt die Versand-Mails — kein Doppel-Rendering, kleine Seite)
 
 `--publish` kopiert Editor + gehostete Assets nach ../../apps/mail-editor/
 (GitHub Pages deployt apps/ -> https://werkzeuge.goetheanum.ch/apps/mail-editor/).
+`--verify` prüft nach dem Merge, ob alle gehosteten Assets live erreichbar sind.
 """
 import json, base64, shutil, subprocess, sys
+from datetime import datetime
 from pathlib import Path
-from PIL import Image, ImageFont, ImageDraw, ImageOps
+from PIL import Image, ImageOps
 
 ROOT = Path(__file__).parent
 G = ROOT / "assets/generated"
@@ -36,31 +38,23 @@ def xml(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
-def typo(text, out, px, color, wrap=None, weight="Bold"):
-    """FazetaSans-Zeile als PNG (Wortmarke, Badge). Wird immer neu gerendert — kein Stale-Cache."""
-    f = ImageFont.truetype(str(ROOT / f"assets/fonts/FazetaSans-{weight}.ttf"), px * S)
-    d0 = ImageDraw.Draw(Image.new("RGBA", (8, 8))); lines = [text]
-    if wrap:
-        words, cur, lines = text.split(), "", []
-        for w in words:
-            t = (cur + " " + w).strip()
-            if d0.textlength(t, font=f) <= wrap * S or not cur: cur = t
-            else: lines.append(cur); cur = w
-        lines.append(cur)
-    asc, desc = f.getmetrics(); lh = int((asc + desc) * 1.02)
-    Wd = int(max(d0.textlength(l, font=f) for l in lines)) + 8 * S; Ht = lh * len(lines) + 8 * S
-    img = Image.new("RGBA", (Wd, Ht), (0, 0, 0, 0)); d = ImageDraw.Draw(img)
-    rgb = tuple(int(color.lstrip('#')[i:i+2], 16) for i in (0, 2, 4)); y = 4 * S
-    for l in lines: d.text((4*S, y), l, font=f, fill=rgb+(255,)); y += lh
-    img.save(G / out); return out, Wd // S
+def logo(out="logo_goetheanum.png", height=20):
+    """Offizielle Wortmarke (assets/logos/goetheanum-logo.svg) als PNG, Original-Blau —
+    das Logo bleibt das Logo, kein Schriftersatz (Kommentar shared#wortmarke, 9.7.)."""
+    import cairosvg
+    svg = ROOT.parent.parent / "assets/logos/goetheanum-logo.svg"
+    cairosvg.svg2png(url=str(svg), write_to=str(G / out), output_height=height * S)
+    return out, Image.open(G / out).width // S
 
 
-def src_for(rel, embed):
-    """Bildquelle je Modus: Data-URI (Editor/Vorschau) oder gehostete URL (Versand)."""
-    if embed or not BASE:
-        mime = "image/png" if rel.endswith(".png") else "image/jpeg"
-        return f"data:{mime};base64," + base64.b64encode((G / rel).read_bytes()).decode()
-    return f"{BASE}/{rel}"
+def data_uri(rel):
+    mime = "image/png" if rel.endswith(".png") else "image/jpeg"
+    return f"data:{mime};base64," + base64.b64encode((G / rel).read_bytes()).decode()
+
+
+def src_for(rel):
+    """Bildquelle je Modus: gehostete URL (versandfähig) oder Data-URI (nur Vorschau)."""
+    return f"{BASE}/{rel}" if BASE else data_uri(rel)
 
 
 def compose(var, key):
@@ -94,7 +88,7 @@ def ctas_for(seg, welle, lang):
     return [(z, labels[z]) for z in ziele]
 
 
-def render_mail(motiv, welle, lang, wm, badges, embed):
+def render_mail(motiv, welle, lang, wm):
     seg = SEG_OF[motiv]
     vid = H["wellenplan"][seg][welle].split("/")[1]
     var = variation(motiv, vid)
@@ -102,8 +96,7 @@ def render_mail(motiv, welle, lang, wm, badges, embed):
     ctas = ctas_for(seg, welle, lang)
     mehrere = len(ctas) > 1
     cta_links = [(label, links.link_for(welle, seg, ziel, lang, mehrere)) for ziel, label in ctas]
-    hero = src_for(compose(var, f"{motiv}_{vid}"), embed)
-    badge = badges[lang]
+    hero = src_for(compose(var, f"{motiv}_{vid}"))
     fontface = (f"<mj-style>@font-face{{font-family:'Fazeta Sans';src:url('{BASE}/FazetaSans-Bold.ttf') "
                 "format('truetype');font-weight:700;font-style:normal;}</mj-style>") if BASE else ""
     btns = []
@@ -119,10 +112,10 @@ def render_mail(motiv, welle, lang, wm, badges, embed):
     mjml = f"""<mjml><mj-head><mj-title>{xml(c['betreff'])}</mj-title><mj-preview>{xml(preheader(c))}</mj-preview>{fontface}
 <mj-attributes><mj-all font-family="{FONT_STACK}"/><mj-text font-size="16px" line-height="25px" color="{INK}"/></mj-attributes></mj-head>
 <mj-body background-color="{MIST}">
-<mj-section background-color="#FFFFFF" padding="18px 28px 14px 28px"><mj-column><mj-image src="{src_for(wm[0], embed)}" alt="Das Goetheanum" width="{wm[1]}px" align="left" padding="0"/></mj-column></mj-section>
+<mj-section background-color="#FFFFFF" padding="18px 28px 14px 28px"><mj-column><mj-image src="{src_for(wm[0])}" alt="Goetheanum" width="{wm[1]}px" align="left" padding="0"/></mj-column></mj-section>
 <mj-section background-color="#FFFFFF" padding="0"><mj-column><mj-image src="{hero}" alt="{xml(var.get('alt',''))}" padding="0" fluid-on-mobile="true"/></mj-column></mj-section>
 <mj-section background-color="#FFFFFF" padding="24px 28px 0 28px"><mj-column>
-  <mj-image src="{src_for(badge[0], embed)}" alt="{xml(H['badge'][lang])}" width="{badge[1]}px" align="left" padding="0 0 10px 0"/>
+  <mj-text font-size="14px" line-height="20px" font-weight="700" color="{AKZENT}" padding="0 0 10px 0">{xml(H['badge'][lang])}</mj-text>
   <mj-text font-family="{HL_STACK}" font-size="30px" line-height="35px" font-weight="700" color="{INK}" padding="0 0 14px 0">{xml(c['botschaft'])}</mj-text>
   <mj-text padding="0 0 22px 0">{xml(c['text'])}</mj-text>
   {btns}
@@ -150,17 +143,43 @@ def commentable(key, label, value_html):
 <button class="cbtn" type="button">💬 <span class="cc" data-cc="{esc(key)}">0</span></button></div>
 <div class="val">{value_html}</div>
 <div class="cpanel" hidden><ul class="clist" data-cl="{esc(key)}"></ul>
-<div class="cin"><input placeholder="Kommentar …"><button onclick="send(this,'{esc(key)}')">senden</button></div></div></div>"""
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'{esc(key)}')">senden</button></div></div></div>"""
+
+
+def verify():
+    """Nach Merge/Deploy: sind Editor und alle gehosteten Assets live erreichbar?
+    Make-or-break vor dem Versand — vor dem Deploy sind die Bild-URLs tot."""
+    if not BASE:
+        sys.exit("asset_base_url ist leer — nichts zu verifizieren (reiner Vorschau-Modus).")
+    import urllib.request
+    files = sorted(f.name for f in G.iterdir()) if G.exists() else []
+    if not files:
+        sys.exit("assets/generated/ ist leer — zuerst bauen: python3 build_editor.py --publish")
+    urls = [BASE.rsplit("/assets", 1)[0] + "/"] + [f"{BASE}/{n}" for n in files]
+    fails = 0
+    for u in urls:
+        try:
+            with urllib.request.urlopen(urllib.request.Request(u, method="HEAD"), timeout=20) as r:
+                ok = r.status == 200
+        except Exception:
+            ok = False
+        fails += not ok
+        print(f"  {'ok      ' if ok else '!! FEHLT'}  {u}")
+    if fails:
+        sys.exit(f"{fails} URL(s) nicht erreichbar — erst mergen/deployen, dann versenden.")
+    print(f"Alle {len(urls)} URLs live — versandbereit.")
 
 
 def main():
     publish = "--publish" in sys.argv
     G.mkdir(parents=True, exist_ok=True); (ROOT/"dist").mkdir(exist_ok=True)
-    wm = typo("DAS GOETHEANUM", "wm_slate.png", 15, T["wortmarke"])
-    badges = {"de": typo(H["badge"]["de"], "badge_de.png", 17, AKZENT),
-              "en": typo(H["badge"]["en"], "badge_en.png", 17, AKZENT)}
+    wm = logo()
     if BASE:
         shutil.copy(ROOT/"assets/fonts/FazetaSans-Bold.ttf", G/"FazetaSans-Bold.ttf")
+    rev = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True,
+                         text=True, cwd=ROOT).stdout.strip() or "?"
+    jetzt = datetime.now()
+    stand = f"{jetzt:%d.%m.%Y}, {jetzt.hour}.{jetzt.minute:02d} Uhr"  # Uhrzeit mit Punkt, ohne führende Null (G22)
     seg_blocks, sizes = [], []
     for motiv in H["motive"]:
         seg = SEG_OF[motiv]
@@ -168,12 +187,12 @@ def main():
         for welle in H["wellenplan"][seg]:
             lang_cards = []
             for lang in ("de", "en"):
-                versand, fields = render_mail(motiv, welle, lang, wm, badges, embed=False)
+                versand, fields = render_mail(motiv, welle, lang, wm)
                 out = ROOT/"dist"/f"mail_{motiv}_{welle}_{lang}.html"
                 out.write_text(versand, encoding="utf-8")
                 sizes.append((out.name, len(versand.encode("utf-8"))))
-                # Editor-Vorschau immer eingebettet (eine Datei, offline teilbar)
-                html = versand if not BASE else render_mail(motiv, welle, lang, wm, badges, embed=True)[0]
+                # Editor-Vorschau = exakt die Versand-Mail (gehostete Bilder, kleine Seite).
+                html = versand
                 base = f"{motiv}_{welle}_{lang}"
                 frows = "".join(commentable(f"{base}#{k}", k, esc(v) if k != "Link" else f'<code>{esc(v)}</code>')
                                 for k, v in fields.items())
@@ -188,8 +207,8 @@ def main():
 
     # Gemeinsame Elemente. Der Button-Stil zeigt die Mail-DNA — Artefakt, kein Theme.
     shared = [
-        ("shared#wortmarke", "Wortmarke", f'<img src="{src_for(wm[0], True)}" style="height:22px" alt="Das Goetheanum">'),
-        ("shared#badge", "Badge", f'<img src="{src_for(badges["de"][0], True)}" style="height:22px" alt="{esc(H["badge"]["de"])}"> / <img src="{src_for(badges["en"][0], True)}" style="height:22px" alt="{esc(H["badge"]["en"])}">'),
+        ("shared#wortmarke", "Wortmarke", f'<img src="{data_uri(wm[0])}" style="height:20px" alt="Goetheanum"> — offizielles Logo'),
+        ("shared#badge", "Badge", f'<span style="color:{AKZENT};font-weight:700">{esc(H["badge"]["de"])}</span> / <span style="color:{AKZENT};font-weight:700">{esc(H["badge"]["en"])}</span> — HTML-Text in der Mail-Grundschrift <!-- # ds-ok Mail-DNA, kein Theme -->'),
         ("shared#beweisband", "Beweis-Band", f'{esc(H["proof"]["de"])}<br>{esc(H["proof"]["en"])}'),
         ("shared#button", "Button-Stil", f'<span style="background:{AKZENT};color:#fff;border-radius:999px;padding:8px 18px;font:600 14px {FONT_STACK}">Gratis testen →</span> <!-- # ds-ok Mail-DNA, kein Theme -->'),
         ("shared#kleinzeile", "Kleinzeile (je Motiv)", "<br>".join(esc(H["kleinzeile"][m]["de"]) for m in H["motive"])),
@@ -259,21 +278,33 @@ def main():
 .cin{{display:flex;gap:6px}}
 .cin input{{flex:1;min-height:var(--tap);font:inherit;font-size:var(--t-small);padding:4px 10px;border:1px solid var(--line);border-radius:var(--r-control);background:var(--paper);color:var(--ink);min-width:0}}
 .cin button{{min-height:var(--tap);background:var(--blue-solid);color:var(--on-accent);border:0;border-radius:var(--r-control);padding:4px 12px;font:inherit;font-size:var(--t-small);cursor:pointer}}
+.uebn{{min-height:var(--tap);background:var(--paper);border:1px solid var(--line-soft);border-radius:var(--r-control);padding:4px 10px;font:inherit;font-size:var(--t-small);cursor:pointer;color:var(--muted)}}
+.uebn:hover{{color:var(--gold-ink);border-color:var(--gold-ink)}}
+/* Sammelansicht: alle offenen Kommentare, anklicken springt zum Feld. */
+.offen{{list-style:none;margin:0;padding:0;display:grid;gap:var(--s2)}}
+.offen button{{display:block;width:100%;text-align:left;min-height:var(--tap);background:var(--paper);border:1px solid var(--line-soft);border-radius:8px;padding:var(--s2) var(--s3);font:inherit;cursor:pointer;color:var(--ink)}}
+.offen button:hover{{border-color:var(--gold-ink)}}
+.offen .okey{{font-family:var(--font-text);font-size:var(--t-micro);color:var(--gold-ink);font-weight:600}}
+.offen .otxt{{display:block;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;margin-top:2px}}
+.offen .ometa{{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-left:8px}}
+.fld.blitz{{outline:2px solid var(--gold-deep);outline-offset:4px;border-radius:8px}}
 /* Global ausblenden: Schalter «Kommentare» in der Kopfleiste. */
-body.nocmt .cbtn,body.nocmt .cpanel{{display:none}}
+body.nocmt .cbtn,body.nocmt .cpanel,body.nocmt .offen-sec{{display:none}}
 /* «Nur Mails»: alle Einzelelemente weg — reine Galerie der Vorschauen. */
 body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
 .shared .fld{{background:var(--paper);border:1px solid var(--line-soft);border-radius:8px;padding:var(--s2) var(--s3)}}
 .subline{{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin:0 0 var(--s3)}}
 </style></head><body>
 
-<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"
+        data-onpage="Cockpit:../sommer-zaehler/|Aktivitäten:../sommer-zaehler/aktivitaeten.html|Kosten:../sommer-zaehler/kosten.html|Multiplikatoren:../sommer-zaehler/multiplikatoren.html|Links:../utm-generator/|Mail:../mail-editor/"></script>
 
 <main class="wrap">
 <section class="lead">
   <span class="kicker">Sommer-Aktion 2026</span>
   <h1>Mail-Editor</h1>
   <p class="lede" style="max-width:var(--measure)">Alle Wellen-Mails der drei Segmente zum Gegenlesen — je Feld kommentierbar, Kommentare landen im Werkzeug-Backend. Korrigiert wird in <code>heroes.json</code>, dann wird neu gebaut.</p>
+  <p class="subline">Stand dieses Builds: {stand} · <code>{rev}</code></p>
   <div class="controls">
     <span class="lab">Sprache</span>
     <button id="b-de" class="pill on" onclick="setLang('de')">Deutsch</button>
@@ -286,6 +317,10 @@ body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
     <span id="status" style="margin-left:auto">verbinde …</span>
   </div>
 </section>
+
+<section class="segment offen-sec" id="offen-sec" hidden><h2>Offene Kommentare</h2>
+<p class="subline">Die To-do-Liste des Gegenlesens — anklicken springt zum Feld.</p>
+<ul class="offen" id="offenliste"></ul></section>
 
 <section class="segment shared-sec"><h2>Gemeinsame Elemente</h2>
 <p class="subline">Einmal kommentieren — gilt für alle Mails.</p>
@@ -323,6 +358,24 @@ function render(){{
      +'<span class="ktxt">'+esc(c.kommentar)+'</span></li>').join('');}});
  document.querySelectorAll('.cc').forEach(s=>{{const n=(COMMENTS[s.dataset.cc]||[]).filter(c=>!c.erledigt).length;
    s.textContent=n;s.classList.toggle('has',n>0);}});
+ const off=[];Object.values(COMMENTS).forEach(l=>l.forEach(c=>{{if(!c.erledigt)off.push(c);}}));
+ off.sort((a,b)=>a.created_at<b.created_at?-1:1);
+ document.getElementById('offen-sec').hidden=off.length===0;
+ document.getElementById('offenliste').innerHTML=off.map(c=>{{const[wo,feld]=c.mail_key.split('#');
+   return '<li><button type="button" data-go="'+esc(c.mail_key)+'"><span class="okey">'
+     +esc(wo==='shared'?'Gemeinsam':wo)+' · '+esc(feld||'')+'</span><span class="ometa">'+esc(c.autor||'?')+' · '+zeit(c.created_at)+'</span>'
+     +'<span class="otxt">'+esc(c.kommentar)+'</span></button></li>';}}).join('');
+}}
+function springe(key){{
+ const fld=document.querySelector('.fld[data-key="'+CSS.escape(key)+'"]'); if(!fld) return;
+ const m=key.match(/_(de|en)#/); if(m) setLang(m[1]);
+ fld.querySelector('.cpanel').hidden=false;
+ fld.scrollIntoView({{behavior:'smooth',block:'center'}});
+ fld.classList.add('blitz'); setTimeout(()=>fld.classList.remove('blitz'),1800);
+}}
+function uebernehmen(b){{
+ const fld=b.closest('.fld'), i=fld.querySelector('.cin input');
+ i.value=fld.querySelector('.val').textContent.trim(); i.focus();
 }}
 async function load(){{
  try{{const r=await fetch(REST+"?select=id,created_at,mail_key,autor,kommentar,erledigt&order=created_at",{{headers:HDR}});
@@ -352,6 +405,7 @@ async function send(btn,key){{
  }}catch(e){{st("Fehler: "+e.message); alert("Konnte nicht senden:\\n"+e.message+"\\n\\nTipp: Diese Seite über werkzeuge.goetheanum.ch öffnen — in eingebetteten Vorschauen sind Netzwerkzugriffe oft blockiert.");}}
  btn.disabled=false;
 }}
+document.getElementById('offenliste').addEventListener('click',e=>{{const b=e.target.closest('[data-go]');if(b)springe(b.dataset.go);}});
 try{{document.getElementById('autor').value=localStorage.getItem('autor')||'';}}catch(e){{}}
 setLang('de');load();
 </script></body></html>"""
@@ -371,10 +425,12 @@ setLang('de');load();
         APP.mkdir(parents=True, exist_ok=True)
         (APP/"index.html").write_text(page, encoding="utf-8")
         adir = APP/"assets"; adir.mkdir(exist_ok=True)
+        for old in adir.iterdir():
+            old.unlink()  # keine Leichen aus früheren Builds im Deploy
         for f in sorted(G.iterdir()):
             shutil.copy(f, adir/f.name)
         print(f"Publiziert: {APP}/index.html + {len(list(adir.iterdir()))} Assets -> {BASE or '(asset_base_url leer!)'}")
 
 
 if __name__ == "__main__":
-    main()
+    verify() if "--verify" in sys.argv else main()
