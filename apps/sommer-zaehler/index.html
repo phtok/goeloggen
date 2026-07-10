@@ -187,7 +187,9 @@
   .landing .meta{margin-right:var(--s2)}
 
   /* Sprungleiste: haftende Bereichs-Anker (B04-Fingerziele, normal statt versal G05) */
-  .jump{position:sticky;top:0;z-index:6;background:var(--paper);border-bottom:1px solid var(--line)}
+  /* Anker-Sprünge unter Kopfzeile + Sprungleiste halten (nicht dahinter) */
+  html{scroll-padding-top:calc(var(--header-h) + 52px)}
+  .jump{position:sticky;top:var(--header-h);z-index:38;background:var(--paper);border-bottom:1px solid var(--line)}
   .jump .jrow{display:flex;gap:var(--s2);overflow-x:auto;-webkit-overflow-scrolling:touch}
   .jump a{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);white-space:nowrap;
     padding:12px 10px;min-height:var(--tap);display:inline-flex;align-items:center;border-bottom:2px solid transparent}
@@ -881,21 +883,29 @@
   function muPwGespeichert(){ try { return sessionStorage.getItem('sommer26_multi_pw') || ''; } catch(e){ return ''; } }
 
   function muNamenLaden(pw, still){
-    return fetch(SB + '/rest/v1/rpc/sommer2026_multi_namen', {
+    // Erst Passwort separat prüfen (funktioniert auch bei leerer Namensliste),
+    // dann die Namen laden.
+    return fetch(SB + '/rest/v1/rpc/sommer2026_multi_pw_ok', {
       method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
       body: JSON.stringify({ p_passwort: pw })
     }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function(rows){
-        if (rows && rows.length){
-          muNamen = {}; rows.forEach(function(x){ muNamen[x.id] = x.name; });
-          try { sessionStorage.setItem('sommer26_multi_pw', pw); } catch(e){}
-          el('muNamenBtn').textContent = 'Namen ausblenden';
-          if (!still) muSag('Namen eingeblendet – nur in diesem Browser.');
-          renderMultis();
-        } else if (!still){
+      .then(function(ok){
+        if (!ok){
           try { sessionStorage.removeItem('sommer26_multi_pw'); } catch(e){}
-          muSag('Passwort stimmt nicht.', true);
+          if (!still) muSag('Passwort stimmt nicht.', true);
+          return;
         }
+        try { sessionStorage.setItem('sommer26_multi_pw', pw); } catch(e){}
+        el('muNamenBtn').textContent = 'Namen ausblenden';
+        if (!still) muSag('Namen eingeblendet – nur in diesem Browser.');
+        return fetch(SB + '/rest/v1/rpc/sommer2026_multi_namen', {
+          method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+          body: JSON.stringify({ p_passwort: pw })
+        }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+          .then(function(rows){
+            muNamen = {}; (rows || []).forEach(function(x){ muNamen[x.id] = x.name; });
+            renderMultis();
+          });
       }).catch(function(){ if (!still) muSag('Nicht erreichbar.', true); });
   }
 
