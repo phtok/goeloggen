@@ -59,18 +59,19 @@
               <option value="andere">Anderes</option>
             </select>
           </label>
-          <label class="field">
-            <span class="lab">Aufgabe der Aktivität</span>
-            <select id="mfRolle">
-              <option value="sichtbarkeit">Sichtbarkeit (gesehen werden)</option>
-              <option value="aktivierung">Aktivierung (Klicks holen)</option>
-              <option value="wirkung" selected>Wirkung (Abos bringen)</option>
-              <option value="bindung">Bindung (halten)</option>
-            </select>
-          </label>
           <label class="field span3">
             <span class="lab">Aktivität</span>
             <input type="text" id="mfTitel" placeholder="z. B. Reel Ernst Zürcher · Instagram" />
+          </label>
+          <label class="field">
+            <span class="lab">Reichweite – Menschen erreicht</span>
+            <input type="number" id="mfReichweite" min="0" step="1" inputmode="numeric" placeholder="z. B. 4200" />
+            <span class="hint">Impressionen / Auflage / Empfänger. Später über Bearbeiten ergänzbar.</span>
+          </label>
+          <label class="field">
+            <span class="lab">Klicks</span>
+            <input type="number" id="mfKlicks" min="0" step="1" inputmode="numeric" placeholder="z. B. 130" />
+            <span class="hint">Wie viele haben den Link angeklickt.</span>
           </label>
           <label class="field">
             <span class="lab">Kürzel – wer steht dahinter?</span>
@@ -81,7 +82,7 @@
           <button class="btn primary" type="button" id="mfBtn">Eintragen</button>
           <span class="said" id="mfSaid"></span>
         </div>
-        <p class="provisorisch" style="margin-top:var(--s3)">Für alle Kampagnen-Beteiligten offen. Reichweite, Klicks und Kosten werden gesammelt nachgetragen (CSV an Philipp oder per Bearbeiten-Knopf im Protokoll unten). Ausgaben trägst Du unter <a href="kosten.html">Kosten</a> ein.</p>
+        <p class="provisorisch" style="margin-top:var(--s3)">Für alle Kampagnen-Beteiligten offen. Reichweite und Klicks fliessen direkt in die Wirkungskette im Cockpit – kennst Du sie noch nicht, trag sie später über den Bearbeiten-Knopf im Protokoll nach. Ausgaben trägst Du unter <a href="kosten.html">Kosten</a> ein.</p>
       </div>
     </details>
     <details class="zb-form">
