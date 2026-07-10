@@ -80,7 +80,7 @@
         },
         "alternativen": [
           "Wo immer Sie diesen Sommer verbringen",
-          "Über 800 Beiträge — einen Sommer lang gratis"
+          "Über 800 Videos — einen Sommer lang gratis"
         ]
       },
       "en": {
@@ -89,7 +89,7 @@
         },
         "alternativen": [
           "Wherever you spend this summer",
-          "Over 800 films — one summer, free"
+          "Over 800 videos — one summer, free"
         ]
       }
     },
@@ -159,8 +159,8 @@
     }
   },
   "proof": {
-    "de": "seit 1921 · 800+ Beiträge · 42 Ausgaben im Jahr · weltweit",
-    "en": "since 1921 · 800+ films · 42 issues a year · worldwide"
+    "de": "seit 1921 · 800+ Videos · 42 Ausgaben im Jahr · weltweit",
+    "en": "since 1921 · 800+ videos · 42 issues a year · worldwide"
   },
   "badge": {
     "de": "3 Monate gratis",
@@ -193,88 +193,100 @@
     "lesen": {
       "w1": {
         "de": {
-          "betreff": "Drei Monate im Freien lesen — gratis",
+          "betreff": "Was Sie sehen, jetzt auch lesen — 3 Monate gratis",
           "botschaft": "Drei Monate im Freien lesen.",
-          "text": "Aufsätze, Zeitsymptome und Stimmen aus der anthroposophischen Bewegung — jede Woche neu, gedruckt und digital.",
-          "alt": "Was Sie sehen, jetzt auch lesen — 3 Monate gratis"
+          "text": "Zu Ihrem goetheanum.tv-Zugang: die Wochenschrift — Aufsätze, Zeitsymptome und Stimmen aus der anthroposophischen Bewegung, jede Woche neu, gedruckt und digital.",
+          "alt": "Drei Monate im Freien lesen — gratis",
+          "preheader": "Die Wochenschrift drei Monate geschenkt — lesen, wo der Sommer Sie hinträgt. Bis 8. August."
         },
         "en": {
-          "betreff": "Read in the open air — three months free",
+          "betreff": "What you watch, now also read — 3 months free",
           "botschaft": "Read in the open air, all summer.",
-          "text": "Essays, signs of the times and voices from the anthroposophical movement — every week, in print and digital.",
-          "alt": "What you watch, now also read — 3 months free"
+          "text": "To go with your goetheanum.tv access: the weekly — essays, signs of the times and voices from the anthroposophical movement, new every week, in print and digital.",
+          "alt": "Read in the open air — three months free",
+          "preheader": "Three months of the weekly as a gift — read wherever summer takes you. Until 8 August."
         }
       },
       "w2": {
         "de": {
           "betreff": "Ihr Sommer hat noch Seiten frei",
-          "botschaft": "Ihr Sommer hat noch Seiten frei.",
-          "text": "Die Aktion läuft: Sichern Sie sich die Wochenschrift drei Monate gratis — und lesen Sie, wo der Abend am schönsten ist.",
-          "alt": "Noch bis 8. August: die Wochenschrift gratis"
+          "botschaft": "Lesen, wo der Abend am schönsten ist.",
+          "text": "Die Aktion läuft noch bis 8. August: die Wochenschrift drei Monate gratis zu Ihrem Abo dazu.",
+          "alt": "Noch bis 8. August: die Wochenschrift gratis",
+          "preheader": "Die Wochenschrift drei Monate gratis zu Ihrem Abo — Anmeldung bis 8. August."
         },
         "en": {
           "betreff": "Your summer still has pages to fill",
-          "botschaft": "Your summer still has pages to fill.",
-          "text": "The offer is on: take the weekly free for three months — and read where the evening is most beautiful.",
-          "alt": "Until 8 August: the weekly, free"
+          "botschaft": "Read where the evening is most beautiful.",
+          "text": "The offer runs until 8 August: three months of the weekly, free, added to your subscription.",
+          "alt": "Until 8 August: the weekly, free",
+          "preheader": "Three months of the weekly free with your subscription — sign up by 8 August."
         }
       },
       "w3": {
         "de": {
-          "betreff": "Am Samstag endet Ihr Gratis-Zugang",
+          "betreff": "Nur noch bis Samstag: drei Monate gratis",
           "botschaft": "Am Samstag ist Schluss.",
           "text": "Nur noch wenige Tage: Ergänzen Sie Ihr Abo drei Monate gratis um die Wochenschrift. Ohne Verpflichtung.",
-          "alt": "Letzte Tage: Wochenschrift gratis lesen"
+          "alt": "Letzte Tage: Wochenschrift gratis lesen",
+          "preheader": "Die Wochenschrift drei Monate gratis zu Ihrem Abo dazu — die Anmeldung dauert eine Minute."
         },
         "en": {
-          "betreff": "Your free access ends on Saturday",
+          "betreff": "Only until Saturday: three months free",
           "botschaft": "Saturday is the deadline.",
           "text": "Only a few days left: add the weekly to your subscription free for three months. No obligation.",
-          "alt": "Last days: read the weekly free"
+          "alt": "Last days: read the weekly free",
+          "preheader": "Three months of the weekly with your subscription — signing up takes a minute."
         }
       }
     },
     "sehen": {
       "w1": {
         "de": {
-          "betreff": "Ein Sommer voller Inspiration — 3 Monate gratis",
+          "betreff": "Was Sie lesen, jetzt auch sehen — 3 Monate gratis",
           "botschaft": "Ein Sommer voller Inspiration.",
-          "text": "Vorträge, Gespräche und Begegnungen vom Goetheanum — über 800 Beiträge, wo immer Sie diesen Sommer verbringen.",
-          "alt": "Was Sie lesen, jetzt auch sehen — 3 Monate gratis"
+          "text": "Zu Ihrer Wochenschrift: goetheanum.tv — Vorträge, Gespräche und Begegnungen vom Goetheanum, über 800 Videos, wo immer Sie diesen Sommer verbringen.",
+          "alt": "Ein Sommer voller Inspiration — 3 Monate gratis",
+          "preheader": "goetheanum.tv drei Monate geschenkt — über 800 Videos, wo immer Sie den Sommer verbringen."
         },
         "en": {
-          "betreff": "A summer full of inspiration — 3 months free",
+          "betreff": "What you read, now also watch — 3 months free",
           "botschaft": "A summer full of inspiration.",
-          "text": "Lectures, conversations and encounters from the Goetheanum — over 800 films, wherever you spend this summer.",
-          "alt": "What you read, now also watch — 3 months free"
+          "text": "To go with your weekly: goetheanum.tv — lectures, conversations and encounters from the Goetheanum, over 800 videos, wherever you spend this summer.",
+          "alt": "A summer full of inspiration — 3 months free",
+          "preheader": "Three months of goetheanum.tv as a gift — over 800 videos, wherever you spend the summer."
         }
       },
       "w2": {
         "de": {
           "betreff": "Sehen Sie, was diesen Sommer läuft",
-          "botschaft": "Was diesen Sommer läuft.",
-          "text": "Über 800 Beiträge warten — Vorträge, Gespräche, Bühne. Drei Monate gratis, unverbindlich.",
-          "alt": "Noch bis 8. August: goetheanum.tv gratis"
+          "botschaft": "Vorträge, Gespräche, Bühne.",
+          "text": "Über 800 Videos warten — noch bis 8. August drei Monate gratis zu Ihrem Abo dazu, unverbindlich.",
+          "alt": "Noch bis 8. August: goetheanum.tv gratis",
+          "preheader": "goetheanum.tv drei Monate gratis zu Ihrem Abo — Anmeldung bis 8. August."
         },
         "en": {
           "betreff": "See what’s on this summer",
-          "botschaft": "What’s on this summer.",
-          "text": "Over 800 films are waiting — lectures, conversations, the stage. Three months free, no obligation.",
-          "alt": "Until 8 August: goetheanum.tv free"
+          "botschaft": "Lectures, conversations, the stage.",
+          "text": "Over 800 videos are waiting — until 8 August, three months free with your subscription, no obligation.",
+          "alt": "Until 8 August: goetheanum.tv free",
+          "preheader": "Three months of goetheanum.tv free with your subscription — sign up by 8 August."
         }
       },
       "w3": {
         "de": {
-          "betreff": "Am Samstag endet Ihr Gratis-Zugang",
+          "betreff": "Nur noch bis Samstag: drei Monate gratis",
           "botschaft": "Am Samstag ist Schluss.",
           "text": "Letzte Tage: Ergänzen Sie Ihr Abo drei Monate gratis um goetheanum.tv. Ohne Bindung.",
-          "alt": "Letzte Tage: goetheanum.tv gratis sehen"
+          "alt": "Letzte Tage: goetheanum.tv gratis sehen",
+          "preheader": "goetheanum.tv drei Monate gratis zu Ihrem Abo dazu — die Anmeldung dauert eine Minute."
         },
         "en": {
-          "betreff": "Your free access ends on Saturday",
+          "betreff": "Only until Saturday: three months free",
           "botschaft": "Saturday is the deadline.",
           "text": "Last days: add goetheanum.tv to your subscription free for three months. No strings.",
-          "alt": "Last days: watch goetheanum.tv free"
+          "alt": "Last days: watch goetheanum.tv free",
+          "preheader": "Three months of goetheanum.tv with your subscription — signing up takes a minute."
         }
       }
     },
@@ -282,57 +294,65 @@
       "w1": {
         "de": {
           "betreff": "Ein Sommer mit dem Goetheanum — 3 Monate gratis",
-          "botschaft": "Ein Sommer mit dem Goetheanum.",
+          "botschaft": "Lesen und sehen — den ganzen Sommer.",
           "text": "Zum Lesen und zum Streamen: zwei Angebote, ein Geschenk — drei Monate kostenlos, jederzeit kündbar.",
-          "alt": "Drei Monate sind eine Jahreszeit — gratis"
+          "alt": "Drei Monate sind eine Jahreszeit — gratis",
+          "preheader": "Lesen oder streamen — oder beides: drei Monate kostenlos, bis 8. August."
         },
         "en": {
           "betreff": "A summer with the Goetheanum — 3 months free",
-          "botschaft": "A summer with the Goetheanum.",
+          "botschaft": "Reading and watching — all summer long.",
           "text": "To read and to stream: two offers, one gift — three months free, cancel anytime.",
-          "alt": "Three months are a season — free"
+          "alt": "Three months are a season — free",
+          "preheader": "Read or stream — or both: three months free, until 8 August."
         }
       },
       "w2": {
         "de": {
           "betreff": "Zwei Angebote, ein Geschenk",
-          "botschaft": "Zwei Angebote, ein Geschenk.",
-          "text": "Lesen und sehen — drei Monate kostenlos. Wählen Sie, was Ihr Sommer braucht.",
-          "alt": "Noch bis 8. August: Ihr Sommer-Geschenk"
+          "botschaft": "Wählen Sie, was Ihr Sommer braucht.",
+          "text": "Lesen oder sehen — oder beides: drei Monate kostenlos, noch bis 8. August.",
+          "alt": "Noch bis 8. August: Ihr Sommer-Geschenk",
+          "preheader": "Die Wochenschrift lesen oder goetheanum.tv streamen — drei Monate kostenlos, bis 8. August."
         },
         "en": {
           "betreff": "Two offers, one gift",
-          "botschaft": "Two offers, one gift.",
-          "text": "Read and watch — three months free. Choose what your summer needs.",
-          "alt": "Until 8 August: your summer gift"
+          "botschaft": "Choose what your summer needs.",
+          "text": "Read or watch — or both: three months free, until 8 August.",
+          "alt": "Until 8 August: your summer gift",
+          "preheader": "Read the weekly or stream goetheanum.tv — three months free, until 8 August."
         }
       },
       "w3": {
         "de": {
           "betreff": "Am Samstag endet die Sommer-Aktion",
-          "botschaft": "Am Samstag ist Schluss.",
-          "text": "Nur noch wenige Tage für drei Monate Goetheanum — gratis, ohne Verpflichtung.",
-          "alt": "Letzte Tage: drei Monate gratis"
+          "botschaft": "Drei Monate Goetheanum, noch bis Samstag.",
+          "text": "Gratis und ohne Verpflichtung — wählen Sie Lesen, Sehen oder beides.",
+          "alt": "Letzte Tage: drei Monate gratis",
+          "preheader": "Drei Monate lesen oder streamen, gratis — nur noch bis Samstag, 8. August."
         },
         "en": {
           "betreff": "The summer offer ends on Saturday",
-          "botschaft": "Saturday is the deadline.",
-          "text": "Just a few days left for three months of Goetheanum — free, no obligation.",
-          "alt": "Last days: three months free"
+          "botschaft": "Three months of Goetheanum, until Saturday.",
+          "text": "Free and without obligation — choose reading, watching or both.",
+          "alt": "Last days: three months free",
+          "preheader": "Three months of reading or streaming, free — only until Saturday, 8 August."
         }
       },
       "w3b": {
         "de": {
           "betreff": "Morgen ist Schluss",
-          "botschaft": "Morgen ist Schluss.",
-          "text": "Ein Klick — und der Sommer mit dem Goetheanum gehört Ihnen. Unverbindlich.",
-          "alt": "Letzte Stunden: 3 Monate gratis"
+          "botschaft": "Sie waren schon da — ein Schritt fehlt noch.",
+          "text": "Drei Monate Goetheanum, gratis und unverbindlich — die Anmeldung dauert eine Minute.",
+          "alt": "Letzte Stunden: 3 Monate gratis",
+          "preheader": "Drei Monate Goetheanum gratis — heute oder morgen anmelden, dann gehört der Sommer Ihnen."
         },
         "en": {
           "betreff": "Last chance — it ends tomorrow",
-          "botschaft": "Tomorrow it ends.",
-          "text": "One click — and the summer with the Goetheanum is yours. No obligation.",
-          "alt": "Final hours: 3 months free"
+          "botschaft": "You were already there — one step to go.",
+          "text": "Three months of Goetheanum, free and without obligation — signing up takes a minute.",
+          "alt": "Final hours: 3 months free",
+          "preheader": "Three months of Goetheanum, free — sign up today or tomorrow and the summer is yours."
         }
       }
     }
