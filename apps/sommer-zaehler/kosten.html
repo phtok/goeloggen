@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kampagne · Kosten · Goetheanum</title>
+<meta name="description" content="Kosten und Rückfluss der Sommer-Aktion 2026 – Summe, Kosten je Abo, Einzelposten." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<link rel="stylesheet" href="campaign.css" />
+</head>
+<body>
+
+<!-- Kopfzeile + gemeinsame Kampagnen-Unterleiste (data-onpage). -->
+<script src="../../design-system/nav.js"
+        data-root="../../"
+        data-variant="werkzeug"
+        data-onpage="Cockpit:./|Aktivitäten:aktivitaeten.html|Kosten:kosten.html|Multiplikatoren:multiplikatoren.html|Links:../utm-generator/|Mail:../mail-editor/"></script>
+
+<main class="wrap">
+
+  <section class="lead">
+    <span class="kick">Kampagne · Sommer-Aktion 2026</span>
+    <h1 class="lead-title">Kosten</h1>
+    <p class="kampagne">Was die Aktion kostet – und was voraussichtlich zurückkommt. Eintragen erscheint sofort im Cockpit.</p>
+  </section>
+
+
+  <section id="kosten">
+    <div class="shead"><h2>Kosten und Wirkung</h2><p>Summe, Kosten je Abo und Rückfluss – sobald Posten erfasst sind.</p></div>
+    <div class="tiles">
+      <div class="tile"><div class="n gold" id="costTotal">–</div><div class="l">Kosten gesamt</div><div class="s" id="costSub">Stunden, Social Media, Druck & Versand, Infrastruktur</div></div>
+      <div class="tile"><div class="n blue" id="costCpa">–</div><div class="l">Kosten je Abo</div><div class="s">sobald Kosten erfasst</div></div>
+      <div class="tile"><div class="n ok" id="costRoi">–</div><div class="l">Rückfluss je € Kosten</div><div class="s">projizierter Folgejahr-Umsatz</div></div>
+    </div>
+    <div class="tablewrap" style="margin-top:var(--s5)">
+      <table class="tarif">
+        <thead><tr><th>Kostenart</th><th class="num">Betrag</th></tr></thead>
+        <tbody id="costBody"><tr><td class="empty" colspan="2">lädt …</td></tr></tbody>
+        <tfoot id="costFoot"></tfoot>
+      </table>
+    </div>
+    <details class="zb-form" open>
+      <summary>Einzelposten anzeigen und eintragen</summary>
+      <div class="tablewrap" style="margin-top:var(--s4)">
+        <table class="tarif">
+          <thead><tr><th>Datum</th><th>Posten</th><th>Kostenart</th><th class="num">Betrag</th></tr></thead>
+          <tbody id="kostenPostenBody"><tr><td class="empty" colspan="4">Noch keine Einzelposten erfasst.</td></tr></tbody>
+        </table>
+      </div>
+      <div class="card soft" style="margin-top:var(--s4)">
+        <div class="grid">
+          <label class="field">
+            <span class="lab">Datum</span>
+            <input type="date" id="kfTag" />
+          </label>
+          <label class="field">
+            <span class="lab">Kostenart</span>
+            <select id="kfKategorie">
+              <option value="stunden">Stunden intern</option>
+              <option value="social">Social Media</option>
+              <option value="druck">Druck &amp; Versand</option>
+              <option value="infrastruktur">Infrastruktur</option>
+              <option value="andere">Andere</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="lab">Betrag in Euro</span>
+            <input type="number" id="kfBetrag" min="0" step="0.01" placeholder="0.00" />
+          </label>
+          <label class="field span3">
+            <span class="lab">Posten</span>
+            <input type="text" id="kfPosten" placeholder="z. B. Inserat BZ Basel, halbe Seite" />
+          </label>
+          <label class="field">
+            <span class="lab">Kürzel – wer trägt ein?</span>
+            <input type="text" id="kfWer" placeholder="z. B. hao" autocomplete="off" />
+          </label>
+        </div>
+        <div style="display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;margin-top:var(--s4)">
+          <button class="btn primary" type="button" id="kfBtn">Eintragen</button>
+          <span class="said" id="kfSaid"></span>
+        </div>
+      </div>
+    </details>
+    <p class="provisorisch">Jeder Posten zählt sofort in Summe, Kosten je Abo und Rückfluss. Eintragen dürfen alle Beteiligten – das Kürzel sagt, wer.</p>
+  </section>
+
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap" style="display:flex;flex-direction:column;gap:var(--s2)">
+    <div class="landing">
+      <span class="meta">Aktionsseiten</span>
+      <a class="btn" href="https://global-sommer2026.goetheanum.online" target="_blank" rel="noopener">Übersicht · 3 Monate gratis</a>
+      <a class="btn" href="https://ws-sommer2026.dasgoetheanum.com" target="_blank" rel="noopener">Wochenschrift</a>
+      <a class="btn" href="https://tv-sommer2026.goetheanum.tv" target="_blank" rel="noopener">goetheanum.tv</a>
+    </div>
+    <div class="frow">
+      <span><strong>Sommer-Zähler 2026</strong> · live aus dem Werkzeug-Backend · nur Summen, keine Personendaten</span>
+      <span><a href="../../design-system/">Design-System</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="campaign.js"></script>
+</body>
+</html>

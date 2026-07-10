@@ -8,9 +8,11 @@ Aggregat-RPCs. Es verlassen **nur Summen** die Datenbank, keine Personendaten.
 
 Die Kampagne ist eine mehrseitige App in `apps/sommer-zaehler/`, geklammert
 durch die gemeinsame Unter-Leiste (`data-onpage` von `nav.js`):
-**Cockpit** (`index.html`) · **Massnahmen** (`massnahmen.html`, Zeitband +
-Protokoll + Kosten) · **Multiplikatoren** (`multiplikatoren.html`) — dazu
-verlinkt **Links** (`../utm-generator/`) und **Mail** (`../mail-editor/`).
+**Cockpit** (`index.html`) · **Aktivitäten** (`aktivitaeten.html`, Zeitband +
+Protokoll) · **Kosten** (`kosten.html`) · **Multiplikatoren**
+(`multiplikatoren.html`) — dazu verlinkt **Links** (`../utm-generator/`) und
+**Mail** (`../mail-editor/`). (Im Backend heisst die Tabelle weiterhin
+`sommer2026_massnahmen`; „Aktivität" ist nur die Oberflächen-Benennung.)
 Geteiltes CSS/JS liegt in `campaign.css` und `campaign.js`; jede Seite bindet
 beide ein und rendert per Element-Guards nur ihre eigenen Abschnitte, so bleibt
 der Code einfach (eine Datei, aus dem Cache). Der Hub-Eintrag `sommer-zaehler`
