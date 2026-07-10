@@ -17,6 +17,19 @@
      unabhängig vom Seiten-Thema) – wie die Vorschau im Logo-Werkzeug. */
   .proben{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
   .proben.zwei-spalten{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+
+  /* Sprachtafel: zwei Fassungen (Icon vorn · Icon in der Mitte) × vier Sprachen,
+     grosszügig gesetzt. Label links, dann zwei Logo-Zellen. */
+  .sprachtafel{display:grid;grid-template-columns:max-content 1fr 1fr;gap:clamp(var(--s6),4vw,var(--s8)) clamp(var(--s6),4vw,var(--s8));align-items:center}
+  .sprachtafel .kopf{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);text-align:center;letter-spacing:.02em}
+  .sprachtafel .sprache{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:18px;white-space:nowrap}
+  .sprachtafel .zelle{display:grid;place-items:center;padding:var(--s6) var(--s4);border-radius:var(--r-card);background:var(--soft);min-height:96px}
+  .sprachtafel .zelle img{height:44px;width:auto;max-width:100%}
+  @media (max-width:720px){
+    .sprachtafel{grid-template-columns:1fr 1fr;gap:var(--s6) var(--s4)}
+    .sprachtafel .sprache{grid-column:1/-1;font-size:16px}
+    .sprachtafel .kopf:first-child{display:none}
+  }
   .probe{margin:0}
   .probe .flaeche{display:grid;place-items:center;min-height:150px;padding:var(--s6);border-radius:var(--r-card);border:1px solid var(--line)}
   .probe img{width:min(100%,340px);height:auto;display:block}
@@ -184,25 +197,52 @@
 
   <section>
     <div class="shead">
-      <h2>In vier Sprachen</h2>
-      <p>Das ‹my› wird übersetzt, der Rest bleibt: gleicher Kreis, gleiche Metrik, gleiche Abstände. Der Name funktioniert in allen Häusersprachen.</p>
+      <h2>Vier Sprachen, zwei Fassungen</h2>
+      <p>Das ‹my› wird übersetzt, der Rest bleibt: gleicher Kreis, gleiche Metrik, gleiche Abstände. Links das Icon am Zeilenanfang, rechts als Bindeglied in der Mitte.</p>
     </div>
-    <div class="leiter">
-      <div class="stufe"><span class="mass">Deutsch · mein</span>
-        <img class="nur-hell" src="../assets/logos/mein-goetheanum-kreis-mitte-deutlich.svg" alt="mein goetheanum" style="height:44px" />
-        <img class="nur-dunkel" src="../assets/logos/mein-goetheanum-kreis-mitte-deutlich-weiss.svg" alt="mein goetheanum, Weiss-Fassung" style="height:44px" />
+    <div class="sprachtafel">
+      <span></span>
+      <span class="kopf">Icon vorn</span>
+      <span class="kopf">Icon in der Mitte</span>
+
+      <span class="sprache">Deutsch</span>
+      <div class="zelle">
+        <img class="nur-hell" src="../assets/logos/mein-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="mein.goetheanum, Icon vorn" />
+        <img class="nur-dunkel" src="../assets/logos/mein-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="mein.goetheanum, Icon vorn, Weiss" />
       </div>
-      <div class="stufe"><span class="mass" lang="en">English · my</span>
-        <img class="nur-hell" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich.svg" alt="my goetheanum" style="height:44px" />
-        <img class="nur-dunkel" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich-weiss.svg" alt="my goetheanum, Weiss-Fassung" style="height:44px" />
+      <div class="zelle">
+        <img class="nur-hell" src="../assets/logos/mein-goetheanum-kreis-mitte-deutlich.svg" alt="mein goetheanum, Icon in der Mitte" />
+        <img class="nur-dunkel" src="../assets/logos/mein-goetheanum-kreis-mitte-deutlich-weiss.svg" alt="mein goetheanum, Icon in der Mitte, Weiss" />
       </div>
-      <div class="stufe"><span class="mass" lang="fr">Français · mon</span>
-        <img class="nur-hell" src="../assets/logos/mon-goetheanum-kreis-mitte-deutlich.svg" alt="mon goetheanum" style="height:44px" />
-        <img class="nur-dunkel" src="../assets/logos/mon-goetheanum-kreis-mitte-deutlich-weiss.svg" alt="mon goetheanum, Weiss-Fassung" style="height:44px" />
+
+      <span class="sprache" lang="en">English</span>
+      <div class="zelle">
+        <img class="nur-hell" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="my.goetheanum, Icon vorn" />
+        <img class="nur-dunkel" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="my.goetheanum, Icon vorn, Weiss" />
       </div>
-      <div class="stufe"><span class="mass" lang="es">Español · mi</span>
-        <img class="nur-hell" src="../assets/logos/mi-goetheanum-kreis-mitte-deutlich.svg" alt="mi goetheanum" style="height:44px" />
-        <img class="nur-dunkel" src="../assets/logos/mi-goetheanum-kreis-mitte-deutlich-weiss.svg" alt="mi goetheanum, Weiss-Fassung" style="height:44px" />
+      <div class="zelle">
+        <img class="nur-hell" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich.svg" alt="my goetheanum, Icon in der Mitte" />
+        <img class="nur-dunkel" src="../assets/logos/my-goetheanum-kleinschreibung-kreis-mitte-deutlich-weiss.svg" alt="my goetheanum, Icon in der Mitte, Weiss" />
+      </div>
+
+      <span class="sprache" lang="fr">Français</span>
+      <div class="zelle">
+        <img class="nur-hell" src="../assets/logos/mon-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="mon.goetheanum, Icon vorn" />
+        <img class="nur-dunkel" src="../assets/logos/mon-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="mon.goetheanum, Icon vorn, Weiss" />
+      </div>
+      <div class="zelle">
+        <img class="nur-hell" src="../assets/logos/mon-goetheanum-kreis-mitte-deutlich.svg" alt="mon goetheanum, Icon in der Mitte" />
+        <img class="nur-dunkel" src="../assets/logos/mon-goetheanum-kreis-mitte-deutlich-weiss.svg" alt="mon goetheanum, Icon in der Mitte, Weiss" />
+      </div>
+
+      <span class="sprache" lang="es">Español</span>
+      <div class="zelle">
+        <img class="nur-hell" src="../assets/logos/mi-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="mi.goetheanum, Icon vorn" />
+        <img class="nur-dunkel" src="../assets/logos/mi-goetheanum-kleinschreibung-kreis-deutlich-weiss.svg" alt="mi.goetheanum, Icon vorn, Weiss" />
+      </div>
+      <div class="zelle">
+        <img class="nur-hell" src="../assets/logos/mi-goetheanum-kreis-mitte-deutlich.svg" alt="mi goetheanum, Icon in der Mitte" />
+        <img class="nur-dunkel" src="../assets/logos/mi-goetheanum-kreis-mitte-deutlich-weiss.svg" alt="mi goetheanum, Icon in der Mitte, Weiss" />
       </div>
     </div>
   </section>
