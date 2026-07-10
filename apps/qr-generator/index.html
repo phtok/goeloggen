@@ -76,7 +76,7 @@
   .codes .act{text-align:right;white-space:nowrap}
   .codes .mini{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 6px;min-height:var(--tap)}
   .codes .mini:hover{color:var(--blue)}
-  .codes .mini.weg:hover{color:var(--bad)}
+  .codes td.dat{font-variant-numeric:tabular-nums;white-space:nowrap}
   .tablewrap{overflow-x:auto;margin-top:var(--s4)}
   .empty{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
   .zwischen{margin-top:var(--s8)}
@@ -304,13 +304,13 @@
       </div>
 
       <div class="shead zwischen">
-        <h3>Meine Codes</h3>
-        <p>In diesem Browser angelegte Kurzlinks. <q>Vergessen</q> löscht nur den Eintrag hier – der Kurzlink selbst läuft weiter.</p>
+        <h3>Alle Kurzlinks</h3>
+        <p>Das offene Register: jeder hier angelegte Code mit Ziel und Zählung – <q>Verlauf</q> holt die Tageskurve nach oben.</p>
       </div>
       <div class="tablewrap">
         <table class="codes">
-          <thead><tr><th>Code</th><th>Ziel</th><th class="num">Scans</th><th>letzter Scan</th><th></th></tr></thead>
-          <tbody id="codesBody"><tr><td class="empty" colspan="5">Noch keine Codes angelegt.</td></tr></tbody>
+          <thead><tr><th>Code</th><th>Ziel</th><th>angelegt</th><th class="num">Scans</th><th>letzter Scan</th><th></th></tr></thead>
+          <tbody id="codesBody"><tr><td class="empty" colspan="6">lädt …</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -330,7 +330,6 @@
   var SB  = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
   var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
   var SHORTBASE = 'https://tools.goetheanum.ch/s/';
-  var STORE = 'qrgen.codes';
 
   function el(id){ return document.getElementById(id); }
 
@@ -496,19 +495,6 @@
       .replace(/[^a-z0-9-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
   }
 
-  function meineCodes(){
-    try { return JSON.parse(localStorage.getItem(STORE) || '[]'); } catch(e){ return []; }
-  }
-  function merkeCode(code, url){
-    var liste = meineCodes().filter(function(x){ return x.code !== code; });
-    liste.unshift({ code: code, url: url, created: new Date().toISOString() });
-    try { localStorage.setItem(STORE, JSON.stringify(liste.slice(0, 60))); } catch(e){}
-  }
-  function vergissCode(code){
-    try { localStorage.setItem(STORE, JSON.stringify(meineCodes().filter(function(x){ return x.code !== code; }))); } catch(e){}
-    zeigeMeine();
-  }
-
   function zeigeKurzlink(code){
     var kurz = SHORTBASE + code;
     el('shortbox').hidden = false;
@@ -542,9 +528,8 @@
       .then(function(ergebnis){
         if(ergebnis === 'ok'){
           registriert = { code: code, url: u };
-          merkeCode(code, u);
           say('Kurzlink angelegt – der QR zeigt jetzt auf ihn.');
-          zeigeKurzlink(code); zeigeMeine(); render();
+          zeigeKurzlink(code); ladeRegister(); render();
         }
         else if(ergebnis === 'vergeben'){ say('Code „' + code + '“ ist schon vergeben – bitte einen anderen wählen.', true); }
         else if(ergebnis === 'ungueltig'){ say('Code oder Adresse ungültig – Code: 3–32 Zeichen (a–z, 0–9, Bindestrich), Adresse mit https://.', true); }
@@ -651,38 +636,35 @@
   el('statBtn').addEventListener('click', function(){ zeigeStats(el('statCode').value); });
   el('statCode').addEventListener('keydown', function(ev){ if(ev.key === 'Enter') zeigeStats(this.value); });
 
-  function zeigeMeine(){
-    var body = el('codesBody'), liste = meineCodes();
-    body.innerHTML = '';
-    if(!liste.length){ body.innerHTML = '<tr><td class="empty" colspan="5">Noch keine Codes angelegt.</td></tr>'; return; }
-    liste.forEach(function(x){
-      var tr = document.createElement('tr');
-      tr.innerHTML = '<td class="cd"></td><td class="zi"></td><td class="num">–</td><td>–</td><td class="act"></td>';
-      var a = document.createElement('a');
-      a.href = SHORTBASE + x.code; a.target = '_blank'; a.rel = 'noopener'; a.textContent = x.code;
-      tr.children[0].appendChild(a);
-      tr.children[1].textContent = x.url;
-      var zeig = document.createElement('button');
-      zeig.type = 'button'; zeig.className = 'mini'; zeig.textContent = 'Verlauf';
-      zeig.addEventListener('click', function(){ zeigeStats(x.code); el('statDetail').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
-      var weg = document.createElement('button');
-      weg.type = 'button'; weg.className = 'mini weg'; weg.textContent = 'Vergessen';
-      weg.setAttribute('aria-label', 'Code aus diesem Browser vergessen');
-      weg.addEventListener('click', function(){ vergissCode(x.code); });
-      tr.children[4].appendChild(zeig); tr.children[4].appendChild(weg);
-      body.appendChild(tr);
-      rpc('qr_stats_public', { p_code: x.code }).then(function(rows){
-        var z = (rows || [])[0]; if(!z) return;
-        tr.children[2].textContent = Number(z.scans).toLocaleString('de-CH');
-        tr.children[3].textContent = fmtZeit(z.letzter_scan);
-      }).catch(function(){});
-    });
+  // Das offene Register: alle angelegten Kurzlinks mit Zählung (eine RPC-Runde).
+  function ladeRegister(){
+    var body = el('codesBody');
+    rpc('qr_links_public').then(function(rows){
+      body.innerHTML = '';
+      if(!rows || !rows.length){ body.innerHTML = '<tr><td class="empty" colspan="6">Noch keine Codes angelegt.</td></tr>'; return; }
+      rows.forEach(function(x){
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td class="cd"></td><td class="zi"></td><td class="dat"></td><td class="num"></td><td class="dat"></td><td class="act"></td>';
+        var a = document.createElement('a');
+        a.href = SHORTBASE + x.code; a.target = '_blank'; a.rel = 'noopener'; a.textContent = x.code;
+        tr.children[0].appendChild(a);
+        tr.children[1].textContent = x.url;
+        tr.children[2].textContent = new Date(x.created_at).toLocaleDateString('de-CH');
+        tr.children[3].textContent = Number(x.scans).toLocaleString('de-CH');
+        tr.children[4].textContent = fmtZeit(x.letzter_scan);
+        var zeig = document.createElement('button');
+        zeig.type = 'button'; zeig.className = 'mini'; zeig.textContent = 'Verlauf';
+        zeig.addEventListener('click', function(){ zeigeStats(x.code); el('statDetail').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
+        tr.children[5].appendChild(zeig);
+        body.appendChild(tr);
+      });
+    }).catch(function(){ body.innerHTML = '<tr><td class="empty" colspan="6">Register nicht ladbar.</td></tr>'; });
   }
 
   // --- Start ---------------------------------------------------------------------
   el('kurzCode').value = neuerCode();
   render();
-  zeigeMeine();
+  ladeRegister();
 </script>
 
 </body>

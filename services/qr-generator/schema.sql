@@ -82,6 +82,20 @@ language sql security definer set search_path to 'public' as $$
 $$;
 grant execute on function public.qr_stats_public(text) to anon, authenticated;
 
+-- Offenes Register (Migration «qr_links_offenes_register», Beschluss 10.7.2026,
+-- wie UTM-Generator/Cockpit): alle angelegten Kurzlinks mit Ziel und Zählung
+-- sind einsehbar – Transparenz vor Verschluss. Personendaten entstehen keine.
+create or replace function public.qr_links_public()
+returns table(code text, url text, created_at timestamptz, scans bigint, letzter_scan timestamptz)
+language sql security definer set search_path to 'public' as $$
+  select l.code, l.url, l.created_at,
+         count(h.id)::bigint as scans, max(h.ts) as letzter_scan
+    from public.qr_links l left join public.link_hits h on h.code = l.code
+   group by l.id, l.code, l.url, l.created_at
+   order by l.created_at desc;
+$$;
+grant execute on function public.qr_links_public() to anon, authenticated;
+
 -- Scans je Tag (letzte 30 Tage) für die kleine Verlaufsgrafik.
 create or replace function public.qr_stats_tage(p_code text)
 returns table(tag date, n bigint)
