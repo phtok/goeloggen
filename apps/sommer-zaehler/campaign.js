@@ -171,7 +171,7 @@
     });
     if((vals.sichtbarkeit || 0) === 0 && (vals.aktivierung || 0) === 0){
       var note = document.createElement('div'); note.className = 'fnote';
-      note.textContent = 'Sichtbarkeit und Aktivierung erscheinen, sobald Reichweite und Klicks im Massnahmen-Protokoll erfasst sind. Wirkung und Bindung zählen bereits live aus den Anmeldungen.';
+      note.textContent = 'Sichtbarkeit und Aktivierung erscheinen, sobald Reichweite und Klicks im Aktivitäten-Protokoll erfasst sind. Wirkung und Bindung zählen bereits live aus den Anmeldungen.';
       host.appendChild(note);
     }
   }
@@ -295,7 +295,7 @@
     tbl.innerHTML = '<thead>' + h1 + h2 + '</thead><tbody>' + body + '</tbody>';
     el('zbLegende').innerHTML = Object.keys(ROLLEN_LABEL).map(function(r){
       return '<span><span class="zr ' + r + '" style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px"></span>' + ROLLEN_LABEL[r] + '</span>';
-    }).join('') + '<span>Jeder Punkt = eine Massnahme; Details beim Überfahren.</span>';
+    }).join('') + '<span>Jeder Punkt = eine Aktivität; Details beim Überfahren.</span>';
   }
 
   // Eintragen/Bearbeiten: offener Schreibweg (Muster Link-Register),
@@ -305,7 +305,7 @@
     var sagen = function(msg, bad){ var s = el('mfSaid'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; };
     var titel = (el('mfTitel').value || '').trim();
     var wer = (el('mfWer').value || '').trim();
-    if (!el('mfTag').value || !titel || !wer){ sagen('Datum, Massnahme und Kürzel sind Pflicht.', true); return; }
+    if (!el('mfTag').value || !titel || !wer){ sagen('Datum, Aktivität und Kürzel sind Pflicht.', true); return; }
     var istEdit = mfEditId != null;
     var params = {
       p_tag: el('mfTag').value, p_massnahme: titel,
@@ -323,7 +323,7 @@
           sagen(istEdit ? 'Geändert.' : 'Eingetragen – erscheint im Zeitband und im Protokoll.');
           mfZuruecksetzen();
           rpc('sommer2026_massnahmen_public').then(function(rows){ renderZeitband(rows); renderMassnahmen(rows); }).catch(function(){});
-        } else { sagen('Datum und Massnahme prüfen.', true); }
+        } else { sagen('Datum und Aktivität prüfen.', true); }
       })
       .catch(function(){ sagen(istEdit ? 'Ändern nicht erreichbar.' : 'Eintragen nicht erreichbar.', true); });
   });
@@ -332,7 +332,7 @@
     if (!el('massnahmenBody')) return;
     var body = el('massnahmenBody'); body.innerHTML = '';
     if(!rows || !rows.length){
-      body.innerHTML = '<tr><td class="empty" colspan="7">Noch keine Massnahmen erfasst – das Protokoll wird gepflegt, sobald die Aktionen laufen.</td></tr>';
+      body.innerHTML = '<tr><td class="empty" colspan="7">Noch keine Aktivitäten erfasst – das Protokoll wird gepflegt, sobald die Aktionen laufen.</td></tr>';
       return;
     }
     rows.forEach(function(r){

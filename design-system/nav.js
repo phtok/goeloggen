@@ -230,18 +230,30 @@
   // Kopfzeile. Auf jeder Breite sichtbar (auch mobil), horizontal scrollbar.
   var ONPAGE = (s && s.dataset.onpage) || "";
   if (ONPAGE) {
-    var sub = el("nav", "dsnav-onpage");
-    sub.setAttribute("aria-label", "Auf dieser Seite");
-    sub.innerHTML = '<div class="row">' + ONPAGE.split("|").map(function (pair) {
+    var pairs = ONPAGE.split("|").map(function (pair) {
       var ci = pair.indexOf(":");
-      var label = ci > 0 ? pair.slice(0, ci) : pair;
-      var anchor = ci > 0 ? pair.slice(ci + 1) : "#";
-      return '<a href="' + anchor + '">' + label + '</a>';
+      return { label: ci > 0 ? pair.slice(0, ci) : pair, target: ci > 0 ? pair.slice(ci + 1) : "#" };
+    });
+    // Eine reine Seiten-Leiste (kein einziges #-Ziel) ist die Klammer über mehrere
+    // Seiten und gehört direkt unter die Kopfzeile, immer sichtbar. Sobald ein
+    // #-Anker dabei ist, ist es eine Sprungleiste und sitzt unter dem Hero/der Lede.
+    var isPageNav = pairs.every(function (p) { return p.target.charAt(0) !== "#"; });
+    // Aktive Seite markieren: Ziel-URL relativ auflösen (über ein <a>) und mit der
+    // aktuellen Seite vergleichen (index.html und Schrägstrich normalisiert). So
+    // trifft es auch nachbarschaftliche Ziele wie „../utm-generator/".
+    var canon = function (p) { return p.replace(/index\.html$/, "").replace(/\/+$/, "/"); };
+    var herePath = canon(location.pathname);
+    var resolve = function (t) { var a = document.createElement("a"); a.href = t; return canon(a.pathname); };
+    var sub = el("nav", "dsnav-onpage");
+    sub.setAttribute("aria-label", isPageNav ? "Kampagne – Seiten" : "Auf dieser Seite");
+    sub.innerHTML = '<div class="row">' + pairs.map(function (p) {
+      var self = isPageNav && p.target.charAt(0) !== "#" && resolve(p.target) === herePath;
+      return '<a href="' + p.target + '"' + (self ? ' aria-current="page"' : '') + '>' + p.label + '</a>';
     }).join("") + '</div>';
-    // Unter den Hero/die Lede hängen; wenn es keinen gibt, direkt unter die Kopfzeile.
+    // Reine Seiten-Leiste: direkt unter die Kopfzeile. Sonst unter den Hero/die Lede.
     // nav.js läuft oft VOR <main> – darum die Platzierung bis DOM-ready aufschieben.
     var placeOnpage = function () {
-      var heroEl = document.querySelector("main .hero, .hero, main .lede");
+      var heroEl = isPageNav ? null : document.querySelector("main .hero, .hero, main .lede");
       (heroEl || header).insertAdjacentElement("afterend", sub);
     };
     if (document.readyState === "loading") {

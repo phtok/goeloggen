@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kampagne · Aktivitäten · Goetheanum</title>
+<meta name="description" content="Zeitband und Protokoll aller Aktivitäten der Sommer-Aktion 2026." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<link rel="stylesheet" href="campaign.css" />
+</head>
+<body>
+
+<!-- Kopfzeile + gemeinsame Kampagnen-Unterleiste (data-onpage). -->
+<script src="../../design-system/nav.js"
+        data-root="../../"
+        data-variant="werkzeug"
+        data-onpage="Cockpit:./|Aktivitäten:aktivitaeten.html|Kosten:kosten.html|Multiplikatoren:multiplikatoren.html|Links:../utm-generator/|Mail:../mail-editor/"></script>
+
+<main class="wrap">
+
+  <section class="lead">
+    <span class="kick">Kampagne · Sommer-Aktion 2026</span>
+    <h1 class="lead-title">Aktivitäten</h1>
+    <p class="kampagne">Was wann lief – nach Phase, Woche und Kanal. Eintragen erscheint sofort im Cockpit.</p>
+  </section>
+
+
+  <section id="band">
+    <div class="shead"><h2>Zeitband der Aktion</h2><p>Alle Aktivitäten aller Akteure auf einen Blick – nach Phase, Woche und Kanal. Was unten eingetragen wird, erscheint sofort hier und in der Wirkung.</p></div>
+    <div class="tablewrap">
+      <table class="zb" id="zeitband">
+        <tbody><tr><td class="empty">lädt …</td></tr></tbody>
+      </table>
+    </div>
+    <div class="zb-legende" id="zbLegende"></div>
+
+    <details class="zb-form" id="mfForm">
+      <summary>Aktivität eintragen</summary>
+      <div class="card soft">
+        <div class="grid">
+          <label class="field">
+            <span class="lab">Datum</span>
+            <input type="date" id="mfTag" />
+          </label>
+          <label class="field">
+            <span class="lab">Kanal</span>
+            <select id="mfKanal">
+              <option value="social">Social Media</option>
+              <option value="newsletter">Newsletter</option>
+              <option value="mailer">Mailing / Post</option>
+              <option value="flyer">Flyer / Stand</option>
+              <option value="popup">Popup</option>
+              <option value="website">Website</option>
+              <option value="empfehlung">Empfehlung</option>
+              <option value="andere">Anderes</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="lab">Aufgabe der Aktivität</span>
+            <select id="mfRolle">
+              <option value="sichtbarkeit">Sichtbarkeit (gesehen werden)</option>
+              <option value="aktivierung">Aktivierung (Klicks holen)</option>
+              <option value="wirkung" selected>Wirkung (Abos bringen)</option>
+              <option value="bindung">Bindung (halten)</option>
+            </select>
+          </label>
+          <label class="field span3">
+            <span class="lab">Aktivität</span>
+            <input type="text" id="mfTitel" placeholder="z. B. Reel Ernst Zürcher · Instagram" />
+          </label>
+          <label class="field">
+            <span class="lab">Kürzel – wer steht dahinter?</span>
+            <input type="text" id="mfWer" placeholder="z. B. pt" autocomplete="off" />
+          </label>
+        </div>
+        <div style="display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;margin-top:var(--s4)">
+          <button class="btn primary" type="button" id="mfBtn">Eintragen</button>
+          <span class="said" id="mfSaid"></span>
+        </div>
+        <p class="provisorisch" style="margin-top:var(--s3)">Für alle Kampagnen-Beteiligten offen. Reichweite, Klicks und Kosten werden gesammelt nachgetragen (CSV an Philipp oder per Bearbeiten-Knopf im Protokoll unten). Ausgaben trägst Du unter <a href="kosten.html">Kosten</a> ein.</p>
+      </div>
+    </details>
+    <details class="zb-form">
+      <summary>Protokoll als Tabelle – anzeigen und bearbeiten</summary>
+      <div class="tablewrap" style="margin-top:var(--s4)">
+        <table class="tarif">
+          <thead><tr><th>Datum</th><th>Aktivität</th><th>Kanal</th><th class="num">Kosten</th><th class="num">Reichweite</th><th class="num">Klicks</th><th></th></tr></thead>
+          <tbody id="massnahmenBody"><tr><td class="empty" colspan="7">lädt …</td></tr></tbody>
+        </table>
+      </div>
+      <p class="provisorisch" style="margin-top:var(--s3)">Interne Beobachtungen und Entscheidungen liegen im Backend – hier erscheinen nur die Zahlen je Aktivität.</p>
+    </details>
+  </section>
+
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap" style="display:flex;flex-direction:column;gap:var(--s2)">
+    <div class="landing">
+      <span class="meta">Aktionsseiten</span>
+      <a class="btn" href="https://global-sommer2026.goetheanum.online" target="_blank" rel="noopener">Übersicht · 3 Monate gratis</a>
+      <a class="btn" href="https://ws-sommer2026.dasgoetheanum.com" target="_blank" rel="noopener">Wochenschrift</a>
+      <a class="btn" href="https://tv-sommer2026.goetheanum.tv" target="_blank" rel="noopener">goetheanum.tv</a>
+    </div>
+    <div class="frow">
+      <span><strong>Sommer-Zähler 2026</strong> · live aus dem Werkzeug-Backend · nur Summen, keine Personendaten</span>
+      <span><a href="../../design-system/">Design-System</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="campaign.js"></script>
+</body>
+</html>

@@ -36,6 +36,7 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 .dsnav-onpage .row{display:flex;gap:22px;padding:11px 26px;white-space:nowrap}
 .dsnav-onpage a{font-size:15px;line-height:1;color:var(--muted);text-decoration:none;flex:0 0 auto}
 .dsnav-onpage a:hover{color:var(--gold-ink)}
+.dsnav-onpage a[aria-current="page"]{color:var(--gold-ink);font-weight:var(--w-deutlich)}
 .dsnav .bar{display:flex;align-items:center;gap:var(--s4);height:var(--header-h);
   max-width:var(--ds-maxw);margin:0 auto;padding:0 26px}
 
