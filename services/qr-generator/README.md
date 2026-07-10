@@ -43,16 +43,18 @@ Zählung. Wer hier einen Kurzlink anlegt, veröffentlicht ihn – für nicht
 | `qr_links_public()` | anon | Offenes Register: alle QR-Kurzlinks mit Ziel und Zählung |
 | `qr_stats_public(p_code)` | anon | Summe, letzter Scan, Ziel-URL (beide Register) |
 | `qr_stats_tage(p_code)` | anon | Scans je Tag, letzte 30 Tage |
+| `qr_link_loeschen(p_code, p_passwort)` | anon, Team-Passwort | Löschen: `ok` · `passwort` · `unbekannt` (Zählung geht mit) |
 | `kurzlink_aufloesen(p_code)` | nur service_role | Auflösen + Zählen für die Function `go` |
 
 ## Bewusste Entscheide (v1)
 
-- **Keine Lösch-RPC, Löschen auf Zuruf** (Beschluss 10.7.2026): ein offener
-  Löschweg würde gedruckte Codes gefährden. Codes werden bei Bedarf direkt im
-  Backend gelöscht (Supabase-SQL: `delete from qr_links where code = '…'`;
-  zugehörige Zählung in `link_hits` gleich mit). Falls später doch ein Knopf
-  gewünscht ist: geschützter Weg nach dem Muster Passwort-Hash der
-  Multiplikatoren.
+- **Löschen nur mit Team-Passwort** (Beschluss 10.7.2026, revidiert vom
+  Auftraggeber): der Lösch-Knopf im Register erscheint nur im Backstage-Modus,
+  der echte Riegel ist das Passwort in `qr_link_loeschen` (Hash in `qr_config`,
+  Muster Multiplikatoren, Präfix `goe-qr:`). Ein offener Löschweg würde
+  gedruckte Codes gefährden. Passwort ändern: neuen Hash in `qr_config`
+  setzen (`update qr_config set value = encode(extensions.digest('goe-qr:' ||
+  lower(trim('NEU')), 'sha256'), 'hex') where key = 'loeschen_pw_hash'`).
 - **Fallback unbekannter Codes:** bleibt vorerst die Sommer-Landingpage (in
   `go/index.ts`); nach der Kampagne auf eine neutrale Seite stellen.
 - **Geparkt für v2:** Logo in der QR-Mitte (erzwingt Fehlerkorrektur H und
