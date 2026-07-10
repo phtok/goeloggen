@@ -82,16 +82,6 @@
   .spark .bv{font-family:var(--font-text);font-variant-numeric:tabular-nums;font-size:var(--t-micro);color:var(--ink)}
   .spark .dl{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
 
-  .miles{background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 14%,var(--card,var(--paper))),var(--card,var(--paper)));border:1px solid var(--gold);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card)}
-  .miles .mlead{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink)}
-  .miles .mlead b{color:var(--gold-ink);font-weight:600}
-  .mtrack{position:relative;height:16px;border-radius:var(--r-pill);background:var(--line-soft);margin:var(--s5) 0 var(--s6);overflow:hidden}
-  .mtrack>span{display:block;height:100%;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--gold),var(--gold-ink));transition:width .6s ease}
-  .mflags{display:flex;justify-content:space-between;font-family:var(--font-text);font-size:var(--t-micro)}
-  .mflags .f{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted)}
-  .mflags .f.done{color:var(--ok)} .mflags .f.next{color:var(--gold-ink);font-weight:600}
-  .mflags .dot{width:11px;height:11px;border-radius:50%;background:var(--line);border:2px solid var(--paper)}
-  .mflags .f.done .dot{background:var(--ok)} .mflags .f.next .dot{background:var(--gold-ink)}
 
   .stay{display:grid;grid-template-columns:1.1fr 1fr;gap:var(--s6);align-items:stretch}
   .cohort{background:var(--card,var(--paper));border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card)}
@@ -196,6 +186,14 @@
   .landing{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3);align-items:center;font-family:var(--font-text);font-size:var(--t-small);margin-bottom:var(--s4)}
   .landing .meta{margin-right:var(--s2)}
 
+  /* Sprungleiste: haftende Bereichs-Anker (B04-Fingerziele, normal statt versal G05) */
+  .jump{position:sticky;top:0;z-index:6;background:var(--paper);border-bottom:1px solid var(--line)}
+  .jump .jrow{display:flex;gap:var(--s2);overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .jump a{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);white-space:nowrap;
+    padding:12px 10px;min-height:var(--tap);display:inline-flex;align-items:center;border-bottom:2px solid transparent}
+  .jump a:hover{color:var(--ink)}
+  .jump a.is-on{color:var(--gold-ink);border-bottom-color:var(--gold)}
+
   @media (max-width:720px){
     .board{grid-template-columns:1fr} .stay{grid-template-columns:1fr}
   }
@@ -220,9 +218,20 @@
         data-root="../../"
         data-variant="werkzeug"></script>
 
+<nav class="jump" aria-label="Bereiche der Seite">
+  <div class="wrap jrow">
+    <a href="#puls">Puls</a>
+    <a href="#wirkung">Wirkung</a>
+    <a href="#kosten">Kosten</a>
+    <a href="#band">Zeitband</a>
+    <a href="#multis">Multiplikatoren</a>
+    <a href="#details">Details</a>
+  </div>
+</nav>
+
 <main class="wrap">
 
-  <section class="lead">
+  <section class="lead" id="puls">
     <span class="kick">Team-Cockpit · 3 Monate gratis</span>
     <h1 class="lead-title">Sommer-Aktion 2026</h1>
     <details class="modell-box">
@@ -239,6 +248,7 @@
         <div class="drow"><span class="dlab">Fortschritt bis Aktionsende</span><span class="dd" id="ddText">–</span></div>
         <div class="meter"><span id="ddBar" style="width:0"></span></div>
         <div class="drow" style="margin-top:8px"><span class="dlab" id="ddStart">Start</span><span class="dlab">8. August</span></div>
+        <div class="drow" style="margin-top:8px"><span class="dlab">Nächste Marke</span><span class="dd" id="msLine">–</span></div>
       </div>
     </div>
   </section>
@@ -272,48 +282,23 @@
   </section>
 
   <section>
-    <div class="shead"><h2>Wirkungskette</h2><p>Von der Sichtbarkeit zur Bindung. Nicht jeder Kanal verkauft – erst die Kette macht Wirkung lesbar. Reichweite und Klicks stammen aus dem Massnahmen-Protokoll, die Abschlüsse aus den Anmeldungen.</p></div>
-    <div class="panel">
-      <div class="funnel" id="funnel"><div class="empty">lädt …</div></div>
-    </div>
+    <div class="shead"><h2>Momentum</h2><p>Neue Abos je Tag – hier wird sichtbar, wann ein Aufruf, ein Newsletter oder ein Beitrag Wirkung zeigt.</p></div>
+    <div class="spark" id="spark"><div class="empty">lädt …</div></div>
   </section>
 
-  <section>
-    <div class="shead"><h2>Woher kommen die Abos?</h2><p>Herkunftsweg der Anmeldungen – aus den UTM-Parametern am Anmelde-Link. So wird sichtbar, welcher Kanal trägt und mit welcher Aufgabe.</p></div>
+  <section id="wirkung">
+    <div class="shead"><h2>Wirkung</h2><p>Woher die Abos kommen (aus den UTM-Parametern am Link) – und darunter die Kette davor: Sichtbarkeit → Klicks → Abschluss. Reichweite und Klicks stammen aus dem Zeitband.</p></div>
     <div id="kanalBars"><div class="empty">lädt …</div></div>
     <div class="motive" id="motive" hidden>
       <div class="mh">Nach Motiv</div>
       <div id="motiveList"></div>
     </div>
-  </section>
-
-  <section>
-    <div class="shead"><h2>Momentum</h2><p>Neue Abos je Tag – hier wird sichtbar, wann ein Aufruf, ein Newsletter oder ein Beitrag Wirkung zeigt.</p></div>
-    <div class="spark" id="spark"><div class="empty">lädt …</div></div>
-  </section>
-
-  <section>
-    <div class="shead"><h2>Meilensteine</h2><p>Die nächste runde Marke – gemeinsam draufzugehen.</p></div>
-    <div class="miles">
-      <div class="mlead" id="milesLead">lädt …</div>
-      <div class="mtrack"><span id="milesBar" style="width:0"></span></div>
-      <div class="mflags" id="milesFlags"></div>
+    <div class="panel" style="margin-top:var(--s5)">
+      <div class="funnel" id="funnel"><div class="empty">lädt …</div></div>
     </div>
   </section>
 
-  <section>
-    <div class="shead"><h2>Wer bleibt?</h2><p>Der Moment nach drei Monaten: Aus jeder Anmelde-Kohorte entscheidet sich, wer zahlend bleibt.</p></div>
-    <div class="stay">
-      <div class="cohort" id="cohortCard"><div class="empty">lädt …</div></div>
-      <div class="proj">
-        <div class="pl">Hochgerechneter Folgejahr-Umsatz</div>
-        <div class="pv" id="projValue">–</div>
-        <div class="pn" id="projNote">Projektion auf Basis der angenommenen Bleibe-Quote und der hinterlegten Preise.</div>
-      </div>
-    </div>
-  </section>
-
-  <section>
+  <section id="kosten">
     <div class="shead"><h2>Kosten und Wirkung</h2><p>Was die Aktion kostet – und was voraussichtlich zurückkommt.</p></div>
     <div class="tiles">
       <div class="tile"><div class="n gold" id="costTotal">–</div><div class="l">Kosten gesamt</div><div class="s" id="costSub">Stunden, Social Media, Druck & Versand, Infrastruktur</div></div>
@@ -373,8 +358,8 @@
     <p class="provisorisch">Jeder Posten zählt sofort in Summe, Kosten je Abo und Rückfluss. Eintragen dürfen alle Beteiligten – das Kürzel sagt, wer.</p>
   </section>
 
-  <section>
-    <div class="shead"><h2>Zeitband der Aktion</h2><p>Alle Massnahmen aller Akteure auf einen Blick – nach Phase, Woche und Kanal. Was unten eingetragen wird, erscheint sofort hier, im Protokoll und in der Wirkungskette.</p></div>
+  <section id="band">
+    <div class="shead"><h2>Zeitband der Aktion</h2><p>Alle Massnahmen aller Akteure auf einen Blick – nach Phase, Woche und Kanal. Was unten eingetragen wird, erscheint sofort hier und in der Wirkung.</p></div>
     <div class="tablewrap">
       <table class="zb" id="zeitband">
         <tbody><tr><td class="empty">lädt …</td></tr></tbody>
@@ -428,20 +413,19 @@
         <p class="provisorisch" style="margin-top:var(--s3)">Für alle Kampagnen-Beteiligten offen. Reichweite, Klicks und Kosten werden gesammelt nachgetragen (CSV an Philipp oder per Bearbeiten-Knopf im Protokoll unten).</p>
       </div>
     </details>
+    <details class="zb-form">
+      <summary>Protokoll als Tabelle – anzeigen und bearbeiten</summary>
+      <div class="tablewrap" style="margin-top:var(--s4)">
+        <table class="tarif">
+          <thead><tr><th>Datum</th><th>Massnahme</th><th>Kanal</th><th class="num">Kosten</th><th class="num">Reichweite</th><th class="num">Klicks</th><th></th></tr></thead>
+          <tbody id="massnahmenBody"><tr><td class="empty" colspan="7">lädt …</td></tr></tbody>
+        </table>
+      </div>
+      <p class="provisorisch" style="margin-top:var(--s3)">Interne Beobachtungen und Entscheidungen liegen im Backend – hier erscheinen nur die Zahlen je Massnahme.</p>
+    </details>
   </section>
 
-  <section>
-    <div class="shead"><h2>Massnahmen-Protokoll</h2><p>Jede Massnahme mit Datum, Aufgabe, Kosten, Reichweite und Klicks – damit aus der Aktion eine lesbare Geschichte wird statt eines Datenhaufens.</p></div>
-    <div class="tablewrap">
-      <table class="tarif">
-        <thead><tr><th>Datum</th><th>Massnahme</th><th>Kanal</th><th class="num">Kosten</th><th class="num">Reichweite</th><th class="num">Klicks</th><th></th></tr></thead>
-        <tbody id="massnahmenBody"><tr><td class="empty" colspan="6">lädt …</td></tr></tbody>
-      </table>
-    </div>
-    <p class="provisorisch">Interne Beobachtungen und Entscheidungen liegen im Backend – hier erscheinen nur die Zahlen je Massnahme.</p>
-  </section>
-
-  <section>
+  <section id="multis">
     <div class="shead"><h2>Multiplikatoren</h2><p>Wer hat wen wann kontaktiert – und was kam heraus? Eine Liste zum Fortschreiben. Namen sind verdeckt (M-01 …); das kleine Passwort blendet sie ein.</p></div>
     <div style="display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;margin-bottom:var(--s4)">
       <button class="btn" type="button" id="muNamenBtn">Namen einblenden</button>
@@ -479,16 +463,30 @@
     </details>
   </section>
 
-  <section>
-    <div class="shead"><h2>Nach Tarif</h2><p>Neue Abos nach Tarifstufe und Zahlungsweise.</p></div>
-    <div class="tablewrap">
-      <table class="tarif">
-        <thead><tr><th>Tarif</th><th class="num">Monatlich</th><th class="num">Jährlich</th><th class="num">Summe</th></tr></thead>
-        <tbody id="tarifBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
-        <tfoot id="tarifFoot"></tfoot>
-      </table>
-    </div>
-    <p class="provisorisch" id="provisorisch"></p>
+  <section id="details">
+    <div class="shead"><h2>Details</h2><p>Selten gebraucht, darum verstaut – ein Klick öffnet.</p></div>
+    <details class="zb-form">
+      <summary>Wer bleibt? – der Drei-Monats-Moment</summary>
+      <div class="stay" style="margin-top:var(--s4)">
+        <div class="cohort" id="cohortCard"><div class="empty">lädt …</div></div>
+        <div class="proj">
+          <div class="pl">Hochgerechneter Folgejahr-Umsatz</div>
+          <div class="pv" id="projValue">–</div>
+          <div class="pn" id="projNote">Projektion auf Basis der angenommenen Bleibe-Quote und der hinterlegten Preise.</div>
+        </div>
+      </div>
+    </details>
+    <details class="zb-form">
+      <summary>Nach Tarif und Zahlungsweise</summary>
+      <div class="tablewrap" style="margin-top:var(--s4)">
+        <table class="tarif">
+          <thead><tr><th>Tarif</th><th class="num">Monatlich</th><th class="num">Jährlich</th><th class="num">Summe</th></tr></thead>
+          <tbody id="tarifBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+          <tfoot id="tarifFoot"></tfoot>
+        </table>
+      </div>
+      <p class="provisorisch" id="provisorisch"></p>
+    </details>
   </section>
 
 </main>
@@ -1150,24 +1148,11 @@
   }
 
   function renderMilestones(total){
+    // Meilenstein als eine Zeile in der Held-Gruppe (statt eigener Sektion).
     var ms = CONFIG.meilensteine;
     var next = ms.find(function(m){ return m > total; }) || ms[ms.length - 1];
-    var prev = 0; for(var i = 0; i < ms.length; i++){ if(ms[i] <= total) prev = ms[i]; }
-    var span = next - prev || 1;
-    var pct = Math.max(0, Math.min(100, Math.round((total - prev) / span * 100)));
-    el('milesBar').style.width = pct + '%';
     var rest = Math.max(0, next - total);
-    el('milesLead').innerHTML = rest > 0
-      ? ('Noch <b>' + fmt(rest) + '</b> Abos bis zum nächsten Meilenstein – <b>' + fmt(next) + '</b>.')
-      : ('Alle Meilensteine erreicht – <b>' + fmt(total) + '</b> Abos.');
-    var flags = el('milesFlags'); flags.innerHTML = '';
-    ms.forEach(function(m){
-      var f = document.createElement('span');
-      f.className = 'f' + (m <= total ? ' done' : (m === next ? ' next' : ''));
-      f.innerHTML = '<span class="dot"></span>';
-      f.appendChild(document.createTextNode(fmt(m)));
-      flags.appendChild(f);
-    });
+    el('msLine').textContent = rest > 0 ? (fmt(next) + ' Abos · noch ' + fmt(rest)) : ('alle erreicht – ' + fmt(total));
   }
 
   // ── Wer bleibt? (jüngste Kohorte) ──────────────────────────────────────────
@@ -1261,6 +1246,19 @@
 
   load();
   setInterval(load, REFRESH);
+
+  // Sprungleiste: aktuellen Bereich markieren
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('.jump a'));
+    var ziele = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+    function markieren(){
+      var y = window.scrollY + 160, akt = 0;
+      ziele.forEach(function(z, i){ if (z && z.offsetTop <= y) akt = i; });
+      links.forEach(function(a, i){ a.classList.toggle('is-on', i === akt); });
+    }
+    window.addEventListener('scroll', markieren, { passive: true });
+    markieren();
+  })();
 </script>
 
 </body>
