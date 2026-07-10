@@ -1,0 +1,133 @@
+{
+  "kampagne": "summer26_trial",
+  "asset_base_url": "https://werkzeuge.goetheanum.ch/apps/mail-editor/assets",
+  "_asset_base_url_hinweis": "Leer = Bilder als Data-URI (nur Vorschau, Gmail clippt/blockt). Gesetzt = gehostete URLs in dist/mail_*.html; `--publish` legt die Dateien nach apps/mail-editor/assets/, GitHub Pages liefert sie unter dieser Basis aus.",
+  "frist": "2026-08-08",
+  "frist_hinweis": "Samstag — wirksamer Schluss-Druck liegt auf Do 6.8. / Fr 7.8.",
+  "theme": {
+    "_hinweis": "Kampagnen-DNA der Mails (deckungsgleich mit den Landingpages) — bewusst NICHT das Haus-Design-System; die Mail ist Artefakt. Nächste Kampagne: nur diesen Block tauschen.",
+    "akzent": "#A95278",
+    "akzent_tief": "#8E3F62",
+    "wash": "#FFF4F8",
+    "tinte": "#232323",
+    "nebel": "#F6F4F2",
+    "gedaempft": "#6E6E6E",
+    "fuss": "#9A9AA6",
+    "font_stack": "Inter,-apple-system,Helvetica,Arial,sans-serif",
+    "headline_stack": "'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif"
+  },
+  "utm_fix": {
+    "utm_source": "mailing",
+    "utm_medium": "email",
+    "utm_campaign": "summer26_trial"
+  },
+  "sprachen": [
+    "de",
+    "en"
+  ],
+  "wellen": {
+    "w1": {
+      "label": "Ankündigung",
+      "versand": "2026-07-14T09:30:00+02:00"
+    },
+    "w2": {
+      "label": "Aktualisierung",
+      "versand": "2026-07-23T09:30:00+02:00"
+    },
+    "w3": {
+      "label": "Letzte Erinnerung",
+      "versand": "2026-08-06T09:30:00+02:00"
+    },
+    "w3b": {
+      "label": "Mini-Reminder",
+      "versand": "2026-08-07T09:30:00+02:00",
+      "nur": "klicker_ohne_anmeldung"
+    }
+  },
+  "segmente": {
+    "noabo": {
+      "label": "Kein Abo",
+      "rolle": "wirkung",
+      "ziele": [
+        "uebersicht",
+        "wos",
+        "gtv"
+      ],
+      "wellen_ctas": {
+        "_hinweis": "EIN Button je Welle -> Übersicht (Entscheid 10.7.: die Wahl wandert aus der Mail in den Browser). Register um w1_noabo/w3_noabo erweitert; die alten Zwei-Button-Zeilen (w1/w3_noabo_ws|tv) bleiben als Altbestand stehen. VORAUSSETZUNG: die Übersichts-Seite muss utm_* an die Zielseiten weiterreichen, sonst ist die gesamte NoAbo-Attribution blind.",
+        "w1": [
+          "uebersicht"
+        ],
+        "w2": [
+          "uebersicht"
+        ],
+        "w3": [
+          "uebersicht"
+        ],
+        "w3b": [
+          "uebersicht"
+        ]
+      }
+    },
+    "nurtv": {
+      "label": "Nur-TV → Cross-sell WS",
+      "rolle": "bindung",
+      "ziele": [
+        "wos"
+      ]
+    },
+    "nurws": {
+      "label": "Nur-WoS → Cross-sell TV",
+      "rolle": "bindung",
+      "ziele": [
+        "gtv"
+      ]
+    }
+  },
+  "landing": {
+    "wos": {
+      "de": "https://ws-sommer2026.dasgoetheanum.com",
+      "en": "https://ws-en-sommer2026.dasgoetheanum.com",
+      "verifiziert": {
+        "de": true,
+        "en": true
+      }
+    },
+    "gtv": {
+      "de": "https://tv-sommer2026.goetheanum.tv",
+      "en": "https://tv-en-sommer2026.goetheanum.tv",
+      "verifiziert": {
+        "de": true,
+        "en": true
+      }
+    },
+    "uebersicht": {
+      "de": "https://global-sommer2026.goetheanum.online",
+      "en": "https://global-sommer2026.goetheanum.online/en",
+      "verifiziert": {
+        "de": true,
+        "en": true
+      }
+    }
+  },
+  "_zu_pruefen": [
+    "EN-URLs am 7.7. live verifiziert (beide Seiten verlinken ws-en-/tv-en-)."
+  ],
+  "assets": {
+    "_hinweis": "Die Landingpages sind client-gerendert; automatischer Abruf liefert nur Titel. Echte Dateien manuell nach assets/ laden (Rechtsklick auf der Live-Seite) und Dateinamen hier eintragen.",
+    "logo_wos": "assets/logo-wochenschrift.png",
+    "logo_gtv": "assets/logo-goetheanum-tv.png",
+    "logo_goetheanum": "assets/logo-goetheanum.png",
+    "mockup_wos": "assets/mockup-wochenschrift.png",
+    "mockup_gtv": "assets/mockup-tv.png"
+  },
+  "supabase": {
+    "project_ref": "dagcsnfrlbpxcmdimnrw",
+    "url": "https://dagcsnfrlbpxcmdimnrw.supabase.co",
+    "links_tabelle": "sommer2026_links",
+    "kommentar_tabelle": "sommer2026_mail_comments",
+    "anon_key_env": "SUPABASE_ANON_KEY",
+    "publishable_key": "sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY",
+    "_key_hinweis": "Publishable Key ist fuer den Browser bestimmt (RLS schuetzt: anon darf nur insert+select auf sommer2026_mail_comments und execute auf sommer2026_comment_erledigt)."
+  }
+}

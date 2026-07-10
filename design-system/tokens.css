@@ -69,11 +69,22 @@
   --bad:#b3261e;         /* Fehler/Warnung */
   --ok:#3f7d46;          /* Erfolg/Bestätigung – Weiss drauf (--on-accent) */
   --on-accent:#fff;      /* Text auf Blau/Gold-Flächen */
+  --ink-print-leise:#6e6f6a; /* leises Strukturbeiwerk auf PAPIERWEISS (Druckwerke:
+                                Kategorie-Titel in Legenden u. ä.) – 5.07:1, B02-fest
+                                für Lesetext; gerechnet im Kartentool, Juli 2026.
+                                Theme-fest: gilt fürs gedruckte Blatt, nicht für
+                                Bildschirmflächen (dort --muted). */
 
   /* --- Code-Konsole (eigenständige, THEME-FESTE Fläche – gleich in Hell/Dunkel,
      wie eine Entwickler-Konsole; Syntaxpalette für Dunkel ausgelegt). --------- */
   --code-bg:#1f2428; --code-bg2:#2b3137; --code-ink:#e8eef2;
   --code-key:#9ecbff; --code-str:#c3e88d; --code-comment:#7f868d;
+
+  /* --- Bühne (Medien-/Katalogfläche, THEME-FEST dunkel wie die Konsole) -----
+     Für Video-Kacheln und Katalog-Bänder (Webfamilie-Befund §3/§4, Vorbild
+     goetheanum.tv). Kontraste gerechnet: ink 15.3:1, muted 8.2:1 auf stage-bg. */
+  --stage-bg:#14171a; --stage-bg2:#232830; --stage-ink:#e9edf1;
+  --stage-muted:#a9b0b7; --stage-veil:rgba(8,10,12,.62);
 
   /* --- Sektionsfarben (Identität der Schul-Sektionen) --------------------- */
   /* Quelle der Wahrheit der Werte: assets/goe-orgs.js (speist die Logo-Engine).
@@ -171,4 +182,20 @@
   --w-deutlich:580; --w-strong:680;
   --shadow-card:0 10px 30px rgba(0,0,0,.45);
   color-scheme:dark;
+}
+
+/* --- Welten (Dialekte) – erlaubte Varianz, Ansatz 1 ---------------------------
+   Eine Welt schaltet STIMMUNGS-Tokens um (Flächen, abgeleitete Tinten) – nie
+   Regeln, nie Grade, nie Abstände. Kontraste jeder Welt sind gerechnet, nicht
+   geschätzt (B02). Welten gelten nur im Hellen; Dunkel bleibt die eine Bühne.
+   Erste Welt: ‹warm› — Stilprobe (Experiment, nicht ratifiziert; siehe
+   design-system/stilprobe-warm.html und CHANGELOG). */
+:root[data-welt="warm"]:not([data-theme="dark"]){
+  --paper:#fbf7ee;              /* warmes Papier – ink 14.1:1 */
+  --soft:#f3edde;               /* warme Karte – ink 12.9:1 */
+  --field-bg:#fdfaf2;
+  --bar-bg:rgba(251,247,238,.9);
+  --line:rgba(74,58,26,.14); --line-soft:rgba(74,58,26,.08);
+  --muted:#616669;              /* nachgedunkelt: 4.98:1 auf --soft, 5.44:1 auf --paper */
+  --gold-ink:#7f5e22;           /* nachgedunkelt: 5.10:1 auf --soft, 5.57:1 auf --paper */
 }

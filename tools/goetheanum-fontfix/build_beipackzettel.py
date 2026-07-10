@@ -197,6 +197,7 @@ KB_ROWS=[
   (58, [("<",">"),("y","Y"),("x","X"),("c","C"),("v","V"),("b","B"),("n","N"),("m","M"),(",",";"),(".",":"),("-","_")]),
 ]
 KW,KH,KG=52,52,7; KB_TOP=176; KB_LEFT=M
+FAT_SHIFT={"6":"&","t":"T","u":"U","h":"H"}   # fette Richtungspfeile (Umschalt) – als Gold-Ecke
 
 def cap(x,y,active):
     stroke="rgba(160,122,51,.55)" if active else "rgba(20,24,28,.16)"
@@ -220,7 +221,7 @@ def gcenter(F,cp,bx,by,bw,bh,target,fill):
     S.append(f'<g transform="translate({cx:.2f},{yy:.2f}) scale({sc:.5f},{-sc:.5f})"><path d="{d}" fill="{fill}"/></g>')
     return True
 
-def keyboard(F, layer, only_have=None, target=30, fill="#23272b"):
+def keyboard(F, layer, only_have=None, target=30, fill="#23272b", fat=None):
     for ri,(off,row) in enumerate(KB_ROWS):
         y=KB_TOP+ri*(KH+KG)
         for ci,(bc,sh) in enumerate(row):
@@ -231,6 +232,9 @@ def keyboard(F, layer, only_have=None, target=30, fill="#23272b"):
             cap(x,y,active)
             txt(K,bc,7,x+6,y+13,"#b0b6bc")            # kleine Tasten-Marke (Grundzeichen)
             if active: gcenter(F,cp,x,y+10,KW,KH-14,target,fill)
+            # Zweitzeichen oben rechts, Gold: der fette Pfeil (Umschalt) – wie im Web.
+            if fat and layer=="base" and bc in fat and F[2].get(ord(fat[bc])) is not None:
+                gcenter(F,ord(fat[bc]),x+KW-19,y+3,16,15,13,"#a07a33")
 
 def kbpage(title,sub,render,foot1,foot2=None):
     global S; S=[]
@@ -243,11 +247,11 @@ def kbpage(title,sub,render,foot1,foot2=None):
     if foot2: txt(K,foot2,9,M,576,"#737a80")
     S.append("</svg>")
 
-# --- Seite 3: Icons auf den Umschalt-Tasten (Großbuchstaben-Ebene) ---
+# --- Seite 3: Piktogramme ohne Text (Grund-Ebene) ---
 def render3():
-    keyboard(IC,"shift",only_have=HAVE_ICON)
-    txt(K,"Gold umrandet = belegt. Umschalt (Shift) halten und die Taste tippen.",9.5,M,458,"#737a80")
-kbpage("Icons – Umschalt-Ebene","Piktogramme auf den Großbuchstaben-Tasten (Shift)",render3,
+    keyboard(IC,"base",only_have=HAVE_ICON)
+    txt(K,"Gold umrandet = belegt. Ohne Umschalt tippen. Badge invers liegt auf ‹1›, Badge auf ‹2›.",9.5,M,458,"#737a80")
+kbpage("Piktogramme – ohne Text","Grund-Ebene: Piktogramme auf den Klein- und Ziffern-Tasten",render3,
        "Font ‹Goetheanum Icons› aktiv setzen, dann tippen. Gleiche Belegung wie die Einzeldateien (SVG/PNG/PDF).",
        "Quelle der Belegung: icons.json. Leere Tasten tragen kein Piktogramm.")
 open("/tmp/beipack_p3.svg","w").write("".join(S))
@@ -255,31 +259,24 @@ cairosvg.svg2pdf(url="/tmp/beipack_p3.svg",write_to="/tmp/beipack_p3.pdf")
 cairosvg.svg2png(url="/tmp/beipack_p3.svg",write_to="/tmp/beipack_p3.png",output_width=1100)
 print("page3 rendered")
 
-# --- Seite 4: Icons auf den Grund-Tasten (Kleinbuchstaben-Ebene) ---
+# --- Seite 4: Piktogramme mit Text (Umschalt-Ebene) ---
 def render4():
-    keyboard(IC,"base",only_have=HAVE_ICON)
-    txt(K,"Gold umrandet = belegt. Ohne Umschalt tippen. Badge invers liegt auf ‹1›, Badge auf ‹2›.",9.5,M,458,"#737a80")
-kbpage("Icons – Grund-Ebene","Piktogramme auf den Kleinbuchstaben- und Ziffern-Tasten",render4,
-       "Font ‹Goetheanum Icons› aktiv setzen, dann tippen. Gleiche Belegung wie die Einzeldateien (SVG/PNG/PDF).",
-       "Quelle der Belegung: icons.json. Leere Tasten tragen kein Piktogramm.")
+    keyboard(IC,"shift",only_have=HAVE_ICON)
+    txt(K,"Gold umrandet = belegt. Umschalt (Shift) halten und dieselbe Taste tippen – dann mit eingeprägtem Text.",9.5,M,458,"#737a80")
+kbpage("Piktogramme – mit Text","Umschalt-Ebene: dieselben Piktogramme mit eingeprägter Beschriftung",render4,
+       "Font ‹Goetheanum Icons› aktiv setzen, Umschalt halten, tippen. Nur als Webfont – nicht als Einzeldatei.",
+       "Quelle der Belegung: icons.json (Gruppe piktogramm-text). Leere Tasten tragen kein Piktogramm.")
 open("/tmp/beipack_p4.svg","w").write("".join(S))
 cairosvg.svg2pdf(url="/tmp/beipack_p4.svg",write_to="/tmp/beipack_p4.pdf")
 cairosvg.svg2png(url="/tmp/beipack_p4.svg",write_to="/tmp/beipack_p4.png",output_width=1100)
 print("page4 rendered")
 
-# --- Seite 5: Pfeile & Kompass aus dem eigenen Font auf normalen Tasten ---
+# --- Seite 5: Pfeile & Kompass – Doppelbeschriftung (dünn tippen, fett per Umschalt) ---
 def render5():
-    keyboard(PF,"base")                      # Pfeile-Font: cmap liegt nur auf den belegten Tasten
-    ly=452
-    txt(K,"Eigener Font ‹Goetheanum Pfeile› – keine Option/Alt-Griffe mehr: einfach die Taste tippen.",9.5,M,ly,"#737a80")
-    # Umschalt-Legende: die vier fetten Pfeile (& T U H)
-    txt(K,"Umschalt = fett:",9,M,ly+26,"#9aa1a7")
-    lx=M+96
-    for ch,lab in [("&","Shift 6"),("T","Shift t"),("U","Shift u"),("H","Shift h")]:
-        gcenter(PF,ord(ch),lx,ly+8,26,26,22,"#23272b")
-        txt(K,lab,8,lx+30,ly+26,"#9aa1a7"); lx+=118
+    keyboard(PF,"base",fat=FAT_SHIFT)        # dünn gross, fett als Gold-Ecke oben rechts (wie im Web)
+    txt(K,"Eigener Font ‹Goetheanum Pfeile›: Taste tippen. Der kleine Gold-Pfeil oben rechts = mit Umschalt (fett).",9.5,M,458,"#737a80")
 kbpage("Pfeile & Kompass","Eigener Font ‹Goetheanum Pfeile› – auf normalen Tasten, nicht Option/Alt",render5,
-       "Grund: dünne Pfeile (6 t u h), gebogene (2 0 q e o ü s ö), Kompass (y x c v). Umschalt: fette Pfeile (& T U H).",
+       "Grund: dünne Pfeile (6 t u h), gebogene (2 0 q e o ü s ö), Kompass (y x c v). Umschalt (Gold-Ecke): fette Pfeile.",
        "Installieren wie die anderen Schnitte. Web: eingebettet, direkt tippbar – siehe icons.html.")
 open("/tmp/beipack_p5.svg","w").write("".join(S))
 cairosvg.svg2pdf(url="/tmp/beipack_p5.svg",write_to="/tmp/beipack_p5.pdf")

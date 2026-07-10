@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
 <title>Goetheanum Werkzeuge – Hausgrafik</title>
 <meta name="description" content="Werkzeuge für die Hausgrafik des Goetheanum: Logos, Schriften, E-Mail-Signatur, Visitenkarten und das Design-System." />
 <link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
@@ -14,9 +15,10 @@
   @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2") format("woff2");font-display:block}
 
   /* Startseite: nur die Karten – kein Hero, keine Überschriften, keine Erklärungen.
-     Spürbar Atem unter dem Header. main.wrap, sonst gewinnt .wrap (0 26px) und der
-     Abstand oben bliebe wirkungslos – nur top/bottom setzen, 26px seitlich bleiben. */
-  main.wrap{padding-top:clamp(64px,9vw,120px);padding-bottom:clamp(40px,6vw,64px)}
+     Atem unter dem Header, aber knapp (‹über dem Karussell zu viel Luft› –
+     Entscheid Auftraggeber, 8. Juli 2026). main.wrap, sonst gewinnt .wrap (0 26px)
+     und der Abstand oben bliebe wirkungslos – nur top/bottom setzen. */
+  main.wrap{padding-top:clamp(36px,5vw,60px);padding-bottom:clamp(40px,6vw,64px)}
   .grid{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
 
   .tile{position:relative;display:flex;flex-direction:column;gap:var(--s3);border:1px solid var(--line);
@@ -78,6 +80,16 @@
   .thumb .ed i:nth-child(1){width:100%}
   .thumb .ed i.mk{background:var(--gold-ink);width:44%}
   .thumb .ed i:nth-child(3){width:82%}
+  /* Campus-Karte: Mini-Karte – Campusblau, weisse Wege, Bau, zwei Marken.
+     Physische Kartenfarben (gedrucktes Artefakt), keine Theme-Flächen. */
+  .thumb .map{position:relative;width:82px;height:58px;border-radius:7px;overflow:hidden;display:block;background:#8abfe5} /* # ds-ok: Kartenfarbe Campus (Artefakt) */
+  .thumb .map b{position:absolute;background:#fff;border-radius:3px} /* # ds-ok: Wege weiss (Artefakt) */
+  .thumb .map b:nth-child(1){width:120%;height:7px;left:-10%;top:33px;transform:rotate(-13deg)}
+  .thumb .map b:nth-child(2){width:7px;height:80%;left:50px;top:-4px;transform:rotate(21deg)}
+  .thumb .map .bau{position:absolute;width:24px;height:17px;left:13px;top:9px;border-radius:3px;transform:rotate(-7deg);background:#0067b2} /* # ds-ok: Goetheanum-Blau (Artefakt) */
+  .thumb .map .m1,.thumb .map .m2{position:absolute;width:12px;height:12px;border-radius:50%;border:1.6px solid #fff} /* # ds-ok: Markenrand weiss (Artefakt) */
+  .thumb .map .m1{background:var(--gold-deep);left:52px;top:10px}
+  .thumb .map .m2{background:#ec5f6c;left:22px;top:36px} /* # ds-ok: Markerrot der Karte (Artefakt) */
 
   /* Entdecker-Karussell – Hinweis auf weniger Bekanntes, oben über den Karten. */
   .carousel{position:relative;margin-bottom:var(--s8);border:1px solid var(--line);
@@ -137,30 +149,35 @@
 (function(){
   // Karten flach nach Priorität (keine Kategorien); Unbekannte ans Ende.
   // Webfont wohnt jetzt in Schriften, Zeichen in Logos – darum keine eigene Karte.
-  var ORDER = ["logo-generator","signatur","editor","visitenkarten","icons","schriften",
-    "sektionsfarben","uebersetzungen","wallpaper","powerpoint",
-    "typografie","design-system"];
+  // Neue Ordnung (Entscheid Auftraggeber, 8. Juli 2026).
+  var ORDER = ["logo-generator","signatur","visitenkarten","schriften",
+    "icons","uebersetzungen","typografie","powerpoint",
+    "wallpaper","karten","sektionsfarben","design-system",
+    "editor"];
   // Entdecker-Karussell: ausgewählte Werkzeuge, je ein Teaser.
-  // Alle öffentlichen Karten als Reihenfolge des Entdeckens: vom Fundament über die
-  // Identität und die Stimme zu den Alltagswerkzeugen und den fertigen Anwendungen.
-  // Der Kicker benennt die Station – gleiche Station = zusammengehörige Karten.
+  // Alle öffentlichen Karten – geordnet von der breitesten Zielgruppe zur kleinsten:
+  // erst die täglichen Werkzeuge für alle (Signatur, Wallpaper, Präsentation, Karte),
+  // dann Hausbild und Nachschlagewerke, zuletzt die Gestaltungs- und Bau-Ebene.
+  // Design-System steht bewusst am Ende (kleinste, spezialisierte Gruppe).
   var DISCOVER = [
-    {slug:"design-system",  kick:"Zuerst · das Fundament", line:"Farben, Schnitte und Regeln aus einer Quelle – hier nachschlagen, von hier aus bauen."},
-    {slug:"logo-generator", kick:"Die Identität",          line:"Das Logo für jede Sektion und jeden Bereich setzen und sauber exportieren."},
-    {slug:"sektionsfarben", kick:"Die Identität",          line:"Die Farben der Schul-Sektionen – Werte, Anwendung und wo Weiss darauf steht."},
-    {slug:"schriften",      kick:"Die Stimme",             line:"Die Hausschrift v2.7: fünf Schnitte von Leise bis Laut, Variable Font und Icon-Satz."},
-    {slug:"icons",          kick:"Die Stimme",             line:"45 Piktogramme, Pfeile und Kompass – als Webfont per Taste oder einzeln als SVG, PNG, PDF."},
-    {slug:"typografie",     kick:"Die Stimme",             line:"Die Satzregeln des Hauses – Auszeichnung, Ziffern, Striche, Anführungen; nachschlagen und prüfen."},
-    {slug:"editor",         kick:"Die Stimme",             line:"Text im Hausbild setzen – die Regeln greifen beim Tippen, fertig zum Übernehmen."},
-    {slug:"visitenkarten",  kick:"Für den Alltag",         line:"Die eigene Visitenkarte im Hausbild – ausfüllen, Vorschau, Druckdatei."},
-    {slug:"signatur",       kick:"Für den Alltag",         line:"Die Mail-Signatur im Hausbild – Angaben eintragen, Block kopieren, einsetzen."},
-    {slug:"uebersetzungen", kick:"Für den Alltag",         line:"Sektionen und Begriffe in vier Sprachen – für Karten, Briefe und die Sekretariate."},
-    {slug:"powerpoint",     kick:"Zum Mitnehmen",          line:"Präsentationsvorlage im Hausbild – mit eingebetteten Schriften, sofort loslegen."},
-    {slug:"wallpaper",      kick:"Zum Mitnehmen",          line:"Elf Goetheanum-Hintergründe für den Desktop, frei zum Herunterladen."}
+    {slug:"signatur",       line:"Die Mail-Signatur im Hausbild – Angaben eintragen, Block kopieren, einsetzen."},
+    {slug:"empfehlungen",   line:"Elf Empfehlungen für E-Mails, die gelesen werden – mit PS-Zeile, Kalender-Erinnerung und A4-PDF."},
+    {slug:"karten",         line:"Die Campus-Karte für Veranstaltungen – Orte wählen, eigene Marken setzen, druckfertiges Vektor-PDF in A4 oder A3."},
+    {slug:"wallpaper",      line:"Elf Goetheanum-Hintergründe für den Desktop, frei zum Herunterladen."},
+    {slug:"powerpoint",     line:"Präsentationsvorlage im Hausbild – mit eingebetteten Schriften, sofort loslegen."},
+    {slug:"visitenkarten",  line:"Die eigene Visitenkarte im Hausbild – ausfüllen, Vorschau, Druckdatei."},
+    {slug:"logo-generator", line:"Das Logo für jede Sektion und jeden Bereich setzen und sauber exportieren."},
+    {slug:"schriften",      line:"Die Hausschrift v2.7: fünf Schnitte von Leise bis Laut, Variable Font und Icon-Satz."},
+    {slug:"uebersetzungen", line:"Sektionen und Begriffe in vier Sprachen – für Karten, Briefe und die Sekretariate."},
+    {slug:"icons",          line:"45 Piktogramme, Pfeile und Kompass – als Webfont per Taste oder einzeln als SVG, PNG, PDF."},
+    {slug:"sektionsfarben", line:"Die Farben der Schul-Sektionen – Werte, Anwendung und wo Weiss darauf steht."},
+    {slug:"typografie",     line:"Die Satzregeln des Hauses – Auszeichnung, Ziffern, Striche, Anführungen; nachschlagen und prüfen."},
+    {slug:"editor",         line:"Text im Hausbild setzen – die Regeln greifen beim Tippen, fertig zum Übernehmen."},
+    {slug:"design-system",  line:"Farben, Schnitte und Regeln aus einer Quelle – für Gestaltende, die neue Werkzeuge bauen."}
   ];
   // Greifbar: jedes Zeichen zeigt das DING, das das Werkzeug erzeugt.
   var VISUAL = {
-    "logo-generator":  '<img src="assets/logos/goetheanum-mark-blue.svg" alt="">',           // die Marke
+    "logo-generator":  '<img src="assets/logos/goetheanum-marke.svg" alt="">',               // die blanke Marke (aus der Engine, DS08)
     "visitenkarten":   '<span class="vk"><i></i><i></i></span>',                               // eine Karte
     "signatur":        '<span class="sig"><b></b><span><i></i><i></i><i></i></span></span>',   // Signatur-Block (blaue Kante + Zeilen)
     "schriften":       '<span class="spec">Ag</span>',                                         // Buchstaben-Probe
@@ -173,7 +190,9 @@
     "wallpaper":       '<img src="assets/wallpaper/goetheanum-wallpaper-48.jpg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px">', // ein Motiv
     "powerpoint":      '<span class="ppt"><b></b><i></i><i></i></span>', // eine Folie mit Titel
     "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>', // vier Sprachen
-    "editor":          '<span class="ed"><i></i><i class="mk"></i><i></i></span>' // Text mit offener Frage
+    "editor":          '<span class="ed"><i></i><i class="mk"></i><i></i></span>', // Text mit offener Frage
+    "karten":          '<span class="map"><b></b><b></b><span class="bau"></span><i class="m1"></i><i class="m2"></i></span>', // Mini-Campus mit Marken
+    "empfehlungen":    '<span class="spec" style="color:var(--gold-ink)">11</span>' // die elf Gebote
   };
   function visual(t){
     var v = VISUAL[t.slug] || ('<span class="spec">' + (t.title || "?").slice(0, 1) + '</span>');
@@ -189,6 +208,11 @@
     return a;
   }
   function buildCarousel(byslug){
+    // Karussell-Extra (kein eigenes Werkzeug): die elf E-Mail-Gebote.
+    byslug["empfehlungen"] = byslug["empfehlungen"] || {
+      slug: "empfehlungen", title: "Diese Mail wird gelesen",
+      href: "apps/signatur-generator/#empfehlungen"
+    };
     var car = document.getElementById("carousel");
     var items = DISCOVER.map(function(d){ return { d:d, t:byslug[d.slug] }; })
                         .filter(function(x){ return x.t; });
@@ -199,8 +223,7 @@
       var a = document.createElement("a"); a.className = "slide"; a.href = x.t.href;
       if (isExt(x.t.href)) { a.target = "_blank"; a.rel = "noopener"; }
       a.innerHTML = visual(x.t) +
-        '<span class="copy">' + (x.d.kick ? '<span class="kick">' + x.d.kick + '</span>' : '') +
-        '<h2>' + x.t.title + '</h2><p>' + x.d.line + '</p>' +
+        '<span class="copy"><h2>' + x.t.title + '</h2><p>' + x.d.line + '</p>' +
         '<span class="go">Ansehen ›</span></span>';
       track.appendChild(a);
     });
@@ -229,7 +252,7 @@
       }
     }
     function go(k){ i = (k + n) % n; paint(); }
-    function start(){ if (reduce || paused) return; stop(); timer = setInterval(function(){ go(i+1); }, 6500); }
+    function start(){ if (reduce || paused) return; stop(); timer = setInterval(function(){ go(i+1); }, 11000); }
     function stop(){ if (timer) { clearInterval(timer); timer = null; } }
     prev.addEventListener("click", function(){ go(i-1); start(); });
     next.addEventListener("click", function(){ go(i+1); start(); });

@@ -1,164 +1,55 @@
 <!doctype html>
-<!-- =============================================================================
-     Sommer-Zähler 2026 · Aktions-Cockpit (Wochenschrift + goetheanum.tv)
-     -----------------------------------------------------------------------------
-     Team-Cockpit zur Sommer-Aktion «3 Monate gratis». Zieht live aus dem
-     Werkzeug-Backend (Supabase) über die Aggregat-RPCs sommer2026_stats /
-     sommer2026_timeline / sommer2026_kohorten. Nur Summen, keine Personendaten.
-
-     Regelkonform per Konstruktion: Farben/Schnitte/Abstände aus tokens.css +
-     base.css (eingebunden, nicht kopiert). Ziffern tabellarisch (G25), Betonung
-     nur über Gewicht (G05), Weiss auf Farbe (B01), Kicker/Labels normal – nicht
-     versal (G05/G23). Nur-Zahlen unter 14px gibt es nicht (B03/DS03).
-     ============================================================================= -->
 <html lang="de-CH">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sommer-Zähler 2026 · Goetheanum</title>
-<meta name="description" content="Aktions-Cockpit der Sommer-Aktion 2026 – neue Abos der Wochenschrift und von goetheanum.tv, live und motivierend." />
+<title>Sommer-Aktion · Cockpit · Goetheanum</title>
+<meta name="description" content="Aktions-Cockpit der Sommer-Aktion 2026 – neue Abos live, mit Momentum und Wirkung." />
 <meta name="robots" content="noindex" />
-<link rel="icon" type="image/svg+xml" href="https://phtok.github.io/goeloggen/assets/logos/goetheanum-mark-blue.svg" />
-
-<!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN. -->
-<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/tokens.css" />
-<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/base.css" />
-<link rel="stylesheet" href="https://phtok.github.io/goeloggen/design-system/nav.css" />
-
-<style>
-  /* Nur cockpit-eigene Gestalt. Alles Gemeinsame kommt aus base.css.
-     Es werden ausschliesslich Tokens verwendet – keine eigenen Farb-/Grössenwerte. */
-
-  .lead{padding:clamp(28px,6vw,52px) 0 var(--s6)}
-  .lead .status{margin-left:8px}
-  .heroline{display:flex;flex-wrap:wrap;align-items:flex-end;gap:clamp(16px,5vw,48px);margin-top:var(--s5)}
-  .figure{display:flex;flex-direction:column}
-  .figure .big{font-family:var(--font-display);font-weight:var(--w-strong);
-    font-size:clamp(72px,17vw,128px);line-height:.9;letter-spacing:-.02em;
-    font-variant-numeric:tabular-nums lining-nums;color:var(--ink)}
-  .figure .cap{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:6px}
-  .figure .cap b{color:var(--gold-ink);font-weight:600}
-
-  .deadline{flex:1;min-width:230px;padding-bottom:10px}
-  .deadline .drow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:12px}
-  .deadline .dlab{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
-  .deadline .dd{font-family:var(--font-text);font-variant-numeric:tabular-nums;font-size:var(--t-small);color:var(--ink);font-weight:600}
-  .meter{height:12px;border-radius:var(--r-pill);background:var(--line-soft);overflow:hidden}
-  .meter>span{display:block;height:100%;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--gold),var(--gold-ink));transition:width .6s ease}
-
-  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4)}
-  .tile{background:var(--card,var(--paper));border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card)}
-  .tile .n{font-family:var(--font-display);font-weight:var(--w-strong);font-size:clamp(30px,5vw,44px);line-height:1;font-variant-numeric:tabular-nums lining-nums}
-  .tile .n.blue{color:var(--blue)} .tile .n.gold{color:var(--gold-ink)} .tile .n.ok{color:var(--ok)}
-  .tile .n .u{font-family:var(--font-text);font-size:var(--t-lede)}
-  .tile .l{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:10px}
-  .tile .s{font-family:var(--font-text);font-size:var(--t-micro);color:var(--ink);margin-top:4px}
-
-  .board{display:grid;grid-template-columns:1fr 1fr;gap:var(--s6)}
-  .panel{background:var(--card,var(--paper));border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card)}
-  .panel h3{margin:0 0 4px;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3)}
-  .panel .sub{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-bottom:var(--s5);line-height:1.5}
-  .stream{margin-bottom:var(--s5)} .stream:last-child{margin-bottom:0}
-  .stream .top2{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;gap:10px}
-  .stream .name{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink)}
-  .stream .val{font-family:var(--font-text);font-variant-numeric:tabular-nums;font-size:var(--t-small);color:var(--ink)}
-  .stream .val b{font-weight:600}
-  .stream .val .g{color:var(--muted);font-size:var(--t-micro)}
-  .track{position:relative;height:14px;border-radius:var(--r-pill);background:var(--line-soft);overflow:hidden}
-  .track>span{display:block;height:100%;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--gold),var(--gold-ink));transition:width .6s ease;min-width:3px}
-  .track .tick{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.5;border-radius:2px}
-  .marks{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s4);display:flex;gap:16px;flex-wrap:wrap}
-  .marks .k{display:inline-flex;align-items:center;gap:7px}
-  .marks .sw{width:16px;height:9px;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold-ink))}
-  .marks .tk{width:2px;height:13px;background:var(--ink);opacity:.5}
-
-  .spark{display:flex;align-items:stretch;gap:clamp(5px,1.4vw,12px);height:160px;padding-top:8px}
-  .spark .d{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
-  .spark .barcell{flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center}
-  .spark .bar{width:100%;max-width:34px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--blue),color-mix(in srgb,var(--blue) 55%,transparent));transition:height .6s ease;min-height:3px}
-  .spark .bv{font-family:var(--font-text);font-variant-numeric:tabular-nums;font-size:var(--t-micro);color:var(--ink)}
-  .spark .dl{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
-
-  .miles{background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 14%,var(--card,var(--paper))),var(--card,var(--paper)));border:1px solid var(--gold);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card)}
-  .miles .mlead{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink)}
-  .miles .mlead b{color:var(--gold-ink);font-weight:600}
-  .mtrack{position:relative;height:16px;border-radius:var(--r-pill);background:var(--line-soft);margin:var(--s5) 0 var(--s6);overflow:hidden}
-  .mtrack>span{display:block;height:100%;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--gold),var(--gold-ink));transition:width .6s ease}
-  .mflags{display:flex;justify-content:space-between;font-family:var(--font-text);font-size:var(--t-micro)}
-  .mflags .f{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted)}
-  .mflags .f.done{color:var(--ok)} .mflags .f.next{color:var(--gold-ink);font-weight:600}
-  .mflags .dot{width:11px;height:11px;border-radius:50%;background:var(--line);border:2px solid var(--paper)}
-  .mflags .f.done .dot{background:var(--ok)} .mflags .f.next .dot{background:var(--gold-ink)}
-
-  .stay{display:grid;grid-template-columns:1.1fr 1fr;gap:var(--s6);align-items:stretch}
-  .cohort{background:var(--card,var(--paper));border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card)}
-  .cohort .when{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
-  .cohort h4{margin:6px 0 var(--s4);font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3)}
-  .conv{display:flex;align-items:center;gap:var(--s5);flex-wrap:wrap}
-  .ring{--p:0;width:104px;height:104px;border-radius:50%;flex:none;background:conic-gradient(var(--ok) calc(var(--p)*1%),var(--line-soft) 0);display:grid;place-items:center}
-  .ring .inner{width:76px;height:76px;border-radius:50%;background:var(--card,var(--paper));display:grid;place-items:center;font-family:var(--font-display);font-weight:var(--w-strong);font-size:var(--t-h3);color:var(--ok);font-variant-numeric:tabular-nums}
-  .conv .txt{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);min-width:190px;flex:1}
-  .conv .txt b{font-weight:600}
-  .conv .txt .m{color:var(--muted);font-size:var(--t-micro)}
-  .pill{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);padding:4px 11px;border-radius:var(--r-pill);background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold-ink);margin-top:var(--s4)}
-  .proj{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6)}
-  .proj .pl{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
-  .proj .pv{font-family:var(--font-display);font-weight:var(--w-strong);font-size:clamp(30px,5vw,42px);color:var(--ok);font-variant-numeric:tabular-nums;line-height:1;margin-top:6px}
-  .proj .pn{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:10px;line-height:1.55}
-
-  .tablewrap{overflow-x:auto}
-  .tarif{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);min-width:440px}
-  .tarif th,.tarif td{padding:11px 12px;border-bottom:1px solid var(--line-soft);text-align:left}
-  .tarif thead th{color:var(--muted);font-weight:600;font-size:var(--t-micro)}
-  .tarif td.num,.tarif th.num{text-align:right;font-variant-numeric:tabular-nums lining-nums}
-  .tarif tfoot td{font-weight:600;border-top:2px solid var(--line);border-bottom:0}
-  .tarif .prod-h td{background:var(--soft);color:var(--gold-ink);font-weight:600}
-
-  .provisorisch{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s4);line-height:1.55}
-  .empty{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
-  .err{font-family:var(--font-text);color:var(--bad);font-size:var(--t-small)}
-
-  @media (max-width:720px){
-    .tiles{grid-template-columns:1fr} .board{grid-template-columns:1fr} .stay{grid-template-columns:1fr}
-  }
-  /* Handy: enger gesetzt, Held-Zahl und Deadline gestapelt, Momentum kompakt */
-  @media (max-width:480px){
-    .lead{padding-top:22px}
-    .heroline{gap:var(--s5)}
-    .figure .big{font-size:clamp(60px,20vw,88px)}
-    .deadline{min-width:0;width:100%}
-    section{padding:var(--s6) 0}
-    .shead{margin-bottom:var(--s4)}
-    .tile{padding:var(--s5)}
-    .spark{height:132px;gap:4px}
-    .conv{gap:var(--s4)}
-    .ring{width:88px;height:88px} .ring .inner{width:64px;height:64px}
-  }
-</style>
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<link rel="stylesheet" href="campaign.css" />
 </head>
 <body>
 
-<!-- Globale Navigation: Kopfzeile + Menü aus tools.json, mit «← Übersicht». -->
-<script src="https://phtok.github.io/goeloggen/design-system/nav.js"
-        data-root="https://phtok.github.io/goeloggen/"
-        data-variant="werkzeug"></script>
+<!-- Kopfzeile + gemeinsame Kampagnen-Unterleiste (data-onpage). -->
+<script src="../../design-system/nav.js"
+        data-root="../../"
+        data-variant="werkzeug"
+        data-onpage="Cockpit:./|Aktivitäten:aktivitaeten.html|Kosten:kosten.html|Multiplikatoren:multiplikatoren.html|Links:../utm-generator/|Mail:../mail-editor/"></script>
 
 <main class="wrap">
 
-  <section class="lead">
-    <span class="kick">Sommer-Aktion 2026 · Team-Cockpit</span>
+  <section class="lead" id="puls">
+    <span class="kick">Team-Cockpit · 3 Monate gratis</span>
+    <h1 class="lead-title">Sommer-Aktion 2026</h1>
+    <details class="modell-box">
+      <summary>Wozu diese Aktion?</summary>
+      <p class="modell">Wir wollen, dass kulturinteressierte Menschen bis zum <span class="k">8. August</span> ein Gratis-Abo starten – und danach als zahlende Leser und Zuschauer bleiben. Jede Aktivität hat darin ihre Aufgabe.</p>
+    </details>
+    <div class="landing">
+      <span class="meta">Aktionsseiten</span>
+      <a class="btn" href="https://global-sommer2026.goetheanum.online" target="_blank" rel="noopener">Übersicht · 3 Monate gratis</a>
+      <a class="btn" href="https://ws-sommer2026.dasgoetheanum.com" target="_blank" rel="noopener">Wochenschrift</a>
+      <a class="btn" href="https://tv-sommer2026.goetheanum.tv" target="_blank" rel="noopener">goetheanum.tv</a>
+    </div>
+    <p class="kampagne">Kampagne <code>summer26_trial</code> · 3. Juli bis 8. August 2026 · <a href="../utm-generator/">UTM-Links für die Aktion bauen →</a></p>
     <div class="heroline">
       <div class="figure">
         <div class="big" id="total">–</div>
-        <div class="cap">neue Abos seit Aktionsstart · <b>3 Monate gratis</b> <span class="status readout" id="status">lädt …</span></div>
+        <div class="cap">neue Abos seit Aktionsstart<br><b>3 Monate gratis</b> <span class="status readout" id="status">lädt …</span></div>
       </div>
       <div class="deadline">
         <div class="drow"><span class="dlab">Fortschritt bis Aktionsende</span><span class="dd" id="ddText">–</span></div>
         <div class="meter"><span id="ddBar" style="width:0"></span></div>
         <div class="drow" style="margin-top:8px"><span class="dlab" id="ddStart">Start</span><span class="dlab">8. August</span></div>
+        <div class="drow" style="margin-top:8px"><span class="dlab">Nächste Marke</span><span class="dd" id="msLine">–</span></div>
       </div>
     </div>
   </section>
+
 
   <section>
     <div class="tiles">
@@ -168,12 +59,13 @@
     </div>
   </section>
 
+
   <section>
-    <div class="shead"><h2>Sechs Ströme</h2><p>Balken zeigt den Stand, der Strich die Zielmarke. Ein Klick auf die Aktion wird zur Zahl.</p></div>
+    <div class="shead"><h2>Fünf Ströme</h2><p>Balken zeigt den Stand, der Strich die Zielmarke. Ein Klick auf die Aktion wird zur Zahl.</p></div>
     <div class="board">
       <div class="panel">
         <h3>Wochenschrift <q>Das Goetheanum</q></h3>
-        <div class="sub">Lesen · Papier und Digital · Deutsch und Englisch · Abo-Verwaltung auf Zoho</div>
+        <div class="sub">Lesen · Deutsch: Papier und Digital · Englisch: nur Digital · Abo-Verwaltung auf Zoho</div>
         <div id="wosStreams"><div class="empty">lädt …</div></div>
       </div>
       <div class="panel">
@@ -188,406 +80,70 @@
     </div>
   </section>
 
-  <section>
-    <div class="shead"><h2>Woher kommen die Abos?</h2><p>Herkunftsweg der Anmeldungen – aus den UTM-Parametern am Anmelde-Link. So wird sichtbar, welcher Kanal trägt.</p></div>
-    <div id="kanalBars"><div class="empty">lädt …</div></div>
-  </section>
 
   <section>
     <div class="shead"><h2>Momentum</h2><p>Neue Abos je Tag – hier wird sichtbar, wann ein Aufruf, ein Newsletter oder ein Beitrag Wirkung zeigt.</p></div>
     <div class="spark" id="spark"><div class="empty">lädt …</div></div>
   </section>
 
-  <section>
-    <div class="shead"><h2>Meilensteine</h2><p>Die nächste runde Marke – gemeinsam draufzugehen.</p></div>
-    <div class="miles">
-      <div class="mlead" id="milesLead">lädt …</div>
-      <div class="mtrack"><span id="milesBar" style="width:0"></span></div>
-      <div class="mflags" id="milesFlags"></div>
+
+  <section id="wirkung">
+    <div class="shead"><h2>Wirkung</h2><p>Woher die Abos kommen (aus den UTM-Parametern am Link) – und darunter die ganze Kette: Reichweite → Klicks → Abschlüsse → Geblieben. Reichweite und Klicks kommen aus den Aktivitäten, Abschlüsse und Geblieben zählt das Cockpit live aus den Anmeldungen.</p></div>
+    <div id="kanalBars"><div class="empty">lädt …</div></div>
+    <div class="motive" id="motive" hidden>
+      <div class="mh">Nach Motiv</div>
+      <div id="motiveList"></div>
+    </div>
+    <div class="panel" style="margin-top:var(--s5)">
+      <div class="funnel" id="funnel"><div class="empty">lädt …</div></div>
     </div>
   </section>
 
-  <section>
-    <div class="shead"><h2>Wer bleibt?</h2><p>Der Moment nach drei Monaten: Aus jeder Anmelde-Kohorte entscheidet sich, wer zahlend bleibt.</p></div>
-    <div class="stay">
-      <div class="cohort" id="cohortCard"><div class="empty">lädt …</div></div>
-      <div class="proj">
-        <div class="pl">Hochgerechneter Folgejahr-Umsatz</div>
-        <div class="pv" id="projValue">–</div>
-        <div class="pn" id="projNote">Projektion auf Basis der angenommenen Bleibe-Quote und der hinterlegten Preise.</div>
+
+  <section id="details">
+    <div class="shead"><h2>Details</h2><p>Wer nach den drei Monaten bleibt – und die Aufschlüsselung nach Tarif und Zahlungsweise.</p></div>
+    <details class="zb-form" open>
+      <summary>Wer bleibt? – der Drei-Monats-Moment</summary>
+      <div class="stay" style="margin-top:var(--s4)">
+        <div class="cohort" id="cohortCard"><div class="empty">lädt …</div></div>
+        <div class="proj">
+          <div class="pl">Hochgerechneter Folgejahr-Umsatz</div>
+          <div class="pv" id="projValue">–</div>
+          <div class="pn" id="projNote">Projektion auf Basis der angenommenen Bleibe-Quote und der hinterlegten Preise.</div>
+        </div>
       </div>
-    </div>
+    </details>
+    <details class="zb-form" open>
+      <summary>Nach Tarif und Zahlungsweise</summary>
+      <div class="tablewrap" style="margin-top:var(--s4)">
+        <table class="tarif">
+          <thead><tr><th>Tarif</th><th class="num">Monatlich</th><th class="num">Jährlich</th><th class="num">Summe</th></tr></thead>
+          <tbody id="tarifBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+          <tfoot id="tarifFoot"></tfoot>
+        </table>
+      </div>
+      <p class="provisorisch" id="provisorisch"></p>
+    </details>
   </section>
 
-  <section>
-    <div class="shead"><h2>Kosten und Wirkung</h2><p>Was die Aktion kostet – und was voraussichtlich zurückkommt. Kosten je Weg und je Abo.</p></div>
-    <div class="tiles">
-      <div class="tile"><div class="n gold" id="costTotal">–</div><div class="l">Kosten gesamt</div><div class="s" id="costSub">inkl. Fixkosten</div></div>
-      <div class="tile"><div class="n blue" id="costCpa">–</div><div class="l">Kosten je Abo</div><div class="s">Schnitt über alle Wege</div></div>
-      <div class="tile"><div class="n ok" id="costRoi">–</div><div class="l">Rückfluss je € Kosten</div><div class="s">projizierter Folgejahr-Umsatz</div></div>
-    </div>
-    <div class="tablewrap" style="margin-top:var(--s5)">
-      <table class="tarif">
-        <thead><tr><th>Weg</th><th class="num">Abos</th><th class="num">Kosten</th><th class="num">€ je Abo</th></tr></thead>
-        <tbody id="costBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
-        <tfoot id="costFoot"></tfoot>
-      </table>
-    </div>
-    <p class="provisorisch">Kosten sind Beispielwerte – bitte die echten Ausgaben je Weg und die Fixkosten der Aktion setzen.</p>
-  </section>
-
-  <section>
-    <div class="shead"><h2>Nach Tarif</h2><p>Neue Abos nach Tarifstufe und Zahlungsweise.</p></div>
-    <div class="tablewrap">
-      <table class="tarif">
-        <thead><tr><th>Tarif</th><th class="num">Monatlich</th><th class="num">Jährlich</th><th class="num">Summe</th></tr></thead>
-        <tbody id="tarifBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
-        <tfoot id="tarifFoot"></tfoot>
-      </table>
-    </div>
-    <p class="provisorisch" id="provisorisch"></p>
-  </section>
 
 </main>
 
 <footer class="ds-footer">
-  <div class="wrap frow">
-    <span><strong>Sommer-Zähler 2026</strong> · live aus dem Werkzeug-Backend · nur Summen, keine Personendaten</span>
-    <span><a href="https://phtok.github.io/goeloggen/design-system/">Design-System</a></span>
+  <div class="wrap" style="display:flex;flex-direction:column;gap:var(--s2)">
+    <div class="landing">
+      <span class="meta">Aktionsseiten</span>
+      <a class="btn" href="https://global-sommer2026.goetheanum.online" target="_blank" rel="noopener">Übersicht · 3 Monate gratis</a>
+      <a class="btn" href="https://ws-sommer2026.dasgoetheanum.com" target="_blank" rel="noopener">Wochenschrift</a>
+      <a class="btn" href="https://tv-sommer2026.goetheanum.tv" target="_blank" rel="noopener">goetheanum.tv</a>
+    </div>
+    <div class="frow">
+      <span><strong>Sommer-Zähler 2026</strong> · live aus dem Werkzeug-Backend · nur Summen, keine Personendaten</span>
+      <span><a href="../../design-system/">Design-System</a></span>
+    </div>
   </div>
 </footer>
 
-<script>
-  /* ── Einstellungen · HART VERDRAHTET ──────────────────────────────────────
-     Zahlen der Anmeldungen kommen live aus dem Backend. Zielmarken, Preise und
-     Bleibe-Quote werden hier gesetzt – sobald die echten Werte vorliegen, nur
-     diese Werte anpassen. */
-  var CONFIG = {
-    start: '2026-06-24',            // Aktionsstart (für den Fortschritts-Balken)
-    ende:  '2026-08-08',            // Aktionsende
-    bleibeQuote: 0.62,             // Annahme, bis Erfahrungswerte vorliegen
-    meilensteine: [100, 250, 500, 1000],
-    ziele: {                        // Zielmarke je Strom
-      'wos.de.papier': 120, 'wos.de.digital': 150,
-      'wos.en.papier': 40,  'wos.en.digital': 80,
-      'gtv.de': 130, 'gtv.en': 90
-    },
-    // Beispielpreise (Vollpreis der wiederkehrenden Zahlung, Euro) – bitte ersetzen.
-    preise: {
-      wos: { standard:{monatlich:14.9, jaehrlich:149}, ermaessigt:{monatlich:7.9, jaehrlich:79} },
-      gtv: { standard:{monatlich:12,   jaehrlich:120}, ermaessigt:{monatlich:8,   jaehrlich:80} }
-    },
-    // Herkunftswege (Attribution) mit den Beispielausgaben der Aktion (Euro) – bitte ersetzen.
-    kanaele: [
-      { key:'newsletter', label:'Newsletter',    kosten: 0 },
-      { key:'mailer',     label:'Mailing',        kosten: 1800 },
-      { key:'social',     label:'Social Media',   kosten: 2400 },
-      { key:'popup',      label:'Popup',          kosten: 600 },
-      { key:'website',    label:'Website direkt', kosten: 0 },
-      { key:'empfehlung', label:'Empfehlung',     kosten: 0 },
-      { key:'andere',     label:'Andere',         kosten: 0 }
-    ],
-    fixkosten: 1200,               // Gestaltung, Landingpages u. Ä.
-    zahlenProvisorisch: true       // blendet den Hinweis auf Beispielwerte ein
-  };
-
-  var SB  = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
-  var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
-  var REFRESH = 60000;
-
-  var STREAMS = [
-    { key:'wos.de.papier',  produkt:'wos', sprache:'de', format:'papier',  name:'Deutsch · Papier',  panel:'wos' },
-    { key:'wos.de.digital', produkt:'wos', sprache:'de', format:'digital', name:'Deutsch · Digital', panel:'wos' },
-    { key:'wos.en.papier',  produkt:'wos', sprache:'en', format:'papier',  name:'Englisch · Papier',  panel:'wos' },
-    { key:'wos.en.digital', produkt:'wos', sprache:'en', format:'digital', name:'Englisch · Digital', panel:'wos' },
-    { key:'gtv.de',         produkt:'gtv', sprache:'de', format:'stream',  name:'Deutsch',  panel:'gtv' },
-    { key:'gtv.en',         produkt:'gtv', sprache:'en', format:'stream',  name:'Englisch', panel:'gtv' }
-  ];
-
-  function fmt(n){ return (Number(n)||0).toLocaleString('de-CH'); }
-  function eur(n){ return '€ ' + Math.round(Number(n)||0).toLocaleString('de-CH'); }
-  function el(id){ return document.getElementById(id); }
-  function dmy(d){ return d.toLocaleDateString('de-CH',{day:'numeric',month:'long'}); }
-
-  function rpc(name){
-    return fetch(SB + '/rest/v1/rpc/' + name, {
-      method:'POST',
-      headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
-      body:'{}'
-    }).then(function(r){ if(!r.ok) throw new Error(name + ' ' + r.status); return r.json(); });
-  }
-
-  function setStatus(state, when){
-    var s = el('status');
-    if(state === 'ok'){ s.className = 'status readout'; s.textContent = '· Stand ' + when.toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'}); }
-    else if(state === 'err'){ s.className = 'status err'; s.textContent = '· nicht ladbar'; }
-    else { s.className = 'status readout'; s.textContent = 'lädt …'; }
-  }
-
-  // ── Deadline-Meter ─────────────────────────────────────────────────────────
-  function renderDeadline(){
-    var start = new Date(CONFIG.start + 'T00:00:00');
-    var ende  = new Date(CONFIG.ende  + 'T23:59:59');
-    var now   = new Date();
-    var pct = Math.max(0, Math.min(100, (now - start) / (ende - start) * 100));
-    el('ddBar').style.width = pct.toFixed(1) + '%';
-    var days = Math.max(0, Math.ceil((ende - now) / 86400000));
-    el('ddText').textContent = days > 0 ? ('noch ' + days + ' Tage') : 'Aktion beendet';
-    el('ddStart').textContent = dmy(start);
-  }
-
-  // ── Aggregation aus sommer2026_stats() ─────────────────────────────────────
-  function streamValue(rows, s){
-    return rows.reduce(function(sum, r){
-      if(r.produkt === s.produkt && r.sprache === s.sprache && r.format === s.format) return sum + Number(r.n);
-      return sum;
-    }, 0);
-  }
-
-  function renderStreams(rows){
-    ['wos','gtv'].forEach(function(panel){
-      var host = el(panel === 'wos' ? 'wosStreams' : 'gtvStreams');
-      host.innerHTML = '';
-      STREAMS.filter(function(s){ return s.panel === panel; }).forEach(function(s){
-        var val = streamValue(rows, s);
-        var ziel = CONFIG.ziele[s.key] || 0;
-        var pct = ziel > 0 ? Math.min(100, Math.round(val / ziel * 100)) : 0;
-        var row = document.createElement('div'); row.className = 'stream';
-        row.innerHTML =
-          '<div class="top2"><span class="name"></span>' +
-          '<span class="val"><b></b> <span class="g"></span></span></div>' +
-          '<div class="track"><span></span><i class="tick" style="left:100%"></i></div>';
-        row.querySelector('.name').textContent = s.name;
-        row.querySelector('.val b').textContent = fmt(val);
-        row.querySelector('.val .g').textContent = ziel ? ('/ ' + fmt(ziel)) : '';
-        row.querySelector('.track > span').style.width = Math.max(3, pct) + '%';
-        host.appendChild(row);
-      });
-    });
-  }
-
-  // ── Woher (Attribution) ────────────────────────────────────────────────────
-  function renderKanaele(kanaele, total){
-    var host = el('kanalBars'); host.innerHTML = '';
-    var byKanal = {}; kanaele.forEach(function(r){ byKanal[r.kanal] = Number(r.n); });
-    var items = CONFIG.kanaele.map(function(k){ return { label:k.label, n:byKanal[k.key] || 0 }; })
-                              .filter(function(x){ return x.n > 0; })
-                              .sort(function(a, b){ return b.n - a.n; });
-    if(!items.length){ host.innerHTML = '<div class="empty">Noch keine Anmeldungen.</div>'; return; }
-    var max = items.reduce(function(m, x){ return Math.max(m, x.n); }, 0) || 1;
-    items.forEach(function(x){
-      var anteil = total > 0 ? Math.round(x.n / total * 100) : 0;
-      var row = document.createElement('div'); row.className = 'stream';
-      row.innerHTML = '<div class="top2"><span class="name"></span>' +
-        '<span class="val"><b></b> <span class="g"></span></span></div>' +
-        '<div class="track"><span></span></div>';
-      row.querySelector('.name').textContent = x.label;
-      row.querySelector('.val b').textContent = fmt(x.n);
-      row.querySelector('.val .g').textContent = anteil + ' %';
-      row.querySelector('.track > span').style.width = Math.max(3, Math.round(x.n / max * 100)) + '%';
-      host.appendChild(row);
-    });
-  }
-
-  // ── Kosten und Wirkung ─────────────────────────────────────────────────────
-  function renderKosten(kanaele, total, revenue){
-    var byKanal = {}; kanaele.forEach(function(r){ byKanal[r.kanal] = Number(r.n); });
-    var kostenSumme = CONFIG.fixkosten || 0;
-    CONFIG.kanaele.forEach(function(k){ kostenSumme += (k.kosten || 0); });
-    el('costTotal').textContent = eur(kostenSumme);
-    el('costCpa').textContent   = total > 0 ? eur(kostenSumme / total) : '–';
-    el('costRoi').textContent   = kostenSumme > 0 ? (revenue / kostenSumme).toFixed(1) + '×' : '–';
-
-    var body = el('costBody'); body.innerHTML = '';
-    CONFIG.kanaele.forEach(function(k){
-      var n = byKanal[k.key] || 0, ko = k.kosten || 0;
-      if(n === 0 && ko === 0) return;
-      var tr = document.createElement('tr');
-      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
-      tr.children[0].textContent = k.label;
-      tr.children[1].textContent = fmt(n);
-      tr.children[2].textContent = ko > 0 ? eur(ko) : '–';
-      tr.children[3].textContent = (ko > 0 && n > 0) ? eur(ko / n) : '–';
-      body.appendChild(tr);
-    });
-    if(CONFIG.fixkosten > 0){
-      var fr = document.createElement('tr');
-      fr.innerHTML = '<td></td><td class="num">–</td><td class="num"></td><td class="num">–</td>';
-      fr.children[0].textContent = 'Fixkosten';
-      fr.children[2].textContent = eur(CONFIG.fixkosten);
-      body.appendChild(fr);
-    }
-    var foot = el('costFoot');
-    foot.innerHTML = '<tr><td>Summe</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>';
-    var c = foot.querySelector('tr').children;
-    c[1].textContent = fmt(total);
-    c[2].textContent = eur(kostenSumme);
-    c[3].textContent = total > 0 ? eur(kostenSumme / total) : '–';
-  }
-
-  // ── Tarif-Tabelle ──────────────────────────────────────────────────────────
-  function renderTarif(rows){
-    function cell(produkt, tarif, intervall){
-      return rows.reduce(function(sum, r){
-        if(r.produkt === produkt && r.tarif === tarif && r.intervall === intervall) return sum + Number(r.n);
-        return sum;
-      }, 0);
-    }
-    var body = el('tarifBody'); body.innerHTML = '';
-    var colM = 0, colJ = 0;
-    [['wos','Wochenschrift'], ['gtv','goetheanum.tv']].forEach(function(p){
-      var hr = document.createElement('tr'); hr.className = 'prod-h';
-      hr.innerHTML = '<td colspan="4"></td>'; hr.querySelector('td').textContent = p[1];
-      body.appendChild(hr);
-      [['standard','Standard'], ['ermaessigt','Ermässigt']].forEach(function(t){
-        var m = cell(p[0], t[0], 'monatlich'), j = cell(p[0], t[0], 'jaehrlich');
-        colM += m; colJ += j;
-        var tr = document.createElement('tr');
-        tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
-        tr.children[0].textContent = t[1];
-        tr.children[1].textContent = fmt(m);
-        tr.children[2].textContent = fmt(j);
-        tr.children[3].textContent = fmt(m + j);
-        body.appendChild(tr);
-      });
-    });
-    var foot = el('tarifFoot');
-    foot.innerHTML = '<tr><td>Summe</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>';
-    foot.querySelector('tr').children[1].textContent = fmt(colM);
-    foot.querySelector('tr').children[2].textContent = fmt(colJ);
-    foot.querySelector('tr').children[3].textContent = fmt(colM + colJ);
-  }
-
-  // ── Umsatz-Projektion (Folgejahr) ──────────────────────────────────────────
-  function projectRevenue(rows){
-    return rows.reduce(function(sum, r){
-      var preis = ((CONFIG.preise[r.produkt] || {})[r.tarif] || {})[r.intervall];
-      if(!preis) return sum;
-      var jahr = r.intervall === 'monatlich' ? preis * 12 : preis;
-      var bleibend;
-      if(r.status === 'bleibt') bleibend = Number(r.n);
-      else if(r.status === 'neu' || r.status === 'laeuft-aus') bleibend = Number(r.n) * CONFIG.bleibeQuote;
-      else bleibend = 0;                     // gekuendigt zählt nicht
-      return sum + bleibend * jahr;
-    }, 0);
-  }
-
-  // ── Kacheln, Meilensteine ──────────────────────────────────────────────────
-  function renderTiles(total, avg, avgDays){
-    el('total').textContent = fmt(total);
-    el('kTotal').textContent = fmt(total);
-    el('kAvg').textContent = fmt(avg);
-    el('kAvgSub').textContent = 'letzte ' + avgDays + ' Tage';
-    var zielSumme = STREAMS.reduce(function(s, x){ return s + (CONFIG.ziele[x.key] || 0); }, 0);
-    var goalPct = zielSumme > 0 ? Math.round(total / zielSumme * 100) : 0;
-    el('kGoal').innerHTML = goalPct + '<span class="u"> %</span>';
-    el('kGoalSub').textContent = fmt(total) + ' von ' + fmt(zielSumme) + ' · Ziel 8. August';
-  }
-
-  function renderMilestones(total){
-    var ms = CONFIG.meilensteine;
-    var next = ms.find(function(m){ return m > total; }) || ms[ms.length - 1];
-    var prev = 0; for(var i = 0; i < ms.length; i++){ if(ms[i] <= total) prev = ms[i]; }
-    var span = next - prev || 1;
-    var pct = Math.max(0, Math.min(100, Math.round((total - prev) / span * 100)));
-    el('milesBar').style.width = pct + '%';
-    var rest = Math.max(0, next - total);
-    el('milesLead').innerHTML = rest > 0
-      ? ('Noch <b>' + fmt(rest) + '</b> Abos bis zum nächsten Meilenstein – <b>' + fmt(next) + '</b>.')
-      : ('Alle Meilensteine erreicht – <b>' + fmt(total) + '</b> Abos.');
-    var flags = el('milesFlags'); flags.innerHTML = '';
-    ms.forEach(function(m){
-      var f = document.createElement('span');
-      f.className = 'f' + (m <= total ? ' done' : (m === next ? ' next' : ''));
-      f.innerHTML = '<span class="dot"></span>';
-      f.appendChild(document.createTextNode(fmt(m)));
-      flags.appendChild(f);
-    });
-  }
-
-  // ── Wer bleibt? (jüngste Kohorte) ──────────────────────────────────────────
-  function renderCohort(kohorten, revenue){
-    var card = el('cohortCard');
-    if(!kohorten || !kohorten.length){ card.innerHTML = '<div class="empty">Noch keine Kohorte.</div>'; return; }
-    var k = kohorten[kohorten.length - 1];
-    var neu = Number(k.neu), bleibt = Number(k.bleibt), offen = Number(k.offen);
-    var projektiert = bleibt + Math.round(offen * CONFIG.bleibeQuote);
-    var quote = neu > 0 ? Math.round(projektiert / neu * 100) : 0;
-    var kMonat = new Date(k.kohorte + 'T00:00:00');
-    var kEntsch = new Date(k.entscheidung_ab + 'T00:00:00');
-    var monat = kMonat.toLocaleDateString('de-CH', { month:'long', year:'numeric' });
-    card.innerHTML =
-      '<div class="when"></div><h4></h4>' +
-      '<div class="conv"><div class="ring"><div class="inner"></div></div>' +
-      '<div class="txt"><b></b><br><span class="m"></span><div class="pill"></div></div></div>';
-    card.querySelector('.when').textContent = 'Kohorte ' + monat + ' · Entscheidung ab ' + dmy(kEntsch);
-    card.querySelector('h4').textContent = fmt(neu) + ' Anmeldungen im Gratis-Zeitraum';
-    card.querySelector('.ring').style.setProperty('--p', quote);
-    card.querySelector('.ring .inner').textContent = quote + '%';
-    card.querySelector('.txt b').textContent = '~' + fmt(projektiert) + ' bleiben voraussichtlich zahlend';
-    card.querySelector('.txt .m').textContent = fmt(offen) + ' Entscheidungen noch offen · ' + fmt(bleibt) + ' bereits umgewandelt';
-    card.querySelector('.pill').textContent = 'Projektion · Annahme ' + Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote';
-
-    el('projValue').textContent = eur(revenue);
-    el('projNote').textContent = 'Hochgerechnet: bleibende Abos zum Vollpreis über alle Tarife, bei ' +
-      Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote.';
-  }
-
-  // ── Momentum ───────────────────────────────────────────────────────────────
-  function renderSpark(timeline){
-    var byDay = {};
-    timeline.forEach(function(r){ byDay[r.day] = (byDay[r.day] || 0) + Number(r.n); });
-    var days = Object.keys(byDay).sort();
-    var recent = days.slice(-10);
-    var host = el('spark'); host.innerHTML = '';
-    if(!recent.length){ host.innerHTML = '<div class="empty">Noch keine Anmeldungen.</div>'; return { avg:0, days:0 }; }
-    var max = recent.reduce(function(m, d){ return Math.max(m, byDay[d]); }, 0) || 1;
-    recent.forEach(function(d){
-      var v = byDay[d];
-      var date = new Date(d + 'T00:00:00');
-      var cell = document.createElement('div'); cell.className = 'd';
-      cell.innerHTML = '<div class="bv"></div><div class="barcell"><div class="bar"></div></div><div class="dl"></div>';
-      cell.querySelector('.bv').textContent = fmt(v);
-      cell.querySelector('.bar').style.height = Math.max(3, Math.round(v / max * 100)) + '%';
-      cell.querySelector('.dl').textContent = date.toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) + '.';
-      host.appendChild(cell);
-    });
-    var sum = recent.reduce(function(s, d){ return s + byDay[d]; }, 0);
-    return { avg: Math.round(sum / recent.length), days: recent.length };
-  }
-
-  // ── Laden ──────────────────────────────────────────────────────────────────
-  function load(){
-    renderDeadline();
-    if(CONFIG.zahlenProvisorisch){
-      el('provisorisch').textContent = 'Zielmarken, Preise und die Bleibe-Quote sind vorläufig hinterlegt – sobald die echten Werte gesetzt sind, rechnet das Cockpit unverändert weiter.';
-    }
-    Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten'), rpc('sommer2026_kanaele') ])
-      .then(function(res){
-        var stats = res[0] || [], timeline = res[1] || [], kohorten = res[2] || [], kanaele = res[3] || [];
-        var total = stats.reduce(function(s, r){ return s + Number(r.n); }, 0);
-        var revenue = projectRevenue(stats);
-        var mo = renderSpark(timeline);
-        renderTiles(total, mo.avg, mo.days);
-        renderStreams(stats);
-        renderKanaele(kanaele, total);
-        renderTarif(stats);
-        renderMilestones(total);
-        renderCohort(kohorten, revenue);
-        renderKosten(kanaele, total, revenue);
-        if(total === 0){ el('status').className = 'status empty'; }
-        setStatus('ok', new Date());
-      })
-      .catch(function(){
-        setStatus('err');
-        ['wosStreams','gtvStreams','kanalBars'].forEach(function(id){ el(id).innerHTML = '<div class="err">nicht ladbar</div>'; });
-        el('spark').innerHTML = '<div class="err">nicht ladbar</div>';
-      });
-  }
-
-  load();
-  setInterval(load, REFRESH);
-</script>
-
+<script src="campaign.js"></script>
 </body>
 </html>

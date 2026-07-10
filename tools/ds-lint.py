@@ -57,7 +57,10 @@ def staged_html():
 
 def excluded(path, c):
     g = c["geltungsbereich"]
-    if any(s in path for s in g["ausgenommen_substr"]):
+    # Staged/Audit-Pfade kommen relativ ("assets/…") – für die Substring-
+    # Ausnahmen ("/assets/") wie absolute behandeln, sonst greifen sie nie.
+    p = "/" + path.lstrip("./")
+    if any(s in p for s in g["ausgenommen_substr"]):
         return True
     if path in g["ausgenommen_dateien"]:
         return True
@@ -165,17 +168,49 @@ def lint_file(path, c):
     findings = []
     skip_lines = {lineno(full, m.start()) for m in re.finditer(r"#\s*ds-ok", full)}
 
+    # Ratifizierungs-Marker im FALSCHEN Format melden (»/* ds-ok: … */« ohne #):
+    # der Checker sieht so eine Ratifizierung nicht – Wiederholungsfehler (1.7.0).
+    for m in re.finditer(r"/\*\s*ds-ok", full):
+        if lineno(full, m.start()) not in skip_lines:
+            findings.append((lineno(full, m.start()), "DS00", "hinweis",
+                             "ds-ok-Marker im falschen Format – »# ds-ok« schreiben, sonst wirkungslos"))
+
     # DS01 – Pflicht-Includes
     for inc in c["includes"]["pflicht"]:
         base = os.path.basename(inc)
         if not re.search(r'href\s*=\s*["\'][^"\']*' + re.escape(base), full):
             findings.append((1, "DS01", "fehler", f"Pflicht-Include fehlt: {inc}"))
 
-    # DS06 – eigene Kopfzeile / Fake-Logo (nur wenn nav.js NICHT eingebunden)
+    # DS06 – eigene Kopfzeile / Fake-Logo (nur wenn nav.js NICHT eingebunden).
+    # `# ds-ok` auf der <header>-Zeile ratifiziert die Ausnahme (z. B. der
+    # Nachbau einer fremden Kopfzeile auf den Perspektiven-Seiten).
     has_nav = bool(re.search(r'nav\.js', full))
     if not has_nav and re.search(r"<header\b", full, re.I):
-        findings.append((lineno(full, re.search(r"<header\b", full, re.I).start()),
-                         "DS06", "hinweis", "eigene <header>-Kopfzeile ohne nav.js – Fundament-Leiste nutzen"))
+        header_ln = lineno(full, re.search(r"<header\b", full, re.I).start())
+        if header_ln not in skip_lines:
+            findings.append((header_ln,
+                             "DS06", "hinweis", "eigene <header>-Kopfzeile ohne nav.js – Fundament-Leiste nutzen"))
+
+    # DS08 – Marke aus dem Generator: das Favicon (Kachel) steht nie als <img>.
+    marke = c.get("marke")
+    if marke:
+        for pat in marke.get("verbotene_muster", []):
+            for m in re.finditer(pat, full, re.I):
+                m_ln = lineno(full, m.start())
+                if m_ln not in skip_lines:
+                    findings.append((m_ln, marke["ds_id"], marke.get("schwere", "hinweis"),
+                                     "Favicon-Kachel als <img> – Marke aus dem Logo-Generator nutzen (DS08)"))
+
+    # DS09 – Fundament/Assets nie absolut über phtok.github.io einbinden: auf der
+    # Custom-Domain (Auslieferung im Root, ohne /goeloggen/-Präfix) laufen die
+    # URLs ins Leere → Seite ungestylt (Vorfall Signatur-Generator, PR #291).
+    einb = c.get("einbindung")
+    if einb:
+        for m in re.finditer(einb["verbotenes_muster"], full, re.I):
+            m_ln = lineno(full, m.start())
+            if m_ln not in skip_lines:
+                findings.append((m_ln, einb["ds_id"], einb.get("schwere", "fehler"),
+                                 "Fundament/Assets absolut (phtok.github.io/goeloggen/…) – relativ einbinden; bricht auf der Custom-Domain"))
 
     # CSS-Kontexte (Blöcke + inline) – ohne <script>
     scriptless = RE_SCRIPT.sub(lambda m: "\n" * m.group(0).count("\n"), full)

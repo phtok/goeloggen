@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Warum unsere Mails ohne Bilder auskommen – Argumentarium</title>
+<style>
+  /* Druckquelle für assets/merkblaetter/warum-ohne-bilder.pdf
+     (Chromium: A4, printBackground). Farben = Hauspalette hell aus
+     tokens.css als Literale: ein gedrucktes Blatt ist immer weiss. */
+  @font-face{font-family:"G Deutlich";src:url("../../fonts/goetheanum/Office/GoetheanumSchriftDeutlich.ttf");font-display:block}
+  @font-face{font-family:"G Klar";src:url("../../fonts/goetheanum/Office/GoetheanumSchriftKlar.ttf");font-display:block}
+  @font-face{font-family:"Source Sans 3";src:url("../../fonts/goetheanum/Fallback/SourceSans3-Regular.ttf");font-display:block}
+  @page{size:A4;margin:0}
+  *{box-sizing:border-box;font-synthesis:none}
+  html,body{margin:0;padding:0}
+  body{font-family:"Source Sans 3",sans-serif;color:#23272b;background:#fff} /* ds-ok: Druck-Artefakt */
+  .page{width:210mm;height:297mm;padding:17mm 17mm 14mm;position:relative;page-break-after:always;overflow:hidden}
+  .page:last-child{page-break-after:auto}
+
+  .kicker{font-family:"G Deutlich";font-size:10.5pt;color:#8a6728;margin:0 0 2mm} /* ds-ok: Druck-Artefakt */
+  h1{font-family:"G Deutlich";font-size:23pt;line-height:1.12;margin:0 0 5mm;font-weight:normal}
+  .kern{font-family:"G Klar";font-size:12pt;line-height:1.5;margin:0 0 9mm;
+    border-left:1mm solid #d7ab68;padding-left:5mm} /* ds-ok: Druck-Artefakt */
+  .kern em{font-style:normal;font-family:"G Deutlich"}
+
+  h2{font-family:"G Deutlich";font-size:13.5pt;margin:0 0 4mm;font-weight:normal}
+  .cols{columns:2;column-gap:9mm}
+  .arg{break-inside:avoid;margin:0 0 4.6mm;padding-left:7mm;position:relative}
+  .arg .n{position:absolute;left:0;top:0;font-family:"G Deutlich";font-size:12.5pt;color:#8a6728} /* ds-ok: Druck-Artefakt */
+  .arg h3{font-family:"G Deutlich";font-size:10.5pt;margin:0 0 1mm;font-weight:normal}
+  .arg p{font-size:9.4pt;line-height:1.42;margin:0}
+
+  .box{border:.35mm solid #d7ab68;border-radius:2.5mm;padding:4.5mm 5.5mm;margin:0 0 8mm} /* ds-ok: Druck-Artefakt */
+  .box h3{font-family:"G Deutlich";font-size:10.5pt;margin:0 0 1.5mm;font-weight:normal}
+  .box p{font-size:9.4pt;line-height:1.42;margin:0}
+
+  .einw{break-inside:avoid;margin:0 0 5mm}
+  .einw h3{font-family:"G Deutlich";font-size:10.5pt;margin:0 0 1mm;font-weight:normal;color:#8a6728} /* ds-ok: Druck-Artefakt */
+  .einw p{font-size:9.4pt;line-height:1.42;margin:0}
+
+  .foot{position:absolute;left:17mm;right:17mm;bottom:9mm;display:flex;
+    justify-content:space-between;font-size:8pt;color:#6b7177} /* ds-ok: Druck-Artefakt */
+</style>
+</head>
+<body>
+
+<div class="page">
+  <p class="kicker">Argumentarium · E-Mail am Goetheanum</p>
+  <h1>Warum unsere Mails ohne Bilder auskommen</h1>
+  <p class="kern">Die Büroklammer ist ein Versprechen: <em>Hier wartet ein Dokument
+    für dich.</em> Wer Bilder in die Signatur legt, bricht dieses Versprechen mit
+    jeder einzelnen Mail. Wir halten es – bei uns sind nur Arbeitsdokumente
+    Anhänge.</p>
+
+  <h2>Sieben Gründe</h2>
+  <div class="cols">
+    <div class="arg"><span class="n">1</span>
+      <h3>Signatur-Bilder erscheinen als Anhang</h3>
+      <p>Gmail, Outlook und Thunderbird zeigen eingebettete Bilder – Logos,
+        Banner, Zertifikats-Grafiken – als Anhang samt Büroklammer. Der Empfänger
+        öffnet die Mail, sucht das Dokument und findet Werbung. Bei jeder
+        Antwort von Neuem.</p></div>
+    <div class="arg"><span class="n">2</span>
+      <h3>Die Hälfte liest dunkel</h3>
+      <p>Text erbt die Farben des Mailprogramms automatisch – unsere Signatur
+        setzt darum bewusst keine Textfarbe. Ein Bild hat feste Farben: Es steht
+        als weisser Kasten im dunklen Fenster, oder der Client invertiert es und
+        zerstört es dabei.</p></div>
+    <div class="arg"><span class="n">3</span>
+      <h3>Nachgeladene Bilder werden blockiert</h3>
+      <p>Remote-Bilder unterdrücken viele Clients und Firmen-Gateways
+        standardmässig, aus gutem Grund (Tracking-Schutz). Übrig bleibt ein
+        leerer Rahmen. Text kommt immer an – in jedem Client, in jeder
+        Grösse.</p></div>
+    <div class="arg"><span class="n">4</span>
+      <h3>Antwortketten vervielfachen jedes Bild</h3>
+      <p>In einem Thread mit zehn Antworten steckt das Signatur-Logo zehnfach.
+        Postfächer und Archive wachsen unnötig, und die Suche nach ‹Mails mit
+        Anhang› wird unbrauchbar, weil sie tausendfach Signatur-Logos findet
+        statt Dokumente.</p></div>
+    <div class="arg"><span class="n">5</span>
+      <h3>Der Standard ist längst Text</h3>
+      <p>Bildlastige Signaturen erhöhen den Spam-Verdacht. Internationale
+        Leitfäden – namentlich die der Universitäten – empfehlen reine
+        Text-Signaturen von wenigen Zeilen, ohne Logo. Der Trend der letzten
+        Jahre geht klar dorthin, nicht davon weg.</p></div>
+    <div class="arg"><span class="n">6</span>
+      <h3>Zugänglichkeit</h3>
+      <p>Vorleseprogramme lesen Text; ein Bild ohne gepflegten Alternativtext
+        ist eine Barriere. Textgrössen skalieren mit den Einstellungen der
+        Lesenden – ein Banner nicht.</p></div>
+    <div class="arg"><span class="n">7</span>
+      <h3>Rechtlich braucht es nichts davon</h3>
+      <p>Die Schweiz kennt keine Pflichtangaben für Geschäfts-E-Mails, und
+        Vertraulichkeitshinweise sind rechtlich wirkungslos. Jeder Ballast in
+        der Signatur ist freiwillig – und was man weglassen kann, lässt man
+        weg.</p></div>
+  </div>
+
+  <div class="foot"><span>Goetheanum · Hausgrafik</span><span>Seite 1 von 2</span></div>
+</div>
+
+<div class="page">
+  <div class="box">
+    <h3>Auch die elegante Abkürzung trägt nicht (geprüft Juli 2026)</h3>
+    <p>Link-Vorschaukarten wirken wie die Lösung – Bildchen ohne Anhang. Sie
+      sind es nicht: Apple Mail bettet das Vorschaubild in die Mail ein, beim
+      Empfänger erscheint wieder die Büroklammer. Outlook-Karten (nur in der
+      Web-Version) laden das Bild nach und werden blockiert. Gmail kennt gar
+      keine. Und auslösen lässt sich der Mechanismus aus einer Signatur heraus
+      ohnehin nicht – er läuft nur beim Verfassen von Hand.</p>
+  </div>
+
+  <h2>Einwände im Gespräch</h2>
+  <div class="cols">
+    <div class="einw"><h3>‹Ohne Logo erkennt niemand das Goetheanum.›</h3>
+      <p>Der Name Goetheanum steht in jeder Signatur in Blau, die Absenderadresse
+        endet auf goetheanum.ch, und alle Signaturen des Hauses sind gleich
+        gebaut. Wiedererkennung entsteht aus Konsistenz, nicht aus einem Bild,
+        das als Anhang ankommt. Das Logo wohnt auf Briefpapier und Website –
+        dort wirkt es.</p></div>
+    <div class="einw"><h3>‹Andere Institutionen haben doch auch Banner.›</h3>
+      <p>Und ihre Mails zeigen bei uns die Büroklammer, leere Bildrahmen und
+        invertierte Logos. Wir orientieren uns an der Praxis der Hochschulen –
+        wenige Zeilen Text – nicht an der des Marketings.</p></div>
+    <div class="einw"><h3>‹Ich will auf unsere Veranstaltung hinweisen – mit Bild.›</h3>
+      <p>Genau dafür gibt es das PS: eine Zeile zuoberst, auf Augenhöhe mit dem
+        Anschreiben, mit Link. Das Bild liefert die Veranstaltungsseite selbst –
+        als Vorschaukarte überall dort, wo der Link geteilt wird: Messenger,
+        Teams, soziale Medien. Das Bild wohnt auf dem Server, die Mail bleibt
+        leicht.</p></div>
+    <div class="einw"><h3>‹Ist eine reine Text-Mail nicht lieblos?›</h3>
+      <p>Sie ist rücksichtsvoll: lesbar in jedem Client, in jeder Schriftgrösse,
+        in Hell und Dunkel, ohne Ballast im Postfach des Gegenübers. Die
+        Sorgfalt zeigt sich in der Typografie und in der Kürze – nicht im
+        Schmuck.</p></div>
+    <div class="einw"><h3>‹Und der Vertraulichkeitshinweis?›</h3>
+      <p>In der Schweiz ohne rechtliche Wirkung: Ein einseitiger Hinweis bindet
+        den Empfänger nicht. Er macht Mails nur länger – also entfällt er.</p></div>
+  </div>
+
+  <h2 style="margin-top:6mm">Kurz gesagt</h2>
+  <p style="font-size:9.4pt;line-height:1.42;margin:0;max-width:160mm">Die
+    Bildlosigkeit ist kein Verzicht, sondern ein Service am Empfänger: Die
+    Büroklammer bleibt ein verlässliches Zeichen, die Mail bleibt in jedem
+    Client lesbar, und die Stimme des Goetheanum trägt der Text. Werkzeug und
+    Begründung: werkzeuge.goetheanum.ch/signatur – elf Empfehlungen samt
+    Fussnote ‹Was in der Schweiz gilt›, als Seite und A4-PDF.</p>
+
+  <div class="foot"><span>Goetheanum · Hausgrafik · Stand 10. Juli 2026</span><span>Seite 2 von 2</span></div>
+</div>
+
+</body>
+</html>

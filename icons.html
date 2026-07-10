@@ -78,6 +78,14 @@
   .keycap.has .gl.pf{font-family:"G Pfeile"}  /* Pfeile-Ebene: eigener Font, Grundtaste getippt */
   /* Buchstaben-Legende: auf belegten Tasten klein in die untere rechte Ecke. */
   .keycap.has .lk{position:absolute;right:7px;bottom:5px;color:var(--gold-ink)}
+  /* Zweitzeichen oben rechts: der fette Pfeil (Umschalt) – wie „&“ über „6“.
+     Nichts unter dem Lesbarkeits-Floor (B03): ⇧ auf --t-micro, Pfeil knapp grösser. */
+  .keycap .sh{position:absolute;right:6px;top:4px;display:flex;align-items:center;gap:1px;line-height:1}
+  .keycap .sh .up{font-size:var(--t-micro);line-height:1;color:var(--gold-ink)}
+  .keycap .sh .fg{font-family:"G Pfeile";font-size:15px;line-height:1;color:var(--gold-ink)}
+  /* Unter-Umschalter ‹ohne/mit Text› – nur unter Piktogramme sichtbar. */
+  .kbd-sub{margin:-2px 0 12px;font-size:var(--t-small)}
+  .kbd-sub[hidden]{display:none}
   @media(max-width:560px){
     .keycap{width:52px;height:52px;border-radius:10px}
     .keycap.has .gl{font-size:33px}
@@ -86,6 +94,7 @@
   /* Live: tippen → Icons (Webfont per Taste). */
   .try{display:flex;flex-direction:column;gap:10px;margin-top:16px}
   .try .out{font-family:"G Icons";font-size:40px;line-height:1.2;color:var(--ink);min-height:52px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--soft);word-break:break-word}
+  .try .out.pf{font-family:"G Pfeile"}   /* Pfeil-/Kompass-Ebene: das Tippfeld zeigt den Pfeile-Font */
   .try input{font:inherit;font-size:16px;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 14px;background:var(--field-bg);min-height:var(--tap)}
   /* Ebenen-Umschalter: Grundebene (Buchstaben → Piktogramme) / Pfeile & Kompass (eigener Font, normale Tasten). */
   .kbd-layer{margin:6px 0 12px}
@@ -160,6 +169,10 @@
           <button type="button" data-layer="base" aria-pressed="true">Piktogramme</button>
           <button type="button" data-layer="pfeile" aria-pressed="false">Pfeile &amp; Kompass</button>
         </div>
+        <div class="seg kbd-sub" id="kbdsub" role="tablist" aria-label="Piktogramm-Ebene">
+          <button type="button" data-sub="ohne" aria-pressed="true">ohne Text</button>
+          <button type="button" data-sub="mit" aria-pressed="false">mit Text</button>
+        </div>
         <div class="kbd" id="kbd"></div>
         <span class="kbd-toast" id="kbdtoast" aria-live="polite"></span>
         <p class="kbdcap" id="kbdcap"></p>
@@ -187,6 +200,7 @@
           <li><b>PNG</b><span>Für schnelle Verwendung in Office und Präsentationen – fester Pixelrahmen.</span></li>
         </ul>
         <p style="margin-top:14px">Im Fließtext oder als Aufzählungszeichen ist der Webfont am leichtesten; für ein einzelnes großes Symbol im Layout die SVG oder das PDF.</p>
+        <p class="note" style="margin-top:10px">Hinweis für Werkzeuge, die SVGs programmatisch setzen: Die Einzeldateien tragen seit Juli 2026 eine <b style="font-weight:var(--w-deutlich)">einheitliche Em-Box</b> (Ausnahme: die Wortmarke). Robust bleibt die Zentrierung auf die Tintenbox (per <code>getBBox()</code>) — Details im <a href="https://github.com/phtok/goeloggen/blob/main/design-system/werkzeugwissen.md">Werkzeugwissen</a>.</p>
       </div>
 
     </div>
@@ -236,17 +250,27 @@
       var rows=DATA.filter(function(it){
         var inTab = tab==="alle" || it.group===tab;
         var inTerm = !term || it.label.toLowerCase().indexOf(term)!==-1 || it.slug.indexOf(term)!==-1;
-        return inTab && inTerm;
+        return inTab && inTerm && !it.fontonly;   // ‹mit Text› ist Font-only (keine Einzeldatei) – nur auf der Tastatur
       });
       grid.innerHTML="";
       rows.forEach(function(it){
         var k=key(it.codepoint);
+        // Pfeile/Kompass liegen im EIGENEN Font «Goetheanum Pfeile» auf Buchstaben-
+        // tasten (nicht auf dem PUA-Codepoint). Darum dort die echte Pfeile-Taste
+        // zeigen – sonst stünde das untypbare PUA-Zeichen (Tofu) im Feld.
+        var pf = it.group==='pfeil-kompass';
+        var taste = k, fett = false;
+        if (pf) {
+          var base = it.slug.replace(/-fett$/,''); fett = /-fett$/.test(it.slug);
+          var bk = PFEIL_REV[base];
+          taste = bk ? (fett ? '⇧'+bk : bk) : '';
+        }
         var cell=document.createElement('div'); cell.className='icell';
         cell.setAttribute('role','group'); cell.setAttribute('aria-label',it.label);
         cell.innerHTML=
           '<span class="ico" aria-hidden="true">'+esc(k)+'</span>'+
           '<div class="nm">'+esc(it.label)+'</div>'+
-          (k ? '<div class="key">Taste <b>'+esc(k)+'</b></div>' : '')+
+          (taste ? '<div class="key">'+(pf?'Pfeile-Taste':'Taste')+' <b>'+esc(taste)+'</b></div>' : '')+
           '<div class="dl">'+
             '<a download href="'+BASE+'svg/'+it.slug+'.svg">SVG</a>'+
             '<a download href="'+BASE+'png/'+it.slug+'.png">PNG</a>'+
@@ -256,19 +280,24 @@
       });
       empty.hidden = rows.length>0;
     }
-    // Zwei Ebenen: Piktogramme (Icon-Font, Buchstaben → Zeichen) und Pfeile & Kompass.
-    // Die Pfeile haben einen EIGENEN Font «Goetheanum Pfeile»: dieselben Zeichen auf
-    // normalen Tasten – tippen, kein Option, kein PUA. Belegung A (Beipackzettel-treu),
-    // Umschalt = fett. Die Tasten hier zeigen die Zeichen aus dem Pfeile-Webfont.
+    // Drei Ebenen, aber nur zwei Fonts – wie auf einer echten Tastatur zwei Zeichen
+    // je Taste liegen (unten tippen, oben mit ⇧):
+    //  • Piktogramme  ‹ohne Text›  – Grundtaste, Icon-Font
+    //  • Piktogramme  ‹mit Text›   – Umschalt-Glyphe (Grosstaste), Icon-Font
+    //  • Pfeile & Kompass          – eigener Font «Goetheanum Pfeile»; die vier
+    //    Richtungspfeile tragen den fetten Pfeil als ⇧-Zweitzeichen oben rechts.
     var PFEIL_KEYS={ '6':'pfeil-hoch','t':'pfeil-links','u':'pfeil-rechts','h':'pfeil-runter',
       'y':'kompass-1','x':'kompass-2','c':'kompass-3','v':'kompass-4',
       '2':'pfeil-gebogen-1','0':'pfeil-gebogen-2','q':'pfeil-gebogen-3','e':'pfeil-gebogen-4',
       'o':'pfeil-gebogen-5','ü':'pfeil-gebogen-6','s':'pfeil-gebogen-7','ö':'pfeil-gebogen-8' };
+    // Umkehrung slug → Taste, für die Kachel-Anzeige im Reiter «Pfeile & Kompass».
+    var PFEIL_REV={}; Object.keys(PFEIL_KEYS).forEach(function(t){ PFEIL_REV[PFEIL_KEYS[t]]=t; });
+    var FAT_SHIFT={ '6':'&','t':'T','u':'U','h':'H' };   // fette Richtungspfeile (Umschalt)
     var ROWS=[['1','2','3','4','5','6','7','8','9','0','ß'],
               ['q','w','e','r','t','z','u','i','o','p','ü'],
               ['a','s','d','f','g','h','j','k','l','ö','ä'],
               ['<','y','x','c','v','b','n','m']];
-    var kbdLayer='base', copyTimer;
+    var kbdLayer='base', mainLayer='pikto', subText=false, copyTimer;
     function copyGlyph(g,label){
       if(navigator.clipboard) navigator.clipboard.writeText(g);
       var t=document.getElementById('kbdtoast'); if(!t) return;
@@ -280,18 +309,27 @@
       var byChar={}, bySlug={};
       DATA.forEach(function(it){ var k=key(it.codepoint); if(k) byChar[k]=it; bySlug[it.slug]=it; });
       box.innerHTML="";
+      var pfeile = kbdLayer==='pfeile', text = kbdLayer==='text';
       ROWS.forEach(function(r){
         var row=document.createElement('div'); row.className='krow';
         r.forEach(function(ch){
-          var pfeile = kbdLayer==='pfeile';
-          var it = pfeile ? bySlug[PFEIL_KEYS[ch]] : byChar[ch];
+          var it=null, glClass='gl', glChar=ch, shHTML='';
+          if(pfeile){
+            it = bySlug[PFEIL_KEYS[ch]];
+            if(it){ glClass='gl pf'; glChar=ch;
+              if(FAT_SHIFT[ch]) shHTML='<span class="sh" aria-hidden="true"><span class="up">⇧</span><span class="fg">'+esc(FAT_SHIFT[ch])+'</span></span>';
+            }
+          } else if(text){
+            var up=ch.toUpperCase(); var t=byChar[up];
+            if(t && t.group==='piktogramm-text'){ it=t; glChar=up; }
+          } else {
+            it = byChar[ch]; glChar=ch;
+          }
           if(it){
             var g=key(it.codepoint), legend=ch.toUpperCase();
-            // Piktogramme: Zeichen aus dem Icon-Font. Pfeile: die GRUNDTASTE im Pfeile-Font.
-            var glClass = pfeile ? 'gl pf' : 'gl', glChar = pfeile ? ch : g;
             var b=document.createElement('button'); b.type='button'; b.className='keycap has';
             b.title=it.label+' – kopieren'; b.setAttribute('aria-label',it.label+' kopieren');
-            b.innerHTML='<span class="'+glClass+'" aria-hidden="true">'+esc(glChar)+'</span><span class="lk">'+esc(legend)+'</span>';
+            b.innerHTML='<span class="'+glClass+'" aria-hidden="true">'+esc(glChar)+'</span>'+shHTML+'<span class="lk">'+esc(legend)+'</span>';
             b.addEventListener('click',(function(gg,lab){ return function(){ copyGlyph(gg,lab); }; })(g,it.label));
             row.appendChild(b);
           } else {
@@ -302,15 +340,48 @@
         });
         box.appendChild(row);
       });
+      var sub=document.getElementById('kbdsub'); if(sub) sub.hidden = pfeile;
+      var G='<b style="color:var(--gold-ink);font-weight:400">';
       var cap=document.getElementById('kbdcap');
-      if(cap) cap.innerHTML = kbdLayer==='base'
-        ? 'Piktogramme – jede <b style="color:var(--gold-ink);font-weight:400">goldene</b> Taste trägt ein Zeichen; ein Klick kopiert es. Pfeile und Kompass haben einen <b style="color:var(--gold-ink);font-weight:400">eigenen Font</b> (Reiter oben).'
-        : 'Pfeile & Kompass – eigener Font <b style="color:var(--gold-ink);font-weight:400">‹Goetheanum Pfeile›</b>: Schrift wählen, Taste tippen (Umschalt = fett) – kein Option nötig. Oder hier per Klick kopieren; Download unten.';
+      if(cap) cap.innerHTML = pfeile
+        ? 'Pfeile & Kompass – eigener Font '+G+'‹Goetheanum Pfeile›</b>: Taste tippen. Das kleine Zeichen oben rechts mit '+G+'⇧ (Umschalt)</b> ist der fette Pfeil. Ein Klick kopiert.'
+        : text
+          ? 'Piktogramme '+G+'mit Text</b> – dieselben Zeichen mit eingeprägter Beschriftung, auf der '+G+'Umschalt-Taste (⇧)</b>. Ein Klick kopiert.'
+          : 'Piktogramme – jede '+G+'goldene</b> Taste trägt ein Zeichen; ein Klick kopiert es. Über '+G+'‹mit Text›</b> die beschrifteten Varianten (Umschalt), rechts der Pfeile-Font.';
+    }
+    // Das Tippfeld folgt der Ebene: Pfeile → Pfeile-Font (6 t u h · y x c v),
+    // ‹mit Text› → Grosstasten im Icon-Font, sonst die Grund-Piktogramme.
+    function syncTry(){
+      var out=document.getElementById('tryout'), inp=document.getElementById('tryin'),
+          lab=document.querySelector('.try .lab');
+      if(!out||!inp) return;
+      var pf = kbdLayer==='pfeile', tx = kbdLayer==='text';
+      out.classList.toggle('pf', pf);
+      inp.value = pf ? '6tuh yxcv' : (tx ? 'HEAFU' : 'heafu');
+      out.textContent = inp.value;
+      if(lab) lab.textContent = pf
+        ? 'Selbst probieren – Pfeil- und Kompass-Tasten tippen (6 t u h · y x c v):'
+        : tx ? 'Selbst probieren – Grosstasten tippen (Umschalt = mit Text):'
+        : 'Selbst probieren – Buchstaben tippen:';
+    }
+    function applyLayer(){
+      kbdLayer = mainLayer==='pfeile' ? 'pfeile' : (subText ? 'text' : 'base');
+      buildKbd(); syncTry();
     }
     document.querySelectorAll('.kbd-layer button').forEach(function(b){
       b.addEventListener('click',function(){
         document.querySelectorAll('.kbd-layer button').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
-        b.setAttribute('aria-pressed','true'); kbdLayer=b.dataset.layer; buildKbd();
+        b.setAttribute('aria-pressed','true');
+        mainLayer = b.dataset.layer==='pfeile' ? 'pfeile' : 'pikto';
+        applyLayer();
+      });
+    });
+    document.querySelectorAll('.kbd-sub button').forEach(function(b){
+      b.addEventListener('click',function(){
+        document.querySelectorAll('.kbd-sub button').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+        b.setAttribute('aria-pressed','true');
+        subText = b.dataset.sub==='mit';
+        if(mainLayer==='pikto') applyLayer();
       });
     });
     document.querySelectorAll('.tabs button').forEach(function(b){

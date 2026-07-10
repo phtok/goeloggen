@@ -16,7 +16,239 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.9.2] – 2026-07-10
+
+### Engine geschärft: Vertrags-Ausnahmen greifen auch für Wurzel-Ordner
+- **Was:** `ds-lint` prüfte Dateien unter `assets/` trotz Ausnahme im Vertrag –
+  die Staged-Pfade kommen relativ (`assets/…`), die Substring-Ausnahme stand
+  absolut (`/assets/`). Der Checker normalisiert Pfade jetzt vor dem Abgleich;
+  auch die neuen Versand-Ausnahmen (`mails/`, `export/`) greifen damit in
+  beiden Pfadformen.
+- **Warum:** Aufgefallen an der neuen Druckquelle
+  `assets/merkblaetter/src/warum-ohne-bilder.html` (Druck-Artefakt: Papier ist
+  immer weiss, gehört nicht in den Theme-Geltungsbereich).
+- **Wirkung:** Geltungsbereich verhält sich wie beschlossen; keine neue Regel.
+
+## [1.9.1] – 2026-07-10
+
+### Die Maschinen bekommen Zähne: CI-Gate + blockierender Hook + Export-Konvention
+- **Was:** (1) **CI-Gate** `.github/workflows/pruefmaschinen.yml` — typo-check
+  (`--all`) und ds-lint laufen auf jedem PR und auf `main`; Schwere ‹fehler›
+  macht den Lauf rot. (2) Der Commit-Hook führt `ds-lint --staged` jetzt
+  **blockierend** (das vorgesehene `|| true` ist entfernt — der Score stand
+  bei 100 %). (3) **Export-Konvention:** erzeugte Versand-/Export-Artefakte
+  wohnen in Ordnern namens `mails/` oder `export/`; diese sind generell vom
+  Vertrag ausgenommen (ersetzt die Einzel-Ausnahme für den Mail-Editor).
+- **Warum:** Beschluss Auftraggeber, 10. Juli 2026, nach dem Score-Einbruch
+  durch die publizierten Versand-Mails: <q>automatisch mergen, wenn die
+  Prüfmaschinen grün sind</q> ist erst durchsetzbar, wenn die Maschinen
+  unabhängig vom lokalen Hook auf jedem PR laufen.
+
+## [1.9.0] – 2026-07-10
+
+### Spielraum & Welten + warme Stilprobe + Geltungsbereich Versand-Artefakte
+- **Was:** (1) Neuer Schaufenster-Abschnitt <q>Spielraum &amp; Welten</q> —
+  Dramaturgie-Leitsatz (ein Hero, eine Primärhandlung je Blick, eine
+  Akzentfläche je Bildschirmhöhe) und die Fest/Frei-Tabelle je Rolle
+  (Varianz-Entwurf, Ansätze 1–3, Beschluss 10. Juli 2026). (2) Welten-Mechanik
+  in `tokens.css`: `data-welt` schaltet Stimmungs-Tokens, nie Regeln; erste
+  Welt **warm** als Stilprobe (`stilprobe-warm.html`, Experiment): warmes
+  Papier #fbf7ee/#f3edde mit nachgedunkelten Tinten (muted 5.0:1, gold-ink
+  5.1:1 auf der Karte — ohne Nachdunkeln fielen beide unter 4.5:1).
+  (3) `geltungsbereich`: `apps/mail-editor/mails/` sind Versand-Artefakte
+  (E-Mail-HTML kann keine Includes tragen) — ausgenommen wie /assets/.
+  (4) `ds-lint` meldet ds-ok-Marker im falschen Format (DS00-Hinweis);
+  Signatur-Generator-Marker korrigiert, `btn-mini` auf ≥14px.
+- **Warum:** Score-Einbruch auf 67 % durch 20 publizierte Versand-Mails
+  (PR #341) + Marker-Wiederholungsfehler — der Vertrag kannte die
+  Artefakt-Klasse ‹Versand-HTML› nicht. Warme Flächen: Auftraggeber-Wunsch
+  nach einer Stimmungs-Variante aus dem My-Goetheanum-Entwurf.
+- **Ausserdem:** Die Perspektive `my-goetheanum.html` und das Lockup
+  `goetheanum-my.svg` sind entfernt (Entscheid: noch zu intern); die
+  App-Schale-Rollen bleiben im Fundament.
+
+## [1.8.0] – 2026-07-10
+
+### App-Schale (aus dem My-Goetheanum-Entwurf aufgenommen)
+- **Was:** Neue Rollen in `base.css` — `app` (Seitenleiste + Inhaltsfläche,
+  mobil als Band), `sidenav` (Bereichs-Navigation; Auswahl = dunkles Gold +
+  Weiss, B01; Gruppen-Etikett als Kicker, G05), `cardgrid`, `card .cfoot`,
+  `leer` (Leerzustand). Neues Lockup `assets/logos/goetheanum-my.svg` aus der
+  Logo-Engine (DS08).
+- **Warum:** Der Entwicklerentwurf des Mitglieder-Portals ‹My Goetheanum›
+  zeigt einen echten Bedarf, den das Fundament nicht deckte — und riet darum
+  die Gestalt: Versal-Zwischentitel (G05), Gold-Etiketten bei ≈2:1 (B02),
+  Weiss auf Hellgrün ≈2:1 (B01/B02), erfundenes Marken-Lockup (DS08).
+- **Wirkung:** `perspektiven/my-goetheanum.html` setzt denselben Schirm aus
+  den Fundament-Rollen — regelkonform durch Konstruktion. Dazu
+  `docs/gestaltungsspielraum-entwurf.md` (Foto-Richtlinie in drei Richtungen,
+  vier Varianz-Ansätze — Entwurf, zu ratifizieren). `contract.json` →
+  Version 1.8.0, Rollen ergänzt.
+
+## [1.7.2] – 2026-07-09
+
+### Badge-Sitz + leisere Modi-Reihe (Rückfluss aus der Kopfzeile)
+- **Was:** Das `.badge`-Rezept in `base.css` setzt die Tinte jetzt optisch
+  mittig ins Oval: `line-height:1` plus ein Hauch mehr Luft oben — Statuswörter
+  haben meist keine Unterlängen, zentriert man das Geviert, hängt die Tinte
+  oben (nachgemessen: vorher 26/36, jetzt 30/32 Gerätepixel bei 4×). Die
+  Beta-Pille der Kopfzeile baut nun auf diesem Rezept auf und läuft in der
+  Lese-Grotesk statt der Display-Schrift (Badge/Chip-Regel des Fundaments);
+  eigen bleibt nur die Gold-Färbung (ein Merkmal, G01).
+- **Ausserdem:** Die Modi-Reihe in der Schublade ist leiser und luftiger —
+  Konturen auf Papier statt Füllflächen, aktiver Zustand = Gold-Kontur +
+  Gold-Tinte statt Doppel-Ring (G03), mehr Abstand (`--s3`/`--s4`). Die
+  Theme-Taste heisst kurz «Dunkel»/«Hell» (im Gruppenkontext ‹Anzeige-Modi›
+  eindeutig), Zeichen sind vor Flex-Schwund geschützt — so trägt die Reihe
+  auch 320px-Schirme ohne Überlauf.
+
+## [1.7.1] – 2026-07-09
+
+### Mobil-Kopfzeile entlastet: Modi-Schalter ziehen in die Schublade
+- **Was:** Auf ≤720px verlassen die drei Modi-Schalter (Lesemodus ·
+  Hell/Dunkel · Teilen) die Leiste und stehen als eigene Reihe `.dmodes`
+  ganz oben in der Schublade — mit Wort **und** Zeichen beschriftet,
+  Ziele ≥44px (B04), Beschriftung `--t-small` (B03). Die Leiste trägt
+  mobil nur noch Marke + Menü. `nav.js` hält beide Button-Sätze
+  (Leiste/Schublade) im selben Zustand; Desktop unverändert.
+- **Warum:** Nach dem Zuwachs auf drei Schalter blieb zwischen Marke und
+  Menüknopf kein Platz mehr zum Dreifachtipp (Feedback-Geste); die
+  reinen Zeichen-Knöpfe waren mobil zudem schwer deutbar.
+
+## [1.7.0] – 2026-07-09
+
+### DS09: Fundament relativ einbinden – Wächter gegen den Custom-Domain-Bruch
+- **Was:** `starter.html` und `starter-artikel.html` binden das Fundament jetzt
+  RELATIV ein (Root-Beispiel, Pfadtiefen dokumentiert); der irreführende
+  Kommentar («funktioniert von JEDEM Ort») ist korrigiert. Neuer Vertrags-Punkt
+  **DS09** (fehler): absolute `phtok.github.io/goeloggen/(design-system|assets)`-
+  URLs und absolute `data-root` meldet der Checker.
+- **Warum:** Vorfall Signatur-Generator (PR #291) – die aus dem Starter
+  übernommenen Absolut-URLs laufen auf der Custom-Domain ins Leere
+  (Auslieferung im Root, kein /goeloggen/-Präfix) → Seite komplett ungestylt.
+  Übergabe-Papier: `docs/learnings-starter-pfade.md`.
+- **Nebenbefund:** Die Artefakt-Marker der Signatur-Vorschaubühne standen im
+  falschen Format (`/* ds-ok: … */` statt `# ds-ok`) – der Checker sah die
+  Ratifizierung nicht. Format korrigiert; Audit wieder 100 % über 40 Seiten.
+
+## [1.6.0] – 2026-07-08
+
+### Werkzeugwissen + Druck-Tinte (Rückfluss aus dem Kartentool)
+- **Was:** Neues Dokument `design-system/werkzeugwissen.md` — Konstruktions-
+  regeln für Werkzeuge, die drucken und zeichnen: kein `text-anchor="middle"`
+  in Export-SVGs (Breiten selbst messen: TTF-Vorschubtabellen, Canvas nur als
+  Rückfall), Icons auf die Tintenbox statt die viewBox zentrieren,
+  Kontur-Zwillinge entfernen + Fugendichtung (`stroke` = `fill`) für
+  Flächengrafik, `.step-num`-Masse im Kartenmassstab (Grad 0.5 × ⌀,
+  Piktos 1.26 × r), Token-Treue auch für Abstände (erfundene `var(--…)`
+  fallen still auf 0). Dazu neues Token **`--ink-print-leise:#6e6f6a`** —
+  leises Strukturbeiwerk auf Papierweiss, gerechnet 5.07:1 (B02-fest).
+- **Warum:** 18 Rückmelderunden Kartentool haben Bauwissen erzeugt, das
+  sonst in der Session verloren ginge (Entscheid Auftraggeber, 8. Juli 2026:
+  ‹direkt einarbeiten›). Der `--s5`-Vorfall (nicht existierendes
+  Abstands-Token, still auf 0 zurückgefallen) zeigt eine DS02-Lücke —
+  Kandidat für `ds-lint`: unbekannte `var(--…)`-Namen melden.
+- **Wirkung:** Werkzeugwissen ist Fundament (gilt für jedes künftige
+  Druck-/Grafik-Werkzeug); `--ink-print-leise` ersetzt den bisher nur im
+  Kartentool notierten Hex-Wert. `contract.json` → Version 1.6.0.
+## [1.5.0] – 2026-07-06
+
+### Bild-Ebene + Logo-Disziplin (DS08)
+- **Was:** Neue Rollen für Fotografie in `base.css` — `hero-bild` (Bild-Hero,
+  Text nur auf dem theme-festen dunklen Schleier, Kontrast gerechnet),
+  Bild-Träger in `teaser .thumb`, `event .thumb` und `poster` (object-fit,
+  Fläche `--soft` als Rückfall). Dazu `brand .lockup` (erzeugtes Logo) und
+  zwei neue Marken-Assets aus der Logo-Engine: `assets/logos/goetheanum-logo.svg`
+  (das offizielle Logo) und `goetheanum-marke.svg` (blanke Marke). Neue Regel
+  **DS08**: Die Marke kommt aus dem Logo-Generator — das Favicon
+  (`goetheanum-mark-blue.svg`, Kachel) steht nie als `<img>`; `ds-lint` prüft das.
+- **Warum:** Auftraggeber-Befund — die Nachbauten waren bildlos und ohne Heros
+  (<q>zu viel System-Indiz, wenig Gestaltung</q>), und Seitenköpfe erfanden
+  Marken-Lockups (Favicon-Kachel + Text) statt den Logo-Generator zu nutzen.
+- **Wirkung:** Die vier Perspektivseiten tragen die echten Motive ihrer
+  Startseiten (site-eigene CDNs: Hero, Veranstaltungs-, Artikel- und
+  Poster-Bilder, Heft-Cover); goetheanum.ch-Nachbau und interner Hub führen
+  das erzeugte Logo/Lockup. `contract.json` → Version 1.5.0, Rolle
+  `hero-bild` + Regel DS08 ergänzt.
+
+## [1.4.0] – 2026-07-06
+
+### Perspektiven als Vollnachbauten + schwebende Leiste
+- **Was:** Neue Rolle `fab` in `base.css` — schwebende Leiste unten rechts
+  (zurück ins System · Original in neuem Fenster, Fingerziele ≥44px).
+  Die vier Perspektivseiten sind jetzt **vollständige Nachbauten der echten
+  Startseiten** (Inhalte von goetheanum.ch, dasgoetheanum.com, goetheanum.tv,
+  anthroposophie.org, Stand 6. Juli 2026): ganze Webseite mit Kopfzeile,
+  Aufmacher, Rubriken/Kalender/Katalog und Fusszeile — ausschliesslich aus
+  Fundament-Rollen gesetzt.
+- **Warum:** Auftraggeber-Entscheid — keine Beispiele, keine Reduktionen,
+  keine erfundenen Inhalte: ein Erlebnis-Eindruck, wie die Seite mit dem
+  System durchgearbeitet aussähe; das Original ist einen Klick daneben.
+- **Wirkung:** `perspektiven/*.html` sind Erlebnis-Seiten ohne Hub-Rahmen
+  (Nachbau-Kopfzeile je Seite mit `# ds-ok` ratifiziert). Die
+  Gegenüberstellungs-Rollen `mockpair`/`mock` (1.3.0) bleiben im Fundament
+  verfügbar. `contract.json` → Version 1.4.0, Rolle `fab` ergänzt.
+
+## [1.3.0] – 2026-07-06
+
+### Gegenüberstellung «heute ↔ mit dem System» (aus den Perspektivseiten aufgenommen)
+- **Was:** Neue Rollen `mockpair`/`mock` (+ `.ist`/`.soll`, `figcaption`, `.screen`)
+  in `base.css` — zwei Fenster auf dieselbe Startseite, links der heutige Zustand
+  als Artefakt (fremde Schriften/Farben mit `# ds-ok` ratifiziert), rechts derselbe
+  Inhalt aus den Fundament-Rollen.
+- **Warum:** Die Perspektivseiten waren einseitig Befund und Analyse. Ihre Aufgabe
+  ist zu **zeigen**, wie die Seiten aussähen, wenn sie mit dem Design-System
+  durchgearbeitet würden — der direkte Ist↔Könnte-Vergleich je Startseite leistet
+  das; die Befund-Zahlen bleiben als Beleg darunter.
+- **Wirkung:** Alle vier `perspektiven/*.html` beginnen mit der Gegenüberstellung
+  ihrer Startseite. Der Bau-Workflow («So baust du ein neues Werkzeug») zog von der
+  Schauseite in den internen Hub (`start/#bauen`) — die Schauseite zeigt das System,
+  die Werkstatt zeigt das Bauen. `contract.json` → Version 1.3.0, Rollen ergänzt.
+
+## [1.2.0] – 2026-07-06
+
+### Webfamilie-Komponenten + Bühne (aus dem Vier-Seiten-Befund aufgenommen)
+- **Was:** Neue kanonische Rollen in `base.css` — Artikel-Anatomie (`crumbs`,
+  `byline`, `lit`, `bio`, `related` + `starter-artikel.html`), `teaser` (+ `.stack`),
+  `event` + `filterbar`, `stage`/`mrow`/`mtile`/`live` (Medienkatalog),
+  `person`, `subscribe`, `.ds-footer .fcols`. Neue theme-feste Tokens
+  `--stage-bg/-bg2/-ink/-muted/-veil` (Kontraste gerechnet: ink 15.3:1,
+  muted 8.2:1).
+- **Warum:** Analyse der vier grossen Goetheanum-Webseiten
+  (`docs/webfamilie-befund.md`): ihre Inhaltsmuster (Artikel, Kalender,
+  Medienkacheln, Newsletter) fehlten dem Fundament; ihre wiederkehrenden
+  Fehler (Versal-Bylines, <14px, Kontrast-Fails, lh 1.4) zeigen, welche
+  Regeln die Rollen einbauen müssen.
+- **Wirkung:** Vier Testseiten unter `perspektiven/` zeigen je Original den
+  Nachbau, den gerechneten Vorher-nachher-Befund und den Einbau-Weg
+  (Craft/WordPress/Uscreen). Schaufenster-Abschnitt «Perspektiven des
+  Design-Systems». `contract.json` → Version 1.2.0, Rollen ergänzt.
+
 ## [Unveröffentlicht]
+
+### Kartentool-Learnings aufgenommen (Werkzeugwissen + belegte Werte)
+- **Was:** Nachschlagewerk Werkzeugwissen (SVG-/Druck-Export-/
+  UI-Bauwissen); Quelle `docs/learnings-kartentool.md` (14 verifizierte
+  Testrunden). Kernregeln: Icons auf die **Tintenbox** zentrieren (Einzeldateien
+  tragen keine einheitliche viewBox — nachgeprüft: nur 46 von 81 Dateien haben
+  die Standardbox); in Export-SVGs **kein `text-anchor="middle"`** und **keine
+  OpenType-Feature-Abhängigkeit** (PDF-Renderer ignorieren beides — Breiten und
+  Ziffern-Slots selbst setzen); Kontur-Zwillinge entfernen, Fugen mit
+  Eigenkontur in Füllfarbe dichten.
+- **Belegte Werte:** Druck-Tinten auf Papierweiss gerechnet — `#4e4f4a` 8.26:1,
+  `#6e6f6a` 5.07:1 (Token-Kandidat `--ink-print-leise`, aufgenommen sobald ein
+  zweites Druckwerkzeug ihn braucht), `#767771` 4.52:1. Die Hausschrift führt
+  `tnum`/`lnum` als GSUB-Features — G25 über `font-variant-numeric` greift auch
+  in der Hausschrift (nur nicht im PDF-Export).
+- **Bestätigt:** Die `.step-num`-Sitzkorrektur (translateY 8 %) wurde im
+  Kartentool unabhängig pixelverifiziert; Vermerk am Kommentar in `base.css`.
+- **Ratifiziert und umgesetzt (9. Juli 2026):** Icon-Einzeldateien per
+  `normalize_icon_svgs.py` aus dem Font regeneriert — einheitliche Em-Box
+  `-2 -1002 1004 1004` (Ausnahme Wortmarke, proportional), ‹mit Text›-Waisen
+  entfernt (nur Webfont), PNG/PDF/ZIP neu, idempotent (Hash-verifiziert).
+  Sichtprüfung: Rollstuhl jetzt font-wahr statt eigenbox-vergrössert.
+  Die parallel entstandenen zwei Werkzeugwissen-Papiere (docs/ und
+  design-system/) sind zu EINEM konsolidiert: design-system/werkzeugwissen.md.
 
 ### Neuer Font «Goetheanum Pfeile» – Pfeile & Kompass ohne PUA-Umweg
 - Die Pfeile/Kompass lagen im Icon-Font im **Zeichen-Privatbereich (PUA)** und waren

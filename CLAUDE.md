@@ -81,8 +81,10 @@ für **jede** neue HTML-Seite oder jedes neue Werkzeug:
    werden schrittweise auf diese Schicht gehoben — neue Seiten starten richtig.)
 3. **Registrieren:** einen Eintrag in `tools.json` ergänzen (erscheint im Hub).
 4. **Hook aktiv halten:** `git config core.hooksPath tools/hooks` — beim Commit
-   laufen `tools/typo-check.py` (Sprache, blockiert bei ‹fehler›) **und**
-   `tools/ds-lint.py --staged` (Gestalt, vorerst berichtend). Vor dem Commit gilt
+   laufen `tools/typo-check.py` (Sprache) **und** `tools/ds-lint.py --staged`
+   (Gestalt) — beide **blockieren** bei ‹fehler› (Beschluss 10. Juli 2026).
+   Zusätzlich läuft dieselbe Prüfung als CI-Gate auf jedem PR
+   (`.github/workflows/pruefmaschinen.yml`). Vor dem Commit gilt
    weiterhin: betroffene Regel-IDs nennen — sprachlich (G/B) wie strukturell (DS).
 
 Die eingebauten Defaults in `base.css` setzen die Hausregeln bereits um (Trennung,
@@ -135,3 +137,12 @@ Bei Änderungen an der Schnittzahl **alle** Beschreibungen mitziehen
 Änderungen an Schriftdateien über die Skripte in `tools/goetheanum-fontfix/`
 (idempotent, aus sauberem Stand) — nicht freihändig Binärdateien patchen.
 Nach Font-Änderungen Webfonts (woff/woff2) und das Komplett-ZIP neu packen.
+
+## Pull Requests: direkt mergen, nicht liegen lassen
+Von Claude erstellte PRs werden **automatisch gemerged** (Beschluss vom
+6. Juli 2026, «ab jetzt immer automatisch»): nicht als Draft parken, nicht
+auf Freigabe warten — wenn die Prüfmaschinen grün sind (typo-check, ds-lint,
+ggf. CI), als **Squash** mergen (Titel + PR-Nummer, wie im Verlauf üblich)
+und den Arbeits-Branch für Folgearbeit frisch von `main` starten.
+Ausnahme: der PR berührt Secrets-/Zahlungs-Konfiguration oder löscht
+Daten — dann vor dem Merge fragen.

@@ -64,7 +64,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,s
 /* --- Kopfzeile -------------------------------------------------------------- */
 .ds-header{position:sticky;top:0;z-index:30;background:var(--bar-bg);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
 .ds-header .bar{display:flex;align-items:center;justify-content:space-between;height:var(--header-h)}
-.brand{display:flex;align-items:center;gap:var(--s3)}
+.brand{display:flex;align-items:center;gap:var(--s3);flex:0 0 auto}
+.brand .lockup{height:34px;width:auto;display:block}  /* erzeugtes Logo/Lockup (DS08) */
 .brand .mk{width:24px;height:24px;border-radius:6px;display:block}
 .brand .wm{font-family:var(--font-display);font-weight:var(--w-text);font-size:27px;line-height:1;color:var(--muted);letter-spacing:.005em}
 nav.top{display:flex;gap:22px}
@@ -85,8 +86,11 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 /* --- Chips & Marken (Lese-Grotesk, kleine Grade) --------------------------- */
 .chip{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:6px 14px}
 .chip b{color:var(--ink);font-weight:600}
-/* Status-Marke (Live/Beta/Entwurf …) – Mikro-Pille, kleiner als .chip, nie versal (G05). */
-.badge{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);letter-spacing:.03em;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:2px 10px}
+/* Status-Marke (Live/Beta/Entwurf …) – Mikro-Pille, kleiner als .chip, nie versal (G05).
+   Optischer Sitz im Oval: Statuswörter haben meist keine Unterlängen – zentriert
+   man das Geviert, sitzt die Tinte zu hoch. Darum line-height:1 und ein Hauch
+   mehr Luft oben (nachgemessen, nicht geschätzt). */
+.badge{display:inline-flex;align-items:center;line-height:1;font-family:var(--font-text);font-size:var(--t-micro);letter-spacing:.03em;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:6px 10px 3px}
 
 /* Schritt-Nummer – runde Zahl-Marke vor nummerierten Zwischentiteln. Gold ist die
    Hausfarbe für Auswahl-/Schrittmarken (wie die Auswahl-Pille); .blue nur für
@@ -98,7 +102,8 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
    Ascent/Descent-Ungleichgewichts der Schrift optisch zu hoch. 8% ist am
    Goetheanum-Schriftschnitt (Laut/680) empirisch vermessen (Pixel-Analyse der
    Tinten-Bounding-Box gegen die geometrische Kreismitte) und deckt sich mit den
-   Font-Metriken (hhea ascent 750 / descent −250 vs. Ziffern-Tintenmitte ≈ 330/1000). */
+   Font-Metriken (hhea ascent 750 / descent −250 vs. Ziffern-Tintenmitte ≈ 330/1000).
+   Unabhängig pixelverifiziert im Kartentool (7/2026, docs/werkzeugwissen.md). */
 .step-num{display:inline-flex;align-items:center;justify-content:center;flex:none;
   width:1.6em;height:1.6em;min-width:1.6em;border-radius:999px;
   font-weight:var(--w-strong);font-size:.72em;
@@ -300,8 +305,181 @@ img,svg,canvas,video{max-width:100%}
    Spacing. Titel/Kicker/Marke bleiben Goetheanum (Identität); die Chrome-Leiste
    pinnt ihre Schrift ohnehin selbst. Grösse ist über size-adjust (B4) geregelt,
    darum kein Grössensprung; A7 (min-height) fängt den ~7% breiteren Reflow. */
-:root[data-read="easy"] body{font-family:var(--font-text);letter-spacing:.03em;word-spacing:.06em}
+:root[data-read="easy"] body{font-family:var(--font-text)}
 :root[data-read="easy"] .lede{font-family:var(--font-text)}
 /* Titel, Kicker und die Kopfzeile bleiben ausdrücklich Goetheanum (Identität). */
 :root[data-read="easy"] h1,:root[data-read="easy"] h2,:root[data-read="easy"] h3,:root[data-read="easy"] h4,
 :root[data-read="easy"] .kicker,:root[data-read="easy"] .kick{font-family:var(--font-display)}
+
+/* =============================================================================
+   Webfamilie-Komponenten (Juli 2026) — aus dem Vier-Seiten-Befund
+   (docs/webfamilie-befund.md §3) ins Fundament aufgenommen: Artikel-Anatomie,
+   Teaser, Veranstaltung + Filterleiste, Bühne/Medienkachel, Person, Newsletter,
+   Fusszeilen-Spalten. Regeln: Funktion/Daten in der Lese-Grotesk (Schrift-
+   Grenze), B02 gerechnet, B03 ≥14px, B04 Ziele ≥44px, G05 nie versal.
+   ============================================================================= */
+
+/* --- Brotkrumen & Byline (Funktion → Lese-Grotesk, nie versal) -------------- */
+.crumbs{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline}
+.crumbs a{color:var(--muted)}
+.crumbs a:hover{color:var(--gold-ink)}
+.byline{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline}
+.byline b{color:var(--ink);font-weight:600}
+
+/* --- Artikel-Anatomie (Vorbild Wochenschrift, mit unseren Faktoren) --------- */
+.lit{border-top:1px solid var(--line);margin-top:var(--s8);padding-top:var(--s4);
+  font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
+  max-width:min(var(--measure),100%)}
+.lit p{margin:0 0 .5em}
+.bio{display:flex;gap:var(--s4);align-items:flex-start;border-top:1px solid var(--line);
+  margin-top:var(--s6);padding-top:var(--s6)}
+.bio .btext{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.6}
+.bio .btext b{color:var(--ink);font-weight:600}
+.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--s4)}
+
+/* --- Teaser (Startseiten-Hierarchie: Bild · Kicker · Titel · Vorspann · Meta) */
+.teaser{display:flex;gap:var(--s4);align-items:flex-start;padding:var(--s4);
+  border:1px solid var(--line-soft);border-radius:var(--r-card);background:var(--paper);
+  color:var(--ink);text-decoration:none}
+.teaser:hover{border-color:var(--gold)}
+.teaser .thumb{flex:0 0 auto;width:116px;aspect-ratio:4/3;border-radius:10px;background:var(--soft);
+  border:1px solid var(--line-soft)}
+.teaser h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);
+  line-height:var(--lh-tight);margin:2px 0 6px}
+.teaser .ex{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.55;margin:0 0 8px}
+.teaser.stack{flex-direction:column}
+.teaser.stack .thumb{width:100%;aspect-ratio:16/9}
+
+/* --- Veranstaltung + Filterleiste (Vorbild goetheanum.ch, Ziffern G25) ------ */
+.filterbar{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:flex-end;margin-bottom:var(--s6)}
+.filterbar .field{min-width:160px;flex:1 1 160px}
+.event{display:flex;gap:var(--s4);align-items:flex-start;padding:var(--s4);
+  border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper)}
+.event .edate{flex:0 0 auto;min-width:64px;text-align:center;border:1px solid var(--line);
+  border-radius:10px;padding:8px 10px;font-family:var(--font-text);font-variant-numeric:tabular-nums}
+.event .edate b{display:block;font-size:24px;line-height:1.1;color:var(--ink);font-weight:600}
+.event .edate span{font-size:var(--t-micro);color:var(--muted)}
+.event h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);
+  line-height:var(--lh-tight);margin:0 0 4px}
+.event .emeta{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+
+/* --- Bühne + Medienkachel (theme-feste Katalogfläche, Vorbild goetheanum.tv) - */
+.stage{background:var(--stage-bg);color:var(--stage-ink);border-radius:var(--r-card);
+  padding:var(--s6);color-scheme:dark}
+.stage .smeta{font-family:var(--font-text);font-size:var(--t-small);color:var(--stage-muted)}
+.mrow{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,240px);gap:var(--s4);
+  overflow-x:auto;scroll-snap-type:x proximity;padding:var(--s2) 2px var(--s3)}
+.mtile{scroll-snap-align:start;color:var(--stage-ink);text-decoration:none;display:block}
+.mtile .poster{position:relative;aspect-ratio:16/9;border-radius:10px;background:var(--stage-bg2);
+  display:grid;place-items:center;overflow:hidden}
+.mtile .dur{position:absolute;right:8px;bottom:8px;font-family:var(--font-text);
+  font-size:var(--t-micro);font-variant-numeric:tabular-nums;color:var(--stage-ink);
+  background:var(--stage-veil);border-radius:6px;padding:2px 8px}
+.mtile .mt{display:block;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px;
+  line-height:1.25;margin-top:8px}
+.mtile .ms{display:block;font-family:var(--font-text);font-size:var(--t-micro);color:var(--stage-muted);margin-top:2px}
+.mtile:hover .poster{outline:2px solid var(--gold)}
+.live{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);
+  background:var(--gold-deep);color:var(--on-accent);border-radius:var(--r-pill);padding:2px 10px}
+
+/* --- Person / Kontakt -------------------------------------------------------- */
+.person{display:flex;gap:var(--s3);align-items:center}
+.person .pv{flex:0 0 auto;width:44px;height:44px;border-radius:var(--r-pill);
+  background:var(--gold-deep);color:var(--on-accent);display:grid;place-items:center;
+  font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px}
+.person .pn{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:17px;line-height:1.2}
+.person .pr{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+.person a{color:var(--gold-ink)}
+
+/* --- Newsletter-Einstieg (ein Feld, ein Knopf – B03: Eingabe ≥16px) ---------- */
+.subscribe{display:flex;gap:var(--s2);flex-wrap:wrap;max-width:460px}
+.subscribe input{flex:1 1 220px;font-family:var(--font-text);font-size:16px;color:var(--ink);
+  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);
+  padding:10px 14px;min-height:var(--tap);outline:none}
+.subscribe input:focus{border-color:var(--gold)}
+
+/* --- Fusszeile mit Spalten (Vorbild 7-Block-Footer goetheanum.ch) ------------ */
+.ds-footer .fcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:var(--s6);margin-bottom:var(--s6)}
+.ds-footer .fcols .ft{font-family:var(--font-display);font-weight:var(--w-deutlich);
+  color:var(--ink);margin-bottom:var(--s2)}
+.ds-footer .fcols a{display:block;padding:3px 0}
+
+/* --- Bild-Ebene (Fotografie trägt die Emotion) --------------------------------
+   Heros und Kacheln tragen echte Bilder; Text steht auf Bildern nur über dem
+   Schleier (Kontrast gerechnet: Schleier ist theme-fest dunkel, Text hell —
+   B01/B02 gelten auch hier). Ohne Bild bleibt die Fläche --soft. */
+.hero-bild{position:relative;border-radius:var(--r-card);overflow:hidden;
+  margin-block:var(--s4) var(--s8);background:var(--soft)}
+.hero-bild img{display:block;width:100%;aspect-ratio:21/9;object-fit:cover}
+@media(max-width:619px){.hero-bild img{aspect-ratio:4/3}}
+.hero-bild .text{position:absolute;inset:auto 0 0 0;padding:clamp(20px,4.5vw,48px);
+  background:linear-gradient(to top,
+    color-mix(in srgb,var(--stage-bg) 88%,transparent),
+    color-mix(in srgb,var(--stage-bg) 42%,transparent) 62%,transparent);
+  color:var(--stage-ink)}
+.hero-bild .text h1,.hero-bild .text h2{color:var(--stage-ink);max-width:24ch}
+.hero-bild .text .kicker,.hero-bild .text .kick{color:var(--gold)}
+.hero-bild .text .lede{color:var(--stage-ink);max-width:56ch}
+.teaser .thumb{overflow:hidden}
+.teaser .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.event .thumb{flex:0 0 auto;width:104px;aspect-ratio:4/3;border-radius:10px;
+  overflow:hidden;background:var(--soft);border:1px solid var(--line-soft)}
+.event .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.poster .pmark{position:relative;z-index:1}
+.poster .dur{z-index:1}
+
+/* --- App-Schale (Portal/Anwendung: Seitenleiste + Karten-Dashboard) -----------
+   Für angemeldete Werkzeuge (Konto, Verwaltung). Auswahl in der Seitenleiste =
+   dunkles Gold + Weiss (B01); Gruppen-Etiketten sind Kicker, nie Versal (G05);
+   Fingerziele ≥44px (B04). Unter 920px rückt die Leiste als Band nach oben. */
+.app{display:grid;grid-template-columns:264px minmax(0,1fr);min-height:100vh;background:var(--soft)}
+.app>.side{background:var(--paper);border-right:1px solid var(--line);
+  padding:var(--s6) var(--s4);display:flex;flex-direction:column;gap:var(--s6)}
+.app>.main{padding:var(--s6) clamp(var(--s4),4vw,56px) var(--s8);min-width:0}
+@media(max-width:919px){
+  .app{grid-template-columns:1fr}
+  .app>.side{border-right:0;border-bottom:1px solid var(--line);flex-direction:row;
+    flex-wrap:wrap;align-items:center;gap:var(--s4)}
+}
+.sidenav{display:grid;gap:2px;align-content:start}
+.sidenav .grp{margin:var(--s4) 0 var(--s2)}  /* Gruppen-Etikett: als .kicker setzen */
+.sidenav a{display:flex;gap:var(--s3);align-items:center;padding:10px var(--s4);
+  border-radius:var(--r-control);color:var(--ink);text-decoration:none;
+  font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px;min-height:var(--tap)}
+.sidenav a:hover{background:color-mix(in srgb,var(--gold) 14%,transparent)}
+.sidenav a[aria-current="page"]{background:var(--gold-deep);color:var(--on-accent)}
+.sidenav a .ext{margin-left:auto;color:var(--muted);font-weight:var(--w-text)}
+.sidenav a[aria-current="page"] .ext{color:var(--on-accent)}
+.app .side .user{margin-top:auto;display:flex;gap:var(--s3);align-items:center;
+  border-top:1px solid var(--line-soft);padding-top:var(--s4)}
+.cardgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--s4)}
+.card .cfoot{margin-top:var(--s4);display:flex;gap:var(--s3);flex-wrap:wrap}
+.leer{color:var(--muted);font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;
+  padding:var(--s6) 0;text-align:center}
+
+/* --- Schwebende Perspektiven-Leiste ------------------------------------------
+   Für Vollnachbauten fremder Startseiten: führt zurück ins System und öffnet
+   das Original in einem neuen Fenster — der einzige Rahmen, den so eine
+   Erlebnis-Seite trägt. Fingerziele ≥44px (B04). */
+.fab{position:fixed;right:var(--s4);bottom:var(--s4);z-index:70;
+  display:flex;flex-direction:column;gap:var(--s2);align-items:flex-end}
+.fab .btn{box-shadow:var(--shadow-card);min-height:var(--tap)}
+
+/* --- Gegenüberstellung (Perspektiven: heute ↔ mit dem System) ----------------
+   Zwei Fenster auf dieselbe Startseite. Das Ist-Fenster (.mock.ist) zeigt den
+   heutigen Zustand als Artefakt — fremde Schriften/Farben dort sind Abbild,
+   keine Theme-Flächen (je Seite mit  # ds-ok  ratifiziert). Das Soll-Fenster
+   (.mock.soll) ist ausschliesslich aus den Rollen dieses Fundaments gebaut. */
+.mockpair{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--s4);align-items:stretch}
+.mock{display:flex;flex-direction:column;margin:0;border:1px solid var(--line);
+  border-radius:var(--r-card);overflow:hidden;background:var(--paper)}
+.mock>figcaption{display:flex;justify-content:space-between;gap:var(--s3);align-items:baseline;
+  padding:var(--s2) var(--s4);border-bottom:1px solid var(--line-soft);
+  font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+.mock>figcaption b{font-weight:600;color:var(--ink)}
+.mock.soll>figcaption b{color:var(--gold-ink)}
+.mock .screen{flex:1;padding:var(--s4)}

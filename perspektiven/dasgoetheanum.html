@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Perspektive: dasgoetheanum.com im Hausbild</title>
+<meta name="description" content="Die Startseite der Wochenschrift ‹Das Goetheanum›, vollständig nachgebaut mit dem Goetheanum-Design-System – echte Inhalte vom 6. Juli 2026, als ganze Webseite erlebbar." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../design-system/tokens.css" />
+<link rel="stylesheet" href="../design-system/base.css" />
+<style>
+  /* Nachbau-Kopfzeile der Wochenschrift – ganz aus Tokens/Rollen gesetzt. */
+  .site-head{border-bottom:2px solid var(--ink);background:var(--paper)}
+  .site-head .util{display:flex;justify-content:flex-end;align-items:center;gap:var(--s4);flex-wrap:wrap;
+    padding:var(--s2) 0;font-family:var(--font-text);font-size:var(--t-small)}
+  .site-head .util a{color:var(--muted)}
+  .site-head .util a:hover{color:var(--gold-ink)}
+  .site-head .bar{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s6);
+    padding:var(--s3) 0 var(--s4);flex-wrap:wrap}
+  .site-head .brand{color:var(--ink);text-decoration:none}
+  .site-head .brand .wm{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:30px;line-height:1}
+  .site-head .brand .datum{display:block;margin-top:4px;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .site-head .mainnav{display:flex;gap:var(--s4);flex-wrap:wrap;font-family:var(--font-display);
+    font-weight:var(--w-deutlich);font-size:16px}
+  .site-head .mainnav a{color:var(--ink);padding:6px 0}
+  .site-head .mainnav a:hover{color:var(--gold-ink)}
+
+  .lead{padding-block:var(--s8) var(--s6);border-bottom:1px solid var(--line);max-width:min(72ch,100%)}
+  .lead h1{max-width:22ch}
+  .lead .byline{margin-top:var(--s3)}
+  .lead .ex{font-family:var(--font-text);color:var(--muted);font-size:var(--t-lede);line-height:1.6;margin-top:var(--s3);max-width:62ch}
+
+  .agrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s4)}
+  .rubrik-liste{display:grid;gap:0;max-width:760px}
+  .rubrik-liste a{display:block;padding:var(--s3) 0;border-top:1px solid var(--line-soft);color:var(--ink);text-decoration:none}
+  .rubrik-liste a:hover h3{color:var(--gold-ink)}
+  .rubrik-liste h3{font-size:var(--t-h3);margin:0}
+</style>
+</head>
+<body>
+
+<header class="site-head"><!-- # ds-ok Nachbau: die Kopfzeile der Zielseite ist hier der Inhalt -->
+  <div class="wrap">
+    <div class="util">
+      <a href="#fussnote">Inserieren</a><a href="#fussnote">Beitragen</a><a href="#fussnote">Newsletter</a>
+      <a href="#fussnote">Schenken</a><a class="btn primary" href="#fussnote" style="padding:6px 16px">Abonnieren</a>
+      <a href="#fussnote" lang="en">English</a><a href="#fussnote">Login</a>
+    </div>
+    <div class="bar">
+      <a class="brand" href="#top"><span class="wm">Das Goetheanum</span>
+        <span class="datum">Wochenschrift für Anthroposophie · 6. Juli 2026</span></a>
+      <nav class="mainnav" aria-label="Hauptnavigation">
+        <a href="#top">Home</a>
+        <a href="#aufsaetze">Aufsätze</a>
+        <a href="#zeitsymptome">Zeitsymptome</a>
+        <a href="#forum">Forum</a>
+        <a href="#worte">Worte</a>
+        <a href="#fussnote">Ausgaben</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <article class="lead">
+    <!-- Bilder: site-eigenes CDN der Wochenschrift – echte Artikelbilder -->
+    <figure class="hero-bild" style="margin-block:var(--s6) var(--s4)">
+      <img src="https://cc93eb4a.delivery.rocketcdn.me/wp-content/uploads/2026/07/G2026_27-28_Web_8.jpg"
+           alt="Junge Menschen der Internationalen Studentenkonferenz" loading="eager" />
+      <figcaption class="text">
+        <span class="kicker">Essay · Schwerpunkt</span>
+        <h1>Die Jugend trägt das Vermächtnis der Zukunft</h1>
+      </figcaption>
+    </figure>
+    <p class="byline"><b>Nathaniel Williams</b> <span>2. Juli 2026</span> <span>18 Min. Lesezeit</span></p>
+    <p class="ex">Wenn wir gross werden, erleben wir die Welt erhaben und doch
+      wie eine Nussschale. Wir wollen echt sein und Brücken schlagen, wenn
+      Maschinen die Führung übernehmen, wenn Nationalismus und Krieg ihr Fest
+      feiern. Die Jugend…</p>
+  </article>
+
+  <section id="aufsaetze">
+    <div class="shead"><h2>Aufsätze</h2><p>Schwerpunktbeiträge</p></div>
+    <div class="agrid">
+      <a class="teaser stack" href="#aufsaetze">
+        <span class="thumb" aria-hidden="true"><img src="https://cc93eb4a.delivery.rocketcdn.me/wp-content/uploads/2026/06/G2026_25-26_Web_8.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">Faust · 14 Min.</span><h3><q>Wir werden Mensch nicht ohne den Teufel</q></h3>
+        <p class="ex">Gespräch vor den <q>Faust</q>-Sommerfestspielen mit Andrea Pfaehler (Inszenierung) und Rafael Tavares (Eurythmieregie) zur Inszenierung 2026.</p>
+        <span class="byline"><b>Andrea Pfaehler, Rafael Tavares und Louis Defèche</b> <span>17. Juni 2026</span></span></span></a>
+      <a class="teaser stack" href="#aufsaetze">
+        <span class="thumb" aria-hidden="true"><img src="https://cc93eb4a.delivery.rocketcdn.me/wp-content/uploads/2026/06/G2026_25-26_Web_13.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">Essay · 12 Min.</span><h3>Goethe von innen</h3>
+        <p class="ex">Harzreise, Italienreise, Ilmenau und Frankreichfeldzug — eine seminaristische Annäherung an den verborgenen Goethe für das Faust-Ensemble in vier Bildern.</p>
+        <span class="byline"><b>Marcus Schneider</b> <span>17. Juni 2026</span></span></span></a>
+      <a class="teaser stack" href="#aufsaetze">
+        <span class="thumb" aria-hidden="true"><img src="https://cc93eb4a.delivery.rocketcdn.me/wp-content/uploads/2026/06/G2026_24_Web_8.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">Gespräch · 11 Min.</span><h3>Ein Gefühl für die Menschheit entwickeln</h3>
+        <p class="ex">Wirtschaftliche Gesundheit ist ein Spiegel gesellschaftlicher Gesundheit. Die World Goetheanum Association sieht im Assoziativen einen Schlüssel.</p>
+        <span class="byline"><b>Karin Michael und Friederike Mainz</b> <span>10. Juni 2026</span></span></span></a>
+    </div>
+  </section>
+
+  <section id="zeitsymptome">
+    <div class="shead"><h2>Zeitsymptome</h2><p>Gegenwart sehen</p></div>
+    <div class="agrid">
+      <a class="teaser stack" href="#zeitsymptome">
+        <span class="thumb" aria-hidden="true"><img src="https://cc93eb4a.delivery.rocketcdn.me/wp-content/uploads/2026/07/G2026_27-28_Web_7.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">Gespräch · 3 Min.</span><h3>Lied vom Wasser</h3>
+        <p class="ex">Musik, Bewegung und die Kraft des Wassers versetzten tausend junge Menschen aus aller Welt während der diesjährigen Internationalen Studentenkonferenz in Staunen.</p>
+        <span class="byline"><b>Gareth Dicker und Ashton Arnoldy</b> <span>2. Juli 2026</span></span></span></a>
+      <a class="teaser stack" href="#zeitsymptome">
+        <span class="thumb" aria-hidden="true"><img src="https://cc93eb4a.delivery.rocketcdn.me/wp-content/uploads/2026/06/G2026_25-26_Web_7.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">Essay · 4 Min.</span><h3>KI und die Frage nach dem Menschlichen</h3>
+        <p class="ex">Zur Enzyklika von Papst Leo XIV. <q>Magnifica Humanitas — über die Bewahrung des Menschen im Zeitalter künstlicher Intelligenz</q>.</p>
+        <span class="byline"><b>Johannes Kronenberg</b> <span>17. Juni 2026</span></span></span></a>
+      <a class="teaser stack" href="#zeitsymptome">
+        <span class="thumb" aria-hidden="true"><img src="https://cc93eb4a.delivery.rocketcdn.me/wp-content/uploads/2026/06/G2026_24_Web_7.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">Ethik · 4 Min.</span><h3>Edgar Morin — Denker der Komplexität, Freund des Menschlichen</h3>
+        <p class="ex">Er hat sehr lange gelebt — 104 Jahre. Und er hat sehr viel beigetragen — zur Menschlichkeit. Als Edgar Nahoum wurde er 1921 geboren.</p>
+        <span class="byline"><b>Bodo von Plato</b> <span>10. Juni 2026</span></span></span></a>
+    </div>
+  </section>
+
+  <section id="forum">
+    <div class="shead"><h2>Forum</h2><p>Dialoge · Rückblicke · Hinweise</p></div>
+    <div class="rubrik-liste">
+      <a href="#forum"><h3>Die Spiritualität der Freiheit</h3></a>
+      <a href="#forum"><h3>Deine Entscheidung verändert die Wirtschaft</h3></a>
+      <a href="#forum"><h3>Im Uhrwerk der Welt</h3></a>
+      <a href="#forum"><h3>Lernen, in der Fantasie zu leben</h3></a>
+    </div>
+  </section>
+
+  <section id="worte">
+    <div class="shead"><h2>Worte</h2><p>Sprüche · Kolumne</p></div>
+    <div class="rubrik-liste">
+      <a href="#worte"><h3>Dein Ort in der Welt</h3></a>
+      <a href="#worte"><h3>Jung bleiben</h3></a>
+      <a href="#worte"><h3>Unvollkommene Welt</h3></a>
+      <a href="#worte"><h3>Ein Meisterroman</h3></a>
+      <a href="#worte"><h3>Auge, Ohr und Herz der Gemeinschaft</h3></a>
+    </div>
+    <div style="margin-top:var(--s6)"><a class="btn" href="#worte">Mehr laden</a></div>
+  </section>
+
+</main>
+
+<footer class="ds-footer" id="fussnote">
+  <div class="wrap">
+    <div class="fcols">
+      <div><p class="ft">Das Goetheanum</p>
+        <a href="#fussnote">Kontakt</a>
+        <a href="#fussnote">Team</a>
+        <a href="#fussnote">Autorenschaft</a></div>
+      <div><p class="ft">Abo</p>
+        <a href="#fussnote">Abonnieren</a>
+        <a href="#fussnote">Schenken</a>
+        <a href="#fussnote">Bankverbindungen</a></div>
+      <div><p class="ft">Rechtliches</p>
+        <a href="#fussnote">AGB</a>
+        <a href="#fussnote">Impressum</a>
+        <a href="#fussnote">Datenschutz</a></div>
+    </div>
+    <div class="frow">
+      <span><strong>Das Goetheanum</strong> · Nachbau der Startseite im Design-System · Inhalte: dasgoetheanum.com, 6. Juli 2026</span>
+      <span><a href="../design-system/">Design-System</a></span>
+    </div>
+  </div>
+</footer>
+
+<div class="fab" role="navigation" aria-label="Perspektive">
+  <a class="btn primary" href="../design-system/#perspektiven">‹ Zurück zum Design-System</a>
+  <a class="btn" href="https://dasgoetheanum.com" target="_blank" rel="noopener">Original öffnen&nbsp;↗</a>
+</div>
+
+</body>
+</html>

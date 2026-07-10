@@ -1,0 +1,461 @@
+<!doctype html>
+<!-- =============================================================================
+     UTM-Link-Generator · Sommer-Aktion 2026
+     -----------------------------------------------------------------------------
+     Jede kampagnenführende Person baut hier saubere, konventionskonforme Links
+     (Namensschema aus services/sommer-zaehler/utm-ablauf.md). Der Link wird
+     optional ins Register geschrieben (Tabelle sommer2026_links), damit das
+     Cockpit auch Links mit 0 Abschlüssen zeigt (Soll/Ist). Das Register speist
+     die Attribution NICHT direkt – gelesen wird eine Spur erst, wenn sie bei einer
+     echten Anmeldung im Webhook mitreist.
+
+     Regelkonform: Farben/Schnitte/Abstände aus tokens.css + base.css (eingebunden,
+     relativ wie die anderen Apps). Ziffern tabellarisch (G25), Betonung nur über
+     Gewicht (G05), Kicker/Labels normal – nicht versal (G05/G23).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UTM-Link-Generator · Goetheanum</title>
+<meta name="description" content="Saubere UTM-Links für die Sommer-Aktion bauen – konventionskonform, mit QR und Link-Register." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<!-- Das Fundament – relativ eingebunden (die absolute phtok-URL leitet per 301 auf
+     http:// um und würde als Mixed Content blockiert). -->
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  /* Nur werkzeug-eigene Gestalt – alles Gemeinsame kommt aus base.css, nur Tokens. */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
+  .grid .span2{grid-column:1 / -1}
+  .field .hint{margin-top:6px}
+  .backlink{margin-top:var(--s4);font-family:var(--font-text);font-size:var(--t-small)}
+  .kurzrow{display:flex;gap:var(--s2);align-items:stretch} .kurzrow input{flex:1}
+
+  .out{margin-top:var(--s6);display:grid;grid-template-columns:1fr auto;gap:var(--s4);align-items:start}
+  .urlbox{font-family:var(--font-mono,var(--font-text));font-size:var(--t-small);color:var(--ink);
+    background:var(--soft);border:1px solid var(--line);border-radius:var(--r-control);
+    padding:var(--s4);word-break:break-all;line-height:1.5;min-height:var(--tap)}
+  .urlbox .ph{color:var(--muted)}
+  .qrwrap{display:flex;flex-direction:column;align-items:center;gap:var(--s2)}
+  .qr{width:150px;height:150px;border-radius:var(--r-control);overflow:hidden;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center}
+  .qr svg{display:block;width:100%;height:100%}
+  .actions{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s4)}
+  .said{font-family:var(--font-text);font-size:var(--t-micro);color:var(--ok);min-height:1.4em;margin-top:var(--s2)}
+  .shortbox{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s2) var(--s4);margin-top:var(--s4);
+    font-family:var(--font-text);font-size:var(--t-small)}
+  .shortbox[hidden]{display:none}
+  .shortbox .sl{color:var(--muted);font-size:var(--t-micro)}
+  .shortbox .su{font-family:var(--font-mono,var(--font-text));color:var(--blue);word-break:break-all}
+
+  .reg{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);table-layout:fixed;min-width:520px}
+  .reg col.cMot{width:44%} .reg col.cQm{width:20%} .reg col.cZiel{width:12%} .reg col.cAb{width:12%} .reg col.cAct{width:12%}
+  .reg .del{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 6px;min-height:var(--tap)}
+  .reg .del:hover{color:var(--bad)} .reg td.act{text-align:right}
+  .reg th,.reg td{padding:10px 12px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top}
+  .reg thead th{color:var(--muted);font-weight:600;font-size:var(--t-micro)}
+  .reg td.num,.reg th.num{text-align:right;font-variant-numeric:tabular-nums lining-nums}
+  .reg .mot{color:var(--ink)} .reg .mot .q{color:var(--muted);font-size:var(--t-micro);display:block;word-break:break-all;margin-top:2px}
+  .reg .mot .q a{color:var(--blue);font-family:var(--font-mono,var(--font-text))}
+  .reg .zero{color:var(--muted)}
+  .tablewrap{overflow-x:auto;margin-top:var(--s4)}
+  .empty{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
+
+  @media (max-width:640px){
+    .grid{grid-template-columns:1fr}
+    .out{grid-template-columns:1fr}
+    .qrwrap{align-items:flex-start}
+  }
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"
+        data-onpage="Cockpit:../sommer-zaehler/|Aktivitäten:../sommer-zaehler/aktivitaeten.html|Kosten:../sommer-zaehler/kosten.html|Multiplikatoren:../sommer-zaehler/multiplikatoren.html|Links:../utm-generator/|Mail:../mail-editor/"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <h1>UTM-Link-Generator</h1>
+    <p class="lede">Baue in Sekunden einen sauberen Anmelde-Link – Quelle, Motiv und Ziel eindeutig beschriftet. So weiss das Cockpit später, welche Aktivität getragen hat.</p>
+    <p class="backlink"><a href="../sommer-zaehler/">← Zum Kampagnen-Cockpit (Sommer-Zähler)</a></p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Link bauen</h2>
+      <p>Alles klein, ohne Umlaute und Leerzeichen – das Feld formt die Eingabe automatisch. <q>Kampagne</q> ist fest auf <b>summer26_trial</b>.</p>
+    </div>
+
+    <div class="card soft">
+      <div class="grid">
+        <label class="field">
+          <span class="lab">Angebot</span>
+          <select id="angebot">
+            <option value="uebersicht">Übersicht · 3 Monate gratis</option>
+            <option value="wos">Wochenschrift</option>
+            <option value="tv">goetheanum.tv</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="lab">Sprache der Landingpage</span>
+          <select id="sprache">
+            <option value="de">Deutsch</option>
+            <option value="en">English</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span class="lab">Quelle · utm_source</span>
+          <input id="source" list="sourceList" placeholder="instagram" autocomplete="off" />
+          <datalist id="sourceList">
+            <option value="instagram"></option><option value="facebook"></option>
+            <option value="linkedin"></option><option value="youtube"></option>
+            <option value="nl-ws"></option><option value="nl-tv"></option>
+            <option value="mailing"></option><option value="inserat"></option>
+            <option value="google"></option><option value="goetheanum"></option>
+            <option value="dasgoetheanum"></option><option value="flyer"></option>
+          </datalist>
+        </label>
+
+        <label class="field">
+          <span class="lab">Medium · utm_medium</span>
+          <input id="medium" list="mediumList" placeholder="social" autocomplete="off" />
+          <datalist id="mediumList">
+            <option value="social"></option><option value="email"></option>
+            <option value="print"></option><option value="cpc"></option>
+            <option value="popup"></option><option value="organic"></option>
+            <option value="referral"></option>
+          </datalist>
+        </label>
+
+        <label class="field span2">
+          <span class="lab">Motiv · utm_content</span>
+          <input id="content" list="contentList" placeholder="reel_ernst_zuercher" autocomplete="off" />
+          <datalist id="contentList">
+            <option value="teaser_kopf"></option><option value="footer_link"></option>
+            <option value="story_probeabo"></option><option value="qr_inserat"></option>
+            <option value="popup_exit"></option><option value="vorab_nl1"></option><option value="vorab_nl2"></option>
+          </datalist>
+          <span class="hint">Das konkrete Motiv/die Platzierung – so unterscheidet das Cockpit ein einzelnes Reel vom Footer-Link.</span>
+        </label>
+
+        <label class="field">
+          <span class="lab">Aufgabe · rolle (fürs Register)</span>
+          <select id="rolle">
+            <option value="sichtbarkeit">Sichtbarkeit</option>
+            <option value="aktivierung">Aktivierung</option>
+            <option value="wirkung" selected>Wirkung</option>
+            <option value="bindung">Bindung</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span class="lab">Kürzel Erstellerin (optional)</span>
+          <input id="ersteller" placeholder="z. B. pt" autocomplete="off" maxlength="24" />
+        </label>
+
+        <label class="field span2">
+          <span class="lab">Kurzname · tools.goetheanum.ch/s/…</span>
+          <span class="kurzrow">
+            <input id="slug" autocomplete="off" maxlength="24" placeholder="otter" />
+            <button class="btn ghost" type="button" id="slugNew">anderes Tier</button>
+          </span>
+          <span class="hint">Zweisilbiger Tiername – merkbar und leicht abzutippen (z. B. in einer Instagram-Bio).</span>
+        </label>
+      </div>
+
+      <div class="out">
+        <div>
+          <div class="urlbox" id="urlbox"><span class="ph">Quelle und Medium wählen – der Link erscheint hier.</span></div>
+          <div class="actions">
+            <button class="btn primary" type="button" id="copyBtn">Kopieren</button>
+            <button class="btn" type="button" id="regBtn">Ins Register</button>
+            <button class="btn ghost" type="button" id="qrBtn">QR laden</button>
+          </div>
+          <div class="said" id="said"></div>
+          <div class="shortbox" id="shortbox" hidden>
+            <span class="sl">Kurzlink (leitet weiter):</span>
+            <a class="su" id="shortUrl" target="_blank" rel="noopener"></a>
+            <button class="btn ghost" type="button" id="shortCopy">Kopieren</button>
+          </div>
+        </div>
+        <div class="qrwrap">
+          <div class="qr" id="qr"><span class="empty">QR</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Registrierte Links</h2>
+      <p>Soll und Ist: jeder gebaute Link mit der Zahl der Anmeldungen, die tatsächlich über ihn kamen. <q>0</q> heisst: lief, brachte (noch) nichts.</p>
+    </div>
+    <div class="tablewrap">
+      <table class="reg">
+        <colgroup><col class="cMot" /><col class="cQm" /><col class="cZiel" /><col class="cAb" /><col class="cAct" /></colgroup>
+        <thead><tr><th>Motiv</th><th>Quelle · Medium</th><th>Ziel</th><th class="num">Abschlüsse</th><th></th></tr></thead>
+        <tbody id="regBody"><tr><td class="empty" colspan="5">lädt …</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>UTM-Link-Generator</strong> · Sommer-Aktion 2026 · Schema in <a href="../../services/sommer-zaehler/utm-ablauf.md">utm-ablauf.md</a></span>
+    <span><a href="../sommer-zaehler/">Cockpit</a> · <a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script src="./qrcode.js"></script>
+<script>
+  var SB  = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
+  var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
+  var CAMPAIGN = 'summer26_trial';
+  var SHORTBASE = 'https://tools.goetheanum.ch/s/';   // Kurzlink: SHORTBASE + kurzname
+
+  function el(id){ return document.getElementById(id); }
+
+  // Kurznamen sind zweisilbige Tiernamen – vertrauenswürdig, merkbar, tippbar
+  // (wichtig auf Instagram, wo Links in Bio/Caption abgetippt werden müssen).
+  var TIERE = ['otter','biber','reiher','marder','hummel','igel','wiesel','robbe','falke','taube',
+    'amsel','meise','schwalbe','moewe','hase','esel','ziege','katze','eule','kraehe','elster','wachtel',
+    'adler','unke','uhu','kranich','dohle','drossel','gecko','koala','panda','puma','tiger','zebra',
+    'kroete','spinne','schnecke','delfin','kamel','lama','luchs','dachs','fuchs','specht','fink','star'];
+  var usedCodes = {};   // aus dem Register gefüllt, damit kein Tier doppelt vorgeschlagen wird
+
+  // Slug säubern: klein, Umlaute auflösen, nur [a-z0-9-].
+  function slugCode(s){
+    return (s || '').toLowerCase()
+      .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+      .replace(/[^a-z0-9-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  }
+
+  // Freies (nicht vergebenes) Tier vorschlagen; sonst mit -2, -3 … anhängen.
+  function neuerKurzname(){
+    var frei = TIERE.filter(function(t){ return !usedCodes[t]; });
+    if(frei.length){ return frei[Math.floor((Date.now() >> 4) % frei.length)]; }
+    var t = TIERE[Math.floor((Date.now() >> 4) % TIERE.length)];
+    for(var i = 2; usedCodes[t + '-' + i]; i++){ /* nächste freie Nummer */ }
+    return t + '-' + i;
+  }
+
+  // Die sechs echten Landingpages: Angebot × Sprache (aus der universellen LP recherchiert).
+  var LANDINGS = {
+    uebersicht: { de:'https://global-sommer2026.goetheanum.online',    en:'https://global-sommer2026.goetheanum.online/en' },
+    wos:        { de:'https://ws-sommer2026.dasgoetheanum.com',        en:'https://ws-en-sommer2026.dasgoetheanum.com' },
+    tv:         { de:'https://tv-sommer2026.goetheanum.tv',            en:'https://tv-en-sommer2026.goetheanum.tv' }
+  };
+  var ANGEBOT_LABEL = { uebersicht:'Übersicht', wos:'Wochenschrift', tv:'goetheanum.tv' };
+
+  // Konvention erzwingen: klein, Umlaute auflösen, nur [a-z0-9_-], Rest → _
+  function slug(s){
+    return (s || '').toLowerCase()
+      .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+      .replace(/[^a-z0-9_-]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
+  }
+
+  function buildUrl(){
+    var src = slug(el('source').value), med = slug(el('medium').value), con = slug(el('content').value);
+    if(!src || !med) return null;
+    var angebot = el('angebot').value, sprache = el('sprache').value;
+    var base = (LANDINGS[angebot] || {})[sprache];
+    if(!base) return null;
+    var u = base + '?utm_source=' + encodeURIComponent(src) +
+            '&utm_medium=' + encodeURIComponent(med) +
+            '&utm_campaign=' + CAMPAIGN;
+    if(con) u += '&utm_content=' + encodeURIComponent(con);
+    return { url:u, src:src, med:med, con:con, angebot:angebot, sprache:sprache };
+  }
+
+  // QR mit weichen Punkten + gerundeten Augen (wie im Inserat). Artefakt-Farben:
+  // ein QR braucht festen dunklen Vordergrund auf hellem Grund, theme-unabhängig.
+  var QR_FG = '#141414';   // QR-Modulfarbe (Artefakt, nicht Theme)  # ds-ok
+  var QR_BG = '#ffffff';   // QR-Ruhezone weiss, muss scannbar bleiben  # ds-ok
+  function softQrSvg(text){
+    // Fehlerkorrektur Q (robust für Druck), Punkte berühren sich (r=0.5) → scannbar.
+    var q = qrcode(0, 'Q'); q.addData(text); q.make();
+    var n = q.getModuleCount(), pad = 4, S = n + pad * 2, p = [];
+    function inFinder(r, c){ return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7); }
+    p.push('<rect width="' + S + '" height="' + S + '" fill="' + QR_BG + '"/>');
+    for(var r = 0; r < n; r++){
+      for(var c = 0; c < n; c++){
+        if(!q.isDark(r, c) || inFinder(r, c)) continue;
+        p.push('<circle cx="' + (c + pad + 0.5) + '" cy="' + (r + pad + 0.5) + '" r="0.5" fill="' + QR_FG + '"/>');
+      }
+    }
+    // Die drei Finder-Augen als gerundete Quadrate (dunkel · hell · dunkel).
+    [[0, 0], [0, n - 7], [n - 7, 0]].forEach(function(e){
+      var y = e[0] + pad, x = e[1] + pad;
+      p.push('<rect x="' + x + '" y="' + y + '" width="7" height="7" rx="2.3" fill="' + QR_FG + '"/>');
+      p.push('<rect x="' + (x + 1) + '" y="' + (y + 1) + '" width="5" height="5" rx="1.7" fill="' + QR_BG + '"/>');
+      p.push('<rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3" rx="1.0" fill="' + QR_FG + '"/>');
+    });
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + S + ' ' + S + '" ' +
+           'preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision">' + p.join('') + '</svg>';
+  }
+
+  var current = null;
+  function render(){
+    // Eingaben normalisieren, ohne den Cursor zu stören (nur bei Bedarf)
+    var b = buildUrl();
+    current = b;
+    var box = el('urlbox'), qr = el('qr');
+    if(!b){
+      box.innerHTML = '<span class="ph">Quelle und Medium wählen – der Link erscheint hier.</span>';
+      qr.innerHTML = '<span class="empty">QR</span>';
+      return;
+    }
+    box.textContent = b.url;
+    try { qr.innerHTML = softQrSvg(b.url); }
+    catch(e){ qr.innerHTML = '<span class="empty">QR</span>'; }
+  }
+
+  ['source','medium','content','angebot','sprache','rolle','ersteller'].forEach(function(id){
+    el(id).addEventListener('input', render);
+    el(id).addEventListener('change', render);
+  });
+
+  // Medium aus der Quelle vorschlagen: Quelle = wo genau, Medium = Kanal-Gattung.
+  // Nur setzen, solange das Medium leer ist oder zuletzt automatisch kam –
+  // eine Handeingabe wird nie überschrieben.
+  var MEDIUM_VORSCHLAG = {
+    instagram:'social', facebook:'social', linkedin:'social', youtube:'social',
+    'nl-ws':'email', 'nl-tv':'email', mailing:'email',
+    inserat:'print', flyer:'print', google:'cpc',
+    goetheanum:'popup', dasgoetheanum:'popup'
+  };
+  var mediumWarAutomatisch = false;
+  el('medium').addEventListener('input', function(){ mediumWarAutomatisch = false; });
+  el('source').addEventListener('input', function(){
+    var v = MEDIUM_VORSCHLAG[slug(el('source').value)];
+    if(v && (!el('medium').value || mediumWarAutomatisch)){
+      el('medium').value = v; mediumWarAutomatisch = true; render();
+    }
+  });
+  // Beim Verlassen die Slug-Form sichtbar zurückschreiben.
+  ['source','medium','content'].forEach(function(id){
+    el(id).addEventListener('blur', function(){ el(id).value = slug(el(id).value); render(); });
+  });
+
+  function say(msg, bad){ var s = el('said'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; }
+
+  el('copyBtn').addEventListener('click', function(){
+    if(!current){ say('Erst Quelle und Medium wählen.', true); return; }
+    navigator.clipboard.writeText(current.url).then(function(){ say('Link kopiert.'); }, function(){ say('Kopieren nicht möglich – Link markieren.', true); });
+  });
+
+  el('qrBtn').addEventListener('click', function(){
+    var svg = el('qr').querySelector('svg');
+    if(!svg){ say('Noch kein QR – erst Link bauen.', true); return; }
+    var blob = new Blob([svg.outerHTML], { type:'image/svg+xml' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'qr_' + (current.con || current.src) + '.svg';
+    a.click(); URL.revokeObjectURL(a.href);
+    say('QR geladen.');
+  });
+
+  function zeigeKurzlink(code){
+    var kurz = SHORTBASE + code;
+    el('shortbox').hidden = false;
+    el('shortUrl').textContent = kurz;
+    el('shortUrl').href = kurz;
+    el('shortCopy').onclick = function(){
+      navigator.clipboard.writeText(kurz).then(function(){ say('Kurzlink kopiert.'); }, function(){ say('Kopieren nicht möglich.', true); });
+    };
+  }
+
+  el('slugNew').addEventListener('click', function(){ el('slug').value = neuerKurzname(); });
+
+  // Schreiben läuft über die RPCs (p_schluessel bleibt aus Kompatibilität in
+  // der Signatur, wird serverseitig ignoriert – Beschluss vom 6.7.2026).
+  el('regBtn').addEventListener('click', function(){
+    if(!current){ say('Erst Quelle und Medium wählen.', true); return; }
+    var code = slugCode(el('slug').value) || neuerKurzname();
+    el('slug').value = code;
+    if(usedCodes[code]){ say('Kurzname „' + code + '“ ist schon vergeben – bitte ein anderes Tier.', true); return; }
+    fetch(SB + '/rest/v1/rpc/sommer2026_link_anlegen', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({
+        p_schluessel: '', p_source: current.src, p_medium: current.med,
+        p_content: current.con || null, p_landing: current.angebot, p_sprache: current.sprache,
+        p_url: current.url, p_code: code, p_rolle: el('rolle').value,
+        p_ersteller: slug(el('ersteller').value) || null
+      })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(ergebnis){
+        if(ergebnis === 'ok'){ say('Im Register gespeichert.'); zeigeKurzlink(code); loadRegister(); }
+        else if(ergebnis === 'vergeben'){ say('Kurzname oder Link schon vergeben – bitte ein anderes Tier.', true); }
+        else { say('Eintrag unvollständig – Quelle, Medium und Link prüfen.', true); }
+      })
+      .catch(function(){ say('Register nicht erreichbar.', true); });
+  });
+
+  function loescheLink(url){
+    if(!window.confirm('Diesen Link wirklich aus dem Register löschen?')) return;
+    fetch(SB + '/rest/v1/rpc/sommer2026_link_loeschen', {
+      method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({ p_url: url, p_schluessel: '' })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(ergebnis){
+        if(ergebnis === 'ok'){ say('Link gelöscht.'); loadRegister(); }
+        else { say('Löschen nicht möglich.', true); }
+      })
+      .catch(function(){ say('Löschen nicht erreichbar.', true); });
+  }
+
+  function loadRegister(){
+    fetch(SB + '/rest/v1/rpc/sommer2026_links_public', {
+      method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY }, body:'{}'
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(rows){
+        var body = el('regBody'); body.innerHTML = '';
+        usedCodes = {}; (rows || []).forEach(function(x){ if(x.code) usedCodes[x.code] = true; });
+        if(!el('slug').value || usedCodes[slugCode(el('slug').value)]) el('slug').value = neuerKurzname();
+        if(!rows || !rows.length){ body.innerHTML = '<tr><td class="empty" colspan="5">Noch keine Links registriert.</td></tr>'; return; }
+        rows.forEach(function(x){
+          var tr = document.createElement('tr');
+          tr.innerHTML = '<td class="mot"></td><td></td><td></td><td class="num"></td><td class="act"></td>';
+          var mot = tr.children[0];
+          mot.textContent = x.utm_content || '—';
+          var q = document.createElement('span'); q.className = 'q';
+          // Kurzlink zeigen (aufgeräumt für die Veröffentlichung), Titel = volle URL.
+          if(x.code){ var a = document.createElement('a'); a.href = SHORTBASE + x.code;
+            a.target = '_blank'; a.rel = 'noopener'; a.textContent = SHORTBASE + x.code;
+            a.title = x.url; q.appendChild(a); }
+          else { q.textContent = x.url; }
+          mot.appendChild(q);
+          tr.children[1].textContent = [x.utm_source, x.utm_medium].filter(Boolean).join(' · ');
+          var ziel = ANGEBOT_LABEL[x.landing] || x.landing || '';
+          if(x.sprache) ziel += ' · ' + x.sprache.toUpperCase();
+          tr.children[2].textContent = ziel;
+          var n = Number(x.abschluesse) || 0;
+          tr.children[3].textContent = n.toLocaleString('de-CH');
+          if(n === 0) tr.children[3].className = 'num zero';
+          var del = document.createElement('button');
+          del.type = 'button'; del.className = 'del'; del.textContent = 'Löschen';
+          del.setAttribute('aria-label', 'Link löschen');
+          del.addEventListener('click', function(){ loescheLink(x.url); });
+          tr.children[4].appendChild(del);
+          body.appendChild(tr);
+        });
+      })
+      .catch(function(){ el('regBody').innerHTML = '<tr><td class="empty" colspan="5">Register nicht ladbar.</td></tr>'; });
+  }
+
+  el('slug').value = neuerKurzname();
+  render();
+  loadRegister();
+</script>
+
+</body>
+</html>

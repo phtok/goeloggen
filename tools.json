@@ -4,7 +4,8 @@
     "live": "Im Einsatz, gepflegt",
     "beta": "Nutzbar, in Überarbeitung",
     "entwurf": "Grober Entwurf",
-    "geparkt": "Konzept, später"
+    "geparkt": "Konzept, später",
+    "intern": "Nur im Backstage-Modus gelistet – Direktlink funktioniert"
   },
   "categories": [
     {
@@ -43,6 +44,11 @@
       "intro": "Begleit-Grotesk, Gewichte und Mischsatz prüfen und kalibrieren."
     },
     {
+      "id": "kampagne",
+      "title": "Kampagne",
+      "intro": "Werkzeuge der Kampagnenarbeit – planen, verlinken, mailen, zählen. Gebaut für die Sommer-Aktion, wiederverwendbar für jede dreistufige Kampagne."
+    },
+    {
       "id": "statistik",
       "title": "Statistik",
       "intro": "Nutzungszahlen aller Werkzeuge – nur der Gebrauch legitimiert den Bau."
@@ -61,6 +67,11 @@
       "id": "archiv",
       "title": "Archiv",
       "intro": "Frühere Stände – eingefroren zum Nachschlagen, nicht gepflegt."
+    },
+    {
+      "id": "labor",
+      "title": "Labor",
+      "intro": "Skizzen und Spezialtools – nur im Backstage sichtbar, zum Ausprobieren vor dem Teilen."
     }
   ],
   "tools": [
@@ -71,8 +82,18 @@
       "tag": "Fundament",
       "title": "Design-System",
       "href": "design-system/",
-      "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Mit Starter und Bau-Workflow.",
+      "desc": "Farben, Schnitte, Typografie-Regeln und Komponenten – die lebende Schauseite, aus einer Quelle gerendert. Der Bau-Workflow steht im internen Hub.",
       "such": "Farben Palette Tokens Hex RGB CMYK Markenfarben Neutrale Komponenten Fundament"
+    },
+    {
+      "slug": "stilprobe-warm",
+      "cat": "schau",
+      "status": "entwurf",
+      "tag": "Stilprobe",
+      "title": "Warme Flächen (Welt ‹warm›)",
+      "href": "design-system/stilprobe-warm.html",
+      "desc": "Experiment: das Fundament auf warmen Farbflächen – ein data-welt-Attribut, Kontraste gerechnet. Nichts davon ist beschlossen.",
+      "such": "Stilprobe warm Welt Flächen Farbklima Variante Dialekt"
     },
     {
       "slug": "sektionsfarben",
@@ -140,7 +161,7 @@
     {
       "slug": "editor",
       "cat": "generatoren",
-      "status": "beta",
+      "status": "intern",
       "tag": "Lektorat",
       "title": "Goetheanum Editor",
       "short": "Editor",
@@ -170,14 +191,36 @@
       "desc": "Mockup zur Vorbereitung der Goetheanum-TV-Umbenennung – kein öffentliches Werkzeug, eigene Welt."
     },
     {
-      "slug": "karten",
-      "cat": "vorbereitung",
+      "slug": "perspektiven",
+      "cat": "schau",
+      "status": "beta",
+      "tag": "Webfamilie",
+      "title": "Perspektiven (Webfamilie)",
+      "href": "design-system/#perspektiven",
+      "desc": "Die Startseiten von goetheanum.ch, dasgoetheanum.com, goetheanum.tv und anthroposophie.org – vollständig nachgebaut im Design-System, mit echten Inhalten und Sprung zum Original.",
+      "such": "Perspektiven Webfamilie Testseiten goetheanum.ch dasgoetheanum goetheanum.tv anthroposophie Befund"
+    },
+    {
+      "slug": "my-goetheanum",
+      "cat": "schau",
       "status": "entwurf",
+      "tag": "my.goetheanum",
+      "title": "my.goetheanum im Einsatz",
+      "short": "my.goetheanum",
+      "href": "perspektiven/my-goetheanum.html",
+      "desc": "Die gewählte my.goetheanum-Fassung (Kleinschreibung, Icon im Kreis, Schnitt Deutlich) auf allen Gründen und in echten Umgebungen — hell/dunkel, gross/klein, Webseite und App.",
+      "such": "my.goetheanum Logo Präsentation Kontexte Gründe dunkel App Webseite Deutlich Kreis"
+    },
+    {
+      "slug": "karten",
+      "cat": "generatoren",
+      "status": "live",
       "tag": "Campus",
-      "title": "Kartentool",
-      "short": "Karten",
+      "title": "Campus-Karte",
+      "short": "Campus-Karte",
       "href": "apps/karten-generator/",
-      "desc": "Lagepläne des Goetheanum-Geländes zusammenstellen und im Hausbild ausgeben."
+      "desc": "Lagepläne des Goetheanum-Geländes von Fall zu Fall beschriften und als Vektor-PDF ausgeben — A4/A3 quer, wahlweise mit Beschnitt und Schnittmarken, Kartenfarben je Variante, Parkflächen einfärbbar.",
+      "such": "Karte Kartierung Campus Gelände Lageplan PDF A3 Schnittmarken Beschnitt Parkflächen"
     },
     {
       "slug": "cover",
@@ -209,6 +252,17 @@
       "href": "apps/schilder/",
       "desc": "Orientierungs- und Türschilder im Hausbild – Zeilen und Zeichen einsetzen, mit Haus-Icons und -Pfeilen, A5 quer drucken. Feste Vorlagen folgen.",
       "such": "Schild Schilder Orientierung Türschild Wegweiser Wegweisung Piktogramm Pfeil A5 Namensschild"
+    },
+    {
+      "slug": "bewegte-schrift",
+      "cat": "vorbereitung",
+      "status": "entwurf",
+      "tag": "Erprobung",
+      "title": "Bewegte Schrift",
+      "short": "Animation",
+      "href": "apps/bewegte-schrift/",
+      "desc": "Erprobung dezenter Schrift-Animationen auf der Gewichtsachse der Hausschrift – live mit Code zum Übernehmen.",
+      "such": "Animation bewegte Schrift Typo GSAP wght Gewicht variable Font Auftakt Nähe Sog Atem Welle Bewegung"
     },
     {
       "slug": "schriften",
@@ -321,8 +375,8 @@
     },
     {
       "slug": "sommer-zaehler",
-      "cat": "statistik",
-      "status": "beta",
+      "cat": "kampagne",
+      "status": "intern",
       "tag": "Aktion",
       "title": "Sommer-Zähler 2026",
       "short": "Sommer-Zähler",
@@ -331,13 +385,35 @@
       "such": "Sommer Aktion Kampagne Abo Zähler Counter Wochenschrift GTV goetheanum.tv Cockpit Zahlen"
     },
     {
+      "slug": "utm-generator",
+      "cat": "kampagne",
+      "status": "intern",
+      "tag": "Aktion",
+      "title": "UTM-Link-Generator",
+      "short": "UTM-Generator",
+      "href": "apps/utm-generator/",
+      "desc": "Saubere, konventionskonforme Anmelde-Links der Sommer-Aktion bauen – mit QR und Link-Register, damit das Cockpit auch Links mit null Abschlüssen zeigt.",
+      "such": "UTM Link Generator Kampagne Attribution Tracking QR Quelle Medium Content Sommer Aktion"
+    },
+    {
+      "slug": "mail-editor",
+      "cat": "kampagne",
+      "status": "intern",
+      "tag": "Aktion",
+      "title": "Mail-Editor",
+      "short": "Mail-Editor",
+      "href": "apps/mail-editor/",
+      "desc": "Alle Wellen-Mails der Sommer-Aktion zum Gegenlesen – drei Segmente × Wellen × zwei Sprachen, je Feld kommentierbar, Kommentare ins Werkzeug-Backend. Gebaut aus einer Quelle (heroes.json).",
+      "such": "Mail Editor Mailing Newsletter Kampagne Wellen Segmente Betreff Gegenlesen Kommentar Sommer Aktion E-Mail"
+    },
+    {
       "slug": "campus-karten",
       "cat": "geparkt",
       "status": "geparkt",
       "tag": "Kartierung",
       "title": "Campus-Kartentool",
       "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campus-kartentool-pflichtenheft.md",
-      "desc": "Veranstaltungs-/Lagekarten des Geländes, A4 druckfertig. Pflichtenheft fertig, Bau steht aus."
+      "desc": "Pflichtenheft zum Kartentool. Der Bau ist erfolgt — das laufende Werkzeug heisst ‹Kartentool› (Kachel Campus/Karten)."
     },
     {
       "slug": "brand-portrait",
@@ -375,6 +451,28 @@
       "short": "Logos alt",
       "href": "archive/logo-generator-original_2026-06-27/",
       "desc": "Der ursprüngliche Logo-Generator, eingefroren als Referenz – dunkles UI, externe Schriften, nicht gepflegt."
+    },
+    {
+      "slug": "marketing-maschine",
+      "cat": "labor",
+      "status": "entwurf",
+      "tag": "Strategie",
+      "title": "Marketing-Maschine",
+      "short": "Marketing-Maschine",
+      "href": "marketing-maschine.html",
+      "desc": "Gesetzte Zusammenfassung des Marketing-Konzepts: Jahresrad, Kennzahlen, die zwei Stimmen und die drei Wachstums-Wege — auf einer Seite. Volltext im Konzeptdokument.",
+      "such": "Marketing Maschine Kampagne Jahresrad Abo Wachstum Wochenschrift goetheanum.tv Leads Strategie Neumeier Newsletter Michaeli"
+    },
+    {
+      "slug": "seelenkalender",
+      "cat": "labor",
+      "status": "intern",
+      "tag": "Neu",
+      "title": "Seelenkalender",
+      "short": "Seelenkalender",
+      "href": "apps/seelenkalender/",
+      "desc": "Der Wochenspruch des Anthroposophischen Seelenkalenders — jede Woche neu, mit Blättern, Teilen und Vertiefungs-Verweisen. Erste Schleife der Lead-Maschine.",
+      "such": "Seelenkalender Wochenspruch Steiner Spruch Woche Ostern Michaeli Johanni Kalender Lead"
     }
   ],
   "docs": [
@@ -419,6 +517,23 @@
       "tag": "Aufbau",
       "href": "https://github.com/phtok/goeloggen/blob/main/start/README.md",
       "desc": "Wie das Design-System aufgebaut ist und wächst."
+    },
+    {
+      "title": "Marketing-Maschine — Konzept",
+      "tag": "Strategie",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/marketing-maschine.md",
+      "desc": "Jahreszyklus, Kampagnen, Leads: Konzept der weitgehend automatisierten Marketing-Maschine für die Wochenschrift und goetheanum.tv."
+    },
+    {
+      "title": "Lead-Maschine — Pflichtenheft",
+      "tag": "Spec",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/lead-maschine.md",
+      "desc": "Ausführungs-Spezifikation der fünf Lead-Schleifen: Seelenkalender, Archiv-Sog, Partner-Kit, Atomisierung, Schenken."
+    },
+    {
+      "title": "Gestaltungsspielraum (Entwurf)",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/gestaltungsspielraum-entwurf.md",
+      "desc": "Foto-Richtlinie in drei Richtungen und vier Ansätze zu erlaubter Varianz – zur Ratifizierung."
     }
   ]
 }
