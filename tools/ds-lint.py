@@ -57,7 +57,10 @@ def staged_html():
 
 def excluded(path, c):
     g = c["geltungsbereich"]
-    if any(s in path for s in g["ausgenommen_substr"]):
+    # Staged/Audit-Pfade kommen relativ ("assets/…") – für die Substring-
+    # Ausnahmen ("/assets/") wie absolute behandeln, sonst greifen sie nie.
+    p = "/" + path.lstrip("./")
+    if any(s in p for s in g["ausgenommen_substr"]):
         return True
     if path in g["ausgenommen_dateien"]:
         return True
