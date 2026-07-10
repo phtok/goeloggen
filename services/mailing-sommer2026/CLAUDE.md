@@ -19,8 +19,9 @@ bleibt unangetastet.
 ```
 heroes.json ─┐
 config.json ─┼─► build_editor.py ─► dist/mail_{motiv}_{welle}_{sprache}.html (20, versandfähig)
-links.py    ─┘        --publish  ─► ../../apps/mail-editor/ (Editor + gehostete Assets, GitHub Pages)
-                      --verify   ─► Live-Check nach dem Merge: Editor + alle Asset-URLs erreichbar?
+links.py    ─┘        --publish  ─► ../../apps/mail-editor/ (Editor + Assets + mails/ = Versand-HTML
+                                    per URL, für die AC-Bestückung; GitHub Pages)
+                      --verify   ─► Live-Check nach dem Merge: Editor, Assets und Mail-URLs erreichbar?
 ```
 Bauen: `pip install -r requirements.txt` · `npm i -g mjml` · `python3 build_editor.py --publish`
 Wortmarke = offizielles Logo (`assets/logos/goetheanum-logo.svg` → PNG via cairosvg), Badge =

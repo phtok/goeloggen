@@ -155,7 +155,10 @@ def verify():
     files = sorted(f.name for f in G.iterdir()) if G.exists() else []
     if not files:
         sys.exit("assets/generated/ ist leer — zuerst bauen: python3 build_editor.py --publish")
-    urls = [BASE.rsplit("/assets", 1)[0] + "/"] + [f"{BASE}/{n}" for n in files]
+    root_url = BASE.rsplit("/assets", 1)[0]
+    mails = sorted(p.name for p in (ROOT/"dist").glob("mail_*.html"))
+    urls = ([root_url + "/"] + [f"{BASE}/{n}" for n in files]
+            + [f"{root_url}/mails/{n}" for n in mails])
     fails = 0
     for u in urls:
         try:
@@ -197,7 +200,7 @@ def main():
                 frows = "".join(commentable(f"{base}#{k}", k, esc(v) if k != "Link" else f'<code>{esc(v)}</code>')
                                 for k, v in fields.items())
                 lang_cards.append(f"""<div class="mail" data-lang="{lang}">
-  <div class="mhd">{welle.upper()} · {lang.upper()}</div>
+  <div class="mhd">{welle.upper()} · {lang.upper()}<a href="mails/mail_{base}.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="{html.replace('"','&quot;')}" loading="lazy" title="Vorschau {base}"></iframe>
   <div class="flds">{frows}
     {commentable(f"{base}#gesamt","Ganze Mail","<i>Anmerkung zur ganzen Mail</i>")}
@@ -250,7 +253,9 @@ def main():
 .waves{{display:flex;gap:var(--s6);overflow-x:auto;padding:var(--s2) 0 var(--s5)}}
 .wave{{display:flex;gap:var(--s3)}}
 .mail{{width:340px;flex:0 0 auto;background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden}}
-.mhd{{background:var(--ink);color:var(--paper);font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;padding:6px 12px}}
+.mhd{{display:flex;align-items:center;background:var(--ink);color:var(--paper);font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;padding:6px 12px}}
+.mhd a{{margin-left:auto;color:inherit;text-decoration:none;border:1px solid var(--paper);border-radius:999px;padding:1px 9px;font-weight:400}}
+.mhd a:hover{{background:var(--paper);color:var(--ink)}}
 .mail iframe{{width:100%;height:520px;border:0;display:block;background:#F6F4F2}} /* # ds-ok Mail-Grund (Artefakt) */
 .flds{{padding:var(--s2) var(--s3)}}
 .fld{{border-top:1px solid var(--line-soft);padding:8px 4px}} .fld:first-child{{border-top:0}}
@@ -429,6 +434,15 @@ setLang('de');load();
             old.unlink()  # keine Leichen aus früheren Builds im Deploy
         for f in sorted(G.iterdir()):
             shutil.copy(f, adir/f.name)
+        # Versand-HTML mit ausliefern: Quelle für die AC-Bestückung (Mail per URL abholen).
+        # noindex nur in der Web-Kopie (Hausregel: jede Seite trägt noindex) — dist/ bleibt rein.
+        mdir = APP/"mails"; mdir.mkdir(exist_ok=True)
+        for old in mdir.iterdir():
+            old.unlink()
+        for f in sorted((ROOT/"dist").glob("mail_*.html")):
+            html = f.read_text(encoding="utf-8").replace(
+                "<head>", '<head><meta name="robots" content="noindex">', 1)
+            (mdir/f.name).write_text(html, encoding="utf-8")
         print(f"Publiziert: {APP}/index.html + {len(list(adir.iterdir()))} Assets -> {BASE or '(asset_base_url leer!)'}")
 
 

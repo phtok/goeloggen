@@ -30,7 +30,9 @@
 .waves{display:flex;gap:var(--s6);overflow-x:auto;padding:var(--s2) 0 var(--s5)}
 .wave{display:flex;gap:var(--s3)}
 .mail{width:340px;flex:0 0 auto;background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden}
-.mhd{background:var(--ink);color:var(--paper);font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;padding:6px 12px}
+.mhd{display:flex;align-items:center;background:var(--ink);color:var(--paper);font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;padding:6px 12px}
+.mhd a{margin-left:auto;color:inherit;text-decoration:none;border:1px solid var(--paper);border-radius:999px;padding:1px 9px;font-weight:400}
+.mhd a:hover{background:var(--paper);color:var(--ink)}
 .mail iframe{width:100%;height:520px;border:0;display:block;background:#F6F4F2} /* # ds-ok Mail-Grund (Artefakt) */
 .flds{padding:var(--s2) var(--s3)}
 .fld{border-top:1px solid var(--line-soft);padding:8px 4px} .fld:first-child{border-top:0}
@@ -76,19 +78,15 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 .subline{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin:0 0 var(--s3)}
 </style></head><body>
 
-<<<<<<< HEAD
 <script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"
         data-onpage="Cockpit:../sommer-zaehler/|Aktivitäten:../sommer-zaehler/aktivitaeten.html|Kosten:../sommer-zaehler/kosten.html|Multiplikatoren:../sommer-zaehler/multiplikatoren.html|Links:../utm-generator/|Mail:../mail-editor/"></script>
-=======
-<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
->>>>>>> 0158d54 (Mail-Editor: Rücklauf beschleunigt, Gegenlese-Kommentare umgesetzt)
 
 <main class="wrap">
 <section class="lead">
   <span class="kicker">Sommer-Aktion 2026</span>
   <h1>Mail-Editor</h1>
   <p class="lede" style="max-width:var(--measure)">Alle Wellen-Mails der drei Segmente zum Gegenlesen — je Feld kommentierbar, Kommentare landen im Werkzeug-Backend. Korrigiert wird in <code>heroes.json</code>, dann wird neu gebaut.</p>
-  <p class="subline">Stand dieses Builds: 10.07.2026, 2.12 Uhr · <code>1b84152</code></p>
+  <p class="subline">Stand dieses Builds: 10.07.2026, 2.40 Uhr · <code>37bd2f7</code></p>
   <div class="controls">
     <span class="lab">Sprache</span>
     <button id="b-de" class="pill on" onclick="setLang('de')">Deutsch</button>
@@ -134,7 +132,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="shared#footer"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'shared#footer')">senden</button></div></div></div></div></section>
 <section class="segment"><h2>Lesen · Die Wochenschrift — nurtv</h2><div class="waves"><div class="wave"><div class="mail" data-lang="de">
-  <div class="mhd">W1 · DE</div>
+  <div class="mhd">W1 · DE<a href="mails/mail_lesen_w1_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -437,7 +435,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="lesen_w1_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'lesen_w1_de#gesamt')">senden</button></div></div></div>
   </div></div><div class="mail" data-lang="en">
-  <div class="mhd">W1 · EN</div>
+  <div class="mhd">W1 · EN<a href="mails/mail_lesen_w1_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -740,7 +738,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="lesen_w1_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'lesen_w1_en#gesamt')">senden</button></div></div></div>
   </div></div></div><div class="wave"><div class="mail" data-lang="de">
-  <div class="mhd">W2 · DE</div>
+  <div class="mhd">W2 · DE<a href="mails/mail_lesen_w2_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -1043,7 +1041,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="lesen_w2_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'lesen_w2_de#gesamt')">senden</button></div></div></div>
   </div></div><div class="mail" data-lang="en">
-  <div class="mhd">W2 · EN</div>
+  <div class="mhd">W2 · EN<a href="mails/mail_lesen_w2_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -1346,7 +1344,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="lesen_w2_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'lesen_w2_en#gesamt')">senden</button></div></div></div>
   </div></div></div><div class="wave"><div class="mail" data-lang="de">
-  <div class="mhd">W3 · DE</div>
+  <div class="mhd">W3 · DE<a href="mails/mail_lesen_w3_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -1649,7 +1647,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="lesen_w3_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'lesen_w3_de#gesamt')">senden</button></div></div></div>
   </div></div><div class="mail" data-lang="en">
-  <div class="mhd">W3 · EN</div>
+  <div class="mhd">W3 · EN<a href="mails/mail_lesen_w3_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -1952,7 +1950,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="lesen_w3_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'lesen_w3_en#gesamt')">senden</button></div></div></div>
   </div></div></div></div></section><section class="segment"><h2>Sehen · goetheanum.tv — nurws</h2><div class="waves"><div class="wave"><div class="mail" data-lang="de">
-  <div class="mhd">W1 · DE</div>
+  <div class="mhd">W1 · DE<a href="mails/mail_sehen_w1_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -2255,7 +2253,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="sehen_w1_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'sehen_w1_de#gesamt')">senden</button></div></div></div>
   </div></div><div class="mail" data-lang="en">
-  <div class="mhd">W1 · EN</div>
+  <div class="mhd">W1 · EN<a href="mails/mail_sehen_w1_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -2558,7 +2556,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="sehen_w1_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'sehen_w1_en#gesamt')">senden</button></div></div></div>
   </div></div></div><div class="wave"><div class="mail" data-lang="de">
-  <div class="mhd">W2 · DE</div>
+  <div class="mhd">W2 · DE<a href="mails/mail_sehen_w2_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -2861,7 +2859,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="sehen_w2_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'sehen_w2_de#gesamt')">senden</button></div></div></div>
   </div></div><div class="mail" data-lang="en">
-  <div class="mhd">W2 · EN</div>
+  <div class="mhd">W2 · EN<a href="mails/mail_sehen_w2_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -3164,7 +3162,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="sehen_w2_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'sehen_w2_en#gesamt')">senden</button></div></div></div>
   </div></div></div><div class="wave"><div class="mail" data-lang="de">
-  <div class="mhd">W3 · DE</div>
+  <div class="mhd">W3 · DE<a href="mails/mail_sehen_w3_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -3467,7 +3465,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="sehen_w3_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'sehen_w3_de#gesamt')">senden</button></div></div></div>
   </div></div><div class="mail" data-lang="en">
-  <div class="mhd">W3 · EN</div>
+  <div class="mhd">W3 · EN<a href="mails/mail_sehen_w3_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -3770,7 +3768,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="sehen_w3_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'sehen_w3_en#gesamt')">senden</button></div></div></div>
   </div></div></div></div></section><section class="segment"><h2>Beides · Das ganze Goetheanum — noabo</h2><div class="waves"><div class="wave"><div class="mail" data-lang="de">
-  <div class="mhd">W1 · DE</div>
+  <div class="mhd">W1 · DE<a href="mails/mail_beides_w1_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -4086,7 +4084,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="beides_w1_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w1_de#gesamt')">senden</button></div></div></div>
   </div></div><div class="mail" data-lang="en">
-  <div class="mhd">W1 · EN</div>
+  <div class="mhd">W1 · EN<a href="mails/mail_beides_w1_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -4402,7 +4400,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="beides_w1_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w1_en#gesamt')">senden</button></div></div></div>
   </div></div></div><div class="wave"><div class="mail" data-lang="de">
-  <div class="mhd">W2 · DE</div>
+  <div class="mhd">W2 · DE<a href="mails/mail_beides_w2_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -4705,7 +4703,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="beides_w2_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w2_de#gesamt')">senden</button></div></div></div>
   </div></div><div class="mail" data-lang="en">
-  <div class="mhd">W2 · EN</div>
+  <div class="mhd">W2 · EN<a href="mails/mail_beides_w2_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -5008,7 +5006,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="beides_w2_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w2_en#gesamt')">senden</button></div></div></div>
   </div></div></div><div class="wave"><div class="mail" data-lang="de">
-  <div class="mhd">W3 · DE</div>
+  <div class="mhd">W3 · DE<a href="mails/mail_beides_w3_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -5324,7 +5322,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="beides_w3_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w3_de#gesamt')">senden</button></div></div></div>
   </div></div><div class="mail" data-lang="en">
-  <div class="mhd">W3 · EN</div>
+  <div class="mhd">W3 · EN<a href="mails/mail_beides_w3_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -5640,7 +5638,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="beides_w3_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w3_en#gesamt')">senden</button></div></div></div>
   </div></div></div><div class="wave"><div class="mail" data-lang="de">
-  <div class="mhd">W3B · DE</div>
+  <div class="mhd">W3B · DE<a href="mails/mail_beides_w3b_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
@@ -5943,7 +5941,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="beides_w3b_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w3b_de#gesamt')">senden</button></div></div></div>
   </div></div><div class="mail" data-lang="en">
-  <div class="mhd">W3B · EN</div>
+  <div class="mhd">W3B · EN<a href="mails/mail_beides_w3b_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
