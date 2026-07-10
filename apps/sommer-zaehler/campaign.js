@@ -262,6 +262,10 @@
   }
   function zbTag(d){ return d.getDate() + '.' + (d.getMonth() + 1) + '.'; }
 
+  // Zeitband-Chips sind anklickbar → laden die Aktivität in die Bearbeiten-Maske.
+  // Delegation über die Tabelle; die Zeilen-Zuordnung liegt in zbById (je Render neu).
+  var zbById = {}, zbWired = false;
+
   function renderZeitband(rows){
     if (!el('zeitband')) return;
     var tbl = el('zeitband'); if(!tbl) return;
@@ -312,11 +316,17 @@
           if (m.reichweite) det.push('Reichweite ' + Number(m.reichweite).toLocaleString('de-CH'));
           if (m.klicks) det.push('Klicks ' + Number(m.klicks).toLocaleString('de-CH'));
           if (m.kosten) det.push('Kosten ' + Number(m.kosten).toLocaleString('de-CH'));
+          if (m.notiz) det.push('Notiz: ' + m.notiz);
+          zbById[m.id] = m;
           var span = document.createElement('span');
-          span.className = 'zb-chip';
-          span.title = m.massnahme + ' – ' + det.filter(Boolean).join(' · ');
+          span.className = 'zb-chip clickable' + (m.notiz ? ' has-note' : '');
+          span.setAttribute('data-mid', m.id);
+          span.setAttribute('role', 'button');
+          span.setAttribute('tabindex', '0');
+          span.title = m.massnahme + ' – ' + det.filter(Boolean).join(' · ') + ' · anklicken zum Bearbeiten';
           span.innerHTML = '<span class="zr"></span><span class="zt">' + zbTag(d) + '</span>';
           span.appendChild(document.createTextNode(m.massnahme));
+          if (m.notiz){ var zn = document.createElement('span'); zn.className = 'zn'; zn.textContent = m.notiz; span.appendChild(zn); }
           chips += span.outerHTML;
         });
         zeile += '<td>' + chips + '</td>';
@@ -325,7 +335,14 @@
     });
 
     tbl.innerHTML = '<thead>' + h1 + h2 + '</thead><tbody>' + body + '</tbody>';
-    el('zbLegende').innerHTML = '<span>Zeilen = Kanal, Spalten = Woche. Jeder Punkt eine Aktivität; Reichweite, Klicks und Kosten beim Überfahren.</span>';
+    // Delegierter Klick/Tastatur: Chip → Aktivität in die Bearbeiten-Maske laden.
+    if (!zbWired){
+      zbWired = true;
+      var oeffne = function(t){ var c = t && t.closest && t.closest('.zb-chip[data-mid]'); if (!c) return false; var m = zbById[c.getAttribute('data-mid')]; if (m) massnahmeBearbeiten(m); return !!m; };
+      tbl.addEventListener('click', function(e){ oeffne(e.target); });
+      tbl.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ if (oeffne(e.target)) e.preventDefault(); } });
+    }
+    el('zbLegende').innerHTML = '<span>Zeilen = Kanal, Spalten = Woche. Jeder Punkt eine Aktivität – anklicken zum Bearbeiten; Reichweite, Klicks, Kosten und Notiz beim Überfahren.</span>';
   }
 
   // Eintragen/Bearbeiten: offener Schreibweg (Muster Link-Register),
@@ -338,11 +355,13 @@
     if (!el('mfTag').value || !titel || !wer){ sagen('Datum, Aktivität und Kürzel sind Pflicht.', true); return; }
     var zahl = function(id){ var e = el(id); return (e && e.value !== '') ? Math.max(0, Math.round(Number(e.value) || 0)) : null; };
     var istEdit = mfEditId != null;
+    var notiz = el('mfNotiz') ? (el('mfNotiz').value || '').trim() : '';
     var params = {
       p_tag: el('mfTag').value, p_massnahme: titel,
       p_kanal: el('mfKanal').value, p_rolle: null,
       p_ersteller: wer, p_kosten: null,
-      p_reichweite: zahl('mfReichweite'), p_klicks: zahl('mfKlicks')
+      p_reichweite: zahl('mfReichweite'), p_klicks: zahl('mfKlicks'),
+      p_notiz: notiz || null
     };
     if (istEdit) { params.p_id = mfEditId; } else { params.p_zielgruppe = null; }
     fetch(SB + '/rest/v1/rpc/' + (istEdit ? 'sommer2026_massnahme_aendern' : 'sommer2026_massnahme_eintragen'), {
@@ -377,6 +396,7 @@
       tr.innerHTML = '<td></td><td></td><td></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="act"></td>';
       tr.children[0].textContent = tag;
       tr.children[1].textContent = (r.massnahme || '') + (r.ersteller ? ' · ' + r.ersteller : '');
+      if (r.notiz){ var nn = document.createElement('span'); nn.className = 'mnote'; nn.textContent = r.notiz; tr.children[1].appendChild(nn); }
       tr.children[2].textContent = kanal;
       tr.children[3].textContent = (r.kosten != null) ? eur(r.kosten) : '–';
       tr.children[4].textContent = (r.reichweite != null) ? fmt(r.reichweite) : '–';
@@ -400,6 +420,7 @@
     el('mfKanal').value = r.kanal || 'andere';
     if (el('mfReichweite')) el('mfReichweite').value = (r.reichweite != null) ? r.reichweite : '';
     if (el('mfKlicks')) el('mfKlicks').value = (r.klicks != null) ? r.klicks : '';
+    if (el('mfNotiz')) el('mfNotiz').value = r.notiz || '';
     el('mfWer').value = r.ersteller || '';
     el('mfBtn').textContent = 'Änderung speichern';
     el('mfSaid').textContent = 'Bearbeitung von «' + (r.massnahme || '') + '» – Speichern übernimmt.';
@@ -411,6 +432,7 @@
     el('mfTitel').value = ''; el('mfWer').value = '';
     if (el('mfReichweite')) el('mfReichweite').value = '';
     if (el('mfKlicks')) el('mfKlicks').value = '';
+    if (el('mfNotiz')) el('mfNotiz').value = '';
     el('mfTag').value = new Date().toISOString().slice(0, 10);
     el('mfBtn').textContent = 'Eintragen';
   }

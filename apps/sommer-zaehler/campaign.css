@@ -137,10 +137,14 @@
   .zb td{min-width:104px}
   .zb-chip{display:block;margin:2px 0;padding:4px 8px;border:1px solid var(--line);border-radius:var(--r-control);
     background:var(--field-bg);color:var(--ink);font-size:var(--t-micro);line-height:1.35;overflow-wrap:anywhere}
+  .zb-chip.clickable{cursor:pointer}
+  .zb-chip.clickable:hover{border-color:var(--gold);background:var(--soft)}
+  .zb-chip.clickable:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+  .zb-chip.has-note{border-left:3px solid var(--gold)}
   .zb-chip .zt{color:var(--muted);font-variant-numeric:tabular-nums;margin-right:5px}
-  .zb-chip .zr{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:baseline}
-  .zr.sichtbarkeit{background:var(--gold)} .zr.aktivierung{background:var(--blue)}
-  .zr.wirkung{background:var(--ok)} .zr.bindung{background:var(--muted)}
+  .zb-chip .zr{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:baseline;background:var(--blue)}
+  .zb-chip .zn{display:block;margin-top:3px;color:var(--muted);font-style:normal}
+  .mnote{display:block;margin-top:2px;color:var(--muted);font-size:var(--t-micro);line-height:1.4}
   .zb-legende{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);margin-top:var(--s3);font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
   /* Multiplikatoren: Status-Wortlabel, Verlaufszeile, Mini-Maske (DS02, G25) */
   .mstat{font-family:var(--font-text);font-size:var(--t-small);white-space:nowrap;color:var(--muted)}

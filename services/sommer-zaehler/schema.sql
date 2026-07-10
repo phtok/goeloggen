@@ -115,6 +115,7 @@ create table if not exists public.sommer2026_massnahmen (
   reichweite  bigint,                                     -- Sichtbarkeit (Impressionen)
   klicks      bigint,                                     -- Aktivierung
   ersteller   text,                                       -- Kürzel: wer steht dahinter
+  notiz       text,                                        -- ÖFFENTLICH: klärende Präzisierung (z. B. «nur geöffnete Mails»)
   beobachtung text,                                       -- INTERN (nicht im RPC)
   entscheidung text                                       -- INTERN (nicht im RPC)
 );
@@ -131,11 +132,13 @@ language sql security definer set search_path to 'public' as $$
    order by n desc;
 $$;
 
--- Massnahmen-Protokoll, kuratiert (ohne interne Freitext-Spalten)
+-- Massnahmen-Protokoll, kuratiert (ohne interne Freitext-Spalten; notiz ist die
+-- öffentliche, klärende Präzisierung und darf mit)
+drop function if exists public.sommer2026_massnahmen_public();
 create or replace function public.sommer2026_massnahmen_public()
-returns table(id bigint, tag date, massnahme text, kanal text, rolle text, ersteller text, kosten numeric, reichweite bigint, klicks bigint)
+returns table(id bigint, tag date, massnahme text, kanal text, rolle text, ersteller text, kosten numeric, reichweite bigint, klicks bigint, notiz text)
 language sql security definer set search_path to 'public' as $$
-  select id, tag, massnahme, kanal, rolle, ersteller, kosten, reichweite, klicks
+  select id, tag, massnahme, kanal, rolle, ersteller, kosten, reichweite, klicks, notiz
     from public.sommer2026_massnahmen
    order by tag, id;
 $$;
@@ -144,10 +147,11 @@ $$;
 -- Schreibweg fürs Team (Muster Link-Register) – nur kuratierte Felder, die
 -- internen Freitext-Spalten bleiben der Redaktion. Speist Zeitband, Protokoll
 -- und Wirkungskette im Cockpit.
+drop function if exists public.sommer2026_massnahme_eintragen(date, text, text, text, text, numeric, bigint, bigint, text);
 create or replace function public.sommer2026_massnahme_eintragen(
   p_tag date, p_massnahme text, p_kanal text, p_rolle text,
   p_zielgruppe text, p_kosten numeric, p_reichweite bigint, p_klicks bigint,
-  p_ersteller text default null)
+  p_ersteller text default null, p_notiz text default null)
 returns text language plpgsql security definer set search_path to 'public' as $$
 declare
   v_kanal text; v_rolle text;
@@ -159,19 +163,21 @@ begin
   if v_kanal not in ('newsletter','mailer','flyer','social','popup','website','empfehlung','andere') then v_kanal := 'andere'; end if;
   v_rolle := lower(coalesce(p_rolle, ''));
   if v_rolle not in ('sichtbarkeit','aktivierung','wirkung','bindung') then v_rolle := 'wirkung'; end if;
-  insert into public.sommer2026_massnahmen (tag, massnahme, kanal, rolle, zielgruppe, kosten, reichweite, klicks, ersteller)
+  insert into public.sommer2026_massnahmen (tag, massnahme, kanal, rolle, zielgruppe, kosten, reichweite, klicks, ersteller, notiz)
   values (p_tag, trim(p_massnahme), v_kanal, v_rolle, nullif(trim(coalesce(p_zielgruppe,'')), ''), p_kosten, p_reichweite, p_klicks,
-          nullif(trim(coalesce(p_ersteller,'')), ''));
+          nullif(trim(coalesce(p_ersteller,'')), ''), nullif(trim(coalesce(p_notiz,'')), ''));
   return 'ok';
 end;
 $$;
-grant execute on function public.sommer2026_massnahme_eintragen(date, text, text, text, text, numeric, bigint, bigint, text) to anon, authenticated;
+grant execute on function public.sommer2026_massnahme_eintragen(date, text, text, text, text, numeric, bigint, bigint, text, text) to anon, authenticated;
 
 -- Bearbeiten (Migration «sommer2026_massnahmen_kuerzel_flyer_bearbeiten»):
 -- nur übergebene Werte ändern, vorhandene Zahlen bleiben erhalten.
+drop function if exists public.sommer2026_massnahme_aendern(bigint, date, text, text, text, text, numeric, bigint, bigint);
 create or replace function public.sommer2026_massnahme_aendern(
   p_id bigint, p_tag date, p_massnahme text, p_kanal text, p_rolle text,
-  p_ersteller text, p_kosten numeric, p_reichweite bigint, p_klicks bigint)
+  p_ersteller text, p_kosten numeric, p_reichweite bigint, p_klicks bigint,
+  p_notiz text default null)
 returns text language plpgsql security definer set search_path to 'public' as $$
 declare
   v_kanal text; v_rolle text; n int;
@@ -188,13 +194,14 @@ begin
     ersteller  = coalesce(nullif(trim(coalesce(p_ersteller,'')), ''), ersteller),
     kosten     = coalesce(p_kosten, kosten),
     reichweite = coalesce(p_reichweite, reichweite),
-    klicks     = coalesce(p_klicks, klicks)
+    klicks     = coalesce(p_klicks, klicks),
+    notiz      = coalesce(nullif(trim(coalesce(p_notiz,'')), ''), notiz)
   where id = p_id;
   get diagnostics n = row_count;
   return case when n > 0 then 'ok' else 'unbekannt' end;
 end;
 $$;
-grant execute on function public.sommer2026_massnahme_aendern(bigint, date, text, text, text, text, numeric, bigint, bigint) to anon, authenticated;
+grant execute on function public.sommer2026_massnahme_aendern(bigint, date, text, text, text, text, numeric, bigint, bigint, text) to anon, authenticated;
 
 -- Kosten-Einzelposten (Migration «sommer2026_kosten_posten»): das Team traegt
 -- Posten mit Kuerzel ein, das Cockpit summiert je Kostenart (Uebersicht bleibt,
