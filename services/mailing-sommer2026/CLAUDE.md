@@ -76,6 +76,23 @@ Versand ab Engagement-Segment, gestaffelt; Nicht-Öffner >12 Mt. weglassen.
 Merge-Tags/Abmeldelink in AC ersetzen `%UNSUBSCRIBELINK%`.
 
 ## Offen
+- [ ] **Attribution NoAbo w2/w3b (make-or-break):** Die Übersichts-Landingpage
+      (global-sommer2026.goetheanum.online) reicht die utm_* NICHT an die verlinkten
+      Zielseiten weiter (nackte hrefs, kein Query-Forwarding; geprüft 10.7.) — Anmeldungen
+      aus w2/w3b sind so im Cockpit unsichtbar. Fix auf der Übersicht: `location.search`
+      an beide Ausgangs-Links anhängen. (WS-Seite selbst ist sauber: Paperform-Buttons
+      mit `prefill-inherit`.)
+- [ ] **Attribution GTV prüfen:** tv-sommer2026 hat kein Paperform; der Anmelde-Dialog
+      (uscreen/goetheanum.tv) ist clientseitig — ob utm_* den Abschluss erreichen, ist
+      unverifiziert. Ohne das bleiben alle gtv-Register-Zeilen ohne Abschlüsse.
+- [ ] **Kleinzeilen an echte Mechanik angleichen** (Entscheid Ph ausstehend): WS-Seite =
+      Kündigungsmodell («die ersten drei Monate in jedem Fall kostenlos, jederzeit kündbar»);
+      die Übersicht behauptet dagegen «enden ohne Verpflichtung» — Landingpage-Widerspruch
+      dort auflösen, Mails auf die eine wahre Formel ziehen.
+- [ ] **Onboarding-Strecke nach dem 8. August** (Trial→Paid, August–November): Willkommen
+      mit Inhalts-Empfehlungen → Mid-Trial-Impuls → Erinnerung vor Ablauf. Grösster
+      Conversion-Hebel laut INMA/NZZ-Learnings; als neue heroes.json/config.json auf
+      derselben Fabrik bauen.
 - [ ] Wellen-Copy w2/w3/w3b feinschleifen (Kolleg:innen via Editor).
 - [ ] Zwei-Button-Labels noabo w1/w3 gegenlesen («Lesen wählen →» / «Sehen wählen →»).
 - [ ] Segment `beides` = geparkte Empfehlungsmail für Doppelabonnenten (später).
