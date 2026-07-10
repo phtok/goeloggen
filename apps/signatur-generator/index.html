@@ -30,7 +30,7 @@
   .lab .sublab{font-family:var(--font-text);font-weight:400;font-size:var(--t-micro);color:var(--muted)}
   .input-wrap{position:relative;display:block}
   .input-wrap input{width:100%;padding-right:96px}
-  .btn-mini{font-family:var(--font-text);font-size:12px;line-height:1;color:var(--on-accent);background:var(--blue-solid);
+  .btn-mini{font-family:var(--font-text);font-size:var(--t-micro);line-height:1;color:var(--on-accent);background:var(--blue-solid);
     border-radius:var(--r-pill);padding:4px 10px;text-decoration:none;white-space:nowrap;
     position:absolute;right:8px;top:50%;transform:translateY(-50%)}
   .btn-mini:hover{filter:brightness(1.12)}
@@ -65,9 +65,9 @@
 
   /* Vorschau-Bühne: simuliert den Empfänger-Client, theme-UNABHÄNGIG (feste Werte). */
   .mail-stage{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card);overflow-x:auto}
-  .mail-stage.light{background:#ffffff;color:#111111} /* ds-ok: Artefakt (Empfänger hell) */
-  .mail-stage.dark{background:#1e1e1e;color:#e8e8e8;border-color:#333333} /* ds-ok: Artefakt (Empfänger dunkel) */
-  .mail-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.5} /* Artefakt: simuliert den Mail-Client */
+  .mail-stage.light{background:#ffffff;color:#111111} /* # ds-ok Artefakt (Empfänger hell) */
+  .mail-stage.dark{background:#1e1e1e;color:#e8e8e8;border-color:#333333} /* # ds-ok Artefakt (Empfänger dunkel) */
+  .mail-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.5} /* # ds-ok Artefakt: simuliert den Mail-Client */
   .mail-greeting{opacity:.6;margin-bottom:14px}
   .scroll-hint{display:none}
 
@@ -115,7 +115,7 @@
   .pikto .acc{stroke:var(--gold-ink)}
   .pikto .slash{stroke:var(--bad);opacity:.75}
   .pikto text{stroke:none;fill:var(--muted);font-family:var(--font-text)}
-  .pikto .ps{font-size:11px}
+  .pikto .ps{font-size:11px}  /* # ds-ok Piktogramm-Beischrift in SVG-Einheiten, aria-hidden – kein Lesetext */
   .empf-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s6)}
   .empf-ps{font-family:var(--font-text);color:var(--gold-ink);font-size:var(--t-small);margin:0}
   .empf-fn{margin-top:var(--s6);padding-top:var(--s4);border-top:1px solid var(--line)}
@@ -125,7 +125,7 @@
   .empf-fn li{max-width:62ch;margin-bottom:var(--s2)}
 
   /* Apple-Mail-Skizze (eigenständige Farben = Artefakt/Screenshot). */
-  .amv{width:100%;max-width:600px;height:auto;display:block;margin-top:var(--s4)} /* ds-ok */
+  .amv{width:100%;max-width:600px;height:auto;display:block;margin-top:var(--s4)} /* # ds-ok */
 
   /* Empfehlungs-Vergleich: aufgeräumt vs. überladen (theme-aware) */
   .empf-ill{flex:none;width:100%;max-width:340px;height:auto;display:block;margin:0}

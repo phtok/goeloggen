@@ -1,6 +1,6 @@
 {
   "$schema": "https://goetheanum/design-system/contract.schema.json",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "titel": "Goetheanum Design-System – Struktur-Vertrag",
   "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
   "geltungsbereich": {
@@ -10,12 +10,14 @@
       "/tools/goetheanum-fontfix/",
       "archive/",
       "reference/",
-      "vendor/"
+      "vendor/",
+      "apps/mail-editor/mails/"
     ],
     "ausgenommen_dateien": [
       "design-system/navigation.html"
     ],
-    "weiterleitungs_stubs": "Root-Stubs ohne eigenes <style>/<link> (reine Redirects) werden übersprungen."
+    "weiterleitungs_stubs": "Root-Stubs ohne eigenes <style>/<link> (reine Redirects) werden übersprungen.",
+    "versand_artefakte": "apps/mail-editor/mails/ sind erzeugtes Versand-HTML (E-Mail-Clients: Inline-Styles, keine <link>-Includes) – Artefakte wie die gedruckte Karte, kein Geltungsbereich des Web-Vertrags."
   },
   "includes": {
     "regel": "Pflicht-Includes einbinden: tokens.css UND base.css (Reihenfolge: tokens VOR base; nav.css zusätzlich für Seiten mit globaler Kopfzeile).",

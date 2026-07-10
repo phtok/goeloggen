@@ -335,6 +335,57 @@
   <!-- Der Bau-Workflow («So baust du ein neues Werkzeug») lebt im internen
        Hub (../start/#bauen) – diese Schauseite zeigt das System, nicht die Werkstatt. -->
 
+  <!-- ================= Spielraum & Welten ================= -->
+  <section id="spielraum">
+    <div class="shead">
+      <h2>Spielraum &amp; Welten</h2>
+      <p>Einheit kommt aus Tokens und Regeln — nicht aus Gleichförmigkeit der
+         Komposition. Was fest ist, prüft die Maschine; was frei ist, entscheidet
+         die Seite.</p>
+    </div>
+
+    <div class="grid cols2">
+      <div class="card">
+        <span class="kicker">Der Leitsatz · Dramaturgie</span>
+        <p style="margin-top:var(--s3);max-width:58ch"><b style="font-weight:var(--w-deutlich)">Ein</b> Hero je Seite,
+          <b style="font-weight:var(--w-deutlich)">eine</b> Primärhandlung je Blick, höchstens
+          <b style="font-weight:var(--w-deutlich)">eine</b> Akzentfläche je Bildschirmhöhe — dafür grosse Sprünge:
+          Riesengrad neben Kleingrad, volle Breite neben schmaler Spalte, Dichte
+          neben Leere. Spannung entsteht aus Komposition, nie aus neuen Werten.</p>
+      </div>
+      <div class="card">
+        <span class="kicker">Welten · Dialekte auf denselben Tokens</span>
+        <p style="margin-top:var(--s3);max-width:58ch">Eine Welt schaltet Stimmungs-Tokens
+          um (Flächen, abgeleitete Tinten) — nie Regeln, nie Grade. Ein Attribut genügt:
+          <code>&lt;html data-welt="warm"&gt;</code>. Die Bühne (<code>--stage-*</code>)
+          war die erste Welt; als Experiment steht jetzt
+          <a href="stilprobe-warm.html">die Stilprobe <b style="font-weight:var(--w-deutlich)">warm</b></a>
+          bereit — Kontraste gerechnet, Entscheid offen. Gestalt-Experimente beginnen
+          als ratifizierte Ausnahme (<code># ds-ok</code>) an einer Seite; bewährt →
+          Welt oder Freiheitsgrad, sonst löst <code>ds-fix</code> auf.</p>
+      </div>
+    </div>
+
+    <span class="kicker" style="margin-top:var(--s6);display:inline-block">Freiheitsgrade je Rolle · fest prüft die Maschine, frei entscheidet die Seite</span>
+    <div class="card" style="margin-top:var(--s3);overflow-x:auto">
+      <table>
+        <thead><tr><th>Rolle</th><th>Fest (Vertrag)</th><th>Frei (Spielraum)</th></tr></thead>
+        <tbody>
+          <tr><td><code>hero-bild</code></td><td>Text nur auf dem Schleier; Alt-Text</td><td>Seitenverhältnis, Titel innen/aussen, mit/ohne Handlung</td></tr>
+          <tr><td><code>teaser</code></td><td>Schrift-Rollen, Kontraste, ≥14px, Abstands-Skala</td><td>Spaltenzahl, liegend/gestapelt, Bildformat, mit/ohne Bild und Byline</td></tr>
+          <tr><td><code>event</code></td><td>Datum tabellarisch (G25), Grade</td><td>mit/ohne Bild, Dichte, Gruppierung nach Tagen</td></tr>
+          <tr><td><code>card</code></td><td>Rand, Radius, Innenraum aus Tokens</td><td><code>.soft</code>-Fläche, Rasterbreite, Fussleiste</td></tr>
+          <tr><td><code>stage</code>/<code>mtile</code></td><td>theme-feste Kontraste, Dauer tnum</td><td>Reihenlänge, Postermotiv, Kachelbreite</td></tr>
+          <tr><td><code>app</code>/<code>sidenav</code></td><td>Auswahl Gold+Weiss (B01), Ziele ≥44px</td><td>Gruppierung, Reihenfolge, Dichte der Karten</td></tr>
+          <tr><td><code>btn</code></td><td>Aktion = Blau, eine Primäre je Blick</td><td>Anordnung, Reihenfolge, Breite</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Aufgenommen nach dem Varianz-Entwurf
+      (<a href="https://github.com/phtok/goeloggen/blob/main/docs/gestaltungsspielraum-entwurf.md">docs/gestaltungsspielraum-entwurf.md</a>,
+      Ansätze 1–3) — Beschluss vom 10. Juli 2026.</p>
+  </section>
+
   <!-- ================= Perspektiven ================= -->
   <section id="perspektiven">
     <div class="shead">
@@ -372,10 +423,6 @@
         <span class="thumb" aria-hidden="true" style="background:var(--sek-aas)"></span>
         <span><span class="kick">Weltweit</span><h3>anthroposophie.org</h3>
         <p class="ex">Die Startseite im Hausbild — Rubrik, Heft-Archiv und Newsletter, komplett.</p></span></a>
-      <a class="teaser stack" href="../perspektiven/my-goetheanum.html">
-        <span class="thumb" aria-hidden="true" style="background:var(--gold)"></span>
-        <span><span class="kick">Portal · Entwurf</span><h3>My Goetheanum</h3>
-        <p class="ex">Der Entwicklerentwurf des Mitglieder-Portals im Hausbild — App-Schale, Karten, gerechnete Kontraste.</p></span></a>
     </div>
   </section>
 
