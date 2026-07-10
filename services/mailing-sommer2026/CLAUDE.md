@@ -78,14 +78,15 @@ Versand ab Engagement-Segment, gestaffelt; Nicht-Öffner >12 Mt. weglassen.
 Merge-Tags/Abmeldelink in AC ersetzen `%UNSUBSCRIBELINK%`.
 
 ## Offen
-- [ ] **VORAUSSETZUNG NoAbo (make-or-break, vor 14.7.):** Die Übersichts-Landingpage
-      (global-sommer2026.goetheanum.online, gebaut mit Lovable) reicht die utm_* NICHT
-      an die Zielseiten weiter — bestätigt 10.7. im Browser: alle vier Angebots-Links je
-      Sprachseite (Karten + Footer) sind nackte hrefs. Seit dem Ein-Button-Entscheid hängt
-      daran die GESAMTE NoAbo-Attribution. **Fix im Lovable-Backend** (Prompt liegt bereit):
-      Query-Weitergabe an alle Angebots-Links + Satz-Korrektur («enden ohne Verpflichtung»
-      → «jederzeit kündbar») + **/en-Bug**: die EN-Übersicht verlinkt heute die DEUTSCHEN
-      Zielseiten statt ws-en-/tv-en-. Danach Klickpfad Ende-zu-Ende testen.
+- [x] **Übersicht gefixt (Lovable, 10.7., publiziert):** Query-Weitergabe an alle
+      Angebots-Links (`src/lib/utm.ts` — komplette location.search, Delegation vor
+      Hydration, sessionStorage-Fallback für interne Navigation), Kündigungsmodell-Satz
+      DE/EN korrigiert, /en verlinkt die -en-Zielseiten. Statisch live verifiziert 10.7.
+      (Sätze + /en-Ziele im HTML, Weitergabe-Logik samt Host-Präfixen im App-Bundle
+      `assets/index-*.js`).
+- [ ] **Klick-Test im echten Browser** (Rest der Voraussetzung): Übersicht mit utm-Test-URL
+      öffnen, beide Angebots-Links müssen die vier Parameter tragen (Schritt 5 des
+      Paperform-Prüfauftrags deckt das mit ab). Erst danach Bulk-Tag «S26-Start».
 - [ ] **Attribution GTV — halb verifiziert (10.7.):** Der Anmelde-Dialog führt in den
       uscreen-Checkout (goetheanum.tv/checkout/new?o=84317 monatlich CHF 14 / o=84322
       jährlich CHF 140) und die utm_* werden in die Checkout-URL übernommen. OFFEN: ob
