@@ -201,6 +201,17 @@
       "such": "Perspektiven Webfamilie Testseiten goetheanum.ch dasgoetheanum goetheanum.tv anthroposophie Befund"
     },
     {
+      "slug": "my-goetheanum",
+      "cat": "schau",
+      "status": "entwurf",
+      "tag": "my.goetheanum",
+      "title": "my.goetheanum im Einsatz",
+      "short": "my.goetheanum",
+      "href": "perspektiven/my-goetheanum.html",
+      "desc": "Die gewählte my.goetheanum-Fassung (Kleinschreibung, Icon im Kreis, Schnitt Deutlich) auf allen Gründen und in echten Umgebungen — hell/dunkel, gross/klein, Webseite und App.",
+      "such": "my.goetheanum Logo Präsentation Kontexte Gründe dunkel App Webseite Deutlich Kreis"
+    },
+    {
       "slug": "karten",
       "cat": "generatoren",
       "status": "live",
