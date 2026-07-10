@@ -46,6 +46,9 @@
   .qr svg{display:block;width:100%;height:100%}
   .payloadbox{width:220px;font-family:var(--font-mono,var(--font-text));font-size:var(--t-micro);color:var(--muted);
     word-break:break-all;line-height:1.5;max-height:5.5em;overflow:hidden}
+  .qrstand{width:220px;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;min-height:1.5em}
+  .qrstand.wach{color:var(--gold-ink);font-weight:var(--w-deutlich)}
+  .qrstand.zaehlt{color:var(--ok)}
   .actions{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s4)}
   .said{font-family:var(--font-text);font-size:var(--t-small);color:var(--ok);min-height:1.5em;margin-top:var(--s2)}
   .shortbox{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s2) var(--s4);margin-top:var(--s4);
@@ -271,6 +274,7 @@
         </div>
         <div class="qrwrap">
           <div class="qr" id="qr"><span class="empty">QR</span></div>
+          <div class="qrstand" id="qrStand"></div>
           <div class="payloadbox" id="payloadBox"></div>
         </div>
       </div>
@@ -438,12 +442,31 @@
   }
 
   var current = null;
+  // Zählt dieser QR? Nur beim Link-Typ mit aktivem Toggle UND angelegtem Kurzlink.
+  function zaehltNicht(){
+    return typ === 'link' && el('kurzToggle').checked &&
+           !(current && current.text.indexOf(SHORTBASE) === 0);
+  }
+  function zeigeStand(){
+    var stand = el('qrStand');
+    if(!current || typ !== 'link' || !el('kurzToggle').checked){
+      stand.textContent = ''; stand.className = 'qrstand'; return;
+    }
+    if(zaehltNicht()){
+      stand.textContent = 'Zählt noch nicht – der QR zeigt die lange Adresse. Erst ‹Kurzlink anlegen› drücken.';
+      stand.className = 'qrstand wach';
+    } else {
+      stand.textContent = 'Kurzlink aktiv – jeder Scan wird gezählt.';
+      stand.className = 'qrstand zaehlt';
+    }
+  }
   function render(){
     current = payload();
     var qr = el('qr'), box = el('payloadBox');
     if(!current){
       qr.innerHTML = '<span class="empty">QR</span>';
       box.textContent = '';
+      zeigeStand();
       return;
     }
     try {
@@ -454,6 +477,7 @@
       box.textContent = '';
       say('Zu viel Inhalt für einen QR-Code – bitte kürzen.', true);
     }
+    zeigeStand();
   }
 
   function say(msg, bad){ var s = el('said'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; }
@@ -551,9 +575,10 @@
     var svg = el('qr').querySelector('svg');
     if(!svg || !current){ say('Erst Inhalt eingeben – dann erscheint der QR.', true); return; }
     var base = 'qr_' + (current.name || 'code');
+    var warnung = zaehltNicht() ? ' Achtung: Kurzlink noch nicht angelegt – dieser QR zählt nicht.' : '';
     if(fmt === 'svg'){
       dlBlob(new Blob([svg.outerHTML], { type: 'image/svg+xml' }), base + '.svg');
-      say('SVG geladen.');
+      say('SVG geladen.' + warnung, !!warnung);
       if(window.goeStat) goeStat('download', base + '.svg');
       return;
     }
@@ -567,7 +592,7 @@
       c.toBlob(function(b){
         if(!b){ say('PNG konnte nicht erzeugt werden.', true); return; }
         dlBlob(b, base + '_' + size + '.png');
-        say('PNG (' + size + ' px) geladen.');
+        say('PNG (' + size + ' px) geladen.' + warnung, !!warnung);
         if(window.goeStat) goeStat('download', base + '_' + size + '.png');
       }, 'image/png');
     };
