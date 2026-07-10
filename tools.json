@@ -67,6 +67,11 @@
       "id": "archiv",
       "title": "Archiv",
       "intro": "Frühere Stände – eingefroren zum Nachschlagen, nicht gepflegt."
+    },
+    {
+      "id": "labor",
+      "title": "Labor",
+      "intro": "Skizzen und Spezialtools – nur im Backstage sichtbar, zum Ausprobieren vor dem Teilen."
     }
   ],
   "tools": [
@@ -417,7 +422,7 @@
     },
     {
       "slug": "marketing-maschine",
-      "cat": "kampagne",
+      "cat": "labor",
       "status": "entwurf",
       "tag": "Strategie",
       "title": "Marketing-Maschine",
@@ -428,7 +433,7 @@
     },
     {
       "slug": "seelenkalender",
-      "cat": "anwendung",
+      "cat": "labor",
       "status": "intern",
       "tag": "Neu",
       "title": "Seelenkalender",
