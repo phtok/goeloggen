@@ -38,6 +38,16 @@ def xml(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
+def titel(s):
+    """Titelzeile ohne einzelnes Schlusswort: letztes Wortpaar unzertrennlich (trägt in
+    jedem Client); text-wrap:balance gleicht die Zeilen aus, wo Clients es können."""
+    t = xml(s.strip())
+    i = t.rfind(" ")
+    if i > 0:
+        t = t[:i] + "&#160;" + t[i + 1:]
+    return f'<div style="text-wrap:balance">{t}</div>'
+
+
 def logo(out="logo_goetheanum.png", height=20):
     """Offizielle Wortmarke (assets/logos/goetheanum-logo.svg) als PNG, Original-Blau —
     das Logo bleibt das Logo, kein Schriftersatz (Kommentar shared#wortmarke, 9.7.)."""
@@ -116,7 +126,7 @@ def render_mail(motiv, welle, lang, wm):
 <mj-section background-color="#FFFFFF" padding="0"><mj-column><mj-image src="{hero}" alt="{xml(var.get('alt',''))}" padding="0" fluid-on-mobile="true"/></mj-column></mj-section>
 <mj-section background-color="#FFFFFF" padding="24px 28px 0 28px"><mj-column>
   <mj-text font-size="14px" line-height="20px" font-weight="700" color="{AKZENT}" padding="0 0 10px 0">{xml(H['badge'][lang])}</mj-text>
-  <mj-text font-family="{HL_STACK}" font-size="30px" line-height="35px" font-weight="700" color="{INK}" padding="0 0 14px 0">{xml(c['botschaft'])}</mj-text>
+  <mj-text font-family="{HL_STACK}" font-size="30px" line-height="35px" font-weight="700" color="{INK}" padding="0 0 14px 0">{titel(c['botschaft'])}</mj-text>
   <mj-text padding="0 0 22px 0">{xml(c['text'])}</mj-text>
   {btns}
   <mj-text font-size="13px" line-height="20px" color="{MUTED}" padding="0 0 26px 0">{xml(H['kleinzeile'][motiv][lang])}</mj-text>
@@ -241,8 +251,8 @@ def main():
 /* Nur editor-eigene Gestalt; alles Gemeinsame aus base.css, nur Tokens (DS02). */
 /* Arbeitsfläche statt Lesespalte: die Galerie darf das Fenster nutzen (Lede
    behält ihr Lesemass); Karten wachsen mit dem Schirm mit. */
-main.wrap{{max-width:min(1760px,96vw)}}
-main{{--mailw:clamp(340px,24vw,480px)}}
+main.wrap{{max-width:min(1960px,96vw)}}
+main{{--mailw:clamp(340px,30vw,600px)}} /* 600 = native Mail-Breite: Vorschau in Originalgrösse */
 .lead{{padding:clamp(24px,5vw,44px) 0 var(--s4)}}
 .controls{{display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap;margin-top:var(--s4)}}
 .controls .lab{{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}}
