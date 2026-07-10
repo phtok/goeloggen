@@ -96,13 +96,28 @@ Merge-Tags/Abmeldelink in AC ersetzen `%UNSUBSCRIBELINK%`.
       DE-Popup mit `prefill-inherit` (leeres Attribut = aktiv, embed.js liest beide
       Schreibweisen), EN via JS-API (`prefillInherit:true` + explizite Werte;
       nackter <a> nur No-JS-Fallback). Kein Testeintrag nötig.
-- [ ] **Attribution GTV — Stand 10.7.:** uscreen-Anmeldungen fliessen bereits ins
-      Cockpit (source=uscreen in signups/ingest_raw), aber der uscreen-Webhook trägt
-      KEIN utm (Payload-Keys geprüft; `offer_id` ist enthalten — auch 85071/85142 im
-      Feed, Kampagnen-Exklusivität von 84317/84322 also KLÄREN). utm liegt laut
-      Uscreen-Doku am Kundendatensatz (People-CSV-Export, first touch, nur Web) —
-      Wellen-Zuordnung TV = nach dem 8.8. per CSV-Export/E-Mail-Join oder Advanced
-      Analytics. Uscreen-Prüfauftrag (Prompt) klärt Offers + AC-Tag-Latenz.
+- [x] **Attribution GTV — Audit 10.7. (Chrome-Claude, uscreen-Admin):** utm-Erfassung
+      BEWIESEN: People-CSV trägt UTM-Spalten (Source/Medium/Term/Content/Campaign),
+      199 von 11'025 Konten mit Werten, Leads inklusive — Wellen-Zählung nach dem 8.8.
+      = CSV-Filter `utm_campaign=summer26_trial` × `utm_content=w…`. Der Weg ins
+      Cockpit läuft über den Webhook «Subscription Assigned» → Supabase-Edge-Function
+      `ingest-uscreen` (4.7. angelegt), Webhook feuert in Sekunden.
+- [ ] **FRIST DURCHSETZEN (kritisch, 9.8.):** Die Checkout-Offers 84317/84322 sind
+      die REGULÄREN Standard-Abos (monatlich/jährlich), deren Free-Trial auf 90 Tage
+      gestellt wurde — «nur bis 8. August» steht NUR im Beschreibungstext, nicht im
+      System. Ohne manuelles Zurückstellen am 9.8. bekäme jeder spätere Abonnent
+      weiter 3 Gratis-Monate (Frist wäre unwahr — Vertrauens- und Kostenfrage).
+      Vorher klären, welcher Trial-Wert vor der Aktion galt. Analog WS: Paperform
+      kennt geplantes Formular-Schliessen — Schliessdatum 8.8. 23.59 setzen (sauberste
+      Durchsetzung). Offer-Zählung als Kampagnen-Ersatz taugt NICHT (Standard-Pläne
+      zählen Organik mit).
+- [ ] **GTV-Abo-Tag in AC: Name + Latenz klären.** Uscreen hat keinen nativen
+      AC-Connector; das Tag entsteht downstream (Make.com-Szenario vom 28.2. oder
+      WordPress/Uncanny Automator auf dasgoetheanum.com). Für die Conversion-Ausstiege
+      der Automationen muss die Latenz bekannt sein (Webhook selbst: Sekunden).
+- [ ] **Datenschutz: zwei webhook.site-TEST-Endpunkte** hängen seit 28.2. am
+      «Subscription Assigned»-Webhook und erhalten echte Abonnenten-Daten —
+      webhook.site ist ein öffentlicher Inspektions-Dienst. Entfernen (Ph).
 - [ ] **AC-Mapping der utm-Felder** in der Paperform-Integration («Failed to load»
       beim Prüfen) — erneut laden; für die Attribution unkritisch (läuft über
       Supabase), fürs AC-Reporting nice-to-have.
