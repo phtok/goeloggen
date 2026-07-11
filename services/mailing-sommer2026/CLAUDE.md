@@ -104,10 +104,15 @@ erledigt erst nach Freigabe + Merge) stehen in **RUECKLAUF-AGENT.md**. Auslöser
 in einer Session „Rücklauf" sagen oder `python3 ruecklauf.py` am Terminal; kein Automat.
 
 ## ActiveCampaign (via Cowork)
-Automation einmal im UI bauen: If/Else-Split auf Abo-Tags (nurtv/nurws/noabo; beides ausgeschlossen),
-Conversion-Goal, Verhaltens-Split vor w3 (Nicht-Öffner → Alt-Betreff). Generiertes HTML aus dist/ in die Schritte.
-Versand ab Engagement-Segment, gestaffelt; Nicht-Öffner >12 Mt. weglassen.
-Merge-Tags/Abmeldelink in AC ersetzen `%UNSUBSCRIBELINK%`.
+**Der fertige Aufbau-Prompt für Claude-Chrome liegt in `AC-AUTOMATION.md`** — komplett,
+paste-fertig (drei Automatisierungen je Segment, Sprach-Split innen, Wellen-Drip mit
+Conversion-Checks und Öffner-Split, Bulk-Tag «S26-Start» als Eintritt, Checkliste vor
+dem Start). Die **Mail-Tabelle** darin (Betreff/Alt/utm_content/URL) wird aus `heroes.json`
+erzeugt und darf nicht von Hand gepflegt werden: nach jeder Copy-Änderung
+`python3 build_editor.py --publish` **und** `python3 ac_prompt.py --write` — dann ist der
+Prompt wieder aktuell. Kurz: If/Else-Split auf Abo-Tags (nurtv/nurws/noabo; beides
+ausgeschlossen), Conversion-Goal, Verhaltens-Split vor w3 (Nicht-Öffner → Alt-Betreff),
+Versand ab Engagement-Segment, Nicht-Öffner >12 Mt. weglassen, `%UNSUBSCRIBELINK%` ersetzt AC.
 
 ## Offen
 - [x] **Übersicht gefixt (Lovable, 10.7., publiziert):** Query-Weitergabe an alle
