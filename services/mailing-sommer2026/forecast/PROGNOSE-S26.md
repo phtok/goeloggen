@@ -142,6 +142,41 @@ Angebot schlechter als angenommen (dann ist die Übersichtsseite der Verdächtig
 > ~208 (164–260). Exakt zählbar wird das erst durch das S26-Conversion-Goal —
 > weshalb dessen sauberes Setzen je Automation der wichtigste Messhebel ist.
 
+### Reale Kalibrierung: die GTV-Abo-Kampagne Feb/März 2026 («Feuerpferd»)
+
+Der erste **echte** Konversions-Ankerpunkt — was den 2025-Sommer-Daten fehlte
+(dort kein Goal). Eine abgeschlossene GTV-Abo-Kampagne (Rabatt 30 %, drei Mails,
+26.2.–4.3.2026) brachte **76 kampagnen-attribuierte Abschlüsse** (Coupon-
+Einlösungen, «nachweislich durch 3 Mails ausgelöst») aus 103 ausgegebenen Codes
+(74 % Einlösung), Ø **~€124 brutto** je Abschluss, ~€9.500 Coupon-Brutto; das
+Publikum ist international (10 Sprachen erfasst). *(Nur Aggregate; die Quelle
+enthält Personendaten, die hier bewusst nicht verarbeitet werden.)*
+
+Was das für S26 heisst:
+
+- **Grössenordnung bestätigt.** Ein einzelnes GTV-Drei-Mail-Angebot konvertiert in
+  **Dutzenden** (76). Meine S26-Prognose (~208) über eine **3×** grössere,
+  dreisegmentige Automation ist dieselbe Grössenordnung — «einige Hundert, nicht
+  Tausende» hält, und die **Abwärtskorrektur des NoAbo-p war richtig**, nicht zu
+  vorsichtig.
+- **Rate im Kontext.** S26 zentral = 0,45 %/Empfänger. Die Feb-Kampagne lag
+  (je nach unbekannter Versandmenge 20–50k) bei **0,15–0,38 %/Empfänger**. Dass
+  S26 **darüber** liegt, ist plausibel — «3 Monate **gratis**» senkt die
+  Einstiegshürde gegenüber einem 30-%-**Bezahl**-Rabatt —, zeigt aber zugleich,
+  dass 208 am **oberen, verteidigbaren Rand** sitzt.
+- **Zwei Korrekturen, gegenläufig:** Free-Trial hebt die Start-Rate (Hürde tiefer),
+  Sommer (Jul/Aug) senkt sie gegenüber Februar. Netto bleibt die Grössenordnung.
+- **Der eine fehlende Wert:** die **Versandmenge der Feb-Kampagne**. Damit wird aus
+  «76» eine echte Rate/Empfänger und ich kann das TV-Angebots-p direkt kalibrieren
+  statt annehmen. Bitte nachreichen, falls verfügbar.
+
+**Werthebel (aus den realen €-Zahlen).** Ein Feb-Abschluss war ~€124 brutto wert.
+Ein S26-Trial-Start ist zunächst **€0** — sein Wert = *Trial→Paid-Rate* × Jahres-
+Abo. Damit ist die **Onboarding-Strecke nach dem 8.8.** (Willkommen → Mid-Trial →
+Erinnerung vor Ablauf) nicht Kür, sondern der **eigentliche Umsatzhebel** — genau
+wie im Drehbuch (§6) vermerkt. Ohne sie sind die ~208 Starts nur potenzieller,
+kein realisierter Umsatz.
+
 ---
 
 ## 4 · Wo performt ihr noch nicht optimal — die virtuellen A/B-Tests
