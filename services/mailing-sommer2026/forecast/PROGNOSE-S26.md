@@ -255,6 +255,27 @@ Mal. Da 2025 schon **ohne** diese Schutzmechanismen < 0,5 % blieb, ist ein Spike
 unwahrscheinlich. → **Keine zusätzliche Dringlichkeit hineintexten** (deckt sich
 mit der Würde-Verbotsliste und Deiner Vorgabe, w3 nicht zu verschärfen).
 
+### Performance steigern — die Hebel nach Wirkung
+
+Nicht alles ist ein A/B-Test. Wo die Evidenz eindeutig ist, wird **gehandelt**,
+nicht getestet; wo sie unsicher **und** messbar ist, wird **getestet**:
+
+| # | Hebel | wirkt auf | Typ | Vorgehen |
+|---|---|---|---|---|
+| 1 | **NoAbo-Übersichts-Hop verkürzen** (1-Klick statt Wahl-Zwischenseite) | Konversion | Struktur | **Einfach tun** — grösster Konversions-Hebel: NoAbo = 74 %, jede Funnel-Stufe verliert 20–40 % |
+| 2 | **Frist-Dramaturgie aufs WS-Angebot** (w3, NurTV + NoAbo) | Klick | Copy | Übertragen; in NoAbo A/B-bar |
+| 3 | **Onboarding-Strecke nach dem 8.8.** (Willkommen → Mid-Trial → Erinnerung) | Umsatz | Struktur | **Einfach tun** — grösster €-Hebel: Trial-Start = €0 bis Trial→Paid |
+| 4 | **DE-Betreff des WS-Angebots** (Brücke) | Öffnung | Copy | A/B in NoAbo DE (gut gepowert, MDE 1,85 pp) |
+| 5 | **w3-Alt-Betreff für Nicht-Öffner** | Öffnung | Copy | A/B in NoAbo |
+
+**Der rote Faden:** Öffnen ist gelöst (~41 %, zweimal real bestätigt) — es klemmt
+am **Klick** (Hebel 2/4/5) und an der **Landing-Konversion** (Hebel 1). Der grösste
+*Umsatz*-Hebel liegt sogar erst **nach** der Kampagne (Hebel 3).
+
+**Nicht tun (auch ein Ergebnis):** Konversions-A/B (unterpowert → über das Goal
+messen), w3 entschärfen (real 0,5–0,6 % Abmeldung = safe), die kleinen warmen
+Segmente feinschleifen (Volumenanteil zu klein, um das Ergebnis zu bewegen).
+
 ---
 
 ## 5 · Sensitivität — es hängt an den Segmentgrössen
