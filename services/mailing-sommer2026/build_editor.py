@@ -16,12 +16,28 @@ from datetime import datetime
 from pathlib import Path
 from PIL import Image, ImageOps
 
-ROOT = Path(__file__).parent
+# Quelle der Instanz: eigener Ordner (Standard) oder per --quelle eine andere
+# Kampagnen-Instanz (heroes.json + config.json + links.py) auf derselben Fabrik —
+# so bleibt build_editor.py die EINE Fabrik für alle dreistufigen Kampagnen.
+ROOT = (Path(sys.argv[sys.argv.index("--quelle") + 1]).resolve()
+        if "--quelle" in sys.argv else Path(__file__).parent)
 G = ROOT / "assets/generated"
-APP = ROOT.parent.parent / "apps/mail-editor"
 CFG = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
 H = json.loads((ROOT / "heroes.json").read_text(encoding="utf-8"))
-import links
+# Ausgabeort im Hub: config `editor_app` (relativ zur Repo-Wurzel); Standard bleibt
+# der Sommer-Editor — bestehende Builds ändern sich nicht.
+APP = Path(__file__).resolve().parent.parent.parent / CFG.get("editor_app", "apps/mail-editor")
+# links.py der Quelle laden — jede Instanz bringt ihre eigene UTM-Regel mit.
+import importlib.util as _ilu
+_spec = _ilu.spec_from_file_location("links", ROOT / "links.py")
+links = _ilu.module_from_spec(_spec); _spec.loader.exec_module(links)
+
+# Editor-Beschriftung je Instanz (Kopf, Titel, Fusszeile, Bereichs-Nav).
+KICKER = CFG.get("editor_kicker", "Sommer-Aktion 2026")
+ONPAGE = CFG.get("editor_onpage",
+                 "Cockpit:../sommer-zaehler/|Aktivitäten:../sommer-zaehler/aktivitaeten.html"
+                 "|Kosten:../sommer-zaehler/kosten.html|Multiplikatoren:../sommer-zaehler/multiplikatoren.html"
+                 "|Links:../utm-generator/|Mail:../mail-editor/|Ablauf:../kampagnen-drehbuch/")
 
 S = 2; WMX = 600
 BASE = (CFG.get("asset_base_url") or "").rstrip("/")
@@ -241,7 +257,7 @@ def main():
     sb_key = CFG["supabase"].get("publishable_key", "")
     page = f"""<!doctype html>
 <!-- =============================================================================
-     Mail-Editor · Sommer-Aktion 2026 (Gegenlesen)
+     Mail-Editor · {KICKER} (Gegenlesen)
      Generiert von services/mailing-sommer2026/build_editor.py — NICHT von Hand
      editieren; Änderungen an heroes.json/config.json, dann neu bauen (--publish).
      Chrome aus tokens.css/base.css (DS01/DS02, B01-B04, Labels normal statt
@@ -249,7 +265,7 @@ def main():
      Kampagnen-DNA der Landingpages — Artefakt, kein Theme (ds-ok je Zeile).
      ============================================================================= -->
 <html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mail-Editor · Sommer-Aktion 2026 · Goetheanum</title>
+<title>Mail-Editor · {KICKER} · Goetheanum</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg">
 <link rel="stylesheet" href="../../design-system/tokens.css">
@@ -333,11 +349,11 @@ body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
 </style></head><body>
 
 <script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"
-        data-onpage="Cockpit:../sommer-zaehler/|Aktivitäten:../sommer-zaehler/aktivitaeten.html|Kosten:../sommer-zaehler/kosten.html|Multiplikatoren:../sommer-zaehler/multiplikatoren.html|Links:../utm-generator/|Mail:../mail-editor/|Ablauf:../kampagnen-drehbuch/"></script>
+        data-onpage="{ONPAGE}"></script>
 
 <main class="wrap">
 <section class="lead">
-  <span class="kicker">Sommer-Aktion 2026</span>
+  <span class="kicker">{KICKER}</span>
   <h1>Mail-Editor</h1>
   <p class="lede" style="max-width:var(--measure)">Alle Wellen-Mails der drei Segmente zum Gegenlesen — je Feld kommentierbar, Kommentare landen im Werkzeug-Backend. Korrigiert wird in <code>heroes.json</code>, dann wird neu gebaut.</p>
   <p class="subline">Stand dieses Builds: {stand} · <code>{rev}</code></p>
@@ -365,7 +381,7 @@ body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
 </main>
 
 <footer class="ds-footer"><div class="wrap"><div class="frow">
-  <span><strong>Mail-Editor</strong> · Sommer-Aktion 2026 · Kommentare ins Werkzeug-Backend, nur Kürzel, keine Personendaten</span>
+  <span><strong>Mail-Editor</strong> · {KICKER} · Kommentare ins Werkzeug-Backend, nur Kürzel, keine Personendaten</span>
   <span><a href="../../design-system/">Design-System</a></span>
 </div></div></footer>
 

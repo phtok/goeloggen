@@ -1,0 +1,100 @@
+<!doctype html>
+<!-- =============================================================================
+     Grenzgänger · Landingpage Griff g001 — Waldorf Parents Letter (EN)
+     -----------------------------------------------------------------------------
+     Englische Schwester von g001.html — gleicher Griff, sprache=en.
+     Register: docs/grenzgaenger/griffe.json · Regeln: docs/grenzgaenger/charta.md
+     ============================================================================= -->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Waldorf Parents Letter · Goetheanum</title>
+<meta name="description" content="Once a month: the three strongest pieces on education, childhood and media literacy from the Goetheanum weekly and goetheanum.tv – curated, free, by email." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+
+<style>
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);line-height:1.05;letter-spacing:-.01em;max-width:18ch}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+  .sprachen{margin-top:var(--s4);font-size:var(--t-small)}
+</style>
+</head>
+<body>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Goetheanum · for parents</span>
+    <h1>The Waldorf Parents Letter</h1>
+    <p class="lede">Once a month: the three strongest pieces on education,
+    childhood and media literacy — selected from the weekly
+    <q>Das Goetheanum</q> and from goetheanum.tv. Free, curated,
+    unsubscribe with one click.</p>
+    <p class="sprachen"><a href="g001.html">Diese Seite auf Deutsch</a></p>
+  </section>
+
+  <section>
+    <div class="card soft" style="display:grid;gap:var(--s4);max-width:520px">
+      <form id="fang-form" style="display:grid;gap:var(--s4)">
+        <label class="field">
+          <span class="lab">Your email address</span>
+          <input type="email" id="fang-email" required autocomplete="email" placeholder="name@example.com" />
+        </label>
+        <input type="text" name="website" id="fang-website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
+        <div>
+          <button class="btn primary" type="submit" id="fang-senden">Get the selection</button>
+        </div>
+        <p class="note">You will first receive a confirmation email
+        (double opt-in). Your address is used for this mailing only and
+        never passed on; unsubscribe any time with one click.</p>
+      </form>
+      <p class="note" id="fang-echo" hidden></p>
+    </div>
+
+    <p class="lese" style="margin-top:var(--s7);line-height:1.6">
+      Since 1921 the weekly has written about what carries childhood —
+      and goetheanum.tv shows the conversations around it. The Parents
+      Letter brings you the best of both: no more than three pieces,
+      fresh every month.
+    </p>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Dornach</span>
+    <span><a href="https://dasgoetheanum.com/en">dasgoetheanum.com</a></span>
+  </div>
+</footer>
+
+<script>
+const FANG_URL='https://dagcsnfrlbpxcmdimnrw.supabase.co/functions/v1/lead-fang?aktion=anmelden';
+const $=id=>document.getElementById(id);
+function echoFang(text){const e=$('fang-echo');e.textContent=text;e.hidden=false;}
+$('fang-form').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  const knopf=$('fang-senden'); knopf.disabled=true;
+  const utm={}; new URLSearchParams(location.search).forEach((v,k)=>{if(k.startsWith('utm_'))utm[k]=v;});
+  try{
+    await fetch(FANG_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:$('fang-email').value,website:$('fang-website').value,
+        griff:'g001',sprache:'en',milieu:'waldorf-eltern',produkt:'beide',utm})});
+    echoFang('Almost there — please open the confirmation email in your inbox.');
+    $('fang-form').reset();
+  }catch(e){
+    echoFang('That did not work just now — please try again later.');
+  }finally{knopf.disabled=false;}
+});
+/* Return from confirm/unsubscribe (redirect from the function) */
+if(location.hash==='#bestaetigt') echoFang('Signed up — the next selection is on its way.');
+if(location.hash==='#beendet')   echoFang('Unsubscribed — quietly, no questions asked.');
+if(location.hash==='#fehler')    echoFang('This link was not (or no longer) valid.');
+</script>
+
+</body>
+</html>
