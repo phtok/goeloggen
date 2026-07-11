@@ -100,15 +100,30 @@
     --sign-soft:#5c7fa6;    /* # ds-ok — gedämpftes Blaugrau, Kicker und Fussnote */
     --sign-box:#eef2f7;     /* # ds-ok — zarte Blau-Tönung der Wechsel-Box */
     --sign-line:#cdd8e6;    /* # ds-ok — feine Trennlinie */
+    --qr-ink:#111111;       /* # ds-ok — QR-Module dunkel (muss lesbar bleiben) */
     width:var(--sheet-w,297mm);height:var(--sheet-h,420mm);background:var(--sign-bg);color:var(--sign-ink);
     box-shadow:0 6px 24px rgba(20,24,28,.14);position:relative;overflow:hidden;font-family:var(--font-display);
     -webkit-print-color-adjust:exact;print-color-adjust:exact}
-  /* Piktogramm-Standard: ein grosses Zeichen, zwei ratifizierte Fassungen.
-     Schwarz auf Weiss und Weiss auf Blau (B01: auf Farbe steht Weiss). */
-  .sheet[data-variant="sw"]  {--sign-bg:#ffffff; --piktogramm:#111111}  /* # ds-ok — schwarz auf weiss (Druck) */
-  .sheet[data-variant="blau"]{--sign-bg:#0061a9; --piktogramm:#ffffff}  /* # ds-ok — weiss auf Markenblau (Druck) */
+  /* Fassungen als ratifizierte Druck-Artefakte. Weiss-auf-Blau ist dem Leitsystem
+     vorbehalten (Piktogramm; Akutschild nur für akute Leitsituationen). */
+  .sheet[data-variant="sw"]  {--sign-bg:#ffffff; --piktogramm:#111111}  /* # ds-ok — schwarz/blau auf weiss (Druck) */
+  .sheet[data-variant="blau"]{--sign-bg:#0061a9; --piktogramm:#ffffff;  /* # ds-ok — weiss auf Markenblau (Druck) */
+    --sign-ink:#ffffff; --sign-soft:#dbe6f2}                            /* # ds-ok — Text/Beiwerk weiss auf Blau */
   .s-pikto{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
   .s-pikto span{font-family:"G Icons";line-height:1;color:var(--piktogramm)}
+
+  /* Ansage/Akutschild: eine zentrale zweisprachige Botschaft, mittig (Canva-Vorlage).
+     Wächst im Flex-Fluss, damit eine optionale Fusszeile darunter bleibt. */
+  .s-ansage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.04em}
+  .s-ansage .de{font-weight:var(--w-deutlich);font-size:1.35em;line-height:1.06}
+  .s-ansage .en{font-weight:var(--w-text);font-size:1.35em;line-height:1.06}
+
+  /* Wechsel-Info: grosse Kopfzeile oben, kleine Fussnote unten (Canva-Vorlage). */
+  .s-whead .de{font-weight:var(--w-deutlich);font-size:1.5em;line-height:1.06}
+  .s-whead .en{font-weight:var(--w-text);font-size:1.5em;line-height:1.06}
+  .s-spacer{flex:1 1 auto}
+  .s-wfoot .de{font-weight:var(--w-deutlich);font-size:.6em;line-height:1.12}
+  .s-wfoot .en{font-weight:var(--w-text);font-size:.6em;line-height:1.12}
   .pad{position:absolute;inset:0;padding:8% 9%;display:flex;flex-direction:column;gap:.55em;font-size:var(--u,13mm)}
 
   .s-kicker{font-family:var(--font-text);font-weight:600;color:var(--sign-soft);font-size:.5em;line-height:1.2;letter-spacing:.01em}
@@ -135,8 +150,14 @@
   .s-box .note .de{font-weight:var(--w-deutlich)}
   .s-box .note .en{font-weight:var(--w-text)}
 
-  .s-foot{margin-top:auto;display:flex;align-items:center;gap:.4em;font-family:var(--font-text);color:var(--sign-ink);font-weight:600;font-size:.5em;line-height:1;padding-top:.5em}
-  .s-foot img{width:1.5em;height:1.5em;flex:none}
+  /* Fusszeile: nur der Link (kein Logo – Schrift und Form tragen die Autorität)
+     plus optionaler QR-Code in weisser Ruhezone, damit er auf jedem Grund liest. */
+  .s-foot{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:.6em;
+    font-family:var(--font-text);color:var(--sign-ink);font-weight:600;font-size:.5em;line-height:1.2;padding-top:.6em}
+  .s-foot .lk{word-break:break-word;align-self:center}
+  .s-foot .qr{background:#ffffff;border-radius:.12em;padding:.24em;flex:none}  /* # ds-ok — weisse QR-Ruhezone */
+  .s-foot .qr svg{display:block;width:3.4em;height:3.4em;shape-rendering:crispEdges}
+  .s-foot .qr svg path{fill:var(--qr-ink)}
 
   .prevfoot{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s4)}
   .dims{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
@@ -186,8 +207,8 @@
   <section class="hero">
     <span class="kicker">Goetheanum · Orientierung</span>
     <h1>Schilder</h1>
-    <p class="lede">Orientierungs- und Raumschilder im Hausbild setzen: zweisprachige Zeilen und Haus-Icons
-      einsetzen, den Titel und die wechselnde Info bestimmen – von A5 bis A1, hoch oder quer, druckfertig.</p>
+    <p class="lede">Schilder im Hausbild setzen – Piktogramm, Ansage, Wechsel-Info oder das ausführliche
+      Raumschild. Zweisprachig (Deutsch über Englisch), mit Haus-Icons, von A5 bis A1, hoch oder quer, druckfertig.</p>
   </section>
 
   <section>
@@ -198,19 +219,21 @@
 
         <div class="grp" id="grp-art">
           <h3>Art</h3>
-          <p class="note">Einfacher Standard: ein grosses Piktogramm auf dem Blatt – oder das ausführliche Raumschild mit Titel, Regelzeilen und Wechsel-Box.</p>
+          <p class="note">Einfache Standards für den Alltag – ein Zeichen, eine Ansage, eine wechselnde Info – oder das ausführliche Raumschild mit Titel, Regelzeilen und Wechsel-Box.</p>
           <div class="optline">
             <span class="lab">Schild-Art</span>
             <div class="seg" role="group" aria-label="Schild-Art" id="sg-type">
               <button type="button" data-v="pikto" aria-pressed="false">Piktogramm</button>
+              <button type="button" data-v="ansage" aria-pressed="false">Ansage</button>
+              <button type="button" data-v="wechsel" aria-pressed="false">Wechsel-Info</button>
               <button type="button" data-v="raum" aria-pressed="true">Raumschild</button>
             </div>
           </div>
         </div>
 
-        <div class="grp" id="grp-pikto" hidden>
-          <h3>Piktogramm</h3>
-          <p class="note">Ein Zeichen der Hausschrift, gross und mittig. Zwei Fassungen: schwarz auf weiss oder weiss auf blauem Grund.</p>
+        <div class="grp" id="grp-fassung" hidden>
+          <h3>Fassung</h3>
+          <p class="note" id="fassung-note">Weiss auf blauem Grund ist dem Leitsystem vorbehalten – beim Akutschild nur für akute Leitsituationen.</p>
           <div class="optline">
             <span class="lab">Fassung</span>
             <div class="seg" role="group" aria-label="Fassung" id="sg-variant">
@@ -218,13 +241,27 @@
               <button type="button" data-v="blau" aria-pressed="false">Weiss auf Blau</button>
             </div>
           </div>
-          <details class="gallery" id="gallery" open style="margin-top:var(--s4)">
+        </div>
+
+        <div class="grp" id="grp-pikto" hidden>
+          <h3>Piktogramm</h3>
+          <p class="note">Ein Zeichen der Hausschrift, gross und mittig.</p>
+          <details class="gallery" id="gallery" open>
             <summary>Piktogramm wählen<span id="gallery-cur" class="sr-only"></span></summary>
             <div class="gbody">
               <input type="search" class="gsearch" id="gallerySearch" placeholder="Suchen – z. B. WC, Pfeil, Kamera" aria-label="Piktogramm suchen" />
               <div id="galleryBody"></div>
             </div>
           </details>
+        </div>
+
+        <div class="grp" id="grp-ansage" hidden>
+          <h3>Ansage</h3>
+          <p class="note">Eine kurze, zentrale Botschaft – zweisprachig, mittig. Für den Aushang mit einer klaren Aussage.</p>
+          <div class="grid2">
+            <label class="f"><span class="lab">Botschaft · Deutsch</span><input type="text" id="ansage-de" placeholder="Das ist die Botschaft in Kürze" /></label>
+            <label class="f"><span class="lab">Botschaft · English</span><input type="text" id="ansage-en" placeholder="This is the message in brief" /></label>
+          </div>
         </div>
 
         <div class="grp" id="grp-kopf">
@@ -261,9 +298,9 @@
         </div>
 
         <div class="grp" id="grp-box">
-          <h3>Wechsel-Box</h3>
+          <h3 id="grp-box-h">Wechsel-Box</h3>
           <p class="note">Das hinterlegte Feld für die wechselnde Info (z. B. Besichtigungszeiten) mit optionaler Fussnote.</p>
-          <div class="optline">
+          <div class="optline" id="box-toggle-line">
             <span class="lab">Wechsel-Box</span>
             <div class="seg" role="group" aria-label="Wechsel-Box" id="tg-box">
               <button type="button" data-v="0" aria-pressed="false">Aus</button>
@@ -272,8 +309,8 @@
           </div>
           <div class="stack" id="box-fields" style="margin-top:var(--s3)">
             <div class="grid2">
-              <label class="f"><span class="lab">Info · Deutsch</span><input type="text" id="box-de" placeholder="Besichtigung 13.30–14.30" /></label>
-              <label class="f"><span class="lab">Info · English</span><input type="text" id="box-en" placeholder="Viewing 1.30–2.30 pm" /></label>
+              <label class="f"><span class="lab" id="box-de-lab">Info · Deutsch</span><input type="text" id="box-de" placeholder="Besichtigung 13.30–14.30" /></label>
+              <label class="f"><span class="lab" id="box-en-lab">Info · English</span><input type="text" id="box-en" placeholder="Viewing 1.30–2.30 pm" /></label>
             </div>
             <div class="grid2">
               <label class="f"><span class="lab">Fussnote · Deutsch</span><input type="text" id="note-de" placeholder="Mitunter geschlossen für Proben und Aufführungen" /></label>
@@ -309,11 +346,27 @@
               <button type="button" data-v="l" aria-pressed="false">Gross</button>
             </div>
           </div>
+        </div>
+
+        <div class="grp" id="grp-fuss">
+          <h3>Fusszeile</h3>
+          <p class="note">Ein Link am Fuss des Schildes – am besten ein Kurzlink aus dem QR-Generator, dann zählen die Scans anonym mit. Kein Logo: Schrift und klare Form tragen die Autorität.</p>
           <div class="optline">
             <span class="lab">Fusszeile</span>
             <div class="seg" role="group" aria-label="Fusszeile" id="tg-foot">
               <button type="button" data-v="0" aria-pressed="false">Aus</button>
               <button type="button" data-v="1" aria-pressed="true">Ein</button>
+            </div>
+          </div>
+          <div class="stack" id="fuss-fields" style="margin-top:var(--s3)">
+            <label class="f"><span class="lab">Link (Fuss)</span><input type="text" id="link" placeholder="tools.goetheanum.ch/s/…" /></label>
+            <p class="note" style="margin:0"><a href="../qr-generator/" target="_blank" rel="noopener">Kurzlink im QR-Generator anlegen</a> – dort entsteht der zählbare Kurzlink; hier einsetzen, dann zeigt der QR darauf.</p>
+            <div class="optline">
+              <span class="lab">QR-Code</span>
+              <div class="seg" role="group" aria-label="QR-Code" id="tg-qr">
+                <button type="button" data-v="0" aria-pressed="true">Aus</button>
+                <button type="button" data-v="1" aria-pressed="false">Ein</button>
+              </div>
             </div>
           </div>
         </div>
@@ -342,6 +395,48 @@
     </div>
   </section>
 
+  <!-- ====================== Kleine Ethik der Beschilderung ==================== -->
+  <section id="ethik">
+    <div class="shead">
+      <h2>Kleine Ethik der Beschilderung</h2>
+      <p>Was ein gutes Schild ausmacht – und was das Arbeiten damit sinnstiftend macht.</p>
+    </div>
+    <div class="prose lese">
+      <p><strong>Ein Schild ist ein Dienst am Gast, nicht eine Botschaft an sich.</strong> Es steht dort,
+        wo jemand eine Frage hat, und beantwortet sie – ruhig, klar, in einem Atemzug lesbar. Wer davorsteht,
+        soll nicht ein Plakat bewundern, sondern schneller weitergehen können.</p>
+
+      <p><strong>Wenige Mittel, präzise gesetzt.</strong> Ein Schild trägt eine Sache. Eine Ansage, ein Ziel,
+        eine Zeit, ein Zeichen. Was man weglassen kann, lässt man weg (G03) – jede entbehrliche Zeile kostet
+        Aufmerksamkeit, die dem Wesentlichen fehlt.</p>
+
+      <p><strong>Keine Logos.</strong> Auf ein Schild gehört kein Signet. Die Hausschrift und die Klarheit der
+        Form machen es zur erkennbaren Autorität – das Haus spricht durch <em>wie</em> es gesetzt ist, nicht
+        durch eine Marke in der Ecke. Ein Logo würde nur behaupten, was die Form ohnehin zeigt.</p>
+
+      <p><strong>Zweisprachig, gleichwertig.</strong> Deutsch über Englisch, gleicher Grad, nur im Gewicht
+        unterschieden (Deutlich über Klar). Der Gast aus der Ferne wird gleich ernst genommen wie der von
+        nebenan – Betont wird mit dem Schnitt, nie mit Versalien, Sperren oder Unterstreichen (G05).</p>
+
+      <p><strong>Weiss auf Blau ist das Leitsystem.</strong> Der blaue Grund führt – er gehört der Wegweisung
+        und den Piktogrammen. Informationsschilder stehen dunkel auf Weiss. Nur eine akute Leitsituation darf
+        den blauen Grund borgen; wird er beliebig, verliert er seine Kraft (B01: auf Farbe steht Weiss).</p>
+
+      <p><strong>Lesbar aus Distanz.</strong> Ein Schild wird im Vorbeigehen gelesen, oft schräg, oft schlecht
+        beleuchtet. Darum gross genug, kontrastreich, in Originalgrösse gedruckt – lieber ein Format grösser als
+        eine Zeile enger. Und montiert auf Augenhöhe, wo die Frage entsteht.</p>
+
+      <p><strong>Der QR-Code zählt mit – anonym.</strong> Wo ein Schild auf mehr verweist, führt ein Kurzlink
+        aus dem <a href="../qr-generator/">QR-Generator</a> dorthin. So wird nachvollziehbar, ob das Schild
+        genutzt wird – gemessen werden nur Zeitpunkt und Code, keine Personen. Nur der Gebrauch legitimiert das
+        Schild; was niemand liest, kommt weg.</p>
+
+      <p><strong>Ein Schild ist vergänglich.</strong> Es hängt für eine Situation, nicht für die Ewigkeit. Nimm
+        es ab, wenn die Situation vorbei ist. Ein veraltetes Schild schadet mehr als gar keines – es lehrt den
+        Gast, den Schildern zu misstrauen.</p>
+    </div>
+  </section>
+
 </main>
 
 <dialog class="picker" id="picker" aria-label="Zeichen wählen">
@@ -360,12 +455,14 @@
   </div>
 </footer>
 
+<!-- QR-Bibliothek: dieselbe wie im QR-Generator (eine Quelle) – rendert den Kurzlink
+     als QR. Zählbar bleibt es über den Kurzlink selbst (tools.goetheanum.ch/s/…). -->
+<script src="../qr-generator/vendor/qrcode.js"></script>
 <script>
 (function(){
   "use strict";
 
   var ICONS_URL = "../../assets/fonts/goetheanum/Icons-Einzeldateien/icons.json";
-  var MARK_URL  = "../../assets/logos/goetheanum-mark-blue.svg";
 
   var FALLBACK = [
     {slug:"pfeil-links",  label:"Pfeil links",  codepoint:"U+E267", group:"pfeil-kompass"},
@@ -397,8 +494,10 @@
 
   function defaults(){
     return {
-      type:"raum",   // 'raum' = Raumschild · 'pikto' = ein grosses Piktogramm
-      pikto:{char:cpChar("U+0061"),label:"Fahrstuhl"}, piktoVariant:"sw",
+      type:"raum",   // 'pikto' · 'ansage' · 'wechsel' · 'raum'
+      pikto:{char:cpChar("U+0061"),label:"Fahrstuhl"}, variant:"sw",
+      ansage:{de:"Das ist die Botschaft in Kürze", en:"This is the message in brief"},
+      link:"goetheanum.ch/campus", qrOn:false,
       kickerOn:false, kicker:"Juli 2026",
       title:{de:"Grosser Saal", en:"Main Auditorium"},
       rules:[
@@ -482,9 +581,13 @@
 
     pad.innerHTML = "";
 
-    // --- Piktogramm-Standard: ein grosses Zeichen, mittig, zwei Fassungen ----
+    // Fassung: Weiss-auf-Blau nur beim Piktogramm (Leitsystem) und Akutschild
+    // (akute Leitsituation). Andere Arten bleiben Blau/Weiss.
+    if(state.type==="pikto" || state.type==="ansage"){ sheet.setAttribute("data-variant", state.variant); }
+    else { sheet.removeAttribute("data-variant"); }
+
+    // --- Piktogramm-Standard: ein grosses Zeichen, mittig -------------------
     if(state.type==="pikto"){
-      sheet.setAttribute("data-variant", state.piktoVariant);
       var wrap=document.createElement("div"); wrap.className="s-pikto";
       var pg=document.createElement("span"); pg.setAttribute("aria-hidden","true");
       pg.textContent = state.pikto ? state.pikto.char : "";
@@ -492,8 +595,22 @@
       wrap.appendChild(pg); pad.appendChild(wrap);
       fit(); return;
     }
-    sheet.removeAttribute("data-variant");
 
+    // --- Ansage/Akutschild: eine zentrale Botschaft ------------------------
+    if(state.type==="ansage"){
+      pad.appendChild(pair(state.ansage.de, state.ansage.en, "s-ansage"));
+      addFooter(); fit(); return;
+    }
+
+    // --- Wechsel-Info: Kopfzeile oben, Fussnote unten ----------------------
+    if(state.type==="wechsel"){
+      if(esc(state.box.de)!=="" || esc(state.box.en)!==""){ pad.appendChild(pair(state.box.de, state.box.en, "s-whead")); }
+      var sp=document.createElement("div"); sp.className="s-spacer"; pad.appendChild(sp);
+      if(esc(state.note.de)!=="" || esc(state.note.en)!==""){ pad.appendChild(pair(state.note.de, state.note.en, "s-wfoot")); }
+      addFooter(); fit(); return;
+    }
+
+    // --- Raumschild (Komposit) ---------------------------------------------
     if(state.kickerOn && esc(state.kicker)!==""){
       var k=document.createElement("div"); k.className="s-kicker"; k.textContent=state.kicker; pad.appendChild(k);
     }
@@ -519,25 +636,59 @@
       if(esc(state.note.de)!=="" || esc(state.note.en)!==""){ b.appendChild(pair(state.note.de, state.note.en, "note")); }
       pad.appendChild(b);
     }
-    if(state.footOn){
-      var f=document.createElement("div"); f.className="s-foot";
-      var img=document.createElement("img"); img.src=MARK_URL; img.alt=""; img.setAttribute("aria-hidden","true");
-      var sp=document.createElement("span"); sp.textContent="www.goetheanum.ch/campus";
-      f.appendChild(sp); f.appendChild(img); pad.appendChild(f);
-    }
+    addFooter();
     fit();
+  }
+
+  // Fusszeile: nur der Link plus optionaler QR-Code – kein Logo.
+  function addFooter(){
+    if(!state.footOn) return;
+    if(esc(state.link)==="" && !state.qrOn) return;
+    var f=document.createElement("div"); f.className="s-foot";
+    var sp=document.createElement("span"); sp.className="lk"; sp.textContent=state.link||""; f.appendChild(sp);
+    if(state.qrOn && esc(state.link)!==""){
+      var svg=makeQr(state.link);
+      if(svg){ var qb=document.createElement("div"); qb.className="qr"; qb.appendChild(svg); f.appendChild(qb); }
+    }
+    pad.appendChild(f);
+  }
+  // QR aus dem Kurzlink erzeugen (dieselbe Bibliothek wie der QR-Generator).
+  function makeQr(text){
+    if(typeof qrcode!=="function") return null;
+    try{
+      var qr=qrcode(0,"M"); qr.addData(String(text)); qr.make();
+      var n=qr.getModuleCount(), SVGNS="http://www.w3.org/2000/svg";
+      var svg=document.createElementNS(SVGNS,"svg"); svg.setAttribute("viewBox","0 0 "+n+" "+n);
+      var d="";
+      for(var r=0;r<n;r++){ for(var c=0;c<n;c++){ if(qr.isDark(r,c)){ d+="M"+c+" "+r+"h1v1h-1z"; } } }
+      var path=document.createElementNS(SVGNS,"path"); path.setAttribute("d",d);
+      svg.appendChild(path); return svg;
+    }catch(e){ return null; }
   }
   function render(){ applyType(); renderRules(); syncInputs(); renderSheet(); }
 
-  // Sichtbarkeit der Bedien-Gruppen je nach Schild-Art.
+  // Sichtbarkeit und Beschriftung der Bedien-Gruppen je nach Schild-Art.
   function applyType(){
-    var pikto = state.type==="pikto";
-    $("grp-pikto").hidden  = !pikto;
-    $("grp-kopf").hidden   =  pikto;
-    $("grp-regeln").hidden =  pikto;
-    $("grp-box").hidden    =  pikto;
-    // Fusszeile/Kicker sind beim reinen Piktogramm nicht sinnvoll – Format bleibt.
-    var foot=$("tg-foot").closest(".optline"); if(foot) foot.style.display = pikto ? "none" : "";
+    var t=state.type, pikto=t==="pikto", ansage=t==="ansage", wechsel=t==="wechsel", raum=t==="raum";
+    $("grp-pikto").hidden   = !pikto;
+    $("grp-ansage").hidden  = !ansage;
+    $("grp-fassung").hidden = !(pikto || ansage);     // Fassung nur wo Blau erlaubt
+    $("grp-kopf").hidden    = !raum;
+    $("grp-regeln").hidden  = !raum;
+    $("grp-box").hidden     = !(raum || wechsel);
+    $("grp-fuss").hidden    =  pikto;                 // reines Piktogramm ohne Fusszeile
+    // Wechsel-Box heisst beim Wechsel-Info-Schild schlicht «Text»; kein Ein/Aus.
+    $("grp-box-h").textContent   = wechsel ? "Text" : "Wechsel-Box";
+    $("box-toggle-line").style.display = wechsel ? "none" : "";
+    $("box-de-lab").textContent  = wechsel ? "Kopfzeile · Deutsch" : "Info · Deutsch";
+    $("box-en-lab").textContent  = wechsel ? "Kopfzeile · English" : "Info · English";
+    // Fassungs-Beschriftung: Piktogramm schwarz/weiss, Akutschild blau/weiss.
+    var b=$("sg-variant").querySelectorAll("button");
+    b[0].textContent = pikto ? "Schwarz auf Weiss" : "Blau auf Weiss";
+    b[1].textContent = pikto ? "Weiss auf Blau" : "Weiss auf Blau (akut)";
+    $("fassung-note").textContent = pikto
+      ? "Zwei Fassungen des Leitsystems: schwarz auf weiss oder weiss auf blauem Grund."
+      : "Blau auf Weiss ist der Standard. Weiss auf Blau ist dem Leitsystem vorbehalten – hier nur für akute Leitsituationen.";
   }
 
   // --- Kopf-/Box-Felder an den Zustand binden -------------------------------
@@ -549,11 +700,16 @@
   bindInput("box-en", function(){return state.box.en;}, function(v){state.box.en=v;});
   bindInput("note-de", function(){return state.note.de;}, function(v){state.note.de=v;});
   bindInput("note-en", function(){return state.note.en;}, function(v){state.note.en=v;});
+  bindInput("ansage-de", function(){return state.ansage.de;}, function(v){state.ansage.de=v;});
+  bindInput("ansage-en", function(){return state.ansage.en;}, function(v){state.ansage.en=v;});
+  bindInput("link", function(){return state.link;}, function(v){state.link=v;});
   function syncInputs(){
     $("kicker").value=state.kicker||""; $("title-de").value=state.title.de||""; $("title-en").value=state.title.en||"";
     $("box-de").value=state.box.de||""; $("box-en").value=state.box.en||""; $("note-de").value=state.note.de||""; $("note-en").value=state.note.en||"";
+    $("ansage-de").value=state.ansage.de||""; $("ansage-en").value=state.ansage.en||""; $("link").value=state.link||"";
     $("kicker-wrap").hidden = !state.kickerOn;
     $("box-fields").style.display = state.boxOn ? "" : "none";
+    $("fuss-fields").style.display = state.footOn ? "" : "none";
   }
 
   // --- Seg-/Toggle-Umschalter ----------------------------------------------
@@ -571,9 +727,10 @@
   wireSeg("sg-size",   function(v){ state.size=v; renderSheet(); });
   wireSeg("sg-orient", function(v){ state.orient=v; renderSheet(); });
   wireSeg("sg-scale",  function(v){ state.scale=v; renderSheet(); });
-  wireSeg("tg-foot",   function(v){ state.footOn = v==="1"; renderSheet(); });
+  wireSeg("tg-foot",   function(v){ state.footOn = v==="1"; $("fuss-fields").style.display=state.footOn?"":"none"; renderSheet(); });
+  wireSeg("tg-qr",     function(v){ state.qrOn = v==="1"; renderSheet(); });
   wireSeg("sg-type",   function(v){ state.type=v; render(); });
-  wireSeg("sg-variant",function(v){ state.piktoVariant=v; renderSheet(); });
+  wireSeg("sg-variant",function(v){ state.variant=v; renderSheet(); });
 
   // --- Klappbare Piktogramm-Auswahl (Hausschrift) ---------------------------
   var galleryBody=$("galleryBody"), gallerySearch=$("gallerySearch"), galleryQuery="";
@@ -659,10 +816,11 @@
   }
   $("reset").addEventListener("click", function(){
     state=defaults(); galleryQuery=""; gallerySearch.value="";
-    setSeg("sg-type", state.type); setSeg("sg-variant", state.piktoVariant);
+    setSeg("sg-type", state.type); setSeg("sg-variant", state.variant);
     setSeg("tg-kicker", state.kickerOn?"1":"0"); setSeg("sg-cols", String(state.cols));
     setSeg("tg-box", state.boxOn?"1":"0"); setSeg("sg-size", state.size);
-    setSeg("sg-orient", state.orient); setSeg("sg-scale", state.scale); setSeg("tg-foot", state.footOn?"1":"0");
+    setSeg("sg-orient", state.orient); setSeg("sg-scale", state.scale);
+    setSeg("tg-foot", state.footOn?"1":"0"); setSeg("tg-qr", state.qrOn?"1":"0");
     buildGallery(); render();
   });
   function setSeg(id,val){ var g=$(id); Array.prototype.forEach.call(g.querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-v")===val)); }); }
@@ -681,7 +839,7 @@
 <style>
   @media print{
     .ds-header,.dsnav,.dsnav-drawer,.dsnav-backdrop,.ds-footer,
-    .hero,.editor,.prevfoot,.actions,.shead,.note,dialog.picker{ display:none !important; }
+    .hero,.editor,.prevfoot,.actions,.shead,.note,dialog.picker,#ethik{ display:none !important; }
     body{ background:#ffffff; }   /* # ds-ok: Druck auf weissem Papier */
     main.wrap, section, .work, .preview, .frame, .stage{ max-width:none;margin:0;padding:0;border:0;background:none;display:block;overflow:visible;position:static }
     .frame{box-shadow:none}
