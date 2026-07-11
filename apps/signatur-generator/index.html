@@ -118,9 +118,6 @@
   .pikto .ps{font-size:11px}  /* # ds-ok Piktogramm-Beischrift in SVG-Einheiten, aria-hidden – kein Lesetext */
   .empf-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s6)}
   .empf-ps{font-family:var(--font-text);color:var(--gold-ink);font-size:var(--t-small);margin:0}
-  .empf-mb{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);margin:var(--s4) 0 0}
-  .empf-mb a{color:var(--gold-ink);text-decoration:none}
-  .empf-mb a:hover{text-decoration:underline}
   .empf-fn{margin-top:var(--s6);padding-top:var(--s4);border-top:1px solid var(--line)}
   .empf-fn .fn-body{font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;color:var(--ink);margin-top:var(--s3)}
   .empf-fn .fn-body p{max-width:62ch;margin:0 0 var(--s2)}
@@ -350,7 +347,7 @@
       <div class="empf-item" data-ico="3">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="12" width="24" height="19" rx="3"/><path d="M10 28l6-7 4 4 3-3 5 6"/><path class="acc" d="M40 13v15a5 5 0 0 1-10 0V16a3 3 0 0 1 6 0v11"/><line x1="6" y1="42" x2="42" y2="6" class="slash"/></svg>
         <h3>Bildersturm?</h3>
-        <p>Bilder in Signaturen erscheinen als Anhang. Die Mail verspricht: <em>Hier ist ein Dokument für dich.</em> Eine Text-Signatur hält dieses Versprechen: Hier wartet wirklich ein Dokument und keine Werbung.</p>
+        <p>Bilder in Signaturen erscheinen als Anhang. Die Mail verspricht: <em>Hier ist ein Dokument für dich.</em> Eine Text-Signatur hält dieses Versprechen: Hier wartet wirklich ein Dokument und keine Werbung. <a href="../../assets/merkblaetter/warum-ohne-bilder.pdf">→ Warum unsere Mails ohne Bilder auskommen (PDF)</a></p>
       </div>
       <div class="empf-item" data-ico="7">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="13" width="21" height="15" rx="2"/><path d="M5 14l10.5 8L26 14"/><circle cx="33" cy="30" r="8" class="acc"/><line x1="39" y1="36" x2="45" y2="42" class="acc"/></svg>
@@ -360,7 +357,7 @@
       <div class="empf-item" data-ico="4">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><text x="15" y="35" class="pt" font-size="30">§</text><line x1="9" y1="40" x2="39" y2="8" class="slash"/></svg>
         <h3>Juristerei</h3>
-        <p>Rechtserklärungen und Vertraulichkeitshinweise sind für das Goetheanum rechtlich nicht erforderlich und sagen dem Empfänger nichts – sie machen Mails nur länger.</p>
+        <p>Rechtserklärungen und Vertraulichkeitshinweise sind für das Goetheanum rechtlich nicht erforderlich und sagen dem Empfänger nichts – sie machen Mails nur länger. <a href="#chFussnote" data-fold="chFussnote">→ Was in der Schweiz gilt</a></p>
       </div>
       <div class="empf-item" data-ico="9">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="16" width="27" height="19" rx="2"/><path d="M6 17l13.5 9L33 17"/><text x="35" y="18" class="ps">z</text><text x="40" y="12" class="ps">z</text></svg>
@@ -370,7 +367,7 @@
       <div class="empf-item" data-ico="5">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><text x="8" y="18" class="ps">012</text><text x="8" y="30" class="ps">345</text><text x="8" y="42" class="ps">678</text><line x1="34" y1="42" x2="44" y2="8" class="slash"/></svg>
         <h3>Zahlenkolonnen</h3>
-        <p>Amtsnummern und Registerangaben gehören auf Briefpapier und Website, nicht unter jede Nachricht.</p>
+        <p>Amtsnummern und Registerangaben gehören auf Briefpapier und Website, nicht unter jede Nachricht. <a href="#chFussnote" data-fold="chFussnote">→ Was in der Schweiz gilt</a></p>
       </div>
       <div class="empf-item" data-ico="8">
         <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><circle cx="29" cy="26" r="13"/><circle cx="29" cy="26" r="4" class="acc"/><line x1="4" y1="7" x2="23" y2="21"/><path d="M6 14L4 7l7 1"/></svg>
@@ -394,9 +391,7 @@
       <button type="button" class="btn primary" id="pdfBtn">Als PDF laden (A4)</button>
     </div>
 
-    <p class="empf-mb">Für Gespräche im Haus: <a href="../../assets/merkblaetter/warum-ohne-bilder.pdf">Argumentarium ‹Warum unsere Mails ohne Bilder auskommen›</a> – sieben Gründe und die Einwände samt Antworten, als A4-PDF.</p>
-
-    <details class="code-details empf-fn">
+    <details class="code-details empf-fn" id="chFussnote">
       <summary>Fussnote: Was in der Schweiz gilt</summary>
       <div class="fn-body">
         <p>Die Empfehlungen können so entspannt ausfallen, weil das schweizerische
@@ -651,6 +646,12 @@ document.getElementById("empfPsJump").addEventListener("click", () => {
   document.getElementById("psFold").open = true;
   setTimeout(() => els.ps.focus({ preventScroll: true }), 250);
 });
+
+// Pfeil-Links auf zugeklappte Vertiefungen (z. B. Schweiz-Fussnote): erst öffnen, dann springt der Anker.
+document.querySelectorAll("a[data-fold]").forEach(a => a.addEventListener("click", () => {
+  const t = document.getElementById(a.getAttribute("data-fold"));
+  if (t) t.open = true;
+}));
 document.getElementById("clearAll").addEventListener("click", () => { setFields({}); onInput(); });
 
 /* ---------- Status / Kopier-Feedback ---------- */
