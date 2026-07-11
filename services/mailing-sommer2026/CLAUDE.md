@@ -93,6 +93,15 @@ Kommentare → Supabase `sommer2026_mail_comments`, key = element-id (`shared#x`
 angewendet). Rücklauf: offene Kommentare lesen → in heroes.json korrigieren → neu bauen
 (`--publish`) → nach dem Merge `--verify`.
 
+## Rücklauf-Agent (Gegenlese-Schleife automatisiert)
+`ruecklauf.py` ist das deterministische Herz: `python3 ruecklauf.py` holt die **offenen**
+Kommentare aus Supabase und macht daraus eine Arbeitsliste mit dem **exakten heroes.json-
+Pfad**, dem **aktuellen Text** und der **Kommentar-ID** je Kommentar (`--json` maschinen-
+lesbar, `--alle` inkl. erledigter). Nur Lesen. Der Ablauf der Schleife und die Leitplanken
+(klar → umsetzen + PR; mehrdeutig → Rückfrage zurückschreiben, nicht raten; nie senden/
+Frist/Zahlung; versendete Wellen in Ruhe lassen; erledigt erst nach Merge) stehen in
+**RUECKLAUF-AGENT.md**. Auslöser: manuell oder als geplante Routine.
+
 ## ActiveCampaign (via Cowork)
 Automation einmal im UI bauen: If/Else-Split auf Abo-Tags (nurtv/nurws/noabo; beides ausgeschlossen),
 Conversion-Goal, Verhaltens-Split vor w3 (Nicht-Öffner → Alt-Betreff). Generiertes HTML aus dist/ in die Schritte.
