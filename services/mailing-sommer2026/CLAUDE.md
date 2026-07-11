@@ -59,6 +59,21 @@ reicht utm_* via Paperform `prefill-inherit` weiter (verifiziert 10.7.). (2) Die
 muss utm_* an ihre zwei Ausgangs-Links anhängen** — ohne diesen Fix ist die gesamte NoAbo-Attribution
 blind (Snippet siehe To-do). (3) GTV-Anmeldedialog: utm-Durchreichung unverifiziert.
 
+## Mails ändern, wenn sie in AC eingepflegt sind
+AC hält **Kopien**: Das eingefügte HTML ist eingefroren, Bilder/Schrift laden dagegen
+**zur Öffnungszeit** von unseren URLs. Daraus folgt:
+- **Text/Betreff/Links ändern (vor Versand der Welle):** heroes.json → bauen → mergen →
+  in AC den E-Mail-Schritt öffnen und das HTML frisch von der Mail-URL einfügen (Betreff
+  aus der Tabelle). Geht auch in aktiver Automation, bis der Warte-Schritt der Welle abläuft.
+- **Bilder tauschen (jederzeit, ohne AC anzufassen):** gleiche Variation-ID = gleicher
+  Dateiname → neues Bild erscheint überall, AUCH in bereits versendeten Mails.
+- **⚠ Nach dem ersten Versand sind die Asset-Dateinamen append-only:** `--publish` räumt
+  das Asset-Verzeichnis auf — eine Variation-ID entfernen/umbenennen löscht die Datei und
+  reisst in schon versendeten Mails tote Bilder. Also während der Kampagne: IDs behalten,
+  Bildinhalt unter gleichem Namen tauschen; Neues nur zusätzlich.
+- **Nach dem Versand einer Welle:** Text/Betreff sind beim Empfänger und unveränderlich;
+  Landingpages hinter den Links bleiben frei änderbar (utm-Links selbst sind fix).
+
 ## Der Editor (Gegenlesen)
 `apps/mail-editor/` (Hub-Kategorie «Kampagne», intern): DE/EN-Umschalter, oben **Sammelansicht
 «Offene Kommentare»** (To-do-Liste; anklicken springt zum Feld, schaltet ggf. die Sprache um und
