@@ -418,6 +418,17 @@
       "such": "Mail Editor Mailing Newsletter Kampagne Wellen Segmente Betreff Gegenlesen Kommentar Sommer Aktion E-Mail"
     },
     {
+      "slug": "kampagnen-drehbuch",
+      "cat": "kampagne",
+      "status": "intern",
+      "tag": "Aktion",
+      "title": "Kampagnen-Drehbuch",
+      "short": "Drehbuch",
+      "href": "apps/kampagnen-drehbuch/",
+      "desc": "Wie wir eine Kampagne bauen — der bewährte Ablauf in sieben Phasen, mit klaren Schritten und Verweisen auf Cockpit, Link-Register und Mail-Editor. Ausführlich in docs/kampagnen-drehbuch.md.",
+      "such": "Kampagne Drehbuch Ablauf Playbook Anleitung Schritte Phasen Checkliste UTM ActiveCampaign Mailing Messkette"
+    },
+    {
       "slug": "campus-karten",
       "cat": "geparkt",
       "status": "geparkt",

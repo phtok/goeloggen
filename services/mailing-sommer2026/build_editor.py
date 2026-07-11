@@ -325,7 +325,7 @@ body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
 </style></head><body>
 
 <script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"
-        data-onpage="Cockpit:../sommer-zaehler/|Aktivitäten:../sommer-zaehler/aktivitaeten.html|Kosten:../sommer-zaehler/kosten.html|Multiplikatoren:../sommer-zaehler/multiplikatoren.html|Links:../utm-generator/|Mail:../mail-editor/"></script>
+        data-onpage="Cockpit:../sommer-zaehler/|Aktivitäten:../sommer-zaehler/aktivitaeten.html|Kosten:../sommer-zaehler/kosten.html|Multiplikatoren:../sommer-zaehler/multiplikatoren.html|Links:../utm-generator/|Mail:../mail-editor/|Ablauf:../kampagnen-drehbuch/"></script>
 
 <main class="wrap">
 <section class="lead">
