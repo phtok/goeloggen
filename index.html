@@ -91,6 +91,11 @@
   .thumb .map .m1{background:var(--gold-deep);left:52px;top:10px}
   .thumb .map .m2{background:#ec5f6c;left:22px;top:36px} /* # ds-ok: Markerrot der Karte (Artefakt) */
 
+  /* QR-Code – das DING, das das Werkzeug macht: drei gerundete Augen + Module,
+     einfarbig über Tokens (theme-fähig, kein Artefakt-Grund nötig). */
+  .thumb .qrg{width:54px;height:54px;display:block}
+  .thumb .qrg .ink{fill:var(--ink)} .thumb .qrg .pap{fill:var(--paper)}
+
   /* Entdecker-Karussell – Hinweis auf weniger Bekanntes, oben über den Karten. */
   .carousel{position:relative;margin-bottom:var(--s8);border:1px solid var(--line);
     border-radius:var(--r-card);background:var(--soft);overflow:hidden}
@@ -150,7 +155,7 @@
   // Karten flach nach Priorität (keine Kategorien); Unbekannte ans Ende.
   // Webfont wohnt jetzt in Schriften, Zeichen in Logos – darum keine eigene Karte.
   // Neue Ordnung (Entscheid Auftraggeber, 8. Juli 2026).
-  var ORDER = ["logo-generator","signatur","visitenkarten","schriften",
+  var ORDER = ["logo-generator","signatur","visitenkarten","qr-generator","schriften",
     "icons","uebersetzungen","typografie","powerpoint",
     "wallpaper","karten","sektionsfarben","design-system",
     "editor"];
@@ -192,6 +197,17 @@
     "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>', // vier Sprachen
     "editor":          '<span class="ed"><i></i><i class="mk"></i><i></i></span>', // Text mit offener Frage
     "karten":          '<span class="map"><b></b><b></b><span class="bau"></span><i class="m1"></i><i class="m2"></i></span>', // Mini-Campus mit Marken
+    "qr-generator":    '<svg class="qrg" viewBox="0 0 25 25" aria-hidden="true">' +
+      '<rect class="ink" x="0" y="0" width="7" height="7" rx="2"/><rect class="pap" x="1" y="1" width="5" height="5" rx="1.4"/><rect class="ink" x="2" y="2" width="3" height="3" rx="0.8"/>' +
+      '<rect class="ink" x="18" y="0" width="7" height="7" rx="2"/><rect class="pap" x="19" y="1" width="5" height="5" rx="1.4"/><rect class="ink" x="20" y="2" width="3" height="3" rx="0.8"/>' +
+      '<rect class="ink" x="0" y="18" width="7" height="7" rx="2"/><rect class="pap" x="1" y="19" width="5" height="5" rx="1.4"/><rect class="ink" x="2" y="20" width="3" height="3" rx="0.8"/>' +
+      '<g class="ink">' +
+      '<rect x="8.6" y="0.5" width="1.5" height="1.5" rx="0.5"/><rect x="11.4" y="0.5" width="1.5" height="1.5" rx="0.5"/><rect x="14.2" y="0.5" width="1.5" height="1.5" rx="0.5"/><rect x="8.6" y="3.3" width="1.5" height="1.5" rx="0.5"/><rect x="14.2" y="2.9" width="1.5" height="1.5" rx="0.5"/>' +
+      '<rect x="0.5" y="8.6" width="1.5" height="1.5" rx="0.5"/><rect x="3.3" y="8.6" width="1.5" height="1.5" rx="0.5"/><rect x="2.9" y="11.4" width="1.5" height="1.5" rx="0.5"/><rect x="0.5" y="14.2" width="1.5" height="1.5" rx="0.5"/>' +
+      '<rect x="8.6" y="8.6" width="1.5" height="1.5" rx="0.5"/><rect x="11.4" y="8.6" width="1.5" height="1.5" rx="0.5"/><rect x="14.2" y="11" width="1.5" height="1.5" rx="0.5"/><rect x="8.6" y="11.4" width="1.5" height="1.5" rx="0.5"/><rect x="11.4" y="14.2" width="1.5" height="1.5" rx="0.5"/><rect x="16" y="8.6" width="1.5" height="1.5" rx="0.5"/><rect x="15.5" y="15.4" width="1.5" height="1.5" rx="0.5"/><rect x="11.4" y="16.6" width="1.5" height="1.5" rx="0.5"/>' +
+      '<rect x="18.4" y="10.4" width="1.5" height="1.5" rx="0.5"/><rect x="21.2" y="8.6" width="1.5" height="1.5" rx="0.5"/><rect x="23" y="12.6" width="1.5" height="1.5" rx="0.5"/><rect x="18.4" y="13.8" width="1.5" height="1.5" rx="0.5"/><rect x="21.5" y="16" width="1.5" height="1.5" rx="0.5"/>' +
+      '<rect x="8.6" y="18.4" width="1.5" height="1.5" rx="0.5"/><rect x="11.4" y="21" width="1.5" height="1.5" rx="0.5"/><rect x="14.2" y="18.4" width="1.5" height="1.5" rx="0.5"/><rect x="18.4" y="18.4" width="1.5" height="1.5" rx="0.5"/><rect x="21.4" y="21" width="1.5" height="1.5" rx="0.5"/><rect x="15.5" y="22" width="1.5" height="1.5" rx="0.5"/><rect x="18.4" y="23" width="1.5" height="1.5" rx="0.5"/>' +
+      '</g></svg>', // ein QR-Code mit den Haus-Augen
     "empfehlungen":    '<span class="spec" style="color:var(--gold-ink)">11</span>' // die elf Gebote
   };
   function visual(t){
