@@ -112,10 +112,19 @@
         </div>
 
         <div class="ctrl">
+          <span class="lab">Anordnung der Marke</span>
+          <div class="seg" id="layout" role="group" aria-label="Anordnung der Marke">
+            <button type="button" data-v="row">Nebeneinander</button>
+            <button type="button" data-v="stack">Gestapelt</button>
+          </div>
+        </div>
+
+        <div class="ctrl">
           <span class="lab">Beschriftung</span>
-          <div class="seg" id="named" role="group" aria-label="Beschriftung">
-            <button type="button" data-v="0">Nur Marke</button>
-            <button type="button" data-v="1">Mit Sektionsname</button>
+          <div class="seg" id="name" role="group" aria-label="Beschriftung">
+            <button type="button" data-v="off">Ohne</button>
+            <button type="button" data-v="short">Kurzname</button>
+            <button type="button" data-v="full">Voller Name</button>
           </div>
         </div>
 
@@ -174,7 +183,7 @@
     handy:   {w:1170, h:2532, label:"Handy · Hochformat"}
   };
 
-  var state = { org:"goetheanum", motif:"flaechen", slot:"mitte", named:false, format:"desktop" };
+  var state = { org:"goetheanum", motif:"flaechen", slot:"mitte", layout:"row", name:"off", format:"desktop" };
 
   // --- Farb-Werkzeug (Bildfarben leben im Script; das Bild ist das Artefakt) ---
   function hexToRgb(h){ h=h.replace("#",""); if(h.length===3) h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
@@ -285,59 +294,84 @@
     "unten-links":  {cx:0.28, cy:0.80, scale:0.72},
     "unten-rechts": {cx:0.72, cy:0.80, scale:0.72}
   };
+  var FF='"Goetheanum","Helvetica Neue",Arial,sans-serif';
+  // Weiche Abtönung hinter der Marke – Weiss trägt auf jeder Fläche (B02, Versicherung).
+  function drawScrim(ctx, cx, cy, reach, pal){
+    var g=ctx.createRadialGradient(cx, cy, reach*0.15, cx, cy, reach);
+    g.addColorStop(0, rgba(pal.scrim, 0.30));
+    g.addColorStop(1, rgba(pal.scrim, 0.0));
+    ctx.fillStyle=g; ctx.fillRect(cx-reach, cy-reach, reach*2, reach*2);
+  }
+  // Schriftgrad so verkleinern, dass langer Text in die Breite passt (volle Namen).
+  function fitFont(ctx, txt, weight, startPx, maxW){
+    var px=startPx;
+    ctx.font=weight+' '+px+'px '+FF;
+    var wpx=ctx.measureText(txt).width;
+    if(wpx>maxW && wpx>0){ px=px*maxW/wpx; }
+    return px;
+  }
   function drawLogo(ctx, w, h, pal){
     if(state.slot==="ohne") return;
     var slot=SLOTS[state.slot]; if(!slot) return;
     var o=ORGS[state.org]||{};
     var isMarke=(state.org==="goetheanum");
-    var showName=state.named && !isMarke && !!o.short_de;
+    var nameStr="";
+    if(!isMarke){
+      if(state.name==="short") nameStr=o.short_de||"";
+      else if(state.name==="full") nameStr=o.name_de||"";
+    }
+    var showName=!!nameStr;
 
-    var base = Math.min(w, h*1.0);
-    var font = base * 0.055 * slot.scale;          // Wortmarke „Goetheanum"
-    var markD = font * 1.18;                        // Kreis-Durchmesser
-    var gap = font * 0.42;
+    var base=Math.min(w, h);
+    var font=base*0.055*slot.scale;                 // Wortmarke „Goetheanum"
+    var markD=font*1.18;                            // Kreis-Durchmesser
+    var gap=font*0.42;
+    var nameFont=font*0.50;
+    var cx=slot.cx*w, cy=slot.cy*h;
+    var GO="Goetheanum";
+    // verfügbare Breite um den Ankerpunkt (Block bleibt auf der Leinwand)
+    var maxNameW=Math.min(w*0.72, 2*Math.min(cx, w-cx) - w*0.08);
+    if(showName) nameFont=fitFont(ctx, nameStr, '580', nameFont, maxNameW);
 
-    ctx.textBaseline="alphabetic";
-    ctx.font = '440 '+font+'px "Goetheanum","Helvetica Neue",Arial,sans-serif';
-    var word="Goetheanum";
-    var wordW = ctx.measureText(word).width;
-    var lineW = markD + gap + wordW;
-
-    var nameFont = font*0.52, nameStr="", nameW=0;
-    if(showName){
-      nameStr=o.short_de;
-      ctx.font='580 '+nameFont+'px "Goetheanum","Helvetica Neue",Arial,sans-serif';
-      nameW=ctx.measureText(nameStr).width;
+    if(state.layout==="stack"){
+      // Marke oben, Wortmarke darunter, Name darunter – zentriert (Vorlagen S. 50/55)
+      var lineGap=font*0.42, nameGap=font*0.30;
+      var totalH=markD + lineGap + font + (showName ? nameGap+nameFont : 0);
+      var top=cy - totalH/2;
+      drawScrim(ctx, cx, cy, Math.max(markD*1.7, totalH*0.60), pal);
+      ctx.textAlign="center";
+      if(markImg) ctx.drawImage(markImg, cx-markD/2, top, markD, markD);
+      ctx.fillStyle="#ffffff"; ctx.textBaseline="top";
+      ctx.font='440 '+font+'px '+FF;
+      ctx.fillText(GO, cx, top+markD+lineGap);
+      if(showName){
+        ctx.fillStyle="rgba(255,255,255,0.94)";
+        ctx.font='580 '+nameFont+'px '+FF;
+        ctx.fillText(nameStr, cx, top+markD+lineGap+font+nameGap);
+      }
+      ctx.textAlign="left";
+      return;
     }
 
-    var cx=slot.cx*w, cy=slot.cy*h;
-    var blockW=Math.max(lineW, (showName? markD+gap+nameW : 0));
-    var left=cx - blockW/2;
-    var midY=cy;                                    // vertikale Mitte der ersten Zeile
+    // horizontal: Marke + Wortmarke nebeneinander, Name als zweite Zeile
+    ctx.font='440 '+font+'px '+FF;
+    var wordW=ctx.measureText(GO).width;
+    var lineW=markD+gap+wordW;
+    var nameW=0;
+    if(showName){ ctx.font='580 '+nameFont+'px '+FF; nameW=ctx.measureText(nameStr).width; }
+    var blockW=Math.max(lineW, showName ? markD+gap+nameW : 0);
+    var left=cx-blockW/2, midY=cy;
 
-    // Weiche Abtönung hinter der Marke – Weiss trägt auf jeder Fläche (B02, Versicherung).
-    var halo = Math.max(lineW*0.62, markD*1.4);
-    var g=ctx.createRadialGradient(cx, cy, markD*0.2, cx, cy, halo);
-    g.addColorStop(0, rgba(pal.scrim, 0.30));
-    g.addColorStop(1, rgba(pal.scrim, 0.0));
-    ctx.fillStyle=g;
-    ctx.fillRect(cx-halo, cy-halo, halo*2, halo*2);
-
-    // Kreis-Marke
-    if(markImg){ ctx.drawImage(markImg, left, midY - markD/2, markD, markD); }
-
-    // Wortmarke „Goetheanum" – Weiss (B01)
-    ctx.fillStyle="#ffffff";
-    ctx.font='440 '+font+'px "Goetheanum","Helvetica Neue",Arial,sans-serif';
-    ctx.textBaseline="middle";
-    ctx.fillText(word, left + markD + gap, midY + font*0.02);
-
-    // Sektionsname (zweite Zeile, unter der Wortmarke)
+    drawScrim(ctx, cx, cy, Math.max(lineW*0.60, markD*1.4), pal);
+    ctx.textAlign="left";
+    if(markImg) ctx.drawImage(markImg, left, midY-markD/2, markD, markD);
+    ctx.fillStyle="#ffffff"; ctx.textBaseline="middle";
+    ctx.font='440 '+font+'px '+FF;
+    ctx.fillText(GO, left+markD+gap, midY+font*0.02);
     if(showName){
-      ctx.font='580 '+nameFont+'px "Goetheanum","Helvetica Neue",Arial,sans-serif';
-      ctx.fillStyle="rgba(255,255,255,0.92)";
-      ctx.textBaseline="alphabetic";
-      ctx.fillText(nameStr, left + markD + gap, midY + markD*0.5 + nameFont*0.95);
+      ctx.fillStyle="rgba(255,255,255,0.94)"; ctx.textBaseline="alphabetic";
+      ctx.font='580 '+nameFont+'px '+FF;
+      ctx.fillText(nameStr, left+markD+gap, midY+markD*0.5+nameFont*0.95);
     }
   }
 
@@ -446,7 +480,8 @@
     buildOrgSelect(); updateOrgNote(); buildFormatSelect();
     wireSeg("motif","motif", function(v){return v;});
     wireSeg("slot","slot", function(v){return v;});
-    wireSeg("named","named", function(v){return v==="1";});
+    wireSeg("layout","layout", function(v){return v;});
+    wireSeg("name","name", function(v){return v;});
     document.getElementById("dlPng").addEventListener("click", function(){ download("png"); });
     document.getElementById("dlJpg").addEventListener("click", function(){ download("jpg"); });
     // Hausschrift laden, dann erst zeichnen (Wortmarke sitzt sonst im Fallback).
