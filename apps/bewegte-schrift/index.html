@@ -30,7 +30,10 @@
   /* NUR werkzeug-eigene Gestalt. Alles Gemeinsame steht in base.css; Werte aus
      den Tokens (var(--…)), keine eigenen Farben/Grade/Abstände. */
   .work{display:grid;gap:var(--s8);grid-template-columns:minmax(0,360px) minmax(0,1fr);align-items:start}
-  @media(max-width:860px){.work{grid-template-columns:1fr}}
+  @media(max-width:860px){
+    .work{grid-template-columns:1fr}
+    .work .preview{order:-1}   /* Bühne zuerst: die Bewegung steht oben, nicht unter der Steuerung */
+  }
 
   /* Bühne: grosse, ruhige Fläche fürs Wort. --soft/--ink halten B01/B02. */
   .stage{position:relative;min-height:clamp(280px,42vh,460px);display:grid;place-items:center;
@@ -42,10 +45,17 @@
 
   /* Das Wort selbst – Hausschrift (Display, geschaut). Nur das Gewicht bewegt sich. */
   .demo{font-family:var(--font-display);font-weight:var(--w-text);
-    font-size:clamp(40px,8.5vw,104px);line-height:1.04;letter-spacing:-.01em;
+    font-size:clamp(38px,11vw,104px);line-height:1.04;letter-spacing:-.01em;
     color:var(--ink);margin:0;max-width:15ch}
   .demo .ltr{display:inline-block;will-change:font-weight}
   .demo .sp{display:inline-block;width:.28em}
+  /* Nähe/Sog auf Touch: Ziehen/Wischen soll die Schrift treiben bzw. die Fläche
+     scrollen – nicht die Seite. Nur im aktiven Effekt, damit sonst normal gescrollt wird. */
+  .stage.grab{touch-action:none;cursor:crosshair}
+  .stage.scroll{touch-action:pan-y}
+  /* Kleiner Hinweis auf der Bühne für die Effekte, die eine Geste brauchen. */
+  .stage .cue{position:absolute;left:0;right:0;bottom:var(--s3);text-align:center;
+    font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);pointer-events:none}
 
   /* Zwei Gewichts-Regler nebeneinander. */
   .range2{display:grid;gap:var(--s6);grid-template-columns:1fr 1fr}
@@ -138,13 +148,14 @@
       </div>
 
       <!-- Bühne + Code ------------------------------------------------------- -->
-      <div style="display:grid;gap:var(--s6)">
+      <div class="preview" style="display:grid;gap:var(--s6)">
         <div class="stage" id="stage" aria-label="Vorschau">
           <p class="demo" id="demo">Bewegte Schrift</p>
         </div>
         <p class="rm-note note" id="rmNote" hidden>
-          ‹Bewegung reduzieren› ist aktiv – die Vorschau steht still, das Gewicht ruht auf dem Zielwert.
-          So verhält sich der Effekt auch im System (WCAG 2.3.3).
+          ‹Bewegung reduzieren› ist im System aktiv – darum steht die Vorschau still, das Gewicht ruht
+          auf dem Zielwert. So verhält sich der Effekt auch im Einsatz (WCAG 2.3.3).
+          <button class="btn ghost" id="forceBtn" type="button" style="margin-top:var(--s2)">Bewegung hier trotzdem zeigen</button>
         </p>
 
         <div>
@@ -181,17 +192,28 @@
   const stage = $("stage"), demo = $("demo");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
 
+  // Motor da? Ohne GSAP (z. B. Netz blockiert das CDN) bewegt sich nichts – sagen statt schweigen.
+  if (!window.gsap){
+    const n = $("rmNote"); n.hidden = false;
+    n.textContent = "Der Bewegungs-Motor (GSAP) konnte nicht geladen werden – Netz prüfen und neu laden.";
+    return;
+  }
+
   // Kurzbeschreibungen – helfen beim Ausprobieren, was trägt.
   const NOTE = {
     auftakt:"Beim Erscheinen wächst jedes Zeichen vom leichten zum vollen Gewicht – ein ruhiger Antritt.",
-    naehe:"Zeichen unter dem Zeiger werden schwerer und fallen wieder zurück – die Schrift folgt der Hand.",
-    sog:"Beim Scrollen der Fläche wandert das Gewicht von leicht nach voll – Bewegung aus dem Lesen.",
+    naehe:"Mit dem Finger (oder Zeiger) über die Schrift fahren – Zeichen darunter werden schwerer und fallen zurück.",
+    sog:"In der Fläche wischen/scrollen: das Gewicht wandert von leicht nach voll – Bewegung aus dem Lesen.",
     atem:"Das ganze Wort atmet langsam zwischen zwei Gewichten – kaum merklich, nie fertig.",
     welle:"Eine Gewichtswelle läuft Zeichen für Zeichen durch das Wort."
   };
+  // Kleiner Gestenhinweis auf der Bühne – nur beim Effekt, der eine Geste braucht.
+  const CUE = { naehe:"mit dem Finger über die Schrift fahren" };
 
   const state = { fx:"auftakt", von:190, bis:580, dur:1.1, ease:"sine.inOut", text:"Bewegte Schrift" };
   let teardown = () => {};
+  let forceMotion = false;                       // Erprobung darf Bewegung trotz Reduce-Motion zeigen
+  const motionOn = () => forceMotion || !reduce.matches;
 
   // --- Wort in Zeichen zerlegen (für Zeichen-Effekte) ----------------------
   function build(text){
@@ -229,8 +251,9 @@
     },
     naehe(L,v){
       gsap.set(L, { fontWeight: v.von });
+      stage.classList.add("grab");               // Touch: Ziehen treibt die Schrift, nicht die Seite
       const setters = L.map(el => gsap.quickTo(el, "fontWeight", { duration:0.4, ease:"power3.out" }));
-      const R = 140; // Wirkradius um den Zeiger (px)
+      const R = 140; // Wirkradius um Zeiger/Finger (px)
       const move = e => {
         L.forEach((el,i) => {
           const b = el.getBoundingClientRect();
@@ -240,9 +263,20 @@
         });
       };
       const leave = () => setters.forEach(s => s(v.von));
+      // pointermove deckt Maus UND Touch-Ziehen ab; down startet sofort, up/leave fällt zurück.
+      stage.addEventListener("pointerdown", move);
       stage.addEventListener("pointermove", move, { passive:true });
+      stage.addEventListener("pointerup", leave);
+      stage.addEventListener("pointercancel", leave);
       stage.addEventListener("pointerleave", leave);
-      return () => { stage.removeEventListener("pointermove", move); stage.removeEventListener("pointerleave", leave); };
+      return () => {
+        stage.classList.remove("grab");
+        stage.removeEventListener("pointerdown", move);
+        stage.removeEventListener("pointermove", move);
+        stage.removeEventListener("pointerup", leave);
+        stage.removeEventListener("pointercancel", leave);
+        stage.removeEventListener("pointerleave", leave);
+      };
     },
     sog(L,v){
       // Bühne wird zum Scroller; das Wort sitzt in einem hohen Track. Das Gewicht
@@ -270,15 +304,23 @@
   // --- Effekt (neu) aufsetzen ----------------------------------------------
   function mount(){
     teardown();
-    // Reste eines vorigen Scroll-Effekts sicher auflösen.
-    if (stage.classList.contains("scroll")) { stage.classList.remove("scroll"); const t = stage.querySelector(".track"); if (t) t.replaceWith(demo); }
+    // Reste eines vorigen Effekts sicher auflösen (Scroll-Track, Greif-Modus, Gestenhinweis).
+    stage.classList.remove("scroll","grab");
+    const oldTrack = stage.querySelector(".track"); if (oldTrack) oldTrack.replaceWith(demo);
+    const oldCue = stage.querySelector(".cue"); if (oldCue) oldCue.remove();
+
     const L = build(state.text);
-    $("rmNote").hidden = !reduce.matches;
-    if (reduce.matches){
+    $("rmNote").hidden = !reduce.matches;   // Hinweis zeigt sich, sobald das System Reduce-Motion meldet
+    if (!motionOn()){
       gsap.set(L, { fontWeight: state.bis }); // Bewegung aus: Zielgewicht ruhen lassen.
       teardown = () => {};
     } else {
       teardown = EFFECTS[state.fx](L, state);
+      if (CUE[state.fx]){                     // Gestenhinweis einblenden
+        const c = document.createElement("span");
+        c.className = "cue"; c.textContent = CUE[state.fx];
+        stage.appendChild(c);
+      }
     }
     writeCode();
   }
@@ -366,7 +408,22 @@ gsap.to(L, {
       const b = $("copy"); b.textContent = "Kopiert"; setTimeout(() => b.textContent = "Code kopieren", 900);
     } catch { /* still */ }
   });
-  reduce.addEventListener?.("change", mount);
+  reduce.addEventListener?.("change", () => { forceMotion = false; mount(); });
+
+  // Reduce-Motion-Übersteuerung: die Erprobung darf die Bewegung trotzdem zeigen.
+  $("forceBtn").addEventListener("click", () => {
+    forceMotion = true; $("forceBtn").textContent = "Bewegung läuft"; mount();
+  });
+
+  // Einmalige Effekte (Auftakt) erneut spielen, sobald die Bühne ins Bild kommt –
+  // auf dem Handy sieht man die Bewegung so beim Herunterscrollen, nicht nur beim Laden.
+  if ("IntersectionObserver" in window){
+    let away = true;
+    new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting && away){ away = false; if (state.fx === "auftakt" && motionOn()) mount(); }
+      else if (!e.isIntersecting){ away = true; }
+    }), { threshold: 0.6 }).observe(stage);
+  }
 
   syncLabels(); mount();
 })();
