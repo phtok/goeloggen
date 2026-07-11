@@ -4,9 +4,12 @@ Kontext-Speicher für Claude Code. Wer hier arbeitet, liest zuerst diese Datei.
 
 ## Ziel
 Drei-Wellen-Mailing, 3 Monate gratis (Wochenschrift und/oder goetheanum.tv), Frist **8. August 2026**.
-Drei Zielgruppen × Wellen × zwei Sprachen. Optik = Landingpage-DNA: Rosé (#A95278) auf Mist-Weiss,
-FazetaSans, echte Sommer-Lifestyle-Motive. Die Mail ist **Artefakt** (Kampagnen-DNA), das
-Editor-Chrome läuft auf dem Haus-Design-System.
+Drei Zielgruppen × Wellen × zwei Sprachen. Optik = Kampagnen-DNA: Rosé (#A95278) auf Mist-Weiss,
+echte Sommer-Lifestyle-Motive. **Schrift-Beschluss 11.7. (Vorschlag 1):** Headline = Hausschrift
+‹Goetheanum› Schnitt Deutlich (woff2 aus dem Repo-Bestand, OFL; Absender ist das Haus, TV-Seite und
+Übersicht sprechen sie schon — löst den Zeitungs-Einwand vom 9.7. prinzipiell), Body = ehrlicher
+System-Stack; Fazeta bleibt der WS-Landingpage vorbehalten. Die Mail ist **Artefakt** (Kampagnen-DNA),
+das Editor-Chrome läuft auf dem Haus-Design-System.
 
 ## Eine Quelle
 `heroes.json` trägt alles Redaktionelle: die Wellen-Texte (`wellen`, je Welle × Sprache, optional
