@@ -113,6 +113,7 @@ def render_mail(motiv, welle, lang, wm):
     mehrere = len(ctas) > 1
     cta_links = [(label, links.link_for(welle, seg, ziel, lang, mehrere)) for ziel, label in ctas]
     hero = src_for(compose(var, f"{motiv}_{vid}"))
+    haupt = cta_links[0][1]["url"]  # Logo und Hero verlinken zur Landing (Kommentar ph 11.7.) — utm bleibt dran
     faces = "".join(f"@font-face{{font-family:'{w['family']}';src:url('{w['url']}') format('woff2');"
                     f"font-weight:{w['weight']};font-style:normal;}}" for w in T.get("webfonts", []))
     fontface = f"<mj-style>{faces}</mj-style>" if (BASE and faces) else ""
@@ -129,8 +130,8 @@ def render_mail(motiv, welle, lang, wm):
     mjml = f"""<mjml><mj-head><mj-title>{xml(c['betreff'])}</mj-title><mj-preview>{xml(preheader(c))}</mj-preview>{fontface}
 <mj-attributes><mj-all font-family="{FONT_STACK}"/><mj-text font-size="16px" line-height="25px" color="{INK}"/></mj-attributes></mj-head>
 <mj-body background-color="{MIST}">
-<mj-section background-color="#FFFFFF" padding="18px 28px 14px 28px"><mj-column><mj-image src="{src_for(wm[0])}" alt="Goetheanum" width="{wm[1]}px" align="left" padding="0"/></mj-column></mj-section>
-<mj-section background-color="#FFFFFF" padding="0"><mj-column><mj-image src="{hero}" alt="{xml(var.get('alt',''))}" padding="0" fluid-on-mobile="true"/></mj-column></mj-section>
+<mj-section background-color="#FFFFFF" padding="18px 28px 14px 28px"><mj-column><mj-image src="{src_for(wm[0])}" href="{xml(haupt)}" alt="Goetheanum" width="{wm[1]}px" align="left" padding="0"/></mj-column></mj-section>
+<mj-section background-color="#FFFFFF" padding="0"><mj-column><mj-image src="{hero}" href="{xml(haupt)}" alt="{xml(var.get('alt',''))}" padding="0" fluid-on-mobile="true"/></mj-column></mj-section>
 <mj-section background-color="#FFFFFF" padding="24px 28px 0 28px"><mj-column>
   <mj-text font-size="14px" line-height="20px" color="{AKZENT}" padding="0 0 10px 0">{xml(H['badge'][lang])}</mj-text>
   <mj-text font-family="{HL_STACK}" font-size="30px" line-height="35px" font-weight="700" color="{INK}" padding="0 0 14px 0">{titel(c['botschaft'])}</mj-text>
@@ -139,16 +140,11 @@ def render_mail(motiv, welle, lang, wm):
   <mj-text font-size="13px" line-height="20px" color="{MUTED}" padding="0 0 26px 0">{kleinzeile(H['kleinzeile'][motiv][lang])}</mj-text>
 </mj-column></mj-section>
 <mj-section background-color="{WASH}" padding="16px 28px"><mj-column><mj-text font-size="14px" line-height="22px" color="{AKZENT_TIEF}" align="center" padding="0">{xml(H['proof'][lang])}</mj-text></mj-column></mj-section>
-<mj-section background-color="{MIST}" padding="20px 28px"><mj-column><mj-text font-size="12px" line-height="19px" color="{FUSS}" padding="0">Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br/><a href="%UNSUBSCRIBELINK%" style="color:{FUSS};">Abmelden</a></mj-text></mj-column></mj-section>
+<mj-section background-color="{MIST}" padding="20px 28px"><mj-column><mj-text font-size="12px" line-height="19px" color="{FUSS}" padding="0">Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br/><a href="https://goetheanum.ch" style="color:{FUSS};">goetheanum.ch</a> · <a href="%UNSUBSCRIBELINK%" style="color:{FUSS};">Abmelden</a></mj-text></mj-column></mj-section>
 </mj-body></mjml>"""
     p = subprocess.run(["mjml", "-i", "-s"], input=mjml, capture_output=True, text=True)
     if p.returncode: raise RuntimeError(p.stderr)
-    fields = {"Motiv": f"{motiv}/{vid} — {var.get('alt','')}", "Betreff": c["betreff"],
-              "Botschaft": c["botschaft"], "Text": c["text"],
-              "CTA": " · ".join(label for label, _ in cta_links),
-              "Alt-Betreff (AC-Split)": c["alt"],
-              "Link": " · ".join(l["url"] for _, l in cta_links)}
-    return p.stdout, fields
+    return p.stdout, c
 
 
 def esc(s): return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
@@ -209,21 +205,24 @@ def main():
         for welle in H["wellenplan"][seg]:
             lang_cards = []
             for lang in ("de", "en"):
-                versand, fields = render_mail(motiv, welle, lang, wm)
+                versand, c = render_mail(motiv, welle, lang, wm)
                 out = ROOT/"dist"/f"mail_{motiv}_{welle}_{lang}.html"
                 out.write_text(versand, encoding="utf-8")
                 sizes.append((out.name, len(versand.encode("utf-8"))))
                 # Editor-Vorschau = exakt die Versand-Mail (gehostete Bilder, kleine Seite).
                 html = versand
                 base = f"{motiv}_{welle}_{lang}"
-                frows = "".join(commentable(f"{base}#{k}", k, esc(v) if k != "Link" else f'<code>{esc(v)}</code>')
-                                for k, v in fields.items())
+                # Posteingang-Zeile: was Empfangende zuerst sehen (Betreff + Anriss);
+                # bei w3 zusätzlich die Zweitrahmung des AC-Splits für Nicht-Öffner.
+                alt_zeile = (f'<div class="ib-alt"><span>Nicht-Öffner erhalten:</span> {esc(c["alt"])}</div>'
+                             if welle == "w3" else "")
+                inbox = (f'<div class="inbox"><div class="ib-b">{esc(c["betreff"])}</div>'
+                         f'<div class="ib-a">{esc(preheader(c))}</div>{alt_zeile}</div>')
                 lang_cards.append(f"""<div class="mail" data-lang="{lang}">
   <div class="mhd">{welle.upper()} · {lang.upper()}<a href="mails/mail_{base}.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
+  {inbox}
   <iframe srcdoc="{html.replace('"','&quot;')}" loading="lazy" title="Vorschau {base}"></iframe>
-  <div class="flds">{frows}
-    {commentable(f"{base}#gesamt","Ganze Mail","<i>Anmerkung zur ganzen Mail</i>")}
-  </div></div>""")
+  <div class="flds">{commentable(f"{base}#gesamt","Anmerkung zur Mail","<i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i>")}</div></div>""")
             wave_cards.append(f'<div class="wave">{"".join(lang_cards)}</div>')
         seg_blocks.append(f'<section class="segment"><h2>{H["motive"][motiv]["label"]} — {seg}</h2><div class="waves">{"".join(wave_cards)}</div></section>')
 
@@ -279,6 +278,12 @@ main{{--mailw:clamp(340px,30vw,600px)}} /* 600 = native Mail-Breite: Vorschau in
 .mhd{{display:flex;align-items:center;background:var(--ink);color:var(--paper);font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;padding:6px 12px}}
 .mhd a{{margin-left:auto;color:inherit;text-decoration:none;border:1px solid var(--paper);border-radius:999px;padding:1px 9px;font-weight:400}}
 .mhd a:hover{{background:var(--paper);color:var(--ink)}}
+/* Posteingang-Zeile: was Empfangende zuerst sehen — Betreff fett, Anriss gedämpft. */
+.inbox{{padding:var(--s2) var(--s3);border-bottom:1px solid var(--line-soft);font-family:var(--font-text)}}
+.ib-b{{font-size:var(--t-small);font-weight:600;color:var(--ink)}}
+.ib-a{{font-size:var(--t-small);color:var(--muted);line-height:1.45;margin-top:2px}}
+.ib-alt{{font-size:var(--t-micro);color:var(--muted);line-height:1.45;margin-top:4px}}
+.ib-alt span{{color:var(--gold-ink);font-weight:600}}
 .mail iframe{{width:100%;height:calc(var(--mailw)*1.55);border:0;display:block;background:#F6F4F2}} /* # ds-ok Mail-Grund (Artefakt) */
 .flds{{padding:var(--s2) var(--s3)}}
 .fld{{border-top:1px solid var(--line-soft);padding:8px 4px}} .fld:first-child{{border-top:0}}
@@ -377,14 +382,23 @@ function toggleNur(){{const b=document.getElementById('b-nur'),an=document.body.
 function toggle(el){{const p=el.closest('.fld').querySelector('.cpanel');p.hidden=!p.hidden;}}
 function esc(s){{const d=document.createElement('div');d.textContent=s;return d.innerHTML;}}
 function zeit(iso){{try{{return new Date(iso).toLocaleString('de-CH',{{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}}).replace(', ',' ');}}catch(e){{return '';}}}}
+function sammel(key){{
+ // Mail-Panels (…#gesamt) bündeln ALLE Kommentare ihrer Mail — auch den
+ // Altbestand aus der früheren Feld-Ansicht (…#Betreff usw.).
+ if(!key.endsWith('#gesamt')) return COMMENTS[key]||[];
+ const basis=key.slice(0,key.length-'gesamt'.length);
+ let alle=[];
+ Object.keys(COMMENTS).forEach(k=>{{if(k.startsWith(basis))alle=alle.concat(COMMENTS[k]);}});
+ return alle.sort((a,b)=>a.created_at<b.created_at?-1:1);
+}}
 function render(){{
  document.querySelectorAll('.clist').forEach(ul=>{{
-   const items=(COMMENTS[ul.dataset.cl]||[]).filter(c=>SHOW_DONE||!c.erledigt);
+   const items=sammel(ul.dataset.cl).filter(c=>SHOW_DONE||!c.erledigt);
    ul.innerHTML=items.map(c=>'<li class="'+(c.erledigt?'done':'')+'">'
      +'<div class="khead"><b>'+esc(c.autor||'?')+'</b><span class="kzeit">'+zeit(c.created_at)+'</span>'
      +'<button class="kdone" onclick="erledigt('+c.id+','+(!c.erledigt)+')" title="'+(c.erledigt?'wieder öffnen':'erledigt')+'" aria-label="'+(c.erledigt?'wieder öffnen':'erledigt')+'">'+(c.erledigt?'↩':'✓')+'</button></div>'
      +'<span class="ktxt">'+esc(c.kommentar)+'</span></li>').join('');}});
- document.querySelectorAll('.cc').forEach(s=>{{const n=(COMMENTS[s.dataset.cc]||[]).filter(c=>!c.erledigt).length;
+ document.querySelectorAll('.cc').forEach(s=>{{const n=sammel(s.dataset.cc).filter(c=>!c.erledigt).length;
    s.textContent=n;s.classList.toggle('has',n>0);}});
  const off=[];Object.values(COMMENTS).forEach(l=>l.forEach(c=>{{if(!c.erledigt)off.push(c);}}));
  off.sort((a,b)=>a.created_at<b.created_at?-1:1);
@@ -395,7 +409,10 @@ function render(){{
      +'<span class="otxt">'+esc(c.kommentar)+'</span></button></li>';}}).join('');
 }}
 function springe(key){{
- const fld=document.querySelector('.fld[data-key="'+CSS.escape(key)+'"]'); if(!fld) return;
+ let fld=document.querySelector('.fld[data-key="'+CSS.escape(key)+'"]');
+ if(!fld){{const basis=key.split('#')[0];
+   fld=document.querySelector('.fld[data-key="'+CSS.escape(basis+'#gesamt')+'"]');}}
+ if(!fld) return;
  const m=key.match(/_(de|en)#/); if(m) setLang(m[1]);
  fld.querySelector('.cpanel').hidden=false;
  fld.scrollIntoView({{behavior:'smooth',block:'center'}});
@@ -423,8 +440,9 @@ async function erledigt(id,wert){{
 function spracheAus(key){{const m=key.match(/_(de|en)#/);return m?m[1]:null;}}
 async function send(btn,key){{
  const inp=btn.previousElementSibling, txt=inp.value.trim(); if(!txt) return;
- const autor=(document.getElementById('autor').value||'').trim()||'anon';
- try{{localStorage.setItem('autor',autor);}}catch(e){{}}
+ const eingabe=(document.getElementById('autor').value||'').trim();
+ try{{if(eingabe)localStorage.setItem('autor',eingabe);}}catch(e){{}}
+ const autor=eingabe||'anon';
  btn.disabled=true; st("sende …");
  try{{
   const r=await fetch(REST,{{method:"POST",headers:{{...HDR,"Prefer":"return=minimal"}},body:JSON.stringify({{mail_key:key,autor,kommentar:txt,sprache:spracheAus(key)}})}});
@@ -434,7 +452,7 @@ async function send(btn,key){{
  btn.disabled=false;
 }}
 document.getElementById('offenliste').addEventListener('click',e=>{{const b=e.target.closest('[data-go]');if(b)springe(b.dataset.go);}});
-try{{document.getElementById('autor').value=localStorage.getItem('autor')||'';}}catch(e){{}}
+try{{const a=localStorage.getItem('autor');if(a&&a!=='anon')document.getElementById('autor').value=a;}}catch(e){{}}
 setLang('de');load();
 </script></body></html>"""
     (ROOT/"dist/editor.html").write_text(page, encoding="utf-8")
