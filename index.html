@@ -80,16 +80,11 @@
   .thumb .ed i:nth-child(1){width:100%}
   .thumb .ed i.mk{background:var(--gold-ink);width:44%}
   .thumb .ed i:nth-child(3){width:82%}
-  /* Campus-Karte: Mini-Karte – Campusblau, weisse Wege, Bau, zwei Marken.
-     Physische Kartenfarben (gedrucktes Artefakt), keine Theme-Flächen. */
-  .thumb .map{position:relative;width:82px;height:58px;border-radius:7px;overflow:hidden;display:block;background:#8abfe5} /* # ds-ok: Kartenfarbe Campus (Artefakt) */
-  .thumb .map b{position:absolute;background:#fff;border-radius:3px} /* # ds-ok: Wege weiss (Artefakt) */
-  .thumb .map b:nth-child(1){width:120%;height:7px;left:-10%;top:33px;transform:rotate(-13deg)}
-  .thumb .map b:nth-child(2){width:7px;height:80%;left:50px;top:-4px;transform:rotate(21deg)}
-  .thumb .map .bau{position:absolute;width:24px;height:17px;left:13px;top:9px;border-radius:3px;transform:rotate(-7deg);background:#0067b2} /* # ds-ok: Goetheanum-Blau (Artefakt) */
-  .thumb .map .m1,.thumb .map .m2{position:absolute;width:12px;height:12px;border-radius:50%;border:1.6px solid #fff} /* # ds-ok: Markenrand weiss (Artefakt) */
-  .thumb .map .m1{background:var(--gold-deep);left:52px;top:10px}
-  .thumb .map .m2{background:#ec5f6c;left:22px;top:36px} /* # ds-ok: Markerrot der Karte (Artefakt) */
+  /* Campus-Karte: ein prägnanter Ausschnitt der echten Geländekarte um das
+     Goetheanum (aus apps/karten-generator/assets/gelaende.svg, vektorscharf
+     per CSS-Crop). Die Kartenfarben stehen im SVG selbst (Artefakt). */
+  .thumb .karte{position:relative;width:88px;height:60px;border-radius:7px;overflow:hidden;display:block}
+  .thumb .karte img{position:absolute;width:484px;max-width:none;height:auto;left:-119px;top:-131px}
 
   /* QR-Code – das DING, das das Werkzeug macht: drei gerundete Augen + Module,
      einfarbig über Tokens (theme-fähig, kein Artefakt-Grund nötig). */
@@ -155,8 +150,8 @@
   // Karten flach nach Priorität (keine Kategorien); Unbekannte ans Ende.
   // Webfont wohnt jetzt in Schriften, Zeichen in Logos – darum keine eigene Karte.
   // Neue Ordnung (Entscheid Auftraggeber, 8. Juli 2026).
-  var ORDER = ["logo-generator","signatur","visitenkarten","qr-generator","schriften",
-    "icons","uebersetzungen","typografie","powerpoint",
+  var ORDER = ["logo-generator","signatur","visitenkarten","schriften",
+    "icons","uebersetzungen","qr-generator","typografie","powerpoint",
     "wallpaper","karten","sektionsfarben","design-system",
     "editor"];
   // Entdecker-Karussell: ausgewählte Werkzeuge, je ein Teaser.
@@ -196,18 +191,19 @@
     "powerpoint":      '<span class="ppt"><b></b><i></i><i></i></span>', // eine Folie mit Titel
     "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>', // vier Sprachen
     "editor":          '<span class="ed"><i></i><i class="mk"></i><i></i></span>', // Text mit offener Frage
-    "karten":          '<span class="map"><b></b><b></b><span class="bau"></span><i class="m1"></i><i class="m2"></i></span>', // Mini-Campus mit Marken
+    "karten":          '<span class="karte"><img src="apps/karten-generator/assets/gelaende.svg" alt=""></span>', // echter Ausschnitt um das Goetheanum
     "qr-generator":    '<svg class="qrg" viewBox="0 0 25 25" aria-hidden="true">' +
       '<rect class="ink" x="0" y="0" width="7" height="7" rx="2"/><rect class="pap" x="1" y="1" width="5" height="5" rx="1.4"/><rect class="ink" x="2" y="2" width="3" height="3" rx="0.8"/>' +
       '<rect class="ink" x="18" y="0" width="7" height="7" rx="2"/><rect class="pap" x="19" y="1" width="5" height="5" rx="1.4"/><rect class="ink" x="20" y="2" width="3" height="3" rx="0.8"/>' +
       '<rect class="ink" x="0" y="18" width="7" height="7" rx="2"/><rect class="pap" x="1" y="19" width="5" height="5" rx="1.4"/><rect class="ink" x="2" y="20" width="3" height="3" rx="0.8"/>' +
-      '<g class="ink">' +
-      '<rect x="8.6" y="0.5" width="1.5" height="1.5" rx="0.5"/><rect x="11.4" y="0.5" width="1.5" height="1.5" rx="0.5"/><rect x="14.2" y="0.5" width="1.5" height="1.5" rx="0.5"/><rect x="8.6" y="3.3" width="1.5" height="1.5" rx="0.5"/><rect x="14.2" y="2.9" width="1.5" height="1.5" rx="0.5"/>' +
-      '<rect x="0.5" y="8.6" width="1.5" height="1.5" rx="0.5"/><rect x="3.3" y="8.6" width="1.5" height="1.5" rx="0.5"/><rect x="2.9" y="11.4" width="1.5" height="1.5" rx="0.5"/><rect x="0.5" y="14.2" width="1.5" height="1.5" rx="0.5"/>' +
-      '<rect x="8.6" y="8.6" width="1.5" height="1.5" rx="0.5"/><rect x="11.4" y="8.6" width="1.5" height="1.5" rx="0.5"/><rect x="14.2" y="11" width="1.5" height="1.5" rx="0.5"/><rect x="8.6" y="11.4" width="1.5" height="1.5" rx="0.5"/><rect x="11.4" y="14.2" width="1.5" height="1.5" rx="0.5"/><rect x="16" y="8.6" width="1.5" height="1.5" rx="0.5"/><rect x="15.5" y="15.4" width="1.5" height="1.5" rx="0.5"/><rect x="11.4" y="16.6" width="1.5" height="1.5" rx="0.5"/>' +
-      '<rect x="18.4" y="10.4" width="1.5" height="1.5" rx="0.5"/><rect x="21.2" y="8.6" width="1.5" height="1.5" rx="0.5"/><rect x="23" y="12.6" width="1.5" height="1.5" rx="0.5"/><rect x="18.4" y="13.8" width="1.5" height="1.5" rx="0.5"/><rect x="21.5" y="16" width="1.5" height="1.5" rx="0.5"/>' +
-      '<rect x="8.6" y="18.4" width="1.5" height="1.5" rx="0.5"/><rect x="11.4" y="21" width="1.5" height="1.5" rx="0.5"/><rect x="14.2" y="18.4" width="1.5" height="1.5" rx="0.5"/><rect x="18.4" y="18.4" width="1.5" height="1.5" rx="0.5"/><rect x="21.4" y="21" width="1.5" height="1.5" rx="0.5"/><rect x="15.5" y="22" width="1.5" height="1.5" rx="0.5"/><rect x="18.4" y="23" width="1.5" height="1.5" rx="0.5"/>' +
-      '</g></svg>', // ein QR-Code mit den Haus-Augen
+      '<g class="ink">' +   /* fliessend: verbundene Kapseln statt Einzelpunkte */
+      '<rect x="8.7" y="0.8" width="4.2" height="1.6" rx="0.8"/><rect x="14.2" y="0.8" width="1.6" height="1.6" rx="0.7"/><rect x="14.2" y="3.2" width="1.6" height="1.6" rx="0.7"/>' +
+      '<rect x="0.8" y="8.7" width="1.6" height="4.2" rx="0.8"/><rect x="3.2" y="8.7" width="1.6" height="1.6" rx="0.7"/><rect x="0.8" y="14.2" width="1.6" height="1.6" rx="0.7"/>' +
+      '<rect x="8.7" y="8.7" width="1.6" height="4.2" rx="0.8"/><rect x="11.1" y="8.7" width="4.2" height="1.6" rx="0.8"/><rect x="13.7" y="11.1" width="1.6" height="4.2" rx="0.8"/><rect x="8.7" y="15.5" width="4.2" height="1.6" rx="0.8"/>' +
+      '<rect x="18.6" y="8.7" width="1.6" height="4.2" rx="0.8"/><rect x="21" y="8.7" width="1.6" height="1.6" rx="0.7"/><rect x="21" y="12.4" width="3.2" height="1.6" rx="0.8"/>' +
+      '<rect x="8.7" y="18.6" width="1.6" height="4.2" rx="0.8"/><rect x="11.1" y="18.6" width="4.2" height="1.6" rx="0.8"/><rect x="15.5" y="21" width="1.6" height="1.6" rx="0.7"/>' +
+      '<rect x="18.6" y="18.6" width="4.2" height="1.6" rx="0.8"/><rect x="18.6" y="21" width="1.6" height="1.6" rx="0.7"/><rect x="23" y="21" width="1.6" height="1.6" rx="0.7"/>' +
+      '</g></svg>', // ein QR-Code im Fliessend-Stil, mit den Haus-Augen
     "empfehlungen":    '<span class="spec" style="color:var(--gold-ink)">11</span>' // die elf Gebote
   };
   function visual(t){

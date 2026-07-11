@@ -235,8 +235,8 @@
           <div class="gopt">
             <span class="lab">Modulstil</span>
             <div class="seg" id="stilSeg" role="group" aria-label="Modulstil">
-              <button type="button" data-stil="punkte" aria-pressed="true">Punkte</button>
-              <button type="button" data-stil="fliessend" aria-pressed="false">Fliessend</button>
+              <button type="button" data-stil="fliessend" aria-pressed="true">Fliessend</button>
+              <button type="button" data-stil="punkte" aria-pressed="false">Punkte</button>
               <button type="button" data-stil="weich" aria-pressed="false">Weich</button>
               <button type="button" data-stil="kanten" aria-pressed="false">Kanten</button>
             </div>
@@ -343,7 +343,7 @@
   function el(id){ return document.getElementById(id); }
 
   // --- Zustand ---------------------------------------------------------------
-  var typ = 'link', stil = 'punkte', farbe = 'tinte', fmt = 'svg', size = 1024;
+  var typ = 'link', stil = 'fliessend', farbe = 'tinte', fmt = 'svg', size = 1024;
   var registriert = null;   // { code, url } nach erfolgreichem Anlegen
 
   // QR-Farben sind Artefakt, nicht Theme: ein Code braucht festen dunklen
