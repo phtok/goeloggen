@@ -1,0 +1,155 @@
+<!doctype html>
+<!-- =============================================================================
+     Kampagnen-Drehbuch · Werkzeug-Seite
+     Der Ablauf einer Mailing-Kampagne in sieben Phasen — klare Schritte, wenig
+     Sätze. Destillat der Sommer-Aktion 2026; das ausführliche Drehbuch mit allem
+     Detailwissen liegt in docs/kampagnen-drehbuch.md.
+     Chrome aus tokens.css/base.css (DS01/DS02); Kicker normal (G05).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Kampagnen-Drehbuch · Goetheanum</title>
+<meta name="description" content="Wie wir eine Kampagne bauen — der bewährte Ablauf in sieben Phasen, mit klaren Schritten und Verweisen auf die Werkzeuge." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  /* Nur seiteneigene Gestalt; alles Gemeinsame aus base.css, nur Tokens (DS02). */
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);line-height:1.05;letter-spacing:-.01em;max-width:18ch}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+  .leitsaetze{display:grid;gap:var(--s2);max-width:760px;margin-bottom:var(--s8)}
+  .leitsaetze p{margin:0;padding:var(--s3) var(--s4);background:var(--field-bg);border-left:3px solid var(--gold-deep);border-radius:0 8px 8px 0;line-height:1.5}
+  .phasen{display:grid;gap:var(--s5);max-width:760px}
+  .phase h3{display:flex;align-items:center;gap:var(--s3);margin:0}
+  .pnum{flex:0 0 auto;width:40px;height:40px;border-radius:999px;background:var(--gold-deep);color:var(--on-accent);display:grid;place-items:center;font-family:var(--font-text);font-size:18px;font-weight:600}
+  .pwann{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);font-weight:400;margin-left:auto}
+  .schritte{margin:var(--s4) 0 0;padding-left:1.5em}
+  .schritte li{line-height:1.55;margin-bottom:var(--s2)}
+  .schritte li::marker{color:var(--gold-ink)}
+  .wz{margin:var(--s4) 0 0;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .wz a{margin-right:var(--s3)}
+  .quelle{margin-top:var(--s8);font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);max-width:760px}
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"
+        data-onpage="Cockpit:../sommer-zaehler/|Aktivitäten:../sommer-zaehler/aktivitaeten.html|Kosten:../sommer-zaehler/kosten.html|Multiplikatoren:../sommer-zaehler/multiplikatoren.html|Links:../utm-generator/|Mail:../mail-editor/|Ablauf:./"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Kampagne</span>
+    <h1>Wie wir eine Kampagne bauen</h1>
+    <p class="lede">Der bewährte Ablauf in sieben Phasen — klare Schritte, wenig Sätze.
+    Destillat der Sommer-Aktion 2026; das ausführliche Drehbuch mit allem Detailwissen:
+    <a href="../../docs/kampagnen-drehbuch.md">kampagnen-drehbuch.md</a>.</p>
+  </section>
+
+  <section class="leitsaetze" aria-label="Leitsätze">
+    <p>Es beginnt nicht mit Texten.</p>
+    <p>Kein Text verspricht mehr, als die Kleinzeile erlaubt.</p>
+    <p>Eine Frist existiert nur, wenn eine Maschine sie durchsetzt.</p>
+  </section>
+
+  <section class="phasen">
+
+    <article class="card soft phase">
+      <h3><span class="pnum">0</span>Wahrheit zuerst <span class="pwann">vor allem anderen</span></h3>
+      <ol class="schritte">
+        <li>Das Angebot in einem Satz festzurren: Was bekommt man, was kostet es danach, endet es von selbst, bis wann?</li>
+        <li>Diesen Satz zur Kleinzeile machen — sie steht später unter jedem Button und ist der Vertrag.</li>
+        <li>Die Frist im System verankern: Formular-Schliessdatum setzen, Rückstellung der Probe-Konditionen terminieren.</li>
+        <li>Segmente benennen, die zugehörigen ActiveCampaign-Tags klären, Zielzahl festlegen.</li>
+      </ol>
+    </article>
+
+    <article class="card soft phase">
+      <h3><span class="pnum">1</span>Messkette beweisen <span class="pwann">bevor Inhalte entstehen</span></h3>
+      <ol class="schritte">
+        <li>Das utm-Schema übernehmen: Quelle, Medium und Kampagne fix; der Inhalt benennt Welle und Segment.</li>
+        <li>Links erzeugen und ins Register einspielen — das Cockpit zählt nur, was dort steht.</li>
+        <li>Jeden Hop prüfen: Reicht jede Seite die Parameter weiter? Füllt das Formular die vier versteckten Felder?</li>
+        <li>Eine Anmeldung Ende-zu-Ende testen und im Cockpit nachsehen — erst dann weiterbauen.</li>
+      </ol>
+      <p class="wz">Werkzeuge: <a href="../utm-generator/">Link-Generator</a> <a href="../sommer-zaehler/">Cockpit</a></p>
+    </article>
+
+    <article class="card soft phase">
+      <h3><span class="pnum">2</span>Gehalt, dann Text <span class="pwann">Rohmaterial vor Dramaturgie</span></h3>
+      <ol class="schritte">
+        <li>Beim Auftraggeber das Rohmaterial holen: Was macht das Angebot mit einem Menschen? Das ist der Kern jeder Mail.</li>
+        <li>Den Fünfer-Tisch arbeiten lassen: Autorin, Copywriter, Hüterin der Haus-Stimme, Neumeier, Geyrhalter.</li>
+        <li>Dramaturgie setzen: erste Welle Brücke, zweite Welle Datum, dritte Welle echte Frist, Mini-Reminder nur an Klicker.</li>
+        <li>Gegenlesen lassen — jedes Feld kommentierbar, der Rücklauf fliesst in die Quelle.</li>
+      </ol>
+      <p class="wz">Werkzeug: <a href="../mail-editor/">Mail-Editor</a></p>
+    </article>
+
+    <article class="card soft phase">
+      <h3><span class="pnum">3</span>Bauen und prüfen <span class="pwann">eine Quelle, eine Fabrik</span></h3>
+      <ol class="schritte">
+        <li>Redaktionelles in <q>heroes.json</q>, Strukturelles in <q>config.json</q> — die Fabrik bleibt unangetastet.</li>
+        <li>Bauen und veröffentlichen; die Prüfmaschinen halten Typografie und Gestalt.</li>
+        <li>Nach dem Merge den Live-Check laufen lassen: Sind alle Bilder und Mails erreichbar?</li>
+        <li>Testversand an echte Geräte — Apple Mail, Gmail, Outlook — und die Links kontrollieren.</li>
+      </ol>
+      <p class="wz">Quelle und Befehle: <a href="https://github.com/phtok/goeloggen/tree/main/services/mailing-sommer2026">services/mailing-sommer2026</a></p>
+    </article>
+
+    <article class="card soft phase">
+      <h3><span class="pnum">4</span>ActiveCampaign <span class="pwann">erst aktivieren, dann starten</span></h3>
+      <ol class="schritte">
+        <li>Je Segment eine Automation, der Sprach-Split liegt innen.</li>
+        <li>Eintritt über ein Bulk-Tag — Listen-Trigger erfassen den Bestand nicht.</li>
+        <li>Vor jeder Welle den Conversion-Check, vor der dritten Welle den Öffner-Split mit Alt-Betreff.</li>
+        <li>Predictive Sending nur für die frühen Wellen — Frist-Mails fix senden.</li>
+        <li>Erst alle Automationen aktivieren, dann das Start-Tag setzen.</li>
+      </ol>
+    </article>
+
+    <article class="card soft phase">
+      <h3><span class="pnum">5</span>Betrieb <span class="pwann">während die Wellen laufen</span></h3>
+      <ol class="schritte">
+        <li>ActiveCampaign hält Kopien: Änderungen heissen neu bauen und das HTML frisch einfügen — bis die Welle läuft.</li>
+        <li>Bilder wirken per Adresse: gleicher Dateiname, neues Bild — nach dem ersten Versand nie mehr Dateien löschen.</li>
+        <li>Zahlen täglich lesen, Massnahmen festhalten.</li>
+      </ol>
+      <p class="wz">Werkzeuge: <a href="../sommer-zaehler/">Cockpit</a> <a href="../sommer-zaehler/aktivitaeten.html">Aktivitäten</a> <a href="../sommer-zaehler/kosten.html">Kosten</a></p>
+    </article>
+
+    <article class="card soft phase">
+      <h3><span class="pnum">6</span>Nach der Frist <span class="pwann">hier liegt der grösste Hebel</span></h3>
+      <ol class="schritte">
+        <li>Am Tag danach die Frist durchsetzen: Probe-Konditionen zurückstellen, Formulare schliessen.</li>
+        <li>Zählen: Cockpit für das Direkte, der Plattform-Export je Welle für das Übrige.</li>
+        <li>Die Gratis-Monate begleiten: Willkommen, Impuls zur Halbzeit, Erinnerung vor Ablauf — die Onboarding-Strecke entscheidet, wer bleibt.</li>
+        <li>Die Lehren zurück ins Drehbuch schreiben.</li>
+      </ol>
+      <p class="wz">Nachschlag: <a href="../../docs/kampagnen-drehbuch.md">das ausführliche Drehbuch</a></p>
+    </article>
+
+  </section>
+
+  <p class="quelle">Dieses Blatt ist das Destillat; Entscheidungsgründe, eingefrorenes
+  Detailwissen und die wiederverwendbaren Muster stehen im
+  <a href="../../docs/kampagnen-drehbuch.md">Kampagnen-Drehbuch</a>.</p>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Kampagnen-Drehbuch</strong> · sieben Phasen, eine Fabrik</span>
+    <span><a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
