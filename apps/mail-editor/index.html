@@ -79,6 +79,9 @@ main{--mailw:clamp(340px,30vw,600px)} /* 600 = native Mail-Breite: Vorschau in O
 .offen .okey{font-family:var(--font-text);font-size:var(--t-micro);color:var(--gold-ink);font-weight:600}
 .offen .otxt{display:block;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;margin-top:2px}
 .offen .ometa{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-left:8px}
+.offen li.done button{opacity:.72}
+.offen li.done .otxt{text-decoration:line-through;color:var(--muted)}
+.offen li.done .okey{color:var(--muted)}
 .fld.blitz{outline:2px solid var(--gold-deep);outline-offset:4px;border-radius:8px}
 /* Global ausblenden: Schalter «Kommentare» in der Kopfleiste. */
 body.nocmt .cbtn,body.nocmt .cpanel,body.nocmt .offen-sec{display:none}
@@ -96,7 +99,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   <span class="kicker">Sommer-Aktion 2026</span>
   <h1>Mail-Editor</h1>
   <p class="lede" style="max-width:var(--measure)">Alle Wellen-Mails der drei Segmente zum Gegenlesen — je Feld kommentierbar, Kommentare landen im Werkzeug-Backend. Korrigiert wird in <code>heroes.json</code>, dann wird neu gebaut.</p>
-  <p class="subline">Stand dieses Builds: 11.07.2026, 16.38 Uhr · <code>63a14f1</code></p>
+  <p class="subline">Stand dieses Builds: 11.07.2026, 17.00 Uhr · <code>5df7731</code></p>
   <div class="controls">
     <span class="lab">Sprache</span>
     <button id="b-de" class="pill on" onclick="setLang('de')">Deutsch</button>
@@ -110,8 +113,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </div>
 </section>
 
-<section class="segment offen-sec" id="offen-sec" hidden><h2>Offene Kommentare</h2>
-<p class="subline">Die To-do-Liste des Gegenlesens — anklicken springt zum Feld.</p>
+<section class="segment offen-sec" id="offen-sec" hidden><h2 id="offen-titel">Offene Kommentare</h2>
+<p class="subline" id="offen-sub">Die To-do-Liste des Gegenlesens — anklicken springt zum Feld.</p>
 <ul class="offen" id="offenliste"></ul></section>
 
 <section class="segment shared-sec"><h2>Gemeinsame Elemente</h2>
@@ -6061,14 +6064,18 @@ function render(){
      +'<div class="khead"><b>'+esc(c.autor||'?')+'</b><span class="kzeit">'+zeit(c.created_at)+'</span>'
      +'<button class="kdone" onclick="erledigt('+c.id+','+(!c.erledigt)+')" title="'+(c.erledigt?'wieder öffnen':'erledigt')+'" aria-label="'+(c.erledigt?'wieder öffnen':'erledigt')+'">'+(c.erledigt?'↩':'✓')+'</button></div>'
      +'<span class="ktxt">'+esc(c.kommentar)+'</span></li>').join('');});
- document.querySelectorAll('.cc').forEach(s=>{const n=sammel(s.dataset.cc).filter(c=>!c.erledigt).length;
+ document.querySelectorAll('.cc').forEach(s=>{const n=sammel(s.dataset.cc).filter(c=>SHOW_DONE||!c.erledigt).length;
    s.textContent=n;s.classList.toggle('has',n>0);});
- const off=[];Object.values(COMMENTS).forEach(l=>l.forEach(c=>{if(!c.erledigt)off.push(c);}));
+ // Sammelliste oben: normal die offene To-do-Liste; mit «Erledigte zeigen» auch die erledigten.
+ const off=[];Object.values(COMMENTS).forEach(l=>l.forEach(c=>{if(SHOW_DONE||!c.erledigt)off.push(c);}));
  off.sort((a,b)=>a.created_at<b.created_at?-1:1);
+ const titel=document.getElementById('offen-titel'), sub=document.getElementById('offen-sub');
+ if(SHOW_DONE){titel.textContent='Alle Kommentare';sub.textContent='Offene und erledigte — anklicken springt zum Feld.';}
+ else{titel.textContent='Offene Kommentare';sub.textContent='Die To-do-Liste des Gegenlesens — anklicken springt zum Feld.';}
  document.getElementById('offen-sec').hidden=off.length===0;
  document.getElementById('offenliste').innerHTML=off.map(c=>{const[wo,feld]=c.mail_key.split('#');
-   return '<li><button type="button" data-go="'+esc(c.mail_key)+'"><span class="okey">'
-     +esc(wo==='shared'?'Gemeinsam':wo)+' · '+esc(feld||'')+'</span><span class="ometa">'+esc(c.autor||'?')+' · '+zeit(c.created_at)+'</span>'
+   return '<li'+(c.erledigt?' class="done"':'')+'><button type="button" data-go="'+esc(c.mail_key)+'"><span class="okey">'
+     +esc(wo==='shared'?'Gemeinsam':wo)+' · '+esc(feld||'')+(c.erledigt?' · erledigt':'')+'</span><span class="ometa">'+esc(c.autor||'?')+' · '+zeit(c.created_at)+'</span>'
      +'<span class="otxt">'+esc(c.kommentar)+'</span></button></li>';}).join('');
 }
 function springe(key){
