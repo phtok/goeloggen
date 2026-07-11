@@ -15,19 +15,23 @@ Nur Lesen. Das ist der Teil, den der Agent nicht neu erraten muss.
 ## Die Schleife (der Agent)
 1. **Briefing holen:** `python3 ruecklauf.py`. Keine offenen → fertig, nichts tun.
 2. **Je Kommentar einordnen:**
-   - **Klar und umsetzbar** (konkrete Fassung, eindeutige Korrektur): umsetzen.
+   - **Klar und umsetzbar** (konkrete Fassung, eindeutige Korrektur): Fassung vorbereiten.
    - **Mehrdeutig** (z. B. „macht vielleicht mehr Sinn" ohne Fassung, Geschmacksfrage,
      Struktur-/Architekturfrage): **nicht raten.** Rückfrage als Kommentar zurück-
      schreiben (siehe unten) oder Philipp direkt fragen. Kommentar bleibt offen.
-3. **Umsetzen — nur in `heroes.json`** am genannten Pfad. Betroffene Regel-IDs nennen
-   (G/B/DS). Die Fabrik (`build_editor.py`) bleibt unangetastet.
+3. **Fassung vorbereiten — nur in `heroes.json`** am genannten Pfad. Betroffene Regel-IDs
+   nennen (G/B/DS). Die Fabrik (`build_editor.py`) bleibt unangetastet.
 4. **Bauen:** `python3 build_editor.py --publish`. Bricht der Build oder eine Prüfmaschine
    (Hook) → Fehler zuerst lösen, nicht drumherum bauen.
-5. **PR** auf `main`, Titel wie üblich. Prüfmaschinen (CI-Job „pruefen") grün → **Squash-
-   Merge** (Haus-Regel: Claude-PRs werden gemergt, nicht als Draft geparkt). Danach den
-   Arbeits-Branch frisch von `main` ziehen.
+5. **Vorlegen (aktuelle Autonomie-Stufe, Entscheid Ph 11.7.):** je Kommentar Alt→Neu
+   zeigen und **auf Philipps Freigabe warten** — nicht selbst mergen. Praktisch: einen
+   **Draft-PR** öffnen und die Vorschläge kurz auflisten (Kommentar → Pfad → alt/neu →
+   Regel-ID). Erst auf sein OK: als Squash mergen, danach den Arbeits-Branch frisch von
+   `main` ziehen. *(Höhere Stufe später möglich: eindeutige Korrekturen bei grünen
+   Maschinen direkt mergen, nur Mehrdeutiges vorlegen. Sendet nichts, ist reversibel —
+   der irreversible Akt bleibt der Versand. Erst umstellen, wenn Ph das freigibt.)*
 6. **Nach dem Merge** `python3 build_editor.py --verify` (alle URLs live).
-7. **Erledigt setzen** — für jeden umgesetzten Kommentar:
+7. **Erledigt setzen** — für jeden freigegebenen und gemergten Kommentar:
    - Antwort einfügen (Insert in `sommer2026_mail_comments`): `autor='claude'`, gleicher
      `mail_key`, kurze Notiz was geändert wurde (+ PR-Nummer).
    - Original per RPC schliessen: `sommer2026_comment_erledigt(kommentar_id, true)`.
@@ -45,7 +49,15 @@ Insert in `sommer2026_mail_comments` mit `autor='claude'`, gleichem `mail_key`, 
 konkreten Rückfrage — erscheint im Editor unter demselben Element, Philipp antwortet dort.
 Den auslösenden Kommentar **offen lassen**, bis die Fassung klar ist.
 
-## Auslöser
-Manuell (jederzeit `python3 ruecklauf.py`) oder als geplante Routine, die eine frische
-Session weckt, das Briefing liest und bei offenen Kommentaren die Schleife fährt. Bei
-0 offenen endet sie sofort — ein HTTP-Aufruf, kein Aufwand.
+## Wie auslösen (manuell)
+Zwei Wege, beide von Hand — es läuft kein Automat (Entscheid Ph 11.7.):
+
+1. **In einer Claude-Code-Session** (der normale Weg): Philipp sagt **„Rücklauf"** (oder
+   „gibt es neue Kommentare?"). Die Session fährt Schritt 1–4, **legt die Vorschläge vor**
+   und wartet auf Freigabe.
+2. **Selbst am Terminal:** `cd services/mailing-sommer2026 && python3 ruecklauf.py` —
+   zeigt das Briefing (offene Kommentare mit Pfad + aktuellem Text). `--json` maschinen-
+   lesbar, `--alle` inkl. erledigter. Nur Lesen; ändert nichts.
+
+Bei 0 offenen Kommentaren: „nichts zu tun", Ende. Eine geplante Routine ist bewusst
+**nicht** eingerichtet — erst wenn Philipp einen Takt freigibt.

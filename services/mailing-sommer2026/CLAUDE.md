@@ -98,9 +98,10 @@ angewendet). Rücklauf: offene Kommentare lesen → in heroes.json korrigieren �
 Kommentare aus Supabase und macht daraus eine Arbeitsliste mit dem **exakten heroes.json-
 Pfad**, dem **aktuellen Text** und der **Kommentar-ID** je Kommentar (`--json` maschinen-
 lesbar, `--alle` inkl. erledigter). Nur Lesen. Der Ablauf der Schleife und die Leitplanken
-(klar → umsetzen + PR; mehrdeutig → Rückfrage zurückschreiben, nicht raten; nie senden/
-Frist/Zahlung; versendete Wellen in Ruhe lassen; erledigt erst nach Merge) stehen in
-**RUECKLAUF-AGENT.md**. Auslöser: manuell oder als geplante Routine.
+(Autonomie-Stufe 11.7. = **alles vorlegen**, nicht selbst mergen; mehrdeutig → Rückfrage
+zurückschreiben, nicht raten; nie senden/Frist/Zahlung; versendete Wellen in Ruhe lassen;
+erledigt erst nach Freigabe + Merge) stehen in **RUECKLAUF-AGENT.md**. Auslöser: manuell —
+in einer Session „Rücklauf" sagen oder `python3 ruecklauf.py` am Terminal; kein Automat.
 
 ## ActiveCampaign (via Cowork)
 Automation einmal im UI bauen: If/Else-Split auf Abo-Tags (nurtv/nurws/noabo; beides ausgeschlossen),
