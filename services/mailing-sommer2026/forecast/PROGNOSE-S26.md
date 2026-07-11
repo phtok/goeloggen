@@ -66,9 +66,11 @@ erste Optimierungsverdacht.
 Die **Frist-Mail zieht beim TV-Angebot**, beim WS-Angebot verpufft sie. Das ist
 das stärkste Einzelsignal der 2025-Daten und der Kern des A/B-Teils weiter unten.
 
-**Abmeldungen:** je Mail **< 0,5 %** der Versandmenge (52–105 absolut). Der oft
-zitierte 12,5-%-Wert stammt aus der winzigen Neujahr-Kampagne (8 Sendungen) und
-ist statistisch nicht übertragbar.
+**Abmeldungen:** in den Sommer-2025-Serien je Mail **< 0,5 %** (52–105 absolut).
+Auch die reale GTV-Neujahr-Mail 3 (Feb 2026) — die Quelle des «12,5 %»-Insights —
+lag echt bei nur **0,585 % (DE) / 0,517 % (EN)** (90 bzw. 68 Abmeldungen auf
+15.385 / 13.150): kein Spike. Der «12,5 %»-Wert hält den realen Zahlen nicht
+stand (Details §3, Kalibrierung).
 
 ---
 
@@ -159,22 +161,35 @@ Was das für S26 heisst:
   dreisegmentige Automation ist dieselbe Grössenordnung — «einige Hundert, nicht
   Tausende» hält, und die **Abwärtskorrektur des NoAbo-p war richtig**, nicht zu
   vorsichtig.
-- **Jetzt mit echter Rate.** Die Versandmenge steckt in den 2025-GTV-Daten:
-  GTV DE 27.502 + EN 23.777 ≈ **~51.000** erreicht (international, wie die
-  Sprach-Verteilung der Abschlüsse zeigt). → **76 / 51.000 = 0,15 %/Empfänger**
-  für ein **kaltes, bezahltes** 30-%-Rabatt-Angebot. Ein gemessener Wert, keine
-  Annahme mehr.
-- **Rekonziliation mit S26 (der Clou).** Mein korrigiertes NoAbo (kalt) liegt bei
-  152 / 40.000 = **0,38 %/Empfänger** — für ein **Gratis-Trial**. Der Sprung
-  0,15 % → 0,38 % ist ein **~2,5× Free-über-Bezahl-Aufschlag** (Trial-Starts ohne
-  Sofortzahlung konvertieren typisch 2–4× über einen Bezahl-Rabatt). Das sitzt
-  **mitten im plausiblen Band** — die reale Kampagne **bestätigt die Abwärts-
-  korrektur**, statt sie zu widerlegen. Aus «Annahme» wird «kalibriert».
-- **Restunsicherheit, beide Lesarten stützen 208.** War die Feb-Kampagne
-  DE-lastiger/kleiner (~27k statt 51k), steigt ihre Rate auf ~0,28 % und der
-  Aufschlag schrumpft auf ~1,4× — dann wäre S26 sogar leicht **konservativ**.
-  Sommer (Jul/Aug schwächer als Februar) wirkt gegenläufig. In **keiner** Lesart
-  wird 208 nennenswert nach unten gedrückt.
+- **Jetzt mit exakter Rate.** Die echte Versandmenge (GTV Neujahr 2026, Mail 1):
+  **30.381 DE + 25.405 EN = 55.786** erreicht. → **76 / 55.786 = 0,14 %/Empfänger**
+  für ein **kaltes, bezahltes** 30-%-Rabatt-Angebot. Gemessen, keine Annahme.
+- **Rekonziliation mit S26 (der Clou).** Mein korrigiertes NoAbo (kalt, **Gratis**-
+  Trial) liegt bei 152 / 40.000 = **0,38 %/Empfänger**. Der Sprung 0,14 % → 0,38 %
+  ist ein **~2,8× Free-über-Bezahl-Aufschlag** (Trial-Starts ohne Sofortzahlung
+  konvertieren typisch 2–4× über einen Bezahl-Rabatt) — **mitten im plausiblen
+  Band**. Die reale Kampagne **bestätigt die Abwärtskorrektur**; aus «Annahme» wird
+  «Messwert». Sommer (schwächer als Februar) wirkt leicht gegenläufig, ändert die
+  Grössenordnung nicht.
+
+**Drei Bestätigungen aus derselben realen Kampagne:**
+
+1. **Öffnungsraten — ein zweites Mal bestätigt.** GTV26 öffnete w1/w2 bei
+   **40–41 % (DE) / 39–40 % (EN)** — praktisch deckungsgleich mit den 2025-Sommer-
+   Ankern und meinen S26-Annahmen. Zwei unabhängige reale Kampagnen, dieselben
+   Öffnungsraten → das Fundament der Prognose steht.
+2. **Die Frist-Mail ist real unkritisch.** GTV26 Mail 3 hatte **0,585 % / 0,517 %**
+   Abmeldungen — kein Spike. Die leicht höhere Rate als im Sommer (~0,35 %) erklärt
+   die **komprimierte Taktung** (3 Mails in **5 Tagen**). **S26 verteilt dieselben
+   drei Wellen über ~3½ Wochen** → noch entspannter, Abmelde-Risiko noch tiefer.
+   Also: **w3 nicht entschärfen, keine Zusatz-Dringlichkeit** (deckt sich mit der
+   Vorgabe).
+3. **Gate vs. Split (Struktur-Hinweis).** GTV26 **gatete** w3 (nur ~51 % — die
+   Engager — bekamen Mail 3; daher dort die «>60 %»-Öffnung). S26 **splittet**
+   stattdessen: alle bekommen w3, Nicht-Öffner mit Alt-Betreff. Meine Prognose
+   rechnet w3 korrekt auf die **volle** Basis (S26-Design). Falls die Abmeldungen
+   im Betrieb doch klettern, ist GTV26s Gate der bewährte Notausgang für den
+   Nicht-Öffner-Rest.
 
 **Werthebel (aus den realen €-Zahlen).** Ein Feb-Abschluss war ~€124 brutto wert.
 Ein S26-Trial-Start ist zunächst **€0** — sein Wert = *Trial→Paid-Rate* × Jahres-
@@ -260,7 +275,9 @@ klein). **Nenne mir die drei echten Grössen, und das Band kollabiert.**
 - **`simulate.py`** — Monte-Carlo, 40.000 Durchläufe je Zweig, fester Seed.
   Doppelt-stochastisch: (1) wahre S26-Rate ~ N(2025-Anker, Streuung aus der
   Kampagnen-Spanne), (2) Zahl ~ Binomial. Bänder = Perzentile P10/P50/P90.
-- **`basis-2025.json`** — die vier Kampagnen als Eingabe (Deine AC-Zahlen).
+- **`basis-2025.json`** — die vier Sommer-Kampagnen als Eingabe (Deine AC-Zahlen).
+- **`kalibrierung-gtv-neujahr-2026.json`** — die reale Feb-2026-TV-Kampagne
+  (Sends, Öffnungen, Abmeldungen, 76 Abschlüsse) als externe Kalibrierung.
 - **`forecast.json`** — maschinenlesbarer Ergebnis-Dump (fürs Cockpit/Dashboard).
 - Aufruf: `python3 simulate.py` (Bericht) · `--json` (Ergebnis-Datei).
 
