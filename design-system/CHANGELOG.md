@@ -16,6 +16,16 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.9.4] – 2026-07-11
+
+### Menü: Strukturtitel von Laut auf Deutlich
+- **Was:** Schubladen-Titel, Bereichs-Titel und aktiver Eintrag laufen jetzt in
+  **Deutlich (580)** statt Laut (680). Die Laute ist die Inline-Fettung —
+  Strukturtitel tragen laut Hausregel Deutlich; bei 15–17px rendert 680
+  zudem klumpig (Befund Auftraggeber, iPhone-Screenshot 11. Juli 2026).
+- **Wirkung:** nav.css (`.dhead .t`, `.dsnav-group>summary`,
+  `.dsnav-link.is-active .tt`); keine neue Regel — eine Regel angewandt.
+
 ## [1.9.3] – 2026-07-10
 
 ### Status-Marker in der Intern-Schublade
