@@ -107,9 +107,9 @@ def render_mail(motiv, welle, lang, wm):
     mehrere = len(ctas) > 1
     cta_links = [(label, links.link_for(welle, seg, ziel, lang, mehrere)) for ziel, label in ctas]
     hero = src_for(compose(var, f"{motiv}_{vid}"))
-    wf = T.get("headline_webfont")
-    fontface = (f"<mj-style>@font-face{{font-family:'{wf['family']}';src:url('{wf['url']}') "
-                f"format('{wf['format']}');font-weight:{wf['weight']};font-style:normal;}}</mj-style>") if (BASE and wf) else ""
+    faces = "".join(f"@font-face{{font-family:'{w['family']}';src:url('{w['url']}') format('woff2');"
+                    f"font-weight:{w['weight']};font-style:normal;}}" for w in T.get("webfonts", []))
+    fontface = f"<mj-style>{faces}</mj-style>" if (BASE and faces) else ""
     btns = []
     for i, (label, l) in enumerate(cta_links):
         primaer = i == 0
@@ -126,7 +126,7 @@ def render_mail(motiv, welle, lang, wm):
 <mj-section background-color="#FFFFFF" padding="18px 28px 14px 28px"><mj-column><mj-image src="{src_for(wm[0])}" alt="Goetheanum" width="{wm[1]}px" align="left" padding="0"/></mj-column></mj-section>
 <mj-section background-color="#FFFFFF" padding="0"><mj-column><mj-image src="{hero}" alt="{xml(var.get('alt',''))}" padding="0" fluid-on-mobile="true"/></mj-column></mj-section>
 <mj-section background-color="#FFFFFF" padding="24px 28px 0 28px"><mj-column>
-  <mj-text font-size="14px" line-height="20px" font-weight="700" color="{AKZENT}" padding="0 0 10px 0">{xml(H['badge'][lang])}</mj-text>
+  <mj-text font-size="14px" line-height="20px" color="{AKZENT}" padding="0 0 10px 0">{xml(H['badge'][lang])}</mj-text>
   <mj-text font-family="{HL_STACK}" font-size="30px" line-height="35px" font-weight="700" color="{INK}" padding="0 0 14px 0">{titel(c['botschaft'])}</mj-text>
   <mj-text padding="0 0 22px 0">{xml(c['text'])}</mj-text>
   {btns}
@@ -224,7 +224,7 @@ def main():
     # Gemeinsame Elemente. Der Button-Stil zeigt die Mail-DNA — Artefakt, kein Theme.
     shared = [
         ("shared#wortmarke", "Wortmarke", f'<img src="{data_uri(wm[0])}" style="height:20px" alt="Goetheanum"> — offizielles Logo'),
-        ("shared#badge", "Badge", f'<span style="color:{AKZENT};font-weight:700">{esc(H["badge"]["de"])}</span> / <span style="color:{AKZENT};font-weight:700">{esc(H["badge"]["en"])}</span> — HTML-Text in der Mail-Grundschrift <!-- # ds-ok Mail-DNA, kein Theme -->'),
+        ("shared#badge", "Badge", f'<span style="color:{AKZENT}">{esc(H["badge"]["de"])}</span> / <span style="color:{AKZENT}">{esc(H["badge"]["en"])}</span> — HTML-Text, normal statt fett (G05) <!-- # ds-ok Mail-DNA, kein Theme -->'),
         ("shared#beweisband", "Beweis-Band", f'{esc(H["proof"]["de"])}<br>{esc(H["proof"]["en"])}'),
         ("shared#button", "Button-Stil", f'<span style="background:{AKZENT};color:#fff;border-radius:999px;padding:8px 18px;font:600 14px {FONT_STACK}">Gratis testen →</span> <!-- # ds-ok Mail-DNA, kein Theme -->'),
         ("shared#kleinzeile", "Kleinzeile (je Motiv)", "<br>".join(esc(H["kleinzeile"][m]["de"]) for m in H["motive"])),

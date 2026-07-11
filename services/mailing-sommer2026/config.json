@@ -5,7 +5,7 @@
   "frist": "2026-08-08",
   "frist_hinweis": "Samstag — wirksamer Schluss-Druck liegt auf Do 6.8. / Fr 7.8.",
   "theme": {
-    "_hinweis": "Kampagnen-DNA der Mails: Rosé-Palette + Sommer-Motive. Schrift-Beschluss 11.7.26 (Ph, Vorschlag 1): Headline = Hausschrift ‹Goetheanum› Schnitt Deutlich (Absender ist das Haus; TV-Seite und Übersicht sprechen sie schon; eigene Lizenz OFL — löst den Zeitungs-Einwand vom 9.7. prinzipiell). Body = ehrlicher System-Stack (Inter war toter Eintrag). Fazeta bleibt der WS-Landingpage vorbehalten.",
+    "_hinweis": "Kampagnen-DNA der Mails: Rosé-Palette + Sommer-Motive. Schrift-Beschlüsse 11.7.26 (Ph): Headline = Hausschrift ‹Goetheanum› Deutlich, Body = ‹Source Sans 3› als Webfont (Vorschlag 1 — die Haus-Paarung des Design-Systems, beide OFL/selbst gehostet; dieselben Clients laden beide, kein Zustand mischt falsch), Fallback = System-Stack. Kicker/Badge normal statt fett (G05). Fazeta bleibt der WS-Landingpage vorbehalten.",
     "akzent": "#A95278",
     "akzent_tief": "#8E3F62",
     "wash": "#FFF4F8",
@@ -13,15 +13,27 @@
     "nebel": "#F6F4F2",
     "gedaempft": "#6E6E6E",
     "fuss": "#9A9AA6",
-    "font_stack": "-apple-system,'Segoe UI',Helvetica,Arial,sans-serif",
+    "font_stack": "'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif",
     "headline_stack": "Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif",
-    "headline_webfont": {
-      "family": "Goetheanum",
-      "url": "https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2",
-      "format": "woff2",
-      "weight": "700",
-      "_hinweis": "Deutlich (580) = Titelschnitt der Hausregeln; als weight 700 deklariert, damit Apple Mail ihn für die 700er-Headline nimmt (kein synthetisches Fetten). Nur Apple-Clients laden ihn (@font-face), der Rest sieht den Fallback-Stack."
-    }
+    "webfonts": [
+      {
+        "family": "Goetheanum",
+        "weight": "700",
+        "url": "https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2",
+        "_hinweis": "Deutlich (580) als 700 deklariert — Apple Mail nimmt ihn exakt für die Headline, kein synthetisches Fetten."
+      },
+      {
+        "family": "Source Sans 3",
+        "weight": "400",
+        "url": "https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2"
+      },
+      {
+        "family": "Source Sans 3",
+        "weight": "600",
+        "url": "https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2",
+        "_hinweis": "600 deckt die Button-Beschriftung."
+      }
+    ]
   },
   "utm_fix": {
     "utm_source": "mailing",
