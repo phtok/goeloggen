@@ -11,6 +11,10 @@ echte Sommer-Lifestyle-Motive. **Schrift-Beschluss 11.7. (Vorschlag 1):** Headli
 System-Stack; Fazeta bleibt der WS-Landingpage vorbehalten. Die Mail ist **Artefakt** (Kampagnen-DNA),
 das Editor-Chrome läuft auf dem Haus-Design-System.
 
+## Drehbuch für die nächste Kampagne
+Die übertragbaren Lehren (Reihenfolge, Messkette, Fünfer-Tisch, AC-Muster, eingefrorenes
+Detailwissen) stehen in **docs/kampagnen-drehbuch.md** — dort beginnt die nächste Kampagne.
+
 ## Eine Quelle
 `heroes.json` trägt alles Redaktionelle: die Wellen-Texte (`wellen`, je Welle × Sprache, optional
 `preheader`), die Motive mit CTA-Labels und Bildvariationen, den Wellenplan, Kleinzeile/Proof/Badge.
