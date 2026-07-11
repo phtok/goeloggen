@@ -101,7 +101,14 @@
     --sign-box:#eef2f7;     /* # ds-ok — zarte Blau-Tönung der Wechsel-Box */
     --sign-line:#cdd8e6;    /* # ds-ok — feine Trennlinie */
     width:var(--sheet-w,297mm);height:var(--sheet-h,420mm);background:var(--sign-bg);color:var(--sign-ink);
-    box-shadow:0 6px 24px rgba(20,24,28,.14);position:relative;overflow:hidden;font-family:var(--font-display)}
+    box-shadow:0 6px 24px rgba(20,24,28,.14);position:relative;overflow:hidden;font-family:var(--font-display);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  /* Piktogramm-Standard: ein grosses Zeichen, zwei ratifizierte Fassungen.
+     Schwarz auf Weiss und Weiss auf Blau (B01: auf Farbe steht Weiss). */
+  .sheet[data-variant="sw"]  {--sign-bg:#ffffff; --piktogramm:#111111}  /* # ds-ok — schwarz auf weiss (Druck) */
+  .sheet[data-variant="blau"]{--sign-bg:#0061a9; --piktogramm:#ffffff}  /* # ds-ok — weiss auf Markenblau (Druck) */
+  .s-pikto{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .s-pikto span{font-family:"G Icons";line-height:1;color:var(--piktogramm)}
   .pad{position:absolute;inset:0;padding:8% 9%;display:flex;flex-direction:column;gap:.55em;font-size:var(--u,13mm)}
 
   .s-kicker{font-family:var(--font-text);font-weight:600;color:var(--sign-soft);font-size:.5em;line-height:1.2;letter-spacing:.01em}
@@ -150,8 +157,24 @@
   .glyphcell:hover,.glyphcell:focus-visible{border-color:var(--gold-ink);background:var(--paper);outline:none}
   .glyphcell .g{font-family:"G Icons";font-size:38px;line-height:1;color:var(--ink);height:40px}
   .glyphcell .n{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);text-align:center;line-height:1.2;min-height:2.4em}
+  .glyphcell[aria-pressed="true"]{border-color:var(--gold-ink);background:var(--paper);box-shadow:0 0 0 1px var(--gold-ink) inset}
   .pnone{margin-top:var(--s2)}
   .empty{color:var(--muted);font-size:var(--t-small);padding:var(--s4) 0}
+
+  /* --- Klappbare Piktogramm-Auswahl (native <details>) ---------------------- */
+  .gallery{border:1px solid var(--line);border-radius:var(--r-card);background:var(--field-bg);overflow:hidden}
+  .gallery>summary{cursor:pointer;padding:var(--s3) var(--s4);font-family:var(--font-text);font-weight:600;font-size:var(--t-small);
+    color:var(--ink);list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:var(--tap)}
+  .gallery>summary::-webkit-details-marker{display:none}
+  .gallery>summary::after{content:"▾";color:var(--muted);font-size:var(--t-small)}
+  .gallery[open]>summary::after{content:"▴"}
+  .gallery>summary:hover{color:var(--gold-ink)}
+  .gallery .gbody{padding:var(--s3) var(--s4) var(--s4);border-top:1px solid var(--line-soft)}
+  .gallery .gsearch{width:100%;font-family:var(--font-text);font-size:16px;color:var(--ink);background:var(--field-bg);
+    border:1px solid var(--line);border-radius:var(--r-control);padding:10px 12px;outline:none;margin-bottom:var(--s3)}
+  .gallery .gsearch:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
+  .gallery h4{font-family:var(--font-text);font-weight:600;font-size:var(--t-small);color:var(--muted);margin:var(--s3) 0 var(--s2)}
+  .gallery .gbody>h4:first-child{margin-top:0}
 </style>
 </head>
 <body>
@@ -173,7 +196,38 @@
       <!-- ============================ BEDIENUNG ============================= -->
       <div class="editor">
 
-        <div class="grp">
+        <div class="grp" id="grp-art">
+          <h3>Art</h3>
+          <p class="note">Einfacher Standard: ein grosses Piktogramm auf dem Blatt – oder das ausführliche Raumschild mit Titel, Regelzeilen und Wechsel-Box.</p>
+          <div class="optline">
+            <span class="lab">Schild-Art</span>
+            <div class="seg" role="group" aria-label="Schild-Art" id="sg-type">
+              <button type="button" data-v="pikto" aria-pressed="false">Piktogramm</button>
+              <button type="button" data-v="raum" aria-pressed="true">Raumschild</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grp" id="grp-pikto" hidden>
+          <h3>Piktogramm</h3>
+          <p class="note">Ein Zeichen der Hausschrift, gross und mittig. Zwei Fassungen: schwarz auf weiss oder weiss auf blauem Grund.</p>
+          <div class="optline">
+            <span class="lab">Fassung</span>
+            <div class="seg" role="group" aria-label="Fassung" id="sg-variant">
+              <button type="button" data-v="sw" aria-pressed="true">Schwarz auf Weiss</button>
+              <button type="button" data-v="blau" aria-pressed="false">Weiss auf Blau</button>
+            </div>
+          </div>
+          <details class="gallery" id="gallery" open style="margin-top:var(--s4)">
+            <summary>Piktogramm wählen<span id="gallery-cur" class="sr-only"></span></summary>
+            <div class="gbody">
+              <input type="search" class="gsearch" id="gallerySearch" placeholder="Suchen – z. B. WC, Pfeil, Kamera" aria-label="Piktogramm suchen" />
+              <div id="galleryBody"></div>
+            </div>
+          </details>
+        </div>
+
+        <div class="grp" id="grp-kopf">
           <h3>Kopf</h3>
           <p class="note">Titel zweisprachig – Deutsch (Deutlich) über Englisch (Klar). Die Datum-Zeile ist optional.</p>
           <div class="optline">
@@ -192,7 +246,7 @@
           </div>
         </div>
 
-        <div class="grp">
+        <div class="grp" id="grp-regeln">
           <h3>Regeln &amp; Wege</h3>
           <p class="note">Je Zeile ein Icon oder Pfeil aus dem Haus-Satz, dazu das zweisprachige Label. Für Wegweiser genügen Pfeil und Zielname.</p>
           <div class="rules" id="rules"></div>
@@ -206,7 +260,7 @@
           </div>
         </div>
 
-        <div class="grp">
+        <div class="grp" id="grp-box">
           <h3>Wechsel-Box</h3>
           <p class="note">Das hinterlegte Feld für die wechselnde Info (z. B. Besichtigungszeiten) mit optionaler Fussnote.</p>
           <div class="optline">
@@ -343,6 +397,8 @@
 
   function defaults(){
     return {
+      type:"raum",   // 'raum' = Raumschild · 'pikto' = ein grosses Piktogramm
+      pikto:{char:cpChar("U+0061"),label:"Fahrstuhl"}, piktoVariant:"sw",
       kickerOn:false, kicker:"Juli 2026",
       title:{de:"Grosser Saal", en:"Main Auditorium"},
       rules:[
@@ -425,6 +481,19 @@
       w + " × " + h + " mm";
 
     pad.innerHTML = "";
+
+    // --- Piktogramm-Standard: ein grosses Zeichen, mittig, zwei Fassungen ----
+    if(state.type==="pikto"){
+      sheet.setAttribute("data-variant", state.piktoVariant);
+      var wrap=document.createElement("div"); wrap.className="s-pikto";
+      var pg=document.createElement("span"); pg.setAttribute("aria-hidden","true");
+      pg.textContent = state.pikto ? state.pikto.char : "";
+      pg.style.fontSize = (Math.min(w,h)*0.6).toFixed(2)+"mm";
+      wrap.appendChild(pg); pad.appendChild(wrap);
+      fit(); return;
+    }
+    sheet.removeAttribute("data-variant");
+
     if(state.kickerOn && esc(state.kicker)!==""){
       var k=document.createElement("div"); k.className="s-kicker"; k.textContent=state.kicker; pad.appendChild(k);
     }
@@ -458,7 +527,18 @@
     }
     fit();
   }
-  function render(){ renderRules(); syncInputs(); renderSheet(); }
+  function render(){ applyType(); renderRules(); syncInputs(); renderSheet(); }
+
+  // Sichtbarkeit der Bedien-Gruppen je nach Schild-Art.
+  function applyType(){
+    var pikto = state.type==="pikto";
+    $("grp-pikto").hidden  = !pikto;
+    $("grp-kopf").hidden   =  pikto;
+    $("grp-regeln").hidden =  pikto;
+    $("grp-box").hidden    =  pikto;
+    // Fusszeile/Kicker sind beim reinen Piktogramm nicht sinnvoll – Format bleibt.
+    var foot=$("tg-foot").closest(".optline"); if(foot) foot.style.display = pikto ? "none" : "";
+  }
 
   // --- Kopf-/Box-Felder an den Zustand binden -------------------------------
   function bindInput(id, get, set){ var el=$(id); el.value=get()||""; el.addEventListener("input", function(){ set(el.value); renderSheet(); }); }
@@ -492,6 +572,35 @@
   wireSeg("sg-orient", function(v){ state.orient=v; renderSheet(); });
   wireSeg("sg-scale",  function(v){ state.scale=v; renderSheet(); });
   wireSeg("tg-foot",   function(v){ state.footOn = v==="1"; renderSheet(); });
+  wireSeg("sg-type",   function(v){ state.type=v; render(); });
+  wireSeg("sg-variant",function(v){ state.piktoVariant=v; renderSheet(); });
+
+  // --- Klappbare Piktogramm-Auswahl (Hausschrift) ---------------------------
+  var galleryBody=$("galleryBody"), gallerySearch=$("gallerySearch"), galleryQuery="";
+  function buildGallery(){
+    galleryBody.innerHTML="";
+    var q=galleryQuery.trim().toLowerCase(), any=false;
+    GROUP_ORDER.forEach(function(g){
+      var items=symbols.filter(function(it){ if(it.group!==g) return false; if(!q) return true; return it.label.toLowerCase().indexOf(q)>=0||it.slug.toLowerCase().indexOf(q)>=0; });
+      if(!items.length) return; any=true;
+      var h=document.createElement("h4"); h.textContent=GROUP_TITLE[g]||g; galleryBody.appendChild(h);
+      var grid=document.createElement("div"); grid.className="glyphgrid";
+      items.forEach(function(it){
+        var ch=cpChar(it.codepoint);
+        var cell=document.createElement("button"); cell.type="button"; cell.className="glyphcell";
+        cell.setAttribute("aria-label",it.label);
+        cell.setAttribute("aria-pressed", String(!!state.pikto && state.pikto.char===ch));
+        var g1=document.createElement("span"); g1.className="g"; g1.setAttribute("aria-hidden","true"); g1.textContent=ch;
+        var n1=document.createElement("span"); n1.className="n"; n1.textContent=it.label;
+        cell.appendChild(g1); cell.appendChild(n1);
+        cell.addEventListener("click", function(){ state.pikto={char:ch,label:it.label}; buildGallery(); renderSheet(); });
+        grid.appendChild(cell);
+      });
+      galleryBody.appendChild(grid);
+    });
+    if(!any){ var e=document.createElement("p"); e.className="empty"; e.textContent="Kein Piktogramm gefunden."; galleryBody.appendChild(e); }
+  }
+  gallerySearch.addEventListener("input", function(){ galleryQuery=gallerySearch.value; buildGallery(); });
 
   // --- Vorschau skalieren ---------------------------------------------------
   var stage=$("stage"), scaleEl=$("sheetscale"), currentScale=1;
@@ -549,19 +658,21 @@
     pageStyle.textContent = "@page{size:"+w+"mm "+h+"mm;margin:0}";
   }
   $("reset").addEventListener("click", function(){
-    state=defaults();
+    state=defaults(); galleryQuery=""; gallerySearch.value="";
+    setSeg("sg-type", state.type); setSeg("sg-variant", state.piktoVariant);
     setSeg("tg-kicker", state.kickerOn?"1":"0"); setSeg("sg-cols", String(state.cols));
     setSeg("tg-box", state.boxOn?"1":"0"); setSeg("sg-size", state.size);
     setSeg("sg-orient", state.orient); setSeg("sg-scale", state.scale); setSeg("tg-foot", state.footOn?"1":"0");
-    render();
+    buildGallery(); render();
   });
   function setSeg(id,val){ var g=$(id); Array.prototype.forEach.call(g.querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-v")===val)); }); }
 
   // --- Icon-Daten laden -----------------------------------------------------
   fetch(ICONS_URL).then(function(r){ return r.ok?r.json():null; }).then(function(data){
-    if(Array.isArray(data)&&data.length){ symbols=data.filter(function(it){ return it.group==="piktogramm"||it.group==="pfeil-kompass"; }); }
+    if(Array.isArray(data)&&data.length){ symbols=data.filter(function(it){ return it.group==="piktogramm"||it.group==="pfeil-kompass"; }); buildGallery(); }
   }).catch(function(){});
 
+  buildGallery();
   render();
 })();
 </script>
