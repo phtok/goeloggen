@@ -116,6 +116,17 @@
       "such": "Wallpaper Hintergrund Desktop Bild"
     },
     {
+      "slug": "wallpaper-generator",
+      "cat": "generatoren",
+      "status": "beta",
+      "tag": "Wallpaper",
+      "title": "Wallpaper-Generator",
+      "short": "Wallpaper",
+      "href": "apps/wallpaper-generator/",
+      "desc": "Eigenes Wallpaper im Hausbild – Grundmotiv in der Sektionsfarbe, Marke an definierter Stelle, für Desktop und Videocall (PNG/JPG).",
+      "such": "Wallpaper Generator Hintergrund Desktop Zoom Teams Videocall Präsentation Sektionsfarbe Sektion Motiv gestalten"
+    },
+    {
       "slug": "powerpoint",
       "cat": "anwendung",
       "status": "live",

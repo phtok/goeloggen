@@ -1,0 +1,448 @@
+<!doctype html>
+<!-- =============================================================================
+     Goetheanum-Werkzeug · WALLPAPER-GENERATOR
+     -----------------------------------------------------------------------------
+     Eigenes Wallpaper im Hausbild: Grundmotiv × Sektion (→ Farbe + Logo) ×
+     definierte Platzierung × Format → PNG/JPG. Bewusst EINGEZÄUNT (G01/G03):
+     nur Palette-Farben, nur die offizielle Marke, nur sanktionierte Plätze –
+     jede Ausgabe ist markenkonform, weil sie nicht anders kann.
+
+     Betroffene Regeln:
+       · G05  Kicker normal, nicht versal.
+       · B01  Auf Farbe steht Weiss – nie dunkler Text. Auswahl = Gold/Weiss (.seg),
+              Aktion = Blau/Weiss (.btn.primary), aus base.css.
+       · B02  Kontrast gerechnet, nicht geschätzt: die Motivfläche wird so weit
+              vertieft, bis Weiss ≥4.5:1 hält (deepenForWhite() im Script).
+       · DS01 Fundament eingebunden (tokens VOR base), relativ (DS09).
+       · DS02/DS07 Im CSS nur Tokens (var(--…)); alle Bildfarben leben im <script>
+              (die Leinwand IST das Artefakt – ds-lint prüft nur CSS).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+<title>Wallpaper-Generator · Goetheanum</title>
+<meta name="description" content="Eigenes Desktop- oder Videocall-Wallpaper im Hausbild – Grundmotiv in der Sektionsfarbe, Marke an definierter Stelle, als PNG oder JPG." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<!-- Fundament – eine Quelle der Wahrheit. Eingebunden, nicht kopiert. Relativ (DS09). -->
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  /* NUR werkzeug-eigenes Layout. Farben/Schnitte/Abstände kommen aus den Tokens. */
+  .hero{padding-block:clamp(36px,6vw,60px) var(--s6)}
+  .hero .lede{margin-top:var(--s4);max-width:60ch}
+
+  .studio{display:grid;gap:var(--s6);margin-top:var(--s6)}
+  @media(min-width:920px){
+    .studio{grid-template-columns:360px 1fr;align-items:start}
+    .panel-controls{grid-column:1;grid-row:1}
+    .panel-preview{grid-column:2;grid-row:1;position:sticky;top:calc(var(--header-h) + var(--s4))}
+  }
+
+  .ctrls{display:grid;gap:var(--s6)}
+  .ctrl > .lab{display:block;margin-bottom:var(--s2)}
+
+  /* Vorschau-Rahmen. Fläche/Rahmen tokenisiert (B05). */
+  .stage{border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft);
+    padding:var(--s4);overflow:hidden}
+  .stage canvas{display:block;width:100%;height:auto;border-radius:var(--r-control);
+    box-shadow:var(--shadow-card)}
+  .stage .meta{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);justify-content:space-between;
+    align-items:baseline;margin-top:var(--s3)}
+
+  .actions{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s2)}
+
+  /* Farb-Vorschau-Punkt neben der Sektionswahl (Bildfarbe = Artefakt → im Script gesetzt). */
+  .swatch{width:18px;height:18px;border-radius:var(--r-pill);border:1px solid var(--line);
+    display:inline-block;vertical-align:-3px;margin-right:var(--s1)}
+
+  .fineprint{margin-top:var(--s8);max-width:64ch}
+</style>
+</head>
+<body>
+
+<!-- Globale Leiste aus dem Fundament (DS06 – keine eigene Kopfzeile). -->
+<script src="../../design-system/nav.js" data-root="../../" data-section="anwendung" data-active="wallpaper-generator"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Hausgrafik · Anwendungen</span>
+    <h1>Wallpaper-Generator</h1>
+    <p class="lede">Ein eigener Hintergrund fürs Videogespräch oder den Desktop – das
+      Grundmotiv in deiner Sektionsfarbe, die Marke an definierter Stelle. Wählen,
+      ansehen, herunterladen.</p>
+  </section>
+
+  <div class="studio">
+
+    <!-- ---- Steuerung ---------------------------------------------------- -->
+    <section class="panel-controls">
+      <div class="card soft ctrls">
+
+        <div class="ctrl">
+          <label class="lab" for="org">Sektion oder Bereich</label>
+          <div class="field"><select id="org" aria-label="Sektion oder Bereich"></select></div>
+          <p class="note" id="orgNote" style="margin-top:var(--s2)"></p>
+        </div>
+
+        <div class="ctrl">
+          <span class="lab">Grundmotiv</span>
+          <div class="seg" id="motif" role="group" aria-label="Grundmotiv">
+            <button type="button" data-v="ruhig">Ruhig</button>
+            <button type="button" data-v="bogen">Bogen</button>
+            <button type="button" data-v="tor">Tor</button>
+          </div>
+        </div>
+
+        <div class="ctrl">
+          <span class="lab">Platzierung der Marke</span>
+          <div class="seg" id="slot" role="group" aria-label="Platzierung der Marke">
+            <button type="button" data-v="mitte">Mitte</button>
+            <button type="button" data-v="unten-links">Unten links</button>
+            <button type="button" data-v="unten-rechts">Unten rechts</button>
+            <button type="button" data-v="ohne">Ohne</button>
+          </div>
+          <p class="note" style="margin-top:var(--s2)">Die Plätze meiden die Zonen, in
+            denen Symbole und Leisten sitzen.</p>
+        </div>
+
+        <div class="ctrl">
+          <span class="lab">Beschriftung</span>
+          <div class="seg" id="named" role="group" aria-label="Beschriftung">
+            <button type="button" data-v="0">Nur Marke</button>
+            <button type="button" data-v="1">Mit Sektionsname</button>
+          </div>
+        </div>
+
+        <div class="ctrl">
+          <label class="lab" for="format">Format</label>
+          <div class="field"><select id="format" aria-label="Format"></select></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" type="button" id="dlPng">PNG herunterladen</button>
+          <button class="btn" type="button" id="dlJpg">JPG</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- Vorschau ---------------------------------------------------- -->
+    <section class="panel-preview">
+      <div class="stage">
+        <canvas id="pv" width="1280" height="720" aria-label="Vorschau des Wallpapers"></canvas>
+        <div class="meta">
+          <span class="readout" id="metaName">—</span>
+          <span class="readout" id="metaSize">—</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <p class="fineprint note">Alle Motive gehen aus einer Quelle hervor – den
+    Identitätsfarben aus <a href="../../sektionsfarben.html">Sektionsfarben</a> und der
+    Marke aus dem <a href="../logos/">Logo-Generator</a>. Die fertigen Motive stehen
+    weiterhin unter <a href="../../wallpaper.html">Wallpaper</a> bereit.</p>
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Hausgrafik</span>
+    <span><a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<!-- Datenquelle: Sektionen/Bereiche + Identitätsfarben (speist auch Logo & Sektionsfarben). -->
+<script src="../../assets/goe-orgs.js"></script>
+<script>
+(function(){
+  "use strict";
+  var ORGS = window.GOE_GCI_ORGS || {}, CATS = window.GOE_GCI_CATS || {};
+
+  // Auswahl: Marke + die zwölf Sektionen + die eigenständig gefärbten Bereiche.
+  var SEKT = (CATS.sektionen && CATS.sektionen.items) || [];
+  var BER  = ["buehne","bauadmin","gaertnerei"];
+
+  var FORMATS = {
+    desktop: {w:2560, h:1440, label:"Desktop · 16:9"},
+    zoom:    {w:1920, h:1080, label:"Videocall · 1920×1080"},
+    ultra:   {w:3440, h:1440, label:"Ultrawide · 21:9"},
+    handy:   {w:1170, h:2532, label:"Handy · Hochformat"}
+  };
+
+  var state = { org:"goetheanum", motif:"bogen", slot:"mitte", named:false, format:"desktop" };
+
+  // --- Farb-Werkzeug (Bildfarben leben im Script; das Bild ist das Artefakt) ---
+  function hexToRgb(h){ h=h.replace("#",""); if(h.length===3) h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    return { r:parseInt(h.slice(0,2),16), g:parseInt(h.slice(2,4),16), b:parseInt(h.slice(4,6),16) }; }
+  function rgbToHex(c){ function p(n){ n=Math.max(0,Math.min(255,Math.round(n))).toString(16); return n.length<2?"0"+n:n; }
+    return "#"+p(c.r)+p(c.g)+p(c.b); }
+  function mix(a,b,t){ return { r:a.r+(b.r-a.r)*t, g:a.g+(b.g-a.g)*t, b:a.b+(b.b-a.b)*t }; }
+  function rgba(c,a){ return "rgba("+Math.round(c.r)+","+Math.round(c.g)+","+Math.round(c.b)+","+a+")"; }
+  var BLACK={r:0,g:0,b:0}, WHITE={r:255,g:255,b:255};
+
+  function relLum(c){ function f(v){ v/=255; return v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055,2.4); }
+    return 0.2126*f(c.r)+0.7152*f(c.g)+0.0722*f(c.b); }
+  function contrastWhite(c){ return 1.05/(relLum(c)+0.05); }   // Weiss hat L=1
+
+  // B02: die Fläche so weit vertiefen, bis Weiss sicher ≥ Zielkontrast trägt.
+  function deepenForWhite(c, target){ var out={r:c.r,g:c.g,b:c.b}, guard=0;
+    while(contrastWhite(out) < target && guard<80){ out=mix(out,BLACK,0.05); guard++; }
+    return out; }
+
+  function orgColor(key){ var o=ORGS[key]; return (o && o.color) || "#0061a9"; }
+
+  function palette(hexIn){
+    var section = hexToRgb(hexIn);
+    var field   = deepenForWhite(section, 4.5);        // trägt Weiss (B02)
+    return {
+      section: section,
+      field: field,
+      fieldHex: rgbToHex(field),
+      fieldBottom: mix(field, BLACK, 0.16),            // sanfte Tiefe unten
+      tintLight:   mix(section, WHITE, 0.14),          // echte Hausfarbe nach vorn
+      tintLighter: mix(section, WHITE, 0.30),
+      tintDark:    mix(field,   BLACK, 0.14),
+      scrim:       mix(field,   BLACK, 0.45)           // weiche Abtönung hinter der Marke
+    };
+  }
+
+  // --- Marke: weisser Kreis + Bau-Glyphe in der Flächenfarbe (aus der Hausmarke) ---
+  var GLYPH =
+    '<path d="M5.7224,3.472L15.8254,0v21.07h-6.002l.007-7.74c.003-.501-.086-.969-.242-1.438-.475-1.43-3.866-8.42-3.866-8.42"/>'+
+    '<path d="M5.292,7.1965s3.062,4.895,3.062,6.039l.048,7.834h-3.538l-.022-2.693c-.035-1.633-3.74-6.24-3.74-6.24l4.19-4.94Z"/>'+
+    '<path d="M0,17.9464l2.355-1.673s1.103,1.842,1.201,2.488c.099.646.02,2.309.02,2.309H1.072s.005-.607.008-.876c.007-.476-.144-.883-.375-1.274-.108-.183-.609-.818-.705-.974"/>';
+  function markSVG(glyphHex){
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">'+
+      '<circle cx="32" cy="32" r="32" fill="#ffffff"/>'+
+      '<g transform="translate(19.2,15) scale(1.614)" fill="'+glyphHex+'">'+GLYPH+'</g></svg>';
+  }
+  var markImg=null, markKey="";
+  function ensureMark(glyphHex){ return new Promise(function(res){
+    if(markKey===glyphHex && markImg){ res(markImg); return; }
+    var img=new Image();
+    img.onload=function(){ markImg=img; markKey=glyphHex; res(img); };
+    img.onerror=function(){ res(null); };
+    img.src="data:image/svg+xml;base64,"+btoa(unescape(encodeURIComponent(markSVG(glyphHex))));
+  }); }
+
+  // --- Grundmotiv: Bögen aus der Bau-Silhouette, links verankert -------------
+  function arch(ctx, x, w, H, topY){
+    var r=Math.min(w*0.5, (H-topY)*0.6);
+    ctx.beginPath();
+    ctx.moveTo(x, H*1.03);
+    ctx.lineTo(x, topY+r);
+    ctx.quadraticCurveTo(x, topY, x+r, topY);
+    ctx.quadraticCurveTo(x+w, topY, x+w, topY+r);
+    ctx.lineTo(x+w, H*1.03);
+    ctx.closePath();
+  }
+  function fillArch(ctx,x,w,H,topY,color,alpha){ ctx.fillStyle=rgba(color,alpha); arch(ctx,x*W(ctx),w*W(ctx),H,topY*H); ctx.fill(); }
+  function W(ctx){ return ctx.canvas.width; }
+
+  function drawMotif(ctx, w, h, pal){
+    var s = Math.min(w,h);               // Motive skalieren mit der kürzeren Kante
+    function A(px,pw,topPy,color,alpha){
+      var x=px*w, width=pw*w, topY=topPy*h;
+      ctx.fillStyle=rgba(color,alpha); arch(ctx,x,width,h,topY); ctx.fill();
+    }
+    if(state.motif==="ruhig"){
+      A(-0.12,0.42,0.14, pal.tintLight, 0.10);
+    } else if(state.motif==="tor"){
+      A(-0.12,0.34,0.06, pal.tintLight,   0.12);
+      A( 0.12,0.34,0.20, pal.tintLighter, 0.10);
+      A( 0.34,0.30,0.34, pal.tintDark,    0.09);
+    } else { // bogen (Vorgabe)
+      A(-0.10,0.46,0.09, pal.tintLighter, 0.10);
+      A(-0.04,0.30,0.24, pal.tintLight,   0.14);
+      A( 0.03,0.14,0.44, pal.tintDark,    0.10);
+    }
+  }
+
+  // --- Marke setzen an definierten Plätzen -----------------------------------
+  var SLOTS = {
+    "mitte":        {cx:0.50, cy:0.46, scale:1.00},
+    "unten-links":  {cx:0.28, cy:0.80, scale:0.72},
+    "unten-rechts": {cx:0.72, cy:0.80, scale:0.72}
+  };
+  function drawLogo(ctx, w, h, pal){
+    if(state.slot==="ohne") return;
+    var slot=SLOTS[state.slot]; if(!slot) return;
+    var o=ORGS[state.org]||{};
+    var isMarke=(state.org==="goetheanum");
+    var showName=state.named && !isMarke && !!o.short_de;
+
+    var base = Math.min(w, h*1.0);
+    var font = base * 0.055 * slot.scale;          // Wortmarke „Goetheanum"
+    var markD = font * 1.18;                        // Kreis-Durchmesser
+    var gap = font * 0.42;
+
+    ctx.textBaseline="alphabetic";
+    ctx.font = '440 '+font+'px "Goetheanum","Helvetica Neue",Arial,sans-serif';
+    var word="Goetheanum";
+    var wordW = ctx.measureText(word).width;
+    var lineW = markD + gap + wordW;
+
+    var nameFont = font*0.52, nameStr="", nameW=0;
+    if(showName){
+      nameStr=o.short_de;
+      ctx.font='580 '+nameFont+'px "Goetheanum","Helvetica Neue",Arial,sans-serif';
+      nameW=ctx.measureText(nameStr).width;
+    }
+
+    var cx=slot.cx*w, cy=slot.cy*h;
+    var blockW=Math.max(lineW, (showName? markD+gap+nameW : 0));
+    var left=cx - blockW/2;
+    var midY=cy;                                    // vertikale Mitte der ersten Zeile
+
+    // Weiche Abtönung hinter der Marke – Weiss trägt auf jeder Fläche (B02, Versicherung).
+    var halo = Math.max(lineW*0.62, markD*1.4);
+    var g=ctx.createRadialGradient(cx, cy, markD*0.2, cx, cy, halo);
+    g.addColorStop(0, rgba(pal.scrim, 0.30));
+    g.addColorStop(1, rgba(pal.scrim, 0.0));
+    ctx.fillStyle=g;
+    ctx.fillRect(cx-halo, cy-halo, halo*2, halo*2);
+
+    // Kreis-Marke
+    if(markImg){ ctx.drawImage(markImg, left, midY - markD/2, markD, markD); }
+
+    // Wortmarke „Goetheanum" – Weiss (B01)
+    ctx.fillStyle="#ffffff";
+    ctx.font='440 '+font+'px "Goetheanum","Helvetica Neue",Arial,sans-serif';
+    ctx.textBaseline="middle";
+    ctx.fillText(word, left + markD + gap, midY + font*0.02);
+
+    // Sektionsname (zweite Zeile, unter der Wortmarke)
+    if(showName){
+      ctx.font='580 '+nameFont+'px "Goetheanum","Helvetica Neue",Arial,sans-serif';
+      ctx.fillStyle="rgba(255,255,255,0.92)";
+      ctx.textBaseline="alphabetic";
+      ctx.fillText(nameStr, left + markD + gap, midY + markD*0.5 + nameFont*0.95);
+    }
+  }
+
+  // --- Zeichnen (gleiche Funktion für Vorschau und Export – Proportionalkoord.) ---
+  function paintField(ctx, w, h, pal){
+    var g=ctx.createLinearGradient(0,0,0,h);
+    g.addColorStop(0, pal.fieldHex);
+    g.addColorStop(1, rgbToHex(pal.fieldBottom));
+    ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+  }
+  function paint(canvas, w, h){
+    var pal=palette(orgColor(state.org));
+    return ensureMark(pal.fieldHex).then(function(){
+      var ctx=canvas.getContext("2d");
+      ctx.clearRect(0,0,w,h);
+      paintField(ctx,w,h,pal);
+      drawMotif(ctx,w,h,pal);
+      drawLogo(ctx,w,h,pal);
+    });
+  }
+
+  var PV=document.getElementById("pv");
+  var busy=false, again=false;
+  function render(){
+    if(busy){ again=true; return; }
+    busy=true;
+    var f=FORMATS[state.format];
+    var maxW=1400, scale=Math.min(1, maxW/f.w);
+    PV.width=Math.round(f.w*scale); PV.height=Math.round(f.h*scale);
+    paint(PV, PV.width, PV.height).then(function(){
+      busy=false;
+      updateMeta(f);
+      if(again){ again=false; render(); }
+    });
+  }
+  function updateMeta(f){
+    var o=ORGS[state.org]||{};
+    var nm=(state.org==="goetheanum") ? "Goetheanum · Markenblau" : (o.name_de||state.org);
+    document.getElementById("metaName").textContent=nm;
+    document.getElementById("metaSize").textContent=f.w+" × "+f.h+" px";
+  }
+
+  // --- Export ---------------------------------------------------------------
+  function slugFor(key){
+    if(key==="goetheanum") return "markenblau";
+    var o=ORGS[key]||{}; var s=(o.short_de||key).toLowerCase();
+    return s.replace(/[äàá]/g,"a").replace(/ö/g,"o").replace(/ü/g,"u").replace(/ß/g,"ss")
+            .replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
+  }
+  function download(type){
+    var f=FORMATS[state.format];
+    var c=document.createElement("canvas"); c.width=f.w; c.height=f.h;
+    paint(c, f.w, f.h).then(function(){
+      var mime=(type==="jpg")?"image/jpeg":"image/png";
+      var q=(type==="jpg")?0.92:undefined;
+      c.toBlob(function(blob){
+        if(!blob) return;
+        var url=URL.createObjectURL(blob);
+        var a=document.createElement("a");
+        a.href=url; a.download="goetheanum-wallpaper-"+slugFor(state.org)+"-"+state.format+"."+type;
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); },120);
+        if(window.goeStat) window.goeStat("download","wallpaper-generator");
+      }, mime, q);
+    });
+  }
+
+  // --- Steuerung verdrahten -------------------------------------------------
+  function buildOrgSelect(){
+    var sel=document.getElementById("org");
+    function opt(key,label){ var o=document.createElement("option"); o.value=key; o.textContent=label; return o; }
+    var gMark=document.createElement("optgroup"); gMark.label="Marke";
+    gMark.appendChild(opt("goetheanum","Goetheanum · Markenblau")); sel.appendChild(gMark);
+    var gS=document.createElement("optgroup"); gS.label="Sektionen";
+    SEKT.forEach(function(k){ var o=ORGS[k]; if(o) gS.appendChild(opt(k, o.short_de||o.name_de||k)); });
+    sel.appendChild(gS);
+    var gB=document.createElement("optgroup"); gB.label="Bereiche";
+    BER.forEach(function(k){ var o=ORGS[k]; if(o) gB.appendChild(opt(k, o.short_de||o.name_de||k)); });
+    sel.appendChild(gB);
+    sel.value=state.org;
+    sel.addEventListener("change", function(){ state.org=sel.value; updateOrgNote(); render(); });
+  }
+  function updateOrgNote(){
+    var note=document.getElementById("orgNote");
+    var col=orgColor(state.org);
+    var o=ORGS[state.org]||{};
+    var nm=(state.org==="goetheanum")?"Markenblau":(o.name_de||state.org);
+    note.innerHTML='<span class="swatch" style="background:'+col+'"></span>'+nm+' · '+col.toUpperCase();
+  }
+  function buildFormatSelect(){
+    var sel=document.getElementById("format");
+    Object.keys(FORMATS).forEach(function(k){ var f=FORMATS[k];
+      var o=document.createElement("option"); o.value=k; o.textContent=f.label+" ("+f.w+"×"+f.h+")"; sel.appendChild(o); });
+    sel.value=state.format;
+    sel.addEventListener("change", function(){ state.format=sel.value; render(); });
+  }
+  function wireSeg(id, key, cast){
+    var box=document.getElementById(id);
+    var btns=box.querySelectorAll("button");
+    function sync(){ btns.forEach(function(b){ b.setAttribute("aria-pressed", String(cast(b.dataset.v)===state[key])); }); }
+    btns.forEach(function(b){ b.addEventListener("click", function(){ state[key]=cast(b.dataset.v); sync(); render(); }); });
+    sync();
+  }
+
+  function init(){
+    buildOrgSelect(); updateOrgNote(); buildFormatSelect();
+    wireSeg("motif","motif", function(v){return v;});
+    wireSeg("slot","slot", function(v){return v;});
+    wireSeg("named","named", function(v){return v==="1";});
+    document.getElementById("dlPng").addEventListener("click", function(){ download("png"); });
+    document.getElementById("dlJpg").addEventListener("click", function(){ download("jpg"); });
+    // Hausschrift laden, dann erst zeichnen (Wortmarke sitzt sonst im Fallback).
+    var ready = (document.fonts && document.fonts.load)
+      ? Promise.all([ document.fonts.load('440 100px "Goetheanum"'),
+                      document.fonts.load('580 100px "Goetheanum"') ]).catch(function(){})
+      : Promise.resolve();
+    ready.then(render);
+  }
+  if(document.readyState!=="loading") init();
+  else document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>
