@@ -93,9 +93,9 @@
         <div class="ctrl">
           <span class="lab">Grundmotiv</span>
           <div class="seg" id="motif" role="group" aria-label="Grundmotiv">
-            <button type="button" data-v="ruhig">Ruhig</button>
+            <button type="button" data-v="flaechen">Flächen</button>
             <button type="button" data-v="bogen">Bogen</button>
-            <button type="button" data-v="tor">Tor</button>
+            <button type="button" data-v="verlauf">Verlauf</button>
           </div>
         </div>
 
@@ -174,7 +174,7 @@
     handy:   {w:1170, h:2532, label:"Handy · Hochformat"}
   };
 
-  var state = { org:"goetheanum", motif:"bogen", slot:"mitte", named:false, format:"desktop" };
+  var state = { org:"goetheanum", motif:"flaechen", slot:"mitte", named:false, format:"desktop" };
 
   // --- Farb-Werkzeug (Bildfarben leben im Script; das Bild ist das Artefakt) ---
   function hexToRgb(h){ h=h.replace("#",""); if(h.length===3) h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
@@ -204,10 +204,12 @@
       field: field,
       fieldHex: rgbToHex(field),
       fieldBottom: mix(field, BLACK, 0.16),            // sanfte Tiefe unten
-      tintLight:   mix(section, WHITE, 0.14),          // echte Hausfarbe nach vorn
-      tintLighter: mix(section, WHITE, 0.30),
-      tintDark:    mix(field,   BLACK, 0.14),
-      scrim:       mix(field,   BLACK, 0.45)           // weiche Abtönung hinter der Marke
+      tintLight:      mix(section, WHITE, 0.14),       // echte Hausfarbe nach vorn (Bogen/Verlauf)
+      tintLighter:    mix(section, WHITE, 0.30),
+      tintDark:       mix(field,   BLACK, 0.14),
+      tintFieldLight: mix(field,   WHITE, 0.13),       // monochrome Falten der Fläche
+      tintFieldDark:  mix(field,   BLACK, 0.12),
+      scrim:          mix(field,   BLACK, 0.45)        // weiche Abtönung hinter der Marke
     };
   }
 
@@ -230,8 +232,16 @@
     img.src="data:image/svg+xml;base64,"+btoa(unescape(encodeURIComponent(markSVG(glyphHex))));
   }); }
 
-  // --- Grundmotiv: Bögen aus der Bau-Silhouette, links verankert -------------
-  function arch(ctx, x, w, H, topY){
+  // --- Grundmotiv: drei Archetypen aus der Hausgrafik ------------------------
+  //   flaechen = gefaltete, eckige Ebenen (Bau-Silhouette, monochrom)
+  //   bogen    = grosser weicher Bogen oben links + Facette oben rechts
+  //   verlauf  = ruhiger Verlauf, marken-vorwärts
+  function poly(ctx, pts, w, h){                       // Polygon aus Bruchteil-Koordinaten
+    ctx.beginPath();
+    for(var i=0;i<pts.length;i++){ var x=pts[i][0]*w, y=pts[i][1]*h; if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y); }
+    ctx.closePath();
+  }
+  function arch(ctx, x, w, H, topY){                   // gerundeter Bogen, unten verankert
     var r=Math.min(w*0.5, (H-topY)*0.6);
     ctx.beginPath();
     ctx.moveTo(x, H*1.03);
@@ -241,26 +251,32 @@
     ctx.lineTo(x+w, H*1.03);
     ctx.closePath();
   }
-  function fillArch(ctx,x,w,H,topY,color,alpha){ ctx.fillStyle=rgba(color,alpha); arch(ctx,x*W(ctx),w*W(ctx),H,topY*H); ctx.fill(); }
-  function W(ctx){ return ctx.canvas.width; }
-
   function drawMotif(ctx, w, h, pal){
-    var s = Math.min(w,h);               // Motive skalieren mit der kürzeren Kante
-    function A(px,pw,topPy,color,alpha){
-      var x=px*w, width=pw*w, topY=topPy*h;
-      ctx.fillStyle=rgba(color,alpha); arch(ctx,x,width,h,topY); ctx.fill();
+    if(state.motif==="verlauf"){
+      var g=ctx.createLinearGradient(0,0,w*0.85,h);    // zarter diagonaler Lichtzug
+      g.addColorStop(0,   rgba(pal.tintFieldLight,0.12));
+      g.addColorStop(0.55,rgba(pal.tintFieldLight,0.0));
+      ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+      return;
     }
-    if(state.motif==="ruhig"){
-      A(-0.12,0.42,0.14, pal.tintLight, 0.10);
-    } else if(state.motif==="tor"){
-      A(-0.12,0.34,0.06, pal.tintLight,   0.12);
-      A( 0.12,0.34,0.20, pal.tintLighter, 0.10);
-      A( 0.34,0.30,0.34, pal.tintDark,    0.09);
-    } else { // bogen (Vorgabe)
-      A(-0.10,0.46,0.09, pal.tintLighter, 0.10);
-      A(-0.04,0.30,0.24, pal.tintLight,   0.14);
-      A( 0.03,0.14,0.44, pal.tintDark,    0.10);
+    if(state.motif==="bogen"){
+      ctx.fillStyle=rgba(pal.tintLighter,0.12);        // grosser Bogen oben links
+      arch(ctx, -0.10*w, 0.52*w, h, 0.06*h); ctx.fill();
+      ctx.fillStyle=rgba(pal.tintLight,0.10);          // innerer Bogen
+      arch(ctx, -0.04*w, 0.30*w, h, 0.24*h); ctx.fill();
+      ctx.fillStyle=rgba(pal.tintFieldDark,0.10);      // eckige Facette oben rechts
+      poly(ctx, [[0.72,-0.02],[1.02,-0.02],[1.02,0.32],[0.86,0.24]], w, h); ctx.fill();
+      return;
     }
+    // flaechen (Vorgabe) – gefaltete, eckige Ebenen links + Facette rechts
+    ctx.fillStyle=rgba(pal.tintFieldLight,0.11);       // helle Ebene
+    poly(ctx, [[-0.02,-0.02],[0.34,-0.02],[0.295,0.31],[0.205,0.52],[0.24,1.02],[-0.02,1.02]], w, h); ctx.fill();
+    ctx.fillStyle=rgba(pal.tintFieldDark,0.13);        // dunklere Ebene dahinter (Falte)
+    poly(ctx, [[-0.02,-0.02],[0.225,-0.02],[0.30,0.34],[0.12,0.60],[0.16,1.02],[-0.02,1.02]], w, h); ctx.fill();
+    ctx.fillStyle=rgba(pal.tintFieldLight,0.14);       // heller Falz
+    poly(ctx, [[0.105,0.44],[0.135,0.44],[0.165,1.02],[0.115,1.02]], w, h); ctx.fill();
+    ctx.fillStyle=rgba(pal.tintFieldLight,0.07);       // ruhige Facette rechts
+    poly(ctx, [[1.02,-0.02],[1.02,1.02],[0.74,1.02],[0.815,0.42],[0.75,0.10],[0.87,-0.02]], w, h); ctx.fill();
   }
 
   // --- Marke setzen an definierten Plätzen -----------------------------------
