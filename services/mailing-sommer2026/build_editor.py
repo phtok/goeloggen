@@ -38,6 +38,12 @@ def xml(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
+def kleinzeile(s):
+    """Definierter Umbruch statt Zufallsfluss: jede Aussage eine Zeile, der Mittepunkt
+    schliesst die Zeile (geschütztes Spatium davor, damit er nie allein rutscht)."""
+    return "&#160;·<br />".join(xml(t.strip()) for t in s.split("·"))
+
+
 def titel(s):
     """Titelzeile ohne einzelnes Schlusswort: letztes Wortpaar unzertrennlich (trägt in
     jedem Client); text-wrap:balance gleicht die Zeilen aus, wo Clients es können."""
@@ -130,7 +136,7 @@ def render_mail(motiv, welle, lang, wm):
   <mj-text font-family="{HL_STACK}" font-size="30px" line-height="35px" font-weight="700" color="{INK}" padding="0 0 14px 0">{titel(c['botschaft'])}</mj-text>
   <mj-text padding="0 0 22px 0">{xml(c['text'])}</mj-text>
   {btns}
-  <mj-text font-size="13px" line-height="20px" color="{MUTED}" padding="0 0 26px 0">{xml(H['kleinzeile'][motiv][lang])}</mj-text>
+  <mj-text font-size="13px" line-height="20px" color="{MUTED}" padding="0 0 26px 0">{kleinzeile(H['kleinzeile'][motiv][lang])}</mj-text>
 </mj-column></mj-section>
 <mj-section background-color="{WASH}" padding="16px 28px"><mj-column><mj-text font-size="14px" line-height="22px" color="{AKZENT_TIEF}" align="center" padding="0">{xml(H['proof'][lang])}</mj-text></mj-column></mj-section>
 <mj-section background-color="{MIST}" padding="20px 28px"><mj-column><mj-text font-size="12px" line-height="19px" color="{FUSS}" padding="0">Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br/><a href="%UNSUBSCRIBELINK%" style="color:{FUSS};">Abmelden</a></mj-text></mj-column></mj-section>
