@@ -80,16 +80,14 @@
   .thumb .ed i:nth-child(1){width:100%}
   .thumb .ed i.mk{background:var(--gold-ink);width:44%}
   .thumb .ed i:nth-child(3){width:82%}
-  /* Campus-Karte: ein prägnanter Ausschnitt der echten Geländekarte um das
-     Goetheanum (aus apps/karten-generator/assets/gelaende.svg, vektorscharf
-     per CSS-Crop). Die Kartenfarben stehen im SVG selbst (Artefakt). */
-  .thumb .karte{position:relative;width:88px;height:60px;border-radius:7px;overflow:hidden;display:block}
-  .thumb .karte img{position:absolute;width:484px;max-width:none;height:auto;left:-119px;top:-131px}
+  /* Campus-Karte: markanter Nord-Anschnitt der Goetheanum-Silhouette (echte
+     Geometrie aus der Geländekarte) auf hellem Campusfeld mit weissen Wegen.
+     Vereinfacht und plakativ; die Kartenfarben sind Artefakt, kein Theme. */
+  .thumb .karte{width:88px;height:60px;border-radius:7px;display:block}
 
-  /* QR-Code – das DING, das das Werkzeug macht: drei gerundete Augen + Module,
-     einfarbig über Tokens (theme-fähig, kein Artefakt-Grund nötig). */
-  .thumb .qrg{width:54px;height:54px;display:block}
-  .thumb .qrg .ink{fill:var(--ink)} .thumb .qrg .pap{fill:var(--paper)}
+  /* QR-Code – ein echter, scannbarer QR (führt über tools.goetheanum.ch/s/hoi
+     zum Werkzeug selbst). Weisser Grund fest, damit er in jedem Theme scannt. */
+  .thumb .qrg{width:66px;height:66px;border-radius:8px;display:block}
 
   /* Entdecker-Karussell – Hinweis auf weniger Bekanntes, oben über den Karten. */
   .carousel{position:relative;margin-bottom:var(--s8);border:1px solid var(--line);
@@ -191,19 +189,8 @@
     "powerpoint":      '<span class="ppt"><b></b><i></i><i></i></span>', // eine Folie mit Titel
     "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>', // vier Sprachen
     "editor":          '<span class="ed"><i></i><i class="mk"></i><i></i></span>', // Text mit offener Frage
-    "karten":          '<span class="karte"><img src="apps/karten-generator/assets/gelaende.svg" alt=""></span>', // echter Ausschnitt um das Goetheanum
-    "qr-generator":    '<svg class="qrg" viewBox="0 0 25 25" aria-hidden="true">' +
-      '<rect class="ink" x="0" y="0" width="7" height="7" rx="2"/><rect class="pap" x="1" y="1" width="5" height="5" rx="1.4"/><rect class="ink" x="2" y="2" width="3" height="3" rx="0.8"/>' +
-      '<rect class="ink" x="18" y="0" width="7" height="7" rx="2"/><rect class="pap" x="19" y="1" width="5" height="5" rx="1.4"/><rect class="ink" x="20" y="2" width="3" height="3" rx="0.8"/>' +
-      '<rect class="ink" x="0" y="18" width="7" height="7" rx="2"/><rect class="pap" x="1" y="19" width="5" height="5" rx="1.4"/><rect class="ink" x="2" y="20" width="3" height="3" rx="0.8"/>' +
-      '<g class="ink">' +   /* fliessend: verbundene Kapseln statt Einzelpunkte */
-      '<rect x="8.7" y="0.8" width="4.2" height="1.6" rx="0.8"/><rect x="14.2" y="0.8" width="1.6" height="1.6" rx="0.7"/><rect x="14.2" y="3.2" width="1.6" height="1.6" rx="0.7"/>' +
-      '<rect x="0.8" y="8.7" width="1.6" height="4.2" rx="0.8"/><rect x="3.2" y="8.7" width="1.6" height="1.6" rx="0.7"/><rect x="0.8" y="14.2" width="1.6" height="1.6" rx="0.7"/>' +
-      '<rect x="8.7" y="8.7" width="1.6" height="4.2" rx="0.8"/><rect x="11.1" y="8.7" width="4.2" height="1.6" rx="0.8"/><rect x="13.7" y="11.1" width="1.6" height="4.2" rx="0.8"/><rect x="8.7" y="15.5" width="4.2" height="1.6" rx="0.8"/>' +
-      '<rect x="18.6" y="8.7" width="1.6" height="4.2" rx="0.8"/><rect x="21" y="8.7" width="1.6" height="1.6" rx="0.7"/><rect x="21" y="12.4" width="3.2" height="1.6" rx="0.8"/>' +
-      '<rect x="8.7" y="18.6" width="1.6" height="4.2" rx="0.8"/><rect x="11.1" y="18.6" width="4.2" height="1.6" rx="0.8"/><rect x="15.5" y="21" width="1.6" height="1.6" rx="0.7"/>' +
-      '<rect x="18.6" y="18.6" width="4.2" height="1.6" rx="0.8"/><rect x="18.6" y="21" width="1.6" height="1.6" rx="0.7"/><rect x="23" y="21" width="1.6" height="1.6" rx="0.7"/>' +
-      '</g></svg>', // ein QR-Code im Fliessend-Stil, mit den Haus-Augen
+    "karten":          '<svg class="karte" viewBox="292 326 108 73" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="292" y="326" width="108" height="73" fill="#8abfe5"/><path d="M292 388 Q340 373 400 389" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M398 356 Q374 372 356 392" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/><g transform="matrix(1,0,0,-1,326.2333,381.59504)"><path d="M0 0-1.62 1.668-1.063 2.215-5.521 6.744-7.343 6.652-8.935 8.108-7.837 8.585-8.388 9.846-11.464 16.982-24.128 27.375-31.49 44.172-32.109 45.594-32.874 45.625-32.899 48.235-30.616 48.265-30.821 64.63-33.154 64.603-33.172 67.229-32.37 67.244-14.991 92.616 36.46 93.218 54.944 67.973 55.759 67.992 55.787 65.673 52.757 65.642 52.957 49.605 55.977 49.63 56.014 47.341 54.963 47.299 47.38 28.345 35.045 17.56 31.459 9.05 32.65 8.576 31.179 7.017 29.298 7.099 24.972 2.525 25.544 2.015 23.958 .332 21.071 .295 21.012 5.984 2.793 5.771 2.868 .037Z" fill="#0067b2"/></g></svg>', // markanter Nord-Anschnitt des Goetheanum
+    "qr-generator":    '<img class="qrg" src="assets/qr-werkzeug.svg" alt="">', // echter, scannbarer QR (Fliessend) zum Werkzeug
     "empfehlungen":    '<span class="spec" style="color:var(--gold-ink)">11</span>' // die elf Gebote
   };
   function visual(t){
