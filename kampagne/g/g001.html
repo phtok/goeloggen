@@ -1,0 +1,103 @@
+<!doctype html>
+<!-- =============================================================================
+     Grenzgänger · Landingpage Griff g001 — Waldorf-Eltern-Post (DE)
+     -----------------------------------------------------------------------------
+     Aus design-system/starter.html gebaut (Pfadtiefe ../../). Aussengerichtete
+     Fang-Seite: EIN Feld (E-Mail), Köder-Versprechen als Titel, Consent-Satz
+     unter dem Knopf. Double-Opt-in über services/lead-agent/lead-fang.
+     Register: docs/grenzgaenger/griffe.json · Regeln: docs/grenzgaenger/charta.md
+     Bewusst OHNE Werkzeug-Navigation (Publikum ist draussen, nicht das Haus)
+     und OHNE noindex — diese Seite soll gefunden werden.
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Waldorf-Eltern-Post · Das Goetheanum</title>
+<meta name="description" content="Monatlich die drei stärksten Stücke zu Erziehung, Kindheit und Medienmündigkeit aus Wochenschrift und goetheanum.tv – kuratiert, frei, per Mail." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+
+<style>
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);line-height:1.05;letter-spacing:-.01em;max-width:18ch}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+  .sprachen{margin-top:var(--s4);font-size:var(--t-small)}
+</style>
+</head>
+<body>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Das Goetheanum · für Eltern</span>
+    <h1>Die Waldorf-Eltern-Post</h1>
+    <p class="lede">Einmal im Monat: die drei stärksten Stücke zu Erziehung,
+    Kindheit und Medienmündigkeit — ausgewählt aus der Wochenschrift
+    <q>Das Goetheanum</q> und aus goetheanum.tv. Frei, kuratiert, kündbar
+    mit einem Klick.</p>
+    <p class="sprachen"><a href="g001-en.html">Read this in English</a></p>
+  </section>
+
+  <section>
+    <div class="card soft" style="display:grid;gap:var(--s4);max-width:520px">
+      <form id="fang-form" style="display:grid;gap:var(--s4)">
+        <label class="field">
+          <span class="lab">Ihre E-Mail-Adresse</span>
+          <input type="email" id="fang-email" required autocomplete="email" placeholder="name@beispiel.ch" />
+        </label>
+        <input type="text" name="website" id="fang-website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
+        <div>
+          <button class="btn primary" type="submit" id="fang-senden">Auswahl bestellen</button>
+        </div>
+        <p class="note">Sie erhalten zuerst einen Bestätigungs-Brief
+        (Double-Opt-in). Ihre Adresse dient nur diesem Versand und wird
+        nicht weitergegeben; Abmeldung jederzeit mit einem Klick.</p>
+      </form>
+      <p class="note" id="fang-echo" hidden></p>
+    </div>
+
+    <p class="lese" style="margin-top:var(--s7);line-height:1.6">
+      Seit 1921 schreibt die Wochenschrift über das, was Kindheit trägt —
+      und goetheanum.tv zeigt die Gespräche dazu. Die Eltern-Post bringt
+      Ihnen davon das Beste: nicht mehr als drei Stücke, jeden Monat neu.
+    </p>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Dornach</span>
+    <span><a href="https://dasgoetheanum.com/">dasgoetheanum.com</a></span>
+  </div>
+</footer>
+
+<script>
+const FANG_URL='https://dagcsnfrlbpxcmdimnrw.supabase.co/functions/v1/lead-fang?aktion=anmelden';
+const $=id=>document.getElementById(id);
+function echoFang(text){const e=$('fang-echo');e.textContent=text;e.hidden=false;}
+$('fang-form').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  const knopf=$('fang-senden'); knopf.disabled=true;
+  const utm={}; new URLSearchParams(location.search).forEach((v,k)=>{if(k.startsWith('utm_'))utm[k]=v;});
+  try{
+    await fetch(FANG_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:$('fang-email').value,website:$('fang-website').value,
+        griff:'g001',sprache:'de',milieu:'waldorf-eltern',produkt:'beide',utm})});
+    echoFang('Fast geschafft — bitte den Bestätigungs-Brief im Postfach öffnen.');
+    $('fang-form').reset();
+  }catch(e){
+    echoFang('Das hat gerade nicht geklappt — bitte später noch einmal versuchen.');
+  }finally{knopf.disabled=false;}
+});
+/* Rückkehr von Bestätigen/Abmelden (Weiterleitung der Function) */
+if(location.hash==='#bestaetigt') echoFang('Angemeldet — die nächste Auswahl kommt zu Ihnen.');
+if(location.hash==='#beendet')   echoFang('Abgemeldet — still und ohne Rückfrage.');
+if(location.hash==='#fehler')    echoFang('Dieser Verweis war nicht (mehr) gültig.');
+</script>
+
+</body>
+</html>

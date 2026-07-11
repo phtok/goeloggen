@@ -1,0 +1,116 @@
+<!doctype html>
+<!-- =============================================================================
+     Grenzgänger · Cockpit des Lead-Agenten
+     -----------------------------------------------------------------------------
+     Aus design-system/starter.html gebaut (App-Pfadtiefe ../../). Zeigt das
+     Griffe-Register (docs/grenzgaenger/griffe.json) als Statustafel und die
+     Live-Summen der Fang-Strecke (marketing_stats(), nur Summen — nie Zeilen).
+     Charta: docs/grenzgaenger/charta.md · Backend: services/lead-agent/
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Grenzgänger · Lead-Agent · Goetheanum</title>
+<meta name="description" content="Cockpit des Grenzgänger-Agenten – alle Griffe zur Lead-Gewinnung für Wochenschrift und goetheanum.tv, mit Status und Live-Summen." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);line-height:1.05;letter-spacing:-.01em;max-width:18ch}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+  .griffe{display:grid;gap:var(--s3);margin-top:var(--s5)}
+  .griff{display:grid;gap:var(--s2)}
+  .griff .kopf{display:flex;gap:var(--s3);align-items:baseline;flex-wrap:wrap}
+  .griff h3{margin:0;font-size:var(--t-body)}
+  .griff .gid{font-family:var(--font-mono);font-size:var(--t-small);color:var(--muted)}
+  .chip{font-family:var(--font-text);font-size:var(--t-small);border:1px solid var(--line);border-radius:999px;padding:2px 12px;color:var(--ink);background:var(--field-bg)}
+  .chip.live{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent)}
+  .griff .zeilen{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.55}
+  .griff .zahl{font-variant-numeric:tabular-nums}
+  .quellen{margin-top:var(--s7);font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.7}
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"
+        data-onpage="Griffe:.|Mails:../grenzgaenger-mails/|Links:../utm-generator/|Ablauf:../kampagnen-drehbuch/"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Lead-Agent · Wochenschrift und goetheanum.tv</span>
+    <h1>Grenzgänger</h1>
+    <p class="lede">Der Agent, der neue Kreise erschliesst: alle Griffe des
+    Registers mit Status und — sobald die Fang-Strecke läuft — den
+    Live-Summen je Griff. Ziel: den Abonnentenstamm beider Produkte
+    verzehnfachen, über die heutigen Milieus hinaus.</p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Die Griffe</h2>
+      <p>Aus <code>docs/grenzgaenger/griffe.json</code> — der Agent schreibt, die Tafel zeigt. <span id="stats-stand"></span></p>
+    </div>
+    <div class="griffe" id="griffe">Lade das Register …</div>
+
+    <p class="quellen">
+      Verfassung: <a href="../../docs/grenzgaenger/charta.md">charta.md</a> ·
+      Rückfluss an die Redaktionen: <a href="../../docs/grenzgaenger/redaktions-echo.md">redaktions-echo.md</a> ·
+      Angebots-Learnings: <a href="../../docs/grenzgaenger/lernbuch.md">lernbuch.md</a> ·
+      Fang-Strecke: <code>services/lead-agent/</code> ·
+      Wellen-Copy: <code>services/mailing-grenzgaenger/</code>
+    </p>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Grenzgänger</strong> · nur Summen, keine Personendaten</span>
+    <span><a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script>
+const SB_URL='https://dagcsnfrlbpxcmdimnrw.supabase.co';
+const SB_KEY='sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
+const STATUS_LABEL={'vorgeschlagen':'vorgeschlagen','in-arbeit':'in Arbeit','bereit':'bereit',
+  'live':'live','gemessen':'gemessen','skaliert':'skaliert','verworfen':'verworfen'};
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+async function lade(){
+  const wrap=document.getElementById('griffe');
+  let reg;
+  try{
+    reg=await (await fetch('../../docs/grenzgaenger/griffe.json',{cache:'no-store'})).json();
+  }catch(e){wrap.textContent='Register nicht ladbar — docs/grenzgaenger/griffe.json fehlt oder ist nicht erreichbar.';return;}
+  let stats={};
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/rpc/marketing_stats',{method:'POST',
+      headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:'{}'});
+    if(r.ok) (await r.json()).forEach(z=>stats[z.griff_id]=z);
+    document.getElementById('stats-stand').textContent=r.ok?'Summen live aus der Fang-Strecke.':'Fang-Strecke noch nicht verbunden.';
+  }catch(e){document.getElementById('stats-stand').textContent='Fang-Strecke noch nicht verbunden.';}
+  const reihenfolge=['live','bereit','in-arbeit','gemessen','skaliert','vorgeschlagen','verworfen'];
+  const griffe=[...reg.griffe].sort((a,b)=>reihenfolge.indexOf(a.status)-reihenfolge.indexOf(b.status));
+  wrap.innerHTML=griffe.map(g=>{
+    const s=stats[g.id];
+    const zahlen=s?` · <span class="zahl">${s.aktiv}</span> aktiv · Wellen <span class="zahl">${s.w1}/${s.w2}/${s.w3}</span>`:'';
+    return `<div class="card soft griff">
+      <div class="kopf"><span class="gid">${esc(g.id)}</span><h3>${esc(g.titel)}</h3>
+        <span class="chip${g.status==='live'?' live':''}">${esc(STATUS_LABEL[g.status]||g.status)}</span></div>
+      <div class="zeilen"><strong>Grenzübertritt:</strong> ${esc(g.grenzuebertritt)}</div>
+      <div class="zeilen"><strong>Köder:</strong> ${esc(g.koeder)}</div>
+      <div class="zeilen">Milieu ${esc(g.milieu)} · Ring ${esc(String(g.ring))} · ${esc(g.kanal)} · Produkt ${esc(g.produkt.join(', '))}${zahlen}</div>
+    </div>`;}).join('');
+}
+lade();
+</script>
+
+</body>
+</html>

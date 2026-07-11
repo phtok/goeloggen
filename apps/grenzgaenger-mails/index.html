@@ -1,0 +1,2011 @@
+<!doctype html>
+<!-- =============================================================================
+     Mail-Editor · Grenzgänger (Gegenlesen)
+     Generiert von services/mailing-sommer2026/build_editor.py — NICHT von Hand
+     editieren; Änderungen an heroes.json/config.json, dann neu bauen (--publish).
+     Chrome aus tokens.css/base.css (DS01/DS02, B01-B04, Labels normal statt
+     versal G05/G23). Die Mail-Vorschauen (iframes) und Feld-Werte tragen die
+     Kampagnen-DNA der Landingpages — Artefakt, kein Theme (ds-ok je Zeile).
+     ============================================================================= -->
+<html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mail-Editor · Grenzgänger · Goetheanum</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg">
+<link rel="stylesheet" href="../../design-system/tokens.css">
+<link rel="stylesheet" href="../../design-system/base.css">
+<link rel="stylesheet" href="../../design-system/nav.css">
+<style>
+/* Nur editor-eigene Gestalt; alles Gemeinsame aus base.css, nur Tokens (DS02). */
+/* Arbeitsfläche statt Lesespalte: die Galerie darf das Fenster nutzen (Lede
+   behält ihr Lesemass); Karten wachsen mit dem Schirm mit. */
+main.wrap{max-width:min(1960px,96vw)}
+main{--mailw:clamp(340px,30vw,600px)} /* 600 = native Mail-Breite: Vorschau in Originalgrösse */
+.lead{padding:clamp(24px,5vw,44px) 0 var(--s4)}
+.controls{display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap;margin-top:var(--s4)}
+.controls .lab{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+.pill{min-height:var(--tap);padding:8px 18px;border-radius:999px;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink);font:inherit;font-size:var(--t-small);cursor:pointer}
+.pill.on{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent);font-weight:600}
+.controls input{min-height:var(--tap);font:inherit;font-size:var(--t-small);padding:6px 12px;
+  border:1px solid var(--line);border-radius:var(--r-control);background:var(--field-bg);color:var(--ink);width:110px}
+#status{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+.segment h2{margin:var(--s8) 0 var(--s2)}
+.shared{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--s3);margin-bottom:var(--s4)}
+.waves{display:flex;gap:var(--s6);overflow-x:auto;padding:var(--s2) 0 var(--s5)}
+.wave{display:flex;gap:var(--s3)}
+.mail{width:var(--mailw);flex:0 0 auto;background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden}
+.mhd{display:flex;align-items:center;background:var(--ink);color:var(--paper);font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;padding:6px 12px}
+.mhd a{margin-left:auto;color:inherit;text-decoration:none;border:1px solid var(--paper);border-radius:999px;padding:1px 9px;font-weight:400}
+.mhd a:hover{background:var(--paper);color:var(--ink)}
+/* Posteingang-Zeile: was Empfangende zuerst sehen — Betreff fett, Anriss gedämpft. */
+.inbox{padding:var(--s2) var(--s3);border-bottom:1px solid var(--line-soft);font-family:var(--font-text)}
+.ib-b{font-size:var(--t-small);font-weight:600;color:var(--ink)}
+.ib-a{font-size:var(--t-small);color:var(--muted);line-height:1.45;margin-top:2px}
+.ib-alt{font-size:var(--t-micro);color:var(--muted);line-height:1.45;margin-top:4px}
+.ib-alt span{color:var(--gold-ink);font-weight:600}
+.mail iframe{width:100%;height:calc(var(--mailw)*1.55);border:0;display:block;background:#F6F4F2} /* # ds-ok Mail-Grund (Artefakt) */
+.flds{padding:var(--s2) var(--s3)}
+.fld{border-top:1px solid var(--line-soft);padding:8px 4px} .fld:first-child{border-top:0}
+.fh{display:flex;align-items:center;gap:var(--s2)}
+.lbl{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);flex:1}
+.cbtn{min-height:var(--tap);background:var(--field-bg);border:1px solid var(--line-soft);border-radius:999px;padding:2px 12px;font:inherit;font-size:var(--t-micro);cursor:pointer;color:var(--ink)}
+.cc.has{background:var(--gold-deep);color:var(--on-accent);border-radius:10px;padding:0 7px}
+.val{font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;margin-top:4px;color:var(--ink)}
+.val code{font-family:var(--font-mono);font-size:var(--t-micro);color:var(--muted);word-break:break-all}
+.fh{cursor:pointer}
+.cpanel{margin-top:var(--s2);background:var(--field-bg);border-radius:8px;padding:6px}
+.clist{list-style:none;margin:0;padding:0;font-family:var(--font-text);font-size:var(--t-small)}
+.clist:not(:empty){margin-bottom:6px}
+/* Untereinander, nicht nebeneinander: Kopfzeile klein, Text volle Breite. */
+.clist li{display:block;padding:4px 7px;background:var(--paper);border-radius:6px;margin-bottom:3px}
+.khead{display:flex;gap:8px;align-items:baseline}
+.khead b{color:var(--gold-ink);font-size:var(--t-micro)}
+.kzeit{font-size:var(--t-micro);color:var(--muted);white-space:nowrap;margin-left:auto}
+.ktxt{display:block;line-height:1.45}
+.clist li.done .ktxt{text-decoration:line-through;color:var(--muted)}
+/* Kleines Zeichen, grosses Fingerziel: unsichtbare Trefferfläche ≥44px (B04). */
+.kdone{position:relative;background:none;border:0;padding:0 2px;font:inherit;font-size:var(--t-micro);color:var(--muted);cursor:pointer;line-height:1}
+.kdone::after{content:"";position:absolute;inset:-13px}
+.kdone:hover{color:var(--gold-ink)}
+.cin{display:flex;gap:6px}
+.cin input{flex:1;min-height:var(--tap);font:inherit;font-size:var(--t-small);padding:4px 10px;border:1px solid var(--line);border-radius:var(--r-control);background:var(--paper);color:var(--ink);min-width:0}
+.cin button{min-height:var(--tap);background:var(--blue-solid);color:var(--on-accent);border:0;border-radius:var(--r-control);padding:4px 12px;font:inherit;font-size:var(--t-small);cursor:pointer}
+.uebn{min-height:var(--tap);background:var(--paper);border:1px solid var(--line-soft);border-radius:var(--r-control);padding:4px 10px;font:inherit;font-size:var(--t-small);cursor:pointer;color:var(--muted)}
+.uebn:hover{color:var(--gold-ink);border-color:var(--gold-ink)}
+/* Sammelansicht: alle offenen Kommentare, anklicken springt zum Feld. */
+.offen{list-style:none;margin:0;padding:0;display:grid;gap:var(--s2)}
+.offen button{display:block;width:100%;text-align:left;min-height:var(--tap);background:var(--paper);border:1px solid var(--line-soft);border-radius:8px;padding:var(--s2) var(--s3);font:inherit;cursor:pointer;color:var(--ink)}
+.offen button:hover{border-color:var(--gold-ink)}
+.offen .okey{font-family:var(--font-text);font-size:var(--t-micro);color:var(--gold-ink);font-weight:600}
+.offen .otxt{display:block;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;margin-top:2px}
+.offen .ometa{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-left:8px}
+.offen li.done button{opacity:.72}
+.offen li.done .otxt{text-decoration:line-through;color:var(--muted)}
+.offen li.done .okey{color:var(--muted)}
+.fld.blitz{outline:2px solid var(--gold-deep);outline-offset:4px;border-radius:8px}
+/* Global ausblenden: Schalter «Kommentare» in der Kopfleiste. */
+body.nocmt .cbtn,body.nocmt .cpanel,body.nocmt .offen-sec{display:none}
+/* «Nur Mails»: alle Einzelelemente weg — reine Galerie der Vorschauen. */
+body.nurmails .flds,body.nurmails .shared-sec{display:none}
+.shared .fld{background:var(--paper);border:1px solid var(--line-soft);border-radius:8px;padding:var(--s2) var(--s3)}
+.subline{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin:0 0 var(--s3)}
+</style></head><body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"
+        data-onpage="Grenzgänger:../grenzgaenger/|Links:../utm-generator/|Mails:../grenzgaenger-mails/|Ablauf:../kampagnen-drehbuch/"></script>
+
+<main class="wrap">
+<section class="lead">
+  <span class="kicker">Grenzgänger</span>
+  <h1>Mail-Editor</h1>
+  <p class="lede" style="max-width:var(--measure)">Alle Wellen-Mails der drei Segmente zum Gegenlesen — je Feld kommentierbar, Kommentare landen im Werkzeug-Backend. Korrigiert wird in <code>heroes.json</code>, dann wird neu gebaut.</p>
+  <p class="subline">Stand dieses Builds: 11.07.2026, 19.26 Uhr · <code>e536b8a</code></p>
+  <div class="controls">
+    <span class="lab">Sprache</span>
+    <button id="b-de" class="pill on" onclick="setLang('de')">Deutsch</button>
+    <button id="b-en" class="pill" onclick="setLang('en')">English</button>
+    <span class="lab" style="margin-left:var(--s3)">Ihr Kürzel</span>
+    <input id="autor" placeholder="z. B. ph">
+    <button id="b-done" class="pill" onclick="toggleDone()">Erledigte zeigen</button>
+    <button id="b-cmt" class="pill on" onclick="toggleComments()" aria-pressed="true">Kommentare</button>
+    <button id="b-nur" class="pill" onclick="toggleNur()" aria-pressed="false">Nur Mails</button>
+    <span id="status" style="margin-left:auto">verbinde …</span>
+  </div>
+</section>
+
+<section class="segment offen-sec" id="offen-sec" hidden><h2 id="offen-titel">Offene Kommentare</h2>
+<p class="subline" id="offen-sub">Die To-do-Liste des Gegenlesens — anklicken springt zum Feld.</p>
+<ul class="offen" id="offenliste"></ul></section>
+
+<section class="segment shared-sec"><h2>Gemeinsame Elemente</h2>
+<p class="subline">Einmal kommentieren — gilt für alle Mails.</p>
+<div class="shared"><div class="fld" data-key="shared#wortmarke"><div class="fh" onclick="toggle(this)"><span class="lbl">Wortmarke</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="shared#wortmarke">0</span></button></div>
+<div class="val"><img src="data:image/png;base64,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" style="height:20px" alt="Goetheanum"> — offizielles Logo</div>
+<div class="cpanel" hidden><ul class="clist" data-cl="shared#wortmarke"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'shared#wortmarke')">senden</button></div></div></div><div class="fld" data-key="shared#badge"><div class="fh" onclick="toggle(this)"><span class="lbl">Badge</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="shared#badge">0</span></button></div>
+<div class="val"><span style="color:#0061A9">Die Waldorf-Eltern-Post</span> / <span style="color:#0061A9">The Waldorf Parents Letter</span> — HTML-Text, normal statt fett (G05) <!-- # ds-ok Mail-DNA, kein Theme --></div>
+<div class="cpanel" hidden><ul class="clist" data-cl="shared#badge"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'shared#badge')">senden</button></div></div></div><div class="fld" data-key="shared#beweisband"><div class="fh" onclick="toggle(this)"><span class="lbl">Beweis-Band</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="shared#beweisband">0</span></button></div>
+<div class="val">Seit 1921 aus dem Goetheanum in Dornach — die Wochenschrift und goetheanum.tv<br>From the Goetheanum in Dornach since 1921 — the weekly and goetheanum.tv</div>
+<div class="cpanel" hidden><ul class="clist" data-cl="shared#beweisband"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'shared#beweisband')">senden</button></div></div></div><div class="fld" data-key="shared#button"><div class="fh" onclick="toggle(this)"><span class="lbl">Button-Stil</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="shared#button">0</span></button></div>
+<div class="val"><span style="background:#0061A9;color:#fff;border-radius:999px;padding:8px 18px;font:600 14px 'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif">Gratis testen →</span> <!-- # ds-ok Mail-DNA, kein Theme --></div>
+<div class="cpanel" hidden><ul class="clist" data-cl="shared#button"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'shared#button')">senden</button></div></div></div><div class="fld" data-key="shared#kleinzeile"><div class="fh" onclick="toggle(this)"><span class="lbl">Kleinzeile (je Motiv)</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="shared#kleinzeile">0</span></button></div>
+<div class="val">Die Eltern-Post ist und bleibt frei · höchstens drei Begleit-Briefe · Abmeldung mit einem Klick</div>
+<div class="cpanel" hidden><ul class="clist" data-cl="shared#kleinzeile"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'shared#kleinzeile')">senden</button></div></div></div><div class="fld" data-key="shared#footer"><div class="fh" onclick="toggle(this)"><span class="lbl">Footer</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="shared#footer">0</span></button></div>
+<div class="val">Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach · Abmelden</div>
+<div class="cpanel" hidden><ul class="clist" data-cl="shared#footer"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'shared#footer')">senden</button></div></div></div></div></section>
+<section class="segment"><h2>Waldorf-Eltern — g001</h2><div class="waves"><div class="wave"><div class="mail" data-lang="de">
+  <div class="mhd">W1 · DE<a href="mails/mail_eltern_w1_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
+  <div class="inbox"><div class="ib-b">Willkommen — Ihre erste Auswahl</div><div class="ib-a">Drei Stücke zu Erziehung, Kindheit und Medienmündigkeit — ausgewählt für Sie.</div></div>
+  <iframe srcdoc="<!-- FILE: undefined -->
+<!doctype html>
+<html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
+
+<head>
+  <title>Willkommen — Ihre erste Auswahl</title>
+  <!--[if !mso]><!-->
+  <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
+  <!--<![endif]-->
+  <meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;>
+  <style type=&quot;text/css&quot;>
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
+  <!--[if lte mso 11]>
+    <style type=&quot;text/css&quot;>
+      .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]-->
+  <style type=&quot;text/css&quot;>
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    }
+  </style>
+  <style media=&quot;screen and (min-width:480px)&quot;>
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @media only screen and (max-width:479px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @font-face {
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+    }
+  </style>
+</head>
+
+<body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Drei Stücke zu Erziehung, Kindheit und Medienmündigkeit — ausgewählt für Sie.</div>
+  <div aria-label=&quot;Willkommen — Ihre erste Auswahl&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+    <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:18px 28px 14px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:119px;&quot;>
+                                <a href=&quot;https://dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w1&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Goetheanum&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets/logo_goetheanum.png&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;119&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:0;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:600px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:600px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                                <a href=&quot;https://dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w1&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Lesen im Garten&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets/hero_eltern_e1.jpg&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;600&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:24px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#0061A9;&quot;>Die Waldorf-Eltern-Post</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Schön, dass Sie&#160;lesen.</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Ihre erste Auswahl ist da: Woche für Woche schreiben in der Wochenschrift Menschen über das, was Kindheit trägt — vom ersten Schultag bis zur Frage, wie viel Bildschirm ein Kind verträgt. Drei Stücke haben wir für Sie ausgewählt; das erste liegt einen Klick entfernt.</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:separate;line-height:100%;&quot;>
+                          <tbody>
+                            <tr>
+                              <td align=&quot;center&quot; bgcolor=&quot;#0061A9&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#0061A9;&quot; valign=&quot;middle&quot;>
+                                <a href=&quot;https://dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w1&quot; style=&quot;display:inline-block;background:#0061A9;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Zur Auswahl </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die Eltern-Post ist und bleibt frei&#160;·<br />höchstens drei Begleit-Briefe&#160;·<br />Abmeldung mit einem Klick</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#EFF6FC&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#EFF6FC;background-color:#EFF6FC;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#EFF6FC;background-color:#EFF6FC;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:16px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#004E88;&quot;>Seit 1921 aus dem Goetheanum in Dornach — die Wochenschrift und goetheanum.tv</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+  </div>
+</body>
+
+</html>
+" loading="lazy" title="Vorschau eltern_w1_de"></iframe>
+  <div class="flds"><div class="fld" data-key="eltern_w1_de#gesamt"><div class="fh" onclick="toggle(this)"><span class="lbl">Anmerkung zur Mail</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="eltern_w1_de#gesamt">0</span></button></div>
+<div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
+<div class="cpanel" hidden><ul class="clist" data-cl="eltern_w1_de#gesamt"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'eltern_w1_de#gesamt')">senden</button></div></div></div></div></div><div class="mail" data-lang="en">
+  <div class="mhd">W1 · EN<a href="mails/mail_eltern_w1_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
+  <div class="inbox"><div class="ib-b">Welcome — your first selection</div><div class="ib-a">Three pieces on education, childhood and media literacy — selected for you.</div></div>
+  <iframe srcdoc="<!-- FILE: undefined -->
+<!doctype html>
+<html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
+
+<head>
+  <title>Welcome — your first selection</title>
+  <!--[if !mso]><!-->
+  <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
+  <!--<![endif]-->
+  <meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;>
+  <style type=&quot;text/css&quot;>
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
+  <!--[if lte mso 11]>
+    <style type=&quot;text/css&quot;>
+      .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]-->
+  <style type=&quot;text/css&quot;>
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    }
+  </style>
+  <style media=&quot;screen and (min-width:480px)&quot;>
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @media only screen and (max-width:479px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @font-face {
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+    }
+  </style>
+</head>
+
+<body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Three pieces on education, childhood and media literacy — selected for you.</div>
+  <div aria-label=&quot;Welcome — your first selection&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+    <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:18px 28px 14px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:119px;&quot;>
+                                <a href=&quot;https://dasgoetheanum.com/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w1&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Goetheanum&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets/logo_goetheanum.png&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;119&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:0;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:600px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:600px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                                <a href=&quot;https://dasgoetheanum.com/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w1&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Lesen im Garten&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets/hero_eltern_e1.jpg&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;600&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:24px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#0061A9;&quot;>The Waldorf Parents Letter</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Good to have you&#160;reading.</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Your first selection is here: week after week, the Goetheanum weekly writes about what carries childhood — from the first day of school to the question of how much screen time a child can bear. We have picked three pieces for you; the first is one click away.</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:separate;line-height:100%;&quot;>
+                          <tbody>
+                            <tr>
+                              <td align=&quot;center&quot; bgcolor=&quot;#0061A9&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#0061A9;&quot; valign=&quot;middle&quot;>
+                                <a href=&quot;https://dasgoetheanum.com/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w1&quot; style=&quot;display:inline-block;background:#0061A9;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> To the selection </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The Parents Letter is and stays free&#160;·<br />no more than three companion notes&#160;·<br />unsubscribe with one click</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#EFF6FC&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#EFF6FC;background-color:#EFF6FC;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#EFF6FC;background-color:#EFF6FC;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:16px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#004E88;&quot;>From the Goetheanum in Dornach since 1921 — the weekly and goetheanum.tv</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+  </div>
+</body>
+
+</html>
+" loading="lazy" title="Vorschau eltern_w1_en"></iframe>
+  <div class="flds"><div class="fld" data-key="eltern_w1_en#gesamt"><div class="fh" onclick="toggle(this)"><span class="lbl">Anmerkung zur Mail</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="eltern_w1_en#gesamt">0</span></button></div>
+<div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
+<div class="cpanel" hidden><ul class="clist" data-cl="eltern_w1_en#gesamt"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'eltern_w1_en#gesamt')">senden</button></div></div></div></div></div></div><div class="wave"><div class="mail" data-lang="de">
+  <div class="mhd">W2 · DE<a href="mails/mail_eltern_w2_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
+  <div class="inbox"><div class="ib-b">Drei Stücke, die bleiben</div><div class="ib-a">Auf goetheanum.tv sprechen Pädagoginnen, Ärzte und Forschende — in ganzer Länge.</div></div>
+  <iframe srcdoc="<!-- FILE: undefined -->
+<!doctype html>
+<html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
+
+<head>
+  <title>Drei Stücke, die bleiben</title>
+  <!--[if !mso]><!-->
+  <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
+  <!--<![endif]-->
+  <meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;>
+  <style type=&quot;text/css&quot;>
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
+  <!--[if lte mso 11]>
+    <style type=&quot;text/css&quot;>
+      .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]-->
+  <style type=&quot;text/css&quot;>
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    }
+  </style>
+  <style media=&quot;screen and (min-width:480px)&quot;>
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @media only screen and (max-width:479px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @font-face {
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+    }
+  </style>
+</head>
+
+<body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Auf goetheanum.tv sprechen Pädagoginnen, Ärzte und Forschende — in ganzer Länge.</div>
+  <div aria-label=&quot;Drei Stücke, die bleiben&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+    <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:18px 28px 14px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:119px;&quot;>
+                                <a href=&quot;https://goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w2&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Goetheanum&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets/logo_goetheanum.png&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;119&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:0;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:600px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:600px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                                <a href=&quot;https://goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w2&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Vor dem Goetheanum-Bau&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets/hero_eltern_e2.jpg&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;600&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:24px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#0061A9;&quot;>Die Waldorf-Eltern-Post</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Manches versteht man erst im&#160;Gespräch.</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Zum Lesen kommt das Sehen: Auf goetheanum.tv sprechen Pädagoginnen, Ärzte und Forschende über Erziehung und Aufwachsen — Gespräche in ganzer Länge, nicht in Schnipseln. Ein guter Anfang sind die Beiträge über Medienmündigkeit und Kindheit.</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:separate;line-height:100%;&quot;>
+                          <tbody>
+                            <tr>
+                              <td align=&quot;center&quot; bgcolor=&quot;#0061A9&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#0061A9;&quot; valign=&quot;middle&quot;>
+                                <a href=&quot;https://goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w2&quot; style=&quot;display:inline-block;background:#0061A9;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Auf goetheanum.tv ansehen </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die Eltern-Post ist und bleibt frei&#160;·<br />höchstens drei Begleit-Briefe&#160;·<br />Abmeldung mit einem Klick</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#EFF6FC&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#EFF6FC;background-color:#EFF6FC;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#EFF6FC;background-color:#EFF6FC;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:16px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#004E88;&quot;>Seit 1921 aus dem Goetheanum in Dornach — die Wochenschrift und goetheanum.tv</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+  </div>
+</body>
+
+</html>
+" loading="lazy" title="Vorschau eltern_w2_de"></iframe>
+  <div class="flds"><div class="fld" data-key="eltern_w2_de#gesamt"><div class="fh" onclick="toggle(this)"><span class="lbl">Anmerkung zur Mail</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="eltern_w2_de#gesamt">0</span></button></div>
+<div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
+<div class="cpanel" hidden><ul class="clist" data-cl="eltern_w2_de#gesamt"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'eltern_w2_de#gesamt')">senden</button></div></div></div></div></div><div class="mail" data-lang="en">
+  <div class="mhd">W2 · EN<a href="mails/mail_eltern_w2_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
+  <div class="inbox"><div class="ib-b">Three pieces that stay with you</div><div class="ib-a">On goetheanum.tv, educators, physicians and researchers speak — at full length.</div></div>
+  <iframe srcdoc="<!-- FILE: undefined -->
+<!doctype html>
+<html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
+
+<head>
+  <title>Three pieces that stay with you</title>
+  <!--[if !mso]><!-->
+  <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
+  <!--<![endif]-->
+  <meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;>
+  <style type=&quot;text/css&quot;>
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
+  <!--[if lte mso 11]>
+    <style type=&quot;text/css&quot;>
+      .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]-->
+  <style type=&quot;text/css&quot;>
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    }
+  </style>
+  <style media=&quot;screen and (min-width:480px)&quot;>
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @media only screen and (max-width:479px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @font-face {
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+    }
+  </style>
+</head>
+
+<body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>On goetheanum.tv, educators, physicians and researchers speak — at full length.</div>
+  <div aria-label=&quot;Three pieces that stay with you&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+    <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:18px 28px 14px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:119px;&quot;>
+                                <a href=&quot;https://goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w2&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Goetheanum&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets/logo_goetheanum.png&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;119&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:0;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:600px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:600px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                                <a href=&quot;https://goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w2&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Vor dem Goetheanum-Bau&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets/hero_eltern_e2.jpg&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;600&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:24px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#0061A9;&quot;>The Waldorf Parents Letter</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Some things you only grasp in&#160;conversation.</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Watching joins reading: on goetheanum.tv, educators, physicians and researchers talk about upbringing and growing up — conversations at full length, not in snippets. The pieces on media literacy and childhood are a good place to start.</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:separate;line-height:100%;&quot;>
+                          <tbody>
+                            <tr>
+                              <td align=&quot;center&quot; bgcolor=&quot;#0061A9&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#0061A9;&quot; valign=&quot;middle&quot;>
+                                <a href=&quot;https://goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w2&quot; style=&quot;display:inline-block;background:#0061A9;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Watch on goetheanum.tv </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The Parents Letter is and stays free&#160;·<br />no more than three companion notes&#160;·<br />unsubscribe with one click</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#EFF6FC&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#EFF6FC;background-color:#EFF6FC;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#EFF6FC;background-color:#EFF6FC;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:16px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#004E88;&quot;>From the Goetheanum in Dornach since 1921 — the weekly and goetheanum.tv</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+  </div>
+</body>
+
+</html>
+" loading="lazy" title="Vorschau eltern_w2_en"></iframe>
+  <div class="flds"><div class="fld" data-key="eltern_w2_en#gesamt"><div class="fh" onclick="toggle(this)"><span class="lbl">Anmerkung zur Mail</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="eltern_w2_en#gesamt">0</span></button></div>
+<div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
+<div class="cpanel" hidden><ul class="clist" data-cl="eltern_w2_en#gesamt"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'eltern_w2_en#gesamt')">senden</button></div></div></div></div></div></div><div class="wave"><div class="mail" data-lang="de">
+  <div class="mhd">W3 · DE<a href="mails/mail_eltern_w3_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
+  <div class="inbox"><div class="ib-b">Wenn Sie weiterlesen möchten — das Abo im Klartext</div><div class="ib-a">Ehrliche Konditionen, offen auf der Seite — das Abo endet, wann Sie es beenden.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> Das ganze Blatt, jede Woche</div></div>
+  <iframe srcdoc="<!-- FILE: undefined -->
+<!doctype html>
+<html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
+
+<head>
+  <title>Wenn Sie weiterlesen möchten — das Abo im Klartext</title>
+  <!--[if !mso]><!-->
+  <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
+  <!--<![endif]-->
+  <meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;>
+  <style type=&quot;text/css&quot;>
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
+  <!--[if lte mso 11]>
+    <style type=&quot;text/css&quot;>
+      .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]-->
+  <style type=&quot;text/css&quot;>
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    }
+  </style>
+  <style media=&quot;screen and (min-width:480px)&quot;>
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @media only screen and (max-width:479px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @font-face {
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+    }
+  </style>
+</head>
+
+<body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Ehrliche Konditionen, offen auf der Seite — das Abo endet, wann Sie es beenden.</div>
+  <div aria-label=&quot;Wenn Sie weiterlesen möchten — das Abo im Klartext&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+    <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:18px 28px 14px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:119px;&quot;>
+                                <a href=&quot;https://dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w3&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Goetheanum&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets/logo_goetheanum.png&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;119&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:0;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:600px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:600px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                                <a href=&quot;https://dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w3&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Picknick im Grünen&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets/hero_eltern_e3.jpg&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;600&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:24px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#0061A9;&quot;>Die Waldorf-Eltern-Post</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>Die Eltern-Post bleibt frei. Und wer mehr&#160;will?</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>An der freien Eltern-Post ändert sich nichts. Wer mehr möchte, bekommt mit dem Abo der Wochenschrift jede Woche das ganze Blatt — gedruckt oder digital — und mit goetheanum.tv alle Aufzeichnungen. Die Konditionen stehen offen auf der Seite; das Abo endet, wann Sie es beenden.</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:separate;line-height:100%;&quot;>
+                          <tbody>
+                            <tr>
+                              <td align=&quot;center&quot; bgcolor=&quot;#0061A9&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#0061A9;&quot; valign=&quot;middle&quot;>
+                                <a href=&quot;https://dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w3&quot; style=&quot;display:inline-block;background:#0061A9;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Zur Auswahl </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die Eltern-Post ist und bleibt frei&#160;·<br />höchstens drei Begleit-Briefe&#160;·<br />Abmeldung mit einem Klick</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#EFF6FC&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#EFF6FC;background-color:#EFF6FC;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#EFF6FC;background-color:#EFF6FC;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:16px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#004E88;&quot;>Seit 1921 aus dem Goetheanum in Dornach — die Wochenschrift und goetheanum.tv</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+  </div>
+</body>
+
+</html>
+" loading="lazy" title="Vorschau eltern_w3_de"></iframe>
+  <div class="flds"><div class="fld" data-key="eltern_w3_de#gesamt"><div class="fh" onclick="toggle(this)"><span class="lbl">Anmerkung zur Mail</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="eltern_w3_de#gesamt">0</span></button></div>
+<div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
+<div class="cpanel" hidden><ul class="clist" data-cl="eltern_w3_de#gesamt"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'eltern_w3_de#gesamt')">senden</button></div></div></div></div></div><div class="mail" data-lang="en">
+  <div class="mhd">W3 · EN<a href="mails/mail_eltern_w3_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
+  <div class="inbox"><div class="ib-b">If you want to keep reading — the subscription, plainly</div><div class="ib-a">Honest terms, stated openly on the page — the subscription ends whenever you end it.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> The whole paper, every week</div></div>
+  <iframe srcdoc="<!-- FILE: undefined -->
+<!doctype html>
+<html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
+
+<head>
+  <title>If you want to keep reading — the subscription, plainly</title>
+  <!--[if !mso]><!-->
+  <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
+  <!--<![endif]-->
+  <meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;>
+  <style type=&quot;text/css&quot;>
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
+  <!--[if lte mso 11]>
+    <style type=&quot;text/css&quot;>
+      .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]-->
+  <style type=&quot;text/css&quot;>
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    }
+  </style>
+  <style media=&quot;screen and (min-width:480px)&quot;>
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @media only screen and (max-width:479px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @font-face {
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+    }
+  </style>
+</head>
+
+<body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Honest terms, stated openly on the page — the subscription ends whenever you end it.</div>
+  <div aria-label=&quot;If you want to keep reading — the subscription, plainly&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+    <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:18px 28px 14px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:119px;&quot;>
+                                <a href=&quot;https://dasgoetheanum.com/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w3&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Goetheanum&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets/logo_goetheanum.png&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;119&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:0;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:600px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:600px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                                <a href=&quot;https://dasgoetheanum.com/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w3&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Picknick im Grünen&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets/hero_eltern_e3.jpg&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;600&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:24px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#0061A9;&quot;>The Waldorf Parents Letter</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot;>The Parents Letter stays free. And if you want&#160;more?</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Nothing changes about the free Parents Letter. If you want more, a subscription to the weekly brings you the whole paper every week — in print or digitally — and goetheanum.tv opens all recordings. The terms are stated openly on the page; the subscription ends whenever you end it.</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:separate;line-height:100%;&quot;>
+                          <tbody>
+                            <tr>
+                              <td align=&quot;center&quot; bgcolor=&quot;#0061A9&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#0061A9;&quot; valign=&quot;middle&quot;>
+                                <a href=&quot;https://dasgoetheanum.com/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=grenzgaenger&amp;utm_content=g001_w3&quot; style=&quot;display:inline-block;background:#0061A9;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> To the selection </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The Parents Letter is and stays free&#160;·<br />no more than three companion notes&#160;·<br />unsubscribe with one click</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#EFF6FC&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#EFF6FC;background-color:#EFF6FC;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#EFF6FC;background-color:#EFF6FC;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:16px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#004E88;&quot;>From the Goetheanum in Dornach since 1921 — the weekly and goetheanum.tv</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+  </div>
+</body>
+
+</html>
+" loading="lazy" title="Vorschau eltern_w3_en"></iframe>
+  <div class="flds"><div class="fld" data-key="eltern_w3_en#gesamt"><div class="fh" onclick="toggle(this)"><span class="lbl">Anmerkung zur Mail</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="eltern_w3_en#gesamt">0</span></button></div>
+<div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
+<div class="cpanel" hidden><ul class="clist" data-cl="eltern_w3_en#gesamt"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'eltern_w3_en#gesamt')">senden</button></div></div></div></div></div></div></div></section>
+</main>
+
+<footer class="ds-footer"><div class="wrap"><div class="frow">
+  <span><strong>Mail-Editor</strong> · Grenzgänger · Kommentare ins Werkzeug-Backend, nur Kürzel, keine Personendaten</span>
+  <span><a href="../../design-system/">Design-System</a></span>
+</div></div></footer>
+
+<script>
+const SB_URL="https://dagcsnfrlbpxcmdimnrw.supabase.co", SB_KEY="sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY", TAB="sommer2026_mail_comments";
+const REST=SB_URL+"/rest/v1/"+TAB, RPC=SB_URL+"/rest/v1/rpc/sommer2026_comment_erledigt";
+const HDR={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};
+let COMMENTS={}, SHOW_DONE=false;
+const st=t=>document.getElementById('status').textContent=t;
+function setLang(l){document.getElementById('b-de').classList.toggle('on',l=='de');document.getElementById('b-en').classList.toggle('on',l=='en');
+ document.querySelectorAll('.mail').forEach(m=>m.style.display=(m.dataset.lang==l?'':'none'));}
+function toggleDone(){SHOW_DONE=!SHOW_DONE;document.getElementById('b-done').classList.toggle('on',SHOW_DONE);render();}
+function toggleComments(){const b=document.getElementById('b-cmt'),an=document.body.classList.toggle('nocmt');
+ b.classList.toggle('on',!an);b.setAttribute('aria-pressed',String(!an));}
+function toggleNur(){const b=document.getElementById('b-nur'),an=document.body.classList.toggle('nurmails');
+ b.classList.toggle('on',an);b.setAttribute('aria-pressed',String(an));}
+function toggle(el){const p=el.closest('.fld').querySelector('.cpanel');p.hidden=!p.hidden;}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function zeit(iso){try{return new Date(iso).toLocaleString('de-CH',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).replace(', ',' ');}catch(e){return '';}}
+function sammel(key){
+ // Mail-Panels (…#gesamt) bündeln ALLE Kommentare ihrer Mail — auch den
+ // Altbestand aus der früheren Feld-Ansicht (…#Betreff usw.).
+ if(!key.endsWith('#gesamt')) return COMMENTS[key]||[];
+ const basis=key.slice(0,key.length-'gesamt'.length);
+ let alle=[];
+ Object.keys(COMMENTS).forEach(k=>{if(k.startsWith(basis))alle=alle.concat(COMMENTS[k]);});
+ return alle.sort((a,b)=>a.created_at<b.created_at?-1:1);
+}
+function render(){
+ document.querySelectorAll('.clist').forEach(ul=>{
+   const items=sammel(ul.dataset.cl).filter(c=>SHOW_DONE||!c.erledigt);
+   ul.innerHTML=items.map(c=>'<li class="'+(c.erledigt?'done':'')+'">'
+     +'<div class="khead"><b>'+esc(c.autor||'?')+'</b><span class="kzeit">'+zeit(c.created_at)+'</span>'
+     +'<button class="kdone" onclick="erledigt('+c.id+','+(!c.erledigt)+')" title="'+(c.erledigt?'wieder öffnen':'erledigt')+'" aria-label="'+(c.erledigt?'wieder öffnen':'erledigt')+'">'+(c.erledigt?'↩':'✓')+'</button></div>'
+     +'<span class="ktxt">'+esc(c.kommentar)+'</span></li>').join('');});
+ document.querySelectorAll('.cc').forEach(s=>{const n=sammel(s.dataset.cc).filter(c=>SHOW_DONE||!c.erledigt).length;
+   s.textContent=n;s.classList.toggle('has',n>0);});
+ // Sammelliste oben: normal die offene To-do-Liste; mit «Erledigte zeigen» auch die erledigten.
+ const off=[];Object.values(COMMENTS).forEach(l=>l.forEach(c=>{if(SHOW_DONE||!c.erledigt)off.push(c);}));
+ off.sort((a,b)=>a.created_at<b.created_at?-1:1);
+ const titel=document.getElementById('offen-titel'), sub=document.getElementById('offen-sub');
+ if(SHOW_DONE){titel.textContent='Alle Kommentare';sub.textContent='Offene und erledigte — anklicken springt zum Feld.';}
+ else{titel.textContent='Offene Kommentare';sub.textContent='Die To-do-Liste des Gegenlesens — anklicken springt zum Feld.';}
+ document.getElementById('offen-sec').hidden=off.length===0;
+ document.getElementById('offenliste').innerHTML=off.map(c=>{const[wo,feld]=c.mail_key.split('#');
+   return '<li'+(c.erledigt?' class="done"':'')+'><button type="button" data-go="'+esc(c.mail_key)+'"><span class="okey">'
+     +esc(wo==='shared'?'Gemeinsam':wo)+' · '+esc(feld||'')+(c.erledigt?' · erledigt':'')+'</span><span class="ometa">'+esc(c.autor||'?')+' · '+zeit(c.created_at)+'</span>'
+     +'<span class="otxt">'+esc(c.kommentar)+'</span></button></li>';}).join('');
+}
+function springe(key){
+ let fld=document.querySelector('.fld[data-key="'+CSS.escape(key)+'"]');
+ if(!fld){const basis=key.split('#')[0];
+   fld=document.querySelector('.fld[data-key="'+CSS.escape(basis+'#gesamt')+'"]');}
+ if(!fld) return;
+ const m=key.match(/_(de|en)#/); if(m) setLang(m[1]);
+ fld.querySelector('.cpanel').hidden=false;
+ fld.scrollIntoView({behavior:'smooth',block:'center'});
+ fld.classList.add('blitz'); setTimeout(()=>fld.classList.remove('blitz'),1800);
+}
+function uebernehmen(b){
+ const fld=b.closest('.fld'), i=fld.querySelector('.cin input');
+ i.value=fld.querySelector('.val').textContent.trim(); i.focus();
+}
+async function load(){
+ try{const r=await fetch(REST+"?select=id,created_at,mail_key,autor,kommentar,erledigt&order=created_at",{headers:HDR});
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  const data=await r.json(); COMMENTS={};
+  data.forEach(c=>{(COMMENTS[c.mail_key]=COMMENTS[c.mail_key]||[]).push(c);});
+  render(); st("verbunden · "+data.filter(c=>!c.erledigt).length+" offene Kommentare");
+ }catch(e){st("offline — Kommentare nicht ladbar ("+e.message+")");}
+}
+async function erledigt(id,wert){
+ st("speichere …");
+ try{const r=await fetch(RPC,{method:"POST",headers:HDR,body:JSON.stringify({kommentar_id:id,wert:wert})});
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  await load();
+ }catch(e){st("Fehler: "+e.message);}
+}
+function spracheAus(key){const m=key.match(/_(de|en)#/);return m?m[1]:null;}
+async function send(btn,key){
+ const inp=btn.previousElementSibling, txt=inp.value.trim(); if(!txt) return;
+ const eingabe=(document.getElementById('autor').value||'').trim();
+ try{if(eingabe)localStorage.setItem('autor',eingabe);}catch(e){}
+ const autor=eingabe||'anon';
+ btn.disabled=true; st("sende …");
+ try{
+  const r=await fetch(REST,{method:"POST",headers:{...HDR,"Prefer":"return=minimal"},body:JSON.stringify({mail_key:key,autor,kommentar:txt,sprache:spracheAus(key)})});
+  if(!r.ok) throw new Error("HTTP "+r.status+" "+(await r.text()).slice(0,120));
+  inp.value=""; await load();
+ }catch(e){st("Fehler: "+e.message); alert("Konnte nicht senden:\n"+e.message+"\n\nTipp: Diese Seite über werkzeuge.goetheanum.ch öffnen — in eingebetteten Vorschauen sind Netzwerkzugriffe oft blockiert.");}
+ btn.disabled=false;
+}
+document.getElementById('offenliste').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)springe(b.dataset.go);});
+try{const a=localStorage.getItem('autor');if(a&&a!=='anon')document.getElementById('autor').value=a;}catch(e){}
+setLang('de');load();
+</script></body></html>

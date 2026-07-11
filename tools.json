@@ -418,6 +418,28 @@
       "such": "Mail Editor Mailing Newsletter Kampagne Wellen Segmente Betreff Gegenlesen Kommentar Sommer Aktion E-Mail"
     },
     {
+      "slug": "grenzgaenger",
+      "cat": "kampagne",
+      "status": "intern",
+      "tag": "Neu",
+      "title": "Grenzgänger — Lead-Agent",
+      "short": "Grenzgänger",
+      "href": "apps/grenzgaenger/",
+      "desc": "Cockpit des permanenten Lead-Agenten: alle Griffe zur Erschliessung neuer Kreise für Wochenschrift und goetheanum.tv, mit Status, Grenzübertritt und Live-Summen der Fang-Strecke.",
+      "such": "Grenzgänger Lead Agent Griffe Register Abo Wachstum Milieu Kreise Wochenschrift GTV goetheanum.tv Fang Wellen"
+    },
+    {
+      "slug": "grenzgaenger-mails",
+      "cat": "kampagne",
+      "status": "intern",
+      "tag": "Neu",
+      "title": "Grenzgänger — Wellen-Mails",
+      "short": "Grenzgänger-Mails",
+      "href": "apps/grenzgaenger-mails/",
+      "desc": "Die Drei-Wellen-Mails der Grenzgänger-Zielkreise zum Gegenlesen – je Griff drei Wellen × zwei Sprachen, je Feld kommentierbar. Gebaut aus einer Quelle (services/mailing-grenzgaenger/heroes.json).",
+      "such": "Grenzgänger Mail Wellen Editor Gegenlesen Lead Nurture Betreff Kommentar E-Mail"
+    },
+    {
       "slug": "kampagnen-drehbuch",
       "cat": "kampagne",
       "status": "intern",
