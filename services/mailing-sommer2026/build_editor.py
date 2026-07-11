@@ -107,8 +107,9 @@ def render_mail(motiv, welle, lang, wm):
     mehrere = len(ctas) > 1
     cta_links = [(label, links.link_for(welle, seg, ziel, lang, mehrere)) for ziel, label in ctas]
     hero = src_for(compose(var, f"{motiv}_{vid}"))
-    fontface = (f"<mj-style>@font-face{{font-family:'Fazeta Sans';src:url('{BASE}/FazetaSans-Bold.ttf') "
-                "format('truetype');font-weight:700;font-style:normal;}</mj-style>") if BASE else ""
+    wf = T.get("headline_webfont")
+    fontface = (f"<mj-style>@font-face{{font-family:'{wf['family']}';src:url('{wf['url']}') "
+                f"format('{wf['format']}');font-weight:{wf['weight']};font-style:normal;}}</mj-style>") if (BASE and wf) else ""
     btns = []
     for i, (label, l) in enumerate(cta_links):
         primaer = i == 0
@@ -186,9 +187,11 @@ def verify():
 def main():
     publish = "--publish" in sys.argv
     G.mkdir(parents=True, exist_ok=True); (ROOT/"dist").mkdir(exist_ok=True)
+    for alt in G.iterdir():
+        alt.unlink()  # alles in G wird je Build erzeugt — keine Leichen (z. B. alte Font-TTFs)
     wm = logo()
-    if BASE:
-        shutil.copy(ROOT/"assets/fonts/FazetaSans-Bold.ttf", G/"FazetaSans-Bold.ttf")
+    # Kein Font-Hosting mehr in den Mail-Assets: die Headline lädt die Hausschrift
+    # (theme.headline_webfont) direkt aus dem Schriften-Bestand des Repos (OFL).
     rev = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True, cwd=ROOT).stdout.strip() or "?"
     jetzt = datetime.now()

@@ -90,7 +90,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   <span class="kicker">Sommer-Aktion 2026</span>
   <h1>Mail-Editor</h1>
   <p class="lede" style="max-width:var(--measure)">Alle Wellen-Mails der drei Segmente zum Gegenlesen — je Feld kommentierbar, Kommentare landen im Werkzeug-Backend. Korrigiert wird in <code>heroes.json</code>, dann wird neu gebaut.</p>
-  <p class="subline">Stand dieses Builds: 10.07.2026, 22.43 Uhr · <code>629555a</code></p>
+  <p class="subline">Stand dieses Builds: 11.07.2026, 13.04 Uhr · <code>2610229</code></p>
   <div class="controls">
     <span class="lab">Sprache</span>
     <button id="b-de" class="pill on" onclick="setLang('de')">Deutsch</button>
@@ -124,7 +124,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="shared#beweisband"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'shared#beweisband')">senden</button></div></div></div><div class="fld" data-key="shared#button"><div class="fh" onclick="toggle(this)"><span class="lbl">Button-Stil</span>
 <button class="cbtn" type="button">💬 <span class="cc" data-cc="shared#button">0</span></button></div>
-<div class="val"><span style="background:#A95278;color:#fff;border-radius:999px;padding:8px 18px;font:600 14px Inter,-apple-system,Helvetica,Arial,sans-serif">Gratis testen →</span> <!-- # ds-ok Mail-DNA, kein Theme --></div>
+<div class="val"><span style="background:#A95278;color:#fff;border-radius:999px;padding:8px 18px;font:600 14px -apple-system,'Segoe UI',Helvetica,Arial,sans-serif">Gratis testen →</span> <!-- # ds-ok Mail-DNA, kein Theme --></div>
 <div class="cpanel" hidden><ul class="clist" data-cl="shared#button"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'shared#button')">senden</button></div></div></div><div class="fld" data-key="shared#kleinzeile"><div class="fh" onclick="toggle(this)"><span class="lbl">Kleinzeile (je Motiv)</span>
 <button class="cbtn" type="button">💬 <span class="cc" data-cc="shared#kleinzeile">0</span></button></div>
@@ -223,8 +223,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -310,19 +310,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Jede Woche ein Stück weiter&#160;sehen.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Was Sie auf goetheanum.tv sehen, lesen Sie in der Wochenschrift weiter: Woche für Woche schreiben dort Menschen, die einer Frage ihr Leben gewidmet haben — nicht was sie wissen, sondern wie sie suchen. Wer mitliest, kommt mit anderen Augen in die eigene Woche zurück.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Was Sie auf goetheanum.tv sehen, lesen Sie in der Wochenschrift weiter: Woche für Woche schreiben dort Menschen, die einer Frage ihr Leben gewidmet haben — nicht was sie wissen, sondern wie sie suchen. Wer mitliest, kommt mit anderen Augen in die eigene Woche zurück.</div>
                       </td>
                     </tr>
                     <tr>
@@ -331,7 +331,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Drei Monate lesen → </a>
+                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Drei Monate lesen → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -340,7 +340,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die ersten drei Monate kostenlos · jederzeit ohne Begründung kündbar · Aktion bis 8. August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die ersten drei Monate kostenlos · jederzeit ohne Begründung kündbar · Aktion bis 8. August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -364,7 +364,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -388,7 +388,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -528,8 +528,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -615,19 +615,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>See a little further every&#160;week.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>What you watch on goetheanum.tv you can read on in the weekly: week after week, people who have given their lives to a question write down not what they know but how they search. Read along, and you return to your own week with different eyes.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>What you watch on goetheanum.tv you can read on in the weekly: week after week, people who have given their lives to a question write down not what they know but how they search. Read along, and you return to your own week with different eyes.</div>
                       </td>
                     </tr>
                     <tr>
@@ -636,7 +636,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Start reading free → </a>
+                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Start reading free → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -645,7 +645,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The first three months free · cancel anytime, no reason needed · offer ends 8 August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The first three months free · cancel anytime, no reason needed · offer ends 8 August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -669,7 +669,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -693,7 +693,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -833,8 +833,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -920,19 +920,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Ein Sommer über den eigenen Rand&#160;hinaus.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Noch bis 8. August lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — Lesestoff, der in Ihnen weiterarbeitet, wenn der Bildschirm dunkel ist.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Noch bis 8. August lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — Lesestoff, der in Ihnen weiterarbeitet, wenn der Bildschirm dunkel ist.</div>
                       </td>
                     </tr>
                     <tr>
@@ -941,7 +941,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Drei Monate lesen → </a>
+                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Drei Monate lesen → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -950,7 +950,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die ersten drei Monate kostenlos · jederzeit ohne Begründung kündbar · Aktion bis 8. August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die ersten drei Monate kostenlos · jederzeit ohne Begründung kündbar · Aktion bis 8. August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -974,7 +974,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -998,7 +998,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -1138,8 +1138,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -1225,19 +1225,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>A summer beyond your own&#160;horizon.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Until 8 August, read the weekly free for three months with your subscription — reading that keeps working in you after the screen goes dark.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Until 8 August, read the weekly free for three months with your subscription — reading that keeps working in you after the screen goes dark.</div>
                       </td>
                     </tr>
                     <tr>
@@ -1246,7 +1246,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Start reading free → </a>
+                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Start reading free → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -1255,7 +1255,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The first three months free · cancel anytime, no reason needed · offer ends 8 August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The first three months free · cancel anytime, no reason needed · offer ends 8 August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -1279,7 +1279,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -1303,7 +1303,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -1443,8 +1443,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -1530,19 +1530,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Bis Samstag bleibt die Tür&#160;offen.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Noch ein paar Sommertage lang: die Wochenschrift, drei Monate gratis zu Ihrem Abo. Wenn sie Ihnen nicht ans Herz wächst, kündigen Sie einfach.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Noch ein paar Sommertage lang: die Wochenschrift, drei Monate gratis zu Ihrem Abo. Wenn sie Ihnen nicht ans Herz wächst, kündigen Sie einfach.</div>
                       </td>
                     </tr>
                     <tr>
@@ -1551,7 +1551,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Drei Monate lesen → </a>
+                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Drei Monate lesen → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -1560,7 +1560,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die ersten drei Monate kostenlos · jederzeit ohne Begründung kündbar · Aktion bis 8. August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die ersten drei Monate kostenlos · jederzeit ohne Begründung kündbar · Aktion bis 8. August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -1584,7 +1584,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -1608,7 +1608,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -1748,8 +1748,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -1835,19 +1835,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>The door stays open until&#160;Saturday.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>A few summer days remain: the weekly, free for three months with your subscription. If it doesn’t grow on you, simply cancel.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>A few summer days remain: the weekly, free for three months with your subscription. If it doesn’t grow on you, simply cancel.</div>
                       </td>
                     </tr>
                     <tr>
@@ -1856,7 +1856,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Start reading free → </a>
+                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Start reading free → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -1865,7 +1865,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The first three months free · cancel anytime, no reason needed · offer ends 8 August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The first three months free · cancel anytime, no reason needed · offer ends 8 August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -1889,7 +1889,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -1913,7 +1913,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -2053,8 +2053,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -2140,19 +2140,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Zusehen, wie jemand&#160;denkt.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Was Sie jede Woche lesen, können Sie jetzt auch sehen und hören: Auf goetheanum.tv denken Menschen laut, in über 800 Vorträgen und Gesprächen. Sie hören das Zögern und das Finden mit — alles, was auf der gedruckten Seite unsichtbar bleibt.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Was Sie jede Woche lesen, können Sie jetzt auch sehen und hören: Auf goetheanum.tv denken Menschen laut, in über 800 Vorträgen und Gesprächen. Sie hören das Zögern und das Finden mit — alles, was auf der gedruckten Seite unsichtbar bleibt.</div>
                       </td>
                     </tr>
                     <tr>
@@ -2161,7 +2161,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Drei Monate schauen → </a>
+                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Drei Monate schauen → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -2170,7 +2170,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die ersten drei Monate kostenlos · jederzeit kündbar, ein Klick im Konto · Aktion bis 8. August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die ersten drei Monate kostenlos · jederzeit kündbar, ein Klick im Konto · Aktion bis 8. August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -2194,7 +2194,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -2218,7 +2218,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -2358,8 +2358,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -2445,19 +2445,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Watch someone&#160;think.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>What you read each week you can now watch and hear: on goetheanum.tv, people think out loud, in over 800 lectures and conversations. You hear the hesitation and the finding — everything the printed page keeps invisible.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>What you read each week you can now watch and hear: on goetheanum.tv, people think out loud, in over 800 lectures and conversations. You hear the hesitation and the finding — everything the printed page keeps invisible.</div>
                       </td>
                     </tr>
                     <tr>
@@ -2466,7 +2466,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Start watching free → </a>
+                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Start watching free → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -2475,7 +2475,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The first three months free · cancel anytime with one click in your account · offer ends 8 August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The first three months free · cancel anytime with one click in your account · offer ends 8 August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -2499,7 +2499,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -2523,7 +2523,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -2663,8 +2663,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -2750,19 +2750,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Setzen Sie sich&#160;dazu.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Ein Abend auf goetheanum.tv ist ein Abend in Gesellschaft von Menschen, die ihr Leben lang an einer Frage gearbeitet haben — und die laut denken, statt fertige Antworten vorzutragen. Noch bis 8. August drei Monate gratis zu Ihrem Abo.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Ein Abend auf goetheanum.tv ist ein Abend in Gesellschaft von Menschen, die ihr Leben lang an einer Frage gearbeitet haben — und die laut denken, statt fertige Antworten vorzutragen. Noch bis 8. August drei Monate gratis zu Ihrem Abo.</div>
                       </td>
                     </tr>
                     <tr>
@@ -2771,7 +2771,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Drei Monate schauen → </a>
+                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Drei Monate schauen → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -2780,7 +2780,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die ersten drei Monate kostenlos · jederzeit kündbar, ein Klick im Konto · Aktion bis 8. August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die ersten drei Monate kostenlos · jederzeit kündbar, ein Klick im Konto · Aktion bis 8. August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -2804,7 +2804,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -2828,7 +2828,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -2968,8 +2968,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -3055,19 +3055,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Pull up a&#160;chair.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>An evening on goetheanum.tv is an evening in the company of people who have worked on a question all their lives — thinking out loud rather than reciting finished answers. Until 8 August: three months free with your subscription.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>An evening on goetheanum.tv is an evening in the company of people who have worked on a question all their lives — thinking out loud rather than reciting finished answers. Until 8 August: three months free with your subscription.</div>
                       </td>
                     </tr>
                     <tr>
@@ -3076,7 +3076,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Start watching free → </a>
+                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Start watching free → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -3085,7 +3085,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The first three months free · cancel anytime with one click in your account · offer ends 8 August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The first three months free · cancel anytime with one click in your account · offer ends 8 August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -3109,7 +3109,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -3133,7 +3133,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -3273,8 +3273,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -3360,19 +3360,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Bis Samstag ist Ihr Platz&#160;frei.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Noch ein paar Sommertage: goetheanum.tv, die ersten drei Monate gratis zu Ihrem Abo — bleiben Sie nur, wenn es in Ihnen nachklingt.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Noch ein paar Sommertage: goetheanum.tv, die ersten drei Monate gratis zu Ihrem Abo — bleiben Sie nur, wenn es in Ihnen nachklingt.</div>
                       </td>
                     </tr>
                     <tr>
@@ -3381,7 +3381,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Drei Monate schauen → </a>
+                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Drei Monate schauen → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -3390,7 +3390,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die ersten drei Monate kostenlos · jederzeit kündbar, ein Klick im Konto · Aktion bis 8. August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Die ersten drei Monate kostenlos · jederzeit kündbar, ein Klick im Konto · Aktion bis 8. August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -3414,7 +3414,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -3438,7 +3438,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -3578,8 +3578,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -3665,19 +3665,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Your seat stays free until&#160;Saturday.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>A few summer days left: goetheanum.tv, the first three months free with your subscription — stay only if it stays with you.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>A few summer days left: goetheanum.tv, the first three months free with your subscription — stay only if it stays with you.</div>
                       </td>
                     </tr>
                     <tr>
@@ -3686,7 +3686,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Start watching free → </a>
+                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Start watching free → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -3695,7 +3695,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The first three months free · cancel anytime with one click in your account · offer ends 8 August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>The first three months free · cancel anytime with one click in your account · offer ends 8 August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -3719,7 +3719,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -3743,7 +3743,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -3883,8 +3883,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -3970,19 +3970,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Zwei Fenster auf, den ganzen&#160;Sommer.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Lernen Sie das Goetheanum diesen Sommer von beiden Seiten kennen: Lesen Sie in der Wochenschrift Menschen, die einer Frage ihr Leben gewidmet haben, und sehen Sie auf goetheanum.tv zu, wie sie laut denken — die ersten drei Monate kostenlos, jederzeit kündbar.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Lernen Sie das Goetheanum diesen Sommer von beiden Seiten kennen: Lesen Sie in der Wochenschrift Menschen, die einer Frage ihr Leben gewidmet haben, und sehen Sie auf goetheanum.tv zu, wie sie laut denken — die ersten drei Monate kostenlos, jederzeit kündbar.</div>
                       </td>
                     </tr>
                     <tr>
@@ -3991,7 +3991,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://global-sommer2026.goetheanum.online?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Ihren Sommer wählen → </a>
+                                <a href=&quot;https://global-sommer2026.goetheanum.online?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Ihren Sommer wählen → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -4000,7 +4000,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Beide Angebote kombinierbar · die ersten drei Monate kostenlos, jederzeit kündbar · nur bis 8. August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Beide Angebote kombinierbar · die ersten drei Monate kostenlos, jederzeit kündbar · nur bis 8. August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -4024,7 +4024,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -4048,7 +4048,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -4188,8 +4188,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -4275,19 +4275,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Two windows open, all summer&#160;long.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Get to know the Goetheanum from both sides this summer: in the weekly, read people who have given their lives to a question; on goetheanum.tv, watch them think out loud — the first three months free, cancel anytime.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Get to know the Goetheanum from both sides this summer: in the weekly, read people who have given their lives to a question; on goetheanum.tv, watch them think out loud — the first three months free, cancel anytime.</div>
                       </td>
                     </tr>
                     <tr>
@@ -4296,7 +4296,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://global-sommer2026.goetheanum.online/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Choose your summer → </a>
+                                <a href=&quot;https://global-sommer2026.goetheanum.online/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Choose your summer → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -4305,7 +4305,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Both offers can be combined · the first three months free, cancel anytime · only until 8 August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Both offers can be combined · the first three months free, cancel anytime · only until 8 August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -4329,7 +4329,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -4353,7 +4353,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -4493,8 +4493,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -4580,19 +4580,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Denken in guter&#160;Gesellschaft.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Ein Essay am Morgen, ein Vortrag am Abend — und dazwischen merken Sie, wie die eigenen Gedanken weiter reichen als sonst. Die ersten drei Monate geschenkt, anmelden bis 8. August.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Ein Essay am Morgen, ein Vortrag am Abend — und dazwischen merken Sie, wie die eigenen Gedanken weiter reichen als sonst. Die ersten drei Monate geschenkt, anmelden bis 8. August.</div>
                       </td>
                     </tr>
                     <tr>
@@ -4601,7 +4601,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://global-sommer2026.goetheanum.online?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Ihren Sommer wählen → </a>
+                                <a href=&quot;https://global-sommer2026.goetheanum.online?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Ihren Sommer wählen → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -4610,7 +4610,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Beide Angebote kombinierbar · die ersten drei Monate kostenlos, jederzeit kündbar · nur bis 8. August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Beide Angebote kombinierbar · die ersten drei Monate kostenlos, jederzeit kündbar · nur bis 8. August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -4634,7 +4634,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -4658,7 +4658,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -4798,8 +4798,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -4885,19 +4885,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Thinking in good&#160;company.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>An essay in the morning, a lecture in the evening — and in between you notice your own thoughts reaching further than usual. The first three months free, sign up by 8 August.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>An essay in the morning, a lecture in the evening — and in between you notice your own thoughts reaching further than usual. The first three months free, sign up by 8 August.</div>
                       </td>
                     </tr>
                     <tr>
@@ -4906,7 +4906,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://global-sommer2026.goetheanum.online/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Choose your summer → </a>
+                                <a href=&quot;https://global-sommer2026.goetheanum.online/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Choose your summer → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -4915,7 +4915,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Both offers can be combined · the first three months free, cancel anytime · only until 8 August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Both offers can be combined · the first three months free, cancel anytime · only until 8 August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -4939,7 +4939,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -4963,7 +4963,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -5103,8 +5103,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -5190,19 +5190,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Lesen, sehen oder beides — Ihre&#160;Wahl.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Noch bis Samstag: drei Monate kostenlos lesen oder sehen — danach entscheiden Sie, ob es weitergeht.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Noch bis Samstag: drei Monate kostenlos lesen oder sehen — danach entscheiden Sie, ob es weitergeht.</div>
                       </td>
                     </tr>
                     <tr>
@@ -5211,7 +5211,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://global-sommer2026.goetheanum.online?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Ihren Sommer wählen → </a>
+                                <a href=&quot;https://global-sommer2026.goetheanum.online?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Ihren Sommer wählen → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -5220,7 +5220,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Beide Angebote kombinierbar · die ersten drei Monate kostenlos, jederzeit kündbar · nur bis 8. August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Beide Angebote kombinierbar · die ersten drei Monate kostenlos, jederzeit kündbar · nur bis 8. August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -5244,7 +5244,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -5268,7 +5268,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -5408,8 +5408,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -5495,19 +5495,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Reading, watching or both — your&#160;choice.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Until Saturday: three months free to read or watch — after that, you decide whether it continues.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Until Saturday: three months free to read or watch — after that, you decide whether it continues.</div>
                       </td>
                     </tr>
                     <tr>
@@ -5516,7 +5516,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://global-sommer2026.goetheanum.online/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Choose your summer → </a>
+                                <a href=&quot;https://global-sommer2026.goetheanum.online/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Choose your summer → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -5525,7 +5525,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Both offers can be combined · the first three months free, cancel anytime · only until 8 August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Both offers can be combined · the first three months free, cancel anytime · only until 8 August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -5549,7 +5549,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -5573,7 +5573,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -5713,8 +5713,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -5800,19 +5800,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 Monate gratis</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>Sie waren schon da — ein Schritt fehlt&#160;noch.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Was Sie sich angeschaut haben, hat Sie aus einem Grund angesprochen — eine Minute, und Sie haben drei Monate Zeit, dem nachzugehen.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Was Sie sich angeschaut haben, hat Sie aus einem Grund angesprochen — eine Minute, und Sie haben drei Monate Zeit, dem nachzugehen.</div>
                       </td>
                     </tr>
                     <tr>
@@ -5821,7 +5821,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://global-sommer2026.goetheanum.online?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Ihren Sommer wählen → </a>
+                                <a href=&quot;https://global-sommer2026.goetheanum.online?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Ihren Sommer wählen → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -5830,7 +5830,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Beide Angebote kombinierbar · die ersten drei Monate kostenlos, jederzeit kündbar · nur bis 8. August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Beide Angebote kombinierbar · die ersten drei Monate kostenlos, jederzeit kündbar · nur bis 8. August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -5854,7 +5854,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute — seit 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -5878,7 +5878,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -6018,8 +6018,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   </style>
   <style type=&quot;text/css&quot;>
     @font-face {
-      font-family: 'Fazeta Sans';
-      src: url('https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/FazetaSans-Bold.ttf') format('truetype');
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -6105,19 +6105,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;line-height:20px;text-align:left;color:#A95278;&quot;>3 months free</div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Fazeta Sans','Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
                           <div style=&quot;text-wrap:balance&quot;>You’ve already had a look — one step to&#160;go.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>What you looked at spoke to you for a reason — one minute, and you have three months to follow it.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>What you looked at spoke to you for a reason — one minute, and you have three months to follow it.</div>
                       </td>
                     </tr>
                     <tr>
@@ -6126,7 +6126,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://global-sommer2026.goetheanum.online/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Choose your summer → </a>
+                                <a href=&quot;https://global-sommer2026.goetheanum.online/en?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_noabo&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Choose your summer → </a>
                               </td>
                             </tr>
                           </tbody>
@@ -6135,7 +6135,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 26px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Both offers can be combined · the first three months free, cancel anytime · only until 8 August 2026.</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Both offers can be combined · the first three months free, cancel anytime · only until 8 August 2026.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -6159,7 +6159,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today — since 1921</div>
                       </td>
                     </tr>
                   </tbody>
@@ -6183,7 +6183,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:Inter,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
+                        <div style=&quot;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
