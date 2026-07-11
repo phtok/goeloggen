@@ -86,8 +86,24 @@
   .thumb .karte{width:88px;height:60px;border-radius:7px;display:block}
 
   /* QR-Code – ein echter, scannbarer QR (führt über tools.goetheanum.ch/s/hoi
-     zum Werkzeug selbst). Weisser Grund fest, damit er in jedem Theme scannt. */
+     zum Werkzeug selbst). Zwei Fassungen: dunkel auf hell (Light) und invertiert
+     hell auf dunkel (Dark) – die passende steht je nach Theme, gesteuert über
+     data-theme UND prefers-color-scheme. */
   .thumb .qrg{width:66px;height:66px;border-radius:8px;display:block}
+  .thumb .qrgd{display:none}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .thumb .qrgl{display:none}
+    :root:not([data-theme="light"]) .thumb .qrgd{display:block}
+  }
+  :root[data-theme="dark"] .thumb .qrgl{display:none}
+  :root[data-theme="dark"] .thumb .qrgd{display:block}
+  :root[data-theme="light"] .thumb .qrgl{display:block}
+  :root[data-theme="light"] .thumb .qrgd{display:none}
+
+  /* Wallpaper: ein Motiv, aber im Card-Gesetz – kontaktiert in einem kleinen
+     gerahmten Bildchen, mittig mit Luft, nicht randlos über die ganze Kachel. */
+  .thumb .wp{width:96px;height:54px;border-radius:6px;overflow:hidden;display:block}
+  .thumb .wp img{width:100%;height:100%;object-fit:cover;display:block}
 
   /* Entdecker-Karussell – Hinweis auf weniger Bekanntes, oben über den Karten. */
   .carousel{position:relative;margin-bottom:var(--s8);border:1px solid var(--line);
@@ -185,12 +201,12 @@
     "design-system":   '<span class="sys"><i class="bar"></i><i class="ln"></i><i class="ln s"></i><span class="chips"><i style="background:var(--gold)"></i><i style="background:var(--sek-ms)"></i><i style="background:var(--gold-deep)"></i></span></span>', // Mini-Bauplan: Struktur + Farbe
     "sektionsfarben":  '<span class="sw"><i style="background:var(--sek-szw)"></i><i style="background:var(--sek-lws)"></i><i style="background:var(--sek-ms)"></i><i style="background:var(--sek-js)"></i></span>', // vier Sektionsfarben
     "zeichen":         '<span style="background:#fff;border-radius:8px;width:100%;height:100%;display:grid;place-items:center"><img src="assets/zeichen/hochschulzeichen.png" alt="" style="max-height:66px;max-width:78%"></span>', // Rudolf-Steiner-Zeichen auf weissem Papier
-    "wallpaper":       '<img src="assets/wallpaper/goetheanum-wallpaper-48.jpg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px">', // ein Motiv
+    "wallpaper":       '<span class="wp"><img src="assets/wallpaper/goetheanum-wallpaper-48.jpg" alt=""></span>', // ein Motiv, im Card-Gesetz gerahmt
     "powerpoint":      '<span class="ppt"><b></b><i></i><i></i></span>', // eine Folie mit Titel
     "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>', // vier Sprachen
     "editor":          '<span class="ed"><i></i><i class="mk"></i><i></i></span>', // Text mit offener Frage
     "karten":          '<svg class="karte" viewBox="292 326 108 73" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="292" y="326" width="108" height="73" fill="#8abfe5"/><path d="M292 388 Q340 373 400 389" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M398 356 Q374 372 356 392" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/><g transform="matrix(1,0,0,-1,326.2333,381.59504)"><path d="M0 0-1.62 1.668-1.063 2.215-5.521 6.744-7.343 6.652-8.935 8.108-7.837 8.585-8.388 9.846-11.464 16.982-24.128 27.375-31.49 44.172-32.109 45.594-32.874 45.625-32.899 48.235-30.616 48.265-30.821 64.63-33.154 64.603-33.172 67.229-32.37 67.244-14.991 92.616 36.46 93.218 54.944 67.973 55.759 67.992 55.787 65.673 52.757 65.642 52.957 49.605 55.977 49.63 56.014 47.341 54.963 47.299 47.38 28.345 35.045 17.56 31.459 9.05 32.65 8.576 31.179 7.017 29.298 7.099 24.972 2.525 25.544 2.015 23.958 .332 21.071 .295 21.012 5.984 2.793 5.771 2.868 .037Z" fill="#0067b2"/></g></svg>', // markanter Nord-Anschnitt des Goetheanum
-    "qr-generator":    '<img class="qrg" src="assets/qr-werkzeug.svg" alt="">', // echter, scannbarer QR (Fliessend) zum Werkzeug
+    "qr-generator":    '<img class="qrg qrgl" src="assets/qr-werkzeug.svg" alt=""><img class="qrg qrgd" src="assets/qr-werkzeug-dark.svg" alt="">', // echter QR, Light + Dark (invertiert)
     "empfehlungen":    '<span class="spec" style="color:var(--gold-ink)">11</span>' // die elf Gebote
   };
   function visual(t){
