@@ -100,7 +100,8 @@ Die Routine feuert **wöchentlich, Dienstag 06:00 UTC** (nach dem
 Seelenkalender-Montagsversand liegen frische Wochenzahlen vor), jede
 Feuerung in einer frischen Session, Benachrichtigung per Push und E-Mail.
 
-Trigger-ID: _wird nach dem Scharfstellen hier nachgetragen._
+Trigger-ID: `trig_015FNRshk7nikmbZUTd5YYqv` (scharfgestellt 11. Juli 2026;
+erste Feuerung Dienstag, 14. Juli 2026, 06.00 UTC).
 
 **Der Prompt der Routine (versioniert, Quelle der Wahrheit):**
 
