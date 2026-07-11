@@ -43,6 +43,7 @@
   .gopt .lab{display:block;margin-bottom:var(--s2)}
   .qrwrap{display:flex;flex-direction:column;align-items:center;gap:var(--s2)}
   .qr{width:220px;height:220px;border-radius:var(--r-control);overflow:hidden;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center}
+  .qr.dunkel{background:#141414}   /* Vorschau-Grund für weisse Codes – Artefakt, nicht Theme  # ds-ok */
   .qr svg{display:block;width:100%;height:100%}
   .payloadbox{width:220px;font-family:var(--font-mono,var(--font-text));font-size:var(--t-micro);color:var(--muted);
     word-break:break-all;line-height:1.5;max-height:5.5em;overflow:hidden}
@@ -246,7 +247,9 @@
               <button type="button" data-farbe="tinte" aria-pressed="true">Tinte</button>
               <button type="button" data-farbe="blau" aria-pressed="false">Blau</button>
               <button type="button" data-farbe="gold" aria-pressed="false">Gold</button>
+              <button type="button" data-farbe="weiss" aria-pressed="false">Weiss</button>
             </div>
+            <span class="hint" id="weissHint" hidden>Weiss ist zum Freistellen: der Grund bleibt transparent – wirkt nur auf dunklem Untergrund, und gestürzte Codes lesen nicht alle Kameras gleich gut. Vor dem Druck testen.</span>
           </div>
           <div class="gopt">
             <span class="lab">Format</span>
@@ -344,11 +347,13 @@
   var registriert = null;   // { code, url } nach erfolgreichem Anlegen
 
   // QR-Farben sind Artefakt, nicht Theme: ein Code braucht festen dunklen
-  // Vordergrund auf weissem Grund, sonst liest ihn keine Kamera – theme-unabhängig.
+  // Vordergrund auf hellem Grund (oder gestürzt: Weiss auf dunklem Grund),
+  // sonst liest ihn keine Kamera – theme-unabhängig.
   var FARBEN = {
     tinte: '#141414',   // nahschwarz, wie im Inserat  # ds-ok
     blau:  '#0061a9',   // Hausblau, Kontrast 5.0:1 auf Weiss  # ds-ok
-    gold:  '#94702e'    // tiefes Gold, Kontrast 4.6:1 auf Weiss  # ds-ok
+    gold:  '#94702e',   // tiefes Gold, Kontrast 4.6:1 auf Weiss  # ds-ok
+    weiss: '#ffffff'    // gestürzt, Grund transparent – zum Freistellen auf Dunklem  # ds-ok
   };
   var QR_BG = '#ffffff';  // Ruhezone weiss, muss scannbar bleiben  # ds-ok
 
@@ -414,7 +419,7 @@
   // Fehlerkorrektur Q (robust für Druck). Punkte berühren sich (r=0.5) → scannbar;
   // Fliessend verschmilzt Nachbarn zu runden Formen (aussen wie innen gerundet);
   // Weich lässt minimale Fugen (0.94er-Module), Kanten ist der klassische Vollblock.
-  function qrSvg(text, stilWahl, fg){
+  function qrSvg(text, stilWahl, fg, bg){
     var q = qrcode(0, 'Q'); q.addData(text); q.make();
     var n = q.getModuleCount(), pad = 4, S = n + pad * 2, p = [];
     function inFinder(r, c){ return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7); }
@@ -429,7 +434,18 @@
         'H' + (x + bl)     + (bl ? 'A' + bl + ' ' + bl + ' 0 0 1 ' + x + ' ' + (y + 1 - bl) : '') +
         'V' + (y + tl)     + (tl ? 'A' + tl + ' ' + tl + ' 0 0 1 ' + (x + tl) + ' ' + y : '') + 'Z';
     }
-    p.push('<rect width="' + S + '" height="' + S + '" fill="' + QR_BG + '"/>');
+    // Gerundetes Rechteck als Pfad (r=0 → scharfe Ecken); für die Augen-Ringe.
+    function rr(x, y, w, h, rad){
+      if(!rad) return 'M' + x + ' ' + y + 'H' + (x + w) + 'V' + (y + h) + 'H' + x + 'Z';
+      return 'M' + (x + rad) + ' ' + y +
+        'H' + (x + w - rad) + 'A' + rad + ' ' + rad + ' 0 0 1 ' + (x + w) + ' ' + (y + rad) +
+        'V' + (y + h - rad) + 'A' + rad + ' ' + rad + ' 0 0 1 ' + (x + w - rad) + ' ' + (y + h) +
+        'H' + (x + rad) + 'A' + rad + ' ' + rad + ' 0 0 1 ' + x + ' ' + (y + h - rad) +
+        'V' + (y + rad) + 'A' + rad + ' ' + rad + ' 0 0 1 ' + (x + rad) + ' ' + y + 'Z';
+    }
+    // Ohne bg bleibt der Grund transparent (Weiss zum Freistellen) – die
+    // Ruhezone muss dann der Untergrund liefern.
+    if(bg) p.push('<rect width="' + S + '" height="' + S + '" fill="' + bg + '"/>');
     var teile = [], R = 0.5;
     for(var r = 0; r < n; r++){
       for(var c = 0; c < n; c++){
@@ -462,13 +478,14 @@
       }
     }
     if(teile.length) p.push('<path d="' + teile.join('') + '" fill="' + fg + '"/>');
-    // Die drei Finder-Augen (dunkel · hell · dunkel); gerundet ausser bei Kanten.
+    // Die drei Finder-Augen als Ring + Kern (fill-rule evenodd macht die Mitte
+    // zum echten Loch – so bleibt sie auch bei transparentem Grund hell);
+    // gerundet ausser bei Kanten.
     var rund = stilWahl === 'kanten' ? [0, 0, 0] : [2.3, 1.7, 1.0];
     [[0, 0], [0, n - 7], [n - 7, 0]].forEach(function(e){
       var y = e[0] + pad, x = e[1] + pad;
-      p.push('<rect x="' + x + '" y="' + y + '" width="7" height="7" rx="' + rund[0] + '" fill="' + fg + '"/>');
-      p.push('<rect x="' + (x + 1) + '" y="' + (y + 1) + '" width="5" height="5" rx="' + rund[1] + '" fill="' + QR_BG + '"/>');
-      p.push('<rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3" rx="' + rund[2] + '" fill="' + fg + '"/>');
+      p.push('<path fill-rule="evenodd" d="' + rr(x, y, 7, 7, rund[0]) + rr(x + 1, y + 1, 5, 5, rund[1]) + '" fill="' + fg + '"/>');
+      p.push('<path d="' + rr(x + 2, y + 2, 3, 3, rund[2]) + '" fill="' + fg + '"/>');
     });
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + S + ' ' + S + '" ' +
            'preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision">' + p.join('') + '</svg>';
@@ -502,8 +519,9 @@
       zeigeStand();
       return;
     }
+    qr.classList.toggle('dunkel', farbe === 'weiss');
     try {
-      qr.innerHTML = qrSvg(current.text, stil, FARBEN[farbe]);
+      qr.innerHTML = qrSvg(current.text, stil, FARBEN[farbe], farbe === 'weiss' ? null : QR_BG);
       box.textContent = current.text;
     } catch(e){
       qr.innerHTML = '<span class="empty">zu viel Inhalt</span>';
@@ -529,7 +547,7 @@
     render();
   });
   segWire('stilSeg', 'stil', function(v){ stil = v; render(); });
-  segWire('farbSeg', 'farbe', function(v){ farbe = v; render(); });
+  segWire('farbSeg', 'farbe', function(v){ farbe = v; el('weissHint').hidden = (v !== 'weiss'); render(); });
   segWire('fmtSeg', 'fmt', function(v){ fmt = v; el('sizeOpt').hidden = (v !== 'png'); });
   segWire('sizeSeg', 'size', function(v){ size = Number(v); });
 
@@ -619,7 +637,8 @@
     img.onload = function(){
       var c = document.createElement('canvas'); c.width = size; c.height = size;
       var ctx = c.getContext('2d');
-      ctx.fillStyle = QR_BG; ctx.fillRect(0, 0, size, size);
+      // Weiss bleibt transparent (Freistellen); sonst weisse Ruhezone.
+      if(farbe !== 'weiss'){ ctx.fillStyle = QR_BG; ctx.fillRect(0, 0, size, size); }
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(img, 0, 0, size, size);
       c.toBlob(function(b){
