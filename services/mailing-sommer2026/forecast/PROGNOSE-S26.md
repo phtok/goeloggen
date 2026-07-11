@@ -159,16 +159,22 @@ Was das für S26 heisst:
   dreisegmentige Automation ist dieselbe Grössenordnung — «einige Hundert, nicht
   Tausende» hält, und die **Abwärtskorrektur des NoAbo-p war richtig**, nicht zu
   vorsichtig.
-- **Rate im Kontext.** S26 zentral = 0,45 %/Empfänger. Die Feb-Kampagne lag
-  (je nach unbekannter Versandmenge 20–50k) bei **0,15–0,38 %/Empfänger**. Dass
-  S26 **darüber** liegt, ist plausibel — «3 Monate **gratis**» senkt die
-  Einstiegshürde gegenüber einem 30-%-**Bezahl**-Rabatt —, zeigt aber zugleich,
-  dass 208 am **oberen, verteidigbaren Rand** sitzt.
-- **Zwei Korrekturen, gegenläufig:** Free-Trial hebt die Start-Rate (Hürde tiefer),
-  Sommer (Jul/Aug) senkt sie gegenüber Februar. Netto bleibt die Grössenordnung.
-- **Der eine fehlende Wert:** die **Versandmenge der Feb-Kampagne**. Damit wird aus
-  «76» eine echte Rate/Empfänger und ich kann das TV-Angebots-p direkt kalibrieren
-  statt annehmen. Bitte nachreichen, falls verfügbar.
+- **Jetzt mit echter Rate.** Die Versandmenge steckt in den 2025-GTV-Daten:
+  GTV DE 27.502 + EN 23.777 ≈ **~51.000** erreicht (international, wie die
+  Sprach-Verteilung der Abschlüsse zeigt). → **76 / 51.000 = 0,15 %/Empfänger**
+  für ein **kaltes, bezahltes** 30-%-Rabatt-Angebot. Ein gemessener Wert, keine
+  Annahme mehr.
+- **Rekonziliation mit S26 (der Clou).** Mein korrigiertes NoAbo (kalt) liegt bei
+  152 / 40.000 = **0,38 %/Empfänger** — für ein **Gratis-Trial**. Der Sprung
+  0,15 % → 0,38 % ist ein **~2,5× Free-über-Bezahl-Aufschlag** (Trial-Starts ohne
+  Sofortzahlung konvertieren typisch 2–4× über einen Bezahl-Rabatt). Das sitzt
+  **mitten im plausiblen Band** — die reale Kampagne **bestätigt die Abwärts-
+  korrektur**, statt sie zu widerlegen. Aus «Annahme» wird «kalibriert».
+- **Restunsicherheit, beide Lesarten stützen 208.** War die Feb-Kampagne
+  DE-lastiger/kleiner (~27k statt 51k), steigt ihre Rate auf ~0,28 % und der
+  Aufschlag schrumpft auf ~1,4× — dann wäre S26 sogar leicht **konservativ**.
+  Sommer (Jul/Aug schwächer als Februar) wirkt gegenläufig. In **keiner** Lesart
+  wird 208 nennenswert nach unten gedrückt.
 
 **Werthebel (aus den realen €-Zahlen).** Ein Feb-Abschluss war ~€124 brutto wert.
 Ein S26-Trial-Start ist zunächst **€0** — sein Wert = *Trial→Paid-Rate* × Jahres-

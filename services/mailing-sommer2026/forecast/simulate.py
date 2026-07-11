@@ -137,10 +137,11 @@ GROESSEN_BAND = {
 # Klick→Signup-Rate p (auf EINDEUTIGE Klicker). Kein 2025-Messwert ->
 # Szenario. Warm (Bestandskunde nimmt Gratis-Schwesterprodukt) hoch,
 # NoAbo kalt + Extra-Hop ueber die Uebersichtsseite -> niedrig.
-# Externe Kalibrierung (real): GTV-Abo-Kampagne Feb/Maerz 2026, 3 Mails ->
-# 76 attribuierte Abschluesse (Rabatt-Angebot). Bestaetigt die Groessen-
-# ordnung (Dutzende je Einzelkampagne) und die Abwaertskorrektur unten.
-# Denn S26 ~208 = dieselbe Groessenordnung, 3x skaliert + Gratis-Angebot.
+# Externe Kalibrierung (real, gemessen): GTV-Abo-Kampagne Feb/Maerz 2026,
+# 3 Mails -> 76 Abschluesse / ~51.000 erreicht = 0,15%/Empf. (kalt, bezahltes
+# Rabatt-Angebot). NoAbo hier = 0,38%/Empf. (Gratis-Trial) -> ~2,5x Free-ueber-
+# Bezahl-Aufschlag, plausibel. Die reale Kampagne KALIBRIERT die Abwaerts-
+# korrektur des NoAbo-p unten (aus Annahme wird Messwert), nicht nur Plausibilitaet.
 P_SIGNUP = {                 # (low, mid, high)
     "nurtv": (0.15, 0.25, 0.40),
     "nurws": (0.13, 0.22, 0.38),
