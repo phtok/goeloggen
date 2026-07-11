@@ -80,9 +80,9 @@
   .thumb .ed i:nth-child(1){width:100%}
   .thumb .ed i.mk{background:var(--gold-ink);width:44%}
   .thumb .ed i:nth-child(3){width:82%}
-  /* Campus-Karte: markanter Nord-Anschnitt der Goetheanum-Silhouette (echte
-     Geometrie aus der Geländekarte) auf hellem Campusfeld mit weissen Wegen.
-     Vereinfacht und plakativ; die Kartenfarben sind Artefakt, kein Theme. */
+  /* Campus-Karte: ein schematisches Zeichen (Baukörper, generische Wege, zwei
+     Marken) – Symbol, kein Grundriss, behauptet keinen realen Wegverlauf. Die
+     Kartenfarben sind Artefakt (das DING ist farbig), kein Theme. */
   .thumb .karte{width:88px;height:60px;border-radius:7px;display:block}
 
   /* QR-Code – ein echter, scannbarer QR (führt über tools.goetheanum.ch/s/hoi
@@ -205,7 +205,7 @@
     "powerpoint":      '<span class="ppt"><b></b><i></i><i></i></span>', // eine Folie mit Titel
     "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>', // vier Sprachen
     "editor":          '<span class="ed"><i></i><i class="mk"></i><i></i></span>', // Text mit offener Frage
-    "karten":          '<svg class="karte" viewBox="292 326 108 73" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="292" y="326" width="108" height="73" fill="#8abfe5"/><path d="M292 388 Q340 373 400 389" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M398 356 Q374 372 356 392" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/><g transform="matrix(1,0,0,-1,326.2333,381.59504)"><path d="M0 0-1.62 1.668-1.063 2.215-5.521 6.744-7.343 6.652-8.935 8.108-7.837 8.585-8.388 9.846-11.464 16.982-24.128 27.375-31.49 44.172-32.109 45.594-32.874 45.625-32.899 48.235-30.616 48.265-30.821 64.63-33.154 64.603-33.172 67.229-32.37 67.244-14.991 92.616 36.46 93.218 54.944 67.973 55.759 67.992 55.787 65.673 52.757 65.642 52.957 49.605 55.977 49.63 56.014 47.341 54.963 47.299 47.38 28.345 35.045 17.56 31.459 9.05 32.65 8.576 31.179 7.017 29.298 7.099 24.972 2.525 25.544 2.015 23.958 .332 21.071 .295 21.012 5.984 2.793 5.771 2.868 .037Z" fill="#0067b2"/></g></svg>', // markanter Nord-Anschnitt des Goetheanum
+    "karten":          '<svg class="karte" viewBox="0 0 100 68" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="100" height="68" fill="#8abfe5"/><path d="M-4 52 Q40 40 104 54" stroke="#ffffff" stroke-width="4.2" fill="none" stroke-linecap="round"/><path d="M30 -4 Q44 30 40 72" stroke="#ffffff" stroke-width="4.2" fill="none" stroke-linecap="round"/><path d="M50 34 L96 46" stroke="#ffffff" stroke-width="3.4" fill="none" stroke-linecap="round"/><rect x="40" y="22" width="26" height="20" rx="6" fill="#0067b2"/><circle cx="70" cy="24" r="4.2" fill="#caa04e" stroke="#ffffff" stroke-width="1.4"/><circle cx="33" cy="50" r="4.2" fill="#ec5f6c" stroke="#ffffff" stroke-width="1.4"/></svg>', // schematisches Campus-Zeichen, kein Grundriss
     "qr-generator":    '<img class="qrg qrgl" src="assets/qr-werkzeug.svg" alt=""><img class="qrg qrgd" src="assets/qr-werkzeug-dark.svg" alt="">', // echter QR, Light + Dark (invertiert)
     "empfehlungen":    '<span class="spec" style="color:var(--gold-ink)">11</span>' // die elf Gebote
   };
