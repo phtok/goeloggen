@@ -92,6 +92,11 @@ Kommentare → Supabase `sommer2026_mail_comments`, key = element-id (`shared#x`
 (RPC `sommer2026_comment_erledigt`, security definer; `supabase/comment_erledigt_rpc.sql`,
 angewendet). Rücklauf: offene Kommentare lesen → in heroes.json korrigieren → neu bauen
 (`--publish`) → nach dem Merge `--verify`.
+**‹Fassung vorschlagen› je Mail** (ausklappbar unter dem Kommentarfeld): die Felder
+(Betreff, Betreff+, Botschaft, Text, Alt) vorbefüllt; ‹vorschlagen› schickt die neue Fassung
+unter dem Feld-Key mit Präfix `Fassung → ` ins Backend. Der Rücklauf-Agent erkennt sie als
+fertigen Feldtext und setzt sie ein (kein Umformulieren) — «im Editor bearbeiten» ohne die
+eine Quelle/Git/Prüfmaschinen aufzugeben. Details: RUECKLAUF-AGENT.md.
 
 ## Rücklauf-Agent (Gegenlese-Schleife automatisiert)
 `ruecklauf.py` ist das deterministische Herz: `python3 ruecklauf.py` holt die **offenen**

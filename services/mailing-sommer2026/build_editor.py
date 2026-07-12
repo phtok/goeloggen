@@ -191,6 +191,26 @@ def commentable(key, label, value_html):
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'{esc(key)}')">senden</button></div></div></div>"""
 
 
+def vorschlag_panel(base, welle, c):
+    """‹Fassung vorschlagen›: je Feld ein vorbefülltes Eingabefeld; ‹vorschlagen›
+    schickt die neue Fassung unter {base}#{feld} als Vorschlag ins Backend
+    (Präfix ‹Fassung → ›), der Rücklauf-Agent nimmt sie in heroes.json auf."""
+    felder = [("betreff", "Betreff", c.get("betreff", "")),
+              ("preheader", "Betreff+ (Anriss)", preheader(c)),
+              ("botschaft", "Botschaft", c.get("botschaft", "")),
+              ("text", "Fliesstext", c.get("text", ""))]
+    if welle == "w3" and c.get("alt"):
+        felder.append(("alt", "Alt-Betreff (Nicht-Öffner)", c["alt"]))
+    rows = "".join(
+        f'<label class="pf"><span>{lab}</span>'
+        f'<textarea rows="2">{esc(val)}</textarea>'
+        f'<button type="button" onclick="vorschlag(this,\'{base}#{feld}\')">vorschlagen</button></label>'
+        for feld, lab, val in felder)
+    return (f'<details class="propose"><summary>✎ Fassung vorschlagen</summary>'
+            f'<p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins '
+            f'Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p>{rows}</details>')
+
+
 def verify():
     """Nach Merge/Deploy: sind Editor und alle gehosteten Assets live erreichbar?
     Make-or-break vor dem Versand — vor dem Deploy sind die Bild-URLs tot."""
@@ -254,7 +274,8 @@ def main():
   <div class="mhd">{welle.upper()} · {lang.upper()}<a href="mails/mail_{base}.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   {inbox}
   <iframe srcdoc="{html.replace('"','&quot;')}" loading="lazy" title="Vorschau {base}"></iframe>
-  <div class="flds">{commentable(f"{base}#gesamt","Anmerkung zur Mail","<i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i>")}</div></div>""")
+  <div class="flds">{commentable(f"{base}#gesamt","Anmerkung zur Mail","<i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i>")}
+  {vorschlag_panel(base, welle, c)}</div></div>""")
             wave_cards.append(f'<div class="wave">{"".join(lang_cards)}</div>')
         seg_blocks.append(f'<section class="segment"><h2>{H["motive"][motiv]["label"]} — {seg}</h2><div class="waves">{"".join(wave_cards)}</div></section>')
 
@@ -345,6 +366,16 @@ main{{--mailw:clamp(340px,30vw,600px)}} /* 600 = native Mail-Breite: Vorschau in
 .cin button{{min-height:var(--tap);background:var(--blue-solid);color:var(--on-accent);border:0;border-radius:var(--r-control);padding:4px 12px;font:inherit;font-size:var(--t-small);cursor:pointer}}
 .uebn{{min-height:var(--tap);background:var(--paper);border:1px solid var(--line-soft);border-radius:var(--r-control);padding:4px 10px;font:inherit;font-size:var(--t-small);cursor:pointer;color:var(--muted)}}
 .uebn:hover{{color:var(--gold-ink);border-color:var(--gold-ink)}}
+/* ‹Fassung vorschlagen›: je Feld vorbefüllt, ‹vorschlagen› → Backend → Rücklauf-Agent. */
+.propose{{margin-top:var(--s2);font-family:var(--font-text);font-size:var(--t-small)}}
+.propose summary{{cursor:pointer;color:var(--gold-ink);font-weight:600;padding:4px 0;min-height:var(--tap);display:flex;align-items:center}}
+.propose .phint{{color:var(--muted);font-size:var(--t-micro);line-height:1.4;margin:2px 0 8px}}
+.pf{{display:grid;gap:3px;margin-bottom:8px}}
+.pf>span{{font-size:var(--t-micro);color:var(--muted)}}
+.pf textarea{{width:100%;font:inherit;font-size:var(--t-small);line-height:1.4;padding:5px 8px;border:1px solid var(--line-soft);border-radius:var(--r-control);background:var(--paper);color:var(--ink);resize:vertical;box-sizing:border-box}}
+.pf textarea:focus{{outline:2px solid var(--gold-ink);outline-offset:-1px}}
+.pf button{{justify-self:start;min-height:var(--tap);background:var(--paper);border:1px solid var(--gold-ink);border-radius:var(--r-control);padding:3px 12px;font:inherit;font-size:var(--t-small);color:var(--gold-ink);cursor:pointer}}
+.pf button:hover{{background:var(--field-bg)}}
 /* Sammelansicht: alle offenen Kommentare, anklicken springt zum Feld. */
 .offen{{list-style:none;margin:0;padding:0;display:grid;gap:var(--s2)}}
 .offen button{{display:block;width:100%;text-align:left;min-height:var(--tap);background:var(--paper);border:1px solid var(--line-soft);border-radius:8px;padding:var(--s2) var(--s3);font:inherit;cursor:pointer;color:var(--ink)}}
@@ -487,6 +518,21 @@ async function send(btn,key){{
   const r=await fetch(REST,{{method:"POST",headers:{{...HDR,"Prefer":"return=minimal"}},body:JSON.stringify({{mail_key:key,autor,kommentar:txt,sprache:spracheAus(key)}})}});
   if(!r.ok) throw new Error("HTTP "+r.status+" "+(await r.text()).slice(0,120));
   inp.value=""; await load();
+ }}catch(e){{st("Fehler: "+e.message); alert("Konnte nicht senden:\\n"+e.message+"\\n\\nTipp: Diese Seite über werkzeuge.goetheanum.ch öffnen — in eingebetteten Vorschauen sind Netzwerkzugriffe oft blockiert.");}}
+ btn.disabled=false;
+}}
+async function vorschlag(btn,key){{
+ // Neue Feld-Fassung als Vorschlag speichern (Präfix ‹Fassung → ›, unter dem Feld-Key);
+ // der Rücklauf-Agent erkennt sie und nimmt sie in heroes.json auf.
+ const ta=btn.previousElementSibling, txt=ta.value.trim(); if(!txt) return;
+ const eingabe=(document.getElementById('autor').value||'').trim();
+ try{{if(eingabe)localStorage.setItem('autor',eingabe);}}catch(e){{}}
+ const autor=eingabe||'anon';
+ btn.disabled=true; st("sende Vorschlag …");
+ try{{
+  const r=await fetch(REST,{{method:"POST",headers:{{...HDR,"Prefer":"return=minimal"}},body:JSON.stringify({{mail_key:key,autor,kommentar:"Fassung → "+txt,sprache:spracheAus(key)}})}});
+  if(!r.ok) throw new Error("HTTP "+r.status+" "+(await r.text()).slice(0,120));
+  st("Vorschlag gespeichert ✓"); await load();
  }}catch(e){{st("Fehler: "+e.message); alert("Konnte nicht senden:\\n"+e.message+"\\n\\nTipp: Diese Seite über werkzeuge.goetheanum.ch öffnen — in eingebetteten Vorschauen sind Netzwerkzugriffe oft blockiert.");}}
  btn.disabled=false;
 }}

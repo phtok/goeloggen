@@ -125,7 +125,14 @@ def briefing(rows):
         else:
             kopf = f"(unklar) {v['roh']}"
         print(f"## {kopf}")
-        print(f"- **Kommentar** ({c['autor'] or '?'}, {zeit(c['created_at'])}): {c['kommentar']}")
+        # ‹Fassung → …› = konkreter Editor-Vorschlag (neue Feld-Fassung), kein freier Kommentar.
+        k = c["kommentar"] or ""
+        if k.startswith("Fassung → ") or k.startswith("Fassung -> "):
+            neu = k.split("→", 1)[-1].split("->", 1)[-1].strip()
+            print(f"- **Fassungsvorschlag** ({c['autor'] or '?'}, {zeit(c['created_at'])}) — "
+                  f"neuer Feldtext, direkt einsetzbar:\n```\n{neu}\n```")
+        else:
+            print(f"- **Kommentar** ({c['autor'] or '?'}, {zeit(c['created_at'])}): {k}")
         if v.get("pfad"):
             print(f"- **heroes.json-Pfad**: `{v['pfad']}`")
         akt = v.get("aktuell")
