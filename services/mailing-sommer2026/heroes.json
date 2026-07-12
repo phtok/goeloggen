@@ -235,14 +235,14 @@
       },
       "w2": {
         "de": {
-          "betreff": "Ihr Sommer hat noch Seiten frei",
+          "betreff": "Drei Monate Lesestoff, geschenkt zu Ihrem Abo",
           "botschaft": "Ein Sommer über den eigenen Rand hinaus.",
           "text": "Noch bis 8. August lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — Lesestoff, der in Ihnen weiterarbeitet, wenn der Bildschirm dunkel ist.",
           "alt": "Lesestoff, der den Sommer überdauert — gratis",
           "preheader": "Bis 8. August: die Wochenschrift drei Monate gratis zu Ihrem Abo — sie liest sich überall."
         },
         "en": {
-          "betreff": "Your summer still has pages to turn",
+          "betreff": "Three months of reading, free with your subscription",
           "botschaft": "A summer beyond your own horizon.",
           "text": "Until 8 August, read the weekly free for three months with your subscription — reading that keeps working in you after the screen goes dark.",
           "alt": "Reading that outlasts the summer — free",
@@ -251,18 +251,18 @@
       },
       "w3": {
         "de": {
-          "betreff": "Nur noch bis Samstag: drei Monate gratis",
+          "betreff": "Bis Samstag: drei Monate mitlesen, geschenkt",
           "botschaft": "Bis Samstag bleibt die Tür offen.",
-          "text": "Noch ein paar Sommertage lang: die Wochenschrift, drei Monate gratis zu Ihrem Abo. Wenn sie Ihnen nicht ans Herz wächst, kündigen Sie einfach.",
+          "text": "Diese Woche endet die Sommer-Aktion. Bis Samstag lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — und kommen mit anderen Augen in Ihre Woche zurück. Gefällt es nicht, kündigen Sie mit einem Klick.",
           "alt": "Was Sie sehen, jetzt auch lesen — bis Samstag",
-          "preheader": "Eine Minute für drei Monate Lesezeit: die Wochenschrift gratis zu Ihrem Abo — bis Samstag."
+          "preheader": "Drei Gratis-Monate zum Mitlesen — nur noch bis Samstag, 8. August."
         },
         "en": {
-          "betreff": "Only until Saturday: three months free",
+          "betreff": "Until Saturday: three months of reading, as a gift",
           "botschaft": "The door stays open until Saturday.",
-          "text": "A few summer days remain: the weekly, free for three months with your subscription. If it doesn’t grow on you, simply cancel.",
+          "text": "This week the summer offer ends. Until Saturday, read the weekly free for three months with your subscription — and return to your own week with different eyes. If it’s not for you, cancel in one click.",
           "alt": "What you watch, now also read — until Saturday",
-          "preheader": "One minute for three months: the weekly, free with your subscription — until Saturday."
+          "preheader": "Three free months to read along — only until Saturday, 8 August."
         }
       }
     },
