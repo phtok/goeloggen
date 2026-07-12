@@ -475,6 +475,11 @@
   var FLAT_ORDER = ["logo-generator", "signatur", "visitenkarten", "schriften", "icons",
     "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint",
     "editor", "wallpaper", "design-system"];
+  // Backstage angeheftet: täglich gebrauchte Redaktions-Werkzeuge stehen in der
+  // Intern-Schublade ganz oben – über den Welten, kurzer Griff statt in einer
+  // Welt vergraben (Werkzeugpost = Redaktionstisch der Monatsmail). Angeheftete
+  // erscheinen nicht zusätzlich in ihrer Welt (G03 – Doppelung weglassen).
+  var INTERN_PIN = ["werkzeugpost"];
   var PUBLIC_CATS = WORLDS.reduce(function (a, w) { return a.concat(w.cats); }, []);
 
   function renderDrawer() {
@@ -497,10 +502,17 @@
       pub.sort(function (a, b) { return rank(a) - rank(b); });
       pub.forEach(function (t) { drawerBody.appendChild(linkEl(t)); });
     } else {
-      // intern: nach Backstage-Welten gruppiert (kurze, scannbare Bereiche).
+      // intern: erst die angehefteten Redaktions-Werkzeuge (ganz oben), dann
+      // nach Backstage-Welten gruppiert (kurze, scannbare Bereiche).
       var cur = currentWorldId();
+      INTERN_PIN.forEach(function (slug) {
+        var t = bySlug(slug);
+        if (t) drawerBody.appendChild(linkEl(t));
+      });
       WORLDS.concat(INTERN_EXTRA).forEach(function (w) {
-        var tools = ALL.filter(function (t) { return w.cats.indexOf(t.cat) !== -1; });
+        var tools = ALL.filter(function (t) {
+          return w.cats.indexOf(t.cat) !== -1 && INTERN_PIN.indexOf(t.slug) === -1;
+        });
         if (!tools.length) return;
         drawerBody.appendChild(groupEl(w, tools, w.id === cur));
       });
