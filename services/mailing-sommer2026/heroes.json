@@ -139,8 +139,8 @@
           "gtv": "Sehen wählen →"
         },
         "alternativen": [
-          "Wählen Sie Ihr Geschenk: lesen oder streamen",
-          "Zwei Angebote, ein Geschenk — bis 8. August",
+          "Wählen Sie: lesen oder streamen",
+          "Zwei Angebote, ein Sommer — bis 8. August",
           "Zusehen, wie Menschen laut denken — und die eigenen Fragen bekommen Gesellschaft."
         ]
       },
@@ -151,8 +151,8 @@
           "gtv": "Choose watching →"
         },
         "alternativen": [
-          "Choose your gift: read or stream",
-          "Two offers, one gift — until 8 August",
+          "Choose: read or stream",
+          "Two offers, one summer — until 8 August",
           "Watch people think out loud — and your own questions find company."
         ]
       }
@@ -160,16 +160,16 @@
   },
   "kleinzeile": {
     "lesen": {
-      "de": "Die ersten drei Monate kostenlos · jederzeit ohne Begründung kündbar · Aktion bis 8. August 2026.",
-      "en": "The first three months free · cancel anytime, no reason needed · offer ends 8 August 2026."
+      "de": "Drei Monate kostenlos, danach läuft das Abo regulär weiter · jederzeit ohne Begründung kündbar · Aktion bis 8. August 2026.",
+      "en": "Three months free, then the subscription continues at the regular price · cancel anytime, no reason needed · offer ends 8 August 2026."
     },
     "sehen": {
-      "de": "Die ersten drei Monate kostenlos · jederzeit kündbar, ein Klick im Konto · Aktion bis 8. August 2026.",
-      "en": "The first three months free · cancel anytime with one click in your account · offer ends 8 August 2026."
+      "de": "Drei Monate kostenlos, danach läuft das Abo regulär weiter · jederzeit kündbar, ein Klick im Konto · Aktion bis 8. August 2026.",
+      "en": "Three months free, then the subscription continues at the regular price · cancel anytime with one click in your account · offer ends 8 August 2026."
     },
     "beides": {
-      "de": "Beide Angebote kombinierbar · die ersten drei Monate kostenlos, jederzeit kündbar · nur bis 8. August 2026.",
-      "en": "Both offers can be combined · the first three months free, cancel anytime · only until 8 August 2026."
+      "de": "Beide Angebote kombinierbar · drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar · nur bis 8. August 2026.",
+      "en": "Both offers can be combined · three months free, then the subscription continues at the regular price, cancel anytime · only until 8 August 2026."
     }
   },
   "proof": {
@@ -223,26 +223,26 @@
           "botschaft": "Jede Woche ein Stück weiter sehen.",
           "text": "Was Sie auf goetheanum.tv sehen, lesen Sie in der Wochenschrift weiter: Woche für Woche schreiben dort Menschen, die einer Frage ihr Leben gewidmet haben — nicht was sie wissen, sondern wie sie suchen. Wer mitliest, kommt mit anderen Augen in die eigene Woche zurück.",
           "alt": "Drei Monate im Freien lesen — gratis",
-          "preheader": "Die ersten drei Monate geschenkt — lesen, wo der Sommer Sie hinträgt. Bis 8. August."
+          "preheader": "Drei Monate kostenlos mitlesen — wo der Sommer Sie hinträgt. Bis 8. August."
         },
         "en": {
           "betreff": "What you watch, now also read — 3 months free",
           "botschaft": "See a little further every week.",
           "text": "What you watch on goetheanum.tv you can read on in the weekly: week after week, people who have given their lives to a question write down not what they know but how they search. Read along, and you return to your own week with different eyes.",
           "alt": "Read in the open air — three months free",
-          "preheader": "The first three months as a gift — read wherever summer takes you. Until 8 August."
+          "preheader": "Three months free to read — wherever summer takes you. Until 8 August."
         }
       },
       "w2": {
         "de": {
-          "betreff": "Drei Monate Lesestoff, geschenkt zu Ihrem Abo",
+          "betreff": "Drei Monate mitlesen, danach entscheiden Sie.",
           "botschaft": "Ein Sommer über den eigenen Rand hinaus.",
           "text": "Noch bis 8. August lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — Lesestoff, der in Ihnen weiterarbeitet, wenn der Bildschirm dunkel ist.",
           "alt": "Lesestoff, der den Sommer überdauert — gratis",
           "preheader": "Bis 8. August: die Wochenschrift drei Monate gratis zu Ihrem Abo — sie liest sich überall."
         },
         "en": {
-          "betreff": "Three months of reading, free with your subscription",
+          "betreff": "Three months of reading — then you decide.",
           "botschaft": "A summer beyond your own horizon.",
           "text": "Until 8 August, read the weekly free for three months with your subscription — reading that keeps working in you after the screen goes dark.",
           "alt": "Reading that outlasts the summer — free",
@@ -251,14 +251,14 @@
       },
       "w3": {
         "de": {
-          "betreff": "Bis Samstag: drei Monate mitlesen, geschenkt",
+          "betreff": "Bis Samstag: drei Monate mitlesen, kostenlos",
           "botschaft": "Bis Samstag bleibt die Tür offen.",
           "text": "Diese Woche endet die Sommer-Aktion. Bis Samstag lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — und kommen mit anderen Augen in Ihre Woche zurück. Gefällt es nicht, kündigen Sie mit einem Klick.",
           "alt": "Was Sie sehen, jetzt auch lesen — bis Samstag",
           "preheader": "Drei Gratis-Monate zum Mitlesen — nur noch bis Samstag, 8. August."
         },
         "en": {
-          "betreff": "Until Saturday: three months of reading, as a gift",
+          "betreff": "Until Saturday: three months of reading, free",
           "botschaft": "The door stays open until Saturday.",
           "text": "This week the summer offer ends. Until Saturday, read the weekly free for three months with your subscription — and return to your own week with different eyes. If it’s not for you, cancel in one click.",
           "alt": "What you watch, now also read — until Saturday",
@@ -303,14 +303,14 @@
         "de": {
           "betreff": "Nur noch bis Samstag: drei Monate gratis",
           "botschaft": "Bis Samstag ist Ihr Platz frei.",
-          "text": "Noch ein paar Sommertage: goetheanum.tv, die ersten drei Monate gratis zu Ihrem Abo — bleiben Sie nur, wenn es in Ihnen nachklingt.",
+          "text": "Noch ein paar Sommertage: goetheanum.tv, drei Monate gratis zu Ihrem Abo — bleiben Sie nur, wenn es in Ihnen nachklingt.",
           "alt": "Was Sie lesen, jetzt auch sehen — bis Samstag",
           "preheader": "Eine Minute für drei Monate goetheanum.tv: gratis zu Ihrem Abo — bis Samstag, 8. August."
         },
         "en": {
           "betreff": "Only until Saturday: three months free",
           "botschaft": "Your seat stays free until Saturday.",
-          "text": "A few summer days left: goetheanum.tv, the first three months free with your subscription — stay only if it stays with you.",
+          "text": "A few summer days left: goetheanum.tv, three months free with your subscription — stay only if it stays with you.",
           "alt": "What you read, now also watch — until Saturday",
           "preheader": "One minute for three months of goetheanum.tv — free with your subscription, until Saturday."
         }
@@ -321,31 +321,31 @@
         "de": {
           "betreff": "Ein Sommer mit dem Goetheanum — 3 Monate gratis",
           "botschaft": "Zwei Fenster auf, den ganzen Sommer.",
-          "text": "Lernen Sie das Goetheanum diesen Sommer von beiden Seiten kennen: Lesen Sie in der Wochenschrift Menschen, die einer Frage ihr Leben gewidmet haben, und sehen Sie auf goetheanum.tv zu, wie sie laut denken — die ersten drei Monate kostenlos, jederzeit kündbar.",
+          "text": "Lernen Sie das Goetheanum diesen Sommer von beiden Seiten kennen: Lesen Sie in der Wochenschrift Menschen, die einer Frage ihr Leben gewidmet haben, und sehen Sie auf goetheanum.tv zu, wie sie laut denken — drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar.",
           "alt": "Drei Monate sind eine Jahreszeit — gratis",
-          "preheader": "Lesen oder schauen — oder beides: die ersten drei Monate geschenkt, bis 8. August."
+          "preheader": "Lesen oder schauen — oder beides: drei Monate kostenlos, bis 8. August."
         },
         "en": {
           "betreff": "A summer with the Goetheanum — 3 months free",
           "botschaft": "Two windows open, all summer long.",
-          "text": "Get to know the Goetheanum from both sides this summer: in the weekly, read people who have given their lives to a question; on goetheanum.tv, watch them think out loud — the first three months free, cancel anytime.",
+          "text": "Get to know the Goetheanum from both sides this summer: in the weekly, read people who have given their lives to a question; on goetheanum.tv, watch them think out loud — three months free, then the subscription continues at the regular price, cancel anytime.",
           "alt": "Three months is a whole season — free",
-          "preheader": "Read the weekly, watch goetheanum.tv — or both: the first three months free. Until 8 August."
+          "preheader": "Read the weekly, watch goetheanum.tv — or both: three months free. Until 8 August."
         }
       },
       "w2": {
         "de": {
           "betreff": "Lesen, sehen — oder gleich beides",
           "botschaft": "Denken in guter Gesellschaft.",
-          "text": "Ein Essay am Morgen, ein Vortrag am Abend — und dazwischen merken Sie, wie die eigenen Gedanken weiter reichen als sonst. Die ersten drei Monate geschenkt, anmelden bis 8. August.",
-          "alt": "Noch bis 8. August: Ihr Sommer-Geschenk",
+          "text": "Ein Essay am Morgen, ein Vortrag am Abend — und dazwischen merken Sie, wie die eigenen Gedanken weiter reichen als sonst. Drei Monate kostenlos, anmelden bis 8. August.",
+          "alt": "Noch bis 8. August: drei Monate kostenlos",
           "preheader": "Wochenschrift und goetheanum.tv, drei Monate kostenlos — Stoff zum Weiterdenken. Bis 8. August."
         },
         "en": {
           "betreff": "Read, watch — or simply both",
           "botschaft": "Thinking in good company.",
-          "text": "An essay in the morning, a lecture in the evening — and in between you notice your own thoughts reaching further than usual. The first three months free, sign up by 8 August.",
-          "alt": "Until 8 August: your summer gift",
+          "text": "An essay in the morning, a lecture in the evening — and in between you notice your own thoughts reaching further than usual. Three months free, sign up by 8 August.",
+          "alt": "Until 8 August: three months free",
           "preheader": "The weekly and goetheanum.tv, three months free — food for thought all summer. By 8 August."
         }
       },
