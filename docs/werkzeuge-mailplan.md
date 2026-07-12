@@ -170,13 +170,23 @@ zusätzlich auf der jeweiligen Werkzeug-Seite verlinkt.
   aussprechen kann, wird erinnert.
 
 ### Die Redaktion: gegenlesen im Werkzeug, versenden als Mensch
-Für die Texte der kommenden Monate entsteht eine **Redaktionsseite** nach dem
-bewährten Muster der Kampagnen-Mail-Editoren (`apps/mail-editor/`,
-`apps/grenzgaenger-mails/`): alle Monats-Mails aus **einer Quelle**
+Die **Redaktionsseite** steht: `apps/werkzeugpost/` (Manifest-Eintrag
+«Werkzeugpost — Redaktion»). Alle Monats-Mails kommen aus **einer Quelle**
 (`services/werkzeugpost/mails.json`), je Monat eine Karte mit Status
-(Entwurf · bereit · versandt), jedes Feld kommentierbar, Änderungen laufen
-als Commits — damit ist jede Fassung minimal nachvollziehbar (Verlauf =
-Git-History, auf der Seite verlinkt).
+(Entwurf · in Redaktion · bereit · versandt), Betreff und Text direkt
+editierbar, **Mobilvorschau** im Telefon-Mockup samt Längen-Warnung. Die
+**Reihenfolge** tauschen Pfeile (Feld `pos`), zwei Ausgaben lassen sich
+**zusammenlegen**, neue kommen dazu. Bearbeitet wird im Browser
+(Zwischenstand lokal); *Exportieren* schreibt die neue `mails.json` zurück —
+damit ist jede Fassung nachvollziehbar (Verlauf = Git-History).
+
+**Der Redaktionstisch ist eingebaut.** Sieben Personas
+(`services/werkzeugpost/personas.json`) lesen jede Mail unabhängig gegen —
+vier Mitarbeitende aus allen Generationen (Sekretariat, Technik,
+Wissenschaft, Betrieb), eine Texterin, die Leitung und ein Marken-Gast. Der
+Redakteur (KI) legt den Entwurf vor und sammelt die Voten; sie erscheinen je
+Ausgabe im Feld `tisch` und auf der Seite. Die Endredaktion macht der Mensch.
+Der Tisch ist damit für weitere Sessions parat.
 
 **Versand bewusst nicht automatisiert:** Die Mail predigt ‹Auftritt des
 Hauses, Stimme eines Menschen› — dann muss sie auch aus dem persönlichen
