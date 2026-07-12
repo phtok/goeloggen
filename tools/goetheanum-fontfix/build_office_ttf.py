@@ -26,6 +26,9 @@ JOBS = [
     ("Goetheanum-Pfeile-v2.7.otf",           "Goetheanum Pfeile",           "GoetheanumPfeileOffice"),
 ]
 
+# Design-Gewichte der Schnitte (Schnitt-System v2.7; identisch zu STAT/Webfonts).
+WEIGHTS = {"Leise": 265, "Ruhig": 350, "Klar": 440, "Deutlich": 580, "Laut": 680}
+
 def otf_to_ttf(ft, max_err=1.0):
     glyphOrder = ft.getGlyphOrder(); gs = ft.getGlyphSet()
     glyf = newTable("glyf"); glyf.glyphOrder = glyphOrder; glyf.glyphs = {}
@@ -73,7 +76,11 @@ def setname(ft, family, ps):
     S(3, "2.7;GOEA;" + ps)
     os2 = ft["OS/2"]; head = ft["head"]
     os2.fsSelection = (os2.fsSelection & ~0b100001) | 0x40   # nur REGULAR (Bold/Italic aus)
-    os2.usWeightClass = 400
+    # Echtes Design-Gewicht je Schnitt statt pauschal 400: die WWS-Namen (id21/22)
+    # gruppieren die Schnitte zur Familie ‹Goetheanum Schrift›; standen alle auf 400,
+    # sah PowerPoint fünf Regular-400-Stile und löste den am weitesten entfernten
+    # (Laut 680) falsch auf → Sperr-Effekt. Werte wie in den Webfonts/STAT.
+    os2.usWeightClass = WEIGHTS.get(family.split()[-1], 400)
     os2.fsType = 0                                            # installierbar einbettbar
     head.macStyle = 0
 
