@@ -105,8 +105,10 @@ ersetzt AC beim Versand automatisch. Absender/Reply-To wie bei GTV26
 (104/107) übernehmen. **Die Links in den Mails nicht anfassen** — die
 `utm_*`-Parameter sind unsere Conversion-Attribution (Cockpit),
 Link-Tracking von AC darf die Ziel-URLs nicht umschreiben, nur ummanteln
-(Standard-Klick-Tracking ist okay). Jede Mail hat genau EINEN Button; die Spalte «utm_content» sagt dir, was
-in dessen Link stehen muss — das ist deine Kontrolle beim Testversand.
+(Standard-Klick-Tracking ist okay). Jede Mail hat genau EINEN Button — plus einen
+leisen Teilen-Link im PS unter der Feinschrift (führt aufs selbe Angebot, eigenes
+`utm_content` `…_share`); beide nicht anfassen. Die Spalte «utm_content» unten meint den
+**Button** — das ist deine Kontrolle beim Testversand.
 Alle Links tragen zudem
 `utm_source=mailing`, `utm_medium=email`, `utm_campaign=summer26_trial`.
 

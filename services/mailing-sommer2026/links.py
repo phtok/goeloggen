@@ -58,6 +58,25 @@ def ziele_for(segment: str, welle: str) -> list:
     return (scfg.get("wellen_ctas") or {}).get(welle) or [scfg["ziele"][0]]
 
 
+def share_link_for(welle: str, segment: str, sprache: str) -> dict:
+    """Teilen-Link im PS: fuehrt auf das ANGEBOT der Gruppe (= erstes CTA-Ziel der Mail),
+    nie auf ein schon bezahltes Produkt. Eigenes utm_content 'w{n}_{seg}_share', damit das
+    Cockpit Weiterempfehlungen getrennt von Direktanmeldungen zaehlt."""
+    ziel = ziele_for(segment, welle)[0]
+    content = f"{welle}_{segment}_share"
+    return {
+        "utm_source": CFG["utm_fix"]["utm_source"],
+        "utm_medium": CFG["utm_fix"]["utm_medium"],
+        "utm_campaign": CFG["utm_fix"]["utm_campaign"],
+        "utm_content": content,
+        "landing": ziel,
+        "sprache": sprache,
+        "url": build_url(ziel, sprache, content),
+        "rolle": CFG["segmente"][segment]["rolle"],
+        "ersteller": "ph",
+    }
+
+
 def all_rows():
     """Alle Register-Zeilen aus heroes.json/config.json ableiten (fuer Abgleich/Neu-Sync)."""
     H = json.loads((Path(__file__).parent / "heroes.json").read_text(encoding="utf-8"))
@@ -69,6 +88,8 @@ def all_rows():
             for sprache in CFG["sprachen"]:
                 for ziel in ziele:
                     rows.append(link_for(welle, segment, ziel, sprache, mehrere))
+                # Teilen-Link je Mail (PS) — eigenes utm_content, gleiches Ziel wie der Button.
+                rows.append(share_link_for(welle, segment, sprache))
     return rows
 
 

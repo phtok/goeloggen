@@ -180,6 +180,17 @@
     "de": "Sommerangebot 2026 · 3 Monate gratis",
     "en": "Summer offer 2026 · 3 months free"
   },
+  "ps": {
+    "_hinweis": "Leises Teilen-PS unter der Kleinzeile. link_wort wird in build_editor.py zum Teilen-Link auf das Angebot der jeweiligen Gruppe (nie auf ein schon bezahltes Produkt) mit eigenem utm_content w{n}_{seg}_share.",
+    "de": {
+      "text": "PS: Kennen Sie jemanden, dem dieser Sommer gefiele? Geben Sie die Einladung gern weiter.",
+      "link_wort": "Einladung"
+    },
+    "en": {
+      "text": "PS: Know someone this summer would suit? Do pass the invitation on.",
+      "link_wort": "invitation"
+    }
+  },
   "auswahl": {
     "lesen": "garten",
     "sehen": "pergola",
