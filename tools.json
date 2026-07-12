@@ -575,6 +575,12 @@
       "desc": "Ausführungs-Spezifikation der fünf Lead-Schleifen: Seelenkalender, Archiv-Sog, Partner-Kit, Atomisierung, Schenken."
     },
     {
+      "title": "Werkzeuge-Mail — Jahresplan",
+      "tag": "Kommunikation",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/werkzeuge-mailplan.md",
+      "desc": "Monatliche Mitarbeitenden-Mail ab September: je Monat ein Werkzeug — Abfolge, Bauform, Ton, Muster-Mail."
+    },
+    {
       "title": "Gestaltungsspielraum (Entwurf)",
       "href": "https://github.com/phtok/goeloggen/blob/main/docs/gestaltungsspielraum-entwurf.md",
       "desc": "Foto-Richtlinie in drei Richtungen und vier Ansätze zu erlaubter Varianz – zur Ratifizierung."
