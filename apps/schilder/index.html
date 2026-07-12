@@ -124,6 +124,40 @@
   .s-spacer{flex:1 1 auto}
   .s-wfoot .de{font-weight:var(--w-deutlich);font-size:.6em;line-height:1.12}
   .s-wfoot .en{font-weight:var(--w-text);font-size:.6em;line-height:1.12}
+
+  /* Akutes Leitsystem: Pfeil + Ziel (Icon beschriftet oder Wort). Weiss auf Blau.
+     Richtung bestimmt die Anordnung: geradeaus = Spalte, Pfeil oben; links/rechts = Reihe. */
+  .s-leit{position:absolute;inset:0;padding:7% 8%;display:flex;gap:.4em;font-size:var(--u,13mm);color:var(--sign-ink)}
+  .s-leit .arrow{font-family:"G Icons";line-height:1;flex:none;display:flex;align-items:center;justify-content:center}
+  .s-leit .target{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.14em;min-width:0}
+  .s-leit .target .ic{font-family:"G Icons";line-height:1}
+  .s-leit .target .cap,.s-leit .target .wort{display:grid;gap:.02em}
+  .s-leit .target .de{font-weight:var(--w-deutlich);font-size:1.25em;line-height:1.05}
+  .s-leit .target .en{font-weight:var(--w-text);font-size:1.25em;line-height:1.05}
+  .s-leit.dir-geradeaus{flex-direction:column;align-items:center;justify-content:center}
+  .s-leit.dir-links{flex-direction:row;align-items:center}
+  .s-leit.dir-rechts{flex-direction:row-reverse;align-items:center}
+
+  /* Türschild: Raumfunktion, zweisprachig, links- oder rechtsbündig. */
+  .s-tuer{position:absolute;inset:0;padding:8% 9%;display:flex;flex-direction:column;justify-content:center;font-size:var(--u,13mm)}
+  .s-tuer.al-left{align-items:flex-start;text-align:left}
+  .s-tuer.al-right{align-items:flex-end;text-align:right}
+  .s-tuer .de{font-weight:var(--w-deutlich);font-size:1.7em;line-height:1.04}
+  .s-tuer .en{font-weight:var(--w-text);font-size:1.7em;line-height:1.04}
+
+  /* Öffnungszeiten: die Übersicht, zweispaltig – Deutsch links, Englisch rechts. */
+  .s-oeff{position:absolute;inset:0;padding:6% 6.5%;display:grid;grid-template-columns:1fr 1fr;gap:.9em 1.4em;font-size:var(--u,13mm);align-content:start}
+  .s-oeff .col{display:flex;flex-direction:column;gap:.5em;min-width:0}
+  .s-oeff .entry{break-inside:avoid}
+  .s-oeff .entry .t{font-weight:var(--w-deutlich);font-size:.42em;line-height:1.12}
+  .s-oeff .entry .b{font-weight:var(--w-text);font-size:.38em;line-height:1.28;white-space:pre-line}
+
+  /* Namensschild (nur Vorstände): Voller Name gross, Rolle klein. */
+  .s-name{position:absolute;inset:0;padding:9% 10%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.25em;font-size:var(--u,13mm)}
+  .s-name .full{font-weight:var(--w-deutlich);font-size:1.7em;line-height:1.05}
+  .s-name .role{display:grid;gap:.02em}
+  .s-name .role .de{font-weight:var(--w-deutlich);font-size:.55em;line-height:1.15}
+  .s-name .role .en{font-weight:var(--w-text);font-size:.55em;line-height:1.15}
   .pad{position:absolute;inset:0;padding:8% 9%;display:flex;flex-direction:column;gap:.55em;font-size:var(--u,13mm)}
 
   .s-kicker{font-family:var(--font-text);font-weight:600;color:var(--sign-soft);font-size:.5em;line-height:1.2;letter-spacing:.01em}
@@ -219,48 +253,100 @@
 
         <div class="grp" id="grp-art">
           <h3>Art</h3>
-          <p class="note">Einfache Standards für den Alltag – ein Zeichen, eine Ansage, eine wechselnde Info – oder das ausführliche Raumschild mit Titel, Regelzeilen und Wechsel-Box.</p>
+          <p class="note">Jede Art hat ihr Format und ihre Fassung. <strong>Weiss auf Blau</strong> gehört dem Leitsystem – nur Schilder, die einen Weg zeigen. <strong>Dunkel auf Weiss</strong> gehört allen Ansagen, akut oder statisch.</p>
           <div class="optline">
             <span class="lab">Schild-Art</span>
             <div class="seg" role="group" aria-label="Schild-Art" id="sg-type">
-              <button type="button" data-v="pikto" aria-pressed="false">Piktogramm</button>
-              <button type="button" data-v="ansage" aria-pressed="false">Ansage</button>
-              <button type="button" data-v="wechsel" aria-pressed="false">Wechsel-Info</button>
-              <button type="button" data-v="raum" aria-pressed="true">Raumschild</button>
+              <button type="button" data-v="leit" aria-pressed="false">Leitsystem</button>
+              <button type="button" data-v="akut" aria-pressed="false">Akutschild</button>
+              <button type="button" data-v="saal" aria-pressed="false">Saalschild</button>
+              <button type="button" data-v="roll" aria-pressed="true">Rollschild</button>
+              <button type="button" data-v="tuer" aria-pressed="false">Türschild</button>
+              <button type="button" data-v="name" aria-pressed="false">Namensschild</button>
+              <button type="button" data-v="oeff" aria-pressed="false">Öffnungszeiten</button>
             </div>
           </div>
+          <p class="note" id="art-info" style="margin-top:var(--s3)"></p>
         </div>
 
-        <div class="grp" id="grp-fassung" hidden>
-          <h3>Fassung</h3>
-          <p class="note" id="fassung-note">Weiss auf blauem Grund ist dem Leitsystem vorbehalten – beim Akutschild nur für akute Leitsituationen.</p>
+        <div class="grp" id="grp-oeff" hidden>
+          <h3>Öffnungszeiten</h3>
+          <p class="note">Die Übersicht aller Öffnungszeiten – zweisprachig, Deutsch links, Englisch rechts. Je Eintrag ein Titel und die Zeilen darunter (eine Zeile je Zeitangabe).</p>
+          <div class="stack" id="oeff-entries"></div>
+          <div class="addrow"><button type="button" class="btn" id="addOeff">Eintrag hinzufügen</button></div>
+        </div>
+
+        <div class="grp" id="grp-leit" hidden>
+          <h3>Akutes Leitsystem</h3>
+          <p class="note">Weiss auf Blau – zeigt einen Weg. Ein Pfeil und ein Ziel: ein Icon (beschriftet) oder ein Wort. Die Richtung bestimmt Format und Pfeilrichtung: geradeaus = hoch, Pfeil oben; links/rechts = quer.</p>
           <div class="optline">
-            <span class="lab">Fassung</span>
-            <div class="seg" role="group" aria-label="Fassung" id="sg-variant">
-              <button type="button" data-v="sw" aria-pressed="true">Schwarz auf Weiss</button>
-              <button type="button" data-v="blau" aria-pressed="false">Weiss auf Blau</button>
+            <span class="lab">Richtung</span>
+            <div class="seg" role="group" aria-label="Richtung" id="sg-dir">
+              <button type="button" data-v="geradeaus" aria-pressed="true">Geradeaus</button>
+              <button type="button" data-v="links" aria-pressed="false">Links</button>
+              <button type="button" data-v="rechts" aria-pressed="false">Rechts</button>
+            </div>
+          </div>
+          <div class="optline">
+            <span class="lab">Ziel</span>
+            <div class="seg" role="group" aria-label="Ziel" id="sg-leitmode">
+              <button type="button" data-v="icon" aria-pressed="true">Icon</button>
+              <button type="button" data-v="wort" aria-pressed="false">Wort</button>
+            </div>
+          </div>
+          <div id="leit-icon-fields">
+            <details class="gallery" id="gallery" open style="margin-top:var(--s3)">
+              <summary>Icon wählen<span id="gallery-cur" class="sr-only"></span></summary>
+              <div class="gbody">
+                <input type="search" class="gsearch" id="gallerySearch" placeholder="Suchen – z. B. WC, Fahrstuhl, Garderobe" aria-label="Icon suchen" />
+                <div id="galleryBody"></div>
+              </div>
+            </details>
+            <div class="grid2" style="margin-top:var(--s3)">
+              <label class="f"><span class="lab">Beschriftung · Deutsch</span><input type="text" id="leit-de" placeholder="Garderobe" /></label>
+              <label class="f"><span class="lab">Beschriftung · English</span><input type="text" id="leit-en" placeholder="Cloakroom" /></label>
+            </div>
+          </div>
+          <div id="leit-wort-fields" hidden>
+            <div class="grid2">
+              <label class="f"><span class="lab">Wort · Deutsch</span><input type="text" id="wort-de" placeholder="Ausgang" /></label>
+              <label class="f"><span class="lab">Wort · English</span><input type="text" id="wort-en" placeholder="Exit" /></label>
             </div>
           </div>
         </div>
 
-        <div class="grp" id="grp-pikto" hidden>
-          <h3>Piktogramm</h3>
-          <p class="note">Ein Zeichen der Hausschrift, gross und mittig.</p>
-          <details class="gallery" id="gallery" open>
-            <summary>Piktogramm wählen<span id="gallery-cur" class="sr-only"></span></summary>
-            <div class="gbody">
-              <input type="search" class="gsearch" id="gallerySearch" placeholder="Suchen – z. B. WC, Pfeil, Kamera" aria-label="Piktogramm suchen" />
-              <div id="galleryBody"></div>
-            </div>
-          </details>
-        </div>
-
-        <div class="grp" id="grp-ansage" hidden>
-          <h3>Ansage</h3>
-          <p class="note">Eine kurze, zentrale Botschaft – zweisprachig, mittig. Für den Aushang mit einer klaren Aussage.</p>
+        <div class="grp" id="grp-akut" hidden>
+          <h3>Akutschild</h3>
+          <p class="note">Eine kurze, zentrale Botschaft – zweisprachig, mittig. Dunkel auf Weiss. A3 quer oder hoch.</p>
           <div class="grid2">
             <label class="f"><span class="lab">Botschaft · Deutsch</span><input type="text" id="ansage-de" placeholder="Das ist die Botschaft in Kürze" /></label>
             <label class="f"><span class="lab">Botschaft · English</span><input type="text" id="ansage-en" placeholder="This is the message in brief" /></label>
+          </div>
+        </div>
+
+        <div class="grp" id="grp-name" hidden>
+          <h3>Namensschild</h3>
+          <p class="note">Nur für Vorstände. Voller Name gross, Rolle klein darunter – A5 quer, dunkel auf Weiss.</p>
+          <label class="f"><span class="lab">Voller Name</span><input type="text" id="name-full" placeholder="Vorname Nachname" /></label>
+          <div class="grid2" style="margin-top:var(--s3)">
+            <label class="f"><span class="lab">Rolle · Deutsch</span><input type="text" id="role-de" placeholder="Vorstand" /></label>
+            <label class="f"><span class="lab">Rolle · English</span><input type="text" id="role-en" placeholder="Executive Council" /></label>
+          </div>
+        </div>
+
+        <div class="grp" id="grp-tuer" hidden>
+          <h3>Türschild</h3>
+          <p class="note">Raumfunktion, zweisprachig – A3 hoch, dunkel auf Weiss. Bündig links oder rechts.</p>
+          <div class="grid2">
+            <label class="f"><span class="lab">Funktion · Deutsch</span><input type="text" id="tuer-de" placeholder="Sekretariat" /></label>
+            <label class="f"><span class="lab">Funktion · English</span><input type="text" id="tuer-en" placeholder="Office" /></label>
+          </div>
+          <div class="optline" style="margin-top:var(--s3)">
+            <span class="lab">Bündig</span>
+            <div class="seg" role="group" aria-label="Bündig" id="sg-tueralign">
+              <button type="button" data-v="left" aria-pressed="true">Links</button>
+              <button type="button" data-v="right" aria-pressed="false">Rechts</button>
+            </div>
           </div>
         </div>
 
@@ -418,9 +504,9 @@
         unterschieden (Deutlich über Klar). Der Gast aus der Ferne wird gleich ernst genommen wie der von
         nebenan – Betont wird mit dem Schnitt, nie mit Versalien, Sperren oder Unterstreichen (G05).</p>
 
-      <p><strong>Weiss auf Blau ist das Leitsystem.</strong> Der blaue Grund führt – er gehört der Wegweisung
-        und den Piktogrammen. Informationsschilder stehen dunkel auf Weiss. Nur eine akute Leitsituation darf
-        den blauen Grund borgen; wird er beliebig, verliert er seine Kraft (B01: auf Farbe steht Weiss).</p>
+      <p><strong>Weiss auf Blau ist das Leitsystem.</strong> Der blaue Grund führt – er gehört allein den
+        Schildern, die einen Weg zeigen. Alle Ansagen, akut oder statisch, stehen dunkel auf Weiss. Wird der
+        blaue Grund beliebig, verliert er seine Kraft (B01: auf Farbe steht Weiss).</p>
 
       <p><strong>Lesbar aus Distanz.</strong> Ein Schild wird im Vorbeigehen gelesen, oft schräg, oft schlecht
         beleuchtet. Darum gross genug, kontrastreich, in Originalgrösse gedruckt – lieber ein Format grösser als
@@ -490,14 +576,44 @@
   var SIZE_LABEL = {a5:"A5",a4:"A4",a3:"A3",a2:"A2",a1:"A1"};
   var SCALE_MULT = {s:0.85, m:1, l:1.18};
 
+  // Kanon der Schild-Arten: verbindliches Format und die Fassung. Weiss auf Blau
+  // (variant 'blau') nur fürs Leitsystem; alle Ansagen dunkel auf Weiss (kein
+  // data-variant → Markenblau auf Weiss). Formate exakt nach Vorgabe.
+  var ARTS = {
+    leit: {label:"Leitsystem",   variant:"blau", size:"a3", orient:"hoch", info:"Weiss auf Blau · A3 · zeigt einen Weg (Pfeil + Ziel)."},
+    akut: {label:"Akutschild",   variant:"weiss",size:"a3", orient:"quer", info:"Dunkel auf Weiss · A3 quer oder hoch · eine zentrale Botschaft."},
+    saal: {label:"Saalschild",   variant:"weiss",size:"a5", orient:"quer", info:"Dunkel auf Weiss · A5 quer · Kopfzeile und Fussnote."},
+    roll: {label:"Rollschild",   variant:"weiss",size:"a3", orient:"hoch", info:"Dunkel auf Weiss · A4/A3 hoch · Titel, Regelzeilen, Wechsel-Box."},
+    tuer: {label:"Türschild",    variant:"weiss",size:"a3", orient:"hoch", info:"Dunkel auf Weiss · A3 hoch · Raumfunktion, links- oder rechtsbündig."},
+    name: {label:"Namensschild", variant:"weiss",size:"a5", orient:"quer", info:"Dunkel auf Weiss · A5 quer · nur Vorstände: Name gross, Rolle klein."},
+    oeff: {label:"Öffnungszeiten",variant:"weiss",size:"a2",orient:"quer", info:"Dunkel auf Weiss · A1/A2/A5 · die Übersicht aller Öffnungszeiten, zweispaltig zweisprachig."}
+  };
+  // Pfeil-Codepoints (fett) für die Leitrichtung.
+  var LEIT_ARROW = {geradeaus:"U+E268", links:"U+E26B", rechts:"U+E269"};
+
   function cpChar(cp){ try{ return String.fromCodePoint(parseInt(String(cp).replace(/^U\+/i,""),16)); }catch(e){ return ""; } }
 
   function defaults(){
     return {
-      type:"raum",   // 'pikto' · 'ansage' · 'wechsel' · 'raum'
-      pikto:{char:cpChar("U+0061"),label:"Fahrstuhl"}, variant:"sw",
+      type:"roll",
+      // Leitsystem
+      dir:"geradeaus", leitMode:"icon",
+      leitIcon:{char:cpChar("U+0066"),label:"Garderobe"},
+      leitCap:{de:"Garderobe", en:"Cloakroom"}, wort:{de:"Ausgang", en:"Exit"},
+      // Akutschild
       ansage:{de:"Das ist die Botschaft in Kürze", en:"This is the message in brief"},
-      link:"goetheanum.ch/campus", qrOn:false,
+      // Türschild
+      tuer:{de:"Sekretariat", en:"Office"}, tuerAlign:"left",
+      // Namensschild
+      nameFull:"Vorname Nachname", role:{de:"Vorstand", en:"Executive Council"},
+      // Öffnungszeiten (je Eintrag: Titel + Zeilen, zweisprachig)
+      oeff:[
+        {tde:"Hauptgebäude", ten:"Main Building", bde:"Täglich 9–20 Uhr\n(erweitert bei Veranstaltungen)", ben:"Mo to Fr · 9 am – 8 pm\n(extended at events)"},
+        {tde:"Ticketverkauf", ten:"Reception", bde:"Di bis So 9–18 Uhr", ben:"Tu to Su · 9 am – 8 pm\n(No tickets on Mondays)"},
+        {tde:"Café in der Wandelhalle", ten:"Café in the Entrance", bde:"Täglich 9–17 Uhr", ben:"Daily · 9 am – 5 pm"},
+        {tde:"Bibliothek", ten:"Library", bde:"Di und Fr 14–18 Uhr", ben:"Tu and Fr · 2 – 6 pm"}
+      ],
+      // Rollschild
       kickerOn:false, kicker:"Juli 2026",
       title:{de:"Grosser Saal", en:"Main Auditorium"},
       rules:[
@@ -506,8 +622,11 @@
         {sym:{char:cpChar("U+0075"),label:"Draussen essen"}, de:"Draussen essen", en:"Eat outside"}
       ],
       cols:1,
+      // Rollschild + Saalschild teilen Kopfzeile/Fussnote
       boxOn:true, box:{de:"Besichtigung 13.30–14.30", en:"Viewing 1.30–2.30 pm"},
       note:{de:"Mitunter geschlossen für Proben und Aufführungen", en:"Sometimes closed for rehearsals and performances"},
+      // gemeinsam
+      link:"goetheanum.ch/campus", qrOn:false,
       size:"a3", orient:"hoch", scale:"m", footOn:true
     };
   }
@@ -568,6 +687,45 @@
     if(esc(en)!==""){ var e=document.createElement("div"); e.className="en"; e.textContent=en; wrap.appendChild(e); }
     return wrap;
   }
+  function oeffEntry(title, body){
+    var e=document.createElement("div"); e.className="entry";
+    if(esc(title)!==""){ var t=document.createElement("div"); t.className="t"; t.textContent=title; e.appendChild(t); }
+    if(esc(body)!==""){ var b=document.createElement("div"); b.className="b"; b.textContent=body; e.appendChild(b); }
+    return e;
+  }
+
+  // Öffnungszeiten-Einträge bearbeiten.
+  var oeffEl=$("oeff-entries");
+  function renderOeff(){
+    oeffEl.innerHTML="";
+    state.oeff.forEach(function(en, i){
+      var row=document.createElement("div"); row.className="rule"; row.style.gridTemplateColumns="1fr auto";
+      var fields=document.createElement("div"); fields.className="stack";
+      var g1=document.createElement("div"); g1.className="grid2";
+      g1.appendChild(mkField("Titel · Deutsch", en.tde, function(v){ state.oeff[i].tde=v; renderSheet(); }));
+      g1.appendChild(mkField("Titel · English", en.ten, function(v){ state.oeff[i].ten=v; renderSheet(); }));
+      var g2=document.createElement("div"); g2.className="grid2";
+      g2.appendChild(mkArea("Zeilen · Deutsch", en.bde, function(v){ state.oeff[i].bde=v; renderSheet(); }));
+      g2.appendChild(mkArea("Zeilen · English", en.ben, function(v){ state.oeff[i].ben=v; renderSheet(); }));
+      fields.appendChild(g1); fields.appendChild(g2);
+      var tools=document.createElement("div"); tools.className="ruletools";
+      tools.appendChild(mkIcon("↑","nach oben", i===0, function(){ moveOeff(i,-1); }));
+      tools.appendChild(mkIcon("↓","nach unten", i===state.oeff.length-1, function(){ moveOeff(i,1); }));
+      tools.appendChild(mkIcon("✕","entfernen", false, function(){ state.oeff.splice(i,1); render(); }));
+      row.appendChild(fields); row.appendChild(tools);
+      oeffEl.appendChild(row);
+    });
+  }
+  function mkArea(lab, val, fn){
+    var l=document.createElement("label"); l.className="f";
+    var s=document.createElement("span"); s.className="lab"; s.textContent=lab;
+    var ta=document.createElement("textarea"); ta.value=val||""; ta.rows=3; ta.placeholder=lab;
+    ta.style.cssText="width:100%;font-family:var(--font-text);font-size:16px;line-height:1.3;color:var(--ink);background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:10px 12px;outline:none;resize:vertical";
+    ta.addEventListener("input", function(){ fn(ta.value); });
+    l.appendChild(s); l.appendChild(ta); return l;
+  }
+  function moveOeff(i,d){ var j=i+d; if(j<0||j>=state.oeff.length) return; var t=state.oeff[i]; state.oeff[i]=state.oeff[j]; state.oeff[j]=t; render(); }
+  $("addOeff").addEventListener("click", function(){ state.oeff.push({tde:"",ten:"",bde:"",ben:""}); render(); });
   function renderSheet(){
     // Format & Einheit
     var base = SIZES[state.size]; var w=base[0], h=base[1];
@@ -581,36 +739,70 @@
 
     pad.innerHTML = "";
 
-    // Fassung: Weiss-auf-Blau nur beim Piktogramm (Leitsystem) und Akutschild
-    // (akute Leitsituation). Andere Arten bleiben Blau/Weiss.
-    if(state.type==="pikto" || state.type==="ansage"){ sheet.setAttribute("data-variant", state.variant); }
+    // Fassung: Weiss auf Blau nur fürs Leitsystem; alle Ansagen dunkel auf Weiss.
+    if(state.type==="leit"){ sheet.setAttribute("data-variant","blau"); }
     else { sheet.removeAttribute("data-variant"); }
 
-    // --- Piktogramm-Standard: ein grosses Zeichen, mittig -------------------
-    if(state.type==="pikto"){
-      var wrap=document.createElement("div"); wrap.className="s-pikto";
-      var pg=document.createElement("span"); pg.setAttribute("aria-hidden","true");
-      pg.textContent = state.pikto ? state.pikto.char : "";
-      pg.style.fontSize = (Math.min(w,h)*0.6).toFixed(2)+"mm";
-      wrap.appendChild(pg); pad.appendChild(wrap);
+    // --- Akutes Leitsystem: Pfeil + Ziel (Icon beschriftet oder Wort) -------
+    if(state.type==="leit"){
+      var lw=document.createElement("div"); lw.className="s-leit dir-"+state.dir;
+      var ar=document.createElement("span"); ar.className="arrow"; ar.setAttribute("aria-hidden","true");
+      ar.textContent=cpChar(LEIT_ARROW[state.dir]||LEIT_ARROW.geradeaus);
+      ar.style.fontSize=(Math.min(w,h)*0.30).toFixed(2)+"mm";
+      var tg=document.createElement("div"); tg.className="target";
+      if(state.leitMode==="wort"){
+        tg.appendChild(pair(state.wort.de, state.wort.en, "wort"));
+      } else {
+        if(state.leitIcon){ var ic=document.createElement("div"); ic.className="ic"; ic.setAttribute("aria-hidden","true");
+          ic.textContent=state.leitIcon.char; ic.style.fontSize=(Math.min(w,h)*0.34).toFixed(2)+"mm"; tg.appendChild(ic); }
+        tg.appendChild(pair(state.leitCap.de, state.leitCap.en, "cap"));
+      }
+      lw.appendChild(ar); lw.appendChild(tg); pad.appendChild(lw);
       fit(); return;
     }
 
-    // --- Ansage/Akutschild: eine zentrale Botschaft ------------------------
-    if(state.type==="ansage"){
+    // --- Akutschild: eine zentrale Botschaft, mittig -----------------------
+    if(state.type==="akut"){
       pad.appendChild(pair(state.ansage.de, state.ansage.en, "s-ansage"));
       addFooter(); fit(); return;
     }
 
-    // --- Wechsel-Info: Kopfzeile oben, Fussnote unten ----------------------
-    if(state.type==="wechsel"){
+    // --- Saalschild: Kopfzeile oben, Fussnote unten ------------------------
+    if(state.type==="saal"){
       if(esc(state.box.de)!=="" || esc(state.box.en)!==""){ pad.appendChild(pair(state.box.de, state.box.en, "s-whead")); }
       var sp=document.createElement("div"); sp.className="s-spacer"; pad.appendChild(sp);
       if(esc(state.note.de)!=="" || esc(state.note.en)!==""){ pad.appendChild(pair(state.note.de, state.note.en, "s-wfoot")); }
       addFooter(); fit(); return;
     }
 
-    // --- Raumschild (Komposit) ---------------------------------------------
+    // --- Türschild: Raumfunktion, links- oder rechtsbündig -----------------
+    if(state.type==="tuer"){
+      var tw=pair(state.tuer.de, state.tuer.en, "s-tuer al-"+(state.tuerAlign==="right"?"right":"left"));
+      pad.appendChild(tw); fit(); return;
+    }
+
+    // --- Öffnungszeiten: die Übersicht, zweispaltig (DE links, EN rechts) ---
+    if(state.type==="oeff"){
+      var ow=document.createElement("div"); ow.className="s-oeff";
+      var colDe=document.createElement("div"); colDe.className="col";
+      var colEn=document.createElement("div"); colEn.className="col";
+      state.oeff.forEach(function(e){
+        colDe.appendChild(oeffEntry(e.tde, e.bde));
+        colEn.appendChild(oeffEntry(e.ten, e.ben));
+      });
+      ow.appendChild(colDe); ow.appendChild(colEn); pad.appendChild(ow);
+      fit(); return;
+    }
+
+    // --- Namensschild: Voller Name, Rolle klein ----------------------------
+    if(state.type==="name"){
+      var nw=document.createElement("div"); nw.className="s-name";
+      if(esc(state.nameFull)!==""){ var fn=document.createElement("div"); fn.className="full"; fn.textContent=state.nameFull; nw.appendChild(fn); }
+      if(esc(state.role.de)!=="" || esc(state.role.en)!==""){ nw.appendChild(pair(state.role.de, state.role.en, "role")); }
+      pad.appendChild(nw); fit(); return;
+    }
+
+    // --- Rollschild (Komposit) ---------------------------------------------
     if(state.kickerOn && esc(state.kicker)!==""){
       var k=document.createElement("div"); k.className="s-kicker"; k.textContent=state.kicker; pad.appendChild(k);
     }
@@ -665,30 +857,32 @@
       svg.appendChild(path); return svg;
     }catch(e){ return null; }
   }
-  function render(){ applyType(); renderRules(); syncInputs(); renderSheet(); }
+  function render(){ applyType(); renderRules(); renderOeff(); syncInputs(); renderSheet(); }
 
   // Sichtbarkeit und Beschriftung der Bedien-Gruppen je nach Schild-Art.
   function applyType(){
     var t=state.type, pikto=t==="pikto", ansage=t==="ansage", wechsel=t==="wechsel", raum=t==="raum";
-    $("grp-pikto").hidden   = !pikto;
-    $("grp-ansage").hidden  = !ansage;
-    $("grp-fassung").hidden = !(pikto || ansage);     // Fassung nur wo Blau erlaubt
-    $("grp-kopf").hidden    = !raum;
-    $("grp-regeln").hidden  = !raum;
-    $("grp-box").hidden     = !(raum || wechsel);
-    $("grp-fuss").hidden    =  pikto;                 // reines Piktogramm ohne Fusszeile
-    // Wechsel-Box heisst beim Wechsel-Info-Schild schlicht «Text»; kein Ein/Aus.
-    $("grp-box-h").textContent   = wechsel ? "Text" : "Wechsel-Box";
-    $("box-toggle-line").style.display = wechsel ? "none" : "";
-    $("box-de-lab").textContent  = wechsel ? "Kopfzeile · Deutsch" : "Info · Deutsch";
-    $("box-en-lab").textContent  = wechsel ? "Kopfzeile · English" : "Info · English";
-    // Fassungs-Beschriftung: Piktogramm schwarz/weiss, Akutschild blau/weiss.
-    var b=$("sg-variant").querySelectorAll("button");
-    b[0].textContent = pikto ? "Schwarz auf Weiss" : "Blau auf Weiss";
-    b[1].textContent = pikto ? "Weiss auf Blau" : "Weiss auf Blau (akut)";
-    $("fassung-note").textContent = pikto
-      ? "Zwei Fassungen des Leitsystems: schwarz auf weiss oder weiss auf blauem Grund."
-      : "Blau auf Weiss ist der Standard. Weiss auf Blau ist dem Leitsystem vorbehalten – hier nur für akute Leitsituationen.";
+    var t=state.type, leit=t==="leit", akut=t==="akut", saal=t==="saal", roll=t==="roll", tuer=t==="tuer", name=t==="name", oeff=t==="oeff";
+    $("grp-leit").hidden   = !leit;
+    $("grp-akut").hidden   = !akut;
+    $("grp-name").hidden   = !name;
+    $("grp-tuer").hidden   = !tuer;
+    $("grp-oeff").hidden   = !oeff;
+    $("grp-kopf").hidden   = !roll;
+    $("grp-regeln").hidden = !roll;
+    $("grp-box").hidden    = !(roll || saal);
+    $("grp-fuss").hidden   = !(akut || saal || roll);   // Fusszeile nur bei Ansage-Schildern
+    // Leitsystem: Ziel-Felder je nach Icon/Wort.
+    if(leit){ $("leit-icon-fields").hidden = state.leitMode!=="icon"; $("leit-wort-fields").hidden = state.leitMode!=="wort"; }
+    // Box heisst beim Saalschild «Text» (Kopfzeile + Fussnote), kein Ein/Aus.
+    $("grp-box-h").textContent   = saal ? "Text" : "Wechsel-Box";
+    $("box-toggle-line").style.display = saal ? "none" : "";
+    $("box-de-lab").textContent  = saal ? "Kopfzeile · Deutsch" : "Info · Deutsch";
+    $("box-en-lab").textContent  = saal ? "Kopfzeile · English" : "Info · English";
+    // Format-Steuerung: Ausrichtung beim Leitsystem von der Richtung bestimmt.
+    $("sg-orient").closest(".optline").style.display = leit ? "none" : "";
+    // Kurzinfo zur Art (Format + Fassung).
+    $("art-info").textContent = (ARTS[t]||{}).info || "";
   }
 
   // --- Kopf-/Box-Felder an den Zustand binden -------------------------------
@@ -702,11 +896,24 @@
   bindInput("note-en", function(){return state.note.en;}, function(v){state.note.en=v;});
   bindInput("ansage-de", function(){return state.ansage.de;}, function(v){state.ansage.de=v;});
   bindInput("ansage-en", function(){return state.ansage.en;}, function(v){state.ansage.en=v;});
+  bindInput("leit-de", function(){return state.leitCap.de;}, function(v){state.leitCap.de=v;});
+  bindInput("leit-en", function(){return state.leitCap.en;}, function(v){state.leitCap.en=v;});
+  bindInput("wort-de", function(){return state.wort.de;}, function(v){state.wort.de=v;});
+  bindInput("wort-en", function(){return state.wort.en;}, function(v){state.wort.en=v;});
+  bindInput("tuer-de", function(){return state.tuer.de;}, function(v){state.tuer.de=v;});
+  bindInput("tuer-en", function(){return state.tuer.en;}, function(v){state.tuer.en=v;});
+  bindInput("name-full", function(){return state.nameFull;}, function(v){state.nameFull=v;});
+  bindInput("role-de", function(){return state.role.de;}, function(v){state.role.de=v;});
+  bindInput("role-en", function(){return state.role.en;}, function(v){state.role.en=v;});
   bindInput("link", function(){return state.link;}, function(v){state.link=v;});
   function syncInputs(){
     $("kicker").value=state.kicker||""; $("title-de").value=state.title.de||""; $("title-en").value=state.title.en||"";
     $("box-de").value=state.box.de||""; $("box-en").value=state.box.en||""; $("note-de").value=state.note.de||""; $("note-en").value=state.note.en||"";
-    $("ansage-de").value=state.ansage.de||""; $("ansage-en").value=state.ansage.en||""; $("link").value=state.link||"";
+    $("ansage-de").value=state.ansage.de||""; $("ansage-en").value=state.ansage.en||"";
+    $("leit-de").value=state.leitCap.de||""; $("leit-en").value=state.leitCap.en||""; $("wort-de").value=state.wort.de||""; $("wort-en").value=state.wort.en||"";
+    $("tuer-de").value=state.tuer.de||""; $("tuer-en").value=state.tuer.en||"";
+    $("name-full").value=state.nameFull||""; $("role-de").value=state.role.de||""; $("role-en").value=state.role.en||"";
+    $("link").value=state.link||"";
     $("kicker-wrap").hidden = !state.kickerOn;
     $("box-fields").style.display = state.boxOn ? "" : "none";
     $("fuss-fields").style.display = state.footOn ? "" : "none";
@@ -729,8 +936,21 @@
   wireSeg("sg-scale",  function(v){ state.scale=v; renderSheet(); });
   wireSeg("tg-foot",   function(v){ state.footOn = v==="1"; $("fuss-fields").style.display=state.footOn?"":"none"; renderSheet(); });
   wireSeg("tg-qr",     function(v){ state.qrOn = v==="1"; renderSheet(); });
-  wireSeg("sg-type",   function(v){ state.type=v; render(); });
-  wireSeg("sg-variant",function(v){ state.variant=v; renderSheet(); });
+  wireSeg("sg-type",   function(v){ setArt(v); });
+  wireSeg("sg-dir",    function(v){ state.dir=v; state.orient=(v==="geradeaus"?"hoch":"quer"); setSeg("sg-orient", state.orient); renderSheet(); });
+  wireSeg("sg-leitmode",function(v){ state.leitMode=v; render(); });
+  wireSeg("sg-tueralign",function(v){ state.tuerAlign=v; renderSheet(); });
+
+  // Art wechseln: Format und Fassung auf den Kanon setzen.
+  function setArt(v){
+    state.type=v;
+    var a=ARTS[v]||{};
+    if(a.size) state.size=a.size;
+    if(v==="leit"){ state.orient = state.dir==="geradeaus" ? "hoch" : "quer"; }
+    else if(a.orient){ state.orient=a.orient; }
+    setSeg("sg-size", state.size); setSeg("sg-orient", state.orient);
+    render();
+  }
 
   // --- Klappbare Piktogramm-Auswahl (Hausschrift) ---------------------------
   var galleryBody=$("galleryBody"), gallerySearch=$("gallerySearch"), galleryQuery="";
@@ -746,11 +966,11 @@
         var ch=cpChar(it.codepoint);
         var cell=document.createElement("button"); cell.type="button"; cell.className="glyphcell";
         cell.setAttribute("aria-label",it.label);
-        cell.setAttribute("aria-pressed", String(!!state.pikto && state.pikto.char===ch));
+        cell.setAttribute("aria-pressed", String(!!state.leitIcon && state.leitIcon.char===ch));
         var g1=document.createElement("span"); g1.className="g"; g1.setAttribute("aria-hidden","true"); g1.textContent=ch;
         var n1=document.createElement("span"); n1.className="n"; n1.textContent=it.label;
         cell.appendChild(g1); cell.appendChild(n1);
-        cell.addEventListener("click", function(){ state.pikto={char:ch,label:it.label}; buildGallery(); renderSheet(); });
+        cell.addEventListener("click", function(){ state.leitIcon={char:ch,label:it.label}; buildGallery(); renderSheet(); });
         grid.appendChild(cell);
       });
       galleryBody.appendChild(grid);
@@ -816,7 +1036,8 @@
   }
   $("reset").addEventListener("click", function(){
     state=defaults(); galleryQuery=""; gallerySearch.value="";
-    setSeg("sg-type", state.type); setSeg("sg-variant", state.variant);
+    setSeg("sg-type", state.type);
+    setSeg("sg-dir", state.dir); setSeg("sg-leitmode", state.leitMode); setSeg("sg-tueralign", state.tuerAlign);
     setSeg("tg-kicker", state.kickerOn?"1":"0"); setSeg("sg-cols", String(state.cols));
     setSeg("tg-box", state.boxOn?"1":"0"); setSeg("sg-size", state.size);
     setSeg("sg-orient", state.orient); setSeg("sg-scale", state.scale);
