@@ -1,0 +1,44 @@
+{
+  "_quelle": "GTV Neujahr 2026 (intern GTV26) — reale, abgeschlossene TV-Abo-Kampagne, Feb 2026. Nur AGGREGATE; die Live-Quelle enthält Personendaten, die hier bewusst nicht verarbeitet werden.",
+  "_rolle": "Externe Kalibrierung der S26-Prognose. Speist NICHT das Monte-Carlo (anderes Angebot: 30% Rabatt statt 3 Monate gratis), sondern verankert (a) die Abschluss-Rate, (b) die Öffnungsraten, (c) das Abmelde-Risiko der Frist-Mail.",
+  "angebot": "30 % Rabatt (bezahlt), Coupon-basiert, drei Mails",
+  "taktung": "3 Mails in 5 Tagen (25.2. / 27.2. / 1.3.) — komprimiert; vgl. S26 ~3,5 Wochen (14.7. / 23.7. / 6.8.)",
+  "w3_mechanik": "Öffner-/Engagement-GATE: Mail 3 nur an ~51 % (Engager). Daher dort Öffnungsrate mechanisch >60 %. (S26 nutzt stattdessen einen Öffner-SPLIT: alle bekommen w3, Nicht-Öffner mit Alt-Betreff.)",
+  "kampagnen": {
+    "GTV_Neujahr_2026_DE": {
+      "sprache": "DE", "eingetreten": 34120,
+      "mails": [
+        { "welle": 1, "datum": "2026-02-25", "versandt": 30381, "geoeffnet": 12508, "open_rate": 0.412, "abmeldungen": null },
+        { "welle": 2, "datum": "2026-02-27", "versandt": 29727, "geoeffnet": 11996, "open_rate": 0.404, "abmeldungen": null },
+        { "welle": 3, "datum": "2026-03-01", "versandt": 15385, "geoeffnet": 9944, "open_rate": 0.646, "abmeldungen": 90, "_hinweis": "opener-gated; open_rate mechanisch erhoeht" }
+      ]
+    },
+    "GTV_New_Year_2026_EN": {
+      "sprache": "EN", "eingetreten": 26797,
+      "mails": [
+        { "welle": 1, "datum": "2026-02-26", "versandt": 25405, "geoeffnet": 10152, "open_rate": 0.400, "abmeldungen": null },
+        { "welle": 2, "datum": "2026-02-26", "versandt": 25349, "geoeffnet": 9814, "open_rate": 0.387, "abmeldungen": null },
+        { "welle": 3, "datum": "2026-03-01", "versandt": 13150, "geoeffnet": 8398, "open_rate": 0.639, "abmeldungen": 68, "_hinweis": "opener-gated" }
+      ]
+    }
+  },
+  "abschluesse": {
+    "attribuiert": 76,
+    "_quelle": "Coupon-Einlösungen, «nachweislich durch 3 Mails ausgelöst» (React-Cockpit der Kampagne)",
+    "coupons_ausgegeben": 103,
+    "coupon_brutto_eur": 9457,
+    "coupon_netto_eur": 4650,
+    "woche_gesamt_brutto_eur": 13644,
+    "avg_brutto_je_abschluss_eur": 124
+  },
+  "kalibrierung": {
+    "erreicht_mail1": 55786,
+    "konversion_je_empfaenger": 0.00136,
+    "_konversion_hinweis": "76 / 55.786 (Mail-1-Reichweite) = 0,14 %/Empfänger — kalt, bezahltes Rabatt-Angebot",
+    "s26_noabo_je_empfaenger": 0.0038,
+    "free_ueber_bezahl_aufschlag": 2.8,
+    "_aufschlag_hinweis": "0,38 % (S26 Gratis-Trial) / 0,14 % (Feb bezahlt) ≈ 2,8× — im plausiblen Band 2–4×",
+    "abmelderate_mail3": { "DE": 0.00585, "EN": 0.00517, "_hinweis": "kein Spike; «12,5 %»-Insight hält realen Zahlen nicht stand" },
+    "open_rate_mail1": { "DE": 0.412, "EN": 0.400, "_hinweis": "deckungsgleich mit 2025-Sommer-Ankern und S26-Annahmen" }
+  }
+}

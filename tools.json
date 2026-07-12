@@ -418,6 +418,17 @@
       "such": "Mail Editor Mailing Newsletter Kampagne Wellen Segmente Betreff Gegenlesen Kommentar Sommer Aktion E-Mail"
     },
     {
+      "slug": "nachfass-editor",
+      "cat": "kampagne",
+      "status": "intern",
+      "tag": "Aktion",
+      "title": "Nachfass-Editor",
+      "short": "Nachfass-Editor",
+      "href": "apps/nachfass-editor/",
+      "desc": "Die drei Nachfass-Mails nach dem Gratis-Start (Willkommen · Halbzeit · Erinnerung) zum Gegenlesen – umschaltbar nach Sprache und Angebot (Wochenschrift/goetheanum.tv), je Mail kommentierbar. Eigenes Kommentar-Backend, getrennt von der Kampagnen-Liste.",
+      "such": "Nachfass Onboarding Willkommen Trial Gratis Nurture Mail Editor Kampagne Gegenlesen Kommentar Sommer Aktion E-Mail"
+    },
+    {
       "slug": "grenzgaenger",
       "cat": "kampagne",
       "status": "intern",
