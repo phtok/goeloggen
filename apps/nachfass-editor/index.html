@@ -1,0 +1,224 @@
+<!doctype html>
+<!-- =============================================================================
+     Nachfass-Editor · Sommer-Aktion 2026 (Gegenlesen der Onboarding-Strecke)
+     Vorbild: apps/mail-editor/. Chrome aus tokens.css/base.css (DS01/DS02,
+     B01-B04, Labels normal statt versal G05/G23). Die Mail-Vorschauen tragen
+     die Kampagnen-DNA (Artefakt) und werden per Skript gerendert.
+     Kommentare -> Supabase-Tabelle nachfass_mail_comments (eigene Tabelle, damit
+     sie NICHT in der Kampagnen-To-do-Liste auftauchen). Texte: services/
+     mailing-sommer2026/forecast/ONBOARDING-AUTOMATION.md.
+     ============================================================================= -->
+<html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nachfass-Editor · Sommer-Aktion 2026 · Goetheanum</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg">
+<link rel="stylesheet" href="../../design-system/tokens.css">
+<link rel="stylesheet" href="../../design-system/base.css">
+<link rel="stylesheet" href="../../design-system/nav.css">
+<style>
+/* Nur editor-eigene Gestalt; alles Gemeinsame aus base.css, nur Tokens (DS02). */
+main.wrap{max-width:min(1400px,96vw)}
+.lead{padding:clamp(24px,5vw,44px) 0 var(--s4)}
+.controls{display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap;margin-top:var(--s4)}
+.controls .lab{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+.pill{min-height:var(--tap);padding:8px 18px;border-radius:999px;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink);font:inherit;font-size:var(--t-small);cursor:pointer}
+.pill.on{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent);font-weight:600}
+.controls input{min-height:var(--tap);font:inherit;font-size:var(--t-small);padding:6px 12px;
+  border:1px solid var(--line);border-radius:var(--r-control);background:var(--field-bg);color:var(--ink);width:110px}
+#status{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+.subline{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin:0 0 var(--s3)}
+.segment h2{margin:var(--s8) 0 var(--s2)}
+.flow{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:var(--s4)}
+.mail{background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.mhd{display:flex;align-items:center;background:var(--ink);color:var(--paper);font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;padding:6px 12px;letter-spacing:.04em}
+.inbox{padding:var(--s2) var(--s3);border-bottom:1px solid var(--line-soft);font-family:var(--font-text)}
+.ib-b{font-size:var(--t-small);font-weight:600;color:var(--ink)}
+.ib-a{font-size:var(--t-small);color:var(--muted);line-height:1.45;margin-top:2px}
+.mbody{padding:var(--s3);font-family:var(--font-text);border-bottom:1px solid var(--line-soft)}
+.mbody p{margin:0 0 var(--s2);font-size:var(--t-small);line-height:1.55;color:var(--ink)}
+.mbody .btn{display:inline-block;background:#A95278;color:#fff;border-radius:999px;padding:8px 16px;font-weight:600;font-size:var(--t-small)} /* # ds-ok Kampagnen-DNA (Artefakt), kein Theme */
+.mbody .ph{color:var(--gold-ink);font-weight:600;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+.flds{padding:var(--s2) var(--s3);margin-top:auto}
+.fld{border-top:1px solid var(--line-soft);padding:8px 4px}
+.fh{display:flex;align-items:center;gap:var(--s2);cursor:pointer}
+.lbl{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);flex:1}
+.cbtn{min-height:var(--tap);background:var(--field-bg);border:1px solid var(--line-soft);border-radius:999px;padding:2px 12px;font:inherit;font-size:var(--t-micro);cursor:pointer;color:var(--ink)}
+.cc.has{background:var(--gold-deep);color:var(--on-accent);border-radius:10px;padding:0 7px}
+.cpanel{margin-top:var(--s2);background:var(--field-bg);border-radius:8px;padding:6px}
+.clist{list-style:none;margin:0;padding:0;font-family:var(--font-text);font-size:var(--t-small)}
+.clist:not(:empty){margin-bottom:6px}
+.clist li{display:block;padding:4px 7px;background:var(--paper);border-radius:6px;margin-bottom:3px}
+.khead{display:flex;gap:8px;align-items:baseline}
+.khead b{color:var(--gold-ink);font-size:var(--t-micro)}
+.kzeit{font-size:var(--t-micro);color:var(--muted);white-space:nowrap;margin-left:auto}
+.ktxt{display:block;line-height:1.45}
+.clist li.done .ktxt{text-decoration:line-through;color:var(--muted)}
+.kdone{position:relative;background:none;border:0;padding:0 2px;font:inherit;font-size:var(--t-micro);color:var(--muted);cursor:pointer;line-height:1}
+.kdone::after{content:"";position:absolute;inset:-13px}
+.kdone:hover{color:var(--gold-ink)}
+.cin{display:flex;gap:6px}
+.cin input{flex:1;min-height:var(--tap);font:inherit;font-size:var(--t-small);padding:4px 10px;border:1px solid var(--line);border-radius:var(--r-control);background:var(--paper);color:var(--ink);min-width:0}
+.cin button{min-height:var(--tap);background:var(--blue-solid);color:var(--on-accent);border:0;border-radius:var(--r-control);padding:4px 12px;font:inherit;font-size:var(--t-small);cursor:pointer}
+.offen{list-style:none;margin:0;padding:0;display:grid;gap:var(--s2)}
+.offen button{display:block;width:100%;text-align:left;min-height:var(--tap);background:var(--paper);border:1px solid var(--line-soft);border-radius:8px;padding:var(--s2) var(--s3);font:inherit;cursor:pointer;color:var(--ink)}
+.offen button:hover{border-color:var(--gold-ink)}
+.offen .okey{font-family:var(--font-text);font-size:var(--t-micro);color:var(--gold-ink);font-weight:600}
+.offen .otxt{display:block;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;margin-top:2px}
+.offen .ometa{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-left:8px}
+.offen li.done button{opacity:.72}
+.offen li.done .otxt{text-decoration:line-through;color:var(--muted)}
+.fld.blitz{outline:2px solid var(--gold-deep);outline-offset:4px;border-radius:8px}
+body.nocmt .cbtn,body.nocmt .cpanel,body.nocmt .offen-sec{display:none}
+</style></head><body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"
+        data-onpage="Mail-Editor:../mail-editor/|Nachfass:../nachfass-editor/|Ablauf:../kampagnen-drehbuch/"></script>
+
+<main class="wrap">
+<section class="lead">
+  <span class="kicker">Sommer-Aktion 2026</span>
+  <h1>Nachfass-Editor</h1>
+  <p class="lede" style="max-width:var(--measure)">Die drei Mails nach dem Gratis-Start — Willkommen,
+    Halbzeit, Erinnerung — je Mail kommentierbar. Umschalten nach Sprache und Angebot. Die Kommentare
+    landen in einem eigenen Backend (nicht in der Kampagnen-Liste). Vorschau, kein Versand.</p>
+  <p class="subline">Onboarding-Strecke · Texte aus <code>ONBOARDING-AUTOMATION.md</code></p>
+  <div class="controls">
+    <span class="lab">Sprache</span>
+    <button id="b-de" class="pill on" onclick="setLang('de')">Deutsch</button>
+    <button id="b-en" class="pill" onclick="setLang('en')">English</button>
+    <span class="lab" style="margin-left:var(--s3)">Angebot</span>
+    <button id="b-ws" class="pill on" onclick="setProd('ws')">Wochenschrift</button>
+    <button id="b-tv" class="pill" onclick="setProd('tv')">goetheanum.tv</button>
+    <span class="lab" style="margin-left:var(--s3)">Ihr Kürzel</span>
+    <input id="autor" placeholder="z. B. ph">
+    <button id="b-done" class="pill" onclick="toggleDone()">Erledigte zeigen</button>
+    <button id="b-cmt" class="pill on" onclick="toggleComments()" aria-pressed="true">Kommentare</button>
+    <span id="status" style="margin-left:auto">verbinde …</span>
+  </div>
+</section>
+
+<section class="segment offen-sec" id="offen-sec" hidden><h2 id="offen-titel">Offene Kommentare</h2>
+<p class="subline" id="offen-sub">Die To-do-Liste des Gegenlesens — anklicken springt zur Mail.</p>
+<ul class="offen" id="offenliste"></ul></section>
+
+<section class="segment"><h2>Nachfass-Mails</h2>
+<p class="subline">Drei Wellen je Angebot und Sprache. Zwei Stellen sind noch zu füllen (gelb) — echte Beitrags-Empfehlungen; das Datum setzt AC automatisch.</p>
+<div class="flow" id="flow"></div></section>
+</main>
+
+<script>
+const MAILS={
+ ws:{de:[
+  {tag:'Tag 0 · Willkommen',betreff:'Willkommen — Ihre erste Woche zum Mitlesen',pre:'Drei Monate Wochenschrift, geschenkt. So finden Sie hinein.',text:['Schön, dass Sie dabei sind. Die Wochenschrift erscheint jede Woche — Sie müssen nichts nachholen, fangen Sie einfach mit der aktuellen Ausgabe an.','Ein Vorschlag für den Anfang: [aktueller Beitrag]. Lesen Sie, wo der Sommer Sie hinträgt.'],knopf:'Zur aktuellen Ausgabe'},
+  {tag:'~Tag 45 · Anstoss zur Halbzeit',betreff:'Haben Sie diese Woche schon gelesen?',pre:'Ein Stück, das nachklingt — mitten in Ihren drei Gratis-Monaten.',text:['Die Hälfte Ihrer drei Monate ist um. Falls die Woche voll war — hier ist ein Beitrag, der sich lohnt: [Empfehlung].','Ein paar Minuten, die anders weiterdenken lassen.'],knopf:'Jetzt lesen'},
+  {tag:'~Tag 75 · Erinnerung vor dem Ende',betreff:'In zwei Wochen endet Ihre Gratis-Zeit',pre:'Was danach passiert — und wie Sie entscheiden.',text:['Ihre drei Gratis-Monate der Wochenschrift enden am [Datum]. Danach läuft Ihr Abo regulär weiter — wenn Sie mögen.','Wenn nicht, kündigen Sie bis dahin mit einem Klick, ohne Angabe von Gründen. Und falls Sie geblieben sind, weil es Ihnen etwas gibt: schön, dass Sie mitlesen.'],knopf:'Abo ansehen'},
+ ],en:[
+  {tag:'Day 0 · Welcome',betreff:'Welcome — your first week of reading',pre:'Three months of the weekly, as a gift. Here’s how to begin.',text:['Glad you’re here. The weekly comes out every week — there’s nothing to catch up on, simply start with the current issue.','A suggestion to begin: [current piece]. Read wherever summer takes you.'],knopf:'Read the current issue'},
+  {tag:'~Day 45 · Halfway nudge',betreff:'Have you read this week yet?',pre:'A piece that stays with you — halfway through your free months.',text:['You’re halfway through your three months. If the week was full — here’s one worth your time: [recommendation].','A few minutes that keep working in you.'],knopf:'Read now'},
+  {tag:'~Day 75 · Reminder before it ends',betreff:'Your free time ends in two weeks',pre:'What happens next — and how you decide.',text:['Your three free months of the weekly end on [date]. After that your subscription simply continues — if you’d like.','If not, cancel before then in one click, no reasons needed. And if you stayed because it gives you something: we’re glad you’re reading.'],knopf:'View subscription'},
+ ]},
+ tv:{de:[
+  {tag:'Tag 0 · Willkommen',betreff:'Willkommen — Ihr erster Abend bei goetheanum.tv',pre:'Drei Monate goetheanum.tv, geschenkt. So finden Sie hinein.',text:['Schön, dass Sie dabei sind. Über 800 Aufnahmen warten — Sie müssen nichts der Reihe nach schauen, fangen Sie mit dem an, was Sie anzieht.','Ein Vorschlag für den Anfang: [Empfehlung]. Schauen Sie, wann der Abend Ihnen gehört.'],knopf:'Jetzt anschauen'},
+  {tag:'~Tag 45 · Anstoss zur Halbzeit',betreff:'Schon reingeschaut diese Woche?',pre:'Eine Aufnahme, die bleibt — mitten in Ihren drei Gratis-Monaten.',text:['Die Hälfte Ihrer drei Monate ist um. Falls die Woche voll war — hier ist eine Aufnahme, die sich lohnt: [Empfehlung].','Eine halbe Stunde, die nachklingt.'],knopf:'Jetzt anschauen'},
+  {tag:'~Tag 75 · Erinnerung vor dem Ende',betreff:'In zwei Wochen endet Ihre Gratis-Zeit',pre:'Was danach passiert — und wie Sie entscheiden.',text:['Ihre drei Gratis-Monate bei goetheanum.tv enden am [Datum]. Danach läuft Ihr Abo regulär weiter — wenn Sie mögen.','Wenn nicht, kündigen Sie bis dahin mit einem Klick, ohne Angabe von Gründen. Und falls Sie geblieben sind, weil es Ihnen etwas gibt: schön, dass Sie dabei sind.'],knopf:'Abo ansehen'},
+ ],en:[
+  {tag:'Day 0 · Welcome',betreff:'Welcome — your first evening at goetheanum.tv',pre:'Three months of goetheanum.tv, as a gift. Here’s how to begin.',text:['Glad you’re here. Over 800 recordings are waiting — there’s no order to follow, simply start with what draws you.','A suggestion to begin: [recommendation]. Watch whenever the evening is yours.'],knopf:'Start watching'},
+  {tag:'~Day 45 · Halfway nudge',betreff:'Have you watched anything this week?',pre:'A recording that stays with you — halfway through your free months.',text:['You’re halfway through your three months. If the week was full — here’s one worth your time: [recommendation].','Half an hour that stays with you.'],knopf:'Start watching'},
+  {tag:'~Day 75 · Reminder before it ends',betreff:'Your free time ends in two weeks',pre:'What happens next — and how you decide.',text:['Your three free months at goetheanum.tv end on [date]. After that your subscription simply continues — if you’d like.','If not, cancel before then in one click, no reasons needed. And if you stayed because it gives you something: we’re glad you’re here.'],knopf:'View subscription'},
+ ]},
+};
+const PRODLABEL={ws:'Wochenschrift',tv:'goetheanum.tv'};
+const WK=['w1','w2','w3'];
+const escph=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\[([^\]]+)\]/g,'<span class="ph">[$1]</span>');
+function buildFlow(){
+ const box=document.getElementById('flow');let html='';
+ ['ws','tv'].forEach(pr=>['de','en'].forEach(lg=>MAILS[pr][lg].forEach((m,i)=>{
+  const key='nachfass_'+pr+'_'+WK[i]+'_'+lg+'#gesamt';
+  html+='<div class="mail" data-lang="'+lg+'" data-prod="'+pr+'">'
+   +'<div class="mhd">'+PRODLABEL[pr]+' · '+m.tag+'</div>'
+   +'<div class="inbox"><div class="ib-b">'+escph(m.betreff)+'</div><div class="ib-a">'+escph(m.pre)+'</div></div>'
+   +'<div class="mbody">'+m.text.map(t=>'<p>'+escph(t)+'</p>').join('')+'<span class="btn">'+escph(m.knopf)+' →</span></div>'
+   +'<div class="flds"><div class="fld" data-key="'+key+'">'
+   +'<div class="fh" onclick="toggle(this)"><span class="lbl">Anmerkung zur Mail</span>'
+   +'<button class="cbtn" type="button">💬 <span class="cc" data-cc="'+key+'">0</span></button></div>'
+   +'<div class="cpanel" hidden><ul class="clist" data-cl="'+key+'"></ul>'
+   +'<div class="cin"><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,\''+key+'\')">senden</button></div>'
+   +'</div></div></div></div>';
+ })));
+ box.innerHTML=html;
+}
+
+const SB_URL="https://dagcsnfrlbpxcmdimnrw.supabase.co", SB_KEY="sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY", TAB="nachfass_mail_comments";
+const REST=SB_URL+"/rest/v1/"+TAB, RPC=SB_URL+"/rest/v1/rpc/nachfass_comment_erledigt";
+const HDR={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};
+let COMMENTS={}, SHOW_DONE=false, LANG='de', PROD='ws';
+const st=t=>document.getElementById('status').textContent=t;
+function applyFilter(){document.querySelectorAll('.mail').forEach(m=>m.style.display=(m.dataset.lang===LANG&&m.dataset.prod===PROD)?'':'none');}
+function setLang(l){LANG=l;document.getElementById('b-de').classList.toggle('on',l==='de');document.getElementById('b-en').classList.toggle('on',l==='en');applyFilter();}
+function setProd(p){PROD=p;document.getElementById('b-ws').classList.toggle('on',p==='ws');document.getElementById('b-tv').classList.toggle('on',p==='tv');applyFilter();}
+function toggleDone(){SHOW_DONE=!SHOW_DONE;document.getElementById('b-done').classList.toggle('on',SHOW_DONE);render();}
+function toggleComments(){const b=document.getElementById('b-cmt'),an=document.body.classList.toggle('nocmt');b.classList.toggle('on',!an);b.setAttribute('aria-pressed',String(!an));}
+function toggle(el){const p=el.closest('.fld').querySelector('.cpanel');p.hidden=!p.hidden;}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function zeit(iso){try{return new Date(iso).toLocaleString('de-CH',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).replace(', ',' ');}catch(e){return '';}}
+function render(){
+ document.querySelectorAll('.clist').forEach(ul=>{
+   const items=(COMMENTS[ul.dataset.cl]||[]).filter(c=>SHOW_DONE||!c.erledigt);
+   ul.innerHTML=items.map(c=>'<li class="'+(c.erledigt?'done':'')+'">'
+     +'<div class="khead"><b>'+esc(c.autor||'?')+'</b><span class="kzeit">'+zeit(c.created_at)+'</span>'
+     +'<button class="kdone" onclick="erledigt('+c.id+','+(!c.erledigt)+')" title="'+(c.erledigt?'wieder öffnen':'erledigt')+'" aria-label="'+(c.erledigt?'wieder öffnen':'erledigt')+'">'+(c.erledigt?'↩':'✓')+'</button></div>'
+     +'<span class="ktxt">'+esc(c.kommentar)+'</span></li>').join('');});
+ document.querySelectorAll('.cc').forEach(s=>{const n=(COMMENTS[s.dataset.cc]||[]).filter(c=>SHOW_DONE||!c.erledigt).length;s.textContent=n;s.classList.toggle('has',n>0);});
+ const off=[];Object.values(COMMENTS).forEach(l=>l.forEach(c=>{if(SHOW_DONE||!c.erledigt)off.push(c);}));
+ off.sort((a,b)=>a.created_at<b.created_at?-1:1);
+ const titel=document.getElementById('offen-titel'),sub=document.getElementById('offen-sub');
+ if(SHOW_DONE){titel.textContent='Alle Kommentare';sub.textContent='Offene und erledigte — anklicken springt zur Mail.';}
+ else{titel.textContent='Offene Kommentare';sub.textContent='Die To-do-Liste des Gegenlesens — anklicken springt zur Mail.';}
+ document.getElementById('offen-sec').hidden=off.length===0;
+ document.getElementById('offenliste').innerHTML=off.map(c=>{const teile=c.mail_key.replace('#gesamt','').split('_');
+   const pr=teile[1]||'',wl=teile[2]||'',lg=teile[3]||'';
+   return '<li'+(c.erledigt?' class="done"':'')+'><button type="button" data-go="'+esc(c.mail_key)+'"><span class="okey">'
+     +esc((PRODLABEL[pr]||pr)+' · '+wl+' · '+lg)+(c.erledigt?' · erledigt':'')+'</span><span class="ometa">'+esc(c.autor||'?')+' · '+zeit(c.created_at)+'</span>'
+     +'<span class="otxt">'+esc(c.kommentar)+'</span></button></li>';}).join('');
+}
+function springe(key){
+ const teile=key.replace('#gesamt','').split('_'); const pr=teile[1],lg=teile[3];
+ if(pr) setProd(pr); if(lg) setLang(lg);
+ const fld=document.querySelector('.fld[data-key="'+CSS.escape(key)+'"]'); if(!fld) return;
+ fld.querySelector('.cpanel').hidden=false;
+ fld.scrollIntoView({behavior:'smooth',block:'center'});
+ fld.classList.add('blitz');setTimeout(()=>fld.classList.remove('blitz'),1800);
+}
+async function load(){
+ try{const r=await fetch(REST+"?select=id,created_at,mail_key,autor,kommentar,erledigt&order=created_at",{headers:HDR});
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  const data=await r.json();COMMENTS={};
+  data.forEach(c=>{(COMMENTS[c.mail_key]=COMMENTS[c.mail_key]||[]).push(c);});
+  render();st("verbunden · "+data.filter(c=>!c.erledigt).length+" offene Kommentare");
+ }catch(e){st("offline — Kommentare nicht ladbar ("+e.message+")");}
+}
+async function erledigt(id,wert){
+ st("speichere …");
+ try{const r=await fetch(RPC,{method:"POST",headers:HDR,body:JSON.stringify({kommentar_id:id,wert:wert})});
+  if(!r.ok) throw new Error("HTTP "+r.status);await load();
+ }catch(e){st("Fehler: "+e.message);}
+}
+function spracheAus(key){const m=key.match(/_(de|en)#/);return m?m[1]:null;}
+async function send(btn,key){
+ const inp=btn.previousElementSibling,txt=inp.value.trim();if(!txt) return;
+ const eingabe=(document.getElementById('autor').value||'').trim();
+ try{if(eingabe)localStorage.setItem('autor',eingabe);}catch(e){}
+ const autor=eingabe||'anon';btn.disabled=true;st("sende …");
+ try{
+  const r=await fetch(REST,{method:"POST",headers:{...HDR,"Prefer":"return=minimal"},body:JSON.stringify({mail_key:key,autor,kommentar:txt,sprache:spracheAus(key)})});
+  if(!r.ok) throw new Error("HTTP "+r.status+" "+(await r.text()).slice(0,120));
+  inp.value="";await load();
+ }catch(e){st("Fehler: "+e.message);alert("Konnte nicht senden:\n"+e.message+"\n\nTipp: Diese Seite über werkzeuge.goetheanum.ch öffnen — in eingebetteten Vorschauen sind Netzwerkzugriffe oft blockiert.");}
+ btn.disabled=false;
+}
+document.getElementById('offenliste').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)springe(b.dataset.go);});
+try{const a=localStorage.getItem('autor');if(a&&a!=='anon')document.getElementById('autor').value=a;}catch(e){}
+buildFlow();applyFilter();load();
+</script>
+</body></html>
