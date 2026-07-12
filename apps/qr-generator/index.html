@@ -36,6 +36,10 @@
   .kurzrow{display:flex;gap:var(--s2);align-items:stretch;flex-wrap:wrap} .kurzrow input{flex:1;min-width:140px}
   .check{display:flex;align-items:center;gap:var(--s2);font-family:var(--font-text);font-size:var(--t-body);color:var(--ink);cursor:pointer;min-height:var(--tap)}
   .check input{width:20px;height:20px;accent-color:var(--blue)}
+  /* Modus-Umschalter QR-Code | Kurzlink – dieselbe App, zwei Türen. */
+  .seg.modus{margin-bottom:var(--s4)}
+  body[data-modus="kurzlink"] #typSeg,
+  body[data-modus="kurzlink"] .qr-only{display:none}
 
   /* Gestalt & Ausgabe: Regler links, Vorschau rechts. */
   .out{display:grid;grid-template-columns:1fr auto;gap:var(--s6);align-items:start}
@@ -102,14 +106,18 @@
 <main class="wrap">
 
   <section class="hero">
-    <h1>QR-Code-Generator</h1>
-    <p class="lede">QR-Codes im Hausstil – für Links, WLAN-Zugänge, Kontakte, E-Mail und Text. Link-Codes laufen auf Wunsch als Kurzlink und zählen ihre Scans: anonym und ohne Fremddienst.</p>
+    <div class="seg modus" id="modusSeg" role="group" aria-label="Modus">
+      <button type="button" data-modus="qr" aria-pressed="true">QR-Code</button>
+      <button type="button" data-modus="kurzlink" aria-pressed="false">Kurzlink</button>
+    </div>
+    <h1 id="titel">QR-Code-Generator</h1>
+    <p class="lede" id="lede">QR-Codes im Hausstil – für Links, WLAN-Zugänge, Kontakte, E-Mail und Text. Link-Codes laufen auf Wunsch als Kurzlink und zählen ihre Scans: anonym und ohne Fremddienst.</p>
   </section>
 
   <section>
     <div class="shead">
-      <h2>Inhalt</h2>
-      <p>Was der Code beim Scannen auslösen soll. Nur Link-Codes können zählen – alles andere steht fest im Code selbst.</p>
+      <h2 id="inhaltTitel">Inhalt</h2>
+      <p id="inhaltText">Was der Code beim Scannen auslösen soll. Nur Link-Codes können zählen – alles andere steht fest im Code selbst.</p>
     </div>
 
     <div class="card soft">
@@ -126,7 +134,7 @@
           <span class="lab">Ziel-Adresse (URL)</span>
           <input id="linkUrl" type="url" placeholder="https://goetheanum.ch/veranstaltungen" autocomplete="off" />
         </label>
-        <label class="check span2">
+        <label class="check span2 qr-only">
           <input type="checkbox" id="kurzToggle" checked />
           <span>Kurzlink mit Scan-Statistik (empfohlen)</span>
         </label>
@@ -225,14 +233,14 @@
 
   <section>
     <div class="shead">
-      <h2>Gestalt und Ausgabe</h2>
-      <p>Drei Stile, drei Farben – immer dunkel auf Weiss, damit jede Kamera den Code liest. SVG für Druck und Layout, PNG für Mail und Web.</p>
+      <h2 id="gestaltTitel">Gestalt und Ausgabe</h2>
+      <p id="gestaltText">Drei Stile, drei Farben – immer dunkel auf Weiss, damit jede Kamera den Code liest. SVG für Druck und Layout, PNG für Mail und Web.</p>
     </div>
 
     <div class="card soft">
       <div class="out">
         <div>
-          <div class="gopt">
+          <div class="gopt qr-only">
             <span class="lab">Modulstil</span>
             <div class="seg" id="stilSeg" role="group" aria-label="Modulstil">
               <button type="button" data-stil="fliessend" aria-pressed="true">Fliessend</button>
@@ -241,7 +249,7 @@
               <button type="button" data-stil="kanten" aria-pressed="false">Kanten</button>
             </div>
           </div>
-          <div class="gopt">
+          <div class="gopt qr-only">
             <span class="lab">Farbe</span>
             <div class="seg" id="farbSeg" role="group" aria-label="Farbe">
               <button type="button" data-farbe="tinte" aria-pressed="true">Tinte</button>
@@ -761,9 +769,51 @@
     }).catch(function(){ body.innerHTML = '<tr><td class="empty" colspan="6">Register nicht ladbar.</td></tr>'; });
   }
 
+  // --- Modus: QR-Code | Kurzlink (dieselbe App, zwei Türen) -------------------
+  var TEXTE = {
+    qr: {
+      titel: 'QR-Code-Generator',
+      lede: 'QR-Codes im Hausstil – für Links, WLAN-Zugänge, Kontakte, E-Mail und Text. Link-Codes laufen auf Wunsch als Kurzlink und zählen ihre Scans: anonym und ohne Fremddienst.',
+      inhaltTitel: 'Inhalt',
+      inhaltText: 'Was der Code beim Scannen auslösen soll. Nur Link-Codes können zählen – alles andere steht fest im Code selbst.',
+      gestaltTitel: 'Gestalt und Ausgabe',
+      gestaltText: 'Drei Stile, drei Farben – immer dunkel auf Weiss, damit jede Kamera den Code liest. SVG für Druck und Layout, PNG für Mail und Web.'
+    },
+    kurzlink: {
+      titel: 'Kurzlink',
+      lede: 'Eine kurze, hauseigene Adresse (tools.goetheanum.ch/s/…) statt langer Links – tippbar, QR-tauglich, nach dem Druck umhängbar, ohne Fremddienst. Jeder Aufruf wird still gezählt.',
+      inhaltTitel: 'Ziel',
+      inhaltText: 'Die lange Adresse, auf die der Kurzlink weiterleiten soll.',
+      gestaltTitel: 'Als QR-Code (optional)',
+      gestaltText: 'Denselben Kurzlink gleich als QR herunterladen – SVG für Druck und Layout, PNG für Mail und Web.'
+    }
+  };
+  var modus = 'qr';
+  function setModus(m){
+    modus = (m && String(m).indexOf('kurzlink') === 0) ? 'kurzlink' : 'qr';
+    document.body.setAttribute('data-modus', modus);
+    el('modusSeg').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.modus === modus ? 'true' : 'false'); });
+    var t = TEXTE[modus];
+    el('titel').textContent = t.titel; el('lede').textContent = t.lede;
+    el('inhaltTitel').textContent = t.inhaltTitel; el('inhaltText').textContent = t.inhaltText;
+    el('gestaltTitel').textContent = t.gestaltTitel; el('gestaltText').textContent = t.gestaltText;
+    if(modus === 'kurzlink'){
+      // Kurzlink-erst: auf Link zwingen, Kurzlink immer an, Code-Feld sichtbar.
+      typ = 'link';
+      el('typSeg').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.typ === 'link' ? 'true' : 'false'); });
+      ['link','wlan','kontakt','email','text'].forEach(function(p){ el('pane-' + p).hidden = (p !== 'link'); });
+      el('kurzToggle').checked = true; el('kurzFeld').hidden = false;
+    }
+    try { history.replaceState(null, '', modus === 'kurzlink' ? '?modus=kurzlink' : location.pathname); } catch(e){}
+    render();
+  }
+  segWire('modusSeg', 'modus', setModus);
+
   // --- Start ---------------------------------------------------------------------
+  var params = new URLSearchParams(location.search);
+  var startModus = params.get('modus') || (location.hash === '#kurzlink' ? 'kurzlink' : 'qr');
   el('kurzCode').value = neuerCode();
-  render();
+  setModus(startModus);
   ladeRegister();
 </script>
 
