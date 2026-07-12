@@ -120,6 +120,21 @@ def ctas_for(seg, welle, lang):
     return [(z, labels[z]) for z in ziele]
 
 
+def ps_block(seg, welle, lang):
+    """Leises Teilen-PS: das link_wort wird zum Teilen-Link auf das Angebot der Gruppe
+    (links.share_link_for — nie ein schon bezahltes Produkt, eigenes utm_content)."""
+    ps = H.get("ps", {})
+    p = ps.get(lang)
+    if not p or welle not in ps.get("wellen", []):
+        return ""
+    url = links.share_link_for(welle, seg, lang)["url"]
+    wort = p["link_wort"]
+    txt = xml(p["text"]).replace(
+        xml(wort), f'<a href="{xml(url)}" style="color:{AKZENT};text-decoration:underline">{xml(wort)}</a>', 1)
+    return (f'<mj-text font-size="13px" line-height="20px" color="{MUTED}" '
+            f'padding="0 0 26px 0">{txt}</mj-text>')
+
+
 def render_mail(motiv, welle, lang, wm):
     seg = SEG_OF[motiv]
     vid = H["wellenplan"][seg][welle].split("/")[1]
@@ -153,7 +168,8 @@ def render_mail(motiv, welle, lang, wm):
   <mj-text font-family="{HL_STACK}" font-size="30px" line-height="35px" font-weight="700" color="{INK}" padding="0 0 14px 0">{titel(c['botschaft'])}</mj-text>
   <mj-text padding="0 0 22px 0">{xml(c['text'])}</mj-text>
   {btns}
-  <mj-text font-size="13px" line-height="20px" color="{MUTED}" padding="0 0 26px 0">{kleinzeile(H['kleinzeile'][motiv][lang])}</mj-text>
+  <mj-text font-size="13px" line-height="20px" color="{MUTED}" padding="0 0 14px 0">{kleinzeile(H['kleinzeile'][motiv][lang])}</mj-text>
+  {ps_block(seg, welle, lang)}
 </mj-column></mj-section>
 <mj-section background-color="{WASH}" padding="16px 28px"><mj-column><mj-text font-size="14px" line-height="22px" color="{AKZENT_TIEF}" align="center" padding="0">{xml(H['proof'][lang])}</mj-text></mj-column></mj-section>
 <mj-section background-color="{MIST}" padding="20px 28px"><mj-column><mj-text font-size="12px" line-height="19px" color="{FUSS}" padding="0">Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br/><a href="https://goetheanum.ch" style="color:{FUSS};">goetheanum.ch</a> · <a href="%UNSUBSCRIBELINK%" style="color:{FUSS};">Abmelden</a></mj-text></mj-column></mj-section>
