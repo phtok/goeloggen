@@ -31,7 +31,7 @@ Die Reihenfolge folgt drei Logiken zugleich: **Saison** (was gerade ansteht),
 
 | Monat | Werkzeug | Warum jetzt | Blick dahinter (Identitätsstück) |
 |---|---|---|---|
-| **September** | **Signatur** | Saisonauftakt, alle kehren zurück; kleinster Aufwand, grösster kollektiver Effekt — der perfekte Serien-Start | Aus dem Haus gehen täglich hunderte Mails; die Signatur ist die häufigste Geste des Hauses. Einheit entsteht aus vielen kleinen, übereinstimmenden Gesten. |
+| **September** | **Signatur** | Saisonauftakt, alle kehren zurück; kleinster Aufwand, grösster kollektiver Effekt — der perfekte Serien-Start | Jede Mail ist ein Auftritt des Goetheanum — und zugleich die Stimme eines Menschen. Wir arbeiten öffentlich: Erkennbarkeit schafft Vertrauen. Zwei Zeilen sind gesetzt, alles Weitere ist frei. |
 | **Oktober** | **Schriften** (Office-Schriften installieren) | Die Stimme des Hauses auf jeden Rechner — und die stille Voraussetzung für den November | Warum die Schnitte Flüstern bis Schreien heissen; betont wird mit Laut, nie mit Unterstreichen oder VERSALIEN. |
 | **November** | **PowerPoint-Vorlagen** | Jahresberichte, Gremien, Tagungen zum Jahresende; baut sichtbar auf dem Oktober auf («die Schriften habt ihr schon») | Eine Folie im Hausbild wirkt, bevor das erste Wort gesprochen ist — und eingebettete Schriften reisen mit. |
 | **Dezember** | **Wallpaper** | Der besinnliche Monat: die einzige Mail, die *nichts* verlangt — ein Geschenk, elf Bilder, fertig | Das Haus auf dem eigenen Schreibtisch. Zugehörigkeit braucht manchmal keinen Zweck. |
@@ -92,6 +92,15 @@ Bild ist besser als ein dekoratives.
   verwenden Sie ausschliesslich». Die Argumentation ist immer: *das hier ist
   schneller und schöner als der bisherige Weg.* Wer die Werkzeuge aus Freude
   nutzt, bleibt; wer sie aus Pflicht nutzt, weicht aus (Strategieblatt, Abschnitt 4).
+- **Nutzen statt Einheits-Rhetorik.** «Einheit», «Einheitlichkeit»,
+  «gemeinsamer Auftritt als Ziel an sich» zieht nicht — es klingt nach Uniform
+  und weckt Widerstand («das sind doch nur Mails»). Tragfähig ist das Doppel
+  aus *individuellem Nutzen* (Zeit, Freiheit im Detail, ein Werkzeug, das
+  Arbeit abnimmt) und *gemeinsamem Nutzen* über den öffentlichen Charakter
+  des Hauses: Erkennbarkeit schafft Vertrauen bei denen, die unsere Mails
+  empfangen. Jede Mail dieser Serie beantwortet ausdrücklich beide Fragen:
+  *Was bringt es mir? Was bringt es uns?* Die Freiheit immer mitnennen
+  (was gesetzt ist — und was bewusst frei bleibt).
 - **Würde ohne Steifheit.** Das Haus darf in diesen Mails lächeln. Humor ja —
   aber als Wärme, nie als Ironie über das Haus oder die Lesenden.
 - **Ehrlichkeit als Stilmittel.** Beta heisst Beta; «sagt uns, was klemmt»
@@ -127,12 +136,19 @@ Bild ist besser als ein dekoratives.
 
 ## 7. Muster: die September-Mail
 
-> **Betreff:** Aus der Werkzeugkiste: Drei Minuten, und jede Mail trägt das Haus
+*Die Argumente des zweiten Teils kommen aus dem Werkzeug selbst (elf
+Empfehlungen, Merkblatt, Schweiz-Fussnote): zwei Zeilen gesetzt, alles Weitere
+frei; Antworten dürfen ohne Signatur gehen; reiner Text statt Bild-Anhang;
+das PS als meistgelesener Platz; kein rechtlicher Ballast nötig.*
+
+> **Betreff:** E-Mails, die gelesen werden
 >
-> Liebe Kolleginnen und Kollegen
+> Liebe Mitarbeitende
 >
-> Zum Saisonbeginn das kleinste Werkzeug mit der grössten Wirkung: die
-> gemeinsame E-Mail-Signatur.
+> Wir möchten in einer Reihe monatlicher Mails einige Werkzeuge vorstellen,
+> die unsere Arbeit erleichtern können und unseren gemeinsamen Auftritt
+> stärken. Wir beginnen mit dem kleinsten Werkzeug mit der grössten Wirkung:
+> der E-Mail-Signatur.
 >
 > Aus dem Haus gehen täglich hunderte Mails. Jede ist ein kleiner Auftritt des
 > Goetheanum — und bisher sieht fast jeder anders aus. Das ändert sich in drei
@@ -140,11 +156,28 @@ Bild ist besser als ein dekoratives.
 >
 > 1. Signatur-Werkzeug öffnen: \[Link]
 > 2. Name, Aufgabe, Sektion eintragen — die Vorschau zeigt sofort das Ergebnis
-> 3. Kopieren, in Outlook einsetzen, fertig
+> 3. Kopieren, in Outlook/Apple Mail einsetzen, fertig.
 >
-> **Der Blick dahinter:** Einheit entsteht nicht aus grossen Gesten, sondern
-> aus vielen kleinen, die übereinstimmen. Die Signatur ist die häufigste Geste
-> des Hauses — hunderte Male am Tag.
+> Zwei Zeilen sind dabei gesetzt: dein Name und das Goetheanum. Alles Weitere
+> wählst du selbst — die Signatur ist deine, keine Uniform. Antworten und
+> interne Mails dürfen sogar ganz ohne ausgehen.
+>
+> **Was es dir bringt:** Drei Minuten jetzt, dann nie wieder daran denken. Die
+> Signatur kommt überall richtig an — in Outlook wie in Apple Mail, hell wie
+> dunkel, ohne Bild, das beim Empfänger als Anhang erscheint. Und gleich
+> darunter liegt der meistgelesene Platz jeder Mail: das PS, ideal für den
+> Hinweis auf deine Veranstaltung — das Werkzeug erinnert dich, wenn er
+> abläuft.
+>
+> **Was es uns bringt:** Wir arbeiten öffentlich. Wer eine Mail aus dem
+> Goetheanum erhält, soll auf einen Blick sehen: Sie kommt wirklich von hier —
+> und sie kommt von einem Menschen. Diese Verlässlichkeit ist Vertrauen.
+> Deine Mail leiht sich Glaubwürdigkeit vom Haus, und das Haus gewinnt sie
+> durch deine zurück.
+>
+> Zum Werkzeug gehören elf kurze Empfehlungen für E-Mails, die gelesen
+> werden — entspannt, ohne Juristerei, als PDF zum Mitnehmen. Die kürzeste
+> Mail ist oft die freundlichste.
 >
 > Wenn etwas klemmt oder fehlt: einfach auf diese Mail antworten, wir lesen
 > alles.
