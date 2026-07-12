@@ -37,6 +37,13 @@
   .raster{display:grid;gap:var(--s5);margin-top:var(--s4)}
   @media(min-width:900px){.raster{grid-template-columns:1fr minmax(300px,340px)}}
 
+  /* Auf dem Handy IST der Bildschirm der Rahmen: Mockup weg, das Textfeld
+     wird selbst zur vollflächigen, direkt bearbeitbaren Anzeige der Mail. */
+  .vorschau-spalte{display:none}
+  @media(min-width:900px){.vorschau-spalte{display:block}}
+  .mailfeld{font-size:16px;line-height:1.5;min-height:60vh}
+  @media(min-width:900px){.mailfeld{min-height:0}}
+
   .feld-gruppe{display:grid;gap:var(--s3)}
   .zeichen{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);text-align:right}
   .zeichen.warn{color:var(--blue);font-weight:600}
@@ -144,7 +151,11 @@ function zeichnen(){
   a.forEach((g, i)=>{
     liste.appendChild(karte(g, i, a.length));
   });
+  liste.querySelectorAll(".mailfeld").forEach(wachsen);
 }
+
+// Textfeld wächst mit dem Inhalt — die ganze Mail ohne inneres Scrollen.
+function wachsen(t){ t.style.height="auto"; t.style.height=(t.scrollHeight+4)+"px"; }
 
 function karte(g, i, n){
   const el = document.createElement("section");
@@ -176,7 +187,7 @@ function karte(g, i, n){
         <div class="zeichen ${betreffLen>T_BETREFF_WARN?"warn":""}">${betreffLen} Zeichen${betreffLen>T_BETREFF_WARN?" · wird evtl. abgeschnitten":""}</div>
         <label class="field">
           <span class="lab">Text der Mail</span>
-          <textarea data-feld="body" data-id="${g.id}" rows="16">${esc(g.body)}</textarea>
+          <textarea class="mailfeld" data-feld="body" data-id="${g.id}" rows="16">${esc(g.body)}</textarea>
         </label>
         <div class="zeichen ${bodyLen>T_BODY_WARN?"warn":""}">${bodyLen} Zeichen${bodyLen>T_BODY_WARN?" · länger als ein Mobilscreen":""}</div>
         <div style="display:flex;gap:var(--s2);flex-wrap:wrap">
@@ -185,7 +196,7 @@ function karte(g, i, n){
         </div>
       </div>
 
-      <div>
+      <div class="vorschau-spalte">
         <div class="telefon" aria-hidden="false">
           <div class="telefon-schirm">
             <div class="tv-betreff">${esc(g.betreff)||"&nbsp;"}</div>
@@ -229,6 +240,7 @@ document.addEventListener("input", e=>{
       const len = e.target.value.length;
       if(f==="betreff"){ const z=box.querySelectorAll(".zeichen")[0]; z.textContent=len+" Zeichen"+(len>T_BETREFF_WARN?" · wird evtl. abgeschnitten":""); z.classList.toggle("warn",len>T_BETREFF_WARN); }
       if(f==="body"){
+        wachsen(e.target);
         const z=box.querySelectorAll(".zeichen")[1]; z.textContent=len+" Zeichen"+(len>T_BODY_WARN?" · länger als ein Mobilscreen":""); z.classList.toggle("warn",len>T_BODY_WARN);
         const card=e.target.closest(".ausgabe"); card.querySelector(".tv-body").textContent=e.target.value;
         const h=card.querySelector(".tv-hint"); h.textContent=len>T_BODY_WARN?"Zu lang — kürzen, bis alles ohne Scrollen sichtbar ist":"Vorschau auf dem Telefon"; h.classList.toggle("warn",len>T_BODY_WARN);
