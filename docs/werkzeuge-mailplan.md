@@ -101,6 +101,10 @@ Bild ist besser als ein dekoratives.
   empfangen. Jede Mail dieser Serie beantwortet ausdrücklich beide Fragen:
   *Was bringt es mir? Was bringt es uns?* Die Freiheit immer mitnennen
   (was gesetzt ist — und was bewusst frei bleibt).
+- **Keine Absetzung vom Ist-Zustand.** Nicht der heutige Zustand ist das
+  Problem («bisher sieht jede Mail anders aus»), das Neue ist der Gewinn.
+  Wer den Status quo zum Mangel erklärt, erklärt die Lesenden zu dessen
+  Verursachern — und erzeugt Abwehr statt Lust.
 - **Würde ohne Steifheit.** Das Haus darf in diesen Mails lächeln. Humor ja —
   aber als Wärme, nie als Ironie über das Haus oder die Lesenden.
 - **Ehrlichkeit als Stilmittel.** Beta heisst Beta; «sagt uns, was klemmt»
@@ -151,8 +155,8 @@ das PS als meistgelesener Platz; kein rechtlicher Ballast nötig.*
 > der E-Mail-Signatur.
 >
 > Aus dem Haus gehen täglich hunderte Mails. Jede ist ein kleiner Auftritt des
-> Goetheanum — und bisher sieht fast jeder anders aus. Das ändert sich in drei
-> Minuten:
+> Goetheanum — und zugleich die Stimme eines Menschen. Eine Signatur, die
+> beides zeigt, ist in drei Minuten eingerichtet:
 >
 > 1. Signatur-Werkzeug öffnen: \[Link]
 > 2. Name, Aufgabe, Sektion eintragen — die Vorschau zeigt sofort das Ergebnis
@@ -164,10 +168,9 @@ das PS als meistgelesener Platz; kein rechtlicher Ballast nötig.*
 >
 > **Was es dir bringt:** Drei Minuten jetzt, dann nie wieder daran denken. Die
 > Signatur kommt überall richtig an — in Outlook wie in Apple Mail, hell wie
-> dunkel, ohne Bild, das beim Empfänger als Anhang erscheint. Und gleich
-> darunter liegt der meistgelesene Platz jeder Mail: das PS, ideal für den
-> Hinweis auf deine Veranstaltung — das Werkzeug erinnert dich, wenn er
-> abläuft.
+> dunkel, ohne Bild, das beim Empfänger als Anhang erscheint. Und du kannst im
+> Werkzeug ein PS eintragen, den meistgelesenen Platz jeder Mail — ideal für
+> den Hinweis auf deine Veranstaltung. Läuft er ab, erinnert dich das Werkzeug.
 >
 > **Was es uns bringt:** Wir arbeiten öffentlich. Wer eine Mail aus dem
 > Goetheanum erhält, soll auf einen Blick sehen: Sie kommt wirklich von hier —
@@ -175,9 +178,9 @@ das PS als meistgelesener Platz; kein rechtlicher Ballast nötig.*
 > Deine Mail leiht sich Glaubwürdigkeit vom Haus, und das Haus gewinnt sie
 > durch deine zurück.
 >
-> Zum Werkzeug gehören elf kurze Empfehlungen für E-Mails, die gelesen
-> werden — entspannt, ohne Juristerei, als PDF zum Mitnehmen. Die kürzeste
-> Mail ist oft die freundlichste.
+> Neben dem Werkzeug findest du elf kurze Empfehlungen zum Mailschreiben.
+> Sie sind entspannt gehalten, ganz ohne Juristerei, und es gibt sie als PDF.
+> Unsere liebste: Die kürzeste Mail ist oft die freundlichste.
 >
 > Wenn etwas klemmt oder fehlt: einfach auf diese Mail antworten, wir lesen
 > alles.
