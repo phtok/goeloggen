@@ -219,18 +219,18 @@
     "lesen": {
       "w1": {
         "de": {
-          "betreff": "Was Sie sehen, jetzt auch lesen — 3 Monate gratis",
-          "botschaft": "Jede Woche ein Stück weiter sehen.",
-          "text": "Was Sie auf goetheanum.tv sehen, lesen Sie in der Wochenschrift weiter: Woche für Woche schreiben dort Menschen, die einer Frage ihr Leben gewidmet haben — nicht was sie wissen, sondern wie sie suchen. Wer mitliest, kommt mit anderen Augen in die eigene Woche zurück.",
+          "betreff": "Denken, das über die Woche hinausreicht — 3 Monate gratis",
+          "botschaft": "Lesen, das in Ihnen weiterarbeitet.",
+          "text": "Ergänzend zu dem, was Sie auf goetheanum.tv sehen, denkt die Wochenschrift weiter — schwarz auf weiss, jede Woche neu: «Den Frieden herbeidenken», «Und wenn das Leben aus den Sternen käme?», «Biografiearbeit als Weg zum Ich». Dazu das ganze Archiv seit 2023, das mit Ihrem Abo offen bleibt. Nicht was die Autoren wissen, sondern wie sie suchen.",
           "alt": "Drei Monate im Freien lesen — gratis",
-          "preheader": "Drei Monate kostenlos mitlesen — wo der Sommer Sie hinträgt. Bis 8. August."
+          "preheader": "«Und wenn das Leben aus den Sternen käme?» und das ganze Archiv — jede Woche neu. Bis 8. August."
         },
         "en": {
-          "betreff": "What you watch, now also read — 3 months free",
-          "botschaft": "See a little further every week.",
-          "text": "What you watch on goetheanum.tv you can read on in the weekly: week after week, people who have given their lives to a question write down not what they know but how they search. Read along, and you return to your own week with different eyes.",
+          "betreff": "Thinking that reaches beyond the week — 3 months free",
+          "botschaft": "Reading that keeps working in you.",
+          "text": "Alongside what you watch on goetheanum.tv, the weekly thinks on — in black and white, new each week: «Envisioning peace», «What if life came from the stars?», «Biography work as a path to the self». Plus the whole archive since 2023, which stays open with your subscription. Not what the authors know, but how they search.",
           "alt": "Read in the open air — three months free",
-          "preheader": "Three months free to read — wherever summer takes you. Until 8 August."
+          "preheader": "«What if life came from the stars?» and the whole archive — new each week. Until 8 August."
         }
       },
       "w2": {
@@ -254,14 +254,14 @@
           "betreff": "Bis Samstag: drei Monate mitlesen, kostenlos",
           "botschaft": "Bis Samstag bleibt die Tür offen.",
           "text": "Diese Woche endet die Sommer-Aktion. Bis Samstag lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — und kommen mit anderen Augen in Ihre Woche zurück. Gefällt es nicht, kündigen Sie mit einem Klick.",
-          "alt": "Was Sie sehen, jetzt auch lesen — bis Samstag",
+          "alt": "Bis Samstag: Denken, das über die Woche hinausreicht",
           "preheader": "Drei Gratis-Monate zum Mitlesen — nur noch bis Samstag, 8. August."
         },
         "en": {
           "betreff": "Until Saturday: three months of reading, free",
           "botschaft": "The door stays open until Saturday.",
           "text": "This week the summer offer ends. Until Saturday, read the weekly free for three months with your subscription — and return to your own week with different eyes. If it’s not for you, cancel in one click.",
-          "alt": "What you watch, now also read — until Saturday",
+          "alt": "Until Saturday: thinking that reaches beyond the week",
           "preheader": "Three free months to read along — only until Saturday, 8 August."
         }
       }
@@ -269,18 +269,18 @@
     "sehen": {
       "w1": {
         "de": {
-          "betreff": "Was Sie lesen, jetzt auch sehen — 3 Monate gratis",
-          "botschaft": "Zusehen, wie jemand denkt.",
-          "text": "Was Sie jede Woche lesen, können Sie jetzt auch sehen und hören: Auf goetheanum.tv denken Menschen laut, in über 800 Vorträgen und Gesprächen. Sie hören das Zögern und das Finden mit — alles, was auf der gedruckten Seite unsichtbar bleibt.",
-          "alt": "Dem Gelesenen zuhören — 3 Monate gratis",
-          "preheader": "Über 800 Vorträge und Gespräche, die Ihrem Lesen Tiefe geben — wohin der Sommer Sie trägt."
+          "betreff": "Sehen, wie Menschen laut denken — 3 Monate gratis",
+          "botschaft": "So nah am Goetheanum, wo immer Sie sind.",
+          "text": "Ergänzend zu den Artikeln, die Sie jede Woche lesen, steht Ihnen die ganze Mediathek offen — über 800 Beiträge, wöchentlich neu: «Dieser Krieg muss enden. Jetzt.», «Kann man Glück lernen?», dazu die Reihe, in der die Sahara ergrünt. Vorträge, Reportagen und Aufführungen, die Sie ganz nah ans Leben am Goetheanum bringen — selbst aus grosser Entfernung.",
+          "alt": "Die ganze Mediathek, ergänzend zu Ihrem Lesen — 3 Monate gratis",
+          "preheader": "«Kann man Glück lernen?» und über 800 weitere Beiträge — nah am Goetheanum, wohin der Sommer Sie trägt."
         },
         "en": {
-          "betreff": "What you read, now also watch — 3 months free",
-          "botschaft": "Watch someone think.",
-          "text": "What you read each week you can now watch and hear: on goetheanum.tv, people think out loud, in over 800 lectures and conversations. You hear the hesitation and the finding — everything the printed page keeps invisible.",
-          "alt": "Listen to what you read — 3 months free",
-          "preheader": "Over 800 lectures and conversations that deepen your reading — wherever summer takes you."
+          "betreff": "Watch people think out loud — 3 months free",
+          "botschaft": "Close to the Goetheanum, wherever you are.",
+          "text": "Alongside the articles you read each week, the whole media library is open to you — over 800 pieces, new every week: «This war must end. Now.», «Can we learn to be happy?», and the series «Greening the Desert», in which the Sahara turns green. Lectures, reportage and performances that bring you close to life at the Goetheanum — even from a great distance.",
+          "alt": "The whole media library, alongside your reading — 3 months free",
+          "preheader": "«Can we learn to be happy?» and over 800 more — close to the Goetheanum, wherever summer takes you."
         }
       },
       "w2": {
@@ -304,14 +304,14 @@
           "betreff": "Nur noch bis Samstag: drei Monate gratis",
           "botschaft": "Bis Samstag ist Ihr Platz frei.",
           "text": "Noch ein paar Sommertage: goetheanum.tv, drei Monate gratis zu Ihrem Abo — bleiben Sie nur, wenn es in Ihnen nachklingt.",
-          "alt": "Was Sie lesen, jetzt auch sehen — bis Samstag",
+          "alt": "Bis Samstag: sehen, wie Menschen laut denken",
           "preheader": "Eine Minute für drei Monate goetheanum.tv: gratis zu Ihrem Abo — bis Samstag, 8. August."
         },
         "en": {
           "betreff": "Only until Saturday: three months free",
           "botschaft": "Your seat stays free until Saturday.",
           "text": "A few summer days left: goetheanum.tv, three months free with your subscription — stay only if it stays with you.",
-          "alt": "What you read, now also watch — until Saturday",
+          "alt": "Until Saturday: watch people think out loud",
           "preheader": "One minute for three months of goetheanum.tv — free with your subscription, until Saturday."
         }
       }

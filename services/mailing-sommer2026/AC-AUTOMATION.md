@@ -120,23 +120,23 @@ Alle Links tragen zudem
 
 | Welle | Sprache | Betreff | Alt-Betreff (nur w3-Zweig «Nicht-Öffner») | utm_content | HTML-Quelle |
 |---|---|---|---|---|---|
-| w1 | DE | Was Sie sehen, jetzt auch lesen — 3 Monate gratis | — | `w1_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w1_de.html |
-| w1 | EN | What you watch, now also read — 3 months free | — | `w1_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w1_en.html |
+| w1 | DE | Denken, das über die Woche hinausreicht — 3 Monate gratis | — | `w1_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w1_de.html |
+| w1 | EN | Thinking that reaches beyond the week — 3 months free | — | `w1_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w1_en.html |
 | w2 | DE | Drei Monate mitlesen, danach entscheiden Sie. | — | `w2_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w2_de.html |
 | w2 | EN | Three months of reading — then you decide. | — | `w2_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w2_en.html |
-| w3 | DE | Bis Samstag: drei Monate mitlesen, kostenlos | Was Sie sehen, jetzt auch lesen — bis Samstag | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_de.html |
-| w3 | EN | Until Saturday: three months of reading, free | What you watch, now also read — until Saturday | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_en.html |
+| w3 | DE | Bis Samstag: drei Monate mitlesen, kostenlos | Bis Samstag: Denken, das über die Woche hinausreicht | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_de.html |
+| w3 | EN | Until Saturday: three months of reading, free | Until Saturday: thinking that reaches beyond the week | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_en.html |
 
 ### S26 · NurWS→TV (Angebot: goetheanum.tv sehen)
 
 | Welle | Sprache | Betreff | Alt-Betreff (nur w3-Zweig «Nicht-Öffner») | utm_content | HTML-Quelle |
 |---|---|---|---|---|---|
-| w1 | DE | Was Sie lesen, jetzt auch sehen — 3 Monate gratis | — | `w1_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w1_de.html |
-| w1 | EN | What you read, now also watch — 3 months free | — | `w1_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w1_en.html |
+| w1 | DE | Sehen, wie Menschen laut denken — 3 Monate gratis | — | `w1_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w1_de.html |
+| w1 | EN | Watch people think out loud — 3 months free | — | `w1_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w1_en.html |
 | w2 | DE | Ihr Sommer hat noch Abende frei | — | `w2_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w2_de.html |
 | w2 | EN | Your summer still has evenings free | — | `w2_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w2_en.html |
-| w3 | DE | Nur noch bis Samstag: drei Monate gratis | Was Sie lesen, jetzt auch sehen — bis Samstag | `w3_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3_de.html |
-| w3 | EN | Only until Saturday: three months free | What you read, now also watch — until Saturday | `w3_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3_en.html |
+| w3 | DE | Nur noch bis Samstag: drei Monate gratis | Bis Samstag: sehen, wie Menschen laut denken | `w3_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3_de.html |
+| w3 | EN | Only until Saturday: three months free | Until Saturday: watch people think out loud | `w3_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3_en.html |
 
 ### S26 · NoAbo (beide Angebote; jede Mail führt mit einem Button zur Übersicht)
 
