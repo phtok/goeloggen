@@ -79,6 +79,12 @@ Wiedererkennbarkeit *ist* die halbe Wirkung:
 Minute. Wenn eine Mail länger wird, ist es zwei Mails — dann wartet die zweite
 Hälfte auf ihren eigenen Monat.
 
+**Die Mail teasert, die Seite argumentiert.** Die vollständige Begründung
+(Empfehlungen, Merkblätter, Warum-Erklärungen) wohnt auf der Werkzeug-Seite —
+dort liest sie sich besser, mit Bildern, Faltkästen und PDF. Die Mail trägt
+höchstens *einen* Identitätssatz und macht auf den Rest neugierig, statt ihn
+nachzuerzählen. Was die Seite schon sagt, sagt die Mail nicht noch einmal.
+
 **Bild:** genau eines, wenn es trägt — am stärksten als Vorher/Nachher-Miniatur
 (die alte wilde Signatur neben der neuen) oder als Ergebnis-Ausschnitt. Kein
 Bild ist besser als ein dekoratives.
@@ -140,50 +146,36 @@ Bild ist besser als ein dekoratives.
 
 ## 7. Muster: die September-Mail
 
-*Die Argumente des zweiten Teils kommen aus dem Werkzeug selbst (elf
-Empfehlungen, Merkblatt, Schweiz-Fussnote): zwei Zeilen gesetzt, alles Weitere
-frei; Antworten dürfen ohne Signatur gehen; reiner Text statt Bild-Anhang;
-das PS als meistgelesener Platz; kein rechtlicher Ballast nötig.*
+*Die Mail teasert, die Seite argumentiert: Die Argumente (Freiheit im Detail,
+Vertrauen durch Erkennbarkeit, elf Empfehlungen, Merkblatt, Schweiz-Fussnote)
+stehen auf der Werkzeug-Seite — die Mail trägt einen Identitätssatz und macht
+auf den Rest neugierig.*
 
 > **Betreff:** E-Mails, die gelesen werden
 >
 > Liebe Mitarbeitende
 >
-> Wir möchten in einer Reihe monatlicher Mails einige Werkzeuge vorstellen,
-> die unsere Arbeit erleichtern können und unseren gemeinsamen Auftritt
-> stärken. Wir beginnen mit dem kleinsten Werkzeug mit der grössten Wirkung:
-> der E-Mail-Signatur.
+> Wir möchten in einer Reihe monatlicher Mails Werkzeuge vorstellen, die
+> unsere Arbeit erleichtern und unseren gemeinsamen Auftritt stärken. Den
+> Anfang macht das kleinste mit der grössten Wirkung: die E-Mail-Signatur.
 >
-> Aus dem Haus gehen täglich hunderte Mails. Jede ist ein kleiner Auftritt des
-> Goetheanum — und zugleich die Stimme eines Menschen. Eine Signatur, die
-> beides zeigt, ist in drei Minuten eingerichtet:
+> Jede Mail aus dem Haus ist ein kleiner Auftritt des Goetheanum — und
+> zugleich die Stimme eines Menschen. Eine Signatur, die beides zeigt, ist in
+> drei Minuten eingerichtet:
 >
 > 1. Signatur-Werkzeug öffnen: \[Link]
 > 2. Name, Aufgabe, Sektion eintragen — die Vorschau zeigt sofort das Ergebnis
 > 3. Kopieren, in Outlook/Apple Mail einsetzen, fertig.
 >
-> Zwei Zeilen sind dabei gesetzt: dein Name und das Goetheanum. Alles Weitere
-> wählst du selbst — die Signatur ist deine, keine Uniform. Antworten und
-> interne Mails dürfen sogar ganz ohne ausgehen.
+> Zwei Zeilen sind gesetzt, alles Weitere wählst du selbst — die Signatur ist
+> deine, keine Uniform.
 >
-> **Was es dir bringt:** Drei Minuten jetzt, dann nie wieder daran denken. Die
-> Signatur kommt überall richtig an — in Outlook wie in Apple Mail, hell wie
-> dunkel, ohne Bild, das beim Empfänger als Anhang erscheint. Und du kannst im
-> Werkzeug ein PS eintragen, den meistgelesenen Platz jeder Mail — ideal für
-> den Hinweis auf deine Veranstaltung. Läuft er ab, erinnert dich das Werkzeug.
+> Auf der Seite wartet mehr: warum die Signatur ohne Bild auskommt, was das
+> PS kann (der meistgelesene Platz jeder Mail) — und elf entspannte
+> Empfehlungen für E-Mails, die gelesen werden. Unsere liebste: Die kürzeste
+> Mail ist oft die freundlichste.
 >
-> **Was es uns bringt:** Wir arbeiten öffentlich. Wer eine Mail aus dem
-> Goetheanum erhält, soll auf einen Blick sehen: Sie kommt wirklich von hier —
-> und sie kommt von einem Menschen. Diese Verlässlichkeit ist Vertrauen.
-> Deine Mail leiht sich Glaubwürdigkeit vom Haus, und das Haus gewinnt sie
-> durch deine zurück.
->
-> Neben dem Werkzeug findest du elf kurze Empfehlungen zum Mailschreiben.
-> Sie sind entspannt gehalten, ganz ohne Juristerei, und es gibt sie als PDF.
-> Unsere liebste: Die kürzeste Mail ist oft die freundlichste.
->
-> Wenn etwas klemmt oder fehlt: einfach auf diese Mail antworten, wir lesen
-> alles.
+> Wenn etwas klemmt oder fehlt: einfach antworten, wir lesen alles.
 >
 > Herzlich
 > Philipp Tok & Stefan Hasler
