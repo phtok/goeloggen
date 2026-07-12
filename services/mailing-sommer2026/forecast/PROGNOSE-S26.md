@@ -276,6 +276,45 @@ am **Klick** (Hebel 2/4/5) und an der **Landing-Konversion** (Hebel 1). Der grö
 messen), w3 entschärfen (real 0,5–0,6 % Abmeldung = safe), die kleinen warmen
 Segmente feinschleifen (Volumenanteil zu klein, um das Ergebnis zu bewegen).
 
+### Konsequenz & Umsetzung — der Fahrplan
+
+**Die Konsequenz in einem Satz:** S26 baut eine **Pipeline** (~200 Trials), kein
+Umsatz-Event — der Wert entsteht durch **Trial→Paid im Q4**, nicht durch
+Trial-Starts im August; und die grössten Hebel liegen **nicht mehr in den Mails**
+(Öffnen gelöst, Klick nahe am Ceiling), sondern am **Übersichts-Hop** (Konversion)
+und im **Onboarding** (Umsatz). Zwei stille Killer, beide **keine** Copy: die
+Mess-Kette (Goal + UTM) und die Frist-Durchsetzung.
+
+Weil **w1 in 2 Tagen (14.7.)** rausgeht, nach Zeitachse:
+
+**Jetzt — vor w1 (kritischer Pfad):**
+- AC-Checkliste zu Ende: Tags/Listen verifizieren, Testversände, **Conversion-Goal
+  je Automation gesetzt**, Predictive für w3/w3b aus.
+- **Übersichts-Browser-Klicktest** (offene To-do): trägt die Seite utm an *beide*
+  Angebots-Links **und** ist der Weg zum Formular wirklich kurz? Das ist zugleich
+  der erste Griff an **Hebel 1**: was hier klemmt, sofort glätten (Buttons above
+  the fold, 1 Klick zum Formular).
+- **Frist im System:** uscreen-Trial-Reset (9.8.) terminieren, Vor-Aktions-Wert
+  notieren — sonst ist die Frist unwahr (Kosten-/Vertrauensrisiko).
+- Nur ohne Launch-Risiko: w1-DE-WS-Betreff-Split (NoAbo DE, **Hebel 4**).
+
+**Während der Wellen (14.7.–6.8.):**
+- Cockpit je `utm_content` beobachten; der ggü. 2025 **erhöhte Wellen-Schwund** ist
+  das Live-Konversionssignal (Conversion-Check-Austritte).
+- **w3-WS-Framing** vor dem w3-Bau (Anfang August) ratifizieren und einspielen
+  (heroes.json → `build_editor.py --publish` → HTML in AC): Standard-w3 mit
+  Frist+Brücke wie GTV, Alt-Betreff (Nicht-Öffner) = die Brücke (**Hebel 2**).
+  w3-Alt-Betreff-Test in NoAbo (**Hebel 5**).
+
+**Nach der Frist — ab 9.8.:**
+- Frist durchsetzen (Trial zurückstellen, Paperform schliessen).
+- **Onboarding-Automation** auf derselben Fabrik bauen (Willkommen Tag 0 →
+  Mid-Trial ~Tag 45 → Erinnerung ~Tag 75), fertig **vor** dem ersten Trial-Ablauf
+  (~Mitte Oktober). **Hebel 3 — der grösste €-Hebel.**
+
+**Wichtigste Nicht-Handlung:** die letzten Tage **nicht** in w1/w2-Copy stecken,
+sondern in Checkliste, Hop-Check und Onboarding-Scoping.
+
 ---
 
 ## 5 · Sensitivität — es hängt an den Segmentgrössen
