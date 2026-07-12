@@ -12,6 +12,16 @@ eine Arbeitsliste: je Kommentar der **exakte heroes.json-Pfad**, der **aktuelle 
 und die **Kommentar-ID**. `--json` maschinenlesbar, `--alle` inkl. erledigter (Rückschau).
 Nur Lesen. Das ist der Teil, den der Agent nicht neu erraten muss.
 
+## Zwei Sorten Rücklauf
+- **Freier Kommentar** (unter `…#gesamt` oder einem Feld-Key): Kritik/Wunsch — der Agent
+  liest, entscheidet, formuliert die Fassung selbst.
+- **Fassungsvorschlag** (Editor-Knopf ‹Fassung vorschlagen›): kommt unter dem **Feld-Key**
+  (`{motiv}_{welle}_{lang}#betreff|botschaft|text|preheader|alt`) mit Präfix **`Fassung → `**
+  und enthält bereits den **fertigen neuen Feldtext**. `ruecklauf.py` weist ihn als
+  ‹Fassungsvorschlag → direkt einsetzbar› aus: der Agent setzt genau diesen Text an den
+  Pfad — kein Umformulieren, nur prüfen (passt er, bricht er keine Regel?) und einsetzen.
+  Bleibt trotzdem ein Vorschlag: bauen, PR, ratifizieren.
+
 ## Die Schleife (der Agent)
 1. **Briefing holen:** `python3 ruecklauf.py`. Keine offenen → fertig, nichts tun.
 2. **Je Kommentar einordnen:**
