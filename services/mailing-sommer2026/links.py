@@ -80,6 +80,7 @@ def share_link_for(welle: str, segment: str, sprache: str) -> dict:
 def all_rows():
     """Alle Register-Zeilen aus heroes.json/config.json ableiten (fuer Abgleich/Neu-Sync)."""
     H = json.loads((Path(__file__).parent / "heroes.json").read_text(encoding="utf-8"))
+    ps_wellen = H.get("ps", {}).get("wellen", [])  # nur diese Wellen tragen das Teilen-PS
     rows = []
     for segment, wellen in H["wellenplan"].items():
         for welle in wellen:
@@ -88,8 +89,9 @@ def all_rows():
             for sprache in CFG["sprachen"]:
                 for ziel in ziele:
                     rows.append(link_for(welle, segment, ziel, sprache, mehrere))
-                # Teilen-Link je Mail (PS) — eigenes utm_content, gleiches Ziel wie der Button.
-                rows.append(share_link_for(welle, segment, sprache))
+                # Teilen-Link (PS) — nur wo das PS steht; eigenes utm_content, Ziel wie der Button.
+                if welle in ps_wellen:
+                    rows.append(share_link_for(welle, segment, sprache))
     return rows
 
 

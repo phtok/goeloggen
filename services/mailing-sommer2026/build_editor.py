@@ -123,8 +123,9 @@ def ctas_for(seg, welle, lang):
 def ps_block(seg, welle, lang):
     """Leises Teilen-PS: das link_wort wird zum Teilen-Link auf das Angebot der Gruppe
     (links.share_link_for — nie ein schon bezahltes Produkt, eigenes utm_content)."""
-    p = H.get("ps", {}).get(lang)
-    if not p:
+    ps = H.get("ps", {})
+    p = ps.get(lang)
+    if not p or welle not in ps.get("wellen", []):
         return ""
     url = links.share_link_for(welle, seg, lang)["url"]
     wort = p["link_wort"]
