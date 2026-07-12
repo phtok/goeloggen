@@ -122,10 +122,10 @@ Alle Links tragen zudem
 |---|---|---|---|---|---|
 | w1 | DE | Was Sie sehen, jetzt auch lesen — 3 Monate gratis | — | `w1_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w1_de.html |
 | w1 | EN | What you watch, now also read — 3 months free | — | `w1_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w1_en.html |
-| w2 | DE | Ihr Sommer hat noch Seiten frei | — | `w2_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w2_de.html |
-| w2 | EN | Your summer still has pages to turn | — | `w2_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w2_en.html |
-| w3 | DE | Nur noch bis Samstag: drei Monate gratis | Was Sie sehen, jetzt auch lesen — bis Samstag | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_de.html |
-| w3 | EN | Only until Saturday: three months free | What you watch, now also read — until Saturday | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_en.html |
+| w2 | DE | Drei Monate Lesestoff, geschenkt zu Ihrem Abo | — | `w2_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w2_de.html |
+| w2 | EN | Three months of reading, free with your subscription | — | `w2_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w2_en.html |
+| w3 | DE | Bis Samstag: drei Monate mitlesen, geschenkt | Was Sie sehen, jetzt auch lesen — bis Samstag | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_de.html |
+| w3 | EN | Until Saturday: three months of reading, as a gift | What you watch, now also read — until Saturday | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_en.html |
 
 ### S26 · NurWS→TV (Angebot: goetheanum.tv sehen)
 
