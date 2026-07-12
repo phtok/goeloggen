@@ -31,7 +31,10 @@ def main(site: str) -> None:
         if (root / slug).exists() or (root / f"{slug}.html").exists():
             print(f"alias übersprungen (Kollision): /{slug}")
             continue
-        target = "../" + (href if href.endswith("/") else href + "/")
+        # Kein Schrägstrich anhängen, wenn der Pfad eine Query/Anker trägt
+        # (z. B. apps/qr-generator/?modus=kurzlink) – sonst bräche das Ziel.
+        hrefn = href if (href.endswith("/") or "?" in href or "#" in href) else href + "/"
+        target = "../" + hrefn
         d = root / slug
         d.mkdir(parents=True)
         (d / "index.html").write_text(STUB.format(t=target), encoding="utf-8")

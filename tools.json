@@ -203,6 +203,17 @@
       "such": "QR Code Generator Kurzlink WLAN WiFi vCard Kontakt E-Mail Statistik Scans"
     },
     {
+      "slug": "kurzlink",
+      "cat": "generatoren",
+      "status": "live",
+      "tag": "Kurzlink",
+      "title": "Kurzlink",
+      "short": "Kurzlink",
+      "href": "apps/qr-generator/?modus=kurzlink",
+      "desc": "Eine kurze, hauseigene Adresse statt langer Links – tippbar, QR-tauglich, nach dem Druck umhängbar, ohne Fremddienst.",
+      "such": "Kurzlink Link Kürzer Shortlink URL kurze Adresse Weiterleitung tools.goetheanum.ch"
+    },
+    {
       "slug": "gtv-naming",
       "cat": "schau",
       "status": "beta",
