@@ -440,6 +440,17 @@
       "such": "Grenzgänger Mail Wellen Editor Gegenlesen Lead Nurture Betreff Kommentar E-Mail"
     },
     {
+      "slug": "werkzeugpost",
+      "cat": "kampagne",
+      "status": "intern",
+      "tag": "Neu",
+      "title": "Werkzeugpost — Redaktion",
+      "short": "Werkzeugpost",
+      "href": "apps/werkzeugpost/",
+      "desc": "Redaktionstisch der monatlichen Mitarbeitenden-Mail: Texte der kommenden Monate vorbereiten, umsortieren, zusammenlegen, gegenlesen (sieben Personas) und aus dem eigenen Postfach übernehmen. Eine Quelle (services/werkzeugpost/mails.json), Verlauf = Git.",
+      "such": "Werkzeugpost Redaktion Mail Newsletter monatlich Mitarbeitende Signatur Tisch Personas Gegenlesen Plan"
+    },
+    {
       "slug": "kampagnen-drehbuch",
       "cat": "kampagne",
       "status": "intern",

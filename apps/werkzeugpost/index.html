@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Werkzeugpost — Redaktion · Goetheanum</title>
+<meta name="description" content="Redaktionstisch der monatlichen Werkzeug-Mail: Texte vorbereiten, umsortieren, gegenlesen und übernehmen." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  .hero{padding-block:clamp(32px,6vw,60px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(28px,4.6vw,46px);line-height:1.06;letter-spacing:-.01em;max-width:20ch}
+  .hero .lede{margin-top:var(--s5);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:60ch}
+
+  .toolbar{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center;margin-block:var(--s5)}
+  .toolbar .spacer{flex:1 1 auto}
+
+  /* Monatskarten */
+  .ausgabe{margin-bottom:var(--s5)}
+  .ausgabe-kopf{display:flex;gap:var(--s3);align-items:baseline;flex-wrap:wrap}
+  .ausgabe-kopf h3{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(19px,2.4vw,24px);margin:0}
+  .ausgabe-kopf .werk{color:var(--muted);font-size:var(--t-small)}
+  .ordnung{display:flex;gap:var(--s1);margin-left:auto}
+  .ordnung .btn{min-width:var(--tap);padding-inline:var(--s2)}
+
+  .pille{display:inline-flex;align-items:center;gap:.4em;padding:.2em .7em;border-radius:999px;font-family:var(--font-text);font-size:var(--t-small);font-weight:600;line-height:1.4}
+  .pille[data-status="entwurf"]{background:var(--field-bg);color:var(--muted)}
+  .pille[data-status="in_redaktion"]{background:var(--gold-deep);color:var(--on-accent)}
+  .pille[data-status="bereit"]{background:var(--ok);color:var(--on-accent)}
+  .pille[data-status="versandt"]{background:var(--blue-solid);color:var(--on-accent)}
+
+  .raster{display:grid;gap:var(--s5);margin-top:var(--s4)}
+  @media(min-width:900px){.raster{grid-template-columns:1fr minmax(300px,340px)}}
+
+  .feld-gruppe{display:grid;gap:var(--s3)}
+  .zeichen{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);text-align:right}
+  .zeichen.warn{color:var(--blue);font-weight:600}
+
+  /* Mobil-Vorschau: echtes Telefon-Mockup */
+  .telefon{margin:0 auto;max-width:300px;background:#111;border-radius:28px;padding:10px} /* # ds-ok: Gerätefarbe des Telefon-Mockups, keine Themefläche */
+  .telefon-schirm{background:var(--paper);border-radius:20px;padding:var(--s4);min-height:420px;overflow:hidden;font-family:var(--font-text)}
+  .tv-betreff{font-weight:700;font-size:15px;line-height:1.35;margin-bottom:var(--s2);padding-bottom:var(--s2);border-bottom:1px solid var(--line)}
+  .tv-body{font-size:14px;line-height:1.5;white-space:pre-wrap}
+  .tv-hint{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);text-align:center;margin-top:var(--s2)}
+  .tv-hint.warn{color:var(--blue);font-weight:600}
+
+  /* Tisch */
+  .tisch{margin-top:var(--s4)}
+  .tisch summary{cursor:pointer;font-family:var(--font);font-weight:var(--w-klar)}
+  .stuhl{display:flex;gap:var(--s3);padding:var(--s3) 0;border-top:1px solid var(--line)}
+  .stuhl:first-of-type{border-top:0}
+  .stuhl .wer{flex:0 0 8.5em}
+  .stuhl .wer b{font-family:var(--font);font-weight:var(--w-klar);display:block}
+  .stuhl .wer small{color:var(--muted);font-size:var(--t-micro)}
+  .stuhl .kern{flex:1;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5}
+  .kein-tisch{color:var(--muted);font-size:var(--t-small);font-style:normal}
+
+  .hinweis{background:var(--field-bg);border-radius:12px;padding:var(--s4);font-size:var(--t-small);line-height:1.55;margin-top:var(--s4)}
+  .hinweis code{font-family:var(--font-text);background:var(--paper);padding:.05em .35em;border-radius:6px}
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Werkzeugpost · Redaktion</span>
+    <h1>Der Redaktionstisch</h1>
+    <p class="lede">Hier stehen die Mails der kommenden Monate bereit — für Philipp und Stefan
+      zum Vorbereiten, Umsortieren und Gegenlesen. Eine Quelle, ein Verlauf: Änderungen
+      werden als geänderte <code>mails.json</code> exportiert und committet — so bleibt jede
+      Fassung nachvollziehbar. Versandt wird aus dem eigenen Postfach.</p>
+  </section>
+
+  <div class="toolbar">
+    <button class="btn primary" id="neu" type="button">+ Ausgabe</button>
+    <button class="btn" id="zusammenlegen" type="button">Zwei zusammenlegen …</button>
+    <span class="spacer"></span>
+    <button class="btn" id="zuruecksetzen" type="button">Auf Datei-Stand zurück</button>
+    <button class="btn primary" id="export" type="button">mails.json exportieren</button>
+  </div>
+
+  <div id="liste" aria-live="polite"></div>
+
+  <div class="hinweis">
+    <strong>So arbeitet der Tisch.</strong> Die sieben Personas lesen jede Mail unabhängig
+    gegen (Sekretariat, Technik, Wissenschaft, Betrieb, Texterin, Leitung, Marken-Gast) —
+    eine neue Runde stösst der Redakteur an, die Voten erscheinen dann je Ausgabe im
+    Feld <code>tisch</code>. Bearbeiten und Umsortieren geschieht hier im Browser
+    (Zwischenstand liegt lokal); erst <em>Exportieren</em> schreibt die neue
+    <code>mails.json</code>, die ihr committet. <strong>Reihenfolge</strong> tauscht ihr mit
+    den Pfeilen, <strong>Themen zusammenlegen</strong> fasst zwei Ausgaben zu einer, neue
+    kommen mit <em>+ Ausgabe</em> hinzu.
+  </div>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Hausgrafik</span>
+    <span><a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script>
+const ROOT = "../../services/werkzeugpost/";
+const LS = "werkzeugpost-entwurf-v1";
+let daten = null, personas = [], dirty = false;
+
+const T_BODY_WARN = 950;   // Zeichen: darüber passt es kaum auf einen Mobilscreen
+const T_BETREFF_WARN = 60; // Zeichen: Betreff-Abschneidung im Postfach
+
+async function laden(){
+  const roh = localStorage.getItem(LS);
+  if(roh){
+    try{ daten = JSON.parse(roh); dirty = true; }catch(e){ daten = null; }
+  }
+  const [m, p] = await Promise.all([
+    daten ? Promise.resolve(daten) : fetch(ROOT+"mails.json").then(r=>r.json()),
+    fetch(ROOT+"personas.json").then(r=>r.json())
+  ]);
+  daten = m; personas = p.personas;
+  zeichnen();
+}
+
+function personaName(id){ const p = personas.find(x=>x.id===id); return p ? p.name : id; }
+function personaRolle(id){ const p = personas.find(x=>x.id===id); return p ? p.rolle : ""; }
+
+function sichern(){ localStorage.setItem(LS, JSON.stringify(daten)); dirty = true; }
+
+function esc(s){ return (s||"").replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+
+function zeichnen(){
+  const liste = document.getElementById("liste");
+  const a = [...daten.ausgaben].sort((x,y)=>x.pos-y.pos);
+  liste.innerHTML = "";
+  a.forEach((g, i)=>{
+    liste.appendChild(karte(g, i, a.length));
+  });
+}
+
+function karte(g, i, n){
+  const el = document.createElement("section");
+  el.className = "card soft ausgabe";
+  const werk = (g.werkzeuge||[]).join(" · ");
+  const betreffLen = (g.betreff||"").length;
+  const bodyLen = (g.body||"").length;
+
+  el.innerHTML = `
+    <div class="ausgabe-kopf">
+      <h3>${esc(g.monat)}</h3>
+      <span class="werk">${esc(werk)}</span>
+      <select class="pille-select" data-id="${g.id}" aria-label="Status" style="margin-left:var(--s2)">
+        ${daten.status_werte.map(s=>`<option value="${s}" ${s===g.status?"selected":""}>${s.replace("_"," ")}</option>`).join("")}
+      </select>
+      <span class="ordnung">
+        <button class="btn" type="button" data-hoch="${g.id}" ${i===0?"disabled":""} aria-label="nach oben">↑</button>
+        <button class="btn" type="button" data-runter="${g.id}" ${i===n-1?"disabled":""} aria-label="nach unten">↓</button>
+      </span>
+    </div>
+    <p style="color:var(--muted);font-size:var(--t-small);margin:var(--s2) 0 0">${esc(g.anlass||"")}</p>
+
+    <div class="raster">
+      <div class="feld-gruppe">
+        <label class="field">
+          <span class="lab">Betreff</span>
+          <input type="text" data-feld="betreff" data-id="${g.id}" value="${esc(g.betreff)}" />
+        </label>
+        <div class="zeichen ${betreffLen>T_BETREFF_WARN?"warn":""}">${betreffLen} Zeichen${betreffLen>T_BETREFF_WARN?" · wird evtl. abgeschnitten":""}</div>
+        <label class="field">
+          <span class="lab">Text der Mail</span>
+          <textarea data-feld="body" data-id="${g.id}" rows="16">${esc(g.body)}</textarea>
+        </label>
+        <div class="zeichen ${bodyLen>T_BODY_WARN?"warn":""}">${bodyLen} Zeichen${bodyLen>T_BODY_WARN?" · länger als ein Mobilscreen":""}</div>
+        <div style="display:flex;gap:var(--s2);flex-wrap:wrap">
+          <button class="btn primary" type="button" data-uebernehmen="${g.id}">Mail übernehmen (kopieren)</button>
+          <button class="btn" type="button" data-loeschen="${g.id}">Ausgabe entfernen</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="telefon" aria-hidden="false">
+          <div class="telefon-schirm">
+            <div class="tv-betreff">${esc(g.betreff)||"&nbsp;"}</div>
+            <div class="tv-body">${esc(g.body)||"&nbsp;"}</div>
+          </div>
+        </div>
+        <div class="tv-hint ${bodyLen>T_BODY_WARN?"warn":""}">${bodyLen>T_BODY_WARN?"Zu lang — kürzen, bis alles ohne Scrollen sichtbar ist":"Vorschau auf dem Telefon"}</div>
+      </div>
+    </div>
+
+    ${tischPanel(g)}
+  `;
+  return el;
+}
+
+function tischPanel(g){
+  const t = g.tisch;
+  if(!t){
+    return `<details class="tisch"><summary>Redaktionstisch</summary>
+      <p class="kein-tisch">Noch keine Runde. Der Redakteur legt den Entwurf den sieben Personas vor —
+      dann stehen ihre Voten hier. Personas: ${personas.map(p=>esc(p.name)).join(", ")}.</p></details>`;
+  }
+  const stuehle = (t.voten||[]).map(v=>`
+    <div class="stuhl">
+      <div class="wer"><b>${esc(personaName(v.persona))}</b><small>${esc(personaRolle(v.persona))}</small></div>
+      <div class="kern">${esc(v.kern)}</div>
+    </div>`).join("");
+  return `<details class="tisch" open><summary>Redaktionstisch — Runde ${t.runde} (${esc(t.datum)})</summary>
+    <p style="color:var(--muted);font-size:var(--t-small);margin:var(--s2) 0">Vorgelegt: ${esc(t.vorgelegter_entwurf||"")}</p>
+    ${stuehle}</details>`;
+}
+
+// ---- Ereignisse ----
+document.addEventListener("input", e=>{
+  const f = e.target.dataset.feld;
+  if(f){
+    const g = daten.ausgaben.find(x=>x.id===e.target.dataset.id);
+    if(g){ g[f] = e.target.value; sichern();
+      // Zeichenzähler live, ohne Neuzeichnen des Felds (Fokus halten)
+      const box = e.target.closest(".feld-gruppe");
+      const len = e.target.value.length;
+      if(f==="betreff"){ const z=box.querySelectorAll(".zeichen")[0]; z.textContent=len+" Zeichen"+(len>T_BETREFF_WARN?" · wird evtl. abgeschnitten":""); z.classList.toggle("warn",len>T_BETREFF_WARN); }
+      if(f==="body"){
+        const z=box.querySelectorAll(".zeichen")[1]; z.textContent=len+" Zeichen"+(len>T_BODY_WARN?" · länger als ein Mobilscreen":""); z.classList.toggle("warn",len>T_BODY_WARN);
+        const card=e.target.closest(".ausgabe"); card.querySelector(".tv-body").textContent=e.target.value;
+        const h=card.querySelector(".tv-hint"); h.textContent=len>T_BODY_WARN?"Zu lang — kürzen, bis alles ohne Scrollen sichtbar ist":"Vorschau auf dem Telefon"; h.classList.toggle("warn",len>T_BODY_WARN);
+      }
+      if(f==="betreff"){ e.target.closest(".ausgabe").querySelector(".tv-betreff").textContent=e.target.value; }
+    }
+  }
+});
+
+document.addEventListener("change", e=>{
+  if(e.target.classList.contains("pille-select")){
+    const g = daten.ausgaben.find(x=>x.id===e.target.dataset.id);
+    if(g){ g.status = e.target.value; sichern(); }
+  }
+});
+
+document.addEventListener("click", e=>{
+  const t = e.target;
+  if(t.dataset.hoch || t.dataset.runter){
+    const id = t.dataset.hoch || t.dataset.runter;
+    tauschen(id, t.dataset.hoch ? -1 : +1); return;
+  }
+  if(t.dataset.uebernehmen){
+    const g = daten.ausgaben.find(x=>x.id===t.dataset.uebernehmen);
+    const text = "Betreff: "+g.betreff+"\n\n"+g.body;
+    navigator.clipboard.writeText(text).then(()=>{ t.textContent="✓ kopiert"; setTimeout(()=>t.textContent="Mail übernehmen (kopieren)",1600); });
+    return;
+  }
+  if(t.dataset.loeschen){
+    const g = daten.ausgaben.find(x=>x.id===t.dataset.loeschen);
+    if(confirm("Ausgabe «"+g.monat+"» entfernen?")){
+      daten.ausgaben = daten.ausgaben.filter(x=>x.id!==t.dataset.loeschen);
+      renumerieren(); sichern(); zeichnen();
+    }
+    return;
+  }
+  if(t.id==="neu"){ neueAusgabe(); return; }
+  if(t.id==="zusammenlegen"){ zusammenlegen(); return; }
+  if(t.id==="export"){ exportieren(); return; }
+  if(t.id==="zuruecksetzen"){
+    if(confirm("Lokalen Zwischenstand verwerfen und den Datei-Stand laden?")){
+      localStorage.removeItem(LS); location.reload();
+    }
+    return;
+  }
+});
+
+function tauschen(id, richtung){
+  const a = [...daten.ausgaben].sort((x,y)=>x.pos-y.pos);
+  const idx = a.findIndex(x=>x.id===id);
+  const ziel = idx + richtung;
+  if(ziel<0 || ziel>=a.length) return;
+  const p1 = a[idx].pos, p2 = a[ziel].pos;
+  a[idx].pos = p2; a[ziel].pos = p1;
+  sichern(); zeichnen();
+}
+
+function renumerieren(){
+  [...daten.ausgaben].sort((x,y)=>x.pos-y.pos).forEach((g,i)=>g.pos=i+1);
+}
+
+function neueAusgabe(){
+  const monat = prompt("Monat / Titel der neuen Ausgabe?", "");
+  if(!monat) return;
+  const maxPos = Math.max(0, ...daten.ausgaben.map(g=>g.pos));
+  daten.ausgaben.push({
+    id: "neu-"+monat.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""),
+    pos: maxPos+1, monat, status:"entwurf", werkzeuge:[], anlass:"",
+    betreff:"", body:"", anhang:{titel:"",blatt:"",status:"offen"}, tisch:null
+  });
+  sichern(); zeichnen();
+}
+
+function zusammenlegen(){
+  const a = [...daten.ausgaben].sort((x,y)=>x.pos-y.pos);
+  const liste = a.map((g,i)=>`${i+1}) ${g.monat}`).join("\n");
+  const erste = parseInt(prompt("Zwei Ausgaben zusammenlegen.\nNummer der ERSTEN (behält Platz und Text):\n\n"+liste, ""),10);
+  if(!erste) return;
+  const zweite = parseInt(prompt("Nummer der ZWEITEN (wird eingefügt und entfernt):", ""),10);
+  if(!zweite || zweite===erste) return;
+  const g1 = a[erste-1], g2 = a[zweite-1];
+  if(!g1 || !g2) return;
+  g1.werkzeuge = [...(g1.werkzeuge||[]), ...(g2.werkzeuge||[])];
+  g1.anlass = (g1.anlass||"") + (g2.anlass?(" + "+g2.anlass):"");
+  g1.body = (g1.body||"") + "\n\n— zusammengelegt aus «"+g2.monat+"» —\n\n" + (g2.body||"");
+  daten.ausgaben = daten.ausgaben.filter(x=>x.id!==g2.id);
+  renumerieren(); sichern(); zeichnen();
+}
+
+function exportieren(){
+  renumerieren();
+  const clean = JSON.parse(JSON.stringify(daten));
+  const blob = new Blob([JSON.stringify(clean, null, 2)+"\n"], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "mails.json";
+  a.click();
+}
+
+laden();
+</script>
+
+</body>
+</html>
