@@ -7,6 +7,7 @@
   "visitenkarten": "visitenkarten-generator.html",
   "karten": "karten-generator.html",
   "cover": "cover-generator.html",
+  "wallpaper-generator": "apps/wallpaper-generator/",
   "briefe": "briefschaften.html",
   "statistik": "statistik.html",
   "hub": "start/"
