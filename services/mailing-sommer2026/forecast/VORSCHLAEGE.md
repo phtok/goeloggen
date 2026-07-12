@@ -1,10 +1,26 @@
 # Textvorschläge & Kontroll-Liste — Sommer-Aktion 2026
 
-Alles hier ist ein **Vorschlag zum Freigeben**. Nichts ist eingebaut, nichts
-versendet. Sag, was Dir gefällt — dann baue ich es in die Mails ein.
-
 Grundregel bei allem: die Frist (8. August) ist echt, darum darf man sie nennen.
 Keine erfundene Knappheit, kein Druck, kündigen bleibt einfach.
+
+> **✓ Stand: eingebaut in die Mail-Quelle (`heroes.json`, DE + EN):**
+> - **Mail 2** neu: «Drei Monate Lesestoff, geschenkt zu Ihrem Abo»
+> - **Mail 3** neu: Betreff «Bis Samstag: drei Monate mitlesen, geschenkt» + der
+>   neue Text (siehe Punkt 2)
+> - **Mail 1** unverändert (schon stark).
+> - Der Nicht-Öffner-Betreff von Mail 3 («Was Sie sehen, jetzt auch lesen — bis
+>   Samstag») **bleibt** — sonst bekämen Öffner und Nicht-Öffner denselben Betreff.
+>
+> **Zwei bewusste Abweichungen** von dem, was ich vorhin genannt habe, mit Grund:
+> Mail 2 wurde **nicht** «Was Sie sehen, jetzt auch lesen — bis 8. August», weil
+> das die Zeile aus Mail 1 fast wörtlich wiederholt (liest sich wie kopiert).
+> Mail 3 wurde **nicht** «Bis Samstag: was Sie sehen, jetzt auch lesen», weil das
+> exakt der Nicht-Öffner-Betreff ist — dann wäre die Unterscheidung weg. Beide
+> Alternativen bleiben wählbar; ein Wort, und ich tausche.
+>
+> **Vor dem Versand von Mail 3** einmal `build_editor.py --publish` laufen lassen,
+> damit der neue Mail-3-Text auch im HTML steht (die Betreffe wirken schon über
+> die AC-Tabelle).
 
 ---
 
