@@ -628,8 +628,8 @@
   ],
   "reihenfolge": {
     "$hinweis": "Vom Sortierer gepflegte Reihenfolgen (Slugs). Startseite und Schublade lesen sie; fehlt ein Eintrag, gilt die eingebaute Vorgabe. Verlauf = Git.",
-    "schublade": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint", "editor", "wallpaper", "design-system"],
-    "karten": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "uebersetzungen", "qr-generator", "kurzlink", "typografie", "powerpoint", "wallpaper", "karten", "sektionsfarben", "design-system", "editor"],
+    "schublade": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "qr-generator", "kurzlink", "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint", "wallpaper", "design-system"],
+    "karten": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "uebersetzungen", "qr-generator", "kurzlink", "typografie", "powerpoint", "wallpaper", "karten", "sektionsfarben", "design-system"],
     "karussell": ["signatur", "empfehlungen", "karten", "wallpaper", "powerpoint", "visitenkarten", "logo-generator", "schriften", "uebersetzungen", "icons", "sektionsfarben", "typografie", "editor", "design-system"]
   }
 }
