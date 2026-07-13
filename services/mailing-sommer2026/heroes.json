@@ -30,7 +30,7 @@
       ],
       "de": {
         "cta_labels": {
-          "wos": "Drei Monate lesen →"
+          "wos": "Mehr erfahren →"
         },
         "alternativen": [
           "Lesen, wo der Sommer Sie hinträgt",
@@ -40,7 +40,7 @@
       },
       "en": {
         "cta_labels": {
-          "wos": "Start reading free →"
+          "wos": "Learn more →"
         },
         "alternativen": [
           "Read wherever the summer takes you",
@@ -86,7 +86,7 @@
       ],
       "de": {
         "cta_labels": {
-          "gtv": "Drei Monate schauen →"
+          "gtv": "Mehr erfahren →"
         },
         "alternativen": [
           "Wo immer Sie diesen Sommer verbringen",
@@ -96,7 +96,7 @@
       },
       "en": {
         "cta_labels": {
-          "gtv": "Start watching free →"
+          "gtv": "Learn more →"
         },
         "alternativen": [
           "Wherever you spend this summer",
@@ -134,7 +134,7 @@
       ],
       "de": {
         "cta_labels": {
-          "uebersicht": "Ihren Sommer wählen →",
+          "uebersicht": "Mehr erfahren →",
           "wos": "Lesen wählen →",
           "gtv": "Sehen wählen →"
         },
@@ -146,7 +146,7 @@
       },
       "en": {
         "cta_labels": {
-          "uebersicht": "Choose your summer →",
+          "uebersicht": "Learn more →",
           "wos": "Choose reading →",
           "gtv": "Choose watching →"
         },
