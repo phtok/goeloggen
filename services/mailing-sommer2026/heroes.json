@@ -251,18 +251,18 @@
       },
       "w3": {
         "de": {
-          "betreff": "Bis Samstag: drei Monate mitlesen, kostenlos",
-          "botschaft": "Bis Samstag bleibt die Tür offen.",
-          "text": "Diese Woche endet die Sommer-Aktion. Bis Samstag lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — und kommen mit anderen Augen in Ihre Woche zurück. Gefällt es nicht, kündigen Sie mit einem Klick.",
-          "alt": "Bis Samstag: Denken, das über die Woche hinausreicht",
-          "preheader": "Drei Gratis-Monate zum Mitlesen — nur noch bis Samstag, 8. August."
+          "betreff": "Bis Samstag: drei Monate gratis lesen — dann schliesst die Aktion",
+          "botschaft": "Am Samstag schliesst die Tür.",
+          "text": "Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — beginnen Sie jetzt, und entscheiden erst danach, ob sie bleibt.",
+          "alt": "Am Samstag endet Ihr Gratis-Test der Wochenschrift — falls Sie ihn noch wollen.",
+          "preheader": "Drei Monate Wochenschrift gratis — nur noch bis Samstag, 8. August."
         },
         "en": {
-          "betreff": "Until Saturday: three months of reading, free",
-          "botschaft": "The door stays open until Saturday.",
-          "text": "This week the summer offer ends. Until Saturday, read the weekly free for three months with your subscription — and return to your own week with different eyes. If it’s not for you, cancel in one click.",
-          "alt": "Until Saturday: thinking that reaches beyond the week",
-          "preheader": "Three free months to read along — only until Saturday, 8 August."
+          "betreff": "Until Saturday: three months of the weekly, free — then the offer closes",
+          "botschaft": "On Saturday the door closes.",
+          "text": "On Saturday, 8 August, the summer offer ends. Until then, read the weekly free for three months with your subscription — begin now, and decide only afterwards whether it stays.",
+          "alt": "On Saturday your free trial of the weekly ends — if you still want it.",
+          "preheader": "Three months of the weekly, free — only until Saturday, 8 August."
         }
       }
     },
@@ -301,18 +301,18 @@
       },
       "w3": {
         "de": {
-          "betreff": "Nur noch bis Samstag: drei Monate gratis",
-          "botschaft": "Bis Samstag ist Ihr Platz frei.",
-          "text": "Noch ein paar Sommertage: goetheanum.tv, drei Monate gratis zu Ihrem Abo — bleiben Sie nur, wenn es in Ihnen nachklingt.",
-          "alt": "Bis Samstag: sehen, wie Menschen laut denken",
-          "preheader": "Eine Minute für drei Monate goetheanum.tv: gratis zu Ihrem Abo — bis Samstag, 8. August."
+          "betreff": "Bis Samstag: drei Monate goetheanum.tv gratis — dann schliesst die Aktion",
+          "botschaft": "Am Samstag schliesst die Aktion.",
+          "text": "Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin sehen Sie goetheanum.tv drei Monate gratis zu Ihrem Abo — beginnen Sie jetzt, und entscheiden erst danach, ob es bleibt.",
+          "alt": "Am Samstag endet Ihr Gratis-Test von goetheanum.tv — falls Sie ihn noch wollen.",
+          "preheader": "Eine Minute genügt: drei Monate goetheanum.tv gratis — bis Samstag, 8. August."
         },
         "en": {
-          "betreff": "Only until Saturday: three months free",
-          "botschaft": "Your seat stays free until Saturday.",
-          "text": "A few summer days left: goetheanum.tv, three months free with your subscription — stay only if it stays with you.",
-          "alt": "Until Saturday: watch people think out loud",
-          "preheader": "One minute for three months of goetheanum.tv — free with your subscription, until Saturday."
+          "betreff": "Until Saturday: three months of goetheanum.tv, free — then the offer closes",
+          "botschaft": "On Saturday the offer closes.",
+          "text": "On Saturday, 8 August, the summer offer ends. Until then, watch goetheanum.tv free for three months with your subscription — begin now, and decide only afterwards whether it stays.",
+          "alt": "On Saturday your free trial of goetheanum.tv ends — if you still want it.",
+          "preheader": "One minute is enough: three months of goetheanum.tv, free — until Saturday, 8 August."
         }
       }
     },
@@ -351,33 +351,33 @@
       },
       "w3": {
         "de": {
-          "betreff": "Am Samstag endet die Sommer-Aktion",
-          "botschaft": "Lesen, sehen oder beides — Ihre Wahl.",
-          "text": "Noch bis Samstag: drei Monate kostenlos lesen oder sehen — danach entscheiden Sie, ob es weitergeht.",
-          "alt": "Drei Monate Goetheanum — lesen, sehen oder beides",
+          "betreff": "Bis Samstag: drei Monate Goetheanum gratis — dann schliesst die Aktion",
+          "botschaft": "Bis Samstag — lesen, sehen oder beides.",
+          "text": "Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin lesen und/oder sehen Sie das Goetheanum drei Monate gratis — beginnen Sie jetzt, und entscheiden erst danach, ob es weitergeht.",
+          "alt": "Am Samstag endet Ihr Gratis-Test — falls Sie ihn noch wollen.",
           "preheader": "Drei Monate lesen oder schauen, gratis — nur noch bis Samstag, 8. August."
         },
         "en": {
-          "betreff": "The summer offer ends on Saturday",
-          "botschaft": "Reading, watching or both — your choice.",
-          "text": "Until Saturday: three months free to read or watch — after that, you decide whether it continues.",
-          "alt": "Three months of Goetheanum — read, watch or both",
+          "betreff": "Until Saturday: three months of the Goetheanum, free — then the offer closes",
+          "botschaft": "Until Saturday — read, watch or both.",
+          "text": "On Saturday, 8 August, the summer offer ends. Until then, read and/or watch the Goetheanum free for three months — begin now, and decide only afterwards whether it continues.",
+          "alt": "On Saturday your free trial ends — if you still want it.",
           "preheader": "Three months of reading or watching, free — only until Saturday, 8 August."
         }
       },
       "w3b": {
         "de": {
-          "betreff": "Morgen ist Schluss",
+          "betreff": "Morgen schliesst die Aktion",
           "botschaft": "Sie waren schon da — ein Schritt fehlt noch.",
-          "text": "Was Sie sich angeschaut haben, hat Sie aus einem Grund angesprochen — eine Minute, und Sie haben drei Monate Zeit, dem nachzugehen.",
-          "alt": "Bis morgen: drei Monate Goetheanum gratis",
+          "text": "Morgen, am 8. August, schliesst das Sommerangebot. Was Sie sich angeschaut haben, hat Sie aus einem Grund angesprochen — eine Minute jetzt, und Sie haben drei Monate Zeit, dem nachzugehen.",
+          "alt": "Bis morgen: Ihre drei Gratis-Monate — falls Sie sie noch wollen.",
           "preheader": "Drei Monate Goetheanum, gratis und jederzeit kündbar — anmelden bis morgen, Samstag, 8. August."
         },
         "en": {
-          "betreff": "It ends tomorrow",
+          "betreff": "Tomorrow the offer closes",
           "botschaft": "You’ve already had a look — one step to go.",
-          "text": "What you looked at spoke to you for a reason — one minute, and you have three months to follow it.",
-          "alt": "Until tomorrow: 3 months of Goetheanum free",
+          "text": "Tomorrow, 8 August, the summer offer closes. What you looked at spoke to you for a reason — one minute now, and you have three months to follow it.",
+          "alt": "Until tomorrow: your three free months — if you still want them.",
           "preheader": "Three months of the Goetheanum, free, cancel anytime — sign up by tomorrow, Saturday 8 August."
         }
       }
