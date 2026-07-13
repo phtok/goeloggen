@@ -187,11 +187,14 @@
       host.appendChild(lvl);
     });
     // Reichweite je Kanal – aus den Aktivitäten summiert (Social, Newsletter, …).
-    var reach = {}, klick = {};
+    // Neben der Summe je Kanal auch die einzelnen Aktivitäten sammeln, damit der
+    // Balken zu einer Liste der Quellen aufklappt (Herkunft der Reichweite prüfbar).
+    var reach = {}, klick = {}, quellen = {};
     (massnahmen || []).forEach(function(m){
       var r = Number(m.reichweite) || 0, k = Number(m.klicks) || 0, kn = m.kanal || 'andere';
       if (r) reach[kn] = (reach[kn] || 0) + r;
       if (k) klick[kn] = (klick[kn] || 0) + k;
+      if (r || k) (quellen[kn] = quellen[kn] || []).push({ name:m.massnahme || '—', tag:m.tag, reichweite:r, klicks:k });
     });
     var kanalItems = Object.keys(reach).map(function(kn){ return { kanal:kn, reach:reach[kn], klick:klick[kn] || 0 }; })
                                        .sort(function(a, b){ return b.reach - a.reach; });
@@ -201,15 +204,50 @@
       var head = document.createElement('div'); head.className = 'rk-h'; head.textContent = 'Reichweite je Kanal';
       box.appendChild(head);
       kanalItems.forEach(function(x){
+        // Jeder Kanal-Balken ist aufklappbar (details/summary) und listet darunter
+        // die einzelnen Quellen (Aktivitäten), die die Reichweite ausmachen.
+        var det = document.createElement('details'); det.className = 'reach-detail';
+        var sum = document.createElement('summary');
         var row = document.createElement('div'); row.className = 'stream';
         row.innerHTML = '<div class="top2"><span class="name"></span>' +
           '<span class="val"><b></b> <span class="g"></span></span></div>' +
           '<div class="track"><span></span></div>';
+        var qs = (quellen[x.kanal] || []).slice().sort(function(a, b){ return b.reichweite - a.reichweite; });
         row.querySelector('.name').textContent = KANAL_LABEL[x.kanal] || x.kanal;
+        var caret = document.createElement('span'); caret.className = 'rk-caret'; caret.setAttribute('aria-hidden', 'true');
+        row.querySelector('.name').appendChild(caret);
         row.querySelector('.val b').textContent = fmt(x.reach);
-        row.querySelector('.val .g').textContent = x.klick ? (fmt(x.klick) + ' Klicks') : '';
+        var g = x.klick ? (fmt(x.klick) + ' Klicks') : '';
+        if (qs.length) g += (g ? ' · ' : '') + qs.length + (qs.length === 1 ? ' Quelle' : ' Quellen');
+        row.querySelector('.val .g').textContent = g;
         row.querySelector('.track > span').style.width = Math.max(3, Math.round(x.reach / kmax * 100)) + '%';
-        box.appendChild(row);
+        sum.appendChild(row); det.appendChild(sum);
+
+        var list = document.createElement('div'); list.className = 'quellen';
+        qs.forEach(function(q){
+          var qr = document.createElement('div'); qr.className = 'motrow';
+          var mc = document.createElement('span'); mc.className = 'mc'; mc.textContent = q.name;
+          if (q.tag){ var ms = document.createElement('span'); ms.className = 'ms';
+            ms.textContent = new Date(q.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
+            mc.appendChild(ms); }
+          var mn = document.createElement('span'); mn.className = 'mn';
+          mn.textContent = fmt(q.reichweite) + (q.klicks ? (' · ' + fmt(q.klicks) + ' Klicks') : '');
+          qr.appendChild(mc); qr.appendChild(mn); list.appendChild(qr);
+        });
+        if (!qs.length){
+          var leer = document.createElement('div'); leer.className = 'qz-hint';
+          leer.textContent = 'Keine Einzel-Quellen erfasst.'; list.appendChild(leer);
+        }
+        // Social: die externe Quelle (Metricool) direkt aus der Liste verlinken.
+        if (x.kanal === 'social' && CONFIG.quelleSocial){
+          var qlink = document.createElement('div'); qlink.className = 'qz-hint';
+          qlink.appendChild(document.createTextNode('Quelle der Zahlen: '));
+          var qa = document.createElement('a'); qa.href = CONFIG.quelleSocial.url;
+          qa.target = '_blank'; qa.rel = 'noopener'; qa.textContent = CONFIG.quelleSocial.label;
+          qlink.appendChild(qa); list.appendChild(qlink);
+        }
+        det.appendChild(list);
+        box.appendChild(det);
       });
       host.appendChild(box);
     }
