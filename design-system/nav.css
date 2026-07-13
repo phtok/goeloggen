@@ -187,6 +187,13 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 .dsnav-group>summary .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s}
 .dsnav-group[open]>summary .arr{transform:rotate(90deg)}
 
+/* Unterwelten: eine Ebene tiefer verschachtelt (Labor → Ligaturen, Schriftpflege,
+   Geparktes, Überreste). Ruhiger als die Oberwelt – Titel kleiner und weniger fett;
+   Bereich und Einträge eingerückt, damit die Verschachtelung lesbar ist. */
+.dsnav-group .dsnav-group{border-bottom:0;border-top:1px solid var(--line-soft)}
+.dsnav-group .dsnav-group>summary{padding-left:36px;font-weight:var(--w-klar);font-size:15px}
+.dsnav-group .dsnav-group .dsnav-link{padding-left:48px}
+
 .dsnav-link{display:flex;align-items:center;gap:10px;min-height:var(--tap);padding:6px 22px;text-decoration:none;color:var(--ink)}
 .dsnav-home{border-bottom:1px solid var(--line-soft);margin-bottom:var(--s2)}
 .dsnav-link:hover{background:var(--soft)}

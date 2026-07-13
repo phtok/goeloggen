@@ -128,19 +128,23 @@
     { id: "anwendungen", label: "Anwendungen",
       intro: "Fertige Vorlagen zum Übernehmen – Wallpaper, Präsentationen.", cats: ["anwendung"] }
   ];
-  // Nur intern zusätzlich – die Backstage-Welten (A/B/C-Qualifizierung).
-  // Kuratierte Reihenfolge; Manifest-Kategorien, die hier fehlen, laufen beim
-  // Laden automatisch als eigene Backstage-Welt hinten nach (Sicherheitsnetz).
+  // Nur intern zusätzlich – die Backstage-Welten. Kuratierte Reihenfolge: erst die
+  // Redaktions- und Beobachtungs-Welten, dann das Labor als Sammelort für Erprobung
+  // und Abgelegtes. Das Labor trägt Unterwelten (verschachtelte Kisten) – die
+  // Etiketten je Werkzeug (Beta/Entwurf/intern/geparkt) sagen ohnehin, was
+  // öffentlich ist. Manifest-Kategorien, die hier fehlen, laufen beim Laden
+  // automatisch als eigene Welt nach (Sicherheitsnetz).
   var INTERN_EXTRA = [
-    { id: "vorbereitung", label: "In Vorbereitung", intro: "In Arbeit – noch nicht freigegeben.", cats: ["vorbereitung"] },
-    { id: "ligaturen", label: "Ligaturen", intro: "Die Kiste nur für die Ligaturen.", cats: ["ligaturen"] },
-    { id: "schriftpflege", label: "Schriftpflege", intro: "Grotesk, Gewichte und Mischsatz prüfen.", cats: ["schriftpflege"] },
     { id: "kampagne", label: "Kampagne", intro: "Kampagnen planen, verlinken, mailen, zählen.", cats: ["kampagne"] },
-    { id: "statistik", label: "Statistik", intro: "Nutzungszahlen aller Werkzeuge.", cats: ["statistik"] },
     { id: "schau", label: "Schau & Mockups", intro: "Präsentations-Mockups und Studien.", cats: ["schau"] },
-    { id: "geparkt", label: "Geparktes", intro: "Konzepte, die später kommen.", cats: ["geparkt"] },
-    { id: "archiv", label: "Archiv", intro: "Frühere Stände, eingefroren.", cats: ["archiv"] },
-    { id: "labor", label: "Labor", intro: "Skizzen und Spezialtools – zum Ausprobieren vor dem Teilen.", cats: ["labor"] }
+    { id: "statistik", label: "Statistik", intro: "Nutzungszahlen aller Werkzeuge.", cats: ["statistik"] },
+    { id: "labor", label: "Labor", intro: "Erprobung und Abgelegtes – zum Ausprobieren, mit verschachtelten Kisten.",
+      cats: ["labor"], sub: [
+        { id: "ligaturen", label: "Ligaturen", intro: "Die Kiste nur für die Ligaturen.", cats: ["ligaturen"] },
+        { id: "schriftpflege", label: "Schriftpflege", intro: "Grotesk, Gewichte und Mischsatz prüfen.", cats: ["schriftpflege"] },
+        { id: "geparkt", label: "Geparktes", intro: "Konzepte, die später kommen.", cats: ["geparkt"] },
+        { id: "archiv", label: "Überreste", intro: "Frühere Stände, eingefroren.", cats: ["archiv"] }
+    ] }
   ];
   var PUBLIC_IDS = WORLDS.map(function (w) { return w.id; });
 
@@ -164,10 +168,11 @@
     return ROOT + h.replace(/^\//, "");
   }
   function isExternal(h) { return /^https?:/i.test(h) && h.indexOf(ROOT) !== 0; }
-  function worldFor(catId) {
-    var all = WORLDS.concat(INTERN_EXTRA);
-    for (var i = 0; i < all.length; i++) { if (all[i].cats.indexOf(catId) !== -1) return all[i]; }
-    return null;
+  // Alle Kategorien einer Welt inklusive ihrer Unterwelten (flach).
+  function catsOf(w) {
+    var cs = (w.cats || []).slice();
+    (w.sub || []).forEach(function (s) { cs = cs.concat(catsOf(s)); });
+    return cs;
   }
   function currentFile() { var p = location.pathname.replace(/\/+$/, ""); return p.slice(p.lastIndexOf("/") + 1); }
   function isActiveTool(t) {
@@ -433,10 +438,9 @@
   var ALL = [];
   function bySlug(slug) { return ALL.filter(function (t) { return t.slug === slug; })[0]; }
 
-  function currentWorldId() {
-    for (var i = 0; i < ALL.length; i++) {
-      if (isActiveTool(ALL[i])) { var w = worldFor(ALL[i].cat); return w ? w.id : null; }
-    }
+  // Kategorie der aktiven Seite – so öffnet sich ihre Welt (und Unterwelt).
+  function currentCat() {
+    for (var i = 0; i < ALL.length; i++) { if (isActiveTool(ALL[i])) return ALL[i].cat; }
     return null;
   }
 
@@ -458,14 +462,25 @@
     return a;
   }
 
-  function groupEl(w, tools, open) {
+  // Eine Welt als aufklappbarer Bereich. Unterwelten verschachteln sich als eigene
+  // Bereiche darunter (Labor → Ligaturen, Schriftpflege, Geparktes, Überreste).
+  // Leere Welten (kein Werkzeug, keine gefüllte Unterwelt) entfallen. curCat =
+  // Kategorie der aktiven Seite: ihre Welt und Unterwelt stehen offen.
+  function worldGroupEl(w, curCat) {
+    var tools = ALL.filter(function (t) {
+      return (w.cats || []).indexOf(t.cat) !== -1 && INTERN_PIN.indexOf(t.slug) === -1;
+    });
+    var subs = (w.sub || []).map(function (s) { return worldGroupEl(s, curCat); })
+                            .filter(function (n) { return n; });
+    if (!tools.length && !subs.length) return null;
     var g = el("details", "dsnav-group");
     g.setAttribute("data-world", w.id);
-    g.open = open;
+    g.open = catsOf(w).indexOf(curCat) !== -1;
     // Das Menü koordiniert, es erklärt nicht: nur Titel, kein Beiwerk-Text.
     g.appendChild(el("summary", null,
       '<span class="ttl">' + w.label + '</span><span class="arr">›</span>'));
     tools.forEach(function (t) { g.appendChild(linkEl(t)); });
+    subs.forEach(function (n) { g.appendChild(n); });
     return g;
   }
 
@@ -503,18 +518,15 @@
       pub.forEach(function (t) { drawerBody.appendChild(linkEl(t)); });
     } else {
       // intern: erst die angehefteten Redaktions-Werkzeuge (ganz oben), dann
-      // nach Backstage-Welten gruppiert (kurze, scannbare Bereiche).
-      var cur = currentWorldId();
+      // nach Backstage-Welten gruppiert; Unterwelten verschachteln sich (Labor).
+      var curCat = currentCat();
       INTERN_PIN.forEach(function (slug) {
         var t = bySlug(slug);
         if (t) drawerBody.appendChild(linkEl(t));
       });
       WORLDS.concat(INTERN_EXTRA).forEach(function (w) {
-        var tools = ALL.filter(function (t) {
-          return w.cats.indexOf(t.cat) !== -1 && INTERN_PIN.indexOf(t.slug) === -1;
-        });
-        if (!tools.length) return;
-        drawerBody.appendChild(groupEl(w, tools, w.id === cur));
+        var node = worldGroupEl(w, curCat);
+        if (node) drawerBody.appendChild(node);
       });
     }
     applySearch();
@@ -526,7 +538,7 @@
     // Sicherheitsnetz: Manifest-Kategorien ohne Welt werden automatisch eigene
     // Backstage-Welten (Titel/Intro aus tools.json) — eine neue Kategorie im
     // Manifest verschwindet damit nie mehr stillschweigend aus dem Menü.
-    var known = WORLDS.concat(INTERN_EXTRA).reduce(function (a, w) { return a.concat(w.cats); }, []);
+    var known = WORLDS.concat(INTERN_EXTRA).reduce(function (a, w) { return a.concat(catsOf(w)); }, []);
     (m.categories || []).forEach(function (c) {
       if (c && c.id && known.indexOf(c.id) === -1) {
         INTERN_EXTRA.push({ id: c.id, label: c.title || c.id, intro: c.intro || "", cats: [c.id] });
