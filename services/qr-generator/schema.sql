@@ -106,36 +106,22 @@ language sql security definer set search_path to 'public' as $$
 $$;
 grant execute on function public.qr_stats_tage(text) to anon, authenticated;
 
--- Löschtaste (Migration «qr_link_loeschen_mit_passwort», Beschluss 10.7.2026,
--- revidiert): Löschen im Werkzeug, aber nur mit Team-Passwort (Muster
--- Multiplikatoren: Hash in versiegelter Config, Präfix 'goe-qr:', Vergleich
--- gross/klein- und leerzeichen-unabhängig). Der Knopf erscheint nur im
--- Backstage-Modus; der echte Riegel ist die RPC.
-create table if not exists public.qr_config (
-  key   text primary key,
-  value text not null
-);
-alter table public.qr_config enable row level security;
-revoke all on table public.qr_config from anon, authenticated;
--- Schlüssel in qr_config:
---   loeschen_pw_hash : sha256('goe-qr:' || lower(trim(passwort))), hex
-
-create or replace function public.qr_link_loeschen(p_code text, p_passwort text)
+-- Löschtaste (Migration «qr_link_loeschen_ohne_passwort», Beschluss 11.7.2026):
+-- Löschen im Werkzeug OHNE Passwort – der Backstage-Modus (Client-Schalter)
+-- genügt als Schutz. Der Knopf erscheint nur im Backstage; die RPC ist für anon
+-- offen (Kurzlinks sind wiederherstellbar, das Register ohnehin öffentlich).
+create or replace function public.qr_link_loeschen(p_code text)
 returns text language plpgsql security definer set search_path to 'public' as $$
 declare v_code text := lower(trim(coalesce(p_code,''))); n int;
 begin
-  if not exists (
-    select 1 from public.qr_config c
-     where c.key = 'loeschen_pw_hash'
-       and c.value = encode(extensions.digest('goe-qr:' || lower(trim(coalesce(p_passwort,''))), 'sha256'), 'hex')
-  ) then return 'passwort'; end if;
+  if v_code = '' then return 'unvollstaendig'; end if;
   delete from public.qr_links where code = v_code;
   get diagnostics n = row_count;
   if n = 0 then return 'unbekannt'; end if;
   delete from public.link_hits where code = v_code;   -- Zählung geht mit dem Code
   return 'ok';
 end; $$;
-grant execute on function public.qr_link_loeschen(text, text) to anon, authenticated;
+grant execute on function public.qr_link_loeschen(text) to anon, authenticated;
 
 -- Auflösen + Zählen in EINEM Rundgang – nur für die Edge Function (service_role).
 create or replace function public.kurzlink_aufloesen(p_code text)

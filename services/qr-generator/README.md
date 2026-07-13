@@ -43,18 +43,17 @@ Zählung. Wer hier einen Kurzlink anlegt, veröffentlicht ihn – für nicht
 | `qr_links_public()` | anon | Offenes Register: alle QR-Kurzlinks mit Ziel und Zählung |
 | `qr_stats_public(p_code)` | anon | Summe, letzter Scan, Ziel-URL (beide Register) |
 | `qr_stats_tage(p_code)` | anon | Scans je Tag, letzte 30 Tage |
-| `qr_link_loeschen(p_code, p_passwort)` | anon, Team-Passwort | Löschen: `ok` · `passwort` · `unbekannt` (Zählung geht mit) |
+| `qr_link_loeschen(p_code)` | anon | Löschen: `ok` · `unbekannt` (Zählung geht mit) |
 | `kurzlink_aufloesen(p_code)` | nur service_role | Auflösen + Zählen für die Function `go` |
 
 ## Bewusste Entscheide (v1)
 
-- **Löschen nur mit Team-Passwort** (Beschluss 10.7.2026, revidiert vom
-  Auftraggeber): der Lösch-Knopf im Register erscheint nur im Backstage-Modus,
-  der echte Riegel ist das Passwort in `qr_link_loeschen` (Hash in `qr_config`,
-  Muster Multiplikatoren, Präfix `goe-qr:`). Ein offener Löschweg würde
-  gedruckte Codes gefährden. Passwort ändern: neuen Hash in `qr_config`
-  setzen (`update qr_config set value = encode(extensions.digest('goe-qr:' ||
-  lower(trim('NEU')), 'sha256'), 'hex') where key = 'loeschen_pw_hash'`).
+- **Löschen ohne Passwort, Backstage genügt** (Beschluss 11.7.2026): der
+  Lösch-Knopf im Register erscheint nur im Backstage-Modus (Client-Schalter
+  `goeNavIntern`); `qr_link_loeschen(p_code)` ist für anon offen. Bewusst in
+  Kauf genommen: die RPC ist damit technisch von jedem aufrufbar (Backstage
+  schützt nur den Knopf, nicht den Endpunkt) – vertretbar, weil Kurzlinks
+  wiederherstellbar sind und das Register ohnehin öffentlich ist.
 - **Fallback unbekannter Codes:** bleibt vorerst die Sommer-Landingpage (in
   `go/index.ts`); nach der Kampagne auf eine neutrale Seite stellen.
 - **Geparkt für v2:** Logo in der QR-Mitte (erzwingt Fehlerkorrektur H und
