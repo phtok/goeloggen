@@ -40,6 +40,15 @@
   .seg.modus{margin-bottom:var(--s4)}
   body[data-modus="kurzlink"] #typSeg,
   body[data-modus="kurzlink"] .qr-only{display:none}
+  /* QR-Ausgabe als aufklappbarer Block. Im QR-Modus immer offen und nicht
+     klappbar (wirkt wie ein normaler Kopf); im Kurzlink-Modus optional,
+     startet eingeklappt. */
+  #gestaltBox > summary{list-style:none;cursor:pointer}
+  #gestaltBox > summary::-webkit-details-marker{display:none}
+  #gestaltBox > summary::marker{content:""}
+  body[data-modus="qr"] #gestaltBox > summary{pointer-events:none}
+  body[data-modus="kurzlink"] #gestaltBox > summary h2::after{content:" ▸";color:var(--muted);font-weight:400}
+  body[data-modus="kurzlink"] #gestaltBox[open] > summary h2::after{content:" ▾"}
 
   /* Gestalt & Ausgabe: Regler links, Vorschau rechts. */
   .out{display:grid;grid-template-columns:1fr auto;gap:var(--s6);align-items:start}
@@ -239,15 +248,16 @@
   </section>
 
   <section>
-    <div class="shead">
+    <details id="gestaltBox" open>
+    <summary class="shead">
       <h2 id="gestaltTitel">Gestalt und Ausgabe</h2>
-      <p id="gestaltText">Drei Stile, drei Farben – immer dunkel auf Weiss, damit jede Kamera den Code liest. SVG für Druck und Layout, PNG für Mail und Web.</p>
-    </div>
+      <p id="gestaltText">Farbe und Format wählen – immer dunkel auf Weiss, damit jede Kamera den Code liest. SVG für Druck und Layout, PNG für Mail und Web.</p>
+    </summary>
 
     <div class="card soft">
       <div class="out">
         <div>
-          <div class="gopt qr-only">
+          <div class="gopt">
             <span class="lab">Farbe</span>
             <div class="seg" id="farbSeg" role="group" aria-label="Farbe">
               <button type="button" data-farbe="tinte" aria-pressed="true">Tinte</button>
@@ -290,6 +300,7 @@
         </div>
       </div>
     </div>
+    </details>
   </section>
 
   <section>
@@ -818,6 +829,8 @@
     el('titel').textContent = t.titel; el('lede').textContent = t.lede;
     el('inhaltTitel').textContent = t.inhaltTitel; el('inhaltText').textContent = t.inhaltText;
     el('gestaltTitel').textContent = t.gestaltTitel; el('gestaltText').textContent = t.gestaltText;
+    // QR-Ausgabe: im QR-Modus offen, im Kurzlink-Modus eingeklappt (optional).
+    el('gestaltBox').open = (modus === 'qr');
     if(modus === 'kurzlink'){
       // Kurzlink-erst: auf Link zwingen, Kurzlink immer an, Code-Feld sichtbar.
       typ = 'link';
