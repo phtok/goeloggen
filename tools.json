@@ -44,9 +44,9 @@
       "intro": "Werkzeuge der Kampagnenarbeit – planen, verlinken, mailen, zählen. Gebaut für die Sommer-Aktion, wiederverwendbar für jede dreistufige Kampagne."
     },
     {
-      "id": "statistik",
-      "title": "Statistik",
-      "intro": "Nutzungszahlen aller Werkzeuge – nur der Gebrauch legitimiert den Bau."
+      "id": "kistenpflege",
+      "title": "Kistenpflege",
+      "intro": "Die Werkzeuge selbst pflegen – Zahlen ansehen (Stats), Reihenfolgen ordnen (Sortierer), die Monatsmail schreiben (Post). Startet mit Stats."
     },
     {
       "id": "schau",
@@ -394,12 +394,24 @@
     },
     {
       "slug": "statistik",
-      "cat": "statistik",
+      "cat": "kistenpflege",
       "status": "beta",
       "tag": "Zahlen",
-      "title": "Statistik",
+      "title": "Stats",
+      "short": "Stats",
       "href": "statistik.html",
       "desc": "Anonyme Nutzungszahlen aller Werkzeuge."
+    },
+    {
+      "slug": "sortierer",
+      "cat": "kistenpflege",
+      "status": "intern",
+      "tag": "Kistenpflege",
+      "title": "Sortierer",
+      "short": "Sortierer",
+      "href": "sortierer.html",
+      "desc": "Schublade, Karussell und Karten der Startseite selbst ordnen – ziehen, Reihenfolge exportieren, committen. Eine Quelle (tools.json → reihenfolge), Verlauf = Git.",
+      "such": "Sortierer Reihenfolge ordnen sortieren Schublade Karussell Karten Startseite Menü Navigation Kistenpflege"
     },
     {
       "slug": "sommer-zaehler",
@@ -458,7 +470,7 @@
     },
     {
       "slug": "werkzeugpost",
-      "cat": "kampagne",
+      "cat": "kistenpflege",
       "status": "intern",
       "tag": "Neu",
       "title": "Werkzeugpost — Redaktion",
@@ -613,5 +625,11 @@
       "href": "https://github.com/phtok/goeloggen/blob/main/docs/gestaltungsspielraum-entwurf.md",
       "desc": "Foto-Richtlinie in drei Richtungen und vier Ansätze zu erlaubter Varianz – zur Ratifizierung."
     }
-  ]
+  ],
+  "reihenfolge": {
+    "$hinweis": "Vom Sortierer gepflegte Reihenfolgen (Slugs). Startseite und Schublade lesen sie; fehlt ein Eintrag, gilt die eingebaute Vorgabe. Verlauf = Git.",
+    "schublade": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint", "editor", "wallpaper", "design-system"],
+    "karten": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "uebersetzungen", "qr-generator", "kurzlink", "typografie", "powerpoint", "wallpaper", "karten", "sektionsfarben", "design-system", "editor"],
+    "karussell": ["signatur", "empfehlungen", "karten", "wallpaper", "powerpoint", "visitenkarten", "logo-generator", "schriften", "uebersetzungen", "icons", "sektionsfarben", "typografie", "editor", "design-system"]
+  }
 }
