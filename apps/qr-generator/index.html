@@ -815,6 +815,9 @@
   el('kurzCode').value = neuerCode();
   setModus(startModus);
   ladeRegister();
+  // Backstage-Umschaltung (nav.js feuert „goe:intern") sofort spiegeln, damit
+  // die Löschknöpfe erscheinen/verschwinden – ohne Reload.
+  window.addEventListener('goe:intern', ladeRegister);
 </script>
 
 </body>
