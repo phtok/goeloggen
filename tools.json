@@ -29,11 +29,6 @@
       "intro": "Fertige Vorlagen zum Übernehmen – Wallpaper, Präsentationen."
     },
     {
-      "id": "vorbereitung",
-      "title": "In Vorbereitung",
-      "intro": "In Arbeit – noch nicht für die Breite freigegeben. Intern sichtbar."
-    },
-    {
       "id": "ligaturen",
       "title": "Ligaturen",
       "intro": "Die Kiste nur für die Ligaturen – Werkschau, Überlagerung, Abstände."
@@ -257,7 +252,7 @@
     },
     {
       "slug": "cover",
-      "cat": "vorbereitung",
+      "cat": "generatoren",
       "status": "entwurf",
       "tag": "Goetheanum TV",
       "title": "Cover-Generator",
@@ -267,7 +262,7 @@
     },
     {
       "slug": "briefschaften",
-      "cat": "vorbereitung",
+      "cat": "generatoren",
       "status": "entwurf",
       "tag": "Korrespondenz",
       "title": "Briefschaften",
@@ -277,7 +272,7 @@
     },
     {
       "slug": "schilder",
-      "cat": "vorbereitung",
+      "cat": "generatoren",
       "status": "entwurf",
       "tag": "Orientierung",
       "title": "Schilder",
@@ -288,7 +283,7 @@
     },
     {
       "slug": "bewegte-schrift",
-      "cat": "vorbereitung",
+      "cat": "labor",
       "status": "entwurf",
       "tag": "Erprobung",
       "title": "Bewegte Schrift",
