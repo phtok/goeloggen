@@ -71,6 +71,16 @@
   ],
   "tools": [
     {
+      "slug": "schmiede",
+      "cat": "labor",
+      "status": "intern",
+      "tag": "Mitmachen",
+      "title": "Werkzeug-Schmiede",
+      "href": "apps/schmiede/",
+      "desc": "Beschreiben, was du brauchst – und anbieten, was du mitbringst. Die Rampe, über die neue Werkzeuge im Hausbild entstehen, ohne Design- oder Code-Wissen. Nur per Direktlink.",
+      "such": "Mitmachen Werkzeug bestellen Auftrag Wunsch Rampe Beitrag Onboarding Schmiede Werkstatt beschreiben anbieten"
+    },
+    {
       "slug": "design-system",
       "cat": "system",
       "status": "beta",

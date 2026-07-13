@@ -1,0 +1,344 @@
+<!doctype html>
+<!-- =============================================================================
+     Werkzeug-Schmiede · die menschliche Vorderseite der Bau-Fabrik
+     -----------------------------------------------------------------------------
+     Zweck: Wer ein Werkzeug braucht, beschreibt es hier in eigener Sprache und
+     bietet an, was er mitbringt. Daraus wird ein hausgeframter Werkzeug-Auftrag,
+     der in die bestehende Bau-Schleife einrastet (Starter kopieren → Mitte füllen
+     → tools.json → Prüfmaschinen). Der Mensch baut, indem er beschreibt; Framing
+     und Maschine erledigen die Konstruktion und garantieren Hauskonformität.
+
+     Zugang: nur im Backstage gelistet (tools.json → status "intern", cat "labor"),
+     erreichbar über den persönlich weitergegebenen Direktlink. noindex.
+
+     Regelkonform durch Konstruktion: Fundament EINGEBUNDEN (nicht kopiert), relativ
+     (App-Tiefe ../../). Farben/Schnitte/Abstände nur über Tokens. Auswahl-Pillen
+     über .seg (Gold + Weiss, B01). Betonung nur mit Laut (G05), Anführung über <q>.
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Werkzeug-Schmiede · Goetheanum</title>
+<meta name="description" content="Beschreiben, was du brauchst – und anbieten, was du mitbringst. Die Rampe, über die neue Werkzeuge im Hausbild entstehen." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<!-- Das Fundament – eine Quelle der Wahrheit. Reihenfolge: tokens VOR base (DS01). Relativ (DS09). -->
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  /* Nur werkzeug-eigene Anordnung. Alles Gemeinsame kommt aus base.css; nur Tokens, keine neuen Werte. */
+  .wie{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:var(--s4);margin-top:var(--s6)}
+  .wie .card{display:grid;gap:var(--s2);align-content:start}
+  .wie .num{font-family:var(--font-display);font-weight:var(--w-deutlich);color:var(--gold-ink);font-size:var(--t-lede);line-height:1}
+  .wie h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body)}
+
+  .teil{margin-top:var(--s8)}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
+  .form-grid .span2{grid-column:1 / -1}
+  .field .hint{margin-top:6px}
+
+  .auftrag{white-space:pre-wrap;font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;
+    color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:var(--r-control);
+    padding:var(--s4);min-height:var(--tap);word-break:break-word}
+  .auftrag .ph{color:var(--muted)}
+  .actions{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s4)}
+  .said{font-family:var(--font-text);font-size:var(--t-micro);color:var(--ok);min-height:1.4em;margin-top:var(--s2)}
+  .said.bad{color:var(--bad)}
+  .sent{margin-top:var(--s2);font-family:var(--font-text);font-size:var(--t-small)}
+  .sent[hidden]{display:none}
+
+  @media (max-width:640px){ .form-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<!-- Globale Leiste aus tools.json (DS06). data-variant zeigt das sichtbare „← Übersicht". -->
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Mitmachen</span>
+    <h1>Werkzeug-Schmiede</h1>
+    <p class="lede">Beschreib in deinen Worten, was du brauchst – und biete an, was du mitbringst. Daraus entsteht ein Werkzeug im Hausbild, ganz ohne Design- oder Code-Wissen.</p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Wie das hier funktioniert</h2>
+      <p>Drei Schritte, keine Fachbegriffe nötig. Du sagst, was gemeint ist – das Fundament sorgt dafür, dass es aussieht wie das Goetheanum.</p>
+    </div>
+    <div class="wie">
+      <div class="card soft">
+        <span class="num">1</span>
+        <h3>Du beschreibst</h3>
+        <p class="note">Sag, was du brauchst und was du beisteuern kannst. Normale Sprache genügt.</p>
+      </div>
+      <div class="card soft">
+        <span class="num">2</span>
+        <h3>Die Maschine hält die Regeln</h3>
+        <p class="note">Schrift, Farben und Typografie kommen aus dem Fundament. Falsches lässt sich gar nicht erst bauen.</p>
+      </div>
+      <div class="card soft">
+        <span class="num">3</span>
+        <h3>Es entsteht ein Werkzeug</h3>
+        <p class="note">Aus deinem Auftrag wird eine Seite im Hausbild – geprüft, bevor sie erscheint.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== Teil 1 · Was ich brauche ========================== -->
+  <section class="teil">
+    <div class="shead">
+      <h2>Was ich brauche</h2>
+      <p>Je klarer das Bild, desto schneller steht das Werkzeug. Leer lassen ist erlaubt – nur der erste Satz hilft am meisten.</p>
+    </div>
+
+    <div class="card soft">
+      <div class="form-grid">
+        <label class="field span2">
+          <span class="lab">Wie soll das Werkzeug heissen?</span>
+          <input id="titel" type="text" placeholder="z. B. Jahresbericht-Generator" autocomplete="off" />
+        </label>
+
+        <label class="field span2">
+          <span class="lab">Was soll es tun?</span>
+          <textarea id="zweck" placeholder="In einem Satz: was möchtest du damit erreichen?"></textarea>
+        </label>
+
+        <label class="field">
+          <span class="lab">Für wen oder wozu?</span>
+          <input id="fuerwen" type="text" placeholder="z. B. mein Jahresbericht für die Sektion" autocomplete="off" />
+        </label>
+
+        <label class="field">
+          <span class="lab">Wie oft brauchst du es?</span>
+          <select id="takt">
+            <option value="einmalig">einmalig</option>
+            <option value="ab und zu">ab und zu</option>
+            <option value="laufend, immer aktuell">laufend, immer aktuell</option>
+          </select>
+        </label>
+
+        <div class="field span2">
+          <span class="lab">Was kommt am Ende heraus?</span>
+          <div class="seg" id="ausgabe" role="group" aria-label="Was herauskommt">
+            <button type="button" aria-pressed="false">Webseite</button>
+            <button type="button" aria-pressed="false">PDF oder Druck</button>
+            <button type="button" aria-pressed="false">E-Mail-Signatur</button>
+            <button type="button" aria-pressed="false">Karte oder Cover</button>
+            <button type="button" aria-pressed="false">Bild für Social</button>
+            <button type="button" aria-pressed="false">Präsentation</button>
+            <button type="button" aria-pressed="false">Noch offen</button>
+          </div>
+        </div>
+
+        <label class="field span2">
+          <span class="lab">Gibt es ein Vorbild?</span>
+          <input id="vorbild" type="text" placeholder="Etwas, das so ähnlich aussehen soll – Link oder Beschreibung" autocomplete="off" />
+          <span class="hint">Ein bestehendes Werkzeug, eine Seite, ein Vorbild aus dem Alltag – alles hilft.</span>
+        </label>
+
+        <label class="field">
+          <span class="lab">Bis wann?</span>
+          <input id="termin" type="text" placeholder="z. B. vor der Jahrestagung" autocomplete="off" />
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== Teil 2 · Was ich mitbringe ======================== -->
+  <section class="teil">
+    <div class="shead">
+      <h2>Was ich mitbringe</h2>
+      <p>Ein Werkzeug wird gut, wenn Inhalte und Wissen von dir kommen. Sag, was du einspeisen, anschliessen oder hochladen kannst.</p>
+    </div>
+
+    <div class="card soft">
+      <div class="form-grid">
+        <label class="field span2">
+          <span class="lab">Woher kommen Inhalte und Daten?</span>
+          <textarea id="quellen" placeholder="Zähl deine Quellen auf – Links, Dateien, Zugänge, Ordner. Grob genügt."></textarea>
+        </label>
+
+        <div class="field span2">
+          <span class="lab">Art der Quellen</span>
+          <div class="seg" id="quellenart" role="group" aria-label="Art der Quellen">
+            <button type="button" aria-pressed="false">Google Drive</button>
+            <button type="button" aria-pressed="false">Tabelle oder CSV</button>
+            <button type="button" aria-pressed="false">Social-Konten</button>
+            <button type="button" aria-pressed="false">Statistik</button>
+            <button type="button" aria-pressed="false">Bilder</button>
+            <button type="button" aria-pressed="false">Texte</button>
+            <button type="button" aria-pressed="false">Zugang oder Schnittstelle</button>
+          </div>
+        </div>
+
+        <div class="field span2">
+          <span class="lab">Was kannst du selbst beisteuern?</span>
+          <div class="seg" id="biete" role="group" aria-label="Was du beisteuerst">
+            <button type="button" aria-pressed="false">Texte schreiben</button>
+            <button type="button" aria-pressed="false">Bilder liefern</button>
+            <button type="button" aria-pressed="false">Fachwissen</button>
+            <button type="button" aria-pressed="false">Mittesten</button>
+            <button type="button" aria-pressed="false">Zeit</button>
+          </div>
+        </div>
+
+        <label class="field">
+          <span class="lab">Wer stellt den Auftrag?</span>
+          <input id="wer" type="text" placeholder="Name oder Kürzel" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span class="lab">Bereich oder Sektion</span>
+          <input id="bereich" type="text" placeholder="z. B. Kommunikation" autocomplete="off" />
+        </label>
+        <label class="field span2">
+          <span class="lab">Kontakt für Rückfragen</span>
+          <input id="kontakt" type="text" placeholder="E-Mail oder Telefon – nur für die Werkstatt" autocomplete="off" />
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== Dein Auftrag ====================================== -->
+  <section class="teil">
+    <div class="shead">
+      <h2>Dein Auftrag</h2>
+      <p>Aus deinen Angaben wird ein sauberer Auftrag – die Sprache, die die Werkstatt versteht. Prüf ihn, dann schick ihn ab.</p>
+    </div>
+
+    <div class="card">
+      <div class="auftrag" id="auftrag"><span class="ph">Fülle oben aus und klicke auf <q>Auftrag zusammenstellen</q> – dein fertiger Auftrag erscheint hier.</span></div>
+      <div class="actions">
+        <button class="btn primary" type="button" id="baueBtn">Auftrag zusammenstellen</button>
+        <button class="btn" type="button" id="sendBtn">Absenden</button>
+        <button class="btn ghost" type="button" id="copyBtn">Kopieren</button>
+        <button class="btn ghost" type="button" id="resetBtn">Zurücksetzen</button>
+      </div>
+      <div class="said" id="said"></div>
+      <p class="sent" id="sent" hidden>In der Werkstatt gelandet: <a id="sentLink" href="#" target="_blank" rel="noopener">Auftrag ansehen</a></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Werkzeug-Schmiede</strong> · die Rampe zur Mitarbeit</span>
+    <span><a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script>
+  // Absende-Weg (a): sobald der Worker workers/werkzeug-auftrag/ deployed ist, hier
+  // seine URL eintragen. Dann geht „Absenden" direkt als Werkzeug-Wunsch in die
+  // Bau-Schleife (GitHub-Issue, Label werkzeug-wunsch) – ohne GitHub-Konto für die
+  // absendende Person. Solange leer: „Absenden" kopiert und bittet ums Weitergeben.
+  var AUFTRAG_ENDPOINT = '';
+
+  function el(id){ return document.getElementById(id); }
+  function val(id){ return (el(id).value || '').trim(); }
+
+  // Auswahl-Pillen (.seg) an/aus schalten – Gold + Weiss kommt aus base.css (B01).
+  Array.prototype.forEach.call(document.querySelectorAll('.seg'), function(group){
+    group.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if(!b) return;
+      b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+    });
+  });
+  function segWerte(id){
+    return Array.prototype.map.call(
+      el(id).querySelectorAll('button[aria-pressed="true"]'),
+      function(b){ return b.textContent.trim(); }
+    );
+  }
+
+  function zeile(label, wert){ return wert ? ('- ' + label + ': ' + wert + '\n') : ''; }
+
+  function baueAuftrag(){
+    var titel = val('titel') || 'Werkzeug ohne Namen';
+    var zweck = val('zweck');
+    var ausgabe = segWerte('ausgabe').join(', ');
+    var quellenart = segWerte('quellenart').join(', ');
+    var biete = segWerte('biete').join(', ');
+
+    var md = '# Werkzeug-Wunsch: ' + titel + '\n\n';
+    md += '## Was gebraucht wird\n' + (zweck || '(noch nicht beschrieben)') + '\n\n';
+    md += zeile('Für wen oder wozu', val('fuerwen'));
+    md += zeile('Was herauskommt', ausgabe);
+    md += zeile('Wie oft', el('takt').value);
+    md += zeile('Vorbild', val('vorbild'));
+    md += zeile('Bis wann', val('termin'));
+    md += '\n## Was mitgebracht wird\n' + (val('quellen') || '(keine Quellen genannt)') + '\n\n';
+    md += zeile('Art der Quellen', quellenart);
+    md += zeile('Kann selbst beisteuern', biete);
+    md += '\n## Wer den Auftrag stellt\n';
+    md += zeile('Name oder Kürzel', val('wer'));
+    md += zeile('Bereich', val('bereich'));
+    md += zeile('Kontakt', val('kontakt'));
+    md += '\n---\nErzeugt mit der Werkzeug-Schmiede (apps/schmiede/). Bauweg im Haus: '
+        + 'Starter kopieren, Mitte füllen, in tools.json eintragen, Prüfmaschinen. '
+        + 'Hauskonform durch Konstruktion.\n';
+    return md;
+  }
+
+  var aktuell = null;
+  function say(msg, bad){ var s = el('said'); s.textContent = msg; s.className = bad ? 'said bad' : 'said'; }
+
+  function render(){
+    aktuell = baueAuftrag();
+    el('auftrag').textContent = aktuell;
+    el('sent').hidden = true;
+    return aktuell;
+  }
+
+  el('baueBtn').addEventListener('click', function(){ render(); say('Auftrag zusammengestellt – prüfen, dann absenden oder kopieren.'); });
+
+  el('copyBtn').addEventListener('click', function(){
+    var md = aktuell || render();
+    navigator.clipboard.writeText(md).then(
+      function(){ say('Auftrag kopiert.'); },
+      function(){ say('Kopieren ging nicht – Text oben markieren und kopieren.', true); }
+    );
+  });
+
+  el('resetBtn').addEventListener('click', function(){
+    document.querySelectorAll('#titel,#zweck,#fuerwen,#vorbild,#termin,#quellen,#wer,#bereich,#kontakt').forEach(function(f){ f.value = ''; });
+    el('takt').selectedIndex = 0;
+    Array.prototype.forEach.call(document.querySelectorAll('.seg button'), function(b){ b.setAttribute('aria-pressed', 'false'); });
+    aktuell = null;
+    el('auftrag').innerHTML = '<span class="ph">Fülle oben aus und klicke auf <q>Auftrag zusammenstellen</q> – dein fertiger Auftrag erscheint hier.</span>';
+    el('sent').hidden = true;
+    say('');
+  });
+
+  el('sendBtn').addEventListener('click', function(){
+    var md = aktuell || render();
+    if(AUFTRAG_ENDPOINT){
+      say('Wird abgeschickt …');
+      fetch(AUFTRAG_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ titel: val('titel'), auftrag: md })
+      }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function(res){
+          say('In der Werkstatt angekommen.');
+          if(res && res.url){ el('sentLink').href = res.url; el('sent').hidden = false; }
+        })
+        .catch(function(){ say('Absenden ging nicht – bitte kopieren und weitergeben.', true); });
+    } else {
+      navigator.clipboard.writeText(md).then(
+        function(){ say('Auftrag kopiert – schick ihn an die Person, die dir den Link gegeben hat.'); },
+        function(){ say('Bitte den Auftrag oben markieren und kopieren.', true); }
+      );
+    }
+  });
+</script>
+
+</body>
+</html>
