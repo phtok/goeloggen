@@ -220,6 +220,41 @@ def vorschlag_panel(base, welle, c):
             f'Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p>{rows}</details>')
 
 
+def maildata_for(seg, motiv, welle, lang, c, ctas):
+    """Redaktionelle Felder einer Mail als JS-Datensatz für den Overlay-Editor
+    (openEditor liest MAILDATA[base]). Nur vorhandene Felder; Reihenfolge/Labels
+    macht der Client. CTA nur editierbar, wenn die Mail genau EINEN Button hat —
+    der Fassungs-Key (…#cta) kann kein Ziel kodieren (Multi-Button = beides)."""
+    fields = {"betreff": c.get("betreff", ""), "preheader": preheader(c),
+              "botschaft": c.get("botschaft", ""), "text": c.get("text", "")}
+    if welle == "w3" and c.get("alt"):
+        fields["alt"] = c["alt"]
+    cta = {"editable": False}
+    labels = H["motive"][motiv][lang].get("cta_labels", {})
+    # Nur editierbar, wenn der Fassungs-Key (…#cta) EINDEUTIG ist: eine Welle mit einem
+    # Button UND das Motiv hat genau ein cta_label (sonst wüsste die Fassung nicht, welches).
+    if len(ctas) == 1 and len(labels) == 1:
+        ziel, label = ctas[0]
+        cta = {"editable": True, "ziel": ziel, "label": label}
+    return {"label": f"{seg} · {motiv} · {welle} · {lang.upper()}", "fields": fields, "cta": cta}
+
+
+# Das Overlay-Editor-Skelett (einmal in der Seite; openEditor füllt es aus MAILDATA).
+EDITOR_DIALOG = (
+    '<dialog id="editor" class="edov">'
+    '<form method="dialog" class="edov-frame">'
+    '<header class="edov-head"><span class="edov-title" id="edov-title"></span>'
+    '<button class="edov-x" type="button" onclick="closeEditor()" aria-label="Schliessen">✕</button></header>'
+    '<div class="edov-body">'
+    '<div class="edov-preview"><iframe id="edov-frame" title="Live-Vorschau"></iframe></div>'
+    '<div class="edov-form" id="edov-fields"></div>'
+    '</div>'
+    '<footer class="edov-foot"><span class="edov-status" id="edov-status"></span>'
+    '<button class="edov-cancel" type="button" onclick="closeEditor()">Abbrechen</button>'
+    '<button class="edov-save" type="button" onclick="saveEditor()">Speichern</button></footer>'
+    '</form></dialog>')
+
+
 def verify():
     """Nach Merge/Deploy: sind Editor und alle gehosteten Assets live erreichbar?
     Make-or-break vor dem Versand — vor dem Deploy sind die Bild-URLs tot."""
@@ -259,7 +294,7 @@ def main():
                          text=True, cwd=ROOT).stdout.strip() or "?"
     jetzt = datetime.now()
     stand = f"{jetzt:%d.%m.%Y}, {jetzt.hour}.{jetzt.minute:02d} Uhr"  # Uhrzeit mit Punkt, ohne führende Null (G22)
-    seg_blocks, sizes = [], []
+    seg_blocks, sizes, maildata = [], [], {}
     for motiv in H["motive"]:
         seg = SEG_OF[motiv]
         wave_cards = []
@@ -273,6 +308,7 @@ def main():
                 # Editor-Vorschau = exakt die Versand-Mail (gehostete Bilder, kleine Seite).
                 html = versand
                 base = f"{motiv}_{welle}_{lang}"
+                maildata[base] = maildata_for(seg, motiv, welle, lang, c, ctas_for(seg, welle, lang))
                 # Posteingang-Zeile: was Empfangende zuerst sehen (Betreff + Anriss);
                 # bei w3 zusätzlich die Zweitrahmung des AC-Splits für Nicht-Öffner.
                 alt_zeile = (f'<div class="ib-alt"><span>Nicht-Öffner erhalten:</span> {esc(c["alt"])}</div>'
@@ -280,7 +316,7 @@ def main():
                 inbox = (f'<div class="inbox"><div class="ib-b">{esc(c["betreff"])}</div>'
                          f'<div class="ib-a">{esc(preheader(c))}</div>{alt_zeile}</div>')
                 lang_cards.append(f"""<div class="mail" data-lang="{lang}">
-  <div class="mhd">{welle.upper()} · {lang.upper()}<a href="mails/mail_{base}.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
+  <div class="mhd">{welle.upper()} · {lang.upper()}<button class="mhd-edit" type="button" onclick="openEditor('{base}')">✎ Bearbeiten</button><a href="mails/mail_{base}.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   {inbox}
   <iframe srcdoc="{html.replace('"','&quot;')}" loading="lazy" title="Vorschau {base}"></iframe>
   <div class="flds">{commentable(f"{base}#gesamt","Anmerkung zur Mail","<i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i>")}
@@ -301,6 +337,7 @@ def main():
 
     sb_url = CFG["supabase"]["url"]; tab = CFG["supabase"]["kommentar_tabelle"]
     sb_key = CFG["supabase"].get("publishable_key", "")
+    maildata_json = json.dumps(maildata, ensure_ascii=False)
     page = f"""<!doctype html>
 <!-- =============================================================================
      Mail-Editor · {KICKER} (Gegenlesen)
@@ -402,6 +439,33 @@ body.nocmt .cbtn,body.nocmt .cpanel,body.nocmt .offen-sec{{display:none}}
 body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
 .shared .fld{{background:var(--paper);border:1px solid var(--line-soft);border-radius:8px;padding:var(--s2) var(--s3)}}
 .subline{{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin:0 0 var(--s3)}}
+/* Overlay-Editor: Mail gross bearbeiten, Speichern schreibt eine ‹Fassung → ›-Anmerkung. */
+.mhd-edit{{min-height:var(--tap);margin-left:8px;background:transparent;border:1px solid var(--paper);border-radius:999px;color:var(--paper);padding:2px 10px;font:inherit;font-size:var(--t-micro);cursor:pointer}}
+.mhd-edit:hover{{background:var(--paper);color:var(--ink)}}
+.edov{{border:0;border-radius:var(--r-card);padding:0;width:96vw;max-width:min(1400px,96vw);background:var(--paper);color:var(--ink)}}
+.edov::backdrop{{background:rgba(20,24,28,.55)}} /* # ds-ok Scrim, kein Theme */
+.edov-frame{{margin:0;display:flex;flex-direction:column;max-height:92vh}}
+.edov-head{{display:flex;align-items:center;gap:var(--s3);background:var(--ink);color:var(--paper);padding:var(--s3) var(--s4)}}
+.edov-title{{flex:1;font-family:var(--font-display);font-size:var(--t-body)}}
+.edov-x{{min-height:var(--tap);min-width:var(--tap);background:transparent;border:1px solid var(--paper);border-radius:999px;color:var(--paper);font:inherit;cursor:pointer}}
+.edov-x:hover{{background:var(--paper);color:var(--ink)}}
+.edov-body{{display:grid;grid-template-columns:minmax(320px,560px) 1fr;gap:var(--s4);padding:var(--s4);overflow:auto}}
+.edov-preview iframe{{width:100%;height:70vh;border:0;border-radius:8px;background:#F6F4F2}} /* # ds-ok Mail-Grund (Artefakt) */
+.edov-form{{display:flex;flex-direction:column;gap:var(--s3);min-width:0}}
+.edov-inbox{{background:var(--field-bg);border:1px solid var(--line-soft);border-radius:8px;padding:var(--s2) var(--s3);font-family:var(--font-text)}}
+.edov-ib-b{{font-size:var(--t-small);font-weight:600;color:var(--ink)}}
+.edov-ib-a{{font-size:var(--t-small);color:var(--muted);line-height:1.45;margin-top:2px}}
+.edov-ib-alt{{font-size:var(--t-micro);color:var(--muted);line-height:1.45;margin-top:4px}}
+.edov-ib-alt span{{color:var(--gold-ink);font-weight:600}}
+.edov-f{{display:grid;gap:4px}}
+.edov-f>span{{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}}
+.edov-f textarea{{width:100%;font-family:var(--font-text);font-size:var(--t-body);line-height:1.5;padding:8px 10px;border:1px solid var(--line-soft);border-radius:var(--r-control);background:var(--paper);color:var(--ink);resize:vertical;box-sizing:border-box}}
+.edov-f textarea:focus{{outline:2px solid var(--gold-ink);outline-offset:-1px}}
+.edov-foot{{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) var(--s4);border-top:1px solid var(--line-soft)}}
+.edov-status{{flex:1;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}}
+.edov-cancel{{min-height:var(--tap);background:var(--paper);border:1px solid var(--line);border-radius:var(--r-control);padding:6px 16px;font:inherit;font-size:var(--t-small);color:var(--ink);cursor:pointer}}
+.edov-save{{min-height:var(--tap);background:var(--blue-solid);color:var(--on-accent);border:0;border-radius:var(--r-control);padding:6px 20px;font:inherit;font-size:var(--t-small);font-weight:600;cursor:pointer}}
+@media(max-width:900px){{.edov-body{{grid-template-columns:1fr}}.edov-preview iframe{{height:50vh}}}}
 </style></head><body>
 
 <script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"
@@ -434,6 +498,7 @@ body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
 <p class="subline">Einmal kommentieren — gilt für alle Mails.</p>
 <div class="shared">{shared_html}</div></section>
 {''.join(seg_blocks)}
+{EDITOR_DIALOG}
 </main>
 
 <footer class="ds-footer"><div class="wrap"><div class="frow">
@@ -446,6 +511,11 @@ const SB_URL="{sb_url}", SB_KEY="{sb_key}", TAB="{tab}";
 const REST=SB_URL+"/rest/v1/"+TAB, RPC=SB_URL+"/rest/v1/rpc/sommer2026_comment_erledigt";
 const HDR={{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"}};
 let COMMENTS={{}}, SHOW_DONE=false;
+const MAILDATA={maildata_json};
+const FELD_LABEL={{betreff:"Betreff",preheader:"Betreff+ (Anriss)",botschaft:"Botschaft",text:"Fliesstext",alt:"Alt-Betreff (Nicht-Öffner)",cta:"Button-Text"}};
+const FELD_ROWS={{betreff:2,preheader:2,botschaft:3,text:6,alt:2,cta:1}};
+const FELD_ORDER=["betreff","preheader","botschaft","text","alt","cta"];
+let EDIT={{base:null,orig:{{}},last:{{}}}};
 const st=t=>document.getElementById('status').textContent=t;
 function setLang(l){{document.getElementById('b-de').classList.toggle('on',l=='de');document.getElementById('b-en').classList.toggle('on',l=='en');
  document.querySelectorAll('.mail').forEach(m=>m.style.display=(m.dataset.lang==l?'':'none'));}}
@@ -530,21 +600,99 @@ async function send(btn,key){{
  }}catch(e){{st("Fehler: "+e.message); alert("Konnte nicht senden:\\n"+e.message+"\\n\\nTipp: Diese Seite über werkzeuge.goetheanum.ch öffnen — in eingebetteten Vorschauen sind Netzwerkzugriffe oft blockiert.");}}
  btn.disabled=false;
 }}
+async function postFassung(key,txt,autor){{
+ // Eine Feld-Fassung schreiben (Präfix ‹Fassung → ›, unter dem Feld-Key). Genau die
+ // Zeile, die der Rücklauf-Agent konsumiert — von ‹vorschlagen› wie vom Overlay-Speichern.
+ const r=await fetch(REST,{{method:"POST",headers:{{...HDR,"Prefer":"return=minimal"}},body:JSON.stringify({{mail_key:key,autor,kommentar:"Fassung → "+txt,sprache:spracheAus(key)}})}});
+ if(!r.ok) throw new Error("HTTP "+r.status+" "+(await r.text()).slice(0,120));
+}}
 async function vorschlag(btn,key){{
- // Neue Feld-Fassung als Vorschlag speichern (Präfix ‹Fassung → ›, unter dem Feld-Key);
- // der Rücklauf-Agent erkennt sie und nimmt sie in heroes.json auf.
  const ta=btn.previousElementSibling, txt=ta.value.trim(); if(!txt) return;
  const eingabe=(document.getElementById('autor').value||'').trim();
  try{{if(eingabe)localStorage.setItem('autor',eingabe);}}catch(e){{}}
  const autor=eingabe||'anon';
  btn.disabled=true; st("sende Vorschlag …");
- try{{
-  const r=await fetch(REST,{{method:"POST",headers:{{...HDR,"Prefer":"return=minimal"}},body:JSON.stringify({{mail_key:key,autor,kommentar:"Fassung → "+txt,sprache:spracheAus(key)}})}});
-  if(!r.ok) throw new Error("HTTP "+r.status+" "+(await r.text()).slice(0,120));
-  st("Vorschlag gespeichert ✓"); await load();
- }}catch(e){{st("Fehler: "+e.message); alert("Konnte nicht senden:\\n"+e.message+"\\n\\nTipp: Diese Seite über werkzeuge.goetheanum.ch öffnen — in eingebetteten Vorschauen sind Netzwerkzugriffe oft blockiert.");}}
+ try{{ await postFassung(key,txt,autor); st("Vorschlag gespeichert ✓"); await load(); }}
+ catch(e){{st("Fehler: "+e.message); alert("Konnte nicht senden:\\n"+e.message+"\\n\\nTipp: Diese Seite über werkzeuge.goetheanum.ch öffnen — in eingebetteten Vorschauen sind Netzwerkzugriffe oft blockiert.");}}
  btn.disabled=false;
 }}
+/* ── Overlay-Editor ───────────────────────────────────────────────────────────
+   Mail gross bearbeiten; die Live-Vorschau ist exakt die Versand-Mail (srcdoc der
+   Karte), beim Tippen per Text-Node-Ersatz gepatcht. Speichern schreibt je
+   geändertem Feld eine ‹Fassung → ›-Anmerkung — die veröffentlichte HTML arbeitet
+   die bestehende Rücklauf-Schleife ein (die statische Seite baut kein MJML neu). */
+const estat=t=>{{const s=document.getElementById('edov-status');if(s)s.textContent=t;}};
+function titelMirror(s){{s=(s||'').trim();const i=s.lastIndexOf(' ');return i>0?s.slice(0,i)+'\\u00a0'+s.slice(i+1):s;}}
+function patchNode(doc,oldV,newV){{
+ if(!doc||!doc.body||!oldV) return false;
+ const w=doc.createTreeWalker(doc.body,NodeFilter.SHOW_TEXT);
+ let n; while(n=w.nextNode()){{ if(n.nodeValue.indexOf(oldV)>=0){{ n.nodeValue=n.nodeValue.replace(oldV,newV); return true; }} }}
+ return false;
+}}
+function edFeld(f){{const t=document.querySelector('#edov-fields textarea[data-field="'+f+'"]');return t?t.value:(EDIT.orig[f]!=null?EDIT.orig[f]:'');}}
+function setInbox(){{
+ const b=document.getElementById('eib-b'); if(b) b.textContent=edFeld('betreff');
+ const a=document.getElementById('eib-a'); if(a) a.textContent=edFeld('preheader');
+ const al=document.getElementById('eib-alt-t'); if(al) al.textContent=edFeld('alt');
+}}
+function initLast(){{
+ EDIT.last={{}};
+ if('botschaft' in EDIT.orig) EDIT.last.botschaft=titelMirror(EDIT.orig.botschaft);
+ if('text' in EDIT.orig) EDIT.last.text=EDIT.orig.text;
+ if('cta' in EDIT.orig) EDIT.last.cta=EDIT.orig.cta;
+}}
+function doPatch(feld,val){{
+ if(feld==='betreff'||feld==='preheader'||feld==='alt'){{ setInbox(); return; }}
+ const doc=document.getElementById('edov-frame').contentDocument;
+ if(feld==='botschaft'){{ const nr=titelMirror(val); if(patchNode(doc,EDIT.last.botschaft,nr)) EDIT.last.botschaft=nr; return; }}
+ const old=EDIT.last[feld]; if(old==null) return;
+ if(patchNode(doc,old,val)) EDIT.last[feld]=val;
+}}
+function onEdit(e){{const ta=e.target; clearTimeout(ta._pt); ta._pt=setTimeout(()=>doPatch(ta.dataset.field,ta.value),120);}}
+function openEditor(base){{
+ const d=MAILDATA[base]; if(!d) return;
+ EDIT={{base:base,orig:{{}},last:{{}}}};
+ document.getElementById('edov-title').textContent=d.label;
+ const felder=[];
+ FELD_ORDER.forEach(f=>{{
+   if(f==='cta'){{ if(d.cta&&d.cta.editable){{ felder.push(['cta',FELD_LABEL.cta,d.cta.label]); }} }}
+   else if(d.fields&&(f in d.fields)){{ felder.push([f,FELD_LABEL[f],d.fields[f]]); }}
+ }});
+ const w3=!!(d.fields&&('alt' in d.fields));
+ const inbox='<div class="edov-inbox"><div class="edov-ib-b" id="eib-b"></div>'
+   +'<div class="edov-ib-a" id="eib-a"></div>'
+   +(w3?'<div class="edov-ib-alt" id="eib-alt"><span>Nicht-Öffner erhalten:</span> <span id="eib-alt-t"></span></div>':'')
+   +'</div>';
+ const rows=felder.map(([f,lab,val])=>{{ EDIT.orig[f]=val;
+   return '<label class="edov-f"><span>'+esc(lab)+'</span><textarea data-field="'+f+'" rows="'+(FELD_ROWS[f]||3)+'">'+esc(val)+'</textarea></label>';
+ }}).join('');
+ document.getElementById('edov-fields').innerHTML=inbox+rows;
+ setInbox();
+ const src=document.querySelector('iframe[title="Vorschau '+base+'"]');
+ const frame=document.getElementById('edov-frame');
+ frame.onload=initLast; frame.srcdoc=src?src.srcdoc:'';
+ document.querySelectorAll('#edov-fields textarea').forEach(ta=>ta.addEventListener('input',onEdit));
+ estat('Bearbeiten — Speichern legt je geändertem Feld eine Fassung vor.');
+ document.getElementById('editor').showModal();
+}}
+async function saveEditor(){{
+ const base=EDIT.base; if(!base) return;
+ const eingabe=(document.getElementById('autor').value||'').trim();
+ try{{if(eingabe)localStorage.setItem('autor',eingabe);}}catch(e){{}}
+ const autor=eingabe||'anon';
+ const posts=[];
+ document.querySelectorAll('#edov-fields textarea').forEach(ta=>{{
+   const f=ta.dataset.field, v=ta.value.trim(), o=(EDIT.orig[f]!=null?String(EDIT.orig[f]):'').trim();
+   if(v&&v!==o) posts.push(postFassung(base+'#'+f,v,autor));
+ }});
+ if(!posts.length){{ estat('nichts geändert'); return; }}
+ estat('speichere '+posts.length+' Feld(er) …');
+ try{{ await Promise.all(posts); await load(); closeEditor();
+   st('gespeichert ✓ — der Rücklauf-Agent arbeitet die Fassung in die HTML ein'); }}
+ catch(e){{ estat('Fehler: '+e.message); alert("Konnte nicht speichern:\\n"+e.message+"\\n\\nTipp: Diese Seite über werkzeuge.goetheanum.ch öffnen — in eingebetteten Vorschauen sind Netzwerkzugriffe oft blockiert."); }}
+}}
+function closeEditor(){{ EDIT={{base:null,orig:{{}},last:{{}}}}; document.getElementById('editor').close(); }}
+document.getElementById('editor').addEventListener('close',()=>{{document.getElementById('edov-frame').srcdoc='';}});
 document.getElementById('offenliste').addEventListener('click',e=>{{const b=e.target.closest('[data-go]');if(b)springe(b.dataset.go);}});
 try{{const a=localStorage.getItem('autor');if(a&&a!=='anon')document.getElementById('autor').value=a;}}catch(e){{}}
 setLang('de');load();
