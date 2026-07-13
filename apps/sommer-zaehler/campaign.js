@@ -37,7 +37,15 @@
       { key:'andere',     label:'Andere',         rolle:'' }
     ],
     // Kosten der Aktion (Euro) – stehen auf 0, echte Zahlen werden erfragt.
-    zahlenProvisorisch: true       // blendet den Hinweis auf Beispielwerte ein
+    zahlenProvisorisch: true,      // blendet den Hinweis auf Beispielwerte ein
+    // Externe Quelle der Social-Media-Zahlen (Reichweite/Klicks je Kanal).
+    // Metricool gibt die Zahlen nur im geschützten Dashboard aus – ein Live-Abgriff
+    // aus dem Browser ist nicht möglich. Darum ablesen und je Aktivität eintragen.
+    quelleSocial: {
+      label: 'Metricool · Kampagnen-Auswertung',
+      url:   'https://app.metricool.com/reporting/campaigns-dashboard/public?token=eyJ6aXAiOiJERUYiLCJhbGciOiJIUzUxMiJ9.eJxVztFSgkAUgOF3ObcywhrCxh3VTLLWZmZmNU2Dy5Lgrhzg5AhN7x7jXZf_d_X_QPqdQfQOOyJsI9dNEcdWU1OoqjJjVVn4cKBICSIW8ouQ-YwFDhy2-X_QJxyAs-lk6p3B0icaiEBjU6_atpJHafY66b6sElsSM755NJORZFjGwdO8v85ewxN7vkoal4tDvWyThUrucS1fVOnFYo_Ey5u7oq770L_t5w9Wr5ualqsyrUaoWrmIdZG7lF_yYOfHb8UmnOVCd4EHDlCHejjBLDUE5zM6Ds3g9w85oFAH.cL8xJiluV4VRcqD2tsOIXKgpvI7UfN_fbvREgPpiP_r0T0JTBfS_vH2cnrq50d-kogWBjyZLE_OMINhFqo8dIw',
+      takt:  'Empfehlung: wöchentlich (montags) übernehmen; in der Schlussspurt-Woche ab 3. August täglich.'
+    }
   };
 
   var SB  = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
@@ -208,6 +216,28 @@
     var note = document.createElement('div'); note.className = 'fnote';
     note.textContent = 'Reichweite und Klicks kommen aus den Aktivitäten – je Eintrag erfassen (auch später über Bearbeiten). Abschlüsse und Geblieben zählt das Cockpit live aus den Anmeldungen.';
     host.appendChild(note);
+  }
+
+  // ── Quelle der Social-Media-Zahlen (Metricool) ─────────────────────────────
+  // Reichweite und Klicks der Social-Kanäle liegen nicht im Backend, sondern in
+  // Metricool. Der Block nennt die Quelle mit Link und den Übernahme-Takt; die
+  // Zahlen selbst trägt man je Aktivität ein (Reichweite/Klicks). Element-gewächtert,
+  // erscheint also nur auf Seiten mit einem #quelleSocial-Container.
+  function renderQuelleSocial(){
+    var host = el('quelleSocial'); if (!host) return;
+    var q = CONFIG.quelleSocial; if (!q) return;
+    host.innerHTML = '';
+    var row = document.createElement('div'); row.className = 'landing';
+    var lab = document.createElement('span'); lab.className = 'meta';
+    lab.textContent = 'Quelle · Social-Media-Zahlen';
+    var a = document.createElement('a'); a.className = 'btn';
+    a.href = q.url; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = q.label;
+    row.appendChild(lab); row.appendChild(a);
+    var note = document.createElement('p'); note.className = 'provisorisch';
+    note.textContent = 'Reichweite und Klicks der Social-Media-Kanäle kommen aus Metricool. ' +
+      q.takt + ' Ein automatischer Abruf ist nicht möglich – die abgelesenen Zahlen je Aktivität eintragen.';
+    host.appendChild(row); host.appendChild(note);
   }
 
   // ── Attribution nach Motiv (utm_content) ───────────────────────────────────
@@ -789,6 +819,7 @@
   // ── Laden ──────────────────────────────────────────────────────────────────
   function load(){
     renderDeadline();
+    renderQuelleSocial();
     if(CONFIG.zahlenProvisorisch && el('provisorisch')){
       el('provisorisch').textContent = 'Zielmarken, Preise und die Bleibe-Quote sind vorläufig hinterlegt – sobald die echten Werte gesetzt sind, rechnet das Cockpit unverändert weiter.';
     }
