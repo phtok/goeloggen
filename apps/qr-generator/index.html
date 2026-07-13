@@ -721,16 +721,14 @@
   el('statBtn').addEventListener('click', function(){ zeigeStats(el('statCode').value); });
   el('statCode').addEventListener('keydown', function(ev){ if(ev.key === 'Enter') zeigeStats(this.value); });
 
-  // Löschen: Knopf nur im Backstage-Modus (Schalter aus nav.js), der echte
-  // Riegel ist das Team-Passwort in der RPC qr_link_loeschen.
+  // Löschen: Knopf nur im Backstage-Modus (Schalter aus nav.js) – kein Passwort
+  // (Beschluss: Backstage genügt als Schutz). Nur eine Rückfrage gegen Versehen.
   function imBackstage(){ try { return localStorage.getItem('goeNavIntern') === '1'; } catch(e){ return false; } }
   function loescheCode(code){
-    var pw = window.prompt('Team-Passwort, um „' + code + '“ endgültig zu löschen (Kurzlink und Zählung):');
-    if(pw === null || pw === '') return;
-    rpc('qr_link_loeschen', { p_code: code, p_passwort: pw })
+    if(!window.confirm('Kurzlink „' + code + '“ endgültig löschen? Der Link und seine Zählung sind dann weg.')) return;
+    rpc('qr_link_loeschen', { p_code: code })
       .then(function(ergebnis){
         if(ergebnis === 'ok'){ statSay('Code „' + code + '“ gelöscht.'); el('statDetail').hidden = true; ladeRegister(); }
-        else if(ergebnis === 'passwort'){ statSay('Falsches Passwort – nichts gelöscht.', true); }
         else { statSay('Code „' + code + '“ nicht gefunden.', true); }
       })
       .catch(function(){ statSay('Löschen nicht erreichbar.', true); });
@@ -760,7 +758,7 @@
         if(backstage){
           var weg = document.createElement('button');
           weg.type = 'button'; weg.className = 'mini weg'; weg.textContent = 'Löschen';
-          weg.setAttribute('aria-label', 'Kurzlink löschen (Team-Passwort nötig)');
+          weg.setAttribute('aria-label', 'Kurzlink löschen');
           weg.addEventListener('click', function(){ loescheCode(x.code); });
           tr.children[5].appendChild(weg);
         }
