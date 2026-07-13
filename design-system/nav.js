@@ -90,15 +90,28 @@
   // Werkzeuge mit JS-Download rufen window.goeStat('download', name) selbst auf.
   var STAT_SB = "https://dagcsnfrlbpxcmdimnrw.supabase.co";
   var STAT_KEY = "sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY";
-  function goeStat(event, label) {
-    if (!ACTIVE || !event) return;
+  function goeBump(tool, event, label) {
     try {
       fetch(STAT_SB + "/rest/v1/rpc/goeloggen_bump", {
         method: "POST", keepalive: true,
         headers: { "Content-Type": "application/json", "apikey": STAT_KEY, "Authorization": "Bearer " + STAT_KEY },
-        body: JSON.stringify({ p_tool: ACTIVE, p_event: event, p_label: (label || "").slice(0, 160) })
+        body: JSON.stringify({ p_tool: tool, p_event: event, p_label: (label || "").slice(0, 160) })
       }).catch(function () {});
     } catch (e) {}
+  }
+  function goeStat(event, label) {
+    if (!ACTIVE || !event) return;
+    goeBump(ACTIVE, event, label);
+    // Grob-Region je Seitenaufruf: die ZEITZONE des Browsers (z. B. „Europe/Zurich")
+    // – kein IP, keine Personendaten, nur eine anonyme Summe je Zeitzone. Gezählt
+    // über dieselbe (tool,event,label)-Zählung mit dem reservierten Schlüssel
+    // „__region" (die Statistik blendet ihn aus der Werkzeugliste aus).
+    if (event === "view") {
+      var tz = "";
+      try { tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || ""); } catch (e) {}
+      if (!tz) { try { tz = (navigator.language || ""); } catch (e) {} }
+      if (tz) goeBump("__region", "view", tz);
+    }
   }
   window.goeStat = goeStat;
   goeStat("view", "");
