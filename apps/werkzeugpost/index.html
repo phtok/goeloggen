@@ -107,6 +107,12 @@
 
   .hinweis{background:var(--field-bg);border-radius:12px;padding:var(--s4);font-size:var(--t-small);line-height:1.55;margin-top:var(--s5)}
   .hinweis code{font-family:var(--font-text);background:var(--paper);padding:.05em .35em;border-radius:6px}
+
+  /* Leiser Statushinweis, wenn die Quelle frisch vorbereitete Ausgaben nachlegt.
+     Gold-Kante wie der aktive Menüeintrag; ruhige Fläche, Text auf Tokens. */
+  .quelle-hinweis{margin-bottom:var(--s4);background:var(--field-bg);border-radius:12px;
+    box-shadow:inset 3px 0 0 var(--gold-deep);padding:var(--s3) var(--s4);
+    font-size:var(--t-small);line-height:1.5;color:var(--ink)}
 </style>
 </head>
 <body>
@@ -130,6 +136,8 @@
     <button class="btn" id="zuruecksetzen" type="button">Auf Datei-Stand zurück</button>
     <button class="btn primary" id="export" type="button">mails.json exportieren</button>
   </div>
+
+  <p class="quelle-hinweis" id="quelle-hinweis" role="status" hidden></p>
 
   <div class="werkstatt">
     <div class="liste-spalte">
@@ -167,14 +175,40 @@ const T_BODY_WARN = 950;
 const T_BETREFF_WARN = 60;
 
 async function laden(){
-  const roh = localStorage.getItem(LS);
-  if(roh){ try{ daten = JSON.parse(roh); }catch(e){ daten = null; } }
-  const [m, p] = await Promise.all([
-    daten ? Promise.resolve(daten) : fetch(ROOT+"mails.json").then(r=>r.json()),
+  // Die committete Quelle ist die Wahrheit (eine Quelle, Verlauf = Git) und darf
+  // nie von einem lokalen Zwischenstand verdeckt werden. Frisch vorbereitete
+  // Ausgaben, die der Zwischenstand noch nicht kennt, werden ergänzt — nicht-
+  // zerstörend: lokale Bearbeitungen bleiben erhalten. «Auf Datei-Stand zurück»
+  // verwirft den Zwischenstand ganz.
+  const [quelle, p] = await Promise.all([
+    fetch(ROOT+"mails.json").then(r=>r.json()),
     fetch(ROOT+"personas.json").then(r=>r.json())
   ]);
-  daten = m; personas = p.personas;
+  personas = p.personas;
+
+  let entwurf = null;
+  const roh = localStorage.getItem(LS);
+  if(roh){ try{ entwurf = JSON.parse(roh); }catch(e){ entwurf = null; } }
+
+  let ergaenzt = 0;
+  if(entwurf && Array.isArray(entwurf.ausgaben)){
+    daten = entwurf;
+    // Metadaten (Serie, Statuswerte, Version) stets aus der Quelle nachziehen.
+    daten.serie = quelle.serie;
+    daten.status_werte = quelle.status_werte;
+    daten.version = quelle.version;
+    const haben = new Set(daten.ausgaben.map(g=>g.id));
+    let maxPos = Math.max(0, ...daten.ausgaben.map(g=>g.pos||0));
+    [...quelle.ausgaben].sort((a,b)=>(a.pos||0)-(b.pos||0)).forEach(g=>{
+      if(!haben.has(g.id)){ daten.ausgaben.push(Object.assign({}, g, {pos:++maxPos})); ergaenzt++; }
+    });
+    if(ergaenzt) sichern();
+  } else {
+    daten = quelle;
+  }
+
   listeZeichnen();
+  if(ergaenzt) quelleHinweis(ergaenzt);
 }
 
 const esc = s => (s||"").replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
@@ -183,6 +217,13 @@ const personaName = id => (personas.find(x=>x.id===id)||{}).name || id;
 const personaRolle = id => (personas.find(x=>x.id===id)||{}).rolle || "";
 function sichern(){ localStorage.setItem(LS, JSON.stringify(daten)); }
 function statusLabel(s){ return s.replace("_"," "); }
+function quelleHinweis(n){
+  const el = document.getElementById("quelle-hinweis");
+  if(!el) return;
+  el.textContent = (n===1 ? "Eine neu vorbereitete Ausgabe" : n+" neu vorbereitete Ausgaben")
+    + " aus der Quelle ergänzt — dein Zwischenstand kannte sie noch nicht.";
+  el.hidden = false;
+}
 
 // ---------- Liste ----------
 function listeZeichnen(){
