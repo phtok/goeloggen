@@ -124,8 +124,8 @@ Alle Links tragen zudem
 | w1 | EN | Thinking that reaches beyond the week — 3 months free | — | `w1_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w1_en.html |
 | w2 | DE | Drei Monate mitlesen, danach entscheiden Sie. | — | `w2_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w2_de.html |
 | w2 | EN | Three months of reading — then you decide. | — | `w2_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w2_en.html |
-| w3 | DE | Bis Samstag: drei Monate mitlesen, kostenlos | Bis Samstag: Denken, das über die Woche hinausreicht | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_de.html |
-| w3 | EN | Until Saturday: three months of reading, free | Until Saturday: thinking that reaches beyond the week | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_en.html |
+| w3 | DE | Bis Samstag: drei Monate gratis lesen — dann schliesst die Aktion | Am Samstag endet Ihr Gratis-Test der Wochenschrift — falls Sie ihn noch wollen. | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_de.html |
+| w3 | EN | Until Saturday: three months of the weekly, free — then the offer closes | On Saturday your free trial of the weekly ends — if you still want it. | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_en.html |
 
 ### S26 · NurWS→TV (Angebot: goetheanum.tv sehen)
 
@@ -135,8 +135,8 @@ Alle Links tragen zudem
 | w1 | EN | Watch people think out loud — 3 months free | — | `w1_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w1_en.html |
 | w2 | DE | Ihr Sommer hat noch Abende frei | — | `w2_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w2_de.html |
 | w2 | EN | Your summer still has evenings free | — | `w2_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w2_en.html |
-| w3 | DE | Nur noch bis Samstag: drei Monate gratis | Bis Samstag: sehen, wie Menschen laut denken | `w3_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3_de.html |
-| w3 | EN | Only until Saturday: three months free | Until Saturday: watch people think out loud | `w3_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3_en.html |
+| w3 | DE | Bis Samstag: drei Monate goetheanum.tv gratis — dann schliesst die Aktion | Am Samstag endet Ihr Gratis-Test von goetheanum.tv — falls Sie ihn noch wollen. | `w3_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3_de.html |
+| w3 | EN | Until Saturday: three months of goetheanum.tv, free — then the offer closes | On Saturday your free trial of goetheanum.tv ends — if you still want it. | `w3_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3_en.html |
 
 ### S26 · NoAbo (beide Angebote; jede Mail führt mit einem Button zur Übersicht)
 
@@ -146,10 +146,10 @@ Alle Links tragen zudem
 | w1 | EN | A summer with the Goetheanum — 3 months free | — | `w1_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w1_en.html |
 | w2 | DE | Lesen, sehen — oder gleich beides | — | `w2_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w2_de.html |
 | w2 | EN | Read, watch — or simply both | — | `w2_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w2_en.html |
-| w3 | DE | Am Samstag endet die Sommer-Aktion | Drei Monate Goetheanum — lesen, sehen oder beides | `w3_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3_de.html |
-| w3 | EN | The summer offer ends on Saturday | Three months of Goetheanum — read, watch or both | `w3_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3_en.html |
-| w3b | DE | Morgen ist Schluss | — | `w3b_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3b_de.html |
-| w3b | EN | It ends tomorrow | — | `w3b_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3b_en.html |
+| w3 | DE | Bis Samstag: drei Monate Goetheanum gratis — dann schliesst die Aktion | Am Samstag endet Ihr Gratis-Test — falls Sie ihn noch wollen. | `w3_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3_de.html |
+| w3 | EN | Until Saturday: three months of the Goetheanum, free — then the offer closes | On Saturday your free trial ends — if you still want it. | `w3_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3_en.html |
+| w3b | DE | Morgen schliesst die Aktion | — | `w3b_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3b_de.html |
+| w3b | EN | Tomorrow the offer closes | — | `w3b_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3b_en.html |
 
 Macht **26 E-Mail-Schritte** insgesamt: 20 Mails, wobei die 6 w3-Mails je zweimal eingehängt werden (Standard- und Alt-Betreff, gleiches HTML).
 <!-- TABELLEN:END -->
