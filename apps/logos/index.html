@@ -132,14 +132,6 @@
   .empf-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s8)}
   .empf-ps{font-family:var(--font-text);color:var(--gold-ink);font-size:var(--t-small);margin:0;max-width:46ch}
 
-  .dl{display:grid;gap:var(--s4);grid-template-columns:1fr;margin-top:var(--s6)}
-  @media(min-width:680px){.dl{grid-template-columns:1fr 1fr}}
-  .dl .col{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s4)}
-  .dl .col.ja{background:var(--soft)}
-  .dl h4{display:flex;align-items:center;gap:8px;font-weight:var(--w-strong);font-size:14px;margin-bottom:var(--s2)}
-  .dl .ja h4{color:var(--ok)}.dl .nein h4{color:var(--bad)}
-  .dl li{list-style:none;display:flex;gap:9px;padding:5px 0;border-top:1px solid var(--line-soft);font-size:var(--t-small);line-height:1.45}
-  .dl .ja .mk{color:var(--ok);font-weight:var(--w-strong)}.dl .nein .mk{color:var(--bad);font-weight:var(--w-strong)}
   /* .note kommt aus base.css (kanonische Hinweis-Rolle). */
 </style>
 </head>
@@ -266,26 +258,6 @@
           <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M13 6h15l7 7v29H13z"/><path d="M28 6v7h7"/><circle cx="19" cy="29" r="2.4" class="acc"/><circle cx="30" cy="34" r="2.4" class="acc"/><line x1="19" y1="29" x2="30" y2="34" class="acc"/></svg>
           <h3>SVG oder PNG?</h3>
           <p>SVG für Web und Druck (Vektor), PNG für Pixel. Beides aus diesem Werkzeug. Ruhiger Grund mit genug Kontrast; auf Foto oder Dunkel die Weiss-Variante.</p>
-        </div>
-      </div>
-
-      <h3 style="margin-top:var(--s2)">So / So nicht</h3>
-      <div class="dl">
-        <div class="col ja">
-          <h4>✓ So</h4>
-          <ul>
-            <li><span class="mk">✓</span> Fertiges SVG aus dem Werkzeug.</li>
-            <li><span class="mk">✓</span> Öffentlich das allgemeine Logo, fachlich das Fachlogo.</li>
-            <li><span class="mk">✓</span> Schutzraum wahren, genug Kontrast.</li>
-          </ul>
-        </div>
-        <div class="col nein">
-          <h4>✕ So nicht</h4>
-          <ul>
-            <li><span class="mk">✕</span> Wortmarke neu setzen, Lockup umbauen.</li>
-            <li><span class="mk">✕</span> Zeichen quetschen, verzerren, einfärben, als Mini-Icon.</li>
-            <li><span class="mk">✕</span> Logo aus altem Dokument herauskopieren.</li>
-          </ul>
         </div>
       </div>
 
