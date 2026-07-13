@@ -97,6 +97,14 @@ angewendet). Rücklauf: offene Kommentare lesen → in heroes.json korrigieren �
 unter dem Feld-Key mit Präfix `Fassung → ` ins Backend. Der Rücklauf-Agent erkennt sie als
 fertigen Feldtext und setzt sie ein (kein Umformulieren) — «im Editor bearbeiten» ohne die
 eine Quelle/Git/Prüfmaschinen aufzugeben. Details: RUECKLAUF-AGENT.md.
+**Overlay-Editor ‹✎ Bearbeiten› (je Mail-Karte):** öffnet die Mail gross als `<dialog>` —
+links die Live-Vorschau (exakt die Versand-Mail, beim Tippen per Text-Node-Ersatz gepatcht:
+Fliesstext/Botschaft im Body, Betreff/Anriss/Alt im Posteingang-Streifen), rechts die Felder.
+`Speichern` schreibt je **geändertem** Feld eine `Fassung → `-Anmerkung (derselbe Kanal wie
+‹vorschlagen›, geteilter JS-Helfer `postFassung`) — kein neues Backend. Die veröffentlichte
+HTML arbeitet die bestehende Rücklauf-Schleife ein (Apply-Stufe 1, Entscheid Ph 13.7.: die
+statische Seite baut kein MJML neu, kein Auto-Merge/Secret). Button-Text nur editierbar, wenn
+das Motiv genau ein `cta_label` hat (lesen/sehen); `beides` (Multi-Label) ist ausgenommen.
 
 ## Rücklauf-Agent (Gegenlese-Schleife automatisiert)
 `ruecklauf.py` ist das deterministische Herz: `python3 ruecklauf.py` holt die **offenen**
