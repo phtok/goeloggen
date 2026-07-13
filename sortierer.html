@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Sortierer — Kistenpflege · Goetheanum</title>
+<meta name="description" content="Schublade, Karussell und Karten der Startseite selbst ordnen und die Reihenfolge exportieren." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+
+<style>
+  .hero{padding-block:clamp(28px,5vw,52px) var(--s5)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(26px,4.4vw,44px);line-height:1.06;letter-spacing:-.01em;max-width:20ch}
+  .hero .lede{margin-top:var(--s4);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:64ch}
+  .hero .lede code{font-family:var(--font-text);background:var(--field-bg);padding:.05em .35em;border-radius:6px}
+
+  .toolbar{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center;margin-block:var(--s5)}
+  .toolbar .spacer{flex:1 1 auto}
+
+  .status{margin-block:var(--s4);background:var(--field-bg);border-radius:12px;
+    box-shadow:inset 3px 0 0 var(--gold-deep);padding:var(--s3) var(--s4);
+    font-size:var(--t-small);line-height:1.5;color:var(--ink)}
+
+  .spalten{display:grid;gap:var(--s5)}
+  @media(min-width:820px){ .spalten{grid-template-columns:repeat(3,1fr)} }
+
+  .kiste{border:1px solid var(--line);border-radius:16px;background:var(--paper);overflow:hidden;display:flex;flex-direction:column}
+  .kiste-kopf{padding:var(--s4) var(--s4) var(--s3);border-bottom:1px solid var(--line)}
+  .kiste-kopf h2{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(18px,2.4vw,22px);line-height:1.1}
+  .kiste-kopf p{color:var(--muted);font-size:var(--t-small);line-height:1.4;margin-top:2px}
+
+  .liste{list-style:none;margin:0;padding:var(--s2);display:flex;flex-direction:column;gap:var(--s2)}
+  .zeile{display:flex;align-items:center;gap:var(--s2);background:var(--field-bg);border-radius:12px;
+    padding:6px 6px 6px var(--s3);cursor:grab}
+  .zeile.zieht{opacity:.5}
+  .zeile.ueber{box-shadow:inset 0 0 0 2px var(--gold-deep)}
+  .zeile .griff{flex:0 0 auto;color:var(--muted);font-size:18px;line-height:1;cursor:grab;user-select:none;width:22px;text-align:center}
+  .zeile .wer{flex:1;min-width:0}
+  .zeile .wer b{font-family:var(--font-text);font-weight:600;font-size:var(--t-body,16px);line-height:1.25;display:block;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .zeile .wer small{color:var(--muted);font-size:var(--t-micro)}
+  .zeile .rang{flex:0 0 auto;color:var(--muted);font-family:var(--font-text);font-size:var(--t-micro);min-width:2ch;text-align:right}
+  .zeile-ordnung{display:flex;flex-direction:column;gap:2px;flex:0 0 auto}
+  .zeile-ordnung .btn{min-width:var(--tap);min-height:var(--tap);padding:0;display:grid;place-items:center}
+  @media(min-width:820px){ .zeile-ordnung .btn{min-height:34px} }
+
+  .hinweisbox{background:var(--field-bg);border-radius:12px;padding:var(--s4);font-size:var(--t-small);line-height:1.55;margin-top:var(--s6)}
+  .hinweisbox code{font-family:var(--font-text);background:var(--paper);padding:.05em .35em;border-radius:6px}
+  .hinweisbox strong{font-family:var(--font);font-weight:var(--w-deutlich)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-active="sortierer"
+        data-onpage="Stats:statistik.html|Sortierer:sortierer.html|Post:apps/werkzeugpost/"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Kistenpflege · Sortierer</span>
+    <h1>Reihenfolgen selbst ordnen</h1>
+    <p class="lede">Ziehen (oder mit den Pfeilen) ordnen: die <em>Schublade</em> (öffentliches Menü),
+      das <em>Karussell</em> und die <em>Karten</em> der Startseite. Eine Quelle, ein Verlauf:
+      <em>Exportieren</em> schreibt die <code>tools.json</code> mit dem Feld <code>reihenfolge</code>,
+      die ihr committet. Startseite und Schublade lesen sie dann.</p>
+  </section>
+
+  <div class="toolbar">
+    <span class="spacer"></span>
+    <button class="btn" id="zuruecksetzen" type="button">Auf Datei-Stand zurück</button>
+    <button class="btn primary" id="export" type="button">tools.json exportieren</button>
+  </div>
+
+  <p class="status" id="status" role="status" hidden></p>
+
+  <div class="spalten" id="spalten" aria-live="polite"></div>
+
+  <div class="hinweisbox">
+    <strong>So wirkt es.</strong> Der Sortierer ändert nur das Feld <code>reihenfolge</code> in der
+    <code>tools.json</code> – alles andere bleibt unangetastet. Nach dem <em>Exportieren</em> die Datei
+    committen; Startseite und Schublade übernehmen die neue Reihenfolge. Ordnen geschieht hier im Browser
+    (Zwischenstand lokal). <code>Auf Datei-Stand zurück</code> verwirft den Zwischenstand.
+  </div>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Kistenpflege</span>
+    <span><a href="design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script>
+"use strict";
+(function(){
+  var LS = "sortierer-entwurf-v1";
+  var PUBLIC = ["generatoren", "schrift", "system", "anwendung"];
+  var LISTEN = [
+    { key:"schublade", label:"Schublade", hint:"Öffentliches Menü (Burger) – von oben nach unten." },
+    { key:"karussell", label:"Karussell", hint:"Entdecker-Karussell auf der Startseite." },
+    { key:"karten",    label:"Karten",    hint:"Kachel-Raster auf der Startseite." }
+  ];
+
+  var rohText = "";      // tools.json als Text (für formatschonenden Export)
+  var quelle = null;     // tools.json geparst
+  var titel = {};        // slug → Anzeigename
+  var daten = { schublade:[], karten:[], karussell:[] };
+  var zieht = null;      // {key, index} beim Ziehen
+
+  function esc(s){ return (s||"").replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  function ladeEntwurf(){ try{ var r=localStorage.getItem(LS); return r?JSON.parse(r):null; }catch(e){ return null; } }
+  function sichern(){ try{ localStorage.setItem(LS, JSON.stringify(daten)); }catch(e){} }
+
+  function laden(){
+    fetch("tools.json").then(function(r){ return r.text(); }).then(function(txt){
+      rohText = txt; quelle = JSON.parse(txt);
+      // Anzeigename wie auf den Flächen (Karte/Schublade zeigen den Titel).
+      (quelle.tools||[]).forEach(function(t){ if(t.slug) titel[t.slug] = t.title || t.short || t.slug; });
+      titel["empfehlungen"] = titel["empfehlungen"] || "Diese Mail wird gelesen";
+
+      var R = quelle.reihenfolge || {};
+      var draft = ladeEntwurf();
+      ["schublade","karten","karussell"].forEach(function(k){
+        daten[k] = (draft && Array.isArray(draft[k])) ? draft[k].slice()
+                 : (Array.isArray(R[k]) ? R[k].slice() : []);
+      });
+      // Schublade und Karten decken genau die öffentlichen Werkzeuge ab:
+      // fehlende anhängen, verschwundene entfernen (Karussell bleibt kuratiert).
+      var publik = (quelle.tools||[]).filter(function(t){
+        return PUBLIC.indexOf(t.cat) >= 0 && (t.status === "live" || t.status === "beta");
+      }).map(function(t){ return t.slug; });
+      ["schublade","karten"].forEach(function(k){
+        daten[k] = daten[k].filter(function(s){ return publik.indexOf(s) >= 0; });
+        publik.forEach(function(s){ if(daten[k].indexOf(s) < 0) daten[k].push(s); });
+      });
+      zeichnen();
+    }).catch(function(){
+      document.getElementById("spalten").innerHTML =
+        '<p style="color:var(--muted)">tools.json konnte nicht geladen werden.</p>';
+    });
+  }
+
+  function zeichnen(){
+    var wrap = document.getElementById("spalten");
+    wrap.innerHTML = "";
+    LISTEN.forEach(function(L){
+      var kiste = document.createElement("section"); kiste.className = "kiste";
+      var kopf = '<div class="kiste-kopf"><h2>'+esc(L.label)+'</h2><p>'+esc(L.hint)+'</p></div>';
+      var lis = daten[L.key].map(function(slug, i){
+        var name = titel[slug] || slug;
+        return '<li class="zeile" draggable="true" data-key="'+L.key+'" data-index="'+i+'">'+
+                 '<span class="griff" aria-hidden="true">⠿</span>'+
+                 '<span class="rang">'+(i+1)+'</span>'+
+                 '<span class="wer"><b>'+esc(name)+'</b><small>'+esc(slug)+'</small></span>'+
+                 '<span class="zeile-ordnung">'+
+                   '<button class="btn" type="button" data-hoch="'+L.key+':'+i+'" '+(i===0?'disabled':'')+' aria-label="'+esc(name)+' nach oben">↑</button>'+
+                   '<button class="btn" type="button" data-runter="'+L.key+':'+i+'" '+(i===daten[L.key].length-1?'disabled':'')+' aria-label="'+esc(name)+' nach unten">↓</button>'+
+                 '</span>'+
+               '</li>';
+      }).join("");
+      kiste.innerHTML = kopf + '<ul class="liste" data-key="'+L.key+'">'+lis+'</ul>';
+      wrap.appendChild(kiste);
+    });
+  }
+
+  function verschiebe(key, from, to){
+    var a = daten[key];
+    if(to < 0 || to >= a.length) return;
+    var x = a.splice(from, 1)[0];
+    a.splice(to, 0, x);
+    sichern(); zeichnen();
+  }
+
+  // Pfeil-Knöpfe (barrierefrei, auch mobil)
+  document.getElementById("spalten").addEventListener("click", function(e){
+    var h = e.target.closest("[data-hoch]"), r = e.target.closest("[data-runter]");
+    if(h){ var p=h.getAttribute("data-hoch").split(":"); verschiebe(p[0], +p[1], +p[1]-1); }
+    else if(r){ var q=r.getAttribute("data-runter").split(":"); verschiebe(q[0], +q[1], +q[1]+1); }
+  });
+
+  // Ziehen (Drag-and-drop) – nur innerhalb derselben Liste
+  var wrapEl = document.getElementById("spalten");
+  wrapEl.addEventListener("dragstart", function(e){
+    var li = e.target.closest(".zeile"); if(!li) return;
+    zieht = { key: li.getAttribute("data-key"), index: +li.getAttribute("data-index") };
+    li.classList.add("zieht");
+    try{ e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", ""); }catch(x){}
+  });
+  wrapEl.addEventListener("dragend", function(){
+    zieht = null;
+    Array.prototype.forEach.call(wrapEl.querySelectorAll(".zeile"), function(z){ z.classList.remove("zieht","ueber"); });
+  });
+  wrapEl.addEventListener("dragover", function(e){
+    var li = e.target.closest(".zeile"); if(!li || !zieht) return;
+    if(li.getAttribute("data-key") !== zieht.key) return;   // nicht über Listen hinweg
+    e.preventDefault();
+    Array.prototype.forEach.call(wrapEl.querySelectorAll(".zeile.ueber"), function(z){ z.classList.remove("ueber"); });
+    li.classList.add("ueber");
+  });
+  wrapEl.addEventListener("drop", function(e){
+    var li = e.target.closest(".zeile"); if(!li || !zieht) return;
+    if(li.getAttribute("data-key") !== zieht.key) return;
+    e.preventDefault();
+    var to = +li.getAttribute("data-index");
+    verschiebe(zieht.key, zieht.index, to);
+    zieht = null;
+  });
+
+  // Export: nur das Feld reihenfolge in der tools.json ersetzen (Rest byte-genau
+  // erhalten → schlanker Git-Diff). Fällt der Textersatz aus, wird neu serialisiert.
+  function bausteinReihenfolge(){
+    var arr = function(a){ return "[" + a.map(function(s){ return JSON.stringify(s); }).join(", ") + "]"; };
+    var hinweis = (quelle.reihenfolge && quelle.reihenfolge.$hinweis) ||
+      "Vom Sortierer gepflegte Reihenfolgen (Slugs). Startseite und Schublade lesen sie; fehlt ein Eintrag, gilt die eingebaute Vorgabe. Verlauf = Git.";
+    return '"reihenfolge": {\n' +
+      '    "$hinweis": ' + JSON.stringify(hinweis) + ',\n' +
+      '    "schublade": ' + arr(daten.schublade) + ',\n' +
+      '    "karten": ' + arr(daten.karten) + ',\n' +
+      '    "karussell": ' + arr(daten.karussell) + '\n' +
+      '  }';
+  }
+  function exportieren(){
+    var text;
+    if(/"reihenfolge"\s*:\s*\{[\s\S]*?\n  \}/.test(rohText)){
+      text = rohText.replace(/"reihenfolge"\s*:\s*\{[\s\S]*?\n  \}/, bausteinReihenfolge());
+    } else {
+      var obj = JSON.parse(JSON.stringify(quelle));
+      obj.reihenfolge = { $hinweis: (quelle.reihenfolge||{}).$hinweis || "", schublade: daten.schublade, karten: daten.karten, karussell: daten.karussell };
+      text = JSON.stringify(obj, null, 2);
+    }
+    var blob = new Blob([text], { type: "application/json" });
+    var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "tools.json"; a.click();
+    var s = document.getElementById("status");
+    s.textContent = "tools.json exportiert. Jetzt committen – Startseite und Schublade übernehmen die Reihenfolge.";
+    s.hidden = false;
+  }
+  document.getElementById("export").addEventListener("click", exportieren);
+  document.getElementById("zuruecksetzen").addEventListener("click", function(){
+    if(confirm("Lokalen Zwischenstand verwerfen und den Datei-Stand laden?")){
+      try{ localStorage.removeItem(LS); }catch(e){}
+      location.reload();
+    }
+  });
+
+  laden();
+})();
+</script>
+</body>
+</html>

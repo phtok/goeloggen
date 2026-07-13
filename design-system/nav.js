@@ -135,9 +135,9 @@
   // öffentlich ist. Manifest-Kategorien, die hier fehlen, laufen beim Laden
   // automatisch als eigene Welt nach (Sicherheitsnetz).
   var INTERN_EXTRA = [
+    { id: "kistenpflege", label: "Kistenpflege", intro: "Die Werkzeuge selbst pflegen – Stats, Sortierer, Post.", cats: ["kistenpflege"] },
     { id: "kampagne", label: "Kampagne", intro: "Kampagnen planen, verlinken, mailen, zählen.", cats: ["kampagne"] },
     { id: "schau", label: "Schau & Mockups", intro: "Präsentations-Mockups und Studien.", cats: ["schau"] },
-    { id: "statistik", label: "Statistik", intro: "Nutzungszahlen aller Werkzeuge.", cats: ["statistik"] },
     { id: "labor", label: "Labor", intro: "Erprobung und Abgelegtes – zum Ausprobieren, mit verschachtelten Kisten.",
       cats: ["labor"], sub: [
         { id: "ligaturen", label: "Ligaturen", intro: "Die Kiste nur für die Ligaturen.", cats: ["ligaturen"] },
@@ -468,7 +468,7 @@
   // Kategorie der aktiven Seite: ihre Welt und Unterwelt stehen offen.
   function worldGroupEl(w, curCat) {
     var tools = ALL.filter(function (t) {
-      return (w.cats || []).indexOf(t.cat) !== -1 && INTERN_PIN.indexOf(t.slug) === -1;
+      return (w.cats || []).indexOf(t.cat) !== -1;
     });
     var subs = (w.sub || []).map(function (s) { return worldGroupEl(s, curCat); })
                             .filter(function (n) { return n; });
@@ -484,17 +484,13 @@
     return g;
   }
 
-  // Öffentliche Reihenfolge (flach) – wie die Startseite; nur der Editor
-  // steht tiefer, direkt vor Wallpaper (noch nicht reif — Entscheid
-  // Auftraggeber, 8. Juli 2026). Unbekannte ans Ende.
-  var FLAT_ORDER = ["logo-generator", "signatur", "visitenkarten", "schriften", "icons",
+  // Öffentliche Reihenfolge (flach) – wie die Startseite. Vom Sortierer gepflegt
+  // (tools.json → reihenfolge.schublade); fehlt sie, gilt diese eingebaute
+  // Vorgabe. Unbekannte ans Ende.
+  var DEFAULT_FLAT_ORDER = ["logo-generator", "signatur", "visitenkarten", "schriften", "icons",
     "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint",
     "editor", "wallpaper", "design-system"];
-  // Backstage angeheftet: täglich gebrauchte Redaktions-Werkzeuge stehen in der
-  // Intern-Schublade ganz oben – über den Welten, kurzer Griff statt in einer
-  // Welt vergraben (Werkzeugpost = Redaktionstisch der Monatsmail). Angeheftete
-  // erscheinen nicht zusätzlich in ihrer Welt (G03 – Doppelung weglassen).
-  var INTERN_PIN = ["werkzeugpost"];
+  var FLAT_ORDER = DEFAULT_FLAT_ORDER;
   var PUBLIC_CATS = WORLDS.reduce(function (a, w) { return a.concat(w.cats); }, []);
 
   function renderDrawer() {
@@ -517,13 +513,9 @@
       pub.sort(function (a, b) { return rank(a) - rank(b); });
       pub.forEach(function (t) { drawerBody.appendChild(linkEl(t)); });
     } else {
-      // intern: erst die angehefteten Redaktions-Werkzeuge (ganz oben), dann
-      // nach Backstage-Welten gruppiert; Unterwelten verschachteln sich (Labor).
+      // intern: nach Backstage-Welten gruppiert; Unterwelten verschachteln sich
+      // (Labor). Kistenpflege bündelt Stats · Sortierer · Post.
       var curCat = currentCat();
-      INTERN_PIN.forEach(function (slug) {
-        var t = bySlug(slug);
-        if (t) drawerBody.appendChild(linkEl(t));
-      });
       WORLDS.concat(INTERN_EXTRA).forEach(function (w) {
         var node = worldGroupEl(w, curCat);
         if (node) drawerBody.appendChild(node);
@@ -535,6 +527,11 @@
   // --- Manifest laden --------------------------------------------------------
   fetch(TOOLS).then(function (r) { return r.json(); }).then(function (m) {
     ALL = m.tools || [];
+    // Reihenfolge der öffentlichen Schublade: vom Sortierer gepflegt (eine Quelle),
+    // sonst die eingebaute Vorgabe.
+    if (m.reihenfolge && m.reihenfolge.schublade && m.reihenfolge.schublade.length) {
+      FLAT_ORDER = m.reihenfolge.schublade;
+    }
     // Sicherheitsnetz: Manifest-Kategorien ohne Welt werden automatisch eigene
     // Backstage-Welten (Titel/Intro aus tools.json) — eine neue Kategorie im
     // Manifest verschwindet damit nie mehr stillschweigend aus dem Menü.

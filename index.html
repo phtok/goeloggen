@@ -228,15 +228,19 @@
     a.innerHTML = visual(t) + '<h2>' + t.title + ' <span class="arr">›</span></h2>';
     return a;
   }
-  function buildCarousel(byslug){
+  function buildCarousel(byslug, order){
     // Karussell-Extra (kein eigenes Werkzeug): die elf E-Mail-Gebote.
     byslug["empfehlungen"] = byslug["empfehlungen"] || {
       slug: "empfehlungen", title: "Diese Mail wird gelesen",
       href: "apps/signatur-generator/#empfehlungen"
     };
+    // Teaser-Zeilen je Slug; die Reihenfolge pflegt der Sortierer
+    // (tools.json → reihenfolge.karussell), sonst gilt die DISCOVER-Vorgabe.
+    var LINES = {}; DISCOVER.forEach(function(d){ LINES[d.slug] = d.line; });
+    var slugs = (order && order.length) ? order : DISCOVER.map(function(d){ return d.slug; });
     var car = document.getElementById("carousel");
-    var items = DISCOVER.map(function(d){ return { d:d, t:byslug[d.slug] }; })
-                        .filter(function(x){ return x.t; });
+    var items = slugs.map(function(slug){ return { line: LINES[slug] || "", t: byslug[slug] }; })
+                     .filter(function(x){ return x.t; });
     if (items.length < 2) { car.remove(); return; }   // Karussell erst ab zwei Folien
 
     var track = document.createElement("div"); track.className = "track";
@@ -244,7 +248,7 @@
       var a = document.createElement("a"); a.className = "slide"; a.href = x.t.href;
       if (isExt(x.t.href)) { a.target = "_blank"; a.rel = "noopener"; }
       a.innerHTML = visual(x.t) +
-        '<span class="copy"><h2>' + x.t.title + '</h2><p>' + x.d.line + '</p>' +
+        '<span class="copy"><h2>' + x.t.title + '</h2><p>' + x.line + '</p>' +
         '<span class="go">Ansehen ›</span></span>';
       track.appendChild(a);
     });
@@ -301,14 +305,17 @@
   }
 
   function render(man){
-    // Öffentliche Welten (Backstage wie schau/schriftpflege/statistik bleibt draussen).
+    // Öffentliche Welten (Backstage wie schau/schriftpflege/kistenpflege bleibt draussen).
     var PUBLIC = ["generatoren", "schrift", "system", "anwendung"];
     var tools = (man.tools || []).filter(function(t){
       return PUBLIC.indexOf(t.cat) >= 0 && (t.status === "live" || t.status === "beta");
     });
     var byslug = {}; tools.forEach(function(t){ byslug[t.slug] = t; });
-    buildCarousel(byslug);
-    var rank = function(t){ var k = ORDER.indexOf(t.slug); return k < 0 ? 999 : k; };
+    // Reihenfolgen pflegt der Sortierer (tools.json → reihenfolge); sonst die Vorgaben.
+    var R = man.reihenfolge || {};
+    buildCarousel(byslug, R.karussell);
+    var kartenOrder = (R.karten && R.karten.length) ? R.karten : ORDER;
+    var rank = function(t){ var k = kartenOrder.indexOf(t.slug); return k < 0 ? 999 : k; };
     tools.sort(function(a,b){ return rank(a) - rank(b); });
     var grid = document.getElementById("cards");
     tools.forEach(function(t){ grid.appendChild(tile(t)); });
