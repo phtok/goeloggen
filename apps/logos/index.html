@@ -68,19 +68,14 @@
     .dsnav,.dsnav-drawer,.dsnav-backdrop,.dsnav-toast,.hero,#werkzeug,.ds-footer,.pdfbtn{display:none !important}
     body{background:var(--paper)}
     main.wrap{max-width:none;padding:0}
-    #begleitschreiben .shead{display:block}
-    .sheet{margin-top:0}
+    .sheet{margin-top:0;border:0;padding:0}
+    .empf-hero{display:none}   /* Hero-Logo im Druck weglassen – Stufe 1 zeigt es ohnehin */
   }
 
   /* Begleitschreiben */
   /* Kein Rahmen-Kasten mehr ums Blatt (verschlang mobil Bildschirm bei noch
      kleinem Text) – der Inhalt steht direkt in der Sektion wie überall sonst. */
   .sheet{margin-top:var(--s4)}
-  /* Zweispaltiges Textpaar (Formen/Farbe, Raum & Grösse/Dateien). Eigener Name,
-     NICHT ‹.num› – die kanonische Klasse ‹.num› ist rechtsbündige Tabellenziffer
-     (base.css), eine Namensgleichheit hätte hier Fliesstext rechtsbündig gemacht. */
-  .sheet .pair{display:grid;gap:var(--s6);grid-template-columns:1fr}
-  @media(min-width:720px){.sheet .pair{grid-template-columns:1fr 1fr}}
   .sheet h3{display:flex;gap:8px;align-items:center;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px;margin-bottom:6px}
   .sheet p{color:var(--ink);font-size:var(--t-small);line-height:1.6;max-width:62ch;text-align:left}
   .sheet p.lead{font-size:var(--t-body);max-width:66ch}
@@ -91,14 +86,53 @@
   .vstrip svg{height:46px;width:auto;max-width:200px}
   .vstrip figcaption{color:var(--muted);font-size:var(--t-micro);margin-top:6px}
 
+  /* --- Hinweise im Stil der ‹Elf Empfehlungen› (Signatur) --------------------
+     Weiche Karte mit Gold-Kante, Kicker/Titel/Intro neben einer Illustration,
+     knappe Merkposten, PS + PDF-Knopf. Die grossen echten Marken bleiben gross
+     (drei Stufen als Feature-Reihen); nur das Handwerk läuft im zweispaltigen
+     Fluss wie die Empfehlungen. */
+  .empf-card{border-top:3px solid var(--gold)}
+  .empf-top{display:flex;flex-direction:column;gap:var(--s6);margin-bottom:var(--s8)}
+  .empf-head{order:2}
+  .empf-hero{order:1}
+  @media(min-width:720px){
+    .empf-top{flex-direction:row;gap:var(--s8);align-items:center;justify-content:space-between}
+    .empf-head{order:0;flex:1 1 auto}
+    .empf-hero{order:0;flex:0 1 300px}
+  }
+  .empf-head h2{font-size:var(--t-h2)}
+  .empf-head .lead{font-family:var(--font-text);color:var(--ink);font-size:var(--t-small);line-height:1.6;margin-top:var(--s2);max-width:52ch}
+  .empf-hero .box{border:1px solid var(--line);border-radius:12px;background:var(--soft);padding:24px;display:grid;place-items:center;min-height:104px}
+  .empf-hero svg{height:54px;width:auto;max-width:100%}
+
   /* Drei Stufen (Logo · Fachlogo · Zeichen): Titel, dann grosses Visual, dann
      Text – gleiche Reihenfolge auf allen Breiten (kein Umschichten nötig). */
   .tier{margin-top:var(--s6)}
+  .tier h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);margin:0 0 var(--s1);display:flex;gap:.5ch;align-items:center}
   .tier .vstrip{margin:var(--s3) 0}
   .tier .vstrip .box{min-height:120px;padding:18px;flex:1 1 0}
   .tier .vstrip svg,.tier .vstrip img{height:68px;width:auto;max-width:100%;display:block}
+  .tier p{font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;color:var(--ink);max-width:62ch}
 
-  .dl{display:grid;gap:var(--s4);grid-template-columns:1fr;margin-top:var(--s3)}
+  /* Handwerk: zweispaltiger Merkposten-Fluss wie die Empfehlungen. */
+  .hr-soft{height:1px;background:var(--line);border:0;margin:var(--s8) 0 var(--s6)}
+  .empf{font-family:var(--font-text)}
+  @media(min-width:720px){.empf{columns:2;column-gap:var(--s8)}}
+  .empf-item{break-inside:avoid;margin:0 0 var(--s6)}
+  .empf-item h3{font-family:var(--font-display);font-weight:var(--w-strong);font-size:var(--t-h3);margin:0 0 var(--s2)}
+  .empf-item p{font-size:var(--t-small);line-height:1.6;color:var(--ink);margin:0 0 var(--s2);max-width:46ch}
+  .empf-item .vstrip{margin:var(--s2) 0 0;align-items:flex-start}
+  .empf-item .vstrip .box{min-height:60px;padding:9px}
+  .empf-item .vstrip svg{height:30px}
+  .empf-item .vstrip figcaption{font-size:var(--t-micro)}
+  .pikto{width:50px;height:50px;display:block;margin-bottom:var(--s2);fill:none;stroke:var(--muted);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .pikto .acc{stroke:var(--gold-ink)}
+  .pikto .slash{stroke:var(--bad);opacity:.75}
+
+  .empf-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s8)}
+  .empf-ps{font-family:var(--font-text);color:var(--gold-ink);font-size:var(--t-small);margin:0;max-width:46ch}
+
+  .dl{display:grid;gap:var(--s4);grid-template-columns:1fr;margin-top:var(--s6)}
   @media(min-width:680px){.dl{grid-template-columns:1fr 1fr}}
   .dl .col{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s4)}
   .dl .col.ja{background:var(--soft)}
@@ -178,14 +212,16 @@
 
   <!-- ===================== BEGLEITSCHREIBEN ===================== -->
   <section id="begleitschreiben">
-    <div class="shead">
-      <h2>Hinweise zur Anwendung</h2>
-      <p>Welches Zeichen — wann, wo, in welchem Format.</p>
-      <button class="btn pdfbtn" id="pdfSheet" type="button">Als PDF speichern</button>
-    </div>
+    <div class="sheet card soft empf-card">
 
-    <div class="sheet">
-      <p class="lead">Unser Logo ist das Goetheanum, wo wir nicht selbst im Raum stehen. <strong>Wiedererkennen schafft Vertrauen</strong> — darum überall dasselbe, fertig aus diesem Werkzeug. Nie nachbauen, nie neu setzen.</p>
+      <div class="empf-top">
+        <div class="empf-head">
+          <span class="kicker">Goetheanum · Grafik</span>
+          <h2>Wiedererkennen schafft Vertrauen</h2>
+          <p class="lead">Unser Logo ist das Goetheanum, wo wir nicht selbst im Raum stehen — darum überall dasselbe, fertig aus diesem Werkzeug, nie nachbauen. Diese Hinweise sagen: welches Zeichen, wann, in welchem Format.</p>
+        </div>
+        <div class="empf-hero" id="vHead"></div>
+      </div>
 
       <div class="tier">
         <h3><span class="step-num"><span>1</span></span> Das allgemeine Logo grüsst</h3>
@@ -205,31 +241,35 @@
         <p>Steiners <a href="../../zeichen.html">Zeichen für Hochschule, Gesellschaft und Bau-Administration</a> sind ein <strong>Erbe</strong>: Sie tragen ihr Zentrum ausser sich und schenken dem Folgenden Raum. <strong>Nur auf Papier und im Hochformat</strong>, festlich — nie anstatt des Logos, nur dazu.</p>
       </div>
 
-      <div class="pair" style="margin-top:var(--s6)">
-        <div>
-          <h3>Formen</h3>
-          <p>Lang ist der Standard, wo Platz ist. Kurz an engen Stellen oder bei langem Namen. Icon · Kreis · Quadrat für App-Symbol, Social-Avatar, Favicon – nur wo der Kontext schon ‹Goetheanum› sagt.</p>
+      <hr class="hr-soft">
+
+      <div class="empf">
+        <div class="empf-item">
+          <h3>Lang oder kurz?</h3>
+          <p>Lang ist der Standard, wo Platz ist. Kurz an engen Stellen oder bei langem Namen. Icon · Kreis · Quadrat fürs Kleine – nur wo der Kontext schon ‹Goetheanum› sagt.</p>
           <div class="vstrip" id="vVariants"></div>
         </div>
-        <div>
-          <h3>Farbe</h3>
-          <p>Original (Hausfarbe auf hell) · Weiss (auf dunkel oder Bild) · Schwarz (einfarbig) · Grau (Ausnahme). Nie umfärben, keine Verläufe.</p>
+
+        <div class="empf-item">
+          <h3>Nie umfärben</h3>
+          <p>Original (Hausfarbe auf hell) · Weiss (auf dunkel oder Bild) · Schwarz (einfarbig) · Grau (Ausnahme). Keine Verläufe.</p>
           <div class="vstrip" id="vColors"></div>
         </div>
-      </div>
 
-      <div class="pair" style="margin-top:var(--s6)">
-        <div>
-          <h3>Raum &amp; Grösse</h3>
-          <p>Rundum Luft in Höhe des Zeichens – nichts dringt ein: kein Text, keine Grafik, kein zweites Logo. Richtwert ~25 mm oder ~120 px Breite. <span class="note" style="display:inline">Exakte Werte aus dem Logopaket.</span></p>
+        <div class="empf-item">
+          <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="7" width="34" height="34" rx="3" stroke-dasharray="4 5"/><rect x="18" y="18" width="12" height="12" rx="2" class="acc"/></svg>
+          <h3>Luft ringsum</h3>
+          <p>Rundum Luft in Höhe des Zeichens – nichts dringt ein: kein Text, keine Grafik, kein zweites Logo. Richtwert ~25 mm oder ~120 px Breite. <span class="note" style="display:inline">Exakte Werte aus dem Logopaket.</span></p>
         </div>
-        <div>
-          <h3>Dateien</h3>
+
+        <div class="empf-item">
+          <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M13 6h15l7 7v29H13z"/><path d="M28 6v7h7"/><circle cx="19" cy="29" r="2.4" class="acc"/><circle cx="30" cy="34" r="2.4" class="acc"/><line x1="19" y1="29" x2="30" y2="34" class="acc"/></svg>
+          <h3>SVG oder PNG?</h3>
           <p>SVG für Web und Druck (Vektor), PNG für Pixel. Beides aus diesem Werkzeug. Ruhiger Grund mit genug Kontrast; auf Foto oder Dunkel die Weiss-Variante.</p>
         </div>
       </div>
 
-      <h3 style="margin-top:var(--s6)">So / So nicht</h3>
+      <h3 style="margin-top:var(--s2)">So / So nicht</h3>
       <div class="dl">
         <div class="col ja">
           <h4>✓ So</h4>
@@ -249,7 +289,12 @@
         </div>
       </div>
 
-      <p class="note" style="margin-top:var(--s4)">Holen: oben Sektion wählen und herunterladen. Die Zeichen liegen als <a href="../../zeichen.html">eigene Seite</a> (Vorschau und Pakete). · Grundlage: Werkstatt-Artikel und Leitsystem-Grundsätze auf grafik.goetheanum.ch; Struktur nach gängigen Logo-Richtlinien (u. a. Smithsonian, UC Santa Barbara, Mailchimp).</p>
+      <div class="empf-foot">
+        <p class="empf-ps">PS: Im Zweifel das blaue Logo – es passt fast überall.</p>
+        <button class="btn primary pdfbtn" id="pdfSheet" type="button">Als PDF speichern</button>
+      </div>
+
+      <p class="note" style="margin-top:var(--s4)">Die Zeichen liegen als <a href="../../zeichen.html">eigene Seite</a> (Vorschau und Pakete). · Grundlage: Werkstatt-Artikel und Leitsystem-Grundsätze auf grafik.goetheanum.ch; Struktur nach gängigen Logo-Richtlinien (u. a. Smithsonian, UC Santa Barbara, Mailchimp).</p>
     </div>
   </section>
 
@@ -561,6 +606,8 @@
   // nie nachgezeichnet, nie erfunden. Stufe 3 zeigt die offiziellen Vorschau-Bilder,
   // dieselben wie auf zeichen.html (eine Quelle, kein Nachbau der Marken hier).
   function buildTierVisuals(){
+    var hd = $("vHead");
+    if (hd){ hd.innerHTML = '<div class="box">' + E.svg({cat:"allgemein",org:"goetheanum",layout:"desktop",mode:"original",scale:2.635}) + '</div>'; }
     var t1 = $("vTier1"), t2 = $("vTier2"), t3 = $("vTier3");
     if (t1){
       t1.appendChild(figure(E.svg({cat:"allgemein",org:"goetheanum",layout:"desktop",mode:"original",scale:2.635}), "Logo", false));
