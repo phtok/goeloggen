@@ -8,6 +8,11 @@
      → tools.json → Prüfmaschinen). Der Mensch baut, indem er beschreibt; Framing
      und Maschine erledigen die Konstruktion und garantieren Hauskonformität.
 
+     Absenden: insert-only nach Supabase (security-definer-RPC schmiede_auftrag_anlegen,
+     publishable Key – Muster wie UTM-Generator/Statistik). Rohzeilen sind zu;
+     gelesen/getaggt wird nur im key-geschützten Cockpit (apps/schmiede-eingang/).
+     Kein Worker, kein Token, kein GitHub-Konto nötig. Backend: services/schmiede/.
+
      Zugang: nur im Backstage gelistet (tools.json → status "intern", cat "labor"),
      erreichbar über den persönlich weitergegebenen Direktlink. noindex.
 
@@ -48,8 +53,8 @@
   .actions{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s4)}
   .said{font-family:var(--font-text);font-size:var(--t-micro);color:var(--ok);min-height:1.4em;margin-top:var(--s2)}
   .said.bad{color:var(--bad)}
-  .sent{margin-top:var(--s2);font-family:var(--font-text);font-size:var(--t-small)}
-  .sent[hidden]{display:none}
+  /* Honigtopf: für Menschen unsichtbar, Bots füllen es aus (Muster lead-fang). */
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 
   @media (max-width:640px){ .form-grid{grid-template-columns:1fr} }
 </style>
@@ -201,6 +206,9 @@
           <span class="lab">Kontakt für Rückfragen</span>
           <input id="kontakt" type="text" placeholder="E-Mail oder Telefon – nur für die Werkstatt" autocomplete="off" />
         </label>
+
+        <!-- Honigtopf gegen Bots: unsichtbar, ohne Tab-Stopp. Menschen lassen es leer. -->
+        <div class="hp" aria-hidden="true"><label>Website<input id="hp" type="text" tabindex="-1" autocomplete="off" /></label></div>
       </div>
     </div>
   </section>
@@ -221,7 +229,6 @@
         <button class="btn ghost" type="button" id="resetBtn">Zurücksetzen</button>
       </div>
       <div class="said" id="said"></div>
-      <p class="sent" id="sent" hidden>In der Werkstatt gelandet: <a id="sentLink" href="#" target="_blank" rel="noopener">Auftrag ansehen</a></p>
     </div>
   </section>
 
@@ -235,11 +242,11 @@
 </footer>
 
 <script>
-  // Absende-Weg (a): sobald der Worker workers/werkzeug-auftrag/ deployed ist, hier
-  // seine URL eintragen. Dann geht „Absenden" direkt als Werkzeug-Wunsch in die
-  // Bau-Schleife (GitHub-Issue, Label werkzeug-wunsch) – ohne GitHub-Konto für die
-  // absendende Person. Solange leer: „Absenden" kopiert und bittet ums Weitergeben.
-  var AUFTRAG_ENDPOINT = '';
+  // Absenden schreibt insert-only in Supabase (Muster wie UTM-Generator/Statistik):
+  // die RPC schmiede_auftrag_anlegen mit dem publishable Key. Die Rohzeilen sind zu;
+  // gelesen/getaggt wird nur im key-geschützten Cockpit (apps/schmiede-eingang/).
+  var SB  = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
+  var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
 
   function el(id){ return document.getElementById(id); }
   function val(id){ return (el(id).value || '').trim(); }
@@ -287,13 +294,25 @@
     return md;
   }
 
+  // Rohfelder als Objekt – landet als daten-jsonb in der Tabelle (fürs Cockpit).
+  function datenObjekt(){
+    return {
+      zweck: val('zweck'), fuer_wen: val('fuerwen'),
+      ausgabe: segWerte('ausgabe'), takt: el('takt').value,
+      vorbild: val('vorbild'), termin: val('termin'),
+      quellen: val('quellen'), quellenart: segWerte('quellenart'),
+      biete: segWerte('biete'), wer: val('wer'),
+      bereich: val('bereich'), kontakt: val('kontakt')
+    };
+  }
+
   var aktuell = null;
   function say(msg, bad){ var s = el('said'); s.textContent = msg; s.className = bad ? 'said bad' : 'said'; }
 
   function render(){
     aktuell = baueAuftrag();
     el('auftrag').textContent = aktuell;
-    el('sent').hidden = true;
+    el('sendBtn').disabled = false;
     return aktuell;
   }
 
@@ -308,35 +327,35 @@
   });
 
   el('resetBtn').addEventListener('click', function(){
-    document.querySelectorAll('#titel,#zweck,#fuerwen,#vorbild,#termin,#quellen,#wer,#bereich,#kontakt').forEach(function(f){ f.value = ''; });
+    document.querySelectorAll('#titel,#zweck,#fuerwen,#vorbild,#termin,#quellen,#wer,#bereich,#kontakt,#hp').forEach(function(f){ f.value = ''; });
     el('takt').selectedIndex = 0;
     Array.prototype.forEach.call(document.querySelectorAll('.seg button'), function(b){ b.setAttribute('aria-pressed', 'false'); });
     aktuell = null;
     el('auftrag').innerHTML = '<span class="ph">Fülle oben aus und klicke auf <q>Auftrag zusammenstellen</q> – dein fertiger Auftrag erscheint hier.</span>';
-    el('sent').hidden = true;
+    el('sendBtn').disabled = false;
     say('');
   });
 
   el('sendBtn').addEventListener('click', function(){
     var md = aktuell || render();
-    if(AUFTRAG_ENDPOINT){
-      say('Wird abgeschickt …');
-      fetch(AUFTRAG_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ titel: val('titel'), auftrag: md })
-      }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
-        .then(function(res){
-          say('In der Werkstatt angekommen.');
-          if(res && res.url){ el('sentLink').href = res.url; el('sent').hidden = false; }
-        })
-        .catch(function(){ say('Absenden ging nicht – bitte kopieren und weitergeben.', true); });
-    } else {
-      navigator.clipboard.writeText(md).then(
-        function(){ say('Auftrag kopiert – schick ihn an die Person, die dir den Link gegeben hat.'); },
-        function(){ say('Bitte den Auftrag oben markieren und kopieren.', true); }
-      );
-    }
+    el('sendBtn').disabled = true;
+    say('Wird abgeschickt …');
+    fetch(SB + '/rest/v1/rpc/schmiede_auftrag_anlegen', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
+      body: JSON.stringify({ p_titel: val('titel'), p_daten: datenObjekt(), p_md: md, p_honeypot: el('hp').value })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(res){
+        if(res === 'ok'){ say('In der Werkstatt angekommen – danke! Du hörst von der Werkstatt.'); }
+        else { say('Bitte wenigstens Titel oder Beschreibung ausfüllen.', true); el('sendBtn').disabled = false; }
+      })
+      .catch(function(){
+        navigator.clipboard.writeText(md).then(
+          function(){ say('Absenden ging nicht – Auftrag kopiert, bitte an die Person weitergeben, die dir den Link gab.', true); },
+          function(){ say('Absenden ging nicht – bitte den Auftrag oben markieren und kopieren.', true); }
+        );
+        el('sendBtn').disabled = false;
+      });
   });
 </script>
 
