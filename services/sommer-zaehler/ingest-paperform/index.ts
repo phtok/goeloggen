@@ -42,6 +42,24 @@ function cleanUtm(v: any): string | null {
 // (device.utm_source/…); ausserdem trägt device.url bzw. der ?_d=-Parameter die
 // Landingpage (auch bei eingebetteten Formularen). Fallback: UTMs aus einer im
 // Body eingebetteten URL.
+// Kanal-Bucket aus den UTM-Spuren ableiten (wie ingest-uscreen). utm_source und
+// utm_medium zusammen prüfen, Reihenfolge zählt: Newsletter vor Mailer, weil
+// «email» das Wort «mail» enthält. Ohne Spur bleibt es «andere».
+const KANAELE = ["newsletter", "mailer", "flyer", "social", "popup", "website", "empfehlung", "andere"];
+function mapKanal(src: string | null, med: string | null): string {
+  const s = [src, med].filter(Boolean).join(" ").toLowerCase();
+  if (!s) return "andere";
+  if (KANAELE.includes(s)) return s;
+  if (/(news|\bnl\b)/.test(s)) return "newsletter";
+  if (/(mail|post|brief)/.test(s)) return "mailer";
+  if (/(insta|face|\bfb\b|social|linkedin|youtube|twitter|tiktok)/.test(s)) return "social";
+  if (/(popup|pop-up|overlay)/.test(s)) return "popup";
+  if (/(flyer|stand|plakat)/.test(s)) return "flyer";
+  if (/(web|site|direct|organic)/.test(s)) return "website";
+  if (/(refer|empfehl|friend)/.test(s)) return "empfehlung";
+  return "andere";
+}
+
 function utmFromBody(body: any): { src: string | null; med: string | null; camp: string | null; cont: string | null; land: string | null } {
   const out = { src: null as string | null, med: null as string | null, camp: null as string | null, cont: null as string | null, land: null as string | null };
   // 1) Versteckte Formularfelder mit Key utm_source/… (Prefill aus der URL).
@@ -160,7 +178,7 @@ Deno.serve(async (req) => {
   const utm = utmFromBody(body);
   const row = {
     signed_up_at: new Date().toISOString(), produkt: "wos", sprache, format,
-    tarif, intervall, waehrung, status: "neu", kanal: "andere", source: "paperform", ext_id: String(subId || ""), dedup_key: dedupKey,
+    tarif, intervall, waehrung, status: "neu", kanal: mapKanal(utm.src, utm.med), source: "paperform", ext_id: String(subId || ""), dedup_key: dedupKey,
     kampagne: utm.camp || "summer26_trial",
     utm_source: utm.src, utm_medium: utm.med, utm_campaign: utm.camp, utm_content: utm.cont,
     landing_path: utm.land ? utm.land.slice(0, 200) : null,
