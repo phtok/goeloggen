@@ -109,7 +109,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   <span class="kicker">Sommer-Aktion 2026</span>
   <h1>Mail-Editor</h1>
   <p class="lede" style="max-width:var(--measure)">Alle Wellen-Mails der drei Segmente zum Gegenlesen — je Feld kommentierbar, Kommentare landen im Werkzeug-Backend. Korrigiert wird in <code>heroes.json</code>, dann wird neu gebaut.</p>
-  <p class="subline">Stand dieses Builds: 13.07.2026, 12.16 Uhr · <code>930e62b</code></p>
+  <p class="subline">Stand dieses Builds: 13.07.2026, 17.22 Uhr · <code>a397c6a</code></p>
   <div class="controls">
     <span class="lab">Sprache</span>
     <button id="b-de" class="pill on" onclick="setLang('de')">Deutsch</button>
@@ -151,7 +151,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="shared#kleinzeile"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'shared#kleinzeile')">senden</button></div></div></div><div class="fld" data-key="shared#footer"><div class="fh" onclick="toggle(this)"><span class="lbl">Footer</span>
 <button class="cbtn" type="button">💬 <span class="cc" data-cc="shared#footer">0</span></button></div>
-<div class="val">Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach · Abmelden</div>
+<div class="val">kommt aus ActiveCampaign (Absender-Adresse + Abmelden) — bewusst NICHT im HTML, sonst doppelt</div>
 <div class="cpanel" hidden><ul class="clist" data-cl="shared#footer"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'shared#footer')">senden</button></div></div></div></div></section>
 <section class="segment"><h2>Lesen · Die Wochenschrift — nurtv</h2><div class="waves"><div class="wave"><div class="mail" data-lang="de">
@@ -408,30 +408,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -719,30 +695,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     <!--[if mso | IE]></td></tr></table><![endif]-->
   </div>
 </body>
@@ -1008,30 +960,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -1319,30 +1247,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     <!--[if mso | IE]></td></tr></table><![endif]-->
   </div>
 </body>
@@ -1614,30 +1518,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     <!--[if mso | IE]></td></tr></table><![endif]-->
   </div>
 </body>
@@ -1898,30 +1778,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -2209,30 +2065,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     <!--[if mso | IE]></td></tr></table><![endif]-->
   </div>
 </body>
@@ -2498,30 +2330,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -2809,30 +2617,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     <!--[if mso | IE]></td></tr></table><![endif]-->
   </div>
 </body>
@@ -3098,30 +2882,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -3404,30 +3164,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     <!--[if mso | IE]></td></tr></table><![endif]-->
   </div>
 </body>
@@ -3688,30 +3424,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -3999,30 +3711,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     <!--[if mso | IE]></td></tr></table><![endif]-->
   </div>
 </body>
@@ -4288,30 +3976,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -4599,30 +4263,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     <!--[if mso | IE]></td></tr></table><![endif]-->
   </div>
 </body>
@@ -4888,30 +4528,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -5194,30 +4810,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     <!--[if mso | IE]></td></tr></table><![endif]-->
   </div>
 </body>
@@ -5478,30 +5070,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
@@ -5784,30 +5352,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     <!--[if mso | IE]></td></tr></table><![endif]-->
   </div>
 </body>
@@ -6068,30 +5612,6 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
-    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
-      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
-        <tbody>
-          <tr>
-            <td style=&quot;direction:ltr;font-size:0px;padding:20px 28px;text-align:center;&quot;>
-              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
-              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
-                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
-                  <tbody>
-                    <tr>
-                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;text-align:left;color:#9A9AA6;&quot;>Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br /><a href=&quot;https://goetheanum.ch&quot; style=&quot;color:#9A9AA6;&quot;>goetheanum.ch</a> · <a href=&quot;%UNSUBSCRIBELINK%&quot; style=&quot;color:#9A9AA6;&quot;>Abmelden</a></div>
                       </td>
                     </tr>
                   </tbody>
