@@ -172,7 +172,6 @@ def render_mail(motiv, welle, lang, wm):
   {ps_block(seg, welle, lang)}
 </mj-column></mj-section>
 <mj-section background-color="{WASH}" padding="16px 28px"><mj-column><mj-text font-size="14px" line-height="22px" color="{AKZENT_TIEF}" align="center" padding="0">{xml(H['proof'][lang])}</mj-text></mj-column></mj-section>
-<mj-section background-color="{MIST}" padding="20px 28px"><mj-column><mj-text font-size="12px" line-height="19px" color="{FUSS}" padding="0">Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach<br/><a href="https://goetheanum.ch" style="color:{FUSS};">goetheanum.ch</a> · <a href="%UNSUBSCRIBELINK%" style="color:{FUSS};">Abmelden</a></mj-text></mj-column></mj-section>
 </mj-body></mjml>"""
     p = subprocess.run(["mjml", "-i", "-s"], input=mjml, capture_output=True, text=True)
     if p.returncode: raise RuntimeError(p.stderr)
@@ -286,7 +285,7 @@ def main():
         ("shared#beweisband", "Beweis-Band", f'{esc(H["proof"]["de"])}<br>{esc(H["proof"]["en"])}'),
         ("shared#button", "Button-Stil", f'<span style="background:{AKZENT};color:#fff;border-radius:999px;padding:8px 18px;font:600 14px {FONT_STACK}">Gratis testen →</span> <!-- # ds-ok Mail-DNA, kein Theme -->'),
         ("shared#kleinzeile", "Kleinzeile (je Motiv)", "<br>".join(esc(H["kleinzeile"][m]["de"]) for m in H["motive"])),
-        ("shared#footer", "Footer", "Allgemeine Anthroposophische Gesellschaft · Goetheanum · Dornach · Abmelden"),
+        ("shared#footer", "Footer", "kommt aus ActiveCampaign (Absender-Adresse + Abmelden) — bewusst NICHT im HTML, sonst doppelt"),
     ]
     shared_html = "".join(commentable(k, l, v) for k, l, v in shared)
 
