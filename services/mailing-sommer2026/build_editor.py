@@ -158,9 +158,19 @@ def render_mail(motiv, welle, lang, wm):
             f'color="{"#FFFFFF" if primaer else AKZENT}" {border}border-radius="999px" font-size="16px" '
             f'font-weight="600" inner-padding="15px 30px" align="left" padding="0 0 {pad}px 0">{xml(label)}</mj-button>')
     btns = "".join(btns)
+    # ‹Im Browser lesen›: zeigt auf die ohnehin gehostete Versand-URL (dieselbe Datei,
+    # die AC bestückt) — keine Merge-Tags, immer erreichbar, gut zum Gegenlesen mit Kolleg:innen.
+    # Nur wenn gehostet (BASE gesetzt); im reinen Vorschau-Modus gibt es keine URL.
+    mail_url = f"{BASE.rsplit('/assets', 1)[0]}/mails/mail_{motiv}_{welle}_{lang}.html" if BASE else ""
+    browser_txt = "Im Browser lesen" if lang == "de" else "Read in browser"
+    browser_bar = (f'<mj-section background-color="{MIST}" padding="6px 28px 0 28px"><mj-column>'
+                   f'<mj-text align="right" font-size="13px" line-height="18px" color="{MUTED}" padding="0">'
+                   f'<a href="{mail_url}" style="color:{MUTED};text-decoration:underline;">{browser_txt}</a>'
+                   f'</mj-text></mj-column></mj-section>') if mail_url else ""
     mjml = f"""<mjml><mj-head><mj-title>{xml(c['betreff'])}</mj-title><mj-preview>{xml(preheader(c))}</mj-preview>{fontface}
 <mj-attributes><mj-all font-family="{FONT_STACK}"/><mj-text font-size="16px" line-height="25px" color="{INK}"/></mj-attributes></mj-head>
 <mj-body background-color="{MIST}">
+{browser_bar}
 <mj-section background-color="#FFFFFF" padding="18px 28px 14px 28px"><mj-column><mj-image src="{src_for(wm[0])}" href="{xml(haupt)}" alt="Goetheanum" width="{wm[1]}px" align="left" padding="0"/></mj-column></mj-section>
 <mj-section background-color="#FFFFFF" padding="0"><mj-column><mj-image src="{hero}" href="{xml(haupt)}" alt="{xml(var.get('alt',''))}" padding="0" fluid-on-mobile="true"/></mj-column></mj-section>
 <mj-section background-color="#FFFFFF" padding="24px 28px 0 28px"><mj-column>
