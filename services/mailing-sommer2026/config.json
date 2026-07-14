@@ -47,20 +47,21 @@
   "wellen": {
     "w1": {
       "label": "Ankündigung",
-      "versand": "2026-07-14T09:30:00+02:00"
+      "versand": "2026-07-16T09:30:00+02:00"
     },
     "w2": {
       "label": "Aktualisierung",
-      "versand": "2026-07-23T09:30:00+02:00"
+      "versand": "2026-07-30T09:30:00+02:00"
     },
     "w3": {
-      "label": "Letzte Erinnerung",
-      "versand": "2026-08-06T09:30:00+02:00"
+      "label": "Letzte Erinnerung (Vorabend)",
+      "versand": "2026-08-07T18:00:00+02:00",
+      "_hinweis": "Freitagabend, Rahmen ‹morgen läuft es aus›."
     },
     "w3b": {
-      "label": "Mini-Reminder",
-      "versand": "2026-08-07T09:30:00+02:00",
-      "nur": "klicker_ohne_anmeldung"
+      "label": "Frist-Tag (Samstag)",
+      "versand": "2026-08-08T10:00:00+02:00",
+      "_hinweis": "Samstag = Frist-Tag, Rahmen ‹heute läuft es aus›. Für ALLE Gruppen (nicht mehr nur Klicker) — GF-Prinzip: keine Nacht zwischen letztem Ruf und Frist."
     }
   },
   "segmente": {
