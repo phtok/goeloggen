@@ -177,12 +177,15 @@
     "en": "Voices and faces of anthroposophy today"
   },
   "badge": {
-    "de": "Sommerangebot 2026 · 3 Monate gratis",
+    "de": "Sommerangebot 2026",
     "en": "Summer offer 2026 · 3 months free"
   },
   "ps": {
     "_hinweis": "Leises Teilen-PS unter der Kleinzeile. link_wort wird in build_editor.py zum Teilen-Link auf das Angebot der jeweiligen Gruppe (nie auf ein schon bezahltes Produkt) mit eigenem utm_content w{n}_{seg}_share. wellen = nur diese Wellen tragen das PS (Frist-Mails w3/w3b ausgenommen: die letzte Erinnerung trägt einen einzigen klaren Ruf).",
-    "wellen": ["w1", "w2"],
+    "wellen": [
+      "w1",
+      "w2"
+    ],
     "de": {
       "text": "PS: Kennen Sie jemanden, dem dieser Sommer gefiele? Geben Sie die Einladung gern weiter.",
       "link_wort": "Einladung"
@@ -219,11 +222,11 @@
     "lesen": {
       "w1": {
         "de": {
-          "betreff": "Denken, das über die Woche hinausreicht — 3 Monate gratis",
-          "botschaft": "Lesen, das in Ihnen weiterarbeitet.",
-          "text": "Ergänzend zu dem, was Sie auf goetheanum.tv sehen, denkt die Wochenschrift weiter — schwarz auf weiss, jede Woche neu: «Den Frieden herbeidenken», «Und wenn das Leben aus den Sternen käme?», «Biografiearbeit als Weg zum Ich». Dazu das ganze Archiv seit 2022, das mit Ihrem Abo offen bleibt. Nicht was die Autoren wissen, sondern wie sie suchen.",
+          "betreff": "Ihr freier Zugang zur Wochenzeitschrift Das Goetheanum",
+          "botschaft": "Drei freie Monate für Sie",
+          "text": "Ergänzend zu dem, was Sie auf goetheanum.tv sehen können, erweitert die Wochenzeitschrift ‹Das Goetheanum› den Horizont – auf Papier oder online – und beleuchtet brisante Themen. Sie erhalten auch drei Monate lang uneingeschränkten Zugriff auf das gesamte Archiv seit 2022.",
           "alt": "Drei Monate im Freien lesen — gratis",
-          "preheader": "«Und wenn das Leben aus den Sternen käme?» und das ganze Archiv — jede Woche neu. Bis 8. August."
+          "preheader": "Drei Monate freien Zugang für alle, die gerne in Ruhe auf Papier oder online lesen."
         },
         "en": {
           "betreff": "Thinking that reaches beyond the week — 3 months free",
@@ -235,11 +238,11 @@
       },
       "w2": {
         "de": {
-          "betreff": "Drei Monate mitlesen, danach entscheiden Sie.",
-          "botschaft": "Ein Sommer über den eigenen Rand hinaus.",
-          "text": "Noch bis 8. August lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — Lesestoff, der in Ihnen weiterarbeitet, wenn der Bildschirm dunkel ist.",
+          "betreff": "Haben Sie bereits daran gedacht, Ihren kostenlosen Zugang zu aktivieren?",
+          "botschaft": "Haben Sie nicht vergessen, Ihren kostenlosen Zugang zu aktivieren?",
+          "text": "Das Angebot gilt bis zum 8. August und erlaubt Ihnen, die Wochenschrift Das Goetheanum drei Monate lang kostenlos zu testen. Zögern Sie nicht, es jetzt zu aktivieren.",
           "alt": "Lesestoff, der den Sommer überdauert — gratis",
-          "preheader": "Bis 8. August: die Wochenschrift drei Monate gratis zu Ihrem Abo — sie liest sich überall."
+          "preheader": "Der kostenlose Zugang für drei Monate ist ein Angebot, das nur bis zum 8. August gilt."
         },
         "en": {
           "betreff": "Three months of reading — then you decide.",
@@ -251,11 +254,11 @@
       },
       "w3": {
         "de": {
-          "betreff": "Bis Samstag: drei Monate gratis lesen — dann schliesst die Aktion",
-          "botschaft": "Am Samstag schliesst die Tür.",
-          "text": "Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — beginnen Sie jetzt, und entscheiden erst danach, ob sie bleibt.",
+          "betreff": "Letzte Erinnerung: Nur noch wenig Zeit, um Ihren kostenlosen Zugang zu aktivieren.",
+          "botschaft": "Falls Sie vergessen haben: Es bleiben noch ein paar Stunden, um es zu aktivieren.",
+          "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zur Wochenschrift Das Goetheanum – auf Papier und/oder online – erhalten, in wenigen Stunden endet. Sie können es noch aktivieren – tun Sie es jetzt. Danach ist es zu spät.",
           "alt": "Am Samstag endet Ihr Gratis-Test der Wochenschrift — falls Sie ihn noch wollen.",
-          "preheader": "Drei Monate Wochenschrift gratis — nur noch bis Samstag, 8. August."
+          "preheader": "Das Ausnahmeangebot von drei kostenlosen Monaten läuft bald aus – Sie haben heute noch Zeit, es zu aktivieren."
         },
         "en": {
           "betreff": "Until Saturday: three months of the weekly, free — then the offer closes",
