@@ -464,7 +464,9 @@ body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
 .mhd-edit{{min-height:var(--tap);margin-left:8px;background:transparent;border:1px solid var(--paper);border-radius:999px;color:var(--paper);padding:2px 10px;font:inherit;font-size:var(--t-micro);cursor:pointer}}
 .mhd-edit:hover{{background:var(--paper);color:var(--ink)}}
 /* WYSIWYG-Overlay: Vollfenster, dünner Balken, Mail zentriert und direkt editierbar. */
-.wyz{{border:0;padding:0;margin:0;width:100vw;max-width:100vw;height:100vh;max-height:100vh;inset:0;background:var(--paper);color:var(--ink);overflow:hidden;display:flex;flex-direction:column}}
+.wyz{{border:0;padding:0;margin:0;width:100vw;max-width:100vw;height:100vh;max-height:100vh;inset:0;background:var(--paper);color:var(--ink);overflow:hidden}}
+.wyz:not([open]){{display:none}}  /* geschlossen = unsichtbar (nicht vom eigenen display überschreiben) */
+.wyz[open]{{display:flex;flex-direction:column}}
 .wyz::backdrop{{background:rgba(20,24,28,.55)}} /* # ds-ok Scrim, kein Theme */
 .wyz-bar{{flex:0 0 auto;display:flex;align-items:center;gap:var(--s3);min-height:var(--tap);padding:2px var(--s3);background:var(--ink);color:var(--paper)}}
 .wyz-label{{font-family:var(--font-text);font-size:var(--t-micro);color:var(--paper);opacity:.85}}
