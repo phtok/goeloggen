@@ -38,6 +38,7 @@ HTML-Text in der Mail-Grundschrift — beide so beschlossen im Gegenlesen (Komme
 - **lesen** → Segment `nurtv` (Cross-sell WS): w1 garten · w2 abendlicht · w3 see
 - **sehen** → Segment `nurws` (Cross-sell TV): w1 pergola · w2 licht · w3 feuer
 - **beides** → Segment `noabo` (kein Abo): w1 abendlicht · w2 vor-dem-bau · w3 picknick · w3b picknick
+- **w3b jetzt für ALLE Gruppen** (Samstag-Frist-Mail, Entscheid 14.7.): lesen/sehen erhielten w3b (Bild = w3). Termine: w1 16.7., w2 30.7., w3 Fr 7.8. 18 Uhr («morgen»), w3b Sa 8.8. 10 Uhr («heute»). w3 = Öffner-Split (Alt-Betreff), w3b = an alle Nicht-Konvertierten.
 Auswahl (bestätigt): lesen=garten · sehen=pergola · beides=abendlicht. Motive in `assets/motive/` (8 JPGs).
 Betreff-Alternativen (`wellen.*.alt`) = Munition für AC-Split (Nicht-Öffner).
 

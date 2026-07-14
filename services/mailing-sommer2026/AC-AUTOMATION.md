@@ -8,14 +8,24 @@
 
 ---
 
-Baue in ActiveCampaign die Automatisierungen für unser Drei-Wellen-Mailing
-«Sommer-Aktion 2026» (3 Monate gratis: Wochenschrift und/oder goetheanum.tv,
-Frist Samstag, 8. August 2026). Es gibt 20 fertige, versandfähige Mails —
-je Segment die Wellen × DE/EN: NurTV 6, NurWS 6, NoAbo 8 (dort kommt der
-Mini-Reminder w3b dazu); der HTML-Quelltext jeder Mail liegt unter einer
+Baue bzw. aktualisiere in ActiveCampaign die Automatisierungen für unser
+**Vier-Wellen-Mailing** «Sommer-Aktion 2026» (3 Monate gratis: Wochenschrift
+und/oder goetheanum.tv, Frist Samstag, 8. August 2026). Es gibt **24 fertige,
+versandfähige Mails** — je Gruppe die vier Wellen × DE/EN (**w1** Ankündigung,
+**w2** Erinnerung, **w3** Vorabend-Frist «morgen», **w3b** Frist-Tag «heute»):
+Lesen 8, Sehen 8, Beides 8. Der HTML-Quelltext jeder Mail liegt unter einer
 festen URL (Tabelle unten). Orientiere dich am Stil der bestehenden
-Automatisierungen GTV26 (DE /builder/104, EN /builder/107) — aber baue neu
-nach dieser Struktur. Ändere nichts an den bestehenden Automatisierungen.
+GTV26-Automatisierungen (DE /builder/104, EN /builder/107) — je Sprache eine
+eigene Automatisierung. Ändere nichts an GTV26.
+
+**Zwei Aufträge in einem:**
+- **Gruppe Lesen (DE + EN):** die Automatisierungen bestehen bereits →
+  **aktualisieren**: die neuen Versanddaten (unten) eintragen, jede Mail frisch
+  aus ihrer URL neu einfügen (die Copy hat sich geändert), und die **neue vierte
+  Welle w3b (Samstag)** als Schritt anhängen (Conversion-Check davor, siehe unten).
+- **Gruppen Sehen und Beides (DE + EN):** **neu aufbauen** nach der Struktur unten.
+
+Macht **sechs Automatisierungen** (drei Gruppen × zwei Sprachen).
 
 ## Deine zwei Fragen, beantwortet
 
@@ -32,69 +42,53 @@ nach dieser Struktur. Ändere nichts an den bestehenden Automatisierungen.
   vermutlich «GTV Abonnent»; wie das Wochenschrift-Pendant heisst, weiss ich
   nicht sicher). Notiere mir am Ende, welche Tags du verwendet hast.
 
-## Struktur: drei Automatisierungen (nicht eine)
+## Struktur: sechs Automatisierungen (je Gruppe × Sprache)
 
-Eine je Segment — **S26 · NurTV→WS**, **S26 · NurWS→TV**, **S26 · NoAbo** —
-mit dem Sprach-Split jeweils innen. Gründe: jedes Segment hat ein eigenes
-Conversion-Ziel (anderes Abo-Tag), NoAbo hat eine Welle mehr (w3b), und das
-Reporting bleibt je Segment lesbar.
+Je Gruppe und Sprache eine eigene Automatisierung — **S26 · Lesen · DE/EN**,
+**S26 · Sehen · DE/EN**, **S26 · Beides · DE/EN** — wie bei GTV26 (getrennte
+DE/EN-Builder). Gründe: jede Gruppe hat ein eigenes Conversion-Ziel, das
+Reporting bleibt je Gruppe/Sprache lesbar, und Testversand/Go-Live lassen sich
+je Automatisierung einzeln freigeben. **Lesen DE/EN** existieren schon → nur
+aktualisieren; **Sehen/Beides DE/EN** neu bauen.
 
 ### Aufbau jeder Automatisierung
 
-1. **Start-Trigger:** Tag **«S26-Start»** wird hinzugefügt (einmaliger Lauf).
-   Der Bestand tritt NICHT über die Listen-Anmeldung ein (die feuert nur bei
-   Neuanmeldungen!), sondern indem wir das Tag per Bulk auf den Adressstamm
-   setzen — erst wenn alle drei Automatisierungen aktiv sind.
-2. **Hygiene-Filter** direkt nach dem Start: Wer in den letzten 12 Monaten
-   keine Kampagne geöffnet hat → Automatisierung beenden (Zustellbarkeit).
-3. **Segment-Weiche** (macht die drei Automatisierungen überschneidungsfrei):
-   - NurTV→WS: If/Else «hat GTV-Tag UND hat NICHT WS-Tag» — No → Ende
-   - NurWS→TV: If/Else «hat WS-Tag UND hat NICHT GTV-Tag» — No → Ende
-   - NoAbo: If/Else «hat WEDER GTV- NOCH WS-Tag» — No → Ende
-4. **Sprach-Split:** If/Else «ist in Liste ‹Special Offers›» → EN-Zweig,
-   sonst DE-Zweig. Beide Zweige sind strukturell identisch, nur mit den
-   jeweiligen Mails.
-5. **Wellen-Drip je Sprach-Zweig** (Zeiten = Schweizer Zeit):
-   - **Warten bis Di 14.07.2026, 9.30 Uhr** → Mail **w1** senden
-     (Predictive Sending: ja, wie bei GTV26).
-   - **Warten bis Do 23.07.2026, 9.30 Uhr** → **Conversion-Check**: hat der
-     Kontakt inzwischen das Ziel-Abo-Tag? Ja → Ende. Nein → Mail **w2**
-     (Predictive: ja).
-   - **Warten bis Do 06.08.2026, 9.30 Uhr** → Conversion-Check (wie oben) →
-     **Öffner-Split**: «hat w1 ODER w2 dieser Automatisierung geöffnet?»
-     - Ja → Mail **w3** mit dem **Standard-Betreff**
-     - Nein → Mail **w3** mit dem **Alt-Betreff** (identisches HTML, nur die
-       Betreffzeile anders — zwei separate E-Mail-Schritte mit derselben
-       HTML-Quelle)
-     - *Bauweg:* If/Else nutzt den Segment-Builder; das ODER geht dort als
-       «match any» über zwei «hat geöffnet»-Bedingungen (Kategorie Actions).
-       **Plan B**, falls das ODER über zwei konkrete Automation-Mails nicht
-       sauber wählbar ist: zwei verschachtelte If/Else — «hat w1 geöffnet?»
-       Ja → Standard; Nein → «hat w2 geöffnet?» Ja → Standard; Nein →
-       Alt-Betreff. Gleiches Ergebnis, ganz ohne ODER.
-     - **Predictive Sending hier AUS** (fixer Versand): Predictive streut bis
-       24 h — die letzte Erinnerung darf nicht in den Mini-Reminder- oder
-       Frist-Tag hineinrutschen.
-   - **Nur S26 · NoAbo:** **Warten bis Fr 07.08.2026, 9.30 Uhr** → Bedingung:
-     «hat in w1–w3 geklickt UND hat kein Abo-Tag» → Mail **w3b**
-     (Mini-Reminder, nur an unentschlossene Klicker; Predictive AUS).
-     Alle anderen → Ende.
-     - *Bauweg:* Bedingungsgruppe (match any) mit drei «hat Link
-       geklickt»-Bedingungen, per UND verknüpft mit «hat kein Abo-Tag»
-       (UND und ODER nie in derselben Gruppe — zweite Gruppe verwenden).
-       **Plan B:** eine kleine Hilfs-Automatisierung mit Start-Trigger
-       «klickt einen Link in einer E-Mail» (beschränkt auf die
-       S26-NoAbo-Mails), die nur das Tag **«S26-geklickt»** setzt und endet;
-       die w3b-Bedingung wird dann schlicht «hat Tag S26-geklickt UND hat
-       kein Abo-Tag».
-6. **Conversion-Ziel je Automatisierung** (als Goal-Schritt ans Ende, «Ende
-   der Automatisierung», damit Konvertierte sofort aussteigen und AC die
-   Conversion zählt):
-   - S26 · NurTV→WS: WS-Abo-Tag gesetzt
-   - S26 · NurWS→TV: GTV-Abo-Tag gesetzt
-   - S26 · NoAbo: eines der beiden Abo-Tags gesetzt — Goals nutzen denselben
-     Segment-Builder, das ODER ist also eine Bedingungsgruppe mit
-     «match any» über die zwei Tag-Bedingungen.
+1. **Start-Trigger:** Tag **«S26-Start»** (einmaliger Lauf; per Bulk auf den
+   Adressstamm, erst wenn **alle sechs** aktiv sind — die Listen-Anmeldung feuert
+   nur bei Neuanmeldungen, deshalb Bulk-Tag als Eintritt).
+2. **Hygiene-Filter:** keine Kampagne in den letzten 12 Monaten geöffnet → Ende.
+3. **Sprach-Weiche:** ist in Liste «Sonderangebote» (DE) bzw. «Special Offers»
+   (EN)? Nein → Ende. (Jede Automatisierung trägt nur EINE Sprache.)
+4. **Gruppen-Weiche** (macht die Automatisierungen überschneidungsfrei):
+   - Lesen: «hat GTV-Tag UND NICHT WS-Tag» — Nein → Ende
+   - Sehen: «hat WS-Tag UND NICHT GTV-Tag» — Nein → Ende
+   - Beides: «hat WEDER GTV- NOCH WS-Tag» — Nein → Ende
+5. **Wellen-Drip** (Zeiten = Schweizer Zeit):
+   - **Warten bis Do 16.07.2026, 9.30 Uhr** → Mail **w1** (Predictive Sending: ja).
+   - **Warten bis Do 30.07.2026, 9.30 Uhr** → **Conversion-Check** (hat der
+     Kontakt das Ziel-Abo-Tag? Ja → Ende) → Mail **w2** (Predictive: ja).
+   - **Warten bis Fr 07.08.2026, 18.00 Uhr** → Conversion-Check → **Öffner-Split**:
+     «hat w1 ODER w2 geöffnet?»
+     - Ja → **w3** mit **Standard-Betreff**
+     - Nein → **w3** mit **Alt-Betreff** (identisches HTML, nur die Betreffzeile —
+       zwei E-Mail-Schritte mit derselben HTML-Quelle)
+     - *Bauweg:* «match any» über zwei «hat geöffnet»-Bedingungen. **Plan B:**
+       zwei verschachtelte If/Else («w1 geöffnet?» → sonst «w2 geöffnet?» → sonst
+       Alt-Betreff).
+     - **Predictive AUS** (fixer Freitagabend-Versand — der Rahmen «morgen läuft
+       es aus» darf nicht in den Frist-Tag verrutschen).
+   - **Warten bis Sa 08.08.2026, 10.00 Uhr** → Conversion-Check → Mail **w3b**
+     an **alle noch nicht Konvertierten** (Standard-Betreff, Rahmen «heute läuft
+     es aus»). **Predictive AUS.**
+6. **Conversion-Ziel** (Goal am Ende, «Ende der Automatisierung», damit
+   Konvertierte sofort aussteigen und AC zählt):
+   - Lesen: WS-Abo-Tag gesetzt · Sehen: GTV-Abo-Tag gesetzt · Beides: eines der
+     beiden Abo-Tags (Bedingungsgruppe «match any» über die zwei Tag-Bedingungen).
+
+**Neu gegenüber der alten Struktur:** w3b (Samstag) geht jetzt an **alle** noch
+nicht Konvertierten **jeder** Gruppe — nicht mehr nur an NoAbo-Klicker. GF-Prinzip:
+keine Nacht zwischen letztem Ruf (Fr abend) und Frist (Sa). Die frühere
+Klick-Bedingung/Hilfsautomatisierung für w3b **entfällt** damit.
 
 ## Die Mails (HTML per URL abholen)
 
@@ -120,60 +114,72 @@ Alle Links tragen zudem
 
 | Welle | Sprache | Betreff | Alt-Betreff (nur w3-Zweig «Nicht-Öffner») | utm_content | HTML-Quelle |
 |---|---|---|---|---|---|
-| w1 | DE | Denken, das über die Woche hinausreicht — 3 Monate gratis | — | `w1_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w1_de.html |
-| w1 | EN | Thinking that reaches beyond the week — 3 months free | — | `w1_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w1_en.html |
-| w2 | DE | Drei Monate mitlesen, danach entscheiden Sie. | — | `w2_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w2_de.html |
-| w2 | EN | Three months of reading — then you decide. | — | `w2_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w2_en.html |
-| w3 | DE | Bis Samstag: drei Monate gratis lesen — dann schliesst die Aktion | Am Samstag endet Ihr Gratis-Test der Wochenschrift — falls Sie ihn noch wollen. | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_de.html |
-| w3 | EN | Until Saturday: three months of the weekly, free — then the offer closes | On Saturday your free trial of the weekly ends — if you still want it. | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_en.html |
+| w1 | DE | Ihr freier Zugang zur Wochenschrift Das Goetheanum | — | `w1_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w1_de.html |
+| w1 | EN | Your free access to the weekly Das Goetheanum | — | `w1_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w1_en.html |
+| w2 | DE | Ihr kostenloser Zugang – noch bis zum 8. August | — | `w2_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w2_de.html |
+| w2 | EN | Your free access — still open until 8 August | — | `w2_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w2_en.html |
+| w3 | DE | Nur noch bis morgen, Samstag: drei Monate gratis lesen | Bis morgen: drei Monate gratis lesen — jetzt starten | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_de.html |
+| w3 | EN | Only until tomorrow, Saturday: three months free | Until tomorrow: three months of free reading — start now | `w3_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3_en.html |
+| w3b | DE | Heute läuft das Angebot aus — drei Monate gratis lesen | — | `w3b_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3b_de.html |
+| w3b | EN | The offer closes today — three months of free reading | — | `w3b_nurtv` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3b_en.html |
 
 ### S26 · NurWS→TV (Angebot: goetheanum.tv sehen)
 
 | Welle | Sprache | Betreff | Alt-Betreff (nur w3-Zweig «Nicht-Öffner») | utm_content | HTML-Quelle |
 |---|---|---|---|---|---|
-| w1 | DE | Sehen, wie Menschen laut denken — 3 Monate gratis | — | `w1_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w1_de.html |
-| w1 | EN | Watch people think out loud — 3 months free | — | `w1_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w1_en.html |
-| w2 | DE | Ihr Sommer hat noch Abende frei | — | `w2_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w2_de.html |
-| w2 | EN | Your summer still has evenings free | — | `w2_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w2_en.html |
-| w3 | DE | Bis Samstag: drei Monate goetheanum.tv gratis — dann schliesst die Aktion | Am Samstag endet Ihr Gratis-Test von goetheanum.tv — falls Sie ihn noch wollen. | `w3_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3_de.html |
-| w3 | EN | Until Saturday: three months of goetheanum.tv, free — then the offer closes | On Saturday your free trial of goetheanum.tv ends — if you still want it. | `w3_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3_en.html |
+| w1 | DE | Ihr freier Zugang zu goetheanum.tv | — | `w1_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w1_de.html |
+| w1 | EN | Your free access to goetheanum.tv | — | `w1_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w1_en.html |
+| w2 | DE | Ihr kostenloser Zugang – noch bis zum 8. August | — | `w2_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w2_de.html |
+| w2 | EN | Your free access — still open until 8 August | — | `w2_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w2_en.html |
+| w3 | DE | Nur noch bis morgen, Samstag: drei Monate goetheanum.tv gratis | Bis morgen: drei Monate goetheanum.tv gratis — jetzt starten | `w3_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3_de.html |
+| w3 | EN | Only until tomorrow, Saturday: three months of goetheanum.tv | Until tomorrow: three months of goetheanum.tv free — start now | `w3_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3_en.html |
+| w3b | DE | Heute läuft das Angebot aus — drei Monate goetheanum.tv gratis | — | `w3b_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3b_de.html |
+| w3b | EN | The offer closes today — three months of goetheanum.tv | — | `w3b_nurws` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3b_en.html |
 
 ### S26 · NoAbo (beide Angebote; jede Mail führt mit einem Button zur Übersicht)
 
 | Welle | Sprache | Betreff | Alt-Betreff (nur w3-Zweig «Nicht-Öffner») | utm_content | HTML-Quelle |
 |---|---|---|---|---|---|
-| w1 | DE | Ein Sommer mit dem Goetheanum — 3 Monate gratis | — | `w1_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w1_de.html |
-| w1 | EN | A summer with the Goetheanum — 3 months free | — | `w1_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w1_en.html |
-| w2 | DE | Lesen, sehen — oder gleich beides | — | `w2_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w2_de.html |
-| w2 | EN | Read, watch — or simply both | — | `w2_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w2_en.html |
-| w3 | DE | Bis Samstag: drei Monate Goetheanum gratis — dann schliesst die Aktion | Am Samstag endet Ihr Gratis-Test — falls Sie ihn noch wollen. | `w3_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3_de.html |
-| w3 | EN | Until Saturday: three months of the Goetheanum, free — then the offer closes | On Saturday your free trial ends — if you still want it. | `w3_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3_en.html |
-| w3b | DE | Morgen schliesst die Aktion | — | `w3b_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3b_de.html |
-| w3b | EN | Tomorrow the offer closes | — | `w3b_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3b_en.html |
+| w1 | DE | Ihr freier Zugang zum Goetheanum – lesen und sehen | — | `w1_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w1_de.html |
+| w1 | EN | Your free access to the Goetheanum – read and watch | — | `w1_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w1_en.html |
+| w2 | DE | Ihr kostenloser Zugang – noch bis zum 8. August | — | `w2_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w2_de.html |
+| w2 | EN | Your free access — still open until 8 August | — | `w2_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w2_en.html |
+| w3 | DE | Nur noch bis morgen, Samstag: drei Monate gratis | Bis morgen: drei Monate gratis lesen oder sehen — jetzt starten | `w3_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3_de.html |
+| w3 | EN | Only until tomorrow, Saturday: three months free | Until tomorrow: three months free to read or watch — start now | `w3_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3_en.html |
+| w3b | DE | Heute läuft das Angebot aus — drei Monate gratis | — | `w3b_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3b_de.html |
+| w3b | EN | The offer closes today — three months free | — | `w3b_noabo` | https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_beides_w3b_en.html |
 
-Macht **26 E-Mail-Schritte** insgesamt: 20 Mails, wobei die 6 w3-Mails je zweimal eingehängt werden (Standard- und Alt-Betreff, gleiches HTML).
+Macht **30 E-Mail-Schritte** insgesamt: 24 Mails, wobei die 6 w3-Mails je zweimal eingehängt werden (Standard- und Alt-Betreff, gleiches HTML).
 <!-- TABELLEN:END -->
 
 ## Bevor etwas live geht — Checkliste
 
 1. Exakte Tag-Namen (GTV-Abo, WS-Abo) und Listen-Namen verifizieren und mir
    nennen.
-2. Von jeder Mail-Vorlage einen **Testversand an philipp@saetzerei.com**:
-   Bilder laden, Betreff/Preheader stimmen, Abmeldelink funktioniert, die
-   Button-Links tragen `utm_campaign=summer26_trial` und exakt das
-   `utm_content` aus der Tabelle.
-3. Alle drei Automatisierungen **aktiv schalten, BEVOR** das Tag «S26-Start»
-   per Bulk gesetzt wird. Das Bulk-Setzen selbst NICHT ausführen — nur
-   vorbereiten und mir Bescheid geben. Zweite Voraussetzung vor dem Start:
-   der utm-Weitergabe-Fix auf der Übersichts-Landingpage muss live sein
-   (separater Zusatz-Auftrag) — vorher wäre die NoAbo-Attribution blind.
-4. Zum Insight «12,5 % Abmelderate bei GTV26 Mail 3»: Unsere w3 ist ebenfalls
-   eine Frist-Mail. Die Entschärfung ist eingebaut (w3b geht nur an Klicker,
-   Nicht-Öffner bekommen w3 nur mit anderem Betreff) — bitte keine
-   zusätzliche Dringlichkeit hineintexten und nichts am Mail-Inhalt ändern.
+2. **Testversand ALLER 24 Mails — sobald alle sechs Automatisierungen fertig
+   gebaut sind** (vor dem Aktivschalten). Schicke jede der 24 Vorlagen **je
+   einmal** an diese vier Adressen:
+   - `francisca.devries@dasgoetheanum.com`
+   - `louis.defeche@goetheanum.ch`
+   - `nicolas.prestifilippo@goetheanum.ch`
+   - `philipp@saetzerei.com`
+
+   Prüfe je Mail: Bilder laden, Betreff/Preheader stimmen, **genau EIN Footer**
+   (der AC-eigene — die HTML tragen keinen), Abmeldelink funktioniert, der
+   Button trägt `utm_campaign=summer26_trial` und exakt das `utm_content` aus
+   der Tabelle. Sind alle drei Gruppen × zwei Sprachen × vier Wellen (= 24)
+   raus, melde mir kurz «alle 24 getestet».
+3. Alle sechs Automatisierungen **aktiv schalten, BEVOR** «S26-Start» per Bulk
+   gesetzt wird. Das Bulk-Setzen selbst NICHT ausführen — nur vorbereiten und
+   mir Bescheid geben. Zweite Voraussetzung: der utm-Weitergabe-Fix auf der
+   Übersichts-Landingpage muss live sein — vorher wäre die NoAbo-Attribution
+   blind.
+4. Zum Insight «12,5 % Abmelderate bei GTV26 Mail 3»: w3 und w3b sind Frist-
+   Mails. Die Entschärfung sitzt im Text (kein Drohton, aufs Datum geankert)
+   und im Öffner-Split vor w3 (Nicht-Öffner bekommen nur einen anderen Betreff)
+   — bitte keine zusätzliche Dringlichkeit hineintexten, nichts am Inhalt ändern.
 5. Falls etwas nicht wie beschrieben machbar ist, nicht improvisieren — kurz
-   melden, was der Builder anbietet, dann entscheiden wir. Für die drei
-   bekannten Verifikationspunkte (Öffner-ODER vor w3, w3b-Klick-Bedingung,
-   NoAbo-OR-Goal) stehen die Bauwege und Plan-B-Varianten direkt bei den
-   jeweiligen Schritten in der Struktur oben. Melde mir am Ende kurz,
-   welcher Weg es jeweils geworden ist (Plan A oder B).
+   melden, was der Builder anbietet, dann entscheiden wir. Für die
+   Verifikationspunkte (Öffner-ODER vor w3, «match any»-Goal bei Beides) stehen
+   die Bauwege und Plan-B-Varianten oben. Melde am Ende, welcher Weg es jeweils
+   wurde (Plan A oder B).

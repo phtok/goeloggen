@@ -204,12 +204,14 @@
     "nurtv": {
       "w1": "lesen/garten",
       "w2": "lesen/abendlicht",
-      "w3": "lesen/see"
+      "w3": "lesen/see",
+      "w3b": "lesen/see"
     },
     "nurws": {
       "w1": "sehen/pergola",
       "w2": "sehen/terrasse",
-      "w3": "sehen/haengematte"
+      "w3": "sehen/haengematte",
+      "w3b": "sehen/haengematte"
     },
     "noabo": {
       "w1": "beides/abendlicht",
@@ -254,18 +256,34 @@
       },
       "w3": {
         "de": {
-          "betreff": "Letzte Erinnerung: nur noch bis Samstag, 8. August",
-          "botschaft": "Nur noch bis Samstag, 8. August",
-          "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zur Wochenschrift ‹Das Goetheanum› – auf Papier und/oder online – erhalten, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.",
-          "alt": "Am Samstag endet Ihr Gratis-Test der Wochenschrift — falls Sie ihn noch wollen.",
-          "preheader": "Das Ausnahmeangebot von drei kostenlosen Monaten läuft am Samstag, 8. August, aus."
+          "betreff": "Nur noch bis morgen, Samstag: drei Monate gratis lesen",
+          "botschaft": "Nur noch bis morgen, 8. August",
+          "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zur Wochenschrift ‹Das Goetheanum› – auf Papier oder online – erhalten, morgen, am Samstag, 8. August, endet. Jetzt freischalten.",
+          "alt": "Bis morgen: drei Monate gratis lesen — jetzt starten",
+          "preheader": "Das Angebot für drei kostenlose Monate ‹Das Goetheanum› läuft morgen, am Samstag, 8. August, aus."
         },
         "en": {
-          "betreff": "Last reminder: only until Saturday, 8 August",
-          "botschaft": "Only until Saturday, 8 August",
-          "text": "A reminder that the summer offer — three months of free access to the weekly ‹Das Goetheanum›, on paper and/or online — ends on Saturday, 8 August. Until then, you can unlock it.",
-          "alt": "On Saturday your free trial of the weekly ends — if you still want it.",
-          "preheader": "The exceptional offer of three free months ends on Saturday, 8 August."
+          "betreff": "Only until tomorrow, Saturday: three months free",
+          "botschaft": "Only until tomorrow, 8 August",
+          "text": "A reminder that the summer offer — three months of free access to the weekly ‹Das Goetheanum›, on paper or online — ends tomorrow, Saturday 8 August. Unlock it now.",
+          "alt": "Until tomorrow: three months of free reading — start now",
+          "preheader": "The offer of three free months of ‹Das Goetheanum› ends tomorrow, Saturday 8 August."
+        }
+      },
+      "w3b": {
+        "de": {
+          "betreff": "Heute läuft das Angebot aus — drei Monate gratis lesen",
+          "botschaft": "Nur noch heute, 8. August",
+          "text": "Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie die Wochenschrift ‹Das Goetheanum› drei Monate lang kostenlos lesen. Jetzt freischalten.",
+          "alt": "Heute letzter Tag: drei Monate gratis lesen — jetzt starten",
+          "preheader": "Nur noch heute, Samstag, 8. August: drei Monate ‹Das Goetheanum› gratis."
+        },
+        "en": {
+          "betreff": "The offer closes today — three months of free reading",
+          "botschaft": "Only today, 8 August",
+          "text": "Today, Saturday 8 August, the summer offer closes. Until then you can read the weekly ‹Das Goetheanum› free for three months. Unlock it now.",
+          "alt": "Last day today: three months of free reading — start now",
+          "preheader": "Only today, Saturday 8 August: three months of ‹Das Goetheanum› free."
         }
       }
     },
@@ -304,18 +322,34 @@
       },
       "w3": {
         "de": {
-          "betreff": "Letzte Erinnerung: nur noch bis Samstag, 8. August",
-          "botschaft": "Nur noch bis Samstag, 8. August",
-          "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zu goetheanum.tv erhalten, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.",
-          "alt": "Am Samstag endet Ihr Gratis-Test von goetheanum.tv — falls Sie ihn noch wollen.",
-          "preheader": "Das Angebot für drei kostenlose Monate goetheanum.tv läuft am Samstag, 8. August, aus."
+          "betreff": "Nur noch bis morgen, Samstag: drei Monate goetheanum.tv gratis",
+          "botschaft": "Nur noch bis morgen, 8. August",
+          "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zu goetheanum.tv erhalten, morgen, am Samstag, 8. August, endet. Jetzt freischalten.",
+          "alt": "Bis morgen: drei Monate goetheanum.tv gratis — jetzt starten",
+          "preheader": "Das Angebot für drei kostenlose Monate goetheanum.tv läuft morgen, am Samstag, 8. August, aus."
         },
         "en": {
-          "betreff": "Last reminder: only until Saturday, 8 August",
-          "botschaft": "Only until Saturday, 8 August",
-          "text": "A reminder that the summer offer — three months of free access to goetheanum.tv — ends on Saturday, 8 August. Until then, you can unlock it.",
-          "alt": "On Saturday your free trial of goetheanum.tv ends — if you still want it.",
-          "preheader": "The offer of three free months of goetheanum.tv ends on Saturday, 8 August."
+          "betreff": "Only until tomorrow, Saturday: three months of goetheanum.tv",
+          "botschaft": "Only until tomorrow, 8 August",
+          "text": "A reminder that the summer offer — three months of free access to goetheanum.tv — ends tomorrow, Saturday 8 August. Unlock it now.",
+          "alt": "Until tomorrow: three months of goetheanum.tv free — start now",
+          "preheader": "The offer of three free months of goetheanum.tv ends tomorrow, Saturday 8 August."
+        }
+      },
+      "w3b": {
+        "de": {
+          "betreff": "Heute läuft das Angebot aus — drei Monate goetheanum.tv gratis",
+          "botschaft": "Nur noch heute, 8. August",
+          "text": "Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie goetheanum.tv drei Monate lang kostenlos sehen. Jetzt freischalten.",
+          "alt": "Heute letzter Tag: drei Monate goetheanum.tv gratis — jetzt starten",
+          "preheader": "Nur noch heute, Samstag, 8. August: drei Monate goetheanum.tv gratis."
+        },
+        "en": {
+          "betreff": "The offer closes today — three months of goetheanum.tv",
+          "botschaft": "Only today, 8 August",
+          "text": "Today, Saturday 8 August, the summer offer closes. Until then you can watch goetheanum.tv free for three months. Unlock it now.",
+          "alt": "Last day today: three months of goetheanum.tv free — start now",
+          "preheader": "Only today, Saturday 8 August: three months of goetheanum.tv free."
         }
       }
     },
@@ -354,34 +388,34 @@
       },
       "w3": {
         "de": {
-          "betreff": "Letzte Erinnerung: nur noch bis Samstag, 8. August",
-          "botschaft": "Nur noch bis Samstag, 8. August",
-          "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.",
-          "alt": "Am Samstag endet Ihr Gratis-Test — falls Sie ihn noch wollen.",
-          "preheader": "Drei Monate lesen und/oder sehen, kostenlos – am Samstag, 8. August, läuft das Angebot aus."
+          "betreff": "Nur noch bis morgen, Samstag: drei Monate gratis",
+          "botschaft": "Nur noch bis morgen, 8. August",
+          "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen, morgen, am Samstag, 8. August, endet. Jetzt freischalten.",
+          "alt": "Bis morgen: drei Monate gratis lesen oder sehen — jetzt starten",
+          "preheader": "Drei Monate lesen und/oder sehen, kostenlos – morgen, am Samstag, 8. August, läuft das Angebot aus."
         },
         "en": {
-          "betreff": "Last reminder: only until Saturday, 8 August",
-          "botschaft": "Only until Saturday, 8 August",
-          "text": "A reminder that the summer offer — three months of free access to the Goetheanum, to read and/or watch — ends on Saturday, 8 August. Until then, you can unlock it.",
-          "alt": "On Saturday your free trial ends — if you still want it.",
-          "preheader": "Three months of reading and/or watching, free – the offer ends on Saturday, 8 August."
+          "betreff": "Only until tomorrow, Saturday: three months free",
+          "botschaft": "Only until tomorrow, 8 August",
+          "text": "A reminder that the summer offer — three months of free access to the Goetheanum, to read and/or watch — ends tomorrow, Saturday 8 August. Unlock it now.",
+          "alt": "Until tomorrow: three months free to read or watch — start now",
+          "preheader": "Three months of reading and/or watching, free – the offer ends tomorrow, Saturday 8 August."
         }
       },
       "w3b": {
         "de": {
-          "betreff": "Morgen läuft das Angebot aus",
-          "botschaft": "Nur noch bis morgen, 8. August",
-          "text": "Morgen, am 8. August, endet das Sommerangebot. Bis dahin können Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen. Jetzt freischalten.",
-          "alt": "Bis morgen: Ihre drei Gratis-Monate — falls Sie sie noch wollen.",
-          "preheader": "Drei Monate Goetheanum, kostenlos – nur noch bis morgen, Samstag, 8. August."
+          "betreff": "Heute läuft das Angebot aus — drei Monate gratis",
+          "botschaft": "Nur noch heute, 8. August",
+          "text": "Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen. Jetzt freischalten.",
+          "alt": "Heute letzter Tag: drei Monate gratis — jetzt starten",
+          "preheader": "Nur noch heute, Samstag, 8. August: drei Monate Goetheanum gratis."
         },
         "en": {
-          "betreff": "The offer closes tomorrow",
-          "botschaft": "Only until tomorrow, 8 August",
-          "text": "Tomorrow, 8 August, the summer offer closes. Until then you can read and/or watch the Goetheanum free for three months. Unlock it now.",
-          "alt": "Until tomorrow: your three free months — if you still want them.",
-          "preheader": "Three months of the Goetheanum, free – only until tomorrow, Saturday 8 August."
+          "betreff": "The offer closes today — three months free",
+          "botschaft": "Only today, 8 August",
+          "text": "Today, Saturday 8 August, the summer offer closes. Until then you can read and/or watch the Goetheanum free for three months. Unlock it now.",
+          "alt": "Last day today: three months free — start now",
+          "preheader": "Only today, Saturday 8 August: three months of the Goetheanum free."
         }
       }
     }

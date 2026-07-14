@@ -147,7 +147,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   <span class="kicker">Sommer-Aktion 2026</span>
   <h1>Mail-Editor</h1>
   <p class="lede" style="max-width:var(--measure)">Alle Wellen-Mails der drei Segmente zum Gegenlesen — je Feld kommentierbar, Kommentare landen im Werkzeug-Backend. Korrigiert wird in <code>heroes.json</code>, dann wird neu gebaut.</p>
-  <p class="subline">Stand dieses Builds: 14.07.2026, 13.20 Uhr · <code>088b04d</code></p>
+  <p class="subline">Stand dieses Builds: 14.07.2026, 22.38 Uhr · <code>187cf85</code></p>
   <div class="controls">
     <span class="lab">Sprache</span>
     <button id="b-de" class="pill on" onclick="setLang('de')">Deutsch</button>
@@ -1402,13 +1402,13 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'lesen_w2_en#gesamt')">senden</button></div></div></div>
   <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Your free access — still open until 8 August</textarea><button type="button" onclick="vorschlag(this,'lesen_w2_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Free access for three months — an offer that runs only until 8 August.</textarea><button type="button" onclick="vorschlag(this,'lesen_w2_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Your free access is still waiting</textarea><button type="button" onclick="vorschlag(this,'lesen_w2_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">The offer runs until 8 August and lets you try the weekly ‹Das Goetheanum› free for three months. Unlock it now.</textarea><button type="button" onclick="vorschlag(this,'lesen_w2_en#text')">vorschlagen</button></label></details></div></div></div><div class="wave"><div class="mail" data-lang="de">
   <div class="mhd">W3 · DE<button class="mhd-edit" type="button" onclick="openEditor('lesen_w3_de')">✎ Bearbeiten</button><a href="mails/mail_lesen_w3_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
-  <div class="inbox"><div class="ib-b">Letzte Erinnerung: nur noch bis Samstag, 8. August</div><div class="ib-a">Das Ausnahmeangebot von drei kostenlosen Monaten läuft am Samstag, 8. August, aus.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> Am Samstag endet Ihr Gratis-Test der Wochenschrift — falls Sie ihn noch wollen.</div></div>
+  <div class="inbox"><div class="ib-b">Nur noch bis morgen, Samstag: drei Monate gratis lesen</div><div class="ib-a">Das Angebot für drei kostenlose Monate ‹Das Goetheanum› läuft morgen, am Samstag, 8. August, aus.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> Bis morgen: drei Monate gratis lesen — jetzt starten</div></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
 
 <head>
-  <title>Letzte Erinnerung: nur noch bis Samstag, 8. August</title>
+  <title>Nur noch bis morgen, Samstag: drei Monate gratis lesen</title>
   <!--[if !mso]><!-->
   <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
   <!--<![endif]-->
@@ -1512,8 +1512,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 </head>
 
 <body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
-  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Das Ausnahmeangebot von drei kostenlosen Monaten läuft am Samstag, 8. August, aus.</div>
-  <div aria-label=&quot;Letzte Erinnerung: nur noch bis Samstag, 8. August&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Das Angebot für drei kostenlose Monate ‹Das Goetheanum› läuft morgen, am Samstag, 8. August, aus.</div>
+  <div aria-label=&quot;Nur noch bis morgen, Samstag: drei Monate gratis lesen&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
     <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
     <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
       <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
@@ -1624,13 +1624,13 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;lesen_w3_de#botschaft&quot;>Nur noch bis Samstag, 8.&#160;August</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;lesen_w3_de#botschaft&quot;>Nur noch bis morgen, 8.&#160;August</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;lesen_w3_de#text&quot;>Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zur Wochenschrift ‹Das Goetheanum› – auf Papier und/oder online – erhalten, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.</span></div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;lesen_w3_de#text&quot;>Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zur Wochenschrift ‹Das Goetheanum› – auf Papier oder online – erhalten, morgen, am Samstag, 8. August, endet. Jetzt freischalten.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -1697,15 +1697,15 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
 <div class="cpanel" hidden><ul class="clist" data-cl="lesen_w3_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'lesen_w3_de#gesamt')">senden</button></div></div></div>
-  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Letzte Erinnerung: nur noch bis Samstag, 8. August</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_de#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Das Ausnahmeangebot von drei kostenlosen Monaten läuft am Samstag, 8. August, aus.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_de#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Nur noch bis Samstag, 8. August</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_de#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zur Wochenschrift ‹Das Goetheanum› – auf Papier und/oder online – erhalten, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_de#text')">vorschlagen</button></label><label class="pf"><span>Alt-Betreff (Nicht-Öffner)</span><textarea rows="2">Am Samstag endet Ihr Gratis-Test der Wochenschrift — falls Sie ihn noch wollen.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_de#alt')">vorschlagen</button></label></details></div></div><div class="mail" data-lang="en">
+  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Nur noch bis morgen, Samstag: drei Monate gratis lesen</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_de#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Das Angebot für drei kostenlose Monate ‹Das Goetheanum› läuft morgen, am Samstag, 8. August, aus.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_de#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Nur noch bis morgen, 8. August</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_de#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zur Wochenschrift ‹Das Goetheanum› – auf Papier oder online – erhalten, morgen, am Samstag, 8. August, endet. Jetzt freischalten.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_de#text')">vorschlagen</button></label><label class="pf"><span>Alt-Betreff (Nicht-Öffner)</span><textarea rows="2">Bis morgen: drei Monate gratis lesen — jetzt starten</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_de#alt')">vorschlagen</button></label></details></div></div><div class="mail" data-lang="en">
   <div class="mhd">W3 · EN<button class="mhd-edit" type="button" onclick="openEditor('lesen_w3_en')">✎ Bearbeiten</button><a href="mails/mail_lesen_w3_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
-  <div class="inbox"><div class="ib-b">Last reminder: only until Saturday, 8 August</div><div class="ib-a">The exceptional offer of three free months ends on Saturday, 8 August.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> On Saturday your free trial of the weekly ends — if you still want it.</div></div>
+  <div class="inbox"><div class="ib-b">Only until tomorrow, Saturday: three months free</div><div class="ib-a">The offer of three free months of ‹Das Goetheanum› ends tomorrow, Saturday 8 August.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> Until tomorrow: three months of free reading — start now</div></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
 
 <head>
-  <title>Last reminder: only until Saturday, 8 August</title>
+  <title>Only until tomorrow, Saturday: three months free</title>
   <!--[if !mso]><!-->
   <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
   <!--<![endif]-->
@@ -1809,8 +1809,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 </head>
 
 <body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
-  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>The exceptional offer of three free months ends on Saturday, 8 August.</div>
-  <div aria-label=&quot;Last reminder: only until Saturday, 8 August&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>The offer of three free months of ‹Das Goetheanum› ends tomorrow, Saturday 8 August.</div>
+  <div aria-label=&quot;Only until tomorrow, Saturday: three months free&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
     <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
     <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
       <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
@@ -1921,13 +1921,13 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;lesen_w3_en#botschaft&quot;>Only until Saturday, 8&#160;August</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;lesen_w3_en#botschaft&quot;>Only until tomorrow, 8&#160;August</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;lesen_w3_en#text&quot;>A reminder that the summer offer — three months of free access to the weekly ‹Das Goetheanum›, on paper and/or online — ends on Saturday, 8 August. Until then, you can unlock it.</span></div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;lesen_w3_en#text&quot;>A reminder that the summer offer — three months of free access to the weekly ‹Das Goetheanum›, on paper or online — ends tomorrow, Saturday 8 August. Unlock it now.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -1994,7 +1994,601 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
 <div class="cpanel" hidden><ul class="clist" data-cl="lesen_w3_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'lesen_w3_en#gesamt')">senden</button></div></div></div>
-  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Last reminder: only until Saturday, 8 August</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">The exceptional offer of three free months ends on Saturday, 8 August.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Only until Saturday, 8 August</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">A reminder that the summer offer — three months of free access to the weekly ‹Das Goetheanum›, on paper and/or online — ends on Saturday, 8 August. Until then, you can unlock it.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_en#text')">vorschlagen</button></label><label class="pf"><span>Alt-Betreff (Nicht-Öffner)</span><textarea rows="2">On Saturday your free trial of the weekly ends — if you still want it.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_en#alt')">vorschlagen</button></label></details></div></div></div></div></section><section class="segment"><h2>Sehen · goetheanum.tv — nurws</h2><div class="waves"><div class="wave"><div class="mail" data-lang="de">
+  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Only until tomorrow, Saturday: three months free</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">The offer of three free months of ‹Das Goetheanum› ends tomorrow, Saturday 8 August.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Only until tomorrow, 8 August</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">A reminder that the summer offer — three months of free access to the weekly ‹Das Goetheanum›, on paper or online — ends tomorrow, Saturday 8 August. Unlock it now.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_en#text')">vorschlagen</button></label><label class="pf"><span>Alt-Betreff (Nicht-Öffner)</span><textarea rows="2">Until tomorrow: three months of free reading — start now</textarea><button type="button" onclick="vorschlag(this,'lesen_w3_en#alt')">vorschlagen</button></label></details></div></div></div><div class="wave"><div class="mail" data-lang="de">
+  <div class="mhd">W3B · DE<button class="mhd-edit" type="button" onclick="openEditor('lesen_w3b_de')">✎ Bearbeiten</button><a href="mails/mail_lesen_w3b_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
+  <div class="inbox"><div class="ib-b">Heute läuft das Angebot aus — drei Monate gratis lesen</div><div class="ib-a">Nur noch heute, Samstag, 8. August: drei Monate ‹Das Goetheanum› gratis.</div></div>
+  <iframe srcdoc="<!-- FILE: undefined -->
+<!doctype html>
+<html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
+
+<head>
+  <title>Heute läuft das Angebot aus — drei Monate gratis lesen</title>
+  <!--[if !mso]><!-->
+  <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
+  <!--<![endif]-->
+  <meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;>
+  <style type=&quot;text/css&quot;>
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
+  <!--[if lte mso 11]>
+    <style type=&quot;text/css&quot;>
+      .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]-->
+  <style type=&quot;text/css&quot;>
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    }
+  </style>
+  <style media=&quot;screen and (min-width:480px)&quot;>
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @media only screen and (max-width:479px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @font-face {
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+    }
+  </style>
+</head>
+
+<body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Nur noch heute, Samstag, 8. August: drei Monate ‹Das Goetheanum› gratis.</div>
+  <div aria-label=&quot;Heute läuft das Angebot aus — drei Monate gratis lesen&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+    <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:6px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;right&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;text-align:right;color:#6E6E6E;&quot;><a href=&quot;https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3b_de.html&quot; style=&quot;color:#6E6E6E;text-decoration:underline;&quot;>Im Browser lesen</a></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:18px 28px 14px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:119px;&quot;>
+                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_nurtv&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Goetheanum&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/logo_goetheanum.png&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;119&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:0;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:600px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:600px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_nurtv&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Am See lesen&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/hero_lesen_see.jpg&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;600&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:24px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#de&quot;>Sommerangebot 2026</span></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;lesen_w3b_de#botschaft&quot;>Nur noch heute, 8.&#160;August</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;lesen_w3b_de#text&quot;>Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie die Wochenschrift ‹Das Goetheanum› drei Monate lang kostenlos lesen. Jetzt freischalten.</span></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:separate;line-height:100%;&quot;>
+                          <tbody>
+                            <tr>
+                              <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
+                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;lesen_w3b_de#cta&quot;>Mehr erfahren →</span>
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#lesen#de&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit ohne Begründung kündbar&#160;·<br />Aktion bis 8. August 2026.</span></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFF4F8&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFF4F8;background-color:#FFF4F8;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFF4F8;background-color:#FFF4F8;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:16px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:left;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#de&quot;>Stimmen und Gesichter der Anthroposophie von heute</span></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+  </div>
+</body>
+
+</html>
+" loading="lazy" title="Vorschau lesen_w3b_de"></iframe>
+  <div class="flds"><div class="fld" data-key="lesen_w3b_de#gesamt"><div class="fh" onclick="toggle(this)"><span class="lbl">Anmerkung zur Mail</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="lesen_w3b_de#gesamt">0</span></button></div>
+<div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
+<div class="cpanel" hidden><ul class="clist" data-cl="lesen_w3b_de#gesamt"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'lesen_w3b_de#gesamt')">senden</button></div></div></div>
+  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Heute läuft das Angebot aus — drei Monate gratis lesen</textarea><button type="button" onclick="vorschlag(this,'lesen_w3b_de#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Nur noch heute, Samstag, 8. August: drei Monate ‹Das Goetheanum› gratis.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3b_de#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Nur noch heute, 8. August</textarea><button type="button" onclick="vorschlag(this,'lesen_w3b_de#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie die Wochenschrift ‹Das Goetheanum› drei Monate lang kostenlos lesen. Jetzt freischalten.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3b_de#text')">vorschlagen</button></label></details></div></div><div class="mail" data-lang="en">
+  <div class="mhd">W3B · EN<button class="mhd-edit" type="button" onclick="openEditor('lesen_w3b_en')">✎ Bearbeiten</button><a href="mails/mail_lesen_w3b_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
+  <div class="inbox"><div class="ib-b">The offer closes today — three months of free reading</div><div class="ib-a">Only today, Saturday 8 August: three months of ‹Das Goetheanum› free.</div></div>
+  <iframe srcdoc="<!-- FILE: undefined -->
+<!doctype html>
+<html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
+
+<head>
+  <title>The offer closes today — three months of free reading</title>
+  <!--[if !mso]><!-->
+  <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
+  <!--<![endif]-->
+  <meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;>
+  <style type=&quot;text/css&quot;>
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
+  <!--[if lte mso 11]>
+    <style type=&quot;text/css&quot;>
+      .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]-->
+  <style type=&quot;text/css&quot;>
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    }
+  </style>
+  <style media=&quot;screen and (min-width:480px)&quot;>
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @media only screen and (max-width:479px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @font-face {
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+    }
+  </style>
+</head>
+
+<body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Only today, Saturday 8 August: three months of ‹Das Goetheanum› free.</div>
+  <div aria-label=&quot;The offer closes today — three months of free reading&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+    <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:6px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;right&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;text-align:right;color:#6E6E6E;&quot;><a href=&quot;https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_lesen_w3b_en.html&quot; style=&quot;color:#6E6E6E;text-decoration:underline;&quot;>Read in browser</a></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:18px 28px 14px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:119px;&quot;>
+                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_nurtv&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Goetheanum&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/logo_goetheanum.png&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;119&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:0;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:600px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:600px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_nurtv&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Am See lesen&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/hero_lesen_see.jpg&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;600&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:24px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#en&quot;>Summer offer 2026</span></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;lesen_w3b_en#botschaft&quot;>Only today, 8&#160;August</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;lesen_w3b_en#text&quot;>Today, Saturday 8 August, the summer offer closes. Until then you can read the weekly ‹Das Goetheanum› free for three months. Unlock it now.</span></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:separate;line-height:100%;&quot;>
+                          <tbody>
+                            <tr>
+                              <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
+                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;lesen_w3b_en#cta&quot;>Learn more →</span>
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#lesen#en&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime, no reason needed&#160;·<br />offer ends 8 August 2026.</span></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFF4F8&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFF4F8;background-color:#FFF4F8;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFF4F8;background-color:#FFF4F8;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:16px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:left;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#en&quot;>Voices and faces of anthroposophy today</span></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+  </div>
+</body>
+
+</html>
+" loading="lazy" title="Vorschau lesen_w3b_en"></iframe>
+  <div class="flds"><div class="fld" data-key="lesen_w3b_en#gesamt"><div class="fh" onclick="toggle(this)"><span class="lbl">Anmerkung zur Mail</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="lesen_w3b_en#gesamt">0</span></button></div>
+<div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
+<div class="cpanel" hidden><ul class="clist" data-cl="lesen_w3b_en#gesamt"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'lesen_w3b_en#gesamt')">senden</button></div></div></div>
+  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">The offer closes today — three months of free reading</textarea><button type="button" onclick="vorschlag(this,'lesen_w3b_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Only today, Saturday 8 August: three months of ‹Das Goetheanum› free.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3b_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Only today, 8 August</textarea><button type="button" onclick="vorschlag(this,'lesen_w3b_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Today, Saturday 8 August, the summer offer closes. Until then you can read the weekly ‹Das Goetheanum› free for three months. Unlock it now.</textarea><button type="button" onclick="vorschlag(this,'lesen_w3b_en#text')">vorschlagen</button></label></details></div></div></div></div></section><section class="segment"><h2>Sehen · goetheanum.tv — nurws</h2><div class="waves"><div class="wave"><div class="mail" data-lang="de">
   <div class="mhd">W1 · DE<button class="mhd-edit" type="button" onclick="openEditor('sehen_w1_de')">✎ Bearbeiten</button><a href="mails/mail_sehen_w1_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <div class="inbox"><div class="ib-b">Ihr freier Zugang zu goetheanum.tv</div><div class="ib-a">Drei Monate die ganze Mediathek — über 800 Beiträge, wöchentlich neu.</div></div>
   <iframe srcdoc="<!-- FILE: undefined -->
@@ -3204,13 +3798,13 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'sehen_w2_en#gesamt')">senden</button></div></div></div>
   <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Your free access — still open until 8 August</textarea><button type="button" onclick="vorschlag(this,'sehen_w2_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Three months of goetheanum.tv – the offer runs only until 8 August.</textarea><button type="button" onclick="vorschlag(this,'sehen_w2_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Your free access is still waiting</textarea><button type="button" onclick="vorschlag(this,'sehen_w2_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">The offer runs until 8 August and lets you try goetheanum.tv free for three months. Unlock it now.</textarea><button type="button" onclick="vorschlag(this,'sehen_w2_en#text')">vorschlagen</button></label></details></div></div></div><div class="wave"><div class="mail" data-lang="de">
   <div class="mhd">W3 · DE<button class="mhd-edit" type="button" onclick="openEditor('sehen_w3_de')">✎ Bearbeiten</button><a href="mails/mail_sehen_w3_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
-  <div class="inbox"><div class="ib-b">Letzte Erinnerung: nur noch bis Samstag, 8. August</div><div class="ib-a">Das Angebot für drei kostenlose Monate goetheanum.tv läuft am Samstag, 8. August, aus.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> Am Samstag endet Ihr Gratis-Test von goetheanum.tv — falls Sie ihn noch wollen.</div></div>
+  <div class="inbox"><div class="ib-b">Nur noch bis morgen, Samstag: drei Monate goetheanum.tv gratis</div><div class="ib-a">Das Angebot für drei kostenlose Monate goetheanum.tv läuft morgen, am Samstag, 8. August, aus.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> Bis morgen: drei Monate goetheanum.tv gratis — jetzt starten</div></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
 
 <head>
-  <title>Letzte Erinnerung: nur noch bis Samstag, 8. August</title>
+  <title>Nur noch bis morgen, Samstag: drei Monate goetheanum.tv gratis</title>
   <!--[if !mso]><!-->
   <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
   <!--<![endif]-->
@@ -3314,8 +3908,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 </head>
 
 <body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
-  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Das Angebot für drei kostenlose Monate goetheanum.tv läuft am Samstag, 8. August, aus.</div>
-  <div aria-label=&quot;Letzte Erinnerung: nur noch bis Samstag, 8. August&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Das Angebot für drei kostenlose Monate goetheanum.tv läuft morgen, am Samstag, 8. August, aus.</div>
+  <div aria-label=&quot;Nur noch bis morgen, Samstag: drei Monate goetheanum.tv gratis&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
     <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
     <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
       <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
@@ -3426,13 +4020,13 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;sehen_w3_de#botschaft&quot;>Nur noch bis Samstag, 8.&#160;August</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;sehen_w3_de#botschaft&quot;>Nur noch bis morgen, 8.&#160;August</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;sehen_w3_de#text&quot;>Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zu goetheanum.tv erhalten, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.</span></div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;sehen_w3_de#text&quot;>Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zu goetheanum.tv erhalten, morgen, am Samstag, 8. August, endet. Jetzt freischalten.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -3499,15 +4093,15 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
 <div class="cpanel" hidden><ul class="clist" data-cl="sehen_w3_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'sehen_w3_de#gesamt')">senden</button></div></div></div>
-  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Letzte Erinnerung: nur noch bis Samstag, 8. August</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_de#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Das Angebot für drei kostenlose Monate goetheanum.tv läuft am Samstag, 8. August, aus.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_de#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Nur noch bis Samstag, 8. August</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_de#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zu goetheanum.tv erhalten, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_de#text')">vorschlagen</button></label><label class="pf"><span>Alt-Betreff (Nicht-Öffner)</span><textarea rows="2">Am Samstag endet Ihr Gratis-Test von goetheanum.tv — falls Sie ihn noch wollen.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_de#alt')">vorschlagen</button></label></details></div></div><div class="mail" data-lang="en">
+  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Nur noch bis morgen, Samstag: drei Monate goetheanum.tv gratis</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_de#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Das Angebot für drei kostenlose Monate goetheanum.tv läuft morgen, am Samstag, 8. August, aus.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_de#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Nur noch bis morgen, 8. August</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_de#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zu goetheanum.tv erhalten, morgen, am Samstag, 8. August, endet. Jetzt freischalten.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_de#text')">vorschlagen</button></label><label class="pf"><span>Alt-Betreff (Nicht-Öffner)</span><textarea rows="2">Bis morgen: drei Monate goetheanum.tv gratis — jetzt starten</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_de#alt')">vorschlagen</button></label></details></div></div><div class="mail" data-lang="en">
   <div class="mhd">W3 · EN<button class="mhd-edit" type="button" onclick="openEditor('sehen_w3_en')">✎ Bearbeiten</button><a href="mails/mail_sehen_w3_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
-  <div class="inbox"><div class="ib-b">Last reminder: only until Saturday, 8 August</div><div class="ib-a">The offer of three free months of goetheanum.tv ends on Saturday, 8 August.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> On Saturday your free trial of goetheanum.tv ends — if you still want it.</div></div>
+  <div class="inbox"><div class="ib-b">Only until tomorrow, Saturday: three months of goetheanum.tv</div><div class="ib-a">The offer of three free months of goetheanum.tv ends tomorrow, Saturday 8 August.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> Until tomorrow: three months of goetheanum.tv free — start now</div></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
 
 <head>
-  <title>Last reminder: only until Saturday, 8 August</title>
+  <title>Only until tomorrow, Saturday: three months of goetheanum.tv</title>
   <!--[if !mso]><!-->
   <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
   <!--<![endif]-->
@@ -3611,8 +4205,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 </head>
 
 <body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
-  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>The offer of three free months of goetheanum.tv ends on Saturday, 8 August.</div>
-  <div aria-label=&quot;Last reminder: only until Saturday, 8 August&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>The offer of three free months of goetheanum.tv ends tomorrow, Saturday 8 August.</div>
+  <div aria-label=&quot;Only until tomorrow, Saturday: three months of goetheanum.tv&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
     <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
     <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
       <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
@@ -3723,13 +4317,13 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;sehen_w3_en#botschaft&quot;>Only until Saturday, 8&#160;August</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;sehen_w3_en#botschaft&quot;>Only until tomorrow, 8&#160;August</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;sehen_w3_en#text&quot;>A reminder that the summer offer — three months of free access to goetheanum.tv — ends on Saturday, 8 August. Until then, you can unlock it.</span></div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;sehen_w3_en#text&quot;>A reminder that the summer offer — three months of free access to goetheanum.tv — ends tomorrow, Saturday 8 August. Unlock it now.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -3796,7 +4390,601 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
 <div class="cpanel" hidden><ul class="clist" data-cl="sehen_w3_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'sehen_w3_en#gesamt')">senden</button></div></div></div>
-  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Last reminder: only until Saturday, 8 August</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">The offer of three free months of goetheanum.tv ends on Saturday, 8 August.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Only until Saturday, 8 August</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">A reminder that the summer offer — three months of free access to goetheanum.tv — ends on Saturday, 8 August. Until then, you can unlock it.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_en#text')">vorschlagen</button></label><label class="pf"><span>Alt-Betreff (Nicht-Öffner)</span><textarea rows="2">On Saturday your free trial of goetheanum.tv ends — if you still want it.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_en#alt')">vorschlagen</button></label></details></div></div></div></div></section><section class="segment"><h2>Beides · Das ganze Goetheanum — noabo</h2><div class="waves"><div class="wave"><div class="mail" data-lang="de">
+  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Only until tomorrow, Saturday: three months of goetheanum.tv</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">The offer of three free months of goetheanum.tv ends tomorrow, Saturday 8 August.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Only until tomorrow, 8 August</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">A reminder that the summer offer — three months of free access to goetheanum.tv — ends tomorrow, Saturday 8 August. Unlock it now.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_en#text')">vorschlagen</button></label><label class="pf"><span>Alt-Betreff (Nicht-Öffner)</span><textarea rows="2">Until tomorrow: three months of goetheanum.tv free — start now</textarea><button type="button" onclick="vorschlag(this,'sehen_w3_en#alt')">vorschlagen</button></label></details></div></div></div><div class="wave"><div class="mail" data-lang="de">
+  <div class="mhd">W3B · DE<button class="mhd-edit" type="button" onclick="openEditor('sehen_w3b_de')">✎ Bearbeiten</button><a href="mails/mail_sehen_w3b_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
+  <div class="inbox"><div class="ib-b">Heute läuft das Angebot aus — drei Monate goetheanum.tv gratis</div><div class="ib-a">Nur noch heute, Samstag, 8. August: drei Monate goetheanum.tv gratis.</div></div>
+  <iframe srcdoc="<!-- FILE: undefined -->
+<!doctype html>
+<html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
+
+<head>
+  <title>Heute läuft das Angebot aus — drei Monate goetheanum.tv gratis</title>
+  <!--[if !mso]><!-->
+  <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
+  <!--<![endif]-->
+  <meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;>
+  <style type=&quot;text/css&quot;>
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
+  <!--[if lte mso 11]>
+    <style type=&quot;text/css&quot;>
+      .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]-->
+  <style type=&quot;text/css&quot;>
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    }
+  </style>
+  <style media=&quot;screen and (min-width:480px)&quot;>
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @media only screen and (max-width:479px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @font-face {
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+    }
+  </style>
+</head>
+
+<body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Nur noch heute, Samstag, 8. August: drei Monate goetheanum.tv gratis.</div>
+  <div aria-label=&quot;Heute läuft das Angebot aus — drei Monate goetheanum.tv gratis&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+    <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:6px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;right&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;text-align:right;color:#6E6E6E;&quot;><a href=&quot;https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3b_de.html&quot; style=&quot;color:#6E6E6E;text-decoration:underline;&quot;>Im Browser lesen</a></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:18px 28px 14px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:119px;&quot;>
+                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_nurws&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Goetheanum&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/logo_goetheanum.png&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;119&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:0;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:600px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:600px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_nurws&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;goetheanum.tv in der Hängematte am See&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/hero_sehen_haengematte.jpg&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;600&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:24px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#de&quot;>Sommerangebot 2026</span></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;sehen_w3b_de#botschaft&quot;>Nur noch heute, 8.&#160;August</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;sehen_w3b_de#text&quot;>Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie goetheanum.tv drei Monate lang kostenlos sehen. Jetzt freischalten.</span></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:separate;line-height:100%;&quot;>
+                          <tbody>
+                            <tr>
+                              <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
+                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;sehen_w3b_de#cta&quot;>Mehr erfahren →</span>
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#sehen#de&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit kündbar, ein Klick im Konto&#160;·<br />Aktion bis 8. August 2026.</span></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFF4F8&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFF4F8;background-color:#FFF4F8;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFF4F8;background-color:#FFF4F8;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:16px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:left;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#de&quot;>Stimmen und Gesichter der Anthroposophie von heute</span></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+  </div>
+</body>
+
+</html>
+" loading="lazy" title="Vorschau sehen_w3b_de"></iframe>
+  <div class="flds"><div class="fld" data-key="sehen_w3b_de#gesamt"><div class="fh" onclick="toggle(this)"><span class="lbl">Anmerkung zur Mail</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="sehen_w3b_de#gesamt">0</span></button></div>
+<div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
+<div class="cpanel" hidden><ul class="clist" data-cl="sehen_w3b_de#gesamt"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'sehen_w3b_de#gesamt')">senden</button></div></div></div>
+  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Heute läuft das Angebot aus — drei Monate goetheanum.tv gratis</textarea><button type="button" onclick="vorschlag(this,'sehen_w3b_de#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Nur noch heute, Samstag, 8. August: drei Monate goetheanum.tv gratis.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3b_de#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Nur noch heute, 8. August</textarea><button type="button" onclick="vorschlag(this,'sehen_w3b_de#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie goetheanum.tv drei Monate lang kostenlos sehen. Jetzt freischalten.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3b_de#text')">vorschlagen</button></label></details></div></div><div class="mail" data-lang="en">
+  <div class="mhd">W3B · EN<button class="mhd-edit" type="button" onclick="openEditor('sehen_w3b_en')">✎ Bearbeiten</button><a href="mails/mail_sehen_w3b_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
+  <div class="inbox"><div class="ib-b">The offer closes today — three months of goetheanum.tv</div><div class="ib-a">Only today, Saturday 8 August: three months of goetheanum.tv free.</div></div>
+  <iframe srcdoc="<!-- FILE: undefined -->
+<!doctype html>
+<html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
+
+<head>
+  <title>The offer closes today — three months of goetheanum.tv</title>
+  <!--[if !mso]><!-->
+  <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
+  <!--<![endif]-->
+  <meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;>
+  <style type=&quot;text/css&quot;>
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
+  <!--[if lte mso 11]>
+    <style type=&quot;text/css&quot;>
+      .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]-->
+  <style type=&quot;text/css&quot;>
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    }
+  </style>
+  <style media=&quot;screen and (min-width:480px)&quot;>
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @media only screen and (max-width:479px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+  <style type=&quot;text/css&quot;>
+    @font-face {
+      font-family: 'Goetheanum';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Source Sans 3';
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+    }
+  </style>
+</head>
+
+<body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Only today, Saturday 8 August: three months of goetheanum.tv free.</div>
+  <div aria-label=&quot;The offer closes today — three months of goetheanum.tv&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+    <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:6px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;right&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;text-align:right;color:#6E6E6E;&quot;><a href=&quot;https://werkzeuge.goetheanum.ch/apps/mail-editor/mails/mail_sehen_w3b_en.html&quot; style=&quot;color:#6E6E6E;text-decoration:underline;&quot;>Read in browser</a></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:18px 28px 14px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:119px;&quot;>
+                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_nurws&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;Goetheanum&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/logo_goetheanum.png&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;119&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:0;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:600px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:collapse;border-spacing:0px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                          <tbody>
+                            <tr>
+                              <td style=&quot;width:600px;&quot; class=&quot;mj-full-width-mobile&quot;>
+                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_nurws&quot; target=&quot;_blank&quot;>
+                                  <img alt=&quot;goetheanum.tv in der Hängematte am See&quot; src=&quot;https://werkzeuge.goetheanum.ch/apps/mail-editor/assets/hero_sehen_haengematte.jpg&quot; style=&quot;border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;&quot; width=&quot;600&quot; height=&quot;auto&quot; />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFFFFF&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFFFFF;background-color:#FFFFFF;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:24px 28px 0 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#en&quot;>Summer offer 2026</span></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;sehen_w3b_en#botschaft&quot;>Only today, 8&#160;August</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;sehen_w3b_en#text&quot;>Today, Saturday 8 August, the summer offer closes. Until then you can watch goetheanum.tv free for three months. Unlock it now.</span></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;border-collapse:separate;line-height:100%;&quot;>
+                          <tbody>
+                            <tr>
+                              <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
+                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3b_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;sehen_w3b_en#cta&quot;>Learn more →</span>
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#sehen#en&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime with one click in your account&#160;·<br />offer ends 8 August 2026.</span></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#FFF4F8&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
+    <div style=&quot;background:#FFF4F8;background-color:#FFF4F8;margin:0px auto;max-width:600px;&quot;>
+      <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#FFF4F8;background-color:#FFF4F8;width:100%;&quot;>
+        <tbody>
+          <tr>
+            <td style=&quot;direction:ltr;font-size:0px;padding:16px 28px;text-align:center;&quot;>
+              <!--[if mso | IE]><table role=&quot;presentation&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;><tr><td class=&quot;&quot; style=&quot;vertical-align:top;width:544px;&quot; ><![endif]-->
+              <div class=&quot;mj-column-per-100 mj-outlook-group-fix&quot; style=&quot;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;&quot;>
+                <table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;vertical-align:top;&quot; width=&quot;100%&quot;>
+                  <tbody>
+                    <tr>
+                      <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:left;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#en&quot;>Voices and faces of anthroposophy today</span></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+  </div>
+</body>
+
+</html>
+" loading="lazy" title="Vorschau sehen_w3b_en"></iframe>
+  <div class="flds"><div class="fld" data-key="sehen_w3b_en#gesamt"><div class="fh" onclick="toggle(this)"><span class="lbl">Anmerkung zur Mail</span>
+<button class="cbtn" type="button">💬 <span class="cc" data-cc="sehen_w3b_en#gesamt">0</span></button></div>
+<div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
+<div class="cpanel" hidden><ul class="clist" data-cl="sehen_w3b_en#gesamt"></ul>
+<div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'sehen_w3b_en#gesamt')">senden</button></div></div></div>
+  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">The offer closes today — three months of goetheanum.tv</textarea><button type="button" onclick="vorschlag(this,'sehen_w3b_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Only today, Saturday 8 August: three months of goetheanum.tv free.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3b_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Only today, 8 August</textarea><button type="button" onclick="vorschlag(this,'sehen_w3b_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Today, Saturday 8 August, the summer offer closes. Until then you can watch goetheanum.tv free for three months. Unlock it now.</textarea><button type="button" onclick="vorschlag(this,'sehen_w3b_en#text')">vorschlagen</button></label></details></div></div></div></div></section><section class="segment"><h2>Beides · Das ganze Goetheanum — noabo</h2><div class="waves"><div class="wave"><div class="mail" data-lang="de">
   <div class="mhd">W1 · DE<button class="mhd-edit" type="button" onclick="openEditor('beides_w1_de')">✎ Bearbeiten</button><a href="mails/mail_beides_w1_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
   <div class="inbox"><div class="ib-b">Ihr freier Zugang zum Goetheanum – lesen und sehen</div><div class="ib-a">Wochenschrift und goetheanum.tv – drei Monate gratis, bis 8. August.</div></div>
   <iframe srcdoc="<!-- FILE: undefined -->
@@ -4998,13 +6186,13 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w2_en#gesamt')">senden</button></div></div></div>
   <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Your free access — still open until 8 August</textarea><button type="button" onclick="vorschlag(this,'beides_w2_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">The weekly and/or goetheanum.tv, three months free – until 8 August.</textarea><button type="button" onclick="vorschlag(this,'beides_w2_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Your free access is still waiting</textarea><button type="button" onclick="vorschlag(this,'beides_w2_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">The offer runs until 8 August: try the weekly ‹Das Goetheanum› and goetheanum.tv free for three months – separately or together. Unlock it now.</textarea><button type="button" onclick="vorschlag(this,'beides_w2_en#text')">vorschlagen</button></label></details></div></div></div><div class="wave"><div class="mail" data-lang="de">
   <div class="mhd">W3 · DE<button class="mhd-edit" type="button" onclick="openEditor('beides_w3_de')">✎ Bearbeiten</button><a href="mails/mail_beides_w3_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
-  <div class="inbox"><div class="ib-b">Letzte Erinnerung: nur noch bis Samstag, 8. August</div><div class="ib-a">Drei Monate lesen und/oder sehen, kostenlos – am Samstag, 8. August, läuft das Angebot aus.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> Am Samstag endet Ihr Gratis-Test — falls Sie ihn noch wollen.</div></div>
+  <div class="inbox"><div class="ib-b">Nur noch bis morgen, Samstag: drei Monate gratis</div><div class="ib-a">Drei Monate lesen und/oder sehen, kostenlos – morgen, am Samstag, 8. August, läuft das Angebot aus.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> Bis morgen: drei Monate gratis lesen oder sehen — jetzt starten</div></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
 
 <head>
-  <title>Letzte Erinnerung: nur noch bis Samstag, 8. August</title>
+  <title>Nur noch bis morgen, Samstag: drei Monate gratis</title>
   <!--[if !mso]><!-->
   <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
   <!--<![endif]-->
@@ -5108,8 +6296,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 </head>
 
 <body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
-  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Drei Monate lesen und/oder sehen, kostenlos – am Samstag, 8. August, läuft das Angebot aus.</div>
-  <div aria-label=&quot;Letzte Erinnerung: nur noch bis Samstag, 8. August&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Drei Monate lesen und/oder sehen, kostenlos – morgen, am Samstag, 8. August, läuft das Angebot aus.</div>
+  <div aria-label=&quot;Nur noch bis morgen, Samstag: drei Monate gratis&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
     <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
     <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
       <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
@@ -5220,13 +6408,13 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w3_de#botschaft&quot;>Nur noch bis Samstag, 8.&#160;August</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w3_de#botschaft&quot;>Nur noch bis morgen, 8.&#160;August</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w3_de#text&quot;>Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.</span></div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w3_de#text&quot;>Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen, morgen, am Samstag, 8. August, endet. Jetzt freischalten.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -5291,15 +6479,15 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
 <div class="cpanel" hidden><ul class="clist" data-cl="beides_w3_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w3_de#gesamt')">senden</button></div></div></div>
-  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Letzte Erinnerung: nur noch bis Samstag, 8. August</textarea><button type="button" onclick="vorschlag(this,'beides_w3_de#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Drei Monate lesen und/oder sehen, kostenlos – am Samstag, 8. August, läuft das Angebot aus.</textarea><button type="button" onclick="vorschlag(this,'beides_w3_de#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Nur noch bis Samstag, 8. August</textarea><button type="button" onclick="vorschlag(this,'beides_w3_de#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.</textarea><button type="button" onclick="vorschlag(this,'beides_w3_de#text')">vorschlagen</button></label><label class="pf"><span>Alt-Betreff (Nicht-Öffner)</span><textarea rows="2">Am Samstag endet Ihr Gratis-Test — falls Sie ihn noch wollen.</textarea><button type="button" onclick="vorschlag(this,'beides_w3_de#alt')">vorschlagen</button></label></details></div></div><div class="mail" data-lang="en">
+  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Nur noch bis morgen, Samstag: drei Monate gratis</textarea><button type="button" onclick="vorschlag(this,'beides_w3_de#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Drei Monate lesen und/oder sehen, kostenlos – morgen, am Samstag, 8. August, läuft das Angebot aus.</textarea><button type="button" onclick="vorschlag(this,'beides_w3_de#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Nur noch bis morgen, 8. August</textarea><button type="button" onclick="vorschlag(this,'beides_w3_de#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen, morgen, am Samstag, 8. August, endet. Jetzt freischalten.</textarea><button type="button" onclick="vorschlag(this,'beides_w3_de#text')">vorschlagen</button></label><label class="pf"><span>Alt-Betreff (Nicht-Öffner)</span><textarea rows="2">Bis morgen: drei Monate gratis lesen oder sehen — jetzt starten</textarea><button type="button" onclick="vorschlag(this,'beides_w3_de#alt')">vorschlagen</button></label></details></div></div><div class="mail" data-lang="en">
   <div class="mhd">W3 · EN<button class="mhd-edit" type="button" onclick="openEditor('beides_w3_en')">✎ Bearbeiten</button><a href="mails/mail_beides_w3_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
-  <div class="inbox"><div class="ib-b">Last reminder: only until Saturday, 8 August</div><div class="ib-a">Three months of reading and/or watching, free – the offer ends on Saturday, 8 August.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> On Saturday your free trial ends — if you still want it.</div></div>
+  <div class="inbox"><div class="ib-b">Only until tomorrow, Saturday: three months free</div><div class="ib-a">Three months of reading and/or watching, free – the offer ends tomorrow, Saturday 8 August.</div><div class="ib-alt"><span>Nicht-Öffner erhalten:</span> Until tomorrow: three months free to read or watch — start now</div></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
 
 <head>
-  <title>Last reminder: only until Saturday, 8 August</title>
+  <title>Only until tomorrow, Saturday: three months free</title>
   <!--[if !mso]><!-->
   <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
   <!--<![endif]-->
@@ -5403,8 +6591,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 </head>
 
 <body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
-  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Three months of reading and/or watching, free – the offer ends on Saturday, 8 August.</div>
-  <div aria-label=&quot;Last reminder: only until Saturday, 8 August&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Three months of reading and/or watching, free – the offer ends tomorrow, Saturday 8 August.</div>
+  <div aria-label=&quot;Only until tomorrow, Saturday: three months free&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
     <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
     <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
       <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
@@ -5515,13 +6703,13 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w3_en#botschaft&quot;>Only until Saturday, 8&#160;August</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w3_en#botschaft&quot;>Only until tomorrow, 8&#160;August</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w3_en#text&quot;>A reminder that the summer offer — three months of free access to the Goetheanum, to read and/or watch — ends on Saturday, 8 August. Until then, you can unlock it.</span></div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w3_en#text&quot;>A reminder that the summer offer — three months of free access to the Goetheanum, to read and/or watch — ends tomorrow, Saturday 8 August. Unlock it now.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -5586,15 +6774,15 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
 <div class="cpanel" hidden><ul class="clist" data-cl="beides_w3_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w3_en#gesamt')">senden</button></div></div></div>
-  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Last reminder: only until Saturday, 8 August</textarea><button type="button" onclick="vorschlag(this,'beides_w3_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Three months of reading and/or watching, free – the offer ends on Saturday, 8 August.</textarea><button type="button" onclick="vorschlag(this,'beides_w3_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Only until Saturday, 8 August</textarea><button type="button" onclick="vorschlag(this,'beides_w3_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">A reminder that the summer offer — three months of free access to the Goetheanum, to read and/or watch — ends on Saturday, 8 August. Until then, you can unlock it.</textarea><button type="button" onclick="vorschlag(this,'beides_w3_en#text')">vorschlagen</button></label><label class="pf"><span>Alt-Betreff (Nicht-Öffner)</span><textarea rows="2">On Saturday your free trial ends — if you still want it.</textarea><button type="button" onclick="vorschlag(this,'beides_w3_en#alt')">vorschlagen</button></label></details></div></div></div><div class="wave"><div class="mail" data-lang="de">
+  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Only until tomorrow, Saturday: three months free</textarea><button type="button" onclick="vorschlag(this,'beides_w3_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Three months of reading and/or watching, free – the offer ends tomorrow, Saturday 8 August.</textarea><button type="button" onclick="vorschlag(this,'beides_w3_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Only until tomorrow, 8 August</textarea><button type="button" onclick="vorschlag(this,'beides_w3_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">A reminder that the summer offer — three months of free access to the Goetheanum, to read and/or watch — ends tomorrow, Saturday 8 August. Unlock it now.</textarea><button type="button" onclick="vorschlag(this,'beides_w3_en#text')">vorschlagen</button></label><label class="pf"><span>Alt-Betreff (Nicht-Öffner)</span><textarea rows="2">Until tomorrow: three months free to read or watch — start now</textarea><button type="button" onclick="vorschlag(this,'beides_w3_en#alt')">vorschlagen</button></label></details></div></div></div><div class="wave"><div class="mail" data-lang="de">
   <div class="mhd">W3B · DE<button class="mhd-edit" type="button" onclick="openEditor('beides_w3b_de')">✎ Bearbeiten</button><a href="mails/mail_beides_w3b_de.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
-  <div class="inbox"><div class="ib-b">Morgen läuft das Angebot aus</div><div class="ib-a">Drei Monate Goetheanum, kostenlos – nur noch bis morgen, Samstag, 8. August.</div></div>
+  <div class="inbox"><div class="ib-b">Heute läuft das Angebot aus — drei Monate gratis</div><div class="ib-a">Nur noch heute, Samstag, 8. August: drei Monate Goetheanum gratis.</div></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
 
 <head>
-  <title>Morgen läuft das Angebot aus</title>
+  <title>Heute läuft das Angebot aus — drei Monate gratis</title>
   <!--[if !mso]><!-->
   <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
   <!--<![endif]-->
@@ -5698,8 +6886,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 </head>
 
 <body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
-  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Drei Monate Goetheanum, kostenlos – nur noch bis morgen, Samstag, 8. August.</div>
-  <div aria-label=&quot;Morgen läuft das Angebot aus&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Nur noch heute, Samstag, 8. August: drei Monate Goetheanum gratis.</div>
+  <div aria-label=&quot;Heute läuft das Angebot aus — drei Monate gratis&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
     <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
     <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
       <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
@@ -5810,13 +6998,13 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w3b_de#botschaft&quot;>Nur noch bis morgen, 8.&#160;August</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w3b_de#botschaft&quot;>Nur noch heute, 8.&#160;August</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w3b_de#text&quot;>Morgen, am 8. August, endet das Sommerangebot. Bis dahin können Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen. Jetzt freischalten.</span></div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w3b_de#text&quot;>Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen. Jetzt freischalten.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -5881,15 +7069,15 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
 <div class="cpanel" hidden><ul class="clist" data-cl="beides_w3b_de#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w3b_de#gesamt')">senden</button></div></div></div>
-  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Morgen läuft das Angebot aus</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_de#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Drei Monate Goetheanum, kostenlos – nur noch bis morgen, Samstag, 8. August.</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_de#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Nur noch bis morgen, 8. August</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_de#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Morgen, am 8. August, endet das Sommerangebot. Bis dahin können Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen. Jetzt freischalten.</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_de#text')">vorschlagen</button></label></details></div></div><div class="mail" data-lang="en">
+  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Heute läuft das Angebot aus — drei Monate gratis</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_de#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Nur noch heute, Samstag, 8. August: drei Monate Goetheanum gratis.</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_de#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Nur noch heute, 8. August</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_de#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen. Jetzt freischalten.</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_de#text')">vorschlagen</button></label></details></div></div><div class="mail" data-lang="en">
   <div class="mhd">W3B · EN<button class="mhd-edit" type="button" onclick="openEditor('beides_w3b_en')">✎ Bearbeiten</button><a href="mails/mail_beides_w3b_en.html" title="Versand-HTML öffnen (AC-Bestückung)">HTML</a></div>
-  <div class="inbox"><div class="ib-b">The offer closes tomorrow</div><div class="ib-a">Three months of the Goetheanum, free – only until tomorrow, Saturday 8 August.</div></div>
+  <div class="inbox"><div class="ib-b">The offer closes today — three months free</div><div class="ib-a">Only today, Saturday 8 August: three months of the Goetheanum free.</div></div>
   <iframe srcdoc="<!-- FILE: undefined -->
 <!doctype html>
 <html lang=&quot;und&quot; dir=&quot;auto&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;>
 
 <head>
-  <title>The offer closes tomorrow</title>
+  <title>The offer closes today — three months free</title>
   <!--[if !mso]><!-->
   <meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
   <!--<![endif]-->
@@ -5993,8 +7181,8 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 </head>
 
 <body style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
-  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Three months of the Goetheanum, free – only until tomorrow, Saturday 8 August.</div>
-  <div aria-label=&quot;The offer closes tomorrow&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
+  <div style=&quot;display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;&quot;>Only today, Saturday 8 August: three months of the Goetheanum free.</div>
+  <div aria-label=&quot;The offer closes today — three months free&quot; aria-roledescription=&quot;email&quot; role=&quot;article&quot; lang=&quot;und&quot; dir=&quot;auto&quot; style=&quot;word-spacing:normal;background-color:#F6F4F2;&quot;>
     <!--[if mso | IE]><table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;&quot; role=&quot;presentation&quot; style=&quot;width:600px;&quot; width=&quot;600&quot; bgcolor=&quot;#F6F4F2&quot; ><tr><td style=&quot;line-height:0px;font-size:0px;mso-line-height-rule:exactly;&quot;><![endif]-->
     <div style=&quot;background:#F6F4F2;background-color:#F6F4F2;margin:0px auto;max-width:600px;&quot;>
       <table align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; role=&quot;presentation&quot; style=&quot;background:#F6F4F2;background-color:#F6F4F2;width:100%;&quot;>
@@ -6105,13 +7293,13 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w3b_en#botschaft&quot;>Only until tomorrow, 8&#160;August</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w3b_en#botschaft&quot;>Only today, 8&#160;August</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w3b_en#text&quot;>Tomorrow, 8 August, the summer offer closes. Until then you can read and/or watch the Goetheanum free for three months. Unlock it now.</span></div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w3b_en#text&quot;>Today, Saturday 8 August, the summer offer closes. Until then you can read and/or watch the Goetheanum free for three months. Unlock it now.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -6176,7 +7364,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="val"><i>Was auffällt — das Element einfach benennen (Betreff, Bild, Text …)</i></div>
 <div class="cpanel" hidden><ul class="clist" data-cl="beides_w3b_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w3b_en#gesamt')">senden</button></div></div></div>
-  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">The offer closes tomorrow</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Three months of the Goetheanum, free – only until tomorrow, Saturday 8 August.</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Only until tomorrow, 8 August</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Tomorrow, 8 August, the summer offer closes. Until then you can read and/or watch the Goetheanum free for three months. Unlock it now.</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_en#text')">vorschlagen</button></label></details></div></div></div></div></section>
+  <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">The offer closes today — three months free</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Only today, Saturday 8 August: three months of the Goetheanum free.</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">Only today, 8 August</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Today, Saturday 8 August, the summer offer closes. Until then you can read and/or watch the Goetheanum free for three months. Unlock it now.</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_en#text')">vorschlagen</button></label></details></div></div></div></div></section>
 <dialog id="wyz" class="wyz"><div class="wyz-bar"><span class="wyz-label" id="wyz-label"></span><span class="wyz-msg" id="wyz-msg"></span><input class="wyz-autor" id="wyz-autor" placeholder="Kürzel" aria-label="Ihr Kürzel"><button class="wyz-save" type="button" onclick="saveAll()">Speichern</button><button class="wyz-x" type="button" onclick="closeEditor()" aria-label="Schliessen">✕</button></div><button class="wyz-nav prev" type="button" onclick="navTo(-1)" aria-label="Vorherige Mail">‹</button><button class="wyz-nav next" type="button" onclick="navTo(1)" aria-label="Nächste Mail">›</button><div class="wyz-stage"><div class="wyz-col"><div class="wyz-inbox" id="wyz-chrome"></div><iframe id="wyz-frame" class="wyz-frame" scrolling="no" title="Live-Editor"></iframe></div></div></dialog>
 </main>
 
@@ -6190,8 +7378,8 @@ const SB_URL="https://dagcsnfrlbpxcmdimnrw.supabase.co", SB_KEY="sb_publishable_
 const REST=SB_URL+"/rest/v1/"+TAB, RPC=SB_URL+"/rest/v1/rpc/sommer2026_comment_erledigt";
 const HDR={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};
 let COMMENTS={}, SHOW_DONE=false;
-const MAILDATA={"lesen_w1_de": {"label": "nurtv · lesen · w1 · DE", "fields": {"betreff": "Ihr freier Zugang zur Wochenschrift Das Goetheanum", "preheader": "Drei Monate freien Zugang für alle, die gerne in Ruhe auf Papier oder online lesen.", "botschaft": "Drei freie Monate für Sie", "text": "Die Wochenschrift ‹Das Goetheanum› erweitert den Horizont – auf Papier oder online – und beleuchtet brisante Themen. Sie erhalten drei Monate lang uneingeschränkten Zugriff auf das gesamte Archiv seit 2022."}, "cta": {"editable": true, "ziel": "wos", "label": "Mehr erfahren →"}}, "lesen_w1_en": {"label": "nurtv · lesen · w1 · EN", "fields": {"betreff": "Your free access to the weekly Das Goetheanum", "preheader": "Three months of free access — for anyone who likes to read in peace, on paper or online.", "botschaft": "Three free months for you", "text": "The weekly ‹Das Goetheanum› broadens your horizon – on paper or online – and takes on pressing questions. You receive three months of unlimited access to the entire archive since 2022."}, "cta": {"editable": true, "ziel": "wos", "label": "Learn more →"}}, "lesen_w2_de": {"label": "nurtv · lesen · w2 · DE", "fields": {"betreff": "Ihr kostenloser Zugang – noch bis zum 8. August", "preheader": "Der kostenlose Zugang für drei Monate ist ein Angebot, das nur bis zum 8. August gilt.", "botschaft": "Ihr kostenloser Zugang steht noch bereit", "text": "Das Angebot gilt bis zum 8. August und erlaubt Ihnen, die Wochenschrift ‹Das Goetheanum› drei Monate lang kostenlos zu testen. Jetzt freischalten."}, "cta": {"editable": true, "ziel": "wos", "label": "Mehr erfahren →"}}, "lesen_w2_en": {"label": "nurtv · lesen · w2 · EN", "fields": {"betreff": "Your free access — still open until 8 August", "preheader": "Free access for three months — an offer that runs only until 8 August.", "botschaft": "Your free access is still waiting", "text": "The offer runs until 8 August and lets you try the weekly ‹Das Goetheanum› free for three months. Unlock it now."}, "cta": {"editable": true, "ziel": "wos", "label": "Learn more →"}}, "lesen_w3_de": {"label": "nurtv · lesen · w3 · DE", "fields": {"betreff": "Letzte Erinnerung: nur noch bis Samstag, 8. August", "preheader": "Das Ausnahmeangebot von drei kostenlosen Monaten läuft am Samstag, 8. August, aus.", "botschaft": "Nur noch bis Samstag, 8. August", "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zur Wochenschrift ‹Das Goetheanum› – auf Papier und/oder online – erhalten, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.", "alt": "Am Samstag endet Ihr Gratis-Test der Wochenschrift — falls Sie ihn noch wollen."}, "cta": {"editable": true, "ziel": "wos", "label": "Mehr erfahren →"}}, "lesen_w3_en": {"label": "nurtv · lesen · w3 · EN", "fields": {"betreff": "Last reminder: only until Saturday, 8 August", "preheader": "The exceptional offer of three free months ends on Saturday, 8 August.", "botschaft": "Only until Saturday, 8 August", "text": "A reminder that the summer offer — three months of free access to the weekly ‹Das Goetheanum›, on paper and/or online — ends on Saturday, 8 August. Until then, you can unlock it.", "alt": "On Saturday your free trial of the weekly ends — if you still want it."}, "cta": {"editable": true, "ziel": "wos", "label": "Learn more →"}}, "sehen_w1_de": {"label": "nurws · sehen · w1 · DE", "fields": {"betreff": "Ihr freier Zugang zu goetheanum.tv", "preheader": "Drei Monate die ganze Mediathek — über 800 Beiträge, wöchentlich neu.", "botschaft": "Drei freie Monate für Sie", "text": "goetheanum.tv öffnet Ihnen die ganze Mediathek – über 800 Beiträge, wöchentlich neu: Vorträge, Reportagen und Aufführungen, nah am Leben am Goetheanum. Sie erhalten drei Monate lang uneingeschränkten Zugriff."}, "cta": {"editable": true, "ziel": "gtv", "label": "Mehr erfahren →"}}, "sehen_w1_en": {"label": "nurws · sehen · w1 · EN", "fields": {"betreff": "Your free access to goetheanum.tv", "preheader": "Three months of the whole media library — over 800 items, new each week.", "botschaft": "Three free months for you", "text": "goetheanum.tv opens the whole media library to you – over 800 items, new each week: lectures, reportages and performances, close to life at the Goetheanum. You receive three months of unlimited access."}, "cta": {"editable": true, "ziel": "gtv", "label": "Learn more →"}}, "sehen_w2_de": {"label": "nurws · sehen · w2 · DE", "fields": {"betreff": "Ihr kostenloser Zugang – noch bis zum 8. August", "preheader": "Drei Monate goetheanum.tv – das Angebot gilt nur bis zum 8. August.", "botschaft": "Ihr kostenloser Zugang steht noch bereit", "text": "Das Angebot gilt bis zum 8. August und erlaubt Ihnen, goetheanum.tv drei Monate lang kostenlos zu testen. Jetzt freischalten."}, "cta": {"editable": true, "ziel": "gtv", "label": "Mehr erfahren →"}}, "sehen_w2_en": {"label": "nurws · sehen · w2 · EN", "fields": {"betreff": "Your free access — still open until 8 August", "preheader": "Three months of goetheanum.tv – the offer runs only until 8 August.", "botschaft": "Your free access is still waiting", "text": "The offer runs until 8 August and lets you try goetheanum.tv free for three months. Unlock it now."}, "cta": {"editable": true, "ziel": "gtv", "label": "Learn more →"}}, "sehen_w3_de": {"label": "nurws · sehen · w3 · DE", "fields": {"betreff": "Letzte Erinnerung: nur noch bis Samstag, 8. August", "preheader": "Das Angebot für drei kostenlose Monate goetheanum.tv läuft am Samstag, 8. August, aus.", "botschaft": "Nur noch bis Samstag, 8. August", "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zu goetheanum.tv erhalten, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.", "alt": "Am Samstag endet Ihr Gratis-Test von goetheanum.tv — falls Sie ihn noch wollen."}, "cta": {"editable": true, "ziel": "gtv", "label": "Mehr erfahren →"}}, "sehen_w3_en": {"label": "nurws · sehen · w3 · EN", "fields": {"betreff": "Last reminder: only until Saturday, 8 August", "preheader": "The offer of three free months of goetheanum.tv ends on Saturday, 8 August.", "botschaft": "Only until Saturday, 8 August", "text": "A reminder that the summer offer — three months of free access to goetheanum.tv — ends on Saturday, 8 August. Until then, you can unlock it.", "alt": "On Saturday your free trial of goetheanum.tv ends — if you still want it."}, "cta": {"editable": true, "ziel": "gtv", "label": "Learn more →"}}, "beides_w1_de": {"label": "noabo · beides · w1 · DE", "fields": {"betreff": "Ihr freier Zugang zum Goetheanum – lesen und sehen", "preheader": "Wochenschrift und goetheanum.tv – drei Monate gratis, bis 8. August.", "botschaft": "Drei freie Monate für Sie", "text": "Das Goetheanum gibt es in Wort und im Bild: die Wochenschrift ‹Das Goetheanum› und die Mediathek goetheanum.tv. Lernen Sie beide diesen Sommer drei Monate kostenlos kennen – einzeln oder zusammen."}, "cta": {"editable": false}}, "beides_w1_en": {"label": "noabo · beides · w1 · EN", "fields": {"betreff": "Your free access to the Goetheanum – read and watch", "preheader": "The weekly and goetheanum.tv – three months free, until 8 August.", "botschaft": "Three free months for you", "text": "The Goetheanum exists in words and in image: the weekly ‹Das Goetheanum› and the media library goetheanum.tv. Get to know both this summer, three months free – separately or together."}, "cta": {"editable": false}}, "beides_w2_de": {"label": "noabo · beides · w2 · DE", "fields": {"betreff": "Ihr kostenloser Zugang – noch bis zum 8. August", "preheader": "Wochenschrift und/oder goetheanum.tv, drei Monate kostenlos – bis 8. August.", "botschaft": "Ihr kostenloser Zugang steht noch bereit", "text": "Das Angebot gilt bis zum 8. August: die Wochenschrift ‹Das Goetheanum› und goetheanum.tv drei Monate lang kostenlos testen – einzeln oder zusammen. Jetzt freischalten."}, "cta": {"editable": false}}, "beides_w2_en": {"label": "noabo · beides · w2 · EN", "fields": {"betreff": "Your free access — still open until 8 August", "preheader": "The weekly and/or goetheanum.tv, three months free – until 8 August.", "botschaft": "Your free access is still waiting", "text": "The offer runs until 8 August: try the weekly ‹Das Goetheanum› and goetheanum.tv free for three months – separately or together. Unlock it now."}, "cta": {"editable": false}}, "beides_w3_de": {"label": "noabo · beides · w3 · DE", "fields": {"betreff": "Letzte Erinnerung: nur noch bis Samstag, 8. August", "preheader": "Drei Monate lesen und/oder sehen, kostenlos – am Samstag, 8. August, läuft das Angebot aus.", "botschaft": "Nur noch bis Samstag, 8. August", "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.", "alt": "Am Samstag endet Ihr Gratis-Test — falls Sie ihn noch wollen."}, "cta": {"editable": false}}, "beides_w3_en": {"label": "noabo · beides · w3 · EN", "fields": {"betreff": "Last reminder: only until Saturday, 8 August", "preheader": "Three months of reading and/or watching, free – the offer ends on Saturday, 8 August.", "botschaft": "Only until Saturday, 8 August", "text": "A reminder that the summer offer — three months of free access to the Goetheanum, to read and/or watch — ends on Saturday, 8 August. Until then, you can unlock it.", "alt": "On Saturday your free trial ends — if you still want it."}, "cta": {"editable": false}}, "beides_w3b_de": {"label": "noabo · beides · w3b · DE", "fields": {"betreff": "Morgen läuft das Angebot aus", "preheader": "Drei Monate Goetheanum, kostenlos – nur noch bis morgen, Samstag, 8. August.", "botschaft": "Nur noch bis morgen, 8. August", "text": "Morgen, am 8. August, endet das Sommerangebot. Bis dahin können Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen. Jetzt freischalten."}, "cta": {"editable": false}}, "beides_w3b_en": {"label": "noabo · beides · w3b · EN", "fields": {"betreff": "The offer closes tomorrow", "preheader": "Three months of the Goetheanum, free – only until tomorrow, Saturday 8 August.", "botschaft": "Only until tomorrow, 8 August", "text": "Tomorrow, 8 August, the summer offer closes. Until then you can read and/or watch the Goetheanum free for three months. Unlock it now."}, "cta": {"editable": false}}};
-const NAVBASES=["lesen_w1_de", "lesen_w1_en", "lesen_w2_de", "lesen_w2_en", "lesen_w3_de", "lesen_w3_en", "sehen_w1_de", "sehen_w1_en", "sehen_w2_de", "sehen_w2_en", "sehen_w3_de", "sehen_w3_en", "beides_w1_de", "beides_w1_en", "beides_w2_de", "beides_w2_en", "beides_w3_de", "beides_w3_en", "beides_w3b_de", "beides_w3b_en"];
+const MAILDATA={"lesen_w1_de": {"label": "nurtv · lesen · w1 · DE", "fields": {"betreff": "Ihr freier Zugang zur Wochenschrift Das Goetheanum", "preheader": "Drei Monate freien Zugang für alle, die gerne in Ruhe auf Papier oder online lesen.", "botschaft": "Drei freie Monate für Sie", "text": "Die Wochenschrift ‹Das Goetheanum› erweitert den Horizont – auf Papier oder online – und beleuchtet brisante Themen. Sie erhalten drei Monate lang uneingeschränkten Zugriff auf das gesamte Archiv seit 2022."}, "cta": {"editable": true, "ziel": "wos", "label": "Mehr erfahren →"}}, "lesen_w1_en": {"label": "nurtv · lesen · w1 · EN", "fields": {"betreff": "Your free access to the weekly Das Goetheanum", "preheader": "Three months of free access — for anyone who likes to read in peace, on paper or online.", "botschaft": "Three free months for you", "text": "The weekly ‹Das Goetheanum› broadens your horizon – on paper or online – and takes on pressing questions. You receive three months of unlimited access to the entire archive since 2022."}, "cta": {"editable": true, "ziel": "wos", "label": "Learn more →"}}, "lesen_w2_de": {"label": "nurtv · lesen · w2 · DE", "fields": {"betreff": "Ihr kostenloser Zugang – noch bis zum 8. August", "preheader": "Der kostenlose Zugang für drei Monate ist ein Angebot, das nur bis zum 8. August gilt.", "botschaft": "Ihr kostenloser Zugang steht noch bereit", "text": "Das Angebot gilt bis zum 8. August und erlaubt Ihnen, die Wochenschrift ‹Das Goetheanum› drei Monate lang kostenlos zu testen. Jetzt freischalten."}, "cta": {"editable": true, "ziel": "wos", "label": "Mehr erfahren →"}}, "lesen_w2_en": {"label": "nurtv · lesen · w2 · EN", "fields": {"betreff": "Your free access — still open until 8 August", "preheader": "Free access for three months — an offer that runs only until 8 August.", "botschaft": "Your free access is still waiting", "text": "The offer runs until 8 August and lets you try the weekly ‹Das Goetheanum› free for three months. Unlock it now."}, "cta": {"editable": true, "ziel": "wos", "label": "Learn more →"}}, "lesen_w3_de": {"label": "nurtv · lesen · w3 · DE", "fields": {"betreff": "Nur noch bis morgen, Samstag: drei Monate gratis lesen", "preheader": "Das Angebot für drei kostenlose Monate ‹Das Goetheanum› läuft morgen, am Samstag, 8. August, aus.", "botschaft": "Nur noch bis morgen, 8. August", "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zur Wochenschrift ‹Das Goetheanum› – auf Papier oder online – erhalten, morgen, am Samstag, 8. August, endet. Jetzt freischalten.", "alt": "Bis morgen: drei Monate gratis lesen — jetzt starten"}, "cta": {"editable": true, "ziel": "wos", "label": "Mehr erfahren →"}}, "lesen_w3_en": {"label": "nurtv · lesen · w3 · EN", "fields": {"betreff": "Only until tomorrow, Saturday: three months free", "preheader": "The offer of three free months of ‹Das Goetheanum› ends tomorrow, Saturday 8 August.", "botschaft": "Only until tomorrow, 8 August", "text": "A reminder that the summer offer — three months of free access to the weekly ‹Das Goetheanum›, on paper or online — ends tomorrow, Saturday 8 August. Unlock it now.", "alt": "Until tomorrow: three months of free reading — start now"}, "cta": {"editable": true, "ziel": "wos", "label": "Learn more →"}}, "lesen_w3b_de": {"label": "nurtv · lesen · w3b · DE", "fields": {"betreff": "Heute läuft das Angebot aus — drei Monate gratis lesen", "preheader": "Nur noch heute, Samstag, 8. August: drei Monate ‹Das Goetheanum› gratis.", "botschaft": "Nur noch heute, 8. August", "text": "Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie die Wochenschrift ‹Das Goetheanum› drei Monate lang kostenlos lesen. Jetzt freischalten."}, "cta": {"editable": true, "ziel": "wos", "label": "Mehr erfahren →"}}, "lesen_w3b_en": {"label": "nurtv · lesen · w3b · EN", "fields": {"betreff": "The offer closes today — three months of free reading", "preheader": "Only today, Saturday 8 August: three months of ‹Das Goetheanum› free.", "botschaft": "Only today, 8 August", "text": "Today, Saturday 8 August, the summer offer closes. Until then you can read the weekly ‹Das Goetheanum› free for three months. Unlock it now."}, "cta": {"editable": true, "ziel": "wos", "label": "Learn more →"}}, "sehen_w1_de": {"label": "nurws · sehen · w1 · DE", "fields": {"betreff": "Ihr freier Zugang zu goetheanum.tv", "preheader": "Drei Monate die ganze Mediathek — über 800 Beiträge, wöchentlich neu.", "botschaft": "Drei freie Monate für Sie", "text": "goetheanum.tv öffnet Ihnen die ganze Mediathek – über 800 Beiträge, wöchentlich neu: Vorträge, Reportagen und Aufführungen, nah am Leben am Goetheanum. Sie erhalten drei Monate lang uneingeschränkten Zugriff."}, "cta": {"editable": true, "ziel": "gtv", "label": "Mehr erfahren →"}}, "sehen_w1_en": {"label": "nurws · sehen · w1 · EN", "fields": {"betreff": "Your free access to goetheanum.tv", "preheader": "Three months of the whole media library — over 800 items, new each week.", "botschaft": "Three free months for you", "text": "goetheanum.tv opens the whole media library to you – over 800 items, new each week: lectures, reportages and performances, close to life at the Goetheanum. You receive three months of unlimited access."}, "cta": {"editable": true, "ziel": "gtv", "label": "Learn more →"}}, "sehen_w2_de": {"label": "nurws · sehen · w2 · DE", "fields": {"betreff": "Ihr kostenloser Zugang – noch bis zum 8. August", "preheader": "Drei Monate goetheanum.tv – das Angebot gilt nur bis zum 8. August.", "botschaft": "Ihr kostenloser Zugang steht noch bereit", "text": "Das Angebot gilt bis zum 8. August und erlaubt Ihnen, goetheanum.tv drei Monate lang kostenlos zu testen. Jetzt freischalten."}, "cta": {"editable": true, "ziel": "gtv", "label": "Mehr erfahren →"}}, "sehen_w2_en": {"label": "nurws · sehen · w2 · EN", "fields": {"betreff": "Your free access — still open until 8 August", "preheader": "Three months of goetheanum.tv – the offer runs only until 8 August.", "botschaft": "Your free access is still waiting", "text": "The offer runs until 8 August and lets you try goetheanum.tv free for three months. Unlock it now."}, "cta": {"editable": true, "ziel": "gtv", "label": "Learn more →"}}, "sehen_w3_de": {"label": "nurws · sehen · w3 · DE", "fields": {"betreff": "Nur noch bis morgen, Samstag: drei Monate goetheanum.tv gratis", "preheader": "Das Angebot für drei kostenlose Monate goetheanum.tv läuft morgen, am Samstag, 8. August, aus.", "botschaft": "Nur noch bis morgen, 8. August", "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zu goetheanum.tv erhalten, morgen, am Samstag, 8. August, endet. Jetzt freischalten.", "alt": "Bis morgen: drei Monate goetheanum.tv gratis — jetzt starten"}, "cta": {"editable": true, "ziel": "gtv", "label": "Mehr erfahren →"}}, "sehen_w3_en": {"label": "nurws · sehen · w3 · EN", "fields": {"betreff": "Only until tomorrow, Saturday: three months of goetheanum.tv", "preheader": "The offer of three free months of goetheanum.tv ends tomorrow, Saturday 8 August.", "botschaft": "Only until tomorrow, 8 August", "text": "A reminder that the summer offer — three months of free access to goetheanum.tv — ends tomorrow, Saturday 8 August. Unlock it now.", "alt": "Until tomorrow: three months of goetheanum.tv free — start now"}, "cta": {"editable": true, "ziel": "gtv", "label": "Learn more →"}}, "sehen_w3b_de": {"label": "nurws · sehen · w3b · DE", "fields": {"betreff": "Heute läuft das Angebot aus — drei Monate goetheanum.tv gratis", "preheader": "Nur noch heute, Samstag, 8. August: drei Monate goetheanum.tv gratis.", "botschaft": "Nur noch heute, 8. August", "text": "Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie goetheanum.tv drei Monate lang kostenlos sehen. Jetzt freischalten."}, "cta": {"editable": true, "ziel": "gtv", "label": "Mehr erfahren →"}}, "sehen_w3b_en": {"label": "nurws · sehen · w3b · EN", "fields": {"betreff": "The offer closes today — three months of goetheanum.tv", "preheader": "Only today, Saturday 8 August: three months of goetheanum.tv free.", "botschaft": "Only today, 8 August", "text": "Today, Saturday 8 August, the summer offer closes. Until then you can watch goetheanum.tv free for three months. Unlock it now."}, "cta": {"editable": true, "ziel": "gtv", "label": "Learn more →"}}, "beides_w1_de": {"label": "noabo · beides · w1 · DE", "fields": {"betreff": "Ihr freier Zugang zum Goetheanum – lesen und sehen", "preheader": "Wochenschrift und goetheanum.tv – drei Monate gratis, bis 8. August.", "botschaft": "Drei freie Monate für Sie", "text": "Das Goetheanum gibt es in Wort und im Bild: die Wochenschrift ‹Das Goetheanum› und die Mediathek goetheanum.tv. Lernen Sie beide diesen Sommer drei Monate kostenlos kennen – einzeln oder zusammen."}, "cta": {"editable": false}}, "beides_w1_en": {"label": "noabo · beides · w1 · EN", "fields": {"betreff": "Your free access to the Goetheanum – read and watch", "preheader": "The weekly and goetheanum.tv – three months free, until 8 August.", "botschaft": "Three free months for you", "text": "The Goetheanum exists in words and in image: the weekly ‹Das Goetheanum› and the media library goetheanum.tv. Get to know both this summer, three months free – separately or together."}, "cta": {"editable": false}}, "beides_w2_de": {"label": "noabo · beides · w2 · DE", "fields": {"betreff": "Ihr kostenloser Zugang – noch bis zum 8. August", "preheader": "Wochenschrift und/oder goetheanum.tv, drei Monate kostenlos – bis 8. August.", "botschaft": "Ihr kostenloser Zugang steht noch bereit", "text": "Das Angebot gilt bis zum 8. August: die Wochenschrift ‹Das Goetheanum› und goetheanum.tv drei Monate lang kostenlos testen – einzeln oder zusammen. Jetzt freischalten."}, "cta": {"editable": false}}, "beides_w2_en": {"label": "noabo · beides · w2 · EN", "fields": {"betreff": "Your free access — still open until 8 August", "preheader": "The weekly and/or goetheanum.tv, three months free – until 8 August.", "botschaft": "Your free access is still waiting", "text": "The offer runs until 8 August: try the weekly ‹Das Goetheanum› and goetheanum.tv free for three months – separately or together. Unlock it now."}, "cta": {"editable": false}}, "beides_w3_de": {"label": "noabo · beides · w3 · DE", "fields": {"betreff": "Nur noch bis morgen, Samstag: drei Monate gratis", "preheader": "Drei Monate lesen und/oder sehen, kostenlos – morgen, am Samstag, 8. August, läuft das Angebot aus.", "botschaft": "Nur noch bis morgen, 8. August", "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen, morgen, am Samstag, 8. August, endet. Jetzt freischalten.", "alt": "Bis morgen: drei Monate gratis lesen oder sehen — jetzt starten"}, "cta": {"editable": false}}, "beides_w3_en": {"label": "noabo · beides · w3 · EN", "fields": {"betreff": "Only until tomorrow, Saturday: three months free", "preheader": "Three months of reading and/or watching, free – the offer ends tomorrow, Saturday 8 August.", "botschaft": "Only until tomorrow, 8 August", "text": "A reminder that the summer offer — three months of free access to the Goetheanum, to read and/or watch — ends tomorrow, Saturday 8 August. Unlock it now.", "alt": "Until tomorrow: three months free to read or watch — start now"}, "cta": {"editable": false}}, "beides_w3b_de": {"label": "noabo · beides · w3b · DE", "fields": {"betreff": "Heute läuft das Angebot aus — drei Monate gratis", "preheader": "Nur noch heute, Samstag, 8. August: drei Monate Goetheanum gratis.", "botschaft": "Nur noch heute, 8. August", "text": "Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen. Jetzt freischalten."}, "cta": {"editable": false}}, "beides_w3b_en": {"label": "noabo · beides · w3b · EN", "fields": {"betreff": "The offer closes today — three months free", "preheader": "Only today, Saturday 8 August: three months of the Goetheanum free.", "botschaft": "Only today, 8 August", "text": "Today, Saturday 8 August, the summer offer closes. Until then you can read and/or watch the Goetheanum free for three months. Unlock it now."}, "cta": {"editable": false}}};
+const NAVBASES=["lesen_w1_de", "lesen_w1_en", "lesen_w2_de", "lesen_w2_en", "lesen_w3_de", "lesen_w3_en", "lesen_w3b_de", "lesen_w3b_en", "sehen_w1_de", "sehen_w1_en", "sehen_w2_de", "sehen_w2_en", "sehen_w3_de", "sehen_w3_en", "sehen_w3b_de", "sehen_w3b_en", "beides_w1_de", "beides_w1_en", "beides_w2_de", "beides_w2_en", "beides_w3_de", "beides_w3_en", "beides_w3b_de", "beides_w3b_en"];
 let PENDING={}, SUBMITTED={}, CUR=null, UILANG='de';
 const st=t=>document.getElementById('status').textContent=t;
 function setLang(l){UILANG=l;document.getElementById('b-de').classList.toggle('on',l=='de');document.getElementById('b-en').classList.toggle('on',l=='en');
