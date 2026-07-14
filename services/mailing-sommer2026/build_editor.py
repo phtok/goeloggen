@@ -199,7 +199,7 @@ def render_mail(motiv, welle, lang, wm):
   <mj-text font-size="13px" line-height="20px" color="{MUTED}" padding="0 0 14px 0">{wrap_edit(kleinzeile(H['kleinzeile'][motiv][lang]), f"shared#kleinzeile#{motiv}#{lang}")}</mj-text>
   {ps_block(seg, welle, lang)}
 </mj-column></mj-section>
-<mj-section background-color="{WASH}" padding="16px 28px"><mj-column><mj-text font-size="14px" line-height="22px" color="{AKZENT_TIEF}" align="center" padding="0">{wrap_edit(xml(H['proof'][lang]), f"shared#beweisband#{lang}")}</mj-text></mj-column></mj-section>
+<mj-section background-color="{WASH}" padding="16px 28px"><mj-column><mj-text font-size="14px" line-height="22px" color="{AKZENT_TIEF}" align="left" padding="0">{wrap_edit(xml(H['proof'][lang]), f"shared#beweisband#{lang}")}</mj-text></mj-column></mj-section>
 </mj-body></mjml>"""
     p = subprocess.run(["mjml", "-i", "-s"], input=mjml, capture_output=True, text=True)
     if p.returncode: raise RuntimeError(p.stderr)

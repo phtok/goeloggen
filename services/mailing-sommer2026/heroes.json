@@ -178,7 +178,7 @@
   },
   "badge": {
     "de": "Sommerangebot 2026",
-    "en": "Summer offer 2026 · 3 months free"
+    "en": "Summer offer 2026"
   },
   "ps": {
     "_hinweis": "Leises Teilen-PS unter der Kleinzeile. link_wort wird in build_editor.py zum Teilen-Link auf das Angebot der jeweiligen Gruppe (nie auf ein schon bezahltes Produkt) mit eigenem utm_content w{n}_{seg}_share. wellen = nur diese Wellen tragen das PS (Frist-Mails w3/w3b ausgenommen: die letzte Erinnerung trägt einen einzigen klaren Ruf).",
@@ -222,50 +222,50 @@
     "lesen": {
       "w1": {
         "de": {
-          "betreff": "Ihr freier Zugang zur Wochenzeitschrift Das Goetheanum",
+          "betreff": "Ihr freier Zugang zur Wochenschrift Das Goetheanum",
           "botschaft": "Drei freie Monate für Sie",
-          "text": "Ergänzend zu dem, was Sie auf goetheanum.tv sehen können, erweitert die Wochenzeitschrift ‹Das Goetheanum› den Horizont – auf Papier oder online – und beleuchtet brisante Themen. Sie erhalten auch drei Monate lang uneingeschränkten Zugriff auf das gesamte Archiv seit 2022.",
+          "text": "Die Wochenschrift ‹Das Goetheanum› erweitert den Horizont – auf Papier oder online – und beleuchtet brisante Themen. Sie erhalten drei Monate lang uneingeschränkten Zugriff auf das gesamte Archiv seit 2022.",
           "alt": "Drei Monate im Freien lesen — gratis",
           "preheader": "Drei Monate freien Zugang für alle, die gerne in Ruhe auf Papier oder online lesen."
         },
         "en": {
-          "betreff": "Thinking that reaches beyond the week — 3 months free",
-          "botschaft": "Reading that keeps working in you.",
-          "text": "Alongside what you watch on goetheanum.tv, the weekly thinks on — in black and white, new each week: «Envisioning peace», «What if life came from the stars?», «Biography work as a path to the self». Plus the whole archive since 2022, which stays open with your subscription. Not what the authors know, but how they search.",
+          "betreff": "Your free access to the weekly Das Goetheanum",
+          "botschaft": "Three free months for you",
+          "text": "The weekly ‹Das Goetheanum› broadens your horizon – on paper or online – and takes on pressing questions. You receive three months of unlimited access to the entire archive since 2022.",
           "alt": "Read in the open air — three months free",
-          "preheader": "«What if life came from the stars?» and the whole archive — new each week. Until 8 August."
+          "preheader": "Three months of free access — for anyone who likes to read in peace, on paper or online."
         }
       },
       "w2": {
         "de": {
-          "betreff": "Haben Sie bereits daran gedacht, Ihren kostenlosen Zugang zu aktivieren?",
-          "botschaft": "Haben Sie nicht vergessen, Ihren kostenlosen Zugang zu aktivieren?",
-          "text": "Das Angebot gilt bis zum 8. August und erlaubt Ihnen, die Wochenschrift Das Goetheanum drei Monate lang kostenlos zu testen. Zögern Sie nicht, es jetzt zu aktivieren.",
+          "betreff": "Ihr kostenloser Zugang – noch bis zum 8. August",
+          "botschaft": "Ihr kostenloser Zugang steht noch bereit",
+          "text": "Das Angebot gilt bis zum 8. August und erlaubt Ihnen, die Wochenschrift ‹Das Goetheanum› drei Monate lang kostenlos zu testen. Jetzt freischalten.",
           "alt": "Lesestoff, der den Sommer überdauert — gratis",
           "preheader": "Der kostenlose Zugang für drei Monate ist ein Angebot, das nur bis zum 8. August gilt."
         },
         "en": {
-          "betreff": "Three months of reading — then you decide.",
-          "botschaft": "A summer beyond your own horizon.",
-          "text": "Until 8 August, read the weekly free for three months with your subscription — reading that keeps working in you after the screen goes dark.",
+          "betreff": "Your free access — still open until 8 August",
+          "botschaft": "Your free access is still waiting",
+          "text": "The offer runs until 8 August and lets you try the weekly ‹Das Goetheanum› free for three months. Unlock it now.",
           "alt": "Reading that outlasts the summer — free",
-          "preheader": "Until 8 August: three months of the weekly, free with your subscription — it goes where you go."
+          "preheader": "Free access for three months — an offer that runs only until 8 August."
         }
       },
       "w3": {
         "de": {
-          "betreff": "Letzte Erinnerung: Nur noch wenig Zeit, um Ihren kostenlosen Zugang zu aktivieren.",
-          "botschaft": "Falls Sie vergessen haben: Es bleiben noch ein paar Stunden, um es zu aktivieren.",
-          "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zur Wochenschrift Das Goetheanum – auf Papier und/oder online – erhalten, in wenigen Stunden endet. Sie können es noch aktivieren – tun Sie es jetzt. Danach ist es zu spät.",
+          "betreff": "Letzte Erinnerung: nur noch bis Samstag, 8. August",
+          "botschaft": "Nur noch bis Samstag, 8. August",
+          "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zur Wochenschrift ‹Das Goetheanum› – auf Papier und/oder online – erhalten, am Samstag, 8. August, endet. Bis dahin können Sie es freischalten.",
           "alt": "Am Samstag endet Ihr Gratis-Test der Wochenschrift — falls Sie ihn noch wollen.",
-          "preheader": "Das Ausnahmeangebot von drei kostenlosen Monaten läuft bald aus – Sie haben heute noch Zeit, es zu aktivieren."
+          "preheader": "Das Ausnahmeangebot von drei kostenlosen Monaten läuft am Samstag, 8. August, aus."
         },
         "en": {
-          "betreff": "Until Saturday: three months of the weekly, free — then the offer closes",
-          "botschaft": "On Saturday the door closes.",
-          "text": "On Saturday, 8 August, the summer offer ends. Until then, read the weekly free for three months with your subscription — begin now, and decide only afterwards whether it stays.",
+          "betreff": "Last reminder: only until Saturday, 8 August",
+          "botschaft": "Only until Saturday, 8 August",
+          "text": "A reminder that the summer offer — three months of free access to the weekly ‹Das Goetheanum›, on paper and/or online — ends on Saturday, 8 August. Until then, you can unlock it.",
           "alt": "On Saturday your free trial of the weekly ends — if you still want it.",
-          "preheader": "Three months of the weekly, free — only until Saturday, 8 August."
+          "preheader": "The exceptional offer of three free months ends on Saturday, 8 August."
         }
       }
     },
