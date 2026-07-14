@@ -464,14 +464,14 @@ body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
 .mhd-edit{{min-height:var(--tap);margin-left:8px;background:transparent;border:1px solid var(--paper);border-radius:999px;color:var(--paper);padding:2px 10px;font:inherit;font-size:var(--t-micro);cursor:pointer}}
 .mhd-edit:hover{{background:var(--paper);color:var(--ink)}}
 /* WYSIWYG-Overlay: Vollfenster, dünner Balken, Mail zentriert und direkt editierbar. */
-.wyz{{border:0;padding:0;margin:0;width:100vw;max-width:100vw;height:100vh;max-height:100vh;inset:0;background:var(--paper);color:var(--ink);overflow:hidden}}
+.wyz{{border:0;padding:0;margin:0;width:100vw;max-width:100vw;height:100vh;height:100dvh;max-height:100vh;max-height:100dvh;inset:0;background:var(--paper);color:var(--ink);overflow:hidden}}
 .wyz:not([open]){{display:none}}  /* geschlossen = unsichtbar (nicht vom eigenen display überschreiben) */
 .wyz[open]{{display:flex;flex-direction:column}}
 .wyz::backdrop{{background:rgba(20,24,28,.55)}} /* # ds-ok Scrim, kein Theme */
-.wyz-bar{{flex:0 0 auto;display:flex;align-items:center;gap:var(--s3);min-height:var(--tap);padding:2px var(--s3);background:var(--ink);color:var(--paper)}}
-.wyz-label{{font-family:var(--font-text);font-size:var(--t-micro);color:var(--paper);opacity:.85}}
-.wyz-msg{{flex:1;font-family:var(--font-text);font-size:var(--t-micro);color:var(--paper);opacity:.7;text-align:right}}
-.wyz-autor{{min-height:32px;width:90px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-control);padding:2px 8px;font:inherit;font-size:var(--t-micro)}}
+.wyz-bar{{flex:0 0 auto;display:flex;align-items:center;gap:var(--s2);min-height:var(--tap);padding:2px var(--s3);background:var(--ink);color:var(--paper)}}
+.wyz-label{{flex:1;min-width:0;font-family:var(--font-text);font-size:var(--t-micro);color:var(--paper);opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+.wyz-msg{{font-family:var(--font-text);font-size:var(--t-micro);color:var(--paper);opacity:.7;text-align:right;white-space:nowrap}}
+.wyz-autor{{min-height:32px;width:84px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-control);padding:2px 8px;font:inherit;font-size:16px}} /* 16px: kein iOS-Zoom beim Fokus */
 .wyz-save{{min-height:32px;background:var(--blue-solid);color:var(--on-accent);border:0;border-radius:var(--r-control);padding:4px 16px;font:inherit;font-size:var(--t-small);font-weight:600;cursor:pointer}}
 .wyz-x{{min-height:32px;min-width:32px;background:transparent;border:1px solid var(--paper);border-radius:999px;color:var(--paper);font:inherit;cursor:pointer}}
 .wyz-x:hover{{background:var(--paper);color:var(--ink)}}
@@ -481,17 +481,23 @@ body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
 .wyz-inbox{{background:var(--paper);border:1px solid var(--line-soft);border-radius:8px 8px 0 0;border-bottom:0;padding:var(--s2) var(--s3);font-family:var(--font-text);display:grid;gap:3px}}
 .wyz-ib-lab{{font-size:var(--t-micro);color:var(--muted);margin-top:4px}}
 .wyz-ib-lab:first-child{{margin-top:0}}
-.wyz-ib-b,.wyz-ib-a,.wyz-ib-alt-in{{width:100%;box-sizing:border-box;font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);background:var(--field-bg);border:1px solid var(--line-soft);border-radius:var(--r-control);padding:6px 8px}}
+.wyz-ib-b,.wyz-ib-a,.wyz-ib-alt-in{{width:100%;box-sizing:border-box;font-family:var(--font-text);font-size:16px;color:var(--ink);background:var(--field-bg);border:1px solid var(--line-soft);border-radius:var(--r-control);padding:6px 8px}} /* 16px: Eingabefeld-Minimum (B03), kein iOS-Zoom */
 .wyz-ib-b{{font-weight:600}}
 .wyz-ib-a{{line-height:1.4;resize:vertical}}
 .wyz-inbox input:focus,.wyz-inbox textarea:focus{{outline:2px solid var(--gold-ink);outline-offset:1px}}
-.wyz-frame{{width:600px;max-width:100%;border:0;display:block;background:#F6F4F2}} /* # ds-ok Mail-Grund (Artefakt) */
+.wyz-frame{{width:100%;border:0;display:block;background:#F6F4F2}} /* # ds-ok Mail-Grund (Artefakt); Breite folgt der Spalte (mobil fluid) */
 .wyz-nav{{position:fixed;top:50%;transform:translateY(-50%);z-index:2;width:56px;height:56px;background:var(--paper);border:1px solid var(--line);border-radius:999px;color:var(--ink);font-size:28px;line-height:1;cursor:pointer;box-shadow:0 2px 10px rgba(20,24,28,.18)}} /* # ds-ok Schatten */
 .wyz-nav:hover{{border-color:var(--gold-ink);color:var(--gold-ink)}}
 .wyz-nav:disabled{{opacity:.3;cursor:default;box-shadow:none}}
 .wyz-nav.prev{{left:max(8px,calc(50vw - 300px - 68px))}}
 .wyz-nav.next{{right:max(8px,calc(50vw - 300px - 68px))}}
-@media(max-width:720px){{.wyz-nav.prev{{left:6px}}.wyz-nav.next{{right:6px}}}}
+@media(max-width:720px){{
+  .wyz-stage{{padding:var(--s3) 6px 84px}}  /* schmalere Ränder, Platz unten für die Pfeile */
+  .wyz-nav{{top:auto;bottom:calc(12px + env(safe-area-inset-bottom, 0px));transform:none;width:48px;height:48px}}
+  .wyz-nav.prev{{left:12px}}
+  .wyz-nav.next{{right:12px}}
+  .wyz-msg{{display:none}}  /* im schmalen Balken den Statustext weglassen */
+}}
 </style></head><body>
 
 <script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"
