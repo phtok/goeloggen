@@ -81,6 +81,16 @@
       "such": "Mitmachen Werkzeug bestellen Auftrag Wunsch Rampe Beitrag Onboarding Schmiede Werkstatt beschreiben anbieten"
     },
     {
+      "slug": "schmiede-eingang",
+      "cat": "labor",
+      "status": "intern",
+      "tag": "Backstage",
+      "title": "Schmiede-Eingang",
+      "href": "apps/schmiede-eingang/",
+      "desc": "Cockpit für die Wünsche aus der Werkzeug-Schmiede – sichten, taggen, Status setzen. Key-geschützt: nur mit Geheim-Schlüssel (?key=…) sichtbar.",
+      "such": "Cockpit Eingang Wünsche Aufträge Triage Tags Status Backstage Schmiede verwalten"
+    },
+    {
       "slug": "design-system",
       "cat": "system",
       "status": "beta",
