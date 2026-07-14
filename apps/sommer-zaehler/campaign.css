@@ -118,6 +118,17 @@
   /* Reichweite je Kanal – Aufschlüsselung unter der Kette (nutzt die .stream-Balken). */
   .funnel .reach-kanal{margin-top:var(--s6);padding-top:var(--s5);border-top:1px solid var(--line-soft)}
   .funnel .reach-kanal .rk-h{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);font-weight:600;margin-bottom:var(--s4)}
+  /* Aufklappbarer Kanal-Balken: Summary trägt den Balken, darunter die Quellen-Liste. */
+  .funnel .reach-detail{margin-bottom:var(--s5)}
+  .funnel .reach-detail:last-of-type{margin-bottom:0}
+  .funnel .reach-detail>summary{list-style:none;cursor:pointer;display:block;border-radius:var(--r-pill)}
+  .funnel .reach-detail>summary::-webkit-details-marker{display:none}
+  .funnel .reach-detail>summary:focus-visible{outline:2px solid var(--gold-ink);outline-offset:3px}
+  .funnel .reach-detail>summary .stream{margin-bottom:0}
+  .funnel .reach-detail .rk-caret{display:inline-block;width:0;height:0;margin-left:8px;vertical-align:middle;border-left:5px solid var(--muted);border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .2s ease}
+  .funnel .reach-detail[open] .rk-caret{transform:rotate(90deg)}
+  .funnel .reach-detail .quellen{margin:var(--s3) 0 var(--s4);padding-left:var(--s4);border-left:2px solid var(--line-soft)}
+  .funnel .reach-detail .quellen .qz-hint{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);padding:8px 0;line-height:1.5}
 
   /* Attribution nach Motiv (utm_content) – feiner als der kanal-Bucket. */
   .motive{margin-top:var(--s6)}
