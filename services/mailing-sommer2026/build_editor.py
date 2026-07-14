@@ -695,7 +695,10 @@ function applyPending(doc){{
  Object.keys(merged).forEach(key=>{{const feld=feldOf(key);
    doc.querySelectorAll('[data-edit="'+key+'"]').forEach(n=>writeCE(n,feld,merged[key]));}});
 }}
-function autosizeIframe(f){{ try{{const d=f.contentDocument; if(d&&d.body) f.style.height=d.body.scrollHeight+'px';}}catch(e){{}} }}
+function autosizeIframe(f){{ try{{const d=f.contentDocument; if(d&&d.body){{
+  const h=Math.max(d.body.scrollHeight,d.body.offsetHeight,d.documentElement.scrollHeight,d.documentElement.offsetHeight);
+  if(h>0) f.style.height=h+'px';
+}}}}catch(e){{}} }}
 function onCE(e){{
  const node=e.target.closest&&e.target.closest('[data-edit]'); if(!node) return;
  const key=node.getAttribute('data-edit'), feld=feldOf(key);
@@ -741,9 +744,11 @@ function openEditor(base){{
    doc.addEventListener('input',onCE); doc.addEventListener('keydown',ceKeydown);
    doc.addEventListener('click',ev=>{{if(ev.target.closest('a')&&ev.target.closest('[data-edit]'))ev.preventDefault();}});
    applyPending(doc); autosizeIframe(frame);
-   // Höhe nachziehen, sobald Bilder/Schrift nachladen (scrollHeight wächst danach).
+   // Höhe robust nachziehen: Bilder laden auf Mobil verzögert (4G), iOS meldet
+   // ResizeObserver/‹load› unzuverlässig — darum zusätzlich mehrfach nachmessen.
    try{{new frame.contentWindow.ResizeObserver(()=>autosizeIframe(frame)).observe(doc.body);}}catch(e){{}}
-   doc.querySelectorAll('img').forEach(im=>im.addEventListener('load',()=>autosizeIframe(frame)));
+   doc.querySelectorAll('img').forEach(im=>{{ if(im.complete) return; im.addEventListener('load',()=>autosizeIframe(frame)); im.addEventListener('error',()=>autosizeIframe(frame)); }});
+   [120,400,900,1800,3000,5000,8000].forEach(ms=>setTimeout(()=>autosizeIframe(frame),ms));
  }};
  frame.onload=setup; frame.srcdoc=src?src.srcdoc:'';
  // Nicht auf das load-Event warten (Bilder können es verzögern): aufsetzen, sobald der Body da ist.
@@ -763,6 +768,7 @@ async function saveAll(){{
 }}
 function closeEditor(){{ document.getElementById('wyz').close(); }}
 document.getElementById('wyz').addEventListener('close',()=>{{document.getElementById('wyz-frame').removeAttribute('srcdoc');}});
+window.addEventListener('resize',()=>{{ if(document.getElementById('wyz').open) autosizeIframe(document.getElementById('wyz-frame')); }});
 document.getElementById('wyz').addEventListener('keydown',e=>{{
  if((e.metaKey||e.ctrlKey)&&(e.key==='s'||e.key==='S')){{e.preventDefault();saveAll();return;}}
  if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight') return;
