@@ -102,30 +102,34 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 /* Overlay-Editor: Mail gross bearbeiten, Speichern schreibt eine ‹Fassung → ›-Anmerkung. */
 .mhd-edit{min-height:var(--tap);margin-left:8px;background:transparent;border:1px solid var(--paper);border-radius:999px;color:var(--paper);padding:2px 10px;font:inherit;font-size:var(--t-micro);cursor:pointer}
 .mhd-edit:hover{background:var(--paper);color:var(--ink)}
-.edov{border:0;border-radius:var(--r-card);padding:0;width:96vw;max-width:min(1400px,96vw);background:var(--paper);color:var(--ink)}
-.edov::backdrop{background:rgba(20,24,28,.55)} /* # ds-ok Scrim, kein Theme */
-.edov-frame{margin:0;display:flex;flex-direction:column;max-height:92vh}
-.edov-head{display:flex;align-items:center;gap:var(--s3);background:var(--ink);color:var(--paper);padding:var(--s3) var(--s4)}
-.edov-title{flex:1;font-family:var(--font-display);font-size:var(--t-body)}
-.edov-x{min-height:var(--tap);min-width:var(--tap);background:transparent;border:1px solid var(--paper);border-radius:999px;color:var(--paper);font:inherit;cursor:pointer}
-.edov-x:hover{background:var(--paper);color:var(--ink)}
-.edov-body{display:grid;grid-template-columns:minmax(320px,560px) 1fr;gap:var(--s4);padding:var(--s4);overflow:auto}
-.edov-preview iframe{width:100%;height:70vh;border:0;border-radius:8px;background:#F6F4F2} /* # ds-ok Mail-Grund (Artefakt) */
-.edov-form{display:flex;flex-direction:column;gap:var(--s3);min-width:0}
-.edov-inbox{background:var(--field-bg);border:1px solid var(--line-soft);border-radius:8px;padding:var(--s2) var(--s3);font-family:var(--font-text)}
-.edov-ib-b{font-size:var(--t-small);font-weight:600;color:var(--ink)}
-.edov-ib-a{font-size:var(--t-small);color:var(--muted);line-height:1.45;margin-top:2px}
-.edov-ib-alt{font-size:var(--t-micro);color:var(--muted);line-height:1.45;margin-top:4px}
-.edov-ib-alt span{color:var(--gold-ink);font-weight:600}
-.edov-f{display:grid;gap:4px}
-.edov-f>span{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
-.edov-f textarea{width:100%;font-family:var(--font-text);font-size:var(--t-body);line-height:1.5;padding:8px 10px;border:1px solid var(--line-soft);border-radius:var(--r-control);background:var(--paper);color:var(--ink);resize:vertical;box-sizing:border-box}
-.edov-f textarea:focus{outline:2px solid var(--gold-ink);outline-offset:-1px}
-.edov-foot{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) var(--s4);border-top:1px solid var(--line-soft)}
-.edov-status{flex:1;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
-.edov-cancel{min-height:var(--tap);background:var(--paper);border:1px solid var(--line);border-radius:var(--r-control);padding:6px 16px;font:inherit;font-size:var(--t-small);color:var(--ink);cursor:pointer}
-.edov-save{min-height:var(--tap);background:var(--blue-solid);color:var(--on-accent);border:0;border-radius:var(--r-control);padding:6px 20px;font:inherit;font-size:var(--t-small);font-weight:600;cursor:pointer}
-@media(max-width:900px){.edov-body{grid-template-columns:1fr}.edov-preview iframe{height:50vh}}
+/* WYSIWYG-Overlay: Vollfenster, dünner Balken, Mail zentriert und direkt editierbar. */
+.wyz{border:0;padding:0;margin:0;width:100vw;max-width:100vw;height:100vh;max-height:100vh;inset:0;background:var(--paper);color:var(--ink);overflow:hidden;display:flex;flex-direction:column}
+.wyz::backdrop{background:rgba(20,24,28,.55)} /* # ds-ok Scrim, kein Theme */
+.wyz-bar{flex:0 0 auto;display:flex;align-items:center;gap:var(--s3);min-height:var(--tap);padding:2px var(--s3);background:var(--ink);color:var(--paper)}
+.wyz-label{font-family:var(--font-text);font-size:var(--t-micro);color:var(--paper);opacity:.85}
+.wyz-msg{flex:1;font-family:var(--font-text);font-size:var(--t-micro);color:var(--paper);opacity:.7;text-align:right}
+.wyz-autor{min-height:32px;width:90px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-control);padding:2px 8px;font:inherit;font-size:var(--t-micro)}
+.wyz-save{min-height:32px;background:var(--blue-solid);color:var(--on-accent);border:0;border-radius:var(--r-control);padding:4px 16px;font:inherit;font-size:var(--t-small);font-weight:600;cursor:pointer}
+.wyz-x{min-height:32px;min-width:32px;background:transparent;border:1px solid var(--paper);border-radius:999px;color:var(--paper);font:inherit;cursor:pointer}
+.wyz-x:hover{background:var(--paper);color:var(--ink)}
+.wyz-stage{flex:1 1 auto;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:var(--s5) var(--s3) var(--s8);background:var(--field-bg)}
+.wyz-col{width:600px;max-width:100%;box-shadow:0 6px 30px rgba(20,24,28,.16)} /* # ds-ok Blatt-Schatten */
+.wyz-inbox{background:var(--paper);border:1px solid var(--line-soft);border-radius:8px 8px 0 0;border-bottom:0;padding:var(--s2) var(--s3);font-family:var(--font-text)}
+.wyz-ib{display:block}
+.wyz-ib-lab{font-size:var(--t-micro);color:var(--muted)}
+.wyz-ib-b{font-size:var(--t-small);font-weight:600;color:var(--ink);outline:1px dashed transparent}
+.wyz-ib-a{font-size:var(--t-small);color:var(--muted);line-height:1.45;margin-top:2px;outline:1px dashed transparent}
+.wyz-ib-alt{font-size:var(--t-micro);color:var(--muted);line-height:1.45;margin-top:4px}
+.wyz-ib-alt .lab{color:var(--gold-ink);font-weight:600}
+.wyz-ib-b:hover,.wyz-ib-a:hover,.wyz-ib-alt [contenteditable]:hover{outline-color:var(--line)}
+.wyz-inbox [contenteditable]:focus{outline:2px solid var(--gold-ink);outline-offset:2px}
+.wyz-frame{width:600px;max-width:100%;border:0;display:block;background:#F6F4F2} /* # ds-ok Mail-Grund (Artefakt) */
+.wyz-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:2;width:56px;height:56px;background:var(--paper);border:1px solid var(--line);border-radius:999px;color:var(--ink);font-size:28px;line-height:1;cursor:pointer;box-shadow:0 2px 10px rgba(20,24,28,.18)} /* # ds-ok Schatten */
+.wyz-nav:hover{border-color:var(--gold-ink);color:var(--gold-ink)}
+.wyz-nav:disabled{opacity:.3;cursor:default;box-shadow:none}
+.wyz-nav.prev{left:max(8px,calc(50vw - 300px - 68px))}
+.wyz-nav.next{right:max(8px,calc(50vw - 300px - 68px))}
+@media(max-width:720px){.wyz-nav.prev{left:6px}.wyz-nav.next{right:6px}}
 </style></head><body>
 
 <script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"
@@ -136,7 +140,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
   <span class="kicker">Sommer-Aktion 2026</span>
   <h1>Mail-Editor</h1>
   <p class="lede" style="max-width:var(--measure)">Alle Wellen-Mails der drei Segmente zum Gegenlesen — je Feld kommentierbar, Kommentare landen im Werkzeug-Backend. Korrigiert wird in <code>heroes.json</code>, dann wird neu gebaut.</p>
-  <p class="subline">Stand dieses Builds: 13.07.2026, 23.15 Uhr · <code>1b84d88</code></p>
+  <p class="subline">Stand dieses Builds: 14.07.2026, 8.51 Uhr · <code>b0f37b2</code></p>
   <div class="controls">
     <span class="lab">Sprache</span>
     <button id="b-de" class="pill on" onclick="setLang('de')">Deutsch</button>
@@ -399,19 +403,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Sommerangebot 2026 · 3 Monate gratis</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#de&quot;>Sommerangebot 2026 · 3 Monate gratis</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Lesen, das in Ihnen&#160;weiterarbeitet.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;lesen_w1_de#botschaft&quot;>Lesen, das in Ihnen&#160;weiterarbeitet.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Ergänzend zu dem, was Sie auf goetheanum.tv sehen, denkt die Wochenschrift weiter — schwarz auf weiss, jede Woche neu: «Den Frieden herbeidenken», «Und wenn das Leben aus den Sternen käme?», «Biografiearbeit als Weg zum Ich». Dazu das ganze Archiv seit 2022, das mit Ihrem Abo offen bleibt. Nicht was die Autoren wissen, sondern wie sie suchen.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;lesen_w1_de#text&quot;>Ergänzend zu dem, was Sie auf goetheanum.tv sehen, denkt die Wochenschrift weiter — schwarz auf weiss, jede Woche neu: «Den Frieden herbeidenken», «Und wenn das Leben aus den Sternen käme?», «Biografiearbeit als Weg zum Ich». Dazu das ganze Archiv seit 2022, das mit Ihrem Abo offen bleibt. Nicht was die Autoren wissen, sondern wie sie suchen.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -420,7 +424,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Mehr erfahren → </a>
+                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;lesen_w1_de#cta&quot;>Mehr erfahren →</span>
+                                </a>
                               </td>
                             </tr>
                           </tbody>
@@ -429,7 +435,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit ohne Begründung kündbar&#160;·<br />Aktion bis 8. August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#lesen#de&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit ohne Begründung kündbar&#160;·<br />Aktion bis 8. August 2026.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -458,7 +464,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#de&quot;>Stimmen und Gesichter der Anthroposophie von heute</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -699,19 +705,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Summer offer 2026 · 3 months free</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#en&quot;>Summer offer 2026 · 3 months free</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Reading that keeps working in&#160;you.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;lesen_w1_en#botschaft&quot;>Reading that keeps working in&#160;you.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Alongside what you watch on goetheanum.tv, the weekly thinks on — in black and white, new each week: «Envisioning peace», «What if life came from the stars?», «Biography work as a path to the self». Plus the whole archive since 2022, which stays open with your subscription. Not what the authors know, but how they search.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;lesen_w1_en#text&quot;>Alongside what you watch on goetheanum.tv, the weekly thinks on — in black and white, new each week: «Envisioning peace», «What if life came from the stars?», «Biography work as a path to the self». Plus the whole archive since 2022, which stays open with your subscription. Not what the authors know, but how they search.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -720,7 +726,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Learn more → </a>
+                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;lesen_w1_en#cta&quot;>Learn more →</span>
+                                </a>
                               </td>
                             </tr>
                           </tbody>
@@ -729,7 +737,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime, no reason needed&#160;·<br />offer ends 8 August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#lesen#en&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime, no reason needed&#160;·<br />offer ends 8 August 2026.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -758,7 +766,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#en&quot;>Voices and faces of anthroposophy today</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -999,19 +1007,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Sommerangebot 2026 · 3 Monate gratis</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#de&quot;>Sommerangebot 2026 · 3 Monate gratis</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Ein Sommer über den eigenen Rand&#160;hinaus.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;lesen_w2_de#botschaft&quot;>Ein Sommer über den eigenen Rand&#160;hinaus.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Noch bis 8. August lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — Lesestoff, der in Ihnen weiterarbeitet, wenn der Bildschirm dunkel ist.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;lesen_w2_de#text&quot;>Noch bis 8. August lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — Lesestoff, der in Ihnen weiterarbeitet, wenn der Bildschirm dunkel ist.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -1020,7 +1028,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Mehr erfahren → </a>
+                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;lesen_w2_de#cta&quot;>Mehr erfahren →</span>
+                                </a>
                               </td>
                             </tr>
                           </tbody>
@@ -1029,7 +1039,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit ohne Begründung kündbar&#160;·<br />Aktion bis 8. August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#lesen#de&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit ohne Begründung kündbar&#160;·<br />Aktion bis 8. August 2026.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -1058,7 +1068,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#de&quot;>Stimmen und Gesichter der Anthroposophie von heute</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -1299,19 +1309,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Summer offer 2026 · 3 months free</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#en&quot;>Summer offer 2026 · 3 months free</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>A summer beyond your own&#160;horizon.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;lesen_w2_en#botschaft&quot;>A summer beyond your own&#160;horizon.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Until 8 August, read the weekly free for three months with your subscription — reading that keeps working in you after the screen goes dark.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;lesen_w2_en#text&quot;>Until 8 August, read the weekly free for three months with your subscription — reading that keeps working in you after the screen goes dark.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -1320,7 +1330,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Learn more → </a>
+                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;lesen_w2_en#cta&quot;>Learn more →</span>
+                                </a>
                               </td>
                             </tr>
                           </tbody>
@@ -1329,7 +1341,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime, no reason needed&#160;·<br />offer ends 8 August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#lesen#en&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime, no reason needed&#160;·<br />offer ends 8 August 2026.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -1358,7 +1370,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#en&quot;>Voices and faces of anthroposophy today</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -1599,19 +1611,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Sommerangebot 2026 · 3 Monate gratis</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#de&quot;>Sommerangebot 2026 · 3 Monate gratis</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Am Samstag schliesst die&#160;Tür.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;lesen_w3_de#botschaft&quot;>Am Samstag schliesst die&#160;Tür.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — beginnen Sie jetzt, und entscheiden erst danach, ob sie bleibt.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;lesen_w3_de#text&quot;>Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — beginnen Sie jetzt, und entscheiden erst danach, ob sie bleibt.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -1620,7 +1632,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Mehr erfahren → </a>
+                                <a href=&quot;https://ws-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;lesen_w3_de#cta&quot;>Mehr erfahren →</span>
+                                </a>
                               </td>
                             </tr>
                           </tbody>
@@ -1629,7 +1643,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit ohne Begründung kündbar&#160;·<br />Aktion bis 8. August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#lesen#de&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit ohne Begründung kündbar&#160;·<br />Aktion bis 8. August 2026.</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -1653,7 +1667,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#de&quot;>Stimmen und Gesichter der Anthroposophie von heute</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -1894,19 +1908,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Summer offer 2026 · 3 months free</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#en&quot;>Summer offer 2026 · 3 months free</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>On Saturday the door&#160;closes.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;lesen_w3_en#botschaft&quot;>On Saturday the door&#160;closes.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>On Saturday, 8 August, the summer offer ends. Until then, read the weekly free for three months with your subscription — begin now, and decide only afterwards whether it stays.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;lesen_w3_en#text&quot;>On Saturday, 8 August, the summer offer ends. Until then, read the weekly free for three months with your subscription — begin now, and decide only afterwards whether it stays.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -1915,7 +1929,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Learn more → </a>
+                                <a href=&quot;https://ws-en-sommer2026.dasgoetheanum.com?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurtv&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;lesen_w3_en#cta&quot;>Learn more →</span>
+                                </a>
                               </td>
                             </tr>
                           </tbody>
@@ -1924,7 +1940,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime, no reason needed&#160;·<br />offer ends 8 August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#lesen#en&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime, no reason needed&#160;·<br />offer ends 8 August 2026.</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -1948,7 +1964,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#en&quot;>Voices and faces of anthroposophy today</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -2189,19 +2205,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Sommerangebot 2026 · 3 Monate gratis</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#de&quot;>Sommerangebot 2026 · 3 Monate gratis</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>So nah am Goetheanum, wo immer Sie&#160;sind.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;sehen_w1_de#botschaft&quot;>So nah am Goetheanum, wo immer Sie&#160;sind.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Ergänzend zu den Artikeln, die Sie jede Woche lesen, steht Ihnen die ganze Mediathek offen — über 800 Beiträge, wöchentlich neu: «Dieser Krieg muss enden. Jetzt.», «Kann man Glück lernen?», dazu die Reihe, in der die Sahara ergrünt. Vorträge, Reportagen und Aufführungen, die Sie ganz nah ans Leben am Goetheanum bringen — selbst aus grosser Entfernung.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;sehen_w1_de#text&quot;>Ergänzend zu den Artikeln, die Sie jede Woche lesen, steht Ihnen die ganze Mediathek offen — über 800 Beiträge, wöchentlich neu: «Dieser Krieg muss enden. Jetzt.», «Kann man Glück lernen?», dazu die Reihe, in der die Sahara ergrünt. Vorträge, Reportagen und Aufführungen, die Sie ganz nah ans Leben am Goetheanum bringen — selbst aus grosser Entfernung.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -2210,7 +2226,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Mehr erfahren → </a>
+                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;sehen_w1_de#cta&quot;>Mehr erfahren →</span>
+                                </a>
                               </td>
                             </tr>
                           </tbody>
@@ -2219,7 +2237,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit kündbar, ein Klick im Konto&#160;·<br />Aktion bis 8. August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#sehen#de&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit kündbar, ein Klick im Konto&#160;·<br />Aktion bis 8. August 2026.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -2248,7 +2266,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#de&quot;>Stimmen und Gesichter der Anthroposophie von heute</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -2489,19 +2507,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Summer offer 2026 · 3 months free</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#en&quot;>Summer offer 2026 · 3 months free</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Close to the Goetheanum, wherever you&#160;are.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;sehen_w1_en#botschaft&quot;>Close to the Goetheanum, wherever you&#160;are.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Alongside the articles you read each week, the whole media library is open to you — over 800 pieces, new every week: «This war must end. Now.», «Can we learn to be happy?», and the series «Greening the Desert», in which the Sahara turns green. Lectures, reportage and performances that bring you close to life at the Goetheanum — even from a great distance.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;sehen_w1_en#text&quot;>Alongside the articles you read each week, the whole media library is open to you — over 800 pieces, new every week: «This war must end. Now.», «Can we learn to be happy?», and the series «Greening the Desert», in which the Sahara turns green. Lectures, reportage and performances that bring you close to life at the Goetheanum — even from a great distance.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -2510,7 +2528,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Learn more → </a>
+                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w1_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;sehen_w1_en#cta&quot;>Learn more →</span>
+                                </a>
                               </td>
                             </tr>
                           </tbody>
@@ -2519,7 +2539,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime with one click in your account&#160;·<br />offer ends 8 August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#sehen#en&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime with one click in your account&#160;·<br />offer ends 8 August 2026.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -2548,7 +2568,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#en&quot;>Voices and faces of anthroposophy today</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -2789,19 +2809,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Sommerangebot 2026 · 3 Monate gratis</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#de&quot;>Sommerangebot 2026 · 3 Monate gratis</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Setzen Sie sich&#160;dazu.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;sehen_w2_de#botschaft&quot;>Setzen Sie sich&#160;dazu.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Ein Abend auf goetheanum.tv ist ein Abend in Gesellschaft von Menschen, die ihr Leben lang an einer Frage gearbeitet haben — und die laut denken, statt fertige Antworten vorzutragen. Noch bis 8. August drei Monate gratis zu Ihrem Abo.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;sehen_w2_de#text&quot;>Ein Abend auf goetheanum.tv ist ein Abend in Gesellschaft von Menschen, die ihr Leben lang an einer Frage gearbeitet haben — und die laut denken, statt fertige Antworten vorzutragen. Noch bis 8. August drei Monate gratis zu Ihrem Abo.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -2810,7 +2830,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Mehr erfahren → </a>
+                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;sehen_w2_de#cta&quot;>Mehr erfahren →</span>
+                                </a>
                               </td>
                             </tr>
                           </tbody>
@@ -2819,7 +2841,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit kündbar, ein Klick im Konto&#160;·<br />Aktion bis 8. August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#sehen#de&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit kündbar, ein Klick im Konto&#160;·<br />Aktion bis 8. August 2026.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -2848,7 +2870,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#de&quot;>Stimmen und Gesichter der Anthroposophie von heute</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -3089,19 +3111,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Summer offer 2026 · 3 months free</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#en&quot;>Summer offer 2026 · 3 months free</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Pull up a&#160;chair.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;sehen_w2_en#botschaft&quot;>Pull up a&#160;chair.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>An evening on goetheanum.tv is an evening in the company of people who have worked on a question all their lives — thinking out loud rather than reciting finished answers. Until 8 August: three months free with your subscription.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;sehen_w2_en#text&quot;>An evening on goetheanum.tv is an evening in the company of people who have worked on a question all their lives — thinking out loud rather than reciting finished answers. Until 8 August: three months free with your subscription.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -3110,7 +3132,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Learn more → </a>
+                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w2_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;sehen_w2_en#cta&quot;>Learn more →</span>
+                                </a>
                               </td>
                             </tr>
                           </tbody>
@@ -3119,7 +3143,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime with one click in your account&#160;·<br />offer ends 8 August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#sehen#en&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime with one click in your account&#160;·<br />offer ends 8 August 2026.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -3148,7 +3172,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#en&quot;>Voices and faces of anthroposophy today</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -3389,19 +3413,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Sommerangebot 2026 · 3 Monate gratis</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#de&quot;>Sommerangebot 2026 · 3 Monate gratis</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Am Samstag schliesst die&#160;Aktion.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;sehen_w3_de#botschaft&quot;>Am Samstag schliesst die&#160;Aktion.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin sehen Sie goetheanum.tv drei Monate gratis zu Ihrem Abo — beginnen Sie jetzt, und entscheiden erst danach, ob es bleibt.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;sehen_w3_de#text&quot;>Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin sehen Sie goetheanum.tv drei Monate gratis zu Ihrem Abo — beginnen Sie jetzt, und entscheiden erst danach, ob es bleibt.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -3410,7 +3434,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Mehr erfahren → </a>
+                                <a href=&quot;https://tv-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;sehen_w3_de#cta&quot;>Mehr erfahren →</span>
+                                </a>
                               </td>
                             </tr>
                           </tbody>
@@ -3419,7 +3445,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit kündbar, ein Klick im Konto&#160;·<br />Aktion bis 8. August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#sehen#de&quot;>Drei Monate kostenlos, danach läuft das Abo regulär weiter&#160;·<br />jederzeit kündbar, ein Klick im Konto&#160;·<br />Aktion bis 8. August 2026.</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -3443,7 +3469,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#de&quot;>Stimmen und Gesichter der Anthroposophie von heute</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -3684,19 +3710,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Summer offer 2026 · 3 months free</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#en&quot;>Summer offer 2026 · 3 months free</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>On Saturday the offer&#160;closes.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;sehen_w3_en#botschaft&quot;>On Saturday the offer&#160;closes.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>On Saturday, 8 August, the summer offer ends. Until then, watch goetheanum.tv free for three months with your subscription — begin now, and decide only afterwards whether it stays.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;sehen_w3_en#text&quot;>On Saturday, 8 August, the summer offer ends. Until then, watch goetheanum.tv free for three months with your subscription — begin now, and decide only afterwards whether it stays.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -3705,7 +3731,9 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                           <tbody>
                             <tr>
                               <td align=&quot;center&quot; bgcolor=&quot;#A95278&quot; role=&quot;presentation&quot; style=&quot;border:none;border-radius:999px;cursor:auto;mso-padding-alt:15px 30px;background:#A95278;&quot; valign=&quot;middle&quot;>
-                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;> Learn more → </a>
+                                <a href=&quot;https://tv-en-sommer2026.goetheanum.tv?utm_source=mailing&amp;utm_medium=email&amp;utm_campaign=summer26_trial&amp;utm_content=w3_nurws&quot; style=&quot;display:inline-block;background:#A95278;color:#FFFFFF;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 30px;mso-padding-alt:0px;border-radius:999px;&quot; target=&quot;_blank&quot;>
+                                  <span data-edit=&quot;sehen_w3_en#cta&quot;>Learn more →</span>
+                                </a>
                               </td>
                             </tr>
                           </tbody>
@@ -3714,7 +3742,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime with one click in your account&#160;·<br />offer ends 8 August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#sehen#en&quot;>Three months free, then the subscription continues at the regular price&#160;·<br />cancel anytime with one click in your account&#160;·<br />offer ends 8 August 2026.</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -3738,7 +3766,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#en&quot;>Voices and faces of anthroposophy today</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -3979,19 +4007,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Sommerangebot 2026 · 3 Monate gratis</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#de&quot;>Sommerangebot 2026 · 3 Monate gratis</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Zwei Fenster auf, den ganzen&#160;Sommer.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w1_de#botschaft&quot;>Zwei Fenster auf, den ganzen&#160;Sommer.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Lernen Sie das Goetheanum diesen Sommer von beiden Seiten kennen: Lesen Sie in der Wochenschrift Menschen, die einer Frage ihr Leben gewidmet haben, und sehen Sie auf goetheanum.tv zu, wie sie laut denken — drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w1_de#text&quot;>Lernen Sie das Goetheanum diesen Sommer von beiden Seiten kennen: Lesen Sie in der Wochenschrift Menschen, die einer Frage ihr Leben gewidmet haben, und sehen Sie auf goetheanum.tv zu, wie sie laut denken — drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -4009,7 +4037,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Beide Angebote kombinierbar&#160;·<br />drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar&#160;·<br />nur bis 8. August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#beides#de&quot;>Beide Angebote kombinierbar&#160;·<br />drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar&#160;·<br />nur bis 8. August 2026.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -4038,7 +4066,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#de&quot;>Stimmen und Gesichter der Anthroposophie von heute</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -4279,19 +4307,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Summer offer 2026 · 3 months free</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#en&quot;>Summer offer 2026 · 3 months free</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Two windows open, all summer&#160;long.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w1_en#botschaft&quot;>Two windows open, all summer&#160;long.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Get to know the Goetheanum from both sides this summer: in the weekly, read people who have given their lives to a question; on goetheanum.tv, watch them think out loud — three months free, then the subscription continues at the regular price, cancel anytime.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w1_en#text&quot;>Get to know the Goetheanum from both sides this summer: in the weekly, read people who have given their lives to a question; on goetheanum.tv, watch them think out loud — three months free, then the subscription continues at the regular price, cancel anytime.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -4309,7 +4337,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Both offers can be combined&#160;·<br />three months free, then the subscription continues at the regular price, cancel anytime&#160;·<br />only until 8 August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#beides#en&quot;>Both offers can be combined&#160;·<br />three months free, then the subscription continues at the regular price, cancel anytime&#160;·<br />only until 8 August 2026.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -4338,7 +4366,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#en&quot;>Voices and faces of anthroposophy today</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -4579,19 +4607,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Sommerangebot 2026 · 3 Monate gratis</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#de&quot;>Sommerangebot 2026 · 3 Monate gratis</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Denken in guter&#160;Gesellschaft.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w2_de#botschaft&quot;>Denken in guter&#160;Gesellschaft.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Ein Essay am Morgen, ein Vortrag am Abend — und dazwischen merken Sie, wie die eigenen Gedanken weiter reichen als sonst. Drei Monate kostenlos, anmelden bis 8. August.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w2_de#text&quot;>Ein Essay am Morgen, ein Vortrag am Abend — und dazwischen merken Sie, wie die eigenen Gedanken weiter reichen als sonst. Drei Monate kostenlos, anmelden bis 8. August.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -4609,7 +4637,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Beide Angebote kombinierbar&#160;·<br />drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar&#160;·<br />nur bis 8. August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#beides#de&quot;>Beide Angebote kombinierbar&#160;·<br />drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar&#160;·<br />nur bis 8. August 2026.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -4638,7 +4666,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#de&quot;>Stimmen und Gesichter der Anthroposophie von heute</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -4879,19 +4907,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Summer offer 2026 · 3 months free</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#en&quot;>Summer offer 2026 · 3 months free</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Thinking in good&#160;company.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w2_en#botschaft&quot;>Thinking in good&#160;company.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>An essay in the morning, a lecture in the evening — and in between you notice your own thoughts reaching further than usual. Three months free, sign up by 8 August.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w2_en#text&quot;>An essay in the morning, a lecture in the evening — and in between you notice your own thoughts reaching further than usual. Three months free, sign up by 8 August.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -4909,7 +4937,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Both offers can be combined&#160;·<br />three months free, then the subscription continues at the regular price, cancel anytime&#160;·<br />only until 8 August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#beides#en&quot;>Both offers can be combined&#160;·<br />three months free, then the subscription continues at the regular price, cancel anytime&#160;·<br />only until 8 August 2026.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -4938,7 +4966,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#en&quot;>Voices and faces of anthroposophy today</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -5179,19 +5207,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Sommerangebot 2026 · 3 Monate gratis</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#de&quot;>Sommerangebot 2026 · 3 Monate gratis</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Bis Samstag — lesen, sehen oder&#160;beides.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w3_de#botschaft&quot;>Bis Samstag — lesen, sehen oder&#160;beides.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin lesen und/oder sehen Sie das Goetheanum drei Monate gratis — beginnen Sie jetzt, und entscheiden erst danach, ob es weitergeht.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w3_de#text&quot;>Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin lesen und/oder sehen Sie das Goetheanum drei Monate gratis — beginnen Sie jetzt, und entscheiden erst danach, ob es weitergeht.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -5209,7 +5237,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Beide Angebote kombinierbar&#160;·<br />drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar&#160;·<br />nur bis 8. August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#beides#de&quot;>Beide Angebote kombinierbar&#160;·<br />drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar&#160;·<br />nur bis 8. August 2026.</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -5233,7 +5261,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#de&quot;>Stimmen und Gesichter der Anthroposophie von heute</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -5474,19 +5502,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Summer offer 2026 · 3 months free</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#en&quot;>Summer offer 2026 · 3 months free</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Until Saturday — read, watch or&#160;both.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w3_en#botschaft&quot;>Until Saturday — read, watch or&#160;both.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>On Saturday, 8 August, the summer offer ends. Until then, read and/or watch the Goetheanum free for three months — begin now, and decide only afterwards whether it continues.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w3_en#text&quot;>On Saturday, 8 August, the summer offer ends. Until then, read and/or watch the Goetheanum free for three months — begin now, and decide only afterwards whether it continues.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -5504,7 +5532,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Both offers can be combined&#160;·<br />three months free, then the subscription continues at the regular price, cancel anytime&#160;·<br />only until 8 August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#beides#en&quot;>Both offers can be combined&#160;·<br />three months free, then the subscription continues at the regular price, cancel anytime&#160;·<br />only until 8 August 2026.</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -5528,7 +5556,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#en&quot;>Voices and faces of anthroposophy today</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -5769,19 +5797,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Sommerangebot 2026 · 3 Monate gratis</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#de&quot;>Sommerangebot 2026 · 3 Monate gratis</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>Sie waren schon da — ein Schritt fehlt&#160;noch.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w3b_de#botschaft&quot;>Sie waren schon da — ein Schritt fehlt&#160;noch.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Morgen, am 8. August, schliesst das Sommerangebot. Was Sie sich angeschaut haben, hat Sie aus einem Grund angesprochen — eine Minute jetzt, und Sie haben drei Monate Zeit, dem nachzugehen.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w3b_de#text&quot;>Morgen, am 8. August, schliesst das Sommerangebot. Was Sie sich angeschaut haben, hat Sie aus einem Grund angesprochen — eine Minute jetzt, und Sie haben drei Monate Zeit, dem nachzugehen.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -5799,7 +5827,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Beide Angebote kombinierbar&#160;·<br />drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar&#160;·<br />nur bis 8. August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#beides#de&quot;>Beide Angebote kombinierbar&#160;·<br />drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar&#160;·<br />nur bis 8. August 2026.</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -5823,7 +5851,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Stimmen und Gesichter der Anthroposophie von heute</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#de&quot;>Stimmen und Gesichter der Anthroposophie von heute</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -6064,19 +6092,19 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 10px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;>Summer offer 2026 · 3 months free</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;text-align:left;color:#A95278;&quot;><span data-edit=&quot;shared#badge#en&quot;>Summer offer 2026 · 3 months free</span></div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
                         <div style=&quot;font-family:Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;line-height:35px;text-align:left;color:#232323;&quot;>
-                          <div style=&quot;text-wrap:balance&quot;>You’ve already had a look — one step to&#160;go.</div>
+                          <div style=&quot;text-wrap:balance&quot; data-edit=&quot;beides_w3b_en#botschaft&quot;>You’ve already had a look — one step to&#160;go.</div>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 22px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;>Tomorrow, 8 August, the summer offer closes. What you looked at spoke to you for a reason — one minute now, and you have three months to follow it.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;text-align:left;color:#232323;&quot;><span data-edit=&quot;beides_w3b_en#text&quot;>Tomorrow, 8 August, the summer offer closes. What you looked at spoke to you for a reason — one minute now, and you have three months to follow it.</span></div>
                       </td>
                     </tr>
                     <tr>
@@ -6094,7 +6122,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                     </tr>
                     <tr>
                       <td align=&quot;left&quot; style=&quot;font-size:0px;padding:0 0 14px 0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;>Both offers can be combined&#160;·<br />three months free, then the subscription continues at the regular price, cancel anytime&#160;·<br />only until 8 August 2026.</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;text-align:left;color:#6E6E6E;&quot;><span data-edit=&quot;shared#kleinzeile#beides#en&quot;>Both offers can be combined&#160;·<br />three months free, then the subscription continues at the regular price, cancel anytime&#160;·<br />only until 8 August 2026.</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -6118,7 +6146,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
                   <tbody>
                     <tr>
                       <td align=&quot;center&quot; style=&quot;font-size:0px;padding:0;word-break:break-word;&quot;>
-                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;>Voices and faces of anthroposophy today</div>
+                        <div style=&quot;font-family:'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;text-align:center;color:#8E3F62;&quot;><span data-edit=&quot;shared#beweisband#en&quot;>Voices and faces of anthroposophy today</span></div>
                       </td>
                     </tr>
                   </tbody>
@@ -6142,7 +6170,7 @@ body.nurmails .flds,body.nurmails .shared-sec{display:none}
 <div class="cpanel" hidden><ul class="clist" data-cl="beides_w3b_en#gesamt"></ul>
 <div class="cin"><button class="uebn" type="button" onclick="uebernehmen(this)" title="Feldtext übernehmen — direkt die gewünschte Fassung schreiben" aria-label="Feldtext übernehmen">✎</button><input placeholder="Kommentar oder gewünschte Fassung …"><button onclick="send(this,'beides_w3b_en#gesamt')">senden</button></div></div></div>
   <details class="propose"><summary>✎ Fassung vorschlagen</summary><p class="phint">Feldtext ändern und ‹vorschlagen› — geht als Vorschlag ins Backend, der Rücklauf-Agent nimmt ihn in <code>heroes.json</code> auf.</p><label class="pf"><span>Betreff</span><textarea rows="2">Tomorrow the offer closes</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_en#betreff')">vorschlagen</button></label><label class="pf"><span>Betreff+ (Anriss)</span><textarea rows="2">Three months of the Goetheanum, free, cancel anytime — sign up by tomorrow, Saturday 8 August.</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_en#preheader')">vorschlagen</button></label><label class="pf"><span>Botschaft</span><textarea rows="2">You’ve already had a look — one step to go.</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_en#botschaft')">vorschlagen</button></label><label class="pf"><span>Fliesstext</span><textarea rows="2">Tomorrow, 8 August, the summer offer closes. What you looked at spoke to you for a reason — one minute now, and you have three months to follow it.</textarea><button type="button" onclick="vorschlag(this,'beides_w3b_en#text')">vorschlagen</button></label></details></div></div></div></div></section>
-<dialog id="editor" class="edov"><form method="dialog" class="edov-frame"><header class="edov-head"><span class="edov-title" id="edov-title"></span><button class="edov-x" type="button" onclick="closeEditor()" aria-label="Schliessen">✕</button></header><div class="edov-body"><div class="edov-preview"><iframe id="edov-frame" title="Live-Vorschau"></iframe></div><div class="edov-form" id="edov-fields"></div></div><footer class="edov-foot"><span class="edov-status" id="edov-status"></span><button class="edov-cancel" type="button" onclick="closeEditor()">Abbrechen</button><button class="edov-save" type="button" onclick="saveEditor()">Speichern</button></footer></form></dialog>
+<dialog id="wyz" class="wyz"><div class="wyz-bar"><span class="wyz-label" id="wyz-label"></span><span class="wyz-msg" id="wyz-msg"></span><input class="wyz-autor" id="wyz-autor" placeholder="Kürzel" aria-label="Ihr Kürzel"><button class="wyz-save" type="button" onclick="saveAll()">Speichern</button><button class="wyz-x" type="button" onclick="closeEditor()" aria-label="Schliessen">✕</button></div><button class="wyz-nav prev" type="button" onclick="navTo(-1)" aria-label="Vorherige Mail">‹</button><button class="wyz-nav next" type="button" onclick="navTo(1)" aria-label="Nächste Mail">›</button><div class="wyz-stage"><div class="wyz-col"><div class="wyz-inbox" id="wyz-chrome"></div><iframe id="wyz-frame" class="wyz-frame" scrolling="no" title="Live-Editor"></iframe></div></div></dialog>
 </main>
 
 <footer class="ds-footer"><div class="wrap"><div class="frow">
@@ -6156,12 +6184,10 @@ const REST=SB_URL+"/rest/v1/"+TAB, RPC=SB_URL+"/rest/v1/rpc/sommer2026_comment_e
 const HDR={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};
 let COMMENTS={}, SHOW_DONE=false;
 const MAILDATA={"lesen_w1_de": {"label": "nurtv · lesen · w1 · DE", "fields": {"betreff": "Denken, das über die Woche hinausreicht — 3 Monate gratis", "preheader": "«Und wenn das Leben aus den Sternen käme?» und das ganze Archiv — jede Woche neu. Bis 8. August.", "botschaft": "Lesen, das in Ihnen weiterarbeitet.", "text": "Ergänzend zu dem, was Sie auf goetheanum.tv sehen, denkt die Wochenschrift weiter — schwarz auf weiss, jede Woche neu: «Den Frieden herbeidenken», «Und wenn das Leben aus den Sternen käme?», «Biografiearbeit als Weg zum Ich». Dazu das ganze Archiv seit 2022, das mit Ihrem Abo offen bleibt. Nicht was die Autoren wissen, sondern wie sie suchen."}, "cta": {"editable": true, "ziel": "wos", "label": "Mehr erfahren →"}}, "lesen_w1_en": {"label": "nurtv · lesen · w1 · EN", "fields": {"betreff": "Thinking that reaches beyond the week — 3 months free", "preheader": "«What if life came from the stars?» and the whole archive — new each week. Until 8 August.", "botschaft": "Reading that keeps working in you.", "text": "Alongside what you watch on goetheanum.tv, the weekly thinks on — in black and white, new each week: «Envisioning peace», «What if life came from the stars?», «Biography work as a path to the self». Plus the whole archive since 2022, which stays open with your subscription. Not what the authors know, but how they search."}, "cta": {"editable": true, "ziel": "wos", "label": "Learn more →"}}, "lesen_w2_de": {"label": "nurtv · lesen · w2 · DE", "fields": {"betreff": "Drei Monate mitlesen, danach entscheiden Sie.", "preheader": "Bis 8. August: die Wochenschrift drei Monate gratis zu Ihrem Abo — sie liest sich überall.", "botschaft": "Ein Sommer über den eigenen Rand hinaus.", "text": "Noch bis 8. August lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — Lesestoff, der in Ihnen weiterarbeitet, wenn der Bildschirm dunkel ist."}, "cta": {"editable": true, "ziel": "wos", "label": "Mehr erfahren →"}}, "lesen_w2_en": {"label": "nurtv · lesen · w2 · EN", "fields": {"betreff": "Three months of reading — then you decide.", "preheader": "Until 8 August: three months of the weekly, free with your subscription — it goes where you go.", "botschaft": "A summer beyond your own horizon.", "text": "Until 8 August, read the weekly free for three months with your subscription — reading that keeps working in you after the screen goes dark."}, "cta": {"editable": true, "ziel": "wos", "label": "Learn more →"}}, "lesen_w3_de": {"label": "nurtv · lesen · w3 · DE", "fields": {"betreff": "Bis Samstag: drei Monate gratis lesen — dann schliesst die Aktion", "preheader": "Drei Monate Wochenschrift gratis — nur noch bis Samstag, 8. August.", "botschaft": "Am Samstag schliesst die Tür.", "text": "Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin lesen Sie die Wochenschrift drei Monate gratis zu Ihrem Abo — beginnen Sie jetzt, und entscheiden erst danach, ob sie bleibt.", "alt": "Am Samstag endet Ihr Gratis-Test der Wochenschrift — falls Sie ihn noch wollen."}, "cta": {"editable": true, "ziel": "wos", "label": "Mehr erfahren →"}}, "lesen_w3_en": {"label": "nurtv · lesen · w3 · EN", "fields": {"betreff": "Until Saturday: three months of the weekly, free — then the offer closes", "preheader": "Three months of the weekly, free — only until Saturday, 8 August.", "botschaft": "On Saturday the door closes.", "text": "On Saturday, 8 August, the summer offer ends. Until then, read the weekly free for three months with your subscription — begin now, and decide only afterwards whether it stays.", "alt": "On Saturday your free trial of the weekly ends — if you still want it."}, "cta": {"editable": true, "ziel": "wos", "label": "Learn more →"}}, "sehen_w1_de": {"label": "nurws · sehen · w1 · DE", "fields": {"betreff": "Sehen, wie Menschen laut denken — 3 Monate gratis", "preheader": "«Kann man Glück lernen?» und über 800 weitere Beiträge — nah am Goetheanum, wohin der Sommer Sie trägt.", "botschaft": "So nah am Goetheanum, wo immer Sie sind.", "text": "Ergänzend zu den Artikeln, die Sie jede Woche lesen, steht Ihnen die ganze Mediathek offen — über 800 Beiträge, wöchentlich neu: «Dieser Krieg muss enden. Jetzt.», «Kann man Glück lernen?», dazu die Reihe, in der die Sahara ergrünt. Vorträge, Reportagen und Aufführungen, die Sie ganz nah ans Leben am Goetheanum bringen — selbst aus grosser Entfernung."}, "cta": {"editable": true, "ziel": "gtv", "label": "Mehr erfahren →"}}, "sehen_w1_en": {"label": "nurws · sehen · w1 · EN", "fields": {"betreff": "Watch people think out loud — 3 months free", "preheader": "«Can we learn to be happy?» and over 800 more — close to the Goetheanum, wherever summer takes you.", "botschaft": "Close to the Goetheanum, wherever you are.", "text": "Alongside the articles you read each week, the whole media library is open to you — over 800 pieces, new every week: «This war must end. Now.», «Can we learn to be happy?», and the series «Greening the Desert», in which the Sahara turns green. Lectures, reportage and performances that bring you close to life at the Goetheanum — even from a great distance."}, "cta": {"editable": true, "ziel": "gtv", "label": "Learn more →"}}, "sehen_w2_de": {"label": "nurws · sehen · w2 · DE", "fields": {"betreff": "Ihr Sommer hat noch Abende frei", "preheader": "goetheanum.tv drei Monate gratis zu Ihrem Abo — Abende, die nachwirken. Bis 8. August.", "botschaft": "Setzen Sie sich dazu.", "text": "Ein Abend auf goetheanum.tv ist ein Abend in Gesellschaft von Menschen, die ihr Leben lang an einer Frage gearbeitet haben — und die laut denken, statt fertige Antworten vorzutragen. Noch bis 8. August drei Monate gratis zu Ihrem Abo."}, "cta": {"editable": true, "ziel": "gtv", "label": "Mehr erfahren →"}}, "sehen_w2_en": {"label": "nurws · sehen · w2 · EN", "fields": {"betreff": "Your summer still has evenings free", "preheader": "goetheanum.tv, three months free with your subscription — evenings that linger. By 8 August.", "botschaft": "Pull up a chair.", "text": "An evening on goetheanum.tv is an evening in the company of people who have worked on a question all their lives — thinking out loud rather than reciting finished answers. Until 8 August: three months free with your subscription."}, "cta": {"editable": true, "ziel": "gtv", "label": "Learn more →"}}, "sehen_w3_de": {"label": "nurws · sehen · w3 · DE", "fields": {"betreff": "Bis Samstag: drei Monate goetheanum.tv gratis — dann schliesst die Aktion", "preheader": "Eine Minute genügt: drei Monate goetheanum.tv gratis — bis Samstag, 8. August.", "botschaft": "Am Samstag schliesst die Aktion.", "text": "Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin sehen Sie goetheanum.tv drei Monate gratis zu Ihrem Abo — beginnen Sie jetzt, und entscheiden erst danach, ob es bleibt.", "alt": "Am Samstag endet Ihr Gratis-Test von goetheanum.tv — falls Sie ihn noch wollen."}, "cta": {"editable": true, "ziel": "gtv", "label": "Mehr erfahren →"}}, "sehen_w3_en": {"label": "nurws · sehen · w3 · EN", "fields": {"betreff": "Until Saturday: three months of goetheanum.tv, free — then the offer closes", "preheader": "One minute is enough: three months of goetheanum.tv, free — until Saturday, 8 August.", "botschaft": "On Saturday the offer closes.", "text": "On Saturday, 8 August, the summer offer ends. Until then, watch goetheanum.tv free for three months with your subscription — begin now, and decide only afterwards whether it stays.", "alt": "On Saturday your free trial of goetheanum.tv ends — if you still want it."}, "cta": {"editable": true, "ziel": "gtv", "label": "Learn more →"}}, "beides_w1_de": {"label": "noabo · beides · w1 · DE", "fields": {"betreff": "Ein Sommer mit dem Goetheanum — 3 Monate gratis", "preheader": "Lesen oder schauen — oder beides: drei Monate kostenlos, bis 8. August.", "botschaft": "Zwei Fenster auf, den ganzen Sommer.", "text": "Lernen Sie das Goetheanum diesen Sommer von beiden Seiten kennen: Lesen Sie in der Wochenschrift Menschen, die einer Frage ihr Leben gewidmet haben, und sehen Sie auf goetheanum.tv zu, wie sie laut denken — drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar."}, "cta": {"editable": false}}, "beides_w1_en": {"label": "noabo · beides · w1 · EN", "fields": {"betreff": "A summer with the Goetheanum — 3 months free", "preheader": "Read the weekly, watch goetheanum.tv — or both: three months free. Until 8 August.", "botschaft": "Two windows open, all summer long.", "text": "Get to know the Goetheanum from both sides this summer: in the weekly, read people who have given their lives to a question; on goetheanum.tv, watch them think out loud — three months free, then the subscription continues at the regular price, cancel anytime."}, "cta": {"editable": false}}, "beides_w2_de": {"label": "noabo · beides · w2 · DE", "fields": {"betreff": "Lesen, sehen — oder gleich beides", "preheader": "Wochenschrift und goetheanum.tv, drei Monate kostenlos — Stoff zum Weiterdenken. Bis 8. August.", "botschaft": "Denken in guter Gesellschaft.", "text": "Ein Essay am Morgen, ein Vortrag am Abend — und dazwischen merken Sie, wie die eigenen Gedanken weiter reichen als sonst. Drei Monate kostenlos, anmelden bis 8. August."}, "cta": {"editable": false}}, "beides_w2_en": {"label": "noabo · beides · w2 · EN", "fields": {"betreff": "Read, watch — or simply both", "preheader": "The weekly and goetheanum.tv, three months free — food for thought all summer. By 8 August.", "botschaft": "Thinking in good company.", "text": "An essay in the morning, a lecture in the evening — and in between you notice your own thoughts reaching further than usual. Three months free, sign up by 8 August."}, "cta": {"editable": false}}, "beides_w3_de": {"label": "noabo · beides · w3 · DE", "fields": {"betreff": "Bis Samstag: drei Monate Goetheanum gratis — dann schliesst die Aktion", "preheader": "Drei Monate lesen oder schauen, gratis — nur noch bis Samstag, 8. August.", "botschaft": "Bis Samstag — lesen, sehen oder beides.", "text": "Am Samstag, dem 8. August, endet das Sommerangebot. Bis dahin lesen und/oder sehen Sie das Goetheanum drei Monate gratis — beginnen Sie jetzt, und entscheiden erst danach, ob es weitergeht.", "alt": "Am Samstag endet Ihr Gratis-Test — falls Sie ihn noch wollen."}, "cta": {"editable": false}}, "beides_w3_en": {"label": "noabo · beides · w3 · EN", "fields": {"betreff": "Until Saturday: three months of the Goetheanum, free — then the offer closes", "preheader": "Three months of reading or watching, free — only until Saturday, 8 August.", "botschaft": "Until Saturday — read, watch or both.", "text": "On Saturday, 8 August, the summer offer ends. Until then, read and/or watch the Goetheanum free for three months — begin now, and decide only afterwards whether it continues.", "alt": "On Saturday your free trial ends — if you still want it."}, "cta": {"editable": false}}, "beides_w3b_de": {"label": "noabo · beides · w3b · DE", "fields": {"betreff": "Morgen schliesst die Aktion", "preheader": "Drei Monate Goetheanum, gratis und jederzeit kündbar — anmelden bis morgen, Samstag, 8. August.", "botschaft": "Sie waren schon da — ein Schritt fehlt noch.", "text": "Morgen, am 8. August, schliesst das Sommerangebot. Was Sie sich angeschaut haben, hat Sie aus einem Grund angesprochen — eine Minute jetzt, und Sie haben drei Monate Zeit, dem nachzugehen."}, "cta": {"editable": false}}, "beides_w3b_en": {"label": "noabo · beides · w3b · EN", "fields": {"betreff": "Tomorrow the offer closes", "preheader": "Three months of the Goetheanum, free, cancel anytime — sign up by tomorrow, Saturday 8 August.", "botschaft": "You’ve already had a look — one step to go.", "text": "Tomorrow, 8 August, the summer offer closes. What you looked at spoke to you for a reason — one minute now, and you have three months to follow it."}, "cta": {"editable": false}}};
-const FELD_LABEL={betreff:"Betreff",preheader:"Betreff+ (Anriss)",botschaft:"Botschaft",text:"Fliesstext",alt:"Alt-Betreff (Nicht-Öffner)",cta:"Button-Text"};
-const FELD_ROWS={betreff:2,preheader:2,botschaft:3,text:6,alt:2,cta:1};
-const FELD_ORDER=["betreff","preheader","botschaft","text","alt","cta"];
-let EDIT={base:null,orig:{},last:{}};
+const NAVBASES=["lesen_w1_de", "lesen_w1_en", "lesen_w2_de", "lesen_w2_en", "lesen_w3_de", "lesen_w3_en", "sehen_w1_de", "sehen_w1_en", "sehen_w2_de", "sehen_w2_en", "sehen_w3_de", "sehen_w3_en", "beides_w1_de", "beides_w1_en", "beides_w2_de", "beides_w2_en", "beides_w3_de", "beides_w3_en", "beides_w3b_de", "beides_w3b_en"];
+let PENDING={}, SUBMITTED={}, CUR=null, CE_T=null, UILANG='de';
 const st=t=>document.getElementById('status').textContent=t;
-function setLang(l){document.getElementById('b-de').classList.toggle('on',l=='de');document.getElementById('b-en').classList.toggle('on',l=='en');
+function setLang(l){UILANG=l;document.getElementById('b-de').classList.toggle('on',l=='de');document.getElementById('b-en').classList.toggle('on',l=='en');
  document.querySelectorAll('.mail').forEach(m=>m.style.display=(m.dataset.lang==l?'':'none'));}
 function toggleDone(){SHOW_DONE=!SHOW_DONE;document.getElementById('b-done').classList.toggle('on',SHOW_DONE);render();}
 function toggleComments(){const b=document.getElementById('b-cmt'),an=document.body.classList.toggle('nocmt');
@@ -6230,7 +6256,7 @@ async function erledigt(id,wert){
   await load();
  }catch(e){st("Fehler: "+e.message);}
 }
-function spracheAus(key){const m=key.match(/_(de|en)#/);return m?m[1]:null;}
+function spracheAus(key){const m=key.match(/(?:_|#)(de|en)(?:#|$)/);return m?m[1]:null;}
 async function send(btn,key){
  const inp=btn.previousElementSibling, txt=inp.value.trim(); if(!txt) return;
  const eingabe=(document.getElementById('autor').value||'').trim();
@@ -6260,83 +6286,118 @@ async function vorschlag(btn,key){
  catch(e){st("Fehler: "+e.message); alert("Konnte nicht senden:\n"+e.message+"\n\nTipp: Diese Seite über werkzeuge.goetheanum.ch öffnen — in eingebetteten Vorschauen sind Netzwerkzugriffe oft blockiert.");}
  btn.disabled=false;
 }
-/* ── Overlay-Editor ───────────────────────────────────────────────────────────
-   Mail gross bearbeiten; die Live-Vorschau ist exakt die Versand-Mail (srcdoc der
-   Karte), beim Tippen per Text-Node-Ersatz gepatcht. Speichern schreibt je
-   geändertem Feld eine ‹Fassung → ›-Anmerkung — die veröffentlichte HTML arbeitet
-   die bestehende Rücklauf-Schleife ein (die statische Seite baut kein MJML neu). */
-const estat=t=>{const s=document.getElementById('edov-status');if(s)s.textContent=t;};
-function titelMirror(s){s=(s||'').trim();const i=s.lastIndexOf(' ');return i>0?s.slice(0,i)+'\u00a0'+s.slice(i+1):s;}
-function patchNode(doc,oldV,newV){
- if(!doc||!doc.body||!oldV) return false;
- const w=doc.createTreeWalker(doc.body,NodeFilter.SHOW_TEXT);
- let n; while(n=w.nextNode()){ if(n.nodeValue.indexOf(oldV)>=0){ n.nodeValue=n.nodeValue.replace(oldV,newV); return true; } }
- return false;
+/* ── WYSIWYG-Overlay ──────────────────────────────────────────────────────────
+   Direkt IN der Mailvorschau texten. Die editierbaren Stellen tragen data-edit
+   (aus dem Build); im Overlay-iframe werden sie contentEditable. Speichern schreibt
+   je geändertem Feld eine ‹Fassung → ›-Anmerkung (postFassung) — die veröffentlichte
+   HTML arbeitet die Rücklauf-Schleife ein. Geteilte Elemente (badge/proof/kleinzeile)
+   werden sofort in ALLEN geladenen iframes gespiegelt. */
+const CE_SINGLE={betreff:1,alt:1,cta:1,badge:1,botschaft:1,kleinzeile:1};
+const wmsg=t=>{const m=document.getElementById('wyz-msg');if(m)m.textContent=t;};
+function feldOf(key){return key.split('#')[1];}  // mail: 'text'; shared#badge#de → 'badge'
+function normNbsp(s){return (s||'').replace(/\u00a0/g,' ');}
+function kleinzeileMirror(s){return s.split('·').map(t=>esc(t.trim())).join('&#160;·<br>');}
+function readCE(node,feld){
+ if(feld==='kleinzeile') return normNbsp(node.textContent).split('·').map(t=>t.trim()).filter(Boolean).join(' · ');
+ if(feld==='text'||feld==='preheader'){
+   const t=node.innerText!=null?node.innerText:node.textContent;
+   return normNbsp(t).replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+ }
+ return normNbsp(node.textContent).replace(/\s+/g,' ').trim();
 }
-function edFeld(f){const t=document.querySelector('#edov-fields textarea[data-field="'+f+'"]');return t?t.value:(EDIT.orig[f]!=null?EDIT.orig[f]:'');}
-function setInbox(){
- const b=document.getElementById('eib-b'); if(b) b.textContent=edFeld('betreff');
- const a=document.getElementById('eib-a'); if(a) a.textContent=edFeld('preheader');
- const al=document.getElementById('eib-alt-t'); if(al) al.textContent=edFeld('alt');
+function writeCE(node,feld,val){
+ if(feld==='kleinzeile'){ node.innerHTML=kleinzeileMirror(val); return; }
+ if(feld==='botschaft'){ const t=(val||'').trim(),i=t.lastIndexOf(' ');
+   node.textContent=(i>0?t.slice(0,i)+'\u00a0'+t.slice(i+1):t); return; }
+ node.textContent=val;
 }
-function initLast(){
- EDIT.last={};
- if('botschaft' in EDIT.orig) EDIT.last.botschaft=titelMirror(EDIT.orig.botschaft);
- if('text' in EDIT.orig) EDIT.last.text=EDIT.orig.text;
- if('cta' in EDIT.orig) EDIT.last.cta=EDIT.orig.cta;
+function allDocs(){
+ const docs=[]; const f=document.getElementById('wyz-frame');
+ try{if(f&&f.contentDocument&&f.contentDocument.body)docs.push(f.contentDocument);}catch(e){}
+ document.querySelectorAll('.mail iframe').forEach(fr=>{try{if(fr.contentDocument&&fr.contentDocument.body)docs.push(fr.contentDocument);}catch(e){}});
+ return docs;
 }
-function doPatch(feld,val){
- if(feld==='betreff'||feld==='preheader'||feld==='alt'){ setInbox(); return; }
- const doc=document.getElementById('edov-frame').contentDocument;
- if(feld==='botschaft'){ const nr=titelMirror(val); if(patchNode(doc,EDIT.last.botschaft,nr)) EDIT.last.botschaft=nr; return; }
- const old=EDIT.last[feld]; if(old==null) return;
- if(patchNode(doc,old,val)) EDIT.last[feld]=val;
+function applyEdit(key,val,exceptNode){
+ const feld=feldOf(key), sel='[data-edit="'+key+'"]';
+ allDocs().forEach(d=>d.querySelectorAll(sel).forEach(n=>{ if(n!==exceptNode) writeCE(n,feld,val); }));
 }
-function onEdit(e){const ta=e.target; clearTimeout(ta._pt); ta._pt=setTimeout(()=>doPatch(ta.dataset.field,ta.value),120);}
+function applyPending(doc){
+ const merged=Object.assign({},SUBMITTED,PENDING);
+ Object.keys(merged).forEach(key=>{const feld=feldOf(key);
+   doc.querySelectorAll('[data-edit="'+key+'"]').forEach(n=>writeCE(n,feld,merged[key]));});
+}
+function autosizeIframe(f){ try{const d=f.contentDocument; if(d&&d.body) f.style.height=d.body.scrollHeight+'px';}catch(e){} }
+function onCE(e){
+ const node=e.target.closest&&e.target.closest('[data-edit]'); if(!node) return;
+ const key=node.getAttribute('data-edit'), feld=feldOf(key);
+ clearTimeout(CE_T); CE_T=setTimeout(()=>{
+   const val=readCE(node,feld); PENDING[key]=val; applyEdit(key,val,node);
+   autosizeIframe(document.getElementById('wyz-frame'));
+   const n=Object.keys(PENDING).length; wmsg(n?('· '+n+' Änderung'+(n>1?'en':'')+' offen'):'');
+ },150);
+}
+function ceKeydown(e){
+ if((e.metaKey||e.ctrlKey)&&(e.key==='s'||e.key==='S')){e.preventDefault();saveAll();return;}
+ if(e.key!=='Enter'||e.shiftKey) return;
+ const node=e.target.closest&&e.target.closest('[data-edit]'); if(!node) return;
+ if(CE_SINGLE[feldOf(node.getAttribute('data-edit'))]) e.preventDefault();
+}
+function navList(){return NAVBASES.filter(b=>b.slice(-3)==='_'+UILANG);}
+function updateNav(){const l=navList(),i=l.indexOf(CUR);
+ document.querySelector('.wyz-nav.prev').disabled=(i<=0);
+ document.querySelector('.wyz-nav.next').disabled=(i<0||i>=l.length-1);}
+function navTo(delta){const l=navList(),i=l.indexOf(CUR); if(i<0) return;
+ const j=i+delta; if(j<0||j>=l.length) return; openEditor(l[j]);}
 function openEditor(base){
  const d=MAILDATA[base]; if(!d) return;
- EDIT={base:base,orig:{},last:{}};
- document.getElementById('edov-title').textContent=d.label;
- const felder=[];
- FELD_ORDER.forEach(f=>{
-   if(f==='cta'){ if(d.cta&&d.cta.editable){ felder.push(['cta',FELD_LABEL.cta,d.cta.label]); } }
-   else if(d.fields&&(f in d.fields)){ felder.push([f,FELD_LABEL[f],d.fields[f]]); }
- });
- const w3=!!(d.fields&&('alt' in d.fields));
- const inbox='<div class="edov-inbox"><div class="edov-ib-b" id="eib-b"></div>'
-   +'<div class="edov-ib-a" id="eib-a"></div>'
-   +(w3?'<div class="edov-ib-alt" id="eib-alt"><span>Nicht-Öffner erhalten:</span> <span id="eib-alt-t"></span></div>':'')
-   +'</div>';
- const rows=felder.map(([f,lab,val])=>{ EDIT.orig[f]=val;
-   return '<label class="edov-f"><span>'+esc(lab)+'</span><textarea data-field="'+f+'" rows="'+(FELD_ROWS[f]||3)+'">'+esc(val)+'</textarea></label>';
- }).join('');
- document.getElementById('edov-fields').innerHTML=inbox+rows;
- setInbox();
- const src=document.querySelector('iframe[title="Vorschau '+base+'"]');
- const frame=document.getElementById('edov-frame');
- frame.onload=initLast; frame.srcdoc=src?src.srcdoc:'';
- document.querySelectorAll('#edov-fields textarea').forEach(ta=>ta.addEventListener('input',onEdit));
- estat('Bearbeiten — Speichern legt je geändertem Feld eine Fassung vor.');
- document.getElementById('editor').showModal();
+ CUR=base; UILANG=base.slice(-2);
+ document.getElementById('wyz-label').textContent=d.label; wmsg('');
+ try{const a=document.getElementById('wyz-autor');if(!a.value)a.value=(localStorage.getItem('autor')||document.getElementById('autor').value||'');}catch(e){}
+ const f=d.fields||{};
+ let chrome='<span class="wyz-ib-lab">Posteingang</span>'
+   +'<div class="wyz-ib wyz-ib-b" contenteditable="true" data-edit="'+base+'#betreff">'+esc(f.betreff||'')+'</div>'
+   +'<div class="wyz-ib wyz-ib-a" contenteditable="true" data-edit="'+base+'#preheader">'+esc(f.preheader||'')+'</div>';
+ if('alt' in f) chrome+='<div class="wyz-ib-alt"><span class="lab">Nicht-Öffner:</span> <span contenteditable="true" data-edit="'+base+'#alt">'+esc(f.alt)+'</span></div>';
+ const chromeEl=document.getElementById('wyz-chrome'); chromeEl.innerHTML=chrome;
+ chromeEl.oninput=onCE; chromeEl.onkeydown=ceKeydown; applyPending(document);
+ const src=document.querySelector('.mail iframe[title="Vorschau '+base+'"]');
+ const frame=document.getElementById('wyz-frame'); let done=false;
+ const setup=()=>{ const doc=frame.contentDocument; if(done||!doc||!doc.body) return; done=true;
+   doc.querySelectorAll('[data-edit]').forEach(n=>n.setAttribute('contenteditable','true'));
+   const stl=doc.createElement('style');
+   stl.textContent='[data-edit]{outline:1px dashed transparent;cursor:text}[data-edit]:hover{outline-color:rgba(0,0,0,.18)}[data-edit]:focus{outline:2px solid #3b82f6;outline-offset:2px}'; /* # ds-ok Artefakt-Affordance */
+   doc.head.appendChild(stl);
+   doc.addEventListener('input',onCE); doc.addEventListener('keydown',ceKeydown);
+   doc.addEventListener('click',ev=>{if(ev.target.closest('a')&&ev.target.closest('[data-edit]'))ev.preventDefault();});
+   applyPending(doc); autosizeIframe(frame);
+   // Höhe nachziehen, sobald Bilder/Schrift nachladen (scrollHeight wächst danach).
+   try{new frame.contentWindow.ResizeObserver(()=>autosizeIframe(frame)).observe(doc.body);}catch(e){}
+   doc.querySelectorAll('img').forEach(im=>im.addEventListener('load',()=>autosizeIframe(frame)));
+ };
+ frame.onload=setup; frame.srcdoc=src?src.srcdoc:'';
+ // Nicht auf das load-Event warten (Bilder können es verzögern): aufsetzen, sobald der Body da ist.
+ let t=0; const iv=setInterval(()=>{ setup(); if(done||++t>60) clearInterval(iv); },50);
+ updateNav(); if(!document.getElementById('wyz').open) document.getElementById('wyz').showModal();
 }
-async function saveEditor(){
- const base=EDIT.base; if(!base) return;
- const eingabe=(document.getElementById('autor').value||'').trim();
- try{if(eingabe)localStorage.setItem('autor',eingabe);}catch(e){}
+async function saveAll(){
+ const keys=Object.keys(PENDING); if(!keys.length){ wmsg('nichts geändert'); return; }
+ const eingabe=(document.getElementById('wyz-autor').value||document.getElementById('autor').value||'').trim();
+ try{if(eingabe){localStorage.setItem('autor',eingabe);document.getElementById('autor').value=eingabe;}}catch(e){}
  const autor=eingabe||'anon';
- const posts=[];
- document.querySelectorAll('#edov-fields textarea').forEach(ta=>{
-   const f=ta.dataset.field, v=ta.value.trim(), o=(EDIT.orig[f]!=null?String(EDIT.orig[f]):'').trim();
-   if(v&&v!==o) posts.push(postFassung(base+'#'+f,v,autor));
- });
- if(!posts.length){ estat('nichts geändert'); return; }
- estat('speichere '+posts.length+' Feld(er) …');
- try{ await Promise.all(posts); await load(); closeEditor();
+ wmsg('speichere '+keys.length+' …');
+ try{ await Promise.all(keys.map(k=>postFassung(k,PENDING[k],autor)));
+   Object.assign(SUBMITTED,PENDING); PENDING={}; wmsg('gespeichert ✓'); await load();
    st('gespeichert ✓ — der Rücklauf-Agent arbeitet die Fassung in die HTML ein'); }
- catch(e){ estat('Fehler: '+e.message); alert("Konnte nicht speichern:\n"+e.message+"\n\nTipp: Diese Seite über werkzeuge.goetheanum.ch öffnen — in eingebetteten Vorschauen sind Netzwerkzugriffe oft blockiert."); }
+ catch(e){ wmsg('Fehler: '+e.message); alert("Konnte nicht speichern:\n"+e.message+"\n\nTipp: Diese Seite über werkzeuge.goetheanum.ch öffnen — in eingebetteten Vorschauen sind Netzwerkzugriffe oft blockiert."); }
 }
-function closeEditor(){ EDIT={base:null,orig:{},last:{}}; document.getElementById('editor').close(); }
-document.getElementById('editor').addEventListener('close',()=>{document.getElementById('edov-frame').srcdoc='';});
+function closeEditor(){ document.getElementById('wyz').close(); }
+document.getElementById('wyz').addEventListener('close',()=>{document.getElementById('wyz-frame').removeAttribute('srcdoc');});
+document.getElementById('wyz').addEventListener('keydown',e=>{
+ if((e.metaKey||e.ctrlKey)&&(e.key==='s'||e.key==='S')){e.preventDefault();saveAll();return;}
+ if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight') return;
+ const a=document.activeElement; if(a&&(a.isContentEditable||a.id==='wyz-frame')) return;
+ e.preventDefault(); navTo(e.key==='ArrowRight'?1:-1);
+});
 document.getElementById('offenliste').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)springe(b.dataset.go);});
 try{const a=localStorage.getItem('autor');if(a&&a!=='anon')document.getElementById('autor').value=a;}catch(e){}
 setLang('de');load();

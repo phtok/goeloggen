@@ -97,14 +97,19 @@ angewendet). Rücklauf: offene Kommentare lesen → in heroes.json korrigieren �
 unter dem Feld-Key mit Präfix `Fassung → ` ins Backend. Der Rücklauf-Agent erkennt sie als
 fertigen Feldtext und setzt sie ein (kein Umformulieren) — «im Editor bearbeiten» ohne die
 eine Quelle/Git/Prüfmaschinen aufzugeben. Details: RUECKLAUF-AGENT.md.
-**Overlay-Editor ‹✎ Bearbeiten› (je Mail-Karte):** öffnet die Mail gross als `<dialog>` —
-links die Live-Vorschau (exakt die Versand-Mail, beim Tippen per Text-Node-Ersatz gepatcht:
-Fliesstext/Botschaft im Body, Betreff/Anriss/Alt im Posteingang-Streifen), rechts die Felder.
-`Speichern` schreibt je **geändertem** Feld eine `Fassung → `-Anmerkung (derselbe Kanal wie
-‹vorschlagen›, geteilter JS-Helfer `postFassung`) — kein neues Backend. Die veröffentlichte
-HTML arbeitet die bestehende Rücklauf-Schleife ein (Apply-Stufe 1, Entscheid Ph 13.7.: die
-statische Seite baut kein MJML neu, kein Auto-Merge/Secret). Button-Text nur editierbar, wenn
-das Motiv genau ein `cta_label` hat (lesen/sehen); `beides` (Multi-Label) ist ausgenommen.
+**WYSIWYG-Overlay ‹✎ Bearbeiten› (je Mail-Karte):** öffnet die Mail als Vollfenster-`<dialog>`
+(dünner Balken oben: Label · Kürzel · Speichern · ✕), Mail zentriert in nativer 600px-Schärfe,
+Pfeile links/rechts zum Blättern (gleiche Sprache), `←/→` und `⌘/Ctrl+S`. **Direkt IN der
+Vorschau** getextet: die editierbaren Stellen tragen `data-edit` (aus dem Build, via `wrap_edit`/
+`titel(key=)`), im Overlay-iframe werden sie `contentEditable`. Betreff/Anriss/Alt (nicht im Body)
+stehen editierbar im Posteingang-Streifen darüber. `Speichern` schreibt je **geändertem** Feld
+eine `Fassung → `-Anmerkung (derselbe Kanal wie ‹vorschlagen›, geteilter `postFassung`) — kein
+neues Backend; die veröffentlichte HTML arbeitet die Rücklauf-Schleife ein (Apply-Stufe 1,
+Entscheid Ph 13.7.: statische Seite baut kein MJML, kein Auto-Merge/Secret). **Geteilte Elemente**
+(Badge/Proof/Kleinzeile) sind sprach-/motiv-qualifiziert (`shared#badge#{lang}`,
+`shared#kleinzeile#{motiv}#{lang}`) — beim Tippen sofort in ALLEN geladenen iframes gespiegelt,
+und `ruecklauf.zerlege` löst sie auf **genau einen** heroes-Pfad auf (nicht mehr Doppel-Dump).
+Button-Text nur editierbar bei eindeutigem `cta_label` (lesen/sehen); `beides` ausgenommen.
 
 ## Rücklauf-Agent (Gegenlese-Schleife automatisiert)
 `ruecklauf.py` ist das deterministische Herz: `python3 ruecklauf.py` holt die **offenen**

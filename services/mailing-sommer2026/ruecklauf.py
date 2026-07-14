@@ -78,15 +78,30 @@ def zerlege(mail_key):
     wo, _, feld = mail_key.partition("#")
     feld = feld or "gesamt"
     if wo == "shared":
-        pfad, label = SHARED.get(feld, (None, feld))
+        # feld ist entweder blank (Karten-Kommentar: shared#badge) ODER qualifiziert
+        # (WYSIWYG-Overlay: shared#badge#de, shared#kleinzeile#lesen#de). Qualifiziert
+        # → genau EIN Pfad, sprach-/motiv-eindeutig; blank → Übersicht wie bisher.
+        teile = feld.split("#")
+        element = teile[0]
+        tmpl, label = SHARED.get(element, (None, element))
+        if tmpl and len(teile) > 1:
+            lang = teile[-1]
+            if "*" in tmpl:  # kleinzeile: element#motiv#lang
+                motiv = teile[1] if len(teile) > 2 else None
+                pfad = tmpl.replace("*", motiv).format(l=lang) if motiv else None
+            else:            # badge/proof: element#lang
+                pfad = tmpl.format(l=lang)
+            return {"art": "shared", "element": element, "label": label,
+                    "sprache": lang, "pfad": pfad,
+                    "aktuell": hole(pfad) if pfad else None}
         aktuell = {}
-        if pfad and "*" in pfad:  # je Motiv
+        if tmpl and "*" in tmpl:  # je Motiv
             for m in H["motive"]:
-                aktuell[m] = {l: hole(pfad.replace("*", m).format(l=l)) for l in ("de", "en")}
-        elif pfad:
-            aktuell = {l: hole(pfad.format(l=l)) for l in ("de", "en")}
-        return {"art": "shared", "element": feld, "label": label,
-                "pfad": pfad, "aktuell": aktuell}
+                aktuell[m] = {l: hole(tmpl.replace("*", m).format(l=l)) for l in ("de", "en")}
+        elif tmpl:
+            aktuell = {l: hole(tmpl.format(l=l)) for l in ("de", "en")}
+        return {"art": "shared", "element": element, "label": label,
+                "pfad": tmpl, "aktuell": aktuell}
     teile = wo.split("_")
     if len(teile) < 3:
         return {"art": "unbekannt", "roh": mail_key}
