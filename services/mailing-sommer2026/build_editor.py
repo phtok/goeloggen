@@ -477,15 +477,14 @@ body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
 .wyz-x:hover{{background:var(--paper);color:var(--ink)}}
 .wyz-stage{{flex:1 1 auto;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:var(--s5) var(--s3) var(--s8);background:var(--field-bg)}}
 .wyz-col{{width:600px;max-width:100%;box-shadow:0 6px 30px rgba(20,24,28,.16)}} /* # ds-ok Blatt-Schatten */
-.wyz-inbox{{background:var(--paper);border:1px solid var(--line-soft);border-radius:8px 8px 0 0;border-bottom:0;padding:var(--s2) var(--s3);font-family:var(--font-text)}}
-.wyz-ib{{display:block}}
-.wyz-ib-lab{{font-size:var(--t-micro);color:var(--muted)}}
-.wyz-ib-b{{font-size:var(--t-small);font-weight:600;color:var(--ink);outline:1px dashed transparent}}
-.wyz-ib-a{{font-size:var(--t-small);color:var(--muted);line-height:1.45;margin-top:2px;outline:1px dashed transparent}}
-.wyz-ib-alt{{font-size:var(--t-micro);color:var(--muted);line-height:1.45;margin-top:4px}}
-.wyz-ib-alt .lab{{color:var(--gold-ink);font-weight:600}}
-.wyz-ib-b:hover,.wyz-ib-a:hover,.wyz-ib-alt [contenteditable]:hover{{outline-color:var(--line)}}
-.wyz-inbox [contenteditable]:focus{{outline:2px solid var(--gold-ink);outline-offset:2px}}
+/* Posteingang-Streifen: echte Formularfelder (in jedem Browser editierbar, auch im Modal-Dialog). */
+.wyz-inbox{{background:var(--paper);border:1px solid var(--line-soft);border-radius:8px 8px 0 0;border-bottom:0;padding:var(--s2) var(--s3);font-family:var(--font-text);display:grid;gap:3px}}
+.wyz-ib-lab{{font-size:var(--t-micro);color:var(--muted);margin-top:4px}}
+.wyz-ib-lab:first-child{{margin-top:0}}
+.wyz-ib-b,.wyz-ib-a,.wyz-ib-alt-in{{width:100%;box-sizing:border-box;font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);background:var(--field-bg);border:1px solid var(--line-soft);border-radius:var(--r-control);padding:6px 8px}}
+.wyz-ib-b{{font-weight:600}}
+.wyz-ib-a{{line-height:1.4;resize:vertical}}
+.wyz-inbox input:focus,.wyz-inbox textarea:focus{{outline:2px solid var(--gold-ink);outline-offset:1px}}
 .wyz-frame{{width:600px;max-width:100%;border:0;display:block;background:#F6F4F2}} /* # ds-ok Mail-Grund (Artefakt) */
 .wyz-nav{{position:fixed;top:50%;transform:translateY(-50%);z-index:2;width:56px;height:56px;background:var(--paper);border:1px solid var(--line);border-radius:999px;color:var(--ink);font-size:28px;line-height:1;cursor:pointer;box-shadow:0 2px 10px rgba(20,24,28,.18)}} /* # ds-ok Schatten */
 .wyz-nav:hover{{border-color:var(--gold-ink);color:var(--gold-ink)}}
@@ -540,7 +539,7 @@ const HDR={{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"app
 let COMMENTS={{}}, SHOW_DONE=false;
 const MAILDATA={maildata_json};
 const NAVBASES={navbases_json};
-let PENDING={{}}, SUBMITTED={{}}, CUR=null, CE_T=null, UILANG='de';
+let PENDING={{}}, SUBMITTED={{}}, CUR=null, UILANG='de';
 const st=t=>document.getElementById('status').textContent=t;
 function setLang(l){{UILANG=l;document.getElementById('b-de').classList.toggle('on',l=='de');document.getElementById('b-en').classList.toggle('on',l=='en');
  document.querySelectorAll('.mail').forEach(m=>m.style.display=(m.dataset.lang==l?'':'none'));}}
@@ -660,7 +659,16 @@ function readCE(node,feld){{
  }}
  return normNbsp(node.textContent).replace(/\\s+/g,' ').trim();
 }}
+function readField(node,feld){{  // Formularfeld (Posteingang) vs. contentEditable (Mail-Body)
+ if(node.tagName==='INPUT'||node.tagName==='TEXTAREA'){{
+   const v=node.value||'';
+   if(feld==='preheader') return v.replace(/[ \\t]+/g,' ').replace(/\\n{{3,}}/g,'\\n\\n').trim();
+   return v.replace(/\\s+/g,' ').trim();
+ }}
+ return readCE(node,feld);
+}}
 function writeCE(node,feld,val){{
+ if(node.tagName==='INPUT'||node.tagName==='TEXTAREA'){{ node.value=val; return; }}
  if(feld==='kleinzeile'){{ node.innerHTML=kleinzeileMirror(val); return; }}
  if(feld==='botschaft'){{ const t=(val||'').trim(),i=t.lastIndexOf(' ');
    node.textContent=(i>0?t.slice(0,i)+'\\u00a0'+t.slice(i+1):t); return; }}
@@ -685,8 +693,8 @@ function autosizeIframe(f){{ try{{const d=f.contentDocument; if(d&&d.body) f.sty
 function onCE(e){{
  const node=e.target.closest&&e.target.closest('[data-edit]'); if(!node) return;
  const key=node.getAttribute('data-edit'), feld=feldOf(key);
- clearTimeout(CE_T); CE_T=setTimeout(()=>{{
-   const val=readCE(node,feld); PENDING[key]=val; applyEdit(key,val,node);
+ clearTimeout(node._wt); node._wt=setTimeout(()=>{{  // Timer je Node: schnelle Feldwechsel löschen sich nicht
+   const val=readField(node,feld); PENDING[key]=val; applyEdit(key,val,node);
    autosizeIframe(document.getElementById('wyz-frame'));
    const n=Object.keys(PENDING).length; wmsg(n?('· '+n+' Änderung'+(n>1?'en':'')+' offen'):'');
  }},150);
@@ -709,10 +717,12 @@ function openEditor(base){{
  document.getElementById('wyz-label').textContent=d.label; wmsg('');
  try{{const a=document.getElementById('wyz-autor');if(!a.value)a.value=(localStorage.getItem('autor')||document.getElementById('autor').value||'');}}catch(e){{}}
  const f=d.fields||{{}};
- let chrome='<span class="wyz-ib-lab">Posteingang</span>'
-   +'<div class="wyz-ib wyz-ib-b" contenteditable="true" data-edit="'+base+'#betreff">'+esc(f.betreff||'')+'</div>'
-   +'<div class="wyz-ib wyz-ib-a" contenteditable="true" data-edit="'+base+'#preheader">'+esc(f.preheader||'')+'</div>';
- if('alt' in f) chrome+='<div class="wyz-ib-alt"><span class="lab">Nicht-Öffner:</span> <span contenteditable="true" data-edit="'+base+'#alt">'+esc(f.alt)+'</span></div>';
+ let chrome='<span class="wyz-ib-lab">Betreff</span>'
+   +'<input class="wyz-ib-b" data-edit="'+base+'#betreff" value="'+esc(f.betreff||'')+'">'
+   +'<span class="wyz-ib-lab">Anriss (Vorschauzeile)</span>'
+   +'<textarea class="wyz-ib-a" rows="2" data-edit="'+base+'#preheader">'+esc(f.preheader||'')+'</textarea>';
+ if('alt' in f) chrome+='<span class="wyz-ib-lab">Alt-Betreff (Nicht-Öffner)</span>'
+   +'<input class="wyz-ib-alt-in" data-edit="'+base+'#alt" value="'+esc(f.alt)+'">';
  const chromeEl=document.getElementById('wyz-chrome'); chromeEl.innerHTML=chrome;
  chromeEl.oninput=onCE; chromeEl.onkeydown=ceKeydown; applyPending(document);
  const src=document.querySelector('.mail iframe[title="Vorschau '+base+'"]');
