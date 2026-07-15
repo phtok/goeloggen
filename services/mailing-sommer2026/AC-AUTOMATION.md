@@ -18,12 +18,22 @@ festen URL (Tabelle unten). Orientiere dich am Stil der bestehenden
 GTV26-Automatisierungen (DE /builder/104, EN /builder/107) — je Sprache eine
 eigene Automatisierung. Ändere nichts an GTV26.
 
-**Zwei Aufträge in einem:**
-- **Gruppe Lesen (DE + EN):** die Automatisierungen bestehen bereits →
-  **aktualisieren**: die neuen Versanddaten (unten) eintragen, jede Mail frisch
-  aus ihrer URL neu einfügen (die Copy hat sich geändert), und die **neue vierte
-  Welle w3b (Samstag)** als Schritt anhängen (Conversion-Check davor, siehe unten).
-- **Gruppen Sehen und Beides (DE + EN):** **neu aufbauen** nach der Struktur unten.
+**Zwei Aufträge in einem — die Reihenfolge ist Absicht:**
+1. **Gruppe Lesen (DE + EN) aktualisieren:** die Automatisierungen bestehen
+   bereits → die neuen Versanddaten (unten) eintragen, jede Mail frisch aus
+   ihrer URL neu einfügen (die Copy hat sich geändert), und die **neue vierte
+   Welle w3b (Samstag)** als Schritt anhängen (Conversion-Check und Öffner-Gate
+   davor, siehe unten). Erst wenn Lesen DE und EN vollständig der Soll-Struktur
+   unten entsprechen, weiter zu Schritt 2 — sie sind die Kopiervorlage.
+2. **Gruppen Sehen und Beides (DE + EN) durch Duplizieren bauen:** die frisch
+   aktualisierten Lesen-Automatisierungen **duplizieren** (Lesen DE → Sehen DE
+   und Beides DE; Lesen EN → Sehen EN und Beides EN) und je Kopie die
+   **Duplikat-Checkliste** unten abarbeiten. Struktur, Trigger, Warte-Schritte
+   und Weichen sind in allen Gruppen identisch — nur Gruppen-Weiche, Ziel-Tag
+   und die fünf E-Mail-Schritte unterscheiden sich. Falls der Builder das
+   Duplizieren nicht sauber anbietet oder die Kopie mehr Nacharbeit kostet als
+   ein Neubau: nicht erzwingen — dann nach der Struktur unten neu aufbauen und
+   mir kurz melden, warum.
 
 Macht **sechs Automatisierungen** (drei Gruppen × zwei Sprachen).
 
@@ -48,8 +58,9 @@ Je Gruppe und Sprache eine eigene Automatisierung — **S26 · Lesen · DE/EN**,
 **S26 · Sehen · DE/EN**, **S26 · Beides · DE/EN** — wie bei GTV26 (getrennte
 DE/EN-Builder). Gründe: jede Gruppe hat ein eigenes Conversion-Ziel, das
 Reporting bleibt je Gruppe/Sprache lesbar, und Testversand/Go-Live lassen sich
-je Automatisierung einzeln freigeben. **Lesen DE/EN** existieren schon → nur
-aktualisieren; **Sehen/Beides DE/EN** neu bauen.
+je Automatisierung einzeln freigeben. **Lesen DE/EN** existieren schon → zuerst
+aktualisieren; **Sehen/Beides DE/EN** entstehen danach als angepasste Duplikate
+davon (Checkliste unten).
 
 ### Aufbau jeder Automatisierung
 
@@ -96,6 +107,33 @@ keine Nacht zwischen letztem Ruf (Fr abend) und Frist (Sa). Damit bekommt ein
 Nicht-Öffner höchstens **drei** Mails (w1, w2, w3-Alt), ein Öffner die volle
 Frist-Staffel inkl. w3b. Die frühere Klick-Bedingung/Hilfsautomatisierung
 **entfällt**.
+
+### Duplikat-Checkliste (je Kopie vollständig abarbeiten)
+
+Beim Duplizieren übernimmt AC **alle** Inhalte der Vorlage — jede Kopie trägt
+also zunächst noch Lesen-Inhalte. Je Duplikat sind genau diese Punkte zu
+ändern, alles andere bleibt stehen:
+
+1. **Name:** «S26 · Sehen · DE/EN» bzw. «S26 · Beides · DE/EN».
+2. **Gruppen-Weiche** (Schritt 4 oben): Tag-Bedingung der neuen Gruppe setzen —
+   Sehen: «hat WS-Tag UND NICHT GTV-Tag» · Beides: «WEDER GTV- noch WS-Tag».
+3. **Alle fünf E-Mail-Schritte** (w1, w2, w3 Standard, w3 Alt, w3b): HTML
+   frisch aus der Gruppen-URL (Tabelle unten) einfügen, Betreff aus der
+   Tabelle setzen, den E-Mail-Schritt nach Gruppe und Welle umbenennen
+   (z. B. «S26 Sehen w1 DE»). Nichts von der Lesen-Vorlage stehen lassen.
+4. **Conversion-Checks** (vor w2, w3, w3b): auf das Ziel-Tag der neuen Gruppe
+   umstellen — Sehen: GTV-Abo-Tag · Beides: eines der beiden Abo-Tags
+   («match any»).
+5. **Conversion-Ziel (Goal)** am Ende: gleiches Ziel-Tag wie in Punkt 4.
+6. **Kontrolle gegen Kopier-Restbestand:** einmal alle Schritte der Kopie
+   durchgehen — nirgends darf mehr ein Lesen-Betreff, eine `mail_lesen_…`-URL
+   oder (bei Sehen) ein WS-Ziel-Tag stehen. Duplikate bleiben **inaktiv**, bis
+   alle sechs fertig gebaut und getestet sind.
+
+Unverändert aus der Vorlage übernehmen (genau das spart die Zeit):
+Start-Trigger «S26-Start», Hygiene-Filter, Sprach-Weiche, die vier
+Warte-Schritte mit ihren Zeiten, Öffner-Split vor w3, Öffner-Gate vor w3b,
+Absender/Reply-To.
 
 ## Die Mails (HTML per URL abholen)
 
