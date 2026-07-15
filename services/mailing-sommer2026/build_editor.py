@@ -55,8 +55,11 @@ def xml(s):
 
 
 def kleinzeile(s):
-    """Definierter Umbruch statt Zufallsfluss: jede Aussage eine Zeile, der Mittepunkt
-    schliesst die Zeile (geschütztes Spatium davor, damit er nie allein rutscht)."""
+    """Definierter Umbruch statt Zufallsfluss. Enthält die Quelle Zeilenumbrüche (\\n),
+    wird GENAU dort gebrochen (manueller Umbruch); der Mittepunkt bleibt dann in der Zeile,
+    mit geschütztem Spatium davor. Sonst: je Aussage eine Zeile (Umbruch am ·)."""
+    if "\n" in s:
+        return "<br />".join(xml(z.strip()).replace(" ·", "&#160;·") for z in s.split("\n") if z.strip())
     return "&#160;·<br />".join(xml(t.strip()) for t in s.split("·"))
 
 
@@ -146,6 +149,7 @@ def ps_block(seg, welle, lang):
     wort = p["link_wort"]
     txt = xml(p["text"]).replace(
         xml(wort), f'<a href="{xml(url)}" style="color:{AKZENT};text-decoration:underline">{xml(wort)}</a>', 1)
+    txt = txt.replace("\n", "<br />")  # manueller Umbruch aus der Quelle (\n) übernehmen
     return (f'<mj-text font-size="13px" line-height="20px" color="{MUTED}" '
             f'padding="0 0 26px 0">{txt}</mj-text>')
 

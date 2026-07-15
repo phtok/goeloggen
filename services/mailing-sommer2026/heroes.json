@@ -82,6 +82,16 @@
             0.45
           ],
           "alt": "goetheanum.tv in der Hängematte am See"
+        },
+        {
+          "id": "feuer",
+          "bild": "assets/motive/gtv-feuer.jpg",
+          "stil": "voll",
+          "center": [
+            0.5,
+            0.5
+          ],
+          "alt": "goetheanum.tv am Abendfeuer"
         }
       ],
       "de": {
@@ -168,8 +178,8 @@
       "en": "Three months free, then the subscription continues at the regular price · cancel anytime with one click in your account · offer ends 8 August 2026."
     },
     "beides": {
-      "de": "Beide Angebote kombinierbar · drei Monate kostenlos, danach läuft das Abo regulär weiter, jederzeit kündbar · nur bis 8. August 2026.",
-      "en": "Both offers can be combined · three months free, then the subscription continues at the regular price, cancel anytime · only until 8 August 2026."
+      "de": "Beide Angebote kombinierbar · drei Monate kostenlos,\ndanach läuft das Abo regulär weiter, jederzeit kündbar ·\nnur bis 8. August 2026.",
+      "en": "Both offers can be combined · three months free,\nthen the subscription continues at the regular price, cancel anytime ·\nonly until 8 August 2026."
     }
   },
   "proof": {
@@ -187,11 +197,11 @@
       "w2"
     ],
     "de": {
-      "text": "PS: Kennen Sie jemanden, dem dieser Sommer gefiele? Geben Sie die Einladung gern weiter.",
+      "text": "PS: Kennen Sie jemanden, dem dieser Sommer gefiele?\nGeben Sie die Einladung gern weiter.",
       "link_wort": "Einladung"
     },
     "en": {
-      "text": "PS: Know someone this summer would suit? Do pass the invitation on.",
+      "text": "PS: Know someone this summer would suit?\nDo pass the invitation on.",
       "link_wort": "invitation"
     }
   },
@@ -205,19 +215,19 @@
       "w1": "lesen/garten",
       "w2": "lesen/abendlicht",
       "w3": "lesen/see",
-      "w3b": "lesen/see"
+      "w3b": "lesen/abendlicht"
     },
     "nurws": {
       "w1": "sehen/pergola",
       "w2": "sehen/terrasse",
       "w3": "sehen/haengematte",
-      "w3b": "sehen/haengematte"
+      "w3b": "sehen/feuer"
     },
     "noabo": {
       "w1": "beides/abendlicht",
       "w2": "beides/vor-dem-bau",
       "w3": "beides/picknick",
-      "w3b": "beides/picknick"
+      "w3b": "beides/abendlicht"
     }
   },
   "wellen": {
