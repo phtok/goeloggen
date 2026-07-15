@@ -77,18 +77,25 @@ aktualisieren; **Sehen/Beides DE/EN** neu bauen.
        Alt-Betreff).
      - **Predictive AUS** (fixer Freitagabend-Versand — der Rahmen «morgen läuft
        es aus» darf nicht in den Frist-Tag verrutschen).
-   - **Warten bis Sa 08.08.2026, 10.00 Uhr** → Conversion-Check → Mail **w3b**
-     an **alle noch nicht Konvertierten** (Standard-Betreff, Rahmen «heute läuft
-     es aus»). **Predictive AUS.**
+   - **Warten bis Sa 08.08.2026, 10.00 Uhr** → Conversion-Check → **Öffner-Gate**:
+     «hat w1 ODER w2 ODER w3 dieser Kampagne geöffnet?» **Ja** → Mail **w3b**
+     (Standard-Betreff, Rahmen «heute läuft es aus»); **Nein** → Ende. Die
+     Samstag-Mail geht also **nur an Kontakte, die diese Kampagne schon geöffnet
+     haben** — kein vierter Anlauf bei Desinteressierten. **Predictive AUS.**
+     *(Bauweg wie beim Öffner-Split vor w3: «match any» über die drei
+     «hat geöffnet»-Bedingungen, bzw. verschachtelte If/Else als Plan B.)*
 6. **Conversion-Ziel** (Goal am Ende, «Ende der Automatisierung», damit
    Konvertierte sofort aussteigen und AC zählt):
    - Lesen: WS-Abo-Tag gesetzt · Sehen: GTV-Abo-Tag gesetzt · Beides: eines der
      beiden Abo-Tags (Bedingungsgruppe «match any» über die zwei Tag-Bedingungen).
 
-**Neu gegenüber der alten Struktur:** w3b (Samstag) geht jetzt an **alle** noch
-nicht Konvertierten **jeder** Gruppe — nicht mehr nur an NoAbo-Klicker. GF-Prinzip:
-keine Nacht zwischen letztem Ruf (Fr abend) und Frist (Sa). Die frühere
-Klick-Bedingung/Hilfsautomatisierung für w3b **entfällt** damit.
+**Neu gegenüber der alten Struktur:** w3b (Samstag) gibt es jetzt in **jeder**
+Gruppe (nicht mehr nur NoAbo), geht aber **nur an Öffner** dieser Kampagne
+(w1/w2/w3) — die letzte Mail landet nicht bei Desinteressierten. GF-Prinzip:
+keine Nacht zwischen letztem Ruf (Fr abend) und Frist (Sa). Damit bekommt ein
+Nicht-Öffner höchstens **drei** Mails (w1, w2, w3-Alt), ein Öffner die volle
+Frist-Staffel inkl. w3b. Die frühere Klick-Bedingung/Hilfsautomatisierung
+**entfällt**.
 
 ## Die Mails (HTML per URL abholen)
 
@@ -175,9 +182,10 @@ Macht **30 E-Mail-Schritte** insgesamt: 24 Mails, wobei die 6 w3-Mails je zweima
    Übersichts-Landingpage muss live sein — vorher wäre die NoAbo-Attribution
    blind.
 4. Zum Insight «12,5 % Abmelderate bei GTV26 Mail 3»: w3 und w3b sind Frist-
-   Mails. Die Entschärfung sitzt im Text (kein Drohton, aufs Datum geankert)
-   und im Öffner-Split vor w3 (Nicht-Öffner bekommen nur einen anderen Betreff)
-   — bitte keine zusätzliche Dringlichkeit hineintexten, nichts am Inhalt ändern.
+   Mails. Die Entschärfung sitzt im Text (kein Drohton, aufs Datum geankert),
+   im Öffner-Split vor w3 (Nicht-Öffner nur anderer Betreff) und im **Öffner-Gate
+   vor w3b** (die vierte Mail nur an Kampagnen-Öffner) — bitte keine zusätzliche
+   Dringlichkeit hineintexten, nichts am Inhalt ändern.
 5. Falls etwas nicht wie beschrieben machbar ist, nicht improvisieren — kurz
    melden, was der Builder anbietet, dann entscheiden wir. Für die
    Verifikationspunkte (Öffner-ODER vor w3, «match any»-Goal bei Beides) stehen
