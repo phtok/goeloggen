@@ -11,6 +11,10 @@ echte Sommer-Lifestyle-Motive. **Schrift-Beschluss 11.7. (Vorschlag 1):** Headli
 System-Stack; Fazeta bleibt der WS-Landingpage vorbehalten. Die Mail ist **Artefakt** (Kampagnen-DNA),
 das Editor-Chrome läuft auf dem Haus-Design-System.
 
+## Redaktion (erweiterter Tisch)
+Rollen, Spielregeln und Aufruf («Redaktion auf X schauen lassen») stehen in
+**REDAKTION.md** — parallele Rollen-Agenten, Ergebnisse werden vorgelegt.
+
 ## Drehbuch für die nächste Kampagne
 Die übertragbaren Lehren (Reihenfolge, Messkette, Fünfer-Tisch, AC-Muster, eingefrorenes
 Detailwissen) stehen in **docs/kampagnen-drehbuch.md** — dort beginnt die nächste Kampagne.
@@ -38,7 +42,9 @@ HTML-Text in der Mail-Grundschrift — beide so beschlossen im Gegenlesen (Komme
 - **lesen** → Segment `nurtv` (Cross-sell WS): w1 garten · w2 abendlicht · w3 see
 - **sehen** → Segment `nurws` (Cross-sell TV): w1 pergola · w2 licht · w3 feuer
 - **beides** → Segment `noabo` (kein Abo): w1 abendlicht · w2 vor-dem-bau · w3 picknick · w3b picknick
-- **w3b jetzt für ALLE Gruppen** (Samstag-Frist-Mail, Entscheid 14.7.): lesen/sehen erhielten w3b (Bild = w3). Termine: w1 16.7., w2 30.7., w3 Fr 7.8. 18 Uhr («morgen»), w3b Sa 8.8. 10 Uhr («heute»). w3 = Öffner-Split (Alt-Betreff), w3b = an alle Nicht-Konvertierten.
+- **Finaler Takt (Entscheide 14./15.7.):** w1 Do 16.7. 9.30 · w2 Do 30.7. 9.30 · w3 Fr 7.8. **18 Uhr** (Rahmen «morgen», Öffner-Split: Nicht-Öffner nur Alt-Betreff, Predictive AUS) · **w3b Sa 8.8. 10 Uhr** (Frist-Tag, Rahmen «heute», **nur an Öffner von w1/w2/w3** — Nicht-Öffner bekommen max. 3 Mails; Predictive AUS). Frist = Sa 8.8. **Mitternacht** (bestätigt). w3b gibt es in ALLEN Gruppen; 24 Mails, 6 Automatisierungen (Gruppe×Sprache).
+- **Bilder w3b/W2 (15.7.):** beides wechselt Wos/TV/Wos/TV (W2 tv-haengematte, W4 tv-terrasse); sehen W4 = pergola. `gtv-feuer/licht.jpg` sind Mini-Auflösung (680px) — NICHT als Hero verwenden. Kein Motiv zeigt Heft+TV zusammen (müsste neu entstehen).
+- **Register:** w3b_nurtv/w3b_nurws (de+en) sind im Live-Register; `python3 links.py --sql` erzeugt idempotentes Register-SQL für künftige Wellen.
 Auswahl (bestätigt): lesen=garten · sehen=pergola · beides=abendlicht. Motive in `assets/motive/` (8 JPGs).
 Betreff-Alternativen (`wellen.*.alt`) = Munition für AC-Split (Nicht-Öffner).
 
