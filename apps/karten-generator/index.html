@@ -328,6 +328,15 @@
 
       <fieldset>
         <legend>Kartenfarben</legend>
+        <div class="backend-only">
+          <div class="seg" id="basiskarte-row">
+            <button type="button" data-basiskarte="vektor" aria-pressed="true">Vektor</button>
+            <button type="button" data-basiskarte="aquarell" aria-pressed="false">Aquarell</button>
+            <button type="button" data-basiskarte="wiesen" aria-pressed="false">Wiesen</button>
+          </div>
+          <div class="hint" id="basiskarte-hinweis">Vektorkarte mit der Hauspalette.
+            «Aquarell» oder «Wiesen» blenden das gemalte Blatt ein.</div>
+        </div>
         <div class="hint">Standard ist die gedeckte Hauspalette; jede Rolle
           lässt sich einzeln anpassen.</div>
         <label class="checkbox-row">
