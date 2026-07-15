@@ -124,12 +124,19 @@ Aufgenommenes gilt ab dann überall. Der **Beschluss-Ledger**
 (`design-system/CHANGELOG.md`) ist das Gedächtnis; der Score (`ds-lint --score`)
 macht „wie weit weg" zu einer Zahl statt eines Gefühls.
 
-## Schnitt-System (Stand v2.7)
-- Installierbare statische Schnitte: **Leise (265) · Ruhig (350) · Klar (440) ·
+## Schnitt-System (Stand v2.7, Paketstruktur Trio)
+- Statische Schnitte: **Leise (265) · Ruhig (350) · Klar (440) ·
   Deutlich (580) · Laut (680)**. Ruhig = ruhiger Lese-/Buchschnitt (füllt den
   Sprung Leise→Klar); Deutlich = Titel; Laut = Inline-/Office-Fettung (⌘B).
+- **Installiert wird nur das Office-TTF-Set.** Es trägt die Familienstruktur:
+  ‹Goetheanum Schrift› = Klar (Regular) + Laut (Fett, ⌘B) + Leise (Kursiv, ⌘I);
+  Ruhig, Deutlich, Icons, Pfeile als eigene Familien. Die Desktop-OTF der
+  Schnitte sind reine **Build-Quellen** (`assets/fonts/goetheanum/Fonts/`) und
+  werden nicht mehr ausgeliefert — gleiche Namen wie die Office-Familie,
+  parallel installiert kollidieren sie (macOS deaktiviert Doppelgänger,
+  PowerPoint verformt synthetisch).
 - Variable: 7 Named Instances **Flüstern 190 · Leise · Ruhig · Klar · Deutlich ·
-  Laut · Schreien 725**.
+  Laut · Schreien 725** — Web und Design, stufenlos.
 Bei Änderungen an der Schnittzahl **alle** Beschreibungen mitziehen
 (schriften.html, schrift-webfont.html, README, tools.json, Beipackzettel).
 

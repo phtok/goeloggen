@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 # Packt das Download-ZIP Goetheanum-Schriften-v2.7.zip reproduzierbar aus dem
-# aktuellen Stand auf der Platte (OTFs, Variable, Webfonts, Fallback, Beipack-
-# zettel, Lizenzen). Deterministisch (fester Zeitstempel, sortiert), damit das
-# Binär-Diff minimal bleibt. Nach Font- oder Beipackzettel-Änderungen ausführen.
+# aktuellen Stand auf der Platte (Office-TTF, Variable, Webfonts, Icons/Pfeile,
+# Fallback, Beipackzettel, Lizenzen). Deterministisch (fester Zeitstempel,
+# sortiert), damit das Binär-Diff minimal bleibt. Nach Font- oder Beipack-
+# zettel-Änderungen ausführen.
+# Die statischen Schnitt-OTF (Fonts/Goetheanum-Schrift-*.otf) sind seit dem
+# Trio-Umbau reine BUILD-QUELLEN und werden nicht mehr ausgeliefert — sonst
+# kollidieren sie mit der gleichnamigen Office-Familie.
 import os, glob, zipfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
@@ -15,7 +19,8 @@ def members():
     out = []
     out += [os.path.join(ROOT, "Beipackzettel-Goetheanum-Schriften.pdf")]
     out += g("Fallback", "*")
-    out += g("Fonts", "*.otf")
+    out += g("Fonts", "Goetheanum-Icons-*.otf")
+    out += g("Fonts", "Goetheanum-Pfeile-*.otf")
     out += g("Office", "*.ttf")
     out += [os.path.join(ROOT, "OFL.txt"), os.path.join(ROOT, "README.md")]
     out += g("Variable", "*.otf")
