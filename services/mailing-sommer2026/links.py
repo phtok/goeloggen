@@ -96,17 +96,26 @@ def all_rows():
 
 
 def to_insert_sql() -> str:
-    """SQL, das den Registerstand rekonstruiert (idempotent-Guard beachten!)."""
+    """Idempotentes Register-SQL: fügt nur Zeilen ein, die es (utm_content, sprache)
+    noch nicht gibt. So bleibt ‹Registrierung im Generator› gefahrlos wiederholbar —
+    einfach `python3 links.py --sql` in Supabase ausführen, wenn eine Welle dazukommt."""
     cols = "utm_source, utm_medium, utm_campaign, utm_content, landing, sprache, url, rolle, ersteller"
     vals = []
     for r in all_rows():
         vals.append("('{utm_source}','{utm_medium}','{utm_campaign}','{utm_content}',"
                     "'{landing}','{sprache}','{url}','{rolle}','{ersteller}')".format(**r))
-    return f"insert into public.sommer2026_links ({cols})\nvalues\n  " + ",\n  ".join(vals) + ";"
+    return (f"insert into public.sommer2026_links ({cols})\n"
+            f"select * from (values\n  " + ",\n  ".join(vals) + f"\n) as v({cols})\n"
+            "where not exists (select 1 from public.sommer2026_links l\n"
+            "                  where l.utm_content = v.utm_content and l.sprache = v.sprache);")
 
 
 if __name__ == "__main__":
-    rows = all_rows()
-    print(f"{len(rows)} Links abgeleitet:\n")
-    for r in rows:
-        print(f"  {r['sprache']}  {r['utm_content']:<16} -> {r['url']}")
+    import sys
+    if "--sql" in sys.argv:
+        print(to_insert_sql())
+    else:
+        rows = all_rows()
+        print(f"{len(rows)} Links abgeleitet:\n")
+        for r in rows:
+            print(f"  {r['sprache']}  {r['utm_content']:<16} -> {r['url']}")
