@@ -123,5 +123,48 @@
 </footer>
 
 <script src="campaign.js"></script>
+
+<!-- Titel-Atem (Erprobung aus ‹Bewegte Schrift›): der Titel atmet auf der
+     Gewichtsachse der Hausschrift – animierte Betonung mit Laut/Leise (G05),
+     nur in der Zeit. Hausschrift: font-family:var(--font-display); die Achse
+     ist wght (190–725), font-weight (numerisch) steuert wght direkt – kein
+     font-variation-settings nötig. Bewegung immer gegen prefers-reduced-motion
+     absichern (WCAG 2.3.3): dann ruht der Titel im gesetzten Gewicht. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(() => {
+  "use strict";
+  const el = document.querySelector(".lead-title");
+  if (!el || !window.gsap) return;             // ohne Motor (CDN blockiert) steht der Titel ruhig
+
+  // Wort in Zeichen zerlegen – Vorlesbarkeit sichert das aria-label am Titel.
+  const text = el.textContent.trim();
+  el.setAttribute("aria-label", text);
+  el.textContent = "";
+  [...text].forEach(ch => {
+    const s = document.createElement("span");
+    s.className = "ltr"; s.textContent = ch; s.setAttribute("aria-hidden", "true");
+    el.appendChild(s);
+  });
+  const L = [...el.querySelectorAll(".ltr")];   // Wort in Zeichen zerlegt
+
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  let tween = null;
+  const apply = () => {
+    if (tween){ tween.kill(); tween = null; }
+    if (reduce.matches){ gsap.set(L, { clearProps: "fontWeight" }); return; } // Satzgewicht (Deutlich) ruht
+    gsap.set(L, { fontWeight: 344 });
+    tween = gsap.to(L, {
+      fontWeight: 527,
+      duration: 0.6,
+      ease: "sine.inOut",
+      yoyo: true, repeat: -1,
+      stagger: { each: 0.04, from: "center" }
+    });
+  };
+  reduce.addEventListener?.("change", apply);
+  apply();
+})();
+</script>
 </body>
 </html>
