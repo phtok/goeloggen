@@ -215,15 +215,15 @@ def main() -> int:
         if not gefunden:
             print(f"Warnung: Wiesenpfad {wiesen_id} nicht gefunden", file=sys.stderr)
 
-    # ‹Wiese gross› bis an die Wege ziehen (Entscheid Auftraggeber, 16. Juli
-    # 2026): das .ai-Quellpolygon folgt den Weg-Lücken nicht (gerader
-    # impliziter Schluss zur Nordost-Strasse, Südkante 5–14 Einheiten vor der
-    # Weg-Innenkante). Die Kontur hier ist VEKTORGENAU aus der Karte selbst
-    # berechnet: Boden-Maske (k-campus + k-wiese) geflutet, Aussenkontur der
-    # umschlossenen Insel verfolgt, vereinfacht (ε≈0.25 E) und 0.2 E nach
-    # innen versetzt; Trennung zur kleinen Wiese in der verlängerten
-    # Hauptweg-Achse (x≈341.5). Werkzeug: Session-Notiz 16.7.2026.
-    WIESE_GROSS_D = (
+    # Beide Wiesen bis an die Wege ziehen (Entscheid Auftraggeber, 16. Juli
+    # 2026): die .ai-Quellpolygone folgen den Weg-Lücken nicht. Die Konturen
+    # sind VEKTORGENAU aus der Karte selbst berechnet: Boden-Maske
+    # (k-campus + k-wiese) geflutet, Aussenkontur der umschlossenen Insel
+    # verfolgt, vereinfacht (ε≈0.25 E) und 0.2 E nach innen versetzt;
+    # Trennung der Wiesen in der verlängerten Hauptweg-Achse (x≈341.5).
+    # Werkzeug: Session-Notiz 16.7.2026.
+    WIESEN_KONTUREN = {
+        "gross": (
         "M-9.46-29.8-12.57-32.91-16.28-35.39-20.61-36.87-24.7-37.37-29.41-37.37-7"
         "9.15-28.24-102.63-21.62-111.42-18.3-111.51-12.53-107.59-11.37-105.77-9.4"
         "2-104.62-6.6-104.74-3.27-105.77-0.96-106.87 0.16-105.95-0.21-103.33-3.71"
@@ -239,19 +239,27 @@ def main() -> int:
         "5.14 100.48-7.14 88.2-7.51 72.18-6.76 65.63-3.98 58.95 14.78 33.94 25.63"
         " 20.47 25.77 11.42 19.92 11.63 14.51 10.88 8.46 8.74 3.3 4.7-0.24 0.29-2"
         ".76-5.26-6.38-21.77-7.75-25.99-9.5-29.73Z"
-    )
-    wiese_gross_neu = [0]
+    ),
+        "klein": (
+        "M-0.11-64.2-0.66-64.76-1.54-64.76-4.75-63.77-28.22-52.29-31.27-44.39-33."
+        "64-36.28-35.14-27.68-35.64-19.57-35.51-13.59-35.02-10.5-33.9-6.77-32.29-"
+        "3.3-30.06 0.05-25.7 4.65-19.73 9.13-16.62 10.35-12.91 7.74-8.8 7.25-0.83"
+        " 1.89-0.28 0.55 0.47-53.83 0.47-62.56-0.15-64.13Z"
+    ),
+    }
+    for kurz, kontur_d in WIESEN_KONTUREN.items():
+        ersetzt = [0]
 
-    def wiese_gross_ersetzen(match: re.Match) -> str:
-        wiese_gross_neu[0] += 1
-        return match.group(1) + WIESE_GROSS_D + match.group(2)
+        def kontur_ersetzen(match: re.Match, _d=kontur_d, _z=ersetzt) -> str:
+            _z[0] += 1
+            return match.group(1) + _d + match.group(2)
 
-    svg = re.sub(
-        r'(<g data-wiese-halter="gross"><path[^>]*? d=")[^"]*("[^>]*?/>)',
-        wiese_gross_ersetzen, svg, count=1)
-    if wiese_gross_neu[0] != 1:
-        print("Warnung: Wiese-gross-Kontur nicht ersetzt", file=sys.stderr)
-    print("Wiese gross an die Wege gezogen (vektorgenaue Kontur)")
+        svg = re.sub(
+            r'(<g data-wiese-halter="' + kurz + r'"><path[^>]*? d=")[^"]*("[^>]*?/>)',
+            kontur_ersetzen, svg, count=1)
+        if ersetzt[0] != 1:
+            print(f"Warnung: Wiesen-Kontur {kurz} nicht ersetzt", file=sys.stderr)
+    print("Wiesen an die Wege gezogen (vektorgenaue Konturen)")
 
     # Dunkle Gebäudeflächen sind flach gemeint — weisse Quell-Striche
     # (Wege-Strichrolle) an ihnen zeichnen Konturen: Strich entfernen.
