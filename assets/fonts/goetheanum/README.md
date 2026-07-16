@@ -87,8 +87,19 @@ Der jeweils aktuelle Stand steht als **`Neu in …`** oben; im Beipackzettel (PD
 sind Zeichensatz und Funktionen der aktuellen Fassung abgebildet.
 
 ## Dateien
-- `Fonts/` — OTF (Desktop): Leise, Ruhig, Klar, Deutlich, Laut, Icons
-- Office-Verknüpfung: Klar=Regular, Laut=Fett (⌘B), Leise=Kursiv (⌘I) – eine Familie „Goetheanum Schrift"
-- `Variable/` — variable OTF (CFF2)
+- `Office/` — TTF zum Installieren (Word, PowerPoint, Outlook). Trägt die
+  Familienstruktur: Klar=Regular, Laut=Fett (⌘B), Leise=Kursiv (⌘I) – eine
+  Familie „Goetheanum Schrift"; dazu Ruhig, Deutlich, Icons und Pfeile als
+  eigene Familien.
+- `Fonts/` — OTF-**Build-Quellen** der Schnitte (nicht installieren, nicht
+  ausliefern: gleiche Namen wie die Office-Familie → Konflikt). Nur Icons-
+  und Pfeile-OTF werden weiterhin angeboten.
+- `Variable/` — variable OTF (CFF2), Web und Design: die ganze Gewichtsachse
 - `Webfonts/woff` und `Webfonts/woff2` — Web
 - `OFL.txt` — Lizenz · `Beipackzettel-…pdf` — Original-Beipackzettel
+
+**Vor jeder Neuinstallation:** ältere Goetheanum-Schriften entfernen — auch
+die früher verteilten Desktop-OTF ([Anleitung von
+Apple](https://support.apple.com/de-de/guide/font-book/fntb2bcb512d/mac);
+Windows: Einstellungen → Personalisierung → Schriftarten). Alt und Neu
+nebeneinander geraten in Namens-Konflikt.
