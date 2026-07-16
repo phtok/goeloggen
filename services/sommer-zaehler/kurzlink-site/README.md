@@ -24,8 +24,10 @@ Nicht hier im Repo, sondern im **UTM-Generator** (nur intern gelistet):
 eintragen, Kurznamen wählen, ins Register schreiben. Der Kurzname wird zum
 Pfad `/s/<kurzname>`.
 
-**Slug-Stil:** kurz, klein, ein zweisilbiger Tiername mit Bild (`otter`,
-`biber`, `reiher` …). Menschlich abtippbar aus Bio, Caption oder Papier.
+**Slug-Stil:** kurz, klein, ein zwei- bis dreisilbiger Tiername mit Bild
+(`otter`, `biber`, `pelikan` …) — Deutsch oder Englisch je nach Sprache der
+Landingpage (`heron`, `falcon` …). Menschlich abtippbar aus Bio, Caption
+oder Papier.
 
 ## Wie die Weiterleitung läuft
 
