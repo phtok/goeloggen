@@ -10,6 +10,8 @@
   .lead{padding:clamp(28px,6vw,52px) 0 var(--s6)}
   .lead .status{margin-left:8px}
   .lead-title{font-family:var(--font-display);font-weight:var(--w-deutlich);color:var(--gold-ink);font-size:clamp(32px,7vw,58px);line-height:1.02;letter-spacing:-.01em;margin:8px 0 0;max-width:18ch}
+  /* Titel-Atem (Aktivitäten): Zeichen einzeln ansprechbar, nur das Gewicht bewegt sich. */
+  .lead-title .ltr{display:inline-block;will-change:font-weight}
   .heroline{display:flex;flex-wrap:wrap;align-items:flex-end;gap:clamp(16px,5vw,48px);margin-top:var(--s8)}
   .figure{display:flex;flex-direction:column}
   .figure .big{font-family:var(--font-display);font-weight:var(--w-strong);
