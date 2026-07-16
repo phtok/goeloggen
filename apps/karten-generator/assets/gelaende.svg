@@ -2093,4 +2093,8 @@
 </g>
 <g>
 </g>
+<g id="ergaenzungen-2026-07"><!-- kuratierte Ergänzungen (Quelle: Aquarell-Blatt, Entscheid 16. Juli 2026; gepflegt in tools/karten/build-gelaende-svg.py) -->
+<path id="campusbau-54" d="M469.9 151.63 468.26 152.58 468.26 154.48 469.9 155.43 471.55 154.48 471.55 152.58Z" class="k-gebaeude-campus"/>
+<path id="campusbau-55" d="M379.1 203.4 392.1 202 383.89 211.5 382.11 211.7Z" class="k-gebaeude-campus"/>
+</g>
 </svg>

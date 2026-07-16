@@ -100,6 +100,7 @@ const state = {
   titelLogo: null,     // { markup, verhaeltnis, breite } — Sonderlogo statt Titel
   preset: "gedeckt",   // Standard; Anpassung je Rolle bleibt möglich
   farben: { ...PRESETS["gedeckt"] },
+  basiskarte: "vektor", // Grundkarte: ‹vektor› | ‹aquarell› | ‹wiesen› (Backend «Karte»)
   platzieren: null,    // { label, farbe } während der Platzierung (neue Marke)
   platzierenOrt: null, // Ort-id, deren Marke gerade verschoben wird
   platzierenLogo: false, // Logo wird gerade neu platziert
@@ -114,6 +115,21 @@ let logoInhalt = null;       // Campus-Wortmarke aus dem Logogenerator (reine Pf
 let kompassInhalt = null;    // Kompassrose aus den Icons v2.7 (kompass-2)
 const ikonen = {};           // weitere Icons v2.7 (treppe, fahrstuhl, pfeil)
 
+// Aquarell-Basiskarte (optionale Grundkarte, Backend «Karte»): das gemalte
+// Blatt liegt auf denselben Vektor-Massen, nur um ~0.7° gedreht. Die Matrix
+// bildet Bild-Pixel → Gelände-Koordinaten ab (Ähnlichkeit; vom Auftraggeber
+// im Karten-Justierer eingemessen und per Kontur-Diagnose an sieben Bauten
+// feinjustiert, 16. Juli 2026 — Deckung der Bauten ≤ ~1 mm auf dem Blatt).
+// Das gemalte Blatt ist ein Artefakt (feste Farben, wie die gedruckte
+// Karte), keine Theme-Fläche — es wird nicht umgefärbt.
+const AQUARELL = {
+  datei: "assets/aquarell-basis.jpg",
+  breite: 1072,
+  hoehe: 1467,
+  matrix: [0.393188, -0.004713, 0.004713, 0.393188, 124.629726, 36.783654]
+};
+let aquarellDataUri = null;  // data:image/jpeg;base64,… (einmal beim Start geladen)
+
 async function ladeGelaende() {
   const antwort = await fetch("assets/gelaende.svg");
   const text = await antwort.text();
@@ -125,6 +141,25 @@ async function ladeGelaende() {
     .replace(/^[\s\S]*?<svg[^>]*>/, "")
     .replace(/<\/svg>\s*$/, "")
     .replace(/<style>[\s\S]*?<\/style>/, "");
+}
+
+// Aquarell-Blatt einmal als Data-URI laden — so trägt dieselbe Szene das Bild
+// in Vorschau, SVG- und PDF-Export (svg2pdf braucht das Raster eingebettet).
+// Fehlt die Datei, bleibt es bei der Vektorkarte (aquarellDataUri = null).
+async function ladeAquarell() {
+  try {
+    const antwort = await fetch(AQUARELL.datei);
+    if (!antwort.ok) throw new Error(String(antwort.status));
+    const blob = await antwort.blob();
+    aquarellDataUri = await new Promise((loesen, ablehnen) => {
+      const leser = new FileReader();
+      leser.onload = () => loesen(leser.result);
+      leser.onerror = () => ablehnen(leser.error);
+      leser.readAsDataURL(blob);
+    });
+  } catch (fehler) {
+    console.warn("Aquarell-Basiskarte nicht ladbar, nur Vektorkarte:", fehler);
+  }
 }
 
 // Das Logo kommt aus dem Logogenerator (LogoEngine) — dieselben Pfaddaten
@@ -293,6 +328,47 @@ function gelaendeMarkup() {
     return `stroke="${state.farben[rolle] || "#cccccc"}"`;
   });
   return inhalt;
+}
+
+// Grundkarte je Modus (Backend «Karte»); sitzt in der Gelände-Gruppe, also im
+// Gelände-Koordinatensystem (Bild → Gelände über KARTE-nahe Matrix AQUARELL):
+//   ‹vektor›   die umgefärbte Vektorkarte (Standard);
+//   ‹aquarell› das gemalte Blatt an ihrer Stelle;
+//   ‹wiesen›   Vektorkarte, darüber das Blatt nur in den gewählten Wiesen.
+// Ohne geladenes Blatt fällt alles auf ‹vektor› zurück.
+function grundkarteModus() {
+  return aquarellDataUri ? state.basiskarte : "vektor";
+}
+
+function grundkarteMarkup() {
+  const modus = grundkarteModus();
+  if (modus === "aquarell") return aquarellBildMarkup(false);
+  if (modus === "wiesen") return gelaendeMarkup() + aquarellBildMarkup(true);
+  return gelaendeMarkup();
+}
+
+function aquarellBildMarkup(nurWiesen) {
+  if (!aquarellDataUri) return "";
+  const A = AQUARELL;
+  const bild = `<image href="${aquarellDataUri}" x="0" y="0"`
+    + ` width="${A.breite}" height="${A.hoehe}"`
+    + ` transform="matrix(${A.matrix.join(" ")})" preserveAspectRatio="none" />`;
+  return nurWiesen ? `<g clip-path="url(#aquarell-wiesen-clip)">${bild}</g>` : bild;
+}
+
+// Clip für den Wiesen-Modus: die gewählten Wiesenpolygone aus der Rohkarte
+// (jeder Pfad trägt seinen eigenen Transform in Gelände-Koordinaten — dasselbe
+// System wie das Aquarell-Bild). Ohne Auswahl bleibt der Clip leer.
+function aquarellWiesenClipMarkup() {
+  if (!gelaendeInhalt) return "";
+  const teile = [];
+  ["klein", "gross"].forEach((name) => {
+    if (!state.wiesen[name]) return;
+    const treffer = gelaendeInhalt.match(new RegExp(`<path[^>]*\\bid="wiese-${name}"[^>]*>`));
+    if (treffer) teile.push(treffer[0]);
+  });
+  if (!teile.length) return "";
+  return `<clipPath id="aquarell-wiesen-clip" clipPathUnits="userSpaceOnUse">${teile.join("")}</clipPath>`;
 }
 
 // Beschnitt der Wiesenpolygone (Gelände-Koordinaten aus Blatt-mm gerechnet).
@@ -881,11 +957,12 @@ function szeneMarkup(anschnitt) {
         <rect x="${-b}" y="${-b}" width="${SZENE.breite + 2 * b}" height="${SZENE.hoehe + 2 * b}" />
       </clipPath>
       ${wieseClipMarkup()}
+      ${grundkarteModus() === "wiesen" ? aquarellWiesenClipMarkup() : ""}
     </defs>
     <rect x="${-b}" y="${-b}" width="${SZENE.breite + 2 * b}" height="${SZENE.hoehe + 2 * b}" fill="#ffffff" />
     <g clip-path="url(#blatt-clip)">
       <g transform="translate(${a.dx} ${a.dy}) scale(${a.skala})">
-        <g id="gelaende" transform="translate(${g.x} ${g.y}) scale(${skala})">${gelaendeMarkup()}</g>
+        <g id="gelaende" transform="translate(${g.x} ${g.y}) scale(${skala})">${grundkarteMarkup()}</g>
         ${gebaeudeLabelMarkup()}
         ${kompassMarkup()}
       </g>
@@ -1388,6 +1465,22 @@ function renderOptionen() {
   document.getElementById("opt-wiese-gross").checked = state.wiesen.gross;
   document.getElementById("opt-kompakt").checked = state.kompakt;
 
+  // Grundkarte (Backend «Karte»): Auswahl spiegeln, Rollenfarben abblenden,
+  // wenn das gemalte Blatt die Vektorkarte ganz ersetzt (sie wirken dann nicht).
+  document.querySelectorAll("#basiskarte-row [data-basiskarte]").forEach((knopf) => {
+    knopf.setAttribute("aria-pressed", knopf.dataset.basiskarte === state.basiskarte ? "true" : "false");
+  });
+  const grundModus = grundkarteModus();
+  farbRollen.style.opacity = grundModus === "aquarell" ? "0.45" : "";
+  const bkHinweis = document.getElementById("basiskarte-hinweis");
+  if (bkHinweis) {
+    bkHinweis.textContent = grundModus === "aquarell"
+      ? "Gemaltes Blatt statt Vektorkarte — die Rollenfarben unten wirken hier nicht."
+      : grundModus === "wiesen"
+        ? "Vektorkarte; das gemalte Blatt erscheint nur in den unten gewählten Wiesen."
+        : "Vektorkarte mit der Hauspalette. «Aquarell» oder «Wiesen» blenden das gemalte Blatt ein.";
+  }
+
   document.getElementById("logo-skala").value = String(Math.round(state.logo.skala * 100));
   document.getElementById("logo-wert").textContent = `${Math.round(state.logo.skala * 100)}%`;
   document.getElementById("titellogo-breite").value = String(state.titelLogo ? state.titelLogo.breite : 45);
@@ -1423,7 +1516,8 @@ function standAlsJson() {
     eigene: state.eigene, wiesen: state.wiesen, kompakt: state.kompakt, ausschnitt: state.ausschnitt,
     logo: { ...state.logo, basis: LOGO_STANDARD.breite },
     titelLogo: state.titelLogo,
-    preset: state.preset, farben: state.farben
+    preset: state.preset, farben: state.farben,
+    basiskarte: state.basiskarte
   };
 }
 
@@ -1485,6 +1579,7 @@ function standAnwenden(s) {
     if (typeof s.preset === "string") state.preset = PRESET_MIGRATION[s.preset] || s.preset;
     if (!PRESETS[state.preset] && state.preset !== "eigene Mischung") state.preset = "gedeckt";
     if (s.farben) state.farben = { ...PRESETS["gedeckt"], ...s.farben };
+    state.basiskarte = (s.basiskarte === "aquarell" || s.basiskarte === "wiesen") ? s.basiskarte : "vektor";
     state.ausschnitt = state.ausschnitt || { skala: 1, dx: 0, dy: 0 };
 }
 
@@ -1705,6 +1800,13 @@ document.querySelectorAll("#format-row [data-format]").forEach((knopf) => {
 document.querySelectorAll("#sprache-row [data-sprache]").forEach((knopf) => {
   knopf.addEventListener("click", () => {
     state.sprache = knopf.dataset.sprache;
+    render();
+  });
+});
+
+document.querySelectorAll("#basiskarte-row [data-basiskarte]").forEach((knopf) => {
+  knopf.addEventListener("click", () => {
+    state.basiskarte = knopf.dataset.basiskarte;
     render();
   });
 });
@@ -1961,7 +2063,7 @@ function render() {
 (async function start() {
   laden();
   logoErzeugen();
-  await Promise.all([ladeGelaende(), ladeIkonen()]);
+  await Promise.all([ladeGelaende(), ladeIkonen(), ladeAquarell()]);
   // Schriften vor dem ersten Satz laden — die Label-Zentrierung misst
   // mit der echten Hausschrift, nicht mit der Ausweichschrift.
   try {

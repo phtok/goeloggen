@@ -974,14 +974,15 @@ const ORTE = [
     "farbe": "blau",
     "label": {
       "de": "Helene Finckh Häuschen",
-      "en": "Helene Finckh Häuschen"
+      "en": "Helene Finckh Hut"
     },
     "positionen": [
       [
-        190.85,
-        67.22
+        185.53,
+        69.2
       ]
-    ]
+    ],
+    "gebaeude": "campusbau-25"
   },
   {
     "id": "h-jaager",
@@ -1416,10 +1417,11 @@ const ORTE = [
     },
     "positionen": [
       [
-        264.89,
-        41.53
+        264.16,
+        42.77
       ]
-    ]
+    ],
+    "gebaeude": "campusbau-54"
   },
   {
     "id": "g-praeparate",
@@ -1429,13 +1431,14 @@ const ORTE = [
     "farbe": "gruen",
     "label": {
       "de": "Präparatepavillon",
-      "en": "Präparatepavillon"
+      "en": "Preparations Pavilion"
     },
     "positionen": [
       [
-        219.62,
-        62.18
+        222.17,
+        67.46
       ]
-    ]
+    ],
+    "gebaeude": "campusbau-55"
   }
 ];

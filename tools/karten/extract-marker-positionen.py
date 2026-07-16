@@ -269,18 +269,26 @@ WILLKOMMEN = [
      {"de": "Schnittblumengarten", "en": "Cut Flower Garden"}, [[229.09, 25.06]]),
     ("g-duftkraeuter", "16", "gaerten",
      {"de": "Duftkräutergarten", "en": "Fragrant Herb Garden"}, [[239.3, 39.0]]),
+    # Bienenskulptur + Präparatepavillon: Lagen vom Aquarell-Blatt übernommen
+    # (dort massgenau gemalt; Grundkarten-Formen campusbau-54/-55, Entscheid
+    # Auftraggeber 16. Juli 2026). Marker 17 sitzt am Zugang unter der Wabe.
     ("g-bienen", "17", "gaerten",
-     {"de": "Bienenskulptur", "en": "Bee Sculpture"}, [[264.89, 41.53]]),
+     {"de": "Bienenskulptur", "en": "Bee Sculpture"}, [[264.16, 42.77]],
+     {"gebaeude": "campusbau-54"}),
     ("g-praeparate", "18", "gaerten",
-     {"de": "Präparatepavillon", "en": "Präparatepavillon"}, [[219.62, 62.18]]),
+     {"de": "Präparatepavillon", "en": "Preparations Pavilion"}, [[222.17, 67.46]],
+     {"gebaeude": "campusbau-55"}),
 
     # Weitere Häuser (Seite 4 der Beispielkarten, mm-genau):
     ("h-kepler", "50", "haeuser",
      {"de": "Kepler-Sternwarte", "en": "Kepler Observatory"},
      [[255.47, 36.32]], {"gebaeude": "campusbau-15"}),
+    # Vom Seite-4-Wert [190.85, 67.22] an die Süd-Ecke des gezeichneten
+    # Häuschens (campusbau-25) gerückt — der alte Punkt lag ~5 mm östlich
+    # im Gras; Marker sitzen an den Zugängen (Entscheid 16. Juli 2026).
     ("h-finckh", "51", "haeuser",
-     {"de": "Helene Finckh Häuschen", "en": "Helene Finckh Häuschen"},
-     [[190.85, 67.22]]),
+     {"de": "Helene Finckh Häuschen", "en": "Helene Finckh Hut"},
+     [[185.53, 69.2]], {"gebaeude": "campusbau-25"}),
     ("h-jaager", "52", "haeuser",
      {"de": "Haus de Jaager", "en": "Haus de Jaager"},
      [[266.08, 134.87]]),
