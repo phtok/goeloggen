@@ -148,8 +148,19 @@
       "tag": "Anwendungen",
       "title": "PowerPoint-Vorlagen",
       "href": "powerpoint.html",
-      "desc": "Präsentationsvorlage (A4) im Hausbild mit eingebetteten Schriften – plus die TrueType-Schriften fürs Office zum Installieren.",
+      "desc": "Präsentationsvorlage (A4) im Hausbild – acht Layouts, plus die TrueType-Schriften fürs Office zum Installieren.",
       "such": "PowerPoint Präsentation Folien PPT Vorlage Keynote"
+    },
+    {
+      "slug": "abo",
+      "cat": "anwendung",
+      "status": "live",
+      "tag": "Anwendungen",
+      "title": "Werkzeug-Abo",
+      "short": "Abo",
+      "href": "abo.html",
+      "desc": "Bescheid bekommen, wenn ein Werkzeug neu ist oder besser funktioniert – alle oder nur die persönlich relevanten.",
+      "such": "Abo Newsletter Updates Neuerungen Benachrichtigung Mail"
     },
     {
       "slug": "logo-generator",

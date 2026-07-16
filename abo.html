@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+<title>Werkzeug-Abo · Goetheanum</title>
+<meta name="description" content="Bescheid bekommen, wenn ein Werkzeug neu ist oder besser funktioniert – alle oder nur die persönlich relevanten." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+
+<!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN. RELATIV, nie absolut. -->
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+
+<style>
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);line-height:1.05;letter-spacing:-.01em;max-width:18ch}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+
+  /* Auswahl-Liste: Fingerziele ≥44px (B04), Lese-Grotesk für Label (Schrift-Grenze) */
+  .gruppe{margin-top:var(--s6)}
+  .gruppe h3{font-family:var(--font);font-weight:var(--w-deutlich);font-size:var(--t-body);margin:0 0 var(--s2)}
+  .wahl{display:grid;gap:2px}
+  .wahl label{display:flex;align-items:center;gap:var(--s3);min-height:var(--tap);padding:var(--s2) var(--s3);
+    border-radius:8px;cursor:pointer;font-family:var(--font-text);font-size:var(--t-body);color:var(--ink)}
+  .wahl label:hover{background:var(--field-bg)}
+  .wahl input{width:20px;height:20px;accent-color:var(--blue);flex:none}
+  .wahl label.aus{color:var(--muted)}
+  .honig{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+  .meldung{display:none;margin-top:var(--s6);padding:var(--s4) var(--s5);border-radius:10px;
+    background:var(--field-bg);border:1px solid var(--line);font-family:var(--font-text);font-size:var(--t-body)}
+  .meldung.zeigen{display:block}
+</style>
+</head>
+<body>
+
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Werkzeuge · Neuerungen</span>
+    <h1>Das Werkzeug-Abo</h1>
+    <p class="lede">Bescheid bekommen, wenn ein Werkzeug neu ist oder besser funktioniert –
+      etwa wenn sich bei den Schriften eine Neuinstallation lohnt. Alle Werkzeuge
+      oder nur die, mit denen du arbeitest. Jede Mail trägt die Abmeldung mit einem Klick.</p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Anmelden</h2>
+      <p>E-Mail eintragen, Auswahl treffen, bestätigen – fertig. Schon angemeldet?
+        Einfach mit neuer Auswahl erneut absenden, sie wird übernommen.</p>
+    </div>
+
+    <div id="meldung-gesendet" class="meldung">Fast geschafft: Bitte den Posteingang öffnen
+      und die Anmeldung bestätigen. Nichts erhalten? Spam-Ordner prüfen oder erneut absenden.</div>
+    <div id="meldung-bestaetigt" class="meldung">Das Abo ist bestätigt – du bekommst ab jetzt
+      Bescheid, wenn etwas Neues kommt.</div>
+    <div id="meldung-beendet" class="meldung">Das Abo ist beendet. Danke fürs Dabeisein –
+      die Tür bleibt offen.</div>
+    <div id="meldung-fehler" class="meldung">Das hat nicht geklappt – der Link ist verbraucht
+      oder unvollständig. Einfach unten neu anmelden.</div>
+
+    <form id="abo" class="card soft" style="display:grid;gap:var(--s4);max-width:620px">
+      <label class="field">
+        <span class="lab">E-Mail</span>
+        <input type="email" name="email" required autocomplete="email" placeholder="vorname.name@goetheanum.ch" />
+      </label>
+
+      <label class="honig" aria-hidden="true" tabindex="-1">
+        <span class="lab">Website</span>
+        <input type="text" name="website" autocomplete="off" />
+      </label>
+
+      <div class="wahl" style="margin-top:var(--s2)">
+        <label><input type="checkbox" id="alle" checked />
+          <span><strong>Alle Werkzeuge</strong> – alles Neue, eine Auswahl ist nicht nötig</span></label>
+      </div>
+
+      <div id="gruppen" hidden></div>
+
+      <div style="display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center">
+        <button class="btn primary" type="submit">Abo bestellen</button>
+        <span style="font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)">
+          Double-Opt-in – erst der Klick in der Mail schaltet das Abo scharf.</span>
+      </div>
+    </form>
+
+    <p class="lese" style="margin-top:var(--s6);line-height:1.5;font-size:var(--t-small);color:var(--muted);max-width:62ch">
+      Die Adresse dient allein diesem Versand und wandert nirgendwohin sonst.
+      Abmelden geht in jeder Mail mit einem Klick – ohne Rückfrage, ohne Umweg.</p>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Hausgrafik</span>
+    <span><a href="design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script>
+const ABO_URL = 'https://dagcsnfrlbpxcmdimnrw.supabase.co/functions/v1/werkzeug-abo?aktion=anmelden';
+// Öffentlicher (publishable) Schlüssel — kein Geheimnis, nur die Eintrittskarte ans Funktions-Tor.
+const ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhZ2NzbmZybGJweGNtZGltbnJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMTAyNzYsImV4cCI6MjA5MTU4NjI3Nn0.sp-Cl-6ua0xR90oJ4lP1-vvB5orAd-zsAWRyQhPy9KM';
+const OFFEN = new Set(['live', 'beta']);   // nur öffentlich Nutzbares anbieten
+
+async function bauen() {
+  const t = await (await fetch('tools.json')).json();
+  const je = new Map();
+  for (const w of t.tools) {
+    if (!OFFEN.has(w.status) || w.slug === 'abo') continue;   // sich selbst nicht anbieten
+    if (!je.has(w.cat)) je.set(w.cat, []);
+    je.get(w.cat).push(w);
+  }
+  const wurzel = document.getElementById('gruppen');
+  for (const kat of t.categories) {
+    const liste = je.get(kat.id);
+    if (!liste || !liste.length) continue;
+    const g = document.createElement('div');
+    g.className = 'gruppe';
+    const h = document.createElement('h3');
+    h.textContent = kat.title;
+    g.appendChild(h);
+    const w = document.createElement('div');
+    w.className = 'wahl';
+    for (const werk of liste) {
+      const label = document.createElement('label');
+      const box = document.createElement('input');
+      box.type = 'checkbox'; box.value = werk.slug;
+      label.appendChild(box);
+      label.appendChild(document.createTextNode(werk.title));
+      w.appendChild(label);
+    }
+    g.appendChild(w);
+    wurzel.appendChild(g);
+  }
+}
+
+const alle = document.getElementById('alle');
+const gruppen = document.getElementById('gruppen');
+alle.addEventListener('change', () => { gruppen.hidden = alle.checked; });
+
+function zeige(id) {
+  document.querySelectorAll('.meldung').forEach((m) => m.classList.remove('zeigen'));
+  const m = document.getElementById('meldung-' + id);
+  if (m) { m.classList.add('zeigen'); m.scrollIntoView({ block: 'nearest' }); }
+}
+const anker = location.hash.replace('#', '');
+if (['bestaetigt', 'beendet', 'fehler'].includes(anker)) zeige(anker);
+
+document.getElementById('abo').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const f = e.target;
+  const auswahl = alle.checked ? []
+    : [...gruppen.querySelectorAll('input:checked')].map((b) => b.value);
+  try {
+    await fetch(ABO_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ANON, 'apikey': ANON },
+      body: JSON.stringify({ email: f.email.value, auswahl, website: f.website.value }),
+    });
+  } catch (_) { /* Antwort ist bewusst immer gleich */ }
+  zeige('gesendet');
+  f.email.value = '';
+});
+
+bauen();
+</script>
+
+</body>
+</html>
