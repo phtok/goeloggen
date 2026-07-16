@@ -240,6 +240,25 @@ def main() -> int:
     svg = re.sub(r"<path[^>]*>", bau_nummerieren, svg)
     print(f"Campus-Gebäude nummeriert: {bau_zaehler[0]}")
 
+    # Kuratierte Ergänzungen, die in der .ai-Vorlage (Stand 2022) fehlen —
+    # Quelle ist das Aquarell-Blatt (Entscheid Auftraggeber, 16. Juli 2026):
+    # Bienenskulptur (Wabe, sechsseitig) und Präparatepavillon (Trapez,
+    # lange Nordkante parallel zur kurzen Südkante, Öffnung zum Heizhaus).
+    # Feste ids oberhalb des Auto-Zählers (aktuell 53); wandern die Bauten
+    # in eine neue .ai-Fassung, entfällt dieser Block ersatzlos.
+    ergaenzungen = (
+        '<g id="ergaenzungen-2026-07">'
+        "<!-- kuratierte Ergänzungen (Quelle: Aquarell-Blatt, Entscheid "
+        "16. Juli 2026; gepflegt in tools/karten/build-gelaende-svg.py) -->\n"
+        '<path id="campusbau-54" d="M469.9 151.63 468.26 152.58 468.26 154.48 '
+        '469.9 155.43 471.55 154.48 471.55 152.58Z" class="k-gebaeude-campus"/>\n'
+        '<path id="campusbau-55" d="M379.1 203.4 392.1 202 383.89 211.5 '
+        '382.11 211.7Z" class="k-gebaeude-campus"/>\n'
+        "</g>\n"
+    )
+    svg = svg.replace("</svg>", ergaenzungen + "</svg>", 1)
+    print("Ergänzungen angefügt: Bienenskulptur (54), Präparatepavillon (55)")
+
     stil = "\n".join(
         f".k-{rolle} {{ fill: var(--karte-{rolle}, {farbe}); }}"
         for rolle, farbe in STANDARD.items()
