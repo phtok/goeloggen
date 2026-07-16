@@ -403,7 +403,7 @@
           span.appendChild(kopf);
           var box = document.createElement('span'); box.className = 'zb-det';
           det.forEach(function(p){
-            var zd = document.createElement('span'); zd.className = 'zd';
+            var zd = document.createElement('span'); zd.className = 'zd' + (p[0] === 'Notiz' ? ' zd-note' : '');
             var l = document.createElement('span'); l.className = 'zdl'; l.textContent = p[0];
             var v = document.createElement('span'); v.className = 'zdv'; v.textContent = p[1];
             zd.appendChild(l); zd.appendChild(v); box.appendChild(zd);
