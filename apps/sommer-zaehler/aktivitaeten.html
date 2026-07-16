@@ -153,13 +153,15 @@
   const apply = () => {
     if (tween){ tween.kill(); tween = null; }
     if (reduce.matches){ gsap.set(L, { clearProps: "fontWeight" }); return; } // Satzgewicht (Deutlich) ruht
-    gsap.set(L, { fontWeight: 344 });
+    // Sanfter Atem: kleiner Hub um das eigene Satzgewicht (Klar 440 ↔ Deutlich 580),
+    // langsamer Zug – ein voller Atemzug dauert so rund 3,6 Sekunden.
+    gsap.set(L, { fontWeight: 440 });
     tween = gsap.to(L, {
-      fontWeight: 527,
-      duration: 0.6,
+      fontWeight: 580,
+      duration: 1.8,
       ease: "sine.inOut",
       yoyo: true, repeat: -1,
-      stagger: { each: 0.04, from: "center" }
+      stagger: { each: 0.06, from: "center" }
     });
   };
   reduce.addEventListener?.("change", apply);
