@@ -261,6 +261,10 @@ def maildata_for(seg, motiv, welle, lang, c, ctas):
 
 # WYSIWYG-Overlay (einmal in der Seite): Vollfenster, dünner Balken, Mail zentriert und
 # direkt in der Vorschau editierbar, Pfeile links/rechts zum Blättern. openEditor(base) füllt.
+# `editor_hinweis` (config.json): Warnstreifen unter dem Balken — die Mails liegen in AC,
+# Änderungen hier erreichen den Versand nicht von selbst.
+WYZ_NOTE = (f'<div class="wyz-note" role="note">{esc(CFG["editor_hinweis"])}</div>'
+            if CFG.get("editor_hinweis") else "")
 WYZ_DIALOG = (
     '<dialog id="wyz" class="wyz">'
     '<div class="wyz-bar">'
@@ -270,6 +274,7 @@ WYZ_DIALOG = (
     '<button class="wyz-save" type="button" onclick="saveAll()">Speichern</button>'
     '<button class="wyz-x" type="button" onclick="closeEditor()" aria-label="Schliessen">✕</button>'
     '</div>'
+    f'{WYZ_NOTE}'
     '<button class="wyz-nav prev" type="button" onclick="navTo(-1)" aria-label="Vorherige Mail">‹</button>'
     '<button class="wyz-nav next" type="button" onclick="navTo(1)" aria-label="Nächste Mail">›</button>'
     '<div class="wyz-stage"><div class="wyz-col">'
@@ -479,6 +484,7 @@ body.nurmails .flds,body.nurmails .shared-sec{{display:none}}
 .wyz-save{{min-height:32px;background:var(--blue-solid);color:var(--on-accent);border:0;border-radius:var(--r-control);padding:4px 16px;font:inherit;font-size:var(--t-small);font-weight:600;cursor:pointer}}
 .wyz-x{{min-height:32px;min-width:32px;background:transparent;border:1px solid var(--paper);border-radius:999px;color:var(--paper);font:inherit;cursor:pointer}}
 .wyz-x:hover{{background:var(--paper);color:var(--ink)}}
+.wyz-note{{flex:0 0 auto;background:var(--gold-deep);color:var(--on-accent);font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;padding:var(--s1) var(--s3)}} /* B01: Weiss auf dunklem Gold (4.55:1) */
 .wyz-stage{{flex:1 1 auto;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:var(--s5) var(--s3) var(--s8);background:var(--field-bg)}}
 .wyz-col{{width:600px;max-width:100%;box-shadow:0 6px 30px rgba(20,24,28,.16)}} /* # ds-ok Blatt-Schatten */
 /* Posteingang-Streifen: echte Formularfelder (in jedem Browser editierbar, auch im Modal-Dialog). */
