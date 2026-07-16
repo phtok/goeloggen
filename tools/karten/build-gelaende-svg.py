@@ -216,30 +216,42 @@ def main() -> int:
             print(f"Warnung: Wiesenpfad {wiesen_id} nicht gefunden", file=sys.stderr)
 
     # ‹Wiese gross› bis an die Wege ziehen (Entscheid Auftraggeber, 16. Juli
-    # 2026): das .ai-Quellpolygon liess zur Nordost-Strasse einen wachsenden
-    # Keil frei (gerader impliziter Schluss) und blieb im Süden 5–14 Einheiten
-    # vor der Weg-Innenkante stehen. Südkante und Südost-Scheitel neu entlang
-    # der Weg-Innenkanten (≈1 E Rand), Nordost-Kante als Punktzug der
-    # geschwungenen Strasse angefügt; die Rondell-Kurven bleiben unberührt.
-    WIESE_GROSS_ERSATZ = [
-        ("M0 0-2.46-5.55-12.039-1.456-18.235-3.316-32.178-13.703-42.942"
-         "-20.128-49.495-25.677-62.038-22.322-70.208-20.478-85.734-18.426"
-         "-96.203-15.56-103.54-21.626-112.653-18.085-120.972-13.883-128.608"
-         "-8.856-129.513-8.531-133.96-4.443",
-         "M4.556-14.945 -1.444-25.445-12.944-31.645-41.944-34.945-71.444"
-         "-34.045-100.944-29.245-126.444-20.945-132.444-13.445-133.96-4.443"),
-        ("-60.922 107.31-48.872 115.979",
-         "-60.922 107.31-48.872 115.979 -44.944 118.755-33.944 124.055"
-         "-21.944 127.155-10.944 126.755-3.444 122.955 1.256 116.555 3.256"
-         " 107.555 2.256 94.555-1.144 77.555-4.244 59.555-5.944 41.555-6.044"
-         " 24.555-4.644 11.555-1.444-0.445 1.856-8.945"),
-    ]
-    for alt, neu in WIESE_GROSS_ERSATZ:
-        if svg.count(alt) != 1:
-            print("Warnung: Wiese-gross-Signatur nicht eindeutig", file=sys.stderr)
-            continue
-        svg = svg.replace(alt, neu)
-    print("Wiese gross an die Wege gezogen (Süd- + Nordost-Kante)")
+    # 2026): das .ai-Quellpolygon folgt den Weg-Lücken nicht (gerader
+    # impliziter Schluss zur Nordost-Strasse, Südkante 5–14 Einheiten vor der
+    # Weg-Innenkante). Die Kontur hier ist VEKTORGENAU aus der Karte selbst
+    # berechnet: Boden-Maske (k-campus + k-wiese) geflutet, Aussenkontur der
+    # umschlossenen Insel verfolgt, vereinfacht (ε≈0.25 E) und 0.2 E nach
+    # innen versetzt; Trennung zur kleinen Wiese in der verlängerten
+    # Hauptweg-Achse (x≈341.5). Werkzeug: Session-Notiz 16.7.2026.
+    WIESE_GROSS_D = (
+        "M-9.46-29.8-12.57-32.91-16.28-35.39-20.61-36.87-24.7-37.37-29.41-37.37-7"
+        "9.15-28.24-102.63-21.62-111.42-18.3-111.51-12.53-107.59-11.37-105.77-9.4"
+        "2-104.62-6.6-104.74-3.27-105.77-0.96-106.87 0.16-105.95-0.21-103.33-3.71"
+        "-99.89-5.87-97.18-6.26-94.49-5.5-92.81-4.46-90.77-2.17-89.74 0.4-89.76 3"
+        ".72-87.49 5.25-85.86 5.13-84.75 6.51-85.04 7.8-81.36 10.38-80.47 9.74-78"
+        ".85 10.01-78.01 10.98-78.04 11.68-75.74 13.6-80.13 22.52-80.28 23.56-81."
+        "85 24.62-82.88 24.75-84.49 23.77-84.51 21.59-84.8 21.35-93.18 15.6-94.97"
+        " 14.38-96.67 15.13-98.09 14.57-98.89 12.72-98.6 11.32-97.57 11.09-105.53"
+        " 5.62-109.67 5.26-110.62 6.07-111.74 68.81-111.53 69.69-109.32 71.78-103"
+        ".74 75.87-99.07 75.9-82.3 92.17-82.28 93.06-78.58 96.77-69.59 101.64-60."
+        "45 107.4-43.82 119.4-31.07 129.78-25.21 133.89-19.02 136.87-12.1 136.99-"
+        "7.04 134.76-3.85 132.06-1.63 127.74-0.89 123.54-0.64 116.96-2.01 112.99-"
+        "5.14 100.48-7.14 88.2-7.51 72.18-6.76 65.63-3.98 58.95 14.78 33.94 25.63"
+        " 20.47 25.77 11.42 19.92 11.63 14.51 10.88 8.46 8.74 3.3 4.7-0.24 0.29-2"
+        ".76-5.26-6.38-21.77-7.75-25.99-9.5-29.73Z"
+    )
+    wiese_gross_neu = [0]
+
+    def wiese_gross_ersetzen(match: re.Match) -> str:
+        wiese_gross_neu[0] += 1
+        return match.group(1) + WIESE_GROSS_D + match.group(2)
+
+    svg = re.sub(
+        r'(<g data-wiese-halter="gross"><path[^>]*? d=")[^"]*("[^>]*?/>)',
+        wiese_gross_ersetzen, svg, count=1)
+    if wiese_gross_neu[0] != 1:
+        print("Warnung: Wiese-gross-Kontur nicht ersetzt", file=sys.stderr)
+    print("Wiese gross an die Wege gezogen (vektorgenaue Kontur)")
 
     # Dunkle Gebäudeflächen sind flach gemeint — weisse Quell-Striche
     # (Wege-Strichrolle) an ihnen zeichnen Konturen: Strich entfernen.
