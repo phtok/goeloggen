@@ -215,6 +215,32 @@ def main() -> int:
         if not gefunden:
             print(f"Warnung: Wiesenpfad {wiesen_id} nicht gefunden", file=sys.stderr)
 
+    # ‹Wiese gross› bis an die Wege ziehen (Entscheid Auftraggeber, 16. Juli
+    # 2026): das .ai-Quellpolygon liess zur Nordost-Strasse einen wachsenden
+    # Keil frei (gerader impliziter Schluss) und blieb im Süden 5–14 Einheiten
+    # vor der Weg-Innenkante stehen. Südkante und Südost-Scheitel neu entlang
+    # der Weg-Innenkanten (≈1 E Rand), Nordost-Kante als Punktzug der
+    # geschwungenen Strasse angefügt; die Rondell-Kurven bleiben unberührt.
+    WIESE_GROSS_ERSATZ = [
+        ("M0 0-2.46-5.55-12.039-1.456-18.235-3.316-32.178-13.703-42.942"
+         "-20.128-49.495-25.677-62.038-22.322-70.208-20.478-85.734-18.426"
+         "-96.203-15.56-103.54-21.626-112.653-18.085-120.972-13.883-128.608"
+         "-8.856-129.513-8.531-133.96-4.443",
+         "M4.556-14.945 -1.444-25.445-12.944-31.645-41.944-34.945-71.444"
+         "-34.045-100.944-29.245-126.444-20.945-132.444-13.445-133.96-4.443"),
+        ("-60.922 107.31-48.872 115.979",
+         "-60.922 107.31-48.872 115.979 -44.944 118.755-33.944 124.055"
+         "-21.944 127.155-10.944 126.755-3.444 122.955 1.256 116.555 3.256"
+         " 107.555 2.256 94.555-1.144 77.555-4.244 59.555-5.944 41.555-6.044"
+         " 24.555-4.644 11.555-1.444-0.445 1.856-8.945"),
+    ]
+    for alt, neu in WIESE_GROSS_ERSATZ:
+        if svg.count(alt) != 1:
+            print("Warnung: Wiese-gross-Signatur nicht eindeutig", file=sys.stderr)
+            continue
+        svg = svg.replace(alt, neu)
+    print("Wiese gross an die Wege gezogen (Süd- + Nordost-Kante)")
+
     # Dunkle Gebäudeflächen sind flach gemeint — weisse Quell-Striche
     # (Wege-Strichrolle) an ihnen zeichnen Konturen: Strich entfernen.
     def strich_von_dunklen(match: re.Match) -> str:

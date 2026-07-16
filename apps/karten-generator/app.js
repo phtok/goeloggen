@@ -101,6 +101,7 @@ const state = {
   preset: "gedeckt",   // Standard; Anpassung je Rolle bleibt möglich
   farben: { ...PRESETS["gedeckt"] },
   basiskarte: "vektor", // Grundkarte: ‹vektor› | ‹aquarell› | ‹wiesen› (Backend «Karte»)
+  aquarellDeckkraft: 100, // Deckkraft des gemalten Blatts in % (Backend-Regler)
   platzieren: null,    // { label, farbe } während der Platzierung (neue Marke)
   platzierenOrt: null, // Ort-id, deren Marke gerade verschoben wird
   platzierenLogo: false, // Logo wird gerade neu platziert
@@ -350,10 +351,18 @@ function grundkarteMarkup() {
 function aquarellBildMarkup(nurWiesen) {
   if (!aquarellDataUri) return "";
   const A = AQUARELL;
+  // Deckkraft: das Blatt lässt sich leicht einblenden (Backend-Regler) —
+  // in den Wiesen wie im Ganzen.
+  const deckkraft = Math.max(10, Math.min(100, state.aquarellDeckkraft ?? 100));
+  const alpha = deckkraft < 100 ? ` opacity="${(deckkraft / 100).toFixed(2)}"` : "";
   const bild = `<image href="${aquarellDataUri}" x="0" y="0"`
-    + ` width="${A.breite}" height="${A.hoehe}"`
+    + ` width="${A.breite}" height="${A.hoehe}"${alpha}`
     + ` transform="matrix(${A.matrix.join(" ")})" preserveAspectRatio="none" />`;
-  return nurWiesen ? `<g clip-path="url(#aquarell-wiesen-clip)">${bild}</g>` : bild;
+  // Im Wiesen-Modus zusätzlich der allgemeine Wiesen-Beschnitt, damit Raster
+  // und Vektorfläche exakt dieselbe Kontur tragen.
+  return nurWiesen
+    ? `<g clip-path="url(#wiese-clip)"><g clip-path="url(#aquarell-wiesen-clip)">${bild}</g></g>`
+    : bild;
 }
 
 // Clip für den Wiesen-Modus: die gewählten Wiesenpolygone aus der Rohkarte
@@ -372,11 +381,14 @@ function aquarellWiesenClipMarkup() {
 }
 
 // Beschnitt der Wiesenpolygone (Gelände-Koordinaten aus Blatt-mm gerechnet).
+// Ost und Süd liegen seit der Kanten-Korrektur der grossen Wiese (16. Juli
+// 2026) weit aussen — geschnitten wird nur noch der West-Überhang der
+// kleinen Wiese (die Quellpolygone laufen dort unter dem Weg weiter).
 function wieseClipMarkup() {
   const g = KARTE.gelaende;
   const s = g.breite / gelaendeMasse.breite;
-  const punkte = [[150, 40], [250, 40], [250, 212], [216, 212], [216, 192],
-    [196, 190], [176, 167], [150, 148]]
+  const punkte = [[150, 40], [270, 40], [270, 225], [195, 225],
+    [176, 167], [150, 148]]
     .map(([x, y]) => `${((x - g.x) / s).toFixed(1)},${((y - g.y) / s).toFixed(1)}`)
     .join(" ");
   return `<clipPath id="wiese-clip"><polygon points="${punkte}" /></clipPath>`;
@@ -1472,6 +1484,12 @@ function renderOptionen() {
   });
   const grundModus = grundkarteModus();
   farbRollen.style.opacity = grundModus === "aquarell" ? "0.45" : "";
+  const deckRegler = document.getElementById("aquarell-deckkraft");
+  if (deckRegler) {
+    deckRegler.value = state.aquarellDeckkraft;
+    document.getElementById("aquarell-deckkraft-wert").textContent = state.aquarellDeckkraft + " %";
+    deckRegler.closest(".farb-reihe").style.opacity = grundModus === "vektor" ? "0.45" : "";
+  }
   const bkHinweis = document.getElementById("basiskarte-hinweis");
   if (bkHinweis) {
     bkHinweis.textContent = grundModus === "aquarell"
@@ -1517,7 +1535,8 @@ function standAlsJson() {
     logo: { ...state.logo, basis: LOGO_STANDARD.breite },
     titelLogo: state.titelLogo,
     preset: state.preset, farben: state.farben,
-    basiskarte: state.basiskarte
+    basiskarte: state.basiskarte,
+    aquarellDeckkraft: state.aquarellDeckkraft
   };
 }
 
@@ -1580,6 +1599,9 @@ function standAnwenden(s) {
     if (!PRESETS[state.preset] && state.preset !== "eigene Mischung") state.preset = "gedeckt";
     if (s.farben) state.farben = { ...PRESETS["gedeckt"], ...s.farben };
     state.basiskarte = (s.basiskarte === "aquarell" || s.basiskarte === "wiesen") ? s.basiskarte : "vektor";
+    const deckkraft = Number(s.aquarellDeckkraft);
+    state.aquarellDeckkraft = Number.isFinite(deckkraft)
+      ? Math.max(10, Math.min(100, Math.round(deckkraft))) : 100;
     state.ausschnitt = state.ausschnitt || { skala: 1, dx: 0, dy: 0 };
 }
 
@@ -1809,6 +1831,11 @@ document.querySelectorAll("#basiskarte-row [data-basiskarte]").forEach((knopf) =
     state.basiskarte = knopf.dataset.basiskarte;
     render();
   });
+});
+
+document.getElementById("aquarell-deckkraft").addEventListener("input", (e) => {
+  state.aquarellDeckkraft = Math.max(10, Math.min(100, Math.round(Number(e.target.value) || 100)));
+  render();
 });
 
 document.getElementById("opt-wiese-klein").addEventListener("change", (e) => {
