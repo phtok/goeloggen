@@ -4,6 +4,8 @@
   "_asset_base_url_hinweis": "Leer = Bilder als Data-URI (nur Vorschau, Gmail clippt/blockt). Gesetzt = gehostete URLs in dist/mail_*.html; `--publish` legt die Dateien nach apps/mail-editor/assets/, GitHub Pages liefert sie unter dieser Basis aus.",
   "frist": "2026-08-08",
   "frist_hinweis": "Samstag — wirksamer Schluss-Druck liegt auf Do 6.8. / Fr 7.8.",
+  "editor_hinweis": "Diese Mails sind in ActiveCampaign eingepflegt — versendet wird, was dort liegt. Änderungen hier gehen als Fassung in den Rücklauf und erreichen den Versand erst nach Merge und neuem Einfügen in AC; bereits versendete Wellen sind unveränderlich.",
+  "_editor_hinweis_hinweis": "Warn-Einblender im Bearbeiten-Overlay des Editors, seit die Mails in AC eingepflegt sind (16.7.). Leer/fehlend = kein Einblender.",
   "theme": {
     "_hinweis": "Kampagnen-DNA der Mails: Rosé-Palette + Sommer-Motive. Schrift-Beschlüsse 11.7.26 (Ph): Headline = Hausschrift ‹Goetheanum› Deutlich, Body = ‹Source Sans 3› als Webfont (Vorschlag 1 — die Haus-Paarung des Design-Systems, beide OFL/selbst gehostet; dieselben Clients laden beide, kein Zustand mischt falsch), Fallback = System-Stack. Kicker/Badge normal statt fett (G05). Fazeta bleibt der WS-Landingpage vorbehalten.",
     "akzent": "#A95278",
