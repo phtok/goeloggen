@@ -116,16 +116,17 @@ let kompassInhalt = null;    // Kompassrose aus den Icons v2.7 (kompass-2)
 const ikonen = {};           // weitere Icons v2.7 (treppe, fahrstuhl, pfeil)
 
 // Aquarell-Basiskarte (optionale Grundkarte, Backend «Karte»): das gemalte
-// Blatt liegt auf denselben Vektor-Massen, nur optisch leicht gedreht. Die
-// Matrix bildet Bild-Pixel → Gelände-Koordinaten ab (Ähnlichkeit, an
-// Goetheanum + Halde eingemessen; Rückrechnung trifft die orte.js-Lagen auf
-// ~0.01 mm). Das gemalte Blatt ist ein Artefakt (feste Farben, wie die
-// gedruckte Karte), keine Theme-Fläche — es wird nicht umgefärbt.
+// Blatt liegt auf denselben Vektor-Massen, nur um ~0.7° gedreht. Die Matrix
+// bildet Bild-Pixel → Gelände-Koordinaten ab (Ähnlichkeit; vom Auftraggeber
+// im Karten-Justierer eingemessen und per Kontur-Diagnose an sieben Bauten
+// feinjustiert, 16. Juli 2026 — Deckung der Bauten ≤ ~1 mm auf dem Blatt).
+// Das gemalte Blatt ist ein Artefakt (feste Farben, wie die gedruckte
+// Karte), keine Theme-Fläche — es wird nicht umgefärbt.
 const AQUARELL = {
   datei: "assets/aquarell-basis.jpg",
   breite: 1072,
   hoehe: 1467,
-  matrix: [0.594629, 0.101191, -0.101191, 0.594629, 107.712046, -179.346323]
+  matrix: [0.393188, -0.004713, 0.004713, 0.393188, 124.629726, 36.783654]
 };
 let aquarellDataUri = null;  // data:image/jpeg;base64,… (einmal beim Start geladen)
 
