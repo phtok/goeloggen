@@ -330,9 +330,11 @@
   }
   function zbTag(d){ return d.getDate() + '.' + (d.getMonth() + 1) + '.'; }
 
-  // Zeitband-Chips sind anklickbar → laden die Aktivität in die Bearbeiten-Maske.
+  // Zeitband-Chips sind kompakt (Punkt · Tag · Titel einzeilig) – Antippen klappt
+  // die Felder auf (Kürzel, Reichweite, Klicks, Kosten, Notiz + Bearbeiten-Knopf).
   // Delegation über die Tabelle; die Zeilen-Zuordnung liegt in zbById (je Render neu).
-  var zbById = {}, zbWired = false;
+  // zbOffen merkt sich aufgeklappte Chips über die 60-Sekunden-Neu-Renderings hinweg.
+  var zbById = {}, zbWired = false, zbOffen = {};
 
   function renderZeitband(rows){
     if (!el('zeitband')) return;
@@ -380,21 +382,36 @@
           var d = new Date(m.tag + 'T00:00:00');
           if (d < von || d > bis) return;
           var det = [];
-          if (m.ersteller) det.push('Kürzel ' + m.ersteller);
-          if (m.reichweite) det.push('Reichweite ' + Number(m.reichweite).toLocaleString('de-CH'));
-          if (m.klicks) det.push('Klicks ' + Number(m.klicks).toLocaleString('de-CH'));
-          if (m.kosten) det.push('Kosten ' + Number(m.kosten).toLocaleString('de-CH'));
-          if (m.notiz) det.push('Notiz: ' + m.notiz);
+          if (m.ersteller) det.push(['Kürzel', m.ersteller]);
+          if (m.reichweite) det.push(['Reichweite', Number(m.reichweite).toLocaleString('de-CH')]);
+          if (m.klicks) det.push(['Klicks', Number(m.klicks).toLocaleString('de-CH')]);
+          if (m.kosten) det.push(['Kosten', Number(m.kosten).toLocaleString('de-CH')]);
+          if (m.notiz) det.push(['Notiz', m.notiz]);
           zbById[m.id] = m;
+          var istOffen = !!zbOffen[m.id];
           var span = document.createElement('span');
-          span.className = 'zb-chip clickable' + (m.notiz ? ' has-note' : '');
+          span.className = 'zb-chip clickable' + (istOffen ? ' open' : '') + (m.notiz ? ' has-note' : '');
           span.setAttribute('data-mid', m.id);
           span.setAttribute('role', 'button');
           span.setAttribute('tabindex', '0');
-          span.title = m.massnahme + ' – ' + det.filter(Boolean).join(' · ') + ' · anklicken zum Bearbeiten';
-          span.innerHTML = '<span class="zr"></span><span class="zt">' + zbTag(d) + '</span>';
-          span.appendChild(document.createTextNode(m.massnahme));
-          if (m.notiz){ var zn = document.createElement('span'); zn.className = 'zn'; zn.textContent = m.notiz; span.appendChild(zn); }
+          span.setAttribute('aria-expanded', istOffen ? 'true' : 'false');
+          span.title = m.massnahme + (det.length ? ' – ' + det.map(function(p){ return p[0] + ' ' + p[1]; }).join(' · ') : '') + ' · antippen zum Ausklappen';
+          var kopf = document.createElement('span'); kopf.className = 'zk';
+          kopf.innerHTML = '<span class="zr"></span><span class="zt">' + zbTag(d) + '</span>';
+          var zm = document.createElement('span'); zm.className = 'zm'; zm.textContent = m.massnahme;
+          kopf.appendChild(zm);
+          span.appendChild(kopf);
+          var box = document.createElement('span'); box.className = 'zb-det';
+          det.forEach(function(p){
+            var zd = document.createElement('span'); zd.className = 'zd';
+            var l = document.createElement('span'); l.className = 'zdl'; l.textContent = p[0];
+            var v = document.createElement('span'); v.className = 'zdv'; v.textContent = p[1];
+            zd.appendChild(l); zd.appendChild(v); box.appendChild(zd);
+          });
+          var eb = document.createElement('button'); eb.type = 'button'; eb.className = 'zb-edit';
+          eb.setAttribute('data-mid', m.id); eb.textContent = 'Bearbeiten';
+          box.appendChild(eb);
+          span.appendChild(box);
           chips += span.outerHTML;
         });
         zeile += '<td>' + chips + '</td>';
@@ -403,14 +420,30 @@
     });
 
     tbl.innerHTML = '<thead>' + h1 + h2 + '</thead><tbody>' + body + '</tbody>';
-    // Delegierter Klick/Tastatur: Chip → Aktivität in die Bearbeiten-Maske laden.
+    // Delegierter Klick/Tastatur: Chip klappt die Felder auf/zu, der Bearbeiten-Knopf
+    // im aufgeklappten Chip lädt die Aktivität in die Maske.
     if (!zbWired){
       zbWired = true;
-      var oeffne = function(t){ var c = t && t.closest && t.closest('.zb-chip[data-mid]'); if (!c) return false; var m = zbById[c.getAttribute('data-mid')]; if (m) massnahmeBearbeiten(m); return !!m; };
-      tbl.addEventListener('click', function(e){ oeffne(e.target); });
-      tbl.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ if (oeffne(e.target)) e.preventDefault(); } });
+      var kippe = function(c){
+        var offen = c.classList.toggle('open');
+        c.setAttribute('aria-expanded', offen ? 'true' : 'false');
+        var id = c.getAttribute('data-mid');
+        if (offen) zbOffen[id] = true; else delete zbOffen[id];
+      };
+      tbl.addEventListener('click', function(e){
+        var b = e.target.closest && e.target.closest('.zb-edit[data-mid]');
+        if (b){ var m = zbById[b.getAttribute('data-mid')]; if (m) massnahmeBearbeiten(m); return; }
+        var c = e.target.closest && e.target.closest('.zb-chip[data-mid]');
+        if (c) kippe(c);
+      });
+      tbl.addEventListener('keydown', function(e){
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        if (e.target.closest && e.target.closest('.zb-edit')) return; // Knopf reagiert selbst
+        var c = e.target.closest && e.target.closest('.zb-chip[data-mid]');
+        if (c){ e.preventDefault(); kippe(c); }
+      });
     }
-    el('zbLegende').innerHTML = '<span>Zeilen = Kanal, Spalten = Woche. Jeder Punkt eine Aktivität – anklicken zum Bearbeiten; Reichweite, Klicks, Kosten und Notiz beim Überfahren.</span>';
+    el('zbLegende').innerHTML = '<span>Zeilen = Kanal, Spalten = Woche. Jeder Punkt eine Aktivität – antippen klappt Reichweite, Klicks, Kosten und Notiz auf; Bearbeiten dort.</span>';
   }
 
   // Eintragen/Bearbeiten: offener Schreibweg (Muster Link-Register),
