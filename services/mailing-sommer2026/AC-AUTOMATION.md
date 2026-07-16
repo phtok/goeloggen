@@ -75,7 +75,9 @@ davon (Checkliste unten).
    - Sehen: «hat WS-Tag UND NICHT GTV-Tag» — Nein → Ende
    - Beides: «hat WEDER GTV- NOCH WS-Tag» — Nein → Ende
 5. **Wellen-Drip** (Zeiten = Schweizer Zeit):
-   - **Warten bis Do 16.07.2026, 9.30 Uhr** → Mail **w1** (Predictive Sending: ja).
+   - **Warten bis Do 16.07.2026, 12.00 Uhr** → Mail **w1** (Predictive Sending: ja).
+     *(Start am 16.7. von 9.30 auf 12 Uhr verschoben — der Aufbau läuft am
+     Versandtag selbst; die Wartezeit muss beim Aktivschalten in der Zukunft liegen.)*
    - **Warten bis Do 30.07.2026, 9.30 Uhr** → **Conversion-Check** (hat der
      Kontakt das Ziel-Abo-Tag? Ja → Ende) → Mail **w2** (Predictive: ja).
    - **Warten bis Fr 07.08.2026, 18.00 Uhr** → Conversion-Check → **Öffner-Split**:
