@@ -165,7 +165,7 @@
             <input id="slug" autocomplete="off" maxlength="24" placeholder="otter" />
             <button class="btn ghost" type="button" id="slugNew">anderes Tier</button>
           </span>
-          <span class="hint">Zweisilbiger Tiername – merkbar und leicht abzutippen (z. B. in einer Instagram-Bio).</span>
+          <span class="hint">Zwei- bis dreisilbiger Tiername, Deutsch oder Englisch je nach Sprache der Landingpage – merkbar und leicht abzutippen (z. B. in einer Instagram-Bio).</span>
         </label>
       </div>
 
@@ -223,12 +223,22 @@
 
   function el(id){ return document.getElementById(id); }
 
-  // Kurznamen sind zweisilbige Tiernamen – vertrauenswürdig, merkbar, tippbar
-  // (wichtig auf Instagram, wo Links in Bio/Caption abgetippt werden müssen).
-  var TIERE = ['otter','biber','reiher','marder','hummel','igel','wiesel','robbe','falke','taube',
+  // Kurznamen sind Tiernamen (zwei- bis dreisilbig) – vertrauenswürdig, merkbar,
+  // tippbar (wichtig auf Instagram, wo Links in Bio/Caption abgetippt werden müssen).
+  // Die Sprache des Tiers folgt der Sprache der Landingpage (de/en).
+  var TIERE_DE = ['otter','biber','reiher','marder','hummel','igel','wiesel','robbe','falke','taube',
     'amsel','meise','schwalbe','moewe','hase','esel','ziege','katze','eule','kraehe','elster','wachtel',
     'adler','unke','uhu','kranich','dohle','drossel','gecko','koala','panda','puma','tiger','zebra',
-    'kroete','spinne','schnecke','delfin','kamel','lama','luchs','dachs','fuchs','specht','fink','star'];
+    'kroete','spinne','schnecke','delfin','kamel','lama','luchs','dachs','fuchs','specht','fink','star',
+    'pinguin','pelikan','flamingo','papagei','forelle','libelle','gazelle','hermelin','kolibri',
+    'pavian','jaguar','gepard','bison','kondor','walross','seehund','maulwurf','hamster','lerche',
+    'wombat','sardine','makrele','murmeltier','alpaka','okapi'];
+  var TIERE_EN = ['rabbit','badger','heron','weasel','falcon','beaver','magpie','seal','eagle','dolphin',
+    'turtle','raven','robin','sparrow','swallow','seagull','pelican','flamingo','penguin','kestrel',
+    'marten','ferret','squirrel','buzzard','osprey','donkey','monkey','gorilla','gazelle','leopard',
+    'panther','walrus','hedgehog','tortoise','lobster','salmon','herring','mackerel','lizard','lemur',
+    'gibbon','pigeon','curlew','plover','starling','kingfisher'];
+  function tierListe(){ return el('sprache').value === 'en' ? TIERE_EN : TIERE_DE; }
   var usedCodes = {};   // aus dem Register gefüllt, damit kein Tier doppelt vorgeschlagen wird
 
   // Slug säubern: klein, Umlaute auflösen, nur [a-z0-9-].
@@ -238,14 +248,20 @@
       .replace(/[^a-z0-9-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
   }
 
-  // Freies (nicht vergebenes) Tier vorschlagen; sonst mit -2, -3 … anhängen.
+  // Freies (nicht vergebenes) Tier der passenden Sprache vorschlagen;
+  // sonst mit -2, -3 … anhängen.
   function neuerKurzname(){
-    var frei = TIERE.filter(function(t){ return !usedCodes[t]; });
+    var tiere = tierListe();
+    var frei = tiere.filter(function(t){ return !usedCodes[t]; });
     if(frei.length){ return frei[Math.floor((Date.now() >> 4) % frei.length)]; }
-    var t = TIERE[Math.floor((Date.now() >> 4) % TIERE.length)];
+    var t = tiere[Math.floor((Date.now() >> 4) % tiere.length)];
     for(var i = 2; usedCodes[t + '-' + i]; i++){ /* nächste freie Nummer */ }
     return t + '-' + i;
   }
+
+  // Auto-Vorschlag folgt der Sprache; eine Handeingabe wird nie überschrieben.
+  var slugWarAutomatisch = false;
+  function setzeAutoSlug(){ el('slug').value = neuerKurzname(); slugWarAutomatisch = true; }
 
   // Die sechs echten Landingpages: Angebot × Sprache (aus der universellen LP recherchiert).
   var LANDINGS = {
@@ -373,7 +389,11 @@
     };
   }
 
-  el('slugNew').addEventListener('click', function(){ el('slug').value = neuerKurzname(); });
+  el('slugNew').addEventListener('click', setzeAutoSlug);
+  el('slug').addEventListener('input', function(){ slugWarAutomatisch = false; });
+  el('sprache').addEventListener('change', function(){
+    if(slugWarAutomatisch || !el('slug').value) setzeAutoSlug();
+  });
 
   // Schreiben läuft über die RPCs (p_schluessel bleibt aus Kompatibilität in
   // der Signatur, wird serverseitig ignoriert – Beschluss vom 6.7.2026).
@@ -420,7 +440,7 @@
       .then(function(rows){
         var body = el('regBody'); body.innerHTML = '';
         usedCodes = {}; (rows || []).forEach(function(x){ if(x.code) usedCodes[x.code] = true; });
-        if(!el('slug').value || usedCodes[slugCode(el('slug').value)]) el('slug').value = neuerKurzname();
+        if(slugWarAutomatisch || !el('slug').value || usedCodes[slugCode(el('slug').value)]) setzeAutoSlug();
         if(!rows || !rows.length){ body.innerHTML = '<tr><td class="empty" colspan="5">Noch keine Links registriert.</td></tr>'; return; }
         rows.forEach(function(x){
           var tr = document.createElement('tr');
@@ -452,7 +472,7 @@
       .catch(function(){ el('regBody').innerHTML = '<tr><td class="empty" colspan="5">Register nicht ladbar.</td></tr>'; });
   }
 
-  el('slug').value = neuerKurzname();
+  setzeAutoSlug();
   render();
   loadRegister();
 </script>
