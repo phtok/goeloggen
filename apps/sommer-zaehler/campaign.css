@@ -138,17 +138,19 @@
   .motrow .mn{font-variant-numeric:tabular-nums lining-nums;color:var(--ink);font-weight:600}
   .kanal-rolle{color:var(--muted);font-size:var(--t-micro);margin-left:7px}
 
-  /* Zeitband: Phasen × Wochen × Kanäle (nur Tokens, DS02; Ziffern tnum, G25) */
-  .zb{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);min-width:720px}
-  .zb th,.zb td{border:1px solid var(--line-soft);padding:8px 10px;vertical-align:top;text-align:left}
+  /* Zeitband: Phasen × Wochen × Kanäle (nur Tokens, DS02; Ziffern tnum, G25).
+     Festes Spaltenraster: die Wochen teilen sich die Breite gleichmässig, statt
+     sich nach dem längsten Chip-Titel zu strecken – Titel laufen in die Ellipse. */
+  .zb{width:100%;table-layout:fixed;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);min-width:600px}
+  .zb th,.zb td{border:1px solid var(--line-soft);padding:6px 8px;vertical-align:top;text-align:left}
   .zb thead .ph th{font-weight:600;color:var(--on-accent);background:var(--blue-solid);border-color:var(--blue-solid)}
+  .zb thead .ph th:first-child{width:112px}
   .zb thead .wk th{font-weight:600;color:var(--muted);font-size:var(--t-micro);font-variant-numeric:tabular-nums;white-space:nowrap}
   .zb thead .wk th.heute{color:var(--gold-ink);border-bottom:2px solid var(--gold)}
-  .zb .kz{white-space:nowrap;color:var(--ink);font-weight:600;background:var(--soft)}
-  .zb td{min-width:104px}
+  .zb .kz{color:var(--ink);font-weight:600;background:var(--soft);overflow-wrap:anywhere}
   /* Chip kompakt: Punkt · Tag · Titel in EINER Zeile (Übersicht) – Antippen
      klappt die Felder auf (.zb-det). Zustand .open + aria-expanded aus campaign.js. */
-  .zb-chip{display:block;margin:2px 0;padding:4px 8px;border:1px solid var(--line);border-radius:var(--r-control);
+  .zb-chip{display:block;margin:2px 0;padding:4px 6px;border:1px solid var(--line);border-radius:var(--r-control);
     background:var(--field-bg);color:var(--ink);font-size:var(--t-micro);line-height:1.35;overflow-wrap:anywhere}
   .zb-chip.clickable{cursor:pointer}
   .zb-chip.clickable:hover{border-color:var(--gold);background:var(--soft)}
@@ -159,11 +161,16 @@
   .zb-chip .zr{display:inline-block;flex:none;width:8px;height:8px;border-radius:50%;align-self:center;background:var(--blue)}
   .zb-chip .zm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .zb-chip.open .zm{white-space:normal;overflow:visible}
+  .zb-chip.open .zr{align-self:flex-start;margin-top:5px}
   .zb-chip .zb-det{display:none}
   .zb-chip.open .zb-det{display:block;margin-top:4px;padding-top:4px;border-top:1px solid var(--line-soft)}
   .zb-chip .zd{display:flex;justify-content:space-between;gap:8px;padding:2px 0}
   .zb-chip .zd .zdl{color:var(--muted);flex:none}
   .zb-chip .zd .zdv{font-variant-numeric:tabular-nums;text-align:right;overflow-wrap:anywhere}
+  /* Text-Felder (Notiz) gestapelt statt rechtsbündig gequetscht */
+  .zb-chip .zd.zd-note{display:block}
+  .zb-chip .zd-note .zdl{display:block}
+  .zb-chip .zd-note .zdv{display:block;text-align:left;overflow-wrap:break-word}
   .zb-edit{font-family:var(--font-text);font-size:var(--t-micro);color:var(--blue);background:none;border:0;cursor:pointer;padding:6px 0;margin-top:2px;min-height:var(--tap)}
   .zb-edit:hover{color:var(--gold-ink)}
   .mnote{display:block;margin-top:2px;color:var(--muted);font-size:var(--t-micro);line-height:1.4}
