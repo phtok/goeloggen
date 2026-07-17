@@ -46,10 +46,12 @@ Sie aufmerksam geworden?», E-Mail-redigiert). So bleibt sichtbar, welches
 welcher Kanal. Die Ingestion (Paperform / Uscreen) schreibt das mit; der
 `kanal`-Bucket wird daraus abgeleitet. Die **Kosten** liegen (wie Preise und
 Zielmarken) im `CONFIG`-Block der Seite; daraus rechnet das Cockpit Kosten je Abo
-(CPA) und den Rückfluss je eingesetztem Franken. Alle Geldbeträge zeigt das
-Cockpit in **einer** Anzeige-Währung (`CONFIG.waehrung`, aktuell CHF); gezahlt
-wird real in EUR und CHF (`waehrung` je Anmeldung) – echte Preise je Währung
-stehen noch aus.
+(CPA) und den Rückfluss je eingesetztem Franken. Der Folgejahr-Umsatz rechnet
+je **Zahlungswährung** getrennt (`waehrung` je Anmeldung; goetheanum.tv
+rechnet ausschliesslich in EUR) mit den **echten Preisen** aus den
+Kampagnen-Formularen bzw. dem Uscreen-Store (`CONFIG.preise`, Stand
+17.7.2026); die EUR-Summe fliesst über `CONFIG.eurChf` in die
+CHF-Gesamtsumme ein.
 
 ## Wirkungskette und Aktivitäten-Protokoll
 

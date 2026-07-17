@@ -19,14 +19,28 @@
       'wos.en.digital': 120,
       'gtv.de': 250, 'gtv.en': 180
     },
-    // Anzeige-Währung aller Geldbeträge (Kosten, CPA, Folgejahr-Umsatz).
-    // Gezahlt wird real in EUR UND CHF (Paperform-Formulare je Währung) – bis
-    // je Währung echte Preise hinterlegt sind, gilt EINE Rechenwährung.
+    // Anzeige-Währung aller Geldbeträge (Kosten, CPA, Summenzeile Folgejahr-Umsatz).
     waehrung: 'CHF',
-    // Beispielpreise (Vollpreis der wiederkehrenden Zahlung, in CONFIG.waehrung) – bitte ersetzen.
+    // Umrechnung EUR→CHF – nur für die Summenzeile (EUR-Umsatz in die
+    // CHF-Gesamtsumme einrechnen). Bei Kursbewegung hier nachführen.
+    eurChf: 0.93,
+    // ECHTE Preise (Stand 17.7.2026): Wochenschrift aus den vier Kampagnen-
+    // Formularen (Paperform, CHF/EUR × Papier&Online/Online), goetheanum.tv aus
+    // dem Uscreen-Store (rechnet ausschliesslich in EUR: 14.90/Monat, 149/Jahr).
+    // «Ermässigt» ist im Shop KEIN eigener Preis, sondern läuft über Coupons
+    // (20/30/50 %) – ermässigte Zeilen rechnen darum zum Standardpreis (Fallback).
+    // Das Förderabo der Wochenschrift (Papier 249 CHF/239 EUR, Online 199/189
+    // im Jahr) führt das Backend nicht als Tarif – es zählt als Standard.
     preise: {
-      wos: { standard:{monatlich:14.9, jaehrlich:149}, ermaessigt:{monatlich:7.9, jaehrlich:79} },
-      gtv: { standard:{monatlich:12,   jaehrlich:120}, ermaessigt:{monatlich:8,   jaehrlich:80} }
+      chf: {
+        wos: { papier:  { standard:{monatlich:14.9, jaehrlich:149} },
+               digital: { standard:{monatlich:10.9, jaehrlich:109} } }
+      },
+      eur: {
+        wos: { papier:  { standard:{monatlich:13.9, jaehrlich:139} },
+               digital: { standard:{monatlich:9.9,  jaehrlich:99} } },
+        gtv: { stream:  { standard:{monatlich:14.9, jaehrlich:149} } }
+      }
     },
     // Herkunftswege (Attribution) mit Hauptaufgabe – nicht jeder Kanal verkauft.
     // Social stiftet Aufmerksamkeit, der Newsletter Beziehung, das Mailing die
@@ -38,7 +52,7 @@
       { key:'popup',      label:'Popup',          rolle:'Entscheidung' },
       { key:'website',    label:'Website direkt', rolle:'Orientierung' },
       { key:'empfehlung', label:'Empfehlung',     rolle:'Vertrauen' },
-      { key:'andere',     label:'Andere',         rolle:'' }
+      { key:'andere',     label:'ohne UTM',       rolle:'' }
     ],
     // Kosten der Aktion (in CONFIG.waehrung) – stehen auf 0, echte Zahlen werden erfragt.
     zahlenProvisorisch: true,      // blendet den Hinweis auf Beispielwerte ein
@@ -155,15 +169,15 @@
       row.querySelector('.track > span').style.width = Math.max(3, Math.round(x.n / max * 100)) + '%';
       host.appendChild(row);
     });
-    // «Andere» einordnen: kein eigener Kanal, sondern Anmeldungen OHNE UTM-Spur.
+    // «ohne UTM» einordnen: kein eigener Kanal, sondern Anmeldungen ohne UTM-Spur.
     // Hauptquellen: goetheanum.tv (der Uscreen-Webhook trägt keine UTM-Felder mit)
     // und direkte Landingpage-/Formular-Aufrufe ohne Parameter.
     var ohneSpur = byKanal['andere'] || 0;
     if (ohneSpur > 0){
       var note = document.createElement('div'); note.className = 'fnote';
-      note.textContent = '«Andere» heisst: ohne UTM-Spur angekommen (' + fmt(ohneSpur) +
-        ' Anmeldungen). Der goetheanum.tv-Checkout liefert technisch keine UTMs in den Webhook – ' +
-        'diese Abos landen immer hier; dazu direkte Aufrufe von Landingpage oder Formular. ' +
+      note.textContent = '«ohne UTM» = ' + fmt(ohneSpur) + ' Anmeldungen, die ohne UTM-Parameter ankamen. ' +
+        'Der goetheanum.tv-Checkout liefert technisch keine UTMs in den Webhook – diese Abos landen immer hier; ' +
+        'dazu direkte Aufrufe von Landingpage oder Formular. ' +
         'Die Einzel-Ereignisse stehen unter Momentum → «Was ist passiert?».';
       host.appendChild(note);
     }
@@ -726,7 +740,8 @@
     posten.forEach(function(k){ var b = Number(k.betrag) || 0; summe += b; jeKat[k.kategorie] = (jeKat[k.kategorie] || 0) + b; });
     el('costTotal').textContent = geld(summe);
     el('costCpa').textContent   = (summe > 0 && total > 0) ? geld(summe / total) : '–';
-    el('costRoi').textContent   = summe > 0 ? (revenue / summe).toFixed(1) + '×' : '–';
+    var revChf = revenue && revenue.chfGesamt || 0;
+    el('costRoi').textContent   = summe > 0 ? (revChf / summe).toFixed(1) + '×' : '–';
 
     var body = el('costBody'); body.innerHTML = '';
     Object.keys(KAT_LABEL).forEach(function(kat){
@@ -815,17 +830,28 @@
   }
 
   // ── Umsatz-Projektion (Folgejahr) ──────────────────────────────────────────
+  // Rechnet je Zahlungswährung getrennt (CHF- und EUR-Zahler zum je echten
+  // Preis) und liefert zusätzlich die CHF-Gesamtsumme (EUR über CONFIG.eurChf).
+  // goetheanum.tv rechnet ausschliesslich in EUR – Zeilen ohne Währungsangabe
+  // fallen darum auf EUR. Preis-Lookup: Währung → Produkt → Format → Tarif
+  // (ermässigt hat im Shop keinen eigenen Preis → Fallback Standard).
   function projectRevenue(rows){
-    return rows.reduce(function(sum, r){
-      var preis = ((CONFIG.preise[r.produkt] || {})[r.tarif] || {})[r.intervall];
-      if(!preis) return sum;
+    var summe = { chf: 0, eur: 0 };
+    rows.forEach(function(r){
+      var w = r.waehrung === 'chf' ? 'chf' : 'eur';
+      var jeFormat = ((CONFIG.preise[w] || {})[r.produkt] || {})[r.format] || {};
+      var jeTarif = jeFormat[r.tarif] || jeFormat.standard || {};
+      var preis = jeTarif[r.intervall];
+      if(!preis) return;
       var jahr = r.intervall === 'monatlich' ? preis * 12 : preis;
       var bleibend;
       if(r.status === 'bleibt') bleibend = Number(r.n);
       else if(r.status === 'neu' || r.status === 'laeuft-aus') bleibend = Number(r.n) * CONFIG.bleibeQuote;
       else bleibend = 0;                     // gekuendigt zählt nicht
-      return sum + bleibend * jahr;
-    }, 0);
+      summe[w] += bleibend * jahr;
+    });
+    summe.chfGesamt = summe.chf + summe.eur * CONFIG.eurChf;
+    return summe;
   }
 
   // ── Kacheln, Meilensteine ──────────────────────────────────────────────────
@@ -874,9 +900,13 @@
     card.querySelector('.txt .m').textContent = fmt(offen) + ' Entscheidungen noch offen · ' + fmt(bleibt) + ' bereits umgewandelt';
     card.querySelector('.pill').textContent = 'Projektion · Annahme ' + Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote';
 
-    el('projValue').textContent = geld(revenue);
-    el('projNote').textContent = 'Hochgerechnet: bleibende Abos zum Vollpreis über alle Tarife, bei ' +
-      Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote.';
+    el('projValue').textContent = geld(revenue.chfGesamt);
+    var teile = [];
+    if (revenue.chf > 0) teile.push('CHF ' + Math.round(revenue.chf).toLocaleString('de-CH') + ' von CHF-Zahlern');
+    if (revenue.eur > 0) teile.push('€ ' + Math.round(revenue.eur).toLocaleString('de-CH') + ' von EUR-Zahlern, umgerechnet zum Kurs ' + CONFIG.eurChf);
+    el('projNote').textContent = 'Hochgerechnet: bleibende Abos zum echten Vollpreis je Zahlungswährung' +
+      (teile.length ? ' (' + teile.join(' + ') + ')' : '') + ', bei ' +
+      Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote.';
   }
 
   // ── Momentum ───────────────────────────────────────────────────────────────
@@ -940,7 +970,7 @@
       sb.textContent = wann + ' · ' + t.datum.toLocaleDateString('de-CH', { day: 'numeric', month: 'long' });
       var sn = document.createElement('span'); sn.className = 'ev-sum';
       sn.textContent = fmt(t.rows.length) + (t.rows.length === 1 ? ' Abo' : ' Abos') +
-        ' · ' + fmt(mitSpur) + ' mit Spur · ' + fmt(t.rows.length - mitSpur) + ' ohne';
+        ' · ' + fmt(mitSpur) + ' mit UTM · ' + fmt(t.rows.length - mitSpur) + ' ohne';
       sum.appendChild(sb); sum.appendChild(sn); det.appendChild(sum);
       var list = document.createElement('div'); list.className = 'ev-list';
       t.rows.forEach(function(r){
@@ -962,7 +992,7 @@
           her.appendChild(spur);
         } else {
           var ob = document.createElement('span'); ob.className = 'ev-kanal ev-ohne';
-          ob.textContent = 'ohne Spur';
+          ob.textContent = 'ohne UTM';
           her.appendChild(ob);
           var wo = document.createElement('span'); wo.className = 'ev-spur';
           wo.textContent = r.landing_path ? ('via ' + r.landing_path) : ('via ' + (r.source === 'uscreen' ? 'goetheanum.tv-Checkout' : r.source));
@@ -975,7 +1005,7 @@
       host.appendChild(det);
     });
     var note = document.createElement('div'); note.className = 'fnote';
-    note.textContent = 'Zeiten auf die Stunde gerundet, keine Personendaten. «Ohne Spur» = Anmeldung kam ohne UTM-Parameter an (zählt in der Wirkung als «Andere»).';
+    note.textContent = 'Zeiten auf die Stunde gerundet, keine Personendaten. «ohne UTM» = Anmeldung kam ohne UTM-Parameter an – so heisst sie auch in der Wirkung.';
     host.appendChild(note);
   }
 

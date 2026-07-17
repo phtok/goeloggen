@@ -207,6 +207,8 @@ Deno.serve(async (req) => {
 
   const row = {
     signed_up_at: when, produkt: "gtv", sprache, format: "stream",
+    // Der Store rechnet ausschliesslich in EUR (Uscreen-Währung des Shops).
+    waehrung: "eur",
     tarif, intervall, status: "neu", kanal, source: "uscreen", ext_id: ext, dedup_key: dedupKey,
     kampagne: (camp ? String(camp) : "summer26_trial"),
     utm_source: src ? String(src) : null, utm_medium: med ? String(med) : null,
