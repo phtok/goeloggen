@@ -64,7 +64,11 @@
   .reg .zero{color:var(--muted)}
   .tablewrap{overflow-x:auto;margin-top:var(--s4)}
   .empty{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
+  /* Register-Werkzeuge: Suche, Filter, Sortierung – Felder aus base.css, nur Raster hier. */
+  .reg-tools{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:var(--s3);margin-top:var(--s4)}
+  .reg-zahl{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin:var(--s3) 0 0;font-variant-numeric:tabular-nums}
 
+  @media (max-width:720px){ .reg-tools{grid-template-columns:1fr 1fr} }
   @media (max-width:640px){
     .grid{grid-template-columns:1fr}
     .out{grid-template-columns:1fr}
@@ -196,6 +200,30 @@
       <h2>Registrierte Links</h2>
       <p>Soll und Ist: jeder gebaute Link mit der Zahl der Anmeldungen, die tatsächlich über ihn kamen. <q>0</q> heisst: lief, brachte (noch) nichts.</p>
     </div>
+    <!-- Werkzeuge über der Liste: Suche, zwei Filter, Sortierung – die Liste
+         bleibt vollständig geladen, gefiltert wird im Browser. -->
+    <div class="reg-tools">
+      <label class="field"><span class="lab">Suche</span>
+        <input id="regSuche" type="search" placeholder="Motiv, Quelle, Tiername, URL …" autocomplete="off" /></label>
+      <label class="field"><span class="lab">Quelle</span>
+        <select id="regQuelle"><option value="">alle</option></select></label>
+      <label class="field"><span class="lab">Ziel</span>
+        <select id="regZiel">
+          <option value="">alle</option>
+          <option value="uebersicht">Übersicht</option>
+          <option value="wos">Wochenschrift</option>
+          <option value="tv">goetheanum.tv</option>
+        </select></label>
+      <label class="field"><span class="lab">Sortieren nach</span>
+        <select id="regSort">
+          <option value="abschluesse">Abschlüsse · meiste zuerst</option>
+          <option value="neu">Neueste zuerst</option>
+          <option value="alt">Älteste zuerst</option>
+          <option value="motiv">Motiv A–Z</option>
+          <option value="quelle">Quelle A–Z</option>
+        </select></label>
+    </div>
+    <p class="reg-zahl" id="regZahl"></p>
     <div class="tablewrap">
       <table class="reg">
         <colgroup><col class="cMot" /><col class="cQm" /><col class="cZiel" /><col class="cAb" /><col class="cAct" /></colgroup>
@@ -433,41 +461,106 @@
       .catch(function(){ say('Löschen nicht erreichbar.', true); });
   }
 
+  // Register: einmal laden, dann im Browser suchen, filtern, sortieren.
+  var regRows = [];
+
+  function regQuelleOptionen(){
+    // Quellen-Filter aus den tatsächlich vorhandenen utm_source-Werten füllen;
+    // die aktuelle Auswahl übersteht das Neuladen.
+    var sel = el('regQuelle'), aktuell = sel.value;
+    var quellen = {};
+    regRows.forEach(function(x){ if(x.utm_source) quellen[x.utm_source] = true; });
+    sel.innerHTML = '<option value="">alle</option>';
+    Object.keys(quellen).sort().forEach(function(s){
+      var o = document.createElement('option'); o.value = s; o.textContent = s; sel.appendChild(o);
+    });
+    if(quellen[aktuell]) sel.value = aktuell;
+  }
+
+  function applyRegister(){
+    var body = el('regBody'); body.innerHTML = '';
+    if(!regRows.length){
+      body.innerHTML = '<tr><td class="empty" colspan="5">Noch keine Links registriert.</td></tr>';
+      el('regZahl').textContent = '';
+      return;
+    }
+    var suche = (el('regSuche').value || '').trim().toLowerCase();
+    var fQuelle = el('regQuelle').value, fZiel = el('regZiel').value;
+    var rows = regRows.filter(function(x){
+      if(fQuelle && x.utm_source !== fQuelle) return false;
+      if(fZiel && x.landing !== fZiel) return false;
+      if(!suche) return true;
+      var heu = [x.utm_content, x.utm_source, x.utm_medium, x.code, x.url,
+                 x.ersteller, ANGEBOT_LABEL[x.landing] || x.landing, x.sprache]
+        .filter(Boolean).join(' ').toLowerCase();
+      return heu.indexOf(suche) !== -1;
+    });
+    var sortiert = rows.slice();
+    var az = function(a, b){ return String(a || '').localeCompare(String(b || ''), 'de'); };
+    switch(el('regSort').value){
+      case 'neu':    sortiert.sort(function(a, b){ return new Date(b.created_at) - new Date(a.created_at); }); break;
+      case 'alt':    sortiert.sort(function(a, b){ return new Date(a.created_at) - new Date(b.created_at); }); break;
+      case 'motiv':  sortiert.sort(function(a, b){ return az(a.utm_content, b.utm_content); }); break;
+      case 'quelle': sortiert.sort(function(a, b){ return az(a.utm_source, b.utm_source) || az(a.utm_medium, b.utm_medium); }); break;
+      default:       sortiert.sort(function(a, b){ return (Number(b.abschluesse) || 0) - (Number(a.abschluesse) || 0) ||
+                                                          (new Date(b.created_at) - new Date(a.created_at)); });
+    }
+    var abschluesse = sortiert.reduce(function(s, x){ return s + (Number(x.abschluesse) || 0); }, 0);
+    el('regZahl').textContent = sortiert.length === regRows.length
+      ? (regRows.length + ' Links · ' + abschluesse.toLocaleString('de-CH') + ' Abschlüsse')
+      : (sortiert.length + ' von ' + regRows.length + ' Links · ' + abschluesse.toLocaleString('de-CH') + ' Abschlüsse im Filter');
+    if(!sortiert.length){
+      body.innerHTML = '<tr><td class="empty" colspan="5">Kein Link passt zu Suche/Filter.</td></tr>';
+      return;
+    }
+    sortiert.forEach(function(x){
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td class="mot"></td><td class="mot"></td><td></td><td class="num"></td><td class="act"></td>';
+      var mot = tr.children[0];
+      mot.textContent = x.utm_content || '—';
+      var q = document.createElement('span'); q.className = 'q';
+      // Kurzlink zeigen (aufgeräumt für die Veröffentlichung), Titel = volle URL.
+      if(x.code){ var a = document.createElement('a'); a.href = SHORTBASE + x.code;
+        a.target = '_blank'; a.rel = 'noopener'; a.textContent = SHORTBASE + x.code;
+        a.title = x.url; q.appendChild(a); }
+      else { q.textContent = x.url; }
+      mot.appendChild(q);
+      tr.children[1].textContent = [x.utm_source, x.utm_medium].filter(Boolean).join(' · ');
+      // Unterzeile: wann angelegt, von wem – macht die Sortierung nach Datum lesbar.
+      var meta = document.createElement('span'); meta.className = 'q';
+      var wann = x.created_at ? new Date(x.created_at).toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) : '';
+      meta.textContent = [wann && ('angelegt ' + wann), x.ersteller].filter(Boolean).join(' · ');
+      if(meta.textContent) tr.children[1].appendChild(meta);
+      var ziel = ANGEBOT_LABEL[x.landing] || x.landing || '';
+      if(x.sprache) ziel += ' · ' + x.sprache.toUpperCase();
+      tr.children[2].textContent = ziel;
+      var n = Number(x.abschluesse) || 0;
+      tr.children[3].textContent = n.toLocaleString('de-CH');
+      if(n === 0) tr.children[3].className = 'num zero';
+      var del = document.createElement('button');
+      del.type = 'button'; del.className = 'del'; del.textContent = 'Löschen';
+      del.setAttribute('aria-label', 'Link löschen');
+      del.addEventListener('click', function(){ loescheLink(x.url); });
+      tr.children[4].appendChild(del);
+      body.appendChild(tr);
+    });
+  }
+
+  ['regSuche','regQuelle','regZiel','regSort'].forEach(function(id){
+    el(id).addEventListener('input', applyRegister);
+    el(id).addEventListener('change', applyRegister);
+  });
+
   function loadRegister(){
     fetch(SB + '/rest/v1/rpc/sommer2026_links_public', {
       method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY }, body:'{}'
     }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(rows){
-        var body = el('regBody'); body.innerHTML = '';
-        usedCodes = {}; (rows || []).forEach(function(x){ if(x.code) usedCodes[x.code] = true; });
+        regRows = rows || [];
+        usedCodes = {}; regRows.forEach(function(x){ if(x.code) usedCodes[x.code] = true; });
         if(slugWarAutomatisch || !el('slug').value || usedCodes[slugCode(el('slug').value)]) setzeAutoSlug();
-        if(!rows || !rows.length){ body.innerHTML = '<tr><td class="empty" colspan="5">Noch keine Links registriert.</td></tr>'; return; }
-        rows.forEach(function(x){
-          var tr = document.createElement('tr');
-          tr.innerHTML = '<td class="mot"></td><td></td><td></td><td class="num"></td><td class="act"></td>';
-          var mot = tr.children[0];
-          mot.textContent = x.utm_content || '—';
-          var q = document.createElement('span'); q.className = 'q';
-          // Kurzlink zeigen (aufgeräumt für die Veröffentlichung), Titel = volle URL.
-          if(x.code){ var a = document.createElement('a'); a.href = SHORTBASE + x.code;
-            a.target = '_blank'; a.rel = 'noopener'; a.textContent = SHORTBASE + x.code;
-            a.title = x.url; q.appendChild(a); }
-          else { q.textContent = x.url; }
-          mot.appendChild(q);
-          tr.children[1].textContent = [x.utm_source, x.utm_medium].filter(Boolean).join(' · ');
-          var ziel = ANGEBOT_LABEL[x.landing] || x.landing || '';
-          if(x.sprache) ziel += ' · ' + x.sprache.toUpperCase();
-          tr.children[2].textContent = ziel;
-          var n = Number(x.abschluesse) || 0;
-          tr.children[3].textContent = n.toLocaleString('de-CH');
-          if(n === 0) tr.children[3].className = 'num zero';
-          var del = document.createElement('button');
-          del.type = 'button'; del.className = 'del'; del.textContent = 'Löschen';
-          del.setAttribute('aria-label', 'Link löschen');
-          del.addEventListener('click', function(){ loescheLink(x.url); });
-          tr.children[4].appendChild(del);
-          body.appendChild(tr);
-        });
+        regQuelleOptionen();
+        applyRegister();
       })
       .catch(function(){ el('regBody').innerHTML = '<tr><td class="empty" colspan="5">Register nicht ladbar.</td></tr>'; });
   }

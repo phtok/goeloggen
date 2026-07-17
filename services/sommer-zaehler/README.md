@@ -31,7 +31,9 @@ RPCs (für `anon` per Publishable-Key aufrufbar, wie in `statistik.html`):
 `sommer2026_kohorten` (der 3-Monats-Moment), `sommer2026_kanaele` (Attribution
 je Herkunftsweg), `sommer2026_attribution` (feiner: je UTM-Motiv),
 `sommer2026_trichter` (Wirkungskette Sichtbarkeit→Bindung),
-`sommer2026_massnahmen_public` (Massnahmen-Protokoll, kuratiert).
+`sommer2026_massnahmen_public` (Massnahmen-Protokoll, kuratiert),
+`sommer2026_ereignisse` (Einzel-Anmeldungen der letzten 14 Tage für «Was ist
+passiert?» – stundengenau gerundet, ohne jede Personenspalte).
 
 ## Attribution (Woher) und Kosten
 
@@ -44,7 +46,10 @@ Sie aufmerksam geworden?», E-Mail-redigiert). So bleibt sichtbar, welches
 welcher Kanal. Die Ingestion (Paperform / Uscreen) schreibt das mit; der
 `kanal`-Bucket wird daraus abgeleitet. Die **Kosten** liegen (wie Preise und
 Zielmarken) im `CONFIG`-Block der Seite; daraus rechnet das Cockpit Kosten je Abo
-(CPA) und den Rückfluss je € Kosten.
+(CPA) und den Rückfluss je eingesetztem Franken. Alle Geldbeträge zeigt das
+Cockpit in **einer** Anzeige-Währung (`CONFIG.waehrung`, aktuell CHF); gezahlt
+wird real in EUR und CHF (`waehrung` je Anmeldung) – echte Preise je Währung
+stehen noch aus.
 
 ## Wirkungskette und Aktivitäten-Protokoll
 

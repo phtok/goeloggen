@@ -19,7 +19,11 @@
       'wos.en.digital': 120,
       'gtv.de': 250, 'gtv.en': 180
     },
-    // Beispielpreise (Vollpreis der wiederkehrenden Zahlung, Euro) – bitte ersetzen.
+    // Anzeige-Währung aller Geldbeträge (Kosten, CPA, Folgejahr-Umsatz).
+    // Gezahlt wird real in EUR UND CHF (Paperform-Formulare je Währung) – bis
+    // je Währung echte Preise hinterlegt sind, gilt EINE Rechenwährung.
+    waehrung: 'CHF',
+    // Beispielpreise (Vollpreis der wiederkehrenden Zahlung, in CONFIG.waehrung) – bitte ersetzen.
     preise: {
       wos: { standard:{monatlich:14.9, jaehrlich:149}, ermaessigt:{monatlich:7.9, jaehrlich:79} },
       gtv: { standard:{monatlich:12,   jaehrlich:120}, ermaessigt:{monatlich:8,   jaehrlich:80} }
@@ -36,7 +40,7 @@
       { key:'empfehlung', label:'Empfehlung',     rolle:'Vertrauen' },
       { key:'andere',     label:'Andere',         rolle:'' }
     ],
-    // Kosten der Aktion (Euro) – stehen auf 0, echte Zahlen werden erfragt.
+    // Kosten der Aktion (in CONFIG.waehrung) – stehen auf 0, echte Zahlen werden erfragt.
     zahlenProvisorisch: true,      // blendet den Hinweis auf Beispielwerte ein
     // Externe Quelle der Social-Media-Zahlen (Reichweite/Klicks je Kanal).
     // Metricool gibt die Zahlen nur im geschützten Dashboard aus – ein Live-Abgriff
@@ -61,7 +65,7 @@
   ];
 
   function fmt(n){ return (Number(n)||0).toLocaleString('de-CH'); }
-  function eur(n){ return '€ ' + Math.round(Number(n)||0).toLocaleString('de-CH'); }
+  function geld(n){ return CONFIG.waehrung + ' ' + Math.round(Number(n)||0).toLocaleString('de-CH'); }
   function el(id){ return document.getElementById(id); }
   function dmy(d){ return d.toLocaleDateString('de-CH',{day:'numeric',month:'long'}); }
 
@@ -151,6 +155,18 @@
       row.querySelector('.track > span').style.width = Math.max(3, Math.round(x.n / max * 100)) + '%';
       host.appendChild(row);
     });
+    // «Andere» einordnen: kein eigener Kanal, sondern Anmeldungen OHNE UTM-Spur.
+    // Hauptquellen: goetheanum.tv (der Uscreen-Webhook trägt keine UTM-Felder mit)
+    // und direkte Landingpage-/Formular-Aufrufe ohne Parameter.
+    var ohneSpur = byKanal['andere'] || 0;
+    if (ohneSpur > 0){
+      var note = document.createElement('div'); note.className = 'fnote';
+      note.textContent = '«Andere» heisst: ohne UTM-Spur angekommen (' + fmt(ohneSpur) +
+        ' Anmeldungen). Der goetheanum.tv-Checkout liefert technisch keine UTMs in den Webhook – ' +
+        'diese Abos landen immer hier; dazu direkte Aufrufe von Landingpage oder Formular. ' +
+        'Die Einzel-Ereignisse stehen unter Momentum → «Was ist passiert?».';
+      host.appendChild(note);
+    }
   }
 
   // ── Wirkungskette: Reichweite → Klicks → Abschlüsse → Geblieben ─────────────
@@ -499,7 +515,7 @@
       tr.children[1].textContent = (r.massnahme || '') + (r.ersteller ? ' · ' + r.ersteller : '');
       if (r.notiz){ var nn = document.createElement('span'); nn.className = 'mnote'; nn.textContent = r.notiz; tr.children[1].appendChild(nn); }
       tr.children[2].textContent = kanal;
-      tr.children[3].textContent = (r.kosten != null) ? eur(r.kosten) : '–';
+      tr.children[3].textContent = (r.kosten != null) ? geld(r.kosten) : '–';
       tr.children[4].textContent = (r.reichweite != null) ? fmt(r.reichweite) : '–';
       tr.children[5].textContent = (r.klicks != null) ? fmt(r.klicks) : '–';
       var edit = document.createElement('button');
@@ -708,8 +724,8 @@
     posten = posten || [];
     var jeKat = {}; var summe = 0;
     posten.forEach(function(k){ var b = Number(k.betrag) || 0; summe += b; jeKat[k.kategorie] = (jeKat[k.kategorie] || 0) + b; });
-    el('costTotal').textContent = eur(summe);
-    el('costCpa').textContent   = (summe > 0 && total > 0) ? eur(summe / total) : '–';
+    el('costTotal').textContent = geld(summe);
+    el('costCpa').textContent   = (summe > 0 && total > 0) ? geld(summe / total) : '–';
     el('costRoi').textContent   = summe > 0 ? (revenue / summe).toFixed(1) + '×' : '–';
 
     var body = el('costBody'); body.innerHTML = '';
@@ -718,12 +734,12 @@
       var tr = document.createElement('tr');
       tr.innerHTML = '<td></td><td class="num"></td>';
       tr.children[0].textContent = KAT_LABEL[kat];
-      tr.children[1].textContent = eur(jeKat[kat] || 0);
+      tr.children[1].textContent = geld(jeKat[kat] || 0);
       body.appendChild(tr);
     });
     var foot = el('costFoot');
     foot.innerHTML = '<tr><td>Summe</td><td class="num"></td></tr>';
-    foot.querySelector('tr').children[1].textContent = eur(summe);
+    foot.querySelector('tr').children[1].textContent = geld(summe);
 
     var pb = el('kostenPostenBody'); pb.innerHTML = '';
     if (!posten.length){
@@ -735,7 +751,7 @@
         tr.children[0].textContent = k.tag ? new Date(k.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) : '–';
         tr.children[1].textContent = (k.posten || '') + (k.ersteller ? ' · ' + k.ersteller : '');
         tr.children[2].textContent = KAT_LABEL[k.kategorie] || k.kategorie || '';
-        tr.children[3].textContent = eur(k.betrag);
+        tr.children[3].textContent = geld(k.betrag);
         pb.appendChild(tr);
       });
     }
@@ -858,7 +874,7 @@
     card.querySelector('.txt .m').textContent = fmt(offen) + ' Entscheidungen noch offen · ' + fmt(bleibt) + ' bereits umgewandelt';
     card.querySelector('.pill').textContent = 'Projektion · Annahme ' + Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote';
 
-    el('projValue').textContent = eur(revenue);
+    el('projValue').textContent = geld(revenue);
     el('projNote').textContent = 'Hochgerechnet: bleibende Abos zum Vollpreis über alle Tarife, bei ' +
       Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote.';
   }
@@ -887,10 +903,91 @@
     return { avg: Math.round(sum / recent.length), days: recent.length };
   }
 
+  // ── Ereignis-Protokoll: die einzelnen Abos («Was ist passiert?») ────────────
+  // RPC sommer2026_ereignisse: Einzel-Anmeldungen der letzten 14 Tage, stunden-
+  // genau gerundet, ohne Personendaten. Beantwortet «woher kamen heute welche
+  // Abos?» – je Tag aufklappbar, heute offen. Abos ohne UTM-Spur sind markiert.
+  function evProduktLabel(r){
+    if (r.produkt === 'gtv') return 'goetheanum.tv · ' + (r.sprache === 'en' ? 'EN' : 'DE');
+    return 'Wochenschrift · ' + (r.sprache === 'en' ? 'EN' : 'DE') + ' · ' + (r.format === 'papier' ? 'Papier' : 'Digital');
+  }
+  function renderEreignisse(rows){
+    var host = el('evList'); if (!host) return;
+    host.innerHTML = '';
+    if (!rows || !rows.length){
+      host.innerHTML = '<div class="empty">Noch keine Anmeldungen in den letzten 14 Tagen.</div>';
+      return;
+    }
+    var heute = new Date(); heute.setHours(0, 0, 0, 0);
+    var gestern = new Date(heute); gestern.setDate(gestern.getDate() - 1);
+    var tage = {}, folge = [];
+    rows.forEach(function(r){
+      var d = new Date(r.stunde);
+      var k = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+      if (!tage[k]){ tage[k] = { datum: new Date(d.getFullYear(), d.getMonth(), d.getDate()), rows: [] }; folge.push(k); }
+      tage[k].rows.push(r);
+    });
+    folge.forEach(function(k){
+      var t = tage[k];
+      var mitSpur = t.rows.filter(function(r){ return r.utm_source || r.utm_content; }).length;
+      var det = document.createElement('details'); det.className = 'ev-day';
+      if (t.datum.getTime() === heute.getTime()) det.open = true;
+      var wann = t.datum.getTime() === heute.getTime() ? 'Heute'
+               : t.datum.getTime() === gestern.getTime() ? 'Gestern'
+               : t.datum.toLocaleDateString('de-CH', { weekday: 'long' });
+      var sum = document.createElement('summary');
+      var sb = document.createElement('b');
+      sb.textContent = wann + ' · ' + t.datum.toLocaleDateString('de-CH', { day: 'numeric', month: 'long' });
+      var sn = document.createElement('span'); sn.className = 'ev-sum';
+      sn.textContent = fmt(t.rows.length) + (t.rows.length === 1 ? ' Abo' : ' Abos') +
+        ' · ' + fmt(mitSpur) + ' mit Spur · ' + fmt(t.rows.length - mitSpur) + ' ohne';
+      sum.appendChild(sb); sum.appendChild(sn); det.appendChild(sum);
+      var list = document.createElement('div'); list.className = 'ev-list';
+      t.rows.forEach(function(r){
+        var row = document.createElement('div'); row.className = 'ev-row';
+        var zeit = document.createElement('span'); zeit.className = 'ev-zeit';
+        zeit.textContent = new Date(r.stunde).toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+        var was = document.createElement('span'); was.className = 'ev-was';
+        was.textContent = evProduktLabel(r);
+        var wm = document.createElement('span'); wm.className = 'ev-meta';
+        wm.textContent = (r.tarif === 'ermaessigt' ? 'Ermässigt' : 'Standard') + ' · ' + (r.intervall === 'monatlich' ? 'monatlich' : 'jährlich');
+        was.appendChild(wm);
+        var her = document.createElement('span'); her.className = 'ev-her';
+        if (r.utm_source || r.utm_content){
+          var kb = document.createElement('span'); kb.className = 'ev-kanal';
+          kb.textContent = KANAL_LABEL[r.kanal] || r.kanal;
+          her.appendChild(kb);
+          var spur = document.createElement('span'); spur.className = 'ev-spur';
+          spur.textContent = [r.utm_source, r.utm_medium, r.utm_content].filter(Boolean).join(' · ');
+          her.appendChild(spur);
+        } else {
+          var ob = document.createElement('span'); ob.className = 'ev-kanal ev-ohne';
+          ob.textContent = 'ohne Spur';
+          her.appendChild(ob);
+          var wo = document.createElement('span'); wo.className = 'ev-spur';
+          wo.textContent = r.landing_path ? ('via ' + r.landing_path) : ('via ' + (r.source === 'uscreen' ? 'goetheanum.tv-Checkout' : r.source));
+          her.appendChild(wo);
+        }
+        row.appendChild(zeit); row.appendChild(was); row.appendChild(her);
+        list.appendChild(row);
+      });
+      det.appendChild(list);
+      host.appendChild(det);
+    });
+    var note = document.createElement('div'); note.className = 'fnote';
+    note.textContent = 'Zeiten auf die Stunde gerundet, keine Personendaten. «Ohne Spur» = Anmeldung kam ohne UTM-Parameter an (zählt in der Wirkung als «Andere»).';
+    host.appendChild(note);
+  }
+
   // ── Laden ──────────────────────────────────────────────────────────────────
   function load(){
     renderDeadline();
     renderQuelleSocial();
+    // Ereignis-Protokoll separat laden: fällt der RPC aus, bleibt der Rest des
+    // Cockpits vollständig – nur die Liste meldet sich als nicht ladbar.
+    if (el('evList')) rpc('sommer2026_ereignisse')
+      .then(renderEreignisse)
+      .catch(function(){ el('evList').innerHTML = '<div class="err">nicht ladbar</div>'; });
     if(CONFIG.zahlenProvisorisch && el('provisorisch')){
       el('provisorisch').textContent = 'Zielmarken, Preise und die Bleibe-Quote sind vorläufig hinterlegt – sobald die echten Werte gesetzt sind, rechnet das Cockpit unverändert weiter.';
     }
