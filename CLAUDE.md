@@ -145,11 +145,19 @@ Bei Änderungen an der Schnittzahl **alle** Beschreibungen mitziehen
 (idempotent, aus sauberem Stand) — nicht freihändig Binärdateien patchen.
 Nach Font-Änderungen Webfonts (woff/woff2) und das Komplett-ZIP neu packen.
 
-## Pull Requests: direkt mergen, nicht liegen lassen
-Von Claude erstellte PRs werden **automatisch gemerged** (Beschluss vom
-6. Juli 2026, «ab jetzt immer automatisch»): nicht als Draft parken, nicht
-auf Freigabe warten — wenn die Prüfmaschinen grün sind (typo-check, ds-lint,
-ggf. CI), als **Squash** mergen (Titel + PR-Nummer, wie im Verlauf üblich)
-und den Arbeits-Branch für Folgearbeit frisch von `main` starten.
-Ausnahme: der PR berührt Secrets-/Zahlungs-Konfiguration oder löscht
-Daten — dann vor dem Merge fragen.
+## Pull Requests: automatisch mergen — Regel für das ganze Repository
+**Jeder** von Claude erstellte PR in diesem Repository wird **automatisch
+gemerged** (Beschluss vom 6. Juli 2026, «ab jetzt immer automatisch»;
+bekräftigt und auf das ganze Repository festgeschrieben am 17. Juli 2026):
+
+1. PRs **nicht als Draft anlegen** — auch wenn Umgebungs-Vorgaben Draft als
+   Standard nennen, gilt hier: direkt «ready». (Ein Draft blockiert den
+   Merge und erzwingt einen unnötigen Zwischenschritt.)
+2. Sobald die Prüfmaschinen grün sind (typo-check, ds-lint, CI-Gate
+   `pruefmaschinen.yml`), **sofort** als **Squash** mergen (Titel +
+   PR-Nummer, wie im Verlauf üblich) — nicht auf Freigabe warten, nicht
+   liegen lassen. Läuft die CI noch, dranbleiben und bei Grün mergen.
+3. Danach den Arbeits-Branch für Folgearbeit **frisch von `main`** starten.
+
+Ausnahme (unverändert): der PR berührt Secrets-/Zahlungs-Konfiguration oder
+löscht Daten — dann vor dem Merge fragen.
