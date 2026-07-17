@@ -23,13 +23,7 @@
   .panel p{margin-top:var(--s4);color:var(--muted)}
   .btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
 
-  /* Gütesiegel-Panel: gesichert ↔ Goodwill, zwei Spalten (fällt mobil auf eine). */
-  .siegel{max-width:74ch}
-  .siegel .cols{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4) var(--s8);margin-top:var(--s6)}
-  @media (max-width:640px){.siegel .cols{grid-template-columns:1fr}}
-  .siegel .lbl{color:var(--blue);font-weight:var(--w-deutlich);font-size:var(--t-small);margin-bottom:var(--s2)}
-  .siegel ul{margin:0;padding-left:1.1em;color:var(--muted)}
-  .siegel li{margin-top:var(--s2)}
+  /* Gütesiegel-Panel: kurze Ankündigung am Lesemaß (G10), verlinkt aufs Regelwerk. */
   .siegel .seal{margin-top:var(--s6);color:var(--ink);font-weight:var(--w-deutlich)}
 </style>
 </head>
@@ -46,30 +40,12 @@
 
   <div class="panel siegel">
     <span class="nm">Ein Gütesiegel – und eine Einladung</span>
-    <p>Diese Vorlage ist kein leeres Gerüst, sondern gesetztes Hausbild. Der Rahmen kommt <b>gesichert</b>
-      mit der Datei. Der Feinschliff dagegen lässt sich in PowerPoint nicht erzwingen – er lebt vom
-      <b>Goodwill</b>. Darum trägt die Platzhalterpräsentation die Regeln in kleinen Häppchen selbst:
-      wer sie ausfüllt, liest sie mit, lernt die gemeinsame Sprache und gibt sie weiter.</p>
-    <div class="cols">
-      <div>
-        <div class="lbl">Gesichert – kommt mit der Datei</div>
-        <ul>
-          <li>Acht Layouts, sauber aufgebaut</li>
-          <li>Hausfarben im Theme – ‹Umfärben› bietet die Marke</li>
-          <li>Das Hausschrift-Trio, sobald installiert</li>
-          <li>Geprüfte Kontraste, barrierefrei nach WCAG 2.2 AA</li>
-        </ul>
-      </div>
-      <div>
-        <div class="lbl">Dem Goodwill anvertraut – die Feintypografie</div>
-        <ul>
-          <li>Anführungen in einfachen Guillemets ‹so›</li>
-          <li>Echtes Minus in −2,1 %, schmales Leerzeichen in 12,4 Mio</li>
-          <li>Ziffern tabellarisch, ohne führende Nullen</li>
-          <li>Betonung mit Laut, nie mit Versalien (Einfachauszeichnung)</li>
-        </ul>
-      </div>
-    </div>
+    <p>Der Rahmen kommt <b>gesichert</b> mit der Datei: acht Layouts, Hausfarben im Theme, das
+      Schrift-Trio und geprüfte Kontraste – barrierefrei. Den Feinschliff dagegen kann PowerPoint
+      nicht erzwingen; er lebt vom <b>Goodwill</b>.</p>
+    <p>Darum zeigen die Platzhalterfolien die Regeln selbst – anschaulich, in kleinen Schritten. Wer
+      die Vorlage ausfüllt, lernt die gemeinsame Sprache und gibt sie weiter. Das ganze Regelwerk steht
+      auf der <a href="typografie.html">Typografie-Seite</a>.</p>
     <p class="seal">Barrierefrei gesetzt · Im Hausbild geführt · Bis ins Detail geregelt.</p>
   </div>
 
