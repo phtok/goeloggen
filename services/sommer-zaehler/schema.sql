@@ -45,13 +45,16 @@ alter table public.sommer2026_signups enable row level security;
 -- Bewusst KEINE anon-Policy: RLS an + keine Policy = Rohzeilen zu.
 revoke all on table public.sommer2026_signups from anon, authenticated;
 
--- 1) Breakdown je Dimension (Ströme, Tarife, Bleibe-Zustand)
+-- 1) Breakdown je Dimension (Ströme, Tarife, Bleibe-Zustand, Zahlungswährung)
+-- (Migration «sommer2026_stats_waehrung»: waehrung ergänzt, damit der
+-- Folgejahr-Umsatz je Zahlungswährung zum echten Preis rechnet; gtv-Zeilen
+-- ohne Angabe wurden auf 'eur' nachgezogen – der Uscreen-Store rechnet in EUR.)
 create or replace function public.sommer2026_stats()
-returns table(produkt text, sprache text, format text, tarif text, intervall text, status text, n bigint)
+returns table(produkt text, sprache text, format text, tarif text, intervall text, status text, waehrung text, n bigint)
 language sql security definer set search_path to 'public' as $$
-  select produkt, sprache, format, tarif, intervall, status, count(*)::bigint as n
+  select produkt, sprache, format, tarif, intervall, status, waehrung, count(*)::bigint as n
     from public.sommer2026_signups
-   group by produkt, sprache, format, tarif, intervall, status;
+   group by produkt, sprache, format, tarif, intervall, status, waehrung;
 $$;
 
 -- 2) Momentum: Anmeldungen je Tag und Produkt
