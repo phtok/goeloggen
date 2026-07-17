@@ -301,6 +301,22 @@ grant execute on function public.sommer2026_attribution()       to anon, authent
 grant execute on function public.sommer2026_massnahmen_public() to anon, authenticated;
 grant execute on function public.sommer2026_trichter()          to anon, authenticated;
 
+-- Ereignis-Protokoll (Migration «sommer2026_ereignisse»): die einzelnen
+-- Anmeldungen der letzten 14 Tage fürs Cockpit («Was ist heute passiert?») –
+-- stundengenau gerundet (keine Minuten-Fingerprints), ohne jede Personenspalte.
+create or replace function public.sommer2026_ereignisse()
+returns table(stunde timestamptz, produkt text, sprache text, format text, tarif text, intervall text,
+              kanal text, utm_source text, utm_medium text, utm_content text, landing_path text, source text)
+language sql security definer set search_path to 'public' as $$
+  select date_trunc('hour', signed_up_at) as stunde, produkt, sprache, format, tarif, intervall,
+         kanal, utm_source, utm_medium, utm_content, landing_path, source
+    from public.sommer2026_signups
+   where signed_up_at >= now() - interval '14 days'
+   order by signed_up_at desc
+   limit 400;
+$$;
+grant execute on function public.sommer2026_ereignisse() to anon, authenticated;
+
 -- =============================================================================
 -- Link-Register (Migration «sommer2026_links_register»)
 -- Erzeugte UTM-Links (aus apps/utm-generator/) sammeln → Soll/Ist im Cockpit.

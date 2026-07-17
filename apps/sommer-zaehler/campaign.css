@@ -196,6 +196,31 @@
   .zb-form .span3{grid-column:1 / -1}
   @media (max-width:640px){ .zb-form .grid{grid-template-columns:1fr} }
 
+  /* Ereignis-Protokoll: je Tag aufklappbar (heute offen), Zeilen = einzelne Abos.
+     Daten-Schrift Source (B03 ≥15), Ziffern tabellarisch (G25), nur Tokens (DS02). */
+  .ev-day{border-bottom:1px solid var(--line-soft)}
+  .ev-day>summary{cursor:pointer;list-style:none;display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);
+    align-items:baseline;justify-content:space-between;min-height:var(--tap);padding:10px 0;
+    font-family:var(--font-text);font-size:var(--t-small)}
+  .ev-day>summary::-webkit-details-marker{display:none}
+  .ev-day>summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .ev-day>summary b{color:var(--ink);font-weight:600}
+  .ev-day .ev-sum{color:var(--muted);font-variant-numeric:tabular-nums}
+  .ev-list{padding-bottom:var(--s4)}
+  .ev-row{display:grid;grid-template-columns:56px 1.1fr 1.4fr;gap:var(--s2) var(--s4);
+    padding:7px 0;border-top:1px solid var(--line-soft);
+    font-family:var(--font-text);font-size:var(--t-small);align-items:baseline}
+  .ev-zeit{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ev-was{color:var(--ink)}
+  .ev-meta{display:block;color:var(--muted);font-size:var(--t-micro);margin-top:2px}
+  .ev-her{min-width:0}
+  .ev-kanal{display:inline-block;font-size:var(--t-micro);font-weight:600;color:var(--gold-ink);
+    background:color-mix(in srgb,var(--gold) 15%,transparent);border-radius:var(--r-pill);
+    padding:2px 10px;margin-right:8px;white-space:nowrap}
+  .ev-kanal.ev-ohne{color:var(--muted);background:var(--soft)}
+  .ev-spur{color:var(--muted);font-size:var(--t-micro);overflow-wrap:anywhere}
+  @media (max-width:560px){ .ev-row{grid-template-columns:48px 1fr} .ev-her{grid-column:2} }
+
   /* Aktionsseiten als Buttons – Fingerziele statt klebender Textlinks (B04, DS02) */
   .landing{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3);align-items:center;font-family:var(--font-text);font-size:var(--t-small);margin-bottom:var(--s4)}
   .landing .meta{margin-right:var(--s2)}
