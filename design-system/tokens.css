@@ -69,6 +69,7 @@
   --bad:#b3261e;         /* Fehler/Warnung */
   --ok:#3f7d46;          /* Erfolg/Bestätigung – Weiss drauf (--on-accent) */
   --on-accent:#fff;      /* Text auf Blau/Gold-Flächen */
+  --on-accent-muted:#ccdff1; /* gedämpfter Sekundärtext auf Blau (Fusszeile/Meta) – 4.7:1 auf --blue (WCAG AA); Weiss bleibt --on-accent. Nicht für Fliesstext auf Gold/Grün (dort <4.5:1). */
   --ink-print-leise:#6e6f6a; /* leises Strukturbeiwerk auf PAPIERWEISS (Druckwerke:
                                 Kategorie-Titel in Legenden u. ä.) – 5.07:1, B02-fest
                                 für Lesetext; gerechnet im Kartentool, Juli 2026.

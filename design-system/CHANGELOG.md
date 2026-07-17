@@ -16,7 +16,21 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
-## [1.9.4] – 2026-07-11
+## [1.9.5] – 2026-07-17
+
+### Gedämpfter Text auf Blau bekommt ein Token: `--on-accent-muted`
+- **Was:** Neues Token `--on-accent-muted:#ccdff1` — gedämpfter Sekundärtext
+  (Fusszeile, Meta, Kontaktzeile) auf Blau-Flächen. **4.7:1 auf `--blue`**
+  (WCAG AA); `--on-accent` bleibt Weiss für die Haupt-Beschriftung. Dunkel
+  erbt (on-accent-Flächen bleiben dunkel genug, Beschluss 1.9-Serie).
+- **Warum:** Die PowerPoint-Vorlage setzte die Fusszeile/Kontaktzeile auf den
+  blauen Folien in `#9CC3EC` = **3.47:1** (13pt, kleiner Text → unter 4.5:1,
+  B02-Verstoss). Statt lokal einen Wert zu erfinden ins Fundament genommen —
+  der Atem: die Rand-Verbesserung gilt ab jetzt überall.
+- **Wirkung:** `tokens.css` (`--on-accent-muted`); genutzt in der PP-Vorlage
+  (Folien 1/5/15, Layouts 2/3). Keine neue Regel — B02 endlich auch für
+  gedämpften Text auf Akzent erfüllbar, ohne Weiss zu erzwingen.
+
 
 ### Menü: Strukturtitel von Laut auf Deutlich
 - **Was:** Schubladen-Titel, Bereichs-Titel und aktiver Eintrag laufen jetzt in
