@@ -180,6 +180,32 @@ Deno.serve(async (req) => {
   // 3-Monats-Frist bestimmt (separater Schritt im Oktober).
   if (isPay && !isNew) return json({ ok: true, note: "Zahlung ignoriert (Umwandlung erst nach 3 Monaten)" });
 
+  // «User Created» ist KEINE Aktions-Anmeldung (Registrierung ≠ Abo) – aber es
+  // ist laut Uscreen-Doku das einzige Event, das die Custom-Field-Antworten
+  // (`custom_fields`, Slot 1 = «Wie sind Sie auf uns aufmerksam geworden?»)
+  // mitbringt. Darum: Antwort an eine bestehende Anmeldung derselben Person
+  // heften (nur wo noch leer); Kanal nachziehen, wenn er noch «andere» ist.
+  // Kommt die Anmeldung erst NACH diesem Event, greift der Roh-Log-Fallback
+  // unten. WICHTIG: vor isNew prüfen – «created» matcht sonst als Anmeldung.
+  if (/user[_.]?created/.test(e)) {
+    const cf = (data && typeof data.custom_fields === "object" && data.custom_fields) || {};
+    const antwort0 = pick(data, ["custom_fields.custom_field_1", "custom_fields.user_field_1", "custom_field_1", "user_field_1", "user_fields.0.value"]) ?? Object.values(cf)[0];
+    const antwort = antwort0 ? scrubEmail(String(antwort0)).slice(0, 300) : null;
+    if (!antwort) return json({ ok: true, note: "user_created ohne Selbstauskunft" });
+    await fetch(`${SB}/rest/v1/sommer2026_signups?dedup_key=eq.${encodeURIComponent(dedupKey)}&selbstauskunft=is.null`, {
+      method: "PATCH", headers: { ...H, Prefer: "return=minimal" },
+      body: JSON.stringify({ selbstauskunft: antwort }),
+    }).catch(() => {});
+    const nachKanal = mapKanal(antwort);
+    if (nachKanal !== "andere") {
+      await fetch(`${SB}/rest/v1/sommer2026_signups?dedup_key=eq.${encodeURIComponent(dedupKey)}&kanal=eq.andere`, {
+        method: "PATCH", headers: { ...H, Prefer: "return=minimal" },
+        body: JSON.stringify({ kanal: nachKanal }),
+      }).catch(() => {});
+    }
+    return json({ ok: true, note: "Selbstauskunft vermerkt" });
+  }
+
   if (!isNew) return json({ ok: true, skipped: "event ignoriert" });
 
   // Aktion = jede Neuanmeldung im Aktionszeitraum (aktion_start begrenzt es zeitlich).
@@ -194,10 +220,24 @@ Deno.serve(async (req) => {
   const { sprache, intervall, tarif } = mapPlan(title);
   const utmRaw = utmFrom(data);
   const src = cleanUtm(utmRaw.src), med = cleanUtm(utmRaw.med), camp = cleanUtm(utmRaw.camp), cont = cleanUtm(utmRaw.cont), land = utmRaw.land;
-  // Offene Selbstauskunft «Wie sind Sie aufmerksam geworden?» (Custom User Field) – O-Ton, E-Mail-redigiert.
-  const selbst0 = pick(data, ["referral_source", "how_heard", "how_did_you_hear", "custom_fields.how_did_you_hear", "user_field_1", "user_fields.0.value"]);
-  const selbst = selbst0 ? scrubEmail(String(selbst0)).slice(0, 300) : null;
-  const kanal = mapKanal(src || pick(data, ["source", "referral_source"]) || selbst0);
+  // Offene Selbstauskunft «Wie sind Sie aufmerksam geworden?» (Custom User Field,
+  // Slot 1 = custom_field_1) – O-Ton, E-Mail-redigiert.
+  const selbst0 = pick(data, ["referral_source", "how_heard", "how_did_you_hear", "custom_fields.how_did_you_hear",
+    "custom_fields.custom_field_1", "custom_fields.user_field_1", "custom_field_1", "user_field_1", "user_fields.0.value"]);
+  let selbst = selbst0 ? scrubEmail(String(selbst0)).slice(0, 300) : null;
+  // Fallback: kam «User Created» (traegt die Custom Fields) schon VOR dieser
+  // Anmeldung, liegt die Antwort im Roh-Log – dort nachschlagen (custom_fields
+  // ueberleben die PII-Redaktion, user_id auch).
+  if (!selbst && ext) {
+    try {
+      const raws = await fetch(`${SB}/rest/v1/sommer2026_ingest_raw?source=eq.uscreen&event=ilike.*user*creat*&payload->>user_id=eq.${encodeURIComponent(ext)}&order=received_at.desc&limit=1&select=payload`, { headers: H })
+        .then((r) => r.json());
+      const cf = raws?.[0]?.payload?.custom_fields;
+      const a = cf && typeof cf === "object" ? (cf.custom_field_1 ?? cf.user_field_1 ?? Object.values(cf)[0]) : null;
+      if (a) selbst = scrubEmail(String(a)).slice(0, 300);
+    } catch { /* kein Fallback */ }
+  }
+  const kanal = mapKanal(src || pick(data, ["source", "referral_source"]) || selbst);
   const when = pick(data, ["created_at", "subscribed_at", "started_at", "date"]) || new Date().toISOString();
 
   // Aktions-Grenze: Anmeldungen vor dem Start (Nachmittag 3. Juli) zählen nicht.

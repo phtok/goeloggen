@@ -82,6 +82,43 @@ Gib mir am Ende einen kompakten Bericht in genau dieser Gliederung:
 
 ---
 
+## Ergebnis des ersten Durchlaufs (17.7.2026, Claude im Chrome)
+
+- **Custom-Feld angelegt:** Slot «User Field 1» trägt jetzt «Wie sind Sie auf
+  uns aufmerksam geworden?» (Key im Datenmodell: `custom_field_1` /
+  `user_field_1`; Uscreen kennt nur drei feste, immer optionale Text-Slots).
+- **Webhook-Payload nicht erweiterbar** (nur URL + ein Event je Endpunkt).
+  Unser Endpunkt hört auf: Recurring Payment Successful, Order Paid, Access
+  canceled, Subscription Assigned. **Es fehlt «User Created»** – laut
+  Uscreen-Doku das einzige Event, das die Custom-Field-Antworten
+  (`custom_fields`) mitliefert. → Follow-up unten.
+- **API:** Unter «Developers» gibt es nur den Publishable-Key (Headless,
+  «no scopes») – für Server-Lookups ungeeignet. Der eigentliche Admin-Key
+  (`X-Store-Token`) liegt laut Doku auf der **API-Keys-Seite unter Admin
+  Users** und ist teils Plus-Plan-gebunden. Mit dem User-Created-Event wird
+  die API für die Selbstauskunft aber voraussichtlich gar nicht gebraucht.
+- **Tracking (Weg B):** Kein GA4/Meta verbunden; der **Post-purchase-Slot**
+  (Settings → Snippets, läuft ~10 s nach Checkout) ist frei bis auf ein
+  X/Twitter-Event – dort könnte clientseitiges Konversions-Tracking ergänzt
+  werden, falls nötig.
+
+### Follow-up-Auftrag für Claude im Chrome (kurz)
+
+> Im Uscreen-Admin von goetheanum.tv: Öffne Settings → Webhooks. Lege einen
+> zusätzlichen Webhook auf **dieselbe URL wie der bestehende
+> `…supabase.co/functions/v1/ingest-uscreen`-Endpunkt** an (URL inklusive des
+> `?key=…`-Teils vom bestehenden Eintrag übernehmen, nicht in den Chat
+> schreiben), mit Event **«User Created»**. Nichts löschen, bestehende
+> Einträge unverändert lassen. Danach: Sieh unter Settings → Admin Users
+> nach, ob es dort eine API-Keys-Seite gibt (Admin-API, `X-Store-Token`) und
+> berichte nur, ob sie existiert und ob ein Key angelegt werden kann – keinen
+> Key-Wert in den Chat.
+
+Die Ingestion verarbeitet «User Created» bereits: Sie legt daraus **kein**
+Abo an, sondern heftet die Selbstauskunft an die Anmeldung derselben Person
+(nur wo noch leer) und zieht den Kanal nach, wenn er noch «andere» ist;
+kommt die Anmeldung später, greift der Roh-Log-Fallback.
+
 ## Was danach bei uns passiert (Backend-Seite)
 
 - Die Ingestion (`ingest-uscreen/index.ts`) liest die Custom-Field-Antwort
