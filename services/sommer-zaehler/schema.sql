@@ -398,6 +398,41 @@ language sql security definer set search_path to 'public' as $$
 $$;
 grant execute on function public.sommer2026_links_public() to anon, authenticated;
 
+-- Sprache fürs Produkt gtv aus dem Link-Register (Migration
+-- «sommer2026_sprache_aus_register_trigger», Beschluss 18.7.2026): die
+-- Uscreen-Plan-Titel sind durchweg deutsch, der Titel-Rat der Ingestion ergäbe
+-- immer 'de'. Trägt das UTM-Tupel im Register eindeutig EINE Sprache, setzt
+-- der Trigger sie beim Schreiben; mehrdeutige Tupel und Anmeldungen ohne Spur
+-- bleiben unangetastet. Netz und doppelter Boden zur gleichen Logik in
+-- ingest-uscreen (spracheAusRegister) - beide setzen denselben Wert.
+create or replace function public.sommer2026_sprache_aus_register()
+returns trigger language plpgsql security definer set search_path to 'public' as $$
+declare
+  v_sprache text;
+begin
+  if new.produkt = 'gtv' and (new.utm_source is not null or new.utm_content is not null) then
+    select min(l.sprache) into v_sprache
+      from public.sommer2026_links l
+     where l.utm_campaign is not distinct from new.utm_campaign
+       and l.utm_source   is not distinct from new.utm_source
+       and l.utm_medium   is not distinct from new.utm_medium
+       and l.utm_content  is not distinct from new.utm_content
+       and l.sprache is not null
+    having count(distinct l.sprache) = 1;
+    if v_sprache is not null then
+      new.sprache := v_sprache;
+    end if;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists sommer2026_signups_sprache on public.sommer2026_signups;
+create trigger sommer2026_signups_sprache
+before insert or update of utm_source, utm_medium, utm_campaign, utm_content
+on public.sommer2026_signups
+for each row execute function public.sommer2026_sprache_aus_register();
+
 -- Kurzlink-Weiterleitung: Edge Function `go` liest sommer2026_links.code (Service-Role)
 -- und leitet per 302 auf die volle UTM-URL. Siehe go/index.ts.
 
