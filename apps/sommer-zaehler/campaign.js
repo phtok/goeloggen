@@ -1010,6 +1010,15 @@
           var wo = document.createElement('span'); wo.className = 'ev-spur';
           wo.textContent = r.landing_path ? ('via ' + r.landing_path) : ('via ' + (r.source === 'uscreen' ? 'goetheanum.tv-Checkout' : r.source));
           her.appendChild(wo);
+          // «Vermutete Herkunft»: zeitlich nächster Kurzlink-Klick vor dem
+          // Abschluss (aus dem RPC) – Indiz, keine Messung, darum eigene,
+          // klar abgesetzte Beschriftung. Die harte Attribution bleibt leer.
+          if (r.vermutet_code){
+            var vm = document.createElement('span'); vm.className = 'ev-vermutet';
+            vm.textContent = 'vermutet: ' + [r.vermutet_source, r.vermutet_content].filter(Boolean).join(' · ') +
+              ' — Klick auf /s/' + r.vermutet_code + ' ' + fmt(r.vermutet_min) + ' Min. davor';
+            her.appendChild(vm);
+          }
         }
         row.appendChild(zeit); row.appendChild(was); row.appendChild(her);
         list.appendChild(row);
@@ -1018,7 +1027,8 @@
       host.appendChild(det);
     });
     var note = document.createElement('div'); note.className = 'fnote';
-    note.textContent = 'Zeiten auf die Stunde gerundet, keine Personendaten. «ohne UTM» = Anmeldung kam ohne UTM-Parameter an – so heisst sie auch in der Wirkung.';
+    note.textContent = 'Zeiten auf die Stunde gerundet, keine Personendaten. «ohne UTM» = Anmeldung kam ohne UTM-Parameter an – so heisst sie auch in der Wirkung. ' +
+      '«vermutet» = der zeitlich nächste Kurzlink-Klick (bis 90 Minuten davor) auf einen passenden Kampagnen-Link – ein Indiz, keine Messung; gezählt wird es nirgends.';
     host.appendChild(note);
   }
 
