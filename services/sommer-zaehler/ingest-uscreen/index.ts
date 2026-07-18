@@ -12,7 +12,9 @@
 //
 // Attribution: volles UTM-Tupel (source/medium/campaign/content) + Landingpage-Pfad
 // + offene Selbstauskunft (E-Mail-redigiert) werden je Anmeldung mitgeschrieben; der
-// grobe kanal-Bucket bleibt als Zusammenfassung.
+// grobe kanal-Bucket bleibt als Zusammenfassung. Die Sprache kommt, wo das UTM-Tupel
+// im Link-Register eindeutig ist, aus sommer2026_links.sprache (die Uscreen-Plan-
+// Titel sind durchweg deutsch, der Titel-Rat bliebe sonst immer 'de').
 //
 // Entdopplung: dedup_key = <produkt>:<gesalzener E-Mail-Hash> (Person je Produkt,
 // auch über Quellen hinweg), Fallback <source>:<ext_id>. Upsert/Update laufen
@@ -87,6 +89,24 @@ function mapPlan(title: string) {
     : /(month|monat|mensile|mensuel)/.test(t) ? "monatlich" : "monatlich";
   const tarif = /(reduc|ermäss|ermaess|student|conc)/.test(t) ? "ermaessigt" : "standard";
   return { sprache, intervall, tarif };
+}
+
+// Die Uscreen-Plan-Titel sind durchweg deutsch («Standard-Abo Monatlich» …),
+// mapPlan rät für die Sprache darum praktisch immer 'de'. Massgeblich ist das
+// Link-Register: trägt das UTM-Tupel dort eindeutig EINE Sprache, gilt sie.
+// Mehrdeutig (dasselbe Tupel als DE- und EN-Link registriert) → null, der
+// Titel-Rat bleibt. Tupel-Vergleich NULL-sicher, wie in sommer2026_links_public.
+async function spracheAusRegister(src: string | null, med: string | null,
+  camp: string | null, cont: string | null): Promise<string | null> {
+  if (!src && !cont) return null;
+  const p = new URLSearchParams({ select: "sprache" });
+  const f = (k: string, v: string | null) => p.append(k, v == null ? "is.null" : `eq.${v}`);
+  f("utm_campaign", camp); f("utm_source", src); f("utm_medium", med); f("utm_content", cont);
+  const rows = await fetch(`${SB}/rest/v1/sommer2026_links?${p}`, { headers: H })
+    .then((r) => (r.ok ? r.json() : [])).catch(() => []);
+  const sprachen = [...new Set((Array.isArray(rows) ? rows : [])
+    .map((r: any) => r.sprache).filter(Boolean))];
+  return sprachen.length === 1 ? String(sprachen[0]) : null;
 }
 
 const KANAELE = ["newsletter", "mailer", "social", "popup", "website", "empfehlung", "andere"];
@@ -205,9 +225,13 @@ Deno.serve(async (req) => {
       }).catch(() => {});
     }
     if (src2 || cont2) {
+      // Kommt die Spur nachträglich, die Sprache gleich mitziehen (Register
+      // schlägt Titel-Rat) – nur auf Zeilen, die noch keine Spur tragen.
+      const sprache2 = await spracheAusRegister(src2, med2, camp2, cont2);
       await fetch(`${SB}/rest/v1/sommer2026_signups?${wo}&utm_source=is.null&utm_content=is.null`, {
         method: "PATCH", headers: { ...H, Prefer: "return=minimal" },
-        body: JSON.stringify({ utm_source: src2, utm_medium: med2, utm_campaign: camp2, utm_content: cont2 }),
+        body: JSON.stringify({ utm_source: src2, utm_medium: med2, utm_campaign: camp2, utm_content: cont2,
+                               ...(sprache2 ? { sprache: sprache2 } : {}) }),
       }).catch(() => {});
     }
     const nachKanal = mapKanal(src2 || med2 || antwort);
@@ -231,7 +255,7 @@ Deno.serve(async (req) => {
   else istAktion = true;
   if (!istAktion) return json({ ok: true, skipped: "nicht Aktion (Coupon/Plan)" });
 
-  const { sprache, intervall, tarif } = mapPlan(title);
+  const { sprache: planSprache, intervall, tarif } = mapPlan(title);
   const utmRaw = utmFrom(data);
   let src = cleanUtm(utmRaw.src), med = cleanUtm(utmRaw.med), camp = cleanUtm(utmRaw.camp), cont = cleanUtm(utmRaw.cont);
   const land = utmRaw.land;
@@ -260,6 +284,7 @@ Deno.serve(async (req) => {
     } catch { /* kein Fallback */ }
   }
   const kanal = mapKanal(src || pick(data, ["source", "referral_source"]) || selbst);
+  const sprache = (await spracheAusRegister(src, med, camp, cont)) ?? planSprache;
   const when = pick(data, ["created_at", "subscribed_at", "started_at", "date"]) || new Date().toISOString();
 
   // Aktions-Grenze: Anmeldungen vor dem Start (Nachmittag 3. Juli) zählen nicht.
