@@ -219,6 +219,9 @@
     padding:2px 10px;margin-right:8px;white-space:nowrap}
   .ev-kanal.ev-ohne{color:var(--muted);background:var(--soft)}
   .ev-spur{color:var(--muted);font-size:var(--t-micro);overflow-wrap:anywhere}
+  /* Vermutete Herkunft: klar abgesetzt (gepunktete Kante), damit Indiz nie wie Messung liest. */
+  .ev-vermutet{display:block;color:var(--muted);font-size:var(--t-micro);margin-top:3px;
+    padding-left:var(--s3);border-left:2px dotted var(--line);overflow-wrap:anywhere}
   @media (max-width:560px){ .ev-row{grid-template-columns:48px 1fr} .ev-her{grid-column:2} }
 
   /* Aktionsseiten als Buttons – Fingerziele statt klebender Textlinks (B04, DS02) */

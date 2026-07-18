@@ -304,18 +304,37 @@ grant execute on function public.sommer2026_attribution()       to anon, authent
 grant execute on function public.sommer2026_massnahmen_public() to anon, authenticated;
 grant execute on function public.sommer2026_trichter()          to anon, authenticated;
 
--- Ereignis-Protokoll (Migration «sommer2026_ereignisse»): die einzelnen
--- Anmeldungen der letzten 14 Tage fürs Cockpit («Was ist heute passiert?») –
--- stundengenau gerundet (keine Minuten-Fingerprints), ohne jede Personenspalte.
+-- Ereignis-Protokoll (Migration «sommer2026_ereignisse», erweitert um
+-- «sommer2026_ereignisse_vermutung»): die einzelnen Anmeldungen der letzten
+-- 14 Tage fürs Cockpit («Was ist heute passiert?») – stundengenau gerundet
+-- (keine Minuten-Fingerprints), ohne jede Personenspalte. Für Anmeldungen
+-- OHNE UTM-Spur wird zusätzlich die «vermutete Herkunft» mitgeliefert: der
+-- zeitlich nächste Kurzlink-Klick auf einen zum Produkt passenden Link
+-- innerhalb von 90 Minuten davor. Indiz, keine Messung – die harte
+-- Attribution (kanal/utm_*) bleibt unberührt.
 create or replace function public.sommer2026_ereignisse()
 returns table(stunde timestamptz, produkt text, sprache text, format text, tarif text, intervall text,
-              kanal text, utm_source text, utm_medium text, utm_content text, landing_path text, source text)
+              kanal text, utm_source text, utm_medium text, utm_content text, landing_path text, source text,
+              vermutet_source text, vermutet_content text, vermutet_code text, vermutet_min int)
 language sql security definer set search_path to 'public' as $$
-  select date_trunc('hour', signed_up_at) as stunde, produkt, sprache, format, tarif, intervall,
-         kanal, utm_source, utm_medium, utm_content, landing_path, source
-    from public.sommer2026_signups
-   where signed_up_at >= now() - interval '14 days'
-   order by signed_up_at desc
+  select date_trunc('hour', s.signed_up_at) as stunde, s.produkt, s.sprache, s.format, s.tarif, s.intervall,
+         s.kanal, s.utm_source, s.utm_medium, s.utm_content, s.landing_path, s.source,
+         v.utm_source, v.utm_content, v.code, v.minuten
+    from public.sommer2026_signups s
+    left join lateral (
+      select l.utm_source, l.utm_content, l.code,
+             (extract(epoch from (s.signed_up_at - h.ts)) / 60)::int as minuten
+        from public.link_hits h
+        join public.sommer2026_links l on l.code = h.code
+       where s.utm_source is null and s.utm_content is null
+         and h.ts between s.signed_up_at - interval '90 minutes' and s.signed_up_at
+         and ((s.produkt = 'gtv' and l.landing in ('tv','gtv','uebersicht'))
+           or (s.produkt = 'wos' and l.landing in ('wos','uebersicht')))
+       order by h.ts desc
+       limit 1
+    ) v on true
+   where s.signed_up_at >= now() - interval '14 days'
+   order by s.signed_up_at desc
    limit 400;
 $$;
 grant execute on function public.sommer2026_ereignisse() to anon, authenticated;
