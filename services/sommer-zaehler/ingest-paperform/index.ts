@@ -38,6 +38,25 @@ function cleanUtm(v: any): string | null {
   return (s === "" || /^(none|n\/?a|null|undefined|-)$/i.test(s)) ? null : s;
 }
 
+// Offene Selbstauskunft «Wie sind Sie auf uns aufmerksam geworden?» aus den
+// Formularfeldern lesen: über den Custom-Key `selbstauskunft` oder die
+// Feldbeschriftung. E-Mail-artige Angaben werden redigiert (O-Ton bleibt).
+const SELBST_LABEL = /(aufmerksam|how did you hear|hear about|wie .*erfahren)/i;
+function scrubEmail(s: string): string {
+  return s.replace(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi, "***");
+}
+function selbstFromBody(body: any): string | null {
+  const data = Array.isArray(body?.data) ? body.data : [];
+  for (const f of data) {
+    const key = String(f?.custom_key || f?.key || "").toLowerCase();
+    const label = String(f?.title || "");
+    const v = cleanUtm(f?.value);
+    if (!v) continue;
+    if (key === "selbstauskunft" || SELBST_LABEL.test(label)) return scrubEmail(String(v)).slice(0, 300);
+  }
+  return null;
+}
+
 // UTM-Tupel + Landingpage. Paperform legt die Herkunft in `device` ab
 // (device.utm_source/…); ausserdem trägt device.url bzw. der ?_d=-Parameter die
 // Landingpage (auch bei eingebetteten Formularen). Fallback: UTMs aus einer im
@@ -176,12 +195,17 @@ Deno.serve(async (req) => {
   const dedupKey = email ? `wos:${await sha256Hex(salt + email)}` : `paperform:${subId || (await sha256Hex(blob)).slice(0, 24)}`;
 
   const utm = utmFromBody(body);
+  // Selbstauskunft mitschreiben; ohne UTM-Spur bestimmt sie den Kanal-Bucket
+  // (z. B. «über den Newsletter» → newsletter statt andere).
+  const selbst = selbstFromBody(body);
+  let kanal = mapKanal(utm.src, utm.med);
+  if (kanal === "andere" && selbst) kanal = mapKanal(selbst, null);
   const row = {
     signed_up_at: new Date().toISOString(), produkt: "wos", sprache, format,
-    tarif, intervall, waehrung, status: "neu", kanal: mapKanal(utm.src, utm.med), source: "paperform", ext_id: String(subId || ""), dedup_key: dedupKey,
+    tarif, intervall, waehrung, status: "neu", kanal, source: "paperform", ext_id: String(subId || ""), dedup_key: dedupKey,
     kampagne: utm.camp || "summer26_trial",
     utm_source: utm.src, utm_medium: utm.med, utm_campaign: utm.camp, utm_content: utm.cont,
-    landing_path: utm.land ? utm.land.slice(0, 200) : null,
+    landing_path: utm.land ? utm.land.slice(0, 200) : null, selbstauskunft: selbst,
   };
   const res = await fetch(`${SB}/rest/v1/sommer2026_signups?on_conflict=dedup_key`, {
     method: "POST",

@@ -130,3 +130,10 @@ Neue Massnahme → Zeile im Massnahmen-Protokoll (`sommer2026_massnahmen`, Servi
 Role) mit Datum, `rolle`, Kosten, Reichweite, Klicks und den internen Notizen.
 Neue Links immer nach obiger Konvention bauen – dann erscheinen sie ohne weiteres
 Zutun im Cockpit.
+
+**Newsletter-Aussendungen (Beschluss 18.7.2026):** ab sofort werden in den
+Newslettern **Generator-Links** eingesetzt (nach dieser Konvention, aus
+`apps/utm-generator/`), nicht die Auto-UTMs des Newsletter-Tools. Die
+Auto-Beschriftungen («Newsletter / Goetheanum Newsletter … (Copy)») bucketen
+zwar grob richtig, tauchen aber im Register-Soll/Ist nie auf und tragen kein
+Motiv. Bereits versendete Alt-Links bleiben, wie sie sind.

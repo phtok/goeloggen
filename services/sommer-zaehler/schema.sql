@@ -346,19 +346,26 @@ alter table public.sommer2026_links enable row level security;
 revoke all on table public.sommer2026_links from anon, authenticated;
 -- Schreiben über die RPCs unten (kein direktes anon-INSERT auf die Tabelle).
 
--- Soll/Ist: je registriertem Link die Zahl der Anmeldungen über genau dieses UTM-Tupel
+-- Soll/Ist: je registriertem Link die Zahl der Anmeldungen über genau dieses
+-- UTM-Tupel – plus die Kurzlink-Klicks (Migration «sommer2026_links_klicks_sichtbar»:
+-- die Function go zählt jeden /s/<code>-Aufruf in link_hits; hier wird die Zählung
+-- je Link sichtbar). Nur Links MIT Kurzcode haben eine Klick-Zählung.
 create or replace function public.sommer2026_links_public()
 returns table(created_at timestamptz, utm_source text, utm_medium text, utm_content text,
-              landing text, sprache text, url text, code text, rolle text, ersteller text, abschluesse bigint)
+              landing text, sprache text, url text, code text, rolle text, ersteller text,
+              abschluesse bigint, klicks bigint, letzter_klick timestamptz)
 language sql security definer set search_path to 'public' as $$
   select l.created_at, l.utm_source, l.utm_medium, l.utm_content, l.landing, l.sprache, l.url, l.code, l.rolle, l.ersteller,
-         count(s.id)::bigint as abschluesse
+         count(distinct s.id)::bigint as abschluesse,
+         count(distinct h.id)::bigint as klicks,
+         max(h.ts) as letzter_klick
     from public.sommer2026_links l
     left join public.sommer2026_signups s
       on  s.utm_campaign is not distinct from l.utm_campaign
       and s.utm_source   is not distinct from l.utm_source
       and s.utm_medium   is not distinct from l.utm_medium
       and s.utm_content  is not distinct from l.utm_content
+    left join public.link_hits h on l.code is not null and h.code = l.code
    group by l.id, l.created_at, l.utm_source, l.utm_medium, l.utm_content, l.landing, l.sprache, l.url, l.code, l.rolle, l.ersteller
    order by abschluesse desc, l.created_at desc;
 $$;

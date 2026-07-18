@@ -52,8 +52,8 @@
   .shortbox .sl{color:var(--muted);font-size:var(--t-micro)}
   .shortbox .su{font-family:var(--font-mono,var(--font-text));color:var(--blue);word-break:break-all}
 
-  .reg{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);table-layout:fixed;min-width:520px}
-  .reg col.cMot{width:44%} .reg col.cQm{width:20%} .reg col.cZiel{width:12%} .reg col.cAb{width:12%} .reg col.cAct{width:12%}
+  .reg{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);table-layout:fixed;min-width:560px}
+  .reg col.cMot{width:38%} .reg col.cQm{width:19%} .reg col.cZiel{width:12%} .reg col.cKl{width:10%} .reg col.cAb{width:11%} .reg col.cAct{width:10%}
   .reg .del{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 6px;min-height:var(--tap)}
   .reg .del:hover{color:var(--bad)} .reg td.act{text-align:right}
   .reg th,.reg td{padding:10px 12px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top}
@@ -217,6 +217,7 @@
       <label class="field"><span class="lab">Sortieren nach</span>
         <select id="regSort">
           <option value="abschluesse">Abschlüsse · meiste zuerst</option>
+          <option value="klicks">Klicks · meiste zuerst</option>
           <option value="neu">Neueste zuerst</option>
           <option value="alt">Älteste zuerst</option>
           <option value="motiv">Motiv A–Z</option>
@@ -226,9 +227,9 @@
     <p class="reg-zahl" id="regZahl"></p>
     <div class="tablewrap">
       <table class="reg">
-        <colgroup><col class="cMot" /><col class="cQm" /><col class="cZiel" /><col class="cAb" /><col class="cAct" /></colgroup>
-        <thead><tr><th>Motiv</th><th>Quelle · Medium</th><th>Ziel</th><th class="num">Abschlüsse</th><th></th></tr></thead>
-        <tbody id="regBody"><tr><td class="empty" colspan="5">lädt …</td></tr></tbody>
+        <colgroup><col class="cMot" /><col class="cQm" /><col class="cZiel" /><col class="cKl" /><col class="cAb" /><col class="cAct" /></colgroup>
+        <thead><tr><th>Motiv</th><th>Quelle · Medium</th><th>Ziel</th><th class="num">Klicks</th><th class="num">Abschlüsse</th><th></th></tr></thead>
+        <tbody id="regBody"><tr><td class="empty" colspan="6">lädt …</td></tr></tbody>
       </table>
     </div>
   </section>
@@ -480,7 +481,7 @@
   function applyRegister(){
     var body = el('regBody'); body.innerHTML = '';
     if(!regRows.length){
-      body.innerHTML = '<tr><td class="empty" colspan="5">Noch keine Links registriert.</td></tr>';
+      body.innerHTML = '<tr><td class="empty" colspan="6">Noch keine Links registriert.</td></tr>';
       el('regZahl').textContent = '';
       return;
     }
@@ -498,6 +499,8 @@
     var sortiert = rows.slice();
     var az = function(a, b){ return String(a || '').localeCompare(String(b || ''), 'de'); };
     switch(el('regSort').value){
+      case 'klicks': sortiert.sort(function(a, b){ return (Number(b.klicks) || 0) - (Number(a.klicks) || 0) ||
+                                                          (Number(b.abschluesse) || 0) - (Number(a.abschluesse) || 0); }); break;
       case 'neu':    sortiert.sort(function(a, b){ return new Date(b.created_at) - new Date(a.created_at); }); break;
       case 'alt':    sortiert.sort(function(a, b){ return new Date(a.created_at) - new Date(b.created_at); }); break;
       case 'motiv':  sortiert.sort(function(a, b){ return az(a.utm_content, b.utm_content); }); break;
@@ -506,16 +509,18 @@
                                                           (new Date(b.created_at) - new Date(a.created_at)); });
     }
     var abschluesse = sortiert.reduce(function(s, x){ return s + (Number(x.abschluesse) || 0); }, 0);
+    var klicksSumme = sortiert.reduce(function(s, x){ return s + (Number(x.klicks) || 0); }, 0);
+    var zahlen = klicksSumme.toLocaleString('de-CH') + ' Klicks · ' + abschluesse.toLocaleString('de-CH') + ' Abschlüsse';
     el('regZahl').textContent = sortiert.length === regRows.length
-      ? (regRows.length + ' Links · ' + abschluesse.toLocaleString('de-CH') + ' Abschlüsse')
-      : (sortiert.length + ' von ' + regRows.length + ' Links · ' + abschluesse.toLocaleString('de-CH') + ' Abschlüsse im Filter');
+      ? (regRows.length + ' Links · ' + zahlen)
+      : (sortiert.length + ' von ' + regRows.length + ' Links · ' + zahlen + ' im Filter');
     if(!sortiert.length){
-      body.innerHTML = '<tr><td class="empty" colspan="5">Kein Link passt zu Suche/Filter.</td></tr>';
+      body.innerHTML = '<tr><td class="empty" colspan="6">Kein Link passt zu Suche/Filter.</td></tr>';
       return;
     }
     sortiert.forEach(function(x){
       var tr = document.createElement('tr');
-      tr.innerHTML = '<td class="mot"></td><td class="mot"></td><td></td><td class="num"></td><td class="act"></td>';
+      tr.innerHTML = '<td class="mot"></td><td class="mot"></td><td></td><td class="num"></td><td class="num"></td><td class="act"></td>';
       var mot = tr.children[0];
       mot.textContent = x.utm_content || '—';
       var q = document.createElement('span'); q.className = 'q';
@@ -534,14 +539,25 @@
       var ziel = ANGEBOT_LABEL[x.landing] || x.landing || '';
       if(x.sprache) ziel += ' · ' + x.sprache.toUpperCase();
       tr.children[2].textContent = ziel;
+      // Klicks zählt die Weiterleitung (Function go) – nur Links MIT Kurzcode
+      // haben eine Zählung; volle URLs ohne Kurzlink zeigen einen Strich.
+      var kl = Number(x.klicks) || 0;
+      if(!x.code){ tr.children[3].textContent = '–'; tr.children[3].className = 'num zero';
+        tr.children[3].title = 'Ohne Kurzlink keine Klick-Zählung'; }
+      else {
+        tr.children[3].textContent = kl.toLocaleString('de-CH');
+        if(kl === 0) tr.children[3].className = 'num zero';
+        if(x.letzter_klick) tr.children[3].title = 'letzter Klick ' +
+          new Date(x.letzter_klick).toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
+      }
       var n = Number(x.abschluesse) || 0;
-      tr.children[3].textContent = n.toLocaleString('de-CH');
-      if(n === 0) tr.children[3].className = 'num zero';
+      tr.children[4].textContent = n.toLocaleString('de-CH');
+      if(n === 0) tr.children[4].className = 'num zero';
       var del = document.createElement('button');
       del.type = 'button'; del.className = 'del'; del.textContent = 'Löschen';
       del.setAttribute('aria-label', 'Link löschen');
       del.addEventListener('click', function(){ loescheLink(x.url); });
-      tr.children[4].appendChild(del);
+      tr.children[5].appendChild(del);
       body.appendChild(tr);
     });
   }
@@ -562,7 +578,7 @@
         regQuelleOptionen();
         applyRegister();
       })
-      .catch(function(){ el('regBody').innerHTML = '<tr><td class="empty" colspan="5">Register nicht ladbar.</td></tr>'; });
+      .catch(function(){ el('regBody').innerHTML = '<tr><td class="empty" colspan="6">Register nicht ladbar.</td></tr>'; });
   }
 
   setzeAutoSlug();

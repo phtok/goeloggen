@@ -61,9 +61,10 @@ function cleanUtm(v: any): string | null {
   return (s === "" || /^(none|n\/?a|null|undefined|-)$/i.test(s)) ? null : s;
 }
 
-// Volles UTM-Tupel + Landingpage: direkte Felder, sonst aus einer eingebetteten URL nachziehen.
+// Volles UTM-Tupel + Landingpage: direkte Felder, Uscreens utm_params-Block
+// (kommt im user_created-Event mit), sonst aus einer eingebetteten URL nachziehen.
 function utmFrom(data: any): { src: any; med: any; camp: any; cont: any; land: any } {
-  const g = (k: string) => pick(data, [k, "custom_fields." + k, "utm." + k.replace("utm_", ""), "query." + k]);
+  const g = (k: string) => pick(data, [k, "utm_params." + k, "custom_fields." + k, "utm." + k.replace("utm_", ""), "query." + k]);
   let src = g("utm_source"), med = g("utm_medium"), camp = g("utm_campaign"), cont = g("utm_content");
   let land = pick(data, ["landing_path", "landing_page", "page"]);
   const urlish = pick(data, ["landing_url", "page_url", "signup_url", "url", "referrer_url", "referrer"]);
@@ -181,29 +182,42 @@ Deno.serve(async (req) => {
   if (isPay && !isNew) return json({ ok: true, note: "Zahlung ignoriert (Umwandlung erst nach 3 Monaten)" });
 
   // «User Created» ist KEINE Aktions-Anmeldung (Registrierung ≠ Abo) – aber es
-  // ist laut Uscreen-Doku das einzige Event, das die Custom-Field-Antworten
-  // (`custom_fields`, Slot 1 = «Wie sind Sie auf uns aufmerksam geworden?»)
-  // mitbringt. Darum: Antwort an eine bestehende Anmeldung derselben Person
-  // heften (nur wo noch leer); Kanal nachziehen, wenn er noch «andere» ist.
-  // Kommt die Anmeldung erst NACH diesem Event, greift der Roh-Log-Fallback
-  // unten. WICHTIG: vor isNew prüfen – «created» matcht sonst als Anmeldung.
+  // ist das einzige Event, das Attribution mitbringt: das VOLLE UTM-Tupel
+  // (`utm_params`, aus Uscreens eigener Session-Erfassung – am 18.7. live
+  // verifiziert) und die Custom-Field-Antwort (`custom_fields`, Schlüssel ist
+  // der FRAGETEXT, darum der Object.values-Fallback). Beides wird an eine
+  // bestehende Anmeldung derselben Person geheftet (nur wo noch leer); der
+  // Kanal wird nachgezogen, solange er «andere» ist. Kommt die Anmeldung erst
+  // NACH diesem Event, greift der Roh-Log-Fallback unten.
+  // WICHTIG: vor isNew prüfen – «created» matcht sonst als Anmeldung.
   if (/user[_.]?created/.test(e)) {
     const cf = (data && typeof data.custom_fields === "object" && data.custom_fields) || {};
     const antwort0 = pick(data, ["custom_fields.custom_field_1", "custom_fields.user_field_1", "custom_field_1", "user_field_1", "user_fields.0.value"]) ?? Object.values(cf)[0];
     const antwort = antwort0 ? scrubEmail(String(antwort0)).slice(0, 300) : null;
-    if (!antwort) return json({ ok: true, note: "user_created ohne Selbstauskunft" });
-    await fetch(`${SB}/rest/v1/sommer2026_signups?dedup_key=eq.${encodeURIComponent(dedupKey)}&selbstauskunft=is.null`, {
-      method: "PATCH", headers: { ...H, Prefer: "return=minimal" },
-      body: JSON.stringify({ selbstauskunft: antwort }),
-    }).catch(() => {});
-    const nachKanal = mapKanal(antwort);
+    const u2 = utmFrom(data);
+    const src2 = cleanUtm(u2.src), med2 = cleanUtm(u2.med), camp2 = cleanUtm(u2.camp), cont2 = cleanUtm(u2.cont);
+    if (!antwort && !src2 && !cont2) return json({ ok: true, note: "user_created ohne Spur" });
+    const wo = `dedup_key=eq.${encodeURIComponent(dedupKey)}`;
+    if (antwort) {
+      await fetch(`${SB}/rest/v1/sommer2026_signups?${wo}&selbstauskunft=is.null`, {
+        method: "PATCH", headers: { ...H, Prefer: "return=minimal" },
+        body: JSON.stringify({ selbstauskunft: antwort }),
+      }).catch(() => {});
+    }
+    if (src2 || cont2) {
+      await fetch(`${SB}/rest/v1/sommer2026_signups?${wo}&utm_source=is.null&utm_content=is.null`, {
+        method: "PATCH", headers: { ...H, Prefer: "return=minimal" },
+        body: JSON.stringify({ utm_source: src2, utm_medium: med2, utm_campaign: camp2, utm_content: cont2 }),
+      }).catch(() => {});
+    }
+    const nachKanal = mapKanal(src2 || med2 || antwort);
     if (nachKanal !== "andere") {
-      await fetch(`${SB}/rest/v1/sommer2026_signups?dedup_key=eq.${encodeURIComponent(dedupKey)}&kanal=eq.andere`, {
+      await fetch(`${SB}/rest/v1/sommer2026_signups?${wo}&kanal=eq.andere`, {
         method: "PATCH", headers: { ...H, Prefer: "return=minimal" },
         body: JSON.stringify({ kanal: nachKanal }),
       }).catch(() => {});
     }
-    return json({ ok: true, note: "Selbstauskunft vermerkt" });
+    return json({ ok: true, note: "Attribution vermerkt", utm: !!(src2 || cont2), selbstauskunft: !!antwort });
   }
 
   if (!isNew) return json({ ok: true, skipped: "event ignoriert" });
@@ -219,22 +233,30 @@ Deno.serve(async (req) => {
 
   const { sprache, intervall, tarif } = mapPlan(title);
   const utmRaw = utmFrom(data);
-  const src = cleanUtm(utmRaw.src), med = cleanUtm(utmRaw.med), camp = cleanUtm(utmRaw.camp), cont = cleanUtm(utmRaw.cont), land = utmRaw.land;
+  let src = cleanUtm(utmRaw.src), med = cleanUtm(utmRaw.med), camp = cleanUtm(utmRaw.camp), cont = cleanUtm(utmRaw.cont);
+  const land = utmRaw.land;
   // Offene Selbstauskunft «Wie sind Sie aufmerksam geworden?» (Custom User Field,
   // Slot 1 = custom_field_1) – O-Ton, E-Mail-redigiert.
   const selbst0 = pick(data, ["referral_source", "how_heard", "how_did_you_hear", "custom_fields.how_did_you_hear",
     "custom_fields.custom_field_1", "custom_fields.user_field_1", "custom_field_1", "user_field_1", "user_fields.0.value"]);
   let selbst = selbst0 ? scrubEmail(String(selbst0)).slice(0, 300) : null;
-  // Fallback: kam «User Created» (traegt die Custom Fields) schon VOR dieser
-  // Anmeldung, liegt die Antwort im Roh-Log – dort nachschlagen (custom_fields
-  // ueberleben die PII-Redaktion, user_id auch).
-  if (!selbst && ext) {
+  // Fallback: kam «User Created» (traegt utm_params UND custom_fields) schon
+  // VOR dieser Anmeldung, liegt beides im Roh-Log – dort nachschlagen (beide
+  // Felder ueberleben die PII-Redaktion; die User-ID heisst dort `id`).
+  if ((!selbst || !src) && ext) {
     try {
-      const raws = await fetch(`${SB}/rest/v1/sommer2026_ingest_raw?source=eq.uscreen&event=ilike.*user*creat*&payload->>user_id=eq.${encodeURIComponent(ext)}&order=received_at.desc&limit=1&select=payload`, { headers: H })
+      const raws = await fetch(`${SB}/rest/v1/sommer2026_ingest_raw?source=eq.uscreen&event=ilike.*user*creat*&payload->>id=eq.${encodeURIComponent(ext)}&order=received_at.desc&limit=1&select=payload`, { headers: H })
         .then((r) => r.json());
-      const cf = raws?.[0]?.payload?.custom_fields;
-      const a = cf && typeof cf === "object" ? (cf.custom_field_1 ?? cf.user_field_1 ?? Object.values(cf)[0]) : null;
-      if (a) selbst = scrubEmail(String(a)).slice(0, 300);
+      const p = raws?.[0]?.payload;
+      if (!selbst) {
+        const cf = p?.custom_fields;
+        const a = cf && typeof cf === "object" ? (cf.custom_field_1 ?? cf.user_field_1 ?? Object.values(cf)[0]) : null;
+        if (a) selbst = scrubEmail(String(a)).slice(0, 300);
+      }
+      if (!src && p?.utm_params && typeof p.utm_params === "object") {
+        src = src || cleanUtm(p.utm_params.utm_source); med = med || cleanUtm(p.utm_params.utm_medium);
+        camp = camp || cleanUtm(p.utm_params.utm_campaign); cont = cont || cleanUtm(p.utm_params.utm_content);
+      }
     } catch { /* kein Fallback */ }
   }
   const kanal = mapKanal(src || pick(data, ["source", "referral_source"]) || selbst);
