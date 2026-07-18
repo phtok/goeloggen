@@ -1,5 +1,15 @@
 # Auftrag für Claude im Chrome: Uscreen-Attribution einrichten (goetheanum.tv)
 
+> **SCHLUSSSTAND 18.7.2026 — erledigt und übertroffen.** Das Event
+> «User Created» ist aktiv und liefert `utm_params` (volles UTM-Tupel aus
+> Uscreens Session-Erfassung) plus die Custom-Field-Antwort; die Ingestion
+> (ab v16) heftet beides automatisch an die Anmeldungen. Der Altbestand
+> 3.–18.7. wurde über den People-CSV-Export rekonstruiert (People → Filter
+> «Created on date» → Export; enthält UTM-Spalten + Referrer + User Field 1):
+> 18 Alt-Abos bekamen ihr UTM-Tupel, 23 ihren Kanal (mailer/social/website)
+> nachträglich. Ein Admin-API-Zugang existiert in diesem Konto nicht und
+> wird nicht gebraucht. Die Abschnitte unten bleiben als Verlauf stehen.
+
 Dieser Prompt ist für **Claude in Chrome** gedacht, eingeloggt im
 **Uscreen-Admin von goetheanum.tv**. Er stammt aus der Attributions-Analyse vom
 17.7.2026: Der Uscreen-Webhook liefert nur `event`, `subscription_id`,

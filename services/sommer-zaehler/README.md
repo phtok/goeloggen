@@ -129,8 +129,14 @@ verfeinern.
   (Secret liegt in `sommer2026_config`, nicht im Code/Repo).
 - **In Uscreen:** Settings → Webhooks → obige URL; Events *subscription
   created / canceled* (und *payment/charge* für die Umwandlung `bleibt`).
-- **Attribution:** Settings → Custom user fields → «Wie sind Sie auf uns
-  aufmerksam geworden?»; die Function mappt die Antwort auf `kanal`.
+- **Attribution:** Das Event «User Created» liefert `utm_params` (volles
+  UTM-Tupel aus Uscreens Session-Erfassung) und die Custom-Field-Antwort
+  «Wie sind Sie auf uns aufmerksam geworden?» (Slot `custom_field_1`,
+  Schlüssel im Payload = Fragetext). Die Function heftet beides an die
+  Anmeldung derselben Person (nur wo leer) und mappt auf `kanal`;
+  Registrierungen zählen nie als Abo. Rückwirkend lässt sich dasselbe über
+  den People-CSV-Export ziehen (Filter «Created on date», enthält
+  UTM-Spalten; so am 18.7. für den Altbestand geschehen).
 - **Aktions-Isolierung:** jede Neuanmeldung (`subscription_assigned` u. ä.) im
   Aktionszeitraum zählt als `neu`. Trials hinterlegen eine Kreditkarte, darum ist
   `transaction_id` **kein** Unterscheidungsmerkmal. Verlängerungen legen nichts an
