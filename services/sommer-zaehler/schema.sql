@@ -285,13 +285,21 @@ revoke all on table public.sommer2026_multi_kontakte from anon, authenticated;
 -- Volltext siehe Migration «sommer2026_multiplikatoren».
 
 -- Wirkungstrichter: Sichtbarkeit → Aktivierung → Wirkung → Bindung
+-- (Migration «sommer2026_trichter_kurzlink_klicks»: die Stufe «Klicks» =
+-- von Hand erfasste Aktivitäts-Klicks PLUS die automatisch gezählten
+-- Kurzlink-Klicks der Kampagnen-Links aus link_hits. Doppelzählung möglich,
+-- wenn dieselben Klicks zusätzlich von Hand erfasst werden – die Fussnote
+-- im Cockpit weist die Zusammensetzung aus.)
 create or replace function public.sommer2026_trichter()
 returns table(stufe text, wert bigint, ord int)
 language sql security definer set search_path to 'public' as $$
   select * from (
     select 'sichtbarkeit'::text as stufe, coalesce(sum(reichweite),0)::bigint as wert, 1 as ord from public.sommer2026_massnahmen
     union all
-    select 'aktivierung', coalesce(sum(klicks),0)::bigint, 2 from public.sommer2026_massnahmen
+    select 'aktivierung',
+           (select coalesce(sum(klicks),0) from public.sommer2026_massnahmen)::bigint
+         + (select count(*) from public.link_hits h join public.sommer2026_links l on l.code = h.code)::bigint,
+           2
     union all
     select 'wirkung', count(*)::bigint, 3 from public.sommer2026_signups
     union all
