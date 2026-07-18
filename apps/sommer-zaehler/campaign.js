@@ -170,15 +170,17 @@
       host.appendChild(row);
     });
     // «ohne UTM» einordnen: kein eigener Kanal, sondern Anmeldungen ohne UTM-Spur.
-    // Hauptquellen: goetheanum.tv (der Uscreen-Webhook trägt keine UTM-Felder mit)
-    // und direkte Landingpage-/Formular-Aufrufe ohne Parameter.
+    // Seit 18.7. liefern beide Wege die Spur (goetheanum.tv über das
+    // user_created-Event mit utm_params, Paperform über Felder + device.utm);
+    // übrig bleiben Direktbesucher ohne Parameter und der nicht mehr
+    // rekonstruierbare Rest des Altbestands vor dem 18.7.
     var ohneSpur = byKanal['andere'] || 0;
     if (ohneSpur > 0){
       var note = document.createElement('div'); note.className = 'fnote';
-      note.textContent = '«ohne UTM» = ' + fmt(ohneSpur) + ' Anmeldungen, die ohne UTM-Parameter ankamen. ' +
-        'Der goetheanum.tv-Checkout liefert technisch keine UTMs in den Webhook – diese Abos landen immer hier; ' +
-        'dazu direkte Aufrufe von Landingpage oder Formular. ' +
-        'Die Einzel-Ereignisse stehen unter Momentum → «Was ist passiert?».';
+      note.textContent = '«ohne UTM» = ' + fmt(ohneSpur) + ' Anmeldungen, die ohne UTM-Parameter ankamen: ' +
+        'Direktbesuche ohne Link-Parameter und ein Teil des Altbestands vor dem 18. Juli ' +
+        '(seit dem 18.7. liefern Wochenschrift-Formulare UND goetheanum.tv die Spur automatisch). ' +
+        'Die Einzel-Ereignisse stehen unter Momentum → «Was ist passiert?», dort auch die vermutete Herkunft.';
       host.appendChild(note);
     }
   }
