@@ -284,7 +284,7 @@
       host.appendChild(box);
     }
     var note = document.createElement('div'); note.className = 'fnote';
-    note.textContent = 'Reichweite und Klicks kommen aus den Aktivitäten – je Eintrag erfassen (auch später über Bearbeiten). Abschlüsse und Geblieben zählt das Cockpit live aus den Anmeldungen.';
+    note.textContent = 'Reichweite kommt aus den Aktivitäten (je Eintrag erfassen). Klicks = erfasste Aktivitäts-Klicks plus die automatisch gezählten Kurzlink-Klicks aller Kampagnen-Links; dieselben Klicks nicht zusätzlich von Hand eintragen, sonst zählen sie doppelt. Abschlüsse und Geblieben zählt das Cockpit live aus den Anmeldungen.';
     host.appendChild(note);
   }
 
