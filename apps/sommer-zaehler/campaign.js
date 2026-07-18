@@ -867,6 +867,19 @@
     el('kGoalSub').textContent = fmt(total) + ' von ' + fmt(ziel) + ' · Ziel 8. August';
   }
 
+  // ── Attributions-Gesundheit: Anteil der Anmeldungen mit UTM-Spur ───────────
+  // Aus den Kanal-Buckets gerechnet: alles ausser «andere» (= ohne UTM) hat
+  // eine Spur. Die Kachel macht sichtbar, ob die Attributions-Arbeit greift.
+  function renderSpurTile(kanaele, total){
+    if (!el('kSpur')) return;
+    var ohne = 0;
+    (kanaele || []).forEach(function(r){ if (r.kanal === 'andere') ohne += Number(r.n) || 0; });
+    var mit = Math.max(0, total - ohne);
+    var pct = total > 0 ? Math.round(mit / total * 100) : 0;
+    el('kSpur').innerHTML = pct + '<span class="u"> %</span>';
+    el('kSpurSub').textContent = fmt(mit) + ' von ' + fmt(total) + ' Anmeldungen · Rest ohne UTM';
+  }
+
   function renderMilestones(total){
     if (!el('msLine')) return;
     // Meilenstein als eine Zeile in der Held-Gruppe (statt eigener Sektion).
@@ -1034,6 +1047,7 @@
         renderStreams(stats);
         renderFunnel(trichter, massnahmen);
         renderKanaele(kanaele, total);
+        renderSpurTile(kanaele, total);
         renderMotive(attribution);
         renderTarif(stats);
         renderMilestones(total);
