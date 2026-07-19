@@ -197,6 +197,14 @@
       flex: 1; min-height: var(--tap);              /* B04 */
       accent-color: var(--blue-solid);
     }
+    .schriftzug-justage select,
+    .schriftzug-justage input[type="number"] {
+      min-height: var(--tap);                       /* B04 */
+      font-size: 16px;                              /* B03: Eingaben ≥16px */
+      border: 1px solid var(--line); border-radius: var(--r-control);
+      background: var(--field-bg); color: var(--ink); padding: 0 var(--s2);
+    }
+    .schriftzug-justage input[type="number"] { width: 76px; }
     .farb-reihe input[type="color"] {
       width: 44px; height: 32px;
       border: 1px solid var(--line); border-radius: var(--r-control);
@@ -340,6 +348,27 @@
             <label for="aquarell-deckkraft">Aquarell-Deckkraft</label>
             <input id="aquarell-deckkraft" type="range" min="10" max="100" step="5" value="100" />
             <span class="hint" id="aquarell-deckkraft-wert">100 %</span>
+          </div>
+          <div class="schriftzug-justage">
+            <div class="farb-reihe">
+              <label for="schriftzug-wahl">Schriftzug auf der Malerei</label>
+              <select id="schriftzug-wahl">
+                <option value="Goetheanum">Goetheanum</option>
+                <option value="Schreinerei">Schreinerei</option>
+              </select>
+            </div>
+            <div class="farb-reihe">
+              <label for="schriftzug-x">Lage x · y in mm</label>
+              <input id="schriftzug-x" type="number" step="0.1" min="0" max="297" />
+              <input id="schriftzug-y" type="number" step="0.1" min="0" max="210" aria-label="Lage y in mm" />
+            </div>
+            <div class="farb-reihe">
+              <label for="schriftzug-groesse">Grad in mm · Winkel</label>
+              <input id="schriftzug-groesse" type="number" step="0.05" min="1.5" max="8" />
+              <input id="schriftzug-winkel" type="number" step="0.1" min="-180" max="180" aria-label="Winkel in Grad" />
+            </div>
+            <div class="hint">Wirkt nur im Aquarell-Modus; die Werte wandern
+              mit «Stand als JSON» zurück in die Vorlage.</div>
           </div>
         </div>
         <div class="hint">Standard ist die gedeckte Hauspalette; jede Rolle

@@ -35,7 +35,10 @@ const MARKER_FARBEN_AQUARELL = {
   grau: "#5f6266",
   gold: "#7a5a20"
 };
-const MARKER_RAND_AQUARELL = 0.5;  // mm — Rand der weissen Scheibe
+// «So dünn wie die Schrift» (Entscheid Auftraggeber, 19.7.): der Stamm
+// der Laut-Ziffern misst 0.13 em — beim Ziffergrad 2.03 mm sind das
+// 0.26 mm. Rand und Ziffer führen damit denselben Strich.
+const MARKER_RAND_AQUARELL = 0.26;
 const TINTE = "#4e4f4a";
 // Leise Druck-Tinte für Strukturbeiwerk (Kategorie-Titel der Legende):
 // = Token --ink-print-leise (tokens.css, seit v1.6.0), gerechnet 5.07:1
@@ -118,6 +121,7 @@ const state = {
   farben: { ...PRESETS["gedeckt"] },
   basiskarte: "vektor", // Grundkarte: ‹vektor› | ‹aquarell› | ‹wiesen› (Backend «Karte»)
   aquarellDeckkraft: 100, // Deckkraft des gemalten Blatts in % (Backend-Regler)
+  schriftzuege: {},       // Aquarell-Schriftzüge: Überschreibung je Text (x, y, groesse, winkel)
   platzieren: null,    // { label, farbe } während der Platzierung (neue Marke)
   platzierenOrt: null, // Ort-id, deren Marke gerade verschoben wird
   platzierenLogo: false, // Logo wird gerade neu platziert
@@ -659,7 +663,7 @@ function pfeilMarkup(x, y, r, hex, richtung) {
   const spitze = ikonMarkup("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 4.4, hex, winkel);
   if (!aquarellMarkerStil()) return spitze;
   // Aquarell: weisse Unterlegung (grösseres Duplikat) als Kontur zum Grund.
-  return ikonMarkup("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 5.0, "#ffffff", winkel) + spitze;
+  return ikonMarkup("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 4.9, "#ffffff", winkel) + spitze;
 }
 
 /* Treppen- und Lift-Badges: exakte Vektorgeometrie der Vorlage
@@ -765,7 +769,9 @@ function textBreiteMm(text, familie, groesseMm) {
 }
 
 function gebaeudeLabelMarkup() {
-  const labels = aquarellMarkerStil() ? GEBAEUDE_LABELS_AQUARELL : GEBAEUDE_LABELS;
+  const labels = aquarellMarkerStil()
+    ? GEBAEUDE_LABELS_AQUARELL.map((l) => ({ ...l, ...(state.schriftzuege[l.text] || {}) }))
+    : GEBAEUDE_LABELS;
   return labels.map((l) => {
     const drehung = l.winkel ? ` transform="rotate(${l.winkel} ${l.x} ${l.y})"` : "";
     const links = l.x - textBreiteMm(l.text, SCHRIFT_SPRACHE, l.groesse) / 2;
@@ -1539,6 +1545,17 @@ function renderOptionen() {
     document.getElementById("aquarell-deckkraft-wert").textContent = state.aquarellDeckkraft + " %";
     deckRegler.closest(".farb-reihe").style.opacity = grundModus === "vektor" ? "0.45" : "";
   }
+  const zugWahl = document.getElementById("schriftzug-wahl");
+  if (zugWahl) {
+    const basis = GEBAEUDE_LABELS_AQUARELL.find((l) => l.text === zugWahl.value)
+      || GEBAEUDE_LABELS_AQUARELL[0];
+    const zug = { ...basis, ...(state.schriftzuege[basis.text] || {}) };
+    document.getElementById("schriftzug-x").value = zug.x;
+    document.getElementById("schriftzug-y").value = zug.y;
+    document.getElementById("schriftzug-groesse").value = zug.groesse;
+    document.getElementById("schriftzug-winkel").value = zug.winkel;
+    document.querySelector(".schriftzug-justage").style.opacity = grundModus === "aquarell" ? "" : "0.45";
+  }
   const bkHinweis = document.getElementById("basiskarte-hinweis");
   if (bkHinweis) {
     bkHinweis.textContent = grundModus === "aquarell"
@@ -1585,7 +1602,8 @@ function standAlsJson() {
     titelLogo: state.titelLogo,
     preset: state.preset, farben: state.farben,
     basiskarte: state.basiskarte,
-    aquarellDeckkraft: state.aquarellDeckkraft
+    aquarellDeckkraft: state.aquarellDeckkraft,
+    schriftzuege: state.schriftzuege
   };
 }
 
@@ -1651,6 +1669,22 @@ function standAnwenden(s) {
     const deckkraft = Number(s.aquarellDeckkraft);
     state.aquarellDeckkraft = Number.isFinite(deckkraft)
       ? Math.max(10, Math.min(100, Math.round(deckkraft))) : 100;
+    state.schriftzuege = {};
+    if (s.schriftzuege && typeof s.schriftzuege === "object") {
+      GEBAEUDE_LABELS_AQUARELL.forEach((l) => {
+        const z = s.schriftzuege[l.text];
+        if (!z || typeof z !== "object") return;
+        const grenzen = { x: [0, 297], y: [0, 210], groesse: [1.5, 8], winkel: [-180, 180] };
+        const wert = {};
+        Object.keys(grenzen).forEach((feld) => {
+          const zahl = Number(z[feld]);
+          if (Number.isFinite(zahl)) {
+            wert[feld] = Math.max(grenzen[feld][0], Math.min(grenzen[feld][1], zahl));
+          }
+        });
+        if (Object.keys(wert).length) state.schriftzuege[l.text] = wert;
+      });
+    }
     state.ausschnitt = state.ausschnitt || { skala: 1, dx: 0, dy: 0 };
 }
 
@@ -1886,6 +1920,22 @@ document.getElementById("aquarell-deckkraft").addEventListener("input", (e) => {
   state.aquarellDeckkraft = Math.max(10, Math.min(100, Math.round(Number(e.target.value) || 100)));
   render();
 });
+
+document.getElementById("schriftzug-wahl").addEventListener("change", () => renderOptionen());
+[["schriftzug-x", "x", 0, 297], ["schriftzug-y", "y", 0, 210],
+ ["schriftzug-groesse", "groesse", 1.5, 8], ["schriftzug-winkel", "winkel", -180, 180]]
+  .forEach(([id, feld, min, max]) => {
+    document.getElementById(id).addEventListener("input", (e) => {
+      const wert = Number(e.target.value);
+      if (!Number.isFinite(wert)) return;
+      const text = document.getElementById("schriftzug-wahl").value;
+      state.schriftzuege[text] = {
+        ...(state.schriftzuege[text] || {}),
+        [feld]: Math.max(min, Math.min(max, wert))
+      };
+      render();
+    });
+  });
 
 document.getElementById("opt-wiese-klein").addEventListener("change", (e) => {
   state.wiesen.klein = e.target.checked;
