@@ -1,0 +1,324 @@
+<!doctype html>
+<!-- =============================================================================
+     Gestaltungsprinzipien – Entwurf zur Entscheidung (Werkstatt-Fassung)
+     -----------------------------------------------------------------------------
+     Gesetzte Fassung von docs/gestaltungsprinzipien-entwurf.md (PR #486).
+     Aus starter-artikel.html gebaut: Artkopf (crumbs/kicker/lede/byline, G05),
+     Mengentext in .prose (Schrift-Grenze: Leseschrift), Zitate über <q> (G16),
+     Herleitungskette als zugängliche Stufenliste (Token-Werte, DS02/DS07).
+     Nach Ratifizierung entsteht daraus die Haus-Fassung (eine Seite, sechs Sätze).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Gestaltungsprinzipien · Goetheanum</title>
+<meta name="description" content="Entwurf der Prinzipien-Mittelschicht: Charaktersatz, sechs Prinzipien, Herleitungskette – zur Ratifizierung." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<!-- Das Fundament – eine Quelle der Wahrheit. NICHT kopieren, EINBINDEN. RELATIV, nie absolut. -->
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Nur Artikel-Layout; Rollen (crumbs/byline/lit/related) kommen aus base.css. */
+  .artkopf{padding-block:clamp(36px,6vw,64px) var(--s6);max-width:min(72ch,100%)}
+  .artkopf h1{max-width:24ch}
+  .artkopf .lede{margin-top:var(--s4)}
+  .artkopf .byline{margin-top:var(--s4)}
+
+  /* Charaktersatz: Strukturebene (eigene Hierarchie nach G01), Hausschrift. */
+  .charaktersatz{margin-block:var(--s6);max-width:min(72ch,100%)}
+  .charaktersatz p{font-family:var(--font-display);font-weight:var(--w-deutlich);
+    font-size:var(--t-h3);line-height:1.3;margin:0}
+  .charaktersatz .nachsatz{font-family:var(--font-display);font-weight:var(--w-leise);
+    font-size:var(--t-lede);color:var(--muted);margin-top:var(--s3)}
+
+  /* Herleitungskette: Stufenliste statt Diagramm – lesbar, zugänglich, tokenrein. */
+  .kette{list-style:none;margin:var(--s6) 0;padding:0;max-width:min(72ch,100%);
+    counter-reset:stufe}
+  .kette li{counter-increment:stufe;border-left:3px solid var(--gold);
+    background:var(--soft);padding:var(--s3) var(--s4);margin-bottom:var(--s2)}
+  .kette li::before{content:counter(stufe);font-family:var(--font-text);
+    font-variant-numeric:tabular-nums;color:var(--gold-ink);
+    font-size:var(--t-small);margin-right:var(--s3)}
+  .kette b{font-family:var(--font-display);font-weight:var(--w-deutlich)}
+  .kette .takt{display:block;font-family:var(--font-text);color:var(--muted);
+    font-size:var(--t-small);margin-top:var(--s1)}
+  .kette li:nth-child(2){margin-left:var(--s4)}
+  .kette li:nth-child(3){margin-left:var(--s8)}
+  .kette li:nth-child(4){margin-left:calc(var(--s8) + var(--s4))}
+  .kette li:nth-child(5){margin-left:calc(var(--s8) + var(--s8))}
+  @media (max-width:560px){.kette li{margin-left:0 !important}}
+
+  /* Prinzipien: Anker-Abschnitte im Prose-Fluss. */
+  .prinzip{margin-top:var(--s8)}
+  .prose .folgt{margin-top:var(--s2)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-active="prinzipien" data-variant="werkzeug"
+  data-onpage="Befund:#befund|Vorbilder:#vorbilder|Prinzipien:#prinzipien|Arbeitsweise:#kette|Fragen:#fragen"></script>
+
+<main class="wrap">
+
+  <header class="artkopf">
+    <nav class="crumbs" aria-label="Pfad">
+      <a href="start/">Werkstatt</a> <span aria-hidden="true">›</span>
+      <span aria-current="page">Gestaltungsprinzipien</span>
+    </nav>
+    <span class="kicker" style="margin-top:var(--s4);display:inline-block">Entscheidungsblatt · Entwurf</span>
+    <h1>Gestaltungsprinzipien</h1>
+    <p class="lede">Die fehlende Mitte zwischen Strategie und Einzelregeln:
+      ein Charaktersatz, sechs Prinzipien und eine Herleitungskette, die jede
+      Einzellösung aus der Gesamtperspektive nachvollziehbar macht.</p>
+    <p class="byline"><b>Werkstatt-Fassung</b> <span>Stand 19. Juli 2026</span>
+      <span>Status: Entwurf, vom Auftraggeber zu ratifizieren</span></p>
+  </header>
+
+  <article class="prose">
+
+    <h2 id="befund">1 · Befund: warum es kleinteilig wirkt</h2>
+    <p>Das System hat eine <strong>Spitze</strong> (das Strategieblatt: Purpose,
+      Onliness, Werte) und einen breiten <strong>Unterbau</strong> (Tokens,
+      Rollen, Regelwerk, Vertrag, Ledger, Prüfmaschinen). Was fehlt, ist die
+      <strong>Mitte</strong>: eine Handvoll Prinzipien, aus denen sich jede
+      Regel herleitet und an denen sich jede neue Frage beantworten lässt,
+      bevor sie eine neue Regel erzeugt.</p>
+    <p>Die Folgen des fehlenden Mittelbaus sind genau die beobachteten:
+      Regeln sagen <em>was</em>, nicht <em>warum</em> – G05 verbietet
+      Versal-Hervorhebung, G17 Kunst-Kapitälchen, G23 Versalsatz im Lesetext:
+      drei Regeln, ein Grund. Wer den Grund nicht kennt, muss drei Regeln
+      lernen; wer ihn kennt, braucht keine. Jede neue Frage wird als
+      Einzellösung beantwortet und landet als weiterer Eintrag im Regelwerk
+      oder Ledger – das Regelwerk wächst schneller als das Verständnis. Und
+      der Charakter ist zwar implizit da, aber nirgends ausgesprochen: was
+      nicht ausgesprochen ist, kann eine breite Mitarbeitendenschaft weder
+      denken noch weitergeben.</p>
+
+    <h2 id="vorbilder">2 · Vorbilder – und was genau von ihnen zu lernen ist</h2>
+    <p><strong>Karl Gerstner</strong>, <q>Programme entwerfen</q> (1964), gibt
+      die direkteste Antwort auf <q>tausend Einzellösungen</q>: nicht Lösungen
+      für Aufgaben entwerfen, sondern <strong>Programme für Lösungen</strong>.
+      Eine Aufgabe wird nicht einzeln gelöst, sondern als Fall eines Programms –
+      genau das leisten Tokens, Rollen und der Atem schon technisch; Gerstner
+      liefert die Denkfigur dazu.</p>
+    <p><strong>Dieter Rams</strong> (Braun) zeigt die Form: zehn Prinzipien,
+      jedes ein wertender Satz (<q>Gutes Design ist so wenig Design wie
+      möglich</q>). Prinzipien sind wenige, merkbare, wertende Sätze – keine
+      Checklisten – und sie bleiben über Jahrzehnte stabil, während Produkte
+      und Regeln wechseln.</p>
+    <p><strong>Otl Aicher</strong> (Lufthansa, München 72, ERCO) zeigt die
+      Haltung: aus wenigen Entscheiden – eine Schrift, ein Raster, eine
+      Bildsprache – ist alles ableitbar, vom Ticket bis zum Leitsystem. Der
+      Charakter sitzt in den Entscheiden, nicht in den Artefakten.</p>
+    <p><strong>Christopher Alexander</strong>, <q>A Pattern Language</q>,
+      zeigt die Nachvollziehbarkeit: Muster erzeugen Lösungen, statt sie
+      aufzuzählen; jede konkrete Lösung kann ihr Muster nennen. Von jeder
+      Einzellösung führt ein benannter Weg zurück zur Gesamtperspektive.</p>
+    <p>Die <strong>GOV.UK Design Principles</strong> beweisen, dass Prinzipien
+      für eine sehr breite, gestalterisch ungeschulte Mitarbeitendenschaft
+      formulierbar sind: zehn Verb-Sätze (<q>Do less</q> · <q>Do the hard work
+      to make it simple</q>), jeder mit Beispielen, öffentlich, zitierfähig in
+      jeder Diskussion. <strong>Massimo Vignelli</strong> (<q>The Vignelli
+      Canon</q>) rechtfertigt die Enge: die Disziplin der wenigen Mittel ist
+      kein Mangel, sondern die Quelle der Wiedererkennbarkeit.</p>
+    <p class="note">Handwerksregel des Prinzipien-Schreibens (u. a. Jared
+      Spool): Ein Prinzip taugt nur, wenn man mit ihm Nein sagen kann und wenn
+      sein Gegenteil vertretbar wäre. <q>Wir gestalten einfach, schön und
+      nützlich</q> ist keines – niemand vertritt das Gegenteil.
+      <q>Weglassen</q> ist eines.</p>
+
+    <h2 id="prinzipien">3 · Was den Charakter tatsächlich ausmacht</h2>
+    <p>Der Vorschlag erfindet nichts Neues, er spricht aus, was im Bestand
+      schon konsequent gelebt wird. Voran ein Charaktersatz, der alles
+      trägt:</p>
+  </article>
+
+  <figure class="card soft charaktersatz">
+    <p>Das Goetheanum spricht – es dekoriert nicht.</p>
+    <p class="nachsatz">Ruhig, deutlich, würdig; mit wenigen Mitteln, für
+      alle, aus einer Quelle.</p>
+  </figure>
+
+  <article class="prose">
+    <section class="prinzip" id="p1">
+      <h3>P1 · Eine Stimme</h3>
+      <p>Die Schrift ist eine Sprechweise, kein Stil-Baukasten: Klar trägt,
+        Laut betont, Leise antwortet. Betont wird mit Ton (Laut), nie mit
+        Tricks (Unterstreichen, Versalien, Sperren). Eine Familie trägt alles;
+        wo sie an ihre Grenze kommt, übernimmt genau eine benannte Zweitstimme
+        (Source Sans 3 für Funktion und Daten) – als Entscheid, nicht je
+        Seite.</p>
+      <p class="note folgt">Daraus folgen: S01, G01, G02, G04, G05, G23, die
+        Schrift-Grenze.</p>
+    </section>
+
+    <section class="prinzip" id="p2">
+      <h3>P2 · Weglassen</h3>
+      <p>Was entfallen kann, entfällt – Auszeichnung, Schmuck, Beiwerk, Text.
+        Das Menü koordiniert, es erklärt nicht; der Normalfall trägt kein
+        Zeichen; ein Beta-Hinweis an einem Ort statt zwölf Pillen. Weglassen
+        ist keine Askese, sondern der Grund, warum das Wenige wirkt.</p>
+      <p class="note folgt">Daraus folgen: G03, G17 (kein Schmuck), die
+        Utility-Lücke (für Falsches gibt es kein Werkzeug), der
+        Dramaturgie-Leitsatz (ein Hero, eine Primärhandlung).</p>
+    </section>
+
+    <section class="prinzip" id="p3">
+      <h3>P3 · Für alle gebaut</h3>
+      <p>Zugänglichkeit ist Ausgangspunkt, nicht Prüfpunkt – und sie wird
+        gerechnet, nicht geschätzt (Kontraste, Grade, Ziele). Nichts Lesbares
+        unter 14 Pixel, Weiss auf Farbflächen, Fingerziele 44 Pixel. Wer das
+        Haus vertritt, schliesst niemanden aus.</p>
+      <p class="note folgt">Daraus folgen: B01–B05, G28, die Mobil-Baseline.</p>
+    </section>
+
+    <section class="prinzip" id="p4">
+      <h3>P4 · Ehrlich</h3>
+      <p>Nichts vortäuschen: keine Kunst-Kapitälchen, keine vorgetäuschten
+        Mediävalziffern, CMYK nur als ausgewiesener Richtwert, Status ehrlich
+        (live · beta · Entwurf), Schätzungen als Lesart markiert, nie als
+        Messung. Auch die Werkzeuge selbst sind ehrlich: sie zeigen, was sie
+        können, und verschweigen nicht, was aussteht.</p>
+      <p class="note folgt">Daraus folgen: G17, G25 (nicht vortäuschen), die
+        Farben-Seite (ehrlich statt erfunden), die Wirkungs-Lesarten.</p>
+    </section>
+
+    <section class="prinzip" id="p5">
+      <h3>P5 · Aus einer Quelle</h3>
+      <p>Einbinden statt kopieren: eine Änderung gilt überall oder sie gilt
+        nicht. Tokens, eine Org-Datenwurzel, eine Logo-Engine, ein Manifest.
+        Was an einer Seite verbessert wird, fliesst ins Fundament zurück (der
+        Atem) – eine Verbesserung am Rand ist erst fertig, wenn sie überall
+        gilt.</p>
+      <p class="note folgt">Daraus folgen: DS01, DS02, DS07, DS09, die
+        Aufnahme-Schleife, der Ledger.</p>
+    </section>
+
+    <section class="prinzip" id="p6">
+      <h3>P6 · Die Maschine verhindert den Fehler, der Mensch macht die Gestalt</h3>
+      <p>Eindeutiges wird automatisiert, Mehrdeutiges vorgeschlagen, Gestaltung
+        bleibt beim Menschen. Die Maschine schlägt vor, der Mensch ratifiziert –
+        und die Ratifizierung wird Teil des Codes (ds-ok, Ledger). Konformität
+        entsteht durch Konstruktion, nicht durch Kontrolle.</p>
+      <p class="note folgt">Daraus folgen: G26, die Konformitäts-Engine, der
+        Bau-Workflow (Starter statt Nullpunkt).</p>
+    </section>
+
+    <p><strong>Gegenprobe</strong> (Nein-sagen-Test): Jedes der sechs verbietet
+      real Erwünschtes – P1 die <q>lebendige</q> Mischtypografie, P2 das gut
+      gemeinte Erklär-Beiwerk, P3 die elegante 12-Pixel-Marginalie, P4 die
+      geschönte Zahl, P5 die schnelle lokale Kopie, P6 sowohl den
+      handgeprüften Wildwuchs als auch die Maschine, die Gestaltung erzwingt.
+      Und jedes Gegenteil ist eine vertretbare Position, die andere Häuser
+      einnehmen – die Prinzipien sind also Entscheidungen, keine
+      Platitüden.</p>
+
+    <h2 id="kette">4 · Prinzipiell arbeiten – die Herleitungskette</h2>
+    <p>Damit Einzellösungen aus der Gesamtperspektive nachvollziehbar werden,
+      wird die vorhandene Architektur um die fehlende Ebene ergänzt – und jede
+      Ebene beruft sich ausdrücklich auf die darüber:</p>
+  </article>
+
+  <ol class="kette" aria-label="Herleitungskette von Charakter bis Werkzeug">
+    <li><b>Charaktersatz</b> – ein Satz.<span class="takt">Ändert sich nie.</span></li>
+    <li><b>Prinzipien P1–P6</b> – dieses Blatt.<span class="takt">Ändern sich fast nie.</span></li>
+    <li><b>Regeln G · B · DS</b> – jede nennt ihr Prinzip.<span class="takt">Ändern sich selten.</span></li>
+    <li><b>Tokens &amp; Rollen</b> – das Fundament.<span class="takt">Ändern sich im Atem-Rhythmus.</span></li>
+    <li><b>Werkzeuge &amp; Seiten</b> – die Praxis.<span class="takt">Ändern sich laufend.</span></li>
+  </ol>
+
+  <article class="prose">
+    <p>Die Mechanik dazu ist klein: <strong>Jede Regel bekommt einen
+      Prinzip-Anker</strong> (ein Feld <q>prinzip</q> in den Regel-Quellen und
+      im Vertrag). Eine Regel, die sich keinem Prinzip zuordnen lässt, ist ein
+      Befund – entweder fehlt ein Prinzip, oder die Regel ist entbehrlich (P2,
+      auf das Regelwerk selbst angewandt). <strong>Ledger-Einträge nennen das
+      Prinzip</strong>, nicht nur die Regel. <strong>Neue Fragen gehen zuerst
+      ans Prinzip</strong>: Prinzip befragen → reicht meist → sonst Regel
+      ableiten → zuletzt Token oder Rolle; eine Lösung ohne Anker ist per
+      Definition ein Atem-Entscheid für den Auftraggeber, keine stille
+      Einzellösung. <strong>Die Prüfmaschinen sprechen mit</strong> und geben
+      den Anker in der Meldung aus (<q>DS02 · P5 Aus einer Quelle</q>) – aus
+      einer Fehlermeldung wird ein Lehrsatz. Und der Widerspruchsfall bleibt
+      beim Menschen: wo Regel und Schrift oder zwei Prinzipien kollidieren,
+      wird gemeldet und entschieden, nicht eigenmächtig umgeschrieben.</p>
+
+    <h2 id="fassungen">5 · Formulierbar für die breite Mitarbeitendenschaft</h2>
+    <p>Zwei Fassungen desselben Inhalts, nach Publikum getrennt: die
+      <strong>Werkstatt-Fassung</strong> – dieses Blatt, mit Regel-IDs,
+      Herleitungskette und Gegenproben, für alle, die am System bauen – und
+      die <strong>Haus-Fassung</strong>: eine Seite, sechs Sätze, je ein
+      Bildpaar <q>so nicht / so</q>, ohne eine einzige Regel-ID, ohne
+      Fachwort. Sprachregel dafür: Verben, Hausdeutsch, keine Platitüden –
+      jeder Satz muss den Nein-sagen-Test bestehen.</p>
+    <p>Die wichtigste Entlastung dabei: Die Mitarbeitendenschaft begegnet den
+      Prinzipien vor allem <strong>verkörpert</strong>, nicht als Text – das
+      ist das Onliness-Versprechen. Wer die Werkzeuge benutzt, arbeitet
+      prinzipiengetreu, ohne ein Prinzip gelesen zu haben. Die Haus-Fassung
+      beantwortet nur die Frage, die Werkzeuge offen lassen: <em>Warum ist das
+      so?</em> – in sechs Sätzen, die man sich merken und weitersagen kann.</p>
+
+    <h2 id="fragen">6 · Offene Fragen zur Entscheidung</h2>
+    <ol>
+      <li><strong>Der Charaktersatz:</strong> trägt <q>Das Goetheanum spricht –
+        es dekoriert nicht</q>? Oder soll er näher an Purpose und Würde
+        formuliert sein?</li>
+      <li><strong>Sechs Prinzipien:</strong> richtige Zahl, richtiger Schnitt?
+        Kandidat für Zusammenlegung: P4 und P6 teilen die Wurzel <q>nichts
+        vortäuschen</q>.</li>
+      <li><strong>Die offene Charakterfrage:</strong> Das System, wie es steht,
+        ist still, schweizerisch, zurückhaltend – der Bau, den es vertritt,
+        ist plastisch, organisch, expressiv. Ist die Stille der gewollte
+        Charakter (die Bühne gehört dem Haus, die Grafik dient) – oder fehlt
+        dem System eine benannte warme, organische Dimension? Die Welt
+        <q>warm</q> und der Spielraum-Entwurf sind erste Antworten; hier
+        braucht es einen Grundsatz-Entscheid, kein weiteres Experiment.</li>
+      <li><strong>Verankerung:</strong> Prinzip-Anker in Regelwerk und Vertrag
+        eintragen und die Prüfmaschinen-Meldungen erweitern – ja oder
+        nein?</li>
+      <li><strong>Ort der Haus-Fassung:</strong> Schaufenster-Abschnitt,
+        eigene Seite, oder beides (die Seite speist den Abschnitt)?</li>
+    </ol>
+    <p>Nach der Ratifizierung wird dieses Blatt zur Quelle: Haus-Fassung
+      bauen, Prinzip-Anker eintragen, Ledger-Schema erweitern – je als eigener
+      Schritt.</p>
+  </article>
+
+  <aside class="lit" aria-label="Literatur">
+    <p><b style="color:var(--ink)">Literatur</b></p>
+    <p>Karl Gerstner, <q>Programme entwerfen</q>, Teufen 1964.</p>
+    <p>Dieter Rams, Zehn Thesen für gutes Design, Braun/Vitsœ.</p>
+    <p>Otl Aicher, <q>die welt als entwurf</q>, Berlin 1991.</p>
+    <p>Christopher Alexander, <q>A Pattern Language</q>, New York 1977.</p>
+    <p>Government Digital Service, GOV.UK Design Principles, London 2012.</p>
+    <p>Massimo Vignelli, <q>The Vignelli Canon</q>, Baden 2010.</p>
+    <p>Vollständige Quelle dieses Blatts: <a href="https://github.com/phtok/goeloggen/blob/main/docs/gestaltungsprinzipien-entwurf.md">docs/gestaltungsprinzipien-entwurf.md</a>.</p>
+  </aside>
+
+  <section aria-label="Verwandte Blätter">
+    <div class="shead"><h2>Verwandt</h2><p>Die Nachbarn dieses Blatts – Spitze, Fundament und Regelwerk.</p></div>
+    <div class="related">
+      <a class="teaser stack" href="marketing-maschine.html"><span class="thumb" aria-hidden="true"></span>
+        <span><span class="kick">Strategie</span><h3>Marketing-Maschine</h3>
+        <p class="ex">Die Strategie-Spitze als gesetzte Zusammenfassung.</p></span></a>
+      <a class="teaser stack" href="design-system/"><span class="thumb" aria-hidden="true"></span>
+        <span><span class="kick">Fundament</span><h3>Design-System</h3>
+        <p class="ex">Tokens, Rollen und die Konformitäts-Engine – die Schauseite.</p></span></a>
+      <a class="teaser stack" href="typografie.html"><span class="thumb" aria-hidden="true"></span>
+        <span><span class="kick">Hausregeln</span><h3>Typografie</h3>
+        <p class="ex">Das Regelwerk, das die Prinzipien konkret macht.</p></span></a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Hausgrafik</span>
+    <span><a href="design-system/">Design-System</a></span>
+  </div>
+</footer>
+</body>
+</html>
