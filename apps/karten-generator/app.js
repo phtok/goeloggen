@@ -20,6 +20,22 @@ const MARKER_FARBEN = {
   gold: "#94702e"
 };
 const FARB_ZYKLUS = ["rot", "blau", "gruen", "grau", "gold"];
+
+// Marker-Stil der gemalten Karte (Entwurfsrunden Auftraggeber, 19. Juli
+// 2026; gilt NUR im Aquarell-Modus — Vektor- und Wiesen-Modus behalten
+// die Vorlagenfarben oben): weisse Scheiben, Farbe wandert in Rand und
+// Zahl. Die Scheibe trennt auf jedem gemalten Grund; Rand und Ziffer
+// müssen nur noch auf Weiss bestehen — dunkle Verwandte der Vorlagen-
+// farben, gerechnet (B02-Methodik): Rot 6.0 · Blau 6.4 · Grün 6.4 ·
+// Gold 6.4 · Grau 6.1 zu 1. Blau = Markenblau (--blue-solid).
+const MARKER_FARBEN_AQUARELL = {
+  rot: "#b23543",
+  blau: "#0061a9",
+  gruen: "#226b52",
+  grau: "#5f6266",
+  gold: "#7a5a20"
+};
+const MARKER_RAND_AQUARELL = 0.5;  // mm — Rand der weissen Scheibe
 const TINTE = "#4e4f4a";
 // Leise Druck-Tinte für Strukturbeiwerk (Kategorie-Titel der Legende):
 // = Token --ink-print-leise (tokens.css, seit v1.6.0), gerechnet 5.07:1
@@ -341,6 +357,12 @@ function grundkarteModus() {
   return aquarellDataUri ? state.basiskarte : "vektor";
 }
 
+// Weisse-Scheiben-Stil nur auf dem ganzflächig gemalten Blatt — im
+// Wiesen-Modus ist die Karte die Vektorzeichnung (Entscheid 19.7.2026).
+function aquarellMarkerStil() {
+  return grundkarteModus() === "aquarell";
+}
+
 function grundkarteMarkup() {
   const modus = grundkarteModus();
   if (modus === "aquarell") return aquarellBildMarkup(false);
@@ -467,7 +489,8 @@ function ortFarbe(ort) {
 }
 
 function ortFarbeHex(ort) {
-  return MARKER_FARBEN[ortFarbe(ort)] || MARKER_FARBEN.rot;
+  const familie = aquarellMarkerStil() ? MARKER_FARBEN_AQUARELL : MARKER_FARBEN;
+  return familie[ortFarbe(ort)] || familie.rot;
 }
 
 function naechsteEigeneNummer() {
@@ -579,6 +602,11 @@ function markenBreite(ort, r) {
 }
 
 function markenKreis(x, y, hex, text, r, symbol, feldBreite) {
+  // Aquarell: Scheibe weiss, die Kategoriefarbe wandert in Rand + Zeichen.
+  const invers = aquarellMarkerStil();
+  const scheibe = invers ? "#ffffff" : hex;
+  const zeichen = invers ? hex : "#ffffff";
+  const rand = invers ? ` stroke="${hex}" stroke-width="${MARKER_RAND_AQUARELL}"` : "";
   // Kreiszahl nach dem Sonderelement des Design-Systems (.step-num):
   // Hausschrift Laut, fester Kreis, Tintenmitte der Ziffern auf der
   // Kreismitte (ZIFFERN_SITZ). Grad = 0.5 × Durchmesser — eine Spur
@@ -592,8 +620,8 @@ function markenKreis(x, y, hex, text, r, symbol, feldBreite) {
     const b = feldBreite * (r / 2.03);
     const h = r * 2.75;
     return `<rect x="${(x - b / 2).toFixed(3)}" y="${(y - h / 2).toFixed(3)}"`
-      + ` width="${b.toFixed(3)}" height="${h.toFixed(3)}" rx="${(h / 2).toFixed(3)}" fill="${hex}" />`
-      + symbolMarkup(symbol, x, y, b - h * 0.7, "#ffffff", h * 0.72);
+      + ` width="${b.toFixed(3)}" height="${h.toFixed(3)}" rx="${(h / 2).toFixed(3)}" fill="${scheibe}"${rand} />`
+      + symbolMarkup(symbol, x, y, b - h * 0.7, zeichen, h * 0.72);
   }
   if (symbol) {
     const symbole = Array.isArray(symbol) ? symbol : [symbol];
@@ -601,22 +629,22 @@ function markenKreis(x, y, hex, text, r, symbol, feldBreite) {
     if (symbole.length === 1) {
       // Das Pikto braucht Luft zum Kreisrand (Karte wie Liste) — 1.26 ×
       // Radius entspricht optisch dem Sitz der Ziffern im Zahlkreis.
-      return `<circle cx="${x}" cy="${y}" r="${rr}" fill="${hex}" />`
-        + symbolMarkup(symbole[0], x, y, rr * 1.26, "#ffffff");
+      return `<circle cx="${x}" cy="${y}" r="${rr}" fill="${scheibe}"${rand} />`
+        + symbolMarkup(symbole[0], x, y, rr * 1.26, zeichen);
     }
     const schritt = rr * 1.55;
     const breite = schritt * (symbole.length - 1) + 2 * rr;
     let aus = `<rect x="${(x - breite / 2).toFixed(3)}" y="${(y - rr).toFixed(3)}"`
-      + ` width="${breite.toFixed(3)}" height="${(2 * rr).toFixed(3)}" rx="${rr}" fill="${hex}" />`;
+      + ` width="${breite.toFixed(3)}" height="${(2 * rr).toFixed(3)}" rx="${rr}" fill="${scheibe}"${rand} />`;
     symbole.forEach((s, index) => {
       const cx = x + (index - (symbole.length - 1) / 2) * schritt;
-      aus += symbolMarkup(s, cx, y, rr * 1.5, "#ffffff");
+      aus += symbolMarkup(s, cx, y, rr * 1.5, zeichen);
     });
     return aus;
   }
   const groesse = r;
-  return `<circle cx="${x}" cy="${y}" r="${r}" fill="${hex}" />`
-    + zentrierterText(x, y + groesse * ZIFFERN_SITZ, text, groesse, "#ffffff");
+  return `<circle cx="${x}" cy="${y}" r="${r}" fill="${scheibe}"${rand} />`
+    + zentrierterText(x, y + groesse * ZIFFERN_SITZ, text, groesse, zeichen);
 }
 
 function pfeilMarkup(x, y, r, hex, richtung) {
@@ -628,7 +656,10 @@ function pfeilMarkup(x, y, r, hex, richtung) {
     : ({ rechts: 0, "unten-rechts": 45, "unten-links": 135 }[richtung] || 0);
   const abstand = r + 2.6;
   const dx = Math.cos(winkel * Math.PI / 180), dy = Math.sin(winkel * Math.PI / 180);
-  return ikonMarkup("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 4.4, hex, winkel);
+  const spitze = ikonMarkup("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 4.4, hex, winkel);
+  if (!aquarellMarkerStil()) return spitze;
+  // Aquarell: weisse Unterlegung (grösseres Duplikat) als Kontur zum Grund.
+  return ikonMarkup("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 5.0, "#ffffff", winkel) + spitze;
 }
 
 /* Treppen- und Lift-Badges: exakte Vektorgeometrie der Vorlage
@@ -665,7 +696,17 @@ const LIFT_BADGES = {
 };
 
 function treppenBadge(x, y, buchstabe, form, hex, mitRand) {
-  const farbe = hex || MARKER_FARBEN.rot;
+  let farbe = hex || MARKER_FARBEN.rot;
+  let flaeche = "#ffffff";
+  let weissrand = "";
+  // Aquarell: Badge invertiert — volle Scheibe, Zug/Buchstabe weiss, dazu
+  // weisser Rand (Gegenstück zu den weissen Zielmarken). In der Legende
+  // (mitRand) trennt die volle Scheibe auf dem Blattweiss von selbst.
+  if (aquarellMarkerStil()) {
+    flaeche = farbe;
+    farbe = "#ffffff";
+    if (!mitRand) weissrand = ` stroke="#ffffff" stroke-width="${MARKER_RAND_AQUARELL}"`;
+  }
   const skala = mitRand ? 0.85 : 1;    // Legende wie die Vorlage kleiner
   const ring = mitRand ? ` stroke="${farbe}" stroke-width="${(BADGE_RING / skala).toFixed(3)}"` : "";
   const strich = `fill="none" stroke="${farbe}" stroke-width="${BADGE_STRICH}"`;
@@ -673,12 +714,12 @@ function treppenBadge(x, y, buchstabe, form, hex, mitRand) {
   if (form === "lift") {
     const b = LIFT_BADGES[buchstabe] || LIFT_BADGES.N;
     const mitte = buchstabe === "S" ? 0.334 : 0.107;  // Chevron-Mitte der Vorlage
-    kern = `<rect x="-1.33" y="${(mitte - 2.45).toFixed(3)}" width="2.66" height="4.9" rx="0.26" fill="#ffffff"${ring} />`
+    kern = `<rect x="-1.33" y="${(mitte - 2.45).toFixed(3)}" width="2.66" height="4.9" rx="0.26" fill="${flaeche}"${ring}${weissrand} />`
       + `<path d="${b.chevrons}" ${strich} />`
       + `<path d="${b.buchstabe}" fill="${farbe}" />`;
   } else {
     const b = TREPPEN_BADGES[buchstabe] || TREPPEN_BADGES.M;
-    kern = `<circle cx="0" cy="0" r="2.39" fill="#ffffff"${ring} />`
+    kern = `<circle cx="0" cy="0" r="2.39" fill="${flaeche}"${ring}${weissrand} />`
       + `<path d="${b.zug}" ${strich} />`
       + `<path d="${b.buchstabe}" fill="${farbe}" />`;
   }
@@ -690,6 +731,13 @@ function treppenBadge(x, y, buchstabe, form, hex, mitRand) {
 const GEBAEUDE_LABELS = [
   { text: "Goetheanum", x: 198.6, y: 115.0, groesse: 4.23, winkel: 0 },
   { text: "Schreinerei", x: 224.4, y: 93.2, groesse: 3.18, winkel: -76 }
+];
+// Auf der gemalten Karte folgen die Schriftzüge den gemalten Kanten
+// (Messraster 19.7.2026: Goetheanum-Gesimse ≈ −1.3°, Schreinerei-
+// Längsachse ≈ −69°) und laufen einen Grad kleiner als im Vektor.
+const GEBAEUDE_LABELS_AQUARELL = [
+  { text: "Goetheanum", x: 198.1, y: 116.6, groesse: 3.6, winkel: -1.3 },
+  { text: "Schreinerei", x: 224.8, y: 93.0, groesse: 2.7, winkel: -69 }
 ];
 
 // Textbreite in mm — die Labels werden start-verankert selbst zentriert.
@@ -717,7 +765,8 @@ function textBreiteMm(text, familie, groesseMm) {
 }
 
 function gebaeudeLabelMarkup() {
-  return GEBAEUDE_LABELS.map((l) => {
+  const labels = aquarellMarkerStil() ? GEBAEUDE_LABELS_AQUARELL : GEBAEUDE_LABELS;
+  return labels.map((l) => {
     const drehung = l.winkel ? ` transform="rotate(${l.winkel} ${l.x} ${l.y})"` : "";
     const links = l.x - textBreiteMm(l.text, SCHRIFT_SPRACHE, l.groesse) / 2;
     return `<text x="${links.toFixed(3)}" y="${l.y}" font-size="${l.groesse}" fill="#ffffff"`
