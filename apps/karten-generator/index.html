@@ -242,6 +242,11 @@
     }
     .print-svg { display: block; width: 100%; height: auto; }
     .print-svg.platzieren { cursor: crosshair; }
+    /* Schriftzug-Justage: der Finger zieht das Wort, statt die Seite zu scrollen. */
+    .print-svg.justage-aktiv { touch-action: none; cursor: grab; }
+    #schriftzug-karte[aria-pressed="true"] {
+      background: var(--blue-solid); color: var(--on-accent); border-color: var(--blue-solid);
+    }
     .ausschnitt-panel {
       display: flex; align-items: center; flex-wrap: wrap;
       gap: var(--s3);
@@ -367,8 +372,10 @@
               <input id="schriftzug-groesse" type="number" step="0.05" min="1.5" max="8" />
               <input id="schriftzug-winkel" type="number" step="0.1" min="-180" max="180" aria-label="Winkel in Grad" />
             </div>
+            <button id="schriftzug-karte" type="button" class="btn" aria-pressed="false">Auf der Karte ziehen</button>
             <div class="hint">Wirkt nur im Aquarell-Modus; die Werte wandern
-              mit «Stand als JSON» zurück in die Vorlage.</div>
+              mit «Stand als JSON» zurück in die Vorlage. Auf der Karte ziehen:
+              Wort schieben stellt die Lage, der Griff am Wortende Grad und Winkel.</div>
           </div>
         </div>
         <div class="hint">Standard ist die gedeckte Hauspalette; jede Rolle

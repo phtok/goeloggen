@@ -774,15 +774,54 @@ function textBreiteMm(text, familie, groesseMm) {
   return messKontext.measureText(text).width / 100 * groesseMm;
 }
 
+// Die Aquarell-Schriftzüge samt der Justage-Überschreibungen (state.schriftzuege).
+function aktuelleSchriftzuege() {
+  return GEBAEUDE_LABELS_AQUARELL.map((l) => ({ ...l, ...(state.schriftzuege[l.text] || {}) }));
+}
+
 function gebaeudeLabelMarkup() {
-  const labels = aquarellMarkerStil()
-    ? GEBAEUDE_LABELS_AQUARELL.map((l) => ({ ...l, ...(state.schriftzuege[l.text] || {}) }))
-    : GEBAEUDE_LABELS;
+  const labels = aquarellMarkerStil() ? aktuelleSchriftzuege() : GEBAEUDE_LABELS;
   return labels.map((l) => {
     const drehung = l.winkel ? ` transform="rotate(${l.winkel} ${l.x} ${l.y})"` : "";
     const links = l.x - textBreiteMm(l.text, SCHRIFT_SPRACHE, l.groesse) / 2;
     return `<text x="${links.toFixed(3)}" y="${l.y}" font-size="${l.groesse}" fill="#ffffff"`
       + ` font-family="${SCHRIFT_SPRACHE}"${drehung}>${escapeXml(l.text)}</text>`;
+  }).join("");
+}
+
+// On-Karte-Justage der Schriftzüge (Backend, nur Aquarell): Wort anfassen =
+// verschieben, Griff am Wortende = Grösse und Winkel. Für die mobile Nutzung,
+// wo Panel-Regler und Karte nicht gleichzeitig im Blick sind (Wunsch
+// Auftraggeber, 20. Juli 2026). Die Griffe leben NUR in der Vorschau, nie im
+// Export (renderVorschau hängt sie an, szeneMarkup kennt sie nicht).
+let schriftzugJustage = false;
+
+function schriftzugJustageAktiv() {
+  return schriftzugJustage && backendAktiv() && grundkarteModus() === "aquarell";
+}
+
+function schriftzugGriffPunkte(l) {
+  const halb = textBreiteMm(l.text, SCHRIFT_SPRACHE, l.groesse) / 2;
+  const rad = l.winkel * Math.PI / 180;
+  return {
+    mitte: [l.x, l.y],
+    griff: [l.x + halb * Math.cos(rad), l.y + halb * Math.sin(rad)],
+    halb
+  };
+}
+
+function schriftzugGriffeMarkup() {
+  if (!schriftzugJustageAktiv()) return "";
+  return aktuelleSchriftzuege().map((l) => {
+    const g = schriftzugGriffPunkte(l);
+    const [cx, cy] = anp(g.mitte[0], g.mitte[1]);
+    const [gx, gy] = anp(g.griff[0], g.griff[1]);
+    return "<g pointer-events=\"none\">"
+      + `<line x1="${cx.toFixed(2)}" y1="${cy.toFixed(2)}" x2="${gx.toFixed(2)}" y2="${gy.toFixed(2)}"`
+      + ` stroke="#0061a9" stroke-width="0.4" stroke-dasharray="1.2 1" opacity="0.85" />`
+      + `<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="1.2" fill="#0061a9" fill-opacity="0.55" />`
+      + `<circle cx="${gx.toFixed(2)}" cy="${gy.toFixed(2)}" r="2.3" fill="#ffffff" stroke="#0061a9" stroke-width="0.6" />`
+      + "</g>";
   }).join("");
 }
 
@@ -1076,12 +1115,14 @@ function renderVorschau() {
     paperStage.style.aspectRatio = "313 / 226";
     printSvg.innerHTML = szeneMarkup(3)
       + schnittmarkenMarkup(SZENE.breite, SZENE.hoehe, 3, 5)
-      + `<rect x="0" y="0" width="${SZENE.breite}" height="${SZENE.hoehe}" fill="none" stroke="${TINTE}" stroke-opacity="0.35" stroke-width="0.15" stroke-dasharray="2 1.4" />`;
+      + `<rect x="0" y="0" width="${SZENE.breite}" height="${SZENE.hoehe}" fill="none" stroke="${TINTE}" stroke-opacity="0.35" stroke-width="0.15" stroke-dasharray="2 1.4" />`
+      + schriftzugGriffeMarkup();
   } else {
     printSvg.setAttribute("viewBox", `0 0 ${SZENE.breite} ${SZENE.hoehe}`);
     paperStage.style.aspectRatio = "297 / 210";
-    printSvg.innerHTML = szeneMarkup(0);
+    printSvg.innerHTML = szeneMarkup(0) + schriftzugGriffeMarkup();
   }
+  printSvg.classList.toggle("justage-aktiv", schriftzugJustageAktiv());
   const format = state.format === "a3" ? "A3 quer (420 × 297)" : "A4 quer (297 × 210)";
   previewNote.textContent = marken
     ? `${format} · gestrichelt = Endformat, aussen Beschnitt und Schnittmarken.`
@@ -1562,6 +1603,14 @@ function renderOptionen() {
     document.getElementById("schriftzug-groesse").value = zug.groesse;
     document.getElementById("schriftzug-winkel").value = zug.winkel;
     document.querySelector(".schriftzug-justage").style.opacity = grundModus === "aquarell" ? "" : "0.45";
+    const zugKnopf = document.getElementById("schriftzug-karte");
+    if (zugKnopf) {
+      const anAqua = grundModus === "aquarell";
+      zugKnopf.disabled = !anAqua;
+      if (!anAqua && schriftzugJustage) schriftzugJustage = false;
+      zugKnopf.setAttribute("aria-pressed", schriftzugJustage ? "true" : "false");
+      zugKnopf.textContent = schriftzugJustage ? "Ziehen beenden" : "Auf der Karte ziehen";
+    }
   }
   const bkHinweis = document.getElementById("basiskarte-hinweis");
   if (bkHinweis) {
@@ -1878,6 +1927,83 @@ document.addEventListener("keydown", (ereignis) => {
   }
 });
 
+/* ---------- Schriftzüge direkt auf der Karte justieren ---------- */
+
+const klemme = (wert, min, max) => Math.max(min, Math.min(max, wert));
+
+// Trifft der Zeiger (in Blatt-mm) einen Schriftzug? Griff (Ende) vor Körper.
+function schriftzugTreffer(mx, my) {
+  const labels = aktuelleSchriftzuege();
+  for (const l of labels) {
+    const g = schriftzugGriffPunkte(l);
+    if (Math.hypot(mx - g.griff[0], my - g.griff[1]) <= 3.5) {
+      return { text: l.text, modus: "griff" };
+    }
+  }
+  for (const l of labels) {
+    const w = l.winkel * Math.PI / 180;
+    const dx = mx - l.x, dy = my - l.y;
+    const lx = dx * Math.cos(w) + dy * Math.sin(w);       // ins Wort-Frame drehen
+    const ly = -dx * Math.sin(w) + dy * Math.cos(w);
+    const halb = textBreiteMm(l.text, SCHRIFT_SPRACHE, l.groesse) / 2;
+    if (Math.abs(lx) <= halb + 1 && Math.abs(ly) <= l.groesse * 0.85) {
+      return { text: l.text, modus: "koerper" };
+    }
+  }
+  return null;
+}
+
+let schriftzugZiehen = null;
+let schriftzugFrame = 0;
+
+printSvg.addEventListener("pointerdown", (ereignis) => {
+  if (!schriftzugJustageAktiv()) return;
+  const p = svgPunkt(ereignis.clientX, ereignis.clientY);
+  if (!p) return;
+  const [mx, my] = anpZurueck(p.x, p.y);
+  const treffer = schriftzugTreffer(mx, my);
+  if (!treffer) return;
+  ereignis.preventDefault();
+  try { printSvg.setPointerCapture(ereignis.pointerId); } catch (fehler) { /* egal */ }
+  const l = aktuelleSchriftzuege().find((q) => q.text === treffer.text);
+  schriftzugZiehen = { text: treffer.text, modus: treffer.modus, offx: mx - l.x, offy: my - l.y };
+  const wahl = document.getElementById("schriftzug-wahl");
+  if (wahl) wahl.value = treffer.text;
+});
+
+printSvg.addEventListener("pointermove", (ereignis) => {
+  if (!schriftzugZiehen) return;
+  const p = svgPunkt(ereignis.clientX, ereignis.clientY);
+  if (!p) return;
+  ereignis.preventDefault();
+  const [mx, my] = anpZurueck(p.x, p.y);
+  const basis = GEBAEUDE_LABELS_AQUARELL.find((q) => q.text === schriftzugZiehen.text);
+  const w = { ...(state.schriftzuege[schriftzugZiehen.text] || {}) };
+  if (schriftzugZiehen.modus === "koerper") {
+    w.x = Math.round(klemme(mx - schriftzugZiehen.offx, 0, 297) * 10) / 10;
+    w.y = Math.round(klemme(my - schriftzugZiehen.offy, 0, 210) * 10) / 10;
+  } else {
+    const mitte = { ...basis, ...(state.schriftzuege[schriftzugZiehen.text] || {}) };
+    const dx = mx - mitte.x, dy = my - mitte.y;
+    const proEinheit = textBreiteMm(schriftzugZiehen.text, SCHRIFT_SPRACHE, 1) / 2;
+    w.groesse = Math.round(klemme(Math.hypot(dx, dy) / proEinheit, 1.5, 8) * 100) / 100;
+    w.winkel = Math.round(klemme(Math.atan2(dy, dx) * 180 / Math.PI, -180, 180) * 10) / 10;
+  }
+  state.schriftzuege[schriftzugZiehen.text] = w;
+  if (!schriftzugFrame) {
+    schriftzugFrame = requestAnimationFrame(() => { schriftzugFrame = 0; renderVorschau(); });
+  }
+});
+
+function schriftzugZiehenEnde() {
+  if (!schriftzugZiehen) return;
+  schriftzugZiehen = null;
+  renderOptionen();  // Zahlenfelder nachziehen
+  speichern();
+}
+printSvg.addEventListener("pointerup", schriftzugZiehenEnde);
+printSvg.addEventListener("pointercancel", schriftzugZiehenEnde);
+
 /* ---------- Bedienelemente verdrahten ---------- */
 
 document.getElementById("titel-input").addEventListener("input", (ereignis) => {
@@ -1950,6 +2076,13 @@ document.getElementById("schriftzug-wahl").addEventListener("change", () => rend
       render();
     });
   });
+
+document.getElementById("schriftzug-karte").addEventListener("click", () => {
+  schriftzugJustage = !schriftzugJustage;
+  renderOptionen();   // Knopf-Zustand (aria-pressed, Beschriftung) spiegeln
+  renderVorschau();   // Griffe ein-/ausblenden
+  if (schriftzugJustage) printSvg.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
 
 document.getElementById("opt-wiese-klein").addEventListener("change", (e) => {
   state.wiesen.klein = e.target.checked;
