@@ -742,12 +742,13 @@ const GEBAEUDE_LABELS = [
   { text: "Goetheanum", x: 198.6, y: 115.0, groesse: 4.23, winkel: 0 },
   { text: "Schreinerei", x: 224.4, y: 93.2, groesse: 3.18, winkel: -76 }
 ];
-// Auf der gemalten Karte folgen die Schriftzüge den gemalten Kanten
-// (Messraster 19.7.2026: Goetheanum-Gesimse ≈ −1.3°, Schreinerei-
-// Längsachse ≈ −69°) und laufen einen Grad kleiner als im Vektor.
+// Auf der gemalten Karte folgen die Schriftzüge den gemalten Kanten. Lage,
+// Grad und Winkel hat der Auftraggeber am 20. Juli 2026 direkt auf der Karte
+// eingemessen (mobil, «Auf der Karte ziehen») und hier als Vorlage
+// festgeschrieben.
 const GEBAEUDE_LABELS_AQUARELL = [
-  { text: "Goetheanum", x: 198.1, y: 116.6, groesse: 3.6, winkel: -1.3 },
-  { text: "Schreinerei", x: 224.8, y: 93.0, groesse: 2.7, winkel: -69 }
+  { text: "Goetheanum", x: 198.5, y: 116.6, groesse: 3.05, winkel: 0.7 },
+  { text: "Schreinerei", x: 224.1, y: 94.9, groesse: 2.78, winkel: -73 }
 ];
 
 // Textbreite in mm — die Labels werden start-verankert selbst zentriert.
