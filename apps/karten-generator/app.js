@@ -605,12 +605,18 @@ function markenBreite(ort, r) {
   return rr * 1.55 * (ort.symbol.length - 1) + 2 * rr;
 }
 
-function markenKreis(x, y, hex, text, r, symbol, feldBreite) {
+function markenKreis(x, y, hex, text, r, symbol, feldBreite, voll) {
   // Aquarell: Scheibe weiss, die Kategoriefarbe wandert in Rand + Zeichen.
-  const invers = aquarellMarkerStil();
+  // Ausnahme ‹voll› (Kategorie Verkehr): volle Scheibe wie die Treppen,
+  // weisses Zeichen und weisser Rand — Bahnhof, Bus, Parkplatz und
+  // Vitalshop stehen auf hellem Grund (Wege, Blattweiss), wo die weisse
+  // Scheibe verschwämme (Untergrund-Inventur, 19. Juli 2026).
+  const stil = aquarellMarkerStil();
+  const invers = stil && !voll;
   const scheibe = invers ? "#ffffff" : hex;
   const zeichen = invers ? hex : "#ffffff";
-  const rand = invers ? ` stroke="${hex}" stroke-width="${MARKER_RAND_AQUARELL}"` : "";
+  const rand = invers ? ` stroke="${hex}" stroke-width="${MARKER_RAND_AQUARELL}"`
+    : (stil && voll ? ` stroke="#ffffff" stroke-width="${MARKER_RAND_AQUARELL}"` : "");
   // Kreiszahl nach dem Sonderelement des Design-Systems (.step-num):
   // Hausschrift Laut, fester Kreis, Tintenmitte der Ziffern auf der
   // Kreismitte (ZIFFERN_SITZ). Grad = 0.5 × Durchmesser — eine Spur
@@ -803,7 +809,8 @@ function ortMarkup(ort) {
   }
   ortPositionen(ort).forEach(([px, py]) => {
     const [x, y] = anp(px, py);
-    teile += markenKreis(x, y, hex, ortMarker(ort), 2.03, ort.symbol, ort.feldBreite);
+    teile += markenKreis(x, y, hex, ortMarker(ort), 2.03, ort.symbol, ort.feldBreite,
+      ort.kategorie === "verkehr");
     if (ort.pfeil) teile += pfeilMarkup(x, y, 2.03, hex, ort.pfeil);
   });
   return teile;
@@ -955,7 +962,7 @@ function legendeMarkup() {
       const r = symbol ? 2.03 / SYMBOL_FAKTOR : 2.03;
       const b = markenBreite(ort, r);
       teile += markenKreis(x - 2.03 + b / 2, y - 0.9, hex,
-        ort.legendeText || ortMarker(ort), r, symbol);
+        ort.legendeText || ortMarker(ort), r, symbol, undefined, ort.kategorie === "verkehr");
       textX = x + Math.max(L.labelAbstand, b - 2.03 + 1.6);
     }
     zeile.zeilenTexte.forEach((text, index) => {
@@ -1725,15 +1732,18 @@ function variantenLesen() {
 }
 
 function varianteAblegen() {
-  const titel = state.titel.trim();
-  if (!titel) return;
+  // Jede Ausgabe wird abgelegt — auch ohne Titel (Ersatzname) und je
+  // Ausgabe ein eigener Eintrag (Schlüssel mit Uhrzeit), damit jede
+  // exportierte Karte einzeln wieder aufrufbar bleibt (Wunsch
+  // Auftraggeber, 20. Juli 2026). PDF und SVG derselben Minute teilen
+  // sich einen Eintrag (gleicher Stand).
+  const titel = state.titel.trim() || "Ohne Titel";
   try {
     const varianten = variantenLesen();
     const jetzt = new Date();
-    const tag = jetzt.toISOString().slice(0, 10);
-    varianten[`${titel}|${tag}`] = {
-      titel, stand: standAlsJson(),
-      gespeichert: jetzt.toISOString().slice(0, 16).replace("T", " ")
+    const stempel = jetzt.toISOString().slice(0, 16).replace("T", " ");
+    varianten[`${titel}|${stempel}`] = {
+      titel, stand: standAlsJson(), gespeichert: stempel
     };
     const schluessel = Object.keys(varianten)
       .sort((a, b) => (varianten[a].gespeichert || "").localeCompare(varianten[b].gespeichert || ""));
@@ -1768,24 +1778,28 @@ function renderVarianten() {
     zeile.appendChild(titelSpan);
     const datum = document.createElement("span");
     datum.className = "object-marker";
-    datum.textContent = (eintrag.gespeichert || "").slice(0, 10);
+    datum.textContent = (eintrag.gespeichert || "").slice(0, 16);
     zeile.appendChild(datum);
-    const weg = document.createElement("button");
-    weg.type = "button";
-    weg.className = "row-btn";
-    weg.title = "Gespeicherte Karte löschen";
-    weg.textContent = "✕";
-    weg.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (!window.confirm(`Gespeicherte Karte ‹${titel}› (${(eintrag.gespeichert || "").slice(0, 10)}) löschen?`)) return;
-      const varianten = variantenLesen();
-      delete varianten[schluessel];
-      try { localStorage.setItem(VARIANTEN_SCHLUESSEL, JSON.stringify(varianten)); } catch (fehler) { /* egal */ }
-      renderVarianten();
-    });
-    zeile.appendChild(weg);
+    // Löschen nur im Backend-Modus (Wunsch Auftraggeber, 20. Juli 2026) —
+    // im normalen Betrieb bleibt die Liste unantastbar, nur aufrufbar.
+    if (backendAktiv()) {
+      const weg = document.createElement("button");
+      weg.type = "button";
+      weg.className = "row-btn";
+      weg.title = "Gespeicherte Karte löschen";
+      weg.textContent = "✕";
+      weg.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (!window.confirm(`Gespeicherte Karte ‹${titel}› (${(eintrag.gespeichert || "").slice(0, 16)}) löschen?`)) return;
+        const varianten = variantenLesen();
+        delete varianten[schluessel];
+        try { localStorage.setItem(VARIANTEN_SCHLUESSEL, JSON.stringify(varianten)); } catch (fehler) { /* egal */ }
+        renderVarianten();
+      });
+      zeile.appendChild(weg);
+    }
     zeile.addEventListener("click", () => {
-      if (!window.confirm(`Karte ‹${titel}› vom ${(eintrag.gespeichert || "").slice(0, 10)} laden? Die aktuelle Ansicht wird ersetzt.`)) return;
+      if (!window.confirm(`Karte ‹${titel}› vom ${(eintrag.gespeichert || "").slice(0, 16)} laden? Die aktuelle Ansicht wird ersetzt.`)) return;
       standAnwenden(eintrag.stand || {});
       render();
     });
@@ -1989,6 +2003,7 @@ function backendAktiv() {
 function backendAnwenden() {
   document.body.classList.toggle("backend", backendAktiv());
   renderOrte();  // ✥ der justierbaren Marker folgt dem Modus
+  renderVarianten();  // Löschknöpfe der Karten-Liste folgen dem Modus
 }
 
 window.addEventListener("goe:intern", backendAnwenden);
