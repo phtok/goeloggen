@@ -1,0 +1,51 @@
+# Deploy der Edge Function «sortierer-commit» — vom Handy auslösbar.
+# -----------------------------------------------------------------------------
+# Die Supabase-Weboberfläche hat keinen Deploy-Knopf; deployt wird per CLI.
+# Dieser Workflow führt die CLI in der Cloud aus: kein Rechner nötig, ein Klick
+# auf «Run workflow» (Tab Actions) genügt. Läuft ausserdem automatisch, wenn
+# sich die Funktionsquelle auf main ändert.
+#
+# Einmalig einzurichten (beides vom Handy):
+#   1. Supabase-Access-Token erzeugen:
+#      https://supabase.com/dashboard/account/tokens  → «Generate new token».
+#   2. Als GitHub-Secret hinterlegen (Name EXACT: SUPABASE_ACCESS_TOKEN):
+#      https://github.com/phtok/goeloggen/settings/secrets/actions
+#      → «New repository secret».
+# Danach: Tab «Actions» → «Deploy sortierer-commit» → «Run workflow».
+#
+# Die Funktionsquelle wohnt bei services/…; sie wird hier in das von der CLI
+# erwartete Layout (supabase/functions/<name>/index.ts) kopiert und deployt.
+# verify_jwt bleibt aus (die Funktion hat eigene Passwort-Sperre).
+name: Deploy sortierer-commit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "services/kistenpflege/sortierer-commit/index.ts"
+      - ".github/workflows/deploy-sortierer.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_REF: dagcsnfrlbpxcmdimnrw
+    steps:
+      - uses: actions/checkout@v4
+      - name: Supabase-CLI bereitstellen
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Token prüfen
+        run: |
+          if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
+            echo "::error::Secret SUPABASE_ACCESS_TOKEN fehlt. Anleitung im Workflow-Kopf." && exit 1
+          fi
+      - name: Funktion ins CLI-Layout kopieren
+        run: |
+          mkdir -p supabase/functions/sortierer-commit
+          cp services/kistenpflege/sortierer-commit/index.ts supabase/functions/sortierer-commit/index.ts
+      - name: Deploy
+        run: supabase functions deploy sortierer-commit --project-ref "$PROJECT_REF" --no-verify-jwt
