@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Ordner-Editor — Kistenpflege · Goetheanum</title>
+<meta name="description" content="Die Ordner (Welten) der Schublade bearbeiten: benennen, ordnen, verschachteln, Werkzeuge einsortieren." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+
+<style>
+  .hero{padding-block:clamp(28px,5vw,52px) var(--s5)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(26px,4.4vw,44px);line-height:1.06;letter-spacing:-.01em;max-width:22ch}
+  .hero .lede{margin-top:var(--s4);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:66ch}
+  .hero .lede code{font-family:var(--font-text);background:var(--field-bg);padding:.05em .35em;border-radius:6px}
+
+  .toolbar{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center;margin-block:var(--s5)}
+  .toolbar .spacer{flex:1 1 auto}
+
+  .status{margin-block:var(--s4);background:var(--field-bg);border-radius:12px;
+    box-shadow:inset 3px 0 0 var(--gold-deep);padding:var(--s3) var(--s4);
+    font-size:var(--t-small);line-height:1.5;color:var(--ink)}
+  .status.err{box-shadow:inset 3px 0 0 var(--bad)}
+
+  .gruppe{margin-block:var(--s6)}
+  .gruppe > h2{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(19px,2.6vw,24px);margin-bottom:var(--s3)}
+  .gruppe > .desc{color:var(--muted);font-size:var(--t-small);margin-bottom:var(--s4)}
+
+  .welt{border:1px solid var(--line);border-radius:16px;background:var(--paper);padding:var(--s4);margin-bottom:var(--s4)}
+  .welt.sub{margin-left:var(--s6);border-style:dashed}
+  .welt-kopf{display:flex;gap:var(--s2);align-items:flex-start;flex-wrap:wrap}
+  .welt-kopf .felder{flex:1;min-width:200px;display:flex;flex-direction:column;gap:var(--s2)}
+  .welt-kopf input{font-family:var(--font-text);width:100%}
+  .welt-kopf input.label{font-weight:600}
+  .welt-ordnung{display:flex;gap:2px;flex:0 0 auto}
+  .welt-ordnung .btn{min-width:var(--tap);min-height:var(--tap);padding:0;display:grid;place-items:center}
+  @media(min-width:820px){ .welt-ordnung .btn{min-height:34px} }
+  .welt .code-id{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
+
+  .werk-liste{list-style:none;margin:var(--s3) 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .werk{display:flex;align-items:center;gap:var(--s2);background:var(--field-bg);border-radius:10px;padding:6px 6px 6px var(--s3)}
+  .werk .wer{flex:1;min-width:0}
+  .werk .wer b{font-family:var(--font-text);font-weight:600;font-size:var(--t-small);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .werk .wer small{color:var(--muted);font-size:var(--t-micro)}
+  .werk select{font-family:var(--font-text);font-size:var(--t-small);min-height:var(--tap)}
+  @media(min-width:820px){ .werk select{min-height:32px} }
+  .werk-leer{color:var(--muted);font-size:var(--t-small);font-style:normal;padding:6px var(--s3)}
+
+  .welt-add{margin-top:var(--s2)}
+  .neu-welt{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center;margin-top:var(--s3)}
+  .neu-welt input{font-family:var(--font-text)}
+
+  .hinweisbox{background:var(--field-bg);border-radius:12px;padding:var(--s4);font-size:var(--t-small);line-height:1.55;margin-top:var(--s6)}
+  .hinweisbox code{font-family:var(--font-text);background:var(--paper);padding:.05em .35em;border-radius:6px}
+  .hinweisbox strong{font-family:var(--font);font-weight:var(--w-deutlich)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-active="ordner"
+        data-onpage="Sortierer:sortierer.html|Ordner:ordner.html|Stats:statistik.html"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Kistenpflege · Ordner-Editor</span>
+    <h1>Die Ordner der Schublade bearbeiten</h1>
+    <p class="lede">Die <em>Welten</em> sind die Ordner des Menüs: benennen, ordnen, verschachteln
+      und Werkzeuge einsortieren. Ein Werkzeug wandert in einen Ordner, indem es dort seine
+      <em>Kategorie</em> annimmt. <em>Exportieren</em> schreibt die <code>tools.json</code> mit den
+      Feldern <code>welten</code> und den geänderten <code>cat</code>-Werten; committen, dann
+      übernimmt die Schublade die Struktur. Der <em>Sortierer</em> ordnet <em>innerhalb</em>,
+      dieser Editor ordnet die <em>Ordner selbst</em>.</p>
+  </section>
+
+  <div class="toolbar">
+    <span class="spacer"></span>
+    <button class="btn" id="zuruecksetzen" type="button">Auf Datei-Stand zurück</button>
+    <button class="btn primary" id="export" type="button">Exportieren</button>
+  </div>
+
+  <p class="status" id="status" role="status" hidden></p>
+
+  <div id="baum" aria-live="polite"></div>
+
+  <div class="hinweisbox">
+    <strong>So wirkt es.</strong> Der Editor ändert nur <code>welten</code> und die
+    <code>cat</code>-Felder der verschobenen Werkzeuge – alles andere in der <code>tools.json</code>
+    bleibt unangetastet. <strong>Öffentliche</strong> Ordner sieht jede Person; <strong>interne</strong>
+    nur die Backstage-Ansicht. Ein Werkzeug bleibt über seinen Direktlink immer erreichbar, auch wenn
+    sein Ordner intern ist. Ordnen geschieht hier im Browser (Zwischenstand lokal);
+    <code>Auf Datei-Stand zurück</code> verwirft ihn.
+  </div>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Kistenpflege</span>
+    <span><a href="design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script>
+"use strict";
+(function(){
+  var LS = "ordner-entwurf-v1";
+  var rohText = "";     // tools.json als Text
+  var quelle = null;    // geparst
+  var welten = { public: [], intern: [] };
+  var toolCat = {};     // slug → cat (bearbeitbar)
+  var toolInfo = {};    // slug → {title, status}
+  var catOriginal = {}; // slug → ursprüngliches cat (für gezielten Export)
+
+  function esc(s){ return (s||"").replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  function slugify(s){ return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,""); }
+  function ladeEntwurf(){ try{ var r=localStorage.getItem(LS); return r?JSON.parse(r):null; }catch(e){ return null; } }
+  function sichern(){ try{ localStorage.setItem(LS, JSON.stringify({ welten:welten, toolCat:toolCat })); }catch(e){} }
+  function status(msg, err){ var s=document.getElementById("status"); s.textContent=msg; s.hidden=false; s.classList.toggle("err", !!err); }
+
+  // Alle Welten flach (für die Verschieben-Auswahl), mit Pfad-Label.
+  function alleWelten(){
+    var out = [];
+    function walk(list, praefix){
+      (list||[]).forEach(function(w){
+        out.push({ id:w.id, cat:(w.cats&&w.cats[0])||w.id, label:(praefix?praefix+" › ":"")+w.label });
+        if(w.sub) walk(w.sub, w.label);
+      });
+    }
+    walk(welten.public, "Öffentlich");
+    walk(welten.intern, "Intern");
+    return out;
+  }
+  // cat → Welt-Objekt (erste Welt, deren cats den cat enthält).
+  function weltVonCat(cat){
+    var found=null;
+    function walk(list){ (list||[]).forEach(function(w){ if(!found && (w.cats||[]).indexOf(cat)>=0) found=w; if(w.sub) walk(w.sub); }); }
+    walk(welten.public); walk(welten.intern);
+    return found;
+  }
+
+  function laden(){
+    fetch("tools.json").then(function(r){ return r.text(); }).then(function(txt){
+      rohText = txt; quelle = JSON.parse(txt);
+      (quelle.tools||[]).forEach(function(t){
+        if(!t.slug) return;
+        toolInfo[t.slug] = { title: t.title || t.short || t.slug, status: t.status || "" };
+        toolCat[t.slug] = t.cat || "";
+        catOriginal[t.slug] = t.cat || "";
+      });
+      var W = quelle.welten || {};
+      var draft = ladeEntwurf();
+      if(draft && draft.welten){ welten = draft.welten; }
+      else { welten = { public: (W.public||[]).map(clone), intern: (W.intern||[]).map(clone) }; }
+      if(draft && draft.toolCat){ Object.keys(draft.toolCat).forEach(function(s){ if(s in toolCat) toolCat[s]=draft.toolCat[s]; }); }
+      zeichnen();
+    }).catch(function(){
+      document.getElementById("baum").innerHTML = '<p style="color:var(--muted)">tools.json konnte nicht geladen werden.</p>';
+    });
+  }
+  function clone(x){ return JSON.parse(JSON.stringify(x)); }
+
+  function toolsInWelt(w){
+    var cats = w.cats || [];
+    return Object.keys(toolCat).filter(function(s){ return cats.indexOf(toolCat[s])>=0; })
+      .sort(function(a,b){ return (toolInfo[a].title||a).localeCompare(toolInfo[b].title||b, "de"); });
+  }
+
+  function weltEl(w, gruppe, idx, list, istSub){
+    var el = document.createElement("section");
+    el.className = "welt" + (istSub?" sub":"");
+    var opts = alleWelten().map(function(o){
+      return '<option value="'+esc(o.cat)+'">'+esc(o.label)+'</option>';
+    }).join("");
+    var werke = toolsInWelt(w);
+    var werkHtml = werke.length ? werke.map(function(s){
+      var sel = opts.replace('value="'+esc(toolCat[s])+'"', 'value="'+esc(toolCat[s])+'" selected');
+      return '<li class="werk">'+
+               '<span class="wer"><b>'+esc(toolInfo[s].title)+'</b><small>'+esc(s)+(toolInfo[s].status?' · '+esc(toolInfo[s].status):'')+'</small></span>'+
+               '<label class="lab" style="position:absolute;left:-9999px">Ordner für '+esc(toolInfo[s].title)+'</label>'+
+               '<select data-move="'+esc(s)+'">'+sel+'</select>'+
+             '</li>';
+    }).join("") : '<li class="werk-leer">Noch keine Werkzeuge in diesem Ordner.</li>';
+
+    el.innerHTML =
+      '<div class="welt-kopf">'+
+        '<div class="felder">'+
+          '<input class="label" type="text" value="'+esc(w.label)+'" data-label="'+esc(w.id)+'" aria-label="Ordnername" />'+
+          '<input class="intro" type="text" value="'+esc(w.intro||"")+'" data-intro="'+esc(w.id)+'" aria-label="Kurzbeschreibung" placeholder="Kurzbeschreibung (optional)" />'+
+          '<span class="code-id">id: '+esc(w.id)+' · cat: '+esc((w.cats||[]).join(", "))+'</span>'+
+        '</div>'+
+        '<div class="welt-ordnung">'+
+          '<button class="btn" type="button" data-up="'+gruppe+':'+idx+'" '+(idx===0?'disabled':'')+' aria-label="Ordner nach oben">↑</button>'+
+          '<button class="btn" type="button" data-down="'+gruppe+':'+idx+'" '+(idx===list.length-1?'disabled':'')+' aria-label="Ordner nach unten">↓</button>'+
+        '</div>'+
+      '</div>'+
+      '<ul class="werk-liste">'+werkHtml+'</ul>'+
+      (istSub?'':'<div class="welt-add"><button class="btn btn-mini" type="button" data-addsub="'+esc(w.id)+'">+ Unterordner</button></div>');
+
+    // gruppe kodiert den Pfad: "public", "intern" oder "sub:<parentId>"
+    if(w.sub && w.sub.length){
+      w.sub.forEach(function(s, j){ el.appendChild(weltEl(s, "sub:"+w.id, j, w.sub, true)); });
+    }
+    return el;
+  }
+
+  function zeichnen(){
+    var baum = document.getElementById("baum");
+    baum.innerHTML = "";
+    var gPub = document.createElement("div"); gPub.className="gruppe";
+    gPub.innerHTML = '<h2>Öffentliche Ordner</h2><p class="desc">Für alle sichtbar – die Welten des öffentlichen Menüs.</p>';
+    welten.public.forEach(function(w,i){ gPub.appendChild(weltEl(w,"public",i,welten.public,false)); });
+    baum.appendChild(gPub);
+
+    var gInt = document.createElement("div"); gInt.className="gruppe";
+    gInt.innerHTML = '<h2>Interne Ordner</h2><p class="desc">Nur in der Backstage-Ansicht – Werkstatt, Kampagne, Labor.</p>';
+    welten.intern.forEach(function(w,i){ gInt.appendChild(weltEl(w,"intern",i,welten.intern,false)); });
+    var neu = document.createElement("div"); neu.className="neu-welt";
+    neu.innerHTML = '<input type="text" id="neu-name" placeholder="Name des neuen internen Ordners" aria-label="Name des neuen Ordners" />'+
+                    '<button class="btn" type="button" id="neu-add">+ Neuer interner Ordner</button>';
+    gInt.appendChild(neu);
+    baum.appendChild(gInt);
+  }
+
+  // --- Interaktion -----------------------------------------------------------
+  function listeVon(gruppe){
+    if(gruppe==="public") return welten.public;
+    if(gruppe==="intern") return welten.intern;
+    if(gruppe.indexOf("sub:")===0){
+      var pid=gruppe.slice(4), found=null;
+      function walk(l){ (l||[]).forEach(function(w){ if(w.id===pid) found=w; if(w.sub) walk(w.sub); }); }
+      walk(welten.public); walk(welten.intern);
+      return found ? (found.sub=found.sub||[]) : null;
+    }
+    return null;
+  }
+  function verschiebeWelt(gruppe, from, to){
+    var l=listeVon(gruppe); if(!l||to<0||to>=l.length) return;
+    var x=l.splice(from,1)[0]; l.splice(to,0,x); sichern(); zeichnen();
+  }
+
+  document.getElementById("baum").addEventListener("click", function(e){
+    var up=e.target.closest("[data-up]"), dn=e.target.closest("[data-down]");
+    var addsub=e.target.closest("[data-addsub]"), addnew=e.target.closest("#neu-add");
+    if(up){ var p=up.getAttribute("data-up").split(":"); verschiebeWelt(p.slice(0,-1).join(":"), +p[p.length-1], +p[p.length-1]-1); }
+    else if(dn){ var q=dn.getAttribute("data-down").split(":"); verschiebeWelt(q.slice(0,-1).join(":"), +q[q.length-1], +q[q.length-1]+1); }
+    else if(addsub){
+      var pid=addsub.getAttribute("data-addsub");
+      var name=(window.prompt("Name des Unterordners:")||"").trim(); if(!name) return;
+      var id=eindeutigeId(slugify(name));
+      var parent=null; function walk(l){ (l||[]).forEach(function(w){ if(w.id===pid) parent=w; if(w.sub) walk(w.sub); }); }
+      walk(welten.public); walk(welten.intern);
+      if(parent){ parent.sub=parent.sub||[]; parent.sub.push({ id:id, label:name, intro:"", cats:[id] }); sichern(); zeichnen(); }
+    }
+    else if(addnew){
+      var nn=document.getElementById("neu-name"); var nm=(nn.value||"").trim(); if(!nm) return;
+      var nid=eindeutigeId(slugify(nm));
+      welten.intern.push({ id:nid, label:nm, intro:"", cats:[nid] }); sichern(); zeichnen();
+    }
+  });
+  document.getElementById("baum").addEventListener("input", function(e){
+    var lab=e.target.closest("[data-label]"), intro=e.target.closest("[data-intro]");
+    if(lab){ setWelt(lab.getAttribute("data-label"), "label", lab.value); sichern(); }
+    else if(intro){ setWelt(intro.getAttribute("data-intro"), "intro", intro.value); sichern(); }
+  });
+  document.getElementById("baum").addEventListener("change", function(e){
+    var mv=e.target.closest("[data-move]");
+    if(mv){ toolCat[mv.getAttribute("data-move")] = mv.value; sichern(); zeichnen(); }
+  });
+
+  function setWelt(id, feld, wert){
+    function walk(l){ (l||[]).forEach(function(w){ if(w.id===id) w[feld]=wert; if(w.sub) walk(w.sub); }); }
+    walk(welten.public); walk(welten.intern);
+  }
+  function eindeutigeId(base){
+    var ids={}; function walk(l){ (l||[]).forEach(function(w){ ids[w.id]=1; if(w.sub) walk(w.sub); }); }
+    walk(welten.public); walk(welten.intern);
+    var id=base||"ordner", n=2; while(ids[id]){ id=base+"-"+n; n++; } return id;
+  }
+
+  // --- Export ----------------------------------------------------------------
+  function serWelten(){
+    var w = { "$hinweis": (quelle.welten&&quelle.welten.$hinweis) ||
+      "Die Ordner der Schublade. public = für alle sichtbar, intern = nur Backstage. Ein Werkzeug gehört über sein cat-Feld in eine Welt (welt.cats). Reihenfolge = Anzeigefolge. sub = verschachtelte Kisten. Vom Ordner-Editor gepflegt; fehlt welten, gilt die in nav.js eingebaute Vorgabe.",
+      "public": welten.public, "intern": welten.intern };
+    var s = JSON.stringify(w, null, 2).split("\n").map(function(l,i){ return i===0?l:"  "+l; }).join("\n");
+    return '"welten": ' + s;
+  }
+  function exportieren(){
+    var text = rohText;
+    // 1) welten-Block ersetzen (oder anhängen).
+    var reW = /"welten"\s*:\s*\{[\s\S]*?\n {2}\}/;
+    if(reW.test(text)){ text = text.replace(reW, serWelten()); }
+    else { text = text.replace(/\n\}\s*$/, ",\n  " + serWelten() + "\n}"); }
+    // 2) geänderte cat-Werte je Werkzeug gezielt ersetzen.
+    Object.keys(toolCat).forEach(function(s){
+      if(toolCat[s]===catOriginal[s]) return;
+      var re = new RegExp('("slug"\\s*:\\s*"'+s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+'"[\\s\\S]{0,120}?"cat"\\s*:\\s*)"[^"]*"');
+      text = text.replace(re, '$1"'+toolCat[s]+'"');
+    });
+    // 3) validieren.
+    try { JSON.parse(text); } catch(err){ status("Ergebnis wäre ungültiges JSON – nichts geschrieben. ("+err.message+")", true); return; }
+    var blob = new Blob([text], { type:"application/json" });
+    var a = document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="tools.json"; a.click();
+    status("tools.json exportiert. Jetzt committen – die Schublade übernimmt die Ordnerstruktur.");
+  }
+
+  document.getElementById("export").addEventListener("click", exportieren);
+  document.getElementById("zuruecksetzen").addEventListener("click", function(){
+    if(confirm("Lokalen Zwischenstand verwerfen und den Datei-Stand laden?")){
+      try{ localStorage.removeItem(LS); }catch(e){}
+      location.reload();
+    }
+  });
+
+  laden();
+})();
+</script>
+</body>
+</html>
