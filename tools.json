@@ -674,5 +674,25 @@
     "karten": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "uebersetzungen", "qr-generator", "kurzlink", "typografie", "powerpoint", "wallpaper", "karten", "sektionsfarben"],
     "karussell": ["signatur", "empfehlungen", "karten", "wallpaper", "powerpoint", "visitenkarten", "logo-generator", "schriften", "uebersetzungen", "icons", "sektionsfarben", "typografie", "editor"],
     "aus": { "schublade": [], "karussell": ["design-system"], "karten": ["design-system"] }
+  },
+  "welten": {
+    "$hinweis": "Die Ordner der Schublade. public = für alle sichtbar, intern = nur Backstage. Ein Werkzeug gehört über sein cat-Feld in eine Welt (welt.cats). Reihenfolge = Anzeigefolge. sub = verschachtelte Kisten. Vom Ordner-Editor gepflegt; fehlt welten, gilt die in nav.js eingebaute Vorgabe.",
+    "public": [
+      { "id": "werkzeuge", "label": "Werkzeuge", "intro": "Eintragen, fertiges Ergebnis übernehmen – täglicher Gebrauch.", "cats": ["generatoren"] },
+      { "id": "schrift", "label": "Schrift", "intro": "Hausschrift und Regeln – ansehen, herunterladen, einbinden.", "cats": ["schrift"] },
+      { "id": "elemente", "label": "Elemente", "intro": "Farben, Zeichen, Logos, Design-System – nachschlagen und holen.", "cats": ["system"] },
+      { "id": "anwendungen", "label": "Anwendungen", "intro": "Fertige Vorlagen zum Übernehmen – Wallpaper, Präsentationen.", "cats": ["anwendung"] }
+    ],
+    "intern": [
+      { "id": "kistenpflege", "label": "Kistenpflege", "intro": "Die Werkzeuge selbst pflegen – Stats, Sortierer, Post.", "cats": ["kistenpflege"] },
+      { "id": "kampagne", "label": "Kampagne", "intro": "Kampagnen planen, verlinken, mailen, zählen.", "cats": ["kampagne"] },
+      { "id": "schau", "label": "Schau & Mockups", "intro": "Präsentations-Mockups und Studien.", "cats": ["schau"] },
+      { "id": "labor", "label": "Labor", "intro": "Erprobung und Abgelegtes – zum Ausprobieren, mit verschachtelten Kisten.", "cats": ["labor"], "sub": [
+        { "id": "ligaturen", "label": "Ligaturen", "intro": "Die Kiste nur für die Ligaturen.", "cats": ["ligaturen"] },
+        { "id": "schriftpflege", "label": "Schriftpflege", "intro": "Grotesk, Gewichte und Mischsatz prüfen.", "cats": ["schriftpflege"] },
+        { "id": "geparkt", "label": "Geparktes", "intro": "Konzepte, die später kommen.", "cats": ["geparkt"] },
+        { "id": "archiv", "label": "Überreste", "intro": "Frühere Stände, eingefroren.", "cats": ["archiv"] }
+      ] }
+    ]
   }
 }

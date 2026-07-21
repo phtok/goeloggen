@@ -547,6 +547,17 @@
   // --- Manifest laden --------------------------------------------------------
   fetch(TOOLS).then(function (r) { return r.json(); }).then(function (m) {
     ALL = m.tools || [];
+    // Ordnerstruktur (Welten) aus den Daten, wenn vorhanden (tools.json → welten,
+    // vom Ordner-Editor gepflegt); sonst gilt die oben eingebaute Vorgabe. Die
+    // abgeleiteten Listen danach neu berechnen.
+    if (m.welten && Array.isArray(m.welten.public) && m.welten.public.length) {
+      WORLDS = m.welten.public;
+      PUBLIC_IDS = WORLDS.map(function (w) { return w.id; });
+      PUBLIC_CATS = WORLDS.reduce(function (a, w) { return a.concat(w.cats || []); }, []);
+    }
+    if (m.welten && Array.isArray(m.welten.intern)) {
+      INTERN_EXTRA = m.welten.intern;
+    }
     // Reihenfolge der öffentlichen Schublade: vom Sortierer gepflegt (eine Quelle),
     // sonst die eingebaute Vorgabe.
     if (m.reihenfolge && m.reihenfolge.schublade && m.reihenfolge.schublade.length) {
