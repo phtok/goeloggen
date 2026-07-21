@@ -75,21 +75,39 @@ statt sie zu exportieren. Dahinter steht die Edge Function
 `dagcsnfrlbpxcmdimnrw`). Sie schreibt **ausschliesslich** das Feld
 `reihenfolge` in die `tools.json` — winzige Wirkfläche, per Git rückholbar.
 
-Zum Scharfschalten zweierlei, **im Supabase-Projekt** (nie hier eintragen):
+**Konfiguration liegt in der Tabelle `public.sortierer_config`** (Hausmuster wie
+`seelenkalender_config`: `key`/`value`, RLS ohne Policies → nur Service-Role).
+Die Funktion liest sie mit der automatisch injizierten Service-Role — **es sind
+keine Env-Secrets zu setzen**. Zwei Zeilen zählen:
 
-1. **Deploy:** Function `sortierer-commit` aus obiger Quelle deployen (Connector
-   oder `supabase functions deploy sortierer-commit`).
-2. **Function-Secrets** (Dashboard → Edge Functions → Secrets, oder
-   `supabase secrets set`):
-   - `GITHUB_TOKEN` — fine-grained PAT, **nur `phtok/goeloggen`**, Contents:
-     Read+Write. (Optional `GITHUB_REPO`/`GITHUB_BRANCH`; Vorgabe
-     `phtok/goeloggen` / `main`.)
-   - `SORTIERER_SECRET` — frei gewähltes langes Passwort; dasselbe gibt die
-     Person beim ersten «Direkt speichern» im Browser ein (bleibt lokal).
+| key | Inhalt | Stand |
+|---|---|---|
+| `sortierer_secret` | App-Passwort fürs Direkt-Speichern (gesetzt) | ✅ gesetzt |
+| `github_token` | Fine-grained PAT, **nur `phtok/goeloggen`**, Contents R+W | ⬜ von Hand eintragen |
 
-Bis beide Secrets gesetzt sind, antwortet die Funktion bewusst mit 500
-«nicht konfiguriert»; solange bleibt **«Exportieren»** der Weg (Datei
-herunterladen und committen).
+Zwei Handgriffe bleiben (genaue Links — die Oberflächen sind sonst mühsam):
+
+1. **PAT erzeugen:** <https://github.com/settings/personal-access-tokens/new>
+   → *Resource owner* `phtok` · *Repository access* → **Only select repositories**
+   → `phtok/goeloggen` · *Permissions* → *Repository permissions* →
+   **Contents: Read and write** · kurze Ablauf. Token kopieren.
+2. **Token eintragen** (nicht hier, direkt in die DB-Zeile):
+   SQL-Editor <https://supabase.com/dashboard/project/dagcsnfrlbpxcmdimnrw/sql/new>
+   ```sql
+   update public.sortierer_config set value = 'DEIN_PAT' where key = 'github_token';
+   ```
+   Oder Tabellen-Editor
+   <https://supabase.com/dashboard/project/dagcsnfrlbpxcmdimnrw/editor> →
+   Tabelle `sortierer_config` → Zeile `github_token` → `value` einfügen.
+3. **Deploy** (die aktuelle Fassung mit `aus` + Config-Tabelle live setzen):
+   `supabase functions deploy sortierer-commit --project-ref dagcsnfrlbpxcmdimnrw`
+   oder Dashboard
+   <https://supabase.com/dashboard/project/dagcsnfrlbpxcmdimnrw/functions>.
+
+Das App-Passwort (`sortierer_secret`) tippt die Person einmalig beim ersten
+«Direkt speichern» im Browser ein (bleibt lokal). Bis `github_token` gesetzt
+**und** die neue Fassung deployt ist, antwortet die Funktion mit 500
+«nicht konfiguriert»; solange bleibt **«Exportieren»** der Weg.
 
 ## Merksatz
 Connector, wo es einen gibt (parat + nie einsehbar + kein Recycling); Env-Key
