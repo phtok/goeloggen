@@ -228,7 +228,7 @@
     a.innerHTML = visual(t) + '<h2>' + t.title + ' <span class="arr">›</span></h2>';
     return a;
   }
-  function buildCarousel(byslug, order){
+  function buildCarousel(byslug, order, aus){
     // Karussell-Extra (kein eigenes Werkzeug): die elf E-Mail-Gebote.
     byslug["empfehlungen"] = byslug["empfehlungen"] || {
       slug: "empfehlungen", title: "Diese Mail wird gelesen",
@@ -238,6 +238,8 @@
     // (tools.json → reihenfolge.karussell), sonst gilt die DISCOVER-Vorgabe.
     var LINES = {}; DISCOVER.forEach(function(d){ LINES[d.slug] = d.line; });
     var slugs = (order && order.length) ? order : DISCOVER.map(function(d){ return d.slug; });
+    var versteckt = aus || [];
+    slugs = slugs.filter(function(s){ return versteckt.indexOf(s) < 0; });
     var car = document.getElementById("carousel");
     var items = slugs.map(function(slug){ return { line: LINES[slug] || "", t: byslug[slug] }; })
                      .filter(function(x){ return x.t; });
@@ -313,7 +315,11 @@
     var byslug = {}; tools.forEach(function(t){ byslug[t.slug] = t; });
     // Reihenfolgen pflegt der Sortierer (tools.json → reihenfolge); sonst die Vorgaben.
     var R = man.reihenfolge || {};
-    buildCarousel(byslug, R.karussell);
+    var AUS = R.aus || {};
+    buildCarousel(byslug, R.karussell, AUS.karussell || []);
+    // Ausgeblendete Karten (Sortierer): weg von der Startseite, per Direktlink/Menü erreichbar.
+    var ausKarten = AUS.karten || [];
+    tools = tools.filter(function(t){ return ausKarten.indexOf(t.slug) < 0; });
     var kartenOrder = (R.karten && R.karten.length) ? R.karten : ORDER;
     var rank = function(t){ var k = kartenOrder.indexOf(t.slug); return k < 0 ? 999 : k; };
     tools.sort(function(a,b){ return rank(a) - rank(b); });

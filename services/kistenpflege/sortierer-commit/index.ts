@@ -97,15 +97,21 @@ Deno.serve(async (req) => {
   const clean = (a: string[]) => a.filter((s) => known.has(s));
   const neu = { schublade: clean(r.schublade), karten: clean(r.karten), karussell: clean(r.karussell) };
 
+  // Ausgeblendete je Fläche (optional, rückwärtskompatibel). Nur bekannte Slugs.
+  const a = r.aus && typeof r.aus === "object" ? r.aus : {};
+  const cleanAus = (x: unknown) => Array.isArray(x) ? clean(x.filter((s) => typeof s === "string") as string[]) : [];
+  const aus = { schublade: cleanAus(a.schublade), karussell: cleanAus(a.karussell), karten: cleanAus(a.karten) };
+
   // $hinweis aus dem Ist-Stand bewahren.
   const hm = text.match(/"\$hinweis":\s*("(?:[^"\\]|\\.)*")/);
-  const hinweis = hm ? hm[1] : JSON.stringify("Vom Sortierer gepflegte Reihenfolgen (Slugs). Startseite und Schublade lesen sie; fehlt ein Eintrag, gilt die eingebaute Vorgabe. Verlauf = Git.");
+  const hinweis = hm ? hm[1] : JSON.stringify("Vom Sortierer gepflegte Reihenfolgen (Slugs). Startseite und Schublade lesen sie; fehlt ein Eintrag, gilt die eingebaute Vorgabe. aus = je Fläche ausgeblendet (bleibt per Direktlink und in der Intern-Ansicht erreichbar). Verlauf = Git.");
   const block =
     '"reihenfolge": {\n' +
     '    "$hinweis": ' + hinweis + ',\n' +
     '    "schublade": ' + arr(neu.schublade) + ',\n' +
     '    "karten": ' + arr(neu.karten) + ',\n' +
-    '    "karussell": ' + arr(neu.karussell) + "\n" +
+    '    "karussell": ' + arr(neu.karussell) + ',\n' +
+    '    "aus": { "schublade": ' + arr(aus.schublade) + ', "karussell": ' + arr(aus.karussell) + ', "karten": ' + arr(aus.karten) + " }\n" +
     "  }";
 
   // Nur den reihenfolge-Block ersetzen (Rest byte-genau).
