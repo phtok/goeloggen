@@ -1,12 +1,14 @@
 // =============================================================================
 // sortierer-commit · Supabase Edge Function — der Sortierer speichert direkt
 // -----------------------------------------------------------------------------
-// Nimmt vom Sortierer die drei Reihenfolgen (schublade/karten/karussell) und
-// schreibt AUSSCHLIESSLICH das Feld «reihenfolge» in die tools.json auf GitHub —
-// per Contents-API, mit dem aktuellen Stand als Basis (kein Stale-Clobber).
-// Alles andere in der Datei bleibt byte-genau. Ein GitHub-Token liegt server-
-// seitig, nie im Browser. Ein Passwort sperrt den Zugang; die Wirkfläche ist
-// bewusst winzig (nur Menü-Reihenfolge, per Git jederzeit rückholbar).
+// Nimmt vom Sortierer/Ordner-Editor Änderungen an der Menü-Struktur und schreibt
+// gezielt in die tools.json auf GitHub — per Contents-API, mit dem aktuellen
+// Stand als Basis (kein Stale-Clobber). Body (alle Felder optional, mindestens
+// eines): reihenfolge {schublade,karten,karussell,aus} · welten {public,intern}
+// · cats {slug: cat}. Nur die betroffenen Blöcke/Felder werden ersetzt, der Rest
+// bleibt byte-genau. Ein GitHub-Token liegt serverseitig, nie im Browser. Ein
+// Passwort sperrt den Zugang; die Wirkfläche ist bewusst winzig (nur Menü-Struktur,
+// per Git jederzeit rückholbar).
 //
 // Konfiguration liegt NICHT in Env-Secrets, sondern in der Tabelle
 // public.sortierer_config (nur Service-Role, RLS ohne Policies) — Hausmuster
@@ -83,11 +85,13 @@ Deno.serve(async (req) => {
   }
 
   const body = await req.json().catch(() => null);
-  const r = body && body.reihenfolge;
-  const ok3 = r && ["schublade", "karten", "karussell"].every(
-    (k) => Array.isArray(r[k]) && r[k].every((s: unknown) => typeof s === "string"),
-  );
-  if (!ok3) return json(400, { error: "reihenfolge (schublade/karten/karussell als Slug-Listen) fehlt." });
+  if (!body || typeof body !== "object") return json(400, { error: "Body fehlt." });
+  const hasReihenfolge = !!body.reihenfolge;
+  const hasWelten = !!(body.welten && typeof body.welten === "object");
+  const hasCats = !!(body.cats && typeof body.cats === "object");
+  if (!hasReihenfolge && !hasWelten && !hasCats) {
+    return json(400, { error: "Nichts zu tun (reihenfolge / welten / cats fehlen)." });
+  }
 
   const gh = {
     Authorization: `Bearer ${TOKEN}`,
@@ -115,30 +119,70 @@ Deno.serve(async (req) => {
     return json(500, { error: "tools.json (aktuell) ist kein gültiges JSON." });
   }
   const clean = (a: string[]) => a.filter((s) => known.has(s));
-  const neu = { schublade: clean(r.schublade), karten: clean(r.karten), karussell: clean(r.karussell) };
+  const reEsc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const applied: string[] = [];
+  let next = text;
 
-  // Ausgeblendete je Fläche (optional, rückwärtskompatibel). Nur bekannte Slugs.
-  const a = r.aus && typeof r.aus === "object" ? r.aus : {};
-  const cleanAus = (x: unknown) => Array.isArray(x) ? clean(x.filter((s) => typeof s === "string") as string[]) : [];
-  const aus = { schublade: cleanAus(a.schublade), karussell: cleanAus(a.karussell), karten: cleanAus(a.karten) };
+  // --- reihenfolge (optional) ---
+  if (hasReihenfolge) {
+    const r = body.reihenfolge;
+    const ok3 = ["schublade", "karten", "karussell"].every(
+      (k) => Array.isArray(r[k]) && r[k].every((s: unknown) => typeof s === "string"),
+    );
+    if (!ok3) return json(400, { error: "reihenfolge (schublade/karten/karussell als Slug-Listen) fehlt." });
+    const neu = { schublade: clean(r.schublade), karten: clean(r.karten), karussell: clean(r.karussell) };
+    const a = r.aus && typeof r.aus === "object" ? r.aus : {};
+    const cleanAus = (x: unknown) => Array.isArray(x) ? clean(x.filter((s) => typeof s === "string") as string[]) : [];
+    const aus = { schublade: cleanAus(a.schublade), karussell: cleanAus(a.karussell), karten: cleanAus(a.karten) };
+    const hm = next.match(/"reihenfolge"[\s\S]*?"\$hinweis":\s*("(?:[^"\\]|\\.)*")/);
+    const hinweis = hm ? hm[1] : JSON.stringify("Vom Sortierer gepflegte Reihenfolgen (Slugs). Startseite und Schublade lesen sie; fehlt ein Eintrag, gilt die eingebaute Vorgabe. aus = je Fläche ausgeblendet (bleibt per Direktlink und in der Intern-Ansicht erreichbar). Verlauf = Git.");
+    const block =
+      '"reihenfolge": {\n' +
+      '    "$hinweis": ' + hinweis + ',\n' +
+      '    "schublade": ' + arr(neu.schublade) + ',\n' +
+      '    "karten": ' + arr(neu.karten) + ',\n' +
+      '    "karussell": ' + arr(neu.karussell) + ',\n' +
+      '    "aus": { "schublade": ' + arr(aus.schublade) + ', "karussell": ' + arr(aus.karussell) + ', "karten": ' + arr(aus.karten) + " }\n" +
+      "  }";
+    const re = /"reihenfolge"\s*:\s*\{[\s\S]*?\n {2}\}/;
+    next = re.test(next) ? next.replace(re, block) : next.replace(/\n\}\s*$/, ",\n  " + block + "\n}");
+    applied.push("reihenfolge");
+  }
 
-  // $hinweis aus dem Ist-Stand bewahren.
-  const hm = text.match(/"\$hinweis":\s*("(?:[^"\\]|\\.)*")/);
-  const hinweis = hm ? hm[1] : JSON.stringify("Vom Sortierer gepflegte Reihenfolgen (Slugs). Startseite und Schublade lesen sie; fehlt ein Eintrag, gilt die eingebaute Vorgabe. aus = je Fläche ausgeblendet (bleibt per Direktlink und in der Intern-Ansicht erreichbar). Verlauf = Git.");
-  const block =
-    '"reihenfolge": {\n' +
-    '    "$hinweis": ' + hinweis + ',\n' +
-    '    "schublade": ' + arr(neu.schublade) + ',\n' +
-    '    "karten": ' + arr(neu.karten) + ',\n' +
-    '    "karussell": ' + arr(neu.karussell) + ',\n' +
-    '    "aus": { "schublade": ' + arr(aus.schublade) + ', "karussell": ' + arr(aus.karussell) + ', "karten": ' + arr(aus.karten) + " }\n" +
-    "  }";
+  // --- welten (optional) — Ordnerstruktur ---
+  if (hasWelten) {
+    // Struktur säubern: nur bekannte Felder, rekursiv (kein Fremd-Schlüssel).
+    type W = { id: string; label: string; intro?: string; cats?: string[]; sub?: W[] };
+    const sane = (list: unknown): W[] => Array.isArray(list) ? list.map((x) => {
+      const w = (x || {}) as Record<string, unknown>;
+      const out: W = {
+        id: String(w.id || ""),
+        label: String(w.label || ""),
+        intro: typeof w.intro === "string" ? w.intro : "",
+        cats: Array.isArray(w.cats) ? w.cats.filter((c) => typeof c === "string").map(String) : [],
+      };
+      if (Array.isArray(w.sub) && w.sub.length) out.sub = sane(w.sub);
+      return out;
+    }).filter((w) => w.id && w.label) : [];
+    const wm = next.match(/"welten"[\s\S]*?"\$hinweis":\s*("(?:[^"\\]|\\.)*")/);
+    const whinweis = wm ? JSON.parse(wm[1]) : "Die Ordner der Schublade. public = für alle sichtbar, intern = nur Backstage. Ein Werkzeug gehört über sein cat-Feld in eine Welt (welt.cats). Reihenfolge = Anzeigefolge. sub = verschachtelte Kisten. Vom Ordner-Editor gepflegt; fehlt welten, gilt die in nav.js eingebaute Vorgabe.";
+    const wobj = { "$hinweis": whinweis, public: sane(body.welten.public), intern: sane(body.welten.intern) };
+    const wser = JSON.stringify(wobj, null, 2).split("\n").map((l, i) => i === 0 ? l : "  " + l).join("\n");
+    const block = '"welten": ' + wser;
+    const re = /"welten"\s*:\s*\{[\s\S]*?\n {2}\}/;
+    next = re.test(next) ? next.replace(re, block) : next.replace(/\n\}\s*$/, ",\n  " + block + "\n}");
+    applied.push("welten");
+  }
 
-  // Nur den reihenfolge-Block ersetzen (Rest byte-genau).
-  const re = /"reihenfolge"\s*:\s*\{[\s\S]*?\n {2}\}/;
-  const next = re.test(text)
-    ? text.replace(re, block)
-    : text.replace(/\n\}\s*$/, ",\n  " + block + "\n}");
+  // --- cats (optional) — Werkzeuge in andere Ordner legen ---
+  if (hasCats) {
+    for (const [slug, cat] of Object.entries(body.cats as Record<string, unknown>)) {
+      if (!known.has(slug) || typeof cat !== "string" || !cat) continue;
+      const re = new RegExp('("slug"\\s*:\\s*"' + reEsc(slug) + '"[\\s\\S]{0,160}?"cat"\\s*:\\s*)"[^"]*"');
+      next = next.replace(re, `$1"${cat}"`);
+    }
+    applied.push("cats");
+  }
 
   if (next === text) return json(200, { ok: true, unchanged: true });
   try { JSON.parse(next); } catch { return json(500, { error: "Ergebnis wäre ungültiges JSON – nichts geschrieben." }); }
@@ -148,7 +192,7 @@ Deno.serve(async (req) => {
     method: "PUT",
     headers: gh,
     body: JSON.stringify({
-      message: "Sortierer: Reihenfolge aktualisiert",
+      message: "Sortierer/Ordner: " + applied.join(" + ") + " aktualisiert",
       content: textToB64(next),
       sha: cur.sha,
       branch: BRANCH,
@@ -158,5 +202,5 @@ Deno.serve(async (req) => {
     return json(502, { error: "Schreiben bei GitHub fehlgeschlagen.", status: putRes.status, detail: (await putRes.text()).slice(0, 300) });
   }
   const put = await putRes.json();
-  return json(200, { ok: true, commit: put.commit && put.commit.sha });
+  return json(200, { ok: true, commit: put.commit && put.commit.sha, applied });
 });

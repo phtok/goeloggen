@@ -79,7 +79,8 @@
   <div class="toolbar">
     <span class="spacer"></span>
     <button class="btn" id="zuruecksetzen" type="button">Auf Datei-Stand zurück</button>
-    <button class="btn primary" id="export" type="button">Exportieren</button>
+    <button class="btn" id="export" type="button">Exportieren</button>
+    <button class="btn primary" id="speichern" type="button">Direkt speichern</button>
   </div>
 
   <p class="status" id="status" role="status" hidden></p>
@@ -309,6 +310,49 @@
     status("tools.json exportiert. Jetzt committen – die Schublade übernimmt die Ordnerstruktur.");
   }
 
+  // --- Direkt speichern (gleiche Edge Function + Passwort wie der Sortierer) ---
+  var SB = "https://dagcsnfrlbpxcmdimnrw.supabase.co";
+  var FUNKTION = SB + "/functions/v1/sortierer-commit";
+  var PUBKEY = "sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY";
+  var SECRET_LS = "sortierer-secret";
+  function geaenderteCats(){
+    var out = {}; Object.keys(toolCat).forEach(function(s){ if(toolCat[s]!==catOriginal[s]) out[s]=toolCat[s]; });
+    return out;
+  }
+  function speichern(){
+    var secret = "";
+    try { secret = localStorage.getItem(SECRET_LS) || ""; } catch(e){}
+    if(!secret){
+      secret = (window.prompt("Passwort fürs Direkt-Speichern (einmalig, bleibt in diesem Browser):")||"").trim();
+      if(!secret) return;
+      try { localStorage.setItem(SECRET_LS, secret); } catch(e){}
+    }
+    var cats = geaenderteCats();
+    status("Speichere …");
+    fetch(FUNKTION, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "x-sortierer-secret":secret, "apikey":PUBKEY, "Authorization":"Bearer "+PUBKEY },
+      body: JSON.stringify({ welten:{ public:welten.public, intern:welten.intern }, cats:cats })
+    }).then(function(r){
+      return r.json().catch(function(){ return {}; }).then(function(j){ return { ok:r.ok, code:r.status, j:j }; });
+    }).then(function(res){
+      if(res.ok && res.j && res.j.ok){
+        if(res.j.unchanged){ status("Nichts zu speichern – schon aktuell."); return; }
+        var sha=(res.j.commit||"").slice(0,7);
+        // Nach dem Commit gilt der neue Stand als Datei-Stand.
+        Object.keys(cats).forEach(function(s){ catOriginal[s]=cats[s]; });
+        status("Gespeichert und committet"+(sha?" ("+sha+")":"")+". Die Schublade übernimmt es in ~1 Minute.");
+      } else if(res.code===401){
+        try{ localStorage.removeItem(SECRET_LS); }catch(e){}
+        status("Passwort falsch – beim nächsten Speichern neu eingeben.", true);
+      } else if(res.code===500 && res.j && /konfiguriert/.test(res.j.error||"")){
+        status("Server noch nicht eingerichtet (Token/Passwort fehlen). Nutze solange «Exportieren».", true);
+      } else {
+        status("Konnte nicht direkt speichern ("+((res.j&&res.j.error)||res.code)+"). Nutze «Exportieren».", true);
+      }
+    }).catch(function(){ status("Netzwerkfehler beim Speichern. Nutze «Exportieren».", true); });
+  }
+  document.getElementById("speichern").addEventListener("click", speichern);
   document.getElementById("export").addEventListener("click", exportieren);
   document.getElementById("zuruecksetzen").addEventListener("click", function(){
     if(confirm("Lokalen Zwischenstand verwerfen und den Datei-Stand laden?")){
