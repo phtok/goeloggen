@@ -483,6 +483,8 @@
     var tools = ALL.filter(function (t) {
       return (w.cats || []).indexOf(t.cat) !== -1;
     });
+    // Auch intern in Sortierer-Reihenfolge (reihenfolge.schublade); Unbekannte ans Ende.
+    tools.sort(function (a, b) { return flatRank(a) - flatRank(b); });
     var subs = (w.sub || []).map(function (s) { return worldGroupEl(s, curCat); })
                             .filter(function (n) { return n; });
     if (!tools.length && !subs.length) return null;
@@ -504,7 +506,11 @@
     "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint",
     "editor", "wallpaper", "design-system"];
   var FLAT_ORDER = DEFAULT_FLAT_ORDER;
+  // Vom Sortierer ausgeblendete Schubladen-Einträge (tools.json → reihenfolge.aus.schublade):
+  // weg aus dem ÖFFENTLICHEN Menü, in der Intern-Ansicht bleiben sie sichtbar.
+  var AUS_SCHUBLADE = [];
   var PUBLIC_CATS = WORLDS.reduce(function (a, w) { return a.concat(w.cats); }, []);
+  var flatRank = function (t) { var k = FLAT_ORDER.indexOf(t.slug); return k < 0 ? 999 : k; };
 
   function renderDrawer() {
     var intern = isIntern();
@@ -519,11 +525,12 @@
 
     if (!intern) {
       // FLACH: eine priorisierte Liste aller öffentlichen Werkzeuge, keine Bereiche.
+      // Vom Sortierer Ausgeblendete bleiben hier draussen (Intern-Ansicht zeigt sie).
       var pub = ALL.filter(function (t) {
-        return PUBLIC_CATS.indexOf(t.cat) !== -1 && (t.status === "live" || t.status === "beta");
+        return PUBLIC_CATS.indexOf(t.cat) !== -1 && (t.status === "live" || t.status === "beta") &&
+               AUS_SCHUBLADE.indexOf(t.slug) === -1;
       });
-      var rank = function (t) { var k = FLAT_ORDER.indexOf(t.slug); return k < 0 ? 999 : k; };
-      pub.sort(function (a, b) { return rank(a) - rank(b); });
+      pub.sort(function (a, b) { return flatRank(a) - flatRank(b); });
       pub.forEach(function (t) { drawerBody.appendChild(linkEl(t)); });
     } else {
       // intern: nach Backstage-Welten gruppiert; Unterwelten verschachteln sich
@@ -544,6 +551,9 @@
     // sonst die eingebaute Vorgabe.
     if (m.reihenfolge && m.reihenfolge.schublade && m.reihenfolge.schublade.length) {
       FLAT_ORDER = m.reihenfolge.schublade;
+    }
+    if (m.reihenfolge && m.reihenfolge.aus && Array.isArray(m.reihenfolge.aus.schublade)) {
+      AUS_SCHUBLADE = m.reihenfolge.aus.schublade;
     }
     // Sicherheitsnetz: Manifest-Kategorien ohne Welt werden automatisch eigene
     // Backstage-Welten (Titel/Intro aus tools.json) — eine neue Kategorie im

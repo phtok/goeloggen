@@ -37,6 +37,7 @@ Einmal setzen, dauerhaft wiederverwenden.
 | **ActiveCampaign** | Connector | — | — | installiert, **Auth erneuern** |
 | **GitHub** | Connector/Proxy | (`GH_TOKEN` nur für `gh`-CLI) | `repo`, `read:org` | über Proxy |
 | **Resend** | Supabase-Config-Tabelle (`seelenkalender_config`, nur Service-Role) | `resend_api_key` | nur Senden (`sending`) | per SQL-Editor setzen (`services/seelenkalender/README.md`) — **nicht** als Claude-Env nötig |
+| **Sortierer-Commit** | Supabase Edge Function | `GITHUB_TOKEN`, `SORTIERER_SECRET` | Token: **nur dieses Repo**, Contents R+W | Function-Secrets im Supabase-Projekt setzen (s. u.) |
 | *(Alternative: Brevo)* | Connector | — | — | im Verzeichnis, nicht installiert |
 
 ## Env-Variablen setzen (Web-UI)
@@ -65,6 +66,30 @@ gepflegt, **nicht** hier — deshalb ist `mcpServers` leer. Für einen
   }
 }
 ```
+
+## Sortierer «Direkt speichern» (Edge Function)
+
+Der Sortierer (`sortierer.html`) kann die Menü-Reihenfolge direkt committen,
+statt sie zu exportieren. Dahinter steht die Edge Function
+`services/kistenpflege/sortierer-commit/index.ts` (Projekt
+`dagcsnfrlbpxcmdimnrw`). Sie schreibt **ausschliesslich** das Feld
+`reihenfolge` in die `tools.json` — winzige Wirkfläche, per Git rückholbar.
+
+Zum Scharfschalten zweierlei, **im Supabase-Projekt** (nie hier eintragen):
+
+1. **Deploy:** Function `sortierer-commit` aus obiger Quelle deployen (Connector
+   oder `supabase functions deploy sortierer-commit`).
+2. **Function-Secrets** (Dashboard → Edge Functions → Secrets, oder
+   `supabase secrets set`):
+   - `GITHUB_TOKEN` — fine-grained PAT, **nur `phtok/goeloggen`**, Contents:
+     Read+Write. (Optional `GITHUB_REPO`/`GITHUB_BRANCH`; Vorgabe
+     `phtok/goeloggen` / `main`.)
+   - `SORTIERER_SECRET` — frei gewähltes langes Passwort; dasselbe gibt die
+     Person beim ersten «Direkt speichern» im Browser ein (bleibt lokal).
+
+Bis beide Secrets gesetzt sind, antwortet die Funktion bewusst mit 500
+«nicht konfiguriert»; solange bleibt **«Exportieren»** der Weg (Datei
+herunterladen und committen).
 
 ## Merksatz
 Connector, wo es einen gibt (parat + nie einsehbar + kein Recycling); Env-Key
