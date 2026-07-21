@@ -5,12 +5,15 @@
 # auf «Run workflow» (Tab Actions) genügt. Läuft ausserdem automatisch, wenn
 # sich die Funktionsquelle auf main ändert.
 #
-# Einmalig einzurichten (beides vom Handy):
-#   1. Supabase-Access-Token erzeugen:
-#      https://supabase.com/dashboard/account/tokens  → «Generate new token».
-#   2. Als GitHub-Secret hinterlegen (Name EXACT: SUPABASE_ACCESS_TOKEN):
-#      https://github.com/phtok/goeloggen/settings/secrets/actions
-#      → «New repository secret».
+# Einmalig einzurichten (alles vom Handy, als GitHub-Repo-Secrets):
+#   https://github.com/phtok/goeloggen/settings/secrets/actions → «New repository secret»
+#   1. SUPABASE_ACCESS_TOKEN  (PFLICHT, für den Deploy)
+#      Token: https://supabase.com/dashboard/account/tokens → «Generate new token».
+#   2. SORTIERER_GH_TOKEN  (optional, bequem): der GitHub-PAT, den die Funktion
+#      zum Committen braucht (fine-grained, nur phtok/goeloggen, Contents R+W).
+#      Ist er gesetzt, schreibt dieser Workflow ihn in die Tabelle
+#      public.sortierer_config (Zeile github_token) — dann entfällt jedes
+#      Dashboard-Gefummel. Alternativ den Token direkt in die DB-Zeile setzen.
 # Danach: Tab «Actions» → «Deploy sortierer-commit» → «Run workflow».
 #
 # Die Funktionsquelle wohnt bei services/…; sie wird hier in das von der CLI
@@ -31,6 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SORTIERER_GH_TOKEN: ${{ secrets.SORTIERER_GH_TOKEN }}
       PROJECT_REF: dagcsnfrlbpxcmdimnrw
     steps:
       - uses: actions/checkout@v4
@@ -43,6 +47,26 @@ jobs:
           if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
             echo "::error::Secret SUPABASE_ACCESS_TOKEN fehlt. Anleitung im Workflow-Kopf." && exit 1
           fi
+      - name: GitHub-PAT in die Config-Tabelle schreiben (wenn SORTIERER_GH_TOKEN gesetzt)
+        run: |
+          if [ -z "$SORTIERER_GH_TOKEN" ]; then
+            echo "SORTIERER_GH_TOKEN nicht gesetzt – überspringe (Token dann von Hand in sortierer_config eintragen)."
+            exit 0
+          fi
+          # Token als einfach-gequotetes SQL-Literal (einfache Quotes verdoppeln).
+          ESC=${SORTIERER_GH_TOKEN//\'/\'\'}
+          SQL="update public.sortierer_config set value = '${ESC}' where key = 'github_token';"
+          BODY=$(jq -nc --arg q "$SQL" '{query:$q}')
+          code=$(curl -s -o /tmp/resp.json -w '%{http_code}' -X POST \
+            "https://api.supabase.com/v1/projects/${PROJECT_REF}/database/query" \
+            -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data "$BODY")
+          echo "Management-API HTTP $code"
+          if [ "$code" != "200" ] && [ "$code" != "201" ]; then
+            cat /tmp/resp.json; echo "::error::github_token konnte nicht gesetzt werden." && exit 1
+          fi
+          echo "github_token in sortierer_config gesetzt."
       - name: Funktion ins CLI-Layout kopieren
         run: |
           mkdir -p supabase/functions/sortierer-commit
