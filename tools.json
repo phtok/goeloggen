@@ -445,6 +445,17 @@
       "such": "Sortierer Reihenfolge ordnen sortieren Schublade Karussell Karten Startseite Menü Navigation Kistenpflege"
     },
     {
+      "slug": "ordner",
+      "cat": "kistenpflege",
+      "status": "intern",
+      "tag": "Kistenpflege",
+      "title": "Ordner-Editor",
+      "short": "Ordner",
+      "href": "ordner.html",
+      "desc": "Die Ordner (Welten) der Schublade bearbeiten: benennen, ordnen, verschachteln und Werkzeuge einsortieren. Schreibt tools.json → welten und die cat-Felder; Verlauf = Git.",
+      "such": "Ordner Welten Struktur Kategorien Menü Schublade Backstage einsortieren verschachteln Ordner-Editor Kistenpflege"
+    },
+    {
       "slug": "sommer-zaehler",
       "cat": "kampagne",
       "status": "intern",
