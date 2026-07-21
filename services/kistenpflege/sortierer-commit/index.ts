@@ -5,24 +5,38 @@
 // schreibt AUSSCHLIESSLICH das Feld «reihenfolge» in die tools.json auf GitHub —
 // per Contents-API, mit dem aktuellen Stand als Basis (kein Stale-Clobber).
 // Alles andere in der Datei bleibt byte-genau. Ein GitHub-Token liegt server-
-// seitig (Secret), nie im Browser. Ein Passwort (SORTIERER_SECRET) sperrt den
-// Zugang; die Wirkfläche ist bewusst winzig (nur Menü-Reihenfolge, per Git
-// jederzeit rückholbar).
+// seitig, nie im Browser. Ein Passwort sperrt den Zugang; die Wirkfläche ist
+// bewusst winzig (nur Menü-Reihenfolge, per Git jederzeit rückholbar).
 //
-// Secrets (im Supabase-Projekt setzen):
-//   GITHUB_TOKEN      Fine-grained PAT, nur dieses Repo, Contents: Read+Write
-//   GITHUB_REPO       "phtok/goeloggen" (Vorgabe, wenn leer)
-//   GITHUB_BRANCH     "main" (Vorgabe, wenn leer)
-//   SORTIERER_SECRET  frei gewähltes, langes Passwort
-// Quelle im Repo: services/kistenpflege/sortierer-commit/index.ts
+// Konfiguration liegt NICHT in Env-Secrets, sondern in der Tabelle
+// public.sortierer_config (nur Service-Role, RLS ohne Policies) — Hausmuster
+// wie seelenkalender_config. Schlüssel (Spalte key → value):
+//   sortierer_secret  frei gewähltes, langes Passwort (App-Passwort)
+//   github_token      Fine-grained PAT, nur dieses Repo, Contents: Read+Write
+//   github_repo       "phtok/goeloggen" (Vorgabe, wenn leer)
+//   github_branch     "main" (Vorgabe, wenn leer)
+// Die Funktion liest sie mit der automatisch injizierten Service-Role-Rolle
+// (SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY) — es sind KEINE eigenen Env-Secrets
+// mehr zu setzen. Quelle im Repo: services/kistenpflege/sortierer-commit/index.ts
 // =============================================================================
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
-const TOKEN  = Deno.env.get("GITHUB_TOKEN") || "";
-const REPO   = Deno.env.get("GITHUB_REPO") || "phtok/goeloggen";
-const BRANCH = Deno.env.get("GITHUB_BRANCH") || "main";
-const SECRET = Deno.env.get("SORTIERER_SECRET") || "";
+const SB_URL = Deno.env.get("SUPABASE_URL") || "";
+const SVC    = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
 const PATH   = "tools.json";
+
+// Config aus public.sortierer_config lesen (nur Service-Role kommt an die Tabelle).
+async function loadConfig(): Promise<Record<string, string>> {
+  if (!SB_URL || !SVC) return {};
+  const res = await fetch(`${SB_URL}/rest/v1/sortierer_config?select=key,value`, {
+    headers: { apikey: SVC, Authorization: `Bearer ${SVC}` },
+  });
+  if (!res.ok) return {};
+  const rows = await res.json().catch(() => []) as Array<{ key: string; value: string }>;
+  const cfg: Record<string, string> = {};
+  for (const r of rows) cfg[r.key] = r.value;
+  return cfg;
+}
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -55,7 +69,13 @@ const arr = (a: string[]) => "[" + a.map((s) => JSON.stringify(s)).join(", ") + 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return json(405, { error: "Nur POST." });
-  if (!TOKEN || !SECRET) return json(500, { error: "Funktion nicht konfiguriert (GITHUB_TOKEN / SORTIERER_SECRET fehlen)." });
+
+  const cfg = await loadConfig();
+  const TOKEN  = cfg.github_token || "";
+  const SECRET = cfg.sortierer_secret || "";
+  const REPO   = cfg.github_repo || "phtok/goeloggen";
+  const BRANCH = cfg.github_branch || "main";
+  if (!TOKEN || !SECRET) return json(500, { error: "Funktion nicht konfiguriert (sortierer_config: github_token / sortierer_secret fehlen)." });
 
   // Passwort-Sperre.
   if ((req.headers.get("x-sortierer-secret") || "") !== SECRET) {
