@@ -63,6 +63,27 @@
       label: 'Metricool · Kampagnen-Auswertung',
       url:   'https://app.metricool.com/reporting/campaigns-dashboard/public?token=eyJ6aXAiOiJERUYiLCJhbGciOiJIUzUxMiJ9.eJxVztFSgkAUgOF3ObcywhrCxh3VTLLWZmZmNU2Dy5Lgrhzg5AhN7x7jXZf_d_X_QPqdQfQOOyJsI9dNEcdWU1OoqjJjVVn4cKBICSIW8ouQ-YwFDhy2-X_QJxyAs-lk6p3B0icaiEBjU6_atpJHafY66b6sElsSM755NJORZFjGwdO8v85ewxN7vkoal4tDvWyThUrucS1fVOnFYo_Ey5u7oq770L_t5w9Wr5ualqsyrUaoWrmIdZG7lF_yYOfHb8UmnOVCd4EHDlCHejjBLDUE5zM6Ds3g9w85oFAH.cL8xJiluV4VRcqD2tsOIXKgpvI7UfN_fbvREgPpiP_r0T0JTBfS_vH2cnrq50d-kogWBjyZLE_OMINhFqo8dIw',
       takt:  'Empfehlung: wöchentlich (montags) übernehmen; in der Schlussspurt-Woche ab 3. August täglich.'
+    },
+    // Dunkelfeld-Lesart: die Anmeldungen OHNE UTM den Aktivitäten zugeordnet.
+    // DATIERTE SCHÄTZUNG (±30 %), keine Messung – die «gemessen»-Spalte im
+    // Cockpit kommt live aus attribution/kanaele, «≈ dunkel» steht hier. Bei
+    // neuer Auswertung: stand + zeilen nachziehen (Herleitung im Repo unter
+    // docs/wirkungs-lesart-<datum>.md). Summe der zeilen = Live-Gesamt, sonst
+    // stimmt die Fusszeile nicht mehr (gemessen 107 · dunkel 109 · gesamt 216
+    // am 22.7.). Sortiert nach ≈ gesamt.
+    dunkelLesart: {
+      stand: '22. Juli',
+      doc:   'docs/wirkungs-lesart-22-07.md',
+      zeilen: [
+        { akt:'Mailing · Welle 1',                              gemessen:79, dunkel:1,  gesamt:80 },
+        { akt:'Meta-Anzeige · bezahlt',                         gemessen:0,  dunkel:44, gesamt:44 },
+        { akt:'Organik · Bestand · Direkt',                     gemessen:8,  dunkel:25, gesamt:33 },
+        { akt:'Social organisch · Reels, Stories, Karussell',   gemessen:9,  dunkel:14, gesamt:23 },
+        { akt:'goetheanum.tv-Newsletter · TV-Weekly',           gemessen:5,  dunkel:17, gesamt:22 },
+        { akt:'Haus- und AC-Newsletter · Frühphase',            gemessen:5,  dunkel:7,  gesamt:12 },
+        { akt:'Inserat · Print',                                gemessen:0,  dunkel:1,  gesamt:1 },
+        { akt:'Empfehlung',                                     gemessen:1,  dunkel:0,  gesamt:1 }
+      ]
     }
   };
 
@@ -331,6 +352,136 @@
       row.querySelector('.mn').textContent = fmt(x.n);
       list.appendChild(row);
     });
+  }
+
+  // ── Aktivität → Abschlüsse (gemessen, live) ─────────────────────────────────
+  // Beantwortet «welche Aktivität hat zu welchen Abschlüssen geführt?» aus harten
+  // Daten: Abschlüsse je Motiv-Tupel aus der Attribution (echte Zählung), Klicks
+  // aus dem Link-Register (DE+EN sind eigene Kurzcodes → summiert). Zeigt neben
+  // den Abschlüssen die Klicks, damit ein Attributions-Leck sichtbar wird
+  // (viele Klicks, kaum gemessene Abschlüsse = die Spur ging unterwegs verloren).
+  // Die Anmeldungen OHNE Spur stehen als eigene Fusszeile und werden darunter
+  // (renderDunkelfeld) den Aktivitäten als Schätzung zugeordnet.
+  function renderAktivitaeten(attribution, links, kanaele){
+    if (!el('aktBody')) return;
+    var body = el('aktBody'); body.innerHTML = '';
+    var keyOf = function(s, m, c){ return (s || '') + '|' + (m || '') + '|' + (c || ''); };
+    var acts = {};
+    (attribution || []).forEach(function(r){
+      if (!r.utm_source && !r.utm_content) return;   // ohne Spur → Dunkelfeld
+      var k = keyOf(r.utm_source, r.utm_medium, r.utm_content);
+      var a = acts[k] || (acts[k] = { source:r.utm_source, medium:r.utm_medium, content:r.utm_content, kanal:r.kanal, ab:0, kl:0 });
+      a.ab += Number(r.n) || 0;
+      if (!a.kanal) a.kanal = r.kanal;
+    });
+    (links || []).forEach(function(l){
+      var k = keyOf(l.utm_source, l.utm_medium, l.utm_content);
+      var a = acts[k] || (acts[k] = { source:l.utm_source, medium:l.utm_medium, content:l.utm_content, kanal:null, ab:0, kl:0 });
+      a.kl += Number(l.klicks) || 0;
+    });
+    var items = Object.keys(acts).map(function(k){ return acts[k]; })
+      .filter(function(x){ return x.ab > 0 || x.kl > 0; })
+      .sort(function(a, b){ return b.ab - a.ab || b.kl - a.kl; });
+    if (!items.length){
+      body.innerHTML = '<tr><td class="empty" colspan="4">Noch keine Anmeldung mit UTM-Spur.</td></tr>';
+    } else items.forEach(function(x){
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td></td><td class="num"></td><td class="num"></td>';
+      tr.children[0].textContent = x.content || x.source || '—';
+      var quelle = [x.source, x.medium].filter(Boolean).join(' · ');
+      if (quelle){ var sp = document.createElement('span'); sp.className = 'akt-q'; sp.textContent = quelle; tr.children[0].appendChild(sp); }
+      tr.children[1].textContent = KANAL_LABEL[x.kanal] || x.kanal || '—';
+      tr.children[2].textContent = x.kl ? fmt(x.kl) : '–';
+      tr.children[3].textContent = fmt(x.ab);
+      // Leck-Markierung: viele Klicks, kaum gemessene Abschlüsse (Spur verloren).
+      if (x.kl >= 40 && x.ab <= 1) tr.classList.add('akt-leck');
+      body.appendChild(tr);
+    });
+    var foot = el('aktFoot');
+    if (foot){
+      var ohne = 0; (kanaele || []).forEach(function(r){ if (r.kanal === 'andere') ohne += Number(r.n) || 0; });
+      foot.innerHTML = '';
+      var tr = document.createElement('tr'); tr.className = 'akt-ohne';
+      tr.innerHTML = '<td></td><td></td><td class="num"></td><td class="num"></td>';
+      tr.children[0].textContent = 'ohne UTM-Spur';
+      var note = document.createElement('span'); note.className = 'akt-q'; note.textContent = 'unten eingeordnet (Schätzung)';
+      tr.children[0].appendChild(note);
+      tr.children[1].textContent = '—';
+      tr.children[2].textContent = '–';
+      tr.children[3].textContent = fmt(ohne);
+      foot.appendChild(tr);
+    }
+  }
+
+  // ── Dunkelfeld eingeordnet (Schätzung, datiert) ─────────────────────────────
+  // Die Anmeldungen ohne UTM den Aktivitäten zugeordnet: «gemessen» + «≈ dunkel»
+  // = «≈ gesamt». Die Zahlen stehen in CONFIG.dunkelLesart (datierte Lesart,
+  // ±30 %) – hier nur gerendert, damit die Einordnung an EINER Stelle gepflegt
+  // wird. Herleitung im Repo (CONFIG.dunkelLesart.doc).
+  function renderDunkelfeld(){
+    if (!el('dunkelBody')) return;
+    var L = CONFIG.dunkelLesart; if (!L) return;
+    var body = el('dunkelBody'); body.innerHTML = '';
+    var sg = 0, sd = 0, ss = 0;
+    L.zeilen.forEach(function(z){
+      sg += z.gemessen; sd += z.dunkel; ss += z.gesamt;
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
+      tr.children[0].textContent = z.akt;
+      tr.children[1].textContent = fmt(z.gemessen);
+      tr.children[2].textContent = z.dunkel ? ('≈' + fmt(z.dunkel)) : '–';
+      tr.children[3].textContent = '≈' + fmt(z.gesamt);
+      body.appendChild(tr);
+    });
+    var foot = el('dunkelFoot');
+    if (foot){
+      foot.innerHTML = '<tr><td>Summe</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>';
+      var tds = foot.querySelector('tr').children;
+      tds[1].textContent = fmt(sg); tds[2].textContent = fmt(sd); tds[3].textContent = fmt(ss);
+    }
+    if (el('dunkelStand')) el('dunkelStand').textContent = L.stand;
+  }
+
+  // ── Vermutete Herkunft der dunklen Anmeldungen (Live-Aggregat) ──────────────
+  // Das Live-Fundament unter der Schätzung: je dunkler Anmeldung der letzten 14
+  // Tage der zeitlich nächste Kurzlink-Klick (aus sommer2026_ereignisse) – ein
+  // Indiz, keine Messung. Atmet mit dem 60-Sekunden-Takt. Ordnet die Klicks nach
+  // vermuteter Aktivität, plus die Zahl der dunklen ohne zeitnahen Klick.
+  function renderVermutet(rows){
+    if (!el('vermutetList')) return;
+    var host = el('vermutetList'); host.innerHTML = '';
+    var dunkel = (rows || []).filter(function(r){ return !r.utm_source && !r.utm_content; });
+    var mitHinweis = dunkel.filter(function(r){ return r.vermutet_code; });
+    var agg = {};
+    mitHinweis.forEach(function(r){
+      var label = [r.vermutet_source, r.vermutet_content].filter(Boolean).join(' · ') || r.vermutet_code;
+      agg[label] = (agg[label] || 0) + 1;
+    });
+    var items = Object.keys(agg).map(function(k){ return { label:k, n:agg[k] }; })
+      .sort(function(a, b){ return b.n - a.n; });
+    if (el('vermutetKopf')){
+      el('vermutetKopf').textContent = 'Vermutete Herkunft der ' + fmt(dunkel.length) +
+        ' Anmeldungen ohne UTM der letzten 14 Tage – Indiz, keine Messung';
+    }
+    if (!dunkel.length){
+      host.innerHTML = '<div class="empty">In den letzten 14 Tagen kam keine Anmeldung ohne UTM.</div>';
+      return;
+    }
+    items.forEach(function(x){
+      var row = document.createElement('div'); row.className = 'motrow';
+      row.innerHTML = '<span class="mc"></span><span class="mn"></span>';
+      row.querySelector('.mc').textContent = x.label;
+      row.querySelector('.mn').textContent = fmt(x.n);
+      host.appendChild(row);
+    });
+    var ohneHinweis = dunkel.length - mitHinweis.length;
+    if (ohneHinweis > 0){
+      var row = document.createElement('div'); row.className = 'motrow qz-rest';
+      row.innerHTML = '<span class="mc"></span><span class="mn"></span>';
+      row.querySelector('.mc').textContent = 'ohne zeitnahen Klick · Direkt oder Organik';
+      row.querySelector('.mn').textContent = fmt(ohneHinweis);
+      host.appendChild(row);
+    }
   }
 
   // ── Aktivitäten-Protokoll ───────────────────────────────────────────────────
@@ -1039,19 +1190,25 @@
     renderDeadline();
     renderQuelleSocial();
     // Ereignis-Protokoll separat laden: fällt der RPC aus, bleibt der Rest des
-    // Cockpits vollständig – nur die Liste meldet sich als nicht ladbar.
-    if (el('evList')) rpc('sommer2026_ereignisse')
-      .then(renderEreignisse)
-      .catch(function(){ el('evList').innerHTML = '<div class="err">nicht ladbar</div>'; });
+    // Cockpits vollständig – nur die Liste meldet sich als nicht ladbar. Speist
+    // sowohl das Protokoll («Was ist passiert?») als auch das Live-Aggregat der
+    // vermuteten Herkunft unter der Dunkelfeld-Schätzung.
+    if (el('evList') || el('vermutetList')) rpc('sommer2026_ereignisse')
+      .then(function(rows){ renderEreignisse(rows); renderVermutet(rows); })
+      .catch(function(){
+        if (el('evList')) el('evList').innerHTML = '<div class="err">nicht ladbar</div>';
+        if (el('vermutetList')) el('vermutetList').innerHTML = '<div class="err">nicht ladbar</div>';
+      });
     if(CONFIG.zahlenProvisorisch && el('provisorisch')){
       el('provisorisch').textContent = 'Zielmarken, Preise und die Bleibe-Quote sind vorläufig hinterlegt – sobald die echten Werte gesetzt sind, rechnet das Cockpit unverändert weiter.';
     }
     Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten'), rpc('sommer2026_kanaele'),
-                  rpc('sommer2026_trichter'), rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public'), rpc('sommer2026_kosten_public'), rpc('sommer2026_multi_liste'), rpc('sommer2026_multi_protokoll') ])
+                  rpc('sommer2026_trichter'), rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public'), rpc('sommer2026_kosten_public'), rpc('sommer2026_multi_liste'), rpc('sommer2026_multi_protokoll'), rpc('sommer2026_links_public') ])
       .then(function(res){
         var stats = res[0] || [], timeline = res[1] || [], kohorten = res[2] || [], kanaele = res[3] || [];
         var trichter = res[4] || [], attribution = res[5] || [], massnahmen = res[6] || [], kostenPosten = res[7] || [];
         muListe = res[8] || []; muProto = res[9] || [];
+        var links = res[10] || [];
         var total = stats.reduce(function(s, r){ return s + Number(r.n); }, 0);
         var revenue = projectRevenue(stats);
         var mo = renderSpark(timeline);
@@ -1061,6 +1218,8 @@
         renderKanaele(kanaele, total);
         renderSpurTile(kanaele, total);
         renderMotive(attribution);
+        renderAktivitaeten(attribution, links, kanaele);
+        renderDunkelfeld();
         renderTarif(stats);
         renderMilestones(total);
         renderCohort(kohorten, revenue);

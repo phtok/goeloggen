@@ -102,23 +102,48 @@
     <div class="panel" style="margin-top:var(--s5)">
       <div class="funnel" id="funnel"><div class="empty">lädt …</div></div>
     </div>
-    <details class="zb-form">
-      <summary>Lesart: die Abos ohne UTM eingeordnet – Schätzung, Stand 18. Juli</summary>
+    <div id="quelleSocial" style="margin-top:var(--s5)"></div>
+  </section>
+
+
+  <section id="aktivitaeten-abschluesse">
+    <div class="shead"><h2>Aktivität → Abschlüsse</h2><p>Welche Aktivität zu welchen Abschlüssen geführt hat – erst die harte Messung (Abschlüsse je Aktivität, live aus den UTM-Spuren, mit den Klicks daneben), dann die Anmeldungen ohne UTM den Aktivitäten zugeordnet.</p></div>
+    <div class="panel">
+      <div class="mh">Gemessen · je Aktivität mit UTM-Spur</div>
       <div class="tablewrap" style="margin-top:var(--s4)">
-        <table class="tarif">
-          <thead><tr><th>Aktivität</th><th class="num">gemessen</th><th class="num">≈ geschätzt dazu</th><th class="num">≈ gesamt</th></tr></thead>
-          <tbody>
-            <tr><td>Mailing (Mail-Welle 1)</td><td class="num">34</td><td class="num">≈21</td><td class="num">≈55</td></tr>
-            <tr><td>Haus-Newsletter (Sommerfestivals, AWW, TV-Weekly)</td><td class="num">6</td><td class="num">≈20</td><td class="num">≈26</td></tr>
-            <tr><td>Organik und Bestand (Suche, Haus-Seiten, Storefront)</td><td class="num">7</td><td class="num">≈23</td><td class="num">≈30</td></tr>
-            <tr><td>Social Media</td><td class="num">8</td><td class="num">≈5</td><td class="num">≈13</td></tr>
-            <tr><td>Print und Festival</td><td class="num">0</td><td class="num">≈0–2</td><td class="num">≈0–2</td></tr>
-          </tbody>
+        <table class="tarif akt-tab">
+          <thead><tr><th>Aktivität</th><th>Kanal</th><th class="num">Klicks</th><th class="num">Abschlüsse</th></tr></thead>
+          <tbody id="aktBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+          <tfoot id="aktFoot"></tfoot>
         </table>
       </div>
-      <p class="provisorisch">Die Spalte «gemessen» sind harte UTM-Zuordnungen. «≈ geschätzt» ist eine <b>Lesart</b> der Abos ohne Spur (±30 %), gestützt auf vier belegte Anker: die Klick-Tageskurven des ActiveCampaign-Newsletters, die Kurzlink-Klicks, das Konto-Alter der goetheanum.tv-Abonnenten (31 der dunklen TV-Abos sind Bestandskonten von vor der Aktion) und die Referrer aus dem Uscreen-Export. Nichts davon steht in der Datenbank – die Messwerte bleiben unangetastet. Herleitung: <code>docs/wirkungs-lesart-18-07.md</code> im Werkzeug-Repo.</p>
+      <p class="provisorisch">Abschlüsse = echte Zählung je Motiv-Spur (Attribution); Klicks = Kurzlink-Klicks aus dem Link-Register (DE und EN zusammengezählt). Eine Zeile mit vielen Klicks, aber kaum Abschlüssen ist markiert: dort ging die Spur zwischen Klick und Anmeldung verloren – bei der bezahlten Meta-Anzeige führt der Weg auf den goetheanum.tv-Checkout (Uscreen), der die UTM nicht bis zur Anmeldung trägt. Deshalb landet ihre Wirkung unten im Dunkelfeld.</p>
+    </div>
+
+    <div class="panel" style="margin-top:var(--s5)">
+      <div class="mh">Dunkelfeld eingeordnet · Schätzung, Stand <span id="dunkelStand">–</span></div>
+      <div class="tablewrap" style="margin-top:var(--s4)">
+        <table class="tarif">
+          <thead><tr><th>Aktivität</th><th class="num">gemessen</th><th class="num">≈ dunkel</th><th class="num">≈ gesamt</th></tr></thead>
+          <tbody id="dunkelBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+          <tfoot id="dunkelFoot"></tfoot>
+        </table>
+      </div>
+      <p class="provisorisch">Die Spalte «gemessen» ist hart (UTM). «≈ dunkel» verteilt die Anmeldungen ohne Spur nach vier Ankern – am stärksten der <b>vermuteten Herkunft</b> je Anmeldung (zeitnächster Kurzlink-Klick), die inzwischen 72 der 84 dunklen der letzten 14 Tage abdeckt. Alles mit ≈ ist eine Lesart (±30 %), keine Messung; die Datenbank bleibt unberührt. Herleitung: <code>docs/wirkungs-lesart-22-07.md</code>.</p>
+      <details class="zb-form">
+        <summary id="vermutetKopf">Vermutete Herkunft der letzten 14 Tage – das Live-Fundament unter der Schätzung</summary>
+        <div id="vermutetList" style="margin-top:var(--s4)"><div class="empty">lädt …</div></div>
+        <p class="provisorisch">Live aus den Ereignissen: je Anmeldung ohne UTM der zeitlich nächste Kurzlink-Klick (bis 90 Min. davor) auf einen passenden Kampagnen-Link. Ein Indiz, keine Messung – gezählt wird es nirgends, es ordnet nur ein.</p>
+      </details>
+    </div>
+
+    <details class="zb-form">
+      <summary>Warum kommen so viele ohne UTM – und was hilft?</summary>
+      <div class="card soft" style="margin-top:var(--s4)">
+        <p class="modell">Von den dunklen Anmeldungen der letzten 14 Tage sind rund zwei Drittel <b>goetheanum.tv</b> (Uscreen). Deren Spur hängt an einem einzigen Faden: dem <code>user_created</code>-Event, das Uscreen mit den UTM-Parametern schickt. Kommt es ohne (In-App-Browser aus Social, verlorene Cookies), ist die Anmeldung dunkel – der Checkout selbst trägt keine Spur.</p>
+        <p class="provisorisch">Grösster Hebel: die UTM auf der TV-Landingpage an den goetheanum.tv-Checkout weiterreichen und bezahlte wie soziale TV-Wege über den Kurzlink (<code>/s/&lt;code&gt;</code>) führen – dann wandert allein die Meta-Anzeige (≈44 Anmeldungen) von dunkel nach gemessen. Zweiter Hebel: auf allen vier Wochenschrift-Formularen die versteckten UTM-Prefill-Felder gegenprüfen. Schritte im Repo unter <code>services/sommer-zaehler/utm-ablauf.md</code>.</p>
+      </div>
     </details>
-    <div id="quelleSocial" style="margin-top:var(--s5)"></div>
   </section>
 
 

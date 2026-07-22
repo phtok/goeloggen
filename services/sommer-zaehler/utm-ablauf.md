@@ -124,6 +124,40 @@ Test: einen generierten Link mit `utm_*` öffnen, Formular abschicken → in
 `sommer2026_signups` steht die Zeile mit gefüllten `utm_*`, im Cockpit unter
 «Nach Motiv».
 
+## Sonderfall goetheanum.tv / Uscreen: damit die Spur den Checkout überlebt
+
+Der grösste blinde Fleck der Attribution (Befund 22. Juli: rund zwei Drittel
+aller dunklen Anmeldungen sind goetheanum.tv). Anders als bei Paperform gibt
+es **kein** verstecktes UTM-Feld, das man setzen kann — die Spur überlebt nur
+so weit, wie Uscreen sie in seiner eigenen Session mitführt und im
+`user_created`-Event als `utm_params` mitschickt. Bricht diese Kette (In-App-
+Browser aus Instagram/Facebook, Cookie-Verlust, Weiterleitungen), ist die
+Anmeldung dunkel. Sinnbild: die bezahlte Meta-Anzeige (`story_statisch`)
+sammelt ~600 Kurzlink-Klicks, aber nur eine hart zugeordnete Anmeldung.
+
+Zwei Stellen, am besten beide:
+
+**1. Landingpage → Uscreen-Checkout (Web-Seite):** Die TV-Landingpage
+(`tv-sommer2026…` / `tv-en-sommer2026…`) muss die eingehenden `?utm_*` an den
+«3 Monate gratis»-Button hängen — also an die Uscreen-Checkout-URL
+anhängen, genau wie die WoS-Landingpage sie ans Paperform-Formular reicht.
+Ohne das sieht Uscreen die UTM nur, wenn sein eigenes Session-Tracking sie
+zufällig aufgenommen hat.
+
+**2. Bezahlte und soziale TV-Wege über den Kurzlink führen.** Statt den
+Roh-Link zu teilen, den Kurzlink `/s/<code>` aus dem Generator einsetzen
+(Function `go`, 302 auf die volle UTM-URL). Der serverseitige Redirect ist
+robuster gegen In-App-Browser als ein direkt geteilter Roh-Link und zählt
+den Klick verlässlich in `link_hits` (Grundlage der vermuteten Herkunft im
+Cockpit). Die **Meta-Anzeige zuerst umstellen** — sie ist der grösste
+Einzelposten (≈44 Anmeldungen), der heute dunkel läuft.
+
+Test: einen TV-Kurzlink mit `utm_*` öffnen, Trial über den Uscreen-Checkout
+starten → in `sommer2026_signups` trägt die Zeile die `utm_*` (nicht nur der
+`user_created`-Fallback). Solange das nicht greift, bleibt die Wirkung dieser
+Wege in der Dunkelfeld-Lesart des Cockpits (Wirkung → «Aktivität →
+Abschlüsse»), nicht in der harten Messung.
+
 ## Pflege
 
 Neue Massnahme → Zeile im Massnahmen-Protokoll (`sommer2026_massnahmen`, Service-

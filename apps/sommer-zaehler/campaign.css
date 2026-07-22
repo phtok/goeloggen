@@ -140,6 +140,17 @@
   .motrow .mn{font-variant-numeric:tabular-nums lining-nums;color:var(--ink);font-weight:600}
   .kanal-rolle{color:var(--muted);font-size:var(--t-micro);margin-left:7px}
 
+  /* Aktivität → Abschlüsse: gemessene Live-Tabelle + Dunkelfeld-Schätzung.
+     Nur Tokens (DS02/DS07), Ziffern tabellarisch über .tarif .num (G25). */
+  .panel>.mh{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);font-weight:600;margin-bottom:var(--s3)}
+  .akt-tab .akt-q{display:block;color:var(--muted);font-size:var(--t-micro);margin-top:2px;overflow-wrap:anywhere}
+  /* Leck-Zeile: viele Klicks, kaum Abschlüsse – zurückhaltend getönt, Kante in Gold. */
+  .akt-tab tbody tr.akt-leck td{background:color-mix(in srgb,var(--gold) 12%,transparent)}
+  .akt-tab tbody tr.akt-leck td:first-child{box-shadow:inset 3px 0 0 var(--gold-ink)}
+  .akt-tab tfoot .akt-ohne td{border-top:2px solid var(--line);font-weight:600;color:var(--ink)}
+  .akt-tab tfoot .akt-ohne .akt-q{font-weight:400}
+  .motrow.qz-rest .mc{color:var(--muted)}
+
   /* Zeitband: Phasen × Wochen × Kanäle (nur Tokens, DS02; Ziffern tnum, G25).
      Festes Spaltenraster: die Wochen teilen sich die Breite gleichmässig, statt
      sich nach dem längsten Chip-Titel zu strecken – Titel laufen in die Ellipse. */
