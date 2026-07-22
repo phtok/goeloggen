@@ -160,6 +160,12 @@
   .empf-ill .lostcap{fill:var(--bad);font-family:var(--font-text);opacity:.85}
 
   .privacy{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.5;margin-top:var(--s3)}
+  /* Backend-Versuch: Logo-Option, nur in der Intern-Ansicht sichtbar (JS). */
+  .logo-opt{display:flex;gap:var(--s2);align-items:flex-start;margin-top:var(--s4);
+    padding:var(--s3);border:1px dashed var(--line);border-radius:var(--r-card);cursor:pointer}
+  .logo-opt input{margin-top:2px;width:16px;height:16px;flex:none}
+  .logo-opt .lo-lab{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);display:block}
+  .logo-opt .lo-sub{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.5;display:block;margin-top:2px}
 
   @media(max-width:560px){
     .mail-stage{padding:var(--s4)}
@@ -242,6 +248,14 @@
             </div>
           </div>
         </details>
+
+        <label class="logo-opt" id="logoOpt" hidden>
+          <input type="checkbox" id="showLogo" />
+          <span>
+            <span class="lo-lab">Logo über der Signatur</span>
+            <span class="lo-sub">Backend-Versuch · graues Zeichen, erscheint nur, wo Bilder geladen werden (sonst nichts). Kein Anhang, kein Tracking (auf unserem Server).</span>
+          </span>
+        </label>
 
         <div class="btnrow">
           <button type="button" class="btn ghost" id="fillExample">Beispiel einfügen</button>
@@ -440,6 +454,15 @@
 const MAIL_BLUE = "#4183B4"; // ds-ok: Artefakt-Farbe im Mail-Output (theme-unabhängig)
 const CFONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
 
+// Backend-Versuch: fail-silent Logo. Absolute Produktiv-URL (E-Mail-fest).
+const LOGO_URL = "https://werkzeuge.goetheanum.ch/assets/logos/goetheanum-signatur-grau.png";
+// Gewünscht nur, wenn Intern-Ansicht an UND Häkchen gesetzt – so bleibt es Backend.
+function logoWanted() {
+  const on = !!(window.goeIntern && window.goeIntern());
+  const box = document.getElementById("showLogo");
+  return on && box && box.checked;
+}
+
 const FIELDS = ["name","role","phone","mobile","web","org1","org2","street","city","country","ps","pslink","psuntil"];
 const STORE_KEY = "goe-signatur-v3";
 
@@ -535,6 +558,22 @@ function buildSignature() {
   while (hl.length && hl[0] === "") { hl.shift(); tl.shift(); }
   while (hl.length && hl[hl.length - 1] === "") { hl.pop(); tl.pop(); }
 
+  // Backend-Versuch (nur Intern-Ansicht): fail-silent Logo an der Spitze der
+  // Signatur, gleich nach dem Trennstrich. Leeres alt = kein Text, wenn das
+  // Bild blockiert/nicht geladen wird → nichts statt kaputtem Rahmen. Nur im
+  // HTML, nie im Klartext. URL absolut auf die Produktiv-Domain (E-Mail braucht
+  // das); auf GitHub-Pages liegen uns keine Zugriffslogs vor → kein Tracking.
+  if (logoWanted()) {
+    // CSS-Hintergrund statt <img>: lädt das Bild nicht (blockiert/nicht
+    // unterstützt), bleibt nur leerer Raum – kein kaputtes Platzhalter-Icon.
+    // Zeigt in Apple Mail und Gmail, ist in Outlook still (rendert keine
+    // CSS-Hintergründe) – ‹erscheint, wo möglich, sonst nichts›.
+    const logo = "<div style=\"width:40px;height:40px;background:url('" + LOGO_URL + "') no-repeat center/contain;margin:0 0 4px;\"></div>";
+    // nach Trennstrich (_) und Leerzeile einsetzen, sonst an die Spitze
+    const at = (hl[0] === "_") ? 2 : 0;
+    hl.splice(at, 0, logo);
+  }
+
   const html = psHtml + "<div style=\"font-family:" + CFONT + ";font-size:12px;line-height:1.3;\">" + (hl.join("<br>") || "&nbsp;") + "</div>";
   const text = psText.concat(tl).join("\n");
   return { html, text };
@@ -552,6 +591,8 @@ function save() {
   try {
     const data = { mode: state.mode };
     FIELDS.forEach(k => { data[k] = els[k].value; });
+    const box = document.getElementById("showLogo");
+    if (box) data.showLogo = box.checked;
     localStorage.setItem(STORE_KEY, JSON.stringify(data));
   } catch (e) {}
 }
@@ -560,6 +601,8 @@ function loadStored() {
     const data = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
     if (!data) return false;
     FIELDS.forEach(k => { if (typeof data[k] === "string") els[k].value = data[k]; });
+    const box = document.getElementById("showLogo");
+    if (box && data.showLogo) box.checked = true;
     if (data.mode) setMode(data.mode, false);
     return true;
   } catch (e) { return false; }
@@ -653,6 +696,15 @@ document.querySelectorAll("a[data-fold]").forEach(a => a.addEventListener("click
   if (t) t.open = true;
 }));
 document.getElementById("clearAll").addEventListener("click", () => { setFields({}); onInput(); });
+
+// Backend-Versuch: Logo-Häkchen und Kopplung an die Intern-Ansicht.
+document.getElementById("showLogo").addEventListener("change", () => { render(); resetCopied(); save(); });
+function syncIntern() {
+  const on = !!(window.goeIntern && window.goeIntern());
+  document.getElementById("logoOpt").hidden = !on;
+  render(); // Logo-Einblendung hängt an der Intern-Ansicht
+}
+window.addEventListener("goe:intern", syncIntern);
 
 /* ---------- Status / Kopier-Feedback ---------- */
 function flash(btn, label) {
@@ -985,7 +1037,7 @@ if (!hadStored && !hadQuery) setFields(EXAMPLE);
 // Ein gefülltes PS zeigt sich auch im Formular – der Fold klappt dann auf.
 if (val("ps") || val("pslink")) document.getElementById("psFold").open = true;
 setMode(state.mode, false);
-render();
+syncIntern();   // Logo-Option nur in der Intern-Ansicht zeigen (rendert mit)
 growAll();
 checkExpiry();
 </script>
