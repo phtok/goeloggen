@@ -166,6 +166,10 @@
   .logo-opt input{margin-top:2px;width:16px;height:16px;flex:none}
   .logo-opt .lo-lab{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);display:block}
   .logo-opt .lo-sub{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.5;display:block;margin-top:2px}
+  .logo-tech{display:grid;gap:var(--s2);margin:var(--s2) 0 0 var(--s2);padding-left:var(--s4);border-left:1px dashed var(--line)}
+  .logo-tech label{display:flex;gap:var(--s2);align-items:flex-start;font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);cursor:pointer}
+  .logo-tech input{margin-top:3px;flex:none}
+  .logo-tech .lt-sub{color:var(--muted);font-size:var(--t-micro)}
 
   @media(max-width:560px){
     .mail-stage{padding:var(--s4)}
@@ -253,9 +257,13 @@
           <input type="checkbox" id="showLogo" />
           <span>
             <span class="lo-lab">Logo unter der Signatur</span>
-            <span class="lo-sub">Backend-Versuch · Marke + Wortmarke, verlinkt zu goetheanum.ch. Erscheint nur, wo Bilder geladen werden (sonst nichts). Kein Anhang, kein Tracking (auf unserem Server).</span>
+            <span class="lo-sub">Backend-Versuch · Marke + Wortmarke, verlinkt zu goetheanum.ch. Kein Anhang, kein Tracking (auf unserem Server).</span>
           </span>
         </label>
+        <div class="logo-tech" id="logoTech" hidden>
+          <label><input type="radio" name="logoTech" value="bg" checked /> <span>Fail-silent <span class="lt-sub">(Apple Mail, Gmail · bei Blockade nichts, aber in Outlook unsichtbar)</span></span></label>
+          <label><input type="radio" name="logoTech" value="img" /> <span>Auch Outlook <span class="lt-sub">(img · zeigt in Outlook, dafür Platzhalter-Kästchen bei blockierten Bildern)</span></span></label>
+        </div>
 
         <div class="btnrow">
           <button type="button" class="btn ghost" id="fillExample">Beispiel einfügen</button>
@@ -463,6 +471,10 @@ function logoWanted() {
   const box = document.getElementById("showLogo");
   return on && box && box.checked;
 }
+function logoTech() {
+  const r = document.querySelector("input[name=\"logoTech\"]:checked");
+  return r ? r.value : "bg";
+}
 
 const FIELDS = ["name","role","phone","mobile","web","org1","org2","street","city","country","ps","pslink","psuntil"];
 const STORE_KEY = "goe-signatur-v3";
@@ -565,13 +577,21 @@ function buildSignature() {
   // HTML, nie im Klartext. URL absolut auf die Produktiv-Domain (E-Mail braucht
   // das); auf GitHub-Pages liegen uns keine Zugriffslogs vor → kein Tracking.
   if (logoWanted()) {
-    // Logo mit Abstand UNTER allen Daten, verlinkt zu goetheanum.ch.
-    // CSS-Hintergrund statt <img>: lädt das Bild nicht (blockiert/nicht
-    // unterstützt), bleibt nur leerer Raum – kein kaputtes Platzhalter-Icon.
-    // Zeigt in Apple Mail und Gmail, ist in Outlook still (rendert keine
-    // CSS-Hintergründe) – ‹erscheint, wo möglich, sonst nichts›.
-    const logo = "<a href=\"https://goetheanum.ch\" style=\"display:inline-block;border:0;text-decoration:none;\">" +
-      "<div style=\"width:143px;height:24px;background:url('" + LOGO_URL + "') no-repeat left center/contain;margin:14px 0 0;\"></div></a>";
+    // Logo klein, mit Abstand UNTER allen Daten, verlinkt zu goetheanum.ch.
+    // Zwei Techniken (Backend-Wahl):
+    //  bg  – CSS-Hintergrund: fail-silent (blockiert → leerer Raum, kein
+    //        Bruch), zeigt in Apple Mail/Gmail, in Outlook still.
+    //  img – <img>: zeigt auch in Outlook, dafür Platzhalter-Kästchen bei
+    //        blockierten Bildern (in Outlook nicht vermeidbar).
+    let logo;
+    if (logoTech() === "img") {
+      logo = "<a href=\"https://goetheanum.ch\" style=\"text-decoration:none;border:0;\">" +
+        "<img src=\"" + LOGO_URL + "\" width=\"120\" height=\"20\" alt=\"Goetheanum\" " +
+        "style=\"display:block;border:0;outline:none;text-decoration:none;margin:22px 0 0;-ms-interpolation-mode:bicubic;\" /></a>";
+    } else {
+      logo = "<a href=\"https://goetheanum.ch\" style=\"display:inline-block;border:0;text-decoration:none;\">" +
+        "<div style=\"width:120px;height:20px;background:url('" + LOGO_URL + "') no-repeat left center/contain;margin:22px 0 0;\"></div></a>";
+    }
     hl.push(logo);
   }
 
@@ -594,6 +614,7 @@ function save() {
     FIELDS.forEach(k => { data[k] = els[k].value; });
     const box = document.getElementById("showLogo");
     if (box) data.showLogo = box.checked;
+    data.logoTech = logoTech();
     localStorage.setItem(STORE_KEY, JSON.stringify(data));
   } catch (e) {}
 }
@@ -604,6 +625,10 @@ function loadStored() {
     FIELDS.forEach(k => { if (typeof data[k] === "string") els[k].value = data[k]; });
     const box = document.getElementById("showLogo");
     if (box && data.showLogo) box.checked = true;
+    if (data.logoTech) {
+      const r = document.querySelector("input[name=\"logoTech\"][value=\"" + data.logoTech + "\"]");
+      if (r) r.checked = true;
+    }
     if (data.mode) setMode(data.mode, false);
     return true;
   } catch (e) { return false; }
@@ -698,11 +723,18 @@ document.querySelectorAll("a[data-fold]").forEach(a => a.addEventListener("click
 }));
 document.getElementById("clearAll").addEventListener("click", () => { setFields({}); onInput(); });
 
-// Backend-Versuch: Logo-Häkchen und Kopplung an die Intern-Ansicht.
-document.getElementById("showLogo").addEventListener("change", () => { render(); resetCopied(); save(); });
+// Backend-Versuch: Logo-Häkchen, Technik-Wahl und Kopplung an die Intern-Ansicht.
+function syncLogoTech() {
+  const box = document.getElementById("showLogo");
+  document.getElementById("logoTech").hidden = !(box && box.checked);
+}
+document.getElementById("showLogo").addEventListener("change", () => { syncLogoTech(); render(); resetCopied(); save(); });
+document.querySelectorAll("input[name=\"logoTech\"]").forEach(r =>
+  r.addEventListener("change", () => { render(); resetCopied(); save(); }));
 function syncIntern() {
   const on = !!(window.goeIntern && window.goeIntern());
   document.getElementById("logoOpt").hidden = !on;
+  if (!on) document.getElementById("logoTech").hidden = true; else syncLogoTech();
   render(); // Logo-Einblendung hängt an der Intern-Ansicht
 }
 window.addEventListener("goe:intern", syncIntern);
