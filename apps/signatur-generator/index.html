@@ -252,8 +252,8 @@
         <label class="logo-opt" id="logoOpt" hidden>
           <input type="checkbox" id="showLogo" />
           <span>
-            <span class="lo-lab">Logo über der Signatur</span>
-            <span class="lo-sub">Backend-Versuch · graues Zeichen, erscheint nur, wo Bilder geladen werden (sonst nichts). Kein Anhang, kein Tracking (auf unserem Server).</span>
+            <span class="lo-lab">Logo unter der Signatur</span>
+            <span class="lo-sub">Backend-Versuch · Marke + Wortmarke, verlinkt zu goetheanum.ch. Erscheint nur, wo Bilder geladen werden (sonst nichts). Kein Anhang, kein Tracking (auf unserem Server).</span>
           </span>
         </label>
 
@@ -454,8 +454,9 @@
 const MAIL_BLUE = "#4183B4"; // ds-ok: Artefakt-Farbe im Mail-Output (theme-unabhängig)
 const CFONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
 
-// Backend-Versuch: fail-silent Logo. Absolute Produktiv-URL (E-Mail-fest).
-const LOGO_URL = "https://werkzeuge.goetheanum.ch/assets/logos/goetheanum-signatur-grau.png";
+// Backend-Versuch: fail-silent Logo (Icon + Wortmarke, both-modes-Blau #4183B4).
+// Absolute Produktiv-URL (E-Mail braucht absolute Bild-Adressen).
+const LOGO_URL = "https://werkzeuge.goetheanum.ch/assets/logos/goetheanum-signatur-logo.png";
 // Gewünscht nur, wenn Intern-Ansicht an UND Häkchen gesetzt – so bleibt es Backend.
 function logoWanted() {
   const on = !!(window.goeIntern && window.goeIntern());
@@ -564,14 +565,14 @@ function buildSignature() {
   // HTML, nie im Klartext. URL absolut auf die Produktiv-Domain (E-Mail braucht
   // das); auf GitHub-Pages liegen uns keine Zugriffslogs vor → kein Tracking.
   if (logoWanted()) {
+    // Logo mit Abstand UNTER allen Daten, verlinkt zu goetheanum.ch.
     // CSS-Hintergrund statt <img>: lädt das Bild nicht (blockiert/nicht
     // unterstützt), bleibt nur leerer Raum – kein kaputtes Platzhalter-Icon.
     // Zeigt in Apple Mail und Gmail, ist in Outlook still (rendert keine
     // CSS-Hintergründe) – ‹erscheint, wo möglich, sonst nichts›.
-    const logo = "<div style=\"width:40px;height:40px;background:url('" + LOGO_URL + "') no-repeat center/contain;margin:0 0 4px;\"></div>";
-    // nach Trennstrich (_) und Leerzeile einsetzen, sonst an die Spitze
-    const at = (hl[0] === "_") ? 2 : 0;
-    hl.splice(at, 0, logo);
+    const logo = "<a href=\"https://goetheanum.ch\" style=\"display:inline-block;border:0;text-decoration:none;\">" +
+      "<div style=\"width:143px;height:24px;background:url('" + LOGO_URL + "') no-repeat left center/contain;margin:14px 0 0;\"></div></a>";
+    hl.push(logo);
   }
 
   const html = psHtml + "<div style=\"font-family:" + CFONT + ";font-size:12px;line-height:1.3;\">" + (hl.join("<br>") || "&nbsp;") + "</div>";
