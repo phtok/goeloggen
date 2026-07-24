@@ -13,11 +13,14 @@
     ende:  '2026-08-08',            // Aktionsende
     bleibeQuote: 0.62,             // Annahme, bis Erfahrungswerte vorliegen
     meilensteine: [100, 250, 500, 1000],
-    zielGesamt: 1000,               // Gesamtziel der Aktion (neue Abos)
-    ziele: {                        // Zielmarke je Strom (Zwischenmarken, Summe = Gesamtziel)
-      'wos.de.papier': 200, 'wos.de.digital': 250,
-      'wos.en.digital': 120,
-      'gtv.de': 250, 'gtv.en': 180
+    zielGesamt: 700,                // Gesamtziel der Aktion (neue Abos)
+    // Zielmarke je Strom – Zwischenmarken, Summe = Gesamtziel. Beim Absenken des
+    // Gesamtziels auf 700 (24.7.) proportional mitgezogen (Faktor 0,7), damit die
+    // Ströme-Tabelle nicht gegen den Stand-Block rechnet.
+    ziele: {
+      'wos.de.papier': 140, 'wos.de.digital': 175,
+      'wos.en.digital': 84,
+      'gtv.de': 175, 'gtv.en': 126
     },
     // Anzeige-Währung aller Geldbeträge (Kosten, CPA, Summenzeile Folgejahr-Umsatz).
     waehrung: 'CHF',
