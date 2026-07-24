@@ -1,5 +1,11 @@
 # Wirkungs-Lesart der Sommer-Aktion — Stand 22. Juli 2026
 
+> **Abgelöst am 24. Juli 2026 — in einem Kernpunkt falsch.** Die hier der
+> bezahlten Meta-Anzeige zugeschriebenen ≈44 Anmeldungen sind ein Artefakt der
+> Nächster-Klick-Zuordnung, und die Ursache («der Uscreen-Checkout trägt die
+> Spur nicht») ist widerlegt. Gültig ist `wirkungs-lesart-24-07.md`. Dieses
+> Dokument bleibt als Historie stehen.
+
 Dieses Dokument ordnet die Anmeldungen **ohne UTM-Spur** («ohne UTM» im
 Cockpit) den Aktivitäten der Kampagne zu. Es ist eine **Lesart, keine
 Messung**: Alle mit ≈ markierten Zahlen sind Schätzungen (±30 %). Die

@@ -48,16 +48,21 @@
     // während die Zahlen weiterlaufen. Schätzung (±30 %), keine Messung; die
     // Messwerte in der Datenbank bleiben unangetastet. Bei neuer Auswertung:
     // stand/doc/anteile hier nachziehen, sonst nichts.
+    // Korrektur 24. Juli: der Anteil der bezahlten Anzeige fiel von 40 % auf 7 %.
+    // Die alte Zahl kam aus der vermuteten Herkunft (zeitnächster Klick) – ein
+    // Anker, der nur bei spärlichen Klicks trägt. Die Anzeige stellt fast das
+    // ganze Klick-Log und gewann darum fast jede Nähe-Lotterie; eine Placebo-Probe
+    // (Anmeldezeiten um ±24/48 h verschoben) trifft sie fast gleich oft.
     dunkel: {
-      stand: '22. Juli',
-      doc:   'docs/wirkungs-lesart-22-07.md',
+      stand: '24. Juli',
+      doc:   'docs/wirkungs-lesart-24-07.md',
       anteile: {
-        bezahlt:    0.404,   // Meta-Anzeige über den Uscreen-Checkout
-        organik:    0.229,   // Direkt, Suche, Storefront, Bestandskonten
-        newsletter: 0.220,   // TV-Weekly und Haus-Newsletter
-        social:     0.128,   // Reels, Stories, Karussell
-        mailing:    0.009,
-        print:      0.009
+        newsletter: 0.346,   // TV-Weekly und Haus-Newsletter (Placebo-Überschuss belegt)
+        organik:    0.300,   // Direkt, Suche, Storefront, Bestandskonten
+        mailing:    0.208,   // Nachlauf der Welle 1 ohne Spur
+        bezahlt:    0.069,   // Meta-Anzeige – Obergrenze aus dem sauberen Fenster
+        social:     0.069,   // Reels, Stories, Karussell
+        print:      0.008
       }
     },
     // Kosten der Aktion (in CONFIG.waehrung) – stehen auf 0, echte Zahlen werden erfragt.
@@ -335,7 +340,7 @@
       nm.appendChild(car); nm.appendChild(document.createTextNode(gebietLabel(x.g)));
       // Merkzeichen: ein Wort, das sagt, was diese Zeile bedeutet.
       var z = null;
-      if (x.kl >= 40 && x.ab <= 1) z = ['leck', 'Spur bricht ab'];
+      if (x.kl >= 40 && x.ab <= 1) z = ['leck', 'viel Klick, kaum Abschluss'];
       else if (total > 0 && x.gesamt >= total * 0.3) z = ['traegt', 'trägt die Aktion'];
       else if (x.kl === 0 && x.gesamt === 0 && x.links > 0) z = ['still', 'nie ausgespielt'];
       else if (x.kl >= 20 && x.ab === 0) z = ['still', 'ohne messbaren Ertrag'];
@@ -504,10 +509,12 @@
       });
     });
 
-    // (b) Viel Klick, (fast) kein gemessener Abschluss. Alle Wege, die auf
-    // goetheanum.tv führen, teilen EINE Ursache (der Uscreen-Checkout trägt die
-    // Spur nicht bis zur Anmeldung) – darum ein einziger Zug statt vieler
-    // Einzelmeldungen. Was nicht auf TV führt, ist ein Landungs-Problem.
+    // (b) Viel Klick, (fast) kein gemessener Abschluss. Bis zum 24. Juli stand
+    // hier EINE gemeinsame Ursache (der Uscreen-Checkout trage die Spur nicht) –
+    // das ist widerlegt: die Kette Landing → Checkout → user_created ist geprüft
+    // und trägt die UTM. Bleibt der Befund selbst: diese Wege werden geklickt und
+    // münden kaum in Abos. Darum ein Zug, der misst statt umbaut.
+    // Herleitung: docs/wirkungs-lesart-24-07.md.
     var leck = { kl:0, motive:[] };
     Object.keys(grp).forEach(function(k){
       var g = grp[k], a2 = ab[k] || 0;
@@ -526,15 +533,14 @@
       }
     });
     if (leck.kl > 0){
-      var dunkelTv = dunkelVerteilen(ohneSpur);
-      var sichtbar = (dunkelTv.bezahlt || 0);
-      zuege.push({ titel:'UTM-Spur bis in den goetheanum.tv-Checkout tragen', art:2, mass:leck.kl,
-        warum:fmt(leck.kl) + ' Klicks auf TV-Wege führen zu fast keinem messbaren Abschluss',
-        hebel:sichtbar ? ('≈ ' + fmt(sichtbar) + ' sichtbar') : 'sichtbar machen',
+      zuege.push({ titel:'Bezahlte Anzeige 3–4 Tage aussetzen und vergleichen', art:2, mass:leck.kl,
+        warum:fmt(leck.kl) + ' Klicks auf TV-Wege führen zu fast keinem Abschluss',
+        hebel:'Klarheit',
         text:'Betroffen: ' + leck.motive.slice(0, 5).join(', ') + (leck.motive.length > 5 ? ' und weitere' : '') +
-             '. Alle führen auf goetheanum.tv, und der Uscreen-Checkout trägt die UTM nicht bis zur Anmeldung. ' +
-             'Das schafft keine neuen Abos – es macht vorhandene erst zählbar und die bezahlte Anzeige überhaupt steuerbar. ' +
-             'Zwei Schritte: die eingehenden ?utm_* auf der TV-Landingpage an den Checkout-Knopf hängen und die bezahlten Wege über den Kurzlink /s/<code> führen. Schritte in services/sommer-zaehler/utm-ablauf.md.' });
+             '. Die Spur ist geprüft und intakt: die Landingpages hängen die UTM an die Checkout-URL, Uscreen liefert sie im user_created-Event, die Ingestion verheftet sie. ' +
+             'Die organischen Wege über dieselbe Seite und dieselben In-App-Browser werden mit 3 bis 5 Prozent ihrer Klicks messbar, die bezahlte Anzeige mit 0,4 Prozent – die Klicks werden also nicht verloren, sie werden kaum zu Abos. ' +
+             'Darum zuerst messen statt umbauen: die Anzeige aussetzen, solange die Grundlinie sauber ist (Mailing abgeklungen, nächste Welle später), und die Anmeldungen je Tag vergleichen. ' +
+             'Soll sie danach weiterlaufen, macht ein eigenes Uscreen-Angebot je bezahltem Weg sie hart messbar (offer_id kommt serverseitig im Webhook an): services/sommer-zaehler/uscreen-angebot-attribution-auftrag.md.' });
     }
 
     // (c) Datengrundlage: Aktivitäten ohne Reichweite und ohne Klicks.
@@ -1331,7 +1337,8 @@
     });
     var note = document.createElement('div'); note.className = 'fnote';
     note.textContent = 'Zeiten auf die Stunde gerundet, keine Personendaten. «ohne UTM» = Anmeldung kam ohne UTM-Parameter an – so heisst sie auch in der Wirkung. ' +
-      '«vermutet» = der zeitlich nächste Kurzlink-Klick (bis 90 Minuten davor) auf einen passenden Kampagnen-Link – ein Indiz, keine Messung; gezählt wird es nirgends.';
+      '«vermutet» = der zeitlich nächste Kurzlink-Klick (bis 90 Minuten davor) auf einen passenden Kampagnen-Link – ein Indiz, keine Messung; gezählt wird es nirgends. ' +
+      'Bei einem Weg, der fast alle Klicks stellt, steht dieses Indiz zufällig daneben und trägt nichts.';
     host.appendChild(note);
   }
 

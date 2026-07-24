@@ -136,39 +136,44 @@ Test: einen generierten Link mit `utm_*` öffnen, Formular abschicken → in
 `sommer2026_signups` steht die Zeile mit gefüllten `utm_*`, im Cockpit unter
 «Nach Motiv».
 
-## Sonderfall goetheanum.tv / Uscreen: damit die Spur den Checkout überlebt
+## Sonderfall goetheanum.tv / Uscreen: wie weit die Spur trägt
 
-Der grösste blinde Fleck der Attribution (Befund 22. Juli: rund zwei Drittel
-aller dunklen Anmeldungen sind goetheanum.tv). Anders als bei Paperform gibt
-es **kein** verstecktes UTM-Feld, das man setzen kann — die Spur überlebt nur
-so weit, wie Uscreen sie in seiner eigenen Session mitführt und im
-`user_created`-Event als `utm_params` mitschickt. Bricht diese Kette (In-App-
-Browser aus Instagram/Facebook, Cookie-Verlust, Weiterleitungen), ist die
-Anmeldung dunkel. Sinnbild: die bezahlte Meta-Anzeige (`story_statisch`)
-sammelt ~600 Kurzlink-Klicks, aber nur eine hart zugeordnete Anmeldung.
+> **Stand 24. Juli 2026 — die Kette ist geprüft und intakt.** Der frühere
+> Befund («der Uscreen-Checkout trägt die UTM nicht bis zur Anmeldung») ist
+> widerlegt. Herleitung: `docs/wirkungs-lesart-24-07.md`.
 
-Zwei Stellen, am besten beide:
+Nachgemessen an den ausgelieferten Landing-Bundles und am Roh-Log:
 
-**1. Landingpage → Uscreen-Checkout (Web-Seite):** Die TV-Landingpage
-(`tv-sommer2026…` / `tv-en-sommer2026…`) muss die eingehenden `?utm_*` an den
-«3 Monate gratis»-Button hängen — also an die Uscreen-Checkout-URL
-anhängen, genau wie die WoS-Landingpage sie ans Paperform-Formular reicht.
-Ohne das sieht Uscreen die UTM nur, wenn sein eigenes Session-Tracking sie
-zufällig aufgenommen hat.
+- Die Übersichts-Landing hängt die eingehenden `utm_*` beim Klick an die
+  Ziel-URL (delegierter Handler auf `pointerdown`/`click`/`keydown`).
+- Die TV-Landing sichert sie in `sessionStorage` (`lovable_utm:`) und hängt
+  sie an die Checkout-URL `goetheanum.tv/checkout/new?o=<offer_id>`.
+- Uscreen liefert sie im `user_created`-Event (`utm_params`), die Ingestion
+  heftet sie an die Anmeldung derselben Person.
 
-**2. Bezahlte und soziale TV-Wege über den Kurzlink führen.** Statt den
-Roh-Link zu teilen, den Kurzlink `/s/<code>` aus dem Generator einsetzen
-(Function `go`, 302 auf die volle UTM-URL). Der serverseitige Redirect ist
-robuster gegen In-App-Browser als ein direkt geteilter Roh-Link und zählt
-den Klick verlässlich in `link_hits` (Grundlage der vermuteten Herkunft im
-Cockpit). Die **Meta-Anzeige zuerst umstellen** — sie ist der grösste
-Einzelposten (≈44 Anmeldungen), der heute dunkel läuft.
+Anders als bei Paperform gibt es weiterhin **kein** verstecktes UTM-Feld: die
+Spur überlebt so weit, wie Uscreen sie in seiner eigenen Session mitführt.
+Das bleibt eine echte Grenze — sie fällt nur weniger ins Gewicht als gedacht.
+Belegt an den Klick-Quoten: organische Social-Wege über **dieselbe** Landing
+und in denselben In-App-Browsern werden mit 3–5 % ihrer Klicks als Konto mit
+Spur sichtbar, die bezahlte Meta-Anzeige mit 0,4 % (714 Klicks, 3 Konten).
+Die Spur bricht dort also nicht — die Klicks werden kaum zu Anmeldungen.
+
+**Wenn ein Weg trotzdem hart messbar sein muss** (bezahlte Anzeige, Partner,
+Inserat), führt er nicht über den Browser, sondern über das Produkt: ein
+**eigenes Uscreen-Angebot** je Weg. `offer_id` und `coupon` stehen im
+`order_paid`-Webhook und kommen serverseitig an — an Cookies, In-App-Browsern
+und Weiterleitungen vorbei. Auftrag und Mapping:
+`services/sommer-zaehler/uscreen-angebot-attribution-auftrag.md`.
+
+**Kurzlinks bleiben Pflicht** für alle geteilten Wege (`/s/<code>`, Function
+`go`, 302 auf die volle UTM-URL): sie zählen den Klick in `link_hits` — die
+einzige Reichweiten-Grundlage, die wir selbst besitzen. Ihre Grenze steht
+ebenfalls im Lesart-Dokument: als Herkunfts-Indiz taugen sie nur, solange ein
+Weg nicht fast alle Klicks stellt.
 
 Test: einen TV-Kurzlink mit `utm_*` öffnen, Trial über den Uscreen-Checkout
-starten → in `sommer2026_signups` trägt die Zeile die `utm_*` (nicht nur der
-`user_created`-Fallback). Solange das nicht greift, bleibt die Wirkung dieser
-Wege in der Dunkelfeld-Lesart des Cockpits (Spalte «≈ mit Dunkelfeld» der
-Gebiete-Liste), nicht in der harten Messung.
+starten → in `sommer2026_signups` trägt die Zeile die `utm_*`.
 
 ## Pflege
 
