@@ -221,10 +221,9 @@
       cursor: pointer;
     }
 
+    /* Farbe/Grösse aus der kanonischen .hint-Rolle (base.css) – DS04 */
     .hint {
       margin-top: 6px;
-      font-size: var(--t-small);
-      color: var(--muted);
       line-height: 1.5;
     }
 
@@ -268,7 +267,10 @@
       flex-wrap: wrap;
     }
 
-    .chip {
+    /* eigene Namensraum-Klasse statt kanonischer .chip-Rolle (die ist ein passives
+       Info-Tag): das hier sind klickbare Auswahl-Pillen (Weich/Stark/Extrem) –
+       JS-Zustand (.active/data-blur) bleibt unverändert – DS04 */
+    .blur-chip {
       border: 1px solid var(--line);
       border-radius: 999px;
       padding: 5px 10px;
@@ -281,7 +283,7 @@
     }
 
     /* aktive Pille = dunkles Gold + Weiss (B01) */
-    .chip.active {
+    .blur-chip.active {
       background: var(--gold-deep);
       border-color: var(--gold-deep);
       color: var(--on-accent);
@@ -520,9 +522,9 @@ of Language</textarea>
                 <label for="bgBlur">Blur (px)</label>
                 <input id="bgBlur" type="number" min="0" max="360" step="1" value="42" />
                 <div class="chip-row">
-                  <button type="button" class="chip" data-blur="90">Weich</button>
-                  <button type="button" class="chip" data-blur="170">Stark</button>
-                  <button type="button" class="chip" data-blur="280">Extrem</button>
+                  <button type="button" class="blur-chip" data-blur="90">Weich</button>
+                  <button type="button" class="blur-chip" data-blur="170">Stark</button>
+                  <button type="button" class="blur-chip" data-blur="280">Extrem</button>
                 </div>
               </div>
             </div>
@@ -774,7 +776,7 @@ of Language</textarea>
       backgroundUpload: document.getElementById("backgroundUpload"),
       bgZoom: document.getElementById("bgZoom"),
       bgBlur: document.getElementById("bgBlur"),
-      blurChips: Array.from(document.querySelectorAll(".chip[data-blur]")),
+      blurChips: Array.from(document.querySelectorAll(".blur-chip[data-blur]")),
       bgDim: document.getElementById("bgDim"),
       bgX: document.getElementById("bgX"),
       bgY: document.getElementById("bgY"),

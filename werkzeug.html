@@ -20,7 +20,7 @@
   .bar{display:flex;align-items:center;justify-content:space-between;min-height:56px}
   .bar b{font-weight:400}.bar a{color:var(--muted);text-decoration:none;font-size:var(--t-small)}
   .hero{padding-block:34px 6px}
-  .kick{color:var(--gold-ink);font-size:var(--t-small);margin-bottom:10px}
+  /* Kicker: kanonische Rolle aus base.css (.kick) nutzen – DS04 */
   /* h1 aus dem Fundament */
   .lede{color:var(--muted);margin-top:10px;max-width:620px;font-size:15px}
   .panel{border:1px solid var(--line);border-radius:16px;padding:22px;margin:22px 0;background:var(--soft)}
@@ -39,9 +39,11 @@
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid var(--paper);box-shadow:0 1px 4px rgba(0,0,0,.18)}
   input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid var(--paper)}
   .readout{margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .code{font-family:var(--font-mono);font-size:var(--t-small);background:var(--code-bg);color:var(--code-ink);border-radius:9px;padding:9px 13px;letter-spacing:.02em}
-  .btn{font:inherit;font-size:var(--t-small);border:1px solid var(--line);background:var(--field-bg);color:var(--ink);border-radius:9px;padding:8px 13px;cursor:pointer}
-  .btn:hover{border-color:var(--gold-ink)}
+  /* eigene Namensraum-Klasse statt kanonischer .code-Rolle (die ist hell/Zeilen-Chip):
+     dunkler Konsolen-Chip (code-bg/code-ink) - Farbe NICHT von .code dedupen, sonst
+     ink-auf-code-bg (B02) - DS04 */
+  .ro-code{font-family:var(--font-mono);font-size:var(--t-small);background:var(--code-bg);color:var(--code-ink);border-radius:9px;padding:9px 13px;letter-spacing:.02em}
+  /* Knopf: kanonische Rolle aus base.css (.btn, Aktion=Blau) nutzen – DS04 */
   .reset{color:var(--muted);font-size:var(--t-small);background:none;border:none;cursor:pointer;text-decoration:underline}
   footer{border-top:1px solid var(--line);padding:24px 0 50px;color:var(--muted);font-size:var(--t-small);margin-top:10px}
 </style>
@@ -73,7 +75,7 @@
           <div class="ctrl"><label>Laufweite <b><span id="figT-v">+10</span></b></label><input type="range" id="figT" min="-30" max="160" value="10"></div>
         </div>
         <div class="readout">
-          <span class="code" id="figCode"></span>
+          <span class="ro-code" id="figCode"></span>
           <button class="btn" data-copy="figCode">kopieren</button>
           <button class="reset" data-reset="figs">zurücksetzen</button>
         </div>
@@ -86,7 +88,7 @@
           <div class="ctrl"><label>Laufweite <b><span id="capT-v">30</span></b></label><input type="range" id="capT" min="-30" max="160" value="30"></div>
         </div>
         <div class="readout">
-          <span class="code" id="capCode"></span>
+          <span class="ro-code" id="capCode"></span>
           <button class="btn" data-copy="capCode">kopieren</button>
           <button class="reset" data-reset="caps">zurücksetzen</button>
         </div>
@@ -109,7 +111,7 @@
       <div class="ctrl"><label>Laufweite <b><span id="supT-v">0</span></b></label><input type="range" id="supT" min="-30" max="160" value="0"></div>
     </div>
     <div class="readout">
-      <span class="code" id="supCode"></span>
+      <span class="ro-code" id="supCode"></span>
       <button class="btn" data-copy="supCode">Werte kopieren</button>
       <button class="reset" data-reset="sup">zurücksetzen</button>
     </div>
@@ -130,7 +132,7 @@
       <div class="ctrl"><label>Laufweite <b><span id="subT-v">0</span></b></label><input type="range" id="subT" min="-30" max="160" value="0"></div>
     </div>
     <div class="readout">
-      <span class="code" id="subCode"></span>
+      <span class="ro-code" id="subCode"></span>
       <button class="btn" data-copy="subCode">Werte kopieren</button>
       <button class="reset" data-reset="sub">zurücksetzen</button>
     </div>

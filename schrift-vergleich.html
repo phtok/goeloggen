@@ -25,7 +25,7 @@
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
   a{color:var(--gold-ink)}
   .hero{padding-block:42px 4px}
-  .kick{color:var(--gold-ink);font-size:14px;margin-bottom:10px}
+  /* Kicker: kanonische Rolle aus base.css (.kick) nutzen – DS04 */
   /* Überschriften aus dem Fundament. */
   .lede{font-size:17px;color:var(--muted);max-width:64ch;margin-top:12px}
   section{padding:30px 0;border-top:1px solid var(--line-soft)}
@@ -45,7 +45,9 @@
   .a-body{font-family:var(--body),sans-serif;font-size:var(--bsize);font-weight:var(--bweight);line-height:1.62;text-wrap:pretty}
   .a-body p{margin-bottom:.9em}
   .a-body em{font-style:italic}
-  .byline{font-family:var(--body),sans-serif;font-size:calc(var(--bsize)*.8);color:var(--muted);margin-top:18px;border-top:1px solid var(--line-soft);padding-top:10px}
+  /* eigene Namensraum-Klasse (wie .a-kick/.a-head/...) statt kanonischer .byline-Rolle, weil
+     Groesse hier interaktiv an --bsize gekoppelt ist (Schriftvergleichs-Regler) - DS04 */
+  .a-byline{font-family:var(--body),sans-serif;font-size:calc(var(--bsize)*.8);color:var(--muted);margin-top:18px;border-top:1px solid var(--line-soft);padding-top:10px}
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   @media(max-width:680px){.cards{grid-template-columns:1fr}}
   .card{border:1px solid var(--line-soft);border-radius:12px;padding:16px 18px}
@@ -91,7 +93,7 @@
         <p>Zahlen ordnen den Betrieb. Im Jahr 1487 fanden Plätze ihre Besucher, 23 Veranstaltungen standen allein im Oktober im Kalender, und um 11.10 Uhr öffnete sich der Vorhang. Die Tabellen der Verwaltung verlangen <em>dicktengleiche</em> Ziffern – im Fließtext dagegen laufen sie proportional und ruhig.</p>
         <p>Anthroposophie versteht sich als Erkenntnisweg, nicht als Bekenntnis. Genau deshalb braucht ihre Schrift zweierlei: eine Stimme, die ruft – und eine, die <em>liest</em>. Die erste ist die Hausgrotesk. Die zweite suchen wir hier.</p>
       </div>
-      <div class="byline">Redaktion · 47° 32′ nördlicher Breite · Auflage 1487</div>
+      <div class="a-byline">Redaktion · 47° 32′ nördlicher Breite · Auflage 1487</div>
     </article>
   </section>
 
