@@ -23,6 +23,14 @@ Link. Ohne sie entsteht ein Datenhaufen statt einer lesbaren Geschichte.
 | `utm_medium` | Welche Art Kontakt? | `social` · `email` · `print` · `cpc` · `popup` · `organic` · `referral` |
 | `utm_content` | Welches konkrete Motiv / welche Platzierung? | `reel_ernst_zuercher` · `story_probeabo` · `teaser_kopf` · `footer_link` · `qr_inserat` · `popup_exit` · `vorab_nl1` |
 
+**Englische Links bekommen ein eigenes `utm_content`** (Suffix `-en`, wie
+`karussell-en`). Grund: Sprache ist keine eigene UTM-Dimension. Trägt die
+englische Variante dasselbe Tupel wie die deutsche und unterscheidet sich nur
+in der Landingpage, ist die Sprache im Register mehrdeutig — und bei
+goetheanum.tv, wo sie sonst nirgends herkommt, dann gar nicht mehr feststellbar
+(Befund 24.7.: 47 der 64 Tupel mehrdeutig, darum nur 2 als englisch verbuchte
+TV-Abos bei 61 Anmeldungen aus dem übrigen Ausland).
+
 Regeln: nur Kleinbuchstaben, keine Umlaute (`ue/oe/ae`), keine Leerzeichen. Der
 `kanal`-Bucket im Cockpit wird aus `utm_source`/`utm_medium` abgeleitet – die
 Rohwerte bleiben erhalten, damit «Nach Motiv» das einzelne Reel vom Footer-Link

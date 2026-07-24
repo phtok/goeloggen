@@ -282,6 +282,67 @@
       td[3].textContent = sz ? (Math.round(total / sz * 100) + ' %') : '–';
     }
     if (el('stroemeKopf')) el('stroemeKopf').textContent = 'Woraus sich die ' + fmt(total) + ' Abos zusammensetzen';
+    if (el('stroemeNote')){
+      el('stroemeNote').textContent = 'Bei der Wochenschrift ist die Sprache gemessen – jede Sprache hat ihr eigenes Formular. ' +
+        'Bei goetheanum.tv ist sie es nicht: die Uscreen-Plan-Titel sind durchweg deutsch, und DE- wie EN-Landingpage führen in dasselbe Angebot. ' +
+        'Die TV-Zeile «Englisch» zählt darum nur die Anmeldungen, deren Link-Spur die Sprache selbst trägt – sie ist eine Untergrenze, keine Aufteilung. ' +
+        'Was von ausserhalb des Sprachraums kommt, steht darunter unter «Woher die Abos kommen».';
+    }
+  }
+
+  // Herkunft: Land aus der Zahlung (Uscreen country_code, Migration «sommer2026_land»).
+  // Gemessen, nicht geraten – und bei goetheanum.tv das einzige belastbare Mass
+  // für die Nachfrage ausserhalb des deutschen Sprachraums, weil die Sprache dort
+  // nicht aus dem Abo hervorgeht. Land ist NICHT Sprache; die Notiz sagt es auch.
+  var DACH = ['DE', 'CH', 'AT', 'LI'];
+  var LAND_NAME = { DE:'Deutschland', CH:'Schweiz', AT:'Österreich', LI:'Liechtenstein',
+    US:'USA', GB:'Grossbritannien', NL:'Niederlande', AU:'Australien', NZ:'Neuseeland',
+    CA:'Kanada', BE:'Belgien', IT:'Italien', FR:'Frankreich', ES:'Spanien', DK:'Dänemark',
+    NO:'Norwegen', SE:'Schweden', FI:'Finnland', BR:'Brasilien', CL:'Chile', CO:'Kolumbien',
+    IE:'Irland', SI:'Slowenien', HR:'Kroatien', HU:'Ungarn', CZ:'Tschechien', EE:'Estland',
+    LU:'Luxemburg', TR:'Türkei', TW:'Taiwan', IN:'Indien' };
+  function renderHerkunft(rows){
+    if (!el('herkunftBody')) return;
+    var gtv = (rows || []).filter(function(r){ return r.produkt === 'gtv'; });
+    var summe = gtv.reduce(function(s, r){ return s + Number(r.n || 0); }, 0);
+    if (!summe){ el('herkunftBody').innerHTML = '<tr><td class="empty" colspan="3">noch keine Landangaben</td></tr>'; return; }
+    var dach = 0, uebrige = 0, offen = 0;
+    gtv.forEach(function(r){
+      var n = Number(r.n || 0);
+      if (!r.land) offen += n; else if (DACH.indexOf(r.land) >= 0) dach += n; else uebrige += n;
+    });
+    var zeilen = [
+      { t:'deutschsprachig · DE, CH, AT', n:dach },
+      { t:'übrige Länder', n:uebrige },
+      { t:'ohne Landangabe', n:offen }
+    ];
+    var body = el('herkunftBody'); body.innerHTML = '';
+    zeilen.forEach(function(z){
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td>';
+      tr.children[0].textContent = z.t;
+      tr.children[1].textContent = fmt(z.n);
+      tr.children[2].textContent = Math.round(z.n / summe * 100) + ' %';
+      body.appendChild(tr);
+    });
+    var liste = el('herkunftLaender');
+    if (liste){
+      liste.innerHTML = '';
+      gtv.filter(function(r){ return r.land && DACH.indexOf(r.land) < 0; })
+        .sort(function(a, b){ return Number(b.n) - Number(a.n); })
+        .slice(0, 10)
+        .forEach(function(r){
+          var row = document.createElement('div'); row.className = 'motrow';
+          row.innerHTML = '<span class="mc"></span><span class="mn"></span>';
+          row.querySelector('.mc').textContent = LAND_NAME[r.land] || r.land;
+          row.querySelector('.mn').textContent = fmt(r.n);
+          liste.appendChild(row);
+        });
+    }
+    if (el('herkunftKopf')){
+      el('herkunftKopf').textContent = 'Woher die goetheanum.tv-Abos kommen – ' + fmt(uebrige) +
+        ' von ' + fmt(summe) + ' aus dem übrigen Ausland';
+    }
   }
 
   // ── 2 · Gebiete: eine Liste, jede Zeile die ganze Kette ───────────────────
@@ -1359,6 +1420,10 @@
         if (el('evList')) el('evList').innerHTML = '<div class="err">nicht ladbar</div>';
         if (el('vermutetList')) el('vermutetList').innerHTML = '<div class="err">nicht ladbar</div>';
       });
+    // Herkunft separat laden – fällt sie aus, bleibt das übrige Cockpit ganz.
+    if (el('herkunftBody')) rpc('sommer2026_herkunft')
+      .then(renderHerkunft)
+      .catch(function(){ el('herkunftBody').innerHTML = '<tr><td class="err" colspan="3">nicht ladbar</td></tr>'; });
     if(CONFIG.zahlenProvisorisch && el('provisorisch')){
       el('provisorisch').textContent = 'Zielmarken, Preise und die Bleibe-Quote sind vorläufig hinterlegt – sobald die echten Werte gesetzt sind, rechnet das Cockpit unverändert weiter.';
     }
