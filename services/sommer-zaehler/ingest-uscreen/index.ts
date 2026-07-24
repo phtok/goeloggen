@@ -16,6 +16,12 @@
 // im Link-Register eindeutig ist, aus sommer2026_links.sprache (die Uscreen-Plan-
 // Titel sind durchweg deutsch, der Titel-Rat bliebe sonst immer 'de').
 //
+// Herkunftsland (`land`, Migration «sommer2026_land»): ISO-Code aus der Zahlung.
+// Der Sprach-Rat trägt bei goetheanum.tv kaum – das Link-Register führt fast
+// jedes UTM-Tupel in BEIDEN Sprachen (dieselbe Spur, nur andere Landingpage),
+// und DE- wie EN-Landing schicken in dasselbe Angebot. Das Land ist gemessen,
+// nicht geraten; es ersetzt die Sprache nicht, es ergänzt sie.
+//
 // Entdopplung: dedup_key = <produkt>:<gesalzener E-Mail-Hash> (Person je Produkt,
 // auch über Quellen hinweg), Fallback <source>:<ext_id>. Upsert/Update laufen
 // über dedup_key – dieselbe Person zählt nie doppelt, auch bei mehreren Events.
@@ -54,6 +60,18 @@ async function sha256Hex(s: string): Promise<string> {
 // E-Mail-artige Werte aus Freitext entfernen (Selbstauskunft ist qualitativ, nicht personenbezogen).
 function scrubEmail(s: string): string {
   return s.replace(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi, "***");
+}
+
+// Herkunftsland aus der Zahlung (`order_paid.country_code`). Das ist das einzige
+// gemessene Herkunfts-Merkmal, das Uscreen liefert – und für goetheanum.tv das
+// Ersatzmass für die Sprache: die Plan-Titel sind durchweg deutsch, das Angebot
+// für DE und EN dasselbe (`?o=84317`), darum geht die Sprache aus dem Abo selbst
+// nicht hervor. Land ist NICHT Sprache, aber es ist gemessen statt geraten.
+function landAus(data: any): string | null {
+  const v = pick(data, ["country_code", "country", "billing_country", "user.country_code"]);
+  if (!v) return null;
+  const s = String(v).trim().toUpperCase();
+  return /^[A-Z]{2}$/.test(s) ? s : null;
 }
 
 // Platzhalter-Werte (Feld-Default «none», leer, «n/a» …) NICHT als UTM werten.
@@ -198,8 +216,18 @@ Deno.serve(async (req) => {
   if (isCancel) { await patchStatus(dedupKey, "gekuendigt"); return json({ ok: true, status: "gekuendigt" }); }
   // Jeder Trial hinterlegt eine Karte → Zahlung fällt sofort an. Darum setzt eine
   // Zahlung (noch) KEIN 'bleibt': die echte Umwandlung wird erst nach der
-  // 3-Monats-Frist bestimmt (separater Schritt im Oktober).
-  if (isPay && !isNew) return json({ ok: true, note: "Zahlung ignoriert (Umwandlung erst nach 3 Monaten)" });
+  // 3-Monats-Frist bestimmt (separater Schritt im Oktober). EIN Feld wird aber
+  // mitgenommen: das Herkunftsland – nur die Zahlung trägt es.
+  if (isPay && !isNew) {
+    const herkunft = landAus(data);
+    if (herkunft) {
+      await fetch(`${SB}/rest/v1/sommer2026_signups?dedup_key=eq.${encodeURIComponent(dedupKey)}&land=is.null`, {
+        method: "PATCH", headers: { ...H, Prefer: "return=minimal" },
+        body: JSON.stringify({ land: herkunft }),
+      }).catch(() => {});
+    }
+    return json({ ok: true, note: "Zahlung ignoriert (Umwandlung erst nach 3 Monaten)", land: !!herkunft });
+  }
 
   // «User Created» ist KEINE Aktions-Anmeldung (Registrierung ≠ Abo) – aber es
   // ist das einzige Event, das Attribution mitbringt: das VOLLE UTM-Tupel
@@ -258,7 +286,7 @@ Deno.serve(async (req) => {
   const { sprache: planSprache, intervall, tarif } = mapPlan(title);
   const utmRaw = utmFrom(data);
   let src = cleanUtm(utmRaw.src), med = cleanUtm(utmRaw.med), camp = cleanUtm(utmRaw.camp), cont = cleanUtm(utmRaw.cont);
-  const land = utmRaw.land;
+  const landingPfad = utmRaw.land;   // Landingpage-Pfad – NICHT das Herkunftsland (Spalte `land`)
   // Offene Selbstauskunft «Wie sind Sie aufmerksam geworden?» (Custom User Field,
   // Slot 1 = custom_field_1) – O-Ton, E-Mail-redigiert.
   const selbst0 = pick(data, ["referral_source", "how_heard", "how_did_you_hear", "custom_fields.how_did_you_hear",
@@ -283,6 +311,19 @@ Deno.serve(async (req) => {
       }
     } catch { /* kein Fallback */ }
   }
+  // Herkunftsland: trägt nur die Zahlung. Der Trial belastet die Karte sofort,
+  // darum liegt «order paid» oft schon VOR dieser Anmeldung im Roh-Log (die
+  // Redaktion lässt country_code stehen). Kommt die Zahlung später, holt der
+  // isPay-Zweig oben das Land nach.
+  let herkunft = landAus(data);
+  if (!herkunft && ext) {
+    try {
+      const bez = await fetch(`${SB}/rest/v1/sommer2026_ingest_raw?source=eq.uscreen&event=eq.order_paid&payload->>user_id=eq.${encodeURIComponent(ext)}&order=received_at.desc&limit=1&select=payload`, { headers: H })
+        .then((r) => r.json());
+      herkunft = landAus(bez?.[0]?.payload);
+    } catch { /* kein Land */ }
+  }
+
   const kanal = mapKanal(src || pick(data, ["source", "referral_source"]) || selbst);
   const sprache = (await spracheAusRegister(src, med, camp, cont)) ?? planSprache;
   const when = pick(data, ["created_at", "subscribed_at", "started_at", "date"]) || new Date().toISOString();
@@ -300,7 +341,10 @@ Deno.serve(async (req) => {
     kampagne: (camp ? String(camp) : "summer26_trial"),
     utm_source: src ? String(src) : null, utm_medium: med ? String(med) : null,
     utm_campaign: camp ? String(camp) : null, utm_content: cont ? String(cont) : null,
-    landing_path: land ? String(land).slice(0, 200) : null, selbstauskunft: selbst,
+    landing_path: landingPfad ? String(landingPfad).slice(0, 200) : null, selbstauskunft: selbst,
+    // Nur setzen, wenn bekannt: der Upsert läuft mit merge-duplicates, ein
+    // zweites Ereignis ohne Land würde ein bereits gefundenes sonst löschen.
+    ...(herkunft ? { land: herkunft } : {}),
   };
   const res = await fetch(`${SB}/rest/v1/sommer2026_signups?on_conflict=dedup_key`, {
     method: "POST",

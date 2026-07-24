@@ -31,8 +31,16 @@ create table if not exists public.sommer2026_signups (
   utm_campaign  text,                                 -- i. d. R. = kampagne
   utm_content   text,                                 -- konkretes Motiv (z. B. reel_ernst_zuercher)
   landing_path  text,                                 -- Pfad der genutzten Landingpage
-  selbstauskunft text                                 -- «Wie aufmerksam geworden?», E-Mail-redigiert (O-Ton)
+  selbstauskunft text,                                -- «Wie aufmerksam geworden?», E-Mail-redigiert (O-Ton)
+  -- Herkunftsland (Migration «sommer2026_land»): ISO-3166-alpha-2 aus der Zahlung
+  -- (Uscreen order_paid.country_code). Gemessen statt geraten – und für
+  -- goetheanum.tv das einzige brauchbare Ersatzmass für die Sprache: die
+  -- Plan-Titel sind durchweg deutsch, DE- und EN-Landing führen in dasselbe
+  -- Angebot. Land ist NICHT Sprache; es ergänzt sie, es ersetzt sie nicht.
+  -- Paperform liefert kein Land (dort ist die Sprache am Formular gemessen).
+  land          text
 );
+-- Bestand: alter table public.sommer2026_signups add column if not exists land text;
 -- Entdopplung strikt über dedup_key (Person je Produkt, auch über Quellen hinweg)
 create unique index if not exists sommer2026_signups_dedup_uk on public.sommer2026_signups (dedup_key);
 
@@ -92,10 +100,23 @@ language sql security definer set search_path to 'public' as $$
    order by n desc;
 $$;
 
+-- 5) Herkunft: Anmeldungen je Produkt und Land (Migration «sommer2026_land»).
+-- Antwortet auf die Frage, die die Sprache bei goetheanum.tv nicht beantworten
+-- kann – wie viel der Nachfrage von ausserhalb des deutschen Sprachraums kommt.
+create or replace function public.sommer2026_herkunft()
+returns table(produkt text, land text, n bigint)
+language sql security definer set search_path to 'public' as $$
+  select produkt, land, count(*)::bigint as n
+    from public.sommer2026_signups
+   group by produkt, land
+   order by produkt, count(*) desc;
+$$;
+
 grant execute on function public.sommer2026_stats()    to anon, authenticated;
 grant execute on function public.sommer2026_timeline() to anon, authenticated;
 grant execute on function public.sommer2026_kohorten() to anon, authenticated;
 grant execute on function public.sommer2026_kanaele()  to anon, authenticated;
+grant execute on function public.sommer2026_herkunft() to anon, authenticated;
 
 -- =============================================================================
 -- Wirkungskette: Massnahmen-Protokoll + feinere Attribution + Trichter

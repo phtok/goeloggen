@@ -137,6 +137,22 @@ verfeinern.
   Registrierungen zählen nie als Abo. Rückwirkend lässt sich dasselbe über
   den People-CSV-Export ziehen (Filter «Created on date», enthält
   UTM-Spalten; so am 18.7. für den Altbestand geschehen).
+- **Herkunftsland (`land`, seit 24.7.):** Die Sprache lässt sich bei
+  goetheanum.tv nicht messen — die Uscreen-Plan-Titel sind durchweg deutsch, und
+  DE- wie EN-Landingpage führen in **dasselbe** Angebot (`?o=84317`). Auch das
+  Link-Register hilft kaum: 47 der 64 UTM-Tupel sind für beide Sprachen
+  registriert (dieselbe Spur, nur andere Landingpage), womit
+  `spracheAusRegister` leer zurückkommt und der deutsche Titel-Rat stehen
+  bleibt. Darum wird das **Land aus der Zahlung** (`order_paid.country_code`)
+  mitgeschrieben: gemessen statt geraten. Es kommt mit dem Zahlungs-Ereignis,
+  wird bei der Anlage aus dem Roh-Log nachgezogen und sonst vom `isPay`-Zweig
+  nachgetragen. Land ist **nicht** Sprache — es beantwortet nur die Frage, wie
+  viel Nachfrage von ausserhalb des deutschen Sprachraums kommt (RPC
+  `sommer2026_herkunft`, im Cockpit unter «Woher die Abos kommen»).
+  Paperform liefert kein Land; dort ist die Sprache am Formular gemessen.
+- **Deploy:** Workflow [`deploy-ingest-uscreen.yml`](../../.github/workflows/deploy-ingest-uscreen.yml)
+  deployt die Funktion, sobald sich ihre Quelle auf `main` ändert — von Hand
+  deployt fiel die Produktion schon einmal hinter das Repo zurück (#482).
 - **Aktions-Isolierung:** jede Neuanmeldung (`subscription_assigned` u. ä.) im
   Aktionszeitraum zählt als `neu`. Trials hinterlegen eine Kreditkarte, darum ist
   `transaction_id` **kein** Unterscheidungsmerkmal. Verlängerungen legen nichts an
