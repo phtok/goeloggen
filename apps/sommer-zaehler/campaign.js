@@ -239,73 +239,110 @@
       lvl.querySelector('.ftrack > span').style.width = Math.max(3, Math.round(v / max * 100)) + '%';
       host.appendChild(lvl);
     });
-    // Reichweite je Kanal – aus den Aktivitäten summiert (Social, Newsletter, …).
-    // Neben der Summe je Kanal auch die einzelnen Aktivitäten sammeln, damit der
-    // Balken zu einer Liste der Quellen aufklappt (Herkunft der Reichweite prüfbar).
-    var reach = {}, klick = {}, quellen = {};
+    // Die Aufschlüsselung «Reichweite und Klicks je Kanal» (mit Aufklapp auf die
+    // einzelnen Aktivitäten) steht jetzt in der eigenen Sektion «Kanäle»
+    // (renderKanalUebersicht) – hier bleibt die Kette als Summe.
+    var note = document.createElement('div'); note.className = 'fnote';
+    note.textContent = 'Reichweite und Klicks kommen aus den Aktivitäten (je Kanal aufgeschlüsselt unter «Kanäle»). Klicks = erfasste Aktivitäts-Klicks plus die automatisch gezählten Kurzlink-Klicks aller Kampagnen-Links; dieselben Klicks nicht zusätzlich von Hand eintragen, sonst zählen sie doppelt. Abschlüsse und Geblieben zählt das Cockpit live aus den Anmeldungen.';
+    host.appendChild(note);
+  }
+
+  // ── Kanäle: Reichweite und Klicks je Kanal (aufklappbar zu Aktivitäten) ─────
+  // Eigene Übersicht über den Kopf der Wirkungskette: je Kanal (Mailing,
+  // Newsletter, Social Media …) die summierte Reichweite und die Klicks; ein
+  // Klick auf den Kanal klappt die einzelnen Aktivitäten dahinter auf. Reichweite
+  // und die von Hand erfassten Klicks kommen aus dem Aktivitäten-Protokoll
+  // (massnahmen), die Kurzlink-Klicks aus dem Link-Register (links) – über die
+  // UTM-Spur dem Kanal zugeordnet (kanalVonLink). Summenlogik wie die Kette.
+  function kanalVonLink(l){
+    var s = ((l.utm_source || '') + ' ' + (l.utm_medium || '')).toLowerCase();
+    if (!s.trim()) return 'andere';
+    if (/(news|\bnl\b|weekly)/.test(s)) return 'newsletter';     // vor mailer: «email» enthält «mail»
+    if (/(mailing|\bmail\b|post|brief)/.test(s)) return 'mailer';
+    if (/(insta|face|\bfb\b|social|linkedin|youtube|twitter|tiktok|meta)/.test(s)) return 'social';
+    if (/(popup|overlay)/.test(s)) return 'popup';
+    if (/(inserat|flyer|stand|plakat|print)/.test(s)) return 'flyer';
+    if (/(web|site|direct|organic)/.test(s)) return 'website';
+    if (/(refer|empfehl|friend|partner)/.test(s)) return 'empfehlung';
+    return 'andere';
+  }
+  function renderKanalUebersicht(massnahmen, links){
+    if (!el('kanalReichweite')) return;
+    var host = el('kanalReichweite'); host.innerHTML = '';
+    // Reichweite + Hand-Klicks + Aktivitäten je Kanal aus dem Protokoll.
+    var reach = {}, klickHand = {}, quellen = {};
     (massnahmen || []).forEach(function(m){
       var r = Number(m.reichweite) || 0, k = Number(m.klicks) || 0, kn = m.kanal || 'andere';
       if (r) reach[kn] = (reach[kn] || 0) + r;
-      if (k) klick[kn] = (klick[kn] || 0) + k;
+      if (k) klickHand[kn] = (klickHand[kn] || 0) + k;
       if (r || k) (quellen[kn] = quellen[kn] || []).push({ name:m.massnahme || '—', tag:m.tag, reichweite:r, klicks:k });
     });
-    var kanalItems = Object.keys(reach).map(function(kn){ return { kanal:kn, reach:reach[kn], klick:klick[kn] || 0 }; })
-                                       .sort(function(a, b){ return b.reach - a.reach; });
-    if (kanalItems.length){
-      var kmax = kanalItems.reduce(function(m, x){ return Math.max(m, x.reach); }, 0) || 1;
-      var box = document.createElement('div'); box.className = 'reach-kanal';
-      var head = document.createElement('div'); head.className = 'rk-h'; head.textContent = 'Reichweite je Kanal';
-      box.appendChild(head);
-      kanalItems.forEach(function(x){
-        // Jeder Kanal-Balken ist aufklappbar (details/summary) und listet darunter
-        // die einzelnen Quellen (Aktivitäten), die die Reichweite ausmachen.
-        var det = document.createElement('details'); det.className = 'reach-detail';
-        var sum = document.createElement('summary');
-        var row = document.createElement('div'); row.className = 'stream';
-        row.innerHTML = '<div class="top2"><span class="name"></span>' +
-          '<span class="val"><b></b> <span class="g"></span></span></div>' +
-          '<div class="track"><span></span></div>';
-        var qs = (quellen[x.kanal] || []).slice().sort(function(a, b){ return b.reichweite - a.reichweite; });
-        row.querySelector('.name').textContent = KANAL_LABEL[x.kanal] || x.kanal;
-        var caret = document.createElement('span'); caret.className = 'rk-caret'; caret.setAttribute('aria-hidden', 'true');
-        row.querySelector('.name').appendChild(caret);
-        row.querySelector('.val b').textContent = fmt(x.reach);
-        var g = x.klick ? (fmt(x.klick) + ' Klicks') : '';
-        if (qs.length) g += (g ? ' · ' : '') + qs.length + (qs.length === 1 ? ' Quelle' : ' Quellen');
-        row.querySelector('.val .g').textContent = g;
-        row.querySelector('.track > span').style.width = Math.max(3, Math.round(x.reach / kmax * 100)) + '%';
-        sum.appendChild(row); det.appendChild(sum);
+    // Kurzlink-Klicks je Kanal aus dem Register (über die UTM-Spur zugeordnet).
+    var klickKurz = {};
+    (links || []).forEach(function(l){
+      var k = Number(l.klicks) || 0; if (!k) return;
+      var kn = kanalVonLink(l); klickKurz[kn] = (klickKurz[kn] || 0) + k;
+    });
+    var alle = {}; [reach, klickHand, klickKurz].forEach(function(o){ Object.keys(o).forEach(function(kn){ alle[kn] = true; }); });
+    var items = Object.keys(alle).map(function(kn){
+      var kh = klickHand[kn] || 0, kk = klickKurz[kn] || 0;
+      return { kanal:kn, reach:reach[kn] || 0, klickHand:kh, klickKurz:kk, klick:kh + kk };
+    }).sort(function(a, b){ return b.reach - a.reach || b.klick - a.klick; });
+    if (!items.length){ host.innerHTML = '<div class="empty">Noch keine Aktivitäten erfasst.</div>'; return; }
+    var rmax = items.reduce(function(m, x){ return Math.max(m, x.reach); }, 0) || 1;
+    items.forEach(function(x){
+      var det = document.createElement('details'); det.className = 'reach-detail';
+      var summary = document.createElement('summary');
+      var row = document.createElement('div'); row.className = 'stream';
+      row.innerHTML = '<div class="top2"><span class="name"></span>' +
+        '<span class="val"><b></b> <span class="g"></span></span></div>' +
+        '<div class="track"><span></span></div>';
+      var qs = (quellen[x.kanal] || []).slice().sort(function(a, b){ return b.reichweite - a.reichweite; });
+      row.querySelector('.name').textContent = KANAL_LABEL[x.kanal] || x.kanal;
+      var caret = document.createElement('span'); caret.className = 'rk-caret'; caret.setAttribute('aria-hidden', 'true');
+      row.querySelector('.name').appendChild(caret);
+      row.querySelector('.val b').textContent = fmt(x.reach);
+      var g = (x.klick ? (fmt(x.klick) + ' Klicks') : 'keine Klicks');
+      g += ' · ' + qs.length + (qs.length === 1 ? ' Aktivität' : ' Aktivitäten');
+      row.querySelector('.val .g').textContent = g;
+      row.querySelector('.track > span').style.width = Math.max(3, Math.round(x.reach / rmax * 100)) + '%';
+      summary.appendChild(row); det.appendChild(summary);
 
-        var list = document.createElement('div'); list.className = 'quellen';
-        qs.forEach(function(q){
-          var qr = document.createElement('div'); qr.className = 'motrow';
-          var mc = document.createElement('span'); mc.className = 'mc'; mc.textContent = q.name;
-          if (q.tag){ var ms = document.createElement('span'); ms.className = 'ms';
-            ms.textContent = new Date(q.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
-            mc.appendChild(ms); }
-          var mn = document.createElement('span'); mn.className = 'mn';
-          mn.textContent = fmt(q.reichweite) + (q.klicks ? (' · ' + fmt(q.klicks) + ' Klicks') : '');
-          qr.appendChild(mc); qr.appendChild(mn); list.appendChild(qr);
-        });
-        if (!qs.length){
-          var leer = document.createElement('div'); leer.className = 'qz-hint';
-          leer.textContent = 'Keine Einzel-Quellen erfasst.'; list.appendChild(leer);
-        }
-        // Social: die externe Quelle (Metricool) direkt aus der Liste verlinken.
-        if (x.kanal === 'social' && CONFIG.quelleSocial){
-          var qlink = document.createElement('div'); qlink.className = 'qz-hint';
-          qlink.appendChild(document.createTextNode('Quelle der Zahlen: '));
-          var qa = document.createElement('a'); qa.href = CONFIG.quelleSocial.url;
-          qa.target = '_blank'; qa.rel = 'noopener'; qa.textContent = CONFIG.quelleSocial.label;
-          qlink.appendChild(qa); list.appendChild(qlink);
-        }
-        det.appendChild(list);
-        box.appendChild(det);
+      var list = document.createElement('div'); list.className = 'quellen';
+      qs.forEach(function(q){
+        var qr = document.createElement('div'); qr.className = 'motrow';
+        var mc = document.createElement('span'); mc.className = 'mc'; mc.textContent = q.name;
+        if (q.tag){ var ms = document.createElement('span'); ms.className = 'ms';
+          ms.textContent = new Date(q.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
+          mc.appendChild(ms); }
+        var mn = document.createElement('span'); mn.className = 'mn';
+        mn.textContent = fmt(q.reichweite) + (q.klicks ? (' · ' + fmt(q.klicks) + ' Klicks') : '');
+        qr.appendChild(mc); qr.appendChild(mn); list.appendChild(qr);
       });
-      host.appendChild(box);
-    }
+      if (!qs.length){
+        var leer = document.createElement('div'); leer.className = 'qz-hint';
+        leer.textContent = 'Keine Aktivität mit Reichweite oder Klicks erfasst.'; list.appendChild(leer);
+      }
+      // Kurzlink-Klicks je Kanal lassen sich nicht einer einzelnen Aktivität
+      // zuordnen – darum als eigene, klar beschriftete Zeile ausweisen.
+      if (x.klickKurz){
+        var kz = document.createElement('div'); kz.className = 'qz-hint';
+        kz.textContent = '+ ' + fmt(x.klickKurz) + ' Kurzlink-Klicks der Kampagnen-Links (nicht je Aktivität aufgeschlüsselt).';
+        list.appendChild(kz);
+      }
+      // Social: die externe Quelle (Metricool) direkt aus der Liste verlinken.
+      if (x.kanal === 'social' && CONFIG.quelleSocial){
+        var qlink = document.createElement('div'); qlink.className = 'qz-hint';
+        qlink.appendChild(document.createTextNode('Quelle der Zahlen: '));
+        var qa = document.createElement('a'); qa.href = CONFIG.quelleSocial.url;
+        qa.target = '_blank'; qa.rel = 'noopener'; qa.textContent = CONFIG.quelleSocial.label;
+        qlink.appendChild(qa); list.appendChild(qlink);
+      }
+      det.appendChild(list);
+      host.appendChild(det);
+    });
     var note = document.createElement('div'); note.className = 'fnote';
-    note.textContent = 'Reichweite kommt aus den Aktivitäten (je Eintrag erfassen). Klicks = erfasste Aktivitäts-Klicks plus die automatisch gezählten Kurzlink-Klicks aller Kampagnen-Links; dieselben Klicks nicht zusätzlich von Hand eintragen, sonst zählen sie doppelt. Abschlüsse und Geblieben zählt das Cockpit live aus den Anmeldungen.';
+    note.textContent = 'Reichweite und die je Aktivität erfassten Klicks kommen aus dem Aktivitäten-Protokoll, die Kurzlink-Klicks aus dem Link-Register (über die UTM-Spur dem Kanal zugeordnet). Dieselben Klicks nicht zusätzlich von Hand eintragen, sonst zählen sie doppelt.';
     host.appendChild(note);
   }
 
@@ -657,9 +694,10 @@
         if (ergebnis === 'ok'){
           sagen(istEdit ? 'Geändert.' : 'Eingetragen – erscheint im Zeitband, im Protokoll und in der Reichweite.');
           mfZuruecksetzen();
-          // Reichweite/Klicks fliessen in die Wirkungskette – darum Zeitband, Protokoll UND Trichter neu laden.
-          Promise.all([rpc('sommer2026_massnahmen_public'), rpc('sommer2026_trichter')])
-            .then(function(res){ var rows = res[0] || []; renderZeitband(rows); renderMassnahmen(rows); renderFunnel(res[1] || [], rows); })
+          // Reichweite/Klicks fliessen in die Wirkungskette – darum Zeitband, Protokoll,
+          // Trichter UND die Kanal-Übersicht neu laden.
+          Promise.all([rpc('sommer2026_massnahmen_public'), rpc('sommer2026_trichter'), rpc('sommer2026_links_public')])
+            .then(function(res){ var rows = res[0] || []; renderZeitband(rows); renderMassnahmen(rows); renderFunnel(res[1] || [], rows); renderKanalUebersicht(rows, res[2] || []); })
             .catch(function(){});
         } else { sagen('Datum und Aktivität prüfen.', true); }
       })
@@ -1219,6 +1257,7 @@
         renderSpurTile(kanaele, total);
         renderMotive(attribution);
         renderAktivitaeten(attribution, links, kanaele);
+        renderKanalUebersicht(massnahmen, links);
         renderDunkelfeld();
         renderTarif(stats);
         renderMilestones(total);
