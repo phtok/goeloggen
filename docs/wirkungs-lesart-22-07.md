@@ -3,8 +3,9 @@
 Dieses Dokument ordnet die Anmeldungen **ohne UTM-Spur** («ohne UTM» im
 Cockpit) den Aktivitäten der Kampagne zu. Es ist eine **Lesart, keine
 Messung**: Alle mit ≈ markierten Zahlen sind Schätzungen (±30 %). Die
-Datenbank bleibt unangetastet — dort stehen nur harte Zuordnungen. Die
-Kompaktfassung steht im Cockpit unter Wirkung → «Aktivität → Abschlüsse».
+Datenbank bleibt unangetastet — dort stehen nur harte Zuordnungen. Im Cockpit
+wirkt diese Lesart in der Spalte «≈ mit Dunkelfeld» der Gebiete-Liste; die
+Herleitung steht dort unter Belege → «Dunkelfeld».
 
 Diese Fassung löst `wirkungs-lesart-18-07.md` ab (die bleibt als Historie
 liegen). Neu gegenüber dem 18. Juli: ein Live-Anker mehr — die **vermutete
@@ -120,6 +121,32 @@ ehrlichste Einzelbefund bleibt.
    Sitzungsdauer erweitern und für Paperform zusätzlich über `landing_path`
    ankern — dann bekämen auch die 12 hint-losen dunklen eine Lesart. Erst
    nach Freigabe, weil es die Auslegung (nicht die Messung) verschiebt.
+
+## Wie das Cockpit diese Lesart benutzt (seit dem Umbau vom 24. Juli)
+
+Die Zuordnung liegt im Cockpit nicht mehr als feste Zeilenliste, sondern als
+**Anteile** in `CONFIG.dunkel.anteile` (`apps/sommer-zaehler/campaign.js`):
+
+| Gebiet | Anteil |
+|---|--:|
+| Bezahlt · Anzeige (Meta über den Uscreen-Checkout) | 40,4 % |
+| Organik · Direkt · Bestand | 22,9 % |
+| Newsletter (TV-Weekly und Haus-Newsletter) | 22,0 % |
+| Social organisch | 12,8 % |
+| Mailing | 0,9 % |
+| Print · Stand · Inserat | 0,9 % |
+
+Diese Anteile stammen aus der Verteilung oben (109 dunkle Anmeldungen am
+22. Juli) und werden auf den **jeweils aktuellen** Stand der Anmeldungen ohne
+Spur angewandt. Damit bleibt die Einordnung stimmig, während die Zahlen
+weiterlaufen – ohne dass jemand die Tabelle täglich nachrechnen müsste. Der
+Rundungsrest geht an das grösste Gebiet, damit die Summe exakt aufgeht.
+
+**Bei einer neuen Auswertung** genügt es, `stand`, `doc` und `anteile` dort
+nachzuziehen; die Gebiete-Liste und die Belege-Tabelle rechnen unverändert
+weiter. Ändert sich die Struktur der Kampagne grundlegend (neuer Kanal, das
+Uscreen-Leck geschlossen), gehört eine frische Lesart her – nicht eine
+Fortschreibung der alten.
 
 ## Pflege
 

@@ -27,14 +27,6 @@
   .meter{height:12px;border-radius:var(--r-pill);background:var(--line-soft);overflow:hidden}
   .meter>span{display:block;height:100%;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--gold),var(--gold-ink));transition:width .6s ease}
 
-  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:var(--s6) var(--s8)}
-  .tile{padding:0}
-  .tile .n{font-family:var(--font-display);font-weight:var(--w-strong);font-size:clamp(30px,5vw,44px);line-height:1;font-variant-numeric:tabular-nums lining-nums}
-  .tile .n.blue{color:var(--blue)} .tile .n.gold{color:var(--gold-ink)} .tile .n.ok{color:var(--ok)}
-  .tile .n .u{font-family:var(--font-text);font-size:var(--t-lede)}
-  .tile .l{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:10px}
-  .tile .s{font-family:var(--font-text);font-size:var(--t-micro);color:var(--ink);margin-top:4px}
-
   .board{display:grid;grid-template-columns:1fr 1fr;gap:var(--s6)}
   .panel{background:var(--card,var(--paper));border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card)}
   .panel h3{margin:0 0 4px;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3)}
@@ -53,12 +45,6 @@
   .marks .sw{width:16px;height:9px;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold-ink))}
   .marks .tk{width:2px;height:13px;background:var(--ink);opacity:.5}
 
-  .spark{display:flex;align-items:stretch;gap:clamp(5px,1.4vw,12px);height:160px;padding-top:8px}
-  .spark .d{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
-  .spark .barcell{flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center}
-  .spark .bar{width:100%;max-width:34px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--blue),color-mix(in srgb,var(--blue) 55%,transparent));transition:height .6s ease;min-height:3px}
-  .spark .bv{font-family:var(--font-text);font-variant-numeric:tabular-nums;font-size:var(--t-micro);color:var(--ink)}
-  .spark .dl{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
 
 
   .stay{display:grid;grid-template-columns:1.1fr 1fr;gap:var(--s6);align-items:stretch}
@@ -104,32 +90,75 @@
   .kampagne{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s4)}
   .kampagne code{font-family:var(--font-mono,var(--font-text));color:var(--ink)}
 
-  /* Wirkungskette: Reichweite → Klicks → Abschlüsse → Geblieben (alles gemessen). */
-  .funnel .lvl{margin-bottom:var(--s5)} .funnel .lvl:last-child{margin-bottom:0}
-  .funnel .l2{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:7px}
-  .funnel .fname{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink)}
-  .funnel .fname .r{color:var(--muted);font-size:var(--t-micro);margin-left:7px}
-  .funnel .fval{font-family:var(--font-text);font-variant-numeric:tabular-nums lining-nums;font-size:var(--t-small);color:var(--ink);font-weight:600}
-  .funnel .ftrack{height:16px;border-radius:var(--r-pill);background:var(--line-soft);overflow:hidden}
-  .funnel .ftrack>span{display:block;height:100%;border-radius:var(--r-pill);transition:width .6s ease;min-width:3px}
-  .funnel .s1>span{background:color-mix(in srgb,var(--blue) 42%,transparent)}
-  .funnel .s2>span{background:color-mix(in srgb,var(--blue) 70%,transparent)}
-  .funnel .s3>span{background:linear-gradient(90deg,var(--gold),var(--gold-ink))}
-  .funnel .s4>span{background:var(--ok)}
-  .funnel .fnote{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s5);line-height:1.5}
-  /* Kanäle: Reichweite/Klicks je Kanal, aufklappbar zu den Aktivitäten (eigene
-     Sektion; nutzt die .stream-Balken). Zuvor unter der Wirkungskette, darum
-     Selektoren un-gescoped. Nur Tokens (DS02), Ziffern tnum über .stream (G25). */
-  .reach-detail{margin-bottom:var(--s5)}
-  .reach-detail:last-of-type{margin-bottom:0}
-  .reach-detail>summary{list-style:none;cursor:pointer;display:block;border-radius:var(--r-pill);min-height:var(--tap)}
-  .reach-detail>summary::-webkit-details-marker{display:none}
-  .reach-detail>summary:focus-visible{outline:2px solid var(--gold-ink);outline-offset:3px}
-  .reach-detail>summary .stream{margin-bottom:0}
-  .reach-detail .rk-caret{display:inline-block;width:0;height:0;margin-left:8px;vertical-align:middle;border-left:5px solid var(--muted);border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .2s ease}
-  .reach-detail[open] .rk-caret{transform:rotate(90deg)}
-  .reach-detail .quellen{margin:var(--s3) 0 var(--s4);padding-left:var(--s4);border-left:2px solid var(--line-soft)}
-  .reach-detail .quellen .qz-hint{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);padding:8px 0;line-height:1.5}
+
+  /* ── Stand: eine Zahl, ein Tempo, eine Prognose (ersetzt Kacheln + Momentum) ── */
+  .stand{display:grid;grid-template-columns:auto 1fr;gap:var(--s8);align-items:end}
+  .stand .zahl{font-family:var(--font-display);font-weight:var(--w-strong);
+    font-size:clamp(64px,14vw,112px);line-height:.9;letter-spacing:-.02em;
+    color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
+  .stand .zahl-u{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:var(--s2)}
+  .stand .rechts{min-width:min(100%,260px)}
+  .kpi{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s6);margin-bottom:var(--s3)}
+  .kpi .k{font-family:var(--font-text);font-size:var(--t-small)}
+  .kpi .k b{display:block;font-size:var(--t-lede);color:var(--ink);font-variant-numeric:tabular-nums}
+  .kpi .k span{color:var(--muted);font-size:var(--t-micro)}
+  .kpi .k.warn b{color:var(--bad)}
+  /* Befund: die Fortschreibung im Klartext – der Satz, den eine Prozentzahl verschweigt. */
+  .befund{margin-top:var(--s6);padding:var(--s4) var(--s6);border-radius:var(--r-card);
+    background:color-mix(in srgb,var(--bad) 10%,transparent);border-left:3px solid var(--bad)}
+  .befund p{font-family:var(--font-display);font-weight:var(--w-text);font-size:var(--t-lede);
+    line-height:1.4;color:var(--ink);margin:0;max-width:var(--measure)}
+  .befund .b-meta{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s2)}
+  /* Puls: der Takt neben der Zahl, nicht als eigene Sektion. */
+  .puls{display:flex;align-items:flex-end;gap:var(--s1);height:56px;margin-top:var(--s6)}
+  .puls .p{flex:1;background:color-mix(in srgb,var(--blue) 55%,transparent);border-radius:3px 3px 0 0;min-height:2px}
+  .puls .p.hoch{background:var(--blue-solid)}
+  .puls-l{display:flex;justify-content:space-between;gap:var(--s2);font-family:var(--font-text);
+    font-size:var(--t-micro);color:var(--muted);margin-top:var(--s1);flex-wrap:wrap}
+
+  /* ── Gebiete: eine Liste, jede Zeile die ganze Kette ───────────────────── */
+  .geb{border-bottom:1px solid var(--line-soft)}
+  .geb>summary{list-style:none;cursor:pointer;padding:var(--s3) 0;min-height:var(--tap)}
+  .geb>summary::-webkit-details-marker{display:none}
+  .geb>summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .geb-kopf{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s4)}
+  .geb-name{font-family:var(--font-text);font-size:var(--t-body);color:var(--ink);font-weight:600}
+  .geb-name .car,.zug-t .car{display:inline-block;width:0;height:0;margin-right:var(--s2);vertical-align:middle;
+    border-left:5px solid var(--muted);border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .2s}
+  .geb[open] .geb-name .car,.zug[open] .zug-t .car{transform:rotate(90deg)}
+  .geb-wert{font-family:var(--font-text);font-variant-numeric:tabular-nums lining-nums;
+    font-size:var(--t-lede);color:var(--ink);font-weight:600;white-space:nowrap}
+  .geb-wert .du{color:var(--muted);font-size:var(--t-micro);font-weight:400}
+  .geb-kette{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);
+    margin-top:var(--s1);display:flex;flex-wrap:wrap;gap:var(--s1) var(--s3)}
+  .geb-kette b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+  .geb .track{margin-top:var(--s2)}
+  .geb-tief{padding:0 0 var(--s4) var(--s4);border-left:2px solid var(--line-soft);margin-bottom:var(--s3)}
+  .geb-tief .qz-hint{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);padding:8px 0;line-height:1.5}
+  /* Merkzeichen: ein Wort, das sagt, was die Zeile bedeutet – keine Ampel. */
+  .zeichen{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;
+    border-radius:var(--r-pill);padding:2px 10px;margin-left:var(--s2);white-space:nowrap}
+  .zeichen.traegt{color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}
+  .zeichen.leck{color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+  .zeichen.still{color:var(--muted);background:var(--soft)}
+  .zeichen.dunkel{color:var(--gold-ink);background:color-mix(in srgb,var(--gold) 15%,transparent)}
+
+  /* ── Nächste Züge ───────────────────────────────────────────────────────── */
+  .zug{border-bottom:1px solid var(--line-soft)}
+  .zug>summary{list-style:none;cursor:pointer;padding:var(--s3) 0;min-height:var(--tap);
+    display:flex;justify-content:space-between;align-items:baseline;gap:var(--s4)}
+  .zug>summary::-webkit-details-marker{display:none}
+  .zug>summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .zug-t{font-family:var(--font-text);font-size:var(--t-body);color:var(--ink)}
+  .zug-t .warum{display:block;color:var(--muted);font-size:var(--t-micro);margin-top:2px;margin-left:var(--s4)}
+  .zug-h{font-family:var(--font-text);font-size:var(--t-small);font-weight:600;white-space:nowrap;
+    font-variant-numeric:tabular-nums;color:var(--gold-ink)}
+  .zug-tief{padding:0 0 var(--s4) var(--s4);border-left:2px solid var(--line-soft);margin-bottom:var(--s3);
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);line-height:1.55;max-width:var(--measure)}
+  .zug-tief p{margin:0 0 var(--s2)}
+
+  /* Überschrift innerhalb einer Tafel (Belege). */
+  .panel>.mh,.mh{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);font-weight:600;margin-bottom:var(--s3)}
 
   /* Attribution nach Motiv (utm_content) – feiner als der kanal-Bucket. */
   .motive{margin-top:var(--s6)}
@@ -251,6 +280,10 @@
   @media (max-width:720px){
     .board{grid-template-columns:1fr} .stay{grid-template-columns:1fr}
   }
+  @media (max-width:640px){
+    .stand{grid-template-columns:1fr;gap:var(--s6)}
+    .geb-kopf{flex-wrap:wrap}
+  }
   /* Handy: enger gesetzt, Held-Zahl und Deadline gestapelt, Momentum kompakt */
   @media (max-width:480px){
     .lead{padding-top:22px}
@@ -259,7 +292,6 @@
     .deadline{min-width:0;width:100%}
     section{padding:var(--s6) 0}
     .shead{margin-bottom:var(--s4)}
-    .spark{height:132px;gap:4px}
     .conv{gap:var(--s4)}
     .ring{width:88px;height:88px} .ring .inner{width:64px;height:64px}
   }

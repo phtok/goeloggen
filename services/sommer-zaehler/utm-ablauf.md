@@ -86,13 +86,25 @@ Vorveröffentlichung der Landingpages. Ihr Effekt wird zweifach isoliert:
 So lässt sich sagen: «Die Vorab-Teaser haben X Anmeldungen im Aktionszeitraum
 nachgezogen», ohne sie mit dem eigentlichen Aktions-Newsletter zu vermischen.
 
-## So liest das Cockpit die Spur
+## So liest das Cockpit die Spur (Ordnung seit dem 24. Juli)
 
-- **Nach Motiv** (`sommer2026_attribution`): welches `utm_content` trug – Reel vs.
-  Footer vs. Vorab-Teaser.
-- **Wirkungskette** (`sommer2026_trichter`): Reichweite/Klicks aus dem
-  Massnahmen-Protokoll, Abschlüsse aus den Anmeldungen.
-- **Woher** (`sommer2026_kanaele`): der grobe Bucket mit Hauptaufgabe je Kanal.
+Alles läuft in der **Gebiete-Liste** zusammen: je Gebiet (Mailing, bezahlte
+Anzeige, Newsletter, Social …) eine Zeile mit der ganzen Kette.
+
+- **Abschlüsse je Gebiet** aus `sommer2026_attribution`; die Zuordnung
+  `utm_source`/`utm_medium` → Gebiet steht als Liste `GEBIETE` in
+  `apps/sommer-zaehler/campaign.js` (erster Treffer gewinnt, Reihenfolge ist
+  dort begründet).
+- **Klicks** aus dem Link-Register (`sommer2026_links_public`, je Kurzcode
+  gezählt) plus die von Hand erfassten Aktivitäts-Klicks.
+- **Reichweite** aus dem Aktivitäten-Protokoll (`sommer2026_massnahmen_public`).
+- **Einzelne Motive** (`utm_content`) erscheinen beim Aufklappen der Zeile und
+  vollständig unter Belege → «Alle Motive einzeln».
+- **Nächste Züge** liest die Lücke: jeder registrierte Link ist eine Absicht –
+  Motive ohne einen einzigen Klick gelten als vorbereitet, aber nicht gezündet.
+
+Darum lohnt sich die saubere Konvention doppelt: sie bestimmt, in welcher
+Zeile eine Massnahme erscheint, und ob das Cockpit sie als offenen Zug erkennt.
 
 ## Paperform: damit die UTMs im Webhook ankommen
 
@@ -155,8 +167,8 @@ Einzelposten (≈44 Anmeldungen), der heute dunkel läuft.
 Test: einen TV-Kurzlink mit `utm_*` öffnen, Trial über den Uscreen-Checkout
 starten → in `sommer2026_signups` trägt die Zeile die `utm_*` (nicht nur der
 `user_created`-Fallback). Solange das nicht greift, bleibt die Wirkung dieser
-Wege in der Dunkelfeld-Lesart des Cockpits (Wirkung → «Aktivität →
-Abschlüsse»), nicht in der harten Messung.
+Wege in der Dunkelfeld-Lesart des Cockpits (Spalte «≈ mit Dunkelfeld» der
+Gebiete-Liste), nicht in der harten Messung.
 
 ## Pflege
 
