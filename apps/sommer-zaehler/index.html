@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sommer-Aktion · Cockpit · Goetheanum</title>
-<meta name="description" content="Aktions-Cockpit der Sommer-Aktion 2026 – neue Abos live, mit Momentum und Wirkung." />
+<meta name="description" content="Aktions-Cockpit der Sommer-Aktion 2026 – Stand, Gebiete und nächste Züge auf einen Blick." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="../../design-system/tokens.css" />
@@ -22,165 +22,143 @@
 
 <main class="wrap">
 
-  <section class="lead" id="puls">
-    <span class="kick">Team-Cockpit · 3 Monate gratis</span>
+  <section class="lead">
+    <span class="kick">Team-Cockpit · 3 Monate gratis <span class="status readout" id="status">lädt …</span></span>
     <h1 class="lead-title">Sommer-Aktion 2026</h1>
     <details class="modell-box">
       <summary>Wozu diese Aktion?</summary>
       <p class="modell">Wir wollen, dass kulturinteressierte Menschen bis zum <span class="k">8. August</span> ein Gratis-Abo starten – und danach als zahlende Leser und Zuschauer bleiben. Jede Aktivität hat darin ihre Aufgabe.</p>
     </details>
-    <div class="landing">
-      <span class="meta">Aktionsseiten</span>
-      <a class="btn" href="https://global-sommer2026.goetheanum.online" target="_blank" rel="noopener">Übersicht · 3 Monate gratis</a>
-      <a class="btn" href="https://ws-sommer2026.dasgoetheanum.com" target="_blank" rel="noopener">Wochenschrift</a>
-      <a class="btn" href="https://tv-sommer2026.goetheanum.tv" target="_blank" rel="noopener">goetheanum.tv</a>
-    </div>
     <p class="kampagne">Kampagne <code>summer26_trial</code> · 3. Juli bis 8. August 2026 · <a href="../utm-generator/">UTM-Links für die Aktion bauen →</a></p>
-    <div class="heroline">
-      <div class="figure">
-        <div class="big" id="total">–</div>
-        <div class="cap">neue Abos seit Aktionsstart<br><b>3 Monate gratis</b> <span class="status readout" id="status">lädt …</span></div>
-      </div>
-      <div class="deadline">
-        <div class="drow"><span class="dlab">Fortschritt bis Aktionsende</span><span class="dd" id="ddText">–</span></div>
-        <div class="meter"><span id="ddBar" style="width:0"></span></div>
-        <div class="drow" style="margin-top:8px"><span class="dlab" id="ddStart">Start</span><span class="dlab">8. August</span></div>
-        <div class="drow" style="margin-top:8px"><span class="dlab">Nächste Marke</span><span class="dd" id="msLine">–</span></div>
-      </div>
-    </div>
   </section>
 
 
-  <section>
-    <div class="tiles">
-      <div class="tile"><div class="n gold" id="kTotal">–</div><div class="l">Neue Abos gesamt</div><div class="s">Wochenschrift + goetheanum.tv</div></div>
-      <div class="tile"><div class="n blue" id="kAvg">–</div><div class="l">Ø pro Tag</div><div class="s" id="kAvgSub">letzte Tage</div></div>
-      <div class="tile"><div class="n ok" id="kGoal">–</div><div class="l">Zielerreichung</div><div class="s" id="kGoalSub">gegen Kampagnenziel</div></div>
-      <div class="tile"><div class="n blue" id="kSpur">–</div><div class="l">Mit UTM-Spur</div><div class="s" id="kSpurSub">Anteil der Anmeldungen</div></div>
-    </div>
-  </section>
-
-
-  <section>
-    <div class="shead"><h2>Fünf Ströme</h2><p>Balken zeigt den Stand, der Strich die Zielmarke. Ein Klick auf die Aktion wird zur Zahl.</p></div>
-    <div class="board">
-      <div class="panel">
-        <h3>Wochenschrift <q>Das Goetheanum</q></h3>
-        <div class="sub">Lesen · Deutsch: Papier und Digital · Englisch: nur Digital · Abo-Verwaltung auf Zoho</div>
-        <div id="wosStreams"><div class="empty">lädt …</div></div>
-      </div>
-      <div class="panel">
-        <h3>goetheanum.tv</h3>
-        <div class="sub">Streamen · Mediathek mit über 800 Beiträgen · Deutsch und Englisch · läuft auf Uscreen</div>
-        <div id="gtvStreams"><div class="empty">lädt …</div></div>
-        <div class="marks">
-          <span class="k"><span class="sw"></span>erreicht</span>
-          <span class="k"><span class="tk"></span>Zielmarke</span>
+  <!-- ══ 1 · STAND ═══════════════════════════════════════════════════════ -->
+  <section id="stand">
+    <div class="shead"><h2>Stand</h2><p>Eine Zahl, ein Tempo, eine Prognose – ohne Beschönigung.</p></div>
+    <div class="panel">
+      <div class="stand">
+        <div>
+          <div class="zahl" id="standZahl">–</div>
+          <div class="zahl-u" id="standUnter">lädt …</div>
+        </div>
+        <div class="rechts">
+          <div class="kpi">
+            <div class="k"><b id="kZiel">–</b><span>vom Ziel erreicht</span></div>
+            <div class="k"><b id="kTempo">–</b><span>Abos/Tag aktuell</span></div>
+            <div class="k warn"><b id="kNoetig">–</b><span>Abos/Tag nötig</span></div>
+          </div>
+          <div class="meter"><span id="ddBar" style="width:0"></span></div>
+          <div class="puls" id="puls"></div>
+          <div class="puls-l" id="pulsL"></div>
         </div>
       </div>
-    </div>
-  </section>
 
-
-  <section>
-    <div class="shead"><h2>Momentum</h2><p>Neue Abos je Tag – hier wird sichtbar, wann ein Aufruf, ein Newsletter oder ein Beitrag Wirkung zeigt.</p></div>
-    <div class="spark" id="spark"><div class="empty">lädt …</div></div>
-    <details class="zb-form">
-      <summary>Was ist passiert? – die einzelnen Abos mit Herkunft</summary>
-      <div id="evList" style="margin-top:var(--s4)"><div class="empty">lädt …</div></div>
-    </details>
-  </section>
-
-
-  <section id="wirkung">
-    <div class="shead"><h2>Wirkung</h2><p>Woher die Abos kommen (aus den UTM-Parametern am Link) – und darunter die ganze Kette: Reichweite → Klicks → Abschlüsse → Geblieben. Reichweite und Klicks kommen aus den Aktivitäten, Abschlüsse und Geblieben zählt das Cockpit live aus den Anmeldungen.</p></div>
-    <div id="kanalBars"><div class="empty">lädt …</div></div>
-    <div class="motive" id="motive" hidden>
-      <div class="mh">Nach Motiv</div>
-      <div id="motiveList"></div>
-    </div>
-    <div class="panel" style="margin-top:var(--s5)">
-      <div class="funnel" id="funnel"><div class="empty">lädt …</div></div>
-    </div>
-    <div id="quelleSocial" style="margin-top:var(--s5)"></div>
-  </section>
-
-
-  <section id="kanaele">
-    <div class="shead"><h2>Kanäle</h2><p>Reichweite und Klicks je Kanal – Mailing, Newsletter, Social Media und die übrigen. Ein Kanal aufklappen zeigt die einzelnen Aktivitäten dahinter.</p></div>
-    <div class="panel">
-      <div id="kanalReichweite"><div class="empty">lädt …</div></div>
-    </div>
-  </section>
-
-
-  <section id="aktivitaeten-abschluesse">
-    <div class="shead"><h2>Aktivität → Abschlüsse</h2><p>Welche Aktivität zu welchen Abschlüssen geführt hat – erst die harte Messung (Abschlüsse je Aktivität, live aus den UTM-Spuren, mit den Klicks daneben), dann die Anmeldungen ohne UTM den Aktivitäten zugeordnet.</p></div>
-    <div class="panel">
-      <div class="mh">Gemessen · je Aktivität mit UTM-Spur</div>
-      <div class="tablewrap" style="margin-top:var(--s4)">
-        <table class="tarif akt-tab">
-          <thead><tr><th>Aktivität</th><th>Kanal</th><th class="num">Klicks</th><th class="num">Abschlüsse</th></tr></thead>
-          <tbody id="aktBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
-          <tfoot id="aktFoot"></tfoot>
-        </table>
+      <div class="befund" id="befund" hidden>
+        <p id="befundText"></p>
+        <div class="b-meta" id="befundMeta"></div>
       </div>
-      <p class="provisorisch">Abschlüsse = echte Zählung je Motiv-Spur (Attribution); Klicks = Kurzlink-Klicks aus dem Link-Register (DE und EN zusammengezählt). Eine Zeile mit vielen Klicks, aber kaum Abschlüssen ist markiert: dort ging die Spur zwischen Klick und Anmeldung verloren – bei der bezahlten Meta-Anzeige führt der Weg auf den goetheanum.tv-Checkout (Uscreen), der die UTM nicht bis zur Anmeldung trägt. Deshalb landet ihre Wirkung unten im Dunkelfeld.</p>
-    </div>
 
-    <div class="panel" style="margin-top:var(--s5)">
-      <div class="mh">Dunkelfeld eingeordnet · Schätzung, Stand <span id="dunkelStand">–</span></div>
-      <div class="tablewrap" style="margin-top:var(--s4)">
-        <table class="tarif">
-          <thead><tr><th>Aktivität</th><th class="num">gemessen</th><th class="num">≈ dunkel</th><th class="num">≈ gesamt</th></tr></thead>
-          <tbody id="dunkelBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
-          <tfoot id="dunkelFoot"></tfoot>
-        </table>
-      </div>
-      <p class="provisorisch">Die Spalte «gemessen» ist hart (UTM). «≈ dunkel» verteilt die Anmeldungen ohne Spur nach vier Ankern – am stärksten der <b>vermuteten Herkunft</b> je Anmeldung (zeitnächster Kurzlink-Klick), die inzwischen 72 der 84 dunklen der letzten 14 Tage abdeckt. Alles mit ≈ ist eine Lesart (±30 %), keine Messung; die Datenbank bleibt unberührt. Herleitung: <code>docs/wirkungs-lesart-22-07.md</code>.</p>
       <details class="zb-form">
-        <summary id="vermutetKopf">Vermutete Herkunft der letzten 14 Tage – das Live-Fundament unter der Schätzung</summary>
-        <div id="vermutetList" style="margin-top:var(--s4)"><div class="empty">lädt …</div></div>
-        <p class="provisorisch">Live aus den Ereignissen: je Anmeldung ohne UTM der zeitlich nächste Kurzlink-Klick (bis 90 Min. davor) auf einen passenden Kampagnen-Link. Ein Indiz, keine Messung – gezählt wird es nirgends, es ordnet nur ein.</p>
+        <summary id="stroemeKopf">Woraus sich die Abos zusammensetzen</summary>
+        <div class="tablewrap" style="margin-top:var(--s4)">
+          <table class="tarif">
+            <thead><tr><th>Strom</th><th class="num">Abos</th><th class="num">Zielmarke</th><th class="num">erreicht</th></tr></thead>
+            <tbody id="stroemeBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+            <tfoot id="stroemeFoot"></tfoot>
+          </table>
+        </div>
       </details>
     </div>
-
-    <details class="zb-form">
-      <summary>Warum kommen so viele ohne UTM – und was hilft?</summary>
-      <div class="card soft" style="margin-top:var(--s4)">
-        <p class="modell">Von den dunklen Anmeldungen der letzten 14 Tage sind rund zwei Drittel <b>goetheanum.tv</b> (Uscreen). Deren Spur hängt an einem einzigen Faden: dem <code>user_created</code>-Event, das Uscreen mit den UTM-Parametern schickt. Kommt es ohne (In-App-Browser aus Social, verlorene Cookies), ist die Anmeldung dunkel – der Checkout selbst trägt keine Spur.</p>
-        <p class="provisorisch">Grösster Hebel: die UTM auf der TV-Landingpage an den goetheanum.tv-Checkout weiterreichen und bezahlte wie soziale TV-Wege über den Kurzlink (<code>/s/&lt;code&gt;</code>) führen – dann wandert allein die Meta-Anzeige (≈44 Anmeldungen) von dunkel nach gemessen. Zweiter Hebel: auf allen vier Wochenschrift-Formularen die versteckten UTM-Prefill-Felder gegenprüfen. Schritte im Repo unter <code>services/sommer-zaehler/utm-ablauf.md</code>.</p>
-      </div>
-    </details>
   </section>
 
 
-  <section id="details">
-    <div class="shead"><h2>Details</h2><p>Wer nach den drei Monaten bleibt – und die Aufschlüsselung nach Tarif und Zahlungsweise.</p></div>
-    <details class="zb-form" open>
-      <summary>Wer bleibt? – der Drei-Monats-Moment</summary>
-      <div class="stay" style="margin-top:var(--s4)">
-        <div class="cohort" id="cohortCard"><div class="empty">lädt …</div></div>
-        <div class="proj">
-          <div class="pl">Hochgerechneter Folgejahr-Umsatz</div>
-          <div class="pv" id="projValue">–</div>
-          <div class="pn" id="projNote">Projektion auf Basis der angenommenen Bleibe-Quote und der hinterlegten Preise.</div>
+  <!-- ══ 2 · GEBIETE ═════════════════════════════════════════════════════ -->
+  <section id="gebiete">
+    <div class="shead"><h2>Gebiete</h2><p>Jede Zeile ein Gebiet, jede Zeile die ganze Kette: Reichweite → Klicks → Abschlüsse. Sortiert nach Wirkung. Aufklappen zeigt die einzelnen Aktivitäten und den Befund.</p></div>
+    <div class="panel">
+      <div id="gebieteListe"><div class="empty">lädt …</div></div>
+    </div>
+    <p class="provisorisch" id="gebieteNote"></p>
+  </section>
+
+
+  <!-- ══ 3 · NÄCHSTE ZÜGE ════════════════════════════════════════════════ -->
+  <section id="zuege">
+    <div class="shead"><h2>Nächste Züge</h2><p>Was jetzt noch möglich ist – aus den Daten gelesen, nach Hebel sortiert. Der Plan steht schon im Link-Register und im Aktivitäten-Protokoll; hier steht, was davon noch nicht gezündet hat.</p></div>
+    <div class="panel">
+      <div id="zuegeListe"><div class="empty">lädt …</div></div>
+    </div>
+    <p class="provisorisch">Die Erwartungen sind grob und aus der bisherigen Wirkung derselben Kanäle abgeleitet – sie sortieren die Reihenfolge, sie versprechen nichts.</p>
+  </section>
+
+
+  <!-- ══ 4 · BELEGE ══════════════════════════════════════════════════════ -->
+  <section id="belege">
+    <div class="shead"><h2>Belege</h2><p>Alles, was man selten braucht, aber jederzeit nachschlagen können muss.</p></div>
+    <div class="panel">
+
+      <details class="zb-form">
+        <summary>Was ist passiert? – die einzelnen Abos mit Herkunft</summary>
+        <div id="evList" style="margin-top:var(--s4)"><div class="empty">lädt …</div></div>
+      </details>
+
+      <details class="zb-form">
+        <summary>Dunkelfeld – wie die Abos ohne Spur verteilt wurden</summary>
+        <div class="tablewrap" style="margin-top:var(--s4)">
+          <table class="tarif">
+            <thead><tr><th>Gebiet</th><th class="num">Anteil</th><th class="num">≈ zugeordnet</th></tr></thead>
+            <tbody id="dunkelBody"><tr><td class="empty" colspan="3">lädt …</td></tr></tbody>
+            <tfoot id="dunkelFoot"></tfoot>
+          </table>
         </div>
-      </div>
-    </details>
-    <details class="zb-form" open>
-      <summary>Nach Tarif und Zahlungsweise</summary>
-      <div class="tablewrap" style="margin-top:var(--s4)">
-        <table class="tarif">
-          <thead><tr><th>Tarif</th><th class="num">Monatlich</th><th class="num">Jährlich</th><th class="num">Summe</th></tr></thead>
-          <tbody id="tarifBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
-          <tfoot id="tarifFoot"></tfoot>
-        </table>
-      </div>
-      <p class="provisorisch" id="provisorisch"></p>
-    </details>
-  </section>
+        <p class="provisorisch" id="dunkelNote"></p>
+        <div id="vermutetKopf" class="mh" style="margin-top:var(--s6)"></div>
+        <div id="vermutetList"><div class="empty">lädt …</div></div>
+        <p class="provisorisch">Live aus den Ereignissen: je Anmeldung ohne UTM der zeitlich nächste Kurzlink-Klick (bis 90 Min. davor) auf einen passenden Kampagnen-Link. Ein Indiz, keine Messung – gezählt wird es nirgends, es ordnet nur ein.</p>
+      </details>
 
+      <details class="zb-form">
+        <summary>Alle Motive einzeln</summary>
+        <div class="motive" id="motive" hidden>
+          <div id="motiveList"></div>
+        </div>
+      </details>
+
+      <details class="zb-form">
+        <summary>Wer bleibt? – der Drei-Monats-Moment</summary>
+        <div class="stay" style="margin-top:var(--s4)">
+          <div class="cohort" id="cohortCard"><div class="empty">lädt …</div></div>
+          <div class="proj">
+            <div class="pl">Hochgerechneter Folgejahr-Umsatz</div>
+            <div class="pv" id="projValue">–</div>
+            <div class="pn" id="projNote">Projektion auf Basis der angenommenen Bleibe-Quote und der hinterlegten Preise.</div>
+          </div>
+        </div>
+      </details>
+
+      <details class="zb-form">
+        <summary>Nach Tarif und Zahlungsweise</summary>
+        <div class="tablewrap" style="margin-top:var(--s4)">
+          <table class="tarif">
+            <thead><tr><th>Tarif</th><th class="num">Monatlich</th><th class="num">Jährlich</th><th class="num">Summe</th></tr></thead>
+            <tbody id="tarifBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+            <tfoot id="tarifFoot"></tfoot>
+          </table>
+        </div>
+        <p class="provisorisch" id="provisorisch"></p>
+      </details>
+
+      <details class="zb-form">
+        <summary>Methode und Quellen</summary>
+        <div style="margin-top:var(--s4)">
+          <p class="provisorisch">Abschlüsse und «Geblieben» zählt das Cockpit live aus den Anmeldungen (nur Summen, keine Personendaten). Reichweite und die je Aktivität erfassten Klicks kommen aus dem <a href="aktivitaeten.html">Aktivitäten-Protokoll</a>, die Kurzlink-Klicks automatisch aus dem <a href="../utm-generator/">Link-Register</a>. Alles mit ≈ ist eine datierte Lesart, keine Messung.</p>
+          <div id="quelleSocial"></div>
+        </div>
+      </details>
+
+    </div>
+  </section>
 
 </main>
 

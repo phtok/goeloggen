@@ -42,18 +42,24 @@
         gtv: { stream:  { standard:{monatlich:14.9, jaehrlich:149} } }
       }
     },
-    // Herkunftswege (Attribution) mit Hauptaufgabe – nicht jeder Kanal verkauft.
-    // Social stiftet Aufmerksamkeit, der Newsletter Beziehung, das Mailing die
-    // Entscheidung. Die Rolle sagt, gegen welche Aufgabe man den Kanal fair liest.
-    kanaele: [
-      { key:'newsletter', label:'Newsletter',     rolle:'Beziehung' },
-      { key:'mailer',     label:'Mailing',        rolle:'Entscheidung' },
-      { key:'social',     label:'Social Media',   rolle:'Aufmerksamkeit' },
-      { key:'popup',      label:'Popup',          rolle:'Entscheidung' },
-      { key:'website',    label:'Website direkt', rolle:'Orientierung' },
-      { key:'empfehlung', label:'Empfehlung',     rolle:'Vertrauen' },
-      { key:'andere',     label:'ohne UTM',       rolle:'' }
-    ],
+    // Dunkelfeld: die Anmeldungen OHNE UTM-Spur den Gebieten zuordnen.
+    // Hinterlegt sind ANTEILE aus der datierten Lesart – sie werden auf den
+    // jeweils aktuellen Stand angewandt, damit die Einordnung stimmig bleibt,
+    // während die Zahlen weiterlaufen. Schätzung (±30 %), keine Messung; die
+    // Messwerte in der Datenbank bleiben unangetastet. Bei neuer Auswertung:
+    // stand/doc/anteile hier nachziehen, sonst nichts.
+    dunkel: {
+      stand: '22. Juli',
+      doc:   'docs/wirkungs-lesart-22-07.md',
+      anteile: {
+        bezahlt:    0.404,   // Meta-Anzeige über den Uscreen-Checkout
+        organik:    0.229,   // Direkt, Suche, Storefront, Bestandskonten
+        newsletter: 0.220,   // TV-Weekly und Haus-Newsletter
+        social:     0.128,   // Reels, Stories, Karussell
+        mailing:    0.009,
+        print:      0.009
+      }
+    },
     // Kosten der Aktion (in CONFIG.waehrung) – stehen auf 0, echte Zahlen werden erfragt.
     zahlenProvisorisch: true,      // blendet den Hinweis auf Beispielwerte ein
     // Externe Quelle der Social-Media-Zahlen (Reichweite/Klicks je Kanal).
@@ -63,27 +69,6 @@
       label: 'Metricool · Kampagnen-Auswertung',
       url:   'https://app.metricool.com/reporting/campaigns-dashboard/public?token=eyJ6aXAiOiJERUYiLCJhbGciOiJIUzUxMiJ9.eJxVztFSgkAUgOF3ObcywhrCxh3VTLLWZmZmNU2Dy5Lgrhzg5AhN7x7jXZf_d_X_QPqdQfQOOyJsI9dNEcdWU1OoqjJjVVn4cKBICSIW8ouQ-YwFDhy2-X_QJxyAs-lk6p3B0icaiEBjU6_atpJHafY66b6sElsSM755NJORZFjGwdO8v85ewxN7vkoal4tDvWyThUrucS1fVOnFYo_Ey5u7oq770L_t5w9Wr5ualqsyrUaoWrmIdZG7lF_yYOfHb8UmnOVCd4EHDlCHejjBLDUE5zM6Ds3g9w85oFAH.cL8xJiluV4VRcqD2tsOIXKgpvI7UfN_fbvREgPpiP_r0T0JTBfS_vH2cnrq50d-kogWBjyZLE_OMINhFqo8dIw',
       takt:  'Empfehlung: wöchentlich (montags) übernehmen; in der Schlussspurt-Woche ab 3. August täglich.'
-    },
-    // Dunkelfeld-Lesart: die Anmeldungen OHNE UTM den Aktivitäten zugeordnet.
-    // DATIERTE SCHÄTZUNG (±30 %), keine Messung – die «gemessen»-Spalte im
-    // Cockpit kommt live aus attribution/kanaele, «≈ dunkel» steht hier. Bei
-    // neuer Auswertung: stand + zeilen nachziehen (Herleitung im Repo unter
-    // docs/wirkungs-lesart-<datum>.md). Summe der zeilen = Live-Gesamt, sonst
-    // stimmt die Fusszeile nicht mehr (gemessen 107 · dunkel 109 · gesamt 216
-    // am 22.7.). Sortiert nach ≈ gesamt.
-    dunkelLesart: {
-      stand: '22. Juli',
-      doc:   'docs/wirkungs-lesart-22-07.md',
-      zeilen: [
-        { akt:'Mailing · Welle 1',                              gemessen:79, dunkel:1,  gesamt:80 },
-        { akt:'Meta-Anzeige · bezahlt',                         gemessen:0,  dunkel:44, gesamt:44 },
-        { akt:'Organik · Bestand · Direkt',                     gemessen:8,  dunkel:25, gesamt:33 },
-        { akt:'Social organisch · Reels, Stories, Karussell',   gemessen:9,  dunkel:14, gesamt:23 },
-        { akt:'goetheanum.tv-Newsletter · TV-Weekly',           gemessen:5,  dunkel:17, gesamt:22 },
-        { akt:'Haus- und AC-Newsletter · Frühphase',            gemessen:5,  dunkel:7,  gesamt:12 },
-        { akt:'Inserat · Print',                                gemessen:0,  dunkel:1,  gesamt:1 },
-        { akt:'Empfehlung',                                     gemessen:1,  dunkel:0,  gesamt:1 }
-      ]
     }
   };
 
@@ -120,230 +105,466 @@
     else { s.className = 'status readout'; s.textContent = 'lädt …'; }
   }
 
-  // ── Deadline-Meter ─────────────────────────────────────────────────────────
-  function renderDeadline(){
-    if (!el('ddBar')) return;
-    var start = new Date(CONFIG.start + 'T00:00:00');
-    var ende  = new Date(CONFIG.ende  + 'T23:59:59');
-    var now   = new Date();
-    var pct = Math.max(0, Math.min(100, (now - start) / (ende - start) * 100));
-    el('ddBar').style.width = pct.toFixed(1) + '%';
-    var days = Math.max(0, Math.ceil((ende - now) / 86400000));
-    el('ddText').textContent = days > 0 ? ('noch ' + days + ' Tage') : 'Aktion beendet';
-    el('ddStart').textContent = dmy(start);
+  // ── Gebiete: die eine Achse, auf der alles zusammenläuft ──────────────────
+  // Ein «Gebiet» ist ein Wirkungsfeld der Kampagne (Mailing, bezahlte Anzeige,
+  // Newsletter …). Alle drei Datenquellen werden darauf abgebildet, damit eine
+  // Zeile die ganze Kette tragen kann: Reichweite und Hand-Klicks aus dem
+  // Aktivitäten-Protokoll, Kurzlink-Klicks aus dem Link-Register, Abschlüsse aus
+  // der Attribution. REIHENFOLGE ZÄHLT – der erste Treffer gewinnt: «bezahlt»
+  // vor «social» (die Anzeige läuft als medium=social), «newsletter» vor
+  // «mailing» (das Wort «email» enthält «mail»), «print» vor «organik»
+  // (inserat_* trägt medium=web).
+  var GEBIETE = [
+    { key:'bezahlt',    label:'Bezahlt · Anzeige',          test:/anzeige|\bads?\b|\bcpc\b/ },
+    { key:'newsletter', label:'Newsletter',                 test:/news|\bnl\b|nl-|weekly/ },
+    { key:'mailing',    label:'Mailing',                    test:/mailing|mailer|\bpost\b|brief/ },
+    { key:'social',     label:'Social organisch',           test:/insta|face|\bfb\b|linkedin|youtube|tiktok|twitter|social/ },
+    { key:'print',      label:'Print · Stand · Inserat',    test:/inserat|print|flyer|stand|plakat|\bqr\b/ },
+    { key:'popup',      label:'Popup',                      test:/popup|overlay/ },
+    { key:'empfehlung', label:'Empfehlung',                 test:/refer|empfehl|partner|friend/ },
+    { key:'organik',    label:'Organik · Direkt · Bestand', test:/uscreen|landing|\bweb\b|site|direct|organic/ },
+    { key:'andere',     label:'Übrige',                     test:null }
+  ];
+  function gebietVonSpur(src, med){
+    var s = ((src || '') + ' ' + (med || '')).toLowerCase();
+    if (!s.trim()) return 'andere';
+    for (var i = 0; i < GEBIETE.length; i++){
+      var g = GEBIETE[i];
+      if (g.test && g.test.test(s)) return g.key;
+    }
+    return 'andere';
+  }
+  // Aktivitäten tragen einen Kanal-Eimer; die bezahlte Anzeige steckt darin als
+  // «social» und wird über den Titel herausgelöst (sonst verschwindet der
+  // grösste Posten in der organischen Zeile).
+  var KANAL_ZU_GEBIET = { social:'social', newsletter:'newsletter', mailer:'mailing',
+                          flyer:'print', website:'organik', popup:'popup', empfehlung:'empfehlung' };
+  function gebietVonMassnahme(m){
+    if (/anzeige|\bads?\b/i.test(m.massnahme || '')) return 'bezahlt';
+    return KANAL_ZU_GEBIET[m.kanal] || 'andere';
+  }
+  function gebietLabel(k){
+    for (var i = 0; i < GEBIETE.length; i++) if (GEBIETE[i].key === k) return GEBIETE[i].label;
+    return k;
   }
 
-  // ── Aggregation aus sommer2026_stats() ─────────────────────────────────────
+  // Dunkelfeld auf die Gebiete verteilen: die datierte Lesart liefert ANTEILE,
+  // die auf den aktuellen Stand der Anmeldungen ohne Spur angewandt werden – so
+  // bleibt die Einordnung stimmig, während die Zahlen weiterlaufen. Der Rest der
+  // Rundung geht an das grösste Gebiet, damit die Summe exakt aufgeht.
+  function dunkelVerteilen(ohne){
+    var anteile = (CONFIG.dunkel && CONFIG.dunkel.anteile) || {};
+    var out = {}, verteilt = 0, groesstes = null, max = -1;
+    Object.keys(anteile).forEach(function(k){
+      var n = Math.round(ohne * anteile[k]);
+      out[k] = n; verteilt += n;
+      if (anteile[k] > max){ max = anteile[k]; groesstes = k; }
+    });
+    if (groesstes && verteilt !== ohne) out[groesstes] += (ohne - verteilt);
+    return out;
+  }
+
+  // ── 1 · Stand: eine Zahl, ein Tempo, eine Prognose ────────────────────────
+  // Der Kern der Aufräumung: statt vier Kacheln, Deadline-Meter, Meilenstein und
+  // eigener Momentum-Sektion EIN Block, der die Frage «wo stehen wir» beantwortet
+  // – samt der Fortschreibung, die eine Prozentzahl allein verschweigt.
+  function tempoUndPrognose(timeline){
+    var byDay = {};
+    (timeline || []).forEach(function(r){ byDay[r.day] = (byDay[r.day] || 0) + Number(r.n); });
+    var tage = Object.keys(byDay).sort();
+    var letzte = tage.slice(-3);
+    var tempo = letzte.length ? letzte.reduce(function(s, d){ return s + byDay[d]; }, 0) / letzte.length : 0;
+    var ende = new Date(CONFIG.ende + 'T00:00:00'), jetzt = new Date();
+    var heute = new Date(jetzt.getFullYear(), jetzt.getMonth(), jetzt.getDate());
+    var rest = Math.max(0, Math.round((ende - heute) / 86400000));
+    return { byDay:byDay, tage:tage, tempo:tempo, rest:rest };
+  }
+  function renderStand(total, timeline){
+    if (!el('standZahl')) return;
+    var t = tempoUndPrognose(timeline);
+    var ziel = CONFIG.zielGesamt || 0;
+    el('standZahl').textContent = fmt(total);
+    el('standUnter').textContent = 'neue Abos · Ziel ' + fmt(ziel) +
+      (t.rest > 0 ? (' · noch ' + t.rest + ' Tage bis ' + dmy(new Date(CONFIG.ende + 'T00:00:00'))) : ' · Aktion beendet');
+    var pct = ziel > 0 ? Math.round(total / ziel * 100) : 0;
+    el('kZiel').textContent = pct + ' %';
+    el('kTempo').textContent = t.tempo.toFixed(1).replace('.', ',');
+    var noetig = t.rest > 0 ? Math.max(0, (ziel - total) / t.rest) : 0;
+    el('kNoetig').textContent = t.rest > 0 ? noetig.toFixed(1).replace('.', ',') : '–';
+    el('ddBar').style.width = Math.min(100, pct) + '%';
+
+    // Puls: die letzten zehn Tage – der Takt neben der Zahl, nicht als eigene Sektion.
+    var host = el('puls'); if (host){
+      host.innerHTML = '';
+      var recent = t.tage.slice(-10);
+      var max = recent.reduce(function(m, d){ return Math.max(m, t.byDay[d]); }, 0) || 1;
+      var spitze = recent.reduce(function(b, d){ return t.byDay[d] > t.byDay[b] ? d : b; }, recent[0]);
+      recent.forEach(function(d){
+        var b = document.createElement('span');
+        b.className = 'p' + (d === spitze ? ' hoch' : '');
+        b.style.height = Math.max(3, Math.round(t.byDay[d] / max * 100)) + '%';
+        b.title = new Date(d + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'long' }) +
+                  ' · ' + fmt(t.byDay[d]) + (t.byDay[d] === 1 ? ' Abo' : ' Abos');
+        host.appendChild(b);
+      });
+      var lab = el('pulsL');
+      if (lab && recent.length){
+        lab.innerHTML = '';
+        var von = document.createElement('span');
+        von.textContent = new Date(recent[0] + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'long' });
+        var top = document.createElement('span');
+        top.textContent = 'Spitze ' + fmt(t.byDay[spitze]) + ' am ' + new Date(spitze + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
+        var bis = document.createElement('span');
+        bis.textContent = 'heute ' + fmt(t.byDay[recent[recent.length - 1]] || 0);
+        lab.appendChild(von); lab.appendChild(top); lab.appendChild(bis);
+      }
+    }
+
+    // Befund: die Fortschreibung im Klartext. Erscheint nur, wenn die Aktion läuft.
+    var box = el('befund');
+    if (box && t.rest > 0){
+      var prognose = Math.round(total + t.tempo * t.rest);
+      box.hidden = false;
+      var txt = el('befundText'); txt.innerHTML = '';
+      txt.appendChild(document.createTextNode('Bei diesem Tempo endet die Aktion bei rund '));
+      var b1 = document.createElement('b'); b1.textContent = fmt(prognose) + ' Abos'; txt.appendChild(b1);
+      txt.appendChild(document.createTextNode('. '));
+      if (prognose < ziel){
+        txt.appendChild(document.createTextNode('Das Ziel ' + fmt(ziel) + ' ist nur erreichbar, wenn ein Impuls von der Grösse der stärksten bisherigen Welle kommt – '));
+        var b2 = document.createElement('b'); b2.textContent = 'mehrfach'; txt.appendChild(b2);
+        txt.appendChild(document.createTextNode('.'));
+      } else {
+        txt.appendChild(document.createTextNode('Das Ziel ' + fmt(ziel) + ' ist bei diesem Tempo in Reichweite.'));
+      }
+      el('befundMeta').textContent = 'Fortschreibung des Schnitts der letzten drei Tage (' +
+        t.tempo.toFixed(1).replace('.', ',') + '/Tag) auf die restlichen ' + t.rest + ' Tage. Kein Versprechen – eine Rechnung.';
+    } else if (box) { box.hidden = true; }
+  }
+
+  // Ströme (Produkt × Sprache × Format) – aus eigener Sektion in den Aufklapp.
   function streamValue(rows, s){
     return rows.reduce(function(sum, r){
       if(r.produkt === s.produkt && r.sprache === s.sprache && r.format === s.format) return sum + Number(r.n);
       return sum;
     }, 0);
   }
-
-  function renderStreams(rows){
-    if (!el('wosStreams')) return;
-    ['wos','gtv'].forEach(function(panel){
-      var host = el(panel === 'wos' ? 'wosStreams' : 'gtvStreams');
-      host.innerHTML = '';
-      STREAMS.filter(function(s){ return s.panel === panel; }).forEach(function(s){
-        var val = streamValue(rows, s);
-        var ziel = CONFIG.ziele[s.key] || 0;
-        var pct = ziel > 0 ? Math.min(100, Math.round(val / ziel * 100)) : 0;
-        var row = document.createElement('div'); row.className = 'stream';
-        row.innerHTML =
-          '<div class="top2"><span class="name"></span>' +
-          '<span class="val"><b></b> <span class="g"></span></span></div>' +
-          '<div class="track"><span></span><i class="tick" style="left:100%"></i></div>';
-        row.querySelector('.name').textContent = s.name;
-        row.querySelector('.val b').textContent = fmt(val);
-        row.querySelector('.val .g').textContent = ziel ? ('/ ' + fmt(ziel)) : '';
-        row.querySelector('.track > span').style.width = Math.max(3, pct) + '%';
-        host.appendChild(row);
-      });
+  function renderStroeme(rows, total){
+    if (!el('stroemeBody')) return;
+    var body = el('stroemeBody'); body.innerHTML = '';
+    var items = STREAMS.map(function(s){
+      return { name:(s.panel === 'gtv' ? 'goetheanum.tv · ' : 'Wochenschrift · ') + s.name,
+               n:streamValue(rows, s), ziel:CONFIG.ziele[s.key] || 0 };
+    }).sort(function(a, b){ return b.n - a.n; });
+    var sz = 0;
+    items.forEach(function(x){
+      sz += x.ziel;
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
+      tr.children[0].textContent = x.name;
+      tr.children[1].textContent = fmt(x.n);
+      tr.children[2].textContent = x.ziel ? fmt(x.ziel) : '–';
+      tr.children[3].textContent = x.ziel ? (Math.round(x.n / x.ziel * 100) + ' %') : '–';
+      body.appendChild(tr);
     });
+    var foot = el('stroemeFoot');
+    if (foot){
+      foot.innerHTML = '<tr><td>Summe</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>';
+      var td = foot.querySelector('tr').children;
+      td[1].textContent = fmt(total); td[2].textContent = fmt(sz);
+      td[3].textContent = sz ? (Math.round(total / sz * 100) + ' %') : '–';
+    }
+    if (el('stroemeKopf')) el('stroemeKopf').textContent = 'Woraus sich die ' + fmt(total) + ' Abos zusammensetzen';
   }
 
-  // ── Woher (Attribution) ────────────────────────────────────────────────────
-  function renderKanaele(kanaele, total){
-    if (!el('kanalBars')) return;
-    var host = el('kanalBars'); host.innerHTML = '';
-    var byKanal = {}; kanaele.forEach(function(r){ byKanal[r.kanal] = Number(r.n); });
-    var items = CONFIG.kanaele.map(function(k){ return { label:k.label, rolle:k.rolle, n:byKanal[k.key] || 0 }; })
-                              .filter(function(x){ return x.n > 0; })
-                              .sort(function(a, b){ return b.n - a.n; });
-    if(!items.length){ host.innerHTML = '<div class="empty">Noch keine Anmeldungen.</div>'; return; }
-    var max = items.reduce(function(m, x){ return Math.max(m, x.n); }, 0) || 1;
-    items.forEach(function(x){
-      var anteil = total > 0 ? Math.round(x.n / total * 100) : 0;
-      var row = document.createElement('div'); row.className = 'stream';
-      row.innerHTML = '<div class="top2"><span class="name"></span>' +
-        '<span class="val"><b></b> <span class="g"></span></span></div>' +
-        '<div class="track"><span></span></div>';
-      row.querySelector('.name').textContent = x.label;
-      if(x.rolle){
-        var r = document.createElement('span'); r.className = 'kanal-rolle';
-        r.textContent = x.rolle; row.querySelector('.name').appendChild(r);
-      }
-      row.querySelector('.val b').textContent = fmt(x.n);
-      row.querySelector('.val .g').textContent = anteil + ' %';
-      row.querySelector('.track > span').style.width = Math.max(3, Math.round(x.n / max * 100)) + '%';
-      host.appendChild(row);
+  // ── 2 · Gebiete: eine Liste, jede Zeile die ganze Kette ───────────────────
+  // Löst «Woher», Wirkungskette, «Nach Motiv», «Kanäle» und «Aktivität →
+  // Abschlüsse» in EINER Ansicht auf – dieselben Messwerte, einmal statt fünfmal.
+  function renderGebiete(attribution, links, massnahmen, kanaele){
+    if (!el('gebieteListe')) return;
+    var host = el('gebieteListe'); host.innerHTML = '';
+    var ab = {}, kl = {}, rw = {}, motive = {}, akte = {}, linkN = {}, ohne = 0;
+    var add = function(o, k, v){ o[k] = (o[k] || 0) + v; };
+
+    (attribution || []).forEach(function(r){
+      var n = Number(r.n) || 0;
+      if (!r.utm_source && !r.utm_content){ ohne += n; return; }
+      var g = gebietVonSpur(r.utm_source, r.utm_medium);
+      add(ab, g, n);
+      var label = r.utm_content || r.utm_source;
+      var key = g + '|' + label + '|' + (r.utm_source || '');
+      (motive[g] = motive[g] || {});
+      motive[g][key] = motive[g][key] || { label:label, quelle:r.utm_source || '', ab:0, kl:0 };
+      motive[g][key].ab += n;
     });
-    // «ohne UTM» einordnen: kein eigener Kanal, sondern Anmeldungen ohne UTM-Spur.
-    // Seit 18.7. liefern beide Wege die Spur (goetheanum.tv über das
-    // user_created-Event mit utm_params, Paperform über Felder + device.utm);
-    // übrig bleiben Direktbesucher ohne Parameter und der nicht mehr
-    // rekonstruierbare Rest des Altbestands vor dem 18.7.
-    var ohneSpur = byKanal['andere'] || 0;
-    if (ohneSpur > 0){
-      var note = document.createElement('div'); note.className = 'fnote';
-      note.textContent = '«ohne UTM» = ' + fmt(ohneSpur) + ' Anmeldungen, die ohne UTM-Parameter ankamen: ' +
-        'Direktbesuche ohne Link-Parameter und ein Teil des Altbestands vor dem 18. Juli ' +
-        '(seit dem 18.7. liefern Wochenschrift-Formulare UND goetheanum.tv die Spur automatisch). ' +
-        'Die Einzel-Ereignisse stehen unter Momentum → «Was ist passiert?», dort auch die vermutete Herkunft.';
-      host.appendChild(note);
+    (links || []).forEach(function(l){
+      var g = gebietVonSpur(l.utm_source, l.utm_medium);
+      add(linkN, g, 1);
+      var k = Number(l.klicks) || 0;
+      if (k) add(kl, g, k);
+      var label = l.utm_content || l.utm_source;
+      var key = g + '|' + label + '|' + (l.utm_source || '');
+      (motive[g] = motive[g] || {});
+      motive[g][key] = motive[g][key] || { label:label, quelle:l.utm_source || '', ab:0, kl:0 };
+      motive[g][key].kl += k;
+    });
+    (massnahmen || []).forEach(function(m){
+      var g = gebietVonMassnahme(m);
+      var r = Number(m.reichweite) || 0, k = Number(m.klicks) || 0;
+      if (r) add(rw, g, r);
+      if (k) add(kl, g, k);
+      if (r || k) (akte[g] = akte[g] || []).push({ name:m.massnahme || '—', tag:m.tag, reichweite:r, klicks:k });
+    });
+
+    var dunkel = dunkelVerteilen(ohne);
+    var total = ohne; Object.keys(ab).forEach(function(k){ total += ab[k]; });
+    var keys = {}; [ab, kl, rw, dunkel, linkN].forEach(function(o){ Object.keys(o).forEach(function(k){ keys[k] = true; }); });
+    var items = Object.keys(keys).map(function(g){
+      return { g:g, ab:ab[g] || 0, kl:kl[g] || 0, rw:rw[g] || 0, du:dunkel[g] || 0,
+               links:linkN[g] || 0, gesamt:(ab[g] || 0) + (dunkel[g] || 0) };
+    }).filter(function(x){ return x.gesamt > 0 || x.rw > 0 || x.kl >= 3 || (x.links >= 2 && x.g !== 'andere'); })
+      .sort(function(a, b){ return b.gesamt - a.gesamt || b.kl - a.kl; });
+    if (!items.length){ host.innerHTML = '<div class="empty">Noch keine Aktivität erfasst.</div>'; return; }
+    var max = items.reduce(function(m, x){ return Math.max(m, x.gesamt); }, 0) || 1;
+
+    items.forEach(function(x){
+      var det = document.createElement('details'); det.className = 'geb';
+      var sum = document.createElement('summary');
+      var kopf = document.createElement('div'); kopf.className = 'geb-kopf';
+      var nm = document.createElement('span'); nm.className = 'geb-name';
+      var car = document.createElement('span'); car.className = 'car'; car.setAttribute('aria-hidden', 'true');
+      nm.appendChild(car); nm.appendChild(document.createTextNode(gebietLabel(x.g)));
+      // Merkzeichen: ein Wort, das sagt, was diese Zeile bedeutet.
+      var z = null;
+      if (x.kl >= 40 && x.ab <= 1) z = ['leck', 'Spur bricht ab'];
+      else if (total > 0 && x.gesamt >= total * 0.3) z = ['traegt', 'trägt die Aktion'];
+      else if (x.kl === 0 && x.gesamt === 0 && x.links > 0) z = ['still', 'nie ausgespielt'];
+      else if (x.kl >= 20 && x.ab === 0) z = ['still', 'ohne messbaren Ertrag'];
+      else if (x.du >= 10 && x.du > x.ab * 2) z = ['dunkel', 'grösstenteils dunkel'];
+      if (z){ var zs = document.createElement('span'); zs.className = 'zeichen ' + z[0]; zs.textContent = z[1]; nm.appendChild(zs); }
+      var wert = document.createElement('span'); wert.className = 'geb-wert';
+      wert.appendChild(document.createTextNode(fmt(x.ab)));
+      if (x.du){ var du = document.createElement('span'); du.className = 'du';
+        du.textContent = ' · ≈' + fmt(x.gesamt) + ' mit Dunkelfeld'; wert.appendChild(du); }
+      kopf.appendChild(nm); kopf.appendChild(wert);
+      var kette = document.createElement('div'); kette.className = 'geb-kette';
+      var teil = function(l, v){ var s2 = document.createElement('span');
+        s2.appendChild(document.createTextNode(l + ' '));
+        var b = document.createElement('b'); b.textContent = v; s2.appendChild(b); kette.appendChild(s2); };
+      teil('Reichweite', x.rw ? fmt(x.rw) : '–');
+      teil('Klicks', x.kl ? fmt(x.kl) : '–');
+      teil('Abschlüsse', fmt(x.ab));
+      if (x.rw && x.kl) teil('Klickquote', (x.kl / x.rw * 100).toFixed(1).replace('.', ',') + ' %');
+      var track = document.createElement('div'); track.className = 'track';
+      var tb = document.createElement('span'); tb.style.width = Math.max(3, Math.round(x.gesamt / max * 100)) + '%';
+      track.appendChild(tb);
+      sum.appendChild(kopf); sum.appendChild(kette); sum.appendChild(track);
+      det.appendChild(sum);
+
+      var tief = document.createElement('div'); tief.className = 'geb-tief';
+      var mots = Object.keys(motive[x.g] || {}).map(function(k){ return motive[x.g][k]; })
+        .filter(function(m){ return m.ab > 0 || m.kl > 0; })
+        .sort(function(a, b){ return b.ab - a.ab || b.kl - a.kl; }).slice(0, 10);
+      mots.forEach(function(m){
+        var row = document.createElement('div'); row.className = 'motrow';
+        var mc = document.createElement('span'); mc.className = 'mc'; mc.textContent = m.label;
+        if (m.quelle && m.quelle !== m.label){ var ms = document.createElement('span'); ms.className = 'ms'; ms.textContent = m.quelle; mc.appendChild(ms); }
+        var mn = document.createElement('span'); mn.className = 'mn';
+        mn.textContent = (m.kl ? fmt(m.kl) + ' Klicks' : '') + (m.kl && m.ab ? ' · ' : '') + (m.ab ? fmt(m.ab) + ' Abos' : (m.kl ? '' : '0'));
+        row.appendChild(mc); row.appendChild(mn); tief.appendChild(row);
+      });
+      (akte[x.g] || []).sort(function(a, b){ return b.reichweite - a.reichweite; }).slice(0, 8).forEach(function(a){
+        var row = document.createElement('div'); row.className = 'motrow';
+        var mc = document.createElement('span'); mc.className = 'mc'; mc.textContent = a.name;
+        if (a.tag){ var ms = document.createElement('span'); ms.className = 'ms';
+          ms.textContent = new Date(a.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }); mc.appendChild(ms); }
+        var mn = document.createElement('span'); mn.className = 'mn';
+        mn.textContent = (a.reichweite ? fmt(a.reichweite) + ' erreicht' : '') +
+                         (a.reichweite && a.klicks ? ' · ' : '') + (a.klicks ? fmt(a.klicks) + ' Klicks' : '');
+        row.appendChild(mc); row.appendChild(mn); tief.appendChild(row);
+      });
+      if (!mots.length && !(akte[x.g] || []).length){
+        var leer = document.createElement('div'); leer.className = 'qz-hint';
+        leer.textContent = 'Keine Einzelposten erfasst.'; tief.appendChild(leer);
+      }
+      if (x.du){
+        var dh = document.createElement('div'); dh.className = 'qz-hint';
+        dh.textContent = '+ ≈' + fmt(x.du) + ' Abos ohne UTM-Spur, diesem Gebiet nach der Lesart zugeordnet (Stand ' +
+          ((CONFIG.dunkel && CONFIG.dunkel.stand) || '–') + ') – Schätzung, keine Messung.';
+        tief.appendChild(dh);
+      }
+      if (x.g === 'social' && CONFIG.quelleSocial){
+        var ql = document.createElement('div'); ql.className = 'qz-hint';
+        ql.appendChild(document.createTextNode('Quelle der Zahlen: '));
+        var qa = document.createElement('a'); qa.href = CONFIG.quelleSocial.url;
+        qa.target = '_blank'; qa.rel = 'noopener'; qa.textContent = CONFIG.quelleSocial.label;
+        ql.appendChild(qa); tief.appendChild(ql);
+      }
+      det.appendChild(tief);
+      host.appendChild(det);
+    });
+
+    // Kontrollzeile: das Dunkelfeld als Ganzes – ohne Balken, es ist oben schon verteilt.
+    if (ohne > 0){
+      var det2 = document.createElement('details'); det2.className = 'geb';
+      var s3 = document.createElement('summary');
+      var k3 = document.createElement('div'); k3.className = 'geb-kopf';
+      var n3 = document.createElement('span'); n3.className = 'geb-name';
+      var c3 = document.createElement('span'); c3.className = 'car'; c3.setAttribute('aria-hidden', 'true');
+      n3.appendChild(c3); n3.appendChild(document.createTextNode('Ohne UTM-Spur'));
+      var z3 = document.createElement('span'); z3.className = 'zeichen dunkel'; z3.textContent = 'Lesart, keine Messung';
+      n3.appendChild(z3);
+      var w3 = document.createElement('span'); w3.className = 'geb-wert';
+      w3.appendChild(document.createTextNode(fmt(ohne)));
+      var d3 = document.createElement('span'); d3.className = 'du';
+      d3.textContent = ' · ' + (total > 0 ? Math.round(ohne / total * 100) : 0) + ' % aller Abos';
+      w3.appendChild(d3);
+      k3.appendChild(n3); k3.appendChild(w3);
+      var kt = document.createElement('div'); kt.className = 'geb-kette';
+      var kts = document.createElement('span'); kts.textContent = 'oben bereits auf die Gebiete verteilt'; kt.appendChild(kts);
+      s3.appendChild(k3); s3.appendChild(kt); det2.appendChild(s3);
+      var t3 = document.createElement('div'); t3.className = 'geb-tief';
+      var p3 = document.createElement('div'); p3.className = 'qz-hint';
+      p3.textContent = 'Diese Anmeldungen kamen ohne UTM-Parameter an und sind in den Zeilen oben als «≈ mit Dunkelfeld» bereits eingerechnet – hier stehen sie noch einmal als Ganzes, damit sichtbar bleibt, wie viel Lesart in der Rangfolge steckt. Herleitung unter Belege.';
+      t3.appendChild(p3); det2.appendChild(t3);
+      host.appendChild(det2);
+    }
+    if (el('gebieteNote')){
+      el('gebieteNote').textContent = '«Abschlüsse» ist die harte UTM-Zählung. «≈ mit Dunkelfeld» verteilt die ' +
+        fmt(ohne) + ' Anmeldungen ohne Spur nach der datierten Lesart (±30 %). Die Summe der Zeilen ergibt wieder ' + fmt(total) + '.';
     }
   }
 
-  // ── Wirkungskette: Reichweite → Klicks → Abschlüsse → Geblieben ─────────────
-  // Alle vier Stufen sind GEMESSENE Zahlen, nicht die im Eintrag gewählte Aufgabe:
-  // Reichweite/Klicks summiert aus den Aktivitäten, Abschlüsse/Geblieben live aus
-  // den Anmeldungen. Darum tragen Kanäle mit Reichweite direkt hier bei.
-  var TRICHTER = {
-    sichtbarkeit: { name:'Reichweite', frage:'Menschen erreicht',   cls:'s1' },
-    aktivierung:  { name:'Klicks',     frage:'haben geklickt',       cls:'s2' },
-    wirkung:      { name:'Abschlüsse', frage:'Abo gestartet',        cls:'s3' },
-    bindung:      { name:'Geblieben',  frage:'nach 3 Monaten dabei', cls:'s4' }
-  };
-  function renderFunnel(trichter, massnahmen){
-    if (!el('funnel')) return;
-    var host = el('funnel'); host.innerHTML = '';
-    var vals = {}; (trichter || []).forEach(function(r){ vals[r.stufe] = Number(r.wert) || 0; });
-    var order = ['sichtbarkeit','aktivierung','wirkung','bindung'];
-    var max = order.reduce(function(m, s){ return Math.max(m, vals[s] || 0); }, 0) || 1;
-    // Umwandlung je Stufe gegen die vorige gemessene Grösse (Klickrate, Abschlussrate, Bleibequote).
-    var rate = { aktivierung: vals.sichtbarkeit > 0 ? vals.aktivierung / vals.sichtbarkeit : null,
-                 wirkung:     vals.aktivierung  > 0 ? vals.wirkung / vals.aktivierung   : null,
-                 bindung:     vals.wirkung      > 0 ? vals.bindung / vals.wirkung       : null };
-    order.forEach(function(s){
-      var meta = TRICHTER[s]; var v = vals[s] || 0;
-      var lvl = document.createElement('div'); lvl.className = 'lvl';
-      lvl.innerHTML = '<div class="l2"><span class="fname"></span><span class="fval"></span></div>' +
-        '<div class="ftrack ' + meta.cls + '"><span></span></div>';
-      var nm = lvl.querySelector('.fname'); nm.textContent = meta.name;
-      var rr = document.createElement('span'); rr.className = 'r'; rr.textContent = meta.frage; nm.appendChild(rr);
-      var vtxt = fmt(v);
-      if (rate[s] != null) vtxt += '  ·  ' + Math.round(rate[s] * 100) + ' %';
-      lvl.querySelector('.fval').textContent = vtxt;
-      lvl.querySelector('.ftrack > span').style.width = Math.max(3, Math.round(v / max * 100)) + '%';
-      host.appendChild(lvl);
-    });
-    // Die Aufschlüsselung «Reichweite und Klicks je Kanal» (mit Aufklapp auf die
-    // einzelnen Aktivitäten) steht jetzt in der eigenen Sektion «Kanäle»
-    // (renderKanalUebersicht) – hier bleibt die Kette als Summe.
-    var note = document.createElement('div'); note.className = 'fnote';
-    note.textContent = 'Reichweite und Klicks kommen aus den Aktivitäten (je Kanal aufgeschlüsselt unter «Kanäle»). Klicks = erfasste Aktivitäts-Klicks plus die automatisch gezählten Kurzlink-Klicks aller Kampagnen-Links; dieselben Klicks nicht zusätzlich von Hand eintragen, sonst zählen sie doppelt. Abschlüsse und Geblieben zählt das Cockpit live aus den Anmeldungen.';
-    host.appendChild(note);
-  }
+  // ── 3 · Nächste Züge: was noch möglich ist, aus den Daten gelesen ─────────
+  // Nichts hiervon ist erfunden: der Plan steht bereits im Link-Register (jeder
+  // registrierte Link ist eine Absicht) und im Aktivitäten-Protokoll. Gelesen
+  // wird die LÜCKE – was vorbereitet ist, aber nie einen Klick gesehen hat.
+  var ZUG_QUELLE = [
+    { test:/mailing|mailer/, titel:'Mail-Welle senden',        warum:'vorbereitet, aber nie ausgespielt' },
+    { test:/news|\bnl\b|nl-|weekly/, titel:'Newsletter-Phasen ausspielen', warum:'Links liegen bereit, null Klicks' },
+    { test:/popup/,          titel:'Popup scharf schalten',    warum:'registriert, aber nie ein Klick' },
+    { test:/inserat|print|\bqr\b/, titel:'Print-Weg prüfen',   warum:'QR und Inserat ohne einen Scan' },
+    { test:/insta|face|\bfb\b|linkedin|youtube|tiktok|social/, titel:'Social-Motive ausspielen', warum:'fertig verlinkt, nie gepostet' },
+    { test:null,             titel:'Vorbereitete Links ausspielen', warum:'registriert, aber nie ein Klick' }
+  ];
+  function renderZuege(links, massnahmen, attribution, timeline, total){
+    if (!el('zuegeListe')) return;
+    var host = el('zuegeListe'); host.innerHTML = '';
+    var zuege = [], ohneSpur = 0;
+    (attribution || []).forEach(function(r){ if (!r.utm_source && !r.utm_content) ohneSpur += Number(r.n) || 0; });
 
-  // ── Kanäle: Reichweite und Klicks je Kanal (aufklappbar zu Aktivitäten) ─────
-  // Eigene Übersicht über den Kopf der Wirkungskette: je Kanal (Mailing,
-  // Newsletter, Social Media …) die summierte Reichweite und die Klicks; ein
-  // Klick auf den Kanal klappt die einzelnen Aktivitäten dahinter auf. Reichweite
-  // und die von Hand erfassten Klicks kommen aus dem Aktivitäten-Protokoll
-  // (massnahmen), die Kurzlink-Klicks aus dem Link-Register (links) – über die
-  // UTM-Spur dem Kanal zugeordnet (kanalVonLink). Summenlogik wie die Kette.
-  function kanalVonLink(l){
-    var s = ((l.utm_source || '') + ' ' + (l.utm_medium || '')).toLowerCase();
-    if (!s.trim()) return 'andere';
-    if (/(news|\bnl\b|weekly)/.test(s)) return 'newsletter';     // vor mailer: «email» enthält «mail»
-    if (/(mailing|\bmail\b|post|brief)/.test(s)) return 'mailer';
-    if (/(insta|face|\bfb\b|social|linkedin|youtube|twitter|tiktok|meta)/.test(s)) return 'social';
-    if (/(popup|overlay)/.test(s)) return 'popup';
-    if (/(inserat|flyer|stand|plakat|print)/.test(s)) return 'flyer';
-    if (/(web|site|direct|organic)/.test(s)) return 'website';
-    if (/(refer|empfehl|friend|partner)/.test(s)) return 'empfehlung';
-    return 'andere';
-  }
-  function renderKanalUebersicht(massnahmen, links){
-    if (!el('kanalReichweite')) return;
-    var host = el('kanalReichweite'); host.innerHTML = '';
-    // Reichweite + Hand-Klicks + Aktivitäten je Kanal aus dem Protokoll.
-    var reach = {}, klickHand = {}, quellen = {};
-    (massnahmen || []).forEach(function(m){
-      var r = Number(m.reichweite) || 0, k = Number(m.klicks) || 0, kn = m.kanal || 'andere';
-      if (r) reach[kn] = (reach[kn] || 0) + r;
-      if (k) klickHand[kn] = (klickHand[kn] || 0) + k;
-      if (r || k) (quellen[kn] = quellen[kn] || []).push({ name:m.massnahme || '—', tag:m.tag, reichweite:r, klicks:k });
+    // (a) Stumme Motive: registrierte Links ohne Klick UND ohne Abschluss.
+    var ab = {};
+    (attribution || []).forEach(function(r){
+      if (r.utm_source || r.utm_content) ab[(r.utm_content || '') + '|' + (r.utm_source || '')] = Number(r.n) || 0;
     });
-    // Kurzlink-Klicks je Kanal aus dem Register (über die UTM-Spur zugeordnet).
-    var klickKurz = {};
+    var grp = {};
     (links || []).forEach(function(l){
-      var k = Number(l.klicks) || 0; if (!k) return;
-      var kn = kanalVonLink(l); klickKurz[kn] = (klickKurz[kn] || 0) + k;
+      var k = (l.utm_content || '') + '|' + (l.utm_source || '');
+      grp[k] = grp[k] || { content:l.utm_content || '', source:l.utm_source || '', med:l.utm_medium || '',
+                           landing:l.landing || '', kl:0, n:0 };
+      grp[k].kl += Number(l.klicks) || 0; grp[k].n++;
+      if (l.landing) grp[k].landing = l.landing;
     });
-    var alle = {}; [reach, klickHand, klickKurz].forEach(function(o){ Object.keys(o).forEach(function(kn){ alle[kn] = true; }); });
-    var items = Object.keys(alle).map(function(kn){
-      var kh = klickHand[kn] || 0, kk = klickKurz[kn] || 0;
-      return { kanal:kn, reach:reach[kn] || 0, klickHand:kh, klickKurz:kk, klick:kh + kk };
-    }).sort(function(a, b){ return b.reach - a.reach || b.klick - a.klick; });
-    if (!items.length){ host.innerHTML = '<div class="empty">Noch keine Aktivitäten erfasst.</div>'; return; }
-    var rmax = items.reduce(function(m, x){ return Math.max(m, x.reach); }, 0) || 1;
-    items.forEach(function(x){
-      var det = document.createElement('details'); det.className = 'reach-detail';
-      var summary = document.createElement('summary');
-      var row = document.createElement('div'); row.className = 'stream';
-      row.innerHTML = '<div class="top2"><span class="name"></span>' +
-        '<span class="val"><b></b> <span class="g"></span></span></div>' +
-        '<div class="track"><span></span></div>';
-      var qs = (quellen[x.kanal] || []).slice().sort(function(a, b){ return b.reichweite - a.reichweite; });
-      row.querySelector('.name').textContent = KANAL_LABEL[x.kanal] || x.kanal;
-      var caret = document.createElement('span'); caret.className = 'rk-caret'; caret.setAttribute('aria-hidden', 'true');
-      row.querySelector('.name').appendChild(caret);
-      row.querySelector('.val b').textContent = fmt(x.reach);
-      var g = (x.klick ? (fmt(x.klick) + ' Klicks') : 'keine Klicks');
-      g += ' · ' + qs.length + (qs.length === 1 ? ' Aktivität' : ' Aktivitäten');
-      row.querySelector('.val .g').textContent = g;
-      row.querySelector('.track > span').style.width = Math.max(3, Math.round(x.reach / rmax * 100)) + '%';
-      summary.appendChild(row); det.appendChild(summary);
-
-      var list = document.createElement('div'); list.className = 'quellen';
-      qs.forEach(function(q){
-        var qr = document.createElement('div'); qr.className = 'motrow';
-        var mc = document.createElement('span'); mc.className = 'mc'; mc.textContent = q.name;
-        if (q.tag){ var ms = document.createElement('span'); ms.className = 'ms';
-          ms.textContent = new Date(q.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
-          mc.appendChild(ms); }
-        var mn = document.createElement('span'); mn.className = 'mn';
-        mn.textContent = fmt(q.reichweite) + (q.klicks ? (' · ' + fmt(q.klicks) + ' Klicks') : '');
-        qr.appendChild(mc); qr.appendChild(mn); list.appendChild(qr);
+    var stumm = {};
+    Object.keys(grp).forEach(function(k){
+      var g = grp[k];
+      if (g.kl === 0 && !(ab[k] > 0)){
+        var s = (g.source + ' ' + g.med).toLowerCase();
+        var art = ZUG_QUELLE.filter(function(q){ return q.test && q.test.test(s); })[0] || ZUG_QUELLE[ZUG_QUELLE.length - 1];
+        stumm[art.titel] = stumm[art.titel] || { art:art, motive:[], links:0, src:g.source, med:g.med };
+        stumm[art.titel].motive.push(g.content || g.source);
+        stumm[art.titel].links += g.n;
+      }
+    });
+    // Anker für die Erwartung: die stärkste bisher gemessene Welle desselben Gebiets.
+    var jeGebiet = {};
+    (attribution || []).forEach(function(r){
+      if (!r.utm_source && !r.utm_content) return;
+      var g = gebietVonSpur(r.utm_source, r.utm_medium);
+      jeGebiet[g] = (jeGebiet[g] || 0) + (Number(r.n) || 0);
+    });
+    // Rangfolge über KATEGORIEN, nicht über Rohzahlen: Klicks und Links sind
+    // nicht vergleichbar. Was neue Abos schafft, steht über dem, was bestehende
+    // nur sichtbar macht; danach kommt Verlust stoppen, zuletzt die Grundlage.
+    //   3 = schafft Abos · 2 = macht sichtbar · 1 = stoppt Verlust · 0 = Grundlage
+    Object.keys(stumm).forEach(function(titel){
+      var s2 = stumm[titel];
+      var g = gebietVonSpur(s2.src, s2.med);
+      var anker = jeGebiet[g] || 0;
+      zuege.push({
+        titel: titel, art: 3, mass: anker,
+        warum: s2.links + ' Links registriert, null Klicks · ' + s2.motive.slice(0, 4).join(', ') +
+               (s2.motive.length > 4 ? ' und weitere' : ''),
+        hebel: anker > 0 ? ('≈ ' + fmt(anker) + ' Abos') : 'unerprobt',
+        text: 'Vorbereitet, aber nie gezündet: ' + s2.motive.length + ' Motiv-Gruppen mit zusammen ' + s2.links +
+              ' Links liegen im Register und haben bis heute keinen einzigen Klick. ' +
+              (anker > 0
+                ? ('Dasselbe Gebiet hat bisher ' + fmt(anker) + ' Abschlüsse gemessen getragen – das ist der Massstab für die Erwartung.')
+                : 'Dieses Gebiet hat bisher nichts getragen; die Erwartung ist entsprechend offen.')
       });
-      if (!qs.length){
-        var leer = document.createElement('div'); leer.className = 'qz-hint';
-        leer.textContent = 'Keine Aktivität mit Reichweite oder Klicks erfasst.'; list.appendChild(leer);
+    });
+
+    // (b) Viel Klick, (fast) kein gemessener Abschluss. Alle Wege, die auf
+    // goetheanum.tv führen, teilen EINE Ursache (der Uscreen-Checkout trägt die
+    // Spur nicht bis zur Anmeldung) – darum ein einziger Zug statt vieler
+    // Einzelmeldungen. Was nicht auf TV führt, ist ein Landungs-Problem.
+    var leck = { kl:0, motive:[] };
+    Object.keys(grp).forEach(function(k){
+      var g = grp[k], a2 = ab[k] || 0;
+      if (g.kl < 20 || a2 > 1) return;
+      var tv = /tv|gtv/.test((g.landing || '').toLowerCase());
+      var geb = gebietVonSpur(g.source, g.med);
+      if (tv || geb === 'bezahlt'){
+        leck.kl += g.kl; leck.motive.push((g.content || g.source) + ' (' + fmt(g.kl) + ')');
+      } else if (a2 === 0) {
+        // Nur echte Nullen melden: ein Motiv mit einer brauchbaren Quote ist
+        // keine Schwäche, auch wenn die absolute Zahl klein ist.
+        zuege.push({ titel:'Prüfen oder einstellen · ' + (g.content || g.source), art:1, mass:g.kl,
+          warum:fmt(g.kl) + ' Klicks, kein einziger Abschluss',
+          hebel:'Verlust stoppen',
+          text:'Wird geklickt, aber niemand meldet sich an. Entweder führt der Link auf die falsche Seite, oder das Versprechen deckt sich nicht mit der Landingpage. Ein Blick auf den Ziel-Link genügt; bis dahin lohnt weitere Produktion in diesem Motiv nicht.' });
       }
-      // Kurzlink-Klicks je Kanal lassen sich nicht einer einzelnen Aktivität
-      // zuordnen – darum als eigene, klar beschriftete Zeile ausweisen.
-      if (x.klickKurz){
-        var kz = document.createElement('div'); kz.className = 'qz-hint';
-        kz.textContent = '+ ' + fmt(x.klickKurz) + ' Kurzlink-Klicks der Kampagnen-Links (nicht je Aktivität aufgeschlüsselt).';
-        list.appendChild(kz);
-      }
-      // Social: die externe Quelle (Metricool) direkt aus der Liste verlinken.
-      if (x.kanal === 'social' && CONFIG.quelleSocial){
-        var qlink = document.createElement('div'); qlink.className = 'qz-hint';
-        qlink.appendChild(document.createTextNode('Quelle der Zahlen: '));
-        var qa = document.createElement('a'); qa.href = CONFIG.quelleSocial.url;
-        qa.target = '_blank'; qa.rel = 'noopener'; qa.textContent = CONFIG.quelleSocial.label;
-        qlink.appendChild(qa); list.appendChild(qlink);
-      }
-      det.appendChild(list);
+    });
+    if (leck.kl > 0){
+      var dunkelTv = dunkelVerteilen(ohneSpur);
+      var sichtbar = (dunkelTv.bezahlt || 0);
+      zuege.push({ titel:'UTM-Spur bis in den goetheanum.tv-Checkout tragen', art:2, mass:leck.kl,
+        warum:fmt(leck.kl) + ' Klicks auf TV-Wege führen zu fast keinem messbaren Abschluss',
+        hebel:sichtbar ? ('≈ ' + fmt(sichtbar) + ' sichtbar') : 'sichtbar machen',
+        text:'Betroffen: ' + leck.motive.slice(0, 5).join(', ') + (leck.motive.length > 5 ? ' und weitere' : '') +
+             '. Alle führen auf goetheanum.tv, und der Uscreen-Checkout trägt die UTM nicht bis zur Anmeldung. ' +
+             'Das schafft keine neuen Abos – es macht vorhandene erst zählbar und die bezahlte Anzeige überhaupt steuerbar. ' +
+             'Zwei Schritte: die eingehenden ?utm_* auf der TV-Landingpage an den Checkout-Knopf hängen und die bezahlten Wege über den Kurzlink /s/<code> führen. Schritte in services/sommer-zaehler/utm-ablauf.md.' });
+    }
+
+    // (c) Datengrundlage: Aktivitäten ohne Reichweite und ohne Klicks.
+    var offen = (massnahmen || []).filter(function(m){ return !m.reichweite && !m.klicks; });
+    if (offen.length){
+      zuege.push({ titel:offen.length + ' Aktivitäten ohne Zahlen nachtragen', art:0, mass:offen.length,
+        warum:'von ' + (massnahmen || []).length + ' Einträgen fehlen ' + offen.length + ' Reichweite und Klicks',
+        hebel:'Grundlage',
+        text:'Ohne diese Zahlen bleibt die Kette oben an mehreren Stellen leer – und die Kosten je Abo lassen sich nicht ehrlich rechnen. Nachtragen im Protokoll über «Bearbeiten».' });
+    }
+
+    zuege.sort(function(a, b){ return b.art - a.art || b.mass - a.mass; });
+
+    if (!zuege.length){ host.innerHTML = '<div class="empty">Nichts liegt brach – alles Vorbereitete ist ausgespielt.</div>'; return; }
+    zuege.slice(0, 8).forEach(function(z, i){
+      var det = document.createElement('details'); det.className = 'zug';
+      if (i === 0) det.open = true;
+      var sum = document.createElement('summary');
+      var t = document.createElement('span'); t.className = 'zug-t';
+      var car = document.createElement('span'); car.className = 'car'; car.setAttribute('aria-hidden', 'true');
+      t.appendChild(car); t.appendChild(document.createTextNode(z.titel));
+      var w = document.createElement('span'); w.className = 'warum'; w.textContent = z.warum; t.appendChild(w);
+      var h = document.createElement('span'); h.className = 'zug-h';
+      h.textContent = z.hebel;
+      sum.appendChild(t); sum.appendChild(h); det.appendChild(sum);
+      var tief = document.createElement('div'); tief.className = 'zug-tief';
+      var p = document.createElement('p'); p.textContent = z.text; tief.appendChild(p);
+      det.appendChild(tief);
       host.appendChild(det);
     });
-    var note = document.createElement('div'); note.className = 'fnote';
-    note.textContent = 'Reichweite und die je Aktivität erfassten Klicks kommen aus dem Aktivitäten-Protokoll, die Kurzlink-Klicks aus dem Link-Register (über die UTM-Spur dem Kanal zugeordnet). Dieselben Klicks nicht zusätzlich von Hand eintragen, sonst zählen sie doppelt.';
-    host.appendChild(note);
   }
 
   // ── Quelle der Social-Media-Zahlen (Metricool) ─────────────────────────────
@@ -391,92 +612,37 @@
     });
   }
 
-  // ── Aktivität → Abschlüsse (gemessen, live) ─────────────────────────────────
-  // Beantwortet «welche Aktivität hat zu welchen Abschlüssen geführt?» aus harten
-  // Daten: Abschlüsse je Motiv-Tupel aus der Attribution (echte Zählung), Klicks
-  // aus dem Link-Register (DE+EN sind eigene Kurzcodes → summiert). Zeigt neben
-  // den Abschlüssen die Klicks, damit ein Attributions-Leck sichtbar wird
-  // (viele Klicks, kaum gemessene Abschlüsse = die Spur ging unterwegs verloren).
-  // Die Anmeldungen OHNE Spur stehen als eigene Fusszeile und werden darunter
-  // (renderDunkelfeld) den Aktivitäten als Schätzung zugeordnet.
-  function renderAktivitaeten(attribution, links, kanaele){
-    if (!el('aktBody')) return;
-    var body = el('aktBody'); body.innerHTML = '';
-    var keyOf = function(s, m, c){ return (s || '') + '|' + (m || '') + '|' + (c || ''); };
-    var acts = {};
-    (attribution || []).forEach(function(r){
-      if (!r.utm_source && !r.utm_content) return;   // ohne Spur → Dunkelfeld
-      var k = keyOf(r.utm_source, r.utm_medium, r.utm_content);
-      var a = acts[k] || (acts[k] = { source:r.utm_source, medium:r.utm_medium, content:r.utm_content, kanal:r.kanal, ab:0, kl:0 });
-      a.ab += Number(r.n) || 0;
-      if (!a.kanal) a.kanal = r.kanal;
-    });
-    (links || []).forEach(function(l){
-      var k = keyOf(l.utm_source, l.utm_medium, l.utm_content);
-      var a = acts[k] || (acts[k] = { source:l.utm_source, medium:l.utm_medium, content:l.utm_content, kanal:null, ab:0, kl:0 });
-      a.kl += Number(l.klicks) || 0;
-    });
-    var items = Object.keys(acts).map(function(k){ return acts[k]; })
-      .filter(function(x){ return x.ab > 0 || x.kl > 0; })
-      .sort(function(a, b){ return b.ab - a.ab || b.kl - a.kl; });
-    if (!items.length){
-      body.innerHTML = '<tr><td class="empty" colspan="4">Noch keine Anmeldung mit UTM-Spur.</td></tr>';
-    } else items.forEach(function(x){
-      var tr = document.createElement('tr');
-      tr.innerHTML = '<td></td><td></td><td class="num"></td><td class="num"></td>';
-      tr.children[0].textContent = x.content || x.source || '—';
-      var quelle = [x.source, x.medium].filter(Boolean).join(' · ');
-      if (quelle){ var sp = document.createElement('span'); sp.className = 'akt-q'; sp.textContent = quelle; tr.children[0].appendChild(sp); }
-      tr.children[1].textContent = KANAL_LABEL[x.kanal] || x.kanal || '—';
-      tr.children[2].textContent = x.kl ? fmt(x.kl) : '–';
-      tr.children[3].textContent = fmt(x.ab);
-      // Leck-Markierung: viele Klicks, kaum gemessene Abschlüsse (Spur verloren).
-      if (x.kl >= 40 && x.ab <= 1) tr.classList.add('akt-leck');
-      body.appendChild(tr);
-    });
-    var foot = el('aktFoot');
-    if (foot){
-      var ohne = 0; (kanaele || []).forEach(function(r){ if (r.kanal === 'andere') ohne += Number(r.n) || 0; });
-      foot.innerHTML = '';
-      var tr = document.createElement('tr'); tr.className = 'akt-ohne';
-      tr.innerHTML = '<td></td><td></td><td class="num"></td><td class="num"></td>';
-      tr.children[0].textContent = 'ohne UTM-Spur';
-      var note = document.createElement('span'); note.className = 'akt-q'; note.textContent = 'unten eingeordnet (Schätzung)';
-      tr.children[0].appendChild(note);
-      tr.children[1].textContent = '—';
-      tr.children[2].textContent = '–';
-      tr.children[3].textContent = fmt(ohne);
-      foot.appendChild(tr);
-    }
-  }
-
-  // ── Dunkelfeld eingeordnet (Schätzung, datiert) ─────────────────────────────
-  // Die Anmeldungen ohne UTM den Aktivitäten zugeordnet: «gemessen» + «≈ dunkel»
-  // = «≈ gesamt». Die Zahlen stehen in CONFIG.dunkelLesart (datierte Lesart,
-  // ±30 %) – hier nur gerendert, damit die Einordnung an EINER Stelle gepflegt
-  // wird. Herleitung im Repo (CONFIG.dunkelLesart.doc).
-  function renderDunkelfeld(){
+  // ── Dunkelfeld-Tabelle (Belege): wie die Abos ohne Spur verteilt wurden ───
+  // Zeigt die ANTEILE der datierten Lesart und was sie auf dem heutigen Stand
+  // bedeuten. Die Verteilung selbst steckt in dunkelVerteilen() – hier wird sie
+  // nur offengelegt, damit die Rangfolge oben nachprüfbar bleibt.
+  function renderDunkelfeld(kanaele, attribution){
     if (!el('dunkelBody')) return;
-    var L = CONFIG.dunkelLesart; if (!L) return;
+    var ohne = 0;
+    (attribution || []).forEach(function(r){ if (!r.utm_source && !r.utm_content) ohne += Number(r.n) || 0; });
+    var verteilt = dunkelVerteilen(ohne);
+    var anteile = (CONFIG.dunkel && CONFIG.dunkel.anteile) || {};
     var body = el('dunkelBody'); body.innerHTML = '';
-    var sg = 0, sd = 0, ss = 0;
-    L.zeilen.forEach(function(z){
-      sg += z.gemessen; sd += z.dunkel; ss += z.gesamt;
+    var keys = Object.keys(anteile).sort(function(a, b){ return anteile[b] - anteile[a]; });
+    keys.forEach(function(k){
       var tr = document.createElement('tr');
-      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
-      tr.children[0].textContent = z.akt;
-      tr.children[1].textContent = fmt(z.gemessen);
-      tr.children[2].textContent = z.dunkel ? ('≈' + fmt(z.dunkel)) : '–';
-      tr.children[3].textContent = '≈' + fmt(z.gesamt);
+      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td>';
+      tr.children[0].textContent = gebietLabel(k);
+      tr.children[1].textContent = Math.round(anteile[k] * 100) + ' %';
+      tr.children[2].textContent = '≈' + fmt(verteilt[k] || 0);
       body.appendChild(tr);
     });
     var foot = el('dunkelFoot');
     if (foot){
-      foot.innerHTML = '<tr><td>Summe</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>';
-      var tds = foot.querySelector('tr').children;
-      tds[1].textContent = fmt(sg); tds[2].textContent = fmt(sd); tds[3].textContent = fmt(ss);
+      foot.innerHTML = '<tr><td>Summe</td><td class="num">100 %</td><td class="num"></td></tr>';
+      foot.querySelector('tr').children[2].textContent = fmt(ohne);
     }
-    if (el('dunkelStand')) el('dunkelStand').textContent = L.stand;
+    if (el('dunkelNote')){
+      el('dunkelNote').textContent = 'Die Anteile stammen aus der datierten Lesart (Stand ' +
+        ((CONFIG.dunkel && CONFIG.dunkel.stand) || '–') + ', ±30 %) und werden auf den heutigen Stand von ' +
+        fmt(ohne) + ' Anmeldungen ohne Spur angewandt. Herleitung: ' +
+        ((CONFIG.dunkel && CONFIG.dunkel.doc) || '') + ' im Werkzeug-Repo. Die Messwerte bleiben unangetastet.';
+    }
   }
 
   // ── Vermutete Herkunft der dunklen Anmeldungen (Live-Aggregat) ──────────────
@@ -694,10 +860,15 @@
         if (ergebnis === 'ok'){
           sagen(istEdit ? 'Geändert.' : 'Eingetragen – erscheint im Zeitband, im Protokoll und in der Reichweite.');
           mfZuruecksetzen();
-          // Reichweite/Klicks fliessen in die Wirkungskette – darum Zeitband, Protokoll,
-          // Trichter UND die Kanal-Übersicht neu laden.
-          Promise.all([rpc('sommer2026_massnahmen_public'), rpc('sommer2026_trichter'), rpc('sommer2026_links_public')])
-            .then(function(res){ var rows = res[0] || []; renderZeitband(rows); renderMassnahmen(rows); renderFunnel(res[1] || [], rows); renderKanalUebersicht(rows, res[2] || []); })
+          // Reichweite und Klicks fliessen in die Gebiete – darum Zeitband, Protokoll
+          // UND (auf dem Cockpit) die Gebiete-Liste neu laden. Die Renderer sind
+          // element-gewächtert; auf der Aktivitäten-Seite greift nur das Erste.
+          Promise.all([rpc('sommer2026_massnahmen_public'), rpc('sommer2026_links_public'), rpc('sommer2026_attribution')])
+            .then(function(res){
+              var rows = res[0] || [];
+              renderZeitband(rows); renderMassnahmen(rows);
+              renderGebiete(res[2] || [], res[1] || [], rows, []);
+            })
             .catch(function(){});
         } else { sagen('Datum und Aktivität prüfen.', true); }
       })
@@ -1045,41 +1216,6 @@
     return summe;
   }
 
-  // ── Kacheln, Meilensteine ──────────────────────────────────────────────────
-  function renderTiles(total, avg, avgDays){
-    if (!el('total')) return;
-    el('total').textContent = fmt(total);
-    el('kTotal').textContent = fmt(total);
-    el('kAvg').textContent = fmt(avg);
-    el('kAvgSub').textContent = 'letzte ' + avgDays + ' Tage';
-    var ziel = CONFIG.zielGesamt || STREAMS.reduce(function(s, x){ return s + (CONFIG.ziele[x.key] || 0); }, 0);
-    var goalPct = ziel > 0 ? Math.round(total / ziel * 100) : 0;
-    el('kGoal').innerHTML = goalPct + '<span class="u"> %</span>';
-    el('kGoalSub').textContent = fmt(total) + ' von ' + fmt(ziel) + ' · Ziel 8. August';
-  }
-
-  // ── Attributions-Gesundheit: Anteil der Anmeldungen mit UTM-Spur ───────────
-  // Aus den Kanal-Buckets gerechnet: alles ausser «andere» (= ohne UTM) hat
-  // eine Spur. Die Kachel macht sichtbar, ob die Attributions-Arbeit greift.
-  function renderSpurTile(kanaele, total){
-    if (!el('kSpur')) return;
-    var ohne = 0;
-    (kanaele || []).forEach(function(r){ if (r.kanal === 'andere') ohne += Number(r.n) || 0; });
-    var mit = Math.max(0, total - ohne);
-    var pct = total > 0 ? Math.round(mit / total * 100) : 0;
-    el('kSpur').innerHTML = pct + '<span class="u"> %</span>';
-    el('kSpurSub').textContent = fmt(mit) + ' von ' + fmt(total) + ' Anmeldungen · Rest ohne UTM';
-  }
-
-  function renderMilestones(total){
-    if (!el('msLine')) return;
-    // Meilenstein als eine Zeile in der Held-Gruppe (statt eigener Sektion).
-    var ms = CONFIG.meilensteine;
-    var next = ms.find(function(m){ return m > total; }) || ms[ms.length - 1];
-    var rest = Math.max(0, next - total);
-    el('msLine').textContent = rest > 0 ? (fmt(next) + ' Abos · noch ' + fmt(rest)) : ('alle erreicht – ' + fmt(total));
-  }
-
   // ── Wer bleibt? (jüngste Kohorte) ──────────────────────────────────────────
   function renderCohort(kohorten, revenue){
     if (!el('cohortCard')) return;
@@ -1111,30 +1247,6 @@
     el('projNote').textContent = 'Hochgerechnet: bleibende Abos zum echten Vollpreis je Zahlungswährung' +
       (teile.length ? ' (' + teile.join(' + ') + ')' : '') + ', bei ' +
       Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote.';
-  }
-
-  // ── Momentum ───────────────────────────────────────────────────────────────
-  function renderSpark(timeline){
-    if (!el('spark')) return { avg: 0, days: 0 };
-    var byDay = {};
-    timeline.forEach(function(r){ byDay[r.day] = (byDay[r.day] || 0) + Number(r.n); });
-    var days = Object.keys(byDay).sort();
-    var recent = days.slice(-10);
-    var host = el('spark'); host.innerHTML = '';
-    if(!recent.length){ host.innerHTML = '<div class="empty">Noch keine Anmeldungen.</div>'; return { avg:0, days:0 }; }
-    var max = recent.reduce(function(m, d){ return Math.max(m, byDay[d]); }, 0) || 1;
-    recent.forEach(function(d){
-      var v = byDay[d];
-      var date = new Date(d + 'T00:00:00');
-      var cell = document.createElement('div'); cell.className = 'd';
-      cell.innerHTML = '<div class="bv"></div><div class="barcell"><div class="bar"></div></div><div class="dl"></div>';
-      cell.querySelector('.bv').textContent = fmt(v);
-      cell.querySelector('.bar').style.height = Math.max(3, Math.round(v / max * 100)) + '%';
-      cell.querySelector('.dl').textContent = date.toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
-      host.appendChild(cell);
-    });
-    var sum = recent.reduce(function(s, d){ return s + byDay[d]; }, 0);
-    return { avg: Math.round(sum / recent.length), days: recent.length };
   }
 
   // ── Ereignis-Protokoll: die einzelnen Abos («Was ist passiert?») ────────────
@@ -1224,13 +1336,13 @@
   }
 
   // ── Laden ──────────────────────────────────────────────────────────────────
+  // Der Trichter-RPC wird nicht mehr abgerufen: seine vier Summen stehen jetzt
+  // je Gebiet in der Gebiete-Liste, wo sie etwas aussagen. Alles andere bleibt.
   function load(){
-    renderDeadline();
     renderQuelleSocial();
     // Ereignis-Protokoll separat laden: fällt der RPC aus, bleibt der Rest des
     // Cockpits vollständig – nur die Liste meldet sich als nicht ladbar. Speist
-    // sowohl das Protokoll («Was ist passiert?») als auch das Live-Aggregat der
-    // vermuteten Herkunft unter der Dunkelfeld-Schätzung.
+    // sowohl «Was ist passiert?» als auch das Live-Aggregat der vermuteten Herkunft.
     if (el('evList') || el('vermutetList')) rpc('sommer2026_ereignisse')
       .then(function(rows){ renderEreignisse(rows); renderVermutet(rows); })
       .catch(function(){
@@ -1241,27 +1353,25 @@
       el('provisorisch').textContent = 'Zielmarken, Preise und die Bleibe-Quote sind vorläufig hinterlegt – sobald die echten Werte gesetzt sind, rechnet das Cockpit unverändert weiter.';
     }
     Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten'), rpc('sommer2026_kanaele'),
-                  rpc('sommer2026_trichter'), rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public'), rpc('sommer2026_kosten_public'), rpc('sommer2026_multi_liste'), rpc('sommer2026_multi_protokoll'), rpc('sommer2026_links_public') ])
+                  rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public'), rpc('sommer2026_kosten_public'),
+                  rpc('sommer2026_multi_liste'), rpc('sommer2026_multi_protokoll'), rpc('sommer2026_links_public') ])
       .then(function(res){
         var stats = res[0] || [], timeline = res[1] || [], kohorten = res[2] || [], kanaele = res[3] || [];
-        var trichter = res[4] || [], attribution = res[5] || [], massnahmen = res[6] || [], kostenPosten = res[7] || [];
-        muListe = res[8] || []; muProto = res[9] || [];
-        var links = res[10] || [];
+        var attribution = res[4] || [], massnahmen = res[5] || [], kostenPosten = res[6] || [];
+        muListe = res[7] || []; muProto = res[8] || [];
+        var links = res[9] || [];
         var total = stats.reduce(function(s, r){ return s + Number(r.n); }, 0);
         var revenue = projectRevenue(stats);
-        var mo = renderSpark(timeline);
-        renderTiles(total, mo.avg, mo.days);
-        renderStreams(stats);
-        renderFunnel(trichter, massnahmen);
-        renderKanaele(kanaele, total);
-        renderSpurTile(kanaele, total);
+        // 1 Stand · 2 Gebiete · 3 Züge · 4 Belege – in dieser Reihenfolge gelesen.
+        renderStand(total, timeline);
+        renderStroeme(stats, total);
+        renderGebiete(attribution, links, massnahmen, kanaele);
+        renderZuege(links, massnahmen, attribution, timeline, total);
+        renderDunkelfeld(kanaele, attribution);
         renderMotive(attribution);
-        renderAktivitaeten(attribution, links, kanaele);
-        renderKanalUebersicht(massnahmen, links);
-        renderDunkelfeld();
         renderTarif(stats);
-        renderMilestones(total);
         renderCohort(kohorten, revenue);
+        // Schwesterseiten (element-gewächtert, hier ohne Wirkung).
         renderKosten(total, revenue, kostenPosten);
         renderMassnahmen(massnahmen);
         renderZeitband(massnahmen);
@@ -1272,8 +1382,7 @@
       })
       .catch(function(){
         setStatus('err');
-        ['wosStreams','gtvStreams','kanalBars','funnel'].forEach(function(id){ var e = el(id); if (e) e.innerHTML = '<div class="err">nicht ladbar</div>'; });
-        if (el('spark')) el('spark').innerHTML = '<div class="err">nicht ladbar</div>';
+        ['gebieteListe','zuegeListe'].forEach(function(id){ var e = el(id); if (e) e.innerHTML = '<div class="err">nicht ladbar</div>'; });
       });
   }
 
