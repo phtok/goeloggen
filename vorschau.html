@@ -23,9 +23,9 @@
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
   a{color:var(--gold-ink)}
   .hero{padding-block:58px 8px}
-  .kick{color:var(--gold-ink);font-size:14px;margin-bottom:14px}
+  /* Kicker: kanonische Rolle aus base.css (.kick) nutzen – DS04 */
   h1{text-wrap:balance}
-  .lede{font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:48ch;margin-top:14px;text-wrap:pretty}
+  .lede{max-width:48ch;margin-top:14px;text-wrap:pretty}
   section{padding:40px 0;border-top:1px solid var(--line-soft)}
   .sec{color:var(--gold-ink);font-size:var(--t-small)}
   h2{margin:4px 0 6px;text-wrap:balance}
@@ -33,8 +33,9 @@
   p{max-width:54ch;text-wrap:pretty}
   p.dim{color:var(--muted)}
   .laut{font-family:"G Laut"}.leise{font-family:"G Leise"}
+  /* Farbe/Grösse kommen aus der kanonischen .note-Rolle (base.css) – DS04 */
   .note{border-left:2px solid var(--gold);background:var(--soft);padding:10px 14px;border-radius:0 10px 10px 0;
-        margin:14px 0;font-size:14px;color:var(--muted);max-width:54ch}
+        margin:14px 0;max-width:54ch}
   code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 6px}
   /* Ziffern-Demo */
   .figs{display:grid;grid-template-columns:1fr;gap:10px;margin:14px 0;max-width:680px}
@@ -63,7 +64,7 @@
   /* tabular alignment demo */
   .align{display:inline-grid;gap:2px;border:1px solid var(--line-soft);border-radius:10px;padding:10px 16px;background:var(--soft);text-align:right;font-size:20px;min-width:160px}
   .twocol{display:flex;gap:18px;flex-wrap:wrap;align-items:start;margin-top:8px}
-  .twocol figcaption,.cap{font-size:var(--t-small);color:var(--muted);margin-top:6px;text-align:center}
+  .twocol figcaption{font-size:var(--t-small);color:var(--muted);margin-top:6px;text-align:center}
   /* before / after */
   .ba{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;max-width:640px}
   @media(max-width:560px){.ba{grid-template-columns:1fr}}

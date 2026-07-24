@@ -29,8 +29,10 @@
   .griff .kopf{display:flex;gap:var(--s3);align-items:baseline;flex-wrap:wrap}
   .griff h3{margin:0;font-size:var(--t-body)}
   .griff .gid{font-family:var(--font-mono);font-size:var(--t-small);color:var(--muted)}
-  .chip{font-family:var(--font-text);font-size:var(--t-small);border:1px solid var(--line);border-radius:999px;padding:2px 12px;color:var(--ink);background:var(--field-bg)}
-  .chip.live{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent)}
+  /* Farbe kommt aus der kanonischen .chip-Rolle (Ruhezustand) bzw. .live-Rolle
+     (Live-Zustand, gleiche Werte gold-deep/on-accent) aus base.css – DS04 */
+  .chip{font-family:var(--font-text);border:1px solid var(--line);border-radius:999px;padding:2px 12px;background:var(--field-bg)}
+  .chip.live{background:var(--gold-deep);border:1px solid var(--gold-deep)}
   .griff .zeilen{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.55}
   .griff .zahl{font-variant-numeric:tabular-nums}
   .quellen{margin-top:var(--s7);font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.7}

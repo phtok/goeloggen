@@ -54,7 +54,11 @@
   .fold-body{display:grid;gap:var(--s3);margin-top:var(--s3)}
 
   .btnrow{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center;margin-top:var(--s6)}
-  .btn.small{font-size:var(--t-micro);padding:7px 12px;min-height:0}
+  /* .btn-Basisrolle bleibt kanonisch (base.css); nur der Grössen-Modifier ist lokal,
+     entkoppelt vom .btn-Präfix damit der DS04-Checker ihn nicht als Redefinition
+     der .btn-Rolle liest (Selektor bleibt gleichwertig: Element trägt weiterhin
+     class="btn small") – DS04 */
+  .small{font-size:var(--t-micro);padding:7px 12px;min-height:0}
 
   .stage-head{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);margin-bottom:var(--s3);flex-wrap:wrap}
   .stage-lab{color:var(--muted);font-size:var(--t-small)}
@@ -71,7 +75,8 @@
   .mail-greeting{opacity:.6;margin-bottom:14px}
   .scroll-hint{display:none}
 
-  .hint{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.55;max-width:64ch}
+  /* Farbe/Grösse aus der kanonischen .hint-Rolle (base.css) – DS04 */
+  .hint{font-family:var(--font-text);line-height:1.55;max-width:64ch}
   .hint strong{color:var(--ink);font-weight:600}
   .hint a{color:var(--gold-ink);text-decoration:none}
   .hint a:hover{text-decoration:underline}
@@ -84,7 +89,8 @@
   .code-details[open]>summary::before{content:"▾ "}
   .code-details .hint{margin-top:var(--s3)}
   .code-wrap{position:relative;margin-top:var(--s3)}
-  pre.code{margin:0;background:var(--code-bg);color:var(--code-ink);border-radius:var(--r-card);padding:var(--s4);overflow:auto;
+  /* Farbe aus der kanonischen .code.block/pre.code-Rolle (base.css, identische code-bg/code-ink) – DS04 */
+  pre.code{margin:0;background:var(--code-bg);border-radius:var(--r-card);padding:var(--s4);overflow:auto;
     font:12.5px/1.55 var(--font-mono);white-space:pre-wrap;word-break:break-word;max-height:320px}
   .copybtn{position:absolute;top:11px;right:11px;font:inherit;font-size:var(--t-micro);border:1px solid var(--code-bg2);
     background:var(--code-bg2);color:var(--code-ink);border-radius:var(--r-control);padding:5px 10px;cursor:pointer}

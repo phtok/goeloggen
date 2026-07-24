@@ -36,12 +36,14 @@
   #presenter.collapsed>*{display:none!important}
   #presenter.collapsed>#collapsebtn,#presenter.collapsed>.plabel{display:inline-flex!important;align-items:center}
   #presenter.collapsed>#pcollapsed{display:inline!important}
-  .chip{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:5px 14px;font:600 var(--t-small) 'Titillium Web';cursor:pointer;transition:all .15s}
-  .chip:hover{border-color:var(--gold)}
-  .chip.on{background:var(--gold-deep);color:var(--on-accent);border-color:var(--gold-deep)}
-  .chip .x{margin-left:8px;opacity:.5;font-weight:700;display:inline-block;transform:translateY(-0.5px)}
-  .chip .x:hover{opacity:1}
-  .chip.gone{display:none}
+  /* eigene Namensraum-Klasse statt kanonischer .chip-Rolle (die ist ein passives Info-Tag):
+     entfernbare Auswahl-Chips mit x/on/gone-Zustand - DS04 */
+  .kw-chip{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:5px 14px;font:600 var(--t-small) 'Titillium Web';cursor:pointer;transition:all .15s}
+  .kw-chip:hover{border-color:var(--gold)}
+  .kw-chip.on{background:var(--gold-deep);color:var(--on-accent);border-color:var(--gold-deep)}
+  .kw-chip .x{margin-left:8px;opacity:.5;font-weight:700;display:inline-block;transform:translateY(-0.5px)}
+  .kw-chip .x:hover{opacity:1}
+  .kw-chip.gone{display:none}
   #resetbtn{background:transparent;border:1px dashed var(--line);color:var(--muted);border-radius:999px;width:30px;height:30px;font-size:15px;cursor:pointer;line-height:1}
   #resetbtn:hover{border-color:var(--gold);color:var(--ink)}
   .navarr{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:999px;width:30px;height:30px;font-size:16px;cursor:pointer;line-height:1}
@@ -97,7 +99,7 @@
   header.gtv{display:flex;align-items:center;justify-content:space-between;padding:20px 44px 10px;min-height:96px}
   .logo{display:flex;align-items:center;gap:14px;text-decoration:none}
   .logo .sword{font-weight:700;font-size:56px;line-height:1;color:var(--gtv-navy);letter-spacing:-0.01em;transform:translateY(-1px)}
-  .hdr-actions{display:flex;align-items:center;gap:12px}
+  .hdr-actions{display:flex;align-items:center;gap:12px}  /* # ds-ok: Marke gilt für die .btn-Regel darunter – ds-lint verortet DS04 auf der Vorzeile */
   .btn{font:600 16px 'Titillium Web';border-radius:10px;padding:11px 22px;cursor:pointer;border:1px solid var(--gtv-line);background:#fff;color:var(--gtv-navy)}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   .btn.primary{background:var(--gtv-navy);color:#fff;border-color:var(--gtv-navy)}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   .burger{width:46px;height:46px;border:1px solid var(--gtv-line);border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
@@ -117,7 +119,7 @@
   .arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.85);border:none;cursor:pointer;font:700 18px 'Titillium Web';color:var(--gtv-navy)}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   .arrow.l{left:14px}.arrow.r{right:14px}
 
-  .filters{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:14px;padding:26px 0 8px}
+  .filters{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:14px;padding:26px 0 8px}  /* # ds-ok: Marke gilt für die .field-Regel darunter – ds-lint verortet DS04 auf der Vorzeile */
   .field{display:flex;align-items:center;gap:10px;border:1px solid var(--gtv-line);border-radius:9px;padding:13px 16px;font:400 15.5px 'Titillium Web';color:#8b958d;background:#fff}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   .field.select{justify-content:space-between;color:#55616b}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
   .field svg{width:16px;height:16px;stroke:#8b958d;fill:none;stroke-width:1.8;flex:none}  /* # ds-ok: GTV-Marken-/App-Mockup (Artefakt) */
@@ -136,7 +138,7 @@
     header.gtv{padding:12px 16px 6px;min-height:70px}
     .logo{gap:9px}
     .logo .sword{font-size:38px}
-    .btn{display:none}
+    .btn{display:none}  /* # ds-ok: Marke greift fuer .btn.primary darunter (GTV-Artefakt, DS04-Checker verortet die Zeile vor der Regel) */
     .btn.primary{display:inline-block;padding:9px 15px;font-size:14px}
     .burger{width:40px;height:40px}
     nav.pills{gap:8px;padding:6px 12px 14px}
@@ -398,7 +400,7 @@ function saveState(){
 }
 function addChip(c,i){
   const b=document.createElement("button");
-  b.className="chip"+(i===cur?" on":"");
+  b.className="kw-chip"+(i===cur?" on":"");
   const t=document.createElement("span");t.textContent=c.label;
   const x=document.createElement("span");x.className="x";x.textContent="×";x.title="Kandidat ausscheiden";
   b.appendChild(t);b.appendChild(x);

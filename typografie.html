@@ -31,9 +31,8 @@
   nav.top a{color:var(--muted);text-decoration:none;font-size:var(--t-small)}
   nav.top a:hover{color:var(--gold-ink)}
   .hero{padding-block:58px 8px}
-  .kick{color:var(--gold-ink);font-size:14px;margin-bottom:14px}
+  /* Kicker/Lede: kanonische Rolle aus base.css (.kick/.lede) nutzen – DS04 */
   h1{text-wrap:balance}
-  .lede{font-family:"G Klar";font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:48ch;margin-top:14px;text-wrap:pretty}
   section{padding:42px 0;border-top:1px solid var(--line-soft)}
   .sec{color:var(--gold-ink);font-size:var(--t-small)}
   /* Marginalspalte (System B): die Paragraphen-Marke wandert auf breiten Schirmen
@@ -48,15 +47,18 @@
   p{max-width:39ch;text-wrap:pretty;orphans:2;widows:2}
   p.dim{color:var(--muted)}
   .leise{font-family:"G Leise"}.deutlich{font-family:"G Deutlich"}.laut{font-family:"G Laut"}
+  /* Farbe/Grösse kommen aus der kanonischen .note-Rolle (base.css) – DS04 */
   .note{display:flex;gap:10px;align-items:baseline;border-left:2px solid var(--gold);background:var(--soft);
-        padding:10px 14px;border-radius:0 10px 10px 0;margin:14px 0;font-size:14px;color:var(--muted);max-width:39ch}
+        padding:10px 14px;border-radius:0 10px 10px 0;margin:14px 0;max-width:39ch}
   .note .rid{font-size:var(--t-small);color:var(--gold-ink);white-space:nowrap}
   .ex{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;max-width:640px}
   @media(max-width:560px){.ex{grid-template-columns:1fr}}
   .ex>div{border:1px solid var(--line-soft);border-radius:10px;padding:10px 14px;background:var(--soft);font-size:15px}
   .ex .t{font-size:var(--t-small);letter-spacing:.02em;margin-bottom:4px}
   .ex .no .t{color:var(--bad)} .ex .yes .t{color:var(--good)}
-  code,.mono{font-family:ui-monospace,Menlo,monospace;font-size:.86em;background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 6px}
+  /* Chip-Code = kanonische .code-Rolle (base.css); bare <code> lokal, da base.css
+     keinen Element-Selektor dafür trägt. */
+  code{font-family:ui-monospace,Menlo,monospace;font-size:.86em;background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 6px}
   .files{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0;max-width:760px}
   @media(max-width:640px){.files{grid-template-columns:1fr}}
   .file{border:1px solid var(--line);border-radius:12px;padding:16px}
@@ -89,10 +91,10 @@
     <p>Hierarchie entsteht aus Raum und Mass, nicht aus Häufung. Die Grundregel: Jede Abweichung vom Fliesstext ändert genau <span class="laut">ein</span> Merkmal – Gewicht, Grösse, Farbe oder Einzug. Nie zwei zugleich. Ein Wort wird nur fetter, nicht zusätzlich grösser und farbig.</p>
     <div class="note"><span class="rid">G01</span>regel. Gilt für Hervorhebung <span class="laut">im</span> Fliesstext: genau ein Merkmal. Strukturebenen – Titel, Lede, Bildlegende, Tabellenkopf – sind eine eigene Hierarchie und keine Auszeichnung; sie dürfen sich in mehr als einem Merkmal vom Text absetzen.</div>
     <h3>Die drei Stimmen</h3>
-    <p>Der Fliesstext steht in Klar. Betont wird mit <span class="laut">Laut</span> – im Office einfach <span class="mono">Cmd+B</span>. Der stille Kontrapunkt ist <span class="leise">Leise</span> – Bildlegenden, Zitate, Nebenstimmen, im Office <span class="mono">Cmd+I</span>. Nie zwei Ämter auf einem Wort.</p>
+    <p>Der Fliesstext steht in Klar. Betont wird mit <span class="laut">Laut</span> – im Office einfach <span class="code">Cmd+B</span>. Der stille Kontrapunkt ist <span class="leise">Leise</span> – Bildlegenden, Zitate, Nebenstimmen, im Office <span class="code">Cmd+I</span>. Nie zwei Ämter auf einem Wort.</p>
     <div class="note"><span class="rid">S01</span>griff. Standardgriff: Lesetext in Klar – auch das Minimum für kleine Marginalien und Fussnoten. Titel in <span class="deutlich">Deutlich</span> (entschiedene Ausnahme für die Titelei), Betonung in Laut, Nebenstimmen in Leise – nie kleiner als der Lesetext. Eine Familie trägt alles – ausser dort, wo sie an ihre Grenze kommt.</div>
     <h3>Wo die Schrift endet</h3>
-    <p>Die Goetheanum Schrift ist eine Werk- und Auszeichnungs-Grotesk, kein Buchsatz. Drei Grenzen sind zu kennen: Sie führt <span class="laut">keine</span> echte Kursive – Leise ist ein aufrechter Gegenton, kein laufender Schreibduktus. Sie führt <span class="laut">mehrere</span> Ziffernsätze (proportional, tabellarisch, Kurzziffern) – aber keine echten Mediävalziffern mit Ranging für lange Zahlentexte; nicht durch Verkleinern vortäuschen. Und sie deckt <span class="laut">Latein</span> ab – kein Griechisch, kein Kyrillisch, kein Arabisch. Für langen, immersiven Mengensatz (Begleitschrift <span class="laut">Source Sans 3</span>), für fremde Schriftsysteme und für Festbreiten-Code (hier im <span class="mono">Monospace</span>) greift man bewusst nach aussen.</p>
+    <p>Die Goetheanum Schrift ist eine Werk- und Auszeichnungs-Grotesk, kein Buchsatz. Drei Grenzen sind zu kennen: Sie führt <span class="laut">keine</span> echte Kursive – Leise ist ein aufrechter Gegenton, kein laufender Schreibduktus. Sie führt <span class="laut">mehrere</span> Ziffernsätze (proportional, tabellarisch, Kurzziffern) – aber keine echten Mediävalziffern mit Ranging für lange Zahlentexte; nicht durch Verkleinern vortäuschen. Und sie deckt <span class="laut">Latein</span> ab – kein Griechisch, kein Kyrillisch, kein Arabisch. Für langen, immersiven Mengensatz (Begleitschrift <span class="laut">Source Sans 3</span>), für fremde Schriftsysteme und für Festbreiten-Code (hier im <span class="code">Monospace</span>) greift man bewusst nach aussen.</p>
     <div class="ex">
       <div class="no"><div class="t">so nicht</div>Der Vortrag ist <u><b>WICHTIG</b></u> und beginnt pünktlich.</div>
       <div class="yes"><div class="t">so</div>Der Vortrag ist <span class="laut">wichtig</span> und beginnt pünktlich.</div>
@@ -113,7 +115,7 @@
     <div class="note"><span class="rid">G09</span>prinzip. Ändert sich eine Ecke, müssen die anderen nachgezogen werden. Lesekomfort ist die Summe, nicht ein Einzelwert.</div>
     <h3>Zeilenlänge</h3>
     <p>Angenehm sind 45–75 Zeichen je Zeile, ideal etwa 67 – als Faustregel: neun deutsche Wörter. Diese Spalte misst 39ch – das sind in dieser schmalen Schrift rund 66 Zeichen, etwa neun Wörter (empirisch gezählt, nicht gerechnet). Der Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit; Fliesstext 1.4–1.6.</p>
-    <div class="note"><span class="rid">G10</span>grenze. Das Mass ist hart: <span class="mono">min(39ch, 100%)</span> – die Einheit ch misst die ‹0›, Prosa läuft schmaler: 39ch ergeben in dieser schmalen Schrift ≈ 66 echte Zeichen (gezählt: 46ch waren 78). Ohne Grenze laufen breite Fenster auf 100 Zeichen davon.</div>
+    <div class="note"><span class="rid">G10</span>grenze. Das Mass ist hart: <span class="code">min(39ch, 100%)</span> – die Einheit ch misst die ‹0›, Prosa läuft schmaler: 39ch ergeben in dieser schmalen Schrift ≈ 66 echte Zeichen (gezählt: 46ch waren 78). Ohne Grenze laufen breite Fenster auf 100 Zeichen davon.</div>
     <h3>Drei Lesesituationen</h3>
     <p>Das Mass von 66 Zeichen gilt der <span class="laut">Lesetypografie</span> – dem ruhigen, linearen Lesen von Mengentext. Daneben stehen zwei eigene Situationen mit eigenem Mass: <span class="laut">Konsultation</span> (Tabelle, Formular, Verzeichnis – man springt und vergleicht, die Zeile darf breiter laufen) und <span class="laut">Schau</span> (Signaletik, Plakat – aus Distanz gelesen, in Laut oder im Variable Font). Die Tabellen dieser Seite sind Konsultation und überschreiten das Lese-Mass bewusst.</p>
     <div class="note"><span class="rid">G27</span>geltung. Das harte Mass bindet den Lesesatz. Konsultation und Schau haben ihr eigenes Gleichgewicht – das magische Viereck wird je Situation neu gestimmt.</div>
@@ -226,7 +228,7 @@
         <p><span style="color:var(--ink)">Für:</span> Redaktion &amp; alle Mitarbeitenden – Datei einem LM mitgeben: ‹Wende diese Regeln auf meinen Text an›.</p>
         <a href="assets/typografie/typo-regeln.yaml" download>herunterladen</a></div>
     </div>
-    <p class="dim">So nutzt du es im Alltag: Text und <span class="mono">typo-regeln.yaml</span> in ein beliebiges KI-Werkzeug geben und schreiben: <i>‹Prüfe und korrigiere meinen Text nach diesen Regeln. Eindeutiges direkt beheben, Mehrdeutiges als Vorschlag markieren.›</i></p>
+    <p class="dim">So nutzt du es im Alltag: Text und <span class="code">typo-regeln.yaml</span> in ein beliebiges KI-Werkzeug geben und schreiben: <i>‹Prüfe und korrigiere meinen Text nach diesen Regeln. Eindeutiges direkt beheben, Mehrdeutiges als Vorschlag markieren.›</i></p>
     <div class="note"><span class="rid">G26</span>kern. Eindeutiges automatisieren, Mehrdeutiges vorschlagen, Gestaltung dem Menschen lassen.</div>
     <p class="credo">Diese Regeln verhindern den Fehler.<br>Den guten Satz macht der Mensch.</p>
   </section>

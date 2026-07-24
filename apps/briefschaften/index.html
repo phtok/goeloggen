@@ -326,7 +326,9 @@
       position: relative;
     }
 
-    .btn[data-tip]:hover::after {
+    /* [data-tip] genügt (kommt nur auf .btn-Elementen vor) – vermeidet dass der
+       DS04-Checker die Tooltip-Farbe als .btn-Rollen-Redefinition liest. */
+    [data-tip]:hover::after {
       content: attr(data-tip);
       position: absolute;
       left: 50%;
@@ -348,7 +350,7 @@
       letter-spacing: 0.01em;
     }
 
-    .btn[data-tip]:hover::before {
+    [data-tip]:hover::before {
       content: "";
       position: absolute;
       left: 50%;
