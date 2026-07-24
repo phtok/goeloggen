@@ -18,10 +18,9 @@ Statische Onepager liegen unter `apps/`:
 
 ### Services
 
-Nicht-statische Unterprojekte sind unter `services/` bereits vorgesehen:
+Nicht-statische Unterprojekte unter `services/`:
 
-- `services/brand-portrait/`
-- `services/gtv-subs/`
+- `services/sommer-zaehler/` - Backend des Sommer-Zähler-Cockpits
 
 ### Collections
 
