@@ -94,21 +94,26 @@
   /* ── Stand: eine Zahl, ein Tempo, eine Prognose (ersetzt Kacheln + Momentum) ── */
   .stand{display:grid;grid-template-columns:auto 1fr;gap:var(--s8);align-items:end}
   .stand .zahl{font-family:var(--font-display);font-weight:var(--w-strong);
-    font-size:clamp(64px,14vw,112px);line-height:.9;letter-spacing:-.02em;
+    font-size:clamp(52px,11vw,88px);line-height:.9;letter-spacing:-.02em;
     color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
   .stand .zahl-u{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:var(--s2)}
   .stand .rechts{min-width:min(100%,260px)}
   .kpi{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s6);margin-bottom:var(--s3)}
   .kpi .k{font-family:var(--font-text);font-size:var(--t-small)}
-  .kpi .k b{display:block;font-size:var(--t-lede);color:var(--ink);font-variant-numeric:tabular-nums}
+  .kpi .k b{display:block;font-size:var(--t-body);color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600}
   .kpi .k span{color:var(--muted);font-size:var(--t-micro)}
   .kpi .k.warn b{color:var(--bad)}
-  /* Befund: die Fortschreibung im Klartext – der Satz, den eine Prozentzahl verschweigt. */
-  .befund{margin-top:var(--s6);padding:var(--s4) var(--s6);border-radius:var(--r-card);
-    background:color-mix(in srgb,var(--bad) 10%,transparent);border-left:3px solid var(--bad)}
-  .befund p{font-family:var(--font-display);font-weight:var(--w-text);font-size:var(--t-lede);
-    line-height:1.4;color:var(--ink);margin:0;max-width:var(--measure)}
-  .befund .b-meta{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s2)}
+  /* Befund: die Fortschreibung im Klartext – der Satz, den eine Prozentzahl
+     verschweigt. Zurückhaltend gesetzt: er soll auffallen, weil er dasteht,
+     nicht weil er laut ist (G03). Lesegrösse statt Lede, getönte Kante statt
+     Signalbalken, Fläche nur angedeutet. */
+  .befund{margin-top:var(--s4);padding:var(--s3) var(--s4);border-radius:var(--r-control);
+    background:color-mix(in srgb,var(--bad) 5%,transparent);
+    border-left:2px solid color-mix(in srgb,var(--bad) 55%,transparent)}
+  .befund p{font-family:var(--font-text);font-size:var(--t-small);
+    line-height:1.55;color:var(--ink);margin:0;max-width:var(--measure)}
+  .befund p b{font-weight:600}
+  .befund .b-meta{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s1)}
   /* Puls: der Takt neben der Zahl, nicht als eigene Sektion. */
   .puls{display:flex;align-items:flex-end;gap:var(--s1);height:56px;margin-top:var(--s6)}
   .puls .p{flex:1;background:color-mix(in srgb,var(--blue) 55%,transparent);border-radius:3px 3px 0 0;min-height:2px}
