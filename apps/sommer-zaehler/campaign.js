@@ -530,9 +530,10 @@
     (links || []).forEach(function(l){
       var k = (l.utm_content || '') + '|' + (l.utm_source || '');
       grp[k] = grp[k] || { content:l.utm_content || '', source:l.utm_source || '', med:l.utm_medium || '',
-                           landing:l.landing || '', kl:0, n:0 };
+                           landing:l.landing || '', kl:0, n:0, letzter:null };
       grp[k].kl += Number(l.klicks) || 0; grp[k].n++;
       if (l.landing) grp[k].landing = l.landing;
+      if (l.letzter_klick && (!grp[k].letzter || l.letzter_klick > grp[k].letzter)) grp[k].letzter = l.letzter_klick;
     });
     var stumm = {};
     Object.keys(grp).forEach(function(k){
@@ -579,7 +580,7 @@
     // und trägt die UTM. Bleibt der Befund selbst: diese Wege werden geklickt und
     // münden kaum in Abos. Darum ein Zug, der misst statt umbaut.
     // Herleitung: docs/wirkungs-lesart-24-07.md.
-    var leck = { kl:0, motive:[] };
+    var leck = { kl:0, motive:[], letzter:null, bezahltKl:0, bezahltLetzter:null };
     Object.keys(grp).forEach(function(k){
       var g = grp[k], a2 = ab[k] || 0;
       if (g.kl < 20 || a2 > 1) return;
@@ -587,6 +588,14 @@
       var geb = gebietVonSpur(g.source, g.med);
       if (tv || geb === 'bezahlt'){
         leck.kl += g.kl; leck.motive.push((g.content || g.source) + ' (' + fmt(g.kl) + ')');
+        if (g.letzter && (!leck.letzter || g.letzter > leck.letzter)) leck.letzter = g.letzter;
+        // Der bezahlte Weg getrennt: nur er ist es, dessen Aussetzen empfohlen
+        // wird – die organischen TV-Wege laufen weiter und dürfen die Erkennung
+        // nicht überdecken.
+        if (geb === 'bezahlt'){
+          leck.bezahltKl += g.kl;
+          if (g.letzter && (!leck.bezahltLetzter || g.letzter > leck.bezahltLetzter)) leck.bezahltLetzter = g.letzter;
+        }
       } else if (a2 === 0) {
         // Nur echte Nullen melden: ein Motiv mit einer brauchbaren Quote ist
         // keine Schwäche, auch wenn die absolute Zahl klein ist.
@@ -597,14 +606,30 @@
       }
     });
     if (leck.kl > 0){
-      zuege.push({ titel:'Bezahlte Anzeige 3–4 Tage aussetzen und vergleichen', art:2, mass:leck.kl,
-        warum:fmt(leck.kl) + ' Klicks auf TV-Wege führen zu fast keinem Abschluss',
-        hebel:'Klarheit',
-        text:'Betroffen: ' + leck.motive.slice(0, 5).join(', ') + (leck.motive.length > 5 ? ' und weitere' : '') +
-             '. Die Spur ist geprüft und intakt: die Landingpages hängen die UTM an die Checkout-URL, Uscreen liefert sie im user_created-Event, die Ingestion verheftet sie. ' +
-             'Die organischen Wege über dieselbe Seite und dieselben In-App-Browser werden mit 3 bis 5 Prozent ihrer Klicks messbar, die bezahlte Anzeige mit 0,4 Prozent – die Klicks werden also nicht verloren, sie werden kaum zu Abos. ' +
-             'Darum zuerst messen statt umbauen: die Anzeige aussetzen, solange die Grundlinie sauber ist (Mailing abgeklungen, nächste Welle später), und die Anmeldungen je Tag vergleichen. ' +
-             'Soll sie danach weiterlaufen, macht ein eigenes Uscreen-Angebot je bezahltem Weg sie hart messbar (offer_id kommt serverseitig im Webhook an): services/sommer-zaehler/uscreen-angebot-attribution-auftrag.md.' });
+      // Läuft der Weg noch, oder ist er schon abgestellt? Der jüngste Kurzlink-
+      // Klick sagt es. Ohne diese Unterscheidung empfiehlt das Cockpit weiter
+      // eine Abschalt-Probe, die längst läuft – der häufigste Weg, wie ein
+      // Cockpit unglaubwürdig wird.
+      var bezug = leck.bezahltLetzter || leck.letzter;
+      var stillTage = bezug ? Math.floor((Date.now() - new Date(bezug).getTime()) / 86400000) : 99;
+      if (stillTage <= 1){
+        zuege.push({ titel:'Bezahlte Anzeige 3–4 Tage aussetzen und vergleichen', art:2, mass:leck.kl,
+          warum:fmt(leck.kl) + ' Klicks auf TV-Wege führen zu fast keinem Abschluss',
+          hebel:'Klarheit',
+          text:'Betroffen: ' + leck.motive.slice(0, 5).join(', ') + (leck.motive.length > 5 ? ' und weitere' : '') +
+               '. Die Spur ist geprüft und intakt: die Landingpages hängen die UTM an die Checkout-URL, Uscreen liefert sie im user_created-Event, die Ingestion verheftet sie. ' +
+               'Die organischen Wege über dieselbe Seite und dieselben In-App-Browser werden mit 3 bis 5 Prozent ihrer Klicks messbar, die bezahlte Anzeige mit 0,4 Prozent – die Klicks werden also nicht verloren, sie werden kaum zu Abos. ' +
+               'Darum zuerst messen statt umbauen: die Anzeige aussetzen, solange die Grundlinie sauber ist, und die Anmeldungen je Tag vergleichen. ' +
+               'Soll sie danach weiterlaufen, macht ein eigenes Uscreen-Angebot je bezahltem Weg sie hart messbar: services/sommer-zaehler/uscreen-angebot-attribution-auftrag.md.' });
+      } else {
+        zuege.push({ titel:'Abschalt-Probe auswerten – die Anzeige liefert seit ' + stillTage + ' Tagen keine Klicks', art:2, mass:leck.kl,
+          warum:'letzter Klick der Anzeige vor ' + stillTage + ' Tagen · ' + fmt(leck.bezahltKl) + ' Klicks insgesamt · die Probe läuft bereits',
+          hebel:'jetzt ablesen',
+          text:'Der teuerste Weg der Aktion ist aus – damit lässt sich endlich in Abos statt in Zuordnungswahrscheinlichkeiten rechnen. ' +
+               'Verglichen wird nicht die Gesamtzahl, sondern die goetheanum.tv-Anmeldungen je Tag vor und nach dem Stopp, bei möglichst gleicher übriger Aktivität. ' +
+               'Vorsicht bei der Lesart: laufen im selben Fenster neue Newsletter, stützen sie die Zahlen und lassen die Anzeige besser aussehen, als sie war. ' +
+               'Fällt der Unterschied klein aus, ist der Befund der alten Lesart widerlegt und die Anzeige trug einstellig. Ergebnis in einer datierten Lesart festhalten (docs/wirkungs-lesart-<datum>.md) und CONFIG.dunkel nachziehen.' });
+      }
     }
 
     // (c) Datengrundlage: Aktivitäten ohne Reichweite und ohne Klicks.
