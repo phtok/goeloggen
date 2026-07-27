@@ -120,6 +120,11 @@ alte Lesart hinter einem Attributions-Problem verborgen hat.
 
 ## Was daraus folgt
 
+> **Nachtrag 27. Juli: Die Abschalt-Probe ist gelaufen — Ergebnis in
+> `abschaltprobe-anzeige-27-07.md`.** Die Anzeige verlor 57 Klicks am Tag,
+> die goetheanum.tv-Anmeldungen fielen um 0,8 am Tag. Die hier angesetzten
+> ≈9 halten stand; die Anteile in `CONFIG.dunkel` bleiben unverändert.
+
 1. **Abschalt-Probe statt Attributions-Umbau (sofort, kostenlos).** Die
    Anzeige 3–4 Tage aussetzen und die goetheanum.tv-Anmeldungen vergleichen.
    Die Grundlinie ist gerade sauber wie nie: das Mailing ist abgeklungen,
