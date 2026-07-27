@@ -88,7 +88,7 @@ LEGENDE = [
             {"de": "Galerie · 1. Etage", "en": "Gallery · 1st Floor"},
             {"de": "Grosser Saal · 2. Etage", "en": "Grosser Saal · 2nd Floor"},
             {"de": "Nordsaal · 5. Etage", "en": "Nordsaal · 5th Floor"},
-            {"de": "Nordatelier · 6. Etage", "en": "Nordatelier · 6th Floor"},
+            {"de": "Nordatelier · 5. Etage", "en": "Nordatelier · 5th Floor"},
         ],
     }),
     ("t-sued", "S", "treppe", {"de": "Südtreppe", "en": "South Stairs"}, {

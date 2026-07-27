@@ -331,8 +331,8 @@ const ORTE = [
         "en": "Nordsaal · 5th Floor"
       },
       {
-        "de": "Nordatelier · 6. Etage",
-        "en": "Nordatelier · 6th Floor"
+        "de": "Nordatelier · 5. Etage",
+        "en": "Nordatelier · 5th Floor"
       }
     ],
     "badges": [
