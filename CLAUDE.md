@@ -145,6 +145,28 @@ Bei Änderungen an der Schnittzahl **alle** Beschreibungen mitziehen
 (idempotent, aus sauberem Stand) — nicht freihändig Binärdateien patchen.
 Nach Font-Änderungen Webfonts (woff/woff2) und das Komplett-ZIP neu packen.
 
+## Schlüsselbund: Tokens & API-Keys (schluessel.saetzerei.com)
+
+Freigegebene API-Keys (Resend, Infomaniak, Vercel, …) liegen **verschlüsselt
+im Supabase-Vault** des Projekts saetzerei-rechnungen (`wwgzqawlyhtrdofczzka`).
+Der Repo-Inhaber verwaltet sie auf **schluessel.saetzerei.com**: freigeben,
+pausieren, entziehen — Entzug wirkt sofort. Gilt repo-übergreifend, auch hier:
+
+1. **Holen:** Braucht eine Aufgabe einen Key, per Supabase-MCP im Projekt
+   saetzerei-rechnungen: `select public.schluessel_lesen('<name>');`
+   Übersicht ohne Werte: `select name, dienst, status, notiz from
+   public.schluesselbund;`
+2. **Flüchtig verwenden:** nur im Arbeitsspeicher bzw. als Env-Variable eines
+   einzelnen Befehls — **nie** in Chat-Antworten, Commits, Dateien, Logs oder
+   Fehlermeldungen wiedergeben (auch nicht gekürzt).
+3. **Fehlt/pausiert:** Die Fehlermeldung sagt es. Dann auf
+   schluessel.saetzerei.com verweisen — den Repo-Inhaber **nicht** bitten,
+   Tokens in den Chat zu kleben.
+4. **Protokoll:** Jedes Lesen wird automatisch in `schluesselbund_log`
+   festgehalten und ist auf der Seite einsehbar.
+
+(Ausführliche Fassung dieses Abschnitts: `CLAUDE.md` im Repo `designs`.)
+
 ## Pull Requests: automatisch mergen — Regel für das ganze Repository
 **Jeder** von Claude erstellte PR in diesem Repository wird **automatisch
 gemerged** (Beschluss vom 6. Juli 2026, «ab jetzt immer automatisch»;
