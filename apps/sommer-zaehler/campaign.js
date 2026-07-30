@@ -176,6 +176,9 @@
   // Der Kern der Aufräumung: statt vier Kacheln, Deadline-Meter, Meilenstein und
   // eigener Momentum-Sektion EIN Block, der die Frage «wo stehen wir» beantwortet
   // – samt der Fortschreibung, die eine Prozentzahl allein verschweigt.
+  function isoTag(d){
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  }
   function tempoUndPrognose(timeline){
     var byDay = {};
     (timeline || []).forEach(function(r){ byDay[r.day] = (byDay[r.day] || 0) + Number(r.n); });
@@ -185,7 +188,16 @@
     var ende = new Date(CONFIG.ende + 'T00:00:00'), jetzt = new Date();
     var heute = new Date(jetzt.getFullYear(), jetzt.getMonth(), jetzt.getDate());
     var rest = Math.max(0, Math.round((ende - heute) / 86400000));
-    return { byDay:byDay, tage:tage, tempo:tempo, rest:rest };
+    // Alle Kalendertage der Aktion bis heute (bzw. bis zum Ende), Lücken = 0 –
+    // damit der Puls den ganzen Zeitraum zeigt, nicht nur Tage mit Anmeldungen.
+    var alle = [];
+    var erster = (CONFIG.start && (!tage.length || CONFIG.start < tage[0])) ? CONFIG.start : tage[0];
+    if (erster){
+      var stop = heute < ende ? heute : ende;
+      if (tage.length && tage[tage.length - 1] > isoTag(stop)) stop = new Date(tage[tage.length - 1] + 'T00:00:00');
+      for (var d = new Date(erster + 'T00:00:00'); d <= stop; d.setDate(d.getDate() + 1)) alle.push(isoTag(d));
+    }
+    return { byDay:byDay, tage:tage, alle:alle, tempo:tempo, rest:rest };
   }
   function renderStand(total, timeline){
     if (!el('standZahl')) return;
@@ -201,29 +213,39 @@
     el('kNoetig').textContent = t.rest > 0 ? noetig.toFixed(1).replace('.', ',') : '–';
     el('ddBar').style.width = Math.min(100, pct) + '%';
 
-    // Puls: die letzten zehn Tage – der Takt neben der Zahl, nicht als eigene Sektion.
+    // Puls: der ganze Zeitraum seit Aktionsstart, ein Balken je Kalendertag
+    // (Lücken = 0). Die Spalte ist das Zeigeziel; die Tageszahl erscheint als
+    // Fahne beim Zeigen und beim Tastatur-Fokus.
     var host = el('puls'); if (host){
       host.innerHTML = '';
-      var recent = t.tage.slice(-10);
-      var max = recent.reduce(function(m, d){ return Math.max(m, t.byDay[d]); }, 0) || 1;
-      var spitze = recent.reduce(function(b, d){ return t.byDay[d] > t.byDay[b] ? d : b; }, recent[0]);
-      recent.forEach(function(d){
+      var alle = t.alle.length ? t.alle : t.tage;
+      var max = alle.reduce(function(m, d){ return Math.max(m, t.byDay[d] || 0); }, 0) || 1;
+      var spitze = alle.reduce(function(b, d){ return (t.byDay[d] || 0) > (t.byDay[b] || 0) ? d : b; }, alle[0]);
+      alle.forEach(function(d){
+        var n = t.byDay[d] || 0;
+        var tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.tabIndex = 0;
+        var tip = new Date(d + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'long' }) +
+                  ' · ' + fmt(n) + (n === 1 ? ' Abo' : ' Abos');
+        tag.setAttribute('data-tip', tip);
+        tag.setAttribute('role', 'img');
+        tag.setAttribute('aria-label', tip);
         var b = document.createElement('span');
         b.className = 'p' + (d === spitze ? ' hoch' : '');
-        b.style.height = Math.max(3, Math.round(t.byDay[d] / max * 100)) + '%';
-        b.title = new Date(d + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'long' }) +
-                  ' · ' + fmt(t.byDay[d]) + (t.byDay[d] === 1 ? ' Abo' : ' Abos');
-        host.appendChild(b);
+        b.style.height = Math.max(3, Math.round(n / max * 100)) + '%';
+        tag.appendChild(b);
+        host.appendChild(tag);
       });
       var lab = el('pulsL');
-      if (lab && recent.length){
+      if (lab && alle.length){
         lab.innerHTML = '';
         var von = document.createElement('span');
-        von.textContent = new Date(recent[0] + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'long' });
+        von.textContent = new Date(alle[0] + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'long' });
         var top = document.createElement('span');
-        top.textContent = 'Spitze ' + fmt(t.byDay[spitze]) + ' am ' + new Date(spitze + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
+        top.textContent = 'Spitze ' + fmt(t.byDay[spitze] || 0) + ' am ' + new Date(spitze + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
         var bis = document.createElement('span');
-        bis.textContent = 'heute ' + fmt(t.byDay[recent[recent.length - 1]] || 0);
+        bis.textContent = 'heute ' + fmt(t.byDay[alle[alle.length - 1]] || 0);
         lab.appendChild(von); lab.appendChild(top); lab.appendChild(bis);
       }
     }

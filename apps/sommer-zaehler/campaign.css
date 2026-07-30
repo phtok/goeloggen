@@ -114,10 +114,25 @@
     line-height:1.55;color:var(--ink);margin:0;max-width:var(--measure)}
   .befund p b{font-weight:600}
   .befund .b-meta{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s1)}
-  /* Puls: der Takt neben der Zahl, nicht als eigene Sektion. */
-  .puls{display:flex;align-items:flex-end;gap:var(--s1);height:56px;margin-top:var(--s6)}
+  /* Puls: der Takt neben der Zahl, nicht als eigene Sektion. Ein Balken je
+     Kalendertag seit Aktionsstart; die ganze Spalte (volle 56px) ist das
+     Zeigeziel, nicht nur der gemalte Balken. Die Tageszahl erscheint als Fahne
+     beim Zeigen UND beim Tastatur-Fokus – nie nur per Hover erreichbar. */
+  .puls{display:flex;align-items:flex-end;gap:2px;height:56px;margin-top:var(--s6)}
+  .puls .tag{position:relative;flex:1;height:100%;display:flex;align-items:flex-end}
+  .puls .tag:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
   .puls .p{flex:1;background:color-mix(in srgb,var(--blue) 55%,transparent);border-radius:3px 3px 0 0;min-height:2px}
   .puls .p.hoch{background:var(--blue-solid)}
+  .puls .tag:hover .p,.puls .tag:focus-visible .p{background:var(--blue-solid)}
+  .puls .tag::after{content:attr(data-tip);position:absolute;bottom:calc(100% + var(--s1));left:50%;
+    transform:translateX(-50%);background:var(--ink);color:var(--paper);
+    font-family:var(--font-text);font-size:var(--t-micro);line-height:1.35;
+    padding:var(--s1) var(--s2);border-radius:6px;white-space:nowrap;
+    opacity:0;visibility:hidden;transition:opacity .12s;pointer-events:none;z-index:3}
+  .puls .tag:hover::after,.puls .tag:focus-visible::after{opacity:1;visibility:visible}
+  /* Randspalten: Fahne buendig statt zentriert, damit sie nicht aus dem Panel ragt. */
+  .puls .tag:nth-child(-n+6)::after{left:0;transform:none}
+  .puls .tag:nth-last-child(-n+6)::after{left:auto;right:0;transform:none}
   .puls-l{display:flex;justify-content:space-between;gap:var(--s2);font-family:var(--font-text);
     font-size:var(--t-micro);color:var(--muted);margin-top:var(--s1);flex-wrap:wrap}
 
