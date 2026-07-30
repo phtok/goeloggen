@@ -13,14 +13,17 @@
     ende:  '2026-08-08',            // Aktionsende
     bleibeQuote: 0.62,             // Annahme, bis Erfahrungswerte vorliegen
     meilensteine: [100, 250, 500, 1000],
-    zielGesamt: 700,                // Gesamtziel der Aktion (neue Abos)
-    // Zielmarke je Strom – Zwischenmarken, Summe = Gesamtziel. Beim Absenken des
-    // Gesamtziels auf 700 (24.7.) proportional mitgezogen (Faktor 0,7), damit die
-    // Ströme-Tabelle nicht gegen den Stand-Block rechnet.
+    zielGesamt: 500,                // Gesamtziel der Aktion (neue Abos) – GF-Vorgabe, zurückgestellt 30.7.
+    // Zielmarke je Strom – Zwischenmarken, Summe = Gesamtziel. Historie: 24.7.
+    // von 1000 auf 700 gesenkt (Faktor 0,7); 30.7. zurück auf die ursprüngliche
+    // GF-Vorgabe 500, Ströme proportional mitgezogen (Faktor 5/7), damit die
+    // Ströme-Tabelle nicht gegen den Stand-Block rechnet. goetheanum.tv zählt
+    // seither als EIN Strom ohne Sprachtrennung (Beschluss 30.7.): die Sprache
+    // ist dort nicht gemessen, die alte EN-Zeile war nur eine Untergrenze.
     ziele: {
-      'wos.de.papier': 140, 'wos.de.digital': 175,
-      'wos.en.digital': 84,
-      'gtv.de': 175, 'gtv.en': 126
+      'wos.de.papier': 100, 'wos.de.digital': 125,
+      'wos.en.digital': 60,
+      'gtv': 215
     },
     // Anzeige-Währung aller Geldbeträge (Kosten, CPA, Summenzeile Folgejahr-Umsatz).
     waehrung: 'CHF',
@@ -88,8 +91,10 @@
     { key:'wos.de.papier',  produkt:'wos', sprache:'de', format:'papier',  name:'Deutsch · Papier',  panel:'wos' },
     { key:'wos.de.digital', produkt:'wos', sprache:'de', format:'digital', name:'Deutsch · Digital', panel:'wos' },
     { key:'wos.en.digital', produkt:'wos', sprache:'en', format:'digital', name:'Englisch · Digital', panel:'wos' },
-    { key:'gtv.de',         produkt:'gtv', sprache:'de', format:'stream',  name:'Deutsch',  panel:'gtv' },
-    { key:'gtv.en',         produkt:'gtv', sprache:'en', format:'stream',  name:'Englisch', panel:'gtv' }
+    // goetheanum.tv ist EIN Produkt und EIN Strom: die Sprache ist dort nicht
+    // gemessen (sprache:null = alle Sprachen zusammenzählen) – anders als bei
+    // der Wochenschrift, wo jede Sprache ihr eigenes Formular hat.
+    { key:'gtv',            produkt:'gtv', sprache:null, format:'stream',  name:'',         panel:'gtv' }
   ];
 
   function fmt(n){ return (Number(n)||0).toLocaleString('de-CH'); }
@@ -274,7 +279,7 @@
   // Ströme (Produkt × Sprache × Format) – aus eigener Sektion in den Aufklapp.
   function streamValue(rows, s){
     return rows.reduce(function(sum, r){
-      if(r.produkt === s.produkt && r.sprache === s.sprache && r.format === s.format) return sum + Number(r.n);
+      if(r.produkt === s.produkt && (s.sprache === null || r.sprache === s.sprache) && r.format === s.format) return sum + Number(r.n);
       return sum;
     }, 0);
   }
@@ -282,7 +287,8 @@
     if (!el('stroemeBody')) return;
     var body = el('stroemeBody'); body.innerHTML = '';
     var items = STREAMS.map(function(s){
-      return { name:(s.panel === 'gtv' ? 'goetheanum.tv · ' : 'Wochenschrift · ') + s.name,
+      var basis = s.panel === 'gtv' ? 'goetheanum.tv' : 'Wochenschrift';
+      return { name: s.name ? basis + ' · ' + s.name : basis,
                n:streamValue(rows, s), ziel:CONFIG.ziele[s.key] || 0 };
     }).sort(function(a, b){ return b.n - a.n; });
     var sz = 0;
@@ -306,8 +312,8 @@
     if (el('stroemeKopf')) el('stroemeKopf').textContent = 'Woraus sich die ' + fmt(total) + ' Abos zusammensetzen';
     if (el('stroemeNote')){
       el('stroemeNote').textContent = 'Bei der Wochenschrift ist die Sprache gemessen – jede Sprache hat ihr eigenes Formular. ' +
-        'Bei goetheanum.tv ist sie es nicht: die Uscreen-Plan-Titel sind durchweg deutsch, und DE- wie EN-Landingpage führen in dasselbe Angebot. ' +
-        'Die TV-Zeile «Englisch» zählt darum nur die Anmeldungen, deren Link-Spur die Sprache selbst trägt – sie ist eine Untergrenze, keine Aufteilung. ' +
+        'Bei goetheanum.tv ist sie es nicht: DE- wie EN-Landingpage führen in dasselbe Uscreen-Angebot, wer welche Sprache bevorzugt, ist nicht erfasst. ' +
+        'Darum zählt goetheanum.tv als ein Strom ohne Sprachtrennung (Beschluss 30. Juli). ' +
         'Was von ausserhalb des Sprachraums kommt, steht darunter unter «Woher die Abos kommen».';
     }
   }
