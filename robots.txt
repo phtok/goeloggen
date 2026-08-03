@@ -1,4 +1,4 @@
-# werkzeuge.goetheanum.ch — interne Werkzeuge der Goetheanum-Hausgrafik.
+# werkzeuge.goetheanum.ch — interne Werkzeuge des Goetheanum.
 # Nicht für Suchtreffer und nicht als Material für KI-Crawler gedacht.
 #
 # Arbeitsteilung (bewusst so, nicht anders):
