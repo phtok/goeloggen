@@ -19,13 +19,13 @@ mit dem **Onliness-Statement** als Herzstück.
 > und sprechen.
 
 ### Onliness-Statement — das ZAG (Herzstück)
-> Die **Goetheanum-Werkzeugkiste** ist die **EINZIGE** Umgebung, die die
+> Die **Goetheanum-Werkzeugkiste** ist die **EINZIGE** Grafik-Umgebung, die die
 > Corporate Identity des Goetheanum nicht als Regelwerk *beschreibt*, sondern sie in
 > **einfachen Alltagswerkzeugen verkörpert** – sodass **jede mitarbeitende Person ohne
 > Designkenntnis** in **Minuten** markenkonformes Material erzeugt, in einer Zeit, in
 > der Identität sonst in Wildwuchs und Beliebigkeit zerfällt.
 
-*(Raster: WAS = Umgebung · WIE = CI verkörpert statt beschrieben · WER =
+*(Raster: WAS = Grafik-Umgebung · WIE = CI verkörpert statt beschrieben · WER =
 Mitarbeitende ohne Designkenntnis · WO = Goetheanum/AAG · WARUM = korrektes Material
 in Minuten · WANN = Zeit der gestalterischen Beliebigkeit.)*
 

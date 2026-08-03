@@ -1,6 +1,6 @@
 # Goetheanum Design-System
 
-Das gemeinsame Fundament – Farben, Schrift, Typografie-Regeln und
+Das gemeinsame Fundament der Goetheanum Grafik – Farben, Schrift, Typografie-Regeln und
 Komponenten an einem Ort, aus **einer Quelle** gerendert. Gebaut, damit beim
 Erstellen neuer Werkzeuge und Seiten **alles parat steht** und **nichts hinterher
 geprüft** werden muss.
