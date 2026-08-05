@@ -16,6 +16,25 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## [1.10.0] – 2026-08-04
+
+### Der Seitentitel wird eine Rolle des Fundaments
+- **Was:** Neue kanonische Rolle `.hero h1, .lead-title` in `base.css` — sie
+  setzt Schrift, Schnitt, **Durchschuss (`--lh-tight` 1.15)** und **Laufweite
+  (0)**. Aus 16 Seiten wurden die lokalen `line-height`- und
+  `letter-spacing`-Angaben am Titel entfernt; `font-size` und `max-width`
+  bleiben bei der Seite. `lead-title` steht jetzt im Vertrag unter
+  `rollen.kanonische_klassen`, damit DS04 künftige Alleingänge meldet.
+- **Warum:** Jede Seite hatte ihren Titel selbst gesetzt — Durchschuss zwischen
+  **1.02 und 1.08**, durchweg mit negativer Laufweite (`-.01em`). Zweizeilige
+  Titel stiessen dadurch zusammen, Umlaute berührten die Zeile darüber. Auch
+  `design-system/starter.html` trug die enge Fassung, hat sie also an jede neue
+  Seite weitergegeben — die Abweichung pflanzte sich fort, statt aufzufallen.
+  Aufgefallen am Sommer-Cockpit auf dem Handy (Rückmeldung 4.8.2026).
+- **Wirkung:** Titel atmen überall gleich; der Grad bleibt eine Satzentscheidung
+  der Seite, der Durchschuss ist Hausregel. Wer künftig `.lead-title` lokal
+  redefiniert, wird von `ds-lint` (DS04) darauf hingewiesen.
+
 ## [1.9.5] – 2026-07-17
 
 ### Gedämpfter Text auf Blau bekommt ein Token: `--on-accent-muted`
