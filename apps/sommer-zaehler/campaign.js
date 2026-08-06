@@ -216,7 +216,16 @@
     el('kTempo').textContent = t.tempo.toFixed(1).replace('.', ',');
     var noetig = t.rest > 0 ? Math.max(0, (ziel - total) / t.rest) : 0;
     el('kNoetig').textContent = t.rest > 0 ? noetig.toFixed(1).replace('.', ',') : '–';
-    el('ddBar').style.width = Math.min(100, pct) + '%';
+    // Über 100 % wird die Spur zum Ist-Stand: Gold bis zur Zielmarke,
+    // die Übererfüllung dahinter in Grün (--ok).
+    var ueber = el('ddBarUeber');
+    if (pct > 100){
+      el('ddBar').style.width = (100 / pct * 100).toFixed(2) + '%';
+      if (ueber) ueber.style.width = ((pct - 100) / pct * 100).toFixed(2) + '%';
+    } else {
+      el('ddBar').style.width = pct + '%';
+      if (ueber) ueber.style.width = '0';
+    }
 
     // Puls: der ganze Zeitraum seit Aktionsstart, ein Balken je Kalendertag
     // (Lücken = 0). Die Spalte ist das Zeigeziel; die Tageszahl erscheint als

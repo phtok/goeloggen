@@ -24,8 +24,9 @@
   .deadline .drow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:12px}
   .deadline .dlab{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
   .deadline .dd{font-family:var(--font-text);font-variant-numeric:tabular-nums;font-size:var(--t-small);color:var(--ink);font-weight:600}
-  .meter{height:12px;border-radius:var(--r-pill);background:var(--line-soft);overflow:hidden}
-  .meter>span{display:block;height:100%;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--gold),var(--gold-ink));transition:width .6s ease}
+  .meter{display:flex;height:12px;border-radius:var(--r-pill);background:var(--line-soft);overflow:hidden}
+  .meter>span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-ink));transition:width .6s ease}
+  .meter>.ueber{background:var(--ok)} /* Übererfüllung über der Zielmarke */
 
   .board{display:grid;grid-template-columns:1fr 1fr;gap:var(--s6)}
   .panel{background:var(--card,var(--paper));border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card)}
