@@ -129,12 +129,19 @@ der die Anzeige-Fenster keinen eigenen Überschuss zeigen.
   Mailing zugeschlagen wird. Der Mailing-Anteil ist darum eher eine
   Obergrenze.
 - **Die Aktion ist nach diesem Stichtag um drei Tage verlängert worden**
-  (neues Ende: 11. August). Der 7. August ist damit nicht mehr der Schlusstag,
-  sondern ein Zwischenstand. Die kommunizierte Frist bleibt der 8. August —
-  die Mail-Wellen 3 und 3b nennen ihn —, der gemessene Zeitraum endet drei
-  Tage später. Wer diese Lesart nach dem 11. August fortschreibt, rechnet die
-  Tage 8. bis 11. August als eigenes Fenster: Sie stehen unter einer Frist,
-  die für die Empfänger bereits abgelaufen war.
+  (neues Ende: 11. August), und zwar **still**: keine Ankündigung, keine Mail,
+  kein neues Datum auf den Aktionsseiten (Beschluss 7. August). Der 7. August
+  ist damit nicht mehr der Schlusstag, sondern ein Zwischenstand. Die
+  kommunizierte Frist bleibt der 8. August — die Mail-Wellen 3 und 3b nennen
+  ihn —, der gemessene Zeitraum endet drei Tage später.
+
+  Wer diese Lesart nach dem 11. August fortschreibt, rechnet die Tage **9. bis
+  11. August als eigenes Fenster**: Hinter ihnen steht kein Versand, sondern
+  nur die offene Tür, und für die Empfänger war die Frist bereits abgelaufen.
+  Beides zieht die Zahlen nach unten. Die Methode oben trägt hier nicht — der
+  Schlüssel «Überschuss nach gemessenen Anteilen» setzt einen Impuls voraus,
+  den es in diesem Fenster nicht gibt. Diese Tage gehören darum in der
+  Grundlinie gerechnet, nicht im Schlussspurt.
 - **Newsletter gegen Mailing.** Beide fallen auf dieselben Tage (17. Juli,
   31. Juli). Anker 2 trennt sie nach dem gemessenen Verhältnis; sind die
   Newsletter schlechter ausgezeichnet als der Mailer, ist ihr Anteil zu
