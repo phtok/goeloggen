@@ -65,6 +65,28 @@
         <div class="b-meta" id="befundMeta"></div>
       </div>
 
+      <!-- Direkt unter der Signaturzahl: Die zweite Frage nach «wie viele» ist
+           «was bringt das». Gezeigt wird die Spanne, nicht eine Zahl. -->
+      <details class="zb-form">
+        <summary>Wer bleibt, und was bringt das? – drei Szenarien</summary>
+        <div class="stay" style="margin-top:var(--s4)">
+          <div class="cohort" id="cohortCard"><div class="empty">lädt …</div></div>
+          <div class="proj">
+            <div class="pl" id="projLabel">Folgejahr-Umsatz</div>
+            <div class="pv" id="projValue">–</div>
+            <div class="pn" id="projNote">Bleibende Abos zum echten Vollpreis je Zahlungswährung.</div>
+          </div>
+        </div>
+        <div class="tablewrap" style="margin-top:var(--s6)">
+          <table class="tarif">
+            <thead><tr><th>Szenario</th><th class="num">bleiben tv/WoS</th><th class="num">Abos</th><th class="num">Folgejahr</th></tr></thead>
+            <tbody id="szenarienBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+            <tfoot id="szenarienFoot"></tfoot>
+          </table>
+        </div>
+        <p class="provisorisch" id="szenarienNote"></p>
+      </details>
+
       <details class="zb-form">
         <summary id="stroemeKopf">Woraus sich die Abos zusammensetzen</summary>
         <div class="tablewrap" style="margin-top:var(--s4)">
@@ -141,18 +163,6 @@
         <summary>Alle Motive einzeln</summary>
         <div class="motive" id="motive" hidden>
           <div id="motiveList"></div>
-        </div>
-      </details>
-
-      <details class="zb-form">
-        <summary>Wer bleibt? – der Drei-Monats-Moment</summary>
-        <div class="stay" style="margin-top:var(--s4)">
-          <div class="cohort" id="cohortCard"><div class="empty">lädt …</div></div>
-          <div class="proj">
-            <div class="pl">Hochgerechneter Folgejahr-Umsatz</div>
-            <div class="pv" id="projValue">–</div>
-            <div class="pn" id="projNote">Projektion auf Basis der angenommenen Bleibe-Quote und der hinterlegten Preise.</div>
-          </div>
         </div>
       </details>
 

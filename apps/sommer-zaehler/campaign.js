@@ -21,12 +21,33 @@
     // Zeitbands. Die Ingestion kennt kein Enddatum (nur aktion_start und
     // aktion_aktiv) – Anmeldungen der Zusatztage zählen von selbst mit.
     ende:  '2026-08-11',
-    // Annahme, bis Erfahrungswerte vorliegen. Bleibt eine Annahme bis in den
-    // Herbst: Die Aktion ist «3 Monate gratis», die erste Kohorte (Juli)
-    // entscheidet also frühestens ab dem 3. Oktober 2026. Bis dahin steht in
-    // der Datenbank bei keiner Anmeldung «bleibt» – die Projektion ist reine
-    // Rechnung, keine Beobachtung.
-    bleibeQuote: 0.62,
+    // Drei Szenarien statt einer Quote (Beschluss 7. August). Eine einzelne
+    // Projektion sieht nach Wissen aus, wo eine Spanne die Wahrheit ist: Es hat
+    // noch KEINE Kohorte entschieden – die erste (Juli) tut es frühestens ab
+    // dem 3. Oktober 2026, bis dahin trägt keine Anmeldung den Status «bleibt».
+    //
+    // Zwei Stellschrauben, nicht eine:
+    // 1) bleibt – wer nach der Gratis-Zeit zahlend bleibt, je Produkt. Die
+    //    Wochenschrift steht höher als goetheanum.tv: Beide Angebote sind
+    //    Opt-out, aber dort ist das Nein einen Klick weit weg, und die
+    //    monatliche Kartenbelastung erinnert jeden Monat an die Entscheidung.
+    //    Der Frühindikator zeigt dasselbe – im Gratis-Zeitraum kündigten 21 von
+    //    440 goetheanum.tv-Abos, bei der Wochenschrift 0 von 274.
+    // 2) monate – wie viele der zwölf Folgemonate ein MONATLICHES Abo im
+    //    Schnitt trägt. Über 85 Prozent der Abos zahlen monatlich; wer für sie
+    //    zwölf volle Monate ansetzt, rechnet mit einer Treue, die niemand
+    //    zugesagt hat. Jährliche Abos zählen voll – das Jahr ist bezahlt.
+    //    Ein Monat Verweildauer ist rund CHF 4200 wert, der grösste Hebel.
+    // Herleitung und Empfindlichkeit: docs/einnahmen-perspektive-07-08.md.
+    szenarien: {
+      doc:     'docs/einnahmen-perspektive-07-08.md',
+      referenz:'erwartet',                 // dieses trägt die grosse Zahl und den Rückfluss
+      liste: [
+        { key:'vorsichtig', name:'Vorsichtig', bleibt:{ gtv:0.35, wos:0.55 }, monate:7  },
+        { key:'erwartet',   name:'Erwartet',   bleibt:{ gtv:0.50, wos:0.70 }, monate:9  },
+        { key:'gut',        name:'Gut',        bleibt:{ gtv:0.65, wos:0.85 }, monate:11 }
+      ]
+    },
     zielGesamt: 500,                // Gesamtziel der Aktion (neue Abos) – GF-Vorgabe, zurückgestellt 30.7.
     // Zielmarke je Strom – Zwischenmarken, Summe = Gesamtziel. Historie: 24.7.
     // von 1000 auf 700 gesenkt (Faktor 0,7); 30.7. zurück auf die ursprüngliche
@@ -1383,56 +1404,137 @@
   // goetheanum.tv rechnet ausschliesslich in EUR – Zeilen ohne Währungsangabe
   // fallen darum auf EUR. Preis-Lookup: Währung → Produkt → Format → Tarif
   // (ermässigt hat im Shop keinen eigenen Preis → Fallback Standard).
-  function projectRevenue(rows){
-    var summe = { chf: 0, eur: 0 };
+  // Die Szenarien der Reihe nach; ohne Treffer das erste.
+  function szenarien(){ return (CONFIG.szenarien && CONFIG.szenarien.liste) || []; }
+  function referenzSzenario(){
+    var l = szenarien(), k = CONFIG.szenarien && CONFIG.szenarien.referenz;
+    for (var i = 0; i < l.length; i++) if (l[i].key === k) return l[i];
+    return l[0] || { name:'', bleibt:{}, monate:12 };
+  }
+  // Bleibe-Quote je Produkt. Ein unbekanntes Produkt erbt die vorsichtigste
+  // hinterlegte Quote – lieber zu wenig versprochen als zu viel.
+  function bleibeQuote(sz, produkt){
+    var b = (sz && sz.bleibt) || {};
+    if (b[produkt] != null) return b[produkt];
+    var werte = Object.keys(b).map(function(k){ return b[k]; });
+    return werte.length ? Math.min.apply(null, werte) : 0;
+  }
+  function projectRevenue(rows, sz){
+    sz = sz || referenzSzenario();
+    var summe = { chf: 0, eur: 0, bleibend: 0, szenario: sz };
     rows.forEach(function(r){
       var w = r.waehrung === 'chf' ? 'chf' : 'eur';
       var jeFormat = ((CONFIG.preise[w] || {})[r.produkt] || {})[r.format] || {};
       var jeTarif = jeFormat[r.tarif] || jeFormat.standard || {};
       var preis = jeTarif[r.intervall];
       if(!preis) return;
-      var jahr = r.intervall === 'monatlich' ? preis * 12 : preis;
+      // Monatliche Abos tragen nur so viele Monate, wie das Szenario ansetzt;
+      // jährliche zählen voll, das Jahr ist im Voraus bezahlt.
+      var jahr = r.intervall === 'monatlich' ? preis * (sz.monate || 12) : preis;
       var bleibend;
       if(r.status === 'bleibt') bleibend = Number(r.n);
-      else if(r.status === 'neu' || r.status === 'laeuft-aus') bleibend = Number(r.n) * CONFIG.bleibeQuote;
+      else if(r.status === 'neu' || r.status === 'laeuft-aus') bleibend = Number(r.n) * bleibeQuote(sz, r.produkt);
       else bleibend = 0;                     // gekuendigt zählt nicht
       summe[w] += bleibend * jahr;
+      summe.bleibend += bleibend;
     });
     summe.chfGesamt = summe.chf + summe.eur * CONFIG.eurChf;
     return summe;
   }
+  // Die Decke: alle bleiben, monatliche zahlen zwölf volle Monate. Keine
+  // Erwartung – sie sagt nur, worüber wir reden.
+  function deckeRevenue(rows){
+    return projectRevenue(rows, { name:'Decke', bleibt:{ gtv:1, wos:1 }, monate:12 });
+  }
+  // Gemischte Quote über den tatsächlichen Produkt-Mix – für die Kohorte, die
+  // nur eine Gesamtzahl kennt.
+  function mischQuote(rows, sz){
+    var oben = 0, unten = 0;
+    (rows || []).forEach(function(r){
+      if (r.status === 'gekuendigt') return;
+      var n = Number(r.n) || 0;
+      oben += n * bleibeQuote(sz, r.produkt); unten += n;
+    });
+    return unten > 0 ? oben / unten : 0;
+  }
 
-  // ── Wer bleibt? (jüngste Kohorte) ──────────────────────────────────────────
-  function renderCohort(kohorten, revenue){
-    if (!el('cohortCard')) return;
+  // ── Wer bleibt, und was bringt das? (Kohorte + drei Szenarien) ─────────────
+  // Steht direkt unter der Signaturzahl: Die zweite Frage nach «wie viele» ist
+  // «was bringt das» – sie gehört nicht unter die Belege. Gezeigt wird die
+  // SPANNE, nicht eine Zahl, denn es hat noch keine Kohorte entschieden.
+  function renderCohort(kohorten, revenue, stats){
+    var ref = (revenue && revenue.szenario) || referenzSzenario();
+
     var card = el('cohortCard');
-    if(!kohorten || !kohorten.length){ card.innerHTML = '<div class="empty">Noch keine Kohorte.</div>'; return; }
-    var k = kohorten[kohorten.length - 1];
-    var neu = Number(k.neu), bleibt = Number(k.bleibt), offen = Number(k.offen);
-    var projektiert = bleibt + Math.round(offen * CONFIG.bleibeQuote);
-    var quote = neu > 0 ? Math.round(projektiert / neu * 100) : 0;
-    var kMonat = new Date(k.kohorte + 'T00:00:00');
-    var kEntsch = new Date(k.entscheidung_ab + 'T00:00:00');
-    var monat = kMonat.toLocaleDateString('de-CH', { month:'long', year:'numeric' });
-    card.innerHTML =
-      '<div class="when"></div><h4></h4>' +
-      '<div class="conv"><div class="ring"><div class="inner"></div></div>' +
-      '<div class="txt"><b></b><br><span class="m"></span><div class="pill"></div></div></div>';
-    card.querySelector('.when').textContent = 'Kohorte ' + monat + ' · Entscheidung ab ' + dmy(kEntsch);
-    card.querySelector('h4').textContent = fmt(neu) + ' Anmeldungen im Gratis-Zeitraum';
-    card.querySelector('.ring').style.setProperty('--p', quote);
-    card.querySelector('.ring .inner').textContent = quote + '%';
-    card.querySelector('.txt b').textContent = '~' + fmt(projektiert) + ' bleiben voraussichtlich zahlend';
-    card.querySelector('.txt .m').textContent = fmt(offen) + ' Entscheidungen noch offen · ' + fmt(bleibt) + ' bereits umgewandelt';
-    card.querySelector('.pill').textContent = 'Projektion · Annahme ' + Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote';
+    if (card){
+      if(!kohorten || !kohorten.length){ card.innerHTML = '<div class="empty">Noch keine Kohorte.</div>'; }
+      else {
+        var k = kohorten[kohorten.length - 1];
+        var neu = Number(k.neu), bleibt = Number(k.bleibt), offen = Number(k.offen);
+        var projektiert = bleibt + Math.round(offen * mischQuote(stats, ref));
+        var quote = neu > 0 ? Math.round(projektiert / neu * 100) : 0;
+        var kMonat = new Date(k.kohorte + 'T00:00:00');
+        var kEntsch = new Date(k.entscheidung_ab + 'T00:00:00');
+        var monat = kMonat.toLocaleDateString('de-CH', { month:'long', year:'numeric' });
+        card.innerHTML =
+          '<div class="when"></div><h4></h4>' +
+          '<div class="conv"><div class="ring"><div class="inner"></div></div>' +
+          '<div class="txt"><b></b><br><span class="m"></span><div class="pill"></div></div></div>';
+        card.querySelector('.when').textContent = 'Kohorte ' + monat + ' · Entscheidung ab ' + dmy(kEntsch);
+        card.querySelector('h4').textContent = fmt(neu) + ' Anmeldungen im Gratis-Zeitraum';
+        card.querySelector('.ring').style.setProperty('--p', quote);
+        card.querySelector('.ring .inner').textContent = quote + '%';
+        card.querySelector('.txt b').textContent = '~' + fmt(projektiert) + ' bleiben voraussichtlich zahlend';
+        card.querySelector('.txt .m').textContent = fmt(offen) + ' Entscheidungen noch offen · ' + fmt(bleibt) + ' bereits umgewandelt';
+        card.querySelector('.pill').textContent = 'Szenario ' + ref.name + ' · noch hat keine Kohorte entschieden';
+      }
+    }
 
-    el('projValue').textContent = geld(revenue.chfGesamt);
+    if (el('projValue')) el('projValue').textContent = geld(revenue.chfGesamt);
+    if (el('projLabel')) el('projLabel').textContent = 'Folgejahr-Umsatz · Szenario ' + ref.name;
+
+    // Die Spanne: ein Szenario je Zeile, das Referenz-Szenario im Gewicht
+    // hervorgehoben – ein Merkmal, nicht zwei (G01).
+    var body = el('szenarienBody');
+    if (body && stats){
+      body.innerHTML = '';
+      szenarien().forEach(function(sz){
+        var r = projectRevenue(stats, sz);
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
+        if (sz.key === ref.key){
+          var b = document.createElement('b'); b.textContent = sz.name + ' · Referenz';
+          tr.children[0].appendChild(b);
+        } else {
+          tr.children[0].textContent = sz.name;
+        }
+        tr.children[1].textContent = Math.round(bleibeQuote(sz, 'gtv') * 100) + ' / ' +
+                                     Math.round(bleibeQuote(sz, 'wos') * 100) + ' %';
+        tr.children[2].textContent = fmt(Math.round(r.bleibend));
+        tr.children[3].textContent = geld(r.chfGesamt);
+        body.appendChild(tr);
+      });
+      var foot = el('szenarienFoot');
+      if (foot){
+        foot.innerHTML = '<tr><td>Decke · alle bleiben, volle zwölf Monate</td>' +
+                         '<td class="num">100 / 100 %</td><td class="num"></td><td class="num"></td></tr>';
+        var d = deckeRevenue(stats), td = foot.querySelector('tr').children;
+        td[2].textContent = fmt(Math.round(d.bleibend));
+        td[3].textContent = geld(d.chfGesamt);
+      }
+    }
+
     var teile = [];
     if (revenue.chf > 0) teile.push('CHF ' + Math.round(revenue.chf).toLocaleString('de-CH') + ' von CHF-Zahlern');
-    if (revenue.eur > 0) teile.push('€ ' + Math.round(revenue.eur).toLocaleString('de-CH') + ' von EUR-Zahlern, umgerechnet zum Kurs ' + CONFIG.eurChf);
-    el('projNote').textContent = 'Hochgerechnet: bleibende Abos zum echten Vollpreis je Zahlungswährung' +
-      (teile.length ? ' (' + teile.join(' + ') + ')' : '') + ', bei ' +
-      Math.round(CONFIG.bleibeQuote * 100) + ' % Bleibe-Quote.';
+    if (revenue.eur > 0) teile.push('EUR ' + Math.round(revenue.eur).toLocaleString('de-CH') + ' von EUR-Zahlern, umgerechnet zum Kurs ' + CONFIG.eurChf);
+    if (el('projNote')) el('projNote').textContent = 'Bleibende Abos zum echten Vollpreis je Zahlungswährung' +
+      (teile.length ? ' (' + teile.join(' + ') + ')' : '') + '. Monatliche Abos mit ' + ref.monate +
+      ' von zwölf Monaten gerechnet, jährliche voll.';
+    if (el('szenarienNote')) el('szenarienNote').textContent =
+      'Zwei Stellschrauben je Szenario: die Bleibe-Quote (goetheanum.tv / Wochenschrift) und die Zahl der Monate, die ein monatliches Abo im Schnitt trägt (' +
+      szenarien().map(function(s){ return s.monate; }).join(' · ') + ' von zwölf). ' +
+      'Keine Prognose – es hat noch keine Kohorte entschieden, die erste tut es Anfang Oktober. ' +
+      'Herleitung, Begründung der Quoten und Empfindlichkeit: ' + ((CONFIG.szenarien && CONFIG.szenarien.doc) || '') + '.';
   }
 
   // ── Ereignis-Protokoll: die einzelnen Abos («Was ist passiert?») ────────────
@@ -1542,8 +1644,9 @@
       .catch(function(){ el('herkunftBody').innerHTML = '<tr><td class="err" colspan="3">nicht ladbar</td></tr>'; });
     if(CONFIG.zahlenProvisorisch && el('provisorisch')){
       el('provisorisch').textContent = 'Preise und Zielmarken sind echt hinterlegt (Formular- und Uscreen-Preise, Stand 17. Juli). ' +
-        'Annahme bleibt allein die Bleibe-Quote von ' + Math.round(CONFIG.bleibeQuote * 100) + ' %: Die Aktion läuft drei Monate gratis, ' +
-        'die erste Kohorte entscheidet frühestens Anfang Oktober. Bis dahin ist jede Zahl zum Folgejahr eine Rechnung, keine Beobachtung.';
+        'Annahme bleiben allein die Bleibe-Quoten und die Verweildauer der monatlichen Abos – darum drei Szenarien statt einer Zahl, ' +
+        'oben unter der Signaturzahl. Die Aktion läuft drei Monate gratis, die erste Kohorte entscheidet frühestens Anfang Oktober; ' +
+        'bis dahin ist jede Zahl zum Folgejahr eine Rechnung, keine Beobachtung.';
     }
     Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten'), rpc('sommer2026_kanaele'),
                   rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public'), rpc('sommer2026_kosten_public'),
@@ -1563,7 +1666,7 @@
         renderDunkelfeld(kanaele, attribution);
         renderMotive(attribution);
         renderTarif(stats);
-        renderCohort(kohorten, revenue);
+        renderCohort(kohorten, revenue, stats);
         // Schwesterseiten (element-gewächtert, hier ohne Wirkung).
         renderKosten(total, revenue, kostenPosten);
         renderMassnahmen(massnahmen);
