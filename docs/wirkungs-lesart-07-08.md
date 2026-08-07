@@ -12,8 +12,8 @@ liegen). Sie widerspricht ihr nicht — sie schreibt sie auf die letzten zwei
 Wochen fort, in denen zwei Mail-Wellen, das Popup und der Schlussspurt
 dazugekommen sind.
 
-Grundlage am Stichtag (7. August, ein Tag vor Aktionsende): **636
-Anmeldungen**, davon **358 mit UTM** und **278 ohne**. Das Dunkelfeld ist
+Grundlage am Stichtag (7. August, vier Tage vor dem verlängerten Aktionsende
+am 11. August): **636 Anmeldungen**, davon **358 mit UTM** und **278 ohne**. Das Dunkelfeld ist
 damit von 54 % (24. Juli) auf **44 %** gesunken — nicht, weil weniger dunkel
 hereinkommt, sondern weil das Mailing mit sauberer Spur so viel dazugelegt
 hat.
@@ -128,6 +128,13 @@ der die Anzeige-Fenster keinen eigenen Überschuss zeigen.
   vermutlich nicht: Die Frist selbst erzeugt Direktverkehr, der hier dem
   Mailing zugeschlagen wird. Der Mailing-Anteil ist darum eher eine
   Obergrenze.
+- **Die Aktion ist nach diesem Stichtag um drei Tage verlängert worden**
+  (neues Ende: 11. August). Der 7. August ist damit nicht mehr der Schlusstag,
+  sondern ein Zwischenstand. Die kommunizierte Frist bleibt der 8. August —
+  die Mail-Wellen 3 und 3b nennen ihn —, der gemessene Zeitraum endet drei
+  Tage später. Wer diese Lesart nach dem 11. August fortschreibt, rechnet die
+  Tage 8. bis 11. August als eigenes Fenster: Sie stehen unter einer Frist,
+  die für die Empfänger bereits abgelaufen war.
 - **Newsletter gegen Mailing.** Beide fallen auf dieselben Tage (17. Juli,
   31. Juli). Anker 2 trennt sie nach dem gemessenen Verhältnis; sind die
   Newsletter schlechter ausgezeichnet als der Mailer, ist ihr Anteil zu

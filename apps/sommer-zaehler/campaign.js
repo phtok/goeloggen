@@ -10,7 +10,12 @@
      diese Werte anpassen. */
   var CONFIG = {
     start: '2026-07-03',            // Aktionsstart (Nachmittag 3. Juli 2026)
-    ende:  '2026-08-08',            // Aktionsende
+    // Aktionsende. Am 7. August um drei Tage verlängert (zuvor 8. August).
+    // Dieses Datum steuert alles Zeitliche: Resttage, «Abos/Tag nötig», die
+    // Breite des Pulses, die Fortschreibung im Befund und das Wochenraster des
+    // Zeitbands. Die Ingestion kennt kein Enddatum (nur aktion_start und
+    // aktion_aktiv) – Anmeldungen der Zusatztage zählen von selbst mit.
+    ende:  '2026-08-11',
     // Annahme, bis Erfahrungswerte vorliegen. Bleibt eine Annahme bis in den
     // Herbst: Die Aktion ist «3 Monate gratis», die erste Kohorte (Juli)
     // entscheidet also frühestens ab dem 3. Oktober 2026. Bis dahin steht in
@@ -110,7 +115,7 @@
     quelleSocial: {
       label: 'Metricool · Kampagnen-Auswertung',
       url:   'https://app.metricool.com/reporting/campaigns-dashboard/public?token=eyJ6aXAiOiJERUYiLCJhbGciOiJIUzUxMiJ9.eJxVztFSgkAUgOF3ObcywhrCxh3VTLLWZmZmNU2Dy5Lgrhzg5AhN7x7jXZf_d_X_QPqdQfQOOyJsI9dNEcdWU1OoqjJjVVn4cKBICSIW8ouQ-YwFDhy2-X_QJxyAs-lk6p3B0icaiEBjU6_atpJHafY66b6sElsSM755NJORZFjGwdO8v85ewxN7vkoal4tDvWyThUrucS1fVOnFYo_Ey5u7oq770L_t5w9Wr5ualqsyrUaoWrmIdZG7lF_yYOfHb8UmnOVCd4EHDlCHejjBLDUE5zM6Ds3g9w85oFAH.cL8xJiluV4VRcqD2tsOIXKgpvI7UfN_fbvREgPpiP_r0T0JTBfS_vH2cnrq50d-kogWBjyZLE_OMINhFqo8dIw',
-      takt:  'Die Aktion endet am 8. August: die Schlusszahlen einmal vollständig übernehmen, sobald Metricool die letzte Woche abgerechnet hat – danach ist die Auswertung fest und der Takt endet.'
+      takt:  'Die Aktion endet am 11. August: bis dahin täglich übernehmen, danach die Schlusszahlen einmal vollständig, sobald Metricool die letzte Woche abgerechnet hat – dann ist die Auswertung fest und der Takt endet.'
     }
   };
 
@@ -870,7 +875,7 @@
   var PHASEN = [
     { name: 'Auftakt',       von: '2026-06-29', bis: '2026-07-19' },
     { name: 'Verdichtung',   von: '2026-07-20', bis: '2026-08-02' },
-    { name: 'Schlussspurt',  von: '2026-08-03', bis: '2026-08-08' }
+    { name: 'Schlussspurt',  von: '2026-08-03', bis: '2026-08-11' }
   ];
   var ZB_KANAELE = [
     ['social', 'Social'], ['newsletter', 'Newsletter'], ['mailer', 'Mailing/Post'], ['flyer', 'Flyer/Stand'],

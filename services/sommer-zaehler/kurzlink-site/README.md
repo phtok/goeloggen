@@ -44,7 +44,8 @@ oder Papier.
 - `index.html` — die Wurzel leitet auf die Aktions-Landingpage weiter.
   **Kein Schaufenster:** die internen Werkzeuge (Generator, Cockpit) werden
   hier bewusst nicht verlinkt — die Wurzel eines Kürzers zeigt nie das
-  Werkzeug. Nach dem 8. August 2026 das Ziel auf `goetheanum.ch` umstellen.
+  Werkzeug. Nach dem 11. August 2026 das Ziel auf `goetheanum.ch` umstellen
+  (die Aktion ist am 7. August um drei Tage verlängert worden).
 - `404.html` — die Weiterleitungs-Brücke; leere und unbekannte Pfade landen
   ebenfalls auf der Aktions-Landingpage.
 - `CNAME` — `tools.goetheanum.ch` (von GitHub Pages gesetzt).
