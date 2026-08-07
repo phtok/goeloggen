@@ -11,8 +11,12 @@
   var CONFIG = {
     start: '2026-07-03',            // Aktionsstart (Nachmittag 3. Juli 2026)
     ende:  '2026-08-08',            // Aktionsende
-    bleibeQuote: 0.62,             // Annahme, bis Erfahrungswerte vorliegen
-    meilensteine: [100, 250, 500, 1000],
+    // Annahme, bis Erfahrungswerte vorliegen. Bleibt eine Annahme bis in den
+    // Herbst: Die Aktion ist «3 Monate gratis», die erste Kohorte (Juli)
+    // entscheidet also frühestens ab dem 3. Oktober 2026. Bis dahin steht in
+    // der Datenbank bei keiner Anmeldung «bleibt» – die Projektion ist reine
+    // Rechnung, keine Beobachtung.
+    bleibeQuote: 0.62,
     zielGesamt: 500,                // Gesamtziel der Aktion (neue Abos) – GF-Vorgabe, zurückgestellt 30.7.
     // Zielmarke je Strom – Zwischenmarken, Summe = Gesamtziel. Historie: 24.7.
     // von 1000 auf 700 gesenkt (Faktor 0,7); 30.7. zurück auf die ursprüngliche
@@ -20,6 +24,10 @@
     // Ströme-Tabelle nicht gegen den Stand-Block rechnet. goetheanum.tv zählt
     // seither als EIN Strom ohne Sprachtrennung (Beschluss 30.7.): die Sprache
     // ist dort nicht gemessen, die alte EN-Zeile war nur eine Untergrenze.
+    // Das Gesamtziel ist am 5. August überschritten worden. Die Marken bleiben
+    // stehen, wie sie vereinbart waren – eine nachträglich angehobene Zielmarke
+    // wäre keine Messung mehr, sondern eine Erzählung. Der Stand-Block zeigt die
+    // Übererfüllung in Grün, die Ströme-Tabelle zeigt sie je Strom in Prozent.
     ziele: {
       'wos.de.papier': 100, 'wos.de.digital': 125,
       'wos.en.digital': 60,
@@ -54,32 +62,55 @@
     // während die Zahlen weiterlaufen. Schätzung (±30 %), keine Messung; die
     // Messwerte in der Datenbank bleiben unangetastet. Bei neuer Auswertung:
     // stand/doc/anteile hier nachziehen, sonst nichts.
-    // Korrektur 24. Juli: der Anteil der bezahlten Anzeige fiel von 40 % auf 7 %.
-    // Die alte Zahl kam aus der vermuteten Herkunft (zeitnächster Klick) – ein
-    // Anker, der nur bei spärlichen Klicks trägt. Die Anzeige stellt fast das
-    // ganze Klick-Log und gewann darum fast jede Nähe-Lotterie; eine Placebo-Probe
-    // (Anmeldezeiten um ±24/48 h verschoben) trifft sie fast gleich oft.
+    // Fortschreibung 7. August (löst die Lesart vom 24. Juli ab). Gerechnet aus
+    // drei Ankern: (1) der Grundlinie der 14 Tage vor der ersten Mail-Welle –
+    // 3,7 Anmeldungen ohne Spur je Tag, auf jedes spätere Fenster
+    // fortgeschrieben; (2) den GEMESSENEN Anteilen desselben Fensters, nach
+    // denen der Überschuss verteilt wird; (3) den 42 Selbstauskünften, die
+    // allein die Grundlinie und das Gebiet «Empfehlung» tragen können.
+    // Zwei Änderungen im Zuschnitt: «Popup» kam am 25. Juli dazu, «Empfehlung»
+    // ist im gemessenen Feld strukturell unsichtbar (dieser Weg trägt nie einen
+    // Link) und stand darum bisher nirgends.
+    // Die bezahlte Anzeige bleibt bei ≈9 Abos insgesamt: sie ist seit dem
+    // 24. Juli aus (letzter Klick 26. Juli), ihr Anteil wächst nicht mehr und
+    // ist durch die Abschalt-Probe gedeckelt, nicht durch die Fensterrechnung.
     dunkel: {
-      stand: '24. Juli',
-      doc:   'docs/wirkungs-lesart-24-07.md',
+      stand: '7. August',
+      doc:   'docs/wirkungs-lesart-07-08.md',
       anteile: {
-        newsletter: 0.346,   // TV-Weekly und Haus-Newsletter (Placebo-Überschuss belegt)
-        organik:    0.300,   // Direkt, Suche, Storefront, Bestandskonten
-        mailing:    0.208,   // Nachlauf der Welle 1 ohne Spur
-        bezahlt:    0.069,   // Meta-Anzeige – Obergrenze aus dem sauberen Fenster
-        social:     0.069,   // Reels, Stories, Karussell
-        print:      0.008
+        mailing:    0.399,   // die drei Mail-Wellen – jede als Sprung in der Tageskurve belegt
+        newsletter: 0.230,   // Haus-Newsletter und TV-Weekly, inkl. der beiden Eröffnungs-Mails
+        organik:    0.140,   // Direkt, Suche, Storefront, Bestandskonten
+        empfehlung: 0.112,   // persönliches Umfeld, Praxen, Schulen, Tagungen – nur aus Selbstauskunft
+        social:     0.043,   // Reels, Stories, Karussell
+        popup:      0.029,   // Webseiten-Popup seit 25. Juli
+        print:      0.025,   // Stand, Flyer, Inserate
+        bezahlt:    0.022    // Meta-Anzeige – Deckel aus der Abschalt-Probe (docs/abschaltprobe-anzeige-27-07.md)
       }
     },
-    // Kosten der Aktion (in CONFIG.waehrung) – stehen auf 0, echte Zahlen werden erfragt.
-    zahlenProvisorisch: true,      // blendet den Hinweis auf Beispielwerte ein
+    // Die Abschalt-Probe der bezahlten Anzeige ist gelaufen UND ausgewertet.
+    // Ohne diesen Eintrag empfiehlt das Cockpit unter «Nächste Züge» weiterhin,
+    // sie auszuwerten – ein Zug, der längst erledigt ist. Steht hier ein
+    // Ergebnis, wird daraus ein Befund statt einer Aufforderung.
+    abschaltprobe: {
+      stand:    '27. Juli',
+      doc:      'docs/abschaltprobe-anzeige-27-07.md',
+      ergebnis: 'Die Anzeige verlor beim Stopp 57 Klicks am Tag – über die Hälfte des gesamten Klick-Aufkommens –, ' +
+                'die goetheanum.tv-Anmeldungen fielen um 0,8 am Tag. Über die ganze Laufzeit rund 8 bis 12 Abos ' +
+                'aus 965 Klicks und 131 000 erreichten Personen. Damit ist sie der teuerste und der schwächste Weg der Aktion.'
+    },
+    // Zeigt an, was im Cockpit noch Annahme ist und nicht gemessen. Preise und
+    // Zielmarken sind es seit dem 17. Juli nicht mehr (echte Formular- und
+    // Uscreen-Preise, ratifizierte GF-Vorgabe) – allein die Bleibe-Quote bleibt
+    // eine Annahme, bis die erste Kohorte im Oktober entscheidet.
+    zahlenProvisorisch: true,
     // Externe Quelle der Social-Media-Zahlen (Reichweite/Klicks je Kanal).
     // Metricool gibt die Zahlen nur im geschützten Dashboard aus – ein Live-Abgriff
     // aus dem Browser ist nicht möglich. Darum ablesen und je Aktivität eintragen.
     quelleSocial: {
       label: 'Metricool · Kampagnen-Auswertung',
       url:   'https://app.metricool.com/reporting/campaigns-dashboard/public?token=eyJ6aXAiOiJERUYiLCJhbGciOiJIUzUxMiJ9.eJxVztFSgkAUgOF3ObcywhrCxh3VTLLWZmZmNU2Dy5Lgrhzg5AhN7x7jXZf_d_X_QPqdQfQOOyJsI9dNEcdWU1OoqjJjVVn4cKBICSIW8ouQ-YwFDhy2-X_QJxyAs-lk6p3B0icaiEBjU6_atpJHafY66b6sElsSM755NJORZFjGwdO8v85ewxN7vkoal4tDvWyThUrucS1fVOnFYo_Ey5u7oq770L_t5w9Wr5ualqsyrUaoWrmIdZG7lF_yYOfHb8UmnOVCd4EHDlCHejjBLDUE5zM6Ds3g9w85oFAH.cL8xJiluV4VRcqD2tsOIXKgpvI7UfN_fbvREgPpiP_r0T0JTBfS_vH2cnrq50d-kogWBjyZLE_OMINhFqo8dIw',
-      takt:  'Empfehlung: wöchentlich (montags) übernehmen; in der Schlussspurt-Woche ab 3. August täglich.'
+      takt:  'Die Aktion endet am 8. August: die Schlusszahlen einmal vollständig übernehmen, sobald Metricool die letzte Woche abgerechnet hat – danach ist die Auswertung fest und der Takt endet.'
     }
   };
 
@@ -616,7 +647,9 @@
     // das ist widerlegt: die Kette Landing → Checkout → user_created ist geprüft
     // und trägt die UTM. Bleibt der Befund selbst: diese Wege werden geklickt und
     // münden kaum in Abos. Darum ein Zug, der misst statt umbaut.
-    // Herleitung: docs/wirkungs-lesart-24-07.md.
+    // Herleitung: docs/wirkungs-lesart-24-07.md, Ergebnis der Probe in
+    // docs/abschaltprobe-anzeige-27-07.md, fortgeschrieben in
+    // docs/wirkungs-lesart-07-08.md.
     var leck = { kl:0, motive:[], letzter:null, bezahltKl:0, bezahltLetzter:null };
     Object.keys(grp).forEach(function(k){
       var g = grp[k], a2 = ab[k] || 0;
@@ -658,6 +691,17 @@
                'Die organischen Wege über dieselbe Seite und dieselben In-App-Browser werden mit 3 bis 5 Prozent ihrer Klicks messbar, die bezahlte Anzeige mit 0,4 Prozent – die Klicks werden also nicht verloren, sie werden kaum zu Abos. ' +
                'Darum zuerst messen statt umbauen: die Anzeige aussetzen, solange die Grundlinie sauber ist, und die Anmeldungen je Tag vergleichen. ' +
                'Soll sie danach weiterlaufen, macht ein eigenes Uscreen-Angebot je bezahltem Weg sie hart messbar: services/sommer-zaehler/uscreen-angebot-attribution-auftrag.md.' });
+      } else if (CONFIG.abschaltprobe && CONFIG.abschaltprobe.ergebnis){
+        // Die Probe ist gelaufen UND ausgewertet: kein Zug mehr, sondern ein
+        // Befund. Er steht zuunterst (art 0) und trägt kein «jetzt» – nichts
+        // ist mehr zu tun, es ist etwas zu wissen.
+        zuege.push({ titel:'Bezahlte Anzeige – Abschalt-Probe ausgewertet', art:0, mass:0,
+          warum:'aus seit dem 24. Juli · letzter Klick vor ' + stillTage + ' Tagen · ' + fmt(leck.bezahltKl) + ' Klicks insgesamt',
+          hebel:'ausgewertet',
+          text:CONFIG.abschaltprobe.ergebnis + ' Festgehalten am ' + CONFIG.abschaltprobe.stand + ' in ' + CONFIG.abschaltprobe.doc +
+               '; die Anteile im Dunkelfeld sind entsprechend gedeckelt. ' +
+               'Für eine nächste bezahlte Runde gilt der Schluss daraus: erst hart messbar machen, dann buchen – ein eigenes Uscreen-Angebot je bezahltem Weg, ' +
+               'siehe services/sommer-zaehler/uscreen-angebot-attribution-auftrag.md.' });
       } else {
         zuege.push({ titel:'Abschalt-Probe auswerten – die Anzeige liefert seit ' + stillTage + ' Tagen keine Klicks', art:2, mass:leck.kl,
           warum:'letzter Klick der Anzeige vor ' + stillTage + ' Tagen · ' + fmt(leck.bezahltKl) + ' Klicks insgesamt · die Probe läuft bereits',
@@ -1487,7 +1531,9 @@
       .then(renderHerkunft)
       .catch(function(){ el('herkunftBody').innerHTML = '<tr><td class="err" colspan="3">nicht ladbar</td></tr>'; });
     if(CONFIG.zahlenProvisorisch && el('provisorisch')){
-      el('provisorisch').textContent = 'Zielmarken, Preise und die Bleibe-Quote sind vorläufig hinterlegt – sobald die echten Werte gesetzt sind, rechnet das Cockpit unverändert weiter.';
+      el('provisorisch').textContent = 'Preise und Zielmarken sind echt hinterlegt (Formular- und Uscreen-Preise, Stand 17. Juli). ' +
+        'Annahme bleibt allein die Bleibe-Quote von ' + Math.round(CONFIG.bleibeQuote * 100) + ' %: Die Aktion läuft drei Monate gratis, ' +
+        'die erste Kohorte entscheidet frühestens Anfang Oktober. Bis dahin ist jede Zahl zum Folgejahr eine Rechnung, keine Beobachtung.';
     }
     Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten'), rpc('sommer2026_kanaele'),
                   rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public'), rpc('sommer2026_kosten_public'),
