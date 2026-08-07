@@ -183,9 +183,21 @@ Strikt über `dedup_key`:
   `dedup_key = <produkt>:<gesalzener E-Mail-Hash>` – E-Mail wird **nur gehasht**
   gespeichert (Salt in `sommer2026_config.hash_salt`), nie im Klartext.
 
-## Fest im Cockpit hinterlegt (bis echte Werte vorliegen)
+## Fest im Cockpit hinterlegt
 
-In `apps/sommer-zaehler/index.html` im `CONFIG`-Block: Zielmarken je Strom,
-Preise je Tarif/Intervall, angenommene Bleibe-Quote, Aktionsstart/-ende,
-Meilensteine. Diese Werte sind vorläufig markiert — nur diese ersetzen, sobald
-die echten Zahlen da sind; die Aggregation rechnet unverändert weiter.
+Im `CONFIG`-Block von `apps/sommer-zaehler/campaign.js`: Aktionsstart/-ende,
+Zielmarken je Strom, Preise je Tarif/Intervall, angenommene Bleibe-Quote,
+Dunkelfeld-Anteile, Ergebnis der Abschalt-Probe. Nur diese Werte ersetzen —
+die Aggregation rechnet unverändert weiter.
+
+Echt sind Preise und Zielmarken (Formular- und Uscreen-Preise Stand 17. Juli,
+GF-Vorgabe 500). Annahme bleibt allein die **Bleibe-Quote**: Die Aktion läuft
+drei Monate gratis, die erste Kohorte entscheidet frühestens Anfang Oktober
+2026 — bis dahin trägt keine Anmeldung den Status `bleibt`.
+
+Die **Dunkelfeld-Anteile** (`CONFIG.dunkel`) sind eine datierte Lesart und
+gehören bei jeder neuen Auswertung nachgezogen (stand / doc / anteile), zuletzt
+`docs/wirkungs-lesart-07-08.md` vom 7. August. Sie verteilt die Anmeldungen ohne Spur aus drei Ankern: Grundlinie
+der Tageskurve vor der ersten Mail-Welle, gemessene Anteile desselben Fensters,
+Selbstauskunft. Historie: `wirkungs-lesart-18-07.md`, `-22-07`, `-24-07` und
+die Abschalt-Probe der bezahlten Anzeige (`abschaltprobe-anzeige-27-07.md`).
