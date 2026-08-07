@@ -10,7 +10,12 @@
      diese Werte anpassen. */
   var CONFIG = {
     start: '2026-07-03',            // Aktionsstart (Nachmittag 3. Juli 2026)
-    // Aktionsende. Am 7. August um drei Tage verlängert (zuvor 8. August).
+    // Aktionsende. Am 7. August um drei Tage verlängert (zuvor 8. August) –
+    // und zwar STILL: keine Ankündigung, keine Mail, kein neues Datum auf den
+    // Aktionsseiten (Beschluss 7. August). Für die Zahlen heisst das: Die Tage
+    // vom 9. bis 11. August sind ein Nachzügler-Fenster ohne eigenen Impuls;
+    // wer die Aktion auswertet, darf sie nicht mit den Aktionstagen vergleichen
+    // – dort stand ein Versand dahinter, hier nur die offene Tür.
     // Dieses Datum steuert alles Zeitliche: Resttage, «Abos/Tag nötig», die
     // Breite des Pulses, die Fortschreibung im Befund und das Wochenraster des
     // Zeitbands. Die Ingestion kennt kein Enddatum (nur aktion_start und
