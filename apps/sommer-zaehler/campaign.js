@@ -281,8 +281,15 @@
     var pct = ziel > 0 ? Math.round(total / ziel * 100) : 0;
     el('kZiel').textContent = pct + ' %';
     el('kTempo').textContent = t.tempo.toFixed(1).replace('.', ',');
-    var noetig = t.rest > 0 ? Math.max(0, (ziel - total) / t.rest) : 0;
-    el('kNoetig').textContent = t.rest > 0 ? noetig.toFixed(1).replace('.', ',') : '–';
+    // «Abos/Tag nötig» beantwortet nur eine Frage: Was fehlt noch bis zur
+    // Zielmarke? Ist sie übertroffen oder die Aktion vorbei, fehlt nichts mehr
+    // – die Kachel stand dann auf 0,0 und sagte nichts (G03: was entbehrlich
+    // ist, entfällt). Sie erscheint darum nur, solange sie eine Antwort hat.
+    var offen = t.rest > 0 && total < ziel;
+    var noetig = offen ? (ziel - total) / t.rest : 0;
+    var kachel = el('kNoetigKachel');
+    if (kachel) kachel.hidden = !offen;
+    el('kNoetig').textContent = offen ? noetig.toFixed(1).replace('.', ',') : '–';
     // Über 100 % wird die Spur zum Ist-Stand: Gold bis zur Zielmarke,
     // die Übererfüllung dahinter in Grün (--ok).
     var ueber = el('ddBarUeber');
