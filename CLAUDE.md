@@ -110,6 +110,38 @@ gibt es die **Gestalt-Schleife**:
   auf Tokens (weisse Schrift → `--on-accent`, weisse Fläche → `--paper`).
   Vorschau ohne, schreiben mit `--apply`. Idempotent.
 
+### Die Maschine prüft die Regel, das Auge prüft das Gewicht
+`typo-check` und `ds-lint` sehen Regelverstösse — sie sehen **nicht**, ob das
+Richtige gross ist. Beides ist schon auseinandergefallen: Drei Szenarien standen
+vollständig und regelkonform auf der Seite, aber als **eine** grosse Zahl und
+darunter drei kleine in einer Tabelle. Gelesen wurde die eine Zahl; die Spanne
+war da und doch nicht zu sehen (behoben in #526).
+
+Darum gilt für **Gestaltungsarbeit** (neue Anzeige, umgestellte Sektion, neue
+Zahlenfläche): **die Seite laden und anschauen, nicht nur rechnen lassen.**
+Chromium und Playwright liegen bereit, das genügt:
+
+```bash
+npx --yes http-server -p 8899 -s &            # Repo ausliefern
+node -e "
+const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+(async () => {
+  const b = await chromium.launch();
+  const p = await b.newPage({ viewport:{ width:1280, height:1500 } });
+  p.on('pageerror', e => console.log('PAGEERROR', e.message));
+  await p.goto('http://127.0.0.1:8899/PFAD/index.html');
+  await p.waitForTimeout(2000);
+  await p.screenshot({ path:'/tmp/seite.png', fullPage:true });
+  await b.close();
+})();"
+```
+
+Kommt die Seite nicht ans Backend (die Sandbox lässt es nicht immer), die
+RPC-Antworten mit `page.route('**/rest/v1/rpc/**', …)` unterlegen — mit **echten**
+Daten aus der Datenbank, sonst prüft man eine Attrappe. Zwei Breiten ansehen
+(**1280** und **420**), und im Zweifel den Schriftgrad messen statt schätzen:
+`getComputedStyle(el).fontSize`. Was gleich wichtig ist, muss gleich gross sein.
+
 **Artefakt-Farben schützen:** physische Farben (gedruckte Karte ist immer weiss,
 ein Telefon-Mockup zeigt die echte App) sind **keine** Theme-Flächen. Solche
 Literale mit `# ds-ok` in der Zeile markieren — Checker und Codemod lassen sie
@@ -122,7 +154,7 @@ Neue Lösung auf einer Seite → `ds-lint` erkennt die Abweichung (DS04) → **a
 `design-system/CHANGELOG.md`, `version` erhöhen) **oder auflösen** (`ds-fix`).
 Aufgenommenes gilt ab dann überall. Der **Beschluss-Ledger**
 (`design-system/CHANGELOG.md`) ist das Gedächtnis; der Score (`ds-lint --score`)
-macht „wie weit weg" zu einer Zahl statt eines Gefühls.
+macht ‹wie weit weg› zu einer Zahl statt eines Gefühls.
 
 ## Schnitt-System (Stand v2.7, Paketstruktur Trio)
 - Statische Schnitte: **Leise (265) · Ruhig (350) · Klar (440) ·

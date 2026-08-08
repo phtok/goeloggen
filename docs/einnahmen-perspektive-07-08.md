@@ -93,8 +93,11 @@ plausible Verschiebung der Bleibe-Quote allein.
   gibt Annahmen weiter.
 - **Kein Deckungsbeitrag.** Gegengerechnet sind nur die Einnahmen. Die Kosten
   der Aktion stehen mit CHF 309.70 (Druck) in der Datenbank; **der Betrag der
-  Meta-Anzeige fehlt dort**. Solange er fehlt, ist jede Aussage über den
-  Rückfluss zu günstig.
+  Meta-Anzeige fehlt dort noch**. Solange er fehlt, ist jede Aussage über den
+  Rückfluss zu günstig — besonders auf der Kosten-Seite, wo Kosten je Abo und
+  Rückfluss direkt daraus gerechnet werden. Die Zahlen werden in der Woche ab
+  dem 10. August eingetragen (Auskunft Auftraggeber, 8. August); sie fliessen
+  ohne weiteres Zutun ein, sobald sie im Kosten-Formular stehen.
 - **Keine Aussage über Papier.** Die Wochenschrift auf Papier trägt
   Herstellungs- und Versandkosten je Exemplar, die hier nicht abgezogen sind.
   Von den 274 WoS-Abos sind 87 Papier-Abos.
