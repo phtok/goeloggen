@@ -197,7 +197,7 @@ drei Monate gratis, die erste Kohorte entscheidet frühestens Anfang Oktober
 
 Die **Dunkelfeld-Anteile** (`CONFIG.dunkel`) sind eine datierte Lesart und
 gehören bei jeder neuen Auswertung nachgezogen (stand / doc / anteile), zuletzt
-`docs/wirkungs-lesart-07-08.md` vom 7. August. Sie verteilt die Anmeldungen ohne Spur aus drei Ankern: Grundlinie
+`docs/wirkungs-lesart-08-08.md` vom 8. August (nachrechenbar: das gleichnamige `.js` daneben). Sie verteilt die Anmeldungen ohne Spur aus drei Ankern: Grundlinie
 der Tageskurve vor der ersten Mail-Welle, gemessene Anteile desselben Fensters,
-Selbstauskunft. Historie: `wirkungs-lesart-18-07.md`, `-22-07`, `-24-07` und
+Selbstauskunft. Historie: `wirkungs-lesart-18-07.md`, `-22-07`, `-24-07`, `-07-08` und
 die Abschalt-Probe der bezahlten Anzeige (`abschaltprobe-anzeige-27-07.md`).

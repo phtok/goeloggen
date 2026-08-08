@@ -31,16 +31,16 @@
     //    Wochenschrift steht höher als goetheanum.tv: Beide Angebote sind
     //    Opt-out, aber dort ist das Nein einen Klick weit weg, und die
     //    monatliche Kartenbelastung erinnert jeden Monat an die Entscheidung.
-    //    Der Frühindikator zeigt dasselbe – im Gratis-Zeitraum kündigten 21 von
-    //    440 goetheanum.tv-Abos, bei der Wochenschrift 0 von 274.
+    //    Der Frühindikator zeigt dasselbe – im Gratis-Zeitraum kündigten 24 von
+    //    573 goetheanum.tv-Abos, bei der Wochenschrift 0 von 353.
     // 2) monate – wie viele der zwölf Folgemonate ein MONATLICHES Abo im
     //    Schnitt trägt. Über 85 Prozent der Abos zahlen monatlich; wer für sie
     //    zwölf volle Monate ansetzt, rechnet mit einer Treue, die niemand
     //    zugesagt hat. Jährliche Abos zählen voll – das Jahr ist bezahlt.
-    //    Ein Monat Verweildauer ist rund CHF 4200 wert, der grösste Hebel.
-    // Herleitung und Empfindlichkeit: docs/einnahmen-perspektive-07-08.md.
+    //    Ein Monat Verweildauer ist rund CHF 5500 wert, der grösste Hebel.
+    // Herleitung und Empfindlichkeit: docs/einnahmen-perspektive-08-08.md.
     szenarien: {
-      doc:     'docs/einnahmen-perspektive-07-08.md',
+      doc:     'docs/einnahmen-perspektive-08-08.md',
       referenz:'erwartet',                 // dieses trägt die grosse Zahl und den Rückfluss
       liste: [
         { key:'vorsichtig', name:'Vorsichtig', bleibt:{ gtv:0.35, wos:0.55 }, monate:7  },
@@ -93,7 +93,7 @@
     // während die Zahlen weiterlaufen. Schätzung (±30 %), keine Messung; die
     // Messwerte in der Datenbank bleiben unangetastet. Bei neuer Auswertung:
     // stand/doc/anteile hier nachziehen, sonst nichts.
-    // Fortschreibung 7. August (löst die Lesart vom 24. Juli ab). Gerechnet aus
+    // Fortschreibung 8. August (löst die Lesart vom 7. August ab). Gerechnet aus
     // drei Ankern: (1) der Grundlinie der 14 Tage vor der ersten Mail-Welle –
     // 3,7 Anmeldungen ohne Spur je Tag, auf jedes spätere Fenster
     // fortgeschrieben; (2) den GEMESSENEN Anteilen desselben Fensters, nach
@@ -102,21 +102,26 @@
     // Zwei Änderungen im Zuschnitt: «Popup» kam am 25. Juli dazu, «Empfehlung»
     // ist im gemessenen Feld strukturell unsichtbar (dieser Weg trägt nie einen
     // Link) und stand darum bisher nirgends.
-    // Die bezahlte Anzeige bleibt bei ≈9 Abos insgesamt: sie ist seit dem
-    // 24. Juli aus (letzter Klick 26. Juli), ihr Anteil wächst nicht mehr und
-    // ist durch die Abschalt-Probe gedeckelt, nicht durch die Fensterrechnung.
+    // Neu am 8. August: Die beiden Fristtage (7./8.) sind ein eigenes Fenster
+    // und haben allein 380 Anmeldungen gebracht – mehr als der ganze Juli.
+    // Weil dort das Mailing 234 von 280 gemessenen Anmeldungen stellt, steigt
+    // sein Anteil am Dunkelfeld von 39,9 auf 49,2 Prozent.
+    // Die bezahlte Anzeige bleibt bei ≈9 Abos insgesamt und wird als FESTE
+    // Zahl geführt (6 dunkel), nicht als Anteil: sie ist seit dem 24. Juli aus
+    // (letzter Klick 26. Juli), ihr Beitrag steht absolut fest. Ein Anteil
+    // liesse ihn schrumpfen, nur weil das Mailing gewachsen ist.
     dunkel: {
-      stand: '7. August',
-      doc:   'docs/wirkungs-lesart-07-08.md',
+      stand: '8. August',
+      doc:   'docs/wirkungs-lesart-08-08.md',
       anteile: {
-        mailing:    0.399,   // die drei Mail-Wellen – jede als Sprung in der Tageskurve belegt
-        newsletter: 0.230,   // Haus-Newsletter und TV-Weekly, inkl. der beiden Eröffnungs-Mails
-        organik:    0.140,   // Direkt, Suche, Storefront, Bestandskonten
-        empfehlung: 0.112,   // persönliches Umfeld, Praxen, Schulen, Tagungen – nur aus Selbstauskunft
-        social:     0.043,   // Reels, Stories, Karussell
-        popup:      0.029,   // Webseiten-Popup seit 25. Juli
-        print:      0.025,   // Stand, Flyer, Inserate
-        bezahlt:    0.022    // Meta-Anzeige – Deckel aus der Abschalt-Probe (docs/abschaltprobe-anzeige-27-07.md)
+        mailing:    0.491,   // die drei Mail-Wellen – jede als Sprung in der Tageskurve belegt
+        newsletter: 0.196,   // Haus-Newsletter und TV-Weekly, inkl. der beiden Eröffnungs-Mails
+        organik:    0.113,   // Direkt, Suche, Storefront, Bestandskonten
+        empfehlung: 0.101,   // persönliches Umfeld, Praxen, Schulen, Tagungen – nur aus Selbstauskunft
+        social:     0.034,   // Reels, Stories, Karussell
+        popup:      0.034,   // Webseiten-Popup seit 25. Juli
+        bezahlt:    0.017,   // Meta-Anzeige – FESTE Zahl (6 Abos) aus der Abschalt-Probe, kein Anteil
+        print:      0.013    // Stand, Flyer, Inserate
       }
     },
     // Die Abschalt-Probe der bezahlten Anzeige ist gelaufen UND ausgewertet.
@@ -680,7 +685,7 @@
     // münden kaum in Abos. Darum ein Zug, der misst statt umbaut.
     // Herleitung: docs/wirkungs-lesart-24-07.md, Ergebnis der Probe in
     // docs/abschaltprobe-anzeige-27-07.md, fortgeschrieben in
-    // docs/wirkungs-lesart-07-08.md.
+    // docs/wirkungs-lesart-08-08.md.
     var leck = { kl:0, motive:[], letzter:null, bezahltKl:0, bezahltLetzter:null };
     Object.keys(grp).forEach(function(k){
       var g = grp[k], a2 = ab[k] || 0;

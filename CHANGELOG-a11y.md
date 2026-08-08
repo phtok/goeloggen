@@ -142,3 +142,21 @@ von Anfang an rot steht, hütet nichts.
 prüfbar. Ein grüner Lauf heisst «keine der prüfbaren Regeln verletzt» — nicht
 «zugänglich». Der Prüfhinweis oben (Tastaturrunde, Screenreader-Durchgang)
 bleibt gültig; die Maschine ersetzt ihn nicht, sie hält ihm den Rücken frei.
+
+**Zweite Grenze, am 8. August am eigenen Fall gesehen:** Der Lauf misst, was
+beim Laden dasteht. **Nicht gemessen wird, was in einer geschlossenen
+`<details>`-Klappe liegt oder erst aus dem Backend nachgeladen wird** — im
+Cockpit also der halbe Inhalt. Dort fiel eine Pille auf der Szenario-Karte mit
+**4.42:1** durch (nötig 4.5), während dieselbe Pille auf der helleren Fläche
+4.66:1 hielt: Der Goldton mischte über `transparent` und nahm die Farbe der
+Fläche an, auf der er lag (behoben in `apps/sommer-zaehler/campaign.css`, jetzt
+über `--paper` gemischt: 4.70:1 hell, 5.19:1 dunkel).
+
+Wer dynamische Oberflächen prüft, muss die Klappen also öffnen und Daten
+unterlegen — Rezept dafür steht in `CLAUDE.md` unter ‹Die Maschine prüft die
+Regel, das Auge prüft das Gewicht›. Und beim Nachrechnen von Hand: Chromium
+gibt Farben auch als `color(srgb …)` mit Werten von 0 bis 1 zurück, nicht nur
+als `rgb()` mit 0 bis 255. Wer stumpf durch 255 teilt, misst Unsinn — erst
+diese Verwechslung liess die Pille wie 4.03:1 aussehen. Sicherer ist, die
+Farben vom Browser auf ein Canvas malen und das Pixel auslesen zu lassen; dann
+stimmt auch die Alpha-Überlagerung.
