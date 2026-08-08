@@ -22,3 +22,40 @@ jobs:
         run: python3 tools/typo-check.py --all
       - name: ds-lint (Gestalt, alle Seiten + Score)
         run: python3 tools/ds-lint.py
+
+  # DS08 · Barrierefreiheit lässt sich nicht lesen, nur messen: ob ein Kontrast
+  # trägt und ein Fingerziel gross genug ist, entscheidet sich erst am
+  # gerenderten Blatt. axe-core prüft die normativen Kriterien der WCAG 2.2
+  # (A und AA) in Chromium. Eigener Job, weil er einen Browser braucht.
+  #
+  # NOCH KEIN TOR: der Schritt läuft mit --check, darf aber scheitern
+  # (continue-on-error), solange der Rückstand aus der Erstmessung offen ist —
+  # er steht in CHANGELOG-a11y.md. Ist der abgetragen, wird aus dem Bericht
+  # ein Tor, indem die eine Zeile «continue-on-error» hier verschwindet. Sonst
+  # wäre jeder Push von Anfang an rot, und ein Tor, das immer rot steht, hütet
+  # nichts.
+  barrierefreiheit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Chromium holen
+        working-directory: tools
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: barrierefreiheit (WCAG 2.2 AA, alle Seiten)
+        continue-on-error: true
+        run: |
+          set +e
+          node tools/barrierefreiheit.mjs --check | tee wcag.txt
+          stand=$?
+          {
+            echo '## Barrierefreiheit · WCAG 2.2 AA (DS08)'
+            echo '```'
+            cat wcag.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit $stand
