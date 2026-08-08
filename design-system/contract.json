@@ -1,6 +1,6 @@
 {
   "$schema": "https://goetheanum/design-system/contract.schema.json",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "titel": "Goetheanum Design-System – Struktur-Vertrag",
   "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
   "geltungsbereich": {
@@ -172,5 +172,24 @@
     "schwere": "fehler",
     "verbotenes_muster": "[\"']https://phtok\\.github\\.io/goeloggen/(?:design-system|assets)/|data-root\\s*=\\s*[\"']https://phtok\\.github\\.io/goeloggen/",
     "hinweis": "Quelle: Vorfall Signatur-Generator (PR #291) – Seite erschien auf werkzeuge.goetheanum.ch ungestylt. Pfadtiefe je Ort: Root design-system/…, App ../../design-system/…"
+  },
+  "barrierefreiheit": {
+    "ds_id": "DS08",
+    "regel": "Die Hausregeln B01–B05 gelten gemessen, nicht behauptet: jede Seite hält die normativen Erfolgskriterien der WCAG 2.2 auf Stufe A und AA.",
+    "schwere": "fehler",
+    "stufen": [
+      "wcag2a",
+      "wcag2aa",
+      "wcag21a",
+      "wcag21aa",
+      "wcag22a",
+      "wcag22aa"
+    ],
+    "werkzeug": "node tools/barrierefreiheit.mjs --check",
+    "pruefung": "Gemessen, nicht gelesen: Chromium lädt jede Seite des Geltungsbereichs auf 390 px (Telefon) und 1440 px (Schreibtisch), blättert sie einmal durch, damit eingeblendete Abschnitte ihre echten Farben zeigen, und lässt axe-core prüfen. Was weiterleitet, wird übersprungen statt gemessen — sonst misst der Lauf die Fehlerseite des Browsers.",
+    "stand": "Berichtend, nicht blockierend: die Erstmessung vom 8. August 2026 hat einen Rückstand ergeben, der in CHANGELOG-a11y.md steht (Abschnitt «Block D»). Erst wenn er abgetragen ist, wird DS08 zum Tor.",
+    "grenze": "Rund ein Drittel der Kriterien ist maschinell prüfbar. Ein grüner Lauf heisst «keine der prüfbaren Regeln verletzt» — nicht «zugänglich». Beschriftungen, Reihenfolge und Verständlichkeit bleiben Sache der Aufmerksamkeit.",
+    "artefakt_dateien": [],
+    "artefakt_hinweis": "Physische Farben sind keine Bildschirmflächen — eine gedruckte Karte ist weiss, weil das Papier weiss ist. Blätter, deren Farben dem Papier gehören, stehen hier; dort entfällt allein die Kontrastprüfung, alle anderen Kriterien gelten weiter. Das ist die Entsprechung zum «# ds-ok» in den Stilblättern: die Maschine schlägt vor, der Mensch ratifiziert."
   }
 }

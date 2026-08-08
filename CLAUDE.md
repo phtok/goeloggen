@@ -34,6 +34,15 @@ beschreiben. Solche Widersprüche **melden und vom Auftraggeber entscheiden
 lassen** — das Regelwerk **nicht** eigenmächtig umschreiben.
 
 ### Barrierefreiheit ist verbindlich (WCAG 2.2 AA)
+**Seit dem 8. August 2026 gemessen, nicht behauptet:** `node
+tools/barrierefreiheit.mjs` (Regel **DS08**) lädt jede Seite des
+Geltungsbereichs in Chromium auf 390 px und 1440 px und lässt `axe-core` die
+normativen Kriterien prüfen. Der Lauf dauert rund sechs Minuten und läuft
+darum **nicht** im Commit-Hook, sondern als eigener Job in
+`pruefmaschinen.yml` — vorerst **berichtend**, bis der Rückstand der
+Erstmessung abgetragen ist (`CHANGELOG-a11y.md`, Block D). `--seite <pfad>`
+prüft eine einzelne Seite in Sekunden, `--regel <id>` nur eine Regelsorte.
+
 Für jede Web-Oberfläche gilt, geprüft (Kontraste rechnen, nicht schätzen):
 - **B01 Kein dunkler Text auf farbigem Grund.** Auf Blau/Gold/Grün steht
   **Weiss** (`--on-accent`). Auswahl-Pille = dunkles Gold + Weiss (≥4.5:1),
@@ -103,9 +112,13 @@ nachkontrolliert. Symmetrisch zur sprachlichen Schleife (`typo-check`/`typo-sync
 gibt es die **Gestalt-Schleife**:
 
 - **Vertrag:** `design-system/contract.json` (Regeln DS01–DS07: Pflicht-Includes,
-  nur Token-Farben, Grössen-Untergrenze B03, kanonische Rollen, verbotene Muster).
+  nur Token-Farben, Grössen-Untergrenze B03, kanonische Rollen, verbotene Muster;
+  dazu **DS08** Barrierefreiheit).
 - **Prüfen:** `tools/ds-lint.py` — `ds-lint.py` (Audit + **Score**),
   `--staged` (Hook), `--score`. Meldet Verstösse nach Regel-ID + `Datei:Zeile`.
+  Was ds-lint nicht lesen kann, misst `tools/barrierefreiheit.mjs` im Browser
+  (**DS08**, siehe oben) — ob ein Kontrast trägt, entscheidet sich erst am
+  gerenderten Blatt.
 - **Korrigieren:** `tools/ds-fix.py` — hebt die Hauspalette **property-bewusst**
   auf Tokens (weisse Schrift → `--on-accent`, weisse Fläche → `--paper`).
   Vorschau ohne, schreiben mit `--apply`. Idempotent.
