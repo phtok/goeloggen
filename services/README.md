@@ -2,5 +2,4 @@
 
 Nicht-statische Unterprojekte mit eigenem Runtime- oder Worker-Kontext.
 
-- `brand-portrait/` - Portrait-Service mit Python-App
-- `gtv-subs/` - Goetheanum-TV-Untertitel und Worker-Helfer
+- `sommer-zaehler/` - Backend des Aktions-Cockpits (`apps/sommer-zaehler/`); zieht Aggregat-Summen aus dem Werkzeug-Supabase.
