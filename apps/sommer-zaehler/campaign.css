@@ -48,7 +48,6 @@
 
 
 
-  .stay{display:grid;grid-template-columns:1.1fr 1fr;gap:var(--s6);align-items:stretch}
   .cohort{background:var(--card,var(--paper));border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card)}
   .cohort .when{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
   .cohort h4{margin:6px 0 var(--s4);font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3)}
@@ -73,10 +72,6 @@
   .szen .s-w{font-family:var(--font-display);font-weight:var(--w-strong);font-size:clamp(26px,3.4vw,36px);color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.05}
   .szen .s-m{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.55}
   .szen .pill{margin-top:0}
-  .proj{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6)}
-  .proj .pl{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
-  .proj .pv{font-family:var(--font-display);font-weight:var(--w-strong);font-size:clamp(30px,5vw,42px);color:var(--ok);font-variant-numeric:tabular-nums;line-height:1;margin-top:6px}
-  .proj .pn{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:10px;line-height:1.55}
 
   .tablewrap{overflow-x:auto}
   .tarif{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);min-width:440px}
@@ -118,17 +113,6 @@
   .kpi .k b{display:block;font-size:var(--t-body);color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600}
   .kpi .k span{color:var(--muted);font-size:var(--t-micro)}
   .kpi .k.warn b{color:var(--bad)}
-  /* Befund: die Fortschreibung im Klartext – der Satz, den eine Prozentzahl
-     verschweigt. Zurückhaltend gesetzt: er soll auffallen, weil er dasteht,
-     nicht weil er laut ist (G03). Lesegrösse statt Lede, getönte Kante statt
-     Signalbalken, Fläche nur angedeutet. */
-  .befund{margin-top:var(--s4);padding:var(--s3) var(--s4);border-radius:var(--r-control);
-    background:color-mix(in srgb,var(--bad) 5%,transparent);
-    border-left:2px solid color-mix(in srgb,var(--bad) 55%,transparent)}
-  .befund p{font-family:var(--font-text);font-size:var(--t-small);
-    line-height:1.55;color:var(--ink);margin:0;max-width:var(--measure)}
-  .befund p b{font-weight:600}
-  .befund .b-meta{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s1)}
   /* Puls: der Takt neben der Zahl, nicht als eigene Sektion. Ein Balken je
      Kalendertag seit Aktionsstart; die ganze Spalte (volle 56px) ist das
      Zeigeziel, nicht nur der gemalte Balken. Die Tageszahl erscheint als Fahne
@@ -313,7 +297,7 @@
   .jump a.is-on{color:var(--gold-ink);border-bottom-color:var(--gold)}
 
   @media (max-width:720px){
-    .board{grid-template-columns:1fr} .stay{grid-template-columns:1fr}
+    .board{grid-template-columns:1fr}
     .szen{grid-template-columns:1fr}
   }
   @media (max-width:640px){

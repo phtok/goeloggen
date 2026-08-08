@@ -52,17 +52,14 @@
           <div class="kpi">
             <div class="k"><b id="kZiel">–</b><span>vom Ziel erreicht</span></div>
             <div class="k"><b id="kTempo">–</b><span>Abos/Tag aktuell</span></div>
-            <div class="k warn"><b id="kNoetig">–</b><span>Abos/Tag nötig</span></div>
+            <!-- Verschwindet, sobald das Ziel übertroffen ist – dann ist nichts
+                 mehr nötig, und was nichts sagt, gehört weg (G03). -->
+            <div class="k warn" id="kNoetigKachel" hidden><b id="kNoetig">–</b><span>Abos/Tag nötig</span></div>
           </div>
           <div class="meter"><span id="ddBar" style="width:0"></span><span id="ddBarUeber" class="ueber" style="width:0"></span></div>
           <div class="puls" id="puls"></div>
           <div class="puls-l" id="pulsL"></div>
         </div>
-      </div>
-
-      <div class="befund" id="befund" hidden>
-        <p id="befundText"></p>
-        <div class="b-meta" id="befundMeta"></div>
       </div>
 
       <!-- Direkt unter der Signaturzahl: Die zweite Frage nach «wie viele» ist
