@@ -91,16 +91,22 @@ Browsers. Solche Blätter werden gezählt und übersprungen.
 
 ## Rückstand aus der Erstmessung
 
-**69 Verstösse, 399 betroffene Stellen, 120 Messungen.** Sechs Regelsorten —
-und der Rückstand ist stark konzentriert: **zwei Seiten tragen ein Viertel
-davon.**
+**70 Verstösse, 419 betroffene Stellen, 120 Messungen** (Lauf der CI). Sechs
+Regelsorten — und der Rückstand ist stark konzentriert: **zwei Seiten tragen
+ein Viertel davon.**
+
+**Der Lauf ist nicht auf jedem Rechner deckungsgleich.** Ob ein Fingerziel
+unter das Mass fällt oder ein Behälter überläuft, hängt an Schriftmetrik und
+Chromium-Bauart: derselbe Stand ergab lokal 28, in der CI 48
+`target-size`-Funde. **Im Zweifel gilt der CI-Lauf** — er misst auf der
+Maschine, die auch das Tor bedient. Die Zahlen unten sind seine.
 
 | Regel | Stellen | Seiten | Was zu tun ist |
 |---|---:|---:|---|
 | `color-contrast` | 145 | 14 | Kontrast unter 4.5:1 (B02). Rechnen, nicht schätzen; der Fund nennt Ist-Wert und Sollwert |
 | `select-name` | 106 | 2 | Auswahlfelder ohne zugänglichen Namen — ein Platzhalter genügt dort nicht |
 | `label` | 82 | 8 | Eingabefelder ohne Beschriftung (WCAG 4.1.2) |
-| `target-size` | 28 | 2 | Fingerziele unter dem Mass (B04) |
+| `target-size` | 48 | 2 | Fingerziele unter dem Mass (B04) |
 | `link-in-text-block` | 22 | 4 | Links im Fliesstext, die sich allein durch Farbe unterscheiden (WCAG 1.4.1) |
 | `scrollable-region-focusable` | 16 | 10 | Behälter mit `overflow: auto` ohne `tabindex="0"` — die Tastatur kommt nicht an den verborgenen Teil |
 
