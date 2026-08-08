@@ -58,7 +58,12 @@
   .conv .txt{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);min-width:190px;flex:1}
   .conv .txt b{font-weight:600}
   .conv .txt .m{color:var(--muted);font-size:var(--t-micro)}
-  .pill{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);line-height:1.45;padding:6px 13px;border-radius:var(--r-control);background:color-mix(in srgb,var(--gold) 15%,transparent);color:var(--gold-ink);margin-top:var(--s4);max-width:100%}
+  /* B02: Der Goldton mischt über --paper, NICHT über transparent. Sonst legt er
+     sich auf die jeweilige Fläche darunter und frisst den Kontrast, den
+     --gold-ink verspricht — auf der Szenario-Karte (--soft) gemessene 4.42:1
+     statt der nötigen 4.5:1, auf --paper knapp gehaltene 4.66:1. Über --paper
+     gemischt hält die Pille überall: 4.70:1 hell, 5.19:1 dunkel. */
+  .pill{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);line-height:1.45;padding:6px 13px;border-radius:var(--r-control);background:color-mix(in srgb,var(--gold) 14%,var(--paper));color:var(--gold-ink);margin-top:var(--s4);max-width:100%}
   /* Drei Szenarien nebeneinander, gleiches Gewicht: die Spanne ist die Aussage.
      Die Zahl steht in --ink, nicht in --ok – Grün auf «Vorsichtig» würde
      schmeicheln. Die Referenz nennt sich per Wort (Pille), nicht per Farbe. */
