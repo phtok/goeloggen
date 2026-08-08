@@ -59,6 +59,15 @@
   .conv .txt b{font-weight:600}
   .conv .txt .m{color:var(--muted);font-size:var(--t-micro)}
   .pill{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);line-height:1.45;padding:6px 13px;border-radius:var(--r-control);background:color-mix(in srgb,var(--gold) 15%,transparent);color:var(--gold-ink);margin-top:var(--s4);max-width:100%}
+  /* Drei Szenarien nebeneinander, gleiches Gewicht: die Spanne ist die Aussage.
+     Die Zahl steht in --ink, nicht in --ok – Grün auf «Vorsichtig» würde
+     schmeicheln. Die Referenz nennt sich per Wort (Pille), nicht per Farbe. */
+  .szen{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);margin-top:var(--s4)}
+  .szen .s{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s5);display:flex;flex-direction:column;gap:6px}
+  .szen .s-n{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .szen .s-w{font-family:var(--font-display);font-weight:var(--w-strong);font-size:clamp(26px,3.4vw,36px);color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.05}
+  .szen .s-m{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.55}
+  .szen .pill{margin-top:0}
   .proj{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6)}
   .proj .pl{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
   .proj .pv{font-family:var(--font-display);font-weight:var(--w-strong);font-size:clamp(30px,5vw,42px);color:var(--ok);font-variant-numeric:tabular-nums;line-height:1;margin-top:6px}
@@ -300,6 +309,7 @@
 
   @media (max-width:720px){
     .board{grid-template-columns:1fr} .stay{grid-template-columns:1fr}
+    .szen{grid-template-columns:1fr}
   }
   @media (max-width:640px){
     .stand{grid-template-columns:1fr;gap:var(--s6)}

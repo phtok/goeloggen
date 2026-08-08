@@ -1446,6 +1446,12 @@
   function deckeRevenue(rows){
     return projectRevenue(rows, { name:'Decke', bleibt:{ gtv:1, wos:1 }, monate:12 });
   }
+  // Aktive Abos – gekündigte zählen nicht mit; Bezugsgrösse der Karten.
+  function aktiveAbos(rows){
+    return (rows || []).reduce(function(s, r){
+      return r.status === 'gekuendigt' ? s : s + (Number(r.n) || 0);
+    }, 0);
+  }
   // Gemischte Quote über den tatsächlichen Produkt-Mix – für die Kohorte, die
   // nur eine Gesamtzahl kennt.
   function mischQuote(rows, sz){
@@ -1490,49 +1496,40 @@
       }
     }
 
-    if (el('projValue')) el('projValue').textContent = geld(revenue.chfGesamt);
-    if (el('projLabel')) el('projLabel').textContent = 'Folgejahr-Umsatz · Szenario ' + ref.name;
-
-    // Die Spanne: ein Szenario je Zeile, das Referenz-Szenario im Gewicht
-    // hervorgehoben – ein Merkmal, nicht zwei (G01).
-    var body = el('szenarienBody');
-    if (body && stats){
-      body.innerHTML = '';
+    // Drei Karten, gleiches Gewicht – die Spanne IST die Aussage. Eine
+    // hervorgehobene Zahl neben zwei kleinen liest sich als Prognose mit
+    // Fehlerbalken; das wäre gelogen, solange keine Kohorte entschieden hat.
+    var host = el('szenKarten');
+    if (host && stats){
+      host.innerHTML = '';
       szenarien().forEach(function(sz){
         var r = projectRevenue(stats, sz);
-        var tr = document.createElement('tr');
-        tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
+        var karte = document.createElement('div'); karte.className = 's';
+        var n = document.createElement('div'); n.className = 's-n'; n.textContent = sz.name;
+        var w = document.createElement('div'); w.className = 's-w'; w.textContent = geld(r.chfGesamt);
+        var m = document.createElement('div'); m.className = 's-m';
+        m.textContent = fmt(Math.round(r.bleibend)) + ' von ' + fmt(Math.round(aktiveAbos(stats))) + ' Abos bleiben · ' +
+                        Math.round(bleibeQuote(sz, 'gtv') * 100) + ' % goetheanum.tv, ' +
+                        Math.round(bleibeQuote(sz, 'wos') * 100) + ' % Wochenschrift · monatliche Abos ' +
+                        sz.monate + ' von zwölf Monaten';
+        karte.appendChild(n); karte.appendChild(w); karte.appendChild(m);
         if (sz.key === ref.key){
-          var b = document.createElement('b'); b.textContent = sz.name + ' · Referenz';
-          tr.children[0].appendChild(b);
-        } else {
-          tr.children[0].textContent = sz.name;
+          var pill = document.createElement('div'); pill.className = 'pill';
+          pill.textContent = 'Referenz – diese Zahl trägt den Rückfluss';
+          karte.appendChild(pill);
         }
-        tr.children[1].textContent = Math.round(bleibeQuote(sz, 'gtv') * 100) + ' / ' +
-                                     Math.round(bleibeQuote(sz, 'wos') * 100) + ' %';
-        tr.children[2].textContent = fmt(Math.round(r.bleibend));
-        tr.children[3].textContent = geld(r.chfGesamt);
-        body.appendChild(tr);
+        host.appendChild(karte);
       });
-      var foot = el('szenarienFoot');
-      if (foot){
-        foot.innerHTML = '<tr><td>Decke · alle bleiben, volle zwölf Monate</td>' +
-                         '<td class="num">100 / 100 %</td><td class="num"></td><td class="num"></td></tr>';
-        var d = deckeRevenue(stats), td = foot.querySelector('tr').children;
-        td[2].textContent = fmt(Math.round(d.bleibend));
-        td[3].textContent = geld(d.chfGesamt);
-      }
     }
 
     var teile = [];
     if (revenue.chf > 0) teile.push('CHF ' + Math.round(revenue.chf).toLocaleString('de-CH') + ' von CHF-Zahlern');
     if (revenue.eur > 0) teile.push('EUR ' + Math.round(revenue.eur).toLocaleString('de-CH') + ' von EUR-Zahlern, umgerechnet zum Kurs ' + CONFIG.eurChf);
-    if (el('projNote')) el('projNote').textContent = 'Bleibende Abos zum echten Vollpreis je Zahlungswährung' +
-      (teile.length ? ' (' + teile.join(' + ') + ')' : '') + '. Monatliche Abos mit ' + ref.monate +
-      ' von zwölf Monaten gerechnet, jährliche voll.';
     if (el('szenarienNote')) el('szenarienNote').textContent =
-      'Zwei Stellschrauben je Szenario: die Bleibe-Quote (goetheanum.tv / Wochenschrift) und die Zahl der Monate, die ein monatliches Abo im Schnitt trägt (' +
-      szenarien().map(function(s){ return s.monate; }).join(' · ') + ' von zwölf). ' +
+      'Blieben alle und zahlten die monatlichen zwölf volle Monate, wären es ' + geld(deckeRevenue(stats).chfGesamt) +
+      ' – die Decke, keine Erwartung. Gerechnet wird zum echten Vollpreis je Zahlungswährung' +
+      (teile.length ? ' (Referenz: ' + teile.join(' + ') + ')' : '') + '. ' +
+      'Zwei Stellschrauben je Szenario: die Bleibe-Quote je Produkt und die Zahl der Monate, die ein monatliches Abo im Schnitt trägt. ' +
       'Keine Prognose – es hat noch keine Kohorte entschieden, die erste tut es Anfang Oktober. ' +
       'Herleitung, Begründung der Quoten und Empfindlichkeit: ' + ((CONFIG.szenarien && CONFIG.szenarien.doc) || '') + '.';
   }
