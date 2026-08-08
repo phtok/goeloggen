@@ -331,25 +331,16 @@
       }
     }
 
-    // Befund: die Fortschreibung im Klartext. Erscheint nur, wenn die Aktion läuft.
-    var box = el('befund');
-    if (box && t.rest > 0){
-      var prognose = Math.round(total + t.tempo * t.rest);
-      box.hidden = false;
-      var txt = el('befundText'); txt.innerHTML = '';
-      txt.appendChild(document.createTextNode('Bei diesem Tempo endet die Aktion bei rund '));
-      var b1 = document.createElement('b'); b1.textContent = fmt(prognose) + ' Abos'; txt.appendChild(b1);
-      txt.appendChild(document.createTextNode('. '));
-      if (prognose < ziel){
-        txt.appendChild(document.createTextNode('Das Ziel ' + fmt(ziel) + ' ist nur erreichbar, wenn ein Impuls von der Grösse der stärksten bisherigen Welle kommt – '));
-        var b2 = document.createElement('b'); b2.textContent = 'mehrfach'; txt.appendChild(b2);
-        txt.appendChild(document.createTextNode('.'));
-      } else {
-        txt.appendChild(document.createTextNode('Das Ziel ' + fmt(ziel) + ' ist bei diesem Tempo in Reichweite.'));
-      }
-      el('befundMeta').textContent = 'Fortschreibung des Schnitts der letzten drei Tage (' +
-        t.tempo.toFixed(1).replace('.', ',') + '/Tag) auf die restlichen ' + t.rest + ' Tage. Kein Versprechen – eine Rechnung.';
-    } else if (box) { box.hidden = true; }
+    // Der Befund (Fortschreibung des Tempos auf die Resttage) ist am 8. August
+    // ENTFERNT worden, nicht abgeschaltet – er log strukturell, sobald die
+    // kommunizierte Frist vorbei war. Er schrieb den Schnitt der letzten drei
+    // Tage fort: 146,3 am Tag, gemessen im Ansturm der Fristtage, hochgerechnet
+    // auf die drei stillen Tage der Verlängerung, an denen niemand mehr
+    // angeschrieben wird. Das ergab «rund 1400 Abos» – und dazu «Das Ziel 500
+    // ist in Reichweite», obwohl es bei 186 Prozent längst übertroffen war.
+    // Eine Fortschreibung über einen Impuls hinweg ist keine Rechnung, sondern
+    // eine Behauptung. Wer sie zurückholen will, braucht ein Tempo, das den
+    // Impuls kennt – nicht einen Schnitt über drei Tage.
   }
 
   // Ströme (Produkt × Sprache × Format) – aus eigener Sektion in den Aufklapp.
