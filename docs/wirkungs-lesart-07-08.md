@@ -1,5 +1,8 @@
 # Wirkungs-Lesart der Sommer-Aktion — Stand 7. August 2026
 
+> **Abgelöst am 8. August 2026 durch `wirkungs-lesart-08-08.md`.** Diese Fassung
+> bleibt als Historie stehen — die Zahlen darin sind der Stand vom 7. August.
+
 Dieses Dokument ordnet die Anmeldungen **ohne UTM-Spur** («ohne UTM» im
 Cockpit) den Aktivitäten der Kampagne zu. Es ist eine **Lesart, keine
 Messung**: Alle mit ≈ markierten Zahlen sind Schätzungen (±30 %). Die
