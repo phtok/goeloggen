@@ -135,6 +135,13 @@
                 'die goetheanum.tv-Anmeldungen fielen um 0,8 am Tag. Über die ganze Laufzeit rund 8 bis 12 Abos ' +
                 'aus 965 Klicks und 131 000 erreichten Personen. Damit ist sie der teuerste und der schwächste Weg der Aktion.'
     },
+    // «Nächste Züge» liest aus den Daten, was noch nicht gezündet hat. Das
+    // trägt, solange die Aktion läuft – seit die Frist am 8. August um
+    // Mitternacht ablief, schlägt es Handlungen vor, die niemand mehr tun
+    // kann. Darum ausgeblendet (Beschluss 8. August). Für die nächste
+    // Aktion hier auf true stellen; die Sektion und ihre Logik bleiben
+    // vollständig erhalten.
+    zuegeZeigen: false,
     // Zeigt an, was im Cockpit noch Annahme ist und nicht gemessen. Preise und
     // Zielmarken sind es seit dem 17. Juli nicht mehr (echte Formular- und
     // Uscreen-Preise, ratifizierte GF-Vorgabe) – allein die Bleibe-Quote bleibt
@@ -619,6 +626,11 @@
   ];
   function renderZuege(links, massnahmen, attribution, timeline, total){
     if (!el('zuegeListe')) return;
+    // Der Schalter entscheidet, die Seite trägt nur das Vorzeichen: So gibt es
+    // eine Wahrheit, nicht zwei (HTML-Attribut UND Konfiguration).
+    var sektion = el('zuege');
+    if (sektion) sektion.hidden = !CONFIG.zuegeZeigen;
+    if (!CONFIG.zuegeZeigen) return;
     var host = el('zuegeListe'); host.innerHTML = '';
     var zuege = [], ohneSpur = 0;
     (attribution || []).forEach(function(r){ if (!r.utm_source && !r.utm_content) ohneSpur += Number(r.n) || 0; });
