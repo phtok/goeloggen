@@ -112,7 +112,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .kennzahl.auf-papier{background:var(--paper)}
 
 /* --- Chips & Marken (Lese-Grotesk, kleine Grade) --------------------------- */
-.chip{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:6px 14px}
+.chip{font-family:var(--font-text);font-size:var(--t-small);line-height:1.35;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:var(--pille-y) var(--pille-x)}
 .chip b{color:var(--ink);font-weight:600}
 /* Chip mit Ton: benennt etwas (‹Referenz›, ‹Entwurf›) statt es nur zu zeigen.
    Trägt darum ganze Sätze – und braucht dafür mehr Luft als der Etiketten-Chip:
@@ -121,13 +121,14 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
    Fläche an, auf der er liegt, und frisst den Kontrast von --gold-ink (B02;
    auf einer --soft-Karte gemessene 4.42:1 statt der nötigen 4.5:1). */
 .chip.ton{display:inline-block;border-color:transparent;border-radius:var(--r-control);
-  padding:var(--s2) var(--s4);line-height:1.5;
+  padding:var(--pille-y) var(--pille-x);line-height:1.5;
   background:color-mix(in srgb,var(--gold) 14%,var(--paper));color:var(--gold-ink);max-width:100%}
 /* Status-Marke (Live/Beta/Entwurf …) – Mikro-Pille, kleiner als .chip, nie versal (G05).
    Optischer Sitz im Oval: Statuswörter haben meist keine Unterlängen – zentriert
    man das Geviert, sitzt die Tinte zu hoch. Darum line-height:1 und ein Hauch
    mehr Luft oben (nachgemessen, nicht geschätzt). */
-.badge{display:inline-flex;align-items:center;line-height:1;font-family:var(--font-text);font-size:var(--t-micro);letter-spacing:.03em;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:6px 10px 3px}
+.badge{display:inline-flex;align-items:center;line-height:1;font-family:var(--font-text);font-size:var(--t-micro);letter-spacing:.03em;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);
+  padding:calc(var(--pille-y) + .12em) var(--pille-x) calc(var(--pille-y) - .12em)}
 
 /* Schritt-Nummer – runde Zahl-Marke vor nummerierten Zwischentiteln. Gold ist die
    Hausfarbe für Auswahl-/Schrittmarken (wie die Auswahl-Pille); .blue nur für

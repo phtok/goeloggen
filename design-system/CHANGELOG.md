@@ -40,7 +40,28 @@ Leere — DS10 fand es sofort an drei Stellen in der Werkzeugpost, wo seit je di
 falsche Strichstärke stand. **Ein Design-System, dessen Vokabular vom
 Sprachgebrauch des Hauses abweicht, erzeugt genau solche Fehler.**
 
-**Wirkung.** `tokens.css` (Skala geschlossen, Schnitt-Namen), `base.css`
+**Und die Pillen.** Dieselbe Frage, nächste Ebene: Die pillenförmigen Rollen
+trugen zwischen **0,14 und 0,67 em** senkrechter Luft — also gar keine Regel.
+Die engsten (`.zeichen`, `.ev-kanal`: 2 px bei 14 px Schrift) klebten sichtbar
+an der Rundung. Neu gibt es dafür ein Grundmass, **in em statt in Pixeln**, damit
+die Luft mit dem Schriftgrad wächst: `--pille-y:0.4em`, `--pille-x:0.95em`.
+Waagrecht knapp ein Geviert, weil eine volle Rundung die Ecken frisst — was beim
+Rechteck noch Abstand ist, berührt im Oval schon die Kurve. Alle Pillen sitzen
+jetzt auf diesem Mass; die Marke behält ihre ratifizierte optische Verschiebung
+nach oben, nur proportional statt absolut.
+
+**Und eine fehlende Zweitfarbe.** Beim Nachmessen fiel das grüne Merkzeichen
+«trägt die Aktion» mit **4,14:1** durch. Grund: Gold hatte seit je zwei
+Gestalten — `--gold` als Fläche, `--gold-ink` als Schrift —, Grün nur eine.
+`--ok` ist als Fläche definiert («Weiss drauf»); wer es als Schrift nahm, fiel
+unter AA. Neu: **`--ok-ink`** (hell `#39703f`, dunkel `#6bac76`), gerechnet
+gegen den grünen Ton auf Papier und auf Karte. *Eine Signalfarbe braucht beide
+Gestalten, sonst wird die Fläche als Schrift missbraucht.* Die getönten Marken
+mischen jetzt zudem über `--paper` statt über `transparent` — sonst nehmen sie
+die Farbe der Fläche an, auf der sie zufällig liegen.
+
+**Wirkung.** `tokens.css` (Skala geschlossen, Schnitt-Namen, Pillen-Luft,
+`--ok-ink`), `base.css`
 (`.kennzahl`, `.kennzahlen`, `.chip.ton`), `contract.json` (DS10),
 `tools/ds-lint.py` (`check_tokens`). Das Cockpit gab seine zwei lokalen
 Karten-Kopien und die eigene `.pill` ab und nutzt die Grundformen. Score

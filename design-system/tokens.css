@@ -67,7 +67,12 @@
   --line:rgba(20,24,28,.10);
   --line-soft:rgba(20,24,28,.055);
   --bad:#b3261e;         /* Fehler/Warnung */
-  --ok:#3f7d46;          /* Erfolg/Bestätigung – Weiss drauf (--on-accent) */
+  --ok:#3f7d46;          /* Erfolg/Bestätigung als FLÄCHE – Weiss drauf (--on-accent) */
+  --ok-ink:#39703f;      /* Grün als TEXT – 4.92:1 auf grünem Ton über --paper, 4.66:1 über --soft,
+                            5.89:1 auf --paper (WCAG AA). Gold hatte diese Zweitfarbe seit je
+                            (--gold-ink), Grün nicht: Wer --ok als Schrift nahm, landete bei 4.14:1
+                            (gemessen am Merkzeichen «trägt die Aktion», 9.8.2026). Eine Signalfarbe
+                            braucht beide Gestalten, sonst wird die Fläche als Schrift missbraucht. */
   --on-accent:#fff;      /* Text auf Blau/Gold-Flächen */
   --on-accent-muted:#ccdff1; /* gedämpfter Sekundärtext auf Blau (Fusszeile/Meta) – 4.7:1 auf --blue (WCAG AA); Weiss bleibt --on-accent. Nicht für Fliesstext auf Gold/Grün (dort <4.5:1). */
   --ink-print-leise:#6e6f6a; /* leises Strukturbeiwerk auf PAPIERWEISS (Druckwerke:
@@ -167,6 +172,16 @@
      Gegen das Wiederauftreten wacht DS10 (unbekanntes Token = Fehler). */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s7:28px; --s8:32px;
 
+  /* --- Pillen-Luft --------------------------------------------------------
+     Jede Pille (Chip, Marke, Merkzeichen) bekommt ihre Luft aus DIESEN zwei
+     Werten – in em, damit sie mit dem Schriftgrad wächst statt bei kleiner
+     Schrift zu ersticken. Gemessen am 9. August 2026: Die Pillen im Repo
+     trugen zwischen 0.14 und 0.67 em senkrechter Luft, also gar keine Regel;
+     die engsten (2px bei 14px Schrift) klebten sichtbar. Waagrecht knapp ein
+     Geviert, weil eine volle Rundung (--r-pill) die Ecken frisst: Was bei
+     einem Rechteck noch Abstand ist, berührt im Oval schon die Kurve. */
+  --pille-y:0.4em; --pille-x:0.95em;
+
   /* --- Radien, Maße, Fingerziel ------------------------------------------ */
   --r-control:10px; --r-card:14px; --r-pill:999px;
   --header-h:74px; --maxw:1080px; --ds-maxw:1080px;
@@ -194,6 +209,7 @@
   --bar-bg:rgba(20,23,26,.85);
   --line:rgba(255,255,255,.14); --line-soft:rgba(255,255,255,.07);
   --bad:#e0675e; --ok:#5aa367;   /* on-accent bleibt Weiss – kein dunkler Text auf Akzentflächen */
+  --ok-ink:#6bac76;              /* Grün als Text hellt im Dunkel auf – 5.36:1 auf grünem Ton */
   /* B7: keine pauschale Gewichtsabsenkung mehr – kleiner Lese-/UI-Text (Knöpfe,
      Label, Meta, Betonung) behält im Dunkeln sein Hell-Gewicht (Beier). Die
      Halations-Absenkung greift NUR an grossen Display-Rollen (siehe base.css). */

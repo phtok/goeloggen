@@ -151,12 +151,16 @@
   .geb-tief{padding:0 0 var(--s4) var(--s4);border-left:2px solid var(--line-soft);margin-bottom:var(--s3)}
   .geb-tief .qz-hint{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);padding:8px 0;line-height:1.5}
   /* Merkzeichen: ein Wort, das sagt, was die Zeile bedeutet – keine Ampel. */
+  /* Merkzeichen einer Gebiets-Zeile («trägt die Aktion», «grösstenteils
+     dunkel»). Luft aus dem Grundmass des Fundaments, nicht aus rohen Pixeln:
+     vorher 2px bei 14px Schrift – die Tinte klebte an der Rundung. */
   .zeichen{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;
-    border-radius:var(--r-pill);padding:2px 10px;margin-left:var(--s2);white-space:nowrap}
-  .zeichen.traegt{color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}
-  .zeichen.leck{color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+    line-height:1.35;border-radius:var(--r-pill);padding:var(--pille-y) var(--pille-x);
+    margin-left:var(--s2);white-space:nowrap}
+  .zeichen.traegt{color:var(--ok-ink);background:color-mix(in srgb,var(--ok) 14%,var(--paper))}
+  .zeichen.leck{color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--paper))}
   .zeichen.still{color:var(--muted);background:var(--soft)}
-  .zeichen.dunkel{color:var(--gold-ink);background:color-mix(in srgb,var(--gold) 15%,transparent)}
+  .zeichen.dunkel{color:var(--gold-ink);background:color-mix(in srgb,var(--gold) 14%,var(--paper))}
 
   /* ── Nächste Züge ───────────────────────────────────────────────────────── */
   .zug{border-bottom:1px solid var(--line-soft)}
@@ -269,8 +273,8 @@
   .ev-meta{display:block;color:var(--muted);font-size:var(--t-micro);margin-top:2px}
   .ev-her{min-width:0}
   .ev-kanal{display:inline-block;font-size:var(--t-micro);font-weight:600;color:var(--gold-ink);
-    background:color-mix(in srgb,var(--gold) 15%,transparent);border-radius:var(--r-pill);
-    padding:2px 10px;margin-right:8px;white-space:nowrap}
+    background:color-mix(in srgb,var(--gold) 14%,var(--paper));border-radius:var(--r-pill);
+    padding:var(--pille-y) var(--pille-x);line-height:1.35;margin-right:8px;white-space:nowrap}
   .ev-kanal.ev-ohne{color:var(--muted);background:var(--soft)}
   .ev-spur{color:var(--muted);font-size:var(--t-micro);overflow-wrap:anywhere}
   /* Vermutete Herkunft: klar abgesetzt (gepunktete Kante), damit Indiz nie wie Messung liest. */
