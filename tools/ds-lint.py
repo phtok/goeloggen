@@ -6,7 +6,7 @@ Goetheanum DS-Lint – prüft die GESTALT-Konformität jeder Seite gegen den Ver
 Symmetrisch zu tools/typo-check.py (Sprache): dieses Werkzeug erzwingt die
 Struktur des Design-Systems, statt sie hinterher von Hand nachzukontrollieren.
 
-Quelle der Wahrheit:  design-system/contract.json  (Regeln DS01–DS07).
+Quelle der Wahrheit:  design-system/contract.json  (Regeln DS01–DS10).
 Geltungsbereich:      versionierte *.html mit <body> (Werkzeug-/Schau-Seiten).
                       Reine Weiterleitungs-Stubs (meta refresh) werden übersprungen.
 Geprüft wird nur CSS: <style>-Blöcke und style="…"-Attribute; <script> bleibt aussen
@@ -161,6 +161,53 @@ def check_colors_sizes(body, base_off, full, findings, c, skip_lines):
                              f"{prop.strip()}: hartverdrahtete Farbe {lit} – var(--…) nutzen"))
 
 
+_TOKENS = None
+def bekannte_tokens():
+    """Alle im Fundament definierten Custom Properties.
+
+    Grund für DS10: CSS löst ein unbekanntes Token STILL zu nichts auf. Aus
+    »padding:var(--s5)« wird »padding:0«, ohne Fehler, ohne Warnung – am
+    9. August 2026 klebte deshalb im Sommer-Bericht die Schrift auf der
+    Kartenkante, und 13 Dateien im Repo griffen nach derselben fehlenden
+    Sprosse. Ein Wert, der schweigend verschwindet, ist schlimmer als einer,
+    der bricht: Niemand sucht danach."""
+    global _TOKENS
+    if _TOKENS is None:
+        _TOKENS = set()
+        for datei in ("design-system/tokens.css", "design-system/base.css",
+                      "design-system/nav.css"):
+            pfad = os.path.join(ROOT, datei)
+            if os.path.exists(pfad):
+                _TOKENS |= set(re.findall(r"(--[a-zA-Z0-9_-]+)\s*:", open(pfad, encoding="utf-8").read()))
+    return _TOKENS
+
+
+def check_tokens(full, findings, skip_lines, path):
+    """DS10 – jedes var(--x) muss ein definiertes Token treffen."""
+    # Was die Datei selbst definiert (eigener <style>, Inline-Stil, JS-gesetzt),
+    # zählt als bekannt – geprüft wird die Lücke zum Fundament, nicht der
+    # legitime lokale Eigenbau.
+    lokal = set(re.findall(r"(--[a-zA-Z0-9_-]+)\s*:", full))
+    # Begleitende CSS-Dateien der Seite mitlesen (<link href="x.css">).
+    for rel in re.findall(r'<link[^>]+href\s*=\s*["\']([^"\']+\.css)["\']', full):
+        kandidat = os.path.normpath(os.path.join(os.path.dirname(os.path.join(ROOT, path)), rel))
+        if os.path.exists(kandidat):
+            lokal |= set(re.findall(r"(--[a-zA-Z0-9_-]+)\s*:", open(kandidat, encoding="utf-8").read()))
+    bekannt = bekannte_tokens() | lokal
+    gemeldet = set()
+    for m in re.finditer(r"var\(\s*(--[a-zA-Z0-9_-]+)\s*([,)])", full):
+        name, weiter = m.group(1), m.group(2)
+        if name in bekannt or weiter == ",":   # mit Rückfallwert ist es Absicht
+            continue
+        ln = lineno(full, m.start())
+        if ln in skip_lines or (name, ln) in gemeldet:
+            continue
+        gemeldet.add((name, ln))
+        findings.append((ln, "DS10", "fehler",
+                         f"unbekanntes Token {name} – CSS löst es still zu nichts auf; "
+                         f"Skala in tokens.css prüfen oder Rückfallwert setzen"))
+
+
 def lint_file(path, c):
     full = open(os.path.join(ROOT, path), encoding="utf-8").read()
     if is_stub(full):
@@ -174,6 +221,9 @@ def lint_file(path, c):
         if lineno(full, m.start()) not in skip_lines:
             findings.append((lineno(full, m.start()), "DS00", "hinweis",
                              "ds-ok-Marker im falschen Format – »# ds-ok« schreiben, sonst wirkungslos"))
+
+    # DS10 – unbekannte Token (still verschwindende Werte)
+    check_tokens(full, findings, skip_lines, path)
 
     # DS01 – Pflicht-Includes
     for inc in c["includes"]["pflicht"]:

@@ -16,6 +16,57 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 9. August 2026 — die Skala hatte Löcher, und CSS schwieg darüber (1.12.0)
+
+**Was.** Die Abstands-Skala ist lückenlos geworden (`--s5:20px`, `--s7:28px`),
+die fünf Schnitte tragen jetzt ihre Hausnamen als Token (`--w-klar`, `--w-laut`,
+`--w-ruhig`; die alten `--w-text`/`--w-strong` bleiben als Zweitnamen gültig),
+und zwei Grundformen kamen dazu: **`.kennzahl`/`.kennzahlen`** (eine Fläche, die
+EINE Zahl trägt: Label, Wert, Notiz — mit grosszügigem Innenabstand) und
+**`.chip.ton`** (ein Chip, der einen ganzen Satz tragen kann). Neue Regel
+**DS10**: jedes `var(--x)` muss ein definiertes Token treffen.
+
+**Warum.** Im Sommer-Bericht klebte die Schrift auf den Kartenkanten. Der Grund
+war kein Gestaltungsfehler, sondern ein Systemfehler: `--s5` existierte nicht.
+Die Skala ging 4 · 8 · 12 · 16 · — · 24 · — · 32, und **CSS löst ein unbekanntes
+Token still zu nichts auf** — aus `padding:var(--s5)` wurde `padding:0`, ohne
+Fehler, ohne Warnung. **13 Dateien im Repo** griffen nach genau diesen beiden
+fehlenden Sprossen. Wer eine Skala mit Löchern baut, baut eine Falle: Die
+fehlende Sprosse ist die, nach der gegriffen wird.
+
+Derselbe Fehlertyp eine Ebene höher: Das Haus spricht von «Klar» und «Laut», die
+Token hiessen `--w-text` und `--w-strong`. Wer das Hauswort benutzte, griff ins
+Leere — DS10 fand es sofort an drei Stellen in der Werkzeugpost, wo seit je die
+falsche Strichstärke stand. **Ein Design-System, dessen Vokabular vom
+Sprachgebrauch des Hauses abweicht, erzeugt genau solche Fehler.**
+
+**Und die Pillen.** Dieselbe Frage, nächste Ebene: Die pillenförmigen Rollen
+trugen zwischen **0,14 und 0,67 em** senkrechter Luft — also gar keine Regel.
+Die engsten (`.zeichen`, `.ev-kanal`: 2 px bei 14 px Schrift) klebten sichtbar
+an der Rundung. Neu gibt es dafür ein Grundmass, **in em statt in Pixeln**, damit
+die Luft mit dem Schriftgrad wächst: `--pille-y:0.4em`, `--pille-x:0.95em`.
+Waagrecht knapp ein Geviert, weil eine volle Rundung die Ecken frisst — was beim
+Rechteck noch Abstand ist, berührt im Oval schon die Kurve. Alle Pillen sitzen
+jetzt auf diesem Mass; die Marke behält ihre ratifizierte optische Verschiebung
+nach oben, nur proportional statt absolut.
+
+**Und eine fehlende Zweitfarbe.** Beim Nachmessen fiel das grüne Merkzeichen
+«trägt die Aktion» mit **4,14:1** durch. Grund: Gold hatte seit je zwei
+Gestalten — `--gold` als Fläche, `--gold-ink` als Schrift —, Grün nur eine.
+`--ok` ist als Fläche definiert («Weiss drauf»); wer es als Schrift nahm, fiel
+unter AA. Neu: **`--ok-ink`** (hell `#39703f`, dunkel `#6bac76`), gerechnet
+gegen den grünen Ton auf Papier und auf Karte. *Eine Signalfarbe braucht beide
+Gestalten, sonst wird die Fläche als Schrift missbraucht.* Die getönten Marken
+mischen jetzt zudem über `--paper` statt über `transparent` — sonst nehmen sie
+die Farbe der Fläche an, auf der sie zufällig liegen.
+
+**Wirkung.** `tokens.css` (Skala geschlossen, Schnitt-Namen, Pillen-Luft,
+`--ok-ink`), `base.css`
+(`.kennzahl`, `.kennzahlen`, `.chip.ton`), `contract.json` (DS10),
+`tools/ds-lint.py` (`check_tokens`). Das Cockpit gab seine zwei lokalen
+Karten-Kopien und die eigene `.pill` ab und nutzt die Grundformen. Score
+zurück auf 100 Prozent — mit einer Wache mehr.
+
 ## [1.10.0] – 2026-08-04
 
 ### Der Seitentitel wird eine Rolle des Fundaments

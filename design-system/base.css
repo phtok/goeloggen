@@ -92,14 +92,43 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .card{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);background:var(--paper)}
 .card.soft{background:var(--soft)}
 
+/* --- Kennzahl: die Grundform für eine Fläche, die EINE Zahl trägt ----------
+   Label (was), Wert (die Zahl), Notiz (woher/wie gerechnet) – in dieser
+   Reihenfolge, weil man erst wissen muss, was man liest. Der Innenabstand ist
+   bewusst gross: Eine Zahl in 32px braucht Rand, sonst liest sie sich als
+   Etikett statt als Aussage. Rhythmus innen aus Tokens, nicht aus rohen Pixeln.
+   .kennzahlen ist das Raster dazu – auto-fit, damit die Reihe von selbst
+   umbricht und keine Sonderregel je Breite nötig wird. */
+.kennzahlen{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:var(--s4)}
+.kennzahl{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:var(--s6);display:flex;flex-direction:column;gap:var(--s2)}
+.kennzahl .k-label{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.4}
+.kennzahl .k-wert{font-family:var(--font-display);font-weight:var(--w-strong);
+  font-size:clamp(26px,3.2vw,34px);color:var(--ink);
+  font-variant-numeric:tabular-nums lining-nums;line-height:var(--lh-tight)}
+.kennzahl .k-note{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.55}
+/* Auf Papier statt auf gedämpfter Fläche – für Kennzahlen, die selbst auf
+   einer --soft-Fläche liegen (sonst verschwindet die Kante). */
+.kennzahl.auf-papier{background:var(--paper)}
+
 /* --- Chips & Marken (Lese-Grotesk, kleine Grade) --------------------------- */
-.chip{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:6px 14px}
+.chip{font-family:var(--font-text);font-size:var(--t-small);line-height:1.35;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:var(--pille-y) var(--pille-x)}
 .chip b{color:var(--ink);font-weight:600}
+/* Chip mit Ton: benennt etwas (‹Referenz›, ‹Entwurf›) statt es nur zu zeigen.
+   Trägt darum ganze Sätze – und braucht dafür mehr Luft als der Etiketten-Chip:
+   Innenabstand aus Tokens, Zeilenhöhe wie Lesetext, Umbruch erlaubt. Der Goldton
+   mischt über --paper, NICHT über transparent, sonst nimmt er die Farbe der
+   Fläche an, auf der er liegt, und frisst den Kontrast von --gold-ink (B02;
+   auf einer --soft-Karte gemessene 4.42:1 statt der nötigen 4.5:1). */
+.chip.ton{display:inline-block;border-color:transparent;border-radius:var(--r-control);
+  padding:var(--pille-y) var(--pille-x);line-height:1.5;
+  background:color-mix(in srgb,var(--gold) 14%,var(--paper));color:var(--gold-ink);max-width:100%}
 /* Status-Marke (Live/Beta/Entwurf …) – Mikro-Pille, kleiner als .chip, nie versal (G05).
    Optischer Sitz im Oval: Statuswörter haben meist keine Unterlängen – zentriert
    man das Geviert, sitzt die Tinte zu hoch. Darum line-height:1 und ein Hauch
    mehr Luft oben (nachgemessen, nicht geschätzt). */
-.badge{display:inline-flex;align-items:center;line-height:1;font-family:var(--font-text);font-size:var(--t-micro);letter-spacing:.03em;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:6px 10px 3px}
+.badge{display:inline-flex;align-items:center;line-height:1;font-family:var(--font-text);font-size:var(--t-micro);letter-spacing:.03em;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);
+  padding:calc(var(--pille-y) + .12em) var(--pille-x) calc(var(--pille-y) - .12em)}
 
 /* Schritt-Nummer – runde Zahl-Marke vor nummerierten Zwischentiteln. Gold ist die
    Hausfarbe für Auswahl-/Schrittmarken (wie die Auswahl-Pille); .blue nur für

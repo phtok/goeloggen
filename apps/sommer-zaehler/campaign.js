@@ -1531,14 +1531,14 @@
         card.innerHTML =
           '<div class="when"></div><h4></h4>' +
           '<div class="conv"><div class="ring"><div class="inner"></div></div>' +
-          '<div class="txt"><b></b><br><span class="m"></span><div class="pill"></div></div></div>';
+          '<div class="txt"><b></b><br><span class="m"></span><div class="chip ton"></div></div></div>';
         card.querySelector('.when').textContent = 'Kohorte ' + monat + ' · Entscheidung ab ' + dmy(kEntsch);
         card.querySelector('h4').textContent = fmt(neu) + ' Anmeldungen im Gratis-Zeitraum';
         card.querySelector('.ring').style.setProperty('--p', quote);
         card.querySelector('.ring .inner').textContent = quote + '%';
         card.querySelector('.txt b').textContent = '~' + fmt(projektiert) + ' bleiben voraussichtlich zahlend';
         card.querySelector('.txt .m').textContent = fmt(offen) + ' Entscheidungen noch offen · ' + fmt(bleibt) + ' bereits umgewandelt';
-        card.querySelector('.pill').textContent = 'Szenario ' + ref.name + ' · noch hat keine Kohorte entschieden';
+        card.querySelector('.chip').textContent = 'Szenario ' + ref.name + ' · noch hat keine Kohorte entschieden';
       }
     }
 
@@ -1550,17 +1550,17 @@
       host.innerHTML = '';
       szenarien().forEach(function(sz){
         var r = projectRevenue(stats, sz);
-        var karte = document.createElement('div'); karte.className = 's';
-        var n = document.createElement('div'); n.className = 's-n'; n.textContent = sz.name;
-        var w = document.createElement('div'); w.className = 's-w'; w.textContent = geld(r.chfGesamt);
-        var m = document.createElement('div'); m.className = 's-m';
+        var karte = document.createElement('div'); karte.className = 'kennzahl';
+        var n = document.createElement('div'); n.className = 'k-label'; n.textContent = sz.name;
+        var w = document.createElement('div'); w.className = 'k-wert'; w.textContent = geld(r.chfGesamt);
+        var m = document.createElement('div'); m.className = 'k-note';
         m.textContent = fmt(Math.round(r.bleibend)) + ' von ' + fmt(Math.round(aktiveAbos(stats))) + ' Abos bleiben · ' +
                         Math.round(bleibeQuote(sz, 'gtv') * 100) + ' % goetheanum.tv, ' +
                         Math.round(bleibeQuote(sz, 'wos') * 100) + ' % Wochenschrift · monatliche Abos ' +
                         sz.monate + ' von zwölf Monaten';
         karte.appendChild(n); karte.appendChild(w); karte.appendChild(m);
         if (sz.key === ref.key){
-          var pill = document.createElement('div'); pill.className = 'pill';
+          var pill = document.createElement('div'); pill.className = 'chip ton';
           pill.textContent = 'Referenz – diese Zahl trägt den Rückfluss';
           karte.appendChild(pill);
         }
@@ -1600,10 +1600,10 @@
     ];
     host.innerHTML = '';
     karten.forEach(function(k){
-      var d = document.createElement('div'); d.className = 'g';
-      var n = document.createElement('div'); n.className = 'g-n'; n.textContent = k.n;
-      var w = document.createElement('div'); w.className = 'g-w'; w.textContent = k.w;
-      var m = document.createElement('div'); m.className = 'g-m'; m.textContent = k.m;
+      var d = document.createElement('div'); d.className = 'kennzahl';
+      var n = document.createElement('div'); n.className = 'k-label'; n.textContent = k.n;
+      var w = document.createElement('div'); w.className = 'k-wert'; w.textContent = k.w;
+      var m = document.createElement('div'); m.className = 'k-note'; m.textContent = k.m;
       d.appendChild(n); d.appendChild(w); d.appendChild(m); host.appendChild(d);
     });
   }
