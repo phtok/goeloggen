@@ -13,6 +13,120 @@ geerbt.
 erst unterwegs nachziehen mussten: der **Wahrheit des Angebots** und der
 **Messkette**. Beides war teurer nachzurüsten als alles Redaktionelle.
 
+## Die Frist ist das Instrument — und sie verbraucht sich
+
+**Eine Frist gewinnt keine Aufmerksamkeit. Sie erntet Unentschiedene.** Das ist
+der brauchbarste Befund des Sommers 2026 und er bestimmt den Zuschnitt der
+nächsten Kampagne mehr als jeder Kanal.
+
+Belegt: Die beiden Fristtage (7./8. August) brachten **380 von 1057
+Anmeldungen** — in zwei von vierzig Tagen. Es war aber **kein neues Publikum**:
+234 der 280 messbaren Fristtag-Anmeldungen trugen die Mailing-Spur, waren also
+Leute, die im Juli schon zweimal angeschrieben worden waren. Die Frist hat
+geerntet, was die Wellen vorher gesät hatten.
+
+Daraus folgen drei verschiedene Fragen, die man nicht verwechseln darf.
+
+### 1 · Mehrere Fristen INNERHALB einer Kampagne — der eigentliche Hebel
+
+Nicht mehr Erinnerungsmails an dieselbe Frist, sondern **mehrere echte Fristen**.
+Das Kriterium, an dem sich jede Form messen lassen muss:
+
+> **Eine Frist muss etwas kosten, wenn man sie verpasst.** Sonst ist sie
+> Dekoration, und der Empfänger merkt es beim zweiten Mal.
+
+Vier Formen, die dieses Kriterium erfüllen — geordnet nach Aufwand:
+
+**(a) Eigene Frist je Zielgruppe.** Die Kampagne lief 2026 ohnehin in sechs
+Automatisierungen (drei Gruppen × zwei Sprachen). Gibt man jeder Gruppe ein
+eigenes Enddatum — Lesen endet am 20., Sehen am 27., Beides am 3. —, hat das
+**Haus drei Ernte-Momente, der einzelne Empfänger aber genau eine Frist**. Kein
+Glaubwürdigkeits-Verlust, weil niemand zwei Daten sieht. Kostet nichts ausser
+drei Zeilen Konfiguration; die Fabrik kann es heute schon.
+
+Zwei Zugaben: Die Last verteilt sich (2026 kamen 380 Anmeldungen an zwei Tagen
+durch dieselbe Kette), und **man lernt an der ersten Gruppe für die zweite** —
+2026 hätte man nach der Lesen-Gruppe gewusst, dass das Quer-Angebot an
+TV-Abonnenten kaum trägt (34 Abos gegen 102 in der Gegenrichtung), und die
+verbleibenden Wellen anders bestückt.
+
+Der einzige Haken: Wer weiterleitet, sieht ein anderes Datum. Selten, und
+harmlos, solange die Mails kein «für alle» behaupten.
+
+**(b) Gestaffeltes Angebot — die Frist verliert Substanz, nicht Gültigkeit.**
+Bis zum 20. drei Monate gratis, bis zum 31. zwei, bis zum 8. einer. Jede Stufe
+ist eine echte Frist, weil man wirklich etwas verliert. Drei Ernten aus einem
+Vorrat, der sich dazwischen neu bildet.
+
+Der Preis dafür steht in Phase 0: **Die Mechanik muss in EINEM Satz sagbar
+bleiben.** 2026 sagten die Kleinzeilen schon bei einem einzigen Angebot
+dreierlei. Eine Staffel verdoppelt diese Gefahr — nur machen, wenn der eine
+Satz vorher steht.
+
+**(c) Kontingent statt Datum.** «Die ersten 300 zum vollen Angebot.» Der Zähler
+läuft im Cockpit ohnehin live und liesse sich öffentlich zeigen — Knappheit,
+die man sieht, wirkt stärker als eine, die behauptet wird. **Aber nur, wenn man
+wirklich schliesst.** Wer bei 400 Interessierten die 301. Anmeldung trotzdem
+nimmt, hat das Instrument verbrannt. Sauberer darum als Stufe, nicht als Stopp:
+die ersten 300 bekommen drei Monate, danach zwei.
+
+**(d) Anlass-Fristen.** An ein wirkliches Ereignis gebunden — «nur während des
+Faust-Festivals», «endet mit der Tagung». Sie sind von Natur aus wahr, weil das
+Ereignis wirklich endet, und sie geben der Frist einen Grund. 2026 lagen drei
+Festival-Wochenenden in der Kampagne, ungenutzt als Frist.
+
+**Empfehlung für die nächste Kampagne:** **(a) je Gruppe eine eigene Frist**,
+weil es nichts kostet, nichts riskiert und sofort geht — kombiniert mit **(d)**,
+wo ein Anlass da ist. **(b)** nur, wenn der eine Satz steht. **(c)** nur mit der
+Bereitschaft, wirklich zu schliessen.
+
+**Unabhängig davon:** die letzte Frist mit **drei** Schlussmomenten in 48 Stunden
+statt zwei. 2026 erreichte die vorletzte Mail 12 080 Öffner und 1 237 Klicker,
+die letzte nur noch 5 623 Öffner — aber mit **12,1 % der höchsten Klickquote
+aller vier Wellen**. Der Vorrat war nach der ersten Schlussmail also nicht
+erschöpft. Wo die vierte läge, hat 2026 nicht ausgetestet.
+
+### 2 · Kürzere Kampagne, Frist früher — ja
+
+Die Mitte war schwach: **24. bis 29. Juli 10,5 Anmeldungen am Tag** gegen 26 im
+Schnitt. Fünf Wochen waren rund zwei zu lang; die Zeit hat den Vorrat nicht
+vergrössert, nur das Vergessen.
+
+→ **Drei Wochen statt fünf**, gleiche Zahl Wellen, dichter gestellt.
+
+### 3 · Mehrere Frist-Kampagnen im Jahr — nur mit eigenem Anlass
+
+Zwei Gründe zur Vorsicht, beide gemessen:
+
+- **Der Verteiler ist endlich.** 69 % der Aktion kamen aus einer Liste von rund
+  33 000 Adressen und ergaben etwa 640 Abos — knapp **2 %**. Eine zweite
+  Frist-Kampagne spricht dieselben Menschen an, und zwar die 98 %, die schon
+  einmal nicht wollten.
+- **Die Ermüdung ist schon INNERHALB einer Kampagne messbar:** Öffnungsrate
+  **50,3 → 46,3 → 36,6 %** über die drei offenen Wellen. Das ist der Verschleiss
+  in fünf Wochen.
+
+→ **Höchstens zwei solcher Kampagnen im Jahr, jede mit eigenem Anlass**
+(Jahreswechsel, Jubiläum, Michaeli) — nicht zweimal dasselbe «3 Monate gratis».
+Eine Frist ohne Anlass ist eine Behauptung; mit Anlass ist sie ein Ereignis.
+
+### Der Punkt, der über alles entscheidet: Glaubwürdigkeit
+
+**Eine Frist wirkt, weil man ihr glaubt.** Die Aktion 2026 wurde nach dem
+kommunizierten Fristtag **still** um drei Tage verlängert. Das kostete nichts —
+*weil* es still war. Angekündigt hätte es die Frist entwertet.
+
+Wer «nur bis» zweimal im Jahr sagt und beide Male weiterlaufen lässt, hat beim
+dritten Mal ein Datum ohne Wirkung. **Der Mechanismus lebt von Kredit, und
+Kredit wird verbraucht.** Verlängern also nie ankündigen — besser gar nicht
+verlängern.
+
+### Was 2026 nicht beantwortet hat
+
+Ob eine zweite Kampagne im selben Jahr nochmals 2 % bringt oder nur 0,5 %.
+Billig herauszufinden: **beim nächsten Mal die Liste teilen** und eine Hälfte
+auslassen — dann steht die Antwort in den Zahlen statt in einer Vermutung.
+
 ## Phase 0 — Angebots-Wahrheit (bevor irgendjemand gestaltet)
 
 1. **Mechanik schriftlich festzurren, in einem Satz:** Was genau bekommt man,
@@ -125,7 +239,13 @@ erst unterwegs nachziehen mussten: der **Wahrheit des Angebots** und der
 
 ## Phase 6 — Nach der Frist (der grösste Hebel liegt HIER)
 
-1. Frist durchsetzen (Trial zurück, Formulare schliessen) — am Tag danach.
+1. **Frist durchsetzen** (Trial zurück, Formulare schliessen) — am Tag danach,
+   und zwar als Termin mit Namen, nicht als guter Vorsatz. 2026 war das eine
+   Falle: Die Uscreen-Checkout-Angebote waren die **regulären** Abos, deren
+   Gratis-Testphase nur auf 90 Tage gestellt war — «nur bis 8. August» stand
+   allein im Beschreibungstext, nicht im System. Ohne manuelles Zurückstellen
+   bekommt **jeder** spätere Abonnent weiter drei Gratismonate; die Frist wäre
+   im Nachhinein unwahr. Vor der Kampagne notieren, welcher Wert vorher galt.
 2. Zählung: Paperform/Backend direkt; TV per uscreen-People-CSV
    (`utm_campaign` × `utm_content`), App-Zugänge als bekannte Lücke.
 3. **Onboarding-Strecke für die Gratis-Monate** (Willkommen mit
