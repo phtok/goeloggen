@@ -37,7 +37,7 @@ KICKER = CFG.get("editor_kicker", "Sommer-Aktion 2026")
 ONPAGE = CFG.get("editor_onpage",
                  "Cockpit:../sommer-zaehler/|Aktivitäten:../sommer-zaehler/aktivitaeten.html"
                  "|Kosten:../sommer-zaehler/kosten.html|Multiplikatoren:../sommer-zaehler/multiplikatoren.html"
-                 "|Links:../utm-generator/|Mail:../mail-editor/|Ablauf:../kampagnen-drehbuch/")
+                 "|Links:../utm-generator/|Mail:../mail-editor/|Nachfass:../nachfass-editor/|Ablauf:../kampagnen-drehbuch/")
 
 S = 2; WMX = 600
 BASE = (CFG.get("asset_base_url") or "").rstrip("/")
