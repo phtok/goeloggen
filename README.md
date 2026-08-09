@@ -18,10 +18,18 @@ Statische Onepager liegen unter `apps/`:
 
 ### Services
 
-Nicht-statische Unterprojekte sind unter `services/` bereits vorgesehen:
+Nicht-statische Unterprojekte unter `services/`:
 
-- `services/brand-portrait/`
-- `services/gtv-subs/`
+- `services/sommer-zaehler/` – Backend des Aktions-Cockpits
+- `services/mailing-sommer2026/` – Mail-Fabrik der Sommer-Aktion 2026
+- `services/mailing-grenzgaenger/` – Mail-Fabrik der Grenzgaenger-Wellen
+- `services/lead-agent/` – Fang-Strecke des Grenzgaenger-Agenten
+- `services/seelenkalender/` – Versand-Strecke des Wochenspruch-Abos
+- `services/werkzeug-abo/` – Update-Abo der Werkzeuge
+- `services/schmiede/` – Eingang der Wuensche aus der Werkzeug-Schmiede
+- `services/qr-generator/` – Kurzlinks mit anonymer Scan-Zaehlung
+- `services/kistenpflege/` – Sortierer der Werkzeugkiste
+- `services/werkzeugpost/` – Textbestand der Werkzeugpost
 
 ### Collections
 
