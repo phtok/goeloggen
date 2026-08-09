@@ -1,6 +1,6 @@
 # Schlussbericht Sommer-Aktion — was noch einzusammeln ist
 
-Stand 8. August 2026. Diese Liste ist zum Abhaken: Was hier steht, kann die
+Stand 9. August 2026. Diese Liste ist zum Abhaken: Was hier steht, kann die
 Datenbank **nicht** selbst holen. Alles Übrige — Anmeldungen, Ströme, Tarife,
 Währungen, Herkunftsland, Kurzlink-Klicks, Selbstauskünfte — liegt bereits
 vollständig im Backend und fliesst ohne Zutun in den Bericht.
@@ -12,41 +12,55 @@ Kampagnen-App eingetragen und ist sofort im Cockpit wirksam:
   Knopf «Bearbeiten» in der Zeile
 - Beträge → **Kosten** (`kosten.html`)
 
-## Zuerst: die vier Mail-Wellen (ActiveCampaign)
+## Erledigt am 9. August: ActiveCampaign
 
-Der wichtigste Posten. Das Mailing trägt rund 69 Prozent der Aktion, und
-genau dort ist die Wirkungskette leer: keine Reichweite, keine Klicks. Ohne
-diese acht Zahlen lässt sich für den stärksten Kanal weder eine Klickquote
-noch ein Preis je Abo rechnen.
+Die Zahlen sind über die AC-API gelesen und in den Aktivitäten eingetragen.
+Die Wirkungskette des Mailings steht damit:
 
-| Aktivität | Datum | fehlt |
-|---|---|---|
-| Mail-Welle 1 «Ankündigung» | 17. Juli | Reichweite, Klicks |
-| Mail-Welle 2 «Erinnerung» | 30. Juli | Reichweite, Klicks |
-| Mail-Welle 3 «morgen läuft es aus» | 7. August | Reichweite, Klicks |
-| Mail-Welle 3b «heute läuft es aus» | 8. August | Reichweite, Klicks |
+| Welle | zugestellt | geöffnet | Öffnungsrate | Klicker | Klick je Öffner |
+|---|---:|---:|---:|---:|---:|
+| w1 · 17. Juli | 33 709 | 16 959 | 50,3 % | 1 954 | 11,5 % |
+| w2 · 30. Juli | 33 385 | 15 449 | 46,3 % | 1 559 | 10,1 % |
+| w3 · 7. August | 33 006 | 12 080 | 36,6 % | 1 237 | 10,2 % |
+| w3b · 8. August | 12 974 | 5 623 | 43,3 % | 683 | **12,1 %** |
+| **Summe** | **113 074** | **50 111** | **44,3 %** | **5 433** | **10,8 %** |
 
-**Zwei Definitionen, damit die Zahlen vergleichbar bleiben** — so ist der
-Newsletter vom 4. Juli erfasst, und so sollten es alle sein:
+Newsletter: Wochenschrift 17. Juli 16 690 zugestellt / 6 917 geöffnet ·
+Weekly 17. Juli 13 292 / 5 688 / 519 Klicker · Wochenschrift 31. Juli
+16 797 / 6 362 · Weekly 31. Juli 13 253 / 5 394 / 580 Klicker.
 
-- **Reichweite = geöffnete Mails**, nicht versendete.
-- **Klicks = eindeutige Klicker (Personen)**, nicht Klick-Ereignisse.
+**Kette des Mailings:** 113 074 zugestellt → 50 111 geöffnet → 5 433 Klicker
+→ 469 gemessene Abos, mit Dunkelfeld ≈641. Aus jedem neunten Klicker wurde
+ein Abo (11,8 %); aus 1 000 zugestellten Mails knapp sechs.
 
-Weicht eine Zahl davon ab, gehört das in die öffentliche **Notiz** der Zeile —
-sonst rechnet der Bericht Äpfel gegen Birnen. Jede Welle bestand aus sechs
-Mails (Lesen/Sehen/Beides × DE/EN); für die Wirkungskette zählt die **Summe**
-über alle sechs.
+### Vier Befunde aus dem Abholen
 
-## Dann: die Newsletter (ActiveCampaign)
+1. **Korrektur der Definition: Reichweite = zugestellte Mails, nicht
+   geöffnete.** Der Sammel-Auftrag verlangte zuerst die Öffnungen; das war
+   falsch. Reichweite ist im Trichter die Aussetzung, nicht schon eine
+   Reaktion — und nur so passt sie zur Social-Reichweite aus Metricool. Die
+   Öffnungen stehen in der Notiz jeder Zeile, die Lesart bleibt damit
+   umkehrbar. **Offen:** Der Newsletter vom 4. Juli trägt noch Öffnungen als
+   Reichweite (3 338, zugestellt laut Notiz ~7 000) und fällt aus der
+   Systematik; bei Gelegenheit die echte Zustellzahl nachholen.
+2. **w3b hängt zweimal, nicht einmal** — Öffner- und Nicht-Öffner-Zweig, wie
+   w3. Die Aktion hatte 36 E-Mail-Schritte, nicht 30.
+3. **Der englischen Gruppe «Lesen» fehlt die letzte Welle.** Für Lesen · EN
+   gibt es keine w3b-Kampagne vom 8. August. Stattdessen tragen zwei
+   w3b-EN-Kampagnen das Versanddatum **15. Juli** — drei Tage **vor** der
+   ersten Welle, mit 197 zugestellten Mails, 90 Öffnern, 7 Klickern. Beides
+   ist erklärungsbedürftig: Entweder haben 197 englische Leser am 15. Juli ein
+   «heute läuft es aus» erhalten, als die Aktion noch gar nicht angekündigt
+   war, oder es war ein Testlauf auf einer internen Liste. Die 197 sind in der
+   w3b-Zeile **nicht** enthalten; mit ihnen wären es 13 171 / 5 713 / 690.
+4. **Bei beiden Wochenschrift-Newslettern war das Link-Tracking aus**
+   (`tracklinks:none`). Ihre Klicks sind darum nicht messbar — die Zeilen
+   stehen leer und **nicht** auf null. Für die nächste Aktion: vor dem Versand
+   prüfen, dass Link-Tracking an ist, sonst ist der Weg blind.
 
-| Aktivität | Datum |
-|---|---|
-| Newsletter Wochenschrift | 17. Juli · 31. Juli |
-| Newsletter Weekly | 17. Juli · 31. Juli |
-| Newsletter AGiD | 27. Juli |
-
-Gleiche zwei Definitionen. Die Newsletter tragen laut Lesart rund 12 Prozent
-der Aktion — nach dem Mailing der zweitgrösste Posten ohne Zahlen.
+**Nicht gefunden: Newsletter AGiD (27. Juli).** Im ganzen Konto existiert für
+Juli 2026 keine AGiD-Kampagne. Die Zeile im Protokoll trägt den Befund als
+Notiz und zählt bis zur Klärung als geplant, nicht als ausgespielt.
 
 ## Social (Metricool)
 
@@ -102,10 +116,9 @@ sagen und die Zahl nicht härter machen, als sie ist.
 
 ## Reihenfolge
 
-1. Mail-Wellen (4 Einträge) — der grösste Hebel
-2. Meta-Kosten (1 Eintrag) — macht den teuersten Weg bewertbar
-3. Newsletter (5 Einträge)
+1. ~~Mail-Wellen (4 Einträge)~~ — **erledigt 9. August**
+2. ~~Newsletter (4 von 5)~~ — **erledigt 9. August**, AGiD offen
+3. **Meta-Kosten (1 Eintrag)** — jetzt der grösste Hebel: Er macht den
+   teuersten Weg der Aktion bewertbar
 4. Social (6 Einträge)
-5. Stunden, Flyer, die zwei offenen Fragen
-
-Nach Punkt 1 und 2 ist der Bericht schon erzählbar; alles Weitere schärft ihn.
+5. Stunden, Flyer, die zwei offenen Fragen, AGiD klären

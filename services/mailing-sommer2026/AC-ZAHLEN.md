@@ -3,9 +3,15 @@
 > **Dies ist der fertige Prompt.** Alles ab der Trennlinie unten Claude-Chrome
 > geben. Er holt **nur Zahlen** — er ändert in ActiveCampaign nichts.
 >
+> **Ausgeführt am 9. August 2026** — die Zahlen stehen im Protokoll, die
+> Befunde in `docs/schlussbericht-datensammlung.md`. Der Prompt bleibt als
+> Vorlage für die nächste Aktion liegen.
+>
 > Was mit den Zahlen geschieht: Sie werden im Cockpit unter **Aktivitäten**
-> (`aktivitaeten.html`) je Zeile über «Bearbeiten» eingetragen, Reichweite und
-> Klicks. Danach rechnet die Wirkungskette für das Mailing durch — bisher ist
+> (`aktivitaeten.html`) je Zeile über «Bearbeiten» eingetragen. **Reichweite =
+> zugestellt**, Klicks = eindeutige Klicker; die Öffnungen wandern in die
+> Notiz. Der Prompt holt alle drei Zahlen, damit die Lesart umkehrbar bleibt —
+> Reichweite ist im Trichter die Aussetzung, nicht schon eine Reaktion. Danach rechnet die Wirkungskette für das Mailing durch — bisher ist
 > sie leer, obwohl das Mailing rund 69 Prozent der Aktion trägt. Vollständige
 > Sammel-Liste: `docs/schlussbericht-datensammlung.md`.
 
