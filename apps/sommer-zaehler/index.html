@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sommer-Aktion · Cockpit · Goetheanum</title>
-<meta name="description" content="Aktions-Cockpit der Sommer-Aktion 2026 – Stand, Gebiete und nächste Züge auf einen Blick." />
+<meta name="description" content="Sommer-Aktion 2026 – Ergebnis, Wirkung je Kanal, Herkunft der Abos und Schlüsse, live aus dem Backend." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="../../design-system/tokens.css" />
@@ -39,9 +39,11 @@
   </section>
 
 
-  <!-- ══ 1 · STAND ═══════════════════════════════════════════════════════ -->
+  <!-- ══ 1 · ÜBERSICHT ═══════════════════════════════════════════════════
+       Grosse Zahlen zuerst, alles Kleinere in Klappen darunter. Wer nur den
+       Ausgang wissen will, liest die erste Bildschirmhöhe und hört auf. -->
   <section id="stand">
-    <div class="shead"><h2>Stand</h2></div>
+    <div class="shead"><h2>Übersicht</h2></div>
     <div class="panel">
       <div class="stand">
         <div>
@@ -62,17 +64,97 @@
         </div>
       </div>
 
-      <!-- Direkt unter der Signaturzahl: Die zweite Frage nach «wie viele» ist
-           «was bringt das». Gezeigt wird die Spanne, nicht eine Zahl. -->
+      <div class="gross" id="kopfZahlen"><div class="empty">lädt …</div></div>
+    </div>
+  </section>
+
+
+  <!-- ══ 2 · ERGEBNIS UND GELD ═══════════════════════════════════════════ -->
+  <section id="ergebnis">
+    <div class="shead"><h2>Ergebnis und Geld</h2><p>Was die Aktion eingebracht hat und was sie gekostet hat – nebeneinander. Der Umsatz ist bis November eine Rechnung in drei Szenarien; dann entscheiden die ersten Kohorten, und aus der Spanne wird eine Zahl.</p></div>
+    <div class="panel">
+
+      <!-- Drei gleichwertige Karten: Die Spanne IST die Aussage, darum trägt
+           keine der drei mehr Gewicht als die andere. Die Referenz nennt sich
+           mit einem Wort, nicht mit Farbe oder Grösse (G01, G03). -->
+      <div class="szen" id="szenKarten"><div class="empty">lädt …</div></div>
+      <p class="provisorisch" id="szenarienNote"></p>
+
+      <div class="gross" style="margin-top:var(--s6)">
+        <div class="g"><div class="g-n">Kosten erfasst</div><div class="g-w" id="costTotal">–</div><div class="g-m">alle eingetragenen Posten</div></div>
+        <div class="g"><div class="g-n">Kosten je Abo</div><div class="g-w" id="costCpa">–</div><div class="g-m">erfasste Kosten geteilt durch alle Anmeldungen</div></div>
+        <div class="g"><div class="g-n">Rückfluss</div><div class="g-w" id="costRoi">–</div><div class="g-m">Folgejahr-Umsatz je eingesetztem Franken</div></div>
+      </div>
+      <p class="provisorisch" id="kostenNote"></p>
+
       <details class="zb-form">
-        <summary>Wer bleibt, und was bringt das? – drei Szenarien</summary>
-        <!-- Drei gleichwertige Karten: Die Spanne IST die Aussage, darum trägt
-             keine der drei mehr Gewicht als die andere. Die Referenz nennt sich
-             mit einem Wort, nicht mit Farbe oder Grösse (G01, G03). -->
-        <div class="szen" id="szenKarten"><div class="empty">lädt …</div></div>
-        <div class="cohort" id="cohortCard" style="margin-top:var(--s6)"><div class="empty">lädt …</div></div>
-        <p class="provisorisch" id="szenarienNote"></p>
+        <summary>Wer bleibt? – die Kohorte und der Drei-Monats-Moment</summary>
+        <div class="cohort" id="cohortCard" style="margin-top:var(--s4)"><div class="empty">lädt …</div></div>
       </details>
+
+      <details class="zb-form">
+        <summary>Kosten im Einzelnen</summary>
+        <div class="tablewrap" style="margin-top:var(--s4)">
+          <table class="tarif">
+            <thead><tr><th>Kategorie</th><th class="num">Betrag</th></tr></thead>
+            <tbody id="costBody"><tr><td class="empty" colspan="2">lädt …</td></tr></tbody>
+            <tfoot id="costFoot"></tfoot>
+          </table>
+        </div>
+        <div class="tablewrap" style="margin-top:var(--s6)">
+          <table class="tarif">
+            <thead><tr><th>Datum</th><th>Posten</th><th>Kategorie</th><th class="num">Betrag</th></tr></thead>
+            <tbody id="kostenPostenBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="zb-form">
+        <summary>Nach Tarif und Zahlungsweise</summary>
+        <div class="tablewrap" style="margin-top:var(--s4)">
+          <table class="tarif">
+            <thead><tr><th>Tarif</th><th class="num">Monatlich</th><th class="num">Jährlich</th><th class="num">Summe</th></tr></thead>
+            <tbody id="tarifBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+            <tfoot id="tarifFoot"></tfoot>
+          </table>
+        </div>
+        <p class="provisorisch" id="provisorisch"></p>
+      </details>
+    </div>
+  </section>
+
+
+  <!-- ══ 3 · WAS HAT FUNKTIONIERT ════════════════════════════════════════ -->
+  <section id="gebiete">
+    <div class="shead"><h2>Was hat funktioniert</h2><p>Jede Zeile ist ein Wirkungsfeld und trägt die ganze Kette: Reichweite, Klicks, Abschlüsse – und den Aufwand, wo er erfasst ist. Aufklappen zeigt die einzelnen Motive und Aktivitäten dahinter.</p></div>
+    <div class="panel">
+      <div id="gebieteListe"><div class="empty">lädt …</div></div>
+    </div>
+    <p class="provisorisch" id="gebieteNote"></p>
+  </section>
+
+
+  <!-- Ausgeblendet, seit die Frist vorbei ist: Ein Zug, den niemand mehr tun
+       kann, ist kein Zug. Der Schalter ist CONFIG.zuegeZeigen – für die nächste
+       Aktion ein Wort, nicht ein Wiederaufbau. Die Sektion bleibt darum im
+       Markup stehen, auch wenn der Bericht sie nicht braucht. -->
+  <section id="zuege" hidden>
+    <div class="shead"><h2>Nächste Züge</h2><p>Was jetzt noch möglich ist – aus den Daten gelesen, nach Hebel sortiert.</p></div>
+    <div class="panel">
+      <div id="zuegeListe"><div class="empty">lädt …</div></div>
+    </div>
+    <p class="provisorisch">Die Erwartungen sind grob und aus der bisherigen Wirkung derselben Kanäle abgeleitet – sie sortieren die Reihenfolge, sie versprechen nichts.</p>
+  </section>
+
+
+  <!-- ══ 4 · WER SIND DIE NEUEN ══════════════════════════════════════════ -->
+  <section id="wer">
+    <div class="shead"><h2>Wer sind die Neuen</h2><p>Woher sie kommen, was sie gewählt haben – und welche Zielgruppe wie geantwortet hat.</p></div>
+    <div class="panel">
+
+      <div class="mh">Welche Gruppe wir wie erreicht haben</div>
+      <div id="segmente"><div class="empty">lädt …</div></div>
+      <p class="provisorisch" id="segmenteNote"></p>
 
       <details class="zb-form">
         <summary id="stroemeKopf">Woraus sich die Abos zusammensetzen</summary>
@@ -101,32 +183,35 @@
   </section>
 
 
-  <!-- ══ 2 · GEBIETE ═════════════════════════════════════════════════════ -->
-  <section id="gebiete">
-    <div class="shead"><h2>Gebiete</h2></div>
+  <!-- ══ 5 · SCHLÜSSE ════════════════════════════════════════════════════
+       Der einzige Abschnitt, der nicht gerechnet, sondern geschrieben ist.
+       Er steht bewusst NACH den Zahlen: Wer die Schlüsse zuerst liest, liest
+       die Zahlen nur noch als Beleg. -->
+  <section id="schluesse">
+    <div class="shead"><h2>Schlüsse und Perspektiven</h2><p>Geschrieben, nicht gerechnet – gestützt auf die datierten Lesarten im Repo. Was hier steht, ist eine Auslegung und darf widersprochen werden.</p></div>
     <div class="panel">
-      <div id="gebieteListe"><div class="empty">lädt …</div></div>
+
+      <div class="mh">Was diese Aktion gezeigt hat</div>
+      <div class="prose">
+        <p><b>Die Aktion war eine Aktivierung des eigenen Umfelds, keine Gewinnung neuer Öffentlichkeit.</b> Rund vier von fünf Abos stammen aus Adressen, die das Haus schon hatte – Mailing und Newsletter zusammen. Das ist kein Makel, aber es beantwortet die Frage nach Wachstum nicht: Wer neue Kreise erreichen will, kann das aus dem eigenen Verteiler nicht lernen.</p>
+        <p><b>Die Frist wirkt stärker als jeder einzelne Kanal.</b> Die beiden Fristtage brachten mehr Anmeldungen als der ganze Juli, und die letzte Welle hatte die höchste Klickquote aller vier. Wer beim nächsten Mal mehr will, setzt eher eine zweite Frist als einen weiteren Kanal.</p>
+        <p><b>Bezahlte Reichweite hat hier nicht getragen.</b> Rund 131 000 erreichte Personen und 965 Klicks ergaben etwa neun Abos – dreifach belegt durch Placebo-Probe, Abschalt-Probe und Fensterrechnung. Für eine nächste bezahlte Runde gilt: erst hart messbar machen, dann buchen.</p>
+        <p><b>Das Quer-Angebot funktioniert asymmetrisch.</b> Wochenschrift-Abonnenten nahmen goetheanum.tv rund dreimal so oft an wie umgekehrt. Wer beide Häuser verbinden will, geht offenbar leichter vom Lesen zum Sehen als vom Sehen zum Lesen.</p>
+      </div>
+
+      <div class="mh" style="margin-top:var(--s6)">Was jetzt noch aussteht</div>
+      <div class="prose">
+        <p>Der Bericht ist erst vollständig, wenn die Kosten drinstehen – vor allem der Betrag der bezahlten Anzeige. Bis dahin bleiben «Kosten je Abo» und «Rückfluss» oben leer: Mit den bisher erfassten CHF 310 ergäben sie einen Rückfluss von rund 215-fach und einen Preis von null Franken je Abo – technisch richtig gerechnet und trotzdem gelogen.</p>
+        <p><b>Anfang November</b> entscheiden die ersten Kohorten über das Bleiben. Dann ersetzt eine Messung die drei Szenarien, und aus der Spanne wird eine Zahl. Erst danach lässt sich sagen, was die Aktion wirklich eingebracht hat.</p>
+        <p>Offen sind ausserdem: die Social-Zahlen aus Metricool, der Abgleich der Wochenschrift-Anmeldungen gegen Zoho, und zwei Ungereimtheiten aus dem Mailing – der englischen Gruppe «Lesen» fehlt die letzte Welle, und bei beiden Wochenschrift-Newslettern war das Link-Tracking aus. Alles einzeln in <code>docs/schlussbericht-datensammlung.md</code>.</p>
+      </div>
     </div>
-    <p class="provisorisch" id="gebieteNote"></p>
   </section>
 
 
-  <!-- ══ 3 · NÄCHSTE ZÜGE ════════════════════════════════════════════════ -->
-  <!-- Ausgeblendet, seit die Frist vorbei ist: Ein Zug, den niemand mehr tun
-       kann, ist kein Zug. Der Schalter ist CONFIG.zuegeZeigen – für die nächste
-       Aktion ein Wort, nicht ein Wiederaufbau. -->
-  <section id="zuege" hidden>
-    <div class="shead"><h2>Nächste Züge</h2><p>Was jetzt noch möglich ist – aus den Daten gelesen, nach Hebel sortiert. Der Plan steht schon im Link-Register und im Aktivitäten-Protokoll; hier steht, was davon noch nicht gezündet hat.</p></div>
-    <div class="panel">
-      <div id="zuegeListe"><div class="empty">lädt …</div></div>
-    </div>
-    <p class="provisorisch">Die Erwartungen sind grob und aus der bisherigen Wirkung derselben Kanäle abgeleitet – sie sortieren die Reihenfolge, sie versprechen nichts.</p>
-  </section>
-
-
-  <!-- ══ 4 · BELEGE ══════════════════════════════════════════════════════ -->
+  <!-- ══ 6 · BELEGE ══════════════════════════════════════════════════════ -->
   <section id="belege">
-    <div class="shead"><h2>Belege</h2><p>Alles, was man selten braucht, aber jederzeit nachschlagen können muss.</p></div>
+    <div class="shead"><h2>Belege und Methode</h2><p>Alles, was man selten braucht, aber jederzeit nachschlagen können muss.</p></div>
     <div class="panel">
 
       <details class="zb-form">
@@ -146,7 +231,7 @@
         <p class="provisorisch" id="dunkelNote"></p>
         <div id="vermutetKopf" class="mh" style="margin-top:var(--s6)"></div>
         <div id="vermutetList"><div class="empty">lädt …</div></div>
-        <p class="provisorisch">Live aus den Ereignissen: je Anmeldung ohne UTM der zeitlich nächste Kurzlink-Klick (bis 90 Min. davor) auf einen passenden Kampagnen-Link. Ein Indiz, keine Messung – gezählt wird es nirgends, es ordnet nur ein. Das Indiz trägt nur bei spärlichen Klicks: Solange die bezahlte Anzeige lief, stellte sie über die Hälfte aller Klicks und stand darum zufällig bei fast jeder Anmeldung daneben – nachgerechnet in <code>docs/wirkungs-lesart-24-07.md</code>. Seit ihrem Stopp am 24. Juli beherrscht kein Weg mehr das Klick-Log; das Indiz ist damit brauchbarer geworden, bleibt aber ein Indiz. Die geltende Zuordnung des Dunkelfeldes rechnet nicht damit, sondern aus Tageskurve, gemessenen Fenster-Anteilen und Selbstauskunft: <code>docs/wirkungs-lesart-07-08.md</code>.</p>
+        <p class="provisorisch">Live aus den Ereignissen: je Anmeldung ohne UTM der zeitlich nächste Kurzlink-Klick (bis 90 Min. davor) auf einen passenden Kampagnen-Link. Ein Indiz, keine Messung – gezählt wird es nirgends, es ordnet nur ein. Das Indiz trägt nur bei spärlichen Klicks: Solange die bezahlte Anzeige lief, stellte sie über die Hälfte aller Klicks und stand darum zufällig bei fast jeder Anmeldung daneben – nachgerechnet in <code>docs/wirkungs-lesart-24-07.md</code>. Seit ihrem Stopp am 24. Juli beherrscht kein Weg mehr das Klick-Log; das Indiz ist damit brauchbarer geworden, bleibt aber ein Indiz. Die geltende Zuordnung des Dunkelfeldes rechnet nicht damit, sondern aus Tageskurve, gemessenen Fenster-Anteilen und Selbstauskunft: <code>docs/wirkungs-lesart-08-08.md</code>.</p>
       </details>
 
       <details class="zb-form">
@@ -157,21 +242,9 @@
       </details>
 
       <details class="zb-form">
-        <summary>Nach Tarif und Zahlungsweise</summary>
-        <div class="tablewrap" style="margin-top:var(--s4)">
-          <table class="tarif">
-            <thead><tr><th>Tarif</th><th class="num">Monatlich</th><th class="num">Jährlich</th><th class="num">Summe</th></tr></thead>
-            <tbody id="tarifBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
-            <tfoot id="tarifFoot"></tfoot>
-          </table>
-        </div>
-        <p class="provisorisch" id="provisorisch"></p>
-      </details>
-
-      <details class="zb-form">
         <summary>Methode und Quellen</summary>
         <div style="margin-top:var(--s4)">
-          <p class="provisorisch">Abschlüsse und «Geblieben» zählt das Cockpit live aus den Anmeldungen (nur Summen, keine Personendaten). Reichweite und die je Aktivität erfassten Klicks kommen aus dem <a href="aktivitaeten.html">Aktivitäten-Protokoll</a>, die Kurzlink-Klicks automatisch aus dem <a href="../utm-generator/">Link-Register</a>. Alles mit ≈ ist eine datierte Lesart, keine Messung.</p>
+          <p class="provisorisch">Abschlüsse und «Geblieben» zählt das Cockpit live aus den Anmeldungen (nur Summen, keine Personendaten). Reichweite und die je Aktivität erfassten Klicks kommen aus dem <a href="aktivitaeten.html">Aktivitäten-Protokoll</a>, die Kurzlink-Klicks automatisch aus dem <a href="../utm-generator/">Link-Register</a>. Reichweite heisst bei Mails <b>zugestellt</b>, Klicks heissen <b>eindeutige Klicker</b> – die Öffnungen stehen je Zeile in der Notiz. Alles mit ≈ ist eine datierte Lesart, keine Messung.</p>
           <div id="quelleSocial"></div>
         </div>
       </details>

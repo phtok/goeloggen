@@ -142,6 +142,14 @@
     // Aktion hier auf true stellen; die Sektion und ihre Logik bleiben
     // vollständig erhalten.
     zuegeZeigen: false,
+    // Sind die Kosten vollständig erfasst? Solange NEIN, zeigt der Bericht
+    // «Kosten je Abo» und «Rückfluss» NICHT an. Mit CHF 310 erfassten Kosten
+    // stünde dort ein Rückfluss von 215-fach und ein Preis je Abo von 0 Franken
+    // — beides technisch richtig gerechnet und trotzdem gelogen, weil der
+    // teuerste Weg der Aktion (die bezahlte Anzeige) noch fehlt. Sobald die
+    // Beträge eingetragen sind: hier auf true stellen.
+    // Was fehlt, steht in docs/schlussbericht-datensammlung.md.
+    kostenVollstaendig: false,
     // Zeigt an, was im Cockpit noch Annahme ist und nicht gemessen. Preise und
     // Zielmarken sind es seit dem 17. Juli nicht mehr (echte Formular- und
     // Uscreen-Preise, ratifizierte GF-Vorgabe) – allein die Bleibe-Quote bleibt
@@ -485,19 +493,21 @@
       motive[g][key] = motive[g][key] || { label:label, quelle:l.utm_source || '', ab:0, kl:0 };
       motive[g][key].kl += k;
     });
+    var ko = {};
     (massnahmen || []).forEach(function(m){
       var g = gebietVonMassnahme(m);
-      var r = Number(m.reichweite) || 0, k = Number(m.klicks) || 0;
+      var r = Number(m.reichweite) || 0, k = Number(m.klicks) || 0, c = Number(m.kosten) || 0;
       if (r) add(rw, g, r);
       if (k) add(kl, g, k);
-      if (r || k) (akte[g] = akte[g] || []).push({ name:m.massnahme || '—', tag:m.tag, reichweite:r, klicks:k });
+      if (c) add(ko, g, c);
+      if (r || k || c) (akte[g] = akte[g] || []).push({ name:m.massnahme || '—', tag:m.tag, reichweite:r, klicks:k, kosten:c });
     });
 
     var dunkel = dunkelVerteilen(ohne);
     var total = ohne; Object.keys(ab).forEach(function(k){ total += ab[k]; });
     var keys = {}; [ab, kl, rw, dunkel, linkN].forEach(function(o){ Object.keys(o).forEach(function(k){ keys[k] = true; }); });
     var items = Object.keys(keys).map(function(g){
-      return { g:g, ab:ab[g] || 0, kl:kl[g] || 0, rw:rw[g] || 0, du:dunkel[g] || 0,
+      return { g:g, ab:ab[g] || 0, kl:kl[g] || 0, rw:rw[g] || 0, du:dunkel[g] || 0, ko:ko[g] || 0,
                links:linkN[g] || 0, gesamt:(ab[g] || 0) + (dunkel[g] || 0) };
     }).filter(function(x){ return x.gesamt > 0 || x.rw > 0 || x.kl >= 3 || (x.links >= 2 && x.g !== 'andere'); })
       .sort(function(a, b){ return b.gesamt - a.gesamt || b.kl - a.kl; });
@@ -532,6 +542,12 @@
       teil('Klicks', x.kl ? fmt(x.kl) : '–');
       teil('Abschlüsse', fmt(x.ab));
       if (x.rw && x.kl) teil('Klickquote', (x.kl / x.rw * 100).toFixed(1).replace('.', ',') + ' %');
+      // Aufwand nur zeigen, wo er erfasst ist. Eine 0 wäre hier keine Sparsamkeit,
+      // sondern eine Lücke – und würde das Gebiet gratis aussehen lassen.
+      if (x.ko){
+        teil('Aufwand', geld(x.ko));
+        if (x.gesamt) teil('je Abo', geld(x.ko / x.gesamt));
+      }
       var track = document.createElement('div'); track.className = 'track';
       var tb = document.createElement('span'); tb.style.width = Math.max(3, Math.round(x.gesamt / max * 100)) + '%';
       track.appendChild(tb);
@@ -1323,9 +1339,24 @@
     var jeKat = {}; var summe = 0;
     posten.forEach(function(k){ var b = Number(k.betrag) || 0; summe += b; jeKat[k.kategorie] = (jeKat[k.kategorie] || 0) + b; });
     el('costTotal').textContent = geld(summe);
-    el('costCpa').textContent   = (summe > 0 && total > 0) ? geld(summe / total) : '–';
     var revChf = revenue && revenue.chfGesamt || 0;
-    el('costRoi').textContent   = summe > 0 ? (revChf / summe).toFixed(1) + '×' : '–';
+    var voll = CONFIG.kostenVollstaendig !== false;
+    if (voll){
+      // Beträge unter zehn Franken auf Rappen genau – ein «CHF 0» wäre keine
+      // Sparsamkeit, sondern eine gerundete Unwahrheit.
+      var cpa = (summe > 0 && total > 0) ? summe / total : 0;
+      el('costCpa').textContent = cpa > 0
+        ? (cpa < 10 ? CONFIG.waehrung + ' ' + cpa.toFixed(2).replace('.', ',') : geld(cpa))
+        : '–';
+      el('costRoi').textContent = summe > 0 ? (revChf / summe).toFixed(1) + '×' : '–';
+    } else {
+      el('costCpa').textContent = '–';
+      el('costRoi').textContent = '–';
+    }
+    if (el('kostenNote')) el('kostenNote').textContent = voll
+      ? 'Alle bekannten Kosten sind erfasst; Kosten je Abo und Rückfluss rechnen darauf.'
+      : 'Kosten je Abo und Rückfluss bleiben leer, solange die Kosten unvollständig sind — vor allem der Betrag der bezahlten Anzeige fehlt. '
+        + 'Gerechnet würden daraus sonst Zahlen, die technisch stimmen und trotzdem täuschen. Was fehlt, steht in docs/schlussbericht-datensammlung.md; eingetragen wird es unter Kosten.';
 
     var body = el('costBody'); body.innerHTML = '';
     Object.keys(KAT_LABEL).forEach(function(kat){
@@ -1549,6 +1580,98 @@
       'Herleitung, Begründung der Quoten und Empfindlichkeit: ' + ((CONFIG.szenarien && CONFIG.szenarien.doc) || '') + '.';
   }
 
+  // ── Kopfzahlen: die grossen Zahlen zuerst ─────────────────────────────────
+  // Der Bericht beginnt mit dem, was jeder wissen will, und nicht mit dem Weg
+  // dorthin. Alles Kleinere steht darunter in Klappen.
+  function renderKopf(stats, revenue, posten){
+    var host = el('kopfZahlen'); if (!host) return;
+    var je = function(produkt){
+      return (stats || []).reduce(function(s, r){ return r.produkt === produkt ? s + Number(r.n || 0) : s; }, 0);
+    };
+    var kosten = (posten || []).reduce(function(s, k){ return s + (Number(k.betrag) || 0); }, 0);
+    var ref = (revenue && revenue.szenario) || referenzSzenario();
+    var karten = [
+      { n:'Wochenschrift', w:fmt(je('wos')), m:'Papier und Digital, Deutsch und Englisch' },
+      { n:'goetheanum.tv', w:fmt(je('gtv')), m:'ein Strom, Sprache dort nicht gemessen' },
+      { n:'Folgejahr-Umsatz', w:geld(revenue ? revenue.chfGesamt : 0),
+        m:'Szenario ' + ref.name + ' – eine Rechnung, keine Messung' },
+      { n:'Kosten erfasst', w:geld(kosten),
+        m:kosten > 0 ? 'Stand der Kosten-Seite' : 'noch nichts erfasst' }
+    ];
+    host.innerHTML = '';
+    karten.forEach(function(k){
+      var d = document.createElement('div'); d.className = 'g';
+      var n = document.createElement('div'); n.className = 'g-n'; n.textContent = k.n;
+      var w = document.createElement('div'); w.className = 'g-w'; w.textContent = k.w;
+      var m = document.createElement('div'); m.className = 'g-m'; m.textContent = k.m;
+      d.appendChild(n); d.appendChild(w); d.appendChild(m); host.appendChild(d);
+    });
+  }
+
+  // ── Wen wir erreicht haben: die drei Zielgruppen des Mailings ─────────────
+  // Die Wellen tragen die Gruppe im utm_content (w1_noabo, w2_nurws …). Damit
+  // ist «welche Gruppe haben wir wie erreicht» gemessen, nicht geraten – der
+  // einzige Ort der Aktion, an dem das geht.
+  var SEGMENTE = [
+    { key:'noabo', name:'Ohne Abo',
+      was:'bekam beide Angebote – Wochenschrift und goetheanum.tv' },
+    { key:'nurws', name:'Wochenschrift-Abonnenten',
+      was:'Quer-Angebot: goetheanum.tv' },
+    { key:'nurtv', name:'goetheanum.tv-Abonnenten',
+      was:'Quer-Angebot: Wochenschrift' }
+  ];
+  function renderSegmente(attribution){
+    var host = el('segmente'); if (!host) return;
+    var je = {}, wellen = {};
+    (attribution || []).forEach(function(r){
+      var t = /^(w\d+b?)_(nurtv|nurws|noabo)(_share)?$/.exec(r.utm_content || '');
+      if (!t) return;
+      var n = Number(r.n) || 0;
+      je[t[2]] = (je[t[2]] || 0) + n;
+      (wellen[t[2]] = wellen[t[2]] || {});
+      wellen[t[2]][t[1]] = (wellen[t[2]][t[1]] || 0) + n;
+    });
+    var summe = Object.keys(je).reduce(function(s, k){ return s + je[k]; }, 0);
+    if (!summe){ host.innerHTML = '<div class="empty">Keine Zielgruppen-Spur in den Anmeldungen.</div>'; return; }
+    host.innerHTML = '';
+    SEGMENTE.forEach(function(sg){
+      var n = je[sg.key] || 0;
+      var det = document.createElement('details'); det.className = 'geb';
+      var sum = document.createElement('summary');
+      var kopf = document.createElement('div'); kopf.className = 'geb-kopf';
+      var nm = document.createElement('span'); nm.className = 'geb-name';
+      var car = document.createElement('span'); car.className = 'car'; car.setAttribute('aria-hidden', 'true');
+      nm.appendChild(car); nm.appendChild(document.createTextNode(sg.name));
+      var wert = document.createElement('span'); wert.className = 'geb-wert';
+      wert.appendChild(document.createTextNode(fmt(n)));
+      var an = document.createElement('span'); an.className = 'du';
+      an.textContent = ' · ' + Math.round(n / summe * 100) + ' % der Mailing-Abos';
+      wert.appendChild(an);
+      kopf.appendChild(nm); kopf.appendChild(wert);
+      var kette = document.createElement('div'); kette.className = 'geb-kette';
+      var s2 = document.createElement('span'); s2.textContent = sg.was; kette.appendChild(s2);
+      var track = document.createElement('div'); track.className = 'track';
+      var tb = document.createElement('span'); tb.style.width = Math.max(3, Math.round(n / summe * 100)) + '%';
+      track.appendChild(tb);
+      sum.appendChild(kopf); sum.appendChild(kette); sum.appendChild(track);
+      det.appendChild(sum);
+      var tief = document.createElement('div'); tief.className = 'geb-tief';
+      ['w1', 'w2', 'w3', 'w3b'].forEach(function(w){
+        var v = (wellen[sg.key] || {})[w] || 0;
+        var row = document.createElement('div'); row.className = 'motrow';
+        var mc = document.createElement('span'); mc.className = 'mc'; mc.textContent = 'Welle ' + w.slice(1);
+        var mn = document.createElement('span'); mn.className = 'mn'; mn.textContent = fmt(v) + ' Abos';
+        row.appendChild(mc); row.appendChild(mn); tief.appendChild(row);
+      });
+      det.appendChild(tief);
+      host.appendChild(det);
+    });
+    if (el('segmenteNote')) el('segmenteNote').textContent =
+      'Gemessen an ' + fmt(summe) + ' Anmeldungen, die eine Mailing-Spur tragen: Die Wellen führten je Zielgruppe ' +
+      'einen eigenen Link (utm_content), darum ist die Gruppe hier keine Vermutung. ' +
+      'Anmeldungen ohne Spur sind nicht enthalten – sie lassen sich keiner Gruppe zuordnen.';
+  }
+
   // ── Ereignis-Protokoll: die einzelnen Abos («Was ist passiert?») ────────────
   // RPC sommer2026_ereignisse: Einzel-Anmeldungen der letzten 14 Tage, stunden-
   // genau gerundet, ohne Personendaten. Beantwortet «woher kamen heute welche
@@ -1672,7 +1795,9 @@
         var revenue = projectRevenue(stats);
         // 1 Stand · 2 Gebiete · 3 Züge · 4 Belege – in dieser Reihenfolge gelesen.
         renderStand(total, timeline);
+        renderKopf(stats, revenue, kostenPosten);
         renderStroeme(stats, total);
+        renderSegmente(attribution);
         renderGebiete(attribution, links, massnahmen, kanaele);
         renderZuege(links, massnahmen, attribution, timeline, total);
         renderDunkelfeld(kanaele, attribution);
