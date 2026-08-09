@@ -28,8 +28,6 @@ collections/jahrgaenge/zeichnungen/**
 # Local experiment snapshots
 archive/*
 fremdprojekte/
-!archive/legacy-entrypoints_2026-03-10/
-!archive/legacy-entrypoints_2026-03-10/**
 
 # Cloudflare worker local state/config
 workers/.wrangler/

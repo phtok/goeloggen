@@ -1,0 +1,46 @@
+{
+  "_quelle": "AC-Reporting-Schnittstelle (eindeutige Klicker = Personen, nicht Link-Klicks). Vier abgeschlossene Sommer-2025-Automationen, alle Kontakte ausgetreten.",
+  "_hinweis_conversion": "In den 2025-Kampagnen war KEIN Conversion-Goal hinterlegt. Es gibt daher keine gemessene Abschlusszahl; der Wellen-Schwund ist fast ausschliesslich Abmeldungen + Bounces.",
+  "_felder": "eingetreten je Kampagne; je Mail: versandt, geoeffnet, klicker (Personen), abmeldungen",
+  "kampagnen": {
+    "WOS_Sommer_2025_DE": {
+      "produkt": "Wochenschrift", "sprache": "DE", "eingetreten": 29449,
+      "mails": [
+        { "welle": 1, "versandt": 24007, "geoeffnet": 9363, "klicker": 660, "abmeldungen": 105 },
+        { "welle": 2, "versandt": 23854, "geoeffnet": 8785, "klicker": 434, "abmeldungen": 90 },
+        { "welle": 3, "versandt": 23699, "geoeffnet": 8405, "klicker": 419, "abmeldungen": 77 }
+      ]
+    },
+    "WOS_Sommer_2025_EN": {
+      "produkt": "Wochenschrift", "sprache": "EN", "eingetreten": 24452,
+      "mails": [
+        { "welle": 1, "versandt": 21985, "geoeffnet": 10217, "klicker": 495, "abmeldungen": 94 },
+        { "welle": 2, "versandt": 21841, "geoeffnet": 8429, "klicker": 246, "abmeldungen": 81 },
+        { "welle": 3, "versandt": 21721, "geoeffnet": 8161, "klicker": 237, "abmeldungen": 98 }
+      ]
+    },
+    "GTV_Sommer_2025_DE": {
+      "produkt": "goetheanum.tv", "sprache": "DE", "eingetreten": 29754,
+      "mails": [
+        { "welle": 1, "versandt": 27502, "geoeffnet": 11671, "klicker": 438, "abmeldungen": 73 },
+        { "welle": 2, "versandt": 27328, "geoeffnet": 11046, "klicker": 521, "abmeldungen": 83 },
+        { "welle": 3, "versandt": 27158, "geoeffnet": 10471, "klicker": 753, "abmeldungen": 94 }
+      ]
+    },
+    "GTV_Sommer_2025_EN": {
+      "produkt": "goetheanum.tv", "sprache": "EN", "eingetreten": 24691,
+      "mails": [
+        { "welle": 1, "versandt": 23777, "geoeffnet": 10282, "klicker": 240, "abmeldungen": 52 },
+        { "welle": 2, "versandt": 23655, "geoeffnet": 9885, "klicker": 292, "abmeldungen": 52 },
+        { "welle": 3, "versandt": 23542, "geoeffnet": 9434, "klicker": 463, "abmeldungen": 76 }
+      ]
+    }
+  },
+  "_muster": {
+    "eintritt_zu_mail1_schwund": "WOS DE 18,5% · WOS EN 10,1% · GTV DE 7,6% · GTV EN 3,7% (Hygiene-/Abo-Filter vor Mail 1)",
+    "wellen_schwund_mail1_zu_mail3": "je Kampagne nur ~250–350 Kontakte (kaum Conversion/Austritt waehrend der Serie)",
+    "open_gap": "EN oeffnet staerker als DE (v.a. WS: WOS EN w1 46,5% vs WOS DE 39,0%)",
+    "klick_dynamik": "WS-Angebot: Klick FAELLT ueber die Wellen. TV-Angebot: Klick STEIGT zur Frist (Frist-Mail zieht).",
+    "abmeldungen": "je Mail <0,5% der Versandmenge (52–105 absolut) — die Frist-Mail ist unkritisch."
+  }
+}
