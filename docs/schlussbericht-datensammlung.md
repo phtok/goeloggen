@@ -93,6 +93,31 @@ teuerste Weg fehlt.
   Flyer Empfang» und «Auslage Flyer Buchhandlung» (10. Juli). Wo nichts
   gemessen ist: verteilte Stückzahl eintragen und das in der Notiz sagen.
 
+## Zwei Arten von Kosten — nicht vermischen (Hinweis 9. August)
+
+Bisher kennt das Cockpit **eine** Sorte Kosten: einmalige Kampagnenkosten
+(Druck, Anzeige, Stunden), verteilt über alle Abos. Das reicht nicht. Es kommt
+eine zweite Sorte dazu — **Stückkosten je Abo und Jahr**, und die sind je Strom
+verschieden:
+
+| Strom | Stückkosten | Bemerkung |
+|---|---|---|
+| Wochenschrift **Papier** | Druck + Porto je Heft | grob rechenbar; **darf nicht auf alle Abos verteilt werden** |
+| goetheanum.tv | Gebühr je Uscreen-Abo | folgt |
+| Wochenschrift **Digital** | keine | durch die laufende Infrastruktur gedeckt |
+
+Die Folge für den Bericht ist nicht kosmetisch: Aus dem Folgejahr-**Umsatz**
+wird erst mit diesen Zahlen ein **Deckungsbeitrag**. Und weil die Stückkosten
+am Papier hängen, verschiebt sich damit auch die Rangfolge der Ströme — ein
+Papier-Abo bringt mehr Umsatz und kostet mehr; ob es netto mehr trägt als ein
+digitales, ist heute unbeantwortet.
+
+Zu sammeln sind darum **je Strom zwei Zahlen**: Herstellkosten je Ausgabe und
+Portokosten je Ausgabe (Wochenschrift Papier, je Zone, wenn es sich unterscheidet)
+sowie die Uscreen-Gebühr je Abo und Monat. Sobald sie vorliegen, bekommt das
+Cockpit eine eigene Struktur dafür (`CONFIG.stueckkosten` je Strom) — vorher
+nicht: Eine leere Struktur mit Nullen darin sähe aus wie «kostet nichts».
+
 ## Zwei offene Fragen, keine Zahlen
 
 - **Inserate VaG und RSV** (13. Juli, Notiz «Bei Bruno Zweifel angefragt») —

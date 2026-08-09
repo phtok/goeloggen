@@ -129,7 +129,16 @@
   --font-mono:ui-monospace,Menlo,Consolas,monospace;
 
   /* --- Schnitte (Goetheanum Variable) ------------------------------------- */
-  --w-leise:265; --w-text:440; --w-deutlich:580; --w-strong:680;
+  /* Die fünf Schnitte tragen im Haus Namen: Leise · Ruhig · Klar · Deutlich ·
+     Laut. Genau diese Namen sind jetzt auch die Token. Vorher hiessen zwei von
+     ihnen anders (--w-text für Klar, --w-strong für Laut) – wer das Hauswort
+     benutzte und «var(--w-klar)» schrieb, griff ins Leere, und CSS schwieg
+     dazu (gefunden von DS10 in der Werkzeugpost, drei Stellen). Ein
+     Design-System, dessen Vokabular vom Sprachgebrauch des Hauses abweicht,
+     erzeugt genau solche Fehler. Die alten Namen bleiben als Zweitnamen
+     gültig, damit kein Bestand bricht. */
+  --w-leise:265; --w-ruhig:350; --w-klar:440; --w-deutlich:580; --w-laut:680;
+  --w-text:var(--w-klar); --w-strong:var(--w-laut);
 
   /* --- Typo-Skala (mobil-first, flüssig, inklusiv) ------------------------ */
   /* Grund in rem → respektiert die Browser-Schriftgröße der Nutzer (WCAG resize,
@@ -147,8 +156,16 @@
   --lh-body:1.66; --lh-tight:1.15;   /* Display-als-Fliesstext braucht Luft (Zeilenabstand) */
   --measure:62ch;        /* ~66 Zeichen in Source – lineares Lesemaß (G10) */
 
-  /* --- Abstände (4/8/12/16/24/32) ---------------------------------------- */
-  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s6:24px; --s8:32px;
+  /* --- Abstände (4/8/12/16/20/24/28/32) -----------------------------------
+     Die Skala ist LÜCKENLOS. Sie war es nicht: --s5 und --s7 fehlten, und weil
+     CSS ein unbekanntes Token stillschweigend zu nichts auflöst, wurde aus
+     «padding:var(--s5)» ein «padding:0». Genau das war am 9. August 2026 im
+     Sommer-Bericht zu sehen — Zahlenkacheln, deren Schrift auf der Kante klebte.
+     13 Dateien im Repo griffen nach diesen beiden Sprossen. Wer eine Skala mit
+     Löchern baut, baut eine Falle: Die fehlende Sprosse ist die, nach der
+     gegriffen wird. Neue Sprossen darum nur AM STÜCK ergänzen, nie einzeln.
+     Gegen das Wiederauftreten wacht DS10 (unbekanntes Token = Fehler). */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s7:28px; --s8:32px;
 
   /* --- Radien, Maße, Fingerziel ------------------------------------------ */
   --r-control:10px; --r-card:14px; --r-pill:999px;

@@ -57,31 +57,17 @@
   .conv .txt{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);min-width:190px;flex:1}
   .conv .txt b{font-weight:600}
   .conv .txt .m{color:var(--muted);font-size:var(--t-micro)}
-  /* B02: Der Goldton mischt über --paper, NICHT über transparent. Sonst legt er
-     sich auf die jeweilige Fläche darunter und frisst den Kontrast, den
-     --gold-ink verspricht — auf der Szenario-Karte (--soft) gemessene 4.42:1
-     statt der nötigen 4.5:1, auf --paper knapp gehaltene 4.66:1. Über --paper
-     gemischt hält die Pille überall: 4.70:1 hell, 5.19:1 dunkel. */
-  .pill{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);line-height:1.45;padding:6px 13px;border-radius:var(--r-control);background:color-mix(in srgb,var(--gold) 14%,var(--paper));color:var(--gold-ink);margin-top:var(--s4);max-width:100%}
-  /* Grosse Zahlen in einer Reihe (Übersicht, Geld). Gleiche Bauart wie die
-     Szenario-Karten, nur schmaler – damit die Seite EINE Sprache für Zahlen
-     spricht und nicht zwei. Auto-fit statt fester Spaltenzahl: die Reihe bricht
-     von selbst, ohne Sonderregel je Breite. */
-  .gross{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:var(--s4);margin-top:var(--s6)}
-  .gross .g{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s5);display:flex;flex-direction:column;gap:6px}
-  .gross .g-n{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
-  .gross .g-w{font-family:var(--font-display);font-weight:var(--w-strong);font-size:clamp(24px,3vw,32px);color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.05}
-  .gross .g-m{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.55}
+  /* Die Referenz-Marke ist ein Chip mit Ton (base.css). Hier nur ihr Sitz. */
+  .cohort .chip.ton{margin-top:var(--s4)}
+  /* Zahlenkacheln kommen aus dem Fundament (.kennzahlen/.kennzahl in base.css).
+     Hier steht nur, was diese Seite besonders macht: der Abstand nach oben. */
+  .kennzahlen{margin-top:var(--s6)}
 
   /* Drei Szenarien nebeneinander, gleiches Gewicht: die Spanne ist die Aussage.
      Die Zahl steht in --ink, nicht in --ok – Grün auf «Vorsichtig» würde
      schmeicheln. Die Referenz nennt sich per Wort (Pille), nicht per Farbe. */
   .szen{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);margin-top:var(--s4)}
-  .szen .s{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s5);display:flex;flex-direction:column;gap:6px}
-  .szen .s-n{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
-  .szen .s-w{font-family:var(--font-display);font-weight:var(--w-strong);font-size:clamp(26px,3.4vw,36px);color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.05}
-  .szen .s-m{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.55}
-  .szen .pill{margin-top:0}
+  .szen .chip.ton{margin-top:var(--s2)}
 
   .tablewrap{overflow-x:auto}
   .tarif{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);min-width:440px}

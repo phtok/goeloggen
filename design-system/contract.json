@@ -1,6 +1,6 @@
 {
   "$schema": "https://goetheanum/design-system/contract.schema.json",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "titel": "Goetheanum Design-System – Struktur-Vertrag",
   "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
   "geltungsbereich": {
@@ -191,5 +191,17 @@
     "grenze": "Rund ein Drittel der Kriterien ist maschinell prüfbar. Ein grüner Lauf heisst «keine der prüfbaren Regeln verletzt» — nicht «zugänglich». Beschriftungen, Reihenfolge und Verständlichkeit bleiben Sache der Aufmerksamkeit.",
     "artefakt_dateien": [],
     "artefakt_hinweis": "Physische Farben sind keine Bildschirmflächen — eine gedruckte Karte ist weiss, weil das Papier weiss ist. Blätter, deren Farben dem Papier gehören, stehen hier; dort entfällt allein die Kontrastprüfung, alle anderen Kriterien gelten weiter. Das ist die Entsprechung zum «# ds-ok» in den Stilblättern: die Maschine schlägt vor, der Mensch ratifiziert."
+  },
+  "tokens": {
+    "ds_id": "DS10",
+    "regel": "Jedes var(--x) muss ein definiertes Token treffen.",
+    "schwere": "fehler",
+    "quellen": [
+      "design-system/tokens.css",
+      "design-system/base.css",
+      "design-system/nav.css"
+    ],
+    "ausnahme": "var(--x, rueckfall) mit Rueckfallwert ist Absicht und wird nicht geprueft.",
+    "hinweis": "CSS loest ein unbekanntes Token still zu nichts auf – aus padding:var(--s5) wird padding:0, ohne Fehlermeldung. Ein Wert, der schweigend verschwindet, ist schlimmer als einer, der bricht: niemand sucht danach."
   }
 }

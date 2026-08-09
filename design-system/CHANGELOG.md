@@ -16,6 +16,36 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 9. August 2026 — die Skala hatte Löcher, und CSS schwieg darüber (1.12.0)
+
+**Was.** Die Abstands-Skala ist lückenlos geworden (`--s5:20px`, `--s7:28px`),
+die fünf Schnitte tragen jetzt ihre Hausnamen als Token (`--w-klar`, `--w-laut`,
+`--w-ruhig`; die alten `--w-text`/`--w-strong` bleiben als Zweitnamen gültig),
+und zwei Grundformen kamen dazu: **`.kennzahl`/`.kennzahlen`** (eine Fläche, die
+EINE Zahl trägt: Label, Wert, Notiz — mit grosszügigem Innenabstand) und
+**`.chip.ton`** (ein Chip, der einen ganzen Satz tragen kann). Neue Regel
+**DS10**: jedes `var(--x)` muss ein definiertes Token treffen.
+
+**Warum.** Im Sommer-Bericht klebte die Schrift auf den Kartenkanten. Der Grund
+war kein Gestaltungsfehler, sondern ein Systemfehler: `--s5` existierte nicht.
+Die Skala ging 4 · 8 · 12 · 16 · — · 24 · — · 32, und **CSS löst ein unbekanntes
+Token still zu nichts auf** — aus `padding:var(--s5)` wurde `padding:0`, ohne
+Fehler, ohne Warnung. **13 Dateien im Repo** griffen nach genau diesen beiden
+fehlenden Sprossen. Wer eine Skala mit Löchern baut, baut eine Falle: Die
+fehlende Sprosse ist die, nach der gegriffen wird.
+
+Derselbe Fehlertyp eine Ebene höher: Das Haus spricht von «Klar» und «Laut», die
+Token hiessen `--w-text` und `--w-strong`. Wer das Hauswort benutzte, griff ins
+Leere — DS10 fand es sofort an drei Stellen in der Werkzeugpost, wo seit je die
+falsche Strichstärke stand. **Ein Design-System, dessen Vokabular vom
+Sprachgebrauch des Hauses abweicht, erzeugt genau solche Fehler.**
+
+**Wirkung.** `tokens.css` (Skala geschlossen, Schnitt-Namen), `base.css`
+(`.kennzahl`, `.kennzahlen`, `.chip.ton`), `contract.json` (DS10),
+`tools/ds-lint.py` (`check_tokens`). Das Cockpit gab seine zwei lokalen
+Karten-Kopien und die eigene `.pill` ab und nutzt die Grundformen. Score
+zurück auf 100 Prozent — mit einer Wache mehr.
+
 ## [1.10.0] – 2026-08-04
 
 ### Der Seitentitel wird eine Rolle des Fundaments
