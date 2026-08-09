@@ -132,26 +132,9 @@ war da und doch nicht zu sehen (behoben in #526).
 
 Darum gilt für **Gestaltungsarbeit** (neue Anzeige, umgestellte Sektion, neue
 Zahlenfläche): **die Seite laden und anschauen, nicht nur rechnen lassen.**
-Chromium und Playwright liegen bereit, das genügt:
-
-```bash
-npx --yes http-server -p 8899 -s &            # Repo ausliefern
-node -e "
-const { chromium } = require('/opt/node22/lib/node_modules/playwright');
-(async () => {
-  const b = await chromium.launch();
-  const p = await b.newPage({ viewport:{ width:1280, height:1500 } });
-  p.on('pageerror', e => console.log('PAGEERROR', e.message));
-  await p.goto('http://127.0.0.1:8899/PFAD/index.html');
-  await p.waitForTimeout(2000);
-  await p.screenshot({ path:'/tmp/seite.png', fullPage:true });
-  await b.close();
-})();"
-```
-
-Kommt die Seite nicht ans Backend (die Sandbox lässt es nicht immer), die
-RPC-Antworten mit `page.route('**/rest/v1/rpc/**', …)` unterlegen — mit **echten**
-Daten aus der Datenbank, sonst prüft man eine Attrappe. Zwei Breiten ansehen
+Das kopierfertige Playwright-Rezept (samt RPC-Unterlegung, wenn die
+Sandbox das Backend nicht lässt) steht in `CLAUDE-REF.md` § Seite
+anschauen. Zwei Breiten ansehen
 (**1280** und **420**), und im Zweifel den Schriftgrad messen statt schätzen:
 `getComputedStyle(el).fontSize`. Was gleich wichtig ist, muss gleich gross sein.
 
@@ -170,20 +153,13 @@ Aufgenommenes gilt ab dann überall. Der **Beschluss-Ledger**
 macht ‹wie weit weg› zu einer Zahl statt eines Gefühls.
 
 ## Schnitt-System (Stand v2.7, Paketstruktur Trio)
-- Statische Schnitte: **Leise (265) · Ruhig (350) · Klar (440) ·
-  Deutlich (580) · Laut (680)**. Ruhig = ruhiger Lese-/Buchschnitt (füllt den
-  Sprung Leise→Klar); Deutlich = Titel; Laut = Inline-/Office-Fettung (⌘B).
-- **Installiert wird nur das Office-TTF-Set.** Es trägt die Familienstruktur:
-  ‹Goetheanum Schrift› = Klar (Regular) + Laut (Fett, ⌘B) + Leise (Kursiv, ⌘I);
-  Ruhig, Deutlich, Icons, Pfeile als eigene Familien. Die Desktop-OTF der
-  Schnitte sind reine **Build-Quellen** (`assets/fonts/goetheanum/Fonts/`) und
-  werden nicht mehr ausgeliefert — gleiche Namen wie die Office-Familie,
-  parallel installiert kollidieren sie (macOS deaktiviert Doppelgänger,
-  PowerPoint verformt synthetisch).
-- Variable: 7 Named Instances **Flüstern 190 · Leise · Ruhig · Klar · Deutlich ·
-  Laut · Schreien 725** — Web und Design, stufenlos.
-Bei Änderungen an der Schnittzahl **alle** Beschreibungen mitziehen
-(schriften.html, schrift-webfont.html, README, tools.json, Beipackzettel).
+Fünf statische Schnitte **Leise (265) · Ruhig (350) · Klar (440) ·
+Deutlich (580) · Laut (680)**; Variable mit 7 Named Instances (Flüstern
+190 … Schreien 725). Vor jeder Font- oder Paket-Arbeit zuerst
+`CLAUDE-REF.md` § Schnitt-System lesen (Office-TTF-Struktur,
+Build-Quellen, Kollisionsregeln); bei Änderungen an der Schnittzahl
+**alle** Beschreibungen mitziehen (schriften.html, schrift-webfont.html,
+README, tools.json, Beipackzettel).
 
 ## Fonts reproduzierbar bauen
 Änderungen an Schriftdateien über die Skripte in `tools/goetheanum-fontfix/`
@@ -192,25 +168,13 @@ Nach Font-Änderungen Webfonts (woff/woff2) und das Komplett-ZIP neu packen.
 
 ## Schlüsselbund: Tokens & API-Keys (schluessel.saetzerei.com)
 
-Freigegebene API-Keys (Resend, Infomaniak, Vercel, …) liegen **verschlüsselt
-im Supabase-Vault** des Projekts saetzerei-rechnungen (`wwgzqawlyhtrdofczzka`).
-Der Repo-Inhaber verwaltet sie auf **schluessel.saetzerei.com**: freigeben,
-pausieren, entziehen — Entzug wirkt sofort. Gilt repo-übergreifend, auch hier:
-
-1. **Holen:** Braucht eine Aufgabe einen Key, per Supabase-MCP im Projekt
-   saetzerei-rechnungen: `select public.schluessel_lesen('<name>');`
-   Übersicht ohne Werte: `select name, dienst, status, notiz from
-   public.schluesselbund;`
-2. **Flüchtig verwenden:** nur im Arbeitsspeicher bzw. als Env-Variable eines
-   einzelnen Befehls — **nie** in Chat-Antworten, Commits, Dateien, Logs oder
-   Fehlermeldungen wiedergeben (auch nicht gekürzt).
-3. **Fehlt/pausiert:** Die Fehlermeldung sagt es. Dann auf
-   schluessel.saetzerei.com verweisen — den Repo-Inhaber **nicht** bitten,
-   Tokens in den Chat zu kleben.
-4. **Protokoll:** Jedes Lesen wird automatisch in `schluesselbund_log`
-   festgehalten und ist auf der Seite einsehbar.
-
-(Ausführliche Fassung dieses Abschnitts: `CLAUDE.md` im Repo `designs`.)
+API-Keys liegen verschlüsselt im Supabase-Vault des Projekts
+saetzerei-rechnungen; holen per `select public.schluessel_lesen('<name>');`
+(Supabase-MCP). **Flüchtig verwenden** — nie in Chat-Antworten, Commits,
+Dateien, Logs oder Fehlermeldungen wiedergeben, auch nicht gekürzt. Fehlt
+oder pausiert ein Key: auf schluessel.saetzerei.com verweisen, den
+Repo-Inhaber **nicht** um Tokens im Chat bitten. Jedes Lesen wird
+protokolliert. (Ausführliche Fassung: `CLAUDE.md` im Repo `designs`.)
 
 ## Pull Requests: automatisch mergen — Regel für das ganze Repository
 **Jeder** von Claude erstellte PR in diesem Repository wird **automatisch
