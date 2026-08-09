@@ -11,9 +11,8 @@
 > (`aktivitaeten.html`) je Zeile über «Bearbeiten» eingetragen. **Reichweite =
 > zugestellt**, Klicks = eindeutige Klicker; die Öffnungen wandern in die
 > Notiz. Der Prompt holt alle drei Zahlen, damit die Lesart umkehrbar bleibt —
-> Reichweite ist im Trichter die Aussetzung, nicht schon eine Reaktion. Danach rechnet die Wirkungskette für das Mailing durch — bisher ist
-> sie leer, obwohl das Mailing rund 69 Prozent der Aktion trägt. Vollständige
-> Sammel-Liste: `docs/schlussbericht-datensammlung.md`.
+> Reichweite ist im Trichter die Aussetzung, nicht schon eine Reaktion.
+> Vollständige Sammel-Liste: `docs/schlussbericht-datensammlung.md`.
 
 ---
 
