@@ -6,9 +6,16 @@
 //
 // Aktions-Isolierung: jede Neuanmeldung im Aktionszeitraum → status 'neu' (jeder
 // Trial hinterlegt eine Karte, darum ist transaction_id KEIN Unterscheidungsmerkmal).
-// Verlängerungen legen nichts an. Zahlungen setzen (noch) KEIN 'bleibt' – die
-// Umwandlung wird erst nach der 3-Monats-Frist bestimmt. Kündigung → 'gekuendigt'.
+// Zahlungen setzen (noch) KEIN 'bleibt' – die Umwandlung wird erst nach der
+// 3-Monats-Frist bestimmt. Kündigung → 'gekuendigt'.
 // Optional schärfer via aktion_coupon / aktion_plan.
+//
+// Verlängerung ≠ Abschluss (Beschluss 10. August 2026): Uscreen feuert
+// `subscription_assigned` auch für laufende Bestandsabos und unterscheidet die
+// beiden Fälle im Payload nicht. Erkannt wird es an einer früheren
+// `success_recurring` derselben Person – ein Abo mit drei Gratismonaten kann
+// keine haben. Solche Zeilen bekommen `art: 'verlaengerung'` und fallen aus
+// allen Auswertungen (die lesen die View `sommer2026_neuabos`).
 //
 // Attribution: volles UTM-Tupel (source/medium/campaign/content) + Landingpage-Pfad
 // + offene Selbstauskunft (E-Mail-redigiert) werden je Anmeldung mitgeschrieben; der
@@ -274,6 +281,30 @@ Deno.serve(async (req) => {
 
   if (!isNew) return json({ ok: true, skipped: "event ignoriert" });
 
+  // Verlängerung oder Abschluss? Uscreen sagt es nicht: `subscription_assigned`
+  // trägt nur user_id, subscription_id und den Plantitel – dieselben Felder für
+  // beides. 40 laufende Bestandsabos standen darum als Anmeldung in der Zählung
+  // (belegt am 10.8. über den Uscreen-Vollexport: ihre nächste Rechnung fällt
+  // genau einen Monat bzw. ein Jahr nach unserem Anmeldedatum).
+  //
+  // Der Test, der trägt: Ein Abo mit drei Gratismonaten kann in den ersten 90
+  // Tagen KEINE wiederkehrende Zahlung haben. Liegt für dieselbe Person schon
+  // ein `success_recurring` VOR diesem Ereignis, läuft ihr Abo bereits. Gegen
+  // die 655 bekannten Zeilen geprüft: kein einziger Fehlgriff auf ein echtes
+  // Neuabo. Die Zeile wird trotzdem geschrieben – als `art: 'verlaengerung'`,
+  // sichtbar, aber ausserhalb der Zählung (View sommer2026_neuabos).
+  let art = "neu";
+  if (ext) {
+    try {
+      const frueher = await fetch(
+        `${SB}/rest/v1/sommer2026_ingest_raw?source=eq.uscreen&event=eq.success_recurring` +
+        `&payload->>user_id=eq.${encodeURIComponent(ext)}&limit=1&select=id`,
+        { headers: H },
+      ).then((r) => (r.ok ? r.json() : []));
+      if (Array.isArray(frueher) && frueher.length) art = "verlaengerung";
+    } catch { /* im Zweifel als Abschluss zählen – der Abgleich korrigiert */ }
+  }
+
   // Aktion = jede Neuanmeldung im Aktionszeitraum (aktion_start begrenzt es zeitlich).
   // Optional schärfer über aktion_coupon / aktion_plan.
   const coupon = (pick(data, ["coupon_code", "coupon", "discount_code", "code"]) || "").toString().toLowerCase();
@@ -337,7 +368,7 @@ Deno.serve(async (req) => {
     signed_up_at: when, produkt: "gtv", sprache, format: "stream",
     // Der Store rechnet ausschliesslich in EUR (Uscreen-Währung des Shops).
     waehrung: "eur",
-    tarif, intervall, status: "neu", kanal, source: "uscreen", ext_id: ext, dedup_key: dedupKey,
+    tarif, intervall, status: "neu", art, kanal, source: "uscreen", ext_id: ext, dedup_key: dedupKey,
     kampagne: (camp ? String(camp) : "summer26_trial"),
     utm_source: src ? String(src) : null, utm_medium: med ? String(med) : null,
     utm_campaign: camp ? String(camp) : null, utm_content: cont ? String(cont) : null,
