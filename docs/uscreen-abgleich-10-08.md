@@ -115,14 +115,29 @@ noch nichts über den Oktober, aber sie ist keine Schätzung.
 547 monatlich, 79 jährlich (12,6 %). Die Einnahmen-Perspektive rechnet mit
 dieser Mischung; sie ist damit belegt statt angenommen.
 
-## Was zu tun ist
+## Umgesetzt am 10. August
 
-1. **Ingest-Regel schärfen:** Verlängerungen nicht als Neuzugang zählen
-   (Bedingung auf `Subscription Created at`).
-2. **Die 40 markieren, nicht löschen** — sie sind ein Beleg dafür, wie viele
-   Bestandsabos in der Kampagnenzeit turnusmässig verlängert wurden.
-3. **Die 11 aus dem Juli nachtragen.**
-4. **Aktionsangebot gegen Bestandsabos sperren**, damit niemand geschenkt
-   bekommt, wofür er schon zahlt.
-5. **Angebote 84317 und 84322 am 12. August zurücksetzen** — steht
-   unverändert offen.
+1. **Neue Spalte `art`** in `sommer2026_signups`: `neu` oder `verlaengerung`.
+   Die 40 sind markiert, nicht gelöscht — sie bleiben als Beleg sichtbar, wie
+   viele Bestandsabos in der Aktionszeit turnusmässig weiterliefen.
+2. **Eine View für die Regel:** `sommer2026_neuabos` zeigt nur `art = 'neu'`.
+   Alle neun öffentlichen Auswertungen lesen sie — ein Ort statt neun.
+3. **Die 11 aus dem Juli sind nachgetragen** (`source = 'manual'`, damit die
+   Herkunft der Zeile sichtbar bleibt). Zwei davon hatten schon gekündigt.
+4. **Der Webhook erkennt es künftig selbst.** Uscreens Payload unterscheidet
+   Abschluss und Verlängerung nicht — aber ein Abo mit drei Gratismonaten kann
+   in den ersten 90 Tagen keine wiederkehrende Zahlung haben. Liegt für
+   dieselbe Person schon ein `success_recurring` im Rohprotokoll, ist es eine
+   Verlängerung. Gegen die 655 bekannten Zeilen geprüft: **kein Fehlgriff auf
+   ein echtes Neuabo** (der Test findet 33 der 40 — was er findet, stimmt).
+
+**Stand danach:** goetheanum.tv **636** statt 665. Davon sind 626 gegen Uscreen
+belegt; die restlichen 10 tragen keine `ext_id` und lassen sich nicht prüfen.
+
+## Was offen bleibt
+
+- **Aktionsangebot gegen Bestandsabos sperren**, damit niemand geschenkt
+  bekommt, wofür er schon zahlt.
+- **Angebote 84317 und 84322 am 12. August zurücksetzen** — steht unverändert
+  offen und ist die einzige offene Sache mit einer Frist.
+- **Die 10 Zeilen ohne `ext_id`** — nicht prüfbar, bleiben in der Zählung.

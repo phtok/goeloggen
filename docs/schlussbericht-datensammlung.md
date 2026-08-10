@@ -90,10 +90,17 @@ keine Kontaktdaten:
    bisher nirgends verbucht — es gehört auf die Kostenseite, auch ohne
    Frankenbetrag.
 
-**Nicht holen:** Kontaktlisten auf Personenebene. Sie liessen sich ohne
-E-Mail-Adressen nicht gegen Uscreen legen, und die Frage ‹wer hat geklickt und
-doch nicht abgeschlossen› ist über Uscreen bereits beantwortet (227 abgebrochene
-Kassengänge mit Mailing-Spur).
+Dazu die AC-Kosten selbst (Tarif, Kontingent, Gebühr) — sie sind bisher
+nirgends verbucht. Fertiger Auftrag: `services/mailing-sommer2026/AC-NENNER.md`.
+
+**Nicht holen: Kontaktlisten auf Personenebene.** Sie *würden* etwas sagen —
+mit den Adressen liesse sich Klick gegen Abschluss legen, und das Dunkelfeld
+wäre gemessen statt geschätzt. Dagegen stehen zwei Dinge: Personendaten aus
+zwei Systemen zusammenzuführen ist ein eigener Vorgang mit eigener
+Rechtsgrundlage, und die Frage ‹wer hat geklickt und doch nicht abgeschlossen›
+ist über Uscreen bereits beantwortet (227 abgebrochene Kassengänge mit
+Mailing-Spur). Die Nenner je Gruppe bringen fast dieselbe Erkenntnis ohne eine
+einzige Adresse.
 
 ## Traffic der Aktionsseiten — was wir haben und was fehlt (Frage vom 10. August)
 
