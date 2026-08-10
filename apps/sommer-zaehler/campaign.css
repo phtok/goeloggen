@@ -75,6 +75,9 @@
   .tarif thead th{color:var(--muted);font-weight:600;font-size:var(--t-micro)}
   .tarif td.num,.tarif th.num{text-align:right;font-variant-numeric:tabular-nums lining-nums}
   .tarif tfoot td{font-weight:600;border-top:2px solid var(--line);border-bottom:0}
+  /* Zwei Spalten brauchen die Mindestbreite nicht. Mit ihr schob sich auf dem
+     Handy ausgerechnet die Summe hinter den rechten Rand. */
+  .tarif.schmal{min-width:0}
   .tarif .prod-h td{background:var(--soft);color:var(--gold-ink);font-weight:600}
 
   .provisorisch{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s4);line-height:1.55}
@@ -248,6 +251,10 @@
   @media (max-width:720px){ .mvform{grid-template-columns:1fr 1fr} }
   .medit{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 6px;min-height:var(--tap)}
   .medit:hover{color:var(--blue)} td.act{text-align:right;white-space:nowrap}
+  /* Löschen ist erreichbar, aber nicht die erste Farbe im Blatt: gedämpft, bis
+     der Finger darauf liegt. Rot erst beim Zeigen (--bad trägt als Schrift). */
+  .medit.weg:hover,.medit.weg:focus-visible{color:var(--bad)}
+  .medit[disabled]{opacity:.5;pointer-events:none}
   .zb-form{margin-top:var(--s5)}
   .zb-form summary{cursor:pointer;font-family:var(--font-text);font-weight:600;color:var(--ink);min-height:var(--tap);display:flex;align-items:center}
   .zb-form .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);margin-top:var(--s4)}

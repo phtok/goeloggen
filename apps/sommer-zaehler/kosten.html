@@ -28,65 +28,104 @@
     <p class="kampagne">Was die Aktion kostet – und was voraussichtlich zurückkommt. Eintragen erscheint sofort im Cockpit.</p>
   </section>
 
+  <!-- Eintragen steht oben und offen: Es ist die Handlung, für die man diese
+       Seite aufruft. Die Auswertung darunter ist das Ergebnis, nicht der Weg. -->
+  <section id="eintragen">
+    <div class="shead">
+      <h2>Kosten eintragen</h2>
+      <p>Ein Posten je Ausgabe. Alles zählt sofort in Summe, Kosten je Abo und Rückfluss – und lässt sich unten wieder löschen.</p>
+    </div>
+
+    <div class="card soft">
+      <div class="formgrid">
+
+        <label class="field span2">
+          <span class="lab">Wofür? <b>Pflicht</b></span>
+          <input type="text" id="kfPosten" placeholder="z. B. Meta-Anzeige Juli" autocomplete="off" />
+          <span class="hint" id="kfPostenHint">Kurz und wiedererkennbar – so steht es später im Bericht.</span>
+        </label>
+
+        <label class="field">
+          <span class="lab">Was für eine Kosten­art? <b>Pflicht</b></span>
+          <select id="kfKategorie">
+            <option value="stunden">Stunden intern</option>
+            <option value="social">Social Media</option>
+            <option value="druck">Druck &amp; Versand</option>
+            <option value="infrastruktur">Infrastruktur</option>
+            <option value="andere">Andere</option>
+          </select>
+          <span class="hint" id="kfKatHint"></span>
+        </label>
+
+        <!-- Franken-Feld: der Normalfall. Bei Stunden intern tritt das
+             Stunden-Paar an seine Stelle, damit niemand raten muss, was in
+             ein Feld ‹Betrag in CHF› gehört. -->
+        <label class="field" id="kfBetragFeld">
+          <span class="lab">Wie viel in Franken? <b>Pflicht</b></span>
+          <input type="number" id="kfBetrag" min="0" step="0.05" inputmode="decimal" placeholder="0.00" />
+          <span class="hint">Ganze Rechnung, ohne Währungszeichen.</span>
+        </label>
+
+        <label class="field" id="kfStundenFeld" hidden>
+          <span class="lab">Wie viele Stunden? <b>Pflicht</b></span>
+          <input type="number" id="kfStunden" min="0" step="0.25" inputmode="decimal" placeholder="z. B. 8" />
+          <span class="hint">Grobe Schätzung genügt – Viertelstunden möglich.</span>
+        </label>
+
+        <label class="field" id="kfAnsatzFeld" hidden>
+          <span class="lab">Ansatz je Stunde</span>
+          <input type="number" id="kfAnsatz" min="0" step="5" inputmode="decimal" value="80" />
+          <span class="hint">Interner Vollkosten-Ansatz in Franken. Vorschlag: 80.</span>
+        </label>
+
+        <label class="field">
+          <span class="lab">Wann?</span>
+          <input type="date" id="kfTag" />
+          <span class="hint">Datum der Rechnung oder der Arbeit. Heute ist voreingestellt.</span>
+        </label>
+
+        <label class="field">
+          <span class="lab">Dein Kürzel <b>Pflicht</b></span>
+          <input type="text" id="kfWer" placeholder="z. B. hao" autocomplete="off" maxlength="8" />
+          <span class="hint">Zwei bis vier Buchstaben. Wird für das nächste Mal gemerkt.</span>
+        </label>
+
+        <p class="hint span3" id="kfRechnung" hidden></p>
+      </div>
+
+      <div class="cfoot" style="align-items:center">
+        <button class="btn primary" type="button" id="kfBtn">Eintragen</button>
+        <span class="said" id="kfSaid" role="status" aria-live="polite"></span>
+      </div>
+    </div>
+  </section>
 
   <section id="kosten">
     <div class="shead"><h2>Kosten und Wirkung</h2><p>Summe, Kosten je Abo und Rückfluss – sobald Posten erfasst sind.</p></div>
-    <div class="tiles">
-      <div class="tile"><div class="n gold" id="costTotal">–</div><div class="l">Kosten gesamt</div><div class="s" id="costSub">Stunden, Social Media, Druck & Versand, Infrastruktur</div></div>
-      <div class="tile"><div class="n blue" id="costCpa">–</div><div class="l">Kosten je Abo</div><div class="s">sobald Kosten erfasst</div></div>
-      <div class="tile"><div class="n ok" id="costRoi">–</div><div class="l">Rückfluss je eingesetztem Franken</div><div class="s">projizierter Folgejahr-Umsatz</div></div>
+    <!-- Hausrolle .kennzahlen – die alten .tile-Klassen gab es seit dem Umbau
+         des Cockpits nicht mehr, die Zahlen standen hier unformatiert
+         untereinander. Gefunden beim Anschauen der Seite, nicht beim Rechnen. -->
+    <div class="kennzahlen">
+      <div class="kennzahl"><div class="k-label">Kosten erfasst</div><div class="k-wert" id="costTotal">–</div><div class="k-note" id="costSub">alle eingetragenen Posten</div></div>
+      <div class="kennzahl"><div class="k-label">Kosten je Abo</div><div class="k-wert" id="costCpa">–</div><div class="k-note">erfasste Kosten geteilt durch alle Anmeldungen</div></div>
+      <div class="kennzahl"><div class="k-label">Rückfluss</div><div class="k-wert" id="costRoi">–</div><div class="k-note">Folgejahr-Umsatz je eingesetztem Franken</div></div>
     </div>
+    <p class="hint" id="kostenNote" style="margin-top:var(--s4)"></p>
     <div class="tablewrap" style="margin-top:var(--s5)">
-      <table class="tarif">
+      <table class="tarif schmal">
         <thead><tr><th>Kostenart</th><th class="num">Betrag</th></tr></thead>
         <tbody id="costBody"><tr><td class="empty" colspan="2">lädt …</td></tr></tbody>
         <tfoot id="costFoot"></tfoot>
       </table>
     </div>
-    <details class="zb-form" open>
-      <summary>Einzelposten anzeigen und eintragen</summary>
-      <div class="tablewrap" style="margin-top:var(--s4)">
-        <table class="tarif">
-          <thead><tr><th>Datum</th><th>Posten</th><th>Kostenart</th><th class="num">Betrag</th></tr></thead>
-          <tbody id="kostenPostenBody"><tr><td class="empty" colspan="4">Noch keine Einzelposten erfasst.</td></tr></tbody>
-        </table>
-      </div>
-      <div class="card soft" style="margin-top:var(--s4)">
-        <div class="grid">
-          <label class="field">
-            <span class="lab">Datum</span>
-            <input type="date" id="kfTag" />
-          </label>
-          <label class="field">
-            <span class="lab">Kostenart</span>
-            <select id="kfKategorie">
-              <option value="stunden">Stunden intern</option>
-              <option value="social">Social Media</option>
-              <option value="druck">Druck &amp; Versand</option>
-              <option value="infrastruktur">Infrastruktur</option>
-              <option value="andere">Andere</option>
-            </select>
-          </label>
-          <label class="field">
-            <span class="lab">Betrag in Franken</span>
-            <input type="number" id="kfBetrag" min="0" step="0.01" placeholder="0.00" />
-          </label>
-          <label class="field span3">
-            <span class="lab">Posten</span>
-            <input type="text" id="kfPosten" placeholder="z. B. Inserat BZ Basel, halbe Seite" />
-          </label>
-          <label class="field">
-            <span class="lab">Kürzel – wer trägt ein?</span>
-            <input type="text" id="kfWer" placeholder="z. B. hao" autocomplete="off" />
-          </label>
-        </div>
-        <div style="display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;margin-top:var(--s4)">
-          <button class="btn primary" type="button" id="kfBtn">Eintragen</button>
-          <span class="said" id="kfSaid"></span>
-        </div>
-      </div>
-    </details>
-    <p class="provisorisch">Jeder Posten zählt sofort in Summe, Kosten je Abo und Rückfluss. Eintragen dürfen alle Beteiligten – das Kürzel sagt, wer.</p>
+    <div class="shead" style="margin-top:var(--s7)"><h3>Einzelposten</h3><p>Jede Zeile eine Ausgabe. Falsch eingetragenes hier löschen.</p></div>
+    <div class="tablewrap">
+      <table class="tarif">
+        <thead><tr><th>Datum</th><th>Posten</th><th>Kostenart</th><th class="num">Betrag</th><th><span class="sr-only">Löschen</span></th></tr></thead>
+        <tbody id="kostenPostenBody"><tr><td class="empty" colspan="5">Noch keine Einzelposten erfasst.</td></tr></tbody>
+      </table>
+    </div>
+    <p class="provisorisch">Eintragen und Löschen dürfen alle Beteiligten – das Kürzel sagt, wer es war.</p>
   </section>
 
 
