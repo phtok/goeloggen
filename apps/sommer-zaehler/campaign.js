@@ -31,16 +31,18 @@
     //    Wochenschrift steht höher als goetheanum.tv: Beide Angebote sind
     //    Opt-out, aber dort ist das Nein einen Klick weit weg, und die
     //    monatliche Kartenbelastung erinnert jeden Monat an die Entscheidung.
-    //    Der Frühindikator zeigt dasselbe – im Gratis-Zeitraum kündigten 24 von
-    //    573 goetheanum.tv-Abos, bei der Wochenschrift 0 von 353.
+    //    Der Frühindikator zeigt dasselbe – im Gratis-Zeitraum kündigten 23 von
+    //    636 goetheanum.tv-Abos, bei der Wochenschrift 0 von 406.
     // 2) monate – wie viele der zwölf Folgemonate ein MONATLICHES Abo im
     //    Schnitt trägt. Über 85 Prozent der Abos zahlen monatlich; wer für sie
     //    zwölf volle Monate ansetzt, rechnet mit einer Treue, die niemand
     //    zugesagt hat. Jährliche Abos zählen voll – das Jahr ist bezahlt.
-    //    Ein Monat Verweildauer ist rund CHF 5500 wert, der grösste Hebel.
-    // Herleitung und Empfindlichkeit: docs/einnahmen-perspektive-08-08.md.
+    //    Ein Monat Verweildauer ist rund CHF 6200 wert, der grösste Hebel.
+    // Herleitung und Empfindlichkeit: docs/einnahmen-perspektive-10-08.md
+    // (Stand 10. August, gerechnet auf 1042 Anmeldungen / 1019 aktive Abos nach
+    // der neuen Zählregel – die Fassung vom 8. August rechnete auf 902).
     szenarien: {
-      doc:     'docs/einnahmen-perspektive-08-08.md',
+      doc:     'docs/einnahmen-perspektive-10-08.md',
       referenz:'erwartet',                 // dieses trägt die grosse Zahl und den Rückfluss
       liste: [
         { key:'vorsichtig', name:'Vorsichtig', bleibt:{ gtv:0.35, wos:0.55 }, monate:7  },
@@ -135,6 +137,47 @@
                 'die goetheanum.tv-Anmeldungen fielen um 0,8 am Tag. Über die ganze Laufzeit rund 8 bis 12 Abos ' +
                 'aus 965 Klicks und 131 000 erreichten Personen. Damit ist sie der teuerste und der schwächste Weg der Aktion.'
     },
+    // Die NENNER des Mailings – wie viele Menschen je Gruppe angeschrieben
+    // wurden. Sie liegen allein in ActiveCampaign und sind am 10. August im
+    // zweiten AC-Lauf geholt worden (services/mailing-sommer2026/AC-NENNER.md,
+    // Auswertung docs/mailing-gruppen-10-08.md). Erst mit ihnen wird aus einer
+    // absoluten Zahl eine QUOTE – und die Quote ist das, womit die nächste
+    // Aktion geplant wird. Die Abschlüsse bleiben live aus der Attribution;
+    // hier stehen nur die Nenner, sonst rechnete das Cockpit gegen sich selbst.
+    mailingGruppen: {
+      stand: '10. August',
+      doc:   'docs/mailing-gruppen-10-08.md',
+      // Schlüssel = utm_content-Gruppe der Wellen (w1_noabo, w2_nurws …).
+      je: {
+        nurws: { angeschrieben: 922,   klicker: 193,
+                 sprachen:[['Deutsch', 377, 91], ['Englisch', 545, 102]] },
+        noabo: { angeschrieben: 28948, klicker: 4385,
+                 sprachen:[['Deutsch', 12231, 2123], ['Englisch', 16717, 2262]] },
+        nurtv: { angeschrieben: 3839,  klicker: 930,
+                 sprachen:[['Deutsch', 1858, 511], ['Englisch', 1981, 419]] }
+      }
+    },
+    // Was der Versand den Verteiler gekostet hat. Eine Kostenseite ohne
+    // Frankenbetrag – sie stand bisher in keiner Rechnung und gehört trotzdem
+    // in den Bericht: Vier Wellen auf 33 709 Adressen sind nicht gratis.
+    // Die AC-Monatsgebühr selbst liegt beim Konto-Inhaber in einem eigenen
+    // Portal und fehlt weiterhin; der Verteilschlüssel steht (Versandanteil,
+    // nicht Zeitanteil). Sobald die Gebühr da ist: als Posten «Infrastruktur»
+    // in die Kosten-Maske, dann rechnet sie überall mit.
+    verteiler: {
+      stand:        '10. August',
+      doc:          'docs/mailing-gruppen-10-08.md',
+      adressen:     33709,
+      abmeldungen:  549,     // gesamt
+      abmeldWellen: 488,     // davon aus den vier Wellen – nur diese rechnen
+                             // gegen die 33 709 Adressen; die übrigen 61 kamen
+                             // aus den Newslettern mit eigenem Verteiler.
+      hardBounces:  46,
+      softBounces:  118,
+      sendungen:    113074,  // die vier Wellen zusammen
+      kontingent:   1200000, // Sendungen im Abrechnungszeitraum
+      gebuehrOffen: true
+    },
     // «Nächste Züge» liest aus den Daten, was noch nicht gezündet hat. Das
     // trägt, solange die Aktion läuft – seit die Frist am 8. August um
     // Mitternacht ablief, schlägt es Handlungen vor, die niemand mehr tun
@@ -143,11 +186,11 @@
     // vollständig erhalten.
     zuegeZeigen: false,
     // Sind die Kosten vollständig erfasst? Solange NEIN, zeigt der Bericht
-    // «Kosten je Abo» und «Rückfluss» NICHT an. Mit CHF 310 erfassten Kosten
-    // stünde dort ein Rückfluss von 215-fach und ein Preis je Abo von 0 Franken
-    // — beides technisch richtig gerechnet und trotzdem gelogen, weil der
-    // teuerste Weg der Aktion (die bezahlte Anzeige) noch fehlt. Sobald die
-    // Beträge eingetragen sind: hier auf true stellen.
+    // «Kosten je Abo» und «Rückfluss» NICHT an. Mit den am 10. August erfassten
+    // CHF 769.70 stünde dort ein Rückfluss von 86-fach und ein Preis je Abo von
+    // 74 Rappen — beides technisch richtig gerechnet und trotzdem gelogen, weil
+    // die internen Stunden fehlen (Kategorie «Stunden intern», Hausansatz
+    // CHF 60). Sobald sie eingetragen sind: hier auf true stellen.
     // Was fehlt, steht in docs/schlussbericht-datensammlung.md.
     kostenVollstaendig: false,
     // Zeigt an, was im Cockpit noch Annahme ist und nicht gemessen. Preise und
@@ -585,6 +628,29 @@
         dh.textContent = '+ ≈' + fmt(x.du) + ' Abos ohne UTM-Spur, diesem Gebiet nach der Lesart zugeordnet (Stand ' +
           ((CONFIG.dunkel && CONFIG.dunkel.stand) || '–') + ') – Schätzung, keine Messung.';
         tief.appendChild(dh);
+      }
+      // Was der Versand den Verteiler gekostet hat – die zweite Kostenseite des
+      // Mailings, die in keiner Frankenrechnung steht und trotzdem eine ist.
+      // Sie steht hier und nicht bei den Kosten: Wer liest, was das Mailing
+      // getragen hat, soll im selben Blick sehen, was es verbraucht hat.
+      if (x.g === 'mailing' && CONFIG.verteiler){
+        var v = CONFIG.verteiler;
+        var vh = document.createElement('div'); vh.className = 'qz-hint';
+        vh.textContent = 'Was der Versand den Verteiler gekostet hat: ' + fmt(v.abmeldungen) +
+          ' Abmeldungen, davon ' + fmt(v.abmeldWellen) + ' aus den vier Wellen – ' +
+          (v.abmeldWellen / v.adressen * 100).toFixed(2).replace('.', ',') + ' % von ' + fmt(v.adressen) +
+          ' Adressen in fünf Wochen. Dazu ' +
+          fmt(v.hardBounces) + ' harte und ' + fmt(v.softBounces) + ' weiche Rückläufer. ' +
+          'Ein niedriger, normaler Wert – aber eine Kostenseite, die bisher in keiner Rechnung stand. ' +
+          'Die vier Wellen verbrauchten ' + fmt(v.sendungen) + ' Sendungen, ' +
+          (v.sendungen / v.kontingent * 100).toFixed(1).replace('.', ',') + ' % des Kontingents' +
+          (v.gebuehrOffen ? ' – die ActiveCampaign-Monatsgebühr selbst liegt beim Konto-Inhaber und fehlt noch.' : '.') +
+          ' Herleitung: ' + (v.doc || '') + '.';
+        tief.appendChild(vh);
+        var gh = document.createElement('div'); gh.className = 'qz-hint';
+        gh.textContent = 'Welche Gruppe wie reagiert hat, steht unter «Wer sind die Neuen» – seit dem 10. August mit Nennern ' +
+          'und darum als Quote statt als absoluter Zahl.';
+        tief.appendChild(gh);
       }
       if (x.g === 'social' && CONFIG.quelleSocial){
         var ql = document.createElement('div'); ql.className = 'qz-hint';
@@ -1782,14 +1848,39 @@
     var summe = Object.keys(je).reduce(function(s, k){ return s + je[k]; }, 0);
     if (!summe){ host.innerHTML = '<div class="empty">Keine Zielgruppen-Spur in den Anmeldungen.</div>'; return; }
     host.innerHTML = '';
-    SEGMENTE.forEach(function(sg){
+    var nenner = (CONFIG.mailingGruppen && CONFIG.mailingGruppen.je) || {};
+    // Unter einem Prozent auf zwei Stellen: «0,9 %» und «0,91 %» sind zwei
+    // verschiedene Aussagen, wenn die Nachbarzeile 53 % trägt.
+    var prozent = function(oben, unten){
+      if (!unten) return null;
+      var p = oben / unten * 100;
+      return p.toFixed(p < 1 ? 2 : 1).replace('.', ',') + ' %';
+    };
+    // Sortiert nach der QUOTE je Klicker, nicht nach der absoluten Zahl. Sonst
+    // steht die grösste Gruppe oben und der Bericht sagt das Gegenteil dessen,
+    // was er gemessen hat: Die kleinste Gruppe ist die stärkste.
+    var reihe = SEGMENTE.map(function(sg){
+      var g = nenner[sg.key] || {};
       var n = je[sg.key] || 0;
+      return { sg:sg, n:n, an:g.angeschrieben || 0, kl:g.klicker || 0,
+               sprachen:g.sprachen || [],
+               jeKlicker: g.klicker ? n / g.klicker : -1 };
+    }).sort(function(a, b){ return b.jeKlicker - a.jeKlicker || b.n - a.n; });
+    var bestQuote = reihe.reduce(function(m, x){ return Math.max(m, x.jeKlicker); }, 0) || 1;
+
+    reihe.forEach(function(x){
+      var sg = x.sg, n = x.n;
       var det = document.createElement('details'); det.className = 'geb';
       var sum = document.createElement('summary');
       var kopf = document.createElement('div'); kopf.className = 'geb-kopf';
       var nm = document.createElement('span'); nm.className = 'geb-name';
       var car = document.createElement('span'); car.className = 'car'; car.setAttribute('aria-hidden', 'true');
       nm.appendChild(car); nm.appendChild(document.createTextNode(sg.name));
+      // Merkzeichen wie bei den Gebieten – dieselbe Sprache für denselben Befund.
+      var z = null;
+      if (x.kl >= 100 && x.jeKlicker >= 0 && x.jeKlicker < 0.05) z = ['leck', 'viel Klick, kaum Abschluss'];
+      else if (x.jeKlicker > 0 && x.jeKlicker === bestQuote) z = ['traegt', 'wandelt am besten'];
+      if (z){ var zs = document.createElement('span'); zs.className = 'zeichen ' + z[0]; zs.textContent = z[1]; nm.appendChild(zs); }
       var wert = document.createElement('span'); wert.className = 'geb-wert';
       wert.appendChild(document.createTextNode(fmt(n)));
       var an = document.createElement('span'); an.className = 'du';
@@ -1797,26 +1888,59 @@
       wert.appendChild(an);
       kopf.appendChild(nm); kopf.appendChild(wert);
       var kette = document.createElement('div'); kette.className = 'geb-kette';
-      var s2 = document.createElement('span'); s2.textContent = sg.was; kette.appendChild(s2);
+      var teil = function(l, v){
+        var s2 = document.createElement('span');
+        s2.appendChild(document.createTextNode(l + ' '));
+        var b = document.createElement('b'); b.textContent = v; s2.appendChild(b);
+        kette.appendChild(s2);
+      };
+      if (x.an){
+        teil('angeschrieben', fmt(x.an));
+        teil('Klicker', fmt(x.kl));
+        teil('Abschlüsse', fmt(n));
+        teil('Abo je Angeschriebenem', prozent(n, x.an));
+        teil('Abo je Klicker', prozent(n, x.kl));
+      } else {
+        var s3 = document.createElement('span'); s3.textContent = sg.was; kette.appendChild(s3);
+      }
       var track = document.createElement('div'); track.className = 'track';
-      var tb = document.createElement('span'); tb.style.width = Math.max(3, Math.round(n / summe * 100)) + '%';
+      var tb = document.createElement('span');
+      // Der Balken zeigt die Quote je Klicker, nicht die Menge – sonst füllt die
+      // grösste Gruppe die Zeile und die Aussage kippt ins Gegenteil.
+      tb.style.width = Math.max(3, Math.round((x.an ? x.jeKlicker / bestQuote : n / summe) * 100)) + '%';
       track.appendChild(tb);
       sum.appendChild(kopf); sum.appendChild(kette); sum.appendChild(track);
       det.appendChild(sum);
       var tief = document.createElement('div'); tief.className = 'geb-tief';
-      ['w1', 'w2', 'w3', 'w3b'].forEach(function(w){
-        var v = (wellen[sg.key] || {})[w] || 0;
+      var zeile = function(links, rechts){
         var row = document.createElement('div'); row.className = 'motrow';
-        var mc = document.createElement('span'); mc.className = 'mc'; mc.textContent = 'Welle ' + w.slice(1);
-        var mn = document.createElement('span'); mn.className = 'mn'; mn.textContent = fmt(v) + ' Abos';
+        var mc = document.createElement('span'); mc.className = 'mc'; mc.textContent = links;
+        var mn = document.createElement('span'); mn.className = 'mn'; mn.textContent = rechts;
         row.appendChild(mc); row.appendChild(mn); tief.appendChild(row);
+      };
+      zeile(sg.was, x.an ? fmt(x.an) + ' angeschrieben' : '');
+      ['w1', 'w2', 'w3', 'w3b'].forEach(function(w){
+        zeile('Welle ' + w.slice(1), fmt((wellen[sg.key] || {})[w] || 0) + ' Abos');
       });
+      x.sprachen.forEach(function(s){
+        zeile(s[0], fmt(s[1]) + ' angeschrieben · ' + fmt(s[2]) + ' Klicker · ' + prozent(s[2], s[1]) + ' Klickrate');
+      });
+      if (x.an){
+        var q = document.createElement('div'); q.className = 'qz-hint';
+        q.textContent = 'Angeschriebene und Klicker je Gruppe stammen aus ActiveCampaign (Stand ' +
+          ((CONFIG.mailingGruppen && CONFIG.mailingGruppen.stand) || '–') + '), die Abschlüsse live aus der UTM-Spur. ' +
+          'Herleitung: ' + ((CONFIG.mailingGruppen && CONFIG.mailingGruppen.doc) || '') + '.';
+        tief.appendChild(q);
+      }
       det.appendChild(tief);
       host.appendChild(det);
     });
     if (el('segmenteNote')) el('segmenteNote').textContent =
       'Gemessen an ' + fmt(summe) + ' Anmeldungen, die eine Mailing-Spur tragen: Die Wellen führten je Zielgruppe ' +
       'einen eigenen Link (utm_content), darum ist die Gruppe hier keine Vermutung. ' +
+      'Seit dem 10. August stehen auch die Nenner – wie viele Menschen je Gruppe überhaupt angeschrieben wurden – ' +
+      'und aus der absoluten Zahl wird eine Quote. Sortiert und balkenlang ist darum die Quote je Klicker, nicht die Menge: ' +
+      'Die kleinste Gruppe ist die stärkste. ' +
       'Anmeldungen ohne Spur sind nicht enthalten – sie lassen sich keiner Gruppe zuordnen.';
   }
 

@@ -1,6 +1,6 @@
 # Schlussbericht Sommer-Aktion — was noch einzusammeln ist
 
-Stand 9. August 2026. Diese Liste ist zum Abhaken: Was hier steht, kann die
+Stand 10. August 2026, die Aktion endete am 11. August. Diese Liste ist zum Abhaken: Was hier steht, kann die
 Datenbank **nicht** selbst holen. Alles Übrige — Anmeldungen, Ströme, Tarife,
 Währungen, Herkunftsland, Kurzlink-Klicks, Selbstauskünfte — liegt bereits
 vollständig im Backend und fliesst ohne Zutun in den Bericht.
@@ -83,6 +83,29 @@ bisher unverbuchte Kostenseite, und zwei Fehler in der Mail-Strecke.
 **Offen bleibt allein die AC-Monatsgebühr** — die Abrechnung liegt beim
 Konto-Inhaber in einem eigenen Portal und war nicht einsehbar. Der
 Verteilschlüssel steht: Die vier Wellen verbrauchten 9,4 % des Sendekontingents.
+
+## Erledigt am 10. August: Einnahmen-Perspektive und Cockpit nachgezogen
+
+Die Zählregel hat die Basis verschoben, darum ist beides neu gerechnet und
+neu geschrieben:
+
+- **`docs/einnahmen-perspektive-10-08.md`** löst die Fassung vom 8. August ab.
+  Basis jetzt **1 042 Anmeldungen, 1 019 aktiv** (vorher 902). Erwartet
+  **CHF 65 877** statt 58 497, Decke 149 306, ein Monat Verweildauer rund
+  CHF 6 200 statt 5 500. **Quoten und Monats-Faktoren sind unverändert** — es
+  hat sich allein die Menge geändert. `CONFIG.szenarien.doc` zeigt auf die
+  neue Fassung.
+- **Die Nenner je Gruppe stehen im Cockpit** (`CONFIG.mailingGruppen`).
+  Abschnitt «Wer sind die Neuen» sortiert die drei Gruppen jetzt nach der
+  Quote je Klicker statt nach der Menge und zeigt je Gruppe angeschrieben,
+  Klicker, Abo je Angeschriebenem, Abo je Klicker sowie die Sprachzeilen.
+- **Was der Versand den Verteiler gekostet hat** (`CONFIG.verteiler`) steht
+  im Abschnitt «Was hat funktioniert» beim Gebiet Mailing: 549 Abmeldungen,
+  46 harte und 118 weiche Rückläufer, 9,4 % des Sendekontingents.
+- **Abschnitt «Schlüsse und Perspektiven» neu geschrieben.** Vier neue
+  Absätze aus der Gruppen-Auswertung; die Aussage «Quer-Angebot rund
+  dreimal so oft» ist korrigiert — gemessen ist es das **Zwölffache**
+  (11,2 % gegen 0,91 % je Angeschriebenem).
 
 ## Noch einmal ActiveCampaign — zwei Sorten Zahlen, die nur dort liegen
 
@@ -200,8 +223,24 @@ sowie die Uscreen-Gebühr je Abo und Monat. Sobald sie vorliegen, bekommt das
 Cockpit eine eigene Struktur dafür (`CONFIG.stueckkosten` je Strom) — vorher
 nicht: Eine leere Struktur mit Nullen darin sähe aus wie «kostet nichts».
 
-## Zwei offene Fragen, keine Zahlen
+## Offene Fragen, keine Zahlen
 
+- **Warum die Gruppe «Sehen» so schlecht wandelte.** Sie hatte die höchste
+  Klickrate aller Gruppen (24,2 %) und die schlechteste Umwandlung (0,91 %
+  je Angeschriebenem, 3,8 % je Klicker). Drei Ursachen sind ausgeschlossen —
+  Formular, Papierformat, Ablenkungsklick (Nachtrag in
+  `docs/mailing-gruppen-10-08.md`). **Offen ist genau eine Prüfung:** Betreff
+  und ersten Absatz der `S26 · Sehen`-Mails in ActiveCampaign ansehen — lesen
+  zahlende TV-Kunden dort ein Angebot für ihr **eigenes**, schon bezahltes
+  Abo statt eines für die Wochenschrift? Wäre es so, wäre die Gruppe nicht
+  falsch adressiert, sondern falsch angesprochen — ein Textfehler, kein
+  Zielgruppenfehler, und für die nächste Aktion billig zu beheben. Fünf
+  Minuten Arbeit, und die Ursachenfrage ist beantwortet.
+- **Die 268 Kassenabbrecher anschreiben** — sie sind bei Uscreen samt
+  Abbruchzeitpunkt bekannt, die Abandoned-Checkout-Mail bringt Uscreen selbst
+  mit und war nicht scharf geschaltet. Der billigste ungenutzte Hebel der
+  Aktion; er verträgt aber keine Wartezeit (Herleitung und die Grenze zum
+  Wortbruch: `docs/mailing-gruppen-10-08.md`).
 - **Inserate VaG und RSV** (13. Juli, Notiz «Bei Bruno Zweifel angefragt») —
   sind sie überhaupt erschienen? Wenn nein, gehören die Zeilen als
   «nicht erschienen» in die Notiz, sonst zählen sie als stumme Wege gegen die
@@ -218,14 +257,24 @@ nicht: Eine leere Struktur mit Nullen darin sähe aus wie «kostet nichts».
 Die **Bleibe-Quote**. Die Aktion ist «3 Monate gratis»; die erste Kohorte
 entscheidet frühestens Anfang Oktober. Bis dahin bleibt der Folgejahr-Umsatz
 eine Rechnung in drei Szenarien
-(`docs/einnahmen-perspektive-08-08.md`) — der Schlussbericht sollte das so
+(`docs/einnahmen-perspektive-10-08.md`) — der Schlussbericht sollte das so
 sagen und die Zahl nicht härter machen, als sie ist.
 
 ## Reihenfolge
 
 1. ~~Mail-Wellen (4 Einträge)~~ — **erledigt 9. August**
 2. ~~Newsletter (4 von 5)~~ — **erledigt 9. August**, AGiD offen
-3. **Meta-Kosten (1 Eintrag)** — jetzt der grösste Hebel: Er macht den
-   teuersten Weg der Aktion bewertbar
-4. Social (6 Einträge)
-5. Stunden, Flyer, die zwei offenen Fragen, AGiD klären
+3. ~~Meta- und YouTube-Kosten~~ — **erledigt 10. August** (CHF 460)
+4. ~~Uscreen-Vollabgleich und Zählregel~~ — **erledigt 10. August**
+5. ~~Nenner je Gruppe (zweiter AC-Lauf)~~ — **erledigt 10. August**
+6. ~~Einnahmen-Perspektive neu rechnen, Erkenntnisse ins Cockpit~~ —
+   **erledigt 10. August**
+7. **Interne Stunden eintragen** — der eine Eintrag, der noch fehlt.
+   Kategorie «Stunden intern», Ansatz CHF 60 (voreingestellt), grobe
+   Schätzung genügt. Danach `CONFIG.kostenVollstaendig` auf `true` stellen —
+   erst dann zeigt der Bericht Kosten je Abo und Rückfluss.
+8. Social (6 Einträge aus Metricool), Flyer-Reichweite
+9. AC-Monatsgebühr beim Konto-Inhaber erfragen (Verteilschlüssel steht:
+   9,4 % des Sendekontingents, als Posten «Infrastruktur» eintragen)
+10. Die offenen Fragen: Sehen-Gruppe, Inserate VaG/RSV, Zoho-Abgleich,
+    AGiD-Newsletter
