@@ -1,5 +1,10 @@
 # Einnahmen-Perspektive der Sommer-Aktion — drei Szenarien, Stand 8. August 2026
 
+> **Überholt.** Die geltende Fassung ist
+> `docs/einnahmen-perspektive-10-08.md` (Schlussstand 1 042 Anmeldungen /
+> 1 019 aktive Abos nach der neuen Zählregel). Dieses Dokument rechnet noch
+> auf 902 aktive Abos und bleibt als Beleg des Zwischenstands stehen.
+
 Was die Aktion im **Folgejahr** einbringt, wenn die Gratis-Zeit vorbei ist.
 Gerechnet auf dem Stand vom 8. August, dem letzten Fristtag: **926
 Anmeldungen, davon 902 aktiv** (24 bereits gekündigt). Die Aktion läuft still
