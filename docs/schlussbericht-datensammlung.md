@@ -62,6 +62,39 @@ ein Abo (11,8 %); aus 1 000 zugestellten Mails knapp sechs.
 Juli 2026 keine AGiD-Kampagne. Die Zeile im Protokoll trägt den Befund als
 Notiz und zählt bis zur Klärung als geplant, nicht als ausgespielt.
 
+## Erledigt am 10. August: Abgleich goetheanum.tv gegen Uscreen
+
+Vollexport aller Konten, zeilenweise gejoint. Befund und Folgen stehen in
+`docs/uscreen-abgleich-10-08.md`. Kurz: Uscreen kennt **626** neue Abos im
+Fenster, wir zählen 665 — 40 unserer Zeilen sind Verlängerungen, 11 echte
+Abos aus dem Juli fehlen uns. Die Gratismonate sind bei 620 von 626 gebucht;
+der Verlust liegt nicht bei der Frist, sondern an der Kasse (268 Abbrüche
+ohne Rückkehr).
+
+## Noch einmal ActiveCampaign — zwei Sorten Zahlen, die nur dort liegen
+
+Der erste Lauf hat Summen je Welle geholt. Für den Bericht fehlen zwei Dinge,
+die keine andere Quelle hat. Beides sind **Summen, keine Listen** — es braucht
+keine Kontaktdaten:
+
+1. **Die Nenner je Gruppe.** Bisher haben wir jede Welle über alle sechs
+   Automatisierungen zusammengezählt. Gebraucht wird die Aufschlüsselung
+   **je Automatisierung** (`Lesen`, `Sehen`, `Beides` × DE/EN) mal **je Welle**
+   — 24 Zeilen mit zugestellt, geöffnet, geklickt. Erst damit lässt sich
+   rechnen, welche **Gruppe** wie gut konvertiert hat: Unsere Abschlüsse
+   tragen die Gruppe im `utm_content` (`_noabo`, `_nurws`, `_nurtv`), aber
+   ohne den Nenner ist das nur eine absolute Zahl. Die Quote je Gruppe ist die
+   Zahl, mit der die nächste Aktion geplant wird.
+2. **Abmeldungen und Bounces je Welle.** Vier Wellen auf rund 33 000 Adressen
+   sind nicht gratis. Was die Aktion an Verteilerqualität gekostet hat, ist
+   bisher nirgends verbucht — es gehört auf die Kostenseite, auch ohne
+   Frankenbetrag.
+
+**Nicht holen:** Kontaktlisten auf Personenebene. Sie liessen sich ohne
+E-Mail-Adressen nicht gegen Uscreen legen, und die Frage ‹wer hat geklickt und
+doch nicht abgeschlossen› ist über Uscreen bereits beantwortet (227 abgebrochene
+Kassengänge mit Mailing-Spur).
+
 ## Social (Metricool)
 
 Sechs Einträge, alle ohne vollständige Zahlen. Die Kampagnen-Auswertung liegt
