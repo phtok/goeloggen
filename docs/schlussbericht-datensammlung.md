@@ -147,7 +147,10 @@ fehlt, hält Kosten je Abo und Rückfluss weiterhin leer.
 - **Interne Stunden** — Kategorie **Stunden intern**, grobe Schätzung genügt.
   Ohne sie liest sich die Aktion billiger, als sie war. Die Maske fragt jetzt
   nach **Stunden und Ansatz** und rechnet die Franken selbst; eingetragen
-  werden also 8 h zu 80, nicht 640.
+  werden also 8 Stunden zu 60, nicht 480. **Der Hausansatz ist CHF 60 je
+  Stunde** (festgelegt am 10. August 2026) und steht in der Maske
+  voreingestellt — er ist damit über alle Posten hinweg derselbe, sonst
+  vergleicht der Bericht Stunden, die verschieden viel wert sind.
 - **Flyer und Stand** — Druck ist erfasst; fehlen noch Reichweite für «Auslage
   Flyer Empfang» und «Auslage Flyer Buchhandlung» (10. Juli). Wo nichts
   gemessen ist: verteilte Stückzahl eintragen und das in der Notiz sagen.
