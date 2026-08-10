@@ -62,6 +62,65 @@ ein Abo (11,8 %); aus 1 000 zugestellten Mails knapp sechs.
 Juli 2026 keine AGiD-Kampagne. Die Zeile im Protokoll trägt den Befund als
 Notiz und zählt bis zur Klärung als geplant, nicht als ausgespielt.
 
+## Erledigt am 10. August: Abgleich goetheanum.tv gegen Uscreen
+
+Vollexport aller Konten, zeilenweise gejoint. Befund und Folgen stehen in
+`docs/uscreen-abgleich-10-08.md`. Kurz: Uscreen kennt **626** neue Abos im
+Fenster, wir zählen 665 — 40 unserer Zeilen sind Verlängerungen, 11 echte
+Abos aus dem Juli fehlen uns. Die Gratismonate sind bei 620 von 626 gebucht;
+der Verlust liegt nicht bei der Frist, sondern an der Kasse (268 Abbrüche
+ohne Rückkehr).
+
+## Noch einmal ActiveCampaign — zwei Sorten Zahlen, die nur dort liegen
+
+Der erste Lauf hat Summen je Welle geholt. Für den Bericht fehlen zwei Dinge,
+die keine andere Quelle hat. Beides sind **Summen, keine Listen** — es braucht
+keine Kontaktdaten:
+
+1. **Die Nenner je Gruppe.** Bisher haben wir jede Welle über alle sechs
+   Automatisierungen zusammengezählt. Gebraucht wird die Aufschlüsselung
+   **je Automatisierung** (`Lesen`, `Sehen`, `Beides` × DE/EN) mal **je Welle**
+   — 24 Zeilen mit zugestellt, geöffnet, geklickt. Erst damit lässt sich
+   rechnen, welche **Gruppe** wie gut konvertiert hat: Unsere Abschlüsse
+   tragen die Gruppe im `utm_content` (`_noabo`, `_nurws`, `_nurtv`), aber
+   ohne den Nenner ist das nur eine absolute Zahl. Die Quote je Gruppe ist die
+   Zahl, mit der die nächste Aktion geplant wird.
+2. **Abmeldungen und Bounces je Welle.** Vier Wellen auf rund 33 000 Adressen
+   sind nicht gratis. Was die Aktion an Verteilerqualität gekostet hat, ist
+   bisher nirgends verbucht — es gehört auf die Kostenseite, auch ohne
+   Frankenbetrag.
+
+**Nicht holen:** Kontaktlisten auf Personenebene. Sie liessen sich ohne
+E-Mail-Adressen nicht gegen Uscreen legen, und die Frage ‹wer hat geklickt und
+doch nicht abgeschlossen› ist über Uscreen bereits beantwortet (227 abgebrochene
+Kassengänge mit Mailing-Spur).
+
+## Traffic der Aktionsseiten — was wir haben und was fehlt (Frage vom 10. August)
+
+**Die Aktionsseiten selbst zählen nicht mit.** Auf
+`global-sommer2026.goetheanum.online`, `ws-sommer2026.dasgoetheanum.com` und
+`tv-sommer2026.goetheanum.tv` läuft keine Reichweiten-Messung — es gibt also
+keine Seitenaufrufe, keine Verweildauer, keine Absprungrate. Das ist die
+grösste blinde Stelle der Auswertung.
+
+**Der Weg dorthin ist trotzdem gemessen**, an der Quelle statt am Ziel:
+
+| Was | Zahl | Woher |
+|---|---:|---|
+| Klicks auf Aktionslinks, alle Aktivitäten zusammen | 10 589 | Aktivitäten-Protokoll (AC, Meta, YouTube) |
+| davon Klicker der vier Mail-Wellen | 5 433 | ActiveCampaign |
+| Klicks auf die Kurzlinks (Print, QR, Social) | 2 333 | eigene Weiterleitung |
+| neue Konten auf goetheanum.tv | 874 | Uscreen |
+| abgeschlossene Abos goetheanum.tv | 626 | Uscreen |
+
+Aus 10 589 Klicks wurden 874 Konten und 626 Abos. Die Kurzlink-Klicks je Ziel:
+Übersicht 1 529 · goetheanum.tv 401 · Wochenschrift 363.
+
+**Für die nächste Aktion:** ein leichtgewichtiger Zähler auf den Aktionsseiten
+(dieselbe Weiterleitung, die die Kurzlinks zählt, kann das) — damit die Lücke
+zwischen ‹Klick im Mail› und ‹Konto angelegt› sichtbar wird. Heute ist sie eine
+Differenz, die wir ausrechnen, statt einer Zahl, die wir messen.
+
 ## Social (Metricool)
 
 Sechs Einträge, alle ohne vollständige Zahlen. Die Kampagnen-Auswertung liegt
@@ -79,16 +138,19 @@ und Quellen».
 
 ## Geld (Meta Ads Manager und eigene Aufzeichnung)
 
-In der Datenbank stehen bisher **nur CHF 309.70 Druck**. Damit sind Kosten je
-Abo und Rückfluss auf der Kosten-Seite zu günstig — und ausgerechnet der
-teuerste Weg fehlt.
+Stand 10. August: **CHF 769.70** erfasst — Druck 309.70, Meta-Anzeige 423,
+YouTube-Anzeige 37. Damit ist der teuerste Weg endlich bewertbar. Was noch
+fehlt, hält Kosten je Abo und Rückfluss weiterhin leer.
 
-- **Meta-Anzeige** — Betrag aus dem Ads Manager (Rechnung Juli), Kategorie
-  **Social Media**. DE und EN dürfen zusammengefasst werden. Reichweite und
-  Klicks der Anzeige stehen bereits (62 812 / 353 und 68 343 / 612). Ist die
-  Zahl da, steht neben dem Befund «≈9 Abos» endlich ein Preis.
+- ~~**Meta-Anzeige**~~ — **erledigt 10. August** (CHF 423). Reichweite und
+  Klicks standen bereits (62 812 / 353 und 68 343 / 612).
 - **Interne Stunden** — Kategorie **Stunden intern**, grobe Schätzung genügt.
-  Ohne sie liest sich die Aktion billiger, als sie war.
+  Ohne sie liest sich die Aktion billiger, als sie war. Die Maske fragt jetzt
+  nach **Stunden und Ansatz** und rechnet die Franken selbst; eingetragen
+  werden also 8 Stunden zu 60, nicht 480. **Der Hausansatz ist CHF 60 je
+  Stunde** (festgelegt am 10. August 2026) und steht in der Maske
+  voreingestellt — er ist damit über alle Posten hinweg derselbe, sonst
+  vergleicht der Bericht Stunden, die verschieden viel wert sind.
 - **Flyer und Stand** — Druck ist erfasst; fehlen noch Reichweite für «Auslage
   Flyer Empfang» und «Auslage Flyer Buchhandlung» (10. Juli). Wo nichts
   gemessen ist: verteilte Stückzahl eintragen und das in der Notiz sagen.

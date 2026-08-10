@@ -16,6 +16,47 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 10. August 2026 — eine Maske, die sagt, was sie will (1.13.0)
+
+**Was.** Vier Grundformen für Eingabemasken kommen ins Fundament:
+**`.formgrid`** (drei Spalten, auf schmalem Blatt eine, mit `.span2`/`.span3`),
+**`.said`** als Rückmelde-Zeile mit `.gut`/`.schlecht`, **`.field>.hint`** als
+Beisatz direkt am Feld — und **`.btn[disabled]`**, damit ein Knopf keinen
+zweiten Klick annimmt, solange der erste noch schreibt. Dazu eine Zeile, die
+lange gefehlt hat: **`[hidden]{display:none !important}`**.
+
+**Warum.** Das Team hat die Kosten-Maske benutzt und drei Dinge gemeldet, die
+alle dasselbe Muster haben — *die Maske erklärt sich nicht*:
+
+1. «Wo sollen die internen Stunden eingetragen sein? Was machen wir unter
+   Betrag in CHF?» Die Maske fragte bei der Kostenart «Stunden intern» nach
+   einem Franken-Betrag und liess den Menschen die Umrechnung machen. **Eine
+   Maske, die nach dem Ergebnis fragt statt nach dem, was man weiss, ist eine
+   Rechenaufgabe.** Jetzt fragt sie nach Stunden und Ansatz und schreibt das
+   Ergebnis hin, bevor geklickt wird.
+2. Ein Doppelklick auf «Eintragen» hat den Posten **zweimal** angelegt — die
+   Zeile musste von Hand aus der Datenbank geholt werden. Der Knopf war nie
+   gesperrt; keine Maske im Haus hatte dafür eine Form.
+3. Es gab **keinen Weg zurück**. Wer sich vertippt, muss jemanden bitten. Ein
+   offener Schreibweg ohne offenen Löschweg macht aus jedem Tippfehler eine
+   Anfrage.
+
+**`[hidden]` war die stille Falle.** Das Franken-Feld sollte im Stunden-Modus
+verschwinden, blieb aber stehen: `.field{display:grid}` schlägt das schwache
+`[hidden]` des Browsers. Derselbe Fehlertyp wie die Löcher in der Skala vom
+Vortag — das Fundament setzt `display` auf Klassen und muss darum auch sagen,
+wie Verstecken gewinnt. **Gefunden beim Anschauen der Seite, nicht beim
+Rechnen**; im selben Blick fiel auf, dass die Kosten-Seite seit dem Cockpit-Umbau
+noch `.tile` benutzte — eine Klasse, die es nicht mehr gab. Ihre drei Zahlen
+standen seither unformatiert untereinander, und keine Maschine hat es gesehen.
+
+**Wirkung.** `base.css` (`.formgrid`, `.said`, `.field>.hint`,
+`.btn[disabled]`, `[hidden]`), `contract.json` (Version). Die Kosten-Seite
+nutzt die Grundformen und die Hausrolle `.kennzahl`; die Aktivitäten-Maske
+bekam dieselbe Klick-Sperre. Backend: Stunden bleiben als Stunden erhalten
+(`stunden`, `ansatz`), eine Zwei-Minuten-Sperre gegen den doppelten Klick und
+ein Löschweg, der so offen ist wie der Schreibweg.
+
 ## 9. August 2026 — die Skala hatte Löcher, und CSS schwieg darüber (1.12.0)
 
 **Was.** Die Abstands-Skala ist lückenlos geworden (`--s5:20px`, `--s7:28px`),

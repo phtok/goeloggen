@@ -161,6 +161,12 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .btn.primary:hover{filter:brightness(1.08)}
 .btn.ghost{color:var(--muted);background:none}
 .btn.ok{background:var(--ok);border-color:var(--ok);color:var(--on-accent)}
+/* Ausgeschaltet, solange eine Handlung läuft: Der Knopf nimmt keinen zweiten
+   Klick mehr an. Ohne das entstehen doppelte Einträge – einmal passiert und
+   von Hand aus der Datenbank geholt (Kosten, 10. August 2026). Kontrast ist
+   hier ausgenommen (WCAG 1.4.3 nimmt inaktive Bedienelemente aus); dass der
+   Knopf wartet, sagt zusätzlich seine Beschriftung. */
+.btn[disabled]{cursor:default;pointer-events:none;opacity:.6}
 
 /* --- Segmentierte Auswahl (Pillen) = WAHL ---------------------------------- */
 /* Anwahl = Gold/Weiss – der Hausfarbklang für Auswahl. Kapselform, kein Pfeil. */
@@ -184,6 +190,12 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 
 /* --- Formularfelder -------------------------------------------------------- */
 /* 16px+ verhindert das automatische Zoomen beim Fokus auf iOS. Lesetext-Schrift. */
+/* [hidden] muss stärker sein als jede display-Regel des Hauses. Sonst blieb ein
+   ausgeblendetes Feld stehen, weil .field{display:grid} das schwache
+   UA-[hidden] überschreibt – genau so stand ‹Betrag in Franken› neben den
+   Stunden, die es ersetzen sollte (gefunden 10. August 2026). */
+[hidden]{display:none !important}
+
 .field{display:grid;gap:var(--s1)}
 .field>.lab{font-size:var(--t-small);color:var(--muted);letter-spacing:.01em}
 .field input,.field textarea,.field select{
@@ -212,6 +224,26 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .field input::placeholder,.field textarea::placeholder{color:var(--muted);opacity:.7}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
 .field input.invalid{border-color:var(--bad);box-shadow:0 0 0 3px color-mix(in srgb,var(--bad) 20%,transparent)}
+/* Beisatz unter einem Feld: sagt in einem Satz, was hineingehört. Wo eine
+   Maske erklärt werden muss, gehört die Erklärung ans Feld – nicht in eine
+   Legende weiter unten, die niemand liest. */
+.field>.hint{margin:2px 0 0}
+
+/* --- Eingabe-Raster -------------------------------------------------------- */
+/* Drei Spalten auf breitem Blatt, eine auf schmalem. Jede Eingabemaske im Haus
+   benutzt dieses Raster – vorher hatte jede Seite ihr eigenes. */
+.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4)}
+.formgrid>.span2{grid-column:span 2}
+.formgrid>.span3{grid-column:1 / -1}
+@media(max-width:640px){
+  .formgrid{grid-template-columns:1fr}
+  .formgrid>.span2,.formgrid>.span3{grid-column:auto}
+}
+/* Zeile unter dem Knopf: Ist die Handlung angekommen? Die Farbe kommt aus der
+   Klasse, nicht aus dem Skript – sonst bleibt sie im Dunkelmodus stehen. */
+.said{font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;color:var(--muted)}
+.said.gut{color:var(--ok-ink)}
+.said.schlecht{color:var(--bad)}
 
 /* --- Fusszeile ------------------------------------------------------------- */
 .ds-footer{border-top:1px solid var(--line);padding:var(--s8) 0 60px;color:var(--muted);font-size:var(--t-small);margin-top:var(--s8)}

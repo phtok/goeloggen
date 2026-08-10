@@ -1074,10 +1074,14 @@
   // erscheint sofort überall. Bearbeiten lädt die Zeile über den Knopf im Protokoll.
   if (el('mfTag')) el('mfTag').value = new Date().toISOString().slice(0, 10);
   if (el('mfBtn')) el('mfBtn').addEventListener('click', function(){
-    var sagen = function(msg, bad){ var s = el('mfSaid'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; };
+    var sagen = function(msg, bad){ meldung('mfSaid', msg, bad); };
     var titel = (el('mfTitel').value || '').trim();
     var wer = (el('mfWer').value || '').trim();
     if (!el('mfTag').value || !titel || !wer){ sagen('Datum, Aktivität und Kürzel sind Pflicht.', true); return; }
+    // Wie bei den Kosten: kein zweiter Klick, solange der erste schreibt.
+    var mfB = el('mfBtn'), mfText = mfB.textContent;
+    mfB.disabled = true; mfB.textContent = 'Wird gespeichert …';
+    var mfFrei = function(){ mfB.disabled = false; mfB.textContent = mfText; };
     var zahl = function(id){ var e = el(id); return (e && e.value !== '') ? Math.max(0, Math.round(Number(e.value) || 0)) : null; };
     var istEdit = mfEditId != null;
     var notiz = el('mfNotiz') ? (el('mfNotiz').value || '').trim() : '';
@@ -1095,6 +1099,7 @@
       body: JSON.stringify(params)
     }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(ergebnis){
+        mfFrei();
         if (ergebnis === 'ok'){
           sagen(istEdit ? 'Geändert.' : 'Eingetragen – erscheint im Zeitband, im Protokoll und in der Reichweite.');
           mfZuruecksetzen();
@@ -1110,7 +1115,7 @@
             .catch(function(){});
         } else { sagen('Datum und Aktivität prüfen.', true); }
       })
-      .catch(function(){ sagen(istEdit ? 'Ändern nicht erreichbar.' : 'Eintragen nicht erreichbar.', true); });
+      .catch(function(){ mfFrei(); sagen(istEdit ? 'Ändern nicht erreichbar.' : 'Eintragen nicht erreichbar.', true); });
   });
 
   function renderMassnahmen(rows){
@@ -1355,7 +1360,7 @@
     }
     if (el('kostenNote')) el('kostenNote').textContent = voll
       ? 'Alle bekannten Kosten sind erfasst; Kosten je Abo und Rückfluss rechnen darauf.'
-      : 'Kosten je Abo und Rückfluss bleiben leer, solange die Kosten unvollständig sind — vor allem der Betrag der bezahlten Anzeige fehlt. '
+      : 'Kosten je Abo und Rückfluss bleiben leer, solange die Kosten unvollständig sind — die bezahlten Anzeigen stehen seit dem 10. August drin, die internen Stunden fehlen noch. '
         + 'Gerechnet würden daraus sonst Zahlen, die technisch stimmen und trotzdem täuschen. Was fehlt, steht in docs/schlussbericht-datensammlung.md; eingetragen wird es unter Kosten.';
 
     var body = el('costBody'); body.innerHTML = '';
@@ -1373,42 +1378,185 @@
 
     var pb = el('kostenPostenBody'); pb.innerHTML = '';
     if (!posten.length){
-      pb.innerHTML = '<tr><td class="empty" colspan="4">Noch keine Einzelposten erfasst.</td></tr>';
+      pb.innerHTML = '<tr><td class="empty" colspan="5">Noch keine Einzelposten erfasst.</td></tr>';
     } else {
       posten.forEach(function(k){
         var tr = document.createElement('tr');
-        tr.innerHTML = '<td></td><td></td><td></td><td class="num"></td>';
+        tr.innerHTML = '<td></td><td></td><td></td><td class="num"></td><td class="act"></td>';
         tr.children[0].textContent = k.tag ? new Date(k.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) : '–';
         tr.children[1].textContent = (k.posten || '') + (k.ersteller ? ' · ' + k.ersteller : '');
+        // Stunden bleiben sichtbar, nicht nur ihr Franken-Wert: «8 h × CHF 80»
+        // sagt im Bericht mehr als «CHF 640».
+        if (k.stunden != null){
+          var sn = document.createElement('span'); sn.className = 'mnote';
+          sn.textContent = zahlKurz(k.stunden) + ' h' + (k.ansatz != null ? ' × ' + geld(k.ansatz) : '');
+          tr.children[1].appendChild(sn);
+        }
         tr.children[2].textContent = KAT_LABEL[k.kategorie] || k.kategorie || '';
         tr.children[3].textContent = geld(k.betrag);
+        if (el('kfBtn')){   // Löschen nur dort, wo auch eingetragen wird
+          var weg = document.createElement('button');
+          weg.type = 'button'; weg.className = 'medit weg';
+          weg.textContent = 'Löschen';
+          weg.setAttribute('aria-label', 'Posten ' + (k.posten || '') + ' löschen');
+          weg.addEventListener('click', function(){ kostenLoeschen(k, weg); });
+          tr.children[4].appendChild(weg);
+        }
         pb.appendChild(tr);
       });
     }
   }
 
-  // Kosten eintragen: offener Schreibweg mit Pflicht-Kuerzel.
-  if (el('kfTag')) el('kfTag').value = new Date().toISOString().slice(0, 10);
-  if (el('kfBtn')) el('kfBtn').addEventListener('click', function(){
-    var sagen = function(msg, bad){ var s = el('kfSaid'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; };
-    var posten = (el('kfPosten').value || '').trim();
-    var wer = (el('kfWer').value || '').trim();
-    var betrag = el('kfBetrag').value;
-    if (!el('kfTag').value || !posten || !wer || betrag === '' || Number(betrag) < 0){ sagen('Datum, Posten, Betrag und Kürzel sind Pflicht.', true); return; }
-    fetch(SB + '/rest/v1/rpc/sommer2026_kosten_eintragen', {
+  // Zahl ohne unnötige Nullen: 8 statt 8.00, 2,5 statt 2.50.
+  function zahlKurz(n){
+    var z = Number(n) || 0;
+    return (Math.round(z * 100) / 100).toString().replace('.', ',');
+  }
+
+  // Löschen ist so offen wie Eintragen – wer einen Posten anlegen darf, muss
+  // den eigenen Fehler wegnehmen können, ohne jemanden zu fragen. Genau das
+  // hat am 10. August gefehlt: Ein Doppelklick landete zweimal in der Summe
+  // und musste von Hand aus der Datenbank geholt werden.
+  function kostenLoeschen(k, btn){
+    var sagen = function(msg, bad){ meldung('kfSaid', msg, bad); };
+    var wer = kfKuerzel();
+    if (!wer){ sagen('Zuerst das eigene Kürzel oben eintragen – dann löschen.', true); if (el('kfWer')) el('kfWer').focus(); return; }
+    if (!window.confirm('Posten «' + (k.posten || '') + '» über ' + geld(k.betrag) + ' wirklich löschen?')) return;
+    btn.disabled = true;
+    fetch(SB + '/rest/v1/rpc/sommer2026_kosten_loeschen', {
       method: 'POST',
       headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
-      body: JSON.stringify({ p_tag: el('kfTag').value, p_posten: posten, p_kategorie: el('kfKategorie').value, p_betrag: Number(betrag), p_ersteller: wer })
+      body: JSON.stringify({ p_id: k.id, p_ersteller: wer })
     }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(ergebnis){
         if (ergebnis === 'ok'){
-          sagen('Eingetragen – Summe, Kosten je Abo und Rückfluss sind aktualisiert.');
-          el('kfPosten').value = ''; el('kfBetrag').value = '';
-          rpc('sommer2026_kosten_public').then(function(rows){ renderKosten(lastTotal, lastRevenue, rows); }).catch(function(){});
-        } else { sagen('Angaben prüfen.', true); }
+          sagen('Gelöscht: ' + (k.posten || '') + ' · ' + geld(k.betrag) + '.');
+          kostenNeuLaden();
+        } else { btn.disabled = false; sagen('Der Posten war schon weg.', true); }
       })
-      .catch(function(){ sagen('Eintragen nicht erreichbar.', true); });
-  });
+      .catch(function(){ btn.disabled = false; sagen('Löschen nicht erreichbar.', true); });
+  }
+
+  function kostenNeuLaden(){
+    return rpc('sommer2026_kosten_public')
+      .then(function(rows){ renderKosten(lastTotal, lastRevenue, rows); })
+      .catch(function(){});
+  }
+
+  // Rückmeldung: Farbe über die Klasse, nicht über style – sonst bleibt Grün
+  // im Dunkelmodus stehen und fällt unter den Kontrast (B05).
+  function meldung(id, text, schlecht){
+    var s = el(id); if (!s) return;
+    s.textContent = text;
+    s.className = 'said ' + (schlecht ? 'schlecht' : 'gut');
+  }
+
+  // ── Kosten eintragen ───────────────────────────────────────────────────────
+  // Offener Schreibweg mit Pflicht-Kürzel. Die Maske sagt je Kostenart, was
+  // hineingehört: Bei ‹Stunden intern› fragte sie bisher nach einem «Betrag in
+  // Franken» – und niemand wusste, ob Stunden oder Franken gemeint sind
+  // (Rückmeldung Team, 10. August). Jetzt fragt sie nach Stunden und rechnet.
+  var KAT_HINWEIS = {
+    stunden:        'Eigene Arbeitszeit. Stunden und Ansatz eintragen – die Franken rechnet das Werkzeug.',
+    social:         'Bezahlte Anzeigen und was ihre Gestaltung gekostet hat: Meta, YouTube, Instagram.',
+    druck:          'Druck, Papier, Porto, Versand, Material am Stand.',
+    infrastruktur:  'Dienste, die die Aktion getragen haben: Aktionsseiten, Mailversand, Video-Plattform.',
+    andere:         'Was in keine der anderen Arten passt – im Posten sagen, was es ist.'
+  };
+  var KAT_BEISPIEL = {
+    stunden:        'z. B. Redaktion Mailtexte',
+    social:         'z. B. Meta-Anzeige Juli',
+    druck:          'z. B. Flyer DE 1000 Stück',
+    infrastruktur:  'z. B. Landingpage Hosting Juli',
+    andere:         'z. B. Inserat BZ Basel, halbe Seite'
+  };
+  var KF_KUERZEL = 'sommer2026:kuerzel';
+
+  function kfKuerzel(){ return el('kfWer') ? (el('kfWer').value || '').trim() : ''; }
+  function kfStundenModus(){ return el('kfKategorie') && el('kfKategorie').value === 'stunden'; }
+
+  // Was am Ende in der Datenbank steht, ist immer ein Franken-Betrag. Im
+  // Stunden-Modus entsteht er aus Stunden × Ansatz – und wird vor dem Klick
+  // ausgeschrieben, damit niemand eine Zahl abschickt, die er nicht gesehen hat.
+  function kfBetragJetzt(){
+    if (!kfStundenModus()) return el('kfBetrag').value === '' ? null : Number(el('kfBetrag').value);
+    var h = Number(el('kfStunden').value), a = Number(el('kfAnsatz').value);
+    if (!(h > 0) || !(a >= 0)) return null;
+    return Math.round(h * a * 100) / 100;
+  }
+
+  function kfMaskeStellen(){
+    if (!el('kfKategorie')) return;
+    var kat = el('kfKategorie').value, stunden = kat === 'stunden';
+    el('kfBetragFeld').hidden = stunden;
+    el('kfStundenFeld').hidden = !stunden;
+    el('kfAnsatzFeld').hidden = !stunden;
+    el('kfKatHint').textContent = KAT_HINWEIS[kat] || '';
+    el('kfPosten').placeholder = KAT_BEISPIEL[kat] || '';
+    var r = el('kfRechnung'), b = kfBetragJetzt();
+    if (stunden && b != null){
+      r.hidden = false;
+      r.textContent = 'Das ergibt ' + geld(b) + ' – so steht es nachher in der Summe.';
+    } else { r.hidden = true; r.textContent = ''; }
+  }
+
+  if (el('kfBtn')){
+    el('kfTag').value = new Date().toISOString().slice(0, 10);
+    try { var gemerkt = localStorage.getItem(KF_KUERZEL); if (gemerkt) el('kfWer').value = gemerkt; } catch(e){}
+    el('kfKategorie').addEventListener('change', kfMaskeStellen);
+    ['kfStunden','kfAnsatz'].forEach(function(id){ el(id).addEventListener('input', kfMaskeStellen); });
+    kfMaskeStellen();
+
+    el('kfBtn').addEventListener('click', function(){
+      var sagen = function(msg, bad){ meldung('kfSaid', msg, bad); };
+      var btn = el('kfBtn');
+      var posten = (el('kfPosten').value || '').trim();
+      var wer = kfKuerzel();
+      var betrag = kfBetragJetzt();
+
+      // Fehlt etwas, sagen wir welches Feld – und springen hin.
+      var fehlt = null;
+      if (!posten) fehlt = ['Wofür ist das Geld gegangen?', 'kfPosten'];
+      else if (betrag == null || betrag < 0) fehlt = kfStundenModus()
+        ? ['Wie viele Stunden waren es?', 'kfStunden']
+        : ['Wie viel hat es gekostet?', 'kfBetrag'];
+      else if (!el('kfTag').value) fehlt = ['Welches Datum?', 'kfTag'];
+      else if (!wer) fehlt = ['Noch das eigene Kürzel – dann ist klar, wer eingetragen hat.', 'kfWer'];
+      if (fehlt){ sagen(fehlt[0], true); el(fehlt[1]).focus(); return; }
+
+      // Der Knopf nimmt keinen zweiten Klick an, solange er schreibt.
+      btn.disabled = true;
+      var beschriftung = btn.textContent;
+      btn.textContent = 'Wird eingetragen …';
+      var frei = function(){ btn.disabled = false; btn.textContent = beschriftung; };
+
+      try { localStorage.setItem(KF_KUERZEL, wer); } catch(e){}
+      fetch(SB + '/rest/v1/rpc/sommer2026_kosten_eintragen', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+        body: JSON.stringify({
+          p_tag: el('kfTag').value, p_posten: posten, p_kategorie: el('kfKategorie').value,
+          p_betrag: betrag, p_ersteller: wer,
+          p_stunden: kfStundenModus() ? Number(el('kfStunden').value) : null,
+          p_ansatz:  kfStundenModus() ? Number(el('kfAnsatz').value)  : null
+        })
+      }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function(ergebnis){
+          frei();
+          if (ergebnis === 'ok'){
+            sagen('Eingetragen: ' + posten + ' · ' + geld(betrag) + '. Summe, Kosten je Abo und Rückfluss sind aktualisiert.');
+            el('kfPosten').value = ''; el('kfBetrag').value = ''; el('kfStunden').value = '';
+            kfMaskeStellen();
+            el('kfPosten').focus();
+            kostenNeuLaden();
+          } else if (ergebnis === 'doppelt'){
+            sagen('Dieser Posten steht mit demselben Betrag schon in der Liste – nichts doppelt eingetragen.', true);
+            kostenNeuLaden();
+          } else { sagen('Angaben prüfen.', true); }
+        })
+        .catch(function(){ frei(); sagen('Eintragen nicht erreichbar – bitte gleich noch einmal.', true); });
+    });
+  }
 
   // ── Tarif-Tabelle ──────────────────────────────────────────────────────────
   function renderTarif(rows){
