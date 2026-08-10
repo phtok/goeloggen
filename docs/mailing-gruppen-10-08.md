@@ -45,10 +45,36 @@ Problem, sondern der Weg zum Abschluss.** Bei der Wochenschrift führt er über
 ein Paperform-Formular, bei goetheanum.tv über die Uscreen-Kasse — gemessen ist
 bisher keiner von beiden.
 
-Zweite mögliche Erklärung, die nicht auszuschliessen ist: Wer bewegte Bilder
-schaut, will kein Heft. Dann wäre die Gruppe schlicht falsch adressiert. Welche
-der beiden Erklärungen stimmt, entscheidet eine Messung des Formularwegs — nicht
-eine Meinung.
+### Nachtrag am selben Tag: drei Ursachen sind ausgeschlossen
+
+Der erste Verdacht — der Anmeldeweg der Wochenschrift sei der Engpass — **hält
+der Prüfung nicht stand.** Drei Tests, alle aus vorhandenen Daten:
+
+1. **Das Formular ist es nicht.** Innerhalb der Gruppe «Beides» — dieselben
+   Menschen, dieselbe Mail, beide Angebote nebeneinander — gewann die
+   Wochenschrift: **211 Abschlüsse gegen 188** bei goetheanum.tv. Wer die Wahl
+   hatte, nahm eher das Heft. Ein kaputter Weg sieht anders aus.
+2. **Das Papier ist es nicht.** Die Formatwahl ist in beiden Gruppen praktisch
+   identisch: 76 % digital bei «Beides», 77 % bei «Sehen». Die Adresseingabe
+   schreckt nicht ab, weil kaum jemand sie überhaupt erreicht.
+3. **Ein Ablenkungsklick ist es nicht.** Das Link-Register zeigt für jede Gruppe
+   genau **eine** Zielseite (plus denselben Link als Weiterempfehlung). Die
+   Sehen-Gruppe konnte gar nichts anderes anklicken als die Wochenschrift.
+
+**Was bleibt, ist eine Hypothese, die aus dem Repo nicht zu belegen ist:** Die
+Sehen-Gruppe besteht aus zahlenden goetheanum.tv-Kundinnen und -Kunden. Ein
+Betreff wie ‹3 Monate gratis› kann von ihnen als Angebot für **ihr eigenes**
+Abo gelesen werden. Dann erklärt sich beides auf einmal — die höchste Klickrate
+aller Gruppen (Interesse am eigenen Vorteil) und die tiefste Umwandlung
+(Enttäuschung auf der Zielseite). Dazu passt, dass zwei bereits zahlende
+Abonnenten tatsächlich drei Gratismonate erhalten haben
+(`docs/uscreen-abgleich-10-08.md`).
+
+**Prüfbar ist das nur an einem Ort:** dem Betreff und dem ersten Absatz der
+Mails aus `S26 · Sehen · DE/EN`. Die Texte liegen in ActiveCampaign, nicht im
+Repo. Wer sie ansieht, weiss es in fünf Minuten — und wenn die Hypothese
+stimmt, ist die Verbesserung ebenso einfach: **Bestandskunden sagen, was sie
+bekommen, nicht was andere bekommen.**
 
 ## Sprachen
 
@@ -133,6 +159,40 @@ Bei einer Grundgebühr in der für 100 000 Kontakte üblichen Grössenordnung li
 der Versandanteil bei rund **CHF 100** — grob, weil der Preis fehlt. **Die
 einzige offene Angabe ist die Monatsgebühr**; sie liegt beim Konto-Inhaber.
 Kommt sie, wird daraus eine Rechnung statt einer Schätzung.
+
+## Nachhaken bei den Abspringern — was möglich ist
+
+Drei Gruppen sind namentlich bekannt und noch erreichbar. Sie unterscheiden
+sich stark darin, wie nahe sie am Abschluss waren:
+
+| Gruppe | Zahl | wie nah dran | wo bekannt |
+|---|---:|---|---|
+| **Kasse abgebrochen (goetheanum.tv)** | 268 | Konto angelegt, Kasse erreicht, nicht abgeschlossen | Uscreen, mit Zeitstempel |
+| Klicker ohne Abschluss (Beides) | ~3 986 | Zielseite gesehen | ActiveCampaign |
+| Klicker ohne Abschluss (Sehen) | ~895 | Zielseite gesehen | ActiveCampaign |
+
+**Die 268 sind die Chance.** Sie haben ein Konto angelegt, sich bis zur Kasse
+durchgeklickt und dort aufgehört — Absicht war da, es fehlte ein Schritt.
+Uscreen kennt sie samt Abbruchzeitpunkt und bringt eine eigene Funktion für
+genau diesen Fall mit (Abandoned-Checkout-Mail). Sie ist offenbar nicht scharf
+geschaltet, sonst wären 268 Menschen bereits angeschrieben worden. **Das ist
+der billigste ungenutzte Hebel der ganzen Aktion**: keine Reichweite, keine
+Gestaltung, eine Einstellung.
+
+Bei den Klickern ist der Fall schwächer. Sie haben eine Seite gesehen und sich
+dagegen entschieden — dieselbe Botschaft ein viertes Mal ändert daran nichts.
+Sinnvoll wäre dort nur eine **andere** Frage: nicht «kaufen Sie doch», sondern
+«was hat gefehlt?». Eine Frage an 895 Menschen, die nachweislich Interesse
+hatten, ist die wohlfeilste Marktforschung, die zu haben ist — und sie
+beantwortet die Ursachenfrage oben endgültig.
+
+**Was dagegen spricht, sofort loszulegen:** Die Frist ist am 11. August
+abgelaufen. Wer jetzt eine Mail bekommt, bekommt entweder ein neues Angebot
+(dann ist die Frist keine Frist gewesen — genau der Schaden, den das Drehbuch
+beschreibt) oder eine Frage ohne Angebot. **Die Frage ist unschädlich, das
+Nachangebot nicht.** Bei den 268 Kassenabbrüchen ist es anders: Sie sind
+innerhalb der Frist stecken geblieben, ein Nachfassen dort ist Service, kein
+Wortbruch — vorausgesetzt, es passiert schnell.
 
 ## Was daraus für die nächste Aktion folgt
 
