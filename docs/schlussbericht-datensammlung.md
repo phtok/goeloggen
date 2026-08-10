@@ -71,6 +71,19 @@ Abos aus dem Juli fehlen uns. Die Gratismonate sind bei 620 von 626 gebucht;
 der Verlust liegt nicht bei der Frist, sondern an der Kasse (268 Abbrüche
 ohne Rückkehr).
 
+## Erledigt am 10. August: die Nenner je Gruppe
+
+Zweiter AC-Lauf ausgeführt. Auswertung in `docs/mailing-gruppen-10-08.md`.
+Kurz: Die Gruppe **Lesen** (Wochenschrift-Leser, 922 angeschrieben) wandelte
+**11,2 %** der Angeschriebenen und **53,4 % der Klicker** in ein TV-Abo — die
+Gruppe **Sehen** (TV-Abonnenten, Wochenschrift angeboten) trotz der besten
+Klickrate nur **0,91 %** beziehungsweise 3,8 %. Dazu: **549 Abmeldungen** als
+bisher unverbuchte Kostenseite, und zwei Fehler in der Mail-Strecke.
+
+**Offen bleibt allein die AC-Monatsgebühr** — die Abrechnung liegt beim
+Konto-Inhaber in einem eigenen Portal und war nicht einsehbar. Der
+Verteilschlüssel steht: Die vier Wellen verbrauchten 9,4 % des Sendekontingents.
+
 ## Noch einmal ActiveCampaign — zwei Sorten Zahlen, die nur dort liegen
 
 Der erste Lauf hat Summen je Welle geholt. Für den Bericht fehlen zwei Dinge,
