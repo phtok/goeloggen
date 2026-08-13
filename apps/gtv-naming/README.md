@@ -57,7 +57,7 @@ Optional in der goeloggen-Übersicht/Startseite verlinken (neben Logo-Generator)
 
 - Logosystem (SIGNET-, POINT-Pfade, GL-Glyphensatz mit 130 Zeichen, Satzlogik
   `logoZweizeiler`/`logoSonderform`) ist aus
-  `apps/logo-generator/` **dupliziert** (Stand Juni 2026).
+  `apps/logos/` **dupliziert** (Stand Juni 2026).
   Sinnvoller Refactor: gemeinsame Konstanten nach `assets/` auslagern und in
   beiden Apps importieren, damit Glyphen-/Pfadänderungen nur einmal gepflegt
   werden.
