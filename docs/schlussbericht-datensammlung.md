@@ -214,31 +214,39 @@ CHF 60), Infrastruktur 295 (Lovable 200, AC-Anteil geschätzt 95).
 `CONFIG.kostenVollstaendig` steht auf `true` — Kosten je Abo (CHF 8.65) und
 Rückfluss (7,3-fach) zeigen im Cockpit echte Zahlen.
 
-Was in dieser Summe **absichtlich fehlt** und keine allgemeine Kampagnenkosten
-sind, sondern eine andere Rechnung (siehe «Zwei Arten von Kosten» unten): die
-laufende, jährlich wiederkehrende Uscreen-Gebühr je zahlendem Abo.
+Die Kostensumme oben ist damit **vollständig für das, was sie sein soll**: was
+die Kampagne einmalig gekostet hat. Sie ist **nicht** vollständig für eine
+andere, grössere Frage — siehe unten.
 
-## Zwei Arten von Kosten — nicht vermischen (Hinweis 9. August)
+## Zwei Arten von Kosten — nicht vermischen, und nur eine gehört in diesen Bericht (Hinweis 9. August, präzisiert 13. August)
 
-Das Cockpit rechnet **eine** Sorte Kosten in der Summe oben: einmalige
-Kampagnenkosten (Druck, Anzeige, Stunden), verteilt über alle Abos. Das reicht
-für «was hat die Aktion gekostet» — nicht für «was bleibt vom Folgejahr-Umsatz
-übrig». Dafür braucht es eine zweite Sorte, **Stückkosten je Abo und Jahr**, je
-Strom verschieden:
+Das Cockpit rechnet **eine** Sorte Kosten: einmalige Kampagnenkosten (Druck,
+Anzeige, Stunden), verteilt über alle Abos. Das beantwortet «was hat die
+Aktion gekostet» — vollständig, siehe oben.
 
-| Strom | Stückkosten | Bemerkung |
-|---|---|---|
-| Wochenschrift **Papier**, Trial-Zeit | Druck + Porto je Heft | **erledigt** — CHF 1 949.90 für 1 147 Hefte, `docs/probeabo-kosten-12-08.md`, bereits in der Summe oben |
-| Wochenschrift **Papier**, Folgejahr | Druck + Porto je Heft und Jahr | offen — dieselbe Rechnung, für die Jahre **nach** der Gratiszeit, **nicht** in der Kostensumme, sondern gegen den Folgejahr-Umsatz zu stellen |
-| goetheanum.tv | Gebühr je Uscreen-Abo und Monat | offen |
-| Wochenschrift **Digital** | keine | durch die laufende Infrastruktur gedeckt |
+Es gibt eine **zweite** Sorte, **laufende Stückkosten je Abo und Jahr**
+(Uscreen-Gebühr nach der Umwandlung, Papier für die Jahre nach der Gratiszeit).
+Sie beantwortet eine andere Frage — «trägt sich ein Abo langfristig» — und
+**gehört ausdrücklich nicht in diesen Bericht** (Klärung des Auftraggebers,
+13. August):
 
-Die Trial-Fulfillmentkosten (erste Zeile) sind eine **einmalige** Ausgabe der
-Kampagne — sie gehören zur Kostensumme oben und sind dort drin. Die zweite und
-dritte Zeile sind etwas anderes: eine **wiederkehrende** Ausgabe für jedes Jahr,
-in dem ein Abo bezahlt weiterläuft. Erst mit ihr wird aus dem Folgejahr-Umsatz
-(`docs/einnahmen-perspektive-10-08.md`) ein Deckungsbeitrag. Diese Zahlen fehlen
-weiterhin und stehen als «Spätere Ergänzung» unten.
+- **Uscreen verlangt erst Gebühren, wenn ein Testabo zu zahlen beginnt.**
+  Während der Gratiszeit fällt nichts an; die Frage stellt sich erst, sobald
+  eine Bleibe-Quote gemessen ist (frühestens Oktober).
+- **Diese laufenden Kosten sollen aus dem Abopreis selbst getragen werden** —
+  das ist eine Frage der Preiskalkulation für Wochenschrift und goetheanum.tv
+  insgesamt, nicht spezifisch für diese Kampagne. Sie zu beantworten braucht
+  einen deutlich weiteren Kontext (Vollkosten je Strom, nicht nur diese
+  Aktion) und gehört in ein eigenes Vorhaben, nicht in den Kampagnenbericht.
+
+Einzige Ausnahme, die weiterhin hierhin gehört: Das Papier-Fulfillment der
+**Trial-Hefte** (CHF 1 949.90, `docs/probeabo-kosten-12-08.md`) ist eine
+**einmalige** Kampagnenausgabe — sie steckt bereits in der Summe oben, weil sie
+den Gratis-Zeitraum betrifft, nicht das Folgejahr.
+
+Der Folgejahr-Umsatz (`docs/einnahmen-perspektive-10-08.md`) bleibt darum
+bewusst ein **Umsatz**, kein Deckungsbeitrag — das ist keine Lücke dieses
+Berichts, sondern seine Grenze.
 
 ## Spätere Ergänzung — verzichtbar, auf Wunsch des Auftraggebers zurückgestellt (13. August)
 
@@ -261,9 +269,11 @@ anfallen — niemand muss sie aktiv beschaffen:
   bleibt offen, wie viele Dubletten oder Fehleinträge die 406 WoS-Anmeldungen
   enthalten. (goetheanum.tv braucht das nicht — dort schreibt der Webhook
   direkt.)
-- **Uscreen-Gebühr je Abo und Monat, Papier-Stückkosten fürs Folgejahr** — die
-  zweite Kostensorte oben; ohne sie bleibt der Folgejahr-Umsatz ein Umsatz,
-  kein Deckungsbeitrag.
+
+**Nicht auf dieser Liste, weil es kein Sammelauftrag dieses Berichts ist:** die
+Uscreen-Gebühr je Abo und die Papier-Stückkosten fürs Folgejahr. Siehe «Zwei
+Arten von Kosten» oben — das ist eine Preiskalkulationsfrage mit eigenem,
+weiterem Kontext, keine Datenlücke, die dieser Bericht schliessen soll.
 
 ## Bewusst nicht getan (13. August)
 

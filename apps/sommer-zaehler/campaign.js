@@ -1427,7 +1427,7 @@
     }
     if (el('kostenNote')) el('kostenNote').textContent = voll
       ? 'Kampagnenkosten sind erfasst (die ActiveCampaign-Gebühr darin ist eine Schätzung, im Posten selbst markiert); Kosten je Abo und Rückfluss rechnen darauf. '
-        + 'Die laufenden Stückkosten je Abo – Uscreen-Gebühr, Papier fürs Folgejahr – fehlen weiterhin und betreffen den Deckungsbeitrag der Einnahmen-Perspektive, nicht diese Summe (docs/schlussbericht-datensammlung.md).'
+        + 'Bewusst nicht darin: die laufende Uscreen-Gebühr und Papier je Folgejahr – die sollen aus dem Abopreis selbst gedeckt werden, eine Preisfrage jenseits dieser Kampagne (docs/schlussbericht-datensammlung.md).'
       : 'Kosten je Abo und Rückfluss bleiben leer, solange die Kosten unvollständig sind — die bezahlten Anzeigen stehen seit dem 10. August drin, die internen Stunden fehlen noch. '
         + 'Gerechnet würden daraus sonst Zahlen, die technisch stimmen und trotzdem täuschen. Was fehlt, steht in docs/schlussbericht-datensammlung.md; eingetragen wird es unter Kosten.';
 
