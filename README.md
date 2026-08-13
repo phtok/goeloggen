@@ -93,6 +93,12 @@ erzeugten Pfade — die Abschnitts-Pfade aus `sektionen.json`
 (`tools/build_sections.py`) und die Kurz-Adressen `/‹slug›/` je Werkzeug
 (`tools/build_tool_aliases.py`).
 
+**Altlinks bleiben stehen.** Wer eine Adresse auswaerts hinterlegt hat, soll
+nicht ins Leere laufen, wenn wir intern umbenennen. `apps/logo-generator/` ist
+darum kein Werkzeug mehr, sondern eine Weiterleitung auf `apps/logos/` — siehe
+`apps/README.md`. Umbenennen heisst hier: **die alte Adresse behalten**, nicht
+ersetzen.
+
 **Korrektur vom 13. August 2026:** hier stand zwischenzeitlich, Pages liefere
 den Branch-Inhalt aus und das Repository sei oeffentlich lesbar. Das war
 **falsch** — es beruhte auf einer fehlerhaften Statuscode-Messung, die die
