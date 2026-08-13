@@ -61,20 +61,38 @@ der Prüfung nicht stand.** Drei Tests, alle aus vorhandenen Daten:
    genau **eine** Zielseite (plus denselben Link als Weiterempfehlung). Die
    Sehen-Gruppe konnte gar nichts anderes anklicken als die Wochenschrift.
 
-**Was bleibt, ist eine Hypothese, die aus dem Repo nicht zu belegen ist:** Die
-Sehen-Gruppe besteht aus zahlenden goetheanum.tv-Kundinnen und -Kunden. Ein
-Betreff wie ‹3 Monate gratis› kann von ihnen als Angebot für **ihr eigenes**
-Abo gelesen werden. Dann erklärt sich beides auf einmal — die höchste Klickrate
-aller Gruppen (Interesse am eigenen Vorteil) und die tiefste Umwandlung
-(Enttäuschung auf der Zielseite). Dazu passt, dass zwei bereits zahlende
-Abonnenten tatsächlich drei Gratismonate erhalten haben
-(`docs/uscreen-abgleich-10-08.md`).
+**Nachtrag 13. August — die vierte Ursache ist geprüft, nicht mehr offen.**
+Die Betreffzeilen aller 24 Mail-Schritte stehen bereits im Repo
+(`services/mailing-sommer2026/AC-AUTOMATION.md`, Tabelle «S26 · NurTV→WS» —
+das ist die Sehen-Automation) — ein Blick genügte, keine neue Abfrage nötig.
 
-**Prüfbar ist das nur an einem Ort:** dem Betreff und dem ersten Absatz der
-Mails aus `S26 · Sehen · DE/EN`. Die Texte liegen in ActiveCampaign, nicht im
-Repo. Wer sie ansieht, weiss es in fünf Minuten — und wenn die Hypothese
-stimmt, ist die Verbesserung ebenso einfach: **Bestandskunden sagen, was sie
-bekommen, nicht was andere bekommen.**
+Der Vergleich der acht Betreffzeilen gegen die acht der Gegenrichtung
+(«S26 · NurWS→TV», Lesen-Automation, dasselbe Muster in derselben Aktion)
+**widerlegt die Hypothese, statt sie zu bestätigen:**
+
+| Welle | Sehen → WS (Betreff nennt Produkt?) | Lesen → TV (Betreff nennt Produkt?) |
+|---|---|---|
+| w1 DE/EN | ja («Wochenschrift», «weekly») | ja («goetheanum.tv») |
+| w2 DE/EN | **nein** («Ihr kostenloser Zugang …») | **nein** — identischer Betreff |
+| w3 DE | ja («… gratis lesen») | ja («… goetheanum.tv gratis») |
+| w3 EN | **nein** («three months free») | ja («… of goetheanum.tv») |
+| w3b DE/EN | ja («… gratis lesen» / «free reading») | ja («… goetheanum.tv») |
+
+Die einzige Zeile ohne Produktnamen, die **nur** die Sehen-Automation trifft,
+ist **w3 EN** — eine von acht. Die w2-Lücke («Ihr kostenloser Zugang») steht
+in **beiden** Richtungen identisch und kann darum den Unterschied zwischen
+11,2 % und 0,91 % nicht erklären: Wäre unklare Betreffzeile die Ursache, würde
+sie die Lesen-Gruppe genauso treffen — tut sie aber nachweislich nicht.
+
+**Die Hypothese vom letzten Eintrag ist damit widerlegt, nicht offen.** Es
+gibt keinen Textfehler, der sich in fünf Minuten beheben liesse — die Mails
+sind zu über 90 % strukturell identisch zur erfolgreichen Gegenrichtung.
+Was bleibt, ist eine Erklärung ohne billige Lösung: Der Wechsel vom Sehen zum
+Lesen scheint **dem Medium nach** ein grösserer Schritt zu sein als der
+umgekehrte — ein zusätzliches Leseabo zu beginnen, ist ein anderes
+Commitment als ein Video anzuklicken, unabhängig davon, wie klar das Angebot
+formuliert ist. Das ist eine Erkenntnis über die Werbung von Video- zu
+Lese-Publikum, keine Korrektur an dieser Kampagne.
 
 ## Sprachen
 
@@ -155,44 +173,30 @@ ausgelöst, sondern zusätzliches Volumen erzeugt. Ein Zeitanteil (5,5 Wochen
 Grundgebühr) wäre zehnmal so hoch und würde der Aktion etwas anlasten, das auch
 ohne sie bezahlt worden wäre.
 
-Bei einer Grundgebühr in der für 100 000 Kontakte üblichen Grössenordnung liegt
-der Versandanteil bei rund **CHF 100** — grob, weil der Preis fehlt. **Die
-einzige offene Angabe ist die Monatsgebühr**; sie liegt beim Konto-Inhaber.
-Kommt sie, wird daraus eine Rechnung statt einer Schätzung.
+**Nachtrag 13. August — als Schätzung eingetragen, auf Wunsch des Auftraggebers
+statt weiter nachzufragen.** Angenommene Grundgebühr CHF 1'000/Monat (Grössen­
+ordnung für ~100 000 Kontakte mit den hier genutzten bedingten Automatisierungen,
+ungeprüft) × 9,4 % Versandanteil = **CHF 95**, als Posten «Infrastruktur» in der
+Kosten-Maske erfasst. Kommt die echte Gebühr je einmal ans Licht, ersetzt sie
+diesen Posten — bis dahin ist er als Schätzung markiert (Posten-Text in der
+Kosten-Tabelle), nicht als Messung.
 
-## Nachhaken bei den Abspringern — was möglich ist
+## Nachhaken bei den Abspringern — geprüft, Entscheid: nicht jetzt
 
-Drei Gruppen sind namentlich bekannt und noch erreichbar. Sie unterscheiden
-sich stark darin, wie nahe sie am Abschluss waren:
+Drei Gruppen wären namentlich bekannt und erreichbar gewesen — Kassenabbrecher
+bei goetheanum.tv (268, mit Zeitstempel bei Uscreen) und Klicker ohne
+Abschluss in beiden Mail-Gruppen (~4 900, in ActiveCampaign). Die 268 wären
+der günstigste Hebel gewesen: Konto angelegt, Kasse erreicht, ein Schritt
+gefehlt — Uscreen bringt die Abandoned-Checkout-Mail für genau diesen Fall
+serienmässig mit.
 
-| Gruppe | Zahl | wie nah dran | wo bekannt |
-|---|---:|---|---|
-| **Kasse abgebrochen (goetheanum.tv)** | 268 | Konto angelegt, Kasse erreicht, nicht abgeschlossen | Uscreen, mit Zeitstempel |
-| Klicker ohne Abschluss (Beides) | ~3 986 | Zielseite gesehen | ActiveCampaign |
-| Klicker ohne Abschluss (Sehen) | ~895 | Zielseite gesehen | ActiveCampaign |
-
-**Die 268 sind die Chance.** Sie haben ein Konto angelegt, sich bis zur Kasse
-durchgeklickt und dort aufgehört — Absicht war da, es fehlte ein Schritt.
-Uscreen kennt sie samt Abbruchzeitpunkt und bringt eine eigene Funktion für
-genau diesen Fall mit (Abandoned-Checkout-Mail). Sie ist offenbar nicht scharf
-geschaltet, sonst wären 268 Menschen bereits angeschrieben worden. **Das ist
-der billigste ungenutzte Hebel der ganzen Aktion**: keine Reichweite, keine
-Gestaltung, eine Einstellung.
-
-Bei den Klickern ist der Fall schwächer. Sie haben eine Seite gesehen und sich
-dagegen entschieden — dieselbe Botschaft ein viertes Mal ändert daran nichts.
-Sinnvoll wäre dort nur eine **andere** Frage: nicht «kaufen Sie doch», sondern
-«was hat gefehlt?». Eine Frage an 895 Menschen, die nachweislich Interesse
-hatten, ist die wohlfeilste Marktforschung, die zu haben ist — und sie
-beantwortet die Ursachenfrage oben endgültig.
-
-**Was dagegen spricht, sofort loszulegen:** Die Frist ist am 11. August
-abgelaufen. Wer jetzt eine Mail bekommt, bekommt entweder ein neues Angebot
-(dann ist die Frist keine Frist gewesen — genau der Schaden, den das Drehbuch
-beschreibt) oder eine Frage ohne Angebot. **Die Frage ist unschädlich, das
-Nachangebot nicht.** Bei den 268 Kassenabbrüchen ist es anders: Sie sind
-innerhalb der Frist stecken geblieben, ein Nachfassen dort ist Service, kein
-Wortbruch — vorausgesetzt, es passiert schnell.
+**Entscheid vom 13. August: kein Nachfassen.** Der Auftraggeber hat sich
+bewusst dagegen ausgesprochen. Festgehalten, damit es nicht als vergessener
+Punkt wiederkehrt: Die Analyse steht, die Zahl ist bekannt, die Handlung ist
+unterblieben — nicht aus Unwissen, sondern aus Entscheid. Für die nächste
+Aktion bleibt die Erkenntnis gültig: Ein Kassenabbrecher mit Zeitstempel ist
+der billigste erreichbare Rest einer Kampagne, sollte es beim nächsten Mal
+anders entschieden werden.
 
 ## Was daraus für die nächste Aktion folgt
 
@@ -200,10 +204,13 @@ Wortbruch — vorausgesetzt, es passiert schnell.
    brachte 19 % der Abos mit Mailing-Spur. Wer schon etwas vom Haus hat, nimmt
    das zweite Angebot an. Eine Aktion, die nur diese Gruppe anspricht, wäre um
    ein Vielfaches günstiger und kaum weniger wirksam.
-2. **Den Abschlussweg messen, bevor man mehr Reichweite kauft.** «Sehen» hat die
-   beste Klickrate und die schlechteste Umwandlung. Solange niemand weiss, wo
-   diese 895 Menschen verloren gingen, ist jede zusätzliche Reichweite auf
-   denselben Weg geschüttet.
+2. **Vom Sehen zum Lesen ist ein grösserer Schritt als umgekehrt — einplanen,
+   nicht wegtexten.** Formular, Papierformat, Ablenkung und Betreff sind
+   geprüft und ausgeschlossen; «Sehen» wandelt trotzdem nur ein Zwölftel der
+   Rate von «Lesen». Eine gute Anzeigen-Klickrate bei dieser Zielgruppe ist
+   kein Signal für ähnliche Abschlusszahlen wie bei «Lesen» — die Erwartung
+   für eine nächste Aktion muss das schon vorher berücksichtigen, nicht erst
+   im Nachhinein erklären.
 3. **Deutsch und Englisch getrennt planen.** Der englische Verteiler ist grösser
    und reagiert schwächer — mit denselben Texten, nur übersetzt. Das ist eine
    Frage an die Ansprache, nicht an die Zustellung.

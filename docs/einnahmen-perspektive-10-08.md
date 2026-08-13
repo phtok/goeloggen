@@ -128,13 +128,17 @@ der Bleibe-Quote allein.
 - **Keine Prognose.** Kein Wert stützt sich auf eine beobachtete
   Bleibe-Entscheidung, weil es noch keine gibt. Wer die Zahlen weitergibt,
   gibt Annahmen weiter.
-- **Kein Deckungsbeitrag.** Gegengerechnet sind nur die Einnahmen. Die Kosten
-  der Aktion stehen mit **CHF 769.70** in der Datenbank (Druck 309.70,
-  Meta-Anzeige 423, YouTube-Anzeige 37); **die internen Stunden fehlen dort
-  noch**. Solange sie fehlen, bleiben «Kosten je Abo» und «Rückfluss» im
-  Cockpit leer: Aus CHF 769.70 auf 1 042 Anmeldungen ergäbe sich ein Preis von
-  74 Rappen je Abo und ein Rückfluss von 86-fach — technisch richtig
-  gerechnet und trotzdem gelogen.
+- **Noch kein Deckungsbeitrag — aber die Kampagnenkosten stehen.** Seit
+  13. August: **CHF 9 014.60** vollständig erfasst (Druck & Versand 2 259.60,
+  davon 1 949.90 Papier-Fulfillment der Probeabos — `docs/probeabo-kosten-12-08.md`;
+  Social 460; Stunden intern 6 000; Infrastruktur 295, davon CHF 95 eine
+  Schätzung für die ActiveCampaign-Gebühr). Das Cockpit rechnet damit live:
+  **CHF 8.65 Kosten je Anmeldung, Rückfluss 7,3-fach** gegen das Szenario
+  «Erwartet». Was weiterhin fehlt, ist die **laufende** Uscreen-Gebühr je Abo
+  und Monat sowie die Papier-Stückkosten für die Jahre **nach** der Gratiszeit
+  — ohne sie bleibt der Folgejahr-Umsatz oben ein Umsatz, kein
+  Deckungsbeitrag (`docs/schlussbericht-datensammlung.md`, «Zwei Arten von
+  Kosten»).
 - **Keine Aussage über Papier.** Die Wochenschrift auf Papier trägt
   Herstellungs- und Versandkosten je Exemplar, die hier nicht abgezogen sind.
   Von den 406 WoS-Abos sind **114 Papier-Abos**. Was dafür zu sammeln ist,

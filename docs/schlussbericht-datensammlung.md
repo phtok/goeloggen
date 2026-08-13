@@ -1,6 +1,6 @@
 # Schlussbericht Sommer-Aktion — was noch einzusammeln ist
 
-Stand 10. August 2026, die Aktion endete am 11. August. Diese Liste ist zum Abhaken: Was hier steht, kann die
+Stand 13. August 2026 (Aktion endete am 11. August). Diese Liste ist zum Abhaken: Was hier steht, kann die
 Datenbank **nicht** selbst holen. Alles Übrige — Anmeldungen, Ströme, Tarife,
 Währungen, Herkunftsland, Kurzlink-Klicks, Selbstauskünfte — liegt bereits
 vollständig im Backend und fliesst ohne Zutun in den Bericht.
@@ -107,6 +107,47 @@ neu geschrieben:
   dreimal so oft» ist korrigiert — gemessen ist es das **Zwölffache**
   (11,2 % gegen 0,91 % je Angeschriebenem).
 
+## Erledigt am 13. August: Kosten vollständig, Sehen-Ursache geklärt
+
+Vier Entscheide des Auftraggebers, alle umgesetzt:
+
+1. **Interne Stunden sind eingetragen** — 40 Stunden Landing Pages und
+   technische Klärungen, 60 Stunden Kampagnenmonitor, Mailings, Entwürfe und
+   Zuarbeiten, macht **CHF 6 000** zum Hausansatz CHF 60. Zusammen mit den
+   bereits erfassten Beträgen (Druck, Meta, YouTube) und dem separat
+   hergeleiteten Papier-Fulfillment der Probeabos (`docs/probeabo-kosten-12-08.md`,
+   CHF 1 949.90) stehen jetzt **CHF 9 014.60** in der Datenbank.
+2. **`CONFIG.kostenVollstaendig` steht auf `true`.** Kosten je Abo und
+   Rückfluss zeigen ab jetzt echte Zahlen statt eines Platzhalters: **CHF 8.65
+   je Anmeldung, Rückfluss 7,3-fach** (gegen die Szenario-Mitte «Erwartet»,
+   CHF 65 877 — siehe unten, «Nicht vollständig» weiterhin zutreffend für
+   Metricool/Flyer/Papier-Stückkosten, siehe «Zwei Arten von Kosten»).
+3. **Die AC-Monatsgebühr ist als Schätzung eingetragen**, nicht weiter
+   nachgefragt: CHF 95 (9,4 % Versandanteil auf angenommene CHF 1 000/Monat
+   Grundgebühr, ungeprüft — Herleitung in `docs/mailing-gruppen-10-08.md`).
+   Als Kostenposten «ActiveCampaign-Anteil …» in der Kategorie
+   Infrastruktur, mit dem Wort «Schätzung» im Posten-Text selbst markiert.
+4. **Die Sehen-Ursache ist geklärt — durch Widerlegung, nicht Bestätigung.**
+   Die Mail-Betreffzeilen standen bereits im Repo
+   (`services/mailing-sommer2026/AC-AUTOMATION.md`); der Vergleich gegen die
+   Lesen-Automation widerlegt die Hypothese vom letzten Eintrag («Betreff
+   verwechselbar mit dem eigenen Abo»). Es gibt keinen Textfehler zu beheben.
+   Die wahrscheinlichste Erklärung ist strukturell: Ein Leseabo zu beginnen
+   ist ein grösserer Schritt als ein Video anzuklicken — eine Erkenntnis für
+   die nächste Aktion, keine Korrektur an dieser. Herleitung in
+   `docs/mailing-gruppen-10-08.md`.
+
+**Bewusst nicht getan:** Die 268 Kassenabbrecher bei goetheanum.tv
+anzuschreiben. Der Auftraggeber hat sich dagegen entschieden — die Analyse
+bleibt im Dokument stehen, damit sie nicht als vergessener Punkt wiederkehrt.
+
+**Auf später verschoben, nicht mehr in der Bearbeitungsreihenfolge:**
+Metricool-Zahlen, Flyer-Reichweite, der fehlende AGiD-Newsletter, die
+Inserate VaG/RSV und der Zoho-Abgleich der Wochenschrift. Der Auftraggeber
+hat sie ausdrücklich als verzichtbare Ergänzung eingestuft — der Bericht
+ist ohne sie fertig, sie verbessern ihn, wenn sie einmal anfallen. Details
+weiterhin unten, jetzt unter «Spätere Ergänzung».
+
 ## Noch einmal ActiveCampaign — zwei Sorten Zahlen, die nur dort liegen
 
 Der erste Lauf hat Summen je Welle geholt. Für den Bericht fehlen zwei Dinge,
@@ -164,93 +205,74 @@ Aus 10 589 Klicks wurden 874 Konten und 626 Abos. Die Kurzlink-Klicks je Ziel:
 zwischen ‹Klick im Mail› und ‹Konto angelegt› sichtbar wird. Heute ist sie eine
 Differenz, die wir ausrechnen, statt einer Zahl, die wir messen.
 
-## Social (Metricool)
-
-Sechs Einträge, alle ohne vollständige Zahlen. Die Kampagnen-Auswertung liegt
-im geschützten Metricool-Dashboard; der Link steht im Cockpit unter «Methode
-und Quellen».
-
-| Aktivität | Datum | fehlt |
-|---|---|---|
-| Reel WS: Wolfgang | 10. Juli | Klicks |
-| Reel GTV: Thijs | 12. Juli | Klicks (Reichweite 3 prüfen — wirkt wie ein Tippfehler) |
-| Karussell GTV | 16. Juli | Reichweite, Klicks |
-| Karussell WS | 19. Juli | Reichweite, Klicks |
-| Reel: letzte Erinnerung WS | 31. Juli | Reichweite, Klicks |
-| Reel: Letzte Erinnerung GTV | 2. August | Reichweite, Klicks |
-
 ## Geld (Meta Ads Manager und eigene Aufzeichnung)
 
-Stand 10. August: **CHF 769.70** erfasst — Druck 309.70, Meta-Anzeige 423,
-YouTube-Anzeige 37. Damit ist der teuerste Weg endlich bewertbar. Was noch
-fehlt, hält Kosten je Abo und Rückfluss weiterhin leer.
+**Stand 13. August: CHF 9 014.60, vollständig erfasst.** Druck & Versand
+2 259.60 (davon 1 949.90 Papier-Fulfillment der Probeabos, siehe unten),
+Social 460 (Meta 423, YouTube 37), Stunden intern 6 000 (100 Stunden ×
+CHF 60), Infrastruktur 295 (Lovable 200, AC-Anteil geschätzt 95).
+`CONFIG.kostenVollstaendig` steht auf `true` — Kosten je Abo (CHF 8.65) und
+Rückfluss (7,3-fach) zeigen im Cockpit echte Zahlen.
 
-- ~~**Meta-Anzeige**~~ — **erledigt 10. August** (CHF 423). Reichweite und
-  Klicks standen bereits (62 812 / 353 und 68 343 / 612).
-- **Interne Stunden** — Kategorie **Stunden intern**, grobe Schätzung genügt.
-  Ohne sie liest sich die Aktion billiger, als sie war. Die Maske fragt jetzt
-  nach **Stunden und Ansatz** und rechnet die Franken selbst; eingetragen
-  werden also 8 Stunden zu 60, nicht 480. **Der Hausansatz ist CHF 60 je
-  Stunde** (festgelegt am 10. August 2026) und steht in der Maske
-  voreingestellt — er ist damit über alle Posten hinweg derselbe, sonst
-  vergleicht der Bericht Stunden, die verschieden viel wert sind.
-- **Flyer und Stand** — Druck ist erfasst; fehlen noch Reichweite für «Auslage
-  Flyer Empfang» und «Auslage Flyer Buchhandlung» (10. Juli). Wo nichts
-  gemessen ist: verteilte Stückzahl eintragen und das in der Notiz sagen.
+Was in dieser Summe **absichtlich fehlt** und keine allgemeine Kampagnenkosten
+sind, sondern eine andere Rechnung (siehe «Zwei Arten von Kosten» unten): die
+laufende, jährlich wiederkehrende Uscreen-Gebühr je zahlendem Abo.
 
 ## Zwei Arten von Kosten — nicht vermischen (Hinweis 9. August)
 
-Bisher kennt das Cockpit **eine** Sorte Kosten: einmalige Kampagnenkosten
-(Druck, Anzeige, Stunden), verteilt über alle Abos. Das reicht nicht. Es kommt
-eine zweite Sorte dazu — **Stückkosten je Abo und Jahr**, und die sind je Strom
-verschieden:
+Das Cockpit rechnet **eine** Sorte Kosten in der Summe oben: einmalige
+Kampagnenkosten (Druck, Anzeige, Stunden), verteilt über alle Abos. Das reicht
+für «was hat die Aktion gekostet» — nicht für «was bleibt vom Folgejahr-Umsatz
+übrig». Dafür braucht es eine zweite Sorte, **Stückkosten je Abo und Jahr**, je
+Strom verschieden:
 
 | Strom | Stückkosten | Bemerkung |
 |---|---|---|
-| Wochenschrift **Papier** | Druck + Porto je Heft | grob rechenbar; **darf nicht auf alle Abos verteilt werden** |
-| goetheanum.tv | Gebühr je Uscreen-Abo | folgt |
+| Wochenschrift **Papier**, Trial-Zeit | Druck + Porto je Heft | **erledigt** — CHF 1 949.90 für 1 147 Hefte, `docs/probeabo-kosten-12-08.md`, bereits in der Summe oben |
+| Wochenschrift **Papier**, Folgejahr | Druck + Porto je Heft und Jahr | offen — dieselbe Rechnung, für die Jahre **nach** der Gratiszeit, **nicht** in der Kostensumme, sondern gegen den Folgejahr-Umsatz zu stellen |
+| goetheanum.tv | Gebühr je Uscreen-Abo und Monat | offen |
 | Wochenschrift **Digital** | keine | durch die laufende Infrastruktur gedeckt |
 
-Die Folge für den Bericht ist nicht kosmetisch: Aus dem Folgejahr-**Umsatz**
-wird erst mit diesen Zahlen ein **Deckungsbeitrag**. Und weil die Stückkosten
-am Papier hängen, verschiebt sich damit auch die Rangfolge der Ströme — ein
-Papier-Abo bringt mehr Umsatz und kostet mehr; ob es netto mehr trägt als ein
-digitales, ist heute unbeantwortet.
+Die Trial-Fulfillmentkosten (erste Zeile) sind eine **einmalige** Ausgabe der
+Kampagne — sie gehören zur Kostensumme oben und sind dort drin. Die zweite und
+dritte Zeile sind etwas anderes: eine **wiederkehrende** Ausgabe für jedes Jahr,
+in dem ein Abo bezahlt weiterläuft. Erst mit ihr wird aus dem Folgejahr-Umsatz
+(`docs/einnahmen-perspektive-10-08.md`) ein Deckungsbeitrag. Diese Zahlen fehlen
+weiterhin und stehen als «Spätere Ergänzung» unten.
 
-Zu sammeln sind darum **je Strom zwei Zahlen**: Herstellkosten je Ausgabe und
-Portokosten je Ausgabe (Wochenschrift Papier, je Zone, wenn es sich unterscheidet)
-sowie die Uscreen-Gebühr je Abo und Monat. Sobald sie vorliegen, bekommt das
-Cockpit eine eigene Struktur dafür (`CONFIG.stueckkosten` je Strom) — vorher
-nicht: Eine leere Struktur mit Nullen darin sähe aus wie «kostet nichts».
+## Spätere Ergänzung — verzichtbar, auf Wunsch des Auftraggebers zurückgestellt (13. August)
 
-## Offene Fragen, keine Zahlen
+Fünf Punkte, keiner davon hält den Bericht auf. Sie verbessern ihn, sobald sie
+anfallen — niemand muss sie aktiv beschaffen:
 
-- **Warum die Gruppe «Sehen» so schlecht wandelte.** Sie hatte die höchste
-  Klickrate aller Gruppen (24,2 %) und die schlechteste Umwandlung (0,91 %
-  je Angeschriebenem, 3,8 % je Klicker). Drei Ursachen sind ausgeschlossen —
-  Formular, Papierformat, Ablenkungsklick (Nachtrag in
-  `docs/mailing-gruppen-10-08.md`). **Offen ist genau eine Prüfung:** Betreff
-  und ersten Absatz der `S26 · Sehen`-Mails in ActiveCampaign ansehen — lesen
-  zahlende TV-Kunden dort ein Angebot für ihr **eigenes**, schon bezahltes
-  Abo statt eines für die Wochenschrift? Wäre es so, wäre die Gruppe nicht
-  falsch adressiert, sondern falsch angesprochen — ein Textfehler, kein
-  Zielgruppenfehler, und für die nächste Aktion billig zu beheben. Fünf
-  Minuten Arbeit, und die Ursachenfrage ist beantwortet.
-- **Die 268 Kassenabbrecher anschreiben** — sie sind bei Uscreen samt
-  Abbruchzeitpunkt bekannt, die Abandoned-Checkout-Mail bringt Uscreen selbst
-  mit und war nicht scharf geschaltet. Der billigste ungenutzte Hebel der
-  Aktion; er verträgt aber keine Wartezeit (Herleitung und die Grenze zum
-  Wortbruch: `docs/mailing-gruppen-10-08.md`).
+- **Social (Metricool), 6 Einträge ohne vollständige Zahlen** — Kampagnen-
+  Auswertung im geschützten Dashboard, Link im Cockpit unter «Methode und
+  Quellen»: Reel WS Wolfgang (10.7., fehlt Klicks), Reel GTV Thijs (12.7.,
+  fehlt Klicks, Reichweite 3 wirkt wie ein Tippfehler), Karussell GTV (16.7.),
+  Karussell WS (19.7.), Reel letzte Erinnerung WS (31.7.), Reel letzte
+  Erinnerung GTV (2.8.) — bei den letzten vier fehlen Reichweite und Klicks.
+- **Flyer- und Stand-Reichweite** — Druck ist erfasst (CHF 82.50 + 55, oben);
+  es fehlt, wie viele Flyer «Auslage Empfang» und «Auslage Buchhandlung»
+  (10. Juli) tatsächlich mitgenommen wurden.
 - **Inserate VaG und RSV** (13. Juli, Notiz «Bei Bruno Zweifel angefragt») —
-  sind sie überhaupt erschienen? Wenn nein, gehören die Zeilen als
-  «nicht erschienen» in die Notiz, sonst zählen sie als stumme Wege gegen die
-  Kampagne. Wenn ja: Reichweite beim Betreiber erfragen.
-- **Abgleich Wochenschrift gegen Zoho** — die 359 WoS-Anmeldungen sind
-  Paperform-Einreichungen. Wahrheitsstand für Abonnements ist Zoho. Für den
-  Bericht zählt, wie viele davon dort als Abo angelegt sind; die Differenz sind
-  Dubletten oder Fehleinträge und gehören benannt, nicht stillschweigend
-  mitgezählt. (goetheanum.tv braucht diesen Abgleich nicht — dort schreibt der
-  Uscreen-Webhook direkt.)
+  ob sie überhaupt erschienen sind, ist unbestätigt.
+- **Abgleich Wochenschrift gegen Zoho** — 359 WoS-Anmeldungen sind Paperform-
+  Einreichungen; Zoho ist der Wahrheitsstand für Abonnements. Ohne Abgleich
+  bleibt offen, wie viele Dubletten oder Fehleinträge die 406 WoS-Anmeldungen
+  enthalten. (goetheanum.tv braucht das nicht — dort schreibt der Webhook
+  direkt.)
+- **Uscreen-Gebühr je Abo und Monat, Papier-Stückkosten fürs Folgejahr** — die
+  zweite Kostensorte oben; ohne sie bleibt der Folgejahr-Umsatz ein Umsatz,
+  kein Deckungsbeitrag.
+
+## Bewusst nicht getan (13. August)
+
+**Die 268 Kassenabbrecher bei goetheanum.tv anschreiben.** Sie sind bei
+Uscreen samt Abbruchzeitpunkt bekannt, die Abandoned-Checkout-Mail bringt
+Uscreen serienmässig mit, war aber nicht scharf geschaltet. Der Auftraggeber
+hat sich gegen ein Nachfassen entschieden. Herleitung und Zahl bleiben in
+`docs/mailing-gruppen-10-08.md` stehen, damit die Analyse nicht als offener
+Punkt zurückkommt — die Entscheidung ist gefallen, nicht das Wissen fehlt.
 
 ## Was NICHT jetzt eingesammelt wird
 
@@ -262,19 +284,20 @@ sagen und die Zahl nicht härter machen, als sie ist.
 
 ## Reihenfolge
 
+Alles hier Genannte ist entweder erledigt oder bewusst zurückgestellt — es
+gibt aktuell **keinen offenen Blocker** für den Schlussbericht.
+
 1. ~~Mail-Wellen (4 Einträge)~~ — **erledigt 9. August**
-2. ~~Newsletter (4 von 5)~~ — **erledigt 9. August**, AGiD offen
-3. ~~Meta- und YouTube-Kosten~~ — **erledigt 10. August** (CHF 460)
+2. ~~Newsletter (4 von 5)~~ — **erledigt 9. August**, AGiD auf später verschoben
+3. ~~Meta- und YouTube-Kosten~~ — **erledigt 10. August**
 4. ~~Uscreen-Vollabgleich und Zählregel~~ — **erledigt 10. August**
 5. ~~Nenner je Gruppe (zweiter AC-Lauf)~~ — **erledigt 10. August**
 6. ~~Einnahmen-Perspektive neu rechnen, Erkenntnisse ins Cockpit~~ —
    **erledigt 10. August**
-7. **Interne Stunden eintragen** — der eine Eintrag, der noch fehlt.
-   Kategorie «Stunden intern», Ansatz CHF 60 (voreingestellt), grobe
-   Schätzung genügt. Danach `CONFIG.kostenVollstaendig` auf `true` stellen —
-   erst dann zeigt der Bericht Kosten je Abo und Rückfluss.
-8. Social (6 Einträge aus Metricool), Flyer-Reichweite
-9. AC-Monatsgebühr beim Konto-Inhaber erfragen (Verteilschlüssel steht:
-   9,4 % des Sendekontingents, als Posten «Infrastruktur» eintragen)
-10. Die offenen Fragen: Sehen-Gruppe, Inserate VaG/RSV, Zoho-Abgleich,
-    AGiD-Newsletter
+7. ~~Interne Stunden, `CONFIG.kostenVollstaendig`~~ — **erledigt 13. August**
+8. ~~AC-Monatsgebühr~~ — **erledigt 13. August** (als Schätzung, CHF 95)
+9. ~~Sehen-Gruppe: Ursache prüfen~~ — **erledigt 13. August** (widerlegt,
+   nicht bestätigt — Herleitung in `docs/mailing-gruppen-10-08.md`)
+10. ~~Kassenabbrecher anschreiben~~ — **entschieden: nicht** (13. August)
+11. Was übrig bleibt, steht unter «Spätere Ergänzung» — freiwillig, nicht
+    Teil der Berichtspflicht.
