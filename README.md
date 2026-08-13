@@ -77,14 +77,32 @@ Die zugehoerigen Verarbeitungsskripte und groesseren Datensammlungen folgen spae
 
 ## Was aktuell online bleibt
 
-Der GitHub-Pages-Workflow publiziert weiter nur den stabilen oeffentlichen Satz:
+`deploy-pages.yml` baut ein kuratiertes Bundle (`_site`) und laedt es als
+Pages-Artefakt hoch — aber **ausgeliefert wird es derzeit nicht**. Gemessen am
+13. August 2026: `werkzeuge.goetheanum.ch` serviert den **Branch-Inhalt**, nicht
+das Artefakt.
 
-- Logo-Generator
-- GTV Naming – Renderings
-- Visitenkarten-Generator
-- gemeinsame `assets/`
+Beleg: `/CLAUDE.md`, `/SECRETS.md`, `/tools/ds-lint.py`, `/services/` und
+`/reference/` antworten mit 200, obwohl der Workflow genau diese Ordner
+aussen vor laesst. Umgekehrt fehlen die vom Workflow **erzeugten** Dateien —
+die Kurz-Adressen `/‹slug›/` aus `tools/build_tool_aliases.py` waren live nie
+erreichbar (404), obwohl sie in jedem Artefakt liegen. Genau daran starb der
+Teilen-Link der Logoseite.
 
-Das reduziert Risiko fuer laufende Veroeffentlichungen, obwohl die Repo-Struktur intern bereits aufgeraeumt ist.
+**Solange das so ist, gilt:** was live erreichbar sein soll, muss **im Branch
+liegen**. Darum sind die Kurz-Adressen als Weiterleitungs-Stubs eingecheckt
+(`logo-generator/`, `qr-generator/`, `kurzlink/`, `gtv-naming/` — neben den
+laengst eingecheckten Abschnitts-Pfaden `logo/`, `signatur/`, `karten/` …).
+Neu erzeugen laesst sich der Satz reproduzierbar mit:
+
+    python3 tools/build_tool_aliases.py .
+
+**Offen (Entscheidung des Auftraggebers):** Pages-Quelle in den
+Repository-Einstellungen von ‹Deploy from a branch› auf ‹GitHub Actions›
+umstellen. Dann gilt wieder, was der Workflow beschreibt — das kuratierte
+Bundle — und `docs/`, `tools/`, `workers/`, `services/`, `reference/`,
+`collections/` verschwinden aus dem Web. Bis dahin ist das Repository
+oeffentlich lesbar.
 
 ## Noch bewusst nicht in diesem kleinen Merge
 
