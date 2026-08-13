@@ -186,13 +186,14 @@
     // vollständig erhalten.
     zuegeZeigen: false,
     // Sind die Kosten vollständig erfasst? Solange NEIN, zeigt der Bericht
-    // «Kosten je Abo» und «Rückfluss» NICHT an. Mit den am 10. August erfassten
-    // CHF 769.70 stünde dort ein Rückfluss von 86-fach und ein Preis je Abo von
-    // 74 Rappen — beides technisch richtig gerechnet und trotzdem gelogen, weil
-    // die internen Stunden fehlen (Kategorie «Stunden intern», Hausansatz
-    // CHF 60). Sobald sie eingetragen sind: hier auf true stellen.
-    // Was fehlt, steht in docs/schlussbericht-datensammlung.md.
-    kostenVollstaendig: false,
+    // «Kosten je Abo» und «Rückfluss» NICHT an. Seit 13. August true: interne
+    // Stunden (100 h × CHF 60) und die geschätzte AC-Monatsgebühr (CHF 95,
+    // als Schätzung im Posten-Text markiert) sind eingetragen, macht
+    // CHF 9 014.60. Was an Stückkosten je Abo (Uscreen-Gebühr, Papier fürs
+    // Folgejahr) weiterhin fehlt, betrifft den Deckungsbeitrag der
+    // Einnahmen-Perspektive, nicht diese Kampagnenkosten-Summe — siehe
+    // docs/schlussbericht-datensammlung.md, «Zwei Arten von Kosten».
+    kostenVollstaendig: true,
     // Zeigt an, was im Cockpit noch Annahme ist und nicht gemessen. Preise und
     // Zielmarken sind es seit dem 17. Juli nicht mehr (echte Formular- und
     // Uscreen-Preise, ratifizierte GF-Vorgabe) – allein die Bleibe-Quote bleibt
@@ -1425,7 +1426,8 @@
       el('costRoi').textContent = '–';
     }
     if (el('kostenNote')) el('kostenNote').textContent = voll
-      ? 'Alle bekannten Kosten sind erfasst; Kosten je Abo und Rückfluss rechnen darauf.'
+      ? 'Kampagnenkosten sind erfasst (die ActiveCampaign-Gebühr darin ist eine Schätzung, im Posten selbst markiert); Kosten je Abo und Rückfluss rechnen darauf. '
+        + 'Bewusst nicht darin: die laufende Uscreen-Gebühr und Papier je Folgejahr – die sollen aus dem Abopreis selbst gedeckt werden, eine Preisfrage jenseits dieser Kampagne (docs/schlussbericht-datensammlung.md).'
       : 'Kosten je Abo und Rückfluss bleiben leer, solange die Kosten unvollständig sind — die bezahlten Anzeigen stehen seit dem 10. August drin, die internen Stunden fehlen noch. '
         + 'Gerechnet würden daraus sonst Zahlen, die technisch stimmen und trotzdem täuschen. Was fehlt, steht in docs/schlussbericht-datensammlung.md; eingetragen wird es unter Kosten.';
 

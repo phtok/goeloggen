@@ -13,6 +13,83 @@ geerbt.
 erst unterwegs nachziehen mussten: der **Wahrheit des Angebots** und der
 **Messkette**. Beides war teurer nachzurüsten als alles Redaktionelle.
 
+**Und jetzt ist es beziffert** (Nachtrag 13. August 2026, nach Abschluss der
+Kostenerfassung): Die Aktion kostete **CHF 9 014.60**, davon **CHF 6 000
+interne Arbeitszeit — zwei Drittel.** Bezahlte Reichweite waren fünf Prozent.
+Ein erheblicher Teil dieser hundert Stunden ging in Arbeiten, die es bei
+sauberer Messkette gar nicht gegeben hätte: den zeilenweisen Uscreen-Abgleich
+(40 fälschlich gezählte Verlängerungen, 11 fehlende Abos aus der Webhook-Lücke
+der ersten vier Tage), drei Neuberechnungen der Einnahmen-Perspektive auf
+wandernder Basis, zwei nachträgliche ActiveCampaign-Läufe für Zahlen, die
+während des Versands ohnehin entstanden.
+
+**Die Messkette vorne zu bauen spart nicht Genauigkeit — es spart die
+Arbeitszeit, die alles andere überwiegt.** Wer beim nächsten Mal billiger
+werden will, kürzt nicht das Mediabudget (CHF 460), sondern die
+Nacharbeit.
+
+## Die Zahlen, die den Zuschnitt der nächsten Kampagne bestimmen
+
+Fünf Befunde aus dem Schlussbericht, jeder mit einer Folge für die Planung.
+Herleitung in `docs/mailing-gruppen-10-08.md` und `docs/uscreen-abgleich-10-08.md`.
+
+**1 · Die Richtung des Quer-Angebots entscheidet mehr als der Text.**
+Je 1 000 angeschriebener Personen: Wochenschrift-Leser → goetheanum.tv
+**112 Abos**; Menschen ohne Abo → beides **14**; goetheanum.tv-Abonnenten →
+Wochenschrift **9**. Der Abstand zwischen der besten und der schlechtesten
+Richtung ist **zwölffach**. Vier mögliche Ursachen für die schwache Richtung
+sind geprüft und ausgeschlossen (Anmeldeweg, Papierformat, Ablenkungsklick,
+Betreffzeile) — es bleibt der Schluss, dass **ein Leseabo zu beginnen ein
+grösserer Schritt ist als ein Video anzuklicken**. Das ist eine
+Planungsgrösse, kein behebbarer Fehler: Für die Richtung Sehen → Lesen von
+vornherein mit einem Bruchteil rechnen, nicht hinterher erklären.
+
+**2 · Der Ertrag hängt am Bleiben, nicht an der Zahl der Anmeldungen.**
+Ein Monat durchschnittlicher Verweildauer ist rund **CHF 6 200** wert — die
+ganze Kampagne kostete 9 014.60. **Anderthalb Monate zusätzliche Treue zahlen
+die Aktion ein zweites Mal.** Die Onboarding-Strecke für die Gratismonate
+(Phase 6.3) ist damit nicht ein Nachklapp, sondern der grösste einzelne Hebel
+auf den Ertrag — und 2026 wurde sie nie gebaut.
+
+**3 · Der Kassenweg ist der grösste unbeobachtete Verlust.** 268 Menschen
+legten bei goetheanum.tv ein Konto an, erreichten die Kasse und schlossen
+nicht ab. Gemessen an 626 Abschlüssen wären das **43 Prozent mehr** gewesen.
+Uscreen kennt sie samt Zeitstempel und bringt die Erinnerungsmail
+serienmässig mit — sie war nicht scharf geschaltet. Für die nächste Aktion:
+**vor dem ersten Mail einschalten**, nicht hinterher entdecken.
+
+**4 · Ein Viertel kam aus dem eigenen Keller, ungeplant und unsichtbar.**
+166 der 626 belegten goetheanum.tv-Abos stammen aus Konten, die es vorher
+schon gab, 63 davon seit 2022. Sie tragen **keine UTM-Spur** (die wird bei
+Kontoerstellung gesetzt) und fielen darum in jeder Attribution ins
+Dunkelfeld. Sie kündigen bisher mit 1,8 Prozent halb so oft wie die
+Neukonten (4,6 Prozent) — die **treuere** Hälfte der Ernte war die, die
+niemand geplant hatte. Ruhende Konten sind ein eigener Kanal und gehören
+beim nächsten Mal eigens angesprochen und eigens gezählt.
+
+**5 · Reichweite hat einen Preis in Kontakten, nicht nur in Franken.**
+549 Menschen haben den Verteiler verlassen — auf zwei gewonnene Abos ein
+verlorener Kontakt. Nach Listenanteil geschätzt (nicht gemessen, die
+Abmeldungen liegen nur je Welle vor) trägt die breite Gruppe «ohne Abo»
+davon rund 420 — dort kostet **jedes Abo ungefähr einen verlorenen
+Kontakt**, in der eigenen Lesergruppe eines auf acht. Auffällig: Die
+**zweite** Welle kostete mehr Abmeldungen (180) als die erste (163), die
+Frist-Mail am Schlusstag am wenigsten von allen (42). Nicht die Schärfe
+vertreibt, sondern die Wiederholung ohne neuen Anlass.
+
+**Und was nicht getragen hat:** Bezahlte Reichweite. 131 000 erreichte
+Personen, 965 Klicks, rund neun Abos — **CHF 51 je Abo gegen CHF 8.65 im
+Schnitt der Aktion**. Dreifach belegt (Placebo-Probe, Abschalt-Probe,
+Fensterrechnung). Erst den Kassenweg messbar machen, dann wieder Reichweite
+kaufen.
+
+**Kostenstruktur zum Merken** (CHF 9 014.60 gesamt): interne Stunden 67 %,
+Papier-Fulfillment der Probeabos 22 %, bezahlte Anzeigen 5 %, Rest 7 %.
+Ein digitales Probeabo kostet in der Gratiszeit nichts, ein Papier-Probeabo
+**CHF 17.26** (`docs/probeabo-kosten-12-08.md`) — bei drei Gratismonaten ist
+Papier der einzige Strom, bei dem «gratis» tatsächlich Geld kostet. In der
+Mengenplanung berücksichtigen.
+
 ## Die Frist ist das Instrument — und sie verbraucht sich
 
 **Eine Frist gewinnt keine Aufmerksamkeit. Sie erntet Unentschiedene.** Das ist
@@ -167,6 +244,31 @@ auslassen — dann steht die Antwort in den Zahlen statt in einer Vermutung.
    durch die ganze Kette; im Backend nachsehen. 2026-Trick: echte
    Produktions-Anmeldungen mit utm sind der beste Beweis — kein Testeintrag
    mit Nebenwirkungen nötig, erst in den Daten nachschauen.
+   **⚠ Der Webhook muss VOR der ersten Mail laufen und mit einer echten
+   Anmeldung belegt sein.** 2026 lief er in den ersten vier Tagen noch nicht
+   sauber — 11 echte Abos fehlten und mussten im August von Hand aus dem
+   Uscreen-Vollexport nachgetragen werden.
+5. **Zählregel schriftlich, bevor gezählt wird: Was ist ein Neuabschluss?**
+   2026 die teuerste Auslassung. Uscreen feuert `subscription_assigned` auch
+   für **laufende Bestandsabos**, die turnusmässig weiterlaufen, und
+   unterscheidet die Fälle im Payload nicht — nur `user_id`,
+   `subscription_id`, Plantitel. 40 Verlängerungen standen dadurch als
+   Anmeldung in der Zählung (6 Prozent zu hoch), bis der zeilenweise Abgleich
+   sie fand. Gegenmittel steckt jetzt im Ingest: Ein Abo mit Gratismonaten
+   kann in den ersten 90 Tagen **keine** wiederkehrende Zahlung haben — liegt
+   für dieselbe Person schon ein `success_recurring` im Rohprotokoll, ist es
+   eine Verlängerung (Spalte `art`, View `sommer2026_neuabos`).
+6. **Nenner je Segment festhalten, solange sie entstehen.** Wie viele
+   Menschen je Gruppe angeschrieben wurden, weiss nur ActiveCampaign — und
+   ohne diese Zahl ist jedes Ergebnis eine absolute Zahl statt einer Quote.
+   2026 mussten sie in zwei nachträglichen Läufen geholt werden. Je
+   Automation × Welle: zugestellt, eindeutige Öffner, eindeutige Klicker;
+   dazu Abmeldungen und Bounces je Welle (Fertiger Auftrag:
+   `services/mailing-sommer2026/AC-NENNER.md`).
+7. **Zähler auf die Aktionsseiten.** 2026 die grösste blinde Stelle: Die
+   Landingpages zählten nicht mit, die Lücke zwischen ‹Klick im Mail› und
+   ‹Konto angelegt› ist bis heute eine Differenz statt einer Messung.
+   Dieselbe Weiterleitung, die die Kurzlinks zählt, kann das.
 
 ## Phase 2 — Gehalt und Inhalt (in DIESER Reihenfolge)
 
@@ -224,8 +326,17 @@ auslassen — dann steht die Antwort in den Zahlen statt in einer Vermutung.
   Mails (w3/w3b) fix senden. HTML als Custom-HTML von den Mail-URLs
   einfügen; %UNSUBSCRIBELINK% ersetzt AC; AC-Klick-Tracking ummantelt die
   URLs nur (utm bleibt intakt).
-- Reihenfolge: Automationen bauen → Testversände → AKTIV schalten → dann
-  erst Bulk-Tag setzen.
+- Reihenfolge: Automationen bauen → Testversände → **Abnahme (siehe unten)** →
+  AKTIV schalten → dann erst Bulk-Tag setzen.
+- **⚠ Abnahme der ganzen Strecke vor dem Scharfschalten — Schritt für
+  Schritt, nicht stichprobenhaft.** 2026 trugen **zwei von sechs**
+  Automationen einen Fehler, den vor dem Versand niemand gesehen hat: In
+  `S26 · Lesen · EN` ging die Frist-Mail am **15. Juli** hinaus — drei Tage
+  **vor** der Ankündigung; 197 englische Leser bekamen «heute läuft es aus»,
+  bevor die Aktion begonnen hatte. Und bei beiden Wochenschrift-Newslettern
+  war das **Link-Tracking aus** (`tracklinks:none`), ihre Klicks sind
+  dauerhaft nicht messbar. Abzuhaken je Schritt: **Versanddatum ·
+  Link-Tracking an · Zielgruppe des Zweigs · utm_content des Buttons.**
 
 ## Phase 5 — Betrieb während der Wellen
 
@@ -250,9 +361,16 @@ auslassen — dann steht die Antwort in den Zahlen statt in einer Vermutung.
    (`utm_campaign` × `utm_content`), App-Zugänge als bekannte Lücke.
 3. **Onboarding-Strecke für die Gratis-Monate** (Willkommen mit
    Inhalts-Empfehlungen → Mid-Trial-Impuls → Erinnerung vor Ablauf): laut
-   INMA/NZZ der grösste Trial→Paid-Hebel — 2026 als To-do notiert, nächstes
-   Mal von Anfang an Teil des Plans (dieselbe Fabrik, eigene heroes.json).
-4. Retro in dieses Drehbuch zurückschreiben.
+   INMA/NZZ der grösste Trial→Paid-Hebel — 2026 als To-do notiert und **nie
+   gebaut**. Sie gehört ab dem nächsten Mal in Phase 0, nicht in Phase 6:
+   Ein Monat zusätzlicher Verweildauer ist rund CHF 6 200 wert, die ganze
+   Aktion kostete 9 014.60. Dieselbe Fabrik, eigene heroes.json.
+4. **Kassenabbrecher zurückholen.** Uscreen kennt jede abgebrochene Kasse mit
+   Zeitstempel und bringt die Erinnerungsmail mit; 2026 war sie nicht
+   eingeschaltet und 268 Menschen blieben liegen. **Vor der Kampagne
+   einschalten**, dann geschieht es von selbst und innerhalb der Frist —
+   nachträglich ist es entweder zu spät oder es macht die Frist unwahr.
+5. Retro in dieses Drehbuch zurückschreiben.
 
 ## Eingefrorenes Detailwissen (Nachschlag)
 
