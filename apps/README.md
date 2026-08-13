@@ -2,7 +2,7 @@
 
 Statische Goetheanum-Onepager mit jeweils eigenem Einstieg unter `index.html`.
 
-- `logo-generator/`
+- `logos/` - Logo-Generator (Slug `logo-generator`)
 - `gtv-naming/` - GTV Naming – Renderings
 - `visitenkarten-generator/`
 - `briefschaften/`

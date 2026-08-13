@@ -8,7 +8,7 @@ Dieses Repository enthaelt nur noch Goetheanum-Projekte.
 
 Statische Onepager liegen unter `apps/`:
 
-- `apps/logo-generator/`
+- `apps/logos/` - Logo-Generator (Slug `logo-generator`, kurze Adresse `/logo-generator/`)
 - `apps/gtv-naming/` - GTV Naming – Renderings: Praesentationswerkzeug fuer die Umbenennung von Goetheanum TV mit umschaltbarer Wortmarke fuer alle Namenskandidaten
 - `apps/visitenkarten-generator/`
 - `apps/briefschaften/`
@@ -51,7 +51,7 @@ Die Root-HTML-Dateien sind jetzt bewusst nur noch Launcher oder Rueckwaertskompa
 
 - `index.html` -> Front door (Uebersicht der Werkzeuge; Wurzel umgelegt)
 - `portal.html` -> `index.html` (Alias, alte Links bleiben stabil)
-- `logo-generator.html` -> `apps/logo-generator/`
+- `logo-generator.html` -> `apps/logos/`
 - `visitenkarten.html` -> `visitenkarten-generator.html`
 - `visitenkarten-generator.html` -> `apps/visitenkarten-generator/`
 - `briefschaften.html` -> `apps/briefschaften/`

@@ -321,7 +321,7 @@ export function dashboardHtml(workerOrigin) {
         <p class="eyebrow">Goetheanum Logo Generator</p>
         <h1>Nutzungsstatistik</h1>
       </div>
-      <a class="toplink" href="https://phtok.github.io/goeloggen/apps/logo-generator/" rel="noopener noreferrer">Generator oeffnen</a>
+      <a class="toplink" href="https://werkzeuge.goetheanum.ch/logo-generator/" rel="noopener noreferrer">Generator oeffnen</a>
     </header>
 
     <section class="controls" aria-label="Zeitraum">

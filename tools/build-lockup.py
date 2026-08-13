@@ -5,7 +5,7 @@ Goetheanum-Lockup reproduzierbar bauen (Icon + „Goetheanum" + Unterzeile).
 
 Nutzt dieselbe Engine wie der Logo-Generator: die eingebetteten Wortmarken-
 Outlines (GLYPHS), die Marke (ICON) und die textToPath-Geometrie werden direkt
-aus apps/logo-generator/index.html gelesen. So entsteht ein echtes Lockup als
+aus apps/logos/engine.js gelesen. So entsteht ein echtes Lockup als
 SVG – kein freihändig gezeichnetes Logo.
 
 Nutzung:
@@ -16,7 +16,7 @@ Nutzung:
 import sys, os, re, json, math, argparse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC  = os.path.join(ROOT, "apps", "logo-generator", "index.html")
+SRC  = os.path.join(ROOT, "apps", "logos", "engine.js")
 
 # Lockup-Geometrie wie im Generator (Layout „desktop"): fs=10.3, Text bei x=19.5,
 # Zeilen-Grundlinien y=10.05 und 20.05, Höhe 22.24; Breite = max(Zeilenbreiten)+25.
