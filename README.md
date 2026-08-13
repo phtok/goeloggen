@@ -105,10 +105,19 @@ aus `sektionen.json` und die Kurz-Adressen `/‹slug›/` je Werkzeug sind desha
     python3 tools/build_sections.py .
     python3 tools/build_tool_aliases.py .
 
+**Der Branch-Lauf ist entschaerft, nicht abgeschaltet.** `_config.yml` haelt beim
+Jekyll-Lauf dieselben Quellordner draussen, die auch das Bundle auslaesst
+(`tools/`, `docs/`, `workers/`, `services/`, `collections/`, `reference/`,
+`archive/`, `CLAUDE.md`, `SECRETS.md` …). Beide Laeufe veroeffentlichen damit
+denselben Umfang, und es faellt nicht mehr auf, welcher gerade oben steht.
+Aendert sich, was `deploy-pages.yml` kopiert, muss `_config.yml` mitziehen —
+die Liste dort ist aus dem Workflow abgeleitet, nicht geraten.
+
 **Offen (nur der Auftraggeber kann das):** unter Settings → Pages die Quelle auf
-‹GitHub Actions› stellen. Dann faellt der Branch-Lauf weg, das kuratierte Bundle
-gilt allein, die Quellordner sind zuverlaessig draussen — und die eingecheckten
-Weiterleitungen werden zur blossen Redundanz statt zur Notwendigkeit.
+‹GitHub Actions› stellen. Dann faellt der Branch-Lauf ganz weg, das kuratierte
+Bundle gilt allein — und die eingecheckten Weiterleitungen wie `_config.yml`
+werden zur blossen Redundanz statt zur Notwendigkeit. Ueber die API laesst sich
+das nicht erledigen: der Einstellungs-Pfad ist fuer Automaten gesperrt.
 
 **Altlinks bleiben stehen.** Wer eine Adresse auswaerts hinterlegt hat, soll
 nicht ins Leere laufen, wenn wir intern umbenennen. `apps/logo-generator/` ist
