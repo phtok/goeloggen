@@ -78,31 +78,26 @@ Die zugehoerigen Verarbeitungsskripte und groesseren Datensammlungen folgen spae
 ## Was aktuell online bleibt
 
 `deploy-pages.yml` baut ein kuratiertes Bundle (`_site`) und laedt es als
-Pages-Artefakt hoch — aber **ausgeliefert wird es derzeit nicht**. Gemessen am
-13. August 2026: `werkzeuge.goetheanum.ch` serviert den **Branch-Inhalt**, nicht
-das Artefakt.
+Pages-Artefakt hoch — und **genau dieses Artefakt wird ausgeliefert**. Die
+Pages-Quelle steht auf ‹GitHub Actions›. Gemessen am 13. August 2026:
 
-Beleg: `/CLAUDE.md`, `/SECRETS.md`, `/tools/ds-lint.py`, `/services/` und
-`/reference/` antworten mit 200, obwohl der Workflow genau diese Ordner
-aussen vor laesst. Umgekehrt fehlen die vom Workflow **erzeugten** Dateien —
-die Kurz-Adressen `/‹slug›/` aus `tools/build_tool_aliases.py` waren live nie
-erreichbar (404), obwohl sie in jedem Artefakt liegen. Genau daran starb der
-Teilen-Link der Logoseite.
+- `/.nojekyll` antwortet mit 200 — die Datei entsteht erst im Build und liegt
+  **nicht** im Repository. Ausgeliefert wird also das Gebaute.
+- `/CLAUDE.md`, `/SECRETS.md`, `/tools/ds-lint.py`, `/docs/`, `/workers/`,
+  `/services/`, `/collections/` antworten mit **404**. Die Quellordner, die der
+  Workflow aussen vor laesst, sind **nicht** oeffentlich erreichbar.
 
-**Solange das so ist, gilt:** was live erreichbar sein soll, muss **im Branch
-liegen**. Darum sind die Kurz-Adressen als Weiterleitungs-Stubs eingecheckt
-(`logo-generator/`, `qr-generator/`, `kurzlink/`, `gtv-naming/` — neben den
-laengst eingecheckten Abschnitts-Pfaden `logo/`, `signatur/`, `karten/` …).
-Neu erzeugen laesst sich der Satz reproduzierbar mit:
+Online ist damit der kuratierte Satz: alle Tool-/Launcher-HTML im Wurzelordner,
+`apps/`, `start/`, `design-system/`, `assets/`, `tools.json` sowie die im Build
+erzeugten Pfade — die Abschnitts-Pfade aus `sektionen.json`
+(`tools/build_sections.py`) und die Kurz-Adressen `/‹slug›/` je Werkzeug
+(`tools/build_tool_aliases.py`).
 
-    python3 tools/build_tool_aliases.py .
-
-**Offen (Entscheidung des Auftraggebers):** Pages-Quelle in den
-Repository-Einstellungen von ‹Deploy from a branch› auf ‹GitHub Actions›
-umstellen. Dann gilt wieder, was der Workflow beschreibt — das kuratierte
-Bundle — und `docs/`, `tools/`, `workers/`, `services/`, `reference/`,
-`collections/` verschwinden aus dem Web. Bis dahin ist das Repository
-oeffentlich lesbar.
+**Korrektur vom 13. August 2026:** hier stand zwischenzeitlich, Pages liefere
+den Branch-Inhalt aus und das Repository sei oeffentlich lesbar. Das war
+**falsch** — es beruhte auf einer fehlerhaften Statuscode-Messung, die die
+`200 Connection Established` des Proxys mitzaehlte. Nachgemessen mit der
+tatsaechlichen HTTP/2-Statuszeile: die Quellordner sind 404.
 
 ## Noch bewusst nicht in diesem kleinen Merge
 
