@@ -1403,7 +1403,9 @@
 
   // ── Kosten und Wirkung ─────────────────────────────────────────────────────
   var KAT_LABEL = { stunden:'Stunden intern', social:'Social Media', druck:'Druck & Versand', infrastruktur:'Infrastruktur', andere:'Andere' };
-  var lastTotal = 0, lastRevenue = 0;
+  // lastStats hält die Roh-Statistik fest, damit ein Nachladen der Kosten
+  // (Eintragen/Löschen) den Treue-Hebel neu rechnen kann, ohne alles zu holen.
+  var lastTotal = 0, lastRevenue = 0, lastStats = [];
   function renderKosten(total, revenue, posten){
     if (!el('costTotal')) return;
     lastTotal = total; lastRevenue = revenue;
@@ -1420,10 +1422,38 @@
       el('costCpa').textContent = cpa > 0
         ? (cpa < 10 ? CONFIG.waehrung + ' ' + cpa.toFixed(2).replace('.', ',') : geld(cpa))
         : '–';
-      el('costRoi').textContent = summe > 0 ? (revChf / summe).toFixed(1) + '×' : '–';
+      // Dezimalkomma wie überall sonst im Haus – toFixed liefert einen Punkt.
+      el('costRoi').textContent = summe > 0 ? (revChf / summe).toFixed(1).replace('.', ',') + '×' : '–';
     } else {
       el('costCpa').textContent = '–';
       el('costRoi').textContent = '–';
+    }
+
+    // Der grösste Hebel auf den Ertrag ist nicht die Zahl der Anmeldungen,
+    // sondern wie lange sie zahlen. Gerechnet, nicht behauptet: dasselbe
+    // Szenario mit einem Monat mehr – die Differenz IST der Wert eines
+    // Monats. Nebenbefund, der die Kostenzahl links relativiert: schon
+    // anderthalb Monate mehr Treue zahlen die ganze Aktion ein zweites Mal.
+    if (el('treueWert')){
+      var monatsWert = treueHebel(lastStats);
+      el('treueWert').textContent = monatsWert > 0 ? geld(monatsWert) : '–';
+      if (el('treueNote')){
+        el('treueNote').textContent = (monatsWert > 0 && summe > 0)
+          ? 'so viel bringt ein Monat mehr Treue im Schnitt – ' + (summe / monatsWert).toFixed(1).replace('.', ',')
+            + ' solcher Monate zahlen die ganze Aktion ein zweites Mal'
+          : 'wie viel Folgejahr-Umsatz ein Monat mehr Treue bringt';
+      }
+    }
+
+    // Woraus die Kosten bestehen – die Struktur ist die eigentliche Nachricht:
+    // Diese Aktion war Handarbeit, kein Medienkauf. Ohne diesen Satz liest
+    // jeder die Summe als Werbebudget.
+    if (el('costSub')){
+      var stundenAnteil = summe > 0 ? Math.round((jeKat.stunden || 0) / summe * 100) : 0;
+      var mediaAnteil   = summe > 0 ? Math.round((jeKat.social  || 0) / summe * 100) : 0;
+      el('costSub').textContent = (summe > 0 && stundenAnteil > 0)
+        ? 'davon ' + stundenAnteil + ' % interne Arbeitszeit, ' + mediaAnteil + ' % bezahlte Anzeigen'
+        : 'alle eingetragenen Posten';
     }
     if (el('kostenNote')) el('kostenNote').textContent = voll
       ? 'Kampagnenkosten sind erfasst (die ActiveCampaign-Gebühr darin ist eine Schätzung, im Posten selbst markiert); Kosten je Abo und Rückfluss rechnen darauf. '
@@ -1707,6 +1737,15 @@
   // Erwartung – sie sagt nur, worüber wir reden.
   function deckeRevenue(rows){
     return projectRevenue(rows, { name:'Decke', bleibt:{ gtv:1, wos:1 }, monate:12 });
+  }
+  // Was ein Monat durchschnittlicher Verweildauer wert ist: dasselbe Szenario
+  // einmal mit einem Monat mehr gerechnet, die Differenz ist die Antwort.
+  // Nur die monatlichen Abos bewegen sich – jährliche haben ihr Jahr bezahlt.
+  function treueHebel(rows){
+    if (!rows || !rows.length) return 0;
+    var sz = referenzSzenario();
+    var mehr = { name: sz.name, bleibt: sz.bleibt, monate: (sz.monate || 12) + 1 };
+    return projectRevenue(rows, mehr).chfGesamt - projectRevenue(rows, sz).chfGesamt;
   }
   // Aktive Abos – gekündigte zählen nicht mit; Bezugsgrösse der Karten.
   function aktiveAbos(rows){
@@ -2066,6 +2105,7 @@
         muListe = res[7] || []; muProto = res[8] || [];
         var links = res[9] || [];
         var total = stats.reduce(function(s, r){ return s + Number(r.n); }, 0);
+        lastStats = stats;
         var revenue = projectRevenue(stats);
         // 1 Stand · 2 Gebiete · 3 Züge · 4 Belege – in dieser Reihenfolge gelesen.
         renderStand(total, timeline);
