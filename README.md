@@ -77,21 +77,38 @@ Die zugehoerigen Verarbeitungsskripte und groesseren Datensammlungen folgen spae
 
 ## Was aktuell online bleibt
 
-`deploy-pages.yml` baut ein kuratiertes Bundle (`_site`) und laedt es als
-Pages-Artefakt hoch — und **genau dieses Artefakt wird ausgeliefert**. Die
-Pages-Quelle steht auf ‹GitHub Actions›. Gemessen am 13. August 2026:
+**Zwei Auslieferungen konkurrieren — das ist der Stand, nicht die Absicht.**
+Auf jeden Push nach `main` laufen zwei Pages-Deployments:
 
-- `/.nojekyll` antwortet mit 200 — die Datei entsteht erst im Build und liegt
-  **nicht** im Repository. Ausgeliefert wird also das Gebaute.
-- `/CLAUDE.md`, `/SECRETS.md`, `/tools/ds-lint.py`, `/docs/`, `/workers/`,
-  `/services/`, `/collections/` antworten mit **404**. Die Quellordner, die der
-  Workflow aussen vor laesst, sind **nicht** oeffentlich erreichbar.
+1. `deploy-pages.yml` (unser Workflow) laedt das kuratierte Bundle `_site` hoch.
+2. `pages-build-deployment` — der von GitHub selbst erzeugte Lauf, weil die
+   **Pages-Quelle auf ‹Deploy from a branch› steht**. Er veroeffentlicht den
+   **rohen Branch**, durch Jekyll gereicht.
 
-Online ist damit der kuratierte Satz: alle Tool-/Launcher-HTML im Wurzelordner,
-`apps/`, `start/`, `design-system/`, `assets/`, `tools.json` sowie die im Build
-erzeugten Pfade — die Abschnitts-Pfade aus `sektionen.json`
-(`tools/build_sections.py`) und die Kurz-Adressen `/‹slug›/` je Werkzeug
-(`tools/build_tool_aliases.py`).
+**Der spaeter fertige Lauf gewinnt.** Beim Merge von #549 etwa war der
+Branch-Lauf um 17:37:57 fertig, der Bundle-Lauf um 17:37:32 — also stand der
+Branch online. An anderen Tagesstunden war es umgekehrt. Die Seite wechselt
+darum ihr Gesicht, ohne dass jemand etwas aendert.
+
+Woran man erkennt, welcher Lauf gerade oben ist (gemessen 13. August 2026):
+
+- **Branch-Lauf oben:** `/CLAUDE.md` **und** `/CLAUDE.html` antworten mit 200
+  (Jekyll wandelt Markdown mit um); alles nur im Build Erzeugte ist **404**.
+- **Bundle-Lauf oben:** die Quellordner sind 404, die erzeugten Pfade 200.
+
+**Daraus die Arbeitsregel, solange das so ist:** was live gelten soll, muss
+**im Branch liegen** — dann traegt es unter beiden Laeufen. Die Abschnitts-Pfade
+aus `sektionen.json` und die Kurz-Adressen `/‹slug›/` je Werkzeug sind deshalb
+**eingecheckt**, nicht nur erzeugt. Neu erzeugen, wenn `sektionen.json` oder
+`tools.json` sich aendern:
+
+    python3 tools/build_sections.py .
+    python3 tools/build_tool_aliases.py .
+
+**Offen (nur der Auftraggeber kann das):** unter Settings → Pages die Quelle auf
+‹GitHub Actions› stellen. Dann faellt der Branch-Lauf weg, das kuratierte Bundle
+gilt allein, die Quellordner sind zuverlaessig draussen — und die eingecheckten
+Weiterleitungen werden zur blossen Redundanz statt zur Notwendigkeit.
 
 **Altlinks bleiben stehen.** Wer eine Adresse auswaerts hinterlegt hat, soll
 nicht ins Leere laufen, wenn wir intern umbenennen. `apps/logo-generator/` ist
@@ -99,11 +116,15 @@ darum kein Werkzeug mehr, sondern eine Weiterleitung auf `apps/logos/` — siehe
 `apps/README.md`. Umbenennen heisst hier: **die alte Adresse behalten**, nicht
 ersetzen.
 
-**Korrektur vom 13. August 2026:** hier stand zwischenzeitlich, Pages liefere
-den Branch-Inhalt aus und das Repository sei oeffentlich lesbar. Das war
-**falsch** — es beruhte auf einer fehlerhaften Statuscode-Messung, die die
-`200 Connection Established` des Proxys mitzaehlte. Nachgemessen mit der
-tatsaechlichen HTTP/2-Statuszeile: die Quellordner sind 404.
+**Zur Vorgeschichte (13. August 2026):** dieser Abschnitt behauptete an einem Tag
+zweierlei Gegenteiliges — erst ‹der Branch wird ausgeliefert›, dann ‹das Bundle
+wird ausgeliefert›. Beide Messungen waren fuer sich richtig und trotzdem
+irrefuehrend: es haengt davon ab, welcher der zwei Laeufe zuletzt fertig wurde.
+**Lehre fuer kuenftige Messungen:** eine einzelne Abfrage beweist hier nichts.
+Mehrfach messen, den Zeitpunkt notieren und gegen beide Deployment-Laeufe
+halten. Und den Statuscode an der echten HTTP-Statuszeile ablesen — hinter einem
+Proxy steht davor eine `200 Connection Established`, die leicht mitgezaehlt wird
+und 404er als Erfolg erscheinen laesst.
 
 ## Noch bewusst nicht in diesem kleinen Merge
 
