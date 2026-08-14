@@ -1833,6 +1833,28 @@
       'Zwei Stellschrauben je Szenario: die Bleibe-Quote je Produkt und die Zahl der Monate, die ein monatliches Abo im Schnitt trägt. ' +
       'Keine Prognose – es hat noch keine Kohorte entschieden, die erste tut es Anfang Oktober. ' +
       'Herleitung, Begründung der Quoten und Empfindlichkeit: ' + ((CONFIG.szenarien && CONFIG.szenarien.doc) || '') + '.';
+
+    // Vorblick auf drei Jahre: kein neues Szenario, dieselbe Bleibe-Quote nur
+    // zweimal zusätzlich auf ein VOLLES Kalenderjahr angewandt statt auf den
+    // Monats-Faktor des Startjahrs (der galt nur, weil die Aktion mitten im
+    // Jahr begann). Bewusst OHNE weiteren Schwund in Jahr 2/3 – dafür gibt es
+    // vor 2028 keinen Messwert – und ohne Preisänderung.
+    var vhost = el('vorblick3Karten');
+    if (vhost && stats){
+      vhost.innerHTML = '';
+      szenarien().forEach(function(sz){
+        var jahr1 = projectRevenue(stats, sz).chfGesamt;
+        var volljahr = projectRevenue(stats, { name: sz.name, bleibt: sz.bleibt, monate: 12 }).chfGesamt;
+        var gesamt = jahr1 + 2 * volljahr;
+        var karte = document.createElement('div'); karte.className = 'kennzahl';
+        var n = document.createElement('div'); n.className = 'k-label'; n.textContent = sz.name;
+        var w = document.createElement('div'); w.className = 'k-wert'; w.textContent = geld(gesamt);
+        var m = document.createElement('div'); m.className = 'k-note';
+        m.textContent = 'Jahr 1 ' + geld(jahr1) + ' · Jahr 2 und 3 je ' + geld(volljahr);
+        karte.appendChild(n); karte.appendChild(w); karte.appendChild(m);
+        vhost.appendChild(karte);
+      });
+    }
   }
 
   // ── Kopfzahlen: die grossen Zahlen zuerst ─────────────────────────────────
