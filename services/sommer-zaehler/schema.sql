@@ -551,6 +551,16 @@ revoke all on table public.sommer2026_config from anon, authenticated;
 --   nachfrist      Nach `aktion_ende` angemeldet. Das Angebot ist dasselbe, das
 --                  Versprechen nicht mehr: Seit dem 12. August gibt Uscreen auf
 --                  84317 drei Tage Probe statt drei Monate gratis.
+--   anderes_angebot  Hat das Aktionsangebot nie bekommen. Erkannt am Test, der
+--                  auch `verlaengerung` trägt, nur vorwärts: Ein Abo mit drei
+--                  Gratismonaten kann in den ersten 85 Tagen keine echte
+--                  Zahlung haben. Sechs Zeilen (Migration
+--                  «sommer2026_art_anderes_angebot», 25. August) – vier
+--                  App-Käufe über Apple (210182, 211202), ein ermässigtes
+--                  Jahresabo (85072), eine Sofortzahlung am Anmeldetag. Auf
+--                  diesen Angeboten sind es sieben Tage Probe.
+--                  Einmalige Korrektur, keine laufende Regel: Seit
+--                  `aktion_ende` entstehen keine Aktionszeilen mehr.
 --
 -- Die Trennung liegt in der View, nicht in den RPCs: So kann keine Auswertung
 -- sie vergessen. Jede öffentliche Zahl liest sommer2026_neuabos.
@@ -559,10 +569,10 @@ revoke all on table public.sommer2026_config from anon, authenticated;
 --   add column if not exists art text not null default 'neu';
 alter table public.sommer2026_signups drop constraint if exists sommer2026_signups_art_check;
 alter table public.sommer2026_signups add constraint sommer2026_signups_art_check
-  check (art in ('neu', 'verlaengerung', 'nachfrist'));
+  check (art in ('neu', 'verlaengerung', 'nachfrist', 'anderes_angebot'));
 
 comment on column public.sommer2026_signups.art is
-  'neu = Aktionsanmeldung (zählt) · verlaengerung = laufendes Bestandsabo, kein Neuabo · nachfrist = nach dem Aktionsende (aktion_ende) angemeldet, anderes Angebot. Nur art = ''neu'' liegt in der View sommer2026_neuabos und damit in den Zahlen.';
+  'neu = Aktionsanmeldung (zählt) · verlaengerung = laufendes Bestandsabo · nachfrist = nach aktion_ende angemeldet · anderes_angebot = hat das Aktionsangebot nie bekommen (App-Kauf, ermässigtes Abo, Sofortzahlung – sieben Tage Probe statt drei Monate). Nur art = ''neu'' liegt in der View sommer2026_neuabos und damit in den Zahlen.';
 
 create or replace view public.sommer2026_neuabos as
   select * from public.sommer2026_signups where art = 'neu';
