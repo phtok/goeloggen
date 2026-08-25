@@ -526,8 +526,46 @@ revoke all on table public.sommer2026_config from anon, authenticated;
 --   aktion_aktiv   : 'true' = zählen, sonst nur loggen
 --   aktion_start   : Zeitgrenze (Anmeldungen davor zählen nicht), z. B.
 --                    '2026-07-03T12:00:00+02:00'
+--   aktion_ende    : Zeitgrenze nach hinten – Anmeldungen danach werden
+--                    geschrieben, aber als art = 'nachfrist' (zählen nicht),
+--                    '2026-08-11T23:59:59+02:00'
 --   aktion_coupon  : optional – Aktions-Coupon-Code (statt Trial-Heuristik)
 --   aktion_plan    : optional – Aktions-Plan-Titel (statt Trial-Heuristik)
+
+-- =============================================================================
+-- Was zählt und was nur dasteht: Spalte `art` + View sommer2026_neuabos
+-- (Migrationen «sommer2026_art» nach dem Uscreen-Vollabgleich vom 10. August
+-- und «sommer2026_art_nachfrist» vom 25. August – hier nachgetragen, die
+-- Rohtabelle oben nennt die Spalte noch nicht.)
+--
+-- Nicht jede Zeile in sommer2026_signups ist eine Aktionsanmeldung. Zwei Sorten
+-- stehen darin, ohne dazuzugehören, und beide sind gemessene Wirklichkeit – es
+-- wäre falsch, sie wegzuwerfen, und ebenso falsch, sie mitzuzählen:
+--
+--   verlaengerung  Uscreen unterscheidet Abschluss und Verlängerung nicht:
+--                  `subscription_assigned` trägt für beides dieselben Felder.
+--                  Erkannt am Test, der trägt – ein Abo mit drei Gratismonaten
+--                  kann in den ersten 90 Tagen keine wiederkehrende Zahlung
+--                  haben. Liegt für dieselbe Person schon ein
+--                  `success_recurring` VOR dem Ereignis, läuft ihr Abo bereits.
+--   nachfrist      Nach `aktion_ende` angemeldet. Das Angebot ist dasselbe, das
+--                  Versprechen nicht mehr: Seit dem 12. August gibt Uscreen auf
+--                  84317 drei Tage Probe statt drei Monate gratis.
+--
+-- Die Trennung liegt in der View, nicht in den RPCs: So kann keine Auswertung
+-- sie vergessen. Jede öffentliche Zahl liest sommer2026_neuabos.
+--
+-- alter table public.sommer2026_signups
+--   add column if not exists art text not null default 'neu';
+alter table public.sommer2026_signups drop constraint if exists sommer2026_signups_art_check;
+alter table public.sommer2026_signups add constraint sommer2026_signups_art_check
+  check (art in ('neu', 'verlaengerung', 'nachfrist'));
+
+comment on column public.sommer2026_signups.art is
+  'neu = Aktionsanmeldung (zählt) · verlaengerung = laufendes Bestandsabo, kein Neuabo · nachfrist = nach dem Aktionsende (aktion_ende) angemeldet, anderes Angebot. Nur art = ''neu'' liegt in der View sommer2026_neuabos und damit in den Zahlen.';
+
+create or replace view public.sommer2026_neuabos as
+  select * from public.sommer2026_signups where art = 'neu';
 
 -- =============================================================================
 -- Laufende Kündigungen (Migration «sommer2026_kuendigungen», 25. August 2026)

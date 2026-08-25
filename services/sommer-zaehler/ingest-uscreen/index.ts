@@ -173,7 +173,7 @@ Deno.serve(async (req) => {
 
   const u = new URL(req.url);
   const key = u.searchParams.get("key") || req.headers.get("x-webhook-key") || "";
-  const cfgRows = await fetch(`${SB}/rest/v1/sommer2026_config?key=in.(webhook_secret,hash_salt,aktion_aktiv,aktion_start,aktion_coupon,aktion_plan)&select=key,value`, { headers: H })
+  const cfgRows = await fetch(`${SB}/rest/v1/sommer2026_config?key=in.(webhook_secret,hash_salt,aktion_aktiv,aktion_start,aktion_ende,aktion_coupon,aktion_plan)&select=key,value`, { headers: H })
     .then((r) => r.json()).catch(() => []);
   const cfg: Record<string, string> = {};
   if (Array.isArray(cfgRows)) for (const r of cfgRows) cfg[r.key] = r.value;
@@ -183,6 +183,7 @@ Deno.serve(async (req) => {
   const armed = (cfg["aktion_aktiv"] || "").toLowerCase() === "true";
   const salt = cfg["hash_salt"] || "";
   const aktionStart = cfg["aktion_start"] || "";
+  const aktionEnde  = cfg["aktion_ende"]  || "";
   const aktionCoupon = (cfg["aktion_coupon"] || "").toLowerCase();
   const aktionPlan = (cfg["aktion_plan"] || "").toLowerCase();
 
@@ -364,11 +365,29 @@ Deno.serve(async (req) => {
     return json({ ok: true, skipped: "vor Aktionsstart" });
   }
 
+  // Und die Grenze nach hinten (`aktion_ende`, 11. August). Sie hat bis zum
+  // 25. August gefehlt, und das hatte Folgen: Anmeldungen der Tage danach liefen
+  // weiter in die Aktionszahlen, obwohl das Angebot 84317 seither kein
+  // Gratis-Vierteljahr mehr gibt, sondern drei Tage Probe. Drei dieser
+  // Anmeldungen zahlten binnen drei Tagen und standen trotzdem als
+  // Gratis-Probeabo in der Zählung.
+  //
+  // Die Zeile wird trotzdem geschrieben – nur als `art: 'nachfrist'`, denselben
+  // Weg wie `verlaengerung`: sichtbar in der Tabelle, ausserhalb der View
+  // sommer2026_neuabos und damit ausserhalb jeder Zahl. Wegwerfen wäre falsch,
+  // die Anmeldung hat ja stattgefunden; mitzählen wäre es auch. Kündigungen
+  // dieser Personen kommen weiterhin an: patchStatus geht über dedup_key und
+  // kennt die Art nicht.
+  let artZeit = art;
+  if (aktionEnde && !isNaN(Date.parse(when)) && new Date(when) > new Date(aktionEnde) && artZeit === "neu") {
+    artZeit = "nachfrist";
+  }
+
   const row = {
     signed_up_at: when, produkt: "gtv", sprache, format: "stream",
     // Der Store rechnet ausschliesslich in EUR (Uscreen-Währung des Shops).
     waehrung: "eur",
-    tarif, intervall, status: "neu", art, kanal, source: "uscreen", ext_id: ext, dedup_key: dedupKey,
+    tarif, intervall, status: "neu", art: artZeit, kanal, source: "uscreen", ext_id: ext, dedup_key: dedupKey,
     kampagne: (camp ? String(camp) : "summer26_trial"),
     utm_source: src ? String(src) : null, utm_medium: med ? String(med) : null,
     utm_campaign: camp ? String(camp) : null, utm_content: cont ? String(cont) : null,
@@ -386,5 +405,5 @@ Deno.serve(async (req) => {
     await log(event, false, `upsert ${res.status} ${(await res.text()).slice(0, 300)}`, row);
     return json({ ok: false }, 200);
   }
-  return json({ ok: true, status: "neu", sprache, tarif, intervall, kanal });
+  return json({ ok: true, status: "neu", art: artZeit, sprache, tarif, intervall, kanal });
 });
