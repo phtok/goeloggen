@@ -162,7 +162,12 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
    Die ganze Pille ist der Aufruf; ein Klick öffnet die Mail. Kein Beta-Hinweis mehr. */
 .dsnav-invite{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:44;
   display:flex;align-items:center;gap:4px;max-width:calc(100% - 28px);
-  background:var(--bar-bg);backdrop-filter:saturate(160%) blur(10px);
+  /* OPAK, nicht --bar-bg: eine klebende Leiste liegt über dem EIGENEN Papier
+     und darf durchscheinen; diese Pille schwebt über BELIEBIGEM Inhalt. Über
+     einer dunklen Bühne mischt --bar-bg (90% Weiss) den Grund auf #e8e8e8 —
+     der Aufruf in --gold-ink fiel damit auf 4.23:1 und verfehlte B02.
+     Opak trägt er 5.18:1. Gemessen am Kalender-Entwurf, 25. August 2026. */
+  background:var(--paper);backdrop-filter:saturate(160%) blur(10px);
   border:1px solid var(--line);border-radius:var(--r-pill);
   padding:5px 6px;box-shadow:var(--shadow-card);font-size:var(--t-small)}
 .dsnav-invite .ask{display:inline-flex;align-items:center;gap:7px;color:var(--ink);text-decoration:none;

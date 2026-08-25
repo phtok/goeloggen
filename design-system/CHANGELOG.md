@@ -16,6 +16,25 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 25. August 2026 — was über allem schwebt, muss undurchsichtig sein (1.13.1)
+
+**Was.** Die globale Feedback-Pille (`.dsnav-invite`, `nav.css`) liegt nicht
+mehr auf `--bar-bg`, sondern **opak** auf `--paper`.
+
+**Warum.** `--bar-bg` ist 90% Weiss — richtig für eine klebende Leiste, die
+über dem **eigenen** Papier liegt und ein wenig durchscheinen darf. Die
+Feedback-Pille aber schwebt über **beliebigem** Inhalt. Über der dunklen Bühne
+des Kalender-Entwurfs mischte sich ihr Grund auf `#e8e8e8`, und der Aufruf in
+`--gold-ink` fiel damit von 5.18:1 auf **4.23:1** — unter die 4.5:1 aus B02.
+Gefunden hat es nicht das Auge, sondern `tools/barrierefreiheit.mjs`: dieselbe
+Seite war bei ds-lint sauber, weil kein Token verletzt war. **Ein Kontrast
+entscheidet sich erst am gerenderten Blatt** — und eine Fläche, die sich ihren
+Grund vom Zufall borgt, hat gar keinen.
+
+**Wirkung.** B02 hält jetzt auf jedem Grund, auf dem die Pille landen kann.
+Regel für neue schwebende Elemente: **`--bar-bg` nur für Leisten, die zum
+eigenen Blatt gehören; alles frei Schwebende trägt `--paper`.**
+
 ## 10. August 2026 — eine Maske, die sagt, was sie will (1.13.0)
 
 **Was.** Vier Grundformen für Eingabemasken kommen ins Fundament:
