@@ -184,6 +184,19 @@ verfeinern.
   in der Tabelle, ausserhalb der View `sommer2026_neuabos` und damit ausserhalb
   jeder Zahl – derselbe Weg wie `verlaengerung`. Kündigungen dieser Personen
   kommen weiter an (`patchStatus` geht über `dedup_key` und kennt die Art nicht).
+  Dieselbe Regel steht zusätzlich als **Trigger an der Tabelle**
+  (`sommer2026_art_nach_frist`), weil ein Deploy ausbleiben kann – genau das
+  geschah am 25. August, als der Workflow an einem abgelaufenen
+  `SUPABASE_ACCESS_TOKEN` scheiterte – und weil es mehr Schreibwege gibt als die
+  zwei Funktionen (Zoho-Import, manuelle Nachträge).
+
+> **Offen: `SUPABASE_ACCESS_TOKEN` ist abgelaufen.** Seit dem 25. August
+> scheitern beide Deploy-Workflows mit `401 Unauthorized`; die Produktion läuft
+> auf dem Funktionsstand vom 10. August. Fachlich ist das aufgefangen (der
+> Trigger oben erzwingt die Frist-Grenze in der Datenbank), aber jede künftige
+> Änderung an den Ingestionen bleibt liegen, bis das Repo-Secret erneuert ist:
+> Supabase → Account → Access Tokens → neues Token, dann in den
+> Repo-Secrets ersetzen.
 - **Scharf/Log:** zählt nur wenn `sommer2026_config.aktion_aktiv = 'true'`,
   sonst reiner Log-Modus.
 

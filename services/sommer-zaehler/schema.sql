@@ -567,6 +567,42 @@ comment on column public.sommer2026_signups.art is
 create or replace view public.sommer2026_neuabos as
   select * from public.sommer2026_signups where art = 'neu';
 
+-- Die Frist-Grenze gehört an die Daten, nicht in jede schreibende Funktion
+-- (Migration «sommer2026_nachfrist_trigger», 25. August 2026).
+--
+-- Beide Ingestionen kennen `aktion_ende` inzwischen selbst. Trotzdem steht die
+-- Regel hier noch einmal, und zwar aus zwei Gründen:
+--
+-- 1) Ein Deploy kann ausbleiben. Genau das ist am 25. August passiert: Der
+--    Workflow scheiterte an einem abgelaufenen SUPABASE_ACCESS_TOKEN (401),
+--    und die Produktion lief weiter auf dem Stand vom 10. August. Eine Regel,
+--    die nur im Repo steht, ist eine Behauptung – dieselbe Lehre wie #482.
+-- 2) Es gibt mehr Schreibwege als die zwei Funktionen: Zoho-Importe, manuelle
+--    Nachträge aus dem Vollabgleich. Auch die dürfen die Zahlen nicht aufblähen.
+--
+-- Nur beim Einfügen und nur, wenn die Zeile als 'neu' käme; 'verlaengerung'
+-- bleibt unangetastet. Beim Upsert (on_conflict → UPDATE) feuert er nicht, eine
+-- bestehende Zeile wird durch ein späteres Ereignis derselben Person also nicht
+-- nachträglich umetikettiert.
+create or replace function public.sommer2026_art_nach_frist()
+returns trigger language plpgsql security definer set search_path to 'public' as $$
+declare ende timestamptz;
+begin
+  if new.art is distinct from 'neu' then return new; end if;
+  select nullif(value, '')::timestamptz into ende
+    from public.sommer2026_config where key = 'aktion_ende';
+  if ende is not null and new.signed_up_at > ende then
+    new.art := 'nachfrist';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists sommer2026_signups_nachfrist on public.sommer2026_signups;
+create trigger sommer2026_signups_nachfrist
+  before insert on public.sommer2026_signups
+  for each row execute function public.sommer2026_art_nach_frist();
+
 -- =============================================================================
 -- Laufende Kündigungen (Migration «sommer2026_kuendigungen», 25. August 2026)
 --
