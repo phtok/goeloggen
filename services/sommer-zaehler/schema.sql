@@ -551,6 +551,16 @@ revoke all on table public.sommer2026_config from anon, authenticated;
 --   nachfrist      Nach `aktion_ende` angemeldet. Das Angebot ist dasselbe, das
 --                  Versprechen nicht mehr: Seit dem 12. August gibt Uscreen auf
 --                  84317 drei Tage Probe statt drei Monate gratis.
+--   anderes_angebot  Hat das Aktionsangebot nie bekommen. Erkannt am Test, der
+--                  auch `verlaengerung` trägt, nur vorwärts: Ein Abo mit drei
+--                  Gratismonaten kann in den ersten 85 Tagen keine echte
+--                  Zahlung haben. Sechs Zeilen (Migration
+--                  «sommer2026_art_anderes_angebot», 25. August) – vier
+--                  App-Käufe über Apple (210182, 211202), ein ermässigtes
+--                  Jahresabo (85072), eine Sofortzahlung am Anmeldetag. Auf
+--                  diesen Angeboten sind es sieben Tage Probe.
+--                  Einmalige Korrektur, keine laufende Regel: Seit
+--                  `aktion_ende` entstehen keine Aktionszeilen mehr.
 --
 -- Die Trennung liegt in der View, nicht in den RPCs: So kann keine Auswertung
 -- sie vergessen. Jede öffentliche Zahl liest sommer2026_neuabos.
@@ -559,13 +569,49 @@ revoke all on table public.sommer2026_config from anon, authenticated;
 --   add column if not exists art text not null default 'neu';
 alter table public.sommer2026_signups drop constraint if exists sommer2026_signups_art_check;
 alter table public.sommer2026_signups add constraint sommer2026_signups_art_check
-  check (art in ('neu', 'verlaengerung', 'nachfrist'));
+  check (art in ('neu', 'verlaengerung', 'nachfrist', 'anderes_angebot'));
 
 comment on column public.sommer2026_signups.art is
-  'neu = Aktionsanmeldung (zählt) · verlaengerung = laufendes Bestandsabo, kein Neuabo · nachfrist = nach dem Aktionsende (aktion_ende) angemeldet, anderes Angebot. Nur art = ''neu'' liegt in der View sommer2026_neuabos und damit in den Zahlen.';
+  'neu = Aktionsanmeldung (zählt) · verlaengerung = laufendes Bestandsabo · nachfrist = nach aktion_ende angemeldet · anderes_angebot = hat das Aktionsangebot nie bekommen (App-Kauf, ermässigtes Abo, Sofortzahlung – sieben Tage Probe statt drei Monate). Nur art = ''neu'' liegt in der View sommer2026_neuabos und damit in den Zahlen.';
 
 create or replace view public.sommer2026_neuabos as
   select * from public.sommer2026_signups where art = 'neu';
+
+-- Die Frist-Grenze gehört an die Daten, nicht in jede schreibende Funktion
+-- (Migration «sommer2026_nachfrist_trigger», 25. August 2026).
+--
+-- Beide Ingestionen kennen `aktion_ende` inzwischen selbst. Trotzdem steht die
+-- Regel hier noch einmal, und zwar aus zwei Gründen:
+--
+-- 1) Ein Deploy kann ausbleiben. Genau das ist am 25. August passiert: Der
+--    Workflow scheiterte an einem abgelaufenen SUPABASE_ACCESS_TOKEN (401),
+--    und die Produktion lief weiter auf dem Stand vom 10. August. Eine Regel,
+--    die nur im Repo steht, ist eine Behauptung – dieselbe Lehre wie #482.
+-- 2) Es gibt mehr Schreibwege als die zwei Funktionen: Zoho-Importe, manuelle
+--    Nachträge aus dem Vollabgleich. Auch die dürfen die Zahlen nicht aufblähen.
+--
+-- Nur beim Einfügen und nur, wenn die Zeile als 'neu' käme; 'verlaengerung'
+-- bleibt unangetastet. Beim Upsert (on_conflict → UPDATE) feuert er nicht, eine
+-- bestehende Zeile wird durch ein späteres Ereignis derselben Person also nicht
+-- nachträglich umetikettiert.
+create or replace function public.sommer2026_art_nach_frist()
+returns trigger language plpgsql security definer set search_path to 'public' as $$
+declare ende timestamptz;
+begin
+  if new.art is distinct from 'neu' then return new; end if;
+  select nullif(value, '')::timestamptz into ende
+    from public.sommer2026_config where key = 'aktion_ende';
+  if ende is not null and new.signed_up_at > ende then
+    new.art := 'nachfrist';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists sommer2026_signups_nachfrist on public.sommer2026_signups;
+create trigger sommer2026_signups_nachfrist
+  before insert on public.sommer2026_signups
+  for each row execute function public.sommer2026_art_nach_frist();
 
 -- =============================================================================
 -- Laufende Kündigungen (Migration «sommer2026_kuendigungen», 25. August 2026)
