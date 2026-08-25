@@ -33,7 +33,22 @@ je Herkunftsweg), `sommer2026_attribution` (feiner: je UTM-Motiv),
 `sommer2026_trichter` (Wirkungskette Sichtbarkeit→Bindung),
 `sommer2026_massnahmen_public` (Massnahmen-Protokoll, kuratiert),
 `sommer2026_ereignisse` (Einzel-Anmeldungen der letzten 14 Tage für «Was ist
-passiert?» – stundengenau gerundet, ohne jede Personenspalte).
+passiert?» – stundengenau gerundet, ohne jede Personenspalte),
+`sommer2026_kuendigungen` (laufende Kündigungen: Tag der Kündigung, Ende des
+Zugangs, Abstand zur Anmeldung).
+
+**Laufende Kündigungen.** `status = 'gekuendigt'` sagt nur *dass*, nicht *wann*
+und nicht *bis wann*. Das Zeitliche steht im Roh-Protokoll der Ingestion: Der
+Uscreen-Webhook `subscription_canceled` bringt `access_ends_at` mit. Die RPC
+`sommer2026_kuendigungen` liest von dort statt aus einer eigenen Spalte – so
+gibt es keine zweite Wahrheit und keinen Deploy nachzuziehen. Wichtig für die
+Lesart: **gekündigt heisst nicht weg.** Uscreen beendet den Zugang zum Ende der
+laufenden Frist, bei diesen Abos also meist erst im Oktober oder November, wenn
+die drei Gratismonate ohnehin abgelaufen wären. Das Cockpit zeigt darum beide
+Zahlen nebeneinander (Abschnitt «Laufende Kündigungen»). Zeilen aus dem
+Uscreen-Vollabgleich vom 10. August tragen kein Ereignis und kommen mit
+`tag = null` herein – sie zählen mit und werden in der Anzeige als datumslos
+ausgewiesen.
 
 ## Attribution (Woher) und Kosten
 
