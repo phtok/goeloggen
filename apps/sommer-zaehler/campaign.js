@@ -31,8 +31,11 @@
     //    Wochenschrift steht höher als goetheanum.tv: Beide Angebote sind
     //    Opt-out, aber dort ist das Nein einen Klick weit weg, und die
     //    monatliche Kartenbelastung erinnert jeden Monat an die Entscheidung.
-    //    Der Frühindikator zeigt dasselbe – im Gratis-Zeitraum kündigten 23 von
-    //    636 goetheanum.tv-Abos, bei der Wochenschrift 0 von 406.
+    //    Der Frühindikator zeigt dasselbe: Im Gratis-Zeitraum kündigen allein
+    //    goetheanum.tv-Abos, bei der Wochenschrift bisher keines. Die Zahlen
+    //    dazu stehen nicht mehr hier – sie laufen weiter, während dieser
+    //    Kommentar stehen bliebe. Sie stehen live im Cockpit unter «Laufende
+    //    Kündigungen» (RPC sommer2026_kuendigungen).
     // 2) monate – wie viele der zwölf Folgemonate ein MONATLICHES Abo im
     //    Schnitt trägt. Über 85 Prozent der Abos zahlen monatlich; wer für sie
     //    zwölf volle Monate ansetzt, rechnet mit einer Treue, die niemand
@@ -1835,6 +1838,236 @@
       'Herleitung, Begründung der Quoten und Empfindlichkeit: ' + ((CONFIG.szenarien && CONFIG.szenarien.doc) || '') + '.';
   }
 
+  // ── Laufende Kündigungen ──────────────────────────────────────────────────
+  // Die einzige GEMESSENE Zahl zum Bleiben. Alles andere in dieser Sektion ist
+  // gerechnet: Die drei Szenarien setzen Bleibe-Quoten, die noch keine Kohorte
+  // bestätigt hat. Wer im Gratis-Zeitraum kündigt, hat dagegen entschieden –
+  // sichtbar, datiert, ohne Annahme. Darum steht der Block direkt unter den
+  // Szenarien und nicht in einer Klappe: er ist ihre Gegenprobe.
+  //
+  // Zwei Zahlen statt einer, weil «gekündigt» hier nicht «weg» heisst. Uscreen
+  // beendet den Zugang nicht im Moment der Kündigung, sondern zum Ende der
+  // laufenden Frist (`access_ends_at`) – bei diesen Abos also meist erst im
+  // Oktober oder November, wenn die Gratiszeit ohnehin abgelaufen wäre. Eine
+  // einzelne Kachel «gekündigt» würde einen Abgang behaupten, der noch gar
+  // nicht stattgefunden hat; darum steht daneben, wie viele davon noch dabei
+  // sind. Die Kündigung ist hier kein Abschied, sondern ein vorweggenommenes
+  // Nein zur Verlängerung.
+  //
+  // Quelle: RPC sommer2026_kuendigungen (Migration «sommer2026_kuendigungen»).
+  // Sie liest den Zeitpunkt aus dem Roh-Protokoll der Ingestion, wo der
+  // Uscreen-Webhook `subscription_canceled` samt `access_ends_at` liegt – die
+  // Anmeldetabelle selbst kennt nur den Zustand, nicht seinen Tag. Es verlassen
+  // ausschliesslich Summen die Datenbank, wie bei allen anderen RPCs auch.
+  function kuendAggregat(rows, stats){
+    var jetzt = new Date();
+    var heute = new Date(jetzt.getFullYear(), jetzt.getMonth(), jetzt.getDate());
+    var a = { gesamt:0, laufend:0, beendet:0, ohneDatum:0, ohneEnde:0,
+              jeProdukt:{}, byDay:{}, monate:{}, tage:[], median:null, ersteWoche:0 };
+    (rows || []).forEach(function(r){
+      var n = Number(r.n) || 0;
+      if (!n) return;
+      a.gesamt += n;
+      a.jeProdukt[r.produkt] = (a.jeProdukt[r.produkt] || 0) + n;
+      if (r.tag){
+        a.byDay[r.tag] = (a.byDay[r.tag] || 0) + n;
+        if (r.tage_bis_kuendigung != null){
+          var d = Number(r.tage_bis_kuendigung);
+          for (var i = 0; i < n; i++) a.tage.push(d);
+          if (d <= 7) a.ersteWoche += n;
+        }
+      } else {
+        a.ohneDatum += n;
+      }
+      if (r.zugang_ende){
+        // Der Endtag zählt noch als Zugang: Uscreen nennt einen Zeitpunkt, wir
+        // vergleichen Tage. Wessen Zugang heute ausläuft, ist heute noch dabei.
+        var ende = new Date(r.zugang_ende + 'T00:00:00');
+        if (ende >= heute) a.laufend += n; else a.beendet += n;
+        var m = r.zugang_ende.slice(0, 7);
+        a.monate[m] = (a.monate[m] || 0) + n;
+      } else {
+        a.ohneEnde += n;
+      }
+    });
+    // Median statt Mittelwert: Ein einzelner Spätentschluss nach elf Wochen
+    // zieht den Schnitt hoch und behauptet eine Bedenkzeit, die es nicht gab.
+    if (a.tage.length){
+      var s = a.tage.slice().sort(function(x, y){ return x - y; });
+      a.median = s[Math.floor((s.length - 1) / 2)];   // diskret, wie percentile_disc(0.5)
+    }
+    // Bezugsgrösse je Produkt: ALLE Anmeldungen dieses Produkts, gekündigte
+    // eingeschlossen – die Quote fragt, wie viele der Gewonnenen wieder gingen.
+    a.basis = {};
+    (stats || []).forEach(function(r){
+      a.basis[r.produkt] = (a.basis[r.produkt] || 0) + (Number(r.n) || 0);
+    });
+    return a;
+  }
+
+  // Zwei Formen, weil der Satz sie braucht: die Nennform für Tabellen und
+  // Kacheln, die Beugung für den Fliesstext («bei der Wochenschrift»).
+  var PRODUKT_NAME = { gtv:'goetheanum.tv', wos:'Wochenschrift' };
+  var PRODUKT_DATIV = { gtv:'goetheanum.tv', wos:'der Wochenschrift' };
+  function produktName(p){ return PRODUKT_NAME[p] || p; }
+  function produktDativ(p){ return PRODUKT_DATIV[p] || PRODUKT_NAME[p] || p; }
+
+  function renderKuendigungen(rows, stats){
+    if (!el('kuendZahlen')) return;
+    var a = kuendAggregat(rows, stats);
+    var basisGesamt = Object.keys(a.basis).reduce(function(s, k){ return s + a.basis[k]; }, 0);
+
+    // Welches Produkt trägt die Kündigungen, welches nicht? Die Antwort ist der
+    // Kern des Befundes – bei der Wochenschrift hat bisher niemand gekündigt.
+    var mit = [], ohne = [];
+    Object.keys(a.basis).sort().forEach(function(p){
+      ((a.jeProdukt[p] || 0) > 0 ? mit : ohne).push(p);
+    });
+
+    if (el('kuendLede')){
+      if (!a.gesamt){
+        el('kuendLede').textContent = 'Bisher hat niemand gekündigt.';
+      } else {
+        var satz = fmt(a.gesamt) + ' von ' + fmt(basisGesamt) + ' Anmeldungen haben gekündigt';
+        if (mit.length === 1 && ohne.length){
+          satz += ' – alle bei ' + produktDativ(mit[0]) + ', bei ' +
+                  ohne.map(produktDativ).join(' und ') + ' keine einzige';
+        }
+        satz += '. Fort ist damit noch fast niemand: ' + fmt(a.laufend) +
+                ' behalten den Zugang bis zum Ende ihrer Frist.';
+        el('kuendLede').textContent = satz;
+      }
+    }
+
+    var karten = [];
+    var quote = [];
+    Object.keys(a.basis).sort().forEach(function(p){
+      var n = a.jeProdukt[p] || 0, b = a.basis[p] || 0;
+      quote.push(produktName(p) + ' ' + fmt(n) + ' von ' + fmt(b) +
+                 (b ? ' (' + (Math.round(n / b * 1000) / 10).toString().replace('.', ',') + ' %)' : ''));
+    });
+    karten.push({ n:'Gekündigt', w:fmt(a.gesamt), m:quote.join(' · ') });
+    karten.push({ n:'Zugang läuft noch', w:fmt(a.laufend),
+                  m:a.beendet ? ('gekündigt, aber bis zum Fristende weiter dabei · ' + fmt(a.beendet) +
+                                 (a.beendet === 1 ? ' Zugang ist beendet' : ' Zugänge sind beendet')) +
+                                (a.ohneEnde ? ', ' + fmt(a.ohneEnde) + ' ohne Enddatum' : '')
+                              : 'gekündigt, aber bis zum Fristende weiter dabei' });
+    if (a.median != null){
+      karten.push({ n:'Nach wie vielen Tagen', w:fmt(a.median) + (a.median === 1 ? ' Tag' : ' Tage'),
+                    m:'Median zwischen Anmeldung und Kündigung · ' + fmt(a.ersteWoche) + ' von ' +
+                      fmt(a.tage.length) + ' in der ersten Woche' });
+    }
+    var host = el('kuendZahlen');
+    host.innerHTML = '';
+    karten.forEach(function(k){
+      var d = document.createElement('div'); d.className = 'kennzahl';
+      var n = document.createElement('div'); n.className = 'k-label'; n.textContent = k.n;
+      var w = document.createElement('div'); w.className = 'k-wert'; w.textContent = k.w;
+      var m = document.createElement('div'); m.className = 'k-note'; m.textContent = k.m;
+      d.appendChild(n); d.appendChild(w); d.appendChild(m); host.appendChild(d);
+    });
+
+    // Takt der Kündigungen – gleiche Bauart wie der Puls oben, aber eigener
+    // Zeitraum: Kündigungen laufen über das Aktionsende hinaus weiter, der
+    // Puls der Anmeldungen endet am 11. August. Beginn ist trotzdem der
+    // Aktionsstart, damit sichtbar bleibt, dass die ersten zwei Wochen keine
+    // einzige Kündigung trugen.
+    var pulsHost = el('kuendPuls');
+    if (pulsHost){
+      pulsHost.innerHTML = '';
+      var tage = Object.keys(a.byDay).sort();
+      var alle = [];
+      if (tage.length){
+        var erster = (CONFIG.start && CONFIG.start < tage[0]) ? CONFIG.start : tage[0];
+        var jetzt2 = new Date();
+        var stop = new Date(jetzt2.getFullYear(), jetzt2.getMonth(), jetzt2.getDate());
+        var letzterTag = new Date(tage[tage.length - 1] + 'T00:00:00');
+        if (letzterTag > stop) stop = letzterTag;
+        for (var d2 = new Date(erster + 'T00:00:00'); d2 <= stop; d2.setDate(d2.getDate() + 1)) alle.push(isoTag(d2));
+      }
+      var max = alle.reduce(function(m, d){ return Math.max(m, a.byDay[d] || 0); }, 0) || 1;
+      var spitze = alle.reduce(function(b, d){ return (a.byDay[d] || 0) > (a.byDay[b] || 0) ? d : b; }, alle[0]);
+      alle.forEach(function(d){
+        var n = a.byDay[d] || 0;
+        var tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.tabIndex = 0;
+        var tip = new Date(d + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'long' }) +
+                  ' · ' + fmt(n) + (n === 1 ? ' Kündigung' : ' Kündigungen');
+        tag.setAttribute('data-tip', tip);
+        tag.setAttribute('role', 'img');
+        tag.setAttribute('aria-label', tip);
+        var b = document.createElement('span');
+        b.className = 'p' + (d === spitze ? ' hoch' : '');
+        b.style.height = Math.max(3, Math.round(n / max * 100)) + '%';
+        tag.appendChild(b);
+        pulsHost.appendChild(tag);
+      });
+      var lab = el('kuendPulsL');
+      if (lab){
+        lab.innerHTML = '';
+        if (alle.length){
+          var erstesEreignis = tage.length ? new Date(tage[0] + 'T00:00:00') : null;
+          var von = document.createElement('span');
+          von.textContent = 'erste Kündigung ' + (erstesEreignis ? dmy(erstesEreignis) : '–');
+          var top = document.createElement('span');
+          top.textContent = 'Spitze ' + fmt(a.byDay[spitze] || 0) + ' am ' +
+                            new Date(spitze + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
+          var bis = document.createElement('span');
+          bis.textContent = 'heute ' + fmt(a.byDay[alle[alle.length - 1]] || 0);
+          lab.appendChild(von); lab.appendChild(top); lab.appendChild(bis);
+        }
+      }
+    }
+
+    // Wann der Zugang endet – die Welle, auf die es ankommt. Bis dahin zählen
+    // diese Menschen als Publikum, danach nicht mehr.
+    var body = el('kuendMonatBody');
+    if (body){
+      body.innerHTML = '';
+      var monate = Object.keys(a.monate).sort();
+      if (!monate.length && !a.ohneEnde){
+        body.innerHTML = '<tr><td class="empty" colspan="3">noch keine Enddaten</td></tr>';
+      } else {
+        // Die Tabelle summiert auf ALLE Kündigungen, nicht nur auf die mit
+        // Enddatum: Eine Summe, die kleiner ist als die Kachel darüber, liest
+        // sich als Rechenfehler. Die Zeile ohne Datum steht darum sichtbar mit.
+        var zeilen = monate.map(function(m){
+          return { name:new Date(m + '-01T00:00:00').toLocaleDateString('de-CH', { month:'long', year:'numeric' }),
+                   n:a.monate[m] };
+        });
+        if (a.ohneEnde) zeilen.push({ name:'ohne Enddatum', n:a.ohneEnde });
+        var summe = zeilen.reduce(function(s, z){ return s + z.n; }, 0);
+        zeilen.forEach(function(z){
+          var tr = document.createElement('tr');
+          tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td>';
+          tr.children[0].textContent = z.name;
+          tr.children[1].textContent = fmt(z.n);
+          tr.children[2].textContent = Math.round(z.n / summe * 100) + ' %';
+          body.appendChild(tr);
+        });
+        var foot = el('kuendMonatFoot');
+        if (foot){
+          foot.innerHTML = '<tr><td>Summe</td><td class="num"></td><td class="num"></td></tr>';
+          var td = foot.querySelector('tr').children;
+          td[1].textContent = fmt(summe);
+          td[2].textContent = '100 %';
+        }
+      }
+    }
+
+    if (el('kuendNote')){
+      el('kuendNote').textContent =
+        'Gemessen, nicht gerechnet: Jede Zeile stammt aus dem Uscreen-Ereignis «subscription_canceled». ' +
+        'Der Tag des Zugangsendes ist Uscreens eigenes «access_ends_at» – in der Regel das Ende der drei Gratismonate, ' +
+        'bei einem Teil der Abos aber schon das Ende des laufenden Monats. ' +
+        (a.ohneDatum ? (fmt(a.ohneDatum) + ' Kündigung' + (a.ohneDatum === 1 ? ' trägt' : 'en tragen') +
+          ' kein Datum: sie stammt aus dem Uscreen-Vollabgleich vom 10. August und nicht aus einem Webhook. ') : '') +
+        'Was diese Zahl NICHT ist: eine Bleibe-Quote. Sie sagt, wer vorzeitig Nein gesagt hat – nicht, wer im Oktober Ja sagt. ' +
+        'Die Rechnung oben zählt gekündigte Abos bereits nicht mehr mit.';
+    }
+  }
+
   // ── Kopfzahlen: die grossen Zahlen zuerst ─────────────────────────────────
   // Der Bericht beginnt mit dem, was jeder wissen will, und nicht mit dem Weg
   // dorthin. Alles Kleinere steht darunter in Klappen.
@@ -2096,9 +2329,18 @@
         'oben unter der Signaturzahl. Die Aktion läuft drei Monate gratis, die erste Kohorte entscheidet frühestens Anfang Oktober; ' +
         'bis dahin ist jede Zahl zum Folgejahr eine Rechnung, keine Beobachtung.';
     }
+    // Die Kündigungen laufen im selben Zug mit, aber mit eigenem Fangnetz: Sie
+    // brauchen die Statistik als Bezugsgrösse (Quote je Produkt) und gehören
+    // darum in diesen Zug – ein Ausfall darf aber nicht das ganze Cockpit
+    // mitnehmen. `null` heisst «nicht ladbar» und ist von «keine Kündigung»
+    // (leere Liste) unterschieden; eine 0 zu zeigen, wo nichts geladen wurde,
+    // wäre eine Behauptung.
+    var kuendP = el('kuendZahlen') ? rpc('sommer2026_kuendigungen').catch(function(){ return null; })
+                                   : Promise.resolve([]);
     Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten'), rpc('sommer2026_kanaele'),
                   rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public'), rpc('sommer2026_kosten_public'),
-                  rpc('sommer2026_multi_liste'), rpc('sommer2026_multi_protokoll'), rpc('sommer2026_links_public') ])
+                  rpc('sommer2026_multi_liste'), rpc('sommer2026_multi_protokoll'), rpc('sommer2026_links_public'),
+                  kuendP ])
       .then(function(res){
         var stats = res[0] || [], timeline = res[1] || [], kohorten = res[2] || [], kanaele = res[3] || [];
         var attribution = res[4] || [], massnahmen = res[5] || [], kostenPosten = res[6] || [];
@@ -2117,6 +2359,12 @@
         renderDunkelfeld(kanaele, attribution);
         renderMotive(attribution);
         renderTarif(stats);
+        if (res[10] === null){
+          if (el('kuendZahlen')) el('kuendZahlen').innerHTML = '<div class="err">nicht ladbar</div>';
+          if (el('kuendLede'))   el('kuendLede').textContent = 'Die Kündigungen liessen sich gerade nicht laden.';
+        } else {
+          renderKuendigungen(res[10] || [], stats);
+        }
         renderCohort(kohorten, revenue, stats);
         // Schwesterseiten (element-gewächtert, hier ohne Wirkung).
         renderKosten(total, revenue, kostenPosten);

@@ -528,3 +528,59 @@ revoke all on table public.sommer2026_config from anon, authenticated;
 --                    '2026-07-03T12:00:00+02:00'
 --   aktion_coupon  : optional – Aktions-Coupon-Code (statt Trial-Heuristik)
 --   aktion_plan    : optional – Aktions-Plan-Titel (statt Trial-Heuristik)
+
+-- =============================================================================
+-- Laufende Kündigungen (Migration «sommer2026_kuendigungen», 25. August 2026)
+--
+-- Die Kündigung selbst steht schon in der Anmeldung (status = 'gekuendigt').
+-- Was fehlte, war das Zeitliche: WANN gekündigt wurde und BIS WANN der Zugang
+-- trotzdem noch läuft. Beides liegt im Roh-Protokoll oben – der Uscreen-Webhook
+-- `subscription_canceled` bringt `access_ends_at` mit. Darum liest die RPC von
+-- dort und nicht aus einer neuen Spalte: keine zweite Wahrheit, kein Nachführen,
+-- kein neuer Deploy der Edge-Function.
+--
+-- Warum das Zugangsende zählt: «gekündigt» heisst bei Uscreen nicht «weg».
+-- Wer heute kündigt, behält den Zugang bis zum Ende der laufenden Frist – bei
+-- diesen Abos meist bis Oktober oder November, wenn die drei Gratismonate
+-- ohnehin abgelaufen wären. Eine Zahl «gekündigt» allein behauptet einen
+-- Abgang, der noch nicht stattgefunden hat.
+--
+-- Der LEFT JOIN ist Absicht: Eine Handvoll Zeilen stammt aus dem
+-- Uscreen-Vollabgleich vom 10. August und nicht aus einem Webhook – sie tragen
+-- kein Ereignis und damit kein Datum. Sie fallen nicht aus der Zählung, sie
+-- kommen mit tag = null herein und werden in der Anzeige als solche benannt.
+--
+-- Gelesen wird die View `sommer2026_neuabos` (art = 'neu') – dieselbe
+-- Grundgesamtheit wie `sommer2026_stats`. Verlängerungen bestehender Abos
+-- stehen in der Tabelle, gehören aber nicht zur Aktion; läse diese RPC die
+-- Rohtabelle, stünden ihre Kündigungen gegen eine Bezugsgrösse, die sie nicht
+-- enthält, und die Quote wäre zu hoch.
+create or replace function public.sommer2026_kuendigungen()
+returns table(produkt text, intervall text, tag date, zugang_ende date, tage_bis_kuendigung int, n bigint)
+language sql security definer set search_path to 'public' as $$
+  with ereignis as (
+    select (payload->>'user_id')                                    as uid,
+           min(received_at)                                         as gekuendigt_at,
+           max(nullif(payload->>'access_ends_at','')::timestamptz)  as zugang_bis
+      from public.sommer2026_ingest_raw
+     where source = 'uscreen'
+       and event ilike '%cancel%'
+       and payload->>'user_id' is not null
+     group by 1
+  )
+  select s.produkt,
+         s.intervall,
+         e.gekuendigt_at::date                                 as tag,
+         e.zugang_bis::date                                    as zugang_ende,
+         (e.gekuendigt_at::date - s.signed_up_at::date)::int   as tage_bis_kuendigung,
+         count(*)::bigint                                      as n
+    from public.sommer2026_neuabos s
+    left join ereignis e on e.uid = s.ext_id
+   where s.status = 'gekuendigt'
+   group by 1, 2, 3, 4, 5;
+$$;
+
+comment on function public.sommer2026_kuendigungen() is
+  'Sommer-Aktion 2026: gekündigte Anmeldungen als Aggregat – Tag der Kündigung, Ende des Zugangs (Uscreen access_ends_at), Abstand zur Anmeldung. Grundgesamtheit wie sommer2026_stats (View sommer2026_neuabos). Nur Summen, keine Personendaten.';
+
+grant execute on function public.sommer2026_kuendigungen() to anon, authenticated;
