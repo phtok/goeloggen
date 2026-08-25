@@ -144,7 +144,7 @@ Deno.serve(async (req) => {
 
   const u = new URL(req.url);
   const key = u.searchParams.get("key") || req.headers.get("x-webhook-key") || "";
-  const cfgRows = await fetch(`${SB}/rest/v1/sommer2026_config?key=in.(webhook_secret,hash_salt,aktion_aktiv)&select=key,value`, { headers: H })
+  const cfgRows = await fetch(`${SB}/rest/v1/sommer2026_config?key=in.(webhook_secret,hash_salt,aktion_aktiv,aktion_ende)&select=key,value`, { headers: H })
     .then((r) => r.json()).catch(() => []);
   const cfg: Record<string, string> = {};
   if (Array.isArray(cfgRows)) for (const r of cfgRows) cfg[r.key] = r.value;
@@ -160,6 +160,8 @@ Deno.serve(async (req) => {
   }).catch(() => {});
 
   if ((cfg["aktion_aktiv"] || "").toLowerCase() !== "true") return json({ ok: true, mode: "log" });
+
+  const aktionEnde = cfg["aktion_ende"] || "";
 
   const blob = JSON.stringify(body).toLowerCase();
 
@@ -200,9 +202,17 @@ Deno.serve(async (req) => {
   const selbst = selbstFromBody(body);
   let kanal = mapKanal(utm.src, utm.med);
   if (kanal === "andere" && selbst) kanal = mapKanal(selbst, null);
+  // Aktions-Grenze nach hinten (`aktion_ende`, 11. August) – dieselbe Regel wie
+  // bei Uscreen. Das Formular bleibt offen, die Aktion ist vorbei: Einreichungen
+  // danach werden geschrieben, aber als `art: 'nachfrist'` ausserhalb der View
+  // sommer2026_neuabos und damit ausserhalb der Zählung. Eine Anmeldung nach
+  // Fristende ist eine Anmeldung, nur keine Aktionsanmeldung.
+  const jetzt = new Date().toISOString();
+  const art = aktionEnde && !isNaN(Date.parse(aktionEnde)) && new Date(jetzt) > new Date(aktionEnde)
+    ? "nachfrist" : "neu";
   const row = {
-    signed_up_at: new Date().toISOString(), produkt: "wos", sprache, format,
-    tarif, intervall, waehrung, status: "neu", kanal, source: "paperform", ext_id: String(subId || ""), dedup_key: dedupKey,
+    signed_up_at: jetzt, produkt: "wos", sprache, format,
+    tarif, intervall, waehrung, status: "neu", art, kanal, source: "paperform", ext_id: String(subId || ""), dedup_key: dedupKey,
     kampagne: utm.camp || "summer26_trial",
     utm_source: utm.src, utm_medium: utm.med, utm_campaign: utm.camp, utm_content: utm.cont,
     landing_path: utm.land ? utm.land.slice(0, 200) : null, selbstauskunft: selbst,

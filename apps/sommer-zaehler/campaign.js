@@ -18,8 +18,12 @@
     // – dort stand ein Versand dahinter, hier nur die offene Tür.
     // Dieses Datum steuert alles Zeitliche: Resttage, «Abos/Tag nötig», die
     // Breite des Pulses, die Fortschreibung im Befund und das Wochenraster des
-    // Zeitbands. Die Ingestion kennt kein Enddatum (nur aktion_start und
-    // aktion_aktiv) – Anmeldungen der Zusatztage zählen von selbst mit.
+    // Zeitbands. Seit dem 25. August kennt es auch die Ingestion, als
+    // `aktion_ende` in sommer2026_config: Anmeldungen danach werden geschrieben,
+    // aber als art = 'nachfrist' – sie fallen aus der View sommer2026_neuabos
+    // und damit aus jeder Zahl. Vorher war die Zählung nach hinten offen, und
+    // 23 Anmeldungen vom 12. bis 25. August standen in den Aktionszahlen, obwohl
+    // das Angebot seither drei Tage Probe gibt statt drei Monate gratis.
     ende:  '2026-08-11',
     // Drei Szenarien statt einer Quote (Beschluss 7. August). Eine einzelne
     // Projektion sieht nach Wissen aus, wo eine Spanne die Wahrheit ist: Es hat

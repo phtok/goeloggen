@@ -173,7 +173,17 @@ verfeinern.
   `transaction_id` **kein** Unterscheidungsmerkmal. Verlängerungen legen nichts an
   (nur Neuanmeldungen). Kündigung → `gekuendigt`. **Zahlungen setzen vorerst kein
   `bleibt`** – die Umwandlung wird erst nach der 3-Monats-Frist bestimmt. Zeitlich
-  begrenzt durch `aktion_start`; schärfer stellbar über `aktion_coupon` / `aktion_plan`.
+  begrenzt durch `aktion_start` **und `aktion_ende`**; schärfer stellbar über
+  `aktion_coupon` / `aktion_plan`.
+- **Die Aktion hat ein Ende (`aktion_ende`, seit 25. August).** Nach hinten war
+  die Zählung offen, und das hatte Folgen: Anmeldungen ab dem 12. August liefen
+  weiter in die Aktionszahlen, obwohl das Angebot 84317 seither **drei Tage
+  Probe** gibt statt drei Monate gratis – drei dieser Personen zahlten binnen
+  drei Tagen und standen dennoch als Gratis-Probeabo in der Zählung. Solche
+  Zeilen werden weiterhin geschrieben, aber als **`art = 'nachfrist'`**: sichtbar
+  in der Tabelle, ausserhalb der View `sommer2026_neuabos` und damit ausserhalb
+  jeder Zahl – derselbe Weg wie `verlaengerung`. Kündigungen dieser Personen
+  kommen weiter an (`patchStatus` geht über `dedup_key` und kennt die Art nicht).
 - **Scharf/Log:** zählt nur wenn `sommer2026_config.aktion_aktiv = 'true'`,
   sonst reiner Log-Modus.
 
