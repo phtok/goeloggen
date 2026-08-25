@@ -31,11 +31,15 @@
     //    Wochenschrift steht höher als goetheanum.tv: Beide Angebote sind
     //    Opt-out, aber dort ist das Nein einen Klick weit weg, und die
     //    monatliche Kartenbelastung erinnert jeden Monat an die Entscheidung.
-    //    Der Frühindikator zeigt dasselbe: Im Gratis-Zeitraum kündigen allein
-    //    goetheanum.tv-Abos, bei der Wochenschrift bisher keines. Die Zahlen
-    //    dazu stehen nicht mehr hier – sie laufen weiter, während dieser
-    //    Kommentar stehen bliebe. Sie stehen live im Cockpit unter «Laufende
-    //    Kündigungen» (RPC sommer2026_kuendigungen).
+    //    ACHTUNG beim Frühindikator: Er trägt diese Annahme NICHT. Im
+    //    Gratis-Zeitraum kündigen allein goetheanum.tv-Abos – aber nur, weil
+    //    allein goetheanum.tv Kündigungen meldet. Für die Wochenschrift gibt es
+    //    keinen Meldeweg (Paperform sendet nur Anmeldungen, Zoho ist nicht
+    //    angebunden); ihre 0 ist ein blinder Fleck, kein Messwert. Die Quoten
+    //    hier bleiben darum eine begründete Annahme und stützen sich auf die
+    //    Bauart des Ausstiegs, nicht auf eine Beobachtung. Was gemessen ist,
+    //    läuft live im Cockpit unter «Laufende Kündigungen»
+    //    (RPC sommer2026_kuendigungen).
     // 2) monate – wie viele der zwölf Folgemonate ein MONATLICHES Abo im
     //    Schnitt trägt. Über 85 Prozent der Abos zahlen monatlich; wer für sie
     //    zwölf volle Monate ansetzt, rechnet mit einer Treue, die niemand
@@ -1907,45 +1911,68 @@
 
   // Zwei Formen, weil der Satz sie braucht: die Nennform für Tabellen und
   // Kacheln, die Beugung für den Fliesstext («bei der Wochenschrift»).
+  // «goetheanum.tv» steht artikellos, «Wochenschrift» braucht einen – und der
+  // beugt sich mit der Präposition mit: bei DER Wochenschrift, für DIE
+  // Wochenschrift. Darum zwei Fälle statt einer Beugung, sonst steht im Satz
+  // «für der Wochenschrift».
   var PRODUKT_NAME = { gtv:'goetheanum.tv', wos:'Wochenschrift' };
   var PRODUKT_DATIV = { gtv:'goetheanum.tv', wos:'der Wochenschrift' };
+  var PRODUKT_AKK   = { gtv:'goetheanum.tv', wos:'die Wochenschrift' };
   function produktName(p){ return PRODUKT_NAME[p] || p; }
   function produktDativ(p){ return PRODUKT_DATIV[p] || PRODUKT_NAME[p] || p; }
+  function produktAkk(p){ return PRODUKT_AKK[p] || PRODUKT_NAME[p] || p; }
+
+  // WO EINE KÜNDIGUNG ÜBERHAUPT ANKOMMT – die wichtigste Zeile dieses
+  // Abschnitts. goetheanum.tv meldet sie: Uscreen schickt `subscription_canceled`
+  // an die Ingestion. Die Wochenschrift meldet sie NICHT – Paperform sendet nur
+  // Einreichungen, und die Zoho-Anbindung ist geplant und nicht gebaut
+  // (services/sommer-zaehler/README.md). Alle Wochenschrift-Zeilen tragen darum
+  // status = 'neu', und zwar unabhängig davon, was in Wirklichkeit geschieht.
+  //
+  // Eine 0 heisst dort also «nicht gemessen», nicht «keine». Der Unterschied ist
+  // nicht kosmetisch: Als Ergebnis gelesen wäre die 0 der beste Wert der ganzen
+  // Aktion – und er wäre erfunden. Darum steht die Wochenschrift weder im Zähler
+  // noch im Nenner der Quote, sondern daneben, benannt als blinder Fleck.
+  var KUENDIGUNG_GEMESSEN = { gtv:true, wos:false };
+  function kuendigungGemessen(p){ return KUENDIGUNG_GEMESSEN[p] === true; }
 
   function renderKuendigungen(rows, stats){
     if (!el('kuendZahlen')) return;
     var a = kuendAggregat(rows, stats);
-    var basisGesamt = Object.keys(a.basis).reduce(function(s, k){ return s + a.basis[k]; }, 0);
-
-    // Welches Produkt trägt die Kündigungen, welches nicht? Die Antwort ist der
-    // Kern des Befundes – bei der Wochenschrift hat bisher niemand gekündigt.
-    var mit = [], ohne = [];
-    Object.keys(a.basis).sort().forEach(function(p){
-      ((a.jeProdukt[p] || 0) > 0 ? mit : ohne).push(p);
-    });
+    // Bezugsgrösse ist NUR, was auch melden kann. Die Wochenschrift in denselben
+    // Nenner zu nehmen, würde die Quote künstlich halbieren – 39 von 1 067 statt
+    // 39 von 652 –, obwohl von 415 dieser Anmeldungen gar keine Kündigung
+    // eintreffen KANN. Siehe KUENDIGUNG_GEMESSEN.
+    var gemessene = Object.keys(a.basis).filter(kuendigungGemessen).sort();
+    var blinde    = Object.keys(a.basis).filter(function(p){ return !kuendigungGemessen(p); }).sort();
+    var basisGemessen = gemessene.reduce(function(s, p){ return s + a.basis[p]; }, 0);
 
     if (el('kuendLede')){
+      var satz;
       if (!a.gesamt){
-        el('kuendLede').textContent = 'Bisher hat niemand gekündigt.';
+        satz = 'Bisher ist keine Kündigung gemeldet worden.';
       } else {
-        var satz = fmt(a.gesamt) + ' von ' + fmt(basisGesamt) + ' Anmeldungen haben gekündigt';
-        if (mit.length === 1 && ohne.length){
-          satz += ' – alle bei ' + produktDativ(mit[0]) + ', bei ' +
-                  ohne.map(produktDativ).join(' und ') + ' keine einzige';
-        }
-        satz += '. Fort ist damit noch fast niemand: ' + fmt(a.laufend) +
-                ' behalten den Zugang bis zum Ende ihrer Frist.';
-        el('kuendLede').textContent = satz;
+        satz = fmt(a.gesamt) + ' von ' + fmt(basisGemessen) + ' ' +
+               gemessene.map(produktName).join('- und ') + '-Abos sind gekündigt worden. ' +
+               'Fort ist damit noch fast niemand: ' + fmt(a.laufend) +
+               ' behalten den Zugang bis zum Ende ihrer Frist.';
       }
+      if (blinde.length){
+        satz += ' Für ' + blinde.map(produktAkk).join(' und ') +
+                ' lässt sich dasselbe nicht sagen – von dort meldet keine Quelle Kündigungen.';
+      }
+      el('kuendLede').textContent = satz;
     }
 
     var karten = [];
-    var quote = [];
-    Object.keys(a.basis).sort().forEach(function(p){
+    var quote = gemessene.map(function(p){
       var n = a.jeProdukt[p] || 0, b = a.basis[p] || 0;
-      quote.push(produktName(p) + ' ' + fmt(n) + ' von ' + fmt(b) +
-                 (b ? ' (' + (Math.round(n / b * 1000) / 10).toString().replace('.', ',') + ' %)' : ''));
+      return produktName(p) + ' ' + fmt(n) + ' von ' + fmt(b) +
+             (b ? ' (' + (Math.round(n / b * 1000) / 10).toString().replace('.', ',') + ' %)' : '');
     });
+    if (blinde.length){
+      quote.push(blinde.map(produktName).join(' und ') + ' nicht gemessen');
+    }
     karten.push({ n:'Gekündigt', w:fmt(a.gesamt), m:quote.join(' · ') });
     karten.push({ n:'Zugang läuft noch', w:fmt(a.laufend),
                   m:a.beendet ? ('gekündigt, aber bis zum Fristende weiter dabei · ' + fmt(a.beendet) +
@@ -2058,7 +2085,11 @@
 
     if (el('kuendNote')){
       el('kuendNote').textContent =
-        'Gemessen, nicht gerechnet: Jede Zeile stammt aus dem Uscreen-Ereignis «subscription_canceled». ' +
+        (blinde.length ? ('Der blinde Fleck zuerst: Für ' + blinde.map(produktAkk).join(' und ') +
+          ' gibt es keinen Meldeweg für Kündigungen. Paperform sendet nur Anmeldungen, die Zoho-Anbindung ist ' +
+          'geplant und nicht gebaut – jede dieser Zeilen steht auf «neu», gleichgültig was in Wirklichkeit ' +
+          'geschieht. Diese Anmeldungen stehen darum weder im Zähler noch im Nenner der Quote. ') : '') +
+        'Gemessen, nicht gerechnet: Jede gezählte Zeile stammt aus dem Uscreen-Ereignis «subscription_canceled». ' +
         'Der Tag des Zugangsendes ist Uscreens eigenes «access_ends_at» – in der Regel das Ende der drei Gratismonate, ' +
         'bei einem Teil der Abos aber schon das Ende des laufenden Monats. ' +
         (a.ohneDatum ? (fmt(a.ohneDatum) + ' Kündigung' + (a.ohneDatum === 1 ? ' trägt' : 'en tragen') +
