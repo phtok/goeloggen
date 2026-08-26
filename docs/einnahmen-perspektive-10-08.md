@@ -123,6 +123,31 @@ Nur der Monats-Faktor bewegt, die Quoten bleiben auf «Erwartet»:
 einzelne Hebel in dieser Rechnung, grösser als jede plausible Verschiebung
 der Bleibe-Quote allein.
 
+### Vorblick auf drei Jahre — was «bleiben» auf Dauer bedeutet
+
+Eine Nebenrechnung, kein viertes Szenario: **Was wäre die Aktion wert, wenn
+alle, die laut den drei Szenarien Jahr 1 überstehen, zu heutigen Preisen
+auch Jahr 2 und Jahr 3 bleiben?** Dieselbe Bleibe-Quote wie oben, nur zweimal
+zusätzlich auf ein **volles** Kalenderjahr angewandt (kein Monats-Faktor
+mehr — der galt nur fürs Startjahr, weil die Aktion mitten im Jahr begann).
+
+| | Jahr 1 (Aktion) | Jahr 2 | Jahr 3 | **Drei Jahre gesamt** |
+|---|---:|---:|---:|---:|
+| **Vorsichtig** | 39 577 | 62 505 | 62 505 | **164 587** |
+| **Erwartet** | 66 269 | 84 977 | 84 977 | **236 223** |
+| **Gut** | 99 563 | 107 449 | 107 449 | **314 460** |
+
+**Was hier bewusst NICHT drinsteckt: ein weiterer Schwund in Jahr 2 und 3.**
+Die Zeile nimmt an, wer die Bleibe-Entscheidung im Jahr 1 einmal getroffen
+hat, hält sie unverändert — das ist eine vereinfachende Annahme, keine
+zweite Bleibe-Quote, für die es (bis mindestens 2028) keinen einzigen
+Messwert gibt. Erst recht keine Preisänderung: gerechnet wird durchweg zu
+den **heutigen** Preisen. Die Zahl beantwortet darum nur eine Frage — **was
+die Aktion auf Dauer bedeutet, wenn die Jahr-1-Bleibenden treu bleiben** —,
+nicht «was sie tatsächlich bringen wird». Zum Vergleich: Die Kampagne
+kostete CHF 9 014.60 einmalig; selbst im vorsichtigen Fall steht dem über
+drei Jahre das 18-Fache an Umsatz gegenüber.
+
 ## Was diese Rechnung nicht ist
 
 - **Keine Prognose.** Kein Wert stützt sich auf eine beobachtete
