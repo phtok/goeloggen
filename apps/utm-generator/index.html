@@ -250,6 +250,13 @@
   var CAMPAIGN = 'summer26_trial';
   var SHORTBASE = 'https://tools.goetheanum.ch/s/';   // Kurzlink: SHORTBASE + kurzname
 
+  // Kurzlink-QRs versal codieren: der Alphanumerisch-Modus des QR-Standards
+  // (nur Ziffern, Grossbuchstaben und wenige Zeichen) braucht rund ein Drittel
+  // weniger Platz als der Byte-Modus. Die Weiterleitung (Function go) lowercased
+  // den Code serverseitig – die Versalform landet also immer am selben Ziel.
+  var ALPHANUM = /^[0-9A-Z $%*+\-./:]+$/;
+  function kurzText(code){ return (SHORTBASE + code).toUpperCase(); }
+
   function el(id){ return document.getElementById(id); }
 
   // Kurznamen sind Tiernamen (zwei- bis dreisilbig) – vertrauenswürdig, merkbar,
@@ -324,9 +331,14 @@
   // ein QR braucht festen dunklen Vordergrund auf hellem Grund, theme-unabhängig.
   var QR_FG = '#141414';   // QR-Modulfarbe (Artefakt, nicht Theme)  # ds-ok
   var QR_BG = '#ffffff';   // QR-Ruhezone weiss, muss scannbar bleiben  # ds-ok
-  function softQrSvg(text){
-    // Fehlerkorrektur Q (robust für Druck), Punkte berühren sich (r=0.5) → scannbar.
-    var q = qrcode(0, 'Q'); q.addData(text); q.make();
+  function softQrSvg(text, kompakt){
+    // Kurzlinks (kompakt=true, Versalform) alphanumerisch mit Fehlerkorrektur M:
+    // kurze Nutzlast, weniger Module = grössere Punkte bei gleicher Druckgrösse.
+    // Sonst Byte-Modus mit Q (robust für Druck). Punkte berühren sich (r=0.5) → scannbar.
+    var q;
+    if(kompakt && ALPHANUM.test(text)){ q = qrcode(0, 'M'); q.addData(text, 'Alphanumeric'); }
+    else { q = qrcode(0, 'Q'); q.addData(text); }
+    q.make();
     var n = q.getModuleCount(), pad = 4, S = n + pad * 2, p = [];
     function inFinder(r, c){ return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7); }
     p.push('<rect width="' + S + '" height="' + S + '" fill="' + QR_BG + '"/>');
@@ -348,6 +360,7 @@
   }
 
   var current = null;
+  var registriert = null;   // { code, url } nach erfolgreichem Registrieren
   function render(){
     // Eingaben normalisieren, ohne den Cursor zu stören (nur bei Bedarf)
     var b = buildUrl();
@@ -359,7 +372,10 @@
       return;
     }
     box.textContent = b.url;
-    try { qr.innerHTML = softQrSvg(b.url); }
+    // Ist der Link registriert, zeigt der QR den Kurzlink: deutlich weniger
+    // Module als die lange UTM-Adresse, und jeder Scan zählt als Klick.
+    var kurz = registriert && registriert.url === b.url;
+    try { qr.innerHTML = softQrSvg(kurz ? kurzText(registriert.code) : b.url, kurz); }
     catch(e){ qr.innerHTML = '<span class="empty">QR</span>'; }
   }
 
@@ -403,7 +419,8 @@
     var blob = new Blob([svg.outerHTML], { type:'image/svg+xml' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'qr_' + (current.con || current.src) + '.svg';
+    a.download = 'qr_' + ((registriert && current && registriert.url === current.url)
+      ? registriert.code : (current.con || current.src)) + '.svg';
     a.click(); URL.revokeObjectURL(a.href);
     say('QR geladen.');
   });
@@ -442,7 +459,11 @@
       })
     }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(ergebnis){
-        if(ergebnis === 'ok'){ say('Im Register gespeichert.'); zeigeKurzlink(code); loadRegister(); }
+        if(ergebnis === 'ok'){
+          registriert = { code: code, url: current.url };
+          say('Im Register gespeichert – der QR zeigt jetzt den Kurzlink (kompakter, zählt Klicks).');
+          zeigeKurzlink(code); loadRegister(); render();
+        }
         else if(ergebnis === 'vergeben'){ say('Kurzname oder Link schon vergeben – bitte ein anderes Tier.', true); }
         else { say('Eintrag unvollständig – Quelle, Medium und Link prüfen.', true); }
       })
