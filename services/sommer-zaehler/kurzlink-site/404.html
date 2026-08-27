@@ -49,8 +49,9 @@
     var LANDING = "https://global-sommer2026.goetheanum.online";
     var segs = location.pathname.split("/").filter(Boolean);
     var code = segs.length ? segs[segs.length - 1] : "";
-    // «s» ist nur das Verzeichnis, kein Kurzname.
-    if (code === "s") code = "";
+    // «s» ist nur das Verzeichnis, kein Kurzname – auch versal (QR-Codes
+    // tragen den Kurzlink in Grossschreibung, die Auflösung lowercased).
+    if (code.toLowerCase() === "s") code = "";
     var ziel = code ? GO + encodeURIComponent(code) : LANDING;
     var a = document.getElementById("direkt");
     if (a) a.setAttribute("href", ziel);

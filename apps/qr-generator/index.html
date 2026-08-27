@@ -7,7 +7,9 @@
      Edge Function go und zählen ihre Scans anonym in link_hits – gespeichert
      werden nur Zeitpunkt und Code, keine Personendaten. Statistik über die
      Aggregat-RPCs qr_stats_public / qr_stats_tage (Schema:
-     services/qr-generator/schema.sql).
+     services/qr-generator/schema.sql). Kurzlink-QRs sind versal im
+     Alphanumerisch-Modus mit Fehlerkorrektur M codiert – 25×25 statt 33×33
+     Module, damit der Code ruhig bleibt und im Druck gross gepunktet ist.
 
      Regelkonform: Farben/Schnitte/Abstände aus tokens.css + base.css. Ziffern
      tabellarisch (G25), Betonung nur über Gewicht (G05), Labels normal, nicht
@@ -352,6 +354,14 @@
   var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
   var SHORTBASE = 'https://tools.goetheanum.ch/s/';
 
+  // Kurzlink-QRs versal codieren: der Alphanumerisch-Modus des QR-Standards
+  // (nur Ziffern, Grossbuchstaben und wenige Zeichen) braucht rund ein Drittel
+  // weniger Platz als der Byte-Modus – aus 33×33 Modulen werden 25×25. Die
+  // Auflösung ist case-unempfindlich (kurzlink_aufloesen lowercased serverseitig),
+  // die Versalform landet also immer am selben Ziel.
+  var ALPHANUM = /^[0-9A-Z $%*+\-./:]+$/;
+  function kurzText(code){ return (SHORTBASE + code).toUpperCase(); }
+
   function el(id){ return document.getElementById(id); }
 
   // --- Zustand ---------------------------------------------------------------
@@ -385,7 +395,7 @@
       var u = urlNormal(el('linkUrl').value);
       if(!u) return null;
       if(el('kurzToggle').checked && registriert && registriert.url === u){
-        return { text: SHORTBASE + registriert.code, name: registriert.code };
+        return { text: kurzText(registriert.code), name: registriert.code, kurz: true };
       }
       var host = u.replace(/^https?:\/\//, '').split(/[/?#]/)[0].replace(/[^a-z0-9.-]+/gi, '') || 'link';
       return { text: u, name: host };
@@ -428,11 +438,18 @@
   }
 
   // --- Gestalt: QR als SVG ------------------------------------------------------
-  // Fehlerkorrektur Q (robust für Druck). Punkte berühren sich (r=0.5) → scannbar;
+  // Kurzlinks (kompakt=true, Versalform) laufen alphanumerisch mit Fehler-
+  // korrektur M: die Nutzlast ist kurz, weniger Module heissen bei gleicher
+  // Druckgrösse grössere Punkte – das liest sich besser als dichteres Q.
+  // Alles andere bleibt Byte-Modus mit Q (robust für Druck).
+  // Punkte berühren sich (r=0.5) → scannbar;
   // Fliessend verschmilzt Nachbarn zu runden Formen (aussen wie innen gerundet);
   // Weich lässt minimale Fugen (0.94er-Module), Kanten ist der klassische Vollblock.
-  function qrSvg(text, stilWahl, fg, bg){
-    var q = qrcode(0, 'Q'); q.addData(text); q.make();
+  function qrSvg(text, stilWahl, fg, bg, kompakt){
+    var q;
+    if(kompakt && ALPHANUM.test(text)){ q = qrcode(0, 'M'); q.addData(text, 'Alphanumeric'); }
+    else { q = qrcode(0, 'Q'); q.addData(text); }
+    q.make();
     var n = q.getModuleCount(), pad = 4, S = n + pad * 2, p = [];
     function inFinder(r, c){ return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7); }
     // Dunkel im Sinn der Modulfläche (Finder-Augen zählen nicht mit – die werden
@@ -506,8 +523,7 @@
   var current = null;
   // Zählt dieser QR? Nur beim Link-Typ mit aktivem Toggle UND angelegtem Kurzlink.
   function zaehltNicht(){
-    return typ === 'link' && el('kurzToggle').checked &&
-           !(current && current.text.indexOf(SHORTBASE) === 0);
+    return typ === 'link' && el('kurzToggle').checked && !(current && current.kurz);
   }
   function zeigeStand(){
     var stand = el('qrStand');
@@ -518,7 +534,7 @@
       stand.textContent = 'Zählt noch nicht – der QR zeigt die lange Adresse. Erst ‹Kurzlink anlegen› drücken.';
       stand.className = 'qrstand wach';
     } else {
-      stand.textContent = 'Kurzlink aktiv – jeder Scan wird gezählt.';
+      stand.textContent = 'Kurzlink aktiv – jeder Scan wird gezählt. Versal codiert für den kleinstmöglichen QR.';
       stand.className = 'qrstand zaehlt';
     }
   }
@@ -533,7 +549,7 @@
     }
     qr.classList.toggle('dunkel', farbe === 'weiss');
     try {
-      qr.innerHTML = qrSvg(current.text, stil, FARBEN[farbe], farbe === 'weiss' ? null : QR_BG);
+      qr.innerHTML = qrSvg(current.text, stil, FARBEN[farbe], farbe === 'weiss' ? null : QR_BG, current.kurz);
       box.textContent = current.text;
     } catch(e){
       qr.innerHTML = '<span class="empty">zu viel Inhalt</span>';
@@ -751,11 +767,11 @@
 
         var row = document.createElement('div'); row.className = 'arch-row';
 
-        // Fester QR (fliessend) – klein, Klick lädt ihn als SVG.
+        // Fester QR (fliessend, kompakt versal) – klein, Klick lädt ihn als SVG.
         var qbtn = document.createElement('button');
         qbtn.type = 'button'; qbtn.className = 'qmini';
         qbtn.setAttribute('aria-label', 'QR von ' + x.code + ' herunterladen'); qbtn.title = 'QR herunterladen';
-        try { qbtn.innerHTML = qrSvg(kurz, 'fliessend', '#141414', '#ffffff'); } catch(e){ qbtn.textContent = 'QR'; }
+        try { qbtn.innerHTML = qrSvg(kurzText(x.code), 'fliessend', '#141414', '#ffffff', true); } catch(e){ qbtn.textContent = 'QR'; }
         qbtn.addEventListener('click', function(){
           var svg = qbtn.querySelector('svg'); if(!svg) return;
           dlBlob(new Blob([svg.outerHTML], { type: 'image/svg+xml' }), 'qr_' + x.code + '.svg');
