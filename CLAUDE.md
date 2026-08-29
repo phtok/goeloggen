@@ -1,5 +1,16 @@
 # Arbeitsregeln für dieses Repository
 
+## Sparsamer Claude-Verbrauch (Beschluss 29. 8. 2026)
+
+Claude-Kapazität ist knapp; jeder Subagent baut einen eigenen, teuren
+Kontext auf. Zwei Regeln für jede Session: Subagenten standardmässig auf
+Sonnet starten (`model: "sonnet"` im Agent-Aufruf; das grosse Modell nur
+für Architektur, kniffliges Debugging oder adversariales Review grosser
+Änderungen). Und kein Personalaufmarsch für Einzeiler: Konrad
+(`korrektor-goeloggen`) und Martha (`metteurin-goeloggen`) werden nur bei
+inhaltlicher Satz- oder Gestaltungsarbeit gerufen — nicht für Tippfehler
+oder Doku-Einzeiler; die Prüfmaschinen (Hook + CI) laufen ohnehin.
+
 ## Typografie ist verbindlich — keine freihändigen Griffe
 
 **Vor jeder Satz-, Seiten- oder Gestaltungsarbeit** (HTML-Seiten, Specimen,
