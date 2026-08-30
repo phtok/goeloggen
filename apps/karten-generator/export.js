@@ -190,6 +190,28 @@ function druckboxenEinsetzen(bytes, geometrie) {
 
 /* ---------- PDF-Export ---------- */
 
+// Das gemalte Blatt geht als Datei-Verweis ins PDF, nicht als Data-URI.
+// Befund vom 30. August 2026: svg2pdf zerlegt Data-URIs mit einem Ausdruck,
+// dessen Alternative-in-Schleife an der rund 670 000 Zeichen langen Kette
+// in manchen Regex-Maschinen (Safari) aussteigt. Greift der Ausdruck nicht,
+// hält svg2pdf die Zeichenkette für eine Adresse, rät das Bildformat aus
+// ihrer Endung und reicht jsPDF ein verstümmeltes ‹data:image/…› weiter.
+// jsPDF wirft ‹files of type UNKNOWN›, svg2pdf fängt den Wurf selbst ab —
+// und das Blatt kommt ohne Aquarell heraus, ohne dass jemand etwas merkt.
+// Die kurze Datei-Adresse nimmt den Ausdruck aus dem Spiel: das Format
+// kommt aus der Endung, die Bytes holt svg2pdf selbst. Der SVG-Export
+// behält die Data-URI — dort muss die Datei für sich allein stehen.
+function rasterAufDatei(svgElement) {
+  const bilder = Array.from(svgElement.querySelectorAll("image"));
+  bilder.forEach((bild) => {
+    const quelle = bild.getAttribute("href") || bild.getAttribute("xlink:href");
+    if (!quelle || !quelle.startsWith("data:image/")) return;
+    bild.removeAttribute("xlink:href");
+    bild.setAttribute("href", new URL(AQUARELL.datei, document.baseURI).href);
+  });
+  return bilder.length;
+}
+
 let pdfSchriftenPromise = null;
 
 function pdfSchriftenLaden() {
@@ -210,6 +232,7 @@ async function exportPdf() {
   const svgText = exportSvgString("");
   const svgElement = new DOMParser()
     .parseFromString(svgText, "image/svg+xml").documentElement;
+  const raster = rasterAufDatei(svgElement);
 
   const doc = new jspdf.jsPDF({
     unit: "pt",
@@ -229,6 +252,13 @@ async function exportPdf() {
   });
 
   let bytes = new Uint8Array(doc.output("arraybuffer"));
+  // Gegenprobe statt Vertrauen: svg2pdf verschluckt einen gescheiterten
+  // Bildeinbau lautlos. Trägt die Szene ein Raster, muss das PDF ein
+  // Bild-XObject führen — sonst lieber gar keine Datei als ein Blatt
+  // ohne Grundkarte.
+  if (raster && bytesSuchen(bytes, "/Subtype /Image", 0, false) < 0) {
+    throw new Error("Aquarell-Blatt nicht ins PDF übernommen");
+  }
   bytes = druckboxenEinsetzen(bytes, g);
   herunterladen(dateiname("pdf"), new Blob([bytes], { type: "application/pdf" }), "application/pdf");
 }
