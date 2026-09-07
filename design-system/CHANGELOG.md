@@ -16,6 +16,37 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 7. September 2026 — eine Sektionsfarbe braucht drei Gestalten (1.14.0)
+
+**Was.** Jede Sektionsfarbe bekommt zwei abgeleitete Flächen und eine Tinte:
+**`--sek-*-dunkel`** (matte, tiefe Fläche – Weiss drauf, 6.6 bis 7.2:1,
+markenfest), **`--sek-*-hell`** (leise Tint-Fläche – `--ink` oder die
+Sektionstinte drauf; kippt im Dunkelmodus zu einem stillen, tiefen Ton) und
+**`--sek-*-ink`** (die Sektion als Text – hell gleich dem dunklen Ton, dunkel
+ein heller Hauch). Erzeugt werden sie aus einem Rezept in OKLCH
+(`tools/sek-varianten.py`, idempotent, `--apply`), geprüft von
+`tools/check-on-sek.py` (jetzt CI-Tor in `pruefmaschinen.yml`): 143 Kontraste,
+beide Themes, alle ≥ 4.5:1. Die Seite `sektionsfarben.html` zeigt Karten statt
+Tabelle (mobil-first), misst die Kontraste am gerenderten Blatt, führt sechs
+Anwendungsbausteine je Sektion vor und stellt drei Stärken je Rolle zur
+Entscheidung nebeneinander.
+
+**Warum.** Sechs der zwölf Basisfarben tragen kein Weiss (B01 – Landwirtschaft
+2.66:1, Heilpädagogik 2.41:1), und als Fläche sind alle zu laut für ein
+Kopfband oder einen Hinweiskasten. Wer eine Sektion sichtbar machen wollte,
+griff bisher zu Hand-Mischungen oder liess es. Gold und Grün hatten längst
+beide Gestalten (`--gold-deep`/`--gold-ink`, `--ok`/`--ok-ink`) – die
+Sektionen nicht. Und weil zwölf Farben zwölfmal von Hand gemischt zwölf
+Meinungen ergeben, rechnet ein Rezept: gleiche Helligkeit je Rolle, Buntheit
+gedeckelt, Farbton der Sektion. Damit wirken die Sektionen als **eine Reihe**.
+
+**Wirkung.** Regel für Werkzeuge: Kopfband/Titelfläche = `-dunkel` +
+`--on-accent`; Chip/Kasten/Zeile = `-hell` + `--ink` oder `-ink`; Kicker/Link =
+`-ink`; die Basis bleibt Linie, Marke und Knopf (mit `--on-sek-*`). Basisfarbe
+korrigieren = `goe-orgs.js` und `tokens.css` ändern, dann
+`python3 tools/sek-varianten.py --apply`. Eine andere Stärke wählen = eine Zahl
+im `REZEPT` des Skripts.
+
 ## 25. August 2026 — was über allem schwebt, muss undurchsichtig sein (1.13.1)
 
 **Was.** Die globale Feedback-Pille (`.dsnav-invite`, `nav.css`) liegt nicht
