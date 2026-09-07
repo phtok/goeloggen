@@ -93,5 +93,34 @@ Familienzeile ist das erste Stück Fundament, das dort ankommt.
 3. **Pilot** auf einer Sektionsseite mit dem Zwei-Zeilen-Snippet, dann
    goetheanum.ch.
 
+## 6 · Variante: schwebender Öffner unten links (Frage vom 7. 9.)
+
+**Als Öffner ja, als Bloom-Menü nein.** Die G-Marke als schwebende Taste
+unten links ist der universalste Einbau überhaupt: sie braucht keine
+Kopfzeile, kein CMS, kein Layout – ein Skript, fertig. Auf dem Handy liegt
+sie im Daumenbereich. Was sich aber **radial aufblühen** lässt, sind vier
+bis sechs Icons – nicht elf Sektionen, ein Dutzend Bereiche und die
+Medien. Icons ohne Wort sind für dieses Publikum nicht lesbar und
+widersprechen dem Grundsatz «nur Titel». Darum: die Marke **öffnet**, und
+was aufgeht, ist dieselbe Schublade mit Titeln wie in Abschnitt 3.
+
+Was die schwebende Form leisten muss:
+
+- **Beschriftet, nicht nur Icon.** Ruhend eine runde Taste (48 px,
+  Markenblau, weisse Marke – B01); bei Hover und Fokus blüht sie zur Pille
+  «Goetheanum» auf. So versteht man, was sie tut.
+- **Fokus nie verdecken** (WCAG 2.2, SC 2.4.11): die Taste bleibt klein und
+  weicht am unteren Rand aus, wenn ein fokussiertes Element darunter liegt.
+- **Platz teilen:** Cookie-Banner und Chat-Widgets liegen meist unten
+  rechts oder ganz unten; links unten ist frei, aber die Taste muss über
+  Bannern liegen und im Druck verschwinden.
+- **Bewegung nur mit Erlaubnis** (`prefers-reduced-motion`).
+- **Auf dem Desktop** ist die Zeile oben die bekanntere Form; die
+  schwebende Marke ist die stärkere Form für Handy und Fremdseiten.
+
+**Entscheid für den Prototyp:** beide Öffner in einer Datei, per Schalter
+umschaltbar – dieselbe `familie.json`, dieselbe Schublade. Der Auftraggeber
+sieht beides und entscheidet am Blatt, nicht am Papier.
+
 Offen für den Auftraggeber: ob die Zeile auf goetheanum.ch selbst
 erscheint (Empfehlung: ja, überall gleich) oder dort im Hauptmenü aufgeht.
