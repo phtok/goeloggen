@@ -37,10 +37,13 @@ REZEPT = {
     # Fläche dunkel: L 0.47 → Weiss ≥ 5.5:1 auf jeder Sektion; C höchstens 0.085
     # (matt: kräftige Basistöne haben 0.13–0.20). Faktor hält leise Basistöne leise.
     "dunkel":   {"L": 0.47, "C_max": 0.085, "C_faktor": 0.62},
-    # Fläche hell (Hellmodus): L 0.935 → --ink 11:1, der dunkle Ton ≥ 5:1.
-    "hell":     {"L": 0.935, "C_max": 0.040, "C_faktor": 0.30},
-    # Fläche hell (Dunkelmodus): stiller, tiefer Ton knapp über --paper (#16191c).
-    "hell_dk":  {"L": 0.30, "C_max": 0.045, "C_faktor": 0.30},
+    # Fläche hell (Hellmodus): ein Farbhauch, kaum mehr als Papier – L 0.965, Buntheit
+    # sehr niedrig (Beschluss 7. 9. 2026: «zarter, weniger leuchtend»). --ink ≥ 13:1,
+    # der dunkle Ton ≥ 6:1.
+    "hell":     {"L": 0.965, "C_max": 0.022, "C_faktor": 0.20},
+    # Fläche hell (Dunkelmodus): derselbe Hauch, gespiegelt – ein stiller Ton knapp
+    # über --paper (#16191c, L ≈ 0.20) und --soft (L ≈ 0.24).
+    "hell_dk":  {"L": 0.27, "C_max": 0.035, "C_faktor": 0.25},
     # Text im Dunkelmodus: heller Hauch der Sektion – ≥ 4.5:1 auf hell_dk UND --paper.
     "ink_dk":   {"L": 0.82, "C_max": 0.090, "C_faktor": 0.60},
 }

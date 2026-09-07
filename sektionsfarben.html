@@ -131,7 +131,7 @@
     <h2>Sektionen</h2>
     <p class="desc">Drei Flächen je Sektion: die <b>Basis</b> ist Identität (markenfest, kippt nicht mit
       Hell/Dunkel) und dient als Linie, Marke oder Knopf. <b>Dunkel</b> ist die matte Fläche für
-      weissen Text – Kopfbänder, Titelflächen. <b>Hell</b> ist der leise Akzent für Chips, Kästen
+      weissen Text – Kopfbänder, Titelflächen. <b>Hell</b> ist ein Farbhauch für Chips, Kästen
       und Zeilen; darauf steht <code>--ink</code> oder die Sektionstinte <code>--sek-*-ink</code>.
       Die Kontrastzahl auf jeder Fläche ist live gemessen.</p>
     <div class="karten" id="karten"></div>
@@ -176,11 +176,12 @@
   </section>
 
   <section class="grp" id="vorschlaege">
-    <h2>Vorschläge zur Entscheidung</h2>
+    <h2>Vorschläge und Beschluss</h2>
     <p class="desc">Die Varianten entstehen aus einem Rezept in OKLCH: gleiche Helligkeit je Rolle,
-      Buntheit gedeckelt, Farbton der Sektion. Hier drei Stärken je Rolle nebeneinander – die
-      <b>Empfehlung</b> ist bereits in den Tokens umgesetzt. Eine andere Wahl heisst: eine Zahl
-      im Rezept ändern (<code>tools/sek-varianten.py</code>), neu erzeugen, fertig.</p>
+      Buntheit gedeckelt, Farbton der Sektion. Hier drei Stärken je Rolle nebeneinander; der
+      <b>Beschluss</b> vom 7. September 2026 steht in den Tokens: Dunkel matt (B), Hell als
+      Farbhauch. Eine andere Wahl heisst: eine Zahl im Rezept ändern
+      (<code>tools/sek-varianten.py</code>), neu erzeugen, fertig.</p>
     <div id="reihen"></div>
   </section>
 
@@ -377,12 +378,12 @@
   var VORSCHLAEGE=[
     {rolle:"Dunkel · Fläche für Weiss", fg:"#ffffff", stufen:[
       {name:"A · tiefer", L:0.42, cMax:0.085, cF:0.62, note:"schwerer, Weiss über 8:1"},
-      {name:"B · Empfehlung", L:0.47, cMax:0.085, cF:0.62, empf:true, note:"matt und ruhig, Weiss 6.6 bis 7.2:1 – so in den Tokens"},
+      {name:"B · Beschluss", L:0.47, cMax:0.085, cF:0.62, empf:true, note:"matt und ruhig, Weiss 6.6 bis 7.2:1 – so in den Tokens (7. September 2026)"},
       {name:"C · lichter", L:0.52, cMax:0.085, cF:0.62, note:"heller, Weiss um 5.3:1 – nah an der Grenze für Angenehm"}]},
     {rolle:"Hell · Fläche für dunklen Text", fg:null, stufen:[
-      {name:"A · zarter", L:0.955, cMax:0.030, cF:0.30, note:"kaum mehr als Papier"},
-      {name:"B · Empfehlung", L:0.935, cMax:0.040, cF:0.30, empf:true, note:"leise, aber als Fläche erkennbar – so in den Tokens"},
-      {name:"C · kräftiger", L:0.910, cMax:0.055, cF:0.30, note:"deutlicher Ton, näher am Pastell"}]}
+      {name:"Hauch · Beschluss", L:0.965, cMax:0.022, cF:0.20, empf:true, note:"ein Farbhauch, kaum mehr als Papier – so in den Tokens (7. September 2026)"},
+      {name:"zarter", L:0.955, cMax:0.030, cF:0.30, note:"noch als Fläche spürbar, aber schon leuchtender"},
+      {name:"leise", L:0.935, cMax:0.040, cF:0.30, note:"die erste Empfehlung – als zu leuchtend verworfen"}]}
   ];
   function bauReihen(){
     var wrap=$("#reihen"); if(!wrap) return;
@@ -390,7 +391,7 @@
       v.stufen.forEach(function(st){
         var r=el("div","reihe"), rk=el("div","rk");
         rk.appendChild(el("h3",null,v.rolle+" – "+st.name));
-        if(st.empf) rk.appendChild(el("span","badge","Empfehlung"));
+        if(st.empf) rk.appendChild(el("span","badge","Beschluss"));
         var minK=99, kacheln=el("div","kacheln");
         KEYS.forEach(function(k){
           var bg=ableiten(O[k].color,st.L,st.cMax,st.cF), fg=v.fg||ableiten(O[k].color,0.47,0.085,0.62), kk=kontrast(fg,bg);

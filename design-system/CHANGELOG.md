@@ -20,16 +20,19 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 **Was.** Jede Sektionsfarbe bekommt zwei abgeleitete Flächen und eine Tinte:
 **`--sek-*-dunkel`** (matte, tiefe Fläche – Weiss drauf, 6.6 bis 7.2:1,
-markenfest), **`--sek-*-hell`** (leise Tint-Fläche – `--ink` oder die
-Sektionstinte drauf; kippt im Dunkelmodus zu einem stillen, tiefen Ton) und
+markenfest), **`--sek-*-hell`** (ein Farbhauch, kaum mehr als Papier – `--ink`
+oder die Sektionstinte drauf; kippt im Dunkelmodus zu einem stillen, tiefen
+Ton knapp über `--paper`) und
 **`--sek-*-ink`** (die Sektion als Text – hell gleich dem dunklen Ton, dunkel
 ein heller Hauch). Erzeugt werden sie aus einem Rezept in OKLCH
 (`tools/sek-varianten.py`, idempotent, `--apply`), geprüft von
 `tools/check-on-sek.py` (jetzt CI-Tor in `pruefmaschinen.yml`): 143 Kontraste,
 beide Themes, alle ≥ 4.5:1. Die Seite `sektionsfarben.html` zeigt Karten statt
 Tabelle (mobil-first), misst die Kontraste am gerenderten Blatt, führt sechs
-Anwendungsbausteine je Sektion vor und stellt drei Stärken je Rolle zur
-Entscheidung nebeneinander.
+Anwendungsbausteine je Sektion vor und stellt drei Stärken je Rolle
+nebeneinander. Beschluss des Auftraggebers am selben Tag: Dunkel matt
+(Stufe B), Hell zarter als jeder Vorschlag – ein Hauch (L 0.965), nicht
+leuchtend.
 
 **Warum.** Sechs der zwölf Basisfarben tragen kein Weiss (B01 – Landwirtschaft
 2.66:1, Heilpädagogik 2.41:1), und als Fläche sind alle zu laut für ein
