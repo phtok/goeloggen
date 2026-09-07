@@ -16,6 +16,32 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 7. September 2026 — das Akkordeon wird ein Modul (1.15.0)
+
+**Was.** Das Akkordeon aus der Schau-Seite `akkordeon.html` zieht als Modul
+ins Fundament: **`akkordeon.css`** und **`akkordeon.js`** neben `nav.css`/`nav.js`.
+Drei Kleider auf einer Mechanik – `.bluete`, `.faden`, `.kapsel` als Klasse an
+`.acc-liste` – mit vier Farbrollen (`--ak` Linie, `--ak-ink` Text, `--ak-dunkel`
+Fläche für Weiss, `--ak-hell` Hauch), im Hausfall Gold, per `data-sek` in jeder
+Sektionsfarbe (1.14.0). Das Skript macht natives `details`/`summary` weich
+(Bloom-Kurve des goetheanum.ch-Menüs), hält je Liste eines offen, ohne dass die
+Seite springt, bietet «Alle aufklappen», öffnet beim Drucken alles und stellt
+den Stand danach wieder her.
+
+**Warum.** Der Auftraggeber will das Modul in Craft übernehmen und dafür den
+Code samt CSS kopieren – das geht nur, wenn er als Datei existiert und nicht im
+`<style>` einer Seite steckt. Ein Modul, das in der Seite wohnt, muss für jede
+zweite Seite abgeschrieben werden; ein Modul im Fundament wird eingebunden.
+Die Schau-Seite bindet die Dateien jetzt selbst ein (Konformität durch
+Identität) und bietet Twig-Partial, CSS, JS und einen aus `tokens.css`
+gerechneten Token-Auszug zum Kopieren an.
+
+**Wirkung.** Neue Dateien `design-system/akkordeon.css` und
+`design-system/akkordeon.js`; Markup-Vertrag `.acc-liste > .acc-kopf + details.acc
+> summary(.nr .frage .knopf) + .acc-body > .acc-inner.prose`. Welches Kleid die
+Website trägt, ist noch nicht entschieden – das Modul trägt alle drei, die
+Wahl ist eine Klasse.
+
 ## 7. September 2026 — eine Sektionsfarbe braucht drei Gestalten (1.14.0)
 
 **Was.** Jede Sektionsfarbe bekommt zwei abgeleitete Flächen und eine Tinte:
