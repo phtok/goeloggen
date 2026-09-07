@@ -16,6 +16,21 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 7. September 2026 — Faden: die Nummer über der Frage (1.16.1)
+
+**Was.** Im Kleid Faden steht die Nummer als eigene, leise Zeile über der
+Frage (Sektionstinte, `--t-small`); Frage und Antwort laufen bündig in
+derselben Einrückung. Vorher stand die Zahl in einer eigenen Spalte links.
+
+**Warum.** Der Auftraggeber: die eingerückte Zahl «schafft eine typografische
+Kluft» – auf dem Handy stand die Antwort links bündig, die Frage aber hinter
+der Zahl eingerückt. Die Zahl über der Frage schliesst die Kluft und bleibt
+mit 15 px in der Tinte unauffällig; am Blatt geprüft bei 420 und 1280 px.
+
+**Wirkung.** `akkordeon.css`, Kleid Faden: `summary` als Raster mit den
+Bereichen `nr` / `frage` / `knopf`; Blüte und Kapsel behalten ihre Zahl in
+Spalte bzw. Kreis.
+
 ## 7. September 2026 — zwei Bereiche mit eigener Farbe bekommen ihre Flächen (1.16.0)
 
 **Was.** Bühne (`--bereich-buehne`) und Bau-Administration (`--bereich-bauadmin`)
