@@ -42,6 +42,38 @@ gerechneten Token-Auszug zum Kopieren an.
 Website trägt, ist noch nicht entschieden – das Modul trägt alle drei, die
 Wahl ist eine Klasse.
 
+**Mechanik (hier statt auf der Seite, Beschluss 1.14.1).** Bewegung mit der
+Bloom-Kurve `cubic-bezier(.32,.08,.24,1)`, 280 ms auf, 220 ms zu, bei
+`prefers-reduced-motion` keine. Eines aufs Mal: schliesst sich darüber eine
+Antwort, geht sie ohne Bewegung zu und der Versatz wird ausgeglichen – die
+angetippte Frage bleibt an ihrem Platz (gemessen 401→401 px); liegt sie danach
+unter einer klebenden Leiste, zieht die Seite nach. «Alle aufklappen» hebt das
+auf; `beforeprint` öffnet alles, `afterprint` stellt den Stand her. Jede Frage
+ist per `#id` verlinkbar. Fingerziel = ganze Zeile ≥44 px (B04), der Winkel ist
+nur das Zeichen (das gelernte der Webfamilie: Hauptmenü, Kalender-Filter,
+Klappliste). Frage in der Hausschrift Deutlich mit Durchschuss 1.25, schmal
+18 px; Antwort als Mengentext in `.prose` (Schrift-Grenze, Lesemass 62ch);
+Nummer tabellarisch (G25). Farben: Basis als Linie/Ring, Tinte für Nummer und
+Winkel, dunkle Fläche + Weiss für die Anwahl (B01), Hauch als Grund.
+
+## 7. September 2026 — Werkzeuge zeigen, das Repo erklärt (1.14.1)
+
+**Was.** Die Sektionsfarben-Seite verliert den Abschnitt «Vorschläge und
+Beschluss», die Bereiche-Liste, die Kontrast-Belege und alle Token- und
+Skript-Hinweise in den Bildunterschriften. Das Prinzip steht jetzt in
+`CLAUDE.md`: eine Werkzeugseite trägt nur, was der Anwender zum Arbeiten
+braucht – Dokumentation gehört in diesen Ledger, den PR oder `CLAUDE-REF.md`.
+
+**Warum.** Der Auftraggeber: «Dokumentation ist nicht relevant für die
+Anwender.» Die Vergleichsreihen waren für die Entscheidung gebaut und blieben
+nach dem Beschluss als Ballast stehen; die Bereiche-Liste wiederholte zu
+achtzig Prozent Markenblau. Beides erklärte, statt zu zeigen.
+
+**Wirkung.** Regel für alle Werkzeuge (Ausnahme: Labor- und Strategieseiten
+im Backstage). Die Bereiche bleiben in der ersten Karte «Goetheanum und
+Bereiche» (Markenblau); ob Bühne und Bau-Administration eigene Karten mit
+Varianten bekommen, ist offen.
+
 ## 7. September 2026 — eine Sektionsfarbe braucht drei Gestalten (1.14.0)
 
 **Was.** Jede Sektionsfarbe bekommt zwei abgeleitete Flächen und eine Tinte:

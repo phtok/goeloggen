@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="design-system/nav.css" />
 <link rel="stylesheet" href="design-system/akkordeon.css" />
 <style>
-  /* Nur Seiten-Eigenes: Hero, Farbwahl, Mechanik-Tabelle, Kopierbereich.
+  /* Nur Seiten-Eigenes: Hero, Farbwahl, Kopierbereich.
      Das Modul selbst steht in design-system/akkordeon.css + akkordeon.js. */
   .hero .lede{max-width:58ch}
   .hero .quelle{margin-top:var(--s4)}
@@ -20,7 +20,6 @@
   .farbwahl .lab{display:block;margin-bottom:var(--s2)}
   .farbwahl .seg button{gap:8px}
   .farbwahl .punkt{display:inline-block;width:10px;height:10px;border-radius:var(--r-pill);flex:0 0 auto}
-  .mechanik td:first-child{white-space:nowrap;color:var(--muted)}
   /* Kopierbereich: Wahl (Twig · CSS · JS · Tokens), Knopf, Rückmeldung, Block */
   .kopieren{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s3);margin-top:var(--s4)}
   .kopieren .said{flex:1 1 auto}
@@ -32,7 +31,7 @@
 <body>
 
 <script src="design-system/nav.js" data-root="./" data-variant="werkzeug"
-  data-onpage="Blüte:#bluete|Faden:#faden|Kapsel:#kapsel|Mechanik:#mechanik|Craft:#craft"></script>
+  data-onpage="Blüte:#bluete|Faden:#faden|Kapsel:#kapsel|Craft:#craft"></script>
 
 <main class="wrap">
 
@@ -482,24 +481,6 @@
     </div>
   </section>
 
-  <section id="mechanik">
-    <div class="shead">
-      <h2>Eine Mechanik, drei Kleider</h2>
-      <p>Alle drei Entwürfe teilen dasselbe Gerüst. Was sich unterscheidet, ist allein die Hülle – die Klasse an der Liste. Darum lässt sich der gewählte Entwurf ohne Umbau in die Website übernehmen.</p>
-    </div>
-    <table class="mechanik">
-      <tbody>
-        <tr><td>Grundlage</td><td>Natives <span class="code">details</span>/<span class="code">summary</span> – klappbar, mit Tastatur und Vorleser bedienbar, auch ohne Skript.</td></tr>
-        <tr><td>Bewegung</td><td>Bloom-Kurve der Hauptseite (<span class="code">cubic-bezier(.32,.08,.24,1)</span>), <span class="num">280</span> ms auf, <span class="num">220</span> ms zu. Wer weniger Bewegung wünscht, bekommt keine (WCAG 2.3.3).</td></tr>
-        <tr><td>Ruhe beim Öffnen</td><td>Schliesst sich darüber eine andere Antwort, bleibt die angetippte Frage an ihrem Platz auf dem Schirm – die Seite springt nicht.</td></tr>
-        <tr><td>Eines aufs Mal</td><td>Öffnet sich eine Antwort, schliesst sich die andere weich. <q>Alle aufklappen</q> hebt das auf – zum Lesen am Stück, zum Bildschirmfoto; beim Drucken öffnet sich alles von selbst.</td></tr>
-        <tr><td>Verlinkbar</td><td>Jede Frage hat eine Adresse (<span class="code">#faden-7</span>); der Link öffnet sie direkt.</td></tr>
-        <tr><td>Fingerziele</td><td>Die ganze Zeile ist das Ziel, mindestens <span class="num">44</span> px hoch (B04); der Winkel ist nur das Zeichen – das gelernte der Webfamilie (Hauptmenü, Kalender-Filter, Klappliste).</td></tr>
-        <tr><td>Schrift</td><td>Frage in der Hausschrift, Deutlich (Titelrolle, schmal <span class="num">18</span> px); Nummer tabellarisch (G25); Antwort ist Mengentext und läuft darum in der Lese-Grotesk im Lesemass von <span class="num">62</span> Zeichen (Schrift-Grenze, G10).</td></tr>
-        <tr><td>Farben</td><td>Vier Rollen aus den Sektionsfarben: die Basis als Linie und Ring, die Tinte für Nummer und Winkel, die dunkle Fläche für die Anwahl mit Weiss (B01), der Hauch als Grund. Hausfall Gold; Hell und Dunkel folgen von selbst.</td></tr>
-      </tbody>
-    </table>
-  </section>
 
   <section id="craft">
     <div class="shead">

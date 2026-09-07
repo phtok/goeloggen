@@ -88,6 +88,17 @@ verdrahtet – nicht je Seite entscheiden.
   Titel/Marken **Deutlich**. Kleine Labels nie in Leise.
 Das Menü **koordiniert, es erklärt nicht**: nur Titel, kein Beiwerk-Text.
 
+## Werkzeuge zeigen, das Repo erklärt (Beschluss 7. 9. 2026)
+Eine Werkzeugseite trägt **nur, was der Anwender zum Arbeiten braucht**:
+Werte, Bausteine, Beispiele. **Keine** Vorschläge, Beschlüsse, Herleitungen,
+Varianten-Vergleiche, Kontrast-Belege, Versionsgeschichte oder Hinweise auf
+Skripte und Prüfer – das ist Dokumentation und gehört in den Ledger
+(`design-system/CHANGELOG.md`), den PR oder `CLAUDE-REF.md`. Wer beim Bauen
+etwas erklären will, schreibt es dorthin und lässt es auf der Seite weg
+(G03 gilt auch für Text). Ausnahme sind ausgewiesene Strategie- und
+Laborseiten (`tools.json`: `cat: labor`), die nur im Backstage erscheinen.
+Auslöser: Abschnitt «Vorschläge und Beschluss» auf der Sektionsfarben-Seite.
+
 ## Bauen neuer Seiten und Werkzeuge — vom Fundament aus, nicht freihändig
 Konformität entsteht durch Konstruktion, nicht durch Nachkontrolle. Darum gilt
 für **jede** neue HTML-Seite oder jedes neue Werkzeug:
