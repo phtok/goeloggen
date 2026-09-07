@@ -113,6 +113,10 @@
   --sek-mas:#2e54a4;         /* Mathematisch-Astronomische Sektion */
   --sek-hpise:#f98a3c;       /* Sektion für Heilpädagogik und inklusive soziale Entwicklung */
   --bereich:#0061a9;         /* Verwaltungs-/Bereichs-Standard = Markenblau (wie die Logo-Daten, goe-orgs.js) */
+  /* Bereiche mit EIGENER Farbe (Quelle goe-orgs.js) – bekommen dieselben Varianten wie
+     die Sektionen (tools/sek-varianten.py). Gärtnerei = Landwirtschaftsgrün (--sek-lws). */
+  --bereich-buehne:#968250;   /* Bühne */
+  --bereich-bauadmin:#b15359; /* Bau-Administration */
 
   /* Vordergrund AUF der jeweiligen Sektionsfläche (WCAG 1.4.3): Weiss nur, wo es
      ≥ 4.5:1 hält – sonst ein dunkler Sektionston. Werkzeuge nutzen ausschliesslich
@@ -125,6 +129,8 @@
   --on-sek-js:#4a0f0c;       /* Weiss nur 2.86 → dunkelrot 5.39:1 */
   --on-sek-srmk:#0f2445;     /* Weiss nur 3.35 → dunkelblau 4.61:1 */
   --on-sek-hpise:#3c2408;    /* Weiss nur 2.41 → dunkelbraun 6.03:1 */
+  --on-bereich-bauadmin:#fff;    /* Weiss 4.94:1 */
+  --on-bereich-buehne:#1e1500;   /* Weiss nur 3.75 → sehr dunkles Braun 4.82:1 (Bühnengold ist ein Mittelton) */
 
   /* --- Schrift-Familien --------------------------------------------------- */
   --font-display:"Goetheanum","Helvetica Neue",Arial,sans-serif; /* Titel, Chrome */
@@ -241,6 +247,8 @@
   --sek-srmk-dunkel:#3e5b88; --sek-srmk-hell:#edf4ff; --sek-srmk-ink:#3e5b88;
   --sek-mas-dunkel:#415a8a; --sek-mas-hell:#eef4ff; --sek-mas-ink:#415a8a;
   --sek-hpise-dunkel:#804c2a; --sek-hpise-hell:#fff0e8; --sek-hpise-ink:#804c2a;
+  --bereich-buehne-dunkel:#655a3d; --bereich-buehne-hell:#f7f3e9; --bereich-buehne-ink:#655a3d;
+  --bereich-bauadmin-dunkel:#80484b; --bereich-bauadmin-hell:#ffefef; --bereich-bauadmin-ink:#80484b;
 }
 :root[data-theme="dark"]{
   --sek-goetheanum-hell:#192837; --sek-goetheanum-ink:#9cc9f8;
@@ -256,6 +264,8 @@
   --sek-srmk-hell:#1c2737; --sek-srmk-ink:#a5c6f8;
   --sek-mas-hell:#1e2637; --sek-mas-ink:#a8c5fa;
   --sek-hpise-hell:#342216; --sek-hpise-ink:#f3b48e;
+  --bereich-buehne-hell:#2a261c; --bereich-buehne-ink:#d0c3a5;
+  --bereich-bauadmin-hell:#342021; --bereich-bauadmin-ink:#f0b1b2;
 }
 /* @sek-varianten:ende */
 

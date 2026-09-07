@@ -5,6 +5,7 @@
 Aus jeder Basis-Sektionsfarbe (--sek-<key> in design-system/tokens.css, Quelle
 der Werte: assets/goe-orgs.js) entstehen in OKLCH drei abgeleitete Töne:
 
+  (ebenso --bereich-<key>-… für Bereiche mit eigener Farbe: Bühne, Bau-Administration)
   --sek-<key>-dunkel   matte, tiefe FLÄCHE – trägt Weiss (--on-accent), ≥ 5.5:1.
                        Markenfest (kippt nicht mit Hell/Dunkel).
   --sek-<key>-hell     leise TINT-Fläche – trägt --ink oder --sek-<key>-ink.
@@ -116,17 +117,24 @@ def ableiten(hexv, rolle):
     L, C, H = to_oklch(hexv)
     return from_oklch(r["L"], min(C * r["C_faktor"], r["C_max"]), H)
 
+# Zwei Familien: Sektionen (--sek-*) und Bereiche mit eigener Farbe (--bereich-<key>).
+# --bereich ohne Schlüssel ist der Standard (= Markenblau) und bekommt keine Varianten.
+FAMILIEN = (("sek", "sektion-varianten"), ("bereich", "bereich-varianten"))
+
 def basis_lesen():
     css = open(TOKENS_CSS, encoding="utf-8").read()
     kopf = css.split("/* @sek-varianten", 1)[0]     # nur den Basis-Block lesen
-    paare = re.findall(r"--sek-([\w]+)\s*:\s*(#[0-9a-fA-F]{3,6})\s*;\s*(?:/\*\s*(.*?)\s*\*/)?", kopf)
-    return [(k, v.lower(), d or "") for k, v, d in paare]
+    out = []
+    for fam, _ in FAMILIEN:
+        for k, v, d in re.findall(r"--%s-([\w]+)\s*:\s*(#[0-9a-fA-F]{3,6})\s*;\s*(?:/\*\s*(.*?)\s*\*/)?" % fam, kopf):
+            out.append((fam, k, v.lower(), d or ""))
+    return out
 
 def varianten():
-    return [{"key": k, "basis": v, "name": d,
+    return [{"fam": f, "key": k, "basis": v, "name": d,
              "dunkel": ableiten(v, "dunkel"), "hell": ableiten(v, "hell"),
              "hell_dk": ableiten(v, "hell_dk"), "ink_dk": ableiten(v, "ink_dk")}
-            for k, v, d in basis_lesen()]
+            for f, k, v, d in basis_lesen()]
 
 MARK_A = "/* @sek-varianten:start – GENERIERT von tools/sek-varianten.py, nicht von Hand ändern */"
 MARK_E = "/* @sek-varianten:ende */"
@@ -145,12 +153,13 @@ def css_block(vs):
          "   gedeckelt (matt). Gerechnet: tools/sek-varianten.py · geprüft: tools/check-on-sek.py. */",
          ":root{"]
     for v in vs:
-        z.append("  --sek-%s-dunkel:%s; --sek-%s-hell:%s; --sek-%s-ink:%s;"
-                 % (v["key"], v["dunkel"], v["key"], v["hell"], v["key"], v["dunkel"]))
+        p = "--%s-%s" % (v["fam"], v["key"])
+        z.append("  %s-dunkel:%s; %s-hell:%s; %s-ink:%s;" % (p, v["dunkel"], p, v["hell"], p, v["dunkel"]))
     z.append("}")
     z.append(":root[data-theme=\"dark\"]{")
     for v in vs:
-        z.append("  --sek-%s-hell:%s; --sek-%s-ink:%s;" % (v["key"], v["hell_dk"], v["key"], v["ink_dk"]))
+        p = "--%s-%s" % (v["fam"], v["key"])
+        z.append("  %s-hell:%s; %s-ink:%s;" % (p, v["hell_dk"], p, v["ink_dk"]))
     z.append("}")
     z.append(MARK_E)
     return "\n".join(z)
@@ -174,26 +183,31 @@ def apply_json(vs):
     """Schreibt den Block "sektion-varianten" im kompakten Hausformat (eine Zeile je
     Wert), damit der Rest der Datei unberührt bleibt – json.dumps würde alles umbrechen."""
     txt = open(TOKENS_JSON, encoding="utf-8").read()
-    z = ['    "sektion-varianten": {',
-         '      "$description": "Abgeleitete Sektionstöne – generiert von tools/sek-varianten.py (nicht von Hand ändern). '
-         'dunkel: matte Fläche, Weiss drauf, markenfest. hell: leise Tint-Fläche, --ink drauf; '
-         'hell_dunkelmodus gilt im Dunkel. ink: Sektion als Text (hell = dunkel; ink_dunkelmodus im Dunkel).",']
-    for i, v in enumerate(vs):
-        z.append('      "%s": { "dunkel": { "$value": "%s" }, "hell": { "$value": "%s" }, '
-                 '"hell_dunkelmodus": { "$value": "%s" }, "ink": { "$value": "%s" }, '
-                 '"ink_dunkelmodus": { "$value": "%s" }, "$description": "%s" }%s'
-                 % (v["key"], v["dunkel"], v["hell"], v["hell_dk"], v["dunkel"], v["ink_dk"],
-                    v["name"].replace('"', "'"), "," if i < len(vs) - 1 else ""))
-    z.append('    }')
-    block = "\n".join(z)
-    start = txt.find('    "sektion-varianten": {')
-    if start >= 0:
-        # bis zur schliessenden Klammer auf derselben Einrücktiefe
-        ende = txt.index("\n    }", start) + len("\n    }")
-        neu = txt[:start] + block + txt[ende:]
-    else:
-        anker = txt.index('\n  },\n  "font"')      # Ende des "color"-Objekts
-        neu = txt[:anker] + ",\n" + block + txt[anker:]
+    neu = txt
+    for fam, gruppe in FAMILIEN:
+        fv = [v for v in vs if v["fam"] == fam]
+        if not fv:
+            continue
+        z = ['    "%s": {' % gruppe,
+             '      "$description": "Abgeleitete Töne (%s) – generiert von tools/sek-varianten.py (nicht von Hand ändern). '
+             'dunkel: matte Fläche, Weiss drauf, markenfest. hell: Farbhauch, --ink drauf; '
+             'hell_dunkelmodus gilt im Dunkel. ink: Farbe als Text (hell = dunkel; ink_dunkelmodus im Dunkel).",' % fam]
+        for i, v in enumerate(fv):
+            z.append('      "%s": { "dunkel": { "$value": "%s" }, "hell": { "$value": "%s" }, '
+                     '"hell_dunkelmodus": { "$value": "%s" }, "ink": { "$value": "%s" }, '
+                     '"ink_dunkelmodus": { "$value": "%s" }, "$description": "%s" }%s'
+                     % (v["key"], v["dunkel"], v["hell"], v["hell_dk"], v["dunkel"], v["ink_dk"],
+                        v["name"].replace('"', "'"), "," if i < len(fv) - 1 else ""))
+        z.append('    }')
+        block = "\n".join(z)
+        start = neu.find('    "%s": {' % gruppe)
+        if start >= 0:
+            # bis zur schliessenden Klammer auf derselben Einrücktiefe
+            ende = neu.index("\n    }", start) + len("\n    }")
+            neu = neu[:start] + block + neu[ende:]
+        else:
+            anker = neu.index('\n  },\n  "font"')      # Ende des "color"-Objekts
+            neu = neu[:anker] + ",\n" + block + neu[anker:]
     if neu != txt:
         open(TOKENS_JSON, "w", encoding="utf-8").write(neu)
         return True
@@ -203,8 +217,8 @@ def vorschau(vs):
     print("%-12s %-8s %-8s W/dk  %-8s ink/h dk/h  %-8s ink/hd %-8s i/hd i/pap" %
           ("key", "basis", "dunkel", "hell", "hell_dk", "ink_dk"))
     for v in vs:
-        print("%-12s %-8s %-8s %4.1f  %-8s %4.1f  %4.1f  %-8s %4.1f   %-8s %4.1f %4.1f" % (
-            v["key"], v["basis"], v["dunkel"], kontrast("#fff", v["dunkel"]),
+        print("%-16s %-8s %-8s %4.1f  %-8s %4.1f  %4.1f  %-8s %4.1f   %-8s %4.1f %4.1f" % (
+            v["fam"] + "-" + v["key"], v["basis"], v["dunkel"], kontrast("#fff", v["dunkel"]),
             v["hell"], kontrast("#23272b", v["hell"]), kontrast(v["dunkel"], v["hell"]),
             v["hell_dk"], kontrast("#e6e8ea", v["hell_dk"]),
             v["ink_dk"], kontrast(v["ink_dk"], v["hell_dk"]), kontrast(v["ink_dk"], "#16191c")))

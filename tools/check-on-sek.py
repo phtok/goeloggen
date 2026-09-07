@@ -55,8 +55,11 @@ def main():
     light = _tokens(light_css)
     dark = dict(light); dark.update(_tokens("\n".join(dark_blocks)))
 
-    sek = dict(re.findall(r"--sek-([\w]+)\s*:\s*(#[0-9a-fA-F]{3,6})", light_css))
-    sek = {k: v for k, v in sek.items() if not k.endswith(("-dunkel", "-hell", "-ink"))}
+    sek = {}
+    for fam in ("sek", "bereich"):
+        for k, v in re.findall(r"--%s-([\w]+)\s*:\s*(#[0-9a-fA-F]{3,6})" % fam, light_css):
+            if not k.endswith(("-dunkel", "-hell", "-ink")):
+                sek[fam + "-" + k] = v
     fails, n = [], 0
 
     def check(label, fg, bg, ziel=AA):
@@ -67,23 +70,23 @@ def main():
             fails.append("  %s: %.2f < %.1f" % (label, r, ziel))
 
     for key, bg in sek.items():
-        fg = light.get("--on-sek-" + key)
+        fg = light.get("--on-" + key)
         if fg is None:
-            fails.append("  --on-sek-%s fehlt (Fläche %s)" % (key, bg)); continue
-        check("--on-sek-%s (%s) auf --sek-%s (%s)" % (key, fg, key, bg), fg, bg)
+            fails.append("  --on-%s fehlt (Fläche %s)" % (key, bg)); continue
+        check("--on-%s (%s) auf --%s (%s)" % (key, fg, key, bg), fg, bg)
         # Varianten (optional, aber wenn eine da ist, müssen alle da sein)
-        dunkel = light.get("--sek-%s-dunkel" % key)
+        dunkel = light.get("--%s-dunkel" % key)
         if dunkel is None:
             continue
         for theme, t in (("hell", light), ("dunkel", dark)):
-            hell, ink = t.get("--sek-%s-hell" % key), t.get("--sek-%s-ink" % key)
+            hell, ink = t.get("--%s-hell" % key), t.get("--%s-ink" % key)
             if hell is None or ink is None:
-                fails.append("  --sek-%s-hell/-ink fehlt (Theme %s)" % (key, theme)); continue
-            check("Weiss auf --sek-%s-dunkel (%s)" % (key, dunkel), t["--on-accent"], dunkel)
-            check("--ink auf --sek-%s-hell (%s, %s)" % (key, hell, theme), t["--ink"], hell)
-            check("--sek-%s-ink (%s) auf --sek-%s-hell (%s, %s)" % (key, ink, key, hell, theme), ink, hell)
-            check("--sek-%s-ink (%s) auf --paper (%s)" % (key, ink, theme), ink, t["--paper"])
-            check("--sek-%s-ink (%s) auf --soft (%s)" % (key, ink, theme), ink, t["--soft"])
+                fails.append("  --%s-hell/-ink fehlt (Theme %s)" % (key, theme)); continue
+            check("Weiss auf --%s-dunkel (%s)" % (key, dunkel), t["--on-accent"], dunkel)
+            check("--ink auf --%s-hell (%s, %s)" % (key, hell, theme), t["--ink"], hell)
+            check("--%s-ink (%s) auf --%s-hell (%s, %s)" % (key, ink, key, hell, theme), ink, hell)
+            check("--%s-ink (%s) auf --paper (%s)" % (key, ink, theme), ink, t["--paper"])
+            check("--%s-ink (%s) auf --soft (%s)" % (key, ink, theme), ink, t["--soft"])
     if fails:
         print("✗ Sektions-Kontraste unter WCAG AA:"); print("\n".join(fails)); return 1
     print("✓ %d Sektions-Kontraste (Basis + Varianten, beide Themes) halten ≥ %.1f:1." % (n, AA))

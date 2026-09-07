@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex" />
 <title>Goetheanum – Sektionsfarben</title>
-<meta name="description" content="Die Identitätsfarben der Schul-Sektionen mit heller und dunkler Variante, Kontrasten, Anwendungsbeispielen und allen Werten (Hex, RGB, HSB, CMYK-Richtwert) – klick-kopierbar." />
+<meta name="description" content="Die Identitätsfarben der Schul-Sektionen und Bereiche mit heller und dunkler Variante, Anwendungsbeispielen und allen Werten (Hex, RGB, HSB, CMYK-Richtwert) – klick-kopierbar." />
 <link rel="stylesheet" href="design-system/tokens.css" />
 <link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
@@ -97,7 +97,7 @@
 </head>
 <body>
 <script src="design-system/nav.js" data-root="./" data-section="system" data-active="sektionsfarben"
-        data-onpage="Sektionen:#sektionen|Anwendung:#anwendung"></script>
+        data-onpage="Sektionen:#sektionen|Bereiche:#bereiche|Anwendung:#anwendung"></script>
 
 <main class="wrap">
   <div class="hero">
@@ -111,8 +111,15 @@
     <h2>Sektionen</h2>
     <p class="desc">Die <b>Basis</b> ist Identität: Linie, Marke, Knopf. <b>Dunkel</b> trägt
       weissen Text: Kopfbänder, Titelflächen. <b>Hell</b> ist ein Farbhauch für Chips, Kästen
-      und Zeilen mit dunklem Text. Die Bereiche tragen Markenblau (erste Karte).</p>
+      und Zeilen mit dunklem Text.</p>
     <div class="karten" id="karten"></div>
+  </section>
+
+  <section class="grp" id="bereiche">
+    <h2>Bereiche</h2>
+    <p class="desc">Die Bereiche tragen Markenblau (Karte «Goetheanum und Bereiche»). Zwei haben eine
+      eigene Farbe; die Gärtnerei teilt das Grün der Landwirtschaft.</p>
+    <div class="karten" id="karten-bereiche"></div>
   </section>
 
   <section class="grp" id="anwendung">
@@ -218,8 +225,12 @@
   // --- Daten -----------------------------------------------------------------
   var O=window.GOE_GCI_ORGS||{}, C=window.GOE_GCI_CATS||{};
   var KEYS=(C.sektionen&&C.sektionen.items||[]).filter(function(k){return O[k]&&O[k].color;});
-  var SEK=[{key:"goetheanum",name:"Goetheanum und Bereiche",hex:(O.goetheanum||{}).color||"#0061a9"}]
-    .concat(KEYS.map(function(k){return {key:k,name:O[k].name_de,hex:O[k].color};}));
+  var SEK=[{fam:"sek",key:"goetheanum",name:"Goetheanum und Bereiche",hex:(O.goetheanum||{}).color||"#0061a9"}]
+    .concat(KEYS.map(function(k){return {fam:"sek",key:k,name:O[k].name_de,hex:O[k].color};}));
+  // Bereiche mit eigener Farbe (alle übrigen tragen Markenblau)
+  var BER=["buehne","bauadmin"].filter(function(k){return O[k]&&O[k].color;})
+    .map(function(k){return {fam:"bereich",key:k,name:O[k].name_de,hex:O[k].color};});
+  var ALLE=SEK.concat(BER);
 
   // --- Sektionskarten --------------------------------------------------------
   function flaeche(cls,rolle,bgVar,fgVar){
@@ -231,14 +242,15 @@
     return d;
   }
   function karte(s){
-    var a=el("article","sek"); a.dataset.key=s.key;
+    var t="--"+s.fam+"-"+s.key, on="--on-"+s.fam+"-"+s.key;
+    var a=el("article","sek"); a.dataset.tok=t;
     var f=el("div","farben");
-    f.appendChild(flaeche("basis","Basis","--sek-"+s.key,"--on-sek-"+s.key));
-    f.appendChild(flaeche("dunkel","Dunkel","--sek-"+s.key+"-dunkel","--on-accent"));
-    f.appendChild(flaeche("hell","Hell","--sek-"+s.key+"-hell","--sek-"+s.key+"-ink"));
+    f.appendChild(flaeche("basis","Basis",t,on));
+    f.appendChild(flaeche("dunkel","Dunkel",t+"-dunkel","--on-accent"));
+    f.appendChild(flaeche("hell","Hell",t+"-hell",t+"-ink"));
     a.appendChild(f);
     var kopf=el("div","kopf"); kopf.appendChild(el("h3",null)); kopf.lastChild.textContent=s.name;
-    kopf.appendChild(el("span","tok","--sek-"+s.key)); a.appendChild(kopf);
+    kopf.appendChild(el("span","tok",t)); a.appendChild(kopf);
     var rgb=hexToRgb(s.hex), hsb=rgbToHsb(rgb.r,rgb.g,rgb.b), cmyk=rgbToCmyk(rgb.r,rgb.g,rgb.b);
     var w1=el("div","werte"); w1.appendChild(el("span","lab","Basis · Hex, RGB, HSB, CMYK (Richtwert)"));
     w1.appendChild(wert(s.hex.toUpperCase(),"Hex"));
@@ -253,7 +265,7 @@
   function messen(){
     // Kontraste am gerenderten Blatt: erst nach dem Malen lesen, je Theme neu.
     document.querySelectorAll("article.sek").forEach(function(a){
-      var key=a.dataset.key;
+      var tok=a.dataset.tok;
       a.querySelectorAll(".f").forEach(function(f){
         var bg=paintHex(f), fg=paintHex(f,"color"), k=kontrast(fg,bg);
         f.querySelector(".hx").textContent=bg.toUpperCase();
@@ -262,7 +274,7 @@
       });
       var w2=a.querySelector(".werte.var"); while(w2.childNodes.length>1) w2.removeChild(w2.lastChild);
       [["dunkel","-dunkel"],["hell","-hell"],["ink","-ink"]].forEach(function(p){
-        var name="--sek-"+key+p[1], hx=tokenHex(name).toUpperCase();
+        var name=tok+p[1], hx=tokenHex(name).toUpperCase();
         var b=wert(name,hx,"var("+name+")"); b.title="Klick kopiert das Token"; w2.appendChild(b);
       });
     });
@@ -270,9 +282,9 @@
 
   // --- Anwendung -------------------------------------------------------------
   function waehle(key){
-    var s=SEK.filter(function(x){return x.key===key;})[0]||SEK[0], anw=$("#anw");
-    ["","-dunkel","-hell","-ink"].forEach(function(p){anw.style.setProperty("--x"+(p||""),"var(--sek-"+s.key+p+")");});
-    anw.style.setProperty("--x-on","var(--on-sek-"+s.key+")");
+    var s=ALLE.filter(function(x){return x.key===key;})[0]||SEK[0], anw=$("#anw"), t="--"+s.fam+"-"+s.key;
+    ["","-dunkel","-hell","-ink"].forEach(function(p){anw.style.setProperty("--x"+(p||""),"var("+t+p+")");});
+    anw.style.setProperty("--x-on","var(--on-"+s.fam+"-"+s.key+")");
     var kurz=(O[s.key]&&O[s.key].short_de)||s.name;
     $("#bsp-titel").textContent=s.key==="goetheanum"?"Tagung am Goetheanum":s.name;
     $("#bsp-chip").textContent=kurz; $("#bsp-kick").textContent=kurz;
@@ -280,9 +292,9 @@
   }
   function bauWaehler(){
     var w=$("#waehler");
-    SEK.forEach(function(s){
+    ALLE.forEach(function(s){
       var b=el("button"); b.type="button"; b.dataset.key=s.key; b.setAttribute("aria-pressed","false");
-      var p=el("span","punkt"); p.style.background="var(--sek-"+s.key+")"; b.appendChild(p);
+      var p=el("span","punkt"); p.style.background="var(--"+s.fam+"-"+s.key+")"; b.appendChild(p);
       b.appendChild(document.createTextNode(s.key==="goetheanum"?"Goetheanum":(O[s.key].short_de||s.name)));
       b.addEventListener("click",function(){waehle(s.key);});
       w.appendChild(b);
@@ -293,6 +305,7 @@
 
   function render(){
     var k=$("#karten"); SEK.forEach(function(s){k.appendChild(karte(s));});
+    var kb=$("#karten-bereiche"); BER.forEach(function(s){kb.appendChild(karte(s));});
     bauWaehler();
     requestAnimationFrame(function(){messen(); waehle("aas");});
     // Theme-Wechsel (nav.js setzt data-theme) → Kontraste neu messen

@@ -495,18 +495,20 @@ function buildSwatches(tok,typo){
 
 function buildSektion(tok){
   const wrap=$("#sektionen-sw"); if(!wrap||!tok.color.sektion) return;
-  const vt=tok.color["sektion-varianten"]||{};
-  Object.entries(tok.color.sektion).filter(([k])=>!k.startsWith("$")).forEach(([k,v])=>{
+  [["sektion","sek","sektion-varianten"],["bereich","bereich","bereich-varianten"]].forEach(([gruppe,fam,vgruppe])=>{
+  const vt=tok.color[vgruppe]||{};
+  Object.entries(tok.color[gruppe]||{}).filter(([k])=>!k.startsWith("$")).forEach(([k,v])=>{
     const hex=v.$value, varianten=!!vt[k];
     const b=el("button","sw");
     b.innerHTML =
       `<div class="chip-c" style="background:${hex}"></div>`+
-      (varianten?`<div class="chip-v" aria-hidden="true"><i style="background:var(--sek-${k}-dunkel)"></i><i style="background:var(--sek-${k}-hell)"></i></div>`:"")+
+      (varianten?`<div class="chip-v" aria-hidden="true"><i style="background:var(--${fam}-${k}-dunkel)"></i><i style="background:var(--${fam}-${k}-hell)"></i></div>`:"")+
       `<div class="body"><div class="nm">${v.$description||k}</div>`+
-      `<div class="hx">--sek-${k} · ${hex}</div>`+
+      `<div class="hx">--${fam}-${k} · ${hex}</div>`+
       (varianten?`<div class="ds">dazu -dunkel (Weiss drauf) · -hell (Ink drauf) · -ink (als Text) – <a href="../sektionsfarben.html">Anwendung</a></div>`:"")+`</div>`;
     b.addEventListener("click",()=>{navigator.clipboard?.writeText(hex);toast(hex+" kopiert");});
     wrap.appendChild(b);
+  });
   });
 }
 
