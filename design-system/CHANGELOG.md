@@ -16,6 +16,28 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 7. September 2026 — Frage und Antwort, eine Stimme (1.15.1)
+
+**Was.** Die Antwort im Akkordeon läuft wieder in der Hausschrift (Klar,
+`--t-body`), nicht mehr in der Lese-Grotesk. Mass `min(48ch,100%)` – gemessen
+63 Zeichen je Zeile auf breitem Blatt – und Durchschuss 1.6 breit, 1.5 schmal.
+Der Lesemodus der Kopfzeile schaltet weiterhin auf die Grotesk um.
+
+**Warum.** Der Auftraggeber: Frage und Antwort «erscheinen wie zwei völlig
+verschiedene Welten», und die Grotesk wirkte zu gross – sie ist per
+`size-adjust` auf die x-Höhe der Hausschrift gehoben und steht bei gleichem
+Grad optisch grösser. Zwei Wege wurden gemessen und angeschaut: Grotesk auf
+17–18 px angeglichen, oder eine Stimme. Die eine Stimme löst die Disharmonie
+ganz und entspricht der Hausregel (Fliesstext in der Hausschrift, Lesbarkeit
+aus den Faktoren). Auf dem Handy bleibt die Zeile mit rund 39 Zeichen unter
+dem Mass von G10 – darum der knappere Durchschuss nach G11.
+
+**Wirkung.** `akkordeon.css`: `.acc-inner` ohne `.prose`, eigenes Mass und
+eigener Durchschuss; Markup-Vertrag `.acc-body > .acc-inner`. Befund fürs
+Regelwerk (nicht geändert): G10 nennt `min(39ch,100%)` für die Hausschrift,
+das Token `--measure` steht auf 62ch für die Grotesk – beide meinen ~66
+Zeichen, der Regeltext ist älter als die Schrift-Grenze.
+
 ## 7. September 2026 — das Akkordeon wird ein Modul (1.15.0)
 
 **Was.** Das Akkordeon aus der Schau-Seite `akkordeon.html` zieht als Modul
@@ -38,7 +60,7 @@ gerechneten Token-Auszug zum Kopieren an.
 
 **Wirkung.** Neue Dateien `design-system/akkordeon.css` und
 `design-system/akkordeon.js`; Markup-Vertrag `.acc-liste > .acc-kopf + details.acc
-> summary(.nr .frage .knopf) + .acc-body > .acc-inner.prose`. Welches Kleid die
+> summary(.nr .frage .knopf) + .acc-body > .acc-inner`. Welches Kleid die
 Website trägt, ist noch nicht entschieden – das Modul trägt alle drei, die
 Wahl ist eine Klasse.
 

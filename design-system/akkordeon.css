@@ -2,7 +2,7 @@
    Goetheanum CI – Akkordeon (Modul)
    -----------------------------------------------------------------------------
    Drei Kleider auf EINER Mechanik: .bluete · .faden · .kapsel (Klasse an .acc-liste).
-   Setzt design-system/tokens.css und base.css voraus (Rollen .prose, .btn, .meta).
+   Setzt design-system/tokens.css und base.css voraus (Rollen .btn, .meta).
    Markup: <div class="acc-liste faden" data-sek="hpise"> mit .acc-kopf und
    <details class="acc"> je Frage; Skript: design-system/akkordeon.js.
    Vorbild der Bewegung: das aufblühende Klappmenü von goetheanum.ch
@@ -10,8 +10,8 @@
    Farbe: vier Rollen – --ak Linie/Marke · --ak-ink Text · --ak-dunkel Fläche
    für Weiss · --ak-hell Hauch. Hausfall Gold; data-sek="<sektion>" nimmt die
    Sektionsfarben (Basis · -ink · -dunkel · -hell, Sektionsfarben 1.14.0).
-   Regeln: Frage = Titelrolle Deutlich; Antwort = Mengentext in der Lese-Grotesk
-   (.prose, Schrift-Grenze); Nummer tabellarisch (G25); Fingerziel = ganze Zeile
+   Regeln: Frage = Titelrolle Deutlich, Antwort = Fliesstext Klar – beide in der
+   Hausschrift, eine Stimme; Nummer tabellarisch (G25); Fingerziel = ganze Zeile
    ≥44 px (B04); Anwahl = dunkle Fläche + Weiss (B01); Winkel als Zeichen (das
    gelernte der Webfamilie); keine Versalien, kein Unterstreichen (G05).
    ============================================================================= */
@@ -56,8 +56,11 @@
   transition:transform var(--acc-dauer) var(--acc-kurve),background var(--acc-dauer),color var(--acc-dauer),border-color var(--acc-dauer)}
 .acc .knopf .ic{width:20px;height:20px;display:block}
 .acc .acc-body{overflow:hidden}
-/* Antwort = Mengentext → Lese-Grotesk (.prose aus base.css), Lesemass 62ch. */
-.acc .acc-inner{line-height:var(--lh-body)}
+/* Antwort in der Hausschrift (erbt den Körper, folgt damit auch dem Lesemodus) –
+   eine Stimme mit der Frage. Mass 48ch ≈ 63 Zeichen (G10); Durchschuss 1.6 breit,
+   1.5 schmal, weil kurze Zeilen enger stehen (G11). */
+.acc .acc-inner{max-width:min(48ch,100%);line-height:1.6}
+@media(max-width:560px){.acc .acc-inner{line-height:1.5}}
 .acc .acc-inner p{margin:0 0 .75em}
 .acc .acc-inner p:last-child{margin-bottom:0}
 /* Schmal: Karten nutzen fast das ganze Blatt (12 px Rand statt 22). */
