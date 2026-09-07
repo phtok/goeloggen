@@ -16,6 +16,24 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 7. September 2026 — Werkzeuge zeigen, das Repo erklärt (1.14.1)
+
+**Was.** Die Sektionsfarben-Seite verliert den Abschnitt «Vorschläge und
+Beschluss», die Bereiche-Liste, die Kontrast-Belege und alle Token- und
+Skript-Hinweise in den Bildunterschriften. Das Prinzip steht jetzt in
+`CLAUDE.md`: eine Werkzeugseite trägt nur, was der Anwender zum Arbeiten
+braucht – Dokumentation gehört in diesen Ledger, den PR oder `CLAUDE-REF.md`.
+
+**Warum.** Der Auftraggeber: «Dokumentation ist nicht relevant für die
+Anwender.» Die Vergleichsreihen waren für die Entscheidung gebaut und blieben
+nach dem Beschluss als Ballast stehen; die Bereiche-Liste wiederholte zu
+achtzig Prozent Markenblau. Beides erklärte, statt zu zeigen.
+
+**Wirkung.** Regel für alle Werkzeuge (Ausnahme: Labor- und Strategieseiten
+im Backstage). Die Bereiche bleiben in der ersten Karte «Goetheanum und
+Bereiche» (Markenblau); ob Bühne und Bau-Administration eigene Karten mit
+Varianten bekommen, ist offen.
+
 ## 7. September 2026 — eine Sektionsfarbe braucht drei Gestalten (1.14.0)
 
 **Was.** Jede Sektionsfarbe bekommt zwei abgeleitete Flächen und eine Tinte:
