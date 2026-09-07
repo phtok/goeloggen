@@ -16,6 +16,46 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 7. September 2026 — das Akkordeon wird ein Modul (1.15.0)
+
+**Was.** Das Akkordeon aus der Schau-Seite `akkordeon.html` zieht als Modul
+ins Fundament: **`akkordeon.css`** und **`akkordeon.js`** neben `nav.css`/`nav.js`.
+Drei Kleider auf einer Mechanik – `.bluete`, `.faden`, `.kapsel` als Klasse an
+`.acc-liste` – mit vier Farbrollen (`--ak` Linie, `--ak-ink` Text, `--ak-dunkel`
+Fläche für Weiss, `--ak-hell` Hauch), im Hausfall Gold, per `data-sek` in jeder
+Sektionsfarbe (1.14.0). Das Skript macht natives `details`/`summary` weich
+(Bloom-Kurve des goetheanum.ch-Menüs), hält je Liste eines offen, ohne dass die
+Seite springt, bietet «Alle aufklappen», öffnet beim Drucken alles und stellt
+den Stand danach wieder her.
+
+**Warum.** Der Auftraggeber will das Modul in Craft übernehmen und dafür den
+Code samt CSS kopieren – das geht nur, wenn er als Datei existiert und nicht im
+`<style>` einer Seite steckt. Ein Modul, das in der Seite wohnt, muss für jede
+zweite Seite abgeschrieben werden; ein Modul im Fundament wird eingebunden.
+Die Schau-Seite bindet die Dateien jetzt selbst ein (Konformität durch
+Identität) und bietet Twig-Partial, CSS, JS und einen aus `tokens.css`
+gerechneten Token-Auszug zum Kopieren an.
+
+**Wirkung.** Neue Dateien `design-system/akkordeon.css` und
+`design-system/akkordeon.js`; Markup-Vertrag `.acc-liste > .acc-kopf + details.acc
+> summary(.nr .frage .knopf) + .acc-body > .acc-inner.prose`. Welches Kleid die
+Website trägt, ist noch nicht entschieden – das Modul trägt alle drei, die
+Wahl ist eine Klasse.
+
+**Mechanik (hier statt auf der Seite, Beschluss 1.14.1).** Bewegung mit der
+Bloom-Kurve `cubic-bezier(.32,.08,.24,1)`, 280 ms auf, 220 ms zu, bei
+`prefers-reduced-motion` keine. Eines aufs Mal: schliesst sich darüber eine
+Antwort, geht sie ohne Bewegung zu und der Versatz wird ausgeglichen – die
+angetippte Frage bleibt an ihrem Platz (gemessen 401→401 px); liegt sie danach
+unter einer klebenden Leiste, zieht die Seite nach. «Alle aufklappen» hebt das
+auf; `beforeprint` öffnet alles, `afterprint` stellt den Stand her. Jede Frage
+ist per `#id` verlinkbar. Fingerziel = ganze Zeile ≥44 px (B04), der Winkel ist
+nur das Zeichen (das gelernte der Webfamilie: Hauptmenü, Kalender-Filter,
+Klappliste). Frage in der Hausschrift Deutlich mit Durchschuss 1.25, schmal
+18 px; Antwort als Mengentext in `.prose` (Schrift-Grenze, Lesemass 62ch);
+Nummer tabellarisch (G25). Farben: Basis als Linie/Ring, Tinte für Nummer und
+Winkel, dunkle Fläche + Weiss für die Anwahl (B01), Hauch als Grund.
+
 ## 7. September 2026 — Werkzeuge zeigen, das Repo erklärt (1.14.1)
 
 **Was.** Die Sektionsfarben-Seite verliert den Abschnitt «Vorschläge und
