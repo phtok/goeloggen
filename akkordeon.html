@@ -158,6 +158,7 @@
   /* Mechanik-Tabelle, Einbau */
   .mechanik td:first-child{white-space:nowrap;color:var(--muted)}
   #craft pre{margin-top:var(--s4)}
+  #craft pre:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 
   @media print{
     .acc-kopf .alle,.farbwahl{display:none}
@@ -642,7 +643,8 @@
       <h2>Einbau in Craft</h2>
       <p>Ja, das Modul lässt sich direkt in die Craft-Seiten der Webfamilie übernehmen: ein Matrix-Block <q>Akkordeon</q> mit Zeilen aus Frage und Antwort, ein Twig-Partial, dazu das CSS des gewählten Entwurfs und das kleine Skript. Keine Bibliothek, keine Abhängigkeit.</p>
     </div>
-    <pre class="code">{# templates/_partials/akkordeon.twig – ein Matrix-Block «Akkordeon» mit Zeilen (frage, antwort) #}
+    <!-- tabindex: der Codeblock scrollt seitlich, darum muss er per Tastatur erreichbar sein (WCAG 2.1.1). -->
+    <pre class="code" tabindex="0">{# templates/_partials/akkordeon.twig – ein Matrix-Block «Akkordeon» mit Zeilen (frage, antwort) #}
 &lt;div class=&quot;acc-liste faden&quot; data-sek=&quot;{{ entry.sektion.value ?? &#x27;&#x27; }}&quot;&gt;
   &lt;div class=&quot;acc-kopf&quot;&gt;
     &lt;span class=&quot;meta&quot;&gt;{{ block.zeilen|length }} Fragen&lt;/span&gt;
