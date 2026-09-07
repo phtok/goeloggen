@@ -16,6 +16,23 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 7. September 2026 — zwei Bereiche mit eigener Farbe bekommen ihre Flächen (1.16.0)
+
+**Was.** Bühne (`--bereich-buehne`) und Bau-Administration (`--bereich-bauadmin`)
+kommen als Tokens ins Fundament, mit `--on-bereich-*` und denselben drei
+Varianten wie die Sektionen (`-dunkel`, `-hell`, `-ink`), erzeugt vom selben
+Rezept. Die Sektionsfarben-Seite zeigt sie als zwei Karten im Abschnitt
+«Bereiche»; der Wähler der Anwendungsbeispiele kennt sie.
+
+**Warum.** Von allen Bereichen und Teilbereichen tragen nur diese zwei eine
+eigene Farbe (die Gärtnerei teilt das Landwirtschaftsgrün, alle anderen
+Markenblau). Die alte Bereiche-Liste wiederholte darum Markenblau und
+erklärte nichts. Beschluss des Auftraggebers: eigene Karten mit Varianten.
+Bühnengold ist ein Mittelton: Weiss hält nur 3.75:1, darum steht darauf ein
+sehr dunkles Braun (4.82:1), wie bei den hellen Sektionen.
+
+**Wirkung.** Generator und Prüfer kennen zwei Familien (`sek`, `bereich`);
+`--bereich` ohne Schlüssel bleibt der Standard (= Markenblau) ohne Varianten.
 ## 7. September 2026 — Frage und Antwort, eine Stimme (1.15.1)
 
 **Was.** Die Antwort im Akkordeon läuft wieder in der Hausschrift (Klar,
