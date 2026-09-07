@@ -90,22 +90,25 @@
 }
 
 /* --- Kleid 2 · Faden: ein durchgehender Faden links an der ganzen Liste ------- */
+/* Die Nummer steht als eigene Zeile über der Frage (leise, in der Sektionstinte);
+   Frage und Antwort laufen bündig in derselben Einrückung – keine Spalte, keine
+   Kluft zwischen Zahl und Text. */
 .faden{border-left:2px solid var(--line)}
 .faden .acc-kopf{padding-left:var(--s4);margin-bottom:0}
 .faden .acc{border-top:1px solid var(--line-soft);transition:box-shadow var(--acc-dauer)}
 .faden .acc:last-child{border-bottom:1px solid var(--line-soft)}
 .faden .acc.is-open{box-shadow:-2px 0 0 var(--ak)}   /* das gefärbte Stück des Fadens */
-.faden summary{display:grid;grid-template-columns:2.5ch minmax(0,1fr) auto;align-items:center;gap:var(--s4);
-  padding:var(--s4) 0 var(--s4) var(--s4);min-height:var(--tap)}
-.faden .nr{color:var(--ak-ink);text-align:right}
-.faden .frage{transition:color var(--acc-dauer)}
+.faden summary{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"nr knopf" "frage knopf";
+  column-gap:var(--s4);row-gap:2px;align-items:center;padding:var(--s4) 0 var(--s4) var(--s4);min-height:var(--tap)}
+.faden .nr{grid-area:nr;color:var(--ak-ink);line-height:1.2}
+.faden .frage{grid-area:frage;transition:color var(--acc-dauer)}
 .faden summary:hover .frage,.faden .acc.is-open .frage{color:var(--ak-ink)}
-.faden .knopf{color:var(--muted)}
+.faden .knopf{grid-area:knopf;color:var(--muted)}
 .faden summary:hover .knopf,.faden .acc.is-open .knopf{color:var(--ak-ink)}
 .faden .acc.is-open .knopf{transform:rotate(180deg)}
-.faden .acc-inner{margin:0 0 var(--s6) calc(var(--s4) + 2.5ch + var(--s4))}
+.faden .acc-inner{margin:0 0 var(--s6) var(--s4)}
 @media(max-width:560px){
-  .faden summary{gap:var(--s3);padding-left:var(--s3)}
+  .faden summary{padding-left:var(--s3)}
   .faden .acc-kopf{padding-left:var(--s3)}
   .faden .acc-inner{margin-left:var(--s3);padding-right:var(--s2)}
 }
