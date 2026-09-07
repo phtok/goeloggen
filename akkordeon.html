@@ -32,11 +32,18 @@
   .acc summary{list-style:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .acc summary::-webkit-details-marker{display:none}
   .acc summary:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+  /* Frage: Titelrolle, aber mehrzeilig in einer Liste – darum 1.25 statt 1.15 Durchschuss,
+     sonst klemmen vier Zeilen aufeinander. Ausgleich (balance) nur auf breitem Blatt;
+     schmal macht er jede Zeile kürzer als nötig. */
   .acc .frage{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);
-    line-height:var(--lh-tight);letter-spacing:0;text-wrap:balance;hyphens:manual}
+    line-height:1.25;letter-spacing:0;text-wrap:pretty;hyphens:manual}
+  @media(min-width:561px){.acc .frage{text-wrap:balance}}
   .acc .nr{font-family:var(--font-text);font-variant-numeric:tabular-nums lining-nums;
     font-feature-settings:"tnum","lnum";font-size:var(--t-small);color:var(--muted)}
-  .acc .knopf{flex:0 0 auto;display:grid;place-items:center;width:var(--tap);height:var(--tap);
+  /* Der Knopf ist nur das Zeichen; das Fingerziel ist die ganze Zeile (≥44 px hoch, B04).
+     Das Zeichen ist der Winkel – das gelernte Zeichen der Webfamilie (Hauptmenü,
+     Kalender-Filter, Klappliste), kein Plus. */
+  .acc .knopf{flex:0 0 auto;display:grid;place-items:center;width:24px;height:24px;
     border-radius:var(--r-pill);color:var(--gold-ink);
     transition:transform var(--acc-dauer) var(--acc-kurve),background var(--acc-dauer),color var(--acc-dauer),border-color var(--acc-dauer)}
   .acc .knopf .ic{width:20px;height:20px;display:block}
@@ -47,48 +54,60 @@
   @media(prefers-reduced-motion:reduce){:root{--acc-dauer:0s}}
 
   /* Entwurf 1 · Blüte – jede Frage eine runde Karte; die offene blüht auf
-     (Gold-Ring, Schatten, Plus dreht zum Kreuz), mit Zeiger-Nase wie das Menü. */
+     (Gold-Ring, Schatten, Winkel kippt im goldenen Rund), mit Zeiger-Nase wie das Menü. */
   .bluete .acc{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-card);
     transition:border-color var(--acc-dauer),box-shadow var(--acc-dauer)}
   .bluete .acc+.acc{margin-top:var(--s3)}
   .bluete .acc:hover{border-color:var(--gold)}
   .bluete .acc.is-open{border-color:var(--gold);box-shadow:var(--shadow-card)}
   .bluete summary{display:flex;align-items:center;gap:var(--s4);padding:var(--s4) var(--s4) var(--s4) var(--s6)}
+  .bluete .knopf{width:40px;height:40px}
   .bluete .nr{flex:0 0 auto;min-width:2ch;text-align:right}
   .bluete .frage{flex:1 1 auto}
   .bluete .knopf{border:1px solid var(--line);background:var(--paper)}
   .bluete .acc:hover .knopf{border-color:var(--gold)}
-  .bluete .acc.is-open .knopf{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent);transform:rotate(45deg)}
+  .bluete .acc.is-open .knopf{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent);transform:rotate(180deg)}
   .bluete .acc-inner{position:relative;margin:0 var(--s4) 0 var(--s6);padding:var(--s5) 0 var(--s6) calc(2ch + var(--s4));
     border-top:1px solid var(--line-soft)}
-  .bluete .acc-inner::before{content:"";position:absolute;top:-6px;right:calc(var(--tap) / 2 - 5px);width:10px;height:10px;
+  .bluete .acc-inner::before{content:"";position:absolute;top:-6px;right:15px;width:10px;height:10px;
     background:var(--paper);border-left:1px solid var(--line-soft);border-top:1px solid var(--line-soft);transform:rotate(45deg)}
+  @media(max-width:560px){
+    .bluete summary{gap:var(--s3);padding:var(--s4) var(--s3) var(--s4) var(--s4)}
+    .bluete .knopf{width:32px;height:32px}
+    .bluete .acc-inner{margin:0 var(--s4);padding-left:0}
+    .bluete .acc-inner::before{right:7px}
+  }
 
   /* Entwurf 2 · Faden – nur Linien; die goldene Nummer führt, die offene Antwort
      hängt an einem goldenen Faden. Am leichtesten, am nächsten beim Original. */
   .faden .acc{border-top:1px solid var(--line)}
   .faden .acc:last-child{border-bottom:1px solid var(--line)}
-  .faden summary{display:grid;grid-template-columns:3ch minmax(0,1fr) auto;align-items:center;gap:var(--s4);padding:var(--s4) 0;min-height:var(--tap)}
+  .faden summary{display:grid;grid-template-columns:2.5ch minmax(0,1fr) auto;align-items:center;gap:var(--s4);padding:var(--s4) 0;min-height:var(--tap)}
   .faden .nr{color:var(--gold-ink);text-align:right;padding-right:0}
   .faden .frage{font-weight:var(--w-klar);transition:color var(--acc-dauer)}
   .faden summary:hover .frage,.faden .acc.is-open .frage{color:var(--gold-ink)}
   .faden .knopf{color:var(--muted)}
   .faden summary:hover .knopf{color:var(--gold-ink)}
   .faden .acc.is-open .knopf{transform:rotate(180deg);color:var(--gold-ink)}
-  .faden .acc-inner{margin:0 0 var(--s6) calc(3ch + var(--s4));padding:0 var(--tap) 0 var(--s5);border-left:2px solid var(--gold)}
+  .faden .acc-inner{margin:0 0 var(--s6) calc(2.5ch + var(--s4));padding:0 0 0 var(--s5);border-left:2px solid var(--gold)}
+  /* Schmal: der Faden rückt an den Rand, die Antwort bekommt die volle Breite. */
+  @media(max-width:560px){
+    .faden summary{gap:var(--s3)}
+    .faden .acc-inner{margin-left:0;padding-left:var(--s4)}
+  }
 
   /* Entwurf 3 · Kapsel – die Fragen als weiche Kapseln auf gedämpftem Grund;
-     die offene wird zur Auswahl-Pille (dunkles Gold + Weiss, B01) und rundet
-     sich zur Karte, in der die Antwort liegt. */
+     die offene wird zur Auswahl-Pille (dunkles Gold + Weiss, B01) und bleibt
+     rund – sie liegt oben in einer gleich runden Karte mit der Antwort. */
   .kapsel{display:grid;gap:var(--s3)}
-  .kapsel .acc{background:var(--soft);border-radius:calc(var(--tap) / 2 + var(--s3));
-    transition:border-radius var(--acc-dauer) var(--acc-kurve)}
-  .kapsel .acc.is-open{border-radius:var(--r-card)}
-  .kapsel summary{display:flex;align-items:center;gap:var(--s4);padding:var(--s3) var(--s3) var(--s3) var(--s3);
-    border-radius:inherit;transition:background var(--acc-dauer),color var(--acc-dauer)}
+  /* Rund bleibt rund: Kapsel und Karte tragen denselben Radius; die offene Pille
+     liegt oben in der Karte und behält ihre volle Rundung. */
+  .kapsel .acc{background:var(--soft);border-radius:var(--kapsel-r);--kapsel-r:calc(var(--s3) + 1.1em + var(--s3))}
+  .kapsel summary{display:flex;align-items:center;gap:var(--s4);padding:var(--s3) var(--s4) var(--s3) var(--s3);
+    border-radius:var(--kapsel-r);transition:background var(--acc-dauer),color var(--acc-dauer)}
   .kapsel summary:hover{background:color-mix(in srgb,var(--gold) 16%,var(--paper))}
-  .kapsel .acc.is-open summary{background:var(--gold-deep);color:var(--on-accent);border-bottom-left-radius:0;border-bottom-right-radius:0}
-  .kapsel .nr{flex:0 0 auto;display:grid;place-items:center;width:var(--tap);height:var(--tap);border-radius:var(--r-pill);
+  .kapsel .acc.is-open summary{background:var(--gold-deep);color:var(--on-accent)}
+  .kapsel .nr{flex:0 0 auto;display:grid;place-items:center;width:2.2em;height:2.2em;border-radius:var(--r-pill);
     background:var(--paper);color:var(--gold-ink);font-weight:600;transition:background var(--acc-dauer),color var(--acc-dauer)}
   .kapsel .nr>span{display:block;line-height:1;transform:translateY(4%)}
   /* Offen: die Nummer kehrt sich um – Papier mit Gold-Tinte (5.18:1, B02); Weiss auf
@@ -97,8 +116,11 @@
   .kapsel .frage{flex:1 1 auto}
   .kapsel .knopf{color:var(--gold-ink)}
   .kapsel .acc.is-open .knopf{color:var(--on-accent);transform:rotate(180deg)}
-  .kapsel .acc-inner{padding:var(--s5) var(--s6) var(--s6) calc(var(--s3) + var(--tap) + var(--s4))}
-  @media(max-width:560px){.kapsel .acc-inner{padding-left:var(--s5);padding-right:var(--s5)}}
+  .kapsel .acc-inner{padding:var(--s5) var(--s6) var(--s6) calc(var(--s3) + 2.2em + var(--s4))}
+  @media(max-width:560px){
+    .kapsel summary{gap:var(--s3)}
+    .kapsel .acc-inner{padding:var(--s4) var(--s5) var(--s5)}
+  }
 
   /* Mechanik-Tabelle */
   .mechanik td:first-child{white-space:nowrap;color:var(--muted)}
@@ -121,14 +143,14 @@
   <section id="bluete">
     <div class="shead">
       <h2><span class="step-num"><span>1</span></span> Blüte</h2>
-      <p>Jede Frage ist eine runde Karte. Die offene blüht auf: Goldring, leichter Schatten, das Plus dreht sich zum Kreuz – und die Antwort hängt mit einer kleinen Zeiger-Nase am Knopf, wie das Menü der Hauptseite an seinem Menüpunkt.</p>
+      <p>Jede Frage ist eine runde Karte. Die offene blüht auf: Goldring, leichter Schatten, der Winkel kippt im goldenen Rund – und die Antwort hängt mit einer kleinen Zeiger-Nase am Knopf, wie das Menü der Hauptseite an seinem Menüpunkt.</p>
     </div>
     <div class="acc-liste bluete">
     <details class="acc" id="bluete-1" data-gruppe="bluete">
       <summary>
         <span class="nr"><span>1</span></span>
         <span class="frage">Was sind die Aufgaben der Sektion für Heilpädagogik und inklusive soziale Entwicklung?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Die Sektion für Heilpädagogik und inklusive soziale Entwicklung ist ein Fachbereich der Freien Hochschule für Geisteswissenschaft (Goetheanum). Die Freie Hochschule für Geisteswissenschaft ist eine unabhängige Hochschule, die von Rudolf Steiner auf der Weihnachtstagung 1923/24 gegründet wurde und von der Allgemeinen Anthroposophischen Gesellschaft getragen wird. Ihre Kernaufgaben sind (1) Forschung, auch durch geisteswissenschaftliche (kontemplative) Untersuchungsmethoden, (2) persönliche und fachliche Entwicklung, auch durch innere (esoterische, kontemplative) Praxiswege, und (3) Aufbau von kollegialen Netzwerken, um professionellen Austausch, kollegiale Beratung, Forschung und Entwicklung in den verschiedenen Berufsfeldern zu ermöglichen. Die Sektion für Heilpädagogik und inklusive soziale Entwicklung nimmt diese Aufgaben im Kontext des interdisziplinären Feldes der Heilpädagogik und inklusiven sozialen Entwicklung wahr, das Sonderpädagogik, Frühförderung, integrative Pädagogik, Soziale Arbeit, Sozialtherapie, Sozialpädagogik, inklusive Gemeinschaftsbildung, inklusive Transformation des Sozialraums und verwandte Tätigkeitsfelder umfasst, die auf die Unterstützung von Menschen mit Behinderungen oder anderen von Marginalisierung betroffenen Personen ausgerichtet sind.</p></div></div>
     </details>
@@ -136,7 +158,7 @@
       <summary>
         <span class="nr"><span>2</span></span>
         <span class="frage">Wie ist die Sektion für Heilpädagogik und inklusive soziale Entwicklung organisiert?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Die Sektion für Heilpädagogik und Inklusive Soziale Entwicklung hat ein Leitungsteam, bestehend aus dem Sektionsleiter, der vom Kollegium der Freien Hochschule für Geisteswissenschaft (Goetheanum-Leitung) ernannt wird, und zwei weiteren Mitgliedern, die gemeinsam für die Arbeit der Sektion insgesamt verantwortlich sind. Der Sektionsleiter ist Mitglied der Goetheanum-Leitung. Das Leitungsteam wird von einer Geschäftsstelle unterstützt, die auch den Förderverein der Sektion, den ‹Fonds für Heilpädagogik und Sozialtherapie Dornach›, verwaltet. Ein Delegiertenkreis und verschiedene ständige Arbeitsgruppen vernetzen die weltweite Berufsgemeinschaft im Arbeitsgebiet der Sektion und ermöglichen eine aktive Zusammenarbeit zu verschiedenen Themen und Fragen unter dem Dach der Sektion. Jedes Organ der Sektion bestimmt seine eigene Arbeitsweise und organisiert seine eigenen Prozesse der Zusammenarbeit, wobei der aktive Kontakt und die Zusammenarbeit mit dem Leitungsteam aufrechterhalten werden. Dies gilt gleichermaßen für die Arbeitsgruppen, die Projektgruppen und die Netzwerke von Professionals aus dem Feld der Sektion, die sich in verschiedenen Ländern oder Regionen bilden. Eine genauere Beschreibung der Organisation findet sich im <a href="https://static.goetheanum.ch/uploads/websites/Inclusive-Social/Dokumente/Dokumente/Arbeitspapiere/Organisation-der-Sektion/2024-10-7-Organisation-Sektion-DE-final.pdf">Organisationsdokument der Sektion</a>.</p></div></div>
     </details>
@@ -144,7 +166,7 @@
       <summary>
         <span class="nr"><span>3</span></span>
         <span class="frage">Wie verwende ich den Namen der Sektion?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Wenn Sie auf Deutsch kommunizieren, verwenden Sie bitte den deutschen Namen: Sektion für Heilpädagogik und inklusive soziale Entwicklung. Wenn Sie in einer anderen Sprache kommunizieren, verwenden Sie bitte die englische Bezeichnung: Section for Inclusive Social Development. Der Begriff ‹Heilpädagogik‹ hat eine spezifische Geschichte und ist im deutschen Sprachraum als Fachbegriff etabliert, lässt sich aber nicht direkt in andere Kontexte übersetzen, wenngleich das so bezeichntete Tätigkeitsfeld definitiv in den Arbeitsbereich der Sektion fällt. Für anthroposophisch orientierten Professionals in der Begleitung von Menschen mit Assistenzbedarf ist unsere Empfehlung, geeignete Berufsbezeichnungen zu übernehmen und zu verwenden, die in ihrem jeweiligen Praxisumfeld allgemein verstanden und erkannt werden.</p></div></div>
     </details>
@@ -152,7 +174,7 @@
       <summary>
         <span class="nr"><span>4</span></span>
         <span class="frage">Muss ich Mitglied der Freien Hochschule für Geisteswissenschaft sein, um an den Aktivitäten der Sektion teilzunehmen?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Die Mitwirkung im professionellen Netzwerk der Sektion steht sowohl Mitgliedern der Freien Hochschule für Geisteswissenschaft offen, als auch denjenigen Kolleg:innen, die (noch) keine Mitglieder im formalen Sinne sind, sich aber mit dieser Berufszusammenhang verbunden fühlen und auf dieser Grundlage eine Zusammenarbeit anstreben wollen. Diejenigen, die sich persönlich zur Mitgliedschaft in der Freien Hochschule für Geisteswissenschaft und zur aktiven Arbeit mit dem kontemplativen Weg der sogenannten <a href="https://allgemeine-sektion.goetheanum.ch/en/first-class">‹Ersten (einführenden) Klasse‹</a> in der <a href="https://allgemeine-sektion.goetheanum.ch/en/the-section">Allgemeinen Anthroposophischen Sektion</a> entschieden haben, spielen eine wichtige Rolle in der Arbeit der Sektion. Sie sind mitverantwortlich für die Freie Hochschule für Geisteswissenschaft und tragen das bewusste Bindeglied zwischen der fachlich orientierten Arbeit der Sektion und den in der Allgemeinen Anthroposophischen Sektion gepflegten allgemein menschlichen Grundlagen der individuellen Entwicklung.</p></div></div>
     </details>
@@ -160,7 +182,7 @@
       <summary>
         <span class="nr"><span>5</span></span>
         <span class="frage">Gibt es bestimmte Funktionen innerhalb der Sektion, für die eine formale Mitgliedschaft in der Freien Hochschule für Geisteswissenschaft erforderlich ist?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Die Mitglieder des Leitungsteams der Sektion müssen Mitglieder der Freien Hochschule für Geisteswissenschaft sein. Auch die Mitarbeit in Arbeitsgruppen oder Projekten, die mit den Inhalten der ‹Ersten (einführenden) Klasse‹ der Allgemeinen Anthroposophischen Sektion in ihrer Beziehung zum Fachgebiet der Sektion arbeiten, setzt die Mitgliedschaft in der Freien Hochschule für Geisteswissenschaft voraus. Im Übrigen ist die Mitwirkung im Delegiertenkreis, in Arbeitsgruppen oder die Mitarbeit in Projekten der Sektion nicht formal an die Mitgliedschaft in der Freien Hochschule für Geisteswissenschaft geknüpft.</p></div></div>
     </details>
@@ -168,7 +190,7 @@
       <summary>
         <span class="nr"><span>6</span></span>
         <span class="frage">Wie werde ich Mitglied der Freien Hochschule für Geisteswissenschaft?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Die Aufnahme als Mitglied der Freien Hochschule für Geisteswissenschaft erfolgt über die Allgemeine Anthroposophische Sektion. Mit der Mitgliedschaft ist auch der Eintritt in die <a href="https://allgemeine-sektion.goetheanum.ch/en/first-class">‹Erste (einführende) Klasse‹</a> der Allgemeinen Anthroposophischen Sektion verbunden, die als Einführung in einen meditativen Schulungsweg von Rudolf Steiner mit der Begründung der Hochschule initiiert wurde. Informationen zum Aufnahmeprozess erhalten Sie <a href="https://allgemeine-sektion.goetheanum.ch/en">über die Allgemeine Anthroposophische Sektion</a>. Sie könne sich aber auch gerne direkt an <a href="mailto:bart.vanmechelen@goetheanum.ch">Bart Vanmechelen</a> im Leitungsteam der Sektion für Heilpädagogik und inklusive soziale Entwicklung wenden. Wir würden uns freuen, Sie in diesem Prozess begleiten zu dürfen!</p></div></div>
     </details>
@@ -176,7 +198,7 @@
       <summary>
         <span class="nr"><span>7</span></span>
         <span class="frage">Wie wird die Arbeit der Sektion für Heilpädagogik und inklusive soziale Entwicklung finanziert?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Alle Länder-/Regionalnetzwerke, die im Delegiertenkreis vertreten sind, unterstützen die Arbeit der Sektion und die internationale kollegiale Zusammenarbeit durch einen jährlichen finanziellen Beitrag. Diese Beiträge werden in einem offenen und transparenten Verfahren festgelegt und die Delegierten erhalten jährlich im Rahmen des Jahresberichts der Sektion einen Überblick. Jedes Länder-/regionale Netzwerk schätzt seine Möglichkeiten selbst ein, macht dann eine verbindliche Zusage auf der Grundlage seiner Größe, seiner relativen Wirtschaftskraft und seiner Möglichkeiten und legt dem Delegiertenkreis gegenüber Rechenschaft darüber ab, dass es zu dieser gegenseitige Verbindlichkeit nach besten Kräften beiträgt. Dieses solidarische Finanzierungsmodell bildet die Finanzierungsgrundlage für die Arbeit der Sektion. Hinzu kommen Projektförderungen durch Stiftungen, die aktiv eingeworben werden müssen, und ein kleiner Beitrag der Allgemeinen Anthroposophischen Gesellschaft, der weniger als 10% des Jahresbudgets der Sektion ausmacht. Die Einnahmen aus Aktivitäten wie Publikationen und Tagungen decken in der Regel nur teilweise die Kosten der jeweiligen Aktivität. Mit anderen Worten: Die Sektion und ihr fachlicher Arbeitszusammenhang sind gemeinsam dafür verantwortlich, jedes Jahr die Mittel aufzubringen, die unsere Zusammenarbeit unter dem Dach der Sektion möglich machen!</p></div></div>
     </details>
@@ -184,7 +206,7 @@
       <summary>
         <span class="nr"><span>8</span></span>
         <span class="frage">Wie werden die Mitglieder des Delegiertenkreises benannt?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Aktive Arbeitsgruppen und Länder-/regionale Netzwerke sind eingeladen, eine:n Delegierte:n zu benennen, der/die aktiv und verantwortungsbewusst die Verbindung zwischen dem Länder-/regionalen Netzwerk im Fachgebiet und dem größeren Netzwerk von Professionals, die unter dem Dach der Sektion zusammenarbeiten, sowie dem Leitungsteam der Sektion gewährleistet. Diese Nominierungen müssen vom Leitungsteam der Sektion angenommen werden. Dort, wo es kein funktionierendes Länder-/Regionalnetzwerk gibt, das in der Lage ist, eine:n oder mehrere Delegierte in einem Verfahren zu benennen, das alle relevanten Beteiligten in dem Land/der Region einbezieht, kann das Leitungsteam einen oder mehrere aktive Kolleg:innen kooptieren, um diese Verbindungsfunktion zu übernehmen, bis sich ein ausreichend stabiles und funktionierendes Länder-/Regionalnetz entwickelt. Hier finden Sie eine <a href="https://inclusivesocial.goetheanum.ch/de/delegiertenkreis">Überblick über die derzeitigen Mitglieder des Delegiertenkreises</a>.</p></div></div>
     </details>
@@ -192,7 +214,7 @@
       <summary>
         <span class="nr"><span>9</span></span>
         <span class="frage">Wie funktionieren die inhaltlichen Arbeitsgruppen?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Inhaltliche Arbeitsgruppen der Sektion (z.B. Sozialtherapeutische Arbeitsgruppe, Internationaler Ausbildungskreis, Arbeitsgruppe für Heilpädagogik und Inklusion in der Schule …) können auf Initiative des Leitungsteams, auf Initiative von Mitgliedern des Delegiertenkreises oder durch eine andere Initiative aus dem Arbeitsfeld der Sektion gebildet werden, die in Kommunikation und Abstimmung mit einem Mitglied des Leitungsteams erfolgt. Nach ihrer Gründung organisieren sich die Arbeitsgruppen selbst, legen ihre Aufgaben und ihre Arbeitsweise fest und bestimmen auch selbst, wie sie weitere Kolleg:innen in die Arbeit der Gruppe einbeziehen. Sie benennen eine:n Sprecher:in als primären Ansprechpartner für Interessierte, der die Arbeitsgruppe im Delegiertenkreis vertritt. Jede inhaltliche Arbeitsgruppe wird außerdem von einem Mitglied des Leitungsteams unterstützt das entweder selbst aktives Mitglied der Gruppe ist oder im Leitungsteam als Verbindungsperson zur Gruppe fungiert.</p></div></div>
     </details>
@@ -200,7 +222,7 @@
       <summary>
         <span class="nr"><span>10</span></span>
         <span class="frage">Wie funktionieren die regionalen Arbeitsgruppen?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Neben den inhaltlichen Arbeitsgruppen haben die Delegierten einiger geographischer Regionen beschlossen, regionale Arbeitsgruppen zu bilden, um die regionale Zusammenarbeit zu stärken. Dazu gehören KRUG (ein Netzwerk von Ausbildungszentren in der Region Osteuropa und Zentralasien), der LATAM-Council (für das Netzwerk in Lateinamerika) und die Asien-Pazifik-Netzwerkgruppe. Die Hauptverantwortung für solche regionalen Arbeitsgruppen liegt bei den Delegierten aus der jeweiligen Region. Wie jede andere Arbeitsgruppe auch, organisieren sich diese Gruppen selbst, legen ihre Aufgaben und Arbeitsweise selbst fest und bestimmen auch ihre eigenen Verfahren für die Einbeziehung weiterer Kolleg:innen aus ihren Regionen in die Arbeit der Gruppe oder in von der Gruppe organisierte Aktivitäten (wie regionale Konferenzen, Projekte usw.). Sie benennen eine:n Sprecher:in als Hauptansprechpartner für Interessierte. Wie bei den inhaltlichen Arbeitsgruppen ist jede regionale Arbeitsgruppe mit einem Mitglied des Leitungsteams als Ansprechpartner verbunden.</p></div></div>
     </details>
@@ -208,7 +230,7 @@
       <summary>
         <span class="nr"><span>11</span></span>
         <span class="frage">Wie kann ich herausfinden, welche Arbeitsgruppen derzeit bestehen und wie ich mit ihnen Kontakt aufnehmen kann?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Alle derzeit aktiven inhaltlichen und regionalen Arbeitsgruppen sind auf der Website der Sektion unter <a href="https://inclusivesocial.org/arbeitsfelder/">‹</a><a href="https://inclusivesocial.goetheanum.ch/de/arbeitsfelder">Zusammenarbeit‹</a> zu finden.</p></div></div>
     </details>
@@ -216,7 +238,7 @@
       <summary>
         <span class="nr"><span>12</span></span>
         <span class="frage">In manchen Ländern arbeiten Vertreter:innen der verschiedenen Fachsektionen der Hochschule auf nationaler oder regionaler Ebene regelmäßig zusammen. Was hat es damit auf sich?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Die Freie Hochschule für Geisteswissenschaft ist eine transnationale Forschungs-, Bildungs- und Entwicklungsgemeinschaft, die ihr Zentrum am Goetheanum in Dornach (CH) hat, aber weltweit aktiv ist. Das gleiche gilt für ihre Fachsektionen (Fakultäten) für ihr jeweiliges Fachgebiet. Das bedeutet: Es gibt keine separaten Sektionen in verschiedenen Ländern. Es können sich aber innerhalb der Sektion Arbeitszusammenhänge auch auf geographischer Basis bilden. Diese können sich als Arbeitskreise der Sektion für Heilpädagogik und inklusive soziale Entwicklung verstehen, solange sie im aktiven Kontakt mit dem Leitungsteam der Sektion stehen und von diesem als solcher anerkannt werden. Solche nationalen oder regionalen Arbeitskreise sind dann Arbeitsgruppen der Sektion, im Sinne der oben dargestellten Prinzipien. Benennen sie in Absprache mit dem Leitungsteam der Sektion eine:n oder mehrere Vertreter:innen, so können diese auch mit den Vertreter:innen ähnlicher Arbeitskreise aus anderen Fachsektionen eine regelmäßige Zusammenarbeit entwickeln. Solche interdisziplinäre Arbeitskreise bestehen beispielsweise in UK, Nordamerika (USA &amp; Kanada) und in den Niederlanden. Sie werden in der Regel auch durch die Anthroposophische Gesellschaft unterstützt, in ihrer Rolle als Förderorganisation der Hochschule. Diese Arbeitskreise und ihre Vertreter:innen arbeiten im Sinne des Forschungs- und Bildungsauftrags der Hochschule. Sie haben kein Mandat, das Netzwerk der Praxisorganisationen und Berufsverbände in ihrem Land zu vertreten, oder in deren Namen zu kommunizieren. Kommunikationen im Namen der Sektion müssen, wenn sie über die eigenverantwortlichen Aktivitäten des Arbeitskreises hinausgehen, mit der Leitung der Sektion abgestimmte werden. Ob die Bildung eines solchen Arbeitszusammenhanges in einem Land oder einer Region sinnvoll ist, und in welcher Form, ist gegebenenfalls mit der Leitung der Sektion abzustimmen.</p></div></div>
     </details>
@@ -224,7 +246,7 @@
       <summary>
         <span class="nr"><span>13</span></span>
         <span class="frage">Einige Berufsbildungsstätten – und die von ihnen ausgestellten Diplome – sind von der Sektion (oder früher vom ‹Anthroposophic Council for Inclusive Social Development›) formell anerkannt. Was bedeutet diese Anerkennung?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Der Internationale Ausbildungskreis ist eine Arbeitsgruppe der Sektion für Heilpädagogik und inklusive soziale Entwicklung. Er fördert die weltweite Zusammenarbeit von anthroposophisch orientierten Aus- und Weiterbildungsstätten und beruflichen Bildungsinitiativen im Arbeitsfeld der Sektion. Er ist auch verantwortlich für das Anerkennungsverfahren, mit dem Berufsbildungsprogramme im Arbeitsfeld der Sektion formal anerkannt werden können. Dieser Prozess ist freiwillig und besteht aus einem Peer-Review-Verfahren, das alle fünf Jahre erneuert werden muss. Eine Ausbildungsstätte, die dieses Peer-Review-Verfahren erfolgreich durchlaufen hat und sich als Mitglied des Internationalen Ausbildungskreises zur aktiven Mitarbeit verpflichtet, darf sich als ‹Anerkannt von der Sektion für Heilpädagogik und inklusive soziale Entwicklung der Freien Hochschule für Geisteswissenschaft (Goetheanum)› bezeichnen. Sie ist auch berechtigt, diesen Vermerk auf den Diplomen und Zertifikaten, die sie ihren Absolvent:innen ausstellt, anzubringen. Diese Anerkennung bedeutet, dass das Ausbildungszentrum aktiv mit der Sektion verbunden ist, sich der Evaluation und dem Feedback von Kolleg:innen aus anderen anerkannten Ausbildungszentren geöffnet hat und sich im Rahmen des Internationalen Ausbildungskreises zu einem kontinuierlichen Entwicklungsprozess auf der Grundlage gemeinsamer Prinzipien verpflichtet hat. (Weitere Informationen über den Internationalen Ausbildungskreis und den Anerkennungsprozess finden Sie hier unter <a href="https://inclusivesocial.goetheanum.ch/de/arbeitsfelder/ausbildungskreis">‹Internationaler Ausbildungskreis‹</a>.)</p></div></div>
     </details>
@@ -232,7 +254,7 @@
       <summary>
         <span class="nr"><span>14</span></span>
         <span class="frage">Bedeutet die Anerkennung durch die Sektion auch, dass die anerkannten Ausbildungen miteinander vergleichbar und/oder gleichwertig sind?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Die Anerkennung einer Berufsausbildung oder eines Ausbildungsprogramms durch die Sektion bedeutet nicht, dass eine anerkannte Ausbildung gleichwertig mit einer anderen ist. Die Ausbildungen in unserem Bereich umfassen viele verschiedene Formate, Niveaus und Spezialisierungsbereiche. Daher basiert die Anerkennung nicht auf einem standardisierten Lehrplan und macht keine Aussage über die Gleichwertigkeit.</p></div></div>
     </details>
@@ -240,7 +262,7 @@
       <summary>
         <span class="nr"><span>15</span></span>
         <span class="frage">Sind die von der Sektion anerkannten Ausbildungen auch von staatlichen oder anderen öffentlichen Akkreditierungsstellen anerkannt?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Die Anerkennung einer Ausbildung durch die Sektion bedeutet nicht, dass die Ausbildung auch von einer akademischen, staatlichen oder öffentlichen Stelle anerkannt wird. Zwar sind die Ausbildungen oft in verschiedene nationale Qualifikationssysteme eingebunden, doch ist dies nicht immer der Fall. In manchen Fällen füllen die von der Sektion anerkannten Ausbildungen Lücken in einem nationalen Qualifikationssystem, für die es keine Form der öffentlichen Anerkennung gibt. In anderen Fällen kann es sich um eine Form der beruflichen Fort-, Weiter- oder Höherqualifizierung handeln, die auf eine Vertiefung der beruflichen Praxis abzielt, aber nicht zu einer zusätzlichen formalen Qualifikation führt. Dies muss von Fall zu Fall im Rahmen des jeweiligen Qualifikationssystems und Regelungsumfelds betrachtet werden. Darüber hinaus können auch Ausbildungszentren, die nicht von der Sektion anerkannt sind, qualitativ hochwertige Ausbildungen und Qualifikationen anbieten – sie haben sich nur nicht dafür entschieden, dies im Rahmen des Peer-Netzwerks der Sektion zu demonstrieren und sich auf diesem Weg dem Peer-Review und Entwicklungsprozess zu unterziehen.</p></div></div>
     </details>
@@ -248,7 +270,7 @@
       <summary>
         <span class="nr"><span>16</span></span>
         <span class="frage">Können anthroposophische Organisationen im Behindertenbereich Mitarbeiter:innen ohne einen von der Sektion anerkannten Abschluss beschäftigen?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Ob eine anthroposophische Organisation nur Fachleute anstellt, deren Diplome von der Sektion anerkannt sind, oder auch solche, die über andere Qualifikationen verfügen, bleibt der jeweiligen Organisation überlassen (und den Kriterien ihrer Mitgliedschaft in anderen Berufsorganisationen, die dies gegebenenfalls vorschreiben). Die Sektion selbst beansprucht nicht, dass nur diejenigen, die eine von der Sektion anerkannte Qualifikation besitzen, im interdisziplinären Arbeitsbereich der Sektion tätig sind. Sie könnte eine solche Anforderung in ihrer Rolle auch gar nicht stellen, da sie einen Forschungs- und Bildungsauftrag hat, und nicht etwa ein Berufsverband, in dem sich Praxiseinrichtungen unter verbindlichen Leitlinien zusammenschliessen. Allerdings darf sich kein Ausbildungszentrum als von der Sektion ‹anerkannt› bezeichnen, ohne das Peer-Review-Verfahren des Internationalen Ausbildungskreises erfolgreich durchlaufen zu haben, und Einzelpersonen dürfen ihre Qualifikation nur dann als von der Sektion ‹anerkannt› bezeichnen, wenn ihr Ausbildungszentrum zum Zeitpunkt der Ausstellung ihres Diploms eine solche Anerkennung besaß.</p></div></div>
     </details>
@@ -256,7 +278,7 @@
       <summary>
         <span class="nr"><span>17</span></span>
         <span class="frage">Wo erfahre ich mehr über die Arbeit der Sektion und wie halte ich mich über ihre Aktivitäten auf dem Laufenden?</span>
-        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </summary>
       <div class="acc-body"><div class="acc-inner"><p>Alle Professionals im Arbeitsfeld der Sektion sind eingeladen, sich für den kostenlosen E-Mail-Newsletter anzumelden, der regelmäßig Informationen über Konferenzen, Veröffentlichungen und andere Aktivitäten enthält. Dies ist der wichtigste Kommunikations-Kanal der Sektion. <a href="https://inclusivesocial.org/newsletter-anmeldung/">Sie können sich hier anmelden.</a></p><p>Die vierteljährlich erscheinende Fachzeitschrift ‹Anthroposophic Perspectives in Inclusive Social Development› wird in deutscher und englischer Sprache veröffentlicht und <a href="https://inclusivesocial.org/perspectives-abonnieren/">kann hier abonniert werden</a>.</p><p>Bitte folgen Sie der Sektion auch in den sozialen Medien (@inclusivesocial auf <a href="https://www.instagram.com/inclusivesocial/">Instagram</a> und <a href="https://www.facebook.com/inclusivesocial">Facebook</a>).</p><p>Wenn Sie mehr über bestimmte Arbeitsgruppen erfahren möchten und wissen möchten, wie Sie sich einbringen können, wenden Sie sich bitte <a href="https://inclusivesocial.goetheanum.ch/de/arbeitsfelder">an die für die jeweilige Gruppe angegebene Kontaktperson</a>.</p><p>Bei weiteren Fragen können Sie sich jederzeit an die Geschäftsstelle der Sektion in Dornach und an das Leitungsteam wenden: <a href="mailto:inclusivesocial@goetheanum.ch">inclusivesocial@goetheanum.ch</a>.</p></div></div>
     </details>
@@ -411,7 +433,7 @@
   <section id="kapsel">
     <div class="shead">
       <h2><span class="step-num"><span>3</span></span> Kapsel</h2>
-      <p>Die Fragen liegen als weiche Kapseln auf gedämpftem Grund. Die angewählte wird zur Auswahl-Pille des Hauses – dunkles Gold, weisse Schrift – und rundet sich zur Karte, in der die Antwort liegt.</p>
+      <p>Die Fragen liegen als weiche Kapseln auf gedämpftem Grund. Die angewählte wird zur Auswahl-Pille des Hauses – dunkles Gold, weisse Schrift – und bleibt rund: Sie liegt oben in einer gleich runden Karte, in der die Antwort steht.</p>
     </div>
     <div class="acc-liste kapsel">
     <details class="acc" id="kapsel-1" data-gruppe="kapsel">
@@ -564,7 +586,7 @@
         <tr><td>Bewegung</td><td>Bloom-Kurve der Hauptseite (<span class="code">cubic-bezier(.32,.08,.24,1)</span>), <span class="num">280</span> ms auf, <span class="num">220</span> ms zu. Wer weniger Bewegung wünscht, bekommt keine (WCAG 2.3.3).</td></tr>
         <tr><td>Eines aufs Mal</td><td>Öffnet sich eine Antwort, schliesst sich die andere weich – die Seite bleibt ruhig und kurz.</td></tr>
         <tr><td>Verlinkbar</td><td>Jede Frage hat eine Adresse (<span class="code">#faden-7</span>); der Link öffnet sie direkt.</td></tr>
-        <tr><td>Fingerziele</td><td>Knopf und Zeile mindestens <span class="num">44</span> px hoch (B04); die ganze Zeile ist klickbar.</td></tr>
+        <tr><td>Fingerziele</td><td>Die ganze Zeile ist das Ziel, mindestens <span class="num">44</span> px hoch (B04); der Winkel ist nur das Zeichen – das gelernte der Webfamilie (Hauptmenü, Kalender-Filter, Klappliste).</td></tr>
         <tr><td>Schrift</td><td>Frage in der Hausschrift, Deutlich (Titelrolle); Nummer tabellarisch (G25); Antwort im Lesemass von <span class="num">62</span> Zeichen (G10).</td></tr>
         <tr><td>Farben</td><td>Alles aus den Tokens – Hell und Dunkel folgen von selbst; Anwahl = dunkles Gold mit Weiss (B01, 4.55:1).</td></tr>
       </tbody>
