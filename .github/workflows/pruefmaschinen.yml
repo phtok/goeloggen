@@ -22,6 +22,8 @@ jobs:
         run: python3 tools/typo-check.py --all
       - name: ds-lint (Gestalt, alle Seiten + Score)
         run: python3 tools/ds-lint.py
+      - name: check-on-sek (Sektionsfarben – Vordergrund und Varianten mindestens 4.5 zu 1, beide Themes)
+        run: python3 tools/check-on-sek.py
 
   # DS08 · Barrierefreiheit lässt sich nicht lesen, nur messen: ob ein Kontrast
   # trägt und ein Fingerziel gross genug ist, entscheidet sich erst am

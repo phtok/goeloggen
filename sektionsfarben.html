@@ -6,150 +6,429 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex" />
 <title>Goetheanum – Sektionsfarben</title>
-<meta name="description" content="Die Identitätsfarben der Schul-Sektionen und der Bereiche mit Hex, RGB, HSB und CMYK (Richtwert) – klick-kopierbar. Marken- und Neutralfarben wohnen im Design-System." />
+<meta name="description" content="Die Identitätsfarben der Schul-Sektionen mit heller und dunkler Variante, Kontrasten, Anwendungsbeispielen und allen Werten (Hex, RGB, HSB, CMYK-Richtwert) – klick-kopierbar." />
 <link rel="stylesheet" href="design-system/tokens.css" />
 <link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
 <style>
-  /* Farben/Schrift/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigenes Layout. */
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
-  .hero{padding-block:60px 14px}
+  /* Farben/Schrift/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigenes Layout.
+     Alle Sektionsfarben kommen als var(--sek-*) aus den Tokens; die Seite setzt
+     sie per Skript auf die Kacheln, damit Hell/Dunkel von selbst stimmt (B05). */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(16px,4vw,26px)}
+  .hero{padding-block:clamp(40px,7vw,60px) var(--s4)}
   .lede{max-width:64ch;margin-top:var(--s4)}
 
   .grp{margin-top:var(--s8)}
-  .grp > h2{font-size:var(--t-h3);font-family:var(--font);font-weight:var(--w-deutlich);margin-bottom:var(--s2)}
-  .grp > p{color:var(--muted);font-size:var(--t-small);max-width:62ch}
+  .grp > h2{font-size:var(--t-h2);margin-bottom:var(--s2)}
+  .grp > .desc{max-width:62ch}
 
-  .tablecard{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);overflow-x:auto;margin-top:var(--s4)}
-  table{width:100%;border-collapse:collapse}
-  th,td{vertical-align:middle;text-align:left;padding:var(--s3) var(--s4);border-top:1px solid var(--line-soft)}
-  thead th{border-top:0;color:var(--muted);font-size:var(--t-small);font-weight:var(--w-text);white-space:nowrap}
-  tbody td{font-size:var(--t-small)}
-  td.val{cursor:copy;font-variant-numeric:tabular-nums;white-space:nowrap}
-  td.val:hover{background:var(--soft)}
-  .name{font-family:var(--font);font-weight:var(--w-deutlich);font-size:var(--t-body)}
-  .pend{color:var(--muted)}
+  /* --- Sektionskarte: drei Flächen (Basis · Dunkel · Hell), dann die Werte ---- */
+  .karten{display:grid;gap:var(--s4);margin-top:var(--s5)}
+  @media(min-width:900px){.karten{grid-template-columns:1fr 1fr}}
+  .sek{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);overflow:hidden}
+  .sek .farben{display:grid;grid-template-columns:1fr 1fr}
+  .sek .f{padding:var(--s4);min-height:92px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;
+    font-family:var(--font-text);font-size:var(--t-small);line-height:1.35}
+  .sek .f.basis{grid-column:1/-1;min-height:120px}
+  .sek .f .rolle{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body)}
+  .sek .f .hx{font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.02em}
+  .sek .f .k{opacity:.92}
+  @media(min-width:520px){
+    .sek .farben{grid-template-columns:2fr 1fr 1fr}
+    .sek .f.basis{grid-column:auto;min-height:132px}
+  }
+  .sek .kopf{padding:var(--s4) var(--s4) 0;display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3);align-items:baseline}
+  .sek .kopf h3{font-size:var(--t-h3);margin:0}
+  .sek .kopf .tok{font-family:var(--font-mono);font-size:var(--t-micro);color:var(--muted)}
+  .sek .werte{display:flex;flex-wrap:wrap;gap:var(--s2);padding:var(--s3) var(--s4) 0}
+  .sek .werte:last-child{padding-bottom:var(--s4)}
+  .sek .werte .lab{flex-basis:100%;font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
+  .wert{font:inherit;font-family:var(--font-text);font-size:var(--t-small);font-variant-numeric:tabular-nums;
+    color:var(--ink);background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-pill);
+    padding:var(--pille-y) var(--pille-x);cursor:copy;min-height:36px;display:inline-flex;align-items:center;gap:.5em}
+  .wert:hover{border-color:var(--blue)}
+  .wert .art{color:var(--muted);font-size:var(--t-micro)}
+  .wert .punkt{width:.9em;height:.9em;border-radius:50%;border:1px solid var(--line);flex:none}
 
-  .sw{width:42px;height:42px;border-radius:var(--r-control);border:1px solid var(--line);display:inline-block;vertical-align:middle}
-  td.swc{width:42px}
+  /* --- Anwendung: ein Wähler, alle Beispiele in den Tönen der gewählten Sektion --- */
+  .waehler{display:flex;gap:var(--s2);overflow-x:auto;padding:var(--s2) 0 var(--s3);margin-top:var(--s4);
+    scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+  .waehler button{flex:none;font:inherit;font-family:var(--font-text);font-size:var(--t-small);min-height:var(--tap);
+    padding:var(--pille-y) var(--pille-x);border-radius:var(--r-pill);border:1px solid var(--line);
+    background:var(--field-bg);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:.5em}
+  .waehler button .punkt{width:.85em;height:.85em;border-radius:50%;flex:none}
+  .waehler button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent)}
+  .anw{--x:var(--sek-aas);--x-on:var(--on-sek-aas);--x-dunkel:var(--sek-aas-dunkel);--x-hell:var(--sek-aas-hell);--x-ink:var(--sek-aas-ink);
+    display:grid;gap:var(--s4)}
+  @media(min-width:760px){.anw{grid-template-columns:1fr 1fr}}
+  .bsp{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s4);display:flex;flex-direction:column;gap:var(--s3)}
+  .bsp > .meta{order:9}
+  .bsp .rolle-t{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  /* 1 · Kopfband: dunkle Fläche, Weiss drauf */
+  .kopfband{background:var(--x-dunkel);color:var(--on-accent);border-radius:var(--r-control);padding:var(--s5) var(--s5) var(--s6)}
+  .kopfband .kick{color:var(--on-accent);opacity:.85}
+  .kopfband h3{color:var(--on-accent);font-size:var(--t-h3);max-width:22ch;margin:0}
+  .kopfband p{color:var(--on-accent);font-family:var(--font-text);font-size:var(--t-small);margin-top:var(--s2)}
+  /* 2 · Chip/Etikett: helle Fläche, Sektionstinte */
+  .chip.sek{background:var(--x-hell);color:var(--x-ink);border-color:transparent;font-weight:600}
+  /* 3 · Hinweiskasten: helle Fläche, Lesetext in --ink, Kante im dunklen Ton */
+  .kasten{background:var(--x-hell);color:var(--ink);border-left:4px solid var(--x-dunkel);border-radius:0 var(--r-control) var(--r-control) 0;
+    padding:var(--s4) var(--s5);font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-body)}
+  .kasten b{color:var(--x-ink);font-weight:600}
+  /* 4 · Kicker und Link: Sektion als Text auf Papier */
+  .textprobe .kick{color:var(--x-ink)}
+  .textprobe h3{font-size:var(--t-h3);margin:0 0 var(--s2)}
+  .textprobe p{font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure)}
+  .textprobe a{color:var(--x-ink);text-decoration-color:var(--x-hell)}
+  /* 5 · Aktion: Basisfarbe als Knopf, Vordergrund aus --on-sek-* */
+  .btn.sek{background:var(--x);border-color:var(--x);color:var(--x-on);font-weight:var(--w-strong)}
+  /* 6 · Marke: Basisfarbe als Linie an einer Karte */
+  .marke{border:1px solid var(--line);border-top:5px solid var(--x);border-radius:var(--r-card);padding:var(--s4) var(--s5);background:var(--soft)}
+  .marke h3{font-size:var(--t-h3);margin:0}
+  .marke .meta{margin-top:var(--s1)}
+  .belege{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s4)}
 
-  .fineprint{margin-top:var(--s8);color:var(--muted);font-size:var(--t-small);max-width:64ch}
-  .fineprint b{color:var(--ink);font-weight:var(--w-deutlich)}
+  /* --- Vorschläge: Reihen zum Vergleich ------------------------------------ */
+  .reihe{margin-top:var(--s5)}
+  .reihe .rk{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s3);margin-bottom:var(--s2)}
+  .reihe .rk h3{font-size:var(--t-body);margin:0}
+  .reihe .rk .meta{flex-basis:100%}
+  @media(min-width:640px){.reihe .rk .meta{flex-basis:auto}}
+  .kacheln{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s1);border-radius:var(--r-control);overflow:hidden}
+  @media(min-width:520px){.kacheln{grid-template-columns:repeat(6,1fr)}}
+  @media(min-width:900px){.kacheln{grid-template-columns:repeat(12,1fr)}}
+  .kacheln .t{aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body)}
+  .kacheln .t small{font-family:var(--font-text);font-size:var(--t-micro);font-weight:400;opacity:.9}
+
+  /* --- Bereiche: kompakte Liste -------------------------------------------- */
+  .liste{display:grid;gap:var(--s2);margin-top:var(--s4)}
+  .liste .z{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s3);padding:var(--s3) var(--s4);
+    border:1px solid var(--line);border-radius:var(--r-control);background:var(--paper)}
+  .liste .z .name{font-weight:var(--w-deutlich);font-size:var(--t-body);flex:1 1 14ch}
+  .liste .sw{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);flex:none}
+
+  .fineprint{margin-top:var(--s8);color:var(--muted);font-size:var(--t-small);max-width:64ch;font-family:var(--font-text);line-height:1.6}
+  .fineprint b{color:var(--ink);font-weight:600}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:var(--r-pill);font-family:var(--font-text);font-size:var(--t-small);opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
+  .toast.show{opacity:1}
 </style>
 </head>
 <body>
 <script src="design-system/nav.js" data-root="./" data-section="system" data-active="sektionsfarben"
-        data-onpage="Sektionen:#sektionen|Bereiche:#bereiche"></script>
+        data-onpage="Sektionen:#sektionen|Anwendung:#anwendung|Vorschläge:#vorschlaege|Bereiche:#bereiche"></script>
 
 <main class="wrap">
   <div class="hero">
     <div class="kicker">Elemente</div>
     <h1>Sektionsfarben</h1>
-    <p class="lede">Die Identitätsfarben der Schul-Sektionen und der Bereiche – Hex, RGB und HSB exakt
-      aus der Quelle (<code>assets/goe-orgs.js</code>, speist die Logo-Engine). Jede Zelle ist
-      klick-kopierbar. Marken- und Neutralfarben wohnen im
-      <a href="design-system/">Design-System</a>.</p>
+    <p class="lede">Jede Sektion hat eine Identitätsfarbe – und seit September 2026 dazu eine
+      <b>dunkle</b> Fläche, die Weiss trägt, und eine <b>helle</b>, die dunklen Text trägt.
+      Alle Kontraste sind gerechnet, nicht geschätzt; jeder Wert ist klick-kopierbar.</p>
   </div>
 
   <section class="grp" id="sektionen">
     <h2>Sektionen</h2>
-    <p>Die Identitätsfarben der Sektionen der Freien Hochschule für Geisteswissenschaft. Markenfest –
-      sie kippen nicht mit Hell/Dunkel.</p>
-    <div class="tablecard"><table><thead><tr>
-      <th></th><th>Sektion</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th>
-    </tr></thead><tbody id="sektionen-body"></tbody></table></div>
+    <p class="desc">Drei Flächen je Sektion: die <b>Basis</b> ist Identität (markenfest, kippt nicht mit
+      Hell/Dunkel) und dient als Linie, Marke oder Knopf. <b>Dunkel</b> ist die matte Fläche für
+      weissen Text – Kopfbänder, Titelflächen. <b>Hell</b> ist ein Farbhauch für Chips, Kästen
+      und Zeilen; darauf steht <code>--ink</code> oder die Sektionstinte <code>--sek-*-ink</code>.
+      Die Kontrastzahl auf jeder Fläche ist live gemessen.</p>
+    <div class="karten" id="karten"></div>
+  </section>
+
+  <section class="grp" id="anwendung">
+    <h2>Anwendung</h2>
+    <p class="desc">Sektion wählen – die Beispiele zeigen dieselben sechs Bausteine in ihren Tönen.
+      Genau so werden sie in den Werkzeugen gebaut: mit den Tokens, nie mit Hex-Werten.</p>
+    <div class="waehler" id="waehler" role="group" aria-label="Sektion wählen"></div>
+    <div class="anw" id="anw">
+      <div class="bsp">
+        <div class="kopfband"><span class="kick">Tagung · 14. bis 16. Mai</span>
+          <h3 id="bsp-titel">Titel der Sektion</h3>
+          <p>Freie Hochschule für Geisteswissenschaft · Goetheanum, Dornach</p></div>
+        <p class="meta"><b>Kopfband</b> · Fläche <code>--sek-*-dunkel</code>, Schrift <code>--on-accent</code>. Matt genug fürs Auge, tief genug für Weiss.</p>
+      </div>
+      <div class="bsp">
+        <div><span class="chip sek" id="bsp-chip">Sektion</span> <span class="chip sek">Neu</span> <span class="chip sek">Rundbrief 3/2026</span></div>
+        <div class="marke"><h3>Studienwoche im Herbst</h3><p class="meta">Anmeldung bis 30. September</p></div>
+        <p class="meta"><b>Chip</b> · Fläche <code>--sek-*-hell</code>, Schrift <code>--sek-*-ink</code>. <b>Marke</b> · die Basis als Linie an der Karte, nicht als Textgrund.</p>
+      </div>
+      <div class="bsp">
+        <div class="kasten"><b>Hinweis der Sektion.</b> Die Anmeldung ist offen; Mitglieder der Hochschule erhalten den Studienbrief vorab.</div>
+        <p class="meta"><b>Hinweiskasten</b> · Fläche <code>--sek-*-hell</code>, Lesetext in <code>--ink</code>, Kante <code>--sek-*-dunkel</code>. Der leise Akzent, der nicht schreit.</p>
+      </div>
+      <div class="bsp textprobe">
+        <div><span class="kick" id="bsp-kick">Sektion</span>
+          <h3>Forschung und Praxis im Gespräch</h3>
+          <p>Der Kicker trägt die Sektion als Text; im Lauftext bleibt ein <a href="#anwendung">Verweis in der Sektionstinte</a> lesbar – auch im Dunkelmodus.</p></div>
+        <p class="meta"><b>Kicker und Link</b> · Schrift <code>--sek-*-ink</code> auf Papier. Im Hellen ist das der dunkle Ton, im Dunkeln ein heller Hauch.</p>
+      </div>
+      <div class="bsp">
+        <div><button class="btn sek" type="button">Zur Sektion</button> <button class="btn" type="button">Programm</button></div>
+        <p class="meta"><b>Aktion</b> · die Basis als Knopf, Schrift aus <code>--on-sek-*</code> (Weiss nur, wo es 4.5:1 hält – sonst der dunkle Sektionston, B01).</p>
+      </div>
+      <div class="bsp">
+        <div class="belege" id="belege"></div>
+        <p class="meta"><b>Belege</b> · die Kontraste dieser Beispiele, gemessen an den gerade gerenderten Farben (Theme oben rechts wechseln – die Zahlen ziehen mit).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="grp" id="vorschlaege">
+    <h2>Vorschläge und Beschluss</h2>
+    <p class="desc">Die Varianten entstehen aus einem Rezept in OKLCH: gleiche Helligkeit je Rolle,
+      Buntheit gedeckelt, Farbton der Sektion. Hier drei Stärken je Rolle nebeneinander; der
+      <b>Beschluss</b> vom 7. September 2026 steht in den Tokens: Dunkel matt (B), Hell als
+      Farbhauch. Eine andere Wahl heisst: eine Zahl im Rezept ändern
+      (<code>tools/sek-varianten.py</code>), neu erzeugen, fertig.</p>
+    <div id="reihen"></div>
   </section>
 
   <section class="grp" id="bereiche">
     <h2>Bereiche</h2>
-    <p>Die Bereiche tragen den Standard – Markenblau – oder eine eigene Bereichsfarbe.</p>
-    <div class="tablecard"><table><thead><tr>
-      <th></th><th>Bereich</th><th>Hex</th><th>RGB</th><th>HSB</th><th>CMYK<span class="pend"> ·&nbsp;Richtwert</span></th>
-    </tr></thead><tbody id="bereiche-body"></tbody></table></div>
+    <p class="desc">Die Bereiche tragen den Standard – Markenblau, mit denselben Varianten wie
+      <code>--sek-goetheanum</code> – oder eine eigene Bereichsfarbe (Basis, ohne Varianten).</p>
+    <div class="liste" id="bereiche-liste"></div>
   </section>
 
   <p class="fineprint">
     <b>Hex · RGB · HSB</b> sind aus der Quelle errechnet und verbindlich für Bildschirm/Web.
     <b>CMYK</b> ist ein <b>rechnerischer Richtwert</b> (sRGB→CMYK, geräteabhängig) – <b>nicht</b> der
     verbindliche Druckwert; die offiziellen Druck-CMYK-Werte folgen aus dem Marken-Handbuch.
-    Korrigieren = die Quelle bearbeiten
-    (<a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-orgs.js">goe-orgs.js</a>).
+    Basisfarben korrigieren = die Quelle bearbeiten
+    (<a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-orgs.js">goe-orgs.js</a>);
+    Varianten werden daraus erzeugt (<a href="https://github.com/phtok/goeloggen/blob/main/tools/sek-varianten.py">sek-varianten.py</a>)
+    und von <code>tools/check-on-sek.py</code> auf ≥ 4.5:1 geprüft. Marken- und Neutralfarben wohnen im
+    <a href="design-system/">Design-System</a>.
   </p>
 </main>
 
-<div class="toast" id="toast" style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--on-accent);padding:8px 16px;border-radius:var(--r-pill);font-size:var(--t-small);opacity:0;transition:opacity .2s;pointer-events:none;z-index:60"></div>
+<div class="toast" id="toast"></div>
 
 <script src="assets/goe-orgs.js"></script>
 <script>
 (function(){
   "use strict";
-  function $(s,r){return (r||document).querySelector(s);}
+  var $=function(s,r){return (r||document).querySelector(s);};
+  var el=function(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+  var ROOT=document.documentElement;
 
-  // --- Farbwert-Umrechnung aus dem Hex (eine Quelle: der goe-orgs-Hex) -------
+  // --- Farbmathematik (eine Quelle: der Hex) ---------------------------------
   function hexToRgb(hex){
     var h=hex.replace("#","");
     if(h.length===3) h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
     return {r:parseInt(h.slice(0,2),16), g:parseInt(h.slice(2,4),16), b:parseInt(h.slice(4,6),16)};
   }
+  function rgbToHex(r,g,b){return "#"+[r,g,b].map(function(c){c=Math.max(0,Math.min(255,Math.round(c)));return (c<16?"0":"")+c.toString(16);}).join("");}
   function rgbToHsb(r,g,b){
     r/=255; g/=255; b/=255;
     var max=Math.max(r,g,b), min=Math.min(r,g,b), d=max-min, h=0;
-    if(d!==0){
-      if(max===r) h=((g-b)/d)%6;
-      else if(max===g) h=(b-r)/d+2;
-      else h=(r-g)/d+4;
-      h*=60; if(h<0) h+=360;
-    }
-    var s=max===0?0:d/max;
-    return {h:Math.round(h), s:Math.round(s*100), b:Math.round(max*100)};
+    if(d!==0){ if(max===r) h=((g-b)/d)%6; else if(max===g) h=(b-r)/d+2; else h=(r-g)/d+4; h*=60; if(h<0) h+=360; }
+    return {h:Math.round(h), s:Math.round((max===0?0:d/max)*100), b:Math.round(max*100)};
   }
   function rgbToCmyk(r,g,b){
     r/=255; g/=255; b/=255;
-    var k=1-Math.max(r,g,b);
-    if(k===1) return {c:0,m:0,y:0,k:100};
-    var c=(1-r-k)/(1-k), m=(1-g-k)/(1-k), y=(1-b-k)/(1-k);
-    return {c:Math.round(c*100), m:Math.round(m*100), y:Math.round(y*100), k:Math.round(k*100)};
+    var k=1-Math.max(r,g,b); if(k===1) return {c:0,m:0,y:0,k:100};
+    return {c:Math.round((1-r-k)/(1-k)*100), m:Math.round((1-g-k)/(1-k)*100), y:Math.round((1-b-k)/(1-k)*100), k:Math.round(k*100)};
+  }
+  function lin(c){c/=255;return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);}
+  function lum(hex){var c=hexToRgb(hex);return 0.2126*lin(c.r)+0.7152*lin(c.g)+0.0722*lin(c.b);}
+  function kontrast(a,b){var la=lum(a),lb=lum(b),hi=Math.max(la,lb),lo=Math.min(la,lb);return (hi+0.05)/(lo+0.05);}
+  function fmt(k){return (Math.round(k*10)/10).toFixed(1)+":1";}
+  // gerenderte Farbe (rgb(...)) → Hex, damit Kontraste am echten Blatt gerechnet werden
+  function cssToHex(v){
+    v=(v||"").trim(); if(v[0]==="#") return v.length===4?"#"+v[1]+v[1]+v[2]+v[2]+v[3]+v[3]:v;
+    var m=v.match(/rgba?\(([^)]+)\)/); if(!m) return "#000000";
+    var p=m[1].split(/[\s,\/]+/).map(parseFloat); return rgbToHex(p[0],p[1],p[2]);
+  }
+  function tokenHex(name){return cssToHex(getComputedStyle(ROOT).getPropertyValue(name));}
+  function paintHex(node,prop){return cssToHex(getComputedStyle(node)[prop||"backgroundColor"]);}
+
+  // --- OKLCH (nur für die Vergleichsreihen; das Rezept selbst rechnet tools/sek-varianten.py)
+  function rgbToOklab(hex){
+    var c=hexToRgb(hex), r=lin(c.r), g=lin(c.g), b=lin(c.b);
+    var l=Math.cbrt(0.4122214708*r+0.5363325363*g+0.0514459929*b),
+        m=Math.cbrt(0.2119034982*r+0.6806995451*g+0.1073969566*b),
+        s=Math.cbrt(0.0883024619*r+0.2817188376*g+0.6299787005*b);
+    return [0.2104542553*l+0.7936177850*m-0.0040720468*s, 1.9779984951*l-2.4285922050*m+0.4505937099*s, 0.0259040371*l+0.7827717662*m-0.8086757660*s];
+  }
+  function oklabToRgb(L,a,b){
+    var l=L+0.3963377774*a+0.2158037573*b, m=L-0.1055613458*a-0.0638541728*b, s=L-0.0894841775*a-1.2914855480*b;
+    l=l*l*l; m=m*m*m; s=s*s*s;
+    var un=function(c){return c<=0.0031308?12.92*c:1.055*Math.pow(c,1/2.4)-0.055;};
+    return [un(4.0767416621*l-3.3077115913*m+0.2309699292*s), un(-1.2684380046*l+2.6097574011*m-0.3413193965*s), un(-0.0041960863*l-0.7034186147*m+1.7076147010*s)];
+  }
+  function ableiten(hex,L,cMax,cFaktor){
+    var lab=rgbToOklab(hex), C=Math.min(Math.hypot(lab[1],lab[2])*cFaktor,cMax), H=Math.atan2(lab[2],lab[1]);
+    for(var i=0;i<40;i++){
+      var rgb=oklabToRgb(L,C*Math.cos(H),C*Math.sin(H));
+      if(rgb.every(function(c){return c>=-0.0005&&c<=1.0005;})) return rgbToHex(rgb[0]*255,rgb[1]*255,rgb[2]*255);
+      C*=0.94;
+    }
+    var g=oklabToRgb(L,0,0); return rgbToHex(g[0]*255,g[1]*255,g[2]*255);
   }
 
+  // --- Kopieren --------------------------------------------------------------
   function copy(txt){
     if(navigator.clipboard) navigator.clipboard.writeText(txt);
-    var t=$("#toast"); t.textContent="„"+txt+"“ kopiert"; t.style.opacity="1";
-    setTimeout(function(){t.style.opacity="0";},1100);
+    var t=$("#toast"); t.textContent="„"+txt+"“ kopiert"; t.classList.add("show");
+    setTimeout(function(){t.classList.remove("show");},1100);
   }
-  function valCell(txt){
-    var td=document.createElement("td");
-    td.className="val"; td.textContent=txt; td.title="Klick kopiert";
-    td.addEventListener("click",function(){copy(txt);});
-    return td;
-  }
-
-  function row(tbody, hex, name){
-    var rgb=hexToRgb(hex), hsb=rgbToHsb(rgb.r,rgb.g,rgb.b), cmyk=rgbToCmyk(rgb.r,rgb.g,rgb.b);
-    var tr=document.createElement("tr");
-    var swc=document.createElement("td"); swc.className="swc";
-    var sw=document.createElement("span"); sw.className="sw"; sw.style.background=hex; swc.appendChild(sw);
-    tr.appendChild(swc);
-    var nc=document.createElement("td");
-    nc.innerHTML='<span class="name"></span>'; nc.querySelector(".name").textContent=name;
-    tr.appendChild(nc);
-    tr.appendChild(valCell(hex.toUpperCase()));
-    tr.appendChild(valCell(rgb.r+", "+rgb.g+", "+rgb.b));
-    tr.appendChild(valCell(hsb.h+"°, "+hsb.s+"%, "+hsb.b+"%"));
-    tr.appendChild(valCell(cmyk.c+", "+cmyk.m+", "+cmyk.y+", "+cmyk.k));
-    tbody.appendChild(tr);
+  function wert(txt,art,punkt){
+    var b=el("button","wert"); b.type="button"; b.title="Klick kopiert";
+    if(punkt){var p=el("span","punkt"); p.style.background=punkt; b.appendChild(p);}
+    if(art){b.appendChild(el("span","art",art));}
+    b.appendChild(document.createTextNode(txt));
+    b.addEventListener("click",function(){copy(txt);});
+    return b;
   }
 
-  function renderGroup(catKey, bodyId){
-    var O=window.GOE_GCI_ORGS, C=window.GOE_GCI_CATS, body=$("#"+bodyId);
-    if(!O||!C||!C[catKey]||!body) return;
-    C[catKey].items.forEach(function(k){
-      var o=O[k]; if(!o||!o.color) return;
-      row(body, o.color, o.name_de);
+  // --- Daten -----------------------------------------------------------------
+  var O=window.GOE_GCI_ORGS||{}, C=window.GOE_GCI_CATS||{};
+  var KEYS=(C.sektionen&&C.sektionen.items||[]).filter(function(k){return O[k]&&O[k].color;});
+  var SEK=[{key:"goetheanum",name:"Goetheanum und Bereiche",hex:(O.goetheanum||{}).color||"#0061a9"}]
+    .concat(KEYS.map(function(k){return {key:k,name:O[k].name_de,hex:O[k].color};}));
+
+  // --- Sektionskarten --------------------------------------------------------
+  function flaeche(cls,rolle,bgVar,fgVar){
+    var d=el("div","f "+cls);
+    d.style.background="var("+bgVar+")"; d.style.color="var("+fgVar+")";
+    d.appendChild(el("span","rolle",rolle));
+    d.appendChild(el("span","hx"));
+    d.appendChild(el("span","k"));
+    return d;
+  }
+  function karte(s){
+    var a=el("article","sek"); a.dataset.key=s.key;
+    var f=el("div","farben");
+    f.appendChild(flaeche("basis","Basis","--sek-"+s.key,"--on-sek-"+s.key));
+    f.appendChild(flaeche("dunkel","Dunkel","--sek-"+s.key+"-dunkel","--on-accent"));
+    f.appendChild(flaeche("hell","Hell","--sek-"+s.key+"-hell","--sek-"+s.key+"-ink"));
+    a.appendChild(f);
+    var kopf=el("div","kopf"); kopf.appendChild(el("h3",null)); kopf.lastChild.textContent=s.name;
+    kopf.appendChild(el("span","tok","--sek-"+s.key)); a.appendChild(kopf);
+    var rgb=hexToRgb(s.hex), hsb=rgbToHsb(rgb.r,rgb.g,rgb.b), cmyk=rgbToCmyk(rgb.r,rgb.g,rgb.b);
+    var w1=el("div","werte"); w1.appendChild(el("span","lab","Basis · Hex, RGB, HSB, CMYK (Richtwert)"));
+    w1.appendChild(wert(s.hex.toUpperCase(),"Hex"));
+    w1.appendChild(wert(rgb.r+", "+rgb.g+", "+rgb.b,"RGB"));
+    w1.appendChild(wert(hsb.h+"°, "+hsb.s+"%, "+hsb.b+"%","HSB"));
+    w1.appendChild(wert(cmyk.c+", "+cmyk.m+", "+cmyk.y+", "+cmyk.k,"CMYK"));
+    a.appendChild(w1);
+    var w2=el("div","werte var"); w2.appendChild(el("span","lab","Varianten · Hex im aktuellen Theme, Token zum Einbauen"));
+    a.appendChild(w2);
+    return a;
+  }
+  function messen(){
+    // Kontraste am gerenderten Blatt: erst nach dem Malen lesen, je Theme neu.
+    document.querySelectorAll("article.sek").forEach(function(a){
+      var key=a.dataset.key;
+      a.querySelectorAll(".f").forEach(function(f){
+        var bg=paintHex(f), fg=paintHex(f,"color"), k=kontrast(fg,bg);
+        f.querySelector(".hx").textContent=bg.toUpperCase();
+        var wer=f.classList.contains("hell")?"Tinte":(fg.toLowerCase()==="#ffffff"?"Weiss":"Dunkelton");
+        f.querySelector(".k").textContent=wer+" "+fmt(k)+(k>=4.5?" ✓":" ✗");
+      });
+      var w2=a.querySelector(".werte.var"); while(w2.childNodes.length>1) w2.removeChild(w2.lastChild);
+      [["dunkel","-dunkel"],["hell","-hell"],["ink","-ink"]].forEach(function(p){
+        var name="--sek-"+key+p[1], hx=tokenHex(name).toUpperCase();
+        var b=wert(name,hx,"var("+name+")"); b.title="Klick kopiert das Token"; w2.appendChild(b);
+      });
     });
   }
+
+  // --- Anwendung -------------------------------------------------------------
+  function waehle(key){
+    var s=SEK.filter(function(x){return x.key===key;})[0]||SEK[0], anw=$("#anw");
+    ["","-dunkel","-hell","-ink"].forEach(function(p){anw.style.setProperty("--x"+(p||""),"var(--sek-"+s.key+p+")");});
+    anw.style.setProperty("--x-on","var(--on-sek-"+s.key+")");
+    var kurz=(O[s.key]&&O[s.key].short_de)||s.name;
+    $("#bsp-titel").textContent=s.key==="goetheanum"?"Tagung am Goetheanum":s.name;
+    $("#bsp-chip").textContent=kurz; $("#bsp-kick").textContent=kurz;
+    document.querySelectorAll("#waehler button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.key===s.key));});
+    belege();
+  }
+  function belege(){
+    var box=$("#belege"); box.innerHTML="";
+    var proben=[
+      ["Weiss auf Dunkel", $(".kopfband h3"), $(".kopfband")],
+      ["Tinte auf Hell", $("#bsp-chip"), $("#bsp-chip")],
+      ["Ink auf Hell", $(".kasten"), $(".kasten")],
+      ["Tinte auf Papier", $("#bsp-kick"), $("#bsp-kick").closest(".bsp")],
+      ["Knopf", $(".btn.sek"), $(".btn.sek")]
+    ];
+    proben.forEach(function(p){
+      var k=kontrast(paintHex(p[1],"color"),paintHex(p[2]));
+      var c=el("span","chip",""); c.appendChild(document.createTextNode(p[0]+" ")); c.appendChild(el("b",null,fmt(k)+(k>=4.5?" ✓":" ✗")));
+      box.appendChild(c);
+    });
+  }
+  function bauWaehler(){
+    var w=$("#waehler");
+    SEK.forEach(function(s){
+      var b=el("button"); b.type="button"; b.dataset.key=s.key; b.setAttribute("aria-pressed","false");
+      var p=el("span","punkt"); p.style.background="var(--sek-"+s.key+")"; b.appendChild(p);
+      b.appendChild(document.createTextNode(s.key==="goetheanum"?"Goetheanum":(O[s.key].short_de||s.name)));
+      b.addEventListener("click",function(){waehle(s.key);});
+      w.appendChild(b);
+    });
+  }
+
+  // --- Vorschläge: drei Stärken je Rolle -------------------------------------
+  var VORSCHLAEGE=[
+    {rolle:"Dunkel · Fläche für Weiss", fg:"#ffffff", stufen:[
+      {name:"A · tiefer", L:0.42, cMax:0.085, cF:0.62, note:"schwerer, Weiss über 8:1"},
+      {name:"B · Beschluss", L:0.47, cMax:0.085, cF:0.62, empf:true, note:"matt und ruhig, Weiss 6.6 bis 7.2:1 – so in den Tokens (7. September 2026)"},
+      {name:"C · lichter", L:0.52, cMax:0.085, cF:0.62, note:"heller, Weiss um 5.3:1 – nah an der Grenze für Angenehm"}]},
+    {rolle:"Hell · Fläche für dunklen Text", fg:null, stufen:[
+      {name:"Hauch · Beschluss", L:0.965, cMax:0.022, cF:0.20, empf:true, note:"ein Farbhauch, kaum mehr als Papier – so in den Tokens (7. September 2026)"},
+      {name:"zarter", L:0.955, cMax:0.030, cF:0.30, note:"noch als Fläche spürbar, aber schon leuchtender"},
+      {name:"leise", L:0.935, cMax:0.040, cF:0.30, note:"die erste Empfehlung – als zu leuchtend verworfen"}]}
+  ];
+  function bauReihen(){
+    var wrap=$("#reihen"); if(!wrap) return;
+    VORSCHLAEGE.forEach(function(v){
+      v.stufen.forEach(function(st){
+        var r=el("div","reihe"), rk=el("div","rk");
+        rk.appendChild(el("h3",null,v.rolle+" – "+st.name));
+        if(st.empf) rk.appendChild(el("span","badge","Beschluss"));
+        var minK=99, kacheln=el("div","kacheln");
+        KEYS.forEach(function(k){
+          var bg=ableiten(O[k].color,st.L,st.cMax,st.cF), fg=v.fg||ableiten(O[k].color,0.47,0.085,0.62), kk=kontrast(fg,bg);
+          if(v.fg==null){ kk=Math.min(kk,kontrast("#23272b",bg)); }
+          minK=Math.min(minK,kk);
+          var t=el("div","t"); t.style.background=bg; t.style.color=v.fg||"#23272b"; t.title=O[k].short_de+" · "+bg;
+          t.appendChild(document.createTextNode("Aa")); t.appendChild(el("small",null,fmt(kk)));
+          kacheln.appendChild(t);
+        });
+        rk.appendChild(el("span","meta",st.note+" · schwächster Kontrast "+fmt(minK)));
+        r.appendChild(rk); r.appendChild(kacheln); wrap.appendChild(r);
+      });
+    });
+  }
+
+  // --- Bereiche --------------------------------------------------------------
+  function bauBereiche(){
+    var l=$("#bereiche-liste"); if(!l) return;
+    (C.bereiche&&C.bereiche.items||[]).forEach(function(k){
+      var o=O[k]; if(!o||!o.color) return;
+      var z=el("div","z"), sw=el("span","sw"); sw.style.background=o.color; z.appendChild(sw);
+      z.appendChild(el("span","name")); z.lastChild.textContent=o.name_de;
+      var rgb=hexToRgb(o.color);
+      z.appendChild(wert(o.color.toUpperCase(),"Hex"));
+      z.appendChild(wert(rgb.r+", "+rgb.g+", "+rgb.b,"RGB"));
+      if(o.color.toLowerCase()==="#0061a9") z.appendChild(el("span","meta","Standard · Varianten wie --sek-goetheanum"));
+      l.appendChild(z);
+    });
+  }
+
   function render(){
-    renderGroup("sektionen","sektionen-body");
-    renderGroup("bereiche","bereiche-body");
+    var k=$("#karten"); SEK.forEach(function(s){k.appendChild(karte(s));});
+    bauWaehler(); bauReihen(); bauBereiche();
+    requestAnimationFrame(function(){messen(); waehle("aas");});
+    // Theme-Wechsel (nav.js setzt data-theme) → Kontraste neu messen
+    new MutationObserver(function(){requestAnimationFrame(function(){messen(); belege();});})
+      .observe(ROOT,{attributes:true,attributeFilter:["data-theme"]});
   }
   if(document.readyState!=="loading") render();
   else document.addEventListener("DOMContentLoaded", render);
