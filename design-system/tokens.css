@@ -65,6 +65,8 @@
   --field-bg:#fff;       /* Eingabefelder, Knöpfe, Pillen */
   --bar-bg:rgba(255,255,255,.9);  /* klebende Leisten (Kopf, Schublade) */
   --line:rgba(20,24,28,.10);
+  --scrim:rgba(20,24,28,.32);  /* Schleier hinter Schubladen und Dialogen – deckt den Grund,
+                                  ohne ihn zu löschen. Dunkler als --line, leiser als --stage-veil. */
   --line-soft:rgba(20,24,28,.055);
   --bad:#b3261e;         /* Fehler/Warnung */
   --ok:#3f7d46;          /* Erfolg/Bestätigung als FLÄCHE – Weiss drauf (--on-accent) */
@@ -214,6 +216,7 @@
   --paper:#16191c; --soft:#1e2329; --field-bg:#1e2329;
   --bar-bg:rgba(20,23,26,.85);
   --line:rgba(255,255,255,.14); --line-soft:rgba(255,255,255,.07);
+  --scrim:rgba(0,0,0,.52);       /* im Dunkel muss der Schleier tiefer greifen als im Hellen */
   --bad:#e0675e; --ok:#5aa367;   /* on-accent bleibt Weiss – kein dunkler Text auf Akzentflächen */
   --ok-ink:#6bac76;              /* Grün als Text hellt im Dunkel auf – 5.36:1 auf grünem Ton */
   /* B7: keine pauschale Gewichtsabsenkung mehr – kleiner Lese-/UI-Text (Knöpfe,

@@ -24,11 +24,16 @@
 .goe-fam-knopf{position:fixed;bottom:var(--s4);z-index:70;
   display:block;width:var(--goe-fam-d);height:var(--goe-fam-d);padding:0;
   background:none;border:0;border-radius:var(--r-pill);cursor:pointer;
-  filter:drop-shadow(0 3px 10px rgba(20,24,28,.22));
+  filter:drop-shadow(0 2px 8px rgba(20,24,28,.18));
   transition:opacity .4s ease,transform .2s ease}
 .goe-fam-knopf.links{left:var(--s4)}
 .goe-fam-knopf.rechts{right:var(--s4)}
 .goe-fam-knopf svg{width:100%;height:100%;display:block}
+/* Die Marke: Fläche aus Papier, Ring und Zeichen in der Zustandsfarbe. Kein
+   fester Blauwert – auf dunklem Papier hielte er nur 2.76:1 (B02). */
+.goe-fam-marke{color:var(--blue)}
+.goe-fam-marke .grund{fill:var(--paper);stroke:currentColor;stroke-width:1.35}
+.goe-fam-marke path{fill:currentColor}
 .goe-fam-knopf:hover{transform:scale(1.06)}
 .goe-fam-knopf:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 
@@ -77,6 +82,7 @@
 .goe-fam-panel .kopf .dach{display:inline-flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;
   font-size:18px;font-weight:var(--w-deutlich);min-height:var(--tap)}
 .goe-fam-panel .kopf .dach svg{width:26px;height:26px;display:block;flex:0 0 auto}
+.goe-fam-panel .kopf .dach .goe-fam-marke{color:var(--blue)}
 .goe-fam-panel .kopf .dach:hover{color:var(--gold-ink)}
 .goe-fam-panel .zu{font:inherit;font-size:24px;line-height:1;color:var(--muted);background:none;border:0;
   width:var(--tap);height:var(--tap);border-radius:var(--r-pill);cursor:pointer}

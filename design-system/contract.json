@@ -1,6 +1,6 @@
 {
   "$schema": "https://goetheanum/design-system/contract.schema.json",
-  "version": "1.18.0",
+  "version": "1.19.0",
   "titel": "Goetheanum Design-System – Struktur-Vertrag",
   "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
   "geltungsbereich": {
@@ -221,18 +221,8 @@
   "verlinktes_css": {
     "regel": "DS02/DS03/DS04/DS05/DS07 gelten auch für die repo-eigenen CSS-Dateien, die eine Seite per <link> einbindet – nicht nur für ihre <style>-Blöcke. Was das gerenderte Blatt trägt, wird geprüft.",
     "werkzeug": "tools/ds-lint.py (Abschnitt ‹verlinkte CSS›)",
-    "stand": "berichtend",
-    "begruendung": "Erstmessung am 8. September 2026: acht Verstösse in base.css und nav.css, die seit der Anhebung des Grössen-Bodens (10. Juli, 13 → 14 px) unsichtbar mitliefen, weil der Prüfer nur ins HTML sah. Sie stecken in 52 bis 60 der 63 Seiten; sofort blockierend gestellt, stünde das Gate für das ganze Haus rot und niemand könnte mehr committen. Darum berichtend – dasselbe Vorgehen wie bei DS08 (Barrierefreiheit): erst den Rückstand abtragen, dann das Tor schliessen.",
-    "tor_schliessen": "Sind die acht Funde entschieden und behoben, ‹stand› auf ‹tor› setzen. Ab dann zählen CSS-Verstösse wie die der Seite selbst.",
-    "rueckstand": [
-      "design-system/base.css:305 DS03 .kicker 13.5px",
-      "design-system/base.css:336 DS03 .code.block 13px",
-      "design-system/nav.css:52 DS02 .dsnav .brand .wm Farbe",
-      "design-system/nav.css:55 DS03 .dsnav .back 13.5px",
-      "design-system/nav.css:95 DS03 Tooltip 12px",
-      "design-system/nav.css:115 DS02 .dsnav-backdrop Schleierfarbe",
-      "design-system/nav.css:184 DS03 .dsnav-toast 13px",
-      "design-system/nav.css:214 DS03 .dsnav-drawer .foot 12px"
-    ]
+    "stand": "tor",
+    "begruendung": "Erstmessung am 8. September 2026: acht Verstösse in base.css und nav.css, die seit der Anhebung des Grössen-Bodens (10. Juli, 13 → 14 px) unsichtbar mitliefen, weil der Prüfer nur ins HTML sah. Sie steckten in 52 bis 60 der 63 Seiten, darum lief die Regel zunächst berichtend – wie DS08 es vormacht. Noch am selben Tag entschieden und behoben; seither Tor.",
+    "tor_schliessen": "Erledigt am 8. September 2026: Rückstand abgetragen, ‹stand› auf ‹tor› gedreht."
   }
 }
