@@ -16,6 +16,21 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — die Zahl folgt dem Rahmen (1.16.3)
+
+**Was.** In der Blüte nimmt die Nummer die Sektionsfarbe an, sobald der Rahmen
+sie annimmt – bei Hover und im offenen Zustand; geschlossen bleibt sie grau.
+
+**Warum.** Auf Frage des Auftraggebers. Vorher wechselte nur der Ring die
+Farbe, die Zahl blieb stumm; jetzt bewegen sich beide zusammen und der offene
+Eintrag liest sich als ein Zeichen statt als zwei. Die Zahl trägt die **Tinte**
+(`--ak-ink`), nicht die Basisfarbe: die ist Linie, nicht Schrift (B02).
+Gemessen am gerenderten Blatt: 7.04:1 hell, 9.86:1 dunkel.
+
+**Wirkung.** `akkordeon.css`, Kleid Blüte. Faden und Kapsel tragen die Farbe an
+der Zahl schon; damit ist die Regel in allen drei Kleidern dieselbe: **das
+farbige Zeichen der Anwahl trägt die Zahl mit.**
+
 ## 7. September 2026 — die Nummer als Marke, in der Hausschrift (1.16.2)
 
 **Was.** Der Griff aus dem Faden gilt jetzt auch für die **Blüte**: die Nummer
