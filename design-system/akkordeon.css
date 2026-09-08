@@ -8,23 +8,27 @@
    Vorbild der Bewegung: das aufblühende Klappmenü von goetheanum.ch
    (cubic-bezier(.32,.08,.24,1)) – die Bloom-Kurve.
    Farbe: vier Rollen – --ak Linie/Marke · --ak-ink Text · --ak-dunkel Fläche
-   für Weiss · --ak-hell Hauch – abgelesen von den Ton-Rollen des Fundaments.
-   Hausfall Gold; data-sek="<sektion>" an .acc-liste oder an einem Vorfahren.
+   für Weiss · --ak-hell Hauch. Hausfall Gold; data-sek="<sektion>" nimmt die
+   Sektionsfarben (Basis · -ink · -dunkel · -hell, Sektionsfarben 1.14.0).
    Regeln: Frage = Titelrolle Deutlich, Antwort = Fliesstext Klar – beide in der
-   Hausschrift, eine Stimme; Nummer tabellarisch (G25); Fingerziel = ganze Zeile
+   Hausschrift, eine Stimme. Die Nummer (.nr) ist OPTIONAL – ohne sie wird die
+   Zeile einreihig; sie steht nur, wo auf Fragen verwiesen wird (G03). Ziffern
+   tabellarisch (G25); Fingerziel = ganze Zeile
    ≥44 px (B04); Anwahl = dunkle Fläche + Weiss (B01); Winkel als Zeichen (das
    gelernte der Webfamilie); keine Versalien, kein Unterstreichen (G05).
    ============================================================================= */
 :root{--acc-kurve:cubic-bezier(.32,.08,.24,1);--acc-dauer:.28s}
 @media(prefers-reduced-motion:reduce){:root{--acc-dauer:0s}}
 
-/* --- Farbrollen: Hausfall Gold, Sektion per data-sek ------------------------ */
-/* Die Zuordnung data-sek → Farbrollen macht das Fundament (tokens.css, 1.17.0);
-   das Modul liest nur ab. Vorher standen hier dreizehn Zeilen, die jedes weitere
-   Modul hätte abschreiben müssen. */
+/* --- Farbrollen ------------------------------------------------------------
+   Kommen seit 1.20.0 aus dem Fundament: ein data-sek IRGENDWO darüber setzt
+   --ton (Linie/Marke), --ton-dunkel (Fläche für Weiss), --ton-hell (Hauch),
+   --ton-ink (die Farbe als Schrift). Ohne data-sek greift der Hausfall Gold.
+   Die kurzen Namen hier sind nur Lesehilfe für die Regeln darunter. */
 .acc-liste{--ak:var(--ton,var(--gold));--ak-ink:var(--ton-ink,var(--gold-ink));
   --ak-dunkel:var(--ton-dunkel,var(--gold-deep));
-  --ak-hell:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));max-width:780px}
+  --ak-hell:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));
+  max-width:780px}
 
 /* --- Gemeinsame Anatomie ---------------------------------------------------- */
 .acc-kopf{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
@@ -58,6 +62,11 @@
 @media(max-width:560px){.acc .acc-inner{line-height:1.5}}
 .acc .acc-inner p{margin:0 0 .75em}
 .acc .acc-inner p:last-child{margin-bottom:0}
+/* ‹Link kopieren› – die Adresse dieser einen Antwort. Leise am Fuss, damit sie
+   den Lesefluss nicht unterbricht; erscheint nur mit der geöffneten Antwort. */
+.acc .teilen{margin-top:var(--s4);color:var(--ak-ink);border-color:transparent;
+  padding-inline:0;font-size:var(--t-small)}
+.acc .teilen:hover{border-color:transparent;text-decoration:underline;text-underline-offset:.2em}
 /* Schmal: Karten nutzen fast das ganze Blatt (12 px Rand statt 22). */
 @media(max-width:560px){.bluete,.kapsel{margin-inline:-10px}}
 
@@ -77,6 +86,7 @@
 .bluete summary{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"nr knopf" "frage knopf";
   column-gap:var(--s4);row-gap:var(--s2);align-items:center;padding:var(--s4) var(--s4) var(--s4) var(--s6)}
 .bluete .nr{grid-area:nr}
+.bluete summary:not(:has(.nr)){grid-template-areas:"frage knopf"}
 .bluete .frage{grid-area:frage}
 .bluete .knopf{grid-area:knopf}
 .bluete .knopf{width:40px;height:40px;border:1px solid var(--line);background:var(--paper)}
@@ -105,7 +115,11 @@
 .faden summary{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"nr knopf" "frage knopf";
   column-gap:var(--s4);row-gap:var(--s2);align-items:center;padding:var(--s4) 0 var(--s4) var(--s4);min-height:var(--tap)}
 .faden .nr{grid-area:nr;color:var(--ak-ink)}
+.faden summary:not(:has(.nr)){grid-template-areas:"frage knopf"}
 .faden .frage{grid-area:frage;transition:color var(--acc-dauer)}
+/* Hover: ein Hauch Fläche zeigt, dass die ganze Zeile das Ziel ist – nicht nur
+   der Winkel. Sehr zurückhaltend (7 % Ton auf Papier), Fokus bleibt der Ring. */
+.faden summary:hover{background:color-mix(in srgb,var(--ak) 7%,var(--paper))}
 .faden summary:hover .frage,.faden .acc.is-open .frage{color:var(--ak-ink)}
 .faden .knopf{grid-area:knopf;color:var(--muted)}
 .faden summary:hover .knopf,.faden .acc.is-open .knopf{color:var(--ak-ink)}

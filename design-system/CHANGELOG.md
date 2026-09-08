@@ -16,6 +16,42 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — das Akkordeon lässt los: unabhängig, zeigbar, aus dem Fundament gefärbt (1.21.0)
+
+**Was.** Vier Änderungen am Modul Akkordeon, dazu das Aufgehen im Fundament:
+
+1. **Antworten öffnen unabhängig.** Eine neu geöffnete schliesst die anderen
+   nicht mehr; beliebige Kombinationen bleiben stehen. «Alle aufklappen» bleibt
+   und spiegelt jetzt den Stand der Liste, egal wie er zustande kam.
+2. **Die Nummer ist optional und entfällt.** Fehlt `span.nr`, wird die Zeile
+   einreihig (`summary:not(:has(.nr))`). Die Schau-Seite zeigt alle drei Kleider
+   ohne Zahlen.
+3. **Der Faden zeigt seine Bedienbarkeit.** Bei Hover legt sich ein Hauch Ton
+   (7 % auf Papier) unter die ganze Zeile – Winkel, Text und Fläche sind
+   dieselbe Aktion. Der Fokusring bleibt unverändert.
+4. **Jede Antwort ist teilbar.** Wer eine öffnet, bekommt ihre Adresse in die
+   Adresszeile (`replaceState`, kein Sprung, kein Eintrag in der
+   Zurück-Geschichte); am Fuss der Antwort steht ‹Link kopieren›.
+5. **Die Farbrollen kommen aus dem Fundament.** Die dreizehn eigenen
+   `[data-sek]`-Regeln des Moduls sind weg; es liest `--ton`, `--ton-dunkel`,
+   `--ton-hell`, `--ton-ink` (1.20.0) mit Gold als Fallback. Damit färbt auch ein
+   `data-sek` weiter oben im Dokument das Akkordeon mit, und Bühne und
+   Bau-Administration kommen gratis dazu.
+
+**Warum.** Der Auftraggeber, mit Belegen: **GOV.UK** setzt sein Akkordeon
+mehrfach offen, weil zusammengehörige Fragen sich vergleichen lassen müssen –
+Teilnahme und Mitgliedschaft liest man nebeneinander, nicht nacheinander. Das
+Einfach-offen war eine Annahme, keine Anforderung. **NN/g** stützt, Text und
+Zeichen dieselbe Aktion auslösen zu lassen; die Hover-Fläche macht sichtbar,
+was schon galt. Und Direktlinks, die nur beim Ankommen funktionieren, aber beim
+Öffnen keine Adresse hinterlassen, sind für den Leser nicht auffindbar.
+
+**Wirkung.** `akkordeon.css` verliert 13 Regeln an das Fundament (Atem);
+`akkordeon.js` verliert die Einfach-offen-Mechanik samt Sprungausgleich – der
+wurde nur gebraucht, weil sich etwas darüber schloss. Für Craft: der Anker
+kommt aus der **ID der Zeile**, nicht aus `loop.index`, damit ein geteilter Link
+gültig bleibt, wenn Fragen umsortiert werden.
+
 ## 8. September 2026 — ein Attribut färbt einen Abschnitt (1.20.0)
 
 **Was.** `data-sek` ist jetzt Fundament: `<div data-sek="nws">` setzt vier
