@@ -16,6 +16,37 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — das Familienmenü kommt ins Fundament (1.17.0)
+
+**Was.** Drei neue Dateien im Fundament: `familie.json` (die Goetheanum-Familie
+als eine Quelle — vier Gruppen, 32 Einträge, vier Sprachen), `familie.css` und
+`familie.js`. Sie erzeugen ein Menü, das von **jeder** Seite der Familie zurück
+ins Ganze führt — auch von fremden CMS aus, mit einer Zeile im Seitenfuss.
+Zwei Öffner auf dieselbe Schublade: der **Schweber**, eine runde Marke unten
+links, die bei Hover und Fokus zur Pille «Goetheanum» aufblüht (Hauptform, auf
+dem Schreibtisch wie am Telefon), und die **Familienzeile** über dem Seitenkopf.
+Die Schublade zeigt vier Gruppen — Goetheanum, Sektionen, Bereiche, Medien und
+Dienste — als **blosse Titel** (G03); Sektionen und farbtragende Bereiche
+führen einen Punkt in ihrer Identitätsfarbe (`--sek-*`, `--bereich-*`), der
+Standort trägt `aria-current` und Deutlich. Schauseite und Einbau-Rezept:
+`design-system/familie.html`.
+
+**Warum.** Die Familie läuft auf vier Unterbauten (Craft, WordPress, Uscreen,
+Squarespace — `docs/webfamilie-befund.md`); eine gemeinsame Kopfzeile liesse
+sich dort nirgends gleich einbauen, und ein zweiter Header griffe zu stark in
+gewachsene Layouts ein (Einwand des Auftraggebers, 8. September). Der Schweber
+braucht **kein** Layout: er liegt über der Seite, kostet zwei Zeilen und ist am
+Telefon im Daumenbereich. Radial aufblühende Icons («Bloom») wurden verworfen —
+sie tragen vier bis sechs Einträge, nicht dreissig, und Icons ohne Wort sind
+nicht lesbar (`docs/megamenu-konzept.md`, Abschnitt 6).
+
+**Wirkung.** Die Titel kommen aus `assets/goe-orgs.js`, die Reihenfolge und die
+Ziele von `goetheanum.ch/de/sektionen`; eine neue Sektion ist eine Zeile in
+`familie.json` und gilt überall am selben Tag. Der Schweber weicht aus, wenn
+der Tastaturfokus unter ihm liegt (WCAG 2.2, 2.4.11), verschwindet im Druck und
+hält sich an `prefers-reduced-motion`. Gemessen: ds-lint 0 Fehler,
+`barrierefreiheit.mjs` ohne Verstoss auf 390 und 1440 px.
+
 ## 7. September 2026 — zwei Bereiche mit eigener Farbe bekommen ihre Flächen (1.16.0)
 
 **Was.** Bühne (`--bereich-buehne`) und Bau-Administration (`--bereich-bauadmin`)

@@ -121,6 +121,16 @@
       "such": "Farben Identitätsfarben Sektionsfarben Bereichsfarben Varianten hell dunkel Kontrast Anwendung Hex RGB HSB CMYK Palette"
     },
     {
+      "slug": "familie",
+      "cat": "system",
+      "status": "beta",
+      "tag": "Prototyp",
+      "title": "Familienmenü",
+      "href": "design-system/familie.html",
+      "desc": "Von jeder Seite der Goetheanum-Familie zurück ins Ganze: die Marke unten links öffnet ein Menü mit allen Sektionen, Bereichen und Medien – aus einer Quelle, in vier Sprachen, mit zwei Zeilen einzubinden.",
+      "such": "Familienmenü Megamenü Navigation Sektionen Bereiche Familie Schweber Marke zurück Ganze goetheanum.ch Einbinden"
+    },
+    {
       "slug": "wallpaper",
       "cat": "anwendung",
       "status": "live",
