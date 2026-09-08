@@ -29,15 +29,28 @@
   var DACH_URL = "https://goetheanum.ch/";
 
   // Die Marke kommt aus dem Logo-Generator, nicht aus freier Hand (DS08):
-  // Layout ‹point› = Kreis, wie apps/logos/engine.js es erzeugt und
-  // assets/logos/goetheanum-icon-kreis.svg es ablegt. Weisse Kreisfläche,
-  // darüber EIN Pfad, der Aussenring und Zeichen zugleich trägt – nur so
-  // sitzt das Zeichen richtig im Kreis. Markenfest, kippt nicht mit dem Theme.
-  var PUNKT_PFAD = "m14.2058.0162C6.3781.0162.0326,6.3618.0326,14.1895s6.3456,14.1733,14.1732,14.1733,14.1732-6.3457,14.1732-14.1733S22.0335.0162,14.2058.0162Zm-4.5201,22.2477h-2.0254s.0042-.491.0066-.7086c.0056-.385-.1166-.7142-.3035-1.0304-.0873-.1481-.4924-.6616-.5701-.7878l1.9048-1.3533s.8921,1.49.9713,2.0125c.0801.5225.0162,1.8677.0162,1.8677Zm1.0417-.0007l-.0178-2.1782c-.0283-1.3208-3.025-5.0471-3.025-5.0471l3.389-3.9956s2.4766,3.9592,2.4766,4.8845l.0388,6.3364h-2.8616Zm8.866.0004h-4.8547l.0057-6.2604c.0024-.4053-.0695-.7837-.1957-1.1631-.3843-1.1567-3.127-6.8104-3.127-6.8104l8.1716-2.8082v17.0421Z";
-  function punkt(cls) {
-    return '<svg' + (cls ? ' class="' + cls + '"' : '') + ' viewBox="0 0 28.379 28.3628" aria-hidden="true" focusable="false">' +
-      '<circle cx="14.2058" cy="14.1895" r="14.1733" fill="#ffffff"/>' +   // ds-ok Logo: markenfest, keine Theme-Fläche
-      '<path d="' + PUNKT_PFAD + '" fill="#0061a9"/></svg>';               // ds-ok Logo: Markenblau aus dem Generator
+  // die Geometrie ist die des Kreis-Layouts (‹point›, apps/logos/engine.js) –
+  // Kreisfläche, darin das Zeichen an seinem Platz.
+  //
+  // Farbe folgt dem Theme, nicht dem Druck: gerechnet hält festes Markenblau
+  // auf dunklem Papier nur 2.76:1 und reisst damit unter die 3:1 für Grafik
+  // (B02). --blue hellt im Dunkel auf und trägt 6.69:1 – hell wie dunkel, und
+  // auch noch im Ruhezustand (3.12 bzw. 3.57). Der Schweber ist ein Bedien-
+  // element, das die Markenform trägt, kein gedrucktes Logo; darum Fläche in
+  // --paper und Zeichen in --blue statt zweier fester Werte.
+  //
+  // Leise statt laut: die gefüllte blaue Scheibe war auf schmalen Schirmen zu
+  // dominant (Befund Auftraggeber, 8. September). Jetzt trägt der Ring die
+  // Kontur, die Fläche ist Papier.
+  var ZEICHEN = [
+    "m11.3891,8.0134l8.1716-2.8083v17.0421h-4.8546l.0057-6.2604c.0024-.4052-.0696-.7838-.1957-1.1631-.3842-1.1566-3.1269-6.8104-3.1269-6.8104",
+    "m11.041,11.0259s2.4766,3.9592,2.4766,4.8845l.0388,6.3364h-2.8617l-.0178-2.1782c-.0283-1.3208-3.025-5.0471-3.025-5.0471l3.389-3.9956Z",
+    "m6.7607,19.7208l1.9048-1.3532s.8921,1.4899.9714,2.0124c.0801.5225.0162,1.8676.0162,1.8676h-2.0253s.004-.491.0065-.7085c.0057-.385-.1165-.7142-.3033-1.0304-.0874-.148-.4926-.6616-.5702-.7878"
+  ];
+  function punkt() {
+    return '<svg class="goe-fam-marke" viewBox="0 0 28.3465 28.3465" aria-hidden="true" focusable="false">' +
+      '<circle class="grund" cx="14.173" cy="14.173" r="13.5"/>' +
+      ZEICHEN.map(function (d) { return '<path d="' + d + '"/>'; }).join("") + '</svg>';
   }
   var PFEIL = '<svg class="pfeil" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
 
@@ -195,6 +208,11 @@
   }
 
   document.body.appendChild(schleier); document.body.appendChild(panel); document.body.appendChild(knopf);
+  // Anwesenheit melden: die Rückmelde-Pille der Kopfzeile (nav.css) sitzt unten
+  // mittig und überlappte den Schweber auf schmalen Schirmen ab 360 px abwärts
+  // (gemessen). Sie weicht aus, sobald diese Klasse steht. Fehlt nav.css – auf
+  // fremden Seiten der Normalfall – bleibt die Klasse folgenlos.
+  document.documentElement.classList.add("goe-hat-schweber");
 
   fetch(JSON_URL, { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (j) {
     DATA = j; zumKnopf(); render();

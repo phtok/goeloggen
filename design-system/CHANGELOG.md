@@ -16,6 +16,47 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — der Rückstand ist abgetragen, das Tor ist zu (1.19.0)
+
+**Was.** Die acht Funde der Erstmessung sind entschieden und behoben, und
+`verlinktes_css.stand` steht auf **‹tor›** — Verstösse in verlinktem CSS
+blockieren ab jetzt wie die der Seite selbst. Im Einzelnen: der **Kicker**
+(`.kicker`/`.kick`) und der **Code-Block** stehen auf `--t-micro` statt auf
+13.5 und 13 px; in der Kopfzeile tragen «← Übersicht», Tooltip, Toast und der
+Schubladenfuss dasselbe Token statt 12 und 13.5 px. Die Wortmarke nimmt
+`--muted` statt des harten `#8a9097`. Und der Schleier hinter der Schublade
+bekommt ein eigenes Token, **`--scrim`** — hell `rgba(20,24,28,.32)` wie
+bisher, dunkel `rgba(0,0,0,.52)`, weil er dort tiefer greifen muss.
+
+**Warum.** Beschluss des Auftraggebers, 8. September: «Kicker hoch.» Der
+Boden von 14 px gilt seit dem 10. Juli; base.css und nav.css liefen nur
+darunter, weil der Prüfer sie nie las. Die Wortmarke war nebenbei ein
+gerechneter Grenzfall: `#8a9097` hält auf getönter Fläche 3.04:1 — knapp über
+der 3:1 für grosse Schrift und ohne Reserve; `--muted` trägt 4.94:1.
+
+**Wirkung.** Score bleibt 100 % (63/63), jetzt aber mit geschlossenem Tor
+statt mit einem Rückstand daneben. Der Kicker steht auf 54 Seiten und wächst
+um einen halben Pixel — am gerenderten Blatt geprüft, das Bild bleibt.
+
+## 8. September 2026 — der Schweber wird leise (1.19.0)
+
+**Was.** Das Familien-Signet ist nicht mehr eine gefüllte blaue Scheibe mit
+ausgespartem Zeichen, sondern eine **Papierfläche mit Ring und Zeichen** in
+`--blue`. Die Geometrie bleibt die des Kreis-Layouts aus dem Logo-Generator.
+Dazu weicht die Rückmelde-Pille der Kopfzeile dem Schweber aus, sobald
+`familie.js` die Klasse `goe-hat-schweber` setzt.
+
+**Warum.** Befund des Auftraggebers: «auf mobil sehr laut, vielleicht ist das
+Blau zu viel.» Am schmalen Blatt stimmt das — 44 px volles Markenblau sind
+dort ein Drittel der Zeilenhöhe. Und gemessen überlappten Schweber und
+Rückmelde-Pille ab 360 px abwärts, eine gängige Telefonbreite.
+
+**Wirkung.** Die Farbe kommt aus dem Token, nicht aus dem Druck: festes
+Markenblau hält auf dunklem Papier nur **2.76:1** und reisst unter die 3:1 für
+Grafik (B02); `--blue` trägt 6.69:1 und im Ruhezustand noch 3.57:1. Der
+Schweber ist ein Bedienelement, das die Markenform trägt — kein gedrucktes
+Logo. Gemessen auf 320, 360, 390 und 420 px: keine Überlappung mehr.
+
 ## 8. September 2026 — der blinde Fleck: verlinktes CSS kommt unter die Lupe (1.18.0)
 
 **Was.** `tools/ds-lint.py` prüfte DS02 (Farben nur über Tokens), DS03
