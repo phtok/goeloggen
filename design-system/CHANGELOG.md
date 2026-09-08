@@ -16,6 +16,35 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — Orange darf nicht braun werden (1.21.0)
+
+**Was.** Die dunkle Fläche der Heilpädagogik steht heller und schöpft ihre
+Buntheit aus: **`--sek-hpise-dunkel` #AF5400** statt #804C2B (Weiss 5.13:1).
+Ihre Schrift bleibt eine Stufe dunkler, **`--sek-hpise-ink` #9A4900**
+(5.7 bis 6.3:1 auf Papier, Hauch und Karte) – damit die Tinte Reserve behält,
+wo die Fläche heller werden durfte. Dafür wird **`ink` eine eigene Rolle** im
+Rezept statt ein Zweitname der Fläche, und `tools/sek-varianten.py` bekommt
+einen **Ausnahmen-Block** mit Begründungspflicht. Nebenbei trifft
+`from_oklch()` den Gamut-Rand jetzt per Bisektion statt in 6-%-Schritten –
+bisher blieb eine Farbe je nach Zufall bis zu 6 % unter ihrer möglichen
+Buntheit, genau dort, wo sie diese am nötigsten braucht.
+
+**Warum.** Der Auftraggeber: «Das Orange wird unangenehm braun.» Er hat recht,
+und es liegt nicht am Rezept, sondern am Farbkörper: **Orange ist die einzige
+Sektionsfarbe, deren dunkle Form einen eigenen, abwertenden Namen trägt.**
+Dunkles Blau heisst Dunkelblau, dunkles Grün Dunkelgrün – dunkles Orange heisst
+Braun. Bei L 0.47 kann Orange höchstens C 0.121 tragen (gemessen, sRGB); satt
+oder nicht, es bleibt ein Braun. Eine Regel für alle hält die Reihe zusammen,
+aber der Farbkörper ist nicht rund: Wo die Regel die Identität frisst, braucht
+sie eine begründete Ausnahme. Entschieden wurde am Muster, nicht an der Zahl –
+sechs Kandidaten am Kopfband und die ganze Reihe je Kandidat.
+
+**Wirkung.** Die Heilpädagogik ist in der Reihe nun etwas heller als ihre
+Nachbarn. Das ist gewollt: Es gleicht aus, dass Orange bei gleicher Helligkeit
+dunkler und schmutziger wirkt als Blau oder Grün. Regel für neue Ausnahmen:
+**nur mit Muster und Beschluss** – der Block in `sek-varianten.py` sagt das.
+Alle 165 Kontraste halten weiterhin ≥ 4.5:1 in beiden Themes.
+
 ## 8. September 2026 — ein Attribut färbt einen Abschnitt (1.20.0)
 
 **Was.** `data-sek` ist jetzt Fundament: `<div data-sek="nws">` setzt vier
