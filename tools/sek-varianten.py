@@ -161,6 +161,20 @@ def css_block(vs):
         p = "--%s-%s" % (v["fam"], v["key"])
         z.append("  %s-hell:%s; %s-ink:%s;" % (p, v["hell_dk"], p, v["ink_dk"]))
     z.append("}")
+    # --- Zuordnung: ein data-sek färbt einen ganzen Abschnitt -----------------
+    # Ohne diese Schicht schreibt JEDE Komponente ihre eigenen dreizehn Zeilen
+    # (das Akkordeon tat es, 1.15.0). Vier Rollen genügen, und nur zwei davon
+    # sind Flächen – beide gerechnet: --ton-dunkel trägt Weiss, --ton-hell trägt
+    # --ink. Die Basis --ton bleibt Linie und Marke, nie Textgrund (B01).
+    z += ["", "/* Ton eines Abschnitts: <div data-sek=\"nws\"> färbt alles darin.",
+          "   --ton Linie/Marke · --ton-dunkel Fläche für Weiss · --ton-hell Hauch für",
+          "   dunklen Text · --ton-ink die Farbe als Schrift. Hausfall ist Gold. */",
+          "[data-sek]{--ton:var(--gold); --ton-dunkel:var(--gold-deep); "
+          "--ton-hell:color-mix(in srgb,var(--gold) 14%,var(--paper)); --ton-ink:var(--gold-ink);}"]
+    for v in vs:
+        p = "--%s-%s" % (v["fam"], v["key"])
+        z.append("[data-sek=\"%s\"]{--ton:var(%s); --ton-dunkel:var(%s-dunkel); "
+                 "--ton-hell:var(%s-hell); --ton-ink:var(%s-ink);}" % (v["key"], p, p, p, p))
     z.append(MARK_E)
     return "\n".join(z)
 

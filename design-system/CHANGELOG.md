@@ -16,6 +16,37 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 7. September 2026 — ein Attribut färbt einen Abschnitt (1.17.0)
+
+**Was.** `data-sek` ist jetzt Fundament: `<div data-sek="nws">` setzt vier
+Farbrollen für alles darin — **`--ton`** (Linie, Marke), **`--ton-dunkel`**
+(Fläche für Weiss), **`--ton-hell`** (Hauch für dunklen Text), **`--ton-ink`**
+(die Farbe als Schrift). Hausfall ist Gold, die Zuordnung erzeugt
+`tools/sek-varianten.py` mit. Dazu drei Bausteine in `base.css`, die diese
+Rollen abgreifen: **`.band`** (Kopfband, Weiss auf der dunklen Fläche),
+**`.kasten`** (Hinweis auf dem Hauch, Kante im dunklen Ton), **`.btn.ton`**
+(Knopf) sowie `.card.ton` (Kante) — und `.chip.ton` liest die Rollen jetzt
+ebenfalls, im Hausfall unverändert golden.
+
+**Warum.** Das Akkordeon (1.15.0) brauchte die Varianten und schrieb dafür
+**dreizehn Zeilen** Zuordnung in sein eigenes Modul; die Sektionsfarben-Seite
+tat dasselbe mit fünf Variablen im Skript. Jedes weitere Modul hätte
+abgeschrieben — und die Abschriften wären mit der nächsten Sektion
+auseinandergelaufen. **Eine Zuordnung, die jede Komponente wiederholt, gehört
+in die Schicht darunter.** Ebenso die Bausteine: Kopfband und Hinweiskasten
+standen lokal auf der Sektionsfarben-Seite, obwohl sie der eigentliche Grund
+für die hellen und dunklen Varianten sind.
+
+**Wirkung.** Das Akkordeon verliert seine dreizehn Zeilen und liest nur noch
+ab (`--ak: var(--ton, …)`, Modul-API unverändert); die Sektionsfarben-Seite
+verliert ihre gesamte lokale Farblogik und setzt ein Attribut. Neue Werkzeuge
+färben einen Abschnitt mit **einem** `data-sek` und bauen mit `.band`,
+`.kasten`, `.chip.ton`, `.btn.ton`. Der Knopf nimmt dabei immer `--ton-dunkel`
+mit Weiss, nie die Basisfarbe — die hält bei sechs Sektionen kein Weiss (B01).
+Nebenbei: Die Code-zum-Kopieren-Blöcke auf `akkordeon.html` waren Abschriften
+der Modul-Dateien und wären mit dieser Änderung falsch geworden; sie laden den
+Text jetzt aus der Quelle (Rückfall bleibt der statische Block).
+
 ## 7. September 2026 — zwei Bereiche mit eigener Farbe bekommen ihre Flächen (1.16.0)
 
 **Was.** Bühne (`--bereich-buehne`) und Bau-Administration (`--bereich-bauadmin`)
