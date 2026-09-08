@@ -1,0 +1,397 @@
+{
+ "$beschreibung": "Die Goetheanum-Familie als eine Quelle: Gruppen mit Titeln und Zielen für das Familienmenü (design-system/familie.js). Nur Titel, kein Beiwerk (G03). Sektionsnamen aus assets/goe-orgs.js, Reihenfolge wie auf goetheanum.ch/de/sektionen; Ziele von dort übernommen (Stand 7. September 2026). Farbe = Schlüssel eines Tokens (--sek-*, --bereich-*); ohne Farbe bleibt Markenblau. Neue Sektion oder neuer Bereich: hier eine Zeile ergänzen.",
+ "dach": {
+  "titel": {
+   "de": "Goetheanum",
+   "en": "Goetheanum",
+   "fr": "Goetheanum",
+   "es": "Goetheanum"
+  },
+  "href": "https://goetheanum.ch/de",
+  "hrefs": {
+   "en": "https://goetheanum.ch/en",
+   "fr": "https://goetheanum.ch/fr",
+   "es": "https://goetheanum.ch/es"
+  }
+ },
+ "gruppen": [
+  {
+   "id": "goetheanum",
+   "titel": {
+    "de": "Goetheanum",
+    "en": "Goetheanum",
+    "fr": "Goetheanum",
+    "es": "Goetheanum"
+   },
+   "eintraege": [
+    {
+     "key": "start",
+     "titel": {
+      "de": "Startseite",
+      "en": "Home",
+      "fr": "Accueil",
+      "es": "Inicio"
+     },
+     "href": "https://goetheanum.ch/de"
+    },
+    {
+     "key": "veranstaltungen",
+     "titel": {
+      "de": "Veranstaltungen",
+      "en": "Events",
+      "fr": "Événements",
+      "es": "Eventos"
+     },
+     "href": "https://goetheanum.ch/de/veranstaltungen"
+    },
+    {
+     "key": "hochschule",
+     "titel": {
+      "de": "Hochschule",
+      "en": "School of Spiritual Science",
+      "fr": "Université libre",
+      "es": "Universidad libre"
+     },
+     "href": "https://goetheanum.ch/de/hochschule"
+    },
+    {
+     "key": "sektionen",
+     "titel": {
+      "de": "Sektionen",
+      "en": "Sections",
+      "fr": "Sections",
+      "es": "Secciones"
+     },
+     "href": "https://goetheanum.ch/de/sektionen"
+    },
+    {
+     "key": "gesellschaft",
+     "titel": {
+      "de": "Gesellschaft",
+      "en": "Society",
+      "fr": "Société",
+      "es": "Sociedad"
+     },
+     "href": "https://goetheanum.ch/de/gesellschaft"
+    },
+    {
+     "key": "campus",
+     "titel": {
+      "de": "Campus",
+      "en": "Campus",
+      "fr": "Campus",
+      "es": "Campus"
+     },
+     "href": "https://goetheanum.ch/de/campus"
+    },
+    {
+     "key": "mitglied",
+     "titel": {
+      "de": "Mitglied werden",
+      "en": "Become a member",
+      "fr": "Devenir membre",
+      "es": "Hacerse miembro"
+     },
+     "href": "https://goetheanum.ch/de/gesellschaft/mitglied-werden"
+    },
+    {
+     "key": "spenden",
+     "titel": {
+      "de": "Spenden",
+      "en": "Donate",
+      "fr": "Faire un don",
+      "es": "Donar"
+     },
+     "href": "https://www.goetheanum.org/spenden"
+    }
+   ]
+  },
+  {
+   "id": "sektionen",
+   "titel": {
+    "de": "Sektionen",
+    "en": "Sections",
+    "fr": "Sections",
+    "es": "Secciones"
+   },
+   "eintraege": [
+    {
+     "key": "aas",
+     "titel": {
+      "de": "Allgemeine Anthroposophie",
+      "en": "General Anthroposophy",
+      "fr": "Anthroposophie générale",
+      "es": "Antroposofía General"
+     },
+     "href": "https://allgemeine-sektion.goetheanum.ch/de",
+     "farbe": "sek-aas"
+    },
+    {
+     "key": "js",
+     "titel": {
+      "de": "Jugendsektion",
+      "en": "Youth Section",
+      "fr": "Section jeunesse",
+      "es": "Jóvenes"
+     },
+     "href": "https://www.youthsection.org/",
+     "farbe": "sek-js"
+    },
+    {
+     "key": "nws",
+     "titel": {
+      "de": "Naturwissenschaften",
+      "en": "Natural Science",
+      "fr": "Sciences naturelles",
+      "es": "Ciencias Naturales"
+     },
+     "href": "http://www.forschungsinstitut.ch/",
+     "farbe": "sek-nws"
+    },
+    {
+     "key": "lws",
+     "titel": {
+      "de": "Landwirtschaft",
+      "en": "Agriculture",
+      "fr": "Agriculture",
+      "es": "Agricultura"
+     },
+     "href": "https://www.sektion-landwirtschaft.org/",
+     "farbe": "sek-lws"
+    },
+    {
+     "key": "mas",
+     "titel": {
+      "de": "Mathematik und Astronomie",
+      "en": "Mathematics and Astronomy",
+      "fr": "Mathématique-astronomie",
+      "es": "Matemático-Astronómica"
+     },
+     "href": "https://mas.goetheanum.org/",
+     "farbe": "sek-mas"
+    },
+    {
+     "key": "srmk",
+     "titel": {
+      "de": "Redende und Musizierende Künste",
+      "en": "Performing Arts",
+      "fr": "Arts de la parole et musique",
+      "es": "Artes de la Palabra y Música"
+     },
+     "href": "https://srmk.goetheanum.org/",
+     "farbe": "sek-srmk"
+    },
+    {
+     "key": "sbk",
+     "titel": {
+      "de": "Bildende Künste",
+      "en": "Visual Arts",
+      "fr": "Arts plastiques",
+      "es": "Artes Plásticas"
+     },
+     "href": "https://sbk.goetheanum.org/",
+     "farbe": "sek-sbk"
+    },
+    {
+     "key": "ssw",
+     "titel": {
+      "de": "Schöne Wissenschaften",
+      "en": "Literary Arts and Humanities",
+      "fr": "Belles-Lettres",
+      "es": "Bellas Artes"
+     },
+     "href": "https://ssw.goetheanum.org/",
+     "farbe": "sek-ssw"
+    },
+    {
+     "key": "ps",
+     "titel": {
+      "de": "Pädagogik",
+      "en": "Pedagogy",
+      "fr": "Pédagogie",
+      "es": "Pedagogía"
+     },
+     "href": "https://www.goetheanum-paedagogik.ch/",
+     "farbe": "sek-ps"
+    },
+    {
+     "key": "szw",
+     "titel": {
+      "de": "Sozialwissenschaften",
+      "en": "Social Sciences",
+      "fr": "Sciences sociales",
+      "es": "Ciencias Sociales"
+     },
+     "href": "https://social.goetheanum.ch/de",
+     "farbe": "sek-szw"
+    },
+    {
+     "key": "hpise",
+     "titel": {
+      "de": "Heilpädagogik und inklusive soziale Entwicklung",
+      "en": "Inclusive Social Development",
+      "fr": "Développement social inclusif",
+      "es": "Desarrollo Social Inclusivo"
+     },
+     "href": "https://inclusivesocial.goetheanum.ch/de",
+     "farbe": "sek-hpise"
+    },
+    {
+     "key": "ms",
+     "titel": {
+      "de": "Medizin",
+      "en": "Medicine",
+      "fr": "Médecine",
+      "es": "Medicina"
+     },
+     "href": "https://medsektion.goetheanum.ch/",
+     "farbe": "sek-ms"
+    }
+   ]
+  },
+  {
+   "id": "bereiche",
+   "titel": {
+    "de": "Bereiche",
+    "en": "Divisions",
+    "fr": "Domaines",
+    "es": "Áreas"
+   },
+   "eintraege": [
+    {
+     "key": "buehne",
+     "titel": {
+      "de": "Bühne",
+      "en": "Stage",
+      "fr": "Scène",
+      "es": "Escenario"
+     },
+     "href": "https://www.goetheanum-buehne.ch/",
+     "farbe": "bereich-buehne"
+    },
+    {
+     "key": "gaertnerei",
+     "titel": {
+      "de": "Gartenpark",
+      "en": "Garden park",
+      "fr": "Parc",
+      "es": "Parque"
+     },
+     "href": "https://gaertnerei.goetheanum.org/",
+     "farbe": "sek-lws"
+    },
+    {
+     "key": "dokumentation",
+     "titel": {
+      "de": "Dokumentation",
+      "en": "Documentation",
+      "fr": "Documentation",
+      "es": "Documentación"
+     },
+     "href": "https://goetheanum.ch/de/hochschule#dokumentation"
+    },
+    {
+     "key": "studium",
+     "titel": {
+      "de": "Studium und Weiterbildung",
+      "en": "Study and training",
+      "fr": "Études et formation",
+      "es": "Estudios y formación"
+     },
+     "href": "https://goetheanum.ch/de/hochschule#studium-und-weiterbildung"
+    },
+    {
+     "key": "buchhandlung",
+     "titel": {
+      "de": "Buchhandlung",
+      "en": "Bookshop",
+      "fr": "Librairie",
+      "es": "Librería"
+     },
+     "href": "https://www.goetheanum-buchhandlung.ch/"
+    },
+    {
+     "key": "verlag",
+     "titel": {
+      "de": "Verlag",
+      "en": "Publishing house",
+      "fr": "Éditions",
+      "es": "Editorial"
+     },
+     "href": "https://goetheanum-verlag.ch/"
+    }
+   ]
+  },
+  {
+   "id": "medien",
+   "titel": {
+    "de": "Medien und Dienste",
+    "en": "Media and services",
+    "fr": "Médias et services",
+    "es": "Medios y servicios"
+   },
+   "eintraege": [
+    {
+     "key": "wochenschrift",
+     "titel": {
+      "de": "Das Goetheanum",
+      "en": "Das Goetheanum",
+      "fr": "Das Goetheanum",
+      "es": "Das Goetheanum"
+     },
+     "href": "https://dasgoetheanum.com/"
+    },
+    {
+     "key": "tv",
+     "titel": {
+      "de": "Goetheanum.tv",
+      "en": "Goetheanum.tv",
+      "fr": "Goetheanum.tv",
+      "es": "Goetheanum.tv"
+     },
+     "href": "https://goetheanum.tv/"
+    },
+    {
+     "key": "weltweit",
+     "titel": {
+      "de": "Anthroposophie weltweit",
+      "en": "Anthroposophy Worldwide",
+      "fr": "Anthroposophie dans le monde",
+      "es": "Antroposofía en el mundo"
+     },
+     "href": "https://anthroposophie.org/de"
+    },
+    {
+     "key": "podcast",
+     "titel": {
+      "de": "Podcast",
+      "en": "Podcast",
+      "fr": "Podcast",
+      "es": "Podcast"
+     },
+     "href": "https://goetheanum.transistor.fm/"
+    },
+    {
+     "key": "medienstelle",
+     "titel": {
+      "de": "Medienstelle",
+      "en": "Press office",
+      "fr": "Service de presse",
+      "es": "Oficina de prensa"
+     },
+     "href": "https://goetheanum.ch/de/medienstelle"
+    },
+    {
+     "key": "login",
+     "titel": {
+      "de": "Login",
+      "en": "Login",
+      "fr": "Connexion",
+      "es": "Acceso"
+     },
+     "href": "https://goetheanum.org/login"
+    }
+   ]
+  }
+ ]
+}
