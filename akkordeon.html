@@ -714,16 +714,22 @@
    -----------------------------------------------------------------------------
    Radius bewusst DEZENT (--r-card, 14 px): die frühere Kapselform lief auf halbe
    Zeilenhöhe und drückte den Text in die Mitte – runde Ecken fressen Satzspiegel.
-   Nach dem Vorbild der Blüte liest sich der Text auf PAPIER, nicht auf der
-   Fläche: geschlossen liegt die Kapsel auf dem Farbhauch, offen wird die Frage
-   zum Band (oben gerundet, unten bündig) und die Antwort darunter steht auf
-   Papier – eine gefüllte Fläche wiegt schwerer als eine umrissene, und Mengentext
-   braucht den ruhigsten Grund, den es gibt. Einzug wie in der Blüte (--s6),
-   Frage und Antwort auf derselben Kante. */
+   Nach dem Vorbild der Blüte wird die Fläche unter dem Text LEICHTER, statt zu
+   verschwinden: geschlossen liegt die Kapsel auf dem vollen Farbhauch, offen
+   wird die Frage zum Band (oben gerundet, unten bündig) und die Antwort steht
+   auf einem halben Hauch – eine gefüllte Fläche wiegt schwerer als eine
+   umrissene, und Mengentext braucht den ruhigeren Grund. Einzug wie in der
+   Blüte (--s6), Frage und Antwort auf derselben Kante. */
 .kapsel{display:grid;gap:var(--s4)}
 .kapsel .acc{background:var(--ak-hell);border-radius:var(--r-card);overflow:hidden;
   transition:background var(--acc-dauer)}
-.kapsel .acc.is-open{background:var(--paper);box-shadow:inset 0 0 0 1px var(--line-soft)}
+/* Offen liegt der Text auf einem HAUCH – nicht auf Papier und nicht auf der
+   vollen Fläche: 55 % des ohnehin sehr leisen --ton-hell über Papier. Genug,
+   dass die Antwort als eigenes Feld liest, wenig genug, dass der Satz nicht
+   trägt, was er nicht muss. Geschlossen bleibt die volle Fläche – so ist der
+   offene Grund immer der ruhigere von beiden. */
+.kapsel .acc.is-open{background:color-mix(in srgb,var(--ak-hell) 55%,var(--paper));
+  box-shadow:inset 0 0 0 1px var(--line-soft)}
 .kapsel summary{display:flex;align-items:center;gap:var(--s4);padding:var(--s4) var(--s5) var(--s4) var(--s6);
   border-radius:var(--r-card);transition:background var(--acc-dauer),color var(--acc-dauer)}
 .kapsel summary:hover{background:color-mix(in srgb,var(--ak) 10%,var(--ak-hell))}
