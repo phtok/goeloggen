@@ -16,6 +16,21 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — der Text der Kapsel liegt auf einem halben Hauch (1.21.4)
+
+**Was.** Die geöffnete Kapsel steht nicht mehr auf blankem Papier, sondern auf
+**55 % von `--ton-hell` über Papier** – einem halben Hauch. Geschlossen bleibt
+die volle Fläche; der offene Grund ist damit immer der ruhigere von beiden.
+
+**Warum.** Der Auftraggeber: «Ich fände es schon gut, wenn der Text ganz ganz
+leicht hinterlegt wäre.» Papier war eine Stufe zu weit – die Antwort verlor
+ihre Zugehörigkeit zur Karte und stand einfach auf der Seite. Ein halber Hauch
+gibt ihr wieder ein Feld, ohne dass der Satz trägt, was er nicht muss.
+
+**Wirkung.** `akkordeon.css`, Kleid Kapsel. Die Reihe der Gründe von schwer nach
+leicht: Band (`--ton-dunkel`) → geschlossene Kapsel (`--ton-hell`) → offener
+Lesegrund (halber Hauch) → Papier. **Je mehr Text, desto leiser der Grund.**
+
 ## 8. September 2026 — die Schritt-Kugel sitzt auf der Versalmitte (1.21.3)
 
 **Was.** `.step-num` wird um **0.26em ihrer eigenen Grösse angehoben** (rein
