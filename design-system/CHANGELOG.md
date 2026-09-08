@@ -16,6 +16,24 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — die Kapsel lernt von der Blüte: Text auf Papier (1.21.2)
+
+**Was.** Die geöffnete Kapsel wechselt ihren Grund: die Antwort steht auf
+**Papier** (mit der Haarlinie der Blüte), nicht mehr auf dem Farbhauch. Der
+Hauch bleibt der Grund der **geschlossenen** Kapsel; offen trägt nur noch das
+Band die Farbe. Einzug und Innenabstand übernehmen die Masse der Blüte
+(`--s6` links, `--s4` oben und unten am Band).
+
+**Warum.** Der Auftraggeber: «Die Blüte ist ein gutes Vorbild.» Ihre Leichtigkeit
+kommt nicht vom Radius, sondern vom **Grund**: eine gefüllte Fläche wiegt
+schwerer als eine umrissene, und Mengentext braucht den ruhigsten Grund, den es
+gibt. Damit behält die Kapsel ihr Merkmal – die farbige Fläche –, gibt es aber
+dort auf, wo gelesen wird.
+
+**Wirkung.** `akkordeon.css`, Kleid Kapsel. Regel dahinter: **die Farbe zeigt
+den Zustand, das Papier trägt den Text.** Geschlossen = Hauch, offen = Band auf
+Papier.
+
 ## 8. September 2026 — die Kapsel wird ruhig: dezenter Radius, mehr Luft (1.21.1)
 
 **Was.** Das Kleid Kapsel verliert seine Kapselform: der Radius fällt von einer
