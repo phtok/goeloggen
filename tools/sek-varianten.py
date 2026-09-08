@@ -34,10 +34,16 @@ TOKENS_CSS = os.path.join(ROOT, "design-system", "tokens.css")
 TOKENS_JSON = os.path.join(ROOT, "design-system", "tokens.json")
 
 # --- Rezept (die Zahlen, über die entschieden wurde) ------------------------
+# «spanne» ist die Breite, mit der die Helligkeit der BASIS mitwirkt: 0 heisst,
+# alle landen auf derselben Helligkeit, 0.14 heisst, die hellste Basis steht
+# 0.07 höher und die dunkelste 0.07 tiefer als der Mittelwert. Ohne sie kollabiert
+# die Reihe: Sechs der dreizehn Sektionen sind blau und unterscheiden sich vor
+# allem durch ihre Helligkeit – zwingt man sie auf eine, sind sie dieselbe Farbe.
 REZEPT = {
-    # Fläche dunkel: L 0.47 → Weiss ≥ 5.5:1 auf jeder Sektion; C höchstens 0.085
-    # (matt: kräftige Basistöne haben 0.13–0.20). Faktor hält leise Basistöne leise.
-    "dunkel":   {"L": 0.47, "C_max": 0.085, "C_faktor": 0.62},
+    # Fläche dunkel: Mitte L 0.47, Weiss hält überall ≥ 5.3:1. Buntheit vier
+    # Fünftel der Basis («halb satt», Beschluss 8. September 2026) – matt genug
+    # fürs Auge, bunt genug zum Unterscheiden.
+    "dunkel":   {"L": 0.47, "spanne": 0.14, "C_max": 0.20, "C_faktor": 0.80},
     # Fläche hell (Hellmodus): ein Farbhauch, kaum mehr als Papier – L 0.965, Buntheit
     # sehr niedrig (Beschluss 7. 9. 2026: «zarter, weniger leuchtend»). --ink ≥ 13:1,
     # der dunkle Ton ≥ 6:1.
@@ -46,13 +52,13 @@ REZEPT = {
     # über --paper (#16191c, L ≈ 0.20) und --soft (L ≈ 0.24).
     "hell_dk":  {"L": 0.27, "C_max": 0.035, "C_faktor": 0.25},
     # Text im Dunkelmodus: heller Hauch der Sektion – ≥ 4.5:1 auf hell_dk UND --paper.
-    "ink_dk":   {"L": 0.82, "C_max": 0.090, "C_faktor": 0.60},
+    "ink_dk":   {"L": 0.82, "spanne": 0.10, "C_max": 0.120, "C_faktor": 0.70},
     # Die Sektion als SCHRIFT im Hellmodus. Bisher war das ein Zweitname der dunklen
     # Fläche; seit dem Kürbis-Beschluss ist es eine eigene Rolle, weil Fläche und
     # Schrift verschiedene Anforderungen haben: auf der Fläche steht Weiss, die
     # Schrift steht auf hellem Grund. Gleiche Zahlen wie «dunkel» – ausser wo eine
     # Ausnahme das eine hebt und das andere lässt.
-    "ink":      {"L": 0.47, "C_max": 0.085, "C_faktor": 0.62},
+    "ink":      {"L": 0.42, "spanne": 0.14, "C_max": 0.20, "C_faktor": 0.80},
 }
 
 # --- Ausnahmen: wo die Regel am Farbkreis scheitert --------------------------
@@ -71,11 +77,13 @@ REZEPT = {
 # sondern der Deckel zu streng. Beschluss des Auftraggebers, 8. September 2026
 # (Muster D «Korallenrot»). Fläche und Schrift trennt derselbe Abstand wie bei
 # der Heilpädagogik: fünf Hundertstel Helligkeit.
+# Beide Ausnahmen setzen ihre Helligkeit selbst und nehmen darum KEINE Spanne:
+# ihr Wert ist am Muster beschlossen, nicht gerechnet.
 AUSNAHMEN = {
-    "hpise": {"dunkel": {"L": 0.55, "C_max": 0.20, "C_faktor": 1.0},
-              "ink":    {"L": 0.50, "C_max": 0.20, "C_faktor": 1.0}},
-    "js":    {"dunkel": {"L": 0.52, "C_max": 0.20, "C_faktor": 1.0},
-              "ink":    {"L": 0.47, "C_max": 0.20, "C_faktor": 1.0}},
+    "hpise": {"dunkel": {"L": 0.55, "spanne": 0, "C_max": 0.20, "C_faktor": 1.0},
+              "ink":    {"L": 0.50, "spanne": 0, "C_max": 0.20, "C_faktor": 1.0}},
+    "js":    {"dunkel": {"L": 0.52, "spanne": 0, "C_max": 0.20, "C_faktor": 1.0},
+              "ink":    {"L": 0.47, "spanne": 0, "C_max": 0.20, "C_faktor": 1.0}},
 }
 # Bewusst KEIN Sonderfall je Sektion: eine Regel für alle, damit die Reihe stimmt.
 
@@ -154,11 +162,13 @@ def kontrast(a, b):
     return (lb + 0.05) / (la + 0.05)
 
 # --- Ableitung ----------------------------------------------------------------
-def ableiten(hexv, rolle, key=None):
+def ableiten(hexv, rolle, key=None, pos=0.0):
+    """pos ist der Platz der Basis-Helligkeit in der Reihe (-0.5 dunkelste bis
+    +0.5 hellste). Über «spanne» wirkt er auf die abgeleitete Helligkeit."""
     r = dict(REZEPT[rolle])
     r.update(AUSNAHMEN.get(key, {}).get(rolle, {}))
     L, C, H = to_oklch(hexv)
-    return from_oklch(r["L"], min(C * r["C_faktor"], r["C_max"]), H)
+    return from_oklch(r["L"] + r.get("spanne", 0) * pos, min(C * r["C_faktor"], r["C_max"]), H)
 
 # Zwei Familien: Sektionen (--sek-*) und Bereiche mit eigener Farbe (--bereich-<key>).
 # --bereich ohne Schlüssel ist der Standard (= Markenblau) und bekommt keine Varianten.
@@ -174,11 +184,17 @@ def basis_lesen():
     return out
 
 def varianten():
+    basis = basis_lesen()
+    Ls = [to_oklch(v)[0] for _, _, v, _ in basis]
+    lo, hi = min(Ls), max(Ls)
+    spanne = (hi - lo) or 1.0
+    def pos(v):
+        return (to_oklch(v)[0] - lo) / spanne - 0.5
     return [{"fam": f, "key": k, "basis": v, "name": d,
-             "dunkel": ableiten(v, "dunkel", k), "hell": ableiten(v, "hell", k),
-             "hell_dk": ableiten(v, "hell_dk", k), "ink_dk": ableiten(v, "ink_dk", k),
-             "ink": ableiten(v, "ink", k)}
-            for f, k, v, d in basis_lesen()]
+             "dunkel": ableiten(v, "dunkel", k, pos(v)), "hell": ableiten(v, "hell", k, pos(v)),
+             "hell_dk": ableiten(v, "hell_dk", k, pos(v)), "ink_dk": ableiten(v, "ink_dk", k, pos(v)),
+             "ink": ableiten(v, "ink", k, pos(v))}
+            for f, k, v, d in basis]
 
 MARK_A = "/* @sek-varianten:start – GENERIERT von tools/sek-varianten.py, nicht von Hand ändern */"
 MARK_E = "/* @sek-varianten:ende */"

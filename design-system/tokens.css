@@ -237,38 +237,38 @@
    Rezept: OKLCH, gleiche Helligkeit je Rolle (dunkel L .47 · hell L .935), Buntheit
    gedeckelt (matt). Gerechnet: tools/sek-varianten.py · geprüft: tools/check-on-sek.py. */
 :root{
-  --sek-goetheanum-dunkel:#335e89; --sek-goetheanum-hell:#ebf5ff; --sek-goetheanum-ink:#335e89;
-  --sek-aas-dunkel:#79486a; --sek-aas-hell:#feeef8; --sek-aas-ink:#79486a;
-  --sek-ps-dunkel:#4f597d; --sek-ps-hell:#eff3ff; --sek-ps-ink:#4f597d;
-  --sek-ms-dunkel:#59557e; --sek-ms-hell:#f3f2ff; --sek-ms-ink:#59557e;
-  --sek-nws-dunkel:#36655d; --sek-nws-hell:#e8f7f4; --sek-nws-ink:#36655d;
-  --sek-lws-dunkel:#426636; --sek-lws-hell:#ecf7e9; --sek-lws-ink:#426636;
-  --sek-sbk-dunkel:#7c4761; --sek-sbk-hell:#ffeef5; --sek-sbk-ink:#7c4761;
-  --sek-ssw-dunkel:#48588b; --sek-ssw-hell:#eff3ff; --sek-ssw-ink:#48588b;
-  --sek-szw-dunkel:#83454e; --sek-szw-hell:#ffeff0; --sek-szw-ink:#83454e;
+  --sek-goetheanum-dunkel:#125189; --sek-goetheanum-hell:#ebf5ff; --sek-goetheanum-ink:#004378;
+  --sek-aas-dunkel:#7c3d6a; --sek-aas-hell:#feeef8; --sek-aas-ink:#6d2f5c;
+  --sek-ps-dunkel:#394471; --sek-ps-hell:#eff3ff; --sek-ps-ink:#2d3762;
+  --sek-ms-dunkel:#4f477c; --sek-ms-hell:#f3f2ff; --sek-ms-ink:#413a6d;
+  --sek-nws-dunkel:#1d6157; --sek-nws-hell:#e8f7f4; --sek-nws-ink:#075349;
+  --sek-lws-dunkel:#3e7826; --sek-lws-hell:#ecf7e9; --sek-lws-ink:#2f6a14;
+  --sek-sbk-dunkel:#914b6e; --sek-sbk-hell:#ffeef5; --sek-sbk-ink:#813d5f;
+  --sek-ssw-dunkel:#3f5194; --sek-ssw-hell:#eff3ff; --sek-ssw-ink:#324384;
+  --sek-szw-dunkel:#a32c46; --sek-szw-hell:#ffeff0; --sek-szw-ink:#921939;
   --sek-js-dunkel:#bd2525; --sek-js-hell:#ffefed; --sek-js-ink:#ab0815;
-  --sek-srmk-dunkel:#3e5b88; --sek-srmk-hell:#edf4ff; --sek-srmk-ink:#3e5b88;
-  --sek-mas-dunkel:#415a8a; --sek-mas-hell:#eef4ff; --sek-mas-ink:#415a8a;
+  --sek-srmk-dunkel:#3b629e; --sek-srmk-hell:#edf4ff; --sek-srmk-ink:#2d548e;
+  --sek-mas-dunkel:#2c4a88; --sek-mas-hell:#eef4ff; --sek-mas-ink:#1f3c78;
   --sek-hpise-dunkel:#af5400; --sek-hpise-hell:#fff0e7; --sek-hpise-ink:#9a4900;
-  --bereich-buehne-dunkel:#655a3d; --bereich-buehne-hell:#f7f3e9; --bereich-buehne-ink:#655a3d;
-  --bereich-bauadmin-dunkel:#80484b; --bereich-bauadmin-hell:#ffefef; --bereich-bauadmin-ink:#80484b;
+  --bereich-buehne-dunkel:#6c5d37; --bereich-buehne-hell:#f7f3e9; --bereich-buehne-ink:#5e4f2a;
+  --bereich-bauadmin-dunkel:#873f43; --bereich-bauadmin-hell:#ffefef; --bereich-bauadmin-ink:#773136;
 }
 :root[data-theme="dark"]{
-  --sek-goetheanum-hell:#192837; --sek-goetheanum-ink:#9cc9f8;
-  --sek-aas-hell:#31202c; --sek-aas-ink:#e8b1d5;
-  --sek-ps-hell:#222632; --sek-ps-ink:#b7c3ea;
-  --sek-ms-hell:#262433; --sek-ms-ink:#c2beec;
-  --sek-nws-hell:#1b2a27; --sek-nws-ink:#a0d0c6;
-  --sek-lws-hell:#1e2b1a; --sek-lws-ink:#a8d299;
-  --sek-sbk-hell:#332028; --sek-sbk-ink:#ecb0cb;
-  --sek-ssw-hell:#202638; --sek-ssw-ink:#afc2fb;
-  --sek-szw-hell:#361f22; --sek-szw-ink:#f8acb4;
-  --sek-js-hell:#36201d; --sek-js-ink:#f9aea5;
-  --sek-srmk-hell:#1c2737; --sek-srmk-ink:#a5c6f8;
-  --sek-mas-hell:#1e2637; --sek-mas-ink:#a8c5fa;
-  --sek-hpise-hell:#342216; --sek-hpise-ink:#f3b48e;
-  --bereich-buehne-hell:#2a261c; --bereich-buehne-ink:#d0c3a5;
-  --bereich-bauadmin-hell:#342021; --bereich-bauadmin-ink:#f0b1b2;
+  --sek-goetheanum-hell:#192837; --sek-goetheanum-ink:#8bc0f7;
+  --sek-aas-hell:#31202c; --sek-aas-ink:#eaaad4;
+  --sek-ps-hell:#222632; --sek-ps-ink:#a5b2e0;
+  --sek-ms-hell:#262433; --sek-ms-ink:#b9b4e9;
+  --sek-nws-hell:#1b2a27; --sek-nws-ink:#94ccc1;
+  --sek-lws-hell:#1e2b1a; --sek-lws-ink:#aae197;
+  --sek-sbk-hell:#332028; --sek-sbk-ink:#fbb5d5;
+  --sek-ssw-hell:#202638; --sek-ssw-ink:#a8beff;
+  --sek-szw-hell:#361f22; --sek-szw-ink:#ffaeb6;
+  --sek-js-hell:#36201d; --sek-js-ink:#ffbeb6;
+  --sek-srmk-hell:#1c2737; --sek-srmk-ink:#abccff;
+  --sek-mas-hell:#1e2637; --sek-mas-ink:#98b9f6;
+  --sek-hpise-hell:#342216; --sek-hpise-ink:#ffc6a4;
+  --bereich-buehne-hell:#2a261c; --bereich-buehne-ink:#d5c6a2;
+  --bereich-bauadmin-hell:#342021; --bereich-bauadmin-ink:#f5acad;
 }
 
 /* Ton eines Abschnitts: <div data-sek="nws"> färbt alles darin.
