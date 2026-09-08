@@ -64,9 +64,18 @@ REZEPT = {
 # (L 0.50), damit sie auf Papier und auf dem eigenen Hauch Reserve behält.
 # Beschluss des Auftraggebers, 8. September 2026 (Muster C «Kürbis»).
 # Neue Ausnahme nur mit Muster und Beschluss – nicht nach Gefühl.
+# Die Jugendsektion trifft dieselbe Wand von der anderen Seite: Ihr Korallenrot
+# KANN bei L 0.47 viel Buntheit tragen (C 0.191 möglich) – der Deckel nahm ihr
+# 56 Prozent und machte daraus ein stumpfes Rostbraun, das neben der
+# Sozialwissenschaft fast verschwand. Hier ist also nicht der Farbkörper eng,
+# sondern der Deckel zu streng. Beschluss des Auftraggebers, 8. September 2026
+# (Muster D «Korallenrot»). Fläche und Schrift trennt derselbe Abstand wie bei
+# der Heilpädagogik: fünf Hundertstel Helligkeit.
 AUSNAHMEN = {
     "hpise": {"dunkel": {"L": 0.55, "C_max": 0.20, "C_faktor": 1.0},
               "ink":    {"L": 0.50, "C_max": 0.20, "C_faktor": 1.0}},
+    "js":    {"dunkel": {"L": 0.52, "C_max": 0.20, "C_faktor": 1.0},
+              "ink":    {"L": 0.47, "C_max": 0.20, "C_faktor": 1.0}},
 }
 # Bewusst KEIN Sonderfall je Sektion: eine Regel für alle, damit die Reihe stimmt.
 
