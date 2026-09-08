@@ -16,6 +16,27 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — die Kapsel wird ruhig: dezenter Radius, mehr Luft (1.21.1)
+
+**Was.** Das Kleid Kapsel verliert seine Kapselform: der Radius fällt von einer
+halben Zeilenhöhe (rund 46 px) auf **`--r-card`, 14 px**. Dafür mehr
+Innenabstand — Kopfzeile und Antwort tragen `--s5` (schmal `--s4`), Frage und
+Antwort stehen links auf **derselben Kante** (gemessen 139 px breit, 28 px
+schmal). Offen wird die Frage zu einem **Band**: oben gerundet, unten bündig in
+die Karte laufend; die Karte selbst bleibt rund. Der Abstand zwischen den Karten
+wächst von `--s3` auf `--s4`.
+
+**Warum.** Der Auftraggeber: die Kapsel hat bisher keinen Fürsprecher gefunden,
+und der Text wirkte **eingequetscht**. Zu Recht — eine starke Rundung frisst
+Satzspiegel: an den Ecken bleibt vom Innenabstand nichts übrig, der Text
+rückt in die Mitte und die Fläche drückt von zwei Seiten. Dazu kam ein
+Fehler aus dem Wegfall der Nummer: die Antwort behielt ihren Einzug von
+`--s3 + 2.2em + --s4` und stand damit rund 50 px weiter innen als die Frage.
+
+**Wirkung.** `akkordeon.css`, Kleid Kapsel. Regel dahinter: **Rundung und
+Innenabstand hängen zusammen** — wer den Radius erhöht, muss den Innenabstand
+mitziehen, sonst verliert der Satz an den Ecken, was er in der Mitte hat.
+
 ## 8. September 2026 — das Akkordeon lässt los: unabhängig, zeigbar, aus dem Fundament gefärbt (1.21.0)
 
 **Was.** Vier Änderungen am Modul Akkordeon, dazu das Aufgehen im Fundament:

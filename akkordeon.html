@@ -710,13 +710,20 @@
   .faden .acc-inner{margin-left:var(--s3);padding-right:var(--s2)}
 }
 
-/* --- Kleid 3 · Kapsel: Kapseln auf dem Farbhauch; die offene wird zur Pille --- */
-.kapsel{display:grid;gap:var(--s3)}
-.kapsel .acc{--kapsel-r:calc(var(--s3) + 1.1em + var(--s3));background:var(--ak-hell);border-radius:var(--kapsel-r)}
-.kapsel summary{display:flex;align-items:center;gap:var(--s4);padding:var(--s3) var(--s4) var(--s3) var(--s3);
-  border-radius:var(--kapsel-r);transition:background var(--acc-dauer),color var(--acc-dauer)}
+/* --- Kleid 3 · Kapsel: ruhige Felder auf dem Farbhauch; die offene trägt ein Band
+   -----------------------------------------------------------------------------
+   Radius bewusst DEZENT (--r-card, 14 px): die frühere Kapselform lief auf halbe
+   Zeilenhöhe und drückte den Text in die Mitte – runde Ecken fressen Satzspiegel.
+   Dafür mehr Innenabstand: Frage und Antwort stehen links auf derselben Kante
+   (--s5), oben und unten grosszügig. Offen wird die Frage zum Band – oben
+   gerundet, unten bündig in die Karte laufend; die Karte selbst bleibt rund. */
+.kapsel{display:grid;gap:var(--s4)}
+.kapsel .acc{background:var(--ak-hell);border-radius:var(--r-card)}
+.kapsel summary{display:flex;align-items:center;gap:var(--s4);padding:var(--s5);
+  border-radius:var(--r-card);transition:background var(--acc-dauer),color var(--acc-dauer)}
 .kapsel summary:hover{background:color-mix(in srgb,var(--ak) 10%,var(--ak-hell))}
-.kapsel .acc.is-open summary{background:var(--ak-dunkel);color:var(--on-accent)}
+.kapsel .acc.is-open summary{background:var(--ak-dunkel);color:var(--on-accent);
+  border-end-start-radius:0;border-end-end-radius:0}
 .kapsel .nr{flex:0 0 auto;display:grid;place-items:center;width:2.2em;height:2.2em;border-radius:var(--r-pill);
   background:var(--paper);color:var(--ak-ink);font-weight:var(--w-deutlich);
   transition:background var(--acc-dauer),color var(--acc-dauer)}
@@ -726,10 +733,10 @@
 .kapsel .frage{flex:1 1 auto}
 .kapsel .knopf{color:var(--ak-ink)}
 .kapsel .acc.is-open .knopf{color:var(--on-accent);transform:rotate(180deg)}
-.kapsel .acc-inner{padding:var(--s5) var(--s6) var(--s6) calc(var(--s3) + 2.2em + var(--s4))}
+.kapsel .acc-inner{padding:var(--s5) var(--s5) var(--s6)}
 @media(max-width:560px){
-  .kapsel summary{gap:var(--s3);padding:var(--s3) var(--s4) var(--s3) var(--s3)}
-  .kapsel .acc-inner{padding:var(--s5) var(--s5) var(--s6)}
+  .kapsel summary{gap:var(--s3);padding:var(--s4)}
+  .kapsel .acc-inner{padding:var(--s4) var(--s4) var(--s5)}
 }
 
 @media print{
