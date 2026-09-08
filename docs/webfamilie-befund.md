@@ -1,5 +1,11 @@
 # Webfamilie-Befund: Was das Design-System von den vier grossen Goetheanum-Seiten lernt — und sie von ihm
 
+> **Stand 8. September 2026:** Die vier Nachbauten in `perspektiven/` sind
+> **überholt** und im Manifest geparkt — sie zeigen einen Stand, den es so
+> nicht mehr gibt. Der Befund unten (Systemfehler, Lücken, was zu übernehmen
+> ist) gilt weiter als Analyse; die Nachbauten als Vorzeigestücke nicht.
+> Ein neuer Angang steht aus (Beschluss Auftraggeber).
+
 Stand: 6. Juli 2026 · Untersucht: goetheanum.ch · dasgoetheanum.com · goetheanum.tv ·
 anthroposophie.org (Roh-HTML/CSS ausgewertet, Kontraste gerechnet, nicht geschätzt).
 

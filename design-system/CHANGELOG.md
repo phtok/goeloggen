@@ -16,7 +16,7 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
-## 7. September 2026 — ein Attribut färbt einen Abschnitt (1.17.0)
+## 8. September 2026 — ein Attribut färbt einen Abschnitt (1.20.0)
 
 **Was.** `data-sek` ist jetzt Fundament: `<div data-sek="nws">` setzt vier
 Farbrollen für alles darin — **`--ton`** (Linie, Marke), **`--ton-dunkel`**
@@ -43,9 +43,228 @@ verliert ihre gesamte lokale Farblogik und setzt ein Attribut. Neue Werkzeuge
 färben einen Abschnitt mit **einem** `data-sek` und bauen mit `.band`,
 `.kasten`, `.chip.ton`, `.btn.ton`. Der Knopf nimmt dabei immer `--ton-dunkel`
 mit Weiss, nie die Basisfarbe — die hält bei sechs Sektionen kein Weiss (B01).
+Beim Messen fiel nebenbei ein alter Fehler auf der Sektionsfarben-Seite auf:
+die Kontrastzeile auf der Basisfläche trug `opacity:.92`. Bei den sechs
+Sektionen, deren Vordergrund ein knapp gerechneter dunkler Ton ist (4.6:1),
+drückte die Deckkraft ihn **unter** die 4.5:1 — gefunden von
+`tools/barrierefreiheit.mjs`, nicht vom Auge. **Deckkraft ist eine
+Kontraständerung**: auf einem Wert, der ohne Reserve gerechnet ist, hat sie
+nichts zu suchen.
+
 Nebenbei: Die Code-zum-Kopieren-Blöcke auf `akkordeon.html` waren Abschriften
 der Modul-Dateien und wären mit dieser Änderung falsch geworden; sie laden den
 Text jetzt aus der Quelle (Rückfall bleibt der statische Block).
+## 8. September 2026 — der Rückstand ist abgetragen, das Tor ist zu (1.19.0)
+
+**Was.** Die acht Funde der Erstmessung sind entschieden und behoben, und
+`verlinktes_css.stand` steht auf **‹tor›** — Verstösse in verlinktem CSS
+blockieren ab jetzt wie die der Seite selbst. Im Einzelnen: der **Kicker**
+(`.kicker`/`.kick`) und der **Code-Block** stehen auf `--t-micro` statt auf
+13.5 und 13 px; in der Kopfzeile tragen «← Übersicht», Tooltip, Toast und der
+Schubladenfuss dasselbe Token statt 12 und 13.5 px. Die Wortmarke nimmt
+`--muted` statt des harten `#8a9097`. Und der Schleier hinter der Schublade
+bekommt ein eigenes Token, **`--scrim`** — hell `rgba(20,24,28,.32)` wie
+bisher, dunkel `rgba(0,0,0,.52)`, weil er dort tiefer greifen muss.
+
+**Warum.** Beschluss des Auftraggebers, 8. September: «Kicker hoch.» Der
+Boden von 14 px gilt seit dem 10. Juli; base.css und nav.css liefen nur
+darunter, weil der Prüfer sie nie las. Die Wortmarke war nebenbei ein
+gerechneter Grenzfall: `#8a9097` hält auf getönter Fläche 3.04:1 — knapp über
+der 3:1 für grosse Schrift und ohne Reserve; `--muted` trägt 4.94:1.
+
+**Wirkung.** Score bleibt 100 % (63/63), jetzt aber mit geschlossenem Tor
+statt mit einem Rückstand daneben. Der Kicker steht auf 54 Seiten und wächst
+um einen halben Pixel — am gerenderten Blatt geprüft, das Bild bleibt.
+
+## 8. September 2026 — der Schweber wird leise (1.19.0)
+
+**Was.** Das Familien-Signet ist nicht mehr eine gefüllte blaue Scheibe mit
+ausgespartem Zeichen, sondern eine **Papierfläche mit Ring und Zeichen** in
+`--blue`. Die Geometrie bleibt die des Kreis-Layouts aus dem Logo-Generator.
+Dazu weicht die Rückmelde-Pille der Kopfzeile dem Schweber aus, sobald
+`familie.js` die Klasse `goe-hat-schweber` setzt.
+
+**Warum.** Befund des Auftraggebers: «auf mobil sehr laut, vielleicht ist das
+Blau zu viel.» Am schmalen Blatt stimmt das — 44 px volles Markenblau sind
+dort ein Drittel der Zeilenhöhe. Und gemessen überlappten Schweber und
+Rückmelde-Pille ab 360 px abwärts, eine gängige Telefonbreite.
+
+**Wirkung.** Die Farbe kommt aus dem Token, nicht aus dem Druck: festes
+Markenblau hält auf dunklem Papier nur **2.76:1** und reisst unter die 3:1 für
+Grafik (B02); `--blue` trägt 6.69:1 und im Ruhezustand noch 3.57:1. Der
+Schweber ist ein Bedienelement, das die Markenform trägt — kein gedrucktes
+Logo. Gemessen auf 320, 360, 390 und 420 px: keine Überlappung mehr.
+
+## 8. September 2026 — der blinde Fleck: verlinktes CSS kommt unter die Lupe (1.18.0)
+
+**Was.** `tools/ds-lint.py` prüfte DS02 (Farben nur über Tokens), DS03
+(Grössen), DS04 (kanonische Rollen), DS05 (Hervorhebung) und DS07
+(Theme/harte Flächen) bisher **nur** in den `<style>`-Blöcken und
+`style="…"`-Attributen der HTML-Datei selbst — verlinkte `*.css`-Dateien
+blieben aussen vor (nur DS10/`check_tokens` löste sie schon auf). Eine Seite,
+deren ganze Gestalt in einer eigenen CSS-Datei steckt, meldete darum «0
+Fehler», ohne dass dort je geprüft wurde. `tools/ds-lint.py` löst jetzt jeden
+`<link href="…css">` einer Seite über denselben Weg wie DS10 auf (repo-eigene
+Pfade, externe/absolute URLs aussen vor) und prüft die fünf Regeln auch dort —
+jede CSS-Datei genau **einmal** pro Lauf (nicht 60-mal für 60 einbindende
+Seiten), mit der Zeile in der CSS-Datei selbst und einer Liste, welche
+Seite(n) sie einbinden. `design-system/*.css` definiert die kanonischen
+Rollen selbst und ist darum von DS04 (‹lokal redefiniert›) ausgenommen — DS02/
+03/05/07 gelten dort unverändert. Nebenbei behoben, weil das Mitlesen von
+`tokens.css` es sofort sichtbar machte: CSS-Kommentare wurden vor dieser
+Änderung nicht aus den Regel-Körpern entfernt. Zwei Folgen, beide gefixt: (1)
+ein Kommentar direkt hinter einer Custom-Property-Definition
+(`--blue-solid:#0061a9; /* … */`) verklebte mit der nächsten Deklaration und
+liess DS02 diese Fundament-Farben fälschlich als harte Werte melden; (2) ein
+mehrzeiliger Kommentar vor einer Regel landete im erfassten Selektor und sein
+Leerraum liess die Nachfahren-Ausnahme («`.download .btn` ist Verortung, keine
+Neudefinition») fälschlich auch auf **bare** Selektoren wie `.lede{…}`
+zuschlagen — DS04 hat dadurch **fünf** echte, bisher unsichtbare
+Rollen-Redefinitionen in eigenen `<style>`-Blöcken übersehen (siehe Wirkung).
+Dieselbe Verwechslung liess DS05 `.hint a:hover{text-decoration:underline}`
+(Link-Hover, keine Betonung) fälschlich als Verstoss zählen; DS05 prüft
+`underline` jetzt wie DS04 nur auf bare/compound-Selektoren, Nachfahren-
+Selektoren (`.hint a`) sind Link-Konvention und ausdrücklich erlaubt.
+
+**Warum.** Befund Konrads (Korrektor), 8. September 2026, am neuen
+Familienmenü: `design-system/familie.css` (127 Zeilen, komplette Gestalt der
+Schublade) lief unsichtbar am Checker vorbei — der Score war eine Behauptung,
+keine Messung. Jede künftige Seite mit eigener CSS-Datei hätte denselben
+blinden Fleck genutzt, ob absichtlich oder aus Versehen.
+
+**Berichtend, noch kein Tor.** Sofort blockierend gestellt fiele der Score von
+100 % (63/63) auf **5 % (3/63)** — und niemand im Haus könnte mehr committen,
+weil `base.css` und `nav.css` in 60 bzw. 52 der 63 Seiten stecken. Darum
+dasselbe Vorgehen wie bei **DS08** (Barrierefreiheit, 8. August): die
+Erstmessung **berichtet**, sie sperrt nicht. Der Prüfer weist die Funde in
+verlinktem CSS getrennt aus (‹dazu berichtend›), das Gate bleibt grün, und der
+Stand steht im Vertrag unter `verlinktes_css.stand`. Ist der Rückstand
+entschieden und behoben, wird dort ‹berichtend› auf ‹tor› gedreht — eine
+Zeile, wie bei DS08 das `continue-on-error`. Ein Tor, das vom ersten Tag an
+rot steht, hütet nichts.
+
+**Der Rückstand.** `design-system/base.css` und `design-system/nav.css`
+(Fundament) tragen acht echte, bisher unsichtbare Verstösse, die jede Seite
+erbt, die sie einbindet. Sie liefen seit der Anhebung des Grössen-Bodens
+(10. Juli, 13 → 14 px) unbemerkt mit, weil der Prüfer nur ins HTML sah:
+- `base.css:305` `.kicker,.kick{…font-size:13.5px…}` — DS03 fehler, 0.5px
+  unter dem 14px-Floor (B03). Die kanonische Kicker-Rolle selbst.
+- `base.css:336` `.code.block,pre.code{…font-size:13px}` — DS03 fehler.
+- `nav.css:52` `.dsnav .brand .wm{…color:#8a9097…}` — DS02 fehler, hartes Hex
+  statt Token.
+- `nav.css:55` `.dsnav .back{…font-size:13.5px…}` — DS03 fehler.
+- `nav.css:95` `.dsnav [data-tip]::after{…font-size:12px…}` (Tooltip) — DS03
+  fehler.
+- `nav.css:115` `.dsnav-backdrop{…background:rgba(20,24,28,.32)…}` — DS02
+  fehler, rgba() ohne Token.
+- `nav.css:184` `.dsnav-toast{…font-size:13px…}` — DS03 fehler.
+- `nav.css:214` `.dsnav-drawer .foot{…font-size:12px…}` — DS03 fehler.
+
+Dazu ein echter Treffer in Seiten-CSS: `apps/sommer-zaehler/campaign.css:11`
+`.lead-title{…font-size:clamp(32px,7vw,58px);…}` — DS04 hinweis, redefiniert
+die kanonische Rolle lokal (legitim gemeldet, wie base.css/nav.css NICHT
+ausgenommen, weil es keine Fundament-Quelle ist). Und fünf durch den
+Kommentar-Fix neu sichtbare DS04-Treffer in eigenen `<style>`-Blöcken:
+`design-system/index.html:79` (`pre.code`), `schrift-vergleich.html:27` und
+`werkzeug.html:22` (je `.lede`), `sektionsfarben.html:71` und `:82`
+(`.chip.sek`, `.btn.sek`).
+
+**Bewusst nicht getan.** `base.css`/`nav.css` selbst NICHT angefasst — die
+Floor-Unterschreitungen (Kicker, Tooltip, Toast, Fusszeile) und die zwei
+harten Farbwerte betreffen 50+ Seiten auf einen Schlag und brauchen eine
+Design-Entscheidung (grösser setzen? andere Rolle? neues `--scrim`-Token für
+die Backdrop-Rgba?), keine mechanische Korrektur — `tools/ds-fix.py` kennt
+für Grössen ohnehin keine automatische Anhebung. Ebenso nicht angefasst:
+`apps/sommer-zaehler/campaign.css:11` und die fünf frisch sichtbaren
+`<style>`-Redefinitionen — alle sechs sind `hinweis`, blockieren das Gate
+nicht, verdienen aber denselben Blick vor der nächsten Anfassung dieser
+Seiten. `tools/ds-fix.py` prüft nach wie vor nur die HTML-Datei selbst — auf
+verlinkte CSS-Dateien nicht erweitert (nicht beauftragt, siehe Auftrag). ⚑
+Alle acht Fehler + sechs Hinweise liegen zur Entscheidung bei Philipp.
+
+## 8. September 2026 — das Familienmenü kommt ins Fundament (1.17.0)
+
+**Was.** Drei neue Dateien im Fundament: `familie.json` (die Goetheanum-Familie
+als eine Quelle — vier Gruppen, 32 Einträge, vier Sprachen), `familie.css` und
+`familie.js`. Sie erzeugen ein Menü, das von **jeder** Seite der Familie zurück
+ins Ganze führt — auch von fremden CMS aus, mit einer Zeile im Seitenfuss.
+Zwei Öffner auf dieselbe Schublade: der **Schweber**, eine runde Marke unten
+links, die bei Hover und Fokus zur Pille «Goetheanum» aufblüht (Hauptform, auf
+dem Schreibtisch wie am Telefon), und die **Familienzeile** über dem Seitenkopf.
+Die Schublade zeigt vier Gruppen — Goetheanum, Sektionen, Bereiche, Medien und
+Dienste — als **blosse Titel** (G03); Sektionen und farbtragende Bereiche
+führen einen Punkt in ihrer Identitätsfarbe (`--sek-*`, `--bereich-*`), der
+Standort trägt `aria-current` und Deutlich. Schauseite und Einbau-Rezept:
+`design-system/familie.html`.
+
+**Warum.** Die Familie läuft auf vier Unterbauten (Craft, WordPress, Uscreen,
+Squarespace — `docs/webfamilie-befund.md`); eine gemeinsame Kopfzeile liesse
+sich dort nirgends gleich einbauen, und ein zweiter Header griffe zu stark in
+gewachsene Layouts ein (Einwand des Auftraggebers, 8. September). Der Schweber
+braucht **kein** Layout: er liegt über der Seite, kostet zwei Zeilen und ist am
+Telefon im Daumenbereich. Radial aufblühende Icons («Bloom») wurden verworfen —
+sie tragen vier bis sechs Einträge, nicht dreissig, und Icons ohne Wort sind
+nicht lesbar (`docs/megamenu-konzept.md`, Abschnitt 6).
+
+**Wirkung.** Die Titel kommen aus `assets/goe-orgs.js`, die Reihenfolge und die
+Ziele von `goetheanum.ch/de/sektionen`; eine neue Sektion ist eine Zeile in
+`familie.json` und gilt überall am selben Tag. Der Schweber weicht aus, wenn
+der Tastaturfokus unter ihm liegt (WCAG 2.2, 2.4.11), verschwindet im Druck und
+hält sich an `prefers-reduced-motion`. Gemessen: ds-lint 0 Fehler,
+`barrierefreiheit.mjs` ohne Verstoss auf 390 und 1440 px.
+
+## 8. September 2026 — die Zahl folgt dem Rahmen (1.16.3)
+
+**Was.** In der Blüte nimmt die Nummer die Sektionsfarbe an, sobald der Rahmen
+sie annimmt – bei Hover und im offenen Zustand; geschlossen bleibt sie grau.
+
+**Warum.** Auf Frage des Auftraggebers. Vorher wechselte nur der Ring die
+Farbe, die Zahl blieb stumm; jetzt bewegen sich beide zusammen und der offene
+Eintrag liest sich als ein Zeichen statt als zwei. Die Zahl trägt die **Tinte**
+(`--ak-ink`), nicht die Basisfarbe: die ist Linie, nicht Schrift (B02).
+Gemessen am gerenderten Blatt: 7.04:1 hell, 9.86:1 dunkel.
+
+**Wirkung.** `akkordeon.css`, Kleid Blüte. Faden und Kapsel tragen die Farbe an
+der Zahl schon; damit ist die Regel in allen drei Kleidern dieselbe: **das
+farbige Zeichen der Anwahl trägt die Zahl mit.**
+
+## 7. September 2026 — die Nummer als Marke, in der Hausschrift (1.16.2)
+
+**Was.** Der Griff aus dem Faden gilt jetzt auch für die **Blüte**: die Nummer
+steht als eigene Zeile über der Frage, Frage und Antwort laufen bündig (die
+Antwort verliert ihren Einzug von `2ch + s4`). Dazu in **allen drei Kleidern**:
+die Ziffer läuft in der **Hausschrift** (Klar, in der Kapsel Deutlich) statt in
+der Lese-Grotesk, und nach der Zahl steht mehr Luft (`row-gap` von 2 px auf
+`--s2`). Im Kreis der Kapsel sitzt sie mit dem vermessenen 8%-Versatz aus
+`.step-num`.
+
+**Warum.** Der Auftraggeber wollte den Faden-Griff auch in der Blüte und die
+Zahlen «aus der Goeschrift». Die Schrift-Grenze schickt Zahlen in die
+Lese-Grotesk, wo sie **Daten** sind – Tabelle, Wert, Formular. Diese Ziffer ist
+aber keine Angabe, sondern eine **Marke**: sie zählt die Frage, wie die
+Schritt-Nummer `.step-num` einen Schritt zählt, und die trägt in `base.css`
+längst die Hausschrift. Gleiche Rolle, gleiche Schrift.
+
+**Wirkung.** `akkordeon.css`: `.acc .nr` in `--font-display`, Gewicht Klar
+(kleine Hausschrift nie Leise), Ziffern weiterhin dicktengleich (G25). Regel
+für neue Bausteine: **zählende Marken tragen die Hausschrift, messende Werte
+die Lese-Grotesk.** Nur die Blüte behält ihre Zahl in Grau – dort trägt der
+Ring die Farbe, im Faden die Zahl.
+
+## 7. September 2026 — Faden: die Nummer über der Frage (1.16.1)
+
+**Was.** Im Kleid Faden steht die Nummer als eigene, leise Zeile über der
+Frage (Sektionstinte, `--t-small`); Frage und Antwort laufen bündig in
+derselben Einrückung. Vorher stand die Zahl in einer eigenen Spalte links.
+
+**Warum.** Der Auftraggeber: die eingerückte Zahl «schafft eine typografische
+Kluft» – auf dem Handy stand die Antwort links bündig, die Frage aber hinter
+der Zahl eingerückt. Die Zahl über der Frage schliesst die Kluft und bleibt
+mit 15 px in der Tinte unauffällig; am Blatt geprüft bei 420 und 1280 px.
+
+**Wirkung.** `akkordeon.css`, Kleid Faden: `summary` als Raster mit den
+Bereichen `nr` / `frage` / `knopf`; Blüte und Kapsel behalten ihre Zahl in
+Spalte bzw. Kreis.
 
 ## 7. September 2026 — zwei Bereiche mit eigener Farbe bekommen ihre Flächen (1.16.0)
 

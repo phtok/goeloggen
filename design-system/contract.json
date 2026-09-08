@@ -1,6 +1,6 @@
 {
   "$schema": "https://goetheanum/design-system/contract.schema.json",
-  "version": "1.17.0",
+  "version": "1.20.0",
   "titel": "Goetheanum Design-System – Struktur-Vertrag",
   "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
   "geltungsbereich": {
@@ -164,6 +164,20 @@
     ],
     "hinweis": "Ausnahme mit  # ds-ok  auf der Zeile ratifizieren. rel=icon (Favicon) ist der einzige vorgesehene Ort der Kachel."
   },
+  "css_pruefung": {
+    "regel": "DS02, DS03, DS04, DS05 und DS07 prüfen nicht nur <style>-Blöcke und style=…-Attribute der Seite selbst, sondern auch repo-eigene *.css-Dateien, die eine Seite per <link href> einbindet – derselbe Auflösungsweg, den DS10/check_tokens für Custom Properties schon nutzte. Externe/absolute URLs bleiben aussen vor: was nicht im Repo liegt, kann die Maschine nicht mitlesen.",
+    "ds_ids": [
+      "DS02",
+      "DS03",
+      "DS04",
+      "DS05",
+      "DS07"
+    ],
+    "seit": "1.18.0",
+    "ausloeser": "Befund Konrad (Korrektor), 8. September 2026: eine Seite, deren ganze Gestalt in einer eigenen verlinkten CSS-Datei steht (design-system/familie.css), meldete 0 Fehler – geprüft wurde dort aber nichts. Der Score war Behauptung statt Messung.",
+    "einmal_pro_datei": "Jede verlinkte CSS-Datei wird pro Lauf GENAU EINMAL geprüft, unabhängig davon, wie viele Seiten sie einbinden (base.css/nav.css stecken in über 50 der 63 Seiten) – die Meldung nennt die Zeile in der CSS-Datei selbst und, welche Seite(n) sie einbinden. Für den Score gilt eine Seite trotzdem als nicht konform, wenn eine eingebundene Datei einen Fehler trägt: das gerenderte Blatt hat ihn.",
+    "ausnahme_fundament": "design-system/*.css definiert die kanonischen Rollen (.kicker/.btn/.hint/…) selbst – DS04 (‹lokal redefiniert›) gilt darum nur für Seiten-CSS, das diese Rollen NUTZT (z. B. apps/…/campaign.css), nicht für ihre eigene Quelle. DS02/03/05/07 gelten im Fundament unverändert (Custom-Property-Definitionen --x:… und @font-face bleiben wie in DS02 vorgesehen ausgenommen)."
+  },
   "score": {
     "definition": "konforme Seiten / geprüfte Seiten. Konform = kein Verstoss der Schwere ‹fehler›.",
     "ziel": 1.0
@@ -205,5 +219,12 @@
     ],
     "ausnahme": "var(--x, rueckfall) mit Rueckfallwert ist Absicht und wird nicht geprueft.",
     "hinweis": "CSS loest ein unbekanntes Token still zu nichts auf – aus padding:var(--s5) wird padding:0, ohne Fehlermeldung. Ein Wert, der schweigend verschwindet, ist schlimmer als einer, der bricht: niemand sucht danach."
+  },
+  "verlinktes_css": {
+    "regel": "DS02/DS03/DS04/DS05/DS07 gelten auch für die repo-eigenen CSS-Dateien, die eine Seite per <link> einbindet – nicht nur für ihre <style>-Blöcke. Was das gerenderte Blatt trägt, wird geprüft.",
+    "werkzeug": "tools/ds-lint.py (Abschnitt ‹verlinkte CSS›)",
+    "stand": "tor",
+    "begruendung": "Erstmessung am 8. September 2026: acht Verstösse in base.css und nav.css, die seit der Anhebung des Grössen-Bodens (10. Juli, 13 → 14 px) unsichtbar mitliefen, weil der Prüfer nur ins HTML sah. Sie steckten in 52 bis 60 der 63 Seiten, darum lief die Regel zunächst berichtend – wie DS08 es vormacht. Noch am selben Tag entschieden und behoben; seither Tor.",
+    "tor_schliessen": "Erledigt am 8. September 2026: Rückstand abgetragen, ‹stand› auf ‹tor› gedreht."
   }
 }

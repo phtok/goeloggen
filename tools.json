@@ -121,6 +121,16 @@
       "such": "Farben Identitätsfarben Sektionsfarben Bereichsfarben Varianten hell dunkel Kontrast Anwendung Hex RGB HSB CMYK Palette"
     },
     {
+      "slug": "familie",
+      "cat": "system",
+      "status": "beta",
+      "tag": "Prototyp",
+      "title": "Familienmenü",
+      "href": "design-system/familie.html",
+      "desc": "Von jeder Seite der Goetheanum-Familie zurück ins Ganze: die Marke unten links öffnet ein Menü mit allen Sektionen, Bereichen und Medien – aus einer Quelle, in vier Sprachen, mit zwei Zeilen einzubinden.",
+      "such": "Familienmenü Megamenü Navigation Sektionen Bereiche Familie Schweber Marke zurück Ganze goetheanum.ch Einbinden"
+    },
+    {
       "slug": "wallpaper",
       "cat": "anwendung",
       "status": "live",
@@ -263,11 +273,11 @@
     {
       "slug": "perspektiven",
       "cat": "schau",
-      "status": "beta",
+      "status": "geparkt",
       "tag": "Webfamilie",
       "title": "Perspektiven (Webfamilie)",
       "href": "design-system/#perspektiven",
-      "desc": "Die Startseiten von goetheanum.ch, dasgoetheanum.com, goetheanum.tv und anthroposophie.org – vollständig nachgebaut im Design-System, mit echten Inhalten und Sprung zum Original.",
+      "desc": "Die vier Startseiten der Webfamilie, nachgebaut im Design-System – Inhalte vom 6. Juli 2026. Überholt: die Nachbauten bilden einen Stand ab, den es so nicht mehr gibt; ein neuer Angang steht aus (Beschluss Auftraggeber, 8. September 2026). Erreichbar zum Nachschlagen, nicht gepflegt.",
       "such": "Perspektiven Webfamilie Testseiten goetheanum.ch dasgoetheanum goetheanum.tv anthroposophie Befund"
     },
     {

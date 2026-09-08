@@ -49,10 +49,10 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 .dsnav .beta-chip{font-weight:var(--w-strong);color:var(--gold-ink);border-color:currentColor;flex:0 0 auto}
 .dsnav .brand .lockup{height:38px;width:auto;display:block}
 .dsnav .brand .mk{width:24px;height:24px;border-radius:6px;display:block}
-.dsnav .brand .wm{font-family:var(--font);font-weight:var(--w-text);font-size:24px;line-height:1;color:#8a9097;letter-spacing:.005em}
+.dsnav .brand .wm{font-family:var(--font);font-weight:var(--w-text);font-size:24px;line-height:1;color:var(--muted);letter-spacing:.005em}
 
 /* „← Übersicht" – nur in der Generator-Variante sichtbar */
-.dsnav .back{display:none;align-items:center;gap:6px;color:var(--muted);font-size:13.5px;text-decoration:none}
+.dsnav .back{display:none;align-items:center;gap:6px;color:var(--muted);font-size:var(--t-micro);text-decoration:none}
 .dsnav.is-werkzeug .back{display:inline-flex}
 .dsnav .back:hover{color:var(--gold-ink)}
 
@@ -92,7 +92,7 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 /* Sofort-Tooltips (native title-Hovers erscheinen erst nach ~1s) */
 .dsnav [data-tip]{position:relative}
 .dsnav [data-tip]::after{content:attr(data-tip);position:absolute;top:calc(100% + 7px);right:0;z-index:60;
-  background:var(--ink);color:var(--paper);font-size:12px;line-height:1;padding:5px 9px;border-radius:7px;
+  background:var(--ink);color:var(--paper);font-size:var(--t-micro);line-height:1;padding:5px 9px;border-radius:7px;
   white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s ease .1s}
 .dsnav [data-tip]:hover::after,.dsnav [data-tip]:focus-visible::after{opacity:1}
 
@@ -112,7 +112,7 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 }
 
 /* --- Schublade ------------------------------------------------------------- */
-.dsnav-backdrop{position:fixed;inset:0;background:rgba(20,24,28,.32);opacity:0;visibility:hidden;
+.dsnav-backdrop{position:fixed;inset:0;background:var(--scrim);opacity:0;visibility:hidden;
   transition:opacity .18s,visibility .18s;z-index:45}
 .dsnav-backdrop.open{opacity:1;visibility:visible}
 
@@ -178,10 +178,17 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
   width:30px;height:30px;border-radius:var(--r-pill);flex:0 0 auto}
 .dsnav-invite .x:hover{color:var(--ink);background:var(--soft)}
 @media(max-width:480px){.dsnav-invite .ask{padding:7px 12px}}
+/* Liegt der Familien-Schweber unten in der Ecke (design-system/familie.js),
+   rückt die Einblendung eine Zeile höher: auf schmalen Schirmen überlappten
+   die beiden sonst ab 360 px abwärts – am gerenderten Blatt gemessen,
+   8. September 2026. */
+@media(max-width:480px){
+  :root.goe-hat-schweber .dsnav-invite{bottom:calc(var(--s4) + var(--tap) + var(--s2))}
+}
 
 /* Toast für den unsichtbaren Intern-Schalter */
 .dsnav-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);
-  padding:8px 16px;border-radius:var(--r-pill);font-size:13px;opacity:0;visibility:hidden;
+  padding:8px 16px;border-radius:var(--r-pill);font-size:var(--t-micro);opacity:0;visibility:hidden;
   transition:opacity .2s,visibility .2s;z-index:60}
 .dsnav-toast.show{opacity:1;visibility:visible}
 
@@ -211,5 +218,5 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 .dsnav-link .st{margin-left:auto;flex:0 0 auto;font-family:var(--font-text);
   font-size:var(--t-micro);color:var(--muted)}
 
-.dsnav-drawer .foot{padding:var(--s4) 22px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;flex:0 0 auto}
+.dsnav-drawer .foot{padding:var(--s4) 22px;border-top:1px solid var(--line);color:var(--muted);font-size:var(--t-micro);flex:0 0 auto}
 .dsnav-drawer .foot a{color:var(--gold-ink);text-decoration:none}

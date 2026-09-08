@@ -32,7 +32,9 @@
   .sek .f.basis{grid-column:1/-1;min-height:120px}
   .sek .f .rolle{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body)}
   .sek .f .hx{font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.02em}
-  .sek .f .k{opacity:.92}
+  /* Keine Deckkraft auf der Kontrastzeile: sechs Sektionen tragen einen dunklen
+     Ton mit knapp 4.6:1 – 92 % Deckkraft drückten ihn unter die 4.5:1 (B02,
+     gefunden von tools/barrierefreiheit.mjs, nicht vom Auge). */
   @media(min-width:520px){
     .sek .farben{grid-template-columns:2fr 1fr 1fr}
     .sek .f.basis{grid-column:auto;min-height:132px}

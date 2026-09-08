@@ -559,8 +559,12 @@
 .acc .frage{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);
   line-height:1.25;letter-spacing:0;text-wrap:balance;hyphens:manual}
 @media(max-width:560px){.acc .frage{font-size:var(--t-body);text-wrap:pretty}}
-.acc .nr{font-family:var(--font-text);font-variant-numeric:tabular-nums lining-nums;
-  font-feature-settings:&quot;tnum&quot;,&quot;lnum&quot;;font-size:var(--t-small);color:var(--muted)}
+/* Die Nummer ist eine MARKE, kein Datum – darum die Hausschrift (wie .step-num in
+   base.css), nicht die Lese-Grotesk. Kleine Hausschrift nie Leise: Klar ist das
+   Minimum. Ziffern bleiben dicktengleich und untereinander (G25). */
+.acc .nr{font-family:var(--font-display);font-weight:var(--w-text);
+  font-variant-numeric:tabular-nums lining-nums;font-feature-settings:&quot;tnum&quot;,&quot;lnum&quot;;
+  font-size:var(--t-small);color:var(--muted);line-height:1.2}
 /* Der Knopf ist nur das Zeichen (Winkel); das Fingerziel ist die ganze Zeile. */
 .acc .knopf{flex:0 0 auto;display:grid;place-items:center;width:24px;height:24px;
   border-radius:var(--r-pill);color:var(--ak-ink);
@@ -583,40 +587,52 @@
 .bluete .acc+.acc{margin-top:var(--s3)}
 .bluete .acc:hover{border-color:var(--ak)}
 .bluete .acc.is-open{border-color:var(--ak);box-shadow:var(--shadow-card)}
-.bluete summary{display:flex;align-items:center;gap:var(--s4);padding:var(--s4) var(--s4) var(--s4) var(--s6)}
-.bluete .nr{flex:0 0 auto;min-width:2ch;text-align:right}
-.bluete .frage{flex:1 1 auto}
+/* Die Zahl folgt dem Rahmen: mit ihm grau, mit ihm farbig – aber in der TINTE
+   (--ak-ink, ≥4.5:1 auf Papier), nicht in der Basisfarbe: die trägt als Linie,
+   nicht als Schrift (B02). Ein Merkmal wechselt, die Farbe (G01). */
+.bluete .acc:hover .nr,.bluete .acc.is-open .nr{color:var(--ak-ink)}
+/* Nummer als eigene Zeile über der Frage (wie im Faden): Frage und Antwort laufen
+   bündig, die Zahl bleibt leise. Zeilenabstand nach der Zahl aus --s2, damit sie
+   atmet und nicht am Fragentext klebt. */
+.bluete summary{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:&quot;nr knopf&quot; &quot;frage knopf&quot;;
+  column-gap:var(--s4);row-gap:var(--s2);align-items:center;padding:var(--s4) var(--s4) var(--s4) var(--s6)}
+.bluete .nr{grid-area:nr}
+.bluete .frage{grid-area:frage}
+.bluete .knopf{grid-area:knopf}
 .bluete .knopf{width:40px;height:40px;border:1px solid var(--line);background:var(--paper)}
 .bluete .acc:hover .knopf{border-color:var(--ak)}
 .bluete .acc.is-open .knopf{background:var(--ak-dunkel);border-color:var(--ak-dunkel);color:var(--on-accent);transform:rotate(180deg)}
-.bluete .acc-inner{position:relative;margin:0 var(--s4) 0 var(--s6);padding:var(--s5) 0 var(--s6) calc(2ch + var(--s4));
+.bluete .acc-inner{position:relative;margin:0 var(--s4) 0 var(--s6);padding:var(--s5) 0 var(--s6);
   border-top:1px solid var(--line-soft)}
 .bluete .acc-inner::before{content:&quot;&quot;;position:absolute;top:-6px;right:15px;width:10px;height:10px;
   background:var(--paper);border-left:1px solid var(--line-soft);border-top:1px solid var(--line-soft);transform:rotate(45deg)}
 @media(max-width:560px){
-  .bluete summary{gap:var(--s3);padding:var(--s5) var(--s4)}
+  .bluete summary{column-gap:var(--s3);padding:var(--s5) var(--s4)}
   .bluete .knopf{width:32px;height:32px}
   .bluete .acc-inner{margin:0 var(--s4);padding:var(--s5) 0 var(--s6)}
   .bluete .acc-inner::before{right:11px}
 }
 
 /* --- Kleid 2 · Faden: ein durchgehender Faden links an der ganzen Liste ------- */
+/* Die Nummer steht als eigene Zeile über der Frage (leise, in der Sektionstinte);
+   Frage und Antwort laufen bündig in derselben Einrückung – keine Spalte, keine
+   Kluft zwischen Zahl und Text. */
 .faden{border-left:2px solid var(--line)}
 .faden .acc-kopf{padding-left:var(--s4);margin-bottom:0}
 .faden .acc{border-top:1px solid var(--line-soft);transition:box-shadow var(--acc-dauer)}
 .faden .acc:last-child{border-bottom:1px solid var(--line-soft)}
 .faden .acc.is-open{box-shadow:-2px 0 0 var(--ak)}   /* das gefärbte Stück des Fadens */
-.faden summary{display:grid;grid-template-columns:2.5ch minmax(0,1fr) auto;align-items:center;gap:var(--s4);
-  padding:var(--s4) 0 var(--s4) var(--s4);min-height:var(--tap)}
-.faden .nr{color:var(--ak-ink);text-align:right}
-.faden .frage{transition:color var(--acc-dauer)}
+.faden summary{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:&quot;nr knopf&quot; &quot;frage knopf&quot;;
+  column-gap:var(--s4);row-gap:var(--s2);align-items:center;padding:var(--s4) 0 var(--s4) var(--s4);min-height:var(--tap)}
+.faden .nr{grid-area:nr;color:var(--ak-ink)}
+.faden .frage{grid-area:frage;transition:color var(--acc-dauer)}
 .faden summary:hover .frage,.faden .acc.is-open .frage{color:var(--ak-ink)}
-.faden .knopf{color:var(--muted)}
+.faden .knopf{grid-area:knopf;color:var(--muted)}
 .faden summary:hover .knopf,.faden .acc.is-open .knopf{color:var(--ak-ink)}
 .faden .acc.is-open .knopf{transform:rotate(180deg)}
-.faden .acc-inner{margin:0 0 var(--s6) calc(var(--s4) + 2.5ch + var(--s4))}
+.faden .acc-inner{margin:0 0 var(--s6) var(--s4)}
 @media(max-width:560px){
-  .faden summary{gap:var(--s3);padding-left:var(--s3)}
+  .faden summary{padding-left:var(--s3)}
   .faden .acc-kopf{padding-left:var(--s3)}
   .faden .acc-inner{margin-left:var(--s3);padding-right:var(--s2)}
 }
@@ -629,8 +645,11 @@
 .kapsel summary:hover{background:color-mix(in srgb,var(--ak) 10%,var(--ak-hell))}
 .kapsel .acc.is-open summary{background:var(--ak-dunkel);color:var(--on-accent)}
 .kapsel .nr{flex:0 0 auto;display:grid;place-items:center;width:2.2em;height:2.2em;border-radius:var(--r-pill);
-  background:var(--paper);color:var(--ak-ink);font-weight:600;transition:background var(--acc-dauer),color var(--acc-dauer)}
-.kapsel .nr&gt;span{display:block;line-height:1;transform:translateY(4%)}
+  background:var(--paper);color:var(--ak-ink);font-weight:var(--w-deutlich);
+  transition:background var(--acc-dauer),color var(--acc-dauer)}
+/* 8% ist der am Goetheanum-Schnitt vermessene optische Sitz der Ziffer im Kreis
+   (base.css .step-num) – reine Zentrierung setzt die Tinte zu hoch. */
+.kapsel .nr&gt;span{display:block;line-height:1;transform:translateY(8%)}
 .kapsel .frage{flex:1 1 auto}
 .kapsel .knopf{color:var(--ak-ink)}
 .kapsel .acc.is-open .knopf{color:var(--on-accent);transform:rotate(180deg)}
@@ -796,8 +815,9 @@
   --sek-mas:#2e54a4;
   --sek-hpise:#f98a3c;
   --font-display:&quot;Goetheanum&quot;,&quot;Helvetica Neue&quot;,Arial,sans-serif;
-  --font-text:&quot;Source Sans 3&quot;,&quot;Helvetica Neue&quot;,Arial,sans-serif;
+  --w-klar:440;
   --w-deutlich:580;
+  --w-text:var(--w-klar);
   --t-small:clamp(0.9375rem, 0.9rem + 0.18vw, 1rem);
   --t-body:clamp(1.125rem, 1.06rem + 0.3vw, 1.25rem);
   --t-h3:clamp(1.25rem, 1.15rem + 0.45vw, 1.45rem);

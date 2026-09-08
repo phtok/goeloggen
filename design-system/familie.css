@@ -1,0 +1,140 @@
+/* =============================================================================
+   Goetheanum CI – Familienmenü: von jeder Seite der Familie zurück ins Ganze.
+   -----------------------------------------------------------------------------
+   Markup erzeugt familie.js aus familie.json; hier nur das Aussehen. Setzt
+   tokens.css voraus (familie.js bindet es selbst ein, wenn es fehlt). Kein
+   base.css nötig – das Menü darf auf fremden Seiten liegen, ohne deren Grund
+   zu verändern.
+
+   EIN Öffner: das Kreis-Logo (Layout ‹point› aus dem Logo-Generator) schwebt
+   unten in einer Ecke und öffnet die Schublade – vier Gruppen, nur Titel.
+   Eine zweite Leiste über dem Seitenkopf gab es als Entwurf; sie stapelte auf
+   Seiten mit eigener Kopfzeile zwei Marken übereinander und ist darum
+   verworfen (Beschluss Auftraggeber, 8. September 2026).
+   ============================================================================= */
+
+.goe-fam-knopf,.goe-fam-panel{font-family:var(--font);
+  --goe-fam-d:44px;        /* Durchmesser = Fingerziel (B04) */
+  --goe-fam-ruhe:.65}      /* Ruhe-Deckkraft: der Ring hält damit 3.12:1 (B02) */
+
+/* --- Der Schweber ---------------------------------------------------------
+   Kein gefüllter Knopf: das Kreis-Logo IST die Fläche. Sein blauer Ring gibt
+   die Kontur (6.4:1 auf Papier) – ein zusätzlicher Rahmen wäre ein zweites
+   Merkmal ohne Gewinn (G03). */
+.goe-fam-knopf{position:fixed;bottom:var(--s4);z-index:70;
+  display:block;width:var(--goe-fam-d);height:var(--goe-fam-d);padding:0;
+  background:none;border:0;border-radius:var(--r-pill);cursor:pointer;
+  filter:drop-shadow(0 2px 8px rgba(20,24,28,.18));
+  transition:opacity .4s ease,transform .2s ease}
+.goe-fam-knopf.links{left:var(--s4)}
+.goe-fam-knopf.rechts{right:var(--s4)}
+.goe-fam-knopf svg{width:100%;height:100%;display:block}
+/* Die Marke: Fläche aus Papier, Ring und Zeichen in der Zustandsfarbe. Kein
+   fester Blauwert – auf dunklem Papier hielte er nur 2.76:1 (B02). */
+.goe-fam-marke{color:var(--blue)}
+.goe-fam-marke .grund{fill:var(--paper);stroke:currentColor;stroke-width:1.35}
+.goe-fam-marke path{fill:currentColor}
+.goe-fam-knopf:hover{transform:scale(1.06)}
+.goe-fam-knopf:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+/* Leise werden, wenn die Seite ruht – und sofort wieder da bei jeder Regung.
+   Gemessen statt geschätzt: unter 0.65 fällt der Ring unter 3:1 (B02). */
+.goe-fam-knopf.is-ruhe{opacity:var(--goe-fam-ruhe)}
+.goe-fam-knopf:hover,.goe-fam-knopf:focus-visible,
+.goe-fam-knopf[aria-expanded="true"]{opacity:1}
+
+/* Fokus nie verdecken (WCAG 2.2, 2.4.11): liegt ein fokussiertes Element unter
+   dem Schweber, weicht er nach unten aus dem Bild. */
+.goe-fam-knopf.is-weg{transform:translateY(calc(var(--goe-fam-d) + var(--s6)))}
+
+/* Beschriftung als Sofort-Hinweis über dem Zeichen – das Zwillingsmuster zu
+   .dsnav [data-tip] in nav.css, hier eigenständig, weil fremde Seiten nav.css
+   nicht laden. Erscheint nur bei Hover und Fokus, nie im geöffneten Zustand. */
+.goe-fam-knopf::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);
+  background:var(--ink);color:var(--paper);font-family:var(--font-text);
+  font-size:var(--t-micro);line-height:1;white-space:nowrap;
+  padding:6px 10px;border-radius:7px;
+  opacity:0;pointer-events:none;transition:opacity .12s ease .08s}
+.goe-fam-knopf.links::after{left:0}
+.goe-fam-knopf.rechts::after{right:0}
+.goe-fam-knopf:hover::after,.goe-fam-knopf:focus-visible::after{opacity:1}
+.goe-fam-knopf[aria-expanded="true"]::after{opacity:0}
+
+/* --- Schleier und Schublade ---------------------------------------------- */
+.goe-fam-schleier{position:fixed;inset:0;z-index:72;background:var(--stage-veil);
+  opacity:0;visibility:hidden;transition:opacity .18s,visibility .18s}
+.goe-fam-schleier.is-offen{opacity:1;visibility:visible}
+
+.goe-fam-panel{position:fixed;z-index:73;bottom:calc(var(--s4) + var(--goe-fam-d) + var(--s3));
+  width:min(880px,calc(100vw - 2 * var(--s4)));
+  max-height:calc(100vh - var(--goe-fam-d) - 3 * var(--s6));
+  display:flex;flex-direction:column;
+  background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-card);
+  box-shadow:var(--shadow-card);
+  opacity:0;visibility:hidden;transform:translateY(12px);
+  transition:opacity .18s ease,transform .22s ease,visibility .18s}
+.goe-fam-panel.links{left:var(--s4)}
+.goe-fam-panel.rechts{right:var(--s4)}
+.goe-fam-panel.is-offen{opacity:1;visibility:visible;transform:none}
+
+.goe-fam-panel .kopf{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);
+  padding:var(--s3) var(--s6);border-bottom:1px solid var(--line);flex:0 0 auto}
+/* Das Dach trägt die WORTMARKE, nicht eine Überschrift: darum ihr Schnitt und
+   ihre Laufweite, wie sie in der Kopfzeile stehen (nav.css .dsnav .brand .wm) –
+   Klar, nicht Deutlich. Das Wort darf dabei gross sein, es ist die Marke. */
+.goe-fam-panel .kopf .dach{display:inline-flex;align-items:center;gap:11px;color:var(--ink);text-decoration:none;
+  font-size:24px;font-weight:var(--w-text);letter-spacing:.005em;line-height:1;min-height:var(--tap)}
+.goe-fam-panel .kopf .dach svg{width:28px;height:28px;display:block;flex:0 0 auto}
+.goe-fam-panel .kopf .dach .goe-fam-marke{color:var(--blue)}
+.goe-fam-panel .kopf .dach:hover{color:var(--gold-ink)}
+.goe-fam-panel .zu{font:inherit;font-size:24px;line-height:1;color:var(--muted);background:none;border:0;
+  width:var(--tap);height:var(--tap);border-radius:var(--r-pill);cursor:pointer}
+.goe-fam-panel .zu:hover{color:var(--ink);background:var(--soft)}
+
+.goe-fam-panel .rumpf{overflow:auto;padding:var(--s4) var(--s4) var(--s5)}
+
+/* Gruppen: breit vier Spalten, alle offen; schmal untereinander, klappbar. */
+.goe-fam-grp{border:0;margin:0}
+.goe-fam-grp>summary{list-style:none;cursor:default;display:flex;align-items:center;justify-content:space-between;
+  padding:6px 12px;font-family:var(--font-text);font-size:var(--t-small);font-weight:600;color:var(--muted)}
+.goe-fam-grp>summary::-webkit-details-marker{display:none}
+.goe-fam-grp>summary .pfeil{display:none;transition:transform .15s}
+.goe-fam-grp .liste{list-style:none;margin:0;padding:0}
+@media(min-width:760px){
+  .goe-fam-panel .rumpf{display:grid;grid-template-columns:1fr 1.4fr 1fr 1fr;gap:var(--s2)}
+  .goe-fam-grp>summary{pointer-events:none}
+}
+@media(max-width:759px){
+  .goe-fam-grp{border-bottom:1px solid var(--line-soft)}
+  .goe-fam-grp:last-child{border-bottom:0}
+  .goe-fam-grp>summary{cursor:pointer;min-height:var(--tap);color:var(--ink);font-family:var(--font);
+    font-size:16px;font-weight:var(--w-deutlich)}
+  .goe-fam-grp>summary .pfeil{display:inline-block;color:var(--muted)}
+  .goe-fam-grp[open]>summary .pfeil{transform:rotate(180deg)}
+  .goe-fam-grp .liste{padding-bottom:var(--s2)}
+}
+
+/* Einträge: Titel, ein Farbpunkt für Sektion oder Bereich. Der Standort trägt
+   NUR das Gewicht – ein Merkmal, keine zweite Kante (G01). */
+.goe-fam-link{display:flex;align-items:center;gap:10px;min-height:var(--tap);padding:6px 12px;
+  color:var(--ink);text-decoration:none;font-size:16px;line-height:1.3;border-radius:var(--r-control)}
+.goe-fam-link:hover{background:var(--soft)}
+.goe-fam-link:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.goe-fam-link .pt{width:10px;height:10px;border-radius:var(--r-pill);flex:0 0 auto;
+  background:var(--goe-fam-farbe,var(--bereich))}
+.goe-fam-link[aria-current="page"]{font-weight:var(--w-deutlich)}
+
+/* Schmal: Schublade wird zum Blatt von unten, volle Breite. */
+@media(max-width:720px){
+  .goe-fam-panel,.goe-fam-panel.links,.goe-fam-panel.rechts{
+    left:0;right:0;bottom:0;width:auto;max-height:85vh;
+    border-radius:var(--r-card) var(--r-card) 0 0;border-bottom:0;transform:translateY(100%)}
+  .goe-fam-panel.is-offen{transform:none}
+  .goe-fam-panel .kopf{padding:var(--s3) var(--s4)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .goe-fam-knopf,.goe-fam-knopf::after,.goe-fam-panel,.goe-fam-schleier,.goe-fam-grp>summary .pfeil{transition:none}
+  .goe-fam-knopf:hover{transform:none}
+}
+@media print{.goe-fam-knopf,.goe-fam-panel,.goe-fam-schleier{display:none}}
