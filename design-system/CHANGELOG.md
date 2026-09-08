@@ -47,6 +47,59 @@ der Tastaturfokus unter ihm liegt (WCAG 2.2, 2.4.11), verschwindet im Druck und
 hält sich an `prefers-reduced-motion`. Gemessen: ds-lint 0 Fehler,
 `barrierefreiheit.mjs` ohne Verstoss auf 390 und 1440 px.
 
+## 8. September 2026 — die Zahl folgt dem Rahmen (1.16.3)
+
+**Was.** In der Blüte nimmt die Nummer die Sektionsfarbe an, sobald der Rahmen
+sie annimmt – bei Hover und im offenen Zustand; geschlossen bleibt sie grau.
+
+**Warum.** Auf Frage des Auftraggebers. Vorher wechselte nur der Ring die
+Farbe, die Zahl blieb stumm; jetzt bewegen sich beide zusammen und der offene
+Eintrag liest sich als ein Zeichen statt als zwei. Die Zahl trägt die **Tinte**
+(`--ak-ink`), nicht die Basisfarbe: die ist Linie, nicht Schrift (B02).
+Gemessen am gerenderten Blatt: 7.04:1 hell, 9.86:1 dunkel.
+
+**Wirkung.** `akkordeon.css`, Kleid Blüte. Faden und Kapsel tragen die Farbe an
+der Zahl schon; damit ist die Regel in allen drei Kleidern dieselbe: **das
+farbige Zeichen der Anwahl trägt die Zahl mit.**
+
+## 7. September 2026 — die Nummer als Marke, in der Hausschrift (1.16.2)
+
+**Was.** Der Griff aus dem Faden gilt jetzt auch für die **Blüte**: die Nummer
+steht als eigene Zeile über der Frage, Frage und Antwort laufen bündig (die
+Antwort verliert ihren Einzug von `2ch + s4`). Dazu in **allen drei Kleidern**:
+die Ziffer läuft in der **Hausschrift** (Klar, in der Kapsel Deutlich) statt in
+der Lese-Grotesk, und nach der Zahl steht mehr Luft (`row-gap` von 2 px auf
+`--s2`). Im Kreis der Kapsel sitzt sie mit dem vermessenen 8%-Versatz aus
+`.step-num`.
+
+**Warum.** Der Auftraggeber wollte den Faden-Griff auch in der Blüte und die
+Zahlen «aus der Goeschrift». Die Schrift-Grenze schickt Zahlen in die
+Lese-Grotesk, wo sie **Daten** sind – Tabelle, Wert, Formular. Diese Ziffer ist
+aber keine Angabe, sondern eine **Marke**: sie zählt die Frage, wie die
+Schritt-Nummer `.step-num` einen Schritt zählt, und die trägt in `base.css`
+längst die Hausschrift. Gleiche Rolle, gleiche Schrift.
+
+**Wirkung.** `akkordeon.css`: `.acc .nr` in `--font-display`, Gewicht Klar
+(kleine Hausschrift nie Leise), Ziffern weiterhin dicktengleich (G25). Regel
+für neue Bausteine: **zählende Marken tragen die Hausschrift, messende Werte
+die Lese-Grotesk.** Nur die Blüte behält ihre Zahl in Grau – dort trägt der
+Ring die Farbe, im Faden die Zahl.
+
+## 7. September 2026 — Faden: die Nummer über der Frage (1.16.1)
+
+**Was.** Im Kleid Faden steht die Nummer als eigene, leise Zeile über der
+Frage (Sektionstinte, `--t-small`); Frage und Antwort laufen bündig in
+derselben Einrückung. Vorher stand die Zahl in einer eigenen Spalte links.
+
+**Warum.** Der Auftraggeber: die eingerückte Zahl «schafft eine typografische
+Kluft» – auf dem Handy stand die Antwort links bündig, die Frage aber hinter
+der Zahl eingerückt. Die Zahl über der Frage schliesst die Kluft und bleibt
+mit 15 px in der Tinte unauffällig; am Blatt geprüft bei 420 und 1280 px.
+
+**Wirkung.** `akkordeon.css`, Kleid Faden: `summary` als Raster mit den
+Bereichen `nr` / `frage` / `knopf`; Blüte und Kapsel behalten ihre Zahl in
+Spalte bzw. Kreis.
+
 ## 7. September 2026 — zwei Bereiche mit eigener Farbe bekommen ihre Flächen (1.16.0)
 
 **Was.** Bühne (`--bereich-buehne`) und Bau-Administration (`--bereich-bauadmin`)
