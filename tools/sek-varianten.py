@@ -47,6 +47,26 @@ REZEPT = {
     "hell_dk":  {"L": 0.27, "C_max": 0.035, "C_faktor": 0.25},
     # Text im Dunkelmodus: heller Hauch der Sektion – ≥ 4.5:1 auf hell_dk UND --paper.
     "ink_dk":   {"L": 0.82, "C_max": 0.090, "C_faktor": 0.60},
+    # Die Sektion als SCHRIFT im Hellmodus. Bisher war das ein Zweitname der dunklen
+    # Fläche; seit dem Kürbis-Beschluss ist es eine eigene Rolle, weil Fläche und
+    # Schrift verschiedene Anforderungen haben: auf der Fläche steht Weiss, die
+    # Schrift steht auf hellem Grund. Gleiche Zahlen wie «dunkel» – ausser wo eine
+    # Ausnahme das eine hebt und das andere lässt.
+    "ink":      {"L": 0.47, "C_max": 0.085, "C_faktor": 0.62},
+}
+
+# --- Ausnahmen: wo die Regel am Farbkreis scheitert --------------------------
+# Eine Regel für alle hält die Reihe zusammen – aber der Farbkörper ist nicht rund.
+# Orange ist die einzige Sektionsfarbe, deren dunkle Form einen eigenen, abwertenden
+# Namen trägt: Braun. Bei L 0.47 ist Orange – gleich wie bunt – immer ein Braun; das
+# ist die Form des sRGB-Körpers, kein Fehler im Rezept. Darum steht die Heilpädagogik
+# heller und schöpft ihre Buntheit aus. Ihre SCHRIFT bleibt eine Stufe dunkler
+# (L 0.50), damit sie auf Papier und auf dem eigenen Hauch Reserve behält.
+# Beschluss des Auftraggebers, 8. September 2026 (Muster C «Kürbis»).
+# Neue Ausnahme nur mit Muster und Beschluss – nicht nach Gefühl.
+AUSNAHMEN = {
+    "hpise": {"dunkel": {"L": 0.55, "C_max": 0.20, "C_faktor": 1.0},
+              "ink":    {"L": 0.50, "C_max": 0.20, "C_faktor": 1.0}},
 }
 # Bewusst KEIN Sonderfall je Sektion: eine Regel für alle, damit die Reihe stimmt.
 
@@ -92,16 +112,29 @@ def to_oklch(hexv):
     L, a, b = rgb_to_oklab(hex_to_rgb(hexv))
     return L, math.hypot(a, b), math.degrees(math.atan2(b, a)) % 360
 
-def from_oklch(L, C, H):
-    """OKLCH → Hex; liegt der Ton ausserhalb sRGB, wird C reduziert (Farbton bleibt)."""
+def _im_gamut(L, C, H):
     import math
-    for _ in range(40):
+    a, b = C * math.cos(math.radians(H)), C * math.sin(math.radians(H))
+    return all(-0.0005 <= c <= 1.0005 for c in oklab_to_rgb((L, a, b)))
+
+def from_oklch(L, C, H):
+    """OKLCH → Hex. Liegt der Ton ausserhalb sRGB, wird die Buntheit per Bisektion
+    auf den Gamut-RAND gesenkt (Farbton und Helligkeit bleiben). Vorher schrumpfte
+    sie in 6-%-Schritten und blieb je nach Zufall bis zu 6 % unter dem Möglichen –
+    genau dort, wo eine Farbe ihre Buntheit am nötigsten braucht: am Rand."""
+    import math
+    if _im_gamut(L, C, H):
         a, b = C * math.cos(math.radians(H)), C * math.sin(math.radians(H))
-        rgb = oklab_to_rgb((L, a, b))
-        if all(-0.0005 <= c <= 1.0005 for c in rgb):
-            return rgb_to_hex(rgb)
-        C *= 0.94
-    return rgb_to_hex(oklab_to_rgb((L, 0, 0)))
+        return rgb_to_hex(oklab_to_rgb((L, a, b)))
+    lo, hi = 0.0, C
+    for _ in range(48):
+        mid = (lo + hi) / 2
+        if _im_gamut(L, mid, H):
+            lo = mid
+        else:
+            hi = mid
+    a, b = lo * math.cos(math.radians(H)), lo * math.sin(math.radians(H))
+    return rgb_to_hex(oklab_to_rgb((L, a, b)))
 
 def luminance(hexv):
     r, g, b = (lin(c) for c in hex_to_rgb(hexv))
@@ -112,8 +145,9 @@ def kontrast(a, b):
     return (lb + 0.05) / (la + 0.05)
 
 # --- Ableitung ----------------------------------------------------------------
-def ableiten(hexv, rolle):
-    r = REZEPT[rolle]
+def ableiten(hexv, rolle, key=None):
+    r = dict(REZEPT[rolle])
+    r.update(AUSNAHMEN.get(key, {}).get(rolle, {}))
     L, C, H = to_oklch(hexv)
     return from_oklch(r["L"], min(C * r["C_faktor"], r["C_max"]), H)
 
@@ -132,8 +166,9 @@ def basis_lesen():
 
 def varianten():
     return [{"fam": f, "key": k, "basis": v, "name": d,
-             "dunkel": ableiten(v, "dunkel"), "hell": ableiten(v, "hell"),
-             "hell_dk": ableiten(v, "hell_dk"), "ink_dk": ableiten(v, "ink_dk")}
+             "dunkel": ableiten(v, "dunkel", k), "hell": ableiten(v, "hell", k),
+             "hell_dk": ableiten(v, "hell_dk", k), "ink_dk": ableiten(v, "ink_dk", k),
+             "ink": ableiten(v, "ink", k)}
             for f, k, v, d in basis_lesen()]
 
 MARK_A = "/* @sek-varianten:start – GENERIERT von tools/sek-varianten.py, nicht von Hand ändern */"
@@ -154,7 +189,7 @@ def css_block(vs):
          ":root{"]
     for v in vs:
         p = "--%s-%s" % (v["fam"], v["key"])
-        z.append("  %s-dunkel:%s; %s-hell:%s; %s-ink:%s;" % (p, v["dunkel"], p, v["hell"], p, v["dunkel"]))
+        z.append("  %s-dunkel:%s; %s-hell:%s; %s-ink:%s;" % (p, v["dunkel"], p, v["hell"], p, v["ink"]))
     z.append("}")
     z.append(":root[data-theme=\"dark\"]{")
     for v in vs:
@@ -210,7 +245,7 @@ def apply_json(vs):
             z.append('      "%s": { "dunkel": { "$value": "%s" }, "hell": { "$value": "%s" }, '
                      '"hell_dunkelmodus": { "$value": "%s" }, "ink": { "$value": "%s" }, '
                      '"ink_dunkelmodus": { "$value": "%s" }, "$description": "%s" }%s'
-                     % (v["key"], v["dunkel"], v["hell"], v["hell_dk"], v["dunkel"], v["ink_dk"],
+                     % (v["key"], v["dunkel"], v["hell"], v["hell_dk"], v["ink"], v["ink_dk"],
                         v["name"].replace('"', "'"), "," if i < len(fv) - 1 else ""))
         z.append('    }')
         block = "\n".join(z)
@@ -228,12 +263,13 @@ def apply_json(vs):
     return False
 
 def vorschau(vs):
-    print("%-12s %-8s %-8s W/dk  %-8s ink/h dk/h  %-8s ink/hd %-8s i/hd i/pap" %
-          ("key", "basis", "dunkel", "hell", "hell_dk", "ink_dk"))
+    print("%-16s %-8s %-8s W/dk  %-8s ink/h %-8s tinte/h  %-8s ink/hd %-8s i/hd i/pap" %
+          ("key", "basis", "dunkel", "hell", "ink", "hell_dk", "ink_dk"))
     for v in vs:
-        print("%-16s %-8s %-8s %4.1f  %-8s %4.1f  %4.1f  %-8s %4.1f   %-8s %4.1f %4.1f" % (
+        print("%-16s %-8s %-8s %4.1f  %-8s %4.1f  %-8s %4.1f     %-8s %4.1f   %-8s %4.1f %4.1f" % (
             v["fam"] + "-" + v["key"], v["basis"], v["dunkel"], kontrast("#fff", v["dunkel"]),
-            v["hell"], kontrast("#23272b", v["hell"]), kontrast(v["dunkel"], v["hell"]),
+            v["hell"], kontrast("#23272b", v["hell"]),
+            v["ink"], kontrast(v["ink"], v["hell"]),
             v["hell_dk"], kontrast("#e6e8ea", v["hell_dk"]),
             v["ink_dk"], kontrast(v["ink_dk"], v["hell_dk"]), kontrast(v["ink_dk"], "#16191c")))
 
