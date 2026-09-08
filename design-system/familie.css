@@ -79,9 +79,12 @@
 
 .goe-fam-panel .kopf{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);
   padding:var(--s3) var(--s6);border-bottom:1px solid var(--line);flex:0 0 auto}
-.goe-fam-panel .kopf .dach{display:inline-flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;
-  font-size:18px;font-weight:var(--w-deutlich);min-height:var(--tap)}
-.goe-fam-panel .kopf .dach svg{width:26px;height:26px;display:block;flex:0 0 auto}
+/* Das Dach trägt die WORTMARKE, nicht eine Überschrift: darum ihr Schnitt und
+   ihre Laufweite, wie sie in der Kopfzeile stehen (nav.css .dsnav .brand .wm) –
+   Klar, nicht Deutlich. Das Wort darf dabei gross sein, es ist die Marke. */
+.goe-fam-panel .kopf .dach{display:inline-flex;align-items:center;gap:11px;color:var(--ink);text-decoration:none;
+  font-size:24px;font-weight:var(--w-text);letter-spacing:.005em;line-height:1;min-height:var(--tap)}
+.goe-fam-panel .kopf .dach svg{width:28px;height:28px;display:block;flex:0 0 auto}
 .goe-fam-panel .kopf .dach .goe-fam-marke{color:var(--blue)}
 .goe-fam-panel .kopf .dach:hover{color:var(--gold-ink)}
 .goe-fam-panel .zu{font:inherit;font-size:24px;line-height:1;color:var(--muted);background:none;border:0;
