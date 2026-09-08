@@ -16,6 +16,26 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — die Schritt-Kugel sitzt auf der Versalmitte (1.21.3)
+
+**Was.** `.step-num` wird um **0.26em ihrer eigenen Grösse angehoben** (rein
+optisch, `position:relative`, damit die Zeilenbox des Titels unverändert
+bleibt).
+
+**Warum.** Der Auftraggeber sah es am Blatt: «Die Kugel sitzt zu tief.» Die
+Messung gab ihm recht — als Inline-Box hing die Kugel an der **Grundlinie**,
+ihre Mitte lag damit **5.4 px unter der Versalmitte** des Titels (28.8 px Grad,
+Versalhöhe 20, x-Höhe 14; Tinte auf Canvas vermessen, nicht geschätzt). Eine
+Marke neben einem Titel gehört auf die Mitte der Versalhöhe: die Grundlinie ist
+die Kante, auf der der Text steht, nicht seine Mitte. Nachgemessen sitzt die
+Kugel jetzt auf −10 px, exakt auf der Versalmitte.
+
+**Wirkung.** `base.css`. Betrifft beide Seiten, die die Kugel führen
+(`akkordeon.html`, `apps/logos/`) — beide nachgesehen. Regel für runde Marken
+neben Text: **auf die Versalmitte heben, nicht auf der Grundlinie hängen
+lassen** — und die Korrektur optisch setzen, damit der Durchschuss nicht
+springt.
+
 ## 8. September 2026 — die Kapsel lernt von der Blüte: Text auf Papier (1.21.2)
 
 **Was.** Die geöffnete Kapsel wechselt ihren Grund: die Antwort steht auf
