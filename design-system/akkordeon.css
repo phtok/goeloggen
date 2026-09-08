@@ -20,22 +20,15 @@
 :root{--acc-kurve:cubic-bezier(.32,.08,.24,1);--acc-dauer:.28s}
 @media(prefers-reduced-motion:reduce){:root{--acc-dauer:0s}}
 
-/* --- Farbrollen: Hausfall Gold, Sektion per data-sek ------------------------ */
-.acc-liste{--ak:var(--gold);--ak-ink:var(--gold-ink);--ak-dunkel:var(--gold-deep);
-  --ak-hell:color-mix(in srgb,var(--gold) 14%,var(--paper));max-width:780px}
-.acc-liste[data-sek="hpise"]{--ak:var(--sek-hpise);--ak-ink:var(--sek-hpise-ink);--ak-dunkel:var(--sek-hpise-dunkel);--ak-hell:var(--sek-hpise-hell)}
-.acc-liste[data-sek="aas"]{--ak:var(--sek-aas);--ak-ink:var(--sek-aas-ink);--ak-dunkel:var(--sek-aas-dunkel);--ak-hell:var(--sek-aas-hell)}
-.acc-liste[data-sek="ps"]{--ak:var(--sek-ps);--ak-ink:var(--sek-ps-ink);--ak-dunkel:var(--sek-ps-dunkel);--ak-hell:var(--sek-ps-hell)}
-.acc-liste[data-sek="ms"]{--ak:var(--sek-ms);--ak-ink:var(--sek-ms-ink);--ak-dunkel:var(--sek-ms-dunkel);--ak-hell:var(--sek-ms-hell)}
-.acc-liste[data-sek="nws"]{--ak:var(--sek-nws);--ak-ink:var(--sek-nws-ink);--ak-dunkel:var(--sek-nws-dunkel);--ak-hell:var(--sek-nws-hell)}
-.acc-liste[data-sek="lws"]{--ak:var(--sek-lws);--ak-ink:var(--sek-lws-ink);--ak-dunkel:var(--sek-lws-dunkel);--ak-hell:var(--sek-lws-hell)}
-.acc-liste[data-sek="sbk"]{--ak:var(--sek-sbk);--ak-ink:var(--sek-sbk-ink);--ak-dunkel:var(--sek-sbk-dunkel);--ak-hell:var(--sek-sbk-hell)}
-.acc-liste[data-sek="ssw"]{--ak:var(--sek-ssw);--ak-ink:var(--sek-ssw-ink);--ak-dunkel:var(--sek-ssw-dunkel);--ak-hell:var(--sek-ssw-hell)}
-.acc-liste[data-sek="szw"]{--ak:var(--sek-szw);--ak-ink:var(--sek-szw-ink);--ak-dunkel:var(--sek-szw-dunkel);--ak-hell:var(--sek-szw-hell)}
-.acc-liste[data-sek="js"]{--ak:var(--sek-js);--ak-ink:var(--sek-js-ink);--ak-dunkel:var(--sek-js-dunkel);--ak-hell:var(--sek-js-hell)}
-.acc-liste[data-sek="srmk"]{--ak:var(--sek-srmk);--ak-ink:var(--sek-srmk-ink);--ak-dunkel:var(--sek-srmk-dunkel);--ak-hell:var(--sek-srmk-hell)}
-.acc-liste[data-sek="mas"]{--ak:var(--sek-mas);--ak-ink:var(--sek-mas-ink);--ak-dunkel:var(--sek-mas-dunkel);--ak-hell:var(--sek-mas-hell)}
-.acc-liste[data-sek="goetheanum"]{--ak:var(--sek-goetheanum);--ak-ink:var(--sek-goetheanum-ink);--ak-dunkel:var(--sek-goetheanum-dunkel);--ak-hell:var(--sek-goetheanum-hell)}
+/* --- Farbrollen ------------------------------------------------------------
+   Kommen seit 1.20.0 aus dem Fundament: ein data-sek IRGENDWO darüber setzt
+   --ton (Linie/Marke), --ton-dunkel (Fläche für Weiss), --ton-hell (Hauch),
+   --ton-ink (die Farbe als Schrift). Ohne data-sek greift der Hausfall Gold.
+   Die kurzen Namen hier sind nur Lesehilfe für die Regeln darunter. */
+.acc-liste{--ak:var(--ton,var(--gold));--ak-ink:var(--ton-ink,var(--gold-ink));
+  --ak-dunkel:var(--ton-dunkel,var(--gold-deep));
+  --ak-hell:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));
+  max-width:780px}
 
 /* --- Gemeinsame Anatomie ---------------------------------------------------- */
 .acc-kopf{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
@@ -69,6 +62,11 @@
 @media(max-width:560px){.acc .acc-inner{line-height:1.5}}
 .acc .acc-inner p{margin:0 0 .75em}
 .acc .acc-inner p:last-child{margin-bottom:0}
+/* ‹Link kopieren› – die Adresse dieser einen Antwort. Leise am Fuss, damit sie
+   den Lesefluss nicht unterbricht; erscheint nur mit der geöffneten Antwort. */
+.acc .teilen{margin-top:var(--s4);color:var(--ak-ink);border-color:transparent;
+  padding-inline:0;font-size:var(--t-small)}
+.acc .teilen:hover{border-color:transparent;text-decoration:underline;text-underline-offset:.2em}
 /* Schmal: Karten nutzen fast das ganze Blatt (12 px Rand statt 22). */
 @media(max-width:560px){.bluete,.kapsel{margin-inline:-10px}}
 
@@ -119,6 +117,9 @@
 .faden .nr{grid-area:nr;color:var(--ak-ink)}
 .faden summary:not(:has(.nr)){grid-template-areas:"frage knopf"}
 .faden .frage{grid-area:frage;transition:color var(--acc-dauer)}
+/* Hover: ein Hauch Fläche zeigt, dass die ganze Zeile das Ziel ist – nicht nur
+   der Winkel. Sehr zurückhaltend (7 % Ton auf Papier), Fokus bleibt der Ring. */
+.faden summary:hover{background:color-mix(in srgb,var(--ak) 7%,var(--paper))}
 .faden summary:hover .frage,.faden .acc.is-open .frage{color:var(--ak-ink)}
 .faden .knopf{grid-area:knopf;color:var(--muted)}
 .faden summary:hover .knopf,.faden .acc.is-open .knopf{color:var(--ak-ink)}

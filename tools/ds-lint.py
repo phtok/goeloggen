@@ -9,8 +9,19 @@ Struktur des Design-Systems, statt sie hinterher von Hand nachzukontrollieren.
 Quelle der Wahrheit:  design-system/contract.json  (Regeln DS01–DS10).
 Geltungsbereich:      versionierte *.html mit <body> (Werkzeug-/Schau-Seiten).
                       Reine Weiterleitungs-Stubs (meta refresh) werden übersprungen.
-Geprüft wird nur CSS: <style>-Blöcke und style="…"-Attribute; <script> bleibt aussen
-                      vor. Inline-SVG-Attribute (fill="…") sind Inhalt, kein Stil.
+Geprüft wird CSS aus: <style>-Blöcke, style="…"-Attribute UND repo-eigene,
+                      per <link href="…css"> eingebundene *.css-Dateien (DS02/03/
+                      04/05/07 – derselbe Auflösungsweg wie DS10/check_tokens;
+                      externe/absolute URLs bleiben aussen vor, das Repo kann sie
+                      nicht sehen). Jede verlinkte Datei wird GENAU EINMAL geprüft,
+                      unabhängig davon, wie viele Seiten sie einbinden (sonst meldet
+                      base.css seinen Verstoss 60-mal) – siehe lint_css_file().
+                      <script> bleibt aussen vor. Inline-SVG-Attribute (fill="…")
+                      sind Inhalt, kein Stil.
+Blinder Fleck (Befund Konrad, 8.9.2026): bis 1.17.0 sahen DS02–DS05/DS07 nur die
+                      HTML-Datei selbst – eine Seite, deren gesamte Gestalt in
+                      einer eigenen verlinkten CSS-Datei steht, meldete «0 Fehler»,
+                      ohne dass dort geprüft wurde. Geschlossen in 1.18.0.
 
 Nutzung:
   tools/ds-lint.py                 # Audit über ALLE Seiten + Score
@@ -86,6 +97,8 @@ RE_SCRIPT = re.compile(r"<script\b[^>]*>.*?</script>", re.S | re.I)
 RE_INLINE = re.compile(r'style\s*=\s*"([^"]*)"', re.I)
 RE_ATRULE = re.compile(r"@(?:media|supports|keyframes)[^{]*\{", re.I)
 RE_RULE = re.compile(r"([^{}]+)\{([^{}]*)\}", re.S)
+RE_COMMENT = re.compile(r"/\*.*?\*/", re.S)
+RE_LINK_CSS = re.compile(r'<link[^>]+href\s*=\s*["\']([^"\']+\.css)["\']', re.I)
 
 HEXLIT = re.compile(r"#[0-9a-fA-F]{3,8}\b")
 RGBLIT = re.compile(r"\brgba?\s*\(", re.I)
@@ -96,6 +109,45 @@ FSPX = re.compile(r"font-size\s*:\s*([0-9.]+)px", re.I)
 def css_blocks(text):
     """Liste (inhalt, abs_offset) aller <style>-Blöcke."""
     return [(m.group(1), m.start(1)) for m in RE_STYLE.finditer(text)]
+
+
+def strip_comments(text):
+    """CSS-Kommentare zu Leerraum – Zeilenumbrüche bleiben stehen, sonst
+    verschieben sich alle Zeilennummern nach dem ersten Kommentar.
+
+    Ohne das liest »--blue-solid:#0061a9; /* Volles Blau … */« als EINE
+    Deklaration, deren nächster ';'-Abschnitt bei der Property-Erkennung mit
+    dem Kommentartext verklebt (»/* Volles Blau … */\\n --gold-deep« beginnt
+    nicht mit »--« und rutscht durch den Custom-Property-Filter). tokens.css
+    hat genau dieses Muster durchgehend – beim ersten Mitlesen verlinkter
+    Fundament-CSS wären seine Definitionen reihenweise als Verstösse
+    erschienen, ohne dass irgendwo ein echter steckt."""
+    def repl(m):
+        s = m.group(0)
+        return "".join(ch if ch == "\n" else " " for ch in s)
+    return RE_COMMENT.sub(repl, text)
+
+
+def linked_css(full, path):
+    """Repo-eigene, per <link href="…css"> eingebundene CSS-Dateien einer Seite,
+    zu repo-relativen Pfaden aufgelöst – derselbe Weg, den check_tokens/DS10
+    für die Token-Auflösung schon nutzt (hier für DS02/03/04/05/07 wiederverwendet,
+    kein zweiter Mechanismus). Externe/absolute/Daten-URLs bleiben aussen vor:
+    was nicht im Repo liegt, kann die Maschine nicht mitlesen."""
+    out = []
+    for rel in RE_LINK_CSS.findall(full):
+        if re.match(r"^(?:[a-z][a-z0-9+.-]*:)?//", rel, re.I) or rel.lower().startswith("data:"):
+            continue
+        kandidat = os.path.normpath(os.path.join(os.path.dirname(os.path.join(ROOT, path)), rel))
+        if not os.path.exists(kandidat):
+            continue
+        try:
+            if os.path.commonpath([kandidat, ROOT]) != ROOT:
+                continue  # aus dem Repo heraus verlinkt – nicht mitprüfbar
+        except ValueError:
+            continue  # anderes Laufwerk (Windows) – kann hier nicht vorkommen, sicherheitshalber
+        out.append(os.path.relpath(kandidat, ROOT))
+    return out
 
 
 def last_simple(selpart):
@@ -188,11 +240,10 @@ def check_tokens(full, findings, skip_lines, path):
     # zählt als bekannt – geprüft wird die Lücke zum Fundament, nicht der
     # legitime lokale Eigenbau.
     lokal = set(re.findall(r"(--[a-zA-Z0-9_-]+)\s*:", full))
-    # Begleitende CSS-Dateien der Seite mitlesen (<link href="x.css">).
-    for rel in re.findall(r'<link[^>]+href\s*=\s*["\']([^"\']+\.css)["\']', full):
-        kandidat = os.path.normpath(os.path.join(os.path.dirname(os.path.join(ROOT, path)), rel))
-        if os.path.exists(kandidat):
-            lokal |= set(re.findall(r"(--[a-zA-Z0-9_-]+)\s*:", open(kandidat, encoding="utf-8").read()))
+    # Begleitende CSS-Dateien der Seite mitlesen (<link href="x.css">) – via
+    # linked_css(), demselben Auflösungsweg, den DS02/03/04/05/07 unten nutzen.
+    for relpath in linked_css(full, path):
+        lokal |= set(re.findall(r"(--[a-zA-Z0-9_-]+)\s*:", open(os.path.join(ROOT, relpath), encoding="utf-8").read()))
     bekannt = bekannte_tokens() | lokal
     gemeldet = set()
     for m in re.finditer(r"var\(\s*(--[a-zA-Z0-9_-]+)\s*([,)])", full):
@@ -206,6 +257,92 @@ def check_tokens(full, findings, skip_lines, path):
         findings.append((ln, "DS10", "fehler",
                          f"unbekanntes Token {name} – CSS löst es still zu nichts auf; "
                          f"Skala in tokens.css prüfen oder Rückfallwert setzen"))
+
+
+_EMPH_SEL = re.compile(r"\b(strong|b|i|em|h[1-4]|body)\b|\.(kicker|kick|lede|note|hint)")
+
+
+def check_rules(cleaned, ref_text, base_off, findings, c, skip_lines, check_ds04=True):
+    """Läuft über alle Selektor{Körper}-Regeln eines bereits Kommentar- und
+    @media/@supports/@keyframes-bereinigten CSS-Texts und prüft DS02/03 (im
+    Körper, via check_colors_sizes) sowie DS04/DS05 (am Selektor). EINE Stelle
+    für ‹was ist ein Verstoss›, egal ob das CSS in einem <style>-Block der
+    Seite steht oder in einer verlinkten Datei – lint_file() und lint_css_file()
+    rufen dieselbe Funktion.
+
+    `check_ds04` schaltet die Rollen-Redefinitions-Prüfung ab: Fundament-CSS
+    (design-system/base.css & Co.) DEFINIERT .kicker/.hint/.btn/… – das ist die
+    Quelle, keine seiten-lokale Redefinition ihrer selbst. Seiten-CSS (z. B.
+    apps/…/campaign.css), das dieselben Klassen mit eigener font-size/color
+    erneut aufmacht, bleibt geprüft."""
+    for rm in RE_RULE.finditer(cleaned):
+        sel, body = rm.group(1), rm.group(2)
+        body_off = base_off + rm.start(2)
+        check_colors_sizes(body, body_off, ref_text, findings, c, skip_lines)
+        sel_ln = lineno(ref_text, base_off + rm.start(1))
+        if sel_ln in skip_lines:
+            continue
+        # DS04 – kanonische Rolle lokal redefiniert? Nur SCHLÜSSEL-Selektoren
+        # (bare/compound), nicht kontextuelle Überschreibungen (`.download .btn`
+        # ist legitim – das ist Verortung, keine Neudefinition der Rolle).
+        if check_ds04 and ("font-size" in body or re.search(r"\bcolor\s*:", body)):
+            canon = set(c["rollen"]["kanonische_klassen"])
+            for part in sel.split(","):
+                if re.search(r"[ >+~]", part.strip()):
+                    continue  # Nachfahren-Selektor = Verortung, kein Redefinieren
+                classes = set(re.findall(r"\.([A-Za-z][\w-]*)", part))
+                if classes & canon:
+                    hit = sorted(classes & canon)[0]
+                    findings.append((sel_ln, "DS04", "hinweis",
+                                     f".{hit} lokal redefiniert – kanonische Rolle aus base.css nutzen"))
+                    break
+        # DS05 – verbotene Hervorhebung
+        if "text-transform" in body and "uppercase" in body:
+            findings.append((sel_ln, "DS05", "hinweis",
+                             f"text-transform:uppercase ({sel.strip()[:32]}) – Versal nicht als Hervorhebung (G05)"))
+        if "underline" in body:
+            # Nur auf BARE/compound-Selektoren (direkt auf strong/em/.kicker/…) ist
+            # underline eine Hervorhebung. »<container> a« (Link IM Fliesstext/in
+            # .note/.hint) ist Link-Konvention, nicht Betonung – DS05 nimmt Links
+            # ausdrücklich aus (contract.json, Hinweis). Ohne diese Nachfahren-
+            # Ausnahme meldet base.css seine eigene, bewusste Link-Regel
+            # (»p a,li a,.note a,.hint a{text-decoration:underline}«) als Verstoss
+            # gegen sich selbst – Befund beim ersten Mitlesen des Fundaments.
+            for part in sel.split(","):
+                p = part.strip()
+                if re.search(r"[ >+~]", p):
+                    continue
+                if _EMPH_SEL.search(p):
+                    findings.append((sel_ln, "DS05", "hinweis",
+                                     f"underline auf Betonung ({sel.strip()[:32]}) – Laut statt Unterstrich (G05)"))
+                    break
+
+
+_CSS_FILE_CACHE = {}
+
+
+def lint_css_file(relpath, c):
+    """Prüft eine verlinkte, repo-eigene CSS-Datei GENAU EINMAL, unabhängig
+    davon, wie viele HTML-Seiten sie per <link> einbinden – base.css/nav.css
+    stecken auf 60+ Seiten; ohne Cache meldete jede denselben Treffer erneut.
+    Ergebnis wird pro Lauf gecacht und dem Aufrufer (main()) mit den Zeilen der
+    CSS-DATEI SELBST zurückgegeben (nicht der Zeile des <link>-Tags) – main()
+    hängt die Herkunft (welche Seiten sie einbinden) beim Bericht an."""
+    if relpath in _CSS_FILE_CACHE:
+        return _CSS_FILE_CACHE[relpath]
+    fp = os.path.join(ROOT, relpath)
+    raw = open(fp, encoding="utf-8").read()
+    text = strip_comments(raw)  # Länge/Zeilen bleiben gleich, nur Kommentare weg
+    findings = []
+    skip_lines = {lineno(raw, m.start()) for m in re.finditer(r"#\s*ds-ok", raw)}
+    cleaned = RE_ATRULE.sub(lambda m: " " * len(m.group(0)), text)
+    # design-system/*.css DEFINIERT die kanonischen Rollen – DS04 gilt für
+    # Seiten-CSS, das sie NUTZT, nicht für ihre eigene Quelle.
+    check_ds04 = not relpath.startswith("design-system" + os.sep)
+    check_rules(cleaned, text, 0, findings, c, skip_lines, check_ds04=check_ds04)
+    findings.sort(key=lambda f: (f[0], f[1]))
+    _CSS_FILE_CACHE[relpath] = findings
+    return findings
 
 
 def lint_file(path, c):
@@ -264,45 +401,23 @@ def lint_file(path, c):
 
     # CSS-Kontexte (Blöcke + inline) – ohne <script>
     scriptless = RE_SCRIPT.sub(lambda m: "\n" * m.group(0).count("\n"), full)
-    canon = set(c["rollen"]["kanonische_klassen"])
-    emph_sel = re.compile(r"\b(strong|b|i|em|h[1-4]|body)\b|\.(kicker|kick|lede|note|hint)")
 
     for content, off in css_blocks(scriptless):
-        cleaned = RE_ATRULE.sub(lambda m: " " * len(m.group(0)), content)
-        for rm in RE_RULE.finditer(cleaned):
-            sel, body = rm.group(1), rm.group(2)
-            body_off = off + rm.start(2)
-            check_colors_sizes(body, body_off, scriptless, findings, c, skip_lines)
-            sel_ln = lineno(scriptless, off + rm.start(1))
-            if sel_ln in skip_lines:
-                continue
-            # DS04 – kanonische Rolle lokal redefiniert? Nur SCHLÜSSEL-Selektoren
-            # (bare/compound), nicht kontextuelle Überschreibungen (`.download .btn`
-            # ist legitim – das ist Verortung, keine Neudefinition der Rolle).
-            if "font-size" in body or re.search(r"\bcolor\s*:", body):
-                for part in sel.split(","):
-                    if re.search(r"[ >+~]", part.strip()):
-                        continue  # Nachfahren-Selektor = Verortung, kein Redefinieren
-                    classes = set(re.findall(r"\.([A-Za-z][\w-]*)", part))
-                    if classes & canon:
-                        hit = sorted(classes & canon)[0]
-                        findings.append((sel_ln, "DS04", "hinweis",
-                                         f".{hit} lokal redefiniert – kanonische Rolle aus base.css nutzen"))
-                        break
-            # DS05 – verbotene Hervorhebung
-            if "text-transform" in body and "uppercase" in body:
-                findings.append((sel_ln, "DS05", "hinweis",
-                                 f"text-transform:uppercase ({sel.strip()[:32]}) – Versal nicht als Hervorhebung (G05)"))
-            if "underline" in body and emph_sel.search(sel):
-                findings.append((sel_ln, "DS05", "hinweis",
-                                 f"underline auf Betonung ({sel.strip()[:32]}) – Laut statt Unterstrich (G05)"))
+        content_nc = strip_comments(content)  # gleiche Länge/Zeilen, Kommentare weg
+        cleaned = RE_ATRULE.sub(lambda m: " " * len(m.group(0)), content_nc)
+        check_rules(cleaned, scriptless, off, findings, c, skip_lines, check_ds04=True)
 
     # Inline-styles im Markup
     for m in RE_INLINE.finditer(scriptless):
         check_colors_sizes(m.group(1), m.start(1), scriptless, findings, c, skip_lines)
 
     findings.sort(key=lambda f: (f[0], f[1]))
-    return findings
+    # Repo-eigene verlinkte CSS-Dateien werden NICHT hier mitgeprüft (siehe
+    # lint_css_file): dieselbe Datei steckt oft in Dutzenden Seiten, und ohne
+    # eigenen, gecachten Lauf würde main() ihren Verstoss pro Seite erneut
+    # melden. lint_file() liefert nur, WELCHE Dateien diese Seite einbindet;
+    # main() prüft jede davon genau einmal und weist die Herkunft separat aus.
+    return findings, linked_css(full, path)
 
 
 def main():
@@ -320,19 +435,21 @@ def main():
     files = [f for f in files if not excluded(f, c)]
 
     checked = 0
-    conformant = 0
     total_err = 0
     total_warn = 0
     by_rule = {}
     report = []
+    konform_pages = set()   # Seiten ohne EIGENEN Fehler – vor Abzug der CSS-Herkunft
+    css_refs = {}           # csspath -> [Seiten, die sie einbinden] (Reihenfolge egal)
 
     for path in sorted(set(files)):
         fp = os.path.join(ROOT, path)
         if not os.path.exists(fp):
             continue
-        res = lint_file(path, c)
-        if res is None:
+        result = lint_file(path, c)
+        if result is None:
             continue  # Stub
+        res, linked = result
         checked += 1
         errs = [f for f in res if f[2] == "fehler"]
         warns = [f for f in res if f[2] == "hinweis"]
@@ -341,9 +458,46 @@ def main():
         for ln, rid, sev, msg in res:
             by_rule[rid] = by_rule.get(rid, 0) + 1
         if not errs:
-            conformant += 1
+            konform_pages.add(path)
         if res:
             report.append((path, res))
+        for csspath in linked:
+            css_refs.setdefault(csspath, []).append(path)
+
+    # Jede verlinkte, repo-eigene CSS-Datei GENAU EINMAL prüfen (nicht je Seite,
+    # die sie einbindet – base.css/nav.css stecken in fast allen 63 Seiten).
+    # Ihre Verstösse zählen einmal in Fehler/Hinweise/je-Regel; für den SCORE
+    # gilt eine Seite trotzdem als nicht konform, wenn eine von ihr eingebundene
+    # CSS-Datei einen Fehler trägt – das Blatt, das gerendert wird, hat ihn ja.
+    # Erstmessung: BERICHTEND, noch kein Tor. Dieselbe Vorsicht wie bei DS08
+    # (Barrierefreiheit) – base.css und nav.css stecken in 52 bis 60 der 63
+    # Seiten; ihre acht Altlasten sofort blockierend zu stellen hiesse, das
+    # Gate fürs ganze Haus rot zu schalten, bevor jemand entscheiden konnte.
+    # Der Stand steht im Vertrag (verlinktes_css.stand) und wird dort auf
+    # ‹tor› gedreht, sobald der Rückstand abgetragen ist.
+    css_regel = c.get("verlinktes_css", {})
+    css_ist_tor = css_regel.get("stand") == "tor"
+
+    css_report = []
+    pages_mit_css_fehler = set()
+    css_err_gesamt = 0
+    for csspath in sorted(css_refs):
+        css_findings = lint_css_file(csspath, c)
+        if not css_findings:
+            continue
+        css_errs = [f for f in css_findings if f[2] == "fehler"]
+        css_warns = [f for f in css_findings if f[2] == "hinweis"]
+        css_err_gesamt += len(css_errs)
+        if css_ist_tor:
+            total_err += len(css_errs)
+        total_warn += len(css_warns)
+        for ln, rid, sev, msg in css_findings:
+            by_rule[rid] = by_rule.get(rid, 0) + 1
+        css_report.append((csspath, css_findings, css_refs[csspath]))
+        if css_errs and css_ist_tor:
+            pages_mit_css_fehler.update(css_refs[csspath])
+
+    conformant = len(konform_pages - pages_mit_css_fehler)
 
     if not only_score:
         for path, res in report:
@@ -353,12 +507,31 @@ def main():
                 print(f"  {col(str(ln).rjust(4),'dim')}  {tag}  {msg}")
             print()
 
+        if css_report:
+            kopf = "── verlinkte CSS (je Datei einmal geprüft) ────────────────"
+            print(col(kopf, "dim"))
+            if not css_ist_tor and css_err_gesamt:
+                print(col(f"   Rückstand der Erstmessung: {css_err_gesamt} Verstoss/Verstösse — "
+                          "berichtend, noch kein Tor (contract.json → verlinktes_css).", "yel"))
+            for csspath, css_findings, pages in css_report:
+                seiten = sorted(pages)
+                preview = ", ".join(seiten[:4])
+                mehr = f" · +{len(seiten) - 4} weitere" if len(seiten) > 4 else ""
+                print(col(csspath, "b") +
+                      col(f"  (eingebunden von {len(seiten)} Seite{'n' if len(seiten) != 1 else ''}: {preview}{mehr})", "dim"))
+                for ln, rid, sev, msg in css_findings:
+                    tag = col(f"{rid} {sev}", SEV_COL.get(sev, "dim"))
+                    print(f"  {col(str(ln).rjust(4),'dim')}  {tag}  {msg}")
+                print()
+
     score = (conformant / checked) if checked else 1.0
     bar = "█" * round(score * 24) + "·" * (24 - round(score * 24))
     print(col("── Konformität ─────────────────────────────────────────", "dim"))
     print(f"  Seiten geprüft:   {checked}")
     print(f"  konform (0 Fehler): {conformant}")
     print(f"  Verstöße:         {col(str(total_err),'red')} Fehler · {col(str(total_warn),'yel')} Hinweise")
+    if css_err_gesamt and not css_ist_tor:
+        print(f"  {col('dazu berichtend:', 'yel')}  {css_err_gesamt} in verlinktem CSS (Rückstand, blockiert noch nicht)")
     if by_rule:
         order = sorted(by_rule.items(), key=lambda kv: kv[0])
         print("  je Regel:         " + " · ".join(f"{k} {v}" for k, v in order))

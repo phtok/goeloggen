@@ -32,7 +32,9 @@
   .sek .f.basis{grid-column:1/-1;min-height:120px}
   .sek .f .rolle{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body)}
   .sek .f .hx{font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.02em}
-  .sek .f .k{opacity:.92}
+  /* Keine Deckkraft auf der Kontrastzeile: sechs Sektionen tragen einen dunklen
+     Ton mit knapp 4.6:1 – 92 % Deckkraft drückten ihn unter die 4.5:1 (B02,
+     gefunden von tools/barrierefreiheit.mjs, nicht vom Auge). */
   @media(min-width:520px){
     .sek .farben{grid-template-columns:2fr 1fr 1fr}
     .sek .f.basis{grid-column:auto;min-height:132px}
@@ -58,36 +60,16 @@
     background:var(--field-bg);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:.5em}
   .waehler button .punkt{width:.85em;height:.85em;border-radius:50%;flex:none}
   .waehler button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent)}
-  .anw{--x:var(--sek-aas);--x-on:var(--on-sek-aas);--x-dunkel:var(--sek-aas-dunkel);--x-hell:var(--sek-aas-hell);--x-ink:var(--sek-aas-ink);
-    display:grid;gap:var(--s4)}
+  .anw{display:grid;gap:var(--s4)}
   @media(min-width:760px){.anw{grid-template-columns:1fr 1fr}}
   .bsp{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s4);display:flex;flex-direction:column;gap:var(--s3)}
   .bsp > .meta{order:9}
-  .bsp .rolle-t{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
-  /* 1 · Kopfband: dunkle Fläche, Weiss drauf */
-  .kopfband{background:var(--x-dunkel);color:var(--on-accent);border-radius:var(--r-control);padding:var(--s5) var(--s5) var(--s6)}
-  .kopfband .kick{color:var(--on-accent);opacity:.85}
-  .kopfband h3{color:var(--on-accent);font-size:var(--t-h3);max-width:22ch;margin:0}
-  .kopfband p{color:var(--on-accent);font-family:var(--font-text);font-size:var(--t-small);margin-top:var(--s2)}
-  /* 2 · Chip/Etikett: helle Fläche, Sektionstinte */
-  .chip.sek{background:var(--x-hell);color:var(--x-ink);border-color:transparent;font-weight:600}
-  /* 3 · Hinweiskasten: helle Fläche, Lesetext in --ink, Kante im dunklen Ton */
-  .kasten{background:var(--x-hell);color:var(--ink);border-left:4px solid var(--x-dunkel);border-radius:0 var(--r-control) var(--r-control) 0;
-    padding:var(--s4) var(--s5);font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-body)}
-  .kasten b{color:var(--x-ink);font-weight:600}
-  /* 4 · Kicker und Link: Sektion als Text auf Papier */
-  .textprobe .kick{color:var(--x-ink)}
+  .bsp .band h3{max-width:22ch}
+  /* Kicker und Link tragen den Ton als Schrift (Fundament kennt die Rolle, nicht die Stelle). */
+  .textprobe .kick{color:var(--ton-ink)}
   .textprobe h3{font-size:var(--t-h3);margin:0 0 var(--s2)}
   .textprobe p{font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure)}
-  .textprobe a{color:var(--x-ink);text-decoration-color:var(--x-hell)}
-  /* 5 · Aktion: Basisfarbe als Knopf, Vordergrund aus --on-sek-* */
-  .btn.sek{background:var(--x);border-color:var(--x);color:var(--x-on);font-weight:var(--w-strong)}
-  /* 6 · Marke: Basisfarbe als Linie an einer Karte */
-  .marke{border:1px solid var(--line);border-top:5px solid var(--x);border-radius:var(--r-card);padding:var(--s4) var(--s5);background:var(--soft)}
-  .marke h3{font-size:var(--t-h3);margin:0}
-  .marke .meta{margin-top:var(--s1)}
-
-
+  .textprobe a{color:var(--ton-ink);text-decoration-color:var(--ton-hell)}
 
   .fineprint{margin-top:var(--s8);color:var(--muted);font-size:var(--t-small);max-width:64ch;font-family:var(--font-text);line-height:1.6}
   .fineprint b{color:var(--ink);font-weight:600}
@@ -128,15 +110,15 @@
     <div class="waehler" id="waehler" role="group" aria-label="Sektion wählen"></div>
     <div class="anw" id="anw">
       <div class="bsp">
-        <div class="kopfband"><span class="kick">Tagung · 14. bis 16. Mai</span>
+        <div class="band"><span class="kick">Tagung · 14. bis 16. Mai</span>
           <h3 id="bsp-titel">Titel der Sektion</h3>
           <p>Freie Hochschule für Geisteswissenschaft · Goetheanum, Dornach</p></div>
         <p class="meta">Kopfband · Dunkel mit Weiss</p>
       </div>
       <div class="bsp">
-        <div><span class="chip sek" id="bsp-chip">Sektion</span> <span class="chip sek">Neu</span> <span class="chip sek">Rundbrief 3/2026</span></div>
-        <div class="marke"><h3>Studienwoche im Herbst</h3><p class="meta">Anmeldung bis 30. September</p></div>
-        <p class="meta">Chips · Hell mit Sektionstinte. Marke · Basis als Linie</p>
+        <div><span class="chip ton" id="bsp-chip">Sektion</span> <span class="chip ton">Neu</span> <span class="chip ton">Rundbrief 3/2026</span></div>
+        <div class="card ton"><h3>Studienwoche im Herbst</h3><p class="meta">Anmeldung bis 30. September</p></div>
+        <p class="meta">Chips · Hell mit Sektionstinte. Karte · Basis als Kante</p>
       </div>
       <div class="bsp">
         <div class="kasten"><b>Hinweis der Sektion.</b> Die Anmeldung ist offen; Mitglieder der Hochschule erhalten den Studienbrief vorab.</div>
@@ -149,8 +131,8 @@
         <p class="meta">Kicker und Link · Sektionstinte auf Papier</p>
       </div>
       <div class="bsp">
-        <div><button class="btn sek" type="button">Zur Sektion</button> <button class="btn" type="button">Programm</button></div>
-        <p class="meta">Knopf · Basis</p>
+        <div><button class="btn ton" type="button">Zur Sektion</button> <button class="btn" type="button">Programm</button></div>
+        <p class="meta">Knopf · Dunkel mit Weiss</p>
       </div>
     </div>
   </section>
@@ -282,9 +264,8 @@
 
   // --- Anwendung -------------------------------------------------------------
   function waehle(key){
-    var s=ALLE.filter(function(x){return x.key===key;})[0]||SEK[0], anw=$("#anw"), t="--"+s.fam+"-"+s.key;
-    ["","-dunkel","-hell","-ink"].forEach(function(p){anw.style.setProperty("--x"+(p||""),"var("+t+p+")");});
-    anw.style.setProperty("--x-on","var(--on-"+s.fam+"-"+s.key+")");
+    var s=ALLE.filter(function(x){return x.key===key;})[0]||SEK[0], anw=$("#anw");
+    anw.dataset.sek=s.key;   // ein Attribut färbt alles darin (tokens.css)
     var kurz=(O[s.key]&&O[s.key].short_de)||s.name;
     $("#bsp-titel").textContent=s.key==="goetheanum"?"Tagung am Goetheanum":s.name;
     $("#bsp-chip").textContent=kurz; $("#bsp-kick").textContent=kurz;

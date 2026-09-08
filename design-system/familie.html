@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Familienmenü · Goetheanum</title>
+<meta name="description" content="Von jeder Seite der Goetheanum-Familie zurück ins Ganze: eine Marke unten in der Ecke, ein Menü mit allen Bereichen – hier ausprobieren und einbinden." />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+<link rel="stylesheet" href="nav.css" />
+<link rel="stylesheet" href="familie.css" />
+<style>
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+  .steuer{display:grid;gap:var(--s5);max-width:640px}
+  .steuer .field select{font-size:16px}
+  .snippet{position:relative}
+  .snippet .kopie{position:absolute;top:var(--s3);right:var(--s3)}
+  .flaeche{min-height:90vh;display:grid;gap:var(--s4);align-content:start}
+</style>
+</head>
+<body>
+
+<script src="nav.js" data-root="../" data-section="system" data-active="familie"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Design-System</span>
+    <h1>Familienmenü</h1>
+    <p class="lede">Von jeder Seite der Goetheanum-Familie zurück ins Ganze: eine Marke unten in der Ecke, ein Menü mit allen Sektionen, Bereichen und Medien.</p>
+  </section>
+
+  <section id="probieren">
+    <div class="shead">
+      <h2>Probieren</h2>
+      <p>Die Marke liegt unten in der Ecke. Ecke, Standort und Sprache hier umstellen.</p>
+    </div>
+    <div class="card soft steuer">
+      <div class="field">
+        <span class="lab">Ecke</span>
+        <div class="seg" role="group" aria-label="Ecke wählen" id="ecke">
+          <button type="button" data-seite="links" aria-pressed="true">Links unten</button>
+          <button type="button" data-seite="rechts" aria-pressed="false">Rechts unten</button>
+        </div>
+      </div>
+      <label class="field">
+        <span class="lab">Standort der Seite</span>
+        <select id="here"><option value="">Keiner</option></select>
+      </label>
+      <label class="field">
+        <span class="lab">Sprache</span>
+        <select id="lang">
+          <option value="de">Deutsch</option><option value="en">English</option>
+          <option value="fr">Français</option><option value="es">Español</option>
+        </select>
+      </label>
+      <div><button class="btn primary" type="button" id="auf">Menü öffnen</button></div>
+    </div>
+  </section>
+
+  <section id="einbinden">
+    <div class="shead">
+      <h2>Einbinden</h2>
+      <p>Eine Zeile vor dem schliessenden <code>&lt;/body&gt;</code>. Der Standort ist der Schlüssel der eigenen Sektion oder des Bereichs.</p>
+    </div>
+    <div class="snippet">
+      <pre class="code" id="snippet" tabindex="0">&lt;script src="https://werkzeuge.goetheanum.ch/design-system/familie.js"
+        data-here="ms" data-lang="de"&gt;&lt;/script&gt;</pre>
+      <button class="btn kopie" type="button" id="kopie">Kopieren</button>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Schlüssel: <span id="keys" class="readout"></span></p>
+  </section>
+
+  <section class="flaeche" aria-label="Probierfläche">
+    <div class="shead">
+      <h2>Probierfläche</h2>
+    </div>
+    <div class="card"><p class="lese">Blatt zum Scrollen, damit die Marke über Inhalt liegt. Bleibt die Seite ruhig, wird sie leiser.</p></div>
+    <div class="card"><p class="lese"><a href="#probieren">Ein Verweis zum Anspringen</a>, weit unten auf der Seite.</p></div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="./">Design-System</a></span>
+  </div>
+</footer>
+
+<script src="familie.js" data-seite="links" data-lang="de"></script>
+<script>
+(function () {
+  var seg = document.getElementById("ecke");
+  seg.addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    var all = seg.querySelectorAll("button");
+    for (var i = 0; i < all.length; i++) all[i].setAttribute("aria-pressed", String(all[i] === b));
+    goeFamilie.setSeite(b.dataset.seite);
+  });
+  var here = document.getElementById("here");
+  here.addEventListener("change", function () { goeFamilie.setHere(here.value); });
+  var lang = document.getElementById("lang");
+  lang.addEventListener("change", function () { goeFamilie.setLang(lang.value); });
+  document.getElementById("auf").addEventListener("click", function () { goeFamilie.oeffnen(); });
+
+  // Standort-Wähler und Schlüsselliste aus derselben Quelle wie das Menü.
+  fetch("familie.json").then(function (r) { return r.json(); }).then(function (j) {
+    var keys = [];
+    (j.gruppen || []).forEach(function (g) {
+      if (g.id === "goetheanum") return;
+      var og = document.createElement("optgroup"); og.label = g.titel.de;
+      (g.eintraege || []).forEach(function (e) {
+        var o = document.createElement("option"); o.value = e.key; o.textContent = e.titel.de; og.appendChild(o);
+        if (e.farbe) keys.push(e.key);
+      });
+      here.appendChild(og);
+    });
+    document.getElementById("keys").textContent = keys.join(" · ");
+  });
+
+  var kopie = document.getElementById("kopie");
+  kopie.addEventListener("click", function () {
+    var t = document.getElementById("snippet").textContent;
+    navigator.clipboard.writeText(t).then(function () {
+      kopie.textContent = "Kopiert"; setTimeout(function () { kopie.textContent = "Kopieren"; }, 1400);
+    }, function () {});
+  });
+})();
+</script>
+</body>
+</html>
