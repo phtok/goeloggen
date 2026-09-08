@@ -76,6 +76,10 @@
 .bluete .acc+.acc{margin-top:var(--s3)}
 .bluete .acc:hover{border-color:var(--ak)}
 .bluete .acc.is-open{border-color:var(--ak);box-shadow:var(--shadow-card)}
+/* Die Zahl folgt dem Rahmen: mit ihm grau, mit ihm farbig – aber in der TINTE
+   (--ak-ink, ≥4.5:1 auf Papier), nicht in der Basisfarbe: die trägt als Linie,
+   nicht als Schrift (B02). Ein Merkmal wechselt, die Farbe (G01). */
+.bluete .acc:hover .nr,.bluete .acc.is-open .nr{color:var(--ak-ink)}
 /* Nummer als eigene Zeile über der Frage (wie im Faden): Frage und Antwort laufen
    bündig, die Zahl bleibt leise. Zeilenabstand nach der Zahl aus --s2, damit sie
    atmet und nicht am Fragentext klebt. */
