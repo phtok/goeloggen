@@ -163,11 +163,22 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
    Goetheanum-Schriftschnitt (Laut/680) empirisch vermessen (Pixel-Analyse der
    Tinten-Bounding-Box gegen die geometrische Kreismitte) und deckt sich mit den
    Font-Metriken (hhea ascent 750 / descent −250 vs. Ziffern-Tintenmitte ≈ 330/1000).
-   Unabhängig pixelverifiziert im Kartentool (7/2026, docs/werkzeugwissen.md). */
+   Unabhängig pixelverifiziert im Kartentool (7/2026, docs/werkzeugwissen.md).
+
+   Der SITZ DER KUGEL im Titel ist eine zweite Messung (8. 9. 2026): als
+   Inline-Box hängt sie an der Grundlinie und sitzt damit sichtbar zu tief –
+   ihre Mitte lag 5.4 px unter der Versalmitte des Titels (bei 28.8 px Grad;
+   Versalhöhe 20, x-Höhe 14, per Tinten-Messung auf Canvas). Eine Marke neben
+   einem Titel gehört auf die MITTE DER VERSALHÖHE, nicht auf die Grundlinie.
+   Die Korrektur ist rein optisch (position:relative statt vertical-align),
+   damit die Zeilenbox des Titels unverändert bleibt und der Durchschuss nicht
+   springt; 0.26em der Kugel-Grösse = die gemessenen 5.4 px, und weil beide
+   Grössen am Titelgrad hängen, trägt der Wert über die ganze Skala. */
 .step-num{display:inline-flex;align-items:center;justify-content:center;flex:none;
   width:1.6em;height:1.6em;min-width:1.6em;border-radius:999px;
   font-weight:var(--w-strong);font-size:.72em;
-  background:var(--gold-deep);color:var(--on-accent)}
+  background:var(--gold-deep);color:var(--on-accent);
+  position:relative;top:-0.26em}
 .step-num.blue{background:var(--blue-solid)}
 .step-num>*{display:block;line-height:1;font-variant-numeric:tabular-nums lining-nums;transform:translateY(8%)}
 

@@ -16,7 +16,7 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
-## 8. September 2026 — Orange darf nicht braun werden (1.21.0)
+## 8. September 2026 — Orange darf nicht braun werden (1.22.0)
 
 **Was.** Die dunkle Fläche der Heilpädagogik steht heller und schöpft ihre
 Buntheit aus: **`--sek-hpise-dunkel` #AF5400** statt #804C2B (Weiss 5.13:1).
@@ -44,6 +44,115 @@ Nachbarn. Das ist gewollt: Es gleicht aus, dass Orange bei gleicher Helligkeit
 dunkler und schmutziger wirkt als Blau oder Grün. Regel für neue Ausnahmen:
 **nur mit Muster und Beschluss** – der Block in `sek-varianten.py` sagt das.
 Alle 165 Kontraste halten weiterhin ≥ 4.5:1 in beiden Themes.
+## 8. September 2026 — der Text der Kapsel liegt auf einem halben Hauch (1.21.4)
+
+**Was.** Die geöffnete Kapsel steht nicht mehr auf blankem Papier, sondern auf
+**55 % von `--ton-hell` über Papier** – einem halben Hauch. Geschlossen bleibt
+die volle Fläche; der offene Grund ist damit immer der ruhigere von beiden.
+
+**Warum.** Der Auftraggeber: «Ich fände es schon gut, wenn der Text ganz ganz
+leicht hinterlegt wäre.» Papier war eine Stufe zu weit – die Antwort verlor
+ihre Zugehörigkeit zur Karte und stand einfach auf der Seite. Ein halber Hauch
+gibt ihr wieder ein Feld, ohne dass der Satz trägt, was er nicht muss.
+
+**Wirkung.** `akkordeon.css`, Kleid Kapsel. Die Reihe der Gründe von schwer nach
+leicht: Band (`--ton-dunkel`) → geschlossene Kapsel (`--ton-hell`) → offener
+Lesegrund (halber Hauch) → Papier. **Je mehr Text, desto leiser der Grund.**
+
+## 8. September 2026 — die Schritt-Kugel sitzt auf der Versalmitte (1.21.3)
+
+**Was.** `.step-num` wird um **0.26em ihrer eigenen Grösse angehoben** (rein
+optisch, `position:relative`, damit die Zeilenbox des Titels unverändert
+bleibt).
+
+**Warum.** Der Auftraggeber sah es am Blatt: «Die Kugel sitzt zu tief.» Die
+Messung gab ihm recht — als Inline-Box hing die Kugel an der **Grundlinie**,
+ihre Mitte lag damit **5.4 px unter der Versalmitte** des Titels (28.8 px Grad,
+Versalhöhe 20, x-Höhe 14; Tinte auf Canvas vermessen, nicht geschätzt). Eine
+Marke neben einem Titel gehört auf die Mitte der Versalhöhe: die Grundlinie ist
+die Kante, auf der der Text steht, nicht seine Mitte. Nachgemessen sitzt die
+Kugel jetzt auf −10 px, exakt auf der Versalmitte.
+
+**Wirkung.** `base.css`. Betrifft beide Seiten, die die Kugel führen
+(`akkordeon.html`, `apps/logos/`) — beide nachgesehen. Regel für runde Marken
+neben Text: **auf die Versalmitte heben, nicht auf der Grundlinie hängen
+lassen** — und die Korrektur optisch setzen, damit der Durchschuss nicht
+springt.
+
+## 8. September 2026 — die Kapsel lernt von der Blüte: Text auf Papier (1.21.2)
+
+**Was.** Die geöffnete Kapsel wechselt ihren Grund: die Antwort steht auf
+**Papier** (mit der Haarlinie der Blüte), nicht mehr auf dem Farbhauch. Der
+Hauch bleibt der Grund der **geschlossenen** Kapsel; offen trägt nur noch das
+Band die Farbe. Einzug und Innenabstand übernehmen die Masse der Blüte
+(`--s6` links, `--s4` oben und unten am Band).
+
+**Warum.** Der Auftraggeber: «Die Blüte ist ein gutes Vorbild.» Ihre Leichtigkeit
+kommt nicht vom Radius, sondern vom **Grund**: eine gefüllte Fläche wiegt
+schwerer als eine umrissene, und Mengentext braucht den ruhigsten Grund, den es
+gibt. Damit behält die Kapsel ihr Merkmal – die farbige Fläche –, gibt es aber
+dort auf, wo gelesen wird.
+
+**Wirkung.** `akkordeon.css`, Kleid Kapsel. Regel dahinter: **die Farbe zeigt
+den Zustand, das Papier trägt den Text.** Geschlossen = Hauch, offen = Band auf
+Papier.
+
+## 8. September 2026 — die Kapsel wird ruhig: dezenter Radius, mehr Luft (1.21.1)
+
+**Was.** Das Kleid Kapsel verliert seine Kapselform: der Radius fällt von einer
+halben Zeilenhöhe (rund 46 px) auf **`--r-card`, 14 px**. Dafür mehr
+Innenabstand — Kopfzeile und Antwort tragen `--s5` (schmal `--s4`), Frage und
+Antwort stehen links auf **derselben Kante** (gemessen 139 px breit, 28 px
+schmal). Offen wird die Frage zu einem **Band**: oben gerundet, unten bündig in
+die Karte laufend; die Karte selbst bleibt rund. Der Abstand zwischen den Karten
+wächst von `--s3` auf `--s4`.
+
+**Warum.** Der Auftraggeber: die Kapsel hat bisher keinen Fürsprecher gefunden,
+und der Text wirkte **eingequetscht**. Zu Recht — eine starke Rundung frisst
+Satzspiegel: an den Ecken bleibt vom Innenabstand nichts übrig, der Text
+rückt in die Mitte und die Fläche drückt von zwei Seiten. Dazu kam ein
+Fehler aus dem Wegfall der Nummer: die Antwort behielt ihren Einzug von
+`--s3 + 2.2em + --s4` und stand damit rund 50 px weiter innen als die Frage.
+
+**Wirkung.** `akkordeon.css`, Kleid Kapsel. Regel dahinter: **Rundung und
+Innenabstand hängen zusammen** — wer den Radius erhöht, muss den Innenabstand
+mitziehen, sonst verliert der Satz an den Ecken, was er in der Mitte hat.
+
+## 8. September 2026 — das Akkordeon lässt los: unabhängig, zeigbar, aus dem Fundament gefärbt (1.21.0)
+
+**Was.** Vier Änderungen am Modul Akkordeon, dazu das Aufgehen im Fundament:
+
+1. **Antworten öffnen unabhängig.** Eine neu geöffnete schliesst die anderen
+   nicht mehr; beliebige Kombinationen bleiben stehen. «Alle aufklappen» bleibt
+   und spiegelt jetzt den Stand der Liste, egal wie er zustande kam.
+2. **Die Nummer ist optional und entfällt.** Fehlt `span.nr`, wird die Zeile
+   einreihig (`summary:not(:has(.nr))`). Die Schau-Seite zeigt alle drei Kleider
+   ohne Zahlen.
+3. **Der Faden zeigt seine Bedienbarkeit.** Bei Hover legt sich ein Hauch Ton
+   (7 % auf Papier) unter die ganze Zeile – Winkel, Text und Fläche sind
+   dieselbe Aktion. Der Fokusring bleibt unverändert.
+4. **Jede Antwort ist teilbar.** Wer eine öffnet, bekommt ihre Adresse in die
+   Adresszeile (`replaceState`, kein Sprung, kein Eintrag in der
+   Zurück-Geschichte); am Fuss der Antwort steht ‹Link kopieren›.
+5. **Die Farbrollen kommen aus dem Fundament.** Die dreizehn eigenen
+   `[data-sek]`-Regeln des Moduls sind weg; es liest `--ton`, `--ton-dunkel`,
+   `--ton-hell`, `--ton-ink` (1.20.0) mit Gold als Fallback. Damit färbt auch ein
+   `data-sek` weiter oben im Dokument das Akkordeon mit, und Bühne und
+   Bau-Administration kommen gratis dazu.
+
+**Warum.** Der Auftraggeber, mit Belegen: **GOV.UK** setzt sein Akkordeon
+mehrfach offen, weil zusammengehörige Fragen sich vergleichen lassen müssen –
+Teilnahme und Mitgliedschaft liest man nebeneinander, nicht nacheinander. Das
+Einfach-offen war eine Annahme, keine Anforderung. **NN/g** stützt, Text und
+Zeichen dieselbe Aktion auslösen zu lassen; die Hover-Fläche macht sichtbar,
+was schon galt. Und Direktlinks, die nur beim Ankommen funktionieren, aber beim
+Öffnen keine Adresse hinterlassen, sind für den Leser nicht auffindbar.
+
+**Wirkung.** `akkordeon.css` verliert 13 Regeln an das Fundament (Atem);
+`akkordeon.js` verliert die Einfach-offen-Mechanik samt Sprungausgleich – der
+wurde nur gebraucht, weil sich etwas darüber schloss. Für Craft: der Anker
+kommt aus der **ID der Zeile**, nicht aus `loop.index`, damit ein geteilter Link
+gültig bleibt, wenn Fragen umsortiert werden.
 
 ## 8. September 2026 — ein Attribut färbt einen Abschnitt (1.20.0)
 
