@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
 <title>Familienmenü · Goetheanum</title>
-<meta name="description" content="Von jeder Seite der Goetheanum-Familie zurück ins Ganze: eine Marke unten links, ein Menü mit allen Bereichen – hier ausprobieren und einbinden." />
+<meta name="description" content="Von jeder Seite der Goetheanum-Familie zurück ins Ganze: eine Marke unten in der Ecke, ein Menü mit allen Bereichen – hier ausprobieren und einbinden." />
 <link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="tokens.css" />
 <link rel="stylesheet" href="base.css" />
@@ -31,21 +31,20 @@
   <section class="hero">
     <span class="kicker">Design-System</span>
     <h1>Familienmenü</h1>
-    <p class="lede">Von jeder Seite der Goetheanum-Familie zurück ins Ganze: eine Marke unten links, ein Menü mit allen Sektionen, Bereichen und Medien.</p>
+    <p class="lede">Von jeder Seite der Goetheanum-Familie zurück ins Ganze: eine Marke unten in der Ecke, ein Menü mit allen Sektionen, Bereichen und Medien.</p>
   </section>
 
   <section id="probieren">
     <div class="shead">
       <h2>Probieren</h2>
-      <p>Unten links liegt die Marke. Öffner, Standort und Sprache hier umstellen.</p>
+      <p>Die Marke liegt unten in der Ecke. Ecke, Standort und Sprache hier umstellen.</p>
     </div>
     <div class="card soft steuer">
       <div class="field">
-        <span class="lab">Öffner</span>
-        <div class="seg" role="group" aria-label="Öffner wählen" id="form">
-          <button type="button" data-form="schweber" aria-pressed="true">Schweber</button>
-          <button type="button" data-form="zeile" aria-pressed="false">Zeile</button>
-          <button type="button" data-form="beide" aria-pressed="false">Beide</button>
+        <span class="lab">Ecke</span>
+        <div class="seg" role="group" aria-label="Ecke wählen" id="ecke">
+          <button type="button" data-seite="links" aria-pressed="true">Links unten</button>
+          <button type="button" data-seite="rechts" aria-pressed="false">Rechts unten</button>
         </div>
       </div>
       <label class="field">
@@ -80,7 +79,7 @@
     <div class="shead">
       <h2>Probierfläche</h2>
     </div>
-    <div class="card"><p class="lese">Blatt zum Scrollen, damit die Marke über Inhalt liegt.</p></div>
+    <div class="card"><p class="lese">Blatt zum Scrollen, damit die Marke über Inhalt liegt. Bleibt die Seite ruhig, wird sie leiser.</p></div>
     <div class="card"><p class="lese"><a href="#probieren">Ein Verweis zum Anspringen</a>, weit unten auf der Seite.</p></div>
   </section>
 
@@ -93,15 +92,15 @@
   </div>
 </footer>
 
-<script src="familie.js" data-form="schweber" data-lang="de"></script>
+<script src="familie.js" data-seite="links" data-lang="de"></script>
 <script>
 (function () {
-  var seg = document.getElementById("form");
+  var seg = document.getElementById("ecke");
   seg.addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) return;
     var all = seg.querySelectorAll("button");
     for (var i = 0; i < all.length; i++) all[i].setAttribute("aria-pressed", String(all[i] === b));
-    goeFamilie.setForm(b.dataset.form);
+    goeFamilie.setSeite(b.dataset.seite);
   });
   var here = document.getElementById("here");
   here.addEventListener("change", function () { goeFamilie.setHere(here.value); });
