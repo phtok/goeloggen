@@ -16,6 +16,25 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — die Nummer wird optional, und entfällt (1.16.4)
+
+**Was.** Das Akkordeon trägt **keine** Nummern mehr, wo keine gebraucht werden:
+fehlt das `span.nr` im Markup, wird die Zeile einreihig (`summary:not(:has(.nr))`).
+Die Schau-Seite zeigt alle drei Kleider ohne Zahlen; das Twig-Beispiel führt die
+Zahl als auskommentierte Möglichkeit mit.
+
+**Warum.** Auf die Frage des Auftraggebers, ob die Zahlen überhaupt gebraucht
+werden. **G03** beantwortet sie: was entbehrlich ist, entfällt. Fragen einer FAQ
+liest niemand der Reihe nach – es gibt keinen ‹Schritt 7 von 17›; die Anzahl
+steht ohnehin im Kopf der Liste. Ohne Zahl trägt die Zeile ein Zeichen weniger
+und die Frage steht als das, was sie ist. Die Nummer bleibt für den einen Fall,
+in dem sie arbeitet: wenn auf Fragen verwiesen wird (‹siehe Frage 7›) oder eine
+gedruckte Vorlage sie braucht.
+
+**Wirkung.** `akkordeon.css`, Blüte und Faden: einreihiges `summary` ohne `.nr`.
+Die Deep-Links (`#faden-7`) bleiben unverändert – die Adresse braucht die Zahl
+nicht auf dem Blatt.
+
 ## 8. September 2026 — die Zahl folgt dem Rahmen (1.16.3)
 
 **Was.** In der Blüte nimmt die Nummer die Sektionsfarbe an, sobald der Rahmen

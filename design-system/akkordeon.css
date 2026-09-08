@@ -11,7 +11,9 @@
    für Weiss · --ak-hell Hauch. Hausfall Gold; data-sek="<sektion>" nimmt die
    Sektionsfarben (Basis · -ink · -dunkel · -hell, Sektionsfarben 1.14.0).
    Regeln: Frage = Titelrolle Deutlich, Antwort = Fliesstext Klar – beide in der
-   Hausschrift, eine Stimme; Nummer tabellarisch (G25); Fingerziel = ganze Zeile
+   Hausschrift, eine Stimme. Die Nummer (.nr) ist OPTIONAL – ohne sie wird die
+   Zeile einreihig; sie steht nur, wo auf Fragen verwiesen wird (G03). Ziffern
+   tabellarisch (G25); Fingerziel = ganze Zeile
    ≥44 px (B04); Anwahl = dunkle Fläche + Weiss (B01); Winkel als Zeichen (das
    gelernte der Webfamilie); keine Versalien, kein Unterstreichen (G05).
    ============================================================================= */
@@ -86,6 +88,7 @@
 .bluete summary{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"nr knopf" "frage knopf";
   column-gap:var(--s4);row-gap:var(--s2);align-items:center;padding:var(--s4) var(--s4) var(--s4) var(--s6)}
 .bluete .nr{grid-area:nr}
+.bluete summary:not(:has(.nr)){grid-template-areas:"frage knopf"}
 .bluete .frage{grid-area:frage}
 .bluete .knopf{grid-area:knopf}
 .bluete .knopf{width:40px;height:40px;border:1px solid var(--line);background:var(--paper)}
@@ -114,6 +117,7 @@
 .faden summary{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"nr knopf" "frage knopf";
   column-gap:var(--s4);row-gap:var(--s2);align-items:center;padding:var(--s4) 0 var(--s4) var(--s4);min-height:var(--tap)}
 .faden .nr{grid-area:nr;color:var(--ak-ink)}
+.faden summary:not(:has(.nr)){grid-template-areas:"frage knopf"}
 .faden .frage{grid-area:frage;transition:color var(--acc-dauer)}
 .faden summary:hover .frage,.faden .acc.is-open .frage{color:var(--ak-ink)}
 .faden .knopf{grid-area:knopf;color:var(--muted)}
