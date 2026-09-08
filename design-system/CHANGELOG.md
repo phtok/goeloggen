@@ -16,6 +16,42 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — eine Reihe, die alle gleich macht, macht alle gleich (1.24.0)
+
+**Was.** Das Rezept kennt jetzt eine **Spanne**: Die Helligkeit der Basisfarbe
+wirkt auf die abgeleitete mit (`spanne: 0.14` bei Fläche und Tinte, `0.10` im
+Dunkelmodus). Dazu tragen die dunklen Flächen **vier Fünftel** der Buntheit
+ihrer Basis statt eines absoluten Deckels von 0.085 («halb satt», Beschluss).
+Betroffen sind `--sek-*-dunkel`, `--sek-*-ink` und die Dunkelmodus-Tinte; der
+helle Hauch bleibt, wie er ist.
+
+**Warum.** Der Auftraggeber: «Mathe und Redende brauchen Differenzierung.» Das
+Nachmessen zeigte, dass es kein Einzelfall war, sondern die Regel selbst:
+Zwischen **Redende und Musizierende Künste** und der **Mathematisch-Astro-
+nomischen Sektion** lagen in der Basis 18 Einheiten Abstand – in der dunklen
+Variante noch **0.6**. Bei Pädagogik und Redende waren es 22.7 gegen 2.7.
+Insgesamt lagen **sieben von 78 Paaren** praktisch übereinander.
+
+Die Ursache war die Gleichmacherei: Alle dreizehn standen auf **derselben**
+Helligkeit mit gedeckelter Buntheit. Sechs der dreizehn Sektionen sind blau und
+unterscheiden sich vor allem darin, **wie hell** sie sind – zwingt man sie auf
+eine Helligkeit, sind sie dieselbe Farbe. **Eine Reihe, die alle gleich macht,
+macht alle gleich.** Gleichmass ist ein Mittel, keine Tugend: Es soll die
+Sektionen als eine Familie zeigen, nicht ihre Identität einziehen.
+
+**Wirkung.** Kleinster Abstand jetzt 2.6 statt 0.6, **kein Paar mehr unter 2**;
+Redende und Mathe stehen bei 7.7. Weiss hält überall zwischen 5.3 und 9.4:1,
+alle 165 Kontraste ≥ 4.5:1 in beiden Themes. Die zwei Ausnahmen (Kürbis,
+Korallenrot) bleiben und nehmen keine Spanne: Ihr Wert ist am Muster
+beschlossen, nicht gerechnet.
+
+**Offen.** Der helle Hauch trägt weiterhin fast keine Identität – 27 der 78
+Paare liegen unter 2, zwei sind sogar gleich. Das ist die Kehrseite des
+Beschlusses «zart, nicht leuchtend»: Bei dieser Helligkeit ist der Farbraum so
+eng, dass dreizehn Töne kaum Platz haben. Solange die Identität von Basis und
+Tinte getragen wird, ist das vertretbar; wenn Chips einmal ohne Tinte
+auskommen müssen, ist es neu zu entscheiden.
+
 ## 8. September 2026 — die Jugendsektion bekommt ihr Rot zurück (1.23.0)
 
 **Was.** **`--sek-js-dunkel` #BD2525** statt #844741 (Weiss 6.08:1) und
