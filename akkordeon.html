@@ -528,8 +528,8 @@
    Vorbild der Bewegung: das aufblühende Klappmenü von goetheanum.ch
    (cubic-bezier(.32,.08,.24,1)) – die Bloom-Kurve.
    Farbe: vier Rollen – --ak Linie/Marke · --ak-ink Text · --ak-dunkel Fläche
-   für Weiss · --ak-hell Hauch. Hausfall Gold; data-sek=&quot;&lt;sektion&gt;&quot; nimmt die
-   Sektionsfarben (Basis · -ink · -dunkel · -hell, Sektionsfarben 1.14.0).
+   für Weiss · --ak-hell Hauch – abgelesen von den Ton-Rollen des Fundaments.
+   Hausfall Gold; data-sek=&quot;&lt;sektion&gt;&quot; an .acc-liste oder an einem Vorfahren.
    Regeln: Frage = Titelrolle Deutlich, Antwort = Fliesstext Klar – beide in der
    Hausschrift, eine Stimme; Nummer tabellarisch (G25); Fingerziel = ganze Zeile
    ≥44 px (B04); Anwahl = dunkle Fläche + Weiss (B01); Winkel als Zeichen (das
@@ -539,21 +539,12 @@
 @media(prefers-reduced-motion:reduce){:root{--acc-dauer:0s}}
 
 /* --- Farbrollen: Hausfall Gold, Sektion per data-sek ------------------------ */
-.acc-liste{--ak:var(--gold);--ak-ink:var(--gold-ink);--ak-dunkel:var(--gold-deep);
-  --ak-hell:color-mix(in srgb,var(--gold) 14%,var(--paper));max-width:780px}
-.acc-liste[data-sek=&quot;hpise&quot;]{--ak:var(--sek-hpise);--ak-ink:var(--sek-hpise-ink);--ak-dunkel:var(--sek-hpise-dunkel);--ak-hell:var(--sek-hpise-hell)}
-.acc-liste[data-sek=&quot;aas&quot;]{--ak:var(--sek-aas);--ak-ink:var(--sek-aas-ink);--ak-dunkel:var(--sek-aas-dunkel);--ak-hell:var(--sek-aas-hell)}
-.acc-liste[data-sek=&quot;ps&quot;]{--ak:var(--sek-ps);--ak-ink:var(--sek-ps-ink);--ak-dunkel:var(--sek-ps-dunkel);--ak-hell:var(--sek-ps-hell)}
-.acc-liste[data-sek=&quot;ms&quot;]{--ak:var(--sek-ms);--ak-ink:var(--sek-ms-ink);--ak-dunkel:var(--sek-ms-dunkel);--ak-hell:var(--sek-ms-hell)}
-.acc-liste[data-sek=&quot;nws&quot;]{--ak:var(--sek-nws);--ak-ink:var(--sek-nws-ink);--ak-dunkel:var(--sek-nws-dunkel);--ak-hell:var(--sek-nws-hell)}
-.acc-liste[data-sek=&quot;lws&quot;]{--ak:var(--sek-lws);--ak-ink:var(--sek-lws-ink);--ak-dunkel:var(--sek-lws-dunkel);--ak-hell:var(--sek-lws-hell)}
-.acc-liste[data-sek=&quot;sbk&quot;]{--ak:var(--sek-sbk);--ak-ink:var(--sek-sbk-ink);--ak-dunkel:var(--sek-sbk-dunkel);--ak-hell:var(--sek-sbk-hell)}
-.acc-liste[data-sek=&quot;ssw&quot;]{--ak:var(--sek-ssw);--ak-ink:var(--sek-ssw-ink);--ak-dunkel:var(--sek-ssw-dunkel);--ak-hell:var(--sek-ssw-hell)}
-.acc-liste[data-sek=&quot;szw&quot;]{--ak:var(--sek-szw);--ak-ink:var(--sek-szw-ink);--ak-dunkel:var(--sek-szw-dunkel);--ak-hell:var(--sek-szw-hell)}
-.acc-liste[data-sek=&quot;js&quot;]{--ak:var(--sek-js);--ak-ink:var(--sek-js-ink);--ak-dunkel:var(--sek-js-dunkel);--ak-hell:var(--sek-js-hell)}
-.acc-liste[data-sek=&quot;srmk&quot;]{--ak:var(--sek-srmk);--ak-ink:var(--sek-srmk-ink);--ak-dunkel:var(--sek-srmk-dunkel);--ak-hell:var(--sek-srmk-hell)}
-.acc-liste[data-sek=&quot;mas&quot;]{--ak:var(--sek-mas);--ak-ink:var(--sek-mas-ink);--ak-dunkel:var(--sek-mas-dunkel);--ak-hell:var(--sek-mas-hell)}
-.acc-liste[data-sek=&quot;goetheanum&quot;]{--ak:var(--sek-goetheanum);--ak-ink:var(--sek-goetheanum-ink);--ak-dunkel:var(--sek-goetheanum-dunkel);--ak-hell:var(--sek-goetheanum-hell)}
+/* Die Zuordnung data-sek → Farbrollen macht das Fundament (tokens.css, 1.17.0);
+   das Modul liest nur ab. Vorher standen hier dreizehn Zeilen, die jedes weitere
+   Modul hätte abschreiben müssen. */
+.acc-liste{--ak:var(--ton,var(--gold));--ak-ink:var(--ton-ink,var(--gold-ink));
+  --ak-dunkel:var(--ton-dunkel,var(--gold-deep));
+  --ak-hell:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));max-width:780px}
 
 /* --- Gemeinsame Anatomie ---------------------------------------------------- */
 .acc-kopf{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
@@ -671,8 +662,7 @@
 @media print{
   .acc-kopf .alle{display:none}
   .acc .acc-body{overflow:visible}
-}
-</pre>
+}</pre>
     <pre class="code" id="code-js" tabindex="0" hidden>/* =============================================================================
    Goetheanum CI – Akkordeon (Modul-Skript)
    -----------------------------------------------------------------------------
@@ -797,8 +787,7 @@
 
   if (document.readyState === &quot;loading&quot;) document.addEventListener(&quot;DOMContentLoaded&quot;, init); else init();
   window.GoetheanumAkkordeon = {init:init, oeffnen:oeffnen, schliessen:schliessen, alle:alleSetzen};
-})();
-</pre>
+})();</pre>
     <pre class="code" id="code-tokens" tabindex="0" hidden>/* Token-Auszug für Seiten OHNE design-system/tokens.css – nur, was das
    Akkordeon braucht; Werte identisch mit tokens.css (Stand beim Bau).
    Die Webfonts (Goetheanum, Source Sans 3) lädt die Seite selbst per @font-face. */
@@ -952,6 +941,16 @@
   });
   var start = new URL(location.href).searchParams.get("sek");
   if (start && wahl && wahl.querySelector('button[data-sek="' + start + '"]')) farbe(start, true);
+
+  // Die beiden Modul-Dateien aus der QUELLE nachladen – ein abgeschriebener
+  // Code-Block driftet, sobald das Modul sich ändert. Der statische Inhalt
+  // im HTML ist nur der Rückfall (offline, file://).
+  [["code-css","design-system/akkordeon.css"],["code-js","design-system/akkordeon.js"]]
+    .forEach(function(p){
+      fetch(p[1]).then(function(r){ return r.ok ? r.text() : null; })
+        .then(function(t){ if (t) document.getElementById(p[0]).textContent = t.replace(/\n+$/,""); })
+        .catch(function(){});
+    });
 
   // Kopierbereich: einen Block zeigen, in die Zwischenablage legen.
   var codewahl = document.getElementById("codewahl"), aktiv = "code-twig";

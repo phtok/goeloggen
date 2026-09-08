@@ -120,9 +120,31 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
    mischt über --paper, NICHT über transparent, sonst nimmt er die Farbe der
    Fläche an, auf der er liegt, und frisst den Kontrast von --gold-ink (B02;
    auf einer --soft-Karte gemessene 4.42:1 statt der nötigen 4.5:1). */
+   Seit 1.17.0 nimmt der Chip die TON-Rollen: ohne data-sek ist --ton-hell genau
+   dieser Goldton, unter <div data-sek="nws"> färbt er sich mit. */
 .chip.ton{display:inline-block;border-color:transparent;border-radius:var(--r-control);
   padding:var(--pille-y) var(--pille-x);line-height:1.5;
-  background:color-mix(in srgb,var(--gold) 14%,var(--paper));color:var(--gold-ink);max-width:100%}
+  background:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));
+  color:var(--ton-ink,var(--gold-ink));max-width:100%}
+/* --- Ton-Bausteine: was eine Sektionsfarbe im Satz tut ----------------------
+   Ein <div data-sek="nws"> setzt die vier Rollen (tokens.css); diese Bausteine
+   greifen sie ab. Sie sind der Grund, warum es die Varianten gibt:
+   .band   Kopfband/Titelfläche – die dunkle Fläche trägt Weiss (B01).
+   .kasten Hinweis – der Hauch trägt Lesetext in --ink, die Kante den dunklen Ton.
+   Beide sind THEME-fest richtig, weil die Rollen selbst mit Hell/Dunkel kippen. */
+.band{background:var(--ton-dunkel,var(--gold-deep));color:var(--on-accent);
+  border-radius:var(--r-control);padding:var(--s5) var(--s5) var(--s6)}
+.band h1,.band h2,.band h3,.band p,.band .kicker,.band .kick,.band .lede{color:var(--on-accent)}
+.band .kicker,.band .kick{opacity:.85}
+.band p{font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;margin-top:var(--s2)}
+.kasten{background:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));color:var(--ink);
+  border-left:4px solid var(--ton-dunkel,var(--gold-deep));
+  border-radius:0 var(--r-control) var(--r-control) 0;padding:var(--s4) var(--s5);
+  font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-body)}
+.kasten b{color:var(--ton-ink,var(--gold-ink));font-weight:600}
+/* Karte mit Ton-Kante – die Basis als Marke an der Kante, nicht als Textgrund. */
+.card.ton{border-top:5px solid var(--ton,var(--gold))}
+
 /* Status-Marke (Live/Beta/Entwurf …) – Mikro-Pille, kleiner als .chip, nie versal (G05).
    Optischer Sitz im Oval: Statuswörter haben meist keine Unterlängen – zentriert
    man das Geviert, sitzt die Tinte zu hoch. Darum line-height:1 und ein Hauch
@@ -161,6 +183,10 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .btn.primary:hover{filter:brightness(1.08)}
 .btn.ghost{color:var(--muted);background:none}
 .btn.ok{background:var(--ok);border-color:var(--ok);color:var(--on-accent)}
+/* Knopf im Ton des Abschnitts (unter data-sek): die DUNKLE Fläche trägt Weiss –
+   nie die Basisfarbe, die bei sechs Sektionen kein Weiss hält (B01). */
+.btn.ton{background:var(--ton-dunkel,var(--gold-deep));border-color:var(--ton-dunkel,var(--gold-deep));
+  color:var(--on-accent);font-weight:var(--w-strong)}
 /* Ausgeschaltet, solange eine Handlung läuft: Der Knopf nimmt keinen zweiten
    Klick mehr an. Ohne das entstehen doppelte Einträge – einmal passiert und
    von Hand aus der Datenbank geholt (Kosten, 10. August 2026). Kontrast ist

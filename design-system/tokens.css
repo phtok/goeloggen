@@ -270,6 +270,26 @@
   --bereich-buehne-hell:#2a261c; --bereich-buehne-ink:#d0c3a5;
   --bereich-bauadmin-hell:#342021; --bereich-bauadmin-ink:#f0b1b2;
 }
+
+/* Ton eines Abschnitts: <div data-sek="nws"> färbt alles darin.
+   --ton Linie/Marke · --ton-dunkel Fläche für Weiss · --ton-hell Hauch für
+   dunklen Text · --ton-ink die Farbe als Schrift. Hausfall ist Gold. */
+[data-sek]{--ton:var(--gold); --ton-dunkel:var(--gold-deep); --ton-hell:color-mix(in srgb,var(--gold) 14%,var(--paper)); --ton-ink:var(--gold-ink);}
+[data-sek="goetheanum"]{--ton:var(--sek-goetheanum); --ton-dunkel:var(--sek-goetheanum-dunkel); --ton-hell:var(--sek-goetheanum-hell); --ton-ink:var(--sek-goetheanum-ink);}
+[data-sek="aas"]{--ton:var(--sek-aas); --ton-dunkel:var(--sek-aas-dunkel); --ton-hell:var(--sek-aas-hell); --ton-ink:var(--sek-aas-ink);}
+[data-sek="ps"]{--ton:var(--sek-ps); --ton-dunkel:var(--sek-ps-dunkel); --ton-hell:var(--sek-ps-hell); --ton-ink:var(--sek-ps-ink);}
+[data-sek="ms"]{--ton:var(--sek-ms); --ton-dunkel:var(--sek-ms-dunkel); --ton-hell:var(--sek-ms-hell); --ton-ink:var(--sek-ms-ink);}
+[data-sek="nws"]{--ton:var(--sek-nws); --ton-dunkel:var(--sek-nws-dunkel); --ton-hell:var(--sek-nws-hell); --ton-ink:var(--sek-nws-ink);}
+[data-sek="lws"]{--ton:var(--sek-lws); --ton-dunkel:var(--sek-lws-dunkel); --ton-hell:var(--sek-lws-hell); --ton-ink:var(--sek-lws-ink);}
+[data-sek="sbk"]{--ton:var(--sek-sbk); --ton-dunkel:var(--sek-sbk-dunkel); --ton-hell:var(--sek-sbk-hell); --ton-ink:var(--sek-sbk-ink);}
+[data-sek="ssw"]{--ton:var(--sek-ssw); --ton-dunkel:var(--sek-ssw-dunkel); --ton-hell:var(--sek-ssw-hell); --ton-ink:var(--sek-ssw-ink);}
+[data-sek="szw"]{--ton:var(--sek-szw); --ton-dunkel:var(--sek-szw-dunkel); --ton-hell:var(--sek-szw-hell); --ton-ink:var(--sek-szw-ink);}
+[data-sek="js"]{--ton:var(--sek-js); --ton-dunkel:var(--sek-js-dunkel); --ton-hell:var(--sek-js-hell); --ton-ink:var(--sek-js-ink);}
+[data-sek="srmk"]{--ton:var(--sek-srmk); --ton-dunkel:var(--sek-srmk-dunkel); --ton-hell:var(--sek-srmk-hell); --ton-ink:var(--sek-srmk-ink);}
+[data-sek="mas"]{--ton:var(--sek-mas); --ton-dunkel:var(--sek-mas-dunkel); --ton-hell:var(--sek-mas-hell); --ton-ink:var(--sek-mas-ink);}
+[data-sek="hpise"]{--ton:var(--sek-hpise); --ton-dunkel:var(--sek-hpise-dunkel); --ton-hell:var(--sek-hpise-hell); --ton-ink:var(--sek-hpise-ink);}
+[data-sek="buehne"]{--ton:var(--bereich-buehne); --ton-dunkel:var(--bereich-buehne-dunkel); --ton-hell:var(--bereich-buehne-hell); --ton-ink:var(--bereich-buehne-ink);}
+[data-sek="bauadmin"]{--ton:var(--bereich-bauadmin); --ton-dunkel:var(--bereich-bauadmin-dunkel); --ton-hell:var(--bereich-bauadmin-hell); --ton-ink:var(--bereich-bauadmin-ink);}
 /* @sek-varianten:ende */
 
 /* --- Welten (Dialekte) – erlaubte Varianz, Ansatz 1 ---------------------------
