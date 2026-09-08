@@ -16,6 +16,27 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — die Jugendsektion bekommt ihr Rot zurück (1.23.0)
+
+**Was.** **`--sek-js-dunkel` #BD2525** statt #844741 (Weiss 6.08:1) und
+**`--sek-js-ink` #AB0815** als Schrift (6.8 bis 7.6:1). Die Ausnahme steht im
+selben Block wie die der Heilpädagogik, mit demselben Abstand zwischen Fläche
+und Schrift: fünf Hundertstel Helligkeit.
+
+**Warum.** Dieselbe Wand, von der anderen Seite. Bei der Heilpädagogik war der
+**Farbkörper** eng – Orange kann bei dieser Helligkeit gar nicht bunt genug
+sein. Beim Korallenrot der Jugendsektion ist er weit: C 0.191 wären bei L 0.47
+möglich, der Deckel liess 0.085 zu und nahm ihr damit **56 Prozent** ihrer
+Buntheit. Übrig blieb ein stumpfes Rostbraun, das in der Reihe neben der
+Sozialwissenschaft fast verschwand – zwei Nachbarn, die gleich aussahen.
+
+**Wirkung.** Ein Deckel, der für alle gilt, trifft jede Farbe anders: Orange
+lag bei 70 Prozent des Möglichen, Rot bei 44, Blau bei 28. **Ein absoluter
+Deckel ist keine gleiche Behandlung.** Vorerst bleibt er, weil er die blassen
+Sektionen ruhig hält; wo er eine Identität frisst, hebt ihn eine Ausnahme –
+mit Muster und Beschluss, wie der Block es verlangt. Alle 165 Kontraste halten
+weiterhin ≥ 4.5:1 in beiden Themes.
+
 ## 8. September 2026 — Orange darf nicht braun werden (1.22.0)
 
 **Was.** Die dunkle Fläche der Heilpädagogik steht heller und schöpft ihre
