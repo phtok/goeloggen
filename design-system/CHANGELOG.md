@@ -16,6 +16,29 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 7. September 2026 — die Nummer als Marke, in der Hausschrift (1.16.2)
+
+**Was.** Der Griff aus dem Faden gilt jetzt auch für die **Blüte**: die Nummer
+steht als eigene Zeile über der Frage, Frage und Antwort laufen bündig (die
+Antwort verliert ihren Einzug von `2ch + s4`). Dazu in **allen drei Kleidern**:
+die Ziffer läuft in der **Hausschrift** (Klar, in der Kapsel Deutlich) statt in
+der Lese-Grotesk, und nach der Zahl steht mehr Luft (`row-gap` von 2 px auf
+`--s2`). Im Kreis der Kapsel sitzt sie mit dem vermessenen 8%-Versatz aus
+`.step-num`.
+
+**Warum.** Der Auftraggeber wollte den Faden-Griff auch in der Blüte und die
+Zahlen «aus der Goeschrift». Die Schrift-Grenze schickt Zahlen in die
+Lese-Grotesk, wo sie **Daten** sind – Tabelle, Wert, Formular. Diese Ziffer ist
+aber keine Angabe, sondern eine **Marke**: sie zählt die Frage, wie die
+Schritt-Nummer `.step-num` einen Schritt zählt, und die trägt in `base.css`
+längst die Hausschrift. Gleiche Rolle, gleiche Schrift.
+
+**Wirkung.** `akkordeon.css`: `.acc .nr` in `--font-display`, Gewicht Klar
+(kleine Hausschrift nie Leise), Ziffern weiterhin dicktengleich (G25). Regel
+für neue Bausteine: **zählende Marken tragen die Hausschrift, messende Werte
+die Lese-Grotesk.** Nur die Blüte behält ihre Zahl in Grau – dort trägt der
+Ring die Farbe, im Faden die Zahl.
+
 ## 7. September 2026 — Faden: die Nummer über der Frage (1.16.1)
 
 **Was.** Im Kleid Faden steht die Nummer als eigene, leise Zeile über der
