@@ -135,12 +135,17 @@
    -----------------------------------------------------------------------------
    Radius bewusst DEZENT (--r-card, 14 px): die frühere Kapselform lief auf halbe
    Zeilenhöhe und drückte den Text in die Mitte – runde Ecken fressen Satzspiegel.
-   Dafür mehr Innenabstand: Frage und Antwort stehen links auf derselben Kante
-   (--s5), oben und unten grosszügig. Offen wird die Frage zum Band – oben
-   gerundet, unten bündig in die Karte laufend; die Karte selbst bleibt rund. */
+   Nach dem Vorbild der Blüte liest sich der Text auf PAPIER, nicht auf der
+   Fläche: geschlossen liegt die Kapsel auf dem Farbhauch, offen wird die Frage
+   zum Band (oben gerundet, unten bündig) und die Antwort darunter steht auf
+   Papier – eine gefüllte Fläche wiegt schwerer als eine umrissene, und Mengentext
+   braucht den ruhigsten Grund, den es gibt. Einzug wie in der Blüte (--s6),
+   Frage und Antwort auf derselben Kante. */
 .kapsel{display:grid;gap:var(--s4)}
-.kapsel .acc{background:var(--ak-hell);border-radius:var(--r-card)}
-.kapsel summary{display:flex;align-items:center;gap:var(--s4);padding:var(--s5);
+.kapsel .acc{background:var(--ak-hell);border-radius:var(--r-card);overflow:hidden;
+  transition:background var(--acc-dauer)}
+.kapsel .acc.is-open{background:var(--paper);box-shadow:inset 0 0 0 1px var(--line-soft)}
+.kapsel summary{display:flex;align-items:center;gap:var(--s4);padding:var(--s4) var(--s5) var(--s4) var(--s6);
   border-radius:var(--r-card);transition:background var(--acc-dauer),color var(--acc-dauer)}
 .kapsel summary:hover{background:color-mix(in srgb,var(--ak) 10%,var(--ak-hell))}
 .kapsel .acc.is-open summary{background:var(--ak-dunkel);color:var(--on-accent);
@@ -154,10 +159,10 @@
 .kapsel .frage{flex:1 1 auto}
 .kapsel .knopf{color:var(--ak-ink)}
 .kapsel .acc.is-open .knopf{color:var(--on-accent);transform:rotate(180deg)}
-.kapsel .acc-inner{padding:var(--s5) var(--s5) var(--s6)}
+.kapsel .acc-inner{padding:var(--s5) var(--s5) var(--s6) var(--s6)}
 @media(max-width:560px){
   .kapsel summary{gap:var(--s3);padding:var(--s4)}
-  .kapsel .acc-inner{padding:var(--s4) var(--s4) var(--s5)}
+  .kapsel .acc-inner{padding:var(--s5) var(--s4) var(--s6)}
 }
 
 @media print{
