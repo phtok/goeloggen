@@ -16,6 +16,93 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 8. September 2026 — der blinde Fleck: verlinktes CSS kommt unter die Lupe (1.18.0)
+
+**Was.** `tools/ds-lint.py` prüfte DS02 (Farben nur über Tokens), DS03
+(Grössen), DS04 (kanonische Rollen), DS05 (Hervorhebung) und DS07
+(Theme/harte Flächen) bisher **nur** in den `<style>`-Blöcken und
+`style="…"`-Attributen der HTML-Datei selbst — verlinkte `*.css`-Dateien
+blieben aussen vor (nur DS10/`check_tokens` löste sie schon auf). Eine Seite,
+deren ganze Gestalt in einer eigenen CSS-Datei steckt, meldete darum «0
+Fehler», ohne dass dort je geprüft wurde. `tools/ds-lint.py` löst jetzt jeden
+`<link href="…css">` einer Seite über denselben Weg wie DS10 auf (repo-eigene
+Pfade, externe/absolute URLs aussen vor) und prüft die fünf Regeln auch dort —
+jede CSS-Datei genau **einmal** pro Lauf (nicht 60-mal für 60 einbindende
+Seiten), mit der Zeile in der CSS-Datei selbst und einer Liste, welche
+Seite(n) sie einbinden. `design-system/*.css` definiert die kanonischen
+Rollen selbst und ist darum von DS04 (‹lokal redefiniert›) ausgenommen — DS02/
+03/05/07 gelten dort unverändert. Nebenbei behoben, weil das Mitlesen von
+`tokens.css` es sofort sichtbar machte: CSS-Kommentare wurden vor dieser
+Änderung nicht aus den Regel-Körpern entfernt. Zwei Folgen, beide gefixt: (1)
+ein Kommentar direkt hinter einer Custom-Property-Definition
+(`--blue-solid:#0061a9; /* … */`) verklebte mit der nächsten Deklaration und
+liess DS02 diese Fundament-Farben fälschlich als harte Werte melden; (2) ein
+mehrzeiliger Kommentar vor einer Regel landete im erfassten Selektor und sein
+Leerraum liess die Nachfahren-Ausnahme («`.download .btn` ist Verortung, keine
+Neudefinition») fälschlich auch auf **bare** Selektoren wie `.lede{…}`
+zuschlagen — DS04 hat dadurch **fünf** echte, bisher unsichtbare
+Rollen-Redefinitionen in eigenen `<style>`-Blöcken übersehen (siehe Wirkung).
+Dieselbe Verwechslung liess DS05 `.hint a:hover{text-decoration:underline}`
+(Link-Hover, keine Betonung) fälschlich als Verstoss zählen; DS05 prüft
+`underline` jetzt wie DS04 nur auf bare/compound-Selektoren, Nachfahren-
+Selektoren (`.hint a`) sind Link-Konvention und ausdrücklich erlaubt.
+
+**Warum.** Befund Konrads (Korrektor), 8. September 2026, am neuen
+Familienmenü: `design-system/familie.css` (127 Zeilen, komplette Gestalt der
+Schublade) lief unsichtbar am Checker vorbei — der Score war eine Behauptung,
+keine Messung. Jede künftige Seite mit eigener CSS-Datei hätte denselben
+blinden Fleck genutzt, ob absichtlich oder aus Versehen.
+
+**Berichtend, noch kein Tor.** Sofort blockierend gestellt fiele der Score von
+100 % (63/63) auf **5 % (3/63)** — und niemand im Haus könnte mehr committen,
+weil `base.css` und `nav.css` in 60 bzw. 52 der 63 Seiten stecken. Darum
+dasselbe Vorgehen wie bei **DS08** (Barrierefreiheit, 8. August): die
+Erstmessung **berichtet**, sie sperrt nicht. Der Prüfer weist die Funde in
+verlinktem CSS getrennt aus (‹dazu berichtend›), das Gate bleibt grün, und der
+Stand steht im Vertrag unter `verlinktes_css.stand`. Ist der Rückstand
+entschieden und behoben, wird dort ‹berichtend› auf ‹tor› gedreht — eine
+Zeile, wie bei DS08 das `continue-on-error`. Ein Tor, das vom ersten Tag an
+rot steht, hütet nichts.
+
+**Der Rückstand.** `design-system/base.css` und `design-system/nav.css`
+(Fundament) tragen acht echte, bisher unsichtbare Verstösse, die jede Seite
+erbt, die sie einbindet. Sie liefen seit der Anhebung des Grössen-Bodens
+(10. Juli, 13 → 14 px) unbemerkt mit, weil der Prüfer nur ins HTML sah:
+- `base.css:305` `.kicker,.kick{…font-size:13.5px…}` — DS03 fehler, 0.5px
+  unter dem 14px-Floor (B03). Die kanonische Kicker-Rolle selbst.
+- `base.css:336` `.code.block,pre.code{…font-size:13px}` — DS03 fehler.
+- `nav.css:52` `.dsnav .brand .wm{…color:#8a9097…}` — DS02 fehler, hartes Hex
+  statt Token.
+- `nav.css:55` `.dsnav .back{…font-size:13.5px…}` — DS03 fehler.
+- `nav.css:95` `.dsnav [data-tip]::after{…font-size:12px…}` (Tooltip) — DS03
+  fehler.
+- `nav.css:115` `.dsnav-backdrop{…background:rgba(20,24,28,.32)…}` — DS02
+  fehler, rgba() ohne Token.
+- `nav.css:184` `.dsnav-toast{…font-size:13px…}` — DS03 fehler.
+- `nav.css:214` `.dsnav-drawer .foot{…font-size:12px…}` — DS03 fehler.
+
+Dazu ein echter Treffer in Seiten-CSS: `apps/sommer-zaehler/campaign.css:11`
+`.lead-title{…font-size:clamp(32px,7vw,58px);…}` — DS04 hinweis, redefiniert
+die kanonische Rolle lokal (legitim gemeldet, wie base.css/nav.css NICHT
+ausgenommen, weil es keine Fundament-Quelle ist). Und fünf durch den
+Kommentar-Fix neu sichtbare DS04-Treffer in eigenen `<style>`-Blöcken:
+`design-system/index.html:79` (`pre.code`), `schrift-vergleich.html:27` und
+`werkzeug.html:22` (je `.lede`), `sektionsfarben.html:71` und `:82`
+(`.chip.sek`, `.btn.sek`).
+
+**Bewusst nicht getan.** `base.css`/`nav.css` selbst NICHT angefasst — die
+Floor-Unterschreitungen (Kicker, Tooltip, Toast, Fusszeile) und die zwei
+harten Farbwerte betreffen 50+ Seiten auf einen Schlag und brauchen eine
+Design-Entscheidung (grösser setzen? andere Rolle? neues `--scrim`-Token für
+die Backdrop-Rgba?), keine mechanische Korrektur — `tools/ds-fix.py` kennt
+für Grössen ohnehin keine automatische Anhebung. Ebenso nicht angefasst:
+`apps/sommer-zaehler/campaign.css:11` und die fünf frisch sichtbaren
+`<style>`-Redefinitionen — alle sechs sind `hinweis`, blockieren das Gate
+nicht, verdienen aber denselben Blick vor der nächsten Anfassung dieser
+Seiten. `tools/ds-fix.py` prüft nach wie vor nur die HTML-Datei selbst — auf
+verlinkte CSS-Dateien nicht erweitert (nicht beauftragt, siehe Auftrag). ⚑
+Alle acht Fehler + sechs Hinweise liegen zur Entscheidung bei Philipp.
+
 ## 8. September 2026 — das Familienmenü kommt ins Fundament (1.17.0)
 
 **Was.** Drei neue Dateien im Fundament: `familie.json` (die Goetheanum-Familie
