@@ -93,6 +93,8 @@
   .lage .band-l{position:relative;height:36px;border-radius:var(--r-pill);background:var(--soft);border:1px solid var(--line)}
   .lage .band-l i{position:absolute;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid var(--paper);box-shadow:0 0 0 1px var(--line)}
   .lage .skala{display:flex;justify-content:space-between;font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s1);padding:0 2px}
+  /* Schmal: nur jede zweite Marke – die Anker liegen gleichmässig, die Plätze stimmen weiter. */
+  @media(max-width:600px){.lage .skala span:nth-child(2n){display:none}}
 
   /* --- Harmonien ------------------------------------------------------------- */
   .paare{display:grid;gap:var(--s3);margin-top:var(--s4)}
