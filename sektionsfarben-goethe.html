@@ -4,6 +4,9 @@
      -----------------------------------------------------------------------------
      Alternatives Farbkonzept für die Sektionsfarben: die zwölf Sektionen auf dem
      sinnlich-sittlichen Farbenkreis (Zur Farbenlehre 1810, §§ 758–829; Kreis 1809).
+     Drei Vorgaben (9. 9. 2026): jede Basis trägt Weiss und steht als Schrift auf
+     Papier; die Zuordnung beleidigt niemanden und jede Sektion kann Veto einlegen;
+     die heutigen Farbtöne bleiben, wo es geht.
      Werte kommen gerechnet aus assets/sek-goethe.js (tools/sek-goethe.py, dasselbe
      Rezept wie tools/sek-varianten.py). Die Seite setzt sie als Custom Properties
      (--g-*), damit alle Flächen und Schriften über var() laufen (DS02/DS07) und der
@@ -16,7 +19,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
 <title>Sektionen auf Goethes Farbenkreis · Goetheanum</title>
-<meta name="description" content="Alternatives Farbkonzept: die zwölf Sektionen der Hochschule auf Goethes sinnlich-sittlichem Farbenkreis – Ort, Sphäre und Grund aus der Farbenlehre, drei Gestalten je Farbe, Vergleich mit heute." />
+<meta name="description" content="Alternatives Farbkonzept: die zwölf Sektionen der Hochschule auf Goethes sinnlich-sittlichem Farbenkreis – jede Farbe trägt Weiss und steht als Schrift, Ort und Grund aus der Farbenlehre, Vergleich mit heute, Veto je Sektion." />
 <link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="design-system/tokens.css" />
 <link rel="stylesheet" href="design-system/base.css" />
@@ -32,30 +35,33 @@
   .grp > h2{font-size:var(--t-h2);margin-bottom:var(--s2)}
   .grp > .desc{max-width:62ch}
   .grp > .prose{margin-top:var(--s4)}
+  .regeln{list-style:none;margin:var(--s4) 0 0;padding:0;display:grid;gap:var(--s2);max-width:62ch}
+  .regeln li{border-left:3px solid var(--gold);background:var(--soft);padding:var(--s3) var(--s4);
+    font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-body)}
+  .regeln b{font-family:var(--font-display);font-weight:var(--w-deutlich)}
 
   /* --- Der Kreis ------------------------------------------------------------ */
   .kreis-wrap{overflow-x:auto;margin-top:var(--s5);padding-bottom:var(--s2)}
   .kreis{display:block;width:min(100%,760px);min-width:560px;margin:0 auto;font-family:var(--font-text)}
   .kreis .sph{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:26px;fill:var(--ink)}
   .kreis .ort{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:22px;fill:var(--on-accent)}
-  .kreis .wort{font-size:20px;fill:var(--muted)}
   .kreis .nr{font-weight:600;font-size:23px}
   .kreis .mitte{font-size:20px;fill:var(--muted)}
   .kreis .sep{stroke:var(--line);stroke-width:2}
   .kreis .sektor{stroke:var(--paper);stroke-width:2}
   /* Schmal: das Bild schrumpft auf die Breite, die Schrift wächst in Bildeinheiten
      mit, damit sie gerendert nicht unter 14 px fällt (B03); die Sphären stehen
-     dann nur in der Ordnung darunter. */
+     dann nur im Text darunter. */
   @media(max-width:600px){
     .kreis{min-width:0}
-    .kreis .sph,.kreis .ort,.kreis .wort,.kreis .mitte{display:none}
+    .kreis .sph,.kreis .ort,.kreis .mitte{display:none}
     .kreis .nr{font-size:40px}
   }
 
-  /* --- Sphären und Karten ---------------------------------------------------- */
-  .sphaere{margin-top:var(--s7)}
-  .sphaere > h3{font-size:var(--t-h3);margin:0}
-  .sphaere > .desc{max-width:62ch;margin-top:var(--s1)}
+  /* --- Gruppen und Karten ---------------------------------------------------- */
+  .gruppe{margin-top:var(--s7)}
+  .gruppe > h3{font-size:var(--t-h3);margin:0}
+  .gruppe > .desc{max-width:62ch;margin-top:var(--s1)}
   .karten{display:grid;gap:var(--s4);margin-top:var(--s4)}
   @media(min-width:900px){.karten{grid-template-columns:repeat(3,1fr)}}
   @media(min-width:600px) and (max-width:899px){.karten{grid-template-columns:1fr 1fr}}
@@ -68,6 +74,10 @@
   .gk .kopf{padding:var(--s4) var(--s4) 0}
   .gk .kopf h4{font-size:var(--t-body);margin:0 0 var(--s2);line-height:1.25}
   .gk .kopf .orte{display:flex;flex-wrap:wrap;gap:var(--s1) var(--s2);align-items:center}
+  /* Die Basis als Schrift auf Papier – die erste Vorgabe, sichtbar gemacht. */
+  .gk .schrift{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);line-height:1.2;
+    padding:var(--s3) var(--s4) 0;margin:0}
+  .gk .schrift small{display:block;font-family:var(--font-text);font-weight:400;font-size:var(--t-micro);color:var(--muted);margin-top:2px}
   .gk .grund{font-family:var(--font-text);font-size:var(--t-small);line-height:1.55;padding:var(--s3) var(--s4) 0;max-width:46ch;flex:1}
   .gk .werte{display:flex;flex-wrap:wrap;gap:var(--s2);padding:var(--s3) var(--s4) var(--s4);align-items:center}
   .wert{font:inherit;font-family:var(--font-text);font-size:var(--t-small);font-variant-numeric:tabular-nums;
@@ -76,14 +86,19 @@
   .wert:hover{border-color:var(--blue)}
   .wert .art{color:var(--muted);font-size:var(--t-micro)}
   .punkt{width:.9em;height:.9em;border-radius:50%;border:1px solid var(--line);flex:none;display:inline-block;vertical-align:-.1em}
+  /* Rückmeldung der Sektion: offen · angenommen · Veto (Status aus den Daten). */
+  .rueck{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);border:1px dashed var(--line);
+    border-radius:var(--r-pill);padding:var(--pille-y) var(--pille-x);line-height:1.2}
+  .rueck[data-status="angenommen"]{color:var(--ok-ink);border-style:solid;border-color:var(--ok-ink)}
+  .rueck[data-status="veto"]{color:var(--bad);border-style:solid;border-color:var(--bad)}
 
   /* --- Gegenüberstellung ----------------------------------------------------- */
   .tabelle{overflow-x:auto;margin-top:var(--s4)}
-  table.gg{border-collapse:collapse;width:100%;min-width:560px;font-family:var(--font-text);font-size:var(--t-small)}
+  table.gg{border-collapse:collapse;width:100%;min-width:640px;font-family:var(--font-text);font-size:var(--t-small)}
   table.gg th{text-align:left;font-weight:600;color:var(--muted);padding:var(--s2) var(--s3);border-bottom:1px solid var(--line)}
-  table.gg td{padding:var(--s2) var(--s3);border-bottom:1px solid var(--line-soft);vertical-align:middle}
-  table.gg td.num{text-align:right;font-variant-numeric:tabular-nums}
-  table.gg th.num{text-align:right}
+  table.gg td{padding:var(--s2) var(--s3);border-bottom:1px solid var(--line-soft);vertical-align:middle;white-space:nowrap}
+  table.gg td.num,table.gg th.num{text-align:right;font-variant-numeric:tabular-nums}
+  table.gg td.name{white-space:normal}
   .sw{display:inline-block;width:2.2em;height:1.5em;border-radius:6px;border:1px solid var(--line);vertical-align:middle;margin-right:.5em}
 
   /* Lage der Töne auf dem Kreis, abgerollt: 0 = Purpur, 180 = Grün. */
@@ -134,50 +149,63 @@
     <span class="kicker">Labor · Farbkonzept</span>
     <h1>Die Sektionen auf Goethes Farbenkreis</h1>
     <p class="lede">Ein zweites Farbkonzept neben dem heutigen: die zwölf Sektionen der Hochschule
-      auf dem sinnlich-sittlichen Farbenkreis – jede Farbe mit Ort, Sphäre und Grund aus
-      Goethes Text.</p>
-    <p class="byline"><b>Entwurf</b> · 9. September 2026 · zur Entscheidung</p>
+      auf dem sinnlich-sittlichen Farbenkreis – jede Farbe mit Ort und Grund aus Goethes Text,
+      jede so tief, dass sie Weiss trägt und als Schrift steht.</p>
+    <p class="byline"><b>Entwurf</b> · 9. September 2026 · zweite Fassung · zur Entscheidung</p>
+    <ul class="regeln">
+      <li><b>Eine Farbe, beide Richtungen.</b> Jede Basis trägt Weiss und steht als Schrift auf
+        Papier, beides mindestens 4.5:1. Heute halten das sechs von zwölf.</li>
+      <li><b>Die Farbigkeit bleibt.</b> Elf Sektionen behalten ihren Farbton und werden nur tiefer.
+        Die Pädagogik wechselt vom Indigo ins Gold, weil Gelb auf dem Kreis fehlte und fünf
+        Sektionen im Blau standen.</li>
+      <li><b>Jede Sektion kann Veto einlegen.</b> Die Zuordnung nimmt von Goethe nur Sätze, die
+        eine Sektion gern für sich liest. Wer seinen Ort nicht will, sagt es – dann wird
+        neu geordnet, der Kreis bleibt.</li>
+    </ul>
   </div>
 
   <section class="grp" id="kreis">
     <h2>Der Kreis</h2>
     <p class="desc">Goethe ordnet die Farben als Kreis: <b>Purpur</b> oben, wo sich beide Seiten in
-      der Steigerung vereinigen, <b>Grün</b> unten, wo sie sich real mischen. Rechts die
-      tätige Seite (Gelb, Rotgelb, Gelbrot: ‹regsam, lebhaft, strebend›), links die leidende
-      (Blau, Rotblau, Blaurot: ‹unruhig, weich und sehnend›). Das Blatt von 1809 legt darüber vier
-      Sphären des Seelenlebens – <b>Vernunft, Verstand, Sinnlichkeit, Phantasie</b> – und gibt
-      jeder Farbe ein Wort.</p>
+      der Steigerung vereinigen, <b>Grün</b> unten, wo sie sich real mischen. Rechts die warme
+      Seite (Gelb, Rotgelb, Gelbrot: ‹regsam, lebhaft, strebend›), links die kühle (Blau, Rotblau,
+      Blaurot: die Farben des Himmels und der Ferne). Das Blatt von 1809 legt darüber vier Sphären
+      des Seelenlebens – Vernunft, Verstand, Sinnlichkeit, Phantasie. Sie beschreiben die Wirkung
+      der Farben; jede Sektion vereint alle vier.</p>
     <div class="kreis-wrap"><svg class="kreis" id="svg-kreis" viewBox="0 0 760 760" role="img" aria-labelledby="kreis-t"><title id="kreis-t">Goethes Farbenkreis mit den zwölf Sektionen als äusserem Ring</title></svg></div>
     <p class="meta">Äusserer Ring: die zwölf Sektionen in den vorgeschlagenen Farben, nummeriert wie
-      unten. Innen Goethes sechs Farben, von oben im Uhrzeigersinn: Purpur ‹schön›, Gelbrot ‹edel›,
-      Gelb ‹gut›, Grün ‹nützlich›, Blau ‹gemein›, Blaurot ‹unnötig› – die Wörter des Blattes von 1809
-      stufen die <b>Farben</b>, nicht die Sektionen. Vernunft liegt über Purpur und Gelbrot, Verstand
-      über Gelb und Grün, Sinnlichkeit über Grün und Blau, Phantasie über Blaurot und Purpur.</p>
+      unten. Innen Goethes sechs Farben, von oben im Uhrzeigersinn: Purpur, Gelbrot, Gelb, Grün,
+      Blau, Blaurot. Die Sphären des Blattes liegen über je anderthalb Feldern: Vernunft über Purpur
+      und Gelbrot, Verstand über Gelb und Grün, Sinnlichkeit über Grün und Blau, Phantasie über
+      Blaurot und Purpur.</p>
   </section>
 
   <section class="grp" id="ordnung">
     <h2>Die Ordnung</h2>
-    <p class="desc">Jede Sphäre trägt drei Sektionen. Die <b>Basis</b> ist Identität, <b>Dunkel</b> die
-      Fläche für Weiss, <b>Hell</b> der Hauch für dunklen Text – dieselben drei Gestalten wie
-      heute, mit demselben Rezept gerechnet. Der Satz darunter ist der Grund; die Stelle
-      verweist auf Goethes Paragraphen.</p>
-    <div id="sphaeren"></div>
+    <p class="desc">Gegliedert wie Goethes Kreis: Purpur, die warme Seite, Grün, die kühle Seite.
+      Die <b>Basis</b> ist Identität und zugleich Schrift; <b>Dunkel</b> ist die Fläche für Weiss,
+      <b>Hell</b> der Hauch für dunklen Text – die drei Gestalten wie heute, mit demselben Rezept
+      gerechnet. Der Satz auf jeder Karte ist der Grund, die Stelle verweist auf Goethes
+      Paragraphen, die Rückmeldung gehört der Sektion.</p>
+    <div id="gruppen"></div>
   </section>
 
   <section class="grp" id="vergleich">
     <h2>Heute und Goethe</h2>
-    <p class="desc">Abgerollt auf eine Linie zeigt sich, warum der Kreis etwas ändert: Heute liegen
-      fünf Sektionen zwischen Blau und Blaurot, Gelb kommt nicht vor, und zwischen Grün und Blau ist
-      es leer. Auf dem Kreis bekommt jede Sektion ihren eigenen Ort.</p>
+    <p class="desc">Abgerollt auf eine Linie: Heute liegen fünf Sektionen zwischen Blau und Blaurot,
+      Gelb kommt nicht vor. Auf dem Kreis bekommt jede Sektion ihren eigenen Ort – und alle zwölf
+      halten Weiss.</p>
     <div class="lage">
       <div class="zeile"><span class="lab">Heute</span><div class="band-l" id="lage-heute"></div></div>
       <div class="zeile"><span class="lab">Goethe</span><div class="band-l" id="lage-goethe"></div></div>
       <div class="zeile"><span class="lab"></span><div class="skala"><span>Purpur</span><span>Gelbrot</span><span>Gelb</span><span>Grün</span><span>Blau</span><span>Blaurot</span><span>Purpur</span></div></div>
     </div>
     <div class="tabelle"><table class="gg" id="gg">
-      <thead><tr><th class="num">Nr.</th><th>Sektion</th><th>Heute</th><th>Goethe</th><th>Ort</th><th>Sphäre</th></tr></thead>
+      <thead><tr><th class="num">Nr.</th><th>Sektion</th><th>Heute</th><th class="num">Weiss</th><th>Goethe</th><th class="num">Weiss</th><th>Ort</th></tr></thead>
       <tbody></tbody>
     </table></div>
+    <p class="meta">Weiss: Kontrast von weisser Schrift auf der Basis, zugleich der Kontrast der Basis
+      als Schrift auf Papier. Unter 4.5:1 trägt eine Farbe heute keinen Text.</p>
   </section>
 
   <section class="grp" id="harmonien">
@@ -187,15 +215,15 @@
       Auf dem Kreis liegen darum auch Sektionen einander gegenüber, die zusammen die Totalität
       ergeben: Paare, die auf einem Blatt nebeneinander stehen können.</p>
     <div class="paare" id="paare"></div>
-    <p class="meta">Nachbarn auf dem Kreis nennt Goethe ‹charakterlos› – zu nah beieinander, um
-      nebeneinander etwas zu sagen (§§ 827–828). Ein Paar aus derselben Sphäre braucht darum
-      den Abstand über Dunkel und Hell, nicht über die Basis.</p>
+    <p class="meta">Nachbarn auf dem Kreis sagen nebeneinander wenig, schreibt Goethe (§§ 827–828).
+      Ein Paar aus derselben Gruppe braucht darum den Abstand über Dunkel und Hell, nicht über die
+      Basis.</p>
   </section>
 
   <section class="grp" id="anwendung">
     <h2>Anwendung</h2>
     <p class="desc">Sektion wählen – die Bausteine des Design-Systems zeigen sich in ihren
-      Goethe-Tönen.</p>
+      Goethe-Tönen. Kicker und Link stehen in der Basis selbst.</p>
     <div class="waehler" id="waehler" role="group" aria-label="Sektion wählen"></div>
     <div class="anw" id="anw">
       <div class="bsp">
@@ -207,7 +235,7 @@
       <div class="bsp">
         <div><span class="chip ton" id="bsp-chip">Sektion</span> <span class="chip ton">Neu</span> <span class="chip ton">Rundbrief 3/2026</span></div>
         <div class="card ton"><h3>Studienwoche im Herbst</h3><p class="meta">Anmeldung bis 30. September</p></div>
-        <p class="meta">Chips · Hell mit Sektionstinte. Karte · Basis als Kante</p>
+        <p class="meta">Chips · Hell mit Basis als Schrift. Karte · Basis als Kante</p>
       </div>
       <div class="bsp">
         <div class="kasten"><b>Hinweis der Sektion.</b> Die Anmeldung ist offen; Mitglieder der Hochschule erhalten den Studienbrief vorab.</div>
@@ -216,8 +244,8 @@
       <div class="bsp textprobe">
         <div><span class="kick" id="bsp-kick">Sektion</span>
           <h3>Forschung und Praxis im Gespräch</h3>
-          <p>Der Kicker trägt die Sektion als Text; im Lauftext bleibt ein <a href="#anwendung">Verweis in der Sektionstinte</a> lesbar – auch im Dunkelmodus.</p></div>
-        <p class="meta">Kicker und Link · Sektionstinte auf Papier</p>
+          <p>Der Kicker trägt die Sektion als Text; im Lauftext bleibt ein <a href="#anwendung">Verweis in der Basis</a> lesbar – auch im Dunkelmodus.</p></div>
+        <p class="meta">Kicker und Link · Basis auf Papier</p>
       </div>
       <div class="bsp">
         <div><button class="btn ton" type="button">Zur Sektion</button> <button class="btn" type="button">Programm</button></div>
@@ -233,10 +261,12 @@
         Eine Umstellung heisst: zwölf Werte in der Quelle der Logos und in den Tokens, dann das
         Rezept neu laufen lassen – Logos, Wallpaper, Familienmenü und Sektionsfarben-Seite ziehen
         nach. Beides kann eine Weile nebeneinander stehen; die Werkzeuge kennen nur Tokens.</p>
-      <p><b>Gelb trägt kein Weiss.</b> Die reine Basis der Pädagogik hält Weiss nur 1.6:1 – wie
-        heute Landwirtschaft, Jugend und Heilpädagogik. Auf der Basis steht darum ein tiefer Ton
-        der Sektion; die dunkle Fläche trägt Weiss überall ≥ 5:1. Das ist keine Schwäche des
-        Kreises, sondern Goethes Gelb: die nächste Farbe am Licht.</p>
+      <p><b>Das Veto.</b> Jede Sektion sieht ihren Ort, den Grund und die Stelle bei Goethe. Wer den
+        Ort nicht will, meldet es über ‹Sag es uns› unten rechts; die Rückmeldung wird auf der Karte
+        vermerkt. Ein Veto verschiebt eine Sektion auf dem Kreis, nicht das Konzept.</p>
+      <p><b>Gelb ist Gold.</b> Ein Gelb, das Weiss trägt, ist auf dem Bildschirm ein Gold – Goethe
+        selbst nennt das Gold den ‹neuen und hohen Begriff› dieser Farbe. Der Ton liegt neben dem
+        Hausgold, ist aber gelber und satter.</p>
       <p><b>Die Bereiche.</b> Bühne und Bau-Administration stehen nicht auf dem Kreis; sie behalten
         ihre Farben. Das Goetheanum selbst bleibt Markenblau.</p>
     </div>
@@ -264,10 +294,15 @@
   var el=function(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
   var ROOT=document.documentElement, SEK=D.sektionen, byKey={};
   SEK.forEach(function(s,i){s.nr=i+1; byKey[s.key]=s;});
+  var STATUS={offen:"Rückmeldung offen",angenommen:"angenommen",veto:"Veto"};
 
   // --- Töne als Custom Properties (eine Quelle: die Daten) --------------------
+  function istDunkel(){
+    var t=ROOT.getAttribute("data-theme");
+    return t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches);
+  }
   function setzeTokens(){
-    var dunkel=ROOT.getAttribute("data-theme")==="dark"||(!ROOT.getAttribute("data-theme")&&matchMedia("(prefers-color-scheme: dark)").matches);
+    var dunkel=istDunkel();
     SEK.forEach(function(s){
       var p="--g-"+s.key;
       ROOT.style.setProperty(p,s.basis); ROOT.style.setProperty(p+"-on",s.on);
@@ -314,14 +349,12 @@
   function sv(t,attrs,txt){var e=document.createElementNS(NS,t);for(var k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;return e;}
   function bauKreis(){
     var svg=$("#svg-kreis");
-    // Sphären: Trennlinien und Wörter in den Ecken
     D.sphaeren.forEach(function(s){
       var l0=pol(306,s.von), l1=pol(336,s.von);
       svg.appendChild(sv("line",{x1:l0[0],y1:l0[1],x2:l1[0],y2:l1[1],"class":"sep"}));
       var m=(s.von+s.bis)/2, p=pol(352,m);
       svg.appendChild(sv("text",{x:p[0],y:p[1]+9,"text-anchor":"middle","class":"sph"},s.name));
     });
-    // Sektionen: äusserer Ring, jede von Mitte zu Mitte ihrer Nachbarn
     var sorted=SEK.slice().sort(function(a,b){return a.winkel-b.winkel;});
     sorted.forEach(function(s,i){
       var prev=sorted[(i-1+sorted.length)%sorted.length], next=sorted[(i+1)%sorted.length];
@@ -330,19 +363,17 @@
       var p=pol(281,s.winkel);
       svg.appendChild(sv("text",{x:p[0],y:p[1]+8,"text-anchor":"middle","class":"nr",fill:"var(--g-"+s.key+"-on)"},String(s.nr)));
     });
-    // Goethes sechs Farben mit Namen und Wort
     D.anker.forEach(function(a){
       var tok="--g-anker-"+a.name.toLowerCase().replace("ü","ue");
       svg.appendChild(sv("path",{d:ring(180,250,a.winkel-30,a.winkel+30),fill:"var("+tok+")","class":"sektor"}));
-      var p=pol(215,a.winkel), q=pol(148,a.winkel);
+      var p=pol(215,a.winkel);
       svg.appendChild(sv("text",{x:p[0],y:p[1]+8,"text-anchor":"middle","class":"ort",fill:a.name==="Gelb"?"var(--ink)":"var(--on-accent)"},a.name));
-      svg.appendChild(sv("text",{x:q[0],y:q[1]+7,"text-anchor":"middle","class":"wort"},a.wort));
     });
     svg.appendChild(sv("text",{x:CX,y:CY-8,"text-anchor":"middle","class":"mitte"},"Purpur oben"));
-    svg.appendChild(sv("text",{x:CX,y:CY+18,"text-anchor":"middle","class":"mitte"},"tätige Seite rechts"));
+    svg.appendChild(sv("text",{x:CX,y:CY+18,"text-anchor":"middle","class":"mitte"},"warme Seite rechts"));
   }
 
-  // --- Karten je Sphäre ----------------------------------------------------------
+  // --- Karten je Gruppe ------------------------------------------------------------
   function flaeche(cls,txt,bg,fg){
     var d=el("div","f "+cls); d.style.background="var("+bg+")"; d.style.color="var("+fg+")";
     d.appendChild(el("span","nr",txt)); d.appendChild(el("span","hx")); d.appendChild(el("span","k"));
@@ -356,20 +387,24 @@
     f.appendChild(flaeche("hell","Hell",t+"-hell",t+"-ink"));
     a.appendChild(f);
     var kopf=el("div","kopf"); var h=el("h4"); h.textContent=s.name; kopf.appendChild(h);
-    var orte=el("div","orte"); orte.appendChild(el("span","chip",s.ort)); orte.appendChild(el("span","meta",s.para)); kopf.appendChild(orte);
-    a.appendChild(kopf);
+    var orte=el("div","orte"); orte.appendChild(el("span","chip",s.ort)); orte.appendChild(el("span","meta",s.para));
+    var r=el("span","rueck",STATUS[s.status]||s.status); r.dataset.status=s.status; orte.appendChild(r);
+    kopf.appendChild(orte); a.appendChild(kopf);
+    var sch=el("p","schrift"); sch.style.color="var("+t+"-ink)"; sch.appendChild(document.createTextNode(s.kurz));
+    sch.appendChild(el("small","",""));
+    a.appendChild(sch);
     a.appendChild(el("p","grund",s.grund));
     var w=el("div","werte"); w.appendChild(wert(s.basis.toUpperCase(),"Hex",s.basis));
     var heute=el("span","meta"); heute.appendChild(el("span","punkt")); heute.lastChild.style.background="var("+t+"-heute)"; heute.appendChild(document.createTextNode(" heute "+s.heute.toUpperCase()));
     w.appendChild(heute); a.appendChild(w);
     return a;
   }
-  function bauSphaeren(){
-    var wrap=$("#sphaeren");
-    D.sphaeren.forEach(function(sp){
-      var sec=el("div","sphaere"); sec.appendChild(el("h3",null,sp.name));
-      sec.appendChild(el("p","desc","Goethes Blatt: "+sp.farben+"."));
-      var k=el("div","karten"); SEK.filter(function(s){return s.sphaere===sp.id;}).forEach(function(s){k.appendChild(karte(s));});
+  function bauGruppen(){
+    var wrap=$("#gruppen");
+    D.gruppen.forEach(function(g){
+      var sec=el("div","gruppe"); sec.appendChild(el("h3",null,g.name));
+      sec.appendChild(el("p","desc",g.desc));
+      var k=el("div","karten"); SEK.filter(function(s){return s.gruppe===g.id;}).forEach(function(s){k.appendChild(karte(s));});
       sec.appendChild(k); wrap.appendChild(sec);
     });
   }
@@ -378,9 +413,11 @@
       a.querySelectorAll(".f").forEach(function(f){
         var bg=paintHex(f), fg=paintHex(f,"color"), k=kontrast(fg,bg);
         f.querySelector(".hx").textContent=bg.toUpperCase();
-        var wer=f.classList.contains("hell")?"Tinte":(fg.toLowerCase()==="#ffffff"?"Weiss":"Dunkelton");
+        var wer=f.classList.contains("hell")?"Basis":"Weiss";
         f.querySelector(".k").textContent=wer+" "+fmt(k)+(k>=4.5?" ✓":" ✗");
       });
+      var sch=a.querySelector(".schrift"), k=kontrast(paintHex(sch,"color"),paintHex(a));
+      sch.querySelector("small").textContent="als Schrift auf Papier "+fmt(k)+(k>=4.5?" ✓":" ✗");
     });
   }
 
@@ -393,13 +430,14 @@
     });
     var tb=$("#gg tbody");
     SEK.forEach(function(s){
-      var tr=el("tr"), sph=D.sphaeren.filter(function(x){return x.id===s.sphaere;})[0];
+      var tr=el("tr");
       tr.appendChild(el("td","num",String(s.nr)));
-      var td=el("td"); td.textContent=s.name; tr.appendChild(td);
+      var td=el("td","name"); td.textContent=s.name; tr.appendChild(td);
       var a=el("td"); a.appendChild(el("span","sw")); a.lastChild.style.background="var(--g-"+s.key+"-heute)"; a.appendChild(document.createTextNode(s.heute.toUpperCase())); tr.appendChild(a);
+      tr.appendChild(el("td","num",fmt(s.heute_weiss)+(s.heute_weiss>=4.5?" ✓":" ✗")));
       var b=el("td"); b.appendChild(el("span","sw")); b.lastChild.style.background="var(--g-"+s.key+")"; b.appendChild(document.createTextNode(s.basis.toUpperCase())); tr.appendChild(b);
+      tr.appendChild(el("td","num",fmt(s.kontrast.weiss_auf_basis)+" ✓"));
       var o=el("td"); o.textContent=s.ort; tr.appendChild(o);
-      var p=el("td"); p.textContent=sph?sph.name:""; tr.appendChild(p);
       tb.appendChild(tr);
     });
   }
@@ -410,7 +448,7 @@
     D.harmonien.forEach(function(h){
       var a=byKey[h.a], b=byKey[h.b], p=el("div","paar");
       [a,b].forEach(function(s){
-        var d=el("div","h"); d.style.background="var(--g-"+s.key+"-dunkel)"; d.style.color="var(--on-accent)";
+        var d=el("div","h"); d.style.background="var(--g-"+s.key+")"; d.style.color="var(--g-"+s.key+"-on)";
         d.appendChild(el("b",null,s.kurz)); d.appendChild(el("span",null,s.ort)); p.appendChild(d);
       });
       w.appendChild(p);
@@ -437,7 +475,7 @@
   }
 
   function render(){
-    setzeTokens(); bauKreis(); bauSphaeren(); bauLage(); bauPaare(); bauWaehler();
+    setzeTokens(); bauKreis(); bauGruppen(); bauLage(); bauPaare(); bauWaehler();
     requestAnimationFrame(function(){messen(); waehle("aas");});
     new MutationObserver(function(){setzeTokens(); requestAnimationFrame(messen);})
       .observe(ROOT,{attributes:true,attributeFilter:["data-theme"]});
