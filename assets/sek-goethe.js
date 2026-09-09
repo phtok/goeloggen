@@ -111,6 +111,7 @@ window.GOE_SEK_GOETHE = {
    "heute_weiss": 5.22,
    "grund": "Purpur ist für Goethe die Farbe, die ‹teils actu, teils potentia alle andern Farben enthalte›: der Scheitel des Kreises, in dem sich die gesteigerten Pole vereinigen. Die Sektion, die das Ganze trägt, steht dort.",
    "para": "§§ 793–794",
+   "satz": "Das Ganze: Purpur ‹enthält alle andern Farben›.",
    "kontrast": {
     "weiss_auf_basis": 5.3,
     "basis_auf_soft": 5.0,
@@ -145,6 +146,7 @@ window.GOE_SEK_GOETHE = {
    "heute_weiss": 3.18,
    "grund": "Von der Wirkung des Purpurs sagt Goethe, sie sei ‹so einzig wie ihre Natur›: ‹Ernst und Würde› wie ‹Huld und Anmut›. Auf dem Blatt von 1809 steht dieses Rot für das Schöne – der Ort der bildenden Künste.",
    "para": "§ 796",
+   "satz": "Das Schöne: ‹Huld und Anmut›.",
    "kontrast": {
     "weiss_auf_basis": 5.05,
     "basis_auf_soft": 4.76,
@@ -179,6 +181,7 @@ window.GOE_SEK_GOETHE = {
    "heute_weiss": 4.14,
    "grund": "Gelbrot ist die Farbe des Tuns: ‹Die aktive Seite ist hier in ihrer höchsten Energie.› Sozialwissenschaft als Wille, im Sozialen etwas zu bewirken.",
    "para": "§ 775",
+   "satz": "Die Tat: ‹die aktive Seite in ihrer höchsten Energie›.",
    "kontrast": {
     "weiss_auf_basis": 5.04,
     "basis_auf_soft": 4.75,
@@ -213,6 +216,7 @@ window.GOE_SEK_GOETHE = {
    "heute_weiss": 2.86,
    "grund": "Im Rotgelb ‹wächst die Farbe an Energie und erscheint mächtiger und herrlicher›; es gibt ‹das Gefühl von Wärme und Wonne› und ist ‹die Farbe der höhern Glut› – die Jugend.",
    "para": "§§ 772–773",
+   "satz": "Die Glut: ‹Wärme und Wonne›.",
    "kontrast": {
     "weiss_auf_basis": 5.0,
     "basis_auf_soft": 4.71,
@@ -247,6 +251,7 @@ window.GOE_SEK_GOETHE = {
    "heute_weiss": 2.41,
    "grund": "Gelb macht ‹einen durchaus warmen und behaglichen Eindruck›, und ins Rotgelb gesteigert ist es ‹bei Umgebungen angenehm›: Wärme, die aufnimmt und Raum gibt.",
    "para": "§§ 768, 773",
+   "satz": "Die Wärme: ‹warm und behaglich›.",
    "kontrast": {
     "weiss_auf_basis": 5.03,
     "basis_auf_soft": 4.74,
@@ -281,6 +286,7 @@ window.GOE_SEK_GOETHE = {
    "heute_weiss": 2.66,
    "grund": "In Grün findet das Auge ‹eine reale Befriedigung›; wenn die beiden Mutterfarben ‹sich in der Mischung genau das Gleichgewicht halten›, ruht ‹das Auge und das Gemüt› darauf ‹wie auf einem Einfachen›. Erde und Wachstum.",
    "para": "§ 802",
+   "satz": "Die Erde: ‹reale Befriedigung›.",
    "kontrast": {
     "weiss_auf_basis": 5.0,
     "basis_auf_soft": 4.72,
@@ -315,6 +321,7 @@ window.GOE_SEK_GOETHE = {
    "heute_weiss": 5.11,
    "grund": "Grün entsteht, wenn Gelb und Blau ‹gleich bei ihrem ersten Erscheinen› zusammenkommen – die beiden Urfarben, die Goethe aus Licht und Finsternis ableitet. Wo Grün ins Blau übergeht, nennt er das Meergrün ‹eine liebliche Farbe›. Die Sektion, die seine Naturforschung weiterführt.",
    "para": "§§ 785, 801",
+   "satz": "Die Anschauung: die Vereinigung der Urfarben Gelb und Blau.",
    "kontrast": {
     "weiss_auf_basis": 5.04,
     "basis_auf_soft": 4.76,
@@ -349,6 +356,7 @@ window.GOE_SEK_GOETHE = {
    "heute_weiss": 8.64,
    "grund": "Wo Grün ins Blau übergeht: die ‹reale Befriedigung› des Grün (§ 802) wird zur ‹Energie› des Blau (§ 779) – Ruhe, aus der Kraft wird. Das Kind, das wächst; die Pädagogik.",
    "para": "§§ 779, 802",
+   "satz": "Das Wachsen: Ruhe, aus der Kraft wird.",
    "kontrast": {
     "weiss_auf_basis": 4.96,
     "basis_auf_soft": 4.68,
@@ -383,6 +391,7 @@ window.GOE_SEK_GOETHE = {
    "heute_weiss": 3.35,
    "grund": "Blau ‹ist als Farbe eine Energie›; es hat ‹etwas Widersprechendes von Reiz und Ruhe im Anblick›, und wir sehen es gern an, ‹weil es uns nach sich zieht›. Bewegung in der Ruhe: Sprache, Musik, Eurythmie.",
    "para": "§§ 779, 781",
+   "satz": "Der Klang: ‹Reiz und Ruhe›.",
    "kontrast": {
     "weiss_auf_basis": 4.98,
     "basis_auf_soft": 4.7,
@@ -417,6 +426,7 @@ window.GOE_SEK_GOETHE = {
    "heute_weiss": 7.19,
    "grund": "‹Wie wir den hohen Himmel, die fernen Berge blau sehen›: Blau ist die Farbe des Himmels und der Ferne – Mathematik und Astronomie.",
    "para": "§ 780",
+   "satz": "Der Himmel: ‹die fernen Berge blau›.",
    "kontrast": {
     "weiss_auf_basis": 6.98,
     "basis_auf_soft": 6.58,
@@ -451,6 +461,7 @@ window.GOE_SEK_GOETHE = {
    "heute_weiss": 5.13,
    "grund": "Blau ‹steigert sich sehr sanft ins Rote›; mit dieser Farbe wünscht man ‹immer fortzugehen› und dabei ‹einen Punkt zu finden, wo man ausruhen könnte› – die Bewegung des Lesens. Sprache, Dichtung, Geistesgeschichte.",
    "para": "§§ 787–788",
+   "satz": "Das Lesen: ‹fortgehen› und ‹ausruhen›.",
    "kontrast": {
     "weiss_auf_basis": 5.32,
     "basis_auf_soft": 5.02,
@@ -485,6 +496,7 @@ window.GOE_SEK_GOETHE = {
    "heute_weiss": 6.47,
    "grund": "Ins Rote gesteigert ‹erhält› das Blau ‹etwas Wirksames›, sagt Goethe – Wirksamkeit ist das Wort der Heilkunst. Die Medizin behält ihr Violett und steht auf dem Kreis zwischen Blau und Purpur.",
    "para": "§ 787",
+   "satz": "Das Wirksame: ‹erhält dadurch etwas Wirksames›.",
    "kontrast": {
     "weiss_auf_basis": 6.34,
     "basis_auf_soft": 5.97,

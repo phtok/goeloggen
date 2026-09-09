@@ -1,13 +1,14 @@
 <!doctype html>
 <!-- =============================================================================
-     Farbmodell der Sektionen – fünf Stufen je Farbe (Labor, Strategie)
+     Farbmodell der Sektionen – sechs Stufen je Farbe (Labor, Strategie)
      -----------------------------------------------------------------------------
-     Die eine Farbe für Leuchten, Weiss und Schrift war überfordert. Das Modell
-     trennt die Aufgaben: Leuchten (Erkennung, 3:1), Tinte (Schrift, 4.5:1),
-     Grund (Weiss darauf), Pastell und Hauch (Gegenraum für dunklen Text).
-     Werte aus assets/sek-modell.js (tools/sek-modell.py). Die Stufen sind
-     Vorschlagsfarben und werden als --m-* gesetzt; alles Übrige kommt aus den
-     Tokens (DS02/DS07, B05).
+     Goethes Farbenkreis für das Goetheanum: der Kreis als Bild, je Sektion das
+     kürzeste Argument aus der sinnlich-sittlichen Wirkung, und eine Leiter aus
+     sechs Stufen mit je einer Aufgabe – Leuchten (Erkennung, natürliche Buntheit
+     von heute, 3:1), Kern (Weiss darauf, 4.5:1), Tinte (Schrift auf Weiss),
+     Grund (Hintergrund), Pastell und Hauch (Gegenraum für dunklen Text).
+     Werte aus assets/sek-modell.js (tools/sek-modell.py); Stufen als --m-*
+     mit Rückfallwert (DS10), alles Übrige aus den Tokens (DS02/DS07, B05).
      ============================================================================= -->
 <html lang="de-CH">
 <head>
@@ -15,7 +16,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
 <title>Farbmodell der Sektionen · Goetheanum</title>
-<meta name="description" content="Fünf Stufen je Sektion, jede mit einer Aufgabe: Leuchten für die Erkennung, Tinte für die Schrift, Grund, Pastell und Hauch als Gegenraum – mit Anwendungsfällen und Beispielen." />
+<meta name="description" content="Goethes Farbenkreis für das Goetheanum: der Kreis, das kürzeste Argument je Sektion und sechs Stufen je Farbe mit Anwendungsfällen – Leuchten, Kern, Tinte, Grund, Pastell, Hauch." />
 <link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="design-system/tokens.css" />
 <link rel="stylesheet" href="design-system/base.css" />
@@ -30,10 +31,34 @@
   .grp > .desc{max-width:62ch}
   .grp > .prose{margin-top:var(--s4)}
 
-  /* --- Die Leiter: eine Zeile je Sektion, fünf Stufen ------------------------ */
+  /* --- Der Kreis ------------------------------------------------------------- */
+  .kreis-wrap{overflow-x:auto;margin-top:var(--s5);padding-bottom:var(--s2)}
+  .kreis{display:block;width:min(100%,760px);min-width:560px;margin:0 auto;font-family:var(--font-text)}
+  .kreis .sph{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:26px;fill:var(--ink)}
+  .kreis .ort{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:22px;fill:var(--on-accent)}
+  .kreis .nr{font-weight:600;font-size:23px;fill:var(--on-accent)}
+  .kreis .mitte{font-size:20px;fill:var(--muted)}
+  .kreis .sep{stroke:var(--line);stroke-width:2}
+  .kreis .sektor{stroke:var(--paper);stroke-width:2}
+  @media(max-width:600px){
+    .kreis{min-width:0}
+    .kreis .sph,.kreis .ort,.kreis .mitte{display:none}
+    .kreis .nr{font-size:40px}
+  }
+  /* Legende: Nummer, Sektion, Ort, das kürzeste Argument */
+  .legende{list-style:none;margin:var(--s5) 0 0;padding:0;display:grid;gap:var(--s2) var(--s5)}
+  @media(min-width:760px){.legende{grid-template-columns:1fr 1fr}}
+  .legende li{display:grid;grid-template-columns:2.2em 1fr;gap:var(--s2);align-items:start;font-family:var(--font-text);font-size:var(--t-small);line-height:1.45}
+  .legende .n{display:inline-flex;align-items:center;justify-content:center;width:2.2em;height:2.2em;border-radius:50%;
+    color:var(--on-accent);font-weight:600;font-variant-numeric:tabular-nums}
+  .legende b{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);display:block;line-height:1.2}
+  .legende .satz{display:block}
+  .legende .ort-p{color:var(--muted);font-size:var(--t-micro)}
+
+  /* --- Die Leiter: eine Zeile je Sektion, sechs Stufen ------------------------ */
   .leiter{display:grid;gap:var(--s3);margin-top:var(--s4)}
-  .zeile{display:grid;grid-template-columns:minmax(12ch,18ch) repeat(5,1fr);gap:var(--s1);align-items:stretch}
-  @media(max-width:760px){.zeile{grid-template-columns:repeat(5,1fr)} .zeile .wer{grid-column:1/-1}}
+  .zeile{display:grid;grid-template-columns:minmax(12ch,18ch) repeat(6,1fr);gap:var(--s1);align-items:stretch}
+  @media(max-width:760px){.zeile{grid-template-columns:repeat(6,1fr)} .zeile .wer{grid-column:1/-1}}
   .zeile .wer{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-small);line-height:1.2;
     display:flex;flex-direction:column;justify-content:center;padding-right:var(--s2)}
   .zeile .wer small{font-family:var(--font-text);font-weight:400;color:var(--muted);font-size:var(--t-micro)}
@@ -43,9 +68,9 @@
   .stufe .ab.gross{font-size:var(--t-h1)}
   .stufe .k{font-variant-numeric:tabular-nums}
   @media(max-width:760px){.stufe .k .hx{display:none}}
-  .kopfzeile{display:grid;grid-template-columns:minmax(12ch,18ch) repeat(5,1fr);gap:var(--s1);margin-top:var(--s5);
+  .kopfzeile{display:grid;grid-template-columns:minmax(12ch,18ch) repeat(6,1fr);gap:var(--s1);margin-top:var(--s5);
     font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);font-weight:600}
-  @media(max-width:760px){.kopfzeile{grid-template-columns:repeat(5,1fr)} .kopfzeile .wer{display:none}}
+  @media(max-width:760px){.kopfzeile{grid-template-columns:repeat(6,1fr)} .kopfzeile .wer{display:none}}
 
   /* --- Anwendungsfälle --------------------------------------------------------- */
   .tabelle{overflow-x:auto;margin-top:var(--s4)}
@@ -66,15 +91,12 @@
   @media(min-width:760px){.bsp-grid{grid-template-columns:1fr 1fr}}
   .bsp{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s4);display:flex;flex-direction:column;gap:var(--s3)}
   .bsp > .meta{order:9}
-  /* Plakat: Pastell trägt Lesetext in --ink; die Marke steht in Tinte. */
   .plakat{background:var(--m-pastell,var(--soft));border-radius:var(--r-control);padding:var(--s6) var(--s5);min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;gap:var(--s2)}
   .plakat .marke{width:40px;height:40px;border-radius:50%;background:var(--m-tinte,var(--gold-ink));margin-bottom:auto}
   .plakat h3{font-size:var(--t-h2);margin:0;max-width:16ch;color:var(--ink)}
   .plakat p{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);margin:0}
-  /* Leuchten: als Titelfläche nur mit grosser weisser Schrift. */
   .leucht{background:var(--m-leuchten,var(--gold));color:var(--on-accent);border-radius:var(--r-control);padding:var(--s5);min-height:140px;display:flex;align-items:flex-end}
   .leucht h3{font-size:var(--t-h1);margin:0;color:var(--on-accent);line-height:1.05}
-  /* Objekte in Leuchten: Punkt, Linie, Balken. */
   .objekte{display:flex;flex-direction:column;gap:var(--s3)}
   .objekte .menu{display:flex;gap:var(--s3);font-family:var(--font-text);font-size:var(--t-small);align-items:center}
   .objekte .menu .punkt{background:var(--m-leuchten,var(--gold))}
@@ -86,6 +108,10 @@
   .textprobe p{font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure)}
   .textprobe a{color:var(--m-tinte,var(--gold-ink));text-decoration-color:var(--m-hauch,var(--soft))}
   .textprobe .zahl{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h1);color:var(--m-tinte,var(--gold-ink));line-height:1}
+  /* Grund: Hintergrundelement – Fusszeile mit kleiner weisser Schrift, Marke in Leuchten davor. */
+  .fuss{background:var(--m-grund,var(--gold-deep));color:var(--on-accent);border-radius:var(--r-control);padding:var(--s4) var(--s5);
+    display:flex;align-items:center;gap:var(--s3);font-family:var(--font-text);font-size:var(--t-small)}
+  .fuss .punkt{background:var(--m-leuchten,var(--gold));width:1.2em;height:1.2em}
 
   .fineprint{margin-top:var(--s8);color:var(--muted);font-size:var(--t-small);max-width:64ch;font-family:var(--font-text);line-height:1.6}
   .fineprint b{color:var(--ink);font-weight:600}
@@ -93,39 +119,50 @@
 </head>
 <body>
 <script src="design-system/nav.js" data-root="./" data-active="sektionsfarben-modell" data-variant="werkzeug"
-        data-onpage="Leiter:#leiter|Anwendung:#anwendung|Beispiel:#beispiel|Empfehlung:#empfehlung"></script>
+        data-onpage="Kreis:#kreis|Leiter:#leiter|Anwendung:#anwendung|Beispiel:#beispiel|Empfehlung:#empfehlung"></script>
 
 <main class="wrap">
   <div class="artkopf">
     <span class="kicker">Labor · Farbkonzept</span>
-    <h1>Fünf Stufen je Sektion</h1>
-    <p class="lede">Die eine Farbe, die zugleich leuchten, Weiss tragen und als Schrift stehen soll, war
-      überfordert – an der Grenze wird Orange braun. Das Modell trennt die Aufgaben: die
-      <b>Erkennungsfarbe leuchtet</b> und trägt keinen Lesetext, die <b>Tinte</b> dunkelt für die
-      Schrift, <b>Grund, Pastell und Hauch</b> sind der Gegenraum.</p>
-    <p class="byline"><b>Entwurf</b> · 9. September 2026 · Farbtöne der Fassung 3 · zur Entscheidung</p>
+    <h1>Goethes Farbenkreis für das Goetheanum</h1>
+    <p class="lede">Zwölf Sektionen auf dem sinnlich-sittlichen Farbenkreis, jede mit dem kürzesten
+      Argument aus Goethes Text – und je Farbe sechs Stufen mit je einer Aufgabe: die
+      <b>Erkennungsfarbe leuchtet</b> in der natürlichen Buntheit von heute, der <b>Kern</b> trägt
+      Weiss, die <b>Tinte</b> steht auf Papier, <b>Grund, Pastell und Hauch</b> sind der Gegenraum.</p>
+    <p class="byline"><b>Entwurf</b> · 9. September 2026 · zweite Fassung des Modells · zur Entscheidung</p>
   </div>
+
+  <section class="grp" id="kreis">
+    <h2>Der Kreis</h2>
+    <p class="desc">Purpur oben, wo sich beide Seiten in der Steigerung vereinigen; Grün unten, wo sie
+      sich mischen; rechts die warme, links die kühle Seite. Der äussere Ring zeigt die zwölf
+      Sektionen in ihrer Erkennungsfarbe. Die Sphären des Blattes von 1809 beschreiben die Wirkung
+      der Farben; jede Sektion vereint alle vier.</p>
+    <div class="kreis-wrap"><svg class="kreis" id="svg-kreis" viewBox="0 0 760 760" role="img" aria-labelledby="kreis-t"><title id="kreis-t">Goethes Farbenkreis mit den zwölf Sektionen als äusserem Ring</title></svg></div>
+    <ol class="legende" id="legende"></ol>
+  </section>
 
   <section class="grp" id="leiter">
     <h2>Die Leiter</h2>
-    <p class="desc">Je Sektion fünf Stufen, von hell nach tief. Jede Stufe zeigt, was sie trägt: Hauch
-      und Pastell den dunklen Text, Leuchten nur die grosse weisse Schrift, die Tinte sich selbst
-      auf Papier, der Grund das Weiss auch klein. Die Zahlen sind am Blatt gemessen.</p>
-    <div class="kopfzeile"><span class="wer"></span><span>Hauch</span><span>Pastell</span><span>Leuchten</span><span>Tinte</span><span>Grund</span></div>
+    <p class="desc">Je Sektion sechs Stufen, von hell nach tief. Leuchten hat die Buntheit der heutigen
+      Farben – Pigment, nicht Licht – und ist so hell, wie 3:1 auf Papier erlaubt. Der Kern ist
+      dieselbe Farbe, tief genug für Weiss auch klein. Die Tinte ist eigens für Schrift auf Weiss
+      gesetzt. Die Zahlen sind am Blatt gemessen.</p>
+    <div class="kopfzeile"><span class="wer"></span><span>Hauch</span><span>Pastell</span><span>Leuchten</span><span>Kern</span><span>Tinte</span><span>Grund</span></div>
     <div class="leiter" id="leiter-zeilen"></div>
   </section>
 
   <section class="grp" id="anwendung">
     <h2>Anwendungsfälle</h2>
-    <p class="desc">Was praktisch Sinn macht: vier Stufen für die Werkzeuge im Alltag – Leuchten,
-      Tinte, Grund, Hauch – und Pastell für die grosse Fläche. Die Regel dahinter ist eine: Was
-      Lesetext tragen muss, ist nie die Erkennungsfarbe.</p>
+    <p class="desc">Vier Stufen für die Werkzeuge im Alltag – Leuchten, Kern, Tinte, Hauch –, der Grund
+      für Hintergrundelemente und den Dunkelmodus, Pastell für die grosse Fläche. Die Regel
+      dahinter: Was Lesetext tragen muss, ist nie die Erkennungsfarbe.</p>
     <div class="tabelle"><table class="af" id="af">
       <thead><tr><th>Stufe</th><th>Trägt</th><th>Anwendungsfälle</th><th>Regel</th></tr></thead>
       <tbody></tbody>
     </table></div>
     <p class="meta">Dunkelmodus: Hauch und Tinte kippen in ihre dunkle Gestalt (tiefer Hauch, helle Tinte);
-      Leuchten und Grund sind markenfest; Pastell weicht dem Grund.</p>
+      Leuchten, Kern und Grund sind markenfest; Pastell weicht dem Grund.</p>
   </section>
 
   <section class="grp" id="beispiel">
@@ -144,7 +181,7 @@
       <div class="bsp">
         <div class="band"><span class="kick">Rundbrief 3/2026</span><h3 id="bd-titel">Titel der Sektion</h3><p>Freie Hochschule für Geisteswissenschaft</p></div>
         <div><button class="btn ton" type="button">Zur Sektion</button> <button class="btn" type="button">Programm</button></div>
-        <p class="meta">Kopfband und Knopf · Grund trägt Weiss, auch klein</p>
+        <p class="meta">Kopfband und Knopf · Kern trägt Weiss, auch klein</p>
       </div>
       <div class="bsp">
         <div><span class="chip ton" id="ch-1">Sektion</span> <span class="chip ton">Neu</span> <span class="chip ton">Anmeldung offen</span></div>
@@ -164,7 +201,8 @@
           <div class="linie"></div>
           <div class="balken"><i style="height:40%"></i><i style="height:70%"></i><i style="height:100%"></i><i style="height:55%"></i></div>
         </div>
-        <p class="meta">Punkt, Linie, Diagramm · Leuchten als Objekt, ohne Text</p>
+        <div class="fuss"><span class="punkt"></span><span id="fs-name">Sektion</span><span>· Goetheanum, Dornach</span></div>
+        <p class="meta">Punkt, Linie, Diagramm · Leuchten als Objekt. Fusszeile · Grund als Hintergrund</p>
       </div>
     </div>
   </section>
@@ -172,24 +210,27 @@
   <section class="grp" id="empfehlung">
     <h2>Empfehlung</h2>
     <div class="prose">
-      <p><b>Fünf Stufen, vier im Alltag.</b> Drei davon gibt es heute schon (Basis, Dunkel, Hell) und
-        eine als Schrift (Tinte). Neu ist zweierlei: Die Basis wird zum <b>Leuchten</b> und muss keinen
-        Lesetext mehr tragen – sie darf so hell sein, wie 3:1 auf Papier erlaubt. Und <b>Pastell</b>
-        kommt als fünfte Stufe für die grosse Fläche dazu, die heute fehlt.</p>
-      <p><b>Die Heilpädagogik wird sauber.</b> Ihr Leuchten ist ein reines Orange; nur ihre Tinte bleibt
-        ein tiefes Terracotta, weil Orange als Schrift auf Weiss nicht anders kann. Das gilt für alle
-        warmen Töne: Die Tinte ist die Stufe, die man liest, nicht die, an der man die Sektion erkennt.</p>
-      <p><b>Was fällt.</b> Die Vorgabe ‹eine Farbe für beide Richtungen› – sie hat die Reihe in die
-        Tiefe gezwungen. Farbtöne, Ordnung und Veto bleiben, wie in der Fassung 3 beschlossen.</p>
+      <p><b>Sechs Stufen, vier im Alltag.</b> Leuchten, Kern, Tinte und Hauch brauchen die Werkzeuge
+        täglich; Grund und Pastell sind für Hintergrund und grosse Fläche. Der Charakter der Reihe
+        ist der von heute: gedeckt-natürlich, Pigment statt Licht. Neu ist nur, dass jede Stufe eine
+        Aufgabe hat und die Erkennungsfarbe keinen Lesetext mehr tragen muss.</p>
+      <p><b>Die Heilpädagogik.</b> Ihr Leuchten ist ein warmes Orange wie heute, ihr Kern ein tiefes
+        Orange, das Weiss trägt, ihre Tinte ein Terracotta für die Schrift. Was man liest, ist tiefer
+        als das, woran man die Sektion erkennt – bei allen zwölf.</p>
+      <p><b>Was das für die Tokens heisst.</b> Aus drei Gestalten werden sechs: Leuchten, Kern, Tinte,
+        Grund, Pastell, Hauch, je Theme. Basis wird zum Leuchten, Dunkel zum Grund, Hell zum Hauch;
+        Kern, Tinte und Pastell kommen dazu.</p>
     </div>
   </section>
 
   <p class="fineprint">
-    <b>Werte.</b> Gerechnet in OKLCH (tools/sek-modell.py, Daten in assets/sek-modell.js): Leuchten und Tinte
-    an ihrer Grenze mit voller Buntheit, Grund und Hauch mit dem Rezept der heutigen Sektionsfarben,
-    Pastell bei Helligkeit 0.86. Kontraste nach WCAG, auf dieser Seite am gerenderten Blatt gemessen.
-    Laborseite mit Herleitung: <a href="sektionsfarben-goethe.html">Sektionen auf Goethes Farbenkreis</a>;
-    Paletten zum Vergleich: <a href="sektionsfarben-goethe-varianten.html">Varianten</a>.
+    <b>Quelle.</b> Goethe, Zur Farbenlehre (1810), Didaktischer Teil, sechste Abteilung, §§ 758–829; Farbenkreis
+    1809 (Freies Deutsches Hochstift). <b>Werte.</b> Gerechnet in OKLCH (tools/sek-modell.py, Daten in
+    assets/sek-modell.js): Leuchten und Tinte an ihrer Grenze mit natürlicher Buntheit, Kern gleich der Basis
+    der Fassung 3, Grund und Hauch mit dem Rezept der heutigen Sektionsfarben, Pastell bei Helligkeit 0.86.
+    Kontraste am gerenderten Blatt gemessen. Herleitung und Belegstellen:
+    <a href="sektionsfarben-goethe.html">Sektionen auf Goethes Farbenkreis</a>; Paletten zum Vergleich:
+    <a href="sektionsfarben-goethe-varianten.html">Varianten</a>.
   </p>
 </main>
 
@@ -200,7 +241,7 @@
   var D=window.GOE_SEK_MODELL; if(!D) return;
   var $=function(s,r){return (r||document).querySelector(s);};
   var el=function(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
-  var ROOT=document.documentElement, SEK=D.sektionen, byKey={}; SEK.forEach(function(s){byKey[s.key]=s;});
+  var ROOT=document.documentElement, SEK=D.sektionen, byKey={}; SEK.forEach(function(s,i){s.nr=i+1; byKey[s.key]=s;});
   function istDunkel(){var t=ROOT.getAttribute("data-theme");return t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches);}
   function hexToRgb(hex){var h=hex.replace("#","");if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];return {r:parseInt(h.slice(0,2),16),g:parseInt(h.slice(2,4),16),b:parseInt(h.slice(4,6),16)};}
   function rgbToHex(r,g,b){return "#"+[r,g,b].map(function(c){c=Math.max(0,Math.min(255,Math.round(c)));return (c<16?"0":"")+c.toString(16);}).join("");}
@@ -214,21 +255,61 @@
   // --- Stufen als Custom Properties (Theme-bewusst) ------------------------------
   function toene(s){
     var d=istDunkel(), st=s.stufen;
-    return {hauch:d?st.hauch_dk:st.hauch, pastell:d?st.grund:st.pastell, leuchten:st.leuchten, tinte:d?st.tinte_dk:st.tinte, grund:st.grund};
+    return {hauch:d?st.hauch_dk:st.hauch, pastell:d?st.grund:st.pastell, leuchten:st.leuchten, kern:st.kern, tinte:d?st.tinte_dk:st.tinte, grund:st.grund};
   }
   function setze(node,s){
     var t=toene(s);
-    node.style.setProperty("--m-hauch",t.hauch); node.style.setProperty("--m-pastell",t.pastell);
-    node.style.setProperty("--m-leuchten",t.leuchten); node.style.setProperty("--m-tinte",t.tinte); node.style.setProperty("--m-grund",t.grund);
-    // die Ton-Rollen von base.css (band, kasten, chip.ton, btn.ton)
-    node.style.setProperty("--ton",t.leuchten); node.style.setProperty("--ton-dunkel",t.grund);
+    ["hauch","pastell","leuchten","kern","tinte","grund"].forEach(function(k){node.style.setProperty("--m-"+k,t[k]);});
+    // die Ton-Rollen von base.css: Kopfband und Knopf im Kern, Chip und Kasten im Hauch mit Tinte
+    node.style.setProperty("--ton",t.leuchten); node.style.setProperty("--ton-dunkel",t.kern);
     node.style.setProperty("--ton-hell",t.hauch); node.style.setProperty("--ton-ink",t.tinte);
+  }
+
+  // --- Der Kreis (SVG) ---------------------------------------------------------------
+  var NS="http://www.w3.org/2000/svg", CX=380, CY=380;
+  function pol(r,deg){var a=(deg-90)*Math.PI/180;return [CX+r*Math.cos(a),CY+r*Math.sin(a)];}
+  function ring(r1,r2,a0,a1){
+    var p0=pol(r2,a0),p1=pol(r2,a1),p2=pol(r1,a1),p3=pol(r1,a0),gross=(a1-a0)>180?1:0;
+    return "M"+p0.join(",")+" A"+r2+","+r2+" 0 "+gross+" 1 "+p1.join(",")+" L"+p2.join(",")+" A"+r1+","+r1+" 0 "+gross+" 0 "+p3.join(",")+"Z";
+  }
+  function sv(t,attrs,txt){var e=document.createElementNS(NS,t);for(var k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;return e;}
+  function bauKreis(){
+    var svg=$("#svg-kreis");
+    D.sphaeren.forEach(function(s){
+      var l0=pol(306,s.von), l1=pol(336,s.von);
+      svg.appendChild(sv("line",{x1:l0[0],y1:l0[1],x2:l1[0],y2:l1[1],"class":"sep"}));
+      var m=(s.von+s.bis)/2, p=pol(352,m);
+      svg.appendChild(sv("text",{x:p[0],y:p[1]+9,"text-anchor":"middle","class":"sph"},s.name));
+    });
+    var sorted=SEK.slice().sort(function(a,b){return a.winkel-b.winkel;});
+    sorted.forEach(function(s,i){
+      var prev=sorted[(i-1+sorted.length)%sorted.length], next=sorted[(i+1)%sorted.length];
+      var a0=(s.winkel+prev.winkel+(i===0?-360:0))/2, a1=(s.winkel+next.winkel+(i===sorted.length-1?360:0))/2;
+      svg.appendChild(sv("path",{d:ring(262,300,a0,a1),fill:s.stufen.leuchten,"class":"sektor"}));
+      var p=pol(281,s.winkel);
+      svg.appendChild(sv("text",{x:p[0],y:p[1]+8,"text-anchor":"middle","class":"nr"},String(s.nr)));
+    });
+    D.anker.forEach(function(a){
+      svg.appendChild(sv("path",{d:ring(180,250,a.winkel-30,a.winkel+30),fill:a.hex,"class":"sektor"}));
+      var p=pol(215,a.winkel);
+      svg.appendChild(sv("text",{x:p[0],y:p[1]+8,"text-anchor":"middle","class":"ort",fill:a.name==="Gelb"?"var(--ink)":"var(--on-accent)"},a.name));
+    });
+    svg.appendChild(sv("text",{x:CX,y:CY-8,"text-anchor":"middle","class":"mitte"},"Purpur oben"));
+    svg.appendChild(sv("text",{x:CX,y:CY+18,"text-anchor":"middle","class":"mitte"},"warme Seite rechts"));
+    var lg=$("#legende");
+    SEK.forEach(function(s){
+      var li=el("li"); var n=el("span","n",String(s.nr)); n.style.background=s.stufen.kern; li.appendChild(n);
+      var d=el("div"); var b=el("b"); b.textContent=s.name; d.appendChild(b);
+      var satz=el("span","satz"); satz.textContent=s.satz; d.appendChild(satz);
+      var op=el("span","ort-p"); op.textContent=s.ort+" · "+s.para; d.appendChild(op);
+      li.appendChild(d); lg.appendChild(li);
+    });
   }
 
   // --- Die Leiter --------------------------------------------------------------------
   function stufe(cls,bgVar,fgVar,ab,gross){
     var d=el("div","stufe "+cls); d.style.background="var("+bgVar+")"; d.style.color="var("+fgVar+")";
-    var a=el("div","ab"+(gross?" gross":""),ab); d.appendChild(a); d.appendChild(el("div","k")); return d;
+    d.appendChild(el("div","ab"+(gross?" gross":""),ab)); d.appendChild(el("div","k")); return d;
   }
   function zeile(s){
     var z=el("div","zeile"); z.dataset.key=s.key; setze(z,s);
@@ -236,6 +317,7 @@
     z.appendChild(stufe("hauch","--m-hauch","--m-tinte","Ab"));
     z.appendChild(stufe("pastell","--m-pastell","--ink","Ab"));
     z.appendChild(stufe("leuchten","--m-leuchten","--on-accent","Ab",true));
+    z.appendChild(stufe("kern","--m-kern","--on-accent","Ab"));
     z.appendChild(stufe("tinte","--paper","--m-tinte","Ab"));
     z.appendChild(stufe("grund","--m-grund","--on-accent","Ab"));
     return z;
@@ -244,18 +326,19 @@
     document.querySelectorAll(".zeile").forEach(function(z){
       var s=byKey[z.dataset.key]; setze(z,s);
       z.querySelectorAll(".stufe").forEach(function(f){
-        // Im Dunkelmodus weicht Pastell dem Grund und trägt Weiss (Regel Grund).
         if(f.classList.contains("pastell")) f.style.color=istDunkel()?"var(--on-accent)":"var(--ink)";
-        var bg=paintHex(f), fg=paintHex(f,"color"), k=kontrast(fg,bg), min=f.classList.contains("leuchten")?3:(f.classList.contains("pastell")&&!istDunkel()?7:4.5);
+        var bg=paintHex(f), fg=paintHex(f,"color"), k=kontrast(fg,bg);
+        var min=f.classList.contains("leuchten")?3:(f.classList.contains("pastell")&&!istDunkel()?7:(f.classList.contains("tinte")?5.5:4.5));
         f.querySelector(".k").innerHTML="<span class=hx>"+bg.toUpperCase()+" · </span>"+fmt(k)+(k>=min?" ✓":" ✗");
       });
     });
-    document.querySelectorAll("#bsp").forEach(function(b){setze(b,byKey[b.dataset.key||SEK[0].key]);});
+    var b=$("#bsp"); setze(b,byKey[b.dataset.key||SEK[0].key]);
   }
+  bauKreis();
   SEK.forEach(function(s){$("#leiter-zeilen").appendChild(zeile(s));});
 
   // --- Anwendungsfälle --------------------------------------------------------------
-  var probe=SEK.filter(function(s){return s.key==="hpise";})[0]||SEK[0];
+  var probe=byKey.hpise||SEK[0];
   D.stufen.forEach(function(st){
     var tr=el("tr"), r=el("td","rolle"); var p=el("span","probe"); p.style.background=toene(probe)[st.id]; r.appendChild(p); r.appendChild(document.createTextNode(st.name)); tr.appendChild(r);
     ["traegt","faelle","regel"].forEach(function(f){var td=el("td"); td.textContent=st[f]; tr.appendChild(td);});
@@ -266,7 +349,7 @@
   function waehle(key){
     var s=byKey[key]||SEK[0], b=$("#bsp"); b.dataset.key=s.key; setze(b,s);
     $("#pl-titel").textContent=s.name; $("#le-titel").textContent=s.kurz; $("#bd-titel").textContent=s.name;
-    $("#ch-1").textContent=s.kurz; $("#tp-kick").textContent=s.kurz; $("#mn-name").textContent=s.kurz;
+    $("#ch-1").textContent=s.kurz; $("#tp-kick").textContent=s.kurz; $("#mn-name").textContent=s.kurz; $("#fs-name").textContent=s.name;
     document.querySelectorAll("#waehler button").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.key===s.key));});
   }
   SEK.forEach(function(s){
