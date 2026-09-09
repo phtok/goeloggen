@@ -1,0 +1,283 @@
+<!doctype html>
+<!-- =============================================================================
+     Farbmodell der Sektionen – fünf Stufen je Farbe (Labor, Strategie)
+     -----------------------------------------------------------------------------
+     Die eine Farbe für Leuchten, Weiss und Schrift war überfordert. Das Modell
+     trennt die Aufgaben: Leuchten (Erkennung, 3:1), Tinte (Schrift, 4.5:1),
+     Grund (Weiss darauf), Pastell und Hauch (Gegenraum für dunklen Text).
+     Werte aus assets/sek-modell.js (tools/sek-modell.py). Die Stufen sind
+     Vorschlagsfarben und werden als --m-* gesetzt; alles Übrige kommt aus den
+     Tokens (DS02/DS07, B05).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Farbmodell der Sektionen · Goetheanum</title>
+<meta name="description" content="Fünf Stufen je Sektion, jede mit einer Aufgabe: Leuchten für die Erkennung, Tinte für die Schrift, Grund, Pastell und Hauch als Gegenraum – mit Anwendungsfällen und Beispielen." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  .artkopf{padding-block:clamp(36px,6vw,64px) var(--s6);max-width:min(72ch,100%)}
+  .artkopf h1{max-width:22ch}
+  .artkopf .lede{margin-top:var(--s4)}
+  .artkopf .byline{margin-top:var(--s4)}
+  .grp{margin-top:var(--s8)}
+  .grp > h2{font-size:var(--t-h2);margin-bottom:var(--s2)}
+  .grp > .desc{max-width:62ch}
+  .grp > .prose{margin-top:var(--s4)}
+
+  /* --- Die Leiter: eine Zeile je Sektion, fünf Stufen ------------------------ */
+  .leiter{display:grid;gap:var(--s3);margin-top:var(--s4)}
+  .zeile{display:grid;grid-template-columns:minmax(12ch,18ch) repeat(5,1fr);gap:var(--s1);align-items:stretch}
+  @media(max-width:760px){.zeile{grid-template-columns:repeat(5,1fr)} .zeile .wer{grid-column:1/-1}}
+  .zeile .wer{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-small);line-height:1.2;
+    display:flex;flex-direction:column;justify-content:center;padding-right:var(--s2)}
+  .zeile .wer small{font-family:var(--font-text);font-weight:400;color:var(--muted);font-size:var(--t-micro)}
+  .stufe{min-height:72px;border-radius:var(--r-control);padding:var(--s2);display:flex;flex-direction:column;justify-content:space-between;
+    font-family:var(--font-text);font-size:var(--t-micro);line-height:1.25;border:1px solid var(--line)}
+  .stufe .ab{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);line-height:1}
+  .stufe .ab.gross{font-size:var(--t-h1)}
+  .stufe .k{font-variant-numeric:tabular-nums}
+  @media(max-width:760px){.stufe .k .hx{display:none}}
+  .kopfzeile{display:grid;grid-template-columns:minmax(12ch,18ch) repeat(5,1fr);gap:var(--s1);margin-top:var(--s5);
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);font-weight:600}
+  @media(max-width:760px){.kopfzeile{grid-template-columns:repeat(5,1fr)} .kopfzeile .wer{display:none}}
+
+  /* --- Anwendungsfälle --------------------------------------------------------- */
+  .tabelle{overflow-x:auto;margin-top:var(--s4)}
+  table.af{border-collapse:collapse;width:100%;min-width:720px;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5}
+  table.af th{text-align:left;font-weight:600;color:var(--muted);padding:var(--s2) var(--s3);border-bottom:1px solid var(--line);vertical-align:bottom}
+  table.af td{padding:var(--s3);border-bottom:1px solid var(--line-soft);vertical-align:top}
+  table.af td.rolle{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);white-space:nowrap}
+  table.af .probe{display:inline-block;width:2.4em;height:1.6em;border-radius:6px;border:1px solid var(--line);vertical-align:middle;margin-right:.5em}
+
+  /* --- Am Beispiel --------------------------------------------------------------- */
+  .waehler{display:flex;gap:var(--s2);overflow-x:auto;padding:var(--s2) 0 var(--s3);margin-top:var(--s4);scrollbar-width:thin}
+  .waehler button{flex:none;font:inherit;font-family:var(--font-text);font-size:var(--t-small);min-height:var(--tap);
+    padding:var(--pille-y) var(--pille-x);border-radius:var(--r-pill);border:1px solid var(--line);
+    background:var(--field-bg);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:.5em}
+  .waehler button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent)}
+  .punkt{width:.85em;height:.85em;border-radius:50%;flex:none;display:inline-block}
+  .bsp-grid{display:grid;gap:var(--s4)}
+  @media(min-width:760px){.bsp-grid{grid-template-columns:1fr 1fr}}
+  .bsp{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s4);display:flex;flex-direction:column;gap:var(--s3)}
+  .bsp > .meta{order:9}
+  /* Plakat: Pastell trägt Lesetext in --ink; die Marke steht in Tinte. */
+  .plakat{background:var(--m-pastell,var(--soft));border-radius:var(--r-control);padding:var(--s6) var(--s5);min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;gap:var(--s2)}
+  .plakat .marke{width:40px;height:40px;border-radius:50%;background:var(--m-tinte,var(--gold-ink));margin-bottom:auto}
+  .plakat h3{font-size:var(--t-h2);margin:0;max-width:16ch;color:var(--ink)}
+  .plakat p{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);margin:0}
+  /* Leuchten: als Titelfläche nur mit grosser weisser Schrift. */
+  .leucht{background:var(--m-leuchten,var(--gold));color:var(--on-accent);border-radius:var(--r-control);padding:var(--s5);min-height:140px;display:flex;align-items:flex-end}
+  .leucht h3{font-size:var(--t-h1);margin:0;color:var(--on-accent);line-height:1.05}
+  /* Objekte in Leuchten: Punkt, Linie, Balken. */
+  .objekte{display:flex;flex-direction:column;gap:var(--s3)}
+  .objekte .menu{display:flex;gap:var(--s3);font-family:var(--font-text);font-size:var(--t-small);align-items:center}
+  .objekte .menu .punkt{background:var(--m-leuchten,var(--gold))}
+  .objekte .linie{height:0;border-top:4px solid var(--m-leuchten,var(--gold));border-radius:2px}
+  .objekte .balken{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s2);align-items:end;height:64px}
+  .objekte .balken i{display:block;background:var(--m-leuchten,var(--gold));border-radius:4px 4px 0 0}
+  .textprobe .kick{color:var(--m-tinte,var(--gold-ink))}
+  .textprobe h3{font-size:var(--t-h3);margin:0 0 var(--s2)}
+  .textprobe p{font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure)}
+  .textprobe a{color:var(--m-tinte,var(--gold-ink));text-decoration-color:var(--m-hauch,var(--soft))}
+  .textprobe .zahl{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h1);color:var(--m-tinte,var(--gold-ink));line-height:1}
+
+  .fineprint{margin-top:var(--s8);color:var(--muted);font-size:var(--t-small);max-width:64ch;font-family:var(--font-text);line-height:1.6}
+  .fineprint b{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-active="sektionsfarben-modell" data-variant="werkzeug"
+        data-onpage="Leiter:#leiter|Anwendung:#anwendung|Beispiel:#beispiel|Empfehlung:#empfehlung"></script>
+
+<main class="wrap">
+  <div class="artkopf">
+    <span class="kicker">Labor · Farbkonzept</span>
+    <h1>Fünf Stufen je Sektion</h1>
+    <p class="lede">Die eine Farbe, die zugleich leuchten, Weiss tragen und als Schrift stehen soll, war
+      überfordert – an der Grenze wird Orange braun. Das Modell trennt die Aufgaben: die
+      <b>Erkennungsfarbe leuchtet</b> und trägt keinen Lesetext, die <b>Tinte</b> dunkelt für die
+      Schrift, <b>Grund, Pastell und Hauch</b> sind der Gegenraum.</p>
+    <p class="byline"><b>Entwurf</b> · 9. September 2026 · Farbtöne der Fassung 3 · zur Entscheidung</p>
+  </div>
+
+  <section class="grp" id="leiter">
+    <h2>Die Leiter</h2>
+    <p class="desc">Je Sektion fünf Stufen, von hell nach tief. Jede Stufe zeigt, was sie trägt: Hauch
+      und Pastell den dunklen Text, Leuchten nur die grosse weisse Schrift, die Tinte sich selbst
+      auf Papier, der Grund das Weiss auch klein. Die Zahlen sind am Blatt gemessen.</p>
+    <div class="kopfzeile"><span class="wer"></span><span>Hauch</span><span>Pastell</span><span>Leuchten</span><span>Tinte</span><span>Grund</span></div>
+    <div class="leiter" id="leiter-zeilen"></div>
+  </section>
+
+  <section class="grp" id="anwendung">
+    <h2>Anwendungsfälle</h2>
+    <p class="desc">Was praktisch Sinn macht: vier Stufen für die Werkzeuge im Alltag – Leuchten,
+      Tinte, Grund, Hauch – und Pastell für die grosse Fläche. Die Regel dahinter ist eine: Was
+      Lesetext tragen muss, ist nie die Erkennungsfarbe.</p>
+    <div class="tabelle"><table class="af" id="af">
+      <thead><tr><th>Stufe</th><th>Trägt</th><th>Anwendungsfälle</th><th>Regel</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <p class="meta">Dunkelmodus: Hauch und Tinte kippen in ihre dunkle Gestalt (tiefer Hauch, helle Tinte);
+      Leuchten und Grund sind markenfest; Pastell weicht dem Grund.</p>
+  </section>
+
+  <section class="grp" id="beispiel">
+    <h2>Am Beispiel</h2>
+    <p class="desc">Sektion wählen – die Stufen zeigen sich in ihren Anwendungen.</p>
+    <div class="waehler" id="waehler" role="group" aria-label="Sektion wählen"></div>
+    <div class="bsp-grid" id="bsp">
+      <div class="bsp">
+        <div class="plakat"><div class="marke"></div><h3 id="pl-titel">Titel der Sektion</h3><p>Tagung · 14. bis 16. Mai · Goetheanum, Dornach</p></div>
+        <p class="meta">Plakat · Pastell trägt Lesetext, die Marke steht in Tinte</p>
+      </div>
+      <div class="bsp">
+        <div class="leucht"><h3 id="le-titel">Sektion</h3></div>
+        <p class="meta">Titelfläche · Leuchten trägt nur grosse weisse Schrift</p>
+      </div>
+      <div class="bsp">
+        <div class="band"><span class="kick">Rundbrief 3/2026</span><h3 id="bd-titel">Titel der Sektion</h3><p>Freie Hochschule für Geisteswissenschaft</p></div>
+        <div><button class="btn ton" type="button">Zur Sektion</button> <button class="btn" type="button">Programm</button></div>
+        <p class="meta">Kopfband und Knopf · Grund trägt Weiss, auch klein</p>
+      </div>
+      <div class="bsp">
+        <div><span class="chip ton" id="ch-1">Sektion</span> <span class="chip ton">Neu</span> <span class="chip ton">Anmeldung offen</span></div>
+        <div class="kasten"><b>Hinweis der Sektion.</b> Die Anmeldung ist offen; Mitglieder der Hochschule erhalten den Studienbrief vorab.</div>
+        <p class="meta">Chip und Hinweiskasten · Hauch trägt Tinte und Lesetext</p>
+      </div>
+      <div class="bsp textprobe">
+        <div><span class="kick" id="tp-kick">Sektion</span>
+          <h3>Forschung und Praxis im Gespräch</h3>
+          <p>Der Kicker steht in der Tinte, im Lauftext bleibt ein <a href="#beispiel">Verweis in der Tinte</a> lesbar – auch im Dunkelmodus.</p>
+          <div class="zahl">248</div><p class="meta">Teilnehmende · die Zahl in Tinte</p></div>
+        <p class="meta">Kicker, Link, Zahl · Tinte auf Papier</p>
+      </div>
+      <div class="bsp">
+        <div class="objekte">
+          <div class="menu"><span class="punkt"></span><span id="mn-name">Sektion</span><span class="meta">· Punkt im Menü</span></div>
+          <div class="linie"></div>
+          <div class="balken"><i style="height:40%"></i><i style="height:70%"></i><i style="height:100%"></i><i style="height:55%"></i></div>
+        </div>
+        <p class="meta">Punkt, Linie, Diagramm · Leuchten als Objekt, ohne Text</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="grp" id="empfehlung">
+    <h2>Empfehlung</h2>
+    <div class="prose">
+      <p><b>Fünf Stufen, vier im Alltag.</b> Drei davon gibt es heute schon (Basis, Dunkel, Hell) und
+        eine als Schrift (Tinte). Neu ist zweierlei: Die Basis wird zum <b>Leuchten</b> und muss keinen
+        Lesetext mehr tragen – sie darf so hell sein, wie 3:1 auf Papier erlaubt. Und <b>Pastell</b>
+        kommt als fünfte Stufe für die grosse Fläche dazu, die heute fehlt.</p>
+      <p><b>Die Heilpädagogik wird sauber.</b> Ihr Leuchten ist ein reines Orange; nur ihre Tinte bleibt
+        ein tiefes Terracotta, weil Orange als Schrift auf Weiss nicht anders kann. Das gilt für alle
+        warmen Töne: Die Tinte ist die Stufe, die man liest, nicht die, an der man die Sektion erkennt.</p>
+      <p><b>Was fällt.</b> Die Vorgabe ‹eine Farbe für beide Richtungen› – sie hat die Reihe in die
+        Tiefe gezwungen. Farbtöne, Ordnung und Veto bleiben, wie in der Fassung 3 beschlossen.</p>
+    </div>
+  </section>
+
+  <p class="fineprint">
+    <b>Werte.</b> Gerechnet in OKLCH (tools/sek-modell.py, Daten in assets/sek-modell.js): Leuchten und Tinte
+    an ihrer Grenze mit voller Buntheit, Grund und Hauch mit dem Rezept der heutigen Sektionsfarben,
+    Pastell bei Helligkeit 0.86. Kontraste nach WCAG, auf dieser Seite am gerenderten Blatt gemessen.
+    Laborseite mit Herleitung: <a href="sektionsfarben-goethe.html">Sektionen auf Goethes Farbenkreis</a>;
+    Paletten zum Vergleich: <a href="sektionsfarben-goethe-varianten.html">Varianten</a>.
+  </p>
+</main>
+
+<script src="assets/sek-modell.js"></script>
+<script>
+(function(){
+  "use strict";
+  var D=window.GOE_SEK_MODELL; if(!D) return;
+  var $=function(s,r){return (r||document).querySelector(s);};
+  var el=function(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+  var ROOT=document.documentElement, SEK=D.sektionen, byKey={}; SEK.forEach(function(s){byKey[s.key]=s;});
+  function istDunkel(){var t=ROOT.getAttribute("data-theme");return t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches);}
+  function hexToRgb(hex){var h=hex.replace("#","");if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];return {r:parseInt(h.slice(0,2),16),g:parseInt(h.slice(2,4),16),b:parseInt(h.slice(4,6),16)};}
+  function rgbToHex(r,g,b){return "#"+[r,g,b].map(function(c){c=Math.max(0,Math.min(255,Math.round(c)));return (c<16?"0":"")+c.toString(16);}).join("");}
+  function lin(c){c/=255;return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);}
+  function lum(hex){var c=hexToRgb(hex);return 0.2126*lin(c.r)+0.7152*lin(c.g)+0.0722*lin(c.b);}
+  function kontrast(a,b){var la=lum(a),lb=lum(b),hi=Math.max(la,lb),lo=Math.min(la,lb);return (hi+0.05)/(lo+0.05);}
+  function fmt(k){return (Math.round(k*10)/10).toFixed(1)+":1";}
+  function cssToHex(v){v=(v||"").trim();if(v[0]==="#")return v.length===4?"#"+v[1]+v[1]+v[2]+v[2]+v[3]+v[3]:v;var m=v.match(/rgba?\(([^)]+)\)/);if(!m)return "#000000";var p=m[1].split(/[\s,\/]+/).map(parseFloat);return rgbToHex(p[0],p[1],p[2]);}
+  function paintHex(node,prop){return cssToHex(getComputedStyle(node)[prop||"backgroundColor"]);}
+
+  // --- Stufen als Custom Properties (Theme-bewusst) ------------------------------
+  function toene(s){
+    var d=istDunkel(), st=s.stufen;
+    return {hauch:d?st.hauch_dk:st.hauch, pastell:d?st.grund:st.pastell, leuchten:st.leuchten, tinte:d?st.tinte_dk:st.tinte, grund:st.grund};
+  }
+  function setze(node,s){
+    var t=toene(s);
+    node.style.setProperty("--m-hauch",t.hauch); node.style.setProperty("--m-pastell",t.pastell);
+    node.style.setProperty("--m-leuchten",t.leuchten); node.style.setProperty("--m-tinte",t.tinte); node.style.setProperty("--m-grund",t.grund);
+    // die Ton-Rollen von base.css (band, kasten, chip.ton, btn.ton)
+    node.style.setProperty("--ton",t.leuchten); node.style.setProperty("--ton-dunkel",t.grund);
+    node.style.setProperty("--ton-hell",t.hauch); node.style.setProperty("--ton-ink",t.tinte);
+  }
+
+  // --- Die Leiter --------------------------------------------------------------------
+  function stufe(cls,bgVar,fgVar,ab,gross){
+    var d=el("div","stufe "+cls); d.style.background="var("+bgVar+")"; d.style.color="var("+fgVar+")";
+    var a=el("div","ab"+(gross?" gross":""),ab); d.appendChild(a); d.appendChild(el("div","k")); return d;
+  }
+  function zeile(s){
+    var z=el("div","zeile"); z.dataset.key=s.key; setze(z,s);
+    var w=el("div","wer"); w.textContent=s.kurz; var sm=el("small"); sm.textContent=s.ort; w.appendChild(sm); z.appendChild(w);
+    z.appendChild(stufe("hauch","--m-hauch","--m-tinte","Ab"));
+    z.appendChild(stufe("pastell","--m-pastell","--ink","Ab"));
+    z.appendChild(stufe("leuchten","--m-leuchten","--on-accent","Ab",true));
+    z.appendChild(stufe("tinte","--paper","--m-tinte","Ab"));
+    z.appendChild(stufe("grund","--m-grund","--on-accent","Ab"));
+    return z;
+  }
+  function messen(){
+    document.querySelectorAll(".zeile").forEach(function(z){
+      var s=byKey[z.dataset.key]; setze(z,s);
+      z.querySelectorAll(".stufe").forEach(function(f){
+        // Im Dunkelmodus weicht Pastell dem Grund und trägt Weiss (Regel Grund).
+        if(f.classList.contains("pastell")) f.style.color=istDunkel()?"var(--on-accent)":"var(--ink)";
+        var bg=paintHex(f), fg=paintHex(f,"color"), k=kontrast(fg,bg), min=f.classList.contains("leuchten")?3:(f.classList.contains("pastell")&&!istDunkel()?7:4.5);
+        f.querySelector(".k").innerHTML="<span class=hx>"+bg.toUpperCase()+" · </span>"+fmt(k)+(k>=min?" ✓":" ✗");
+      });
+    });
+    document.querySelectorAll("#bsp").forEach(function(b){setze(b,byKey[b.dataset.key||SEK[0].key]);});
+  }
+  SEK.forEach(function(s){$("#leiter-zeilen").appendChild(zeile(s));});
+
+  // --- Anwendungsfälle --------------------------------------------------------------
+  var probe=SEK.filter(function(s){return s.key==="hpise";})[0]||SEK[0];
+  D.stufen.forEach(function(st){
+    var tr=el("tr"), r=el("td","rolle"); var p=el("span","probe"); p.style.background=toene(probe)[st.id]; r.appendChild(p); r.appendChild(document.createTextNode(st.name)); tr.appendChild(r);
+    ["traegt","faelle","regel"].forEach(function(f){var td=el("td"); td.textContent=st[f]; tr.appendChild(td);});
+    $("#af tbody").appendChild(tr);
+  });
+
+  // --- Am Beispiel ----------------------------------------------------------------------
+  function waehle(key){
+    var s=byKey[key]||SEK[0], b=$("#bsp"); b.dataset.key=s.key; setze(b,s);
+    $("#pl-titel").textContent=s.name; $("#le-titel").textContent=s.kurz; $("#bd-titel").textContent=s.name;
+    $("#ch-1").textContent=s.kurz; $("#tp-kick").textContent=s.kurz; $("#mn-name").textContent=s.kurz;
+    document.querySelectorAll("#waehler button").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.key===s.key));});
+  }
+  SEK.forEach(function(s){
+    var b=el("button"); b.type="button"; b.dataset.key=s.key; b.setAttribute("aria-pressed","false");
+    var p=el("span","punkt"); p.style.background=s.stufen.leuchten; b.appendChild(p); b.appendChild(document.createTextNode(s.kurz));
+    b.addEventListener("click",function(){waehle(s.key);}); $("#waehler").appendChild(b);
+  });
+  requestAnimationFrame(function(){messen(); waehle("hpise");});
+  new MutationObserver(function(){requestAnimationFrame(messen);}).observe(ROOT,{attributes:true,attributeFilter:["data-theme"]});
+  try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",function(){requestAnimationFrame(messen);});}catch(e){}
+})();
+</script>
+</body>
+</html>
