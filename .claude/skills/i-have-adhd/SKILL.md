@@ -62,7 +62,18 @@ für beide Seiten leichter.
   abschliessen (Commit, Notiz), statt alles in einem grossen Wurf zu
   halten, der bei Unterbrechung zerfällt.
 
-## 5. Was das nicht heisst
+## 5. Ganze URLs, immer
+
+- Jede Seite, jeder PR, jede Datei, jeder Schlüssel wird mit der
+  **vollständigen, klickbaren URL** genannt (Gesetz in `CLAUDE.md`):
+  https://werkzeuge.goetheanum.ch/<pfad>,
+  https://github.com/phtok/goeloggen/pull/<nummer>,
+  https://github.com/phtok/goeloggen/blob/main/<pfad>,
+  https://schluessel.saetzerei.com/ bei Key-Fragen.
+- Der Link steht dort, wo die Handlung ist («**Öffne …**»), nicht am Ende
+  einer Aufzählung. Kein «siehe Seite X» ohne URL.
+
+## 6. Was das nicht heisst
 
 Nicht dümmer schreiben, nicht Substanz weglassen, nicht in Stichwort-Trümmern
 reden. Vollständige Sätze, präzise Fachbegriffe, ehrliche Fehlermeldungen —

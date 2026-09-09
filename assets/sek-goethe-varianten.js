@@ -7,9 +7,9 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
   "szw": "Sozialwissenschaften",
   "js": "Jugendsektion",
   "hpise": "Heilpädagogik und inklusive soziale Entwicklung",
-  "ps": "Pädagogik",
   "lws": "Landwirtschaft",
   "nws": "Naturwissenschaften",
+  "ps": "Pädagogik",
   "srmk": "Redende und Musizierende Künste",
   "mas": "Mathematik und Astronomie",
   "ssw": "Schöne Wissenschaften",
@@ -21,9 +21,9 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
   "szw",
   "js",
   "hpise",
-  "ps",
   "lws",
   "nws",
+  "ps",
   "srmk",
   "mas",
   "ssw",
@@ -87,16 +87,6 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 2.27
     },
     {
-     "key": "ps",
-     "hex": "#3b4881",
-     "L": 0.42,
-     "C": 0.096,
-     "H": 272.0,
-     "winkel": 266.4,
-     "weiss": 8.64,
-     "soft": 8.15
-    },
-    {
      "key": "lws",
      "hex": "#63b145",
      "L": 0.687,
@@ -115,6 +105,16 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "winkel": 202.5,
      "weiss": 5.11,
      "soft": 4.81
+    },
+    {
+     "key": "ps",
+     "hex": "#3b4881",
+     "L": 0.42,
+     "C": 0.096,
+     "H": 272.0,
+     "winkel": 266.4,
+     "weiss": 8.64,
+     "soft": 8.15
     },
     {
      "key": "srmk",
@@ -160,8 +160,8 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
   },
   {
    "id": "f2",
-   "titel": "Fassung 2",
-   "desc": "Der Stand der Laborseite: Farbtöne von heute, Buntheit je Ort gesetzt, hellste Stufe für 4.6:1 auf Weiss und 4.5:1 auf der Karte.",
+   "titel": "Fassung 3",
+   "desc": "Der Stand der Laborseite (Fassung 3, ohne Gelb): Farbtöne von heute, Buntheit je Ort gesetzt, hellste Stufe für 4.6:1 auf Weiss und 4.5:1 auf der Karte.",
    "grenze": "4.5 Karte",
    "farben": [
     {
@@ -215,16 +215,6 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.74
     },
     {
-     "key": "ps",
-     "hex": "#876c00",
-     "L": 0.542,
-     "C": 0.111,
-     "H": 91.4,
-     "winkel": 115.5,
-     "weiss": 5.03,
-     "soft": 4.74
-    },
-    {
      "key": "lws",
      "hex": "#337f1f",
      "L": 0.529,
@@ -245,14 +235,24 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.76
     },
     {
+     "key": "ps",
+     "hex": "#007c87",
+     "L": 0.535,
+     "C": 0.092,
+     "H": 205.7,
+     "winkel": 215.8,
+     "weiss": 4.96,
+     "soft": 4.68
+    },
+    {
      "key": "srmk",
-     "hex": "#00799a",
-     "L": 0.536,
-     "C": 0.102,
-     "H": 225.3,
-     "winkel": 226.6,
-     "weiss": 5.0,
-     "soft": 4.71
+     "hex": "#0078a3",
+     "L": 0.538,
+     "C": 0.11,
+     "H": 232.4,
+     "winkel": 230.4,
+     "weiss": 4.98,
+     "soft": 4.7
     },
     {
      "key": "mas",
@@ -343,16 +343,6 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.24
     },
     {
-     "key": "ps",
-     "hex": "#8f7300",
-     "L": 0.566,
-     "C": 0.116,
-     "H": 91.8,
-     "winkel": 115.9,
-     "weiss": 4.55,
-     "soft": 4.29
-    },
-    {
      "key": "lws",
      "hex": "#278800",
      "L": 0.549,
@@ -373,14 +363,24 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.29
     },
     {
+     "key": "ps",
+     "hex": "#00838e",
+     "L": 0.557,
+     "C": 0.095,
+     "H": 205.2,
+     "winkel": 215.5,
+     "weiss": 4.53,
+     "soft": 4.27
+    },
+    {
      "key": "srmk",
-     "hex": "#0080a2",
-     "L": 0.558,
-     "C": 0.106,
-     "H": 224.8,
-     "winkel": 226.3,
-     "weiss": 4.56,
-     "soft": 4.3
+     "hex": "#007fac",
+     "L": 0.56,
+     "C": 0.115,
+     "H": 232.2,
+     "winkel": 230.3,
+     "weiss": 4.53,
+     "soft": 4.27
     },
     {
      "key": "mas",
@@ -471,16 +471,6 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.51
     },
     {
-     "key": "ps",
-     "hex": "#8a6f00",
-     "L": 0.552,
-     "C": 0.113,
-     "H": 91.9,
-     "winkel": 115.9,
-     "weiss": 4.82,
-     "soft": 4.55
-    },
-    {
      "key": "lws",
      "hex": "#268400",
      "L": 0.537,
@@ -501,14 +491,24 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.52
     },
     {
+     "key": "ps",
+     "hex": "#007e89",
+     "L": 0.541,
+     "C": 0.093,
+     "H": 205.5,
+     "winkel": 215.7,
+     "weiss": 4.83,
+     "soft": 4.56
+    },
+    {
      "key": "srmk",
-     "hex": "#007c9d",
-     "L": 0.545,
-     "C": 0.103,
-     "H": 224.8,
-     "winkel": 226.3,
-     "weiss": 4.81,
-     "soft": 4.53
+     "hex": "#007ba6",
+     "L": 0.547,
+     "C": 0.111,
+     "H": 231.8,
+     "winkel": 230.1,
+     "weiss": 4.79,
+     "soft": 4.52
     },
     {
      "key": "mas",
@@ -599,16 +599,6 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.5
     },
     {
-     "key": "ps",
-     "hex": "#807142",
-     "L": 0.551,
-     "C": 0.068,
-     "H": 92.3,
-     "winkel": 116.3,
-     "weiss": 4.82,
-     "soft": 4.54
-    },
-    {
      "key": "lws",
      "hex": "#4c7e41",
      "L": 0.542,
@@ -629,14 +619,24 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.5
     },
     {
+     "key": "ps",
+     "hex": "#467a80",
+     "L": 0.546,
+     "C": 0.056,
+     "H": 205.2,
+     "winkel": 215.5,
+     "weiss": 4.82,
+     "soft": 4.55
+    },
+    {
      "key": "srmk",
-     "hex": "#46798c",
+     "hex": "#467891",
      "L": 0.548,
-     "C": 0.062,
-     "H": 224.1,
-     "winkel": 225.9,
-     "weiss": 4.8,
-     "soft": 4.53
+     "C": 0.067,
+     "H": 231.5,
+     "winkel": 229.9,
+     "weiss": 4.82,
+     "soft": 4.55
     },
     {
      "key": "mas",
@@ -727,16 +727,6 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.53
     },
     {
-     "key": "ps",
-     "hex": "#7a7258",
-     "L": 0.552,
-     "C": 0.039,
-     "H": 93.0,
-     "winkel": 117.0,
-     "weiss": 4.8,
-     "soft": 4.52
-    },
-    {
      "key": "lws",
      "hex": "#5e7a57",
      "L": 0.548,
@@ -757,14 +747,24 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.53
     },
     {
-     "key": "srmk",
-     "hex": "#5b7682",
+     "key": "ps",
+     "hex": "#5b777b",
      "L": 0.549,
-     "C": 0.036,
-     "H": 226.9,
-     "winkel": 227.4,
-     "weiss": 4.82,
-     "soft": 4.54
+     "C": 0.033,
+     "H": 207.1,
+     "winkel": 216.6,
+     "weiss": 4.81,
+     "soft": 4.53
+    },
+    {
+     "key": "srmk",
+     "hex": "#5b7685",
+     "L": 0.55,
+     "C": 0.039,
+     "H": 232.7,
+     "winkel": 230.6,
+     "weiss": 4.8,
+     "soft": 4.53
     },
     {
      "key": "mas",
@@ -806,130 +806,130 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
    "farben": [
     {
      "key": "aas",
-     "hex": "#cc00c6",
-     "L": 0.589,
-     "C": 0.269,
-     "H": 330.0,
-     "winkel": 336.0,
-     "weiss": 4.79,
-     "soft": 4.52
+     "hex": "#d000b8",
+     "L": 0.588,
+     "C": 0.262,
+     "H": 334.9,
+     "winkel": 341.9,
+     "weiss": 4.8,
+     "soft": 4.53
     },
     {
      "key": "sbk",
-     "hex": "#df0076",
-     "L": 0.585,
-     "C": 0.237,
-     "H": 0.0,
-     "winkel": 13.4,
-     "weiss": 4.77,
-     "soft": 4.5
-    },
-    {
-     "key": "szw",
-     "hex": "#e41100",
-     "L": 0.581,
-     "C": 0.233,
-     "H": 30.0,
-     "winkel": 53.3,
-     "weiss": 4.8,
-     "soft": 4.52
-    },
-    {
-     "key": "js",
-     "hex": "#ac5f00",
-     "L": 0.563,
-     "C": 0.132,
-     "H": 60.0,
-     "winkel": 84.6,
-     "weiss": 4.78,
-     "soft": 4.51
-    },
-    {
-     "key": "hpise",
-     "hex": "#8c6e00",
-     "L": 0.552,
-     "C": 0.113,
-     "H": 89.7,
-     "winkel": 113.8,
-     "weiss": 4.83,
-     "soft": 4.56
-    },
-    {
-     "key": "ps",
-     "hex": "#677a00",
-     "L": 0.545,
-     "C": 0.129,
-     "H": 119.9,
-     "winkel": 152.6,
-     "weiss": 4.82,
-     "soft": 4.54
-    },
-    {
-     "key": "lws",
-     "hex": "#00843b",
-     "L": 0.536,
-     "C": 0.148,
-     "H": 150.0,
-     "winkel": 185.5,
-     "weiss": 4.81,
-     "soft": 4.54
-    },
-    {
-     "key": "nws",
-     "hex": "#008171",
-     "L": 0.541,
-     "C": 0.098,
-     "H": 180.1,
-     "winkel": 201.9,
-     "weiss": 4.8,
-     "soft": 4.52
-    },
-    {
-     "key": "srmk",
-     "hex": "#007e8d",
-     "L": 0.543,
-     "C": 0.094,
-     "H": 209.3,
-     "winkel": 217.8,
+     "hex": "#e00068",
+     "L": 0.583,
+     "C": 0.234,
+     "H": 5.2,
+     "winkel": 20.2,
      "weiss": 4.81,
      "soft": 4.53
     },
     {
-     "key": "mas",
-     "hex": "#0079b3",
-     "L": 0.549,
+     "key": "szw",
+     "hex": "#d53600",
+     "L": 0.575,
+     "C": 0.202,
+     "H": 35.0,
+     "winkel": 60.0,
+     "weiss": 4.82,
+     "soft": 4.54
+    },
+    {
+     "key": "js",
+     "hex": "#a66200",
+     "L": 0.56,
      "C": 0.126,
-     "H": 240.2,
-     "winkel": 234.6,
-     "weiss": 4.79,
+     "H": 64.7,
+     "winkel": 89.3,
+     "weiss": 4.81,
+     "soft": 4.53
+    },
+    {
+     "key": "hpise",
+     "hex": "#877100",
+     "L": 0.553,
+     "C": 0.114,
+     "H": 95.5,
+     "winkel": 119.5,
+     "weiss": 4.78,
      "soft": 4.51
     },
     {
+     "key": "lws",
+     "hex": "#5d7c00",
+     "L": 0.542,
+     "C": 0.137,
+     "H": 125.1,
+     "winkel": 159.7,
+     "weiss": 4.83,
+     "soft": 4.55
+    },
+    {
+     "key": "nws",
+     "hex": "#00844a",
+     "L": 0.539,
+     "C": 0.133,
+     "H": 154.9,
+     "winkel": 188.1,
+     "weiss": 4.77,
+     "soft": 4.5
+    },
+    {
+     "key": "ps",
+     "hex": "#008076",
+     "L": 0.539,
+     "C": 0.095,
+     "H": 185.3,
+     "winkel": 204.7,
+     "weiss": 4.83,
+     "soft": 4.55
+    },
+    {
+     "key": "srmk",
+     "hex": "#007d92",
+     "L": 0.543,
+     "C": 0.096,
+     "H": 214.9,
+     "winkel": 220.8,
+     "weiss": 4.83,
+     "soft": 4.55
+    },
+    {
+     "key": "mas",
+     "hex": "#0077bc",
+     "L": 0.55,
+     "C": 0.138,
+     "H": 245.0,
+     "winkel": 237.3,
+     "weiss": 4.81,
+     "soft": 4.54
+    },
+    {
      "key": "ssw",
-     "hex": "#4760ff",
-     "L": 0.57,
+     "hex": "#585cff",
+     "L": 0.573,
      "C": 0.236,
-     "H": 270.1,
-     "winkel": 264.1,
-     "weiss": 4.79,
+     "H": 275.0,
+     "winkel": 270.0,
+     "weiss": 4.78,
      "soft": 4.51
     },
     {
      "key": "ms",
-     "hex": "#9937ff",
-     "L": 0.585,
-     "C": 0.27,
-     "H": 300.0,
-     "winkel": 300.0,
-     "weiss": 4.83,
-     "soft": 4.56
+     "hex": "#a628ff",
+     "L": 0.59,
+     "C": 0.283,
+     "H": 304.9,
+     "winkel": 305.9,
+     "weiss": 4.81,
+     "soft": 4.53
     }
    ]
   },
   {
    "id": "gleich_goethe",
    "titel": "Gleichmässig auf Goethes Blatt",
-   "desc": "Zwölf Plätze im gleichen Abstand auf dem Kreis von 1809 (je 30°), Reihenfolge der Fassung 2. Die warme Seite drängt sich im Farbraum, die kühle dehnt sich.",
+   "desc": "Zwölf Plätze im gleichen Abstand auf dem Kreis von 1809 (je 30°), Reihenfolge der Fassung 3. Die warme Seite drängt sich im Farbraum, die kühle dehnt sich.",
    "grenze": "4.5 Karte",
    "farben": [
     {
@@ -983,7 +983,7 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.52
     },
     {
-     "key": "ps",
+     "key": "lws",
      "hex": "#6a7900",
      "L": 0.545,
      "C": 0.127,
@@ -993,7 +993,7 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.55
     },
     {
-     "key": "lws",
+     "key": "nws",
      "hex": "#268400",
      "L": 0.537,
      "C": 0.173,
@@ -1003,7 +1003,7 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 4.52
     },
     {
-     "key": "nws",
+     "key": "ps",
      "hex": "#008080",
      "L": 0.543,
      "C": 0.093,
@@ -1051,6 +1051,262 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "winkel": 330.0,
      "weiss": 4.8,
      "soft": 4.52
+    }
+   ]
+  },
+  {
+   "id": "ohne_gelb",
+   "titel": "Ohne Gelb, gleichmässig 25°",
+   "desc": "Der Kreis ohne das Feld zwischen Orange und Grün: elf gleiche Schritte von Grün über Blau und Purpur bis zum Orange, Reihenfolge der Fassung 3. Volle Buntheit, Grenze Karte.",
+   "grenze": "4.5 Karte",
+   "farben": [
+    {
+     "key": "aas",
+     "hex": "#b400ff",
+     "L": 0.594,
+     "C": 0.301,
+     "H": 309.9,
+     "winkel": 311.9,
+     "weiss": 4.79,
+     "soft": 4.52
+    },
+    {
+     "key": "sbk",
+     "hex": "#d000b8",
+     "L": 0.588,
+     "C": 0.262,
+     "H": 334.9,
+     "winkel": 341.9,
+     "weiss": 4.8,
+     "soft": 4.53
+    },
+    {
+     "key": "szw",
+     "hex": "#df0076",
+     "L": 0.585,
+     "C": 0.237,
+     "H": 0.0,
+     "winkel": 13.4,
+     "weiss": 4.77,
+     "soft": 4.5
+    },
+    {
+     "key": "js",
+     "hex": "#e60026",
+     "L": 0.583,
+     "C": 0.236,
+     "H": 25.0,
+     "winkel": 46.7,
+     "weiss": 4.78,
+     "soft": 4.51
+    },
+    {
+     "key": "hpise",
+     "hex": "#b95600",
+     "L": 0.567,
+     "C": 0.149,
+     "H": 50.2,
+     "winkel": 75.0,
+     "weiss": 4.78,
+     "soft": 4.51
+    },
+    {
+     "key": "lws",
+     "hex": "#428100",
+     "L": 0.539,
+     "C": 0.157,
+     "H": 134.9,
+     "winkel": 173.0,
+     "weiss": 4.8,
+     "soft": 4.53
+    },
+    {
+     "key": "nws",
+     "hex": "#008355",
+     "L": 0.538,
+     "C": 0.122,
+     "H": 160.0,
+     "winkel": 190.9,
+     "weiss": 4.8,
+     "soft": 4.52
+    },
+    {
+     "key": "ps",
+     "hex": "#008076",
+     "L": 0.539,
+     "C": 0.095,
+     "H": 185.3,
+     "winkel": 204.7,
+     "weiss": 4.83,
+     "soft": 4.55
+    },
+    {
+     "key": "srmk",
+     "hex": "#007e8d",
+     "L": 0.543,
+     "C": 0.094,
+     "H": 209.3,
+     "winkel": 217.8,
+     "weiss": 4.81,
+     "soft": 4.53
+    },
+    {
+     "key": "mas",
+     "hex": "#007aaa",
+     "L": 0.547,
+     "C": 0.116,
+     "H": 234.9,
+     "winkel": 231.8,
+     "weiss": 4.81,
+     "soft": 4.54
+    },
+    {
+     "key": "ssw",
+     "hex": "#0069f8",
+     "L": 0.563,
+     "C": 0.229,
+     "H": 259.9,
+     "winkel": 251.9,
+     "weiss": 4.8,
+     "soft": 4.52
+    },
+    {
+     "key": "ms",
+     "hex": "#7451ff",
+     "L": 0.577,
+     "C": 0.243,
+     "H": 285.1,
+     "winkel": 282.1,
+     "weiss": 4.81,
+     "soft": 4.54
+    }
+   ]
+  },
+  {
+   "id": "ohne_gelb_heute",
+   "titel": "Ohne Gelb, Farbtöne von heute (Fassung 3)",
+   "desc": "Die Farbtöne der Fassung 3 mit voller Buntheit: Pädagogik im Blaugrün, Musik im lichten Blau, sonst wie heute. Grenze Karte.",
+   "grenze": "4.5 Karte",
+   "farben": [
+    {
+     "key": "aas",
+     "hex": "#d000b8",
+     "L": 0.588,
+     "C": 0.262,
+     "H": 334.9,
+     "winkel": 341.9,
+     "weiss": 4.8,
+     "soft": 4.53
+    },
+    {
+     "key": "sbk",
+     "hex": "#de007b",
+     "L": 0.585,
+     "C": 0.238,
+     "H": 358.1,
+     "winkel": 10.8,
+     "weiss": 4.78,
+     "soft": 4.51
+    },
+    {
+     "key": "szw",
+     "hex": "#e40043",
+     "L": 0.582,
+     "C": 0.233,
+     "H": 17.9,
+     "winkel": 37.2,
+     "weiss": 4.79,
+     "soft": 4.52
+    },
+    {
+     "key": "js",
+     "hex": "#d53600",
+     "L": 0.575,
+     "C": 0.202,
+     "H": 35.0,
+     "winkel": 60.0,
+     "weiss": 4.82,
+     "soft": 4.54
+    },
+    {
+     "key": "hpise",
+     "hex": "#b25b00",
+     "L": 0.565,
+     "C": 0.14,
+     "H": 55.2,
+     "winkel": 79.8,
+     "weiss": 4.78,
+     "soft": 4.51
+    },
+    {
+     "key": "lws",
+     "hex": "#268400",
+     "L": 0.537,
+     "C": 0.173,
+     "H": 140.0,
+     "winkel": 180.0,
+     "weiss": 4.79,
+     "soft": 4.52
+    },
+    {
+     "key": "nws",
+     "hex": "#008172",
+     "L": 0.541,
+     "C": 0.098,
+     "H": 180.9,
+     "winkel": 202.3,
+     "weiss": 4.79,
+     "soft": 4.52
+    },
+    {
+     "key": "ps",
+     "hex": "#007e89",
+     "L": 0.541,
+     "C": 0.093,
+     "H": 205.5,
+     "winkel": 215.7,
+     "weiss": 4.83,
+     "soft": 4.56
+    },
+    {
+     "key": "srmk",
+     "hex": "#007ba6",
+     "L": 0.547,
+     "C": 0.111,
+     "H": 231.8,
+     "winkel": 230.1,
+     "weiss": 4.79,
+     "soft": 4.52
+    },
+    {
+     "key": "mas",
+     "hex": "#006dea",
+     "L": 0.56,
+     "C": 0.207,
+     "H": 257.9,
+     "winkel": 249.5,
+     "weiss": 4.8,
+     "soft": 4.52
+    },
+    {
+     "key": "ssw",
+     "hex": "#6c54ff",
+     "L": 0.575,
+     "C": 0.241,
+     "H": 282.1,
+     "winkel": 278.5,
+     "weiss": 4.83,
+     "soft": 4.55
+    },
+    {
+     "key": "ms",
+     "hex": "#9937ff",
+     "L": 0.585,
+     "C": 0.27,
+     "H": 300.0,
+     "winkel": 300.0,
+     "weiss": 4.83,
+     "soft": 4.56
     }
    ]
   },
@@ -1111,16 +1367,6 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 2.87
     },
     {
-     "key": "ps",
-     "hex": "#b39100",
-     "L": 0.669,
-     "C": 0.137,
-     "H": 92.1,
-     "winkel": 116.1,
-     "weiss": 3.01,
-     "soft": 2.84
-    },
-    {
      "key": "lws",
      "hex": "#34ab00",
      "L": 0.649,
@@ -1141,14 +1387,24 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 2.85
     },
     {
-     "key": "srmk",
-     "hex": "#00a1cb",
-     "L": 0.659,
-     "C": 0.125,
-     "H": 224.9,
-     "winkel": 226.3,
+     "key": "ps",
+     "hex": "#00a4b1",
+     "L": 0.656,
+     "C": 0.112,
+     "H": 204.8,
+     "winkel": 215.3,
      "weiss": 3.02,
-     "soft": 2.84
+     "soft": 2.85
+    },
+    {
+     "key": "srmk",
+     "hex": "#009fd6",
+     "L": 0.66,
+     "C": 0.135,
+     "H": 232.1,
+     "winkel": 230.2,
+     "weiss": 3.03,
+     "soft": 2.86
     },
     {
      "key": "mas",
@@ -1239,16 +1495,6 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 2.84
     },
     {
-     "key": "ps",
-     "hex": "#a49464",
-     "L": 0.669,
-     "C": 0.068,
-     "H": 91.8,
-     "winkel": 115.8,
-     "weiss": 3.0,
-     "soft": 2.83
-    },
-    {
      "key": "lws",
      "hex": "#6ea162",
      "L": 0.657,
@@ -1269,14 +1515,24 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
      "soft": 2.83
     },
     {
+     "key": "ps",
+     "hex": "#699da3",
+     "L": 0.662,
+     "C": 0.056,
+     "H": 205.0,
+     "winkel": 215.5,
+     "weiss": 3.02,
+     "soft": 2.85
+    },
+    {
      "key": "srmk",
-     "hex": "#689cb1",
+     "hex": "#689bb6",
      "L": 0.664,
-     "C": 0.063,
-     "H": 225.3,
-     "winkel": 226.5,
-     "weiss": 3.01,
-     "soft": 2.84
+     "C": 0.068,
+     "H": 232.3,
+     "winkel": 230.3,
+     "weiss": 3.02,
+     "soft": 2.85
     },
     {
      "key": "mas",
@@ -1314,80 +1570,68 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
  "ordnungen": [
   {
    "id": "wirkung",
-   "titel": "Goethes Wirkung (Fassung 2)",
+   "titel": "Goethes Wirkung (Fassung 3)",
    "lesart": "Purpur oben das Ganze; rechts herab die warme Seite mit Tat, Glut, Wärme und Licht; unten Grün und Meergrün, die Erde und ihre Erforschung; links hinauf Blau, Blaurot und Rotblau: Klang, Himmel, Sprache, Wirksamkeit.",
    "plaetze": [
     {
      "key": "aas",
      "winkel": 0,
-     "H": 350.0,
-     "hex": "#da0090"
+     "hex": "#a74696"
     },
     {
      "key": "sbk",
      "winkel": 30,
-     "H": 12.5,
-     "hex": "#e20054"
+     "hex": "#be3f75"
     },
     {
      "key": "szw",
      "winkel": 60,
-     "H": 35.0,
-     "hex": "#d53600"
+     "hex": "#cd334a"
     },
     {
      "key": "js",
      "winkel": 90,
-     "H": 65.5,
-     "hex": "#a56200"
+     "hex": "#c44424"
     },
     {
      "key": "hpise",
      "winkel": 120,
-     "H": 96.0,
-     "hex": "#867100"
-    },
-    {
-     "key": "ps",
-     "winkel": 150,
-     "H": 118.0,
-     "hex": "#6a7900"
+     "hex": "#ad5800"
     },
     {
      "key": "lws",
-     "winkel": 180,
-     "H": 140.0,
-     "hex": "#268400"
+     "winkel": 150,
+     "hex": "#337f1f"
     },
     {
      "key": "nws",
+     "winkel": 180,
+     "hex": "#007d6f"
+    },
+    {
+     "key": "ps",
      "winkel": 210,
-     "H": 195.0,
-     "hex": "#008080"
+     "hex": "#007c87"
     },
     {
      "key": "srmk",
      "winkel": 240,
-     "H": 250.0,
-     "hex": "#0075ca"
+     "hex": "#0078a3"
     },
     {
      "key": "mas",
      "winkel": 270,
-     "H": 275.0,
-     "hex": "#585cff"
+     "hex": "#1a57ad"
     },
     {
      "key": "ssw",
      "winkel": 300,
-     "H": 300.0,
-     "hex": "#9937ff"
+     "hex": "#635fc2"
     },
     {
      "key": "ms",
      "winkel": 330,
-     "H": 325.0,
-     "hex": "#c700d4"
+     "hex": "#704ea4"
     }
    ],
    "bewegt": []
@@ -1400,74 +1644,62 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
     {
      "key": "aas",
      "winkel": 0,
-     "H": 350.0,
-     "hex": "#da0090"
+     "hex": "#a74696"
     },
     {
      "key": "szw",
      "winkel": 30,
-     "H": 12.5,
-     "hex": "#e20054"
+     "hex": "#cd334a"
     },
     {
      "key": "js",
      "winkel": 60,
-     "H": 35.0,
-     "hex": "#d53600"
+     "hex": "#c44424"
     },
     {
      "key": "hpise",
      "winkel": 90,
-     "H": 65.5,
-     "hex": "#a56200"
-    },
-    {
-     "key": "ps",
-     "winkel": 120,
-     "H": 96.0,
-     "hex": "#867100"
+     "hex": "#ad5800"
     },
     {
      "key": "lws",
-     "winkel": 150,
-     "H": 118.0,
-     "hex": "#6a7900"
+     "winkel": 120,
+     "hex": "#337f1f"
     },
     {
      "key": "nws",
+     "winkel": 150,
+     "hex": "#007d6f"
+    },
+    {
+     "key": "ps",
      "winkel": 180,
-     "H": 140.0,
-     "hex": "#268400"
+     "hex": "#007c87"
     },
     {
      "key": "ms",
      "winkel": 210,
-     "H": 195.0,
-     "hex": "#008080"
+     "hex": "#704ea4"
     },
     {
      "key": "mas",
      "winkel": 240,
-     "H": 250.0,
-     "hex": "#0075ca"
+     "hex": "#1a57ad"
     },
     {
      "key": "srmk",
      "winkel": 270,
-     "H": 275.0,
-     "hex": "#585cff"
+     "hex": "#0078a3"
     },
     {
      "key": "ssw",
      "winkel": 300,
-     "H": 300.0,
-     "hex": "#9937ff"
+     "hex": "#635fc2"
     },
     {
      "key": "sbk",
      "winkel": 330,
-     "H": 325.0,
-     "hex": "#c700d4"
+     "hex": "#be3f75"
     }
    ],
    "bewegt": [
@@ -1483,81 +1715,69 @@ window.GOE_SEK_GOETHE_VARIANTEN = {
     {
      "key": "aas",
      "winkel": 0,
-     "H": 350.0,
-     "hex": "#da0090"
+     "hex": "#a74696"
     },
     {
      "key": "ms",
      "winkel": 30,
-     "H": 12.5,
-     "hex": "#e20054"
+     "hex": "#704ea4"
     },
     {
      "key": "hpise",
      "winkel": 60,
-     "H": 35.0,
-     "hex": "#d53600"
-    },
-    {
-     "key": "ps",
-     "winkel": 90,
-     "H": 65.5,
-     "hex": "#a56200"
+     "hex": "#ad5800"
     },
     {
      "key": "js",
-     "winkel": 120,
-     "H": 96.0,
-     "hex": "#867100"
+     "winkel": 90,
+     "hex": "#c44424"
     },
     {
      "key": "szw",
+     "winkel": 120,
+     "hex": "#cd334a"
+    },
+    {
+     "key": "ps",
      "winkel": 150,
-     "H": 118.0,
-     "hex": "#6a7900"
+     "hex": "#007c87"
     },
     {
      "key": "lws",
      "winkel": 180,
-     "H": 140.0,
-     "hex": "#268400"
+     "hex": "#337f1f"
     },
     {
      "key": "nws",
      "winkel": 210,
-     "H": 195.0,
-     "hex": "#008080"
+     "hex": "#007d6f"
     },
     {
      "key": "mas",
      "winkel": 240,
-     "H": 250.0,
-     "hex": "#0075ca"
+     "hex": "#1a57ad"
     },
     {
      "key": "srmk",
      "winkel": 270,
-     "H": 275.0,
-     "hex": "#585cff"
+     "hex": "#0078a3"
     },
     {
      "key": "ssw",
      "winkel": 300,
-     "H": 300.0,
-     "hex": "#9937ff"
+     "hex": "#635fc2"
     },
     {
      "key": "sbk",
      "winkel": 330,
-     "H": 325.0,
-     "hex": "#c700d4"
+     "hex": "#be3f75"
     }
    ],
    "bewegt": [
     "ms",
     "hpise",
-    "ps",
     "szw",
+    "ps",
     "sbk"
    ]
   }

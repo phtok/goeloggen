@@ -92,7 +92,7 @@ def paletten():
     P = []
     P.append(palette("heute", "Heute", "Die Sektionsfarben, wie sie in den Tokens stehen. Sechs von zwölf tragen kein Weiss.", HEUTE, "keine"))
     f2 = {s["key"]: s["basis"] for s in sg.palette()}
-    P.append(palette("f2", "Fassung 2", "Der Stand der Laborseite: Farbtöne von heute, Buntheit je Ort gesetzt, hellste Stufe für 4.6:1 auf Weiss und 4.5:1 auf der Karte.", f2, "4.5 Karte"))
+    P.append(palette("f2", "Fassung 3", "Der Stand der Laborseite (Fassung 3, ohne Gelb): Farbtöne von heute, Buntheit je Ort gesetzt, hellste Stufe für 4.6:1 auf Weiss und 4.5:1 auf der Karte.", f2, "4.5 Karte"))
     P.append(palette("leuchtend", "Leuchtend, Grenze Papier",
         "Volle Buntheit des Bildschirms, hellste Stufe für genau 4.5:1 auf Weiss. Auf der Karte (--soft) fällt sie knapp darunter – das ist die äusserste Grenze.",
         {k: an_der_grenze(H_F2[k], 4.5) for k in KEYS}, "4.5 Papier"))
@@ -111,8 +111,18 @@ def paletten():
         {k: an_der_grenze(g[k], 4.5, SOFT) for k in KEYS}, "4.5 Karte"))
     gw = {k: winkel_zu_H(30 * i) for i, k in enumerate(KEYS)}
     P.append(palette("gleich_goethe", "Gleichmässig auf Goethes Blatt",
-        "Zwölf Plätze im gleichen Abstand auf dem Kreis von 1809 (je 30°), Reihenfolge der Fassung 2. Die warme Seite drängt sich im Farbraum, die kühle dehnt sich.",
+        "Zwölf Plätze im gleichen Abstand auf dem Kreis von 1809 (je 30°), Reihenfolge der Fassung 3. Die warme Seite drängt sich im Farbraum, die kühle dehnt sich.",
         {k: an_der_grenze(gw[k], 4.5, SOFT) for k in KEYS}, "4.5 Karte"))
+    # Ohne Gelb (Anmerkung 9. 9. 2026): der Bogen von Grün (135) über Blau und
+    # Purpur bis zum Orange (50) wird gleichmässig geteilt – elf Schritte à 25°.
+    reihe_og = ["lws", "nws", "ps", "srmk", "mas", "ssw", "ms", "aas", "sbk", "szw", "js", "hpise"]
+    og = {k: (135 + (410 - 135) / 11 * i) % 360 for i, k in enumerate(reihe_og)}
+    P.append(palette("ohne_gelb", "Ohne Gelb, gleichmässig 25°",
+        "Der Kreis ohne das Feld zwischen Orange und Grün: elf gleiche Schritte von Grün über Blau und Purpur bis zum Orange, Reihenfolge der Fassung 3. Volle Buntheit, Grenze Karte.",
+        {k: an_der_grenze(og[k], 4.5, SOFT) for k in KEYS}, "4.5 Karte"))
+    P.append(palette("ohne_gelb_heute", "Ohne Gelb, Farbtöne von heute (Fassung 3)",
+        "Die Farbtöne der Fassung 3 mit voller Buntheit: Pädagogik im Blaugrün, Musik im lichten Blau, sonst wie heute. Grenze Karte.",
+        {k: an_der_grenze(H_F2[k], 4.5, SOFT) for k in KEYS}, "4.5 Karte"))
     P.append(palette("grenze3", "Leuchtend, Grenze 3:1",
         "Zum Vergleich: die hellste Stufe für 3:1 auf Weiss – WCAG-Grenze nur für grosse Schrift (≥ 24 px) und Ränder. So hell dürfte die Basis sein, wenn kleine Schrift die Tinte nähme.",
         {k: an_der_grenze(H_F2[k], 3.0) for k in KEYS}, "3.0 Papier"))
@@ -124,24 +134,25 @@ def paletten():
 # --- Ordnungen --------------------------------------------------------------------
 # Reihenfolge im Uhrzeigersinn ab Purpur (oben), zwölf Plätze à 30°.
 ORDNUNGEN = [
-    {"id": "wirkung", "titel": "Goethes Wirkung (Fassung 2)",
+    {"id": "wirkung", "titel": "Goethes Wirkung (Fassung 3)",
      "lesart": "Purpur oben das Ganze; rechts herab die warme Seite mit Tat, Glut, Wärme und Licht; unten Grün und Meergrün, die Erde und ihre Erforschung; links hinauf Blau, Blaurot und Rotblau: Klang, Himmel, Sprache, Wirksamkeit.",
-     "reihe": ["aas", "sbk", "szw", "js", "hpise", "ps", "lws", "nws", "srmk", "mas", "ssw", "ms"]},
+     "reihe": ["aas", "sbk", "szw", "js", "hpise", "lws", "nws", "ps", "srmk", "mas", "ssw", "ms"]},
     {"id": "aufgabe", "titel": "Nach Aufgabe",
      "lesart": "Vier Bögen, die jede Sektion sofort findet: rechts Erziehung und Gesellschaft (warm), unten die Erde (Grün), links die Wissenschaften vom Leben und vom Kosmos (Blau), oben links die Künste (Blaurot bis Purpur). Im Scheitel das Ganze.",
-     "reihe": ["aas", "szw", "js", "hpise", "ps", "lws", "nws", "ms", "mas", "srmk", "ssw", "sbk"]},
+     "reihe": ["aas", "szw", "js", "hpise", "lws", "nws", "ps", "ms", "mas", "srmk", "ssw", "sbk"]},
     {"id": "mensch_welt", "titel": "Geist – Mensch – Welt – Erde",
      "lesart": "Eine senkrechte Achse: oben der Geist (Purpur), unten die Erde (Grün). Der rechte Bogen ist der Mensch – Leib, Kindheit, Jugend, Gemeinschaft –, der linke die Welt – Natur, Kosmos, Klang, Wort, Bild.",
-     "reihe": ["aas", "ms", "hpise", "ps", "js", "szw", "lws", "nws", "mas", "srmk", "ssw", "sbk"]},
+     "reihe": ["aas", "ms", "hpise", "js", "szw", "ps", "lws", "nws", "mas", "srmk", "ssw", "sbk"]},
 ]
 
 def ordnungen():
     out = []
     basis = ORDNUNGEN[0]["reihe"]
     for o in ORDNUNGEN:
-        plaetze = [{"key": k, "winkel": 30 * i, "H": round(winkel_zu_H(30 * i), 1),
-                    "hex": an_der_grenze(winkel_zu_H(30 * i), 4.5, SOFT)} for i, k in enumerate(o["reihe"])]
-        # «bewegt» = mehr als einen Platz (30°) von der Fassung 2 entfernt – die
+        # Ringfarbe = die Basis der Fassung 3 (kein Gelb im Ring), Platz = die Ordnung.
+        f3 = {s["key"]: s["basis"] for s in sg.palette()}
+        plaetze = [{"key": k, "winkel": 30 * i, "hex": f3[k]} for i, k in enumerate(o["reihe"])]
+        # «bewegt» = mehr als einen Platz (30°) von der Fassung 3 entfernt – die
         # Sektionen, über die die Ordnung tatsächlich entscheidet.
         def dist(k):
             d = abs(30 * o["reihe"].index(k) - 30 * basis.index(k)) % 360

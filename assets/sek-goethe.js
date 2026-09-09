@@ -73,8 +73,8 @@ window.GOE_SEK_GOETHE = {
   },
   {
    "id": "warm",
-   "name": "Die warme Seite – Gelbrot, Rotgelb, Gelb",
-   "desc": "Goethes Plusseite: die Farben, die ‹regsam, lebhaft, strebend› stimmen (§ 764) – vom Rot bis zum Gold."
+   "name": "Die warme Seite – Gelbrot, Rotgelb",
+   "desc": "Goethes Plusseite: die Farben, die ‹regsam, lebhaft, strebend› stimmen (§ 764) – vom Purpurrot bis zum Orange. Ohne Gelb: ein Gelb, das Weiss trägt, wäre ‹ins Minus gezogen› (§ 770), und Gold gehört der Bühne."
   },
   {
    "id": "gruen",
@@ -259,40 +259,6 @@ window.GOE_SEK_GOETHE = {
    }
   },
   {
-   "key": "ps",
-   "name": "Pädagogische Sektion",
-   "kurz": "Pädagogik",
-   "ort": "Gelb – als Gold",
-   "gruppe": "warm",
-   "status": "offen",
-   "winkel": 116.1,
-   "H": 92,
-   "L": 0.542,
-   "C": 0.115,
-   "basis": "#876c00",
-   "on": "#fff",
-   "dunkel": "#715c11",
-   "hell": "#f9f3e3",
-   "hell_dk": "#2b2616",
-   "ink": "#876c00",
-   "ink_dk": "#dfcc90",
-   "heute": "#3b4881",
-   "heute_winkel": 266.4,
-   "heute_weiss": 8.64,
-   "grund": "Gelb ist ‹die nächste Farbe am Licht›, ‹heiter, munter, sanft reizend›. Ein Gelb, das Schrift trägt, ist Gold – und ‹das Gold in seinem ganz ungemischten Zustande gibt uns einen neuen und hohen Begriff von dieser Farbe›.",
-   "para": "§§ 765–767",
-   "kontrast": {
-    "weiss_auf_basis": 5.03,
-    "basis_auf_soft": 4.74,
-    "weiss_auf_dunkel": 6.48,
-    "ink_auf_hell": 13.57,
-    "basis_auf_hell": 4.54,
-    "tinte_dk_auf_papier": 11.07,
-    "tinte_dk_auf_hell": 9.47,
-    "ink_dk_auf_hell_dk": 12.29
-   }
-  },
-  {
    "key": "lws",
    "name": "Sektion für Landwirtschaft",
    "kurz": "Landwirtschaft",
@@ -361,37 +327,71 @@ window.GOE_SEK_GOETHE = {
    }
   },
   {
+   "key": "ps",
+   "name": "Pädagogische Sektion",
+   "kurz": "Pädagogik",
+   "ort": "Blau, zum Grün",
+   "gruppe": "kuehl",
+   "status": "offen",
+   "winkel": 215.5,
+   "H": 205,
+   "L": 0.535,
+   "C": 0.11,
+   "basis": "#007c87",
+   "on": "#fff",
+   "dunkel": "#006972",
+   "hell": "#e3f8fa",
+   "hell_dk": "#152a2d",
+   "ink": "#007c87",
+   "ink_dk": "#8cd9e2",
+   "heute": "#3b4881",
+   "heute_winkel": 266.4,
+   "heute_weiss": 8.64,
+   "grund": "Wo Grün ins Blau übergeht: die ‹reale Befriedigung› des Grün (§ 802) wird zur ‹Energie› des Blau (§ 779) – Ruhe, aus der Kraft wird. Das Kind, das wächst; die Pädagogik.",
+   "para": "§§ 779, 802",
+   "kontrast": {
+    "weiss_auf_basis": 4.96,
+    "basis_auf_soft": 4.68,
+    "weiss_auf_dunkel": 6.43,
+    "ink_auf_hell": 13.66,
+    "basis_auf_hell": 4.51,
+    "tinte_dk_auf_papier": 11.04,
+    "tinte_dk_auf_hell": 9.38,
+    "ink_dk_auf_hell_dk": 12.2
+   }
+  },
+  {
    "key": "srmk",
    "name": "Sektion für Redende und Musizierende Künste",
    "kurz": "Redende und Musizierende Künste",
    "ort": "Blau, licht",
    "gruppe": "kuehl",
    "status": "offen",
-   "winkel": 226.4,
-   "H": 225,
-   "L": 0.536,
-   "C": 0.105,
-   "basis": "#00799a",
+   "winkel": 230.2,
+   "H": 232,
+   "L": 0.538,
+   "C": 0.115,
+   "basis": "#0078a3",
    "on": "#fff",
-   "dunkel": "#136680",
-   "hell": "#e5f7fe",
-   "hell_dk": "#182930",
-   "ink": "#00799a",
-   "ink_dk": "#96d5ef",
+   "dunkel": "#116588",
+   "hell": "#e7f6ff",
+   "hell_dk": "#172932",
+   "ink": "#0078a3",
+   "ink_dk": "#95d5f7",
    "heute": "#598ddc",
    "heute_winkel": 250.2,
    "heute_weiss": 3.35,
    "grund": "Blau ‹ist als Farbe eine Energie›; es hat ‹etwas Widersprechendes von Reiz und Ruhe im Anblick›, und wir sehen es gern an, ‹weil es uns nach sich zieht›. Bewegung in der Ruhe: Sprache, Musik, Eurythmie.",
    "para": "§§ 779, 781",
    "kontrast": {
-    "weiss_auf_basis": 5.0,
-    "basis_auf_soft": 4.71,
+    "weiss_auf_basis": 4.98,
+    "basis_auf_soft": 4.7,
     "weiss_auf_dunkel": 6.48,
-    "ink_auf_hell": 13.65,
-    "basis_auf_hell": 4.54,
-    "tinte_dk_auf_papier": 10.98,
-    "tinte_dk_auf_hell": 9.34,
-    "ink_dk_auf_hell_dk": 12.22
+    "ink_auf_hell": 13.62,
+    "basis_auf_hell": 4.51,
+    "tinte_dk_auf_papier": 11.04,
+    "tinte_dk_auf_hell": 9.39,
+    "ink_dk_auf_hell_dk": 12.21
    }
   },
   {
@@ -504,15 +504,11 @@ window.GOE_SEK_GOETHE = {
   },
   {
    "a": "szw",
-   "b": "srmk"
+   "b": "ps"
   },
   {
    "a": "js",
    "b": "mas"
-  },
-  {
-   "a": "ps",
-   "b": "ms"
   }
  ]
 };
