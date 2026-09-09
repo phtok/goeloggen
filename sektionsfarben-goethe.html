@@ -1,0 +1,450 @@
+<!doctype html>
+<!-- =============================================================================
+     Sektionen auf Goethes Farbenkreis – Laborseite (Strategie, zur Entscheidung)
+     -----------------------------------------------------------------------------
+     Alternatives Farbkonzept für die Sektionsfarben: die zwölf Sektionen auf dem
+     sinnlich-sittlichen Farbenkreis (Zur Farbenlehre 1810, §§ 758–829; Kreis 1809).
+     Werte kommen gerechnet aus assets/sek-goethe.js (tools/sek-goethe.py, dasselbe
+     Rezept wie tools/sek-varianten.py). Die Seite setzt sie als Custom Properties
+     (--g-*), damit alle Flächen und Schriften über var() laufen (DS02/DS07) und der
+     Dunkelmodus aus den Tokens kippt (B05). Laborseite: darf herleiten und
+     vergleichen (CLAUDE.md, Ausnahme für Strategie- und Laborseiten).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Sektionen auf Goethes Farbenkreis · Goetheanum</title>
+<meta name="description" content="Alternatives Farbkonzept: die zwölf Sektionen der Hochschule auf Goethes sinnlich-sittlichem Farbenkreis – Ort, Sphäre und Grund aus der Farbenlehre, drei Gestalten je Farbe, Vergleich mit heute." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Nur Seitenlayout. Farben/Schrift/Hell-Dunkel aus tokens.css/base.css; die
+     Goethe-Töne setzt das Skript als --g-* auf :root. */
+  .artkopf{padding-block:clamp(36px,6vw,64px) var(--s6);max-width:min(72ch,100%)}
+  .artkopf h1{max-width:22ch}
+  .artkopf .lede{margin-top:var(--s4)}
+  .artkopf .byline{margin-top:var(--s4)}
+  .grp{margin-top:var(--s8)}
+  .grp > h2{font-size:var(--t-h2);margin-bottom:var(--s2)}
+  .grp > .desc{max-width:62ch}
+  .grp > .prose{margin-top:var(--s4)}
+
+  /* --- Der Kreis ------------------------------------------------------------ */
+  .kreis-wrap{overflow-x:auto;margin-top:var(--s5);padding-bottom:var(--s2)}
+  .kreis{display:block;width:min(100%,760px);min-width:560px;margin:0 auto;font-family:var(--font-text)}
+  .kreis .sph{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:26px;fill:var(--ink)}
+  .kreis .ort{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:22px;fill:var(--on-accent)}
+  .kreis .wort{font-size:20px;fill:var(--muted)}
+  .kreis .nr{font-weight:600;font-size:23px}
+  .kreis .mitte{font-size:20px;fill:var(--muted)}
+  .kreis .sep{stroke:var(--line);stroke-width:2}
+  .kreis .sektor{stroke:var(--paper);stroke-width:2}
+  /* Schmal: das Bild schrumpft auf die Breite, die Schrift wächst in Bildeinheiten
+     mit, damit sie gerendert nicht unter 14 px fällt (B03); die Sphären stehen
+     dann nur in der Ordnung darunter. */
+  @media(max-width:600px){
+    .kreis{min-width:0}
+    .kreis .sph,.kreis .ort,.kreis .wort,.kreis .mitte{display:none}
+    .kreis .nr{font-size:40px}
+  }
+
+  /* --- Sphären und Karten ---------------------------------------------------- */
+  .sphaere{margin-top:var(--s7)}
+  .sphaere > h3{font-size:var(--t-h3);margin:0}
+  .sphaere > .desc{max-width:62ch;margin-top:var(--s1)}
+  .karten{display:grid;gap:var(--s4);margin-top:var(--s4)}
+  @media(min-width:900px){.karten{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:600px) and (max-width:899px){.karten{grid-template-columns:1fr 1fr}}
+  .gk{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);overflow:hidden;display:flex;flex-direction:column}
+  .gk .farben{display:grid;grid-template-columns:2fr 1fr 1fr}
+  .gk .f{padding:var(--s3);min-height:88px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;
+    font-family:var(--font-text);font-size:var(--t-micro);line-height:1.35}
+  .gk .f .nr{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3)}
+  .gk .f .hx{font-family:var(--font-mono);letter-spacing:.02em}
+  .gk .kopf{padding:var(--s4) var(--s4) 0}
+  .gk .kopf h4{font-size:var(--t-body);margin:0 0 var(--s2);line-height:1.25}
+  .gk .kopf .orte{display:flex;flex-wrap:wrap;gap:var(--s1) var(--s2);align-items:center}
+  .gk .grund{font-family:var(--font-text);font-size:var(--t-small);line-height:1.55;padding:var(--s3) var(--s4) 0;max-width:46ch;flex:1}
+  .gk .werte{display:flex;flex-wrap:wrap;gap:var(--s2);padding:var(--s3) var(--s4) var(--s4);align-items:center}
+  .wert{font:inherit;font-family:var(--font-text);font-size:var(--t-small);font-variant-numeric:tabular-nums;
+    color:var(--ink);background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-pill);
+    padding:var(--pille-y) var(--pille-x);cursor:copy;min-height:36px;display:inline-flex;align-items:center;gap:.5em}
+  .wert:hover{border-color:var(--blue)}
+  .wert .art{color:var(--muted);font-size:var(--t-micro)}
+  .punkt{width:.9em;height:.9em;border-radius:50%;border:1px solid var(--line);flex:none;display:inline-block;vertical-align:-.1em}
+
+  /* --- Gegenüberstellung ----------------------------------------------------- */
+  .tabelle{overflow-x:auto;margin-top:var(--s4)}
+  table.gg{border-collapse:collapse;width:100%;min-width:560px;font-family:var(--font-text);font-size:var(--t-small)}
+  table.gg th{text-align:left;font-weight:600;color:var(--muted);padding:var(--s2) var(--s3);border-bottom:1px solid var(--line)}
+  table.gg td{padding:var(--s2) var(--s3);border-bottom:1px solid var(--line-soft);vertical-align:middle}
+  table.gg td.num{text-align:right;font-variant-numeric:tabular-nums}
+  table.gg th.num{text-align:right}
+  .sw{display:inline-block;width:2.2em;height:1.5em;border-radius:6px;border:1px solid var(--line);vertical-align:middle;margin-right:.5em}
+
+  /* Lage der Töne auf dem Kreis, abgerollt: 0 = Purpur, 180 = Grün. */
+  .lage{margin-top:var(--s5)}
+  .lage .zeile{display:grid;grid-template-columns:8ch 1fr;gap:var(--s3);align-items:center;margin-top:var(--s3)}
+  .lage .lab{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .lage .band-l{position:relative;height:36px;border-radius:var(--r-pill);background:var(--soft);border:1px solid var(--line)}
+  .lage .band-l i{position:absolute;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid var(--paper);box-shadow:0 0 0 1px var(--line)}
+  .lage .skala{display:flex;justify-content:space-between;font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s1);padding:0 2px}
+  /* Schmal: nur jede zweite Marke – die Anker liegen gleichmässig, die Plätze stimmen weiter. */
+  @media(max-width:600px){.lage .skala span:nth-child(2n){display:none}}
+
+  /* --- Harmonien ------------------------------------------------------------- */
+  .paare{display:grid;gap:var(--s3);margin-top:var(--s4)}
+  @media(min-width:700px){.paare{grid-template-columns:1fr 1fr}}
+  .paar{display:grid;grid-template-columns:1fr 1fr;border-radius:var(--r-card);overflow:hidden;border:1px solid var(--line)}
+  .paar .h{padding:var(--s4);min-height:96px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;font-family:var(--font-text);font-size:var(--t-small);line-height:1.35}
+  .paar .h b{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body)}
+
+  /* --- Anwendung ------------------------------------------------------------- */
+  .waehler{display:flex;gap:var(--s2);overflow-x:auto;padding:var(--s2) 0 var(--s3);margin-top:var(--s4);scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+  .waehler button{flex:none;font:inherit;font-family:var(--font-text);font-size:var(--t-small);min-height:var(--tap);
+    padding:var(--pille-y) var(--pille-x);border-radius:var(--r-pill);border:1px solid var(--line);
+    background:var(--field-bg);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:.5em}
+  .waehler button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent)}
+  .anw{display:grid;gap:var(--s4)}
+  @media(min-width:760px){.anw{grid-template-columns:1fr 1fr}}
+  .bsp{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s4);display:flex;flex-direction:column;gap:var(--s3)}
+  .bsp > .meta{order:9}
+  .bsp .band h3{max-width:22ch}
+  .textprobe .kick{color:var(--ton-ink)}
+  .textprobe h3{font-size:var(--t-h3);margin:0 0 var(--s2)}
+  .textprobe p{font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure)}
+  .textprobe a{color:var(--ton-ink);text-decoration-color:var(--ton-hell)}
+
+  .fineprint{margin-top:var(--s8);color:var(--muted);font-size:var(--t-small);max-width:64ch;font-family:var(--font-text);line-height:1.6}
+  .fineprint b{color:var(--ink);font-weight:600}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:var(--r-pill);font-family:var(--font-text);font-size:var(--t-small);opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-active="sektionsfarben-goethe" data-variant="werkzeug"
+        data-onpage="Kreis:#kreis|Ordnung:#ordnung|Vergleich:#vergleich|Harmonien:#harmonien|Anwendung:#anwendung|Offen:#offen"></script>
+
+<main class="wrap">
+  <div class="artkopf">
+    <span class="kicker">Labor · Farbkonzept</span>
+    <h1>Die Sektionen auf Goethes Farbenkreis</h1>
+    <p class="lede">Ein zweites Farbkonzept neben dem heutigen: die zwölf Sektionen der Hochschule
+      auf dem sinnlich-sittlichen Farbenkreis – jede Farbe mit Ort, Sphäre und Grund aus
+      Goethes Text.</p>
+    <p class="byline"><b>Entwurf</b> · 9. September 2026 · zur Entscheidung</p>
+  </div>
+
+  <section class="grp" id="kreis">
+    <h2>Der Kreis</h2>
+    <p class="desc">Goethe ordnet die Farben als Kreis: <b>Purpur</b> oben, wo sich beide Seiten in
+      der Steigerung vereinigen, <b>Grün</b> unten, wo sie sich real mischen. Rechts die
+      tätige Seite (Gelb, Rotgelb, Gelbrot: ‹regsam, lebhaft, strebend›), links die leidende
+      (Blau, Rotblau, Blaurot: ‹unruhig, weich und sehnend›). Das Blatt von 1809 legt darüber vier
+      Sphären des Seelenlebens – <b>Vernunft, Verstand, Sinnlichkeit, Phantasie</b> – und gibt
+      jeder Farbe ein Wort.</p>
+    <div class="kreis-wrap"><svg class="kreis" id="svg-kreis" viewBox="0 0 760 760" role="img" aria-labelledby="kreis-t"><title id="kreis-t">Goethes Farbenkreis mit den zwölf Sektionen als äusserem Ring</title></svg></div>
+    <p class="meta">Äusserer Ring: die zwölf Sektionen in den vorgeschlagenen Farben, nummeriert wie
+      unten. Innen Goethes sechs Farben, von oben im Uhrzeigersinn: Purpur ‹schön›, Gelbrot ‹edel›,
+      Gelb ‹gut›, Grün ‹nützlich›, Blau ‹gemein›, Blaurot ‹unnötig› – die Wörter des Blattes von 1809
+      stufen die <b>Farben</b>, nicht die Sektionen. Vernunft liegt über Purpur und Gelbrot, Verstand
+      über Gelb und Grün, Sinnlichkeit über Grün und Blau, Phantasie über Blaurot und Purpur.</p>
+  </section>
+
+  <section class="grp" id="ordnung">
+    <h2>Die Ordnung</h2>
+    <p class="desc">Jede Sphäre trägt drei Sektionen. Die <b>Basis</b> ist Identität, <b>Dunkel</b> die
+      Fläche für Weiss, <b>Hell</b> der Hauch für dunklen Text – dieselben drei Gestalten wie
+      heute, mit demselben Rezept gerechnet. Der Satz darunter ist der Grund; die Stelle
+      verweist auf Goethes Paragraphen.</p>
+    <div id="sphaeren"></div>
+  </section>
+
+  <section class="grp" id="vergleich">
+    <h2>Heute und Goethe</h2>
+    <p class="desc">Abgerollt auf eine Linie zeigt sich, warum der Kreis etwas ändert: Heute liegen
+      fünf Sektionen zwischen Blau und Blaurot, Gelb kommt nicht vor, und zwischen Grün und Blau ist
+      es leer. Auf dem Kreis bekommt jede Sektion ihren eigenen Ort.</p>
+    <div class="lage">
+      <div class="zeile"><span class="lab">Heute</span><div class="band-l" id="lage-heute"></div></div>
+      <div class="zeile"><span class="lab">Goethe</span><div class="band-l" id="lage-goethe"></div></div>
+      <div class="zeile"><span class="lab"></span><div class="skala"><span>Purpur</span><span>Gelbrot</span><span>Gelb</span><span>Grün</span><span>Blau</span><span>Blaurot</span><span>Purpur</span></div></div>
+    </div>
+    <div class="tabelle"><table class="gg" id="gg">
+      <thead><tr><th class="num">Nr.</th><th>Sektion</th><th>Heute</th><th>Goethe</th><th>Ort</th><th>Sphäre</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </section>
+
+  <section class="grp" id="harmonien">
+    <h2>Harmonien</h2>
+    <p class="desc">Goethe denkt sich ‹einen beweglichen Diameter› im Kreis: jede Farbe fordert die
+      gegenüberliegende – ‹Gelb fordert Rotblau, Blau fordert Rotgelb, Purpur fordert Grün›.
+      Auf dem Kreis liegen darum auch Sektionen einander gegenüber, die zusammen die Totalität
+      ergeben: Paare, die auf einem Blatt nebeneinander stehen können.</p>
+    <div class="paare" id="paare"></div>
+    <p class="meta">Nachbarn auf dem Kreis nennt Goethe ‹charakterlos› – zu nah beieinander, um
+      nebeneinander etwas zu sagen (§§ 827–828). Ein Paar aus derselben Sphäre braucht darum
+      den Abstand über Dunkel und Hell, nicht über die Basis.</p>
+  </section>
+
+  <section class="grp" id="anwendung">
+    <h2>Anwendung</h2>
+    <p class="desc">Sektion wählen – die Bausteine des Design-Systems zeigen sich in ihren
+      Goethe-Tönen.</p>
+    <div class="waehler" id="waehler" role="group" aria-label="Sektion wählen"></div>
+    <div class="anw" id="anw">
+      <div class="bsp">
+        <div class="band"><span class="kick">Tagung · 14. bis 16. Mai</span>
+          <h3 id="bsp-titel">Titel der Sektion</h3>
+          <p>Freie Hochschule für Geisteswissenschaft · Goetheanum, Dornach</p></div>
+        <p class="meta">Kopfband · Dunkel mit Weiss</p>
+      </div>
+      <div class="bsp">
+        <div><span class="chip ton" id="bsp-chip">Sektion</span> <span class="chip ton">Neu</span> <span class="chip ton">Rundbrief 3/2026</span></div>
+        <div class="card ton"><h3>Studienwoche im Herbst</h3><p class="meta">Anmeldung bis 30. September</p></div>
+        <p class="meta">Chips · Hell mit Sektionstinte. Karte · Basis als Kante</p>
+      </div>
+      <div class="bsp">
+        <div class="kasten"><b>Hinweis der Sektion.</b> Die Anmeldung ist offen; Mitglieder der Hochschule erhalten den Studienbrief vorab.</div>
+        <p class="meta">Hinweiskasten · Hell mit Lesetext, Kante in Dunkel</p>
+      </div>
+      <div class="bsp textprobe">
+        <div><span class="kick" id="bsp-kick">Sektion</span>
+          <h3>Forschung und Praxis im Gespräch</h3>
+          <p>Der Kicker trägt die Sektion als Text; im Lauftext bleibt ein <a href="#anwendung">Verweis in der Sektionstinte</a> lesbar – auch im Dunkelmodus.</p></div>
+        <p class="meta">Kicker und Link · Sektionstinte auf Papier</p>
+      </div>
+      <div class="bsp">
+        <div><button class="btn ton" type="button">Zur Sektion</button> <button class="btn" type="button">Programm</button></div>
+        <p class="meta">Knopf · Dunkel mit Weiss</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="grp" id="offen">
+    <h2>Offen</h2>
+    <div class="prose">
+      <p><b>Der Beschluss.</b> Bleibt es beim heutigen Konzept, oder rückt die Hochschule auf den Kreis?
+        Eine Umstellung heisst: zwölf Werte in der Quelle der Logos und in den Tokens, dann das
+        Rezept neu laufen lassen – Logos, Wallpaper, Familienmenü und Sektionsfarben-Seite ziehen
+        nach. Beides kann eine Weile nebeneinander stehen; die Werkzeuge kennen nur Tokens.</p>
+      <p><b>Gelb trägt kein Weiss.</b> Die reine Basis der Pädagogik hält Weiss nur 1.6:1 – wie
+        heute Landwirtschaft, Jugend und Heilpädagogik. Auf der Basis steht darum ein tiefer Ton
+        der Sektion; die dunkle Fläche trägt Weiss überall ≥ 5:1. Das ist keine Schwäche des
+        Kreises, sondern Goethes Gelb: die nächste Farbe am Licht.</p>
+      <p><b>Die Bereiche.</b> Bühne und Bau-Administration stehen nicht auf dem Kreis; sie behalten
+        ihre Farben. Das Goetheanum selbst bleibt Markenblau.</p>
+    </div>
+  </section>
+
+  <p class="fineprint">
+    <b>Quelle.</b> Johann Wolfgang Goethe, Zur Farbenlehre (1810), Didaktischer Teil, sechste Abteilung
+    ‹Sinnlich-sittliche Wirkung der Farbe›, §§ 758–829; Farbenkreis ‹zur Symbolisierung des
+    menschlichen Geistes- und Seelenlebens› (1809, Freies Deutsches Hochstift). Zitate in Schweizer
+    Schreibung. <b>Werte.</b> Gerechnet in OKLCH mit dem Rezept der heutigen Sektionsfarben
+    (tools/sek-goethe.py, Daten in assets/sek-goethe.js); alle Kontraste ≥ 4.5:1, auf dieser Seite
+    am gerenderten Blatt gemessen. Das heutige Konzept steht auf
+    <a href="sektionsfarben.html">Sektionsfarben</a>.
+  </p>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/sek-goethe.js"></script>
+<script>
+(function(){
+  "use strict";
+  var D=window.GOE_SEK_GOETHE; if(!D) return;
+  var $=function(s,r){return (r||document).querySelector(s);};
+  var el=function(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+  var ROOT=document.documentElement, SEK=D.sektionen, byKey={};
+  SEK.forEach(function(s,i){s.nr=i+1; byKey[s.key]=s;});
+
+  // --- Töne als Custom Properties (eine Quelle: die Daten) --------------------
+  function setzeTokens(){
+    var dunkel=ROOT.getAttribute("data-theme")==="dark"||(!ROOT.getAttribute("data-theme")&&matchMedia("(prefers-color-scheme: dark)").matches);
+    SEK.forEach(function(s){
+      var p="--g-"+s.key;
+      ROOT.style.setProperty(p,s.basis); ROOT.style.setProperty(p+"-on",s.on);
+      ROOT.style.setProperty(p+"-dunkel",s.dunkel);
+      ROOT.style.setProperty(p+"-hell",dunkel?s.hell_dk:s.hell);
+      ROOT.style.setProperty(p+"-ink",dunkel?s.ink_dk:s.ink);
+      ROOT.style.setProperty(p+"-heute",s.heute);
+    });
+    D.anker.forEach(function(a){ROOT.style.setProperty("--g-anker-"+a.name.toLowerCase().replace("ü","ue"),a.hex);});
+  }
+
+  // --- Farbmathematik für die Messung am Blatt --------------------------------
+  function hexToRgb(hex){var h=hex.replace("#","");if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];return {r:parseInt(h.slice(0,2),16),g:parseInt(h.slice(2,4),16),b:parseInt(h.slice(4,6),16)};}
+  function rgbToHex(r,g,b){return "#"+[r,g,b].map(function(c){c=Math.max(0,Math.min(255,Math.round(c)));return (c<16?"0":"")+c.toString(16);}).join("");}
+  function lin(c){c/=255;return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);}
+  function lum(hex){var c=hexToRgb(hex);return 0.2126*lin(c.r)+0.7152*lin(c.g)+0.0722*lin(c.b);}
+  function kontrast(a,b){var la=lum(a),lb=lum(b),hi=Math.max(la,lb),lo=Math.min(la,lb);return (hi+0.05)/(lo+0.05);}
+  function fmt(k){return (Math.round(k*10)/10).toFixed(1)+":1";}
+  function cssToHex(v){v=(v||"").trim();if(v[0]==="#")return v.length===4?"#"+v[1]+v[1]+v[2]+v[2]+v[3]+v[3]:v;var m=v.match(/rgba?\(([^)]+)\)/);if(!m)return "#000000";var p=m[1].split(/[\s,\/]+/).map(parseFloat);return rgbToHex(p[0],p[1],p[2]);}
+  function paintHex(node,prop){return cssToHex(getComputedStyle(node)[prop||"backgroundColor"]);}
+
+  // --- Kopieren ----------------------------------------------------------------
+  function copy(txt){
+    if(navigator.clipboard) navigator.clipboard.writeText(txt);
+    var t=$("#toast"); t.textContent="‹"+txt+"› kopiert"; t.classList.add("show");
+    setTimeout(function(){t.classList.remove("show");},1100);
+  }
+  function wert(txt,art,punkt){
+    var b=el("button","wert"); b.type="button"; b.title="Klick kopiert";
+    if(punkt){var p=el("span","punkt"); p.style.background=punkt; b.appendChild(p);}
+    if(art){b.appendChild(el("span","art",art));}
+    b.appendChild(document.createTextNode(txt));
+    b.addEventListener("click",function(){copy(txt);});
+    return b;
+  }
+
+  // --- Der Kreis (SVG) ----------------------------------------------------------
+  var NS="http://www.w3.org/2000/svg", CX=380, CY=380;
+  function pol(r,deg){var a=(deg-90)*Math.PI/180;return [CX+r*Math.cos(a),CY+r*Math.sin(a)];}
+  function ring(r1,r2,a0,a1){
+    var p0=pol(r2,a0),p1=pol(r2,a1),p2=pol(r1,a1),p3=pol(r1,a0),gross=(a1-a0)>180?1:0;
+    return "M"+p0.join(",")+" A"+r2+","+r2+" 0 "+gross+" 1 "+p1.join(",")+" L"+p2.join(",")+" A"+r1+","+r1+" 0 "+gross+" 0 "+p3.join(",")+"Z";
+  }
+  function sv(t,attrs,txt){var e=document.createElementNS(NS,t);for(var k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;return e;}
+  function bauKreis(){
+    var svg=$("#svg-kreis");
+    // Sphären: Trennlinien und Wörter in den Ecken
+    D.sphaeren.forEach(function(s){
+      var l0=pol(306,s.von), l1=pol(336,s.von);
+      svg.appendChild(sv("line",{x1:l0[0],y1:l0[1],x2:l1[0],y2:l1[1],"class":"sep"}));
+      var m=(s.von+s.bis)/2, p=pol(352,m);
+      svg.appendChild(sv("text",{x:p[0],y:p[1]+9,"text-anchor":"middle","class":"sph"},s.name));
+    });
+    // Sektionen: äusserer Ring, jede von Mitte zu Mitte ihrer Nachbarn
+    var sorted=SEK.slice().sort(function(a,b){return a.winkel-b.winkel;});
+    sorted.forEach(function(s,i){
+      var prev=sorted[(i-1+sorted.length)%sorted.length], next=sorted[(i+1)%sorted.length];
+      var a0=(s.winkel+prev.winkel+(i===0?-360:0))/2, a1=(s.winkel+next.winkel+(i===sorted.length-1?360:0))/2;
+      svg.appendChild(sv("path",{d:ring(262,300,a0,a1),fill:"var(--g-"+s.key+")","class":"sektor"}));
+      var p=pol(281,s.winkel);
+      svg.appendChild(sv("text",{x:p[0],y:p[1]+8,"text-anchor":"middle","class":"nr",fill:"var(--g-"+s.key+"-on)"},String(s.nr)));
+    });
+    // Goethes sechs Farben mit Namen und Wort
+    D.anker.forEach(function(a){
+      var tok="--g-anker-"+a.name.toLowerCase().replace("ü","ue");
+      svg.appendChild(sv("path",{d:ring(180,250,a.winkel-30,a.winkel+30),fill:"var("+tok+")","class":"sektor"}));
+      var p=pol(215,a.winkel), q=pol(148,a.winkel);
+      svg.appendChild(sv("text",{x:p[0],y:p[1]+8,"text-anchor":"middle","class":"ort",fill:a.name==="Gelb"?"var(--ink)":"var(--on-accent)"},a.name));
+      svg.appendChild(sv("text",{x:q[0],y:q[1]+7,"text-anchor":"middle","class":"wort"},a.wort));
+    });
+    svg.appendChild(sv("text",{x:CX,y:CY-8,"text-anchor":"middle","class":"mitte"},"Purpur oben"));
+    svg.appendChild(sv("text",{x:CX,y:CY+18,"text-anchor":"middle","class":"mitte"},"tätige Seite rechts"));
+  }
+
+  // --- Karten je Sphäre ----------------------------------------------------------
+  function flaeche(cls,txt,bg,fg){
+    var d=el("div","f "+cls); d.style.background="var("+bg+")"; d.style.color="var("+fg+")";
+    d.appendChild(el("span","nr",txt)); d.appendChild(el("span","hx")); d.appendChild(el("span","k"));
+    return d;
+  }
+  function karte(s){
+    var t="--g-"+s.key, a=el("article","gk"); a.dataset.key=s.key;
+    var f=el("div","farben");
+    f.appendChild(flaeche("basis",s.nr+" · Basis",t,t+"-on"));
+    f.appendChild(flaeche("dunkel","Dunkel",t+"-dunkel","--on-accent"));
+    f.appendChild(flaeche("hell","Hell",t+"-hell",t+"-ink"));
+    a.appendChild(f);
+    var kopf=el("div","kopf"); var h=el("h4"); h.textContent=s.name; kopf.appendChild(h);
+    var orte=el("div","orte"); orte.appendChild(el("span","chip",s.ort)); orte.appendChild(el("span","meta",s.para)); kopf.appendChild(orte);
+    a.appendChild(kopf);
+    a.appendChild(el("p","grund",s.grund));
+    var w=el("div","werte"); w.appendChild(wert(s.basis.toUpperCase(),"Hex",s.basis));
+    var heute=el("span","meta"); heute.appendChild(el("span","punkt")); heute.lastChild.style.background="var("+t+"-heute)"; heute.appendChild(document.createTextNode(" heute "+s.heute.toUpperCase()));
+    w.appendChild(heute); a.appendChild(w);
+    return a;
+  }
+  function bauSphaeren(){
+    var wrap=$("#sphaeren");
+    D.sphaeren.forEach(function(sp){
+      var sec=el("div","sphaere"); sec.appendChild(el("h3",null,sp.name));
+      sec.appendChild(el("p","desc","Goethes Blatt: "+sp.farben+"."));
+      var k=el("div","karten"); SEK.filter(function(s){return s.sphaere===sp.id;}).forEach(function(s){k.appendChild(karte(s));});
+      sec.appendChild(k); wrap.appendChild(sec);
+    });
+  }
+  function messen(){
+    document.querySelectorAll("article.gk").forEach(function(a){
+      a.querySelectorAll(".f").forEach(function(f){
+        var bg=paintHex(f), fg=paintHex(f,"color"), k=kontrast(fg,bg);
+        f.querySelector(".hx").textContent=bg.toUpperCase();
+        var wer=f.classList.contains("hell")?"Tinte":(fg.toLowerCase()==="#ffffff"?"Weiss":"Dunkelton");
+        f.querySelector(".k").textContent=wer+" "+fmt(k)+(k>=4.5?" ✓":" ✗");
+      });
+    });
+  }
+
+  // --- Vergleich ------------------------------------------------------------------
+  function bauLage(){
+    var h=$("#lage-heute"), g=$("#lage-goethe");
+    SEK.forEach(function(s){
+      var i=el("i"); i.style.left=(s.heute_winkel/360*100)+"%"; i.style.background="var(--g-"+s.key+"-heute)"; i.title=s.kurz+" heute"; h.appendChild(i);
+      var j=el("i"); j.style.left=(s.winkel/360*100)+"%"; j.style.background="var(--g-"+s.key+")"; j.title=s.kurz; g.appendChild(j);
+    });
+    var tb=$("#gg tbody");
+    SEK.forEach(function(s){
+      var tr=el("tr"), sph=D.sphaeren.filter(function(x){return x.id===s.sphaere;})[0];
+      tr.appendChild(el("td","num",String(s.nr)));
+      var td=el("td"); td.textContent=s.name; tr.appendChild(td);
+      var a=el("td"); a.appendChild(el("span","sw")); a.lastChild.style.background="var(--g-"+s.key+"-heute)"; a.appendChild(document.createTextNode(s.heute.toUpperCase())); tr.appendChild(a);
+      var b=el("td"); b.appendChild(el("span","sw")); b.lastChild.style.background="var(--g-"+s.key+")"; b.appendChild(document.createTextNode(s.basis.toUpperCase())); tr.appendChild(b);
+      var o=el("td"); o.textContent=s.ort; tr.appendChild(o);
+      var p=el("td"); p.textContent=sph?sph.name:""; tr.appendChild(p);
+      tb.appendChild(tr);
+    });
+  }
+
+  // --- Harmonien ------------------------------------------------------------------
+  function bauPaare(){
+    var w=$("#paare");
+    D.harmonien.forEach(function(h){
+      var a=byKey[h.a], b=byKey[h.b], p=el("div","paar");
+      [a,b].forEach(function(s){
+        var d=el("div","h"); d.style.background="var(--g-"+s.key+"-dunkel)"; d.style.color="var(--on-accent)";
+        d.appendChild(el("b",null,s.kurz)); d.appendChild(el("span",null,s.ort)); p.appendChild(d);
+      });
+      w.appendChild(p);
+    });
+  }
+
+  // --- Anwendung -------------------------------------------------------------------
+  function waehle(key){
+    var s=byKey[key]||SEK[0], anw=$("#anw"), t="--g-"+s.key;
+    anw.style.setProperty("--ton","var("+t+")"); anw.style.setProperty("--ton-dunkel","var("+t+"-dunkel)");
+    anw.style.setProperty("--ton-hell","var("+t+"-hell)"); anw.style.setProperty("--ton-ink","var("+t+"-ink)");
+    $("#bsp-titel").textContent=s.name; $("#bsp-chip").textContent=s.kurz; $("#bsp-kick").textContent=s.kurz;
+    document.querySelectorAll("#waehler button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.key===s.key));});
+  }
+  function bauWaehler(){
+    var w=$("#waehler");
+    SEK.forEach(function(s){
+      var b=el("button"); b.type="button"; b.dataset.key=s.key; b.setAttribute("aria-pressed","false");
+      var p=el("span","punkt"); p.style.background="var(--g-"+s.key+")"; b.appendChild(p);
+      b.appendChild(document.createTextNode(s.kurz));
+      b.addEventListener("click",function(){waehle(s.key);});
+      w.appendChild(b);
+    });
+  }
+
+  function render(){
+    setzeTokens(); bauKreis(); bauSphaeren(); bauLage(); bauPaare(); bauWaehler();
+    requestAnimationFrame(function(){messen(); waehle("aas");});
+    new MutationObserver(function(){setzeTokens(); requestAnimationFrame(messen);})
+      .observe(ROOT,{attributes:true,attributeFilter:["data-theme"]});
+    try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",function(){setzeTokens(); requestAnimationFrame(messen);});}catch(e){}
+  }
+  if(document.readyState!=="loading") render(); else document.addEventListener("DOMContentLoaded",render);
+})();
+</script>
+</body>
+</html>
