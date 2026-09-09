@@ -198,6 +198,22 @@ oder pausiert ein Key: auf schluessel.saetzerei.com verweisen, den
 Repo-Inhaber **nicht** um Tokens im Chat bitten. Jedes Lesen wird
 protokolliert. (Ausführliche Fassung: `CLAUDE.md` im Repo `designs`.)
 
+## Ganze URLs, immer (Gesetz, Beschluss 9. 9. 2026)
+
+Jede Nennung einer Seite, eines PR, einer Datei oder eines Schlüssels im Chat
+trägt die **vollständige, klickbare URL** – nie nur einen Pfad oder Namen:
+
+- Werkzeugseite live: `https://werkzeuge.goetheanum.ch/<pfad>`
+  (z. B. https://werkzeuge.goetheanum.ch/sektionsfarben-goethe.html)
+- Datei im Repo: `https://github.com/phtok/goeloggen/blob/main/<pfad>`
+- PR: `https://github.com/phtok/goeloggen/pull/<nummer>`
+- Schlüssel und Tokens: direkt die Seite des Schlüsselbunds,
+  https://schluessel.saetzerei.com/ – bei einer Key-Frage steht der Link zur
+  benötigten Seite im ersten Satz, nicht die Anleitung dorthin.
+
+Der Repo-Inhaber will im Chat klicken, nicht suchen. Gilt für jede Antwort,
+Statusmeldung und Übergabe.
+
 ## Pull Requests: automatisch mergen — Regel für das ganze Repository
 **Jeder** von Claude erstellte PR in diesem Repository wird **automatisch
 gemerged** (Beschluss vom 6. Juli 2026, «ab jetzt immer automatisch»;

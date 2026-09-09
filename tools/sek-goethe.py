@@ -18,9 +18,13 @@ Drei Vorgaben des Auftraggebers (9. September 2026):
      bei: nur Goethes bejahende Sätze, keine Rangwörter des Blattes von 1809.
      Jede Sektion kann ihren Ort ablehnen («status»: offen · angenommen · veto).
   3. Die heutigen Farbtöne bleiben, wo es geht: nur die Pädagogik wechselt die
-     Familie (Indigo → Gold, weil Gelb auf dem Kreis fehlte und fünf Sektionen
-     zwischen Blau und Blaurot standen); Musik/Sprache rückt vom Blau ins
-     lichtere Blau, alles andere behält seine Farbigkeit und wird nur tiefer.
+     Familie (Indigo → Blaugrün, weil fünf Sektionen zwischen Blau und Blaurot
+     standen); Musik/Sprache rückt ins lichtere Blau, alles andere behält
+     seine Farbigkeit und wird nur tiefer.
+  4. Kein Gelb (Anmerkung 9. 9. 2026): Gold gehört der Bühne, und ein Gelb,
+     das Weiss trägt, wirkt braun – Goethe selbst: ins Minus gezogen macht es
+     ‹eine sehr unangenehme Wirkung› (§ 770). Der Kreis bleibt zwischen Rotgelb
+     und Grün leer.
 
 Die drei Gestalten entstehen mit DEMSELBEN Rezept wie die heutigen
 Sektionsfarben (tools/sek-varianten.py wird importiert): dunkel (Fläche für
@@ -68,8 +72,8 @@ SPHAEREN = [
 GRUPPEN = [
     {"id": "purpur", "name": "Purpur – die Steigerung",
      "desc": "Oben, wo sich beide Seiten des Kreises vereinigen. Goethe: ‹in der Vereinigung der gesteigerten Pole eine eigentliche Beruhigung› (§ 794)."},
-    {"id": "warm",   "name": "Die warme Seite – Gelbrot, Rotgelb, Gelb",
-     "desc": "Goethes Plusseite: die Farben, die ‹regsam, lebhaft, strebend› stimmen (§ 764) – vom Rot bis zum Gold."},
+    {"id": "warm",   "name": "Die warme Seite – Gelbrot, Rotgelb",
+     "desc": "Goethes Plusseite: die Farben, die ‹regsam, lebhaft, strebend› stimmen (§ 764) – vom Purpurrot bis zum Orange. Ohne Gelb: ein Gelb, das Weiss trägt, wäre ‹ins Minus gezogen› (§ 770), und Gold gehört der Bühne."},
     {"id": "gruen",  "name": "Grün – die Vereinigung",
      "desc": "Unten, wo Gelb und Blau sich real mischen und ‹das Auge und das Gemüt› ruhen (§ 802)."},
     {"id": "kuehl",  "name": "Die kühle Seite – Blau, Rotblau",
@@ -97,16 +101,16 @@ ORDNUNG = [
     {"key": "hpise", "ort": "Gelb, zum Rotgelb", "gruppe": "warm",   "H": 55,  "C": 0.140,
      "grund": "Gelb macht ‹einen durchaus warmen und behaglichen Eindruck›, und ins Rotgelb gesteigert ist es ‹bei Umgebungen angenehm›: Wärme, die aufnimmt und Raum gibt.",
      "para": "§§ 768, 773", "status": "offen"},
-    {"key": "ps",    "ort": "Gelb – als Gold",   "gruppe": "warm",   "H": 92,  "C": 0.115,
-     "grund": "Gelb ist ‹die nächste Farbe am Licht›, ‹heiter, munter, sanft reizend›. Ein Gelb, das Schrift trägt, ist Gold – und ‹das Gold in seinem ganz ungemischten Zustande gibt uns einen neuen und hohen Begriff von dieser Farbe›.",
-     "para": "§§ 765–767", "status": "offen"},
     {"key": "lws",   "ort": "Grün",              "gruppe": "gruen",  "H": 140, "C": 0.150,
      "grund": "In Grün findet das Auge ‹eine reale Befriedigung›; wenn die beiden Mutterfarben ‹sich in der Mischung genau das Gleichgewicht halten›, ruht ‹das Auge und das Gemüt› darauf ‹wie auf einem Einfachen›. Erde und Wachstum.",
      "para": "§ 802", "status": "offen"},
     {"key": "nws",   "ort": "Meergrün",          "gruppe": "gruen",  "H": 181, "C": 0.100, "L": 0.53,
      "grund": "Grün entsteht, wenn Gelb und Blau ‹gleich bei ihrem ersten Erscheinen› zusammenkommen – die beiden Urfarben, die Goethe aus Licht und Finsternis ableitet. Wo Grün ins Blau übergeht, nennt er das Meergrün ‹eine liebliche Farbe›. Die Sektion, die seine Naturforschung weiterführt.",
      "para": "§§ 785, 801", "status": "offen"},
-    {"key": "srmk",  "ort": "Blau, licht",       "gruppe": "kuehl",  "H": 225, "C": 0.105,
+    {"key": "ps",    "ort": "Blau, zum Grün",    "gruppe": "kuehl",  "H": 205, "C": 0.110,
+     "grund": "Wo Grün ins Blau übergeht: die ‹reale Befriedigung› des Grün (§ 802) wird zur ‹Energie› des Blau (§ 779) – Ruhe, aus der Kraft wird. Das Kind, das wächst; die Pädagogik.",
+     "para": "§§ 779, 802", "status": "offen"},
+    {"key": "srmk",  "ort": "Blau, licht",       "gruppe": "kuehl",  "H": 232, "C": 0.115,
      "grund": "Blau ‹ist als Farbe eine Energie›; es hat ‹etwas Widersprechendes von Reiz und Ruhe im Anblick›, und wir sehen es gern an, ‹weil es uns nach sich zieht›. Bewegung in der Ruhe: Sprache, Musik, Eurythmie.",
      "para": "§§ 779, 781", "status": "offen"},
     {"key": "mas",   "ort": "Blau",              "gruppe": "kuehl",  "H": 258, "C": 0.150, "L": 0.47,

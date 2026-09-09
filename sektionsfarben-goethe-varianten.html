@@ -119,7 +119,7 @@
   <section class="grp" id="ordnungen">
     <h2>Ordnungen</h2>
     <p class="desc">Drei Lesarten des Kreises, jede mit zwölf gleichen Plätzen. Wo eine Sektion mehr als
-      einen Platz von der Fassung 2 entfernt liegt, ist sie genannt – über diese wenigen entscheidet
+      einen Platz von der Fassung 3 entfernt liegt, ist sie genannt – über diese wenigen entscheidet
       die Ordnung wirklich.</p>
     <div class="ordnungen" id="ord"></div>
   </section>
@@ -134,9 +134,12 @@
       <p><b>Pastell wird an der Grenze staubig.</b> Weniger Buntheit bei gleicher Tiefe ergibt keine
         hellen Töne, sondern gedämpfte. Wer Pastell will, entscheidet sich gegen die eine Farbe für
         beide Richtungen.</p>
-      <p><b>Gleichmässig verteilt heisst weiter von heute weg.</b> Die 30°-Reihe hält die Reihenfolge
-        von heute und rückt jede Sektion auf ihren Platz; die Verschiebung bleibt klein, bis auf
-        Pädagogik und Musik, die schon in der Fassung 2 wandern.</p>
+      <p><b>Kein Gelb.</b> Gold gehört der Bühne, und ein Gelb an der Grenze wirkt braun – Goethe:
+        ins Minus gezogen ‹eine sehr unangenehme Wirkung› (§ 770). Die Reihen ‹Ohne Gelb› lassen das
+        Feld zwischen Orange und Grün frei; die Pädagogik steht im Blaugrün.</p>
+      <p><b>Gleichmässig verteilt heisst weiter von heute weg.</b> Die 30°-Reihen halten die
+        Reihenfolge von heute und rücken jede Sektion auf ihren Platz; die Verschiebung bleibt klein,
+        bis auf Pädagogik und Musik, die schon in der Fassung 3 wandern.</p>
       <p><b>Die Ordnungen unterscheiden sich in wenigen Sektionen.</b> Goethes Wirkung und die Ordnung
         nach Aufgabe fallen fast zusammen; offen bleiben Medizin (Violett oder Blau), Musik und
         Sprache (Blau oder Blaurot) und die bildenden Künste (Purpurrot oder Lila).</p>
@@ -212,7 +215,7 @@
     });
     w.appendChild(svg); w.appendChild(ol);
     w.appendChild(el("p","lesart",o.lesart));
-    var b=el("p","bewegt"); b.innerHTML=o.bewegt.length?"<b>Bewegt gegenüber Fassung 2:</b> "+o.bewegt.map(function(k){return D.namen[k];}).join(", "):"<b>Die Fassung 2</b> – Bezugspunkt.";
+    var b=el("p","bewegt"); b.innerHTML=o.bewegt.length?"<b>Bewegt gegenüber Fassung 3:</b> "+o.bewegt.map(function(k){return D.namen[k];}).join(", "):"<b>Die Fassung 3</b> – Bezugspunkt.";
     w.appendChild(b);
     return w;
   }
