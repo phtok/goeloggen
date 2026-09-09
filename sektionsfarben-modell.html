@@ -135,9 +135,10 @@
   <section class="grp" id="kreis">
     <h2>Der Kreis</h2>
     <p class="desc">Purpur oben, wo sich beide Seiten in der Steigerung vereinigen; Grün unten, wo sie
-      sich mischen; rechts die warme, links die kühle Seite. Der äussere Ring zeigt die zwölf
-      Sektionen in ihrer Erkennungsfarbe. Die Sphären des Blattes von 1809 beschreiben die Wirkung
-      der Farben; jede Sektion vereint alle vier.</p>
+      sich mischen; rechts die warme, links die kühle Seite. Der äussere Ring zeigt in dreizehn
+      gleichen Feldern die zwölf Sektionen in ihrer Erkennungsfarbe und das Goetheanum in seinem
+      Blau – die Sonderidentität, auf der keine Sektion liegt. Gelb ist wieder da, selbstlos: es
+      leuchtet und trägt keine Schrift, damit Gold der Bühne bleibt.</p>
     <div class="kreis-wrap"><svg class="kreis" id="svg-kreis" viewBox="0 0 760 760" role="img" aria-labelledby="kreis-t"><title id="kreis-t">Goethes Farbenkreis mit den zwölf Sektionen als äusserem Ring</title></svg></div>
     <ol class="legende" id="legende"></ol>
   </section>
@@ -147,7 +148,9 @@
     <p class="desc">Je Sektion sechs Stufen, von hell nach tief. Leuchten hat die Buntheit der heutigen
       Farben – Pigment, nicht Licht – und ist so hell, wie 3:1 auf Papier erlaubt. Der Kern ist
       dieselbe Farbe, tief genug für Weiss auch klein. Die Tinte ist eigens für Schrift auf Weiss
-      gesetzt. Die Zahlen sind am Blatt gemessen.</p>
+      gesetzt. Die Landwirtschaft behält ihr etabliertes Grün als Leuchten exakt. Gelb ist die
+      Ausnahme: Es leuchtet ohne Kontrastpflicht und hat keine eigenen Schriftstufen – Kern, Tinte
+      und Grund sind das Haus-Schwarz in warmem Grau. Die Zahlen sind am Blatt gemessen.</p>
     <div class="kopfzeile"><span class="wer"></span><span>Hauch</span><span>Pastell</span><span>Leuchten</span><span>Kern</span><span>Tinte</span><span>Grund</span></div>
     <div class="leiter" id="leiter-zeilen"></div>
   </section>
@@ -155,8 +158,9 @@
   <section class="grp" id="anwendung">
     <h2>Anwendungsfälle</h2>
     <p class="desc">Vier Stufen für die Werkzeuge im Alltag – Leuchten, Kern, Tinte, Hauch –, der Grund
-      für Hintergrundelemente und den Dunkelmodus, Pastell für die grosse Fläche. Die Regel
-      dahinter: Was Lesetext tragen muss, ist nie die Erkennungsfarbe.</p>
+      für Hintergrundelemente und den Dunkelmodus, Pastell für die grosse Fläche. Zwei Regeln
+      dahinter: Was Lesetext tragen muss, ist nie die Erkennungsfarbe. Und Schwarz steht nie auf
+      Farbe – nur auf der ganz zarten Färbung, also auf Hauch und Pastell.</p>
     <div class="tabelle"><table class="af" id="af">
       <thead><tr><th>Stufe</th><th>Trägt</th><th>Anwendungsfälle</th><th>Regel</th></tr></thead>
       <tbody></tbody>
@@ -217,6 +221,15 @@
       <p><b>Die Heilpädagogik.</b> Ihr Leuchten ist ein warmes Orange wie heute, ihr Kern ein tiefes
         Orange, das Weiss trägt, ihre Tinte ein Terracotta für die Schrift. Was man liest, ist tiefer
         als das, woran man die Sektion erkennt – bei allen zwölf.</p>
+      <p><b>Sonderidentitäten.</b> Das Goetheanum-Blau und das Bühnengold stehen fest; keine
+        Sektion liegt darauf. Darum hat das Blau im Kreis ein eigenes Feld, und darum hat Gelb keine
+        dunklen Stufen: Ein dunkles Gelb wäre Gold. Das Rot der Bau-Administration ist intern und
+        zählt nicht. Die Landwirtschaft, die einzige Sektion mit gelebter Farbidentität, behält ihr
+        Grün exakt; ihr eigenes Logo stellt dem Grün ein dunkles Grau zur Seite – dasselbe Muster,
+        das hier Gelb bekommt.</p>
+      <p><b>Wer trägt das Gelb.</b> Vorgeschlagen ist die Pädagogik (Goethe: ‹die nächste Farbe am
+        Licht›). Ebenso denkbar wären Jugend (‹heiter, munter›) oder Heilpädagogik (‹warm und
+        behaglich›); der Vorschlag steht unter Veto.</p>
       <p><b>Was das für die Tokens heisst.</b> Aus drei Gestalten werden sechs: Leuchten, Kern, Tinte,
         Grund, Pastell, Hauch, je Theme. Basis wird zum Leuchten, Dunkel zum Grund, Hell zum Hauch;
         Kern, Tinte und Pastell kommen dazu.</p>
@@ -281,13 +294,20 @@
       var m=(s.von+s.bis)/2, p=pol(352,m);
       svg.appendChild(sv("text",{x:p[0],y:p[1]+9,"text-anchor":"middle","class":"sph"},s.name));
     });
-    var sorted=SEK.slice().sort(function(a,b){return a.winkel-b.winkel;});
-    sorted.forEach(function(s,i){
-      var prev=sorted[(i-1+sorted.length)%sorted.length], next=sorted[(i+1)%sorted.length];
-      var a0=(s.winkel+prev.winkel+(i===0?-360:0))/2, a1=(s.winkel+next.winkel+(i===sorted.length-1?360:0))/2;
-      svg.appendChild(sv("path",{d:ring(262,300,a0,a1),fill:s.stufen.leuchten,"class":"sektor"}));
-      var p=pol(281,s.winkel);
-      svg.appendChild(sv("text",{x:p[0],y:p[1]+8,"text-anchor":"middle","class":"nr"},String(s.nr)));
+    // Dreizehn gleiche Felder: zwölf Sektionen und das Goetheanum, nach Farbton geordnet.
+    var g=D.sonder.filter(function(x){return x.key==="goetheanum";})[0];
+    var felder=SEK.map(function(s){return {w:s.winkel,hex:s.stufen.leuchten,txt:String(s.nr),on:s.selbstlos?"var(--ink)":"var(--on-accent)"};});
+    if(g) felder.push({w:g.winkel,hex:g.hex,txt:"G",on:"var(--on-accent)"});
+    felder.sort(function(a,b){return a.w-b.w;});
+    var n=felder.length, breite=360/n;
+    // Drehung so, dass die Allgemeine Sektion (Purpur) oben steht.
+    var iA=felder.findIndex(function(f){return f.txt===String((byKey.aas||{}).nr);}); if(iA<0) iA=0;
+    var start=-breite/2-iA*breite;
+    felder.forEach(function(f,i){
+      var a0=start+i*breite, a1=a0+breite, m=(a0+a1)/2;
+      svg.appendChild(sv("path",{d:ring(262,300,a0,a1),fill:f.hex,"class":"sektor"}));
+      var p=pol(281,m);
+      svg.appendChild(sv("text",{x:p[0],y:p[1]+8,"text-anchor":"middle","class":"nr",fill:f.on},f.txt));
     });
     D.anker.forEach(function(a){
       svg.appendChild(sv("path",{d:ring(180,250,a.winkel-30,a.winkel+30),fill:a.hex,"class":"sektor"}));
@@ -304,6 +324,13 @@
       var op=el("span","ort-p"); op.textContent=s.ort+" · "+s.para; d.appendChild(op);
       li.appendChild(d); lg.appendChild(li);
     });
+    D.sonder.forEach(function(x){
+      var li=el("li"); var n=el("span","n",x.key==="goetheanum"?"G":"B"); n.style.background=x.hex; li.appendChild(n);
+      var d=el("div"); var b=el("b"); b.textContent=x.name; d.appendChild(b);
+      var satz=el("span","satz"); satz.textContent=x.grund; d.appendChild(satz);
+      var op=el("span","ort-p"); op.textContent="Sonderidentität · "+x.hex.toUpperCase(); d.appendChild(op);
+      li.appendChild(d); lg.appendChild(li);
+    });
   }
 
   // --- Die Leiter --------------------------------------------------------------------
@@ -316,7 +343,7 @@
     var w=el("div","wer"); w.textContent=s.kurz; var sm=el("small"); sm.textContent=s.ort; w.appendChild(sm); z.appendChild(w);
     z.appendChild(stufe("hauch","--m-hauch","--m-tinte","Ab"));
     z.appendChild(stufe("pastell","--m-pastell","--ink","Ab"));
-    z.appendChild(stufe("leuchten","--m-leuchten","--on-accent","Ab",true));
+    z.appendChild(stufe("leuchten","--m-leuchten","--on-accent",s.selbstlos?"":"Ab",true));
     z.appendChild(stufe("kern","--m-kern","--on-accent","Ab"));
     z.appendChild(stufe("tinte","--paper","--m-tinte","Ab"));
     z.appendChild(stufe("grund","--m-grund","--on-accent","Ab"));
@@ -329,7 +356,8 @@
         if(f.classList.contains("pastell")) f.style.color=istDunkel()?"var(--on-accent)":"var(--ink)";
         var bg=paintHex(f), fg=paintHex(f,"color"), k=kontrast(fg,bg);
         var min=f.classList.contains("leuchten")?3:(f.classList.contains("pastell")&&!istDunkel()?7:(f.classList.contains("tinte")?5.5:4.5));
-        f.querySelector(".k").innerHTML="<span class=hx>"+bg.toUpperCase()+" · </span>"+fmt(k)+(k>=min?" ✓":" ✗");
+        var frei=f.classList.contains("leuchten")&&s.selbstlos, fest=f.classList.contains("leuchten")&&s.fest;
+        f.querySelector(".k").innerHTML="<span class=hx>"+bg.toUpperCase()+" · </span>"+(frei?"ohne Schrift":(fest?"etabliert "+fmt(k):fmt(k)+(k>=min?" ✓":" ✗")));
       });
     });
     var b=$("#bsp"); setze(b,byKey[b.dataset.key||SEK[0].key]);

@@ -17,7 +17,13 @@ Buntheit ist jetzt die Buntheit der Reihe. Je Sektion (Farbtöne der Fassung 3):
             als der Kern (≥ 5.5:1 auf Papier, ≥ 5:1 auf Karte, ≥ 4.5:1 auf Hauch).
   grund     matte tiefe Fläche für Hintergrundelemente und den Dunkelmodus –
             Weiss ≥ 5.5:1. Rezept «dunkel» von tools/sek-varianten.py.
-  pastell   helle bunte Fläche für Plakat, Folie, Wallpaper – --ink ≥ 7:1.
+  pastell   ganz zarte Fläche für Plakat, Folie, Wallpaper – --ink ≥ 7:1.
+            (Schwarz auf Farbe ist sonst verboten; nur die ganz zarte Färbung
+            trägt dunklen Text – Anmerkung 9. 9. 2026.)
+  gelb      selbstlos (Pädagogik): Leuchten ist reines Gelb, es trägt keine
+            Schrift und kein Weiss; Kern, Tinte und Grund sind das Haus-Schwarz
+            in warmem Grau. So bleibt Gold der Bühne. Die Landwirtschaft behält
+            ihr etabliertes Grün #63b145 als Leuchten exakt.
   hauch     ein Farbhauch über Papier – Chip, Hinweis. Rezept «hell».
 Dunkelmodus: hauch_dk und tinte_dk aus dem Rezept; leuchten, kern und grund
 sind markenfest; Pastell weicht dem Grund.
@@ -45,8 +51,11 @@ PAPER_DK, SOFT_DK, INK_DK = T["paper"][1], T["soft"][1], T["ink"][1]
 
 # Natürliche Buntheit je Sektion: die Buntheit von heute, auf die Reihe geglättet
 # (0.11 bis 0.17; Rot und Orange dürfen mehr, Meergrün und Violett weniger).
-C_NAT = {"aas": 0.14, "sbk": 0.14, "szw": 0.17, "js": 0.17, "hpise": 0.15, "lws": 0.15,
-         "nws": 0.11, "ps": 0.12, "srmk": 0.13, "mas": 0.14, "ssw": 0.14, "ms": 0.12}
+C_NAT = {"aas": 0.14, "sbk": 0.14, "szw": 0.17, "js": 0.17, "hpise": 0.15, "lws": 0.163,
+         "nws": 0.11, "ps": 0.17, "srmk": 0.13, "mas": 0.14, "ssw": 0.14, "ms": 0.12}
+# Feste Werte: etabliertes Grün der Landwirtschaft (Leuchten exakt); reines Gelb der Pädagogik.
+FEST_LEUCHTEN = {"lws": "#63b145", "ps": None}
+SELBSTLOS = {"ps"}   # keine eigenen Schriftstufen – Haus-Schwarz in warmem Grau
 
 STUFEN = [
     {"id": "hauch",    "name": "Hauch",    "traegt": "Lesetext in --ink und die Tinte",
@@ -82,8 +91,12 @@ def hellste(H, C, pruef):
 def stufen(key, H, kern, pos):
     C = C_NAT[key]
     leuchten = hellste(H, C, lambda x: sv.kontrast(x, WEISS) >= 3.0)
+    if key in SELBSTLOS:
+        leuchten = sv.from_oklch(0.88, C, H)              # reines Gelb, ohne Kontrastpflicht
+    elif FEST_LEUCHTEN.get(key):
+        leuchten = FEST_LEUCHTEN[key]
     hauch = sv.from_oklch(0.965, min(C * 0.16, 0.022), H)
-    pastell = sv.from_oklch(0.86, min(C * 0.6, 0.09), H)
+    pastell = sv.from_oklch(0.92, min(C * 0.45, 0.06), H)   # ganz zart: nur so darf --ink darauf stehen
     tinte = hellste(H, C + 0.03, lambda x: sv.kontrast(x, WEISS) >= 5.5 and sv.kontrast(x, SOFT) >= 5.0 and sv.kontrast(x, hauch) >= 4.5)
     kL, kC, _ = sv.to_oklch(kern)
     r = sv.REZEPT["dunkel"]
@@ -95,6 +108,10 @@ def stufen(key, H, kern, pos):
     tinte_dk = sv.from_oklch(r["L"] + r["spanne"] * pos, min(C * r["C_faktor"], r["C_max"]), H)
     while min(sv.kontrast(tinte_dk, PAPER_DK), sv.kontrast(tinte_dk, hauch_dk)) < 4.5:
         dL, dC, _ = sv.to_oklch(tinte_dk); tinte_dk = sv.from_oklch(dL + 0.01, dC, H)
+    if key in SELBSTLOS:
+        # Gelb tritt zurück: Schriftstufen im warmen Grau des Haus-Schwarz.
+        kern = sv.from_oklch(0.42, 0.02, H); tinte = INK; grund = sv.from_oklch(0.33, 0.015, H)
+        tinte_dk = INK_DK
     return {"hauch": hauch, "pastell": pastell, "leuchten": leuchten, "kern": kern, "tinte": tinte, "grund": grund,
             "hauch_dk": hauch_dk, "tinte_dk": tinte_dk}
 
@@ -113,7 +130,8 @@ def modell():
              "tinte_dk_papier": sv.kontrast(st["tinte_dk"], PAPER_DK), "tinte_dk_hauch": sv.kontrast(st["tinte_dk"], st["hauch_dk"])}
         out.append({"key": s["key"], "name": O[s["key"]]["name_de"], "kurz": O[s["key"]]["short_de"],
                     "ort": s["ort"], "satz": s.get("satz", ""), "para": s["para"], "H": s["H"], "winkel": sg.winkel(s["H"]),
-                    "heute": O[s["key"]]["color"].lower(), "stufen": st, "kontrast": {a: round(b, 2) for a, b in k.items()}})
+                    "heute": O[s["key"]]["color"].lower(), "selbstlos": s["key"] in SELBSTLOS, "fest": bool(FEST_LEUCHTEN.get(s["key"])),
+                    "stufen": st, "kontrast": {a: round(b, 2) for a, b in k.items()}})
     return out
 
 def main():
@@ -123,7 +141,7 @@ def main():
     schlecht = 0
     for m in M:
         s, k = m["stufen"], m["kontrast"]
-        ok = k["leuchten_papier"] >= 3 and k["weiss_kern"] >= 4.5 and k["tinte_papier"] >= 5.5 and k["tinte_karte"] >= 4.5 and k["tinte_hauch"] >= 4.5 \
+        ok = (k["leuchten_papier"] >= 3 or m["key"] in SELBSTLOS or FEST_LEUCHTEN.get(m["key"])) and k["weiss_kern"] >= 4.5 and k["tinte_papier"] >= 5.5 and k["tinte_karte"] >= 4.5 and k["tinte_hauch"] >= 4.5 \
              and k["weiss_grund"] >= 5.5 and k["ink_pastell"] >= 7 and k["tinte_pastell"] >= 3 and k["tinte_dk_papier"] >= 4.5 and k["tinte_dk_hauch"] >= 4.5
         schlecht += not ok
         print("%-6s %s %s %s %s %s %s | %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f %s" %
@@ -134,7 +152,7 @@ def main():
     if "--apply" in sys.argv:
         daten = {"$quelle": "GENERIERT von tools/sek-modell.py – nicht von Hand ändern.", "stufen": STUFEN, "sektionen": M,
                  "anker": [{"name": a[0], "winkel": a[1], "hex": sv.from_oklch(a[3], a[4], a[2])} for a in sg.ANKER],
-                 "sphaeren": sg.SPHAEREN,
+                 "sphaeren": sg.SPHAEREN, "sonder": [dict(x, winkel=sg.winkel(x["H"])) for x in sg.SONDER],
                  "theme": {"paper": [WEISS, PAPER_DK], "soft": [SOFT, SOFT_DK], "ink": [INK, INK_DK]}}
         js = "/* GENERIERT von tools/sek-modell.py – nicht von Hand ändern. */\nwindow.GOE_SEK_MODELL = " + json.dumps(daten, ensure_ascii=False, indent=1) + ";\n"
         alt = open(OUT_JS, encoding="utf-8").read() if os.path.exists(OUT_JS) else ""

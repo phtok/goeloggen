@@ -21,10 +21,15 @@ Drei Vorgaben des Auftraggebers (9. September 2026):
      Familie (Indigo → Blaugrün, weil fünf Sektionen zwischen Blau und Blaurot
      standen); Musik/Sprache rückt ins lichtere Blau, alles andere behält
      seine Farbigkeit und wird nur tiefer.
-  4. Kein Gelb (Anmerkung 9. 9. 2026): Gold gehört der Bühne, und ein Gelb,
-     das Weiss trägt, wirkt braun – Goethe selbst: ins Minus gezogen macht es
-     ‹eine sehr unangenehme Wirkung› (§ 770). Der Kreis bleibt zwischen Rotgelb
-     und Grün leer.
+  4. Gelb, selbstlos (Anmerkung 9. 9. 2026): Gelb leuchtet, trägt aber keine
+     Schrift und kein Weiss – ein Gelb, das Weiss trägt, wäre Ocker oder Gold,
+     und Gold gehört der Bühne (Goethe § 770: ins Minus gezogen ‹eine sehr
+     unangenehme Wirkung›). Die Pädagogik trägt es; ihre Schriftstufen sind
+     das Haus-Schwarz.
+  5. Sonderidentitäten bleiben frei: das Goetheanum-Blau (--blue, #0061a9)
+     bekommt im Kreis ein eigenes Feld, keine Sektion liegt darauf; Bühnengold
+     bleibt ohne Nachbarn (kein dunkles Gelb). Die Landwirtschaft behält ihr
+     etabliertes Grün #63b145 exakt.
 
 Die drei Gestalten entstehen mit DEMSELBEN Rezept wie die heutigen
 Sektionsfarben (tools/sek-varianten.py wird importiert): dunkel (Fläche für
@@ -68,12 +73,16 @@ SPHAEREN = [
     {"id": "sinnlichkeit", "name": "Sinnlichkeit", "von": 180, "bis": 270},
     {"id": "phantasie",    "name": "Phantasie",    "von": 270, "bis": 360},
 ]
+# Sonderidentitäten: stehen im Kreis, gehören keiner Sektion (Anmerkung 9. 9. 2026).
+SONDER = [{"key": "goetheanum", "name": "Goetheanum", "hex": "#0061a9", "H": 255, "grund": "Das Markenblau des Ganzen – kein Sektionston liegt darauf."},
+          {"key": "buehne", "name": "Bühne", "hex": "#968250", "H": 85, "grund": "Das Gold der Bühne – darum kein dunkles Gelb bei den Sektionen."}]
+
 # Gruppen für die Ordnung: Goethes eigene Gliederung des Kreises.
 GRUPPEN = [
     {"id": "purpur", "name": "Purpur – die Steigerung",
      "desc": "Oben, wo sich beide Seiten des Kreises vereinigen. Goethe: ‹in der Vereinigung der gesteigerten Pole eine eigentliche Beruhigung› (§ 794)."},
-    {"id": "warm",   "name": "Die warme Seite – Gelbrot, Rotgelb",
-     "desc": "Goethes Plusseite: die Farben, die ‹regsam, lebhaft, strebend› stimmen (§ 764) – vom Purpurrot bis zum Orange. Ohne Gelb: ein Gelb, das Weiss trägt, wäre ‹ins Minus gezogen› (§ 770), und Gold gehört der Bühne."},
+    {"id": "warm",   "name": "Die warme Seite – Gelbrot, Rotgelb, Gelb",
+     "desc": "Goethes Plusseite: die Farben, die ‹regsam, lebhaft, strebend› stimmen (§ 764) – vom Purpurrot bis zum Gelb. Gelb ist selbstlos: es leuchtet und trägt keine Schrift, damit es nie ‹ins Minus gezogen› wird (§ 770) und Gold der Bühne bleibt."},
     {"id": "gruen",  "name": "Grün – die Vereinigung",
      "desc": "Unten, wo Gelb und Blau sich real mischen und ‹das Auge und das Gemüt› ruhen (§ 802)."},
     {"id": "kuehl",  "name": "Die kühle Seite – Blau, Rotblau",
@@ -86,7 +95,7 @@ GRUPPEN = [
 # der Löser die hellste Stufe, die Weiss trägt. «grund» ist der Satz für die
 # Seite, «para» die Belegstelle, «status» die Rückmeldung der Sektion.
 ORDNUNG = [
-    {"key": "aas",   "ort": "Purpur",            "gruppe": "purpur", "H": 335, "C": 0.160, "L": 0.55,
+    {"key": "aas",   "ort": "Purpur",            "gruppe": "purpur", "H": 340, "C": 0.160, "L": 0.55,
      "satz": "Das Ganze: Purpur ‹enthält alle andern Farben›.",
      "grund": "Purpur ist für Goethe die Farbe, die ‹teils actu, teils potentia alle andern Farben enthalte›: der Scheitel des Kreises, in dem sich die gesteigerten Pole vereinigen. Die Sektion, die das Ganze trägt, steht dort.",
      "para": "§§ 793–794", "status": "offen"},
@@ -98,15 +107,19 @@ ORDNUNG = [
      "satz": "Die Tat: ‹die aktive Seite in ihrer höchsten Energie›.",
      "grund": "Gelbrot ist die Farbe des Tuns: ‹Die aktive Seite ist hier in ihrer höchsten Energie.› Sozialwissenschaft als Wille, im Sozialen etwas zu bewirken.",
      "para": "§ 775", "status": "offen"},
-    {"key": "js",    "ort": "Rotgelb",           "gruppe": "warm",   "H": 35,  "C": 0.170,
+    {"key": "js",    "ort": "Rotgelb",           "gruppe": "warm",   "H": 40,  "C": 0.170,
      "satz": "Die Glut: ‹Wärme und Wonne›.",
      "grund": "Im Rotgelb ‹wächst die Farbe an Energie und erscheint mächtiger und herrlicher›; es gibt ‹das Gefühl von Wärme und Wonne› und ist ‹die Farbe der höhern Glut› – die Jugend.",
      "para": "§§ 772–773", "status": "offen"},
-    {"key": "hpise", "ort": "Gelb, zum Rotgelb", "gruppe": "warm",   "H": 55,  "C": 0.140,
+    {"key": "hpise", "ort": "Rotgelb, zum Gelb", "gruppe": "warm",   "H": 60,  "C": 0.140,
      "satz": "Die Wärme: ‹warm und behaglich›.",
      "grund": "Gelb macht ‹einen durchaus warmen und behaglichen Eindruck›, und ins Rotgelb gesteigert ist es ‹bei Umgebungen angenehm›: Wärme, die aufnimmt und Raum gibt.",
      "para": "§§ 768, 773", "status": "offen"},
-    {"key": "lws",   "ort": "Grün",              "gruppe": "gruen",  "H": 140, "C": 0.150,
+    {"key": "ps",    "ort": "Gelb",             "gruppe": "warm",   "H": 97,  "C": 0.150,
+     "satz": "Das Licht: ‹die nächste Farbe am Licht›.",
+     "grund": "Gelb ist ‹die nächste Farbe am Licht›, ‹heiter, munter, sanft reizend› – und selbstlos: es leuchtet, trägt aber keine Schrift und kein Weiss. Wo Text steht, tritt es zurück und lässt das Haus-Schwarz sprechen. Die Kindheit, das Lernen.",
+     "para": "§§ 765–766", "status": "offen"},
+    {"key": "lws",   "ort": "Grün",              "gruppe": "gruen",  "H": 138, "C": 0.150,
      "satz": "Die Erde: ‹reale Befriedigung›.",
      "grund": "In Grün findet das Auge ‹eine reale Befriedigung›; wenn die beiden Mutterfarben ‹sich in der Mischung genau das Gleichgewicht halten›, ruht ‹das Auge und das Gemüt› darauf ‹wie auf einem Einfachen›. Erde und Wachstum.",
      "para": "§ 802", "status": "offen"},
@@ -114,23 +127,19 @@ ORDNUNG = [
      "satz": "Die Anschauung: die Vereinigung der Urfarben Gelb und Blau.",
      "grund": "Grün entsteht, wenn Gelb und Blau ‹gleich bei ihrem ersten Erscheinen› zusammenkommen – die beiden Urfarben, die Goethe aus Licht und Finsternis ableitet. Wo Grün ins Blau übergeht, nennt er das Meergrün ‹eine liebliche Farbe›. Die Sektion, die seine Naturforschung weiterführt.",
      "para": "§§ 785, 801", "status": "offen"},
-    {"key": "ps",    "ort": "Blau, zum Grün",    "gruppe": "kuehl",  "H": 205, "C": 0.110,
-     "satz": "Das Wachsen: Ruhe, aus der Kraft wird.",
-     "grund": "Wo Grün ins Blau übergeht: die ‹reale Befriedigung› des Grün (§ 802) wird zur ‹Energie› des Blau (§ 779) – Ruhe, aus der Kraft wird. Das Kind, das wächst; die Pädagogik.",
-     "para": "§§ 779, 802", "status": "offen"},
-    {"key": "srmk",  "ort": "Blau, licht",       "gruppe": "kuehl",  "H": 232, "C": 0.115,
+        {"key": "srmk",  "ort": "Blau, zum Grün",       "gruppe": "kuehl",  "H": 225, "C": 0.115,
      "satz": "Der Klang: ‹Reiz und Ruhe›.",
      "grund": "Blau ‹ist als Farbe eine Energie›; es hat ‹etwas Widersprechendes von Reiz und Ruhe im Anblick›, und wir sehen es gern an, ‹weil es uns nach sich zieht›. Bewegung in der Ruhe: Sprache, Musik, Eurythmie.",
      "para": "§§ 779, 781", "status": "offen"},
-    {"key": "mas",   "ort": "Blau",              "gruppe": "kuehl",  "H": 258, "C": 0.150, "L": 0.47,
+    {"key": "mas",   "ort": "Blau, tief",              "gruppe": "kuehl",  "H": 275, "C": 0.150, "L": 0.47,
      "satz": "Der Himmel: ‹die fernen Berge blau›.",
      "grund": "‹Wie wir den hohen Himmel, die fernen Berge blau sehen›: Blau ist die Farbe des Himmels und der Ferne – Mathematik und Astronomie.",
      "para": "§ 780", "status": "offen"},
-    {"key": "ssw",   "ort": "Blau, zum Rotblau", "gruppe": "kuehl",  "H": 282, "C": 0.150, "L": 0.54,
+    {"key": "ssw",   "ort": "Blaurot", "gruppe": "kuehl",  "H": 292, "C": 0.150, "L": 0.54,
      "satz": "Das Lesen: ‹fortgehen› und ‹ausruhen›.",
      "grund": "Blau ‹steigert sich sehr sanft ins Rote›; mit dieser Farbe wünscht man ‹immer fortzugehen› und dabei ‹einen Punkt zu finden, wo man ausruhen könnte› – die Bewegung des Lesens. Sprache, Dichtung, Geistesgeschichte.",
      "para": "§§ 787–788", "status": "offen"},
-    {"key": "ms",    "ort": "Rotblau",           "gruppe": "kuehl",  "H": 300, "C": 0.135, "L": 0.50,
+    {"key": "ms",    "ort": "Rotblau",           "gruppe": "kuehl",  "H": 312, "C": 0.135, "L": 0.50,
      "satz": "Das Wirksame: ‹erhält dadurch etwas Wirksames›.",
      "grund": "Ins Rote gesteigert ‹erhält› das Blau ‹etwas Wirksames›, sagt Goethe – Wirksamkeit ist das Wort der Heilkunst. Die Medizin behält ihr Violett und steht auf dem Kreis zwischen Blau und Purpur.",
      "para": "§ 787", "status": "offen"},
