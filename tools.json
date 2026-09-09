@@ -635,6 +635,17 @@
       "such": "Goethe Farbenkreis Varianten Vergleich Kontrastgrenze leuchtend pastell gleichmässig Ordnung Sektionen Labor"
     },
     {
+      "slug": "sektionsfarben-modell",
+      "cat": "labor",
+      "status": "entwurf",
+      "tag": "Strategie",
+      "title": "Farbmodell der Sektionen",
+      "short": "Farbmodell",
+      "href": "sektionsfarben-modell.html",
+      "desc": "Fünf Stufen je Sektion, jede mit einer Aufgabe: Leuchten für die Erkennung, Tinte für die Schrift, Grund, Pastell und Hauch als Gegenraum – mit Anwendungsfällen, Regeln und Beispielen. Zur Entscheidung.",
+      "such": "Farbmodell Sektionsfarben Stufen Leuchten Tinte Grund Pastell Hauch Anwendungsfälle Kontrast Erkennungsfarbe Labor"
+    },
+    {
       "slug": "seelenkalender",
       "cat": "labor",
       "status": "intern",
