@@ -1,0 +1,223 @@
+<!doctype html>
+<!-- =============================================================================
+     Goethe-Farbkreis: Varianten – Übersicht zur Suche (Labor, Strategie)
+     -----------------------------------------------------------------------------
+     Kompakter Vergleich, keine ganze Seite je Variante: Paletten an der
+     Kontrastgrenze (Weiss auf der Basis und Basis auf Papier ≥ 4.5:1), zwei
+     3:1-Reihen als Massstab, die Verteilung auf dem Kreis und drei Ordnungen.
+     Werte aus assets/sek-goethe-varianten.js (tools/sek-goethe-varianten.py).
+     Die Farbfelder sind Vorschlagsfarben (Artefakte), das Skript setzt sie
+     direkt; alles Übrige kommt aus den Tokens (DS02/DS07, B05).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Goethe-Farbkreis: Varianten · Goetheanum</title>
+<meta name="description" content="Übersicht zur Suche: Paletten an der Kontrastgrenze, Verteilung auf dem Kreis und drei Ordnungen der Sektionen – kompakt zum Vergleich." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  .artkopf{padding-block:clamp(36px,6vw,64px) var(--s6);max-width:min(72ch,100%)}
+  .artkopf h1{max-width:22ch}
+  .artkopf .lede{margin-top:var(--s4)}
+  .artkopf .byline{margin-top:var(--s4)}
+  .grp{margin-top:var(--s8)}
+  .grp > h2{font-size:var(--t-h2);margin-bottom:var(--s2)}
+  .grp > .desc{max-width:62ch}
+  .grp > .prose{margin-top:var(--s4)}
+
+  /* --- Paletten: eine Zeile je Variante, zwölf Felder ------------------------- */
+  .pal{margin-top:var(--s6);padding-top:var(--s4);border-top:1px solid var(--line)}
+  .pal .kopf{display:flex;flex-wrap:wrap;gap:var(--s1) var(--s3);align-items:baseline}
+  .pal .kopf h3{font-size:var(--t-h3);margin:0}
+  .pal .kopf .grenze{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:2px var(--s2)}
+  .pal .desc{max-width:62ch;margin-top:var(--s1)}
+  .felder{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s1);margin-top:var(--s3)}
+  @media(max-width:900px){.felder{grid-template-columns:repeat(6,1fr)}}
+  @media(max-width:520px){.felder{grid-template-columns:repeat(4,1fr)}}
+  .feld{display:flex;flex-direction:column;gap:2px;min-width:0}
+  /* Das Farbfeld trägt Weiss (B01); darunter steht dieselbe Farbe als Schrift auf Papier. */
+  .feld .flaeche{height:64px;border-radius:var(--r-control);display:flex;align-items:flex-end;padding:var(--s1) var(--s2);
+    color:var(--on-accent);font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body)}
+  .feld .als-schrift{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-small);line-height:1.15;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .feld .k{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .feld .k b{font-weight:600;color:var(--ink)}
+  .feld .k .nein{color:var(--bad)}
+  /* Lage auf dem Kreis, abgerollt (0 = Purpur … 180 = Grün … 360 = Purpur) */
+  .lage{position:relative;height:28px;border-radius:var(--r-pill);background:var(--soft);border:1px solid var(--line);margin-top:var(--s3)}
+  .lage i{position:absolute;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;border:2px solid var(--paper);box-shadow:0 0 0 1px var(--line)}
+  .skala{display:flex;justify-content:space-between;font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s1);padding:0 2px}
+  @media(max-width:600px){.skala span:nth-child(2n){display:none}}
+
+  /* --- Physik der Grenze -------------------------------------------------------- */
+  .tabelle{overflow-x:auto;margin-top:var(--s4)}
+  table.gz{border-collapse:collapse;min-width:420px;font-family:var(--font-text);font-size:var(--t-small)}
+  table.gz th{text-align:left;font-weight:600;color:var(--muted);padding:var(--s2) var(--s3);border-bottom:1px solid var(--line)}
+  table.gz td{padding:var(--s2) var(--s3);border-bottom:1px solid var(--line-soft)}
+  table.gz td.num,table.gz th.num{text-align:right;font-variant-numeric:tabular-nums}
+
+  /* --- Ordnungen: kleine Ringe --------------------------------------------------- */
+  .ordnungen{display:grid;gap:var(--s5);margin-top:var(--s4)}
+  @media(min-width:900px){.ordnungen{grid-template-columns:repeat(3,1fr)}}
+  .ord{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s4);display:flex;flex-direction:column;gap:var(--s3)}
+  .ord h3{font-size:var(--t-h3);margin:0}
+  .ord svg{display:block;width:100%;max-width:280px;margin:0 auto;font-family:var(--font-text)}
+  .ord svg .nr{font-size:22px;font-weight:600;fill:var(--on-accent)}
+  .ord ol{list-style:none;margin:0;padding:0;columns:2;column-gap:var(--s3);font-family:var(--font-text);font-size:var(--t-small);line-height:1.5}
+  .ord ol li{break-inside:avoid;display:flex;gap:var(--s2);align-items:baseline}
+  .ord ol .n{font-variant-numeric:tabular-nums;min-width:2ch;text-align:right;font-weight:600}
+  .ord svg .sektor{stroke:var(--paper);stroke-width:2}
+  .ord .lesart{font-family:var(--font-text);font-size:var(--t-small);line-height:1.55;flex:1}
+  .ord .bewegt{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
+  .ord .bewegt b{color:var(--ink);font-weight:600}
+
+  .fineprint{margin-top:var(--s8);color:var(--muted);font-size:var(--t-small);max-width:64ch;font-family:var(--font-text);line-height:1.6}
+  .fineprint b{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-active="sektionsfarben-goethe-varianten" data-variant="werkzeug"
+        data-onpage="Paletten:#paletten|Grenze:#grenze|Ordnungen:#ordnungen|Lesart:#lesart"></script>
+
+<main class="wrap">
+  <div class="artkopf">
+    <span class="kicker">Labor · Farbkonzept</span>
+    <h1>Varianten an der Kontrastgrenze</h1>
+    <p class="lede">Übersicht zur Suche: dieselben zwölf Sektionen in mehreren Paletten, alle an der
+      Grenze, die die erste Vorgabe zieht – Weiss auf der Basis und die Basis als Schrift auf
+      Papier. Dazu die Verteilung auf dem Kreis und drei Ordnungen.</p>
+    <p class="byline"><b>Entwurf</b> · 9. September 2026 · zur Suche, nicht zur Entscheidung</p>
+  </div>
+
+  <section class="grp" id="paletten">
+    <h2>Paletten</h2>
+    <p class="desc">Jedes Feld trägt Weiss; darunter steht dieselbe Farbe als Schrift auf Papier.
+      Die Zahlen sind die Kontraste auf Weiss und auf der Karte. Der Streifen zeigt die Lage auf
+      Goethes Kreis, abgerollt von Purpur über Grün zurück zu Purpur.</p>
+    <div id="pal"></div>
+  </section>
+
+  <section class="grp" id="grenze">
+    <h2>Die Physik der Grenze</h2>
+    <p class="desc">4.5:1 auf Weiss heisst: die Farbe darf höchstens ein Fünftel so hell leuchten wie
+      das Papier. Weil Grün die Leuchtdichte trägt, ist die hellste erlaubte Stufe je Farbton
+      verschieden – Gelb und Grün bleiben tief, Blau und Purpur dürfen höher. Pastell und 4.5:1
+      schliessen sich für eine einzige Farbe aus; leuchtend heisst an der Grenze: volle Buntheit.</p>
+    <div class="tabelle"><table class="gz" id="gz">
+      <thead><tr><th>Goethes Farbe</th><th class="num">Hellste Stufe bei 4.5:1</th><th class="num">bei 3:1</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <p class="meta">Stufe = Helligkeit L in OKLCH (0 schwarz, 1 weiss). Die 3:1-Grenze gilt nach WCAG nur
+      für grosse Schrift ab 24 px und für Ränder.</p>
+  </section>
+
+  <section class="grp" id="ordnungen">
+    <h2>Ordnungen</h2>
+    <p class="desc">Drei Lesarten des Kreises, jede mit zwölf gleichen Plätzen. Wo eine Sektion mehr als
+      einen Platz von der Fassung 2 entfernt liegt, ist sie genannt – über diese wenigen entscheidet
+      die Ordnung wirklich.</p>
+    <div class="ordnungen" id="ord"></div>
+  </section>
+
+  <section class="grp" id="lesart">
+    <h2>Lesart</h2>
+    <div class="prose">
+      <p><b>Leuchtender geht nur bis zur Grenze.</b> Die Reihe ‹Leuchtend, Grenze Karte› ist das Hellste
+        und Bunteste, das die Vorgabe erlaubt. Alles darüber (die 3:1-Reihen) trägt keine kleine
+        Schrift mehr und braucht die Tinte als zweite Gestalt – das ist das heutige System der
+        drei Gestalten.</p>
+      <p><b>Pastell wird an der Grenze staubig.</b> Weniger Buntheit bei gleicher Tiefe ergibt keine
+        hellen Töne, sondern gedämpfte. Wer Pastell will, entscheidet sich gegen die eine Farbe für
+        beide Richtungen.</p>
+      <p><b>Gleichmässig verteilt heisst weiter von heute weg.</b> Die 30°-Reihe hält die Reihenfolge
+        von heute und rückt jede Sektion auf ihren Platz; die Verschiebung bleibt klein, bis auf
+        Pädagogik und Musik, die schon in der Fassung 2 wandern.</p>
+      <p><b>Die Ordnungen unterscheiden sich in wenigen Sektionen.</b> Goethes Wirkung und die Ordnung
+        nach Aufgabe fallen fast zusammen; offen bleiben Medizin (Violett oder Blau), Musik und
+        Sprache (Blau oder Blaurot) und die bildenden Künste (Purpurrot oder Lila).</p>
+    </div>
+  </section>
+
+  <p class="fineprint">
+    <b>Werte.</b> Gerechnet in OKLCH (tools/sek-goethe-varianten.py, Daten in assets/sek-goethe-varianten.js);
+    Kontraste nach WCAG gegen Weiss und gegen die Kartenfläche des Hellmodus. Die Laborseite mit
+    Herleitung und Belegstellen: <a href="sektionsfarben-goethe.html">Sektionen auf Goethes Farbenkreis</a>.
+  </p>
+</main>
+
+<script src="assets/sek-goethe-varianten.js"></script>
+<script>
+(function(){
+  "use strict";
+  var D=window.GOE_SEK_GOETHE_VARIANTEN; if(!D) return;
+  var $=function(s,r){return (r||document).querySelector(s);};
+  var el=function(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+  var NR={}; D.keys.forEach(function(k,i){NR[k]=i+1;});
+  var KURZ={aas:"Allgemeine",sbk:"Bildende Künste",szw:"Sozialwissenschaft",js:"Jugend",hpise:"Heilpädagogik",ps:"Pädagogik",
+            lws:"Landwirtschaft",nws:"Naturwissenschaft",srmk:"Musik, Sprache",mas:"Mathematik",ssw:"Schöne Wissenschaften",ms:"Medizin"};
+  function fmt(k){return (Math.round(k*10)/10).toFixed(1);}
+
+  // --- Paletten ------------------------------------------------------------------
+  function palette(p){
+    var w=el("div","pal"); w.id="pal-"+p.id;
+    var kopf=el("div","kopf"); kopf.appendChild(el("h3",null,p.titel));
+    kopf.appendChild(el("span","grenze","Grenze "+p.grenze)); w.appendChild(kopf);
+    w.appendChild(el("p","desc",p.desc));
+    var f=el("div","felder");
+    p.farben.forEach(function(c){
+      var d=el("div","feld");
+      var fl=el("div","flaeche",String(NR[c.key])); fl.style.background=c.hex; fl.title=D.namen[c.key]+" "+c.hex.toUpperCase();
+      d.appendChild(fl);
+      var s=el("div","als-schrift"); s.textContent=KURZ[c.key]; s.title=D.namen[c.key]; s.style.color=c.hex; d.appendChild(s);
+      var k=el("div","k"); k.innerHTML=(c.weiss>=4.5?"<b>":"<span class=nein>")+fmt(c.weiss)+(c.weiss>=4.5?"</b>":"</span>")+" · "+(c.soft>=4.5?fmt(c.soft):"<span class=nein>"+fmt(c.soft)+"</span>");
+      d.appendChild(k); f.appendChild(d);
+    });
+    w.appendChild(f);
+    var l=el("div","lage");
+    p.farben.forEach(function(c){var i=el("i"); i.style.left=(c.winkel/360*100)+"%"; i.style.background=c.hex; i.title=D.namen[c.key]; l.appendChild(i);});
+    w.appendChild(l);
+    w.appendChild(el("div","skala","<span>Purpur</span><span>Gelbrot</span><span>Gelb</span><span>Grün</span><span>Blau</span><span>Blaurot</span><span>Purpur</span>"));
+    return w;
+  }
+  D.paletten.forEach(function(p){$("#pal").appendChild(palette(p));});
+
+  // --- Grenzen ---------------------------------------------------------------------
+  D.grenzen.forEach(function(g){
+    var tr=el("tr"); var a=el("td"); a.textContent=g.name; tr.appendChild(a);
+    tr.appendChild(el("td","num",g.L45.toFixed(2))); tr.appendChild(el("td","num",g.L3.toFixed(2)));
+    $("#gz tbody").appendChild(tr);
+  });
+
+  // --- Ordnungen: kleine Ringe -----------------------------------------------------
+  var NS="http://www.w3.org/2000/svg", CX=140, CY=140;
+  function pol(r,deg){var a=(deg-90)*Math.PI/180;return [CX+r*Math.cos(a),CY+r*Math.sin(a)];}
+  function ring(r1,r2,a0,a1){
+    var p0=pol(r2,a0),p1=pol(r2,a1),p2=pol(r1,a1),p3=pol(r1,a0);
+    return "M"+p0.join(",")+" A"+r2+","+r2+" 0 0 1 "+p1.join(",")+" L"+p2.join(",")+" A"+r1+","+r1+" 0 0 0 "+p3.join(",")+"Z";
+  }
+  function sv(t,attrs,txt){var e=document.createElementNS(NS,t);for(var k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;return e;}
+  function ordnung(o){
+    var w=el("div","ord"); w.appendChild(el("h3",null,o.titel));
+    var svg=sv("svg",{viewBox:"0 0 280 280",role:"img"}); svg.appendChild(sv("title",{},o.titel));
+    var ol=el("ol");
+    o.plaetze.forEach(function(p){
+      svg.appendChild(sv("path",{d:ring(84,136,p.winkel-15,p.winkel+15),fill:p.hex,"class":"sektor"}));
+      var q=pol(110,p.winkel); svg.appendChild(sv("text",{x:q[0],y:q[1]+8,"text-anchor":"middle","class":"nr"},String(NR[p.key])));
+      var li=el("li"); li.appendChild(el("span","n",String(NR[p.key]))); li.appendChild(document.createTextNode(KURZ[p.key])); ol.appendChild(li);
+    });
+    w.appendChild(svg); w.appendChild(ol);
+    w.appendChild(el("p","lesart",o.lesart));
+    var b=el("p","bewegt"); b.innerHTML=o.bewegt.length?"<b>Bewegt gegenüber Fassung 2:</b> "+o.bewegt.map(function(k){return D.namen[k];}).join(", "):"<b>Die Fassung 2</b> – Bezugspunkt.";
+    w.appendChild(b);
+    return w;
+  }
+  D.ordnungen.forEach(function(o){$("#ord").appendChild(ordnung(o));});
+})();
+</script>
+</body>
+</html>
