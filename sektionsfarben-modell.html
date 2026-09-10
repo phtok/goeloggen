@@ -44,15 +44,14 @@
   .kreis{display:block;width:min(100%,760px);min-width:560px;margin:0 auto;font-family:var(--font-text)}
   .kreis .sph{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:26px;fill:var(--ink)}
   .kreis .ort{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:22px;fill:var(--on-accent)}
-  .kreis .nr{font-weight:600;font-size:23px;fill:var(--on-accent)}
-  .kreis .frei{fill:var(--ink)}
+  .kreis .nr{font-weight:600;font-size:19px;fill:var(--on-accent)}
   .kreis .mitte{font-size:20px;fill:var(--muted)}
   .kreis .sep{stroke:var(--line);stroke-width:2}
   .kreis .sektor{stroke:var(--paper);stroke-width:2}
   @media(max-width:600px){
     .kreis{min-width:0}
     .kreis .sph,.kreis .ort,.kreis .mitte{display:none}
-    .kreis .nr{font-size:40px}
+    .kreis .nr{font-size:32px}
   }
   /* Legende: Nummer, Sektion, Ort, das kürzeste Argument */
   .legende{list-style:none;margin:var(--s5) 0 0;padding:0;display:grid;gap:var(--s2) var(--s5)}
@@ -322,11 +321,11 @@
     D.sphaeren.forEach(function(s){
       var l0=pol(306,s.von), l1=pol(336,s.von);
       svg.appendChild(sv("line",{x1:l0[0],y1:l0[1],x2:l1[0],y2:l1[1],"class":"sep"}));
-      var m=(s.von+s.bis)/2, p=pol(392,m);   // aussen genug, dass die freie Nummer des Gelb Platz hat
+      var m=(s.von+s.bis)/2, p=pol(352,m);
       svg.appendChild(sv("text",{x:p[0],y:p[1]+9,"text-anchor":"middle","class":"sph"},s.name));
     });
     // Zwölf gleiche Felder, nach Farbton geordnet. Die Sonderidentitäten (Goetheanum-Blau, Bühnengold) stehen nicht im Kreis.
-    var felder=SEK.map(function(s){return {w:s.winkel,hex:s.stufen.leuchten,txt:String(s.nr),frei:!!s.selbstlos};});
+    var felder=SEK.map(function(s){return {w:s.winkel,hex:s.stufen.leuchten,txt:String(s.nr)};});
     felder.sort(function(a,b){return a.w-b.w;});
     var n=felder.length, breite=360/n;
     // Drehung so, dass die Allgemeine Sektion (Purpur) oben steht.
@@ -335,14 +334,14 @@
     felder.forEach(function(f,i){
       var a0=start+i*breite, a1=a0+breite, m=(a0+a1)/2;
       svg.appendChild(sv("path",{d:ring(262,300,a0,a1),fill:f.hex,"class":"sektor"}));
-      // Kein Schwarz auf Farbe: die Nummer des selbstlosen Gelb steht neben dem Feld auf Papier.
-      var p=pol(f.frei?318:281,m);
-      svg.appendChild(sv("text",{x:p[0],y:p[1]+8,"text-anchor":"middle","class":"nr"+(f.frei?" frei":""),fill:f.frei?"var(--ink)":"var(--on-accent)"},f.txt));
+      // Alle Nummern in Weiss im Bogen, auch auf dem Gelb (Beschluss 10. 9. 2026: kein Schwarz neben dem Kreis).
+      var p=pol(281,m);
+      svg.appendChild(sv("text",{x:p[0],y:p[1]+7,"text-anchor":"middle","class":"nr"},f.txt));
     });
     D.anker.forEach(function(a){
       svg.appendChild(sv("path",{d:ring(180,250,a.winkel-30,a.winkel+30),fill:a.hex,"class":"sektor"}));
-      var frei=a.name==="Gelb", p=pol(frei?160:215,a.winkel);
-      svg.appendChild(sv("text",{x:p[0],y:p[1]+8,"text-anchor":"middle","class":"ort"+(frei?" frei":""),fill:frei?"var(--ink)":"var(--on-accent)"},a.name));
+      var p=pol(215,a.winkel);
+      svg.appendChild(sv("text",{x:p[0],y:p[1]+8,"text-anchor":"middle","class":"ort"},a.name));
     });
     svg.appendChild(sv("text",{x:CX,y:CY-8,"text-anchor":"middle","class":"mitte"},"Purpur oben"));
     svg.appendChild(sv("text",{x:CX,y:CY+18,"text-anchor":"middle","class":"mitte"},"warme Seite rechts"));
