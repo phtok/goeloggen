@@ -22,13 +22,14 @@ Drei Vorgaben des Auftraggebers (9. September 2026):
      standen); Musik/Sprache rückt ins lichtere Blau, alles andere behält
      seine Farbigkeit und wird nur tiefer.
   4. Gelb, selbstlos (Anmerkung 9. 9. 2026): Gelb leuchtet, trägt aber keine
-     Schrift und kein Weiss – ein Gelb, das Weiss trägt, wäre Ocker oder Gold,
-     und Gold gehört der Bühne (Goethe § 770: ins Minus gezogen ‹eine sehr
-     unangenehme Wirkung›). Die Pädagogik trägt es; ihre Schriftstufen sind
-     das Haus-Schwarz.
+     Schrift und kein Weiss. Die Pädagogik trägt es; ihre Schriftstufen sind
+     ein dunkles, sattes Gelb (Anmerkung 10. 9. 2026: nicht Schwarz), leicht
+     zum Grün gerückt, damit es nicht ins Braun kippt (Goethe § 770) – und
+     klar vom gedeckten Bühnengold getrennt.
   5. Sonderidentitäten bleiben frei: das Goetheanum-Blau (--blue, #0061a9)
-     bekommt im Kreis ein eigenes Feld, keine Sektion liegt darauf; Bühnengold
-     bleibt ohne Nachbarn (kein dunkles Gelb). Die Landwirtschaft behält ihr
+     bekommt im Kreis ein eigenes Feld, keine Sektion liegt darauf; das
+     Bühnengold ist gedeckt und rötlich, das dunkle Gelb der Pädagogik satt
+     und grünlich – sie liegen auseinander. Die Landwirtschaft behält ihr
      etabliertes Grün #63b145 exakt.
 
 Die drei Gestalten entstehen mit DEMSELBEN Rezept wie die heutigen
@@ -75,14 +76,14 @@ SPHAEREN = [
 ]
 # Sonderidentitäten: stehen im Kreis, gehören keiner Sektion (Anmerkung 9. 9. 2026).
 SONDER = [{"key": "goetheanum", "name": "Goetheanum", "hex": "#0061a9", "H": 255, "grund": "Das Markenblau des Ganzen – kein Sektionston liegt darauf."},
-          {"key": "buehne", "name": "Bühne", "hex": "#968250", "H": 85, "grund": "Das Gold der Bühne – darum kein dunkles Gelb bei den Sektionen."}]
+          {"key": "buehne", "name": "Bühne", "hex": "#968250", "H": 85, "grund": "Das Gold der Bühne – gedeckt und rötlich; das dunkle Gelb der Sektionen bleibt satt und grünlich."}]
 
 # Gruppen für die Ordnung: Goethes eigene Gliederung des Kreises.
 GRUPPEN = [
     {"id": "purpur", "name": "Purpur – die Steigerung",
      "desc": "Oben, wo sich beide Seiten des Kreises vereinigen. Goethe: ‹in der Vereinigung der gesteigerten Pole eine eigentliche Beruhigung› (§ 794)."},
     {"id": "warm",   "name": "Die warme Seite – Gelbrot, Rotgelb, Gelb",
-     "desc": "Goethes Plusseite: die Farben, die ‹regsam, lebhaft, strebend› stimmen (§ 764) – vom Purpurrot bis zum Gelb. Gelb ist selbstlos: es leuchtet und trägt keine Schrift, damit es nie ‹ins Minus gezogen› wird (§ 770) und Gold der Bühne bleibt."},
+     "desc": "Goethes Plusseite: die Farben, die ‹regsam, lebhaft, strebend› stimmen (§ 764) – vom Purpurrot bis zum Gelb. Gelb ist selbstlos: es leuchtet und trägt keine Schrift, damit es nie ‹ins Minus gezogen› wird (§ 770); seine Schrift ist ein dunkles, sattes Gelb."},
     {"id": "gruen",  "name": "Grün – die Vereinigung",
      "desc": "Unten, wo Gelb und Blau sich real mischen und ‹das Auge und das Gemüt› ruhen (§ 802)."},
     {"id": "kuehl",  "name": "Die kühle Seite – Blau, Rotblau",
@@ -117,7 +118,7 @@ ORDNUNG = [
      "para": "§§ 768, 773", "status": "offen"},
     {"key": "ps",    "ort": "Gelb",             "gruppe": "warm",   "H": 97,  "C": 0.150,
      "satz": "Das Licht: ‹die nächste Farbe am Licht›.",
-     "grund": "Gelb ist ‹die nächste Farbe am Licht›, ‹heiter, munter, sanft reizend› – und selbstlos: es leuchtet, trägt aber keine Schrift und kein Weiss. Wo Text steht, tritt es zurück und lässt das Haus-Schwarz sprechen. Die Kindheit, das Lernen.",
+     "grund": "Gelb ist ‹die nächste Farbe am Licht›, ‹heiter, munter, sanft reizend› – und selbstlos: es leuchtet, trägt aber keine Schrift und kein Weiss. Wo Text steht, wird es tief und satt, nie schwarz. Die Kindheit, das Lernen.",
      "para": "§§ 765–766", "status": "offen"},
     {"key": "lws",   "ort": "Grün",              "gruppe": "gruen",  "H": 138, "C": 0.150,
      "satz": "Die Erde: ‹reale Befriedigung›.",

@@ -215,20 +215,20 @@ window.GOE_SEK_MODELL = {
     "hauch": "#f7f4e3",
     "pastell": "#f3ecca",
     "leuchten": "#f7d731",
-    "tinte": "#23272b",
-    "grund": "#23272b",
+    "tinte": "#766900",
+    "grund": "#837500",
     "hauch_dk": "#2b2712",
-    "tinte_dk": "#e6e8ea"
+    "tinte_dk": "#e3cd6d"
    },
    "kontrast": {
     "leuchten_papier": 1.43,
-    "tinte_papier": 15.04,
-    "tinte_karte": 14.18,
-    "tinte_hauch": 13.61,
-    "weiss_grund": 15.04,
-    "grund_pastell": 12.65,
-    "tinte_dk_papier": 14.37,
-    "tinte_dk_hauch": 12.2
+    "tinte_papier": 5.54,
+    "tinte_karte": 5.22,
+    "tinte_hauch": 5.01,
+    "weiss_grund": 4.66,
+    "grund_pastell": 3.92,
+    "tinte_dk_papier": 11.11,
+    "tinte_dk_hauch": 9.43
    }
   },
   {
@@ -496,7 +496,7 @@ window.GOE_SEK_MODELL = {
    "name": "Bühne",
    "hex": "#968250",
    "H": 85,
-   "grund": "Das Gold der Bühne – darum kein dunkles Gelb bei den Sektionen.",
+   "grund": "Das Gold der Bühne – gedeckt und rötlich; das dunkle Gelb der Sektionen bleibt satt und grünlich.",
    "winkel": 109.2
   }
  ],
