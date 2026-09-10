@@ -27,7 +27,7 @@ Drei Vorgaben des Auftraggebers (9. September 2026):
      zum Grün gerückt, damit es nicht ins Braun kippt (Goethe § 770) – und
      klar vom gedeckten Bühnengold getrennt.
   5. Sonderidentitäten bleiben frei: das Goetheanum-Blau (--blue, #0061a9)
-     bekommt im Kreis ein eigenes Feld, keine Sektion liegt darauf; das
+     steht nicht im Kreis (Anmerkung 10. 9. 2026), keine Sektion liegt darauf; das
      Bühnengold ist gedeckt und rötlich, das dunkle Gelb der Pädagogik satt
      und grünlich – sie liegen auseinander. Die Landwirtschaft behält ihr
      etabliertes Grün #63b145 exakt.

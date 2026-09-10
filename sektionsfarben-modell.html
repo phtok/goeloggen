@@ -32,8 +32,15 @@
   .grp > .desc{max-width:62ch}
   .grp > .prose{margin-top:var(--s4)}
 
-  /* --- Der Kreis ------------------------------------------------------------- */
-  .kreis-wrap{overflow-x:auto;margin-top:var(--s5);padding-bottom:var(--s2)}
+  /* --- Der Kreis: Goethes Aquarell von 1809 und die Übertragung ---------------- */
+  .paar{display:grid;gap:var(--s5);margin-top:var(--s5);align-items:start}
+  @media(min-width:1000px){.paar{grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center}}
+  .original{margin:0}
+  .original img{display:block;width:100%;max-width:520px;height:auto;margin:0 auto;aspect-ratio:1;object-fit:cover;object-position:50% 50%;border-radius:var(--r-control);border:1px solid var(--line)}   /* das Blatt ist hochformatig, gezeigt wird der Ring */
+  .original figcaption,.uebertragung figcaption{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.45;margin-top:var(--s3);max-width:52ch}
+  .original figcaption b,.uebertragung figcaption b{color:var(--ink);font-weight:600}
+  .uebertragung{margin:0;min-width:0}
+  .kreis-wrap{overflow-x:auto;padding-bottom:var(--s2)}
   .kreis{display:block;width:min(100%,760px);min-width:560px;margin:0 auto;font-family:var(--font-text)}
   .kreis .sph{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:26px;fill:var(--ink)}
   .kreis .ort{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:22px;fill:var(--on-accent)}
@@ -142,12 +149,26 @@
 
   <section class="grp" id="kreis">
     <h2>Der Kreis</h2>
-    <p class="desc">Purpur oben, wo sich beide Seiten in der Steigerung vereinigen; Grün unten, wo sie
-      sich mischen; rechts die warme, links die kühle Seite. Der äussere Ring zeigt in dreizehn
-      gleichen Feldern die zwölf Sektionen in ihrer Erkennungsfarbe und das Goetheanum in seinem
-      Blau – die Sonderidentität, auf der keine Sektion liegt. Gelb ist wieder da, selbstlos: es
-      leuchtet und trägt keine Schrift; seine Tinte ist ein dunkles, sattes Gelb, kein Gold.</p>
-    <div class="kreis-wrap"><svg class="kreis" id="svg-kreis" viewBox="0 0 760 760" role="img" aria-labelledby="kreis-t"><title id="kreis-t">Goethes Farbenkreis mit den zwölf Sektionen als äusserem Ring</title></svg></div>
+    <p class="desc">Links Goethes eigene Skizze: das Aquarell von 1809, das die sechs Farben den
+      Sphären Vernunft, Verstand, Sinnlichkeit und Phantasie zuordnet. Rechts die Übertragung:
+      Purpur oben, wo sich beide Seiten in der Steigerung vereinigen; Grün unten, wo sie sich
+      mischen; rechts die warme, links die kühle Seite. Der äussere Ring zeigt die zwölf Sektionen
+      in gleichen Feldern, nach Farbton geordnet. Gelb ist selbstlos: es leuchtet und trägt keine
+      Schrift; seine Tinte ist ein dunkles, sattes Gelb, kein Gold. Das Goetheanum-Blau und das
+      Bühnengold sind Sonderidentitäten und stehen nicht im Kreis; keine Sektion liegt auf ihnen.</p>
+    <div class="paar">
+      <figure class="original">
+        <img src="assets/goethe/farbenkreis-1809.jpg" width="600" height="913" loading="lazy"
+             alt="Goethes Aquarell des Farbenkreises von 1809: ein Ring aus Purpur, Orange, Gelb, Grün, Blau und Violett, aussen mit Vernunft, Verstand, Sinnlichkeit und Phantasie beschriftet, innen mit schön, edel, gut, nützlich, gemein, unnötig" />
+        <figcaption><b>Goethe, 1809.</b> Farbenkreis zur Symbolisierung des menschlichen Geistes- und
+          Seelenlebens, Aquarell mit Feder · Freies Deutsches Hochstift, Frankfurter Goethe-Haus · gemeinfrei</figcaption>
+      </figure>
+      <figure class="uebertragung">
+        <div class="kreis-wrap"><svg class="kreis" id="svg-kreis" viewBox="0 0 760 760" role="img" aria-labelledby="kreis-t"><title id="kreis-t">Goethes Farbenkreis mit den zwölf Sektionen als äusserem Ring</title></svg></div>
+        <figcaption><b>Die Übertragung.</b> Innen Goethes sechs Farben, aussen die zwölf Sektionen in
+          ihrer Erkennungsfarbe; die Nummern führen zur Legende.</figcaption>
+      </figure>
+    </div>
     <ol class="legende" id="legende"></ol>
   </section>
 
@@ -232,7 +253,7 @@
         rücken zum Rot und werden Terracotta statt Braun – ein dunkles Orange ist immer Braun. Was
         man liest, ist tiefer als das, woran man die Sektion erkennt – bei allen zwölf.</p>
       <p><b>Sonderidentitäten.</b> Das Goetheanum-Blau und das Bühnengold stehen fest; keine
-        Sektion liegt darauf. Darum hat das Blau im Kreis ein eigenes Feld. Das dunkle Gelb der
+        Sektion liegt darauf, und keines von beiden steht im Kreis. Das dunkle Gelb der
         Pädagogik ist satt und grünlich, das Bühnengold gedeckt und rötlich – sie liegen auseinander.
         Das Rot der Bau-Administration ist intern und zählt nicht. Die Landwirtschaft, die einzige
         Sektion mit gelebter Farbidentität, behält ihr Grün exakt.</p>
@@ -246,8 +267,9 @@
   </section>
 
   <p class="fineprint">
-    <b>Quelle.</b> Goethe, Zur Farbenlehre (1810), Didaktischer Teil, sechste Abteilung, §§ 758–829; Farbenkreis
-    1809 (Freies Deutsches Hochstift). <b>Werte.</b> Gerechnet in OKLCH (tools/sek-modell.py, Daten in
+    <b>Quelle.</b> Goethe, Zur Farbenlehre (1810), Didaktischer Teil, sechste Abteilung, §§ 758–829.
+    <b>Bild.</b> Goethe, Farbenkreis zur Symbolisierung des menschlichen Geistes- und Seelenlebens, 1809,
+    Freies Deutsches Hochstift, Frankfurt; Wiedergabe über Wikimedia Commons, gemeinfrei. <b>Werte.</b> Gerechnet in OKLCH (tools/sek-modell.py, Daten in
     assets/sek-modell.js): Leuchten, Tinte und Grund an ihrer Grenze mit natürlicher Buntheit (warme Töne
     um 15° zum Rot gerückt), Hauch mit dem Rezept der heutigen Sektionsfarben, Pastell bei Helligkeit 0.94.
     Kontraste am gerenderten Blatt gemessen. Herleitung und Belegstellen:
@@ -303,10 +325,8 @@
       var m=(s.von+s.bis)/2, p=pol(392,m);   // aussen genug, dass die freie Nummer des Gelb Platz hat
       svg.appendChild(sv("text",{x:p[0],y:p[1]+9,"text-anchor":"middle","class":"sph"},s.name));
     });
-    // Dreizehn gleiche Felder: zwölf Sektionen und das Goetheanum, nach Farbton geordnet.
-    var g=D.sonder.filter(function(x){return x.key==="goetheanum";})[0];
+    // Zwölf gleiche Felder, nach Farbton geordnet. Die Sonderidentitäten (Goetheanum-Blau, Bühnengold) stehen nicht im Kreis.
     var felder=SEK.map(function(s){return {w:s.winkel,hex:s.stufen.leuchten,txt:String(s.nr),frei:!!s.selbstlos};});
-    if(g) felder.push({w:g.winkel,hex:g.hex,txt:"G",frei:false});
     felder.sort(function(a,b){return a.w-b.w;});
     var n=felder.length, breite=360/n;
     // Drehung so, dass die Allgemeine Sektion (Purpur) oben steht.
@@ -332,13 +352,6 @@
       var d=el("div"); var b=el("b"); b.textContent=s.name; d.appendChild(b);
       var satz=el("span","satz"); satz.textContent=s.satz; d.appendChild(satz);
       var op=el("span","ort-p"); op.textContent=s.ort+" · "+s.para; d.appendChild(op);
-      li.appendChild(d); lg.appendChild(li);
-    });
-    D.sonder.forEach(function(x){
-      var li=el("li"); var n=el("span","n",x.key==="goetheanum"?"G":"B"); n.style.background=x.hex; li.appendChild(n);
-      var d=el("div"); var b=el("b"); b.textContent=x.name; d.appendChild(b);
-      var satz=el("span","satz"); satz.textContent=x.grund; d.appendChild(satz);
-      var op=el("span","ort-p"); op.textContent="Sonderidentität · "+x.hex.toUpperCase(); d.appendChild(op);
       li.appendChild(d); lg.appendChild(li);
     });
   }
