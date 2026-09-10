@@ -101,6 +101,8 @@
   .plakat p{font-family:var(--font-text);font-size:var(--t-small);color:var(--m-tinte,var(--gold-ink));margin:var(--s1) 0 0}
   .leucht{background:var(--m-leuchten,var(--gold));color:var(--on-accent);border-radius:var(--r-control);padding:var(--s5);min-height:140px;display:flex;align-items:flex-end}
   .leucht h3{font-size:var(--t-h1);margin:0;color:var(--on-accent);line-height:1.05}
+  /* Das selbstlose Gelb trägt kein Weiss: seine Titelfläche ist der Grund. */
+  .bsp-grid[data-selbstlos="true"] .leucht{background:var(--m-grund,var(--gold-deep))}
   .objekte{display:flex;flex-direction:column;gap:var(--s3)}
   .objekte .menu{display:flex;gap:var(--s3);font-family:var(--font-text);font-size:var(--t-small);align-items:center}
   .objekte .menu .punkt{background:var(--m-leuchten,var(--gold))}
@@ -144,7 +146,7 @@
       sich mischen; rechts die warme, links die kühle Seite. Der äussere Ring zeigt in dreizehn
       gleichen Feldern die zwölf Sektionen in ihrer Erkennungsfarbe und das Goetheanum in seinem
       Blau – die Sonderidentität, auf der keine Sektion liegt. Gelb ist wieder da, selbstlos: es
-      leuchtet und trägt keine Schrift, damit Gold der Bühne bleibt.</p>
+      leuchtet und trägt keine Schrift; seine Tinte ist ein dunkles, sattes Gelb, kein Gold.</p>
     <div class="kreis-wrap"><svg class="kreis" id="svg-kreis" viewBox="0 0 760 760" role="img" aria-labelledby="kreis-t"><title id="kreis-t">Goethes Farbenkreis mit den zwölf Sektionen als äusserem Ring</title></svg></div>
     <ol class="legende" id="legende"></ol>
   </section>
@@ -155,9 +157,10 @@
       Farben – Pigment, nicht Licht – und ist so hell, wie 3:1 auf Papier erlaubt. Die Tinte ist
       für Schrift auf Weiss gesetzt, der Grund trägt Weiss auch klein; bei den warmen Farben rücken
       beide zum Rot, damit kein Braun entsteht. Die Landwirtschaft behält ihr etabliertes Grün als
-      Leuchten exakt. Gelb ist die Ausnahme: Es leuchtet ohne Kontrastpflicht und hat keine eigenen
-      Schriftstufen – Tinte und Grund sind das Haus-Schwarz. Pastell trägt keinen Text. Die Zahlen
-      sind am Blatt gemessen.</p>
+      Leuchten exakt. Gelb ist die Ausnahme: Es leuchtet ohne Kontrastpflicht; Tinte und Grund sind
+      ein dunkles Gelb, so satt, wie der Gamut bei 5.5:1 und 4.6:1 erlaubt, und leicht zum Grün
+      gerückt, damit es nicht braun wird. Pastell trägt keinen Text. Die Zahlen sind am Blatt
+      gemessen.</p>
     <div class="kopfzeile"><span class="wer"></span><span>Hauch</span><span>Pastell</span><span>Leuchten</span><span>Tinte</span><span>Grund</span></div>
     <div class="leiter" id="leiter-zeilen"></div>
   </section>
@@ -187,7 +190,7 @@
       </div>
       <div class="bsp">
         <div class="leucht"><h3 id="le-titel">Sektion</h3></div>
-        <p class="meta">Titelfläche · Leuchten trägt nur grosse weisse Schrift</p>
+        <p class="meta" id="le-meta">Titelfläche · Leuchten trägt nur grosse weisse Schrift</p>
       </div>
       <div class="bsp">
         <div class="band"><span class="kick">Rundbrief 3/2026</span><h3 id="bd-titel">Titel der Sektion</h3><p>Freie Hochschule für Geisteswissenschaft</p></div>
@@ -229,11 +232,10 @@
         rücken zum Rot und werden Terracotta statt Braun – ein dunkles Orange ist immer Braun. Was
         man liest, ist tiefer als das, woran man die Sektion erkennt – bei allen zwölf.</p>
       <p><b>Sonderidentitäten.</b> Das Goetheanum-Blau und das Bühnengold stehen fest; keine
-        Sektion liegt darauf. Darum hat das Blau im Kreis ein eigenes Feld, und darum hat Gelb keine
-        dunklen Stufen: Ein dunkles Gelb wäre Gold. Das Rot der Bau-Administration ist intern und
-        zählt nicht. Die Landwirtschaft, die einzige Sektion mit gelebter Farbidentität, behält ihr
-        Grün exakt; ihr eigenes Logo stellt dem Grün ein dunkles Grau zur Seite – dasselbe Muster,
-        das hier Gelb bekommt.</p>
+        Sektion liegt darauf. Darum hat das Blau im Kreis ein eigenes Feld. Das dunkle Gelb der
+        Pädagogik ist satt und grünlich, das Bühnengold gedeckt und rötlich – sie liegen auseinander.
+        Das Rot der Bau-Administration ist intern und zählt nicht. Die Landwirtschaft, die einzige
+        Sektion mit gelebter Farbidentität, behält ihr Grün exakt.</p>
       <p><b>Wer trägt das Gelb.</b> Vorgeschlagen ist die Pädagogik (Goethe: ‹die nächste Farbe am
         Licht›). Ebenso denkbar wären Jugend (‹heiter, munter›) oder Heilpädagogik (‹warm und
         behaglich›); der Vorschlag steht unter Veto.</p>
@@ -384,7 +386,8 @@
 
   // --- Am Beispiel ----------------------------------------------------------------------
   function waehle(key){
-    var s=byKey[key]||SEK[0], b=$("#bsp"); b.dataset.key=s.key; setze(b,s);
+    var s=byKey[key]||SEK[0], b=$("#bsp"); b.dataset.key=s.key; b.dataset.selbstlos=String(!!s.selbstlos); setze(b,s);
+    $("#le-meta").textContent=s.selbstlos?"Titelfläche · Gelb trägt kein Weiss, darum steht der Titel auf dem Grund":"Titelfläche · Leuchten trägt nur grosse weisse Schrift";
     $("#pl-titel").textContent=s.name; $("#le-titel").textContent=s.kurz; $("#bd-titel").textContent=s.name;
     $("#ch-1").textContent=s.kurz; $("#tp-kick").textContent=s.kurz; $("#mn-name").textContent=s.kurz;
     document.querySelectorAll("#waehler button").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.key===s.key));});

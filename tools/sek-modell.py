@@ -26,9 +26,12 @@ Buntheit ist jetzt die Buntheit der Reihe. Je Sektion (Farbtöne der Fassung 3):
             warmen Töne (H 30–110) rücken 15° zum Rot und nehmen die volle
             Buntheit – Terracotta statt Braun.
   gelb      selbstlos (Pädagogik): Leuchten ist reines Gelb, es trägt keine
-            Schrift und kein Weiss; Tinte und Grund sind das reine Haus-Schwarz
-            (--ink), kein getöntes Grau. So bleibt Gold der Bühne. Die
-            Landwirtschaft behält ihr etabliertes Grün #63b145 als Leuchten exakt.
+            Schrift und kein Weiss. Tinte und Grund sind ein dunkles Gelb (nicht
+            Schwarz – Anmerkung 10. 9. 2026): an der Gamut-Grenze, also so bunt,
+            wie ein Gelb bei 4.6:1 und 5.5:1 sein kann, und 4° zum Grün gerückt,
+            damit es nicht ins Braun kippt. Vom Bühnengold (#968250, gedeckt und
+            rötlich) liegt es klar entfernt. Die Landwirtschaft behält ihr
+            etabliertes Grün #63b145 als Leuchten exakt.
 Dunkelmodus: hauch_dk und tinte_dk aus dem Rezept; leuchten und grund sind
 markenfest; Pastell weicht dem Grund.
 
@@ -59,7 +62,7 @@ C_NAT = {"aas": 0.14, "sbk": 0.14, "szw": 0.17, "js": 0.17, "hpise": 0.15, "lws"
          "nws": 0.11, "ps": 0.17, "srmk": 0.13, "mas": 0.14, "ssw": 0.14, "ms": 0.12}
 # Feste Werte: etabliertes Grün der Landwirtschaft (Leuchten exakt); reines Gelb der Pädagogik.
 FEST_LEUCHTEN = {"lws": "#63b145", "ps": None}
-SELBSTLOS = {"ps"}   # keine eigenen Schriftstufen – Tinte und Grund sind das Haus-Schwarz
+SELBSTLOS = {"ps"}   # Leuchten ohne Kontrastpflicht; Tinte und Grund ein dunkles Gelb (siehe gelb_verschiebung)
 
 STUFEN = [
     {"id": "hauch",    "name": "Hauch",    "traegt": "Lesetext in --ink und die Tinte",
@@ -93,6 +96,9 @@ def warm_verschiebung(H):
     """Orange und Rotgelb (H 30–110) dunkeln ins Braun; ihre tiefen Stufen rücken 15° zum Rot."""
     return -15 if 30 <= H <= 110 else 0
 
+GELB_VERSCHIEBUNG = 4     # ein dunkles Gelb kippt zum Rot ins Braun – darum leicht zum Grün
+GELB_C = 0.20             # über der Gamut-Grenze: from_oklch senkt auf die grösste mögliche Buntheit
+
 def stufen(key, H, grund, pos):
     C = C_NAT[key]
     Hd = (H + warm_verschiebung(H)) % 360   # Farbton der tiefen Stufen
@@ -113,8 +119,10 @@ def stufen(key, H, grund, pos):
     while min(sv.kontrast(tinte_dk, PAPER_DK), sv.kontrast(tinte_dk, hauch_dk)) < 4.5:
         dL, dC, _ = sv.to_oklch(tinte_dk); tinte_dk = sv.from_oklch(dL + 0.01, dC, H)
     if key in SELBSTLOS:
-        # Gelb tritt zurück: Tinte und Grund sind das reine Haus-Schwarz.
-        tinte = INK; grund = INK; tinte_dk = INK_DK
+        # Dunkles Gelb statt Schwarz: so bunt, wie der Gamut bei 5.5:1 und 4.6:1 erlaubt, leicht zum Grün.
+        Hg = (H + GELB_VERSCHIEBUNG) % 360
+        tinte = hellste(Hg, GELB_C, lambda x: sv.kontrast(x, WEISS) >= 5.5 and sv.kontrast(x, SOFT) >= 5.0 and sv.kontrast(x, hauch) >= 4.5)
+        grund = hellste(Hg, GELB_C, lambda x: sv.kontrast(x, WEISS) >= 4.6)
     return {"hauch": hauch, "pastell": pastell, "leuchten": leuchten, "tinte": tinte, "grund": grund,
             "hauch_dk": hauch_dk, "tinte_dk": tinte_dk}
 
