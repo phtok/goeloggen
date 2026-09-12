@@ -1,5 +1,5 @@
 {
- "$beschreibung": "Die Goetheanum-Familie als eine Quelle: Gruppen mit Titeln und Zielen für das Familienmenü (design-system/familie.js). Nur Titel, kein Beiwerk (G03). Sektionsnamen aus assets/goe-orgs.js, Reihenfolge wie auf goetheanum.ch/de/sektionen; Ziele von dort übernommen (Stand 7. September 2026). Farbe = Schlüssel eines Tokens (--sek-*, --bereich-*); ohne Farbe bleibt Markenblau. Neue Sektion oder neuer Bereich: hier eine Zeile ergänzen.",
+ "$beschreibung": "Die Goetheanum-Familie als eine Quelle: Gruppen mit Titeln und Zielen für das Familienmenü (design-system/familie.js). Nur Titel, kein Beiwerk (G03). Sektionsnamen aus assets/goe-orgs.js, Reihenfolge wie auf goetheanum.ch/de/sektionen. Farbe = Schlüssel eines Tokens (--sek-*, --bereich-*); ohne Farbe bleibt Markenblau.",
  "dach": {
   "titel": {
    "de": "Goetheanum",
@@ -252,10 +252,10 @@
   {
    "id": "bereiche",
    "titel": {
-    "de": "Bereiche",
-    "en": "Divisions",
-    "fr": "Domaines",
-    "es": "Áreas"
+    "de": "Bereiche und Orte",
+    "en": "Divisions and places",
+    "fr": "Domaines et lieux",
+    "es": "Áreas y lugares"
    },
    "eintraege": [
     {
@@ -319,6 +319,26 @@
       "es": "Editorial"
      },
      "href": "https://goetheanum-verlag.ch/"
+    },
+    {
+     "key": "speisehaus",
+     "titel": {
+      "de": "Speisehaus",
+      "en": "Speisehaus",
+      "fr": "Speisehaus",
+      "es": "Speisehaus"
+     },
+     "href": "https://www.speisehaus.ch/"
+    },
+    {
+     "key": "architekturpfad",
+     "titel": {
+      "de": "Architekturpfad",
+      "en": "Architecture trail",
+      "fr": "Sentier d'architecture",
+      "es": "Sendero arquitectónico"
+     },
+     "href": "https://architekturpfad.ch/"
     }
    ]
   },
@@ -331,6 +351,16 @@
     "es": "Medios y servicios"
    },
    "eintraege": [
+    {
+     "key": "tickets",
+     "titel": {
+      "de": "Tickets",
+      "en": "Tickets",
+      "fr": "Billets",
+      "es": "Entradas"
+     },
+     "href": "https://tickets.goetheanum.ch/"
+    },
     {
      "key": "wochenschrift",
      "titel": {
@@ -372,7 +402,7 @@
      "href": "https://goetheanum.transistor.fm/"
     },
     {
-     "key": "medienstelle",
+     "key": "kommunikation",
      "titel": {
       "de": "Medienstelle",
       "en": "Press office",
@@ -393,5 +423,6 @@
     }
    ]
   }
- ]
+ ],
+ "$aufnahmeregel": "WAS HIER HINEINGEHÖRT – zwei Zugänge, sonst keiner:\n(1) EIGENE ADRESSE: ein Ort unter eigener Domain oder Subdomain (medsektion.goetheanum.ch, goetheanum.tv, speisehaus.ch, tickets.goetheanum.ch).\n(2) ORGANISATIONSEINHEIT mit öffentlicher Seite: was in assets/goe-orgs.js als Sektion oder Bereich geführt wird und eine Seite für die Öffentlichkeit hat – auch wenn es dort nur einen Anker gibt (Dokumentation, Studium und Weiterbildung). Reine Verwaltungsstellen (Bau-Administration, Personalwesen) bleiben draussen: sie haben nichts, wohin man einen Besucher schickt.\nKEINE SITEMAP: hinter goetheanum.ch/de/campus liegen acht Unterseiten, darunter ‹fuehrungen-old› – eine Karteileiche. Wer die Navigation fremder CMS nachbaut, pflegt deren Fehler mit und veraltet mit jedem Umbau dort. Rubriken und Unterseiten (Führungen, Hausordnung, Öffnungszeiten, Unterkünfte) gehören ins Menü ihrer eigenen Seite. Das Menü ist die Karte des Ganzen, nicht das Inhaltsverzeichnis einer Seite.\nAUSNAHME: die Gruppe ‹Goetheanum› führt die Rubriken der Dachseite, weil das Dach der eine Ort ist, zu dem man von überall zurückwill. Sie bleibt flach und klappt nicht auf.\nBeschluss Auftraggeber, 12. September 2026, auf den Wunsch ‹Campus auch aufklappen›."
 }
