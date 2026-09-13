@@ -114,14 +114,15 @@
   .goe-fam-grp .liste{padding-bottom:var(--s2)}
 }
 
-/* Einträge: Titel, ein Farbpunkt für Sektion oder Bereich. Der Standort trägt
-   NUR das Gewicht – ein Merkmal, keine zweite Kante (G01). */
-.goe-fam-link{display:flex;align-items:center;gap:10px;min-height:var(--tap);padding:6px 12px;
+/* Einträge: nur der Titel. Kein Farbpunkt davor – er las sich wie ein
+   Aufzählungszeichen und liess die Gruppen ohne Farben eine Ebene höher
+   wirken als die mit; die vier Gruppen sind gleichrangig (Befund
+   Auftraggeber, 13. September 2026). Der Standort trägt NUR das Gewicht –
+   ein Merkmal, keine zweite Kante (G01). */
+.goe-fam-link{display:flex;align-items:center;min-height:var(--tap);padding:6px 12px;
   color:var(--ink);text-decoration:none;font-size:16px;line-height:1.3;border-radius:var(--r-control)}
 .goe-fam-link:hover{background:var(--soft)}
 .goe-fam-link:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
-.goe-fam-link .pt{width:10px;height:10px;border-radius:var(--r-pill);flex:0 0 auto;
-  background:var(--goe-fam-farbe,var(--bereich))}
 .goe-fam-link[aria-current="page"]{font-weight:var(--w-deutlich)}
 
 /* Schmal: Schublade wird zum Blatt von unten, volle Breite. */

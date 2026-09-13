@@ -113,8 +113,12 @@
         var li = el("li");
         var a = el("a", "goe-fam-link");
         a.href = e.href;
-        if (e.farbe) a.style.setProperty("--goe-fam-farbe", "var(--" + e.farbe + ")");
-        a.innerHTML = (e.farbe ? '<span class="pt" aria-hidden="true"></span>' : "") + '<span>' + T(e.titel) + '</span>';
+        // Kein Farbpunkt: als Zeichen vor dem Titel las er sich wie ein
+        // Aufzählungspunkt, und die Gruppen ohne Farben wirkten dadurch eine
+        // Ebene höher als die mit. Die vier Gruppen sind gleichrangig. Die
+        // Farben stehen weiter in familie.json ($farben) – sie sind wahr, sie
+        // gehören hier nur nicht aufs Blatt (G03).
+        a.textContent = T(e.titel);
         if (HERE && e.key === HERE) { a.setAttribute("aria-current", "page"); hereGruppe = d; }
         li.appendChild(a); ul.appendChild(li);
       });
