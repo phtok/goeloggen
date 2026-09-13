@@ -671,6 +671,12 @@
       "desc": "Vollständiges Pflichtenheft des Kartentools."
     },
     {
+      "title": "Campusplan für Gäste – Konzept",
+      "tag": "Konzept",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campusplan-besucher-konzept.md",
+      "desc": "Besucherinnen stellen sich vor der Reise ihren Campusplan zusammen: Szenarien, Druck-PDF, eigener Link mit Abhak-Liste – Relevanz und Machbarkeit geprüft."
+    },
+    {
       "title": "Brand-Portrait – Pflichtenheft",
       "tag": "Spec",
       "href": "https://github.com/phtok/goeloggen/blob/main/reference/material/portrait_brand_generator_pflichtenheft.md",
