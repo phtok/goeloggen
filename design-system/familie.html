@@ -116,7 +116,7 @@
       var og = document.createElement("optgroup"); og.label = g.titel.de;
       (g.eintraege || []).forEach(function (e) {
         var o = document.createElement("option"); o.value = e.key; o.textContent = e.titel.de; og.appendChild(o);
-        if (e.farbe) keys.push(e.key);
+        keys.push(e.key);
       });
       here.appendChild(og);
     });

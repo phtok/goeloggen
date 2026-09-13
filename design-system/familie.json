@@ -85,6 +85,16 @@
      "href": "https://goetheanum.ch/de/campus"
     },
     {
+     "key": "oeffnungszeiten",
+     "titel": {
+      "de": "Öffnungszeiten",
+      "en": "Opening hours",
+      "fr": "Horaires d'ouverture",
+      "es": "Horarios de apertura"
+     },
+     "href": "https://goetheanum.ch/de/campus/oeffnungszeiten"
+    },
+    {
      "key": "mitglied",
      "titel": {
       "de": "Mitglied werden",
@@ -424,5 +434,6 @@
    ]
   }
  ],
- "$aufnahmeregel": "WAS HIER HINEINGEHÖRT – zwei Zugänge, sonst keiner:\n(1) EIGENE ADRESSE: ein Ort unter eigener Domain oder Subdomain (medsektion.goetheanum.ch, goetheanum.tv, speisehaus.ch, tickets.goetheanum.ch).\n(2) ORGANISATIONSEINHEIT mit öffentlicher Seite: was in assets/goe-orgs.js als Sektion oder Bereich geführt wird und eine Seite für die Öffentlichkeit hat – auch wenn es dort nur einen Anker gibt (Dokumentation, Studium und Weiterbildung). Reine Verwaltungsstellen (Bau-Administration, Personalwesen) bleiben draussen: sie haben nichts, wohin man einen Besucher schickt.\nKEINE SITEMAP: hinter goetheanum.ch/de/campus liegen acht Unterseiten, darunter ‹fuehrungen-old› – eine Karteileiche. Wer die Navigation fremder CMS nachbaut, pflegt deren Fehler mit und veraltet mit jedem Umbau dort. Rubriken und Unterseiten (Führungen, Hausordnung, Öffnungszeiten, Unterkünfte) gehören ins Menü ihrer eigenen Seite. Das Menü ist die Karte des Ganzen, nicht das Inhaltsverzeichnis einer Seite.\nAUSNAHME: die Gruppe ‹Goetheanum› führt die Rubriken der Dachseite, weil das Dach der eine Ort ist, zu dem man von überall zurückwill. Sie bleibt flach und klappt nicht auf.\nBeschluss Auftraggeber, 12. September 2026, auf den Wunsch ‹Campus auch aufklappen›."
+ "$aufnahmeregel": "WAS HIER HINEINGEHÖRT – drei Zugänge, sonst keiner:\n(1) EIGENE ADRESSE: ein Ort unter eigener Domain oder Subdomain (medsektion.goetheanum.ch, goetheanum.tv, speisehaus.ch, tickets.goetheanum.ch).\n(2) ORGANISATIONSEINHEIT mit öffentlicher Seite: was in assets/goe-orgs.js als Sektion oder Bereich geführt wird und eine Seite für die Öffentlichkeit hat – auch wenn es dort nur einen Anker gibt (Dokumentation, Studium und Weiterbildung). Reine Verwaltungsstellen (Bau-Administration, Personalwesen) bleiben draussen: sie haben nichts, wohin man einen Besucher schickt.\n(3) BESUCHER-GRUNDAUSKUNFT: was jemand wissen muss, BEVOR er herkommt, und was sonst nirgends im Menü steht. Das ist eine GESCHLOSSENE Liste, die nur der Auftraggeber erweitert – sonst wird daraus durch die Hintertür doch die Sitemap. Heute: Öffnungszeiten (essenziell, Beschluss 13. September 2026). Einziger weiterer Kandidat wäre die Anfahrt; alles andere fällt unter Zugang 1 oder 2 oder bleibt draussen.\nKEINE SITEMAP: hinter goetheanum.ch/de/campus liegen acht Unterseiten, darunter ‹fuehrungen-old› – eine Karteileiche. Wer die Navigation fremder CMS nachbaut, pflegt deren Fehler mit und veraltet mit jedem Umbau dort. Rubriken und Unterseiten (Führungen, Hausordnung, Unterkünfte) gehören ins Menü ihrer eigenen Seite. Das Menü ist die Karte des Ganzen, nicht das Inhaltsverzeichnis einer Seite.\nAUSNAHME: die Gruppe ‹Goetheanum› führt die Rubriken der Dachseite, weil das Dach der eine Ort ist, zu dem man von überall zurückwill. Sie bleibt flach und klappt nicht auf.\nBeschluss Auftraggeber, 12. September 2026, auf den Wunsch ‹Campus auch aufklappen›.",
+ "$farben": "Die Sektions- und Bereichsfarben stehen hier weiter als Tatsache (--sek-*, --bereich-*) – das Menü ZEIGT sie seit dem 13. September 2026 nicht mehr. Grund: als Punkt vor dem Titel las sich die Farbe wie ein Aufzählungszeichen, und die zwei Spalten ohne Punkte wirkten dadurch eine Ebene höher als die zwei mit. Die vier Gruppen sind aber gleichrangig. Der Punkt erklärte nichts, was der Titel nicht schon sagt (G03) – die Sektionsfarbe wirkt dort, wo sie Identität stiftet: auf der Sektionsseite selbst. Befund Auftraggeber."
 }
