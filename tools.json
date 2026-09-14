@@ -635,6 +635,17 @@
       "such": "Goethe Farbenkreis Varianten Vergleich Kontrastgrenze leuchtend pastell gleichmässig Ordnung Sektionen Labor"
     },
     {
+      "slug": "campusplan",
+      "cat": "labor",
+      "status": "entwurf",
+      "tag": "Campus",
+      "title": "Mein Campusplan",
+      "short": "Campusplan",
+      "href": "apps/campusplan/",
+      "desc": "Den eigenen Besuch planen: Themen wählen, Zeit wählen, fertig – Plan drucken oder als Link aufs Telefon nehmen und unterwegs abhaken. Laborfassung zur Erprobung.",
+      "such": "Campusplan Besucher Gäste Besuch planen Rundgang Karte Telefon abhaken Link QR Labor"
+    },
+    {
       "slug": "sektionsfarben-modell",
       "cat": "labor",
       "status": "entwurf",
