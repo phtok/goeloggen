@@ -682,6 +682,12 @@
       "desc": "Vollständiges Pflichtenheft des Kartentools."
     },
     {
+      "title": "Campusplan – Faktenprüfung der Orte",
+      "tag": "Prüfung",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/campusplan-faktenpruefung.md",
+      "desc": "Jede Ortsangabe des Campusplans mit ihrer Quelle – ohne Quelle kein Einzeiler. Zur Prüfung durch den Auftraggeber."
+    },
+    {
       "title": "Campusplan für Gäste – Konzept",
       "tag": "Konzept",
       "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campusplan-besucher-konzept.md",

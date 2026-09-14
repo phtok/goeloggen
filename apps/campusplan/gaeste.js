@@ -3,7 +3,8 @@
 /* Gäste-Zeile je Ort (Konzept § 10, docs/specs/campusplan-besucher-konzept.md).
    Ergänzt den generierten Katalog apps/karten-generator/orte.js — der bleibt
    unberührt. Erster Entwurf vom 14. September 2026: Rang, Dauer, Zugang und
-   Gehfolge sind Schätzungen zur Abnahme; Einzeiler mit Quelle im Konzept § 11.
+   Gehfolge sind Schätzungen zur Abnahme. Jeder Einzeiler hat eine Quelle in
+   docs/campusplan-faktenpruefung.md — ohne Quelle kein Einzeiler (14. 9. 2026).
 
    WICHTIG: Die Reihenfolge in GAESTE ist das Bit im geteilten Link
    (#p=…). Nie umsortieren, nur hinten anhängen — sonst brechen alte Links. */
@@ -70,8 +71,9 @@ const NEUE_ORTE = [
    (speisehaus.ch). Ausstellungsräume, Grosser Saal, Vital-Café, Glashaus,
    Haus de Jaager, Helene-Finckh-Haus: goetheanum.ch/de/campus/oeffnungszeiten.
    ausnahmen = Seite mit tagesaktuellen Einschränkungen (Grosser Saal,
-   Glashaus) — die Zeile verlinkt sie; eine Live-Anbindung ist die nächste
-   Etappe (Konzept § 12, Punkt 9).
+   Glashaus) — die Zeile verlinkt sie; live = Schlüssel in der Antwort der
+   Edge Function campusplan-ausnahmen (services/campusplan/), die diese
+   Seiten liest und zum Besuchstag die Tageszeile liefert.
 
    thema: basis (immer dabei, nummeriert) · anreise (immer dabei, unnummeriert)
    · eines der fünf Themen. rang 1 = Highlight. dauer in Minuten.
@@ -90,27 +92,27 @@ const GAESTE = [
   // Der Bau
   { id: "v16", thema: "bau", rang: 1, gehfolge: 6, dauer: 30, zugang: "betreten",
     zeiten: { de: "Besichtigung täglich 13.30 bis 14.30 Uhr, Ausnahmen bei Veranstaltungen und Proben", en: "Viewing daily 1.30 to 2.30 pm, exceptions for events and rehearsals" },
-    ausnahmen: "https://goetheanum.ch/de/campus/sonder-oeffnungszeiten-grossen-saal",
+    ausnahmen: "https://goetheanum.ch/de/campus/sonder-oeffnungszeiten-grossen-saal", live: "saal",
     einzeiler: { de: "Knapp tausend Plätze unter einer Deckenmalerei in Pflanzenfarben, farbige Glasfenster von 1945.",
                  en: "Nearly a thousand seats under a ceiling painted in plant colours, stained glass from 1945." } },
   { id: "o46", thema: "bau", rang: 2, gehfolge: 8, dauer: 20, zugang: "betreten",
     zeiten: { de: "Mo bis Do 14.30 bis 15.30, Fr 14 bis 16, Sa und So 10 bis 12 und 14 bis 16 Uhr", en: "Mon to Thu 2.30 to 3.30 pm, Fri 2 to 4 pm, Sat and Sun 10 am to noon and 2 to 4 pm" },
-    einzeiler: { de: "Über acht Meter Holz: die Christusfigur zwischen Luzifer und Ahriman, von Rudolf Steiner und Edith Maryon ab 1914.",
-                 en: "Over eight metres of wood: the Christ figure between Lucifer and Ahriman, by Rudolf Steiner and Edith Maryon from 1914." } },
+    einzeiler: { de: "Die über acht Meter hohe Holzskulptur von Rudolf Steiner und Edith Maryon, entstanden ab 1914.",
+                 en: "The wood sculpture over eight metres tall by Rudolf Steiner and Edith Maryon, begun in 1914." } },
   { id: "v12", thema: "bau", rang: 3, gehfolge: 5, dauer: 20, zugang: "betreten", kinder: true,
     zeiten: { de: "täglich 9 bis 20 Uhr, Vital-Café 9 bis 17 Uhr", en: "daily 9 am to 8 pm, Vital café 9 am to 5 pm" },
-    einzeiler: { de: "Das Foyer unter dem Grossen Saal, mit dem Café.", en: "The foyer beneath the Great Hall, with the café." } },
+    einzeiler: { de: "Die Halle mit dem Vital-Café.", en: "The hall with the Vital café." } },
   { id: "n-treppen", thema: "bau", rang: 4, gehfolge: 7, dauer: 10, zugang: "betreten",
-    einzeiler: { de: "Die geschwungenen Betontreppen im Norden und Süden des Baus.",
-                 en: "The sweeping concrete staircases in the north and south of the building." } },
+    einzeiler: { de: "Haupt-, Nord- und Südtreppe mit Liften zu Galerie und Grossem Saal.",
+                 en: "Main, north and south staircases with lifts to the gallery and the Great Hall." } },
 
   // Architektursammlung
   { id: "h-heizhaus", thema: "sammlung", rang: 1, gehfolge: 17, dauer: 10, zugang: "aussen",
     einzeiler: { de: "Der erste Betonbau des Hügels: ein Heizwerk mit sphinxhafter Form, bis heute in Betrieb (1915).",
                  en: "The hill's first concrete building: a boiler house of sphinx-like form, still in use (1915)." } },
   { id: "v32", thema: "sammlung", rang: 2, gehfolge: 33, dauer: 10, zugang: "aussen",
-    zeiten: { de: "innen So 15 bis 16 Uhr, Ausnahmen laut goetheanum.ch", en: "inside Sun 3 to 4 pm, exceptions per goetheanum.ch" },
-    ausnahmen: "https://goetheanum.ch/de/campus/oeffnungszeiten-ausstellung-goethe",
+    zeiten: { de: "Ausstellung ‹Die Entdeckung der Ganzheit› So 15 bis 16 Uhr", en: "Exhibition ‹Die Entdeckung der Ganzheit› Sun 3 to 4 pm" },
+    ausnahmen: "https://goetheanum.ch/de/campus/oeffnungszeiten-ausstellung-goethe", live: "glashaus",
     einzeiler: { de: "Zwei Kuppeln unter Schiefer, gebaut zum Schleifen der Glasfenster des Ersten Goetheanum (1914).",
                  en: "Two domes under slate, built for grinding the stained glass of the First Goetheanum (1914)." } },
   { id: "h-schreinerei", thema: "sammlung", rang: 3, gehfolge: 12, dauer: 10, zugang: "betreten",
@@ -127,21 +129,18 @@ const GAESTE = [
     einzeiler: { de: "Steiners Trafostation mit kubischen Auskragungen, bis heute am Netz (1921).",
                  en: "Steiner's transformer station with cubic projections, still on the grid (1921)." } },
   { id: "h-jaager", thema: "sammlung", rang: 7, gehfolge: 25, dauer: 10, zugang: "aussen", gebaeude: ["campusbau-50"],
-    zeiten: { de: "innen jeden ersten Freitag 15 bis 16 Uhr", en: "inside every first Friday 3 to 4 pm" },
-    einzeiler: { de: "Wohn- und Atelierhaus für einen Bildhauer, kantig und doch mit Anklang an die Doppelkuppel (1921).",
-                 en: "Home and studio for a sculptor, angular yet echoing the double dome (1921)." } },
+    zeiten: { de: "innen jeden ersten Freitag im Monat 15 bis 16 Uhr, Juli und August geschlossen", en: "inside every first Friday of the month 3 to 4 pm, closed July and August" },
+    einzeiler: { de: "Privates Wohnhaus von 1921 mit dem künstlerischen Nachlass des Bildhauers Jacques de Jaager.",
+                 en: "Private home of 1921 with the artistic estate of the sculptor Jacques de Jaager." } },
   { id: "h-eurythmie", thema: "sammlung", rang: 8, gehfolge: 23, dauer: 10, zugang: "aussen",
     gebaeude: ["campusbau-47", "campusbau-48", "campusbau-49"],
     einzeiler: { de: "Drei Wohnhäuser nach Entwurf von Edith Maryon (1920).",
                  en: "Three houses designed by Edith Maryon (1920)." } },
-  { id: "h-verlag", thema: "sammlung", rang: 9, gehfolge: 34, dauer: 10, zugang: "aussen",
-    einzeiler: { de: "Der letzte von Steiner entworfene Bau der Kolonie.",
-                 en: "The last building of the colony designed by Steiner." } },
+  { id: "h-verlag", thema: "sammlung", rang: 9, gehfolge: 34, dauer: 10, zugang: "aussen" },
 
   // Gartenpark
   { id: "g-felsli", thema: "garten", rang: 1, gehfolge: 30, dauer: 15, zugang: "betreten", barrierefrei: false,
-    einzeiler: { de: "Der Felsvorsprung am Westende des Hügels: der Aussichtspunkt.",
-                 en: "The rock spur at the western end of the hill: the lookout." } },
+    einzeiler: { de: "Das westliche Ende des Hügels.", en: "The western end of the hill." } },
   { id: "g-wasserspiel", thema: "garten", rang: 2, gehfolge: 35, dauer: 10, zugang: "betreten", kinder: true },
   { id: "g-gedenkhain", thema: "garten", rang: 3, gehfolge: 31, dauer: 15, zugang: "betreten",
     einzeiler: { de: "Urnenhain, in dem Rudolf Steiner, Marie Steiner-von Sivers und Christian Morgenstern ruhen.",
@@ -151,31 +150,27 @@ const GAESTE = [
   { id: "g-faerberpflanzen", thema: "garten", rang: 6, gehfolge: 20, dauer: 10, zugang: "betreten" },
   { id: "g-schnittblumen", thema: "garten", rang: 7, gehfolge: 21, dauer: 10, zugang: "betreten" },
   { id: "g-bienen", thema: "garten", rang: 8, gehfolge: 22, dauer: 10, zugang: "betreten", kinder: true },
-  { id: "g-praeparate", thema: "garten", rang: 9, gehfolge: 18, dauer: 10, zugang: "aussen",
-    einzeiler: { de: "Hier entstehen die biodynamischen Präparate der Gärtnerei.",
-                 en: "Where the garden's biodynamic preparations are made." } },
+  { id: "g-praeparate", thema: "garten", rang: 9, gehfolge: 18, dauer: 10, zugang: "aussen" },
 
   // Bücher, Kunst, Ausstellungen
   { id: "o5", thema: "kultur", rang: 1, gehfolge: 4, dauer: 20, zugang: "betreten",
     zeiten: { de: "Di bis Fr 10 bis 18, Sa 10 bis 17, So 11 bis 16 Uhr", en: "Tue to Fri 10 am to 6 pm, Sat 10 am to 5 pm, Sun 11 am to 4 pm" }, geschlossen: [1] },
   { id: "o41", thema: "kultur", rang: 2, gehfolge: 13, dauer: 30, zugang: "betreten",
     zeiten: { de: "Fr bis So 14 bis 16 Uhr", en: "Fri to Sun 2 to 4 pm" }, geschlossen: [1, 2, 3, 4],
-    einzeiler: { de: "Das Modell des 1922 abgebrannten Holzbaus, dazu seine Geschichte.",
-                 en: "The model of the wooden building that burned in 1922, and its story." } },
+    einzeiler: { de: "Modell des Ersten Goetheanum, das in der Silvesternacht 1922 abbrannte. Schreinerei Südsaal links, Eintritt CHF 5.",
+                 en: "Model of the First Goetheanum, which burned on New Year's Eve 1922. Schreinerei south hall, left; admission CHF 5." } },
   { id: "o40", thema: "kultur", rang: 3, gehfolge: 14, dauer: 15, zugang: "betreten",
     zeiten: { de: "Fr 14 bis 15 Uhr", en: "Fri 2 to 3 pm" }, geschlossen: [0, 1, 2, 3, 4, 6],
-    einzeiler: { de: "Steiners Arbeitsraum in der Schreinerei.", en: "Steiner's workroom in the Schreinerei." } },
-  { id: "o6", thema: "kultur", rang: 4, gehfolge: 9, dauer: 20, zugang: "betreten",
-    einzeiler: { de: "Ausstellungsraum im Goetheanum.", en: "Exhibition space in the Goetheanum." } },
+    einzeiler: { de: "Schreinerei, rechter Eingang.", en: "Schreinerei, right-hand entrance." } },
+  { id: "o6", thema: "kultur", rang: 4, gehfolge: 9, dauer: 20, zugang: "betreten" },
   { id: "o7", thema: "kultur", rang: 5, gehfolge: 10, dauer: 20, zugang: "betreten",
     zeiten: { de: "Di, Do und Fr 14 bis 18 Uhr", en: "Tue, Thu and Fri 2 pm to 6 pm" }, geschlossen: [0, 1, 3, 6] },
   { id: "o42", thema: "kultur", rang: 6, gehfolge: 15, dauer: 10, zugang: "betreten",
     zeiten: { de: "Fr 14.30 bis 15.30 Uhr", en: "Fri 2.30 to 3.30 pm" }, geschlossen: [0, 1, 2, 3, 4, 6],
-    einzeiler: { de: "Der hohe Raum, in dem die Holzplastik entstand.", en: "The tall room where the wood sculpture was made." } },
+    einzeiler: { de: "Blaues Holzhaus im Südwesten der Schreinerei.", en: "Blue wooden house south-west of the Schreinerei." } },
   { id: "o43", thema: "kultur", rang: 7, gehfolge: 24, dauer: 10, zugang: "betreten",
     zeiten: { de: "Fr 15.30 bis 16.30 Uhr", en: "Fri 3.30 to 4.30 pm" }, geschlossen: [0, 1, 2, 3, 4, 6],
-    einzeiler: { de: "Erinnerungsraum an die Bildhauerin, Mitschöpferin der Holzplastik.",
-                 en: "Memorial room for the sculptor, co-creator of the wood sculpture." } },
+    einzeiler: { de: "Unteres Eurythmiehaus, Rüttiweg 30, 1. Etage.", en: "Lower Eurythmiehaus, Rüttiweg 30, first floor." } },
 
   // Essen und Verweilen
   // Grabstein: das Café war kurz ein eigener Ort (o8), liegt aber in der
@@ -185,8 +180,9 @@ const GAESTE = [
     zeiten: { de: "Laden Mo bis Fr 8 bis 18.30, Sa und So 8 bis 16 Uhr; Restaurant zurzeit geschlossen", en: "Shop Mon to Fri 8 am to 6.30 pm, Sat and Sun 8 am to 4 pm; restaurant currently closed" } },
   { id: "f-vital", thema: "essen", rang: 3, gehfolge: 28, dauer: 15, zugang: "betreten",
     zeiten: { de: "Mo bis Fr 8 bis 18.30, Sa und So 8 bis 16 Uhr", en: "Mon to Fri 8 am to 6.30 pm, Sat and Sun 8 am to 4 pm" } },
-  { id: "v23", thema: "essen", rang: 4, gehfolge: 16, dauer: 15, zugang: "aussen", kinder: true,
-    einzeiler: { de: "Der Holzofen bei der Schreinerei.", en: "The wood-fired oven by the Schreinerei." } },
+  { id: "v23", thema: "essen", rang: 4, gehfolge: 16, dauer: 15, zugang: "anfrage",
+    einzeiler: { de: "Ein Eurythmiesaal bei der Schreinerei; im Sommer wird er so heiss, dass er seinen Spitznamen bekam.",
+                 en: "A eurythmy hall by the Schreinerei; in summer it gets so hot that it earned its nickname." } },
 
   // Sektionen der Hochschule (Arbeitsorte: Zugang auf Anfrage; Gehfolge folgt
   // dem Haus, in dem sie sitzen — nachgestellt hinter den jeweiligen Bau)
@@ -206,5 +202,5 @@ const GAESTE = [
   // Nachtrag 14. 9.: das Helene-Finckh-Haus ist samstags offen (goetheanum.ch)
   { id: "h-finckh", thema: "sammlung", rang: 10, gehfolge: 18, dauer: 10, zugang: "betreten",
     zeiten: { de: "Sa 15 bis 16 Uhr", en: "Sat 3 to 4 pm" }, geschlossen: [0, 1, 2, 3, 4, 5],
-    einzeiler: { de: "Das kleine Holzhaus der Malerin und Steiner-Mitarbeiterin Helene Finckh.", en: "The small wooden house of the painter and Steiner collaborator Helene Finckh." } }
+    einzeiler: { de: "Hügelweg 64 A, in der Kurve oberhalb des Parkplatzes.", en: "Hügelweg 64 A, on the bend above the car park." } }
 ];

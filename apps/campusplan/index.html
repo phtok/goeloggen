@@ -55,13 +55,12 @@
   .karte-tools{position:absolute;right:var(--s3);bottom:var(--s3);display:grid;gap:var(--s2)}
   .karte-tools .btn{min-width:var(--tap);min-height:var(--tap);padding:0;font-size:var(--t-body);box-shadow:var(--shadow-card)}
   #karte [data-aktiv]{fill:var(--karte-goetheanum,var(--blue-solid))}
+  /* Die Karte ist ein Artefakt mit festen Farben (Kartentool-Palette); Marken-
+     füllungen, Ring und Grad stehen darum als SVG-Attribute in app.js, gerechnet
+     gegen die Kartengründe (Konzept § 12, Punkt 10) — nicht als Theme-Tokens. */
   .marke{cursor:pointer}
-  .marke circle{fill:var(--gold-deep);stroke:var(--on-accent);stroke-width:.35}
-  .marke.besucht circle{fill:var(--ok)}
-  .marke.anreise circle{fill:var(--blue-solid)}
-  .marke.fokus circle{stroke:var(--gold);stroke-width:.9}
-  /* Grad der Markenzahl steht als SVG-Attribut in Blatt-mm (app.js), nicht hier. */
-  .marke text{fill:var(--on-accent);font-family:var(--font-text);font-weight:600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+  .marke.fokus circle{stroke-width:.9}
+  .marke text{font-family:var(--font-text);font-weight:600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
 
   /* Stationen: eine Zeile je Ort, Fingerziel 44px, Kästchen links, Karte rechts. */
   .plan{display:grid;gap:var(--s5);margin-top:var(--s5)}
@@ -81,6 +80,7 @@
   .stn .stn-line{font-family:var(--font-text);font-size:var(--t-small);line-height:1.45;color:var(--ink)}
   .stn .stn-karte{min-width:var(--tap);min-height:var(--tap);padding:0 var(--s3)}
   .stn .stn-zu{color:var(--bad);font-weight:600}
+  .stn .stn-live{color:var(--ok-ink);font-weight:600}
   .besuchstag{margin-top:var(--s6);max-width:360px}
   .besuchstag input[type="date"]{min-height:var(--tap);font-size:16px}
   .pdf-hint{margin-top:var(--s2)}
@@ -160,7 +160,7 @@
       <label class="field">
         <span class="lab" data-ui="datum-lab">Besuchstag, wenn du ihn schon kennst</span>
         <input type="date" id="datum" />
-        <span class="hint" data-ui="datum-hint">Damit der Plan sagt, was an diesem Tag geschlossen ist.</span>
+        <span class="hint" data-ui="datum-hint">Mit Besuchstag kommen nur Orte in den Plan, die an diesem Tag offen sind. Geschlossene bleiben unter «Mehr Orte» und sind markiert.</span>
       </label>
     </div>
     <div class="schrittfuss">
@@ -172,7 +172,7 @@
   <section id="s3" hidden>
     <div class="shead">
       <h2 id="s3-frage">Dein Plan</h2>
-      <p class="plan-summe"><span class="readout" id="summe"></span></p>
+      <p class="plan-summe"><span class="readout" id="summe"></span><span class="readout" id="datum-info"></span></p>
     </div>
 
     <div class="plan">

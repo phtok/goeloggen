@@ -128,7 +128,7 @@ LEGENDE = [
     ("o40", "40", "orientierung", {"de": "Rudolf-Steiner-Atelier", "en": "Rudolf Steiner Atelier"}),
     ("o41", "41", "orientierung", {"de": "Baugeschichte + Modell Erstes Goetheanum", "en": "Building History + 1st Goetheanum Model"}),
     ("o42", "42", "orientierung", {"de": "Hochatelier", "en": "Hochatelier"}),
-    ("o43", "43", "orientierung", {"de": "Edith-Maryon-Zimmer", "en": "Edith Maryon Flat"}),
+    ("o43", "43", "orientierung", {"de": "Künstlerwohnung Edith Maryon", "en": "Edith Maryon Flat"}),
     ("o44", "44", "orientierung", {"de": "Haus Duldeck · Rudolf-Steiner-Archiv", "en": "Haus Duldeck · Rudolf Steiner Archive"}),
     ("o45", "45", "orientierung", {"de": "Speisehaus · Laden", "en": "Restaurant · Shop"}, {
         "pfeil": "unten-rechts",
@@ -332,18 +332,19 @@ WILLKOMMEN = [
     ("h-trafo", "58", "haeuser",
      {"de": "Transformatorenhaus", "en": "Transformer House"},
      [[294.25, 229.32]], {"gebaeude": "campusbau-51"}),
+    # Verlagshaus: Lage vom Auftraggeber bestätigt (14. September 2026).
     ("h-verlag", "59", "haeuser",
      {"de": "Verlagshaus", "en": "Publishing House"},
-     [[137.4, 94.4]], {"gebaeude": "campusbau-43", "lageGeschaetzt": True}),
+     [[137.4, 94.4]], {"gebaeude": "campusbau-43"}),
     # Im Bau: Grosser Saal als eigener Ort (fehlte, weil der LT25-Reader
-    # ihn nicht nummerierte), die Holzplastik im 5. Obergeschoss. Das Café
+    # ihn nicht nummerierte), die Holzskulptur im 5. Obergeschoss. Das Café
     # liegt in der Wandelhalle (v12) und ist dort mit gemeint — kein
     # eigener Ort (Rückmeldung Auftraggeber, 14. September 2026).
     ("v16", "16", "saele",
      {"de": "Grosser Saal", "en": "Great Hall"},
      [[198.6, 127.5]], {"gebaeude": "campusbau-53"}),
     ("o46", "46", "ausstellung",
-     {"de": "Menschheitsrepräsentant", "en": "Representative of Humanity"},
+     {"de": "Holzskulptur", "en": "Wood Sculpture"},  # Bezeichnung wie goetheanum.ch («Ausstellungsraum mit Holzskulptur»)
      [[210.8, 121.5]], {"gebaeude": "campusbau-53"}),
 ]
 

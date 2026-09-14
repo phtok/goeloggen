@@ -12,3 +12,4 @@ Nicht-statische Unterprojekte mit eigenem Runtime- oder Worker-Kontext.
 - `qr-generator/` – Backend von `apps/qr-generator/`: Kurzlinks mit anonymer Scan-Zaehlung.
 - `kistenpflege/` – Sortierer der Werkzeugkiste (Edge Function `sortierer-commit`).
 - `werkzeugpost/` – Textbestand der Werkzeugpost (Mails, Personas).
+- `campusplan/` – Backend des Campusplans (`apps/campusplan/`): Edge Function `campusplan-ausnahmen` (tagesaktuelle Ausnahmen von goetheanum.ch) und der monatliche Öffnungszeiten-Wächter.
