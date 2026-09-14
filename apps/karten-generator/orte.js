@@ -202,25 +202,6 @@ const ORTE = [
     "legendeText": "WC"
   },
   {
-    "id": "o8",
-    "marker": "8",
-    "art": "orientierung",
-    "kategorie": "eingaenge",
-    "farbe": "gold",
-    "label": {
-      "de": "Café",
-      "en": "Café"
-    },
-    "positionen": [
-      [
-        207.0,
-        141.0
-      ]
-    ],
-    "gebaeude": "campusbau-52",
-    "lageGeschaetzt": true
-  },
-  {
     "id": "f46",
     "marker": "S",
     "art": "orientierung",

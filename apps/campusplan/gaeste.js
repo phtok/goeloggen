@@ -22,7 +22,7 @@ const THEMEN = [
     kurz: { de: "Buchhandlung, Modell des Ersten Goetheanum, Atelier, Galerie",
             en: "Bookshop, model of the First Goetheanum, studio, gallery" } },
   { id: "essen", name: { de: "Essen und Verweilen", en: "Food and Rest" },
-    kurz: { de: "Café, Speisehaus, Vitalshop", en: "Café, Speisehaus, Vitalshop" } },
+    kurz: { de: "Café in der Wandelhalle, Speisehaus, Vitalshop", en: "Café in the Wandelhalle, Speisehaus, Vitalshop" } },
   { id: "sektionen", name: { de: "Sektionen der Hochschule", en: "Sections of the School" },
     kurz: { de: "Wo die zwölf Sektionen arbeiten: Glashaus, Halde, Goetheanum und mehr",
             en: "Where the twelve sections work: Glashaus, Halde, Goetheanum and more" } }
@@ -60,8 +60,14 @@ const NEUE_ORTE = [
 /* zeiten = Öffnungszeit als Satz (DE/EN); geschlossen = Wochentage (0 = Sonntag,
    1 = Montag …), an denen der Ort zu ist — bei gewähltem Besuchstag fällt er
    aus der Vorauswahl und die Zeile sagt es. Ohne Angabe: keine Aussage.
-   Belegt (goetheanum.ch, September 2026): Goetheanum täglich 9 bis 20 Uhr,
-   Empfang und Kasse Dienstag bis Sonntag 9 bis 18 Uhr. Alles Weitere zu prüfen.
+   Belegt (Stand 14. September 2026): Goetheanum täglich 9 bis 20 Uhr und
+   Empfang Di bis So 9 bis 18 Uhr (goetheanum.ch/de/besuch); Buchhandlung
+   Di bis Fr 10 bis 18, Sa 10 bis 17, So 11 bis 16 Uhr, Mo zu
+   (goetheanum-buchhandlung.ch); Bibliothek Di, Do, Fr 14 bis 18 Uhr,
+   Sommerpause (goetheanum.ch/en/documentation/library); Archiv-Lesesaal
+   Mo bis Fr 15 bis 18 Uhr (rudolf-steiner.com); Speisehaus-Laden Mo bis Fr
+   8 bis 18.30, Sa und So 8 bis 16 Uhr, Restaurant zurzeit geschlossen
+   (speisehaus.ch). Nicht belegt: Café in der Wandelhalle.
 
    thema: basis (immer dabei, nummeriert) · anreise (immer dabei, unnummeriert)
    · eines der fünf Themen. rang 1 = Highlight. dauer in Minuten.
@@ -79,15 +85,16 @@ const GAESTE = [
 
   // Der Bau
   { id: "v16", thema: "bau", rang: 1, gehfolge: 6, dauer: 30, zugang: "betreten",
-    zeiten: { de: "Goetheanum täglich 9 bis 20 Uhr", en: "Goetheanum daily 9 am to 8 pm" },
+    zeiten: { de: "Goetheanum täglich 9 bis 20 Uhr; öffentliche Führung jeden Samstag 14 Uhr", en: "Goetheanum daily 9 am to 8 pm; public guided tour every Saturday 2 pm" },
     einzeiler: { de: "Knapp tausend Plätze unter einer Deckenmalerei in Pflanzenfarben, farbige Glasfenster von 1945.",
                  en: "Nearly a thousand seats under a ceiling painted in plant colours, stained glass from 1945." } },
   { id: "o46", thema: "bau", rang: 2, gehfolge: 8, dauer: 20, zugang: "anfrage",
+    zeiten: { de: "öffentliche Führung jeden Samstag 14 Uhr, CHF 25, Anmeldung am Empfang", en: "public guided tour every Saturday 2 pm, CHF 25, sign up at reception" },
     einzeiler: { de: "Über acht Meter Holz: die Christusfigur zwischen Luzifer und Ahriman, von Rudolf Steiner und Edith Maryon ab 1914.",
                  en: "Over eight metres of wood: the Christ figure between Lucifer and Ahriman, by Rudolf Steiner and Edith Maryon from 1914." } },
-  { id: "v12", thema: "bau", rang: 3, gehfolge: 5, dauer: 10, zugang: "betreten",
+  { id: "v12", thema: "bau", rang: 3, gehfolge: 5, dauer: 20, zugang: "betreten", kinder: true,
     zeiten: { de: "täglich 9 bis 20 Uhr", en: "daily 9 am to 8 pm" },
-    einzeiler: { de: "Das Foyer unter dem Grossen Saal.", en: "The foyer beneath the Great Hall." } },
+    einzeiler: { de: "Das Foyer unter dem Grossen Saal, mit dem Café.", en: "The foyer beneath the Great Hall, with the café." } },
   { id: "n-treppen", thema: "bau", rang: 4, gehfolge: 7, dauer: 10, zugang: "betreten",
     einzeiler: { de: "Die geschwungenen Betontreppen im Norden und Süden des Baus.",
                  en: "The sweeping concrete staircases in the north and south of the building." } },
@@ -103,6 +110,7 @@ const GAESTE = [
     einzeiler: { de: "Die Bauhütte des Ersten Goetheanum, in der Steiner arbeitete und 1925 starb (1913).",
                  en: "The building lodge of the First Goetheanum, where Steiner worked and died in 1925 (1913)." } },
   { id: "o44", thema: "sammlung", rang: 4, gehfolge: 29, dauer: 10, zugang: "aussen", gebaeude: ["campusbau-45"],
+    zeiten: { de: "Lesesaal und Shop des Archivs Mo bis Fr 15 bis 18 Uhr", en: "Archive reading room and shop Mon to Fri 3 pm to 6 pm" },
     einzeiler: { de: "Eisenbeton-Wohnhaus für den Stifter des Grundstücks, seit 2002 Rudolf-Steiner-Archiv (1915).",
                  en: "Reinforced-concrete home of the land's donor, the Rudolf Steiner Archive since 2002 (1915)." } },
   { id: "v31", thema: "sammlung", rang: 5, gehfolge: 32, dauer: 15, zugang: "betreten", kinder: true,
@@ -140,7 +148,8 @@ const GAESTE = [
                  en: "Where the garden's biodynamic preparations are made." } },
 
   // Bücher, Kunst, Ausstellungen
-  { id: "o5", thema: "kultur", rang: 1, gehfolge: 4, dauer: 20, zugang: "betreten" },
+  { id: "o5", thema: "kultur", rang: 1, gehfolge: 4, dauer: 20, zugang: "betreten",
+    zeiten: { de: "Di bis Fr 10 bis 18, Sa 10 bis 17, So 11 bis 16 Uhr", en: "Tue to Fri 10 am to 6 pm, Sat 10 am to 5 pm, Sun 11 am to 4 pm" }, geschlossen: [1] },
   { id: "o41", thema: "kultur", rang: 2, gehfolge: 13, dauer: 30, zugang: "betreten",
     einzeiler: { de: "Das Modell des 1922 abgebrannten Holzbaus, dazu seine Geschichte.",
                  en: "The model of the wooden building that burned in 1922, and its story." } },
@@ -148,7 +157,8 @@ const GAESTE = [
     einzeiler: { de: "Steiners Arbeitsraum in der Schreinerei.", en: "Steiner's workroom in the Schreinerei." } },
   { id: "o6", thema: "kultur", rang: 4, gehfolge: 9, dauer: 20, zugang: "betreten",
     einzeiler: { de: "Ausstellungsraum im Goetheanum.", en: "Exhibition space in the Goetheanum." } },
-  { id: "o7", thema: "kultur", rang: 5, gehfolge: 10, dauer: 20, zugang: "betreten" },
+  { id: "o7", thema: "kultur", rang: 5, gehfolge: 10, dauer: 20, zugang: "betreten",
+    zeiten: { de: "Di, Do und Fr 14 bis 18 Uhr", en: "Tue, Thu and Fri 2 pm to 6 pm" }, geschlossen: [0, 1, 3, 6] },
   { id: "o42", thema: "kultur", rang: 6, gehfolge: 15, dauer: 10, zugang: "anfrage",
     einzeiler: { de: "Der hohe Raum, in dem die Holzplastik entstand.", en: "The tall room where the wood sculpture was made." } },
   { id: "o43", thema: "kultur", rang: 7, gehfolge: 24, dauer: 10, zugang: "anfrage",
@@ -156,9 +166,13 @@ const GAESTE = [
                  en: "Memorial room for the sculptor, co-creator of the wood sculpture." } },
 
   // Essen und Verweilen
-  { id: "o8", thema: "essen", rang: 1, gehfolge: 3, dauer: 30, zugang: "betreten" },
-  { id: "o45", thema: "essen", rang: 2, gehfolge: 27, dauer: 60, zugang: "betreten", kinder: true },
-  { id: "f-vital", thema: "essen", rang: 3, gehfolge: 28, dauer: 15, zugang: "betreten" },
+  // Grabstein: das Café war kurz ein eigener Ort (o8), liegt aber in der
+  // Wandelhalle (v12). Die Zeile bleibt, damit das Link-Bit nicht rutscht.
+  { id: "o8", thema: "aus", rang: 99, gehfolge: 0, dauer: 0 },
+  { id: "o45", thema: "essen", rang: 2, gehfolge: 27, dauer: 60, zugang: "betreten", kinder: true,
+    zeiten: { de: "Laden Mo bis Fr 8 bis 18.30, Sa und So 8 bis 16 Uhr; Restaurant zurzeit geschlossen", en: "Shop Mon to Fri 8 am to 6.30 pm, Sat and Sun 8 am to 4 pm; restaurant currently closed" } },
+  { id: "f-vital", thema: "essen", rang: 3, gehfolge: 28, dauer: 15, zugang: "betreten",
+    zeiten: { de: "Mo bis Fr 8 bis 18.30, Sa und So 8 bis 16 Uhr", en: "Mon to Fri 8 am to 6.30 pm, Sat and Sun 8 am to 4 pm" } },
   { id: "v23", thema: "essen", rang: 4, gehfolge: 16, dauer: 15, zugang: "aussen", kinder: true,
     einzeiler: { de: "Der Holzofen bei der Schreinerei.", en: "The wood-fired oven by the Schreinerei." } },
 
