@@ -531,7 +531,8 @@ function ortMarker(ort) {
 function ortJustierbar(ort) {
   return ort.kategorie === "sektionen" || ort.kategorie === "gaerten"
     || ort.kategorie === "verkehr" || ort.id.indexOf("wc-") === 0
-    || ort.id === "b-zugang";  // Überlappung mit dem Südeingang ausgleichbar
+    || ort.id === "b-zugang"  // Überlappung mit dem Südeingang ausgleichbar
+    || !!ort.lageGeschaetzt;  // noch nicht am Gelände geprüfte Lagen (Campusplan)
 }
 
 function ortBeweglich(ort) {

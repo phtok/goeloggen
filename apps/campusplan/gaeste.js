@@ -22,7 +22,10 @@ const THEMEN = [
     kurz: { de: "Buchhandlung, Modell des Ersten Goetheanum, Atelier, Galerie",
             en: "Bookshop, model of the First Goetheanum, studio, gallery" } },
   { id: "essen", name: { de: "Essen und Verweilen", en: "Food and Rest" },
-    kurz: { de: "Café, Speisehaus, Vitalshop", en: "Café, Speisehaus, Vitalshop" } }
+    kurz: { de: "Café, Speisehaus, Vitalshop", en: "Café, Speisehaus, Vitalshop" } },
+  { id: "sektionen", name: { de: "Sektionen der Hochschule", en: "Sections of the School" },
+    kurz: { de: "Wo die zwölf Sektionen arbeiten: Glashaus, Halde, Goetheanum und mehr",
+            en: "Where the twelve sections work: Glashaus, Halde, Goetheanum and more" } }
 ];
 
 const UMSTAENDE = [
@@ -45,34 +48,29 @@ const ZUGANG = {
   fuehrung: { de: "mit Führung", en: "with a guided tour" }
 };
 
-/* Orte, die im Katalog fehlen. Lage in Blatt-mm; lageGeschaetzt = noch nicht
-   am Gelände geprüft (Konzept § 11, Nebenbefund). */
+/* Orte, die es nur im Gästeplan gibt (kein Katalog-Ort). Lage in Blatt-mm.
+   Heizhaus, Transformatorenhaus, Verlagshaus, Schreinerei, Grosser Saal,
+   Menschheitsrepräsentant und Café stehen seit dem 14. September 2026 im
+   Katalog des Kartentools (tools/karten/extract-marker-positionen.py). */
 const NEUE_ORTE = [
-  { id: "n-saal", label: { de: "Grosser Saal", en: "Great Hall" },
-    positionen: [[198.6, 127.5]], gebaeude: "campusbau-53" },
-  { id: "n-mensch", label: { de: "Menschheitsrepräsentant", en: "Representative of Humanity" },
-    positionen: [[210.8, 121.5]], gebaeude: "campusbau-53" },
   { id: "n-treppen", label: { de: "Treppenhäuser", en: "Staircases" },
-    positionen: [[184.3, 125.9]], gebaeude: "campusbau-53" },
-  { id: "n-cafe", label: { de: "Café", en: "Café" },
-    positionen: [[207.0, 141.0]], gebaeude: "campusbau-52", lageGeschaetzt: true },
-  { id: "n-schreinerei", label: { de: "Schreinerei", en: "Schreinerei (Carpentry)" },
-    positionen: [[228.0, 93.0]], gebaeude: "campusbau-19" },
-  { id: "n-heizhaus", label: { de: "Heizhaus", en: "Heizhaus (Boiler House)" },
-    positionen: [[246.6, 77.0]], gebaeude: "campusbau-23", lageGeschaetzt: true },
-  { id: "n-trafo", label: { de: "Transformatorenhaus", en: "Transformer House" },
-    positionen: [[291.6, 143.5]], gebaeude: "campusbau-24", lageGeschaetzt: true },
-  { id: "n-verlag", label: { de: "Verlagshaus", en: "Publishing House" },
-    positionen: [[137.4, 94.4]], gebaeude: "campusbau-43", lageGeschaetzt: true }
+    positionen: [[184.3, 125.9]], gebaeude: "campusbau-53" }
 ];
 
-/* thema: basis (immer dabei, nummeriert) · anreise (immer dabei, unnummeriert)
+/* zeiten = Öffnungszeit als Satz (DE/EN); geschlossen = Wochentage (0 = Sonntag,
+   1 = Montag …), an denen der Ort zu ist — bei gewähltem Besuchstag fällt er
+   aus der Vorauswahl und die Zeile sagt es. Ohne Angabe: keine Aussage.
+   Belegt (goetheanum.ch, September 2026): Goetheanum täglich 9 bis 20 Uhr,
+   Empfang und Kasse Dienstag bis Sonntag 9 bis 18 Uhr. Alles Weitere zu prüfen.
+
+   thema: basis (immer dabei, nummeriert) · anreise (immer dabei, unnummeriert)
    · eines der fünf Themen. rang 1 = Highlight. dauer in Minuten.
    barrierefrei:false = fällt bei ‹Barrierefrei› weg. kinder:true = rückt bei
    ‹Mit Kindern› nach vorn. gehfolge = Reihenfolge des Rundwegs. */
 const GAESTE = [
   { id: "o1", thema: "basis", gehfolge: 1, dauer: 0, zugang: "betreten" },
-  { id: "o3", thema: "basis", gehfolge: 2, dauer: 5, zugang: "betreten" },
+  { id: "o3", thema: "basis", gehfolge: 2, dauer: 5, zugang: "betreten",
+    zeiten: { de: "Di bis So 9 bis 18 Uhr", en: "Tue to Sun 9 am to 6 pm" }, geschlossen: [1] },
   { id: "wc-goetheanum", thema: "anreise", gehfolge: 0, dauer: 0 },
   { id: "f46", thema: "anreise", gehfolge: 0, dauer: 0 },
   { id: "f-bus", thema: "anreise", gehfolge: 0, dauer: 0 },
@@ -80,26 +78,28 @@ const GAESTE = [
   { id: "b-zugang", thema: "anreise", gehfolge: 0, dauer: 0, nurBarrierefrei: true },
 
   // Der Bau
-  { id: "n-saal", thema: "bau", rang: 1, gehfolge: 6, dauer: 30, zugang: "betreten",
+  { id: "v16", thema: "bau", rang: 1, gehfolge: 6, dauer: 30, zugang: "betreten",
+    zeiten: { de: "Goetheanum täglich 9 bis 20 Uhr", en: "Goetheanum daily 9 am to 8 pm" },
     einzeiler: { de: "Knapp tausend Plätze unter einer Deckenmalerei in Pflanzenfarben, farbige Glasfenster von 1945.",
                  en: "Nearly a thousand seats under a ceiling painted in plant colours, stained glass from 1945." } },
-  { id: "n-mensch", thema: "bau", rang: 2, gehfolge: 8, dauer: 20, zugang: "anfrage",
+  { id: "o46", thema: "bau", rang: 2, gehfolge: 8, dauer: 20, zugang: "anfrage",
     einzeiler: { de: "Über acht Meter Holz: die Christusfigur zwischen Luzifer und Ahriman, von Rudolf Steiner und Edith Maryon ab 1914.",
                  en: "Over eight metres of wood: the Christ figure between Lucifer and Ahriman, by Rudolf Steiner and Edith Maryon from 1914." } },
   { id: "v12", thema: "bau", rang: 3, gehfolge: 5, dauer: 10, zugang: "betreten",
+    zeiten: { de: "täglich 9 bis 20 Uhr", en: "daily 9 am to 8 pm" },
     einzeiler: { de: "Das Foyer unter dem Grossen Saal.", en: "The foyer beneath the Great Hall." } },
   { id: "n-treppen", thema: "bau", rang: 4, gehfolge: 7, dauer: 10, zugang: "betreten",
     einzeiler: { de: "Die geschwungenen Betontreppen im Norden und Süden des Baus.",
                  en: "The sweeping concrete staircases in the north and south of the building." } },
 
   // Architektursammlung
-  { id: "n-heizhaus", thema: "sammlung", rang: 1, gehfolge: 17, dauer: 10, zugang: "aussen",
+  { id: "h-heizhaus", thema: "sammlung", rang: 1, gehfolge: 17, dauer: 10, zugang: "aussen",
     einzeiler: { de: "Der erste Betonbau des Hügels: ein Heizwerk mit sphinxhafter Form, bis heute in Betrieb (1915).",
                  en: "The hill's first concrete building: a boiler house of sphinx-like form, still in use (1915)." } },
   { id: "v32", thema: "sammlung", rang: 2, gehfolge: 33, dauer: 10, zugang: "aussen",
     einzeiler: { de: "Zwei Kuppeln unter Schiefer, gebaut zum Schleifen der Glasfenster des Ersten Goetheanum (1914).",
                  en: "Two domes under slate, built for grinding the stained glass of the First Goetheanum (1914)." } },
-  { id: "n-schreinerei", thema: "sammlung", rang: 3, gehfolge: 12, dauer: 10, zugang: "betreten",
+  { id: "h-schreinerei", thema: "sammlung", rang: 3, gehfolge: 12, dauer: 10, zugang: "betreten",
     einzeiler: { de: "Die Bauhütte des Ersten Goetheanum, in der Steiner arbeitete und 1925 starb (1913).",
                  en: "The building lodge of the First Goetheanum, where Steiner worked and died in 1925 (1913)." } },
   { id: "o44", thema: "sammlung", rang: 4, gehfolge: 29, dauer: 10, zugang: "aussen", gebaeude: ["campusbau-45"],
@@ -108,7 +108,7 @@ const GAESTE = [
   { id: "v31", thema: "sammlung", rang: 5, gehfolge: 32, dauer: 15, zugang: "betreten", kinder: true,
     einzeiler: { de: "Der Betonanbau von 1923 war der Versuchsbau für das zweite Goetheanum, heute Tagungshaus.",
                  en: "The 1923 concrete extension was the trial build for the second Goetheanum, now a conference house." } },
-  { id: "n-trafo", thema: "sammlung", rang: 6, gehfolge: 26, dauer: 10, zugang: "aussen",
+  { id: "h-trafo", thema: "sammlung", rang: 6, gehfolge: 26, dauer: 10, zugang: "aussen",
     einzeiler: { de: "Steiners Trafostation mit kubischen Auskragungen, bis heute am Netz (1921).",
                  en: "Steiner's transformer station with cubic projections, still on the grid (1921)." } },
   { id: "h-jaager", thema: "sammlung", rang: 7, gehfolge: 25, dauer: 10, zugang: "aussen", gebaeude: ["campusbau-50"],
@@ -118,7 +118,7 @@ const GAESTE = [
     gebaeude: ["campusbau-47", "campusbau-48", "campusbau-49"],
     einzeiler: { de: "Drei Wohnhäuser nach Entwurf von Edith Maryon (1920).",
                  en: "Three houses designed by Edith Maryon (1920)." } },
-  { id: "n-verlag", thema: "sammlung", rang: 9, gehfolge: 34, dauer: 10, zugang: "aussen",
+  { id: "h-verlag", thema: "sammlung", rang: 9, gehfolge: 34, dauer: 10, zugang: "aussen",
     einzeiler: { de: "Der letzte von Steiner entworfene Bau der Kolonie.",
                  en: "The last building of the colony designed by Steiner." } },
 
@@ -156,9 +156,24 @@ const GAESTE = [
                  en: "Memorial room for the sculptor, co-creator of the wood sculpture." } },
 
   // Essen und Verweilen
-  { id: "n-cafe", thema: "essen", rang: 1, gehfolge: 3, dauer: 30, zugang: "betreten" },
+  { id: "o8", thema: "essen", rang: 1, gehfolge: 3, dauer: 30, zugang: "betreten" },
   { id: "o45", thema: "essen", rang: 2, gehfolge: 27, dauer: 60, zugang: "betreten", kinder: true },
   { id: "f-vital", thema: "essen", rang: 3, gehfolge: 28, dauer: 15, zugang: "betreten" },
   { id: "v23", thema: "essen", rang: 4, gehfolge: 16, dauer: 15, zugang: "aussen", kinder: true,
-    einzeiler: { de: "Der Holzofen bei der Schreinerei.", en: "The wood-fired oven by the Schreinerei." } }
+    einzeiler: { de: "Der Holzofen bei der Schreinerei.", en: "The wood-fired oven by the Schreinerei." } },
+
+  // Sektionen der Hochschule (Arbeitsorte: Zugang auf Anfrage; Gehfolge folgt
+  // dem Haus, in dem sie sitzen — nachgestellt hinter den jeweiligen Bau)
+  { id: "s-allgemein", thema: "sektionen", rang: 1, gehfolge: 7, dauer: 10, zugang: "anfrage" },
+  { id: "s-natur", thema: "sektionen", rang: 2, gehfolge: 33, dauer: 10, zugang: "anfrage" },
+  { id: "s-landwirtschaft", thema: "sektionen", rang: 3, gehfolge: 33, dauer: 10, zugang: "anfrage" },
+  { id: "s-paedagogik", thema: "sektionen", rang: 4, gehfolge: 7, dauer: 10, zugang: "anfrage" },
+  { id: "s-schoene", thema: "sektionen", rang: 5, gehfolge: 32, dauer: 10, zugang: "anfrage" },
+  { id: "s-redende", thema: "sektionen", rang: 6, gehfolge: 7, dauer: 10, zugang: "anfrage" },
+  { id: "s-sozial", thema: "sektionen", rang: 7, gehfolge: 18, dauer: 10, zugang: "anfrage" },
+  { id: "s-mathematik", thema: "sektionen", rang: 8, gehfolge: 21, dauer: 10, zugang: "anfrage" },
+  { id: "s-medizin", thema: "sektionen", rang: 9, gehfolge: 25, dauer: 10, zugang: "anfrage" },
+  { id: "s-jugend", thema: "sektionen", rang: 10, gehfolge: 10, dauer: 10, zugang: "anfrage" },
+  { id: "s-bildende", thema: "sektionen", rang: 11, gehfolge: 35, dauer: 10, zugang: "anfrage" },
+  { id: "s-heilpaedagogik", thema: "sektionen", rang: 12, gehfolge: 26, dauer: 10, zugang: "anfrage" }
 ];

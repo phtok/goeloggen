@@ -291,10 +291,11 @@ WILLKOMMEN = [
      [[185.53, 69.2]], {"gebaeude": "campusbau-25"}),
     ("h-jaager", "52", "haeuser",
      {"de": "Haus de Jaager", "en": "Haus de Jaager"},
-     [[266.08, 134.87]]),
+     [[266.08, 134.87]], {"gebaeude": "campusbau-50"}),
+    # Drei Eurythmiehäuser (campusbau-47/48/49); die Marke sitzt am mittleren.
     ("h-eurythmie", "53", "haeuser",
      {"de": "Eurythmiehaus", "en": "Eurythmiehaus"},
-     [[268.5, 97.0]]),
+     [[268.5, 97.0]], {"gebaeude": "campusbau-48"}),
     # Das Haus selbst liegt ausserhalb des Blatts — Marke am Strassen-
     # Anschnitt unten rechts (wie die Bushaltestelle), Pfeil nach aussen
     # (Entscheid Auftraggeber, 8. Juli 2026).
@@ -309,6 +310,36 @@ WILLKOMMEN = [
     ("h-kristall", "56", "haeuser",
      {"de": "Kristallisationslabor", "en": "Kristallisationslabor"},
      [[168.0, 60.3]], {"gebaeude": "campusbau-9"}),
+
+    # Für den Campusplan der Gäste ergänzt (14. September 2026, Konzept
+    # docs/specs/campusplan-besucher-konzept.md § 11). Die Architektur-
+    # sammlung des Hügels: Heizhaus, Transformatorenhaus und Verlagshaus
+    # (Merkliste 16. Juli, Punkt 4). Lagen mit lageGeschaetzt sind noch
+    # nicht am Gelände geprüft — im Kartentool justierbar (✥, Lagen-Export),
+    # die Korrektur wandert dann hierher.
+    ("h-schreinerei", "47", "haeuser",
+     {"de": "Schreinerei", "en": "Schreinerei"},
+     [[228.0, 93.0]], {"gebaeude": "campusbau-19"}),
+    ("h-heizhaus", "57", "haeuser",
+     {"de": "Heizhaus", "en": "Heizhaus (Boiler House)"},
+     [[246.6, 77.0]], {"gebaeude": "campusbau-23", "lageGeschaetzt": True}),
+    ("h-trafo", "58", "haeuser",
+     {"de": "Transformatorenhaus", "en": "Transformer House"},
+     [[291.6, 143.5]], {"gebaeude": "campusbau-24", "lageGeschaetzt": True}),
+    ("h-verlag", "59", "haeuser",
+     {"de": "Verlagshaus", "en": "Publishing House"},
+     [[137.4, 94.4]], {"gebaeude": "campusbau-43", "lageGeschaetzt": True}),
+    # Im Bau: Grosser Saal als eigener Ort (fehlte, weil der LT25-Reader
+    # ihn nicht nummerierte), die Holzplastik im 5. Obergeschoss, das Café.
+    ("v16", "16", "saele",
+     {"de": "Grosser Saal", "en": "Great Hall"},
+     [[198.6, 127.5]], {"gebaeude": "campusbau-53"}),
+    ("o46", "46", "ausstellung",
+     {"de": "Menschheitsrepräsentant", "en": "Representative of Humanity"},
+     [[210.8, 121.5]], {"gebaeude": "campusbau-53"}),
+    ("o8", "8", "eingaenge",
+     {"de": "Café", "en": "Café"},
+     [[207.0, 141.0]], {"gebaeude": "campusbau-52", "lageGeschaetzt": True}),
 ]
 
 # Eingänge & Empfang tragen standardmässig Gold (Entscheid Auftraggeber,
@@ -320,7 +351,7 @@ WILLKOMMEN_FARBEN = {"eingaenge": "gold", "sektionen": "grau", "gaerten": "gruen
 # kuratiert. Die beiden Goetheanum-Schalen (52/53) schalten als Einheit.
 GEBAEUDE_JE_ORT = {
     "o3": "campusbau-52", "o4": "campusbau-52", "o5": "campusbau-52",
-    "o6": "campusbau-53", "o7": "campusbau-52",
+    "o6": "campusbau-53", "o7": "campusbau-52", "o44": "campusbau-45",
     "t-main": "campusbau-53", "t-nord": "campusbau-53", "t-sued": "campusbau-53",
     "v10": "campusbau-53", "v11": "campusbau-52", "v12": "campusbau-52",
     "v13": "campusbau-53", "v14": "campusbau-52", "v15": "campusbau-53",
