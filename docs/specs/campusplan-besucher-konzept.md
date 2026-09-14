@@ -26,11 +26,12 @@ vorgedachte Rundgänge — und ein Entscheid, wo die öffentliche Fassung
 wohnt, weil werkzeuge.goetheanum.ch bewusst intern und `noindex` ist.
 
 **Empfehlung:** nicht mit dem Abfrage-Assistenten beginnen, sondern mit
-fertigen Rundgängen zum Anpassen. Erste Etappe am Empfang statt im
-Internet: die Person am Empfang baut den Plan mit dem Gast in einer
-Minute, druckt ihn oder zeigt den QR-Code fürs Telefon. Das braucht
-keinen Hosting-Entscheid und liefert sofort Erfahrung, welche Orte Gäste
-wirklich wollen.
+vordefinierten Highlights, die der Gast in drei Schritten zu seinem Plan
+macht (Ablauf in § 9). Zielperson ist die Einzelne zuhause, am eigenen
+Bildschirm — die Einfachheit der Handhabung entscheidet. Die Heimat der
+öffentlichen Fassung wird sich finden, wenn das Werkzeug überzeugt
+(Entscheid des Auftraggebers, 14. 9. 2026); bis dahin läuft es als
+Laborseite mit teilbarem Link.
 
 ## 1 · Ausgangslage (gemessen, nicht geschätzt)
 
@@ -204,9 +205,10 @@ zwei Türen — dasselbe Muster wie QR-Code und Kurzlink im QR-Generator.
    (schliesst Merkliste Punkte 3 und 4), fünf Rundgänge als Datei
    `apps/karten-generator/rundgaenge.js`. Prüfbar ohne eine Zeile
    Oberfläche.
-2. **Empfangs-Fassung (Labor).** Seite `apps/campusplan/` aus dem
-   Starter: Rundgang wählen → anpassen → Druck-PDF und Link mit QR. Läuft
-   im Backstage, der Empfang arbeitet damit. Registrierung in
+2. **Heim-Fassung (Labor).** Seite `apps/campusplan/` aus dem
+   Starter: Themen wählen → Zeit wählen → Plan anpassen → Druck-PDF und
+   Link mit QR (Ablauf § 9). Läuft als Laborseite mit teilbarem Link,
+   damit sie zuhause ausprobiert werden kann. Registrierung in
    `tools.json` als `cat: labor`.
 3. **Telefon-Fassung.** Derselbe Link öffnet auf dem Telefon die
    Abhak-Liste mit Kartenausschnitt. Messung auf 390 px, Barrierefreiheit
@@ -225,3 +227,144 @@ Soll Etappe 1 und 2 gebaut werden — also die Empfangs-Fassung mit
 fertigen Rundgängen, ohne den öffentlichen Auftritt schon zu
 entscheiden? Empfohlen: ja, weil sie keinen Hosting-Entscheid braucht und
 in einer Woche zeigt, ob Gäste den Plan nehmen.
+
+## 9 · Der Ablauf: drei Bildschirme, je eine Frage, alles vorausgefüllt
+
+Nachtrag 14. September 2026. Richtung des Auftraggebers: das Werkzeug
+muss zuhause von einer Einzelperson bedienbar sein, die Einfachheit
+entscheidet, und der Ablauf ist die Kernfrage — Themen wählen, dann
+Details? Formular? Highlights vordefinieren?
+
+**Antwort: kein Formular, sondern ein vorausgefüllter Plan, den der Gast
+in drei Schritten zu seinem macht.** Ein Formular fragt, der Gast
+antwortet und muss dem Ergebnis vertrauen. Hier steht das Ergebnis schon
+beim dritten Schritt auf der Karte, und der Gast schiebt nur noch zurecht.
+Sein Aufwand: zwei Tipps, ein Tipp, dann wahlweise Korrekturen.
+
+### Schritt 1 · «Was zieht dich her?»
+
+Fünf Themen als Kacheln mit Bild, Mehrfachwahl, keine Untermenüs:
+
+| Thema | Was drin ist |
+|---|---|
+| **Der Bau** | Goetheanum innen: Grosser Saal, Treppenhäuser, Glasfenster, Wandelhalle, Menschheitsrepräsentant |
+| **Architektursammlung** | die Nebenbauten 1913–1924 auf dem Hügel: Heizhaus, Glashaus, Transformatorenhaus, Haus Duldeck, Haus de Jaager, Eurythmiehäuser, Verlagshaus, Halde, Schreinerei |
+| **Gartenpark** | Felsli, Wasserspiel, Gärten, Gedenkhain, Bienenskulptur, Präparatepavillon |
+| **Bücher, Kunst, Ausstellungen** | Buchhandlung, Bibliothek, Nordgalerie, Rudolf-Steiner-Atelier, Modell des Ersten Goetheanum, Hochatelier |
+| **Essen und Verweilen** | Café, Speisehaus, Vitalshop |
+
+Darunter zwei **Umstände** als Schalter, keine Themen: *Mit Kindern* und
+*Barrierefrei*. Sie ändern die Vorauswahl (Kinder-Orte hinein, steile
+Wege heraus), nicht die Themen.
+
+Heizhaus und Verlagshaus stehen nicht in einer Nebenkategorie, sondern
+mitten in der Architektursammlung — sie sind Ikonen des Ensembles
+(Beschluss 14. 9. 2026). Das Transformatorenhaus (1921) gehört dazu und
+fehlt im Katalog ebenfalls.
+
+### Schritt 2 · «Wie viel Zeit hast du?»
+
+Drei grosse Knöpfe: **Zwei Stunden · Halber Tag · Ganzer Tag.**
+
+Wirkung ohne Regelwerk: jeder Ort trägt in seinem Thema einen **Rang**
+(1 = Highlight) und eine **Dauer** in Minuten. Das Zeitbudget schneidet
+die nach Rang sortierte Liste — eine Sortierung und eine Summe, mehr
+nicht. Immer dabei, unabhängig vom Budget: Haupteingang, Empfang, WC und
+die drei Anreise-Marker (Bahnhof, Bus, Parkplatz). Die Anreise wird
+darum **nicht** abgefragt; die Marker kosten auf der Karte nichts.
+
+### Schritt 3 · «Dein Plan»
+
+Karte oben, Liste unten in **Gehreihenfolge** (jeder Ort trägt einen
+festen Rundweg-Index: Eingang → Bau → Kolonie im Süden → Gartenpark →
+zurück). Jede Zeile: Nummer, Name, Einzeiler, Zugangswort, Dauer,
+Kästchen. Abwählen ist ein Tipp; «Mehr Orte» klappt den Rest des Themas
+auf. Darunter drei Knöpfe: **PDF · Link · QR.** Auf dem Telefon ist
+dieser Bildschirm zugleich die Abhak-Liste.
+
+**Highlights vordefinieren: ja — das ist das ganze Inhaltsmodell.** Der
+Rang je Thema ersetzt jede Abfrage-Logik und lässt sich ohne Entwicklerin
+pflegen.
+
+## 10 · Inhaltsmodell: die Gäste-Zeile je Ort
+
+Zu jedem Gäste-Ort kommen zum Katalog (`orte.js`) diese Felder — als
+eigene Datei `gaeste.js`, damit der generierte Katalog unberührt bleibt:
+
+| Feld | Werte | Wozu |
+|---|---|---|
+| `thema` | eines der fünf | Schritt 1 |
+| `rang` | 1 … n innerhalb des Themas | Schritt 2, Highlight zuerst |
+| `dauer` | Minuten | Schritt 2, Zeitbudget |
+| `zugang` | betreten · von aussen · mit Führung · auf Anfrage | Zutritts-Erwartung steuern (§ 6) |
+| `einzeiler` | DE/EN, ein Satz | Schritt 3, Legende, Abhak-Liste |
+| `gehfolge` | Rundweg-Index | Reihenfolge in Liste und Legende |
+| `kinder` · `barrierefrei` | ja/nein | die zwei Umstände |
+
+## 11 · Wo es wirklich Inhalt braucht — und wo nicht
+
+Grundsatz G03 für Text: **Was sich selbst erklärt, bekommt keinen
+Einzeiler**, nur das Zugangswort. Einzeiler nur dort, wo der Name nichts
+sagt oder täuscht («Heizhaus» klingt nach Technikraum, ist eine Ikone).
+
+**Erklärt sich selbst (kein Einzeiler):** Haupteingang, Südeingang,
+Empfang, Infotisch, barrierefreier Zugang, Toiletten, Bahnhof, Bus,
+Parkplatz, Buchhandlung, Bibliothek, Café, Speisehaus, Vitalshop,
+Wasserspiel, Heilkräuter-, Färberpflanzen-, Schnittblumen- und
+Duftkräutergarten, Bienenskulptur.
+
+**Gehört nicht in den Gästeplan (Arbeits- und Wohnorte, kein Sehwert
+von aussen):** AfaP, Trigon, Holzhaus, Studierendenwohnheim,
+Jugendsektionshaus, Gästehaus Friedwart, die zwölf Sektionen als eigene
+Einträge, Säle ausser dem Grossen Saal, Treppenhäuser als eigene Orte.
+
+**Braucht einen Einzeiler — Entwurf aus belegten Fakten** (Quellen:
+Wikipedia-Artikel Goetheanum, https://www.architekturpfad.ch/, Liste der
+Kulturgüter in Dornach; «zu prüfen» = Fakt noch nicht belegt):
+
+| Ort | Einzeiler (Entwurf) | Zugang | Stand |
+|---|---|---|---|
+| Goetheanum · Grosser Saal *(fehlt als Ort)* | Knapp tausend Plätze unter einer Deckenmalerei in Pflanzenfarben, farbige Glasfenster von 1945. | betreten | belegt |
+| Menschheitsrepräsentant *(fehlt als Ort; 5. OG, Südtreppe)* | Über acht Meter Holz: die Christusfigur zwischen Luzifer und Ahriman, von Rudolf Steiner und Edith Maryon ab 1914. | mit Führung? | Zugang zu prüfen |
+| Heizhaus (1915) | Der erste Betonbau des Hügels: ein Heizwerk mit sphinxhafter Form, bis heute in Betrieb. | von aussen | belegt |
+| Glashaus (1914) | Zwei Kuppeln unter Schiefer, gebaut zum Schleifen der Glasfenster des Ersten Goetheanum. | von aussen | belegt |
+| Transformatorenhaus (1921) *(fehlt als Ort)* | Steiners Trafostation mit kubischen Auskragungen, bis heute am Netz. | von aussen | belegt |
+| Haus Duldeck (1915) | Eisenbeton-Wohnhaus für den Stifter des Grundstücks, seit 2002 Rudolf-Steiner-Archiv. | von aussen | belegt |
+| Haus de Jaager (1921) | Wohn- und Atelierhaus für einen Bildhauer, kantig und doch mit Anklang an die Doppelkuppel. | von aussen | belegt |
+| Eurythmiehaus (1920) | Eines von drei Wohnhäusern nach Entwurf von Edith Maryon. | von aussen | belegt |
+| Verlagshaus *(fehlt als Ort)* | Der letzte von Steiner entworfene Bau der Kolonie. | von aussen | Jahr und Fakt zu prüfen |
+| Rudolf Steiner Halde (1905, Anbau 1923) | Der Betonanbau von 1923 war der Versuchsbau für das zweite Goetheanum, heute Tagungshaus. | betreten | belegt |
+| Schreinerei (1913) | Die Bauhütte des Ersten Goetheanum, in der Steiner arbeitete und 1925 starb — heute Atelier und Modell. | betreten | belegt |
+| Baugeschichte + Modell Erstes Goetheanum | Das Modell des 1922 abgebrannten Holzbaus, dazu seine Geschichte. | betreten | belegt |
+| Rudolf-Steiner-Atelier | Steiners Arbeitsraum in der Schreinerei. | betreten? | zu prüfen |
+| Hochatelier | Der hohe Raum, in dem die Holzplastik entstand. | ? | zu prüfen |
+| Edith-Maryon-Zimmer | Erinnerungsraum an die Bildhauerin, Mitschöpferin der Holzplastik. | ? | zu prüfen |
+| Nordgalerie | Ausstellungsraum im Goetheanum. | betreten | zu prüfen |
+| Wandelhalle | Das Foyer unter dem Grossen Saal. | betreten | zu prüfen |
+| Gedenkhain | Urnenhain, in dem Rudolf Steiner, Marie Steiner-von Sivers und Christian Morgenstern ruhen. | betreten | belegt |
+| Felsli | Der Felsvorsprung am Westende des Hügels — der Aussichtspunkt. | betreten | belegt |
+| Präparatepavillon | Hier entstehen die biodynamischen Präparate der Gärtnerei. | von aussen? | zu prüfen |
+| Kepler-Sternwarte | Kleine Sternwarte der Mathematisch-Astronomischen Sektion. | von aussen | zu prüfen |
+| Helene Finckh Häuschen | ? | ? | Inhalt fehlt |
+| Kristallisationslabor | Labor für die Kupferchlorid-Kristallisation, ein Prüfverfahren der biodynamischen Forschung. | von aussen | zu prüfen |
+| Haus Schuurman · Färberei | ? | ? | Inhalt fehlt |
+| Puppentheater Felicia · Backofen | ? | ? | Inhalt fehlt (Kinder-Orte) |
+
+**Befund am Rand:** Der *Architekturpfad Dornach-Arlesheim*
+(https://www.architekturpfad.ch/) führt mit vier Routen durch die
+Kolonie; sein gedruckter Führer von 2011 ist vergriffen. Das Ensemble
+samt Heizhaus, Glashaus, Eurythmeum, Trafostation und Verlagshaus ist
+Kulturgut von nationaler Bedeutung (Kategorie A). Beides stützt die
+Relevanz — und der Pfad ist der natürliche Partner für die Einzeiler
+der Architektursammlung.
+
+## 12 · Abfrage-Fahrplan (eine Frage je Runde)
+
+Der Auftraggeber wird zu den offenen Punkten **einzeln** befragt, je
+Runde eine Frage mit Empfehlung; Antworten landen hier im Papier:
+
+1. Ablauf in drei Schritten (§ 9) — so bauen? *(offen)*
+2. Die fünf Themen und ihre Namen — insbesondere «Architektursammlung». *(offen)*
+3. Zugangswort je Bau: was darf der Gast betreten? *(offen)*
+4. Einzeiler-Entwürfe (§ 11) freigeben oder korrigieren. *(offen)*
+5. Dauer in Minuten je Ort — Schätzung des Auftraggebers oder des Empfangs. *(offen)*
