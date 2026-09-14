@@ -85,7 +85,9 @@ const UI = {
   "an-diesem-tag": { de: "an diesem Tag", en: "on this day" },
   "orte-zu": { de: "Orte sind an diesem Tag zu und nicht im Plan", en: "places are closed that day and left out" },
   "ort-zu": { de: "Ort ist an diesem Tag zu und nicht im Plan", en: "place is closed that day and left out" },
-  "alles-offen": { de: "alle Orte des Plans sind offen", en: "every place in the plan is open" }
+  "alles-offen": { de: "alle Orte des Plans sind offen", en: "every place in the plan is open" },
+  "fuehrung-hint": { de: "Mit einer Führung ist alles zugänglich, auch die Häuser der Architektursammlung.", en: "With a guided tour everything is accessible, including the houses of the architecture collection." },
+  "fuehrung-link": { de: "Führungen buchen", en: "Book a guided tour" }
 };
 
 /* ---------- Zustand ---------- */
