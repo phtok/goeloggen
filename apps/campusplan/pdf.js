@@ -21,7 +21,7 @@ const PDF_SCHRIFTEN_PLAN = [
 ];
 // Druckfarben: Tinte und leise Tinte wie im Kartentool (Learnings § 3),
 // Marken im dunklen Gold (Weiss darauf 4.55:1), Anreise im Markenblau.
-const PDF_FARBEN = { tinte: "#4e4f4a", leise: "#6e6f6a", marke: "#94702e", anreise: "#0061a9", weiss: "#ffffff" };
+const PDF_FARBEN = { tinte: "#4e4f4a", leise: "#6e6f6a", marke: "#7a5a20", anreise: "#0061a9", weiss: "#ffffff" };
 
 let pdfSchriftenVersprechen = null;
 
@@ -219,9 +219,12 @@ async function planPdf() {
     doc.setFont("SourceSans3", "normal"); doc.setFontSize(9.5);
     const einZeilen = g.einzeiler ? doc.splitTextToSize(t(g.einzeiler), textB) : [];
     const meta = [g.zugang ? t(ZUGANG[g.zugang]) : "", g.dauer ? dauerText(g.dauer) : "", g.zeiten ? t(g.zeiten) : ""].filter(Boolean).join(" · ");
-    const geschlossen = state.datum && ortGeschlossenAm(g, state.datum);
+    const tag = planTag();
+    const geschlossen = tag && ortGeschlossenAm(g, tag);
+    const live = ausnahmeAm(g, tag);
+    const zusatz = (geschlossen ? ` · ${ui("geschlossen-am")}` : "") + (live && !live.zu ? ` · ${ui("an-diesem-tag")} ${live.text}` : "");
     doc.setFontSize(8.5);
-    const metaZeilen = meta ? doc.splitTextToSize(meta + (geschlossen ? ` · ${ui("geschlossen-am")}` : ""), textB) : [];
+    const metaZeilen = meta || zusatz ? doc.splitTextToSize(meta + zusatz, textB) : [];
     const hoehe = nameZeilen.length * 4.6 + einZeilen.length * 4.1 + metaZeilen.length * 3.8 + 4;
     if (y + hoehe > untenMax) {
       if (spalte === 0) { spalte = 1; y = spaltenStart; }

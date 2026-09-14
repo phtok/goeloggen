@@ -16,6 +16,12 @@ const PALETTE = {
 const GELAENDE_PFAD = "../karten-generator/assets/gelaende.svg";
 const BLATT = { breite: KARTE.blatt.breite, hoehe: KARTE.blatt.hoehe };
 const MARKE_R = 3.0;          // mm auf dem Blatt
+// Markenfarben auf der Karte — Artefakt-Farben wie im Kartentool (Aquarell-
+// Palette), gerechnet gegen die Kartengründe: Gold #7a5a20 3.2:1 auf dem
+// Campusblau, Weiss darauf 6.3:1; Markenblau 3.3:1 / 6.4:1; Grün 3.2:1 / 6.4:1.
+// Der weisse Ring trennt zusätzlich auf dem dunklen Goetheanum-Blau.
+const MARKE_FARBEN = { station: "#7a5a20", anreise: "#0061a9", besucht: "#226b52", ring: "#ffffff", fokus: "#dfb87a", ziffer: "#ffffff" }; // # ds-ok: Artefakt-Farben der Karte
+const AUSNAHMEN_URL = "https://dagcsnfrlbpxcmdimnrw.supabase.co/functions/v1/campusplan-ausnahmen";
 const ZOOM_MIN_BREITE = 24;   // mm sichtbare Breite bei maximalem Zoom
 const SPEICHER_PRAEFIX = "campusplan:";
 
@@ -72,9 +78,14 @@ const UI = {
   "pdf-link-hint": { de: "Derselbe Plan auf dem Telefon: Link öffnen oder QR-Code scannen, unterwegs abhaken.",
                      en: "The same plan on your phone: open the link or scan the QR code, tick off as you go." },
   "datum-lab": { de: "Besuchstag, wenn du ihn schon kennst", en: "Day of your visit, if you know it" },
-  "datum-hint": { de: "Damit der Plan sagt, was an diesem Tag geschlossen ist.", en: "So the plan can tell you what is closed that day." },
+  "datum-hint": { de: "Mit Besuchstag kommen nur Orte in den Plan, die an diesem Tag offen sind. Geschlossene bleiben unter «Mehr Orte» und sind markiert.",
+                  en: "With a visit day, only places open on that day make the plan. Closed ones stay under «More places», marked." },
   "geschlossen-am": { de: "am Besuchstag geschlossen", en: "closed on your visit day" },
-  ausnahmen: { de: "aktuelle Ausnahmen", en: "current exceptions" }
+  ausnahmen: { de: "aktuelle Ausnahmen", en: "current exceptions" },
+  "an-diesem-tag": { de: "an diesem Tag", en: "on this day" },
+  "orte-zu": { de: "Orte sind an diesem Tag zu und nicht im Plan", en: "places are closed that day and left out" },
+  "ort-zu": { de: "Ort ist an diesem Tag zu und nicht im Plan", en: "place is closed that day and left out" },
+  "alles-offen": { de: "alle Orte des Plans sind offen", en: "every place in the plan is open" }
 };
 
 /* ---------- Zustand ---------- */
@@ -90,6 +101,7 @@ const state = {
   besucht: new Set(),         // Ort-IDs abgehakt (nur Modus ‹plan›)
   code: "",                   // Plan-Code aus dem Link
   datum: "",                  // Besuchstag ISO (optional)
+  ausnahmen: null,            // Antwort der Edge Function (saal, glashaus) oder null
   fokus: null
 };
 
@@ -144,11 +156,49 @@ function immerDabei() {
     && (!g.nurBarrierefrei || state.umstaende.barrierefrei)).map((g) => g.id);
 }
 
+function heuteIso() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+// Der Tag, für den der Plan gilt: der Besuchstag, im Modus ‹plan› ohne Datum der heutige.
+function planTag() {
+  return state.datum || (state.modus === "plan" ? heuteIso() : "");
+}
+
+async function ausnahmenLaden() {
+  try {
+    const r = await fetch(AUSNAHMEN_URL);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    state.ausnahmen = await r.json();
+  } catch (fehler) {
+    state.ausnahmen = null;   // ohne Live-Daten bleibt der Link auf die Seite
+  }
+  if (state.schritt === 3) planZeichnen();
+}
+
+// Tagesaktuelle Ausnahme eines Orts (Grosser Saal, Glashaus) für einen Tag.
+function ausnahmeAm(g, iso) {
+  if (!g.live || !iso || !state.ausnahmen) return null;
+  const liste = state.ausnahmen[g.live] || [];
+  return liste.find((e) => e.datum === iso) || null;
+}
+
 function ortGeschlossenAm(g, iso) {
-  if (!g.geschlossen || !iso) return false;
+  if (!iso) return false;
+  const a = ausnahmeAm(g, iso);
+  if (a && a.zu) return true;
+  if (!g.geschlossen) return false;
   const [j, m, tag] = iso.split("-").map(Number);
   const wochentag = new Date(j, m - 1, tag).getDay();
   return g.geschlossen.includes(wochentag);
+}
+
+function datumText(iso) {
+  if (!iso) return "";
+  const [j, m, tag] = iso.split("-").map(Number);
+  return new Date(j, m - 1, tag).toLocaleDateString(state.sprache === "en" ? "en-GB" : "de-CH",
+    { weekday: "long", day: "numeric", month: "long" });
 }
 
 function vorauswahl() {
@@ -156,7 +206,7 @@ function vorauswahl() {
   const kandidaten = GAESTE.filter((g) => {
     if (g.thema === "basis" || g.thema === "anreise") return false;
     if (state.umstaende.barrierefrei && g.barrierefrei === false) return false;
-    if (ortGeschlossenAm(g, state.datum)) return false;
+    if (ortGeschlossenAm(g, planTag())) return false;
     return state.themen.has(g.thema) || (state.umstaende.kinder && g.kinder);
   });
   // Je Thema nach Rang sortieren, dann reihum ein Ort je Thema — so bekommt
@@ -315,9 +365,12 @@ function markenZeichnen() {
   const marke = (id, text, klasse) => {
     const [x, y] = ortPosition(id);
     const fokus = state.fokus === id ? " fokus" : "";
-    const besucht = state.besucht.has(id) ? " besucht" : "";
-    return `<g class="marke${klasse}${fokus}${besucht}" data-id="${id}" transform="translate(${x} ${y})">` +
-      `<circle r="${MARKE_R}"/><text font-size="${MARKE_R}">${text}</text></g>`;
+    const besucht = state.besucht.has(id);
+    const fuellung = besucht ? MARKE_FARBEN.besucht : (klasse ? MARKE_FARBEN.anreise : MARKE_FARBEN.station);
+    const ring = fokus ? MARKE_FARBEN.fokus : MARKE_FARBEN.ring;
+    return `<g class="marke${klasse}${fokus}${besucht ? " besucht" : ""}" data-id="${id}" transform="translate(${x} ${y})">` +
+      `<circle r="${MARKE_R}" fill="${fuellung}" stroke="${ring}" stroke-width="0.35"/>` +
+      `<text font-size="${MARKE_R}" fill="${MARKE_FARBEN.ziffer}">${text}</text></g>`;
   };
   anreise.forEach((g) => { markup += marke(g.id, ortMarker(g.id) || "·", " anreise"); });
   nummeriert.forEach((g, i) => { markup += marke(g.id, String(i + 1), ""); });
@@ -517,10 +570,14 @@ function zeileMarkup(g, nummer, imPlan) {
   const anreise = g.thema === "anreise";
   const abgehakt = state.besucht.has(id);
   const zugang = g.zugang ? t(ZUGANG[g.zugang]) : "";
-  const zu = ortGeschlossenAm(g, state.datum);
+  const tag = planTag();
+  const zu = ortGeschlossenAm(g, tag);
+  const live = ausnahmeAm(g, tag);
+  const liveText = live && !live.zu ? ` · <span class="stn-live">${ui("an-diesem-tag")} ${live.text}</span>` : "";
   const meta = [zugang, g.dauer ? dauerText(g.dauer) : "", g.zeiten ? t(g.zeiten) : ""].filter(Boolean).join(" · ")
     + (zu ? ` · <span class="stn-zu">${ui("geschlossen-am")}</span>` : "")
-    + (g.ausnahmen ? ` · <a href="${g.ausnahmen}" target="_blank" rel="noopener">${ui("ausnahmen")}</a>` : "");
+    + liveText
+    + (g.ausnahmen && !state.ausnahmen ? ` · <a href="${g.ausnahmen}" target="_blank" rel="noopener">${ui("ausnahmen")}</a>` : "");
   const zeile = g.einzeiler ? `<span class="stn-line">${t(g.einzeiler)}</span>` : "";
   const name = id === "wc-goetheanum" ? ui("wc") : ortName(id);
   const klassen = ["stn", anreise ? "anreise" : "", state.fokus === id ? "fokus" : "", abgehakt ? "abgehakt" : ""].filter(Boolean).join(" ");
@@ -553,6 +610,16 @@ function planZeichnen() {
   } else {
     summe.textContent = `${nummeriert.length} ${ui("stationen")} · ${ui("etwa")} ${dauerText(planMinuten())}`;
   }
+  const info = document.getElementById("datum-info");
+  const tag = planTag();
+  if (tag) {
+    // Gezählt wird nur, was der Gast überhaupt gewählt hätte: im Erstellen die
+    // gewählten Themen, im Plan-Modus alles.
+    const zu = GAESTE.filter((g) => g.thema !== "aus" && g.thema !== "anreise" && !state.an.has(g.id)
+      && (state.modus === "plan" || state.themen.has(g.thema) || (state.umstaende.kinder && g.kinder))
+      && ortGeschlossenAm(g, tag)).length;
+    info.textContent = `${datumText(tag)}: ${zu ? `${zu} ${ui(zu === 1 ? "ort-zu" : "orte-zu")}` : ui("alles-offen")}`;
+  } else info.textContent = "";
 
   // Mehr Orte: je gewähltem Thema, was nicht im Plan ist.
   const mehr = document.getElementById("mehr-orte");
@@ -734,6 +801,7 @@ async function start() {
   state.umstaende.barrierefrei = h.b === "1";
   if (/^\d{4}-\d{2}-\d{2}$/.test(h.d || "")) { state.datum = h.d; document.getElementById("datum").value = h.d; }
   verdrahten();
+  ausnahmenLaden();
   await ladeGelaende();
   karteBauen();
   if (h.p) {

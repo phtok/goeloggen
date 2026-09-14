@@ -754,7 +754,7 @@ const ORTE = [
     "kategorie": "ausstellung",
     "farbe": "blau",
     "label": {
-      "de": "Edith-Maryon-Zimmer",
+      "de": "Künstlerwohnung Edith Maryon",
       "en": "Edith Maryon Flat"
     },
     "positionen": [
@@ -771,8 +771,8 @@ const ORTE = [
     "kategorie": "ausstellung",
     "farbe": "blau",
     "label": {
-      "de": "Menschheitsrepräsentant",
-      "en": "Representative of Humanity"
+      "de": "Holzskulptur",
+      "en": "Wood Sculpture"
     },
     "positionen": [
       [
@@ -1181,8 +1181,7 @@ const ORTE = [
         94.4
       ]
     ],
-    "gebaeude": "campusbau-43",
-    "lageGeschaetzt": true
+    "gebaeude": "campusbau-43"
   },
   {
     "id": "s-allgemein",

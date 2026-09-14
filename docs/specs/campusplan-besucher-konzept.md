@@ -438,7 +438,30 @@ Runde eine Frage mit Empfehlung; Antworten landen hier im Papier:
    Seiten einmal täglich, parst die Zeilen (Wochentag, Tag.Monat, Zeit
    oder «geschlossen») und liefert JSON; der Plan zeigt zum Besuchstag «an
    diesem Tag 14 bis 14.20 Uhr» oder «geschlossen». Ohne Personendaten,
-   Muster wie `services/qr-generator/`. Entscheid des Auftraggebers.*
+   Muster wie `services/qr-generator/`.* **Gebaut 14. 9. (Entscheid
+   Auftraggeber):** Edge Function `campusplan-ausnahmen` liest beide Seiten,
+   liefert JSON, der Plan zeigt zum Besuchstag «an diesem Tag 14.00–14.20
+   Uhr» oder «geschlossen» (Referenz `services/campusplan/`). Dazu der
+   **monatliche Wächter** (`.github/workflows/oeffnungszeiten-waechter.yml`,
+   `tools/oeffnungszeiten-pruefen.py`): vergleicht die sechs Quellseiten der
+   festen Zeiten mit dem Stand in `docs/oeffnungszeiten-stand/` und
+   eröffnet bei Abweichung ein Issue.
+10. **Markerfarben** (Rückmeldung 14. 9.: das helle Blau ist auf der Karte
+   schlecht zu sehen). *Gerechnet gegen die Kartengründe (Campus #8abfe5,
+   Umgebung, Wiese): das Kartentool-Blau #81b2cb hat 1.2:1 auf dem Campus —
+   unsichtbar. Gewählt für den Campusplan die dunklen Verwandten aus der
+   Aquarell-Palette des Kartentools: Stationen Gold #7a5a20 (3.2:1 auf dem
+   Campus, Weiss darauf 6.3:1), Anreise Markenblau #0061a9 (3.3:1 / 6.4:1),
+   besucht Grün #226b52 (3.2:1 / 6.4:1), weisser Ring gegen das dunkle
+   Goetheanum-Blau. Offen: im Kartentool selbst tragen die Häuser weiter
+   #81b2cb — Wechsel auf #0061a9 wie im Aquarell-Modus ist ein Einzeiler,
+   ändert aber alle Tagungskarten (Entscheid Auftraggeber).*
+11. **Faktenprüfung** (Rückmeldung 14. 9.: drei Einzeiler waren erfunden).
+   *Alle Ortsangaben mit Quelle in
+   https://github.com/phtok/goeloggen/blob/main/docs/campusplan-faktenpruefung.md;
+   Unbelegtes gestrichen (Verlagshaus, Präparatepavillon, Nordgalerie),
+   Namen wie auf goetheanum.ch (Holzskulptur, Künstlerwohnung Edith Maryon).
+   Zur Prüfung durch den Auftraggeber.*
 
 ### Ausgabe als PDF (Rückmeldung 14. 9.: Druckansicht war Schrott)
 
