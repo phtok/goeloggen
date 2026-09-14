@@ -358,12 +358,29 @@ Kulturgut von nationaler Bedeutung (Kategorie A). Beides stützt die
 Relevanz — und der Pfad ist der natürliche Partner für die Einzeiler
 der Architektursammlung.
 
+### Bedienung des fertigen Plans auf dem Telefon (gebaut 14. 9. 2026)
+
+Die Karte sitzt oben, die Stationen darunter; die Karte nimmt gut die
+halbe Bildschirmhöhe. **Bewegen:** ein Finger zieht die Karte, die Seite
+scrollt dabei nicht (`touch-action: none` auf der Karte). **Vergrössern:**
+zwei Finger ziehen auf, dazu drei Knöpfe am Kartenrand (Plus, Minus,
+ganzer Plan), Mausrad am Schreibtisch. **Springen:** der Knopf «Karte»
+an jeder Station fährt die Karte auf diesen Ort; ein Tipp auf eine Nummer
+in der Karte springt zur Station in der Liste und rahmt sie. **Abhaken:**
+nur über das grosse Kästchen in der Liste (44 px Fingerziel), nie durch
+einen Tipp auf die Karte — so passiert unterwegs nichts aus Versehen.
+Abgehakte Nummern werden grün, oben zählt «3 von 9 besucht». Der Stand
+bleibt im Speicher des Telefons, der Link selbst ändert sich nicht.
+
 ## 12 · Abfrage-Fahrplan (eine Frage je Runde)
 
 Der Auftraggeber wird zu den offenen Punkten **einzeln** befragt, je
 Runde eine Frage mit Empfehlung; Antworten landen hier im Papier:
 
-1. Ablauf in drei Schritten (§ 9) — so bauen? *(offen)*
+1. Ablauf in drei Schritten (§ 9) — so bauen? *Ja, live testen (14. 9. 2026).
+   Gebaut als Laborseite https://werkzeuge.goetheanum.ch/apps/campusplan/
+   (Etappen 1 und 2, mit Telefon-Fassung aus Etappe 3): Karte zieht und
+   zoomt per Finger, Kästchen 44 px, Abhaken bleibt auf dem Gerät.*
 2. Die fünf Themen und ihre Namen — insbesondere «Architektursammlung». *(offen)*
 3. Zugangswort je Bau: was darf der Gast betreten? *(offen)*
 4. Einzeiler-Entwürfe (§ 11) freigeben oder korrigieren. *(offen)*
