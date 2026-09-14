@@ -180,7 +180,7 @@ function vorauswahl() {
 
 function planMinuten() {
   let summe = 0;
-  state.an.forEach((id) => { const g = gast(id); if (g && g.thema !== "anreise") summe += g.dauer + WEGZEIT; });
+  state.an.forEach((id) => { const g = gast(id); if (g && g.thema !== "anreise" && g.thema !== "aus") summe += g.dauer + WEGZEIT; });
   return summe;
 }
 
@@ -300,7 +300,8 @@ function gebaeudeFaerben() {
 
 function stationen() {
   // Nummerierte Stationen in Gehreihenfolge; Anreise separat, ohne Nummer.
-  const liste = [...state.an].map((id) => gast(id)).filter(Boolean);
+  // Grabsteine (thema ‹aus›) und unbekannte IDs aus alten Links fallen still weg.
+  const liste = [...state.an].map((id) => gast(id)).filter((g) => g && g.thema !== "aus" && ort(g.id));
   const nummeriert = liste.filter((g) => g.thema !== "anreise").sort((a, b) => a.gehfolge - b.gehfolge);
   const anreise = liste.filter((g) => g.thema === "anreise");
   return { nummeriert, anreise };

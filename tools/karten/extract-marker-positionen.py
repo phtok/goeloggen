@@ -330,16 +330,15 @@ WILLKOMMEN = [
      {"de": "Verlagshaus", "en": "Publishing House"},
      [[137.4, 94.4]], {"gebaeude": "campusbau-43", "lageGeschaetzt": True}),
     # Im Bau: Grosser Saal als eigener Ort (fehlte, weil der LT25-Reader
-    # ihn nicht nummerierte), die Holzplastik im 5. Obergeschoss, das Café.
+    # ihn nicht nummerierte), die Holzplastik im 5. Obergeschoss. Das Café
+    # liegt in der Wandelhalle (v12) und ist dort mit gemeint — kein
+    # eigener Ort (Rückmeldung Auftraggeber, 14. September 2026).
     ("v16", "16", "saele",
      {"de": "Grosser Saal", "en": "Great Hall"},
      [[198.6, 127.5]], {"gebaeude": "campusbau-53"}),
     ("o46", "46", "ausstellung",
      {"de": "Menschheitsrepräsentant", "en": "Representative of Humanity"},
      [[210.8, 121.5]], {"gebaeude": "campusbau-53"}),
-    ("o8", "8", "eingaenge",
-     {"de": "Café", "en": "Café"},
-     [[207.0, 141.0]], {"gebaeude": "campusbau-52", "lageGeschaetzt": True}),
 ]
 
 # Eingänge & Empfang tragen standardmässig Gold (Entscheid Auftraggeber,

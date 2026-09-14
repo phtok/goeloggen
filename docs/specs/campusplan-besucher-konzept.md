@@ -392,11 +392,18 @@ Runde eine Frage mit Empfehlung; Antworten landen hier im Papier:
    freiwilliges Datum in Schritt 2; ein am Besuchstag geschlossener Ort
    fällt aus der Vorauswahl und die Zeile sagt es. Belegt sind nur
    Goetheanum (täglich 9 bis 20 Uhr) und Empfang (Di bis So 9 bis 18 Uhr).
-   **Offen: Zeiten für Buchhandlung, Bibliothek, Café, Speisehaus,
-   Vitalshop, Archiv, Schreinerei-Ausstellung** — bitte liefern, ich trage
-   sie ein.*
-7. **Lagen visuell korrigieren.** *Heizhaus, Transformatorenhaus,
-   Verlagshaus und Café stehen jetzt im Katalog des Kartentools (dazu
+   Nachtrag, recherchiert auf Hinweis des Auftraggebers (goetheanum.ch,
+   rudolf-steiner.com): Buchhandlung Di bis Fr 10 bis 18, Sa 10 bis 17,
+   So 11 bis 16 Uhr, Montag zu; Bibliothek Di, Do, Fr 14 bis 18 Uhr;
+   Archiv-Lesesaal in Haus Duldeck Mo bis Fr 15 bis 18 Uhr; Speisehaus-Laden
+   und Vitalshop Mo bis Fr 8 bis 18.30, Sa und So 8 bis 16 Uhr, das
+   Restaurant ist laut speisehaus.ch zurzeit geschlossen; öffentliche
+   Führung jeden Samstag 14 Uhr, CHF 25, mit Grossem Saal und
+   Ausstellungsraum. **Offen: Café in der Wandelhalle, Schreinerei-
+   Ausstellung, ob Grosser Saal und Holzplastik ohne Führung zugänglich
+   sind.***
+7. **Lagen visuell korrigieren.** *Heizhaus, Transformatorenhaus und
+   Verlagshaus stehen jetzt im Katalog des Kartentools (dazu
    Schreinerei, Grosser Saal, Menschheitsrepräsentant; Haus Duldeck, de
    Jaager und Eurythmiehaus mit Gebäude verknüpft). Korrigieren: Kartentool
    im Justage-Modus öffnen
@@ -404,7 +411,10 @@ Runde eine Frage mit Empfehlung; Antworten landen hier im Papier:
    anschalten, am ✥ ziehen, «Justierte Lagen exportieren» → die JSON-Datei
    im Chat einfügen; die Werte wandern in
    `tools/karten/extract-marker-positionen.py`, und der Katalog wird
-   neu erzeugt.*
+   neu erzeugt. Das Café war kurz ein eigener Ort und ist wieder raus:
+   es liegt in der Wandelhalle, die Zeile dort sagt es (Rückmeldung
+   14. 9.). Der ✥-Griff der Häuser erschien beim ersten Test nicht, weil das
+   Deployment noch lief — Seite neu laden.*
 8. **Aquarell als Grundkarte** (Rückmeldung 14. 9.). *(offen — nächste Etappe:
    Schalter auf der Karte, im PDF wie im Kartentool als Datei-Verweis.)*
 
