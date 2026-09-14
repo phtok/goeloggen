@@ -73,7 +73,8 @@ const UI = {
                      en: "The same plan on your phone: open the link or scan the QR code, tick off as you go." },
   "datum-lab": { de: "Besuchstag, wenn du ihn schon kennst", en: "Day of your visit, if you know it" },
   "datum-hint": { de: "Damit der Plan sagt, was an diesem Tag geschlossen ist.", en: "So the plan can tell you what is closed that day." },
-  "geschlossen-am": { de: "am Besuchstag geschlossen", en: "closed on your visit day" }
+  "geschlossen-am": { de: "am Besuchstag geschlossen", en: "closed on your visit day" },
+  ausnahmen: { de: "aktuelle Ausnahmen", en: "current exceptions" }
 };
 
 /* ---------- Zustand ---------- */
@@ -518,7 +519,8 @@ function zeileMarkup(g, nummer, imPlan) {
   const zugang = g.zugang ? t(ZUGANG[g.zugang]) : "";
   const zu = ortGeschlossenAm(g, state.datum);
   const meta = [zugang, g.dauer ? dauerText(g.dauer) : "", g.zeiten ? t(g.zeiten) : ""].filter(Boolean).join(" · ")
-    + (zu ? ` · <span class="stn-zu">${ui("geschlossen-am")}</span>` : "");
+    + (zu ? ` · <span class="stn-zu">${ui("geschlossen-am")}</span>` : "")
+    + (g.ausnahmen ? ` · <a href="${g.ausnahmen}" target="_blank" rel="noopener">${ui("ausnahmen")}</a>` : "");
   const zeile = g.einzeiler ? `<span class="stn-line">${t(g.einzeiler)}</span>` : "";
   const name = id === "wc-goetheanum" ? ui("wc") : ortName(id);
   const klassen = ["stn", anreise ? "anreise" : "", state.fokus === id ? "fokus" : "", abgehakt ? "abgehakt" : ""].filter(Boolean).join(" ");

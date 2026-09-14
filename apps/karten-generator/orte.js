@@ -157,8 +157,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        222.5,
-        130.6
+        217.29,
+        125.79
       ]
     ],
     "symbol": "wc-rollstuhl"
@@ -175,8 +175,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        197.46,
-        125.56
+        197.24,
+        126.03
       ]
     ],
     "symbol": "wc-gruppe",
@@ -195,8 +195,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        218.69,
-        83.73
+        218.29,
+        84.09
       ]
     ],
     "legendeText": "WC"
@@ -266,8 +266,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        274.8,
-        199.6
+        288.44,
+        207.8
       ]
     ]
   },
@@ -1141,12 +1141,11 @@ const ORTE = [
     },
     "positionen": [
       [
-        246.6,
-        77.0
+        154.33,
+        94.24
       ]
     ],
-    "gebaeude": "campusbau-23",
-    "lageGeschaetzt": true
+    "gebaeude": "campusbau-42"
   },
   {
     "id": "h-trafo",
@@ -1160,12 +1159,11 @@ const ORTE = [
     },
     "positionen": [
       [
-        291.6,
-        143.5
+        294.25,
+        229.32
       ]
     ],
-    "gebaeude": "campusbau-24",
-    "lageGeschaetzt": true
+    "gebaeude": "campusbau-51"
   },
   {
     "id": "h-verlag",
@@ -1531,8 +1529,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        264.16,
-        42.77
+        264.89,
+        41.53
       ]
     ],
     "gebaeude": "campusbau-54"
@@ -1549,8 +1547,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        222.17,
-        67.46
+        219.62,
+        62.18
       ]
     ],
     "gebaeude": "campusbau-55"

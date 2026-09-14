@@ -399,9 +399,15 @@ Runde eine Frage mit Empfehlung; Antworten landen hier im Papier:
    und Vitalshop Mo bis Fr 8 bis 18.30, Sa und So 8 bis 16 Uhr, das
    Restaurant ist laut speisehaus.ch zurzeit geschlossen; öffentliche
    Führung jeden Samstag 14 Uhr, CHF 25, mit Grossem Saal und
-   Ausstellungsraum. **Offen: Café in der Wandelhalle, Schreinerei-
-   Ausstellung, ob Grosser Saal und Holzplastik ohne Führung zugänglich
-   sind.***
+   Ausstellungsraum. Zweiter Nachtrag, Quelle
+   https://goetheanum.ch/de/campus/oeffnungszeiten (Hinweis des
+   Auftraggebers): Grosser Saal Besichtigung täglich 13.30 bis 14.30 Uhr;
+   Holzplastik Mo bis Do 14.30 bis 15.30, Fr 14 bis 16, Sa und So 10 bis
+   12 und 14 bis 16 Uhr; Modell Fr bis So 14 bis 16; Rudolf-Steiner-Atelier
+   Fr 14 bis 15; Hochatelier Fr 14.30 bis 15.30; Edith-Maryon-Wohnung Fr
+   15.30 bis 16.30; Helene-Finckh-Haus Sa 15 bis 16 (neu als Ort im
+   Gästeplan); Glashaus innen So 15 bis 16; Haus de Jaager jeden ersten
+   Freitag 15 bis 16; Vital-Café täglich 9 bis 17 Uhr. Alles eingetragen.*
 7. **Lagen visuell korrigieren.** *Heizhaus, Transformatorenhaus und
    Verlagshaus stehen jetzt im Katalog des Kartentools (dazu
    Schreinerei, Grosser Saal, Menschheitsrepräsentant; Haus Duldeck, de
@@ -414,9 +420,25 @@ Runde eine Frage mit Empfehlung; Antworten landen hier im Papier:
    neu erzeugt. Das Café war kurz ein eigener Ort und ist wieder raus:
    es liegt in der Wandelhalle, die Zeile dort sagt es (Rückmeldung
    14. 9.). Der ✥-Griff der Häuser erschien beim ersten Test nicht, weil das
-   Deployment noch lief — Seite neu laden.*
+   Deployment noch lief — Seite neu laden. Korrigiert am 14. 9. aus der
+   Karten-Datei des Auftraggebers: Heizhaus auf Form campusbau-42 westlich
+   des Baus, Transformatorenhaus auf die kleine Form campusbau-51 an der
+   Strasse (ausserhalb des A4-Blatts), dazu Feinlagen von
+   barrierefreiem Zugang, beiden WC, Bienenskulptur, Präparatepavillon
+   und Vitalshop. Nur das Verlagshaus ist noch geschätzt.*
 8. **Aquarell als Grundkarte** (Rückmeldung 14. 9.). *(offen — nächste Etappe:
    Schalter auf der Karte, im PDF wie im Kartentool als Datei-Verweis.)*
+9. **Live-Anbindung der Ausnahmen.** Grosser Saal und Glashaus haben
+   tagesaktuelle Einschränkungen (Veranstaltungen, Proben) auf
+   https://goetheanum.ch/de/campus/sonder-oeffnungszeiten-grossen-saal und
+   https://goetheanum.ch/de/campus/oeffnungszeiten-ausstellung-goethe —
+   reine HTML-Listen («Do. 17.9. 14.00–14.20 Uhr», «Sa. 26.12.
+   geschlossen»), kein Kalender, kein JSON. *Heute: die Zeile verlinkt die
+   Seite. Vorschlag: eine Edge Function im Werkzeug-Backend liest beide
+   Seiten einmal täglich, parst die Zeilen (Wochentag, Tag.Monat, Zeit
+   oder «geschlossen») und liefert JSON; der Plan zeigt zum Besuchstag «an
+   diesem Tag 14 bis 14.20 Uhr» oder «geschlossen». Ohne Personendaten,
+   Muster wie `services/qr-generator/`. Entscheid des Auftraggebers.*
 
 ### Ausgabe als PDF (Rückmeldung 14. 9.: Druckansicht war Schrott)
 

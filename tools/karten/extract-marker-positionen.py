@@ -179,7 +179,7 @@ WILLKOMMEN = [
     # 8. Juli 2026), Marke mit Rollstuhl-Symbol.
     ("b-zugang", "BF", "eingaenge",
      {"de": "Barrierefreier Zugang", "en": "Barrier-free access"},
-     [[222.5, 130.6]], {"symbol": "wc-rollstuhl"}),
+     [[217.29, 125.79]], {"symbol": "wc-rollstuhl"}),  # Feinlage Auftraggeber 14. 9. 2026
 
     # Toiletten (Entscheid Auftraggeber, 8. Juli 2026): keine Unter-
     # gliederung. Goetheanum = breites Feld mit dem fertigen Gruppen-Icon
@@ -194,10 +194,10 @@ WILLKOMMEN = [
     # Auftraggeber justiert (Lagen-Export, 8. Juli 2026).
     ("wc-goetheanum", "WC", "eingaenge",
      {"de": "Toiletten", "en": "Toilets"},
-     [[197.46, 125.56]], {"symbol": "wc-gruppe", "feldBreite": 13, "legendeText": "WC"}),
+     [[197.24, 126.03]], {"symbol": "wc-gruppe", "feldBreite": 13, "legendeText": "WC"}),  # Feinlage 14. 9. 2026
     ("wc-schreinerei", "WC", "eingaenge",
      {"de": "Toiletten", "en": "Toilets"},
-     [[218.69, 83.73]], {"legendeText": "WC"}),
+     [[218.29, 84.09]], {"legendeText": "WC"}),  # Feinlage 14. 9. 2026
 
     # Bushaltestelle ‹Goetheanum› an der Dorneckstrasse beim Speisehaus —
     # eigener Verkehrs-Ort mit Buchstabe B (Entscheid Auftraggeber,
@@ -213,7 +213,7 @@ WILLKOMMEN = [
     # Speisehaus, im Backend justierbar wie alle Verkehrsmarken.
     ("f-vital", "V", "verkehr",
      {"de": "Vitalshop", "en": "Vital Shop"},
-     [[274.8, 199.6]]),
+     [[288.44, 207.8]]),  # an die Strassenecke gerückt, Auftraggeber 14. 9. 2026
 
     # Sektionen (Buchstaben wie auf dem Willkommensschild):
     ("s-allgemein", "a", "sektionen",
@@ -273,10 +273,10 @@ WILLKOMMEN = [
     # (dort massgenau gemalt; Grundkarten-Formen campusbau-54/-55, Entscheid
     # Auftraggeber 16. Juli 2026). Marker 17 sitzt am Zugang unter der Wabe.
     ("g-bienen", "17", "gaerten",
-     {"de": "Bienenskulptur", "en": "Bee Sculpture"}, [[264.16, 42.77]],
+     {"de": "Bienenskulptur", "en": "Bee Sculpture"}, [[264.89, 41.53]],
      {"gebaeude": "campusbau-54"}),
     ("g-praeparate", "18", "gaerten",
-     {"de": "Präparatepavillon", "en": "Preparations Pavilion"}, [[222.17, 67.46]],
+     {"de": "Präparatepavillon", "en": "Preparations Pavilion"}, [[219.62, 62.18]],
      {"gebaeude": "campusbau-55"}),
 
     # Weitere Häuser (Seite 4 der Beispielkarten, mm-genau):
@@ -320,12 +320,18 @@ WILLKOMMEN = [
     ("h-schreinerei", "47", "haeuser",
      {"de": "Schreinerei", "en": "Schreinerei"},
      [[228.0, 93.0]], {"gebaeude": "campusbau-19"}),
+    # Heizhaus und Transformatorenhaus: Lagen vom Auftraggeber justiert
+    # (Karten-Datei ‹Justieren der Nebengebäude›, 14. September 2026). Das
+    # Heizhaus ist die Form campusbau-42 (Zwilling von -11, liegt obenauf);
+    # das Transformatorenhaus die kleine Form campusbau-51 an der Strasse —
+    # ausserhalb des A4-Blatts, im Kartentool nur mit verkleinertem
+    # Ausschnitt sichtbar.
     ("h-heizhaus", "57", "haeuser",
      {"de": "Heizhaus", "en": "Heizhaus (Boiler House)"},
-     [[246.6, 77.0]], {"gebaeude": "campusbau-23", "lageGeschaetzt": True}),
+     [[154.33, 94.24]], {"gebaeude": "campusbau-42"}),
     ("h-trafo", "58", "haeuser",
      {"de": "Transformatorenhaus", "en": "Transformer House"},
-     [[291.6, 143.5]], {"gebaeude": "campusbau-24", "lageGeschaetzt": True}),
+     [[294.25, 229.32]], {"gebaeude": "campusbau-51"}),
     ("h-verlag", "59", "haeuser",
      {"de": "Verlagshaus", "en": "Publishing House"},
      [[137.4, 94.4]], {"gebaeude": "campusbau-43", "lageGeschaetzt": True}),
