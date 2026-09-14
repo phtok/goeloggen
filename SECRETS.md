@@ -117,13 +117,14 @@ Wenn der PAT abläuft (die Funktion antwortet dann mit 502):
 Workflow <https://github.com/phtok/goeloggen/blob/main/.github/workflows/deploy-sortierer.yml>
 läuft, sobald sich die Funktionsquelle auf `main` ändert.
 
-⚠️ **Offener Punkt (14. September 2026):** das Repo-Secret
-`SUPABASE_ACCESS_TOKEN` ist abgelaufen — die Management-API antwortet mit 401,
-der Workflow kommt nicht mehr zum Deploy. Neuen Token holen
+Läuft der Deploy nicht mehr durch, ist meist das Repo-Secret
+`SUPABASE_ACCESS_TOKEN` abgelaufen (Symptom: `401 Unauthorized` von der
+Management-API und von der Supabase-CLI; einmal passiert am 14. September 2026,
+am selben Tag erneuert). Neuen Token holen
 (<https://supabase.com/dashboard/account/tokens> → «Generate new token») und als
 Repo-Secret ersetzen
-(<https://github.com/phtok/goeloggen/settings/secrets/actions>). Bis dahin geht
-der Deploy von Hand:
+(<https://github.com/phtok/goeloggen/settings/secrets/actions>). Von Hand geht
+der Deploy so:
 `supabase functions deploy sortierer-commit --project-ref dagcsnfrlbpxcmdimnrw`
 oder Dashboard
 <https://supabase.com/dashboard/project/dagcsnfrlbpxcmdimnrw/functions>.
