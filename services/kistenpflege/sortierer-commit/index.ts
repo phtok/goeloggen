@@ -6,14 +6,16 @@
 // Stand als Basis (kein Stale-Clobber). Body (alle Felder optional, mindestens
 // eines): reihenfolge {schublade,karten,karussell,aus} · welten {public,intern}
 // · cats {slug: cat}. Nur die betroffenen Blöcke/Felder werden ersetzt, der Rest
-// bleibt byte-genau. Ein GitHub-Token liegt serverseitig, nie im Browser. Ein
-// Passwort sperrt den Zugang; die Wirkfläche ist bewusst winzig (nur Menü-Struktur,
-// per Git jederzeit rückholbar).
+// bleibt byte-genau. Ein GitHub-Token liegt serverseitig, nie im Browser.
+// Kein Passwort: statt dessen nimmt die Funktion nur Aufrufe von den eigenen
+// Werkzeugseiten an (Herkunfts-Sperre, siehe ERLAUBT). Das ist eine Hürde gegen
+// fremde Seiten, kein Schloss — tragend ist die winzige Wirkfläche: geschrieben
+// werden ausschliesslich Menü-Felder in der tools.json, jeder Schritt steht als
+// Commit im Git und ist mit einem Klick zurückzunehmen.
 //
 // Konfiguration liegt NICHT in Env-Secrets, sondern in der Tabelle
 // public.sortierer_config (nur Service-Role, RLS ohne Policies) — Hausmuster
 // wie seelenkalender_config. Schlüssel (Spalte key → value):
-//   sortierer_secret  frei gewähltes, langes Passwort (App-Passwort)
 //   github_token      Fine-grained PAT, nur dieses Repo, Contents: Read+Write
 //   github_repo       "phtok/goeloggen" (Vorgabe, wenn leer)
 //   github_branch     "main" (Vorgabe, wenn leer)
@@ -40,15 +42,29 @@ async function loadConfig(): Promise<Record<string, string>> {
   return cfg;
 }
 
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "content-type, x-sortierer-secret",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
-function json(status: number, body: unknown): Response {
+// Herkunfts-Sperre: nur die eigenen Werkzeugseiten (und die lokale Vorschau)
+// dürfen schreiben. Ein Browser setzt Origin selbst und kann ihn nicht fälschen;
+// ein Kommandozeilen-Aufruf kann es sehr wohl — darum ist das eine Hürde, kein
+// Schloss (siehe Kopf).
+const ERLAUBT = [
+  "https://werkzeuge.goetheanum.ch",
+  "https://phtok.github.io",
+];
+function erlaubt(origin: string): boolean {
+  return ERLAUBT.includes(origin) || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+}
+function cors(origin: string): Record<string, string> {
+  return {
+    "Access-Control-Allow-Origin": erlaubt(origin) ? origin : ERLAUBT[0],
+    "Vary": "Origin",
+    "Access-Control-Allow-Headers": "content-type, authorization, apikey",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
+}
+function json(status: number, body: unknown, origin = ""): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...CORS, "Content-Type": "application/json" },
+    headers: { ...cors(origin), "Content-Type": "application/json" },
   });
 }
 
@@ -69,28 +85,26 @@ function textToB64(t: string): string {
 const arr = (a: string[]) => "[" + a.map((s) => JSON.stringify(s)).join(", ") + "]";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
-  if (req.method !== "POST") return json(405, { error: "Nur POST." });
+  const origin = req.headers.get("origin") || "";
+  if (req.method === "OPTIONS") return new Response("ok", { headers: cors(origin) });
+  if (req.method !== "POST") return json(405, { error: "Nur POST." }, origin);
+
+  // Herkunfts-Sperre statt Passwort.
+  if (!erlaubt(origin)) return json(403, { error: "Aufruf nur von den Werkzeugseiten." }, origin);
 
   const cfg = await loadConfig();
   const TOKEN  = cfg.github_token || "";
-  const SECRET = cfg.sortierer_secret || "";
   const REPO   = cfg.github_repo || "phtok/goeloggen";
   const BRANCH = cfg.github_branch || "main";
-  if (!TOKEN || !SECRET) return json(500, { error: "Funktion nicht konfiguriert (sortierer_config: github_token / sortierer_secret fehlen)." });
-
-  // Passwort-Sperre.
-  if ((req.headers.get("x-sortierer-secret") || "") !== SECRET) {
-    return json(401, { error: "Passwort falsch." });
-  }
+  if (!TOKEN) return json(500, { error: "Funktion nicht konfiguriert (sortierer_config: github_token fehlt)." }, origin);
 
   const body = await req.json().catch(() => null);
-  if (!body || typeof body !== "object") return json(400, { error: "Body fehlt." });
+  if (!body || typeof body !== "object") return json(400, { error: "Body fehlt." }, origin);
   const hasReihenfolge = !!body.reihenfolge;
   const hasWelten = !!(body.welten && typeof body.welten === "object");
   const hasCats = !!(body.cats && typeof body.cats === "object");
   if (!hasReihenfolge && !hasWelten && !hasCats) {
-    return json(400, { error: "Nichts zu tun (reihenfolge / welten / cats fehlen)." });
+    return json(400, { error: "Nichts zu tun (reihenfolge / welten / cats fehlen)." }, origin);
   }
 
   const gh = {
@@ -105,7 +119,7 @@ Deno.serve(async (req) => {
     `https://api.github.com/repos/${REPO}/contents/${encodeURIComponent(PATH)}?ref=${BRANCH}`,
     { headers: gh },
   );
-  if (!getRes.ok) return json(502, { error: "tools.json bei GitHub nicht lesbar.", status: getRes.status });
+  if (!getRes.ok) return json(502, { error: "tools.json bei GitHub nicht lesbar.", status: getRes.status }, origin);
   const cur = await getRes.json();
   const text = b64ToText(cur.content || "");
 
@@ -116,7 +130,7 @@ Deno.serve(async (req) => {
     known = new Set((parsed.tools || []).map((t: { slug?: string }) => t.slug).filter(Boolean));
     known.add("empfehlungen"); // Karussell-Extra ohne eigenes Werkzeug
   } catch {
-    return json(500, { error: "tools.json (aktuell) ist kein gültiges JSON." });
+    return json(500, { error: "tools.json (aktuell) ist kein gültiges JSON." }, origin);
   }
   const clean = (a: string[]) => a.filter((s) => known.has(s));
   const reEsc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -129,7 +143,7 @@ Deno.serve(async (req) => {
     const ok3 = ["schublade", "karten", "karussell"].every(
       (k) => Array.isArray(r[k]) && r[k].every((s: unknown) => typeof s === "string"),
     );
-    if (!ok3) return json(400, { error: "reihenfolge (schublade/karten/karussell als Slug-Listen) fehlt." });
+    if (!ok3) return json(400, { error: "reihenfolge (schublade/karten/karussell als Slug-Listen) fehlt." }, origin);
     const neu = { schublade: clean(r.schublade), karten: clean(r.karten), karussell: clean(r.karussell) };
     const a = r.aus && typeof r.aus === "object" ? r.aus : {};
     const cleanAus = (x: unknown) => Array.isArray(x) ? clean(x.filter((s) => typeof s === "string") as string[]) : [];
@@ -184,8 +198,8 @@ Deno.serve(async (req) => {
     applied.push("cats");
   }
 
-  if (next === text) return json(200, { ok: true, unchanged: true });
-  try { JSON.parse(next); } catch { return json(500, { error: "Ergebnis wäre ungültiges JSON – nichts geschrieben." }); }
+  if (next === text) return json(200, { ok: true, unchanged: true }, origin);
+  try { JSON.parse(next); } catch { return json(500, { error: "Ergebnis wäre ungültiges JSON – nichts geschrieben." }, origin); }
 
   // Committen.
   const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${encodeURIComponent(PATH)}`, {
@@ -199,8 +213,8 @@ Deno.serve(async (req) => {
     }),
   });
   if (!putRes.ok) {
-    return json(502, { error: "Schreiben bei GitHub fehlgeschlagen.", status: putRes.status, detail: (await putRes.text()).slice(0, 300) });
+    return json(502, { error: "Schreiben bei GitHub fehlgeschlagen.", status: putRes.status, detail: (await putRes.text()).slice(0, 300) }, origin);
   }
   const put = await putRes.json();
-  return json(200, { ok: true, commit: put.commit && put.commit.sha, applied });
+  return json(200, { ok: true, commit: put.commit && put.commit.sha, applied }, origin);
 });

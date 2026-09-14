@@ -114,7 +114,6 @@
   var SB = "https://dagcsnfrlbpxcmdimnrw.supabase.co";
   var FUNKTION = SB + "/functions/v1/sortierer-commit";
   var PUBKEY = "sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY";
-  var SECRET_LS = "sortierer-secret";
   var PUBLIC = ["generatoren", "schrift", "system", "anwendung"];
   var LISTEN = [
     { key:"schublade", label:"Schublade", hint:"Öffentliches Menü (Burger) – von oben nach unten." },
@@ -305,20 +304,14 @@
   }
 
   // Direkt speichern: schickt nur die drei Reihenfolgen an die Edge Function, die
-  // sie serverseitig in die tools.json auf GitHub committet. Das Passwort bleibt
-  // im Browser; ist der Server noch nicht eingerichtet, hilft «Exportieren».
+  // sie serverseitig in die tools.json auf GitHub committet. Ohne Passwort – die
+  // Funktion nimmt nur Aufrufe von dieser Seite an, und geschrieben wird allein
+  // die Menü-Reihenfolge (Verlauf = Git). Klemmt der Server, hilft «Exportieren».
   function speichern(){
-    var secret = "";
-    try { secret = localStorage.getItem(SECRET_LS) || ""; } catch (e) {}
-    if (!secret) {
-      secret = (window.prompt("Passwort fürs Direkt-Speichern (einmalig, bleibt in diesem Browser):") || "").trim();
-      if (!secret) return;
-      try { localStorage.setItem(SECRET_LS, secret); } catch (e) {}
-    }
     status("Speichere …");
     fetch(FUNKTION, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-sortierer-secret": secret, "apikey": PUBKEY, "Authorization": "Bearer " + PUBKEY },
+      headers: { "Content-Type": "application/json", "apikey": PUBKEY, "Authorization": "Bearer " + PUBKEY },
       body: JSON.stringify({ reihenfolge: { schublade: daten.schublade, karten: daten.karten, karussell: daten.karussell,
         aus: { schublade: datenAus.schublade, karussell: datenAus.karussell, karten: datenAus.karten } } })
     }).then(function (r) {
@@ -328,11 +321,10 @@
         if (res.j.unchanged) { status("Nichts zu speichern – schon aktuell."); return; }
         var sha = (res.j.commit || "").slice(0, 7);
         status("Gespeichert und committet" + (sha ? " (" + sha + ")" : "") + ". Startseite und Schublade übernehmen es in ~1 Minute.");
-      } else if (res.code === 401) {
-        try { localStorage.removeItem(SECRET_LS); } catch (e) {}
-        status("Passwort falsch – beim nächsten Speichern neu eingeben.", true);
+      } else if (res.code === 403) {
+        status("Diese Adresse darf nicht speichern – die Seite auf werkzeuge.goetheanum.ch öffnen.", true);
       } else if (res.code === 500 && res.j && /konfiguriert/.test(res.j.error || "")) {
-        status("Server noch nicht eingerichtet (Token/Passwort fehlen). Nutze solange «Exportieren».", true);
+        status("Server noch nicht eingerichtet (GitHub-Token fehlt). Nutze solange «Exportieren».", true);
       } else {
         status("Konnte nicht direkt speichern (" + ((res.j && res.j.error) || res.code) + "). Nutze «Exportieren».", true);
       }
