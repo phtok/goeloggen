@@ -14,6 +14,9 @@
 #      Ist er gesetzt, schreibt dieser Workflow ihn in die Tabelle
 #      public.sortierer_config (Zeile github_token) — dann entfällt jedes
 #      Dashboard-Gefummel. Alternativ den Token direkt in die DB-Zeile setzen.
+#      Scheitert dieser Schritt, warnt er nur: er ist Bequemlichkeit, der
+#      Deploy hängt nicht an ihm (Befund 14. September 2026 — ein abgelaufenes
+#      SUPABASE_ACCESS_TOKEN liess ihn den ganzen Lauf abbrechen).
 # Danach: Tab «Actions» → «Deploy sortierer-commit» → «Run workflow».
 #
 # Die Funktionsquelle wohnt bei services/…; sie wird hier in das von der CLI
@@ -64,7 +67,9 @@ jobs:
             --data "$BODY")
           echo "Management-API HTTP $code"
           if [ "$code" != "200" ] && [ "$code" != "201" ]; then
-            cat /tmp/resp.json; echo "::error::github_token konnte nicht gesetzt werden." && exit 1
+            cat /tmp/resp.json
+            echo "::warning::github_token konnte nicht gesetzt werden (HTTP $code) – meist ein abgelaufenes SUPABASE_ACCESS_TOKEN. Der Deploy läuft weiter; steht der Token schon in sortierer_config, ändert das nichts."
+            exit 0
           fi
           echo "github_token in sortierer_config gesetzt."
       - name: Funktion ins CLI-Layout kopieren
