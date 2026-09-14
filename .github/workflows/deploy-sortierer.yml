@@ -18,7 +18,7 @@
 #
 # Die Funktionsquelle wohnt bei services/…; sie wird hier in das von der CLI
 # erwartete Layout (supabase/functions/<name>/index.ts) kopiert und deployt.
-# verify_jwt bleibt aus (die Funktion hat eigene Passwort-Sperre).
+# verify_jwt bleibt aus (die Funktion prüft die Herkunft selbst — kein Passwort).
 name: Deploy sortierer-commit
 
 on:
