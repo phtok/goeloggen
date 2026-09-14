@@ -16,6 +16,36 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 14. September 2026 — das Feld spricht nicht, es zeigt an (1.25.0)
+
+**Was.** Bedienelemente tragen im Fundament jetzt immer die Lese-Grotesk:
+`input, select, textarea, optgroup, option { font-family: var(--font-text) }`
+steht in `base.css` auf **Element-Ebene**, nicht mehr nur unter `.field`. Drei
+Seiten, die die Regel lokal überschrieben, sind mitgezogen: der
+Visitenkarten-Generator (`var(--font)` → `var(--font-text)`, Format-Wahl
+zusätzlich von 14 auf 16 px), die Briefschaften (hart verdrahtetes
+`"SourceSansPro-Regular"` → Token, Feldgrösse fest 16 px statt fluidem
+`--t-small`) und der Karten-Generator (`font: inherit` zog die Display-Schrift
+ins Eingabefeld).
+
+**Warum.** Befund des Auftraggebers an der geschlossenen Klappliste des
+Visitenkarten-Generators: «Typo in der ungeöffneten Ansicht zu eng.» Die
+Hausschrift ist eine Display-Schrift — im Feld, ohne Laufweite und ohne
+Zeilen um sich, läuft sie eng. Die Hausregel sagt es schon (Schrift-Grenze:
+Label, Wert, Formularfelder und Tabellen tragen die Lese-Grotesk); verdrahtet
+war sie aber nur für Felder **innerhalb** von `.field`. Wer sein Feld anders
+baute, bekam die Display-Schrift — die geschlossene Klappliste ist genau der
+Ort, an dem das auffällt, weil dort **ein** Wert ohne Kontext steht.
+
+**Wirkung.** Gemessen am gerenderten Blatt (Chromium, 1280 und 420 px,
+`getComputedStyle`): alle 15 Seiten mit nativer Klappliste zeigen in Feld und
+Optionen jetzt Source Sans 3 — vorher standen acht Felder in Goetheanum und
+eine Klappliste sogar in Arial, weil das UA-Stylesheet die fehlende Angabe
+gewann. Neue Seiten brauchen nichts zu wissen: die Regel greift, bevor eine
+Seite überhaupt eine Klasse vergibt.
+
+---
+
 ## 8. September 2026 — eine Reihe, die alle gleich macht, macht alle gleich (1.24.0)
 
 **Was.** Das Rezept kennt jetzt eine **Spanne**: Die Helligkeit der Basisfarbe

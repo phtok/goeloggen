@@ -226,6 +226,12 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 }
 
 /* --- Formularfelder -------------------------------------------------------- */
+/* Bedienelemente tragen IMMER die Lese-Grotesk – geschlossen wie geöffnet.
+   Die Display-Schrift läuft im Feld zu eng (Befund 14. September 2026: die
+   geschlossene Klappliste im Visitenkarten-Generator); Feld, Klappliste und
+   Option sind Funktion und Daten, nicht Stimme (Schrift-Grenze, CLAUDE.md).
+   Element-Ebene, damit auch Felder ausserhalb von .field richtig starten. */
+input,select,textarea,optgroup,option{font-family:var(--font-text)}
 /* 16px+ verhindert das automatische Zoomen beim Fokus auf iOS. Lesetext-Schrift. */
 /* [hidden] muss stärker sein als jede display-Regel des Hauses. Sonst blieb ein
    ausgeblendetes Feld stehen, weil .field{display:grid} das schwache
