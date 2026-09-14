@@ -26,3 +26,8 @@ streichen und mit Datum versehen.
    bisher weder als Form noch als Ort im Werkzeug; das Verlagshaus
    ebenso. Beide gehören vermutlich zur neuen Perlen-Kategorie aus
    Punkt 3 — zusammen angehen.
+   *Teilweise erledigt 14. September 2026: Heizhaus, Verlagshaus und
+   Transformatorenhaus stehen als Orte im Katalog (Kategorie Häuser,
+   Nummern 57 bis 59), mit vermuteten Grundkarten-Formen und der Marke
+   `lageGeschaetzt` — im Justage-Modus verschiebbar. Offen: Lage am
+   Gelände prüfen und die Perlen-Kategorie (Punkt 3).*

@@ -25,7 +25,7 @@ const UI = {
   "s1-titel": { de: "Themen", en: "Themes" },
   "s2-titel": { de: "Zeit", en: "Time" },
   "s3-titel": { de: "Dein Plan", en: "Your plan" },
-  "s1-frage": { de: "Was zieht dich her?", en: "What brings you here?" },
+  "s1-frage": { de: "Was zieht dich an?", en: "What draws you in?" },
   "s1-hilfe": { de: "Eines oder mehrere wählen. Der Plan füllt sich daraus von selbst.",
                 en: "Pick one or more. The plan fills itself from your choice." },
   "s2-frage": { de: "Wie viel Zeit hast du?", en: "How much time do you have?" },
@@ -36,7 +36,6 @@ const UI = {
   "plan-zeigen": { de: "Plan zeigen", en: "Show plan" },
   "zurueck-zeit": { de: "Zurück zur Zeit", en: "Back to time" },
   neu: { de: "Neu beginnen", en: "Start over" },
-  drucken: { de: "Drucken oder PDF", en: "Print or PDF" },
   link: { de: "Link kopieren", en: "Copy link" },
   qr: { de: "QR-Code", en: "QR code" },
   "link-lab": { de: "Dein Link, zum Weitergeben oder aufs Telefon", en: "Your link, to share or to open on your phone" },
@@ -46,8 +45,8 @@ const UI = {
   "karte-hint": { de: "Ziehen bewegt die Karte, zwei Finger zoomen. Ein Tipp auf eine Nummer springt zur Station.",
                   en: "Drag to move the map, pinch to zoom. Tap a number to jump to its station." },
   titel: { de: "Mein Campusplan", en: "My Campus Plan" },
-  lede: { de: "Den eigenen Besuch am Goetheanum planen: Themen wählen, Zeit wählen, fertig. Den Plan drucken oder als Link aufs Telefon nehmen und unterwegs abhaken.",
-          en: "Plan your own visit to the Goetheanum: pick themes, pick a time, done. Print the plan or take it as a link on your phone and tick off places as you go." },
+  lede: { de: "Den eigenen Besuch am Goetheanum planen: Themen wählen, Zeit wählen, fertig. Den Plan als PDF mitnehmen oder als Link aufs Telefon und unterwegs abhaken.",
+          en: "Plan your own visit to the Goetheanum: pick themes, pick a time, done. Take the plan as a PDF or as a link on your phone and tick off places as you go." },
   besuch: { de: "Mein Besuch", en: "My visit" },
   stationen: { de: "Stationen", en: "stops" },
   etwa: { de: "etwa", en: "about" },
@@ -64,7 +63,17 @@ const UI = {
   min: { de: "Min.", en: "min" },
   std: { de: "Std.", en: "h" },
   "lage-hint": { de: "Lage noch nicht am Gelände geprüft:", en: "Position not yet checked on site:" },
-  "wc": { de: "Toiletten", en: "Toilets" }
+  "wc": { de: "Toiletten", en: "Toilets" },
+  pdf: { de: "PDF herunterladen", en: "Download PDF" },
+  "pdf-laeuft": { de: "PDF wird erzeugt …", en: "Creating PDF …" },
+  "pdf-fehler": { de: "PDF konnte nicht erzeugt werden.", en: "The PDF could not be created." },
+  blatt: { de: "Blatt", en: "sheet" },
+  "stationen-titel": { de: "Die Stationen", en: "The stops" },
+  "pdf-link-hint": { de: "Derselbe Plan auf dem Telefon: Link öffnen oder QR-Code scannen, unterwegs abhaken.",
+                     en: "The same plan on your phone: open the link or scan the QR code, tick off as you go." },
+  "datum-lab": { de: "Besuchstag, wenn du ihn schon kennst", en: "Day of your visit, if you know it" },
+  "datum-hint": { de: "Damit der Plan sagt, was an diesem Tag geschlossen ist.", en: "So the plan can tell you what is closed that day." },
+  "geschlossen-am": { de: "am Besuchstag geschlossen", en: "closed on your visit day" }
 };
 
 /* ---------- Zustand ---------- */
@@ -79,6 +88,7 @@ const state = {
   an: new Set(),              // Ort-IDs im Plan
   besucht: new Set(),         // Ort-IDs abgehakt (nur Modus ‹plan›)
   code: "",                   // Plan-Code aus dem Link
+  datum: "",                  // Besuchstag ISO (optional)
   fokus: null
 };
 
@@ -133,11 +143,19 @@ function immerDabei() {
     && (!g.nurBarrierefrei || state.umstaende.barrierefrei)).map((g) => g.id);
 }
 
+function ortGeschlossenAm(g, iso) {
+  if (!g.geschlossen || !iso) return false;
+  const [j, m, tag] = iso.split("-").map(Number);
+  const wochentag = new Date(j, m - 1, tag).getDay();
+  return g.geschlossen.includes(wochentag);
+}
+
 function vorauswahl() {
   const an = new Set(immerDabei());
   const kandidaten = GAESTE.filter((g) => {
     if (g.thema === "basis" || g.thema === "anreise") return false;
     if (state.umstaende.barrierefrei && g.barrierefrei === false) return false;
+    if (ortGeschlossenAm(g, state.datum)) return false;
     return state.themen.has(g.thema) || (state.umstaende.kinder && g.kinder);
   });
   // Je Thema nach Rang sortieren, dann reihum ein Ort je Thema — so bekommt
@@ -198,6 +216,7 @@ function planLink() {
   const teile = [`p=${kodieren()}`, `s=${state.sprache}`, `z=${state.zeit}`];
   if (state.umstaende.kinder) teile.push("k=1");
   if (state.umstaende.barrierefrei) teile.push("b=1");
+  if (state.datum) teile.push(`d=${state.datum}`);
   const basis = window.location.href.split("#")[0];
   return `${basis}#${teile.join("&")}`;
 }
@@ -496,7 +515,9 @@ function zeileMarkup(g, nummer, imPlan) {
   const anreise = g.thema === "anreise";
   const abgehakt = state.besucht.has(id);
   const zugang = g.zugang ? t(ZUGANG[g.zugang]) : "";
-  const meta = [zugang, g.dauer ? dauerText(g.dauer) : ""].filter(Boolean).join(" · ");
+  const zu = ortGeschlossenAm(g, state.datum);
+  const meta = [zugang, g.dauer ? dauerText(g.dauer) : "", g.zeiten ? t(g.zeiten) : ""].filter(Boolean).join(" · ")
+    + (zu ? ` · <span class="stn-zu">${ui("geschlossen-am")}</span>` : "");
   const zeile = g.einzeiler ? `<span class="stn-line">${t(g.einzeiler)}</span>` : "";
   const name = id === "wc-goetheanum" ? ui("wc") : ortName(id);
   const klassen = ["stn", anreise ? "anreise" : "", state.fokus === id ? "fokus" : "", abgehakt ? "abgehakt" : ""].filter(Boolean).join(" ");
@@ -638,11 +659,21 @@ function verdrahten() {
   document.getElementById("s3-zurueck").addEventListener("click", () => schrittZeigen(2));
   document.getElementById("neu").addEventListener("click", () => {
     state.themen.clear(); state.umstaende = { kinder: false, barrierefrei: false }; state.zeit = "halb"; state.an.clear();
+    state.datum = ""; document.getElementById("datum").value = "";
     window.location.hash = "";
     alles(); schrittZeigen(1);
   });
-  document.getElementById("drucken").addEventListener("click", () => window.print());
-  document.getElementById("plan-drucken").addEventListener("click", () => window.print());
+  document.getElementById("datum").addEventListener("change", (e) => { state.datum = e.target.value || ""; });
+  ["pdf", "plan-pdf"].forEach((id) => {
+    document.getElementById(id).addEventListener("click", async () => {
+      const knopf = document.getElementById(id);
+      const text = knopf.textContent;
+      knopf.disabled = true; knopf.textContent = ui("pdf-laeuft");
+      try { await planPdf(); }
+      catch (fehler) { console.error(fehler); window.alert(ui("pdf-fehler")); }
+      finally { knopf.disabled = false; knopf.textContent = text; }
+    });
+  });
 
   document.getElementById("link-kopieren").addEventListener("click", async () => {
     const link = planLink();
@@ -698,6 +729,7 @@ async function start() {
   if (h.z && ZEITEN.some((z) => z.id === h.z)) state.zeit = h.z;
   state.umstaende.kinder = h.k === "1";
   state.umstaende.barrierefrei = h.b === "1";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(h.d || "")) { state.datum = h.d; document.getElementById("datum").value = h.d; }
   verdrahten();
   await ladeGelaende();
   karteBauen();

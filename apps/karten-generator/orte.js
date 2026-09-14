@@ -202,6 +202,25 @@ const ORTE = [
     "legendeText": "WC"
   },
   {
+    "id": "o8",
+    "marker": "8",
+    "art": "orientierung",
+    "kategorie": "eingaenge",
+    "farbe": "gold",
+    "label": {
+      "de": "Café",
+      "en": "Café"
+    },
+    "positionen": [
+      [
+        207.0,
+        141.0
+      ]
+    ],
+    "gebaeude": "campusbau-52",
+    "lageGeschaetzt": true
+  },
+  {
     "id": "f46",
     "marker": "S",
     "art": "orientierung",
@@ -622,6 +641,24 @@ const ORTE = [
     "gebaeude": "campusbau-6"
   },
   {
+    "id": "v16",
+    "marker": "16",
+    "art": "orientierung",
+    "kategorie": "saele",
+    "farbe": "blau",
+    "label": {
+      "de": "Grosser Saal",
+      "en": "Great Hall"
+    },
+    "positionen": [
+      [
+        198.6,
+        127.5
+      ]
+    ],
+    "gebaeude": "campusbau-53"
+  },
+  {
     "id": "o5",
     "marker": "5",
     "art": "orientierung",
@@ -745,6 +782,24 @@ const ORTE = [
         100.48
       ]
     ]
+  },
+  {
+    "id": "o46",
+    "marker": "46",
+    "art": "orientierung",
+    "kategorie": "ausstellung",
+    "farbe": "blau",
+    "label": {
+      "de": "Menschheitsrepräsentant",
+      "en": "Representative of Humanity"
+    },
+    "positionen": [
+      [
+        210.8,
+        121.5
+      ]
+    ],
+    "gebaeude": "campusbau-53"
   },
   {
     "id": "v31",
@@ -918,7 +973,8 @@ const ORTE = [
         209.09,
         195.49
       ]
-    ]
+    ],
+    "gebaeude": "campusbau-45"
   },
   {
     "id": "o45",
@@ -999,7 +1055,8 @@ const ORTE = [
         266.08,
         134.87
       ]
-    ]
+    ],
+    "gebaeude": "campusbau-50"
   },
   {
     "id": "h-eurythmie",
@@ -1016,7 +1073,8 @@ const ORTE = [
         268.5,
         97.0
       ]
-    ]
+    ],
+    "gebaeude": "campusbau-48"
   },
   {
     "id": "h-jugendhaus",
@@ -1071,6 +1129,81 @@ const ORTE = [
       ]
     ],
     "gebaeude": "campusbau-9"
+  },
+  {
+    "id": "h-schreinerei",
+    "marker": "47",
+    "art": "orientierung",
+    "kategorie": "haeuser",
+    "farbe": "blau",
+    "label": {
+      "de": "Schreinerei",
+      "en": "Schreinerei"
+    },
+    "positionen": [
+      [
+        228.0,
+        93.0
+      ]
+    ],
+    "gebaeude": "campusbau-19"
+  },
+  {
+    "id": "h-heizhaus",
+    "marker": "57",
+    "art": "orientierung",
+    "kategorie": "haeuser",
+    "farbe": "blau",
+    "label": {
+      "de": "Heizhaus",
+      "en": "Heizhaus (Boiler House)"
+    },
+    "positionen": [
+      [
+        246.6,
+        77.0
+      ]
+    ],
+    "gebaeude": "campusbau-23",
+    "lageGeschaetzt": true
+  },
+  {
+    "id": "h-trafo",
+    "marker": "58",
+    "art": "orientierung",
+    "kategorie": "haeuser",
+    "farbe": "blau",
+    "label": {
+      "de": "Transformatorenhaus",
+      "en": "Transformer House"
+    },
+    "positionen": [
+      [
+        291.6,
+        143.5
+      ]
+    ],
+    "gebaeude": "campusbau-24",
+    "lageGeschaetzt": true
+  },
+  {
+    "id": "h-verlag",
+    "marker": "59",
+    "art": "orientierung",
+    "kategorie": "haeuser",
+    "farbe": "blau",
+    "label": {
+      "de": "Verlagshaus",
+      "en": "Publishing House"
+    },
+    "positionen": [
+      [
+        137.4,
+        94.4
+      ]
+    ],
+    "gebaeude": "campusbau-43",
+    "lageGeschaetzt": true
   },
   {
     "id": "s-allgemein",

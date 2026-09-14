@@ -381,7 +381,39 @@ Runde eine Frage mit Empfehlung; Antworten landen hier im Papier:
    Gebaut als Laborseite https://werkzeuge.goetheanum.ch/apps/campusplan/
    (Etappen 1 und 2, mit Telefon-Fassung aus Etappe 3): Karte zieht und
    zoomt per Finger, Kästchen 44 px, Abhaken bleibt auf dem Gerät.*
-2. Die fünf Themen und ihre Namen — insbesondere «Architektursammlung». *(offen)*
+2. Die Themen und ihre Namen. *Rückmeldung 14. 9.: die Sektionen fehlen —
+   sechstes Thema «Sektionen der Hochschule» ergänzt (zwölf Orte, Zugang
+   auf Anfrage). Frage «Was zieht dich an?» statt «her?».*
 3. Zugangswort je Bau: was darf der Gast betreten? *(offen)*
 4. Einzeiler-Entwürfe (§ 11) freigeben oder korrigieren. *(offen)*
 5. Dauer in Minuten je Ort — Schätzung des Auftraggebers oder des Empfangs. *(offen)*
+6. **Öffnungszeiten** (Rückmeldung 14. 9.: mit angeben, Besuchstag abfragen).
+   *Gebaut: Feld `zeiten` und `geschlossen` je Ort, Besuchstag als
+   freiwilliges Datum in Schritt 2; ein am Besuchstag geschlossener Ort
+   fällt aus der Vorauswahl und die Zeile sagt es. Belegt sind nur
+   Goetheanum (täglich 9 bis 20 Uhr) und Empfang (Di bis So 9 bis 18 Uhr).
+   **Offen: Zeiten für Buchhandlung, Bibliothek, Café, Speisehaus,
+   Vitalshop, Archiv, Schreinerei-Ausstellung** — bitte liefern, ich trage
+   sie ein.*
+7. **Lagen visuell korrigieren.** *Heizhaus, Transformatorenhaus,
+   Verlagshaus und Café stehen jetzt im Katalog des Kartentools (dazu
+   Schreinerei, Grosser Saal, Menschheitsrepräsentant; Haus Duldeck, de
+   Jaager und Eurythmiehaus mit Gebäude verknüpft). Korrigieren: Kartentool
+   im Justage-Modus öffnen
+   (https://werkzeuge.goetheanum.ch/apps/karten-generator/#justage), Ort
+   anschalten, am ✥ ziehen, «Justierte Lagen exportieren» → die JSON-Datei
+   im Chat einfügen; die Werte wandern in
+   `tools/karten/extract-marker-positionen.py`, und der Katalog wird
+   neu erzeugt.*
+8. **Aquarell als Grundkarte** (Rückmeldung 14. 9.). *(offen — nächste Etappe:
+   Schalter auf der Karte, im PDF wie im Kartentool als Datei-Verweis.)*
+
+### Ausgabe als PDF (Rückmeldung 14. 9.: Druckansicht war Schrott)
+
+Ersetzt: kein Drucken mehr, sondern ein Vektor-PDF wie im Kartentool
+(jsPDF und svg2pdf, Schrift eingebettet, `apps/campusplan/pdf.js`).
+Blatt 1: Karte auf den Plan zugeschnitten, rechts die nummerierte
+Legende — bei mehr als 22 Stationen enger gesetzt, was nicht mehr passt,
+verweist auf Blatt 2. Blatt 2 und folgende: alle Stationen mit Einzeiler,
+Zugang, Dauer und Zeiten in zwei Spalten, unten Link und QR-Code fürs
+Telefon. Kein Beschnitt, keine Marken: A4 quer für den Drucker zuhause.
