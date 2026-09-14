@@ -453,15 +453,21 @@ Runde eine Frage mit Empfehlung; Antworten landen hier im Papier:
    Aquarell-Palette des Kartentools: Stationen Gold #7a5a20 (3.2:1 auf dem
    Campus, Weiss darauf 6.3:1), Anreise Markenblau #0061a9 (3.3:1 / 6.4:1),
    besucht Grün #226b52 (3.2:1 / 6.4:1), weisser Ring gegen das dunkle
-   Goetheanum-Blau. Offen: im Kartentool selbst tragen die Häuser weiter
-   #81b2cb — Wechsel auf #0061a9 wie im Aquarell-Modus ist ein Einzeiler,
-   ändert aber alle Tagungskarten (Entscheid Auftraggeber).*
+   Goetheanum-Blau. Im Kartentool wechselt ‹blau› ebenfalls auf #0061a9
+   (Entscheid Auftraggeber, 14. 9.: «Ja, Blau wechseln»).*
 11. **Faktenprüfung** (Rückmeldung 14. 9.: drei Einzeiler waren erfunden).
    *Alle Ortsangaben mit Quelle in
    https://github.com/phtok/goeloggen/blob/main/docs/campusplan-faktenpruefung.md;
    Unbelegtes gestrichen (Verlagshaus, Präparatepavillon, Nordgalerie),
    Namen wie auf goetheanum.ch (Holzskulptur, Künstlerwohnung Edith Maryon).
-   Zur Prüfung durch den Auftraggeber.*
+   Zur Prüfung durch den Auftraggeber. Zweite Runde nach dessen Hinweisen:
+   Quelle jetzt vor allem die Gebäude-Seite des Hauses
+   (https://goetheanum.ch/de/campus/nebenbauten), dazu Verlagshaus (Wikipedia
+   ‹Verlag am Goetheanum›), Helene Finckh (Rudolf Steiner Archiv),
+   Präparatepavillon und Bienenskulptur (Medienmitteilung Goetheanum 2026),
+   Hochatelier (AnthroWiki). Zugang: mit Führung ist alles zugänglich
+   (https://goetheanum.ch/de/campus/fuehrungen) — die Zeile «von aussen»
+   sagt jetzt «innen mit Führung», der Plan verlinkt die Führungen.*
 
 ### Ausgabe als PDF (Rückmeldung 14. 9.: Druckansicht war Schrott)
 

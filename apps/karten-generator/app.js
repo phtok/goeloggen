@@ -12,9 +12,13 @@ const EIGENE_START_NR = 60; // feste Nummern (Modus ‹wie Vorlage›)
 
 // Markerfarben aus den Beispielkarten (LT25 rot/blau, Willkommensplan
 // grau/gartengrün) plus dunkles Hausgold (Weiss bleibt lesbar — B01).
+// Blau = Markenblau (--blue-solid) statt des Vorlagen-Hellblaus #81b2cb:
+// das hatte auf dem Campusgrund #8abfe5 nur 1.2:1 und war unsichtbar
+// (Entscheid Auftraggeber, 14. September 2026; gerechnet 3.3:1 auf dem
+// Campus, Weiss darauf 6.4:1 — dieselbe Farbe wie im Aquarell-Modus).
 const MARKER_FARBEN = {
   rot: "#ec5f6c",
-  blau: "#81b2cb",
+  blau: "#0061a9",
   gruen: "#369e7a",
   grau: "#949596",
   gold: "#94702e"
