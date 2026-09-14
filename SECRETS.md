@@ -113,7 +113,17 @@ Wenn der PAT abläuft (die Funktion antwortet dann mit 502):
    <https://supabase.com/dashboard/project/dagcsnfrlbpxcmdimnrw/editor> →
    Tabelle `sortierer_config` → Zeile `github_token` → `value` einfügen.
 
-**Deploy nach Änderungen an der Funktion:**
+**Deploy nach Änderungen an der Funktion:** normalerweise von selbst — der
+Workflow <https://github.com/phtok/goeloggen/blob/main/.github/workflows/deploy-sortierer.yml>
+läuft, sobald sich die Funktionsquelle auf `main` ändert.
+
+⚠️ **Offener Punkt (14. September 2026):** das Repo-Secret
+`SUPABASE_ACCESS_TOKEN` ist abgelaufen — die Management-API antwortet mit 401,
+der Workflow kommt nicht mehr zum Deploy. Neuen Token holen
+(<https://supabase.com/dashboard/account/tokens> → «Generate new token») und als
+Repo-Secret ersetzen
+(<https://github.com/phtok/goeloggen/settings/secrets/actions>). Bis dahin geht
+der Deploy von Hand:
 `supabase functions deploy sortierer-commit --project-ref dagcsnfrlbpxcmdimnrw`
 oder Dashboard
 <https://supabase.com/dashboard/project/dagcsnfrlbpxcmdimnrw/functions>.
