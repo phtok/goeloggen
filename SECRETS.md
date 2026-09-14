@@ -37,7 +37,7 @@ Einmal setzen, dauerhaft wiederverwenden.
 | **ActiveCampaign** | Connector | — | — | installiert, **Auth erneuern** |
 | **GitHub** | Connector/Proxy | (`GH_TOKEN` nur für `gh`-CLI) | `repo`, `read:org` | über Proxy |
 | **Resend** | Supabase-Config-Tabelle (`seelenkalender_config`, nur Service-Role) | `resend_api_key` | nur Senden (`sending`) | per SQL-Editor setzen (`services/seelenkalender/README.md`) — **nicht** als Claude-Env nötig |
-| **Sortierer-Commit** | Supabase Edge Function | `GITHUB_TOKEN`, `SORTIERER_SECRET` | Token: **nur dieses Repo**, Contents R+W | Function-Secrets im Supabase-Projekt setzen (s. u.) |
+| **Sortierer-Commit** | Supabase Edge Function | `github_token` (in `sortierer_config`) | Token: **nur dieses Repo**, Contents R+W | Kein Passwort mehr – Herkunfts-Sperre (s. u.) |
 | *(Alternative: Brevo)* | Connector | — | — | im Verzeichnis, nicht installiert |
 
 ## Env-Variablen setzen (Web-UI)
@@ -69,28 +69,41 @@ gepflegt, **nicht** hier — deshalb ist `mcpServers` leer. Für einen
 
 ## Sortierer «Direkt speichern» (Edge Function)
 
-Der Sortierer (`sortierer.html`) kann die Menü-Reihenfolge direkt committen,
-statt sie zu exportieren. Dahinter steht die Edge Function
-`services/kistenpflege/sortierer-commit/index.ts` (Projekt
-`dagcsnfrlbpxcmdimnrw`). Sie schreibt **ausschliesslich** das Feld
-`reihenfolge` in die `tools.json` — winzige Wirkfläche, per Git rückholbar.
+Der Sortierer (`sortierer.html`) und der Ordner-Editor (`ordner.html`) committen
+die Menü-Struktur direkt, statt sie zu exportieren. Dahinter steht die Edge
+Function `services/kistenpflege/sortierer-commit/index.ts` (Projekt
+`dagcsnfrlbpxcmdimnrw`). Sie schreibt **ausschliesslich** die Menü-Felder
+`reihenfolge`, `welten` und `cat` in der `tools.json` — winzige Wirkfläche, per
+Git rückholbar.
+
+**Kein Passwort** (Beschluss 14. September 2026). Statt dessen nimmt die Funktion
+nur Aufrufe von den eigenen Werkzeugseiten an (Origin-Allowlist im Code:
+`werkzeuge.goetheanum.ch`, `phtok.github.io`, `localhost`). Das ist eine Hürde
+gegen fremde Seiten, **kein Schloss** — eine Anfrage von der Kommandozeile kann
+den Origin setzen. Getragen wird die Entscheidung von der Wirkfläche, nicht vom
+Türsteher: schlimmstenfalls steht das Menü in anderer Reihenfolge, sichtbar als
+Commit, mit einem `git revert` zurück. Wer echten Zugangsschutz braucht (weil die
+Funktion einmal mehr darf als Menü-Felder), baut Supabase-Auth ein, nicht ein
+neues App-Passwort.
 
 **Konfiguration liegt in der Tabelle `public.sortierer_config`** (Hausmuster wie
 `seelenkalender_config`: `key`/`value`, RLS ohne Policies → nur Service-Role).
 Die Funktion liest sie mit der automatisch injizierten Service-Role — **es sind
-keine Env-Secrets zu setzen**. Zwei Zeilen zählen:
+keine Env-Secrets zu setzen**.
 
 | key | Inhalt | Stand |
 |---|---|---|
-| `sortierer_secret` | App-Passwort fürs Direkt-Speichern (gesetzt) | ✅ gesetzt |
-| `github_token` | Fine-grained PAT, **nur `phtok/goeloggen`**, Contents R+W | ⬜ von Hand eintragen |
+| `github_token` | Fine-grained PAT, **nur `phtok/goeloggen`**, Contents R+W | ✅ gesetzt |
+| `github_repo` | `phtok/goeloggen` (Vorgabe, wenn leer) | ✅ gesetzt |
+| `github_branch` | `main` (Vorgabe, wenn leer) | ✅ gesetzt |
+| `sortierer_secret` | **stillgelegt** – wird nicht mehr gelesen, Zeile kann weg | ⬜ Altlast |
 
-Zwei Handgriffe bleiben (genaue Links — die Oberflächen sind sonst mühsam):
+Wenn der PAT abläuft (die Funktion antwortet dann mit 502):
 
-1. **PAT erzeugen:** <https://github.com/settings/personal-access-tokens/new>
+1. **Neuen PAT erzeugen:** <https://github.com/settings/personal-access-tokens/new>
    → *Resource owner* `phtok` · *Repository access* → **Only select repositories**
    → `phtok/goeloggen` · *Permissions* → *Repository permissions* →
-   **Contents: Read and write** · kurze Ablauf. Token kopieren.
+   **Contents: Read and write**. Token kopieren.
 2. **Token eintragen** (nicht hier, direkt in die DB-Zeile):
    SQL-Editor <https://supabase.com/dashboard/project/dagcsnfrlbpxcmdimnrw/sql/new>
    ```sql
@@ -99,15 +112,11 @@ Zwei Handgriffe bleiben (genaue Links — die Oberflächen sind sonst mühsam):
    Oder Tabellen-Editor
    <https://supabase.com/dashboard/project/dagcsnfrlbpxcmdimnrw/editor> →
    Tabelle `sortierer_config` → Zeile `github_token` → `value` einfügen.
-3. **Deploy** (die aktuelle Fassung mit `aus` + Config-Tabelle live setzen):
-   `supabase functions deploy sortierer-commit --project-ref dagcsnfrlbpxcmdimnrw`
-   oder Dashboard
-   <https://supabase.com/dashboard/project/dagcsnfrlbpxcmdimnrw/functions>.
 
-Das App-Passwort (`sortierer_secret`) tippt die Person einmalig beim ersten
-«Direkt speichern» im Browser ein (bleibt lokal). Bis `github_token` gesetzt
-**und** die neue Fassung deployt ist, antwortet die Funktion mit 500
-«nicht konfiguriert»; solange bleibt **«Exportieren»** der Weg.
+**Deploy nach Änderungen an der Funktion:**
+`supabase functions deploy sortierer-commit --project-ref dagcsnfrlbpxcmdimnrw`
+oder Dashboard
+<https://supabase.com/dashboard/project/dagcsnfrlbpxcmdimnrw/functions>.
 
 ## Merksatz
 Connector, wo es einen gibt (parat + nie einsehbar + kein Recycling); Env-Key
