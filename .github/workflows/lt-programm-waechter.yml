@@ -1,0 +1,47 @@
+# Wächter über das Programm der Landwirtschaftlichen Tagung. Holt viermal
+# täglich https://www.agriculture-conference.org/programm (und die Startseite),
+# schreibt den strukturierten Stand nach apps/lt-programm/webseite.json und
+# committet ihn, wenn sich etwas geändert hat. Damit zeigt die Vorschau
+# https://werkzeuge.goetheanum.ch/apps/lt-programm/ nach dem nächsten
+# Pages-Deploy immer den aktuellen Stand der Webseite; «Auf Abruf» = Run workflow.
+# Was nur auf dem Blatt steht (blatt.json), fasst der Wächter nicht an.
+name: LT-Programm-Wächter
+
+on:
+  schedule:
+    - cron: "17 5,11,17,23 * * *"   # viermal täglich (UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lt-programm-waechter
+  cancel-in-progress: false
+
+jobs:
+  holen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Programmseite holen und mit dem Stand vergleichen
+        id: holen
+        run: |
+          set +e
+          python3 tools/lt-programm-holen.py --pruefen
+          rc=$?
+          set -e
+          if [ "$rc" = "1" ]; then echo "geaendert=ja" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [ "$rc" = "0" ]; then echo "geaendert=nein" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "Seite nicht wie erwartet lesbar (Exit $rc)"; exit "$rc"
+      - name: Neuen Stand committen
+        if: steps.holen.outputs.geaendert == 'ja'
+        run: |
+          git config user.name "lt-programm-waechter"
+          git config user.email "werkzeuge@goetheanum.ch"
+          git add apps/lt-programm/webseite.json
+          git commit -m "LT-Programm: Stand der Webseite $(date -u +%Y-%m-%d) übernommen"
+          git push

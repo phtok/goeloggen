@@ -334,6 +334,17 @@
       "such": "Schild Schilder Orientierung Türschild Wegweiser Wegweisung Piktogramm Pfeil A5 Namensschild"
     },
     {
+      "slug": "lt-programm",
+      "cat": "generatoren",
+      "status": "beta",
+      "tag": "Landwirtschaft",
+      "title": "Tagungsprogramm",
+      "short": "Tagungsprogramm",
+      "href": "apps/lt-programm/",
+      "desc": "Rückseite des Programm-Faltblatts der Landwirtschaftlichen Tagung: Zeitplan und Arbeitsgruppen von agriculture-conference.org, als Vorschau und als IDML für InDesign. Der Wächter holt die Webseite regelmässig; offene Punkte werden angezeigt.",
+      "such": "Landwirtschaftliche Tagung Agriculture Conference Programm Faltblatt Arbeitsgruppen Zeitplan IDML InDesign Sektion Landwirtschaft Export"
+    },
+    {
       "slug": "bewegte-schrift",
       "cat": "labor",
       "status": "entwurf",
