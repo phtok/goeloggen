@@ -58,6 +58,13 @@
 
   /* --- Kapitel ------------------------------------------------------------ */
   .kapitel>section:first-child{border-top:0}
+  /* Die globale Kopfleiste ist Glas (--bar-bg, 90 % Weiss, plus Unschärfe).
+     Über der theme-festen dunklen Bühne dieser Seite mischt sich ihr Grund
+     auf etwa #e7e7e6 – der Beta-Chip in --gold-ink fällt damit auf gemessene
+     4.15:1 (axe-core, schmale Achse). Auf dieser Seite steht die Leiste darum
+     auf --paper. Vierte Kandidatin: Glas kann Kontrast nicht garantieren,
+     sobald eine dunkle Fläche darunter laufen darf. */
+  .dsnav{background:var(--paper)}
   /* base.css dämpft den Kicker im Band auf opacity:.85 – Weiss über --gold-deep
      kommt damit auf gemessene 3.77:1 statt der 4.55:1, die das volle Weiss hält
      (axe-core, WCAG 1.4.3, bei 390 und 1440 px). Ein Kicker ist 14 px, also
@@ -564,7 +571,7 @@
       <p>Der Prototyp läuft hier eingebettet. «Inventar» beschriftet jedes Element mit seiner Rolle – dieselbe Zählung wie im Kapitel Inventar.</p>
     </div>
     <div class="rahmenzeile">
-      <div class="seg" role="group" aria-label="Seitentyp im Prototyp" data-rahmen="start">
+      <div class="seg" role="group" aria-label="Seitentyp im Prototyp neben der Startseite" data-rahmen="start">
         <button type="button" data-seite="start" aria-pressed="true">Start</button>
         <button type="button" data-seite="feld" aria-pressed="false">Feld</button>
         <button type="button" data-seite="video" aria-pressed="false">Video</button>
@@ -573,7 +580,7 @@
         <button type="button" data-seite="woche" aria-pressed="false">Wochenschrift</button>
         <button type="button" data-seite="newsletter" aria-pressed="false">Newsletter</button>
       </div>
-      <div class="seg" role="group" aria-label="Beschriftung">
+      <div class="seg" role="group" aria-label="Beschriftung im Prototyp neben der Startseite">
         <button type="button" data-inventar="start" aria-pressed="false">Inventar</button>
       </div>
       <a class="btn ghost" href="wireframe.html#start">Prototyp im Vollbild öffnen</a>
@@ -603,7 +610,7 @@
       <p>Auf dem Schreibtisch liegt die rechte Spalte neben dem Player. Die weiteren Seitentypen zeigen dasselbe Zeilenprinzip.</p>
     </div>
     <div class="rahmenzeile">
-      <div class="seg" role="group" aria-label="Seitentyp im Prototyp" data-rahmen="video">
+      <div class="seg" role="group" aria-label="Seitentyp im Prototyp neben der Videoseite" data-rahmen="video">
         <button type="button" data-seite="start" aria-pressed="false">Start</button>
         <button type="button" data-seite="feld" aria-pressed="false">Feld</button>
         <button type="button" data-seite="video" aria-pressed="true">Video</button>
@@ -612,7 +619,7 @@
         <button type="button" data-seite="woche" aria-pressed="false">Wochenschrift</button>
         <button type="button" data-seite="newsletter" aria-pressed="false">Newsletter</button>
       </div>
-      <div class="seg" role="group" aria-label="Beschriftung">
+      <div class="seg" role="group" aria-label="Beschriftung im Prototyp neben der Videoseite">
         <button type="button" data-inventar="video" aria-pressed="false">Inventar</button>
       </div>
       <a class="btn ghost" href="wireframe.html#video">Prototyp im Vollbild öffnen</a>
