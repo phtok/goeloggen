@@ -40,7 +40,7 @@ def story_absaetze(xml: bytes) -> list[tuple[str, list[tuple[str, str]]]]:
             text = ""
             for kind in csr:
                 if kind.tag == "Content":
-                    text += (kind.text or "").replace(" ", "⏎")
+                    text += (kind.text or "").replace("\u2028", "⏎")
                 elif kind.tag == "Br":
                     text += "‖" if umbruch == "NextColumn" else "¶"
             if text:
@@ -49,17 +49,17 @@ def story_absaetze(xml: bytes) -> list[tuple[str, list[tuple[str, str]]]]:
     return aus
 
 
-def seite_lesen(idml: pathlib.Path, seite: str) -> dict[str, list]:
-    """{story_id: Absätze} für alle Textrahmen der Seite mit dem Namen `seite`."""
+def seite_lesen(idml: pathlib.Path, seite: str | None = None) -> dict[str, list]:
+    """{story_id: Absätze} für alle Textrahmen — der ganzen Datei oder einer Seite."""
     stories: dict[str, list] = {}
     with zipfile.ZipFile(idml) as z:
-        spreads = [n for n in z.namelist() if n.startswith("Spreads/")]
+        spreads = sorted(n for n in z.namelist() if n.startswith("Spreads/"))
         ids: list[str] = []
         for sp in spreads:
             root = ET.fromstring(z.read(sp))
-            if any(p.get("Name") == seite for p in root.iter("Page")):
-                ids = [tf.get("ParentStory") for tf in root.iter("TextFrame")]
-                break
+            if seite and not any(p.get("Name") == seite for p in root.iter("Page")):
+                continue
+            ids += [tf.get("ParentStory") for tf in root.iter("TextFrame")]
         for sid in dict.fromkeys(ids):
             name = f"Stories/Story_{sid}.xml"
             if name in z.namelist():
@@ -79,8 +79,8 @@ def main() -> int:
     slots = json.loads((ORDNER / "slots.json").read_text(encoding="utf-8"))
     datei = pathlib.Path(argv[argv.index("--datei") + 1]) if "--datei" in argv else ORDNER / slots["vorlage"]
     nur = argv[argv.index("--slot") + 1] if "--slot" in argv else None
-    stories = seite_lesen(datei, slots["seite"])
-    print(f"{datei.name}: Seite {slots['seite']} hat {len(stories)} Textrahmen")
+    stories = seite_lesen(datei)
+    print(f"{datei.name}: {len(stories)} Textrahmen auf allen Seiten")
     fehler = 0
     belegt = set()
     for name, slot in slots["slots"].items():
@@ -92,7 +92,7 @@ def main() -> int:
             print(f"  ✗ {name}: Story {sid} nicht auf der Seite")
             fehler += 1
             continue
-        print(f"  ✓ {name} ({sid}, {slot['art']})")
+        print(f"  ✓ {name} ({sid}, {slot['art']}{', nur prüfen' if slot.get('nur_pruefen') else ''})")
         zeigen(sid, stories[sid])
     if "--alle" in argv:
         print("\nRahmen ohne Slot:")

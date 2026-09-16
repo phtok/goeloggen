@@ -2,8 +2,9 @@
    ---------------------------------------------------------------------------
    Schreibt das Blattmodell (programm.js) in die InDesign-Vorlage
    vorlage/LT27.idml. Es werden NUR die Textrahmen aus vorlage/slots.json
-   neu befüllt; Geometrie, Farben, Absatz- und Zeichenformate, Seite 1
-   (Plakat) und alles Übrige bleiben unangetastet. Die Formatierung jedes
+   neu befüllt – und auch von denen nicht die mit `nur_pruefen` (von Hand
+   gesetzte Rahmen wie die unterschnittene Plakatzeile). Geometrie, Farben,
+   Bilder, Absatz- und Zeichenformate und alles Übrige bleiben unangetastet. Die Formatierung jedes
    Rahmens wird aus seinem bisherigen Inhalt geklont: erster «Deutlich»-Lauf
    = laut, erster «Ruhig»-Lauf = ruhig, Absatzattribute je Position bzw.
    je Absatzformat-Name.
@@ -207,7 +208,7 @@ export function storySchreiben(xml, absaetze) {
     else if (a.text !== undefined) runs = [{ lauf: basis[0], text: a.text }];
     else {
       const beide = a.laut && a.ruhig;
-      if (a.laut !== undefined) runs.push({ lauf: laut, text: beide ? `${a.laut} ` : a.laut });
+      if (a.laut !== undefined) runs.push({ lauf: laut, text: beide ? `${a.laut}\u2002` : a.laut });
       if (a.ruhig !== undefined) runs.push({ lauf: ruhig, text: a.ruhig });
     }
     runs = runs.filter((r) => r.text !== '');
@@ -232,6 +233,7 @@ export async function exportIdml(vorlageBytes, modell, slots) {
   const dateien = await zipLesen(vorlageBytes);
   const protokoll = [];
   for (const [name, slot] of Object.entries(slots.slots)) {
+    if (slot.nur_pruefen) { protokoll.push(`· ${name}: von Hand gesetzt – bleibt unangetastet`); continue; }
     const absaetze = modell.slots[name];
     if (absaetze === undefined) { protokoll.push(`· ${name}: kein Inhalt im Modell – Vorlage bleibt`); continue; }
     const pfad = `Stories/Story_${slot.story}.xml`;

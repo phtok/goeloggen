@@ -1,5 +1,5 @@
 {
-  "$beschreibung": "Was auf dem Faltblatt steht, aber NICHT auf der Webseite: Kopf, Stand, Einleitung, feste Rahmen (Check-in, Klassenstunde, Pausen, Uhrzeiten) und Überschreibungen. Alles Übrige (Plenum, Arbeitsgruppen) kommt aus webseite.json. Absatz = Text, oder {laut, ruhig} für Deutlich + Ruhig in einer Zeile; \\n = Zeilenumbruch im Absatz.",
+  "$beschreibung": "Was auf dem Faltblatt steht, aber NICHT auf der Webseite: Kopf, Stand, Einleitung, feste Rahmen (Check-in, Klassenstunde, Pausen, Uhrzeiten) und Überschreibungen. Alles Übrige (Plenum, Arbeitsgruppen) kommt aus webseite.json. Absatz = Text oder {laut, ruhig} für Deutlich + Ruhig in einer Zeile; \\n = Zeilenumbruch im Absatz. Überschreibungen sind auch der Ort für von Hand gesetzte Zeilenumbrüche – die überleben den nächsten Export nur hier.",
   "jahr": 2027,
   "stand": {
     "en": "As of September 2026",
@@ -8,26 +8,20 @@
   "kopf": {
     "motto_en": "Working with the\nIntelligence of Life",
     "motto_de": "Mit der Intelligenz\ndes Lebens arbeiten",
-    "untertitel_en": "Biodynamic agriculture brings microcosm and macrocosm together",
-    "untertitel_de": "Biodynamische Landwirtschaft bringt Mikrokosmos und Makrokosmos zusammen",
+    "untertitel_en": "Biodynamic agriculture brings\nmicrocosm and macrocosm together",
+    "untertitel_de": "Biodynamische Landwirtschaft bringt\nMikrokosmos und Makrokosmos zusammen",
     "tagung_en": "Agriculture Conference",
     "tagung_de": "Landwirtschaftliche Tagung"
   },
   "einleitung": {
-    "en": "Under the guiding theme “Working with the Intelligence of Life”, and with a particular focus on the microbiome, the Agriculture Conference 2027 explores our relationship to the etheric forces.",
+    "en": "Under the guiding theme ‹Working with the Intelligence of Life›, and with a particular focus on the microbiome, the Agriculture Conference 2027 explores our relationship to the etheric forces.",
     "de": "Unter dem Leitgedanken «Mit der Intelligenz des Lebens arbeiten» und mit Blick auf das Mikrobiom widmen wir uns an der Landwirtschaftlichen Tagung 2027 unserer Beziehung und Arbeit mit den Kräften des Ätherischen."
   },
-  "malerei": [
-    {
-      "laut": "Painting on Cover"
-    },
-    {
-      "ruhig": "Malerei auf dem Cover\n‹Titel folgt›"
-    },
-    {
-      "ruhig": "Name folgt"
-    }
-  ],
+  "malerei": {
+    "$hinweis": "Bild auf dem Umschlag – eine Angabe, zwei Stellen (Plakat Seite 1 und Rückseite).",
+    "name": "",
+    "titel": ""
+  },
   "sprachen_hinweis": [
     {
       "laut": "Plenary sessions are available in the following languages:"
@@ -141,26 +135,29 @@
     "zeit_sa_1615": "16:15"
   },
   "plenum": {
-    "$beschreibung": "Überschreibungen je Slot (mi_1500, mi_1700, mi_do_2000, morgen_0830, do_1700, fr_1700, fr_1900, sa_1430; zweite Veranstaltung im selben Slot: mi_1500#2). titel_en/titel_de ersetzen den Titel der Webseite; die Webseite kennt nur deutsche Titel.",
-    "mi_1500": {
-      "titel_en": "Opening",
-      "titel_de": "Eröffnung"
-    },
-    "morgen_0830": {
-      "titel_en": "Working with the Michael Letter from Rudolf Steiner",
-      "titel_de": "Arbeit am Michaelbrief von Rudolf Steiner"
-    },
+    "$beschreibung": "Überschreibungen je Rahmen (mi_1500, mi_1700, mi_do_2000, morgen_0830, do_1700, fr_1700, fr_1900, sa_1430; zweite Veranstaltung im selben Rahmen: mi_1500#2). Felder: titel_en, titel_de, namen, eine_zeile (true = Englisch und Deutsch auf eine Zeile, false = untereinander; ohne Angabe entscheidet umbruch_ab). Nur setzen, was von der Webseite abweichen soll – \\n ist ein Zeilenumbruch.",
     "fr_1900": {
-      "titel_en": "Festive evening",
-      "titel_de": "Festlicher Abend",
       "namen": "Schreinerei Saal +\nWandelhalle"
-    },
-    "sa_1430#2": {
-      "titel_en": "Closing",
-      "titel_de": "Abschluss"
     }
   },
   "arbeitsgruppen": {
+    "1": {
+      "titel_1": "Co-Kreation mit der Intelligenz aller Wesen \nin der Landwirtschaft",
+      "titel_2": "Co-creating with the Intelligence of All Beings \nin Agriculture"
+    },
+    "2": {
+      "titel_1": "Vom Mikrobiom \nzum Genius loci",
+      "titel_2": "From the Microbiome \nto the Genius Loci"
+    },
+    "3": {
+      "titel_1": "Der Michaelbrief im\nKontext der Leitsätze"
+    },
+    "4": {
+      "titel_1": "Bildekräfteforschung \nund Christus-Impuls"
+    },
+    "6": {
+      "titel_1": "Gemeinsam mit \nder Intelligenz des \nLebens züchten"
+    },
     "$beschreibung": "Überschreibungen je Nummer: titel_1, titel_2, namen (mit \\n), sprachen (Liste). Nur setzen, was vom Webseiten-Stand abweichen soll."
   },
   "tagesraster": {
@@ -336,5 +333,6 @@
         "slot": "nachtcafe"
       }
     ]
-  }
+  },
+  "umbruch_ab": 30
 }

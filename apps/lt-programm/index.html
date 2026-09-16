@@ -78,11 +78,12 @@
     <p class="lede">Rückseite des Programm-Faltblatts: Zeitplan und Arbeitsgruppen, so wie sie auf der Tagungswebseite stehen – als Vorschau und als IDML für InDesign.</p>
 
     <div class="leiste">
-      <span class="readout">Stand der Webseite: <b id="stand">–</b></span>
+      <span class="readout" id="quelle-stand">Gespeicherter Stand: <b id="stand">–</b></span>
+      <button class="btn" type="button" id="abrufen">Von der Webseite holen</button>
       <a class="btn" href="https://www.agriculture-conference.org/programm" target="_blank" rel="noopener">Programm auf der Webseite</a>
-      <a class="btn" href="https://github.com/phtok/goeloggen/actions/workflows/lt-programm-waechter.yml" target="_blank" rel="noopener">Jetzt abgleichen</a>
       <button class="btn primary" type="button" id="export">IDML exportieren</button>
     </div>
+    <p class="note" id="zaehler"></p>
     <p class="note" id="protokoll" hidden></p>
   </section>
 
@@ -97,7 +98,9 @@
   <section>
     <div class="shead">
       <h2>Kopf</h2>
+      <p>Die Plakatseite ist von Hand gesetzt (unterschnitten) – der Export fasst sie nicht an. Hier steht nur, ob sie noch zu den Daten passt.</p>
     </div>
+    <ul class="hinweise" id="abgleich"></ul>
     <div class="kopf">
       <div class="card soft">
         <div class="motto" id="motto-en"></div>
@@ -144,40 +147,35 @@
 </footer>
 
 <script type="module">
-  import { komponieren, tagesansicht } from './programm.js';
+  import { komponieren, tagesansicht, abgleichen } from './programm.js';
+  import { webseiteLesen } from './webseite-lesen.js';
   import { exportIdml } from './idml-export.js';
+
+  /* Die Tagungsseite darf der Browser nicht selbst lesen (fremde Herkunft) –
+     das Fenster dorthin ist die Edge Function lt-programm-quelle. Gelesen wird
+     hier, mit demselben Modul wie auf der Kommandozeile. */
+  const QUELLE = 'https://dagcsnfrlbpxcmdimnrw.supabase.co/functions/v1/lt-programm-quelle';
 
   const $ = (s) => document.querySelector(s);
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+  const zeit = (iso) => (iso ? new Date(iso).toLocaleString('de-CH', { dateStyle: 'medium', timeStyle: 'short' }) : 'unbekannt');
 
-  const [webseite, blatt, slots] = await Promise.all(['webseite.json', 'blatt.json', 'vorlage/slots.json']
+  const [gespeichert, blatt, slots] = await Promise.all(['webseite.json', 'blatt.json', 'vorlage/slots.json']
     .map((p) => fetch(p).then((r) => r.json())));
-  const modell = komponieren(webseite, blatt);
 
-  // Kopf
-  $('#jahr').textContent = modell.tagung.jahr;
-  const stand = webseite.stand ? new Date(webseite.stand) : null;
-  $('#stand').textContent = stand ? stand.toLocaleString('de-CH', { dateStyle: 'medium', timeStyle: 'short' }) : 'unbekannt';
-  $('#motto-en').textContent = modell.tagung.motto_en;
-  $('#motto-de').textContent = modell.tagung.motto_de;
-  $('#datum-en').textContent = `${blatt.kopf.tagung_en} · ${modell.tagung.datum_en}`;
-  $('#datum-de').textContent = `${blatt.kopf.tagung_de} · ${modell.tagung.datum_de}`;
+  let webseite = gespeichert;
+  let modell = komponieren(webseite, blatt);
+  let live = false;
 
-  // Offene Punkte
-  const ul = $('#hinweise');
   const ART = { offen: 'offen', uebersetzung: 'Übersetzung', struktur: 'Rahmen', abgleich: 'Abgleich' };
-  if (!modell.hinweise.length) ul.append(el('li', 'note', 'Nichts offen.'));
-  for (const h of modell.hinweise) {
-    const li = el('li');
-    li.append(el('span', 'chip', ART[h.art] || h.art), el('span', '', h.text));
-    ul.append(li);
-  }
 
-  // Zeitplan
   const absatzNode = (a) => {
     const p = el('p');
     if (typeof a === 'string') { p.textContent = a; return p; }
-    if (a.runs) { p.textContent = a.runs.map((r) => r.text).join(''); return p; }
+    if (a.runs) {
+      a.runs.forEach((r) => p.append(el('span', r.laut ? 'en' : 'de', r.text)));
+      return p;
+    }
     if (a.laut) { const s = el('span', 'en', a.laut); if (a.offen) s.classList.add('offen'); p.append(s); }
     if (a.laut && a.ruhig) p.append(' ');
     if (a.ruhig) { const s = el('span', a.laut ? 'de' : '', a.ruhig); if (a.offen && !a.laut) s.classList.add('offen'); p.append(s); }
@@ -185,41 +183,104 @@
     if (!a.laut && a.ruhig && !a.stil) p.classList.add('namen');
     return p;
   };
-  const tage = $('#tage');
-  for (const tag of tagesansicht(modell, blatt)) {
-    const box = el('article', 'tag');
-    const h = el('h3', '', `${tag.en} ${tag.de}`);
-    h.append(el('small', '', `${tag.datum_en} · ${tag.datum_de}`));
-    box.append(h);
-    for (const z of tag.zeilen) {
-      const row = el('div', 'zeile-z');
-      row.append(el('span', 'zeit', z.zeit));
-      const inhalt = el('div');
-      z.absaetze.forEach((a, i) => { const p = absatzNode(a); if (i > 0 && !(typeof a === 'string') && !a.laut) p.classList.add('namen'); inhalt.append(p); });
-      row.append(inhalt);
-      box.append(row);
+
+  function zeichnen() {
+    $('#jahr').textContent = modell.tagung.jahr;
+    $('#stand').textContent = zeit(webseite.stand);
+    $('#quelle-stand').firstChild.textContent = live ? 'Eben von der Webseite geholt: ' : 'Gespeicherter Stand: ';
+    $('#motto-en').textContent = modell.tagung.motto_en;
+    $('#motto-de').textContent = modell.tagung.motto_de;
+    $('#datum-en').textContent = `${blatt.kopf.tagung_en} · ${modell.tagung.datum_en}`;
+    $('#datum-de').textContent = `${blatt.kopf.tagung_de} · ${modell.tagung.datum_de}`;
+
+    // Offene Punkte
+    const ul = $('#hinweise');
+    ul.replaceChildren();
+    if (!modell.hinweise.length) ul.append(el('li', 'note', 'Nichts offen.'));
+    for (const h of modell.hinweise) {
+      const li = el('li');
+      li.append(el('span', 'chip', ART[h.art] || h.art), el('span', '', h.text));
+      ul.append(li);
     }
-    tage.append(box);
+
+    // Abgleich der von Hand gesetzten Rahmen
+    const ab = $('#abgleich');
+    ab.replaceChildren();
+    for (const a of abgleichen(modell, slots)) {
+      const li = el('li');
+      li.append(el('span', 'chip', a.stimmt ? 'stimmt' : 'prüfen'),
+        el('span', '', a.stimmt ? `${a.slot}: ${a.ist}` : `${a.slot}: in der Vorlage steht «${a.ist}» – in den Daten fehlt ${a.fehlt.join(', ')}.`));
+      ab.append(li);
+    }
+
+    // Zeitplan
+    const tage = $('#tage');
+    tage.replaceChildren();
+    for (const tag of tagesansicht(modell, blatt)) {
+      const box = el('article', 'tag');
+      const h = el('h3', '', `${tag.en} ${tag.de}`);
+      h.append(el('small', '', `${tag.datum_en} · ${tag.datum_de}`));
+      box.append(h);
+      for (const z of tag.zeilen) {
+        const row = el('div', 'zeile-z');
+        row.append(el('span', 'zeit', z.zeit));
+        const inhalt = el('div');
+        z.absaetze.forEach((a, i) => { const p = absatzNode(a); if (i > 0 && !(typeof a === 'string') && !a.laut && !a.runs) p.classList.add('namen'); inhalt.append(p); });
+        row.append(inhalt);
+        box.append(row);
+      }
+      tage.append(box);
+    }
+
+    // Arbeitsgruppen
+    const fenster = (block) => (webseite.arbeitsgruppen.find((a) => a.block === block) || {}).fenster || '';
+    $('#fenster-vormittag').textContent = fenster('vormittag');
+    $('#fenster-nachmittag').textContent = fenster('nachmittag');
+    $('#ag-vormittag').replaceChildren();
+    $('#ag-nachmittag').replaceChildren();
+    for (const ag of modell.arbeitsgruppen) {
+      const k = el('article', 'ag');
+      if (ag.sprachen.length > 1 && !ag.titel_2) k.classList.add('fehlt');
+      k.append(el('div', 'nr', [ag.nr, ...ag.sprachen_label].join(' · ')));
+      k.append(el('div', 't1', ag.titel_1));
+      if (ag.titel_2) k.append(el('div', 't2', ag.titel_2));
+      k.append(el('div', 'namen', ag.namen));
+      $(ag.block === 'vormittag' ? '#ag-vormittag' : '#ag-nachmittag').append(k);
+    }
+    $('#zaehler').textContent = `${modell.zaehler.plenum} Plenumsveranstaltungen · ${modell.zaehler.vormittag} Arbeitsgruppen am Vormittag · ${modell.zaehler.nachmittag} am Nachmittag`;
   }
 
-  // Arbeitsgruppen
-  const fenster = (block) => (webseite.arbeitsgruppen.find((a) => a.block === block) || {}).fenster || '';
-  $('#fenster-vormittag').textContent = fenster('vormittag');
-  $('#fenster-nachmittag').textContent = fenster('nachmittag');
-  for (const ag of modell.arbeitsgruppen) {
-    const k = el('article', 'ag');
-    if (ag.sprachen.length > 1 && !ag.titel_2) k.classList.add('fehlt');
-    k.append(el('div', 'nr', [ag.nr, ...ag.sprachen_label].join(' · ')));
-    k.append(el('div', 't1', ag.titel_1));
-    if (ag.titel_2) k.append(el('div', 't2', ag.titel_2));
-    k.append(el('div', 'namen', ag.namen));
-    $(ag.block === 'vormittag' ? '#ag-vormittag' : '#ag-nachmittag').append(k);
-  }
+  function melden(text) { const p = $('#protokoll'); p.hidden = false; p.textContent = text; }
+
+  // Von der Webseite holen – auf Knopfdruck, nicht nach Uhr.
+  $('#abrufen').addEventListener('click', async () => {
+    const knopf = $('#abrufen');
+    knopf.disabled = true;
+    melden('Die Tagungsseite wird gelesen …');
+    try {
+      const q = await (await fetch(`${QUELLE}?frisch`)).json();
+      if (!q.seiten?.programm) throw new Error(q.fehler?.join(' · ') || 'Die Programmseite kam nicht an');
+      const frisch = webseiteLesen(q.seiten.programm, q.seiten.start);
+      frisch.stand = q.stand;
+      const gleich = frisch.pruefsumme === gespeichert.pruefsumme;
+      webseite = frisch; live = true;
+      modell = komponieren(webseite, blatt);
+      zeichnen();
+      melden(gleich
+        ? `Gelesen: unverändert gegenüber dem gespeicherten Stand vom ${zeit(gespeichert.stand)}.`
+        : `Gelesen: die Webseite hat sich seit dem ${zeit(gespeichert.stand)} geändert. Die Vorschau und der Export zeigen jetzt den frischen Stand.`);
+    } catch (fehler) {
+      melden(`Abruf fehlgeschlagen: ${fehler.message}. Die Vorschau zeigt weiter den gespeicherten Stand.`);
+    } finally {
+      knopf.disabled = false;
+    }
+  });
 
   // Export
   $('#export').addEventListener('click', async () => {
-    const knopf = $('#export'); const prot = $('#protokoll');
-    knopf.disabled = true; prot.hidden = false; prot.textContent = 'Vorlage wird geladen …';
+    const knopf = $('#export');
+    knopf.disabled = true;
+    melden('Die Vorlage wird geladen …');
     try {
       const vorlage = new Uint8Array(await (await fetch(`vorlage/${slots.vorlage}`)).arrayBuffer());
       const { bytes, protokoll } = await exportIdml(vorlage, modell, slots);
@@ -229,13 +290,16 @@
       document.body.append(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 10000);
       const ok = protokoll.filter((z) => z.startsWith('✓')).length;
-      prot.textContent = `${name}: ${ok} Rahmen befüllt. ${modell.hinweise.length ? `${modell.hinweise.length} offene Punkte stehen oben.` : ''}`;
+      const hand = protokoll.filter((z) => z.startsWith('·')).length;
+      melden(`${name}: ${ok} Rahmen befüllt, ${hand} von Hand gesetzte unangetastet. Quelle: ${live ? 'frisch von der Webseite' : `gespeicherter Stand vom ${zeit(webseite.stand)}`}.`);
     } catch (fehler) {
-      prot.textContent = `Export fehlgeschlagen: ${fehler.message}`;
+      melden(`Export fehlgeschlagen: ${fehler.message}`);
     } finally {
       knopf.disabled = false;
     }
   });
+
+  zeichnen();
 </script>
 
 </body>
