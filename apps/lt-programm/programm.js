@@ -94,13 +94,16 @@ export function komponieren(webseite, blatt) {
     slots.tage.push({ stil: 'Daten', text: `${tag.datum_en}\t${tag.datum_de}`, umbruch: i < tage.length - 1 ? 'NextColumn' : undefined });
   });
 
+  // Kopf des Blatts: Motto, Untertitel, Tagungszeile – drei Absätze, wie gesetzt.
   slots.kopf_en = [
     { laut: blatt.kopf.motto_en },
-    { runs: [{ ruhig: true, text: `${blatt.kopf.untertitel_en}\n` }, { laut: true, text: `${blatt.kopf.tagung_en}\n${datumEn}` }] },
+    { ruhig: blatt.kopf.untertitel_en },
+    { laut: `${blatt.kopf.tagung_en}\n${datumEn}` },
   ];
   slots.kopf_de = [
     { ruhig: blatt.kopf.motto_de },
-    { runs: [{ ruhig: true, text: `${blatt.kopf.untertitel_de}\n` }, { laut: true, text: `${blatt.kopf.tagung_de}\n${datumDe}` }] },
+    { ruhig: blatt.kopf.untertitel_de },
+    { laut: `${blatt.kopf.tagung_de}\n${datumDe}` },
   ];
   slots.stand = [
     { laut: `${blatt.stand.en}\nVisit our website for\nnews and registration` },
@@ -137,6 +140,7 @@ export function komponieren(webseite, blatt) {
   };
 
   const zeilenFuer = (v, key, wo) => {
+    // `key` ist zugleich der Schlüssel in blatt.json › plenum.
     const o = ueber[key] || {};
     const en = gueltig(o.titel_en, v.titel_en || v.art_en || '', wo, 'titel_en');
     const de = gueltig(o.titel_de, v.titel_de || v.art_de || '', wo, 'titel_de');
@@ -147,20 +151,38 @@ export function komponieren(webseite, blatt) {
     if (de && !en) merken('uebersetzung', `${wo}: «${de}» hat keine englische Fassung auf der Webseite.`);
     if (v.namen_offen) merken('offen', `${wo}: bei den Mitwirkenden steht noch N.N.`);
     const namen = o.namen !== undefined ? o.namen : namenZeile(v.mitwirkende);
-    const aus = [{ ...titelzeile(en, de, schwelle, o.eine_zeile), offen: !!v.titel_offen }];
-    if (namen) aus.push({ ruhig: namen });
+    const zeile = { ...titelzeile(en, de, schwelle, o.eine_zeile), offen: !!v.titel_offen, quelle: { schluessel: key, feld: 'titel' } };
+    // Manche Rahmen sind knapp: dort hängen die Namen mit Mittelpunkt an den Titel.
+    if (namen && o.namen_anhaengen) {
+      if (zeile.runs) zeile.runs[zeile.runs.length - 1].text += ` · ${namen}`;
+      else if (zeile.ruhig) zeile.ruhig += ` · ${namen}`;
+      else zeile.ruhig = namen;
+      return [zeile];
+    }
+    const aus = [zeile];
+    if (namen) aus.push({ ruhig: namen, quelle: { schluessel: key, feld: 'namen' } });
     return aus;
   };
 
   for (const regel of PLENUM_SLOTS) {
     const absaetze = [];
     if (regel.art === 'morgen') {
-      // Ein Titel über allen drei Vormittagen, die Mitwirkenden je Tag in eigener Spalte.
+      // Titel und Art laufen über alle Spalten, darunter die Mitwirkenden je Tag
+      // in eigener Spalte. Was spannt und was nicht, sagt das Modell – sonst
+      // erbt eine Namenszeile den Spaltenlauf der Überschrift und schiebt die
+      // folgenden Tage aus dem Rahmen.
       const o = ueber[regel.slot] || {};
       const erste = eventsBei(regel.teile[0].tag, regel.teile[0].zeit)[0] || {};
       const en = gueltig(o.titel_en, erste.titel_en || erste.art_en || '', regel.slot, 'titel_en');
       const de = gueltig(o.titel_de, erste.titel_de || erste.art_de || '', regel.slot, 'titel_de');
-      absaetze.push(titelzeile(en, de, schwelle, o.eine_zeile));
+      absaetze.push({ ...titelzeile(en, de, schwelle, o.eine_zeile), spanne: 'alle', quelle: { schluessel: regel.slot, feld: 'titel' } });
+      // Die Art («Michaelbrief · Michael Letter») steht als eigene Zeile darunter,
+      // wenn die Webseite sie neben dem Titel nennt.
+      const artEn = o.art_en !== undefined ? o.art_en : (erste.art_en || '');
+      const artDe = o.art_de !== undefined ? o.art_de : (erste.art_de || '');
+      if ((artEn || artDe) && (en || de) && `${artEn}${artDe}` !== `${en}${de}`) {
+        absaetze.push({ ...titelzeile(artEn, artDe, schwelle, o.art_eine_zeile !== false), spanne: 'alle' });
+      }
       const titelGleich = new Set();
       regel.teile.forEach((teil, i) => {
         const evs = eventsBei(teil.tag, teil.zeit);
@@ -168,7 +190,7 @@ export function komponieren(webseite, blatt) {
         const namen = evs.map((v) => namenZeile(v.mitwirkende)).filter(Boolean).join('\n') || '–';
         if (evs.some((v) => v.titel_offen)) merken('offen', `${regel.slot} (${KURZ[teil.tag]}): Beitrag am Vormittag noch ohne Titel.`);
         if (evs.some((v) => v.namen_offen)) merken('offen', `${regel.slot} (${KURZ[teil.tag]}): Mitwirkende am Vormittag noch offen (N.N.).`);
-        absaetze.push({ ruhig: namen, umbruch: i < regel.teile.length - 1 ? 'NextColumn' : undefined });
+        absaetze.push({ ruhig: namen, spanne: 'keine', umbruch: i < regel.teile.length - 1 ? 'NextColumn' : undefined });
       });
       if (titelGleich.size > 1) merken('struktur', 'Die drei Vormittage haben verschiedene Titel – der Rahmen im Blatt trägt nur einen. In blatt.json › plenum › morgen_0830 einen gemeinsamen Titel setzen.');
     } else {
@@ -177,7 +199,9 @@ export function komponieren(webseite, blatt) {
         if (!evs.length) merken('struktur', `${regel.slot}: keine Veranstaltung ${KURZ[teil.tag]} ${teil.zeit} auf der Webseite.`);
         evs.forEach((v, n) => {
           benutzt.add(v);
-          const key = n ? `${regel.slot}#${n + 1}` : regel.slot;
+          // Schlüssel in blatt.json: @2 = zweite Spalte des Rahmens,
+          // #2 = zweite Veranstaltung in derselben Spalte.
+          const key = `${regel.slot}${i ? `@${i + 1}` : ''}${n ? `#${n + 1}` : ''}`;
           absaetze.push(...zeilenFuer(v, key, `${KURZ[teil.tag]} ${teil.zeit}`));
         });
         if (i < regel.teile.length - 1 && absaetze.length) absaetze[absaetze.length - 1].umbruch = 'NextColumn';
@@ -229,14 +253,23 @@ export function arbeitsgruppenAbsaetze(liste, formate) {
     titel_zweitsprache: 'AG-26_grau', titel_chinesisch: 'AG-Chinese', namen: 'AG_Namen' }, formate || {});
   const aus = [];
   let block = null;
+  let ersteImBlock = false;
   for (const ag of liste) {
     if (ag.block !== block) {
+      const nachmittag = ag.block === 'nachmittag';
       block = ag.block;
-      aus.push(block === 'vormittag'
-        ? { stil: f.kopf, runs: [{ laut: true, text: 'Morning\n' }, { ruhig: true, text: 'Vormittag' }] }
-        : { stil: f.kopf, runs: [{ laut: true, text: 'Afternoon\n' }, { ruhig: true, text: 'Nachmittag' }] });
+      ersteImBlock = true;
+      aus.push({
+        stil: f.kopf,
+        runs: [{ laut: true, text: nachmittag ? 'Afternoon\n' : 'Morning\n' }, { ruhig: true, text: nachmittag ? 'Nachmittag' : 'Vormittag' }],
+        // Der Nachmittag beginnt in einer frischen Spalte.
+        umbruch_vor: nachmittag ? 'NextColumn' : undefined,
+      });
     }
+    // Nach der Blocküberschrift ein leerer Absatz als Luft, dann die erste Nummer.
+    if (ersteImBlock) aus.push({ stil: f.sprache, text: '' });
     aus.push({ stil: f.sprache, text: [ag.nr, ...ag.sprachen_label].join(' · ') });
+    ersteImBlock = false;
     aus.push({ stil: block === 'vormittag' ? f.titel_vormittag : f.titel_nachmittag, text: ag.titel_1 });
     if (ag.titel_2) aus.push({ stil: ag.titel_2_stil === 'chinesisch' ? f.titel_chinesisch : f.titel_zweitsprache, text: ag.titel_2 });
     aus.push({ stil: f.namen, text: ag.namen });
