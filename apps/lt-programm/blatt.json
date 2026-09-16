@@ -8,8 +8,8 @@
   "kopf": {
     "motto_en": "Working with the\nIntelligence of Life",
     "motto_de": "Mit der Intelligenz\ndes Lebens arbeiten",
-    "untertitel_en": "Biodynamic agriculture brings\nmicrocosm and macrocosm together",
-    "untertitel_de": "Biodynamische Landwirtschaft bringt\nMikrokosmos und Makrokosmos zusammen",
+    "untertitel_en": "Biodynamic agriculture \nbrings microcosm and \nmacrocosm together",
+    "untertitel_de": "Biodynamische Landwirtschaft \nbringt Mikrokosmos und \nMakrokosmos zusammen",
     "tagung_en": "Agriculture Conference",
     "tagung_de": "Landwirtschaftliche Tagung"
   },
@@ -135,9 +135,22 @@
     "zeit_sa_1615": "16:15"
   },
   "plenum": {
-    "$beschreibung": "Überschreibungen je Rahmen (mi_1500, mi_1700, mi_do_2000, morgen_0830, do_1700, fr_1700, fr_1900, sa_1430; zweite Veranstaltung im selben Rahmen: mi_1500#2). Felder: titel_en, titel_de, namen, eine_zeile (true = Englisch und Deutsch auf eine Zeile, false = untereinander; ohne Angabe entscheidet umbruch_ab). Nur setzen, was von der Webseite abweichen soll – \\n ist ein Zeilenumbruch.",
+    "$beschreibung": "Überschreibungen je Rahmen (mi_1500, mi_1700, mi_do_2000, morgen_0830, do_1700, fr_1700, fr_1900, sa_1430). Mehrspaltige Rahmen: @2 = zweite Spalte; mehrere Veranstaltungen in einer Spalte: #2. Felder: titel_en, titel_de, namen, eine_zeile (true = Englisch und Deutsch auf eine Zeile, false = untereinander; ohne Angabe entscheidet umbruch_ab), namen_anhaengen (Mitwirkende mit Mittelpunkt an die Titelzeile hängen). Nur setzen, was von der Webseite abweichen soll – \\n ist ein Zeilenumbruch.",
     "fr_1900": {
       "namen": "Schreinerei Saal +\nWandelhalle"
+    },
+    "mi_do_2000": {
+      "namen_anhaengen": true,
+      "$hinweis": "Der Rahmen ist knapp – die Mitwirkenden hängen mit Mittelpunkt an der Titelzeile.",
+      "titel_en": "From Microbiome Research to the \nSpiritual Significance of the Preparations",
+      "titel_de": "Von der Mikrobiomforschung zur \ngeisteswissenschaftlichen Bedeutung \nder Präparate"
+    },
+    "mi_1500#2": {
+      "namen": "Nathalia Muguet · Regina Sharmila \nDass · Limbua"
+    },
+    "mi_1700": {
+      "titel_en": "Exploring the Invisible \nNetworks of Life",
+      "titel_de": "Die unsichtbaren Netzwerke \ndes Lebens erkunden"
     }
   },
   "arbeitsgruppen": {

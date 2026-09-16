@@ -46,15 +46,30 @@ export function sauber(text) {
   return String(text).replace(/\u200e|\u200f/g, '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+/* Benannte Entitäten: die häufigen ausgeschrieben, die akzentuierten über die
+   Regel «Buchstabe + Akzentname» (&iacute; &uuml; &ntilde; …) – die Tagungsseite
+   liefert sie in vielen Sprachen. */
 const ENTITAETEN = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: '\u00a0',
-  auml: 'ä', ouml: 'ö', uuml: 'ü', Auml: 'Ä', Ouml: 'Ö', Uuml: 'Ü', szlig: 'ß',
-  eacute: 'é', egrave: 'è', agrave: 'à', ccedil: 'ç', ntilde: 'ñ', lrm: '\u200e',
-  bull: '•', ndash: '–', mdash: '—', hellip: '…', rsquo: '’', lsquo: '‘', ldquo: '“', rdquo: '”' };
+  szlig: 'ß', bull: '•', ndash: '–', mdash: '—', hellip: '…', middot: '·', deg: '°',
+  rsquo: '\u2019', lsquo: '\u2018', ldquo: '\u201c', rdquo: '\u201d', laquo: '«', raquo: '»',
+  lrm: '\u200e', rlm: '\u200f', shy: '\u00ad', ensp: '\u2002', emsp: '\u2003', thinsp: '\u2009' };
+
+const AKZENT = { acute: '\u0301', grave: '\u0300', circ: '\u0302', tilde: '\u0303',
+  uml: '\u0308', ring: '\u030a', cedil: '\u0327', slash: '\u0338', caron: '\u030c', macr: '\u0304' };
+
+/* «&iacute;» → «í»: Buchstabe plus kombinierendes Zeichen, dann zusammengesetzt. */
+function akzent(name) {
+  const m = /^([a-zA-Z])(acute|grave|circ|tilde|uml|ring|cedil|slash|caron|macr)$/.exec(name);
+  if (!m) return null;
+  return (m[1] + AKZENT[m[2]]).normalize('NFC');
+}
 
 function entschluesseln(s) {
   return s.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z]+);/g, (ganz, e) => {
     if (e[0] === '#') return String.fromCodePoint(Number(e[1] === 'x' || e[1] === 'X' ? `0${e.slice(1)}` : e.slice(1)));
-    return ENTITAETEN[e] !== undefined ? ENTITAETEN[e] : ganz;
+    if (ENTITAETEN[e] !== undefined) return ENTITAETEN[e];
+    const a = akzent(e);
+    return a !== null ? a : ganz;
   });
 }
 

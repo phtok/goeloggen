@@ -47,9 +47,10 @@ Regelmässig läuft nichts – der Knopf genügt.
 - `feste_slots`: Check-in, Klassenstunde, Pausen, Uhrzeiten (Rahmen, die die
   Webseite nicht kennt)
 - `plenum`: Überschreibungen je Rahmen (`mi_1500`, `mi_1700`, `mi_do_2000`,
-  `morgen_0830`, `do_1700`, `fr_1700`, `fr_1900`, `sa_1430`; zweite
-  Veranstaltung im selben Rahmen `mi_1500#2`) mit `titel_en`, `titel_de`,
-  `namen`, `eine_zeile`.
+  `morgen_0830`, `do_1700`, `fr_1700`, `fr_1900`, `sa_1430`). Mehrspaltige
+  Rahmen: `@2` = zweite Spalte; mehrere Veranstaltungen in einer Spalte: `#2`.
+  Felder: `titel_en`, `titel_de`, `namen`, `eine_zeile`, `namen_anhaengen`
+  (Mitwirkende mit Mittelpunkt an die Titelzeile hängen).
 - `arbeitsgruppen`: Überschreibungen je Nummer (`"12": {"titel_1": "…"}`).
 - `umbruch_ab`: ab wie vielen Zeichen Englisch und Deutsch untereinander statt
   nebeneinander stehen (Vorgabe 30).
@@ -78,6 +79,19 @@ Ein Rahmen mehr (z. B. eine Veranstaltung ohne Platz, siehe «offene Punkte» �
 Rahmen): in InDesign anlegen, Story-ID in `slots.json` eintragen, in
 `programm.js › PLENUM_SLOTS` zuordnen.
 
+## Passt der Text in die Rahmen?
+
+```
+node tools/lt-programm-passt.mjs LT-2027.idml    # Export gegen die Vorlage messen
+node tools/lt-programm-passt.mjs LT-2027.idml --alle
+```
+
+Misst jeden Rahmen mit der echten Hausschrift in Chromium und meldet, was mehr
+Platz braucht als in der gesetzten Vorlage. Verglichen wird, nicht absolut
+gerechnet: die gezeichnete Rahmenhöhe ist hier keine Schranke – viele Rahmen
+sind kleiner als ihre eigene Zeile und werden trotzdem gesetzt. Belastbar ist
+die Veränderung. Was wächst, gehört ins Blatt geschaut.
+
 ## Von Hand
 
 ```
@@ -96,12 +110,16 @@ node apps/lt-programm/idml-export.js --ziel LT-2027.idml   # Export ohne Browser
 | `idml-export.js` | schreibt das Modell in die Vorlage (eigener Mini-Zip) |
 | `holen.mjs` | Kommandozeile: holen, vergleichen, Umbrüche ernten |
 | `index.html` | Vorschau mit Abruf- und Export-Knopf |
+| `tools/lt-programm-passt.mjs` | misst, ob der Text noch in die Rahmen passt |
 | `services/lt-programm/quelle/` | Edge Function: das CORS-Fenster zur Tagungsseite |
 
 ## Grenzen (Stand September 2026)
 
-- Der Export klont die Formatierung jedes Rahmens aus der Vorlage (erster
-  Deutlich-Lauf, erster Ruhig-Lauf, Absatzattribute nach Absatzformat).
+- Der Export klont die Formatierung aus der Vorlage, absatzweise: Schriftgrad
+  und Zeilenabstand kommen vom Absatz an derselben Stelle, fehlt dort der
+  gesuchte Schnitt, wird er aus dem Rahmen geholt und auf die Grösse dieses
+  Absatzes gebracht. Ob ein Absatz über alle Spalten läuft, sagt das Modell
+  (`spanne`) – nicht die Stelle in der Vorlage.
   **Unterschneidung und Laufweite innerhalb eines Rahmens gehen verloren** –
   darum sind von Hand gesetzte Rahmen als `nur_pruefen` markiert, und
   Zeilenumbrüche werden mit `--umbrueche` gesichert.

@@ -49,22 +49,26 @@ function umbrueche(idmlPfad) {
   const nackt = (s) => String(s).replace(/[\s\u2028\u2002]+/g, '').trim();
   const gefunden = [];
 
+  /* Den Rahmen in echte Absätze zerlegen. Vorsicht: InDesign packt mehrere
+     Absätze in einen ParagraphStyleRange, wenn sie dieselben Eigenschaften
+     tragen – getrennt wird darum am Absatzende (<Br/>), nicht am Block. */
   const storyText = (sid) => {
     const xml = dateien.get(`Stories/Story_${sid}.xml`);
     if (!xml) return null;
     const absaetze = [];
-    for (const psr of xml.split('<ParagraphStyleRange').slice(1)) {
-      const stil = (psr.match(/AppliedParagraphStyle="ParagraphStyle\/([^"]*)"/) || [])[1] || '';
-      let t = '';
-      for (const stueck of psr.split(/<CharacterStyleRange/).slice(1)) {
-        const roh = stueck.split('</ParagraphStyleRange>')[0];
-        for (const m of roh.matchAll(/<Content>([\s\S]*?)<\/Content>|<Br \/>/g)) {
-          t += m[1] !== undefined ? m[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
-        }
+    let stil = '';
+    let laufend = '';
+    const ablegen = () => { absaetze.push({ stil, text: laufend.replace(/\u2028/g, '\n') }); laufend = ''; };
+    for (const block of xml.split('<ParagraphStyleRange').slice(1)) {
+      stil = (block.match(/AppliedParagraphStyle="ParagraphStyle\/([^"]*)"/) || [])[1] || '';
+      const roh = block.split('</ParagraphStyleRange>')[0];
+      for (const m of roh.matchAll(/<Content>([\s\S]*?)<\/Content>|<Br \/>/g)) {
+        if (m[1] === undefined) ablegen();
+        else laufend += m[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
       }
-      absaetze.push({ stil, text: t.replace(/\u2028/g, '\n') });
     }
-    return absaetze;
+    if (laufend) ablegen();
+    return absaetze.filter((a) => a.text !== '');
   };
 
   // Arbeitsgruppen: Titel und Namen je Nummer
@@ -92,22 +96,39 @@ function umbrueche(idmlPfad) {
     }
   }
 
-  // Plenum: erster Absatz je Rahmen (die Titelzeile)
+  /* Plenum: jeder Absatz im Modell weiss, aus welchem Eintrag in blatt.json er
+     stammt (quelle.schluessel/quelle.feld) – damit trifft die Ernte auch dort,
+     wo ein Rahmen mehrere Veranstaltungen trägt. */
   blatt.plenum = blatt.plenum || {};
   for (const [name, slot] of Object.entries(slots.slots)) {
     if (slot.art !== 'zeitplan' || slot.nur_pruefen) continue;
     const gesetzt = storyText(slot.story);
     const soll = modell.slots[name];
-    if (!gesetzt || !soll || !soll.length) continue;
-    const ist = gesetzt[0].text.replace(/\n+$/, '');
-    const sollText = absatzText(soll[0]);
-    if (ist !== sollText && nackt(ist) === nackt(sollText)) {
-      const [en, de] = ist.split('\n');
-      if (en && de) {
-        blatt.plenum[name] = { ...(blatt.plenum[name] || {}), titel_en: en, titel_de: de };
-        gefunden.push(`${name} · Titel`);
+    if (!gesetzt || !Array.isArray(soll)) continue;
+    soll.forEach((absatz, i) => {
+      const q = absatz && absatz.quelle;
+      if (!q || !gesetzt[i]) return;
+      let ist = gesetzt[i].text.replace(/\n+$/, '');
+      const sollText = absatzText(absatz);
+      if (!ist || ist === sollText || nackt(ist) !== nackt(sollText)) return;
+      const eintrag = blatt.plenum[q.schluessel] || (blatt.plenum[q.schluessel] = {});
+      // Hängen die Mitwirkenden am Titel (namen_anhaengen), gehören sie nicht
+      // in den gespeicherten Titel – sonst stünden sie nach dem Export zweimal da.
+      if (q.feld === 'titel' && eintrag.namen_anhaengen) {
+        ist = ist.replace(/\s*·\s*[^·]*$/, '');
+        if (nackt(ist) === '') return;
       }
-    }
+      if (q.feld === 'namen') { eintrag.namen = ist; gefunden.push(`${q.schluessel} · Mitwirkende`); return; }
+      // Titelzeile: Englisch und Deutsch trennen, wo auch die Daten trennen.
+      const enSoll = absatz.laut || (absatz.runs || []).filter((r) => r.laut).map((r) => r.text).join('');
+      const roh = enSoll.replace(/\s+$/, '');
+      const schnitt = roh ? ist.indexOf('\n', Math.max(0, roh.length - 4)) : -1;
+      if (schnitt > 0) {
+        eintrag.titel_en = ist.slice(0, schnitt);
+        eintrag.titel_de = ist.slice(schnitt + 1);
+        gefunden.push(`${q.schluessel} · Titel`);
+      }
+    });
   }
 
   if (!gefunden.length) { console.log('  = keine von Hand gesetzten Umbrüche gefunden, die den Daten entsprechen'); return 0; }

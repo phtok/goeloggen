@@ -179,8 +179,40 @@ function vorlageLesen(xml) {
   return { prefix: xml.slice(0, erste), suffix: xml.slice(letzteEnde), absaetze };
 }
 
+/* Ob ein Absatz über alle Spalten läuft, ist eine Aussage über den Inhalt
+   (eine Überschrift spannt, eine Namenszeile nicht) – darum sagt es das Modell
+   und nicht die Stelle, an der der Absatz in der Vorlage zufällig stand. */
+function spanneSetzen(open, spanne) {
+  if (!spanne) return open;
+  const wert = spanne === 'alle' ? 'SpanColumns' : 'SingleColumn';
+  return /SpanColumnType="/.test(open)
+    ? open.replace(/SpanColumnType="[^"]*"/, `SpanColumnType="${wert}"`)
+    : open.replace(/^<ParagraphStyleRange/, `<ParagraphStyleRange SpanColumnType="${wert}"`);
+}
+
 const istLaut = (l) => /Deutlich|Laut|Bold|Semibold/i.test(l.schnitt);
 const istRuhig = (l) => /Ruhig|Klar|Leise|Regular|Light|Book/i.test(l.schnitt);
+
+/* Schriftgrad und Zeilenabstand gehören dem Absatz, nicht dem Rahmen: fehlt dem
+   Absatz der gesuchte Schnitt, wird der Lauf aus dem Rahmen geholt – aber auf
+   die Grösse DIESES Absatzes gebracht. Sonst bekäme der Untertitel die 35 Punkt
+   der Schlagzeile darüber. */
+function angleichen(lauf, vorbild) {
+  if (!lauf || !vorbild || lauf === vorbild) return lauf;
+  const grad = (vorbild.attrs.match(/\sPointSize="([^"]*)"/) || [])[1];
+  const zeilen = (vorbild.props.match(/<Leading type="unit">([^<]*)<\/Leading>/) || [])[1];
+  let attrs = lauf.attrs;
+  if (grad !== undefined) {
+    attrs = /\sPointSize="/.test(attrs)
+      ? attrs.replace(/\sPointSize="[^"]*"/, ` PointSize="${grad}"`)
+      : `${attrs} PointSize="${grad}"`;
+  }
+  let props = lauf.props;
+  if (zeilen !== undefined && /<Leading type="unit">/.test(props)) {
+    props = props.replace(/<Leading type="unit">[^<]*<\/Leading>/, `<Leading type="unit">${zeilen}</Leading>`);
+  }
+  return { ...lauf, attrs, props };
+}
 
 function laufXml(lauf, text, br, typ) {
   const inhalt = text ? `<Content>${esc(text).replace(/\n/g, '\u2028')}</Content>` : '';
@@ -201,8 +233,11 @@ export function storySchreiben(xml, absaetze) {
     const a = typeof roh === 'string' ? { text: roh } : roh;
     const tpl = (a.stil && nachStil.get(a.stil)) || v.absaetze[Math.min(i, v.absaetze.length - 1)];
     const basis = tpl.laeufe.length ? tpl.laeufe : alle;
-    const laut = (a.stil ? basis.find(istLaut) : null) || storyLaut;
-    const ruhig = (a.stil ? basis.find(istRuhig) : null) || (a.stil ? basis[0] : null) || storyRuhig;
+    // Erst die Läufe DIESES Absatzes, dann erst die des Rahmens – und die nur
+    // auf die Grösse des Absatzes gebracht.
+    const vorbild = basis[0];
+    const laut = basis.find(istLaut) || angleichen(storyLaut, vorbild);
+    const ruhig = basis.find(istRuhig) || basis.find((l) => l !== laut) || angleichen(storyRuhig, vorbild);
     let runs = [];
     if (a.runs) runs = a.runs.map((r) => ({ lauf: r.laut ? laut : ruhig, text: r.text || '' }));
     else if (a.text !== undefined) runs = [{ lauf: basis[0], text: a.text }];
@@ -216,12 +251,14 @@ export function storySchreiben(xml, absaetze) {
     const folgt = i < absaetze.length - 1;          // danach kommt noch ein Absatz
     const umbruch = a.umbruch || null;                // Spaltenumbruch statt einfachem Absatzende
     let inner = '';
+    // Ein Spaltenumbruch VOR dem Absatz: leerer Lauf, der in die nächste Spalte schiebt.
+    if (a.umbruch_vor) inner += laufXml(runs[0].lauf, '', true, a.umbruch_vor);
     runs.forEach((r, k) => {
       const brHier = folgt && !umbruch && k === runs.length - 1;
       inner += laufXml(r.lauf, r.text, brHier, '');
     });
     if (umbruch && folgt) inner += laufXml(runs[runs.length - 1].lauf, '', true, umbruch);
-    aus += `\t\t${tpl.open}\n${inner}\t\t</ParagraphStyleRange>\n`;
+    aus += `\t\t${spanneSetzen(tpl.open, a.spanne)}\n${inner}\t\t</ParagraphStyleRange>\n`;
   });
   return `${v.prefix}${aus.trimEnd()}${v.suffix}`;
 }
