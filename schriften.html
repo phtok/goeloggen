@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="de">
+<head>
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum Schriften</title>
+<meta name="description" content="Goetheanum Schriften 2.7 – Leise, Ruhig, Klar, Deutlich, Laut, Variabel und Icons. Repariert, vervollständigt und optimiert." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Ruhig";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Ruhig.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Deutlich";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Variabel";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.7.woff2") format("woff2");font-weight:190 725;font-display:swap}
+  @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2") format("woff2");font-display:block}
+
+  /* Farben, Schrift, Maße, Hell-Dunkel kommen aus tokens.css/base.css. Hier nur
+     das seiten-eigene Specimen-Layout – keine eigenen Farbwerte, kein eigenes :root. */
+  body{font-family:"G Klar","Helvetica Neue",Arial,sans-serif}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+
+  /* Kicker/Lede/Chip-Aussehen aus base.css – hier nur Specimen-Besonderheiten. */
+  .hero{padding-block:60px 14px}
+  .lede{max-width:600px;margin-top:var(--s4)}  /* Grösse/Schnitt/Farbe aus base.css (Klar – lesbar, nicht Leise) */
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .chip b{color:var(--gold-ink);font-weight:400}
+
+  section{padding:46px 0;border-top:1px solid var(--line-soft)}
+  .shead{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:22px;flex-wrap:wrap}
+  .shead p{color:var(--muted);font-size:14px;max-width:380px}
+
+  .vstage{border:1px solid var(--line);border-radius:16px;padding:26px 24px;background:var(--soft)}
+  .vsample{font-family:"G Variabel";font-variation-settings:"wght" 440;font-size:clamp(36px,8vw,88px);line-height:1.1;outline:none;word-break:break-word}
+  .controls{display:flex;align-items:center;gap:18px;margin-top:20px;flex-wrap:wrap}
+  input[type=range]{-webkit-appearance:none;appearance:none;flex:1;min-width:200px;height:2px;background:var(--line);border-radius:2px}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid var(--paper);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid var(--paper)}
+  .readout{min-width:160px;text-align:right}  /* Grösse/Farbe/tnum aus base.css */
+  .readout b{color:var(--ink);font-weight:400}
+
+  .cuts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:900px){.cuts{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.cuts{grid-template-columns:1fr}}
+  .cut{border:1px solid var(--line);border-radius:14px;padding:20px}
+  .cut .tag{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+  .cut .tag b{font-weight:400}.cut .tag span{font-size:var(--t-micro);color:var(--muted)}
+  .cut .big{font-size:clamp(30px,4.4vw,42px);line-height:1.05}
+  .leise{font-family:"G Leise"} .ruhig{font-family:"G Ruhig"} .klar{font-family:"G Klar"} .deutlich{font-family:"G Deutlich"} .laut{font-family:"G Laut"}
+  .fluestern{font-family:"G Variabel";font-variation-settings:"wght" 190} .schreien{font-family:"G Variabel";font-variation-settings:"wght" 725}
+  .cut.var{background:linear-gradient(0deg,color-mix(in srgb,var(--gold) 8%,transparent),transparent)}
+  .cut .vtag{font-size:var(--t-micro);color:var(--gold-ink);border:1px solid var(--gold);border-radius:6px;padding:2px 6px}
+  .office{display:flex;align-items:center;gap:14px;margin-top:24px;padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:var(--soft);font-size:14px;color:var(--muted)}
+  .office>span{flex:1}.office b{color:var(--ink);font-weight:400}
+  .office::before{content:"⌘B ⌘I";font-size:var(--t-small);color:var(--gold-ink);border:1px solid var(--gold);border-radius:7px;padding:4px 8px;white-space:nowrap}
+
+  .glyph{font-size:clamp(19px,2.8vw,26px);line-height:1.7;color:var(--ink)}
+  .new{display:inline-flex;gap:5px;flex-wrap:wrap;margin-top:14px}
+  .new span{border:1px solid var(--line);border-radius:8px;min-width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;font-size:20px}
+
+  .tabs{display:flex;gap:8px;margin-bottom:18px}
+  .tabs button{font:inherit;font-size:var(--t-small);color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+  .tabs button.on{color:var(--gold-ink);border-color:var(--gold)}
+  .igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(116px,1fr));gap:10px}
+  .icell{position:relative;border:1px solid var(--line-soft);border-radius:12px;padding:14px 8px 10px;background:var(--soft);text-align:center;transition:border-color .15s,background .15s}
+  .icell:hover{border-color:var(--gold);background:var(--paper)}
+  .icell img.gl{width:44px;height:44px;display:block;margin:2px auto 0;object-fit:contain}
+  .icell .nm{font-size:var(--t-micro);color:var(--ink);margin-top:10px;line-height:1.25;min-height:1.25em}
+  .icell .dl{display:flex;gap:7px;justify-content:center;margin-top:8px;opacity:0;transition:opacity .15s}
+  .icell:hover .dl{opacity:1}
+  .icell .dl a{font-size:var(--t-micro);color:var(--gold-ink);text-decoration:none;letter-spacing:.02em}
+  .icell .dl a:hover{text-decoration:underline}
+  @media(hover:none){.icell .dl{opacity:1}}
+
+  .dl-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:820px){.dl-cards{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.dl-cards{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px}
+  .card h3{font-weight:400;font-size:16px}.card p{color:var(--muted);font-size:var(--t-small);flex:1}
+  /* .btn (inkl. .primary, Hover) kommt vollständig aus base.css. */
+
+  .webgrid{display:grid;grid-template-columns:1fr;gap:18px;align-items:start}
+  @media(min-width:820px){.webgrid{grid-template-columns:1.6fr 1fr}}
+  /* Konsole (Fläche/Farbe/Schrift) aus base.css pre.code – hier nur Verortung. */
+  pre.code{position:relative;margin:0;border-radius:var(--r-card);padding:18px}
+  .copybtn{position:absolute;top:11px;right:11px;font:inherit;font-size:var(--t-micro);border:1px solid var(--code-bg2);background:var(--code-bg2);color:var(--code-ink);border-radius:8px;padding:5px 10px;cursor:pointer}
+  .copybtn:hover{filter:brightness(1.25)}
+  .webaside{font-size:14.5px;line-height:1.6}
+  .feat{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--paper);overflow:hidden}
+  .feat summary{list-style:none;cursor:pointer;padding:15px 18px;font-size:15.5px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .feat summary::-webkit-details-marker{display:none}
+  .feat summary span{font-size:var(--t-micro);color:var(--gold-ink);font-family:var(--font-mono)}
+  .feat summary::after{content:"+";color:var(--muted);font-size:18px;line-height:1}
+  .feat[open] summary::after{content:"–"}
+  .feat[open] summary{border-bottom:1px solid var(--line-soft)}
+  .featbody{padding:14px 18px 20px}
+  .featbody p{color:var(--muted);font-size:var(--t-small);max-width:62ch;margin:0 0 12px}
+  .demo{font-size:clamp(22px,3.6vw,30px);line-height:1.5;color:var(--ink)}
+  .numgrid{display:grid;grid-template-columns:1fr;gap:18px}
+  @media(min-width:680px){.numgrid{grid-template-columns:1.5fr 1fr}}
+  .numlbl{font-size:var(--t-micro);color:var(--muted);margin-bottom:8px;letter-spacing:.02em}
+  .numcmp{display:flex;gap:22px}
+  .numsub{font-size:var(--t-micro);color:var(--gold-ink);margin-bottom:4px}
+  .numcol{font-size:clamp(20px,2.6vw,26px);line-height:1.35;color:var(--ink);text-align:right}
+  .glyphover{margin-top:22px;border:1px solid var(--line);border-radius:12px;padding:18px;background:var(--soft)}
+  .goh{font-size:var(--t-small);color:var(--muted);margin-bottom:12px}
+  .gohrow{display:flex;flex-wrap:wrap;gap:8px}
+  .gohrow span{min-width:52px;height:52px;border:1px solid var(--line);border-radius:9px;background:var(--paper);
+    display:inline-flex;align-items:center;justify-content:center;font-size:26px}
+  .gohnote{font-size:var(--t-small);color:var(--muted);margin-top:12px;max-width:64ch}
+  footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--muted);font-size:var(--t-small)}
+  .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .frow strong{color:var(--ink);font-weight:400}
+</style>
+</head>
+<body>
+
+<script src="design-system/nav.js" data-root="./" data-section="schrift" data-active="schriften"
+        data-cta="Download:#download"
+        data-onpage="Variabel:#variabel|Schnitte:#schnitte|Features:#features|Icons:#icons|Webfont:#web|Download:#download"></script>
+
+<main>
+  <div class="wrap hero">
+    <div class="kick">Hausschrift · Version 2.7</div>
+    <h1>Goetheanum Schriften</h1>
+    <p class="lede">Sieben Schnitte von Flüstern bis Schreien – dazu ein Variable Font und ein Icon-Satz. Repariert, vervollständigt, sauber gesetzt.</p>
+  </div>
+
+  <section id="variabel"><div class="wrap">
+    <div class="shead"><h2>Ein Gewicht, stufenlos.</h2>
+      <p>Von Flüstern (190) bis Schreien (725). Text anklicken und selbst schreiben.</p></div>
+    <div class="vstage">
+      <div class="vsample" id="vsample" contenteditable="true" spellcheck="false">Lebendige Formen</div>
+      <div class="controls">
+        <input type="range" id="wght" min="190" max="725" value="440" step="1" aria-label="Gewicht" />
+        <div class="readout">wght <b id="wval">440</b> · <span id="wname">Klar</span></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section id="schnitte"><div class="wrap">
+    <div class="shead"><h2>Sieben Schnitte.</h2>
+      <p>Fünf installierbare Schnitte – Leise, Ruhig, Klar, Deutlich, Laut. Die Extreme <b>Flüstern</b> und <b>Schreien</b> gibt es nur im Variable Font, bewusst der Grafik vorbehalten.</p></div>
+    <div class="cuts">
+      <div class="cut"><div class="tag"><b>Leise</b><span>265 · Kursiv</span></div><div class="big leise">Handgesetzt</div></div>
+      <div class="cut"><div class="tag"><b>Ruhig</b><span>350 · Lesetext</span></div><div class="big ruhig">Handgesetzt</div></div>
+      <div class="cut"><div class="tag"><b>Klar</b><span>440 · Standard</span></div><div class="big klar">Handgesetzt</div></div>
+      <div class="cut"><div class="tag"><b>Deutlich</b><span>580 · Titel</span></div><div class="big deutlich">Handgesetzt</div></div>
+      <div class="cut"><div class="tag"><b>Laut</b><span>680 · Fett</span></div><div class="big laut">Handgesetzt</div></div>
+    </div>
+    <div class="office"><span>Im Office ohne Schriftwechsel: in Klar-Text holt <b>⌘B / Strg+B</b> das fette <b>Laut</b> und <b>⌘I / Strg+I</b> das leise <b>Leise</b>.</span></div>
+    <div class="glyph" style="margin-top:26px">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890 &amp; € @ %</div>
+    <div class="new">
+      <span>!</span><span>&quot;</span><span>$</span><span>§</span><span>Ä</span><span>Ö</span><span>Ü</span><span>ß</span><span>«&nbsp;»</span><span>‹&nbsp;›</span>
+    </div>
+  </div></section>
+
+  <section id="features"><div class="wrap">
+    <div class="shead"><h2>Feinheiten.</h2>
+      <p>Die OpenType-Funktionen und Sonderzeichen der Schrift – zum Aufklappen, mit lebendigem Beispiel im echten Schnitt (Klar).</p></div>
+
+    <details class="feat" open>
+      <summary>f-Ligaturen <span>liga · calt</span></summary>
+      <div class="featbody">
+        <p>ff, fi, fl, ft fließen ineinander; am <b>Wortende</b> schwingt das ff über (calt). Aus Philipps Zeichnungen, je Schnitt gewichtsrichtig.</p>
+        <div class="demo klar">schaffen · Auflage · Grafik · sanfte Kraft · der Stoff, das Schiff</div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Versaleszett ẞ <span>U+1E9E</span></summary>
+      <div class="featbody">
+        <p>Das grosse Eszett für den Versalsatz – <b>STRASSE</b> bleibt ein Wort und fällt nicht auf SS zurück. Von Hand gezeichnet, je Schnitt gewichtsrichtig.</p>
+        <div class="demo klar">STRASSE · MASSNAHME&nbsp; →&nbsp; STRAẞE · MAẞNAHME</div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Kapitälchen <span>smcp · c2sc</span></summary>
+      <div class="featbody">
+        <p>Echte Kapitälchen für Abkürzungen und Auszeichnung – inklusive Kapitälchen-&amp;.</p>
+        <div class="demo klar"><span style="font-feature-settings:'smcp'">goetheanum dornach</span> · <span style="font-feature-settings:'c2sc','smcp'">GmbH &amp; Co.</span></div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Kurzziffern <span>onum</span></summary>
+      <div class="featbody">
+        <p>Mediäval-/Kurzziffern für den Fließtext – mit Ober- und Unterlängen.</p>
+        <div class="demo klar"><span style="font-feature-settings:'onum'">0123456789 · im Jahr 1923</span></div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Ziffern proportional &amp; tabellarisch <span>Standard · tnum</span></summary>
+      <div class="featbody">
+        <p>Ziffern laufen <b>proportional</b> – jede so breit, wie ihre Form verlangt; die schmale 1 drängelt im Fließtext nicht. Für Spalten schaltet <b>tabellarisch</b> (tnum) auf feste, gleiche Breiten, damit gleichrangige Stellen exakt untereinander stehen.</p>
+        <div class="numgrid">
+          <div>
+            <div class="numlbl">Im Fließtext · proportional</div>
+            <div class="demo klar" style="margin:0">Am 1. Juli 1918 kamen 337 Gäste zur 11-Uhr-Führung.</div>
+          </div>
+          <div>
+            <div class="numlbl">In der Spalte · tabellarisch richtet aus</div>
+            <div class="numcmp">
+              <div><div class="numsub">proportional</div><div class="numcol klar">1408,00<br>177,50<br>9,05</div></div>
+              <div><div class="numsub">tabellarisch</div><div class="numcol klar" style="font-feature-settings:'tnum'">1408,00<br>177,50<br>9,05</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Prime &amp; Doppelprime <span>U+2032 · U+2033</span></summary>
+      <div class="featbody">
+        <p>Maßzeichen für Fuß/Zoll, Bogenminute/-sekunde, Koordinaten – das hochgestellte Komma der Schrift, geneigt. Kein Apostroph.</p>
+        <div class="demo klar">47° 32′ 18″ · 5′ 11″ · f′(x)</div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Schlummernde 0 <span>zero</span></summary>
+      <div class="featbody">
+        <p>Geschrägte Null gegen die Verwechslung mit O – als zuschaltbares Feature, die runde Null bleibt Standard.</p>
+        <div class="demo klar">0,75 kg · 0761 → <span style="font-feature-settings:'zero'">0,75 kg · 0761</span></div>
+      </div>
+    </details>
+
+    <details class="feat">
+      <summary>Striche <span>Figure-Dash · Bindestriche</span></summary>
+      <div class="featbody">
+        <p>Figure-Dash ‒ auf Zifferbreite für Zahlenspannen; echte Bindestriche (U+2010) und weicher Trennstrich.</p>
+        <div class="demo klar">1914‒1918 · 0761‒44 33 · Schiff‑fahrt</div>
+      </div>
+    </details>
+
+    <div class="glyphover">
+      <div class="goh">Sonderzeichen im Überblick</div>
+      <div class="gohrow klar">
+        <span title="ff-Ligatur">ff</span>
+        <span title="Versaleszett">ẞ</span>
+        <span title="Prime">′</span><span title="Doppelprime">″</span>
+        <span title="Schlummernde Null" style="font-feature-settings:'zero'">0</span>
+        <span title="Figure-Dash">‒</span><span title="Halbgeviert">–</span><span title="Geviert">—</span>
+        <span title="Guillemets einfach">‹&nbsp;›</span><span title="Guillemets">«&nbsp;»</span>
+      </div>
+      <p class="gohnote">Voller Zeichensatz: Großbuchstaben, Kleinbuchstaben, Ziffern, Akzente, Währung, Satzzeichen, Kapitälchen, Kurzziffern, Ligaturen, Versaleszett und Maßzeichen.</p>
+    </div>
+  </div></section>
+
+  <section id="icons"><div class="wrap">
+    <div class="shead"><h2>Icons.</h2>
+      <p>Per Tastatur gesetzt (siehe Beipackzettel). Jedes Icon einzeln als SVG, PNG und PDF. <a style="color:var(--gold-ink)" href="icons.html">Eigene Icon-Seite mit Suche &amp; Anleitung →</a></p></div>
+    <div class="tabs">
+      <button data-tab="piktogramm" class="on">Piktogramme</button>
+      <button data-tab="pfeil-kompass">Pfeile &amp; Kompass</button>
+    </div>
+    <div class="igrid" id="igrid"></div>
+  </div></section>
+
+  <section id="web"><div class="wrap">
+    <div class="shead"><h2>Webfont einbinden.</h2>
+      <p>Eine Datei, alle sieben Schnitte – der Variable Font ist nur 66&nbsp;KB. Den <code>@font-face</code>-Block kopieren, fertig.</p></div>
+    <div class="webgrid">
+      <pre class="code"><button class="copybtn" id="copyff">kopieren</button><code id="ffcode">@font-face{
+  font-family:"Goetheanum";
+  /* A · Hausadresse — oder B: url("/fonts/Goetheanum-Variabel-v2.7.woff2") */
+  src:url("https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.7.woff2") format("woff2"),
+      url("https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.7.woff") format("woff");
+  font-weight:190 725; font-style:normal; font-display:swap;
+}
+/* Verwendung */
+body{ font-family:"Goetheanum", system-ui, sans-serif; }
+.leise{ font-weight:265 } .ruhig{ font-weight:350 } .klar{ font-weight:440 } .deutlich{ font-weight:580 } .laut{ font-weight:680 }
+.frei{ font-variation-settings:"wght" 520 }  /* stufenlos */</code></pre>
+      <div class="webaside">
+        <p style="margin:0 0 12px">Schnitte über die Achse: <b>Flüstern 190 · Leise 265 · Ruhig 350 · Klar 440 · Deutlich 580 · Laut 680 · Schreien 725</b> – dazwischen alles stufenlos.</p>
+        <p style="margin:0 0 16px;font-size:var(--t-small);color:var(--muted)"><b style="color:var(--ink);font-weight:400">A · Hausadresse</b> (oben) oder <b style="color:var(--ink);font-weight:400">B · selbst hosten</b> (Datei ins Projekt, relative URL – für Produktion empfohlen).</p>
+        <a class="btn primary" href="schrift-webfont.html">Beide Wege &amp; Code-Schnipsel</a>
+      </div>
+    </div>
+  </div></section>
+
+  <section id="download"><div class="wrap">
+    <div class="shead"><h2>Download.</h2>
+      <p>Nach Verwendung wählen, nicht nach Format. Installiert wird das TTF-Set (Office) oder der Variable Font (Design) – Webfonts werden eingebunden, nie installiert.</p></div>
+    <div class="dl-cards">
+      <div class="card"><h3>Office · Word &amp; PowerPoint</h3><p><b style="color:var(--ink);font-weight:400">Installieren.</b> TrueType: die Familie ‹Goetheanum Schrift› (⌘B = Laut, ⌘I = Leise) plus Ruhig, Deutlich, Icons und Pfeile – in der Datei einbettbar. Mit Beipackzettel im Set.</p>
+        <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Office-TTF.zip" download>TTF-Set</a>
+        <a class="btn" href="powerpoint.html">PowerPoint-Vorlagen →</a></div>
+      <div class="card"><h3>Design · InDesign &amp; Co.</h3><p><b style="color:var(--ink);font-weight:400">Installieren.</b> Der Variable Font: alle Schnitte stufenlos auf der Gewichtsachse, Flüstern bis Schreien. Feste Schnitte fürs Office liegen im TTF-Set – die früheren statischen OTF sind darin aufgegangen.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.7.otf" download>Variable OTF</a></div>
+      <div class="card"><h3>Web · Entwickler</h3><p><b style="color:var(--ink);font-weight:400">Nicht installieren.</b> woff2 per <code>@font-face</code> einbinden – Anleitung mit Code-Schnipsel.</p>
+        <a class="btn" href="schrift-webfont.html">Web-Anleitung</a></div>
+      <div class="card"><h3>Komplettpaket</h3><p>Alles in einem: TTF fürs Office, Variable Font, Webfonts, Icons und Pfeile, Beipackzettel.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Schriften-v2.7.zip" download>ZIP</a></div>
+      <div class="card"><h3>Icons als Set</h3><p>81 Icons als SVG, PNG und PDF in einem Archiv.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Icons-v2.7-Einzeldateien.zip" download>Icon-ZIP</a></div>
+      <div class="card"><h3>Beipackzettel</h3><p>Übersicht, Ligaturen &amp; Sonderzeichen, Tastatur-Belegung der Icons.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf" download>PDF</a></div>
+    </div>
+    <p style="margin-top:18px;font-size:var(--t-small);color:var(--muted)">
+      <b style="color:var(--ink);font-weight:400">Installieren:</b> ältere Goetheanum-Schriften zuerst entfernen
+      (<a href="https://support.apple.com/de-de/guide/font-book/fntb2bcb512d/mac">Anleitung von Apple</a>; Windows: Einstellungen → Personalisierung → Schriftarten),
+      dann Datei doppelklicken → ‹Installieren› (macOS Schriftsammlung / Windows Rechtsklick) und das Programm neu starten.
+      <b style="color:var(--ink);font-weight:400">Auf dem Laufenden bleiben:</b> das <a href="abo.html">Werkzeug-Abo</a> meldet, wenn eine neue Fassung eine Neuinstallation lohnt.
+      <b style="color:var(--ink);font-weight:400">Nicht installierbar:</b> WOFF/WOFF2 sind Web-Dateien (nur <code>@font-face</code>); der Variable Font ist fürs Web/Design, nicht fürs Office.
+    </p>
+  </div></section>
+</main>
+
+<footer><div class="wrap frow">
+  <div style="max-width:540px;line-height:1.7">
+    <strong>Goetheanum Schriften 2.7</strong> · abgeleitet aus Titillium (SIL OFL).
+    Sieben Schnitte (Flüstern–Schreien), breiter Variable Font, Office-Fett per ⌘B,
+    Tastatur-Belegung der Icons erhalten, Metadaten korrigiert.
+  </div>
+  <div><a href="assets/fonts/goetheanum/OFL.txt">SIL Open Font License 1.1</a><br><a href="https://grafik.goetheanum.ch">grafik.goetheanum.ch</a></div>
+</div></footer>
+
+<script>
+  (function(){
+    var s=document.getElementById('wght'),v=document.getElementById('wval'),n=document.getElementById('wname'),sm=document.getElementById('vsample');
+    function nm(w){return w<228?'Flüstern':w<308?'Leise':w<395?'Ruhig':w<510?'Klar':w<631?'Deutlich':w<703?'Laut':'Schreien';}
+    function u(){var w=+s.value;sm.style.fontVariationSettings='"wght" '+w;v.textContent=w;n.textContent=nm(w);}
+    s.addEventListener('input',u);u();
+  })();
+
+  (function(){
+    var b=document.getElementById('copyff'); if(!b) return;
+    b.addEventListener('click',function(){
+      var t=document.getElementById('ffcode').innerText;
+      if(navigator.clipboard) navigator.clipboard.writeText(t);
+      var o=b.textContent; b.textContent='kopiert ✓'; setTimeout(function(){b.textContent=o;},1200);
+    });
+  })();
+
+  (function(){
+    var ICONS=[["bioabfall","Bioabfall","piktogramm"],["bitte-anfassen","Bitte anfassen","piktogramm"],["draussen-essen","Draussen essen","piktogramm"],["eintritt","Eintritt","piktogramm"],["fahrstuhl","Fahrstuhl","piktogramm"],["garderobe","Garderobe","piktogramm"],["geraete-abschalten","Geräte abschalten","piktogramm"],["goetheanum-badge","Goetheanum Badge","piktogramm"],["goetheanum-badge-invers","Goetheanum Badge invers","piktogramm"],["hunde-anleinen","Hunde anleinen","piktogramm"],["keine-fotos","Keine Fotos","piktogramm"],["keine-hunde","Keine Hunde","piktogramm"],["keine-taschen","Keine Taschen","piktogramm"],["nur-mit-augen","Nur mit den Augen","piktogramm"],["papier","Papier","piktogramm"],["restmuell","Restmüll","piktogramm"],["schliessfaecher","Schliessfächer","piktogramm"],["treppe","Treppe","piktogramm"],["wc-damen","WC Damen","piktogramm"],["wc-familie","WC Familie","piktogramm"],["wc-gruppe","WC Gruppe","piktogramm"],["wc-herren","WC Herren","piktogramm"],["wc-rollstuhl","WC Rollstuhl","piktogramm"],["wickelraum","Wickelraum","piktogramm"],["wlan","WLAN","piktogramm"],["kompass-1","Kompass","pfeil-kompass"],["kompass-2","Kompass","pfeil-kompass"],["kompass-3","Kompass","pfeil-kompass"],["kompass-4","Kompass","pfeil-kompass"],["pfeil-gebogen-1","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-2","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-3","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-4","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-5","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-6","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-7","Pfeil gebogen","pfeil-kompass"],["pfeil-gebogen-8","Pfeil gebogen","pfeil-kompass"],["pfeil-hoch","Pfeil hoch","pfeil-kompass"],["pfeil-hoch-fett","Pfeil hoch (fett)","pfeil-kompass"],["pfeil-links","Pfeil links","pfeil-kompass"],["pfeil-links-fett","Pfeil links (fett)","pfeil-kompass"],["pfeil-rechts","Pfeil rechts","pfeil-kompass"],["pfeil-rechts-fett","Pfeil rechts (fett)","pfeil-kompass"],["pfeil-runter","Pfeil runter","pfeil-kompass"],["pfeil-runter-fett","Pfeil runter (fett)","pfeil-kompass"]];
+    var BASE="assets/fonts/goetheanum/Icons-Einzeldateien/";
+    var grid=document.getElementById('igrid');
+    function render(tab){
+      grid.innerHTML="";
+      ICONS.filter(function(it){return it[2]===tab;}).forEach(function(it){
+        var slug=it[0],label=it[1];
+        var cell=document.createElement('div');cell.className='icell';
+        cell.innerHTML=
+          '<img class="gl ico-invert" src="'+BASE+'svg/'+slug+'.svg" alt="'+label+'" loading="lazy">'+
+          '<div class="nm">'+label+'</div>'+
+          '<div class="dl">'+
+            '<a download href="'+BASE+'svg/'+slug+'.svg">SVG</a>'+
+            '<a download href="'+BASE+'png/'+slug+'.png">PNG</a>'+
+            '<a download href="'+BASE+'pdf/'+slug+'.pdf">PDF</a>'+
+          '</div>';
+        grid.appendChild(cell);
+      });
+    }
+    document.querySelectorAll('.tabs button').forEach(function(b){
+      b.addEventListener('click',function(){
+        document.querySelectorAll('.tabs button').forEach(function(x){x.classList.remove('on');});
+        b.classList.add('on');render(b.dataset.tab);
+      });
+    });
+    render('piktogramm');
+  })();
+</script>
+
+<!-- Statistik · eigener Supabase-Server (kein Fremddienst, keine Cookies, keine IP/Personendaten).
+     Zählt Seitenaufruf und jeden Download über die geschützte Funktion schriften_bump().
+     Auswertung: statistik.html -->
+<script>
+  (function () {
+    var SB = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
+    var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
+    function bump(kind, label) {
+      try {
+        fetch(SB + '/rest/v1/rpc/schriften_bump', {
+          method: 'POST', keepalive: true,
+          headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
+          body: JSON.stringify({ p_kind: kind, p_label: label })
+        }).catch(function () {});
+      } catch (e) {}
+    }
+    bump('pageview', 'schriften');
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[download]');
+      if (!a) return;
+      bump('download', (a.getAttribute('href') || '').split('/').pop());
+    });
+  })();
+</script>
+</body>
+</html>

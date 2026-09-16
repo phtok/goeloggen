@@ -1,0 +1,119 @@
+# Goetheanum Typografie – prüfbare Hausregeln
+# Quelle der Wahrheit: goetheanum-typo-tokens.json ($regeln). Diese Datei macht
+# die Regeln ausführbar: `erkennen` (Regex) findet Verstöße, `korrektur` behebt
+# Eindeutiges automatisch; `pruefung: lm` markiert Urteils-Regeln für ein
+# Sprachmodell (Prompt: „Wende die Regeln dieser Datei auf den Text an;
+# korrigiere automatisch, was eindeutig ist, schlage vor, was Urteil braucht.").
+# Geltungsbereich: deutscher Lesetext (de-CH). Code, URLs, E-Mails ausnehmen.
+
+# G16: verankert an Wortgrenzen, damit unpaarige gerade Zeichen (Zoll: 5")
+# nicht über das eigentliche Zitat hinweg paaren und echte Paare zerreissen.
+# Öffnend nur nach Anfang/Leerraum/öffnender Klammer/Strich, schliessend nur
+# vor Leerraum/Satzzeichen/Ende (Lookahead – kein Lookbehind, Python-kompatibel).
+- id: G16-anfuehrung
+  regel: Hausanführung sind einfache Guillemets nach aussen ‹…›
+  erkennen: '(^|[\s([{–—-])["„“]([^"„“”\n]{1,200}?)["“”](?=[\s.,;:!?)\]}…]|$)'
+  korrektur: '$1‹$2›'
+  schwere: fehler
+- id: G16-apostroph
+  regel: Echter Apostroph ’ statt Schreibmaschinen-Apostroph '
+  erkennen: "(\\w)'(\\w)"
+  korrektur: '$1’$2'
+  schwere: fehler
+- id: G18-gedankenstrich
+  regel: Gedankenstrich ist der Halbgeviertstrich mit Leerschritten
+  erkennen: '(\S) - (\S)'
+  korrektur: '$1 – $2'
+  schwere: fehler
+- id: G18-bis-strich
+  regel: Bereiche mit Halbgeviert ohne Leerschritte (9–17 Uhr, S. 4–12)
+  erkennen: '(\d)\s*-\s*(\d)'
+  korrektur: '$1–$2'
+  schwere: fehler
+- id: G19-auslassung
+  regel: Auslassungszeichen … statt dreier Punkte
+  erkennen: '\.\.\.'
+  korrektur: '…'
+  schwere: fehler
+- id: G20-abkuerzung
+  regel: In mehrgliedrigen Abkürzungen schmales geschütztes Spatium (z. B., d. h., u. a.)
+  erkennen: '\b(z|d|u)\.[  ]?(B|h|a)\.'
+  korrektur: '$1. $2.'
+  schwere: empfehlung
+- id: G20-prozent
+  regel: Geschütztes Spatium vor % und Einheiten
+  erkennen: '(\d) ?(%|CHF|EUR|kg|km|mm|cm|m2|Uhr)\b'
+  korrektur: '$1 $2'
+  schwere: empfehlung
+- id: G21-gruppen-a
+  regel: Tausendergruppen ab fünf Stellen mit schmalem geschütztem Leerzeichen (Bundeskanzlei/SNB)
+  erkennen: '(\d)[’''.](\d{3})(?=[’''.]\d{3})'
+  korrektur: '$1 $2'
+  schwere: fehler
+- id: G21-gruppen-b
+  regel: letzte Tausendergruppe bei fünf und mehr Stellen
+  erkennen: '(\d{2,3})[’''.](\d{3})\b(?!\d)'
+  korrektur: '$1 $2'
+  schwere: fehler
+- id: G21-viersteller
+  regel: vierstellige Zahlen kompakt, ohne Gruppierung (1318)
+  erkennen: '\b(\d)[’''.](\d{3})\b(?![’''.]?\d)'
+  korrektur: '$1$2'
+  schwere: empfehlung
+- id: G22-uhrzeit
+  regel: Uhrzeit mit Punkt, ohne führende Null (9.30 Uhr)
+  erkennen: '\b0?(\d{1,2}):(\d{2})\s?(Uhr|h)\b'
+  korrektur: '$1.$2 Uhr'
+  schwere: empfehlung
+- id: T01-doppelspatium
+  regel: Nie zwei Leerzeichen
+  erkennen: '(\S)  +(\S)'
+  korrektur: '$1 $2'
+  schwere: fehler
+- id: G18-minus
+  regel: Echtes Minus − bei Zahlen, kein Bindestrich
+  erkennen: '(^|[\s(])-(\d)'
+  korrektur: '$1−$2'
+  schwere: empfehlung
+
+# ––– Urteils-Regeln (für Sprachmodelle; nicht regex-sicher) –––
+- id: S01-schriftwahl
+  regel: Lesetext in Klar (440), zugleich Minimum für kleine Marginalien und Fussnoten; Titel/Header in Deutlich (580, entschiedene Ausnahme für die Titelei); Inline-Betonung und Office-Fett in Laut (680); Nebenstimmen, Legenden, Zitate in Leise (265, nie kleiner als der Lesetext). Nach aussen nur bei Festbreiten-Code (Monospace), fremden Schriftsystemen (Griechisch, Kyrillisch, Arabisch) oder langem immersivem Mengensatz (Begleitschrift Source Sans 3). Keine echte Kursive; mehrere Ziffernsätze (proportional, tabellarisch, Kurzziffern), aber keine Mediävalziffern vortäuschen.
+  pruefung: lm
+  schwere: fehler
+- id: G01-einfachauszeichnung
+  regel: Hervorhebung IM Fliesstext ändert genau EIN Merkmal (Gewicht ODER Grösse ODER Farbe ODER Einzug), nie zwei. Strukturebenen (Titel, Lede, Legende, Tabellenkopf) sind eine eigene Hierarchie und davon ausgenommen.
+  pruefung: lm
+  schwere: fehler
+- id: G04-extreme
+  regel: Kein Gewicht schwerer als Laut (680) im Dokument; Deutlich (580) ist für Titel zulässig. Flüstern/Schreien nur in Grafikanwendungen.
+  pruefung: lm
+  schwere: fehler
+- id: G05-hervorhebung
+  regel: Betont wird mit Laut – nicht mit Unterstreichung, Sperrung oder VERSALIEN.
+  pruefung: lm
+  schwere: fehler
+- id: G03-sparsamkeit
+  regel: Auszeichnungen, die ohne Sinnverlust entfallen können, entfallen.
+  pruefung: lm
+  schwere: empfehlung
+- id: G09-viereck
+  regel: Magisches Viereck – Schriftwahl, Zeilenlänge, Zeilenabstand, Umraum im Gleichgewicht; eine Änderung zieht die anderen nach.
+  pruefung: lm
+  schwere: empfehlung
+- id: G10-zeilenlaenge
+  regel: 45–75 Zeichen je Zeile, Ziel ~66 / neun Wörter. CSS min(39ch,100%); ch misst die 0, schmale Schrift läuft enger (46ch = 78 gezählt). Gilt der Lesetypografie; Tabellen/Signaletik haben eigenes Mass.
+  pruefung: lm
+  schwere: empfehlung
+- id: G25-ziffern
+  regel: Grundton im Fliesstext proportionale Versalziffern; in Tabellen, Listen und Beträgen zwingend tnum (dicktengleich), rechtsbündig und exakt untereinander, nie mit Leerzeichen ausgerichtet. Kurzziffern (onum) für Mengentext mit vielen Zahlen. Keine Mediävalziffern durch Verkleinern vortäuschen.
+  pruefung: lm
+  schwere: empfehlung
+- id: G27-lesesituation
+  regel: Drei Situationen mit eigenem Mass – Lese (linearer Mengentext, hartes Mass), Konsultation (Tabelle/Formular, darf breiter), Schau (Signaletik, aus Distanz). Das harte Zeilenmass bindet nur den Lesesatz.
+  pruefung: lm
+  schwere: empfehlung
+- id: G28-kontrast
+  regel: Lesetext mindestens WCAG AA (4.5:1). tinte-leise (4.35:1) und Gold (3.94:1) nur für Meta, Akzent, grössere Grade. Sprache auszeichnen, Silbentrennung aktiv, keine verwaisten Zeilen.
+  pruefung: lm
+  schwere: empfehlung

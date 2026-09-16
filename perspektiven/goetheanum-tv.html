@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Perspektive: goetheanum.tv im Hausbild</title>
+<meta name="description" content="Die Startseite von Goetheanum TV, vollständig nachgebaut mit dem Goetheanum-Design-System – echte Reihen und Videos vom 6. Juli 2026, als ganze dunkle Bühne erlebbar." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../design-system/tokens.css" />
+<link rel="stylesheet" href="../design-system/base.css" />
+<style>
+  /* Ganze Seite = Bühne (theme-fest dunkel, wie der Katalog selbst). */
+  body{background:var(--stage-bg);color:var(--stage-ink);color-scheme:dark}
+
+  /* Nachbau-Kopfzeile der Zielseite – ganz aus Tokens/Rollen gesetzt. */
+  .site-head{border-bottom:1px solid var(--stage-veil);position:sticky;top:0;background:var(--stage-bg);z-index:50}
+  .site-head .bar{display:flex;align-items:center;justify-content:space-between;gap:var(--s6);
+    padding:var(--s3) 0;flex-wrap:wrap}
+  .site-head .brand{color:var(--stage-ink);text-decoration:none;
+    font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:22px;line-height:1}
+  .site-head .mainnav{display:flex;gap:var(--s4);flex-wrap:wrap;align-items:center;
+    font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px}
+  .site-head .mainnav a{color:var(--stage-ink);padding:6px 0}
+  .site-head .mainnav a:hover{color:var(--gold)}
+  .site-head .cta{display:flex;gap:var(--s2);align-items:center}
+  .site-head .cta .ghostl{color:var(--stage-muted);font-family:var(--font-text);font-size:var(--t-small);padding:10px 8px}
+
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+  .hero h1{color:var(--stage-ink)}
+  .hero .lede{color:var(--stage-muted)}
+  .reihe{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);margin:var(--s8) 0 var(--s2)}
+  .poster .pmark{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:15px;opacity:.92;padding:0 10px;text-align:center}
+  .smeta{margin-top:var(--s6)}
+
+  .site-foot{border-top:1px solid var(--stage-veil);margin-top:var(--s8);padding:var(--s6) 0}
+  .site-foot .frow{display:flex;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--stage-muted)}
+  .site-foot a{color:var(--stage-muted)}
+  .site-foot a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<header class="site-head"><!-- # ds-ok Nachbau: die Kopfzeile der Zielseite ist hier der Inhalt -->
+  <div class="wrap bar">
+    <a class="brand" href="#top">Goetheanum&nbsp;TV</a>
+    <nav class="mainnav" aria-label="Hauptnavigation">
+      <a href="#videothek">Videothek</a>
+      <a href="#fussnote">Community</a>
+      <a href="#fussnote">Shop</a>
+      <a href="#fussnote">Über uns</a>
+    </nav>
+    <span class="cta">
+      <a class="ghostl" href="#fussnote">Einloggen</a>
+      <a class="btn primary" href="#fussnote">Gratis testen</a>
+    </span>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <section class="hero" style="padding-block:var(--s6) 0">
+    <!-- Bilder: site-eigenes CDN (uscreencdn) – echte Poster des Katalogs -->
+    <figure class="hero-bild" style="margin-block:0 var(--s6)">
+      <img src="https://alpha.uscreencdn.com/1110xnull/images/programs/1395938/horizontal/big_2021-11-16_18.01.04.1637082147.jpg?auto=webp"
+           alt="Wasserlandschaft aus dem Vortrag von Herbert Dreiseitl" loading="eager" />
+      <figcaption class="text">
+        <span class="live">Jetzt: Drei Monate Probezeit</span>
+        <h1 style="margin-top:var(--s3)">Anthroposophie in Videos</h1>
+        <p class="lede">Vorträge, Reihen, Livestreams und die Arbeit der Sektionen —
+          der Medienkatalog des Goetheanum.</p>
+        <div style="margin-top:var(--s4);display:flex;gap:var(--s3);flex-wrap:wrap">
+          <a class="btn primary" href="#videothek">Gratis testen</a>
+          <a class="btn" href="#videothek">Alle Videos</a>
+        </div>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section id="videothek">
+    <p class="reihe">Reihen</p>
+    <div class="mrow">
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-ms);color:var(--on-sek-ms)"><span class="pmark">Alma Humana</span></span>
+        <span class="mt">Alma Humana</span><span class="ms">Konferenz-Reihe</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-lws);color:var(--on-sek-lws)"><span class="pmark">Greening the Desert</span></span>
+        <span class="mt">Greening the Desert</span><span class="ms">Dokumentar-Reihe</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-aas);color:var(--on-sek-aas)"><span class="pmark">Rudolf Steiner</span></span>
+        <span class="mt">Das Leben Rudolf Steiners</span><span class="ms">Biografische Reihe</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-nws);color:var(--on-sek-nws)"><span class="pmark">Erde</span></span>
+        <span class="mt">Die Erde als Lebewesen</span><span class="ms">Reihe</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-hpise);color:var(--on-sek-hpise)"><span class="pmark">Heilen</span></span>
+        <span class="mt">Die Kunst des Heilens</span><span class="ms">Reihe</span></a>
+      <a class="mtile" href="#videothek"><span class="poster" style="background:var(--sek-sbk);color:var(--on-sek-sbk)"><span class="pmark">Gesamtkunstwerk</span></span>
+        <span class="mt">Das erste Goetheanum als Gesamtkunstwerk</span><span class="ms">Reihe</span></a>
+    </div>
+
+    <p class="reihe">Aus der Videothek</p>
+    <div class="mrow">
+      <a class="mtile" href="#videothek"><span class="poster"><img src="https://alpha.uscreencdn.com/1110xnull/images/programs/1395938/horizontal/big_2021-11-16_18.01.04.1637082147.jpg?auto=webp" alt="" loading="lazy" /></span>
+        <span class="mt">Was tun wir für das Wasser?</span><span class="ms">Herbert Dreiseitl</span></a>
+      <a class="mtile" href="#videothek"><span class="poster"><img src="https://alpha.uscreencdn.com/1110xnull/images/programs/1394202/horizontal/big_Chaos_und_Form.1636880475.png?auto=webp" alt="" loading="lazy" /></span>
+        <span class="mt">Chaos und Form</span><span class="ms">Eurythmie</span></a>
+      <a class="mtile" href="#videothek"><span class="poster"><img src="https://alpha.uscreencdn.com/1110xnull/images/programs/1394205/horizontal/big_Stille_und_Schrei.1636880570.png?auto=webp" alt="" loading="lazy" /></span>
+        <span class="mt">Stille und Schrei</span><span class="ms">Kaija Saariaho</span></a>
+      <a class="mtile" href="#videothek"><span class="poster"><img src="https://alpha.uscreencdn.com/1110xnull/images/programs/1394288/horizontal/big_33_432.1637313645.jpg?auto=webp" alt="" loading="lazy" /></span>
+        <span class="mt">Die digitalen Herausforderungen in der Pädagogik</span><span class="ms">Vortrag</span></a>
+      <a class="mtile" href="#videothek"><span class="poster"><img src="https://alpha.uscreencdn.com/1110xnull/images/programs/1398810/horizontal/big_Cover-jasmin.1670964792.png?auto=webp" alt="" loading="lazy" /></span>
+        <span class="mt">Gesunde Lebensmittel machen gesund</span><span class="ms">Jasmin Peschke</span></a>
+      <a class="mtile" href="#videothek"><span class="poster"><img src="https://alpha.uscreencdn.com/1110xnull/images/programs/1398812/horizontal/big_Cover-ueli2.1670964517.png?auto=webp" alt="" loading="lazy" /></span>
+        <span class="mt">Unser neues Verhältnis zum Tier</span><span class="ms">Ueli Hurter</span></a>
+    </div>
+
+    <p class="smeta">Videothek: Alle Videos · Kalender · Reihen · Livestreams · Sektionen — Titel und Reihen: goetheanum.tv, 6. Juli 2026.</p>
+  </section>
+
+</main>
+
+<footer class="site-foot" id="fussnote">
+  <div class="wrap frow">
+    <span>© 2026 Goetheanum&nbsp;TV · <a href="#fussnote">AGB</a> · <a href="#fussnote">Privatsphäre</a> · <a href="#fussnote">Impressum</a> · <a href="#fussnote">Kontakt</a> · <a href="#fussnote" lang="de">Deutsch</a> · <a href="#fussnote" lang="en">English</a></span>
+    <span>Nachbau der Startseite im <a href="../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<div class="fab" role="navigation" aria-label="Perspektive">
+  <a class="btn primary" href="../design-system/#perspektiven">‹ Zurück zum Design-System</a>
+  <a class="btn" href="https://www.goetheanum.tv" target="_blank" rel="noopener">Original öffnen&nbsp;↗</a>
+</div>
+
+</body>
+</html>

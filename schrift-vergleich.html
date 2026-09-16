@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum Schriften – Begleit-Grotesk & Fallback im Vergleich</title>
+<meta name="description" content="Die Goetheanum-Display-Grotesk mit einer sehr lesbaren Text-Grotesk gemischt: Source Sans 3, IBM Plex Sans, Atkinson Hyperlegible, Inter – live im Kontext. Plus Nicht-Latein-Fallback." />
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Inter:ital,wght@0,400;0,600;1,400&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Klar.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Deutlich";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"Titillium RUS";src:url("assets/fonts/goetheanum/Fallback/TitilliumRUS-Regular.woff2") format("woff2");font-weight:400;font-display:swap;unicode-range:U+0400-04FF,U+0500-052F}
+  /* Farben/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigene Werte hier. */
+  :root{--maxw:1040px;--body:"Source Sans 3";--bsize:19px;--bweight:400}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:"G Klar","Helvetica Neue",Arial,sans-serif;line-height:1.5;font-size:16.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  a{color:var(--gold-ink)}
+  .hero{padding-block:42px 4px}
+  /* Kicker: kanonische Rolle aus base.css (.kick) nutzen – DS04 */
+  /* Überschriften aus dem Fundament. */
+  .lede{font-size:17px;color:var(--muted);max-width:64ch;margin-top:12px}
+  section{padding:30px 0;border-top:1px solid var(--line-soft)}
+  .sec{color:var(--gold-ink);font-size:var(--t-small)}
+  h2{margin:4px 0 14px}
+  .ctrl{display:flex;gap:14px 22px;flex-wrap:wrap;align-items:center;background:var(--soft);border:1px solid var(--line-soft);border-radius:12px;padding:14px 18px;margin-bottom:22px;position:sticky;top:56px;z-index:20}
+  .ctrl .grp{display:flex;gap:6px;flex-wrap:wrap}
+  .ctrl button{font:inherit;font-size:var(--t-small);color:var(--muted);background:var(--field-bg);border:1px solid var(--line);border-radius:20px;padding:5px 14px;cursor:pointer}
+  .ctrl button[aria-pressed=true]{color:var(--gold-ink);border-color:var(--gold);font-weight:600}
+  .ctrl label{font-size:var(--t-small);color:var(--muted);display:flex;align-items:center;gap:8px}
+  .ctrl input[type=range]{accent-color:var(--gold-ink);width:120px}
+  .ctrl b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .article{max-width:var(--measure);margin:0 auto}
+  .a-kick{font-family:"G Klar";font-size:14px;color:var(--gold-ink);margin-bottom:10px}
+  .a-head{font-family:"G Klar";font-weight:400;font-size:calc(var(--bsize)*2.3);line-height:1.08;margin-bottom:6px;text-wrap:balance}
+  .a-sub{font-family:"G Deutlich";font-size:calc(var(--bsize)*1.15);line-height:1.25;color:var(--muted);margin-bottom:20px}
+  .a-body{font-family:var(--body),sans-serif;font-size:var(--bsize);font-weight:var(--bweight);line-height:1.62;text-wrap:pretty}
+  .a-body p{margin-bottom:.9em}
+  .a-body em{font-style:italic}
+  /* eigene Namensraum-Klasse (wie .a-kick/.a-head/...) statt kanonischer .byline-Rolle, weil
+     Groesse hier interaktiv an --bsize gekoppelt ist (Schriftvergleichs-Regler) - DS04 */
+  .a-byline{font-family:var(--body),sans-serif;font-size:calc(var(--bsize)*.8);color:var(--muted);margin-top:18px;border-top:1px solid var(--line-soft);padding-top:10px}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:680px){.cards{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line-soft);border-radius:12px;padding:16px 18px}
+  .card .nm{font-size:14px;color:var(--gold-ink);font-weight:600;margin-bottom:8px}
+  .card .smp{font-size:17px;line-height:1.5}
+  .scriptrow{display:grid;grid-template-columns:150px 1fr;gap:6px 18px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line-soft)}
+  .scriptrow .lab{font-size:var(--t-small);color:var(--gold-ink)}
+  .scriptrow .smp{font-size:26px}
+  .lat{font-family:"G Klar"} .cyr{font-family:"Titillium RUS"} .grk{font-family:"Source Sans 3"} .arb{font-family:"Cairo"}
+  footer{border-top:1px solid var(--line);padding:26px 0 54px;color:var(--muted);font-size:var(--t-small)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-section="schriftpflege" data-active="schrift-vergleich"></script>
+
+<main><div class="wrap">
+  <div class="hero">
+    <div class="kick">Intern · noindex</div>
+    <h1>Display-Grotesk + Lese-Grotesk</h1>
+    <p class="lede">Keine Serife: Die Goetheanum-Grotesk trägt Titel und Auszeichnung, eine <b>sehr lesbare Text-Grotesk</b> den Mengentext. goetheanum.ch macht das längst – <b>Titillium</b> (Display) plus <b>Source Sans</b> (Text). Hier vier OFL-Kandidaten live im Kontext.</p>
+  </div>
+
+  <section id="mix">
+    <span class="sec">Die Mischung im Kontext · Titel = Goetheanum, Text = Grotesk</span>
+    <h2>Wähle die Lese-Grotesk</h2>
+    <div class="ctrl">
+      <div class="grp" id="fontpick">
+        <button data-f="Source Sans 3" aria-pressed="true">Source Sans 3</button>
+        <button data-f="IBM Plex Sans">IBM Plex Sans</button>
+        <button data-f="Atkinson Hyperlegible">Atkinson Hyperlegible</button>
+        <button data-f="Inter">Inter</button>
+      </div>
+      <label>Grad <input type="range" id="sz" min="15" max="26" value="19" step="0.5"> <b id="szv">19</b></label>
+      <label>Gewicht <input type="range" id="wg" min="400" max="600" value="400" step="10"> <b id="wgv">400</b></label>
+      <label><input type="checkbox" id="dark"> dunkler Grund</label>
+    </div>
+    <article class="article">
+      <div class="a-kick">Wochenschrift · Dornach</div>
+      <div class="a-head">Die Bühne als Erkenntnisraum</div>
+      <div class="a-sub">Wie das Goetheanum seit 1913 Kunst, Forschung und Hochschule unter einem Dach verbindet – und was das für die Gegenwart bedeutet.</div>
+      <div class="a-body">
+        <p>Das Goetheanum in Dornach ist kein Museum, sondern eine Werkstatt. Wer den großen Saal betritt, steht in einem Raum, der für die Bewegung gebaut wurde – für Eurythmie, Schauspiel und die Sprache der Formen. Die <em>Wochenschrift</em> begleitet dieses Werk seit Jahrzehnten: genau, mit Haltung, ohne Behübschung.</p>
+        <p>Zahlen ordnen den Betrieb. Im Jahr 1487 fanden Plätze ihre Besucher, 23 Veranstaltungen standen allein im Oktober im Kalender, und um 11.10 Uhr öffnete sich der Vorhang. Die Tabellen der Verwaltung verlangen <em>dicktengleiche</em> Ziffern – im Fließtext dagegen laufen sie proportional und ruhig.</p>
+        <p>Anthroposophie versteht sich als Erkenntnisweg, nicht als Bekenntnis. Genau deshalb braucht ihre Schrift zweierlei: eine Stimme, die ruft – und eine, die <em>liest</em>. Die erste ist die Hausgrotesk. Die zweite suchen wir hier.</p>
+      </div>
+      <div class="a-byline">Redaktion · 47° 32′ nördlicher Breite · Auflage 1487</div>
+    </article>
+  </section>
+
+  <section id="cards">
+    <span class="sec">Vier Kandidaten · alle SIL OFL · echte Kursive</span>
+    <h2>Schnellvergleich</h2>
+    <div class="cards" id="quickcards"></div>
+  </section>
+
+  <section id="fallback">
+    <span class="sec">Nicht-Latein-Fallback · Titillium-nah</span>
+    <h2>Kohärenz über die Schriftsysteme</h2>
+    <div class="scriptrow"><div class="lab">Latein · Goetheanum</div><div class="smp lat">Goetheanum Dornach — Schweiz · 1913</div></div>
+    <div class="scriptrow"><div class="lab">Kyrillisch · Titillium&nbsp;RUS</div><div class="smp cyr">Гётеанум Дорнах — Швейцария · 1913</div></div>
+    <div class="scriptrow"><div class="lab">Griechisch · Source&nbsp;Sans&nbsp;3</div><div class="smp grk">Γκαίτεανουμ Ντόρναχ — Ελβετία · 1913</div></div>
+    <div class="scriptrow"><div class="lab">Arabisch · Cairo</div><div class="smp arb" dir="rtl">غوتيانوم دورناخ — سويسرا · ١٩١٣</div></div>
+    <p style="font-size:var(--t-small);color:var(--muted);margin-top:14px;max-width:64ch">Wählst du <b>IBM Plex Sans</b> als Lese-Grotesk, deckt die Plex-Superfamilie zugleich Latein/Griechisch/Kyrillisch <i>und</i> Arabisch – eine Schrift für Mengentext und alle Fallbacks.</p>
+  </section>
+</div></main>
+
+<footer><div class="wrap">Goetheanum Schriften · interner Vergleich · alle Kandidaten SIL OFL · <a href="schriften.html">Schriften</a> · <a href="vorschau.html">Neuerungen</a></div></footer>
+
+<script>
+(function(){
+  var pick=document.getElementById("fontpick"), root=document.documentElement;
+  pick.addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    pick.querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed","false")});
+    b.setAttribute("aria-pressed","true");
+    root.style.setProperty("--body",'"'+b.dataset.f+'"');
+  });
+  var sz=document.getElementById("sz"),wg=document.getElementById("wg"),
+      szv=document.getElementById("szv"),wgv=document.getElementById("wgv"),dark=document.getElementById("dark");
+  function upd(){
+    szv.textContent=sz.value; wgv.textContent=wg.value;
+    root.style.setProperty("--bsize",sz.value+"px");
+    root.style.setProperty("--bweight",wg.value);
+    document.body.style.background=dark.checked?"#23272b":"#fff";
+    document.body.style.color=dark.checked?"#f3f0ea":"#23272b";
+  }
+  [sz,wg].forEach(function(e){e.addEventListener("input",upd)}); dark.addEventListener("change",upd); upd();
+  var fonts=[["Source Sans 3","schon euer Fallback (Griech./Kyrill.) · Kontinuität zu goetheanum.ch"],
+             ["IBM Plex Sans","deckt auch Arabisch · vereinheitlicht die Fallbacks"],
+             ["Atkinson Hyperlegible","auf maximale Lesbarkeit/Barrierefreiheit gezeichnet"],
+             ["Inter","Bildschirm-Lesegrotesk · sehr neutral"]];
+  var qc=document.getElementById("quickcards");
+  fonts.forEach(function(f){
+    var d=document.createElement("div"); d.className="card";
+    d.innerHTML='<div class="nm">'+f[0]+'</div>'+
+      '<div class="smp" style="font-family:\''+f[0]+'\'">Lebendige Formen wachsen aus dem Schweigen. <em style="font-style:italic">Ein Versuch in Klarheit</em> – 1913 Plätze, 47° 32′.</div>'+
+      '<div style="font-size:var(--t-small);color:var(--muted);margin-top:8px">'+f[1]+'</div>';
+    qc.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>

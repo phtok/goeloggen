@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Goetheanum Typo-Hook – prüft die vorgemerkten Texte vor jedem Commit.
+# Aktivieren (einmalig, je Arbeitskopie):  git config core.hooksPath tools/hooks
+# Umgehen im Notfall:                       git commit --no-verify
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+PY="$(command -v python3 || command -v python || true)"
+if [ -z "$PY" ]; then
+  echo "Typo-Hook übersprungen: kein Python gefunden." >&2
+  exit 0
+fi
+
+# 1) Hausregeln auf den vorgemerkten HTML-Texten ausführen (Sprache).
+"$PY" "$ROOT/tools/typo-check.py"
+
+# 1b) Struktur-Konformität der vorgemerkten Seiten (Gestalt) – DS-Lint.
+#     BLOCKIEREND seit 10. Juli 2026 (Score 100 %, Beschluss Auftraggeber):
+#     Verstösse der Schwere ‹fehler› stoppen den Commit; Hinweise melden nur.
+"$PY" "$ROOT/tools/ds-lint.py" --staged
+
+# 2) Driftwächter Kanon ↔ Design-System – nur wenn eine der beteiligten
+#    Schichten betroffen ist (Tokens, Kanon, Regel-YAML, Handbuch).
+if git diff --cached --name-only \
+   | grep -Eq 'design-system/(tokens|base)\.css|assets/typografie/(goetheanum-typo-tokens\.json|typo-regeln\.yaml)|typografie\.html'; then
+  "$PY" "$ROOT/tools/typo-sync.py"
+fi
+
+# 3) Sektions-Vordergrund-Kontrast (WCAG 1.4.3, A6): jedes --on-sek-* ≥ 4.5:1 auf
+#    seiner Fläche. Blockiert, sobald tokens.css vorgemerkt ist.
+if git diff --cached --name-only | grep -Eq 'design-system/tokens\.css'; then
+  "$PY" "$ROOT/tools/check-on-sek.py"
+fi
+
+# 4) Typo-Leiter (B6, Beier): Goetheanum-Rolle <18px braucht Deutlich; Leise ≥22px.
+#    Vorläufig BERICHTEND (wie ds-lint), sobald base.css/Leiter vorgemerkt ist.
+if git diff --cached --name-only | grep -Eq 'design-system/(base\.css|type-scale\.json)'; then
+  "$PY" "$ROOT/tools/check-type-scale.py" || true
+fi

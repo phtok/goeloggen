@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Weniger zeigen. Mehr sehen. · Goetheanum Sehen</title>
+<meta name="description" content="Entwurfsgrundlagen für die Videoplattform «Goetheanum Sehen»: zehn Erkenntnisse, das Wireframe, das Inventar, die Architektur.">
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg">
+
+<link rel="stylesheet" href="../design-system/tokens.css">
+<link rel="stylesheet" href="../design-system/base.css">
+<link rel="stylesheet" href="../design-system/nav.css">
+
+<style>
+  /* =========================================================================
+     Präsentation der Entwurfsgrundlagen – eine lange Seite, die auch vorgetragen
+     werden kann. Alles Gemeinsame kommt aus tokens.css/base.css; hier steht nur,
+     was diese Seite eigenhat: das Kapitelraster, der Geräterahmen um den
+     Prototyp, die beiden interaktiven Belege, der Vortragsmodus, der Druck.
+     ========================================================================= */
+
+  /* --- Kapitelraster: Sidenav links ab 1024 px ---------------------------- */
+  .seite{display:grid;grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"hero" "nav" "kapitel"}
+  .seite>.hero{grid-area:hero}
+  .kapitelnav{grid-area:nav}
+  .kapitel{grid-area:kapitel;min-width:0}
+  @media(min-width:1024px){
+    .seite{grid-template-columns:200px minmax(0,1fr);column-gap:var(--s8);
+      grid-template-areas:"hero hero" "nav kapitel";align-items:start}
+    .kapitelnav{position:sticky;top:calc(var(--header-h) + var(--s4));padding-top:var(--s8)}
+  }
+
+  /* Auf dem Handy ist dieselbe Liste ein Sprungmenü: waagrecht, klebend unter
+     der Kopfzeile. Kein zweites Menü – die Schublade der ds-nav bleibt, was sie
+     ist (Werkzeuge), diese Leiste führt durch DIESE Seite. */
+  @media(max-width:1023px){
+    /* Unter der globalen Leiste kleben (wie .dsnav-onpage in nav.css), nicht
+       hinter ihr verschwinden: top:0 schöbe die Leiste unter die Kopfzeile. */
+    .kapitelnav{position:sticky;top:var(--header-h);z-index:39;background:var(--bar-bg);
+      backdrop-filter:saturate(160%) blur(8px);
+      border-bottom:1px solid var(--line);margin:0 calc(-1 * var(--s6));padding:var(--s2) var(--s6)}
+    .kapitelnav .grp{display:none}
+    .kapitelnav .sidenav{grid-auto-flow:column;grid-auto-columns:max-content;
+      overflow-x:auto;overscroll-behavior-x:contain;gap:var(--s1);
+      scrollbar-width:none;padding-bottom:2px}
+    .kapitelnav .sidenav::-webkit-scrollbar{display:none}
+    .kapitelnav .sidenav a{white-space:nowrap;min-height:var(--tap);padding:var(--s2) var(--s3)}
+  }
+  .kapitelnav .sidenav a{font-size:var(--t-small);line-height:1.3}
+  /* Ohne JS bleibt die Liste leer – dann soll auch kein leerer Streifen kleben.
+     Die Seite liest sich von oben nach unten weiter, die Kapitelführung ist
+     eine Zugabe. */
+  .kapitelnav:has(.sidenav:empty){display:none}
+  .kapitelnav .nr{font-variant-numeric:tabular-nums lining-nums;color:var(--muted);flex:none}
+  .kapitelnav .sidenav a[aria-current="page"] .nr{color:var(--on-accent)}
+
+  /* --- Kapitel ------------------------------------------------------------ */
+  .kapitel>section:first-child{border-top:0}
+  /* Die globale Kopfleiste ist Glas (--bar-bg, 90 % Weiss, plus Unschärfe).
+     Über der theme-festen dunklen Bühne dieser Seite mischt sich ihr Grund
+     auf etwa #e7e7e6 – der Beta-Chip in --gold-ink fällt damit auf gemessene
+     4.15:1 (axe-core, schmale Achse). Auf dieser Seite steht die Leiste darum
+     auf --paper. Vierte Kandidatin: Glas kann Kontrast nicht garantieren,
+     sobald eine dunkle Fläche darunter laufen darf. */
+  .dsnav{background:var(--paper)}
+  /* base.css dämpft den Kicker im Band auf opacity:.85 – Weiss über --gold-deep
+     kommt damit auf gemessene 3.77:1 statt der 4.55:1, die das volle Weiss hält
+     (axe-core, WCAG 1.4.3, bei 390 und 1440 px). Ein Kicker ist 14 px, also
+     Lesetext: 4.5:1 sind Pflicht. Hier seitenlokal auf volles Weiss gesetzt;
+     Kandidatin fürs Design-System, denn das trifft jedes Band mit Kicker. */
+  .band .kicker,.band .kick{opacity:1}
+  /* .shead h2 steht im Fundament auf flex:0 0 auto – ein langer Abschnittstitel
+     («Der Wochenrhythmus bringt zurück. Die Technik hält.») kann darum nicht
+     schrumpfen und schob die Seite auf 390 px um 134 px nach rechts (WCAG 1.4.10,
+     Reflow). Hier seitenlokal geheilt; Kandidatin fürs Design-System, denn die
+     Ursache steckt in base.css, nicht auf dieser Seite. */
+  .shead h2{flex-shrink:1;min-width:0}
+  .satz{max-width:var(--measure)}
+  .zwei{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s4)}
+  @media(min-width:760px){.zwei{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .luft{margin-top:var(--s6)}
+
+  /* Nummerierte Anmerkung neben dem Wireframe. */
+  .schritte{display:grid;gap:var(--s4);align-content:start}
+  .schritt{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s3);align-items:start}
+  .schritt .stext{font-family:var(--font-text);font-size:var(--t-small);line-height:1.55;color:var(--muted)}
+  .schritt .stext b{color:var(--ink);font-weight:600}
+
+  /* --- Geräterahmen um den Prototyp --------------------------------------- */
+  .rahmenzeile{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center;margin-bottom:var(--s4)}
+  /* Der Rahmen braucht eine BESTIMMTE Breite: gibt man ihm nur min(390px,100%)
+     in einer auto-Spalte, misst der Browser die Spalte am Inhalt und den Inhalt
+     an der Spalte – der Rahmen fällt zusammen und schneidet den Prototyp ab. */
+  .geraet{width:100%;max-width:390px;height:780px;border:1px solid var(--line);
+    border-radius:var(--r-card);overflow:hidden;background:var(--paper);box-shadow:var(--shadow-card)}
+  .geraet iframe{display:block;width:100%;height:100%;border:0}
+  .druckbild{display:none}
+  .druckbild img{display:block;width:100%;max-width:390px;height:auto;
+    border:1px solid var(--line);border-radius:var(--r-card)}
+  .wf{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s6)}
+  @media(min-width:900px){.wf{grid-template-columns:390px minmax(0,1fr);gap:var(--s8)}}
+
+  /* --- Beleg 1: dreissig Kacheln gegen vier Zeilen ------------------------ */
+  .kachelfeld{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:var(--s2)}
+  .kachelfeld .mtile .mt{font-size:var(--t-micro);line-height:1.25}
+  /* Die Dauer ist eine Marke, kein Satz – sie bricht nicht um und wächst der
+     kleinen Kachel nicht über den Rand. */
+  .kachelfeld .dur{white-space:nowrap}
+  .szeile{display:grid;grid-template-columns:132px minmax(0,1fr);gap:var(--s4);
+    align-items:center;padding:var(--s3) 0;border-bottom:1px solid var(--stage-bg2)}
+  .szeile:last-child{border-bottom:0}
+  .szeile .poster{position:relative;aspect-ratio:16/9;border-radius:10px;background:var(--stage-bg2)}
+  .szeile .zt{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);
+    line-height:var(--lh-tight);color:var(--stage-ink)}
+  .szeile .zm{font-family:var(--font-text);font-size:var(--t-small);color:var(--stage-muted)}
+
+  /* --- Beleg 2: Karussell gegen Wochen-Lead ------------------------------- */
+  .flaeche{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-control);
+    aspect-ratio:16/9;display:flex;align-items:flex-end;justify-content:center;padding:var(--s4)}
+  .punkte{display:flex;gap:var(--s2)}
+  .punkte i{display:block;width:8px;height:8px;border-radius:var(--r-pill);background:var(--line)}
+  .punkte i:first-child{background:var(--muted)}
+  .standbild{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-control);
+    aspect-ratio:16/9;position:relative}
+  .standbild::after{content:"";position:absolute;left:50%;top:50%;width:0;height:0;
+    border-left:14px solid var(--muted);border-top:9px solid transparent;border-bottom:9px solid transparent;
+    transform:translate(-40%,-50%)}
+
+  /* --- Architektur: eine Datenbank, drei Ansichten ------------------------ */
+  .graph{display:grid;gap:var(--s3);justify-items:center}
+  .graph .knoten{display:flex;flex-wrap:wrap;gap:var(--s2);justify-content:center}
+  /* Entitäten IM dunklen Band: der Haus-Chip trägt --muted (und sein <b> --ink)
+     und stünde damit als dunkler Text auf einer Farbfläche – genau das, was B01
+     verbietet. Auf dem Band trägt Weiss: 4.55:1 auf --gold-deep, in tokens.css
+     gerechnet. Darum eine eigene Marke statt einer umgefärbten .chip-Rolle. */
+  .knoten .ent{font-family:var(--font-text);font-size:var(--t-small);line-height:1.35;
+    color:var(--on-accent);border:1px solid var(--on-accent);border-radius:var(--r-pill);
+    padding:var(--pille-y) var(--pille-x);font-weight:600}
+  .strich{width:2px;height:var(--s6);background:var(--line);justify-self:center}
+  .ansichten{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s4)}
+  @media(min-width:760px){.ansichten{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+  /* --- Inventar: was wegfällt, was dazukommt ------------------------------ */
+  .liste{font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;
+    color:var(--muted);list-style:none;display:grid;gap:var(--s2)}
+  .liste li{padding-left:var(--s4);position:relative}
+  .liste li::before{content:"·";position:absolute;left:var(--s2);color:var(--gold-ink)}
+
+  /* --- Sprechernotizen ---------------------------------------------------- */
+  .notizen{margin-top:var(--s5);border-top:1px solid var(--line-soft);padding-top:var(--s3)}
+  .notizen>summary{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
+    cursor:pointer;min-height:var(--tap);display:flex;align-items:center}
+  .notizen>summary::marker{color:var(--muted)}
+  .notizen .ntext{font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;
+    color:var(--muted);max-width:var(--measure);margin-top:var(--s2)}
+
+  /* --- Vortragsmodus: eine CSS-Klasse auf <body>, sonst nichts ------------ */
+  .fortschritt{display:none;position:fixed;inset:0 0 auto 0;height:3px;background:var(--line);z-index:60}
+  .fortschritt i{display:block;height:3px;background:var(--gold);transition:width .15s}
+  .vleiste{display:none;position:fixed;right:var(--s4);bottom:var(--s4);z-index:60;
+    gap:var(--s2);align-items:center;background:var(--bar-bg);
+    border:1px solid var(--line);border-radius:var(--r-pill);padding:var(--s2) var(--s3);
+    backdrop-filter:saturate(160%) blur(8px)}
+  .vleiste .stand{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
+    font-variant-numeric:tabular-nums lining-nums;min-width:5ch;text-align:center}
+  .vleiste button{min-width:var(--tap);min-height:var(--tap)}
+  /* Die globale Leiste heisst .dsnav (nav.js), nicht .ds-header; dazu die
+     Einladungs-Blase und der Toast – im Vortrag bleibt nur das Kapitel. */
+  body.vortrag .dsnav,body.vortrag .dsnav-invite,body.vortrag .dsnav-toast,
+  body.vortrag .ds-footer,body.vortrag .kapitelnav,body.vortrag .skip{display:none}
+  body.vortrag .fortschritt{display:block}
+  body.vortrag .vleiste{display:flex}
+  body.vortrag main section[id]{display:none}
+  body.vortrag main section[id].jetzt{display:block;border-top:0;
+    min-height:calc(100dvh - var(--s8) * 2);padding-block:var(--s8) calc(var(--s8) * 2)}
+  /* Das Kapitel bekommt den Fokus, damit Vorleser und Tastatur mitkommen – es
+     ist aber kein Bedienelement, also ohne Fokusring (er zöge einen Kasten um
+     die ganze Folie). */
+  body.vortrag main section[id].jetzt:focus{outline:none}
+  body.vortrag .notizen{display:none}
+  body.vortrag.notizen-an .jetzt .notizen{display:block}
+  body.vortrag .seite{grid-template-columns:minmax(0,1fr);grid-template-areas:"hero" "nav" "kapitel"}
+
+  /* --- Druck: ein Kapitel je Seite ---------------------------------------- */
+  @media print{
+    .dsnav,.dsnav-invite,.dsnav-toast,.dsnav-onpage,.ds-footer,.kapitelnav,
+    .vleiste,.fortschritt,.skip,.rahmenzeile,.hero .knoepfe,.notizen{display:none !important}
+    body{background:var(--paper);font-size:11pt}
+    main section[id]{break-after:page;break-inside:avoid;border-top:0;padding-block:0 var(--s6)}
+    main section[id]:last-child{break-after:auto}
+    .seite{display:block}
+    .geraet{display:none}
+    .druckbild{display:block}
+    .wf{grid-template-columns:minmax(0,1fr)}
+    /* Die Bühne ist eine theme-feste dunkle Fläche – auf Papier druckt der
+       Browser Flächen nicht mit, und heller Text auf Weiss ist unlesbar. Das
+       Fundament hat dafür (noch) keine Druckgestalt; darum hier seitenlokal.
+       Kandidatin fürs Design-System (DS04-Hinweis ist bewusst). */
+    .stage{background:var(--paper);color:var(--ink);border:1px solid var(--line)}
+    .stage .smeta,.szeile .zt,.szeile .zm{color:var(--ink)}
+    .kachelfeld .poster,.szeile .poster{background:var(--soft);border:1px solid var(--line)}
+    .kachelfeld .dur{color:var(--muted)}
+    .lit a[href^="http"]::after{content:" – " attr(href);word-break:break-all}
+  }
+
+  /* Wer Bewegung reduziert, bekommt statt des eingebetteten Prototyps sein Bild. */
+  @media(prefers-reduced-motion:reduce){
+    .geraet,.rahmenzeile{display:none}
+    .druckbild{display:block}
+  }
+</style>
+</head>
+<body>
+
+<script src="../design-system/nav.js" data-root="../" data-active="sehen" data-variant="werkzeug"></script>
+
+<div class="fortschritt" aria-hidden="true"><i style="width:0%"></i></div>
+
+<main class="wrap seite">
+
+  <!-- 0 · Hero ============================================================ -->
+  <section class="hero" id="anfang" data-titel="Anfang">
+    <span class="kicker">Entwurfsgrundlagen</span>
+    <h1>Weniger zeigen. Mehr sehen.</h1>
+    <p class="lede">Wie die neue Videoplattform des Goetheanum genutzt werden will – und warum wir die Nutzerführung radikal vereinfachen. Zehn Erkenntnisse aus Studien und Vergleichsfällen, das Wireframe, das Inventar, die Architektur.</p>
+    <p class="byline luft"><b>Philipp Tok</b> · Kommunikation · 14. September 2026</p>
+    <div class="knoepfe luft" style="display:flex;gap:var(--s2);flex-wrap:wrap">
+      <button class="btn primary" type="button" id="vortragbtn">Vortragen</button>
+      <a class="btn" href="wireframe.html">Prototyp öffnen</a>
+    </div>
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">Die Plattform ersetzt Uscreen durch eigene Software auf Mux. Die erste Aufgabe war ein überzeugendes, einfaches UI. Diese Seite fasst Recherche und Entwurfsentscheide zusammen.</p>
+    </details>
+  </section>
+
+  <nav class="kapitelnav" aria-label="Kapitel">
+    <div class="sidenav" id="kapitelliste"></div>
+  </nav>
+
+  <div class="kapitel">
+
+  <!-- 1 · Ausgangslage ==================================================== -->
+  <section id="ausgangslage" data-titel="Ausgangslage" data-gruppe="Grundlage">
+    <div class="shead">
+      <h2>Drei Aufgaben, ein Entwurf</h2>
+      <p>Der Entwurf muss alle drei zugleich lösen. Die Nutzerführung entscheidet, ob die Plattform als Bildungsangebot gelesen wird oder als weiterer Streamingdienst.</p>
+    </div>
+    <div class="cardgrid">
+      <div class="card soft">
+        <h3>Uscreen ablösen</h3>
+        <p class="note luft">Eigene Software auf Mux: Player, Backend, Abo, Newsletter in unserer Hand. Kein Drittanbieter mehr zwischen uns und den Abonnenten.</p>
+      </div>
+      <div class="card soft">
+        <h3>Von «TV» zu Bildung</h3>
+        <p class="note luft">«TV» verspricht Unterhaltung. Die Plattform soll Einblick geben: Wissenschaft, Kunst, Anthroposophie, Tagungen. Der Name folgt dem Anspruch.</p>
+      </div>
+      <div class="card soft">
+        <h3>Ein Ökosystem</h3>
+        <p class="note luft">Video, Wochenschrift und Newsletter wachsen zusammen. Essays und Videos verweisen aufeinander; ein wöchentlicher Überblick bündelt alles.</p>
+      </div>
+    </div>
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">Der Entwurf muss alle drei Aufgaben zugleich lösen. Die Nutzerführung entscheidet, ob die Plattform als Bildungsangebot gelesen wird oder als weiterer Streamingdienst.</p>
+    </details>
+  </section>
+
+  <!-- 2 · Die These ======================================================= -->
+  <section id="these" data-titel="Die These" data-gruppe="Grundlage">
+    <div class="band">
+      <span class="kicker">Die These</span>
+      <h2>Ein Bild. Vier Zeilen. Eine Woche.</h2>
+      <p>Radikale Vereinfachung ist keine Sparmassnahme. Sie ist das, was die Forschung zu Aufmerksamkeit, Auswahl und Rückkehr seit Jahren nahelegt – und was die grossen Plattformen gerade selbst nachvollziehen.</p>
+    </div>
+    <div class="schritte luft">
+      <div class="schritt"><span class="step-num"><span>1</span></span><p class="stext"><b>Ein Cover-Format.</b> Ein Standbild 16:9 aus dem Video, ohne Text im Bild.</p></div>
+      <div class="schritt"><span class="step-num"><span>2</span></span><p class="stext"><b>Vier Textelemente.</b> Feld · Format, Titel, Person, Dauer. Nicht mehr.</p></div>
+      <div class="schritt"><span class="step-num"><span>3</span></span><p class="stext"><b>Keine Banner, kein Karussell.</b> Ein redaktionell gesetztes Wochen-Video statt Wechselbilder.</p></div>
+      <div class="schritt"><span class="step-num"><span>4</span></span><p class="stext"><b>Die Woche als Takt.</b> Wie die Wochenschrift: «KW 37» ist das Ordnungsprinzip.</p></div>
+      <div class="schritt"><span class="step-num"><span>5</span></span><p class="stext"><b>Transkript als Rückgrat.</b> Kapitel, Suche, Verweise auf Essays – alles aus dem Text.</p></div>
+    </div>
+  </section>
+
+  <!-- 3 · Erkenntnis 1 ==================================================== -->
+  <section id="auswahl" data-titel="Auswahl lähmt" data-gruppe="Erkenntnisse">
+    <span class="kicker">Erkenntnis 1</span>
+    <div class="shead"><h2>Zu viel Auswahl lähmt</h2></div>
+    <div class="kennzahlen">
+      <div class="kennzahl">
+        <span class="k-label">sucht ein Streaming-Nutzer pro Sitzung nach etwas zum Anschauen</span>
+        <span class="k-wert">10,5 Min</span>
+        <span class="k-note">Nielsen, State of Play 2023</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">bricht den Abend ab, weil sich nichts finden lässt</span>
+        <span class="k-wert">1 von 5</span>
+        <span class="k-note">Nielsen 2023</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">Videos auf der Startseite, dafür grösser – so stieg bei YouTube das Engagement mit Langformaten</span>
+        <span class="k-wert">Weniger</span>
+        <span class="k-note">YouTube Creator Insider, September 2026</span>
+      </div>
+    </div>
+    <div class="kasten luft">YouTubes Discovery-Chef Todd Beaupré: Zu viele Optionen führen dazu, dass manche Zuschauer <b>gar nichts</b> wählen. Für einen kleinen, kuratierten Katalog wie unseren gilt das doppelt – ein Wochen-Video, eine kurze Liste «Neu», fertig.</div>
+
+    <div class="stage luft" id="beleg-auswahl">
+      <div class="seg" role="group" aria-label="Darstellung der Startseite" id="auswahl-seg">
+        <button type="button" data-zeigt="kacheln" aria-pressed="true">30 Kacheln</button>
+        <button type="button" data-zeigt="zeilen" aria-pressed="false">4 Zeilen</button>
+      </div>
+      <div class="luft" id="auswahl-kacheln">
+        <div class="kachelfeld">
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">48 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">32 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">72 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">21 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">54 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">41 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">27 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">63 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">18 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">36 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">19 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">24 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">44 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">52 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">38 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">65 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">29 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">47 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">16 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">33 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">58 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">22 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">81 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">35 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">26 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">43 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">31 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">50 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">14 Min</span></span></a>
+          <a class="mtile" href="wireframe.html#video"><span class="poster"><span class="dur">39 Min</span></span></a>
+        </div>
+        <p class="smeta luft">Dreissig Standbilder ohne Text – so sieht ein voller Katalog aus, wenn ihn niemand ordnet.</p>
+      </div>
+      <div class="luft" id="auswahl-zeilen" hidden>
+        <a class="szeile" href="wireframe.html#video"><span class="poster"></span><span><span class="zt">Was heilt? Rhythmus als Grundlage der Therapie</span><span class="zm">Medizin · Vortrag · Matthias Girke · 48 Min</span></span></a>
+        <a class="szeile" href="wireframe.html#video"><span class="poster"></span><span><span class="zt">Boden, Präparate, Klima</span><span class="zm">Landwirtschaft · Gespräch · Ueli Hurter · 32 Min</span></span></a>
+        <a class="szeile" href="wireframe.html#video"><span class="poster"></span><span><span class="zt">Rhythmus im Schultag</span><span class="zm">Pädagogik · Kurs 3/8 · Constanza Kaliks · 21 Min</span></span></a>
+        <a class="szeile" href="wireframe.html#video"><span class="poster"></span><span><span class="zt">Goethes Farbenlehre im Experiment</span><span class="zm">Naturwissenschaft · Vortrag · Johannes Kühl · 54 Min</span></span></a>
+        <p class="smeta luft">Vier Zeilen, vier Textelemente je Zeile – derselbe Katalog, lesbar gemacht.</p>
+      </div>
+    </div>
+
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">YouTube hat 2024/25 ein Desktop-Redesign mit weniger, grösseren Thumbnails getestet und im September 2026 bestätigt, dass das Engagement mit Langform-Videos gestiegen ist, obwohl weniger Videos sichtbar sind. Stärkste aktuelle Bestätigung der These.</p>
+    </details>
+  </section>
+
+  <!-- 4 · Erkenntnis 2 ==================================================== -->
+  <section id="bild" data-titel="Das Bild entscheidet" data-gruppe="Erkenntnisse">
+    <span class="kicker">Erkenntnis 2</span>
+    <div class="shead"><h2>Das Bild entscheidet – in 1,8 Sekunden</h2></div>
+    <div class="kennzahlen">
+      <div class="kennzahl">
+        <span class="k-label">der Aufmerksamkeit beim Stöbern liegt auf dem Artwork, nicht auf dem Text</span>
+        <span class="k-wert">82 %</span>
+        <span class="k-note">Netflix Tech Blog</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">verweilt ein Nutzer im Schnitt auf einem Titel, bevor er weiterzieht</span>
+        <span class="k-wert">1,8 s</span>
+        <span class="k-note">Netflix Tech Blog</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">Thumbnails mit Nahaufnahmen werden häufiger geklickt, besonders bei Blickkontakt</span>
+        <span class="k-wert">Gesichter</span>
+        <span class="k-note">mehrere Thumbnail-Studien</span>
+      </div>
+    </div>
+    <div class="kasten luft">Bei Vorträgen und Gesprächen ist das Bild gratis: <b>Die Sprecherin ist das Bild.</b> Darum ein Standbild aus dem Video – kein gestaltetes Key-Art pro Titel, kein Text im Bild. Titel, Person und Dauer bleiben als Text im HTML: durchsuchbar, übersetzbar, ohne Grafikaufwand änderbar.</div>
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">Netflix hat die Artwork-Forschung 2016 publiziert. Konsequenz: Das Standbild ist das wichtigste Element, aber es muss nicht produziert werden. Ein guter Frame aus der Aufzeichnung reicht.</p>
+    </details>
+  </section>
+
+  <!-- 5 · Erkenntnis 3 ==================================================== -->
+  <section id="karussell" data-titel="Karussells" data-gruppe="Erkenntnisse">
+    <span class="kicker">Erkenntnis 3</span>
+    <div class="shead"><h2>Karussells werden übersprungen</h2></div>
+    <div class="zwei">
+      <div class="card">
+        <span class="kicker">Bisher</span>
+        <h3>Hero-Karussell</h3>
+        <div class="flaeche luft"><span class="punkte" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div>
+        <p class="note luft">Nutzer scrollen sofort an grossen Wechselbildern vorbei und sehen alles ausser dem ersten Frame nie. Klicks auf Folge-Slides liegen im Promillebereich. Und: Das Karussell zwingt zu Key-Art im Querformat – Produktionsaufwand für jedes Video.</p>
+      </div>
+      <div class="card">
+        <span class="kicker">Neu</span>
+        <h3>Diese Woche</h3>
+        <div class="standbild luft"></div>
+        <p class="meta luft">Medizin · Vortrag</p>
+        <p class="h-display" style="font-size:var(--t-h3)">Was heilt? Rhythmus als Grundlage der Therapie</p>
+        <p class="meta">Matthias Girke · 48 Min · 6 Kapitel</p>
+        <p class="note luft">Ein Video, redaktionell gesetzt, eine Woche lang stabil. Dieselbe Position im Newsletter und auf Social Media.</p>
+      </div>
+    </div>
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">Nielsen Norman Group und mehrere Feldstudien zeigen seit Jahren: Karussells werden ignoriert oder als Werbung gelesen. Das statische Wochen-Video ist zugleich Ankerpunkt für Newsletter und Social Media.</p>
+    </details>
+  </section>
+
+  <!-- 6 · Erkenntnis 4 ==================================================== -->
+  <section id="navigation" data-titel="Navigation statt Kürzung" data-gruppe="Erkenntnisse">
+    <span class="kicker">Erkenntnis 4</span>
+    <div class="shead"><h2>Lange Videos brauchen Navigation, nicht Kürzung</h2></div>
+    <div class="kennzahlen">
+      <div class="kennzahl">
+        <span class="k-label">danach wandert die Aufmerksamkeit – über 6,9 Mio Sitzungen gemessen</span>
+        <span class="k-wert">6 Min</span>
+        <span class="k-note">Guo, Kim, Rubin 2014 (MIT/edX)</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">eines Videos werden typisch angesehen; Lernende springen häufig</span>
+        <span class="k-wert">30–50 %</span>
+        <span class="k-note">Guo et al.; Kim et al.</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">der Studierenden: Interaktive Transkripte verbessern das Lernen</span>
+        <span class="k-wert">97 %</span>
+        <span class="k-note">MIT OpenCourseWare</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">Sehdauer durch Untertitel</span>
+        <span class="k-wert">+12 %</span>
+        <span class="k-note">Facebook-interne Studie</span>
+      </div>
+    </div>
+    <div class="kasten luft">Unsere Vorträge dauern 45 bis 90 Minuten. Das lässt sich nicht kürzen – aber <b>navigierbar</b> machen: Kapitel mit Zeitmarken, ein durchsuchbares Transkript, gemerkter Fortschritt, Untertitel. Kapitel senken die Sehdauer pro Video, weil sie Springen erlauben. Für eine Bildungsplattform ist die Antwort klar: dem Zuschauer dienen, nicht der Kennzahl.</div>
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">Guo/Kim/Rubin ist die meistzitierte Arbeit zu Video-Engagement im Lernen. Erfreulich: Wer die ersten fünf Minuten übersteht, schaut meist bis zum Ende. Transkript-Belege: MIT OCW (Umfrage), University of South Florida (kontrollierte Studie: Verständnis, Behalten, Anwendung). TED hat das Muster 2014 etabliert: Klick auf den Satz springt zur Stelle. Mux erzeugt Untertitel automatisch.</p>
+    </details>
+  </section>
+
+  <!-- 7 · Erkenntnis 5 und 6 ============================================== -->
+  <section id="rhythmus" data-titel="Wochenrhythmus" data-gruppe="Erkenntnisse">
+    <span class="kicker">Erkenntnis 5 und 6</span>
+    <div class="shead"><h2>Der Wochenrhythmus bringt zurück. Die Technik hält.</h2></div>
+    <div class="kennzahlen">
+      <div class="kennzahl">
+        <span class="k-label">eher bleiben Nutzer, wenn wöchentlich statt auf einmal veröffentlicht wird</span>
+        <span class="k-wert">+48 %</span>
+        <span class="k-note">Marketing Science, randomisierte Feldstudie, Dezember 2025</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">Startzeit – ab hier beginnen die Abbrüche</span>
+        <span class="k-wert">2 s</span>
+        <span class="k-note">Akamai / UMass, 6,7 Mio Zuschauer</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">Jede Sekunde mehr Ladezeit erhöht die Abbruchrate um diesen Wert</span>
+        <span class="k-wert">5,8 %</span>
+        <span class="k-note">Akamai / UMass</span>
+      </div>
+    </div>
+    <div class="kasten luft">Das Goetheanum hat den Wochenrhythmus schon – <b>die Wochenschrift</b>. Video übernimmt ihn: «Diese Woche · KW 37» ordnet Startseite, Newsletter und Wochenschrift gleich. Ein leichter Player auf Mux, ohne Uscreen-Ballast, ist bereits ein messbares Argument; Mux Data misst Startzeit und Abbrüche pro Video.</div>
+  </section>
+
+  <!-- 8 · Erkenntnis 7 ==================================================== -->
+  <section id="mediathek" data-titel="Mediathek statt Netflix" data-gruppe="Erkenntnisse">
+    <span class="kicker">Erkenntnis 7</span>
+    <div class="shead"><h2>Unser Publikum denkt in Mediatheken, nicht in Netflix</h2></div>
+    <div class="kennzahlen">
+      <div class="kennzahl">
+        <span class="k-label">Bei Menschen ab 50 liegen die Mediatheken von ARD und ZDF klar vor Amazon und Netflix</span>
+        <span class="k-wert">Platz 1</span>
+        <span class="k-note">ARD/ZDF-Medienstudie 2025</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">der YouTube-Views 2025 kommen vom Smartphone – Mobile ist der Hauptviewport</span>
+        <span class="k-wert">69 %</span>
+        <span class="k-note">Tubular Labs</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">Studien zu App-Design für Ältere: einfache Navigation, grosse Schrift, grosse Tippziele</span>
+        <span class="k-wert">132</span>
+        <span class="k-note">systematische Übersicht 2025</span>
+      </div>
+    </div>
+    <div class="kasten luft">Die non-lineare Nutzung wächst gerade bei den 50- bis 59-Jährigen am stärksten. Das mentale Modell ist die <b>Mediathek</b>: Direktstart aus der Liste, Text neben dem Bild, kein Autoplay. Darum Zeilen statt Kacheln, Grundschrift 17 bis 18 px, Tippziele 48 px. Keine Konservativität, sondern Anschluss an gelernte Muster.</div>
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">Bei 50- bis 69-Jährigen sind die Mediatheken auf Augenhöhe mit YouTube. Die ARD-Mediathek-Konzeption arbeitete mit zwei Zielbildern – «Streamer-Feel» für Jüngere, «erweitertes TV-Erlebnis» für Ältere – und liess Inhalte direkt aus der Übersicht starten. ARTE: acht Themenkategorien, «Mein Arte» mit abonnierbaren Formaten.</p>
+    </details>
+  </section>
+
+  <!-- 9 · Erkenntnis 8 ==================================================== -->
+  <section id="audio" data-titel="Audio" data-gruppe="Erkenntnisse">
+    <span class="kicker">Erkenntnis 8</span>
+    <div class="shead"><h2>Audio ist der zweite Hauptmodus</h2></div>
+    <div class="kennzahlen">
+      <div class="kennzahl">
+        <span class="k-label">Audio-first-Anteil bei Podcasts, 2022 bis 2026. Video und Audio sind ein Medium geworden</span>
+        <span class="k-wert">71 → 51 %</span>
+        <span class="k-note">Cumulus Media / Edison Research</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">lassen Video-Podcasts im Hintergrund laufen; nur 21 % wollen gar kein Video</span>
+        <span class="k-wert">30 %</span>
+        <span class="k-note">Cumulus Media 2026</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">YouTube-Podcasts auf Fernsehern in einem Monat (Oktober 2025) – fast verdoppelt in einem Jahr</span>
+        <span class="k-wert">700 Mio h</span>
+        <span class="k-note">Bloomberg / YouTube</span>
+      </div>
+    </div>
+    <div class="kasten luft">Ein Vortrag ist auch ein Podcast. <b>«Nur Audio» ist keine Nebenfunktion:</b> Hintergrundwiedergabe bei gesperrtem Bildschirm, Steuerung im Sperrbildschirm, Cast auf den Fernseher, Offline-Speichern. Nebula bietet Downloads und Frühzugang als Abo-Argumente – wir können das auch. Ein <b>Modus</b> also, kein zweiter Katalogeintrag – warum das der Unterschied ist, zeigt Erkenntnis 10.</div>
+  </section>
+
+  <!-- 10 · Erkenntnis 9 =================================================== -->
+  <section id="streamer" data-titel="Bildungs-Streamer" data-gruppe="Erkenntnisse">
+    <span class="kicker">Erkenntnis 9</span>
+    <div class="shead"><h2>Was die Bildungs-Streamer lehren</h2></div>
+    <div class="cardgrid">
+      <div class="card soft">
+        <h3>Gaia</h3>
+        <p class="note luft">Spiritualität, Bewusstsein, Dokumentation. 8000 Titel, 13,99 $/Monat oder 119 $/Jahr, Gaia+ 299 $/Jahr mit Live-Events. Zieht sich 2026 von Drittplattformen zurück: Deren Abonnenten hatten höheren Churn, tiefere ARPU – und Gaia wusste nicht, wer sie sind.</p>
+      </div>
+      <div class="card soft">
+        <h3>Nebula</h3>
+        <p class="note luft">Grösster kreativ-eigener Dienst, rund 680 000 Abonnenten, 6 $/Monat oder 60 $/Jahr. Argumente: werbefrei, Offline-Downloads, Frühzugang, Bonusmaterial.</p>
+      </div>
+      <div class="card soft">
+        <h3>MasterClass</h3>
+        <p class="note luft">Prominente Lehrer, Kino-Produktion. Kämpft mit Churn bis 52 % im Konsumentengeschäft; gehalten durch B2B-Lizenzen und häufige «Hero»-Veröffentlichungen.</p>
+      </div>
+    </div>
+    <div class="kennzahlen luft">
+      <div class="kennzahl">
+        <span class="k-label">monatlicher Churn bei Spezial-Streamern (Premium-Dienste: 4,1 %)</span>
+        <span class="k-wert">6,6 %</span>
+        <span class="k-note">Antenna, Q3 2025</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">Kündigern abonniert innerhalb eines Jahres wieder</span>
+        <span class="k-wert">1 von 3</span>
+        <span class="k-note">Antenna 2025</span>
+      </div>
+    </div>
+    <div class="kasten luft">Drei Ableitungen: <b>Jahresabo als Standard.</b> Ein wöchentlicher «Hero». Ein Tier «Tagungen live» – das Goetheanum hat, was Gaia teuer inszenieren muss.</div>
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">Gaia (NASDAQ: GAIA) ist uns inhaltlich am nächsten. Ihre Strategieänderung vom Mai 2026 ist unser Uscreen-Argument: die Beziehung zum Abonnenten selbst besitzen. CuriosityStream hält über 85 % der Direktabonnenten auf Jahresplänen – entsprechend tiefer Churn. Ein Rückhol-Newsletter für Ex-Abonnenten gehört in die Architektur, nicht in eine Kampagne.</p>
+    </details>
+  </section>
+
+  <!-- 11 · Erkenntnis 10 ================================================== -->
+  <section id="zeit-akademie" data-titel="Die ZEIT Akademie" data-gruppe="Erkenntnisse">
+    <span class="kicker">Erkenntnis 10</span>
+    <div class="shead">
+      <h2>Der nächste Verwandte: die ZEIT Akademie</h2>
+      <p>Ein Wochenblatt mit einer Videoplattform – das ist unsere Lage, nicht die von Netflix. Zahlen von ihrer Startseite, ausgezählt am 16. September 2026.</p>
+    </div>
+    <div class="kennzahlen">
+      <div class="kennzahl">
+        <span class="k-label">Einträge listet die Startseite</span>
+        <span class="k-wert">192</span>
+        <span class="k-note">Das Haus selbst spricht von «über 100 Kursen»</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">davon sind Varianten eines anderen Eintrags – jeder vierte</span>
+        <span class="k-wert">49</span>
+        <span class="k-note">21 Audio-Zweitausgaben, 16 Sprachdubletten, 5 Trailer, 7 Kunden- und Altfassungen</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">Wörter ordnen den ganzen Katalog</span>
+        <span class="k-wert">6</span>
+        <span class="k-note">Gesellschaft, Psychologie, Gesundheit, Arbeit, Kultur, Wissen</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">Sortierungen stehen daneben. Kein Karussell, keine Empfehlungen</span>
+        <span class="k-wert">2</span>
+        <span class="k-note">«Neu» und «Meistgesehen»</span>
+      </div>
+    </div>
+
+    <div class="zwei luft">
+      <div class="card soft">
+        <span class="kicker">Übernommen</span>
+        <h3>Die Einheit ist die Reihe, nicht das Video</h3>
+        <p class="note luft">Eine Karte trägt vier Textelemente: Titel, eine Zeile <q>wer und was</q>, die Gesamtdauer in Minuten und die Zahl der Lektionen. <b>318 Minuten · 53 Lektionen</b> sagt in zwei Zahlen, wie gross die Sache ist und in wie vielen Bissen sie kommt.</p>
+        <p class="note luft">Ein einzelnes Gespräch ist derselbe Gegenstand mit <q>1 Lektion</q>. Webinar, Kurs, Lernpfad – eine Form für alles.</p>
+      </div>
+      <div class="card soft">
+        <span class="kicker">Nicht übernommen</span>
+        <h3>Varianten als eigene Einträge</h3>
+        <p class="note luft">Dieselbe Sache steht mehrfach im Katalog: <q>Philosophie</q> und <q>Philosophie (Audio)</q>, <q>Kreativität</q> und <q>Creativity</q>, dazu Trailer, Kundenfassungen und ein <q>Lernpfad Konfliktmanagement alt</q>.</p>
+        <p class="note luft">Die Ursache ist nicht Nachlässigkeit, sondern das Datenmodell: <b>wo eine Variante ein Produkt ist, wird sie ein Eintrag.</b> Der Katalog wächst dann um Dubletten statt um Inhalt.</p>
+      </div>
+    </div>
+
+    <div class="kasten luft">Drei Ableitungen: <b>Reihen und Tagungen tragen ihren Umfang</b> – Gesamtdauer und Zahl der Folgen, ein einzelner Vortrag ist die Reihe mit einer Folge. <b>Nur Audio, Untertitel und Sprache sind Eigenschaften eines Videos</b>, nie ein zweiter Katalogeintrag. Und das Jahresabo steht als Monatspreis neben dem Monatsabo (19,99 gegen 24,99) und trägt die einzige Auszeichnung der Seite: <q>Bester Preis</q>.</div>
+
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">Die ZEIT Akademie nennt sich <q>Die Streamingplattform des Wissens</q> und erklärt sich in drei Säulen zu je drei Zeilen – neun Zeilen für das ganze Angebot. Kein Hero-Karussell, ein statischer Anspruch und ein Knopf.</p>
+      <p class="ntext">Zwei Stellen, an denen wir weiter gehen. Erstens das Transkript: ihre häufigen Fragen sagen <q>Alle Kurse verfügen über deutsche Untertitel und Transkripte. So können Sie die Inhalte auch ohne Ton verfolgen.</q> – das Transkript ist dort eine Zugänglichkeitsfunktion, bei uns ist es der Motor für Suche, Kapitel und die Verbindung zu den Essays. Zweitens das Begleitmaterial: zu jedem Kurs produzieren sie ein E-Book. Unser Gegenstück ist der Essay aus der Wochenschrift – den haben wir schon, wir müssen ihn nur verknüpfen.</p>
+      <p class="ntext">Ihre Kategorien sind sechs Tätigkeits- und Lebensworte, unsere Felder sind die Sektionen der Hochschule. Bei Medizin, Landwirtschaft oder Pädagogik deckt sich beides; bei <q>Allgemeine Anthroposophische Sektion</q> nicht. Das ist eine offene Frage, keine Entscheidung.</p>
+      <p class="ntext">Die Plattform ist nur aus Deutschland erreichbar – Österreich, die Schweiz und Liechtenstein sind ausgeschlossen. Für uns keine Option.</p>
+    </details>
+  </section>
+
+  <!-- 12 · Wireframe Start ================================================ -->
+  <section id="wireframe-start" data-titel="Wireframe: Start" data-gruppe="Der Entwurf">
+    <span class="kicker">Das Wireframe</span>
+    <div class="shead">
+      <h2>Startseite: die Woche, dann die Liste</h2>
+      <p>Der Prototyp läuft hier eingebettet. «Inventar» beschriftet jedes Element mit seiner Rolle – dieselbe Zählung wie im Kapitel Inventar.</p>
+    </div>
+    <div class="rahmenzeile">
+      <div class="seg" role="group" aria-label="Seitentyp im Prototyp neben der Startseite" data-rahmen="start">
+        <button type="button" data-seite="start" aria-pressed="true">Start</button>
+        <button type="button" data-seite="feld" aria-pressed="false">Feld</button>
+        <button type="button" data-seite="video" aria-pressed="false">Video</button>
+        <button type="button" data-seite="person" aria-pressed="false">Person</button>
+        <button type="button" data-seite="reihe" aria-pressed="false">Reihe</button>
+        <button type="button" data-seite="woche" aria-pressed="false">Wochenschrift</button>
+        <button type="button" data-seite="newsletter" aria-pressed="false">Newsletter</button>
+      </div>
+      <div class="seg" role="group" aria-label="Beschriftung im Prototyp neben der Startseite">
+        <button type="button" data-inventar="start" aria-pressed="false">Inventar</button>
+      </div>
+      <a class="btn ghost" href="wireframe.html#start">Prototyp im Vollbild öffnen</a>
+    </div>
+    <div class="wf">
+      <div class="geraet"><iframe src="wireframe.html#start" title="Prototyp: Startseite" loading="lazy" id="rahmen-start"></iframe></div>
+      <div class="druckbild"><img src="bilder/wireframe-start.png" alt="Startseite des Prototyps: ein grosses Wochen-Video, darunter Zeilen mit Standbild links und Text rechts, dann die Felder." width="390" height="780"></div>
+      <div class="schritte">
+        <div class="schritt"><span class="step-num"><span>1</span></span><p class="stext"><b>Ein Wochen-Video.</b> Gross, statisch, redaktionell gesetzt. Kein Karussell. Dieselbe Position wie im Newsletter.</p></div>
+        <div class="schritt"><span class="step-num"><span>2</span></span><p class="stext"><b>Zeilen statt Kacheln.</b> Standbild links, Text rechts, Trennlinie. Drei bis vier Einträge «Neu» – nicht dreissig.</p></div>
+        <div class="schritt"><span class="step-num"><span>3</span></span><p class="stext"><b>Weiter schauen.</b> Fortschrittsbalken auf dem Standbild. Der wichtigste Grund, wiederzukommen.</p></div>
+        <div class="schritt"><span class="step-num"><span>4</span></span><p class="stext"><b>Felder = Sektionen.</b> Medizin, Landwirtschaft, Pädagogik, Bühne … mit den Sektionsfarben aus dem Design-System.</p></div>
+        <div class="schritt"><span class="step-num"><span>5</span></span><p class="stext"><b>Dazu lesen.</b> Ein bis zwei Essays der aktuellen Wochenschrift, als Textzeile ohne Bild.</p></div>
+      </div>
+    </div>
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">Keine Kategorie-Banner, keine Werbeflächen. Hinweise auf weitere Goetheanum-Angebote kommen als Textzeile im Newsletter, nicht als Banner auf der Plattform.</p>
+    </details>
+  </section>
+
+  <!-- 13 · Wireframe Video ================================================ -->
+  <section id="wireframe-video" data-titel="Wireframe: Video" data-gruppe="Der Entwurf">
+    <span class="kicker">Das Wireframe</span>
+    <div class="shead">
+      <h2>Videoseite: Player, Kapitel, Transkript, Verweise</h2>
+      <p>Auf dem Schreibtisch liegt die rechte Spalte neben dem Player. Die weiteren Seitentypen zeigen dasselbe Zeilenprinzip.</p>
+    </div>
+    <div class="rahmenzeile">
+      <div class="seg" role="group" aria-label="Seitentyp im Prototyp neben der Videoseite" data-rahmen="video">
+        <button type="button" data-seite="start" aria-pressed="false">Start</button>
+        <button type="button" data-seite="feld" aria-pressed="false">Feld</button>
+        <button type="button" data-seite="video" aria-pressed="true">Video</button>
+        <button type="button" data-seite="person" aria-pressed="false">Person</button>
+        <button type="button" data-seite="reihe" aria-pressed="false">Reihe</button>
+        <button type="button" data-seite="woche" aria-pressed="false">Wochenschrift</button>
+        <button type="button" data-seite="newsletter" aria-pressed="false">Newsletter</button>
+      </div>
+      <div class="seg" role="group" aria-label="Beschriftung im Prototyp neben der Videoseite">
+        <button type="button" data-inventar="video" aria-pressed="false">Inventar</button>
+      </div>
+      <a class="btn ghost" href="wireframe.html#video">Prototyp im Vollbild öffnen</a>
+    </div>
+    <div class="wf">
+      <div class="geraet"><iframe src="wireframe.html#video" title="Prototyp: Videoseite" loading="lazy" id="rahmen-video"></iframe></div>
+      <div class="druckbild"><img src="bilder/wireframe-video.png" alt="Videoseite des Prototyps: Player mit Kapitelmarken, darunter Titel und Teaser, vier Handlungen, rechts Kapitel und Verweise." width="390" height="780"></div>
+      <div class="schritte">
+        <div class="schritt"><span class="step-num"><span>1</span></span><p class="stext"><b>Player zuerst, schnell.</b> Mux-Player, Start unter zwei Sekunden. Kapitelmarken direkt im Zeitstrahl.</p></div>
+        <div class="schritt"><span class="step-num"><span>2</span></span><p class="stext"><b>Vier Handlungen.</b> Merken, Teilen ab Zeitmarke, Nur Audio, Tempo. Dazu Untertitel und Cast im Player.</p></div>
+        <div class="schritt"><span class="step-num"><span>3</span></span><p class="stext"><b>Kapitel und Transkript.</b> Automatisch aus Mux, redaktionell geprüft. Ein Klick auf den Satz springt zur Stelle.</p></div>
+        <div class="schritt"><span class="step-num"><span>4</span></span><p class="stext"><b>Dazu lesen.</b> Der Essay aus der Wochenschrift – aus derselben Datenbank, kein manuelles Verlinken.</p></div>
+        <div class="schritt"><span class="step-num"><span>5</span></span><p class="stext"><b>Aus derselben Reihe.</b> Die nächste Folge, die Tagung, dieselbe Person. Wenige, klare Nachbarn.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 · Das Inventar =================================================== -->
+  <section id="inventar" data-titel="Das Inventar" data-gruppe="Der Entwurf">
+    <span class="kicker">Das Inventar</span>
+    <div class="shead">
+      <h2>Was es wirklich braucht</h2>
+      <p>Alles, was Text ist, bleibt Text im HTML: durchsuchbar, übersetzbar, änderbar. Nichts wird in Bilder eingebrannt.</p>
+    </div>
+    <div class="kennzahlen">
+      <div class="kennzahl"><span class="k-label">Cover-Format</span><span class="k-wert">1</span><span class="k-note">Standbild 16:9 aus dem Video, kein Text im Bild</span></div>
+      <div class="kennzahl"><span class="k-label">Porträt</span><span class="k-wert">1</span><span class="k-note">quadratisch, nur auf Personenseiten</span></div>
+      <div class="kennzahl"><span class="k-label">Banner</span><span class="k-wert">0</span><span class="k-note">keine Werbeflächen, kein Hero-Karussell</span></div>
+      <div class="kennzahl"><span class="k-label">Textelemente pro Karte</span><span class="k-wert">4</span><span class="k-note">Feld · Format, Titel, Person, Dauer</span></div>
+      <div class="kennzahl"><span class="k-label">auf der Videoseite</span><span class="k-wert">7</span><span class="k-note">plus Datum, Teaser, Kapitel</span></div>
+    </div>
+    <div class="zwei luft">
+      <div class="card soft">
+        <h3>Was wegfällt</h3>
+        <ul class="liste luft">
+          <li>Key-Art pro Video</li>
+          <li>Teasertexte in Listen</li>
+          <li>Kategorie-Banner</li>
+          <li>Autoplay-Vorschau</li>
+          <li>Bewertungssterne</li>
+          <li>Tag-Wolken</li>
+          <li>«Empfohlen für dich» in der ersten Woche</li>
+          <li>Zweitausgaben für Audio und Sprache</li>
+        </ul>
+      </div>
+      <div class="card soft">
+        <h3>Was dazukommt</h3>
+        <ul class="liste luft">
+          <li>Kapitel und Transkript</li>
+          <li>Nur Audio mit Hintergrundwiedergabe</li>
+          <li>Cast</li>
+          <li>Offline</li>
+          <li>Weiter schauen</li>
+          <li>Live-Marker bei Tagungen</li>
+          <li>Frühzugang für Abonnenten</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 · Architektur ==================================================== -->
+  <section id="architektur" data-titel="Architektur" data-gruppe="Der Entwurf">
+    <span class="kicker">Architektur</span>
+    <div class="shead">
+      <h2>Eine Datenbank, drei Ansichten</h2>
+      <p>Die Sektionen sind das Rückgrat. Video und Essay hängen an denselben Entitäten – «Dazu lesen» ist eine Abfrage, keine Redaktionsarbeit.</p>
+    </div>
+    <div class="graph">
+      <div class="band" style="width:100%">
+        <span class="kicker">Ein Inhaltsgraph</span>
+        <h3>Supabase – eine Quelle für alles</h3>
+        <div class="knoten luft">
+          <span class="ent">Feld</span><span class="ent">Person</span>
+          <span class="ent">Reihe</span><span class="ent">Video</span>
+          <span class="ent">Essay</span><span class="ent">Ausgabe</span>
+          <span class="ent">Kapitel</span><span class="ent">Transkript</span>
+        </div>
+        <p>Feld ist die Sektion, Reihe auch eine Tagung. Acht Entitäten, mehr braucht es nicht. Nur Audio, Untertitel und Sprache sind Eigenschaften eines Videos – wo eine Variante zur Entität wird, wächst der Katalog um Dubletten statt um Inhalt (Erkenntnis 10).</p>
+      </div>
+      <span class="strich" aria-hidden="true"></span>
+    </div>
+    <div class="ansichten">
+      <div class="card ton"><h3>Sehen</h3><p class="note luft">Videoplattform</p></div>
+      <div class="card ton"><h3>Lesen</h3><p class="note luft">Wochenschrift-Website</p></div>
+      <div class="card ton"><h3>Meine Woche</h3><p class="note luft">Newsletter, freitags, personalisiert</p></div>
+    </div>
+    <div class="kasten luft">Das Transkript ist der Motor: <b>Suche, Kapitel, SEO</b> – und über Embeddings die Verbindung zu Essays und Gesamtausgabe.</div>
+    <p class="note luft">Der Newsletter fasst die bisherigen Aussendungen zusammen: ein wöchentlicher Überblick über neue Texte und Videos nach gewählten Feldern, ergänzt um Hinweise auf Tagungen und weitere Angebote – als Abfrage derselben Datenbank. Segmentierte Aussendungen erreichen rund 23 % höhere Öffnungs- und 49 % höhere Klickraten.</p>
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">Stack: Next.js auf Vercel, Supabase (Postgres mit Vektorspalte für Transkript-Embeddings), Mux für Video, Untertitel, Audio-Renditions. Erfahrung aus dem GA-RAG (Rudolf Steiner Archiv) lässt sich direkt nutzen.</p>
+    </details>
+  </section>
+
+  <!-- 16 · Der Name ======================================================= -->
+  <section id="name" data-titel="Der Name" data-gruppe="Der Entwurf">
+    <span class="kicker">Der Name</span>
+    <div class="shead">
+      <h2>Tätigkeit statt Medium</h2>
+      <p>Wenn das ganze Ökosystem über Tätigkeiten navigiert wird, heisst die Plattform schlicht «Goetheanum Sehen».</p>
+    </div>
+    <div class="cardgrid">
+      <div class="card"><h3>Lesen</h3><p class="note luft">Wochenschrift</p></div>
+      <div class="card ton"><h3>Sehen</h3><p class="note luft">Videoplattform</p></div>
+      <div class="card"><h3>Hören</h3><p class="note luft">Audio, Podcast</p></div>
+      <div class="card"><h3>Kommen</h3><p class="note luft">Tagungen, Bühne</p></div>
+    </div>
+    <p class="note luft">«TV» verspricht Unterhaltung; «Video» beschreibt nur das Format. Die Adresse folgt der Tätigkeit: goetheanum.ch/sehen. Kein Medienbegriff, sondern das, was man dort tut.</p>
+    <div class="kasten luft">
+      <p style="margin:0"><b>Goetheanum Mediathek</b> – klar, öffentlich-rechtlich, aber archivisch.<br>
+      <b>Goetheanum Aula</b> – Hörsaal, aber schulisch.<br>
+      <b>Goetheanum Video</b> – korrekt, ohne Anspruch.</p>
+    </div>
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">Die Namensfrage ist offen. «Sehen» ist ein Vorschlag, der aus der Architektur folgt.</p>
+    </details>
+  </section>
+
+  <!-- 17 · Nächste Schritte =============================================== -->
+  <section id="schritte" data-titel="Nächste Schritte" data-gruppe="Schluss">
+    <div class="band">
+      <span class="kicker">Nächste Schritte</span>
+      <h2>Was jetzt zu entscheiden ist</h2>
+      <p>Offene Fragen: Name · Preis · Rolle der bisherigen GTV-Inhalte · Mehrsprachigkeit</p>
+    </div>
+    <div class="schritte luft">
+      <div class="schritt"><span class="step-num"><span>1</span></span><p class="stext"><b>Wireframe prüfen.</b> Klickbarer Prototyp mit sieben Seitentypen liegt vor. Rückmeldungen der Redaktionen bis Ende September 2026.</p></div>
+      <div class="schritt"><span class="step-num"><span>2</span></span><p class="stext"><b>Datenmodell.</b> Feld, Person, Reihe, Video, Essay, Ausgabe, Kapitel, Transkript – gemeinsam mit der Wochenschrift-Website.</p></div>
+      <div class="schritt"><span class="step-num"><span>3</span></span><p class="stext"><b>Prototyp in Next.js.</b> Player auf Mux, Startseite, Videoseite, Nur-Audio. Ein Feld als Pilot, zum Beispiel Medizin.</p></div>
+      <div class="schritt"><span class="step-num"><span>4</span></span><p class="stext"><b>Abo-Modell.</b> Jahresabo als Standard, Tier «Tagungen live», Rückhol-Logik für Ex-Abonnenten. Daten aus der Sommer-Aktion 2026 nutzen.</p></div>
+    </div>
+  </section>
+
+  <!-- 18 · Quellen ======================================================== -->
+  <section id="quellen" data-titel="Quellen" data-gruppe="Schluss">
+    <div class="shead">
+      <h2>Quellen</h2>
+      <p>Recherche vom 12. bis 14. September 2026. Verlinkt sind die Quellen, deren Adresse geprüft ist; die übrigen stehen mit Titel und Autoren zum Auffinden.</p>
+    </div>
+    <div class="lit">
+      <p><b>Q1</b> Nielsen, «State of Play» (2023). 10,5 Min Suchzeit pro Sitzung; 1 von 5 gibt auf.</p>
+      <p><b>Q2</b> YouTube Creator Insider, Todd Beaupré (September 2026), dazu Berichte von The Verge und TechCrunch. Desktop-Redesign mit grösseren Thumbnails.</p>
+      <p><b>Q3</b> Netflix Tech Blog, «Artwork Personalization at Netflix» (2017) und «Selecting the best artwork for videos through A/B testing» (2016).</p>
+      <p><b>Q4</b> Thumbnail- und CTR-Studien zu Gesichtern und Blickkontakt.</p>
+      <p><b>Q5</b> Nielsen Norman Group, «Carousel Usability» und «Auto-Forwarding Carousels».</p>
+      <p><b>Q6</b> Guo, Kim, Rubin (2014): «How Video Production Affects Student Engagement», ACM Learning at Scale, DOI 10.1145/2556325.2566239; Kim et al. (2014): «Understanding In-Video Dropouts and Interaction Peaks».</p>
+      <p><b>Q7</b> MIT OpenCourseWare / 3Play Media (Umfrage); Frechette und Morris, USF St. Petersburg (2019).</p>
+      <p><b>Q8</b> Facebook-interne Studie zu Untertiteln.</p>
+      <p><b>Q9</b> Marketing Science (Dezember 2025), randomisierte Feldstudie zu Weekly- gegen Binge-Release.</p>
+      <p><b>Q10</b> Krishnan und Sitaraman (Akamai / UMass Amherst), «Video Stream Quality Impacts Viewer Behavior».</p>
+      <p><b>Q11</b> ARD/ZDF-Medienstudie 2025, Media Perspektiven 29/2025 und 32/2025. <a href="https://www.media-perspektiven.de/publikationsarchiv/2025/detailseite-2025/zunehmend-digital-zur-mediennutzung-des-publikums-ab-50-jahren">Publikum ab 50 Jahren</a> · <a href="https://www.media-perspektiven.de/fileadmin/user_upload/media-perspektiven/pdf/2025/MP_32_2025_ARD_ZDF-Medienstudie_Trends_bei_den_Video-Streamingplattformen.pdf">Trends bei den Video-Streamingplattformen</a></p>
+      <p><b>Q12</b> Tubular Labs (2025). 69 % der YouTube-Views mobil.</p>
+      <p><b>Q13</b> «Optimizing mobile app design for older adults», Aging Clinical and Experimental Research (2025). <a href="https://link.springer.com/article/10.1007/s40520-025-03157-7">link.springer.com</a></p>
+      <p><b>Q14</b> Edison Research, Infinite Dial 2026; Cumulus Media Podcast Consumer. <a href="https://riverside.com/blog/podcast-statistics">riverside.com</a> · <a href="https://backlinko.com/podcast-stats">backlinko.com</a></p>
+      <p><b>Q15</b> eMarketer, «FAQ on podcasting» (2026), zitiert Bloomberg. <a href="https://www.emarketer.com/insights/the-podcast-industry-report-statistics">emarketer.com</a></p>
+      <p><b>Q16</b> BizWest (5. Mai 2026) zu Gaia; Preisseite von gaia.com. <a href="https://bizwest.com/2026/05/05/gaia-to-shift-customer-acquisition-focus-from-third-party-video-streaming-platforms/">bizwest.com</a> · <a href="https://www.gaia.com/invite/join">gaia.com</a></p>
+      <p><b>Q17</b> Nebula, Berichte 2025/26. Rund 680 000 Abonnenten.</p>
+      <p><b>Q18</b> Contrary Research, MasterClass-Profil.</p>
+      <p><b>Q19</b> Antenna, «State of Subscriptions» Q3 2025/2026.</p>
+      <p><b>Q20</b> Mailchimp, Benchmarks zu segmentierten Kampagnen.</p>
+      <p><b>Q21</b> ARTE (Relaunch 2017); ARD-Mediathek-Konzeption.</p>
+      <p><b>Q22</b> TED.com, Redesign 2014 mit interaktivem Transkript.</p>
+      <p><b>Q23</b> CuriosityStream Investor Relations. Über 85 % der Direktabonnenten auf Jahresplänen.</p>
+      <p><b>Q24</b> ZEIT Akademie, Startseite und häufige Fragen, abgerufen am 16. September 2026. 192 Katalogeinträge, davon 49 Varianten – ausgezählt im Quelltext der Seite. <a href="https://www.zeitakademie.de/">zeitakademie.de</a></p>
+    </div>
+  </section>
+
+  </div><!-- /.kapitel -->
+</main>
+
+<div class="vleiste" role="group" aria-label="Vortrag steuern">
+  <button class="btn ghost" type="button" id="vzurueck" aria-label="Kapitel zurück">←</button>
+  <span class="stand" id="vstand">1 / 19</span>
+  <button class="btn ghost" type="button" id="vvor" aria-label="Kapitel vor">→</button>
+  <button class="btn" type="button" id="vnotizen" aria-pressed="false">Notizen</button>
+  <button class="btn" type="button" id="vende">Beenden</button>
+</div>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Kommunikation</strong> · Entwurfsgrundlagen «Goetheanum Sehen»</span>
+    <span><a href="wireframe.html">Prototyp</a> · <a href="../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var kapitel = Array.prototype.slice.call(document.querySelectorAll("main section[id]"));
+
+  /* --- Kapitelnavigation: eine Quelle (data-titel/data-gruppe), zwei Gestalten
+         – Sidenav am Schreibtisch, Sprungmenü auf dem Handy. -------------- */
+  var liste = document.getElementById("kapitelliste");
+  var letzteGruppe = "";
+  kapitel.forEach(function (s, i) {
+    var gruppe = s.getAttribute("data-gruppe");
+    if (gruppe && gruppe !== letzteGruppe) {
+      var g = document.createElement("span");
+      g.className = "kicker grp";
+      g.textContent = gruppe;
+      liste.appendChild(g);
+      letzteGruppe = gruppe;
+    }
+    var a = document.createElement("a");
+    a.href = "#" + s.id;
+    a.innerHTML = '<span class="nr">' + (i + 1) + '</span><span>' + s.getAttribute("data-titel") + '</span>';
+    liste.appendChild(a);
+  });
+  var navlinks = Array.prototype.slice.call(liste.querySelectorAll("a"));
+
+  function markiere(i) {
+    navlinks.forEach(function (a, j) {
+      if (j === i) { a.setAttribute("aria-current", "page"); } else { a.removeAttribute("aria-current"); }
+    });
+    var an = navlinks[i];
+    if (an && liste.scrollWidth > liste.clientWidth) {
+      an.scrollIntoView({ block: "nearest", inline: "center" });
+    }
+  }
+
+  /* Scroll-Spy: das oberste Kapitel, das im oberen Drittel steht, gilt. */
+  if ("IntersectionObserver" in window) {
+    var sichtbar = new Set();
+    var beobachter = new IntersectionObserver(function (eintraege) {
+      eintraege.forEach(function (e) {
+        if (e.isIntersecting) { sichtbar.add(e.target); } else { sichtbar.delete(e.target); }
+      });
+      if (document.body.classList.contains("vortrag")) return;
+      for (var i = 0; i < kapitel.length; i++) {
+        if (sichtbar.has(kapitel[i])) { markiere(i); return; }
+      }
+    }, { rootMargin: "-10% 0px -65% 0px", threshold: 0 });
+    kapitel.forEach(function (s) { beobachter.observe(s); });
+  }
+
+  /* --- Beleg: dreissig Kacheln gegen vier Zeilen ----------------------- */
+  var seg = document.getElementById("auswahl-seg");
+  if (seg) {
+    var flaechen = { kacheln: document.getElementById("auswahl-kacheln"), zeilen: document.getElementById("auswahl-zeilen") };
+    seg.addEventListener("click", function (ev) {
+      var b = ev.target.closest("button[data-zeigt]");
+      if (!b) return;
+      var zeigt = b.getAttribute("data-zeigt");
+      seg.querySelectorAll("button").forEach(function (x) {
+        x.setAttribute("aria-pressed", x === b ? "true" : "false");
+      });
+      Object.keys(flaechen).forEach(function (k) { flaechen[k].hidden = (k !== zeigt); });
+    });
+  }
+
+  /* --- Geräterahmen: Seitentyp und Inventar im Prototyp ---------------- */
+  var ziel = /^https?:/.test(location.protocol) ? location.origin : "*";
+  function anRahmen(name, daten) {
+    var f = document.getElementById("rahmen-" + name);
+    if (f && f.contentWindow) { f.contentWindow.postMessage(daten, ziel); }
+  }
+  document.querySelectorAll(".seg[data-rahmen]").forEach(function (gruppe) {
+    var name = gruppe.getAttribute("data-rahmen");
+    gruppe.addEventListener("click", function (ev) {
+      var b = ev.target.closest("button[data-seite]");
+      if (!b) return;
+      gruppe.querySelectorAll("button").forEach(function (x) {
+        x.setAttribute("aria-pressed", x === b ? "true" : "false");
+      });
+      anRahmen(name, { seite: b.getAttribute("data-seite") });
+    });
+  });
+  document.querySelectorAll("button[data-inventar]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var an = b.getAttribute("aria-pressed") !== "true";
+      b.setAttribute("aria-pressed", an ? "true" : "false");
+      anRahmen(b.getAttribute("data-inventar"), { inventar: an });
+    });
+  });
+
+  /* --- Vortragsmodus: eine Klasse auf <body>, wenig JS, keine Bibliothek -- */
+  var jetzt = 0;
+  var balken = document.querySelector(".fortschritt i");
+  var stand = document.getElementById("vstand");
+
+  function zeige(i) {
+    jetzt = Math.max(0, Math.min(kapitel.length - 1, i));
+    kapitel.forEach(function (s, j) {
+      s.classList.toggle("jetzt", j === jetzt);
+      if (j === jetzt) {
+        s.setAttribute("tabindex", "-1");
+        var d = s.querySelector(".notizen");
+        if (d) { d.open = document.body.classList.contains("notizen-an"); }
+      }
+    });
+    balken.style.width = ((jetzt + 1) / kapitel.length * 100) + "%";
+    stand.textContent = (jetzt + 1) + " / " + kapitel.length;
+    markiere(jetzt);
+    window.scrollTo(0, 0);
+    kapitel[jetzt].focus({ preventScroll: true });
+  }
+
+  function starte() {
+    var i = navlinks.findIndex(function (a) { return a.hasAttribute("aria-current"); });
+    document.body.classList.add("vortrag");
+    zeige(i < 0 ? 0 : i);
+  }
+
+  function beende() {
+    document.body.classList.remove("vortrag", "notizen-an");
+    kapitel.forEach(function (s) { s.classList.remove("jetzt"); });
+    kapitel[jetzt].scrollIntoView();
+  }
+
+  document.getElementById("vortragbtn").addEventListener("click", starte);
+  document.getElementById("vende").addEventListener("click", beende);
+  document.getElementById("vvor").addEventListener("click", function () { zeige(jetzt + 1); });
+  document.getElementById("vzurueck").addEventListener("click", function () { zeige(jetzt - 1); });
+  var nbtn = document.getElementById("vnotizen");
+  function notizen() {
+    var an = document.body.classList.toggle("notizen-an");
+    nbtn.setAttribute("aria-pressed", an ? "true" : "false");
+    var d = kapitel[jetzt].querySelector(".notizen");
+    if (d) { d.open = an; }
+  }
+  nbtn.addEventListener("click", notizen);
+
+  document.addEventListener("keydown", function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var f = document.activeElement;
+    if (f && /^(INPUT|TEXTAREA|SELECT)$/.test(f.tagName)) return;
+    if (!document.body.classList.contains("vortrag")) return;
+    if (e.key === "Escape") { beende(); e.preventDefault(); return; }
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { zeige(jetzt + 1); e.preventDefault(); return; }
+    if (e.key === "ArrowLeft" || e.key === "PageUp") { zeige(jetzt - 1); e.preventDefault(); return; }
+    if (e.key === "n" || e.key === "N") { notizen(); e.preventDefault(); }
+  });
+
+  /* Wischen – nur waagrecht und nur im Vortragsmodus. */
+  var x0 = null, y0 = null;
+  document.addEventListener("touchstart", function (e) {
+    if (!document.body.classList.contains("vortrag") || e.touches.length !== 1) { x0 = null; return; }
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener("touchend", function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    x0 = null;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    zeige(jetzt + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

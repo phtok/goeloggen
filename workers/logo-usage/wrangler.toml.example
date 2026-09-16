@@ -1,0 +1,18 @@
+name = "goetheanum-logo-usage"
+main = "logo-usage-worker.js"
+compatibility_date = "2025-01-01"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGINS = "https://phtok.github.io,https://grafik.goetheanum.ch,null"
+
+# Set after creating the D1 database:
+# npx --yes wrangler@4 d1 create goetheanum-logo-usage
+[[d1_databases]]
+binding = "DB"
+database_name = "goetheanum-logo-usage"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+# Recommended secrets:
+# npx --yes wrangler@4 secret put USAGE_HASH_SALT
+# npx --yes wrangler@4 secret put REPORT_TOKEN

@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum Schriften – Neuerungen v2.6</title>
+<meta name="description" content="Vorschau aller Neuerungen der Goetheanum Schriften v2.6: typografische Spatien, geschützter Bindestrich, Ziffern-Features (pnum/onum/tnum) und der Mediävalziffern-Entwurf." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Leise.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Klar.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"G Variabel";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.7.woff2") format("woff2");font-weight:190 725;font-display:swap}
+  /* Farben/Schrift/Hell-Dunkel aus tokens.css/base.css – nur seiten-eigene Werte. */
+  :root{--maxw:880px;--good:#3f8f5f}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:"G Klar","Helvetica Neue",Arial,sans-serif;
+       line-height:1.55;font-size:16.5px;-webkit-font-smoothing:antialiased;hyphens:auto;-webkit-hyphens:auto}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  a{color:var(--gold-ink)}
+  .hero{padding-block:58px 8px}
+  /* Kicker: kanonische Rolle aus base.css (.kick) nutzen – DS04 */
+  h1{text-wrap:balance}
+  .lede{max-width:48ch;margin-top:14px;text-wrap:pretty}
+  section{padding:40px 0;border-top:1px solid var(--line-soft)}
+  .sec{color:var(--gold-ink);font-size:var(--t-small)}
+  h2{margin:4px 0 6px;text-wrap:balance}
+  h3{font-size:16px;margin:24px 0 8px}
+  p{max-width:54ch;text-wrap:pretty}
+  p.dim{color:var(--muted)}
+  .laut{font-family:"G Laut"}.leise{font-family:"G Leise"}
+  /* Farbe/Grösse kommen aus der kanonischen .note-Rolle (base.css) – DS04 */
+  .note{border-left:2px solid var(--gold);background:var(--soft);padding:10px 14px;border-radius:0 10px 10px 0;
+        margin:14px 0;max-width:54ch}
+  code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--soft);border:1px solid var(--line-soft);border-radius:5px;padding:1px 6px}
+  /* Ziffern-Demo */
+  .figs{display:grid;grid-template-columns:1fr;gap:10px;margin:14px 0;max-width:680px}
+  .figcard{border:1px solid var(--line-soft);border-radius:12px;padding:14px 18px;background:var(--soft)}
+  .figcard .lab{font-size:var(--t-small);letter-spacing:.03em;color:var(--gold-ink);margin-bottom:6px}
+  .figrow{font-size:30px;line-height:1.25;letter-spacing:.04em}
+  .figrow small{font-size:18px;color:var(--muted);letter-spacing:0}
+  .tnum{font-feature-settings:"tnum" 1,"lnum" 1}
+  .pnum{font-feature-settings:"pnum" 1,"lnum" 1}
+  .onum{font-feature-settings:"onum" 1}
+  /* Variable stage */
+  .vstage{border:1px solid var(--line-soft);border-radius:14px;background:var(--soft);padding:24px 22px;margin:16px 0;max-width:760px}
+  .vsample{font-family:"G Variabel";font-weight:440;font-size:clamp(30px,6vw,52px);line-height:1.15;letter-spacing:.01em;
+           outline:none;text-wrap:balance;font-feature-settings:normal}
+  .vsample:focus{background:color-mix(in srgb,var(--gold) 8%,transparent);border-radius:8px}
+  .vcontrols{display:flex;align-items:center;gap:18px 22px;flex-wrap:wrap;margin-top:20px}
+  .vcontrols input[type=range]{flex:1;min-width:200px;accent-color:var(--gold-ink);height:4px}
+  .vcontrols .readout{font-size:var(--t-small);color:var(--muted);white-space:nowrap}
+  .vcontrols .readout b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .vcontrols label{font-size:var(--t-small);color:var(--muted);display:flex;align-items:center;gap:7px;cursor:pointer;white-space:nowrap}
+  .vcontrols label input{accent-color:var(--gold-ink)}
+  .vfeat{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .vfeat button{font:inherit;font-size:var(--t-small);color:var(--muted);background:var(--field-bg);border:1px solid var(--line);
+                border-radius:20px;padding:4px 13px;cursor:pointer}
+  .vfeat button[aria-pressed=true]{color:var(--gold-ink);border-color:var(--gold);background:var(--soft)}
+  /* tabular alignment demo */
+  .align{display:inline-grid;gap:2px;border:1px solid var(--line-soft);border-radius:10px;padding:10px 16px;background:var(--soft);text-align:right;font-size:20px;min-width:160px}
+  .twocol{display:flex;gap:18px;flex-wrap:wrap;align-items:start;margin-top:8px}
+  .twocol figcaption{font-size:var(--t-small);color:var(--muted);margin-top:6px;text-align:center}
+  /* before / after */
+  .ba{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;max-width:640px}
+  @media(max-width:560px){.ba{grid-template-columns:1fr}}
+  .ba>div{border:1px solid var(--line-soft);border-radius:10px;padding:10px 14px;background:var(--soft);font-size:18px}
+  .ba .t{font-size:var(--t-small);letter-spacing:.02em;margin-bottom:4px}
+  .ba .no .t{color:var(--bad)} .ba .yes .t{color:var(--good)}
+  /* spatien ruler */
+  .ruler{display:grid;grid-template-columns:auto 1fr auto;gap:10px 16px;align-items:center;max-width:560px;margin:14px 0}
+  .ruler .nm{font-size:var(--t-small);color:var(--muted)}
+  .ruler .cp{font-family:ui-monospace,Menlo,monospace;font-size:var(--t-small);color:var(--gold-ink);text-align:right}
+  .ruler .bar{font-size:34px;white-space:nowrap}
+  .ruler .bar i{color:var(--gold);font-style:normal}
+  /* draft image */
+  .draft{width:100%;max-width:760px;border:1px solid var(--line);border-radius:12px;margin-top:12px;display:block}
+  .pill{display:inline-block;font-size:var(--t-small);color:var(--bad);border:1px solid var(--bad);border-radius:20px;padding:2px 10px;margin-bottom:8px}
+  footer{border-top:1px solid var(--line);padding:30px 0 60px;color:var(--muted);font-size:var(--t-small)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-section="schrift" data-active="vorschau"
+        data-onpage="Variabel:#variabel|Ziffern:#ziffern|Spatien:#spatien|Handbuch:#handbuch"></script>
+
+<main><div class="wrap">
+  <div class="hero">
+    <div class="kick">Goetheanum Schriften · Vorschau</div>
+    <h1>Neuerungen in <span class="laut">v2.6</span>.</h1>
+    <p class="lede">Was die reparierte Schrift jetzt zusätzlich kann – live in der echten Schrift gesetzt: der Variable Font mit vollem Funktionsumfang, proportionale und tabellarische Ziffern, typografische Spatien und der geschützte Bindestrich.</p>
+  </div>
+
+  <section id="variabel">
+    <span class="sec">Neu · Variable Font</span>
+    <h2>Ein Gewicht, stufenlos – jetzt mit allem.</h2>
+    <p>Der Variable Font trägt jetzt denselben Funktionsumfang wie die festen Schnitte: die <span class="laut">f-Ligaturen</span> – aus den originalen Zeichnungen gewichtsrichtig interpoliert –, proportionale und tabellarische Ziffern, die Maßzeichen und die schlummernde 0. Alles stufenlos von Flüstern (190) bis Schreien (725). Text anklicken und selbst schreiben.</p>
+    <div class="vstage">
+      <div class="vsample" id="vsample" contenteditable="true" spellcheck="false">schaffen · Auflage · Grafik · 1914‒1918</div>
+      <div class="vcontrols">
+        <input type="range" id="wght" min="190" max="725" value="440" step="1" aria-label="Gewicht">
+        <span class="readout">wght <b id="wval">440</b> · <span id="wname">Klar</span></span>
+        <label><input type="checkbox" id="zeroBox"> schlummernde 0 <code>zero</code></label>
+        <label><input type="checkbox" id="tnumBox"> tabellarisch <code>tnum</code></label>
+      </div>
+      <div class="vfeat" id="vfeat">
+        <button data-set="schaffen · Auflage · Grafik · 1914‒1918" aria-pressed="true">Ligaturen</button>
+        <button data-set="11.10 Uhr · 1.000 Plätze · 47° 32′ 18″">Ziffern &amp; Maße</button>
+        <button data-set="Lebendige Formen wachsen">Freier Satz</button>
+      </div>
+    </div>
+    <p class="dim">f-Ligaturen, das überschwingende Wortende-ff, Prime &amp; Doppelprime und die geschrägte 0 – live auf jedem Gewicht, in <em>einer</em> Datei.</p>
+    <div class="note">Im Web genügt <code>font-variation-settings:"wght" 440</code> (190–725). OpenType-Features wie <code>tnum</code> oder <code>zero</code> gelten gleichermaßen für den Variable Font.</div>
+  </section>
+
+  <section id="ziffern">
+    <span class="sec">Neu · Ziffern-Features</span>
+    <h2>Drei Ziffernsätze.</h2>
+    <p>Im Laufenden setzt die Schrift jetzt <span class="laut">proportionale</span> Ziffern – die schmale 1 drängelt nicht mehr, Jahres- und Geldzahlen wirken ruhiger. Für Tabellen schaltet <code>tnum</code> auf dicktengleiche Ziffern, die sauber untereinander stehen. Dazu Kurzziffern auf x-Höhe (<code>onum</code>). Alles in einer Schrift, per OpenType-Feature.</p>
+    <div class="figs">
+      <div class="figcard"><div class="lab">STANDARD · proportional · fürs Laufende</div>
+        <div class="figrow">0123456789&nbsp;&nbsp;<small>CHF 1487 · Seite 1234 · 2026</small></div></div>
+      <div class="figcard"><div class="lab">TABELLARISCH · tnum · für Tabellen</div>
+        <div class="figrow tnum">0123456789&nbsp;&nbsp;<small>CHF 1487 · Seite 1234 · 2026</small></div></div>
+      <div class="figcard"><div class="lab">KURZZIFFERN · onum · gewichtskorrigiert</div>
+        <div class="figrow onum">0123456789&nbsp;&nbsp;<small>CHF 1487 · Seite 1234 · 2026</small></div></div>
+    </div>
+    <h3>Wann tabellarisch?</h3>
+    <p>Sobald Zahlen untereinander fluchten sollen. Links der Standard (proportional, fürs Laufende – fluchtet nicht), rechts mit <code>tnum</code> (dicktengleich, die Kolonne steht):</p>
+    <div class="twocol">
+      <figure><div class="align">1487<br>23<br>1906<br>508</div><figcaption>Standard · fluchtet nicht</figcaption></figure>
+      <figure><div class="align tnum">1487<br>23<br>1906<br>508</div><figcaption>tnum · fluchtet</figcaption></figure>
+    </div>
+    <div class="note">Im Web: <code>font-feature-settings:"tnum" 1</code> für Tabellen, <code>"onum" 1</code> für Kurzziffern. In Office über die OpenType-Ziffern-Dialoge, wo verfügbar. Standard ohne Angabe ist proportional. Gilt für die festen Schnitte wie für den Variable Font.</div>
+  </section>
+
+  <section id="spatien">
+    <span class="sec">Neu · Spatien</span>
+    <h2>Die festen, schmalen Leerzeichen.</h2>
+    <p>Bisher trug die Familie nur Wortzwischenraum und das volle geschützte Leerzeichen. Jetzt enthält sie alle typografischen Spatien – allen voran das <span class="laut">schmale geschützte Leerzeichen</span> (U+202F, 1/8 Geviert), das die Hausregeln vor Einheiten, Prozent und in Zahlen verlangen. Es bricht nie um und wirkt nicht weitläufig.</p>
+    <div class="ba">
+      <div class="no"><div class="t">vorher (Fremdschrift sprang ein)</div>10% · 1000000 · z.B. · 5kg</div>
+      <div class="yes"><div class="t">jetzt (aus der Schrift)</div>10&#8239;% · 1&#8239;000&#8239;000 · z.&#8239;B. · 5&#8239;kg</div>
+    </div>
+    <h3>Die Breiten im Vergleich</h3>
+    <p class="dim">Jedes Leerzeichen zwischen zwei Marken – so wird die Breite sichtbar:</p>
+    <div class="ruler">
+      <div class="nm">Geviert</div><div class="bar"><i>|</i>&#8195;<i>|</i></div><div class="cp">U+2003</div>
+      <div class="nm">Halbgeviert (En)</div><div class="bar"><i>|</i>&#8194;<i>|</i></div><div class="cp">U+2002</div>
+      <div class="nm">Viertelgeviert</div><div class="bar"><i>|</i>&#8197;<i>|</i></div><div class="cp">U+2005</div>
+      <div class="nm">Ziffernspatie</div><div class="bar"><i>|</i>&#8199;<i>|</i></div><div class="cp">U+2007</div>
+      <div class="nm">Schmalspatie (Thin)</div><div class="bar"><i>|</i>&#8201;<i>|</i></div><div class="cp">U+2009</div>
+      <div class="nm laut">schmal-geschützt · Hausnorm</div><div class="bar"><i>|</i>&#8239;<i>|</i></div><div class="cp">U+202F</div>
+      <div class="nm">Haarspatie</div><div class="bar"><i>|</i>&#8202;<i>|</i></div><div class="cp">U+200A</div>
+      <div class="nm">geschützt, voll (NBSP)</div><div class="bar"><i>|</i>&#160;<i>|</i></div><div class="cp">U+00A0</div>
+      <div class="nm">Wortabstand</div><div class="bar"><i>|</i> <i>|</i></div><div class="cp">U+0020</div>
+    </div>
+    <h3>Geschützter Bindestrich</h3>
+    <p>Neu auch U+2011: ein Bindestrich, der nie umbricht. <code>Schrift&#8209;Paket</code> bleibt zusammen, wo der gewöhnliche Bindestrich trennen dürfte.</p>
+    <div class="note">Enthalten in Leise, Klar und Laut – und in der Variable (dort folgt der geschützte Bindestrich sogar dem Gewicht).</div>
+  </section>
+
+  <section id="handbuch">
+    <span class="sec">Auch neu · Handbuch</span>
+    <h2>Typografie, Fassung 2.</h2>
+    <p>Das Regel-Handbuch wurde einer strengen Fachprüfung unterzogen und hält jetzt seine eigenen Regeln: korrigierte Tausender und Spatien, geschärfte Einfachauszeichnung (G01), neue Regeln zu Ziffern (G25), Lesesituationen (G27) und Kontrast (G28), die Schriftwahl S01 mit den Grenzen der Schrift – und eine <span class="laut">Marginalspalte</span> nach dem Vorbild von System B.</p>
+    <p><a href="typografie.html">Zum Handbuch →</a> · <a href="schriften.html">Zu den Schriften →</a> · <a href="assets/fonts/goetheanum/README.md">Changelog v2.6 →</a></p>
+  </section>
+</div></main>
+
+<footer><div class="wrap">
+  Goetheanum Schriften · Vorschau v2.6 · in der echten Schrift gesetzt ·
+  <a href="schriften.html">Schriften</a> · <a href="typografie.html">Typografie</a>
+</div></footer>
+<script>
+(function(){
+  var s=document.getElementById('wght'), v=document.getElementById('vsample'),
+      wv=document.getElementById('wval'), wn=document.getElementById('wname'),
+      zb=document.getElementById('zeroBox'), tb=document.getElementById('tnumBox');
+  if(!s||!v) return;
+  function name(w){return w<=227?'Flüstern':w<=352?'Leise':w<=510?'Klar':w<=630?'Deutlich':w<=702?'Laut':'Schreien';}
+  function upd(){
+    v.style.fontVariationSettings='"wght" '+s.value;
+    wv.textContent=s.value; if(wn) wn.textContent=name(+s.value);
+    var f=[]; if(zb&&zb.checked) f.push('"zero" 1'); if(tb&&tb.checked) f.push('"tnum" 1');
+    v.style.fontFeatureSettings=f.length?f.join(','):'normal';
+  }
+  s.addEventListener('input',upd);
+  if(zb) zb.addEventListener('change',upd);
+  if(tb) tb.addEventListener('change',upd);
+  document.querySelectorAll('#vfeat button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#vfeat button').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');
+      v.textContent=b.getAttribute('data-set');
+    });
+  });
+  upd();
+})();
+</script>
+</body>
+</html>

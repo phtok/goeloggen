@@ -1,0 +1,309 @@
+/* =============================================================================
+   Goetheanum CI – Design-Tokens (eine Quelle der Wahrheit)
+   -----------------------------------------------------------------------------
+   Farben, Typo, Maße, Radien, beide Schriften, Hell/Dunkel. Jedes Tool bindet
+   diese Datei ein und ist allein durch Wiederverwendung im Hausbild.
+
+   Schrift-Grundsatz (robust, mobil-first):
+   • Goetheanum = DISPLAY: Titel, Kicker, Navigation, Knöpfe – kurze, starke Texte.
+   • Source Sans 3 = LESETEXT: Fliesstext, Beschreibungen, Tabellen, kleine Grade,
+     Formularfelder. Die Display-Grotesk wird bei kleinen/langen Texten unleserlich
+     (dünne, kontrastreiche Striche brechen weg) – darum übernimmt eine echte
+     Textschrift alles, was gelesen statt geschaut wird.
+
+   Maschinenlesbare Fassung: design-system/tokens.json (DTCG). Kanon der Typo-
+   Regeln & Farben: assets/typografie/goetheanum-typo-tokens.json (Driftwächter:
+   tools/typo-sync.py).
+   ============================================================================= */
+
+/* --- Hausschrift: Goetheanum Variable (Display) ---------------------------- */
+@font-face{
+  font-family:"Goetheanum";
+  src:url("../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.7.woff2") format("woff2"),
+      url("../assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.7.woff") format("woff");
+  font-weight:190 725; font-style:normal; font-display:swap;
+  /* B5: Zeilenbox auf die Typo-Metrik normieren (750/-250). Die Schrift trägt
+     usWinAscent 1114 (hohe Streukontur) – ohne Override entstünde je Face ein
+     anderer Durchschuss und versetzte Grundlinien. Werte für BEIDE Faces gleich,
+     damit Goetheanum und Source auf derselben Grundlinie sitzen. Der Font-Bug
+     selbst ist separat behoben (U+01FA, #213/#218), damit PPTX/E-Mail-Export
+     ohne dieses CSS ebenfalls stimmt. */
+  ascent-override:75%; descent-override:25%; line-gap-override:0%;
+}
+/* --- Lesetext: Source Sans 3 (selbst gehostet, OFL) ------------------------ */
+/* B4: size-adjust:103% (500/486) gleicht die x-Höhe an Goetheanum an – gleiche px
+   ergeben gleiche wahrgenommene Grösse, und der Fallback springt beim Laden nicht. */
+@font-face{
+  font-family:"Source Sans 3"; font-weight:400; font-style:normal; font-display:swap;
+  size-adjust:103%; ascent-override:75%; descent-override:25%; line-gap-override:0%;
+  src:url("../assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Source Sans 3"; font-weight:600; font-style:normal; font-display:swap;
+  size-adjust:103%; ascent-override:75%; descent-override:25%; line-gap-override:0%;
+  src:url("../assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Source Sans 3"; font-weight:400; font-style:italic; font-display:swap;
+  size-adjust:103%; ascent-override:75%; descent-override:25%; line-gap-override:0%;
+  src:url("../assets/fonts/goetheanum/Fallback/SourceSans3-Italic.woff2") format("woff2");
+}
+
+:root{
+  /* --- Markenfarben ------------------------------------------------------- */
+  --blue:#0061a9;        /* Markenblau – Zustand/Verweis/Link (hellt im Dunkel auf) */
+  --blue-solid:#0061a9;  /* Volles Blau für gefüllte Aktion-Knöpfe – immer Weiss drauf (6.4:1) */
+  --gold:#d7ab68;        /* Gold – Inhalts-Akzent */
+  --gold-deep:#94702e;   /* Gold dunkel – Auswahl-Fläche, Weiss drauf (4.55:1, WCAG AA) */
+  --gold-ink:#8a6728;    /* Gold als TEXT (Kicker, Links) – 4.89:1 auf --soft, 5.18:1 auf Weiss (WCAG AA); hellt im Dunkel auf */
+
+  /* --- Neutrale Töne ------------------------------------------------------ */
+  --ink:#23272b;         /* Lesetext */
+  --muted:#6b7177;       /* Sekundärtext – jetzt 4.9:1 auf Papier (WCAG AA) */
+  --paper:#fff;          /* Grund */
+  --soft:#faf8f4;        /* gedämpfte Fläche (Karten) */
+  --field-bg:#fff;       /* Eingabefelder, Knöpfe, Pillen */
+  --bar-bg:rgba(255,255,255,.9);  /* klebende Leisten (Kopf, Schublade) */
+  --line:rgba(20,24,28,.10);
+  --scrim:rgba(20,24,28,.32);  /* Schleier hinter Schubladen und Dialogen – deckt den Grund,
+                                  ohne ihn zu löschen. Dunkler als --line, leiser als --stage-veil. */
+  --line-soft:rgba(20,24,28,.055);
+  --bad:#b3261e;         /* Fehler/Warnung */
+  --ok:#3f7d46;          /* Erfolg/Bestätigung als FLÄCHE – Weiss drauf (--on-accent) */
+  --ok-ink:#39703f;      /* Grün als TEXT – 4.92:1 auf grünem Ton über --paper, 4.66:1 über --soft,
+                            5.89:1 auf --paper (WCAG AA). Gold hatte diese Zweitfarbe seit je
+                            (--gold-ink), Grün nicht: Wer --ok als Schrift nahm, landete bei 4.14:1
+                            (gemessen am Merkzeichen «trägt die Aktion», 9.8.2026). Eine Signalfarbe
+                            braucht beide Gestalten, sonst wird die Fläche als Schrift missbraucht. */
+  --on-accent:#fff;      /* Text auf Blau/Gold-Flächen */
+  --on-accent-muted:#ccdff1; /* gedämpfter Sekundärtext auf Blau (Fusszeile/Meta) – 4.7:1 auf --blue (WCAG AA); Weiss bleibt --on-accent. Nicht für Fliesstext auf Gold/Grün (dort <4.5:1). */
+  --ink-print-leise:#6e6f6a; /* leises Strukturbeiwerk auf PAPIERWEISS (Druckwerke:
+                                Kategorie-Titel in Legenden u. ä.) – 5.07:1, B02-fest
+                                für Lesetext; gerechnet im Kartentool, Juli 2026.
+                                Theme-fest: gilt fürs gedruckte Blatt, nicht für
+                                Bildschirmflächen (dort --muted). */
+
+  /* --- Code-Konsole (eigenständige, THEME-FESTE Fläche – gleich in Hell/Dunkel,
+     wie eine Entwickler-Konsole; Syntaxpalette für Dunkel ausgelegt). --------- */
+  --code-bg:#1f2428; --code-bg2:#2b3137; --code-ink:#e8eef2;
+  --code-key:#9ecbff; --code-str:#c3e88d; --code-comment:#7f868d;
+
+  /* --- Bühne (Medien-/Katalogfläche, THEME-FEST dunkel wie die Konsole) -----
+     Für Video-Kacheln und Katalog-Bänder (Webfamilie-Befund §3/§4, Vorbild
+     goetheanum.tv). Kontraste gerechnet: ink 15.3:1, muted 8.2:1 auf stage-bg. */
+  --stage-bg:#14171a; --stage-bg2:#232830; --stage-ink:#e9edf1;
+  --stage-muted:#a9b0b7; --stage-veil:rgba(8,10,12,.62);
+
+  /* --- Sektionsfarben (Identität der Schul-Sektionen) --------------------- */
+  /* Quelle der Wahrheit der Werte: assets/goe-orgs.js (speist die Logo-Engine).
+     Hier als Design-Tokens verfügbar gemacht, damit Sektions-Akzente überall im
+     System gleich heissen. MARKENFEST: kippen NICHT mit Hell/Dunkel – eine
+     Sektionsfarbe ist Identität, kein Flächenton. Als Fläche gilt B01: Text
+     darauf ist Weiss (--on-accent) NUR wo der Kontrast ≥4.5:1 (sonst dunkler
+     Ton der Sektion als Linie/Akzent, nicht als Textgrund). */
+  --sek-goetheanum:#0061a9;  /* = Markenblau */
+  --sek-aas:#a24f8a;         /* Allgemeine Anthroposophische Sektion */
+  --sek-ps:#3b4881;          /* Pädagogische Sektion */
+  --sek-ms:#5f5599;          /* Medizinische Sektion */
+  --sek-nws:#1e7b6e;         /* Naturwissenschaftliche Sektion */
+  --sek-lws:#63b145;         /* Sektion für Landwirtschaft */
+  --sek-sbk:#d072a0;         /* Sektion für Bildende Künste */
+  --sek-ssw:#5168c0;         /* Sektion für Schöne Wissenschaften */
+  --sek-szw:#df4164;         /* Sektion für Sozialwissenschaft */
+  --sek-js:#ff675d;          /* Jugendsektion */
+  --sek-srmk:#598ddc;        /* Sektion für Redende und Musizierende Künste */
+  --sek-mas:#2e54a4;         /* Mathematisch-Astronomische Sektion */
+  --sek-hpise:#f98a3c;       /* Sektion für Heilpädagogik und inklusive soziale Entwicklung */
+  --bereich:#0061a9;         /* Verwaltungs-/Bereichs-Standard = Markenblau (wie die Logo-Daten, goe-orgs.js) */
+  /* Bereiche mit EIGENER Farbe (Quelle goe-orgs.js) – bekommen dieselben Varianten wie
+     die Sektionen (tools/sek-varianten.py). Gärtnerei = Landwirtschaftsgrün (--sek-lws). */
+  --bereich-buehne:#968250;   /* Bühne */
+  --bereich-bauadmin:#b15359; /* Bau-Administration */
+
+  /* Vordergrund AUF der jeweiligen Sektionsfläche (WCAG 1.4.3): Weiss nur, wo es
+     ≥ 4.5:1 hält – sonst ein dunkler Sektionston. Werkzeuge nutzen ausschliesslich
+     --on-sek-*, nie hart #fff. Werte gegen ihre Fläche gerechnet (tools/check-on-sek.py). */
+  --on-sek-goetheanum:#fff;  --on-sek-aas:#fff;    --on-sek-ps:#fff;   --on-sek-ms:#fff;
+  --on-sek-nws:#fff;         --on-sek-ssw:#fff;    --on-sek-mas:#fff;   /* Weiss ≥ 4.5:1 */
+  --on-sek-lws:#12351d;      /* Weiss nur 2.66 → dunkelgrün 5.09:1 */
+  --on-sek-sbk:#46172e;      /* Weiss nur 3.18 → dunkelrosa 4.64:1 */
+  --on-sek-szw:#23060c;      /* Weiss nur 4.14 → dunkelrot 4.60:1 */
+  --on-sek-js:#4a0f0c;       /* Weiss nur 2.86 → dunkelrot 5.39:1 */
+  --on-sek-srmk:#0f2445;     /* Weiss nur 3.35 → dunkelblau 4.61:1 */
+  --on-sek-hpise:#3c2408;    /* Weiss nur 2.41 → dunkelbraun 6.03:1 */
+  --on-bereich-bauadmin:#fff;    /* Weiss 4.94:1 */
+  --on-bereich-buehne:#1e1500;   /* Weiss nur 3.75 → sehr dunkles Braun 4.82:1 (Bühnengold ist ein Mittelton) */
+
+  /* --- Schrift-Familien --------------------------------------------------- */
+  --font-display:"Goetheanum","Helvetica Neue",Arial,sans-serif; /* Titel, Chrome */
+  --font-text:"Source Sans 3","Helvetica Neue",Arial,sans-serif; /* Lesetext, klein/lang */
+  --font:var(--font-display);  /* Standard = Hausschrift (die Stimme bleibt Goetheanum). Source NUR für Langtext via .prose */
+  --font-system:"Helvetica Neue",Arial,sans-serif;
+  --font-mono:ui-monospace,Menlo,Consolas,monospace;
+
+  /* --- Schnitte (Goetheanum Variable) ------------------------------------- */
+  /* Die fünf Schnitte tragen im Haus Namen: Leise · Ruhig · Klar · Deutlich ·
+     Laut. Genau diese Namen sind jetzt auch die Token. Vorher hiessen zwei von
+     ihnen anders (--w-text für Klar, --w-strong für Laut) – wer das Hauswort
+     benutzte und «var(--w-klar)» schrieb, griff ins Leere, und CSS schwieg
+     dazu (gefunden von DS10 in der Werkzeugpost, drei Stellen). Ein
+     Design-System, dessen Vokabular vom Sprachgebrauch des Hauses abweicht,
+     erzeugt genau solche Fehler. Die alten Namen bleiben als Zweitnamen
+     gültig, damit kein Bestand bricht. */
+  --w-leise:265; --w-ruhig:350; --w-klar:440; --w-deutlich:580; --w-laut:680;
+  --w-text:var(--w-klar); --w-strong:var(--w-laut);
+
+  /* --- Typo-Skala (mobil-first, flüssig, inklusiv) ------------------------ */
+  /* Grund in rem → respektiert die Browser-Schriftgröße der Nutzer (WCAG resize,
+     1.4.4). Stand der Erkenntnis 2026: 16px ist das Minimum für Fliesstext, Norm
+     ist ‹bei 16 beginnen und hochskalieren›. Darum: Fliesstext 18–20, Lede 20–23,
+     Beiwerk nie unter 14 (Floor von 13 auf 14 angehoben). Zeilenhöhe ≥1.5 (1.4.12),
+     Klick-/Tippziele ≥24px (2.5.8; wir nutzen 44px, --tap). */
+  --t-micro:0.875rem;                                    /* 14px – Floor, nur Beiwerk (Status, Badges) */
+  --t-small:clamp(0.9375rem, 0.9rem + 0.18vw, 1rem);     /* 15–16px – Meta, Label, Hinweis */
+  --t-body:clamp(1.125rem, 1.06rem + 0.3vw, 1.25rem);    /* 18–20px – Fliesstext */
+  --t-lede:clamp(1.25rem, 1.15rem + 0.45vw, 1.45rem);    /* 20–23px – Lede */
+  --t-h3:clamp(1.25rem, 1.15rem + 0.45vw, 1.45rem);      /* 20–23px */
+  --t-h2:clamp(1.45rem, 1.28rem + 0.8vw, 1.8rem);        /* 23–29px – maßvoll */
+  --t-h1:clamp(1.85rem, 1.5rem + 1.55vw, 2.45rem);       /* 30–39px – kein Plakat */
+  --lh-body:1.66; --lh-tight:1.15;   /* Display-als-Fliesstext braucht Luft (Zeilenabstand) */
+  --measure:62ch;        /* ~66 Zeichen in Source – lineares Lesemaß (G10) */
+
+  /* --- Abstände (4/8/12/16/20/24/28/32) -----------------------------------
+     Die Skala ist LÜCKENLOS. Sie war es nicht: --s5 und --s7 fehlten, und weil
+     CSS ein unbekanntes Token stillschweigend zu nichts auflöst, wurde aus
+     «padding:var(--s5)» ein «padding:0». Genau das war am 9. August 2026 im
+     Sommer-Bericht zu sehen — Zahlenkacheln, deren Schrift auf der Kante klebte.
+     13 Dateien im Repo griffen nach diesen beiden Sprossen. Wer eine Skala mit
+     Löchern baut, baut eine Falle: Die fehlende Sprosse ist die, nach der
+     gegriffen wird. Neue Sprossen darum nur AM STÜCK ergänzen, nie einzeln.
+     Gegen das Wiederauftreten wacht DS10 (unbekanntes Token = Fehler). */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s7:28px; --s8:32px;
+
+  /* --- Pillen-Luft --------------------------------------------------------
+     Jede Pille (Chip, Marke, Merkzeichen) bekommt ihre Luft aus DIESEN zwei
+     Werten – in em, damit sie mit dem Schriftgrad wächst statt bei kleiner
+     Schrift zu ersticken. Gemessen am 9. August 2026: Die Pillen im Repo
+     trugen zwischen 0.14 und 0.67 em senkrechter Luft, also gar keine Regel;
+     die engsten (2px bei 14px Schrift) klebten sichtbar. Waagrecht knapp ein
+     Geviert, weil eine volle Rundung (--r-pill) die Ecken frisst: Was bei
+     einem Rechteck noch Abstand ist, berührt im Oval schon die Kurve. */
+  --pille-y:0.4em; --pille-x:0.95em;
+
+  /* --- Radien, Maße, Fingerziel ------------------------------------------ */
+  --r-control:10px; --r-card:14px; --r-pill:999px;
+  --header-h:74px; --maxw:1080px; --ds-maxw:1080px;
+  --tap:44px;            /* Mindest-Fingerziel (Apple 44, Material 48, WCAG 24) */
+
+  /* --- Schatten ---------------------------------------------------------- */
+  --shadow-card:0 10px 30px rgba(20,24,28,.06);
+
+  color-scheme:light;
+}
+
+/* =============================================================================
+   Dunkelmodus – per Schalter (data-theme) gesetzt; Voreinstellung folgt dem
+   System (nav.js setzt data-theme aus localStorage oder prefers-color-scheme).
+   Forschung: kein reines Schwarz/Weiss, Akzente entsättigen, Gewicht senken
+   (heller Text auf dunklem Grund „blutet"/wirkt fetter).
+   ============================================================================= */
+:root[data-theme="dark"]{
+  --blue:#5aa6e0; --gold:#dfb87a;
+  /* Gesetz: NIE dunkle Schrift auf farbigem Grund. Gold-Pille bleibt dunkles Gold
+     mit weissem Text (4.55:1); Gold als TEXT hellt auf (gold-ink, 6.9:1 auf Dunkel). */
+  --gold-deep:#94702e; --gold-ink:#c79a4f;
+  --ink:#e6e8ea; --muted:#9aa1a8;
+  --paper:#16191c; --soft:#1e2329; --field-bg:#1e2329;
+  --bar-bg:rgba(20,23,26,.85);
+  --line:rgba(255,255,255,.14); --line-soft:rgba(255,255,255,.07);
+  --scrim:rgba(0,0,0,.52);       /* im Dunkel muss der Schleier tiefer greifen als im Hellen */
+  --bad:#e0675e; --ok:#5aa367;   /* on-accent bleibt Weiss – kein dunkler Text auf Akzentflächen */
+  --ok-ink:#6bac76;              /* Grün als Text hellt im Dunkel auf – 5.36:1 auf grünem Ton */
+  /* B7: keine pauschale Gewichtsabsenkung mehr – kleiner Lese-/UI-Text (Knöpfe,
+     Label, Meta, Betonung) behält im Dunkeln sein Hell-Gewicht (Beier). Die
+     Halations-Absenkung greift NUR an grossen Display-Rollen (siehe base.css). */
+  --w-deutlich:580; --w-strong:680;
+  --shadow-card:0 10px 30px rgba(0,0,0,.45);
+  color-scheme:dark;
+}
+
+/* @sek-varianten:start – GENERIERT von tools/sek-varianten.py, nicht von Hand ändern */
+/* --- Sektionsfarben: helle und dunkle Variante (Beschluss 7. September 2026) ---
+   --sek-*-dunkel  matte, tiefe Fläche – Weiss drauf (--on-accent), ≥ 5.5:1, MARKENFEST.
+   --sek-*-hell    leise Tint-Fläche – --ink oder --sek-*-ink drauf; kippt im Dunkel
+                   zu einem stillen, tiefen Ton (Fläche = Theme, B05).
+   --sek-*-ink     die Sektion als TEXT (Kicker, Link) – hell: = dunkler Ton, dunkel:
+                   heller Hauch. Hält ≥ 4.5:1 auf --paper, --soft und --sek-*-hell.
+   Rezept: OKLCH, gleiche Helligkeit je Rolle (dunkel L .47 · hell L .935), Buntheit
+   gedeckelt (matt). Gerechnet: tools/sek-varianten.py · geprüft: tools/check-on-sek.py. */
+:root{
+  --sek-goetheanum-dunkel:#125189; --sek-goetheanum-hell:#ebf5ff; --sek-goetheanum-ink:#004378;
+  --sek-aas-dunkel:#7c3d6a; --sek-aas-hell:#feeef8; --sek-aas-ink:#6d2f5c;
+  --sek-ps-dunkel:#394471; --sek-ps-hell:#eff3ff; --sek-ps-ink:#2d3762;
+  --sek-ms-dunkel:#4f477c; --sek-ms-hell:#f3f2ff; --sek-ms-ink:#413a6d;
+  --sek-nws-dunkel:#1d6157; --sek-nws-hell:#e8f7f4; --sek-nws-ink:#075349;
+  --sek-lws-dunkel:#3e7826; --sek-lws-hell:#ecf7e9; --sek-lws-ink:#2f6a14;
+  --sek-sbk-dunkel:#914b6e; --sek-sbk-hell:#ffeef5; --sek-sbk-ink:#813d5f;
+  --sek-ssw-dunkel:#3f5194; --sek-ssw-hell:#eff3ff; --sek-ssw-ink:#324384;
+  --sek-szw-dunkel:#a32c46; --sek-szw-hell:#ffeff0; --sek-szw-ink:#921939;
+  --sek-js-dunkel:#bd2525; --sek-js-hell:#ffefed; --sek-js-ink:#ab0815;
+  --sek-srmk-dunkel:#3b629e; --sek-srmk-hell:#edf4ff; --sek-srmk-ink:#2d548e;
+  --sek-mas-dunkel:#2c4a88; --sek-mas-hell:#eef4ff; --sek-mas-ink:#1f3c78;
+  --sek-hpise-dunkel:#af5400; --sek-hpise-hell:#fff0e7; --sek-hpise-ink:#9a4900;
+  --bereich-buehne-dunkel:#6c5d37; --bereich-buehne-hell:#f7f3e9; --bereich-buehne-ink:#5e4f2a;
+  --bereich-bauadmin-dunkel:#873f43; --bereich-bauadmin-hell:#ffefef; --bereich-bauadmin-ink:#773136;
+}
+:root[data-theme="dark"]{
+  --sek-goetheanum-hell:#192837; --sek-goetheanum-ink:#8bc0f7;
+  --sek-aas-hell:#31202c; --sek-aas-ink:#eaaad4;
+  --sek-ps-hell:#222632; --sek-ps-ink:#a5b2e0;
+  --sek-ms-hell:#262433; --sek-ms-ink:#b9b4e9;
+  --sek-nws-hell:#1b2a27; --sek-nws-ink:#94ccc1;
+  --sek-lws-hell:#1e2b1a; --sek-lws-ink:#aae197;
+  --sek-sbk-hell:#332028; --sek-sbk-ink:#fbb5d5;
+  --sek-ssw-hell:#202638; --sek-ssw-ink:#a8beff;
+  --sek-szw-hell:#361f22; --sek-szw-ink:#ffaeb6;
+  --sek-js-hell:#36201d; --sek-js-ink:#ffbeb6;
+  --sek-srmk-hell:#1c2737; --sek-srmk-ink:#abccff;
+  --sek-mas-hell:#1e2637; --sek-mas-ink:#98b9f6;
+  --sek-hpise-hell:#342216; --sek-hpise-ink:#ffc6a4;
+  --bereich-buehne-hell:#2a261c; --bereich-buehne-ink:#d5c6a2;
+  --bereich-bauadmin-hell:#342021; --bereich-bauadmin-ink:#f5acad;
+}
+
+/* Ton eines Abschnitts: <div data-sek="nws"> färbt alles darin.
+   --ton Linie/Marke · --ton-dunkel Fläche für Weiss · --ton-hell Hauch für
+   dunklen Text · --ton-ink die Farbe als Schrift. Hausfall ist Gold. */
+[data-sek]{--ton:var(--gold); --ton-dunkel:var(--gold-deep); --ton-hell:color-mix(in srgb,var(--gold) 14%,var(--paper)); --ton-ink:var(--gold-ink);}
+[data-sek="goetheanum"]{--ton:var(--sek-goetheanum); --ton-dunkel:var(--sek-goetheanum-dunkel); --ton-hell:var(--sek-goetheanum-hell); --ton-ink:var(--sek-goetheanum-ink);}
+[data-sek="aas"]{--ton:var(--sek-aas); --ton-dunkel:var(--sek-aas-dunkel); --ton-hell:var(--sek-aas-hell); --ton-ink:var(--sek-aas-ink);}
+[data-sek="ps"]{--ton:var(--sek-ps); --ton-dunkel:var(--sek-ps-dunkel); --ton-hell:var(--sek-ps-hell); --ton-ink:var(--sek-ps-ink);}
+[data-sek="ms"]{--ton:var(--sek-ms); --ton-dunkel:var(--sek-ms-dunkel); --ton-hell:var(--sek-ms-hell); --ton-ink:var(--sek-ms-ink);}
+[data-sek="nws"]{--ton:var(--sek-nws); --ton-dunkel:var(--sek-nws-dunkel); --ton-hell:var(--sek-nws-hell); --ton-ink:var(--sek-nws-ink);}
+[data-sek="lws"]{--ton:var(--sek-lws); --ton-dunkel:var(--sek-lws-dunkel); --ton-hell:var(--sek-lws-hell); --ton-ink:var(--sek-lws-ink);}
+[data-sek="sbk"]{--ton:var(--sek-sbk); --ton-dunkel:var(--sek-sbk-dunkel); --ton-hell:var(--sek-sbk-hell); --ton-ink:var(--sek-sbk-ink);}
+[data-sek="ssw"]{--ton:var(--sek-ssw); --ton-dunkel:var(--sek-ssw-dunkel); --ton-hell:var(--sek-ssw-hell); --ton-ink:var(--sek-ssw-ink);}
+[data-sek="szw"]{--ton:var(--sek-szw); --ton-dunkel:var(--sek-szw-dunkel); --ton-hell:var(--sek-szw-hell); --ton-ink:var(--sek-szw-ink);}
+[data-sek="js"]{--ton:var(--sek-js); --ton-dunkel:var(--sek-js-dunkel); --ton-hell:var(--sek-js-hell); --ton-ink:var(--sek-js-ink);}
+[data-sek="srmk"]{--ton:var(--sek-srmk); --ton-dunkel:var(--sek-srmk-dunkel); --ton-hell:var(--sek-srmk-hell); --ton-ink:var(--sek-srmk-ink);}
+[data-sek="mas"]{--ton:var(--sek-mas); --ton-dunkel:var(--sek-mas-dunkel); --ton-hell:var(--sek-mas-hell); --ton-ink:var(--sek-mas-ink);}
+[data-sek="hpise"]{--ton:var(--sek-hpise); --ton-dunkel:var(--sek-hpise-dunkel); --ton-hell:var(--sek-hpise-hell); --ton-ink:var(--sek-hpise-ink);}
+[data-sek="buehne"]{--ton:var(--bereich-buehne); --ton-dunkel:var(--bereich-buehne-dunkel); --ton-hell:var(--bereich-buehne-hell); --ton-ink:var(--bereich-buehne-ink);}
+[data-sek="bauadmin"]{--ton:var(--bereich-bauadmin); --ton-dunkel:var(--bereich-bauadmin-dunkel); --ton-hell:var(--bereich-bauadmin-hell); --ton-ink:var(--bereich-bauadmin-ink);}
+/* @sek-varianten:ende */
+
+/* --- Welten (Dialekte) – erlaubte Varianz, Ansatz 1 ---------------------------
+   Eine Welt schaltet STIMMUNGS-Tokens um (Flächen, abgeleitete Tinten) – nie
+   Regeln, nie Grade, nie Abstände. Kontraste jeder Welt sind gerechnet, nicht
+   geschätzt (B02). Welten gelten nur im Hellen; Dunkel bleibt die eine Bühne.
+   Erste Welt: ‹warm› — Stilprobe (Experiment, nicht ratifiziert; siehe
+   design-system/stilprobe-warm.html und CHANGELOG). */
+:root[data-welt="warm"]:not([data-theme="dark"]){
+  --paper:#fbf7ee;              /* warmes Papier – ink 14.1:1 */
+  --soft:#f3edde;               /* warme Karte – ink 12.9:1 */
+  --field-bg:#fdfaf2;
+  --bar-bg:rgba(251,247,238,.9);
+  --line:rgba(74,58,26,.14); --line-soft:rgba(74,58,26,.08);
+  --muted:#616669;              /* nachgedunkelt: 4.98:1 auf --soft, 5.44:1 auf --paper */
+  --gold-ink:#7f5e22;           /* nachgedunkelt: 5.10:1 auf --soft, 5.57:1 auf --paper */
+}

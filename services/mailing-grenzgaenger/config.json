@@ -1,0 +1,79 @@
+{
+  "kampagne": "grenzgaenger",
+  "_hinweis": "Grenzgänger-Instanz der Mail-Fabrik (services/mailing-sommer2026/build_editor.py — bauen mit: python3 ../mailing-sommer2026/build_editor.py --quelle . --publish). Ein Segment = ein Griff (g0NN, docs/grenzgaenger/griffe.json). Versand nicht über AC, sondern über services/lead-agent/lead-fang (?aktion=wellen) — die Mails hier sind die Versand-Artefakte, %UNSUBSCRIBELINK% ersetzt die Function je Lead.",
+  "asset_base_url": "https://werkzeuge.goetheanum.ch/apps/grenzgaenger-mails/assets",
+  "editor_app": "apps/grenzgaenger-mails",
+  "editor_kicker": "Grenzgänger",
+  "editor_onpage": "Grenzgänger:../grenzgaenger/|Links:../utm-generator/|Mails:../grenzgaenger-mails/|Ablauf:../kampagnen-drehbuch/",
+  "theme": {
+    "_hinweis": "Grenzgänger-Wellen sprechen als das Haus, nicht als Sommer-Aktion: Haus-Blau statt Rosé, sonst dieselbe bewährte Mail-DNA (Schrift-Beschlüsse 11.7.26).",
+    "akzent": "#0061A9",
+    "akzent_tief": "#004E88",
+    "wash": "#EFF6FC",
+    "tinte": "#232323",
+    "nebel": "#F6F4F2",
+    "gedaempft": "#6E6E6E",
+    "fuss": "#9A9AA6",
+    "font_stack": "'Source Sans 3',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif",
+    "headline_stack": "Goetheanum,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif",
+    "webfonts": [
+      {
+        "family": "Goetheanum",
+        "weight": "700",
+        "url": "https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2"
+      },
+      {
+        "family": "Source Sans 3",
+        "weight": "400",
+        "url": "https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2"
+      },
+      {
+        "family": "Source Sans 3",
+        "weight": "600",
+        "url": "https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2"
+      }
+    ]
+  },
+  "utm_fix": {
+    "utm_source": "mailing",
+    "utm_medium": "email",
+    "utm_campaign": "grenzgaenger"
+  },
+  "sprachen": ["de", "en"],
+  "wellen": {
+    "w1": { "label": "Köder-Einlösung", "versand": "Lead-Zeitpunkt (lead-fang, w1 sofort nach Bestätigung)" },
+    "w2": { "label": "Stärkster Inhalt", "versand": "w1 + 4 Tage (marketing_config.w2_nach_tagen)" },
+    "w3": { "label": "Ehrliche Abo-Einladung", "versand": "w2 + 5 Tage (marketing_config.w3_nach_tagen)" }
+  },
+  "segmente": {
+    "g001": {
+      "label": "Waldorf-Eltern",
+      "rolle": "wirkung",
+      "ziele": ["wos", "gtv"],
+      "wellen_ctas": {
+        "_hinweis": "Ein Button je Welle (Lernbuch: wer das Haus nicht kennt, trifft in der Mail keine Produktwahl). w1 liest, w2 sieht, w3 entscheidet.",
+        "w1": ["wos"],
+        "w2": ["gtv"],
+        "w3": ["wos"]
+      }
+    }
+  },
+  "landing": {
+    "_zu_pruefen": "Vor dem Aktivieren eines Griffs (bereit → live): Ziel-URLs verifizieren und wo nötig auf dedizierte Abo-/Themen-Seiten schärfen — Wurzel-Domains sind der sichere Start, nicht das Optimum.",
+    "wos": {
+      "de": "https://dasgoetheanum.com",
+      "en": "https://dasgoetheanum.com/en"
+    },
+    "gtv": {
+      "de": "https://goetheanum.tv",
+      "en": "https://goetheanum.tv"
+    }
+  },
+  "supabase": {
+    "project_ref": "dagcsnfrlbpxcmdimnrw",
+    "url": "https://dagcsnfrlbpxcmdimnrw.supabase.co",
+    "kommentar_tabelle": "sommer2026_mail_comments",
+    "_kommentar_hinweis": "Bewusst dieselbe Gegenlese-Tabelle wie Sommer 2026 — die Feld-Schlüssel (eltern_w1_de#…) kollidieren nicht, und Erledigt-RPC + Editor-Rechte bestehen schon.",
+    "publishable_key": "sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY"
+  }
+}

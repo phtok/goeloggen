@@ -1,0 +1,230 @@
+{
+  "$schema": "https://goetheanum/design-system/contract.schema.json",
+  "version": "1.25.0",
+  "titel": "Goetheanum Design-System – Struktur-Vertrag",
+  "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
+  "geltungsbereich": {
+    "prüfe": "versionierte *.html mit einem <body> (publizierte Werkzeug- und Schau-Seiten)",
+    "ausgenommen_substr": [
+      "/assets/",
+      "/tools/goetheanum-fontfix/",
+      "archive/",
+      "reference/",
+      "vendor/",
+      "/mails/",
+      "/export/"
+    ],
+    "ausgenommen_dateien": [
+      "design-system/navigation.html"
+    ],
+    "weiterleitungs_stubs": "Root-Stubs ohne eigenes <style>/<link> (reine Redirects) werden übersprungen.",
+    "versand_artefakte": "Konvention: erzeugte Versand-/Export-Artefakte (E-Mail-HTML, Druck-/Download-Ausgaben) wohnen in Ordnern namens mails/ oder export/ — diese sind generell vom Web-Vertrag ausgenommen (Artefakte wie die gedruckte Karte). Neue Generatoren legen ihre Ausgaben dort ab, nicht daneben."
+  },
+  "includes": {
+    "regel": "Pflicht-Includes einbinden: tokens.css UND base.css (Reihenfolge: tokens VOR base; nav.css zusätzlich für Seiten mit globaler Kopfzeile).",
+    "pflicht": [
+      "design-system/tokens.css",
+      "design-system/base.css"
+    ],
+    "hinweis": "Reihenfolge: tokens.css VOR base.css. nav.css zusätzlich für Seiten mit globaler Kopfzeile.",
+    "ds_id": "DS01",
+    "schwere": "fehler"
+  },
+  "farben": {
+    "ds_id": "DS02",
+    "regel": "Farbwerte nur über Tokens (var(--…)). Hartverdrahtete Hex-/rgb()-Farben in color/background/border-color/fill/stroke sind verboten – ausser in Custom-Property-DEFINITIONEN (--x:…), @font-face und url().",
+    "schwere": "fehler",
+    "erlaubte_property_präfixe": [
+      "--"
+    ],
+    "ignorierte_properties": [
+      "box-shadow",
+      "-webkit-box-shadow",
+      "filter",
+      "background-image",
+      "text-shadow"
+    ],
+    "hinweis": "box-shadow/Filter dürfen rgba() für Schatten nutzen. Seiten-eigene Tokens (--good:#…) sind die seltene Ausnahme, kein Normalfall."
+  },
+  "groessen": {
+    "ds_id": "DS03",
+    "regel": "Keine lesbare Schrift unter den Untergrenzen (Stand 2026, inklusiv). font-size in px: Fliesstext ≥18, Meta/Label ≥15, nichts Lesbares <14.",
+    "untergrenze_px": 14,
+    "warnen_unter_px": 14,
+    "schwere": "fehler",
+    "warn_schwere": "hinweis",
+    "hinweis": "Floor von 13 auf 14 angehoben (16px-Norm ‹bei 16 beginnen, hochskalieren›). 14px erlaubt (=--t-micro). Bevorzugt die fluiden Skala-Tokens (--t-body/--t-small/--t-micro/--t-lede/--t-h*) statt fester px."
+  },
+  "rollen": {
+    "ds_id": "DS04",
+    "regel": "Kanonische Textrollen (base.css) NICHT seiten-lokal mit eigener font-size/color redefinieren. Klasse verwenden, nicht neu erfinden.",
+    "schwere": "hinweis",
+    "kanonische_klassen": [
+      "kicker",
+      "kick",
+      "lede",
+      "note",
+      "hint",
+      "help",
+      "desc",
+      "subhead",
+      "meta",
+      "cap",
+      "caption",
+      "legend",
+      "byline",
+      "lab",
+      "role",
+      "readout",
+      "mono",
+      "code",
+      "lese",
+      "prose",
+      "chip",
+      "btn",
+      "seg",
+      "field",
+      "shead",
+      "hero",
+      "lead-title",
+      "card",
+      "band",
+      "kasten",
+      "step-num",
+      "crumbs",
+      "teaser",
+      "event",
+      "filterbar",
+      "stage",
+      "mrow",
+      "mtile",
+      "live",
+      "person",
+      "subscribe",
+      "lit",
+      "bio",
+      "related",
+      "fcols",
+      "mockpair",
+      "mock",
+      "fab",
+      "hero-bild",
+      "app",
+      "sidenav",
+      "cardgrid",
+      "leer"
+    ],
+    "hinweis": "Treffer = Seite definiert .note/.hint/.lede/… selbst. ds-fix kann die lokale Regel entfernen, sobald base.css die Rolle trägt."
+  },
+  "hervorhebung": {
+    "ds_id": "DS05",
+    "regel": "Betonung nur über Gewicht/Laut. Verboten als Hervorhebung: Unterstreichen (text-decoration:underline auf em/strong/Fliesstext), Versalien (text-transform:uppercase auf Kicker/Titel/Betonung), Sperren über Leertasten.",
+    "schwere": "hinweis",
+    "verbotene_muster": [
+      "text-decoration:underline",
+      "text-transform:uppercase"
+    ],
+    "bezug": [
+      "G05",
+      "G23"
+    ],
+    "hinweis": "Links dürfen unterstrichen sein; Treffer auf Betonungs-Selektoren (strong/b/em/.kicker/h1..h4) sind der Verstoss."
+  },
+  "kopfzeile": {
+    "ds_id": "DS06",
+    "regel": "Keine eigene Kopfzeile/Fake-Logo. Die globale Leiste kommt aus nav.js (design-system/nav.js). Seiten setzen keine eigene sticky .ds-header / kein eigenes Marken-Logo im Kopf.",
+    "schwere": "hinweis",
+    "verdächtige_muster": [
+      "class=\"ds-header\"",
+      "class=\"page-head",
+      "<header"
+    ],
+    "hinweis": "Treffer prüfen: nutzt die Seite nav.js? Eigener <header> mit Logo = Verstoss (siehe design-system/index.html, behoben in #161)."
+  },
+  "theme": {
+    "ds_id": "DS07",
+    "regel": "Flächen tokenisiert, damit Hell/Dunkel allein aus den Tokens kippt. Kein hartes #fff/#000/white/black als Flächen- oder Textfarbe.",
+    "schwere": "fehler",
+    "verbotene_literale": [
+      "#fff",
+      "#ffffff",
+      "#000",
+      "#000000",
+      "white",
+      "black"
+    ],
+    "hinweis": "Teilmenge von DS02, separat gemeldet, weil es der häufigste Dunkelmodus-Bruch ist (--paper/--ink/--soft/--field-bg statt #fff)."
+  },
+  "marke": {
+    "ds_id": "DS08",
+    "regel": "Die Marke kommt aus dem Logo-Generator: Seitenköpfe tragen das erzeugte Logo/Lockup (assets/logos/goetheanum-logo.svg, goetheanum-werkzeuge.svg) oder die blanke Marke (goetheanum-marke.svg). Das Favicon (goetheanum-mark-blue.svg, Kachel mit Kasten) ist kein Logo und steht nie als <img>.",
+    "schwere": "hinweis",
+    "verbotene_muster": [
+      "<img[^>]*goetheanum-mark-blue"
+    ],
+    "hinweis": "Ausnahme mit  # ds-ok  auf der Zeile ratifizieren. rel=icon (Favicon) ist der einzige vorgesehene Ort der Kachel."
+  },
+  "css_pruefung": {
+    "regel": "DS02, DS03, DS04, DS05 und DS07 prüfen nicht nur <style>-Blöcke und style=…-Attribute der Seite selbst, sondern auch repo-eigene *.css-Dateien, die eine Seite per <link href> einbindet – derselbe Auflösungsweg, den DS10/check_tokens für Custom Properties schon nutzte. Externe/absolute URLs bleiben aussen vor: was nicht im Repo liegt, kann die Maschine nicht mitlesen.",
+    "ds_ids": [
+      "DS02",
+      "DS03",
+      "DS04",
+      "DS05",
+      "DS07"
+    ],
+    "seit": "1.18.0",
+    "ausloeser": "Befund Konrad (Korrektor), 8. September 2026: eine Seite, deren ganze Gestalt in einer eigenen verlinkten CSS-Datei steht (design-system/familie.css), meldete 0 Fehler – geprüft wurde dort aber nichts. Der Score war Behauptung statt Messung.",
+    "einmal_pro_datei": "Jede verlinkte CSS-Datei wird pro Lauf GENAU EINMAL geprüft, unabhängig davon, wie viele Seiten sie einbinden (base.css/nav.css stecken in über 50 der 63 Seiten) – die Meldung nennt die Zeile in der CSS-Datei selbst und, welche Seite(n) sie einbinden. Für den Score gilt eine Seite trotzdem als nicht konform, wenn eine eingebundene Datei einen Fehler trägt: das gerenderte Blatt hat ihn.",
+    "ausnahme_fundament": "design-system/*.css definiert die kanonischen Rollen (.kicker/.btn/.hint/…) selbst – DS04 (‹lokal redefiniert›) gilt darum nur für Seiten-CSS, das diese Rollen NUTZT (z. B. apps/…/campaign.css), nicht für ihre eigene Quelle. DS02/03/05/07 gelten im Fundament unverändert (Custom-Property-Definitionen --x:… und @font-face bleiben wie in DS02 vorgesehen ausgenommen)."
+  },
+  "score": {
+    "definition": "konforme Seiten / geprüfte Seiten. Konform = kein Verstoss der Schwere ‹fehler›.",
+    "ziel": 1.0
+  },
+  "einbindung": {
+    "ds_id": "DS09",
+    "regel": "Fundament und Assets RELATIV einbinden – absolute phtok.github.io/goeloggen-URLs brechen auf der Custom-Domain (Auslieferung im Root, kein /goeloggen/-Präfix → 404 → ungestylt).",
+    "schwere": "fehler",
+    "verbotenes_muster": "[\"']https://phtok\\.github\\.io/goeloggen/(?:design-system|assets)/|data-root\\s*=\\s*[\"']https://phtok\\.github\\.io/goeloggen/",
+    "hinweis": "Quelle: Vorfall Signatur-Generator (PR #291) – Seite erschien auf werkzeuge.goetheanum.ch ungestylt. Pfadtiefe je Ort: Root design-system/…, App ../../design-system/…"
+  },
+  "barrierefreiheit": {
+    "ds_id": "DS08",
+    "regel": "Die Hausregeln B01–B05 gelten gemessen, nicht behauptet: jede Seite hält die normativen Erfolgskriterien der WCAG 2.2 auf Stufe A und AA.",
+    "schwere": "fehler",
+    "stufen": [
+      "wcag2a",
+      "wcag2aa",
+      "wcag21a",
+      "wcag21aa",
+      "wcag22a",
+      "wcag22aa"
+    ],
+    "werkzeug": "node tools/barrierefreiheit.mjs --check",
+    "pruefung": "Gemessen, nicht gelesen: Chromium lädt jede Seite des Geltungsbereichs auf 390 px (Telefon) und 1440 px (Schreibtisch), blättert sie einmal durch, damit eingeblendete Abschnitte ihre echten Farben zeigen, und lässt axe-core prüfen. Was weiterleitet, wird übersprungen statt gemessen — sonst misst der Lauf die Fehlerseite des Browsers.",
+    "stand": "Berichtend, nicht blockierend: die Erstmessung vom 8. August 2026 hat einen Rückstand ergeben, der in CHANGELOG-a11y.md steht (Abschnitt «Block D»). Erst wenn er abgetragen ist, wird DS08 zum Tor.",
+    "grenze": "Rund ein Drittel der Kriterien ist maschinell prüfbar. Ein grüner Lauf heisst «keine der prüfbaren Regeln verletzt» — nicht «zugänglich». Beschriftungen, Reihenfolge und Verständlichkeit bleiben Sache der Aufmerksamkeit.",
+    "artefakt_dateien": [],
+    "artefakt_hinweis": "Physische Farben sind keine Bildschirmflächen — eine gedruckte Karte ist weiss, weil das Papier weiss ist. Blätter, deren Farben dem Papier gehören, stehen hier; dort entfällt allein die Kontrastprüfung, alle anderen Kriterien gelten weiter. Das ist die Entsprechung zum «# ds-ok» in den Stilblättern: die Maschine schlägt vor, der Mensch ratifiziert."
+  },
+  "tokens": {
+    "ds_id": "DS10",
+    "regel": "Jedes var(--x) muss ein definiertes Token treffen.",
+    "schwere": "fehler",
+    "quellen": [
+      "design-system/tokens.css",
+      "design-system/base.css",
+      "design-system/nav.css"
+    ],
+    "ausnahme": "var(--x, rueckfall) mit Rueckfallwert ist Absicht und wird nicht geprueft.",
+    "hinweis": "CSS loest ein unbekanntes Token still zu nichts auf – aus padding:var(--s5) wird padding:0, ohne Fehlermeldung. Ein Wert, der schweigend verschwindet, ist schlimmer als einer, der bricht: niemand sucht danach."
+  },
+  "verlinktes_css": {
+    "regel": "DS02/DS03/DS04/DS05/DS07 gelten auch für die repo-eigenen CSS-Dateien, die eine Seite per <link> einbindet – nicht nur für ihre <style>-Blöcke. Was das gerenderte Blatt trägt, wird geprüft.",
+    "werkzeug": "tools/ds-lint.py (Abschnitt ‹verlinkte CSS›)",
+    "stand": "tor",
+    "begruendung": "Erstmessung am 8. September 2026: acht Verstösse in base.css und nav.css, die seit der Anhebung des Grössen-Bodens (10. Juli, 13 → 14 px) unsichtbar mitliefen, weil der Prüfer nur ins HTML sah. Sie steckten in 52 bis 60 der 63 Seiten, darum lief die Regel zunächst berichtend – wie DS08 es vormacht. Noch am selben Tag entschieden und behoben; seither Tor.",
+    "tor_schliessen": "Erledigt am 8. September 2026: Rückstand abgetragen, ‹stand› auf ‹tor› gedreht."
+  }
+}

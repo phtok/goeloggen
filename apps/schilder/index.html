@@ -1,0 +1,1093 @@
+<!doctype html>
+<!-- =============================================================================
+     Goetheanum-Werkzeug · SCHILDER
+     -----------------------------------------------------------------------------
+     Editor für Orientierungs- und Raumschilder im Hausbild. Vom Fundament aus
+     gebaut: tokens.css + base.css + nav.css EINGEBUNDEN (nicht kopiert), Farben,
+     Schnitte und Abstände ausschliesslich aus den Tokens.
+
+     Vorlage «Raumschild» nach den bestehenden Hausschildern (Rollschild Grosser
+     Saal, Ausstellungsregeln, Öffnungszeiten). Die tragende Grammatik dieser
+     Schilder ist umgesetzt:
+       · Zweisprachig gepaart – Deutsch (Deutlich) über Englisch (Klar), gleicher
+         Grad. Das ist das Kennzeichen aller Haus-Schilder.
+       · Titelblock, Icon-Regelzeilen (Haus-Icons/-Pfeile), hinterlegte Wechsel-
+         Box für die wechselnde Info, Kicker (Datum) und Fusszeile – je zuschaltbar.
+       · Format-Familie A5–A1, hoch und quer; das Schild skaliert in echten mm und
+         druckt in Originalgrösse.
+
+     Auf dem Schild kommt ausschliesslich die Hausschrift zum Einsatz, dazu die
+     Haus-Icons und -Pfeile (Webfont, per Zeichen/Codepoint gesetzt).
+
+     Regel-IDs, die hier tragen:
+       · G05  Betonung mit Schnitt (Deutlich/Klar), nie Versal/Unterstrich/Sperren.
+       · B01/B02 dunkle Markenschrift auf weissem Schild (Blau auf Weiss ≥4.5:1),
+             nie Text auf Farbfläche.
+       · DS01/DS02/DS07 Pflicht-Includes, nur Token-Farben in der Bedienung. Die
+             Schild-Farben (Markenblau auf Weiss) sind ein physisches Druck-
+             Artefakt, theme-fest – als --sign-* definiert (# ds-ok).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Schilder · Goetheanum</title>
+<meta name="description" content="Orientierungs- und Raumschilder im Hausbild setzen – zweisprachige Zeilen und Haus-Icons einsetzen, Format A5 bis A1 drucken." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  /* Haus-Icons als Webfont – deckt Piktogramme UND Pfeile/Kompass ab. */
+  @font-face{font-family:"G Icons";src:url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2") format("woff2");font-display:block}
+
+  .hero{padding-block:clamp(40px,7vw,64px) var(--s4)}
+  .hero .lede{margin-top:var(--s4);max-width:62ch}
+
+  /* Ethik als Spiel: zweispaltig, Piktogramm + treffender Titel + Häppchen
+     (nach Vorbild der Elf Empfehlungen der E-Mail-Signatur). */
+  .ethik{font-family:var(--font-text)}
+  @media(min-width:720px){.ethik{columns:2;column-gap:var(--s8)}}
+  .et-item{break-inside:avoid;margin:0 0 var(--s6)}
+  .et-item h3{font-family:var(--font-display);font-weight:var(--w-strong);font-size:var(--t-h3);margin:0 0 var(--s2)}
+  .et-item p{font-size:var(--t-small);line-height:1.6;color:var(--ink);margin:0;max-width:46ch}
+  .et-item p a{color:var(--gold-ink);text-decoration:underline;text-underline-offset:.15em}
+  .et-pikto{width:48px;height:48px;display:block;margin-bottom:var(--s2);fill:none;stroke:var(--muted);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .et-pikto .acc{stroke:var(--gold-ink)}
+  .et-pikto .slash{stroke:var(--bad);opacity:.8}
+
+  /* Zwei Spalten: links die Bedienung, rechts die Vorschau (klebt mit). */
+  .work{display:grid;grid-template-columns:minmax(320px,1fr) minmax(360px,1.05fr);gap:var(--s8);align-items:start}
+  @media(max-width:960px){.work{grid-template-columns:1fr}.preview{order:-1;position:static}}
+
+  .editor{display:grid;gap:var(--s6)}
+  .grp{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);background:var(--soft)}
+  .grp>h3{font-size:var(--t-h3);margin-bottom:var(--s2)}
+  .grp>.note{margin-bottom:var(--s4)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
+  @media(max-width:520px){.grid2{grid-template-columns:1fr}}
+  .stack{display:grid;gap:var(--s3)}
+
+  /* Feld: Label + Eingabe (Lese-Grotesk, 16px → kein iOS-Zoom). */
+  .f{display:grid;gap:var(--s1)}
+  .f>.lab{font-size:var(--t-small);color:var(--muted);letter-spacing:.01em}
+  .f input{width:100%;font-family:var(--font-text);font-size:16px;font-weight:400;line-height:1.3;color:var(--ink);
+    background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:10px 12px;outline:none;transition:border-color .15s,box-shadow .15s}
+  .f input:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
+
+  .optline{display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap;justify-content:space-between;margin-top:var(--s2)}
+  .optline .lab{flex:0 0 auto;font-size:var(--t-small);color:var(--muted)}
+
+  /* --- Regel-Zeilen --------------------------------------------------------- */
+  .rules{display:grid;gap:var(--s3)}
+  .rule{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s3);align-items:start;
+    padding:var(--s3);border:1px solid var(--line);border-radius:var(--r-card);background:var(--field-bg)}
+  .symbtn{display:inline-flex;align-items:center;justify-content:center;width:var(--tap);height:var(--tap);flex:none;
+    border:1px solid var(--line);border-radius:var(--r-control);background:var(--field-bg);color:var(--ink);cursor:pointer;
+    font-family:"G Icons";font-size:24px;line-height:1;transition:border-color .15s;margin-top:2px}
+  .symbtn:hover{border-color:var(--gold-ink)}
+  .symbtn.empty{font-family:var(--font-text);font-size:22px;color:var(--muted)}
+  .ruletools{display:flex;flex-direction:column;gap:2px}
+  .iconbtn{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;flex:none;
+    border:1px solid transparent;border-radius:8px;background:none;color:var(--muted);cursor:pointer;font-size:15px;line-height:1;transition:.15s}
+  .iconbtn:hover{color:var(--ink);border-color:var(--line)}
+  .iconbtn:disabled{opacity:.3;cursor:not-allowed}.iconbtn:disabled:hover{color:var(--muted);border-color:transparent}
+  .addrow{margin-top:var(--s1)}
+
+  /* --- Vorschau ------------------------------------------------------------- */
+  .preview{position:sticky;top:calc(var(--header-h) + 8px)}
+  .frame{border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft);padding:var(--s6);overflow:hidden}
+  .stage{display:flex;justify-content:center}
+  .sheetscale{transform-origin:top center}
+
+  /* Das physische Schild: Markenblau auf Weiss, theme-fest (WYSIWYG für den Druck).
+     Als --sign-* definiert – DS02 erlaubt Literale in Custom-Property-Definitionen;
+     Weiss ist als Papier ratifiziert (# ds-ok). Masse in mm → Originalgrösse. */
+  .sheet{
+    --sign-bg:#ffffff;      /* # ds-ok — weisses Schild (Druck-Artefakt) */
+    --sign-ink:#0061a9;     /* # ds-ok — Markenblau als Schild-Schrift auf Weiss */
+    --sign-soft:#5c7fa6;    /* # ds-ok — gedämpftes Blaugrau, Kicker und Fussnote */
+    --sign-box:#eef2f7;     /* # ds-ok — zarte Blau-Tönung der Wechsel-Box */
+    --sign-line:#cdd8e6;    /* # ds-ok — feine Trennlinie */
+    --qr-ink:#111111;       /* # ds-ok — QR-Module dunkel (muss lesbar bleiben) */
+    width:var(--sheet-w,297mm);height:var(--sheet-h,420mm);background:var(--sign-bg);color:var(--sign-ink);
+    box-shadow:0 6px 24px rgba(20,24,28,.14);position:relative;overflow:hidden;font-family:var(--font-display);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  /* Fassungen als ratifizierte Druck-Artefakte. Weiss-auf-Blau ist dem Leitsystem
+     vorbehalten (Piktogramm; Akutschild nur für akute Leitsituationen). */
+  .sheet[data-variant="sw"]  {--sign-bg:#ffffff; --piktogramm:#111111}  /* # ds-ok — schwarz/blau auf weiss (Druck) */
+  .sheet[data-variant="blau"]{--sign-bg:#0061a9; --piktogramm:#ffffff;  /* # ds-ok — weiss auf Markenblau (Druck) */
+    --sign-ink:#ffffff; --sign-soft:#dbe6f2}                            /* # ds-ok — Text/Beiwerk weiss auf Blau */
+  .s-pikto{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .s-pikto span{font-family:"G Icons";line-height:1;color:var(--piktogramm)}
+
+  /* Ansage/Akutschild: eine zentrale zweisprachige Botschaft, mittig (Canva-Vorlage).
+     Wächst im Flex-Fluss, damit eine optionale Fusszeile darunter bleibt. */
+  .s-ansage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.04em}
+  .s-ansage .de{font-weight:var(--w-deutlich);font-size:1.35em;line-height:1.06}
+  .s-ansage .en{font-weight:var(--w-text);font-size:1.35em;line-height:1.06}
+
+  /* Wechsel-Info: grosse Kopfzeile oben, kleine Fussnote unten (Canva-Vorlage). */
+  .s-whead .de{font-weight:var(--w-deutlich);font-size:1.5em;line-height:1.06}
+  .s-whead .en{font-weight:var(--w-text);font-size:1.5em;line-height:1.06}
+  .s-spacer{flex:1 1 auto}
+  .s-wfoot .de{font-weight:var(--w-deutlich);font-size:.6em;line-height:1.12}
+  .s-wfoot .en{font-weight:var(--w-text);font-size:.6em;line-height:1.12}
+
+  /* Akutes Leitsystem: Pfeil + Ziel (Icon beschriftet oder Wort). Weiss auf Blau.
+     Richtung bestimmt die Anordnung: geradeaus = Spalte, Pfeil oben; links/rechts = Reihe. */
+  .s-leit{position:absolute;inset:0;padding:7% 8%;display:flex;gap:.4em;font-size:var(--u,13mm);color:var(--sign-ink)}
+  .s-leit .arrow{font-family:"G Icons";line-height:1;flex:none;display:flex;align-items:center;justify-content:center}
+  .s-leit .target{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.14em;min-width:0}
+  .s-leit .target .ic{font-family:"G Icons";line-height:1}
+  .s-leit .target .cap,.s-leit .target .wort{display:grid;gap:.02em}
+  .s-leit .target .de{font-weight:var(--w-deutlich);font-size:1.25em;line-height:1.05}
+  .s-leit .target .en{font-weight:var(--w-text);font-size:1.25em;line-height:1.05}
+  .s-leit.dir-geradeaus{flex-direction:column;align-items:center;justify-content:center}
+  .s-leit.dir-links{flex-direction:row;align-items:center}
+  .s-leit.dir-rechts{flex-direction:row-reverse;align-items:center}
+
+  /* Türschild: Raumfunktion, zweisprachig, links- oder rechtsbündig. */
+  .s-tuer{position:absolute;inset:0;padding:8% 9%;display:flex;flex-direction:column;justify-content:center;font-size:var(--u,13mm)}
+  .s-tuer.al-left{align-items:flex-start;text-align:left}
+  .s-tuer.al-right{align-items:flex-end;text-align:right}
+  .s-tuer .de{font-weight:var(--w-deutlich);font-size:1.7em;line-height:1.04}
+  .s-tuer .en{font-weight:var(--w-text);font-size:1.7em;line-height:1.04}
+
+  /* Öffnungszeiten: die Übersicht, zweispaltig – Deutsch links, Englisch rechts. */
+  .s-oeff{position:absolute;inset:0;padding:6% 6.5%;display:grid;grid-template-columns:1fr 1fr;gap:.9em 1.4em;font-size:var(--u,13mm);align-content:start}
+  .s-oeff .col{display:flex;flex-direction:column;gap:.5em;min-width:0}
+  .s-oeff .entry{break-inside:avoid}
+  .s-oeff .entry .t{font-weight:var(--w-deutlich);font-size:.42em;line-height:1.12}
+  .s-oeff .entry .b{font-weight:var(--w-text);font-size:.38em;line-height:1.28;white-space:pre-line}
+
+  /* Namensschild (nur Vorstände): Voller Name gross, Rolle klein. */
+  .s-name{position:absolute;inset:0;padding:9% 10%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.25em;font-size:var(--u,13mm)}
+  .s-name .full{font-weight:var(--w-deutlich);font-size:1.7em;line-height:1.05}
+  .s-name .role{display:grid;gap:.02em}
+  .s-name .role .de{font-weight:var(--w-deutlich);font-size:.55em;line-height:1.15}
+  .s-name .role .en{font-weight:var(--w-text);font-size:.55em;line-height:1.15}
+  .pad{position:absolute;inset:0;padding:8% 9%;display:flex;flex-direction:column;gap:.55em;font-size:var(--u,13mm)}
+
+  .s-kicker{font-family:var(--font-text);font-weight:600;color:var(--sign-soft);font-size:.5em;line-height:1.2;letter-spacing:.01em}
+
+  .s-title{display:grid;gap:.02em}
+  .s-title .de{font-weight:var(--w-deutlich);font-size:1.95em;line-height:1.02;letter-spacing:-.01em}
+  .s-title .en{font-weight:var(--w-text);font-size:1.95em;line-height:1.02;letter-spacing:-.01em}
+
+  .s-divider{border:0;border-top:.03em solid var(--sign-line);margin:.15em 0 .1em}
+
+  .s-rules{display:grid;grid-template-columns:1fr;gap:.55em .9em;align-items:start}
+  .s-rules.cols-2{grid-template-columns:1fr 1fr}
+  .s-rule{display:flex;gap:.45em;align-items:flex-start}
+  .s-rule .sym{font-family:"G Icons";font-size:1.5em;line-height:1;flex:none}
+  .s-rule .lab{display:grid;gap:.02em;font-size:.7em;line-height:1.08}
+  .s-rule .lab .de{font-weight:var(--w-deutlich)}
+  .s-rule .lab .en{font-weight:var(--w-text)}
+
+  .s-box{background:var(--sign-box);border-radius:.12em;padding:.7em .8em;display:flex;flex-direction:column;gap:.5em;margin-top:.2em}
+  .s-box .big{display:grid;gap:.02em}
+  .s-box .big .de{font-weight:var(--w-deutlich);font-size:.9em;line-height:1.08}
+  .s-box .big .en{font-weight:var(--w-text);font-size:.9em;line-height:1.08}
+  .s-box .note{display:grid;gap:.02em;margin-top:.6em;font-size:.5em;line-height:1.15;color:var(--sign-soft)}
+  .s-box .note .de{font-weight:var(--w-deutlich)}
+  .s-box .note .en{font-weight:var(--w-text)}
+
+  /* Fusszeile: nur der Link (kein Logo – Schrift und Form tragen die Autorität)
+     plus optionaler QR-Code in weisser Ruhezone, damit er auf jedem Grund liest. */
+  .s-foot{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:.6em;
+    font-family:var(--font-text);color:var(--sign-ink);font-weight:600;font-size:.5em;line-height:1.2;padding-top:.6em}
+  .s-foot .lk{word-break:break-word;align-self:center}
+  .s-foot .qr{background:#ffffff;border-radius:.12em;padding:.24em;flex:none}  /* # ds-ok — weisse QR-Ruhezone */
+  .s-foot .qr svg{display:block;width:3.4em;height:3.4em;shape-rendering:crispEdges}
+  .s-foot .qr svg path{fill:var(--qr-ink)}
+
+  .prevfoot{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s4)}
+  .dims{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
+  .actions{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s4)}
+
+  /* --- Zeichen-Wähler ------------------------------------------------------- */
+  dialog.picker{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);color:var(--ink);padding:0;width:min(640px,92vw);max-height:86vh;box-shadow:var(--shadow-card)}
+  dialog.picker::backdrop{background:color-mix(in srgb,var(--ink) 45%,transparent)}
+  .picker .phead{position:sticky;top:0;background:var(--bar-bg);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:var(--s4) var(--s6);display:flex;gap:var(--s4);align-items:center;justify-content:space-between}
+  .picker .phead h3{font-size:var(--t-h3)}
+  .picker .pbody{padding:var(--s4) var(--s6) var(--s6);overflow:auto}
+  .picker .psearch{margin:var(--s4) 0}
+  .picker .psearch input{width:100%;font-family:var(--font-text);font-size:16px;color:var(--ink);background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 12px;outline:none}
+  .picker .psearch input:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
+  .picker h4{font-family:var(--font-text);font-weight:600;font-size:var(--t-small);color:var(--muted);margin:var(--s4) 0 var(--s2)}
+  .glyphgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px}
+  .glyphcell{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px 8px;border:1px solid var(--line-soft);border-radius:12px;background:var(--soft);cursor:pointer;transition:border-color .15s,background .15s}
+  .glyphcell:hover,.glyphcell:focus-visible{border-color:var(--gold-ink);background:var(--paper);outline:none}
+  .glyphcell .g{font-family:"G Icons";font-size:38px;line-height:1;color:var(--ink);height:40px}
+  .glyphcell .n{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);text-align:center;line-height:1.2;min-height:2.4em}
+  .glyphcell[aria-pressed="true"]{border-color:var(--gold-ink);background:var(--paper);box-shadow:0 0 0 1px var(--gold-ink) inset}
+  .pnone{margin-top:var(--s2)}
+  .empty{color:var(--muted);font-size:var(--t-small);padding:var(--s4) 0}
+
+  /* --- Klappbare Piktogramm-Auswahl (native <details>) ---------------------- */
+  .gallery{border:1px solid var(--line);border-radius:var(--r-card);background:var(--field-bg);overflow:hidden}
+  .gallery>summary{cursor:pointer;padding:var(--s3) var(--s4);font-family:var(--font-text);font-weight:600;font-size:var(--t-small);
+    color:var(--ink);list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:var(--tap)}
+  .gallery>summary::-webkit-details-marker{display:none}
+  .gallery>summary::after{content:"▾";color:var(--muted);font-size:var(--t-small)}
+  .gallery[open]>summary::after{content:"▴"}
+  .gallery>summary:hover{color:var(--gold-ink)}
+  .gallery .gbody{padding:var(--s3) var(--s4) var(--s4);border-top:1px solid var(--line-soft)}
+  .gallery .gsearch{width:100%;font-family:var(--font-text);font-size:16px;color:var(--ink);background:var(--field-bg);
+    border:1px solid var(--line);border-radius:var(--r-control);padding:10px 12px;outline:none;margin-bottom:var(--s3)}
+  .gallery .gsearch:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
+  .gallery h4{font-family:var(--font-text);font-weight:600;font-size:var(--t-small);color:var(--muted);margin:var(--s3) 0 var(--s2)}
+  .gallery .gbody>h4:first-child{margin-top:0}
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-section="vorbereitung" data-active="schilder"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Goetheanum · Orientierung</span>
+    <h1>Schilder</h1>
+    <p class="lede">Schilder im Hausbild setzen – Piktogramm, Ansage, Wechsel-Info oder das ausführliche
+      Raumschild. Zweisprachig (Deutsch über Englisch), mit Haus-Icons, von A5 bis A1, hoch oder quer, druckfertig.</p>
+  </section>
+
+  <section>
+    <div class="work">
+
+      <!-- ============================ BEDIENUNG ============================= -->
+      <div class="editor">
+
+        <div class="grp" id="grp-art">
+          <h3>Art</h3>
+          <p class="note">Jede Art hat ihr Format und ihre Fassung. <strong>Weiss auf Blau</strong> gehört dem Leitsystem – nur Schilder, die einen Weg zeigen. <strong>Dunkel auf Weiss</strong> gehört allen Ansagen, akut oder statisch.</p>
+          <div class="optline">
+            <span class="lab">Schild-Art</span>
+            <div class="seg" role="group" aria-label="Schild-Art" id="sg-type">
+              <button type="button" data-v="leit" aria-pressed="false">Leitsystem</button>
+              <button type="button" data-v="akut" aria-pressed="false">Akutschild</button>
+              <button type="button" data-v="saal" aria-pressed="false">Saalschild</button>
+              <button type="button" data-v="roll" aria-pressed="true">Rollschild</button>
+              <button type="button" data-v="tuer" aria-pressed="false">Türschild</button>
+              <button type="button" data-v="name" aria-pressed="false">Namensschild</button>
+              <button type="button" data-v="oeff" aria-pressed="false">Öffnungszeiten</button>
+            </div>
+          </div>
+          <p class="note" id="art-info" style="margin-top:var(--s3)"></p>
+        </div>
+
+        <div class="grp" id="grp-oeff" hidden>
+          <h3>Öffnungszeiten</h3>
+          <p class="note">Die Übersicht aller Öffnungszeiten – zweisprachig, Deutsch links, Englisch rechts. Je Eintrag ein Titel und die Zeilen darunter (eine Zeile je Zeitangabe).</p>
+          <div class="stack" id="oeff-entries"></div>
+          <div class="addrow"><button type="button" class="btn" id="addOeff">Eintrag hinzufügen</button></div>
+        </div>
+
+        <div class="grp" id="grp-leit" hidden>
+          <h3>Akutes Leitsystem</h3>
+          <p class="note">Weiss auf Blau – zeigt einen Weg. Ein Pfeil und ein Ziel: ein Icon (beschriftet) oder ein Wort. Die Richtung bestimmt Format und Pfeilrichtung: geradeaus = hoch, Pfeil oben; links/rechts = quer.</p>
+          <div class="optline">
+            <span class="lab">Richtung</span>
+            <div class="seg" role="group" aria-label="Richtung" id="sg-dir">
+              <button type="button" data-v="geradeaus" aria-pressed="true">Geradeaus</button>
+              <button type="button" data-v="links" aria-pressed="false">Links</button>
+              <button type="button" data-v="rechts" aria-pressed="false">Rechts</button>
+            </div>
+          </div>
+          <div class="optline">
+            <span class="lab">Ziel</span>
+            <div class="seg" role="group" aria-label="Ziel" id="sg-leitmode">
+              <button type="button" data-v="icon" aria-pressed="true">Icon</button>
+              <button type="button" data-v="wort" aria-pressed="false">Wort</button>
+            </div>
+          </div>
+          <div id="leit-icon-fields">
+            <details class="gallery" id="gallery" open style="margin-top:var(--s3)">
+              <summary>Icon wählen<span id="gallery-cur" class="sr-only"></span></summary>
+              <div class="gbody">
+                <input type="search" class="gsearch" id="gallerySearch" placeholder="Suchen – z. B. WC, Fahrstuhl, Garderobe" aria-label="Icon suchen" />
+                <div id="galleryBody"></div>
+              </div>
+            </details>
+            <div class="grid2" style="margin-top:var(--s3)">
+              <label class="f"><span class="lab">Beschriftung · Deutsch</span><input type="text" id="leit-de" placeholder="Garderobe" /></label>
+              <label class="f"><span class="lab">Beschriftung · English</span><input type="text" id="leit-en" placeholder="Cloakroom" /></label>
+            </div>
+          </div>
+          <div id="leit-wort-fields" hidden>
+            <div class="grid2">
+              <label class="f"><span class="lab">Wort · Deutsch</span><input type="text" id="wort-de" placeholder="Ausgang" /></label>
+              <label class="f"><span class="lab">Wort · English</span><input type="text" id="wort-en" placeholder="Exit" /></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="grp" id="grp-akut" hidden>
+          <h3>Akutschild</h3>
+          <p class="note">Eine kurze, zentrale Botschaft – zweisprachig, mittig. Dunkel auf Weiss. A3 quer oder hoch.</p>
+          <div class="grid2">
+            <label class="f"><span class="lab">Botschaft · Deutsch</span><input type="text" id="ansage-de" placeholder="Das ist die Botschaft in Kürze" /></label>
+            <label class="f"><span class="lab">Botschaft · English</span><input type="text" id="ansage-en" placeholder="This is the message in brief" /></label>
+          </div>
+        </div>
+
+        <div class="grp" id="grp-name" hidden>
+          <h3>Namensschild</h3>
+          <p class="note">Nur für Vorstände. Voller Name gross, Rolle klein darunter – A5 quer, dunkel auf Weiss.</p>
+          <label class="f"><span class="lab">Voller Name</span><input type="text" id="name-full" placeholder="Vorname Nachname" /></label>
+          <div class="grid2" style="margin-top:var(--s3)">
+            <label class="f"><span class="lab">Rolle · Deutsch</span><input type="text" id="role-de" placeholder="Vorstand" /></label>
+            <label class="f"><span class="lab">Rolle · English</span><input type="text" id="role-en" placeholder="Executive Council" /></label>
+          </div>
+        </div>
+
+        <div class="grp" id="grp-tuer" hidden>
+          <h3>Türschild</h3>
+          <p class="note">Raumfunktion, zweisprachig – A3 hoch, dunkel auf Weiss. Bündig links oder rechts.</p>
+          <div class="grid2">
+            <label class="f"><span class="lab">Funktion · Deutsch</span><input type="text" id="tuer-de" placeholder="Sekretariat" /></label>
+            <label class="f"><span class="lab">Funktion · English</span><input type="text" id="tuer-en" placeholder="Office" /></label>
+          </div>
+          <div class="optline" style="margin-top:var(--s3)">
+            <span class="lab">Bündig</span>
+            <div class="seg" role="group" aria-label="Bündig" id="sg-tueralign">
+              <button type="button" data-v="left" aria-pressed="true">Links</button>
+              <button type="button" data-v="right" aria-pressed="false">Rechts</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grp" id="grp-kopf">
+          <h3>Kopf</h3>
+          <p class="note">Titel zweisprachig – Deutsch (Deutlich) über Englisch (Klar). Die Datum-Zeile ist optional.</p>
+          <div class="optline">
+            <span class="lab">Datum-Zeile</span>
+            <div class="seg" role="group" aria-label="Datum-Zeile" id="tg-kicker">
+              <button type="button" data-v="0" aria-pressed="true">Aus</button>
+              <button type="button" data-v="1" aria-pressed="false">Ein</button>
+            </div>
+          </div>
+          <div class="stack" style="margin-top:var(--s3)">
+            <label class="f" id="kicker-wrap" hidden><span class="lab">Datum / Überzeile</span><input type="text" id="kicker" placeholder="z. B. Juli 2026" /></label>
+            <div class="grid2">
+              <label class="f"><span class="lab">Titel · Deutsch</span><input type="text" id="title-de" placeholder="Grosser Saal" /></label>
+              <label class="f"><span class="lab">Titel · English</span><input type="text" id="title-en" placeholder="Main Auditorium" /></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="grp" id="grp-regeln">
+          <h3>Regeln &amp; Wege</h3>
+          <p class="note">Je Zeile ein Icon oder Pfeil aus dem Haus-Satz, dazu das zweisprachige Label. Für Wegweiser genügen Pfeil und Zielname.</p>
+          <div class="rules" id="rules"></div>
+          <div class="addrow"><button type="button" class="btn" id="addRule">Zeile hinzufügen</button></div>
+          <div class="optline">
+            <span class="lab">Spalten</span>
+            <div class="seg" role="group" aria-label="Spalten" id="sg-cols">
+              <button type="button" data-v="1" aria-pressed="true">1</button>
+              <button type="button" data-v="2" aria-pressed="false">2</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grp" id="grp-box">
+          <h3 id="grp-box-h">Wechsel-Box</h3>
+          <p class="note">Das hinterlegte Feld für die wechselnde Info (z. B. Besichtigungszeiten) mit optionaler Fussnote.</p>
+          <div class="optline" id="box-toggle-line">
+            <span class="lab">Wechsel-Box</span>
+            <div class="seg" role="group" aria-label="Wechsel-Box" id="tg-box">
+              <button type="button" data-v="0" aria-pressed="false">Aus</button>
+              <button type="button" data-v="1" aria-pressed="true">Ein</button>
+            </div>
+          </div>
+          <div class="stack" id="box-fields" style="margin-top:var(--s3)">
+            <div class="grid2">
+              <label class="f"><span class="lab" id="box-de-lab">Info · Deutsch</span><input type="text" id="box-de" placeholder="Besichtigung 13.30–14.30" /></label>
+              <label class="f"><span class="lab" id="box-en-lab">Info · English</span><input type="text" id="box-en" placeholder="Viewing 1.30–2.30 pm" /></label>
+            </div>
+            <div class="grid2">
+              <label class="f"><span class="lab">Fussnote · Deutsch</span><input type="text" id="note-de" placeholder="Mitunter geschlossen für Proben und Aufführungen" /></label>
+              <label class="f"><span class="lab">Fussnote · English</span><input type="text" id="note-en" placeholder="Sometimes closed for rehearsals and performances" /></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="grp">
+          <h3>Format &amp; Gestalt</h3>
+          <div class="optline">
+            <span class="lab">Grösse</span>
+            <div class="seg" role="group" aria-label="Grösse" id="sg-size">
+              <button type="button" data-v="a5" aria-pressed="false">A5</button>
+              <button type="button" data-v="a4" aria-pressed="false">A4</button>
+              <button type="button" data-v="a3" aria-pressed="true">A3</button>
+              <button type="button" data-v="a2" aria-pressed="false">A2</button>
+              <button type="button" data-v="a1" aria-pressed="false">A1</button>
+            </div>
+          </div>
+          <div class="optline">
+            <span class="lab">Ausrichtung</span>
+            <div class="seg" role="group" aria-label="Ausrichtung" id="sg-orient">
+              <button type="button" data-v="hoch" aria-pressed="true">Hoch</button>
+              <button type="button" data-v="quer" aria-pressed="false">Quer</button>
+            </div>
+          </div>
+          <div class="optline">
+            <span class="lab">Schriftgrösse</span>
+            <div class="seg" role="group" aria-label="Schriftgrösse" id="sg-scale">
+              <button type="button" data-v="s" aria-pressed="false">Klein</button>
+              <button type="button" data-v="m" aria-pressed="true">Mittel</button>
+              <button type="button" data-v="l" aria-pressed="false">Gross</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grp" id="grp-fuss">
+          <h3>Fusszeile</h3>
+          <p class="note">Ein Link am Fuss des Schildes – am besten ein Kurzlink aus dem QR-Generator, dann zählen die Scans anonym mit. Kein Logo: Schrift und klare Form tragen die Autorität.</p>
+          <div class="optline">
+            <span class="lab">Fusszeile</span>
+            <div class="seg" role="group" aria-label="Fusszeile" id="tg-foot">
+              <button type="button" data-v="0" aria-pressed="false">Aus</button>
+              <button type="button" data-v="1" aria-pressed="true">Ein</button>
+            </div>
+          </div>
+          <div class="stack" id="fuss-fields" style="margin-top:var(--s3)">
+            <label class="f"><span class="lab">Link (Fuss)</span><input type="text" id="link" placeholder="tools.goetheanum.ch/s/…" /></label>
+            <p class="note" style="margin:0"><a href="../qr-generator/" target="_blank" rel="noopener">Kurzlink im QR-Generator anlegen</a> – dort entsteht der zählbare Kurzlink; hier einsetzen, dann zeigt der QR darauf.</p>
+            <div class="optline">
+              <span class="lab">QR-Code</span>
+              <div class="seg" role="group" aria-label="QR-Code" id="tg-qr">
+                <button type="button" data-v="0" aria-pressed="true">Aus</button>
+                <button type="button" data-v="1" aria-pressed="false">Ein</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================ VORSCHAU ============================== -->
+      <div class="preview">
+        <div class="shead"><h2>Vorschau</h2><p>So wird gedruckt – in Originalgrösse.</p></div>
+        <div class="frame">
+          <div class="stage" id="stage">
+            <div class="sheetscale" id="sheetscale">
+              <div class="sheet" id="sheet"><div class="pad" id="pad"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="prevfoot"><span class="dims" id="dims"></span></div>
+        <div class="actions">
+          <button type="button" class="btn primary" id="print">Drucken / als PDF</button>
+          <button type="button" class="btn" id="reset">Zurücksetzen</button>
+        </div>
+        <p class="note" style="margin-top:var(--s3)">Im Druckdialog dasselbe Format wählen (A5–A1), Ausrichtung passend
+          und Ränder ‹keine›; als PDF sichern über ‹Als PDF speichern›.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================== Kleine Ethik der Beschilderung ==================== -->
+  <section id="ethik">
+    <div class="shead">
+      <h2>Kleine Ethik der Beschilderung</h2>
+      <p>Acht Häppchen statt Gesetzbuch – was das Arbeiten mit Schildern sinnstiftend macht.</p>
+    </div>
+    <div class="ethik">
+      <div class="et-item">
+        <svg class="et-pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6v30"/><path d="M10 12h20l4 5-4 5H10z" class="acc"/><path d="M18 42h12"/></svg>
+        <h3>Dienst, kein Denkmal</h3>
+        <p>Ein Schild beantwortet eine Frage. Wer davorsteht, soll weitergehen können – nicht ein Plakat bewundern.</p>
+      </div>
+      <div class="et-item">
+        <svg class="et-pikto" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="5" class="acc"/><path d="M24 6v6M24 36v6M6 24h6M36 24h6"/></svg>
+        <h3>Eine Sache genügt</h3>
+        <p>Ein Ziel, eine Zeit, ein Zeichen. Jede Zeile zu viel stiehlt der einen, die zählt, die Aufmerksamkeit.</p>
+      </div>
+      <div class="et-item">
+        <svg class="et-pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 8l14 5v9c0 9-6 14-14 17-8-3-14-8-14-17v-9z"/><line x1="9" y1="41" x2="39" y2="7" class="slash"/></svg>
+        <h3>Kein Logo nötig</h3>
+        <p>Die Hausschrift ist der Absender. Ein Signet würde nur lauter behaupten, was die Form längst zeigt.</p>
+      </div>
+      <div class="et-item">
+        <svg class="et-pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="10" width="24" height="16" rx="3"/><path d="M14 26l-3 5 8-5"/><rect x="20" y="22" width="22" height="14" rx="3" class="acc"/></svg>
+        <h3>Zwei Zungen, ein Ton</h3>
+        <p>Deutsch über Englisch, gleich gross. Betont wird mit dem Schnitt – nie mit Versalien oder Unterstrich.</p>
+      </div>
+      <div class="et-item">
+        <svg class="et-pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 24h26" class="acc"/><path d="M26 14l10 10-10 10" class="acc"/></svg>
+        <h3>Blau zeigt den Weg</h3>
+        <p>Weiss auf Blau führt und gehört dem Leitsystem. Ansagen stehen dunkel auf Weiss – so bleibt Blau ein Versprechen.</p>
+      </div>
+      <div class="et-item">
+        <svg class="et-pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M4 24c5.5-8 13-12 20-12s14.5 4 20 12c-5.5 8-13 12-20 12S9.5 32 4 24z"/><circle cx="24" cy="24" r="5" class="acc"/></svg>
+        <h3>Aus zehn Metern</h3>
+        <p>Gross, kontrastreich, in Originalgrösse gedruckt, auf Augenhöhe gehängt. Ein Schild, das man suchen muss, hat verloren.</p>
+      </div>
+      <div class="et-item">
+        <svg class="et-pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="1"/><rect x="28" y="8" width="12" height="12" rx="1"/><rect x="8" y="28" width="12" height="12" rx="1"/><path d="M28 28h5v5M40 33v7M33 40h-5" class="acc"/></svg>
+        <h3>Der QR zählt leise mit</h3>
+        <p>Ein Kurzlink aus dem <a href="../qr-generator/">QR-Generator</a> zeigt, ob gelesen wird – anonym, nur Zeitpunkt und Code.</p>
+      </div>
+      <div class="et-item">
+        <svg class="et-pikto" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="16"/><path d="M24 14v10l7 4" class="acc"/></svg>
+        <h3>Nimm mich wieder ab</h3>
+        <p>Ein Schild gilt für eine Situation, nicht für die Ewigkeit. Ein veraltetes schadet mehr als gar keines.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<dialog class="picker" id="picker" aria-label="Zeichen wählen">
+  <div class="phead"><h3>Zeichen wählen</h3><button type="button" class="btn ghost" id="pickerClose" aria-label="Schliessen">Schliessen</button></div>
+  <div class="pbody">
+    <div class="psearch"><input type="search" id="pickerSearch" placeholder="Suchen – z. B. Pfeil, WC, Kamera" aria-label="Zeichen suchen" /></div>
+    <div class="pnone"><button type="button" class="btn" id="pickNone">Kein Symbol</button></div>
+    <div id="pickerBody"></div>
+  </div>
+</dialog>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<!-- QR-Bibliothek: dieselbe wie im QR-Generator (eine Quelle) – rendert den Kurzlink
+     als QR. Zählbar bleibt es über den Kurzlink selbst (tools.goetheanum.ch/s/…). -->
+<script src="../qr-generator/vendor/qrcode.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var ICONS_URL = "../../assets/fonts/goetheanum/Icons-Einzeldateien/icons.json";
+
+  var FALLBACK = [
+    {slug:"pfeil-links",  label:"Pfeil links",  codepoint:"U+E267", group:"pfeil-kompass"},
+    {slug:"pfeil-rechts", label:"Pfeil rechts", codepoint:"U+E265", group:"pfeil-kompass"},
+    {slug:"pfeil-hoch",   label:"Pfeil hoch",   codepoint:"U+E264", group:"pfeil-kompass"},
+    {slug:"pfeil-runter", label:"Pfeil runter", codepoint:"U+E266", group:"pfeil-kompass"},
+    {slug:"nur-mit-augen",label:"Nur mit den Augen", codepoint:"U+0077", group:"piktogramm"},
+    {slug:"keine-fotos",  label:"Keine Fotos",  codepoint:"U+007A", group:"piktogramm"},
+    {slug:"draussen-essen",label:"Draussen essen",codepoint:"U+0075",group:"piktogramm"},
+    {slug:"geraete-abschalten",label:"Geräte abschalten",codepoint:"U+006F",group:"piktogramm"},
+    {slug:"eintritt",     label:"Eintritt",     codepoint:"U+0065", group:"piktogramm"},
+    {slug:"garderobe",    label:"Garderobe",    codepoint:"U+0066", group:"piktogramm"},
+    {slug:"fahrstuhl",    label:"Fahrstuhl",    codepoint:"U+0061", group:"piktogramm"},
+    {slug:"treppe",       label:"Treppe",       codepoint:"U+0073", group:"piktogramm"},
+    {slug:"wc-damen",     label:"WC Damen",     codepoint:"U+0079", group:"piktogramm"},
+    {slug:"wc-herren",    label:"WC Herren",    codepoint:"U+003C", group:"piktogramm"},
+    {slug:"wc-rollstuhl", label:"WC Rollstuhl", codepoint:"U+0078", group:"piktogramm"},
+    {slug:"wlan",         label:"WLAN",         codepoint:"U+0067", group:"piktogramm"}
+  ];
+  var GROUP_TITLE = {"pfeil-kompass":"Pfeile & Kompass","piktogramm":"Piktogramme"};
+  var GROUP_ORDER = ["pfeil-kompass","piktogramm"];
+
+  // A-Reihe (Hochformat, mm). Quer = getauscht.
+  var SIZES = {a5:[148,210], a4:[210,297], a3:[297,420], a2:[420,594], a1:[594,841]};
+  var SIZE_LABEL = {a5:"A5",a4:"A4",a3:"A3",a2:"A2",a1:"A1"};
+  var SCALE_MULT = {s:0.85, m:1, l:1.18};
+
+  // Kanon der Schild-Arten: verbindliches Format und die Fassung. Weiss auf Blau
+  // (variant 'blau') nur fürs Leitsystem; alle Ansagen dunkel auf Weiss (kein
+  // data-variant → Markenblau auf Weiss). Formate exakt nach Vorgabe.
+  var ARTS = {
+    leit: {label:"Leitsystem",   variant:"blau", size:"a3", orient:"hoch", info:"Weiss auf Blau · A3 · zeigt einen Weg (Pfeil + Ziel)."},
+    akut: {label:"Akutschild",   variant:"weiss",size:"a3", orient:"quer", info:"Dunkel auf Weiss · A3 quer oder hoch · eine zentrale Botschaft."},
+    saal: {label:"Saalschild",   variant:"weiss",size:"a5", orient:"quer", info:"Dunkel auf Weiss · A5 quer · Kopfzeile und Fussnote."},
+    roll: {label:"Rollschild",   variant:"weiss",size:"a3", orient:"hoch", info:"Dunkel auf Weiss · A4/A3 hoch · Titel, Regelzeilen, Wechsel-Box."},
+    tuer: {label:"Türschild",    variant:"weiss",size:"a3", orient:"hoch", info:"Dunkel auf Weiss · A3 hoch · Raumfunktion, links- oder rechtsbündig."},
+    name: {label:"Namensschild", variant:"weiss",size:"a5", orient:"quer", info:"Dunkel auf Weiss · A5 quer · nur Vorstände: Name gross, Rolle klein."},
+    oeff: {label:"Öffnungszeiten",variant:"weiss",size:"a2",orient:"quer", info:"Dunkel auf Weiss · A1/A2/A5 · die Übersicht aller Öffnungszeiten, zweispaltig zweisprachig."}
+  };
+  // Pfeil-Codepoints (fett) für die Leitrichtung.
+  var LEIT_ARROW = {geradeaus:"U+E268", links:"U+E26B", rechts:"U+E269"};
+
+  function cpChar(cp){ try{ return String.fromCodePoint(parseInt(String(cp).replace(/^U\+/i,""),16)); }catch(e){ return ""; } }
+
+  function defaults(){
+    return {
+      type:"roll",
+      // Leitsystem
+      dir:"geradeaus", leitMode:"icon",
+      leitIcon:{char:cpChar("U+0066"),label:"Garderobe"},
+      leitCap:{de:"Garderobe", en:"Cloakroom"}, wort:{de:"Ausgang", en:"Exit"},
+      // Akutschild
+      ansage:{de:"Das ist die Botschaft in Kürze", en:"This is the message in brief"},
+      // Türschild
+      tuer:{de:"Sekretariat", en:"Office"}, tuerAlign:"left",
+      // Namensschild
+      nameFull:"Vorname Nachname", role:{de:"Vorstand", en:"Executive Council"},
+      // Öffnungszeiten (je Eintrag: Titel + Zeilen, zweisprachig)
+      oeff:[
+        {tde:"Hauptgebäude", ten:"Main Building", bde:"Täglich 9–20 Uhr\n(erweitert bei Veranstaltungen)", ben:"Mo to Fr · 9 am – 8 pm\n(extended at events)"},
+        {tde:"Ticketverkauf", ten:"Reception", bde:"Di bis So 9–18 Uhr", ben:"Tu to Su · 9 am – 8 pm\n(No tickets on Mondays)"},
+        {tde:"Café in der Wandelhalle", ten:"Café in the Entrance", bde:"Täglich 9–17 Uhr", ben:"Daily · 9 am – 5 pm"},
+        {tde:"Bibliothek", ten:"Library", bde:"Di und Fr 14–18 Uhr", ben:"Tu and Fr · 2 – 6 pm"}
+      ],
+      // Rollschild
+      kickerOn:false, kicker:"Juli 2026",
+      title:{de:"Grosser Saal", en:"Main Auditorium"},
+      rules:[
+        {sym:{char:cpChar("U+0077"),label:"Nur mit den Augen"}, de:"Bitte nur mit den Augen berühren", en:"Please touch with your eyes only"},
+        {sym:{char:cpChar("U+007A"),label:"Keine Fotos"}, de:"Keine Aufnahmen", en:"No records"},
+        {sym:{char:cpChar("U+0075"),label:"Draussen essen"}, de:"Draussen essen", en:"Eat outside"}
+      ],
+      cols:1,
+      // Rollschild + Saalschild teilen Kopfzeile/Fussnote
+      boxOn:true, box:{de:"Besichtigung 13.30–14.30", en:"Viewing 1.30–2.30 pm"},
+      note:{de:"Mitunter geschlossen für Proben und Aufführungen", en:"Sometimes closed for rehearsals and performances"},
+      // gemeinsam
+      link:"goetheanum.ch/campus", qrOn:false,
+      size:"a3", orient:"hoch", scale:"m", footOn:true
+    };
+  }
+  var state = defaults();
+  var symbols = FALLBACK.slice();
+
+  var $ = function(id){ return document.getElementById(id); };
+  var pad = $("pad"), sheet = $("sheet"), dims = $("dims");
+
+  function esc(t){ return (t==null?"":String(t)); }
+
+  // --- Regel-Bedienung ------------------------------------------------------
+  var rulesEl = $("rules");
+  function renderRules(){
+    rulesEl.innerHTML = "";
+    state.rules.forEach(function(r, i){
+      var row = document.createElement("div"); row.className = "rule";
+
+      var sym = document.createElement("button");
+      sym.type="button"; sym.className = "symbtn" + (r.sym ? "" : " empty");
+      sym.textContent = r.sym ? r.sym.char : "＋";
+      sym.setAttribute("aria-label","Symbol Zeile "+(i+1)+(r.sym?" – "+r.sym.label:" wählen"));
+      sym.addEventListener("click", function(){ openPicker(i); });
+
+      var fields = document.createElement("div"); fields.className = "stack";
+      fields.appendChild(mkField("Deutsch", r.de, function(v){ state.rules[i].de=v; renderSheet(); }));
+      fields.appendChild(mkField("English", r.en, function(v){ state.rules[i].en=v; renderSheet(); }));
+
+      var tools = document.createElement("div"); tools.className = "ruletools";
+      tools.appendChild(mkIcon("↑","nach oben", i===0, function(){ moveRule(i,-1); }));
+      tools.appendChild(mkIcon("↓","nach unten", i===state.rules.length-1, function(){ moveRule(i,1); }));
+      tools.appendChild(mkIcon("✕","entfernen", false, function(){ state.rules.splice(i,1); render(); }));
+
+      row.appendChild(sym); row.appendChild(fields); row.appendChild(tools);
+      rulesEl.appendChild(row);
+    });
+  }
+  function mkField(lab, val, fn){
+    var l = document.createElement("label"); l.className="f";
+    var s = document.createElement("span"); s.className="lab"; s.textContent=lab;
+    var inp = document.createElement("input"); inp.type="text"; inp.value=val||""; inp.placeholder=lab;
+    inp.addEventListener("input", function(){ fn(inp.value); });
+    l.appendChild(s); l.appendChild(inp); return l;
+  }
+  function mkIcon(glyph, label, disabled, fn){
+    var b=document.createElement("button"); b.type="button"; b.className="iconbtn";
+    b.textContent=glyph; b.title=label; b.setAttribute("aria-label",label);
+    if(disabled) b.disabled=true; else b.addEventListener("click", fn);
+    return b;
+  }
+  function moveRule(i,d){ var j=i+d; if(j<0||j>=state.rules.length) return; var t=state.rules[i]; state.rules[i]=state.rules[j]; state.rules[j]=t; render(); }
+  $("addRule").addEventListener("click", function(){ state.rules.push({sym:null, de:"", en:""}); render(); });
+
+  // --- Schild zeichnen ------------------------------------------------------
+  function pair(de, en, cls){
+    var wrap = document.createElement("div"); wrap.className = cls;
+    if(esc(de)!==""){ var d=document.createElement("div"); d.className="de"; d.textContent=de; wrap.appendChild(d); }
+    if(esc(en)!==""){ var e=document.createElement("div"); e.className="en"; e.textContent=en; wrap.appendChild(e); }
+    return wrap;
+  }
+  function oeffEntry(title, body){
+    var e=document.createElement("div"); e.className="entry";
+    if(esc(title)!==""){ var t=document.createElement("div"); t.className="t"; t.textContent=title; e.appendChild(t); }
+    if(esc(body)!==""){ var b=document.createElement("div"); b.className="b"; b.textContent=body; e.appendChild(b); }
+    return e;
+  }
+
+  // Öffnungszeiten-Einträge bearbeiten.
+  var oeffEl=$("oeff-entries");
+  function renderOeff(){
+    oeffEl.innerHTML="";
+    state.oeff.forEach(function(en, i){
+      var row=document.createElement("div"); row.className="rule"; row.style.gridTemplateColumns="1fr auto";
+      var fields=document.createElement("div"); fields.className="stack";
+      var g1=document.createElement("div"); g1.className="grid2";
+      g1.appendChild(mkField("Titel · Deutsch", en.tde, function(v){ state.oeff[i].tde=v; renderSheet(); }));
+      g1.appendChild(mkField("Titel · English", en.ten, function(v){ state.oeff[i].ten=v; renderSheet(); }));
+      var g2=document.createElement("div"); g2.className="grid2";
+      g2.appendChild(mkArea("Zeilen · Deutsch", en.bde, function(v){ state.oeff[i].bde=v; renderSheet(); }));
+      g2.appendChild(mkArea("Zeilen · English", en.ben, function(v){ state.oeff[i].ben=v; renderSheet(); }));
+      fields.appendChild(g1); fields.appendChild(g2);
+      var tools=document.createElement("div"); tools.className="ruletools";
+      tools.appendChild(mkIcon("↑","nach oben", i===0, function(){ moveOeff(i,-1); }));
+      tools.appendChild(mkIcon("↓","nach unten", i===state.oeff.length-1, function(){ moveOeff(i,1); }));
+      tools.appendChild(mkIcon("✕","entfernen", false, function(){ state.oeff.splice(i,1); render(); }));
+      row.appendChild(fields); row.appendChild(tools);
+      oeffEl.appendChild(row);
+    });
+  }
+  function mkArea(lab, val, fn){
+    var l=document.createElement("label"); l.className="f";
+    var s=document.createElement("span"); s.className="lab"; s.textContent=lab;
+    var ta=document.createElement("textarea"); ta.value=val||""; ta.rows=3; ta.placeholder=lab;
+    ta.style.cssText="width:100%;font-family:var(--font-text);font-size:16px;line-height:1.3;color:var(--ink);background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:10px 12px;outline:none;resize:vertical";
+    ta.addEventListener("input", function(){ fn(ta.value); });
+    l.appendChild(s); l.appendChild(ta); return l;
+  }
+  function moveOeff(i,d){ var j=i+d; if(j<0||j>=state.oeff.length) return; var t=state.oeff[i]; state.oeff[i]=state.oeff[j]; state.oeff[j]=t; render(); }
+  $("addOeff").addEventListener("click", function(){ state.oeff.push({tde:"",ten:"",bde:"",ben:""}); render(); });
+  function renderSheet(){
+    // Format & Einheit
+    var base = SIZES[state.size]; var w=base[0], h=base[1];
+    if(state.orient==="quer"){ var t=w; w=h; h=t; }
+    sheet.style.setProperty("--sheet-w", w+"mm");
+    sheet.style.setProperty("--sheet-h", h+"mm");
+    var u = Math.min(w,h) * 0.045 * (SCALE_MULT[state.scale]||1);
+    pad.style.setProperty("--u", u.toFixed(3)+"mm");
+    dims.textContent = SIZE_LABEL[state.size] + " " + (state.orient==="quer"?"quer":"hoch") + " · " +
+      w + " × " + h + " mm";
+
+    pad.innerHTML = "";
+
+    // Fassung: Weiss auf Blau nur fürs Leitsystem; alle Ansagen dunkel auf Weiss.
+    if(state.type==="leit"){ sheet.setAttribute("data-variant","blau"); }
+    else { sheet.removeAttribute("data-variant"); }
+
+    // --- Akutes Leitsystem: Pfeil + Ziel (Icon beschriftet oder Wort) -------
+    if(state.type==="leit"){
+      var lw=document.createElement("div"); lw.className="s-leit dir-"+state.dir;
+      var ar=document.createElement("span"); ar.className="arrow"; ar.setAttribute("aria-hidden","true");
+      ar.textContent=cpChar(LEIT_ARROW[state.dir]||LEIT_ARROW.geradeaus);
+      ar.style.fontSize=(Math.min(w,h)*0.30).toFixed(2)+"mm";
+      var tg=document.createElement("div"); tg.className="target";
+      if(state.leitMode==="wort"){
+        tg.appendChild(pair(state.wort.de, state.wort.en, "wort"));
+      } else {
+        if(state.leitIcon){ var ic=document.createElement("div"); ic.className="ic"; ic.setAttribute("aria-hidden","true");
+          ic.textContent=state.leitIcon.char; ic.style.fontSize=(Math.min(w,h)*0.34).toFixed(2)+"mm"; tg.appendChild(ic); }
+        tg.appendChild(pair(state.leitCap.de, state.leitCap.en, "cap"));
+      }
+      lw.appendChild(ar); lw.appendChild(tg); pad.appendChild(lw);
+      fit(); return;
+    }
+
+    // --- Akutschild: eine zentrale Botschaft, mittig -----------------------
+    if(state.type==="akut"){
+      pad.appendChild(pair(state.ansage.de, state.ansage.en, "s-ansage"));
+      addFooter(); fit(); return;
+    }
+
+    // --- Saalschild: Kopfzeile oben, Fussnote unten ------------------------
+    if(state.type==="saal"){
+      if(esc(state.box.de)!=="" || esc(state.box.en)!==""){ pad.appendChild(pair(state.box.de, state.box.en, "s-whead")); }
+      var sp=document.createElement("div"); sp.className="s-spacer"; pad.appendChild(sp);
+      if(esc(state.note.de)!=="" || esc(state.note.en)!==""){ pad.appendChild(pair(state.note.de, state.note.en, "s-wfoot")); }
+      addFooter(); fit(); return;
+    }
+
+    // --- Türschild: Raumfunktion, links- oder rechtsbündig -----------------
+    if(state.type==="tuer"){
+      var tw=pair(state.tuer.de, state.tuer.en, "s-tuer al-"+(state.tuerAlign==="right"?"right":"left"));
+      pad.appendChild(tw); fit(); return;
+    }
+
+    // --- Öffnungszeiten: die Übersicht, zweispaltig (DE links, EN rechts) ---
+    if(state.type==="oeff"){
+      var ow=document.createElement("div"); ow.className="s-oeff";
+      var colDe=document.createElement("div"); colDe.className="col";
+      var colEn=document.createElement("div"); colEn.className="col";
+      state.oeff.forEach(function(e){
+        colDe.appendChild(oeffEntry(e.tde, e.bde));
+        colEn.appendChild(oeffEntry(e.ten, e.ben));
+      });
+      ow.appendChild(colDe); ow.appendChild(colEn); pad.appendChild(ow);
+      fit(); return;
+    }
+
+    // --- Namensschild: Voller Name, Rolle klein ----------------------------
+    if(state.type==="name"){
+      var nw=document.createElement("div"); nw.className="s-name";
+      if(esc(state.nameFull)!==""){ var fn=document.createElement("div"); fn.className="full"; fn.textContent=state.nameFull; nw.appendChild(fn); }
+      if(esc(state.role.de)!=="" || esc(state.role.en)!==""){ nw.appendChild(pair(state.role.de, state.role.en, "role")); }
+      pad.appendChild(nw); fit(); return;
+    }
+
+    // --- Rollschild (Komposit) ---------------------------------------------
+    if(state.kickerOn && esc(state.kicker)!==""){
+      var k=document.createElement("div"); k.className="s-kicker"; k.textContent=state.kicker; pad.appendChild(k);
+    }
+    if(esc(state.title.de)!=="" || esc(state.title.en)!==""){
+      pad.appendChild(pair(state.title.de, state.title.en, "s-title"));
+    }
+    var hasRules = state.rules.some(function(r){ return esc(r.de)!=="" || esc(r.en)!=="" || r.sym; });
+    if(hasRules){
+      var hr=document.createElement("hr"); hr.className="s-divider"; pad.appendChild(hr);
+      var box=document.createElement("div"); box.className="s-rules"+(state.cols===2?" cols-2":"");
+      state.rules.forEach(function(r){
+        if(esc(r.de)==="" && esc(r.en)==="" && !r.sym) return;
+        var row=document.createElement("div"); row.className="s-rule";
+        if(r.sym){ var s=document.createElement("span"); s.className="sym"; s.textContent=r.sym.char; row.appendChild(s); }
+        row.appendChild(pair(r.de, r.en, "lab"));
+        box.appendChild(row);
+      });
+      pad.appendChild(box);
+    }
+    if(state.boxOn && (esc(state.box.de)!=="" || esc(state.box.en)!=="" || esc(state.note.de)!=="" || esc(state.note.en)!=="")){
+      var b=document.createElement("div"); b.className="s-box";
+      b.appendChild(pair(state.box.de, state.box.en, "big"));
+      if(esc(state.note.de)!=="" || esc(state.note.en)!==""){ b.appendChild(pair(state.note.de, state.note.en, "note")); }
+      pad.appendChild(b);
+    }
+    addFooter();
+    fit();
+  }
+
+  // Fusszeile: nur der Link plus optionaler QR-Code – kein Logo.
+  function addFooter(){
+    if(!state.footOn) return;
+    if(esc(state.link)==="" && !state.qrOn) return;
+    var f=document.createElement("div"); f.className="s-foot";
+    var sp=document.createElement("span"); sp.className="lk"; sp.textContent=state.link||""; f.appendChild(sp);
+    if(state.qrOn && esc(state.link)!==""){
+      var svg=makeQr(state.link);
+      if(svg){ var qb=document.createElement("div"); qb.className="qr"; qb.appendChild(svg); f.appendChild(qb); }
+    }
+    pad.appendChild(f);
+  }
+  // QR aus dem Kurzlink erzeugen (dieselbe Bibliothek wie der QR-Generator).
+  function makeQr(text){
+    if(typeof qrcode!=="function") return null;
+    try{
+      var qr=qrcode(0,"M"); qr.addData(String(text)); qr.make();
+      var n=qr.getModuleCount(), SVGNS="http://www.w3.org/2000/svg";
+      var svg=document.createElementNS(SVGNS,"svg"); svg.setAttribute("viewBox","0 0 "+n+" "+n);
+      var d="";
+      for(var r=0;r<n;r++){ for(var c=0;c<n;c++){ if(qr.isDark(r,c)){ d+="M"+c+" "+r+"h1v1h-1z"; } } }
+      var path=document.createElementNS(SVGNS,"path"); path.setAttribute("d",d);
+      svg.appendChild(path); return svg;
+    }catch(e){ return null; }
+  }
+  function render(){ applyType(); renderRules(); renderOeff(); syncInputs(); renderSheet(); }
+
+  // Sichtbarkeit und Beschriftung der Bedien-Gruppen je nach Schild-Art.
+  function applyType(){
+    var t=state.type, pikto=t==="pikto", ansage=t==="ansage", wechsel=t==="wechsel", raum=t==="raum";
+    var t=state.type, leit=t==="leit", akut=t==="akut", saal=t==="saal", roll=t==="roll", tuer=t==="tuer", name=t==="name", oeff=t==="oeff";
+    $("grp-leit").hidden   = !leit;
+    $("grp-akut").hidden   = !akut;
+    $("grp-name").hidden   = !name;
+    $("grp-tuer").hidden   = !tuer;
+    $("grp-oeff").hidden   = !oeff;
+    $("grp-kopf").hidden   = !roll;
+    $("grp-regeln").hidden = !roll;
+    $("grp-box").hidden    = !(roll || saal);
+    $("grp-fuss").hidden   = !(akut || saal || roll);   // Fusszeile nur bei Ansage-Schildern
+    // Leitsystem: Ziel-Felder je nach Icon/Wort.
+    if(leit){ $("leit-icon-fields").hidden = state.leitMode!=="icon"; $("leit-wort-fields").hidden = state.leitMode!=="wort"; }
+    // Box heisst beim Saalschild «Text» (Kopfzeile + Fussnote), kein Ein/Aus.
+    $("grp-box-h").textContent   = saal ? "Text" : "Wechsel-Box";
+    $("box-toggle-line").style.display = saal ? "none" : "";
+    $("box-de-lab").textContent  = saal ? "Kopfzeile · Deutsch" : "Info · Deutsch";
+    $("box-en-lab").textContent  = saal ? "Kopfzeile · English" : "Info · English";
+    // Format-Steuerung: Ausrichtung beim Leitsystem von der Richtung bestimmt.
+    $("sg-orient").closest(".optline").style.display = leit ? "none" : "";
+    // Kurzinfo zur Art (Format + Fassung).
+    $("art-info").textContent = (ARTS[t]||{}).info || "";
+  }
+
+  // --- Kopf-/Box-Felder an den Zustand binden -------------------------------
+  function bindInput(id, get, set){ var el=$(id); el.value=get()||""; el.addEventListener("input", function(){ set(el.value); renderSheet(); }); }
+  bindInput("kicker", function(){return state.kicker;}, function(v){state.kicker=v;});
+  bindInput("title-de", function(){return state.title.de;}, function(v){state.title.de=v;});
+  bindInput("title-en", function(){return state.title.en;}, function(v){state.title.en=v;});
+  bindInput("box-de", function(){return state.box.de;}, function(v){state.box.de=v;});
+  bindInput("box-en", function(){return state.box.en;}, function(v){state.box.en=v;});
+  bindInput("note-de", function(){return state.note.de;}, function(v){state.note.de=v;});
+  bindInput("note-en", function(){return state.note.en;}, function(v){state.note.en=v;});
+  bindInput("ansage-de", function(){return state.ansage.de;}, function(v){state.ansage.de=v;});
+  bindInput("ansage-en", function(){return state.ansage.en;}, function(v){state.ansage.en=v;});
+  bindInput("leit-de", function(){return state.leitCap.de;}, function(v){state.leitCap.de=v;});
+  bindInput("leit-en", function(){return state.leitCap.en;}, function(v){state.leitCap.en=v;});
+  bindInput("wort-de", function(){return state.wort.de;}, function(v){state.wort.de=v;});
+  bindInput("wort-en", function(){return state.wort.en;}, function(v){state.wort.en=v;});
+  bindInput("tuer-de", function(){return state.tuer.de;}, function(v){state.tuer.de=v;});
+  bindInput("tuer-en", function(){return state.tuer.en;}, function(v){state.tuer.en=v;});
+  bindInput("name-full", function(){return state.nameFull;}, function(v){state.nameFull=v;});
+  bindInput("role-de", function(){return state.role.de;}, function(v){state.role.de=v;});
+  bindInput("role-en", function(){return state.role.en;}, function(v){state.role.en=v;});
+  bindInput("link", function(){return state.link;}, function(v){state.link=v;});
+  function syncInputs(){
+    $("kicker").value=state.kicker||""; $("title-de").value=state.title.de||""; $("title-en").value=state.title.en||"";
+    $("box-de").value=state.box.de||""; $("box-en").value=state.box.en||""; $("note-de").value=state.note.de||""; $("note-en").value=state.note.en||"";
+    $("ansage-de").value=state.ansage.de||""; $("ansage-en").value=state.ansage.en||"";
+    $("leit-de").value=state.leitCap.de||""; $("leit-en").value=state.leitCap.en||""; $("wort-de").value=state.wort.de||""; $("wort-en").value=state.wort.en||"";
+    $("tuer-de").value=state.tuer.de||""; $("tuer-en").value=state.tuer.en||"";
+    $("name-full").value=state.nameFull||""; $("role-de").value=state.role.de||""; $("role-en").value=state.role.en||"";
+    $("link").value=state.link||"";
+    $("kicker-wrap").hidden = !state.kickerOn;
+    $("box-fields").style.display = state.boxOn ? "" : "none";
+    $("fuss-fields").style.display = state.footOn ? "" : "none";
+  }
+
+  // --- Seg-/Toggle-Umschalter ----------------------------------------------
+  function wireSeg(id, apply){
+    var g=$(id);
+    g.addEventListener("click", function(e){
+      var b=e.target.closest("button"); if(!b) return;
+      Array.prototype.forEach.call(g.querySelectorAll("button"), function(x){ x.setAttribute("aria-pressed", String(x===b)); });
+      apply(b.getAttribute("data-v"));
+    });
+  }
+  wireSeg("tg-kicker", function(v){ state.kickerOn = v==="1"; $("kicker-wrap").hidden=!state.kickerOn; renderSheet(); });
+  wireSeg("sg-cols",   function(v){ state.cols = parseInt(v,10); renderSheet(); });
+  wireSeg("tg-box",    function(v){ state.boxOn = v==="1"; $("box-fields").style.display=state.boxOn?"":"none"; renderSheet(); });
+  wireSeg("sg-size",   function(v){ state.size=v; renderSheet(); });
+  wireSeg("sg-orient", function(v){ state.orient=v; renderSheet(); });
+  wireSeg("sg-scale",  function(v){ state.scale=v; renderSheet(); });
+  wireSeg("tg-foot",   function(v){ state.footOn = v==="1"; $("fuss-fields").style.display=state.footOn?"":"none"; renderSheet(); });
+  wireSeg("tg-qr",     function(v){ state.qrOn = v==="1"; renderSheet(); });
+  wireSeg("sg-type",   function(v){ setArt(v); });
+  wireSeg("sg-dir",    function(v){ state.dir=v; state.orient=(v==="geradeaus"?"hoch":"quer"); setSeg("sg-orient", state.orient); renderSheet(); });
+  wireSeg("sg-leitmode",function(v){ state.leitMode=v; render(); });
+  wireSeg("sg-tueralign",function(v){ state.tuerAlign=v; renderSheet(); });
+
+  // Art wechseln: Format und Fassung auf den Kanon setzen.
+  function setArt(v){
+    state.type=v;
+    var a=ARTS[v]||{};
+    if(a.size) state.size=a.size;
+    if(v==="leit"){ state.orient = state.dir==="geradeaus" ? "hoch" : "quer"; }
+    else if(a.orient){ state.orient=a.orient; }
+    setSeg("sg-size", state.size); setSeg("sg-orient", state.orient);
+    render();
+  }
+
+  // --- Klappbare Piktogramm-Auswahl (Hausschrift) ---------------------------
+  var galleryBody=$("galleryBody"), gallerySearch=$("gallerySearch"), galleryQuery="";
+  function buildGallery(){
+    galleryBody.innerHTML="";
+    var q=galleryQuery.trim().toLowerCase(), any=false;
+    GROUP_ORDER.forEach(function(g){
+      var items=symbols.filter(function(it){ if(it.group!==g) return false; if(!q) return true; return it.label.toLowerCase().indexOf(q)>=0||it.slug.toLowerCase().indexOf(q)>=0; });
+      if(!items.length) return; any=true;
+      var h=document.createElement("h4"); h.textContent=GROUP_TITLE[g]||g; galleryBody.appendChild(h);
+      var grid=document.createElement("div"); grid.className="glyphgrid";
+      items.forEach(function(it){
+        var ch=cpChar(it.codepoint);
+        var cell=document.createElement("button"); cell.type="button"; cell.className="glyphcell";
+        cell.setAttribute("aria-label",it.label);
+        cell.setAttribute("aria-pressed", String(!!state.leitIcon && state.leitIcon.char===ch));
+        var g1=document.createElement("span"); g1.className="g"; g1.setAttribute("aria-hidden","true"); g1.textContent=ch;
+        var n1=document.createElement("span"); n1.className="n"; n1.textContent=it.label;
+        cell.appendChild(g1); cell.appendChild(n1);
+        cell.addEventListener("click", function(){ state.leitIcon={char:ch,label:it.label}; buildGallery(); renderSheet(); });
+        grid.appendChild(cell);
+      });
+      galleryBody.appendChild(grid);
+    });
+    if(!any){ var e=document.createElement("p"); e.className="empty"; e.textContent="Kein Piktogramm gefunden."; galleryBody.appendChild(e); }
+  }
+  gallerySearch.addEventListener("input", function(){ galleryQuery=gallerySearch.value; buildGallery(); });
+
+  // --- Vorschau skalieren ---------------------------------------------------
+  var stage=$("stage"), scaleEl=$("sheetscale"), currentScale=1;
+  function fit(){
+    var natural = sheet.getBoundingClientRect().width / (currentScale||1);
+    var avail = stage.clientWidth;
+    var s = avail>0 ? Math.min(1, avail/natural) : 1;
+    currentScale=s; scaleEl.style.transform="scale("+s+")";
+    scaleEl.style.height=(sheet.offsetHeight*s)+"px";
+  }
+  if(window.ResizeObserver){ new ResizeObserver(fit).observe(stage); }
+  window.addEventListener("resize", fit); window.addEventListener("load", fit);
+
+  // --- Zeichen-Wähler -------------------------------------------------------
+  var picker=$("picker"), pickerBody=$("pickerBody"), pickerSearch=$("pickerSearch"), activeRule=-1;
+  function buildPicker(filter){
+    pickerBody.innerHTML=""; var q=(filter||"").trim().toLowerCase(), any=false;
+    GROUP_ORDER.forEach(function(g){
+      var items=symbols.filter(function(it){ if(it.group!==g) return false; if(!q) return true; return it.label.toLowerCase().indexOf(q)>=0||it.slug.toLowerCase().indexOf(q)>=0; });
+      if(!items.length) return; any=true;
+      var h=document.createElement("h4"); h.textContent=GROUP_TITLE[g]||g; pickerBody.appendChild(h);
+      var grid=document.createElement("div"); grid.className="glyphgrid";
+      items.forEach(function(it){
+        var ch=cpChar(it.codepoint);
+        var cell=document.createElement("button"); cell.type="button"; cell.className="glyphcell"; cell.setAttribute("aria-label",it.label);
+        var g1=document.createElement("span"); g1.className="g"; g1.setAttribute("aria-hidden","true"); g1.textContent=ch;
+        var n1=document.createElement("span"); n1.className="n"; n1.textContent=it.label;
+        cell.appendChild(g1); cell.appendChild(n1);
+        cell.addEventListener("click", function(){ chooseSymbol({char:ch,label:it.label}); });
+        grid.appendChild(cell);
+      });
+      pickerBody.appendChild(grid);
+    });
+    if(!any){ var e=document.createElement("p"); e.className="empty"; e.textContent="Kein Zeichen gefunden."; pickerBody.appendChild(e); }
+  }
+  function openPicker(i){ activeRule=i; pickerSearch.value=""; buildPicker(""); if(picker.showModal) picker.showModal(); else picker.setAttribute("open",""); setTimeout(function(){pickerSearch.focus();},30); }
+  function closePicker(){ if(picker.close && picker.open) picker.close(); else picker.removeAttribute("open"); }
+  function chooseSymbol(sym){ if(activeRule>=0&&activeRule<state.rules.length){ state.rules[activeRule].sym=sym; render(); } closePicker(); }
+  $("pickerClose").addEventListener("click", closePicker);
+  $("pickNone").addEventListener("click", function(){ if(activeRule>=0&&activeRule<state.rules.length){ state.rules[activeRule].sym=null; render(); } closePicker(); });
+  pickerSearch.addEventListener("input", function(){ buildPicker(pickerSearch.value); });
+  picker.addEventListener("click", function(e){ if(e.target===picker) closePicker(); });
+  picker.addEventListener("cancel", function(){ closePicker(); });
+
+  // --- Aktionen -------------------------------------------------------------
+  $("print").addEventListener("click", function(){
+    // Druckseite auf das gewählte Format setzen.
+    var base=SIZES[state.size], w=base[0], h=base[1]; if(state.orient==="quer"){ var t=w; w=h; h=t; }
+    ensurePageStyle(w, h);
+    window.print();
+  });
+  var pageStyle=null;
+  function ensurePageStyle(w,h){
+    if(!pageStyle){ pageStyle=document.createElement("style"); document.head.appendChild(pageStyle); }
+    pageStyle.textContent = "@page{size:"+w+"mm "+h+"mm;margin:0}";
+  }
+  $("reset").addEventListener("click", function(){
+    state=defaults(); galleryQuery=""; gallerySearch.value="";
+    setSeg("sg-type", state.type);
+    setSeg("sg-dir", state.dir); setSeg("sg-leitmode", state.leitMode); setSeg("sg-tueralign", state.tuerAlign);
+    setSeg("tg-kicker", state.kickerOn?"1":"0"); setSeg("sg-cols", String(state.cols));
+    setSeg("tg-box", state.boxOn?"1":"0"); setSeg("sg-size", state.size);
+    setSeg("sg-orient", state.orient); setSeg("sg-scale", state.scale);
+    setSeg("tg-foot", state.footOn?"1":"0"); setSeg("tg-qr", state.qrOn?"1":"0");
+    buildGallery(); render();
+  });
+  function setSeg(id,val){ var g=$(id); Array.prototype.forEach.call(g.querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-v")===val)); }); }
+
+  // --- Icon-Daten laden -----------------------------------------------------
+  fetch(ICONS_URL).then(function(r){ return r.ok?r.json():null; }).then(function(data){
+    if(Array.isArray(data)&&data.length){ symbols=data.filter(function(it){ return it.group==="piktogramm"||it.group==="pfeil-kompass"; }); buildGallery(); }
+  }).catch(function(){});
+
+  buildGallery();
+  render();
+})();
+</script>
+
+<!-- Druck: nur das Schild, in Originalgrösse (Format wird beim Klick per @page gesetzt). -->
+<style>
+  @media print{
+    .ds-header,.dsnav,.dsnav-drawer,.dsnav-backdrop,.ds-footer,
+    .hero,.editor,.prevfoot,.actions,.shead,.note,dialog.picker,#ethik{ display:none !important; }
+    body{ background:#ffffff; }   /* # ds-ok: Druck auf weissem Papier */
+    main.wrap, section, .work, .preview, .frame, .stage{ max-width:none;margin:0;padding:0;border:0;background:none;display:block;overflow:visible;position:static }
+    .frame{box-shadow:none}
+    .sheetscale{ transform:none !important; height:auto !important; }
+    .sheet{ box-shadow:none !important; }
+  }
+</style>
+
+</body>
+</html>

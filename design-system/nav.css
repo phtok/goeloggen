@@ -1,0 +1,222 @@
+/* =============================================================================
+   Goetheanum CI – ds-nav: globale Kopfzeile + klappbares Schubladen-Menü
+   -----------------------------------------------------------------------------
+   Eine Navigation für alle Seiten, gespeist aus tools.json. Setzt tokens.css
+   und base.css voraus. Markup erzeugt nav.js; hier nur das Aussehen.
+   Akkordeon = native <details>/<summary> (klappbar, zugänglich, ohne Skript).
+   ============================================================================= */
+
+/* Die globale Navigation trägt immer die Hausschrift – unabhängig von der
+   Body-Schrift der Gastseite (sonst erbt sie z. B. Helvetica). */
+.dsnav,.dsnav-sub,.dsnav-drawer,.dsnav-onpage{font-family:var(--font)}
+
+/* Scrollbalken-Platz immer reservieren: sonst springt die zentrierte Navigation
+   zwischen kurzen und langen Seiten um die Balkenbreite nach rechts. */
+html{scrollbar-gutter:stable}
+
+/* Sprunglink „Zum Inhalt" – ausserhalb des Bildes, bis er den Fokus bekommt (WCAG 2.4.1). */
+.skip{position:absolute;left:-9999px;top:0;z-index:100;
+  background:var(--blue-solid);color:var(--on-accent);font-family:var(--font);
+  padding:10px 16px;border-radius:0 0 var(--r-control) 0;text-decoration:none}
+.skip:focus{left:0}
+.skip:focus-visible{outline:2px solid var(--on-accent);outline-offset:-4px}
+
+.dsnav{position:sticky;top:0;z-index:40;background:var(--bar-bg);
+  backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
+
+/* Seiten-Sprungleiste – sitzt UNTER dem Hero/der Lede, klebt beim Scrollen unter
+   der Kopfzeile. Inhaltsbreit (gleich, egal ob die Seite full-bleed oder .wrap ist). */
+html{scroll-behavior:smooth;scroll-padding-top:var(--header-h)}
+html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
+.dsnav-onpage{position:sticky;top:var(--header-h);z-index:39;
+  max-width:var(--ds-maxw);margin:0 auto;
+  background:var(--bar-bg);backdrop-filter:saturate(160%) blur(8px);
+  border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.dsnav-onpage::-webkit-scrollbar{display:none}
+.dsnav-onpage .row{display:flex;gap:22px;padding:11px 26px;white-space:nowrap}
+.dsnav-onpage a{font-size:15px;line-height:1;color:var(--muted);text-decoration:none;flex:0 0 auto}
+.dsnav-onpage a:hover{color:var(--gold-ink)}
+.dsnav-onpage a[aria-current="page"]{color:var(--gold-ink);font-weight:var(--w-deutlich)}
+.dsnav .bar{display:flex;align-items:center;gap:var(--s4);height:var(--header-h);
+  max-width:var(--ds-maxw);margin:0 auto;padding:0 26px}
+
+/* Wortmarke = das echte Goetheanum-Lockup (aus dem Logo-Generator), immer zurück zur Übersicht */
+.dsnav .brand{display:flex;align-items:center;gap:var(--s3);text-decoration:none;flex:0 0 auto}
+/* Beta-Kennzeichen neben dem Lockup – folgt dem Werkzeug-Status im Manifest.
+   Baut auf dem .badge-Rezept aus base.css auf (Sitz im Oval, Lese-Grotesk);
+   hier nur die Einfärbung: Gold statt Grau (genau ein Merkmal, G01).
+   Grösse hält den 14px-Floor (B03). */
+.dsnav .beta-chip{font-weight:var(--w-strong);color:var(--gold-ink);border-color:currentColor;flex:0 0 auto}
+.dsnav .brand .lockup{height:38px;width:auto;display:block}
+.dsnav .brand .mk{width:24px;height:24px;border-radius:6px;display:block}
+.dsnav .brand .wm{font-family:var(--font);font-weight:var(--w-text);font-size:24px;line-height:1;color:var(--muted);letter-spacing:.005em}
+
+/* „← Übersicht" – nur in der Generator-Variante sichtbar */
+.dsnav .back{display:none;align-items:center;gap:6px;color:var(--muted);font-size:var(--t-micro);text-decoration:none}
+.dsnav.is-werkzeug .back{display:inline-flex}
+.dsnav .back:hover{color:var(--gold-ink)}
+
+/* Primär-Welten – die vier Schnellzugriffe sollen klar lesbar sein, nicht verblassen:
+   Lese-Ink statt Grau, etwas grösser, mehr Luft. */
+.dsnav .worlds{display:flex;gap:26px;margin-left:auto}
+.dsnav .worlds a,.dsnav .worlds button{font:inherit;font-size:15px;color:var(--ink);
+  background:none;border:0;cursor:pointer;padding:0;text-decoration:none}
+.dsnav .worlds a:hover,.dsnav .worlds button:hover{color:var(--gold-ink)}
+
+/* Seiten-CTA in der Kopfzeile (data-cta) – Aktion = volles Blau + Weiss (B01),
+   immer sichtbar, auch mobil (kein langes Suchen). margin-left:auto hält ihn
+   rechts – auf Desktop hinter den Welten, mobil (Welten ausgeblendet) bündig. */
+.dsnav .cta{margin-left:auto;display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;
+  background:var(--blue-solid);color:var(--on-accent);font-weight:var(--w-strong);
+  font-size:14px;line-height:1;text-decoration:none;white-space:nowrap;
+  border-radius:var(--r-control);padding:11px 16px;min-height:40px}
+.dsnav .cta:hover{filter:brightness(1.08)}
+
+/* Lesemodus-Schalter – ein „a", das die Leseschrift zeigt; Zustand über Gold-Ring.
+   Das Zeichen selbst folgt dem Modus: Goetheanum (Haus) → Source (Lesen). Minuskel,
+   weil sich die beiden Schriften am Klein-a deutlicher unterscheiden als an der Versal.
+   Optische Mitte an den Theme-Schalter angeglichen (kein fixes Kästchen, gleiche Höhe). */
+.dsnav .read{margin-left:16px;display:inline-flex;align-items:center;justify-content:center;font:inherit;
+  color:var(--ink);background:none;border:0;padding:6px;cursor:pointer;line-height:1;border-radius:var(--r-control)}
+.dsnav .read .ic{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:22px;line-height:1;display:block}
+.dsnav .read:hover{color:var(--gold-ink)}
+.dsnav .read[aria-pressed="true"]{color:var(--gold-ink);box-shadow:inset 0 0 0 2px var(--gold)}
+.dsnav .read[aria-pressed="true"] .ic{font-family:var(--font-text)}
+
+/* ☾/☀ Hell-Dunkel – nur das Icon */
+.dsnav .theme,.dsnav .share{margin-left:8px;display:inline-flex;align-items:center;justify-content:center;font:inherit;
+  color:var(--ink);background:none;border:0;padding:6px;cursor:pointer;line-height:1}
+.dsnav .theme .ic,.dsnav .share .ic{font-size:18px;line-height:1}
+.dsnav .theme:hover,.dsnav .share:hover{color:var(--gold-ink)}
+.dsnav .share.ok{color:var(--ok)}
+/* Sofort-Tooltips (native title-Hovers erscheinen erst nach ~1s) */
+.dsnav [data-tip]{position:relative}
+.dsnav [data-tip]::after{content:attr(data-tip);position:absolute;top:calc(100% + 7px);right:0;z-index:60;
+  background:var(--ink);color:var(--paper);font-size:var(--t-micro);line-height:1;padding:5px 9px;border-radius:7px;
+  white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s ease .1s}
+.dsnav [data-tip]:hover::after,.dsnav [data-tip]:focus-visible::after{opacity:1}
+
+/* ☰ Burger – nur das Icon, keine Pille, kein Wort */
+.dsnav .all{margin-left:10px;display:inline-flex;align-items:center;gap:6px;font:inherit;
+  color:var(--ink);background:none;border:0;padding:4px;cursor:pointer;line-height:1}
+.dsnav .all .ic{font-size:23px;line-height:1}
+.dsnav .all:hover{color:var(--gold-ink)}
+.dsnav .all .idot{width:7px;height:7px;border-radius:var(--r-pill);background:var(--gold)}
+
+@media(max-width:720px){
+  .dsnav .worlds{display:none}
+  /* Fingerziel-Luft (B04): die drei Modi-Schalter ziehen in die Schublade
+     (.dmodes) – die Leiste behält nur Marke + Menü. */
+  .dsnav .read,.dsnav .share,.dsnav .theme{display:none}
+  .dsnav .all{margin-left:auto}
+}
+
+/* --- Schublade ------------------------------------------------------------- */
+.dsnav-backdrop{position:fixed;inset:0;background:var(--scrim);opacity:0;visibility:hidden;
+  transition:opacity .18s,visibility .18s;z-index:45}
+.dsnav-backdrop.open{opacity:1;visibility:visible}
+
+.dsnav-drawer{position:fixed;top:0;right:0;z-index:46;width:min(420px,100%);height:100vh;
+  background:var(--paper);border-left:1px solid var(--line);box-shadow:var(--shadow-card);
+  transform:translateX(100%);transition:transform .22s ease;display:flex;flex-direction:column}
+.dsnav-drawer.open{transform:none}
+
+.dsnav-drawer .dhead{display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;height:var(--header-h);border-bottom:1px solid var(--line);flex:0 0 auto}
+.dsnav-drawer .dhead .t{font-weight:var(--w-deutlich);font-size:15px}
+.dsnav-drawer .close{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+.dsnav-drawer .close:hover{color:var(--ink)}
+
+/* Modi-Schalter oben in der Schublade (Lesemodus · Hell/Dunkel · Teilen):
+   nur auf schmalen Schirmen sichtbar – dort ersetzen sie die Leisten-Icons.
+   Leise: Konturen auf Papier statt Füllflächen, aktiver Zustand = Gold statt
+   Grau (ein Merkmal, kein Doppel-Ring — G01/G03). Wort + Zeichen,
+   Ziele ≥44px (B04). */
+.dsnav-drawer .dmodes{display:none;gap:var(--s3);padding:var(--s4) 22px;
+  border-bottom:1px solid var(--line);flex:0 0 auto}
+.dsnav-drawer .dmodes button{flex:1 1 auto;display:inline-flex;align-items:center;justify-content:center;
+  gap:8px;font:inherit;font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);
+  background:none;border:1px solid var(--line);border-radius:var(--r-control);
+  padding:10px 8px;min-height:var(--tap);cursor:pointer}
+/* Das Zeichen darf nie dem Platz geopfert werden (Flex-Kinder schrumpfen sonst auf 0). */
+.dsnav-drawer .dmodes .ic{flex:0 0 auto}
+.dsnav-drawer .dmodes button:hover{border-color:var(--gold)}
+.dsnav-drawer .dmodes button[aria-pressed="true"]{color:var(--gold-ink);border-color:var(--gold)}
+.dsnav-drawer .dmodes .read .ic{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:19px;line-height:1}
+.dsnav-drawer .dmodes .read[aria-pressed="true"] .ic{font-family:var(--font-text)}
+.dsnav-drawer .dmodes .theme .ic,.dsnav-drawer .dmodes .share .ic{font-size:17px;line-height:1;display:inline-flex}
+.dsnav-drawer .dmodes .share.ok{color:var(--ok)}
+@media(max-width:720px){.dsnav-drawer .dmodes{display:flex}}
+
+/* Suche im Menü – filtert die Werkzeugliste live */
+.dsnav-drawer .dsearch{padding:var(--s3) 22px;border-bottom:1px solid var(--line);flex:0 0 auto}
+.dsnav-drawer .dsnav-q{width:100%;font:inherit;font-family:var(--font-text);font-size:16px;
+  color:var(--ink);background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);
+  padding:9px 13px;min-height:var(--tap);outline:none}
+.dsnav-drawer .dsnav-q:focus{border-color:var(--gold)}
+.dsnav-drawer .dsnav-q::placeholder{color:var(--muted)}
+
+.dsnav-drawer .body{overflow:auto;padding:var(--s2) 0 var(--s8)}
+
+/* Globaler Feedback-Einblender (unten, dezent, wegklickbar) – eine einladende Frage.
+   Die ganze Pille ist der Aufruf; ein Klick öffnet die Mail. Kein Beta-Hinweis mehr. */
+.dsnav-invite{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:44;
+  display:flex;align-items:center;gap:4px;max-width:calc(100% - 28px);
+  /* OPAK, nicht --bar-bg: eine klebende Leiste liegt über dem EIGENEN Papier
+     und darf durchscheinen; diese Pille schwebt über BELIEBIGEM Inhalt. Über
+     einer dunklen Bühne mischt --bar-bg (90% Weiss) den Grund auf #e8e8e8 —
+     der Aufruf in --gold-ink fiel damit auf 4.23:1 und verfehlte B02.
+     Opak trägt er 5.18:1. Gemessen am Kalender-Entwurf, 25. August 2026. */
+  background:var(--paper);backdrop-filter:saturate(160%) blur(10px);
+  border:1px solid var(--line);border-radius:var(--r-pill);
+  padding:5px 6px;box-shadow:var(--shadow-card);font-size:var(--t-small)}
+.dsnav-invite .ask{display:inline-flex;align-items:center;gap:7px;color:var(--ink);text-decoration:none;
+  white-space:nowrap;padding:7px 14px;border-radius:var(--r-pill)}
+.dsnav-invite .ask b{color:var(--gold-ink);font-weight:var(--w-deutlich)}
+.dsnav-invite .ask:hover{background:var(--soft)}
+.dsnav-invite .x{border:0;background:none;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;
+  width:30px;height:30px;border-radius:var(--r-pill);flex:0 0 auto}
+.dsnav-invite .x:hover{color:var(--ink);background:var(--soft)}
+@media(max-width:480px){.dsnav-invite .ask{padding:7px 12px}}
+/* Liegt der Familien-Schweber unten in der Ecke (design-system/familie.js),
+   rückt die Einblendung eine Zeile höher: auf schmalen Schirmen überlappten
+   die beiden sonst ab 360 px abwärts – am gerenderten Blatt gemessen,
+   8. September 2026. */
+@media(max-width:480px){
+  :root.goe-hat-schweber .dsnav-invite{bottom:calc(var(--s4) + var(--tap) + var(--s2))}
+}
+
+/* Toast für den unsichtbaren Intern-Schalter */
+.dsnav-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);
+  padding:8px 16px;border-radius:var(--r-pill);font-size:var(--t-micro);opacity:0;visibility:hidden;
+  transition:opacity .2s,visibility .2s;z-index:60}
+.dsnav-toast.show{opacity:1;visibility:visible}
+
+.dsnav-group{border-bottom:1px solid var(--line-soft)}
+.dsnav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+  padding:var(--s4) 22px;font-weight:var(--w-deutlich);font-size:16px}
+.dsnav-group>summary::-webkit-details-marker{display:none}
+.dsnav-group>summary .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s}
+.dsnav-group[open]>summary .arr{transform:rotate(90deg)}
+
+/* Unterwelten: eine Ebene tiefer verschachtelt (Labor → Ligaturen, Schriftpflege,
+   Geparktes, Überreste). Ruhiger als die Oberwelt – Titel kleiner und weniger fett;
+   Bereich und Einträge eingerückt, damit die Verschachtelung lesbar ist. */
+.dsnav-group .dsnav-group{border-bottom:0;border-top:1px solid var(--line-soft)}
+.dsnav-group .dsnav-group>summary{padding-left:36px;font-weight:var(--w-klar);font-size:15px}
+.dsnav-group .dsnav-group .dsnav-link{padding-left:48px}
+
+.dsnav-link{display:flex;align-items:center;gap:10px;min-height:var(--tap);padding:6px 22px;text-decoration:none;color:var(--ink)}
+.dsnav-home{border-bottom:1px solid var(--line-soft);margin-bottom:var(--s2)}
+.dsnav-link:hover{background:var(--soft)}
+.dsnav-link .tt{font-size:17px}
+/* Aktuelle Seite im Menü hervorheben – ruhig, mit Gold-Kante. */
+.dsnav-link.is-active{background:var(--soft);box-shadow:inset 3px 0 0 var(--gold-deep)}
+.dsnav-link.is-active .tt{color:var(--gold-ink);font-weight:var(--w-deutlich)}
+/* Status-Marker (nur Intern-Schublade): leises Wort rechts – Meta-Rolle in der
+   Lese-Grotesk (B03-Floor), Live bleibt unmarkiert (G03). */
+.dsnav-link .st{margin-left:auto;flex:0 0 auto;font-family:var(--font-text);
+  font-size:var(--t-micro);color:var(--muted)}
+
+.dsnav-drawer .foot{padding:var(--s4) 22px;border-top:1px solid var(--line);color:var(--muted);font-size:var(--t-micro);flex:0 0 auto}
+.dsnav-drawer .foot a{color:var(--gold-ink);text-decoration:none}

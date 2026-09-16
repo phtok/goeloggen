@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Perspektive: goetheanum.ch im Hausbild</title>
+<meta name="description" content="Die Startseite von goetheanum.ch, vollständig nachgebaut mit dem Goetheanum-Design-System – echte Inhalte vom 6. Juli 2026, als ganze Webseite erlebbar." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../design-system/tokens.css" />
+<link rel="stylesheet" href="../design-system/base.css" />
+<style>
+  /* Nachbau-Kopfzeile der Zielseite – ganz aus Tokens/Rollen gesetzt. */
+  .site-head{border-bottom:1px solid var(--line);background:var(--paper)}
+  .site-head .util{display:flex;justify-content:flex-end;align-items:center;gap:var(--s4);flex-wrap:wrap;
+    padding:var(--s2) 0;font-family:var(--font-text);font-size:var(--t-small)}
+  .site-head .util a{color:var(--muted)}
+  .site-head .util a:hover{color:var(--gold-ink)}
+  .site-head .util .langs{display:flex;gap:var(--s2)}
+  .site-head .util .langs b{color:var(--ink);font-weight:600}
+  .site-head .bar{display:flex;align-items:center;justify-content:space-between;gap:var(--s6);
+    padding:var(--s3) 0;flex-wrap:wrap}
+  .site-head .brand{display:flex;align-items:center;color:var(--ink);text-decoration:none}
+  .site-head .brand .lockup{height:44px}
+  .site-head .mainnav{display:flex;gap:var(--s4);flex-wrap:wrap;font-family:var(--font-display);
+    font-weight:var(--w-deutlich);font-size:16px}
+  .site-head .mainnav a{color:var(--ink);padding:6px 0}
+  .site-head .mainnav a:hover{color:var(--gold-ink)}
+
+  .hero{padding-block:clamp(40px,7vw,80px) var(--s6)}
+  .events{display:grid;gap:var(--s3);max-width:820px}
+  .event .reihe{margin-left:var(--s2)}
+  .mehr{margin-top:var(--s6)}
+  .trow{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--s4)}
+  .news{display:grid;gap:var(--s3);max-width:820px}
+</style>
+</head>
+<body>
+
+<header class="site-head"><!-- # ds-ok Nachbau: die Kopfzeile der Zielseite ist hier der Inhalt -->
+  <div class="wrap">
+    <div class="util">
+      <a href="#gesellschaft">Mitglied werden</a><a href="#fussnote">Offene Stellen</a><a href="#fussnote">Spenden</a><a href="#fussnote">Login</a>
+      <span class="langs" aria-label="Sprache"><b>DE</b><a href="#fussnote" lang="en">EN</a><a href="#fussnote" lang="fr">FR</a><a href="#fussnote" lang="es">ES</a></span>
+    </div>
+    <div class="bar">
+      <a class="brand" href="#top" aria-label="Goetheanum – Startseite">
+        <img class="lockup" src="../assets/logos/goetheanum-logo.svg" alt="Goetheanum" />
+      </a>
+      <nav class="mainnav" aria-label="Hauptnavigation">
+        <a href="#demnaechst">Veranstaltungen</a>
+        <a href="#studieren">Hochschule</a>
+        <a href="#fussnote">Sektionen</a>
+        <a href="#gesellschaft">Gesellschaft</a>
+        <a href="#besuchen">Campus</a>
+        <a href="#nachrichten">Medien</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <section id="gesellschaft">
+    <!-- Bilder: site-eigenes CDN (static.goetheanum.ch) – echte Motive der Startseite -->
+    <figure class="hero-bild">
+      <img src="https://static.goetheanum.ch/uploads/websites/home/_1200x628_crop_center-center_75_none/1784065/Hero-2-Goetheanum.jpg"
+           alt="Das Goetheanum auf dem Dornacher Hügel" loading="eager" />
+      <figcaption class="text">
+        <h1>Willkommen am Goetheanum!</h1>
+        <p class="lede">Freie Hochschule für Geisteswissenschaft und Sitz der
+          Allgemeinen Anthroposophischen Gesellschaft</p>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section id="demnaechst">
+    <div class="shead"><h2>Demnächst</h2><p>Veranstaltungen der kommenden Tage am Goetheanum.</p></div>
+    <div class="events">
+      <article class="event">
+        <span class="thumb"><img src="https://static.goetheanum.ch/assets/medias/Veranstaltungen/_sliderCard/V_RS_als_lernender_lehrender_SWS.jpg" alt="" loading="lazy" /></span>
+        <div class="edate"><b>9</b><span>Juli</span></div>
+        <div><span class="kick">Vortrag · Allgemeine Anthroposophische Sektion</span>
+          <h3>Rudolf Steiner liest Plato</h3>
+          <p class="emeta">Vortrag Salvatore Lavecchia · 19.00&nbsp;Uhr</p></div>
+      </article>
+      <article class="event">
+        <span class="thumb"><img src="https://static.goetheanum.ch/assets/medias/Veranstaltungen/_sliderCard/1918907/V_Kepler-Sternwarte.jpg" alt="" loading="lazy" /></span>
+        <div class="edate"><b>9</b><span>Juli</span></div>
+        <div><span class="kick">Vortrag · Mathematisch-Astronomische Sektion</span>
+          <h3>Das Sommerdreieck</h3>
+          <p class="emeta">Anleitung zur Beobachtung von aktuellen Himmelserscheinungen · 22.00&nbsp;Uhr</p></div>
+      </article>
+      <article class="event">
+        <span class="thumb"><img src="https://static.goetheanum.ch/assets/medias/Goetheanum/Veranstaltungen/_sliderCard/2070293/V_Faust_2026_Quadrat_1.jpg" alt="" loading="lazy" /></span>
+        <div class="edate"><b>10</b><span>Juli</span></div>
+        <div><span class="kick">Vortrag · Goetheanum-Bühne</span>
+          <h3>Der Pakt mit dem Bösen — bei Faust? Bei uns?</h3>
+          <p class="emeta">Einleitung von Philipp Reubke und Gespräch · 14.00&nbsp;Uhr</p></div>
+      </article>
+      <article class="event">
+        <span class="thumb"><img src="https://static.goetheanum.ch/assets/medias/Goetheanum/Veranstaltungen/_sliderCard/2070293/V_Faust_2026_Quadrat_1.jpg" alt="" loading="lazy" /></span>
+        <div class="edate"><b>10</b><span>Juli</span></div>
+        <div><span class="kick">Vortrag · Goetheanum-Bühne</span>
+          <h3><q>Auf freiem Grund mit freiem Volke stehen</q></h3>
+          <p class="emeta">Vortrag von Gerald Häfner · 15.00&nbsp;Uhr</p></div>
+      </article>
+      <article class="event">
+        <span class="thumb"><img src="https://static.goetheanum.ch/assets/medias/Goetheanum/Veranstaltungen/_sliderCard/2070293/V_Faust_2026_Quadrat_1.jpg" alt="" loading="lazy" /></span>
+        <div class="edate"><b>10</b><span>Juli</span></div>
+        <div><span class="kick">Aufführung · Goetheanum-Bühne</span>
+          <h3>Faust 1</h3>
+          <p class="emeta">16.30&nbsp;Uhr · ganze Reihe</p></div>
+      </article>
+      <article class="event">
+        <span class="thumb"><img src="https://static.goetheanum.ch/assets/medias/Goetheanum/Veranstaltungen/_sliderCard/2070293/V_Faust_2026_Quadrat_1.jpg" alt="" loading="lazy" /></span>
+        <div class="edate"><b>11</b><span>Juli</span></div>
+        <div><span class="kick">Vortrag · Goetheanum-Bühne</span>
+          <h3>Führt Technik notwendig zu Zerstörung? Ist lebensfördernde Technik möglich?</h3>
+          <p class="emeta">Einleitung von Nathaniel Williams und Gespräch · 9.30&nbsp;Uhr</p></div>
+      </article>
+    </div>
+    <div class="mehr"><a class="btn primary" href="#demnaechst">Mehr Veranstaltungen</a></div>
+  </section>
+
+  <section id="besuchen">
+    <div class="shead"><h2>Das Goetheanum erleben</h2><p>Besuch, Studium und Führungen.</p></div>
+    <div class="trow">
+      <a class="teaser stack" href="#besuchen">
+        <span class="thumb" aria-hidden="true"><img src="https://static.goetheanum.ch/uploads/cards/_500x500_fit_center-center_85_none/3DEB3185-0FA3-43D7-8293-DCC7BAC88E80.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">Campus</span><h3>Besuchen Sie uns!</h3>
+        <p class="ex">Gelegen in der Juralandschaft, 10 Kilometer südlich von Basel, erhebt sich das Goetheanum in seiner expressiven Architektur auf dem Dornacher Hügel — mit malerischem Gartenpark, Café und Buchhandlung.</p>
+        <span class="byline"><b>Öffnungszeiten</b></span></span></a>
+      <a class="teaser stack" href="#studieren" id="studieren">
+        <span class="thumb" aria-hidden="true"><img src="https://static.goetheanum.ch/uploads/cards/_500x500_fit_center-center_85_none/2888440/Studies-24_25-37-_-Nicole-Asis.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">Hochschule</span><h3>Am Goetheanum studieren</h3>
+        <p class="ex">Die Abteilung für Weiterbildung bietet Vollzeit- und Teilzeitstudiengänge vor Ort und online für alle an, die sich für die Anthroposophie und ihre Relevanz in unterschiedlichen Praxisfeldern interessieren.</p>
+        <span class="byline"><b>Programme entdecken</b></span></span></a>
+      <a class="teaser stack" href="#besuchen">
+        <span class="thumb" aria-hidden="true"><img src="https://static.goetheanum.ch/uploads/cards/_500x500_fit_center-center_85_none/49B623CE-72C7-4995-9065-1FB70CD4A74B.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">Campus</span><h3>Führungen</h3>
+        <p class="ex">Wir zeigen Ihnen die Geschichte des Goetheanum, erzählen von Rudolf Steiner und erklären die Anthroposophie — mit Architektur, Grossem Saal und Ausstellungsraum. Auch als Themen-, Kinder- und Schulführung.</p>
+        <span class="byline"><b>Alle Führungen</b></span></span></a>
+    </div>
+  </section>
+
+  <section id="nachrichten">
+    <div class="shead"><h2>Nachrichten</h2><p>Aus dem Haus und der Wochenschrift.</p></div>
+    <div class="news">
+      <a class="teaser" href="#nachrichten">
+        <span class="thumb" aria-hidden="true"><img src="https://static.goetheanum.ch/assets/medias/Mitglieder/_700x525_crop_center-center_75_none/AWW2026_7-8_Web_12.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">29. Juni 2026</span><h3>Studien- und Lernort Goetheanum</h3>
+        <p class="ex">Das Goetheanum entwickelt sich mehr als ein Jahrhundert nach seiner Gründung durch das Studium und Erforschen der Anthroposophie weiter.</p></span></a>
+      <a class="teaser" href="#nachrichten">
+        <span class="thumb" aria-hidden="true"><img src="https://static.goetheanum.ch/assets/medias/Goetheanum/Nachrichten/_700x525_crop_center-center_75_none/Faust-2026-am-Goetheanum-Picknick_Wolfgang-Held.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">26. Juni 2026</span><h3><q>Faust</q> — 99., 100. und 101. Aufführung: Feier mit Picknickdecke im Gartenpark</h3>
+        <p class="ex">Drei Sommerfestivals mit Johann Wolfgang Goethes <q>Faust 1 und 2</q> im Juli am Goetheanum: Nach Marie Steiners Uraufführung 1938 gibt es jetzt die 100. Aufführung.</p>
+        <span class="byline"><b>Wolfgang Held</b></span></span></a>
+      <a class="teaser" href="#nachrichten">
+        <span class="thumb" aria-hidden="true"><img src="https://static.goetheanum.ch/assets/medias/Goetheanum/Nachrichten/_700x525_crop_center-center_75_none/MM_Clowing_Juni_2026.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">26. Juni 2026</span><h3>Das Unerwartete erwarten, das Gewohnte neu befragen</h3>
+        <p class="ex">Ob Eltern, Büromensch oder Lehrkraft: Wer das Staunen übt, kann aus Verhaltensmustern ausbrechen und sich dem öffnen, was man noch nicht kennt.</p>
+        <span class="byline"><b>Sebastian Jüngel</b></span></span></a>
+      <a class="teaser" href="#nachrichten">
+        <span class="thumb" aria-hidden="true"><img src="https://static.goetheanum.ch/assets/medias/Goetheanum/Nachrichten/_700x525_crop_center-center_75_none/3166797/G2026_24_Web_14.jpg.jpg" alt="" loading="lazy" /></span>
+        <span><span class="kick">22. Juni 2026</span><h3>Faust: Japanischer Auftakt</h3>
+        <p class="ex">Zum Beginn der Probenzeit für die <q>Faust</q>-Aufführung hat Yuma Ito, Eurythmist im Ensemble, seinen Vater Tomokazu mit dessen Frau empfangen.</p></span></a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer" id="fussnote">
+  <div class="wrap">
+    <div class="fcols">
+      <div><p class="ft">Goetheanum</p>
+        <a href="#fussnote">Rüttiweg 45, 4143 Dornach, Schweiz</a>
+        <a href="#fussnote">+41 61 706 42 42</a>
+        <a href="#fussnote">info@goetheanum.ch</a>
+        <a href="#fussnote">Kontakte &amp; Telefonzeiten</a>
+        <a href="#fussnote">Plan &amp; Zufahrt</a></div>
+      <div><p class="ft">Öffnungszeiten</p>
+        <a href="#fussnote">Täglich 9–20&nbsp;Uhr</a>
+        <a href="#fussnote">Bei Veranstaltungen erweitert</a>
+        <a href="#fussnote">Eine Führung buchen</a>
+        <a href="#fussnote">Unterkünfte</a></div>
+      <div><p class="ft">Ticketverkauf</p>
+        <a href="#fussnote">Am Empfang: Di.–So. 9–18&nbsp;Uhr</a>
+        <a href="#fussnote">Telefon: Di.–Sa. 14–18&nbsp;Uhr</a>
+        <a href="#fussnote">+41 61 706 44 44</a>
+        <a href="#fussnote">tickets@goetheanum.ch</a></div>
+      <div><p class="ft">Administration</p>
+        <a href="#fussnote">Mitgliedersekretariat</a>
+        <a href="#fussnote">Hochschulsekretariat</a>
+        <a href="#fussnote">Bühne</a>
+        <a href="#fussnote">Offene Stellen</a>
+        <a href="#fussnote">Freiwilligenarbeit</a></div>
+      <div><p class="ft">Informationen</p>
+        <a href="#fussnote">Impressum</a>
+        <a href="#fussnote">Datenschutz</a>
+        <a href="#fussnote">Nachhaltigkeit</a>
+        <a href="#fussnote">Hausordnung</a></div>
+      <div><p class="ft">Schnellzugriff</p>
+        <a href="#fussnote">Spenden</a>
+        <a href="#fussnote">Mitglied werden</a>
+        <a href="#fussnote">Medienstelle</a>
+        <a href="#fussnote">Newsletter</a></div>
+      <div><p class="ft">Soziale Medien</p>
+        <a href="#fussnote">Facebook</a>
+        <a href="#fussnote">Instagram</a>
+        <a href="#fussnote">Youtube</a>
+        <a href="#fussnote">Telegram</a></div>
+    </div>
+    <div class="frow">
+      <span><strong>Goetheanum</strong> · Nachbau der Startseite im Design-System · Inhalte: goetheanum.ch, 6. Juli 2026</span>
+      <span><a href="../design-system/">Design-System</a></span>
+    </div>
+  </div>
+</footer>
+
+<div class="fab" role="navigation" aria-label="Perspektive">
+  <a class="btn primary" href="../design-system/#perspektiven">‹ Zurück zum Design-System</a>
+  <a class="btn" href="https://goetheanum.ch/de" target="_blank" rel="noopener">Original öffnen&nbsp;↗</a>
+</div>
+
+</body>
+</html>

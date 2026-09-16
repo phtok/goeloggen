@@ -1,0 +1,93 @@
+# TODO - Goetheanum Logo Generator
+
+## 🔴 High Priority - Design Fixes
+
+### 1. Schachbrett durch einfache Fläche ersetzen
+**Problem:** Transparenter Hintergrund zeigt Schachbrett-Muster  
+**Lösung:** Einfache hellgraue Fläche `#f5f5f5`  
+**Datei:** `index.html` - `render()` Funktion  
+**Code:** 
+```javascript
+// Aktuell:
+pa.style.backgroundImage='linear-gradient(...)';
+// Neu:
+pa.style.backgroundColor='#f5f5f5';
+```
+
+### 2. Reihenfolge: Sprache vor Layout
+**Problem:** Layout-Option steht vor Sprache  
+**Lösung:** Tausche die beiden Sektionen in HTML  
+**Datei:** `index.html` - `.col-left` Bereich  
+
+### 3. Preview-Padding erhöhen
+**Problem:** Logo zu eng am Rand  
+**Lösung:** Preview-Area Padding von `30px 40px` auf `50px 80px`  
+**Datei:** `index.html` - `#preview-area` CSS  
+
+### 4. Header-Font: Titillium Upright Regular
+**Problem:** Header nutzt nicht den embedded Font  
+**Lösung:** `@font-face` hinzufügen und `.htitle` anpassen  
+**Datei:** `index.html` - CSS `<style>` Bereich  
+
+## 🟡 Medium Priority - Features
+
+### 5. Untertitel verstecken
+**Problem:** Untertitel-Option wird selten gebraucht  
+**Lösung:** `display:none` + geheimer Unlock (Doppelklick auf "Größe")  
+**Datei:** `index.html` - HTML + JavaScript  
+
+### 6. Controls Margin erhöhen
+**Problem:** Preview überdeckt Optionen beim Vergrößern  
+**Lösung:** `margin-top` von `240px` auf `380px`  
+**Datei:** `index.html` - `#controls-area` CSS  
+
+## 🟢 Low Priority - Nice to Have
+
+### 7. Mobile Optimierung
+- Spalten-Reihenfolge auf Mobile testen
+- Touch-Interaktion für Slider verbessern
+
+### 8. Export-Feedback
+- Loading-Indicator beim PNG/JPG Export
+- Success-Message nach Download
+
+### 9. Keyboard-Shortcuts
+- `Cmd/Ctrl + S` → SVG Export
+- `Cmd/Ctrl + Shift + S` → PNG Export
+- `Esc` → Untertitel schließen (falls offen)
+
+## 📋 Testing Checklist
+
+- [ ] Alle 34 Organisationen testen
+- [ ] Alle Sprachen (DE, EN, FR, IT)
+- [ ] Alle Farbvarianten
+- [ ] Export SVG (Text-to-Path prüfen)
+- [ ] Export PNG/JPG
+- [ ] Responsive auf Mobile
+- [ ] Browser-Kompatibilität (Chrome, Firefox, Safari)
+
+## 🐛 Known Issues
+
+1. **Doppelte render() Funktion** - wurde schon mal zum Problem
+2. **Button-Styling inkonsistent** - Color modes manchmal schwarz/weiß
+
+## 💡 Future Ideas
+
+- Batch-Export (alle Organisationen auf einmal)
+- Preset-System (eigene Farbkombinationen speichern)
+- Historie (letzte 5 Generierungen)
+- URL-Parameter für Direktlinks (z.B. `?org=medizin&lang=de`)
+
+---
+
+## 🌍 Projektweit (über den Logo-Generator hinaus)
+
+### Zweisprachigkeit (Deutsch / Englisch)
+- Oberflächen der Werkzeuge, Front door und Hub zweisprachig anlegen (DE primär, EN gleichwertig).
+- Sprachumschalter im globalen Header (ds-nav); Auswahl im localStorage merken.
+- UI-Texte in einer kleinen DE/EN-Tabelle bündeln statt im Markup verstreuen; aus dem Manifest sprachneutral halten, wo möglich.
+- Lockup/Sektionsnamen prüfen: braucht „Werkzeuge" eine englische Entsprechung?
+
+### Domains
+- `werkzeuge.goetheanum.ch`: kanonische Domain (live, CNAME im Repo).
+- `tools.goetheanum.ch`: für spätere Projekte reserviert – bewusst **nicht** auf werkzeuge umleiten oder belegen.

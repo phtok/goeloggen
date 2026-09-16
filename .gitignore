@@ -1,0 +1,54 @@
+# macOS
+.DS_Store
+
+# Local machine tooling
+.brew-cache/
+.brew-local/
+.pydeps/
+.venv-font/
+
+# Editor / temp
+*.swp
+*.swo
+*.tmp
+*.log
+
+# Local generated outputs
+tmp/
+output/
+
+# Large local research/data folders (not for GitHub)
+hefte_pdf/
+ausgabe_zeichnungen/
+collections/jahrgaenge/pdfs/**
+!collections/jahrgaenge/pdfs/.gitkeep
+collections/jahrgaenge/zeichnungen/**
+!collections/jahrgaenge/zeichnungen/.gitkeep
+
+# Local experiment snapshots
+archive/*
+fremdprojekte/
+
+# Cloudflare worker local state/config
+workers/.wrangler/
+workers/**/.wrangler/
+workers/wrangler.toml
+workers/**/.secrets.local
+workers/**/wrangler.toml
+
+# Brand Portrait tool local runtime files
+services/brand-portrait/.env
+services/brand-portrait/.venv/
+services/brand-portrait/tmp/
+services/brand-portrait/.hf-cache/
+services/brand-portrait/data/storage/inputs/
+services/brand-portrait/data/storage/outputs/
+services/brand-portrait/data/storage/exports/
+services/brand-portrait/portrait_brand_generator.egg-info/
+services/brand-portrait/*.jpg
+services/brand-portrait/*.png
+__pycache__/
+
+# Browser-Werkzeuge (tools/barrierefreiheit.mjs) — Abhängigkeiten nicht versionieren
+tools/node_modules/
+.env

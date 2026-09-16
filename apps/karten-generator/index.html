@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Kartentool · Goetheanum Campus</title>
+
+  <link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+  <link rel="stylesheet" href="../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../design-system/base.css" />
+  <link rel="stylesheet" href="../../design-system/nav.css" />
+
+  <style>
+    /* Kartenschrift v2.7: Titel = Deutlich, Labels/Legende = Klar (B03/G-Regeln).
+       Familiennamen exakt so auch im PDF-Export registriert. */
+    @font-face {
+      font-family: "GoetheanumDeutlich";
+      src: url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2") format("woff2");
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    /* Kreiszahlen der Marker = Design-System-Sonderelement (.step-num):
+       Hausschrift Laut (680 = --w-strong), dort vermessen. */
+    @font-face {
+      font-family: "GoetheanumLaut";
+      src: url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2") format("woff2");
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    /* Werte/Badges auf der Karte: Lese-Grotesk (Hausregel Label/Wert/Badge);
+       die Beispielkarten setzten dafür die damalige Grotesk in Bold. */
+    @font-face {
+      font-family: "SourceSans3Semibold";
+      src: url("../../assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2") format("woff2");
+      font-weight: 600; font-style: normal; font-display: swap;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: minmax(300px, 380px) 1fr;
+      gap: var(--s8);
+      padding: var(--s6);
+      align-items: start;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+    }
+
+    /* Editor-Spalte läuft normal mit dem Seiten-Scroll (kein eigener
+       Innen-Scroll — der liess die Spalte ‹hochgerutscht› stehen);
+       die Vorschau bleibt sticky, so ist bei den unteren Funktionen
+       sichtbar, was sich auf dem Blatt ändert. */
+    .controls {
+      display: flex; flex-direction: column; gap: var(--s4);
+      min-width: 0;
+    }
+    .preview-shell { position: sticky; top: var(--s4); }
+    @media (max-width: 900px) {
+      .preview-shell { position: static; }
+    }
+    .controls fieldset {
+      border: 1px solid var(--line);
+      border-radius: var(--r-card);
+      background: var(--paper);
+      padding: var(--s4);
+      display: flex; flex-direction: column; gap: var(--s3);
+    }
+    .controls legend {
+      font-weight: var(--w-strong);
+      font-size: var(--t-small);
+      padding: 0 var(--s2);
+    }
+
+    .controls input[type="text"],
+    .controls input[type="search"] {
+      font: inherit; font-family: var(--font-text); font-size: 1rem;   /* B03: Eingaben ≥16px */
+      min-height: var(--tap);                     /* B04 */
+      padding: 0 var(--s3);
+      border: 1px solid var(--line);
+      border-radius: var(--r-control);
+      background: var(--field-bg);
+      color: var(--ink);
+      width: 100%;
+    }
+    .checkbox-row {
+      display: flex; align-items: center; gap: var(--s3);
+      min-height: var(--tap);                     /* B04 */
+      cursor: pointer; font-size: var(--t-small);
+    }
+    .checkbox-row input { width: 20px; height: 20px; accent-color: var(--blue-solid); }
+    .checkbox-row.aus { opacity: .5; }
+
+    .button-row { display: flex; flex-wrap: wrap; gap: var(--s2); }
+
+    /* Justage-Funktionen (Logo, Titellogo) nur im Backend-Modus
+       (?justage bzw. #justage in der Adresse). */
+    .backend-only, .controls fieldset.backend-only { display: none; }
+    body.backend .controls fieldset.backend-only { display: flex; }
+    body.backend .backend-only { display: block; }
+    body.backend .controls div.backend-only { display: flex; flex-direction: column; gap: var(--s3); }
+
+    .object-group-title {
+      display: flex; align-items: center; gap: var(--s2);
+      width: 100%;
+      min-height: var(--tap);                     /* B04 */
+      border: 0; background: none; color: var(--ink);
+      font: inherit; font-size: var(--t-small);
+      font-weight: var(--w-strong);
+      cursor: pointer; padding: 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .object-group-title .chevron { color: var(--muted); width: 1em; }
+    .group-head {
+      display: flex; align-items: center; gap: var(--s2);
+      border-bottom: 1px solid var(--line);
+    }
+    .group-head .object-group-title { flex: 1; border-bottom: 0; }
+    .group-toggle {
+      flex: none;
+      min-height: var(--tap);                     /* B04 */
+      border: 0; background: none; color: var(--muted);
+      font: inherit; font-size: var(--t-small);   /* B03: Label ≥15 */
+      cursor: pointer; border-radius: var(--r-control);
+      padding: 0 var(--s2);
+    }
+    .group-toggle:hover { background: var(--field-bg); color: var(--ink); }
+    .object-group-title .zaehler {
+      margin-left: auto; color: var(--muted);
+      font-weight: normal; font-variant-numeric: tabular-nums;  /* G25 */
+    }
+    .object-list { display: flex; flex-direction: column; }
+    .object-row {
+      display: flex; align-items: center; gap: var(--s2);
+      min-height: var(--tap);                     /* B04 */
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+    }
+    .object-row:last-child { border-bottom: 0; }
+    /* Eigene Marken: Titelzeile oben, Werkzeuge (Farbe, Verschieben,
+       Sortieren, Entfernen) in der zweiten Zeile — die Beschriftung
+       behält volle Breite statt in Buchstabentürme zu brechen. */
+    .object-row.zweizeilig { flex-wrap: wrap; padding: var(--s1) 0; }
+    .object-row.zweizeilig .zeilen-umbruch { flex-basis: 100%; height: 0; }
+    .object-row.zweizeilig .object-title { min-width: 0; }
+    .object-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      flex: none;
+      border: 1px solid var(--line);
+    }
+    .check {
+      width: 20px; height: 20px; flex: none;
+      border: 1px solid var(--line); border-radius: 5px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 14px; color: var(--on-accent);
+      background: var(--field-bg);
+    }
+    .check.an { background: var(--gold-deep); border-color: var(--gold-deep); } /* B01 */
+    .object-title { flex: 1; font-size: var(--t-small); }
+    .object-row.aus .object-title { color: var(--muted); }
+    .object-row.aus .object-dot { opacity: .35; }
+    .object-row.object-sub { padding-left: var(--s6); min-height: var(--tap); } /* B04 */
+    .object-row.object-sub .object-title { font-size: var(--t-small); }
+    .sub-dot {
+      width: 10px; height: 10px;
+      background: transparent;
+    }
+    .sub-dot.an { background: var(--gold-deep); border-color: var(--gold-deep); }
+    .object-marker {
+      font-size: var(--t-micro); color: var(--muted);
+      font-variant-numeric: tabular-nums;        /* G25 */
+      min-width: 2ch; text-align: right;
+    }
+    .row-btn {
+      min-width: var(--tap); min-height: var(--tap);  /* B04 */
+      border: 0; background: none; color: var(--muted);
+      cursor: pointer; border-radius: var(--r-control);
+      font-size: var(--t-small);
+    }
+    .row-btn:hover { background: var(--field-bg); color: var(--ink); }
+    .object-row input.label-edit {
+      flex: 1; font-size: 1rem;                  /* B03 */
+      min-height: 36px;
+      border: 1px solid var(--blue-solid);
+      border-radius: var(--r-control);
+      padding: 0 var(--s2);
+      background: var(--field-bg); color: var(--ink);
+      font-family: var(--font-text);
+    }
+
+    .farb-reihe {
+      display: flex; align-items: center; gap: var(--s3);
+      min-height: var(--tap);
+    }
+    .farb-reihe label { flex: 1; font-size: var(--t-small); }
+    .farb-reihe input[type="range"] {
+      flex: 1; min-height: var(--tap);              /* B04 */
+      accent-color: var(--blue-solid);
+    }
+    .schriftzug-justage select,
+    .schriftzug-justage input[type="number"] {
+      min-height: var(--tap);                       /* B04 */
+      font-size: 16px;                              /* B03: Eingaben ≥16px */
+      border: 1px solid var(--line); border-radius: var(--r-control);
+      background: var(--field-bg); color: var(--ink); padding: 0 var(--s2);
+    }
+    .schriftzug-justage input[type="number"] { width: 76px; }
+    .farb-reihe input[type="color"] {
+      width: 44px; height: 32px;
+      border: 1px solid var(--line); border-radius: var(--r-control);
+      background: var(--field-bg); padding: 2px; cursor: pointer;
+    }
+
+    .marken-farben { display: flex; gap: var(--s2); }
+    .marken-farbe {
+      width: var(--tap); height: var(--tap);      /* B04 */
+      border-radius: 50%; border: 2px solid transparent;
+      cursor: pointer; padding: 0;
+    }
+    .marken-farbe.gewaehlt { border-color: var(--ink); }
+
+    .preview-shell { display: flex; flex-direction: column; gap: var(--s3); min-width: 0; }
+    /* Format-Notiz rechtsbündig an die Zoom-Knöpfe angeschlossen
+       (Entscheid Auftraggeber, 8. Juli 2026) — etwas Luft dazwischen. */
+    .preview-top { display: flex; align-items: center; justify-content: flex-end; gap: var(--s4); flex-wrap: wrap; }
+    .preview-note { font-size: var(--t-small); color: var(--muted); text-align: right; }
+    .zoom-controls { display: flex; align-items: center; gap: var(--s2); }
+    .zoom-controls button { min-width: var(--tap); min-height: var(--tap); }
+    .zoom-value { font-size: var(--t-small); color: var(--muted); min-width: 4ch; font-variant-numeric: tabular-nums; }
+
+    /* Kein Rahmenkasten um die Vorschau — das Blatt (mit Schatten) trägt
+       sich selbst; der Container scrollt nur, wenn der Zoom es braucht. */
+    .preview-canvas {
+      overflow: auto;
+      max-height: calc(100vh - 120px);
+      padding: var(--s4);  /* Luft für den Blattschatten, kein sichtbarer Kasten */
+    }
+    .paper-stage { width: calc(100% * var(--preview-zoom, 1)); margin: 0 auto; }
+    .paper {
+      background: #ffffff; /* # ds-ok: gedrucktes Blatt ist physisch weiss, keine Theme-Flaeche */
+      box-shadow: 0 2px 14px rgba(0,0,0,.18);
+    }
+    .print-svg { display: block; width: 100%; height: auto; }
+    .print-svg.platzieren { cursor: crosshair; }
+    /* Schriftzug-Justage: der Finger zieht das Wort, statt die Seite zu scrollen. */
+    .print-svg.justage-aktiv { touch-action: none; cursor: grab; }
+    #schriftzug-karte[aria-pressed="true"] {
+      background: var(--blue-solid); color: var(--on-accent); border-color: var(--blue-solid);
+    }
+    .ausschnitt-panel {
+      display: flex; align-items: center; flex-wrap: wrap;
+      gap: var(--s3);
+    }
+    .ausschnitt-panel input[type="range"] {
+      flex: 1; min-width: 160px; min-height: var(--tap);  /* B04 */
+      accent-color: var(--blue-solid);
+    }
+    .ausschnitt-panel .button-row button { min-width: var(--tap); }
+    /* Blatt-Text darf keine Seiten-Typografie erben: das globale Tracking
+       (base.css letter-spacing) würde im SVG in Blatt-Millimetern wirken
+       und den Satz sperren — Export und Vorschau müssen identisch sein. */
+    .print-svg text { letter-spacing: normal; word-spacing: normal; }
+  </style>
+</head>
+<body>
+  <script src="../../design-system/nav.js" data-root="../../" data-section="vorbereitung" data-active="karten"></script>
+
+  <main class="app">
+    <aside class="controls">
+      <fieldset>
+        <legend>Titel</legend>
+        <input id="titel-input" type="text" placeholder="Kurzer Veranstaltungsname" />
+        <div class="hint">Hier den Kurztitel der Tagung samt Jahr eintragen,
+          z. B. ‹Landwirtschaftliche Tagung 2026›. Steht links oben über der
+          Legende und benennt das PDF und die gespeicherte Karte.</div>
+        <input id="untertitel-input" type="text" placeholder="1. bis 5. Juli 2026" />
+        <div class="hint">Datum der Veranstaltung — steht unter dem Titel.</div>
+        <div class="backend-only">
+          <div class="hint" id="titellogo-status">Kein Sonderlogo geladen.</div>
+          <div class="button-row">
+            <button id="titellogo-laden" type="button" class="btn">Sonderlogo (SVG) laden</button>
+            <button id="titellogo-weg" type="button" class="btn">Entfernen</button>
+          </div>
+          <div class="farb-reihe">
+            <label for="titellogo-breite">Breite</label>
+            <input id="titellogo-breite" type="range" min="20" max="90" value="45" />
+          </div>
+          <div class="hint">Ersetzt Titel und Untertitel auf dem Blatt (der Titel
+            benennt weiterhin Datei und gespeicherte Karte). Reine Pfad-SVGs
+            verwenden — Text im SVG braucht eingebettete Schriften.</div>
+          <input id="titellogo-datei" type="file" accept=".svg,image/svg+xml" hidden />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Orte</legend>
+        <div class="hint">Häkchen/Zeile = auf die Karte. Farbpunkt (rechts) = Markerfarbe.
+          ✥ = verschieben (Infotisch und eigene Marken).
+          Doppelklick auf eine Zeile ändert die Beschriftung.</div>
+        <div class="seg" id="sprache-row">
+          <button type="button" data-sprache="de" aria-pressed="true">Deutsch</button>
+          <button type="button" data-sprache="en" aria-pressed="false">English</button>
+        </div>
+        <div class="button-row">
+          <button id="orte-alle-an" type="button" class="btn">Alle an</button>
+          <button id="orte-alle-aus" type="button" class="btn">Alle aus</button>
+        </div>
+        <input id="orte-suche" type="search" placeholder="Ort suchen …" autocomplete="off" />
+        <div id="orte-gruppen"></div>
+        <div class="backend-only">
+          <div class="hint">Backend: Sektionen, Gärten, WCs und Verkehrsmarken
+            lassen sich mit ✥ justieren — die Feinlagen wandern über den
+            Export in die Vorlage.</div>
+          <div class="button-row">
+            <button id="lagen-export" type="button" class="btn">Justierte Lagen exportieren</button>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Gebäude</legend>
+        <div id="gebaeude-liste"></div>
+        <div class="hint">Gebäude mit aktivem Marker werden automatisch dunkel
+          (‹durch Marker›); jeder Klick schaltet von Hand um — auch dagegen.</div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Eigene Marke</legend>
+        <label class="lab" for="eigene-titel">Gruppentitel in der Legende (Spalte 2)</label>
+        <input id="eigene-titel" type="text" placeholder="Eigene Marken" />
+        <label class="lab" for="eigene-label">Neue Marke</label>
+        <input id="eigene-label" type="text" placeholder="Beschriftung, z. B. Festbühne" />
+        <div class="marken-farben" id="eigene-farben"></div>
+        <div class="button-row">
+          <button id="eigene-setzen" type="button" class="btn">Auf Karte setzen</button>
+        </div>
+        <div class="hint" id="eigene-hint">Erst Beschriftung eingeben, dann in der Vorschau die Stelle anklicken. ‹Esc› bricht ab.</div>
+        <div class="object-list" id="eigene-liste"></div>
+        <div class="hint">▲▼ an den Einträgen sortiert die Reihenfolge in der Legende.</div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Kartenfarben</legend>
+        <div class="backend-only">
+          <div class="seg" id="basiskarte-row">
+            <button type="button" data-basiskarte="vektor" aria-pressed="true">Vektor</button>
+            <button type="button" data-basiskarte="aquarell" aria-pressed="false">Aquarell</button>
+            <button type="button" data-basiskarte="wiesen" aria-pressed="false">Wiesen</button>
+          </div>
+          <div class="hint" id="basiskarte-hinweis">Vektorkarte mit der Hauspalette.
+            «Aquarell» oder «Wiesen» blenden das gemalte Blatt ein.</div>
+          <div class="farb-reihe">
+            <label for="aquarell-deckkraft">Aquarell-Deckkraft</label>
+            <input id="aquarell-deckkraft" type="range" min="10" max="100" step="5" value="100" />
+            <span class="hint" id="aquarell-deckkraft-wert">100 %</span>
+          </div>
+          <div class="schriftzug-justage">
+            <div class="farb-reihe">
+              <label for="schriftzug-wahl">Schriftzug auf der Malerei</label>
+              <select id="schriftzug-wahl">
+                <option value="Goetheanum">Goetheanum</option>
+                <option value="Schreinerei">Schreinerei</option>
+              </select>
+            </div>
+            <div class="farb-reihe">
+              <label for="schriftzug-x">Lage x · y in mm</label>
+              <input id="schriftzug-x" type="number" step="0.1" min="0" max="297" />
+              <input id="schriftzug-y" type="number" step="0.1" min="0" max="210" aria-label="Lage y in mm" />
+            </div>
+            <div class="farb-reihe">
+              <label for="schriftzug-groesse">Grad in mm · Winkel</label>
+              <input id="schriftzug-groesse" type="number" step="0.05" min="1.5" max="8" />
+              <input id="schriftzug-winkel" type="number" step="0.1" min="-180" max="180" aria-label="Winkel in Grad" />
+            </div>
+            <button id="schriftzug-karte" type="button" class="btn" aria-pressed="false">Auf der Karte ziehen</button>
+            <div class="hint">Wirkt nur im Aquarell-Modus; die Werte wandern
+              mit «Stand als JSON» zurück in die Vorlage. Auf der Karte ziehen:
+              Wort schieben stellt die Lage, der Griff am Wortende Grad und Winkel.</div>
+          </div>
+        </div>
+        <div class="hint">Standard ist die gedeckte Hauspalette; jede Rolle
+          lässt sich einzeln anpassen.</div>
+        <label class="checkbox-row">
+          <input id="opt-wiese-klein" type="checkbox" />
+          <span>Wiese klein einfärben (westlich des Hauptwegs)</span>
+        </label>
+        <label class="checkbox-row">
+          <input id="opt-wiese-gross" type="checkbox" />
+          <span>Wiese gross einfärben (mit Rudolf-Steiner-Archiv)</span>
+        </label>
+        <div id="farb-rollen"></div>
+      </fieldset>
+
+      <fieldset class="backend-only">
+        <legend>Logo (Justage)</legend>
+        <div class="farb-reihe">
+          <label for="logo-skala">Grösse</label>
+          <input id="logo-skala" type="range" min="60" max="200" value="100" />
+          <span class="zoom-value" id="logo-wert">100%</span>
+        </div>
+        <div class="button-row">
+          <button id="logo-links" type="button" class="btn" title="Logo nach links">◀</button>
+          <button id="logo-hoch" type="button" class="btn" title="Logo nach oben">▲</button>
+          <button id="logo-runter" type="button" class="btn" title="Logo nach unten">▼</button>
+          <button id="logo-rechts" type="button" class="btn" title="Logo nach rechts">▶</button>
+          <button id="logo-reset" type="button" class="btn">Standardlage</button>
+        </div>
+        <div class="hint">Pfeile verschieben das Logo in 1-mm-Schritten.
+          Mitte: <span id="logo-lage">Standard (rechts oben)</span></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Export</legend>
+        <div class="seg" id="format-row">
+          <button type="button" data-format="a4" aria-pressed="true">A4 quer</button>
+          <button type="button" data-format="a3" aria-pressed="false">A3 quer</button>
+        </div>
+        <label class="checkbox-row">
+          <input id="opt-beschnitt" type="checkbox" checked />
+          <span>3&nbsp;mm Beschnitt (Randanschnitt)</span>
+        </label>
+        <label class="checkbox-row" id="row-marken">
+          <input id="opt-marken" type="checkbox" />
+          <span>Schnittränder und Schnittmarken einblenden</span>
+        </label>
+        <label class="checkbox-row">
+          <input id="opt-kompakt" type="checkbox" />
+          <span>Kompakte Legende (kleinerer Grad, mehr Zeilen je Spalte)</span>
+        </label>
+        <div class="button-row">
+          <button id="download-pdf" type="button" class="btn primary">PDF</button>
+          <button id="download-svg" type="button" class="btn">SVG</button>
+        </div>
+        <div class="hint">
+          Das PDF ist vektoriell (Text bleibt Text, Karte bleibt Pfad) und trägt
+          Trim- und Bleed-Box für die Druckerei.
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Gespeicherte Karten</legend>
+        <div class="hint">Die Arbeit bleibt beim Neuladen erhalten; jede Ausgabe
+          (PDF oder SVG) legt den Stand hier ab — auch ohne Titel, je Ausgabe
+          ein Eintrag mit Datum und Uhrzeit. Klick lädt die Karte wieder;
+          gelöscht wird im Backend-Modus. Gespeichert wird im Browser dieses
+          Rechners; für Kollegen die Karte als Datei sichern und weitergeben.</div>
+        <div class="object-list" id="varianten-liste"></div>
+        <div class="button-row">
+          <button id="karte-sichern" type="button" class="btn">Als Datei sichern</button>
+          <button id="karte-laden" type="button" class="btn">Aus Datei laden</button>
+          <button id="zuruecksetzen" type="button" class="btn">Neu beginnen (zurücksetzen)</button>
+        </div>
+        <input id="karte-laden-datei" type="file" accept=".json,application/json" hidden />
+      </fieldset>
+    </aside>
+
+    <section class="preview-shell">
+      <div class="preview-top">
+        <div class="preview-note" id="preview-note">Vorschau im Endformat.</div>
+        <div class="zoom-controls">
+          <button id="zoom-out" type="button" class="btn">−</button>
+          <button id="zoom-reset" type="button" class="btn">100%</button>
+          <button id="zoom-in" type="button" class="btn">+</button>
+          <div id="zoom-value" class="zoom-value">100%</div>
+        </div>
+      </div>
+      <div class="preview-canvas">
+        <div id="paper-stage" class="paper-stage" style="aspect-ratio: 297 / 210;">
+          <div id="paper" class="paper">
+            <svg id="print-svg" class="print-svg" viewBox="0 0 297 210" xmlns="http://www.w3.org/2000/svg"></svg>
+          </div>
+        </div>
+      </div>
+      <div class="ausschnitt-panel">
+        <span class="hint">Kartenausschnitt</span>
+        <input id="ausschnitt-skala" type="range" min="70" max="180" step="5" value="100"
+               title="Grösse des Kartenausschnitts" />
+        <span id="ausschnitt-wert" class="zoom-value">100%</span>
+        <div class="button-row">
+          <button id="karte-links" type="button" class="btn" title="Karte nach links">←</button>
+          <button id="karte-hoch" type="button" class="btn" title="Karte nach oben">↑</button>
+          <button id="karte-runter" type="button" class="btn" title="Karte nach unten">↓</button>
+          <button id="karte-rechts" type="button" class="btn" title="Karte nach rechts">→</button>
+          <button id="ausschnitt-reset" type="button" class="btn">Standardlage</button>
+        </div>
+        <span class="hint">Auch mit den Pfeiltasten verschiebbar.</span>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../assets/goe-orgs.js"></script>
+  <script src="../logos/engine.js"></script>
+  <script src="orte.js"></script>
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script src="vendor/svg2pdf.umd.min.js"></script>
+  <script src="app.js"></script>
+  <script src="export.js"></script>
+</body>
+</html>

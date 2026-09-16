@@ -1,0 +1,40 @@
+<!doctype html>
+<!-- =============================================================================
+     werkzeuge.goetheanum.ch/kampagne · Kurz-Weiterleitung aufs Aktions-Cockpit
+     -----------------------------------------------------------------------------
+     Merkbare Kurz-Adresse fuers Team. Leitet dauerhaft auf die bestehende
+     Kampagnen-App (apps/sommer-zaehler/) – deren URL bleibt die Quelle der
+     Wahrheit fuer Bookmarks und tools.json. Nur eine Bruecke, kein zweiter Ort.
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Sommer-Aktion · Cockpit</title>
+<link rel="canonical" href="https://werkzeuge.goetheanum.ch/apps/sommer-zaehler/" />
+<meta http-equiv="refresh" content="0; url=../apps/sommer-zaehler/" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../design-system/tokens.css" />
+<link rel="stylesheet" href="../design-system/base.css" />
+<style>
+  .weiter{min-height:70vh;display:grid;place-content:center;justify-items:center;gap:var(--s5);text-align:center;padding-block:var(--s8)}
+  .weiter h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(26px,4vw,40px);line-height:1.1}
+  .weiter p{color:var(--muted);max-width:52ch;line-height:1.6}
+  .weiter .fallback{font-size:var(--t-small)}
+</style>
+<script>location.replace('../apps/sommer-zaehler/');</script>
+</head>
+<body>
+
+<main class="wrap">
+  <section class="weiter">
+    <span class="kicker">Goetheanum · Sommer-Aktion</span>
+    <h1>Einen Moment – wir öffnen das Cockpit</h1>
+    <p>Passiert nichts, hilft der Weg von Hand:</p>
+    <p class="fallback"><a href="../apps/sommer-zaehler/">weiter zum Aktions-Cockpit</a></p>
+  </section>
+</main>
+
+</body>
+</html>

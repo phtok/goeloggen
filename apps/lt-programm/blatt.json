@@ -1,0 +1,351 @@
+{
+  "$beschreibung": "Was auf dem Faltblatt steht, aber NICHT auf der Webseite: Kopf, Stand, Einleitung, feste Rahmen (Check-in, Klassenstunde, Pausen, Uhrzeiten) und Überschreibungen. Alles Übrige (Plenum, Arbeitsgruppen) kommt aus webseite.json. Absatz = Text oder {laut, ruhig} für Deutlich + Ruhig in einer Zeile; \\n = Zeilenumbruch im Absatz. Überschreibungen sind auch der Ort für von Hand gesetzte Zeilenumbrüche – die überleben den nächsten Export nur hier.",
+  "jahr": 2027,
+  "stand": {
+    "en": "As of September 2026",
+    "de": "Stand September 2026"
+  },
+  "kopf": {
+    "motto_en": "Working with the\nIntelligence of Life",
+    "motto_de": "Mit der Intelligenz\ndes Lebens arbeiten",
+    "untertitel_en": "Biodynamic agriculture \nbrings microcosm and \nmacrocosm together",
+    "untertitel_de": "Biodynamische Landwirtschaft \nbringt Mikrokosmos und \nMakrokosmos zusammen",
+    "tagung_en": "Agriculture Conference",
+    "tagung_de": "Landwirtschaftliche Tagung"
+  },
+  "einleitung": {
+    "en": "Under the guiding theme ‹Working with the Intelligence of Life›, and with a particular focus on the microbiome, the Agriculture Conference 2027 explores our relationship to the etheric forces.",
+    "de": "Unter dem Leitgedanken «Mit der Intelligenz des Lebens arbeiten» und mit Blick auf das Mikrobiom widmen wir uns an der Landwirtschaftlichen Tagung 2027 unserer Beziehung und Arbeit mit den Kräften des Ätherischen."
+  },
+  "malerei": {
+    "$hinweis": "Bild auf dem Umschlag – eine Angabe, zwei Stellen (Plakat Seite 1 und Rückseite).",
+    "name": "",
+    "titel": ""
+  },
+  "sprachen_hinweis": [
+    {
+      "laut": "Plenary sessions are available in the following languages:"
+    },
+    {
+      "ruhig": "Die Plenarveranstaltungen werden in folgende Sprachen gedolmetscht:"
+    }
+  ],
+  "feste_slots": {
+    "willkommen": [
+      {
+        "laut": "Welcome",
+        "ruhig": "Willkommen"
+      }
+    ],
+    "kopf_ag": [
+      {
+        "laut": "Workshops",
+        "ruhig": "Arbeitsgruppen"
+      }
+    ],
+    "mi_klasse": [
+      {
+        "laut": "8th Class Lesson for members\nof the First Class – Free rendering"
+      },
+      {
+        "ruhig": "8. Klassenstunde für Mitglieder\nder Ersten Klasse – Frei gehalten"
+      },
+      {
+        "ruhig": "Ueli Hurter · Eduardo Rincón"
+      }
+    ],
+    "mi_checkin": [
+      {
+        "laut": "Check-in",
+        "ruhig": "Check-in"
+      }
+    ],
+    "kopf_vormittag": [
+      {
+        "laut": "Morning Workshops",
+        "ruhig": "Arbeitsgruppen am Vormittag"
+      }
+    ],
+    "kopf_nachmittag": [
+      {
+        "laut": "Afternoon Workshops",
+        "ruhig": "Arbeitsgruppen am Nachmittag"
+      }
+    ],
+    "pause_do": [
+      {
+        "laut": "Coffee break · Guided tours",
+        "ruhig": "Kaffeepause · Führungen"
+      }
+    ],
+    "pause_lang": [
+      {
+        "laut": "Coffee break",
+        "ruhig": "Kaffeepause"
+      }
+    ],
+    "pause_mi": [
+      {
+        "laut": "Coffee break",
+        "ruhig": "Kaffeepause"
+      }
+    ],
+    "mittag": [
+      {
+        "laut": "Lunch",
+        "ruhig": "Mittagessen"
+      }
+    ],
+    "abendessen": [
+      {
+        "laut": "Dinner",
+        "ruhig": "Abendessen"
+      }
+    ],
+    "nachtcafe": [
+      {
+        "laut": "Night Café",
+        "ruhig": "Nachtcafé"
+      }
+    ],
+    "ende": [
+      {
+        "laut": "End",
+        "ruhig": "Ende"
+      }
+    ],
+    "zeit_mi_1130": "11:30",
+    "zeit_mi_1300": "13:00",
+    "zeit_mi_1500": "15:00",
+    "zeit_mi_1630": "16:30",
+    "zeit_mi_1700": "17:00",
+    "zeit_mi_1830": "18:30",
+    "zeit_mi_2000": "20:00",
+    "zeit_mi_2200": "22:00",
+    "zeit_0830": "8:30",
+    "zeit_1000": "10:00",
+    "zeit_1045": "10:45",
+    "zeit_1230": "12:30",
+    "zeit_1430": "14:30",
+    "zeit_1600": "16:00",
+    "zeit_1700": "17:00",
+    "zeit_2000": "20:00",
+    "zeit_fr_1900": "19:00",
+    "zeit_sa_1430": "14:30",
+    "zeit_sa_1615": "16:15"
+  },
+  "plenum": {
+    "$beschreibung": "Überschreibungen je Rahmen (mi_1500, mi_1700, mi_do_2000, morgen_0830, do_1700, fr_1700, fr_1900, sa_1430). Mehrspaltige Rahmen: @2 = zweite Spalte; mehrere Veranstaltungen in einer Spalte: #2. Felder: titel_en, titel_de, namen, eine_zeile (true = Englisch und Deutsch auf eine Zeile, false = untereinander; ohne Angabe entscheidet umbruch_ab), namen_anhaengen (Mitwirkende mit Mittelpunkt an die Titelzeile hängen). Nur setzen, was von der Webseite abweichen soll – \\n ist ein Zeilenumbruch.",
+    "fr_1900": {
+      "namen": "Schreinerei Saal +\nWandelhalle"
+    },
+    "mi_do_2000": {
+      "namen_anhaengen": true,
+      "$hinweis": "Der Rahmen ist knapp – die Mitwirkenden hängen mit Mittelpunkt an der Titelzeile.",
+      "titel_en": "From Microbiome Research to the \nSpiritual Significance of the Preparations",
+      "titel_de": "Von der Mikrobiomforschung zur \ngeisteswissenschaftlichen Bedeutung \nder Präparate"
+    },
+    "mi_1500#2": {
+      "namen": "Nathalia Muguet · Regina Sharmila \nDass · Limbua"
+    },
+    "mi_1700": {
+      "titel_en": "Exploring the Invisible \nNetworks of Life",
+      "titel_de": "Die unsichtbaren Netzwerke \ndes Lebens erkunden"
+    }
+  },
+  "arbeitsgruppen": {
+    "1": {
+      "titel_1": "Co-Kreation mit der Intelligenz aller Wesen \nin der Landwirtschaft",
+      "titel_2": "Co-creating with the Intelligence of All Beings \nin Agriculture"
+    },
+    "2": {
+      "titel_1": "Vom Mikrobiom \nzum Genius loci",
+      "titel_2": "From the Microbiome \nto the Genius Loci"
+    },
+    "3": {
+      "titel_1": "Der Michaelbrief im\nKontext der Leitsätze"
+    },
+    "4": {
+      "titel_1": "Bildekräfteforschung \nund Christus-Impuls"
+    },
+    "6": {
+      "titel_1": "Gemeinsam mit \nder Intelligenz des \nLebens züchten"
+    },
+    "$beschreibung": "Überschreibungen je Nummer: titel_1, titel_2, namen (mit \\n), sprachen (Liste). Nur setzen, was vom Webseiten-Stand abweichen soll."
+  },
+  "tagesraster": {
+    "$beschreibung": "Reihenfolge der Vorschau je Tag (tag 0 = Mittwoch). Slots aus feste_slots oder dem Plenum; nur Darstellung, der Export folgt der Vorlage.",
+    "zeilen": [
+      {
+        "tag": [
+          0
+        ],
+        "zeit": "11:30",
+        "slot": "mi_klasse"
+      },
+      {
+        "tag": [
+          0
+        ],
+        "zeit": "13:00",
+        "slot": "mi_checkin"
+      },
+      {
+        "tag": [
+          0
+        ],
+        "zeit": "15:00",
+        "slot": "mi_1500"
+      },
+      {
+        "tag": [
+          0
+        ],
+        "zeit": "16:30",
+        "slot": "pause_mi"
+      },
+      {
+        "tag": [
+          0
+        ],
+        "zeit": "17:00",
+        "slot": "mi_1700"
+      },
+      {
+        "tag": [
+          0
+        ],
+        "zeit": "18:30",
+        "slot": "abendessen"
+      },
+      {
+        "tag": [
+          0
+        ],
+        "zeit": "20:00",
+        "slot": "mi_do_2000",
+        "teil": 0
+      },
+      {
+        "tag": [
+          0
+        ],
+        "zeit": "22:00",
+        "slot": "nachtcafe"
+      },
+      {
+        "tag": [
+          1,
+          2,
+          3
+        ],
+        "zeit": "8:30",
+        "slot": "morgen_0830",
+        "teil": "tag"
+      },
+      {
+        "tag": [
+          1,
+          2,
+          3
+        ],
+        "zeit": "10:00",
+        "slot": "pause_lang"
+      },
+      {
+        "tag": [
+          1,
+          2,
+          3
+        ],
+        "zeit": "10:45",
+        "slot": "kopf_vormittag"
+      },
+      {
+        "tag": [
+          1,
+          2,
+          3
+        ],
+        "zeit": "12:30",
+        "slot": "mittag"
+      },
+      {
+        "tag": [
+          1,
+          2
+        ],
+        "zeit": "14:30",
+        "slot": "kopf_nachmittag"
+      },
+      {
+        "tag": [
+          3
+        ],
+        "zeit": "14:30",
+        "slot": "sa_1430"
+      },
+      {
+        "tag": [
+          1,
+          2
+        ],
+        "zeit": "16:00",
+        "slot": "pause_do"
+      },
+      {
+        "tag": [
+          3
+        ],
+        "zeit": "16:15",
+        "slot": "ende"
+      },
+      {
+        "tag": [
+          1
+        ],
+        "zeit": "17:00",
+        "slot": "do_1700"
+      },
+      {
+        "tag": [
+          2
+        ],
+        "zeit": "17:00",
+        "slot": "fr_1700"
+      },
+      {
+        "tag": [
+          1,
+          2
+        ],
+        "zeit": "18:30",
+        "slot": "abendessen"
+      },
+      {
+        "tag": [
+          2
+        ],
+        "zeit": "19:00",
+        "slot": "fr_1900"
+      },
+      {
+        "tag": [
+          1
+        ],
+        "zeit": "20:00",
+        "slot": "mi_do_2000",
+        "teil": 1
+      },
+      {
+        "tag": [
+          1,
+          2
+        ],
+        "zeit": "22:00",
+        "slot": "nachtcafe"
+      }
+    ]
+  },
+  "umbruch_ab": 30
+}
