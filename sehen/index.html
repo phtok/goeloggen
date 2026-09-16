@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Weniger zeigen. Mehr sehen. · Goetheanum Sehen</title>
-<meta name="description" content="Entwurfsgrundlagen für die Videoplattform «Goetheanum Sehen»: neun Erkenntnisse, das Wireframe, das Inventar, die Architektur.">
+<meta name="description" content="Entwurfsgrundlagen für die Videoplattform «Goetheanum Sehen»: zehn Erkenntnisse, das Wireframe, das Inventar, die Architektur.">
 <link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg">
 
 <link rel="stylesheet" href="../design-system/tokens.css">
@@ -224,7 +224,7 @@
   <section class="hero" id="anfang" data-titel="Anfang">
     <span class="kicker">Entwurfsgrundlagen</span>
     <h1>Weniger zeigen. Mehr sehen.</h1>
-    <p class="lede">Wie die neue Videoplattform des Goetheanum genutzt werden will – und warum wir die Nutzerführung radikal vereinfachen. Neun Erkenntnisse aus Studien und Vergleichsfällen, das Wireframe, das Inventar, die Architektur.</p>
+    <p class="lede">Wie die neue Videoplattform des Goetheanum genutzt werden will – und warum wir die Nutzerführung radikal vereinfachen. Zehn Erkenntnisse aus Studien und Vergleichsfällen, das Wireframe, das Inventar, die Architektur.</p>
     <p class="byline luft"><b>Philipp Tok</b> · Kommunikation · 14. September 2026</p>
     <div class="knoepfe luft" style="display:flex;gap:var(--s2);flex-wrap:wrap">
       <button class="btn primary" type="button" id="vortragbtn">Vortragen</button>
@@ -523,7 +523,7 @@
         <span class="k-note">Bloomberg / YouTube</span>
       </div>
     </div>
-    <div class="kasten luft">Ein Vortrag ist auch ein Podcast. <b>«Nur Audio» ist keine Nebenfunktion:</b> Hintergrundwiedergabe bei gesperrtem Bildschirm, Steuerung im Sperrbildschirm, Cast auf den Fernseher, Offline-Speichern. Nebula bietet Downloads und Frühzugang als Abo-Argumente – wir können das auch.</div>
+    <div class="kasten luft">Ein Vortrag ist auch ein Podcast. <b>«Nur Audio» ist keine Nebenfunktion:</b> Hintergrundwiedergabe bei gesperrtem Bildschirm, Steuerung im Sperrbildschirm, Cast auf den Fernseher, Offline-Speichern. Nebula bietet Downloads und Frühzugang als Abo-Argumente – wir können das auch. Ein <b>Modus</b> also, kein zweiter Katalogeintrag – warum das der Unterschied ist, zeigt Erkenntnis 10.</div>
   </section>
 
   <!-- 10 · Erkenntnis 9 =================================================== -->
@@ -563,7 +563,63 @@
     </details>
   </section>
 
-  <!-- 11 · Wireframe Start ================================================ -->
+  <!-- 11 · Erkenntnis 10 ================================================== -->
+  <section id="zeit-akademie" data-titel="Die ZEIT Akademie" data-gruppe="Erkenntnisse">
+    <span class="kicker">Erkenntnis 10</span>
+    <div class="shead">
+      <h2>Der nächste Verwandte: die ZEIT Akademie</h2>
+      <p>Ein Wochenblatt mit einer Videoplattform – das ist unsere Lage, nicht die von Netflix. Zahlen von ihrer Startseite, ausgezählt am 16. September 2026.</p>
+    </div>
+    <div class="kennzahlen">
+      <div class="kennzahl">
+        <span class="k-label">Einträge listet die Startseite</span>
+        <span class="k-wert">192</span>
+        <span class="k-note">Das Haus selbst spricht von «über 100 Kursen»</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">davon sind Varianten eines anderen Eintrags – jeder vierte</span>
+        <span class="k-wert">49</span>
+        <span class="k-note">21 Audio-Zweitausgaben, 16 Sprachdubletten, 5 Trailer, 7 Kunden- und Altfassungen</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">Wörter ordnen den ganzen Katalog</span>
+        <span class="k-wert">6</span>
+        <span class="k-note">Gesellschaft, Psychologie, Gesundheit, Arbeit, Kultur, Wissen</span>
+      </div>
+      <div class="kennzahl">
+        <span class="k-label">Sortierungen stehen daneben. Kein Karussell, keine Empfehlungen</span>
+        <span class="k-wert">2</span>
+        <span class="k-note">«Neu» und «Meistgesehen»</span>
+      </div>
+    </div>
+
+    <div class="zwei luft">
+      <div class="card soft">
+        <span class="kicker">Übernommen</span>
+        <h3>Die Einheit ist die Reihe, nicht das Video</h3>
+        <p class="note luft">Eine Karte trägt vier Textelemente: Titel, eine Zeile <q>wer und was</q>, die Gesamtdauer in Minuten und die Zahl der Lektionen. <b>318 Minuten · 53 Lektionen</b> sagt in zwei Zahlen, wie gross die Sache ist und in wie vielen Bissen sie kommt.</p>
+        <p class="note luft">Ein einzelnes Gespräch ist derselbe Gegenstand mit <q>1 Lektion</q>. Webinar, Kurs, Lernpfad – eine Form für alles.</p>
+      </div>
+      <div class="card soft">
+        <span class="kicker">Nicht übernommen</span>
+        <h3>Varianten als eigene Einträge</h3>
+        <p class="note luft">Dieselbe Sache steht mehrfach im Katalog: <q>Philosophie</q> und <q>Philosophie (Audio)</q>, <q>Kreativität</q> und <q>Creativity</q>, dazu Trailer, Kundenfassungen und ein <q>Lernpfad Konfliktmanagement alt</q>.</p>
+        <p class="note luft">Die Ursache ist nicht Nachlässigkeit, sondern das Datenmodell: <b>wo eine Variante ein Produkt ist, wird sie ein Eintrag.</b> Der Katalog wächst dann um Dubletten statt um Inhalt.</p>
+      </div>
+    </div>
+
+    <div class="kasten luft">Drei Ableitungen: <b>Reihen und Tagungen tragen ihren Umfang</b> – Gesamtdauer und Zahl der Folgen, ein einzelner Vortrag ist die Reihe mit einer Folge. <b>Nur Audio, Untertitel und Sprache sind Eigenschaften eines Videos</b>, nie ein zweiter Katalogeintrag. Und das Jahresabo steht als Monatspreis neben dem Monatsabo (19,99 gegen 24,99) und trägt die einzige Auszeichnung der Seite: <q>Bester Preis</q>.</div>
+
+    <details class="notizen">
+      <summary>Notizen</summary>
+      <p class="ntext">Die ZEIT Akademie nennt sich <q>Die Streamingplattform des Wissens</q> und erklärt sich in drei Säulen zu je drei Zeilen – neun Zeilen für das ganze Angebot. Kein Hero-Karussell, ein statischer Anspruch und ein Knopf.</p>
+      <p class="ntext">Zwei Stellen, an denen wir weiter gehen. Erstens das Transkript: ihre häufigen Fragen sagen <q>Alle Kurse verfügen über deutsche Untertitel und Transkripte. So können Sie die Inhalte auch ohne Ton verfolgen.</q> – das Transkript ist dort eine Zugänglichkeitsfunktion, bei uns ist es der Motor für Suche, Kapitel und die Verbindung zu den Essays. Zweitens das Begleitmaterial: zu jedem Kurs produzieren sie ein E-Book. Unser Gegenstück ist der Essay aus der Wochenschrift – den haben wir schon, wir müssen ihn nur verknüpfen.</p>
+      <p class="ntext">Ihre Kategorien sind sechs Tätigkeits- und Lebensworte, unsere Felder sind die Sektionen der Hochschule. Bei Medizin, Landwirtschaft oder Pädagogik deckt sich beides; bei <q>Allgemeine Anthroposophische Sektion</q> nicht. Das ist eine offene Frage, keine Entscheidung.</p>
+      <p class="ntext">Die Plattform ist nur aus Deutschland erreichbar – Österreich, die Schweiz und Liechtenstein sind ausgeschlossen. Für uns keine Option.</p>
+    </details>
+  </section>
+
+  <!-- 12 · Wireframe Start ================================================ -->
   <section id="wireframe-start" data-titel="Wireframe: Start" data-gruppe="Der Entwurf">
     <span class="kicker">Das Wireframe</span>
     <div class="shead">
@@ -602,7 +658,7 @@
     </details>
   </section>
 
-  <!-- 12 · Wireframe Video ================================================ -->
+  <!-- 13 · Wireframe Video ================================================ -->
   <section id="wireframe-video" data-titel="Wireframe: Video" data-gruppe="Der Entwurf">
     <span class="kicker">Das Wireframe</span>
     <div class="shead">
@@ -637,7 +693,7 @@
     </div>
   </section>
 
-  <!-- 13 · Das Inventar =================================================== -->
+  <!-- 14 · Das Inventar =================================================== -->
   <section id="inventar" data-titel="Das Inventar" data-gruppe="Der Entwurf">
     <span class="kicker">Das Inventar</span>
     <div class="shead">
@@ -662,6 +718,7 @@
           <li>Bewertungssterne</li>
           <li>Tag-Wolken</li>
           <li>«Empfohlen für dich» in der ersten Woche</li>
+          <li>Zweitausgaben für Audio und Sprache</li>
         </ul>
       </div>
       <div class="card soft">
@@ -679,7 +736,7 @@
     </div>
   </section>
 
-  <!-- 14 · Architektur ==================================================== -->
+  <!-- 15 · Architektur ==================================================== -->
   <section id="architektur" data-titel="Architektur" data-gruppe="Der Entwurf">
     <span class="kicker">Architektur</span>
     <div class="shead">
@@ -696,7 +753,7 @@
           <span class="ent">Essay</span><span class="ent">Ausgabe</span>
           <span class="ent">Kapitel</span><span class="ent">Transkript</span>
         </div>
-        <p>Feld ist die Sektion, Reihe auch eine Tagung. Acht Entitäten, mehr braucht es nicht.</p>
+        <p>Feld ist die Sektion, Reihe auch eine Tagung. Acht Entitäten, mehr braucht es nicht. Nur Audio, Untertitel und Sprache sind Eigenschaften eines Videos – wo eine Variante zur Entität wird, wächst der Katalog um Dubletten statt um Inhalt (Erkenntnis 10).</p>
       </div>
       <span class="strich" aria-hidden="true"></span>
     </div>
@@ -713,7 +770,7 @@
     </details>
   </section>
 
-  <!-- 15 · Der Name ======================================================= -->
+  <!-- 16 · Der Name ======================================================= -->
   <section id="name" data-titel="Der Name" data-gruppe="Der Entwurf">
     <span class="kicker">Der Name</span>
     <div class="shead">
@@ -738,7 +795,7 @@
     </details>
   </section>
 
-  <!-- 16 · Nächste Schritte =============================================== -->
+  <!-- 17 · Nächste Schritte =============================================== -->
   <section id="schritte" data-titel="Nächste Schritte" data-gruppe="Schluss">
     <div class="band">
       <span class="kicker">Nächste Schritte</span>
@@ -753,7 +810,7 @@
     </div>
   </section>
 
-  <!-- 17 · Quellen ======================================================== -->
+  <!-- 18 · Quellen ======================================================== -->
   <section id="quellen" data-titel="Quellen" data-gruppe="Schluss">
     <div class="shead">
       <h2>Quellen</h2>
@@ -783,6 +840,7 @@
       <p><b>Q21</b> ARTE (Relaunch 2017); ARD-Mediathek-Konzeption.</p>
       <p><b>Q22</b> TED.com, Redesign 2014 mit interaktivem Transkript.</p>
       <p><b>Q23</b> CuriosityStream Investor Relations. Über 85 % der Direktabonnenten auf Jahresplänen.</p>
+      <p><b>Q24</b> ZEIT Akademie, Startseite und häufige Fragen, abgerufen am 16. September 2026. 192 Katalogeinträge, davon 49 Varianten – ausgezählt im Quelltext der Seite. <a href="https://www.zeitakademie.de/">zeitakademie.de</a></p>
     </div>
   </section>
 
@@ -791,7 +849,7 @@
 
 <div class="vleiste" role="group" aria-label="Vortrag steuern">
   <button class="btn ghost" type="button" id="vzurueck" aria-label="Kapitel zurück">←</button>
-  <span class="stand" id="vstand">1 / 18</span>
+  <span class="stand" id="vstand">1 / 19</span>
   <button class="btn ghost" type="button" id="vvor" aria-label="Kapitel vor">→</button>
   <button class="btn" type="button" id="vnotizen" aria-pressed="false">Notizen</button>
   <button class="btn" type="button" id="vende">Beenden</button>
