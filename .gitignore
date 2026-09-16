@@ -51,3 +51,4 @@ __pycache__/
 
 # Browser-Werkzeuge (tools/barrierefreiheit.mjs) — Abhängigkeiten nicht versionieren
 tools/node_modules/
+.env
