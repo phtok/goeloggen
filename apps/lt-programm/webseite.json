@@ -18,56 +18,71 @@
    "veranstaltungen": [
     {
      "zeit": "15:00",
-     "titel": "Eröffnung",
+     "titel": "Opening",
+     "art": "Eröffnung",
+     "sprachen": [],
+     "mitwirkende": []
+    },
+    {
+     "zeit": "15:00",
+     "titel": "Ueli Hurter, Eduardo Rincon",
      "art": "",
      "sprachen": [
       "DE",
       "EN"
      ],
+     "gleicher_block": true,
      "mitwirkende": [
-      "Ueli Hurter",
-      "Eduardo Rincon"
+      "Experiencing the Intelligence of Life"
      ]
     },
     {
      "zeit": "15:00",
-     "titel": "Titel",
-     "art": "Präsentationen",
+     "titel": "Nathalia Muguet, Regina Sharmila Dass, Limbua",
+     "art": "",
      "sprachen": [
       "EN"
      ],
-     "titel_offen": true,
      "gleicher_block": true,
+     "mitwirkende": []
+    },
+    {
+     "zeit": "17:00",
+     "titel": "Exploring the Invisible Networks of Life",
+     "art": "",
+     "sprachen": [],
      "mitwirkende": [
-      "Nathalia Muguet",
-      "Regina Sharmila Dass",
-      "(Limbua)"
+      "Die unsichtbaren Netzwerke des Lebens erkunden"
      ]
     },
     {
      "zeit": "17:00",
-     "titel": "Titel",
-     "art": "Vorträge",
+     "titel": "Gabriele Berg, Thomas Hardtmuth",
+     "art": "",
      "sprachen": [
       "DE"
      ],
-     "titel_offen": true,
+     "gleicher_block": true,
+     "mitwirkende": []
+    },
+    {
+     "zeit": "20:00",
+     "titel": "From Microbiome Research to the Spiritual Significance of the Preparations",
+     "art": "",
+     "sprachen": [],
      "mitwirkende": [
-      "Gabriele Berg",
-      "Thomas Hardtmuth"
+      "Von der Mikrobiomforschung zur geisteswissenschaftlichen Bedeutung der Präparate"
      ]
     },
     {
      "zeit": "20:00",
-     "titel": "Titel",
-     "art": "Vortrag",
+     "titel": "Jürgen Fritz",
+     "art": "",
      "sprachen": [
       "DE"
      ],
-     "titel_offen": true,
-     "mitwirkende": [
-      "Jürgen Fritz"
-     ]
+     "gleicher_block": true,
+     "mitwirkende": []
     }
    ]
   },
@@ -79,30 +94,39 @@
    "veranstaltungen": [
     {
      "zeit": "08:30",
-     "titel": "Titel",
-     "art": "Michaelbrief",
-     "sprachen": [
-      "EN"
-     ],
-     "titel_offen": true,
+     "titel": "Michaelbrief",
+     "art": "Michael Letter",
+     "sprachen": [],
      "mitwirkende": [
-      "Sophia Montefiore",
-      "Brian Keats"
+      "The Future of Humanity between Artificial Intelligence and Free Will"
      ]
     },
     {
-     "zeit": "17:00",
-     "titel": "Titel",
-     "art": "Präsentationen",
+     "zeit": "08:30",
+     "titel": "Sophia Montefiore, Brian Keats",
+     "art": "",
      "sprachen": [
       "EN"
      ],
-     "titel_offen": true,
-     "mitwirkende": [
-      "Ernst Zürcher",
-      "Florianne Köchlin",
-      "Teo Nasar (+Speaker)"
-     ]
+     "gleicher_block": true,
+     "mitwirkende": []
+    },
+    {
+     "zeit": "17:00",
+     "titel": "Roots, Trees, Soil and Stars",
+     "art": "Wurzeln, Bäume, Boden, Sterne",
+     "sprachen": [],
+     "mitwirkende": []
+    },
+    {
+     "zeit": "17:00",
+     "titel": "Ernst Zürcher, Florianne Köchlin, Teo Nasar, Walter Goldstein",
+     "art": "",
+     "sprachen": [
+      "EN"
+     ],
+     "gleicher_block": true,
+     "mitwirkende": []
     },
     {
      "zeit": "20:00",
@@ -124,30 +148,41 @@
    "veranstaltungen": [
     {
      "zeit": "08:30",
-     "titel": "Titel",
-     "art": "Michaelbrief",
+     "titel": "Michaelbrief",
+     "art": "Michael Letter",
+     "sprachen": [],
+     "mitwirkende": [
+      "The Future of Humanity between Artificial Intelligence and Free Will"
+     ]
+    },
+    {
+     "zeit": "08:30",
+     "titel": "N.N.",
+     "art": "",
      "sprachen": [
       "EN"
      ],
-     "titel_offen": true,
+     "gleicher_block": true,
+     "mitwirkende": []
+    },
+    {
+     "zeit": "17:00",
+     "titel": "Creative Wisdom – How the Etheric Organises the Earthly",
+     "art": "",
+     "sprachen": [],
      "mitwirkende": [
-      "N.N."
+      "Schaffende Weisheit – wie das Ätherische das Irdische organisiert"
      ]
     },
     {
      "zeit": "17:00",
-     "titel": "Schaffende Weisheit – wie das Ätherische das Irdische organisiert",
-     "art": "Präsentationen",
+     "titel": "Moderation: Markus Buchmann",
+     "art": "",
      "sprachen": [
       "DE"
      ],
-     "mitwirkende": [
-      "Dorian Schmidt",
-      "Johannes Weinzierl",
-      "Lea Krontal",
-      "Pia Secondo",
-      "Moderation: Markus Buchmann"
-     ]
+     "gleicher_block": true,
+     "mitwirkende": []
     },
     {
      "zeit": "19:00",
@@ -168,42 +203,61 @@
    "veranstaltungen": [
     {
      "zeit": "08:30",
-     "titel": "Titel",
-     "art": "Michaelbrief",
+     "titel": "Michaelbrief",
+     "art": "Michael Letter",
+     "sprachen": [],
+     "mitwirkende": [
+      "The Future of Humanity between Artificial Intelligence and Free Will"
+     ]
+    },
+    {
+     "zeit": "08:30",
+     "titel": "Ueli Hurter, Luka Macharia",
+     "art": "",
      "sprachen": [
       "EN"
      ],
+     "gleicher_block": true,
+     "mitwirkende": []
+    },
+    {
+     "zeit": "14:30",
+     "titel": "Title",
+     "art": "",
+     "sprachen": [],
      "titel_offen": true,
      "mitwirkende": [
-      "Ueli Hurter",
-      "Luka Macharia"
+      "Titel"
      ]
     },
     {
      "zeit": "14:30",
-     "titel": "Titel",
-     "art": "Panelgespräch",
+     "titel": "Jasmin Peschke, N.N.",
+     "art": "",
      "sprachen": [
       "EN"
      ],
-     "titel_offen": true,
-     "mitwirkende": [
-      "Jasmin Peschke (+Speaker)"
-     ]
+     "gleicher_block": true,
+     "mitwirkende": []
     },
     {
      "zeit": "14:30",
-     "titel": "Abschluss",
+     "titel": "Closing",
+     "art": "Abschluss",
+     "sprachen": [],
+     "gleicher_block": true,
+     "mitwirkende": []
+    },
+    {
+     "zeit": "14:30",
+     "titel": "Ueli Hurter, Eduardo Rincon",
      "art": "",
      "sprachen": [
       "DE",
       "EN"
      ],
      "gleicher_block": true,
-     "mitwirkende": [
-      "Ueli Hurter",
-      "Eduardo Rincon"
-     ]
+     "mitwirkende": []
     }
    ]
   }
@@ -695,8 +749,8 @@
   {
    "nr": 20,
    "block": "vormittag",
-   "titel_1": "Working with the Intelligence of the Forest",
-   "titel_2": "Trabajando con la Inteligencia del Bosque",
+   "titel_1": "Biodynamics Meets Agroforestry",
+   "titel_2": "La biodinámica se encuentra con la agroforestería",
    "mitwirkende": [
     "Esteban Acosta Pereira",
     "Ambra Pirker Grosmaire",
@@ -716,8 +770,8 @@
    ],
    "fenster": "4. bis 6. Februar • 10:45 - 12:30 • In den dreitägigen Arbeitsgruppen am Vormittag wird das Tagungsthema gemeinsam vertieft.",
    "titel": {
-    "EN": "Working with the Intelligence of the Forest",
-    "ES": "Trabajando con la Inteligencia del Bosque"
+    "EN": "Biodynamics Meets Agroforestry",
+    "ES": "La biodinámica se encuentra con la agroforestería"
    }
   },
   {
@@ -893,7 +947,8 @@
    "titel_1": "Fermentation: Vom Umgang mit lebendigen Lacto-Bazillus-Kulturen",
    "titel_2": "Fermentation: Interacting with Live Lactic Acid Bacteria Cultures",
    "mitwirkende": [
-    "Heidi Leonhard"
+    "Heidi Leonhard",
+    "Brigid LeFevre"
    ],
    "sprachen": [
     "DE",
@@ -1450,6 +1505,6 @@
    }
   }
  ],
- "pruefsumme": "6867cb4a5becb790",
- "stand": "2026-09-15T20:32:20+00:00"
+ "pruefsumme": "82573acd691cbd67",
+ "stand": "2026-09-16T09:58:59+00:00"
 }
