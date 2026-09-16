@@ -1,0 +1,409 @@
+// =============================================================================
+// ingest-uscreen · Supabase Edge Function
+// Nimmt Uscreen-Webhooks (goetheanum.tv) entgegen und schreibt die Sommer-Aktion
+// nach public.sommer2026_signups. Jeder Payload wird PII-redigiert in
+// public.sommer2026_ingest_raw geloggt (nur Service-Role liest ihn).
+//
+// Aktions-Isolierung: jede Neuanmeldung im Aktionszeitraum → status 'neu' (jeder
+// Trial hinterlegt eine Karte, darum ist transaction_id KEIN Unterscheidungsmerkmal).
+// Zahlungen setzen (noch) KEIN 'bleibt' – die Umwandlung wird erst nach der
+// 3-Monats-Frist bestimmt. Kündigung → 'gekuendigt'.
+// Optional schärfer via aktion_coupon / aktion_plan.
+//
+// Verlängerung ≠ Abschluss (Beschluss 10. August 2026): Uscreen feuert
+// `subscription_assigned` auch für laufende Bestandsabos und unterscheidet die
+// beiden Fälle im Payload nicht. Erkannt wird es an einer früheren
+// `success_recurring` derselben Person – ein Abo mit drei Gratismonaten kann
+// keine haben. Solche Zeilen bekommen `art: 'verlaengerung'` und fallen aus
+// allen Auswertungen (die lesen die View `sommer2026_neuabos`).
+//
+// Attribution: volles UTM-Tupel (source/medium/campaign/content) + Landingpage-Pfad
+// + offene Selbstauskunft (E-Mail-redigiert) werden je Anmeldung mitgeschrieben; der
+// grobe kanal-Bucket bleibt als Zusammenfassung. Die Sprache kommt, wo das UTM-Tupel
+// im Link-Register eindeutig ist, aus sommer2026_links.sprache (die Uscreen-Plan-
+// Titel sind durchweg deutsch, der Titel-Rat bliebe sonst immer 'de').
+//
+// Herkunftsland (`land`, Migration «sommer2026_land»): ISO-Code aus der Zahlung.
+// Der Sprach-Rat trägt bei goetheanum.tv kaum – das Link-Register führt fast
+// jedes UTM-Tupel in BEIDEN Sprachen (dieselbe Spur, nur andere Landingpage),
+// und DE- wie EN-Landing schicken in dasselbe Angebot. Das Land ist gemessen,
+// nicht geraten; es ersetzt die Sprache nicht, es ergänzt sie.
+//
+// Entdopplung: dedup_key = <produkt>:<gesalzener E-Mail-Hash> (Person je Produkt,
+// auch über Quellen hinweg), Fallback <source>:<ext_id>. Upsert/Update laufen
+// über dedup_key – dieselbe Person zählt nie doppelt, auch bei mehreren Events.
+//
+// Scharf nur wenn sommer2026_config.aktion_aktiv = 'true'. Auth: ?key=<secret>.
+// =============================================================================
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+
+const SB = Deno.env.get("SUPABASE_URL")!;
+const KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const H = { "Content-Type": "application/json", apikey: KEY, Authorization: `Bearer ${KEY}` };
+
+function pick(o: any, keys: string[]): any {
+  for (const k of keys) {
+    const v = k.split(".").reduce((a: any, p: string) => (a == null ? a : a[p]), o);
+    if (v !== undefined && v !== null && v !== "") return v;
+  }
+  return undefined;
+}
+
+function redact(o: any): any {
+  if (Array.isArray(o)) return o.map(redact);
+  if (o && typeof o === "object") {
+    const r: any = {};
+    for (const k of Object.keys(o)) r[k] = /(email|name|phone|address|\bip\b)/i.test(k) ? "***" : redact(o[k]);
+    return r;
+  }
+  return o;
+}
+
+async function sha256Hex(s: string): Promise<string> {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// E-Mail-artige Werte aus Freitext entfernen (Selbstauskunft ist qualitativ, nicht personenbezogen).
+function scrubEmail(s: string): string {
+  return s.replace(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi, "***");
+}
+
+// Herkunftsland aus der Zahlung (`order_paid.country_code`). Das ist das einzige
+// gemessene Herkunfts-Merkmal, das Uscreen liefert – und für goetheanum.tv das
+// Ersatzmass für die Sprache: die Plan-Titel sind durchweg deutsch, das Angebot
+// für DE und EN dasselbe (`?o=84317`), darum geht die Sprache aus dem Abo selbst
+// nicht hervor. Land ist NICHT Sprache, aber es ist gemessen statt geraten.
+function landAus(data: any): string | null {
+  const v = pick(data, ["country_code", "country", "billing_country", "user.country_code"]);
+  if (!v) return null;
+  const s = String(v).trim().toUpperCase();
+  return /^[A-Z]{2}$/.test(s) ? s : null;
+}
+
+// Platzhalter-Werte (Feld-Default «none», leer, «n/a» …) NICHT als UTM werten.
+function cleanUtm(v: any): string | null {
+  if (v == null) return null;
+  const s = String(v).trim();
+  return (s === "" || /^(none|n\/?a|null|undefined|-)$/i.test(s)) ? null : s;
+}
+
+// Volles UTM-Tupel + Landingpage: direkte Felder, Uscreens utm_params-Block
+// (kommt im user_created-Event mit), sonst aus einer eingebetteten URL nachziehen.
+function utmFrom(data: any): { src: any; med: any; camp: any; cont: any; land: any } {
+  const g = (k: string) => pick(data, [k, "utm_params." + k, "custom_fields." + k, "utm." + k.replace("utm_", ""), "query." + k]);
+  let src = g("utm_source"), med = g("utm_medium"), camp = g("utm_campaign"), cont = g("utm_content");
+  let land = pick(data, ["landing_path", "landing_page", "page"]);
+  const urlish = pick(data, ["landing_url", "page_url", "signup_url", "url", "referrer_url", "referrer"]);
+  if (urlish) {
+    try {
+      const url = new URL(String(urlish));
+      const q = url.searchParams;
+      src = src || q.get("utm_source"); med = med || q.get("utm_medium");
+      camp = camp || q.get("utm_campaign"); cont = cont || q.get("utm_content");
+      if (!land) land = url.pathname;
+    } catch { /* keine URL */ }
+  }
+  return { src, med, camp, cont, land };
+}
+
+function mapPlan(title: string) {
+  const t = (title || "").toLowerCase();
+  const sprache = /\b(en|eng|english|englisch)\b/.test(t) ? "en" : "de";
+  const intervall = /(year|annual|annum|jahr|jähr|yearly)/.test(t) ? "jaehrlich"
+    : /(month|monat|mensile|mensuel)/.test(t) ? "monatlich" : "monatlich";
+  const tarif = /(reduc|ermäss|ermaess|student|conc)/.test(t) ? "ermaessigt" : "standard";
+  return { sprache, intervall, tarif };
+}
+
+// Die Uscreen-Plan-Titel sind durchweg deutsch («Standard-Abo Monatlich» …),
+// mapPlan rät für die Sprache darum praktisch immer 'de'. Massgeblich ist das
+// Link-Register: trägt das UTM-Tupel dort eindeutig EINE Sprache, gilt sie.
+// Mehrdeutig (dasselbe Tupel als DE- und EN-Link registriert) → null, der
+// Titel-Rat bleibt. Tupel-Vergleich NULL-sicher, wie in sommer2026_links_public.
+async function spracheAusRegister(src: string | null, med: string | null,
+  camp: string | null, cont: string | null): Promise<string | null> {
+  if (!src && !cont) return null;
+  const p = new URLSearchParams({ select: "sprache" });
+  const f = (k: string, v: string | null) => p.append(k, v == null ? "is.null" : `eq.${v}`);
+  f("utm_campaign", camp); f("utm_source", src); f("utm_medium", med); f("utm_content", cont);
+  const rows = await fetch(`${SB}/rest/v1/sommer2026_links?${p}`, { headers: H })
+    .then((r) => (r.ok ? r.json() : [])).catch(() => []);
+  const sprachen = [...new Set((Array.isArray(rows) ? rows : [])
+    .map((r: any) => r.sprache).filter(Boolean))];
+  return sprachen.length === 1 ? String(sprachen[0]) : null;
+}
+
+const KANAELE = ["newsletter", "mailer", "social", "popup", "website", "empfehlung", "andere"];
+function mapKanal(v: any): string {
+  const s = (v ?? "").toString().toLowerCase();
+  if (!s) return "andere";
+  if (KANAELE.includes(s)) return s;
+  if (/(news|\bnl\b)/.test(s)) return "newsletter";
+  if (/(mail|post|brief)/.test(s)) return "mailer";
+  if (/(insta|face|\bfb\b|social|linkedin|youtube|twitter|tiktok)/.test(s)) return "social";
+  if (/(popup|pop-up|overlay)/.test(s)) return "popup";
+  if (/(web|site|direct|organic)/.test(s)) return "website";
+  if (/(refer|empfehl|friend)/.test(s)) return "empfehlung";
+  return "andere";
+}
+
+async function log(event: string, ok: boolean, note: string, payload: unknown) {
+  await fetch(`${SB}/rest/v1/sommer2026_ingest_raw`, {
+    method: "POST",
+    headers: { ...H, Prefer: "return=minimal" },
+    body: JSON.stringify({ source: "uscreen", event, ok, note, payload: redact(payload) }),
+  }).catch(() => {});
+}
+
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+}
+
+async function patchStatus(dedupKey: string, status: string) {
+  await fetch(`${SB}/rest/v1/sommer2026_signups?dedup_key=eq.${encodeURIComponent(dedupKey)}`, {
+    method: "PATCH",
+    headers: { ...H, Prefer: "return=minimal" },
+    body: JSON.stringify({ status }),
+  }).catch(() => {});
+}
+
+Deno.serve(async (req) => {
+  if (req.method !== "POST") return new Response("ok", { status: 200 });
+
+  const u = new URL(req.url);
+  const key = u.searchParams.get("key") || req.headers.get("x-webhook-key") || "";
+  const cfgRows = await fetch(`${SB}/rest/v1/sommer2026_config?key=in.(webhook_secret,hash_salt,aktion_aktiv,aktion_start,aktion_ende,aktion_coupon,aktion_plan)&select=key,value`, { headers: H })
+    .then((r) => r.json()).catch(() => []);
+  const cfg: Record<string, string> = {};
+  if (Array.isArray(cfgRows)) for (const r of cfgRows) cfg[r.key] = r.value;
+  const secret = cfg["webhook_secret"] || null;
+  if (!secret || key !== secret) return new Response("unauthorized", { status: 401 });
+
+  const armed = (cfg["aktion_aktiv"] || "").toLowerCase() === "true";
+  const salt = cfg["hash_salt"] || "";
+  const aktionStart = cfg["aktion_start"] || "";
+  const aktionEnde  = cfg["aktion_ende"]  || "";
+  const aktionCoupon = (cfg["aktion_coupon"] || "").toLowerCase();
+  const aktionPlan = (cfg["aktion_plan"] || "").toLowerCase();
+
+  let body: any = {};
+  try { body = await req.json(); } catch { /* leer */ }
+
+  const event = (pick(body, ["event", "type", "event_type"]) || "").toString();
+  const data = body.data && typeof body.data === "object" ? body.data : body;
+  await log(event, true, "empfangen", body);
+
+  if (!armed) return json({ ok: true, mode: "log" });
+
+  const ext = String(pick(data, ["user_id", "user.id", "subscription_id", "transaction_id", "id"]) ?? "");
+  if (!ext) return json({ ok: true, skipped: "kein user_id" });
+
+  // Entdopplung: Person je Produkt über gesalzenen E-Mail-Hash (Fallback ext_id).
+  const email = (pick(data, ["customer_email", "user_email", "email"]) || "").toString().toLowerCase();
+
+  // Test-Anmeldungen des Buchhalters (Adressen mit «hao.bu») zählen nie als
+  // Abo: nur ins Roh-Protokoll (zur Verifikation), kein Upsert, kein Status.
+  if (email.includes("hao.bu")) {
+    await fetch(`${SB}/rest/v1/sommer2026_ingest_raw`, {
+      method: "POST", headers: { ...H, Prefer: "return=minimal" },
+      body: JSON.stringify({ source: "uscreen", event, ok: true, note: "test (hao.bu) – nicht gezaehlt", payload: redact(body) }),
+    }).catch(() => {});
+    return json({ ok: true, test: true });
+  }
+
+  const person = email ? await sha256Hex(salt + email) : "";
+  const dedupKey = person ? `gtv:${person}` : `uscreen:${ext}`;
+
+  const title = (pick(data, ["subscription_title", "plan_title", "plan_name", "subscription.title", "product_title", "offer_title", "title"]) || "").toString();
+  const e = event.toLowerCase();
+  const isNew = /(assign|subscribed|created|trial|start)/.test(e);
+  const isPay = /(order_paid|paid|recurring|renew|charge|payment|convert)/.test(e);
+  const isCancel = /(cancel|refund|expire|churn|delet)/.test(e);
+
+  if (isCancel) { await patchStatus(dedupKey, "gekuendigt"); return json({ ok: true, status: "gekuendigt" }); }
+  // Jeder Trial hinterlegt eine Karte → Zahlung fällt sofort an. Darum setzt eine
+  // Zahlung (noch) KEIN 'bleibt': die echte Umwandlung wird erst nach der
+  // 3-Monats-Frist bestimmt (separater Schritt im Oktober). EIN Feld wird aber
+  // mitgenommen: das Herkunftsland – nur die Zahlung trägt es.
+  if (isPay && !isNew) {
+    const herkunft = landAus(data);
+    if (herkunft) {
+      await fetch(`${SB}/rest/v1/sommer2026_signups?dedup_key=eq.${encodeURIComponent(dedupKey)}&land=is.null`, {
+        method: "PATCH", headers: { ...H, Prefer: "return=minimal" },
+        body: JSON.stringify({ land: herkunft }),
+      }).catch(() => {});
+    }
+    return json({ ok: true, note: "Zahlung ignoriert (Umwandlung erst nach 3 Monaten)", land: !!herkunft });
+  }
+
+  // «User Created» ist KEINE Aktions-Anmeldung (Registrierung ≠ Abo) – aber es
+  // ist das einzige Event, das Attribution mitbringt: das VOLLE UTM-Tupel
+  // (`utm_params`, aus Uscreens eigener Session-Erfassung – am 18.7. live
+  // verifiziert) und die Custom-Field-Antwort (`custom_fields`, Schlüssel ist
+  // der FRAGETEXT, darum der Object.values-Fallback). Beides wird an eine
+  // bestehende Anmeldung derselben Person geheftet (nur wo noch leer); der
+  // Kanal wird nachgezogen, solange er «andere» ist. Kommt die Anmeldung erst
+  // NACH diesem Event, greift der Roh-Log-Fallback unten.
+  // WICHTIG: vor isNew prüfen – «created» matcht sonst als Anmeldung.
+  if (/user[_.]?created/.test(e)) {
+    const cf = (data && typeof data.custom_fields === "object" && data.custom_fields) || {};
+    const antwort0 = pick(data, ["custom_fields.custom_field_1", "custom_fields.user_field_1", "custom_field_1", "user_field_1", "user_fields.0.value"]) ?? Object.values(cf)[0];
+    const antwort = antwort0 ? scrubEmail(String(antwort0)).slice(0, 300) : null;
+    const u2 = utmFrom(data);
+    const src2 = cleanUtm(u2.src), med2 = cleanUtm(u2.med), camp2 = cleanUtm(u2.camp), cont2 = cleanUtm(u2.cont);
+    if (!antwort && !src2 && !cont2) return json({ ok: true, note: "user_created ohne Spur" });
+    const wo = `dedup_key=eq.${encodeURIComponent(dedupKey)}`;
+    if (antwort) {
+      await fetch(`${SB}/rest/v1/sommer2026_signups?${wo}&selbstauskunft=is.null`, {
+        method: "PATCH", headers: { ...H, Prefer: "return=minimal" },
+        body: JSON.stringify({ selbstauskunft: antwort }),
+      }).catch(() => {});
+    }
+    if (src2 || cont2) {
+      // Kommt die Spur nachträglich, die Sprache gleich mitziehen (Register
+      // schlägt Titel-Rat) – nur auf Zeilen, die noch keine Spur tragen.
+      const sprache2 = await spracheAusRegister(src2, med2, camp2, cont2);
+      await fetch(`${SB}/rest/v1/sommer2026_signups?${wo}&utm_source=is.null&utm_content=is.null`, {
+        method: "PATCH", headers: { ...H, Prefer: "return=minimal" },
+        body: JSON.stringify({ utm_source: src2, utm_medium: med2, utm_campaign: camp2, utm_content: cont2,
+                               ...(sprache2 ? { sprache: sprache2 } : {}) }),
+      }).catch(() => {});
+    }
+    const nachKanal = mapKanal(src2 || med2 || antwort);
+    if (nachKanal !== "andere") {
+      await fetch(`${SB}/rest/v1/sommer2026_signups?${wo}&kanal=eq.andere`, {
+        method: "PATCH", headers: { ...H, Prefer: "return=minimal" },
+        body: JSON.stringify({ kanal: nachKanal }),
+      }).catch(() => {});
+    }
+    return json({ ok: true, note: "Attribution vermerkt", utm: !!(src2 || cont2), selbstauskunft: !!antwort });
+  }
+
+  if (!isNew) return json({ ok: true, skipped: "event ignoriert" });
+
+  // Verlängerung oder Abschluss? Uscreen sagt es nicht: `subscription_assigned`
+  // trägt nur user_id, subscription_id und den Plantitel – dieselben Felder für
+  // beides. 40 laufende Bestandsabos standen darum als Anmeldung in der Zählung
+  // (belegt am 10.8. über den Uscreen-Vollexport: ihre nächste Rechnung fällt
+  // genau einen Monat bzw. ein Jahr nach unserem Anmeldedatum).
+  //
+  // Der Test, der trägt: Ein Abo mit drei Gratismonaten kann in den ersten 90
+  // Tagen KEINE wiederkehrende Zahlung haben. Liegt für dieselbe Person schon
+  // ein `success_recurring` VOR diesem Ereignis, läuft ihr Abo bereits. Gegen
+  // die 655 bekannten Zeilen geprüft: kein einziger Fehlgriff auf ein echtes
+  // Neuabo. Die Zeile wird trotzdem geschrieben – als `art: 'verlaengerung'`,
+  // sichtbar, aber ausserhalb der Zählung (View sommer2026_neuabos).
+  let art = "neu";
+  if (ext) {
+    try {
+      const frueher = await fetch(
+        `${SB}/rest/v1/sommer2026_ingest_raw?source=eq.uscreen&event=eq.success_recurring` +
+        `&payload->>user_id=eq.${encodeURIComponent(ext)}&limit=1&select=id`,
+        { headers: H },
+      ).then((r) => (r.ok ? r.json() : []));
+      if (Array.isArray(frueher) && frueher.length) art = "verlaengerung";
+    } catch { /* im Zweifel als Abschluss zählen – der Abgleich korrigiert */ }
+  }
+
+  // Aktion = jede Neuanmeldung im Aktionszeitraum (aktion_start begrenzt es zeitlich).
+  // Optional schärfer über aktion_coupon / aktion_plan.
+  const coupon = (pick(data, ["coupon_code", "coupon", "discount_code", "code"]) || "").toString().toLowerCase();
+  let istAktion: boolean;
+  if (aktionCoupon) istAktion = coupon.includes(aktionCoupon);
+  else if (aktionPlan) istAktion = title.toLowerCase().includes(aktionPlan);
+  else istAktion = true;
+  if (!istAktion) return json({ ok: true, skipped: "nicht Aktion (Coupon/Plan)" });
+
+  const { sprache: planSprache, intervall, tarif } = mapPlan(title);
+  const utmRaw = utmFrom(data);
+  let src = cleanUtm(utmRaw.src), med = cleanUtm(utmRaw.med), camp = cleanUtm(utmRaw.camp), cont = cleanUtm(utmRaw.cont);
+  const landingPfad = utmRaw.land;   // Landingpage-Pfad – NICHT das Herkunftsland (Spalte `land`)
+  // Offene Selbstauskunft «Wie sind Sie aufmerksam geworden?» (Custom User Field,
+  // Slot 1 = custom_field_1) – O-Ton, E-Mail-redigiert.
+  const selbst0 = pick(data, ["referral_source", "how_heard", "how_did_you_hear", "custom_fields.how_did_you_hear",
+    "custom_fields.custom_field_1", "custom_fields.user_field_1", "custom_field_1", "user_field_1", "user_fields.0.value"]);
+  let selbst = selbst0 ? scrubEmail(String(selbst0)).slice(0, 300) : null;
+  // Fallback: kam «User Created» (traegt utm_params UND custom_fields) schon
+  // VOR dieser Anmeldung, liegt beides im Roh-Log – dort nachschlagen (beide
+  // Felder ueberleben die PII-Redaktion; die User-ID heisst dort `id`).
+  if ((!selbst || !src) && ext) {
+    try {
+      const raws = await fetch(`${SB}/rest/v1/sommer2026_ingest_raw?source=eq.uscreen&event=ilike.*user*creat*&payload->>id=eq.${encodeURIComponent(ext)}&order=received_at.desc&limit=1&select=payload`, { headers: H })
+        .then((r) => r.json());
+      const p = raws?.[0]?.payload;
+      if (!selbst) {
+        const cf = p?.custom_fields;
+        const a = cf && typeof cf === "object" ? (cf.custom_field_1 ?? cf.user_field_1 ?? Object.values(cf)[0]) : null;
+        if (a) selbst = scrubEmail(String(a)).slice(0, 300);
+      }
+      if (!src && p?.utm_params && typeof p.utm_params === "object") {
+        src = src || cleanUtm(p.utm_params.utm_source); med = med || cleanUtm(p.utm_params.utm_medium);
+        camp = camp || cleanUtm(p.utm_params.utm_campaign); cont = cont || cleanUtm(p.utm_params.utm_content);
+      }
+    } catch { /* kein Fallback */ }
+  }
+  // Herkunftsland: trägt nur die Zahlung. Der Trial belastet die Karte sofort,
+  // darum liegt «order paid» oft schon VOR dieser Anmeldung im Roh-Log (die
+  // Redaktion lässt country_code stehen). Kommt die Zahlung später, holt der
+  // isPay-Zweig oben das Land nach.
+  let herkunft = landAus(data);
+  if (!herkunft && ext) {
+    try {
+      const bez = await fetch(`${SB}/rest/v1/sommer2026_ingest_raw?source=eq.uscreen&event=eq.order_paid&payload->>user_id=eq.${encodeURIComponent(ext)}&order=received_at.desc&limit=1&select=payload`, { headers: H })
+        .then((r) => r.json());
+      herkunft = landAus(bez?.[0]?.payload);
+    } catch { /* kein Land */ }
+  }
+
+  const kanal = mapKanal(src || pick(data, ["source", "referral_source"]) || selbst);
+  const sprache = (await spracheAusRegister(src, med, camp, cont)) ?? planSprache;
+  const when = pick(data, ["created_at", "subscribed_at", "started_at", "date"]) || new Date().toISOString();
+
+  // Aktions-Grenze: Anmeldungen vor dem Start (Nachmittag 3. Juli) zählen nicht.
+  if (aktionStart && !isNaN(Date.parse(when)) && new Date(when) < new Date(aktionStart)) {
+    return json({ ok: true, skipped: "vor Aktionsstart" });
+  }
+
+  // Und die Grenze nach hinten (`aktion_ende`, 11. August). Sie hat bis zum
+  // 25. August gefehlt, und das hatte Folgen: Anmeldungen der Tage danach liefen
+  // weiter in die Aktionszahlen, obwohl das Angebot 84317 seither kein
+  // Gratis-Vierteljahr mehr gibt, sondern drei Tage Probe. Drei dieser
+  // Anmeldungen zahlten binnen drei Tagen und standen trotzdem als
+  // Gratis-Probeabo in der Zählung.
+  //
+  // Die Zeile wird trotzdem geschrieben – nur als `art: 'nachfrist'`, denselben
+  // Weg wie `verlaengerung`: sichtbar in der Tabelle, ausserhalb der View
+  // sommer2026_neuabos und damit ausserhalb jeder Zahl. Wegwerfen wäre falsch,
+  // die Anmeldung hat ja stattgefunden; mitzählen wäre es auch. Kündigungen
+  // dieser Personen kommen weiterhin an: patchStatus geht über dedup_key und
+  // kennt die Art nicht.
+  let artZeit = art;
+  if (aktionEnde && !isNaN(Date.parse(when)) && new Date(when) > new Date(aktionEnde) && artZeit === "neu") {
+    artZeit = "nachfrist";
+  }
+
+  const row = {
+    signed_up_at: when, produkt: "gtv", sprache, format: "stream",
+    // Der Store rechnet ausschliesslich in EUR (Uscreen-Währung des Shops).
+    waehrung: "eur",
+    tarif, intervall, status: "neu", art: artZeit, kanal, source: "uscreen", ext_id: ext, dedup_key: dedupKey,
+    kampagne: (camp ? String(camp) : "summer26_trial"),
+    utm_source: src ? String(src) : null, utm_medium: med ? String(med) : null,
+    utm_campaign: camp ? String(camp) : null, utm_content: cont ? String(cont) : null,
+    landing_path: landingPfad ? String(landingPfad).slice(0, 200) : null, selbstauskunft: selbst,
+    // Nur setzen, wenn bekannt: der Upsert läuft mit merge-duplicates, ein
+    // zweites Ereignis ohne Land würde ein bereits gefundenes sonst löschen.
+    ...(herkunft ? { land: herkunft } : {}),
+  };
+  const res = await fetch(`${SB}/rest/v1/sommer2026_signups?on_conflict=dedup_key`, {
+    method: "POST",
+    headers: { ...H, Prefer: "resolution=merge-duplicates,return=minimal" },
+    body: JSON.stringify(row),
+  });
+  if (!res.ok) {
+    await log(event, false, `upsert ${res.status} ${(await res.text()).slice(0, 300)}`, row);
+    return json({ ok: false }, 200);
+  }
+  return json({ ok: true, status: "neu", art: artZeit, sprache, tarif, intervall, kanal });
+});

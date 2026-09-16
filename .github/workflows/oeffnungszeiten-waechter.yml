@@ -1,0 +1,41 @@
+# Wächter über die Öffnungszeiten des Campusplans (Beschluss Auftraggeber,
+# 14. September 2026: «regelmässige Überprüfung aller Öffnungszeiten,
+# monatlich»). Holt die Quellseiten, vergleicht ihren Zeiten-Text mit dem
+# abgelegten Stand (docs/oeffnungszeiten-stand/) und eröffnet bei Abweichung
+# ein Issue mit dem Unterschied. Geändert wird nichts von selbst — die Zeiten
+# in apps/campusplan/gaeste.js prüft ein Mensch, dann wird der Stand neu
+# geschrieben (python3 tools/oeffnungszeiten-pruefen.py) und committet.
+name: Öffnungszeiten-Wächter
+
+on:
+  schedule:
+    - cron: "0 6 1 * *"     # am 1. jedes Monats, 6 Uhr UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  pruefen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Quellseiten mit dem Stand vergleichen
+        id: vergleich
+        run: |
+          if python3 tools/oeffnungszeiten-pruefen.py --pruefen; then
+            echo "geaendert=nein" >> "$GITHUB_OUTPUT"
+          else
+            echo "geaendert=ja" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Issue eröffnen
+        if: steps.vergleich.outputs.geaendert == 'ja'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          titel="Öffnungszeiten prüfen: Quellseiten haben sich geändert ($(date -u +%Y-%m))"
+          gh issue create --title "$titel" --body-file oeffnungszeiten-abweichungen.md --label "campusplan"

@@ -1,0 +1,22 @@
+{
+  "$titel": "Kanonische Typo-Leiter (B-Leitprinzip, Beier) – eine Quelle der Wahrheit",
+  "$zweck": "Grad → (Schrift, Mindestgewicht, Tracking). tools/check-type-scale.py erzwingt die zwei harten Regeln maschinell; base.css ist die Umsetzung. Symmetrisch zu contract.json (Gestalt) und typo-regeln.yaml (Sprache).",
+  "leitprinzip": "< 18px nur Source ODER Goetheanum Deutlich · ab 18px Klar möglich · Leise erst ab 22px (Retina) bzw. 24 generell. Leichte UND schwere Gewichte verschlechtern das Lesen – die Mitte (Klar/Deutlich) ist optimal.",
+  "gewichte": { "leise": 265, "text_klar": 440, "deutlich": 580, "laut": 680 },
+  "regeln": {
+    "goetheanum_klein": { "id": "TS1", "wenn": "Goetheanum-Textrolle mit font-size < 18px", "dann": "font-weight >= 580 (Deutlich)", "sonst": "Warnung" },
+    "leise_klein": { "id": "TS2", "wenn": "Leise (w-leise / .leise) als Lesetext", "dann": "font-size >= 22px", "sonst": "Warnung" }
+  },
+  "grenzwerte": { "klar_min_px": 18, "leise_min_px": 22, "min_gewicht_unter_18": 580 },
+  "rollen": {
+    "fliesstext": { "schrift": "display-oder-source", "min_px": 18, "tracking": "0.02em" },
+    "lede":       { "schrift": "display", "min_px": 18, "tracking": "0.02em" },
+    "meta":       { "schrift": "source", "min_px": 15 },
+    "label":      { "schrift": "source", "min_px": 15 },
+    "readout":    { "schrift": "source", "min_px": 15 },
+    "beiwerk":    { "schrift": "source", "min_px": 14 },
+    "kicker":     { "schrift": "display", "min_px": 13.5, "min_gewicht": 580 },
+    "knopf":      { "schrift": "display", "min_px": 14.5, "min_gewicht": 580 },
+    "titel":      { "schrift": "display", "min_px": 22, "tracking": "0" }
+  }
+}

@@ -1,0 +1,598 @@
+/* =============================================================================
+   Goetheanum CI – Basis-Komponenten
+   -----------------------------------------------------------------------------
+   Gemeinsame Grundlage für alle Werkzeuge: Grundlayout, Kopf-/Fusszeile,
+   Abschnitte, Karten, Knöpfe, Formularfelder. Setzt design-system/tokens.css
+   voraus (zuerst einbinden). Werkzeug-spezifisches gehört in die jeweilige Seite.
+
+   Schrift-Rollen (robust, mobil-first):
+   • Lesetext (Source Sans 3) trägt Fliesstext, Beschreibungen, Tabellen, Felder.
+   • Display (Goetheanum) trägt Titel, Kicker – das, was geschaut statt gelesen wird.
+   Hell/Dunkel kommt allein aus den Tokens (var(--paper)/--ink/… kippen mit dem Theme).
+   ============================================================================= */
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font); font-weight:var(--w-text);
+  font-size:var(--t-body); line-height:var(--lh-body);
+  letter-spacing:.02em;   /* B3: leichtes Tracking hilft Lese-/Kleingraden (Beier) */
+  font-kerning:normal; text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased;
+}
+/* Langtext (Fliesstext über mehrere Absätze) bekommt die Lese-Grotesk – dort,
+   wo die Display-Schrift bei Menge und Kleingrad ermüdet. Bewusst opt-in, damit
+   die Hausschrift überall sonst die Stimme bleibt. */
+.prose{font-family:var(--font-text);max-width:min(var(--measure),100%)}
+.prose p{margin-bottom:.7em}
+a{color:inherit;text-decoration:none}
+/* Links IM Fliesstext (Absatz, Liste, Hinweis) brauchen eine eigene, sichtbare
+   Rolle – der globale Reset oben macht sie sonst farblich und optisch identisch
+   mit umgebendem Text und damit unauffindbar. Gold = Auswahl-/Verweisfarbe;
+   Unterstreichen ist hier keine Betonung (G05 verbietet Betonung durch
+   Unterstreichen im Fliesstext), sondern die Link-Konvention selbst – DS05
+   nimmt Links davon ausdrücklich aus. */
+p a,li a,.note a,.hint a,.help a,.desc a{color:var(--gold-ink);text-decoration:underline;
+  text-decoration-color:color-mix(in srgb,var(--gold-ink) 45%,transparent);text-underline-offset:.15em}
+p a:hover,li a:hover,.note a:hover,.hint a:hover,.help a:hover,.desc a:hover{text-decoration-color:currentColor}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+
+/* Display-Schrift trägt die Titel – mit fester, gemessener Skala aus EINER Quelle.
+   Seiten setzen KEINE eigenen Überschriften-Grössen oder -Schnitte mehr; so kann
+   keine Seite ausscheren (Konformität durch Konstruktion). Titel = Deutlich, nie Laut. */
+h1,h2,h3,h4,.h-display{font-family:var(--font-display);font-weight:var(--w-deutlich);line-height:var(--lh-tight)}
+h1,h2{letter-spacing:0}   /* B3: grosse Display-Grade bleiben eng (Tracking nur an Lesegraden) */
+/* Seitentitel — EINE Rolle fuer alle Werkzeuge (Beschluss 4.8.2026). Vorher hat
+   jede Seite ihren Titel selbst gesetzt, mit Durchschuss 1.02 bis 1.08 und
+   negativer Laufweite; zweizeilige Titel stiessen dadurch zusammen. Durchschuss
+   und Laufweite kommen ab jetzt von hier (--lh-tight 1.15, Laufweite 0). Die
+   GROESSE darf eine Seite weiterhin selbst waehlen (font-size/max-width) — der
+   Grad ist eine Satzentscheidung, der Durchschuss eine Hausregel. */
+.hero h1,.lead-title{font-family:var(--font-display);font-weight:var(--w-deutlich);
+  line-height:var(--lh-tight);letter-spacing:0}
+.lead-title{color:var(--gold-ink);margin:8px 0 0}
+/* B7: Halations-Absenkung im Dunkeln NUR an grossen Display-Rollen – gegen das
+   Bleeding heller, fetter Grossbuchstaben. Fliess-/Kleintext behält sein Gewicht. */
+:root[data-theme="dark"] h1,:root[data-theme="dark"] h2,:root[data-theme="dark"] .h-display{font-weight:540}
+h1{font-size:var(--t-h1)}
+h2{font-size:var(--t-h2)}
+h3{font-size:var(--t-h3)}
+h4{font-size:var(--t-h3)}
+
+/* Kanonischer Seitenkopf: Kicker · Titel · Lede – ein Baustein für alle Werkzeuge.
+   NUR vertikales Padding (padding-block): der seitliche Rand kommt aus .wrap. Sonst
+   würde `.wrap.hero` den seitlichen .wrap-Rand auf 0 setzen (Text klebt am Rand). */
+.hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+.hero h1{max-width:20ch}
+.hero .lede{margin-top:var(--s4)}
+
+/* Zugänglichkeit: Zustand = Blau */
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* --- Kopfzeile -------------------------------------------------------------- */
+.ds-header{position:sticky;top:0;z-index:30;background:var(--bar-bg);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
+.ds-header .bar{display:flex;align-items:center;justify-content:space-between;height:var(--header-h)}
+.brand{display:flex;align-items:center;gap:var(--s3);flex:0 0 auto}
+.brand .lockup{height:34px;width:auto;display:block}  /* erzeugtes Logo/Lockup (DS08) */
+.brand .mk{width:24px;height:24px;border-radius:6px;display:block}
+.brand .wm{font-family:var(--font-display);font-weight:var(--w-text);font-size:27px;line-height:1;color:var(--muted);letter-spacing:.005em}
+nav.top{display:flex;gap:22px}
+nav.top a{color:var(--muted);font-size:var(--t-small)}
+nav.top a:hover{color:var(--gold-ink)}
+@media(max-width:720px){nav.top{display:none}}
+
+/* --- Abschnitte ------------------------------------------------------------ */
+section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
+.shead{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s8);margin-bottom:var(--s6);flex-wrap:wrap}
+.shead h2{font-size:var(--t-h2);flex:0 0 auto}
+.shead p{color:var(--muted);font-size:var(--t-small);line-height:1.6;max-width:58ch;flex:1 1 320px}
+
+/* --- Karte ----------------------------------------------------------------- */
+.card{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);background:var(--paper)}
+.card.soft{background:var(--soft)}
+
+/* --- Kennzahl: die Grundform für eine Fläche, die EINE Zahl trägt ----------
+   Label (was), Wert (die Zahl), Notiz (woher/wie gerechnet) – in dieser
+   Reihenfolge, weil man erst wissen muss, was man liest. Der Innenabstand ist
+   bewusst gross: Eine Zahl in 32px braucht Rand, sonst liest sie sich als
+   Etikett statt als Aussage. Rhythmus innen aus Tokens, nicht aus rohen Pixeln.
+   .kennzahlen ist das Raster dazu – auto-fit, damit die Reihe von selbst
+   umbricht und keine Sonderregel je Breite nötig wird. */
+.kennzahlen{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:var(--s4)}
+.kennzahl{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:var(--s6);display:flex;flex-direction:column;gap:var(--s2)}
+.kennzahl .k-label{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.4}
+.kennzahl .k-wert{font-family:var(--font-display);font-weight:var(--w-strong);
+  font-size:clamp(26px,3.2vw,34px);color:var(--ink);
+  font-variant-numeric:tabular-nums lining-nums;line-height:var(--lh-tight)}
+.kennzahl .k-note{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.55}
+/* Auf Papier statt auf gedämpfter Fläche – für Kennzahlen, die selbst auf
+   einer --soft-Fläche liegen (sonst verschwindet die Kante). */
+.kennzahl.auf-papier{background:var(--paper)}
+
+/* --- Chips & Marken (Lese-Grotesk, kleine Grade) --------------------------- */
+.chip{font-family:var(--font-text);font-size:var(--t-small);line-height:1.35;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:var(--pille-y) var(--pille-x)}
+.chip b{color:var(--ink);font-weight:600}
+/* Chip mit Ton: benennt etwas (‹Referenz›, ‹Entwurf›) statt es nur zu zeigen.
+   Trägt darum ganze Sätze – und braucht dafür mehr Luft als der Etiketten-Chip:
+   Innenabstand aus Tokens, Zeilenhöhe wie Lesetext, Umbruch erlaubt. Der Goldton
+   mischt über --paper, NICHT über transparent, sonst nimmt er die Farbe der
+   Fläche an, auf der er liegt, und frisst den Kontrast von --gold-ink (B02;
+   auf einer --soft-Karte gemessene 4.42:1 statt der nötigen 4.5:1). */
+   Seit 1.17.0 nimmt der Chip die TON-Rollen: ohne data-sek ist --ton-hell genau
+   dieser Goldton, unter <div data-sek="nws"> färbt er sich mit. */
+.chip.ton{display:inline-block;border-color:transparent;border-radius:var(--r-control);
+  padding:var(--pille-y) var(--pille-x);line-height:1.5;
+  background:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));
+  color:var(--ton-ink,var(--gold-ink));max-width:100%}
+/* --- Ton-Bausteine: was eine Sektionsfarbe im Satz tut ----------------------
+   Ein <div data-sek="nws"> setzt die vier Rollen (tokens.css); diese Bausteine
+   greifen sie ab. Sie sind der Grund, warum es die Varianten gibt:
+   .band   Kopfband/Titelfläche – die dunkle Fläche trägt Weiss (B01).
+   .kasten Hinweis – der Hauch trägt Lesetext in --ink, die Kante den dunklen Ton.
+   Beide sind THEME-fest richtig, weil die Rollen selbst mit Hell/Dunkel kippen. */
+.band{background:var(--ton-dunkel,var(--gold-deep));color:var(--on-accent);
+  border-radius:var(--r-control);padding:var(--s5) var(--s5) var(--s6)}
+.band h1,.band h2,.band h3,.band p,.band .kicker,.band .kick,.band .lede{color:var(--on-accent)}
+.band .kicker,.band .kick{opacity:.85}
+.band p{font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;margin-top:var(--s2)}
+.kasten{background:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));color:var(--ink);
+  border-left:4px solid var(--ton-dunkel,var(--gold-deep));
+  border-radius:0 var(--r-control) var(--r-control) 0;padding:var(--s4) var(--s5);
+  font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-body)}
+.kasten b{color:var(--ton-ink,var(--gold-ink));font-weight:600}
+/* Karte mit Ton-Kante – die Basis als Marke an der Kante, nicht als Textgrund. */
+.card.ton{border-top:5px solid var(--ton,var(--gold))}
+
+/* Status-Marke (Live/Beta/Entwurf …) – Mikro-Pille, kleiner als .chip, nie versal (G05).
+   Optischer Sitz im Oval: Statuswörter haben meist keine Unterlängen – zentriert
+   man das Geviert, sitzt die Tinte zu hoch. Darum line-height:1 und ein Hauch
+   mehr Luft oben (nachgemessen, nicht geschätzt). */
+.badge{display:inline-flex;align-items:center;line-height:1;font-family:var(--font-text);font-size:var(--t-micro);letter-spacing:.03em;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);
+  padding:calc(var(--pille-y) + .12em) var(--pille-x) calc(var(--pille-y) - .12em)}
+
+/* Schritt-Nummer – runde Zahl-Marke vor nummerierten Zwischentiteln. Gold ist die
+   Hausfarbe für Auswahl-/Schrittmarken (wie die Auswahl-Pille); .blue nur für
+   Sonderfälle (z. B. Vergleichsseiten, die Alt/Neu farblich trennen wollen).
+   Feste Höhe UND Breite (nicht nur min-width) machen den Kreis unabhängig vom
+   Zifferninhalt exakt rund. Die Ziffer sitzt in einem inneren Span, das per
+   translateY(8%) verschoben wird – reine line-height/flex-Zentrierung zentriert
+   die LINE BOX, nicht die Zeichen-Tinte: Ziffern ohne Unterlänge sitzen wegen des
+   Ascent/Descent-Ungleichgewichts der Schrift optisch zu hoch. 8% ist am
+   Goetheanum-Schriftschnitt (Laut/680) empirisch vermessen (Pixel-Analyse der
+   Tinten-Bounding-Box gegen die geometrische Kreismitte) und deckt sich mit den
+   Font-Metriken (hhea ascent 750 / descent −250 vs. Ziffern-Tintenmitte ≈ 330/1000).
+   Unabhängig pixelverifiziert im Kartentool (7/2026, docs/werkzeugwissen.md).
+
+   Der SITZ DER KUGEL im Titel ist eine zweite Messung (8. 9. 2026): als
+   Inline-Box hängt sie an der Grundlinie und sitzt damit sichtbar zu tief –
+   ihre Mitte lag 5.4 px unter der Versalmitte des Titels (bei 28.8 px Grad;
+   Versalhöhe 20, x-Höhe 14, per Tinten-Messung auf Canvas). Eine Marke neben
+   einem Titel gehört auf die MITTE DER VERSALHÖHE, nicht auf die Grundlinie.
+   Die Korrektur ist rein optisch (position:relative statt vertical-align),
+   damit die Zeilenbox des Titels unverändert bleibt und der Durchschuss nicht
+   springt; 0.26em der Kugel-Grösse = die gemessenen 5.4 px, und weil beide
+   Grössen am Titelgrad hängen, trägt der Wert über die ganze Skala. */
+.step-num{display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:1.6em;height:1.6em;min-width:1.6em;border-radius:999px;
+  font-weight:var(--w-strong);font-size:.72em;
+  background:var(--gold-deep);color:var(--on-accent);
+  position:relative;top:-0.26em}
+.step-num.blue{background:var(--blue-solid)}
+.step-num>*{display:block;line-height:1;font-variant-numeric:tabular-nums lining-nums;transform:translateY(8%)}
+
+/* --- Knöpfe = AKTION -------------------------------------------------------- */
+/* Aktion = Blau (Zustand/Tun); die primäre Aktion ist gefüllt. Klar getrennt von
+   der Auswahl-Pille (Gold). Mind. Fingerziel auf Touch. */
+.btn{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-size:15px;line-height:1.2;
+  font-weight:var(--w-deutlich);   /* B2: Goetheanum-Label <18px braucht Deutlich (Beier) */
+  padding:10px 16px;border-radius:var(--r-control);border:1px solid var(--line);color:var(--ink);
+  background:var(--field-bg);text-align:center;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--blue)}
+.btn.primary{background:var(--blue-solid);border-color:var(--blue-solid);color:var(--on-accent);font-weight:var(--w-strong)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{color:var(--muted);background:none}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:var(--on-accent)}
+/* Knopf im Ton des Abschnitts (unter data-sek): die DUNKLE Fläche trägt Weiss –
+   nie die Basisfarbe, die bei sechs Sektionen kein Weiss hält (B01). */
+.btn.ton{background:var(--ton-dunkel,var(--gold-deep));border-color:var(--ton-dunkel,var(--gold-deep));
+  color:var(--on-accent);font-weight:var(--w-strong)}
+/* Ausgeschaltet, solange eine Handlung läuft: Der Knopf nimmt keinen zweiten
+   Klick mehr an. Ohne das entstehen doppelte Einträge – einmal passiert und
+   von Hand aus der Datenbank geholt (Kosten, 10. August 2026). Kontrast ist
+   hier ausgenommen (WCAG 1.4.3 nimmt inaktive Bedienelemente aus); dass der
+   Knopf wartet, sagt zusätzlich seine Beschriftung. */
+.btn[disabled]{cursor:default;pointer-events:none;opacity:.6}
+
+/* --- Segmentierte Auswahl (Pillen) = WAHL ---------------------------------- */
+/* Anwahl = Gold/Weiss – der Hausfarbklang für Auswahl. Kapselform, kein Pfeil. */
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+/* Wie .btn: display:inline-flex + align-items:center statt nativer Button-
+   Zentrierung über Padding/line-height – native <button>-Vertikalzentrierung
+   ist zwischen Browsern (v. a. iOS Safari vs. Chromium) nicht verlässlich
+   gleich, padding-basiertes Zentrieren zeigte dort sichtbar zu tief sitzende
+   Schrift. line-height:var(--lh-tight) bleibt zusätzlich nötig, sonst reisst
+   ein zweizeiliges Pillen-Label (z. B. ‹SVG 48›) weit auseinander. */
+.seg button{display:inline-flex;align-items:center;justify-content:center;text-align:center;
+  font:inherit;font-size:14.5px;font-weight:var(--w-deutlich);line-height:var(--lh-tight);padding:8px 15px;border:1px solid var(--line);border-radius:var(--r-pill);
+  background:var(--field-bg);color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.seg button:hover{border-color:var(--gold-ink)}
+.seg button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent);font-weight:var(--w-strong)}
+
+/* Bequeme Fingerziele auf dem Handy (Apple 44 / Material 48 / WCAG 24). */
+@media(max-width:560px){
+  .seg button,.btn{min-height:var(--tap)}
+}
+
+/* --- Formularfelder -------------------------------------------------------- */
+/* Bedienelemente tragen IMMER die Lese-Grotesk – geschlossen wie geöffnet.
+   Die Display-Schrift läuft im Feld zu eng (Befund 14. September 2026: die
+   geschlossene Klappliste im Visitenkarten-Generator); Feld, Klappliste und
+   Option sind Funktion und Daten, nicht Stimme (Schrift-Grenze, CLAUDE.md).
+   Element-Ebene, damit auch Felder ausserhalb von .field richtig starten. */
+input,select,textarea,optgroup,option{font-family:var(--font-text)}
+/* 16px+ verhindert das automatische Zoomen beim Fokus auf iOS. Lesetext-Schrift. */
+/* [hidden] muss stärker sein als jede display-Regel des Hauses. Sonst blieb ein
+   ausgeblendetes Feld stehen, weil .field{display:grid} das schwache
+   UA-[hidden] überschreibt – genau so stand ‹Betrag in Franken› neben den
+   Stunden, die es ersetzen sollte (gefunden 10. August 2026). */
+[hidden]{display:none !important}
+
+.field{display:grid;gap:var(--s1)}
+.field>.lab{font-size:var(--t-small);color:var(--muted);letter-spacing:.01em}
+.field input,.field textarea,.field select{
+  width:100%;font-family:var(--font-text);font-size:16px;font-weight:400;line-height:1.3;color:var(--ink);
+  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 12px;outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+/* Eingaben in der Lese-Grotesk (Source Sans 3): lesbarer als die Display-Schrift. */
+.field select option{font-family:var(--font-text);font-size:16px}
+
+/* Gestaltbare Klappliste (ds-select.js) – Lese-Grotesk, offen wie geschlossen. */
+.ds-select{position:relative}
+.ds-select>select{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}  /* nativ versteckt, bleibt Quelle der Wahrheit */
+.ds-select__btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-family:var(--font-text);font-size:16px;font-weight:400;line-height:1.3;color:var(--ink);text-align:left;
+  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 12px;cursor:pointer;min-height:var(--tap)}
+.ds-select__btn::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:translateY(-2px) rotate(45deg);flex:0 0 auto}
+.ds-select__btn:hover{border-color:var(--gold-deep)}
+.ds-select__list{position:absolute;z-index:50;left:0;right:0;top:calc(100% + 4px);margin:0;padding:6px;list-style:none;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--r-control);box-shadow:var(--shadow-card);max-height:300px;overflow:auto}
+.ds-select__opt{font-family:var(--font-text);font-size:16px;color:var(--ink);padding:9px 11px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.ds-select__opt:hover,.ds-select__opt:focus{background:var(--soft);outline:none}
+.ds-select__opt[aria-selected="true"]{color:var(--gold-ink);font-weight:var(--w-strong)}
+.field textarea{resize:vertical;min-height:48px}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted);opacity:.7}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
+.field input.invalid{border-color:var(--bad);box-shadow:0 0 0 3px color-mix(in srgb,var(--bad) 20%,transparent)}
+/* Beisatz unter einem Feld: sagt in einem Satz, was hineingehört. Wo eine
+   Maske erklärt werden muss, gehört die Erklärung ans Feld – nicht in eine
+   Legende weiter unten, die niemand liest. */
+.field>.hint{margin:2px 0 0}
+
+/* --- Eingabe-Raster -------------------------------------------------------- */
+/* Drei Spalten auf breitem Blatt, eine auf schmalem. Jede Eingabemaske im Haus
+   benutzt dieses Raster – vorher hatte jede Seite ihr eigenes. */
+.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4)}
+.formgrid>.span2{grid-column:span 2}
+.formgrid>.span3{grid-column:1 / -1}
+@media(max-width:640px){
+  .formgrid{grid-template-columns:1fr}
+  .formgrid>.span2,.formgrid>.span3{grid-column:auto}
+}
+/* Zeile unter dem Knopf: Ist die Handlung angekommen? Die Farbe kommt aus der
+   Klasse, nicht aus dem Skript – sonst bleibt sie im Dunkelmodus stehen. */
+.said{font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;color:var(--muted)}
+.said.gut{color:var(--ok-ink)}
+.said.schlecht{color:var(--bad)}
+
+/* --- Fusszeile ------------------------------------------------------------- */
+.ds-footer{border-top:1px solid var(--line);padding:var(--s8) 0 60px;color:var(--muted);font-size:var(--t-small);margin-top:var(--s8)}
+.ds-footer .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.ds-footer .frow strong{color:var(--ink);font-weight:var(--w-text)}
+.ds-footer .frow a:hover{color:var(--gold-ink)}
+
+/* =============================================================================
+   Eingebaute Typografie – Hausregeln als Voreinstellung, nicht als Nachkontrolle
+   Quelle: assets/typografie/goetheanum-typo-tokens.json.
+   ============================================================================= */
+
+/* Lesefluss: Trennung, schöner Umbruch, keine verwaisten Zeilen (G12/G24/G28). */
+body{hyphens:auto;-webkit-hyphens:auto;text-wrap:pretty;orphans:2;widows:2}
+
+/* Hervorhebung im Web nur durch LAUT (lauter/fetter) – kein leiser Gegenton hier.
+   Unterstreichen/Versalien als Hervorhebung gibt es bewusst NICHT (G05). */
+strong,b,em,i{font-style:normal;font-weight:var(--w-strong)}
+
+/* Hausanführung: ‹…› automatisch über <q> (G16). */
+q{quotes:'\2039' '\203A' '\2039' '\203A'}
+
+/* Ziffern in Tabellen: Versalziffern, dicktengleich, exakt untereinander (G25). */
+table{border-collapse:collapse;font-family:var(--font-text);font-variant-numeric:tabular-nums lining-nums}
+th,td{text-align:left;padding:var(--s2) var(--s3);border-bottom:1px solid var(--line-soft)}
+th{font-weight:600;color:var(--ink)}
+td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:right;font-feature-settings:"tnum","lnum"}
+
+/* Schnitt-Utilities. */
+.leise{font-weight:var(--w-leise)}
+.klar{font-weight:var(--w-text)}
+.deutlich{font-weight:var(--w-deutlich)}
+.laut{font-weight:var(--w-strong)}
+
+/* =============================================================================
+   Textrollen – gemessene Grundlage für ALLE Texte (eine Quelle der Wahrheit)
+   -----------------------------------------------------------------------------
+   Jede Seite verwendet diese Rollen statt eigener Grade/Farben/Schnitte. Keine
+   Seite setzt mehr font-size/color für Standardtext selbst – so kann keine aus-
+   scheren (Konformität durch Konstruktion). Mobil-sicher: Mengentext 17–19,
+   Meta/Label/Hinweis 14–15, nichts Lesbares unter 13 (B03). Farbe nur aus den
+   Tokens; Betonung nur über Gewicht (Laut), nie Versal/Sperren/Unterstrich (G05).
+
+     Rolle     Klasse(n)              Wofür                       Grad · Ton
+     ─────────────────────────────────────────────────────────────────────────
+     Kicker    .kicker .kick          Überzeile, getönt, normal   13.5 · Gold·Display
+     Titel     h1–h4 .h-display       geschaute Hierarchie        Skala · ink·Deutlich
+     Lede      .lede                  Anriss unter dem Titel      19–22 · muted
+     Fliess    <body> · .prose        Lese-/Mengentext            17–19 · ink
+     Hinweis   .note .hint .help …    erklärender Beisatz         14–15 · muted
+     Meta      .meta .cap .legend …   Legende, Datum, Byline      14–15 · muted
+     Label     .lab .role             Bedienelement-/Wert-Schild  14–15 · muted, getrackt
+     Wert      .readout               Live-Ausgabe/Ableseband     14–15 · ink, tnum
+     Code      .code .mono            technische Auszeichnung     mono · soft
+   ============================================================================= */
+
+/* Kicker: getönt, leicht getrackt, Display – NORMAL, nicht versal (G05).
+   Kleine UI-Schrift: nie Leise (verschwimmt klein) – mindestens Klar. */
+.kicker,.kick{display:inline-block;font-family:var(--font-display);color:var(--gold-ink);font-size:var(--t-micro);letter-spacing:.03em;font-weight:var(--w-deutlich);line-height:1.3;margin-bottom:var(--s2)}
+
+/* Anriss unter dem Titel. */
+.lede{font-size:var(--t-lede);color:var(--muted);line-height:1.45;max-width:54ch}
+
+/* --- Die Schrift-Grenze: Identität vs. Lesbarkeit ----------------------------
+   Goetheanum ist DISPLAY – die STIMME. Sie trägt alles, was als Sprache gelesen
+   wird: Titel, Kicker, Lede, FLIESSTEXT und die erklärenden Hinweise. Lesbarkeit
+   bei normalem Grad kommt dort aus den FAKTOREN (Zeilenhöhe ≥1.6, Mass ~62ch,
+   Schnitt Klar/Betonung Laut), nicht aus einem Schriftwechsel.
+   Die Lese-Grotesk Source Sans 3 (--font-text) übernimmt FUNKTION & DATEN, wo
+   klein & konventionell gelesen wird: Label, Wert, Meta/Legende, Badge/Chip,
+   Formularfelder, Tabellen. Dort geht Lesbarkeit über Identität. */
+
+/* Erklärender Beisatz (Hilfetext, Untertitel) – Sprache, darum Hausschrift. */
+.note,.hint,.help,.desc,.subhead{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);line-height:1.6;max-width:62ch}
+
+/* Legende, Bildunterschrift, Datum, Byline – das knappe Beiwerk. */
+.meta,.cap,.caption,.legend,.byline{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);line-height:1.45}
+
+/* Aufschrift eines Bedienelements oder Werts – getrackt, nie versal (G05). */
+.lab,.role{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);letter-spacing:.01em;line-height:1.35}
+.lab b,.lab strong,.role b,.role strong{color:var(--ink);font-weight:600}
+
+/* Live-Ausgabe / Ableseband – ruhig, Zahlen dicktengleich (G25). */
+.readout{font-family:var(--font-text);color:var(--ink);font-size:var(--t-small);line-height:1.5;font-variant-numeric:tabular-nums lining-nums}
+
+/* Technische Auszeichnung – Monospace. Inline-Chip (.code) = leise getönt;
+   Block (.code.block / pre.code) = theme-feste Konsole mit Syntaxpalette. */
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums lining-nums}
+.code{font-family:var(--font-mono);font-size:.85em;background:var(--soft);border:1px solid var(--line-soft);border-radius:6px;padding:2px 7px;color:var(--ink)}
+.code.block,pre.code{display:block;background:var(--code-bg);color:var(--code-ink);border:0;border-radius:var(--r-control);padding:14px 16px;line-height:1.55;white-space:pre;overflow:auto;font-size:var(--t-micro)}
+.code .key,.code .k{color:var(--code-key)}
+.code .str,.code .s{color:var(--code-str)}
+.code .com,.code .c{color:var(--code-comment)}
+
+/* Lesemass: ~66 Zeichen je Zeile für linearen Mengentext (G10). */
+.lese{max-width:min(var(--measure),100%)}
+
+/* =============================================================================
+   Mobil-Baseline – ein Satz Leitplanken, damit JEDE Seite auf dem Handy trägt
+   (B03 Mindestgrössen, B04 Fingerziele, kein horizontaler Überlauf). Die Typo
+   skaliert ohnehin fluid (rem-Clamps); hier nur Touch- und Layout-Garantien.
+   ============================================================================= */
+img,svg,canvas,video{max-width:100%}
+/* Einfarbige (schwarze) Strich-Icons als <img> folgen dem Theme: im Dunkelmodus
+   umkehren, sonst werden sie vom dunklen Grund verschluckt. Opt-in (.ico-invert),
+   weil es nur für monochrome Marken/Piktogramme gilt – nicht für Fotos/Farblogos.
+   Besser noch: Icons als Webfont/Inline-SVG mit currentColor setzen (folgt von selbst). */
+:root[data-theme="dark"] .ico-invert{filter:invert(1) brightness(.92)}
+@media(max-width:560px){
+  /* Mobil bleibt der seitliche Rand grosszügig (Luft nach aussen, Lesbarkeit) –
+     nicht verkleinern. 22px Untergrenze, damit Text nie am Glas klebt. */
+  .wrap{padding-left:max(22px,env(safe-area-inset-left));padding-right:max(22px,env(safe-area-inset-right))}
+  /* Fingerziele ≥44px auf Touch: Knöpfe, Pillen, Felder, Klapplisten (B04). */
+  .btn,.seg button{min-height:var(--tap)}
+  .field input,.field textarea,.field select,.ds-select__btn{min-height:var(--tap)}
+  /* Köpfe brechen um statt zu quetschen. */
+  .shead{gap:var(--s3)}
+  .ds-footer .frow{gap:var(--s3)}
+}
+
+/* Bewegung reduzieren (WCAG 2.3.3): auf Wunsch Übergänge und weiches Scrollen
+   global aus. Seiten-eigene Bewegungen (Karussell, .tile-Hover) ziehen nach. */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+}
+
+/* Block C – Lesemodus (opt-in, Kopfzeilen-Schalter, Zustand data-read="easy"):
+   tauscht NUR Textkörper + Lede + Erklärtexte auf die Leseschrift und erhöht das
+   Spacing. Titel/Kicker/Marke bleiben Goetheanum (Identität); die Chrome-Leiste
+   pinnt ihre Schrift ohnehin selbst. Grösse ist über size-adjust (B4) geregelt,
+   darum kein Grössensprung; A7 (min-height) fängt den ~7% breiteren Reflow. */
+:root[data-read="easy"] body{font-family:var(--font-text)}
+:root[data-read="easy"] .lede{font-family:var(--font-text)}
+/* Titel, Kicker und die Kopfzeile bleiben ausdrücklich Goetheanum (Identität). */
+:root[data-read="easy"] h1,:root[data-read="easy"] h2,:root[data-read="easy"] h3,:root[data-read="easy"] h4,
+:root[data-read="easy"] .kicker,:root[data-read="easy"] .kick{font-family:var(--font-display)}
+
+/* =============================================================================
+   Webfamilie-Komponenten (Juli 2026) — aus dem Vier-Seiten-Befund
+   (docs/webfamilie-befund.md §3) ins Fundament aufgenommen: Artikel-Anatomie,
+   Teaser, Veranstaltung + Filterleiste, Bühne/Medienkachel, Person, Newsletter,
+   Fusszeilen-Spalten. Regeln: Funktion/Daten in der Lese-Grotesk (Schrift-
+   Grenze), B02 gerechnet, B03 ≥14px, B04 Ziele ≥44px, G05 nie versal.
+   ============================================================================= */
+
+/* --- Brotkrumen & Byline (Funktion → Lese-Grotesk, nie versal) -------------- */
+.crumbs{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline}
+.crumbs a{color:var(--muted)}
+.crumbs a:hover{color:var(--gold-ink)}
+.byline{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline}
+.byline b{color:var(--ink);font-weight:600}
+
+/* --- Artikel-Anatomie (Vorbild Wochenschrift, mit unseren Faktoren) --------- */
+.lit{border-top:1px solid var(--line);margin-top:var(--s8);padding-top:var(--s4);
+  font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
+  max-width:min(var(--measure),100%)}
+.lit p{margin:0 0 .5em}
+.bio{display:flex;gap:var(--s4);align-items:flex-start;border-top:1px solid var(--line);
+  margin-top:var(--s6);padding-top:var(--s6)}
+.bio .btext{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.6}
+.bio .btext b{color:var(--ink);font-weight:600}
+.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--s4)}
+
+/* --- Teaser (Startseiten-Hierarchie: Bild · Kicker · Titel · Vorspann · Meta) */
+.teaser{display:flex;gap:var(--s4);align-items:flex-start;padding:var(--s4);
+  border:1px solid var(--line-soft);border-radius:var(--r-card);background:var(--paper);
+  color:var(--ink);text-decoration:none}
+.teaser:hover{border-color:var(--gold)}
+.teaser .thumb{flex:0 0 auto;width:116px;aspect-ratio:4/3;border-radius:10px;background:var(--soft);
+  border:1px solid var(--line-soft)}
+.teaser h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);
+  line-height:var(--lh-tight);margin:2px 0 6px}
+.teaser .ex{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.55;margin:0 0 8px}
+.teaser.stack{flex-direction:column}
+.teaser.stack .thumb{width:100%;aspect-ratio:16/9}
+
+/* --- Veranstaltung + Filterleiste (Vorbild goetheanum.ch, Ziffern G25) ------ */
+.filterbar{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:flex-end;margin-bottom:var(--s6)}
+.filterbar .field{min-width:160px;flex:1 1 160px}
+.event{display:flex;gap:var(--s4);align-items:flex-start;padding:var(--s4);
+  border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper)}
+.event .edate{flex:0 0 auto;min-width:64px;text-align:center;border:1px solid var(--line);
+  border-radius:10px;padding:8px 10px;font-family:var(--font-text);font-variant-numeric:tabular-nums}
+.event .edate b{display:block;font-size:24px;line-height:1.1;color:var(--ink);font-weight:600}
+.event .edate span{font-size:var(--t-micro);color:var(--muted)}
+.event h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);
+  line-height:var(--lh-tight);margin:0 0 4px}
+.event .emeta{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+
+/* --- Bühne + Medienkachel (theme-feste Katalogfläche, Vorbild goetheanum.tv) - */
+.stage{background:var(--stage-bg);color:var(--stage-ink);border-radius:var(--r-card);
+  padding:var(--s6);color-scheme:dark}
+.stage .smeta{font-family:var(--font-text);font-size:var(--t-small);color:var(--stage-muted)}
+.mrow{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,240px);gap:var(--s4);
+  overflow-x:auto;scroll-snap-type:x proximity;padding:var(--s2) 2px var(--s3)}
+.mtile{scroll-snap-align:start;color:var(--stage-ink);text-decoration:none;display:block}
+.mtile .poster{position:relative;aspect-ratio:16/9;border-radius:10px;background:var(--stage-bg2);
+  display:grid;place-items:center;overflow:hidden}
+.mtile .dur{position:absolute;right:8px;bottom:8px;font-family:var(--font-text);
+  font-size:var(--t-micro);font-variant-numeric:tabular-nums;color:var(--stage-ink);
+  background:var(--stage-veil);border-radius:6px;padding:2px 8px}
+.mtile .mt{display:block;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px;
+  line-height:1.25;margin-top:8px}
+.mtile .ms{display:block;font-family:var(--font-text);font-size:var(--t-micro);color:var(--stage-muted);margin-top:2px}
+.mtile:hover .poster{outline:2px solid var(--gold)}
+.live{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);
+  background:var(--gold-deep);color:var(--on-accent);border-radius:var(--r-pill);padding:2px 10px}
+
+/* --- Person / Kontakt -------------------------------------------------------- */
+.person{display:flex;gap:var(--s3);align-items:center}
+.person .pv{flex:0 0 auto;width:44px;height:44px;border-radius:var(--r-pill);
+  background:var(--gold-deep);color:var(--on-accent);display:grid;place-items:center;
+  font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px}
+.person .pn{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:17px;line-height:1.2}
+.person .pr{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+.person a{color:var(--gold-ink)}
+
+/* --- Newsletter-Einstieg (ein Feld, ein Knopf – B03: Eingabe ≥16px) ---------- */
+.subscribe{display:flex;gap:var(--s2);flex-wrap:wrap;max-width:460px}
+.subscribe input{flex:1 1 220px;font-family:var(--font-text);font-size:16px;color:var(--ink);
+  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);
+  padding:10px 14px;min-height:var(--tap);outline:none}
+.subscribe input:focus{border-color:var(--gold)}
+
+/* --- Fusszeile mit Spalten (Vorbild 7-Block-Footer goetheanum.ch) ------------ */
+.ds-footer .fcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:var(--s6);margin-bottom:var(--s6)}
+.ds-footer .fcols .ft{font-family:var(--font-display);font-weight:var(--w-deutlich);
+  color:var(--ink);margin-bottom:var(--s2)}
+.ds-footer .fcols a{display:block;padding:3px 0}
+
+/* --- Bild-Ebene (Fotografie trägt die Emotion) --------------------------------
+   Heros und Kacheln tragen echte Bilder; Text steht auf Bildern nur über dem
+   Schleier (Kontrast gerechnet: Schleier ist theme-fest dunkel, Text hell —
+   B01/B02 gelten auch hier). Ohne Bild bleibt die Fläche --soft. */
+.hero-bild{position:relative;border-radius:var(--r-card);overflow:hidden;
+  margin-block:var(--s4) var(--s8);background:var(--soft)}
+.hero-bild img{display:block;width:100%;aspect-ratio:21/9;object-fit:cover}
+@media(max-width:619px){.hero-bild img{aspect-ratio:4/3}}
+.hero-bild .text{position:absolute;inset:auto 0 0 0;padding:clamp(20px,4.5vw,48px);
+  background:linear-gradient(to top,
+    color-mix(in srgb,var(--stage-bg) 88%,transparent),
+    color-mix(in srgb,var(--stage-bg) 42%,transparent) 62%,transparent);
+  color:var(--stage-ink)}
+.hero-bild .text h1,.hero-bild .text h2{color:var(--stage-ink);max-width:24ch}
+.hero-bild .text .kicker,.hero-bild .text .kick{color:var(--gold)}
+.hero-bild .text .lede{color:var(--stage-ink);max-width:56ch}
+.teaser .thumb{overflow:hidden}
+.teaser .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.event .thumb{flex:0 0 auto;width:104px;aspect-ratio:4/3;border-radius:10px;
+  overflow:hidden;background:var(--soft);border:1px solid var(--line-soft)}
+.event .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.poster .pmark{position:relative;z-index:1}
+.poster .dur{z-index:1}
+
+/* --- App-Schale (Portal/Anwendung: Seitenleiste + Karten-Dashboard) -----------
+   Für angemeldete Werkzeuge (Konto, Verwaltung). Auswahl in der Seitenleiste =
+   dunkles Gold + Weiss (B01); Gruppen-Etiketten sind Kicker, nie Versal (G05);
+   Fingerziele ≥44px (B04). Unter 920px rückt die Leiste als Band nach oben. */
+.app{display:grid;grid-template-columns:264px minmax(0,1fr);min-height:100vh;background:var(--soft)}
+.app>.side{background:var(--paper);border-right:1px solid var(--line);
+  padding:var(--s6) var(--s4);display:flex;flex-direction:column;gap:var(--s6)}
+.app>.main{padding:var(--s6) clamp(var(--s4),4vw,56px) var(--s8);min-width:0}
+@media(max-width:919px){
+  .app{grid-template-columns:1fr}
+  .app>.side{border-right:0;border-bottom:1px solid var(--line);flex-direction:row;
+    flex-wrap:wrap;align-items:center;gap:var(--s4)}
+}
+.sidenav{display:grid;gap:2px;align-content:start}
+.sidenav .grp{margin:var(--s4) 0 var(--s2)}  /* Gruppen-Etikett: als .kicker setzen */
+.sidenav a{display:flex;gap:var(--s3);align-items:center;padding:10px var(--s4);
+  border-radius:var(--r-control);color:var(--ink);text-decoration:none;
+  font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px;min-height:var(--tap)}
+.sidenav a:hover{background:color-mix(in srgb,var(--gold) 14%,transparent)}
+.sidenav a[aria-current="page"]{background:var(--gold-deep);color:var(--on-accent)}
+.sidenav a .ext{margin-left:auto;color:var(--muted);font-weight:var(--w-text)}
+.sidenav a[aria-current="page"] .ext{color:var(--on-accent)}
+.app .side .user{margin-top:auto;display:flex;gap:var(--s3);align-items:center;
+  border-top:1px solid var(--line-soft);padding-top:var(--s4)}
+.cardgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--s4)}
+.card .cfoot{margin-top:var(--s4);display:flex;gap:var(--s3);flex-wrap:wrap}
+.leer{color:var(--muted);font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;
+  padding:var(--s6) 0;text-align:center}
+
+/* --- Schwebende Perspektiven-Leiste ------------------------------------------
+   Für Vollnachbauten fremder Startseiten: führt zurück ins System und öffnet
+   das Original in einem neuen Fenster — der einzige Rahmen, den so eine
+   Erlebnis-Seite trägt. Fingerziele ≥44px (B04). */
+.fab{position:fixed;right:var(--s4);bottom:var(--s4);z-index:70;
+  display:flex;flex-direction:column;gap:var(--s2);align-items:flex-end}
+.fab .btn{box-shadow:var(--shadow-card);min-height:var(--tap)}
+
+/* --- Gegenüberstellung (Perspektiven: heute ↔ mit dem System) ----------------
+   Zwei Fenster auf dieselbe Startseite. Das Ist-Fenster (.mock.ist) zeigt den
+   heutigen Zustand als Artefakt — fremde Schriften/Farben dort sind Abbild,
+   keine Theme-Flächen (je Seite mit  # ds-ok  ratifiziert). Das Soll-Fenster
+   (.mock.soll) ist ausschliesslich aus den Rollen dieses Fundaments gebaut. */
+.mockpair{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--s4);align-items:stretch}
+.mock{display:flex;flex-direction:column;margin:0;border:1px solid var(--line);
+  border-radius:var(--r-card);overflow:hidden;background:var(--paper)}
+.mock>figcaption{display:flex;justify-content:space-between;gap:var(--s3);align-items:baseline;
+  padding:var(--s2) var(--s4);border-bottom:1px solid var(--line-soft);
+  font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+.mock>figcaption b{font-weight:600;color:var(--ink)}
+.mock.soll>figcaption b{color:var(--gold-ink)}
+.mock .screen{flex:1;padding:var(--s4)}

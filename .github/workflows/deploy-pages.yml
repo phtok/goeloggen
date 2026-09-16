@@ -1,0 +1,88 @@
+name: Deploy GitHub Pages
+
+# Einzige Quelle fuer das Pages-Deployment. (Die fruehere zweite Workflow-Datei
+# static.yml wurde entfernt – zwei Workflows mit derselben Concurrency-Gruppe
+# konnten sich gegenseitig ueberschreiben.)
+#
+# Veroeffentlicht wird ein kuratiertes Bundle: alle Tool-/Launcher-HTML im Root,
+# die Ordner apps/ (fertige Onepager), start/ + design-system/ (neue Baustelle),
+# das Manifest tools.json sowie die gemeinsamen assets/. Quellordner wie archive/,
+# reference/, docs/, todo/, collections/, services/, tools/, workers/ bleiben aussen vor.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build publish bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+
+          # Alle Tool-/Launcher-HTML im Root (index.html = Weiterleitung bleibt erhalten).
+          shopt -s nullglob
+          for f in *.html; do cp "$f" "_site/$f"; done
+          test -f _site/index.html
+          test -f _site/logo-generator.html
+
+          # Ganze Ordner wholesale – so werden neue Tools automatisch mitveroeffentlicht.
+          for d in apps start design-system assets; do
+            if [ -d "$d" ]; then cp -R "$d" "_site/$d"; fi
+          done
+
+          # Manifest der Werkzeuge (treibt die Uebersicht).
+          if [ -f tools.json ]; then cp tools.json _site/tools.json; fi
+
+          # Crawler-Politik: KI-Bots blockieren, Suchmaschinen lesen das
+          # noindex in den Seiten (Details im Kopf der robots.txt).
+          if [ -f robots.txt ]; then cp robots.txt _site/robots.txt; fi
+
+          # Eigene Domain: GitHub Pages liest die CNAME aus dem Artefakt. Ohne
+          # diese Zeile ginge die Domain-Anbindung beim naechsten Deploy verloren.
+          if [ -f CNAME ]; then cp CNAME _site/CNAME; fi
+
+          # Sprechende Abschnitts-Pfade (saubere URLs -> Weiterleitung auf die
+          # Zielseite). Zentral gepflegt in sektionen.json.
+          if [ -f sektionen.json ]; then python3 tools/build_sections.py _site; fi
+
+          # Kurz-URLs je Werkzeug: /<slug>/ -> /apps/<ordner>/ (aus tools.json).
+          if [ -f tools/build_tool_aliases.py ]; then python3 tools/build_tool_aliases.py _site; fi
+
+          touch _site/.nojekyll
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

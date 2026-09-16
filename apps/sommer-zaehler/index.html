@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sommer-Aktion · Cockpit · Goetheanum</title>
+<meta name="description" content="Sommer-Aktion 2026 – Ergebnis, Wirkung je Kanal, Herkunft der Abos und Schlüsse, live aus dem Backend." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<link rel="stylesheet" href="campaign.css" />
+</head>
+<body>
+
+<!-- Kopfzeile + gemeinsame Kampagnen-Unterleiste (data-onpage). -->
+<script src="../../design-system/nav.js"
+        data-root="../../"
+        data-variant="werkzeug"
+        data-onpage="Cockpit:./|Aktivitäten:aktivitaeten.html|Kosten:kosten.html|Multiplikatoren:multiplikatoren.html|Links:../utm-generator/|Mail:../mail-editor/|Ablauf:../kampagnen-drehbuch/"></script>
+
+<main class="wrap">
+
+  <section class="lead">
+    <span class="kick">Team-Cockpit · 3 Monate gratis <span class="status readout" id="status">lädt …</span></span>
+    <h1 class="lead-title">Sommer-Aktion 2026</h1>
+    <details class="modell-box">
+      <summary>Wozu diese Aktion? · Aktionsseiten</summary>
+      <p class="modell">Wir wollen, dass kulturinteressierte Menschen bis zum <span class="k">11. August</span> ein Gratis-Abo starten – und danach als zahlende Leser und Zuschauer bleiben. Jede Aktivität hat darin ihre Aufgabe.</p>
+      <div class="landing" style="margin-top:var(--s4)">
+        <span class="meta">Aktionsseiten</span>
+        <a class="btn" href="https://global-sommer2026.goetheanum.online" target="_blank" rel="noopener">Übersicht · 3 Monate gratis</a>
+        <a class="btn" href="https://ws-sommer2026.dasgoetheanum.com" target="_blank" rel="noopener">Wochenschrift</a>
+        <a class="btn" href="https://tv-sommer2026.goetheanum.tv" target="_blank" rel="noopener">goetheanum.tv</a>
+      </div>
+    </details>
+    <p class="kampagne">Kampagne <code>summer26_trial</code> · 3. Juli bis 11. August 2026 · <a href="../utm-generator/">UTM-Links für die Aktion bauen →</a></p>
+  </section>
+
+
+  <!-- ══ 1 · ÜBERSICHT ═══════════════════════════════════════════════════
+       Grosse Zahlen zuerst, alles Kleinere in Klappen darunter. Wer nur den
+       Ausgang wissen will, liest die erste Bildschirmhöhe und hört auf. -->
+  <section id="stand">
+    <div class="shead"><h2>Übersicht</h2></div>
+    <div class="panel">
+      <div class="stand">
+        <div>
+          <div class="zahl" id="standZahl">–</div>
+          <div class="zahl-u" id="standUnter">lädt …</div>
+        </div>
+        <div class="rechts">
+          <div class="kpi">
+            <div class="k"><b id="kZiel">–</b><span>vom Ziel erreicht</span></div>
+            <div class="k"><b id="kTempo">–</b><span>Abos/Tag aktuell</span></div>
+            <!-- Verschwindet, sobald das Ziel übertroffen ist – dann ist nichts
+                 mehr nötig, und was nichts sagt, gehört weg (G03). -->
+            <div class="k warn" id="kNoetigKachel" hidden><b id="kNoetig">–</b><span>Abos/Tag nötig</span></div>
+          </div>
+          <div class="meter"><span id="ddBar" style="width:0"></span><span id="ddBarUeber" class="ueber" style="width:0"></span></div>
+          <div class="puls" id="puls"></div>
+          <div class="puls-l" id="pulsL"></div>
+        </div>
+      </div>
+
+      <div class="kennzahlen" id="kopfZahlen"><div class="empty">lädt …</div></div>
+    </div>
+  </section>
+
+
+  <!-- ══ 2 · ERGEBNIS UND GELD ═══════════════════════════════════════════ -->
+  <section id="ergebnis">
+    <div class="shead"><h2>Ergebnis und Geld</h2><p>Was die Aktion eingebracht hat und was sie gekostet hat – nebeneinander. Der Umsatz ist bis November eine Rechnung in drei Szenarien; dann entscheiden die ersten Kohorten, und aus der Spanne wird eine Zahl.</p></div>
+    <div class="panel">
+
+      <!-- Drei gleichwertige Karten: Die Spanne IST die Aussage, darum trägt
+           keine der drei mehr Gewicht als die andere. Die Referenz nennt sich
+           mit einem Wort, nicht mit Farbe oder Grösse (G01, G03). -->
+      <div class="szen" id="szenKarten"><div class="empty">lädt …</div></div>
+      <p class="provisorisch" id="szenarienNote"></p>
+
+      <div class="kennzahlen">
+        <div class="kennzahl"><div class="k-label">Kosten erfasst</div><div class="k-wert" id="costTotal">–</div><div class="k-note" id="costSub">alle eingetragenen Posten</div></div>
+        <div class="kennzahl"><div class="k-label">Kosten je Abo</div><div class="k-wert" id="costCpa">–</div><div class="k-note">erfasste Kosten geteilt durch alle Anmeldungen</div></div>
+        <div class="kennzahl"><div class="k-label">Rückfluss</div><div class="k-wert" id="costRoi">–</div><div class="k-note">Folgejahr-Umsatz je eingesetztem Franken</div></div>
+        <!-- Der Hebel neben den Kosten: Nicht die Zahl der Anmeldungen bewegt den
+             Ertrag am stärksten, sondern wie lange sie bleiben. Steht bewusst in
+             derselben Reihe wie die Kosten – erst nebeneinander sieht man, dass
+             ein einziger Monat Treue einen grossen Teil der Aktion aufwiegt. -->
+        <div class="kennzahl"><div class="k-label">Ein Monat Verweildauer</div><div class="k-wert" id="treueWert">–</div><div class="k-note" id="treueNote">wie viel Folgejahr-Umsatz ein Monat mehr Treue bringt</div></div>
+      </div>
+      <p class="provisorisch" id="kostenNote"></p>
+
+      <!-- Laufende Kündigungen – die Gegenprobe zu den drei Szenarien darüber.
+           Die stehen offen (keine Klappe), weil sie die einzige gemessene
+           Aussage zum Bleiben sind: Wer im Gratis-Zeitraum kündigt, hat
+           entschieden. Zwei Zahlen statt einer, weil «gekündigt» hier nicht
+           «weg» heisst – Uscreen beendet den Zugang erst zum Fristende. -->
+      <div class="mh" style="margin-top:var(--s8)">Laufende Kündigungen</div>
+      <p class="note" id="kuendLede">lädt …</p>
+      <div class="kennzahlen" id="kuendZahlen"><div class="empty">lädt …</div></div>
+      <div class="puls" id="kuendPuls"></div>
+      <div class="puls-l" id="kuendPulsL"></div>
+
+      <details class="zb-form">
+        <summary>Wann der Zugang endet</summary>
+        <div class="tablewrap" style="margin-top:var(--s4)">
+          <table class="tarif schmal">
+            <thead><tr><th>Zugang endet</th><th class="num">Abos</th><th class="num">Anteil</th></tr></thead>
+            <tbody id="kuendMonatBody"><tr><td class="empty" colspan="3">lädt …</td></tr></tbody>
+            <tfoot id="kuendMonatFoot"></tfoot>
+          </table>
+        </div>
+      </details>
+      <p class="provisorisch" id="kuendNote"></p>
+
+      <details class="zb-form">
+        <summary>Wer bleibt? – die Kohorte und der Drei-Monats-Moment</summary>
+        <div class="cohort" id="cohortCard" style="margin-top:var(--s4)"><div class="empty">lädt …</div></div>
+      </details>
+
+      <details class="zb-form">
+        <summary>Kosten im Einzelnen</summary>
+        <div class="tablewrap" style="margin-top:var(--s4)">
+          <table class="tarif">
+            <thead><tr><th>Kategorie</th><th class="num">Betrag</th></tr></thead>
+            <tbody id="costBody"><tr><td class="empty" colspan="2">lädt …</td></tr></tbody>
+            <tfoot id="costFoot"></tfoot>
+          </table>
+        </div>
+        <div class="tablewrap" style="margin-top:var(--s6)">
+          <table class="tarif">
+            <thead><tr><th>Datum</th><th>Posten</th><th>Kategorie</th><th class="num">Betrag</th></tr></thead>
+            <tbody id="kostenPostenBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="zb-form">
+        <summary>Nach Tarif und Zahlungsweise</summary>
+        <div class="tablewrap" style="margin-top:var(--s4)">
+          <table class="tarif">
+            <thead><tr><th>Tarif</th><th class="num">Monatlich</th><th class="num">Jährlich</th><th class="num">Summe</th></tr></thead>
+            <tbody id="tarifBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+            <tfoot id="tarifFoot"></tfoot>
+          </table>
+        </div>
+        <p class="provisorisch" id="provisorisch"></p>
+      </details>
+    </div>
+  </section>
+
+
+  <!-- ══ 3 · WAS HAT FUNKTIONIERT ════════════════════════════════════════ -->
+  <section id="gebiete">
+    <div class="shead"><h2>Was hat funktioniert</h2><p>Jede Zeile ist ein Wirkungsfeld und trägt die ganze Kette: Reichweite, Klicks, Abschlüsse – und den Aufwand, wo er erfasst ist. Aufklappen zeigt die einzelnen Motive und Aktivitäten dahinter.</p></div>
+    <div class="panel">
+      <div id="gebieteListe"><div class="empty">lädt …</div></div>
+    </div>
+    <p class="provisorisch" id="gebieteNote"></p>
+  </section>
+
+
+  <!-- Ausgeblendet, seit die Frist vorbei ist: Ein Zug, den niemand mehr tun
+       kann, ist kein Zug. Der Schalter ist CONFIG.zuegeZeigen – für die nächste
+       Aktion ein Wort, nicht ein Wiederaufbau. Die Sektion bleibt darum im
+       Markup stehen, auch wenn der Bericht sie nicht braucht. -->
+  <section id="zuege" hidden>
+    <div class="shead"><h2>Nächste Züge</h2><p>Was jetzt noch möglich ist – aus den Daten gelesen, nach Hebel sortiert.</p></div>
+    <div class="panel">
+      <div id="zuegeListe"><div class="empty">lädt …</div></div>
+    </div>
+    <p class="provisorisch">Die Erwartungen sind grob und aus der bisherigen Wirkung derselben Kanäle abgeleitet – sie sortieren die Reihenfolge, sie versprechen nichts.</p>
+  </section>
+
+
+  <!-- ══ 4 · WER SIND DIE NEUEN ══════════════════════════════════════════ -->
+  <section id="wer">
+    <div class="shead"><h2>Wer sind die Neuen</h2><p>Woher sie kommen, was sie gewählt haben – und welche Zielgruppe wie geantwortet hat.</p></div>
+    <div class="panel">
+
+      <div class="mh">Welche Gruppe wir wie erreicht haben</div>
+      <div id="segmente"><div class="empty">lädt …</div></div>
+      <p class="provisorisch" id="segmenteNote"></p>
+
+      <details class="zb-form">
+        <summary id="stroemeKopf">Woraus sich die Abos zusammensetzen</summary>
+        <div class="tablewrap" style="margin-top:var(--s4)">
+          <table class="tarif">
+            <thead><tr><th>Strom</th><th class="num">Abos</th><th class="num">Zielmarke</th><th class="num">erreicht</th></tr></thead>
+            <tbody id="stroemeBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+            <tfoot id="stroemeFoot"></tfoot>
+          </table>
+        </div>
+        <p class="provisorisch" id="stroemeNote"></p>
+      </details>
+
+      <details class="zb-form">
+        <summary id="herkunftKopf">Woher die Abos kommen – Land aus der Zahlung</summary>
+        <div class="tablewrap" style="margin-top:var(--s4)">
+          <table class="tarif">
+            <thead><tr><th>Herkunft</th><th class="num">goetheanum.tv</th><th class="num">Anteil</th></tr></thead>
+            <tbody id="herkunftBody"><tr><td class="empty" colspan="3">lädt …</td></tr></tbody>
+          </table>
+        </div>
+        <div id="herkunftLaender" class="motive" style="margin-top:var(--s4)"></div>
+        <p class="provisorisch">Das Land steht im Zahlungs-Ereignis (<code>country_code</code>) und ist damit gemessen. Es sagt nicht, welche Sprache jemand schaut – aber es ist bei goetheanum.tv das einzige belastbare Mass für die Frage, wie viel Nachfrage von ausserhalb des deutschen Sprachraums kommt. Für die Wochenschrift ist es nicht nötig: dort füllt jede Sprache ihr eigenes Formular, die Sprache ist dort gemessen.</p>
+      </details>
+    </div>
+  </section>
+
+
+  <!-- ══ 5 · SCHLÜSSE ════════════════════════════════════════════════════
+       Der einzige Abschnitt, der nicht gerechnet, sondern geschrieben ist.
+       Er steht bewusst NACH den Zahlen: Wer die Schlüsse zuerst liest, liest
+       die Zahlen nur noch als Beleg. -->
+  <section id="schluesse">
+    <div class="shead"><h2>Schlüsse und Perspektiven</h2><p>Geschrieben, nicht gerechnet – gestützt auf die datierten Lesarten im Repo. Was hier steht, ist eine Auslegung und darf widersprochen werden.</p></div>
+    <div class="panel">
+
+      <div class="mh">Was diese Aktion gezeigt hat</div>
+      <div class="prose">
+        <p><b>Die Aktion war eine Aktivierung des eigenen Umfelds, keine Gewinnung neuer Öffentlichkeit.</b> Rund vier von fünf Abos stammen aus Adressen, die das Haus schon hatte – Mailing und Newsletter zusammen. Der Abgleich gegen Uscreen zeigt dasselbe von der anderen Seite: 166 der 626 belegten goetheanum.tv-Abos kamen aus Konten, die es vorher schon gab, 63 davon seit 2022. Das ist kein Makel, aber es beantwortet die Frage nach Wachstum nicht: Wer neue Kreise erreichen will, kann das aus dem eigenen Verteiler nicht lernen.</p>
+        <p><b>Die eigenen Leser sind die stärkste Gruppe, mit Abstand.</b> Von 922 angeschriebenen Wochenschrift-Lesern löste jeder neunte ein goetheanum.tv-Abo, von denen die geklickt haben mehr als jeder zweite. Diese Gruppe war 2,7 Prozent des Verteilers und brachte 19 Prozent der Abos mit Mailing-Spur. Eine Aktion, die nur sie anspricht, wäre um ein Vielfaches günstiger und kaum weniger wirksam.</p>
+        <p><b>Das Quer-Angebot funktioniert asymmetrisch – und der Abstand ist grösser als gedacht.</b> Mit den Nennern aus ActiveCampaign ist es keine Schätzung mehr: Wochenschrift-Leser nahmen goetheanum.tv bei 11,2 Prozent der Angeschriebenen an, goetheanum.tv-Abonnenten die Wochenschrift bei 0,91 Prozent. Das ist nicht das Dreifache, sondern das Zwölffache. Der Weg vom Lesen zum Sehen ist offen, der umgekehrte fast verschlossen.</p>
+        <p><b>Der Engpass liegt nach dem Klick, nicht vor ihm – und er lässt sich nicht wegtexten.</b> Die Gruppe der goetheanum.tv-Abonnenten hatte die höchste Klickrate aller Gruppen – 930 Menschen gingen auf die Wochenschrift-Seite, 35 schlossen ab. Vier mögliche Ursachen sind geprüft und ausgeschlossen: Anmeldeweg (innerhalb der Gruppe «Ohne Abo», bei denselben Menschen in derselben Mail, gewann die Wochenschrift 211 zu 188 gegen goetheanum.tv), Papierformat (in beiden Gruppen praktisch gleich verteilt), ein Ablenkungsklick (jede Gruppe hatte genau eine Zielseite) und ein missverständlicher Betreff (die Betreffzeilen aller 24 Mail-Schritte stehen im Repo; nur eine von acht Zeilen der Sehen-Automation nennt das Angebot nicht beim Namen, und diese Lücke betrifft beide Richtungen gleich). Was bleibt, ist eine Erkenntnis ohne billige Lösung: Ein Leseabo zu beginnen ist offenbar ein grösserer Schritt als ein Video anzuklicken – für die nächste Aktion eine Erwartung, keine Korrektur.</p>
+        <p><b>268 Menschen standen an der Kasse und gingen wieder.</b> Sie hatten bei goetheanum.tv ein Konto angelegt, den Kassengang erreicht und nicht abgeschlossen – gemessen an 626 Abschlüssen wären sie 43 Prozent mehr gewesen. Uscreen kennt sie samt Abbruchzeitpunkt und bringt die Erinnerungsmail für genau diesen Fall serienmässig mit; scharf geschaltet war sie nicht. Der billigste ungenutzte Hebel der Aktion – ein Nachfassen wurde geprüft und bewusst nicht ausgelöst.</p>
+        <p><b>Die Frist wirkt stärker als jeder einzelne Kanal.</b> Die beiden Fristtage brachten mehr Anmeldungen als der ganze Juli, und die letzte Welle hatte die höchste Klickquote aller vier. Wer beim nächsten Mal mehr will, setzt eher eine zweite Frist als einen weiteren Kanal.</p>
+        <p><b>Bezahlte Reichweite hat hier nicht getragen – und jetzt steht ein Preis daneben.</b> Rund 131 000 erreichte Personen und 965 Klicks ergaben etwa neun Abos, dreifach belegt durch Placebo-Probe, Abschalt-Probe und Fensterrechnung. Die CHF 460 für Meta und YouTube machen daraus gut CHF 50 je Abo – ein Vielfaches dessen, was die Aktion im Schnitt gekostet hat. Für eine nächste bezahlte Runde gilt: erst den Weg zur Kasse messbar machen, dann buchen.</p>
+        <p><b>Diese Aktion war Handarbeit, kein Medienkauf.</b> Zwei Drittel der Kosten sind interne Arbeitszeit, fünf Prozent bezahlte Anzeigen. Wer sie beim nächsten Mal günstiger will, kürzt darum nicht das Budget, sondern die Nacharbeit – und ein erheblicher Teil dieser Stunden ging in Arbeit, die eine vorher gebaute Messkette gar nicht erzeugt: der zeilenweise Abgleich gegen Uscreen, drei Neuberechnungen der Einnahmen auf wandernder Basis, zwei nachträgliche Abfragen bei ActiveCampaign.</p>
+        <p><b>Beim Papier kostet «gratis» tatsächlich Geld.</b> Ein digitales Probeabo verursacht in den drei Monaten keinen Rappen, ein Papier-Probeabo CHF 17.26 an Druck und Porto – zusammen CHF 1 950 für 1 147 Hefte, gut ein Fünftel der gesamten Kampagnenkosten. Das ändert nichts an der Wertschätzung für das gedruckte Heft, aber es gehört in die Mengenplanung: Papier ist der einzige Strom, bei dem eine grosszügige Gratiszeit im Voraus bezahlt werden muss.</p>
+        <p><b>Deutsch und Englisch gehören getrennt geplant.</b> Der englische Verteiler ist grösser als der deutsche und reagiert in jeder Gruppe um vier bis sechs Prozentpunkte schwächer – mit denselben Texten, nur übersetzt. 422 der 539 Abos mit Mailing-Spur tragen Deutsch. Das ist eine Frage an die Ansprache, nicht an die Zustellung.</p>
+        <p><b>Wer bei goetheanum.tv aussteigt, tut es sofort – und niemand hat dabei etwas geprüft.</b> 36 der 630 goetheanum.tv-Abos sind im Gratis-Zeitraum gekündigt worden, knapp 6 Prozent. Bemerkenswert ist nicht die Höhe, sondern der Zeitpunkt: Der Median liegt bei drei Tagen, 20 der 35 datierten Kündigungen fielen in die erste Woche, 14 davon auf den Tag der Anmeldung selbst. Das ist keine Enttäuschung nach drei Monaten Sehen – diese Menschen haben das Gratis-Angebot genommen und im selben Zug den Dauerauftrag abgestellt, vor jeder Erfahrung mit dem Programm. Für die Bleibe-Quote heisst das zweierlei: Der Verlust ist kein Urteil über das Angebot, aber er ist auch nicht durch besseres Programm rückholbar. Fort ist deswegen noch niemand – alle 35 mit bekanntem Enddatum behalten den Zugang bis zum Ende ihrer Frist, im Oktober oder November. Die laufenden Zahlen stehen oben unter <q>Laufende Kündigungen</q>.</p>
+        <p><b>Ein Teil der Nachfrage lief an der Aktion vorbei – über die App.</b> Sechs goetheanum.tv-Abos standen in der Zählung, die das Aktionsangebot nie bekommen haben: vier Käufe über Apples In-App-Kauf, ein ermässigtes Jahresabo und einer, der am Anmeldetag den vollen Jahresbetrag zahlte. Auf diesen Uscreen-Angeboten gibt es keine drei Gratismonate, sondern sieben Tage Probe – fünf der sechs zahlen längst. Sie sind aus der Zählung genommen, aber nicht aus der Würdigung: Wer die Mail liest und dann in der App abonniert, ist sehr wohl Wirkung der Aktion. Fürs nächste Mal ist es eine Bauaufgabe, keine Korrektur: Wenn eine Aktion in der App nicht existiert, kann sie dort weder wirken noch gemessen werden.</p>
+        <p><b>Dass die Wochenschrift keine einzige Kündigung zeigt, ist kein Ergebnis – dort schaut niemand hin.</b> Für goetheanum.tv meldet Uscreen jede Kündigung per Webhook. Für die Wochenschrift gibt es keinen solchen Weg: Paperform sendet nur Anmeldungen, die Zoho-Anbindung ist geplant und nie gebaut worden. Alle 409 gezählten Wochenschrift-Zeilen stehen darum auf <q>neu</q>, gleichgültig was in Wirklichkeit geschieht. Als Ergebnis gelesen wäre diese 0 der beste Wert der ganzen Aktion, und sie wäre erfunden. Das trifft eine Annahme, auf der die Szenarien oben ruhen – die höhere Bleibe-Quote der Wochenschrift. Diese Annahme ist begründet (das Nein ist dort nicht zwei Klicks weit weg), aber sie ist bis heute nicht belegt, und der vermeintliche Frühindikator belegt sie auch nicht. Wer sie prüfen will, braucht vor dem Oktober einen Kündigungsstand aus Zoho.</p>
+        <p><b>Zwei von sechs Automatisierungen trugen einen Fehler, den vor dem Versand niemand gesehen hat.</b> Der englischen Gruppe «Lesen» ging die Frist-Mail am 15. Juli zu – drei Tage vor der Ankündigung –, und bei beiden Wochenschrift-Newslettern war das Link-Tracking aus, ihre Klicks sind darum nicht messbar. Fürs nächste Drehbuch: eine Abnahme der ganzen Strecke vor dem Scharfschalten, Versanddatum je Schritt, Link-Tracking an, Zielgruppe je Zweig.</p>
+      </div>
+
+      <div class="mh" style="margin-top:var(--s6)">Was jetzt noch aussteht</div>
+      <div class="prose">
+        <p>Die Kosten stehen: CHF 9 014.60, «Kosten je Abo» und «Rückfluss» oben rechnen live damit. Einzige Schätzung darin ist die ActiveCampaign-Monatsgebühr (CHF 95) – der Konto-Inhaber verwaltet den echten Tarif ausserhalb dieses Werkzeugs.</p>
+        <p><b>Anfang Oktober</b> entscheidet die erste Kohorte über das Bleiben, ab November wird sichtbar, wie viele Monate ein monatliches Abo im Schnitt trägt. Dann ersetzt eine Messung die drei Szenarien, und aus der Spanne wird eine Zahl. Erst danach lässt sich sagen, was die Aktion wirklich eingebracht hat. Was ein Abo danach laufend kostet (Uscreen-Gebühr, Papier je Jahr), rechnet dieser Bericht bewusst nicht gegen – das soll der Abopreis selbst tragen, eine Preisfrage jenseits dieser Kampagne.</p>
+        <p>Auf später verschoben, ohne den Bericht aufzuhalten: die Social-Zahlen aus Metricool, die Reichweite der ausgelegten Flyer, der Abgleich der Wochenschrift-Anmeldungen gegen Zoho, der fehlende AGiD-Newsletter und die Frage, ob die Inserate in VaG und RSV überhaupt erschienen sind. Alles einzeln in <code>docs/schlussbericht-datensammlung.md</code>.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ 6 · BELEGE ══════════════════════════════════════════════════════ -->
+  <section id="belege">
+    <div class="shead"><h2>Belege und Methode</h2><p>Alles, was man selten braucht, aber jederzeit nachschlagen können muss.</p></div>
+    <div class="panel">
+
+      <details class="zb-form">
+        <summary>Was ist passiert? – die einzelnen Abos mit Herkunft</summary>
+        <div id="evList" style="margin-top:var(--s4)"><div class="empty">lädt …</div></div>
+      </details>
+
+      <details class="zb-form">
+        <summary>Dunkelfeld – wie die Abos ohne Spur verteilt wurden</summary>
+        <div class="tablewrap" style="margin-top:var(--s4)">
+          <table class="tarif">
+            <thead><tr><th>Gebiet</th><th class="num">Anteil</th><th class="num">≈ zugeordnet</th></tr></thead>
+            <tbody id="dunkelBody"><tr><td class="empty" colspan="3">lädt …</td></tr></tbody>
+            <tfoot id="dunkelFoot"></tfoot>
+          </table>
+        </div>
+        <p class="provisorisch" id="dunkelNote"></p>
+        <div id="vermutetKopf" class="mh" style="margin-top:var(--s6)"></div>
+        <div id="vermutetList"><div class="empty">lädt …</div></div>
+        <p class="provisorisch">Live aus den Ereignissen: je Anmeldung ohne UTM der zeitlich nächste Kurzlink-Klick (bis 90 Min. davor) auf einen passenden Kampagnen-Link. Ein Indiz, keine Messung – gezählt wird es nirgends, es ordnet nur ein. Das Indiz trägt nur bei spärlichen Klicks: Solange die bezahlte Anzeige lief, stellte sie über die Hälfte aller Klicks und stand darum zufällig bei fast jeder Anmeldung daneben – nachgerechnet in <code>docs/wirkungs-lesart-24-07.md</code>. Seit ihrem Stopp am 24. Juli beherrscht kein Weg mehr das Klick-Log; das Indiz ist damit brauchbarer geworden, bleibt aber ein Indiz. Die geltende Zuordnung des Dunkelfeldes rechnet nicht damit, sondern aus Tageskurve, gemessenen Fenster-Anteilen und Selbstauskunft: <code>docs/wirkungs-lesart-08-08.md</code>.</p>
+      </details>
+
+      <details class="zb-form">
+        <summary>Alle Motive einzeln</summary>
+        <div class="motive" id="motive" hidden>
+          <div id="motiveList"></div>
+        </div>
+      </details>
+
+      <details class="zb-form">
+        <summary>Methode und Quellen</summary>
+        <div style="margin-top:var(--s4)">
+          <p class="provisorisch">Was <b>nicht</b> mitzählt, obwohl es in der Tabelle steht: laufende Bestandsabos, die Uscreen nicht von einem Abschluss unterscheidet (<code>verlaengerung</code>); Anmeldungen nach dem Fristende vom 11. August, die statt drei Gratismonaten nur noch drei Tage Probe bekommen (<code>nachfrist</code>); und Abos, die das Aktionsangebot nie hatten – App-Käufe, ermässigte Abos, Sofortzahler (<code>anderes_angebot</code>). Gelöscht ist nichts davon: Es steht in der Datenbank und fällt allein aus der Sicht <code>sommer2026_neuabos</code>, aus der jede Zahl dieses Berichts liest.</p>
+          <p class="provisorisch">Abschlüsse und «Geblieben» zählt das Cockpit live aus den Anmeldungen (nur Summen, keine Personendaten). Reichweite und die je Aktivität erfassten Klicks kommen aus dem <a href="aktivitaeten.html">Aktivitäten-Protokoll</a>, die Kurzlink-Klicks automatisch aus dem <a href="../utm-generator/">Link-Register</a>. Reichweite heisst bei Mails <b>zugestellt</b>, Klicks heissen <b>eindeutige Klicker</b> – die Öffnungen stehen je Zeile in der Notiz. Alles mit ≈ ist eine datierte Lesart, keine Messung.</p>
+          <div id="quelleSocial"></div>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap" style="display:flex;flex-direction:column;gap:var(--s2)">
+    <div class="landing">
+      <span class="meta">Aktionsseiten</span>
+      <a class="btn" href="https://global-sommer2026.goetheanum.online" target="_blank" rel="noopener">Übersicht · 3 Monate gratis</a>
+      <a class="btn" href="https://ws-sommer2026.dasgoetheanum.com" target="_blank" rel="noopener">Wochenschrift</a>
+      <a class="btn" href="https://tv-sommer2026.goetheanum.tv" target="_blank" rel="noopener">goetheanum.tv</a>
+    </div>
+    <div class="frow">
+      <span><strong>Sommer-Zähler 2026</strong> · live aus dem Werkzeug-Backend · nur Summen, keine Personendaten</span>
+      <span><a href="../../design-system/">Design-System</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="campaign.js"></script>
+</body>
+</html>

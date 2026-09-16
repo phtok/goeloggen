@@ -1,0 +1,874 @@
+<!doctype html>
+<!-- =============================================================================
+     QR-Code-Generator · Werkzeuge Goetheanum
+     -----------------------------------------------------------------------------
+     QR-Codes im Hausstil für Link, WLAN, Kontakt, E-Mail und Text. Link-Codes
+     laufen auf Wunsch als Kurzlink (tools.goetheanum.ch/s/<code>) über die
+     Edge Function go und zählen ihre Scans anonym in link_hits – gespeichert
+     werden nur Zeitpunkt und Code, keine Personendaten. Statistik über die
+     Aggregat-RPCs qr_stats_public / qr_stats_tage (Schema:
+     services/qr-generator/schema.sql). Kurzlink-QRs sind versal im
+     Alphanumerisch-Modus mit Fehlerkorrektur M codiert – 25×25 statt 33×33
+     Module, damit der Code ruhig bleibt und im Druck gross gepunktet ist.
+
+     Regelkonform: Farben/Schnitte/Abstände aus tokens.css + base.css. Ziffern
+     tabellarisch (G25), Betonung nur über Gewicht (G05), Labels normal, nicht
+     versal (G05/G23). Die QR-Farben selbst sind Artefakt, nicht Theme (# ds-ok
+     an den Konstanten unten) – ein Code muss dunkel auf Weiss bleiben, sonst
+     liest ihn keine Kamera.
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>QR-Code-Generator · Goetheanum</title>
+<meta name="description" content="QR-Codes für Link, WLAN, Kontakt, E-Mail und Text – im Hausstil, mit Kurzlink und einfacher Scan-Statistik, ohne Fremddienst." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  /* Nur werkzeug-eigene Gestalt – alles Gemeinsame kommt aus base.css, nur Tokens. */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4);margin-top:var(--s4)}
+  .grid .span2{grid-column:1 / -1}
+  .field .hint{margin-top:6px}
+  .pane[hidden]{display:none}
+  .kurzrow{display:flex;gap:var(--s2);align-items:stretch;flex-wrap:wrap} .kurzrow input{flex:1;min-width:140px}
+  .check{display:flex;align-items:center;gap:var(--s2);font-family:var(--font-text);font-size:var(--t-body);color:var(--ink);cursor:pointer;min-height:var(--tap)}
+  .check input{width:20px;height:20px;accent-color:var(--blue)}
+  /* Modus-Umschalter QR-Code | Kurzlink – dieselbe App, zwei Türen. */
+  .seg.modus{margin-bottom:var(--s4)}
+  body[data-modus="kurzlink"] #typSeg,
+  body[data-modus="kurzlink"] .qr-only{display:none}
+  /* QR-Ausgabe als aufklappbarer Block. Im QR-Modus immer offen und nicht
+     klappbar (wirkt wie ein normaler Kopf); im Kurzlink-Modus optional,
+     startet eingeklappt. */
+  #gestaltBox > summary{list-style:none;cursor:pointer}
+  #gestaltBox > summary::-webkit-details-marker{display:none}
+  #gestaltBox > summary::marker{content:""}
+  body[data-modus="qr"] #gestaltBox > summary{pointer-events:none}
+  body[data-modus="kurzlink"] #gestaltBox > summary h2::after{content:" ▸";color:var(--muted);font-weight:400}
+  body[data-modus="kurzlink"] #gestaltBox[open] > summary h2::after{content:" ▾"}
+
+  /* Gestalt & Ausgabe: Regler links, Vorschau rechts. */
+  .out{display:grid;grid-template-columns:1fr auto;gap:var(--s6);align-items:start}
+  .gopt{margin-bottom:var(--s4)}
+  .gopt .lab{display:block;margin-bottom:var(--s2)}
+  .qrwrap{display:flex;flex-direction:column;align-items:center;gap:var(--s2)}
+  .qr{width:220px;height:220px;border-radius:var(--r-control);overflow:hidden;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center}
+  .qr.dunkel{background:#141414}   /* Vorschau-Grund für weisse Codes – Artefakt, nicht Theme  # ds-ok */
+  .qr svg{display:block;width:100%;height:100%}
+  .payloadbox{width:220px;font-family:var(--font-mono,var(--font-text));font-size:var(--t-micro);color:var(--muted);
+    word-break:break-all;line-height:1.5;max-height:5.5em;overflow:hidden}
+  .qrstand{width:220px;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;min-height:1.5em}
+  .qrstand.wach{color:var(--gold-ink);font-weight:var(--w-deutlich)}
+  .qrstand.zaehlt{color:var(--ok)}
+  .actions{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s4)}
+  .said{font-family:var(--font-text);font-size:var(--t-small);color:var(--ok);min-height:1.5em;margin-top:var(--s2)}
+  .shortbox{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s2) var(--s4);margin-top:var(--s4);
+    font-family:var(--font-text);font-size:var(--t-small)}
+  .shortbox[hidden]{display:none}
+  .shortbox .sl{color:var(--muted)}
+  .shortbox .su{font-family:var(--font-mono,var(--font-text));color:var(--blue);word-break:break-all}
+
+  /* Statistik: Kennzahlen, Tagesbalken (Muster Kampagnen-Cockpit), Code-Tabelle. */
+  .kpis{display:flex;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s4)}
+  .kpi{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s4) var(--s6);min-width:150px}
+  .kpi .kl{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .kpi .kv{font-family:var(--font-display);font-weight:var(--w-strong);font-size:var(--t-h3);color:var(--ink);font-variant-numeric:tabular-nums;margin-top:4px}
+  .spark{display:flex;align-items:stretch;gap:clamp(4px,1vw,10px);height:140px;padding-top:8px;margin-top:var(--s4)}
+  .spark .d{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+  .spark .barcell{flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center}
+  .spark .bar{width:100%;max-width:30px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--blue),color-mix(in srgb,var(--blue) 55%,transparent));min-height:3px}
+  .spark .bv{font-family:var(--font-text);font-variant-numeric:tabular-nums;font-size:var(--t-micro);color:var(--ink)}
+  .spark .dl{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
+  .ziel{margin-top:var(--s4)}
+
+  /* Register als zweizeilige Liste – der volle Kurzlink zum Kopieren obenauf,
+     Ziel + Zahlen darunter. Keine breiten Tabellenzeilen. */
+  .arch{margin-top:var(--s4);font-family:var(--font-text)}
+  .arch-row{display:flex;align-items:flex-start;gap:var(--s3);padding:var(--s3) 0;border-bottom:1px solid var(--line-soft)}
+  .arch-main{flex:1;min-width:0}
+  .arch-akt{white-space:nowrap;display:flex;flex-direction:column;align-items:flex-end}
+  .kurz{display:inline-flex;align-items:center;gap:var(--s2);font-family:var(--font-mono,var(--font-text));font-size:var(--t-small);color:var(--blue);background:none;border:0;cursor:pointer;padding:0;max-width:100%}
+  .kurz .txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .kurz .ci{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);flex:none}
+  .kurz:hover .ci{color:var(--blue)}
+  .arch-meta{margin-top:4px;font-size:var(--t-micro);color:var(--muted);display:flex;flex-wrap:wrap;gap:2px var(--s3)}
+  .arch-meta .zi{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+  .arch-meta b{font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+  .mini{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 6px;min-height:var(--tap)}
+  .mini:hover{color:var(--blue)}
+  .mini.weg:hover{color:var(--bad)}
+  .qmini{display:block;width:40px;height:40px;padding:2px;background:none;border:0;cursor:pointer;border-radius:6px;flex:none}
+  .qmini svg{display:block;width:100%;height:100%}
+  .qmini:hover{background:var(--soft)}
+  .empty{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);padding:var(--s3) 0}
+  .zwischen{margin-top:var(--s8)}
+
+  @media (max-width:640px){
+    .grid{grid-template-columns:1fr}
+    .out{grid-template-columns:1fr}
+    .qrwrap{align-items:flex-start}
+    .spark{height:112px;gap:3px}
+    .spark .bv{display:none}
+  }
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug" data-active="qr-generator"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="seg modus" id="modusSeg" role="group" aria-label="Modus">
+      <button type="button" data-modus="qr" aria-pressed="true">QR-Code</button>
+      <button type="button" data-modus="kurzlink" aria-pressed="false">Kurzlink</button>
+    </div>
+    <h1 id="titel">QR-Code-Generator</h1>
+    <p class="lede" id="lede">QR-Codes im Hausstil – für Links, WLAN-Zugänge, Kontakte, E-Mail und Text. Link-Codes laufen auf Wunsch als Kurzlink und zählen ihre Scans: anonym und ohne Fremddienst.</p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2 id="inhaltTitel">Inhalt</h2>
+      <p id="inhaltText">Was der Code beim Scannen auslösen soll. Nur Link-Codes können zählen – alles andere steht fest im Code selbst.</p>
+    </div>
+
+    <div class="card soft">
+      <div class="seg" id="typSeg" role="group" aria-label="Inhaltstyp">
+        <button type="button" data-typ="link" aria-pressed="true">Link</button>
+        <button type="button" data-typ="wlan" aria-pressed="false">WLAN</button>
+        <button type="button" data-typ="kontakt" aria-pressed="false">Kontakt</button>
+        <button type="button" data-typ="email" aria-pressed="false">E-Mail</button>
+        <button type="button" data-typ="text" aria-pressed="false">Text</button>
+      </div>
+
+      <div class="pane grid" id="pane-link">
+        <label class="field span2">
+          <span class="lab">Ziel-Adresse (URL)</span>
+          <input id="linkUrl" type="url" placeholder="https://goetheanum.ch/veranstaltungen" autocomplete="off" />
+        </label>
+        <label class="check span2 qr-only">
+          <input type="checkbox" id="kurzToggle" checked />
+          <span>Kurzlink mit Scan-Statistik (empfohlen)</span>
+        </label>
+        <div class="field span2" id="kurzFeld">
+          <span class="lab">Kurzname · tools.goetheanum.ch/s/…</span>
+          <span class="kurzrow">
+            <input id="kurzCode" autocomplete="off" maxlength="32" />
+            <button class="btn ghost" type="button" id="kurzNeu">anderer Code</button>
+            <button class="btn" type="button" id="kurzAnlegen">Kurzlink anlegen</button>
+          </span>
+          <span class="hint">Erst <q>Kurzlink anlegen</q> verdrahtet den Code – dann zeigt der QR auf den Kurzlink und jeder Scan wird gezählt.</span>
+        </div>
+      </div>
+
+      <div class="pane grid" id="pane-wlan" hidden>
+        <label class="field">
+          <span class="lab">Netzname (SSID)</span>
+          <input id="wlanSsid" autocomplete="off" placeholder="Goetheanum-Gast" />
+        </label>
+        <label class="field">
+          <span class="lab">Passwort</span>
+          <input id="wlanPass" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span class="lab">Verschlüsselung</span>
+          <select id="wlanTyp">
+            <option value="WPA" selected>WPA / WPA2 / WPA3</option>
+            <option value="WEP">WEP (alt)</option>
+            <option value="nopass">offen, ohne Passwort</option>
+          </select>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="wlanHidden" />
+          <span>verstecktes Netz</span>
+        </label>
+      </div>
+
+      <div class="pane grid" id="pane-kontakt" hidden>
+        <label class="field">
+          <span class="lab">Vorname</span>
+          <input id="kVor" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span class="lab">Nachname</span>
+          <input id="kNach" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span class="lab">Organisation</span>
+          <input id="kOrg" autocomplete="off" placeholder="Goetheanum" />
+        </label>
+        <label class="field">
+          <span class="lab">Funktion</span>
+          <input id="kFunk" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span class="lab">Telefon</span>
+          <input id="kTel" type="tel" autocomplete="off" placeholder="+41 61 706 42 42" />
+        </label>
+        <label class="field">
+          <span class="lab">E-Mail</span>
+          <input id="kMail" type="email" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span class="lab">Website</span>
+          <input id="kWeb" type="url" autocomplete="off" placeholder="https://goetheanum.ch" />
+        </label>
+        <label class="field">
+          <span class="lab">Adresse</span>
+          <input id="kAdr" autocomplete="off" placeholder="Rüttiweg 45, 4143 Dornach" />
+        </label>
+      </div>
+
+      <div class="pane grid" id="pane-email" hidden>
+        <label class="field span2">
+          <span class="lab">An (E-Mail-Adresse)</span>
+          <input id="mAn" type="email" autocomplete="off" />
+        </label>
+        <label class="field span2">
+          <span class="lab">Betreff</span>
+          <input id="mBetreff" autocomplete="off" />
+        </label>
+        <label class="field span2">
+          <span class="lab">Nachricht (vorausgefüllt)</span>
+          <textarea id="mText" rows="3"></textarea>
+        </label>
+      </div>
+
+      <div class="pane grid" id="pane-text" hidden>
+        <label class="field span2">
+          <span class="lab">Text</span>
+          <textarea id="tText" rows="4" placeholder="Beliebiger Text – erscheint beim Scannen direkt auf dem Gerät."></textarea>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <details id="gestaltBox" open>
+    <summary class="shead">
+      <h2 id="gestaltTitel">Gestalt und Ausgabe</h2>
+      <p id="gestaltText">Farbe und Format wählen – immer dunkel auf Weiss, damit jede Kamera den Code liest. SVG für Druck und Layout, PNG für Mail und Web.</p>
+    </summary>
+
+    <div class="card soft">
+      <div class="out">
+        <div>
+          <div class="gopt">
+            <span class="lab">Farbe</span>
+            <div class="seg" id="farbSeg" role="group" aria-label="Farbe">
+              <button type="button" data-farbe="tinte" aria-pressed="true">Tinte</button>
+              <button type="button" data-farbe="blau" aria-pressed="false">Blau</button>
+              <button type="button" data-farbe="gold" aria-pressed="false">Gold</button>
+              <button type="button" data-farbe="weiss" aria-pressed="false">Weiss</button>
+            </div>
+            <span class="hint" id="weissHint" hidden>Weiss ist zum Freistellen: der Grund bleibt transparent – wirkt nur auf dunklem Untergrund, und gestürzte Codes lesen nicht alle Kameras gleich gut. Vor dem Druck testen.</span>
+          </div>
+          <div class="gopt">
+            <span class="lab">Format</span>
+            <div class="seg" id="fmtSeg" role="group" aria-label="Dateiformat">
+              <button type="button" data-fmt="svg" aria-pressed="true">SVG</button>
+              <button type="button" data-fmt="png" aria-pressed="false">PNG</button>
+            </div>
+          </div>
+          <div class="gopt" id="sizeOpt" hidden>
+            <span class="lab">Grösse (Pixel)</span>
+            <div class="seg" id="sizeSeg" role="group" aria-label="PNG-Grösse">
+              <button type="button" data-size="512" aria-pressed="false">512</button>
+              <button type="button" data-size="1024" aria-pressed="true">1024</button>
+              <button type="button" data-size="2048" aria-pressed="false">2048</button>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" type="button" id="dlBtn">Herunterladen</button>
+            <button class="btn" type="button" id="copyBtn">Inhalt kopieren</button>
+          </div>
+          <div class="said" id="said"></div>
+          <div class="shortbox" id="shortbox" hidden>
+            <span class="sl">Kurzlink (leitet weiter und zählt):</span>
+            <a class="su" id="shortUrl" target="_blank" rel="noopener"></a>
+            <button class="btn ghost" type="button" id="shortCopy">Kopieren</button>
+          </div>
+        </div>
+        <div class="qrwrap">
+          <div class="qr" id="qr"><span class="empty">QR</span></div>
+          <div class="qrstand" id="qrStand"></div>
+          <div class="payloadbox" id="payloadBox"></div>
+        </div>
+      </div>
+    </div>
+    </details>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Statistik</h2>
+      <p>Jeder Kurzlink zählt seine Scans – anonym: gespeichert werden nur Zeitpunkt und Code, keine Personendaten, keine Cookies.</p>
+    </div>
+
+    <div class="card soft">
+      <div class="field" style="max-width:420px">
+        <span class="lab">Code prüfen</span>
+        <span class="kurzrow">
+          <input id="statCode" autocomplete="off" maxlength="32" placeholder="z. B. tagung-24" />
+          <button class="btn" type="button" id="statBtn">Anzeigen</button>
+        </span>
+      </div>
+      <div class="said" id="statSaid"></div>
+
+      <div id="statDetail" hidden>
+        <div class="kpis">
+          <div class="kpi"><div class="kl">Scans gesamt</div><div class="kv" id="kScans">–</div></div>
+          <div class="kpi"><div class="kl">letzter Scan</div><div class="kv" id="kLetzter">–</div></div>
+          <div class="kpi"><div class="kl">angelegt</div><div class="kv" id="kAngelegt">–</div></div>
+        </div>
+        <div class="spark" id="statSpark"></div>
+        <p class="note ziel" id="statZiel"></p>
+      </div>
+
+      <div class="shead zwischen">
+        <h3>Alle Kurzlinks</h3>
+        <p>Das offene Register: jeder hier angelegte Code mit Ziel und Zählung – <q>Verlauf</q> holt die Tageskurve nach oben.</p>
+      </div>
+      <div class="arch" id="codesBody"><div class="empty">lädt …</div></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>QR-Code-Generator</strong> · Kurzlinks über tools.goetheanum.ch/s/… · Zählung anonym</span>
+    <span><a href="../../start/">Werkzeuge</a> · <a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script src="./vendor/qrcode.js"></script>
+<script>
+  var SB  = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
+  var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
+  var SHORTBASE = 'https://tools.goetheanum.ch/s/';
+
+  // Kurzlink-QRs versal codieren: der Alphanumerisch-Modus des QR-Standards
+  // (nur Ziffern, Grossbuchstaben und wenige Zeichen) braucht rund ein Drittel
+  // weniger Platz als der Byte-Modus – aus 33×33 Modulen werden 25×25. Die
+  // Auflösung ist case-unempfindlich (kurzlink_aufloesen lowercased serverseitig),
+  // die Versalform landet also immer am selben Ziel.
+  var ALPHANUM = /^[0-9A-Z $%*+\-./:]+$/;
+  function kurzText(code){ return (SHORTBASE + code).toUpperCase(); }
+
+  function el(id){ return document.getElementById(id); }
+
+  // --- Zustand ---------------------------------------------------------------
+  var typ = 'link', stil = 'fliessend', farbe = 'tinte', fmt = 'svg', size = 1024;
+  var registriert = null;   // { code, url } nach erfolgreichem Anlegen
+
+  // QR-Farben sind Artefakt, nicht Theme: ein Code braucht festen dunklen
+  // Vordergrund auf hellem Grund (oder gestürzt: Weiss auf dunklem Grund),
+  // sonst liest ihn keine Kamera – theme-unabhängig.
+  var FARBEN = {
+    tinte: '#141414',   // nahschwarz, wie im Inserat  # ds-ok
+    blau:  '#0061a9',   // Hausblau, Kontrast 5.0:1 auf Weiss  # ds-ok
+    gold:  '#94702e',   // tiefes Gold, Kontrast 4.6:1 auf Weiss  # ds-ok
+    weiss: '#ffffff'    // gestürzt, Grund transparent – zum Freistellen auf Dunklem  # ds-ok
+  };
+  var QR_BG = '#ffffff';  // Ruhezone weiss, muss scannbar bleiben  # ds-ok
+
+  // --- Inhalt: Nutzlast je Typ -----------------------------------------------
+  function urlNormal(s){
+    s = (s || '').trim();
+    if(!s) return '';
+    if(!/^[a-z][a-z0-9+.-]*:/i.test(s)) s = 'https://' + s;
+    return s;
+  }
+  // Sonderzeichen in WIFI-/vCard-Feldern entschärfen (Syntaxzeichen der Formate).
+  function escWifi(s){ return (s || '').replace(/([\\;,:"])/g, '\\$1'); }
+  function escVcard(s){ return (s || '').replace(/\\/g, '\\\\').replace(/([;,])/g, '\\$1').replace(/\r?\n/g, '\\n'); }
+
+  function payload(){
+    if(typ === 'link'){
+      var u = urlNormal(el('linkUrl').value);
+      if(!u) return null;
+      if(el('kurzToggle').checked && registriert && registriert.url === u){
+        return { text: kurzText(registriert.code), name: registriert.code, kurz: true };
+      }
+      var host = u.replace(/^https?:\/\//, '').split(/[/?#]/)[0].replace(/[^a-z0-9.-]+/gi, '') || 'link';
+      return { text: u, name: host };
+    }
+    if(typ === 'wlan'){
+      var ssid = el('wlanSsid').value.trim();
+      if(!ssid) return null;
+      var t = el('wlanTyp').value;
+      var teile = 'WIFI:T:' + t + ';S:' + escWifi(ssid) + ';';
+      if(t !== 'nopass') teile += 'P:' + escWifi(el('wlanPass').value) + ';';
+      if(el('wlanHidden').checked) teile += 'H:true;';
+      return { text: teile + ';', name: ssid.replace(/[^a-z0-9-]+/gi, '-').toLowerCase() || 'wlan' };
+    }
+    if(typ === 'kontakt'){
+      var vor = el('kVor').value.trim(), nach = el('kNach').value.trim();
+      if(!vor && !nach) return null;
+      var z = ['BEGIN:VCARD', 'VERSION:3.0',
+               'N:' + escVcard(nach) + ';' + escVcard(vor) + ';;;',
+               'FN:' + escVcard((vor + ' ' + nach).trim())];
+      if(el('kOrg').value.trim())  z.push('ORG:' + escVcard(el('kOrg').value.trim()));
+      if(el('kFunk').value.trim()) z.push('TITLE:' + escVcard(el('kFunk').value.trim()));
+      if(el('kTel').value.trim())  z.push('TEL;TYPE=CELL:' + escVcard(el('kTel').value.trim()));
+      if(el('kMail').value.trim()) z.push('EMAIL:' + escVcard(el('kMail').value.trim()));
+      if(el('kWeb').value.trim())  z.push('URL:' + escVcard(urlNormal(el('kWeb').value)));
+      if(el('kAdr').value.trim())  z.push('ADR;TYPE=WORK:;;' + escVcard(el('kAdr').value.trim()) + ';;;;');
+      z.push('END:VCARD');
+      return { text: z.join('\r\n'), name: ((vor + '-' + nach).replace(/[^a-z0-9-]+/gi, '-').replace(/^-|-$/g, '') || 'kontakt').toLowerCase() };
+    }
+    if(typ === 'email'){
+      var an = el('mAn').value.trim();
+      if(!an) return null;
+      var q = [];
+      if(el('mBetreff').value.trim()) q.push('subject=' + encodeURIComponent(el('mBetreff').value.trim()));
+      if(el('mText').value.trim())    q.push('body=' + encodeURIComponent(el('mText').value));
+      return { text: 'mailto:' + an + (q.length ? '?' + q.join('&') : ''), name: an.split('@')[0].replace(/[^a-z0-9-]+/gi, '-').toLowerCase() || 'mail' };
+    }
+    var tx = el('tText').value;
+    if(!tx.trim()) return null;
+    return { text: tx, name: 'text' };
+  }
+
+  // --- Gestalt: QR als SVG ------------------------------------------------------
+  // Kurzlinks (kompakt=true, Versalform) laufen alphanumerisch mit Fehler-
+  // korrektur M: die Nutzlast ist kurz, weniger Module heissen bei gleicher
+  // Druckgrösse grössere Punkte – das liest sich besser als dichteres Q.
+  // Alles andere bleibt Byte-Modus mit Q (robust für Druck).
+  // Punkte berühren sich (r=0.5) → scannbar;
+  // Fliessend verschmilzt Nachbarn zu runden Formen (aussen wie innen gerundet);
+  // Weich lässt minimale Fugen (0.94er-Module), Kanten ist der klassische Vollblock.
+  function qrSvg(text, stilWahl, fg, bg, kompakt){
+    var q;
+    if(kompakt && ALPHANUM.test(text)){ q = qrcode(0, 'M'); q.addData(text, 'Alphanumeric'); }
+    else { q = qrcode(0, 'Q'); q.addData(text); }
+    q.make();
+    var n = q.getModuleCount(), pad = 4, S = n + pad * 2, p = [];
+    function inFinder(r, c){ return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7); }
+    // Dunkel im Sinn der Modulfläche (Finder-Augen zählen nicht mit – die werden
+    // separat gesetzt und sollen nicht mit den Modulen verschmelzen).
+    function dunkel(r, c){ return r >= 0 && c >= 0 && r < n && c < n && q.isDark(r, c) && !inFinder(r, c); }
+    // Einheitszelle mit wählbaren Eckradien (im/gegen den Nachbarschaftsverbund).
+    function zelle(x, y, tl, tr, br, bl){
+      return 'M' + (x + tl) + ' ' + y +
+        'H' + (x + 1 - tr) + (tr ? 'A' + tr + ' ' + tr + ' 0 0 1 ' + (x + 1) + ' ' + (y + tr) : '') +
+        'V' + (y + 1 - br) + (br ? 'A' + br + ' ' + br + ' 0 0 1 ' + (x + 1 - br) + ' ' + (y + 1) : '') +
+        'H' + (x + bl)     + (bl ? 'A' + bl + ' ' + bl + ' 0 0 1 ' + x + ' ' + (y + 1 - bl) : '') +
+        'V' + (y + tl)     + (tl ? 'A' + tl + ' ' + tl + ' 0 0 1 ' + (x + tl) + ' ' + y : '') + 'Z';
+    }
+    // Gerundetes Rechteck als Pfad (r=0 → scharfe Ecken); für die Augen-Ringe.
+    function rr(x, y, w, h, rad){
+      if(!rad) return 'M' + x + ' ' + y + 'H' + (x + w) + 'V' + (y + h) + 'H' + x + 'Z';
+      return 'M' + (x + rad) + ' ' + y +
+        'H' + (x + w - rad) + 'A' + rad + ' ' + rad + ' 0 0 1 ' + (x + w) + ' ' + (y + rad) +
+        'V' + (y + h - rad) + 'A' + rad + ' ' + rad + ' 0 0 1 ' + (x + w - rad) + ' ' + (y + h) +
+        'H' + (x + rad) + 'A' + rad + ' ' + rad + ' 0 0 1 ' + x + ' ' + (y + h - rad) +
+        'V' + (y + rad) + 'A' + rad + ' ' + rad + ' 0 0 1 ' + (x + rad) + ' ' + y + 'Z';
+    }
+    // Ohne bg bleibt der Grund transparent (Weiss zum Freistellen) – die
+    // Ruhezone muss dann der Untergrund liefern.
+    if(bg) p.push('<rect width="' + S + '" height="' + S + '" fill="' + bg + '"/>');
+    var teile = [], R = 0.5;
+    for(var r = 0; r < n; r++){
+      for(var c = 0; c < n; c++){
+        var x = c + pad, y = r + pad;
+        if(stilWahl === 'fliessend' && !dunkel(r, c) && !inFinder(r, c)){
+          // Innenecken glätten: liegt eine helle Zelle im Winkel dreier dunkler
+          // Nachbarn, wird ihre Ecke konkav gefüllt – die Form fliesst.
+          if(dunkel(r - 1, c) && dunkel(r, c - 1) && dunkel(r - 1, c - 1))
+            teile.push('M' + x + ' ' + y + 'L' + (x + R) + ' ' + y + 'A' + R + ' ' + R + ' 0 0 0 ' + x + ' ' + (y + R) + 'Z');
+          if(dunkel(r - 1, c) && dunkel(r, c + 1) && dunkel(r - 1, c + 1))
+            teile.push('M' + (x + 1) + ' ' + y + 'L' + (x + 1) + ' ' + (y + R) + 'A' + R + ' ' + R + ' 0 0 0 ' + (x + 1 - R) + ' ' + y + 'Z');
+          if(dunkel(r + 1, c) && dunkel(r, c - 1) && dunkel(r + 1, c - 1))
+            teile.push('M' + x + ' ' + (y + 1) + 'L' + x + ' ' + (y + 1 - R) + 'A' + R + ' ' + R + ' 0 0 0 ' + (x + R) + ' ' + (y + 1) + 'Z');
+          if(dunkel(r + 1, c) && dunkel(r, c + 1) && dunkel(r + 1, c + 1))
+            teile.push('M' + (x + 1) + ' ' + (y + 1) + 'L' + (x + 1 - R) + ' ' + (y + 1) + 'A' + R + ' ' + R + ' 0 0 0 ' + (x + 1) + ' ' + (y + 1 - R) + 'Z');
+          continue;
+        }
+        if(!dunkel(r, c)) continue;
+        if(stilWahl === 'punkte'){
+          p.push('<circle cx="' + (x + 0.5) + '" cy="' + (y + 0.5) + '" r="0.5" fill="' + fg + '"/>');
+        } else if(stilWahl === 'fliessend'){
+          // Aussenecken nur runden, wo kein dunkler Nachbar anschliesst.
+          var o = dunkel(r - 1, c), u = dunkel(r + 1, c), li = dunkel(r, c - 1), re = dunkel(r, c + 1);
+          teile.push(zelle(x, y, (!o && !li) ? R : 0, (!o && !re) ? R : 0, (!u && !re) ? R : 0, (!u && !li) ? R : 0));
+        } else if(stilWahl === 'weich'){
+          p.push('<rect x="' + (x + 0.03) + '" y="' + (y + 0.03) + '" width="0.94" height="0.94" rx="0.28" fill="' + fg + '"/>');
+        } else {
+          p.push('<rect x="' + x + '" y="' + y + '" width="1" height="1" fill="' + fg + '"/>');
+        }
+      }
+    }
+    if(teile.length) p.push('<path d="' + teile.join('') + '" fill="' + fg + '"/>');
+    // Die drei Finder-Augen als Ring + Kern (fill-rule evenodd macht die Mitte
+    // zum echten Loch – so bleibt sie auch bei transparentem Grund hell);
+    // gerundet ausser bei Kanten.
+    var rund = stilWahl === 'kanten' ? [0, 0, 0] : [2.3, 1.7, 1.0];
+    [[0, 0], [0, n - 7], [n - 7, 0]].forEach(function(e){
+      var y = e[0] + pad, x = e[1] + pad;
+      p.push('<path fill-rule="evenodd" d="' + rr(x, y, 7, 7, rund[0]) + rr(x + 1, y + 1, 5, 5, rund[1]) + '" fill="' + fg + '"/>');
+      p.push('<path d="' + rr(x + 2, y + 2, 3, 3, rund[2]) + '" fill="' + fg + '"/>');
+    });
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + S + ' ' + S + '" ' +
+           'preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision">' + p.join('') + '</svg>';
+  }
+
+  var current = null;
+  // Zählt dieser QR? Nur beim Link-Typ mit aktivem Toggle UND angelegtem Kurzlink.
+  function zaehltNicht(){
+    return typ === 'link' && el('kurzToggle').checked && !(current && current.kurz);
+  }
+  function zeigeStand(){
+    var stand = el('qrStand');
+    if(!current || typ !== 'link' || !el('kurzToggle').checked){
+      stand.textContent = ''; stand.className = 'qrstand'; return;
+    }
+    if(zaehltNicht()){
+      stand.textContent = 'Zählt noch nicht – der QR zeigt die lange Adresse. Erst ‹Kurzlink anlegen› drücken.';
+      stand.className = 'qrstand wach';
+    } else {
+      stand.textContent = 'Kurzlink aktiv – jeder Scan wird gezählt. Versal codiert für den kleinstmöglichen QR.';
+      stand.className = 'qrstand zaehlt';
+    }
+  }
+  function render(){
+    current = payload();
+    var qr = el('qr'), box = el('payloadBox');
+    if(!current){
+      qr.innerHTML = '<span class="empty">QR</span>';
+      box.textContent = '';
+      zeigeStand();
+      return;
+    }
+    qr.classList.toggle('dunkel', farbe === 'weiss');
+    try {
+      qr.innerHTML = qrSvg(current.text, stil, FARBEN[farbe], farbe === 'weiss' ? null : QR_BG, current.kurz);
+      box.textContent = current.text;
+    } catch(e){
+      qr.innerHTML = '<span class="empty">zu viel Inhalt</span>';
+      box.textContent = '';
+      say('Zu viel Inhalt für einen QR-Code – bitte kürzen.', true);
+    }
+    zeigeStand();
+  }
+
+  function say(msg, bad){ var s = el('said'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; }
+
+  // --- Segmente (Typ, Stil, Farbe, Format, Grösse) -----------------------------
+  function segWire(segId, attr, cb){
+    el(segId).addEventListener('click', function(ev){
+      var b = ev.target.closest('button'); if(!b) return;
+      el(segId).querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      cb(b.dataset[attr]);
+    });
+  }
+  segWire('typSeg', 'typ', function(v){
+    typ = v;
+    ['link','wlan','kontakt','email','text'].forEach(function(t){ el('pane-' + t).hidden = (t !== v); });
+    render();
+  });
+  segWire('farbSeg', 'farbe', function(v){ farbe = v; el('weissHint').hidden = (v !== 'weiss'); render(); });
+  segWire('fmtSeg', 'fmt', function(v){ fmt = v; el('sizeOpt').hidden = (v !== 'png'); });
+  segWire('sizeSeg', 'size', function(v){ size = Number(v); });
+
+  ['linkUrl','wlanSsid','wlanPass','wlanTyp','wlanHidden','kVor','kNach','kOrg','kFunk','kTel','kMail','kWeb','kAdr','mAn','mBetreff','mText','tText','kurzToggle'].forEach(function(id){
+    el(id).addEventListener('input', render);
+    el(id).addEventListener('change', render);
+  });
+
+  // --- Kurzlink (dynamischer QR): anlegen, merken, zeigen ----------------------
+  var CODEZEICHEN = 'abcdefghjkmnpqrstuvwxyz23456789';   // ohne verwechselbare Zeichen
+  function neuerCode(){
+    var c = '';
+    var rnd = new Uint32Array(6); crypto.getRandomValues(rnd);
+    for(var i = 0; i < 6; i++) c += CODEZEICHEN[rnd[i] % CODEZEICHEN.length];
+    return c;
+  }
+  function codeForm(s){
+    return (s || '').toLowerCase()
+      .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+      .replace(/[^a-z0-9-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  }
+
+  function zeigeKurzlink(code){
+    var kurz = SHORTBASE + code;
+    el('shortbox').hidden = false;
+    el('shortUrl').textContent = kurz;
+    el('shortUrl').href = kurz;
+    el('shortCopy').onclick = function(){
+      navigator.clipboard.writeText(kurz).then(function(){ say('Kurzlink kopiert.'); }, function(){ say('Kopieren nicht möglich.', true); });
+    };
+  }
+
+  el('kurzToggle').addEventListener('change', function(){ el('kurzFeld').hidden = !this.checked; });
+  el('kurzNeu').addEventListener('click', function(){ el('kurzCode').value = neuerCode(); });
+  el('linkUrl').addEventListener('input', function(){
+    if(registriert && registriert.url !== urlNormal(this.value)){ registriert = null; el('shortbox').hidden = true; }
+  });
+
+  function rpc(name, body){
+    return fetch(SB + '/rest/v1/rpc/' + name, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
+      body: JSON.stringify(body || {})
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); });
+  }
+
+  el('kurzAnlegen').addEventListener('click', function(){
+    var u = urlNormal(el('linkUrl').value);
+    if(!u){ say('Erst eine Ziel-Adresse eingeben.', true); return; }
+    var code = codeForm(el('kurzCode').value) || neuerCode();
+    el('kurzCode').value = code;
+    rpc('qr_link_anlegen', { p_code: code, p_url: u })
+      .then(function(ergebnis){
+        if(ergebnis === 'ok'){
+          registriert = { code: code, url: u };
+          say('Kurzlink angelegt – der QR zeigt jetzt auf ihn.');
+          zeigeKurzlink(code); ladeRegister(); render();
+        }
+        else if(ergebnis === 'vergeben'){ say('Code „' + code + '“ ist schon vergeben – bitte einen anderen wählen.', true); }
+        else if(ergebnis === 'ungueltig'){ say('Code oder Adresse ungültig – Code: 3–32 Zeichen (a–z, 0–9, Bindestrich), Adresse mit https://.', true); }
+        else { say('Angaben unvollständig – Adresse und Code prüfen.', true); }
+      })
+      .catch(function(){ say('Kurzlink-Dienst nicht erreichbar.', true); });
+  });
+
+  // --- Ausgabe: SVG direkt, PNG über Canvas ------------------------------------
+  function dlBlob(blob, name){
+    var u = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = u; a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(u); }, 100);
+  }
+
+  el('dlBtn').addEventListener('click', function(){
+    var svg = el('qr').querySelector('svg');
+    if(!svg || !current){ say('Erst Inhalt eingeben – dann erscheint der QR.', true); return; }
+    var base = 'qr_' + (current.name || 'code');
+    var warnung = zaehltNicht() ? ' Achtung: Kurzlink noch nicht angelegt – dieser QR zählt nicht.' : '';
+    if(fmt === 'svg'){
+      dlBlob(new Blob([svg.outerHTML], { type: 'image/svg+xml' }), base + '.svg');
+      say('SVG geladen.' + warnung, !!warnung);
+      if(window.goeStat) goeStat('download', base + '.svg');
+      return;
+    }
+    var img = new Image();
+    img.onload = function(){
+      var c = document.createElement('canvas'); c.width = size; c.height = size;
+      var ctx = c.getContext('2d');
+      // Weiss bleibt transparent (Freistellen); sonst weisse Ruhezone.
+      if(farbe !== 'weiss'){ ctx.fillStyle = QR_BG; ctx.fillRect(0, 0, size, size); }
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(img, 0, 0, size, size);
+      c.toBlob(function(b){
+        if(!b){ say('PNG konnte nicht erzeugt werden.', true); return; }
+        dlBlob(b, base + '_' + size + '.png');
+        say('PNG (' + size + ' px) geladen.' + warnung, !!warnung);
+        if(window.goeStat) goeStat('download', base + '_' + size + '.png');
+      }, 'image/png');
+    };
+    img.onerror = function(){ say('PNG konnte nicht erzeugt werden.', true); };
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg.outerHTML)));
+  });
+
+  el('copyBtn').addEventListener('click', function(){
+    if(!current){ say('Erst Inhalt eingeben.', true); return; }
+    navigator.clipboard.writeText(current.text).then(function(){ say('Inhalt kopiert.'); }, function(){ say('Kopieren nicht möglich.', true); });
+  });
+
+  // --- Statistik ----------------------------------------------------------------
+  function statSay(msg, bad){ var s = el('statSaid'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; }
+  function fmtZeit(iso){
+    if(!iso) return 'noch nie';
+    var d = new Date(iso);
+    return d.toLocaleDateString('de-CH', { day: 'numeric', month: 'numeric', year: 'numeric' }) +
+           ', ' + d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function renderSpark(tage){
+    var host = el('statSpark'); host.innerHTML = '';
+    var byDay = {};
+    (tage || []).forEach(function(r){ byDay[r.tag] = Number(r.n); });
+    // Die letzten 14 Tage als lückenloses Fenster (leere Tage = 0).
+    var fenster = [];
+    for(var i = 13; i >= 0; i--){
+      var d = new Date(); d.setDate(d.getDate() - i);
+      fenster.push(d.toISOString().slice(0, 10));
+    }
+    var max = fenster.reduce(function(m, t){ return Math.max(m, byDay[t] || 0); }, 0);
+    if(!max){ host.innerHTML = '<div class="empty">In den letzten 14 Tagen keine Scans.</div>'; return; }
+    fenster.forEach(function(t){
+      var v = byDay[t] || 0;
+      var date = new Date(t + 'T00:00:00');
+      var cell = document.createElement('div'); cell.className = 'd';
+      cell.innerHTML = '<div class="bv"></div><div class="barcell"><div class="bar"></div></div><div class="dl"></div>';
+      cell.querySelector('.bv').textContent = v ? v.toLocaleString('de-CH') : '';
+      cell.querySelector('.bar').style.height = Math.max(3, Math.round(v / max * 100)) + '%';
+      cell.querySelector('.dl').textContent = date.toLocaleDateString('de-CH', { day: 'numeric', month: 'numeric' });
+      host.appendChild(cell);
+    });
+  }
+
+  function zeigeStats(code){
+    code = codeForm(code);
+    if(!code){ statSay('Erst einen Code eingeben.', true); return; }
+    el('statCode').value = code;
+    statSay('lädt …');
+    Promise.all([ rpc('qr_stats_public', { p_code: code }), rpc('qr_stats_tage', { p_code: code }) ])
+      .then(function(res){
+        var zeile = (res[0] || [])[0];
+        if(!zeile){ el('statDetail').hidden = true; statSay('Code „' + code + '“ ist nicht angelegt.', true); return; }
+        statSay('');
+        el('statDetail').hidden = false;
+        el('kScans').textContent = Number(zeile.scans).toLocaleString('de-CH');
+        el('kLetzter').textContent = fmtZeit(zeile.letzter_scan);
+        el('kAngelegt').textContent = new Date(zeile.created_at).toLocaleDateString('de-CH');
+        el('statZiel').textContent = 'Ziel: ' + zeile.url;
+        renderSpark(res[1]);
+      })
+      .catch(function(){ statSay('Statistik nicht erreichbar.', true); });
+  }
+
+  el('statBtn').addEventListener('click', function(){ zeigeStats(el('statCode').value); });
+  el('statCode').addEventListener('keydown', function(ev){ if(ev.key === 'Enter') zeigeStats(this.value); });
+
+  // Löschen: Knopf nur im Backstage-Modus (Schalter aus nav.js) – kein Passwort
+  // (Beschluss: Backstage genügt als Schutz). Nur eine Rückfrage gegen Versehen.
+  function imBackstage(){ try { return localStorage.getItem('goeNavIntern') === '1'; } catch(e){ return false; } }
+  function loescheCode(code){
+    if(!window.confirm('Kurzlink „' + code + '“ endgültig löschen? Der Link und seine Zählung sind dann weg.')) return;
+    rpc('qr_link_loeschen', { p_code: code })
+      .then(function(ergebnis){
+        if(ergebnis === 'ok'){ statSay('Code „' + code + '“ gelöscht.'); el('statDetail').hidden = true; ladeRegister(); }
+        else { statSay('Code „' + code + '“ nicht gefunden.', true); }
+      })
+      .catch(function(){ statSay('Löschen nicht erreichbar.', true); });
+  }
+
+  // Das offene Register: alle angelegten Kurzlinks mit Zählung (eine RPC-Runde).
+  function ladeRegister(){
+    var body = el('codesBody');
+    rpc('qr_links_public').then(function(rows){
+      body.innerHTML = '';
+      body.innerHTML = '';
+      if(!rows || !rows.length){ body.innerHTML = '<div class="empty">Noch keine Codes angelegt.</div>'; return; }
+      var backstage = imBackstage();
+      rows.forEach(function(x){
+        var kurz = SHORTBASE + x.code;                       // voller Kurzlink
+        var kurzKurz = kurz.replace(/^https?:\/\//, '');     // angezeigt ohne Schema
+
+        var row = document.createElement('div'); row.className = 'arch-row';
+
+        // Fester QR (fliessend, kompakt versal) – klein, Klick lädt ihn als SVG.
+        var qbtn = document.createElement('button');
+        qbtn.type = 'button'; qbtn.className = 'qmini';
+        qbtn.setAttribute('aria-label', 'QR von ' + x.code + ' herunterladen'); qbtn.title = 'QR herunterladen';
+        try { qbtn.innerHTML = qrSvg(kurzText(x.code), 'fliessend', '#141414', '#ffffff', true); } catch(e){ qbtn.textContent = 'QR'; }
+        qbtn.addEventListener('click', function(){
+          var svg = qbtn.querySelector('svg'); if(!svg) return;
+          dlBlob(new Blob([svg.outerHTML], { type: 'image/svg+xml' }), 'qr_' + x.code + '.svg');
+        });
+        row.appendChild(qbtn);
+
+        // Mitte: Zeile 1 = voller Kurzlink zum Kopieren, Zeile 2 = Ziel + Zahlen.
+        var main = document.createElement('div'); main.className = 'arch-main';
+        var kbtn = document.createElement('button');
+        kbtn.type = 'button'; kbtn.className = 'kurz'; kbtn.title = 'Kurzlink kopieren';
+        kbtn.innerHTML = '<span class="txt"></span><span class="ci">kopieren</span>';
+        kbtn.querySelector('.txt').textContent = kurzKurz;
+        kbtn.addEventListener('click', function(){
+          navigator.clipboard.writeText(kurz).then(function(){
+            var ci = kbtn.querySelector('.ci'); ci.textContent = 'kopiert ✓';
+            setTimeout(function(){ ci.textContent = 'kopieren'; }, 1600);
+          }, function(){});
+        });
+        var meta = document.createElement('div'); meta.className = 'arch-meta';
+        var zi = document.createElement('span'); zi.className = 'zi'; zi.textContent = '→ ' + x.url;
+        var sc = document.createElement('span'); sc.innerHTML = '<b></b> Scans'; sc.querySelector('b').textContent = Number(x.scans).toLocaleString('de-CH');
+        var ls = document.createElement('span'); ls.textContent = 'zuletzt ' + fmtZeit(x.letzter_scan);
+        meta.appendChild(zi); meta.appendChild(sc); meta.appendChild(ls);
+        main.appendChild(kbtn); main.appendChild(meta);
+        row.appendChild(main);
+
+        // Rechts: Aktionen.
+        var akt = document.createElement('div'); akt.className = 'arch-akt';
+        var zeig = document.createElement('button');
+        zeig.type = 'button'; zeig.className = 'mini'; zeig.textContent = 'Verlauf';
+        zeig.addEventListener('click', function(){ zeigeStats(x.code); el('statDetail').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
+        akt.appendChild(zeig);
+        if(backstage){
+          var weg = document.createElement('button');
+          weg.type = 'button'; weg.className = 'mini weg'; weg.textContent = 'Löschen';
+          weg.setAttribute('aria-label', 'Kurzlink löschen');
+          weg.addEventListener('click', function(){ loescheCode(x.code); });
+          akt.appendChild(weg);
+        }
+        row.appendChild(akt);
+        body.appendChild(row);
+      });
+    }).catch(function(){ body.innerHTML = '<div class="empty">Register nicht ladbar.</div>'; });
+  }
+
+  // --- Modus: QR-Code | Kurzlink (dieselbe App, zwei Türen) -------------------
+  var TEXTE = {
+    qr: {
+      titel: 'QR-Code-Generator',
+      lede: 'QR-Codes im Hausstil – für Links, WLAN-Zugänge, Kontakte, E-Mail und Text. Link-Codes laufen auf Wunsch als Kurzlink und zählen ihre Scans: anonym und ohne Fremddienst.',
+      inhaltTitel: 'Inhalt',
+      inhaltText: 'Was der Code beim Scannen auslösen soll. Nur Link-Codes können zählen – alles andere steht fest im Code selbst.',
+      gestaltTitel: 'Gestalt und Ausgabe',
+      gestaltText: 'Farbe und Format wählen – immer dunkel auf Weiss, damit jede Kamera den Code liest. SVG für Druck und Layout, PNG für Mail und Web.'
+    },
+    kurzlink: {
+      titel: 'Kurzlink',
+      lede: 'Eine kurze, hauseigene Adresse (tools.goetheanum.ch/s/…) statt langer Links – tippbar, QR-tauglich, nach dem Druck umhängbar, ohne Fremddienst. Jeder Aufruf wird still gezählt.',
+      inhaltTitel: 'Ziel',
+      inhaltText: 'Die lange Adresse, auf die der Kurzlink weiterleiten soll.',
+      gestaltTitel: 'Als QR-Code (optional)',
+      gestaltText: 'Denselben Kurzlink gleich als QR herunterladen – SVG für Druck und Layout, PNG für Mail und Web.'
+    }
+  };
+  var modus = 'qr';
+  function setModus(m){
+    modus = (m && String(m).indexOf('kurzlink') === 0) ? 'kurzlink' : 'qr';
+    document.body.setAttribute('data-modus', modus);
+    el('modusSeg').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.modus === modus ? 'true' : 'false'); });
+    var t = TEXTE[modus];
+    el('titel').textContent = t.titel; el('lede').textContent = t.lede;
+    el('inhaltTitel').textContent = t.inhaltTitel; el('inhaltText').textContent = t.inhaltText;
+    el('gestaltTitel').textContent = t.gestaltTitel; el('gestaltText').textContent = t.gestaltText;
+    // QR-Ausgabe: im QR-Modus offen, im Kurzlink-Modus eingeklappt (optional).
+    el('gestaltBox').open = (modus === 'qr');
+    if(modus === 'kurzlink'){
+      // Kurzlink-erst: auf Link zwingen, Kurzlink immer an, Code-Feld sichtbar.
+      typ = 'link';
+      el('typSeg').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.typ === 'link' ? 'true' : 'false'); });
+      ['link','wlan','kontakt','email','text'].forEach(function(p){ el('pane-' + p).hidden = (p !== 'link'); });
+      el('kurzToggle').checked = true; el('kurzFeld').hidden = false;
+    }
+    try { history.replaceState(null, '', modus === 'kurzlink' ? '?modus=kurzlink' : location.pathname); } catch(e){}
+    render();
+  }
+  segWire('modusSeg', 'modus', setModus);
+
+  // --- Start ---------------------------------------------------------------------
+  var params = new URLSearchParams(location.search);
+  var startModus = params.get('modus') || (location.hash === '#kurzlink' ? 'kurzlink' : 'qr');
+  el('kurzCode').value = neuerCode();
+  setModus(startModus);
+  ladeRegister();
+  // Backstage-Umschaltung (nav.js feuert „goe:intern") sofort spiegeln, damit
+  // die Löschknöpfe erscheinen/verschwinden – ohne Reload.
+  window.addEventListener('goe:intern', ladeRegister);
+</script>
+
+</body>
+</html>

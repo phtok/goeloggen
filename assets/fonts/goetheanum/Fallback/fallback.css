@@ -1,0 +1,26 @@
+/* Goetheanum · Begleit-Grotesk (Mengentext) + Nicht-Latein-Fallback.
+ * Alles SELBST gehostet (woff2), kein CDN. Alle Schriften SIL OFL.
+ *
+ *   Lesetext/Begleitung : Source Sans 3  (entschieden) – Latein + Griechisch + Kyrillisch
+ *   Kyrillischer Display-Fallback : Titillium Web [RUS] (Titillium-nah, für Titel in Hausschrift-Optik)
+ *   Arabisch : Cairo (Titillium-Erweiterung)
+ */
+
+/* — Begleitschrift / Lesetext: Source Sans 3 — */
+@font-face{font-family:"Source Sans 3";src:url("SourceSans3-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url("SourceSans3-SemiBold.woff2") format("woff2");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url("SourceSans3-Italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
+
+/* — Kyrillischer Display-Fallback: Titillium Web [RUS] (nur Kyrillisch) — */
+@font-face{font-family:"Titillium RUS";src:url("TitilliumRUS-Regular.woff2") format("woff2");font-weight:400;font-display:swap;unicode-range:U+0400-04FF,U+0500-052F}
+
+/* — Arabisch: Cairo (nur arabischer Bereich) — */
+@font-face{font-family:"Cairo";src:url("Cairo-Regular.woff2") format("woff2");font-weight:400;font-display:swap;unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF}
+
+/* — Stacks —
+ * Titel/Display laufen in der Goetheanum Schrift (separat eingebunden);
+ * fehlt dort ein Script, greift der Fallback. Mengentext in Source Sans 3. */
+:root{
+  --goe-text:    "Source Sans 3", "Cairo", system-ui, sans-serif;          /* Lesetext */
+  --goe-display: "Goetheanum Klar", "Titillium RUS", "Cairo", sans-serif;  /* Titel + Script-Fallback */
+}

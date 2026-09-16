@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="de">
+<head>
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum Icons</title>
+<meta name="description" content="Der Goetheanum Icon-Satz: 45 benannte Piktogramme, Pfeile und Kompass – als Webfont per Tastatur oder einzeln als SVG, PNG und PDF. Mit Anleitung für den Einsatz." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Farben, Schrift, Maße, Hell-Dunkel kommen aus tokens.css/base.css. Hier nur
+     das seiten-eigene Layout – keine eigenen Farbwerte, kein eigenes :root. */
+  @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2") format("woff2");font-display:block}
+  @font-face{font-family:"G Pfeile";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Pfeile-v2.7.woff2") format("woff2");font-display:block}
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
+
+  body{font-family:"G Klar","Helvetica Neue",Arial,sans-serif}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+
+  /* Kicker/Titel/Lede/Chip aus base.css (Titel = Deutlich, gemessene Skala – nie Laut). */
+  .hero{padding-block:60px 14px}
+  .lede{max-width:600px;margin-top:var(--s4)}  /* Grösse/Schnitt/Farbe aus base.css (Klar – lesbar, nicht Leise) */
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .chip b{color:var(--gold-ink);font-weight:400}
+
+  section{padding:46px 0;border-top:1px solid var(--line-soft)}
+  .shead{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:22px;flex-wrap:wrap}
+  /* .shead h2 aus base.css (Deutlich, t-h2). */
+  .shead p{color:var(--muted);font-size:14px;max-width:380px}
+
+  /* Werkzeugleiste: Gruppen-Reiter + Suche */
+  .toolbar{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .tabs button{font:inherit;font-size:var(--t-small);color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer;min-height:var(--tap)}
+  .tabs button.on{color:var(--gold-ink);border-color:var(--gold)}
+  .search{flex:1;min-width:180px;display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:var(--r-control);padding:0 12px;background:var(--field-bg)}
+  .search input{flex:1;border:0;background:none;color:var(--ink);font:inherit;font-size:16px;padding:11px 0;outline:none;min-height:var(--tap)}
+  .search input::placeholder{color:var(--muted)}
+
+  .igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px}
+  .icell{position:relative;border:1px solid var(--line-soft);border-radius:12px;padding:16px 8px 12px;background:var(--soft);text-align:center;transition:border-color .15s,background .15s}
+  .icell:hover{border-color:var(--gold);background:var(--paper)}
+  /* Icon LIVE aus dem Webfont gesetzt (currentColor → folgt Hell/Dunkel, B05). */
+  .icell .ico{font-family:"G Icons";font-size:46px;line-height:1;color:var(--ink);display:block;height:48px}
+  .icell .nm{font-size:var(--t-micro);color:var(--ink);margin-top:12px;line-height:1.25;min-height:2.5em}
+  .icell .key{display:inline-flex;align-items:center;gap:5px;margin-top:4px;font-size:var(--t-micro);color:var(--muted)}
+  .icell .key b{font-family:var(--font-mono);font-size:var(--t-micro);color:var(--gold-ink);font-weight:400;border:1px solid var(--line);border-radius:5px;padding:1px 6px;background:var(--paper)}
+  .icell .dl{display:flex;gap:4px;justify-content:center;margin-top:10px}
+  .icell .dl a{font-size:var(--t-micro);color:var(--gold-ink);text-decoration:none;letter-spacing:.02em;padding:6px 7px;border-radius:7px;line-height:1}
+  .icell .dl a:hover{text-decoration:underline;background:var(--paper)}
+  .empty{color:var(--muted);font-size:14px;padding:20px 0}
+
+  /* Einsatz – Panels gestapelt, volle Breite (die Tastatur braucht Platz). */
+  .use{display:grid;grid-template-columns:1fr;gap:18px;align-items:start}
+  .panel{border:1px solid var(--line);border-radius:var(--r-card);padding:20px 22px;background:var(--paper)}
+  .panel h3{font-weight:400;font-size:16px;margin:0 0 4px}
+  .panel p{color:var(--muted);font-size:var(--t-small);line-height:1.6;margin:0 0 14px;max-width:60ch}
+  /* Konsole (Fläche/Farbe/Schrift) aus base.css pre.code – hier nur Verortung. */
+  pre.code{position:relative;margin:0 0 14px;border-radius:12px;padding:16px}
+  .copybtn{position:absolute;top:10px;right:10px;font:inherit;font-size:var(--t-micro);border:1px solid var(--code-bg2);background:var(--code-bg2);color:var(--code-ink);border-radius:8px;padding:6px 11px;cursor:pointer;min-height:32px}
+  .copybtn:hover{filter:brightness(1.25)}
+  /* Tastatur-Belegung: das Icon ist der Held der Taste, der Buchstabe nur die
+     kleine Legende in der Ecke (wie das Zweitzeichen auf einer echten Taste).
+     Leere Tasten treten zurück, damit die Piktogramme den Blick führen. */
+  .kbd{display:flex;flex-direction:column;gap:8px;margin:6px 0 12px;overflow-x:auto;padding-bottom:8px}
+  .krow{display:flex;gap:8px}
+  .keycap{position:relative;flex:0 0 auto;width:62px;height:62px;border:1px solid var(--line);border-radius:12px;
+    background:var(--soft);display:flex;align-items:center;justify-content:center}
+  .keycap .lk{font-family:var(--font-mono);font-size:var(--t-micro);line-height:1;color:var(--muted)}
+  .keycap:not(.has){opacity:.5}
+  .keycap.has{border-color:var(--gold);background:var(--paper);box-shadow:0 1px 2px rgba(20,24,28,.05)}
+  .keycap.has .gl{font-family:"G Icons";font-size:40px;line-height:1;color:var(--ink)}
+  .keycap.has .gl.pf{font-family:"G Pfeile"}  /* Pfeile-Ebene: eigener Font, Grundtaste getippt */
+  /* Buchstaben-Legende: auf belegten Tasten klein in die untere rechte Ecke. */
+  .keycap.has .lk{position:absolute;right:7px;bottom:5px;color:var(--gold-ink)}
+  /* Zweitzeichen oben rechts: der fette Pfeil (Umschalt) – wie „&“ über „6“.
+     Nichts unter dem Lesbarkeits-Floor (B03): ⇧ auf --t-micro, Pfeil knapp grösser. */
+  .keycap .sh{position:absolute;right:6px;top:4px;display:flex;align-items:center;gap:1px;line-height:1}
+  .keycap .sh .up{font-size:var(--t-micro);line-height:1;color:var(--gold-ink)}
+  .keycap .sh .fg{font-family:"G Pfeile";font-size:15px;line-height:1;color:var(--gold-ink)}
+  /* Unter-Umschalter ‹ohne/mit Text› – nur unter Piktogramme sichtbar. */
+  .kbd-sub{margin:-2px 0 12px;font-size:var(--t-small)}
+  .kbd-sub[hidden]{display:none}
+  @media(max-width:560px){
+    .keycap{width:52px;height:52px;border-radius:10px}
+    .keycap.has .gl{font-size:33px}
+  }
+  .kbdcap{color:var(--muted);font-size:var(--t-small);line-height:1.6;margin:2px 0 0;max-width:60ch}
+  /* Live: tippen → Icons (Webfont per Taste). */
+  .try{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+  .try .out{font-family:"G Icons";font-size:40px;line-height:1.2;color:var(--ink);min-height:52px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--soft);word-break:break-word}
+  .try .out.pf{font-family:"G Pfeile"}   /* Pfeil-/Kompass-Ebene: das Tippfeld zeigt den Pfeile-Font */
+  .try input{font:inherit;font-size:16px;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 14px;background:var(--field-bg);min-height:var(--tap)}
+  /* Ebenen-Umschalter: Grundebene (Buchstaben → Piktogramme) / Pfeile & Kompass (eigener Font, normale Tasten). */
+  .kbd-layer{margin:6px 0 12px}
+  /* Tasten mit Zeichen sind Knöpfe – ein Klick kopiert das Zeichen (fürs Web). */
+  button.keycap{font:inherit;padding:0;color:inherit;-webkit-appearance:none;appearance:none}
+  .keycap.has{cursor:pointer}
+  .keycap.has:hover{border-color:var(--gold-ink)}
+  .keycap.has:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .kbd-toast{display:block;min-height:1.3em;font-size:var(--t-small);color:var(--gold-ink);opacity:0;transition:opacity .18s;margin:0 0 6px}
+  .kbd-toast.show{opacity:1}
+  .formats{list-style:none;margin:0;padding:0}
+  .formats li{display:flex;gap:10px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line-soft);font-size:var(--t-small);color:var(--muted);line-height:1.5}
+  .formats li:first-child{border-top:0}
+  .formats b{color:var(--ink);font-weight:400;min-width:42px;font-family:var(--font-mono);font-size:var(--t-micro)}
+
+  .dl-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:820px){.dl-cards{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.dl-cards{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px}
+  .card h3{font-weight:400;font-size:16px}.card p{color:var(--muted);font-size:var(--t-small);flex:1}
+  /* .btn (inkl. .primary, Hover) kommt vollständig aus base.css. */
+
+  footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--muted);font-size:var(--t-small)}
+  .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .frow strong{color:var(--ink);font-weight:400}
+</style>
+</head>
+<body>
+
+<script src="design-system/nav.js" data-root="./" data-section="schrift" data-active="icons"
+        data-onpage="Übersicht:#uebersicht|Einsatz:#einsatz|Download:#download"></script>
+
+<main>
+  <div class="wrap hero">
+    <div class="kick">Icons</div>
+    <h1>Goetheanum Icons</h1>
+    <p class="lede">Ein Satz Piktogramme in der Sprache der Hausschrift – Wegweisung, Hinweise, Pfeile und Kompass. Als Webfont per Tastatur gesetzt oder einzeln als SVG, PNG und PDF.</p>
+    <div class="meta">
+      <span class="chip"><b>45</b> benannte Icons</span>
+      <span class="chip"><b>SVG</b> · PNG · PDF</span>
+      <span class="chip"><b>Webfont</b> per Taste</span>
+    </div>
+  </div>
+
+  <section id="uebersicht"><div class="wrap">
+    <div class="shead"><h2>Übersicht.</h2>
+      <p>Jedes Icon live aus dem Webfont gesetzt. Such-Feld filtert nach Name; jede Kachel zeigt die Taste und lädt einzeln.</p></div>
+    <div class="toolbar">
+      <div class="tabs">
+        <button data-tab="piktogramm" class="on">Piktogramme</button>
+        <button data-tab="pfeil-kompass">Pfeile &amp; Kompass</button>
+        <button data-tab="alle">Alle</button>
+      </div>
+      <label class="search">
+        <span aria-hidden="true" style="color:var(--muted)">⌕</span>
+        <input type="search" id="q" placeholder="Icon suchen – z. B. WC, Pfeil, WLAN" aria-label="Icon suchen" />
+      </label>
+    </div>
+    <div class="igrid" id="igrid"></div>
+    <p class="empty" id="empty" hidden>Kein Icon gefunden. Suchbegriff anpassen oder einen anderen Reiter wählen.</p>
+  </div></section>
+
+  <section id="einsatz"><div class="wrap">
+    <div class="shead"><h2>Einsatz.</h2>
+      <p>Zwei Wege: als Webfont (eine Datei, per Taste gesetzt) oder als Einzeldatei für Layout und Druck.</p></div>
+    <div class="use">
+
+      <div class="panel">
+        <h3>Als Webfont – per Taste</h3>
+        <p>Eine Datei trägt alle Icons. Den <code>@font-face</code>-Block einbinden, einem Element die Icon-Schrift geben – dann sitzt jedes Piktogramm auf einer Taste.</p>
+        <div class="seg kbd-layer" role="group" aria-label="Tastaturebene">
+          <button type="button" data-layer="base" aria-pressed="true">Piktogramme</button>
+          <button type="button" data-layer="pfeile" aria-pressed="false">Pfeile &amp; Kompass</button>
+        </div>
+        <div class="seg kbd-sub" id="kbdsub" role="group" aria-label="Piktogramm-Ebene">
+          <button type="button" data-sub="ohne" aria-pressed="true">ohne Text</button>
+          <button type="button" data-sub="mit" aria-pressed="false">mit Text</button>
+        </div>
+        <div class="kbd" id="kbd"></div>
+        <span class="kbd-toast" id="kbdtoast" aria-live="polite"></span>
+        <p class="kbdcap" id="kbdcap"></p>
+        <pre class="code"><button class="copybtn" id="copyff">kopieren</button><code id="ffcode">@font-face{
+  font-family:"Goetheanum Icons";
+  /* A · Hausadresse — oder B: url("/fonts/Goetheanum-Icons-v2.7.woff2") */
+  src:url("https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2") format("woff2");
+  font-display:block;
+}
+.icon{ font-family:"Goetheanum Icons"; }
+/* &lt;span class="icon"&gt;h&lt;/span&gt; → Bioabfall */</code></pre>
+        <div class="try">
+          <label class="lab" for="tryin" style="font-size:var(--t-small);color:var(--muted)">Selbst probieren – Buchstaben tippen:</label>
+          <input id="tryin" type="text" value="heafu" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Tasten eingeben" />
+          <div class="out" id="tryout" aria-hidden="true">heafu</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Als Einzeldatei</h3>
+        <p>Jedes Icon liegt in drei Formaten bereit – fertig fürs Web, fürs Layout und für den Druck. Über jeder Kachel oben einzeln zu laden, alle zusammen im Download-Abschnitt.</p>
+        <ul class="formats">
+          <li><b>SVG</b><span>Fürs Web und für Vektor-Programme – frei skalierbar, in der CSS-Farbe einfärbbar.</span></li>
+          <li><b>PDF</b><span>Für den Druck und InDesign – vektorbasiert, verlustfrei in jeder Größe.</span></li>
+          <li><b>PNG</b><span>Für schnelle Verwendung in Office und Präsentationen – fester Pixelrahmen.</span></li>
+        </ul>
+        <p style="margin-top:14px">Im Fließtext oder als Aufzählungszeichen ist der Webfont am leichtesten; für ein einzelnes großes Symbol im Layout die SVG oder das PDF.</p>
+        <p class="note" style="margin-top:10px">Hinweis für Werkzeuge, die SVGs programmatisch setzen: Die Einzeldateien tragen seit Juli 2026 eine <b style="font-weight:var(--w-deutlich)">einheitliche Em-Box</b> (Ausnahme: die Wortmarke). Robust bleibt die Zentrierung auf die Tintenbox (per <code>getBBox()</code>) — Details im <a href="https://github.com/phtok/goeloggen/blob/main/design-system/werkzeugwissen.md">Werkzeugwissen</a>.</p>
+      </div>
+
+    </div>
+  </div></section>
+
+  <section id="download"><div class="wrap">
+    <div class="shead"><h2>Download.</h2>
+      <p>Alle Icons als Datei-Set, der Icon-Webfont fürs Web und der Beipackzettel mit der Tastatur-Belegung.</p></div>
+    <div class="dl-cards">
+      <div class="card"><h3>Icons als Set</h3><p>Alle Icons als SVG, PNG und PDF in einem Archiv.</p>
+        <a class="btn primary" href="assets/fonts/goetheanum/Goetheanum-Icons-v2.7-Einzeldateien.zip" download>Icon-ZIP</a></div>
+      <div class="card"><h3>Icon-Webfont</h3><p>Eine Datei, alle Icons – fürs Web (woff2) und zum Installieren (otf).</p>
+        <a class="btn" href="assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2" download>woff2</a>
+        <a class="btn" href="assets/fonts/goetheanum/Fonts/Goetheanum-Icons-v2.7.otf" download>OTF</a></div>
+      <div class="card"><h3>Pfeile &amp; Kompass</h3><p>Eigener Font: Pfeile und Kompass auf normalen Tasten – Schrift wählen, tippen (Umschalt = fett).</p>
+        <a class="btn" href="assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Pfeile-v2.7.woff2" download>woff2</a>
+        <a class="btn" href="assets/fonts/goetheanum/Fonts/Goetheanum-Pfeile-v2.7.otf" download>OTF</a></div>
+      <div class="card"><h3>Beipackzettel</h3><p>Übersicht und vollständige Tastatur-Belegung der Icons.</p>
+        <a class="btn" href="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf" download>PDF</a></div>
+    </div>
+    <p style="margin-top:18px;font-size:var(--t-small);color:var(--muted)">
+      <b style="color:var(--ink);font-weight:400">Teil der Hausschrift:</b> Die Icons stecken auch im Komplettpaket der
+      <a style="color:var(--gold-ink)" href="schriften.html">Goetheanum Schriften</a>. Lizenz: <a style="color:var(--gold-ink)" href="assets/fonts/goetheanum/OFL.txt">SIL Open Font License 1.1</a>.
+    </p>
+  </div></section>
+</main>
+
+<footer><div class="wrap frow">
+  <div style="max-width:540px;line-height:1.7">
+    <strong>Goetheanum Icons</strong> · Teil der Goetheanum Schriften 2.7 (SIL OFL).
+    45 benannte Piktogramme, Pfeile und Kompass – als Webfont per Tastatur und einzeln als SVG, PNG und PDF.
+  </div>
+  <div><a href="assets/fonts/goetheanum/OFL.txt">SIL Open Font License 1.1</a><br><a href="https://grafik.goetheanum.ch">grafik.goetheanum.ch</a></div>
+</div></footer>
+
+<script>
+  // Icon-Daten: eine Quelle der Wahrheit (icons.json). Pro Eintrag slug, label,
+  // codepoint (= Taste im Webfont), group. Nur benannte Icons werden gezeigt.
+  (function(){
+    var BASE="assets/fonts/goetheanum/Icons-Einzeldateien/";
+    var grid=document.getElementById('igrid'), empty=document.getElementById('empty'), q=document.getElementById('q');
+    var DATA=[], tab="piktogramm";
+    function key(cp){ try{ return String.fromCodePoint(parseInt(cp.replace("U+",""),16)); }catch(e){ return ""; } }
+    function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+    function render(){
+      var term=(q.value||"").trim().toLowerCase();
+      var rows=DATA.filter(function(it){
+        var inTab = tab==="alle" || it.group===tab;
+        var inTerm = !term || it.label.toLowerCase().indexOf(term)!==-1 || it.slug.indexOf(term)!==-1;
+        return inTab && inTerm && !it.fontonly;   // ‹mit Text› ist Font-only (keine Einzeldatei) – nur auf der Tastatur
+      });
+      grid.innerHTML="";
+      rows.forEach(function(it){
+        var k=key(it.codepoint);
+        // Pfeile/Kompass liegen im EIGENEN Font «Goetheanum Pfeile» auf Buchstaben-
+        // tasten (nicht auf dem PUA-Codepoint). Darum dort die echte Pfeile-Taste
+        // zeigen – sonst stünde das untypbare PUA-Zeichen (Tofu) im Feld.
+        var pf = it.group==='pfeil-kompass';
+        var taste = k, fett = false;
+        if (pf) {
+          var base = it.slug.replace(/-fett$/,''); fett = /-fett$/.test(it.slug);
+          var bk = PFEIL_REV[base];
+          taste = bk ? (fett ? '⇧'+bk : bk) : '';
+        }
+        var cell=document.createElement('div'); cell.className='icell';
+        cell.setAttribute('role','group'); cell.setAttribute('aria-label',it.label);
+        cell.innerHTML=
+          '<span class="ico" aria-hidden="true">'+esc(k)+'</span>'+
+          '<div class="nm">'+esc(it.label)+'</div>'+
+          (taste ? '<div class="key">'+(pf?'Pfeile-Taste':'Taste')+' <b>'+esc(taste)+'</b></div>' : '')+
+          '<div class="dl">'+
+            '<a download href="'+BASE+'svg/'+it.slug+'.svg">SVG</a>'+
+            '<a download href="'+BASE+'png/'+it.slug+'.png">PNG</a>'+
+            '<a download href="'+BASE+'pdf/'+it.slug+'.pdf">PDF</a>'+
+          '</div>';
+        grid.appendChild(cell);
+      });
+      empty.hidden = rows.length>0;
+    }
+    // Drei Ebenen, aber nur zwei Fonts – wie auf einer echten Tastatur zwei Zeichen
+    // je Taste liegen (unten tippen, oben mit ⇧):
+    //  • Piktogramme  ‹ohne Text›  – Grundtaste, Icon-Font
+    //  • Piktogramme  ‹mit Text›   – Umschalt-Glyphe (Grosstaste), Icon-Font
+    //  • Pfeile & Kompass          – eigener Font «Goetheanum Pfeile»; die vier
+    //    Richtungspfeile tragen den fetten Pfeil als ⇧-Zweitzeichen oben rechts.
+    var PFEIL_KEYS={ '6':'pfeil-hoch','t':'pfeil-links','u':'pfeil-rechts','h':'pfeil-runter',
+      'y':'kompass-1','x':'kompass-2','c':'kompass-3','v':'kompass-4',
+      '2':'pfeil-gebogen-1','0':'pfeil-gebogen-2','q':'pfeil-gebogen-3','e':'pfeil-gebogen-4',
+      'o':'pfeil-gebogen-5','ü':'pfeil-gebogen-6','s':'pfeil-gebogen-7','ö':'pfeil-gebogen-8' };
+    // Umkehrung slug → Taste, für die Kachel-Anzeige im Reiter «Pfeile & Kompass».
+    var PFEIL_REV={}; Object.keys(PFEIL_KEYS).forEach(function(t){ PFEIL_REV[PFEIL_KEYS[t]]=t; });
+    var FAT_SHIFT={ '6':'&','t':'T','u':'U','h':'H' };   // fette Richtungspfeile (Umschalt)
+    var ROWS=[['1','2','3','4','5','6','7','8','9','0','ß'],
+              ['q','w','e','r','t','z','u','i','o','p','ü'],
+              ['a','s','d','f','g','h','j','k','l','ö','ä'],
+              ['<','y','x','c','v','b','n','m']];
+    var kbdLayer='base', mainLayer='pikto', subText=false, copyTimer;
+    function copyGlyph(g,label){
+      if(navigator.clipboard) navigator.clipboard.writeText(g);
+      var t=document.getElementById('kbdtoast'); if(!t) return;
+      t.textContent=label+' kopiert'; t.classList.add('show');
+      clearTimeout(copyTimer); copyTimer=setTimeout(function(){ t.classList.remove('show'); },1400);
+    }
+    function buildKbd(){
+      var box=document.getElementById('kbd'); if(!box) return;
+      var byChar={}, bySlug={};
+      DATA.forEach(function(it){ var k=key(it.codepoint); if(k) byChar[k]=it; bySlug[it.slug]=it; });
+      box.innerHTML="";
+      var pfeile = kbdLayer==='pfeile', text = kbdLayer==='text';
+      ROWS.forEach(function(r){
+        var row=document.createElement('div'); row.className='krow';
+        r.forEach(function(ch){
+          var it=null, glClass='gl', glChar=ch, shHTML='';
+          if(pfeile){
+            it = bySlug[PFEIL_KEYS[ch]];
+            if(it){ glClass='gl pf'; glChar=ch;
+              if(FAT_SHIFT[ch]) shHTML='<span class="sh" aria-hidden="true"><span class="up">⇧</span><span class="fg">'+esc(FAT_SHIFT[ch])+'</span></span>';
+            }
+          } else if(text){
+            var up=ch.toUpperCase(); var t=byChar[up];
+            if(t && t.group==='piktogramm-text'){ it=t; glChar=up; }
+          } else {
+            it = byChar[ch]; glChar=ch;
+          }
+          if(it){
+            var g=key(it.codepoint), legend=ch.toUpperCase();
+            var b=document.createElement('button'); b.type='button'; b.className='keycap has';
+            b.title=it.label+' – kopieren'; b.setAttribute('aria-label',it.label+' kopieren');
+            b.innerHTML='<span class="'+glClass+'" aria-hidden="true">'+esc(glChar)+'</span>'+shHTML+'<span class="lk">'+esc(legend)+'</span>';
+            b.addEventListener('click',(function(gg,lab){ return function(){ copyGlyph(gg,lab); }; })(g,it.label));
+            row.appendChild(b);
+          } else {
+            var cap=document.createElement('div'); cap.className='keycap';
+            cap.innerHTML='<span class="lk">'+esc(ch.toUpperCase())+'</span>';
+            row.appendChild(cap);
+          }
+        });
+        box.appendChild(row);
+      });
+      var sub=document.getElementById('kbdsub'); if(sub) sub.hidden = pfeile;
+      var G='<b style="color:var(--gold-ink);font-weight:400">';
+      var cap=document.getElementById('kbdcap');
+      if(cap) cap.innerHTML = pfeile
+        ? 'Pfeile & Kompass – eigener Font '+G+'‹Goetheanum Pfeile›</b>: Taste tippen. Das kleine Zeichen oben rechts mit '+G+'⇧ (Umschalt)</b> ist der fette Pfeil. Ein Klick kopiert.'
+        : text
+          ? 'Piktogramme '+G+'mit Text</b> – dieselben Zeichen mit eingeprägter Beschriftung, auf der '+G+'Umschalt-Taste (⇧)</b>. Ein Klick kopiert.'
+          : 'Piktogramme – jede '+G+'goldene</b> Taste trägt ein Zeichen; ein Klick kopiert es. Über '+G+'‹mit Text›</b> die beschrifteten Varianten (Umschalt), rechts der Pfeile-Font.';
+    }
+    // Das Tippfeld folgt der Ebene: Pfeile → Pfeile-Font (6 t u h · y x c v),
+    // ‹mit Text› → Grosstasten im Icon-Font, sonst die Grund-Piktogramme.
+    function syncTry(){
+      var out=document.getElementById('tryout'), inp=document.getElementById('tryin'),
+          lab=document.querySelector('.try .lab');
+      if(!out||!inp) return;
+      var pf = kbdLayer==='pfeile', tx = kbdLayer==='text';
+      out.classList.toggle('pf', pf);
+      inp.value = pf ? '6tuh yxcv' : (tx ? 'HEAFU' : 'heafu');
+      out.textContent = inp.value;
+      if(lab) lab.textContent = pf
+        ? 'Selbst probieren – Pfeil- und Kompass-Tasten tippen (6 t u h · y x c v):'
+        : tx ? 'Selbst probieren – Grosstasten tippen (Umschalt = mit Text):'
+        : 'Selbst probieren – Buchstaben tippen:';
+    }
+    function applyLayer(){
+      kbdLayer = mainLayer==='pfeile' ? 'pfeile' : (subText ? 'text' : 'base');
+      buildKbd(); syncTry();
+    }
+    document.querySelectorAll('.kbd-layer button').forEach(function(b){
+      b.addEventListener('click',function(){
+        document.querySelectorAll('.kbd-layer button').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+        b.setAttribute('aria-pressed','true');
+        mainLayer = b.dataset.layer==='pfeile' ? 'pfeile' : 'pikto';
+        applyLayer();
+      });
+    });
+    document.querySelectorAll('.kbd-sub button').forEach(function(b){
+      b.addEventListener('click',function(){
+        document.querySelectorAll('.kbd-sub button').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+        b.setAttribute('aria-pressed','true');
+        subText = b.dataset.sub==='mit';
+        if(mainLayer==='pikto') applyLayer();
+      });
+    });
+    document.querySelectorAll('.tabs button').forEach(function(b){
+      b.addEventListener('click',function(){
+        document.querySelectorAll('.tabs button').forEach(function(x){x.classList.remove('on');});
+        b.classList.add('on'); tab=b.dataset.tab; render();
+      });
+    });
+    q.addEventListener('input',render);
+    fetch(BASE+"icons.json").then(function(r){return r.json();}).then(function(d){
+      DATA=d.filter(function(it){ return !/^U\+/.test(it.label); });  // nur benannte
+      render(); buildKbd();
+    }).catch(function(){
+      empty.hidden=false; empty.textContent="Icon-Liste konnte nicht geladen werden. Einzeldateien stehen im Download-Abschnitt bereit.";
+    });
+  })();
+
+  // Live-Demo: Eingabe spiegelt sich in der Icon-Schrift.
+  (function(){
+    var i=document.getElementById('tryin'), o=document.getElementById('tryout');
+    if(!i||!o) return;
+    function u(){ o.textContent=i.value; } i.addEventListener('input',u); u();
+  })();
+
+  // Code kopieren.
+  (function(){
+    var b=document.getElementById('copyff'); if(!b) return;
+    b.addEventListener('click',function(){
+      var t=document.getElementById('ffcode').innerText;
+      if(navigator.clipboard) navigator.clipboard.writeText(t);
+      var o=b.textContent; b.textContent='kopiert ✓'; setTimeout(function(){b.textContent=o;},1200);
+    });
+  })();
+</script>
+
+<!-- Statistik · eigener Supabase-Server (kein Fremddienst, keine Cookies, keine IP/Personendaten).
+     Zählt Seitenaufruf und jeden Download über die geschützte Funktion schriften_bump(). -->
+<script>
+  (function () {
+    var SB = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
+    var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
+    function bump(kind, label) {
+      try {
+        fetch(SB + '/rest/v1/rpc/schriften_bump', {
+          method: 'POST', keepalive: true,
+          headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
+          body: JSON.stringify({ p_kind: kind, p_label: label })
+        }).catch(function () {});
+      } catch (e) {}
+    }
+    bump('pageview', 'icons');
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[download]');
+      if (!a) return;
+      bump('download', (a.getAttribute('href') || '').split('/').pop());
+    });
+  })();
+</script>
+</body>
+</html>

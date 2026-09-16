@@ -1,0 +1,306 @@
+<!doctype html>
+<!-- =============================================================================
+     Tagungsprogramm · Landwirtschaftliche Tagung – Rückseite des Faltblatts
+     Quelle: webseite.json (von agriculture-conference.org, Wächter) + blatt.json
+     (nur auf dem Blatt). Komposition: programm.js · Export: idml-export.js.
+     Gebaut aus design-system/starter.html – nur Tokens + base.css (DS01–DS07).
+     Regel-IDs: Kicker normal (G05) · Betonung Laut, ein Merkmal (G01/G05) ·
+     Ziffern tabellarisch (G25) · B01–B05 über Tokens · Sektionsfarbe --sek-lws.
+     Ablauf und Pflege: ANLEITUNG.md in diesem Ordner.
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Tagungsprogramm · Goetheanum</title>
+<meta name="description" content="Rückseite des Programm-Faltblatts der Landwirtschaftlichen Tagung – Zeitplan und Arbeitsgruppen von der Tagungswebseite, als IDML für InDesign." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  /* Nur seiteneigene Gestaltung – alles Gemeinsame kommt aus base.css. */
+  .hero{padding-block:clamp(36px,6vw,60px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(28px,4.6vw,44px);max-width:20ch}
+  .hero .lede{margin-top:var(--s4);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+
+  .leiste{display:flex;flex-wrap:wrap;gap:var(--s3);align-items:center;margin-top:var(--s5)}
+  .leiste .readout{margin-inline-end:auto}
+
+  /* Kopf des Blatts: Motto zweisprachig, wie auf dem Faltblatt */
+  .kopf{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:var(--s5)}
+  .kopf .motto{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(22px,3vw,30px);line-height:1.2;white-space:pre-line}
+  .kopf .zeile{margin-top:var(--s2);color:var(--muted);font-size:var(--t-small);line-height:1.5}
+
+  /* Zeitplan: vier Tage nebeneinander, auf dem Telefon untereinander */
+  .tage{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-top:var(--s5)}
+  .tag{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);overflow:hidden}
+  .tag h3{background:var(--sek-lws);color:var(--on-sek-lws);padding:var(--s3) var(--s4);font-size:var(--t-h3);font-weight:var(--w-deutlich);line-height:1.2}
+  .tag h3 small{display:block;font-family:var(--font-text);font-size:var(--t-small);font-weight:var(--w-text);margin-top:2px}
+  .zeile-z{display:grid;grid-template-columns:3.6em 1fr;gap:var(--s3);padding:var(--s3) var(--s4);border-top:1px solid var(--line-soft);align-items:baseline}
+  .zeile-z .zeit{font-family:var(--font-text);font-variant-numeric:tabular-nums lining-nums;color:var(--muted);font-size:var(--t-small);text-align:right}
+  .zeile-z p{margin:0;font-size:var(--t-small);line-height:1.5;white-space:pre-line}
+  .zeile-z p+p{margin-top:2px}
+  .zeile-z p .en{font-weight:var(--w-deutlich)}
+  .zeile-z p .de{color:var(--muted)}
+  .zeile-z p.namen{color:var(--muted);font-family:var(--font-text)}
+  .zeile-z .offen{border-bottom:2px solid var(--gold)}
+
+  /* Arbeitsgruppen als Karten in Spalten – wie die Kolumnen auf dem Blatt */
+  .ag-grid{display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fill,minmax(240px,1fr));margin-top:var(--s5)}
+  .ag{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s4);background:var(--paper);display:grid;gap:var(--s2);align-content:start}
+  .ag .nr{font-family:var(--font-text);font-variant-numeric:tabular-nums lining-nums;color:var(--gold-ink);font-size:var(--t-small);font-weight:600}
+  .ag .t1{font-size:var(--t-body);line-height:1.35;font-weight:var(--w-deutlich)}
+  .ag .t2{font-size:var(--t-small);line-height:1.4;color:var(--muted)}
+  .ag .namen{font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;color:var(--muted);white-space:pre-line}
+  .ag.fehlt{border-color:var(--gold)}
+
+  .hinweise{display:grid;gap:var(--s2);margin-top:var(--s4);max-width:72ch}
+  .hinweise li{display:flex;gap:var(--s3);align-items:baseline;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5}
+  .hinweise .chip{flex:0 0 auto}
+
+  #protokoll{margin-top:var(--s3);white-space:pre-line}
+  @media (max-width:640px){ .zeile-z{grid-template-columns:3.2em 1fr} }
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-section="generatoren" data-active="lt-programm"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Sektion für Landwirtschaft</span>
+    <h1>Tagungsprogramm <span id="jahr"></span></h1>
+    <p class="lede">Rückseite des Programm-Faltblatts: Zeitplan und Arbeitsgruppen, so wie sie auf der Tagungswebseite stehen – als Vorschau und als IDML für InDesign.</p>
+
+    <div class="leiste">
+      <span class="readout" id="quelle-stand">Gespeicherter Stand: <b id="stand">–</b></span>
+      <button class="btn" type="button" id="abrufen">Von der Webseite holen</button>
+      <a class="btn" href="https://www.agriculture-conference.org/programm" target="_blank" rel="noopener">Programm auf der Webseite</a>
+      <button class="btn primary" type="button" id="export">IDML exportieren</button>
+    </div>
+    <p class="note" id="zaehler"></p>
+    <p class="note" id="protokoll" hidden></p>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Offene Punkte</h2>
+      <p>Was auf der Webseite noch fehlt oder nur in einer Sprache steht. Ergänzungen fürs Blatt gehören in <a href="blatt.json">blatt.json</a>.</p>
+    </div>
+    <ul class="hinweise" id="hinweise"></ul>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Kopf</h2>
+      <p>Die Plakatseite ist von Hand gesetzt (unterschnitten) – der Export fasst sie nicht an. Hier steht nur, ob sie noch zu den Daten passt.</p>
+    </div>
+    <ul class="hinweise" id="abgleich"></ul>
+    <div class="kopf">
+      <div class="card soft">
+        <div class="motto" id="motto-en"></div>
+        <div class="zeile" id="datum-en"></div>
+      </div>
+      <div class="card soft">
+        <div class="motto" id="motto-de"></div>
+        <div class="zeile" id="datum-de"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Zeitplan</h2>
+      <p>Plenum von der Webseite, Pausen und feste Zeiten vom Blatt. Goldene Linie: Titel auf der Webseite noch offen.</p>
+    </div>
+    <div class="tage" id="tage"></div>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Arbeitsgruppen am Vormittag</h2>
+      <p id="fenster-vormittag"></p>
+    </div>
+    <div class="ag-grid" id="ag-vormittag"></div>
+  </section>
+
+  <section>
+    <div class="shead">
+      <h2>Arbeitsgruppen am Nachmittag</h2>
+      <p id="fenster-nachmittag"></p>
+    </div>
+    <div class="ag-grid" id="ag-nachmittag"></div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script type="module">
+  import { komponieren, tagesansicht, abgleichen } from './programm.js';
+  import { webseiteLesen } from './webseite-lesen.js';
+  import { exportIdml } from './idml-export.js';
+
+  /* Die Tagungsseite darf der Browser nicht selbst lesen (fremde Herkunft) –
+     das Fenster dorthin ist die Edge Function lt-programm-quelle. Gelesen wird
+     hier, mit demselben Modul wie auf der Kommandozeile. */
+  const QUELLE = 'https://dagcsnfrlbpxcmdimnrw.supabase.co/functions/v1/lt-programm-quelle';
+
+  const $ = (s) => document.querySelector(s);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+  const zeit = (iso) => (iso ? new Date(iso).toLocaleString('de-CH', { dateStyle: 'medium', timeStyle: 'short' }) : 'unbekannt');
+
+  const [gespeichert, blatt, slots] = await Promise.all(['webseite.json', 'blatt.json', 'vorlage/slots.json']
+    .map((p) => fetch(p).then((r) => r.json())));
+
+  let webseite = gespeichert;
+  let modell = komponieren(webseite, blatt);
+  let live = false;
+
+  const ART = { offen: 'offen', uebersetzung: 'Übersetzung', struktur: 'Rahmen', abgleich: 'Abgleich' };
+
+  const absatzNode = (a) => {
+    const p = el('p');
+    if (typeof a === 'string') { p.textContent = a; return p; }
+    if (a.runs) {
+      a.runs.forEach((r) => p.append(el('span', r.laut ? 'en' : 'de', r.text)));
+      return p;
+    }
+    if (a.laut) { const s = el('span', 'en', a.laut); if (a.offen) s.classList.add('offen'); p.append(s); }
+    if (a.laut && a.ruhig) p.append(' ');
+    if (a.ruhig) { const s = el('span', a.laut ? 'de' : '', a.ruhig); if (a.offen && !a.laut) s.classList.add('offen'); p.append(s); }
+    if (a.text) p.append(a.text);
+    if (!a.laut && a.ruhig && !a.stil) p.classList.add('namen');
+    return p;
+  };
+
+  function zeichnen() {
+    $('#jahr').textContent = modell.tagung.jahr;
+    $('#stand').textContent = zeit(webseite.stand);
+    $('#quelle-stand').firstChild.textContent = live ? 'Eben von der Webseite geholt: ' : 'Gespeicherter Stand: ';
+    $('#motto-en').textContent = modell.tagung.motto_en;
+    $('#motto-de').textContent = modell.tagung.motto_de;
+    $('#datum-en').textContent = `${blatt.kopf.tagung_en} · ${modell.tagung.datum_en}`;
+    $('#datum-de').textContent = `${blatt.kopf.tagung_de} · ${modell.tagung.datum_de}`;
+
+    // Offene Punkte
+    const ul = $('#hinweise');
+    ul.replaceChildren();
+    if (!modell.hinweise.length) ul.append(el('li', 'note', 'Nichts offen.'));
+    for (const h of modell.hinweise) {
+      const li = el('li');
+      li.append(el('span', 'chip', ART[h.art] || h.art), el('span', '', h.text));
+      ul.append(li);
+    }
+
+    // Abgleich der von Hand gesetzten Rahmen
+    const ab = $('#abgleich');
+    ab.replaceChildren();
+    for (const a of abgleichen(modell, slots)) {
+      const li = el('li');
+      li.append(el('span', 'chip', a.stimmt ? 'stimmt' : 'prüfen'),
+        el('span', '', a.stimmt ? `${a.slot}: ${a.ist}` : `${a.slot}: in der Vorlage steht «${a.ist}» – in den Daten fehlt ${a.fehlt.join(', ')}.`));
+      ab.append(li);
+    }
+
+    // Zeitplan
+    const tage = $('#tage');
+    tage.replaceChildren();
+    for (const tag of tagesansicht(modell, blatt)) {
+      const box = el('article', 'tag');
+      const h = el('h3', '', `${tag.en} ${tag.de}`);
+      h.append(el('small', '', `${tag.datum_en} · ${tag.datum_de}`));
+      box.append(h);
+      for (const z of tag.zeilen) {
+        const row = el('div', 'zeile-z');
+        row.append(el('span', 'zeit', z.zeit));
+        const inhalt = el('div');
+        z.absaetze.forEach((a, i) => { const p = absatzNode(a); if (i > 0 && !(typeof a === 'string') && !a.laut && !a.runs) p.classList.add('namen'); inhalt.append(p); });
+        row.append(inhalt);
+        box.append(row);
+      }
+      tage.append(box);
+    }
+
+    // Arbeitsgruppen
+    const fenster = (block) => (webseite.arbeitsgruppen.find((a) => a.block === block) || {}).fenster || '';
+    $('#fenster-vormittag').textContent = fenster('vormittag');
+    $('#fenster-nachmittag').textContent = fenster('nachmittag');
+    $('#ag-vormittag').replaceChildren();
+    $('#ag-nachmittag').replaceChildren();
+    for (const ag of modell.arbeitsgruppen) {
+      const k = el('article', 'ag');
+      if (ag.sprachen.length > 1 && !ag.titel_2) k.classList.add('fehlt');
+      k.append(el('div', 'nr', [ag.nr, ...ag.sprachen_label].join(' · ')));
+      k.append(el('div', 't1', ag.titel_1));
+      if (ag.titel_2) k.append(el('div', 't2', ag.titel_2));
+      k.append(el('div', 'namen', ag.namen));
+      $(ag.block === 'vormittag' ? '#ag-vormittag' : '#ag-nachmittag').append(k);
+    }
+    $('#zaehler').textContent = `${modell.zaehler.plenum} Plenumsveranstaltungen · ${modell.zaehler.vormittag} Arbeitsgruppen am Vormittag · ${modell.zaehler.nachmittag} am Nachmittag`;
+  }
+
+  function melden(text) { const p = $('#protokoll'); p.hidden = false; p.textContent = text; }
+
+  // Von der Webseite holen – auf Knopfdruck, nicht nach Uhr.
+  $('#abrufen').addEventListener('click', async () => {
+    const knopf = $('#abrufen');
+    knopf.disabled = true;
+    melden('Die Tagungsseite wird gelesen …');
+    try {
+      const q = await (await fetch(`${QUELLE}?frisch`)).json();
+      if (!q.seiten?.programm) throw new Error(q.fehler?.join(' · ') || 'Die Programmseite kam nicht an');
+      const frisch = webseiteLesen(q.seiten.programm, q.seiten.start);
+      frisch.stand = q.stand;
+      const gleich = frisch.pruefsumme === gespeichert.pruefsumme;
+      webseite = frisch; live = true;
+      modell = komponieren(webseite, blatt);
+      zeichnen();
+      melden(gleich
+        ? `Gelesen: unverändert gegenüber dem gespeicherten Stand vom ${zeit(gespeichert.stand)}.`
+        : `Gelesen: die Webseite hat sich seit dem ${zeit(gespeichert.stand)} geändert. Die Vorschau und der Export zeigen jetzt den frischen Stand.`);
+    } catch (fehler) {
+      melden(`Abruf fehlgeschlagen: ${fehler.message}. Die Vorschau zeigt weiter den gespeicherten Stand.`);
+    } finally {
+      knopf.disabled = false;
+    }
+  });
+
+  // Export
+  $('#export').addEventListener('click', async () => {
+    const knopf = $('#export');
+    knopf.disabled = true;
+    melden('Die Vorlage wird geladen …');
+    try {
+      const vorlage = new Uint8Array(await (await fetch(`vorlage/${slots.vorlage}`)).arrayBuffer());
+      const { bytes, protokoll } = await exportIdml(vorlage, modell, slots);
+      const name = `LT-${modell.tagung.jahr}-Programm.idml`;
+      const url = URL.createObjectURL(new Blob([bytes], { type: 'application/vnd.adobe.indesign-idml-package' }));
+      const a = Object.assign(document.createElement('a'), { href: url, download: name });
+      document.body.append(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      const ok = protokoll.filter((z) => z.startsWith('✓')).length;
+      const hand = protokoll.filter((z) => z.startsWith('·')).length;
+      melden(`${name}: ${ok} Rahmen befüllt, ${hand} von Hand gesetzte unangetastet. Quelle: ${live ? 'frisch von der Webseite' : `gespeicherter Stand vom ${zeit(webseite.stand)}`}.`);
+    } catch (fehler) {
+      melden(`Export fehlgeschlagen: ${fehler.message}`);
+    } finally {
+      knopf.disabled = false;
+    }
+  });
+
+  zeichnen();
+</script>
+
+</body>
+</html>

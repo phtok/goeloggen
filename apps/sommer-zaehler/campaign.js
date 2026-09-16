@@ -1,0 +1,2420 @@
+// =============================================================================
+// campaign.js · geteilte Logik der Kampagnen-App. Aus dem Cockpit extrahiert.
+// Jede Seite laedt dieselbe Datei; Renderer und Verdrahtung sind element-
+// gewaechtert (if el(...)), sodass jede Seite nur ihre eigenen Abschnitte
+// rendert. Nur Aggregate verlassen die DB (RPCs). Backend unveraendert.
+// =============================================================================
+  /* ── Einstellungen · HART VERDRAHTET ──────────────────────────────────────
+     Zahlen der Anmeldungen kommen live aus dem Backend. Zielmarken, Preise und
+     Bleibe-Quote werden hier gesetzt – sobald die echten Werte vorliegen, nur
+     diese Werte anpassen. */
+  var CONFIG = {
+    start: '2026-07-03',            // Aktionsstart (Nachmittag 3. Juli 2026)
+    // Aktionsende. Am 7. August um drei Tage verlängert (zuvor 8. August) –
+    // und zwar STILL: keine Ankündigung, keine Mail, kein neues Datum auf den
+    // Aktionsseiten (Beschluss 7. August). Für die Zahlen heisst das: Die Tage
+    // vom 9. bis 11. August sind ein Nachzügler-Fenster ohne eigenen Impuls;
+    // wer die Aktion auswertet, darf sie nicht mit den Aktionstagen vergleichen
+    // – dort stand ein Versand dahinter, hier nur die offene Tür.
+    // Dieses Datum steuert alles Zeitliche: Resttage, «Abos/Tag nötig», die
+    // Breite des Pulses, die Fortschreibung im Befund und das Wochenraster des
+    // Zeitbands. Seit dem 25. August kennt es auch die Ingestion, als
+    // `aktion_ende` in sommer2026_config: Anmeldungen danach werden geschrieben,
+    // aber als art = 'nachfrist' – sie fallen aus der View sommer2026_neuabos
+    // und damit aus jeder Zahl. Vorher war die Zählung nach hinten offen, und
+    // 23 Anmeldungen vom 12. bis 25. August standen in den Aktionszahlen, obwohl
+    // das Angebot seither drei Tage Probe gibt statt drei Monate gratis.
+    ende:  '2026-08-11',
+    // Drei Szenarien statt einer Quote (Beschluss 7. August). Eine einzelne
+    // Projektion sieht nach Wissen aus, wo eine Spanne die Wahrheit ist: Es hat
+    // noch KEINE Kohorte entschieden – die erste (Juli) tut es frühestens ab
+    // dem 3. Oktober 2026, bis dahin trägt keine Anmeldung den Status «bleibt».
+    //
+    // Zwei Stellschrauben, nicht eine:
+    // 1) bleibt – wer nach der Gratis-Zeit zahlend bleibt, je Produkt. Die
+    //    Wochenschrift steht höher als goetheanum.tv: Beide Angebote sind
+    //    Opt-out, aber dort ist das Nein einen Klick weit weg, und die
+    //    monatliche Kartenbelastung erinnert jeden Monat an die Entscheidung.
+    //    ACHTUNG beim Frühindikator: Er trägt diese Annahme NICHT. Im
+    //    Gratis-Zeitraum kündigen allein goetheanum.tv-Abos – aber nur, weil
+    //    allein goetheanum.tv Kündigungen meldet. Für die Wochenschrift gibt es
+    //    keinen Meldeweg (Paperform sendet nur Anmeldungen, Zoho ist nicht
+    //    angebunden); ihre 0 ist ein blinder Fleck, kein Messwert. Die Quoten
+    //    hier bleiben darum eine begründete Annahme und stützen sich auf die
+    //    Bauart des Ausstiegs, nicht auf eine Beobachtung. Was gemessen ist,
+    //    läuft live im Cockpit unter «Laufende Kündigungen»
+    //    (RPC sommer2026_kuendigungen).
+    // 2) monate – wie viele der zwölf Folgemonate ein MONATLICHES Abo im
+    //    Schnitt trägt. Über 85 Prozent der Abos zahlen monatlich; wer für sie
+    //    zwölf volle Monate ansetzt, rechnet mit einer Treue, die niemand
+    //    zugesagt hat. Jährliche Abos zählen voll – das Jahr ist bezahlt.
+    //    Ein Monat Verweildauer ist rund CHF 6200 wert, der grösste Hebel.
+    // Herleitung und Empfindlichkeit: docs/einnahmen-perspektive-10-08.md
+    // (Stand 10. August, gerechnet auf 1042 Anmeldungen / 1019 aktive Abos nach
+    // der neuen Zählregel – die Fassung vom 8. August rechnete auf 902).
+    szenarien: {
+      doc:     'docs/einnahmen-perspektive-10-08.md',
+      referenz:'erwartet',                 // dieses trägt die grosse Zahl und den Rückfluss
+      liste: [
+        { key:'vorsichtig', name:'Vorsichtig', bleibt:{ gtv:0.35, wos:0.55 }, monate:7  },
+        { key:'erwartet',   name:'Erwartet',   bleibt:{ gtv:0.50, wos:0.70 }, monate:9  },
+        { key:'gut',        name:'Gut',        bleibt:{ gtv:0.65, wos:0.85 }, monate:11 }
+      ]
+    },
+    zielGesamt: 500,                // Gesamtziel der Aktion (neue Abos) – GF-Vorgabe, zurückgestellt 30.7.
+    // Zielmarke je Strom – Zwischenmarken, Summe = Gesamtziel. Historie: 24.7.
+    // von 1000 auf 700 gesenkt (Faktor 0,7); 30.7. zurück auf die ursprüngliche
+    // GF-Vorgabe 500, Ströme proportional mitgezogen (Faktor 5/7), damit die
+    // Ströme-Tabelle nicht gegen den Stand-Block rechnet. goetheanum.tv zählt
+    // seither als EIN Strom ohne Sprachtrennung (Beschluss 30.7.): die Sprache
+    // ist dort nicht gemessen, die alte EN-Zeile war nur eine Untergrenze.
+    // Das Gesamtziel ist am 5. August überschritten worden. Die Marken bleiben
+    // stehen, wie sie vereinbart waren – eine nachträglich angehobene Zielmarke
+    // wäre keine Messung mehr, sondern eine Erzählung. Der Stand-Block zeigt die
+    // Übererfüllung in Grün, die Ströme-Tabelle zeigt sie je Strom in Prozent.
+    ziele: {
+      'wos.de.papier': 100, 'wos.de.digital': 125,
+      'wos.en.digital': 60,
+      'gtv': 215
+    },
+    // Anzeige-Währung aller Geldbeträge (Kosten, CPA, Summenzeile Folgejahr-Umsatz).
+    waehrung: 'CHF',
+    // Umrechnung EUR→CHF – nur für die Summenzeile (EUR-Umsatz in die
+    // CHF-Gesamtsumme einrechnen). Bei Kursbewegung hier nachführen.
+    eurChf: 0.93,
+    // ECHTE Preise (Stand 17.7.2026): Wochenschrift aus den vier Kampagnen-
+    // Formularen (Paperform, CHF/EUR × Papier&Online/Online), goetheanum.tv aus
+    // dem Uscreen-Store (rechnet ausschliesslich in EUR: 14.90/Monat, 149/Jahr).
+    // «Ermässigt» ist im Shop KEIN eigener Preis, sondern läuft über Coupons
+    // (20/30/50 %) – ermässigte Zeilen rechnen darum zum Standardpreis (Fallback).
+    // Das Förderabo der Wochenschrift (Papier 249 CHF/239 EUR, Online 199/189
+    // im Jahr) führt das Backend nicht als Tarif – es zählt als Standard.
+    preise: {
+      chf: {
+        wos: { papier:  { standard:{monatlich:14.9, jaehrlich:149} },
+               digital: { standard:{monatlich:10.9, jaehrlich:109} } }
+      },
+      eur: {
+        wos: { papier:  { standard:{monatlich:13.9, jaehrlich:139} },
+               digital: { standard:{monatlich:9.9,  jaehrlich:99} } },
+        gtv: { stream:  { standard:{monatlich:14.9, jaehrlich:149} } }
+      }
+    },
+    // Dunkelfeld: die Anmeldungen OHNE UTM-Spur den Gebieten zuordnen.
+    // Hinterlegt sind ANTEILE aus der datierten Lesart – sie werden auf den
+    // jeweils aktuellen Stand angewandt, damit die Einordnung stimmig bleibt,
+    // während die Zahlen weiterlaufen. Schätzung (±30 %), keine Messung; die
+    // Messwerte in der Datenbank bleiben unangetastet. Bei neuer Auswertung:
+    // stand/doc/anteile hier nachziehen, sonst nichts.
+    // Fortschreibung 8. August (löst die Lesart vom 7. August ab). Gerechnet aus
+    // drei Ankern: (1) der Grundlinie der 14 Tage vor der ersten Mail-Welle –
+    // 3,7 Anmeldungen ohne Spur je Tag, auf jedes spätere Fenster
+    // fortgeschrieben; (2) den GEMESSENEN Anteilen desselben Fensters, nach
+    // denen der Überschuss verteilt wird; (3) den 42 Selbstauskünften, die
+    // allein die Grundlinie und das Gebiet «Empfehlung» tragen können.
+    // Zwei Änderungen im Zuschnitt: «Popup» kam am 25. Juli dazu, «Empfehlung»
+    // ist im gemessenen Feld strukturell unsichtbar (dieser Weg trägt nie einen
+    // Link) und stand darum bisher nirgends.
+    // Neu am 8. August: Die beiden Fristtage (7./8.) sind ein eigenes Fenster
+    // und haben allein 380 Anmeldungen gebracht – mehr als der ganze Juli.
+    // Weil dort das Mailing 234 von 280 gemessenen Anmeldungen stellt, steigt
+    // sein Anteil am Dunkelfeld von 39,9 auf 49,2 Prozent.
+    // Die bezahlte Anzeige bleibt bei ≈9 Abos insgesamt und wird als FESTE
+    // Zahl geführt (6 dunkel), nicht als Anteil: sie ist seit dem 24. Juli aus
+    // (letzter Klick 26. Juli), ihr Beitrag steht absolut fest. Ein Anteil
+    // liesse ihn schrumpfen, nur weil das Mailing gewachsen ist.
+    dunkel: {
+      stand: '8. August',
+      doc:   'docs/wirkungs-lesart-08-08.md',
+      anteile: {
+        mailing:    0.491,   // die drei Mail-Wellen – jede als Sprung in der Tageskurve belegt
+        newsletter: 0.196,   // Haus-Newsletter und TV-Weekly, inkl. der beiden Eröffnungs-Mails
+        organik:    0.113,   // Direkt, Suche, Storefront, Bestandskonten
+        empfehlung: 0.101,   // persönliches Umfeld, Praxen, Schulen, Tagungen – nur aus Selbstauskunft
+        social:     0.034,   // Reels, Stories, Karussell
+        popup:      0.034,   // Webseiten-Popup seit 25. Juli
+        bezahlt:    0.017,   // Meta-Anzeige – FESTE Zahl (6 Abos) aus der Abschalt-Probe, kein Anteil
+        print:      0.013    // Stand, Flyer, Inserate
+      }
+    },
+    // Die Abschalt-Probe der bezahlten Anzeige ist gelaufen UND ausgewertet.
+    // Ohne diesen Eintrag empfiehlt das Cockpit unter «Nächste Züge» weiterhin,
+    // sie auszuwerten – ein Zug, der längst erledigt ist. Steht hier ein
+    // Ergebnis, wird daraus ein Befund statt einer Aufforderung.
+    abschaltprobe: {
+      stand:    '27. Juli',
+      doc:      'docs/abschaltprobe-anzeige-27-07.md',
+      ergebnis: 'Die Anzeige verlor beim Stopp 57 Klicks am Tag – über die Hälfte des gesamten Klick-Aufkommens –, ' +
+                'die goetheanum.tv-Anmeldungen fielen um 0,8 am Tag. Über die ganze Laufzeit rund 8 bis 12 Abos ' +
+                'aus 965 Klicks und 131 000 erreichten Personen. Damit ist sie der teuerste und der schwächste Weg der Aktion.'
+    },
+    // Die NENNER des Mailings – wie viele Menschen je Gruppe angeschrieben
+    // wurden. Sie liegen allein in ActiveCampaign und sind am 10. August im
+    // zweiten AC-Lauf geholt worden (services/mailing-sommer2026/AC-NENNER.md,
+    // Auswertung docs/mailing-gruppen-10-08.md). Erst mit ihnen wird aus einer
+    // absoluten Zahl eine QUOTE – und die Quote ist das, womit die nächste
+    // Aktion geplant wird. Die Abschlüsse bleiben live aus der Attribution;
+    // hier stehen nur die Nenner, sonst rechnete das Cockpit gegen sich selbst.
+    mailingGruppen: {
+      stand: '10. August',
+      doc:   'docs/mailing-gruppen-10-08.md',
+      // Schlüssel = utm_content-Gruppe der Wellen (w1_noabo, w2_nurws …).
+      je: {
+        nurws: { angeschrieben: 922,   klicker: 193,
+                 sprachen:[['Deutsch', 377, 91], ['Englisch', 545, 102]] },
+        noabo: { angeschrieben: 28948, klicker: 4385,
+                 sprachen:[['Deutsch', 12231, 2123], ['Englisch', 16717, 2262]] },
+        nurtv: { angeschrieben: 3839,  klicker: 930,
+                 sprachen:[['Deutsch', 1858, 511], ['Englisch', 1981, 419]] }
+      }
+    },
+    // Was der Versand den Verteiler gekostet hat. Eine Kostenseite ohne
+    // Frankenbetrag – sie stand bisher in keiner Rechnung und gehört trotzdem
+    // in den Bericht: Vier Wellen auf 33 709 Adressen sind nicht gratis.
+    // Die AC-Monatsgebühr selbst liegt beim Konto-Inhaber in einem eigenen
+    // Portal und fehlt weiterhin; der Verteilschlüssel steht (Versandanteil,
+    // nicht Zeitanteil). Sobald die Gebühr da ist: als Posten «Infrastruktur»
+    // in die Kosten-Maske, dann rechnet sie überall mit.
+    verteiler: {
+      stand:        '10. August',
+      doc:          'docs/mailing-gruppen-10-08.md',
+      adressen:     33709,
+      abmeldungen:  549,     // gesamt
+      abmeldWellen: 488,     // davon aus den vier Wellen – nur diese rechnen
+                             // gegen die 33 709 Adressen; die übrigen 61 kamen
+                             // aus den Newslettern mit eigenem Verteiler.
+      hardBounces:  46,
+      softBounces:  118,
+      sendungen:    113074,  // die vier Wellen zusammen
+      kontingent:   1200000, // Sendungen im Abrechnungszeitraum
+      gebuehrOffen: true
+    },
+    // «Nächste Züge» liest aus den Daten, was noch nicht gezündet hat. Das
+    // trägt, solange die Aktion läuft – seit die Frist am 8. August um
+    // Mitternacht ablief, schlägt es Handlungen vor, die niemand mehr tun
+    // kann. Darum ausgeblendet (Beschluss 8. August). Für die nächste
+    // Aktion hier auf true stellen; die Sektion und ihre Logik bleiben
+    // vollständig erhalten.
+    zuegeZeigen: false,
+    // Sind die Kosten vollständig erfasst? Solange NEIN, zeigt der Bericht
+    // «Kosten je Abo» und «Rückfluss» NICHT an. Seit 13. August true: interne
+    // Stunden (100 h × CHF 60) und die geschätzte AC-Monatsgebühr (CHF 95,
+    // als Schätzung im Posten-Text markiert) sind eingetragen, macht
+    // CHF 9 014.60. Was an Stückkosten je Abo (Uscreen-Gebühr, Papier fürs
+    // Folgejahr) weiterhin fehlt, betrifft den Deckungsbeitrag der
+    // Einnahmen-Perspektive, nicht diese Kampagnenkosten-Summe — siehe
+    // docs/schlussbericht-datensammlung.md, «Zwei Arten von Kosten».
+    kostenVollstaendig: true,
+    // Zeigt an, was im Cockpit noch Annahme ist und nicht gemessen. Preise und
+    // Zielmarken sind es seit dem 17. Juli nicht mehr (echte Formular- und
+    // Uscreen-Preise, ratifizierte GF-Vorgabe) – allein die Bleibe-Quote bleibt
+    // eine Annahme, bis die erste Kohorte im Oktober entscheidet.
+    zahlenProvisorisch: true,
+    // Externe Quelle der Social-Media-Zahlen (Reichweite/Klicks je Kanal).
+    // Metricool gibt die Zahlen nur im geschützten Dashboard aus – ein Live-Abgriff
+    // aus dem Browser ist nicht möglich. Darum ablesen und je Aktivität eintragen.
+    quelleSocial: {
+      label: 'Metricool · Kampagnen-Auswertung',
+      url:   'https://app.metricool.com/reporting/campaigns-dashboard/public?token=eyJ6aXAiOiJERUYiLCJhbGciOiJIUzUxMiJ9.eJxVztFSgkAUgOF3ObcywhrCxh3VTLLWZmZmNU2Dy5Lgrhzg5AhN7x7jXZf_d_X_QPqdQfQOOyJsI9dNEcdWU1OoqjJjVVn4cKBICSIW8ouQ-YwFDhy2-X_QJxyAs-lk6p3B0icaiEBjU6_atpJHafY66b6sElsSM755NJORZFjGwdO8v85ewxN7vkoal4tDvWyThUrucS1fVOnFYo_Ey5u7oq770L_t5w9Wr5ualqsyrUaoWrmIdZG7lF_yYOfHb8UmnOVCd4EHDlCHejjBLDUE5zM6Ds3g9w85oFAH.cL8xJiluV4VRcqD2tsOIXKgpvI7UfN_fbvREgPpiP_r0T0JTBfS_vH2cnrq50d-kogWBjyZLE_OMINhFqo8dIw',
+      takt:  'Die Aktion endet am 11. August: bis dahin täglich übernehmen, danach die Schlusszahlen einmal vollständig, sobald Metricool die letzte Woche abgerechnet hat – dann ist die Auswertung fest und der Takt endet.'
+    }
+  };
+
+  var SB  = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
+  var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
+  var REFRESH = 60000;
+
+  var STREAMS = [
+    { key:'wos.de.papier',  produkt:'wos', sprache:'de', format:'papier',  name:'Deutsch · Papier',  panel:'wos' },
+    { key:'wos.de.digital', produkt:'wos', sprache:'de', format:'digital', name:'Deutsch · Digital', panel:'wos' },
+    { key:'wos.en.digital', produkt:'wos', sprache:'en', format:'digital', name:'Englisch · Digital', panel:'wos' },
+    // goetheanum.tv ist EIN Produkt und EIN Strom: die Sprache ist dort nicht
+    // gemessen (sprache:null = alle Sprachen zusammenzählen) – anders als bei
+    // der Wochenschrift, wo jede Sprache ihr eigenes Formular hat.
+    { key:'gtv',            produkt:'gtv', sprache:null, format:'stream',  name:'',         panel:'gtv' }
+  ];
+
+  function fmt(n){ return (Number(n)||0).toLocaleString('de-CH'); }
+  function geld(n){ return CONFIG.waehrung + ' ' + Math.round(Number(n)||0).toLocaleString('de-CH'); }
+  function el(id){ return document.getElementById(id); }
+  function dmy(d){ return d.toLocaleDateString('de-CH',{day:'numeric',month:'long'}); }
+
+  function rpc(name){
+    return fetch(SB + '/rest/v1/rpc/' + name, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body:'{}'
+    }).then(function(r){ if(!r.ok) throw new Error(name + ' ' + r.status); return r.json(); });
+  }
+
+  function setStatus(state, when){
+    var s = el('status');
+    if (!s) return;
+    if(state === 'ok'){ s.className = 'status readout'; s.textContent = '· Stand ' + when.toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'}); }
+    else if(state === 'err'){ s.className = 'status err'; s.textContent = '· nicht ladbar'; }
+    else { s.className = 'status readout'; s.textContent = 'lädt …'; }
+  }
+
+  // ── Gebiete: die eine Achse, auf der alles zusammenläuft ──────────────────
+  // Ein «Gebiet» ist ein Wirkungsfeld der Kampagne (Mailing, bezahlte Anzeige,
+  // Newsletter …). Alle drei Datenquellen werden darauf abgebildet, damit eine
+  // Zeile die ganze Kette tragen kann: Reichweite und Hand-Klicks aus dem
+  // Aktivitäten-Protokoll, Kurzlink-Klicks aus dem Link-Register, Abschlüsse aus
+  // der Attribution. REIHENFOLGE ZÄHLT – der erste Treffer gewinnt: «bezahlt»
+  // vor «social» (die Anzeige läuft als medium=social), «newsletter» vor
+  // «mailing» (das Wort «email» enthält «mail»), «print» vor «organik»
+  // (inserat_* trägt medium=web).
+  var GEBIETE = [
+    { key:'bezahlt',    label:'Bezahlt · Anzeige',          test:/anzeige|\bads?\b|\bcpc\b/ },
+    { key:'newsletter', label:'Newsletter',                 test:/news|\bnl\b|nl-|weekly/ },
+    { key:'mailing',    label:'Mailing',                    test:/mailing|mailer|\bpost\b|brief/ },
+    { key:'social',     label:'Social organisch',           test:/insta|face|\bfb\b|linkedin|youtube|tiktok|twitter|social/ },
+    { key:'print',      label:'Print · Stand · Inserat',    test:/inserat|print|flyer|stand|plakat|\bqr\b/ },
+    { key:'popup',      label:'Popup',                      test:/popup|overlay/ },
+    { key:'empfehlung', label:'Empfehlung',                 test:/refer|empfehl|partner|friend/ },
+    { key:'organik',    label:'Organik · Direkt · Bestand', test:/uscreen|landing|\bweb\b|site|direct|organic/ },
+    { key:'andere',     label:'Übrige',                     test:null }
+  ];
+  function gebietVonSpur(src, med){
+    var s = ((src || '') + ' ' + (med || '')).toLowerCase();
+    if (!s.trim()) return 'andere';
+    for (var i = 0; i < GEBIETE.length; i++){
+      var g = GEBIETE[i];
+      if (g.test && g.test.test(s)) return g.key;
+    }
+    return 'andere';
+  }
+  // Aktivitäten tragen einen Kanal-Eimer; die bezahlte Anzeige steckt darin als
+  // «social» und wird über den Titel herausgelöst (sonst verschwindet der
+  // grösste Posten in der organischen Zeile).
+  var KANAL_ZU_GEBIET = { social:'social', newsletter:'newsletter', mailer:'mailing',
+                          flyer:'print', website:'organik', popup:'popup', empfehlung:'empfehlung' };
+  function gebietVonMassnahme(m){
+    if (/anzeige|\bads?\b/i.test(m.massnahme || '')) return 'bezahlt';
+    return KANAL_ZU_GEBIET[m.kanal] || 'andere';
+  }
+  function gebietLabel(k){
+    for (var i = 0; i < GEBIETE.length; i++) if (GEBIETE[i].key === k) return GEBIETE[i].label;
+    return k;
+  }
+
+  // Dunkelfeld auf die Gebiete verteilen: die datierte Lesart liefert ANTEILE,
+  // die auf den aktuellen Stand der Anmeldungen ohne Spur angewandt werden – so
+  // bleibt die Einordnung stimmig, während die Zahlen weiterlaufen. Der Rest der
+  // Rundung geht an das grösste Gebiet, damit die Summe exakt aufgeht.
+  function dunkelVerteilen(ohne){
+    var anteile = (CONFIG.dunkel && CONFIG.dunkel.anteile) || {};
+    var out = {}, verteilt = 0, groesstes = null, max = -1;
+    Object.keys(anteile).forEach(function(k){
+      var n = Math.round(ohne * anteile[k]);
+      out[k] = n; verteilt += n;
+      if (anteile[k] > max){ max = anteile[k]; groesstes = k; }
+    });
+    if (groesstes && verteilt !== ohne) out[groesstes] += (ohne - verteilt);
+    return out;
+  }
+
+  // ── 1 · Stand: eine Zahl, ein Tempo, eine Prognose ────────────────────────
+  // Der Kern der Aufräumung: statt vier Kacheln, Deadline-Meter, Meilenstein und
+  // eigener Momentum-Sektion EIN Block, der die Frage «wo stehen wir» beantwortet
+  // – samt der Fortschreibung, die eine Prozentzahl allein verschweigt.
+  function isoTag(d){
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  }
+  function tempoUndPrognose(timeline){
+    var byDay = {};
+    (timeline || []).forEach(function(r){ byDay[r.day] = (byDay[r.day] || 0) + Number(r.n); });
+    var tage = Object.keys(byDay).sort();
+    var letzte = tage.slice(-3);
+    var tempo = letzte.length ? letzte.reduce(function(s, d){ return s + byDay[d]; }, 0) / letzte.length : 0;
+    var ende = new Date(CONFIG.ende + 'T00:00:00'), jetzt = new Date();
+    var heute = new Date(jetzt.getFullYear(), jetzt.getMonth(), jetzt.getDate());
+    var rest = Math.max(0, Math.round((ende - heute) / 86400000));
+    // Alle Kalendertage der Aktion bis heute (bzw. bis zum Ende), Lücken = 0 –
+    // damit der Puls den ganzen Zeitraum zeigt, nicht nur Tage mit Anmeldungen.
+    var alle = [];
+    var erster = (CONFIG.start && (!tage.length || CONFIG.start < tage[0])) ? CONFIG.start : tage[0];
+    if (erster){
+      var stop = heute < ende ? heute : ende;
+      if (tage.length && tage[tage.length - 1] > isoTag(stop)) stop = new Date(tage[tage.length - 1] + 'T00:00:00');
+      for (var d = new Date(erster + 'T00:00:00'); d <= stop; d.setDate(d.getDate() + 1)) alle.push(isoTag(d));
+    }
+    return { byDay:byDay, tage:tage, alle:alle, tempo:tempo, rest:rest };
+  }
+  function renderStand(total, timeline){
+    if (!el('standZahl')) return;
+    var t = tempoUndPrognose(timeline);
+    var ziel = CONFIG.zielGesamt || 0;
+    el('standZahl').textContent = fmt(total);
+    el('standUnter').textContent = 'neue Abos · Ziel ' + fmt(ziel) +
+      (t.rest > 0 ? (' · noch ' + t.rest + ' Tage bis ' + dmy(new Date(CONFIG.ende + 'T00:00:00'))) : ' · Aktion beendet');
+    var pct = ziel > 0 ? Math.round(total / ziel * 100) : 0;
+    el('kZiel').textContent = pct + ' %';
+    el('kTempo').textContent = t.tempo.toFixed(1).replace('.', ',');
+    // «Abos/Tag nötig» beantwortet nur eine Frage: Was fehlt noch bis zur
+    // Zielmarke? Ist sie übertroffen oder die Aktion vorbei, fehlt nichts mehr
+    // – die Kachel stand dann auf 0,0 und sagte nichts (G03: was entbehrlich
+    // ist, entfällt). Sie erscheint darum nur, solange sie eine Antwort hat.
+    var offen = t.rest > 0 && total < ziel;
+    var noetig = offen ? (ziel - total) / t.rest : 0;
+    var kachel = el('kNoetigKachel');
+    if (kachel) kachel.hidden = !offen;
+    el('kNoetig').textContent = offen ? noetig.toFixed(1).replace('.', ',') : '–';
+    // Über 100 % wird die Spur zum Ist-Stand: Gold bis zur Zielmarke,
+    // die Übererfüllung dahinter in Grün (--ok).
+    var ueber = el('ddBarUeber');
+    if (pct > 100){
+      el('ddBar').style.width = (100 / pct * 100).toFixed(2) + '%';
+      if (ueber) ueber.style.width = ((pct - 100) / pct * 100).toFixed(2) + '%';
+    } else {
+      el('ddBar').style.width = pct + '%';
+      if (ueber) ueber.style.width = '0';
+    }
+
+    // Puls: der ganze Zeitraum seit Aktionsstart, ein Balken je Kalendertag
+    // (Lücken = 0). Die Spalte ist das Zeigeziel; die Tageszahl erscheint als
+    // Fahne beim Zeigen und beim Tastatur-Fokus.
+    var host = el('puls'); if (host){
+      host.innerHTML = '';
+      var alle = t.alle.length ? t.alle : t.tage;
+      var max = alle.reduce(function(m, d){ return Math.max(m, t.byDay[d] || 0); }, 0) || 1;
+      var spitze = alle.reduce(function(b, d){ return (t.byDay[d] || 0) > (t.byDay[b] || 0) ? d : b; }, alle[0]);
+      alle.forEach(function(d){
+        var n = t.byDay[d] || 0;
+        var tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.tabIndex = 0;
+        var tip = new Date(d + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'long' }) +
+                  ' · ' + fmt(n) + (n === 1 ? ' Abo' : ' Abos');
+        tag.setAttribute('data-tip', tip);
+        tag.setAttribute('role', 'img');
+        tag.setAttribute('aria-label', tip);
+        var b = document.createElement('span');
+        b.className = 'p' + (d === spitze ? ' hoch' : '');
+        b.style.height = Math.max(3, Math.round(n / max * 100)) + '%';
+        tag.appendChild(b);
+        host.appendChild(tag);
+      });
+      var lab = el('pulsL');
+      if (lab && alle.length){
+        lab.innerHTML = '';
+        var von = document.createElement('span');
+        von.textContent = new Date(alle[0] + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'long' });
+        var top = document.createElement('span');
+        top.textContent = 'Spitze ' + fmt(t.byDay[spitze] || 0) + ' am ' + new Date(spitze + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
+        var bis = document.createElement('span');
+        bis.textContent = 'heute ' + fmt(t.byDay[alle[alle.length - 1]] || 0);
+        lab.appendChild(von); lab.appendChild(top); lab.appendChild(bis);
+      }
+    }
+
+    // Der Befund (Fortschreibung des Tempos auf die Resttage) ist am 8. August
+    // ENTFERNT worden, nicht abgeschaltet – er log strukturell, sobald die
+    // kommunizierte Frist vorbei war. Er schrieb den Schnitt der letzten drei
+    // Tage fort: 146,3 am Tag, gemessen im Ansturm der Fristtage, hochgerechnet
+    // auf die drei stillen Tage der Verlängerung, an denen niemand mehr
+    // angeschrieben wird. Das ergab «rund 1400 Abos» – und dazu «Das Ziel 500
+    // ist in Reichweite», obwohl es bei 186 Prozent längst übertroffen war.
+    // Eine Fortschreibung über einen Impuls hinweg ist keine Rechnung, sondern
+    // eine Behauptung. Wer sie zurückholen will, braucht ein Tempo, das den
+    // Impuls kennt – nicht einen Schnitt über drei Tage.
+  }
+
+  // Ströme (Produkt × Sprache × Format) – aus eigener Sektion in den Aufklapp.
+  function streamValue(rows, s){
+    return rows.reduce(function(sum, r){
+      if(r.produkt === s.produkt && (s.sprache === null || r.sprache === s.sprache) && r.format === s.format) return sum + Number(r.n);
+      return sum;
+    }, 0);
+  }
+  function renderStroeme(rows, total){
+    if (!el('stroemeBody')) return;
+    var body = el('stroemeBody'); body.innerHTML = '';
+    var items = STREAMS.map(function(s){
+      var basis = s.panel === 'gtv' ? 'goetheanum.tv' : 'Wochenschrift';
+      return { name: s.name ? basis + ' · ' + s.name : basis,
+               n:streamValue(rows, s), ziel:CONFIG.ziele[s.key] || 0 };
+    }).sort(function(a, b){ return b.n - a.n; });
+    var sz = 0;
+    items.forEach(function(x){
+      sz += x.ziel;
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
+      tr.children[0].textContent = x.name;
+      tr.children[1].textContent = fmt(x.n);
+      tr.children[2].textContent = x.ziel ? fmt(x.ziel) : '–';
+      tr.children[3].textContent = x.ziel ? (Math.round(x.n / x.ziel * 100) + ' %') : '–';
+      body.appendChild(tr);
+    });
+    var foot = el('stroemeFoot');
+    if (foot){
+      foot.innerHTML = '<tr><td>Summe</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>';
+      var td = foot.querySelector('tr').children;
+      td[1].textContent = fmt(total); td[2].textContent = fmt(sz);
+      td[3].textContent = sz ? (Math.round(total / sz * 100) + ' %') : '–';
+    }
+    if (el('stroemeKopf')) el('stroemeKopf').textContent = 'Woraus sich die ' + fmt(total) + ' Abos zusammensetzen';
+    if (el('stroemeNote')){
+      el('stroemeNote').textContent = 'Bei der Wochenschrift ist die Sprache gemessen – jede Sprache hat ihr eigenes Formular. ' +
+        'Bei goetheanum.tv ist sie es nicht: DE- wie EN-Landingpage führen in dasselbe Uscreen-Angebot, wer welche Sprache bevorzugt, ist nicht erfasst. ' +
+        'Darum zählt goetheanum.tv als ein Strom ohne Sprachtrennung (Beschluss 30. Juli). ' +
+        'Was von ausserhalb des Sprachraums kommt, steht darunter unter «Woher die Abos kommen».';
+    }
+  }
+
+  // Herkunft: Land aus der Zahlung (Uscreen country_code, Migration «sommer2026_land»).
+  // Gemessen, nicht geraten – und bei goetheanum.tv das einzige belastbare Mass
+  // für die Nachfrage ausserhalb des deutschen Sprachraums, weil die Sprache dort
+  // nicht aus dem Abo hervorgeht. Land ist NICHT Sprache; die Notiz sagt es auch.
+  var DACH = ['DE', 'CH', 'AT', 'LI'];
+  var LAND_NAME = { DE:'Deutschland', CH:'Schweiz', AT:'Österreich', LI:'Liechtenstein',
+    US:'USA', GB:'Grossbritannien', NL:'Niederlande', AU:'Australien', NZ:'Neuseeland',
+    CA:'Kanada', BE:'Belgien', IT:'Italien', FR:'Frankreich', ES:'Spanien', DK:'Dänemark',
+    NO:'Norwegen', SE:'Schweden', FI:'Finnland', BR:'Brasilien', CL:'Chile', CO:'Kolumbien',
+    IE:'Irland', SI:'Slowenien', HR:'Kroatien', HU:'Ungarn', CZ:'Tschechien', EE:'Estland',
+    LU:'Luxemburg', TR:'Türkei', TW:'Taiwan', IN:'Indien' };
+  function renderHerkunft(rows){
+    if (!el('herkunftBody')) return;
+    var gtv = (rows || []).filter(function(r){ return r.produkt === 'gtv'; });
+    var summe = gtv.reduce(function(s, r){ return s + Number(r.n || 0); }, 0);
+    if (!summe){ el('herkunftBody').innerHTML = '<tr><td class="empty" colspan="3">noch keine Landangaben</td></tr>'; return; }
+    var dach = 0, uebrige = 0, offen = 0;
+    gtv.forEach(function(r){
+      var n = Number(r.n || 0);
+      if (!r.land) offen += n; else if (DACH.indexOf(r.land) >= 0) dach += n; else uebrige += n;
+    });
+    var zeilen = [
+      { t:'deutschsprachig · DE, CH, AT', n:dach },
+      { t:'übrige Länder', n:uebrige },
+      { t:'ohne Landangabe', n:offen }
+    ];
+    var body = el('herkunftBody'); body.innerHTML = '';
+    zeilen.forEach(function(z){
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td>';
+      tr.children[0].textContent = z.t;
+      tr.children[1].textContent = fmt(z.n);
+      tr.children[2].textContent = Math.round(z.n / summe * 100) + ' %';
+      body.appendChild(tr);
+    });
+    var liste = el('herkunftLaender');
+    if (liste){
+      liste.innerHTML = '';
+      gtv.filter(function(r){ return r.land && DACH.indexOf(r.land) < 0; })
+        .sort(function(a, b){ return Number(b.n) - Number(a.n); })
+        .slice(0, 10)
+        .forEach(function(r){
+          var row = document.createElement('div'); row.className = 'motrow';
+          row.innerHTML = '<span class="mc"></span><span class="mn"></span>';
+          row.querySelector('.mc').textContent = LAND_NAME[r.land] || r.land;
+          row.querySelector('.mn').textContent = fmt(r.n);
+          liste.appendChild(row);
+        });
+    }
+    if (el('herkunftKopf')){
+      el('herkunftKopf').textContent = 'Woher die goetheanum.tv-Abos kommen – ' + fmt(uebrige) +
+        ' von ' + fmt(summe) + ' aus dem übrigen Ausland';
+    }
+  }
+
+  // ── 2 · Gebiete: eine Liste, jede Zeile die ganze Kette ───────────────────
+  // Löst «Woher», Wirkungskette, «Nach Motiv», «Kanäle» und «Aktivität →
+  // Abschlüsse» in EINER Ansicht auf – dieselben Messwerte, einmal statt fünfmal.
+  function renderGebiete(attribution, links, massnahmen, kanaele){
+    if (!el('gebieteListe')) return;
+    var host = el('gebieteListe'); host.innerHTML = '';
+    var ab = {}, kl = {}, rw = {}, motive = {}, akte = {}, linkN = {}, ohne = 0;
+    var add = function(o, k, v){ o[k] = (o[k] || 0) + v; };
+
+    (attribution || []).forEach(function(r){
+      var n = Number(r.n) || 0;
+      if (!r.utm_source && !r.utm_content){ ohne += n; return; }
+      var g = gebietVonSpur(r.utm_source, r.utm_medium);
+      add(ab, g, n);
+      var label = r.utm_content || r.utm_source;
+      var key = g + '|' + label + '|' + (r.utm_source || '');
+      (motive[g] = motive[g] || {});
+      motive[g][key] = motive[g][key] || { label:label, quelle:r.utm_source || '', ab:0, kl:0 };
+      motive[g][key].ab += n;
+    });
+    (links || []).forEach(function(l){
+      var g = gebietVonSpur(l.utm_source, l.utm_medium);
+      add(linkN, g, 1);
+      var k = Number(l.klicks) || 0;
+      if (k) add(kl, g, k);
+      var label = l.utm_content || l.utm_source;
+      var key = g + '|' + label + '|' + (l.utm_source || '');
+      (motive[g] = motive[g] || {});
+      motive[g][key] = motive[g][key] || { label:label, quelle:l.utm_source || '', ab:0, kl:0 };
+      motive[g][key].kl += k;
+    });
+    var ko = {};
+    (massnahmen || []).forEach(function(m){
+      var g = gebietVonMassnahme(m);
+      var r = Number(m.reichweite) || 0, k = Number(m.klicks) || 0, c = Number(m.kosten) || 0;
+      if (r) add(rw, g, r);
+      if (k) add(kl, g, k);
+      if (c) add(ko, g, c);
+      if (r || k || c) (akte[g] = akte[g] || []).push({ name:m.massnahme || '—', tag:m.tag, reichweite:r, klicks:k, kosten:c });
+    });
+
+    var dunkel = dunkelVerteilen(ohne);
+    var total = ohne; Object.keys(ab).forEach(function(k){ total += ab[k]; });
+    var keys = {}; [ab, kl, rw, dunkel, linkN].forEach(function(o){ Object.keys(o).forEach(function(k){ keys[k] = true; }); });
+    var items = Object.keys(keys).map(function(g){
+      return { g:g, ab:ab[g] || 0, kl:kl[g] || 0, rw:rw[g] || 0, du:dunkel[g] || 0, ko:ko[g] || 0,
+               links:linkN[g] || 0, gesamt:(ab[g] || 0) + (dunkel[g] || 0) };
+    }).filter(function(x){ return x.gesamt > 0 || x.rw > 0 || x.kl >= 3 || (x.links >= 2 && x.g !== 'andere'); })
+      .sort(function(a, b){ return b.gesamt - a.gesamt || b.kl - a.kl; });
+    if (!items.length){ host.innerHTML = '<div class="empty">Noch keine Aktivität erfasst.</div>'; return; }
+    var max = items.reduce(function(m, x){ return Math.max(m, x.gesamt); }, 0) || 1;
+
+    items.forEach(function(x){
+      var det = document.createElement('details'); det.className = 'geb';
+      var sum = document.createElement('summary');
+      var kopf = document.createElement('div'); kopf.className = 'geb-kopf';
+      var nm = document.createElement('span'); nm.className = 'geb-name';
+      var car = document.createElement('span'); car.className = 'car'; car.setAttribute('aria-hidden', 'true');
+      nm.appendChild(car); nm.appendChild(document.createTextNode(gebietLabel(x.g)));
+      // Merkzeichen: ein Wort, das sagt, was diese Zeile bedeutet.
+      var z = null;
+      if (x.kl >= 40 && x.ab <= 1) z = ['leck', 'viel Klick, kaum Abschluss'];
+      else if (total > 0 && x.gesamt >= total * 0.3) z = ['traegt', 'trägt die Aktion'];
+      else if (x.kl === 0 && x.gesamt === 0 && x.links > 0) z = ['still', 'nie ausgespielt'];
+      else if (x.kl >= 20 && x.ab === 0) z = ['still', 'ohne messbaren Ertrag'];
+      else if (x.du >= 10 && x.du > x.ab * 2) z = ['dunkel', 'grösstenteils dunkel'];
+      if (z){ var zs = document.createElement('span'); zs.className = 'zeichen ' + z[0]; zs.textContent = z[1]; nm.appendChild(zs); }
+      var wert = document.createElement('span'); wert.className = 'geb-wert';
+      wert.appendChild(document.createTextNode(fmt(x.ab)));
+      if (x.du){ var du = document.createElement('span'); du.className = 'du';
+        du.textContent = ' · ≈' + fmt(x.gesamt) + ' mit Dunkelfeld'; wert.appendChild(du); }
+      kopf.appendChild(nm); kopf.appendChild(wert);
+      var kette = document.createElement('div'); kette.className = 'geb-kette';
+      var teil = function(l, v){ var s2 = document.createElement('span');
+        s2.appendChild(document.createTextNode(l + ' '));
+        var b = document.createElement('b'); b.textContent = v; s2.appendChild(b); kette.appendChild(s2); };
+      teil('Reichweite', x.rw ? fmt(x.rw) : '–');
+      teil('Klicks', x.kl ? fmt(x.kl) : '–');
+      teil('Abschlüsse', fmt(x.ab));
+      if (x.rw && x.kl) teil('Klickquote', (x.kl / x.rw * 100).toFixed(1).replace('.', ',') + ' %');
+      // Aufwand nur zeigen, wo er erfasst ist. Eine 0 wäre hier keine Sparsamkeit,
+      // sondern eine Lücke – und würde das Gebiet gratis aussehen lassen.
+      if (x.ko){
+        teil('Aufwand', geld(x.ko));
+        if (x.gesamt) teil('je Abo', geld(x.ko / x.gesamt));
+      }
+      var track = document.createElement('div'); track.className = 'track';
+      var tb = document.createElement('span'); tb.style.width = Math.max(3, Math.round(x.gesamt / max * 100)) + '%';
+      track.appendChild(tb);
+      sum.appendChild(kopf); sum.appendChild(kette); sum.appendChild(track);
+      det.appendChild(sum);
+
+      var tief = document.createElement('div'); tief.className = 'geb-tief';
+      var mots = Object.keys(motive[x.g] || {}).map(function(k){ return motive[x.g][k]; })
+        .filter(function(m){ return m.ab > 0 || m.kl > 0; })
+        .sort(function(a, b){ return b.ab - a.ab || b.kl - a.kl; }).slice(0, 10);
+      mots.forEach(function(m){
+        var row = document.createElement('div'); row.className = 'motrow';
+        var mc = document.createElement('span'); mc.className = 'mc'; mc.textContent = m.label;
+        if (m.quelle && m.quelle !== m.label){ var ms = document.createElement('span'); ms.className = 'ms'; ms.textContent = m.quelle; mc.appendChild(ms); }
+        var mn = document.createElement('span'); mn.className = 'mn';
+        mn.textContent = (m.kl ? fmt(m.kl) + ' Klicks' : '') + (m.kl && m.ab ? ' · ' : '') + (m.ab ? fmt(m.ab) + ' Abos' : (m.kl ? '' : '0'));
+        row.appendChild(mc); row.appendChild(mn); tief.appendChild(row);
+      });
+      (akte[x.g] || []).sort(function(a, b){ return b.reichweite - a.reichweite; }).slice(0, 8).forEach(function(a){
+        var row = document.createElement('div'); row.className = 'motrow';
+        var mc = document.createElement('span'); mc.className = 'mc'; mc.textContent = a.name;
+        if (a.tag){ var ms = document.createElement('span'); ms.className = 'ms';
+          ms.textContent = new Date(a.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }); mc.appendChild(ms); }
+        var mn = document.createElement('span'); mn.className = 'mn';
+        mn.textContent = (a.reichweite ? fmt(a.reichweite) + ' erreicht' : '') +
+                         (a.reichweite && a.klicks ? ' · ' : '') + (a.klicks ? fmt(a.klicks) + ' Klicks' : '');
+        row.appendChild(mc); row.appendChild(mn); tief.appendChild(row);
+      });
+      if (!mots.length && !(akte[x.g] || []).length){
+        var leer = document.createElement('div'); leer.className = 'qz-hint';
+        leer.textContent = 'Keine Einzelposten erfasst.'; tief.appendChild(leer);
+      }
+      if (x.du){
+        var dh = document.createElement('div'); dh.className = 'qz-hint';
+        dh.textContent = '+ ≈' + fmt(x.du) + ' Abos ohne UTM-Spur, diesem Gebiet nach der Lesart zugeordnet (Stand ' +
+          ((CONFIG.dunkel && CONFIG.dunkel.stand) || '–') + ') – Schätzung, keine Messung.';
+        tief.appendChild(dh);
+      }
+      // Was der Versand den Verteiler gekostet hat – die zweite Kostenseite des
+      // Mailings, die in keiner Frankenrechnung steht und trotzdem eine ist.
+      // Sie steht hier und nicht bei den Kosten: Wer liest, was das Mailing
+      // getragen hat, soll im selben Blick sehen, was es verbraucht hat.
+      if (x.g === 'mailing' && CONFIG.verteiler){
+        var v = CONFIG.verteiler;
+        var vh = document.createElement('div'); vh.className = 'qz-hint';
+        vh.textContent = 'Was der Versand den Verteiler gekostet hat: ' + fmt(v.abmeldungen) +
+          ' Abmeldungen, davon ' + fmt(v.abmeldWellen) + ' aus den vier Wellen – ' +
+          (v.abmeldWellen / v.adressen * 100).toFixed(2).replace('.', ',') + ' % von ' + fmt(v.adressen) +
+          ' Adressen in fünf Wochen. Dazu ' +
+          fmt(v.hardBounces) + ' harte und ' + fmt(v.softBounces) + ' weiche Rückläufer. ' +
+          'Ein niedriger, normaler Wert – aber eine Kostenseite, die bisher in keiner Rechnung stand. ' +
+          'Die vier Wellen verbrauchten ' + fmt(v.sendungen) + ' Sendungen, ' +
+          (v.sendungen / v.kontingent * 100).toFixed(1).replace('.', ',') + ' % des Kontingents' +
+          (v.gebuehrOffen ? ' – die ActiveCampaign-Monatsgebühr selbst liegt beim Konto-Inhaber und fehlt noch.' : '.') +
+          ' Herleitung: ' + (v.doc || '') + '.';
+        tief.appendChild(vh);
+        var gh = document.createElement('div'); gh.className = 'qz-hint';
+        gh.textContent = 'Welche Gruppe wie reagiert hat, steht unter «Wer sind die Neuen» – seit dem 10. August mit Nennern ' +
+          'und darum als Quote statt als absoluter Zahl.';
+        tief.appendChild(gh);
+      }
+      if (x.g === 'social' && CONFIG.quelleSocial){
+        var ql = document.createElement('div'); ql.className = 'qz-hint';
+        ql.appendChild(document.createTextNode('Quelle der Zahlen: '));
+        var qa = document.createElement('a'); qa.href = CONFIG.quelleSocial.url;
+        qa.target = '_blank'; qa.rel = 'noopener'; qa.textContent = CONFIG.quelleSocial.label;
+        ql.appendChild(qa); tief.appendChild(ql);
+      }
+      det.appendChild(tief);
+      host.appendChild(det);
+    });
+
+    // Kontrollzeile: das Dunkelfeld als Ganzes – ohne Balken, es ist oben schon verteilt.
+    if (ohne > 0){
+      var det2 = document.createElement('details'); det2.className = 'geb';
+      var s3 = document.createElement('summary');
+      var k3 = document.createElement('div'); k3.className = 'geb-kopf';
+      var n3 = document.createElement('span'); n3.className = 'geb-name';
+      var c3 = document.createElement('span'); c3.className = 'car'; c3.setAttribute('aria-hidden', 'true');
+      n3.appendChild(c3); n3.appendChild(document.createTextNode('Ohne UTM-Spur'));
+      var z3 = document.createElement('span'); z3.className = 'zeichen dunkel'; z3.textContent = 'Lesart, keine Messung';
+      n3.appendChild(z3);
+      var w3 = document.createElement('span'); w3.className = 'geb-wert';
+      w3.appendChild(document.createTextNode(fmt(ohne)));
+      var d3 = document.createElement('span'); d3.className = 'du';
+      d3.textContent = ' · ' + (total > 0 ? Math.round(ohne / total * 100) : 0) + ' % aller Abos';
+      w3.appendChild(d3);
+      k3.appendChild(n3); k3.appendChild(w3);
+      var kt = document.createElement('div'); kt.className = 'geb-kette';
+      var kts = document.createElement('span'); kts.textContent = 'oben bereits auf die Gebiete verteilt'; kt.appendChild(kts);
+      s3.appendChild(k3); s3.appendChild(kt); det2.appendChild(s3);
+      var t3 = document.createElement('div'); t3.className = 'geb-tief';
+      var p3 = document.createElement('div'); p3.className = 'qz-hint';
+      p3.textContent = 'Diese Anmeldungen kamen ohne UTM-Parameter an und sind in den Zeilen oben als «≈ mit Dunkelfeld» bereits eingerechnet – hier stehen sie noch einmal als Ganzes, damit sichtbar bleibt, wie viel Lesart in der Rangfolge steckt. Herleitung unter Belege.';
+      t3.appendChild(p3); det2.appendChild(t3);
+      host.appendChild(det2);
+    }
+    if (el('gebieteNote')){
+      el('gebieteNote').textContent = '«Abschlüsse» ist die harte UTM-Zählung. «≈ mit Dunkelfeld» verteilt die ' +
+        fmt(ohne) + ' Anmeldungen ohne Spur nach der datierten Lesart (±30 %). Die Summe der Zeilen ergibt wieder ' + fmt(total) + '.';
+    }
+  }
+
+  // ── 3 · Nächste Züge: was noch möglich ist, aus den Daten gelesen ─────────
+  // Nichts hiervon ist erfunden: der Plan steht bereits im Link-Register (jeder
+  // registrierte Link ist eine Absicht) und im Aktivitäten-Protokoll. Gelesen
+  // wird die LÜCKE – was vorbereitet ist, aber nie einen Klick gesehen hat.
+  var ZUG_QUELLE = [
+    { test:/mailing|mailer/, titel:'Mail-Welle senden',        warum:'vorbereitet, aber nie ausgespielt' },
+    { test:/news|\bnl\b|nl-|weekly/, titel:'Newsletter-Phasen ausspielen', warum:'Links liegen bereit, null Klicks' },
+    { test:/popup/,          titel:'Popup scharf schalten',    warum:'registriert, aber nie ein Klick' },
+    { test:/inserat|print|\bqr\b/, titel:'Print-Weg prüfen',   warum:'QR und Inserat ohne einen Scan' },
+    { test:/insta|face|\bfb\b|linkedin|youtube|tiktok|social/, titel:'Social-Motive ausspielen', warum:'fertig verlinkt, nie gepostet' },
+    { test:null,             titel:'Vorbereitete Links ausspielen', warum:'registriert, aber nie ein Klick' }
+  ];
+  function renderZuege(links, massnahmen, attribution, timeline, total){
+    if (!el('zuegeListe')) return;
+    // Der Schalter entscheidet, die Seite trägt nur das Vorzeichen: So gibt es
+    // eine Wahrheit, nicht zwei (HTML-Attribut UND Konfiguration).
+    var sektion = el('zuege');
+    if (sektion) sektion.hidden = !CONFIG.zuegeZeigen;
+    if (!CONFIG.zuegeZeigen) return;
+    var host = el('zuegeListe'); host.innerHTML = '';
+    var zuege = [], ohneSpur = 0;
+    (attribution || []).forEach(function(r){ if (!r.utm_source && !r.utm_content) ohneSpur += Number(r.n) || 0; });
+
+    // (a) Stumme Motive: registrierte Links ohne Klick UND ohne Abschluss.
+    var ab = {};
+    (attribution || []).forEach(function(r){
+      if (r.utm_source || r.utm_content) ab[(r.utm_content || '') + '|' + (r.utm_source || '')] = Number(r.n) || 0;
+    });
+    var grp = {};
+    (links || []).forEach(function(l){
+      var k = (l.utm_content || '') + '|' + (l.utm_source || '');
+      grp[k] = grp[k] || { content:l.utm_content || '', source:l.utm_source || '', med:l.utm_medium || '',
+                           landing:l.landing || '', kl:0, n:0, letzter:null };
+      grp[k].kl += Number(l.klicks) || 0; grp[k].n++;
+      if (l.landing) grp[k].landing = l.landing;
+      if (l.letzter_klick && (!grp[k].letzter || l.letzter_klick > grp[k].letzter)) grp[k].letzter = l.letzter_klick;
+    });
+    var stumm = {};
+    Object.keys(grp).forEach(function(k){
+      var g = grp[k];
+      if (g.kl === 0 && !(ab[k] > 0)){
+        var s = (g.source + ' ' + g.med).toLowerCase();
+        var art = ZUG_QUELLE.filter(function(q){ return q.test && q.test.test(s); })[0] || ZUG_QUELLE[ZUG_QUELLE.length - 1];
+        stumm[art.titel] = stumm[art.titel] || { art:art, motive:[], links:0, src:g.source, med:g.med };
+        stumm[art.titel].motive.push(g.content || g.source);
+        stumm[art.titel].links += g.n;
+      }
+    });
+    // Anker für die Erwartung: die stärkste bisher gemessene Welle desselben Gebiets.
+    var jeGebiet = {};
+    (attribution || []).forEach(function(r){
+      if (!r.utm_source && !r.utm_content) return;
+      var g = gebietVonSpur(r.utm_source, r.utm_medium);
+      jeGebiet[g] = (jeGebiet[g] || 0) + (Number(r.n) || 0);
+    });
+    // Rangfolge über KATEGORIEN, nicht über Rohzahlen: Klicks und Links sind
+    // nicht vergleichbar. Was neue Abos schafft, steht über dem, was bestehende
+    // nur sichtbar macht; danach kommt Verlust stoppen, zuletzt die Grundlage.
+    //   3 = schafft Abos · 2 = macht sichtbar · 1 = stoppt Verlust · 0 = Grundlage
+    Object.keys(stumm).forEach(function(titel){
+      var s2 = stumm[titel];
+      var g = gebietVonSpur(s2.src, s2.med);
+      var anker = jeGebiet[g] || 0;
+      zuege.push({
+        titel: titel, art: 3, mass: anker,
+        warum: s2.links + ' Links registriert, null Klicks · ' + s2.motive.slice(0, 4).join(', ') +
+               (s2.motive.length > 4 ? ' und weitere' : ''),
+        hebel: anker > 0 ? ('≈ ' + fmt(anker) + ' Abos') : 'unerprobt',
+        text: 'Vorbereitet, aber nie gezündet: ' + s2.motive.length + ' Motiv-Gruppen mit zusammen ' + s2.links +
+              ' Links liegen im Register und haben bis heute keinen einzigen Klick. ' +
+              (anker > 0
+                ? ('Dasselbe Gebiet hat bisher ' + fmt(anker) + ' Abschlüsse gemessen getragen – das ist der Massstab für die Erwartung.')
+                : 'Dieses Gebiet hat bisher nichts getragen; die Erwartung ist entsprechend offen.')
+      });
+    });
+
+    // (b) Viel Klick, (fast) kein gemessener Abschluss. Bis zum 24. Juli stand
+    // hier EINE gemeinsame Ursache (der Uscreen-Checkout trage die Spur nicht) –
+    // das ist widerlegt: die Kette Landing → Checkout → user_created ist geprüft
+    // und trägt die UTM. Bleibt der Befund selbst: diese Wege werden geklickt und
+    // münden kaum in Abos. Darum ein Zug, der misst statt umbaut.
+    // Herleitung: docs/wirkungs-lesart-24-07.md, Ergebnis der Probe in
+    // docs/abschaltprobe-anzeige-27-07.md, fortgeschrieben in
+    // docs/wirkungs-lesart-08-08.md.
+    var leck = { kl:0, motive:[], letzter:null, bezahltKl:0, bezahltLetzter:null };
+    Object.keys(grp).forEach(function(k){
+      var g = grp[k], a2 = ab[k] || 0;
+      if (g.kl < 20 || a2 > 1) return;
+      var tv = /tv|gtv/.test((g.landing || '').toLowerCase());
+      var geb = gebietVonSpur(g.source, g.med);
+      if (tv || geb === 'bezahlt'){
+        leck.kl += g.kl; leck.motive.push((g.content || g.source) + ' (' + fmt(g.kl) + ')');
+        if (g.letzter && (!leck.letzter || g.letzter > leck.letzter)) leck.letzter = g.letzter;
+        // Der bezahlte Weg getrennt: nur er ist es, dessen Aussetzen empfohlen
+        // wird – die organischen TV-Wege laufen weiter und dürfen die Erkennung
+        // nicht überdecken.
+        if (geb === 'bezahlt'){
+          leck.bezahltKl += g.kl;
+          if (g.letzter && (!leck.bezahltLetzter || g.letzter > leck.bezahltLetzter)) leck.bezahltLetzter = g.letzter;
+        }
+      } else if (a2 === 0) {
+        // Nur echte Nullen melden: ein Motiv mit einer brauchbaren Quote ist
+        // keine Schwäche, auch wenn die absolute Zahl klein ist.
+        zuege.push({ titel:'Prüfen oder einstellen · ' + (g.content || g.source), art:1, mass:g.kl,
+          warum:fmt(g.kl) + ' Klicks, kein einziger Abschluss',
+          hebel:'Verlust stoppen',
+          text:'Wird geklickt, aber niemand meldet sich an. Entweder führt der Link auf die falsche Seite, oder das Versprechen deckt sich nicht mit der Landingpage. Ein Blick auf den Ziel-Link genügt; bis dahin lohnt weitere Produktion in diesem Motiv nicht.' });
+      }
+    });
+    if (leck.kl > 0){
+      // Läuft der Weg noch, oder ist er schon abgestellt? Der jüngste Kurzlink-
+      // Klick sagt es. Ohne diese Unterscheidung empfiehlt das Cockpit weiter
+      // eine Abschalt-Probe, die längst läuft – der häufigste Weg, wie ein
+      // Cockpit unglaubwürdig wird.
+      var bezug = leck.bezahltLetzter || leck.letzter;
+      var stillTage = bezug ? Math.floor((Date.now() - new Date(bezug).getTime()) / 86400000) : 99;
+      if (stillTage <= 1){
+        zuege.push({ titel:'Bezahlte Anzeige 3–4 Tage aussetzen und vergleichen', art:2, mass:leck.kl,
+          warum:fmt(leck.kl) + ' Klicks auf TV-Wege führen zu fast keinem Abschluss',
+          hebel:'Klarheit',
+          text:'Betroffen: ' + leck.motive.slice(0, 5).join(', ') + (leck.motive.length > 5 ? ' und weitere' : '') +
+               '. Die Spur ist geprüft und intakt: die Landingpages hängen die UTM an die Checkout-URL, Uscreen liefert sie im user_created-Event, die Ingestion verheftet sie. ' +
+               'Die organischen Wege über dieselbe Seite und dieselben In-App-Browser werden mit 3 bis 5 Prozent ihrer Klicks messbar, die bezahlte Anzeige mit 0,4 Prozent – die Klicks werden also nicht verloren, sie werden kaum zu Abos. ' +
+               'Darum zuerst messen statt umbauen: die Anzeige aussetzen, solange die Grundlinie sauber ist, und die Anmeldungen je Tag vergleichen. ' +
+               'Soll sie danach weiterlaufen, macht ein eigenes Uscreen-Angebot je bezahltem Weg sie hart messbar: services/sommer-zaehler/uscreen-angebot-attribution-auftrag.md.' });
+      } else if (CONFIG.abschaltprobe && CONFIG.abschaltprobe.ergebnis){
+        // Die Probe ist gelaufen UND ausgewertet: kein Zug mehr, sondern ein
+        // Befund. Er steht zuunterst (art 0) und trägt kein «jetzt» – nichts
+        // ist mehr zu tun, es ist etwas zu wissen.
+        zuege.push({ titel:'Bezahlte Anzeige – Abschalt-Probe ausgewertet', art:0, mass:0,
+          warum:'aus seit dem 24. Juli · letzter Klick vor ' + stillTage + ' Tagen · ' + fmt(leck.bezahltKl) + ' Klicks insgesamt',
+          hebel:'ausgewertet',
+          text:CONFIG.abschaltprobe.ergebnis + ' Festgehalten am ' + CONFIG.abschaltprobe.stand + ' in ' + CONFIG.abschaltprobe.doc +
+               '; die Anteile im Dunkelfeld sind entsprechend gedeckelt. ' +
+               'Für eine nächste bezahlte Runde gilt der Schluss daraus: erst hart messbar machen, dann buchen – ein eigenes Uscreen-Angebot je bezahltem Weg, ' +
+               'siehe services/sommer-zaehler/uscreen-angebot-attribution-auftrag.md.' });
+      } else {
+        zuege.push({ titel:'Abschalt-Probe auswerten – die Anzeige liefert seit ' + stillTage + ' Tagen keine Klicks', art:2, mass:leck.kl,
+          warum:'letzter Klick der Anzeige vor ' + stillTage + ' Tagen · ' + fmt(leck.bezahltKl) + ' Klicks insgesamt · die Probe läuft bereits',
+          hebel:'jetzt ablesen',
+          text:'Der teuerste Weg der Aktion ist aus – damit lässt sich endlich in Abos statt in Zuordnungswahrscheinlichkeiten rechnen. ' +
+               'Verglichen wird nicht die Gesamtzahl, sondern die goetheanum.tv-Anmeldungen je Tag vor und nach dem Stopp, bei möglichst gleicher übriger Aktivität. ' +
+               'Vorsicht bei der Lesart: laufen im selben Fenster neue Newsletter, stützen sie die Zahlen und lassen die Anzeige besser aussehen, als sie war. ' +
+               'Fällt der Unterschied klein aus, ist der Befund der alten Lesart widerlegt und die Anzeige trug einstellig. Ergebnis in einer datierten Lesart festhalten (docs/wirkungs-lesart-<datum>.md) und CONFIG.dunkel nachziehen.' });
+      }
+    }
+
+    // (c) Datengrundlage: Aktivitäten ohne Reichweite und ohne Klicks.
+    var offen = (massnahmen || []).filter(function(m){ return !m.reichweite && !m.klicks; });
+    if (offen.length){
+      zuege.push({ titel:offen.length + ' Aktivitäten ohne Zahlen nachtragen', art:0, mass:offen.length,
+        warum:'von ' + (massnahmen || []).length + ' Einträgen fehlen ' + offen.length + ' Reichweite und Klicks',
+        hebel:'Grundlage',
+        text:'Ohne diese Zahlen bleibt die Kette oben an mehreren Stellen leer – und die Kosten je Abo lassen sich nicht ehrlich rechnen. Nachtragen im Protokoll über «Bearbeiten».' });
+    }
+
+    zuege.sort(function(a, b){ return b.art - a.art || b.mass - a.mass; });
+
+    if (!zuege.length){ host.innerHTML = '<div class="empty">Nichts liegt brach – alles Vorbereitete ist ausgespielt.</div>'; return; }
+    zuege.slice(0, 8).forEach(function(z, i){
+      var det = document.createElement('details'); det.className = 'zug';
+      if (i === 0) det.open = true;
+      var sum = document.createElement('summary');
+      var t = document.createElement('span'); t.className = 'zug-t';
+      var car = document.createElement('span'); car.className = 'car'; car.setAttribute('aria-hidden', 'true');
+      t.appendChild(car); t.appendChild(document.createTextNode(z.titel));
+      var w = document.createElement('span'); w.className = 'warum'; w.textContent = z.warum; t.appendChild(w);
+      var h = document.createElement('span'); h.className = 'zug-h';
+      h.textContent = z.hebel;
+      sum.appendChild(t); sum.appendChild(h); det.appendChild(sum);
+      var tief = document.createElement('div'); tief.className = 'zug-tief';
+      var p = document.createElement('p'); p.textContent = z.text; tief.appendChild(p);
+      det.appendChild(tief);
+      host.appendChild(det);
+    });
+  }
+
+  // ── Quelle der Social-Media-Zahlen (Metricool) ─────────────────────────────
+  // Reichweite und Klicks der Social-Kanäle liegen nicht im Backend, sondern in
+  // Metricool. Der Block nennt die Quelle mit Link und den Übernahme-Takt; die
+  // Zahlen selbst trägt man je Aktivität ein (Reichweite/Klicks). Element-gewächtert,
+  // erscheint also nur auf Seiten mit einem #quelleSocial-Container.
+  function renderQuelleSocial(){
+    var host = el('quelleSocial'); if (!host) return;
+    var q = CONFIG.quelleSocial; if (!q) return;
+    host.innerHTML = '';
+    var row = document.createElement('div'); row.className = 'landing';
+    var lab = document.createElement('span'); lab.className = 'meta';
+    lab.textContent = 'Quelle · Social-Media-Zahlen';
+    var a = document.createElement('a'); a.className = 'btn';
+    a.href = q.url; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = q.label;
+    row.appendChild(lab); row.appendChild(a);
+    var note = document.createElement('p'); note.className = 'provisorisch';
+    note.textContent = 'Reichweite und Klicks der Social-Media-Kanäle kommen aus Metricool. ' +
+      q.takt + ' Ein automatischer Abruf ist nicht möglich – die abgelesenen Zahlen je Aktivität eintragen.';
+    host.appendChild(row); host.appendChild(note);
+  }
+
+  // ── Attribution nach Motiv (utm_content) ───────────────────────────────────
+  function renderMotive(attribution){
+    if (!el('motive')) return;
+    var items = (attribution || []).filter(function(r){ return r.utm_content || r.utm_campaign || r.utm_source; })
+      .map(function(r){
+        var label = r.utm_content || r.utm_campaign || r.utm_source;
+        var quelle = [r.utm_source, r.utm_medium].filter(Boolean).join(' · ');
+        return { label:label, quelle:quelle, n:Number(r.n) || 0 };
+      })
+      .sort(function(a, b){ return b.n - a.n; }).slice(0, 12);
+    var wrap = el('motive'), list = el('motiveList');
+    if(!items.length){ wrap.hidden = true; return; }
+    wrap.hidden = false; list.innerHTML = '';
+    items.forEach(function(x){
+      var row = document.createElement('div'); row.className = 'motrow';
+      row.innerHTML = '<span class="mc"></span><span class="mn"></span>';
+      var mc = row.querySelector('.mc'); mc.textContent = x.label;
+      if(x.quelle){ var s = document.createElement('span'); s.className = 'ms'; s.textContent = x.quelle; mc.appendChild(s); }
+      row.querySelector('.mn').textContent = fmt(x.n);
+      list.appendChild(row);
+    });
+  }
+
+  // ── Dunkelfeld-Tabelle (Belege): wie die Abos ohne Spur verteilt wurden ───
+  // Zeigt die ANTEILE der datierten Lesart und was sie auf dem heutigen Stand
+  // bedeuten. Die Verteilung selbst steckt in dunkelVerteilen() – hier wird sie
+  // nur offengelegt, damit die Rangfolge oben nachprüfbar bleibt.
+  function renderDunkelfeld(kanaele, attribution){
+    if (!el('dunkelBody')) return;
+    var ohne = 0;
+    (attribution || []).forEach(function(r){ if (!r.utm_source && !r.utm_content) ohne += Number(r.n) || 0; });
+    var verteilt = dunkelVerteilen(ohne);
+    var anteile = (CONFIG.dunkel && CONFIG.dunkel.anteile) || {};
+    var body = el('dunkelBody'); body.innerHTML = '';
+    var keys = Object.keys(anteile).sort(function(a, b){ return anteile[b] - anteile[a]; });
+    keys.forEach(function(k){
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td>';
+      tr.children[0].textContent = gebietLabel(k);
+      tr.children[1].textContent = Math.round(anteile[k] * 100) + ' %';
+      tr.children[2].textContent = '≈' + fmt(verteilt[k] || 0);
+      body.appendChild(tr);
+    });
+    var foot = el('dunkelFoot');
+    if (foot){
+      foot.innerHTML = '<tr><td>Summe</td><td class="num">100 %</td><td class="num"></td></tr>';
+      foot.querySelector('tr').children[2].textContent = fmt(ohne);
+    }
+    if (el('dunkelNote')){
+      el('dunkelNote').textContent = 'Die Anteile stammen aus der datierten Lesart (Stand ' +
+        ((CONFIG.dunkel && CONFIG.dunkel.stand) || '–') + ', ±30 %) und werden auf den heutigen Stand von ' +
+        fmt(ohne) + ' Anmeldungen ohne Spur angewandt. Herleitung: ' +
+        ((CONFIG.dunkel && CONFIG.dunkel.doc) || '') + ' im Werkzeug-Repo. Die Messwerte bleiben unangetastet.';
+    }
+  }
+
+  // ── Vermutete Herkunft der dunklen Anmeldungen (Live-Aggregat) ──────────────
+  // Das Live-Fundament unter der Schätzung: je dunkler Anmeldung der letzten 14
+  // Tage der zeitlich nächste Kurzlink-Klick (aus sommer2026_ereignisse) – ein
+  // Indiz, keine Messung. Atmet mit dem 60-Sekunden-Takt. Ordnet die Klicks nach
+  // vermuteter Aktivität, plus die Zahl der dunklen ohne zeitnahen Klick.
+  function renderVermutet(rows){
+    if (!el('vermutetList')) return;
+    var host = el('vermutetList'); host.innerHTML = '';
+    var dunkel = (rows || []).filter(function(r){ return !r.utm_source && !r.utm_content; });
+    var mitHinweis = dunkel.filter(function(r){ return r.vermutet_code; });
+    var agg = {};
+    mitHinweis.forEach(function(r){
+      var label = [r.vermutet_source, r.vermutet_content].filter(Boolean).join(' · ') || r.vermutet_code;
+      agg[label] = (agg[label] || 0) + 1;
+    });
+    var items = Object.keys(agg).map(function(k){ return { label:k, n:agg[k] }; })
+      .sort(function(a, b){ return b.n - a.n; });
+    if (el('vermutetKopf')){
+      el('vermutetKopf').textContent = 'Vermutete Herkunft der ' + fmt(dunkel.length) +
+        ' Anmeldungen ohne UTM der letzten 14 Tage – Indiz, keine Messung';
+    }
+    if (!dunkel.length){
+      host.innerHTML = '<div class="empty">In den letzten 14 Tagen kam keine Anmeldung ohne UTM.</div>';
+      return;
+    }
+    items.forEach(function(x){
+      var row = document.createElement('div'); row.className = 'motrow';
+      row.innerHTML = '<span class="mc"></span><span class="mn"></span>';
+      row.querySelector('.mc').textContent = x.label;
+      row.querySelector('.mn').textContent = fmt(x.n);
+      host.appendChild(row);
+    });
+    var ohneHinweis = dunkel.length - mitHinweis.length;
+    if (ohneHinweis > 0){
+      var row = document.createElement('div'); row.className = 'motrow qz-rest';
+      row.innerHTML = '<span class="mc"></span><span class="mn"></span>';
+      row.querySelector('.mc').textContent = 'ohne zeitnahen Klick · Direkt oder Organik';
+      row.querySelector('.mn').textContent = fmt(ohneHinweis);
+      host.appendChild(row);
+    }
+  }
+
+  // ── Aktivitäten-Protokoll ───────────────────────────────────────────────────
+  var KANAL_LABEL = { newsletter:'Newsletter', mailer:'Mailing', flyer:'Flyer/Stand', social:'Social Media', popup:'Popup', website:'Website', empfehlung:'Empfehlung', andere:'Andere' };
+  // ── Zeitband: Phasen × Wochen × Kanäle ─────────────────────────────────────
+  // Phasen der Aktion (anpassbar): Auftakt → Verdichtung → Schlussspurt.
+  var PHASEN = [
+    { name: 'Auftakt',       von: '2026-06-29', bis: '2026-07-19' },
+    { name: 'Verdichtung',   von: '2026-07-20', bis: '2026-08-02' },
+    { name: 'Schlussspurt',  von: '2026-08-03', bis: '2026-08-11' }
+  ];
+  var ZB_KANAELE = [
+    ['social', 'Social'], ['newsletter', 'Newsletter'], ['mailer', 'Mailing/Post'], ['flyer', 'Flyer/Stand'],
+    ['popup', 'Popup'], ['website', 'Website'], ['empfehlung', 'Empfehlung'], ['andere', 'Anderes']
+  ];
+
+  function zbWochen(){
+    // Montagsraster über den Aktionszeitraum.
+    var start = new Date(CONFIG.start + 'T00:00:00');
+    var ende  = new Date(CONFIG.ende  + 'T00:00:00');
+    var mo = new Date(start); mo.setDate(mo.getDate() - ((mo.getDay() + 6) % 7));
+    var wochen = [];
+    while (mo <= ende){
+      var so = new Date(mo); so.setDate(so.getDate() + 6);
+      wochen.push({ von: new Date(mo), bis: so });
+      mo = new Date(mo); mo.setDate(mo.getDate() + 7);
+    }
+    return wochen;
+  }
+  function zbTag(d){ return d.getDate() + '.' + (d.getMonth() + 1) + '.'; }
+
+  // Zeitband-Chips sind kompakt (Punkt · Tag · Titel einzeilig) – Antippen klappt
+  // die Felder auf (Kürzel, Reichweite, Klicks, Kosten, Notiz + Bearbeiten-Knopf).
+  // Delegation über die Tabelle; die Zeilen-Zuordnung liegt in zbById (je Render neu).
+  // zbOffen merkt sich aufgeklappte Chips über die 60-Sekunden-Neu-Renderings hinweg.
+  var zbById = {}, zbWired = false, zbOffen = {};
+
+  function renderZeitband(rows){
+    if (!el('zeitband')) return;
+    var tbl = el('zeitband'); if(!tbl) return;
+    var wochen = zbWochen();
+    var heute = new Date(); heute.setHours(0,0,0,0);
+
+    // Kopf 1: Phasen (Zellen je Woche, gleiche Phase = zusammenhängende Färbung)
+    var h1 = '<tr class="ph"><th></th>';
+    var i, w, ph;
+    var phasenJeWoche = wochen.map(function(wo){
+      var mitte = new Date(wo.von); mitte.setDate(mitte.getDate() + 3);
+      for (var p = 0; p < PHASEN.length; p++){
+        if (mitte >= new Date(PHASEN[p].von + 'T00:00:00') && mitte <= new Date(PHASEN[p].bis + 'T23:59:59')) return PHASEN[p].name;
+      }
+      return '';
+    });
+    i = 0;
+    while (i < phasenJeWoche.length){
+      var span = 1;
+      while (i + span < phasenJeWoche.length && phasenJeWoche[i + span] === phasenJeWoche[i]) span++;
+      h1 += '<th colspan="' + span + '">' + (phasenJeWoche[i] || '·') + '</th>';
+      i += span;
+    }
+    h1 += '</tr>';
+
+    // Kopf 2: Wochen (heutige Woche markiert)
+    var h2 = '<tr class="wk"><th>Kanal</th>';
+    for (i = 0; i < wochen.length; i++){
+      w = wochen[i];
+      var istHeute = heute >= w.von && heute <= w.bis;
+      h2 += '<th' + (istHeute ? ' class="heute"' : '') + '>' + zbTag(w.von) + '–' + zbTag(w.bis) + '</th>';
+    }
+    h2 += '</tr>';
+
+    // Zeilen: je Kanal, Chips je Woche
+    var body = '';
+    ZB_KANAELE.forEach(function(k){
+      var zeile = '<tr><td class="kz">' + k[1] + '</td>';
+      for (var wi = 0; wi < wochen.length; wi++){
+        var von = wochen[wi].von, bis = wochen[wi].bis;
+        var chips = '';
+        (rows || []).forEach(function(m){
+          if ((m.kanal || 'andere') !== k[0] || !m.tag) return;
+          var d = new Date(m.tag + 'T00:00:00');
+          if (d < von || d > bis) return;
+          var det = [];
+          if (m.ersteller) det.push(['Kürzel', m.ersteller]);
+          if (m.reichweite) det.push(['Reichweite', Number(m.reichweite).toLocaleString('de-CH')]);
+          if (m.klicks) det.push(['Klicks', Number(m.klicks).toLocaleString('de-CH')]);
+          if (m.kosten) det.push(['Kosten', Number(m.kosten).toLocaleString('de-CH')]);
+          if (m.notiz) det.push(['Notiz', m.notiz]);
+          zbById[m.id] = m;
+          var istOffen = !!zbOffen[m.id];
+          var span = document.createElement('span');
+          span.className = 'zb-chip clickable' + (istOffen ? ' open' : '') + (m.notiz ? ' has-note' : '');
+          span.setAttribute('data-mid', m.id);
+          span.setAttribute('role', 'button');
+          span.setAttribute('tabindex', '0');
+          span.setAttribute('aria-expanded', istOffen ? 'true' : 'false');
+          span.title = m.massnahme + (det.length ? ' – ' + det.map(function(p){ return p[0] + ' ' + p[1]; }).join(' · ') : '') + ' · antippen zum Ausklappen';
+          var kopf = document.createElement('span'); kopf.className = 'zk';
+          kopf.innerHTML = '<span class="zr"></span><span class="zt">' + zbTag(d) + '</span>';
+          var zm = document.createElement('span'); zm.className = 'zm'; zm.textContent = m.massnahme;
+          kopf.appendChild(zm);
+          span.appendChild(kopf);
+          var box = document.createElement('span'); box.className = 'zb-det';
+          det.forEach(function(p){
+            var zd = document.createElement('span'); zd.className = 'zd' + (p[0] === 'Notiz' ? ' zd-note' : '');
+            var l = document.createElement('span'); l.className = 'zdl'; l.textContent = p[0];
+            var v = document.createElement('span'); v.className = 'zdv'; v.textContent = p[1];
+            zd.appendChild(l); zd.appendChild(v); box.appendChild(zd);
+          });
+          var eb = document.createElement('button'); eb.type = 'button'; eb.className = 'zb-edit';
+          eb.setAttribute('data-mid', m.id); eb.textContent = 'Bearbeiten';
+          box.appendChild(eb);
+          span.appendChild(box);
+          chips += span.outerHTML;
+        });
+        zeile += '<td>' + chips + '</td>';
+      }
+      body += zeile + '</tr>';
+    });
+
+    tbl.innerHTML = '<thead>' + h1 + h2 + '</thead><tbody>' + body + '</tbody>';
+    // Delegierter Klick/Tastatur: Chip klappt die Felder auf/zu, der Bearbeiten-Knopf
+    // im aufgeklappten Chip lädt die Aktivität in die Maske.
+    if (!zbWired){
+      zbWired = true;
+      var kippe = function(c){
+        var offen = c.classList.toggle('open');
+        c.setAttribute('aria-expanded', offen ? 'true' : 'false');
+        var id = c.getAttribute('data-mid');
+        if (offen) zbOffen[id] = true; else delete zbOffen[id];
+      };
+      tbl.addEventListener('click', function(e){
+        var b = e.target.closest && e.target.closest('.zb-edit[data-mid]');
+        if (b){ var m = zbById[b.getAttribute('data-mid')]; if (m) massnahmeBearbeiten(m); return; }
+        var c = e.target.closest && e.target.closest('.zb-chip[data-mid]');
+        if (c) kippe(c);
+      });
+      tbl.addEventListener('keydown', function(e){
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        if (e.target.closest && e.target.closest('.zb-edit')) return; // Knopf reagiert selbst
+        var c = e.target.closest && e.target.closest('.zb-chip[data-mid]');
+        if (c){ e.preventDefault(); kippe(c); }
+      });
+    }
+    el('zbLegende').innerHTML = '<span>Zeilen = Kanal, Spalten = Woche. Jeder Punkt eine Aktivität – antippen klappt Reichweite, Klicks, Kosten und Notiz auf; Bearbeiten dort.</span>';
+  }
+
+  // Eintragen/Bearbeiten: offener Schreibweg (Muster Link-Register),
+  // erscheint sofort überall. Bearbeiten lädt die Zeile über den Knopf im Protokoll.
+  if (el('mfTag')) el('mfTag').value = new Date().toISOString().slice(0, 10);
+  if (el('mfBtn')) el('mfBtn').addEventListener('click', function(){
+    var sagen = function(msg, bad){ meldung('mfSaid', msg, bad); };
+    var titel = (el('mfTitel').value || '').trim();
+    var wer = (el('mfWer').value || '').trim();
+    if (!el('mfTag').value || !titel || !wer){ sagen('Datum, Aktivität und Kürzel sind Pflicht.', true); return; }
+    // Wie bei den Kosten: kein zweiter Klick, solange der erste schreibt.
+    var mfB = el('mfBtn'), mfText = mfB.textContent;
+    mfB.disabled = true; mfB.textContent = 'Wird gespeichert …';
+    var mfFrei = function(){ mfB.disabled = false; mfB.textContent = mfText; };
+    var zahl = function(id){ var e = el(id); return (e && e.value !== '') ? Math.max(0, Math.round(Number(e.value) || 0)) : null; };
+    var istEdit = mfEditId != null;
+    var notiz = el('mfNotiz') ? (el('mfNotiz').value || '').trim() : '';
+    var params = {
+      p_tag: el('mfTag').value, p_massnahme: titel,
+      p_kanal: el('mfKanal').value, p_rolle: null,
+      p_ersteller: wer, p_kosten: null,
+      p_reichweite: zahl('mfReichweite'), p_klicks: zahl('mfKlicks'),
+      p_notiz: notiz || null
+    };
+    if (istEdit) { params.p_id = mfEditId; } else { params.p_zielgruppe = null; }
+    fetch(SB + '/rest/v1/rpc/' + (istEdit ? 'sommer2026_massnahme_aendern' : 'sommer2026_massnahme_eintragen'), {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify(params)
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(ergebnis){
+        mfFrei();
+        if (ergebnis === 'ok'){
+          sagen(istEdit ? 'Geändert.' : 'Eingetragen – erscheint im Zeitband, im Protokoll und in der Reichweite.');
+          mfZuruecksetzen();
+          // Reichweite und Klicks fliessen in die Gebiete – darum Zeitband, Protokoll
+          // UND (auf dem Cockpit) die Gebiete-Liste neu laden. Die Renderer sind
+          // element-gewächtert; auf der Aktivitäten-Seite greift nur das Erste.
+          Promise.all([rpc('sommer2026_massnahmen_public'), rpc('sommer2026_links_public'), rpc('sommer2026_attribution')])
+            .then(function(res){
+              var rows = res[0] || [];
+              renderZeitband(rows); renderMassnahmen(rows);
+              renderGebiete(res[2] || [], res[1] || [], rows, []);
+            })
+            .catch(function(){});
+        } else { sagen('Datum und Aktivität prüfen.', true); }
+      })
+      .catch(function(){ mfFrei(); sagen(istEdit ? 'Ändern nicht erreichbar.' : 'Eintragen nicht erreichbar.', true); });
+  });
+
+  function renderMassnahmen(rows){
+    if (!el('massnahmenBody')) return;
+    var body = el('massnahmenBody'); body.innerHTML = '';
+    if(!rows || !rows.length){
+      body.innerHTML = '<tr><td class="empty" colspan="7">Noch keine Aktivitäten erfasst – das Protokoll wird gepflegt, sobald die Aktionen laufen.</td></tr>';
+      return;
+    }
+    rows.forEach(function(r){
+      var tag = r.tag ? new Date(r.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) : '–';
+      var kanal = KANAL_LABEL[r.kanal] || r.kanal || '';
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td></td><td></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="act"></td>';
+      tr.children[0].textContent = tag;
+      tr.children[1].textContent = (r.massnahme || '') + (r.ersteller ? ' · ' + r.ersteller : '');
+      if (r.notiz){ var nn = document.createElement('span'); nn.className = 'mnote'; nn.textContent = r.notiz; tr.children[1].appendChild(nn); }
+      tr.children[2].textContent = kanal;
+      tr.children[3].textContent = (r.kosten != null) ? geld(r.kosten) : '–';
+      tr.children[4].textContent = (r.reichweite != null) ? fmt(r.reichweite) : '–';
+      tr.children[5].textContent = (r.klicks != null) ? fmt(r.klicks) : '–';
+      var edit = document.createElement('button');
+      edit.type = 'button'; edit.className = 'medit'; edit.textContent = 'Bearbeiten';
+      edit.addEventListener('click', function(){ massnahmeBearbeiten(r); });
+      tr.children[6].appendChild(edit);
+      body.appendChild(tr);
+    });
+  }
+
+  // Bearbeiten: Zeile in die Maske laden; Speichern übernimmt auch nachgetragene
+  // Reichweite und Klicks (Kosten bleiben dem Kosten-Modul vorbehalten).
+  var mfEditId = null;
+  function massnahmeBearbeiten(r){
+    mfEditId = r.id;
+    var d = el('mfForm'); if (d) d.open = true;
+    el('mfTag').value = r.tag || '';
+    el('mfTitel').value = r.massnahme || '';
+    el('mfKanal').value = r.kanal || 'andere';
+    if (el('mfReichweite')) el('mfReichweite').value = (r.reichweite != null) ? r.reichweite : '';
+    if (el('mfKlicks')) el('mfKlicks').value = (r.klicks != null) ? r.klicks : '';
+    if (el('mfNotiz')) el('mfNotiz').value = r.notiz || '';
+    el('mfWer').value = r.ersteller || '';
+    el('mfBtn').textContent = 'Änderung speichern';
+    el('mfSaid').textContent = 'Bearbeitung von «' + (r.massnahme || '') + '» – Speichern übernimmt.';
+    el('mfSaid').style.color = 'var(--muted)';
+    d.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function mfZuruecksetzen(){
+    mfEditId = null;
+    el('mfTitel').value = ''; el('mfWer').value = '';
+    if (el('mfReichweite')) el('mfReichweite').value = '';
+    if (el('mfKlicks')) el('mfKlicks').value = '';
+    if (el('mfNotiz')) el('mfNotiz').value = '';
+    el('mfTag').value = new Date().toISOString().slice(0, 10);
+    el('mfBtn').textContent = 'Eintragen';
+  }
+
+  // ── Multiplikatoren: Liste, Verlauf, Passwort-Schleier ─────────────────────
+  var MU_ART = { anruf:'Anruf', mail:'Mail', treffen:'Treffen', andere:'Anderes' };
+  var MU_STATUS = { offen:'offen', erreicht:'erreicht', zugesagt:'zugesagt', abgesagt:'abgesagt', spaeter:'später' };
+  var muListe = [], muProto = [], muNamen = {}, muOffen = null;
+
+  function muSag(msg, bad){ var s = el('muSaid'); if (!s) return; s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; }
+  function muPwGespeichert(){ try { return sessionStorage.getItem('sommer26_multi_pw') || ''; } catch(e){ return ''; } }
+
+  function muNamenLaden(pw, still){
+    // Erst Passwort separat prüfen (funktioniert auch bei leerer Namensliste),
+    // dann die Namen laden.
+    return fetch(SB + '/rest/v1/rpc/sommer2026_multi_pw_ok', {
+      method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({ p_passwort: pw })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(ok){
+        if (!ok){
+          try { sessionStorage.removeItem('sommer26_multi_pw'); } catch(e){}
+          if (!still) muSag('Passwort stimmt nicht.', true);
+          return;
+        }
+        try { sessionStorage.setItem('sommer26_multi_pw', pw); } catch(e){}
+        if (el('muNamenBtn')) el('muNamenBtn').textContent = 'Namen ausblenden';
+        if (!still) muSag('Namen eingeblendet – nur in diesem Browser.');
+        return fetch(SB + '/rest/v1/rpc/sommer2026_multi_namen', {
+          method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+          body: JSON.stringify({ p_passwort: pw })
+        }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+          .then(function(rows){
+            muNamen = {}; (rows || []).forEach(function(x){ muNamen[x.id] = x.name; });
+            renderMultis();
+          });
+      }).catch(function(){ if (!still) muSag('Nicht erreichbar.', true); });
+  }
+
+  if (el('muNamenBtn')) el('muNamenBtn').addEventListener('click', function(){
+    if (Object.keys(muNamen).length){
+      muNamen = {}; try { sessionStorage.removeItem('sommer26_multi_pw'); } catch(e){}
+      el('muNamenBtn').textContent = 'Namen einblenden';
+      muSag('Namen ausgeblendet.');
+      renderMultis(); return;
+    }
+    var pw = (window.prompt('Passwort für die Klarnamen:') || '').trim().toLowerCase();
+    if (pw) muNamenLaden(pw, false);
+  });
+
+  function muDatum(d){ return d ? new Date(d + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) : '–'; }
+
+  function renderMultis(){
+    if (!el('muBody')) return;
+    var body = el('muBody'); body.innerHTML = '';
+    if (!muListe.length){
+      body.innerHTML = '<tr><td class="empty" colspan="6">Noch keine Multiplikatoren erfasst – unten anlegen.</td></tr>';
+      return;
+    }
+    muListe.forEach(function(m){
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td></td><td></td><td></td><td class="num"></td><td class="act"></td>';
+      tr.children[0].textContent = muNamen[m.id] || m.alias;
+      tr.children[1].textContent = m.rolle_funktion || '–';
+      var letzter = muProto.filter(function(k){ return k.multiplikator_id === m.id; })[0];
+      tr.children[2].textContent = m.letzter_tag ? (muDatum(m.letzter_tag) + (letzter ? ' · ' + letzter.wer : '')) : '–';
+      var st = document.createElement('span');
+      st.className = 'mstat ' + (m.letzter_status || '');
+      st.textContent = MU_STATUS[m.letzter_status] || '–';
+      tr.children[3].appendChild(st);
+      tr.children[4].textContent = m.kontakte_n || 0;
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'medit';
+      btn.textContent = (muOffen === m.id) ? 'Schliessen' : 'Verlauf & Kontakt';
+      btn.addEventListener('click', function(){ muOffen = (muOffen === m.id) ? null : m.id; renderMultis(); });
+      tr.children[5].appendChild(btn);
+      body.appendChild(tr);
+
+      if (muOffen === m.id){
+        var vr = document.createElement('tr'); vr.className = 'mv';
+        var td = document.createElement('td'); td.colSpan = 6;
+        var eintraege = muProto.filter(function(k){ return k.multiplikator_id === m.id; });
+        if (!eintraege.length){
+          var leer = document.createElement('p'); leer.className = 'empty'; leer.textContent = 'Noch kein Kontakt protokolliert.';
+          td.appendChild(leer);
+        }
+        eintraege.forEach(function(k){
+          var row = document.createElement('div'); row.className = 'mvrow';
+          var meta = document.createElement('span'); meta.className = 'mvmeta';
+          meta.textContent = muDatum(k.tag) + ' · ' + k.wer + ' · ' + (MU_ART[k.art] || k.art);
+          var stx = document.createElement('span'); stx.className = 'mstat ' + (k.status || '');
+          stx.textContent = MU_STATUS[k.status] || '';
+          var erg = document.createElement('span'); erg.textContent = k.ergebnis || '';
+          row.appendChild(meta); row.appendChild(stx); row.appendChild(erg);
+          td.appendChild(row);
+        });
+        // Mini-Maske: Kontakt nachtragen
+        var f = document.createElement('div'); f.className = 'mvform';
+        function feld(labelText, elx){
+          var l = document.createElement('label'); l.className = 'field';
+          var s = document.createElement('span'); s.className = 'lab'; s.textContent = labelText;
+          l.appendChild(s); l.appendChild(elx); return l;
+        }
+        var iTag = document.createElement('input'); iTag.type = 'date'; iTag.value = new Date().toISOString().slice(0, 10);
+        var iWer = document.createElement('input'); iWer.type = 'text'; iWer.placeholder = 'z. B. pt'; iWer.autocomplete = 'off';
+        var sArt = document.createElement('select');
+        Object.keys(MU_ART).forEach(function(a){ var o = document.createElement('option'); o.value = a; o.textContent = MU_ART[a]; sArt.appendChild(o); });
+        var sSt = document.createElement('select');
+        Object.keys(MU_STATUS).forEach(function(a){ var o = document.createElement('option'); o.value = a; o.textContent = MU_STATUS[a]; sSt.appendChild(o); });
+        var iErg = document.createElement('input'); iErg.type = 'text'; iErg.placeholder = 'Ergebnis – keine Klarnamen (offen sichtbar)';
+        f.appendChild(feld('Datum', iTag)); f.appendChild(feld('Kürzel', iWer));
+        f.appendChild(feld('Art', sArt)); f.appendChild(feld('Status', sSt));
+        var ergWrap = feld('Ergebnis', iErg); ergWrap.className = 'field mvspan'; f.appendChild(ergWrap);
+        var aktion = document.createElement('div'); aktion.className = 'mvspan';
+        aktion.style.cssText = 'display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap';
+        var kBtn = document.createElement('button'); kBtn.type = 'button'; kBtn.className = 'btn primary'; kBtn.textContent = 'Kontakt nachtragen';
+        var kSaid = document.createElement('span'); kSaid.className = 'said';
+        aktion.appendChild(kBtn); aktion.appendChild(kSaid);
+        f.appendChild(aktion);
+        kBtn.addEventListener('click', function(){
+          var wer = (iWer.value || '').trim();
+          if (!iTag.value || !wer){ kSaid.textContent = 'Datum und Kürzel sind Pflicht.'; kSaid.style.color = 'var(--bad)'; return; }
+          fetch(SB + '/rest/v1/rpc/sommer2026_multi_kontakt_anlegen', {
+            method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+            body: JSON.stringify({ p_multiplikator: m.id, p_tag: iTag.value, p_wer: wer, p_art: sArt.value, p_ergebnis: (iErg.value || '').trim() || null, p_status: sSt.value })
+          }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+            .then(function(ergebnis){
+              if (ergebnis === 'ok'){ muNeuLaden(); }
+              else { kSaid.textContent = 'Angaben prüfen.'; kSaid.style.color = 'var(--bad)'; }
+            })
+            .catch(function(){ kSaid.textContent = 'Nicht erreichbar.'; kSaid.style.color = 'var(--bad)'; });
+        });
+        td.appendChild(f);
+        vr.appendChild(td);
+        body.appendChild(vr);
+      }
+    });
+  }
+
+  function muNeuLaden(){
+    Promise.all([rpc('sommer2026_multi_liste'), rpc('sommer2026_multi_protokoll')])
+      .then(function(res){ muListe = res[0] || []; muProto = res[1] || []; renderMultis(); })
+      .catch(function(){});
+  }
+
+  if (el('muAnlegenBtn')) el('muAnlegenBtn').addEventListener('click', function(){
+    var sag = function(msg, bad){ var s = el('muASaid'); s.textContent = msg; s.style.color = bad ? 'var(--bad)' : 'var(--ok)'; };
+    var name = (el('muName').value || '').trim();
+    var wer = (el('muWer').value || '').trim();
+    if (!name || !wer){ sag('Name und Kürzel sind Pflicht.', true); return; }
+    fetch(SB + '/rest/v1/rpc/sommer2026_multi_anlegen', {
+      method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({ p_name: name, p_rolle: (el('muRolle').value || '').trim() || null, p_ersteller: wer })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(ergebnis){
+        if (ergebnis === 'ok'){
+          sag('Angelegt – erscheint in der Liste als M-Nummer.');
+          el('muName').value = ''; el('muRolle').value = '';
+          muNeuLaden();
+          if (muPwGespeichert()) muNamenLaden(muPwGespeichert(), true);
+        } else { sag('Name und Kürzel prüfen.', true); }
+      })
+      .catch(function(){ sag('Anlegen nicht erreichbar.', true); });
+  });
+
+  // ── Kosten und Wirkung ─────────────────────────────────────────────────────
+  var KAT_LABEL = { stunden:'Stunden intern', social:'Social Media', druck:'Druck & Versand', infrastruktur:'Infrastruktur', andere:'Andere' };
+  // lastStats hält die Roh-Statistik fest, damit ein Nachladen der Kosten
+  // (Eintragen/Löschen) den Treue-Hebel neu rechnen kann, ohne alles zu holen.
+  var lastTotal = 0, lastRevenue = 0, lastStats = [];
+  function renderKosten(total, revenue, posten){
+    if (!el('costTotal')) return;
+    lastTotal = total; lastRevenue = revenue;
+    posten = posten || [];
+    var jeKat = {}; var summe = 0;
+    posten.forEach(function(k){ var b = Number(k.betrag) || 0; summe += b; jeKat[k.kategorie] = (jeKat[k.kategorie] || 0) + b; });
+    el('costTotal').textContent = geld(summe);
+    var revChf = revenue && revenue.chfGesamt || 0;
+    var voll = CONFIG.kostenVollstaendig !== false;
+    if (voll){
+      // Beträge unter zehn Franken auf Rappen genau – ein «CHF 0» wäre keine
+      // Sparsamkeit, sondern eine gerundete Unwahrheit.
+      var cpa = (summe > 0 && total > 0) ? summe / total : 0;
+      el('costCpa').textContent = cpa > 0
+        ? (cpa < 10 ? CONFIG.waehrung + ' ' + cpa.toFixed(2).replace('.', ',') : geld(cpa))
+        : '–';
+      // Dezimalkomma wie überall sonst im Haus – toFixed liefert einen Punkt.
+      el('costRoi').textContent = summe > 0 ? (revChf / summe).toFixed(1).replace('.', ',') + '×' : '–';
+    } else {
+      el('costCpa').textContent = '–';
+      el('costRoi').textContent = '–';
+    }
+
+    // Der grösste Hebel auf den Ertrag ist nicht die Zahl der Anmeldungen,
+    // sondern wie lange sie zahlen. Gerechnet, nicht behauptet: dasselbe
+    // Szenario mit einem Monat mehr – die Differenz IST der Wert eines
+    // Monats. Nebenbefund, der die Kostenzahl links relativiert: schon
+    // anderthalb Monate mehr Treue zahlen die ganze Aktion ein zweites Mal.
+    if (el('treueWert')){
+      var monatsWert = treueHebel(lastStats);
+      el('treueWert').textContent = monatsWert > 0 ? geld(monatsWert) : '–';
+      if (el('treueNote')){
+        el('treueNote').textContent = (monatsWert > 0 && summe > 0)
+          ? 'so viel bringt ein Monat mehr Treue im Schnitt – ' + (summe / monatsWert).toFixed(1).replace('.', ',')
+            + ' solcher Monate zahlen die ganze Aktion ein zweites Mal'
+          : 'wie viel Folgejahr-Umsatz ein Monat mehr Treue bringt';
+      }
+    }
+
+    // Woraus die Kosten bestehen – die Struktur ist die eigentliche Nachricht:
+    // Diese Aktion war Handarbeit, kein Medienkauf. Ohne diesen Satz liest
+    // jeder die Summe als Werbebudget.
+    if (el('costSub')){
+      var stundenAnteil = summe > 0 ? Math.round((jeKat.stunden || 0) / summe * 100) : 0;
+      var mediaAnteil   = summe > 0 ? Math.round((jeKat.social  || 0) / summe * 100) : 0;
+      el('costSub').textContent = (summe > 0 && stundenAnteil > 0)
+        ? 'davon ' + stundenAnteil + ' % interne Arbeitszeit, ' + mediaAnteil + ' % bezahlte Anzeigen'
+        : 'alle eingetragenen Posten';
+    }
+    if (el('kostenNote')) el('kostenNote').textContent = voll
+      ? 'Kampagnenkosten sind erfasst (die ActiveCampaign-Gebühr darin ist eine Schätzung, im Posten selbst markiert); Kosten je Abo und Rückfluss rechnen darauf. '
+        + 'Bewusst nicht darin: die laufende Uscreen-Gebühr und Papier je Folgejahr – die sollen aus dem Abopreis selbst gedeckt werden, eine Preisfrage jenseits dieser Kampagne (docs/schlussbericht-datensammlung.md).'
+      : 'Kosten je Abo und Rückfluss bleiben leer, solange die Kosten unvollständig sind — die bezahlten Anzeigen stehen seit dem 10. August drin, die internen Stunden fehlen noch. '
+        + 'Gerechnet würden daraus sonst Zahlen, die technisch stimmen und trotzdem täuschen. Was fehlt, steht in docs/schlussbericht-datensammlung.md; eingetragen wird es unter Kosten.';
+
+    var body = el('costBody'); body.innerHTML = '';
+    Object.keys(KAT_LABEL).forEach(function(kat){
+      if (kat === 'andere' && !jeKat[kat]) return;
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td class="num"></td>';
+      tr.children[0].textContent = KAT_LABEL[kat];
+      tr.children[1].textContent = geld(jeKat[kat] || 0);
+      body.appendChild(tr);
+    });
+    var foot = el('costFoot');
+    foot.innerHTML = '<tr><td>Summe</td><td class="num"></td></tr>';
+    foot.querySelector('tr').children[1].textContent = geld(summe);
+
+    var pb = el('kostenPostenBody'); pb.innerHTML = '';
+    if (!posten.length){
+      pb.innerHTML = '<tr><td class="empty" colspan="5">Noch keine Einzelposten erfasst.</td></tr>';
+    } else {
+      posten.forEach(function(k){
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td></td><td></td><td></td><td class="num"></td><td class="act"></td>';
+        tr.children[0].textContent = k.tag ? new Date(k.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) : '–';
+        tr.children[1].textContent = (k.posten || '') + (k.ersteller ? ' · ' + k.ersteller : '');
+        // Stunden bleiben sichtbar, nicht nur ihr Franken-Wert: «8 h × CHF 80»
+        // sagt im Bericht mehr als «CHF 640».
+        if (k.stunden != null){
+          var sn = document.createElement('span'); sn.className = 'mnote';
+          sn.textContent = zahlKurz(k.stunden) + ' h' + (k.ansatz != null ? ' × ' + geld(k.ansatz) : '');
+          tr.children[1].appendChild(sn);
+        }
+        tr.children[2].textContent = KAT_LABEL[k.kategorie] || k.kategorie || '';
+        tr.children[3].textContent = geld(k.betrag);
+        if (el('kfBtn')){   // Löschen nur dort, wo auch eingetragen wird
+          var weg = document.createElement('button');
+          weg.type = 'button'; weg.className = 'medit weg';
+          weg.textContent = 'Löschen';
+          weg.setAttribute('aria-label', 'Posten ' + (k.posten || '') + ' löschen');
+          weg.addEventListener('click', function(){ kostenLoeschen(k, weg); });
+          tr.children[4].appendChild(weg);
+        }
+        pb.appendChild(tr);
+      });
+    }
+  }
+
+  // Zahl ohne unnötige Nullen: 8 statt 8.00, 2,5 statt 2.50.
+  function zahlKurz(n){
+    var z = Number(n) || 0;
+    return (Math.round(z * 100) / 100).toString().replace('.', ',');
+  }
+
+  // Löschen ist so offen wie Eintragen – wer einen Posten anlegen darf, muss
+  // den eigenen Fehler wegnehmen können, ohne jemanden zu fragen. Genau das
+  // hat am 10. August gefehlt: Ein Doppelklick landete zweimal in der Summe
+  // und musste von Hand aus der Datenbank geholt werden.
+  function kostenLoeschen(k, btn){
+    var sagen = function(msg, bad){ meldung('kfSaid', msg, bad); };
+    var wer = kfKuerzel();
+    if (!wer){ sagen('Zuerst das eigene Kürzel oben eintragen – dann löschen.', true); if (el('kfWer')) el('kfWer').focus(); return; }
+    if (!window.confirm('Posten «' + (k.posten || '') + '» über ' + geld(k.betrag) + ' wirklich löschen?')) return;
+    btn.disabled = true;
+    fetch(SB + '/rest/v1/rpc/sommer2026_kosten_loeschen', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({ p_id: k.id, p_ersteller: wer })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(ergebnis){
+        if (ergebnis === 'ok'){
+          sagen('Gelöscht: ' + (k.posten || '') + ' · ' + geld(k.betrag) + '.');
+          kostenNeuLaden();
+        } else { btn.disabled = false; sagen('Der Posten war schon weg.', true); }
+      })
+      .catch(function(){ btn.disabled = false; sagen('Löschen nicht erreichbar.', true); });
+  }
+
+  function kostenNeuLaden(){
+    return rpc('sommer2026_kosten_public')
+      .then(function(rows){ renderKosten(lastTotal, lastRevenue, rows); })
+      .catch(function(){});
+  }
+
+  // Rückmeldung: Farbe über die Klasse, nicht über style – sonst bleibt Grün
+  // im Dunkelmodus stehen und fällt unter den Kontrast (B05).
+  function meldung(id, text, schlecht){
+    var s = el(id); if (!s) return;
+    s.textContent = text;
+    s.className = 'said ' + (schlecht ? 'schlecht' : 'gut');
+  }
+
+  // ── Kosten eintragen ───────────────────────────────────────────────────────
+  // Offener Schreibweg mit Pflicht-Kürzel. Die Maske sagt je Kostenart, was
+  // hineingehört: Bei ‹Stunden intern› fragte sie bisher nach einem «Betrag in
+  // Franken» – und niemand wusste, ob Stunden oder Franken gemeint sind
+  // (Rückmeldung Team, 10. August). Jetzt fragt sie nach Stunden und rechnet.
+  var KAT_HINWEIS = {
+    stunden:        'Eigene Arbeitszeit. Stunden und Ansatz eintragen – die Franken rechnet das Werkzeug.',
+    social:         'Bezahlte Anzeigen und was ihre Gestaltung gekostet hat: Meta, YouTube, Instagram.',
+    druck:          'Druck, Papier, Porto, Versand, Material am Stand.',
+    infrastruktur:  'Dienste, die die Aktion getragen haben: Aktionsseiten, Mailversand, Video-Plattform.',
+    andere:         'Was in keine der anderen Arten passt – im Posten sagen, was es ist.'
+  };
+  var KAT_BEISPIEL = {
+    stunden:        'z. B. Redaktion Mailtexte',
+    social:         'z. B. Meta-Anzeige Juli',
+    druck:          'z. B. Flyer DE 1000 Stück',
+    infrastruktur:  'z. B. Landingpage Hosting Juli',
+    andere:         'z. B. Inserat BZ Basel, halbe Seite'
+  };
+  var KF_KUERZEL = 'sommer2026:kuerzel';
+
+  function kfKuerzel(){ return el('kfWer') ? (el('kfWer').value || '').trim() : ''; }
+  function kfStundenModus(){ return el('kfKategorie') && el('kfKategorie').value === 'stunden'; }
+
+  // Was am Ende in der Datenbank steht, ist immer ein Franken-Betrag. Im
+  // Stunden-Modus entsteht er aus Stunden × Ansatz – und wird vor dem Klick
+  // ausgeschrieben, damit niemand eine Zahl abschickt, die er nicht gesehen hat.
+  function kfBetragJetzt(){
+    if (!kfStundenModus()) return el('kfBetrag').value === '' ? null : Number(el('kfBetrag').value);
+    var h = Number(el('kfStunden').value), a = Number(el('kfAnsatz').value);
+    if (!(h > 0) || !(a >= 0)) return null;
+    return Math.round(h * a * 100) / 100;
+  }
+
+  function kfMaskeStellen(){
+    if (!el('kfKategorie')) return;
+    var kat = el('kfKategorie').value, stunden = kat === 'stunden';
+    el('kfBetragFeld').hidden = stunden;
+    el('kfStundenFeld').hidden = !stunden;
+    el('kfAnsatzFeld').hidden = !stunden;
+    el('kfKatHint').textContent = KAT_HINWEIS[kat] || '';
+    el('kfPosten').placeholder = KAT_BEISPIEL[kat] || '';
+    var r = el('kfRechnung'), b = kfBetragJetzt();
+    if (stunden && b != null){
+      r.hidden = false;
+      r.textContent = 'Das ergibt ' + geld(b) + ' – so steht es nachher in der Summe.';
+    } else { r.hidden = true; r.textContent = ''; }
+  }
+
+  if (el('kfBtn')){
+    el('kfTag').value = new Date().toISOString().slice(0, 10);
+    try { var gemerkt = localStorage.getItem(KF_KUERZEL); if (gemerkt) el('kfWer').value = gemerkt; } catch(e){}
+    el('kfKategorie').addEventListener('change', kfMaskeStellen);
+    ['kfStunden','kfAnsatz'].forEach(function(id){ el(id).addEventListener('input', kfMaskeStellen); });
+    kfMaskeStellen();
+
+    el('kfBtn').addEventListener('click', function(){
+      var sagen = function(msg, bad){ meldung('kfSaid', msg, bad); };
+      var btn = el('kfBtn');
+      var posten = (el('kfPosten').value || '').trim();
+      var wer = kfKuerzel();
+      var betrag = kfBetragJetzt();
+
+      // Fehlt etwas, sagen wir welches Feld – und springen hin.
+      var fehlt = null;
+      if (!posten) fehlt = ['Wofür ist das Geld gegangen?', 'kfPosten'];
+      else if (betrag == null || betrag < 0) fehlt = kfStundenModus()
+        ? ['Wie viele Stunden waren es?', 'kfStunden']
+        : ['Wie viel hat es gekostet?', 'kfBetrag'];
+      else if (!el('kfTag').value) fehlt = ['Welches Datum?', 'kfTag'];
+      else if (!wer) fehlt = ['Noch das eigene Kürzel – dann ist klar, wer eingetragen hat.', 'kfWer'];
+      if (fehlt){ sagen(fehlt[0], true); el(fehlt[1]).focus(); return; }
+
+      // Der Knopf nimmt keinen zweiten Klick an, solange er schreibt.
+      btn.disabled = true;
+      var beschriftung = btn.textContent;
+      btn.textContent = 'Wird eingetragen …';
+      var frei = function(){ btn.disabled = false; btn.textContent = beschriftung; };
+
+      try { localStorage.setItem(KF_KUERZEL, wer); } catch(e){}
+      fetch(SB + '/rest/v1/rpc/sommer2026_kosten_eintragen', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+        body: JSON.stringify({
+          p_tag: el('kfTag').value, p_posten: posten, p_kategorie: el('kfKategorie').value,
+          p_betrag: betrag, p_ersteller: wer,
+          p_stunden: kfStundenModus() ? Number(el('kfStunden').value) : null,
+          p_ansatz:  kfStundenModus() ? Number(el('kfAnsatz').value)  : null
+        })
+      }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function(ergebnis){
+          frei();
+          if (ergebnis === 'ok'){
+            sagen('Eingetragen: ' + posten + ' · ' + geld(betrag) + '. Summe, Kosten je Abo und Rückfluss sind aktualisiert.');
+            el('kfPosten').value = ''; el('kfBetrag').value = ''; el('kfStunden').value = '';
+            kfMaskeStellen();
+            el('kfPosten').focus();
+            kostenNeuLaden();
+          } else if (ergebnis === 'doppelt'){
+            sagen('Dieser Posten steht mit demselben Betrag schon in der Liste – nichts doppelt eingetragen.', true);
+            kostenNeuLaden();
+          } else { sagen('Angaben prüfen.', true); }
+        })
+        .catch(function(){ frei(); sagen('Eintragen nicht erreichbar – bitte gleich noch einmal.', true); });
+    });
+  }
+
+  // ── Tarif-Tabelle ──────────────────────────────────────────────────────────
+  function renderTarif(rows){
+    if (!el('tarifBody')) return;
+    function cell(produkt, tarif, intervall){
+      return rows.reduce(function(sum, r){
+        if(r.produkt === produkt && r.tarif === tarif && r.intervall === intervall) return sum + Number(r.n);
+        return sum;
+      }, 0);
+    }
+    var body = el('tarifBody'); body.innerHTML = '';
+    var colM = 0, colJ = 0;
+    [['wos','Wochenschrift'], ['gtv','goetheanum.tv']].forEach(function(p){
+      var hr = document.createElement('tr'); hr.className = 'prod-h';
+      hr.innerHTML = '<td colspan="4"></td>'; hr.querySelector('td').textContent = p[1];
+      body.appendChild(hr);
+      [['standard','Standard'], ['ermaessigt','Ermässigt']].forEach(function(t){
+        var m = cell(p[0], t[0], 'monatlich'), j = cell(p[0], t[0], 'jaehrlich');
+        colM += m; colJ += j;
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td><td class="num"></td>';
+        tr.children[0].textContent = t[1];
+        tr.children[1].textContent = fmt(m);
+        tr.children[2].textContent = fmt(j);
+        tr.children[3].textContent = fmt(m + j);
+        body.appendChild(tr);
+      });
+    });
+    var foot = el('tarifFoot');
+    foot.innerHTML = '<tr><td>Summe</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>';
+    foot.querySelector('tr').children[1].textContent = fmt(colM);
+    foot.querySelector('tr').children[2].textContent = fmt(colJ);
+    foot.querySelector('tr').children[3].textContent = fmt(colM + colJ);
+  }
+
+  // ── Umsatz-Projektion (Folgejahr) ──────────────────────────────────────────
+  // Rechnet je Zahlungswährung getrennt (CHF- und EUR-Zahler zum je echten
+  // Preis) und liefert zusätzlich die CHF-Gesamtsumme (EUR über CONFIG.eurChf).
+  // goetheanum.tv rechnet ausschliesslich in EUR – Zeilen ohne Währungsangabe
+  // fallen darum auf EUR. Preis-Lookup: Währung → Produkt → Format → Tarif
+  // (ermässigt hat im Shop keinen eigenen Preis → Fallback Standard).
+  // Die Szenarien der Reihe nach; ohne Treffer das erste.
+  function szenarien(){ return (CONFIG.szenarien && CONFIG.szenarien.liste) || []; }
+  function referenzSzenario(){
+    var l = szenarien(), k = CONFIG.szenarien && CONFIG.szenarien.referenz;
+    for (var i = 0; i < l.length; i++) if (l[i].key === k) return l[i];
+    return l[0] || { name:'', bleibt:{}, monate:12 };
+  }
+  // Bleibe-Quote je Produkt. Ein unbekanntes Produkt erbt die vorsichtigste
+  // hinterlegte Quote – lieber zu wenig versprochen als zu viel.
+  function bleibeQuote(sz, produkt){
+    var b = (sz && sz.bleibt) || {};
+    if (b[produkt] != null) return b[produkt];
+    var werte = Object.keys(b).map(function(k){ return b[k]; });
+    return werte.length ? Math.min.apply(null, werte) : 0;
+  }
+  function projectRevenue(rows, sz){
+    sz = sz || referenzSzenario();
+    var summe = { chf: 0, eur: 0, bleibend: 0, szenario: sz };
+    rows.forEach(function(r){
+      var w = r.waehrung === 'chf' ? 'chf' : 'eur';
+      var jeFormat = ((CONFIG.preise[w] || {})[r.produkt] || {})[r.format] || {};
+      var jeTarif = jeFormat[r.tarif] || jeFormat.standard || {};
+      var preis = jeTarif[r.intervall];
+      if(!preis) return;
+      // Monatliche Abos tragen nur so viele Monate, wie das Szenario ansetzt;
+      // jährliche zählen voll, das Jahr ist im Voraus bezahlt.
+      var jahr = r.intervall === 'monatlich' ? preis * (sz.monate || 12) : preis;
+      var bleibend;
+      if(r.status === 'bleibt') bleibend = Number(r.n);
+      else if(r.status === 'neu' || r.status === 'laeuft-aus') bleibend = Number(r.n) * bleibeQuote(sz, r.produkt);
+      else bleibend = 0;                     // gekuendigt zählt nicht
+      summe[w] += bleibend * jahr;
+      summe.bleibend += bleibend;
+    });
+    summe.chfGesamt = summe.chf + summe.eur * CONFIG.eurChf;
+    return summe;
+  }
+  // Die Decke: alle bleiben, monatliche zahlen zwölf volle Monate. Keine
+  // Erwartung – sie sagt nur, worüber wir reden.
+  function deckeRevenue(rows){
+    return projectRevenue(rows, { name:'Decke', bleibt:{ gtv:1, wos:1 }, monate:12 });
+  }
+  // Was ein Monat durchschnittlicher Verweildauer wert ist: dasselbe Szenario
+  // einmal mit einem Monat mehr gerechnet, die Differenz ist die Antwort.
+  // Nur die monatlichen Abos bewegen sich – jährliche haben ihr Jahr bezahlt.
+  function treueHebel(rows){
+    if (!rows || !rows.length) return 0;
+    var sz = referenzSzenario();
+    var mehr = { name: sz.name, bleibt: sz.bleibt, monate: (sz.monate || 12) + 1 };
+    return projectRevenue(rows, mehr).chfGesamt - projectRevenue(rows, sz).chfGesamt;
+  }
+  // Aktive Abos – gekündigte zählen nicht mit; Bezugsgrösse der Karten.
+  function aktiveAbos(rows){
+    return (rows || []).reduce(function(s, r){
+      return r.status === 'gekuendigt' ? s : s + (Number(r.n) || 0);
+    }, 0);
+  }
+  // Gemischte Quote über den tatsächlichen Produkt-Mix – für die Kohorte, die
+  // nur eine Gesamtzahl kennt.
+  function mischQuote(rows, sz){
+    var oben = 0, unten = 0;
+    (rows || []).forEach(function(r){
+      if (r.status === 'gekuendigt') return;
+      var n = Number(r.n) || 0;
+      oben += n * bleibeQuote(sz, r.produkt); unten += n;
+    });
+    return unten > 0 ? oben / unten : 0;
+  }
+
+  // ── Wer bleibt, und was bringt das? (Kohorte + drei Szenarien) ─────────────
+  // Steht direkt unter der Signaturzahl: Die zweite Frage nach «wie viele» ist
+  // «was bringt das» – sie gehört nicht unter die Belege. Gezeigt wird die
+  // SPANNE, nicht eine Zahl, denn es hat noch keine Kohorte entschieden.
+  function renderCohort(kohorten, revenue, stats){
+    var ref = (revenue && revenue.szenario) || referenzSzenario();
+
+    var card = el('cohortCard');
+    if (card){
+      if(!kohorten || !kohorten.length){ card.innerHTML = '<div class="empty">Noch keine Kohorte.</div>'; }
+      else {
+        var k = kohorten[kohorten.length - 1];
+        var neu = Number(k.neu), bleibt = Number(k.bleibt), offen = Number(k.offen);
+        var projektiert = bleibt + Math.round(offen * mischQuote(stats, ref));
+        var quote = neu > 0 ? Math.round(projektiert / neu * 100) : 0;
+        var kMonat = new Date(k.kohorte + 'T00:00:00');
+        var kEntsch = new Date(k.entscheidung_ab + 'T00:00:00');
+        var monat = kMonat.toLocaleDateString('de-CH', { month:'long', year:'numeric' });
+        card.innerHTML =
+          '<div class="when"></div><h4></h4>' +
+          '<div class="conv"><div class="ring"><div class="inner"></div></div>' +
+          '<div class="txt"><b></b><br><span class="m"></span><div class="chip ton"></div></div></div>';
+        card.querySelector('.when').textContent = 'Kohorte ' + monat + ' · Entscheidung ab ' + dmy(kEntsch);
+        card.querySelector('h4').textContent = fmt(neu) + ' Anmeldungen im Gratis-Zeitraum';
+        card.querySelector('.ring').style.setProperty('--p', quote);
+        card.querySelector('.ring .inner').textContent = quote + '%';
+        card.querySelector('.txt b').textContent = '~' + fmt(projektiert) + ' bleiben voraussichtlich zahlend';
+        card.querySelector('.txt .m').textContent = fmt(offen) + ' Entscheidungen noch offen · ' + fmt(bleibt) + ' bereits umgewandelt';
+        card.querySelector('.chip').textContent = 'Szenario ' + ref.name + ' · noch hat keine Kohorte entschieden';
+      }
+    }
+
+    // Drei Karten, gleiches Gewicht – die Spanne IST die Aussage. Eine
+    // hervorgehobene Zahl neben zwei kleinen liest sich als Prognose mit
+    // Fehlerbalken; das wäre gelogen, solange keine Kohorte entschieden hat.
+    var host = el('szenKarten');
+    if (host && stats){
+      host.innerHTML = '';
+      szenarien().forEach(function(sz){
+        var r = projectRevenue(stats, sz);
+        var karte = document.createElement('div'); karte.className = 'kennzahl';
+        var n = document.createElement('div'); n.className = 'k-label'; n.textContent = sz.name;
+        var w = document.createElement('div'); w.className = 'k-wert'; w.textContent = geld(r.chfGesamt);
+        var m = document.createElement('div'); m.className = 'k-note';
+        m.textContent = fmt(Math.round(r.bleibend)) + ' von ' + fmt(Math.round(aktiveAbos(stats))) + ' Abos bleiben · ' +
+                        Math.round(bleibeQuote(sz, 'gtv') * 100) + ' % goetheanum.tv, ' +
+                        Math.round(bleibeQuote(sz, 'wos') * 100) + ' % Wochenschrift · monatliche Abos ' +
+                        sz.monate + ' von zwölf Monaten';
+        karte.appendChild(n); karte.appendChild(w); karte.appendChild(m);
+        if (sz.key === ref.key){
+          var pill = document.createElement('div'); pill.className = 'chip ton';
+          pill.textContent = 'Referenz – diese Zahl trägt den Rückfluss';
+          karte.appendChild(pill);
+        }
+        host.appendChild(karte);
+      });
+    }
+
+    var teile = [];
+    if (revenue.chf > 0) teile.push('CHF ' + Math.round(revenue.chf).toLocaleString('de-CH') + ' von CHF-Zahlern');
+    if (revenue.eur > 0) teile.push('EUR ' + Math.round(revenue.eur).toLocaleString('de-CH') + ' von EUR-Zahlern, umgerechnet zum Kurs ' + CONFIG.eurChf);
+    if (el('szenarienNote')) el('szenarienNote').textContent =
+      'Blieben alle und zahlten die monatlichen zwölf volle Monate, wären es ' + geld(deckeRevenue(stats).chfGesamt) +
+      ' – die Decke, keine Erwartung. Gerechnet wird zum echten Vollpreis je Zahlungswährung' +
+      (teile.length ? ' (Referenz: ' + teile.join(' + ') + ')' : '') + '. ' +
+      'Zwei Stellschrauben je Szenario: die Bleibe-Quote je Produkt und die Zahl der Monate, die ein monatliches Abo im Schnitt trägt. ' +
+      'Keine Prognose – es hat noch keine Kohorte entschieden, die erste tut es Anfang Oktober. ' +
+      'Herleitung, Begründung der Quoten und Empfindlichkeit: ' + ((CONFIG.szenarien && CONFIG.szenarien.doc) || '') + '.';
+  }
+
+  // ── Laufende Kündigungen ──────────────────────────────────────────────────
+  // Die einzige GEMESSENE Zahl zum Bleiben. Alles andere in dieser Sektion ist
+  // gerechnet: Die drei Szenarien setzen Bleibe-Quoten, die noch keine Kohorte
+  // bestätigt hat. Wer im Gratis-Zeitraum kündigt, hat dagegen entschieden –
+  // sichtbar, datiert, ohne Annahme. Darum steht der Block direkt unter den
+  // Szenarien und nicht in einer Klappe: er ist ihre Gegenprobe.
+  //
+  // Zwei Zahlen statt einer, weil «gekündigt» hier nicht «weg» heisst. Uscreen
+  // beendet den Zugang nicht im Moment der Kündigung, sondern zum Ende der
+  // laufenden Frist (`access_ends_at`) – bei diesen Abos also meist erst im
+  // Oktober oder November, wenn die Gratiszeit ohnehin abgelaufen wäre. Eine
+  // einzelne Kachel «gekündigt» würde einen Abgang behaupten, der noch gar
+  // nicht stattgefunden hat; darum steht daneben, wie viele davon noch dabei
+  // sind. Die Kündigung ist hier kein Abschied, sondern ein vorweggenommenes
+  // Nein zur Verlängerung.
+  //
+  // Quelle: RPC sommer2026_kuendigungen (Migration «sommer2026_kuendigungen»).
+  // Sie liest den Zeitpunkt aus dem Roh-Protokoll der Ingestion, wo der
+  // Uscreen-Webhook `subscription_canceled` samt `access_ends_at` liegt – die
+  // Anmeldetabelle selbst kennt nur den Zustand, nicht seinen Tag. Es verlassen
+  // ausschliesslich Summen die Datenbank, wie bei allen anderen RPCs auch.
+  function kuendAggregat(rows, stats){
+    var jetzt = new Date();
+    var heute = new Date(jetzt.getFullYear(), jetzt.getMonth(), jetzt.getDate());
+    var a = { gesamt:0, laufend:0, beendet:0, ohneDatum:0, ohneEnde:0,
+              jeProdukt:{}, byDay:{}, monate:{}, tage:[], median:null, ersteWoche:0 };
+    (rows || []).forEach(function(r){
+      var n = Number(r.n) || 0;
+      if (!n) return;
+      a.gesamt += n;
+      a.jeProdukt[r.produkt] = (a.jeProdukt[r.produkt] || 0) + n;
+      if (r.tag){
+        a.byDay[r.tag] = (a.byDay[r.tag] || 0) + n;
+        if (r.tage_bis_kuendigung != null){
+          var d = Number(r.tage_bis_kuendigung);
+          for (var i = 0; i < n; i++) a.tage.push(d);
+          if (d <= 7) a.ersteWoche += n;
+        }
+      } else {
+        a.ohneDatum += n;
+      }
+      if (r.zugang_ende){
+        // Der Endtag zählt noch als Zugang: Uscreen nennt einen Zeitpunkt, wir
+        // vergleichen Tage. Wessen Zugang heute ausläuft, ist heute noch dabei.
+        var ende = new Date(r.zugang_ende + 'T00:00:00');
+        if (ende >= heute) a.laufend += n; else a.beendet += n;
+        var m = r.zugang_ende.slice(0, 7);
+        a.monate[m] = (a.monate[m] || 0) + n;
+      } else {
+        a.ohneEnde += n;
+      }
+    });
+    // Median statt Mittelwert: Ein einzelner Spätentschluss nach elf Wochen
+    // zieht den Schnitt hoch und behauptet eine Bedenkzeit, die es nicht gab.
+    if (a.tage.length){
+      var s = a.tage.slice().sort(function(x, y){ return x - y; });
+      a.median = s[Math.floor((s.length - 1) / 2)];   // diskret, wie percentile_disc(0.5)
+    }
+    // Bezugsgrösse je Produkt: ALLE Anmeldungen dieses Produkts, gekündigte
+    // eingeschlossen – die Quote fragt, wie viele der Gewonnenen wieder gingen.
+    a.basis = {};
+    (stats || []).forEach(function(r){
+      a.basis[r.produkt] = (a.basis[r.produkt] || 0) + (Number(r.n) || 0);
+    });
+    return a;
+  }
+
+  // Zwei Formen, weil der Satz sie braucht: die Nennform für Tabellen und
+  // Kacheln, die Beugung für den Fliesstext («bei der Wochenschrift»).
+  // «goetheanum.tv» steht artikellos, «Wochenschrift» braucht einen – und der
+  // beugt sich mit der Präposition mit: bei DER Wochenschrift, für DIE
+  // Wochenschrift. Darum zwei Fälle statt einer Beugung, sonst steht im Satz
+  // «für der Wochenschrift».
+  var PRODUKT_NAME = { gtv:'goetheanum.tv', wos:'Wochenschrift' };
+  var PRODUKT_DATIV = { gtv:'goetheanum.tv', wos:'der Wochenschrift' };
+  var PRODUKT_AKK   = { gtv:'goetheanum.tv', wos:'die Wochenschrift' };
+  function produktName(p){ return PRODUKT_NAME[p] || p; }
+  function produktDativ(p){ return PRODUKT_DATIV[p] || PRODUKT_NAME[p] || p; }
+  function produktAkk(p){ return PRODUKT_AKK[p] || PRODUKT_NAME[p] || p; }
+
+  // WO EINE KÜNDIGUNG ÜBERHAUPT ANKOMMT – die wichtigste Zeile dieses
+  // Abschnitts. goetheanum.tv meldet sie: Uscreen schickt `subscription_canceled`
+  // an die Ingestion. Die Wochenschrift meldet sie NICHT – Paperform sendet nur
+  // Einreichungen, und die Zoho-Anbindung ist geplant und nicht gebaut
+  // (services/sommer-zaehler/README.md). Alle Wochenschrift-Zeilen tragen darum
+  // status = 'neu', und zwar unabhängig davon, was in Wirklichkeit geschieht.
+  //
+  // Eine 0 heisst dort also «nicht gemessen», nicht «keine». Der Unterschied ist
+  // nicht kosmetisch: Als Ergebnis gelesen wäre die 0 der beste Wert der ganzen
+  // Aktion – und er wäre erfunden. Darum steht die Wochenschrift weder im Zähler
+  // noch im Nenner der Quote, sondern daneben, benannt als blinder Fleck.
+  var KUENDIGUNG_GEMESSEN = { gtv:true, wos:false };
+  function kuendigungGemessen(p){ return KUENDIGUNG_GEMESSEN[p] === true; }
+
+  function renderKuendigungen(rows, stats){
+    if (!el('kuendZahlen')) return;
+    var a = kuendAggregat(rows, stats);
+    // Bezugsgrösse ist NUR, was auch melden kann. Die Wochenschrift in denselben
+    // Nenner zu nehmen, würde die Quote künstlich halbieren – 39 von 1 067 statt
+    // 39 von 652 –, obwohl von 415 dieser Anmeldungen gar keine Kündigung
+    // eintreffen KANN. Siehe KUENDIGUNG_GEMESSEN.
+    var gemessene = Object.keys(a.basis).filter(kuendigungGemessen).sort();
+    var blinde    = Object.keys(a.basis).filter(function(p){ return !kuendigungGemessen(p); }).sort();
+    var basisGemessen = gemessene.reduce(function(s, p){ return s + a.basis[p]; }, 0);
+
+    if (el('kuendLede')){
+      var satz;
+      if (!a.gesamt){
+        satz = 'Bisher ist keine Kündigung gemeldet worden.';
+      } else {
+        satz = fmt(a.gesamt) + ' von ' + fmt(basisGemessen) + ' ' +
+               gemessene.map(produktName).join('- und ') + '-Abos sind gekündigt worden. ' +
+               'Fort ist damit noch fast niemand: ' + fmt(a.laufend) +
+               ' behalten den Zugang bis zum Ende ihrer Frist.';
+      }
+      if (blinde.length){
+        satz += ' Für ' + blinde.map(produktAkk).join(' und ') +
+                ' lässt sich dasselbe nicht sagen – von dort meldet keine Quelle Kündigungen.';
+      }
+      el('kuendLede').textContent = satz;
+    }
+
+    var karten = [];
+    var quote = gemessene.map(function(p){
+      var n = a.jeProdukt[p] || 0, b = a.basis[p] || 0;
+      return produktName(p) + ' ' + fmt(n) + ' von ' + fmt(b) +
+             (b ? ' (' + (Math.round(n / b * 1000) / 10).toString().replace('.', ',') + ' %)' : '');
+    });
+    if (blinde.length){
+      quote.push(blinde.map(produktName).join(' und ') + ' nicht gemessen');
+    }
+    karten.push({ n:'Gekündigt', w:fmt(a.gesamt), m:quote.join(' · ') });
+    karten.push({ n:'Zugang läuft noch', w:fmt(a.laufend),
+                  m:a.beendet ? ('gekündigt, aber bis zum Fristende weiter dabei · ' + fmt(a.beendet) +
+                                 (a.beendet === 1 ? ' Zugang ist beendet' : ' Zugänge sind beendet')) +
+                                (a.ohneEnde ? ', ' + fmt(a.ohneEnde) + ' ohne Enddatum' : '')
+                              : 'gekündigt, aber bis zum Fristende weiter dabei' });
+    if (a.median != null){
+      karten.push({ n:'Nach wie vielen Tagen', w:fmt(a.median) + (a.median === 1 ? ' Tag' : ' Tage'),
+                    m:'Median zwischen Anmeldung und Kündigung · ' + fmt(a.ersteWoche) + ' von ' +
+                      fmt(a.tage.length) + ' in der ersten Woche' });
+    }
+    var host = el('kuendZahlen');
+    host.innerHTML = '';
+    karten.forEach(function(k){
+      var d = document.createElement('div'); d.className = 'kennzahl';
+      var n = document.createElement('div'); n.className = 'k-label'; n.textContent = k.n;
+      var w = document.createElement('div'); w.className = 'k-wert'; w.textContent = k.w;
+      var m = document.createElement('div'); m.className = 'k-note'; m.textContent = k.m;
+      d.appendChild(n); d.appendChild(w); d.appendChild(m); host.appendChild(d);
+    });
+
+    // Takt der Kündigungen – gleiche Bauart wie der Puls oben, aber eigener
+    // Zeitraum: Kündigungen laufen über das Aktionsende hinaus weiter, der
+    // Puls der Anmeldungen endet am 11. August. Beginn ist trotzdem der
+    // Aktionsstart, damit sichtbar bleibt, dass die ersten zwei Wochen keine
+    // einzige Kündigung trugen.
+    var pulsHost = el('kuendPuls');
+    if (pulsHost){
+      pulsHost.innerHTML = '';
+      var tage = Object.keys(a.byDay).sort();
+      var alle = [];
+      if (tage.length){
+        var erster = (CONFIG.start && CONFIG.start < tage[0]) ? CONFIG.start : tage[0];
+        var jetzt2 = new Date();
+        var stop = new Date(jetzt2.getFullYear(), jetzt2.getMonth(), jetzt2.getDate());
+        var letzterTag = new Date(tage[tage.length - 1] + 'T00:00:00');
+        if (letzterTag > stop) stop = letzterTag;
+        for (var d2 = new Date(erster + 'T00:00:00'); d2 <= stop; d2.setDate(d2.getDate() + 1)) alle.push(isoTag(d2));
+      }
+      var max = alle.reduce(function(m, d){ return Math.max(m, a.byDay[d] || 0); }, 0) || 1;
+      var spitze = alle.reduce(function(b, d){ return (a.byDay[d] || 0) > (a.byDay[b] || 0) ? d : b; }, alle[0]);
+      alle.forEach(function(d){
+        var n = a.byDay[d] || 0;
+        var tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.tabIndex = 0;
+        var tip = new Date(d + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'long' }) +
+                  ' · ' + fmt(n) + (n === 1 ? ' Kündigung' : ' Kündigungen');
+        tag.setAttribute('data-tip', tip);
+        tag.setAttribute('role', 'img');
+        tag.setAttribute('aria-label', tip);
+        var b = document.createElement('span');
+        b.className = 'p' + (d === spitze ? ' hoch' : '');
+        b.style.height = Math.max(3, Math.round(n / max * 100)) + '%';
+        tag.appendChild(b);
+        pulsHost.appendChild(tag);
+      });
+      var lab = el('kuendPulsL');
+      if (lab){
+        lab.innerHTML = '';
+        if (alle.length){
+          var erstesEreignis = tage.length ? new Date(tage[0] + 'T00:00:00') : null;
+          var von = document.createElement('span');
+          von.textContent = 'erste Kündigung ' + (erstesEreignis ? dmy(erstesEreignis) : '–');
+          var top = document.createElement('span');
+          top.textContent = 'Spitze ' + fmt(a.byDay[spitze] || 0) + ' am ' +
+                            new Date(spitze + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
+          var bis = document.createElement('span');
+          bis.textContent = 'heute ' + fmt(a.byDay[alle[alle.length - 1]] || 0);
+          lab.appendChild(von); lab.appendChild(top); lab.appendChild(bis);
+        }
+      }
+    }
+
+    // Wann der Zugang endet – die Welle, auf die es ankommt. Bis dahin zählen
+    // diese Menschen als Publikum, danach nicht mehr.
+    var body = el('kuendMonatBody');
+    if (body){
+      body.innerHTML = '';
+      var monate = Object.keys(a.monate).sort();
+      if (!monate.length && !a.ohneEnde){
+        body.innerHTML = '<tr><td class="empty" colspan="3">noch keine Enddaten</td></tr>';
+      } else {
+        // Die Tabelle summiert auf ALLE Kündigungen, nicht nur auf die mit
+        // Enddatum: Eine Summe, die kleiner ist als die Kachel darüber, liest
+        // sich als Rechenfehler. Die Zeile ohne Datum steht darum sichtbar mit.
+        var zeilen = monate.map(function(m){
+          return { name:new Date(m + '-01T00:00:00').toLocaleDateString('de-CH', { month:'long', year:'numeric' }),
+                   n:a.monate[m] };
+        });
+        if (a.ohneEnde) zeilen.push({ name:'ohne Enddatum', n:a.ohneEnde });
+        var summe = zeilen.reduce(function(s, z){ return s + z.n; }, 0);
+        zeilen.forEach(function(z){
+          var tr = document.createElement('tr');
+          tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td>';
+          tr.children[0].textContent = z.name;
+          tr.children[1].textContent = fmt(z.n);
+          tr.children[2].textContent = Math.round(z.n / summe * 100) + ' %';
+          body.appendChild(tr);
+        });
+        var foot = el('kuendMonatFoot');
+        if (foot){
+          foot.innerHTML = '<tr><td>Summe</td><td class="num"></td><td class="num"></td></tr>';
+          var td = foot.querySelector('tr').children;
+          td[1].textContent = fmt(summe);
+          td[2].textContent = '100 %';
+        }
+      }
+    }
+
+    if (el('kuendNote')){
+      el('kuendNote').textContent =
+        (blinde.length ? ('Der blinde Fleck zuerst: Für ' + blinde.map(produktAkk).join(' und ') +
+          ' gibt es keinen Meldeweg für Kündigungen. Paperform sendet nur Anmeldungen, die Zoho-Anbindung ist ' +
+          'geplant und nicht gebaut – jede dieser Zeilen steht auf «neu», gleichgültig was in Wirklichkeit ' +
+          'geschieht. Diese Anmeldungen stehen darum weder im Zähler noch im Nenner der Quote. ') : '') +
+        'Gemessen, nicht gerechnet: Jede gezählte Zeile stammt aus dem Uscreen-Ereignis «subscription_canceled». ' +
+        'Der Tag des Zugangsendes ist Uscreens eigenes «access_ends_at» – in der Regel das Ende der drei Gratismonate, ' +
+        'bei einem Teil der Abos aber schon das Ende des laufenden Monats. ' +
+        (a.ohneDatum ? (fmt(a.ohneDatum) + ' Kündigung' + (a.ohneDatum === 1 ? ' trägt' : 'en tragen') +
+          ' kein Datum: sie stammt aus dem Uscreen-Vollabgleich vom 10. August und nicht aus einem Webhook. ') : '') +
+        'Was diese Zahl NICHT ist: eine Bleibe-Quote. Sie sagt, wer vorzeitig Nein gesagt hat – nicht, wer im Oktober Ja sagt. ' +
+        'Die Rechnung oben zählt gekündigte Abos bereits nicht mehr mit.';
+    }
+  }
+
+  // ── Kopfzahlen: die grossen Zahlen zuerst ─────────────────────────────────
+  // Der Bericht beginnt mit dem, was jeder wissen will, und nicht mit dem Weg
+  // dorthin. Alles Kleinere steht darunter in Klappen.
+  function renderKopf(stats, revenue, posten){
+    var host = el('kopfZahlen'); if (!host) return;
+    var je = function(produkt){
+      return (stats || []).reduce(function(s, r){ return r.produkt === produkt ? s + Number(r.n || 0) : s; }, 0);
+    };
+    var kosten = (posten || []).reduce(function(s, k){ return s + (Number(k.betrag) || 0); }, 0);
+    var ref = (revenue && revenue.szenario) || referenzSzenario();
+    var karten = [
+      { n:'Wochenschrift', w:fmt(je('wos')), m:'Papier und Digital, Deutsch und Englisch' },
+      { n:'goetheanum.tv', w:fmt(je('gtv')), m:'ein Strom, Sprache dort nicht gemessen' },
+      { n:'Folgejahr-Umsatz', w:geld(revenue ? revenue.chfGesamt : 0),
+        m:'Szenario ' + ref.name + ' – eine Rechnung, keine Messung' },
+      { n:'Kosten erfasst', w:geld(kosten),
+        m:kosten > 0 ? 'Stand der Kosten-Seite' : 'noch nichts erfasst' }
+    ];
+    host.innerHTML = '';
+    karten.forEach(function(k){
+      var d = document.createElement('div'); d.className = 'kennzahl';
+      var n = document.createElement('div'); n.className = 'k-label'; n.textContent = k.n;
+      var w = document.createElement('div'); w.className = 'k-wert'; w.textContent = k.w;
+      var m = document.createElement('div'); m.className = 'k-note'; m.textContent = k.m;
+      d.appendChild(n); d.appendChild(w); d.appendChild(m); host.appendChild(d);
+    });
+  }
+
+  // ── Wen wir erreicht haben: die drei Zielgruppen des Mailings ─────────────
+  // Die Wellen tragen die Gruppe im utm_content (w1_noabo, w2_nurws …). Damit
+  // ist «welche Gruppe haben wir wie erreicht» gemessen, nicht geraten – der
+  // einzige Ort der Aktion, an dem das geht.
+  var SEGMENTE = [
+    { key:'noabo', name:'Ohne Abo',
+      was:'bekam beide Angebote – Wochenschrift und goetheanum.tv' },
+    { key:'nurws', name:'Wochenschrift-Abonnenten',
+      was:'Quer-Angebot: goetheanum.tv' },
+    { key:'nurtv', name:'goetheanum.tv-Abonnenten',
+      was:'Quer-Angebot: Wochenschrift' }
+  ];
+  function renderSegmente(attribution){
+    var host = el('segmente'); if (!host) return;
+    var je = {}, wellen = {};
+    (attribution || []).forEach(function(r){
+      var t = /^(w\d+b?)_(nurtv|nurws|noabo)(_share)?$/.exec(r.utm_content || '');
+      if (!t) return;
+      var n = Number(r.n) || 0;
+      je[t[2]] = (je[t[2]] || 0) + n;
+      (wellen[t[2]] = wellen[t[2]] || {});
+      wellen[t[2]][t[1]] = (wellen[t[2]][t[1]] || 0) + n;
+    });
+    var summe = Object.keys(je).reduce(function(s, k){ return s + je[k]; }, 0);
+    if (!summe){ host.innerHTML = '<div class="empty">Keine Zielgruppen-Spur in den Anmeldungen.</div>'; return; }
+    host.innerHTML = '';
+    var nenner = (CONFIG.mailingGruppen && CONFIG.mailingGruppen.je) || {};
+    // Unter einem Prozent auf zwei Stellen: «0,9 %» und «0,91 %» sind zwei
+    // verschiedene Aussagen, wenn die Nachbarzeile 53 % trägt.
+    var prozent = function(oben, unten){
+      if (!unten) return null;
+      var p = oben / unten * 100;
+      return p.toFixed(p < 1 ? 2 : 1).replace('.', ',') + ' %';
+    };
+    // Sortiert nach der QUOTE je Klicker, nicht nach der absoluten Zahl. Sonst
+    // steht die grösste Gruppe oben und der Bericht sagt das Gegenteil dessen,
+    // was er gemessen hat: Die kleinste Gruppe ist die stärkste.
+    var reihe = SEGMENTE.map(function(sg){
+      var g = nenner[sg.key] || {};
+      var n = je[sg.key] || 0;
+      return { sg:sg, n:n, an:g.angeschrieben || 0, kl:g.klicker || 0,
+               sprachen:g.sprachen || [],
+               jeKlicker: g.klicker ? n / g.klicker : -1 };
+    }).sort(function(a, b){ return b.jeKlicker - a.jeKlicker || b.n - a.n; });
+    var bestQuote = reihe.reduce(function(m, x){ return Math.max(m, x.jeKlicker); }, 0) || 1;
+
+    reihe.forEach(function(x){
+      var sg = x.sg, n = x.n;
+      var det = document.createElement('details'); det.className = 'geb';
+      var sum = document.createElement('summary');
+      var kopf = document.createElement('div'); kopf.className = 'geb-kopf';
+      var nm = document.createElement('span'); nm.className = 'geb-name';
+      var car = document.createElement('span'); car.className = 'car'; car.setAttribute('aria-hidden', 'true');
+      nm.appendChild(car); nm.appendChild(document.createTextNode(sg.name));
+      // Merkzeichen wie bei den Gebieten – dieselbe Sprache für denselben Befund.
+      var z = null;
+      if (x.kl >= 100 && x.jeKlicker >= 0 && x.jeKlicker < 0.05) z = ['leck', 'viel Klick, kaum Abschluss'];
+      else if (x.jeKlicker > 0 && x.jeKlicker === bestQuote) z = ['traegt', 'wandelt am besten'];
+      if (z){ var zs = document.createElement('span'); zs.className = 'zeichen ' + z[0]; zs.textContent = z[1]; nm.appendChild(zs); }
+      var wert = document.createElement('span'); wert.className = 'geb-wert';
+      wert.appendChild(document.createTextNode(fmt(n)));
+      var an = document.createElement('span'); an.className = 'du';
+      an.textContent = ' · ' + Math.round(n / summe * 100) + ' % der Mailing-Abos';
+      wert.appendChild(an);
+      kopf.appendChild(nm); kopf.appendChild(wert);
+      var kette = document.createElement('div'); kette.className = 'geb-kette';
+      var teil = function(l, v){
+        var s2 = document.createElement('span');
+        s2.appendChild(document.createTextNode(l + ' '));
+        var b = document.createElement('b'); b.textContent = v; s2.appendChild(b);
+        kette.appendChild(s2);
+      };
+      if (x.an){
+        teil('angeschrieben', fmt(x.an));
+        teil('Klicker', fmt(x.kl));
+        teil('Abschlüsse', fmt(n));
+        teil('Abo je Angeschriebenem', prozent(n, x.an));
+        teil('Abo je Klicker', prozent(n, x.kl));
+      } else {
+        var s3 = document.createElement('span'); s3.textContent = sg.was; kette.appendChild(s3);
+      }
+      var track = document.createElement('div'); track.className = 'track';
+      var tb = document.createElement('span');
+      // Der Balken zeigt die Quote je Klicker, nicht die Menge – sonst füllt die
+      // grösste Gruppe die Zeile und die Aussage kippt ins Gegenteil.
+      tb.style.width = Math.max(3, Math.round((x.an ? x.jeKlicker / bestQuote : n / summe) * 100)) + '%';
+      track.appendChild(tb);
+      sum.appendChild(kopf); sum.appendChild(kette); sum.appendChild(track);
+      det.appendChild(sum);
+      var tief = document.createElement('div'); tief.className = 'geb-tief';
+      var zeile = function(links, rechts){
+        var row = document.createElement('div'); row.className = 'motrow';
+        var mc = document.createElement('span'); mc.className = 'mc'; mc.textContent = links;
+        var mn = document.createElement('span'); mn.className = 'mn'; mn.textContent = rechts;
+        row.appendChild(mc); row.appendChild(mn); tief.appendChild(row);
+      };
+      zeile(sg.was, x.an ? fmt(x.an) + ' angeschrieben' : '');
+      ['w1', 'w2', 'w3', 'w3b'].forEach(function(w){
+        zeile('Welle ' + w.slice(1), fmt((wellen[sg.key] || {})[w] || 0) + ' Abos');
+      });
+      x.sprachen.forEach(function(s){
+        zeile(s[0], fmt(s[1]) + ' angeschrieben · ' + fmt(s[2]) + ' Klicker · ' + prozent(s[2], s[1]) + ' Klickrate');
+      });
+      if (x.an){
+        var q = document.createElement('div'); q.className = 'qz-hint';
+        q.textContent = 'Angeschriebene und Klicker je Gruppe stammen aus ActiveCampaign (Stand ' +
+          ((CONFIG.mailingGruppen && CONFIG.mailingGruppen.stand) || '–') + '), die Abschlüsse live aus der UTM-Spur. ' +
+          'Herleitung: ' + ((CONFIG.mailingGruppen && CONFIG.mailingGruppen.doc) || '') + '.';
+        tief.appendChild(q);
+      }
+      det.appendChild(tief);
+      host.appendChild(det);
+    });
+    if (el('segmenteNote')) el('segmenteNote').textContent =
+      'Gemessen an ' + fmt(summe) + ' Anmeldungen, die eine Mailing-Spur tragen: Die Wellen führten je Zielgruppe ' +
+      'einen eigenen Link (utm_content), darum ist die Gruppe hier keine Vermutung. ' +
+      'Seit dem 10. August stehen auch die Nenner – wie viele Menschen je Gruppe überhaupt angeschrieben wurden – ' +
+      'und aus der absoluten Zahl wird eine Quote. Sortiert und balkenlang ist darum die Quote je Klicker, nicht die Menge: ' +
+      'Die kleinste Gruppe ist die stärkste. ' +
+      'Anmeldungen ohne Spur sind nicht enthalten – sie lassen sich keiner Gruppe zuordnen.';
+  }
+
+  // ── Ereignis-Protokoll: die einzelnen Abos («Was ist passiert?») ────────────
+  // RPC sommer2026_ereignisse: Einzel-Anmeldungen der letzten 14 Tage, stunden-
+  // genau gerundet, ohne Personendaten. Beantwortet «woher kamen heute welche
+  // Abos?» – je Tag aufklappbar, heute offen. Abos ohne UTM-Spur sind markiert.
+  function evProduktLabel(r){
+    if (r.produkt === 'gtv') return 'goetheanum.tv · ' + (r.sprache === 'en' ? 'EN' : 'DE');
+    return 'Wochenschrift · ' + (r.sprache === 'en' ? 'EN' : 'DE') + ' · ' + (r.format === 'papier' ? 'Papier' : 'Digital');
+  }
+  function renderEreignisse(rows){
+    var host = el('evList'); if (!host) return;
+    host.innerHTML = '';
+    if (!rows || !rows.length){
+      host.innerHTML = '<div class="empty">Noch keine Anmeldungen in den letzten 14 Tagen.</div>';
+      return;
+    }
+    var heute = new Date(); heute.setHours(0, 0, 0, 0);
+    var gestern = new Date(heute); gestern.setDate(gestern.getDate() - 1);
+    var tage = {}, folge = [];
+    rows.forEach(function(r){
+      var d = new Date(r.stunde);
+      var k = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+      if (!tage[k]){ tage[k] = { datum: new Date(d.getFullYear(), d.getMonth(), d.getDate()), rows: [] }; folge.push(k); }
+      tage[k].rows.push(r);
+    });
+    folge.forEach(function(k){
+      var t = tage[k];
+      var mitSpur = t.rows.filter(function(r){ return r.utm_source || r.utm_content; }).length;
+      var det = document.createElement('details'); det.className = 'ev-day';
+      if (t.datum.getTime() === heute.getTime()) det.open = true;
+      var wann = t.datum.getTime() === heute.getTime() ? 'Heute'
+               : t.datum.getTime() === gestern.getTime() ? 'Gestern'
+               : t.datum.toLocaleDateString('de-CH', { weekday: 'long' });
+      var sum = document.createElement('summary');
+      var sb = document.createElement('b');
+      sb.textContent = wann + ' · ' + t.datum.toLocaleDateString('de-CH', { day: 'numeric', month: 'long' });
+      var sn = document.createElement('span'); sn.className = 'ev-sum';
+      sn.textContent = fmt(t.rows.length) + (t.rows.length === 1 ? ' Abo' : ' Abos') +
+        ' · ' + fmt(mitSpur) + ' mit UTM · ' + fmt(t.rows.length - mitSpur) + ' ohne';
+      sum.appendChild(sb); sum.appendChild(sn); det.appendChild(sum);
+      var list = document.createElement('div'); list.className = 'ev-list';
+      t.rows.forEach(function(r){
+        var row = document.createElement('div'); row.className = 'ev-row';
+        var zeit = document.createElement('span'); zeit.className = 'ev-zeit';
+        zeit.textContent = new Date(r.stunde).toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+        var was = document.createElement('span'); was.className = 'ev-was';
+        was.textContent = evProduktLabel(r);
+        var wm = document.createElement('span'); wm.className = 'ev-meta';
+        wm.textContent = (r.tarif === 'ermaessigt' ? 'Ermässigt' : 'Standard') + ' · ' + (r.intervall === 'monatlich' ? 'monatlich' : 'jährlich');
+        was.appendChild(wm);
+        var her = document.createElement('span'); her.className = 'ev-her';
+        if (r.utm_source || r.utm_content){
+          var kb = document.createElement('span'); kb.className = 'ev-kanal';
+          kb.textContent = KANAL_LABEL[r.kanal] || r.kanal;
+          her.appendChild(kb);
+          var spur = document.createElement('span'); spur.className = 'ev-spur';
+          spur.textContent = [r.utm_source, r.utm_medium, r.utm_content].filter(Boolean).join(' · ');
+          her.appendChild(spur);
+        } else {
+          var ob = document.createElement('span'); ob.className = 'ev-kanal ev-ohne';
+          ob.textContent = 'ohne UTM';
+          her.appendChild(ob);
+          var wo = document.createElement('span'); wo.className = 'ev-spur';
+          wo.textContent = r.landing_path ? ('via ' + r.landing_path) : ('via ' + (r.source === 'uscreen' ? 'goetheanum.tv-Checkout' : r.source));
+          her.appendChild(wo);
+          // «Vermutete Herkunft»: zeitlich nächster Kurzlink-Klick vor dem
+          // Abschluss (aus dem RPC) – Indiz, keine Messung, darum eigene,
+          // klar abgesetzte Beschriftung. Die harte Attribution bleibt leer.
+          if (r.vermutet_code){
+            var vm = document.createElement('span'); vm.className = 'ev-vermutet';
+            vm.textContent = 'vermutet: ' + [r.vermutet_source, r.vermutet_content].filter(Boolean).join(' · ') +
+              ' — Klick auf /s/' + r.vermutet_code + ' ' + fmt(r.vermutet_min) + ' Min. davor';
+            her.appendChild(vm);
+          }
+        }
+        row.appendChild(zeit); row.appendChild(was); row.appendChild(her);
+        list.appendChild(row);
+      });
+      det.appendChild(list);
+      host.appendChild(det);
+    });
+    var note = document.createElement('div'); note.className = 'fnote';
+    note.textContent = 'Zeiten auf die Stunde gerundet, keine Personendaten. «ohne UTM» = Anmeldung kam ohne UTM-Parameter an – so heisst sie auch in der Wirkung. ' +
+      '«vermutet» = der zeitlich nächste Kurzlink-Klick (bis 90 Minuten davor) auf einen passenden Kampagnen-Link – ein Indiz, keine Messung; gezählt wird es nirgends. ' +
+      'Bei einem Weg, der fast alle Klicks stellt, steht dieses Indiz zufällig daneben und trägt nichts.';
+    host.appendChild(note);
+  }
+
+  // ── Laden ──────────────────────────────────────────────────────────────────
+  // Der Trichter-RPC wird nicht mehr abgerufen: seine vier Summen stehen jetzt
+  // je Gebiet in der Gebiete-Liste, wo sie etwas aussagen. Alles andere bleibt.
+  function load(){
+    renderQuelleSocial();
+    // Ereignis-Protokoll separat laden: fällt der RPC aus, bleibt der Rest des
+    // Cockpits vollständig – nur die Liste meldet sich als nicht ladbar. Speist
+    // sowohl «Was ist passiert?» als auch das Live-Aggregat der vermuteten Herkunft.
+    if (el('evList') || el('vermutetList')) rpc('sommer2026_ereignisse')
+      .then(function(rows){ renderEreignisse(rows); renderVermutet(rows); })
+      .catch(function(){
+        if (el('evList')) el('evList').innerHTML = '<div class="err">nicht ladbar</div>';
+        if (el('vermutetList')) el('vermutetList').innerHTML = '<div class="err">nicht ladbar</div>';
+      });
+    // Herkunft separat laden – fällt sie aus, bleibt das übrige Cockpit ganz.
+    if (el('herkunftBody')) rpc('sommer2026_herkunft')
+      .then(renderHerkunft)
+      .catch(function(){ el('herkunftBody').innerHTML = '<tr><td class="err" colspan="3">nicht ladbar</td></tr>'; });
+    if(CONFIG.zahlenProvisorisch && el('provisorisch')){
+      el('provisorisch').textContent = 'Preise und Zielmarken sind echt hinterlegt (Formular- und Uscreen-Preise, Stand 17. Juli). ' +
+        'Annahme bleiben allein die Bleibe-Quoten und die Verweildauer der monatlichen Abos – darum drei Szenarien statt einer Zahl, ' +
+        'oben unter der Signaturzahl. Die Aktion läuft drei Monate gratis, die erste Kohorte entscheidet frühestens Anfang Oktober; ' +
+        'bis dahin ist jede Zahl zum Folgejahr eine Rechnung, keine Beobachtung.';
+    }
+    // Die Kündigungen laufen im selben Zug mit, aber mit eigenem Fangnetz: Sie
+    // brauchen die Statistik als Bezugsgrösse (Quote je Produkt) und gehören
+    // darum in diesen Zug – ein Ausfall darf aber nicht das ganze Cockpit
+    // mitnehmen. `null` heisst «nicht ladbar» und ist von «keine Kündigung»
+    // (leere Liste) unterschieden; eine 0 zu zeigen, wo nichts geladen wurde,
+    // wäre eine Behauptung.
+    var kuendP = el('kuendZahlen') ? rpc('sommer2026_kuendigungen').catch(function(){ return null; })
+                                   : Promise.resolve([]);
+    Promise.all([ rpc('sommer2026_stats'), rpc('sommer2026_timeline'), rpc('sommer2026_kohorten'), rpc('sommer2026_kanaele'),
+                  rpc('sommer2026_attribution'), rpc('sommer2026_massnahmen_public'), rpc('sommer2026_kosten_public'),
+                  rpc('sommer2026_multi_liste'), rpc('sommer2026_multi_protokoll'), rpc('sommer2026_links_public'),
+                  kuendP ])
+      .then(function(res){
+        var stats = res[0] || [], timeline = res[1] || [], kohorten = res[2] || [], kanaele = res[3] || [];
+        var attribution = res[4] || [], massnahmen = res[5] || [], kostenPosten = res[6] || [];
+        muListe = res[7] || []; muProto = res[8] || [];
+        var links = res[9] || [];
+        var total = stats.reduce(function(s, r){ return s + Number(r.n); }, 0);
+        lastStats = stats;
+        var revenue = projectRevenue(stats);
+        // 1 Stand · 2 Gebiete · 3 Züge · 4 Belege – in dieser Reihenfolge gelesen.
+        renderStand(total, timeline);
+        renderKopf(stats, revenue, kostenPosten);
+        renderStroeme(stats, total);
+        renderSegmente(attribution);
+        renderGebiete(attribution, links, massnahmen, kanaele);
+        renderZuege(links, massnahmen, attribution, timeline, total);
+        renderDunkelfeld(kanaele, attribution);
+        renderMotive(attribution);
+        renderTarif(stats);
+        if (res[10] === null){
+          if (el('kuendZahlen')) el('kuendZahlen').innerHTML = '<div class="err">nicht ladbar</div>';
+          if (el('kuendLede'))   el('kuendLede').textContent = 'Die Kündigungen liessen sich gerade nicht laden.';
+        } else {
+          renderKuendigungen(res[10] || [], stats);
+        }
+        renderCohort(kohorten, revenue, stats);
+        // Schwesterseiten (element-gewächtert, hier ohne Wirkung).
+        renderKosten(total, revenue, kostenPosten);
+        renderMassnahmen(massnahmen);
+        renderZeitband(massnahmen);
+        renderMultis();
+        if (muPwGespeichert()) muNamenLaden(muPwGespeichert(), true);
+        if(total === 0 && el('status')){ el('status').className = 'status empty'; }
+        setStatus('ok', new Date());
+      })
+      .catch(function(){
+        setStatus('err');
+        ['gebieteListe','zuegeListe'].forEach(function(id){ var e = el(id); if (e) e.innerHTML = '<div class="err">nicht ladbar</div>'; });
+      });
+  }
+
+  load();
+  setInterval(load, REFRESH);

@@ -1,0 +1,324 @@
+/* =============================================================================
+   campaign.css · geteilte Seiten-Gestalt der Kampagnen-App (Cockpit, Massnahmen,
+   Multiplikatoren). Nur Tokens – aus dem fruehe­ren Inline-<style> extrahiert,
+   damit die drei Seiten dieselbe Quelle teilen (DRY). Fundament: tokens.css +
+   base.css. Aenderungen hier gelten auf allen Kampagnenseiten.
+   ============================================================================= */
+  /* Nur cockpit-eigene Gestalt. Alles Gemeinsame kommt aus base.css.
+     Es werden ausschliesslich Tokens verwendet – keine eigenen Farb-/Grössenwerte. */
+
+  .lead{padding:clamp(28px,6vw,52px) 0 var(--s6)}
+  .lead .status{margin-left:8px}
+  .lead-title{font-family:var(--font-display);font-weight:var(--w-deutlich);color:var(--gold-ink);font-size:clamp(32px,7vw,58px);margin:8px 0 0;max-width:18ch}
+  /* Titel-Atem (Aktivitäten): Zeichen einzeln ansprechbar, nur das Gewicht bewegt sich. */
+  .lead-title .ltr{display:inline-block;will-change:font-weight}
+  .heroline{display:flex;flex-wrap:wrap;align-items:flex-end;gap:clamp(16px,5vw,48px);margin-top:var(--s8)}
+  .figure{display:flex;flex-direction:column}
+  .figure .big{font-family:var(--font-display);font-weight:var(--w-strong);
+    font-size:clamp(72px,17vw,128px);line-height:.9;letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums lining-nums;color:var(--ink)}
+  .figure .cap{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:6px}
+  .figure .cap b{color:var(--gold-ink);font-weight:600}
+
+  .deadline{flex:1;min-width:230px;padding-bottom:10px}
+  .deadline .drow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:12px}
+  .deadline .dlab{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .deadline .dd{font-family:var(--font-text);font-variant-numeric:tabular-nums;font-size:var(--t-small);color:var(--ink);font-weight:600}
+  .meter{display:flex;height:12px;border-radius:var(--r-pill);background:var(--line-soft);overflow:hidden}
+  .meter>span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-ink));transition:width .6s ease}
+  .meter>.ueber{background:var(--ok)} /* Übererfüllung über der Zielmarke */
+
+  .board{display:grid;grid-template-columns:1fr 1fr;gap:var(--s6)}
+  .panel{background:var(--card,var(--paper));border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card)}
+  .panel h3{margin:0 0 4px;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3)}
+  .panel .sub{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-bottom:var(--s5);line-height:1.5}
+  .stream{margin-bottom:var(--s5)} .stream:last-child{margin-bottom:0}
+  .stream .top2{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;gap:10px}
+  .stream .name{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink)}
+  .stream .val{font-family:var(--font-text);font-variant-numeric:tabular-nums;font-size:var(--t-small);color:var(--ink)}
+  .stream .val b{font-weight:600}
+  .stream .val .g{color:var(--muted);font-size:var(--t-micro)}
+  .track{position:relative;height:14px;border-radius:var(--r-pill);background:var(--line-soft);overflow:hidden}
+  .track>span{display:block;height:100%;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--gold),var(--gold-ink));transition:width .6s ease;min-width:3px}
+  .track .tick{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.5;border-radius:2px}
+  .marks{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s4);display:flex;gap:16px;flex-wrap:wrap}
+  .marks .k{display:inline-flex;align-items:center;gap:7px}
+  .marks .sw{width:16px;height:9px;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold-ink))}
+  .marks .tk{width:2px;height:13px;background:var(--ink);opacity:.5}
+
+
+
+  .cohort{background:var(--card,var(--paper));border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);box-shadow:var(--shadow-card)}
+  .cohort .when{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
+  .cohort h4{margin:6px 0 var(--s4);font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3)}
+  .conv{display:flex;align-items:center;gap:var(--s5);flex-wrap:wrap}
+  .ring{--p:0;width:104px;height:104px;border-radius:50%;flex:none;background:conic-gradient(var(--ok) calc(var(--p)*1%),var(--line-soft) 0);display:grid;place-items:center}
+  .ring .inner{width:76px;height:76px;border-radius:50%;background:var(--card,var(--paper));display:grid;place-items:center;font-family:var(--font-display);font-weight:var(--w-strong);font-size:var(--t-h3);color:var(--ok);font-variant-numeric:tabular-nums}
+  .conv .txt{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);min-width:190px;flex:1}
+  .conv .txt b{font-weight:600}
+  .conv .txt .m{color:var(--muted);font-size:var(--t-micro)}
+  /* Die Referenz-Marke ist ein Chip mit Ton (base.css). Hier nur ihr Sitz. */
+  .cohort .chip.ton{margin-top:var(--s4)}
+  /* Zahlenkacheln kommen aus dem Fundament (.kennzahlen/.kennzahl in base.css).
+     Hier steht nur, was diese Seite besonders macht: der Abstand nach oben. */
+  .kennzahlen{margin-top:var(--s6)}
+
+  /* Drei Szenarien nebeneinander, gleiches Gewicht: die Spanne ist die Aussage.
+     Die Zahl steht in --ink, nicht in --ok – Grün auf «Vorsichtig» würde
+     schmeicheln. Die Referenz nennt sich per Wort (Pille), nicht per Farbe. */
+  .szen{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);margin-top:var(--s4)}
+  .szen .chip.ton{margin-top:var(--s2)}
+
+  .tablewrap{overflow-x:auto}
+  .tarif{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);min-width:440px}
+  .tarif th,.tarif td{padding:11px 12px;border-bottom:1px solid var(--line-soft);text-align:left}
+  .tarif thead th{color:var(--muted);font-weight:600;font-size:var(--t-micro)}
+  .tarif td.num,.tarif th.num{text-align:right;font-variant-numeric:tabular-nums lining-nums}
+  .tarif tfoot td{font-weight:600;border-top:2px solid var(--line);border-bottom:0}
+  /* Zwei Spalten brauchen die Mindestbreite nicht. Mit ihr schob sich auf dem
+     Handy ausgerechnet die Summe hinter den rechten Rand. */
+  .tarif.schmal{min-width:0}
+  .tarif .prod-h td{background:var(--soft);color:var(--gold-ink);font-weight:600}
+
+  .provisorisch{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s4);line-height:1.55}
+  .empty{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small)}
+  .err{font-family:var(--font-text);color:var(--bad);font-size:var(--t-small)}
+
+  /* Wirkungsmodell: ein Satz, der die ganze Kette rahmt – einklappbar. */
+  .modell-box{margin-top:var(--s4)}
+  .modell-box>summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--gold-ink);padding:2px 0}
+  .modell-box>summary::-webkit-details-marker{display:none}
+  .modell-box>summary::before{content:"";width:8px;height:8px;flex:none;
+    border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+    transform:rotate(-45deg);transition:transform .2s}
+  .modell-box[open]>summary::before{transform:rotate(45deg)}
+  .modell{font-family:var(--font-display);font-weight:var(--w-text);font-size:var(--t-lede);
+    line-height:1.4;color:var(--ink);max-width:var(--measure);margin:var(--s4) 0 0}
+  .modell .k{color:var(--gold-ink)}
+  .kampagne{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s4)}
+  .kampagne code{font-family:var(--font-mono,var(--font-text));color:var(--ink)}
+
+
+  /* ── Stand: eine Zahl, ein Tempo, eine Prognose (ersetzt Kacheln + Momentum) ── */
+  .stand{display:grid;grid-template-columns:auto 1fr;gap:var(--s8);align-items:end}
+  .stand .zahl{font-family:var(--font-display);font-weight:var(--w-strong);
+    font-size:clamp(52px,11vw,88px);line-height:.9;letter-spacing:-.02em;
+    color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
+  .stand .zahl-u{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:var(--s2)}
+  .stand .rechts{min-width:min(100%,260px)}
+  .kpi{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s6);margin-bottom:var(--s3)}
+  .kpi .k{font-family:var(--font-text);font-size:var(--t-small)}
+  .kpi .k b{display:block;font-size:var(--t-body);color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600}
+  .kpi .k span{color:var(--muted);font-size:var(--t-micro)}
+  .kpi .k.warn b{color:var(--bad)}
+  /* Puls: der Takt neben der Zahl, nicht als eigene Sektion. Ein Balken je
+     Kalendertag seit Aktionsstart; die ganze Spalte (volle 56px) ist das
+     Zeigeziel, nicht nur der gemalte Balken. Die Tageszahl erscheint als Fahne
+     beim Zeigen UND beim Tastatur-Fokus – nie nur per Hover erreichbar. */
+  .puls{display:flex;align-items:flex-end;gap:2px;height:56px;margin-top:var(--s6)}
+  .puls .tag{position:relative;flex:1;height:100%;display:flex;align-items:flex-end}
+  .puls .tag:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+  .puls .p{flex:1;background:color-mix(in srgb,var(--blue) 55%,transparent);border-radius:3px 3px 0 0;min-height:2px}
+  .puls .p.hoch{background:var(--blue-solid)}
+  .puls .tag:hover .p,.puls .tag:focus-visible .p{background:var(--blue-solid)}
+  .puls .tag::after{content:attr(data-tip);position:absolute;bottom:calc(100% + var(--s1));left:50%;
+    transform:translateX(-50%);background:var(--ink);color:var(--paper);
+    font-family:var(--font-text);font-size:var(--t-micro);line-height:1.35;
+    padding:var(--s1) var(--s2);border-radius:6px;white-space:nowrap;
+    opacity:0;visibility:hidden;transition:opacity .12s;pointer-events:none;z-index:3}
+  .puls .tag:hover::after,.puls .tag:focus-visible::after{opacity:1;visibility:visible}
+  /* Randspalten: Fahne buendig statt zentriert, damit sie nicht aus dem Panel ragt. */
+  .puls .tag:nth-child(-n+6)::after{left:0;transform:none}
+  .puls .tag:nth-last-child(-n+6)::after{left:auto;right:0;transform:none}
+  .puls-l{display:flex;justify-content:space-between;gap:var(--s2);font-family:var(--font-text);
+    font-size:var(--t-micro);color:var(--muted);margin-top:var(--s1);flex-wrap:wrap}
+
+  /* ── Gebiete: eine Liste, jede Zeile die ganze Kette ───────────────────── */
+  .geb{border-bottom:1px solid var(--line-soft)}
+  .geb>summary{list-style:none;cursor:pointer;padding:var(--s3) 0;min-height:var(--tap)}
+  .geb>summary::-webkit-details-marker{display:none}
+  .geb>summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .geb-kopf{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s4)}
+  .geb-name{font-family:var(--font-text);font-size:var(--t-body);color:var(--ink);font-weight:600}
+  .geb-name .car,.zug-t .car{display:inline-block;width:0;height:0;margin-right:var(--s2);vertical-align:middle;
+    border-left:5px solid var(--muted);border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .2s}
+  .geb[open] .geb-name .car,.zug[open] .zug-t .car{transform:rotate(90deg)}
+  .geb-wert{font-family:var(--font-text);font-variant-numeric:tabular-nums lining-nums;
+    font-size:var(--t-lede);color:var(--ink);font-weight:600;white-space:nowrap}
+  .geb-wert .du{color:var(--muted);font-size:var(--t-micro);font-weight:400}
+  .geb-kette{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);
+    margin-top:var(--s1);display:flex;flex-wrap:wrap;gap:var(--s1) var(--s3)}
+  .geb-kette b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+  .geb .track{margin-top:var(--s2)}
+  .geb-tief{padding:0 0 var(--s4) var(--s4);border-left:2px solid var(--line-soft);margin-bottom:var(--s3)}
+  .geb-tief .qz-hint{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);padding:8px 0;line-height:1.5}
+  /* Merkzeichen: ein Wort, das sagt, was die Zeile bedeutet – keine Ampel. */
+  /* Merkzeichen einer Gebiets-Zeile («trägt die Aktion», «grösstenteils
+     dunkel»). Luft aus dem Grundmass des Fundaments, nicht aus rohen Pixeln:
+     vorher 2px bei 14px Schrift – die Tinte klebte an der Rundung. */
+  .zeichen{display:inline-block;font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;
+    line-height:1.35;border-radius:var(--r-pill);padding:var(--pille-y) var(--pille-x);
+    margin-left:var(--s2);white-space:nowrap}
+  .zeichen.traegt{color:var(--ok-ink);background:color-mix(in srgb,var(--ok) 14%,var(--paper))}
+  .zeichen.leck{color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--paper))}
+  .zeichen.still{color:var(--muted);background:var(--soft)}
+  .zeichen.dunkel{color:var(--gold-ink);background:color-mix(in srgb,var(--gold) 14%,var(--paper))}
+
+  /* ── Nächste Züge ───────────────────────────────────────────────────────── */
+  .zug{border-bottom:1px solid var(--line-soft)}
+  .zug>summary{list-style:none;cursor:pointer;padding:var(--s3) 0;min-height:var(--tap);
+    display:flex;justify-content:space-between;align-items:baseline;gap:var(--s4)}
+  .zug>summary::-webkit-details-marker{display:none}
+  .zug>summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .zug-t{font-family:var(--font-text);font-size:var(--t-body);color:var(--ink)}
+  .zug-t .warum{display:block;color:var(--muted);font-size:var(--t-micro);margin-top:2px;margin-left:var(--s4)}
+  .zug-h{font-family:var(--font-text);font-size:var(--t-small);font-weight:600;white-space:nowrap;
+    font-variant-numeric:tabular-nums;color:var(--gold-ink)}
+  .zug-tief{padding:0 0 var(--s4) var(--s4);border-left:2px solid var(--line-soft);margin-bottom:var(--s3);
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);line-height:1.55;max-width:var(--measure)}
+  .zug-tief p{margin:0 0 var(--s2)}
+
+  /* Überschrift innerhalb einer Tafel (Belege). */
+  .panel>.mh,.mh{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);font-weight:600;margin-bottom:var(--s3)}
+
+  /* Attribution nach Motiv (utm_content) – feiner als der kanal-Bucket. */
+  .motive{margin-top:var(--s6)}
+  .motive .mh{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);font-weight:600;margin-bottom:var(--s4)}
+  .motrow{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line-soft);font-family:var(--font-text);font-size:var(--t-small)}
+  .motrow .mc{color:var(--ink)} .motrow .mc .ms{color:var(--muted);font-size:var(--t-micro);margin-left:7px}
+  .motrow .mn{font-variant-numeric:tabular-nums lining-nums;color:var(--ink);font-weight:600}
+  .kanal-rolle{color:var(--muted);font-size:var(--t-micro);margin-left:7px}
+
+  /* Aktivität → Abschlüsse: gemessene Live-Tabelle + Dunkelfeld-Schätzung.
+     Nur Tokens (DS02/DS07), Ziffern tabellarisch über .tarif .num (G25). */
+  .panel>.mh{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);font-weight:600;margin-bottom:var(--s3)}
+  .akt-tab .akt-q{display:block;color:var(--muted);font-size:var(--t-micro);margin-top:2px;overflow-wrap:anywhere}
+  /* Leck-Zeile: viele Klicks, kaum Abschlüsse – zurückhaltend getönt, Kante in Gold. */
+  .akt-tab tbody tr.akt-leck td{background:color-mix(in srgb,var(--gold) 12%,transparent)}
+  .akt-tab tbody tr.akt-leck td:first-child{box-shadow:inset 3px 0 0 var(--gold-ink)}
+  .akt-tab tfoot .akt-ohne td{border-top:2px solid var(--line);font-weight:600;color:var(--ink)}
+  .akt-tab tfoot .akt-ohne .akt-q{font-weight:400}
+  .motrow.qz-rest .mc{color:var(--muted)}
+
+  /* Zeitband: Phasen × Wochen × Kanäle (nur Tokens, DS02; Ziffern tnum, G25).
+     Festes Spaltenraster: die Wochen teilen sich die Breite gleichmässig, statt
+     sich nach dem längsten Chip-Titel zu strecken – Titel laufen in die Ellipse. */
+  .zb{width:100%;table-layout:fixed;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);min-width:600px}
+  .zb th,.zb td{border:1px solid var(--line-soft);padding:6px 8px;vertical-align:top;text-align:left}
+  .zb thead .ph th{font-weight:600;color:var(--on-accent);background:var(--blue-solid);border-color:var(--blue-solid)}
+  .zb thead .ph th:first-child{width:112px}
+  .zb thead .wk th{font-weight:600;color:var(--muted);font-size:var(--t-micro);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .zb thead .wk th.heute{color:var(--gold-ink);border-bottom:2px solid var(--gold)}
+  .zb .kz{color:var(--ink);font-weight:600;background:var(--soft);overflow-wrap:anywhere}
+  /* Chip kompakt: Punkt · Tag · Titel in EINER Zeile (Übersicht) – Antippen
+     klappt die Felder auf (.zb-det). Zustand .open + aria-expanded aus campaign.js. */
+  .zb-chip{display:block;margin:2px 0;padding:4px 6px;border:1px solid var(--line);border-radius:var(--r-control);
+    background:var(--field-bg);color:var(--ink);font-size:var(--t-micro);line-height:1.35;overflow-wrap:anywhere}
+  .zb-chip.clickable{cursor:pointer}
+  .zb-chip.clickable:hover{border-color:var(--gold);background:var(--soft)}
+  .zb-chip.clickable:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+  .zb-chip.has-note{border-left:3px solid var(--gold)}
+  .zb-chip .zk{display:flex;align-items:baseline;gap:5px;min-width:0}
+  .zb-chip .zt{color:var(--muted);font-variant-numeric:tabular-nums}
+  .zb-chip .zr{display:inline-block;flex:none;width:8px;height:8px;border-radius:50%;align-self:center;background:var(--blue)}
+  .zb-chip .zm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .zb-chip.open .zm{white-space:normal;overflow:visible}
+  .zb-chip.open .zr{align-self:flex-start;margin-top:5px}
+  .zb-chip .zb-det{display:none}
+  .zb-chip.open .zb-det{display:block;margin-top:4px;padding-top:4px;border-top:1px solid var(--line-soft)}
+  .zb-chip .zd{display:flex;justify-content:space-between;gap:8px;padding:2px 0}
+  .zb-chip .zd .zdl{color:var(--muted);flex:none}
+  .zb-chip .zd .zdv{font-variant-numeric:tabular-nums;text-align:right;overflow-wrap:anywhere}
+  /* Text-Felder (Notiz) gestapelt statt rechtsbündig gequetscht */
+  .zb-chip .zd.zd-note{display:block}
+  .zb-chip .zd-note .zdl{display:block}
+  .zb-chip .zd-note .zdv{display:block;text-align:left;overflow-wrap:break-word}
+  .zb-edit{font-family:var(--font-text);font-size:var(--t-micro);color:var(--blue);background:none;border:0;cursor:pointer;padding:6px 0;margin-top:2px;min-height:var(--tap)}
+  .zb-edit:hover{color:var(--gold-ink)}
+  .mnote{display:block;margin-top:2px;color:var(--muted);font-size:var(--t-micro);line-height:1.4}
+  .zb-legende{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);margin-top:var(--s3);font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
+  /* Multiplikatoren: Status-Wortlabel, Verlaufszeile, Mini-Maske (DS02, G25) */
+  .mstat{font-family:var(--font-text);font-size:var(--t-small);white-space:nowrap;color:var(--muted)}
+  .mstat.zugesagt{color:var(--ok);font-weight:600} .mstat.abgesagt{color:var(--bad)}
+  .mstat.erreicht{color:var(--blue)} .mstat.spaeter{color:var(--gold-ink)}
+  .mv td{background:var(--soft)}
+  .mvrow{display:flex;gap:var(--s2) var(--s4);padding:7px 0;border-bottom:1px solid var(--line-soft);
+    font-family:var(--font-text);font-size:var(--t-small);flex-wrap:wrap;align-items:baseline}
+  .mvrow .mvmeta{color:var(--muted);font-size:var(--t-micro);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mvform{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3);margin-top:var(--s4)}
+  .mvform .mvspan{grid-column:1 / -1}
+  @media (max-width:720px){ .mvform{grid-template-columns:1fr 1fr} }
+  .medit{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 6px;min-height:var(--tap)}
+  .medit:hover{color:var(--blue)} td.act{text-align:right;white-space:nowrap}
+  /* Löschen ist erreichbar, aber nicht die erste Farbe im Blatt: gedämpft, bis
+     der Finger darauf liegt. Rot erst beim Zeigen (--bad trägt als Schrift). */
+  .medit.weg:hover,.medit.weg:focus-visible{color:var(--bad)}
+  .medit[disabled]{opacity:.5;pointer-events:none}
+  .zb-form{margin-top:var(--s5)}
+  .zb-form summary{cursor:pointer;font-family:var(--font-text);font-weight:600;color:var(--ink);min-height:var(--tap);display:flex;align-items:center}
+  .zb-form .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);margin-top:var(--s4)}
+  .zb-form .span3{grid-column:1 / -1}
+  @media (max-width:640px){ .zb-form .grid{grid-template-columns:1fr} }
+
+  /* Ereignis-Protokoll: je Tag aufklappbar (heute offen), Zeilen = einzelne Abos.
+     Daten-Schrift Source (B03 ≥15), Ziffern tabellarisch (G25), nur Tokens (DS02). */
+  .ev-day{border-bottom:1px solid var(--line-soft)}
+  .ev-day>summary{cursor:pointer;list-style:none;display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);
+    align-items:baseline;justify-content:space-between;min-height:var(--tap);padding:10px 0;
+    font-family:var(--font-text);font-size:var(--t-small)}
+  .ev-day>summary::-webkit-details-marker{display:none}
+  .ev-day>summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .ev-day>summary b{color:var(--ink);font-weight:600}
+  .ev-day .ev-sum{color:var(--muted);font-variant-numeric:tabular-nums}
+  .ev-list{padding-bottom:var(--s4)}
+  .ev-row{display:grid;grid-template-columns:56px 1.1fr 1.4fr;gap:var(--s2) var(--s4);
+    padding:7px 0;border-top:1px solid var(--line-soft);
+    font-family:var(--font-text);font-size:var(--t-small);align-items:baseline}
+  .ev-zeit{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ev-was{color:var(--ink)}
+  .ev-meta{display:block;color:var(--muted);font-size:var(--t-micro);margin-top:2px}
+  .ev-her{min-width:0}
+  .ev-kanal{display:inline-block;font-size:var(--t-micro);font-weight:600;color:var(--gold-ink);
+    background:color-mix(in srgb,var(--gold) 14%,var(--paper));border-radius:var(--r-pill);
+    padding:var(--pille-y) var(--pille-x);line-height:1.35;margin-right:8px;white-space:nowrap}
+  .ev-kanal.ev-ohne{color:var(--muted);background:var(--soft)}
+  .ev-spur{color:var(--muted);font-size:var(--t-micro);overflow-wrap:anywhere}
+  /* Vermutete Herkunft: klar abgesetzt (gepunktete Kante), damit Indiz nie wie Messung liest. */
+  .ev-vermutet{display:block;color:var(--muted);font-size:var(--t-micro);margin-top:3px;
+    padding-left:var(--s3);border-left:2px dotted var(--line);overflow-wrap:anywhere}
+  @media (max-width:560px){ .ev-row{grid-template-columns:48px 1fr} .ev-her{grid-column:2} }
+
+  /* Aktionsseiten als Buttons – Fingerziele statt klebender Textlinks (B04, DS02) */
+  .landing{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3);align-items:center;font-family:var(--font-text);font-size:var(--t-small);margin-bottom:var(--s4)}
+  .landing .meta{margin-right:var(--s2)}
+
+  /* Sprungleiste: haftende Bereichs-Anker (B04-Fingerziele, normal statt versal G05) */
+  /* Anker-Sprünge unter Kopfzeile + Sprungleiste halten (nicht dahinter) */
+  html{scroll-padding-top:calc(var(--header-h) + 52px)}
+  .jump{position:sticky;top:var(--header-h);z-index:38;background:var(--paper);border-bottom:1px solid var(--line)}
+  .jump .jrow{display:flex;gap:var(--s2);overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .jump a{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);white-space:nowrap;
+    padding:12px 10px;min-height:var(--tap);display:inline-flex;align-items:center;border-bottom:2px solid transparent}
+  .jump a:hover{color:var(--ink)}
+  .jump a.is-on{color:var(--gold-ink);border-bottom-color:var(--gold)}
+
+  @media (max-width:720px){
+    .board{grid-template-columns:1fr}
+    .szen{grid-template-columns:1fr}
+  }
+  @media (max-width:640px){
+    .stand{grid-template-columns:1fr;gap:var(--s6)}
+    .geb-kopf{flex-wrap:wrap}
+  }
+  /* Handy: enger gesetzt, Held-Zahl und Deadline gestapelt, Momentum kompakt */
+  @media (max-width:480px){
+    .lead{padding-top:22px}
+    .heroline{gap:var(--s5)}
+    .figure .big{font-size:clamp(60px,20vw,88px)}
+    .deadline{min-width:0;width:100%}
+    section{padding:var(--s6) 0}
+    .shead{margin-bottom:var(--s4)}
+    .conv{gap:var(--s4)}
+    .ring{width:88px;height:88px} .ring .inner{width:64px;height:64px}
+  }

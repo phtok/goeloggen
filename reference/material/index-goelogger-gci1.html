@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weiterleitung zur Referenzfassung des Logo-Generators</title>
+  <meta http-equiv="refresh" content="0; url=./logo-generator-reference.html" />
+  <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="pragma" content="no-cache" />
+  <meta http-equiv="expires" content="0" />
+  <script>
+    (function () {
+      var target = "./logo-generator-reference.html";
+      if (location.pathname.endsWith("/logo-generator-reference.html")) return;
+      location.replace(target + location.search + location.hash);
+    })();
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #36424f;
+      color: #dbe0e4;
+      font: 400 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: #ebb565; }
+  </style>
+</head>
+<body>
+  <p>Weiterleitung zur Referenzfassung… <a href="./logo-generator-reference.html">Falls nötig hier klicken</a>.</p>
+</body>
+</html>

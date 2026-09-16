@@ -1,0 +1,47 @@
+# Deploy der Edge Function «ingest-paperform» — automatisch bei Änderung.
+# -----------------------------------------------------------------------------
+# Schwesterworkflow zu «Deploy ingest-uscreen» und aus demselben Grund: Die
+# Uscreen-Funktion bekam ihren Workflow, nachdem eine Verbesserung tagelang im
+# Repo lag, während in der Produktion der alte Stand lief (#482). Für Paperform
+# blieb der Handbetrieb stehen — dieselbe Falle, nur unbemerkt. Was auf main
+# liegt, soll auch laufen, für beide Ingestionen.
+#
+# Voraussetzung (schon eingerichtet):
+#   Repo-Secret SUPABASE_ACCESS_TOKEN
+#   (https://supabase.com/dashboard/account/tokens → «Generate new token»).
+#
+# verify_jwt bleibt aus: die Funktion prüft selbst (?key=<webhook_secret>) und
+# wird von Paperform ohne JWT aufgerufen.
+name: Deploy ingest-paperform
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "services/sommer-zaehler/ingest-paperform/index.ts"
+      - ".github/workflows/deploy-ingest-paperform.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_REF: dagcsnfrlbpxcmdimnrw
+    steps:
+      - uses: actions/checkout@v4
+      - name: Supabase-CLI bereitstellen
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Token prüfen
+        run: |
+          if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
+            echo "::error::Secret SUPABASE_ACCESS_TOKEN fehlt. Anleitung im Workflow-Kopf." && exit 1
+          fi
+      - name: Funktion ins CLI-Layout kopieren
+        run: |
+          mkdir -p supabase/functions/ingest-paperform
+          cp services/sommer-zaehler/ingest-paperform/index.ts supabase/functions/ingest-paperform/index.ts
+      - name: Deploy
+        run: supabase functions deploy ingest-paperform --project-ref "$PROJECT_REF" --no-verify-jwt

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="de-CH" data-welt="warm">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stilprobe: warme Flächen · Goetheanum Design-System</title>
+<meta name="description" content="Experiment: das Design-System auf warmen Farbflächen – die Welt ‹warm› als Stilprobe, Kontraste gerechnet. Nichts hiervon ist beschlossen." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+<link rel="stylesheet" href="nav.css" />
+<style>
+  .hero .meta{margin-top:var(--s4);display:flex;gap:var(--s2);flex-wrap:wrap}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--s4)}
+  .kontrast{width:100%}
+  .kontrast td.num{white-space:nowrap}
+  .fl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s4)}
+  .fl .probe{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s4)}
+  .fl .probe .hx{font-family:var(--font-mono);font-size:var(--t-micro);color:var(--muted);margin-top:var(--s2)}
+</style>
+</head>
+<body>
+<script src="nav.js" data-root="../" data-section="schau"
+        data-onpage="Flächen:#flaechen|Komponenten:#komponenten|Gerechnet:#gerechnet"></script>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Stilprobe · Experiment — nicht ratifiziert</span>
+    <h1>Warme Flächen.</h1>
+    <p class="lede">Diese Seite läuft in der Welt <code>warm</code>: dieselben
+      Rollen, dieselben Regeln, dieselbe Schrift — nur die Flächen- und
+      Tinten-Tokens sind auf einen warmen Grundton gestellt. Ein Attribut am
+      Seitenanfang (<code>data-welt="warm"</code>), sonst nichts.</p>
+    <div class="meta">
+      <span class="chip">Welt <b>warm</b></span>
+      <span class="chip">Kontraste <b>gerechnet</b></span>
+      <span class="chip">Dunkelmodus <b>unverändert</b></span>
+    </div>
+  </section>
+
+  <section id="flaechen">
+    <div class="shead"><h2>Die Flächen</h2>
+      <p>Papier und Karte tragen einen warmen Elfenbein-Ton; die Sekundär- und
+         Gold-Tinten sind dafür nachgedunkelt, damit jede Paarung AA hält.</p></div>
+    <div class="fl">
+      <div class="probe" style="background:var(--paper)"><b style="font-weight:var(--w-strong)">Papier</b><div class="hx">--paper · #fbf7ee</div></div>
+      <div class="probe" style="background:var(--soft)"><b style="font-weight:var(--w-strong)">Karte</b><div class="hx">--soft · #f3edde</div></div>
+      <div class="probe" style="background:var(--field-bg)"><b style="font-weight:var(--w-strong)">Feld</b><div class="hx">--field-bg · #fdfaf2</div></div>
+      <div class="probe" style="background:var(--paper)"><span class="kicker">Kicker in Gold-Tinte</span><div class="hx">--gold-ink · #7f5e22</div></div>
+    </div>
+  </section>
+
+  <section id="komponenten">
+    <div class="shead"><h2>Die Rollen auf warmem Grund</h2>
+      <p>Nichts wurde umgebaut — die Bausteine aus <code>base.css</code> erscheinen
+         hier genau so, wie jedes Werkzeug sie nutzt.</p></div>
+    <div class="grid2">
+      <div class="card">
+        <span class="kicker">Karte · Knöpfe · Chips</span>
+        <p class="note" style="margin-top:var(--s3)">Hinweis-Text in der Sekundär-Tinte — auf der warmen Karte 4.98:1.</p>
+        <div class="demo" style="margin-top:var(--s4);display:flex;gap:var(--s3);flex-wrap:wrap">
+          <button class="btn primary">Primär</button>
+          <button class="btn">Normal</button>
+          <span class="chip">Status <b>live</b></span>
+        </div>
+      </div>
+      <div class="card">
+        <span class="kicker">Formular</span>
+        <div style="display:grid;gap:var(--s3);margin-top:var(--s3)">
+          <label class="field"><span class="lab">Eingabe</span><input placeholder="Feld auf warmem Grund" /></label>
+        </div>
+        <p class="meta" style="margin-top:var(--s3)">Meta-Zeile · 14. Juli 2026</p>
+      </div>
+      <article class="event">
+        <div class="edate"><b>11</b><span>Juli</span></div>
+        <div><span class="kick">Beispiel · Veranstaltung</span>
+          <h3>Eine Veranstaltungs-Karte</h3>
+          <p class="emeta">19.30&nbsp;Uhr · Grosser Saal</p></div>
+      </article>
+      <a class="teaser" href="#komponenten">
+        <span class="thumb" aria-hidden="true" style="background:var(--gold)"></span>
+        <span><span class="kick">Beispiel · Teaser</span><h3>Ein Teaser auf warmem Papier</h3>
+        <p class="ex">Vorspann in der Sekundär-Tinte, Titel in der Hausschrift.</p></span></a>
+    </div>
+  </section>
+
+  <section id="gerechnet">
+    <div class="shead"><h2>Gerechnet, nicht geschätzt</h2>
+      <p>Was die Welt <code>warm</code> umschaltet — und was jede Paarung trägt (B02: Lesetext ≥ 4.5:1).</p></div>
+    <div class="card" style="overflow-x:auto">
+      <table class="kontrast">
+        <thead><tr><th>Token</th><th>Standard</th><th>warm</th><th class="num">auf Papier</th><th class="num">auf Karte</th></tr></thead>
+        <tbody>
+          <tr><td>--paper</td><td>#fff</td><td>#fbf7ee</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td>--soft</td><td>#faf8f4</td><td>#f3edde</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td>--ink (Lesetext)</td><td>#23272b</td><td>unverändert</td><td class="num">14.1:1</td><td class="num">12.9:1</td></tr>
+          <tr><td>--muted (Sekundär)</td><td>#6b7177</td><td>#616669</td><td class="num">5.4:1</td><td class="num">5.0:1</td></tr>
+          <tr><td>--gold-ink (Kicker, Links)</td><td>#8a6728</td><td>#7f5e22</td><td class="num">5.6:1</td><td class="num">5.1:1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:var(--s4)">Ohne das Nachdunkeln fielen
+      Sekundär- und Gold-Tinte auf der warmen Karte unter die Grenze
+      (4.2 und 4.4:1) — genau die Falle, in die der Portal-Entwurf lief. Die
+      Welt liefert darum immer beides: Fläche <b style="font-weight:var(--w-deutlich)">und</b> passende Tinte.
+      Der Dunkelmodus bleibt unberührt; Status: Experiment, Entscheid beim
+      Auftraggeber (<a href="https://github.com/phtok/goeloggen/blob/main/docs/gestaltungsspielraum-entwurf.md">Gestaltungsspielraum-Entwurf</a>).</p>
+  </section>
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Stilprobe der Welt <code>warm</code></span>
+    <span><a href="./">Design-System</a> · <a href="../start/">Interner Hub</a></span>
+  </div>
+</footer>
+</body>
+</html>

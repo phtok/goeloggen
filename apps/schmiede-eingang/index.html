@@ -1,0 +1,243 @@
+<!doctype html>
+<!-- =============================================================================
+     Schmiede-Eingang · Cockpit für die Wünsche aus der Werkzeug-Schmiede
+     -----------------------------------------------------------------------------
+     Sicht auf die eingegangenen Aufträge: sichten, taggen, Status setzen, Notiz.
+     Key-geschützt: die Liste kommt nur mit gültigem Schlüssel zurück (RPC
+     schmiede_liste prüft ihn gegen den Config-Hash). Ohne Schlüssel: leer.
+     Zugang über den Geheim-Link  …/apps/schmiede-eingang/?key=<schluessel> .
+
+     Wachstumspfad: hier sollen später AUCH die laufenden Projekte sichtbar und
+     taggbar werden – die Wünsche sind die erste Quelle. Backend: services/schmiede/.
+
+     Regelkonform: Fundament eingebunden (relativ), nur Tokens und DS-Komponenten.
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Schmiede-Eingang · Goetheanum</title>
+<meta name="description" content="Cockpit für die Wünsche aus der Werkzeug-Schmiede – sichten, taggen, Status setzen." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  .gate{max-width:520px;margin-top:var(--s6)}
+  .gate .row{display:flex;gap:var(--s2);align-items:stretch;margin-top:var(--s3)}
+  .gate .row input{flex:1}
+
+  .liste{margin-top:var(--s6);display:grid;gap:var(--s4)}
+  .eintrag .kopf{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s4);flex-wrap:wrap}
+  .eintrag h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3)}
+  .wann{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
+  .badge{font-family:var(--font-text);font-size:var(--t-micro);border:1px solid var(--line);border-radius:var(--r-pill);padding:2px 10px;color:var(--muted)}
+  .badge.neu{color:var(--blue);border-color:var(--blue)}
+  .badge.in_arbeit{color:var(--gold-ink);border-color:var(--gold-ink)}
+  .steckbrief{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);line-height:1.6;margin-top:var(--s3)}
+  .steckbrief .k{color:var(--muted)}
+  details{margin-top:var(--s3)}
+  details summary{cursor:pointer;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .md{white-space:pre-wrap;font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;color:var(--ink);
+    background:var(--soft);border:1px solid var(--line);border-radius:var(--r-control);padding:var(--s4);margin-top:var(--s3);word-break:break-word}
+  .werkzeug{margin-top:var(--s4);display:grid;gap:var(--s3)}
+  .werkzeug .row{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center}
+  .said{font-family:var(--font-text);font-size:var(--t-micro);color:var(--ok);min-height:1.3em}
+  .said.bad{color:var(--bad)}
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Backstage</span>
+    <h1>Schmiede-Eingang</h1>
+    <p class="lede">Die Wünsche aus der Werkzeug-Schmiede – sichten, taggen, den Stand setzen. Sichtbar nur mit dem Schlüssel; der Inhalt verlässt die Datenbank sonst nicht.</p>
+  </section>
+
+  <section id="gate" class="gate" hidden>
+    <div class="card soft">
+      <label class="field">
+        <span class="lab">Schlüssel</span>
+        <span class="row">
+          <input id="keyIn" type="password" placeholder="Geheim-Schlüssel einsetzen" autocomplete="off" />
+          <button class="btn primary" type="button" id="keyBtn">Öffnen</button>
+        </span>
+        <span class="hint">Den Schlüssel bekommst du persönlich. Er lässt sich auch als <q>?key=…</q> an den Link hängen.</span>
+      </label>
+      <div class="said" id="gateSaid"></div>
+    </div>
+  </section>
+
+  <section id="board" hidden>
+    <div class="shead">
+      <h2>Eingegangene Wünsche</h2>
+      <p>Neueste zuerst, Erledigtes nach unten. Status und Tags speichern sofort.</p>
+    </div>
+    <div class="said" id="boardSaid"></div>
+    <div class="liste" id="liste"></div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Schmiede-Eingang</strong> · Backstage</span>
+    <span><a href="../schmiede/">Zur Schmiede</a> · <a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script>
+  var SB  = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
+  var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
+  var STATI = [['neu','neu'],['gesehen','gesehen'],['in_arbeit','in Arbeit'],['erledigt','erledigt']];
+
+  function el(id){ return document.getElementById(id); }
+  function rpc(name, body){
+    return fetch(SB + '/rest/v1/rpc/' + name, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
+      body: JSON.stringify(body)
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); });
+  }
+
+  var schluessel = '';
+  function schluesselAusUrl(){
+    var m = location.search.match(/[?&]key=([^&]+)/);
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
+  function txt(s){ return (s === null || s === undefined) ? '' : String(s); }
+
+  function feldZeile(label, wert){
+    if(!wert) return '';
+    return '<div><span class="k">' + label + ':</span> ' + txt(wert).replace(/</g,'&lt;') + '</div>';
+  }
+
+  function baueEintrag(a){
+    var d = a.daten || {};
+    var wrap = document.createElement('div');
+    wrap.className = 'card eintrag';
+
+    var kopf = document.createElement('div');
+    kopf.className = 'kopf';
+    var h = document.createElement('h3'); h.textContent = a.titel || 'ohne Namen';
+    var wann = document.createElement('span'); wann.className = 'wann';
+    wann.textContent = new Date(a.created_at).toLocaleString('de-CH');
+    kopf.appendChild(h); kopf.appendChild(wann);
+    wrap.appendChild(kopf);
+
+    // Steckbrief: die wichtigsten Felder auf einen Blick.
+    var sb = document.createElement('div'); sb.className = 'steckbrief';
+    sb.innerHTML =
+      feldZeile('Für', d.fuer_wen) +
+      feldZeile('Was', d.zweck) +
+      feldZeile('Herauskommt', (d.ausgabe || []).join(', ')) +
+      feldZeile('Wie oft', d.takt) +
+      feldZeile('Bringt mit', (d.biete || []).join(', ')) +
+      feldZeile('Quellen', (d.quellenart || []).join(', ')) +
+      feldZeile('Von', [d.wer, d.bereich].filter(Boolean).join(' · ')) +
+      feldZeile('Kontakt', d.kontakt);
+    wrap.appendChild(sb);
+
+    if(a.auftrag_md){
+      var det = document.createElement('details');
+      var sum = document.createElement('summary'); sum.textContent = 'Ganzer Auftrag';
+      var md = document.createElement('div'); md.className = 'md'; md.textContent = a.auftrag_md;
+      det.appendChild(sum); det.appendChild(md); wrap.appendChild(det);
+    }
+
+    // Werkzeug: Status (Pillen), Tags, Notiz, Speichern.
+    var wz = document.createElement('div'); wz.className = 'werkzeug';
+
+    var statusRow = document.createElement('div'); statusRow.className = 'row';
+    var seg = document.createElement('div'); seg.className = 'seg'; seg.setAttribute('role','group'); seg.setAttribute('aria-label','Status');
+    STATI.forEach(function(s){
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = s[1]; b.setAttribute('data-status', s[0]);
+      b.setAttribute('aria-pressed', a.status === s[0] ? 'true' : 'false');
+      b.addEventListener('click', function(){
+        Array.prototype.forEach.call(seg.querySelectorAll('button'), function(x){ x.setAttribute('aria-pressed','false'); });
+        b.setAttribute('aria-pressed','true');
+      });
+      seg.appendChild(b);
+    });
+    statusRow.appendChild(seg);
+    wz.appendChild(statusRow);
+
+    var tagF = document.createElement('label'); tagF.className = 'field';
+    tagF.innerHTML = '<span class="lab">Tags (mit Komma trennen)</span>';
+    var tagIn = document.createElement('input'); tagIn.type = 'text'; tagIn.value = (a.tags || []).join(', ');
+    tagIn.placeholder = 'z. B. jahresbericht, social, eilig'; tagF.appendChild(tagIn);
+    wz.appendChild(tagF);
+
+    var notF = document.createElement('label'); notF.className = 'field';
+    notF.innerHTML = '<span class="lab">Notiz</span>';
+    var notIn = document.createElement('textarea'); notIn.value = txt(a.notiz); notIn.placeholder = 'Interne Triage-Notiz'; notF.appendChild(notIn);
+    wz.appendChild(notF);
+
+    var row = document.createElement('div'); row.className = 'row';
+    var save = document.createElement('button'); save.className = 'btn primary'; save.type = 'button'; save.textContent = 'Speichern';
+    var said = document.createElement('span'); said.className = 'said';
+    row.appendChild(save); row.appendChild(said); wz.appendChild(row);
+
+    save.addEventListener('click', function(){
+      var st = seg.querySelector('button[aria-pressed="true"]');
+      var tags = tagIn.value.split(',').map(function(t){ return t.trim(); }).filter(Boolean);
+      save.disabled = true; said.textContent = 'Speichere …'; said.className = 'said';
+      rpc('schmiede_setzen', {
+        p_key: schluessel, p_id: a.id,
+        p_status: st ? st.getAttribute('data-status') : null,
+        p_tags: tags, p_notiz: notIn.value.trim() || null
+      }).then(function(res){
+        if(res === 'ok'){ said.textContent = 'Gespeichert.'; said.className = 'said'; }
+        else if(res === 'schluessel'){ said.textContent = 'Schlüssel abgelaufen – Seite neu öffnen.'; said.className = 'said bad'; }
+        else { said.textContent = 'Nicht gespeichert (' + res + ').'; said.className = 'said bad'; }
+        save.disabled = false;
+      }).catch(function(){ said.textContent = 'Speichern nicht erreichbar.'; said.className = 'said bad'; save.disabled = false; });
+    });
+
+    wrap.appendChild(wz);
+    return wrap;
+  }
+
+  function laden(){
+    el('boardSaid').textContent = 'Lade …'; el('boardSaid').className = 'said';
+    rpc('schmiede_liste', { p_key: schluessel }).then(function(rows){
+      el('gate').hidden = true; el('board').hidden = false;
+      var liste = el('liste'); liste.innerHTML = '';
+      if(!rows || !rows.length){
+        liste.innerHTML = '<p class="leer">Keine Einträge – oder der Schlüssel stimmt nicht. Bei Bedarf den Schlüssel prüfen.</p>';
+        el('boardSaid').textContent = ''; return;
+      }
+      rows.forEach(function(a){ liste.appendChild(baueEintrag(a)); });
+      el('boardSaid').textContent = rows.length + ' Wunsch/Wünsche';
+    }).catch(function(){
+      el('boardSaid').textContent = 'Eingang nicht erreichbar.'; el('boardSaid').className = 'said bad';
+    });
+  }
+
+  function zeigeGate(){
+    el('board').hidden = true; el('gate').hidden = false;
+    el('keyIn').value = schluessel;
+  }
+
+  el('keyBtn').addEventListener('click', function(){
+    schluessel = (el('keyIn').value || '').trim();
+    if(!schluessel){ el('gateSaid').textContent = 'Bitte den Schlüssel eintragen.'; el('gateSaid').className = 'said bad'; return; }
+    laden();
+  });
+  el('keyIn').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ el('keyBtn').click(); } });
+
+  // Start: Schlüssel aus der URL nehmen und gleich laden; sonst Tor zeigen.
+  schluessel = schluesselAusUrl();
+  if(schluessel){ laden(); } else { zeigeGate(); }
+</script>
+
+</body>
+</html>

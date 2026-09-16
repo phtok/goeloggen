@@ -1,0 +1,41 @@
+# Jekyll-Konfiguration – gilt NUR fuer den Branch-Lauf von GitHub Pages.
+#
+# Warum es diese Datei gibt: Auf jeden Push nach main laufen zwei
+# Pages-Deployments gegeneinander (siehe README, Abschnitt «Was aktuell online
+# bleibt»). Der eine veroeffentlicht das kuratierte Bundle aus
+# deploy-pages.yml, der andere – von GitHub selbst erzeugt, weil die
+# Pages-Quelle auf ‹Deploy from a branch› steht – veroeffentlicht den rohen
+# Branch durch Jekyll. Wer spaeter fertig wird, gewinnt.
+#
+# Ohne diese Datei stehen in den Zeitraeumen, in denen der Branch-Lauf oben ist,
+# die Quellordner offen im Netz: /tools/, /docs/, /workers/, /services/,
+# /CLAUDE.md, /SECRETS.md. Die Liste unten haelt sie draussen und bringt den
+# Branch-Lauf damit auf denselben Umfang wie das Bundle.
+#
+# Die Liste ist abgeleitet, nicht geraten: sie ist genau das, was
+# deploy-pages.yml NICHT ins Bundle kopiert. Aendert sich dort etwas, hier
+# mitziehen. Veroeffentlicht bleiben: alle *.html im Wurzelordner, apps/,
+# start/, design-system/, assets/, tools.json, robots.txt, CNAME sowie die
+# eingecheckten Weiterleitungen (Abschnitts-Pfade und Kurz-Adressen).
+#
+# Wird die Pages-Quelle auf ‹GitHub Actions› umgestellt, faellt der Branch-Lauf
+# weg und diese Datei ist wirkungslos – sie schadet dann nicht, kann aber weg.
+
+exclude:
+  - archive/
+  - collections/
+  - docs/
+  - kampagne/
+  - perspektiven/
+  - reference/
+  - services/
+  - todo          # Datei, kein Ordner – darum ohne Schraegstrich
+  - tools/
+  - workers/
+  - CHANGELOG-a11y.md
+  - CHANGELOG.md
+  - CLAUDE-REF.md
+  - CLAUDE.md
+  - README.md
+  - SECRETS.md
+  - sektionen.json
