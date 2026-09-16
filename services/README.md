@@ -12,4 +12,5 @@ Nicht-statische Unterprojekte mit eigenem Runtime- oder Worker-Kontext.
 - `qr-generator/` – Backend von `apps/qr-generator/`: Kurzlinks mit anonymer Scan-Zaehlung.
 - `kistenpflege/` – Sortierer der Werkzeugkiste (Edge Function `sortierer-commit`).
 - `werkzeugpost/` – Textbestand der Werkzeugpost (Mails, Personas).
+- `lt-programm/` – Fenster zur Tagungsseite für das Tagungsprogramm (`apps/lt-programm/`): Edge Function `lt-programm-quelle` holt agriculture-conference.org, gelesen wird im Browser.
 - `campusplan/` – Backend des Campusplans (`apps/campusplan/`): Edge Function `campusplan-ausnahmen` (tagesaktuelle Ausnahmen von goetheanum.ch) und der monatliche Öffnungszeiten-Wächter.

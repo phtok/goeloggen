@@ -1,22 +1,24 @@
-# Wächter über das Programm der Landwirtschaftlichen Tagung. Holt viermal
-# täglich https://www.agriculture-conference.org/programm (und die Startseite),
-# schreibt den strukturierten Stand nach apps/lt-programm/webseite.json und
-# committet ihn, wenn sich etwas geändert hat. Damit zeigt die Vorschau
-# https://werkzeuge.goetheanum.ch/apps/lt-programm/ nach dem nächsten
-# Pages-Deploy immer den aktuellen Stand der Webseite; «Auf Abruf» = Run workflow.
-# Was nur auf dem Blatt steht (blatt.json), fasst der Wächter nicht an.
-name: LT-Programm-Wächter
+# Abgleich des Tagungsprogramms mit agriculture-conference.org — auf Abruf.
+#
+# Regelmässig läuft hier nichts (Beschluss 16. 9. 2026: «vier Mal am Tag ist
+# viel zu oft»). Den frischen Stand holt der Knopf «Von der Webseite holen»
+# auf https://werkzeuge.goetheanum.ch/apps/lt-programm/ — der zeigt und
+# exportiert sofort, ohne irgendetwas zu speichern.
+#
+# Dieser Lauf ist für den anderen Fall: den geholten Stand als
+# apps/lt-programm/webseite.json ins Repo schreiben, damit die Seite ihn
+# auch ohne Abruf zeigt und der Verlauf im Git steht. Von Hand starten:
+# Actions → «LT-Programm: Stand holen» → Run workflow.
+name: "LT-Programm: Stand holen"
 
 on:
-  schedule:
-    - cron: "17 5,11,17,23 * * *"   # viermal täglich (UTC)
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: lt-programm-waechter
+  group: lt-programm-stand
   cancel-in-progress: false
 
 jobs:
@@ -24,14 +26,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-node@v4
         with:
-          python-version: "3.12"
+          node-version: "22"
       - name: Programmseite holen und mit dem Stand vergleichen
         id: holen
         run: |
           set +e
-          python3 tools/lt-programm-holen.py --pruefen
+          node apps/lt-programm/holen.mjs --pruefen
           rc=$?
           set -e
           if [ "$rc" = "1" ]; then echo "geaendert=ja" >> "$GITHUB_OUTPUT"; exit 0; fi
@@ -40,7 +42,7 @@ jobs:
       - name: Neuen Stand committen
         if: steps.holen.outputs.geaendert == 'ja'
         run: |
-          git config user.name "lt-programm-waechter"
+          git config user.name "lt-programm"
           git config user.email "werkzeuge@goetheanum.ch"
           git add apps/lt-programm/webseite.json
           git commit -m "LT-Programm: Stand der Webseite $(date -u +%Y-%m-%d) übernommen"

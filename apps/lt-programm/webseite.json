@@ -3,11 +3,18 @@
  "tagung": {
   "motto": "Mit der Intelligenz des Lebens arbeiten",
   "datum": "3. bis 6. Februar 2027",
-  "ort": "",
   "von": 3,
   "bis": 6,
   "monat": "Februar",
-  "jahr": 2027
+  "jahr": 2027,
+  "dolmetsch": [
+   "Deutsch",
+   "Englisch",
+   "Französisch",
+   "Spanisch",
+   "Italienisch",
+   "Chinesisch"
+  ]
  },
  "plenum": [
   {
@@ -18,8 +25,10 @@
    "veranstaltungen": [
     {
      "zeit": "15:00",
-     "titel": "Eröffnung",
-     "art": "",
+     "titel_en": "",
+     "titel_de": "",
+     "art_en": "Opening",
+     "art_de": "Eröffnung",
      "sprachen": [
       "DE",
       "EN"
@@ -31,27 +40,29 @@
     },
     {
      "zeit": "15:00",
-     "titel": "Titel",
-     "art": "Präsentationen",
+     "titel_en": "Experiencing the Intelligence of Life",
+     "titel_de": "Der Intelligenz des Lebens begegnen",
+     "art_en": "",
+     "art_de": "",
      "sprachen": [
       "EN"
      ],
-     "titel_offen": true,
-     "gleicher_block": true,
      "mitwirkende": [
       "Nathalia Muguet",
       "Regina Sharmila Dass",
-      "(Limbua)"
-     ]
+      "Limbua"
+     ],
+     "gleicher_block": true
     },
     {
      "zeit": "17:00",
-     "titel": "Titel",
-     "art": "Vorträge",
+     "titel_en": "Exploring the Invisible Networks of Life",
+     "titel_de": "Die unsichtbaren Netzwerke des Lebens erkunden",
+     "art_en": "",
+     "art_de": "",
      "sprachen": [
       "DE"
      ],
-     "titel_offen": true,
      "mitwirkende": [
       "Gabriele Berg",
       "Thomas Hardtmuth"
@@ -59,12 +70,13 @@
     },
     {
      "zeit": "20:00",
-     "titel": "Titel",
-     "art": "Vortrag",
+     "titel_en": "From Microbiome Research to the Spiritual Significance of the Preparations",
+     "titel_de": "Von der Mikrobiomforschung zur geisteswissenschaftlichen Bedeutung der Präparate",
+     "art_en": "",
+     "art_de": "",
      "sprachen": [
       "DE"
      ],
-     "titel_offen": true,
      "mitwirkende": [
       "Jürgen Fritz"
      ]
@@ -79,12 +91,13 @@
    "veranstaltungen": [
     {
      "zeit": "08:30",
-     "titel": "Titel",
-     "art": "Michaelbrief",
+     "titel_en": "The Future of Humanity between Artificial Intelligence and Free Will",
+     "titel_de": "Menschheitszukunft zwischen künstlicher Intelligenz und freiem Willen",
+     "art_en": "Michael Letter",
+     "art_de": "Michaelbrief",
      "sprachen": [
       "EN"
      ],
-     "titel_offen": true,
      "mitwirkende": [
       "Sophia Montefiore",
       "Brian Keats"
@@ -92,27 +105,31 @@
     },
     {
      "zeit": "17:00",
-     "titel": "Titel",
-     "art": "Präsentationen",
+     "titel_en": "Roots, Trees, Soil and Stars",
+     "titel_de": "Wurzeln, Bäume, Boden, Sterne",
+     "art_en": "",
+     "art_de": "",
      "sprachen": [
       "EN"
      ],
-     "titel_offen": true,
      "mitwirkende": [
       "Ernst Zürcher",
       "Florianne Köchlin",
-      "Teo Nasar (+Speaker)"
+      "Teo Nasar",
+      "Walter Goldstein"
      ]
     },
     {
      "zeit": "20:00",
-     "titel": "Titel",
-     "art": "Eurythmie-Aufführung",
+     "titel_en": "",
+     "titel_de": "",
+     "art_en": "Eurythmy Performance",
+     "art_de": "Eurythmie-Aufführung",
      "sprachen": [],
-     "titel_offen": true,
      "mitwirkende": [
       "Goetheanum Eurythmie Ensemble"
-     ]
+     ],
+     "titel_offen": true
     }
    ]
   },
@@ -124,35 +141,42 @@
    "veranstaltungen": [
     {
      "zeit": "08:30",
-     "titel": "Titel",
-     "art": "Michaelbrief",
+     "titel_en": "The Future of Humanity between Artificial Intelligence and Free Will",
+     "titel_de": "Menschheitszukunft zwischen künstlicher Intelligenz und freiem Willen",
+     "art_en": "Michael Letter",
+     "art_de": "Michaelbrief",
      "sprachen": [
       "EN"
      ],
-     "titel_offen": true,
      "mitwirkende": [
       "N.N."
-     ]
+     ],
+     "namen_offen": true
     },
     {
      "zeit": "17:00",
-     "titel": "Schaffende Weisheit – wie das Ätherische das Irdische organisiert",
-     "art": "Präsentationen",
+     "titel_en": "Creative Wisdom – How the Etheric Organises the Earthly",
+     "titel_de": "Schaffende Weisheit – wie das Ätherische das Irdische organisiert",
+     "art_en": "",
+     "art_de": "",
      "sprachen": [
       "DE"
      ],
      "mitwirkende": [
       "Dorian Schmidt",
-      "Johannes Weinzierl",
+      "Johannes Weinzirl",
       "Lea Krontal",
+      "Tanja Baumgartner",
       "Pia Secondo",
       "Moderation: Markus Buchmann"
      ]
     },
     {
      "zeit": "19:00",
-     "titel": "Festlicher Abend",
-     "art": "",
+     "titel_en": "",
+     "titel_de": "",
+     "art_en": "Festive evening",
+     "art_de": "Festlicher Abend",
      "sprachen": [],
      "mitwirkende": [
       "Schreinerei Saal und Wandelhalle"
@@ -168,12 +192,13 @@
    "veranstaltungen": [
     {
      "zeit": "08:30",
-     "titel": "Titel",
-     "art": "Michaelbrief",
+     "titel_en": "The Future of Humanity between Artificial Intelligence and Free Will",
+     "titel_de": "Menschheitszukunft zwischen künstlicher Intelligenz und freiem Willen",
+     "art_en": "Michael Letter",
+     "art_de": "Michaelbrief",
      "sprachen": [
       "EN"
      ],
-     "titel_offen": true,
      "mitwirkende": [
       "Ueli Hurter",
       "Luka Macharia"
@@ -181,29 +206,35 @@
     },
     {
      "zeit": "14:30",
-     "titel": "Titel",
-     "art": "Panelgespräch",
+     "titel_en": "",
+     "titel_de": "",
+     "art_en": "",
+     "art_de": "",
      "sprachen": [
       "EN"
      ],
-     "titel_offen": true,
      "mitwirkende": [
-      "Jasmin Peschke (+Speaker)"
-     ]
+      "Jasmin Peschke",
+      "N.N."
+     ],
+     "titel_offen": true,
+     "namen_offen": true
     },
     {
      "zeit": "14:30",
-     "titel": "Abschluss",
-     "art": "",
+     "titel_en": "",
+     "titel_de": "",
+     "art_en": "Closing",
+     "art_de": "Abschluss",
      "sprachen": [
       "DE",
       "EN"
      ],
-     "gleicher_block": true,
      "mitwirkende": [
       "Ueli Hurter",
       "Eduardo Rincon"
-     ]
+     ],
+     "gleicher_block": true
     }
    ]
   }
@@ -251,7 +282,7 @@
    ],
    "ort": "",
    "text_1": [
-    "Die Mikrobiomforschung stellt unser Verhältnis zu den kleinsten Lebenseinheiten auf den Kopf: Gesundheit entsteht nicht durch Beherrschen, sondern durch Beziehung und Kooperation. Unsere Arbeitsgruppe stellt die Frage, ob ein solcher Paradigmenwechsel auch im „Makroskopischen“ ansteht – im Verhältnis von Mensch und Landschaft. Der Genius loci wird zur Fragehaltung: Wie lassen sich Orte im Hinblick auf ihre Potenziale entwickeln – Veranlagtes wahrnehmen und entwickeln in einer gebenden statt einseitig nehmenden Haltung? Ausgehend von Erfahrungen der Veranstalter und aus dem Kreis der Teilnehmenden wollen wir methodische Schritte zur ökologischen Inklusion erarbeiten und in Ansätzen erüben. Einer der drei Termine findet im Freien auf dem Goetheanum-Gelände statt, mit einer angeleiteten Wahrnehmungsübung vor Ort. Dabei wollen wir den Paradigmenwechsel der Mikrobiomforschung zum Anlass nehmen, auf der Ebene der Orts- und Landschaftsentwicklung nach einem Paradigmenwechsel der Mensch-Natur-Beziehung zu fragen. Die Frage nach dem Genius loci dient dabei als Ausgangspunkt für eine erweiterte Blickrichtung und methodische Schritte zur ökologischen Inklusion. Wir wollen eine „gebende“ Haltung gegenüber Landschaft und Ort entwickeln und reflektieren sowie Möglichkeiten der Übertragbarkeit auf eigene Gestaltungsfelder der Teilnehmenden – Hoflandschaften, Gärten und Projekte – diskutieren. In drei Terminen geht es zunächst um eine Einführung und die Frage: Wie lassen sich Orte im Sinne ökologischer Inklusion entwickeln? Der zweite Termin findet draußen auf dem Goetheanum-Gelände statt und umfasst eine Wahrnehmungsübung zur Annäherung an den Genius loci sowie eine praktische Reflexion methodischer Schritte. Im dritten Termin geht es um Vertiefung und Ausblick – um Gestaltungsfragen und Baustellen der Teilnehmenden, methodische Schritte und die eigene Umsetzung."
+    "Die Mikrobiomforschung stellt unser Verhältnis zu den kleinsten Lebenseinheiten auf den Kopf: Gesundheit entsteht nicht durch Beherrschen, sondern durch Beziehung und Kooperation. Unsere Arbeitsgruppe stellt die Frage, ob ein solcher Paradigmenwechsel auch im &bdquo;Makroskopischen“ ansteht – im Verhältnis von Mensch und Landschaft. Der Genius loci wird zur Fragehaltung: Wie lassen sich Orte im Hinblick auf ihre Potenziale entwickeln – Veranlagtes wahrnehmen und entwickeln in einer gebenden statt einseitig nehmenden Haltung? Ausgehend von Erfahrungen der Veranstalter und aus dem Kreis der Teilnehmenden wollen wir methodische Schritte zur ökologischen Inklusion erarbeiten und in Ansätzen erüben. Einer der drei Termine findet im Freien auf dem Goetheanum-Gelände statt, mit einer angeleiteten Wahrnehmungsübung vor Ort. Dabei wollen wir den Paradigmenwechsel der Mikrobiomforschung zum Anlass nehmen, auf der Ebene der Orts- und Landschaftsentwicklung nach einem Paradigmenwechsel der Mensch-Natur-Beziehung zu fragen. Die Frage nach dem Genius loci dient dabei als Ausgangspunkt für eine erweiterte Blickrichtung und methodische Schritte zur ökologischen Inklusion. Wir wollen eine &bdquo;gebende“ Haltung gegenüber Landschaft und Ort entwickeln und reflektieren sowie Möglichkeiten der Übertragbarkeit auf eigene Gestaltungsfelder der Teilnehmenden – Hoflandschaften, Gärten und Projekte – diskutieren. In drei Terminen geht es zunächst um eine Einführung und die Frage: Wie lassen sich Orte im Sinne ökologischer Inklusion entwickeln? Der zweite Termin findet draußen auf dem Goetheanum-Gelände statt und umfasst eine Wahrnehmungsübung zur Annäherung an den Genius loci sowie eine praktische Reflexion methodischer Schritte. Im dritten Termin geht es um Vertiefung und Ausblick – um Gestaltungsfragen und Baustellen der Teilnehmenden, methodische Schritte und die eigene Umsetzung."
    ],
    "text_2": [
     "Microbiome research turns our relationship with the smallest entities of life on its head: health arises not through control, but through relationship and cooperation. Our workshop asks whether a similar paradigm shift is also needed at the “macroscopic” level – in the relationship between people and landscape. The genius loci becomes a way of asking questions: How can places be developed in relation to their potential – perceiving and developing what is inherent in them through an attitude of giving rather than one-sided taking? Drawing on the experience of the organisers and participants, we want to develop and begin to practise methodological steps towards ecological inclusion. One of the three sessions will take place outdoors on the Goetheanum grounds, with a guided perception exercise on site. We want to take the paradigm shift in microbiome research as an opportunity to ask whether a similar shift is needed in our relationship with nature at the level of place and landscape development. The question of the genius loci serves as a starting point for an expanded perspective and methodological steps towards ecological inclusion. We will explore and reflect on a “giving” attitude towards landscape and place, and discuss how these approaches might be transferred to the participants’ own fields of practice – farm landscapes, gardens and projects. The three sessions will begin with an introduction and the question: How can places be developed in the sense of ecological inclusion? The second session will take place outdoors on the Goetheanum grounds and will include a perception exercise to approach the genius loci, followed by practical reflection on methodological steps. The third session will focus on deepening the work and looking ahead, exploring the participants’ questions and areas for development, methodological steps and possibilities for putting the work into practice."
@@ -303,7 +334,7 @@
    ],
    "ort": "",
    "text_1": [
-    "„Wir müssen verstehen lernen, dass wir in der Zukunft nicht die wichtigsten Ereignisse auf dem physischen Plan zu suchen haben, sondern außerhalb des physischen Planes, wie den Christus, den wir als Äthergestalt in der geistigen Welt bei seiner Wiederkehr zu suchen haben werden.“ (GA 118)",
+    "&bdquo;Wir müssen verstehen lernen, dass wir in der Zukunft nicht die wichtigsten Ereignisse auf dem physischen Plan zu suchen haben, sondern außerhalb des physischen Planes, wie den Christus, den wir als Äthergestalt in der geistigen Welt bei seiner Wiederkehr zu suchen haben werden.“ (GA 118)",
     "Rudolf Steiner hat in verschiedenen Vorträgen über ein großes oder das größte Geheimnis des Jahrhunderts gesprochen: die Wiederkunft des Christus im Ätherischen. Wie können die ätherischen Kräfte, die Lebenskräfte, durch die Bildekräfteforschung erlebbar werden, damit auch ein tieferes Verständnis für die Wiederkunft Christi ermöglicht werden kann? Ausgehend von Steiners Aussagen wollen wir uns in dieser Arbeitsgruppe dieser Frage durch Beiträge, Gespräch und praktische Übungen annähern."
    ],
    "text_2": [
@@ -359,7 +390,7 @@
    ],
    "ort": "",
    "text_1": [
-    "Anknüpfend an den Leitgedanken der Tagung „Mit der Intelligenz des Lebens arbeiten“ wollen wir in dieser Arbeitsgruppe untersuchen, wie Saatgutarbeit und Pflanzenzüchtung für die biologisch-dynamische Wirtschaftsweise künftig weiterentwickelt werden können – möglichst emanzipiert vom Einfluss Ahrimans, ohne beispielsweise durch Gentechnik in die Lebenssphäre des Saatguts und der Pflanzen einzugreifen. Am ersten Tag werden wir unser Thema inhaltlich differenzierter ausarbeiten und anhand der Michael-Briefe erläutern. Der zweite Tag gibt Gelegenheit zum Austausch darüber, was wir jeweils in unserer täglichen Arbeitspraxis auf diesem Gebiet konkret tun und auf welche Hindernisse wir dabei stoßen. Am dritten Tag schaffen wir Raum, um Perspektiven zu skizzieren, wie wir die biodynamische Züchtung nachbaufähiger (samenfester) Sorten weiter voranbringen und wie wir dies gemeinsam gestalten können. Die dabei entwickelten Gedanken und Vorhaben sollen am Ende zusammengetragen werden, um sie im Anschluss an die Tagung weiterentwickeln zu können."
+    "Anknüpfend an den Leitgedanken der Tagung &bdquo;Mit der Intelligenz des Lebens arbeiten“ wollen wir in dieser Arbeitsgruppe untersuchen, wie Saatgutarbeit und Pflanzenzüchtung für die biologisch-dynamische Wirtschaftsweise künftig weiterentwickelt werden können – möglichst emanzipiert vom Einfluss Ahrimans, ohne beispielsweise durch Gentechnik in die Lebenssphäre des Saatguts und der Pflanzen einzugreifen. Am ersten Tag werden wir unser Thema inhaltlich differenzierter ausarbeiten und anhand der Michael-Briefe erläutern. Der zweite Tag gibt Gelegenheit zum Austausch darüber, was wir jeweils in unserer täglichen Arbeitspraxis auf diesem Gebiet konkret tun und auf welche Hindernisse wir dabei stoßen. Am dritten Tag schaffen wir Raum, um Perspektiven zu skizzieren, wie wir die biodynamische Züchtung nachbaufähiger (samenfester) Sorten weiter voranbringen und wie wir dies gemeinsam gestalten können. Die dabei entwickelten Gedanken und Vorhaben sollen am Ende zusammengetragen werden, um sie im Anschluss an die Tagung weiterentwickeln zu können."
    ],
    "text_2": [
     "Building on the conference’s guiding theme, “Working with the Intelligence of Life,” this workshop will explore how seed work and plant breeding for biodynamic agriculture can be further developed in the future; ideally emancipated from the influence of Ahriman, without, for example, intervening in the sphere of life of seeds and plants through genetic engineering. On the first day, we will develop our theme in greater depth and explore it in relation to the Michael Letter. The second day will provide an opportunity to exchange experiences about what each of us is doing in our daily practice in this field and what obstacles we encounter. On the third day, we will create space to develop perspectives on how to further advance biodynamic breeding of reproducible, open-pollinated varieties and how we can shape this work together. The ideas and initiatives developed during the workshop will be brought together at the end, with the aim of continuing to develop them after the conference."
@@ -438,7 +469,7 @@
    ],
    "ort": "",
    "text_1": [
-    "Eine Forschergemeinschaft untersuchte auf drei biologisch-dynamischen Höfen über drei Jahre hinweg die Frage: „Was ist Bodenfruchtbarkeit auf der Lebensebene?“ Dazu wurden zu verschiedenen Jahreszeiten Bodenproben aus unterschiedlichen Tiefen und Höhenlagen entnommen und mit Methoden der Bildekräfteforschung untersucht. Ein besonderes Augenmerk liegt auf der Wirkung von Hornkiesel und Hornmist. In dieser Arbeitsgruppe werden die Ergebnisse vorgestellt, anhand von Übungen praktisch erfahrbar gemacht und auf einem Poster mit überraschenden Ergebnissen gemeinsam betrachtet."
+    "Eine Forschergemeinschaft untersuchte auf drei biologisch-dynamischen Höfen über drei Jahre hinweg die Frage: &bdquo;Was ist Bodenfruchtbarkeit auf der Lebensebene?“ Dazu wurden zu verschiedenen Jahreszeiten Bodenproben aus unterschiedlichen Tiefen und Höhenlagen entnommen und mit Methoden der Bildekräfteforschung untersucht. Ein besonderes Augenmerk liegt auf der Wirkung von Hornkiesel und Hornmist. In dieser Arbeitsgruppe werden die Ergebnisse vorgestellt, anhand von Übungen praktisch erfahrbar gemacht und auf einem Poster mit überraschenden Ergebnissen gemeinsam betrachtet."
    ],
    "text_2": [
     "A research group investigated the question “What is soil fertility at the level of life?” on three biodynamic farms over a period of three years. Soil samples were taken from different depths and elevations at different times of the year and analysed using methods of life forces research. Particular attention was given to the effects of horn silica and horn manure. In this workshop, the results will be presented and explored through practical exercises, and a poster summarising some surprising findings will be discussed together."
@@ -513,7 +544,7 @@
    ],
    "ort": "",
    "text_1": [
-    "Rudolf Hauschka fragte einmal Rudolf Steiner: „Können Sie mir erklären, was Rhythmus ist? Wie kann man das Leben studieren?“ Darauf antwortete Rudolf Steiner: „Studieren Sie die Rhythmen. Rhythmus trägt Leben.“ In dieser Arbeitsgruppe wollen wir uns eine Einsicht in die ätherische Welt und ihre sieben Lebensprozesse erarbeiten und dadurch auch den Zusammenhang mit den planetarischen Wirksamkeiten im Menschen erkunden. Dabei wollen wir Rhythmus nicht nur theoretisch betrachten, sondern als eine mögliche Antwort und Lösung für Herausforderungen und Lebensprobleme erfahren."
+    "Rudolf Hauschka fragte einmal Rudolf Steiner: &bdquo;Können Sie mir erklären, was Rhythmus ist? Wie kann man das Leben studieren?“ Darauf antwortete Rudolf Steiner: &bdquo;Studieren Sie die Rhythmen. Rhythmus trägt Leben.“ In dieser Arbeitsgruppe wollen wir uns eine Einsicht in die ätherische Welt und ihre sieben Lebensprozesse erarbeiten und dadurch auch den Zusammenhang mit den planetarischen Wirksamkeiten im Menschen erkunden. Dabei wollen wir Rhythmus nicht nur theoretisch betrachten, sondern als eine mögliche Antwort und Lösung für Herausforderungen und Lebensprobleme erfahren."
    ],
    "text_2": [],
    "fenster": "4. bis 6. Februar • 10:45 - 12:30 • In den dreitägigen Arbeitsgruppen am Vormittag wird das Tagungsthema gemeinsam vertieft.",
@@ -534,7 +565,7 @@
    ],
    "ort": "",
    "text_1": [
-    "Unter dem Motto \"Wir aber wollen reden von Weisheit\" aus dem Korintherbrief wollen wir in drei Tagen einen Bogen spannen von der antiken Gestalt der Sophia, die schon vor der Erschaffung der Welt war, über Athene, die mit Schlangen gegen die Riesen kämpft, und ihre Begegnung mit der Benediktinerin Hildegard von Bingen im Mittelalter, bis hin zur Bedeutung der Sophia für Maria, die sedes sapientiae, insbesondere in der orthodoxen Welt. Schließlich führt uns der Weg zum Michaelbrief Rudolf Steiners und seiner Beschreibung einer kosmischen Intelligenz, die von Michael bewahrt wurde und nun im Menschen wirksam werden soll. Wie können wir heute mit dieser Intelligenz des Lebendigen arbeiten? „In ihr leben, weben und sind wir“ – in Anlehnung an die Worte, die Paulus zu den Athenern gesprochen hat."
+    "Unter dem Motto \"Wir aber wollen reden von Weisheit\" aus dem Korintherbrief wollen wir in drei Tagen einen Bogen spannen von der antiken Gestalt der Sophia, die schon vor der Erschaffung der Welt war, über Athene, die mit Schlangen gegen die Riesen kämpft, und ihre Begegnung mit der Benediktinerin Hildegard von Bingen im Mittelalter, bis hin zur Bedeutung der Sophia für Maria, die sedes sapientiae, insbesondere in der orthodoxen Welt. Schließlich führt uns der Weg zum Michaelbrief Rudolf Steiners und seiner Beschreibung einer kosmischen Intelligenz, die von Michael bewahrt wurde und nun im Menschen wirksam werden soll. Wie können wir heute mit dieser Intelligenz des Lebendigen arbeiten? &bdquo;In ihr leben, weben und sind wir“ – in Anlehnung an die Worte, die Paulus zu den Athenern gesprochen hat."
    ],
    "text_2": [],
    "fenster": "4. bis 6. Februar • 10:45 - 12:30 • In den dreitägigen Arbeitsgruppen am Vormittag wird das Tagungsthema gemeinsam vertieft.",
@@ -607,7 +638,7 @@
     "In the age of the Consciousness Soul and living thought, our well-being originates in the light of our cells. The Ether of Light is capable of radiating and propagating from cell to cell through all three of our systems: the neurosensory, rhythmic, and metabolic systems. It is in the depths of our inner being that we can encounter and support the manifestation of the intelligence of life in matter—an inexhaustible force that, through the Light of humanity, can begin anew and, through perception, manifest itself clearly within us. Understanding this means understanding the essence of biodynamic agricultural practices, which are capable of going beyond the concept of the organic quality of vital food and beyond the concept of the energetic content of vital food. Growing according to the biodynamic agricultural method means generating vital food containing the Ether of Light, which will become increasingly indispensable to humanity in the future."
    ],
    "text_2": [
-    "Nell’epoca dell’Anima Cosciente e del pensiero vivente, il nostro benessere ha origine nella Luce delle nostre cellule. L’Etere della Luce è in grado di irradiarsi e propagarsi da cellula a cellula attraverso tutti e tre i nostri sistemi: il sistema neurosensoriale, il sistema ritmico e il sistema metabolico. È nelle profondità del nostro essere interiore che possiamo incontrare e sostenere la manifestazione dell’intelligenza della vita nella materia—una forza inesauribile che, attraverso la Luce dell’umanità, può ricominciare e, attraverso la percezione, manifestarsi chiaramente dentro di noi. Comprendere questo significa comprendere l’essenza delle pratiche agricole biodinamiche, capaci di andare oltre il concetto di qualità biologica degli alimenti vitali e oltre il concetto del loro contenuto energetico. Coltivare secondo il metodo agricolo biodinamico significa produrre alimenti vitali contenenti l’Etere della Luce, che in futuro diventerà sempre più indispensabile per l’umanità."
+    "Nell’epoca dell’Anima Cosciente e del pensiero vivente, il nostro benessere ha origine nella Luce delle nostre cellule. L’Etere della Luce è in grado di irradiarsi e propagarsi da cellula a cellula attraverso tutti e tre i nostri sistemi: il sistema neurosensoriale, il sistema ritmico e il sistema metabolico. &Egrave; nelle profondità del nostro essere interiore che possiamo incontrare e sostenere la manifestazione dell’intelligenza della vita nella materia—una forza inesauribile che, attraverso la Luce dell’umanità, pu&ograve; ricominciare e, attraverso la percezione, manifestarsi chiaramente dentro di noi. Comprendere questo significa comprendere l’essenza delle pratiche agricole biodinamiche, capaci di andare oltre il concetto di qualità biologica degli alimenti vitali e oltre il concetto del loro contenuto energetico. Coltivare secondo il metodo agricolo biodinamico significa produrre alimenti vitali contenenti l’Etere della Luce, che in futuro diventerà sempre pi&ugrave; indispensabile per l’umanità."
    ],
    "fenster": "4. bis 6. Februar • 10:45 - 12:30 • In den dreitägigen Arbeitsgruppen am Vormittag wird das Tagungsthema gemeinsam vertieft.",
    "titel": {
@@ -619,7 +650,7 @@
    "nr": 17,
    "block": "vormittag",
    "titel_1": "Arboreal Intelligence in the Amazon Cloud Forest",
-   "titel_2": "Intelligence arborícola en el bosque nuboso amazónico",
+   "titel_2": "Intelligence arbor&iacute;cola en el bosque nuboso amaz&oacute;nico",
    "mitwirkende": [
     "Craig Leon"
    ],
@@ -632,12 +663,12 @@
     "Are mycorrhizal networks, when gravitational curves are created, able to provide enough nourishment to young native tree species to eliminate the need for potting soil from the nursery? If so, this could dramatically reduce the manual labour involved in reforesting land deforested by cattle ranching, allowing trees to be transported with bare roots rather than with soil up steep slopes. Krona RSF displays from six distinct areas in the region, ranging from deep primary forest to recently deforested land, show unusual patterns that could provide further evidence of forest intelligence and how mycelium may act like soldiers in the recovery of forests. The workshop will combine audiovisual depictions of the different areas with views of the Kronas and their composition, as well as a look at the more than 3,000 mycelia identified so far on site. It will include drawing on the Kronas and looking for connections and patterns between those found in deep primary forest, primary forest close to deforested land, recently deforested land, land recovering naturally without intervention, and areas where enriched rewilding is taking place. Together, we will explore this phenomenon and look for insights."
    ],
    "text_2": [
-    "¿Son capaces las redes micorrícicas, cuando se crean curvas gravitacionales, de proporcionar suficiente alimento a las especies arbóreas nativas jóvenes como para eliminar la necesidad de utilizar tierra para macetas del vivero? Si es así, esto podría reducir drásticamente el trabajo manual necesario para reforestar tierras deforestadas por la ganadería, ya que permitiría transportar los árboles con las raíces desnudas, en lugar de llevarlos con tierra, por pendientes pronunciadas. Los registros de Krona RSF de seis áreas distintas de la región, desde bosques primarios profundos hasta tierras recientemente deforestadas, muestran patrones inusuales que podrían aportar más evidencias de la inteligencia del bosque y de cómo el micelio puede actuar como soldados en la recuperación de los bosques. El taller combinará representaciones audiovisuales de las distintas áreas con imágenes de las Kronas y de su composición, así como una mirada a los más de 3.000 micelios identificados hasta ahora en el lugar. Incluirá dibujos realizados sobre las Kronas, buscando conexiones y patrones entre aquellos que aparecen en el bosque primario profundo, en el bosque primario cercano a tierras deforestadas, en tierras recientemente deforestadas, en tierras que se están recuperando de forma natural sin intervención y en áreas donde se está llevando a cabo una restauración ecológica enriquecida. Juntos exploraremos este fenómeno y buscaremos nuevas perspectivas."
+    "&iquest;Son capaces las redes micorr&iacute;cicas, cuando se crean curvas gravitacionales, de proporcionar suficiente alimento a las especies arb&oacute;reas nativas j&oacute;venes como para eliminar la necesidad de utilizar tierra para macetas del vivero? Si es as&iacute;, esto podr&iacute;a reducir dr&aacute;sticamente el trabajo manual necesario para reforestar tierras deforestadas por la ganader&iacute;a, ya que permitir&iacute;a transportar los &aacute;rboles con las ra&iacute;ces desnudas, en lugar de llevarlos con tierra, por pendientes pronunciadas. Los registros de Krona RSF de seis &aacute;reas distintas de la regi&oacute;n, desde bosques primarios profundos hasta tierras recientemente deforestadas, muestran patrones inusuales que podr&iacute;an aportar m&aacute;s evidencias de la inteligencia del bosque y de c&oacute;mo el micelio puede actuar como soldados en la recuperaci&oacute;n de los bosques. El taller combinar&aacute; representaciones audiovisuales de las distintas &aacute;reas con im&aacute;genes de las Kronas y de su composici&oacute;n, as&iacute; como una mirada a los m&aacute;s de 3.000 micelios identificados hasta ahora en el lugar. Incluir&aacute; dibujos realizados sobre las Kronas, buscando conexiones y patrones entre aquellos que aparecen en el bosque primario profundo, en el bosque primario cercano a tierras deforestadas, en tierras recientemente deforestadas, en tierras que se est&aacute;n recuperando de forma natural sin intervenci&oacute;n y en &aacute;reas donde se est&aacute; llevando a cabo una restauraci&oacute;n ecol&oacute;gica enriquecida. Juntos exploraremos este fen&oacute;meno y buscaremos nuevas perspectivas."
    ],
    "fenster": "4. bis 6. Februar • 10:45 - 12:30 • In den dreitägigen Arbeitsgruppen am Vormittag wird das Tagungsthema gemeinsam vertieft.",
    "titel": {
     "EN": "Arboreal Intelligence in the Amazon Cloud Forest",
-    "ES": "Intelligence arborícola en el bosque nuboso amazónico"
+    "ES": "Intelligence arbor&iacute;cola en el bosque nuboso amaz&oacute;nico"
    }
   },
   {
@@ -658,7 +689,7 @@
     "Life forces and our connection to the etheric manifest in human beings through the temperaments. These temperaments are reflected in the way we relate to the world and in the way we nourish ourselves. What kind of eaters are we? What kind of eaters are our family members and our guests? Our gut is our second brain, and our intestinal microbiome acts, in a sense, as its neuronal body. How can we use the approach of the temperaments to consciously influence this unconscious organ and, in doing so, support our physical and mental health and live in harmony with others and the world? And what about our farm animals? Do we feed them according to their temperaments and their relationship to the elements? Do we guide them in ways that help them cultivate a healthy microbiome? These are the questions we propose to explore more deeply in our workshop through sensory experiences, periods of meditation and the sharing of experiences."
    ],
    "text_2": [
-    "Les forces de vie et notre lien à l’éthérique se manifestent chez l’être humain à travers les tempéraments. Ceux-ci se reflètent dans notre manière d’être au monde ainsi que dans notre manière de nous nourrir. Quels mangeurs sommes-nous ? Quels mangeurs sont les membres de notre famille et nos convives ? Notre intestin est notre deuxième cerveau et notre microbiote intestinal agit, en quelque sorte, comme son corps neuronal. Comment, à travers l’approche des tempéraments, pouvons-nous agir consciemment sur cet organe inconscient et, ce faisant, favoriser notre santé physique et psychique ainsi que l’harmonie avec les autres et le monde ? Et qu’en est-il de nos animaux de ferme ? Les nourrissons-nous en fonction de leur tempérament et de leur lien aux éléments ? Les accompagnons-nous de manière à favoriser le développement d’un microbiote qui contribue à leur santé ? Voici les questions que nous proposons d’approfondir dans notre atelier à travers des expériences sensibles, des temps méditatifs et des échanges d’expériences."
+    "Les forces de vie et notre lien à l’éthérique se manifestent chez l’&ecirc;tre humain à travers les tempéraments. Ceux-ci se reflètent dans notre manière d’&ecirc;tre au monde ainsi que dans notre manière de nous nourrir. Quels mangeurs sommes-nous ? Quels mangeurs sont les membres de notre famille et nos convives ? Notre intestin est notre deuxième cerveau et notre microbiote intestinal agit, en quelque sorte, comme son corps neuronal. Comment, à travers l’approche des tempéraments, pouvons-nous agir consciemment sur cet organe inconscient et, ce faisant, favoriser notre santé physique et psychique ainsi que l’harmonie avec les autres et le monde ? Et qu’en est-il de nos animaux de ferme ? Les nourrissons-nous en fonction de leur tempérament et de leur lien aux éléments ? Les accompagnons-nous de manière à favoriser le développement d’un microbiote qui contribue à leur santé ? Voici les questions que nous proposons d’approfondir dans notre atelier à travers des expériences sensibles, des temps méditatifs et des échanges d’expériences."
    ],
    "fenster": "4. bis 6. Februar • 10:45 - 12:30 • In den dreitägigen Arbeitsgruppen am Vormittag wird das Tagungsthema gemeinsam vertieft.",
    "titel": {
@@ -695,8 +726,8 @@
   {
    "nr": 20,
    "block": "vormittag",
-   "titel_1": "Working with the Intelligence of the Forest",
-   "titel_2": "Trabajando con la Inteligencia del Bosque",
+   "titel_1": "Biodynamics Meets Agroforestry",
+   "titel_2": "La biodin&aacute;mica se encuentra con la agroforester&iacute;a",
    "mitwirkende": [
     "Esteban Acosta Pereira",
     "Ambra Pirker Grosmaire",
@@ -712,12 +743,12 @@
     "In biodynamics, we work towards developing self-sufficient systems. Agroforestry, as an integrative tool for farm design, can support this by bringing the forces of nature and the wider ecosystem into our work. It creates intensive microbial activity and diversity, strengthening connections across multiple layers of interaction, from the microbiome to the macrobiome. We believe the future of biodynamics lies in integrating knowledge and experience from agroecology, permaculture and regenerative farming, using agroforestry to develop self-sustaining systems. During the workshop, we will draw on more than 20 years of experience implementing agroforestry systems in biodynamic projects across several tropical countries, exploring their potential to become self-sustaining. We will consider how the intelligence of life manifests through soil biodiversity, supporting fertility, water retention, microclimate regulation and the unique characteristics of each ecosystem."
    ],
    "text_2": [
-    "En la agricultura biodinámica trabajamos para desarrollar sistemas autosuficientes. La agroforestería, como herramienta integradora para el diseño de fincas, puede contribuir a ello al incorporar las fuerzas de la naturaleza y del ecosistema en nuestro trabajo. Genera una intensa actividad microbiana y diversidad, fortaleciendo las conexiones entre múltiples niveles de interacción, desde el microbioma hasta el macrobióma. Creemos que el futuro de la biodinámica reside en integrar conocimientos y experiencias de la agroecología, la permacultura y la agricultura regenerativa, utilizando la agroforestería para desarrollar sistemas autosostenibles. Durante el taller, compartiremos más de 20 años de experiencia implementando sistemas agroforestales en proyectos biodinámicos de varios países tropicales, explorando su potencial para convertirse en sistemas autosostenibles. Consideraremos cómo la inteligencia de la vida se manifiesta a través de la biodiversidad del suelo, favoreciendo la fertilidad, la retención de agua, la regulación del microclima y las características únicas de cada ecosistema."
+    "En la agricultura biodin&aacute;mica trabajamos para desarrollar sistemas autosuficientes. La agroforester&iacute;a, como herramienta integradora para el diseño de fincas, puede contribuir a ello al incorporar las fuerzas de la naturaleza y del ecosistema en nuestro trabajo. Genera una intensa actividad microbiana y diversidad, fortaleciendo las conexiones entre m&uacute;ltiples niveles de interacci&oacute;n, desde el microbioma hasta el macrobi&oacute;ma. Creemos que el futuro de la biodin&aacute;mica reside en integrar conocimientos y experiencias de la agroecolog&iacute;a, la permacultura y la agricultura regenerativa, utilizando la agroforester&iacute;a para desarrollar sistemas autosostenibles. Durante el taller, compartiremos m&aacute;s de 20 años de experiencia implementando sistemas agroforestales en proyectos biodin&aacute;micos de varios pa&iacute;ses tropicales, explorando su potencial para convertirse en sistemas autosostenibles. Consideraremos c&oacute;mo la inteligencia de la vida se manifiesta a través de la biodiversidad del suelo, favoreciendo la fertilidad, la retenci&oacute;n de agua, la regulaci&oacute;n del microclima y las caracter&iacute;sticas &uacute;nicas de cada ecosistema."
    ],
    "fenster": "4. bis 6. Februar • 10:45 - 12:30 • In den dreitägigen Arbeitsgruppen am Vormittag wird das Tagungsthema gemeinsam vertieft.",
    "titel": {
-    "EN": "Working with the Intelligence of the Forest",
-    "ES": "Trabajando con la Inteligencia del Bosque"
+    "EN": "Biodynamics Meets Agroforestry",
+    "ES": "La biodin&aacute;mica se encuentra con la agroforester&iacute;a"
    }
   },
   {
@@ -893,7 +924,8 @@
    "titel_1": "Fermentation: Vom Umgang mit lebendigen Lacto-Bazillus-Kulturen",
    "titel_2": "Fermentation: Interacting with Live Lactic Acid Bacteria Cultures",
    "mitwirkende": [
-    "Heidi Leonhard"
+    "Heidi Leonhard",
+    "Brigid LeFevre"
    ],
    "sprachen": [
     "DE",
@@ -901,10 +933,10 @@
    ],
    "ort": "",
    "text_1": [
-    "Weltweit machen Menschen seit Jahrtausenden Lebensmittel durch Fermentation bekömmlicher und länger haltbar. Am ersten Tag beschäftigen wir uns mit dieser Geschichte, verschiedenen Methoden, dem Mikrobiom und den gesundheitlichen Wirkungen der Fermentation. Am zweiten Tag wird es praktisch: Wir stellen Salzzitronen her. Am Folgetag fermentieren wir hochwertiges Gemüse. Der Ablauf wird von Verkostungen begleitet und bietet ausreichend Raum für Fragen und gemeinsame Gespräche. Heidi Leonhard stammt ursprünglich aus Kalifornien und lebt in Deutschland. Sie unterrichtet Kochen, Fermentation und nachhaltige Ernährung. Sie ist Mitglied und Beirätin des AKE, organisiert die jährliche Fachtagung zu Ernährung und Gemeinschaftsverpflegung für den Bund der Freien Waldorfschulen und ist Mitgründerin der Initiative «Küche Bildet». Seit über zehn Jahren fermentiert sie professionell."
+    "Weltweit machen Menschen seit Jahrtausenden Lebensmittel durch Fermentation bekömmlicher und länger haltbar. Am ersten Tag beschäftigen wir uns mit dieser Geschichte, verschiedenen Methoden, dem Mikrobiom und den gesundheitlichen Wirkungen der Fermentation. Am zweiten Tag wird es praktisch: Wir stellen Salzzitronen her. Am Folgetag fermentieren wir hochwertiges Gemüse. Der Ablauf wird von Verkostungen begleitet und bietet ausreichend Raum für Fragen und gemeinsame Gespräche. Heidi Leonhard stammt ursprünglich aus Kalifornien und lebt in Deutschland. Sie unterrichtet Kochen, Fermentation und nachhaltige Ernährung. Sie ist Mitglied und Beirätin des AKE, organisiert die jährliche Fachtagung zu Ernährung und Gemeinschaftsverpflegung für den Bund der Freien Waldorfschulen und ist Mitgründerin der Initiative &laquo;Küche Bildet&raquo;. Seit über zehn Jahren fermentiert sie professionell."
    ],
    "text_2": [
-    "Going back to ancient times and across cultures, humankind has fermented vegetables and fruits to preserve them and make them more digestible. We will begin by exploring the history of fermentation, different methods, and the role of the gut microbiome and health. On the following days, we will work practically, making salt-preserved lemons and fermenting organic seasonal vegetables. Each day will include tastings and plenty of space for questions and dialogue. Heidi Leonhard is originally from California and lives in Germany. She teaches cooking, fermentation and sustainable nutrition that supports regenerative farming. She is a contributor to and member of the advisory board of AKE, and she organises the annual nutrition conference for the Waldorf School Organisation. She is also a founding member and initiator of «Küche Bildet» and has been fermenting professionally for over ten years."
+    "Going back to ancient times and across cultures, humankind has fermented vegetables and fruits to preserve them and make them more digestible. We will begin by exploring the history of fermentation, different methods, and the role of the gut microbiome and health. On the following days, we will work practically, making salt-preserved lemons and fermenting organic seasonal vegetables. Each day will include tastings and plenty of space for questions and dialogue. Heidi Leonhard is originally from California and lives in Germany. She teaches cooking, fermentation and sustainable nutrition that supports regenerative farming. She is a contributor to and member of the advisory board of AKE, and she organises the annual nutrition conference for the Waldorf School Organisation. She is also a founding member and initiator of &laquo;Küche Bildet&raquo; and has been fermenting professionally for over ten years."
    ],
    "fenster": "4. und 5. Februar • 14:30 - 16:00 • Die zweitägigen Arbeitsgruppen am Nachmittag widmen sich freien Themen aus der biodynamischen Bewegung.",
    "titel": {
@@ -980,7 +1012,7 @@
    "text_2": [
     "In this Eurythmy workshop, we will develop simple movements that can also be practised at home. They strengthen the immune system and support inner balance. We will also move together as a group and explore the effects of the movements in space. Please bring gymnastic shoes and something to take notes with.",
     "Expérimenter l’intelligence des forces éthériques",
-    "Dans cet atelier d’eurythmie, nous développerons des mouvements simples qui pourront également être pratiqués à la maison. Ils renforcent le système immunitaire et favorisent l’équilibre intérieur. Nous nous mettrons également en mouvement ensemble et explorerons les effets des mouvements dans l’espace. Veuillez apporter des chaussures de gymnastique ainsi que de quoi prendre des notes."
+    "Dans cet atelier d’eurythmie, nous développerons des mouvements simples qui pourront également &ecirc;tre pratiqués à la maison. Ils renforcent le système immunitaire et favorisent l’équilibre intérieur. Nous nous mettrons également en mouvement ensemble et explorerons les effets des mouvements dans l’espace. Veuillez apporter des chaussures de gymnastique ainsi que de quoi prendre des notes."
    ],
    "fenster": "4. und 5. Februar • 14:30 - 16:00 • Die zweitägigen Arbeitsgruppen am Nachmittag widmen sich freien Themen aus der biodynamischen Bewegung.",
    "titel": {
@@ -1009,7 +1041,7 @@
    "text_2": [
     "Eurythmy can calm, harmonise and stimulate bees and their surroundings. Together, we will move through the developmental process of the worker bees and explore how we can support bees etherically in accordance with their nature, whether we can enhance their wellbeing within their sphere of life, and how we can support them eurythmically in dealing with illness. We will also practise eurythmy directly with the bees at the Goetheanum and observe them. No prior knowledge is required.",
     "Euritmia con le api",
-    "L’euritmia può calmare, armonizzare e stimolare le api e il loro ambiente. Insieme seguiremo attraverso il movimento il processo di sviluppo delle api operaie e ci avvicineremo alle domande su come possiamo sostenere le api sul piano eterico in accordo con la loro natura, se possiamo accrescere il loro benessere nella loro sfera vitale e come possiamo sostenerle attraverso l’euritmia nell’affrontare le malattie. Faremo euritmia anche direttamente con le api al Goetheanum e le osserveremo. Non sono richieste conoscenze preliminari."
+    "L’euritmia pu&ograve; calmare, armonizzare e stimolare le api e il loro ambiente. Insieme seguiremo attraverso il movimento il processo di sviluppo delle api operaie e ci avvicineremo alle domande su come possiamo sostenere le api sul piano eterico in accordo con la loro natura, se possiamo accrescere il loro benessere nella loro sfera vitale e come possiamo sostenerle attraverso l’euritmia nell’affrontare le malattie. Faremo euritmia anche direttamente con le api al Goetheanum e le osserveremo. Non sono richieste conoscenze preliminari."
    ],
    "fenster": "4. und 5. Februar • 14:30 - 16:00 • Die zweitägigen Arbeitsgruppen am Nachmittag widmen sich freien Themen aus der biodynamischen Bewegung.",
    "titel": {
@@ -1054,7 +1086,7 @@
    ],
    "ort": "",
    "text_1": [
-    "In dieser Arbeitsgruppe betrachten wir die aktuellen Entwicklungen aus dem «Richtig-Rechnen»-Universum und gehen der Frage nach, welches Potenzial die Regionalwert-Leistungsrechnung für einen Bewusstseinswandel in der Agrarförderpolitik haben kann. Wir werden auch darüber berichten, welches Grossprojekt wir in diesem Zusammenhang derzeit entwickeln."
+    "In dieser Arbeitsgruppe betrachten wir die aktuellen Entwicklungen aus dem &laquo;Richtig-Rechnen&raquo;-Universum und gehen der Frage nach, welches Potenzial die Regionalwert-Leistungsrechnung für einen Bewusstseinswandel in der Agrarförderpolitik haben kann. Wir werden auch darüber berichten, welches Grossprojekt wir in diesem Zusammenhang derzeit entwickeln."
    ],
    "text_2": [],
    "fenster": "4. und 5. Februar • 14:30 - 16:00 • Die zweitägigen Arbeitsgruppen am Nachmittag widmen sich freien Themen aus der biodynamischen Bewegung.",
@@ -1080,7 +1112,7 @@
     "We are increasingly discovering just how closely plants – and trees in particular, which appear to grow separately above ground, each expressing their own identity – are connected to the soil through their microbiota and to one another through mycorrhizae. It is these multiple connections, fostered by diversity, that contribute to their health and resilience in the face of extreme events. When a tree loses these connections, it quickly becomes vulnerable and may wither away. Are we not witnessing a similar fragmentation in the social world? Family and village ties that once provided a strong sense of belonging have been lost. Many people suffer from loneliness, including farmers who may be too shy or exhausted by their work to speak about their existential worries. In this workshop, we will follow a participatory process combining discussion, artistic exercises and shared contributions. Just as plants depend on their connections, we will explore how we can create and strengthen our own connections at different levels, building a solid foundation from which we can face the challenges of our time."
    ],
    "text_2": [
-    "Nous découvrons de plus en plus à quel point les plantes – et en particulier les arbres, qui semblent pousser séparément au-dessus du sol, chacun exprimant sa propre identité – sont étroitement liés au sol par leur microbiote et les uns aux autres par les mycorhizes. Ce sont ces multiples connexions, favorisées par la diversité, qui contribuent à leur santé et à leur résilience face aux événements extrêmes. Lorsqu’un arbre perd ces connexions, il devient rapidement vulnérable et peut dépérir. Ne sommes-nous pas témoins d’une fragmentation similaire dans le monde social ? Les liens familiaux et villageois qui, autrefois, offraient un fort sentiment d’appartenance se sont perdus. De nombreuses personnes souffrent de solitude, notamment des agriculteurs qui peuvent être trop timides ou épuisés par leur travail pour parler de leurs préoccupations existentielles. Dans cet atelier, nous suivrons un processus participatif combinant discussions, exercices artistiques et contributions de chacun. Tout comme les plantes dépendent de leurs connexions, nous explorerons comment créer et renforcer nos propres liens à différents niveaux, en construisant une base solide à partir de laquelle nous pourrons faire face aux défis de notre époque."
+    "Nous découvrons de plus en plus à quel point les plantes – et en particulier les arbres, qui semblent pousser séparément au-dessus du sol, chacun exprimant sa propre identité – sont étroitement liés au sol par leur microbiote et les uns aux autres par les mycorhizes. Ce sont ces multiples connexions, favorisées par la diversité, qui contribuent à leur santé et à leur résilience face aux événements extr&ecirc;mes. Lorsqu’un arbre perd ces connexions, il devient rapidement vulnérable et peut dépérir. Ne sommes-nous pas témoins d’une fragmentation similaire dans le monde social ? Les liens familiaux et villageois qui, autrefois, offraient un fort sentiment d’appartenance se sont perdus. De nombreuses personnes souffrent de solitude, notamment des agriculteurs qui peuvent &ecirc;tre trop timides ou épuisés par leur travail pour parler de leurs préoccupations existentielles. Dans cet atelier, nous suivrons un processus participatif combinant discussions, exercices artistiques et contributions de chacun. Tout comme les plantes dépendent de leurs connexions, nous explorerons comment créer et renforcer nos propres liens à différents niveaux, en construisant une base solide à partir de laquelle nous pourrons faire face aux défis de notre époque."
    ],
    "fenster": "4. und 5. Februar • 14:30 - 16:00 • Die zweitägigen Arbeitsgruppen am Nachmittag widmen sich freien Themen aus der biodynamischen Bewegung.",
    "titel": {
@@ -1179,7 +1211,7 @@
     "Anatolia is home to an exceptional diversity of plant life, with more than 12,000 native species in Türkiye, including 3,649 endemic species. As a crossroads between major floristic regions and the historical centre of the Fertile Crescent, the region has played an important role in the development of cultivated plants such as wheat, rye and barley. For centuries, the sieve has been an essential tool for preparing wheat, Türkiye’s staple food. Traditionally used during communal threshing celebrations, it also carries cultural and spiritual significance. In this artistic dyeing workshop, the sieve becomes a symbol of life and collective memory. We will work with endemic Anatolian plants, arranging them in layered compositions inside sieves coloured using traditional Turkish natural root dyes. We will then stitch the plants in place with jute straw rope. Through this artistic process, we will explore the enduring relationship between plants, agriculture, the land and human cultural memory."
    ],
    "text_2": [
-    "Anadolu, 12.000’den fazla yerli bitki türüne ev sahipliği yapan olağanüstü bir bitki çeşitliliğine sahiptir. Türkiye’de bunların 3.649’u endemik türlerdir. Önemli flora bölgelerinin kesişme noktasında yer alan ve tarihsel olarak Bereketli Hilal’in merkezlerinden biri olan Anadolu, buğday, çavdar ve arpa gibi kültür bitkilerinin gelişiminde önemli bir rol oynamıştır. Elek, yüzyıllardır Türkiye’nin temel gıdası olan buğdayın hazırlanmasında kullanılan önemli bir araçtır. Geleneksel olarak toplu harman şenliklerinde kullanılan elek, aynı zamanda kültürel ve manevi bir anlam taşır. Bu sanatsal boyama atölyesinde elek, yaşamın ve ortak hafızanın bir simgesine dönüşür. Endemik Anadolu bitkileriyle çalışacak, bitkileri geleneksel Türk doğal kök boyalarıyla renklendirilmiş eleklerin içinde katmanlı kompozisyonlar hâlinde düzenleyeceğiz. Ardından bitkileri jüt liflerinden yapılmış iplerle eleklerin üzerine dikeceğiz. Bu sanatsal süreç aracılığıyla bitkiler, tarım, toprak ve insanın kültürel hafızası arasındaki kalıcı ilişkiyi keşfedeceğiz."
+    "Anadolu, 12.000’den fazla yerli bitki türüne ev sahipliği yapan olağanüstü bir bitki çeşitliliğine sahiptir. Türkiye’de bunların 3.649’u endemik türlerdir. Önemli flora bölgelerinin kesişme noktasında yer alan ve tarihsel olarak Bereketli Hilal’in merkezlerinden biri olan Anadolu, buğday, çavdar ve arpa gibi kültür bitkilerinin gelişiminde önemli bir rol oynamıştır. Elek, yüzyıllardır Türkiye’nin temel gıdası olan buğdayın hazırlanmasında kullanılan önemli bir araçtır. Geleneksel olarak toplu harman şenliklerinde kullanılan elek, aynı zamanda kültürel ve manevi bir anlam taşır. Bu sanatsal boyama atölyesinde elek, yaşamın ve ortak hafızanın bir simgesine dönüşür. Endemik Anadolu bitkileriyle çalışacak, bitkileri geleneksel Türk doğal kök boyalarıyla renklendirilmiş eleklerin içinde katmanlı kompozisyonlar h&acirc;linde düzenleyeceğiz. Ardından bitkileri jüt liflerinden yapılmış iplerle eleklerin üzerine dikeceğiz. Bu sanatsal süreç aracılığıyla bitkiler, tarım, toprak ve insanın kültürel hafızası arasındaki kalıcı ilişkiyi keşfedeceğiz."
    ],
    "fenster": "4. und 5. Februar • 14:30 - 16:00 • Die zweitägigen Arbeitsgruppen am Nachmittag widmen sich freien Themen aus der biodynamischen Bewegung.",
    "titel": {
@@ -1261,9 +1293,9 @@
     "We live in a materialistic world in which everything increasingly becomes an object of exchange, self-interest and the marketplace – a world of falsification and masking, where things are losing their immediate, unique and human purpose. We have lost simplicity. To be a biodynamic farmer in modern society requires a rupture, a rebirth: a break that can awaken humanity’s primordial aspiration to become who we truly are. Today, the call of Mother Earth is more than a call; it is an awakening. By retracing the figure of Francis of Assisi, we will seek a new path: the Johannine way, a path of dialogue with the Wisdom, Beauty and Strength of Christ, allowing ourselves to be permeated by them down to the deepest and most subtle dimensions of our physical being. In the symphony of his Canticle of the Creatures, Francis reveals the wonder of creation, allowing us to encounter each creature in its original and pure beauty. Eight hundred years later, Rudolf Steiner’s Koberwitz lectures present, in a modern form, the fruit of the seed Francis sowed, pointing towards a new relationship between humanity and Mother Earth: the path of the living organism. Along this path, the biodynamic farmer becomes a new conductor of the Canticle of the Creatures. By allowing the intelligence of life to work through them, farmers can help bring forth new communities in which all beings – from the microbe to the ecosystem – are recognised as brothers and sisters."
    ],
    "text_2": [
-    "Nous vivons dans un monde matérialiste où tout devient de plus en plus un objet d’échange, d’intérêt personnel et de marché – un monde de falsification et de dissimulation, où les choses perdent leur fonction immédiate, unique et humaine. Nous avons perdu la simplicité. Être agriculteur biodynamique dans la société moderne exige une rupture, une renaissance : une rupture qui puisse éveiller l’aspiration primordiale de l’être humain à devenir ce qu’il est véritablement. Aujourd’hui, l’appel de la Terre-Mère est plus qu’un appel ; c’est un éveil. En revenant à la figure de François d’Assise, nous chercherons une nouvelle voie : la voie johannique, une voie de dialogue avec la Sagesse, la Beauté et la Force du Christ, en nous laissant imprégner par elles jusque dans les dimensions les plus profondes et les plus subtiles de notre être physique. Dans la symphonie de son Cantique des créatures, François révèle la merveille de la création et nous permet de rencontrer chaque créature dans sa beauté originelle et pure. Huit cents ans plus tard, les cours de Koberwitz de Rudolf Steiner présentent, sous une forme moderne, le fruit de la semence que François avait semée, ouvrant la voie à une nouvelle relation entre l’être humain et la Terre-Mère : la voie de l’organisme vivant. Sur cette voie, l’agriculteur biodynamique devient un nouveau chef d’orchestre du Cantique des créatures. En permettant à l’intelligence de la vie d’agir à travers eux, les agriculteurs peuvent contribuer à faire naître de nouvelles communautés dans lesquelles tous les êtres – du microbe à l’écosystème – sont reconnus comme des frères et sœurs.",
+    "Nous vivons dans un monde matérialiste o&ugrave; tout devient de plus en plus un objet d’échange, d’intér&ecirc;t personnel et de marché – un monde de falsification et de dissimulation, o&ugrave; les choses perdent leur fonction immédiate, unique et humaine. Nous avons perdu la simplicité. &Ecirc;tre agriculteur biodynamique dans la société moderne exige une rupture, une renaissance : une rupture qui puisse éveiller l’aspiration primordiale de l’&ecirc;tre humain à devenir ce qu’il est véritablement. Aujourd’hui, l’appel de la Terre-Mère est plus qu’un appel ; c’est un éveil. En revenant à la figure de François d’Assise, nous chercherons une nouvelle voie : la voie johannique, une voie de dialogue avec la Sagesse, la Beauté et la Force du Christ, en nous laissant imprégner par elles jusque dans les dimensions les plus profondes et les plus subtiles de notre &ecirc;tre physique. Dans la symphonie de son Cantique des créatures, François révèle la merveille de la création et nous permet de rencontrer chaque créature dans sa beauté originelle et pure. Huit cents ans plus tard, les cours de Koberwitz de Rudolf Steiner présentent, sous une forme moderne, le fruit de la semence que François avait semée, ouvrant la voie à une nouvelle relation entre l’&ecirc;tre humain et la Terre-Mère : la voie de l’organisme vivant. Sur cette voie, l’agriculteur biodynamique devient un nouveau chef d’orchestre du Cantique des créatures. En permettant à l’intelligence de la vie d’agir à travers eux, les agriculteurs peuvent contribuer à faire na&icirc;tre de nouvelles communautés dans lesquelles tous les &ecirc;tres – du microbe à l’écosystème – sont reconnus comme des frères et s&oelig;urs.",
     "Francesco e il Cantico delle creature",
-    "Viviamo in un mondo materialistico in cui tutto diventa sempre più oggetto di scambio, interesse personale e mercato – un mondo di falsificazione e dissimulazione, in cui le cose perdono il loro significato immediato, unico e umano. Abbiamo perso la semplicità. Essere agricoltore biodinamico nella società moderna richiede una rottura, una rinascita: una rottura capace di risvegliare l’aspirazione primordiale dell’essere umano a diventare ciò che veramente è. Oggi, il richiamo di Madre Terra è più di un richiamo; è un risveglio. Ripercorrendo la figura di Francesco d’Assisi, cercheremo una nuova via: la via giovannea, una via di dialogo con la Sapienza, la Bellezza e la Forza del Cristo, lasciandoci permeare da esse fino alle dimensioni più profonde e sottili del nostro essere fisico. Nella sinfonia del suo Cantico delle creature, Francesco rivela la meraviglia della creazione, permettendoci di incontrare ogni creatura nella sua bellezza originaria e pura. Ottocento anni dopo, le conferenze di Koberwitz di Rudolf Steiner presentano, in forma moderna, il frutto del seme seminato da Francesco, indicando una nuova relazione tra l’essere umano e Madre Terra: la via dell’organismo vivente. Su questa via, l’agricoltore biodinamico diventa un nuovo direttore d’orchestra del Cantico delle creature. Lasciando agire attraverso di sé l’intelligenza della vita, gli agricoltori possono contribuire a far nascere nuove comunità nelle quali tutti gli esseri – dal microbo all’ecosistema – siano riconosciuti come fratelli e sorelle."
+    "Viviamo in un mondo materialistico in cui tutto diventa sempre pi&ugrave; oggetto di scambio, interesse personale e mercato – un mondo di falsificazione e dissimulazione, in cui le cose perdono il loro significato immediato, unico e umano. Abbiamo perso la semplicità. Essere agricoltore biodinamico nella società moderna richiede una rottura, una rinascita: una rottura capace di risvegliare l’aspirazione primordiale dell’essere umano a diventare ci&ograve; che veramente è. Oggi, il richiamo di Madre Terra è pi&ugrave; di un richiamo; è un risveglio. Ripercorrendo la figura di Francesco d’Assisi, cercheremo una nuova via: la via giovannea, una via di dialogo con la Sapienza, la Bellezza e la Forza del Cristo, lasciandoci permeare da esse fino alle dimensioni pi&ugrave; profonde e sottili del nostro essere fisico. Nella sinfonia del suo Cantico delle creature, Francesco rivela la meraviglia della creazione, permettendoci di incontrare ogni creatura nella sua bellezza originaria e pura. Ottocento anni dopo, le conferenze di Koberwitz di Rudolf Steiner presentano, in forma moderna, il frutto del seme seminato da Francesco, indicando una nuova relazione tra l’essere umano e Madre Terra: la via dell’organismo vivente. Su questa via, l’agricoltore biodinamico diventa un nuovo direttore d’orchestra del Cantico delle creature. Lasciando agire attraverso di sé l’intelligenza della vita, gli agricoltori possono contribuire a far nascere nuove comunità nelle quali tutti gli esseri – dal microbo all’ecosistema – siano riconosciuti come fratelli e sorelle."
    ],
    "fenster": "4. und 5. Februar • 14:30 - 16:00 • Die zweitägigen Arbeitsgruppen am Nachmittag widmen sich freien Themen aus der biodynamischen Bewegung.",
    "titel": {
@@ -1450,6 +1482,6 @@
    }
   }
  ],
- "pruefsumme": "6867cb4a5becb790",
- "stand": "2026-09-15T20:32:20+00:00"
+ "pruefsumme": "477412b99960a603",
+ "stand": "2026-09-16T09:32:18.161Z"
 }
