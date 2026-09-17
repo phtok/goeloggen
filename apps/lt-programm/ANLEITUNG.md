@@ -23,6 +23,10 @@ blatt.json  (nur, was aufs Blatt gehört: Kopf, Stand, Pausen,                  
 3. **Offene Punkte** oben lesen: Platzhalter-Titel, fehlende Zweitsprachen,
    N.N. bei Mitwirkenden. Die gehören auf die Webseite – oder, wenn nur das
    Blatt sie braucht, in `blatt.json`.
+   Darunter der **Abgleich**: was von Hand gesetzt ist und darum nicht
+   mitwandert – Plakatzeile, die Zeitfenster der Arbeitsgruppen
+   (10:45–12:30 und 14:30–16:00) und die sechs Sprachpillen. Steht dort
+   «prüfen», sagt die Zeile, wo es nachzuziehen ist.
 4. **«IDML exportieren»**, Datei in InDesign öffnen. Alle Rahmen der Rückseite
    sind befüllt; die von Hand gesetzten (Plakatzeile) bleiben unangetastet.
 5. **Umbrüche setzen** in InDesign, wie es der Satz braucht.
@@ -65,7 +69,11 @@ Absatz-Schreibweise: `"Text"` oder `{"laut": "English", "ruhig": "Deutsch"}`
   Seite kommen von dort; der Export tauscht nur Text aus.
 - `slots.json` – welcher Textrahmen welchen Inhalt trägt (Story-ID je Slot).
   `"nur_pruefen": true` heisst: der Export fasst den Rahmen **nicht** an (die
-  Plakatzeile ist von Hand unterschnitten); die Vorschau vergleicht ihn nur.
+  Plakatzeile ist von Hand unterschnitten, die Sprachpillen sind gedrehte
+  Einzelrahmen); die Vorschau vergleicht ihn nur. `"feld"` sagt womit:
+  `motto`, `datum` oder `dolmetsch` (die sechs Pillen zusammen gegen die
+  Sprachen der Webseite – Pillenname je Sprache in
+  `programm.js › SPRACHE_PILLE`).
 
 Ändert sich die Vorlage in InDesign (neue Rahmen, anderes Layout, neue
 Story-IDs): IDML exportieren, als `vorlage/LT27.idml` ablegen und prüfen:
@@ -128,3 +136,7 @@ node apps/lt-programm/idml-export.js --ziel LT-2027.idml   # Export ohne Browser
 - Die Zuordnung Veranstaltung → Rahmen steht in `programm.js › PLENUM_SLOTS`
   und geht über Tag und Uhrzeit. Verschiebt die Tagung eine Uhrzeit, meldet die
   Vorschau «keine Veranstaltung um …» – dann dort nachziehen.
+- Die Uhrzeiten der Arbeitsgruppen stehen als feste Slots im Blatt; welche
+  Uhrzeit welche Kante des Fensters ist, sagt `programm.js › FENSTER_SLOTS`.
+  Verschiebt die Webseite ein Fenster, meldet es der Abgleich – geändert wird
+  in `blatt.json › feste_slots`.

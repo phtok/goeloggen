@@ -44,6 +44,48 @@
    "art": "text",
    "vorlage": "Plenary sessions are available in the following languages: / Die Plenarveranstaltungen werden in folgende Sprachen gedolmetscht:"
   },
+  "sprache_de": {
+   "story": "u6de",
+   "art": "abgleich",
+   "feld": "dolmetsch",
+   "nur_pruefen": true,
+   "vorlage": "Deutsch"
+  },
+  "sprache_en": {
+   "story": "u70e",
+   "art": "abgleich",
+   "feld": "dolmetsch",
+   "nur_pruefen": true,
+   "vorlage": "English"
+  },
+  "sprache_fr": {
+   "story": "u726",
+   "art": "abgleich",
+   "feld": "dolmetsch",
+   "nur_pruefen": true,
+   "vorlage": "Français"
+  },
+  "sprache_es": {
+   "story": "u6f6",
+   "art": "abgleich",
+   "feld": "dolmetsch",
+   "nur_pruefen": true,
+   "vorlage": "Español"
+  },
+  "sprache_it": {
+   "story": "u6c6",
+   "art": "abgleich",
+   "feld": "dolmetsch",
+   "nur_pruefen": true,
+   "vorlage": "Italiano"
+  },
+  "sprache_zh": {
+   "story": "u73e",
+   "art": "abgleich",
+   "feld": "dolmetsch",
+   "nur_pruefen": true,
+   "vorlage": "中文"
+  },
   "malerei": {
    "story": "ua98",
    "art": "text",
@@ -251,6 +293,7 @@
   "plakat_motto": {
    "story": "u161",
    "art": "abgleich",
+   "name": "Plakatzeile Motto",
    "seite": "1",
    "nur_pruefen": true,
    "feld": "motto",
@@ -260,6 +303,7 @@
   "plakat_datum": {
    "story": "u179",
    "art": "abgleich",
+   "name": "Plakatzeile Datum",
    "seite": "1",
    "nur_pruefen": true,
    "feld": "datum",
