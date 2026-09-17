@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
 <title>Sortierer — Kistenpflege · Goetheanum</title>
-<meta name="description" content="Schublade, Karussell und Karten der Startseite selbst ordnen und die Reihenfolge exportieren." />
+<meta name="description" content="Schublade und Karten der Startseite selbst ordnen und die Reihenfolge exportieren." />
 <link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
 
 <link rel="stylesheet" href="design-system/tokens.css" />
@@ -72,7 +72,7 @@
     <span class="kicker">Kistenpflege · Sortierer</span>
     <h1>Reihenfolgen selbst ordnen</h1>
     <p class="lede">Ziehen (oder mit den Pfeilen) ordnen: die <em>Schublade</em> (öffentliches Menü),
-      das <em>Karussell</em> und die <em>Karten</em> der Startseite. Mit <em>⊘</em> ein Werkzeug von
+      und die <em>Karten</em> der Startseite. Mit <em>⊘</em> ein Werkzeug von
       einer Fläche <em>ausblenden</em>, mit <em>＋</em> wieder einblenden – ausgeblendet bleibt es per
       Direktlink und in der Intern-Ansicht erreichbar. Eine Quelle, ein Verlauf:
       <em>Exportieren</em> schreibt die <code>tools.json</code> mit dem Feld <code>reihenfolge</code>,
@@ -117,15 +117,14 @@
   var PUBLIC = ["generatoren", "schrift", "system", "anwendung"];
   var LISTEN = [
     { key:"schublade", label:"Schublade", hint:"Öffentliches Menü (Burger) – von oben nach unten." },
-    { key:"karussell", label:"Karussell", hint:"Entdecker-Karussell auf der Startseite." },
     { key:"karten",    label:"Karten",    hint:"Kachel-Raster auf der Startseite." }
   ];
 
   var rohText = "";      // tools.json als Text (für formatschonenden Export)
   var quelle = null;     // tools.json geparst
   var titel = {};        // slug → Anzeigename
-  var daten = { schublade:[], karten:[], karussell:[] };       // sichtbar, in Reihenfolge
-  var datenAus = { schublade:[], karten:[], karussell:[] };    // ausgeblendet je Fläche
+  var daten = { schublade:[], karten:[] };       // sichtbar, in Reihenfolge
+  var datenAus = { schublade:[], karten:[] };    // ausgeblendet je Fläche
   var zieht = null;      // {key, index} beim Ziehen
 
   function esc(s){ return (s||"").replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
@@ -137,7 +136,6 @@
       rohText = txt; quelle = JSON.parse(txt);
       // Anzeigename wie auf den Flächen (Karte/Schublade zeigen den Titel).
       (quelle.tools||[]).forEach(function(t){ if(t.slug) titel[t.slug] = t.title || t.short || t.slug; });
-      titel["empfehlungen"] = titel["empfehlungen"] || "Diese Mail wird gelesen";
 
       var R = quelle.reihenfolge || {};
       var Raus = R.aus || {};
@@ -145,14 +143,14 @@
       // Rückwärtskompatibel: alter Entwurf war {schublade,…}; neuer ist {daten,aus}.
       var dDaten = draft && (draft.daten || (draft.schublade ? draft : null));
       var dAus = draft && draft.aus;
-      ["schublade","karten","karussell"].forEach(function(k){
+      ["schublade","karten"].forEach(function(k){
         daten[k] = (dDaten && Array.isArray(dDaten[k])) ? dDaten[k].slice()
                  : (Array.isArray(R[k]) ? R[k].slice() : []);
         datenAus[k] = (dAus && Array.isArray(dAus[k])) ? dAus[k].slice()
                     : (Array.isArray(Raus[k]) ? Raus[k].slice() : []);
       });
       // Schublade und Karten decken genau die öffentlichen Werkzeuge ab:
-      // fehlende anhängen, verschwundene entfernen (Karussell bleibt kuratiert).
+      // fehlende anhängen, verschwundene entfernen.
       // Bewusst Ausgeblendete (datenAus) NICHT wieder anhängen.
       var publik = (quelle.tools||[]).filter(function(t){
         return PUBLIC.indexOf(t.cat) >= 0 && (t.status === "live" || t.status === "beta");
@@ -162,8 +160,6 @@
         publik.forEach(function(s){ if(daten[k].indexOf(s) < 0 && datenAus[k].indexOf(s) < 0) daten[k].push(s); });
         datenAus[k] = datenAus[k].filter(function(s){ return publik.indexOf(s) >= 0; });
       });
-      // Karussell: ausgeblendete bleiben nur, wenn als Slug bekannt.
-      datenAus.karussell = datenAus.karussell.filter(function(s){ return !!titel[s]; });
       zeichnen();
     }).catch(function(){
       document.getElementById("spalten").innerHTML =
@@ -278,8 +274,7 @@
       '    "$hinweis": ' + JSON.stringify(hinweis) + ',\n' +
       '    "schublade": ' + arr(daten.schublade) + ',\n' +
       '    "karten": ' + arr(daten.karten) + ',\n' +
-      '    "karussell": ' + arr(daten.karussell) + ',\n' +
-      '    "aus": { "schublade": ' + arr(datenAus.schublade) + ', "karussell": ' + arr(datenAus.karussell) + ', "karten": ' + arr(datenAus.karten) + ' }\n' +
+      '    "aus": { "schublade": ' + arr(datenAus.schublade) + ', "karten": ' + arr(datenAus.karten) + ' }\n' +
       '  }';
   }
   function exportieren(){
@@ -288,8 +283,8 @@
       text = rohText.replace(/"reihenfolge"\s*:\s*\{[\s\S]*?\n  \}/, bausteinReihenfolge());
     } else {
       var obj = JSON.parse(JSON.stringify(quelle));
-      obj.reihenfolge = { $hinweis: (quelle.reihenfolge||{}).$hinweis || "", schublade: daten.schublade, karten: daten.karten, karussell: daten.karussell,
-        aus: { schublade: datenAus.schublade, karussell: datenAus.karussell, karten: datenAus.karten } };
+      obj.reihenfolge = { $hinweis: (quelle.reihenfolge||{}).$hinweis || "", schublade: daten.schublade, karten: daten.karten,
+        aus: { schublade: datenAus.schublade, karten: datenAus.karten } };
       text = JSON.stringify(obj, null, 2);
     }
     var blob = new Blob([text], { type: "application/json" });
@@ -303,7 +298,7 @@
     s.classList.toggle("err", !!err);
   }
 
-  // Direkt speichern: schickt nur die drei Reihenfolgen an die Edge Function, die
+  // Direkt speichern: schickt nur die beiden Reihenfolgen an die Edge Function, die
   // sie serverseitig in die tools.json auf GitHub committet. Ohne Passwort – die
   // Funktion nimmt nur Aufrufe von dieser Seite an, und geschrieben wird allein
   // die Menü-Reihenfolge (Verlauf = Git). Klemmt der Server, hilft «Exportieren».
@@ -312,8 +307,8 @@
     fetch(FUNKTION, {
       method: "POST",
       headers: { "Content-Type": "application/json", "apikey": PUBKEY, "Authorization": "Bearer " + PUBKEY },
-      body: JSON.stringify({ reihenfolge: { schublade: daten.schublade, karten: daten.karten, karussell: daten.karussell,
-        aus: { schublade: datenAus.schublade, karussell: datenAus.karussell, karten: datenAus.karten } } })
+      body: JSON.stringify({ reihenfolge: { schublade: daten.schublade, karten: daten.karten,
+        aus: { schublade: datenAus.schublade, karten: datenAus.karten } } })
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, code: r.status, j: j }; });
     }).then(function (res) {

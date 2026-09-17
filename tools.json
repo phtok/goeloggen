@@ -117,7 +117,7 @@
       "tag": "Elemente",
       "title": "Sektionsfarben",
       "href": "sektionsfarben.html",
-      "desc": "Die Identitätsfarben der Sektionen und Bereiche mit heller und dunkler Variante und Anwendungsbeispielen – dazu alle Werte (Hex, RGB, HSB, CMYK-Richtwert), klick-kopierbar.",
+      "desc": "Die Farben der Sektionen und Bereiche – helle und dunkle Variante, alle Werte klick-kopierbar.",
       "such": "Farben Identitätsfarben Sektionsfarben Bereichsfarben Varianten hell dunkel Kontrast Anwendung Hex RGB HSB CMYK Palette"
     },
     {
@@ -127,7 +127,7 @@
       "tag": "Prototyp",
       "title": "Familienmenü",
       "href": "design-system/familie.html",
-      "desc": "Von jeder Seite der Goetheanum-Familie zurück ins Ganze: die Marke unten links öffnet ein Menü mit allen Sektionen, Bereichen und Medien – aus einer Quelle, in vier Sprachen, mit zwei Zeilen einzubinden.",
+      "desc": "Von jeder Seite der Goetheanum-Familie zurück ins Ganze – die Marke unten links öffnet ein Menü mit allen Sektionen, Bereichen und Medien.",
       "such": "Familienmenü Megamenü Navigation Sektionen Bereiche Familie Schweber Marke zurück Ganze goetheanum.ch Einbinden"
     },
     {
@@ -310,7 +310,7 @@
       "title": "Campus-Karte",
       "short": "Campus-Karte",
       "href": "apps/karten-generator/",
-      "desc": "Lagepläne des Goetheanum-Geländes von Fall zu Fall beschriften und als Vektor-PDF ausgeben — A4/A3 quer, wahlweise mit Beschnitt und Schnittmarken, Kartenfarben je Variante, Parkflächen einfärbbar.",
+      "desc": "Die Campus-Karte für Veranstaltungen – Orte wählen, eigene Marken setzen, druckfertiges Vektor-PDF in A4 oder A3.",
       "such": "Karte Kartierung Campus Gelände Lageplan PDF A3 Schnittmarken Beschnitt Parkflächen"
     },
     {
@@ -352,7 +352,7 @@
       "title": "Tagungsprogramm",
       "short": "Tagungsprogramm",
       "href": "apps/lt-programm/",
-      "desc": "Rückseite des Programm-Faltblatts der Landwirtschaftlichen Tagung: Zeitplan und Arbeitsgruppen kommen auf Knopfdruck von agriculture-conference.org, als Vorschau und als IDML für InDesign. Zeigt, was auf der Webseite noch offen ist; von Hand gesetzte Rahmen bleiben unangetastet.",
+      "desc": "Die Rückseite des Tagungs-Faltblatts – Zeitplan und Arbeitsgruppen auf Knopfdruck, als Vorschau und als IDML für InDesign.",
       "such": "Landwirtschaftliche Tagung Agriculture Conference Programm Faltblatt Arbeitsgruppen Zeitplan IDML InDesign Sektion Landwirtschaft Export"
     },
     {
@@ -484,8 +484,8 @@
       "title": "Sortierer",
       "short": "Sortierer",
       "href": "sortierer.html",
-      "desc": "Schublade, Karussell und Karten der Startseite selbst ordnen – ziehen, Reihenfolge exportieren, committen. Eine Quelle (tools.json → reihenfolge), Verlauf = Git.",
-      "such": "Sortierer Reihenfolge ordnen sortieren Schublade Karussell Karten Startseite Menü Navigation Kistenpflege"
+      "desc": "Schublade und Karten der Startseite selbst ordnen – ziehen, Reihenfolge exportieren, committen. Eine Quelle (tools.json → reihenfolge), Verlauf = Git.",
+      "such": "Sortierer Reihenfolge ordnen sortieren Schublade Karten Startseite Menü Navigation Kistenpflege"
     },
     {
       "slug": "ordner",
@@ -773,8 +773,7 @@
     "$hinweis": "Vom Sortierer gepflegte Reihenfolgen (Slugs). Startseite und Schublade lesen sie; fehlt ein Eintrag, gilt die eingebaute Vorgabe. aus = je Fläche ausgeblendet (bleibt per Direktlink und in der Intern-Ansicht erreichbar). Verlauf = Git.",
     "schublade": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "qr-generator", "kurzlink", "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint", "wallpaper", "design-system", "abo"],
     "karten": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "uebersetzungen", "qr-generator", "kurzlink", "typografie", "powerpoint", "wallpaper", "karten", "sektionsfarben", "abo"],
-    "karussell": ["signatur", "empfehlungen", "karten", "wallpaper", "powerpoint", "visitenkarten", "logo-generator", "schriften", "uebersetzungen", "icons", "sektionsfarben", "typografie", "editor"],
-    "aus": { "schublade": [], "karussell": ["design-system"], "karten": ["design-system"] }
+    "aus": { "schublade": [], "karten": ["design-system"] }
   },
   "welten": {
     "$hinweis": "Die Ordner der Schublade. public = für alle sichtbar, intern = nur Backstage. Ein Werkzeug gehört über sein cat-Feld in eine Welt (welt.cats). Reihenfolge = Anzeigefolge. sub = verschachtelte Kisten. Vom Ordner-Editor gepflegt; fehlt welten, gilt die in nav.js eingebaute Vorgabe.",
