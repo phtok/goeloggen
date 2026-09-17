@@ -199,22 +199,23 @@ export function komponieren(webseite, blatt) {
   for (const regel of PLENUM_SLOTS) {
     const absaetze = [];
     if (regel.art === 'morgen') {
-      // Titel und Art laufen über alle Spalten, darunter die Mitwirkenden je Tag
-      // in eigener Spalte. Was spannt und was nicht, sagt das Modell – sonst
-      // erbt eine Namenszeile den Spaltenlauf der Überschrift und schiebt die
-      // folgenden Tage aus dem Rahmen.
+      // Übertitel und Titel laufen über alle Spalten, darunter die Mitwirkenden
+      // je Tag in eigener Spalte. Was spannt und was nicht, sagt das Modell –
+      // sonst erbt eine Namenszeile den Spaltenlauf der Überschrift und schiebt
+      // die folgenden Tage aus dem Rahmen.
       const o = ueber[regel.slot] || {};
       const erste = eventsBei(regel.teile[0].tag, regel.teile[0].zeit)[0] || {};
       const en = gueltig(o.titel_en, erste.titel_en || erste.art_en || '', regel.slot, 'titel_en');
       const de = gueltig(o.titel_de, erste.titel_de || erste.art_de || '', regel.slot, 'titel_de');
-      absaetze.push({ ...titelzeile(en, de, schwelle, o.eine_zeile), spanne: 'alle', quelle: { schluessel: regel.slot, feld: 'titel' } });
-      // Die Art («Michaelbrief · Michael Letter») steht als eigene Zeile darunter,
-      // wenn die Webseite sie neben dem Titel nennt.
-      const artEn = o.art_en !== undefined ? o.art_en : (erste.art_en || '');
-      const artDe = o.art_de !== undefined ? o.art_de : (erste.art_de || '');
+      // Die Art («Michael Letter · Michaelbrief») ist der Übertitel aller drei
+      // Vormittage – sie steht über dem Titel, nicht darunter.
+      const artEn = gueltig(o.art_en, erste.art_en || '', regel.slot, 'art_en');
+      const artDe = gueltig(o.art_de, erste.art_de || '', regel.slot, 'art_de');
       if ((artEn || artDe) && (en || de) && `${artEn}${artDe}` !== `${en}${de}`) {
-        absaetze.push({ ...titelzeile(artEn, artDe, schwelle, o.art_eine_zeile !== false), spanne: 'alle' });
+        absaetze.push({ ...titelzeile(artEn, artDe, schwelle, o.art_eine_zeile !== false),
+          spanne: 'alle', quelle: { schluessel: regel.slot, feld: 'art' } });
       }
+      absaetze.push({ ...titelzeile(en, de, schwelle, o.eine_zeile), spanne: 'alle', quelle: { schluessel: regel.slot, feld: 'titel' } });
       const titelGleich = new Set();
       regel.teile.forEach((teil, i) => {
         const evs = eventsBei(teil.tag, teil.zeit);
@@ -331,10 +332,12 @@ export function tagesansicht(modell, blatt) {
       if (z.teil !== undefined) {
         const teile = spalten(liste);
         if (z.teil === 'tag') {
-          // Rahmen mit Titel über allen Spalten: teile[0] = [Titel, Namen Spalte 1],
-          // teile[1…] = Namen der weiteren Spalten. Titel je Tag wiederholen.
+          // Rahmen mit Kopf über allen Spalten: teile[0] = [Kopf…, Namen Spalte 1],
+          // teile[1…] = Namen der weiteren Spalten. Der Kopf (Übertitel und Titel,
+          // erkennbar am Spaltenlauf) wird je Tag wiederholt.
           const idx = z.tag.indexOf(ti);
-          liste = idx === 0 ? teile[0] : [teile[0][0], ...(teile[idx] || [])];
+          const kopf = teile[0].filter((a) => a && a.spanne === 'alle');
+          liste = idx === 0 ? teile[0] : [...kopf, ...(teile[idx] || [])];
         } else {
           liste = teile[z.teil] || [];
         }

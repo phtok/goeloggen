@@ -119,14 +119,15 @@ function umbrueche(idmlPfad) {
         if (nackt(ist) === '') return;
       }
       if (q.feld === 'namen') { eintrag.namen = ist; gefunden.push(`${q.schluessel} · Mitwirkende`); return; }
-      // Titelzeile: Englisch und Deutsch trennen, wo auch die Daten trennen.
+      // Titel- und Übertitelzeile: Englisch und Deutsch trennen, wo auch die
+      // Daten trennen. `feld` sagt, welches Paar in blatt.json geschrieben wird.
       const enSoll = absatz.laut || (absatz.runs || []).filter((r) => r.laut).map((r) => r.text).join('');
       const roh = enSoll.replace(/\s+$/, '');
       const schnitt = roh ? ist.indexOf('\n', Math.max(0, roh.length - 4)) : -1;
       if (schnitt > 0) {
-        eintrag.titel_en = ist.slice(0, schnitt);
-        eintrag.titel_de = ist.slice(schnitt + 1);
-        gefunden.push(`${q.schluessel} · Titel`);
+        eintrag[`${q.feld}_en`] = ist.slice(0, schnitt);
+        eintrag[`${q.feld}_de`] = ist.slice(schnitt + 1);
+        gefunden.push(`${q.schluessel} · ${q.feld === 'art' ? 'Übertitel' : 'Titel'}`);
       }
     });
   }
