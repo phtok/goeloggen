@@ -33,6 +33,21 @@ export const PLENUM_SLOTS = [
   { slot: 'sa_1430', teile: [{ tag: 3, zeit: '14:30' }] },
 ];
 
+/* Die Arbeitsgruppen laufen in zwei Fenstern. Das Blatt nennt deren Kanten als
+   feste Uhrzeiten (blatt.json › feste_slots) – hier steht, welche Uhrzeit welche
+   Kante ist, damit ein verschobenes Fenster auffliegt (abgleichen). */
+export const FENSTER_SLOTS = [
+  { block: 'vormittag', name: 'Arbeitsgruppen am Vormittag', von: 'zeit_1045', bis: 'zeit_1230' },
+  { block: 'nachmittag', name: 'Arbeitsgruppen am Nachmittag', von: 'zeit_1430', bis: 'zeit_1600' },
+];
+
+/* Gedolmetscht wird in sechs Sprachen. Auf dem Blatt nennt sich jede in ihrer
+   eigenen – von Hand gesetzte Pillen (slots.json › nur_pruefen). */
+export const SPRACHE_PILLE = {
+  Deutsch: 'Deutsch', Englisch: 'English', 'Französisch': 'Français',
+  Spanisch: 'Español', Italienisch: 'Italiano', Chinesisch: '中文',
+};
+
 const KURZ = ['Mi', 'Do', 'Fr', 'Sa'];
 
 /* Text ohne Leerraum und Umbrüche – zum Vergleichen von Hand gesetzter
@@ -50,6 +65,15 @@ function titelzeile(en, de, schwelle, eineZeile) {
   if (!de) return { laut: en };
   const zusammen = eineZeile === true || (eineZeile !== false && en.length + de.length <= schwelle);
   return zusammen ? { laut: en, ruhig: de } : { runs: [{ laut: true, text: `${en}\n` }, { ruhig: true, text: de }] };
+}
+
+/* «4. bis 6. Februar • 10:45 - 12:30 • In den dreitägigen …» → die zwei Kanten
+   und die Tage, die dazu auf der Webseite stehen. */
+function fensterLesen(text) {
+  const z = /(\d{1,2})[:.](\d{2})\s*[-\u2013\u2014]\s*(\d{1,2})[:.](\d{2})/.exec(text || '');
+  if (!z) return null;
+  return { von: `${Number(z[1])}:${z[2]}`, bis: `${Number(z[3])}:${z[4]}`,
+    tage: String(text).split('\u2022')[0].trim() };
 }
 
 export function komponieren(webseite, blatt) {
@@ -79,7 +103,15 @@ export function komponieren(webseite, blatt) {
     datum_en: datumEn,
     stand: webseite.stand || '',
     quelle: webseite.quelle || '',
+    dolmetsch: t.dolmetsch || [],
+    fenster: {},
   };
+  // Die Zeitfenster der Arbeitsgruppen stehen auf der Webseite über den Listen.
+  for (const ag of webseite.arbeitsgruppen || []) {
+    if (!ag.fenster || tagung.fenster[ag.block]) continue;
+    const f = fensterLesen(ag.fenster);
+    if (f) tagung.fenster[ag.block] = f;
+  }
   if (t.motto && blatt.kopf.motto_de && t.motto !== blatt.kopf.motto_de.replace(/\n/g, ' ')) {
     merken('abgleich', `Motto auf der Webseite: «${t.motto}» – in blatt.json steht «${blatt.kopf.motto_de.replace(/\n/g, ' ')}».`);
   }
@@ -324,22 +356,73 @@ export function absatzText(a) {
   return teile.join(a.laut && a.ruhig ? '\u2002' : '');
 }
 
-/* Abgleich der von Hand gesetzten Rahmen (slots.json › nur_pruefen): stimmt
-   das, was in der Vorlage steht, noch mit den Daten überein? Verglichen wird
-   ohne Rücksicht auf Zeilenumbrüche und Leerraum. */
+/* Abgleich: Was von Hand gesetzt ist, fasst der Export nicht an – hier steht,
+   ob es noch zu den Daten passt. Drei Paare: die Plakatzeile (slots.json ›
+   nur_pruefen), die Uhrzeiten der Arbeitsgruppen-Fenster und die sechs
+   Dolmetsch-Sprachen. Verglichen wird ohne Rücksicht auf Leerraum und Umbrüche. */
 export function abgleichen(modell, slots) {
   const nackt = (s) => String(s || '').replace(/[\s\u2028\u2002\u2009]+/g, ' ').replace(/[–—]/g, '-').trim().toLowerCase();
+  const slotText = (a) => (Array.isArray(a) ? a.map(absatzText).join(' ') : absatzText(a)).trim();
+  // Bis-Strich mit Wortverbindern: eine Zeitspanne bricht nicht über die Zeile.
+  const spanne = (von, bis) => `${von}\u2060–\u2060${bis}`;
   const soll = {
     motto: `${modell.tagung.motto_en} ${modell.tagung.motto_de}`,
     datum: `${modell.tagung.datum_en} ${modell.tagung.datum_de}`,
   };
   const aus = [];
+  const pillen = [];
+
+  // Von Hand gesetzte Rahmen: steht in der Vorlage noch, was die Daten sagen?
   for (const [name, slot] of Object.entries(slots.slots || {})) {
     if (!slot.nur_pruefen) continue;
     const ist = slot.vorlage || '';
+    if (slot.feld === 'dolmetsch') { pillen.push({ slot: name, ist: ist.trim() }); continue; }
+    const wie = slot.name || name;
     const woerter = nackt(soll[slot.feld] || '').split(' ').filter((w) => w.length > 3);
     const fehlt = woerter.filter((w) => !nackt(ist).includes(w));
-    aus.push({ slot: name, ist, soll: soll[slot.feld] || '', stimmt: fehlt.length === 0, fehlt });
+    aus.push({ slot: name, stimmt: fehlt.length === 0, text: fehlt.length === 0
+      ? `${wie}: ${ist}`
+      : `${wie}: in der Vorlage steht «${ist}» – in den Daten fehlt ${fehlt.join(', ')}.` });
   }
+
+  // Zeitfenster der Arbeitsgruppen: Webseite gegen die festen Uhrzeiten des Blatts.
+  for (const regel of FENSTER_SLOTS) {
+    const blattVon = slotText(modell.slots[regel.von]);
+    const blattBis = slotText(modell.slots[regel.bis]);
+    const f = (modell.tagung.fenster || {})[regel.block];
+    if (!f) {
+      aus.push({ slot: regel.block, stimmt: false,
+        text: `${regel.name}: die Webseite nennt kein Zeitfenster – ${spanne(blattVon, blattBis)} auf dem Blatt bleibt ungeprüft.` });
+      continue;
+    }
+    const stimmt = zeitNorm(blattVon) === zeitNorm(f.von) && zeitNorm(blattBis) === zeitNorm(f.bis);
+    aus.push({ slot: regel.block, stimmt, text: stimmt
+      ? `${regel.name}: ${spanne(blattVon, blattBis)}, ${f.tage}.`
+      : `${regel.name}: auf dem Blatt ${spanne(blattVon, blattBis)}, auf der Webseite ${spanne(f.von, f.bis)}. In blatt.json › feste_slots nachziehen (${regel.von}, ${regel.bis}).` });
+  }
+
+  // Dolmetsch-Sprachen: die Pillen des Blatts gegen die Sprachen der Webseite.
+  if (pillen.length) {
+    const web = modell.tagung.dolmetsch || [];
+    const unbekannt = web.filter((s) => !SPRACHE_PILLE[s]);
+    const sollP = web.filter((s) => SPRACHE_PILLE[s]).map((s) => SPRACHE_PILLE[s]);
+    const istP = pillen.map((p) => p.ist);
+    const teile = [];
+    if (!web.length) {
+      // Kein Satz «werden nach … gedolmetscht» gefunden – dann sagt das Blatt nichts Falsches,
+      // sondern die Webseite nichts mehr. Die Pillen bleiben, wie sie stehen.
+      teile.push('die Webseite nennt keine Sprachen mehr – der Satz «werden nach … gedolmetscht» hat sich geändert.');
+    } else {
+      const fehlt = sollP.filter((s) => !istP.includes(s));
+      const zuviel = istP.filter((s) => !sollP.includes(s));
+      if (fehlt.length) teile.push(`auf dem Blatt fehlt ${fehlt.join(', ')} – Pille in InDesign ergänzen.`);
+      if (zuviel.length) teile.push(`${zuviel.join(', ')} steht nur auf dem Blatt – Pille entfernen.`);
+      if (unbekannt.length) teile.push(`${unbekannt.join(', ')} steht neu auf der Webseite – Name der Pille in programm.js › SPRACHE_PILLE ergänzen.`);
+    }
+    aus.push({ slot: 'dolmetsch', stimmt: teile.length === 0, text: teile.length === 0
+      ? `Dolmetsch-Sprachen: ${istP.join(' · ')}.`
+      : `Dolmetsch-Sprachen: ${teile.join(' ')}` });
+  }
+
   return aus;
 }
