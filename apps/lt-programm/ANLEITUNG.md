@@ -136,6 +136,11 @@ node apps/lt-programm/idml-export.js --ziel LT-2027.idml   # Export ohne Browser
 - Die Zuordnung Veranstaltung → Rahmen steht in `programm.js › PLENUM_SLOTS`
   und geht über Tag und Uhrzeit. Verschiebt die Tagung eine Uhrzeit, meldet die
   Vorschau «keine Veranstaltung um …» – dann dort nachziehen.
+- Ein **Nachsatz** unter den Namen eines mehrspaltigen Rahmens hat im Modell
+  keine Stelle. 2026 stand im 8:30-Rahmen unter den drei Namensspalten noch
+  «Followed by an exercise with … · Gefolgt von einer Übung mit …» über alle
+  Spalten. Die Webseite nennt für 2027 keinen – käme einer, fiele er beim
+  Export weg. Dann ein Feld dafür in `blatt.json › plenum` anlegen.
 - Die Uhrzeiten der Arbeitsgruppen stehen als feste Slots im Blatt; welche
   Uhrzeit welche Kante des Fensters ist, sagt `programm.js › FENSTER_SLOTS`.
   Verschiebt die Webseite ein Fenster, meldet es der Abgleich – geändert wird
