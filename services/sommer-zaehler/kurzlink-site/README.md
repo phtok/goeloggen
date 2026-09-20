@@ -12,10 +12,17 @@ Statische GitHub-Pages-Seite, die kurze Adressen der Form
 tools.goetheanum.ch/s/<tier>
 ```
 
-auf die volle Kampagnen-URL (samt UTM-Parametern) weiterleitet. Die Auflösung
-macht die Supabase-Function `go` gegen die Tabelle `sommer2026_links` — die
+auf die volle Ziel-URL (bei Kampagnen samt UTM-Parametern) weiterleitet. Die
+Auflösung macht die Supabase-Function `go` gegen die Register
+`sommer2026_links` (UTM-Generator) und `qr_links` (QR-Generator) — die
 Datenbank ist die **einzige Quelle der Wahrheit**. Dieses Repo hält bewusst
-keine Link-Liste; neue Kurzlinks entstehen im Generator und wirken sofort.
+keine Link-Liste; neue Kurzlinks entstehen in den Generatoren und wirken sofort.
+
+**Die Brücke ist neutral.** Sie nennt weder Aktion noch Ziel — ein Kurzlink
+kann zu allem führen (Tagung, Kampagne, Dokument), und die Zwischenseite darf
+nichts davon verraten. Beschluss 20. September 2026, Auslöser: der QR-Link
+`ac27` für die Landwirtschaftliche Tagung zeigte kurz ‹weiter zur
+Aktionsseite› der Sommeraktion.
 
 ## Wie ein neuer Kurzlink entsteht
 
@@ -35,19 +42,18 @@ oder Papier.
    und liefert `404.html` aus.
 2. Ein kleines Skript in `404.html` liest den letzten Pfadteil (`otter`) und
    ruft `…/functions/v1/go/otter` auf.
-3. Die `go`-Function schlägt `otter` in `sommer2026_links` nach und antwortet
-   mit `302` auf die volle Ziel-URL. Unbekannte Kurznamen landen freundlich auf
-   der Aktions-Landingpage.
+3. Die `go`-Function schlägt `otter` in den Registern nach und antwortet
+   mit `302` auf die volle Ziel-URL. Unbekannte Kurznamen landen auf
+   `goetheanum.ch`.
 
 ## Inhalt
 
-- `index.html` — die Wurzel leitet auf die Aktions-Landingpage weiter.
-  **Kein Schaufenster:** die internen Werkzeuge (Generator, Cockpit) werden
+- `index.html` — die Wurzel leitet auf `goetheanum.ch` weiter.
+  **Kein Schaufenster:** die internen Werkzeuge (Generatoren, Cockpit) werden
   hier bewusst nicht verlinkt — die Wurzel eines Kürzers zeigt nie das
-  Werkzeug. Nach dem 11. August 2026 das Ziel auf `goetheanum.ch` umstellen
-  (die Aktion ist am 7. August um drei Tage verlängert worden).
+  Werkzeug.
 - `404.html` — die Weiterleitungs-Brücke; leere und unbekannte Pfade landen
-  ebenfalls auf der Aktions-Landingpage.
+  ebenfalls auf `goetheanum.ch`.
 - `CNAME` — `tools.goetheanum.ch` (von GitHub Pages gesetzt).
 
 ## Gestalt
