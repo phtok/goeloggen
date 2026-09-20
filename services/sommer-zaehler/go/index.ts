@@ -7,14 +7,15 @@
 // Code, keine Personendaten). Ein Rundgang, der Redirect bleibt gleich schnell.
 // Kein API-Key nötig (öffentliche Weiterleitung).
 //
-// Fällt ein Code ins Leere, geht es freundlich auf die Übersichts-Landingpage.
+// Fällt ein Code ins Leere, geht es neutral auf goetheanum.ch (seit 20. 9. 2026;
+// zuvor die Landingpage der Sommeraktion 2026).
 // Schema: services/qr-generator/schema.sql (Migration «qr_links_und_scans»).
 // =============================================================================
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const SB = Deno.env.get("SUPABASE_URL")!;
 const KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const FALLBACK = "https://global-sommer2026.goetheanum.online";
+const FALLBACK = "https://goetheanum.ch";
 
 function redirect(to: string): Response {
   return new Response(null, { status: 302, headers: { Location: to, "Cache-Control": "no-store" } });

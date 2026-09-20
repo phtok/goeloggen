@@ -4,14 +4,18 @@
      -----------------------------------------------------------------------------
      GitHub Pages liefert diese Seite fuer jeden unbekannten Pfad aus. Sie liest
      den Kurznamen aus dem Pfad (z. B. /s/otter → «otter») und uebergibt an die
-     Supabase-Function «go», die in der Tabelle sommer2026_links nachschlaegt und
-     per 302 auf die volle Ziel-URL samt UTM-Parametern weiterleitet.
+     Supabase-Function «go», die in den Registern (sommer2026_links, qr_links)
+     nachschlaegt und per 302 auf die volle Ziel-URL weiterleitet.
 
      Quelle der Wahrheit bleibt die Datenbank (kein doppeltes links.json). Neue
-     Kurzlinks entstehen im Generator (werkzeuge.goetheanum.ch/apps/utm-generator/)
-     und wirken hier sofort – ohne Aenderung an diesem Repo. Leere und
-     unbekannte Pfade landen auf der Aktions-Landingpage – nie auf den
-     internen Werkzeugen.
+     Kurzlinks entstehen in den Generatoren (werkzeuge.goetheanum.ch/apps/
+     utm-generator/ und …/apps/qr-generator/) und wirken hier sofort – ohne
+     Aenderung an diesem Repo.
+
+     Die Bruecke ist NEUTRAL: sie nennt keine Aktion und kein Ziel. Ein Kurzlink
+     kann zu allem fuehren (Tagung, Kampagne, Dokument) – die Zwischenseite darf
+     nichts davon verraten. Leere und unbekannte Pfade landen auf goetheanum.ch,
+     nie auf den internen Werkzeugen.
      ============================================================================= -->
 <html lang="de-CH">
 <head>
@@ -33,26 +37,26 @@
 
 <main class="wrap">
   <section class="weiter">
-    <span class="kicker">Goetheanum · Kurzlink</span>
+    <span class="kicker">Goetheanum</span>
     <h1>Einen Moment – wir leiten weiter</h1>
-    <p>Der Kurzlink wird nachgeschlagen und du landest gleich auf der richtigen
-      Seite. Passiert nichts, hilft der Weg von Hand:</p>
-    <p class="fallback"><a id="direkt" href="https://global-sommer2026.goetheanum.online">weiter zur Aktionsseite</a></p>
+    <p>Du landest gleich auf der richtigen Seite. Passiert nichts, hilft der
+      Weg von Hand:</p>
+    <p class="fallback"><a id="direkt" href="https://goetheanum.ch">weiter zur Zielseite</a></p>
   </section>
 </main>
 
 <script>
   // Kurznamen aus dem Pfad ziehen: letztes nicht-leeres Segment.
-  // /s/otter → otter · /otter → otter · / → leer (dann auf die Aktionsseite).
+  // /s/otter → otter · /otter → otter · / → leer (dann auf goetheanum.ch).
   (function () {
     var GO = "https://dagcsnfrlbpxcmdimnrw.supabase.co/functions/v1/go/";
-    var LANDING = "https://global-sommer2026.goetheanum.online";
+    var HEIMAT = "https://goetheanum.ch";
     var segs = location.pathname.split("/").filter(Boolean);
     var code = segs.length ? segs[segs.length - 1] : "";
     // «s» ist nur das Verzeichnis, kein Kurzname – auch versal (QR-Codes
     // tragen den Kurzlink in Grossschreibung, die Auflösung lowercased).
     if (code.toLowerCase() === "s") code = "";
-    var ziel = code ? GO + encodeURIComponent(code) : LANDING;
+    var ziel = code ? GO + encodeURIComponent(code) : HEIMAT;
     var a = document.getElementById("direkt");
     if (a) a.setAttribute("href", ziel);
     location.replace(ziel);
