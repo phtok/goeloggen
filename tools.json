@@ -561,7 +561,7 @@
       "title": "Werkzeugpost — Redaktion",
       "short": "Werkzeugpost",
       "href": "apps/werkzeugpost/",
-      "desc": "Redaktionstisch der monatlichen Mitarbeitenden-Mail: Texte der kommenden Monate vorbereiten, umsortieren, zusammenlegen, gegenlesen (sieben Personas) und aus dem eigenen Postfach übernehmen. Eine Quelle (services/werkzeugpost/mails.json), Verlauf = Git.",
+      "desc": "Redaktionstisch der monatlichen Mitarbeitenden-Mail: Texte der kommenden Monate vorbereiten, umsortieren, zusammenlegen, gegenlesen (sieben Personas) und aus dem eigenen Postfach übernehmen. Eine Quelle (apps/werkzeugpost/mails.json), Verlauf = Git.",
       "such": "Werkzeugpost Redaktion Mail Newsletter monatlich Mitarbeitende Signatur Tisch Personas Gegenlesen Plan"
     },
     {

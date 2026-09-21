@@ -1,5 +1,5 @@
 {
-  "$beschreibung": "Quelle der Wahrheit für die Werkzeugpost — die monatliche Mitarbeitenden-Mail. Eine Karte je Ausgabe. Reihenfolge = Feld «pos» (frei tauschbar); Themen lassen sich zusammenlegen (mehrere werkzeuge[] je Ausgabe) und neue hinzufügen. Die Redaktionsseite (apps/werkzeugpost/) liest diese Datei, erlaubt Umsortieren/Bearbeiten und exportiert die geänderte JSON zurück — Nachvollziehbarkeit = Git-History. Versand aus dem persönlichen Postfach (Übernehmen-Knopf), nicht automatisch.",
+  "$beschreibung": "Quelle der Wahrheit für die Werkzeugpost — die monatliche Mitarbeitenden-Mail. Eine Karte je Ausgabe. Reihenfolge = Feld «pos» (frei tauschbar); Themen lassen sich zusammenlegen (mehrere werkzeuge[] je Ausgabe) und neue hinzufügen. Die Redaktionsseite (apps/werkzeugpost/) liest diese Datei daneben liegend — services/ wird nicht veröffentlicht, erlaubt Umsortieren/Bearbeiten und exportiert die geänderte JSON zurück — Nachvollziehbarkeit = Git-History. Versand aus dem persönlichen Postfach (Übernehmen-Knopf), nicht automatisch.",
   "version": 1,
   "serie": {
     "arbeitstitel": "Werkzeugpost",
