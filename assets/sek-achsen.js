@@ -700,7 +700,7 @@ window.GOE_SEK_ACHSEN = {
    "key": "buehne",
    "name": "Bühne",
    "hex": "#968250",
-   "grund_text": "Das Gold der Bühne liegt mit Farbton 88 im Gelbfeld des Kreises. Es bleibt einfarbig und besetzt damit den Platz, den keine Sektion als Fläche halten kann.",
+   "grund_text": "Das Gold der Bühne liegt im Farbton nahe beim Gelb der Pädagogik – aber gedeckt, wo jenes leuchtet. Es bleibt einfarbig; für Lesetext ist es zu hell, darum steht Weiss darauf nur gross.",
    "H": 88.4,
    "platz": 112.6,
    "L": 0.61,

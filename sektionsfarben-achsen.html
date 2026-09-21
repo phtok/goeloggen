@@ -100,10 +100,15 @@
   .mono{display:grid;gap:var(--s4);margin-top:var(--s4)}
   @media(min-width:700px){.mono{grid-template-columns:1fr 1fr}}
   .mk{border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;background:var(--paper)}
-  .mk .flaeche{min-height:110px;padding:var(--s4);display:flex;flex-direction:column;justify-content:flex-end;
-    color:var(--on-accent);font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3)}
-  .mk .flaeche small{display:block;font-family:var(--font-mono);font-weight:400;font-size:var(--t-micro);margin-top:2px}
-  .mk p{font-family:var(--font-text);font-size:var(--t-small);line-height:1.55;padding:var(--s4);margin:0;max-width:46ch}
+  /* Die Fläche zeigt die Farbe, die Schrift steht darunter auf Papier: das
+     Bühnengold trägt Weiss nur gross (gemessen 3.8:1) – hier wird nichts
+     behauptet, was die Fläche nicht hält (B01/B02). */
+  .mk .flaeche{min-height:110px}
+  .mk .kopf{padding:var(--s4) var(--s4) 0}
+  .mk .kopf h3{font-size:var(--t-h3);margin:0}
+  .mk .kopf .hx{font-family:var(--font-mono);font-size:var(--t-micro);color:var(--muted);letter-spacing:.02em;margin-top:2px}
+  .mk p{font-family:var(--font-text);font-size:var(--t-small);line-height:1.55;padding:var(--s3) var(--s4) 0;margin:0;max-width:46ch}
+  .mk p.meta{padding-bottom:var(--s4)}
 
   /* --- Anwendung ---------------------------------------------------------------- */
   .waehler{display:flex;gap:var(--s2);overflow-x:auto;padding:var(--s2) 0 var(--s3);margin-top:var(--s4);scrollbar-width:thin;-webkit-overflow-scrolling:touch}
@@ -116,7 +121,9 @@
   .bsp{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s4);display:flex;flex-direction:column;gap:var(--s3)}
   .bsp > .meta{order:9}
   .kopfband{border-radius:var(--r-control);padding:var(--s5) var(--s4);display:flex;flex-direction:column;gap:var(--s2)}
-  .kopfband .kick{font-family:var(--font-text);font-size:var(--t-small);letter-spacing:.02em}
+  /* Der Kicker erbt die Schriftfarbe des Bandes – base.css setzt sonst Goldtinte,
+     die auf einer leuchtenden Fläche nicht trägt (B02). */
+  .kopfband .kick{font-family:var(--font-text);font-size:var(--t-small);letter-spacing:.02em;color:inherit}
   .kopfband h3{font-size:var(--t-h3);margin:0;max-width:22ch}
   .kopfband p{font-family:var(--font-text);font-size:var(--t-small);line-height:1.45;margin:0}
   .zeichenreihe{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center}
@@ -162,8 +169,8 @@
         Weiss, weil sie zu nah am Licht steht, dann schreibt die geforderte Farbe darauf. Beide
         Fälle sind gemessen, keiner geschätzt.</li>
       <li><b>Sechs Achsen, zwölf Sektionen, zwei Monofarben.</b> Jede Achse trägt zwei Sektionen:
-        eine führt mit dem Leuchten, die andere mit dem Grund. Goetheanum-Blau und Bühnengold stehen
-        auf keiner Achse – sie bleiben einfarbig und sind daran zu erkennen.</li>
+        eine leuchtet, die andere trägt. Goetheanum-Blau und Bühnengold stehen auf keiner Achse –
+        sie bleiben einfarbig und sind im Hausbild genau daran zu erkennen.</li>
     </ul>
   </div>
 
@@ -227,7 +234,10 @@
 
   <section class="grp" id="monofarben">
     <h2>Die beiden Monofarben</h2>
-    <p class="desc">Was keine Achse hat, trägt Weiss – und ist daran zu erkennen. Darunter steht, wie weit der nächste Sektionston absteht; der Abstand entsteht über Helligkeit und Buntheit, nicht über den Farbton.</p>
+    <p class="desc">Was keine Achse hat, steht für sich. Das Markenblau trägt Weiss auch klein; das
+      Bühnengold ist gedeckt und trägt es nur gross – darum steht die Schrift hier neben der Fläche,
+      nicht darauf. Darunter steht, wie weit der nächste Sektionston absteht; der Abstand entsteht
+      über Helligkeit und Buntheit, nicht über den Farbton.</p>
     <div class="mono" id="mono-liste"></div>
   </section>
 

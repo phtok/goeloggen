@@ -51,3 +51,6 @@ __pycache__/
 
 # Browser-Werkzeuge (tools/barrierefreiheit.mjs) — Abhängigkeiten nicht versionieren
 tools/node_modules/
+# Wurzel-node_modules: tools/barrierefreiheit.mjs braucht playwright-core und
+# @axe-core/playwright; beim Lauf aus dem Wurzelverzeichnis landen sie hier.
+node_modules/

@@ -182,9 +182,12 @@
       var c = el("article", "mk");
       var f = el("div", "flaeche");
       f.style.background = "var(--a-mono-" + m.key + ")";
-      f.appendChild(document.createTextNode(m.name));
-      f.appendChild(el("small", null, m.hex.toUpperCase() + " · Weiss " + fmt(m.weiss)));
       c.appendChild(f);
+      var kopf = el("div", "kopf");
+      kopf.appendChild(el("h3", null, m.name));
+      kopf.appendChild(el("div", "hx", m.hex.toUpperCase() + " · Weiss " + fmt(m.weiss) +
+        (m.weiss >= 4.5 ? " – trägt auch kleine Schrift" : " – trägt Weiss nur gross")));
+      c.appendChild(kopf);
       c.appendChild(el("p", null, m.grund_text));
       var n = m.naehe;
       c.appendChild(el("p", "meta", "Nächster Sektionston: " + n.kurz + " " + n.hex.toUpperCase() +

@@ -154,7 +154,7 @@ MONO = [
     {"key": "goetheanum", "name": "Goetheanum", "hex": "#0061a9",
      "grund_text": "Das Markenblau des Ganzen. Es steht auf keiner Achse, braucht keine zweite Farbe und trägt Weiss – daran ist das Haus zu erkennen."},
     {"key": "buehne", "name": "Bühne", "hex": "#968250",
-     "grund_text": "Das Gold der Bühne liegt mit Farbton 88 im Gelbfeld des Kreises. Es bleibt einfarbig und besetzt damit den Platz, den keine Sektion als Fläche halten kann."},
+     "grund_text": "Das Gold der Bühne liegt im Farbton nahe beim Gelb der Pädagogik – aber gedeckt, wo jenes leuchtet. Es bleibt einfarbig; für Lesetext ist es zu hell, darum steht Weiss darauf nur gross."},
 ]
 
 # --- Farbmathematik -----------------------------------------------------------------
