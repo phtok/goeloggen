@@ -230,6 +230,11 @@ grant execute on function public.sommer2026_massnahme_aendern(bigint, date, text
 -- Kosten-Einzelposten (Migration «sommer2026_kosten_posten»): das Team traegt
 -- Posten mit Kuerzel ein, das Cockpit summiert je Kostenart (Uebersicht bleibt,
 -- Details klappen auf). Muster wie Massnahmen: Tabelle zu, RPCs offen.
+-- Spaeter dazugekommen: stunden/ansatz (Migration
+-- «sommer2026_kosten_stunden_doppelsperre_loeschen» – die Maske fragt nach
+-- Stunden und rechnet die Franken) und produkt (Migration
+-- «sommer2026_kosten_produkt» – Zuordnung zu EINEM Angebot; NULL heisst
+-- gemeinsam und wird in der Auswertung nach Anmeldungen verteilt).
 create table if not exists public.sommer2026_kosten (
   id         bigint generated always as identity primary key,
   created_at timestamptz not null default now(),
@@ -237,36 +242,96 @@ create table if not exists public.sommer2026_kosten (
   posten     text not null,
   kategorie  text not null default 'andere' check (kategorie in ('stunden','social','druck','infrastruktur','andere')),
   betrag     numeric not null check (betrag >= 0),
-  ersteller  text
+  ersteller  text,
+  stunden    numeric,
+  ansatz     numeric,
+  produkt    text check (produkt is null or produkt in ('wos','gtv'))
 );
 alter table public.sommer2026_kosten enable row level security;
 revoke all on table public.sommer2026_kosten from anon, authenticated;
 
 create or replace function public.sommer2026_kosten_public()
-returns table(id bigint, tag date, posten text, kategorie text, betrag numeric, ersteller text)
+returns table(id bigint, tag date, posten text, kategorie text, betrag numeric,
+              ersteller text, stunden numeric, ansatz numeric, produkt text)
 language sql security definer set search_path to 'public' as $$
-  select id, tag, posten, kategorie, betrag, ersteller
+  select id, tag, posten, kategorie, betrag, ersteller, stunden, ansatz, produkt
     from public.sommer2026_kosten
    order by tag, id;
 $$;
 grant execute on function public.sommer2026_kosten_public() to anon, authenticated;
 
 create or replace function public.sommer2026_kosten_eintragen(
-  p_tag date, p_posten text, p_kategorie text, p_betrag numeric, p_ersteller text)
+  p_tag date, p_posten text, p_kategorie text, p_betrag numeric, p_ersteller text,
+  p_stunden numeric default null, p_ansatz numeric default null, p_produkt text default null)
 returns text language plpgsql security definer set search_path to 'public' as $$
-declare v_kat text;
+declare v_kat text; v_prod text;
 begin
   if p_tag is null or coalesce(trim(p_posten), '') = '' or p_betrag is null or p_betrag < 0 then
     return 'unvollstaendig';
   end if;
   v_kat := lower(coalesce(p_kategorie, ''));
   if v_kat not in ('stunden','social','druck','infrastruktur','andere') then v_kat := 'andere'; end if;
-  insert into public.sommer2026_kosten (tag, posten, kategorie, betrag, ersteller)
-  values (p_tag, trim(p_posten), v_kat, p_betrag, nullif(trim(coalesce(p_ersteller,'')), ''));
+  v_prod := nullif(lower(trim(coalesce(p_produkt, ''))), '');
+  if v_prod is not null and v_prod not in ('wos','gtv') then v_prod := null; end if;
+
+  -- Doppelklick-Sperre: derselbe Posten mit demselben Betrag am selben Tag
+  -- innerhalb von zwei Minuten ist ein zweiter Klick, keine zweite Ausgabe.
+  if exists (
+    select 1 from public.sommer2026_kosten k
+     where k.tag = p_tag
+       and lower(trim(k.posten)) = lower(trim(p_posten))
+       and k.betrag = p_betrag
+       and k.created_at > now() - interval '2 minutes'
+  ) then
+    return 'doppelt';
+  end if;
+
+  insert into public.sommer2026_kosten (tag, posten, kategorie, betrag, ersteller, stunden, ansatz, produkt)
+  values (p_tag, trim(p_posten), v_kat, p_betrag,
+          nullif(trim(coalesce(p_ersteller,'')), ''),
+          case when v_kat = 'stunden' then p_stunden end,
+          case when v_kat = 'stunden' then p_ansatz  end,
+          v_prod);
   return 'ok';
 end;
 $$;
-grant execute on function public.sommer2026_kosten_eintragen(date, text, text, numeric, text) to anon, authenticated;
+grant execute on function public.sommer2026_kosten_eintragen(date, text, text, numeric, text, numeric, numeric, text) to anon, authenticated;
+
+-- Loeschen ist so offen wie Eintragen: Wer einen Posten anlegen darf, muss den
+-- eigenen Fehler wegnehmen koennen, ohne jemanden zu fragen.
+create or replace function public.sommer2026_kosten_loeschen(p_id bigint, p_ersteller text)
+returns text language plpgsql security definer set search_path to 'public' as $$
+declare v_weg int;
+begin
+  if p_id is null or coalesce(trim(p_ersteller), '') = '' then
+    return 'unvollstaendig';
+  end if;
+  delete from public.sommer2026_kosten where id = p_id;
+  get diagnostics v_weg = row_count;
+  if v_weg = 0 then return 'nicht gefunden'; end if;
+  return 'ok';
+end;
+$$;
+grant execute on function public.sommer2026_kosten_loeschen(bigint, text) to anon, authenticated;
+
+-- Zuordnung umhaengen, ohne den Posten zu loeschen. NULL = gemeinsamer Posten.
+create or replace function public.sommer2026_kosten_produkt_setzen(
+  p_id bigint, p_produkt text, p_ersteller text)
+returns text language plpgsql security definer set search_path to 'public' as $$
+declare v_prod text; v_n int;
+begin
+  if p_id is null or coalesce(trim(p_ersteller), '') = '' then
+    return 'unvollstaendig';
+  end if;
+  v_prod := nullif(lower(trim(coalesce(p_produkt, ''))), '');
+  if v_prod is not null and v_prod not in ('wos','gtv') then return 'unbekannt'; end if;
+  update public.sommer2026_kosten set produkt = v_prod where id = p_id;
+  get diagnostics v_n = row_count;
+  if v_n = 0 then return 'nicht gefunden'; end if;
+  return 'ok';
+end;
+$$;
+grant execute on function public.sommer2026_kosten_produkt_setzen(bigint, text, text) to anon, authenticated;
 
 -- Multiplikatoren-Kontaktprotokoll (Migration «sommer2026_multiplikatoren»):
 -- wer hat wen wann kontaktiert, mit welchem Ergebnis. Klarnamen liegen in der

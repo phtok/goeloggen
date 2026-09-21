@@ -236,6 +236,13 @@
 
   function fmt(n){ return (Number(n)||0).toLocaleString('de-CH'); }
   function geld(n){ return CONFIG.waehrung + ' ' + Math.round(Number(n)||0).toLocaleString('de-CH'); }
+  // Kleine Beträge auf Rappen genau: Ein gerundetes «CHF 0» wäre keine
+  // Sparsamkeit, sondern eine gerundete Unwahrheit. Gilt überall dort, wo ein
+  // Betrag durch eine Zahl Abos geteilt wird (Kosten je Abo, je Angebot).
+  function geldFein(n){
+    var z = Number(n) || 0;
+    return z > 0 && z < 10 ? CONFIG.waehrung + ' ' + z.toFixed(2).replace('.', ',') : geld(z);
+  }
   function el(id){ return document.getElementById(id); }
   function dmy(d){ return d.toLocaleDateString('de-CH',{day:'numeric',month:'long'}); }
 
@@ -1427,12 +1434,8 @@
     var revChf = revenue && revenue.chfGesamt || 0;
     var voll = CONFIG.kostenVollstaendig !== false;
     if (voll){
-      // Beträge unter zehn Franken auf Rappen genau – ein «CHF 0» wäre keine
-      // Sparsamkeit, sondern eine gerundete Unwahrheit.
       var cpa = (summe > 0 && total > 0) ? summe / total : 0;
-      el('costCpa').textContent = cpa > 0
-        ? (cpa < 10 ? CONFIG.waehrung + ' ' + cpa.toFixed(2).replace('.', ',') : geld(cpa))
-        : '–';
+      el('costCpa').textContent = cpa > 0 ? geldFein(cpa) : '–';
       // Dezimalkomma wie überall sonst im Haus – toFixed liefert einen Punkt.
       el('costRoi').textContent = summe > 0 ? (revChf / summe).toFixed(1).replace('.', ',') + '×' : '–';
     } else {
@@ -1487,11 +1490,11 @@
 
     var pb = el('kostenPostenBody'); pb.innerHTML = '';
     if (!posten.length){
-      pb.innerHTML = '<tr><td class="empty" colspan="5">Noch keine Einzelposten erfasst.</td></tr>';
+      pb.innerHTML = '<tr><td class="empty" colspan="6">Noch keine Einzelposten erfasst.</td></tr>';
     } else {
       posten.forEach(function(k){
         var tr = document.createElement('tr');
-        tr.innerHTML = '<td></td><td></td><td></td><td class="num"></td><td class="act"></td>';
+        tr.innerHTML = '<td></td><td></td><td></td><td></td><td class="num"></td><td class="act"></td>';
         tr.children[0].textContent = k.tag ? new Date(k.tag + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' }) : '–';
         tr.children[1].textContent = (k.posten || '') + (k.ersteller ? ' · ' + k.ersteller : '');
         // Stunden bleiben sichtbar, nicht nur ihr Franken-Wert: «8 h × CHF 80»
@@ -1502,18 +1505,189 @@
           tr.children[1].appendChild(sn);
         }
         tr.children[2].textContent = KAT_LABEL[k.kategorie] || k.kategorie || '';
-        tr.children[3].textContent = geld(k.betrag);
+        // Zuordnung: dort, wo eingetragen wird, als Klappliste zum Umhängen –
+        // sonst als blosser Text. Ein falsch zugeordneter Posten soll nicht
+        // gelöscht und neu getippt werden müssen.
+        if (el('kfBtn')) tr.children[3].appendChild(zuordnungsWahl(k));
+        else tr.children[3].textContent = k.produkt ? produktName(k.produkt) : 'beide';
+        tr.children[4].textContent = geld(k.betrag);
         if (el('kfBtn')){   // Löschen nur dort, wo auch eingetragen wird
           var weg = document.createElement('button');
           weg.type = 'button'; weg.className = 'medit weg';
           weg.textContent = 'Löschen';
           weg.setAttribute('aria-label', 'Posten ' + (k.posten || '') + ' löschen');
           weg.addEventListener('click', function(){ kostenLoeschen(k, weg); });
-          tr.children[4].appendChild(weg);
+          tr.children[5].appendChild(weg);
         }
         pb.appendChild(tr);
       });
     }
+
+    // Dieselben Posten, ein zweites Mal gelesen – je Angebot. Steht hier und
+    // nicht im Ladevorgang, damit ein neu eingetragener oder gelöschter Posten
+    // die Auswertung je Angebot sofort mitzieht (kostenNeuLaden).
+    renderProdukte(lastStats, posten);
+  }
+
+  // ── Getrennt nach Angebot: Wochenschrift und goetheanum.tv ────────────────
+  // Wunsch der Geschäftsleitung (21. September): die finanziellen Ergebnisse
+  // nicht nur als Summe, sondern je Angebot. Die beiden Seiten der Rechnung
+  // sind dabei NICHT gleich sicher, und die Tabelle sagt das offen, statt eine
+  // gemeinsame Genauigkeit vorzuspiegeln:
+  //
+  //   Der Umsatz teilt sich von selbst. Jede Anmeldung trägt ihr Produkt; es
+  //   läuft dieselbe Rechnung wie für die Gesamtzahl, nur auf den Zeilen eines
+  //   Angebots – echte Preise je Zahlungswährung, Bleibe-Quote und Verweildauer
+  //   des Referenz-Szenarios. Die Summe der beiden Zeilen ist darum auf den
+  //   Rappen die Zahl, die oben in den Szenario-Karten steht.
+  //
+  //   Die Kosten teilen sich nicht von selbst. Diese Aktion lief mit EINEM
+  //   Mailing, EINEM Satz Aktionsseiten und gemeinsamen Stunden für beide
+  //   Angebote. Darum zwei Töpfe: Was ein Posten ausdrücklich für ein Angebot
+  //   ausgibt, zählt direkt – die 1 147 Probehefte auf Papier etwa kosten
+  //   allein die Wochenschrift. Alles Übrige wird nach Anmeldungen verteilt.
+  //   Diese Verteilung ist eine Konvention, keine Messung; sie steht darum
+  //   unter der Tabelle im Klartext, und jeder Posten lässt sich auf der
+  //   Kosten-Seite umhängen, ohne ihn zu löschen.
+  var PRODUKT_REIHE = ['wos', 'gtv'];
+
+  // Nur die Zeilen eines Angebots – damit dieselbe Rechnung, die die
+  // Gesamtzahl trägt, auch je Angebot laufen kann. Gefiltert wird die Zeile,
+  // nicht die Formel: So bleibt es eine Rechnung und nicht zwei.
+  function nurProdukt(rows, produkt){
+    return (rows || []).filter(function(r){ return r.produkt === produkt; });
+  }
+
+  // Kosten je Angebot: direkt zugeordnete Posten plus Anteil am gemeinsamen
+  // Topf. Schlüssel der Verteilung sind die Anmeldungen – dieselbe Bezugsgrösse
+  // wie bei «Kosten je Abo» oben, damit die Tabelle nicht gegen den Block
+  // darüber rechnet.
+  function kostenJeProdukt(posten, stats){
+    var je = {}, alle = 0, gemeinsam = 0, direkt = 0;
+    PRODUKT_REIHE.forEach(function(p){
+      var abos = (stats || []).reduce(function(sum, r){
+        return r.produkt === p ? sum + (Number(r.n) || 0) : sum;
+      }, 0);
+      je[p] = { abos: abos, direkt: 0, anteil: 0, summe: 0 };
+      alle += abos;
+    });
+    (posten || []).forEach(function(k){
+      var b = Number(k.betrag) || 0;
+      if (je[k.produkt]){ je[k.produkt].direkt += b; direkt += b; }
+      else gemeinsam += b;
+    });
+    PRODUKT_REIHE.forEach(function(p){
+      je[p].anteil = alle > 0 ? gemeinsam * (je[p].abos / alle) : 0;
+      je[p].summe  = je[p].direkt + je[p].anteil;
+    });
+    return { je: je, alle: alle, gemeinsam: gemeinsam, direkt: direkt };
+  }
+
+  function renderProdukte(stats, posten){
+    var body = el('produkteBody'); if (!body) return;
+    var k = kostenJeProdukt(posten, stats);
+    if (!k.alle){ body.innerHTML = '<tr><td class="empty" colspan="6">lädt …</td></tr>'; return; }
+
+    var ref = referenzSzenario();
+    var voll = CONFIG.kostenVollstaendig !== false;
+    var umsatz = {}, spanne = {};
+    PRODUKT_REIHE.forEach(function(p){
+      var zeilen = nurProdukt(stats, p);
+      umsatz[p] = projectRevenue(zeilen, ref).chfGesamt;
+      spanne[p] = szenarien().map(function(sz){ return projectRevenue(zeilen, sz).chfGesamt; });
+    });
+
+    var zelle = function(name, abos, ums, kosten){
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td>' +
+                     '<td class="num"></td><td class="num"></td><td class="num"></td>';
+      var c = tr.children;
+      c[0].textContent = name;
+      c[1].textContent = fmt(abos);
+      c[2].textContent = geld(ums);
+      c[3].textContent = voll ? geld(kosten) : '–';
+      c[4].textContent = (voll && abos > 0 && kosten > 0) ? geldFein(kosten / abos) : '–';
+      // Dezimalkomma wie überall sonst im Haus – toFixed liefert einen Punkt.
+      c[5].textContent = (voll && kosten > 0) ? (ums / kosten).toFixed(1).replace('.', ',') + '×' : '–';
+      return tr;
+    };
+
+    body.innerHTML = '';
+    PRODUKT_REIHE.forEach(function(p){
+      body.appendChild(zelle(produktName(p), k.je[p].abos, umsatz[p], k.je[p].summe));
+    });
+
+    var foot = el('produkteFoot');
+    if (foot){
+      foot.innerHTML = '';
+      foot.appendChild(zelle('Zusammen', k.alle,
+        umsatz.wos + umsatz.gtv, k.direkt + k.gemeinsam));
+    }
+
+    if (el('produkteNote')){
+      var jeAbo = function(p){ return k.je[p].abos > 0 ? geldFein(umsatz[p] / k.je[p].abos) : '–'; };
+      var von   = function(p){ return geld(Math.min.apply(null, spanne[p])); };
+      var bis   = function(p){ return geld(Math.max.apply(null, spanne[p])); };
+      var anteil = function(p){ return k.alle > 0 ? Math.round(k.je[p].abos / k.alle * 100) + ' %' : '–'; };
+      el('produkteNote').textContent =
+        'Der Umsatz teilt sich von selbst: Jede Anmeldung trägt ihr Angebot, gerechnet wird zum echten Vollpreis ' +
+        'je Zahlungswährung im Szenario «' + ref.name + '». Ein Abo der Wochenschrift ist darin ' + jeAbo('wos') +
+        ' wert, ein Abo von goetheanum.tv ' + jeAbo('gtv') + '. Über die drei Szenarien spannt sich der ' +
+        'Folgejahr-Umsatz von ' + von('wos') + ' bis ' + bis('wos') + ' (Wochenschrift) und von ' +
+        von('gtv') + ' bis ' + bis('gtv') + ' (goetheanum.tv). ' +
+        (voll
+          ? 'Die Kosten teilen sich nicht von selbst: ' + geld(k.gemeinsam) + ' der ' + geld(k.gemeinsam + k.direkt) +
+            ' sind für beide Angebote zusammen ausgegeben worden – ein Mailing, ein Satz Aktionsseiten, gemeinsame ' +
+            'Stunden – und stehen hier nach Anmeldungen verteilt (' + anteil('wos') + ' Wochenschrift, ' +
+            anteil('gtv') + ' goetheanum.tv). Direkt zugeordnet sind ' + geld(k.direkt) + ', vor allem die Probehefte ' +
+            'auf Papier, die allein die Wochenschrift kostet. Diese Verteilung ist eine Konvention und keine Messung: ' +
+            'Wer einen Posten anders zuordnen will, hängt ihn auf der Kosten-Seite um.'
+          : 'Die Kostenspalten bleiben leer, solange die Kosten unvollständig sind – eine verteilte Teilsumme wäre ' +
+            'doppelt ungenau.');
+    }
+  }
+
+  // Klappliste zum Umhängen eines Postens. Leerer Wert = gemeinsamer Posten;
+  // das ist der Normalfall dieser Aktion und darum die erste Zeile.
+  function zuordnungsWahl(k){
+    var sel = document.createElement('select');
+    sel.className = 'select-inline';
+    sel.setAttribute('aria-label', 'Angebot für Posten ' + (k.posten || ''));
+    [['', 'beide'], ['wos', produktName('wos')], ['gtv', produktName('gtv')]].forEach(function(o){
+      var op = document.createElement('option');
+      op.value = o[0]; op.textContent = o[1];
+      if ((k.produkt || '') === o[0]) op.selected = true;
+      sel.appendChild(op);
+    });
+    sel.addEventListener('change', function(){ kostenProduktSetzen(k, sel); });
+    return sel;
+  }
+
+  function kostenProduktSetzen(k, sel){
+    var sagen = function(msg, bad){ meldung('kfSaid', msg, bad); };
+    var zurueck = function(){ sel.disabled = false; sel.value = k.produkt || ''; };
+    var wer = kfKuerzel();
+    if (!wer){
+      zurueck();
+      sagen('Zuerst das eigene Kürzel eintragen – dann lässt sich die Zuordnung ändern.', true);
+      if (el('kfWer')) el('kfWer').focus();
+      return;
+    }
+    var gewaehlt = sel.value;
+    sel.disabled = true;
+    fetch(SB + '/rest/v1/rpc/sommer2026_kosten_produkt_setzen', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({ p_id: k.id, p_produkt: gewaehlt || null, p_ersteller: wer })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(ergebnis){
+        if (ergebnis === 'ok'){
+          sagen('Zugeordnet: ' + (k.posten || '') + ' · ' +
+                (gewaehlt ? produktName(gewaehlt) : 'beide Angebote') + '. Die Auswertung je Angebot rechnet neu.');
+          kostenNeuLaden();
+        } else { zurueck(); sagen('Die Zuordnung liess sich nicht speichern.', true); }
+      })
+      .catch(function(){ zurueck(); sagen('Zuordnung nicht erreichbar – bitte gleich noch einmal.', true); });
   }
 
   // Zahl ohne unnötige Nullen: 8 statt 8.00, 2,5 statt 2.50.
@@ -1647,7 +1821,9 @@
           p_tag: el('kfTag').value, p_posten: posten, p_kategorie: el('kfKategorie').value,
           p_betrag: betrag, p_ersteller: wer,
           p_stunden: kfStundenModus() ? Number(el('kfStunden').value) : null,
-          p_ansatz:  kfStundenModus() ? Number(el('kfAnsatz').value)  : null
+          p_ansatz:  kfStundenModus() ? Number(el('kfAnsatz').value)  : null,
+          // Leer = gemeinsamer Posten. Der Normalfall dieser Aktion.
+          p_produkt: el('kfProdukt') ? (el('kfProdukt').value || null) : null
         })
       }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
         .then(function(ergebnis){
@@ -1655,6 +1831,9 @@
           if (ergebnis === 'ok'){
             sagen('Eingetragen: ' + posten + ' · ' + geld(betrag) + '. Summe, Kosten je Abo und Rückfluss sind aktualisiert.');
             el('kfPosten').value = ''; el('kfBetrag').value = ''; el('kfStunden').value = '';
+            // Die Zuordnung fällt auf «beide» zurück: Eine stehengebliebene
+            // Wahl würde den nächsten, ganz anderen Posten still mitnehmen.
+            if (el('kfProdukt')) el('kfProdukt').value = '';
             kfMaskeStellen();
             el('kfPosten').focus();
             kostenNeuLaden();

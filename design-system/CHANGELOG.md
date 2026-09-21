@@ -16,6 +16,26 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 21. September 2026 — die Klappliste ausserhalb des Formulars (1.27.0)
+
+**Was.** Neue Utility `.select-inline` in `base.css`: eine Klappliste, die nicht
+in einem `.field` steht, sondern direkt an einem Datensatz — etwa in einer
+Tabellenzeile, wo eine Zuordnung geändert wird. Sie trägt dieselben Grundmasse
+wie das Formularfeld: Lese-Grotesk, 16px, Fingerziel 44px, Flächen aus Tokens.
+
+**Warum.** Beim Bau der Auswertung je Angebot im Kampagnen-Cockpit
+(`apps/sommer-zaehler/kosten.html`) bekam jeder Kostenposten eine Klappliste in
+der Zeile. Ohne Regel fällt der Browser auf seine eigene Klappliste zurück — in
+Chromium rund 13px. Das ist zweifach falsch: unter dem Floor von 14px (B03) und
+unter 16px, worauf iOS beim Antippen die Seite zoomt. Die Lösung lokal in
+`campaign.css` zu lassen hiesse, sie beim nächsten Werkzeug erneut zu erfinden.
+
+**Wirkung.** B03 (Mindestgrössen, Eingabefelder ≥16px), B04 (Fingerziel ≥44px),
+B05 (Flächen aus Tokens: `--field-bg`, `--line`). Gilt ab sofort überall;
+`.medit` bleibt, was es ist — ein Textknopf, kein Eingabefeld.
+
+---
+
 ## 17. September 2026 — die Startseite hört auf zu wechseln (1.26.0)
 
 **Was.** Das Entdecker-Karussell auf der Startseite ist entfernt. Die eine

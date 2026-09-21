@@ -92,6 +92,20 @@
       </div>
       <p class="provisorisch" id="kostenNote"></p>
 
+      <!-- Getrennt nach Angebot (Wunsch der Geschäftsleitung). Zwei Zeilen,
+           gleiches Gewicht – keine der beiden trägt mehr Schrift als die
+           andere (G01). Der Umsatz teilt sich von selbst, die Kosten nicht:
+           womit sie verteilt sind, steht offen unter der Tabelle. -->
+      <div class="mh" style="margin-top:var(--s8)">Getrennt nach Angebot</div>
+      <div class="tablewrap">
+        <table class="tarif">
+          <thead><tr><th>Angebot</th><th class="num">Abos</th><th class="num">Folgejahr-Umsatz</th><th class="num">Kosten</th><th class="num">Kosten je Abo</th><th class="num">Rückfluss</th></tr></thead>
+          <tbody id="produkteBody"><tr><td class="empty" colspan="6">lädt …</td></tr></tbody>
+          <tfoot id="produkteFoot"></tfoot>
+        </table>
+      </div>
+      <p class="provisorisch" id="produkteNote"></p>
+
       <!-- Laufende Kündigungen – die Gegenprobe zu den drei Szenarien darüber.
            Die stehen offen (keine Klappe), weil sie die einzige gemessene
            Aussage zum Bleiben sind: Wer im Gratis-Zeitraum kündigt, hat
@@ -131,8 +145,8 @@
         </div>
         <div class="tablewrap" style="margin-top:var(--s6)">
           <table class="tarif">
-            <thead><tr><th>Datum</th><th>Posten</th><th>Kategorie</th><th class="num">Betrag</th></tr></thead>
-            <tbody id="kostenPostenBody"><tr><td class="empty" colspan="4">lädt …</td></tr></tbody>
+            <thead><tr><th>Datum</th><th>Posten</th><th>Kategorie</th><th>Angebot</th><th class="num">Betrag</th></tr></thead>
+            <tbody id="kostenPostenBody"><tr><td class="empty" colspan="5">lädt …</td></tr></tbody>
           </table>
         </div>
       </details>
@@ -228,8 +242,8 @@
         <p><b>268 Menschen standen an der Kasse und gingen wieder.</b> Sie hatten bei goetheanum.tv ein Konto angelegt, den Kassengang erreicht und nicht abgeschlossen – gemessen an 626 Abschlüssen wären sie 43 Prozent mehr gewesen. Uscreen kennt sie samt Abbruchzeitpunkt und bringt die Erinnerungsmail für genau diesen Fall serienmässig mit; scharf geschaltet war sie nicht. Der billigste ungenutzte Hebel der Aktion – ein Nachfassen wurde geprüft und bewusst nicht ausgelöst.</p>
         <p><b>Die Frist wirkt stärker als jeder einzelne Kanal.</b> Die beiden Fristtage brachten mehr Anmeldungen als der ganze Juli, und die letzte Welle hatte die höchste Klickquote aller vier. Wer beim nächsten Mal mehr will, setzt eher eine zweite Frist als einen weiteren Kanal.</p>
         <p><b>Bezahlte Reichweite hat hier nicht getragen – und jetzt steht ein Preis daneben.</b> Rund 131 000 erreichte Personen und 965 Klicks ergaben etwa neun Abos, dreifach belegt durch Placebo-Probe, Abschalt-Probe und Fensterrechnung. Die CHF 460 für Meta und YouTube machen daraus gut CHF 50 je Abo – ein Vielfaches dessen, was die Aktion im Schnitt gekostet hat. Für eine nächste bezahlte Runde gilt: erst den Weg zur Kasse messbar machen, dann buchen.</p>
-        <p><b>Diese Aktion war Handarbeit, kein Medienkauf.</b> Zwei Drittel der Kosten sind interne Arbeitszeit, fünf Prozent bezahlte Anzeigen. Wer sie beim nächsten Mal günstiger will, kürzt darum nicht das Budget, sondern die Nacharbeit – und ein erheblicher Teil dieser Stunden ging in Arbeit, die eine vorher gebaute Messkette gar nicht erzeugt: der zeilenweise Abgleich gegen Uscreen, drei Neuberechnungen der Einnahmen auf wandernder Basis, zwei nachträgliche Abfragen bei ActiveCampaign.</p>
-        <p><b>Beim Papier kostet «gratis» tatsächlich Geld.</b> Ein digitales Probeabo verursacht in den drei Monaten keinen Rappen, ein Papier-Probeabo CHF 17.26 an Druck und Porto – zusammen CHF 1 950 für 1 147 Hefte, gut ein Fünftel der gesamten Kampagnenkosten. Das ändert nichts an der Wertschätzung für das gedruckte Heft, aber es gehört in die Mengenplanung: Papier ist der einzige Strom, bei dem eine grosszügige Gratiszeit im Voraus bezahlt werden muss.</p>
+        <p><b>Diese Aktion war Handarbeit, kein Medienkauf.</b> Vier Fünftel der Kosten sind interne Arbeitszeit, drei Prozent bezahlte Anzeigen. Wer sie beim nächsten Mal günstiger will, kürzt darum nicht das Budget, sondern die Nacharbeit – und ein erheblicher Teil dieser Stunden ging in Arbeit, die eine vorher gebaute Messkette gar nicht erzeugt: der zeilenweise Abgleich gegen Uscreen, drei Neuberechnungen der Einnahmen auf wandernder Basis, zwei nachträgliche Abfragen bei ActiveCampaign.</p>
+        <p><b>Beim Papier kostet «gratis» tatsächlich Geld.</b> Ein digitales Probeabo verursacht in den drei Monaten keinen Rappen, ein Papier-Probeabo CHF 17.26 an Druck und Porto – zusammen CHF 1 950 für 1 147 Hefte, gut ein Achtel der gesamten Kampagnenkosten. Das ändert nichts an der Wertschätzung für das gedruckte Heft, aber es gehört in die Mengenplanung: Papier ist der einzige Strom, bei dem eine grosszügige Gratiszeit im Voraus bezahlt werden muss.</p>
         <p><b>Deutsch und Englisch gehören getrennt geplant.</b> Der englische Verteiler ist grösser als der deutsche und reagiert in jeder Gruppe um vier bis sechs Prozentpunkte schwächer – mit denselben Texten, nur übersetzt. 422 der 539 Abos mit Mailing-Spur tragen Deutsch. Das ist eine Frage an die Ansprache, nicht an die Zustellung.</p>
         <p><b>Wer bei goetheanum.tv aussteigt, tut es sofort – und niemand hat dabei etwas geprüft.</b> 36 der 630 goetheanum.tv-Abos sind im Gratis-Zeitraum gekündigt worden, knapp 6 Prozent. Bemerkenswert ist nicht die Höhe, sondern der Zeitpunkt: Der Median liegt bei drei Tagen, 20 der 35 datierten Kündigungen fielen in die erste Woche, 14 davon auf den Tag der Anmeldung selbst. Das ist keine Enttäuschung nach drei Monaten Sehen – diese Menschen haben das Gratis-Angebot genommen und im selben Zug den Dauerauftrag abgestellt, vor jeder Erfahrung mit dem Programm. Für die Bleibe-Quote heisst das zweierlei: Der Verlust ist kein Urteil über das Angebot, aber er ist auch nicht durch besseres Programm rückholbar. Fort ist deswegen noch niemand – alle 35 mit bekanntem Enddatum behalten den Zugang bis zum Ende ihrer Frist, im Oktober oder November. Die laufenden Zahlen stehen oben unter <q>Laufende Kündigungen</q>.</p>
         <p><b>Ein Teil der Nachfrage lief an der Aktion vorbei – über die App.</b> Sechs goetheanum.tv-Abos standen in der Zählung, die das Aktionsangebot nie bekommen haben: vier Käufe über Apples In-App-Kauf, ein ermässigtes Jahresabo und einer, der am Anmeldetag den vollen Jahresbetrag zahlte. Auf diesen Uscreen-Angeboten gibt es keine drei Gratismonate, sondern sieben Tage Probe – fünf der sechs zahlen längst. Sie sind aus der Zählung genommen, aber nicht aus der Würdigung: Wer die Mail liest und dann in der App abonniert, ist sehr wohl Wirkung der Aktion. Fürs nächste Mal ist es eine Bauaufgabe, keine Korrektur: Wenn eine Aktion in der App nicht existiert, kann sie dort weder wirken noch gemessen werden.</p>
@@ -239,7 +253,7 @@
 
       <div class="mh" style="margin-top:var(--s6)">Was jetzt noch aussteht</div>
       <div class="prose">
-        <p>Die Kosten stehen: CHF 9 014.60, «Kosten je Abo» und «Rückfluss» oben rechnen live damit. Einzige Schätzung darin ist die ActiveCampaign-Monatsgebühr (CHF 95) – der Konto-Inhaber verwaltet den echten Tarif ausserhalb dieses Werkzeugs.</p>
+        <p>Die Kosten stehen: CHF 15 464.60, «Kosten je Abo» und «Rückfluss» oben rechnen live damit. Einzige Schätzung darin ist die ActiveCampaign-Monatsgebühr (CHF 95) – der Konto-Inhaber verwaltet den echten Tarif ausserhalb dieses Werkzeugs.</p>
         <p><b>Anfang Oktober</b> entscheidet die erste Kohorte über das Bleiben, ab November wird sichtbar, wie viele Monate ein monatliches Abo im Schnitt trägt. Dann ersetzt eine Messung die drei Szenarien, und aus der Spanne wird eine Zahl. Erst danach lässt sich sagen, was die Aktion wirklich eingebracht hat. Was ein Abo danach laufend kostet (Uscreen-Gebühr, Papier je Jahr), rechnet dieser Bericht bewusst nicht gegen – das soll der Abopreis selbst tragen, eine Preisfrage jenseits dieser Kampagne.</p>
         <p>Auf später verschoben, ohne den Bericht aufzuhalten: die Social-Zahlen aus Metricool, die Reichweite der ausgelegten Flyer, der Abgleich der Wochenschrift-Anmeldungen gegen Zoho, der fehlende AGiD-Newsletter und die Frage, ob die Inserate in VaG und RSV überhaupt erschienen sind. Alles einzeln in <code>docs/schlussbericht-datensammlung.md</code>.</p>
       </div>
