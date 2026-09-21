@@ -88,6 +88,7 @@ Browsers. Solche Blätter werden gezählt und übersprungen.
 |----|-----|-------|------------|
 | D1 | `role="tablist"` → `role="group"` auf beiden Tastatur-Umschaltern | `icons.html` | WCAG 1.3.1 – die Knöpfe sind Umschalter mit `aria-pressed`, keine Reiter; `tablist` verlangt Kinder mit `role="tab"` |
 | D2 | `role="group"` auf dem Ausgabe-Block ergänzt | `apps/bewegte-schrift/index.html` | WCAG 4.1.2 – `aria-label` auf einem `<pre>` ohne Rolle ist unzulässig; erst die Rolle macht die Beschriftung gültig |
+| D3 | `tabindex="0"` auf allen 14 `.tablewrap`-Behältern der Kampagnen-App (Cockpit, Kosten, Aktivitäten, Multiplikatoren) | `apps/sommer-zaehler/*.html`, `apps/sommer-zaehler/campaign.css` | WCAG 2.1.1 – `scrollable-region-focusable`. Die Tabellen sind breiter als ein Telefon; ohne Tabstopp kam die Tastatur nie an die rechten Spalten. Anlass: die neue Tabelle <q>Getrennt nach Angebot</q> hätte eine fünfzehnte Stelle desselben Musters hinzugefügt. Gemessen danach: alle vier Seiten ohne Verstoss (21. 9. 2026) |
 
 ## Rückstand aus der Erstmessung
 
@@ -108,7 +109,7 @@ Maschine, die auch das Tor bedient. Die Zahlen unten sind seine.
 | `label` | 82 | 8 | Eingabefelder ohne Beschriftung (WCAG 4.1.2) |
 | `target-size` | 48 | 2 | Fingerziele unter dem Mass (B04) |
 | `link-in-text-block` | 22 | 4 | Links im Fliesstext, die sich allein durch Farbe unterscheiden (WCAG 1.4.1) |
-| `scrollable-region-focusable` | 16 | 10 | Behälter mit `overflow: auto` ohne `tabindex="0"` — die Tastatur kommt nicht an den verborgenen Teil |
+| `scrollable-region-focusable` | 16 | 10 | Behälter mit `overflow: auto` ohne `tabindex="0"` — die Tastatur kommt nicht an den verborgenen Teil. **Die vier Seiten der Kampagnen-App sind seit dem 21. 9. 2026 erledigt (D3).** |
 
 Die dicksten Brocken zuerst:
 

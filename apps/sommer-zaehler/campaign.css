@@ -69,6 +69,10 @@
   .szen{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);margin-top:var(--s4)}
   .szen .chip.ton{margin-top:var(--s2)}
 
+  /* Die Tabellen sind breiter als ein Telefon; der Behälter scrollt. Damit
+     auch die Tastatur an den verborgenen Teil kommt, trägt jeder .tablewrap
+     im Markup tabindex="0" (WCAG 2.1.1, Hausregel in CHANGELOG-a11y.md).
+     Der Fokusring kommt aus base.css. */
   .tablewrap{overflow-x:auto}
   .tarif{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);min-width:440px}
   .tarif th,.tarif td{padding:11px 12px;border-bottom:1px solid var(--line-soft);text-align:left}
