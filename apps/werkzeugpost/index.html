@@ -113,6 +113,7 @@
   .quelle-hinweis{margin-bottom:var(--s4);background:var(--field-bg);border-radius:12px;
     box-shadow:inset 3px 0 0 var(--gold-deep);padding:var(--s3) var(--s4);
     font-size:var(--t-small);line-height:1.5;color:var(--ink)}
+  .quelle-hinweis[data-art="fehler"]{box-shadow:inset 3px 0 0 var(--bad)}
 </style>
 </head>
 <body>
@@ -168,7 +169,9 @@
 </footer>
 
 <script>
-const ROOT = "../../services/werkzeugpost/";
+// Quelle liegt neben der Seite: services/ wird nicht veröffentlicht (_config.yml,
+// deploy-pages.yml) — von dort gelesen, blieb der Tisch online leer (404).
+const ROOT = "./";
 const LS = "werkzeugpost-entwurf-v1";
 let daten = null, personas = [], aktiv = null;
 
@@ -182,8 +185,7 @@ async function laden(){
   // zerstörend: lokale Bearbeitungen bleiben erhalten. «Auf Datei-Stand zurück»
   // verwirft den Zwischenstand ganz.
   const [quelle, p] = await Promise.all([
-    fetch(ROOT+"mails.json").then(r=>r.json()),
-    fetch(ROOT+"personas.json").then(r=>r.json())
+    holen("mails.json"), holen("personas.json")
   ]);
   personas = p.personas;
 
@@ -210,6 +212,23 @@ async function laden(){
 
   listeZeichnen();
   if(ergaenzt) quelleHinweis(ergaenzt);
+}
+
+// Ein leerer Tisch ist kein Zustand, sondern eine Panne: sagen, welche Datei fehlt.
+async function holen(datei){
+  const r = await fetch(ROOT+datei);
+  if(!r.ok) throw new Error(datei+" antwortet mit "+r.status);
+  return r.json();
+}
+function ladeFehler(err){
+  const l = document.getElementById("liste");
+  if(!l) return;
+  const el = document.createElement("p");
+  el.className = "quelle-hinweis";
+  el.dataset.art = "fehler";
+  el.textContent = "Die Ausgaben liessen sich nicht laden — " + err.message
+    + ". Die Quelle (mails.json, personas.json) muss neben dieser Seite liegen.";
+  l.replaceChildren(el);
 }
 
 const esc = s => (s||"").replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
@@ -401,7 +420,7 @@ function exportieren(){
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="mails.json"; a.click();
 }
 
-laden();
+laden().catch(ladeFehler);
 </script>
 
 </body>

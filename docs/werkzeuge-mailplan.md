@@ -172,7 +172,7 @@ zusätzlich auf der jeweiligen Werkzeug-Seite verlinkt.
 ### Die Redaktion: gegenlesen im Werkzeug, versenden als Mensch
 Die **Redaktionsseite** steht: `apps/werkzeugpost/` (Manifest-Eintrag
 «Werkzeugpost — Redaktion»). Alle Monats-Mails kommen aus **einer Quelle**
-(`services/werkzeugpost/mails.json`), je Monat eine Karte mit Status
+(`apps/werkzeugpost/mails.json`), je Monat eine Karte mit Status
 (Entwurf · in Redaktion · bereit · versandt), Betreff und Text direkt
 editierbar, **Mobilvorschau** im Telefon-Mockup samt Längen-Warnung. Die
 **Reihenfolge** tauschen Pfeile (Feld `pos`), zwei Ausgaben lassen sich
@@ -181,7 +181,7 @@ editierbar, **Mobilvorschau** im Telefon-Mockup samt Längen-Warnung. Die
 damit ist jede Fassung nachvollziehbar (Verlauf = Git-History).
 
 **Der Redaktionstisch ist eingebaut.** Sieben Personas
-(`services/werkzeugpost/personas.json`) lesen jede Mail unabhängig gegen —
+(`apps/werkzeugpost/personas.json`) lesen jede Mail unabhängig gegen —
 vier Mitarbeitende aus allen Generationen (Sekretariat, Technik,
 Wissenschaft, Betrieb), eine Texterin, die Leitung und ein Marken-Gast. Der
 Redakteur (KI) legt den Entwurf vor und sammelt die Voten; sie erscheinen je
@@ -233,5 +233,5 @@ auf den Rest neugierig.*
 ---
 
 *Nächste Schritte: Serienname und Anrede (Sie/ihr) festlegen, Verteiler
-klären, Redaktionsseite (`apps/werkzeugpost/` + `services/werkzeugpost/`)
+klären, Redaktionsseite (`apps/werkzeugpost/`)
 bauen, Merkblatt-Reihe gestalten, September-Mail finalisieren.*

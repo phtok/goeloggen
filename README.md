@@ -29,7 +29,7 @@ Nicht-statische Unterprojekte unter `services/`:
 - `services/schmiede/` – Eingang der Wuensche aus der Werkzeug-Schmiede
 - `services/qr-generator/` – Kurzlinks mit anonymer Scan-Zaehlung
 - `services/kistenpflege/` – Sortierer der Werkzeugkiste
-- `services/werkzeugpost/` – Textbestand der Werkzeugpost
+- `apps/werkzeugpost/` – Redaktionstisch samt Textbestand der Werkzeugpost
 
 ### Collections
 
