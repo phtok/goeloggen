@@ -24,11 +24,11 @@ blatt.json  (nur, was aufs Blatt gehört: Kopf, Stand, Pausen,                  
    N.N. bei Mitwirkenden. Die gehören auf die Webseite – oder, wenn nur das
    Blatt sie braucht, in `blatt.json`.
    Darunter der **Abgleich**: was von Hand gesetzt ist und darum nicht
-   mitwandert – Plakatzeile, die Zeitfenster der Arbeitsgruppen
+   mitwandert – Motto und Plakatzeilen, die Zeitfenster der Arbeitsgruppen
    (10:45–12:30 und 14:30–16:00) und die sechs Sprachpillen. Steht dort
    «prüfen», sagt die Zeile, wo es nachzuziehen ist.
 4. **«IDML exportieren»**, Datei in InDesign öffnen. Alle Rahmen der Rückseite
-   sind befüllt; die von Hand gesetzten (Plakatzeile) bleiben unangetastet.
+   sind befüllt; die von Hand gesetzten (Motto, Plakatzeilen) bleiben unangetastet.
 5. **Umbrüche setzen** in InDesign, wie es der Satz braucht.
 6. **Umbrüche sichern**, damit sie den nächsten Export überleben:
    ```
@@ -45,7 +45,7 @@ Regelmässig läuft nichts – der Knopf genügt.
 
 ## blatt.json – was nur auf dem Blatt steht
 
-- `kopf` Motto EN/DE, Untertitel, Tagungsname · `stand` «As of …» ·
+- `kopf` Motto EN/DE, Tagungsname · `stand` «As of …» ·
   `einleitung` EN/DE · `malerei` (Name und Titel des Umschlagbilds – steht auf
   Plakat **und** Rückseite, hier einmal gepflegt) · `sprachen_hinweis`
 - `feste_slots`: Check-in, Klassenstunde, Pausen, Uhrzeiten (Rahmen, die die
@@ -69,9 +69,10 @@ Absatz-Schreibweise: `"Text"` oder `{"laut": "English", "ruhig": "Deutsch"}`
   Seite kommen von dort; der Export tauscht nur Text aus.
 - `slots.json` – welcher Textrahmen welchen Inhalt trägt (Story-ID je Slot).
   `"nur_pruefen": true` heisst: der Export fasst den Rahmen **nicht** an (die
-  Plakatzeile ist von Hand unterschnitten, die Sprachpillen sind gedrehte
-  Einzelrahmen); die Vorschau vergleicht ihn nur. `"feld"` sagt womit:
-  `motto`, `datum` oder `dolmetsch` (die sechs Pillen zusammen gegen die
+  Plakatzeilen sind von Hand unterschnitten, das Motto der Rückseite steht
+  ein Wort je Zeile, die Sprachpillen sind gedrehte Einzelrahmen); die
+  Vorschau vergleicht ihn nur. `"feld"` sagt womit: `motto_en`, `motto_de`,
+  `datum_en`, `datum_de` oder `dolmetsch` (die sechs Pillen zusammen gegen die
   Sprachen der Webseite – Pillenname je Sprache in
   `programm.js › SPRACHE_PILLE`).
 
