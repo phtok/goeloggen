@@ -1,0 +1,308 @@
+<!doctype html>
+<!-- =============================================================================
+     Programmheft · Live-Editor (Skizze)
+     Direkt ins Heft schreiben: jedes Feld der vier A5-Seiten ist bearbeitbar,
+     Programmpunkte und Pausen per Knopf. Satz wie apps/programmheft/ (G05, G01,
+     G25, G03, B01). Farben: zwölf Sektionen + Bereiche + Bühne, mit Namen.
+     Papier bleibt weiss, auch im dunklen Modus (# ds-ok).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Programmheft · Live-Editor · Goetheanum</title>
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<style>
+  .hero{padding-block:clamp(28px,5vw,48px) var(--s5)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(28px,4.6vw,44px)}
+  .hero .lede{margin-top:var(--s3);color:var(--muted);font-size:var(--t-lede);line-height:1.5;max-width:58ch}
+
+  /* ---------- Werkleiste ---------- */
+  .leiste{display:grid;gap:var(--s4);margin-bottom:var(--s6)}
+  .leiste .reihe{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center}
+  .leiste .lab{flex:0 0 100%}
+  .farbwahl{display:flex;flex-wrap:wrap;gap:var(--s2)}
+  .farbwahl button{display:inline-flex;align-items:center;gap:var(--s2);min-height:var(--tap);padding:0 var(--s3) 0 var(--s2);
+    border:1px solid var(--line);border-radius:var(--r-pill);background:var(--paper);color:var(--ink);
+    font-family:var(--font-text);font-size:var(--t-small);cursor:pointer}
+  .farbwahl button .punkt{width:1.5rem;height:1.5rem;border-radius:50%;flex:none}
+  .farbwahl button[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink)}
+  .farbwahl .trenner{flex:0 0 100%;height:0}
+  .motive{display:flex;flex-wrap:wrap;gap:var(--s2)}
+  .motive button{width:var(--tap);height:var(--tap);padding:0;border:.15rem solid transparent;border-radius:var(--r-control);background:var(--soft) center/cover no-repeat;cursor:pointer}
+  .motive button[aria-pressed="true"]{border-color:var(--gold-deep);outline:.15rem solid var(--gold-deep);outline-offset:.1rem}
+  .hinweis{font-size:var(--t-small);color:var(--muted);margin:0}
+
+  /* ---------- Das Heft ---------- */
+  .blaetter{display:flex;flex-wrap:wrap;gap:var(--s6);justify-content:center;padding-bottom:var(--s8)}
+  .seite{width:148mm;height:210mm;background:#fff;color:#23272b; /* # ds-ok Papier */
+    position:relative;overflow:hidden;box-shadow:var(--shadow-card);border:1px solid var(--line);
+    font-family:var(--font-display);font-weight:var(--w-klar);display:flex;flex-direction:column}
+  .blaetter{--acc:var(--bereich);--on-acc:var(--on-accent);--ort:color-mix(in srgb,var(--acc) 72%,#000);--kopf:color-mix(in srgb,var(--acc) 80%,#000)} /* # ds-ok Tinte */
+
+  [contenteditable]{outline:none;border-radius:1mm;cursor:text;min-width:1em}
+  [contenteditable]:hover{box-shadow:0 0 0 .4mm color-mix(in srgb,currentColor 30%,transparent)} /* # ds-ok Bearbeitungsrahmen */
+  [contenteditable]:focus{box-shadow:0 0 0 .6mm var(--gold)}
+  [contenteditable]:empty::before{content:attr(data-leer);opacity:.45}
+
+  .titel .feld{background:var(--acc);color:var(--on-acc);flex:0 0 60%;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;text-align:center;padding:14mm 12mm 18mm;gap:7mm;position:relative}
+  .titel .feld::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:9mm;background:#fff; /* # ds-ok Papier */
+    clip-path:path("M0 20 C 120 0, 260 40, 560 12 L 560 40 L 0 40 Z")}
+  .titel h2{font-weight:var(--w-deutlich);font-size:34pt;line-height:1.05;margin:auto 0 0;text-wrap:balance}
+  .titel .wann{font-weight:var(--w-deutlich);font-size:15pt;line-height:1.3;margin:0;white-space:pre-line;font-variant-numeric:lining-nums}
+  .titel .unter{font-size:11.5pt;line-height:1.4;margin:0;max-width:30em;text-wrap:balance}
+  .titel .stich{font-weight:var(--w-deutlich);font-size:13pt;margin:0}
+  .titel .marke{height:6.5mm;margin-bottom:auto;filter:var(--marke-filter,brightness(0) invert(1))}
+  .titel .bild{flex:1;background:var(--soft) center/cover no-repeat;position:relative}
+  .titel .credit{position:absolute;right:4mm;bottom:3mm;font-family:var(--font-text);font-size:6.5pt;color:#fff; /* # ds-ok Druck-Credit auf Foto */
+    text-shadow:0 0 2mm rgba(0,0,0,.6)} /* # ds-ok */
+
+  .prog{padding:13mm 9mm 10mm}
+  .prog h3,.info h3{font-weight:var(--w-deutlich);font-size:22pt;color:var(--kopf);margin:0 0 6mm 2mm}
+  .zeilen{display:grid;--pad:3mm}
+  .z{display:grid;grid-template-columns:31mm 1fr;gap:3mm;padding:var(--pad) 3mm;border-bottom:.3mm solid rgba(0,0,0,.12); /* # ds-ok Haarlinie */
+    font-family:var(--font-text);font-size:var(--grad,12pt);line-height:1.4;position:relative}
+  .z.pause{background:color-mix(in srgb,var(--acc) 12%,#fff)} /* # ds-ok Tönung */
+  .z .zeit{font-weight:700;font-variant-numeric:tabular-nums lining-nums}
+  .z b,.z strong{font-weight:700}
+  .z .ort{color:var(--ort);display:inline-flex;align-items:baseline;gap:.15em;white-space:nowrap}
+  .z .ort svg{width:.8em;height:.8em;fill:currentColor;flex:none;align-self:center}
+
+  /* Werkzeuge an der Zeile: erscheinen beim Bearbeiten, nie im Druck */
+  .zwerk{position:absolute;right:1mm;top:50%;transform:translateY(-50%);display:none;gap:1mm;z-index:2}
+  .z:hover .zwerk,.z:focus-within .zwerk{display:flex}
+  .zwerk button,.plus button{font-family:var(--font-text);font-size:var(--t-micro);min-height:var(--tap);min-width:var(--tap);
+    padding:0 var(--s2);border-radius:var(--r-control);border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;gap:.3em}
+  .zwerk svg,.plus svg{width:1.1rem;height:1.1rem;stroke:currentColor;fill:none;stroke-width:2}
+  .plus{display:flex;gap:var(--s2);margin-top:3mm;flex-wrap:wrap}
+  .plus button{border-style:dashed}
+
+  .info{padding:13mm 11mm 10mm;gap:5mm}
+  .info h3{margin:0}
+  .info .plan{flex:1;min-height:60mm;display:grid;place-items:center;overflow:hidden}
+  .info .plan img{max-width:100%;max-height:100%;object-fit:contain}
+  .legende{columns:2;column-gap:6mm;font-family:var(--font-text);font-size:11pt;line-height:1.5;margin:0;padding:0;list-style:none}
+  .legende li{display:flex;gap:2mm;break-inside:avoid;margin-bottom:1mm;align-items:baseline}
+  .legende .n{flex:0 0 5.5mm;height:5.5mm;border-radius:50%;background:var(--gold-deep);color:var(--on-accent);
+    display:grid;place-items:center;font-size:8pt;font-weight:700;font-variant-numeric:tabular-nums}
+  .info .fuss{font-family:var(--font-text);font-size:9pt;line-height:1.45;display:flex;justify-content:space-between;align-items:end;gap:4mm}
+  .info .fuss .kontakt{white-space:pre-line}
+  .info .fuss img{height:5mm}
+  .ueberlauf{outline:1mm solid var(--gold);outline-offset:-1mm}
+
+  @media print{
+    @page{size:148mm 210mm;margin:0}
+    body>*:not(main),.hero,.leiste,.zwerk,.plus{display:none!important}
+    main.wrap{max-width:none;padding:0;margin:0}
+    .blaetter{display:block;padding:0}
+    .ueberlauf{outline:0}
+    [contenteditable]{box-shadow:none!important}
+    [contenteditable]:empty::before{content:none}
+    .seite{box-shadow:none;border:0;break-after:page;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Veranstaltungen · Skizze</span>
+    <h1>Programmheft direkt bearbeiten</h1>
+    <p class="lede">Ins Heft klicken und schreiben. Programmpunkte und Pausen mit Plus ergänzen.</p>
+  </section>
+
+  <div class="leiste card soft">
+    <div class="reihe"><span class="lab">Farbe</span><div class="farbwahl" id="farbwahl" role="group" aria-label="Farbe"></div></div>
+    <div class="reihe"><span class="lab">Titelbild</span><div class="motive" id="motive"></div>
+      <button class="btn" type="button" id="bild-waehlen">Eigenes Bild</button><input type="file" id="f-bild" accept="image/*" hidden /></div>
+    <div class="reihe">
+      <button class="btn primary" type="button" onclick="print()">Als PDF drucken</button>
+      <button class="btn" type="button" id="zuruecksetzen">Beispiel wiederherstellen</button>
+      <p class="hinweis">Fett: Text markieren und Strg+B. Alles bleibt in diesem Browser gespeichert.</p>
+    </div>
+  </div>
+
+  <div class="blaetter" id="blaetter"></div>
+</main>
+
+<footer class="ds-footer"><div class="wrap frow"><span><strong>Goetheanum Grafik</strong></span><span><a href="./">Programmheft mit Formular</a></span></div></footer>
+
+<script>
+// Zwölf Sektionen, dann die zwei Bereichsfarben. Name = Beschriftung der Wahl.
+const FARBEN=[
+  ["sek-aas","Allgemeine Anthroposophische Sektion"],["sek-ps","Pädagogische Sektion"],["sek-ms","Medizinische Sektion"],
+  ["sek-nws","Naturwissenschaftliche Sektion"],["sek-lws","Sektion für Landwirtschaft"],["sek-sbk","Sektion für Bildende Künste"],
+  ["sek-ssw","Sektion für Schöne Wissenschaften"],["sek-szw","Sektion für Sozialwissenschaft"],["sek-js","Jugendsektion"],
+  ["sek-srmk","Sektion für Redende und Musizierende Künste"],["sek-mas","Mathematisch-Astronomische Sektion"],
+  ["sek-hpise","Sektion für Heilpädagogik und inklusive soziale Entwicklung"],
+  null,
+  ["bereich","Bereiche"],["bereich-buehne","Bühne"]];
+// Schrift auf der Fläche: die gerechneten --on-*-Tokens (B01/B02).
+const AUF={"bereich":"var(--on-accent)"};
+const auf=k=>AUF[k]||`var(--on-${k})`;
+const MOTIVE=[["titelbild-goetheanum.jpg","Fenster hinter Lavendel","Foto: Goetheanum"],["titel-herbst.jpg","Goetheanum im Herbst","Foto: Goetheanum / Xue Li"],
+  ["titel-campus.jpg","Westansicht, Campus-Fest","Foto: Goetheanum / Xue Li"],["titel-westtreppe.jpg","Westtreppenhaus","Foto: Goetheanum / Xue Li"],
+  ["titel-luftbild.jpg","Luftbild des Campus","Foto: Goetheanum / Xue Li"],["titel-glashaus.jpg","Glashaus","Foto: Goetheanum / Xue Li"]];
+
+const BEISPIEL={farbe:"bereich",bild:MOTIVE[0][0],credit:"Foto: Goetheanum",
+  titel:"Offener Tag am Goetheanum",wann:"Samstag, 17. Oktober 2026\n10.00–16.30",
+  unter:"Das Haus, seine Arbeit und seine Menschen kennenlernen",stich:"Bühne · Forschung · Kunst · Garten",
+  seiten:[[
+    {zeit:"09.30–10.00",text:"Ankommen, Kaffee und Tee",ort:"Foyer",pause:true},
+    {zeit:"10.00–10.15",text:"Musikalische Eröffnung",ort:"Grosser Saal"},
+    {zeit:"10.15–10.40",text:"Begrüssung und Einführung – Vorname Name",ort:"Grosser Saal"},
+    {zeit:"10.40–11.10",text:"<b>Bühne</b> – Einblick in die Probenarbeit",ort:"Grosser Saal"},
+    {zeit:"11.10–11.40",text:"Pause",ort:"Foyer",pause:true},
+    {zeit:"11.40–12.20",text:"<b>Forschung</b> – Vorname Name; Vorname Name",ort:"Grundsteinsaal"},
+    {zeit:"12.20–13.00",text:"<b>Kunst</b> – Führung durch das Haus",ort:"Haupteingang"}
+  ],[
+    {zeit:"13.00–14.00",text:"Mittagessen",ort:"Speisehaus",pause:true},
+    {zeit:"14.00–15.00",text:"<b>Garten</b> – Rundgang mit Vorname Name",ort:"Glashaus"},
+    {zeit:"15.00–15.45",text:"Gespräch im Plenum",ort:"Grosser Saal"},
+    {zeit:"16.00–16.30",text:"Musikalischer Abschluss",ort:"Grosser Saal"},
+    {zeit:"ab 16.30",text:"Ausklang und Getränke",ort:"Foyer",pause:true}
+  ]],
+  info:"Lageplan",plan:"lageplan-standard.svg?v=2",leg:["Haupteingang","Südeingang","Empfang"],
+  kontakt:"Goetheanum, Rüttiweg 45, 4143 Dornach\nwww.goetheanum.ch"};
+
+const SPEICHER="goe-programmheft-live-1";
+let S;try{S=JSON.parse(localStorage.getItem(SPEICHER))}catch(e){}
+if(!S)S=structuredClone(BEISPIEL);
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const strich=s=>s.replace(/(\d)\s*[-–]\s*(\d)/g,"$1–$2"); // Zeitspanne: Halbgeviertstrich
+
+// Nur Text und Fett überleben das Bearbeiten.
+function rein(html){
+  const d=document.createElement("div");d.innerHTML=html;
+  const geh=n=>[...n.childNodes].map(c=>c.nodeType===3?esc(c.textContent)
+    :/^(B|STRONG)$/.test(c.nodeName)?`<b>${geh(c)}</b>`:c.nodeName==="BR"?" ":geh(c)).join("");
+  return geh(d).replace(/<b>\s*<\/b>/g,"");
+}
+
+const I={
+  pin:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  weg:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  tasse:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 10h1.5a2.5 2.5 0 0 1 0 5H17M8 3v2M12 3v2"/></svg>',
+  hoch:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>'};
+
+// Ein bearbeitbares Feld: pfad zeigt in den Zustand, z. B. "seiten.0.3.text".
+const ed=(pfad,wert,tag="span",kl="",leer="",fett=false)=>
+  `<${tag} class="${kl}" contenteditable="${fett?"true":"plaintext-only"}" spellcheck="true" data-pfad="${pfad}" data-leer="${esc(leer)}">${fett?wert:esc(wert)}</${tag}>`;
+
+function zeile(z,s,i){
+  return `<div class="z${z.pause?" pause":""}">
+    ${ed(`seiten.${s}.${i}.zeit`,z.zeit,"span","zeit","Zeit")}
+    <span>${ed(`seiten.${s}.${i}.text`,z.text,"span","","Programmpunkt",true)} <span class="ort">${I.pin}${ed(`seiten.${s}.${i}.ort`,z.ort,"span","","Ort")}</span></span>
+    <span class="zwerk">
+      ${i>0||s>0?`<button type="button" data-tat="hoch" data-s="${s}" data-i="${i}" aria-label="Nach oben" title="Nach oben">${I.hoch}</button>`:""}
+      <button type="button" data-tat="pause" data-s="${s}" data-i="${i}" aria-pressed="${!!z.pause}" title="Als Pause tönen">${I.tasse}Pause</button>
+      <button type="button" data-tat="weg" data-s="${s}" data-i="${i}" aria-label="Programmpunkt entfernen" title="Entfernen">${I.weg}</button>
+    </span></div>`;
+}
+const plus=s=>`<div class="plus">
+  <button type="button" data-tat="neu" data-s="${s}">${I.plus}Programmpunkt</button>
+  <button type="button" data-tat="neupause" data-s="${s}">${I.plus}Pause</button></div>`;
+
+function bauen(){
+  const f=S.farbe, logo="../../assets/logos/goetheanum-logo.svg";
+  const b=$("blaetter");
+  b.style.setProperty("--acc",`var(--${f})`);b.style.setProperty("--on-acc",auf(f));
+  // Logo folgt der Schrift auf der Fläche: weiss, oder dunkel bei hellen Sektionsfarben.
+  const hell=getComputedStyle(document.documentElement).getPropertyValue(`--on-${f}`).trim();
+  b.style.setProperty("--marke-filter",hell&&hell!=="#fff"?"brightness(0)":"brightness(0) invert(1)");
+  b.innerHTML=`
+  <article class="seite titel" aria-label="Seite 1, Titel">
+    <div class="feld">
+      <img class="marke" src="${logo}" alt="Goetheanum" />
+      ${ed("titel",S.titel,"h2","","Titel")}
+      ${ed("wann",S.wann,"p","wann","Datum und Zeit")}
+      ${ed("unter",S.unter,"p","unter","Unterzeile")}
+      ${ed("stich",S.stich,"p","stich","Stichworte")}
+    </div>
+    <div class="bild" style="background-image:url('${S.bild}')">${ed("credit",S.credit,"span","credit","Bildnachweis")}</div>
+  </article>
+  ${[0,1].map(s=>`<article class="seite prog" aria-label="Seite ${s+2}, Programm">
+    ${s===0?"<h3>Programm</h3>":""}<div class="zeilen">${S.seiten[s].map((z,i)=>zeile(z,s,i)).join("")}</div>${plus(s)}
+  </article>`).join("")}
+  <article class="seite info" aria-label="Seite 4, Lageplan">
+    ${ed("info",S.info,"h3","","Überschrift")}
+    <div class="plan"><img src="${S.plan}" alt="Lageplan" /></div>
+    <ol class="legende">${S.leg.map((l,k)=>`<li><span class="n">${k+1}</span>${ed(`leg.${k}`,l,"span","","Ort")}</li>`).join("")}</ol>
+    <div class="plus"><button type="button" data-tat="neuleg">${I.plus}Ort in der Legende</button></div>
+    <div class="fuss">${ed("kontakt",S.kontakt,"span","kontakt","Kontakt")}<img src="${logo}" alt="Goetheanum" /></div>
+  </article>`;
+  einpassen();markieren();sichern();
+}
+
+// Programmseiten füllen: Grad wächst bis 14 pt, Zeilenabstand je Seite bis unten.
+function einpassen(){
+  const seiten=[...document.querySelectorAll(".seite.prog")];
+  const passt=()=>seiten.every(s=>s.scrollHeight<=s.clientHeight+1);
+  const setzen=(g,pad)=>seiten.forEach(s=>{s.style.setProperty("--grad",g+"pt");s.querySelector(".zeilen").style.setProperty("--pad",pad+"mm")});
+  for(let g=14;g>10;g-=.5){setzen(g,3);if(passt())break}
+  seiten.forEach(s=>{const z=s.querySelector(".zeilen");
+    for(let pad=3.5;pad<=7;pad+=.5){z.style.setProperty("--pad",pad+"mm");
+      if(s.scrollHeight>s.clientHeight+1){z.style.setProperty("--pad",(pad-.5)+"mm");break}}});
+  seiten.forEach(s=>s.classList.toggle("ueberlauf",s.scrollHeight>s.clientHeight+1));
+}
+
+function setzen(pfad,wert){const k=pfad.split(".");let o=S;k.slice(0,-1).forEach(x=>o=o[x]);o[k.at(-1)]=wert}
+function sichern(){try{localStorage.setItem(SPEICHER,JSON.stringify(S))}catch(e){}}
+
+const B=$("blaetter");
+B.addEventListener("input",e=>{const el=e.target.closest("[data-pfad]");if(!el)return;
+  setzen(el.dataset.pfad,el.isContentEditable&&el.getAttribute("contenteditable")==="true"?rein(el.innerHTML):el.innerText);
+  einpassen();sichern()});
+B.addEventListener("focusout",e=>{const el=e.target.closest("[data-pfad]");
+  if(el&&/zeit$|^wann$/.test(el.dataset.pfad)){const v=strich(el.innerText);if(v!==el.innerText){el.innerText=v;setzen(el.dataset.pfad,v);sichern()}}});
+B.addEventListener("keydown",e=>{const el=e.target.closest("[data-pfad]");if(!el||e.key!=="Enter")return;
+  if(/^(wann|kontakt)$/.test(el.dataset.pfad))return; // mehrzeilig erlaubt
+  e.preventDefault();
+  const m=el.dataset.pfad.match(/^seiten\.(\d)\.(\d+)\./);
+  if(m){const s=+m[1],i=+m[2];S.seiten[s].splice(i+1,0,{zeit:"",text:"",ort:""});bauen();fokus(`seiten.${s}.${i+1}.zeit`)}
+  else el.blur()});
+B.addEventListener("paste",e=>{if(!e.target.closest("[data-pfad]"))return;e.preventDefault();
+  document.execCommand("insertText",false,(e.clipboardData.getData("text/plain")||"").replace(/\s*\n\s*/g," "))});
+B.addEventListener("click",e=>{const t=e.target.closest("[data-tat]");if(!t)return;
+  const s=+t.dataset.s,i=+t.dataset.i,L=S.seiten[s];
+  switch(t.dataset.tat){
+    case "neu":L.push({zeit:"",text:"",ort:""});bauen();fokus(`seiten.${s}.${L.length-1}.zeit`);return;
+    case "neupause":L.push({zeit:"",text:"Pause",ort:"Foyer",pause:true});bauen();fokus(`seiten.${s}.${L.length-1}.zeit`);return;
+    case "neuleg":S.leg.push("");bauen();fokus(`leg.${S.leg.length-1}`);return;
+    case "pause":L[i].pause=!L[i].pause;break;
+    case "weg":L.splice(i,1);break;
+    case "hoch":if(i>0)[L[i-1],L[i]]=[L[i],L[i-1]];else S.seiten[s-1].push(L.shift());break;
+  }bauen()});
+function fokus(p){const el=B.querySelector(`[data-pfad="${p}"]`);if(el){el.focus()}}
+
+// Farbwahl mit Namen
+FARBEN.forEach(x=>{if(!x){const t=document.createElement("span");t.className="trenner";$("farbwahl").append(t);return}
+  const [k,n]=x,b=document.createElement("button");b.type="button";b.dataset.k=k;
+  b.innerHTML=`<span class="punkt" style="background:var(--${k})"></span>${esc(n)}`;
+  b.onclick=()=>{S.farbe=k;bauen()};$("farbwahl").append(b)});
+MOTIVE.forEach(([f,n,c])=>{const b=document.createElement("button");b.type="button";b.dataset.f=f;
+  b.style.backgroundImage=`url('${f}')`;b.title=n;b.setAttribute("aria-label","Titelbild: "+n);
+  b.onclick=()=>{S.bild=f;S.credit=c;bauen()};$("motive").append(b)});
+function markieren(){
+  document.querySelectorAll("#farbwahl button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===S.farbe));
+  document.querySelectorAll("#motive button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.f===S.bild));
+}
+$("bild-waehlen").onclick=()=>$("f-bild").click();
+$("f-bild").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>{S.bild=r.result;S.credit="";bauen()};r.readAsDataURL(f)});
+$("zuruecksetzen").onclick=()=>{S=structuredClone(BEISPIEL);bauen()};
+
+bauen();
+window.addEventListener("resize",einpassen);
+</script>
+</body>
+</html>
