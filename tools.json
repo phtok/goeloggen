@@ -356,6 +356,17 @@
       "such": "Landwirtschaftliche Tagung Agriculture Conference Programm Faltblatt Arbeitsgruppen Zeitplan IDML InDesign Sektion Landwirtschaft Export"
     },
     {
+      "slug": "programmheft",
+      "cat": "generatoren",
+      "status": "beta",
+      "tag": "Veranstaltungen",
+      "title": "Programmheft",
+      "short": "Programmheft",
+      "href": "apps/programmheft/",
+      "desc": "Vierseitiges A5-Heft für einfache Veranstaltungen: Titel mit Bild, Zeitplan mit Orten, Lageplan – als PDF zum Drucken.",
+      "such": "Programm Programmheft Veranstaltung Event Heft Flyer Zeitplan Lageplan A5 PDF"
+    },
+    {
       "slug": "bewegte-schrift",
       "cat": "labor",
       "status": "entwurf",
