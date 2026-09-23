@@ -4,316 +4,353 @@
  "seite": "2",
  "slots": {
   "tage": {
-   "story": "u58c",
+   "story": "ue56",
    "art": "tage",
    "spalten": 4,
    "vorlage": "Wednesday Mittwoch / February 4 … Saturday Samstag / February 7"
   },
   "kopf_en": {
-   "story": "u604",
+   "story": "uee0",
    "art": "kopf",
-   "vorlage": "You Never Farm Alone · Living Communities for the Future · Agriculture Conference 4–7 February 2026"
+   "vorlage": "Agriculture Conference 3–6 February 2027"
+  },
+  "motto_en": {
+   "story": "u1423",
+   "art": "abgleich",
+   "name": "Motto Rückseite EN",
+   "nur_pruefen": true,
+   "feld": "motto_en",
+   "vorlage": "Working With the Intelligence of Life",
+   "warum": "Von Hand gesetzt: ein Wort je Zeile. Setzt der Mensch."
   },
   "kopf_de": {
-   "story": "u63f",
+   "story": "uf1f",
    "art": "kopf",
-   "vorlage": "You Never Farm Alone · Lebendige Gemeinschaften für die Zukunft · Landwirtschaftliche Tagung 4. bis 7. Februar 2026"
+   "vorlage": "Landwirtschaftliche Tagung 3. bis 6. Februar 2027"
+  },
+  "motto_de": {
+   "story": "u149c",
+   "art": "abgleich",
+   "name": "Motto Rückseite DE",
+   "nur_pruefen": true,
+   "feld": "motto_de",
+   "vorlage": "Mit der Intelligenz des Lebens arbeiten",
+   "warum": "Von Hand gesetzt: ein Wort je Zeile. Setzt der Mensch."
   },
   "stand": {
-   "story": "u5d4",
+   "story": "uea4",
    "art": "text",
-   "vorlage": "As of October 2025 / Stand Oktober 2025 / www.agriculture-conference.org"
+   "vorlage": "As of September 2026 / Stand September 2026 / www.agriculture-conference.org"
   },
   "einleitung": {
-   "story": "u79e",
+   "story": "u108e",
    "art": "text",
-   "vorlage": "Agriculture is an endeavor of community … / Landwirtschaft ist immer ein gemeinschaftliches Unterfangen …"
+   "vorlage": "Under the guiding theme ‹Working with the Intelligence of Life› … / Unter dem Leitgedanken «Mit der Intelligenz des Lebens arbeiten» …"
   },
   "willkommen": {
-   "story": "u67d",
+   "story": "uf60",
    "art": "text",
    "vorlage": "Welcome Willkommen"
   },
   "kopf_ag": {
-   "story": "u7b7",
+   "story": "u10a8",
    "art": "text",
    "vorlage": "Workshops Arbeitsgruppen"
   },
   "sprachen_hinweis": {
-   "story": "u756",
+   "story": "u1043",
    "art": "text",
    "vorlage": "Plenary sessions are available in the following languages: / Die Plenarveranstaltungen werden in folgende Sprachen gedolmetscht:"
   },
   "sprache_de": {
-   "story": "u6de",
+   "story": "ufc6",
    "art": "abgleich",
    "feld": "dolmetsch",
    "nur_pruefen": true,
    "vorlage": "Deutsch"
   },
   "sprache_en": {
-   "story": "u70e",
+   "story": "uff8",
    "art": "abgleich",
    "feld": "dolmetsch",
    "nur_pruefen": true,
    "vorlage": "English"
   },
   "sprache_fr": {
-   "story": "u726",
+   "story": "u1011",
    "art": "abgleich",
    "feld": "dolmetsch",
    "nur_pruefen": true,
    "vorlage": "Français"
   },
   "sprache_es": {
-   "story": "u6f6",
+   "story": "ufdf",
    "art": "abgleich",
    "feld": "dolmetsch",
    "nur_pruefen": true,
    "vorlage": "Español"
   },
   "sprache_it": {
-   "story": "u6c6",
+   "story": "ufad",
    "art": "abgleich",
    "feld": "dolmetsch",
    "nur_pruefen": true,
    "vorlage": "Italiano"
   },
   "sprache_zh": {
-   "story": "u73e",
+   "story": "u102a",
    "art": "abgleich",
    "feld": "dolmetsch",
    "nur_pruefen": true,
    "vorlage": "中文"
   },
   "malerei": {
-   "story": "ua98",
+   "story": "u13ad",
    "art": "text",
-   "vorlage": "Painting on Cover / Malerei auf dem Cover ‹Resolution› Laura Summer",
+   "vorlage": "Painting on Cover / Malerei auf dem Cover / Esther Gerster",
    "seite": "2"
   },
   "mi_klasse": {
-   "story": "u46c",
+   "story": "ud28",
    "art": "zeitplan",
    "vorlage": "8th Class Lesson for members of the First Class – Free rendering / 8. Klassenstunde … / Ueli Hurter · Eduardo Rincón"
   },
   "mi_checkin": {
-   "story": "u965",
+   "story": "u126f",
    "art": "zeitplan",
    "vorlage": "Check-in Check-in"
   },
   "mi_1500": {
-   "story": "u9dd",
+   "story": "u12ec",
    "art": "zeitplan",
    "vorlage": "Opening Eröffnung … / Farming – The Foundation of Community …"
   },
   "mi_1700": {
-   "story": "u9c5",
+   "story": "u12d3",
    "art": "zeitplan",
    "vorlage": "Reimagining Human and Organisational Potential … / Aonghus Gordon · Tara Gratton"
   },
   "mi_do_2000": {
-   "story": "ua0d",
+   "story": "u131e",
    "art": "zeitplan",
    "spalten": 2,
    "vorlage": "Collaboration from Free Will … | Eurythmy: Consonance …"
   },
   "morgen_0830": {
-   "story": "u364",
+   "story": "uc12",
    "art": "zeitplan",
    "spalten": 3,
    "vorlage": "From Wisdom to Freedom … / Working with the Michael Letter … / Namen je Tag in drei Spalten"
   },
   "do_1700": {
-   "story": "u40c",
+   "story": "ucc4",
    "art": "zeitplan",
    "vorlage": "Re-Thinking Economic Activity …"
   },
   "fr_1700": {
-   "story": "u424",
+   "story": "ucdd",
    "art": "zeitplan",
    "vorlage": "Integrating Healing, Education, Agriculture, and Social Arts …"
   },
   "fr_1900": {
-   "story": "u43c",
+   "story": "ucf6",
    "art": "zeitplan",
    "vorlage": "Festive evening Festlicher Abend / Schreinerei Saal + Wandelhalle"
   },
   "sa_1430": {
-   "story": "ua25",
+   "story": "u1338",
    "art": "zeitplan",
    "vorlage": "Closing Abschluss / Building Communities of Research and Knowledge … / The Courage for Community …"
   },
   "kopf_vormittag": {
-   "story": "u4b4",
+   "story": "ud74",
    "art": "zeitplan",
    "vorlage": "Morning Workshops Arbeitsgruppen am Vormittag"
   },
   "kopf_nachmittag": {
-   "story": "u4cc",
+   "story": "ud8e",
    "art": "zeitplan",
    "vorlage": "Afternoon Workshops Arbeitsgruppen am Nachmittag"
   },
   "pause_do": {
-   "story": "u3ac",
+   "story": "uc60",
    "art": "zeitplan",
    "vorlage": "Coffee break · Guided tours Kaffeepause · Führungen"
   },
   "pause_lang": {
-   "story": "u37c",
+   "story": "uc2e",
    "art": "zeitplan",
    "vorlage": "Coffee break Kaffeepause (über drei Tage)"
   },
   "pause_mi": {
-   "story": "u394",
+   "story": "uc47",
    "art": "zeitplan",
    "vorlage": "Coffee break Kaffeepause (Mittwoch)"
   },
   "mittag": {
-   "story": "u3f4",
+   "story": "ucab",
    "art": "zeitplan",
    "vorlage": "Lunch Mittagessen"
   },
   "abendessen": {
-   "story": "u3c4",
+   "story": "uc79",
    "art": "zeitplan",
    "vorlage": "Dinner Abendessen"
   },
   "nachtcafe": {
-   "story": "u5a4",
+   "story": "ue72",
    "art": "zeitplan",
    "vorlage": "Night Café Nachtcafé"
   },
   "ende": {
-   "story": "u935",
+   "story": "u123d",
    "art": "zeitplan",
    "vorlage": "End Ende"
   },
   "zeit_mi_1130": {
-   "story": "u454",
+   "story": "ud0f",
    "art": "zeit",
    "vorlage": "11:30"
   },
   "zeit_mi_1300": {
-   "story": "u94d",
+   "story": "u1256",
    "art": "zeit",
    "vorlage": "13:00"
   },
   "zeit_mi_1500": {
-   "story": "u9f5",
+   "story": "u1305",
    "art": "zeit",
    "vorlage": "15:00"
   },
   "zeit_mi_1630": {
-   "story": "u514",
+   "story": "udd9",
    "art": "zeit",
    "vorlage": "16:30"
   },
   "zeit_mi_1700": {
-   "story": "u995",
+   "story": "u12a1",
    "art": "zeit",
    "vorlage": "17:00"
   },
   "zeit_mi_1830": {
-   "story": "u55c",
+   "story": "ue24",
    "art": "zeit",
    "vorlage": "18:30"
   },
   "zeit_mi_2000": {
-   "story": "u9ad",
+   "story": "u12ba",
    "art": "zeit",
    "vorlage": "20:00"
   },
   "zeit_mi_2200": {
-   "story": "u5bc",
+   "story": "ue8b",
    "art": "zeit",
    "vorlage": "22:00"
   },
   "zeit_0830": {
-   "story": "u4e4",
+   "story": "uda7",
    "art": "zeit",
    "vorlage": "8:30"
   },
   "zeit_1000": {
-   "story": "u4fc",
+   "story": "udc0",
    "art": "zeit",
    "vorlage": "10:00"
   },
   "zeit_1045": {
-   "story": "u484",
+   "story": "ud41",
    "art": "zeit",
    "vorlage": "10:45"
   },
   "zeit_1230": {
-   "story": "u52c",
+   "story": "udf2",
    "art": "zeit",
    "vorlage": "12:30"
   },
   "zeit_1430": {
-   "story": "u49c",
+   "story": "ud5b",
    "art": "zeit",
    "vorlage": "14:30"
   },
   "zeit_1600": {
-   "story": "u544",
+   "story": "ue0b",
    "art": "zeit",
    "vorlage": "16:00"
   },
   "zeit_1700": {
-   "story": "u3dc",
+   "story": "uc92",
    "art": "zeit",
    "vorlage": "17:00"
   },
   "zeit_2000": {
-   "story": "u97d",
+   "story": "u1288",
    "art": "zeit",
    "vorlage": "20:00"
   },
   "zeit_fr_1900": {
-   "story": "u574",
+   "story": "ue3d",
    "art": "zeit",
    "vorlage": "19:00"
   },
   "zeit_sa_1430": {
-   "story": "ua3d",
+   "story": "u1351",
    "art": "zeit",
    "vorlage": "14:30"
   },
   "zeit_sa_1615": {
-   "story": "u91d",
+   "story": "u1223",
    "art": "zeit",
    "vorlage": "16:15"
   },
   "arbeitsgruppen": {
-   "story": "u5ec",
+   "story": "uebd",
    "art": "arbeitsgruppen",
    "spalten": 11,
    "vorlage": "Morning Vormittag · 1 · DE · EN · … · Afternoon Nachmittag · 30 … 55"
   },
-  "plakat_motto": {
-   "story": "u161",
+  "plakat_motto_en": {
+   "story": "u253a",
    "art": "abgleich",
-   "name": "Plakatzeile Motto",
+   "name": "Plakatzeile Motto EN",
    "seite": "1",
    "nur_pruefen": true,
-   "feld": "motto",
-   "vorlage": "Working With the Intelligence of Life / Mit der Intelligenz des Lebens arbeiten",
+   "feld": "motto_en",
+   "vorlage": "Working With the Intelligence of Life",
    "warum": "Von Hand unterschnitten (Laufweite −40 nach g/h/e/f, Horizontalskalierung 98). Setzt der Mensch."
   },
-  "plakat_datum": {
-   "story": "u179",
+  "plakat_motto_de": {
+   "story": "u2521",
    "art": "abgleich",
-   "name": "Plakatzeile Datum",
+   "name": "Plakatzeile Motto DE",
    "seite": "1",
    "nur_pruefen": true,
-   "feld": "datum",
-   "vorlage": "Agriculture Conference 3 to 6 February 2027 / Landwirtschaftliche Tagung 3. bis 6. Februar 2027"
+   "feld": "motto_de",
+   "vorlage": "Mit der Intelligenz des Lebens arbeiten",
+   "warum": "Von Hand unterschnitten (Laufweite −40 nach g/h/e/f, Horizontalskalierung 98). Setzt der Mensch."
+  },
+  "plakat_datum_en": {
+   "story": "u2554",
+   "art": "abgleich",
+   "name": "Plakatzeile Datum EN",
+   "seite": "1",
+   "nur_pruefen": true,
+   "feld": "datum_en",
+   "vorlage": "Agriculture Conference 3 to 6 February 2027"
+  },
+  "plakat_datum_de": {
+   "story": "u24ca",
+   "art": "abgleich",
+   "name": "Plakatzeile Datum DE",
+   "seite": "1",
+   "nur_pruefen": true,
+   "feld": "datum_de",
+   "vorlage": "Landwirtschaftliche Tagung 3. bis 6. Februar 2027"
   },
   "plakat_malerei": {
-   "story": "u30d",
+   "story": "u2508",
    "art": "text",
    "seite": "1",
-   "vorlage": "Painting: Laura Summers, ‹Resolution›"
+   "vorlage": "Painting: Esther Gerster"
   }
  },
  "absatzformate_arbeitsgruppen": {

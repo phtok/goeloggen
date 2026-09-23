@@ -126,17 +126,10 @@ export function komponieren(webseite, blatt) {
     slots.tage.push({ stil: 'Daten', text: `${tag.datum_en}\t${tag.datum_de}`, umbruch: i < tage.length - 1 ? 'NextColumn' : undefined });
   });
 
-  // Kopf des Blatts: Motto, Untertitel, Tagungszeile – drei Absätze, wie gesetzt.
-  slots.kopf_en = [
-    { laut: blatt.kopf.motto_en },
-    { ruhig: blatt.kopf.untertitel_en },
-    { laut: `${blatt.kopf.tagung_en}\n${datumEn}` },
-  ];
-  slots.kopf_de = [
-    { ruhig: blatt.kopf.motto_de },
-    { ruhig: blatt.kopf.untertitel_de },
-    { laut: `${blatt.kopf.tagung_de}\n${datumDe}` },
-  ];
+  // Kopf des Blatts: Tagungszeile. Das Motto steht daneben in eigenen, von
+  // Hand gesetzten Rahmen (slots.json › motto_en/motto_de, nur prüfen).
+  slots.kopf_en = [{ laut: `${blatt.kopf.tagung_en}\n${datumEn}` }];
+  slots.kopf_de = [{ laut: `${blatt.kopf.tagung_de}\n${datumDe}` }];
   slots.stand = [
     { laut: `${blatt.stand.en}\nVisit our website for\nnews and registration` },
     { ruhig: `${blatt.stand.de}\nBesuchen Sie unsere Webseite\nfür Aktuelles und Anmeldung:` },
@@ -147,13 +140,14 @@ export function komponieren(webseite, blatt) {
 
   // Bild auf dem Umschlag – eine Angabe, zwei Stellen (Plakat und Rückseite).
   const mal = blatt.malerei || {};
+  // Der Titel des Bilds steht nur, wenn es einen hat.
   slots.malerei = [
     { laut: 'Painting on Cover' },
-    { ruhig: `Malerei auf dem Cover\n‹${mal.titel || 'Titel folgt'}›` },
+    { ruhig: mal.titel ? `Malerei auf dem Cover\n‹${mal.titel}›` : 'Malerei auf dem Cover' },
     { ruhig: mal.name || 'Name folgt' },
   ];
-  slots.plakat_malerei = [{ laut: `Painting: ${mal.name || 'Name folgt'}, ‹${mal.titel || 'Titel folgt'}›` }];
-  if (!mal.name || !mal.titel) merken('offen', 'Bild auf dem Umschlag: Name oder Titel fehlt – in blatt.json › malerei eintragen (steht auf Plakat und Rückseite).');
+  slots.plakat_malerei = [{ laut: `Painting: ${mal.name || 'Name folgt'}${mal.titel ? `, ‹${mal.titel}›` : ''}` }];
+  if (!mal.name) merken('offen', 'Bild auf dem Umschlag: Name fehlt – in blatt.json › malerei eintragen (steht auf Plakat und Rückseite).');
 
   // ---- Plenum → Rahmen ---------------------------------------------------
   const plenum = webseite.plenum || [];
@@ -360,7 +354,7 @@ export function absatzText(a) {
 }
 
 /* Abgleich: Was von Hand gesetzt ist, fasst der Export nicht an – hier steht,
-   ob es noch zu den Daten passt. Drei Paare: die Plakatzeile (slots.json ›
+   ob es noch zu den Daten passt. Drei Paare: Motto und Plakatzeilen (slots.json ›
    nur_pruefen), die Uhrzeiten der Arbeitsgruppen-Fenster und die sechs
    Dolmetsch-Sprachen. Verglichen wird ohne Rücksicht auf Leerraum und Umbrüche. */
 export function abgleichen(modell, slots) {
@@ -369,8 +363,10 @@ export function abgleichen(modell, slots) {
   // Bis-Strich mit Wortverbindern: eine Zeitspanne bricht nicht über die Zeile.
   const spanne = (von, bis) => `${von}\u2060–\u2060${bis}`;
   const soll = {
-    motto: `${modell.tagung.motto_en} ${modell.tagung.motto_de}`,
-    datum: `${modell.tagung.datum_en} ${modell.tagung.datum_de}`,
+    motto_en: modell.tagung.motto_en,
+    motto_de: modell.tagung.motto_de,
+    datum_en: modell.tagung.datum_en,
+    datum_de: modell.tagung.datum_de,
   };
   const aus = [];
   const pillen = [];
