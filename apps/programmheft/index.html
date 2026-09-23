@@ -53,25 +53,31 @@
   .titel .stich{font-weight:var(--w-deutlich);font-size:13pt;margin:0}
   .titel .bild{flex:1;background:var(--soft) center/cover no-repeat;position:relative}
   .titel .bild .leer{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:var(--t-small);font-family:var(--font-text)}
-  .titel .marke{position:absolute;left:9mm;bottom:8mm;height:6mm;filter:brightness(0) invert(1)}
-  .titel .marke.dunkel{filter:none}
+  .titel .marke{height:6.5mm;filter:brightness(0) invert(1);margin-bottom:auto} /* Logo weiss auf der Farbfläche (B01) */
+  .titel .feld>h2{margin-top:auto}
+  .titel .credit{position:absolute;right:4mm;bottom:3mm;font-family:var(--font-text);font-size:6.5pt;color:#fff; /* # ds-ok Druck-Credit auf Foto */
+    text-shadow:0 0 2mm rgba(0,0,0,.6)} /* # ds-ok */
 
   /* Programmseiten */
   .prog{padding:13mm 9mm 10mm}
   .prog h3{font-weight:var(--w-deutlich);font-size:22pt;color:color-mix(in srgb,var(--acc) 80%,#000);margin:0 0 6mm 2mm} /* # ds-ok Tinte */
   .zeilen{display:grid}
-  .z{display:grid;grid-template-columns:29mm 1fr;gap:3mm;padding:3mm 3mm;border-bottom:.3mm solid rgba(0,0,0,.12); /* # ds-ok Haarlinie */
-    font-family:var(--font-text);font-size:11pt;line-height:1.4}
+  .zeilen{--pad:3mm}
+  .z{display:grid;grid-template-columns:31mm 1fr;gap:3mm;padding:var(--pad) 3mm;border-bottom:.3mm solid rgba(0,0,0,.12); /* # ds-ok Haarlinie */
+    font-family:var(--font-text);font-size:var(--grad,12pt);line-height:1.4}
   .z.pause{background:color-mix(in srgb,var(--acc) 12%,#fff)} /* # ds-ok Tönung */
   .z .zeit{font-weight:700;font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
   .z strong{font-weight:700}
-  .z .ort{color:var(--ort);white-space:nowrap}
+  .z .ort{color:var(--ort);white-space:nowrap;display:inline-block}
   .z .ort svg{width:.8em;height:.8em;vertical-align:-.05em;margin-inline-end:.15em;fill:currentColor}
 
   /* Rückseite */
   .info{padding:13mm 11mm 10mm;gap:5mm}
   .info h3{font-weight:var(--w-deutlich);font-size:22pt;color:color-mix(in srgb,var(--acc) 80%,#000);margin:0} /* # ds-ok Tinte */
-  .info .plan{flex:1;background:var(--soft) center/contain no-repeat;border-radius:2mm;position:relative;min-height:60mm}
+  .info .plan{flex:1;position:relative;min-height:60mm;display:grid;place-items:center;overflow:hidden}
+  .info .plan img{max-width:100%;max-height:100%;object-fit:contain}
+  .info .plan.gedreht img{position:absolute;max-width:none;max-height:none}
+  .info .plan.leer-plan{background:var(--soft);border-radius:2mm}
   .info .plan .leer{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:var(--t-small);font-family:var(--font-text)}
   .legende{columns:2;column-gap:6mm;font-family:var(--font-text);font-size:9.5pt;line-height:1.5;margin:0;padding:0;list-style:none}
   .legende li{display:flex;gap:2mm;break-inside:avoid;margin-bottom:1mm}
@@ -79,6 +85,10 @@
     display:grid;place-items:center;font-size:8pt;font-weight:700;font-variant-numeric:tabular-nums}
   .info .fuss{font-family:var(--font-text);font-size:9pt;line-height:1.45;display:flex;justify-content:space-between;align-items:end;gap:4mm;white-space:pre-line}
   .info .fuss img{height:5mm}
+  .ueberlauf{outline:1mm solid var(--gold);outline-offset:-1mm}
+  .knopfreihe{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center}
+  .checkbox-row{display:flex;gap:var(--s2);align-items:center;min-height:var(--tap)}
+  .form .status{font-size:var(--t-small);color:var(--muted)}
 
   @media print{
     @page{size:148mm 210mm;margin:0}
@@ -86,6 +96,7 @@
     main.wrap{max-width:none;padding:0;margin:0}
     .werk{display:block;padding:0}
     .blaetter{display:block}
+    .ueberlauf{outline:0}
     .seite{box-shadow:none;border:0;break-after:page;print-color-adjust:exact;-webkit-print-color-adjust:exact}
   }
 </style>
@@ -108,22 +119,34 @@
       <label class="field"><span class="lab">Unterzeile</span><input id="f-unter" value="Das Haus, seine Arbeit und seine Menschen kennenlernen" /></label>
       <label class="field"><span class="lab">Stichworte</span><input id="f-stich" value="Bühne · Forschung · Kunst · Garten" /></label>
       <div class="field"><span class="lab">Farbe</span><div class="farben" id="farben"></div></div>
-      <label class="field"><span class="lab">Titelbild</span><input type="file" id="f-bild" accept="image/*" /></label>
+      <div class="field"><span class="lab">Titelbild</span>
+        <div class="knopfreihe">
+          <button class="btn" type="button" id="bild-waehlen">Eigenes Bild wählen</button>
+          <button class="btn" type="button" id="bild-standard">Standardbild</button>
+        </div>
+        <input type="file" id="f-bild" accept="image/*" hidden /></div>
+      <label class="field"><span class="lab">Bildnachweis</span><input id="f-credit" value="Foto: Goetheanum" /></label>
       <label class="field"><span class="lab">Programm</span>
         <textarea id="f-prog" style="min-height:22em"></textarea></label>
       <p class="hint">Eine Zeile je Programmpunkt: Zeit | Text | Ort. Stern am Anfang = Pause (getönte Zeile). **Wort** = fett. Eine Zeile nur mit --- beginnt die zweite Programmseite.</p>
       <label class="field"><span class="lab">Rückseite: Überschrift</span><input id="f-info" value="Lageplan" /></label>
-      <label class="field"><span class="lab">Lageplan</span><input type="file" id="f-plan" accept="image/*" /></label>
-      <label class="field"><span class="lab">Legende (eine Zeile je Nummer)</span><textarea id="f-leg" style="min-height:8em">Haupteingang
-Grundsteinsaal
-Schreinereisaal
-Restaurant Speisehaus
-Garten und Glashaus</textarea></label>
+      <div class="field"><span class="lab">Lageplan</span>
+        <div class="knopfreihe">
+          <a class="btn" href="../karten-generator/">Karte erstellen</a>
+          <button class="btn" type="button" id="plan-waehlen">Datei wählen</button>
+          <button class="btn" type="button" id="plan-standard">Standardplan</button>
+        </div>
+        <input type="file" id="f-plan" accept="image/*,.svg" hidden />
+        <label class="checkbox-row"><input type="checkbox" id="f-drehen" /><span>Plan gedreht, seitenfüllend</span></label>
+        <span class="status" id="plan-status"></span></div>
+      <label class="field"><span class="lab">Eigene Legende (leer lassen, wenn der Plan eine hat)</span><textarea id="f-leg" style="min-height:6em"></textarea></label>
       <label class="field"><span class="lab">Kontakt</span><textarea id="f-kontakt" style="min-height:4em">Goetheanum, Rüttiweg 45, 4143 Dornach
 www.goetheanum.ch</textarea></label>
-      <div style="display:flex;gap:var(--s2);flex-wrap:wrap">
+      <div class="knopfreihe">
         <button class="btn primary" type="button" onclick="print()">Als PDF drucken</button>
+        <button class="btn" type="button" id="zuruecksetzen">Beispiel wiederherstellen</button>
       </div>
+      <p class="hint">Eingaben bleiben in diesem Browser gespeichert.</p>
     </form>
 
     <div class="blaetter" id="blaetter"></div>
@@ -134,7 +157,8 @@ www.goetheanum.ch</textarea></label>
 
 <script>
 const FARBEN=[["goetheanum","Goetheanum"],["nws","Naturwissenschaft"],["lws","Landwirtschaft"],["ps","Pädagogik"],["ms","Medizin"],["aas","Allgemeine Sektion"],["srmk","Redende und Musizierende Künste"],["sbk","Bildende Künste"],["hpise","Heilpädagogik"],["js","Jugend"]];
-let farbe="goetheanum", bild="", plan="";
+const STANDARD_BILD="titelbild-goetheanum.jpg", STANDARD_PLAN="lageplan-standard.svg";
+let farbe="goetheanum", bild=STANDARD_BILD, plan=STANDARD_PLAN;
 const $=id=>document.getElementById(id);
 $("f-prog").value=`09.30–10.00 | *Ankommen, Kaffee und Tee | Foyer
 10.00–10.15 | Musikalische Eröffnung | Grosser Saal
@@ -171,16 +195,18 @@ function bauen(){
   const leg=$("f-leg").value.split("\n").filter(l=>l.trim()).map((l,k)=>`<li><span class="n">${k+1}</span><span>${esc(l)}</span></li>`).join("");
   const stil=`--acc:var(--sek-${farbe});--on-acc:var(--on-sek-${farbe})`;
   const logo="../../assets/logos/goetheanum-logo.svg";
+  const credit=$("f-credit").value.trim();
+  const drehen=$("f-drehen").checked;
   $("blaetter").innerHTML=`
   <article class="seite titel" style="${stil}" aria-label="Seite 1, Titel">
     <div class="feld">
+      <img class="marke" src="${logo}" alt="Goetheanum" />
       <h2>${esc($("f-titel").value)}</h2>
-      <p class="wann">${esc($("f-wann").value)}</p>
+      <p class="wann">${esc(strich($("f-wann").value))}</p>
       <p class="unter">${esc($("f-unter").value)}</p>
       <p class="stich">${esc($("f-stich").value)}</p>
     </div>
-    <div class="bild" style="${bild?`background-image:url(${bild})`:""}">${bild?"":'<span class="leer">Titelbild hochladen</span>'}</div>
-    <img class="marke" src="${logo}" alt="Goetheanum" />
+    <div class="bild" style="${bild?`background-image:url('${bild}')`:""}">${bild?"":'<span class="leer">Titelbild wählen</span>'}${bild&&credit?`<span class="credit">${esc(credit)}</span>`:""}</div>
   </article>
   <article class="seite prog ort-farbe" style="${stil}" aria-label="Seite 2, Programm">
     <h3>Programm</h3><div class="zeilen">${teil[0].join("")}</div>
@@ -190,22 +216,81 @@ function bauen(){
   </article>
   <article class="seite info" style="${stil}" aria-label="Seite 4, ${esc($("f-info").value)}">
     <h3>${esc($("f-info").value)}</h3>
-    <div class="plan" style="${plan?`background-image:url(${plan})`:""}">${plan?"":'<span class="leer">Lageplan hochladen</span>'}</div>
-    <ol class="legende">${leg}</ol>
+    <div class="plan${plan?"":" leer-plan"}${drehen?" gedreht":""}">${plan?`<img src="${plan}" alt="Lageplan" />`:'<span class="leer">Lageplan wählen</span>'}</div>
+    ${leg?`<ol class="legende">${leg}</ol>`:""}
     <div class="fuss"><span>${esc($("f-kontakt").value)}</span><img src="${logo}" alt="Goetheanum" /></div>
   </article>`;
+  einpassen();
+  sichern();
+}
+
+// Programmseiten füllen: Grad und Zeilenabstand wachsen, bis die Seite voll
+// ist (höchstens 14 pt); was selbst bei 10 pt nicht passt, wird markiert.
+function einpassen(){
+  const seiten=[...document.querySelectorAll(".seite.prog")];
+  let grad=14;
+  const passt=()=>seiten.every(s=>s.scrollHeight<=s.clientHeight+1);
+  const setzen=(g,pad)=>seiten.forEach(s=>{s.style.setProperty("--grad",g+"pt");s.querySelector(".zeilen").style.setProperty("--pad",pad+"mm")});
+  for(;grad>10;grad-=.5){setzen(grad,3);if(passt())break}
+  for(let pad=3.5;pad<=6;pad+=.5){setzen(grad,pad);if(!passt()){setzen(grad,pad-.5);break}}
+  seiten.forEach(s=>s.classList.toggle("ueberlauf",s.scrollHeight>s.clientHeight+1));
+  const planBox=document.querySelector(".plan.gedreht");
+  const img=planBox&&planBox.querySelector("img");
+  if(img){const drehe=()=>{const b=planBox.clientWidth,h=planBox.clientHeight;
+    img.style.width=h+"px";img.style.height=b+"px";img.style.transform="rotate(90deg)";};
+    img.complete?drehe():img.onload=drehe}
+}
+
+// Zeitspannen: Bindestrich zwischen Ziffern wird Halbgeviertstrich.
+const strich=s=>s.replace(/(\d)\s*[-–]\s*(\d)/g,"$1–$2");
+
+const FELDER=["f-titel","f-wann","f-unter","f-stich","f-credit","f-prog","f-info","f-leg","f-kontakt"];
+const SPEICHER="goe-programmheft";
+function sichern(){
+  const d={farbe,drehen:$("f-drehen").checked,bild:bild.startsWith("data:")?"eigen":bild,plan:plan.startsWith("data:")?"eigen":plan};
+  FELDER.forEach(id=>d[id]=$(id).value);
+  try{localStorage.setItem(SPEICHER,JSON.stringify(d));
+    if(bild.startsWith("data:"))localStorage.setItem(SPEICHER+"-bild",bild);
+    if(plan.startsWith("data:"))localStorage.setItem(SPEICHER+"-plan",plan);}catch(e){}
+}
+function laden(){
+  let d;try{d=JSON.parse(localStorage.getItem(SPEICHER))}catch(e){}
+  if(!d)return;
+  FELDER.forEach(id=>{if(typeof d[id]==="string")$(id).value=d[id]});
+  farbe=d.farbe||farbe; $("f-drehen").checked=!!d.drehen;
+  bild=d.bild==="eigen"?(localStorage.getItem(SPEICHER+"-bild")||STANDARD_BILD):(d.bild??STANDARD_BILD);
+  plan=d.plan==="eigen"?(localStorage.getItem(SPEICHER+"-plan")||STANDARD_PLAN):(d.plan??STANDARD_PLAN);
+}
+// Übergabe aus dem Kartenwerkzeug (Knopf «Ins Programmheft»).
+function karteUebernehmen(){
+  let k;try{k=JSON.parse(localStorage.getItem("goe-programmheft-lageplan"))}catch(e){}
+  if(!k||!k.svg)return;
+  plan="data:image/svg+xml;base64,"+btoa(unescape(encodeURIComponent(k.svg)));
+  $("f-leg").value="";
+  $("plan-status").textContent="Karte aus dem Kartenwerkzeug übernommen"+(k.titel?`: ${k.titel}`:"")+".";
+  history.replaceState(null,"",location.pathname);
 }
 
 FARBEN.forEach(([k,n])=>{const b=document.createElement("button");b.type="button";
   b.style.background=`var(--sek-${k})`;b.title=n;b.setAttribute("aria-label",n);
-  b.setAttribute("aria-pressed",k===farbe);b.onclick=()=>{farbe=k;
-  document.querySelectorAll(".farben button").forEach(x=>x.setAttribute("aria-pressed",x===b));bauen()};
+  b.onclick=()=>{farbe=k;markieren();bauen()};
   $("farben").append(b)});
+const markieren=()=>document.querySelectorAll(".farben button").forEach((x,k)=>x.setAttribute("aria-pressed",FARBEN[k][0]===farbe));
 const lesen=(inp,set)=>inp.addEventListener("change",()=>{const f=inp.files[0];if(!f)return;
   const r=new FileReader();r.onload=()=>{set(r.result);bauen()};r.readAsDataURL(f)});
-lesen($("f-bild"),v=>bild=v); lesen($("f-plan"),v=>plan=v);
+lesen($("f-bild"),v=>bild=v); lesen($("f-plan"),v=>{plan=v;$("plan-status").textContent=""});
+$("bild-waehlen").onclick=()=>$("f-bild").click();
+$("plan-waehlen").onclick=()=>$("f-plan").click();
+$("bild-standard").onclick=()=>{bild=STANDARD_BILD;bauen()};
+$("plan-standard").onclick=()=>{plan=STANDARD_PLAN;$("plan-status").textContent="";bauen()};
+$("zuruecksetzen").onclick=()=>{localStorage.removeItem(SPEICHER);localStorage.removeItem(SPEICHER+"-bild");localStorage.removeItem(SPEICHER+"-plan");location.reload()};
 $("form").addEventListener("input",bauen);
+$("form").addEventListener("change",bauen);
+laden();
+if(new URLSearchParams(location.search).has("karte"))karteUebernehmen();
+markieren();
 bauen();
+window.addEventListener("resize",einpassen);
 </script>
 </body>
 </html>
