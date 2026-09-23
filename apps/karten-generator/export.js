@@ -293,27 +293,3 @@ document.getElementById("download-svg").addEventListener("click", async () => {
     knopf.disabled = false;
   }
 });
-
-// Übergabe an das Programmheft (../programmheft/): die Karte ohne Beschnitt
-// als SVG mit eingebetteten Schriften, über localStorage derselben Herkunft.
-document.getElementById("ins-programmheft").addEventListener("click", async () => {
-  const knopf = document.getElementById("ins-programmheft");
-  knopf.disabled = true;
-  const vorher = [state.beschnitt, state.marken];
-  try {
-    const fontCss = await svgFontCss();
-    state.beschnitt = false; state.marken = false;
-    const svg = exportSvgString(fontCss);
-    localStorage.setItem("goe-programmheft-lageplan", JSON.stringify({
-      svg, titel: state.titel || "", zeit: Date.now()
-    }));
-    varianteAblegen();
-    window.location.href = "../programmheft/?karte=1";
-  } catch (fehler) {
-    console.error(fehler);
-    knopf.textContent = "Übergabe fehlgeschlagen – bitte als SVG sichern";
-  } finally {
-    [state.beschnitt, state.marken] = vorher;
-    knopf.disabled = false;
-  }
-});

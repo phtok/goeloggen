@@ -132,7 +132,7 @@
       <label class="field"><span class="lab">Rückseite: Überschrift</span><input id="f-info" value="Lageplan" /></label>
       <div class="field"><span class="lab">Lageplan</span>
         <div class="knopfreihe">
-          <a class="btn" href="../karten-generator/">Karte erstellen</a>
+          <a class="btn" href="../karten-generator/">Karte erstellen (als SVG sichern)</a>
           <button class="btn" type="button" id="plan-waehlen">Datei wählen</button>
           <button class="btn" type="button" id="plan-standard">Standardplan</button>
         </div>
@@ -261,15 +261,6 @@ function laden(){
   bild=d.bild==="eigen"?(localStorage.getItem(SPEICHER+"-bild")||STANDARD_BILD):(d.bild??STANDARD_BILD);
   plan=d.plan==="eigen"?(localStorage.getItem(SPEICHER+"-plan")||STANDARD_PLAN):(d.plan??STANDARD_PLAN);
 }
-// Übergabe aus dem Kartenwerkzeug (Knopf «Ins Programmheft»).
-function karteUebernehmen(){
-  let k;try{k=JSON.parse(localStorage.getItem("goe-programmheft-lageplan"))}catch(e){}
-  if(!k||!k.svg)return;
-  plan="data:image/svg+xml;base64,"+btoa(unescape(encodeURIComponent(k.svg)));
-  $("f-leg").value="";
-  $("plan-status").textContent="Karte aus dem Kartenwerkzeug übernommen"+(k.titel?`: ${k.titel}`:"")+".";
-  history.replaceState(null,"",location.pathname);
-}
 
 FARBEN.forEach(([k,n])=>{const b=document.createElement("button");b.type="button";
   b.style.background=`var(--sek-${k})`;b.title=n;b.setAttribute("aria-label",n);
@@ -287,7 +278,6 @@ $("zuruecksetzen").onclick=()=>{localStorage.removeItem(SPEICHER);localStorage.r
 $("form").addEventListener("input",bauen);
 $("form").addEventListener("change",bauen);
 laden();
-if(new URLSearchParams(location.search).has("karte"))karteUebernehmen();
 markieren();
 bauen();
 window.addEventListener("resize",einpassen);
