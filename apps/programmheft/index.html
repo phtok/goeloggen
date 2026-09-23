@@ -1,0 +1,211 @@
+<!doctype html>
+<!-- =============================================================================
+     Programmheft · Vorlage für einfache Veranstaltungen (A5, vier Seiten)
+     Vorbild: Programmheft «Emerson College Renewal» (Titel mit Farbfeld und Bild,
+     zwei Seiten Zeitplan mit Ortsangabe, Rückseite mit Lageplan).
+     Gebaut aus design-system/starter.html – Tokens + base.css (DS01–DS07).
+     Regel-IDs: Kicker normal (G05) · Betonung nur Laut, ein Merkmal (G01) ·
+     Zeiten tabellarisch (G25) · Pausen als Fläche statt Auszeichnung (G03) ·
+     Farbe auf Fläche nur mit --on-sek-* (B01). Das Heft ist ein Druckartefakt:
+     Papier bleibt weiss, auch im dunklen Modus (# ds-ok).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Programmheft · Goetheanum</title>
+<meta name="description" content="Programmheft für einfache Veranstaltungen: Titelblatt, Zeitplan und Lageplan – als A5-PDF zum Drucken." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<style>
+  .hero{padding-block:clamp(36px,6vw,60px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(28px,4.6vw,44px)}
+  .hero .lede{margin-top:var(--s4);color:var(--muted);font-size:var(--t-lede);line-height:1.5;max-width:58ch}
+
+  .werk{display:grid;gap:var(--s8);grid-template-columns:minmax(0,1fr);align-items:start;padding-bottom:var(--s8)}
+  @media (min-width:1100px){.werk{grid-template-columns:minmax(320px,420px) minmax(0,1fr)}}
+  .form{display:grid;gap:var(--s4)}
+  .form textarea{min-height:12em;font-family:var(--font-text)}
+  .form .hint{font-size:var(--t-small);color:var(--muted);line-height:1.5}
+  .farben{display:flex;flex-wrap:wrap;gap:var(--s2)}
+  .farben button{width:var(--tap);height:var(--tap);border-radius:var(--r-pill);border:2px solid var(--paper);box-shadow:0 0 0 1px var(--line);cursor:pointer}
+  .farben button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
+
+  /* ---------- Das Heft: A5-Seiten ---------- */
+  .blaetter{display:grid;gap:var(--s6);justify-items:center}
+  .seite{--acc:var(--sek-goetheanum);--on-acc:var(--on-sek-goetheanum);
+    width:148mm;height:210mm;background:#fff;color:#23272b; /* # ds-ok Papier */
+    position:relative;overflow:hidden;box-shadow:var(--shadow-card);border:1px solid var(--line);
+    font-family:var(--font-display);font-weight:var(--w-klar);display:flex;flex-direction:column}
+  .ort-farbe{--ort:color-mix(in srgb,var(--acc) 72%,#000)} /* # ds-ok Tinte */
+
+  /* Titelseite */
+  .titel .feld{background:var(--acc);color:var(--on-acc);flex:0 0 60%;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;text-align:center;padding:14mm 12mm 18mm;gap:7mm;position:relative}
+  .titel .feld::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:9mm;background:#fff; /* # ds-ok Papier */
+    clip-path:path("M0 20 C 120 0, 260 40, 560 12 L 560 40 L 0 40 Z")}
+  .titel h2{font-weight:var(--w-deutlich);font-size:34pt;line-height:1.05;margin:0;text-wrap:balance}
+  .titel .wann{font-weight:var(--w-deutlich);font-size:15pt;line-height:1.3;margin:0;white-space:pre-line;font-variant-numeric:lining-nums}
+  .titel .unter{font-size:11.5pt;line-height:1.4;margin:0;max-width:30em;text-wrap:balance}
+  .titel .stich{font-weight:var(--w-deutlich);font-size:13pt;margin:0}
+  .titel .bild{flex:1;background:var(--soft) center/cover no-repeat;position:relative}
+  .titel .bild .leer{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:var(--t-small);font-family:var(--font-text)}
+  .titel .marke{position:absolute;left:9mm;bottom:8mm;height:6mm;filter:brightness(0) invert(1)}
+  .titel .marke.dunkel{filter:none}
+
+  /* Programmseiten */
+  .prog{padding:13mm 9mm 10mm}
+  .prog h3{font-weight:var(--w-deutlich);font-size:22pt;color:color-mix(in srgb,var(--acc) 80%,#000);margin:0 0 6mm 2mm} /* # ds-ok Tinte */
+  .zeilen{display:grid}
+  .z{display:grid;grid-template-columns:29mm 1fr;gap:3mm;padding:3mm 3mm;border-bottom:.3mm solid rgba(0,0,0,.12); /* # ds-ok Haarlinie */
+    font-family:var(--font-text);font-size:11pt;line-height:1.4}
+  .z.pause{background:color-mix(in srgb,var(--acc) 12%,#fff)} /* # ds-ok Tönung */
+  .z .zeit{font-weight:700;font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
+  .z strong{font-weight:700}
+  .z .ort{color:var(--ort);white-space:nowrap}
+  .z .ort svg{width:.8em;height:.8em;vertical-align:-.05em;margin-inline-end:.15em;fill:currentColor}
+
+  /* Rückseite */
+  .info{padding:13mm 11mm 10mm;gap:5mm}
+  .info h3{font-weight:var(--w-deutlich);font-size:22pt;color:color-mix(in srgb,var(--acc) 80%,#000);margin:0} /* # ds-ok Tinte */
+  .info .plan{flex:1;background:var(--soft) center/contain no-repeat;border-radius:2mm;position:relative;min-height:60mm}
+  .info .plan .leer{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:var(--t-small);font-family:var(--font-text)}
+  .legende{columns:2;column-gap:6mm;font-family:var(--font-text);font-size:9.5pt;line-height:1.5;margin:0;padding:0;list-style:none}
+  .legende li{display:flex;gap:2mm;break-inside:avoid;margin-bottom:1mm}
+  .legende .n{flex:0 0 5mm;height:5mm;border-radius:50%;background:var(--acc);color:var(--on-acc);
+    display:grid;place-items:center;font-size:8pt;font-weight:700;font-variant-numeric:tabular-nums}
+  .info .fuss{font-family:var(--font-text);font-size:9pt;line-height:1.45;display:flex;justify-content:space-between;align-items:end;gap:4mm;white-space:pre-line}
+  .info .fuss img{height:5mm}
+
+  @media print{
+    @page{size:148mm 210mm;margin:0}
+    body>*:not(main),.hero,.form{display:none!important}
+    main.wrap{max-width:none;padding:0;margin:0}
+    .werk{display:block;padding:0}
+    .blaetter{display:block}
+    .seite{box-shadow:none;border:0;break-after:page;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Veranstaltungen</span>
+    <h1>Programmheft</h1>
+    <p class="lede">Titel, Zeitplan und Lageplan eintragen, dann als A5-PDF drucken.</p>
+  </section>
+
+  <div class="werk">
+    <form class="form card soft" id="form" onsubmit="return false">
+      <label class="field"><span class="lab">Titel</span><input id="f-titel" value="Offener Tag am Goetheanum" /></label>
+      <label class="field"><span class="lab">Datum und Zeit</span><textarea id="f-wann" style="min-height:4em">Samstag, 17. Oktober 2026
+10.00–16.30</textarea></label>
+      <label class="field"><span class="lab">Unterzeile</span><input id="f-unter" value="Das Haus, seine Arbeit und seine Menschen kennenlernen" /></label>
+      <label class="field"><span class="lab">Stichworte</span><input id="f-stich" value="Bühne · Forschung · Kunst · Garten" /></label>
+      <div class="field"><span class="lab">Farbe</span><div class="farben" id="farben"></div></div>
+      <label class="field"><span class="lab">Titelbild</span><input type="file" id="f-bild" accept="image/*" /></label>
+      <label class="field"><span class="lab">Programm</span>
+        <textarea id="f-prog" style="min-height:22em"></textarea></label>
+      <p class="hint">Eine Zeile je Programmpunkt: Zeit | Text | Ort. Stern am Anfang = Pause (getönte Zeile). **Wort** = fett. Eine Zeile nur mit --- beginnt die zweite Programmseite.</p>
+      <label class="field"><span class="lab">Rückseite: Überschrift</span><input id="f-info" value="Lageplan" /></label>
+      <label class="field"><span class="lab">Lageplan</span><input type="file" id="f-plan" accept="image/*" /></label>
+      <label class="field"><span class="lab">Legende (eine Zeile je Nummer)</span><textarea id="f-leg" style="min-height:8em">Haupteingang
+Grundsteinsaal
+Schreinereisaal
+Restaurant Speisehaus
+Garten und Glashaus</textarea></label>
+      <label class="field"><span class="lab">Kontakt</span><textarea id="f-kontakt" style="min-height:4em">Goetheanum, Rüttiweg 45, 4143 Dornach
+www.goetheanum.ch</textarea></label>
+      <div style="display:flex;gap:var(--s2);flex-wrap:wrap">
+        <button class="btn primary" type="button" onclick="print()">Als PDF drucken</button>
+      </div>
+    </form>
+
+    <div class="blaetter" id="blaetter"></div>
+  </div>
+</main>
+
+<footer class="ds-footer"><div class="wrap frow"><span><strong>Goetheanum Grafik</strong></span><span><a href="../../design-system/">Design-System</a></span></div></footer>
+
+<script>
+const FARBEN=[["goetheanum","Goetheanum"],["nws","Naturwissenschaft"],["lws","Landwirtschaft"],["ps","Pädagogik"],["ms","Medizin"],["aas","Allgemeine Sektion"],["srmk","Redende und Musizierende Künste"],["sbk","Bildende Künste"],["hpise","Heilpädagogik"],["js","Jugend"]];
+let farbe="goetheanum", bild="", plan="";
+const $=id=>document.getElementById(id);
+$("f-prog").value=`09.30–10.00 | *Ankommen, Kaffee und Tee | Foyer
+10.00–10.15 | Musikalische Eröffnung | Grosser Saal
+10.15–10.40 | Begrüssung und Einführung – Vorname Name | Grosser Saal
+10.40–11.10 | **Bühne** – Einblick in die Probenarbeit | Grosser Saal
+*11.10–11.40 | Pause | Foyer
+11.40–12.20 | **Forschung** – Vorname Name (20 Minuten); Vorname Name (20 Minuten) | Grundsteinsaal
+12.20–13.00 | **Kunst** – Führung durch das Haus | Treffpunkt Haupteingang
+---
+*13.00–14.00 | Mittagessen | Restaurant Speisehaus
+14.00–15.00 | **Garten** – Rundgang mit Vorname Name | Glashaus
+15.00–15.45 | Gespräch im Plenum | Grosser Saal
+16.00–16.30 | Musikalischer Abschluss | Grosser Saal
+*ab 16.30 | Ausklang und Getränke | Foyer`;
+
+const pin='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>';
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fett=s=>esc(s).replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
+
+function zeile(l){
+  let pause=false;l=l.trim();
+  if(l.startsWith("*")){pause=true;l=l.slice(1)}
+  const [zeit="",text="",ort=""]=l.split("|").map(s=>s.trim());
+  let t=text; if(t.startsWith("*")&&!t.startsWith("**")){pause=true;t=t.slice(1)}
+  return `<div class="z${pause?" pause":""}"><span class="zeit">${esc(zeit)}</span><span>${fett(t)}${ort?` <span class="ort">${pin}${esc(ort)}</span>`:""}</span></div>`;
+}
+
+function bauen(){
+  const zeilen=$("f-prog").value.split("\n").filter(l=>l.trim());
+  let teil=[[],[]],i=0;
+  const bruch=zeilen.findIndex(l=>l.trim()==="---");
+  zeilen.forEach((l,k)=>{ if(l.trim()==="---"){i=1;return}
+    if(bruch<0&&k>=Math.ceil(zeilen.length/2))i=1; teil[i].push(zeile(l)) });
+  const leg=$("f-leg").value.split("\n").filter(l=>l.trim()).map((l,k)=>`<li><span class="n">${k+1}</span><span>${esc(l)}</span></li>`).join("");
+  const stil=`--acc:var(--sek-${farbe});--on-acc:var(--on-sek-${farbe})`;
+  const logo="../../assets/logos/goetheanum-logo.svg";
+  $("blaetter").innerHTML=`
+  <article class="seite titel" style="${stil}" aria-label="Seite 1, Titel">
+    <div class="feld">
+      <h2>${esc($("f-titel").value)}</h2>
+      <p class="wann">${esc($("f-wann").value)}</p>
+      <p class="unter">${esc($("f-unter").value)}</p>
+      <p class="stich">${esc($("f-stich").value)}</p>
+    </div>
+    <div class="bild" style="${bild?`background-image:url(${bild})`:""}">${bild?"":'<span class="leer">Titelbild hochladen</span>'}</div>
+    <img class="marke" src="${logo}" alt="Goetheanum" />
+  </article>
+  <article class="seite prog ort-farbe" style="${stil}" aria-label="Seite 2, Programm">
+    <h3>Programm</h3><div class="zeilen">${teil[0].join("")}</div>
+  </article>
+  <article class="seite prog ort-farbe" style="${stil}" aria-label="Seite 3, Programm">
+    <div class="zeilen">${teil[1].join("")}</div>
+  </article>
+  <article class="seite info" style="${stil}" aria-label="Seite 4, ${esc($("f-info").value)}">
+    <h3>${esc($("f-info").value)}</h3>
+    <div class="plan" style="${plan?`background-image:url(${plan})`:""}">${plan?"":'<span class="leer">Lageplan hochladen</span>'}</div>
+    <ol class="legende">${leg}</ol>
+    <div class="fuss"><span>${esc($("f-kontakt").value)}</span><img src="${logo}" alt="Goetheanum" /></div>
+  </article>`;
+}
+
+FARBEN.forEach(([k,n])=>{const b=document.createElement("button");b.type="button";
+  b.style.background=`var(--sek-${k})`;b.title=n;b.setAttribute("aria-label",n);
+  b.setAttribute("aria-pressed",k===farbe);b.onclick=()=>{farbe=k;
+  document.querySelectorAll(".farben button").forEach(x=>x.setAttribute("aria-pressed",x===b));bauen()};
+  $("farben").append(b)});
+const lesen=(inp,set)=>inp.addEventListener("change",()=>{const f=inp.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>{set(r.result);bauen()};r.readAsDataURL(f)});
+lesen($("f-bild"),v=>bild=v); lesen($("f-plan"),v=>plan=v);
+$("form").addEventListener("input",bauen);
+bauen();
+</script>
+</body>
+</html>
