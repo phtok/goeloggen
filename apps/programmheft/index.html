@@ -79,15 +79,19 @@
   .info .plan.gedreht img{position:absolute;max-width:none;max-height:none}
   .info .plan.leer-plan{background:var(--soft);border-radius:2mm}
   .info .plan .leer{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:var(--t-small);font-family:var(--font-text)}
-  .legende{columns:2;column-gap:6mm;font-family:var(--font-text);font-size:9.5pt;line-height:1.5;margin:0;padding:0;list-style:none}
+  .legende{columns:2;column-gap:6mm;font-family:var(--font-text);font-size:11pt;line-height:1.5;margin:0;padding:0;list-style:none}
   .legende li{display:flex;gap:2mm;break-inside:avoid;margin-bottom:1mm}
-  .legende .n{flex:0 0 5mm;height:5mm;border-radius:50%;background:var(--acc);color:var(--on-acc);
+  .legende .n{flex:0 0 5.5mm;height:5.5mm;border-radius:50%;background:var(--gold-deep);color:var(--on-accent);
     display:grid;place-items:center;font-size:8pt;font-weight:700;font-variant-numeric:tabular-nums}
   .info .fuss{font-family:var(--font-text);font-size:9pt;line-height:1.45;display:flex;justify-content:space-between;align-items:end;gap:4mm;white-space:pre-line}
   .info .fuss img{height:5mm}
   .ueberlauf{outline:1mm solid var(--gold);outline-offset:-1mm}
   .knopfreihe{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center}
-  .checkbox-row{display:flex;gap:var(--s2);align-items:center;min-height:var(--tap)}
+  .motive{display:flex;flex-wrap:wrap;gap:var(--s2);width:100%}
+  .motive button{width:var(--tap);height:var(--tap);padding:0;border:.15rem solid transparent;border-radius:var(--r-control);background:var(--soft) center/cover no-repeat;cursor:pointer}
+  .motive button[aria-pressed="true"]{border-color:var(--gold-deep);outline:.15rem solid var(--gold-deep);outline-offset:.1rem}
+  .checkbox-row{display:flex;gap:var(--s2);align-items:center;justify-content:flex-start;text-align:start;min-height:var(--tap)}
+  .checkbox-row input{width:1.25rem;height:1.25rem;margin:0;flex:none}
   .form .status{font-size:var(--t-small);color:var(--muted)}
 
   @media print{
@@ -121,8 +125,8 @@
       <div class="field"><span class="lab">Farbe</span><div class="farben" id="farben"></div></div>
       <div class="field"><span class="lab">Titelbild</span>
         <div class="knopfreihe">
+          <div class="motive" id="motive"></div>
           <button class="btn" type="button" id="bild-waehlen">Eigenes Bild wählen</button>
-          <button class="btn" type="button" id="bild-standard">Standardbild</button>
         </div>
         <input type="file" id="f-bild" accept="image/*" hidden /></div>
       <label class="field"><span class="lab">Bildnachweis</span><input id="f-credit" value="Foto: Goetheanum" /></label>
@@ -139,7 +143,9 @@
         <input type="file" id="f-plan" accept="image/*,.svg" hidden />
         <label class="checkbox-row"><input type="checkbox" id="f-drehen" /><span>Plan gedreht, seitenfüllend</span></label>
         <span class="status" id="plan-status"></span></div>
-      <label class="field"><span class="lab">Eigene Legende (leer lassen, wenn der Plan eine hat)</span><textarea id="f-leg" style="min-height:6em"></textarea></label>
+      <label class="field"><span class="lab">Legende (eine Zeile je Nummer im Plan)</span><textarea id="f-leg" style="min-height:6em">Haupteingang
+Südeingang
+Empfang</textarea></label>
       <label class="field"><span class="lab">Kontakt</span><textarea id="f-kontakt" style="min-height:4em">Goetheanum, Rüttiweg 45, 4143 Dornach
 www.goetheanum.ch</textarea></label>
       <div class="knopfreihe">
@@ -157,7 +163,10 @@ www.goetheanum.ch</textarea></label>
 
 <script>
 const FARBEN=[["goetheanum","Goetheanum"],["nws","Naturwissenschaft"],["lws","Landwirtschaft"],["ps","Pädagogik"],["ms","Medizin"],["aas","Allgemeine Sektion"],["srmk","Redende und Musizierende Künste"],["sbk","Bildende Künste"],["hpise","Heilpädagogik"],["js","Jugend"]];
-const STANDARD_BILD="titelbild-goetheanum.jpg", STANDARD_PLAN="lageplan-standard.svg";
+const MOTIVE=[["titelbild-goetheanum.jpg","Fenster hinter Lavendel"],["titel-herbst.jpg","Goetheanum im Herbst, von Süden"],
+  ["titel-campus.jpg","Westansicht von Felsli, Campus-Fest"],["titel-westtreppe.jpg","Westtreppenhaus"],
+  ["titel-luftbild.jpg","Luftbild des Campus"],["titel-glashaus.jpg","Glashaus"]];
+const STANDARD_BILD=MOTIVE[0][0], STANDARD_PLAN="lageplan-standard.svg?v=2";
 let farbe="goetheanum", bild=STANDARD_BILD, plan=STANDARD_PLAN;
 const $=id=>document.getElementById(id);
 $("f-prog").value=`09.30–10.00 | *Ankommen, Kaffee und Tee | Foyer
@@ -221,6 +230,7 @@ function bauen(){
     <div class="fuss"><span>${esc($("f-kontakt").value)}</span><img src="${logo}" alt="Goetheanum" /></div>
   </article>`;
   einpassen();
+  motivMarkieren();
   sichern();
 }
 
@@ -232,7 +242,10 @@ function einpassen(){
   const passt=()=>seiten.every(s=>s.scrollHeight<=s.clientHeight+1);
   const setzen=(g,pad)=>seiten.forEach(s=>{s.style.setProperty("--grad",g+"pt");s.querySelector(".zeilen").style.setProperty("--pad",pad+"mm")});
   for(;grad>10;grad-=.5){setzen(grad,3);if(passt())break}
-  for(let pad=3.5;pad<=6;pad+=.5){setzen(grad,pad);if(!passt()){setzen(grad,pad-.5);break}}
+  // Zeilenabstand je Seite: auch eine kurze zweite Seite läuft bis unten.
+  seiten.forEach(s=>{const z=s.querySelector(".zeilen");
+    for(let pad=3.5;pad<=7;pad+=.5){z.style.setProperty("--pad",pad+"mm");
+      if(s.scrollHeight>s.clientHeight+1){z.style.setProperty("--pad",(pad-.5)+"mm");break}}});
   seiten.forEach(s=>s.classList.toggle("ueberlauf",s.scrollHeight>s.clientHeight+1));
   const planBox=document.querySelector(".plan.gedreht");
   const img=planBox&&planBox.querySelector("img");
@@ -245,7 +258,7 @@ function einpassen(){
 const strich=s=>s.replace(/(\d)\s*[-–]\s*(\d)/g,"$1–$2");
 
 const FELDER=["f-titel","f-wann","f-unter","f-stich","f-credit","f-prog","f-info","f-leg","f-kontakt"];
-const SPEICHER="goe-programmheft";
+const SPEICHER="goe-programmheft-2";
 function sichern(){
   const d={farbe,drehen:$("f-drehen").checked,bild:bild.startsWith("data:")?"eigen":bild,plan:plan.startsWith("data:")?"eigen":plan};
   FELDER.forEach(id=>d[id]=$(id).value);
@@ -272,7 +285,10 @@ const lesen=(inp,set)=>inp.addEventListener("change",()=>{const f=inp.files[0];i
 lesen($("f-bild"),v=>bild=v); lesen($("f-plan"),v=>{plan=v;$("plan-status").textContent=""});
 $("bild-waehlen").onclick=()=>$("f-bild").click();
 $("plan-waehlen").onclick=()=>$("f-plan").click();
-$("bild-standard").onclick=()=>{bild=STANDARD_BILD;bauen()};
+MOTIVE.forEach(([f,n])=>{const b=document.createElement("button");b.type="button";
+  b.style.backgroundImage=`url('${f}')`;b.title=n;b.setAttribute("aria-label","Titelbild: "+n);
+  b.onclick=()=>{bild=f;$("f-credit").value=f===STANDARD_BILD?"Foto: Goetheanum":"Foto: Goetheanum / Xue Li";bauen()};$("motive").append(b)});
+const motivMarkieren=()=>document.querySelectorAll(".motive button").forEach((x,k)=>x.setAttribute("aria-pressed",MOTIVE[k][0]===bild));
 $("plan-standard").onclick=()=>{plan=STANDARD_PLAN;$("plan-status").textContent="";bauen()};
 $("zuruecksetzen").onclick=()=>{localStorage.removeItem(SPEICHER);localStorage.removeItem(SPEICHER+"-bild");localStorage.removeItem(SPEICHER+"-plan");location.reload()};
 $("form").addEventListener("input",bauen);
