@@ -65,15 +65,15 @@
   .prog{padding:13mm 9mm 10mm}
   .prog h3,.info h3{font-weight:var(--w-deutlich);font-size:22pt;color:var(--kopf);margin:0 0 6mm 2mm}
   .zeilen{display:grid;--pad:3mm}
-  .z{display:grid;grid-template-columns:31mm 1fr;gap:3mm;padding:var(--pad) 3mm;border-bottom:.3mm solid rgba(0,0,0,.12); /* # ds-ok Haarlinie */
+  .z{display:grid;grid-template-columns:40mm 1fr;gap:3mm;padding:var(--pad) 3mm;border-bottom:.3mm solid rgba(0,0,0,.12); /* # ds-ok Haarlinie */
     font-family:var(--font-text);font-size:var(--grad,12pt);line-height:1.4;position:relative}
   .z.pause{background:color-mix(in srgb,var(--acc) 12%,#fff)} /* # ds-ok Tönung */
-  .z .zeit{font-weight:700;font-variant-numeric:tabular-nums lining-nums}
+  .z .zeit{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums lining-nums}
   .z b,.z strong{font-weight:700}
   /* Vergleich: Programmtitel als Stimme – Hausschrift Klar, Betonung Laut; Zeit und Ort bleiben Source */
   .stimme .z .titeltext{font-family:var(--font-display);font-weight:var(--w-klar)}
   .stimme .z .titeltext b{font-weight:var(--w-laut)}
-  .z .ort{color:var(--ort);display:inline-flex;align-items:baseline;gap:.15em;white-space:nowrap}
+  .z .ort{color:var(--ort);display:inline-flex;align-items:baseline;gap:.15em;white-space:nowrap;margin-left:.35em}
   .z .ort svg{width:.8em;height:.8em;fill:currentColor;flex:none;align-self:center}
 
   /* Werkzeuge an der Zeile: erscheinen beim Bearbeiten, nie im Druck */
@@ -92,7 +92,7 @@
   .karte{position:relative;height:100%;max-width:100%;aspect-ratio:192/210}
   .karte img{width:100%;height:100%;display:block}
   .mk{position:absolute;transform:translate(-50%,-50%);width:6.5mm;height:6.5mm;border-radius:50%;border:.5mm solid #fff; /* # ds-ok Papier */
-    background:var(--gold-deep);color:var(--on-accent);display:grid;place-items:center;font-family:var(--font-text);
+    background:var(--mk,var(--gold-deep));color:var(--on-accent);display:grid;place-items:center;font-family:var(--font-text);
     font-size:10pt;font-weight:700;font-variant-numeric:tabular-nums;cursor:grab;touch-action:none;padding:0}
   .mk:active{cursor:grabbing}
   .offen{font-family:var(--font-text);font-size:var(--t-small);display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap}
@@ -100,11 +100,11 @@
   .z .ort .nr{font-weight:700;font-variant-numeric:tabular-nums}
   .legende{columns:2;column-gap:6mm;font-family:var(--font-text);font-size:11pt;line-height:1.5;margin:0;padding:0;list-style:none}
   .legende li{display:flex;gap:2mm;break-inside:avoid;margin-bottom:1mm;align-items:baseline}
-  .legende .n{flex:0 0 6mm;height:6mm;border-radius:50%;background:var(--gold-deep);color:var(--on-accent);
+  .legende .n{flex:0 0 6mm;height:6mm;border-radius:50%;background:var(--mk,var(--gold-deep));color:var(--on-accent);
     display:grid;place-items:center;font-size:9pt;font-weight:700;font-variant-numeric:tabular-nums}
   .info .fuss{font-family:var(--font-text);font-size:9pt;line-height:1.45;display:flex;justify-content:space-between;align-items:end;gap:4mm}
   .info .fuss .kontakt{white-space:pre-line}
-  .info .fuss img{height:5mm}
+  .info .fuss img{height:9mm;width:auto;max-width:60%}
   .ueberlauf{outline:1mm solid var(--gold);outline-offset:-1mm}
 
   @media print{
@@ -121,6 +121,8 @@
 </head>
 <body>
 <script src="../karten-generator/orte.js"></script>
+<script src="../../assets/goe-orgs.js"></script>
+<script src="../logos/engine.js"></script>
 <script src="../karten-generator/vendor/jspdf.umd.min.js"></script>
 <script src="../karten-generator/vendor/svg2pdf.umd.min.js"></script>
 <script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
@@ -213,7 +215,9 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 // Zeitspanne mit Halbgeviertstrich; keine unnötigen Nullen: 17 Uhr, 9.30, nie 17.00 oder 09.30.
 const strich=s=>s.replace(/(\d)\s*[-–]\s*(\d)/g,"$1–$2")
   .replace(/\b(\d{1,2})[.:]00\b/g,"$1").replace(/\b0(\d)(?=[.:]\d\d|\b(?!\.\s?\w))/g,"$1").replace(/\b(\d{1,2})[:](\d\d)\b/g,"$1.$2");
-S.wann=strich(S.wann);S.seiten.forEach(L=>L.forEach(z=>z.zeit=strich(z.zeit)));
+// Jede Zeitangabe trägt «Uhr» (9.30–10 Uhr, ab 16.30 Uhr).
+const mitUhr=s=>{s=strich(s).trim();return /\d/.test(s)&&!/Uhr$/.test(s)?s+" Uhr":s};
+S.wann=strich(S.wann);S.seiten.forEach(L=>L.forEach(z=>z.zeit=mitUhr(z.zeit)));
 
 // Nur Text und Fett überleben das Bearbeiten.
 function rein(html){
@@ -270,15 +274,25 @@ async function karteFaerben(){
   KARTE_URL=URL.createObjectURL(new Blob([t],{type:"image/svg+xml"}));
   const img=document.querySelector("#karte img");if(img)img.src=KARTE_URL;
 }
+// Sektionslogo aus der Logo-Maschine (apps/logos/engine.js), Original-Farben, Layout «Lang».
+const ORG={"bereich":"goetheanum","bereich-buehne":"buehne"};
+function sektionsLogo(f){
+  const org=ORG[f]||f.replace(/^sek-/,"");
+  try{return LogoEngine.svg({cat:org==="goetheanum"||org==="buehne"?"allgemein":"sektionen",org,layout:"desktop",mode:"original",lang:"de",txt:"",scale:1})}
+  catch(e){console.warn(e);return ""}
+}
 function bauen(){
-  const f=S.farbe, logo="../../assets/logos/goetheanum-logo.svg";
+  const f=S.farbe, logo="../../assets/logos/goetheanum-logo.svg", sektLogo=sektionsLogo(f);
   const b=$("blaetter");NR=orte();b.classList.toggle("stimme",!!S.stimme);
   // Schrift und Logo auf der Fläche immer weiss (B01). Trägt Weiss auf der Grundfarbe
 // nicht (unter 4.5:1), steht die abgedunkelte Variante des Farbsystems (-dunkel).
-  const cs=getComputedStyle(document.documentElement),t=n=>cs.getPropertyValue(`--${n}`).trim();
+// Werte aus dem hellen Satz der Tokens: das Papier ist immer weiss, auch im Dunkelmodus.
+  const t=n=>TOK[n]||"";
   const fl=t(f+"-dunkel")&&kontrast(t(f))<4.5?f+"-dunkel":f;
-  b.style.setProperty("--acc",`var(--${fl})`);
-  if(t(f+"-ink")){b.style.setProperty("--ort",`var(--${f}-ink)`);b.style.setProperty("--kopf",`var(--${f}-ink)`)}
+  // Tinte der Sektion (-ink) für Orte, Köpfe und Marker: hält ≥3:1 gegen jede Kartenstufe
+  // und trägt weisse Ziffern ≥6:1. Bereiche nehmen die Goetheanum-Tinte.
+  const ink=t(f+"-ink")||t("sek-goetheanum-ink");
+  b.style.setProperty("--acc",t(fl));b.style.setProperty("--ort",ink);b.style.setProperty("--kopf",ink);b.style.setProperty("--mk",ink);
   b.innerHTML=`
   <article class="seite titel kante-${S.kante}" aria-label="Seite 1, Titel">
     <div class="feld">
@@ -299,7 +313,7 @@ function bauen(){
     ${NR.some(o=>!lage(o))?`<div class="offen">Noch nicht auf der Karte – auf den Plan ziehen:
       ${NR.map((o,k)=>lage(o)?"":`<button type="button" class="mk" data-ort="${esc(o)}" title="${esc(o)}">${k+1}</button> ${esc(o)}`).join(" ")}</div>`:""}
     <div class="plus">${S.extra.map((x,k)=>ed(`extra.${k}`,x,"span","","Ort")).join(" ")}<button type="button" data-tat="neuleg">${I.plus}Weiterer Ort</button></div>
-    <div class="fuss">${ed("kontakt",S.kontakt,"span","kontakt","Kontakt")}<img src="${logo}" alt="Goetheanum" /></div>
+    <div class="fuss">${ed("kontakt",S.kontakt,"span","kontakt","Kontakt")}<img class="sektlogo" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(sektLogo)}" alt="${esc(FARBEN.find(x=>x&&x[0]===f)?.[1]||"Goetheanum")}" /></div>
   </article>`;
   einpassen();markieren();sichern();karteFaerben();
 }
@@ -325,7 +339,7 @@ B.addEventListener("input",e=>{const el=e.target.closest("[data-pfad]");if(!el)r
   einpassen();sichern()});
 B.addEventListener("focusout",e=>{const el=e.target.closest("[data-pfad]");
   if(el&&/ort$|^extra\./.test(el.dataset.pfad)&&!B.contains(e.relatedTarget)){setTimeout(bauen);return}
-  if(el&&/zeit$|^wann$/.test(el.dataset.pfad)){const v=strich(el.innerText);if(v!==el.innerText){el.innerText=v;setzen(el.dataset.pfad,v);sichern()}}});
+  if(el&&/zeit$|^wann$/.test(el.dataset.pfad)){const v=/zeit$/.test(el.dataset.pfad)?mitUhr(el.innerText):strich(el.innerText);if(v!==el.innerText){el.innerText=v;setzen(el.dataset.pfad,v);sichern()}}});
 B.addEventListener("keydown",e=>{const el=e.target.closest("[data-pfad]");if(!el||e.key!=="Enter")return;
   if(/^(wann|kontakt)$/.test(el.dataset.pfad))return; // mehrzeilig erlaubt
   e.preventDefault();
@@ -394,7 +408,7 @@ async function planPng(){
   const g=c.getContext("2d");g.drawImage(i,0,0,c.width,c.height);const r=c.width*6.5/126/2; // Kreis wie im Heft
   await document.fonts.load("700 20px 'Source Sans 3'");
   NR.forEach((o,k)=>{const p=lage(o);if(!p)return;const px=p[0]/100*c.width,py=p[1]/100*c.height;
-    g.beginPath();g.arc(px,py,r,0,7);g.fillStyle=hex(getComputedStyle(B).getPropertyValue("--gold-deep"));g.fill();
+    g.beginPath();g.arc(px,py,r,0,7);g.fillStyle=hex(getComputedStyle(B).getPropertyValue("--mk"));g.fill();
     g.lineWidth=r*.16;g.strokeStyle="#fff";g.stroke(); // # ds-ok Druck
     g.fillStyle="#fff";g.font=`700 ${r*1.05}px 'Source Sans 3',sans-serif`;g.textAlign="center";g.textBaseline="middle";g.fillText(k+1,px,py+r*.05)}); // # ds-ok Druck
   return {name:"campus.png",bytes:await alsBytes(c),b:c.width,h:c.height}}
@@ -406,7 +420,7 @@ $("idml").onclick=async e=>{const k=e.currentTarget,alt=k.textContent;k.disabled
     const {baueIdml}=await import("./idml.js");
     const f=S.farbe,name=(FARBEN.find(x=>x&&x[0]===f)||[,f])[1];
     const farben={name,akzent:aufloesen("var(--acc)"),ort:aufloesen("var(--ort)"),
-      pause:aufloesen("color-mix(in srgb,var(--acc) 12%,#fff)"),gold:aufloesen("var(--gold-deep)")}; // # ds-ok Tönung
+      pause:aufloesen("color-mix(in srgb,var(--acc) 12%,#fff)"),gold:aufloesen("var(--mk)")}; // # ds-ok Tönung
     const bilder={titel:await titelBild(),plan:await planPng(),logo:await logoPng(true),logoBlau:await logoPng(false)};
     const zip=await baueIdml(S,farben,bilder,NR);
     const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([zip],{type:"application/zip"}));
@@ -427,11 +441,11 @@ const pdfBauen=async e=>{const k=e.currentTarget,alt=k.textContent,druck=k.datas
   try{
     const {bauePdf}=await import("./pdf.js");
     const f={akzent:aufloesen("var(--acc)"),ort:aufloesen("var(--ort)"),kopf:aufloesen("var(--kopf)"),tinte:"#23272b", // # ds-ok Tinte
-      pause:aufloesen("color-mix(in srgb,var(--acc) 12%,#fff)"),linie:"#e0e0e0",gold:aufloesen("var(--gold-deep)")}; // # ds-ok Druck
+      pause:aufloesen("color-mix(in srgb,var(--acc) 12%,#fff)"),linie:"#e0e0e0",gold:aufloesen("var(--mk)")}; // # ds-ok Druck
     const grad=parseFloat(document.querySelector(".seite.prog").style.getPropertyValue("--grad"))||12;
     const logoSvg=await (await fetch("../../assets/logos/goetheanum-logo.svg")).text();
     const titel=druck?await zuschnitt(S.bild,154,103,300,.95):await zuschnitt(S.bild,148,100,150,.78);
-    const doc=await bauePdf(S,f,{titel,plan:await planOhneNummern(druck)},NR,lage,grad,logoSvg,druck);
+    const doc=await bauePdf(S,f,{titel,plan:await planOhneNummern(druck)},NR,lage,grad,logoSvg,druck,sektionsLogo(S.farbe));
     const name=(S.titel||"programmheft").toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
     doc.save(`${name||"programmheft"}-a5-${druck?"druck-3mm":"versand"}.pdf`);
   }catch(err){console.error(err);k.textContent="PDF fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
@@ -439,7 +453,11 @@ const pdfBauen=async e=>{const k=e.currentTarget,alt=k.textContent,druck=k.datas
 $("pdf").onclick=pdfBauen;$("pdf-druck").onclick=pdfBauen;
 $("zuruecksetzen").onclick=()=>{S=structuredClone(BEISPIEL);bauen()};
 
-bauen();
+// Helle Token-Werte einmal aus tokens.css lesen (erster Wert je Name = heller Satz).
+let TOK={};
+fetch("../../design-system/tokens.css").then(a=>a.text()).then(css=>{
+  for(const [,n,v] of css.matchAll(/--([a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{3,8})/g))if(!(n in TOK))TOK[n]=v;
+}).catch(()=>{}).finally(bauen);
 window.addEventListener("resize",einpassen);
 </script>
 </body>

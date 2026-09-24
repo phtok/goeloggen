@@ -88,7 +88,7 @@ function schnittmarken(doc, b, l) {
 /* druck: true → 3 mm Beschnitt, Schnittmarken, TrimBox/BleedBox (wie das Kartenwerkzeug).
    Die Seite wird um den Rand grösser; ein Versatz am Seitenanfang hält alle
    Koordinaten im Endformat, Flächen am Rand laufen bis in den Beschnitt. */
-export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = false) {
+export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = false, sektLogoSvg = '') {
   const B3 = druck ? 3 : 0, R = druck ? 8 : 0;
   const doc = new jspdf.jsPDF({ unit: 'mm', format: [SB + 2 * R, SH + 2 * R], orientation: 'portrait', compress: true });
   const seiteAnfangen = () => {
@@ -136,7 +136,7 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   if (S.credit) { doc.setFont('Source', 'normal'); doc.setFontSize(6.5); doc.text(text(S.credit), SB - 4, SH - 3, { align: 'right' }); }
 
   /* ---------- Seiten 2–3: Programm ---------- */
-  const zab = grad * 1.4 / PT, zeitB = 31, tx = 9 + 3 + zeitB + 3, tb = SB - 9 - 3 - tx;
+  const zab = grad * 1.4 / PT, zeitB = 40, tx = 9 + 3 + zeitB + 3, tb = SB - 9 - 3 - tx;
   const nr = (o) => orte.indexOf((o || '').trim()) + 1;
   S.seiten.forEach((L, s) => {
     neueSeite();
@@ -146,7 +146,7 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
       const l = [];
       String(z.text).split(/(<b>.*?<\/b>)/g).filter(Boolean).forEach((t) =>
         l.push({ t: text(t.replace(/<\/?b>/g, '')), font: /^<b>/.test(t) ? (S.stimme ? 'GLaut' : 'SourceFett') : (S.stimme ? 'GKlar' : 'Source'), farbe: f.tinte }));
-      if (z.ort) l.push({ t: ' ', font: 'Source', farbe: f.tinte }, { t: nr(z.ort) ? nr(z.ort) + ' ' : '', font: 'SourceFett', farbe: f.ort }, { t: z.ort.replace(/ /g, ' '), font: 'Source', farbe: f.ort });
+      if (z.ort) l.push({ t: '  ', font: 'Source', farbe: f.tinte }, { t: nr(z.ort) ? nr(z.ort) + ' ' : '', font: 'SourceFett', farbe: f.ort }, { t: z.ort.replace(/ /g, ' '), font: 'Source', farbe: f.ort });
       return l;
     };
     // Zeilenabstand wie im Heft: Rest der Seite gleichmässig verteilen, 3–7 mm.
@@ -185,7 +185,8 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   });
   doc.setFont('Source', 'normal'); doc.setFontSize(9); doc.setTextColor(f.tinte);
   doc.text(String(S.kontakt).split('\n'), 11, SH - 10 - 5, { lineHeightFactor: 1.45 });
-  const lw2 = svgLogo(logoSvg), bl = 5, bw = bl * lw2.verh;
+  // Rückseite unten rechts: das Logo der gewählten Sektion (Logo-Maschine)
+  const lw2 = svgLogo(sektLogoSvg || logoSvg), bw = Math.min(9 * lw2.verh, 80), bl = bw / lw2.verh;
   await doc.svg(lw2.el, { x: SB - 11 - bw, y: SH - 10 - bl, width: bw, height: bl });
 
   return doc;
