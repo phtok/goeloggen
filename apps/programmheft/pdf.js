@@ -198,7 +198,7 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
     const n1 = L.map((z) => laeufeSetzen(doc, laeufeVon(z), 0, 0, tb - ortB(z), grad, zab));
     const hoehen = L.map((z, i) => (n1[i] + (zweitVon(z).length ? laeufeSetzen(doc, zweitVon(z), 0, 0, tb - ortB(z), grad, zab) : 0)) * zab);
     const frei = SH - 10 - y0 - hoehen.reduce((a, b) => a + b, 0);
-    const pad = Math.max(3, Math.min(7, frei / (L.length * 2)));
+    const pad = Math.max(3, Math.min(4.5, frei / (L.length * 2)));
     let yy = y0;
     L.forEach((z, i) => {
       const h = hoehen[i] + 2 * pad;

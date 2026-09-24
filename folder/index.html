@@ -508,14 +508,14 @@ function karteVersetzen(){const pl=document.querySelector(".info .plan"),k=$("ka
   const rand=MK_D*1.6/100*k.offsetWidth/kh; // Luft von gut einem Marker
   let v=Math.max(0,Math.max(...ys)+rand-sicht/kh);v=Math.min(v,Math.max(0,Math.min(...ys)-rand),Math.max(0,1-sicht/kh));
   KARTE_VERSATZ=v;k.style.marginTop=(-v*kh)+"px"}
-// Programmseiten füllen: Grad wächst bis 14 pt, Zeilenabstand je Seite bis unten.
+// Programmseiten: Grad höchstens 12 pt, Zeilenabstand je Seite höchstens 4,5 mm – die Tafel füllt die Seite nicht zwangsweise.
 function einpassen(){
   const seiten=[...document.querySelectorAll(".seite.prog:not(.frei)")];
   const passt=()=>seiten.every(s=>s.scrollHeight<=s.clientHeight+1);
   const setzen=(g,pad)=>seiten.forEach(s=>{s.style.setProperty("--grad",g+"pt");s.querySelector(".zeilen").style.setProperty("--pad",pad+"mm")});
-  for(let g=14;g>10;g-=.5){setzen(g,3);if(passt())break}
+  for(let g=12;g>9;g-=.5){setzen(g,3);if(passt())break}
   seiten.forEach(s=>{const z=s.querySelector(".zeilen");
-    for(let pad=3.5;pad<=7;pad+=.5){z.style.setProperty("--pad",pad+"mm");
+    for(let pad=3.5;pad<=4.5;pad+=.5){z.style.setProperty("--pad",pad+"mm");
       if(s.scrollHeight>s.clientHeight+1){z.style.setProperty("--pad",(pad-.5)+"mm");break}}});
   seiten.forEach(s=>s.classList.toggle("ueberlauf",s.scrollHeight>s.clientHeight+1));
 }
