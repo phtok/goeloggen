@@ -60,11 +60,14 @@ function laeufeSetzen(doc, laeufe, x, y, breite, grad, zab) {
   return zeilen.length;
 }
 
+const binden = (t) => String(t || '').replace(/(^|\s)(am|im|an|in|zu|zum|zur|und|für|von|vom|mit|bei|auf|aus|um|der|die|das|des|dem|den|ein|eine) /gi, '$1$2\u00a0');
 let FS = 'Source', FF = 'SourceFett'; // Daten-Schrift, je nach Wahl
 function marke(doc, x, y, r, n, farbe) {
   doc.setFillColor(farbe); doc.setDrawColor(WEISS); doc.setLineWidth(0.4);
-  doc.circle(x, y, r, 'FD');
-  doc.setTextColor(WEISS); doc.setFont(FF, 'normal'); doc.setFontSize(r * 1.1 * PT);
+  doc.setFont(FF, 'normal'); doc.setFontSize(r * 1.1 * PT);
+  const w = Math.max(0, doc.getTextWidth(String(n)) + r * 0.5 - 2 * r); // «1–3»: Pille statt Kreis
+  if (w > 0) doc.roundedRect(x - w / 2 - r, y - r, w + 2 * r, 2 * r, r, r, 'FD'); else doc.circle(x, y, r, 'FD');
+  doc.setTextColor(WEISS);
   doc.text(String(n), x, y + r * 0.04, { align: 'center', baseline: 'middle' });
 }
 
@@ -125,12 +128,14 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
 
   doc.setTextColor(WEISS); doc.setFont('GDeutlich', 'normal'); doc.setFontSize(34);
   // Ausgeglichen umbrechen wie text-wrap: balance
-  let titel = doc.splitTextToSize(text(S.titel), SB - 24);
-  for (let b = SB - 24; b > 40; b -= 2) { const t = doc.splitTextToSize(text(S.titel), b); if (t.length > titel.length) break; titel = t; }
+  let titel = doc.splitTextToSize(text(binden(S.titel)), SB - 24);
+  for (let b = SB - 24; b > 40; b -= 2) { const t = doc.splitTextToSize(text(binden(S.titel)), b); if (t.length > titel.length) break; titel = t; }
   const wann = String(S.wann).split('\n');
   const tz = 34 * 1.05 / PT, wz = 15 * 1.3 / PT;
   const blockH = titel.length * tz + 7 + wann.length * wz;
-  let y = 40 + (fh - k - 40 - blockH) / 2 + tz * 0.8 - 8; // etwas über der Mitte
+  // Mittig zwischen Logo (unten bei 26,5 mm) und dem Innenrand über der Kante – wie im Editor.
+  const unten = 126 - (S.kante === 'gerade' ? 10 : 16);
+  let y = 26.5 + (unten - 26.5 - blockH) / 2 + tz * 0.8;
   doc.text(titel, SB / 2, y, { align: 'center', lineHeightFactor: 1.05 });
   y += (titel.length - 1) * tz + 7 + wz;
   doc.setFontSize(15);
@@ -177,7 +182,11 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   const kastenY = 27, kastenH = legY - 5 - kastenY;
   const kb = Math.min(SB - 22, kastenH * 192 / 210), kh = kb * 210 / 192, kx = (SB - kb) / 2;
   doc.addImage(bilder.plan.url, bilder.plan.url.startsWith('data:image/png') ? 'PNG' : 'JPEG', kx, kastenY, kb, kh, 'plan', 'SLOW');
-  orte.forEach((o, i) => { const p = lage(o); if (p) marke(doc, kx + p[0] / 100 * kb, kastenY + p[1] / 100 * kh, 2.4, i + 1, f.gold); });
+  (bilder.marker || []).forEach((m) => {
+    const px = kx + m.x / 100 * kb, py = kastenY + m.y / 100 * kh;
+    if (m.linie) { const ax = kx + m.ax / 100 * kb, ay = kastenY + m.ay / 100 * kh; doc.setDrawColor(f.gold); doc.setLineWidth(0.3); doc.line(ax, ay, px, py); doc.setFillColor(f.gold); doc.circle(ax, ay, 0.7, 'F'); }
+    marke(doc, px, py, 2.4, m.t, f.gold);
+  });
   orte.forEach((o, i) => {
     const sp = Math.floor(i / spalten), zy = legY + (i % spalten) * legZ;
     const x = 11 + sp * (SB - 22 + 4) / 3;
