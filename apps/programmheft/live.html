@@ -26,6 +26,14 @@
   .leiste .reihe{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center}
   .leiste .lab{flex:0 0 100%}
   .knoepfe .btn{flex:1 1 auto}
+  .archiv summary{cursor:pointer;min-height:var(--tap);display:flex;align-items:center;font-family:var(--font-text);font-size:var(--t-small);color:var(--ink)}
+  .archiv-liste{list-style:none;margin:var(--s3) 0 0;padding:0;display:grid;gap:var(--s1);max-height:24rem;overflow:auto}
+  .archiv-liste button{display:flex;gap:var(--s2);align-items:center;width:100%;min-height:var(--tap);padding:var(--s1) var(--s2);text-align:left;
+    border:1px solid var(--line);border-radius:var(--r-control);background:var(--paper);color:var(--ink);font-family:var(--font-text);font-size:var(--t-small);cursor:pointer}
+  .archiv-liste button[aria-current="true"]{border-color:var(--ink)}
+  .archiv-liste .punkt{width:1rem;height:1rem;border-radius:50%;flex:none}
+  .archiv-liste .wann{display:block;color:var(--muted)}
+  .archiv-liste .leer{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
   @media (min-width:1100px){
     main.wrap{max-width:none}
     .werk{display:grid;grid-template-columns:minmax(18rem,21rem) 1fr;gap:var(--s6);align-items:start}
@@ -164,8 +172,12 @@
       <button class="btn" type="button" id="pdf-druck" data-druck="1">PDF für die Druckerei</button>
       <button class="btn" type="button" id="idml">Für InDesign (IDML)</button>
     </div>
+    <details class="archiv" id="archiv">
+      <summary>Alle Folder</summary>
+      <button class="btn" type="button" id="zuruecksetzen">Neuer Folder</button>
+      <ul class="archiv-liste" id="archiv-liste"></ul>
+    </details>
     <div class="reihe">
-      <button class="btn" type="button" id="zuruecksetzen">Beispiel wiederherstellen</button>
       <p class="hinweis">Fett: Text markieren und Strg+B. Alles bleibt in diesem Browser gespeichert.</p>
     </div>
   </div>
@@ -485,6 +497,14 @@ async function planPng(){
     g.lineWidth=r*.16;g.strokeStyle="#fff";g.stroke(); // # ds-ok Druck
     g.fillStyle="#fff";g.font=`700 ${r*1.05}px 'Source Sans 3',sans-serif`;g.textAlign="center";g.textBaseline="middle";g.fillText(k+1,px,py+r*.05)}); // # ds-ok Druck
   return {name:"campus.png",bytes:await alsBytes(c),b:c.width,h:c.height}}
+// Dateiname aus Titel, Sektion und Datum: offener-tag-am-goetheanum_sozialwissenschaften_2026-10-17_a5-versand
+const MONATE=["januar","februar","märz","april","mai","juni","juli","august","september","oktober","november","dezember"];
+function dateiname(art){
+  const slug=t=>String(t||"").toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  const sekt=(FARBEN.find(x=>x&&x[0]===S.farbe)||[,""])[1].replace(/^(Allgemeine Anthroposophische )?Sektion (für )?/,"");
+  const m=String(S.wann).toLowerCase().match(/(\d{1,2})\.\s*([a-zäöü]+)\s+(\d{4})/),mo=m&&MONATE.indexOf(m[2])+1;
+  const datum=m&&mo?`${m[3]}-${String(mo).padStart(2,"0")}-${m[1].padStart(2,"0")}`:"";
+  return [slug(S.titel)||"folder",slug(sekt),datum,art].filter(Boolean).join("_")}
 async function titelBild(){
   const bytes=new Uint8Array(await (await fetch(S.bild)).arrayBuffer()),i=await laden(S.bild);
   const png=bytes[0]===0x89;return {name:png?"titelbild.png":"titelbild.jpg",bytes,b:i.naturalWidth,h:i.naturalHeight}}
@@ -497,7 +517,7 @@ $("idml").onclick=async e=>{const k=e.currentTarget,alt=k.textContent;k.disabled
     const bilder={titel:await titelBild(),plan:await planPng(),logo:await logoPng(true),logoBlau:await logoPng(false)};
     const zip=await baueIdml(S,farben,bilder,NR);
     const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([zip],{type:"application/zip"}));
-    a.download="Programmheft-InDesign.zip";a.click();archivieren("idml");setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    a.download=dateiname("indesign")+".zip";a.click();archivieren("idml");setTimeout(()=>URL.revokeObjectURL(a.href),4000);
   }catch(err){console.error(err);k.textContent="Export fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
   finally{k.disabled=false}k.textContent=alt};
 // ---------- PDF: direkt geschrieben wie im Campusplan, kein Druckdialog
@@ -519,12 +539,23 @@ const pdfBauen=async e=>{const k=e.currentTarget,alt=k.textContent,druck=k.datas
     const logoSvg=await (await fetch("../../assets/logos/goetheanum-logo.svg")).text();
     const titel=druck?await zuschnitt(S.bild,154,103,300,.95):await zuschnitt(S.bild,148,100,150,.78);
     const doc=await bauePdf(S,f,{titel,plan:await planOhneNummern(druck)},NR,lage,grad,logoSvg,druck,sektionsLogo(S.farbe));
-    const name=(S.titel||"programmheft").toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-    doc.save(`${name||"programmheft"}-a5-${druck?"druck-3mm":"versand"}.pdf`);archivieren(druck?"pdf-druck":"pdf-versand");
+    doc.save(dateiname(druck?"a5-druck-3mm":"a5-versand")+".pdf");archivieren(druck?"pdf-druck":"pdf-versand");
   }catch(err){console.error(err);k.textContent="PDF fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
   finally{k.disabled=false}k.textContent=alt};
 $("pdf").onclick=pdfBauen;$("pdf-druck").onclick=pdfBauen;
-$("zuruecksetzen").onclick=()=>{S=structuredClone(BEISPIEL);bauen()}; // neue id beim nächsten Sichern: ein neuer Folder
+$("zuruecksetzen").onclick=()=>{S=structuredClone(BEISPIEL);bauen();archivZeigen()}; // neue id beim nächsten Sichern: ein neuer Folder
+// Alle Folder: öffentliche Liste aus dem Archiv (services/folder/), Klick lädt den Stand
+const sbRpc=(f,b)=>fetch(SB+"/rest/v1/rpc/"+f,{method:"POST",headers:{"Content-Type":"application/json",apikey:SBK,Authorization:"Bearer "+SBK},body:JSON.stringify(b)}).then(r=>{if(!r.ok)throw r.status;return r.json()});
+async function archivZeigen(){const L=$("archiv-liste");
+  try{const rows=await sbRpc("folder_liste",{});
+    L.innerHTML=rows.length?"":`<li class="leer">Noch keine Folder gesichert.</li>`;
+    rows.forEach(f=>{const li=document.createElement("li"),b=document.createElement("button");b.type="button";
+      const d=new Date(f.updated_at);if(f.id===S.id)b.setAttribute("aria-current","true");
+      b.innerHTML=`<span class="punkt" style="background:var(--${esc(f.farbe||"bereich")})"></span><span>${esc(f.titel||"Ohne Titel")}<span class="wann">${d.getDate()}. ${d.getMonth()+1}. ${d.getFullYear()}${(f.exporte||[]).length?" · exportiert":""}</span></span>`;
+      b.onclick=async()=>{try{const st=await sbRpc("folder_holen",{p_id:f.id});if(st){clearTimeout(archivUhr);S=st;bauen();archivZeigen()}}catch(e){}};
+      li.append(b);L.append(li)})}
+  catch(e){L.innerHTML=`<li class="leer">Archiv gerade nicht erreichbar.</li>`}}
+$("archiv").addEventListener("toggle",e=>{if(e.target.open)archivZeigen()});
 
 // Helle Token-Werte einmal aus tokens.css lesen (erster Wert je Name = heller Satz).
 let TOK={};
