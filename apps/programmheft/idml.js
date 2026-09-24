@@ -55,12 +55,12 @@ function rahmen(xmm, ymm, wmm, hmm, story, spalten = 1, vertikal = 'TopAlign') {
 }
 
 // Fett aus dem Editor (<b>) wird zum Zeichenformat «Fett».
-function laeufe(html, extra = '') {
+function laeufe(html, extra = '', stil = '$ID/[No character style]') {
   const teile = String(html).split(/(<b>.*?<\/b>)/g).filter(Boolean);
   return teile.map((t) => {
     const fett = /^<b>/.test(t);
     const txt = t.replace(/<\/?b>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
-    return `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/${fett ? 'Fett' : '$ID/[No character style]'}"${extra}><Content>${x(txt)}</Content></CharacterStyleRange>`;
+    return `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/${fett ? 'Fett' : stil}"${extra}><Content>${x(txt)}</Content></CharacterStyleRange>`;
   }).join('');
 }
 
@@ -83,7 +83,9 @@ function absatzformat(name, a) {
 
 /* S: Zustand des Editors · farben: {akzent, ort, pause} als #rrggbb
    bilder: {titel:{name,bytes,b,h}, plan:{…}, logo:{…}} · orte: Liste der Legende */
-export async function baueIdml(S, farben, bilder, orte) {
+export async function baueIdml(S, farben, bilder, orte, zweit = null) {
+  // zweit: {programm, legende[]} – zweite Sprache in Ruhig, Hauptsprache in Deutlich
+  const Z2 = (t) => `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Zweitsprache"><Content>${x(t)}</Content></CharacterStyleRange>`;
   zaehler = 0;
   const stories = [];
   const neueStory = (absaetze) => { const sid = id('u'); stories.push([sid, story(sid, absaetze)]); return sid; };
@@ -95,7 +97,8 @@ export async function baueIdml(S, farben, bilder, orte) {
     gerade: [[0, 0], [148, 0], [148, 126], [0, 126]] }[S.kante] || null;
   const sTitel = neueStory([
     ['Titel', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(String(S.titel || '').replace(/(^|\s)(am|im|an|in|zu|zum|zur|und|für|von|vom|mit|bei|auf|aus|um|der|die|das|des|dem|den|ein|eine) /gi, '$1$2\u00a0'))}</Content></CharacterStyleRange>`],
-    ...String(S.wann).split('\n').map((z) => ['Datum', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(z)}</Content></CharacterStyleRange>`])]);
+    ...String(S.wann).split('\n').map((z) => ['Datum', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(z)}</Content></CharacterStyleRange>`])  ,...(zweit && S.titel2 ? [['Titel Zweitsprache', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(String(S.titel2))}</Content></CharacterStyleRange>`]] : [])
+  ,...(zweit && S.wann2 ? String(S.wann2).split('\n').map((z) => ['Datum Zweitsprache', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(z)}</Content></CharacterStyleRange>`]) : [])]);
   const sCredit = neueStory([['Bildnachweis', laeufe(esc1(S.credit || ''))]]);
   // Schrift: «alles» setzt auch Daten, Legende und Kontakt in die Hausschrift
   const nurHaus = S.stimme === 'alles';
@@ -111,19 +114,20 @@ export async function baueIdml(S, farben, bilder, orte) {
   // Seiten 2–3 – Programm
   const NR = (o) => orte.indexOf((o || '').trim()) + 1;
   const programm = (L, kopf) => neueStory([
-    ...(kopf ? [['Programm Kopf', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>Programm</Content></CharacterStyleRange>`]] : []),
+    ...(kopf ? [['Programm Kopf', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>Programm</Content></CharacterStyleRange>${zweit ? Z2(' ' + zweit.programm) : ''}`]] : []),
     ...L.map((z) => [z.pause ? 'Programm Pause' : 'Programm',
       `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Fett"><Content>${esc1(z.zeit)}</Content></CharacterStyleRange>`
       + `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>\t</Content></CharacterStyleRange>`
       + laeufe(z.text)
+      + (zweit && z.text2 ? `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>\u2028</Content></CharacterStyleRange>` + laeufe(z.text2, '', 'Zweitsprache') : '')
       + (z.ort ? `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>\t</Content></CharacterStyleRange><CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Ort"><Content>${NR(z.ort) ? NR(z.ort) + ' ' : ''}${esc1(z.ort)}</Content></CharacterStyleRange>` : '')])]);
   const seite2 = [rahmen(9, 13, 130, 187, programm(S.seiten[0], true))];
   const seite3 = [rahmen(9, 13, 130, 187, programm(S.seiten[1], false))];
 
   // Seite 4 – Campus
-  const sInfo = neueStory([['Programm Kopf', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(S.info)}</Content></CharacterStyleRange>`]]);
+  const sInfo = neueStory([['Programm Kopf', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(S.info)}</Content></CharacterStyleRange>${zweit && S.info2 ? Z2(' ' + S.info2) : ''}`]]);
   const sLeg = neueStory(orte.map((o, k) => ['Legende',
-    `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Nummer"><Content>${k + 1}</Content></CharacterStyleRange><CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>\t${esc1(o)}</Content></CharacterStyleRange>`]));
+    `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Nummer"><Content>${k + 1}</Content></CharacterStyleRange><CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>\t${esc1(o)}</Content></CharacterStyleRange>${zweit && zweit.legende[k] ? Z2(' ' + zweit.legende[k]) : ''}`]));
   const sKontakt = neueStory(String(S.kontakt).replace(/\b(\d{4,5}) (?=\S)/g, '$1\u00a0').replace(/ · /g, '\u00a0· ').split('\n').map((z) => ['Kontakt', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(z)}</Content></CharacterStyleRange>`]));
   const legH = Math.ceil(orte.length / 3) * 6 + 2;
   const seite4 = [
@@ -167,6 +171,7 @@ ${inhalt.join('\n')}
 <CharacterStyle Self="CharacterStyle/$ID/[No character style]" Imported="false" Name="$ID/[No character style]"/>
 <CharacterStyle Self="CharacterStyle/Fett" Name="Fett" FontStyle="${FETT}"/>
 <CharacterStyle Self="CharacterStyle/Ort" Name="Ort" FillColor="Color/Ort"/>
+<CharacterStyle Self="CharacterStyle/Zweitsprache" Name="Zweitsprache" FontStyle="Ruhig"><Properties><AppliedFont type="string">Goetheanum Schrift</AppliedFont></Properties></CharacterStyle>
 <CharacterStyle Self="CharacterStyle/Nummer" Name="Nummer" FontStyle="${FETT}" FillColor="Color/Gold"/>
 </RootCharacterStyleGroup>
 <RootParagraphStyleGroup Self="rpsg">
@@ -174,9 +179,11 @@ ${inhalt.join('\n')}
 <ParagraphStyle Self="ParagraphStyle/$ID/NormalParagraphStyle" Name="$ID/NormalParagraphStyle"><Properties><BasedOn type="string">$ID/[No paragraph style]</BasedOn></Properties></ParagraphStyle>
 ${absatzformat('Titel', { schnitt: 'Deutlich', grad: 34, zab: 36, farbe: 'Color/Paper', attr: `Justification="CenterAlign" SpaceAfter="${n(7 * MM)}"` })}
 ${absatzformat('Datum', { schnitt: 'Deutlich', grad: 15, zab: 19.5, farbe: 'Color/Paper', attr: 'Justification="CenterAlign"' })}
+${absatzformat('Titel Zweitsprache', { schnitt: 'Ruhig', grad: 34, zab: 36, farbe: 'Color/Paper', attr: `Justification="CenterAlign" SpaceBefore="${n(3 * MM)}"` })}
+${absatzformat('Datum Zweitsprache', { schnitt: 'Ruhig', grad: 15, zab: 19.5, farbe: 'Color/Paper', attr: `Justification="CenterAlign" SpaceBefore="${n(2 * MM)}"` })}
 ${absatzformat('Bildnachweis', { ...TX, grad: 6.5, zab: 8, farbe: 'Color/Paper', attr: 'Justification="RightAlign"' })}
 ${absatzformat('Programm Kopf', { schnitt: 'Deutlich', grad: 22, zab: 26, farbe: 'Color/Ort', attr: `SpaceAfter="${n(6 * MM)}"` })}
-${absatzformat('Programm', { ...TX, grad: 12, zab: 16.8, attr: zeileAttr, tabs: tabs2 })}
+${absatzformat('Programm', { ...(zweit ? { font: 'Goetheanum Schrift', schnitt: 'Deutlich' } : TX), grad: 12, zab: 16.8, attr: zeileAttr, tabs: tabs2 })}
 <ParagraphStyle Self="ParagraphStyle/Programm Pause" Name="Programm Pause" ParagraphShadingOn="true" ParagraphShadingColor="Color/Pause" ParagraphShadingTopOffset="${n(3 * MM)}" ParagraphShadingBottomOffset="${n(3 * MM)}" ParagraphShadingLeftOffset="${n(31 * MM + 3 * MM)}" ParagraphShadingRightOffset="0"><Properties><BasedOn type="object">ParagraphStyle/Programm</BasedOn></Properties></ParagraphStyle>
 ${absatzformat('Legende', { ...TX, grad: 10, zab: 17, tabs: tab(6) })}
 ${absatzformat('Kontakt', { ...TX, grad: 9, zab: 13 })}

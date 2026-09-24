@@ -12,6 +12,7 @@ const SB = 148, SH = 210;
 const SCHRIFTEN = [
   ['GDeutlich', '../../assets/fonts/goetheanum/Office/GoetheanumSchriftDeutlich.ttf'],
   ['GKlar', '../../assets/fonts/goetheanum/Office/GoetheanumSchriftKlar.ttf'],
+  ['GRuhig', '../../assets/fonts/goetheanum/Office/GoetheanumSchriftRuhig.ttf'],
   ['GLaut', '../../assets/fonts/goetheanum/Office/GoetheanumSchriftLaut.ttf'],
   ['Source', '../../assets/fonts/goetheanum/Fallback/SourceSans3-Regular.ttf'],
   ['SourceFett', '../karten-generator/assets/fonts/SourceSans3-SemiBold.ttf'],
@@ -131,8 +132,11 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   let titel = doc.splitTextToSize(text(binden(S.titel)), SB - 24);
   for (let b = SB - 24; b > 40; b -= 2) { const t = doc.splitTextToSize(text(binden(S.titel)), b); if (t.length > titel.length) break; titel = t; }
   const wann = String(S.wann).split('\n');
+  const Z = bilder.zweit || null; // zweite Sprache: {programm, legende[]} – Hauptsprache Deutlich, zweite Ruhig
+  let titel2 = [], wann2 = [];
+  if (Z) { doc.setFont('GRuhig', 'normal'); doc.setFontSize(34); titel2 = S.titel2 ? doc.splitTextToSize(text(binden(S.titel2)), SB - 24) : []; wann2 = S.wann2 ? String(S.wann2).split('\n') : []; doc.setFont('GDeutlich', 'normal'); }
   const tz = 34 * 1.05 / PT, wz = 15 * 1.3 / PT;
-  const blockH = titel.length * tz + 7 + wann.length * wz;
+  const blockH = titel.length * tz + 7 + wann.length * wz + (titel2.length ? 3 + titel2.length * tz : 0) + (wann2.length ? 2 + wann2.length * wz : 0);
   // Mittig zwischen Logo (unten bei 26,5 mm) und dem Innenrand über der Kante – wie im Editor.
   const unten = 126 - (S.kante === 'gerade' ? 10 : 16);
   let y = 26.5 + (unten - 26.5 - blockH) / 2 + tz * 0.8;
@@ -140,6 +144,9 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   y += (titel.length - 1) * tz + 7 + wz;
   doc.setFontSize(15);
   doc.text(wann, SB / 2, y, { align: 'center', lineHeightFactor: 1.3 });
+  if (titel2.length) { y += (wann.length - 1) * wz + 3 + tz; doc.setFont('GRuhig', 'normal'); doc.setFontSize(34); doc.text(titel2, SB / 2, y, { align: 'center', lineHeightFactor: 1.05 }); y += (titel2.length - 1) * tz; }
+  else y += (wann.length - 1) * wz;
+  if (wann2.length) { y += (titel2.length ? 7 : 2) + wz; doc.setFont('GRuhig', 'normal'); doc.setFontSize(15); doc.text(wann2, SB / 2, y, { align: 'center', lineHeightFactor: 1.3 }); }
   if (S.credit) { doc.setFont(FS, 'normal'); doc.setFontSize(6.5); doc.text(text(S.credit), SB - 4, SH - 3, { align: 'right' }); }
 
   /* ---------- Seiten 2–3: Programm ---------- */
@@ -148,17 +155,19 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   S.seiten.forEach((L, s) => {
     neueSeite();
     let y0 = 13;
-    if (s === 0) { doc.setFont('GDeutlich', 'normal'); doc.setFontSize(22); doc.setTextColor(f.kopf); doc.text('Programm', 11, y0 + 7); y0 += 14; }
+    if (s === 0) { doc.setFont('GDeutlich', 'normal'); doc.setFontSize(22); doc.setTextColor(f.kopf); doc.text('Programm', 11, y0 + 7); if (Z) { const w = doc.getTextWidth('Programm '); doc.setFont('GRuhig', 'normal'); doc.text(Z.programm, 11 + w, y0 + 7); } y0 += 14; }
     const laeufeVon = (z) => {
       const l = [];
       String(z.text).split(/(<b>.*?<\/b>)/g).filter(Boolean).forEach((t) =>
-        l.push({ t: text(t.replace(/<\/?b>/g, '')), font: /^<b>/.test(t) ? (S.stimme ? 'GLaut' : FF) : (S.stimme ? 'GKlar' : FS), farbe: f.tinte }));
+        l.push({ t: text(t.replace(/<\/?b>/g, '')), font: /^<b>/.test(t) ? (Z || S.stimme ? 'GLaut' : FF) : (Z ? 'GDeutlich' : S.stimme ? 'GKlar' : FS), farbe: f.tinte }));
       return l;
     };
     // Zeilenabstand wie im Heft: Rest der Seite gleichmässig verteilen, 3–7 mm.
     // Ort rechtsbündig in eigener Spalte: Nummer fett, Name normal; der Programmtext weicht ihm aus.
     const ortB = (z) => { if (!z.ort) return 0; doc.setFontSize(grad); doc.setFont(FF, 'normal'); const a = nr(z.ort) ? doc.getTextWidth(nr(z.ort) + ' ') : 0; doc.setFont(FS, 'normal'); return a + doc.getTextWidth(z.ort) + 3; };
-    const hoehen = L.map((z) => laeufeSetzen(doc, laeufeVon(z), 0, 0, tb - ortB(z), grad, zab) * zab);
+    const zweitVon = (z) => (Z && z.text2 ? String(z.text2).split(/(<b>.*?<\/b>)/g).filter(Boolean).map((t) => ({ t: text(t.replace(/<\/?b>/g, '')), font: 'GRuhig', farbe: f.tinte })) : []);
+    const n1 = L.map((z) => laeufeSetzen(doc, laeufeVon(z), 0, 0, tb - ortB(z), grad, zab));
+    const hoehen = L.map((z, i) => (n1[i] + (zweitVon(z).length ? laeufeSetzen(doc, zweitVon(z), 0, 0, tb - ortB(z), grad, zab) : 0)) * zab);
     const frei = SH - 10 - y0 - hoehen.reduce((a, b) => a + b, 0);
     const pad = Math.max(3, Math.min(7, frei / (L.length * 2)));
     let yy = y0;
@@ -169,6 +178,7 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
       doc.setFont(FF, 'normal'); doc.setFontSize(grad); doc.setTextColor(f.tinte);
       doc.text(z.zeit, 12, base);
       laeufeSetzen(doc, laeufeVon(z), tx, base, tb - ortB(z), grad, zab);
+      if (zweitVon(z).length) laeufeSetzen(doc, zweitVon(z), tx, base + n1[i] * zab, tb - ortB(z), grad, zab);
       if (z.ort) {
         const rechts = tx + tb; doc.setFontSize(grad); doc.setTextColor(f.ort);
         doc.setFont(FS, 'normal'); doc.text(z.ort, rechts, base, { align: 'right' });
@@ -183,6 +193,7 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   neueSeite();
   doc.setFont('GDeutlich', 'normal'); doc.setFontSize(22); doc.setTextColor(f.kopf);
   doc.text(text(S.info), 11, 13 + 7);
+  if (Z) { const w = doc.getTextWidth(text(S.info) + ' '); doc.setFont('GRuhig', 'normal'); doc.text(text(S.info2 || ''), 11 + w, 13 + 7); }
   const spalten = Math.ceil(orte.length / 3), legZ = 6;
   const legY = SH - 10 - 14 - spalten * legZ;
   const kastenY = 27, kastenH = legY - 5 - kastenY;
@@ -199,6 +210,7 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
     marke(doc, x + 2.5, zy + 3, 2.5, i + 1, f.gold);
     doc.setFont(FS, 'normal'); doc.setFontSize(10); doc.setTextColor(f.tinte);
     doc.text(o, x + 7, zy + 3, { baseline: 'middle' });
+    if (Z && Z.legende[i]) { const w = doc.getTextWidth(o + ' '); doc.setFont('GRuhig', 'normal'); doc.text(Z.legende[i], x + 7 + w, zy + 3, { baseline: 'middle' }); }
   });
   doc.setFont(FS, 'normal'); doc.setFontSize(9); doc.setTextColor(f.tinte);
   const kz = String(S.kontakt).split('\n');
