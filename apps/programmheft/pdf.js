@@ -117,7 +117,7 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   const [p0, ...rest] = kante;
   doc.lines(rest.map((p, i) => [p[0] - (i ? rest[i - 1][0] : p0[0]), p[1] - (i ? rest[i - 1][1] : p0[1])]), p0[0], p0[1], [1, 1], 'F', true);
 
-  const lw1 = svgLogo(logoSvg, WEISS), lh = 11, lw = lh * lw1.verh;
+  const lw1 = svgLogo(logoSvg, WEISS), lh = 6.5, lw = lh * lw1.verh;
   await doc.svg(lw1.el, { x: (SB - lw) / 2, y: 20, width: lw, height: lh });
 
   doc.setTextColor(WEISS); doc.setFont('GDeutlich', 'normal'); doc.setFontSize(34);
