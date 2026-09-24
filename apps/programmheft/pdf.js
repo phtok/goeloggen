@@ -172,21 +172,22 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   neueSeite();
   doc.setFont('GDeutlich', 'normal'); doc.setFontSize(22); doc.setTextColor(f.kopf);
   doc.text(text(S.info), 11, 13 + 7);
-  const spalten = Math.ceil(orte.length / 2), legZ = 6.5;
+  const spalten = Math.ceil(orte.length / 3), legZ = 6;
   const legY = SH - 10 - 14 - spalten * legZ;
   const kastenY = 27, kastenH = legY - 5 - kastenY;
   const kb = Math.min(SB - 22, kastenH * 192 / 210), kh = kb * 210 / 192, kx = (SB - kb) / 2;
   doc.addImage(bilder.plan.url, bilder.plan.url.startsWith('data:image/png') ? 'PNG' : 'JPEG', kx, kastenY, kb, kh, 'plan', 'SLOW');
-  orte.forEach((o, i) => { const p = lage(o); if (p) marke(doc, kx + p[0] / 100 * kb, kastenY + p[1] / 100 * kh, 3.25, i + 1, f.gold); });
+  orte.forEach((o, i) => { const p = lage(o); if (p) marke(doc, kx + p[0] / 100 * kb, kastenY + p[1] / 100 * kh, 2.4, i + 1, f.gold); });
   orte.forEach((o, i) => {
-    const sp = i < spalten ? 0 : 1, zy = legY + (i % spalten) * legZ;
-    const x = 11 + sp * (SB - 22 + 6) / 2;
-    marke(doc, x + 3, zy + 3, 3, i + 1, f.gold);
-    doc.setFont(FS, 'normal'); doc.setFontSize(11); doc.setTextColor(f.tinte);
-    doc.text(o, x + 8, zy + 3, { baseline: 'middle' });
+    const sp = Math.floor(i / spalten), zy = legY + (i % spalten) * legZ;
+    const x = 11 + sp * (SB - 22 + 4) / 3;
+    marke(doc, x + 2.5, zy + 3, 2.5, i + 1, f.gold);
+    doc.setFont(FS, 'normal'); doc.setFontSize(10); doc.setTextColor(f.tinte);
+    doc.text(o, x + 7, zy + 3, { baseline: 'middle' });
   });
   doc.setFont(FS, 'normal'); doc.setFontSize(9); doc.setTextColor(f.tinte);
-  doc.text(String(S.kontakt).split('\n'), 11, SH - 10 - 5, { lineHeightFactor: 1.45 });
+  const kz = String(S.kontakt).split('\n');
+  doc.text(kz, 11, SH - 10 - 1 - (kz.length - 1) * 9 * 1.45 * 0.3528, { lineHeightFactor: 1.45 });
   // Rückseite unten rechts: das Logo der gewählten Sektion (Logo-Maschine)
   const lw2 = svgLogo(sektLogoSvg || logoSvg), bw = Math.min(9 * lw2.verh, 80), bl = bw / lw2.verh;
   await doc.svg(lw2.el, { x: SB - 11 - bw, y: SH - 10 - bl, width: bw, height: bl });
