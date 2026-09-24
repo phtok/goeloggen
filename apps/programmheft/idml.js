@@ -192,7 +192,7 @@ ${absatzformat('Kontakt', { ...TX, grad: 9, zab: 13 })}
 </MasterSpread></idPkg:MasterSpread>`;
   const prefs = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <idPkg:Preferences xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="16.0">
-<DocumentPreference PageHeight="${n(H)}" PageWidth="${n(B)}" PagesPerDocument="4" FacingPages="false" AllowPageShuffle="true" Intent="PrintIntent" CreatePrimaryTextFrame="false" DocumentBleedTopOffset="${n(3 * MM)}" DocumentBleedBottomOffset="${n(3 * MM)}" DocumentBleedInsideOrLeftOffset="${n(3 * MM)}" DocumentBleedOutsideOrRightOffset="${n(3 * MM)}" DocumentBleedUniformSize="true" PageBinding="LeftToRight"/>
+<DocumentPreference PageHeight="${n(H)}" PageWidth="${n(B)}" PagesPerDocument="1" FacingPages="false" AllowPageShuffle="true" Intent="PrintIntent" CreatePrimaryTextFrame="false" DocumentBleedTopOffset="${n(3 * MM)}" DocumentBleedBottomOffset="${n(3 * MM)}" DocumentBleedInsideOrLeftOffset="${n(3 * MM)}" DocumentBleedOutsideOrRightOffset="${n(3 * MM)}" DocumentBleedUniformSize="true" PageBinding="LeftToRight"/>
 <ViewPreference HorizontalMeasurementUnits="Millimeters" VerticalMeasurementUnits="Millimeters"/>
 </idPkg:Preferences>`;
 
@@ -206,6 +206,7 @@ ${absatzformat('Kontakt', { ...TX, grad: 9, zab: 13 })}
 <Layer Self="ly1" Name="Ebene 1" Visible="true" Locked="false" IgnoreWrap="false" ShowGuides="true" LockGuides="false" UI="true" Expendable="true" Printable="true"/>
 <idPkg:MasterSpread src="MasterSpreads/MasterSpread_ms.xml"/>
 ${spreads.map(([s]) => `<idPkg:Spread src="Spreads/Spread_${s}.xml"/>`).join('\n')}
+<Section Self="sec1" Length="4" Name="" ContinueNumbering="false" IncludeSectionPrefix="false" PageNumberStart="1" Marker="" PageStart="pg1" SectionPrefix=""/>
 <idPkg:BackingStory src="XML/BackingStory.xml"/>
 ${stories.map(([s]) => `<idPkg:Story src="Stories/Story_${s}.xml"/>`).join('\n')}
 </Document>`;
