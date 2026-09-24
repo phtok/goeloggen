@@ -108,7 +108,10 @@ export async function baueIdml(S, farben, bilder, orte, zweit = null) {
   const seite1 = [
     bild(0, 110, 148, 100, bilder.titel.name, bilder.titel.b, bilder.titel.h, true),
     flaeche(0, 0, 148, 126, 'Color/Akzent', kante),
-    bild(54.6, 20, 38.8, 6.5, bilder.logo.name, bilder.logo.b, bilder.logo.h, false),
+    (() => { // Titel-Logo: Sektionslogo (zweizeilig, 11 mm hoch) oder Goetheanum-Marke
+      const L = bilder.titelLogo || bilder.logo, v = L.b / L.h;
+      let lh = bilder.titelLogo ? 11 : 6.5, lw = lh * v; if (lw > 118) { lw = 118; lh = lw / v; }
+      return bild((148 - lw) / 2, 20, lw, lh, L.name, L.b, L.h, false); })(),
     rahmen(12, 28.5, 124, 126 - (S.kante === 'gerade' ? 10 : 16) - 28.5, sTitel, 1, 'CenterAlign'),
     rahmen(70, 202, 74, 5, sCredit, 1, 'BottomAlign')];
 
@@ -122,8 +125,15 @@ export async function baueIdml(S, farben, bilder, orte, zweit = null) {
       + laeufe(z.text)
       + (zweit && z.text2 ? `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>\u2028</Content></CharacterStyleRange>` + laeufe(z.text2, '', 'Zweitsprache') : '')
       + (z.ort ? `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>\t</Content></CharacterStyleRange><CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Ort"><Content>${NR(z.ort) ? NR(z.ort) + ' ' : ''}${esc1(z.ort)}</Content></CharacterStyleRange>` : '')])]);
-  const seite2 = [rahmen(9, 13, 130, 187, programm(S.seiten[0], true))];
-  const seite3 = [rahmen(9, 13, 130, 187, programm(S.seiten[1], false))];
+  // Freie Textseite: Überschrift (optional) und Absätze; fett = Laut
+  const art = S.art || ['zeiten', 'zeiten'];
+  const freiText = (s) => neueStory([
+    ...(String((S.kopf || [])[s] || '').trim() ? [['Programm Kopf', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(S.kopf[s])}</Content></CharacterStyleRange>`]] : []),
+    ...String((S.frei || [])[s] || '').split('\n').map((a) => ['Fliesstext', laeufe(a).replace(/CharacterStyle\/Fett/g, 'CharacterStyle/Laut')]),
+    ...(zweit && (S.frei2 || [])[s] ? String(S.frei2[s]).split('\n').map((a) => ['Fliesstext Zweitsprache', laeufe(a).replace(/CharacterStyle\/Fett/g, 'CharacterStyle/Laut')]) : [])]);
+  const innen = (s) => [rahmen(art[s] === 'text' ? 11 : 9, 13, art[s] === 'text' ? 126 : 130, 187, art[s] === 'text' ? freiText(s) : programm(S.seiten[s], s === art.indexOf('zeiten')))];
+  const seite2 = innen(0);
+  const seite3 = innen(1);
 
   // Seite 4 – Campus
   const sLeg = neueStory(orte.map((o, k) => ['Legende',
@@ -171,6 +181,7 @@ ${inhalt.join('\n')}
 <CharacterStyle Self="CharacterStyle/Fett" Name="Fett" FontStyle="${FETT}"/>
 <CharacterStyle Self="CharacterStyle/Ort" Name="Ort" FillColor="Color/Ort"/>
 <CharacterStyle Self="CharacterStyle/Zweitsprache" Name="Zweitsprache" FontStyle="Ruhig"><Properties><AppliedFont type="string">Goetheanum Schrift</AppliedFont></Properties></CharacterStyle>
+<CharacterStyle Self="CharacterStyle/Laut" Name="Laut" FontStyle="Laut"><Properties><AppliedFont type="string">Goetheanum Schrift</AppliedFont></Properties></CharacterStyle>
 <CharacterStyle Self="CharacterStyle/Nummer" Name="Nummer" FontStyle="${FETT}" FillColor="Color/Gold"/>
 </RootCharacterStyleGroup>
 <RootParagraphStyleGroup Self="rpsg">
@@ -184,6 +195,8 @@ ${absatzformat('Bildnachweis', { ...TX, grad: 6.5, zab: 8, farbe: 'Color/Paper',
 ${absatzformat('Programm Kopf', { schnitt: 'Deutlich', grad: 22, zab: 26, farbe: 'Color/Ort', attr: `SpaceAfter="${n(6 * MM)}"` })}
 ${absatzformat('Programm', { ...(zweit ? { font: 'Goetheanum Schrift', schnitt: 'Deutlich' } : TX), grad: 12, zab: 16.8, attr: zeileAttr, tabs: tabs2 })}
 <ParagraphStyle Self="ParagraphStyle/Programm Pause" Name="Programm Pause" ParagraphShadingOn="true" ParagraphShadingColor="Color/Pause" ParagraphShadingTopOffset="${n(3 * MM)}" ParagraphShadingBottomOffset="${n(3 * MM)}" ParagraphShadingLeftOffset="${n(31 * MM + 3 * MM)}" ParagraphShadingRightOffset="0"><Properties><BasedOn type="object">ParagraphStyle/Programm</BasedOn></Properties></ParagraphStyle>
+${absatzformat('Fliesstext', { schnitt: 'Klar', grad: 13, zab: 19.5 })}
+${absatzformat('Fliesstext Zweitsprache', { schnitt: 'Ruhig', grad: 13, zab: 19.5, attr: `SpaceBefore="${n(3 * MM)}"` })}
 ${absatzformat('Legende', { ...TX, grad: 10, zab: 17, tabs: tab(6) })}
 ${absatzformat('Kontakt', { ...TX, grad: 9, zab: 13 })}
 </RootParagraphStyleGroup>
@@ -235,6 +248,6 @@ ${stories.map(([s]) => `<idPkg:Story src="Stories/Story_${s}.xml"/>`).join('\n')
   const idml = await zipSchreiben(dateien);
 
   const paket = new Map([['Programmheft.idml', idml]]);
-  Object.values(bilder).forEach((b) => paket.set(`Links/${b.name}`, b.bytes));
+  Object.values(bilder).filter((b) => b && b.bytes).forEach((b) => paket.set(`Links/${b.name}`, b.bytes));
   return zipSchreiben(paket);
 }
