@@ -25,14 +25,14 @@
   .leiste{display:grid;gap:var(--s4);margin-bottom:var(--s6)}
   .leiste .reihe{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center}
   .leiste .lab{flex:0 0 100%}
-  .farbwahl{display:flex;flex-wrap:wrap;gap:var(--s2)}
-  .farbwahl button{display:inline-flex;align-items:center;gap:var(--s2);min-height:var(--tap);padding:0 var(--s3) 0 var(--s2);
-    border:1px solid var(--line);border-radius:var(--r-pill);background:var(--paper);color:var(--ink);
-    font-family:var(--font-text);font-size:var(--t-small);cursor:pointer}
-  .farbwahl button .punkt{width:1.5rem;height:1.5rem;border-radius:50%;flex:none}
-  .farbwahl button[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink)}
-  .farbwahl .trenner{flex:0 0 100%;height:0}
-  .fmenue{position:relative;flex:1;max-width:28rem}
+  .knoepfe .btn{flex:1 1 auto}
+  @media (min-width:1100px){
+    main.wrap{max-width:none}
+    .werk{display:grid;grid-template-columns:minmax(18rem,21rem) 1fr;gap:var(--s6);align-items:start}
+    .leiste{position:sticky;top:var(--s6);margin-bottom:0}
+    .knoepfe .btn{flex:1 1 100%}
+  }
+  .fmenue{position:relative;flex:1;max-width:28rem;min-width:0}
   .fknopf,.fliste li{display:flex;align-items:center;gap:var(--s2);width:100%;min-height:var(--tap);padding:0 var(--s3) 0 var(--s2);
     font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);cursor:pointer;text-align:left}
   .fknopf{border:1px solid var(--line);border-radius:var(--r-control);background:var(--paper)}
@@ -146,22 +146,27 @@
     <h1>Goetheanum Folder erstellen</h1>
   </section>
 
+  <div class="werk">
   <div class="leiste card soft">
-    <div class="reihe"><span class="lab">Farbe</span><div class="fmenue" id="fmenue"><button type="button" class="fknopf" id="fknopf" aria-haspopup="listbox" aria-expanded="false" aria-label="Farbe wählen"></button><ul class="fliste" id="farbwahl" role="listbox" aria-label="Farbe" hidden></ul></div></div>
+    <div class="reihe"><span class="lab" id="lab-farbe">Farbe</span><div class="fmenue" id="m-farbe"></div></div>
+    <div class="reihe"><span class="lab" id="lab-schrift">Schrift</span><div class="fmenue" id="m-schrift"></div></div>
+    <div class="reihe"><span class="lab" id="lab-kante">Kante über dem Bild</span><div class="fmenue" id="m-kante"></div></div>
     <div class="reihe"><span class="lab">Titelbild</span><div class="motive" id="motive"></div>
       <button class="btn" type="button" id="bild-waehlen">Eigenes Bild</button><input type="file" id="f-bild" accept="image/*" hidden /></div>
-    <div class="reihe"><span class="lab">Kante</span><div class="farbwahl" id="kanten" role="group" aria-label="Kante über dem Titelbild"></div></div>
-    <div class="reihe"><span class="lab">Schrift</span><div class="farbwahl" id="stimmen" role="group" aria-label="Schrift im Heft"></div></div>
-    <div class="reihe">
+    <div class="reihe knoepfe">
+      <span class="lab">Exportieren</span>
       <button class="btn primary" type="button" id="pdf" data-druck="0">PDF für den Versand</button>
       <button class="btn" type="button" id="pdf-druck" data-druck="1">PDF für die Druckerei</button>
       <button class="btn" type="button" id="idml">Für InDesign (IDML)</button>
+    </div>
+    <div class="reihe">
       <button class="btn" type="button" id="zuruecksetzen">Beispiel wiederherstellen</button>
       <p class="hinweis">Fett: Text markieren und Strg+B. Alles bleibt in diesem Browser gespeichert.</p>
     </div>
   </div>
 
   <div class="blaetter" id="blaetter"></div>
+  </div>
 </main>
 
 <footer class="ds-footer"><div class="wrap frow"><span><strong>Goetheanum Grafik</strong></span><span><a href="./">Programmheft mit Formular</a></span></div></footer>
@@ -384,37 +389,43 @@ B.addEventListener("click",e=>{const t=e.target.closest("[data-tat]");if(!t)retu
 function fokus(p){const el=B.querySelector(`[data-pfad="${p}"]`);if(el){el.focus()}}
 
 // Farbwahl mit Namen
-const FL=$("farbwahl"),FK=$("fknopf");
-FARBEN.forEach(x=>{const li=document.createElement("li");if(!x){li.className="trenner";li.setAttribute("role","separator");FL.append(li);return}
-  const [k,n]=x;li.dataset.k=k;li.setAttribute("role","option");li.tabIndex=-1;
-  li.innerHTML=`<span class="punkt" style="background:var(--${k})"></span>${esc(n)}`;
-  li.onclick=()=>{S.farbe=k;fzu();bauen();FK.focus()};FL.append(li)});
-const fopt=()=>[...FL.querySelectorAll("[role=option]")];
-const fzu=()=>{FL.hidden=true;FK.setAttribute("aria-expanded","false")};
-const fauf=()=>{FL.hidden=false;FK.setAttribute("aria-expanded","true");(FL.querySelector("[aria-selected=true]")||fopt()[0]).focus()};
-FK.onclick=()=>FL.hidden?fauf():fzu();
-FK.onkeydown=e=>{if(["ArrowDown","Enter"," "].includes(e.key)){e.preventDefault();fauf()}};
-FL.onkeydown=e=>{const o=fopt(),i=o.indexOf(document.activeElement);
-  if(e.key==="Escape"){e.preventDefault();fzu();FK.focus()}
-  else if(e.key==="ArrowDown"){e.preventDefault();(o[i+1]||o[0]).focus()}
-  else if(e.key==="ArrowUp"){e.preventDefault();(o[i-1]||o[o.length-1]).focus()}
-  else if(e.key==="Enter"||e.key===" "){e.preventDefault();document.activeElement.click()}
-  else if(e.key==="Tab")fzu()};
-document.addEventListener("click",e=>{if(!$("fmenue").contains(e.target))fzu()});
+// Auswahlmenü (eigenes, nicht das System-Menü): Knopf + Liste, Tastatur wie ein listbox
+const MENUES=[];
+function menue(host,lab,eintraege,wert,setzen){ // eintraege: [wert, html] | null = Trenner
+  const k=document.createElement("button"),l=document.createElement("ul");
+  k.type="button";k.className="fknopf";k.setAttribute("aria-haspopup","listbox");k.setAttribute("aria-expanded","false");k.setAttribute("aria-labelledby",lab+" "+host+"-k");k.id=host+"-k";
+  l.className="fliste";l.setAttribute("role","listbox");l.setAttribute("aria-labelledby",lab);l.hidden=true;
+  eintraege.forEach(x=>{const li=document.createElement("li");if(!x){li.className="trenner";li.setAttribute("role","separator");l.append(li);return}
+    li.dataset.v=String(x[0]);li.setAttribute("role","option");li.tabIndex=-1;li.innerHTML=x[1];
+    li.onclick=()=>{setzen(x[0]);zu();bauen();k.focus()};l.append(li)});
+  $(host).append(k,l);
+  const opt=()=>[...l.querySelectorAll("[role=option]")];
+  const zu=()=>{l.hidden=true;k.setAttribute("aria-expanded","false")};
+  const auf=()=>{MENUES.forEach(m=>m.zu());l.hidden=false;k.setAttribute("aria-expanded","true");(l.querySelector("[aria-selected=true]")||opt()[0]).focus()};
+  k.onclick=()=>l.hidden?auf():zu();
+  k.onkeydown=e=>{if(["ArrowDown","Enter"," "].includes(e.key)){e.preventDefault();auf()}};
+  l.onkeydown=e=>{const o=opt(),i=o.indexOf(document.activeElement);
+    if(e.key==="Escape"){e.preventDefault();zu();k.focus()}
+    else if(e.key==="ArrowDown"){e.preventDefault();(o[i+1]||o[0]).focus()}
+    else if(e.key==="ArrowUp"){e.preventDefault();(o[i-1]||o[o.length-1]).focus()}
+    else if(e.key==="Enter"||e.key===" "){e.preventDefault();document.activeElement.click()}
+    else if(e.key==="Tab")zu()};
+  document.addEventListener("click",e=>{if(!$(host).contains(e.target))zu()});
+  const m={zu,markieren(){const v=String(wert());opt().forEach(o=>o.setAttribute("aria-selected",o.dataset.v===v));
+    const a=l.querySelector("[aria-selected=true]");if(a)k.innerHTML=a.innerHTML}};
+  MENUES.push(m);return m}
+menue("m-farbe","lab-farbe",FARBEN.map(x=>x&&[x[0],`<span class="punkt" style="background:var(--${x[0]})"></span>${esc(x[1])}`]),()=>S.farbe,v=>S.farbe=v);
+menue("m-schrift","lab-schrift",[["alles","Nur Hausschrift","var(--font-display)"],["titel","Titel in Hausschrift","var(--font-display)"],[false,"Funktionaler","var(--font-text)"]]
+  .map(([v,n,f])=>[v,`<span style="font-family:${f}">${n}</span>`]),()=>S.stimme===true?"titel":(S.stimme||false),v=>S.stimme=v);
+menue("m-kante","lab-kante",KANTEN.map(([k,n])=>[k,esc(n)]),()=>S.kante,v=>S.kante=v);
 MOTIVE.forEach(([f,n,c])=>{const b=document.createElement("button");b.type="button";b.dataset.f=f;
   b.style.backgroundImage=`url('${f}')`;b.title=n;b.setAttribute("aria-label","Titelbild: "+n);
   b.onclick=()=>{S.bild=f;S.credit=c;bauen()};$("motive").append(b)});
 function markieren(){
-  fopt().forEach(b=>b.setAttribute("aria-selected",b.dataset.k===S.farbe));
-  {const a=FL.querySelector("[aria-selected=true]");if(a)FK.innerHTML=a.innerHTML}
-  document.querySelectorAll("#stimmen button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===String(S.stimme===true?"titel":S.stimme||false)));
-  document.querySelectorAll("#kanten button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===S.kante));
+  MENUES.forEach(m=>m.markieren());
   document.querySelectorAll("#motive button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.f===S.bild));
 }
-[[false,"Source Sans","var(--font-text)"],["titel","Titel in Hausschrift","var(--font-display)"],["alles","Nur Hausschrift","var(--font-display)"]].forEach(([v,n,f])=>{const b=document.createElement("button");b.type="button";b.dataset.v=v;b.textContent=n;b.style.fontFamily=f;
-  b.onclick=()=>{S.stimme=v;bauen()};$("stimmen").append(b)});
-KANTEN.forEach(([k,n])=>{const b=document.createElement("button");b.type="button";b.dataset.k=k;b.textContent=n;
-  b.onclick=()=>{S.kante=k;bauen()};$("kanten").append(b)});
+
 // Ortsnummern auf die Karte ziehen
 B.addEventListener("pointerdown",e=>{const m=e.target.closest(".mk");if(!m)return;e.preventDefault();
   const o=m.dataset.ort,k=$("karte");let pos=null;
