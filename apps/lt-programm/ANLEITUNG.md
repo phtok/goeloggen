@@ -23,8 +23,12 @@ blatt.json  (nur, was aufs Blatt gehört: Kopf, Stand, Pausen,                  
 3. **Offene Punkte** oben lesen: Platzhalter-Titel, fehlende Zweitsprachen,
    N.N. bei Mitwirkenden. Die gehören auf die Webseite – oder, wenn nur das
    Blatt sie braucht, in `blatt.json`.
+   Darunter der **Abgleich**: was von Hand gesetzt ist und darum nicht
+   mitwandert – Motto und Plakatzeilen, die Zeitfenster der Arbeitsgruppen
+   (10:45–12:30 und 14:30–16:00) und die sechs Sprachpillen. Steht dort
+   «prüfen», sagt die Zeile, wo es nachzuziehen ist.
 4. **«IDML exportieren»**, Datei in InDesign öffnen. Alle Rahmen der Rückseite
-   sind befüllt; die von Hand gesetzten (Plakatzeile) bleiben unangetastet.
+   sind befüllt; die von Hand gesetzten (Motto, Plakatzeilen) bleiben unangetastet.
 5. **Umbrüche setzen** in InDesign, wie es der Satz braucht.
 6. **Umbrüche sichern**, damit sie den nächsten Export überleben:
    ```
@@ -41,7 +45,7 @@ Regelmässig läuft nichts – der Knopf genügt.
 
 ## blatt.json – was nur auf dem Blatt steht
 
-- `kopf` Motto EN/DE, Untertitel, Tagungsname · `stand` «As of …» ·
+- `kopf` Motto EN/DE, Tagungsname · `stand` «As of …» ·
   `einleitung` EN/DE · `malerei` (Name und Titel des Umschlagbilds – steht auf
   Plakat **und** Rückseite, hier einmal gepflegt) · `sprachen_hinweis`
 - `feste_slots`: Check-in, Klassenstunde, Pausen, Uhrzeiten (Rahmen, die die
@@ -65,7 +69,12 @@ Absatz-Schreibweise: `"Text"` oder `{"laut": "English", "ruhig": "Deutsch"}`
   Seite kommen von dort; der Export tauscht nur Text aus.
 - `slots.json` – welcher Textrahmen welchen Inhalt trägt (Story-ID je Slot).
   `"nur_pruefen": true` heisst: der Export fasst den Rahmen **nicht** an (die
-  Plakatzeile ist von Hand unterschnitten); die Vorschau vergleicht ihn nur.
+  Plakatzeilen sind von Hand unterschnitten, das Motto der Rückseite steht
+  ein Wort je Zeile, die Sprachpillen sind gedrehte Einzelrahmen); die
+  Vorschau vergleicht ihn nur. `"feld"` sagt womit: `motto_en`, `motto_de`,
+  `datum_en`, `datum_de` oder `dolmetsch` (die sechs Pillen zusammen gegen die
+  Sprachen der Webseite – Pillenname je Sprache in
+  `programm.js › SPRACHE_PILLE`).
 
 Ändert sich die Vorlage in InDesign (neue Rahmen, anderes Layout, neue
 Story-IDs): IDML exportieren, als `vorlage/LT27.idml` ablegen und prüfen:
@@ -128,3 +137,12 @@ node apps/lt-programm/idml-export.js --ziel LT-2027.idml   # Export ohne Browser
 - Die Zuordnung Veranstaltung → Rahmen steht in `programm.js › PLENUM_SLOTS`
   und geht über Tag und Uhrzeit. Verschiebt die Tagung eine Uhrzeit, meldet die
   Vorschau «keine Veranstaltung um …» – dann dort nachziehen.
+- Ein **Nachsatz** unter den Namen eines mehrspaltigen Rahmens hat im Modell
+  keine Stelle. 2026 stand im 8:30-Rahmen unter den drei Namensspalten noch
+  «Followed by an exercise with … · Gefolgt von einer Übung mit …» über alle
+  Spalten. Die Webseite nennt für 2027 keinen – käme einer, fiele er beim
+  Export weg. Dann ein Feld dafür in `blatt.json › plenum` anlegen.
+- Die Uhrzeiten der Arbeitsgruppen stehen als feste Slots im Blatt; welche
+  Uhrzeit welche Kante des Fensters ist, sagt `programm.js › FENSTER_SLOTS`.
+  Verschiebt die Webseite ein Fenster, meldet es der Abgleich – geändert wird
+  in `blatt.json › feste_slots`.

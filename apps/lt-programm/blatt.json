@@ -8,8 +8,6 @@
   "kopf": {
     "motto_en": "Working with the\nIntelligence of Life",
     "motto_de": "Mit der Intelligenz\ndes Lebens arbeiten",
-    "untertitel_en": "Biodynamic agriculture \nbrings microcosm and \nmacrocosm together",
-    "untertitel_de": "Biodynamische Landwirtschaft \nbringt Mikrokosmos und \nMakrokosmos zusammen",
     "tagung_en": "Agriculture Conference",
     "tagung_de": "Landwirtschaftliche Tagung"
   },
@@ -19,7 +17,7 @@
   },
   "malerei": {
     "$hinweis": "Bild auf dem Umschlag – eine Angabe, zwei Stellen (Plakat Seite 1 und Rückseite).",
-    "name": "",
+    "name": "Esther Gerster",
     "titel": ""
   },
   "sprachen_hinweis": [

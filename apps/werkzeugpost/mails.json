@@ -1,0 +1,337 @@
+{
+  "$beschreibung": "Quelle der Wahrheit für die Werkzeugpost — die monatliche Mitarbeitenden-Mail. Eine Karte je Ausgabe. Reihenfolge = Feld «pos» (frei tauschbar); Themen lassen sich zusammenlegen (mehrere werkzeuge[] je Ausgabe) und neue hinzufügen. Die Voten des Redaktionstisches tragen ihre Vorschläge als Textstellen (tisch.voten[].vorschlaege: feld/suchen/ersetzen/warum/stand) — die Redaktionsseite (apps/werkzeugpost/) legt sie zum Übernehmen oder Ablehnen vor und schreibt den Entscheid in «stand» zurück. Sie liest diese Datei daneben liegend — services/ wird nicht veröffentlicht —, erlaubt Umsortieren/Bearbeiten und exportiert die geänderte JSON zurück; Nachvollziehbarkeit = Git-History. Versand aus dem persönlichen Postfach (Übernehmen-Knopf), nicht automatisch.",
+  "version": 1,
+  "serie": {
+    "arbeitstitel": "Werkzeugpost",
+    "adresse": "werkzeuge.goetheanum.ch",
+    "absender": [
+      "Philipp Tok",
+      "Stefan Hasler"
+    ],
+    "kadenz": "erster Dienstagvormittag im Monat",
+    "anrede": "du (offen, Serienname und Sie/du final vom Auftraggeber)"
+  },
+  "status_werte": [
+    "entwurf",
+    "in_redaktion",
+    "bereit",
+    "versandt"
+  ],
+  "ausgaben": [
+    {
+      "id": "2026-09-signatur",
+      "pos": 1,
+      "monat": "September 2026",
+      "status": "in_redaktion",
+      "werkzeuge": [
+        "signatur"
+      ],
+      "anlass": "Saisonbeginn; kleinster Aufwand, grösster kollektiver Effekt",
+      "identitaetssatz": "Jede Mail aus dem Haus ist ein kleiner Auftritt des Goetheanum — und zugleich die Stimme eines Menschen.",
+      "betreff": "E-Mails, die gelesen werden",
+      "body": "Liebe Mitarbeitende,\n\nab heute stellen wir euch monatlich ein Werkzeug vor, das die tägliche Arbeit erleichtert und unseren gemeinsamen Auftritt stärkt. Den Anfang macht die E-Mail-Signatur:\n\nJede Mail aus dem Haus ist ein kleiner Auftritt des Goetheanum — und zugleich die Stimme eines Menschen. Beides ist in drei Minuten eingerichtet:\n\n1. Öffnen: werkzeuge.goetheanum.ch/signatur\n2. Name und Angaben eintragen — die Vorschau zeigt sofort das Ergebnis\n3. Kopieren, in Outlook oder Apple Mail einsetzen, fertig.\n\nZwei Zeilen sind gesetzt, alles Weitere wählst du selbst — die Signatur ist deine. Auf der Seite warten dazu elf Handgriffe für Mails, die gelesen werden — und warum Bilder in der Signatur stören.\n\nWenn etwas klemmt: einfach antworten, wir lesen mit.\n\nHerzlich\nPhilipp Tok & Stefan Hasler\n\nPS: Im Oktober folgt die Hausschrift für euren Rechner.",
+      "anhang": {
+        "titel": "Elf Handgriffe für Mails, die gelesen werden",
+        "quelle": "apps/signatur-generator/ (PDF-Knopf vorhanden)",
+        "blatt": "1 von 10",
+        "status": "vorhanden"
+      },
+      "tisch": {
+        "runde": 1,
+        "datum": "2026-07-12",
+        "vorgelegter_entwurf": "Fassung des Auftraggebers (Betreff «E-Mails, die gelesen werden»)",
+        "voten": [
+          {
+            "persona": "ursula",
+            "kern": "Ton gut. Fehler: Komma nach «ab heute», «des Goetheanums», Anrede wechselt euch/du, Artikel bei «Mail-App» fehlt, Empfehlungs-Satz knickt grammatisch. Behalten: «die Signatur ist deine».",
+            "vorschlaege": [
+              {
+                "id": "u1",
+                "feld": "body",
+                "suchen": "Auftritt des Goetheanum —",
+                "ersetzen": "Auftritt des Goetheanums —",
+                "warum": "Genitiv: «des Goetheanums». Der Doppelklang, den Constanze behalten will, bleibt — es fehlt nur das s.",
+                "stand": "offen"
+              },
+              {
+                "id": "u2",
+                "feld": "body",
+                "suchen": "stellen wir euch monatlich",
+                "ersetzen": "stellen wir dir monatlich",
+                "warum": "Die Anrede wechselt: oben «euch», unten «wählst du selbst». Die Serie ist auf du gesetzt — also durchhalten.",
+                "stand": "offen"
+              },
+              {
+                "id": "u3",
+                "feld": "body",
+                "suchen": "für euren Rechner.",
+                "ersetzen": "für deinen Rechner.",
+                "warum": "Dieselbe Anrede auch im PS — sonst bleibt der Bruch an der meistgelesenen Zeile stehen.",
+                "stand": "offen"
+              }
+            ]
+          },
+          {
+            "persona": "jonas",
+            "kern": "Öffne ich. Komma weg; «entspannt» wirkt gewollt; Betreff und Schluss doppeln «gelesen werden». Behalten: «Zwei Zeilen gesetzt … die Signatur ist deine».",
+            "vorschlaege": [
+              {
+                "id": "j1",
+                "feld": "betreff",
+                "suchen": "E-Mails, die gelesen werden",
+                "ersetzen": "Deine Signatur, in drei Minuten",
+                "warum": "Betreff und Schlusssatz doppeln «gelesen werden»; der Beipackzettel trägt den Titel ohnehin. Alternative zu Neumeiers Vorschlag — es kann nur einer gelten.",
+                "stand": "offen"
+              }
+            ]
+          },
+          {
+            "persona": "mira",
+            "kern": "Wirkt, würde öffnen. «Öffentlichkeit und Individualität» zu abstrakt fürs Handy; «entspannt» unklar für schwaches Deutsch; langen Schlusssatz trennen. Behalten: die Leichtigkeit «drei Minuten, zwei Zeilen».",
+            "vorschlaege": [
+              {
+                "id": "m1",
+                "feld": "body",
+                "suchen": "die Signatur ist deine. Auf der Seite warten dazu elf Handgriffe für Mails, die gelesen werden — und warum Bilder in der Signatur stören.",
+                "ersetzen": "die Signatur ist deine.\n\nAuf der Seite warten elf Handgriffe für Mails, die gelesen werden. Dort steht auch, warum Bilder in der Signatur stören.",
+                "warum": "Der Schlusssatz ist auf dem Handy eine Wand: in zwei kurze Sätze trennen. Löst zugleich Helenes Knick — «Handgriffe … und warum» koppelt ein Nomen mit einem Nebensatz.",
+                "stand": "offen"
+              }
+            ]
+          },
+          {
+            "persona": "beat",
+            "kern": "Konkret genug, mach ich auf. «gemeinsamen Auftritt stärkt» klingt nach Chefetage — sag was ich davon habe; hol auch Wenig-Mailer ab («egal ob zwei oder zwanzig Mails»). Behalten: «die Signatur ist deine».",
+            "vorschlaege": [
+              {
+                "id": "b1",
+                "feld": "body",
+                "suchen": "das die tägliche Arbeit erleichtert und unseren gemeinsamen Auftritt stärkt",
+                "ersetzen": "das dir Arbeit abnimmt — egal ob du zwei oder zwanzig Mails am Tag schreibst",
+                "warum": "«gemeinsamen Auftritt stärkt» klingt nach Chefetage; sag, was der Einzelne davon hat, und hol die Wenig-Mailer ab. Abwägen: der Plan will beide Fragen beantwortet (was bringt es mir, was uns) — der gemeinsame Nutzen steht dann nur noch im Identitätssatz.",
+                "stand": "offen"
+              }
+            ]
+          },
+          {
+            "persona": "helene",
+            "kern": "Warm, aber Bote nicht makellos. Fehler: Komma nach «ab heute»; Listenpunkte uneinheitlich; «Empfehlungen … und warum» koppelt Nomen mit Nebensatz; «man richtet keine Abstrakta ein». «wir lesen alles» → «wir lesen mit». Bestes: Betreff-Echo «E-Mails, die gelesen werden».",
+            "vorschlaege": [
+              {
+                "id": "h1",
+                "feld": "body",
+                "suchen": "Beides ist in drei Minuten eingerichtet:",
+                "ersetzen": "Beides ist in drei Minuten gemacht:",
+                "warum": "Man richtet keine Abstrakta ein: «Beides» ist nichts, was eingerichtet wird.",
+                "stand": "offen"
+              },
+              {
+                "id": "h2",
+                "feld": "body",
+                "suchen": "3. Kopieren, in Outlook oder Apple Mail einsetzen, fertig.",
+                "ersetzen": "3. Kopieren, in Outlook oder Apple Mail einsetzen — fertig",
+                "warum": "Listenpunkte uneinheitlich: 1 und 2 enden ohne Punkt, 3 mit. Gleiches gleich behandeln.",
+                "stand": "offen"
+              }
+            ]
+          },
+          {
+            "persona": "constanze",
+            "kern": "Kann fast an alle. Absenderschaft klären («wir aus der Grafik»); Leitung soll mittragen; Nicht-Bildschirm-Berufe nicht ausschliessen; Komma weg. Behalten: Doppelklang «Auftritt des Goetheanum und Stimme eines Menschen».",
+            "vorschlaege": [
+              {
+                "id": "c1",
+                "feld": "body",
+                "suchen": "Philipp Tok & Stefan Hasler",
+                "ersetzen": "Philipp Tok (Grafik) & Stefan Hasler (Leitung)",
+                "warum": "Absenderschaft klären: wer da schreibt — und dass die Leitung mitträgt.",
+                "stand": "offen"
+              }
+            ]
+          },
+          {
+            "persona": "neumeier",
+            "kern": "Teasert das Werkzeug, nicht die Serie. Betreff als Bewegung statt Nutzwert; Serien-Name/Wortmarke fehlt; Onliness nutzen (warum Signatur zuerst: keine Fläche trägt das Haus öfter). Bestes: Identitätssatz — der ganze Markenkern in einem Satz.",
+            "vorschlaege": [
+              {
+                "id": "n1",
+                "feld": "betreff",
+                "suchen": "E-Mails, die gelesen werden",
+                "ersetzen": "Aus der Werkzeugkiste: E-Mails, die gelesen werden",
+                "warum": "Serienname als Betreff-Vorspann (Jahresplan, Abschnitt 1): ab der ersten Mail als Folge erkennbar. Helenes bestes Stück, das Betreff-Echo, bleibt stehen. Alternative zu Jonas’ Vorschlag.",
+                "stand": "offen"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "2026-10-schriften",
+      "pos": 2,
+      "monat": "Oktober 2026",
+      "status": "entwurf",
+      "werkzeuge": [
+        "schriften"
+      ],
+      "anlass": "Die Stimme des Hauses auf jeden Rechner; Voraussetzung für November",
+      "betreff": "",
+      "body": "",
+      "anhang": {
+        "titel": "",
+        "blatt": "2 von 10",
+        "status": "offen"
+      },
+      "tisch": null
+    },
+    {
+      "id": "2026-11-powerpoint",
+      "pos": 3,
+      "monat": "November 2026",
+      "status": "entwurf",
+      "werkzeuge": [
+        "powerpoint"
+      ],
+      "anlass": "Jahresberichte, Gremien, Tagungen; baut auf Oktober auf",
+      "betreff": "",
+      "body": "",
+      "anhang": {
+        "titel": "",
+        "blatt": "3 von 10",
+        "status": "offen"
+      },
+      "tisch": null
+    },
+    {
+      "id": "2026-12-wallpaper",
+      "pos": 4,
+      "monat": "Dezember 2026",
+      "status": "entwurf",
+      "werkzeuge": [
+        "wallpaper"
+      ],
+      "anlass": "Der besinnliche Monat; die Mail, die nichts verlangt — ein Geschenk",
+      "betreff": "",
+      "body": "",
+      "anhang": {
+        "titel": "",
+        "blatt": "4 von 10",
+        "status": "offen"
+      },
+      "tisch": null
+    },
+    {
+      "id": "2027-01-visitenkarten",
+      "pos": 5,
+      "monat": "Januar 2027",
+      "status": "entwurf",
+      "werkzeuge": [
+        "visitenkarten"
+      ],
+      "anlass": "Neues Jahr, neue Rollen; erster Druck-Workflow der Serie",
+      "betreff": "",
+      "body": "",
+      "anhang": {
+        "titel": "",
+        "blatt": "5 von 10",
+        "status": "offen"
+      },
+      "tisch": null
+    },
+    {
+      "id": "2027-02-logos",
+      "pos": 6,
+      "monat": "Februar 2027",
+      "status": "entwurf",
+      "werkzeuge": [
+        "logo-generator"
+      ],
+      "anlass": "Das Herzstück, bewusst erst nach fünf guten Erfahrungen",
+      "betreff": "",
+      "body": "",
+      "anhang": {
+        "titel": "",
+        "blatt": "6 von 10",
+        "status": "offen"
+      },
+      "tisch": null
+    },
+    {
+      "id": "2027-03-qr",
+      "pos": 7,
+      "monat": "März 2027",
+      "status": "entwurf",
+      "werkzeuge": [
+        "qr-generator"
+      ],
+      "anlass": "Plakat- und Programmzeit fürs Sommerhalbjahr",
+      "betreff": "",
+      "body": "",
+      "anhang": {
+        "titel": "",
+        "blatt": "7 von 10",
+        "status": "offen"
+      },
+      "tisch": null
+    },
+    {
+      "id": "2027-04-karten",
+      "pos": 8,
+      "monat": "April 2027",
+      "status": "entwurf",
+      "werkzeuge": [
+        "karten"
+      ],
+      "anlass": "Besucherströme des Sommers; Wegleitungen, Anfahrten, Parkflächen",
+      "betreff": "",
+      "body": "",
+      "anhang": {
+        "titel": "",
+        "blatt": "8 von 10",
+        "status": "offen"
+      },
+      "tisch": null
+    },
+    {
+      "id": "2027-05-uebersetzungen",
+      "pos": 9,
+      "monat": "Mai 2027",
+      "status": "entwurf",
+      "werkzeuge": [
+        "uebersetzungen"
+      ],
+      "anlass": "Internationale Sommertagungen; EN/FR/ES-Material in den Sekretariaten",
+      "betreff": "",
+      "body": "",
+      "anhang": {
+        "titel": "",
+        "blatt": "9 von 10",
+        "status": "offen"
+      },
+      "tisch": null
+    },
+    {
+      "id": "2027-06-icons",
+      "pos": 10,
+      "monat": "Juni 2027",
+      "status": "entwurf",
+      "werkzeuge": [
+        "icons"
+      ],
+      "anlass": "Kleines Freudenstück vor der Sommerpause; dazu Jahresbilanz und Wunschliste",
+      "betreff": "",
+      "body": "",
+      "anhang": {
+        "titel": "",
+        "blatt": "10 von 10",
+        "status": "offen"
+      },
+      "tisch": null
+    }
+  ],
+  "vorschlag_staende": [
+    "offen",
+    "uebernommen",
+    "abgelehnt"
+  ]
+}

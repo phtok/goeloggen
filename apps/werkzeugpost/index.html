@@ -23,7 +23,8 @@
   .pille{display:inline-flex;align-items:center;padding:.15em .6em;border-radius:999px;font-family:var(--font-text);font-size:var(--t-micro);font-weight:600;line-height:1.4;white-space:nowrap}
   .pille[data-status="entwurf"]{background:var(--field-bg);color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)}
   .pille[data-status="in_redaktion"]{background:var(--gold-deep);color:var(--on-accent)}
-  .pille[data-status="bereit"]{background:var(--ok);color:var(--on-accent)}
+  .pille[data-status="bereit"]{background:var(--field-bg);color:var(--ok-ink);
+    box-shadow:inset 0 0 0 1px var(--ok-ink)}   /* Grün als Schrift, siehe unten (B02) */
   .pille[data-status="versandt"]{background:var(--blue-solid);color:var(--on-accent)}
 
   /* ---------- Liste ---------- */
@@ -104,6 +105,33 @@
   .stuhl .wer small{color:var(--muted);font-size:var(--t-micro)}
   .stuhl .kern{flex:1;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5}
   .kein-tisch{color:var(--muted);font-size:var(--t-small)}
+  /* Am Telefon frisst die Namensspalte die Textbreite — Name über den Text. */
+  @media(max-width:699px){
+    .stuhl{flex-direction:column;gap:var(--s2)}
+    .stuhl .wer{flex:0 0 auto;display:flex;gap:var(--s2);align-items:baseline;flex-wrap:wrap}
+  }
+
+  /* Vorschlag aus einem Votum: Textstelle, Begründung, Entscheid.
+     Kante statt Fläche – der Stand steht in der Pille, nicht in der Farbe des Textes. */
+  .vorschlag{margin-top:var(--s3);background:var(--field-bg);border-radius:12px;
+    box-shadow:inset 3px 0 0 var(--gold-deep);padding:var(--s3)}
+  .vorschlag[data-stand="uebernommen"]{box-shadow:inset 3px 0 0 var(--ok)}
+  .vorschlag[data-stand="abgelehnt"]{box-shadow:inset 3px 0 0 var(--line)}
+  .vorschlag[data-stand="abgelehnt"] .v-stelle{opacity:.7}
+  .v-kopf{display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap;margin-bottom:var(--s2)}
+  .v-warum{font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;margin:0 0 var(--s2)}
+  .v-stelle{display:grid;gap:.25em;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5}
+  .v-zeile{display:flex;gap:var(--s2);align-items:baseline}
+  .v-lab{flex:0 0 4em;color:var(--muted);font-size:var(--t-small)}
+  .v-text{flex:1;white-space:pre-wrap;min-width:0}
+  .v-knoepfe{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s3)}
+  .v-weg{color:var(--muted);font-size:var(--t-micro);margin:var(--s2) 0 0}
+  .pille[data-stand="offen"]{background:var(--gold-deep);color:var(--on-accent)}
+  /* Grün trägt Weiss im Dunkel nicht (gemessen 3.06:1) — darum Grün als Schrift
+     auf ruhiger Fläche: --ok-ink ist genau dafür da (B02). */
+  .pille[data-stand="uebernommen"]{background:var(--field-bg);color:var(--ok-ink);
+    box-shadow:inset 0 0 0 1px var(--ok-ink)}
+  .pille[data-stand="abgelehnt"]{background:var(--field-bg);color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)}
 
   .hinweis{background:var(--field-bg);border-radius:12px;padding:var(--s4);font-size:var(--t-small);line-height:1.55;margin-top:var(--s5)}
   .hinweis code{font-family:var(--font-text);background:var(--paper);padding:.05em .35em;border-radius:6px}
@@ -113,6 +141,7 @@
   .quelle-hinweis{margin-bottom:var(--s4);background:var(--field-bg);border-radius:12px;
     box-shadow:inset 3px 0 0 var(--gold-deep);padding:var(--s3) var(--s4);
     font-size:var(--t-small);line-height:1.5;color:var(--ink)}
+  .quelle-hinweis[data-art="fehler"]{box-shadow:inset 3px 0 0 var(--bad)}
 </style>
 </head>
 <body>
@@ -153,9 +182,12 @@
   <div class="hinweis">
     <strong>So arbeitet der Tisch.</strong> Sieben Personas lesen jede Mail unabhängig gegen
     (Sekretariat, Technik, Wissenschaft, Betrieb, Texterin, Leitung, Marken-Gast) — eine neue
-    Runde stösst der Redakteur an, die Voten erscheinen je Ausgabe im Editor. Bearbeiten und
-    Ordnen geschieht hier im Browser (Zwischenstand lokal); erst <em>Exportieren</em> schreibt
-    die neue <code>mails.json</code>, die ihr committet.
+    Runde stösst der Redakteur an, die Voten erscheinen je Ausgabe im Editor. Jedes Votum legt
+    seine Vorschläge als Textstellen vor: <em>Übernehmen</em> setzt die neue Fassung ein,
+    <em>Ablehnen</em> legt sie beiseite, <em>Zurücknehmen</em> macht die Übernahme rückgängig.
+    Bearbeiten und Ordnen geschieht hier im Browser (Zwischenstand lokal); erst
+    <em>Exportieren</em> schreibt die neue <code>mails.json</code>, die ihr committet —
+    mitsamt den Entscheiden.
   </div>
 
 </main>
@@ -168,7 +200,9 @@
 </footer>
 
 <script>
-const ROOT = "../../services/werkzeugpost/";
+// Quelle liegt neben der Seite: services/ wird nicht veröffentlicht (_config.yml,
+// deploy-pages.yml) — von dort gelesen, blieb der Tisch online leer (404).
+const ROOT = "./";
 const LS = "werkzeugpost-entwurf-v1";
 let daten = null, personas = [], aktiv = null;
 
@@ -182,8 +216,7 @@ async function laden(){
   // zerstörend: lokale Bearbeitungen bleiben erhalten. «Auf Datei-Stand zurück»
   // verwirft den Zwischenstand ganz.
   const [quelle, p] = await Promise.all([
-    fetch(ROOT+"mails.json").then(r=>r.json()),
-    fetch(ROOT+"personas.json").then(r=>r.json())
+    holen("mails.json"), holen("personas.json")
   ]);
   personas = p.personas;
 
@@ -210,6 +243,23 @@ async function laden(){
 
   listeZeichnen();
   if(ergaenzt) quelleHinweis(ergaenzt);
+}
+
+// Ein leerer Tisch ist kein Zustand, sondern eine Panne: sagen, welche Datei fehlt.
+async function holen(datei){
+  const r = await fetch(ROOT+datei);
+  if(!r.ok) throw new Error(datei+" antwortet mit "+r.status);
+  return r.json();
+}
+function ladeFehler(err){
+  const l = document.getElementById("liste");
+  if(!l) return;
+  const el = document.createElement("p");
+  el.className = "quelle-hinweis";
+  el.dataset.art = "fehler";
+  el.textContent = "Die Ausgaben liessen sich nicht laden — " + err.message
+    + ". Die Quelle (mails.json, personas.json) muss neben dieser Seite liegen.";
+  l.replaceChildren(el);
 }
 
 const esc = s => (s||"").replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
@@ -297,19 +347,98 @@ function schliessen(){
 
 function wachsen(t){ if(!t) return; t.style.height="auto"; t.style.height=(t.scrollHeight+4)+"px"; }
 
+// Ein Votum ist eine Meinung, ein Vorschlag ist eine Textstelle: Feld, alte Stelle,
+// neue Stelle. Entschieden wird hier, der Entscheid steht in «stand» und wandert
+// mit dem Export in die mails.json — das Repo merkt sich die Runde, nicht der Kopf.
+let tischOffen = false;
+
+const vorschlaege = g => (g.tisch ? (g.tisch.voten||[]) : []).flatMap(v=>v.vorschlaege||[]);
+const findV = (g, vid) => vorschlaege(g).find(v=>v.id===vid);
+const stelleDa = (g, v) => (g[v.feld]||"").indexOf(v.suchen) !== -1;
+const standLabel = { offen:"offen", uebernommen:"übernommen", abgelehnt:"abgelehnt" };
+
+function vorschlagKarte(g, v){
+  const feldName = v.feld==="betreff" ? "Betreff" : "Text";
+  const da = stelleDa(g, v);
+  let knoepfe = "";
+  if(v.stand==="offen" && da){
+    knoepfe = `<button class="btn primary" type="button" data-ja="${v.id}">Übernehmen</button>
+      <button class="btn" type="button" data-nein="${v.id}">Ablehnen</button>`;
+  } else if(v.stand==="offen"){
+    knoepfe = `<button class="btn" type="button" data-nein="${v.id}">Ablehnen</button>`;
+  } else if(v.stand==="uebernommen"){
+    knoepfe = `<button class="btn" type="button" data-zurueck="${v.id}">Zurücknehmen</button>`;
+  } else {
+    knoepfe = `<button class="btn" type="button" data-ja="${v.id}">Doch übernehmen</button>`;
+  }
+  const weg = (v.stand==="offen" && !da)
+    ? `<p class="v-weg">Die alte Stelle steht nicht mehr im ${feldName} — von Hand gelöst? Dann ablehnen.</p>` : "";
+  return `<div class="vorschlag" data-stand="${v.stand}">
+    <div class="v-kopf">
+      <span class="pille" data-stand="${v.stand}">${standLabel[v.stand]}</span>
+      <span class="v-lab">${feldName}</span>
+    </div>
+    <p class="v-warum">${esc(v.warum)}</p>
+    <div class="v-stelle">
+      <p class="v-zeile"><span class="v-lab">statt</span><span class="v-text">${esc(v.suchen)}</span></p>
+      <p class="v-zeile"><span class="v-lab">neu</span><span class="v-text">${esc(v.ersetzen)}</span></p>
+    </div>
+    ${weg}
+    <div class="v-knoepfe">${knoepfe}</div>
+  </div>`;
+}
+
 function tischPanel(g){
   const t = g.tisch;
   if(!t){
-    return `<details class="tisch"><summary>Redaktionstisch</summary>
+    return `<details class="tisch"${tischOffen?" open":""}><summary>Redaktionstisch</summary>
       <p class="kein-tisch">Noch keine Runde. Der Redakteur legt den Entwurf den sieben Personas vor.
       Personas: ${personas.map(p=>esc(p.name)).join(", ")}.</p></details>`;
   }
+  const alle = vorschlaege(g);
+  const offen = alle.filter(v=>v.stand==="offen").length;
+  const zaehler = alle.length
+    ? ` · ${offen} von ${alle.length} ${alle.length===1?"Vorschlag":"Vorschlägen"} offen` : "";
   const stuehle = (t.voten||[]).map(v=>`
     <div class="stuhl"><div class="wer"><b>${esc(personaName(v.persona))}</b><small>${esc(personaRolle(v.persona))}</small></div>
-    <div class="kern">${esc(v.kern)}</div></div>`).join("");
-  return `<details class="tisch"><summary>Redaktionstisch — Runde ${t.runde} (${esc(t.datum)})</summary>
+    <div class="kern">${esc(v.kern)}
+      ${(v.vorschlaege||[]).map(x=>vorschlagKarte(g,x)).join("")}</div></div>`).join("");
+  return `<details class="tisch"${tischOffen?" open":""}><summary>Redaktionstisch — Runde ${t.runde} (${esc(t.datum)})${zaehler}</summary>
     <p style="color:var(--muted);font-size:var(--t-small)">Vorgelegt: ${esc(t.vorgelegter_entwurf||"")}</p>
     ${stuehle}</details>`;
+}
+
+// Übernehmen ersetzt die alte Stelle durch die neue, Zurücknehmen den Weg zurück —
+// beides literal, ohne reguläre Ausdrücke, und nur wenn die Stelle wirklich dasteht.
+function tauschenImText(g, feld, von, nach){
+  const i = (g[feld]||"").indexOf(von);
+  if(i === -1) return false;
+  g[feld] = g[feld].slice(0,i) + nach + g[feld].slice(i+von.length);
+  return true;
+}
+function entscheiden(vid, wie){
+  const g = findG(aktiv); if(!g) return;
+  const v = findV(g, vid); if(!v) return;
+  if(wie === "ja"){
+    if(v.stand !== "uebernommen" && !tauschenImText(g, v.feld, v.suchen, v.ersetzen)){
+      alert("Die alte Stelle steht nicht mehr im Text — der Vorschlag lässt sich nicht mehr einsetzen.");
+      return;
+    }
+    v.stand = "uebernommen";
+  } else if(wie === "zurueck"){
+    if(!tauschenImText(g, v.feld, v.ersetzen, v.suchen)){
+      alert("Die eingesetzte Stelle steht nicht mehr im Text — von Hand weitergeschrieben?");
+      return;
+    }
+    v.stand = "offen";
+  } else {
+    v.stand = "abgelehnt";
+  }
+  sichern();
+  oeffnen(aktiv);
+  const wieder = document.querySelector(
+    '#editor [data-ja="'+vid+'"], #editor [data-nein="'+vid+'"], #editor [data-zurueck="'+vid+'"]');
+  if(wieder){ wieder.focus(); wieder.scrollIntoView({block:"nearest"}); }
 }
 
 // ---------- robustes Kopieren ----------
@@ -353,6 +482,9 @@ document.addEventListener("click", e=>{
   const d = t.dataset;
   if(d.oeffnen){ oeffnen(d.oeffnen); return; }
   if("schliessen" in d){ schliessen(); return; }
+  if(d.ja){ entscheiden(d.ja, "ja"); return; }
+  if(d.nein){ entscheiden(d.nein, "nein"); return; }
+  if(d.zurueck){ entscheiden(d.zurueck, "zurueck"); return; }
   if(d.hoch || d.runter){ tauschen(d.hoch||d.runter, d.hoch?-1:+1); return; }
   if("kopieren" in d && aktiv){ const g=findG(aktiv); kopieren("Betreff: "+g.betreff+"\n\n"+g.body, t); return; }
   if("mailto" in d && aktiv){ const g=findG(aktiv);
@@ -366,6 +498,11 @@ document.addEventListener("click", e=>{
 });
 
 document.addEventListener("keydown", e=>{ if(e.key==="Escape" && aktiv) schliessen(); });
+
+// Der Tisch bleibt offen, wenn das Übernehmen den Editor neu zeichnet.
+document.addEventListener("toggle", e=>{
+  if(e.target.classList && e.target.classList.contains("tisch")) tischOffen = e.target.open;
+}, true);
 
 function tauschen(id, richtung){
   const a=[...daten.ausgaben].sort((x,y)=>x.pos-y.pos);
@@ -401,7 +538,7 @@ function exportieren(){
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="mails.json"; a.click();
 }
 
-laden();
+laden().catch(ladeFehler);
 </script>
 
 </body>
