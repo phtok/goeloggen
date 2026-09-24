@@ -39,7 +39,7 @@
 
   /* ---------- Das Heft ---------- */
   .blaetter{display:flex;flex-wrap:wrap;gap:var(--s6);justify-content:center;padding-bottom:var(--s8)}
-  .seite{width:148mm;height:210mm;background:#fff;color:#23272b; /* # ds-ok Papier */
+  .seite{width:148mm;height:210mm;flex:none;zoom:var(--z,1);background:#fff;color:#23272b; /* # ds-ok Papier */
     position:relative;overflow:hidden;box-shadow:var(--shadow-card);border:1px solid var(--line);
     font-family:var(--font-display);font-weight:var(--w-klar);display:flex;flex-direction:column}
   .blaetter{--acc:var(--bereich);--on-acc:var(--on-accent);--ort:color-mix(in srgb,var(--acc) 72%,#000);--kopf:color-mix(in srgb,var(--acc) 80%,#000)} /* # ds-ok Tinte */
@@ -383,7 +383,7 @@ B.addEventListener("pointerdown",e=>{const m=e.target.closest(".mk");if(!m)retur
   const o=m.dataset.ort,k=$("karte");let pos=null;
   const zug=ev=>{const r=k.getBoundingClientRect();
     pos=[(ev.clientX-r.left)/r.width*100,(ev.clientY-r.top)/r.height*100].map(v=>Math.round(Math.min(98,Math.max(2,v))*10)/10);
-    Object.assign(m.style,{position:"absolute",transform:"translate(-50%,-50%)",left:`${ev.clientX-m.offsetParent.getBoundingClientRect().left}px`,top:`${ev.clientY-m.offsetParent.getBoundingClientRect().top}px`})};
+    Object.assign(m.style,{position:"absolute",transform:"translate(-50%,-50%)",left:`${(ev.clientX-m.offsetParent.getBoundingClientRect().left)/Z}px`,top:`${(ev.clientY-m.offsetParent.getBoundingClientRect().top)/Z}px`})};
   const los=()=>{removeEventListener("pointermove",zug);removeEventListener("pointerup",los);
     if(pos){const r=k.getBoundingClientRect();S.orte[o]=pos;}bauen()};
   addEventListener("pointermove",zug);addEventListener("pointerup",los)});
@@ -459,6 +459,10 @@ fetch("../../design-system/tokens.css").then(a=>a.text()).then(css=>{
   for(const [,n,v] of css.matchAll(/--([a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{3,8})/g))if(!(n in TOK))TOK[n]=v;
 }).catch(()=>{}).finally(bauen);
 window.addEventListener("resize",einpassen);
+// A5 bleibt A5: auf schmalen Schirmen die ganze Seite verkleinern, nie stauchen
+let Z=1;const zoomen=()=>{const b=document.querySelector(".blaetter"),mm=document.createElement("div");mm.style.width="148mm";document.body.append(mm);
+  const w=mm.getBoundingClientRect().width;mm.remove();Z=Math.min(1,(b.clientWidth||innerWidth)/w);b.style.setProperty("--z",Z)};
+addEventListener("resize",zoomen);zoomen();
 </script>
 </body>
 </html>
