@@ -155,9 +155,6 @@ const FARBEN=[
   ["sek-hpise","Sektion für Heilpädagogik und inklusive soziale Entwicklung"],
   null,
   ["bereich","Bereiche"],["bereich-buehne","Bühne"]];
-// Schrift auf der Fläche: die gerechneten --on-*-Tokens (B01/B02).
-const AUF={"bereich":"var(--on-accent)"};
-const auf=k=>AUF[k]||`var(--on-${k})`;
 const MOTIVE=[["titelbild-goetheanum.jpg","Fenster hinter Lavendel","Foto: Goetheanum"],["titel-herbst.jpg","Goetheanum im Herbst","Foto: Goetheanum / Xue Li"],
   ["titel-campus.jpg","Westansicht, Campus-Fest","Foto: Goetheanum / Xue Li"],["titel-westtreppe.jpg","Westtreppenhaus","Foto: Goetheanum / Xue Li"],
   ["titel-luftbild.jpg","Luftbild des Campus","Foto: Goetheanum / Xue Li"],["titel-glashaus.jpg","Glashaus","Foto: Goetheanum / Xue Li"]];
@@ -237,10 +234,7 @@ const plus=s=>`<div class="plus">
 function bauen(){
   const f=S.farbe, logo="../../assets/logos/goetheanum-logo.svg";
   const b=$("blaetter");NR=orte();
-  b.style.setProperty("--acc",`var(--${f})`);b.style.setProperty("--on-acc",auf(f));
-  // Logo folgt der Schrift auf der Fläche: weiss, oder dunkel bei hellen Sektionsfarben.
-  const hell=getComputedStyle(document.documentElement).getPropertyValue(`--on-${f}`).trim();
-  b.style.setProperty("--marke-filter",hell&&hell!=="#fff"?"brightness(0)":"brightness(0) invert(1)");
+  b.style.setProperty("--acc",`var(--${f})`); // Schrift und Logo auf der Fläche immer weiss (B01)
   b.innerHTML=`
   <article class="seite titel kante-${S.kante}" aria-label="Seite 1, Titel">
     <div class="feld">
