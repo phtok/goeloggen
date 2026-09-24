@@ -191,15 +191,14 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
 
   /* ---------- Seite 4: Campus ---------- */
   neueSeite();
-  doc.setFont('GDeutlich', 'normal'); doc.setFontSize(22); doc.setTextColor(f.kopf);
-  doc.text(text(S.info), 11, 13 + 7);
-  if (Z) { const w = doc.getTextWidth(text(S.info) + ' '); doc.setFont('GRuhig', 'normal'); doc.text(text(S.info2 || ''), 11 + w, 13 + 7); }
   const spalten = Math.ceil(orte.length / 3), legZ = 6;
   const legY = SH - 10 - 14 - spalten * legZ;
-  const kastenY = 27, kastenH = legY - 5 - kastenY;
-  const kb = Math.min(SB - 22, kastenH * 192 / 210), kh = kb * 210 / 192, kx = (SB - kb) / 2;
+  // Karte randabfallend (oben und seitlich bis in den Beschnitt), harte Kante unten über der Legende.
+  const kx = -B3, kb = SB + 2 * B3, kh = kb * 210 / 192, kastenY = -B3 - (bilder.versatz || 0) * kh, unterkante = legY - 5;
+  doc.saveGraphicsState(); doc.rect(kx, -B3, kb, unterkante + B3, null); doc.clip(); doc.discardPath();
   doc.addImage(bilder.plan.url, bilder.plan.url.startsWith('data:image/png') ? 'PNG' : 'JPEG', kx, kastenY, kb, kh, 'plan', 'SLOW');
-  (bilder.marker || []).forEach((m) => {
+  doc.restoreGraphicsState();
+  (bilder.marker || []).filter((m) => { const y = kastenY + m.y / 100 * kh; return y < unterkante - 2.4 && y > -B3 + 2.4; }).forEach((m) => {
     const px = kx + m.x / 100 * kb, py = kastenY + m.y / 100 * kh;
     if (m.linie) { const ax = kx + m.ax / 100 * kb, ay = kastenY + m.ay / 100 * kh; doc.setDrawColor(f.gold); doc.setLineWidth(0.3); doc.line(ax, ay, px, py); doc.setFillColor(f.gold); doc.circle(ax, ay, 0.7, 'F'); }
     marke(doc, px, py, 2.4, m.t, f.gold);
