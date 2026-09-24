@@ -94,7 +94,7 @@ export async function baueIdml(S, farben, bilder, orte) {
     trapez: [[0, 0], [148, 0], [148, 112], [115.4, 126], [32.6, 126], [0, 112]],
     gerade: [[0, 0], [148, 0], [148, 126], [0, 126]] }[S.kante] || null;
   const sTitel = neueStory([
-    ['Titel', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(S.titel)}</Content></CharacterStyleRange>`],
+    ['Titel', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(String(S.titel || '').replace(/(^|\s)(am|im|an|in|zu|zum|zur|und|für|von|vom|mit|bei|auf|aus|um|der|die|das|des|dem|den|ein|eine) /gi, '$1$2\u00a0'))}</Content></CharacterStyleRange>`],
     ...String(S.wann).split('\n').map((z) => ['Datum', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(z)}</Content></CharacterStyleRange>`])]);
   const sCredit = neueStory([['Bildnachweis', laeufe(esc1(S.credit || ''))]]);
   // Schrift: «alles» setzt auch Daten, Legende und Kontakt in die Hausschrift
@@ -105,7 +105,7 @@ export async function baueIdml(S, farben, bilder, orte) {
     bild(0, 110, 148, 100, bilder.titel.name, bilder.titel.b, bilder.titel.h, true),
     flaeche(0, 0, 148, 126, 'Color/Akzent', kante),
     bild(54.6, 20, 38.8, 6.5, bilder.logo.name, bilder.logo.b, bilder.logo.h, false),
-    rahmen(12, 32, 124, 64, sTitel, 1, 'CenterAlign'),
+    rahmen(12, 28.5, 124, 126 - (S.kante === 'gerade' ? 10 : 16) - 28.5, sTitel, 1, 'CenterAlign'),
     rahmen(70, 202, 74, 5, sCredit, 1, 'BottomAlign')];
 
   // Seiten 2–3 – Programm

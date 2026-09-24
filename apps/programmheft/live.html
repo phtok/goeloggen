@@ -73,12 +73,12 @@
 
   .titel .feld{background:var(--acc);color:var(--on-acc);flex:0 0 60%;display:flex;flex-direction:column;
     justify-content:center;align-items:center;text-align:center;padding:14mm 12mm 18mm;gap:7mm;position:relative}
-  .titel .feld{z-index:1;margin-bottom:-14mm;padding-bottom:36mm}
+  .titel .feld{z-index:1;margin-bottom:-14mm;padding-bottom:16mm}
   .kante-schraege .feld{clip-path:polygon(0 0,100% 0,100% calc(100% - 14mm),0 100%)}
   .kante-trapez .feld{clip-path:polygon(0 0,100% 0,100% calc(100% - 14mm),78% 100%,22% 100%,0 calc(100% - 14mm))}
-  .kante-gerade .feld{margin-bottom:0;padding-bottom:28mm}
+  .kante-gerade .feld{margin-bottom:0;padding-bottom:10mm}
   .titel h2{font-weight:var(--w-deutlich);font-size:34pt;line-height:1.05;margin:auto 0 0;text-wrap:balance}
-  .titel .wann{font-weight:var(--w-deutlich);font-size:15pt;line-height:1.3;margin:0;white-space:pre-line;font-variant-numeric:lining-nums}
+  .titel .wann{font-weight:var(--w-deutlich);font-size:15pt;line-height:1.3;margin:0 0 auto;white-space:pre-line;font-variant-numeric:lining-nums}
   .titel .marke{height:6.5mm;margin:6mm 0 auto;filter:var(--marke-filter,brightness(0) invert(1))}
   .titel .bild{flex:1;background:var(--soft) center/cover no-repeat;position:relative}
   .titel .credit{position:absolute;right:4mm;bottom:3mm;font-family:var(--ft);font-size:6.5pt;color:#fff; /* # ds-ok Druck-Credit auf Foto */
@@ -209,9 +209,31 @@ const MOTIVE=[["titelbild-goetheanum.jpg","Fenster hinter Lavendel","Foto: Goeth
 // Orte kommen aus dem Kartenwerkzeug (orte.js, mm auf dem A4-quer-Blatt).
 // Der Standardplan zeigt davon den Ausschnitt x 105–297, y 0–210.
 const AUSSCHNITT={x:105,y:0,b:192,h:210};
+// Ortsnamen tolerant erkennen: Schreibweise (ß/ss, ä/ae, Bindestrich, Gross/klein),
+// deutsch/englisch, Teilnamen («Speisehaus · Laden»), kleine Tippfehler und Spitznamen.
+// Neue Spitznamen hier ergänzen: Schlüssel = was Leute schreiben, Wert = Name auf der Karte.
+const SPITZNAMEN={"buehne":"Grosser Saal","hauptbuehne":"Grosser Saal","saal":"Grosser Saal","grundstein":"Grundsteinsaal",
+  "restaurant":"Speisehaus · Laden","cafeteria":"Speisehaus · Laden","kantine":"Speisehaus · Laden","mensa":"Speisehaus · Laden","laden":"Speisehaus · Laden",
+  "archiv":"Haus Duldeck · Rudolf-Steiner-Archiv","rudolf steiner archiv":"Haus Duldeck · Rudolf-Steiner-Archiv","duldeck":"Haus Duldeck · Rudolf-Steiner-Archiv",
+  "sternwarte":"Kepler-Sternwarte","suedsaal":"Schreinerei Südsaal","ostsaal":"Ostsäle 1-4","ostsaele":"Ostsäle 1-4","friedwart":"Gästehaus Friedwart",
+  "jugendhaus":"Jugendsektionshaus","buchladen":"Buchhandlung","kasse":"Empfang","information":"Infotisch","info":"Infotisch","wc":"Toiletten",
+  "eingang":"Haupteingang","flowforms":"Wasserspiel","maryon":"Künstlerwohnung Edith Maryon","halde":"Rudolf Steiner Halde","atelier":"Rudolf-Steiner-Atelier",
+  "modell":"Baugeschichte + Modell Erstes Goetheanum","terrasse":"Terrassensaal","hof":"Im Hof","bahn":"Bahnhof","bus":"Bushaltestelle","parking":"Parkplatz"};
+const normOrt=t=>String(t||"").toLowerCase().replace(/ß/g,"ss").replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue")
+  .normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g," ").trim().replace(/^(der|die|das|im|in der|in|am|beim|zum|zur) /,"");
+const abstand=(a,b)=>{const d=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){let p=d[0];d[0]=i;
+  for(let j=1;j<=b.length;j++){const t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return d[b.length]};
+let ORT_NAMEN=null;
+function ortFinden(name){const n=normOrt(name);if(!n)return null;
+  if(!ORT_NAMEN){ORT_NAMEN=[];ORTE.forEach(o=>[o.label.de,o.label.en,...o.label.de.split(" · "),...(o.label.en||"").split(" · ")]
+    .forEach(l=>{const k=normOrt(l);if(k)ORT_NAMEN.push([k,o])}));
+    Object.entries(SPITZNAMEN).forEach(([k,v])=>{const o=ORTE.find(o=>o.label.de===v);if(o)ORT_NAMEN.push([normOrt(k),o])})}
+  const gleich=ORT_NAMEN.find(([k])=>k===n);if(gleich)return gleich[1];
+  const anfang=[...new Set(ORT_NAMEN.filter(([k])=>n.length>=4&&k.startsWith(n)).map(x=>x[1]))];if(anfang.length===1)return anfang[0];
+  let best=null,bd=99;ORT_NAMEN.forEach(([k,o])=>{const d=abstand(n,k);if(d<bd){bd=d;best=o}});
+  return bd<=Math.max(1,Math.floor(n.length/6))?best:null}
 function kartenOrt(name){
-  const n=(name||"").trim().toLowerCase();if(!n)return null;
-  const o=ORTE.find(o=>o.label.de.toLowerCase()===n)||ORTE.find(o=>o.label.de.toLowerCase().split(" · ")[0]===n);
+  const o=ortFinden(name);
   const p=o&&o.positionen[0];if(!p)return null;
   const x=(p[0]-AUSSCHNITT.x)/AUSSCHNITT.b*100,y=(p[1]-AUSSCHNITT.y)/AUSSCHNITT.h*100;
   return x<2||x>98||y<2||y>98?null:[Math.round(x*10)/10,Math.round(y*10)/10];
@@ -253,14 +275,16 @@ const qk=new URLSearchParams(location.search).get("kante");if(qk)S.kante=qk;
 const MK_D=4.8/126*100,MK_Y=192/210; // Durchmesser in % der Kartenbreite; Höhe-% → Breite-%
 function markerAnordnung(){
   const P=NR.map((o,k)=>{const p=lage(o);return p&&{k,o,ax:p[0],ay:p[1]*1/MK_Y,x:p[0],y:p[1]*1/MK_Y}}).filter(Boolean);
-  const modus=S.marker||"ausweichen";
+  const modus=S.marker||"zusammen";
   if(modus==="zusammen"){const g=[];P.forEach(p=>{const h=g.find(G=>G.some(q=>Math.hypot(q.ax-p.ax,q.ay-p.ay)<MK_D*1.6));h?h.push(p):g.push([p])});
     return g.map(G=>{const ks=G.map(p=>p.k+1).sort((a,b)=>a-b),fort=ks.every((v,i)=>!i||v===ks[i-1]+1);
-      return {o:G[0].o,x:G.reduce((a,p)=>a+p.ax,0)/G.length,y:G.reduce((a,p)=>a+p.ay,0)/G.length,t:ks.length>2&&fort?ks[0]+"–"+ks.at(-1):ks.join(", "),breit:ks.length>1}})}
+      return {o:G.map(p=>p.o).join("|"),x:G.reduce((a,p)=>a+p.ax,0)/G.length,y:G.reduce((a,p)=>a+p.ay,0)/G.length,t:ks.length>2&&fort?ks[0]+"–"+ks.at(-1):ks.join(", "),breit:ks.length>1}})}
   if(modus==="ausweichen")for(let it=0;it<80;it++)for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
     const a=P[i],b=P[j],dx=b.x-a.x||.01,dy=b.y-a.y,d=Math.hypot(dx,dy),min=MK_D*1.15;
     if(d<min){const f=(min-d)/2/d;a.x-=dx*f;a.y-=dy*f;b.x+=dx*f;b.y+=dy*f}}
   return P.map(p=>({o:p.o,x:p.x,y:p.y,t:String(p.k+1),ax:p.ax,ay:p.ay,linie:Math.hypot(p.x-p.ax,p.y-p.ay)>MK_D*.3}))}
+// Für PDF/InDesign: dieselbe Anordnung wie in der Vorschau, y in % der Kartenhöhe.
+const markerFuerExport=()=>markerAnordnung().map(m=>({x:m.x,y:m.y*MK_Y,t:m.t,breit:!!m.breit,ax:m.ax,ay:m.ay==null?null:m.ay*MK_Y,linie:!!m.linie}));
 function markerHtml(){const A=markerAnordnung(),Y=v=>v*MK_Y;
   return `<svg class="mk-linien" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${A.filter(m=>m.linie).map(m=>
     `<line x1="${m.ax}" y1="${Y(m.ay)}" x2="${m.x}" y2="${Y(m.y)}" vector-effect="non-scaling-stroke"/>`).join("")}</svg>`
@@ -270,11 +294,16 @@ function orte(){const l=[];S.seiten.flat().map(z=>(z.ort||"").trim()).concat(S.e
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 // Zeitspanne mit Halbgeviertstrich; keine unnötigen Nullen: 17 Uhr, 9.30, nie 17.00 oder 09.30.
+// Datum: einzeilig getippt → vor der Uhrzeit umbrechen (G22), «Uhr» ergänzen.
+const wannZeilen=w=>{w=strich(String(w||"")).replace(/(\d{4}),?\s+(?=(ab\s+)?\d{1,2}([.:]\d{2})?\s*[–-])/,"$1\n");
+  return w.split("\n").map(z=>/^(ab\s+)?\d{1,2}([.:]\d{2})?(–\d{1,2}([.:]\d{2})?)?$/.test(z.trim())?z.trim()+" Uhr":z).join("\n")};
+// Titel: kurze Wörter nicht am Zeilenende stehen lassen («Offener Tag / am Goetheanum»).
+const binden=t=>String(t||"").replace(/(^|\s)(am|im|an|in|zu|zum|zur|und|für|von|vom|mit|bei|auf|aus|um|der|die|das|des|dem|den|ein|eine) /gi,"$1$2\u00a0");
 const strich=s=>s.replace(/(\d)\s*[-–]\s*(\d)/g,"$1–$2")
   .replace(/\b(\d{1,2})[.:]00\b/g,"$1").replace(/\b0(\d)(?=[.:]\d\d|\b(?!\.\s?\w))/g,"$1").replace(/\b(\d{1,2})[:](\d\d)\b/g,"$1.$2");
 // Jede Zeitangabe trägt «Uhr» (9.30–10 Uhr, ab 16.30 Uhr).
 const mitUhr=s=>{s=strich(s).trim();return /\d/.test(s)&&!/Uhr$/.test(s)?s+" Uhr":s};
-S.wann=strich(S.wann);S.seiten.forEach(L=>L.forEach(z=>z.zeit=mitUhr(z.zeit)));
+S.wann=wannZeilen(S.wann);S.seiten.forEach(L=>L.forEach(z=>z.zeit=mitUhr(z.zeit)));
 
 // Nur Text und Fett überleben das Bearbeiten.
 function rein(html){
@@ -354,7 +383,7 @@ function bauen(){
   <article class="seite titel kante-${S.kante}" aria-label="Seite 1, Titel">
     <div class="feld">
       <img class="marke" src="${logo}" alt="Goetheanum" />
-      ${ed("titel",S.titel,"h2","","Titel")}
+      ${ed("titel",binden(S.titel),"h2","","Titel")}
       ${ed("wann",S.wann,"p","wann","Datum und Zeit")}
     </div>
     <div class="bild" style="background-image:url('${S.bild}')">${ed("credit",S.credit,"span","credit","Bildnachweis")}</div>
@@ -406,7 +435,7 @@ B.addEventListener("input",e=>{const el=e.target.closest("[data-pfad]");if(!el)r
   einpassen();sichern()});
 B.addEventListener("focusout",e=>{const el=e.target.closest("[data-pfad]");
   if(el&&/ort$|^extra\./.test(el.dataset.pfad)&&!B.contains(e.relatedTarget)){setTimeout(bauen);return}
-  if(el&&/zeit$|^wann$/.test(el.dataset.pfad)){const v=/zeit$/.test(el.dataset.pfad)?mitUhr(el.innerText):strich(el.innerText);if(v!==el.innerText){el.innerText=v;setzen(el.dataset.pfad,v);sichern()}}});
+  if(el&&/zeit$|^wann$/.test(el.dataset.pfad)){const v=/zeit$/.test(el.dataset.pfad)?mitUhr(el.innerText):wannZeilen(el.innerText);if(v!==el.innerText){el.innerText=v;setzen(el.dataset.pfad,v);sichern()}}});
 B.addEventListener("keydown",e=>{const el=e.target.closest("[data-pfad]");if(!el||e.key!=="Enter")return;
   if(/^(wann|kontakt)$/.test(el.dataset.pfad))return; // mehrzeilig erlaubt
   e.preventDefault();
@@ -456,7 +485,7 @@ function menue(host,lab,eintraege,wert,setzen){ // eintraege: [wert, html] | nul
 menue("m-farbe","lab-farbe",FARBEN.map(x=>x&&[x[0],`<span class="punkt" style="background:var(--${x[0]})"></span>${esc(x[1])}`]),()=>S.farbe,v=>S.farbe=v);
 menue("m-schrift","lab-schrift",[["alles","Nur Hausschrift","var(--font-display)"],["titel","Titel in Hausschrift","var(--font-display)"],[false,"Funktionaler","var(--font-text)"]]
   .map(([v,n,f])=>[v,`<span style="font-family:${f}">${n}</span>`]),()=>S.stimme===true?"titel":(S.stimme||false),v=>S.stimme=v);
-menue("m-marker","lab-marker",[["ausweichen","Ausweichen mit Linie"],["zusammen","Zusammenfassen"],["einzeln","Wie gesetzt"]],()=>S.marker||"ausweichen",v=>S.marker=v);
+menue("m-marker","lab-marker",[["zusammen","Zusammenfassen"],["einzeln","Einzeln, wie gesetzt"],["ausweichen","Ausweichen mit Linie"]],()=>S.marker||"zusammen",v=>S.marker=v);
 menue("m-kante","lab-kante",KANTEN.map(([k,n])=>[k,esc(n)]),()=>S.kante,v=>S.kante=v);
 MOTIVE.forEach(([f,n,c])=>{const b=document.createElement("button");b.type="button";b.dataset.f=f;
   b.style.backgroundImage=`url('${f}')`;b.title=n;b.setAttribute("aria-label","Titelbild: "+n);
@@ -473,7 +502,7 @@ B.addEventListener("pointerdown",e=>{const m=e.target.closest(".mk");if(!m)retur
     pos=[(ev.clientX-r.left)/r.width*100,(ev.clientY-r.top)/r.height*100].map(v=>Math.round(Math.min(98,Math.max(2,v))*10)/10);
     Object.assign(m.style,{position:"absolute",transform:"translate(-50%,-50%)",left:`${(ev.clientX-m.offsetParent.getBoundingClientRect().left)/Z}px`,top:`${(ev.clientY-m.offsetParent.getBoundingClientRect().top)/Z}px`})};
   const los=()=>{removeEventListener("pointermove",zug);removeEventListener("pointerup",los);
-    if(pos){const r=k.getBoundingClientRect();S.orte[o]=pos;}bauen()};
+    if(pos)o.split("|").forEach(x=>S.orte[x]=pos);bauen()};
   addEventListener("pointermove",zug);addEventListener("pointerup",los)});
 $("bild-waehlen").onclick=()=>$("f-bild").click();
 $("f-bild").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;
@@ -495,10 +524,13 @@ async function planPng(){
   const i=await laden(KARTE_URL||S.plan),c=document.createElement("canvas");c.width=2400;c.height=Math.round(2400*210/192);
   const g=c.getContext("2d");g.drawImage(i,0,0,c.width,c.height);const r=c.width*4.8/126/2; // Kreis wie im Heft
   await document.fonts.load("700 20px 'Source Sans 3'");
-  NR.forEach((o,k)=>{const p=lage(o);if(!p)return;const px=p[0]/100*c.width,py=p[1]/100*c.height;
-    g.beginPath();g.arc(px,py,r,0,7);g.fillStyle=hex(getComputedStyle(B).getPropertyValue("--mk"));g.fill();
-    g.lineWidth=r*.16;g.strokeStyle="#fff";g.stroke(); // # ds-ok Druck
-    g.fillStyle="#fff";g.font=`700 ${r*1.05}px 'Source Sans 3',sans-serif`;g.textAlign="center";g.textBaseline="middle";g.fillText(k+1,px,py+r*.05)}); // # ds-ok Druck
+  const mk=hex(getComputedStyle(B).getPropertyValue("--mk"));
+  markerFuerExport().forEach(m=>{const px=m.x/100*c.width,py=m.y/100*c.height;g.fillStyle=mk;g.strokeStyle=mk;
+    if(m.linie){g.lineWidth=r*.12;g.beginPath();g.moveTo(m.ax/100*c.width,m.ay/100*c.height);g.lineTo(px,py);g.stroke();g.beginPath();g.arc(m.ax/100*c.width,m.ay/100*c.height,r*.3,0,7);g.fill()}
+    g.font=`700 ${r*1.05}px 'Source Sans 3',sans-serif`;const w=m.breit?Math.max(0,g.measureText(m.t).width+r*.5-2*r):0;
+    g.beginPath();g.moveTo(px-w/2,py-r);g.lineTo(px+w/2,py-r);g.arc(px+w/2,py,r,-Math.PI/2,Math.PI/2);g.lineTo(px-w/2,py+r);g.arc(px-w/2,py,r,Math.PI/2,Math.PI*1.5);g.closePath();
+    g.fill();g.lineWidth=r*.16;g.strokeStyle="#fff";g.stroke(); // # ds-ok Druck
+    g.fillStyle="#fff";g.textAlign="center";g.textBaseline="middle";g.fillText(m.t,px,py+r*.05)}); // # ds-ok Druck
   return {name:"campus.png",bytes:await alsBytes(c),b:c.width,h:c.height}}
 // Dateiname aus Titel, Sektion und Datum: offener-tag-am-goetheanum_sozialwissenschaften_2026-10-17_a5-versand
 const MONATE=["januar","februar","märz","april","mai","juni","juli","august","september","oktober","november","dezember"];
@@ -541,7 +573,7 @@ const pdfBauen=async e=>{const k=e.currentTarget,alt=k.textContent,druck=k.datas
     const grad=parseFloat(document.querySelector(".seite.prog").style.getPropertyValue("--grad"))||12;
     const logoSvg=await (await fetch("../../assets/logos/goetheanum-logo.svg")).text();
     const titel=druck?await zuschnitt(S.bild,154,103,300,.95):await zuschnitt(S.bild,148,100,150,.78);
-    const doc=await bauePdf(S,f,{titel,plan:await planOhneNummern(druck)},NR,lage,grad,logoSvg,druck,sektionsLogo(S.farbe));
+    const doc=await bauePdf(S,f,{titel,plan:await planOhneNummern(druck),marker:markerFuerExport()},NR,lage,grad,logoSvg,druck,sektionsLogo(S.farbe));
     doc.save(dateiname(druck?"a5-druck-3mm":"a5-versand")+".pdf");archivieren(druck?"pdf-druck":"pdf-versand");
   }catch(err){console.error(err);k.textContent="PDF fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
   finally{k.disabled=false}k.textContent=alt};
