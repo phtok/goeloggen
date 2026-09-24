@@ -100,7 +100,7 @@ export async function baueIdml(S, farben, bilder, orte) {
   const seite1 = [
     bild(0, 110, 148, 100, bilder.titel.name, bilder.titel.b, bilder.titel.h, true),
     flaeche(0, 0, 148, 126, 'Color/Akzent', kante),
-    bild(49, 20, 50, 11, bilder.logo.name, bilder.logo.b, bilder.logo.h, false),
+    bild(54.6, 20, 38.8, 6.5, bilder.logo.name, bilder.logo.b, bilder.logo.h, false),
     rahmen(12, 40, 124, 64, sTitel, 1, 'CenterAlign'),
     rahmen(70, 202, 74, 5, sCredit, 1, 'BottomAlign')];
 
