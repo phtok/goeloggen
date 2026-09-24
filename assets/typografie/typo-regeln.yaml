@@ -65,6 +65,19 @@
   erkennen: '\b0?(\d{1,2}):(\d{2})\s?(Uhr|h)\b'
   korrektur: '$1.$2 Uhr'
   schwere: empfehlung
+# G22 (Beschluss 24. 9. 2026): volle Stunden ohne Nullen – 17 Uhr, nie 17.00 Uhr;
+# auch in Spannen (10–16.30 Uhr, 13–14). Nur vor ‹Uhr›/‹h› oder am Spannen-Strich,
+# damit Beträge (CHF 17.00) und Dezimalzahlen unberührt bleiben.
+- id: G22-volle-stunde
+  regel: Volle Stunden ohne Nullen (17 Uhr, 10–16.30 Uhr), nie 17.00 Uhr
+  erkennen: '\b(\d{1,2})[.:]00(?=\s?(?:Uhr|h)\b|\s?–\s?\d)'
+  korrektur: '$1'
+  schwere: fehler
+- id: G22-fuehrende-null
+  regel: Uhrzeit ohne führende Null (9.30 Uhr, nicht 09.30 Uhr)
+  erkennen: '\b0(\d)\.(\d{2})(?=\s?(?:Uhr|h)\b|\s?–\s?\d)'
+  korrektur: '$1.$2'
+  schwere: fehler
 - id: T01-doppelspatium
   regel: Nie zwei Leerzeichen
   erkennen: '(\S)  +(\S)'

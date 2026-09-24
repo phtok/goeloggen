@@ -11,7 +11,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
-<title>Programmheft · Live-Editor · Goetheanum</title>
+<title>Goetheanum Folder erstellen · Goetheanum</title>
 <link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
 <link rel="stylesheet" href="../../design-system/tokens.css" />
 <link rel="stylesheet" href="../../design-system/base.css" />
@@ -125,8 +125,7 @@
 <main class="wrap">
   <section class="hero">
     <span class="kicker">Veranstaltungen · Skizze</span>
-    <h1>Programmheft direkt bearbeiten</h1>
-    <p class="lede">Ins Heft klicken und schreiben. Programmpunkte und Pausen mit Plus ergänzen.</p>
+    <h1>Goetheanum Folder erstellen</h1>
   </section>
 
   <div class="leiste card soft">
@@ -252,6 +251,21 @@ function kontrast(hex){ // Weiss gegen eine Farbe, WCAG-Formel
   const L=[1,3,5].map(i=>parseInt(h.substr(i,2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);
   return 1.05/(.2126*L[0]+.7152*L[1]+.0722*L[2]+.05);
 }
+// Karte in der gewählten Farbe: die vier Blaustufen des Plans werden zu Stufen
+// der Sektionsfarbe (Grund, Wege-Rand, Bauten gemischt mit Weiss; Goetheanum voll).
+let KARTE_URL=null,KARTE_FARBE=null,KARTE_SVG=null;
+const KARTE_STUFEN={"#edf5fa":7,"#8abfe5":45,"#5298cc":68,"#0067b2":100};
+async function karteFaerben(){
+  const f=S.farbe;if(KARTE_FARBE===f)return;KARTE_FARBE=f;
+  KARTE_SVG??=await (await fetch(S.plan)).text();
+  let t=KARTE_SVG;
+  if(f!=="bereich"){const basis=aufloesen(`var(--${f})`);
+    for(const [alt,anteil] of Object.entries(KARTE_STUFEN))
+      t=t.split(alt).join(anteil===100?basis:aufloesen(`color-mix(in srgb,${basis} ${anteil}%,#fff)`));} // # ds-ok Kartenstufe
+  if(KARTE_URL)URL.revokeObjectURL(KARTE_URL);
+  KARTE_URL=URL.createObjectURL(new Blob([t],{type:"image/svg+xml"}));
+  const img=document.querySelector("#karte img");if(img)img.src=KARTE_URL;
+}
 function bauen(){
   const f=S.farbe, logo="../../assets/logos/goetheanum-logo.svg";
   const b=$("blaetter");NR=orte();
@@ -275,7 +289,7 @@ function bauen(){
   </article>`).join("")}
   <article class="seite info" aria-label="Seite 4, Campus">
     ${ed("info",S.info,"h3","","Überschrift")}
-    <div class="plan"><div class="karte" id="karte"><img src="${S.plan}" alt="Plan des Campus" />
+    <div class="plan"><div class="karte" id="karte"><img src="${KARTE_URL||S.plan}" alt="Plan des Campus" />
       ${NR.map((o,k)=>lage(o)?`<button type="button" class="mk" data-ort="${esc(o)}" style="left:${lage(o)[0]}%;top:${lage(o)[1]}%" title="${esc(o)} – ziehen zum Verschieben">${k+1}</button>`:"").join("")}</div></div>
     <ol class="legende">${NR.map((o,k)=>`<li><span class="n">${k+1}</span>${esc(o)}</li>`).join("")}</ol>
     ${NR.some(o=>!lage(o))?`<div class="offen">Noch nicht auf der Karte – auf den Plan ziehen:
@@ -283,7 +297,7 @@ function bauen(){
     <div class="plus">${S.extra.map((x,k)=>ed(`extra.${k}`,x,"span","","Ort")).join(" ")}<button type="button" data-tat="neuleg">${I.plus}Weiterer Ort</button></div>
     <div class="fuss">${ed("kontakt",S.kontakt,"span","kontakt","Kontakt")}<img src="${logo}" alt="Goetheanum" /></div>
   </article>`;
-  einpassen();markieren();sichern();
+  einpassen();markieren();sichern();karteFaerben();
 }
 
 // Programmseiten füllen: Grad wächst bis 14 pt, Zeilenabstand je Seite bis unten.
@@ -369,7 +383,7 @@ async function logoPng(weiss){
   if(weiss){g.globalCompositeOperation="source-in";g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height)} // # ds-ok Druck-Logo
   return {name:weiss?"logo-weiss.png":"logo.png",bytes:await alsBytes(c),b:c.width,h:c.height}}
 async function planPng(){
-  const i=await laden(S.plan),c=document.createElement("canvas");c.width=2400;c.height=Math.round(2400*210/192);
+  const i=await laden(KARTE_URL||S.plan),c=document.createElement("canvas");c.width=2400;c.height=Math.round(2400*210/192);
   const g=c.getContext("2d");g.drawImage(i,0,0,c.width,c.height);const r=c.width*6.5/126/2; // Kreis wie im Heft
   await document.fonts.load("700 20px 'Source Sans 3'");
   NR.forEach((o,k)=>{const p=lage(o);if(!p)return;const px=p[0]/100*c.width,py=p[1]/100*c.height;
@@ -399,7 +413,7 @@ async function zuschnitt(src,bmm,hmm,ppi,q){ // Titelbild wie object-fit: cover
   const s=Math.max(c.width/i.naturalWidth,c.height/i.naturalHeight),w=i.naturalWidth*s,h=i.naturalHeight*s;
   c.getContext("2d").drawImage(i,(c.width-w)/2,(c.height-h)/2,w,h);return {url:c.toDataURL("image/jpeg",q)}}
 async function planOhneNummern(druck){
-  const i=await laden(S.plan),c=document.createElement("canvas"),w=druck?2400:1000;c.width=w;c.height=Math.round(w*210/192);
+  const i=await laden(KARTE_URL||S.plan),c=document.createElement("canvas"),w=druck?2400:1000;c.width=w;c.height=Math.round(w*210/192);
   const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);g.drawImage(i,0,0,c.width,c.height); // # ds-ok Papier
   return {url:druck?c.toDataURL("image/png"):c.toDataURL("image/jpeg",.8)}}
 const pdfBauen=async e=>{const k=e.currentTarget,alt=k.textContent,druck=k.dataset.druck==="1";k.disabled=true;k.textContent="PDF wird gebaut …";
