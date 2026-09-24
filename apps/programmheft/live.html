@@ -57,9 +57,7 @@
   .kante-gerade .feld{margin-bottom:0;padding-bottom:18mm}
   .titel h2{font-weight:var(--w-deutlich);font-size:34pt;line-height:1.05;margin:auto 0 0;text-wrap:balance}
   .titel .wann{font-weight:var(--w-deutlich);font-size:15pt;line-height:1.3;margin:0;white-space:pre-line;font-variant-numeric:lining-nums}
-  .titel .unter{font-size:11.5pt;line-height:1.4;margin:0;max-width:30em;text-wrap:balance}
-  .titel .stich{font-weight:var(--w-deutlich);font-size:13pt;margin:0}
-  .titel .marke{height:6.5mm;margin-bottom:auto;filter:var(--marke-filter,brightness(0) invert(1))}
+  .titel .marke{height:11mm;margin:6mm 0 auto;filter:var(--marke-filter,brightness(0) invert(1))}
   .titel .bild{flex:1;background:var(--soft) center/cover no-repeat;position:relative}
   .titel .credit{position:absolute;right:4mm;bottom:3mm;font-family:var(--font-text);font-size:6.5pt;color:#fff; /* # ds-ok Druck-Credit auf Foto */
     text-shadow:0 0 2mm rgba(0,0,0,.6)} /* # ds-ok */
@@ -119,6 +117,7 @@
 </style>
 </head>
 <body>
+<script src="../karten-generator/orte.js"></script>
 <script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
 
 <main class="wrap">
@@ -135,6 +134,7 @@
     <div class="reihe"><span class="lab">Kante</span><div class="farbwahl" id="kanten" role="group" aria-label="Kante über dem Titelbild"></div></div>
     <div class="reihe">
       <button class="btn primary" type="button" onclick="print()">Als PDF drucken</button>
+      <button class="btn" type="button" id="idml">Für InDesign (IDML)</button>
       <button class="btn" type="button" id="zuruecksetzen">Beispiel wiederherstellen</button>
       <p class="hinweis">Fett: Text markieren und Strg+B. Alles bleibt in diesem Browser gespeichert.</p>
     </div>
@@ -160,12 +160,20 @@ const MOTIVE=[["titelbild-goetheanum.jpg","Fenster hinter Lavendel","Foto: Goeth
   ["titel-luftbild.jpg","Luftbild des Campus","Foto: Goetheanum / Xue Li"],["titel-glashaus.jpg","Glashaus","Foto: Goetheanum / Xue Li"]];
 
 // Bekannte Orte auf dem Standardplan, in Prozent der Karte. Unbekannte zieht man selbst auf die Karte.
-const ORTE={"Grosser Saal":[47,60],"Grundsteinsaal":[53,61.5],"Foyer":[50,66.5],"Haupteingang":[48.7,73.7],
-  "Südeingang":[61.2,60],"Empfang":[51.9,70.6]};
+// Orte kommen aus dem Kartenwerkzeug (orte.js, mm auf dem A4-quer-Blatt).
+// Der Standardplan zeigt davon den Ausschnitt x 105–297, y 0–210.
+const AUSSCHNITT={x:105,y:0,b:192,h:210};
+function kartenOrt(name){
+  const n=(name||"").trim().toLowerCase();if(!n)return null;
+  const o=ORTE.find(o=>o.label.de.toLowerCase()===n)||ORTE.find(o=>o.label.de.toLowerCase().split(" · ")[0]===n);
+  const p=o&&o.positionen[0];if(!p)return null;
+  const x=(p[0]-AUSSCHNITT.x)/AUSSCHNITT.b*100,y=(p[1]-AUSSCHNITT.y)/AUSSCHNITT.h*100;
+  return x<2||x>98||y<2||y>98?null:[Math.round(x*10)/10,Math.round(y*10)/10];
+}
+const lage=o=>S.orte[o]||kartenOrt(o);
 const KANTEN=[["schraege","Schräge wie im Logo"],["trapez","Trapez wie der Bau"],["gerade","Gerade"]];
 const BEISPIEL={farbe:"bereich",bild:MOTIVE[0][0],credit:"Foto: Goetheanum",
-  titel:"Offener Tag am Goetheanum",wann:"Samstag, 17. Oktober 2026\n10.00–16.30",
-  unter:"Das Haus, seine Arbeit und seine Menschen kennenlernen",stich:"Bühne · Forschung · Kunst · Garten",
+  titel:"Offener Tag am Goetheanum",wann:"Samstag, 17. Oktober 2026\n10–16.30 Uhr",
   seiten:[[
     {zeit:"09.30–10.00",text:"Ankommen, Kaffee und Tee",ort:"Foyer",pause:true},
     {zeit:"10.00–10.15",text:"Musikalische Eröffnung",ort:"Grosser Saal"},
@@ -181,21 +189,25 @@ const BEISPIEL={farbe:"bereich",bild:MOTIVE[0][0],credit:"Foto: Goetheanum",
     {zeit:"16.00–16.30",text:"Musikalischer Abschluss",ort:"Grosser Saal"},
     {zeit:"ab 16.30",text:"Ausklang und Getränke",ort:"Foyer",pause:true}
   ]],
-  info:"Campus",plan:"lageplan-standard.svg?v=3",kante:"schraege",extra:[],orte:ORTE,
+  info:"Campus",plan:"lageplan-standard.svg?v=3",kante:"schraege",extra:[],orte:{},
   kontakt:"Goetheanum, Rüttiweg 45, 4143 Dornach\nwww.goetheanum.ch"};
 
 const SPEICHER="goe-programmheft-live-1";
 let S;try{S=JSON.parse(localStorage.getItem(SPEICHER))}catch(e){}
 if(!S)S=structuredClone(BEISPIEL);
 // Ältere Stände nachziehen
-if(!S.orte){S.orte=structuredClone(ORTE);S.extra=[];delete S.leg;if(S.info==="Lageplan")S.info="Campus";S.plan=BEISPIEL.plan}
+if(!S.orte){S.extra=[];delete S.leg;if(S.info==="Lageplan")S.info="Campus";S.plan=BEISPIEL.plan}
+if(S.v!==2){S.v=2;S.orte={};delete S.unter;delete S.stich}
 if(!S.kante)S.kante="schraege";
 const qk=new URLSearchParams(location.search).get("kante");if(qk)S.kante=qk;
 // Legende = Orte aus dem Programm (in Reihenfolge) + eigene Zusätze
 function orte(){const l=[];S.seiten.flat().map(z=>(z.ort||"").trim()).concat(S.extra.map(x=>x.trim())).forEach(o=>{if(o&&!l.includes(o))l.push(o)});return l}
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const strich=s=>s.replace(/(\d)\s*[-–]\s*(\d)/g,"$1–$2"); // Zeitspanne: Halbgeviertstrich
+// Zeitspanne mit Halbgeviertstrich; keine unnötigen Nullen: 17 Uhr, 9.30, nie 17.00 oder 09.30.
+const strich=s=>s.replace(/(\d)\s*[-–]\s*(\d)/g,"$1–$2")
+  .replace(/\b(\d{1,2})[.:]00\b/g,"$1").replace(/\b0(\d)(?=[.:]\d\d|\b(?!\.\s?\w))/g,"$1").replace(/\b(\d{1,2})[:](\d\d)\b/g,"$1.$2");
+S.wann=strich(S.wann);S.seiten.forEach(L=>L.forEach(z=>z.zeit=strich(z.zeit)));
 
 // Nur Text und Fett überleben das Bearbeiten.
 function rein(html){
@@ -231,18 +243,27 @@ const plus=s=>`<div class="plus">
   <button type="button" data-tat="neu" data-s="${s}">${I.plus}Programmpunkt</button>
   <button type="button" data-tat="neupause" data-s="${s}">${I.plus}Pause</button></div>`;
 
+function kontrast(hex){ // Weiss gegen eine Farbe, WCAG-Formel
+  const c=document.createElement("canvas").getContext("2d");c.fillStyle=hex;const h=c.fillStyle;
+  if(!/^#/.test(h))return 21;
+  const L=[1,3,5].map(i=>parseInt(h.substr(i,2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);
+  return 1.05/(.2126*L[0]+.7152*L[1]+.0722*L[2]+.05);
+}
 function bauen(){
   const f=S.farbe, logo="../../assets/logos/goetheanum-logo.svg";
   const b=$("blaetter");NR=orte();
-  b.style.setProperty("--acc",`var(--${f})`); // Schrift und Logo auf der Fläche immer weiss (B01)
+  // Schrift und Logo auf der Fläche immer weiss (B01). Trägt Weiss auf der Grundfarbe
+// nicht (unter 4.5:1), steht die abgedunkelte Variante des Farbsystems (-dunkel).
+  const cs=getComputedStyle(document.documentElement),t=n=>cs.getPropertyValue(`--${n}`).trim();
+  const fl=t(f+"-dunkel")&&kontrast(t(f))<4.5?f+"-dunkel":f;
+  b.style.setProperty("--acc",`var(--${fl})`);
+  if(t(f+"-ink")){b.style.setProperty("--ort",`var(--${f}-ink)`);b.style.setProperty("--kopf",`var(--${f}-ink)`)}
   b.innerHTML=`
   <article class="seite titel kante-${S.kante}" aria-label="Seite 1, Titel">
     <div class="feld">
       <img class="marke" src="${logo}" alt="Goetheanum" />
       ${ed("titel",S.titel,"h2","","Titel")}
       ${ed("wann",S.wann,"p","wann","Datum und Zeit")}
-      ${ed("unter",S.unter,"p","unter","Unterzeile")}
-      ${ed("stich",S.stich,"p","stich","Stichworte")}
     </div>
     <div class="bild" style="background-image:url('${S.bild}')">${ed("credit",S.credit,"span","credit","Bildnachweis")}</div>
   </article>
@@ -252,10 +273,10 @@ function bauen(){
   <article class="seite info" aria-label="Seite 4, Campus">
     ${ed("info",S.info,"h3","","Überschrift")}
     <div class="plan"><div class="karte" id="karte"><img src="${S.plan}" alt="Plan des Campus" />
-      ${NR.map((o,k)=>S.orte[o]?`<button type="button" class="mk" data-ort="${esc(o)}" style="left:${S.orte[o][0]}%;top:${S.orte[o][1]}%" title="${esc(o)} – ziehen zum Verschieben">${k+1}</button>`:"").join("")}</div></div>
+      ${NR.map((o,k)=>lage(o)?`<button type="button" class="mk" data-ort="${esc(o)}" style="left:${lage(o)[0]}%;top:${lage(o)[1]}%" title="${esc(o)} – ziehen zum Verschieben">${k+1}</button>`:"").join("")}</div></div>
     <ol class="legende">${NR.map((o,k)=>`<li><span class="n">${k+1}</span>${esc(o)}</li>`).join("")}</ol>
-    ${NR.some(o=>!S.orte[o])?`<div class="offen">Noch nicht auf der Karte – auf den Plan ziehen:
-      ${NR.map((o,k)=>S.orte[o]?"":`<button type="button" class="mk" data-ort="${esc(o)}" title="${esc(o)}">${k+1}</button> ${esc(o)}`).join(" ")}</div>`:""}
+    ${NR.some(o=>!lage(o))?`<div class="offen">Noch nicht auf der Karte – auf den Plan ziehen:
+      ${NR.map((o,k)=>lage(o)?"":`<button type="button" class="mk" data-ort="${esc(o)}" title="${esc(o)}">${k+1}</button> ${esc(o)}`).join(" ")}</div>`:""}
     <div class="plus">${S.extra.map((x,k)=>ed(`extra.${k}`,x,"span","","Ort")).join(" ")}<button type="button" data-tat="neuleg">${I.plus}Weiterer Ort</button></div>
     <div class="fuss">${ed("kontakt",S.kontakt,"span","kontakt","Kontakt")}<img src="${logo}" alt="Goetheanum" /></div>
   </article>`;
@@ -331,6 +352,41 @@ B.addEventListener("pointerdown",e=>{const m=e.target.closest(".mk");if(!m)retur
 $("bild-waehlen").onclick=()=>$("f-bild").click();
 $("f-bild").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;
   const r=new FileReader();r.onload=()=>{S.bild=r.result;S.credit="";bauen()};r.readAsDataURL(f)});
+// ---------- IDML: InDesign-Paket mit Bildern im Ordner «Links»
+const laden=src=>new Promise((ok,nein)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=nein;i.src=src});
+const alsBytes=c=>new Promise(ok=>c.toBlob(async b=>ok(new Uint8Array(await b.arrayBuffer())),"image/png"));
+const hex=farbe=>{const c=document.createElement("canvas").getContext("2d");c.fillStyle=farbe;return c.fillStyle};
+function aufloesen(v){const d=document.createElement("i");d.style.color=v;B.append(d);const c=getComputedStyle(d).color;d.remove();
+  const m=c.match(/[\d.]+/g).map(Number);return "#"+m.slice(0,3).map(v=>Math.round(v).toString(16).padStart(2,"0")).join("")}
+async function logoPng(weiss){
+  const i=await laden("../../assets/logos/goetheanum-logo.svg"),k=6;const c=document.createElement("canvas");
+  c.width=i.naturalWidth*k;c.height=i.naturalHeight*k;const g=c.getContext("2d");g.drawImage(i,0,0,c.width,c.height);
+  if(weiss){g.globalCompositeOperation="source-in";g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height)} // # ds-ok Druck-Logo
+  return {name:weiss?"logo-weiss.png":"logo.png",bytes:await alsBytes(c),b:c.width,h:c.height}}
+async function planPng(){
+  const i=await laden(S.plan),c=document.createElement("canvas");c.width=2400;c.height=Math.round(2400*210/192);
+  const g=c.getContext("2d");g.drawImage(i,0,0,c.width,c.height);const r=c.width*6.5/126/2; // Kreis wie im Heft
+  await document.fonts.load("700 20px 'Source Sans 3'");
+  NR.forEach((o,k)=>{const p=lage(o);if(!p)return;const px=p[0]/100*c.width,py=p[1]/100*c.height;
+    g.beginPath();g.arc(px,py,r,0,7);g.fillStyle=hex(getComputedStyle(B).getPropertyValue("--gold-deep"));g.fill();
+    g.lineWidth=r*.16;g.strokeStyle="#fff";g.stroke(); // # ds-ok Druck
+    g.fillStyle="#fff";g.font=`700 ${r*1.05}px 'Source Sans 3',sans-serif`;g.textAlign="center";g.textBaseline="middle";g.fillText(k+1,px,py+r*.05)}); // # ds-ok Druck
+  return {name:"campus.png",bytes:await alsBytes(c),b:c.width,h:c.height}}
+async function titelBild(){
+  const bytes=new Uint8Array(await (await fetch(S.bild)).arrayBuffer()),i=await laden(S.bild);
+  const png=bytes[0]===0x89;return {name:png?"titelbild.png":"titelbild.jpg",bytes,b:i.naturalWidth,h:i.naturalHeight}}
+$("idml").onclick=async e=>{const k=e.currentTarget,alt=k.textContent;k.disabled=true;k.textContent="Wird gepackt …";
+  try{
+    const {baueIdml}=await import("./idml.js");
+    const f=S.farbe,name=(FARBEN.find(x=>x&&x[0]===f)||[,f])[1];
+    const farben={name,akzent:aufloesen("var(--acc)"),ort:aufloesen("var(--ort)"),
+      pause:aufloesen("color-mix(in srgb,var(--acc) 12%,#fff)"),gold:aufloesen("var(--gold-deep)")}; // # ds-ok Tönung
+    const bilder={titel:await titelBild(),plan:await planPng(),logo:await logoPng(true),logoBlau:await logoPng(false)};
+    const zip=await baueIdml(S,farben,bilder,NR);
+    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([zip],{type:"application/zip"}));
+    a.download="Programmheft-InDesign.zip";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  }catch(err){console.error(err);k.textContent="Export fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
+  finally{k.disabled=false}k.textContent=alt};
 $("zuruecksetzen").onclick=()=>{S=structuredClone(BEISPIEL);bauen()};
 
 bauen();
