@@ -128,7 +128,7 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   const wann = String(S.wann).split('\n');
   const tz = 34 * 1.05 / PT, wz = 15 * 1.3 / PT;
   const blockH = titel.length * tz + 7 + wann.length * wz;
-  let y = 40 + (fh - k - 40 - blockH) / 2 + tz * 0.8;
+  let y = 40 + (fh - k - 40 - blockH) / 2 + tz * 0.8 - 8; // etwas über der Mitte
   doc.text(titel, SB / 2, y, { align: 'center', lineHeightFactor: 1.05 });
   y += (titel.length - 1) * tz + 7 + wz;
   doc.setFontSize(15);
