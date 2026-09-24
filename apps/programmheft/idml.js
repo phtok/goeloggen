@@ -131,7 +131,7 @@ export async function baueIdml(S, farben, bilder, orte, zweit = null) {
     ...(String((S.kopf || [])[s] || '').trim() ? [['Programm Kopf', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(S.kopf[s])}</Content></CharacterStyleRange>`]] : []),
     ...String((S.frei || [])[s] || '').split('\n').map((a) => ['Fliesstext', laeufe(a).replace(/CharacterStyle\/Fett/g, 'CharacterStyle/Laut')]),
     ...(zweit && (S.frei2 || [])[s] ? String(S.frei2[s]).split('\n').map((a) => ['Fliesstext Zweitsprache', laeufe(a).replace(/CharacterStyle\/Fett/g, 'CharacterStyle/Laut')]) : [])]);
-  const innen = (s) => [rahmen(art[s] === 'text' ? 11 : 9, 13, art[s] === 'text' ? 126 : 130, 187, art[s] === 'text' ? freiText(s) : programm(S.seiten[s], s === art.indexOf('zeiten')))];
+  const innen = (s) => [rahmen(art[s] === 'text' ? 11 : 9, 13, art[s] === 'text' ? 126 : 130, 187, art[s] === 'text' ? freiText(s) : programm(S.seiten[s], false))];
   const seite2 = innen(0);
   const seite3 = innen(1);
 

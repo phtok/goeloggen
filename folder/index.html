@@ -485,7 +485,7 @@ function bauen(){
     <div class="bild" style="background-image:url('${S.bild}')">${ed("credit",S.credit,"span","credit","Foto: Name")}</div>
   </article>
   <div class="doppel" aria-label="Innenseiten, ein Blatt">${[0,1].map(s=>S.art[s]==="text"?textSeite(s):`<article class="seite prog" aria-label="Seite ${s+2}, Programm">
-    ${s===S.art.indexOf("zeiten")?`<h3>Programm${S.sprache2?` <span class="zweit">${SPR[S.sprache2].programm}</span>`:""}</h3>`:""}<div class="zeilen">${S.seiten[s].map((z,i)=>zeile(z,s,i)).join("")}</div>${plus(s)}
+    <div class="zeilen">${S.seiten[s].map((z,i)=>zeile(z,s,i)).join("")}</div>${plus(s)}
   </article>`).join("")}</div>
   <article class="seite info" aria-label="Seite 4, Campus">
     <div class="plan"><div class="karte" id="karte"><img src="${KARTE_URL||S.plan}" alt="Plan des Campus" />
