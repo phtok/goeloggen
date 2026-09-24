@@ -60,10 +60,11 @@ function laeufeSetzen(doc, laeufe, x, y, breite, grad, zab) {
   return zeilen.length;
 }
 
+let FS = 'Source', FF = 'SourceFett'; // Daten-Schrift, je nach Wahl
 function marke(doc, x, y, r, n, farbe) {
   doc.setFillColor(farbe); doc.setDrawColor(WEISS); doc.setLineWidth(0.4);
   doc.circle(x, y, r, 'FD');
-  doc.setTextColor(WEISS); doc.setFont('SourceFett', 'normal'); doc.setFontSize(r * 1.1 * PT);
+  doc.setTextColor(WEISS); doc.setFont(FF, 'normal'); doc.setFontSize(r * 1.1 * PT);
   doc.text(String(n), x, y + r * 0.04, { align: 'center', baseline: 'middle' });
 }
 
@@ -89,6 +90,7 @@ function schnittmarken(doc, b, l) {
    Die Seite wird um den Rand grösser; ein Versatz am Seitenanfang hält alle
    Koordinaten im Endformat, Flächen am Rand laufen bis in den Beschnitt. */
 export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = false, sektLogoSvg = '') {
+  if (S.stimme === 'alles') { FS = 'GKlar'; FF = 'GLaut'; } else { FS = 'Source'; FF = 'SourceFett'; }
   const B3 = druck ? 3 : 0, R = druck ? 8 : 0;
   const doc = new jspdf.jsPDF({ unit: 'mm', format: [SB + 2 * R, SH + 2 * R], orientation: 'portrait', compress: true });
   const seiteAnfangen = () => {
@@ -133,7 +135,7 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   y += (titel.length - 1) * tz + 7 + wz;
   doc.setFontSize(15);
   doc.text(wann, SB / 2, y, { align: 'center', lineHeightFactor: 1.3 });
-  if (S.credit) { doc.setFont('Source', 'normal'); doc.setFontSize(6.5); doc.text(text(S.credit), SB - 4, SH - 3, { align: 'right' }); }
+  if (S.credit) { doc.setFont(FS, 'normal'); doc.setFontSize(6.5); doc.text(text(S.credit), SB - 4, SH - 3, { align: 'right' }); }
 
   /* ---------- Seiten 2–3: Programm ---------- */
   const zab = grad * 1.4 / PT, zeitB = 40, tx = 9 + 3 + zeitB + 3, tb = SB - 9 - 3 - tx;
@@ -145,8 +147,8 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
     const laeufeVon = (z) => {
       const l = [];
       String(z.text).split(/(<b>.*?<\/b>)/g).filter(Boolean).forEach((t) =>
-        l.push({ t: text(t.replace(/<\/?b>/g, '')), font: /^<b>/.test(t) ? (S.stimme ? 'GLaut' : 'SourceFett') : (S.stimme ? 'GKlar' : 'Source'), farbe: f.tinte }));
-      if (z.ort) l.push({ t: '  ', font: 'Source', farbe: f.tinte }, { t: nr(z.ort) ? nr(z.ort) + ' ' : '', font: 'SourceFett', farbe: f.ort }, { t: z.ort.replace(/ /g, ' '), font: 'Source', farbe: f.ort });
+        l.push({ t: text(t.replace(/<\/?b>/g, '')), font: /^<b>/.test(t) ? (S.stimme ? 'GLaut' : FF) : (S.stimme ? 'GKlar' : FS), farbe: f.tinte }));
+      if (z.ort) l.push({ t: '  ', font: FS, farbe: f.tinte }, { t: nr(z.ort) ? nr(z.ort) + ' ' : '', font: FF, farbe: f.ort }, { t: z.ort.replace(/ /g, ' '), font: FS, farbe: f.ort });
       return l;
     };
     // Zeilenabstand wie im Heft: Rest der Seite gleichmässig verteilen, 3–7 mm.
@@ -158,7 +160,7 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
       const h = hoehen[i] + 2 * pad;
       if (z.pause) { doc.setFillColor(f.pause); doc.rect(9, yy, SB - 18, h, 'F'); }
       const base = yy + pad + grad / PT * 0.8;
-      doc.setFont('SourceFett', 'normal'); doc.setFontSize(grad); doc.setTextColor(f.tinte);
+      doc.setFont(FF, 'normal'); doc.setFontSize(grad); doc.setTextColor(f.tinte);
       doc.text(z.zeit, 12, base);
       laeufeSetzen(doc, laeufeVon(z), tx, base, tb, grad, zab);
       yy += h;
@@ -180,10 +182,10 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
     const sp = i < spalten ? 0 : 1, zy = legY + (i % spalten) * legZ;
     const x = 11 + sp * (SB - 22 + 6) / 2;
     marke(doc, x + 3, zy + 3, 3, i + 1, f.gold);
-    doc.setFont('Source', 'normal'); doc.setFontSize(11); doc.setTextColor(f.tinte);
+    doc.setFont(FS, 'normal'); doc.setFontSize(11); doc.setTextColor(f.tinte);
     doc.text(o, x + 8, zy + 3, { baseline: 'middle' });
   });
-  doc.setFont('Source', 'normal'); doc.setFontSize(9); doc.setTextColor(f.tinte);
+  doc.setFont(FS, 'normal'); doc.setFontSize(9); doc.setTextColor(f.tinte);
   doc.text(String(S.kontakt).split('\n'), 11, SH - 10 - 5, { lineHeightFactor: 1.45 });
   // Rückseite unten rechts: das Logo der gewählten Sektion (Logo-Maschine)
   const lw2 = svgLogo(sektLogoSvg || logoSvg), bw = Math.min(9 * lw2.verh, 80), bl = bw / lw2.verh;

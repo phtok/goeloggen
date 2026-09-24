@@ -97,6 +97,10 @@ export async function baueIdml(S, farben, bilder, orte) {
     ['Titel', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(S.titel)}</Content></CharacterStyleRange>`],
     ...String(S.wann).split('\n').map((z) => ['Datum', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(z)}</Content></CharacterStyleRange>`])]);
   const sCredit = neueStory([['Bildnachweis', laeufe(esc1(S.credit || ''))]]);
+  // Schrift: «alles» setzt auch Daten, Legende und Kontakt in die Hausschrift
+  const nurHaus = S.stimme === 'alles';
+  const TX = nurHaus ? { font: 'Goetheanum Schrift', schnitt: 'Klar' } : { font: 'Source Sans 3', schnitt: 'Regular' };
+  const FETT = nurHaus ? 'Laut' : 'Bold';
   const seite1 = [
     bild(0, 110, 148, 100, bilder.titel.name, bilder.titel.b, bilder.titel.h, true),
     flaeche(0, 0, 148, 126, 'Color/Akzent', kante),
@@ -160,21 +164,21 @@ ${inhalt.join('\n')}
 <idPkg:Styles xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="16.0">
 <RootCharacterStyleGroup Self="rcsg">
 <CharacterStyle Self="CharacterStyle/$ID/[No character style]" Imported="false" Name="$ID/[No character style]"/>
-<CharacterStyle Self="CharacterStyle/Fett" Name="Fett" FontStyle="Bold"/>
+<CharacterStyle Self="CharacterStyle/Fett" Name="Fett" FontStyle="${FETT}"/>
 <CharacterStyle Self="CharacterStyle/Ort" Name="Ort" FillColor="Color/Ort"/>
-<CharacterStyle Self="CharacterStyle/Nummer" Name="Nummer" FontStyle="Bold" FillColor="Color/Gold"/>
+<CharacterStyle Self="CharacterStyle/Nummer" Name="Nummer" FontStyle="${FETT}" FillColor="Color/Gold"/>
 </RootCharacterStyleGroup>
 <RootParagraphStyleGroup Self="rpsg">
 <ParagraphStyle Self="ParagraphStyle/$ID/[No paragraph style]" Name="$ID/[No paragraph style]" Imported="false" FontStyle="Regular" PointSize="12" FillColor="Color/Black"><Properties><AppliedFont type="string">Minion Pro</AppliedFont><Leading type="enumeration">Auto</Leading></Properties></ParagraphStyle>
 <ParagraphStyle Self="ParagraphStyle/$ID/NormalParagraphStyle" Name="$ID/NormalParagraphStyle"><Properties><BasedOn type="string">$ID/[No paragraph style]</BasedOn></Properties></ParagraphStyle>
 ${absatzformat('Titel', { schnitt: 'Deutlich', grad: 34, zab: 36, farbe: 'Color/Paper', attr: `Justification="CenterAlign" SpaceAfter="${n(7 * MM)}"` })}
 ${absatzformat('Datum', { schnitt: 'Deutlich', grad: 15, zab: 19.5, farbe: 'Color/Paper', attr: 'Justification="CenterAlign"' })}
-${absatzformat('Bildnachweis', { font: 'Source Sans 3', schnitt: 'Regular', grad: 6.5, zab: 8, farbe: 'Color/Paper', attr: 'Justification="RightAlign"' })}
+${absatzformat('Bildnachweis', { ...TX, grad: 6.5, zab: 8, farbe: 'Color/Paper', attr: 'Justification="RightAlign"' })}
 ${absatzformat('Programm Kopf', { schnitt: 'Deutlich', grad: 22, zab: 26, farbe: 'Color/Ort', attr: `SpaceAfter="${n(6 * MM)}"` })}
-${absatzformat('Programm', { font: 'Source Sans 3', schnitt: 'Regular', grad: 12, zab: 16.8, attr: zeileAttr, tabs: tab(31) })}
+${absatzformat('Programm', { ...TX, grad: 12, zab: 16.8, attr: zeileAttr, tabs: tab(31) })}
 <ParagraphStyle Self="ParagraphStyle/Programm Pause" Name="Programm Pause" ParagraphShadingOn="true" ParagraphShadingColor="Color/Pause" ParagraphShadingTopOffset="${n(3 * MM)}" ParagraphShadingBottomOffset="${n(3 * MM)}" ParagraphShadingLeftOffset="${n(31 * MM + 3 * MM)}" ParagraphShadingRightOffset="0"><Properties><BasedOn type="string">ParagraphStyle/Programm</BasedOn></Properties></ParagraphStyle>
-${absatzformat('Legende', { font: 'Source Sans 3', schnitt: 'Regular', grad: 11, zab: 16.5, tabs: tab(7) })}
-${absatzformat('Kontakt', { font: 'Source Sans 3', schnitt: 'Regular', grad: 9, zab: 13 })}
+${absatzformat('Legende', { ...TX, grad: 11, zab: 16.5, tabs: tab(7) })}
+${absatzformat('Kontakt', { ...TX, grad: 9, zab: 13 })}
 </RootParagraphStyleGroup>
 <RootObjectStyleGroup Self="rosg"><ObjectStyle Self="ObjectStyle/$ID/[None]" Name="$ID/[None]"/><ObjectStyle Self="ObjectStyle/$ID/[Normal Graphics Frame]" Name="$ID/[Normal Graphics Frame]"/><ObjectStyle Self="ObjectStyle/$ID/[Normal Text Frame]" Name="$ID/[Normal Text Frame]"/></RootObjectStyleGroup>
 </idPkg:Styles>`;
