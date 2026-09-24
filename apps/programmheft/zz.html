@@ -219,7 +219,7 @@ if(!S)S=structuredClone(BEISPIEL);
 // Ältere Stände nachziehen
 if(!S.orte){S.extra=[];delete S.leg;if(S.info==="Lageplan")S.info="Campus";S.plan=BEISPIEL.plan}
 if(S.v!==2){S.v=2;S.orte={};delete S.unter;delete S.stich}
-if(!S.kante)S.kante="schraege";
+if(!S.kante)S.kante="schraege";S.stimme="alles";
 const qk=new URLSearchParams(location.search).get("kante");if(qk)S.kante=qk;
 // Legende = Orte aus dem Programm (in Reihenfolge) + eigene Zusätze
 function orte(){const l=[];S.seiten.flat().map(z=>(z.ort||"").trim()).concat(S.extra.map(x=>x.trim())).forEach(o=>{if(o&&!l.includes(o))l.push(o)});return l}
