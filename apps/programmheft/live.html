@@ -32,6 +32,17 @@
   .farbwahl button .punkt{width:1.5rem;height:1.5rem;border-radius:50%;flex:none}
   .farbwahl button[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink)}
   .farbwahl .trenner{flex:0 0 100%;height:0}
+  .fmenue{position:relative;flex:1;max-width:28rem}
+  .fknopf,.fliste li{display:flex;align-items:center;gap:var(--s2);width:100%;min-height:var(--tap);padding:0 var(--s3) 0 var(--s2);
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);cursor:pointer;text-align:left}
+  .fknopf{border:1px solid var(--line);border-radius:var(--r-control);background:var(--paper)}
+  .fknopf::after{content:"";margin-left:auto;width:.5rem;height:.5rem;border:solid var(--ink);border-width:0 2px 2px 0;transform:rotate(45deg) translateY(-.15rem)}
+  .fknopf .punkt,.fliste .punkt{width:1.5rem;height:1.5rem;border-radius:50%;flex:none}
+  .fliste{position:absolute;z-index:20;left:0;right:0;top:calc(100% + var(--s1));margin:0;padding:var(--s1) 0;list-style:none;
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--r-control);box-shadow:var(--shadow-card);max-height:60vh;overflow:auto}
+  .fliste li:hover,.fliste li:focus{background:var(--soft);outline:none}
+  .fliste li[aria-selected="true"]{font-weight:var(--w-deutlich)}
+  .fliste .trenner{min-height:0;height:1px;padding:0;margin:var(--s1) 0;background:var(--line)}
   .motive{display:flex;flex-wrap:wrap;gap:var(--s2)}
   .motive button{width:var(--tap);height:var(--tap);padding:0;border:.15rem solid transparent;border-radius:var(--r-control);background:var(--soft) center/cover no-repeat;cursor:pointer}
   .motive button[aria-pressed="true"]{border-color:var(--gold-deep);outline:.15rem solid var(--gold-deep);outline-offset:.1rem}
@@ -134,7 +145,7 @@
   </section>
 
   <div class="leiste card soft">
-    <div class="reihe"><span class="lab">Farbe</span><div class="farbwahl" id="farbwahl" role="group" aria-label="Farbe"></div></div>
+    <div class="reihe"><span class="lab">Farbe</span><div class="fmenue" id="fmenue"><button type="button" class="fknopf" id="fknopf" aria-haspopup="listbox" aria-expanded="false" aria-label="Farbe wählen"></button><ul class="fliste" id="farbwahl" role="listbox" aria-label="Farbe" hidden></ul></div></div>
     <div class="reihe"><span class="lab">Titelbild</span><div class="motive" id="motive"></div>
       <button class="btn" type="button" id="bild-waehlen">Eigenes Bild</button><input type="file" id="f-bild" accept="image/*" hidden /></div>
     <div class="reihe"><span class="lab">Kante</span><div class="farbwahl" id="kanten" role="group" aria-label="Kante über dem Titelbild"></div></div>
@@ -361,15 +372,29 @@ B.addEventListener("click",e=>{const t=e.target.closest("[data-tat]");if(!t)retu
 function fokus(p){const el=B.querySelector(`[data-pfad="${p}"]`);if(el){el.focus()}}
 
 // Farbwahl mit Namen
-FARBEN.forEach(x=>{if(!x){const t=document.createElement("span");t.className="trenner";$("farbwahl").append(t);return}
-  const [k,n]=x,b=document.createElement("button");b.type="button";b.dataset.k=k;
-  b.innerHTML=`<span class="punkt" style="background:var(--${k})"></span>${esc(n)}`;
-  b.onclick=()=>{S.farbe=k;bauen()};$("farbwahl").append(b)});
+const FL=$("farbwahl"),FK=$("fknopf");
+FARBEN.forEach(x=>{const li=document.createElement("li");if(!x){li.className="trenner";li.setAttribute("role","separator");FL.append(li);return}
+  const [k,n]=x;li.dataset.k=k;li.setAttribute("role","option");li.tabIndex=-1;
+  li.innerHTML=`<span class="punkt" style="background:var(--${k})"></span>${esc(n)}`;
+  li.onclick=()=>{S.farbe=k;fzu();bauen();FK.focus()};FL.append(li)});
+const fopt=()=>[...FL.querySelectorAll("[role=option]")];
+const fzu=()=>{FL.hidden=true;FK.setAttribute("aria-expanded","false")};
+const fauf=()=>{FL.hidden=false;FK.setAttribute("aria-expanded","true");(FL.querySelector("[aria-selected=true]")||fopt()[0]).focus()};
+FK.onclick=()=>FL.hidden?fauf():fzu();
+FK.onkeydown=e=>{if(["ArrowDown","Enter"," "].includes(e.key)){e.preventDefault();fauf()}};
+FL.onkeydown=e=>{const o=fopt(),i=o.indexOf(document.activeElement);
+  if(e.key==="Escape"){e.preventDefault();fzu();FK.focus()}
+  else if(e.key==="ArrowDown"){e.preventDefault();(o[i+1]||o[0]).focus()}
+  else if(e.key==="ArrowUp"){e.preventDefault();(o[i-1]||o[o.length-1]).focus()}
+  else if(e.key==="Enter"||e.key===" "){e.preventDefault();document.activeElement.click()}
+  else if(e.key==="Tab")fzu()};
+document.addEventListener("click",e=>{if(!$("fmenue").contains(e.target))fzu()});
 MOTIVE.forEach(([f,n,c])=>{const b=document.createElement("button");b.type="button";b.dataset.f=f;
   b.style.backgroundImage=`url('${f}')`;b.title=n;b.setAttribute("aria-label","Titelbild: "+n);
   b.onclick=()=>{S.bild=f;S.credit=c;bauen()};$("motive").append(b)});
 function markieren(){
-  document.querySelectorAll("#farbwahl button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===S.farbe));
+  fopt().forEach(b=>b.setAttribute("aria-selected",b.dataset.k===S.farbe));
+  {const a=FL.querySelector("[aria-selected=true]");if(a)FK.innerHTML=a.innerHTML}
   document.querySelectorAll("#stimmen button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===String(!!S.stimme)));
   document.querySelectorAll("#kanten button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===S.kante));
   document.querySelectorAll("#motive button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.f===S.bild));
