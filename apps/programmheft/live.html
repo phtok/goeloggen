@@ -70,6 +70,9 @@
   .z.pause{background:color-mix(in srgb,var(--acc) 12%,#fff)} /* # ds-ok Tönung */
   .z .zeit{font-weight:700;font-variant-numeric:tabular-nums lining-nums}
   .z b,.z strong{font-weight:700}
+  /* Vergleich: Programmtitel als Stimme – Hausschrift Klar, Betonung Laut; Zeit und Ort bleiben Source */
+  .stimme .z .titeltext{font-family:var(--font-display);font-weight:var(--w-klar)}
+  .stimme .z .titeltext b{font-weight:var(--w-laut)}
   .z .ort{color:var(--ort);display:inline-flex;align-items:baseline;gap:.15em;white-space:nowrap}
   .z .ort svg{width:.8em;height:.8em;fill:currentColor;flex:none;align-self:center}
 
@@ -133,6 +136,7 @@
     <div class="reihe"><span class="lab">Titelbild</span><div class="motive" id="motive"></div>
       <button class="btn" type="button" id="bild-waehlen">Eigenes Bild</button><input type="file" id="f-bild" accept="image/*" hidden /></div>
     <div class="reihe"><span class="lab">Kante</span><div class="farbwahl" id="kanten" role="group" aria-label="Kante über dem Titelbild"></div></div>
+    <div class="reihe"><span class="lab">Programmtitel</span><div class="farbwahl" id="stimmen" role="group" aria-label="Schrift der Programmtitel"></div></div>
     <div class="reihe">
       <button class="btn primary" type="button" id="pdf" data-druck="0">PDF für den Versand</button>
       <button class="btn" type="button" id="pdf-druck" data-druck="1">PDF für die Druckerei</button>
@@ -234,7 +238,7 @@ let NR=[];const nrVon=o=>{const k=NR.indexOf((o||"").trim());return k<0?I.pin:`<
 function zeile(z,s,i){
   return `<div class="z${z.pause?" pause":""}">
     ${ed(`seiten.${s}.${i}.zeit`,z.zeit,"span","zeit","Zeit")}
-    <span>${ed(`seiten.${s}.${i}.text`,z.text,"span","","Programmpunkt",true)} <span class="ort">${nrVon(z.ort)}${ed(`seiten.${s}.${i}.ort`,z.ort,"span","","Ort")}</span></span>
+    <span>${ed(`seiten.${s}.${i}.text`,z.text,"span","titeltext","Programmpunkt",true)} <span class="ort">${nrVon(z.ort)}${ed(`seiten.${s}.${i}.ort`,z.ort,"span","","Ort")}</span></span>
     <span class="zwerk">
       ${i>0||s>0?`<button type="button" data-tat="hoch" data-s="${s}" data-i="${i}" aria-label="Nach oben" title="Nach oben">${I.hoch}</button>`:""}
       <button type="button" data-tat="pause" data-s="${s}" data-i="${i}" aria-pressed="${!!z.pause}" title="Als Pause tönen">${I.tasse}Pause</button>
@@ -268,7 +272,7 @@ async function karteFaerben(){
 }
 function bauen(){
   const f=S.farbe, logo="../../assets/logos/goetheanum-logo.svg";
-  const b=$("blaetter");NR=orte();
+  const b=$("blaetter");NR=orte();b.classList.toggle("stimme",!!S.stimme);
   // Schrift und Logo auf der Fläche immer weiss (B01). Trägt Weiss auf der Grundfarbe
 // nicht (unter 4.5:1), steht die abgedunkelte Variante des Farbsystems (-dunkel).
   const cs=getComputedStyle(document.documentElement),t=n=>cs.getPropertyValue(`--${n}`).trim();
@@ -352,9 +356,12 @@ MOTIVE.forEach(([f,n,c])=>{const b=document.createElement("button");b.type="butt
   b.onclick=()=>{S.bild=f;S.credit=c;bauen()};$("motive").append(b)});
 function markieren(){
   document.querySelectorAll("#farbwahl button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===S.farbe));
+  document.querySelectorAll("#stimmen button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===String(!!S.stimme)));
   document.querySelectorAll("#kanten button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===S.kante));
   document.querySelectorAll("#motive button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.f===S.bild));
 }
+[[false,"Source Sans"],[true,"Hausschrift"]].forEach(([v,n])=>{const b=document.createElement("button");b.type="button";b.dataset.v=v;b.textContent=n;
+  b.onclick=()=>{S.stimme=v;bauen()};$("stimmen").append(b)});
 KANTEN.forEach(([k,n])=>{const b=document.createElement("button");b.type="button";b.dataset.k=k;b.textContent=n;
   b.onclick=()=>{S.kante=k;bauen()};$("kanten").append(b)});
 // Ortsnummern auf die Karte ziehen

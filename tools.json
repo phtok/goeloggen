@@ -367,6 +367,17 @@
       "such": "Programm Programmheft Veranstaltung Event Heft Flyer Zeitplan Lageplan A5 PDF"
     },
     {
+      "slug": "folder",
+      "cat": "generatoren",
+      "status": "entwurf",
+      "tag": "Veranstaltungen",
+      "title": "Goetheanum Folder",
+      "short": "Folder",
+      "href": "apps/programmheft/live.html",
+      "desc": "A5-Folder direkt im Heft schreiben: Titel mit Bild, Programm mit Orten, Campusplan in der Sektionsfarbe – PDF für Versand und Druckerei, IDML für InDesign.",
+      "such": "Folder Programmheft Veranstaltung Programm Heft Flyer Campus Karte A5 PDF IDML InDesign Druckerei"
+    },
+    {
       "slug": "bewegte-schrift",
       "cat": "labor",
       "status": "entwurf",

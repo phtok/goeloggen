@@ -12,6 +12,7 @@ const SB = 148, SH = 210;
 const SCHRIFTEN = [
   ['GDeutlich', '../../assets/fonts/goetheanum/Office/GoetheanumSchriftDeutlich.ttf'],
   ['GKlar', '../../assets/fonts/goetheanum/Office/GoetheanumSchriftKlar.ttf'],
+  ['GLaut', '../../assets/fonts/goetheanum/Office/GoetheanumSchriftLaut.ttf'],
   ['Source', '../../assets/fonts/goetheanum/Fallback/SourceSans3-Regular.ttf'],
   ['SourceFett', '../karten-generator/assets/fonts/SourceSans3-SemiBold.ttf'],
 ];
@@ -144,7 +145,7 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
     const laeufeVon = (z) => {
       const l = [];
       String(z.text).split(/(<b>.*?<\/b>)/g).filter(Boolean).forEach((t) =>
-        l.push({ t: text(t.replace(/<\/?b>/g, '')), font: /^<b>/.test(t) ? 'SourceFett' : 'Source', farbe: f.tinte }));
+        l.push({ t: text(t.replace(/<\/?b>/g, '')), font: /^<b>/.test(t) ? (S.stimme ? 'GLaut' : 'SourceFett') : (S.stimme ? 'GKlar' : 'Source'), farbe: f.tinte }));
       if (z.ort) l.push({ t: ' ', font: 'Source', farbe: f.tinte }, { t: nr(z.ort) ? nr(z.ort) + ' ' : '', font: 'SourceFett', farbe: f.ort }, { t: z.ort.replace(/ /g, ' '), font: 'Source', farbe: f.ort });
       return l;
     };

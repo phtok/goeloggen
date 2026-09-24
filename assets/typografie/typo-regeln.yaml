@@ -78,6 +78,13 @@
   erkennen: '\b0(\d)\.(\d{2})(?=\s?(?:Uhr|h)\b|\s?–\s?\d)'
   korrektur: '$1.$2'
   schwere: fehler
+# G21 (Beschluss 24. 9. 2026): ganze Beträge ohne Nullen – CHF 17, nie CHF 17.00.
+# Rappen/Cents bleiben (CHF 17.50). Nur mit Währung davor oder dahinter.
+- id: G21-betrag-ganz
+  regel: Ganze Beträge ohne Nullen (CHF 17, 25 Franken), nie CHF 17.00
+  erkennen: '\b((?:CHF|EUR|Fr\.|€)\s?\d[\d  ’'']*)[.,]00\b|\b(\d[\d  ’'']*)[.,]00(?=\s?(?:CHF|EUR|€|Franken|Euro)\b)'
+  korrektur: '$1$2'
+  schwere: fehler
 - id: T01-doppelspatium
   regel: Nie zwei Leerzeichen
   erkennen: '(\S)  +(\S)'
