@@ -91,6 +91,16 @@
       "such": "Cockpit Eingang Wünsche Aufträge Triage Tags Status Backstage Schmiede verwalten"
     },
     {
+      "slug": "folder-archiv",
+      "cat": "labor",
+      "status": "intern",
+      "tag": "Backstage",
+      "title": "Folder-Archiv",
+      "href": "apps/folder-archiv/",
+      "desc": "Alle Goetheanum-Folder aus dem Editor, mit ihren Exporten; öffnen lädt den Stand in den Editor. Schlüssel wie der Schmiede-Eingang.",
+      "such": "Folder Archiv Programmheft gespeichert Exporte PDF InDesign Backstage"
+    },
+    {
       "slug": "design-system",
       "cat": "system",
       "status": "beta",

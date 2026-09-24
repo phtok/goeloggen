@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- =============================================================================
+     Folder-Archiv · alle Goetheanum-Folder aus apps/programmheft/live.html
+     Der Editor sichert jeden Folder im Hintergrund (laufend und bei jedem
+     Export). Hier: Liste mit Exporten, «Öffnen» lädt den Stand in den Editor.
+     Key-geschützt mit dem Cockpit-Schlüssel der Schmiede. Backend: services/folder/.
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Folder-Archiv · Goetheanum</title>
+<meta name="description" content="Alle Goetheanum-Folder, die im Editor entstanden sind, mit ihren Exporten." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<style>
+  .gate{max-width:520px;margin-top:var(--s6)}
+  .gate .row{display:flex;gap:var(--s2);align-items:stretch;margin-top:var(--s3)}
+  .gate .row input{flex:1}
+  .liste{margin-top:var(--s6);display:grid;gap:var(--s4)}
+  .eintrag{display:flex;gap:var(--s4);align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .eintrag .punkt{width:1.5rem;height:1.5rem;border-radius:50%;flex:none}
+  .eintrag .was{display:flex;gap:var(--s3);align-items:center;flex:1;min-width:14rem}
+  .eintrag h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);margin:0}
+  .meta{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin:0}
+  .said{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);min-height:1.3em}
+  .said.bad{color:var(--bad)}
+</style>
+</head>
+<body>
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Backstage</span>
+    <h1>Folder-Archiv</h1>
+  </section>
+  <section id="gate" class="gate" hidden>
+    <div class="card soft">
+      <label class="field">
+        <span class="lab">Schlüssel</span>
+        <span class="row">
+          <input id="keyIn" type="password" placeholder="Schlüssel des Schmiede-Eingangs" autocomplete="off" />
+          <button class="btn primary" type="button" id="keyBtn">Öffnen</button>
+        </span>
+      </label>
+      <div class="said" id="gateSaid"></div>
+    </div>
+  </section>
+  <section id="board" hidden>
+    <div class="said" id="boardSaid"></div>
+    <div class="liste" id="liste"></div>
+  </section>
+</main>
+<script>
+  var SB  = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
+  var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
+  var ARTEN = { 'pdf-versand': 'PDF Versand', 'pdf-druck': 'PDF Druckerei', 'idml': 'InDesign' };
+  var SPEICHER = 'goe-programmheft-live-1';
+  function el(id){ return document.getElementById(id); }
+  function rpc(name, body){
+    return fetch(SB + '/rest/v1/rpc/' + name, { method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
+      body: JSON.stringify(body) }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); });
+  }
+  function datum(t){ var d = new Date(t);
+    return d.getDate() + '. ' + (d.getMonth() + 1) + '. ' + d.getFullYear() + ', ' + d.getHours() + '.' + String(d.getMinutes()).padStart(2, '0') + ' Uhr'; }
+  var schluessel = (location.search.match(/[?&]key=([^&]+)/) || [])[1];
+  schluessel = schluessel ? decodeURIComponent(schluessel) : '';
+  function eintrag(f){
+    var c = document.createElement('div'); c.className = 'card eintrag';
+    var ex = (f.exporte || []).map(function(x){ return ARTEN[x.art] || x.art; });
+    var zaehl = {}; ex.forEach(function(a){ zaehl[a] = (zaehl[a] || 0) + 1; });
+    var exText = Object.keys(zaehl).map(function(a){ return zaehl[a] > 1 ? a + ' (' + zaehl[a] + ')' : a; }).join(' · ') || 'noch nicht exportiert';
+    c.innerHTML = '<div class="was"><span class="punkt"></span><div><h3></h3><p class="meta"></p><p class="meta"></p></div></div>'
+      + '<button class="btn" type="button">Im Editor öffnen</button>';
+    c.querySelector('.punkt').style.background = 'var(--' + (f.farbe || 'blue') + ')';
+    c.querySelector('h3').textContent = f.titel || 'Ohne Titel';
+    var m = c.querySelectorAll('.meta');
+    m[0].textContent = 'Zuletzt bearbeitet ' + datum(f.updated_at);
+    m[1].textContent = exText;
+    c.querySelector('button').onclick = function(e){
+      var b = e.currentTarget; b.disabled = true; b.textContent = 'Wird geladen …';
+      rpc('folder_holen', { p_key: schluessel, p_id: f.id }).then(function(stand){
+        localStorage.setItem(SPEICHER, JSON.stringify(stand)); location.href = '../programmheft/live.html';
+      }).catch(function(){ b.disabled = false; b.textContent = 'Laden fehlgeschlagen'; });
+    };
+    return c;
+  }
+  function laden(){
+    el('boardSaid').textContent = 'Lade …'; el('boardSaid').className = 'said';
+    rpc('folder_liste', { p_key: schluessel }).then(function(rows){
+      el('gate').hidden = true; el('board').hidden = false;
+      var l = el('liste'); l.innerHTML = '';
+      if(!rows || !rows.length){ el('boardSaid').textContent = 'Keine Folder, oder der Schlüssel stimmt nicht.'; return; }
+      rows.forEach(function(f){ l.appendChild(eintrag(f)); });
+      el('boardSaid').textContent = rows.length === 1 ? '1 Folder' : rows.length + ' Folder';
+    }).catch(function(){ el('gate').hidden = false; el('gateSaid').textContent = 'Archiv nicht erreichbar.'; el('gateSaid').className = 'said bad'; });
+  }
+  el('keyBtn').addEventListener('click', function(){
+    schluessel = (el('keyIn').value || '').trim();
+    if(!schluessel){ el('gateSaid').textContent = 'Bitte den Schlüssel eintragen.'; el('gateSaid').className = 'said bad'; return; }
+    laden();
+  });
+  el('keyIn').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ el('keyBtn').click(); } });
+  if(schluessel){ laden(); } else { el('gate').hidden = false; }
+</script>
+</body>
+</html>
