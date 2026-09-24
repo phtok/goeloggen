@@ -62,7 +62,12 @@
   .hinweis{font-size:var(--t-small);color:var(--muted);margin:0}
 
   /* ---------- Das Heft ---------- */
-  .blaetter{display:flex;flex-wrap:wrap;gap:var(--s6);justify-content:center;padding-bottom:var(--s8)}
+  .blaetter{display:flex;flex-direction:column;align-items:center;gap:var(--s6);padding-bottom:var(--s8)}
+  /* Innen: Seite 2 und 3 sind ein Blatt – ohne Abstand, nur eine feine Falzlinie */
+  .doppel{display:flex;box-shadow:var(--shadow-card);border:1px solid var(--line)}
+  .doppel .seite{box-shadow:none;border:0}
+  .doppel .seite+.seite{border-left:1px dashed var(--line)}
+  @media (max-width:699px){.doppel{flex-direction:column}.doppel .seite+.seite{border-left:0;border-top:1px dashed var(--line)}}
   .seite{width:148mm;height:210mm;flex:none;zoom:var(--z,1);background:#fff;color:#23272b; /* # ds-ok Papier */
     position:relative;overflow:hidden;box-shadow:var(--shadow-card);border:1px solid var(--line);
     font-family:var(--font-display);font-weight:var(--w-klar);display:flex;flex-direction:column}
@@ -420,9 +425,9 @@ function bauen(){
     </div>
     <div class="bild" style="background-image:url('${S.bild}')">${ed("credit",S.credit,"span","credit","Foto: Name")}</div>
   </article>
-  ${[0,1].map(s=>`<article class="seite prog" aria-label="Seite ${s+2}, Programm">
+  <div class="doppel" aria-label="Innenseiten, ein Blatt">${[0,1].map(s=>`<article class="seite prog" aria-label="Seite ${s+2}, Programm">
     ${s===0?`<h3>Programm${S.sprache2?` <span class="zweit">${SPR[S.sprache2].programm}</span>`:""}</h3>`:""}<div class="zeilen">${S.seiten[s].map((z,i)=>zeile(z,s,i)).join("")}</div>${plus(s)}
-  </article>`).join("")}
+  </article>`).join("")}</div>
   <article class="seite info" aria-label="Seite 4, Campus">
     <div class="plan"><div class="karte" id="karte"><img src="${KARTE_URL||S.plan}" alt="Plan des Campus" />
       ${markerHtml()}</div></div>
@@ -649,7 +654,7 @@ fetch("../../design-system/tokens.css").then(a=>a.text()).then(css=>{
 window.addEventListener("resize",einpassen);
 // A5 bleibt A5: auf schmalen Schirmen die ganze Seite verkleinern, nie stauchen
 let Z=1;const zoomen=()=>{const b=document.querySelector(".blaetter"),mm=document.createElement("div");mm.style.width="148mm";document.body.append(mm);
-  const w=mm.getBoundingClientRect().width;mm.remove();Z=Math.min(1,(b.clientWidth||innerWidth)/w);b.style.setProperty("--z",Z)};
+  const w=mm.getBoundingClientRect().width;mm.remove();Z=Math.min(1,(b.clientWidth||innerWidth)/(innerWidth>=700?2*w:w));b.style.setProperty("--z",Z)};
 addEventListener("resize",zoomen);zoomen();
 </script>
 </body>
