@@ -344,7 +344,17 @@ function einpassen(){
 }
 
 function setzen(pfad,wert){const k=pfad.split(".");let o=S;k.slice(0,-1).forEach(x=>o=o[x]);o[k.at(-1)]=wert}
-function sichern(){try{localStorage.setItem(SPEICHER,JSON.stringify(S))}catch(e){}}
+function sichern(){try{localStorage.setItem(SPEICHER,JSON.stringify(S))}catch(e){}archivieren()}
+// Archiv: jeder Folder wird im Hintergrund gesichert (services/folder/), das unberührte Beispiel nicht.
+const SB="https://dagcsnfrlbpxcmdimnrw.supabase.co",SBK="sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY";
+let archivUhr;
+function archivieren(art=null){
+  if(!S.id)S.id=crypto.randomUUID();
+  const {id,...rest}=S;if(!art&&JSON.stringify(rest)===JSON.stringify(BEISPIEL))return;
+  clearTimeout(archivUhr);const los=()=>fetch(SB+"/rest/v1/rpc/folder_sichern",{method:"POST",keepalive:!art,
+    headers:{"Content-Type":"application/json",apikey:SBK,Authorization:"Bearer "+SBK},
+    body:JSON.stringify({p_id:S.id,p_stand:S,p_export:art})}).catch(()=>{});
+  art?los():archivUhr=setTimeout(los,4000)}
 
 const B=$("blaetter");
 B.addEventListener("input",e=>{const el=e.target.closest("[data-pfad]");if(!el)return;
@@ -451,7 +461,7 @@ $("idml").onclick=async e=>{const k=e.currentTarget,alt=k.textContent;k.disabled
     const bilder={titel:await titelBild(),plan:await planPng(),logo:await logoPng(true),logoBlau:await logoPng(false)};
     const zip=await baueIdml(S,farben,bilder,NR);
     const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([zip],{type:"application/zip"}));
-    a.download="Programmheft-InDesign.zip";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    a.download="Programmheft-InDesign.zip";a.click();archivieren("idml");setTimeout(()=>URL.revokeObjectURL(a.href),4000);
   }catch(err){console.error(err);k.textContent="Export fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
   finally{k.disabled=false}k.textContent=alt};
 // ---------- PDF: direkt geschrieben wie im Campusplan, kein Druckdialog
@@ -474,11 +484,11 @@ const pdfBauen=async e=>{const k=e.currentTarget,alt=k.textContent,druck=k.datas
     const titel=druck?await zuschnitt(S.bild,154,103,300,.95):await zuschnitt(S.bild,148,100,150,.78);
     const doc=await bauePdf(S,f,{titel,plan:await planOhneNummern(druck)},NR,lage,grad,logoSvg,druck,sektionsLogo(S.farbe));
     const name=(S.titel||"programmheft").toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-    doc.save(`${name||"programmheft"}-a5-${druck?"druck-3mm":"versand"}.pdf`);
+    doc.save(`${name||"programmheft"}-a5-${druck?"druck-3mm":"versand"}.pdf`);archivieren(druck?"pdf-druck":"pdf-versand");
   }catch(err){console.error(err);k.textContent="PDF fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
   finally{k.disabled=false}k.textContent=alt};
 $("pdf").onclick=pdfBauen;$("pdf-druck").onclick=pdfBauen;
-$("zuruecksetzen").onclick=()=>{S=structuredClone(BEISPIEL);bauen()};
+$("zuruecksetzen").onclick=()=>{S=structuredClone(BEISPIEL);bauen()}; // neue id beim nächsten Sichern: ein neuer Folder
 
 // Helle Token-Werte einmal aus tokens.css lesen (erster Wert je Name = heller Satz).
 let TOK={};
