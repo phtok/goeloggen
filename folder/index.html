@@ -88,7 +88,7 @@
   .prog{padding:13mm 9mm 10mm}
   .prog h3,.info h3{font-weight:var(--w-deutlich);font-size:22pt;color:var(--kopf);margin:0 0 6mm 2mm}
   .zeilen{display:grid;--pad:3mm}
-  .z{display:grid;grid-template-columns:40mm 1fr;gap:3mm;padding:var(--pad) 3mm;border-bottom:.3mm solid rgba(0,0,0,.12); /* # ds-ok Haarlinie */
+  .z{display:grid;grid-template-columns:40mm 1fr auto;gap:3mm;padding:var(--pad) 3mm;border-bottom:.3mm solid rgba(0,0,0,.12); /* # ds-ok Haarlinie */
     font-family:var(--ft);font-size:var(--grad,12pt);line-height:1.4;position:relative}
   .z.pause{background:color-mix(in srgb,var(--acc) 12%,#fff)} /* # ds-ok Tönung */
   .z .zeit{font-weight:var(--fw);white-space:nowrap;font-variant-numeric:tabular-nums lining-nums}
@@ -98,7 +98,7 @@
   .stimme .z .titeltext b{font-weight:var(--w-laut)}
   .blaetter{--ft:var(--font-text);--fw:700}
   .blaetter.alles{--ft:var(--font-display);--fw:var(--w-laut)}
-  .z .ort{color:var(--ort);display:inline-flex;align-items:baseline;gap:.15em;white-space:nowrap;margin-left:.35em}
+  .z .ort{color:var(--ort);display:inline-flex;align-items:baseline;align-self:start;justify-self:end;gap:.15em;white-space:nowrap} /* Ort rechtsbündig */
   .z .ort svg{width:.8em;height:.8em;fill:currentColor;flex:none;align-self:center}
 
   /* Werkzeuge an der Zeile: erscheinen beim Bearbeiten, nie im Druck */
@@ -202,9 +202,9 @@ const FARBEN=[
   ["sek-hpise","Sektion für Heilpädagogik und inklusive soziale Entwicklung"],
   null,
   ["bereich","Bereiche"],["bereich-buehne","Bühne"]];
-const MOTIVE=[["titelbild-goetheanum.jpg","Fenster hinter Lavendel","Foto: Goetheanum"],["titel-herbst.jpg","Goetheanum im Herbst","Foto: Goetheanum / Xue Li"],
-  ["titel-campus.jpg","Westansicht, Campus-Fest","Foto: Goetheanum / Xue Li"],["titel-westtreppe.jpg","Westtreppenhaus","Foto: Goetheanum / Xue Li"],
-  ["titel-luftbild.jpg","Luftbild des Campus","Foto: Goetheanum / Xue Li"],["titel-glashaus.jpg","Glashaus","Foto: Goetheanum / Xue Li"]];
+const MOTIVE=[["titelbild-goetheanum.jpg","Fenster hinter Lavendel","Foto: Xue Li"],["titel-herbst.jpg","Goetheanum im Herbst","Foto: Xue Li"],
+  ["titel-campus.jpg","Westansicht, Campus-Fest","Foto: Xue Li"],["titel-westtreppe.jpg","Westtreppenhaus","Foto: Xue Li"],
+  ["titel-luftbild.jpg","Luftbild des Campus","Foto: Xue Li"],["titel-glashaus.jpg","Glashaus","Foto: Xue Li"]];
 
 // Bekannte Orte auf dem Standardplan, in Prozent der Karte. Unbekannte zieht man selbst auf die Karte.
 // Orte kommen aus dem Kartenwerkzeug (orte.js, mm auf dem A4-quer-Blatt).
@@ -241,7 +241,7 @@ function kartenOrt(name){
 }
 const lage=o=>S.orte[o]||kartenOrt(o);
 const KANTEN=[["schraege","Schräge wie im Logo"],["trapez","Trapez wie der Bau"],["gerade","Gerade"]];
-const BEISPIEL={farbe:"bereich",bild:MOTIVE[0][0],credit:"Foto: Goetheanum",
+const BEISPIEL={farbe:"bereich",bild:MOTIVE[0][0],credit:"Foto: Xue Li",
   titel:"Offener Tag am Goetheanum",wann:"Samstag, 17. Oktober 2026\n10–16.30 Uhr",
   seiten:[[
     {zeit:"09.30–10.00",text:"Ankommen, Kaffee und Tee",ort:"Foyer",pause:true},
@@ -268,6 +268,7 @@ if(!S)S=structuredClone(BEISPIEL);
 if(!S.orte){S.extra=[];delete S.leg;if(S.info==="Lageplan")S.info="Campus";S.plan=BEISPIEL.plan}
 if(S.v!==2){S.v=2;S.orte={};delete S.unter;delete S.stich}
 if(!S.kante)S.kante="schraege";
+if(/^Foto: Goetheanum( \/ Xue Li)?$/.test(S.credit||""))S.credit="Foto: Xue Li";
 if(!S.v3){S.v3=1;S.stimme="alles";if(/^Goetheanum, Rüttiweg 45, 4143 Dornach\nwww\.goetheanum\.ch$/.test(S.kontakt||""))S.kontakt=BEISPIEL.kontakt}
 const qk=new URLSearchParams(location.search).get("kante");if(qk)S.kante=qk;
 // Legende = Orte aus dem Programm (in Reihenfolge) + eigene Zusätze
@@ -300,6 +301,8 @@ const wannZeilen=w=>{w=strich(String(w||"")).replace(/(\d{4}),?\s+(?=(ab\s+)?\d{
   return w.split("\n").map(z=>/^(ab\s+)?\d{1,2}([.:]\d{2})?(–\d{1,2}([.:]\d{2})?)?$/.test(z.trim())?z.trim()+" Uhr":z).join("\n")};
 // Titel: kurze Wörter nicht am Zeilenende stehen lassen («Offener Tag / am Goetheanum»).
 const binden=t=>String(t||"").replace(/(^|\s)(am|im|an|in|zu|zum|zur|und|für|von|vom|mit|bei|auf|aus|um|der|die|das|des|dem|den|ein|eine) /gi,"$1$2\u00a0");
+// Adresse: Postleitzahl und Ort zusammen, «·» bleibt am Wort davor.
+const adresse=t=>String(t||"").replace(/\b(\d{4,5}) (?=\S)/g,"$1\u00a0").replace(/ · /g,"\u00a0· ");
 const strich=s=>s.replace(/(\d)\s*[-–]\s*(\d)/g,"$1–$2")
   .replace(/\b(\d{1,2})[.:]00\b/g,"$1").replace(/\b0(\d)(?=[.:]\d\d|\b(?!\.\s?\w))/g,"$1").replace(/\b(\d{1,2})[:](\d\d)\b/g,"$1.$2");
 // Jede Zeitangabe trägt «Uhr» (9.30–10 Uhr, ab 16.30 Uhr).
@@ -329,7 +332,8 @@ let NR=[];const nrVon=o=>{const k=NR.indexOf((o||"").trim());return k<0?I.pin:`<
 function zeile(z,s,i){
   return `<div class="z${z.pause?" pause":""}">
     ${ed(`seiten.${s}.${i}.zeit`,z.zeit,"span","zeit","Zeit")}
-    <span>${ed(`seiten.${s}.${i}.text`,z.text,"span","titeltext","Programmpunkt",true)} <span class="ort">${nrVon(z.ort)}${ed(`seiten.${s}.${i}.ort`,z.ort,"span","","Ort")}</span></span>
+    <span>${ed(`seiten.${s}.${i}.text`,z.text,"span","titeltext","Programmpunkt",true)}</span>
+    <span class="ort">${nrVon(z.ort)}${ed(`seiten.${s}.${i}.ort`,z.ort,"span","","Ort")}</span>
     <span class="zwerk">
       ${i>0||s>0?`<button type="button" data-tat="hoch" data-s="${s}" data-i="${i}" aria-label="Nach oben" title="Nach oben">${I.hoch}</button>`:""}
       <button type="button" data-tat="pause" data-s="${s}" data-i="${i}" aria-pressed="${!!z.pause}" title="Als Pause tönen">${I.tasse}Pause</button>
@@ -387,7 +391,7 @@ function bauen(){
       ${ed("titel",binden(S.titel),"h2","","Titel")}
       ${ed("wann",S.wann,"p","wann","Datum und Zeit")}
     </div>
-    <div class="bild" style="background-image:url('${S.bild}')">${ed("credit",S.credit,"span","credit","Bildnachweis")}</div>
+    <div class="bild" style="background-image:url('${S.bild}')">${ed("credit",S.credit,"span","credit","Foto: Name")}</div>
   </article>
   ${[0,1].map(s=>`<article class="seite prog" aria-label="Seite ${s+2}, Programm">
     ${s===0?"<h3>Programm</h3>":""}<div class="zeilen">${S.seiten[s].map((z,i)=>zeile(z,s,i)).join("")}</div>${plus(s)}
@@ -400,7 +404,7 @@ function bauen(){
     ${NR.some(o=>!lage(o))?`<div class="offen">Noch nicht auf der Karte – auf den Plan ziehen:
       ${NR.map((o,k)=>lage(o)?"":`<button type="button" class="mk" data-ort="${esc(o)}" title="${esc(o)}">${k+1}</button> ${esc(o)}`).join(" ")}</div>`:""}
     <div class="plus">${S.extra.map((x,k)=>ed(`extra.${k}`,x,"span","","Ort")).join(" ")}<button type="button" data-tat="neuleg">${I.plus}Weiterer Ort</button></div>
-    <div class="fuss">${ed("kontakt",S.kontakt,"span","kontakt","Kontakt")}<img class="sektlogo" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(sektLogo)}" alt="${esc(FARBEN.find(x=>x&&x[0]===f)?.[1]||"Goetheanum")}" /></div>
+    <div class="fuss">${ed("kontakt",adresse(S.kontakt),"span","kontakt","Kontakt")}<img class="sektlogo" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(sektLogo)}" alt="${esc(FARBEN.find(x=>x&&x[0]===f)?.[1]||"Goetheanum")}" /></div>
   </article>`;
   einpassen();markieren();sichern();karteFaerben();
 }
@@ -507,7 +511,7 @@ B.addEventListener("pointerdown",e=>{const m=e.target.closest(".mk");if(!m)retur
   addEventListener("pointermove",zug);addEventListener("pointerup",los)});
 $("bild-waehlen").onclick=()=>$("f-bild").click();
 $("f-bild").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();r.onload=()=>{S.bild=r.result;S.credit="";bauen()};r.readAsDataURL(f)});
+  const r=new FileReader();r.onload=()=>{S.bild=r.result;S.credit="Foto: ";bauen()};r.readAsDataURL(f)});
 // ---------- IDML: InDesign-Paket mit Bildern im Ordner «Links»
 const laden=src=>new Promise((ok,nein)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=nein;i.src=src});
 const alsBytes=c=>new Promise(ok=>c.toBlob(async b=>ok(new Uint8Array(await b.arrayBuffer())),"image/png"));
