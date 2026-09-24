@@ -153,11 +153,12 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
       const l = [];
       String(z.text).split(/(<b>.*?<\/b>)/g).filter(Boolean).forEach((t) =>
         l.push({ t: text(t.replace(/<\/?b>/g, '')), font: /^<b>/.test(t) ? (S.stimme ? 'GLaut' : FF) : (S.stimme ? 'GKlar' : FS), farbe: f.tinte }));
-      if (z.ort) l.push({ t: '  ', font: FS, farbe: f.tinte }, { t: nr(z.ort) ? nr(z.ort) + ' ' : '', font: FF, farbe: f.ort }, { t: z.ort.replace(/ /g, ' '), font: FS, farbe: f.ort });
       return l;
     };
     // Zeilenabstand wie im Heft: Rest der Seite gleichmässig verteilen, 3–7 mm.
-    const hoehen = L.map((z) => laeufeSetzen(doc, laeufeVon(z), 0, 0, tb, grad, zab) * zab);
+    // Ort rechtsbündig in eigener Spalte: Nummer fett, Name normal; der Programmtext weicht ihm aus.
+    const ortB = (z) => { if (!z.ort) return 0; doc.setFontSize(grad); doc.setFont(FF, 'normal'); const a = nr(z.ort) ? doc.getTextWidth(nr(z.ort) + ' ') : 0; doc.setFont(FS, 'normal'); return a + doc.getTextWidth(z.ort) + 3; };
+    const hoehen = L.map((z) => laeufeSetzen(doc, laeufeVon(z), 0, 0, tb - ortB(z), grad, zab) * zab);
     const frei = SH - 10 - y0 - hoehen.reduce((a, b) => a + b, 0);
     const pad = Math.max(3, Math.min(7, frei / (L.length * 2)));
     let yy = y0;
@@ -167,7 +168,12 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
       const base = yy + pad + grad / PT * 0.8;
       doc.setFont(FF, 'normal'); doc.setFontSize(grad); doc.setTextColor(f.tinte);
       doc.text(z.zeit, 12, base);
-      laeufeSetzen(doc, laeufeVon(z), tx, base, tb, grad, zab);
+      laeufeSetzen(doc, laeufeVon(z), tx, base, tb - ortB(z), grad, zab);
+      if (z.ort) {
+        const rechts = tx + tb; doc.setFontSize(grad); doc.setTextColor(f.ort);
+        doc.setFont(FS, 'normal'); doc.text(z.ort, rechts, base, { align: 'right' });
+        if (nr(z.ort)) { const w = doc.getTextWidth(z.ort); doc.setFont(FF, 'normal'); doc.text(nr(z.ort) + ' ', rechts - w, base, { align: 'right' }); }
+      }
       yy += h;
       doc.setDrawColor(f.linie); doc.setLineWidth(0.3); doc.line(9, yy, SB - 9, yy);
     });

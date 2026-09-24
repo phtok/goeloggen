@@ -116,7 +116,7 @@ export async function baueIdml(S, farben, bilder, orte) {
       `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Fett"><Content>${esc1(z.zeit)}</Content></CharacterStyleRange>`
       + `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>\t</Content></CharacterStyleRange>`
       + laeufe(z.text)
-      + (z.ort ? `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Ort"><Content>  ${NR(z.ort) ? NR(z.ort) + ' ' : ''}${esc1(z.ort)}</Content></CharacterStyleRange>` : '')])]);
+      + (z.ort ? `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>\t</Content></CharacterStyleRange><CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Ort"><Content>${NR(z.ort) ? NR(z.ort) + ' ' : ''}${esc1(z.ort)}</Content></CharacterStyleRange>` : '')])]);
   const seite2 = [rahmen(9, 13, 130, 187, programm(S.seiten[0], true))];
   const seite3 = [rahmen(9, 13, 130, 187, programm(S.seiten[1], false))];
 
@@ -124,7 +124,7 @@ export async function baueIdml(S, farben, bilder, orte) {
   const sInfo = neueStory([['Programm Kopf', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(S.info)}</Content></CharacterStyleRange>`]]);
   const sLeg = neueStory(orte.map((o, k) => ['Legende',
     `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Nummer"><Content>${k + 1}</Content></CharacterStyleRange><CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>\t${esc1(o)}</Content></CharacterStyleRange>`]));
-  const sKontakt = neueStory(String(S.kontakt).split('\n').map((z) => ['Kontakt', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(z)}</Content></CharacterStyleRange>`]));
+  const sKontakt = neueStory(String(S.kontakt).replace(/\b(\d{4,5}) (?=\S)/g, '$1\u00a0').replace(/ · /g, '\u00a0· ').split('\n').map((z) => ['Kontakt', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(z)}</Content></CharacterStyleRange>`]));
   const legH = Math.ceil(orte.length / 3) * 6 + 2;
   const seite4 = [
     rahmen(11, 13, 126, 12, sInfo),
@@ -159,6 +159,7 @@ ${inhalt.join('\n')}
 </idPkg:Graphic>`;
 
   const tab = (mm, al = 'LeftAlign') => `<TabList type="list"><ListItem type="record"><Alignment type="enumeration">${al}</Alignment><AlignmentCharacter type="string">.</AlignmentCharacter><Leader type="string"></Leader><Position type="unit">${n(mm * MM)}</Position></ListItem></TabList>`;
+  const tabs2 = `<TabList type="list"><ListItem type="record"><Alignment type="enumeration">LeftAlign</Alignment><AlignmentCharacter type="string">.</AlignmentCharacter><Leader type="string"></Leader><Position type="unit">${n(31 * MM)}</Position></ListItem><ListItem type="record"><Alignment type="enumeration">RightAlign</Alignment><AlignmentCharacter type="string">.</AlignmentCharacter><Leader type="string"></Leader><Position type="unit">${n(127 * MM)}</Position></ListItem></TabList>`; // Ort rechtsbündig
   const zeileAttr = `LeftIndent="${n(31 * MM)}" FirstLineIndent="${n(-31 * MM)}" SpaceBefore="${n(3 * MM)}" SpaceAfter="${n(3 * MM)}" RuleBelow="true" RuleBelowColor="Color/Black" RuleBelowTint="12" RuleBelowWeight="0.85" RuleBelowOffset="${n(3 * MM)}" RuleBelowLeftIndent="${n(-31 * MM)}"`;
   const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <idPkg:Styles xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="16.0">
@@ -175,7 +176,7 @@ ${absatzformat('Titel', { schnitt: 'Deutlich', grad: 34, zab: 36, farbe: 'Color/
 ${absatzformat('Datum', { schnitt: 'Deutlich', grad: 15, zab: 19.5, farbe: 'Color/Paper', attr: 'Justification="CenterAlign"' })}
 ${absatzformat('Bildnachweis', { ...TX, grad: 6.5, zab: 8, farbe: 'Color/Paper', attr: 'Justification="RightAlign"' })}
 ${absatzformat('Programm Kopf', { schnitt: 'Deutlich', grad: 22, zab: 26, farbe: 'Color/Ort', attr: `SpaceAfter="${n(6 * MM)}"` })}
-${absatzformat('Programm', { ...TX, grad: 12, zab: 16.8, attr: zeileAttr, tabs: tab(31) })}
+${absatzformat('Programm', { ...TX, grad: 12, zab: 16.8, attr: zeileAttr, tabs: tabs2 })}
 <ParagraphStyle Self="ParagraphStyle/Programm Pause" Name="Programm Pause" ParagraphShadingOn="true" ParagraphShadingColor="Color/Pause" ParagraphShadingTopOffset="${n(3 * MM)}" ParagraphShadingBottomOffset="${n(3 * MM)}" ParagraphShadingLeftOffset="${n(31 * MM + 3 * MM)}" ParagraphShadingRightOffset="0"><Properties><BasedOn type="object">ParagraphStyle/Programm</BasedOn></Properties></ParagraphStyle>
 ${absatzformat('Legende', { ...TX, grad: 10, zab: 17, tabs: tab(6) })}
 ${absatzformat('Kontakt', { ...TX, grad: 9, zab: 13 })}
