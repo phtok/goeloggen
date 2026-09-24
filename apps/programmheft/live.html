@@ -104,16 +104,16 @@
   .info .plan{flex:1 1 0;min-height:60mm;display:flex;justify-content:center}
   .karte{position:relative;height:100%;max-width:100%;aspect-ratio:192/210}
   .karte img{width:100%;height:100%;display:block}
-  .mk{position:absolute;transform:translate(-50%,-50%);width:6.5mm;height:6.5mm;border-radius:50%;border:.5mm solid #fff; /* # ds-ok Papier */
+  .mk{position:absolute;transform:translate(-50%,-50%);width:4.8mm;height:4.8mm;border-radius:50%;border:.35mm solid #fff; /* # ds-ok Papier */
     background:var(--mk,var(--gold-deep));color:var(--on-accent);display:grid;place-items:center;font-family:var(--ft);
-    font-size:10pt;font-weight:var(--fw);font-variant-numeric:tabular-nums;cursor:grab;touch-action:none;padding:0}
+    font-size:7.5pt;font-weight:var(--fw);font-variant-numeric:tabular-nums;cursor:grab;touch-action:none;padding:0}
   .mk:active{cursor:grabbing}
   .offen{font-family:var(--ft);font-size:var(--t-small);display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap}
   .offen .mk{position:static;transform:none}
   .z .ort .nr{font-weight:var(--fw);font-variant-numeric:tabular-nums}
-  .legende{columns:2;column-gap:6mm;font-family:var(--ft);font-size:11pt;line-height:1.5;margin:0;padding:0;list-style:none}
+  .legende{columns:3;column-gap:4mm;font-family:var(--ft);font-size:10pt;line-height:1.5;margin:0;padding:0;list-style:none}
   .legende li{display:flex;gap:2mm;break-inside:avoid;margin-bottom:1mm;align-items:baseline}
-  .legende .n{flex:0 0 6mm;height:6mm;border-radius:50%;background:var(--mk,var(--gold-deep));color:var(--on-accent);
+  .legende .n{flex:0 0 5mm;height:5mm;border-radius:50%;background:var(--mk,var(--gold-deep));color:var(--on-accent);
     display:grid;place-items:center;font-size:9pt;font-weight:var(--fw);font-variant-numeric:tabular-nums}
   .info .fuss{font-family:var(--ft);font-size:9pt;line-height:1.45;display:flex;justify-content:space-between;align-items:end;gap:4mm}
   .info .fuss .kontakt{white-space:pre-line}
@@ -216,7 +216,7 @@ const BEISPIEL={farbe:"bereich",bild:MOTIVE[0][0],credit:"Foto: Goetheanum",
     {zeit:"ab 16.30",text:"Ausklang und Getränke",ort:"Foyer",pause:true}
   ]],
   info:"Campus",plan:"lageplan-standard.svg?v=3",kante:"schraege",extra:[],orte:{},
-  kontakt:"Goetheanum, Rüttiweg 45, 4143 Dornach\nwww.goetheanum.ch"};
+  kontakt:"Goetheanum\nRüttiweg 45 · 4143 Dornach · Schweiz\nwww.goetheanum.ch",stimme:"alles"};
 
 const SPEICHER="goe-programmheft-live-1";
 let S;try{S=JSON.parse(localStorage.getItem(SPEICHER))}catch(e){}
@@ -225,6 +225,7 @@ if(!S)S=structuredClone(BEISPIEL);
 if(!S.orte){S.extra=[];delete S.leg;if(S.info==="Lageplan")S.info="Campus";S.plan=BEISPIEL.plan}
 if(S.v!==2){S.v=2;S.orte={};delete S.unter;delete S.stich}
 if(!S.kante)S.kante="schraege";
+if(!S.v3){S.v3=1;S.stimme="alles";if(/^Goetheanum, Rüttiweg 45, 4143 Dornach\nwww\.goetheanum\.ch$/.test(S.kontakt||""))S.kontakt=BEISPIEL.kontakt}
 const qk=new URLSearchParams(location.search).get("kante");if(qk)S.kante=qk;
 // Legende = Orte aus dem Programm (in Reihenfolge) + eigene Zusätze
 function orte(){const l=[];S.seiten.flat().map(z=>(z.ort||"").trim()).concat(S.extra.map(x=>x.trim())).forEach(o=>{if(o&&!l.includes(o))l.push(o)});return l}
@@ -453,7 +454,7 @@ async function logoPng(weiss){
   return {name:weiss?"logo-weiss.png":"logo.png",bytes:await alsBytes(c),b:c.width,h:c.height}}
 async function planPng(){
   const i=await laden(KARTE_URL||S.plan),c=document.createElement("canvas");c.width=2400;c.height=Math.round(2400*210/192);
-  const g=c.getContext("2d");g.drawImage(i,0,0,c.width,c.height);const r=c.width*6.5/126/2; // Kreis wie im Heft
+  const g=c.getContext("2d");g.drawImage(i,0,0,c.width,c.height);const r=c.width*4.8/126/2; // Kreis wie im Heft
   await document.fonts.load("700 20px 'Source Sans 3'");
   NR.forEach((o,k)=>{const p=lage(o);if(!p)return;const px=p[0]/100*c.width,py=p[1]/100*c.height;
     g.beginPath();g.arc(px,py,r,0,7);g.fillStyle=hex(getComputedStyle(B).getPropertyValue("--mk"));g.fill();

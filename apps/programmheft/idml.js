@@ -125,12 +125,12 @@ export async function baueIdml(S, farben, bilder, orte) {
   const sLeg = neueStory(orte.map((o, k) => ['Legende',
     `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Nummer"><Content>${k + 1}</Content></CharacterStyleRange><CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>\t${esc1(o)}</Content></CharacterStyleRange>`]));
   const sKontakt = neueStory(String(S.kontakt).split('\n').map((z) => ['Kontakt', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(z)}</Content></CharacterStyleRange>`]));
-  const legH = Math.ceil(orte.length / 2) * 6 + 2;
+  const legH = Math.ceil(orte.length / 3) * 6 + 2;
   const seite4 = [
     rahmen(11, 13, 126, 12, sInfo),
     bild(11, 28, 126, 170 - 28 - legH - 14, bilder.plan.name, bilder.plan.b, bilder.plan.h, false),
-    rahmen(11, 170 - legH, 126, legH + 10, sLeg, 2),
-    rahmen(11, 186, 90, 14, sKontakt, 1, 'BottomAlign'),
+    rahmen(11, 170 - legH, 126, legH + 10, sLeg, 3),
+    rahmen(11, 183, 90, 17, sKontakt, 1, 'BottomAlign'),
     bild(107, 194, 30, 6, bilder.logoBlau.name, bilder.logoBlau.b, bilder.logoBlau.h, false)];
 
   const seiten = [seite1, seite2, seite3, seite4];
@@ -177,7 +177,7 @@ ${absatzformat('Bildnachweis', { ...TX, grad: 6.5, zab: 8, farbe: 'Color/Paper',
 ${absatzformat('Programm Kopf', { schnitt: 'Deutlich', grad: 22, zab: 26, farbe: 'Color/Ort', attr: `SpaceAfter="${n(6 * MM)}"` })}
 ${absatzformat('Programm', { ...TX, grad: 12, zab: 16.8, attr: zeileAttr, tabs: tab(31) })}
 <ParagraphStyle Self="ParagraphStyle/Programm Pause" Name="Programm Pause" ParagraphShadingOn="true" ParagraphShadingColor="Color/Pause" ParagraphShadingTopOffset="${n(3 * MM)}" ParagraphShadingBottomOffset="${n(3 * MM)}" ParagraphShadingLeftOffset="${n(31 * MM + 3 * MM)}" ParagraphShadingRightOffset="0"><Properties><BasedOn type="string">ParagraphStyle/Programm</BasedOn></Properties></ParagraphStyle>
-${absatzformat('Legende', { ...TX, grad: 11, zab: 16.5, tabs: tab(7) })}
+${absatzformat('Legende', { ...TX, grad: 10, zab: 17, tabs: tab(6) })}
 ${absatzformat('Kontakt', { ...TX, grad: 9, zab: 13 })}
 </RootParagraphStyleGroup>
 <RootObjectStyleGroup Self="rosg"><ObjectStyle Self="ObjectStyle/$ID/[None]" Name="$ID/[None]"/><ObjectStyle Self="ObjectStyle/$ID/[Normal Graphics Frame]" Name="$ID/[Normal Graphics Frame]"/><ObjectStyle Self="ObjectStyle/$ID/[Normal Text Frame]" Name="$ID/[Normal Text Frame]"/></RootObjectStyleGroup>
