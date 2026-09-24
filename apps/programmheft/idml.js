@@ -21,6 +21,7 @@ const n = (v) => Math.round(v * 1000) / 1000;
 const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.substr(i, 2), 16)).join(' ');
 
 let zaehler = 0;
+let bilder_versatz = 0; // Karte: Anteil der Höhe, um den der Ausschnitt nach oben rückt
 const id = (p) => `${p}${(++zaehler).toString(36)}`;
 
 function pfad(xmm, ymm, wmm, hmm) {
@@ -42,8 +43,8 @@ function flaeche(xmm, ymm, wmm, hmm, farbe, polygon) {
 function bild(xmm, ymm, wmm, hmm, datei, pxB, pxH, fuellen) {
   const gb = pxB * 72 / 300, gh = pxH * 72 / 300;        // Bild mit 300 ppi
   const fw = wmm * MM, fh = hmm * MM;
-  const s = (fuellen ? Math.max : Math.min)(fw / gb, fh / gh);
-  const tx = OX + xmm * MM + (fw - gb * s) / 2, ty = OY + ymm * MM + (fh - gh * s) / 2;
+  const s = fuellen === 'breite' ? fw / gb : (fuellen ? Math.max : Math.min)(fw / gb, fh / gh);
+  const tx = OX + xmm * MM + (fw - gb * s) / 2, ty = OY + ymm * MM + (fuellen === 'breite' ? -(bilder_versatz * gh * s) : (fh - gh * s) / 2); // «breite»: volle Breite, oben bündig, unten beschnitten
   return `<Rectangle Self="${id('r')}" ContentType="GraphicType" FillColor="Swatch/None" StrokeColor="Swatch/None" StrokeWeight="0" ItemTransform="1 0 0 1 0 0">${pfad(xmm, ymm, wmm, hmm)}
   <Image Self="${id('i')}" ItemTransform="${n(s)} 0 0 ${n(s)} ${n(tx)} ${n(ty)}"><Properties><Profile type="string">$ID/None</Profile><GraphicBounds Left="0" Top="0" Right="${n(gb)}" Bottom="${n(gh)}"/></Properties>
   <Link Self="${id('l')}" LinkResourceURI="file:Links/${x(datei)}" LinkResourceFormat="$ID/${datei.endsWith('.png') ? 'PNG' : 'JPEG'}" StoredState="Normal" LinkClassID="35906" LinkClientID="257"/></Image></Rectangle>`;
@@ -86,7 +87,7 @@ function absatzformat(name, a) {
 export async function baueIdml(S, farben, bilder, orte, zweit = null) {
   // zweit: {programm, legende[]} – zweite Sprache in Ruhig, Hauptsprache in Deutlich
   const Z2 = (t) => `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Zweitsprache"><Content>${x(t)}</Content></CharacterStyleRange>`;
-  zaehler = 0;
+  zaehler = 0; bilder_versatz = bilder.versatz || 0;
   const stories = [];
   const neueStory = (absaetze) => { const sid = id('u'); stories.push([sid, story(sid, absaetze)]); return sid; };
   const esc1 = (t) => x(t);
@@ -125,14 +126,12 @@ export async function baueIdml(S, farben, bilder, orte, zweit = null) {
   const seite3 = [rahmen(9, 13, 130, 187, programm(S.seiten[1], false))];
 
   // Seite 4 – Campus
-  const sInfo = neueStory([['Programm Kopf', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(S.info)}</Content></CharacterStyleRange>${zweit && S.info2 ? Z2(' ' + S.info2) : ''}`]]);
   const sLeg = neueStory(orte.map((o, k) => ['Legende',
     `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Nummer"><Content>${k + 1}</Content></CharacterStyleRange><CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>\t${esc1(o)}</Content></CharacterStyleRange>${zweit && zweit.legende[k] ? Z2(' ' + zweit.legende[k]) : ''}`]));
   const sKontakt = neueStory(String(S.kontakt).replace(/\b(\d{4,5}) (?=\S)/g, '$1\u00a0').replace(/ · /g, '\u00a0· ').split('\n').map((z) => ['Kontakt', `<CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"><Content>${esc1(z)}</Content></CharacterStyleRange>`]));
   const legH = Math.ceil(orte.length / 3) * 6 + 2;
   const seite4 = [
-    rahmen(11, 13, 126, 12, sInfo),
-    bild(11, 28, 126, 170 - 28 - legH - 14, bilder.plan.name, bilder.plan.b, bilder.plan.h, false),
+    bild(-3, -3, 154, 170 - legH - 5 + 3, bilder.plan.name, bilder.plan.b, bilder.plan.h, 'breite'), // randabfallend, harte Kante unten
     rahmen(11, 170 - legH, 126, legH + 10, sLeg, 3),
     rahmen(11, 183, 90, 17, sKontakt, 1, 'BottomAlign'),
     bild(107, 194, 30, 6, bilder.logoBlau.name, bilder.logoBlau.b, bilder.logoBlau.h, false)];

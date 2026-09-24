@@ -123,8 +123,8 @@
 
   .info{padding:13mm 11mm 10mm;gap:5mm}
   .info h3{margin:0}
-  .info .plan{flex:1 1 0;min-height:60mm;display:flex;justify-content:center}
-  .karte{position:relative;height:100%;max-width:100%;aspect-ratio:192/210}
+  .info .plan{flex:1 1 0;min-height:60mm;margin:-13mm -11mm 0;overflow:hidden} /* randabfallend oben und seitlich, harte Kante unten */
+  .karte{position:relative;width:100%;aspect-ratio:192/210}
   .karte img{width:100%;height:100%;display:block}
   .mk{position:absolute;transform:translate(-50%,-50%);width:4.8mm;height:4.8mm;border-radius:50%;border:.35mm solid #fff; /* # ds-ok Papier */
     background:var(--mk,var(--gold-deep));color:var(--on-accent);display:grid;place-items:center;font-family:var(--ft);
@@ -424,7 +424,6 @@ function bauen(){
     ${s===0?`<h3>Programm${S.sprache2?` <span class="zweit">${SPR[S.sprache2].programm}</span>`:""}</h3>`:""}<div class="zeilen">${S.seiten[s].map((z,i)=>zeile(z,s,i)).join("")}</div>${plus(s)}
   </article>`).join("")}
   <article class="seite info" aria-label="Seite 4, Campus">
-    <h3 class="kopf2">${ed("info",S.info,"span","","Überschrift")}${S.sprache2?` ${ed("info2",S.info2||"","span","zweit","Überschrift ("+SPR[S.sprache2].kurz+")")}`:""}</h3>
     <div class="plan"><div class="karte" id="karte"><img src="${KARTE_URL||S.plan}" alt="Plan des Campus" />
       ${markerHtml()}</div></div>
     <ol class="legende">${NR.map((o,k)=>{const z=ortZweit(o);return `<li><span class="n">${k+1}</span><span>${esc(o)}${z?` <span class="zweit">${esc(z)}</span>`:""}</span></li>`}).join("")}</ol>
@@ -433,9 +432,18 @@ function bauen(){
     <div class="plus">${S.extra.map((x,k)=>ed(`extra.${k}`,x,"span","","Ort")).join(" ")}<button type="button" data-tat="neuleg">${I.plus}Weiterer Ort</button></div>
     <div class="fuss">${ed("kontakt",adresse(S.kontakt),"span","kontakt","Kontakt")}<img class="sektlogo" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(sektLogo)}" alt="${esc(FARBEN.find(x=>x&&x[0]===f)?.[1]||"Goetheanum")}" /></div>
   </article>`;
-  einpassen();markieren();sichern();karteFaerben();
+  einpassen();karteVersetzen();markieren();sichern();karteFaerben();
 }
 
+// Karte randabfallend mit harter Kante unten: den Ausschnitt so weit nach oben schieben,
+// dass auch der unterste Marker sichtbar bleibt (ohne den obersten zu verlieren).
+let KARTE_VERSATZ=0; // Anteil der Kartenhöhe, um den die Karte nach oben rückt
+function karteVersetzen(){const pl=document.querySelector(".info .plan"),k=$("karte");if(!pl||!k)return;
+  k.style.marginTop="0";const kh=k.offsetHeight,sicht=pl.offsetHeight;if(!kh)return;
+  const ys=markerAnordnung().map(m=>m.y*MK_Y/100);if(!ys.length){KARTE_VERSATZ=0;return}
+  const rand=MK_D*1.6/100*k.offsetWidth/kh; // Luft von gut einem Marker
+  let v=Math.max(0,Math.max(...ys)+rand-sicht/kh);v=Math.min(v,Math.max(0,Math.min(...ys)-rand),Math.max(0,1-sicht/kh));
+  KARTE_VERSATZ=v;k.style.marginTop=(-v*kh)+"px"}
 // Programmseiten füllen: Grad wächst bis 14 pt, Zeilenabstand je Seite bis unten.
 function einpassen(){
   const seiten=[...document.querySelectorAll(".seite.prog")];
@@ -583,7 +591,7 @@ $("idml").onclick=async e=>{const k=e.currentTarget,alt=k.textContent;k.disabled
     const farben={name,akzent:aufloesen("var(--acc)"),ort:aufloesen("var(--ort)"),
       pause:aufloesen("color-mix(in srgb,var(--acc) 12%,#fff)"),gold:aufloesen("var(--mk)")}; // # ds-ok Tönung
     const bilder={titel:await titelBild(),plan:await planPng(),logo:await logoPng(true),logoBlau:await logoPng(false)};
-    const zip=await baueIdml(S,farben,bilder,NR,S.sprache2?{programm:SPR[S.sprache2].programm,legende:NR.map(ortZweit)}:null);
+    bilder.versatz=KARTE_VERSATZ;const zip=await baueIdml(S,farben,bilder,NR,S.sprache2?{programm:SPR[S.sprache2].programm,legende:NR.map(ortZweit)}:null);
     const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([zip],{type:"application/zip"}));
     a.download=dateiname("indesign")+".zip";a.click();archivieren("idml");setTimeout(()=>URL.revokeObjectURL(a.href),4000);
   }catch(err){console.error(err);k.textContent="Export fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
@@ -606,7 +614,7 @@ const pdfBauen=async e=>{const k=e.currentTarget,alt=k.textContent,druck=k.datas
     const grad=parseFloat(document.querySelector(".seite.prog").style.getPropertyValue("--grad"))||12;
     const logoSvg=await (await fetch("../../assets/logos/goetheanum-logo.svg")).text();
     const titel=druck?await zuschnitt(S.bild,154,103,300,.95):await zuschnitt(S.bild,148,100,150,.78);
-    const doc=await bauePdf(S,f,{titel,plan:await planOhneNummern(druck),marker:markerFuerExport(),zweit:S.sprache2?{programm:SPR[S.sprache2].programm,legende:NR.map(ortZweit)}:null},NR,lage,grad,logoSvg,druck,sektionsLogo(S.farbe));
+    const doc=await bauePdf(S,f,{titel,plan:await planOhneNummern(druck),marker:markerFuerExport(),versatz:KARTE_VERSATZ,zweit:S.sprache2?{programm:SPR[S.sprache2].programm,legende:NR.map(ortZweit)}:null},NR,lage,grad,logoSvg,druck,sektionsLogo(S.farbe));
     doc.save(dateiname(druck?"a5-druck-3mm":"a5-versand")+".pdf");archivieren(druck?"pdf-druck":"pdf-versand");
   }catch(err){console.error(err);k.textContent="PDF fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
   finally{k.disabled=false}k.textContent=alt};
