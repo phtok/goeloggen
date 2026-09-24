@@ -124,29 +124,45 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   const [p0, ...rest] = kante;
   doc.lines(rest.map((p, i) => [p[0] - (i ? rest[i - 1][0] : p0[0]), p[1] - (i ? rest[i - 1][1] : p0[1])]), p0[0], p0[1], [1, 1], 'F', true);
 
-  const lw1 = svgLogo(logoSvg, WEISS), lh = 6.5, lw = lh * lw1.verh;
+  // Titel-Logo: Sektionslogo (weiss, zweizeilig) oder die Goetheanum-Marke
+  const lw1 = svgLogo(bilder.titelLogo || logoSvg, WEISS);
+  let lh = bilder.titelLogo ? 11 : 6.5, lw = lh * lw1.verh;
+  if (lw > 118) { lw = 118; lh = lw / lw1.verh; }
   await doc.svg(lw1.el, { x: (SB - lw) / 2, y: 20, width: lw, height: lh });
+  const logoUnten = 20 + lh;
 
-  doc.setTextColor(WEISS); doc.setFont('GDeutlich', 'normal'); doc.setFontSize(34);
-  // Ausgeglichen umbrechen wie text-wrap: balance
-  let titel = doc.splitTextToSize(text(binden(S.titel)), SB - 24);
-  for (let b = SB - 24; b > 40; b -= 2) { const t = doc.splitTextToSize(text(binden(S.titel)), b); if (t.length > titel.length) break; titel = t; }
+  doc.setTextColor(WEISS);
   const wann = String(S.wann).split('\n');
   const Z = bilder.zweit || null; // zweite Sprache: {programm, legende[]} – Hauptsprache Deutlich, zweite Ruhig
-  let titel2 = [], wann2 = [];
-  if (Z) { doc.setFont('GRuhig', 'normal'); doc.setFontSize(34); titel2 = S.titel2 ? doc.splitTextToSize(text(binden(S.titel2)), SB - 24) : []; wann2 = S.wann2 ? String(S.wann2).split('\n') : []; doc.setFont('GDeutlich', 'normal'); }
-  const tz = 34 * 1.05 / PT, wz = 15 * 1.3 / PT;
-  const blockH = titel.length * tz + 7 + wann.length * wz + (titel2.length ? 3 + titel2.length * tz : 0) + (wann2.length ? 2 + wann2.length * wz : 0);
-  // Mittig zwischen Logo (unten bei 26,5 mm) und dem Innenrand über der Kante – wie im Editor.
-  const unten = 126 - (S.kante === 'gerade' ? 10 : 16);
-  let y = 26.5 + (unten - 26.5 - blockH) / 2 + tz * 0.8;
+  const wann2 = Z && S.wann2 ? String(S.wann2).split('\n') : [];
+  const unten = 126 - (S.kante === 'gerade' ? 10 : 16), wz = 15 * 1.3 / PT;
+  // Ausgeglichen umbrechen wie text-wrap: balance
+  const umbrechen = (t, schnitt, g) => { doc.setFont(schnitt, 'normal'); doc.setFontSize(g); if (!t) return [];
+    // eigener Umbruch nur an normalen Leerzeichen: «am\u00a0Goetheanum» bleibt zusammen (splitTextToSize trennt auch dort)
+    const woerter = text(binden(t)).split(' '), breit = (w) => doc.getTextWidth(w.replace(/\u00a0/g, ' '));
+    const brechen = (b) => woerter.reduce((z, w) => { const k = z.length ? z.at(-1) + ' ' + w : w; if (z.length && breit(k) <= b) z[z.length - 1] = k; else z.push(w); return z; }, []);
+    let z = brechen(SB - 24);
+    for (let b = SB - 24; b > 40; b -= 2) { const u = brechen(b); if (u.length > z.length) break; z = u; }
+    return z.map((l) => l.replace(/\u00a0/g, ' ')); };
+  const mitte = { schraege: 119, trapez: 126, gerade: 112 }[S.kante] || 126; // Farbkante in der Seitenmitte
+  // Titelgrad: 34 pt; reicht das Farbfeld nicht (zweisprachig, Sektionslogo), wird der Titel kleiner, nie unter 22 pt.
+  let g = 34, titel, titel2, tz, blockH;
+  for (; g >= 22; g -= 1) {
+    titel = umbrechen(S.titel, 'GDeutlich', g); titel2 = Z ? umbrechen(S.titel2, 'GRuhig', g) : []; tz = g * 1.05 / PT;
+    blockH = titel.length * tz + 7 + wann.length * wz + (titel2.length ? 7 + titel2.length * tz : 0) + (wann2.length ? (titel2.length ? 5 : 2) + wann2.length * wz : 0);
+    if (blockH <= mitte - 4 - logoUnten - 5) break;
+  }
+  g = Math.max(g, 22);
+  // Mittig zwischen Logo und dem Innenrand über der Kante – wie im Editor.
+  let y = logoUnten + Math.max(5, Math.min((unten - logoUnten - blockH) / 2, mitte - 4 - logoUnten - blockH)) + tz * 0.8;
+  doc.setFont('GDeutlich', 'normal'); doc.setFontSize(g);
   doc.text(titel, SB / 2, y, { align: 'center', lineHeightFactor: 1.05 });
   y += (titel.length - 1) * tz + 7 + wz;
   doc.setFontSize(15);
   doc.text(wann, SB / 2, y, { align: 'center', lineHeightFactor: 1.3 });
-  if (titel2.length) { y += (wann.length - 1) * wz + 3 + tz; doc.setFont('GRuhig', 'normal'); doc.setFontSize(34); doc.text(titel2, SB / 2, y, { align: 'center', lineHeightFactor: 1.05 }); y += (titel2.length - 1) * tz; }
-  else y += (wann.length - 1) * wz;
-  if (wann2.length) { y += (titel2.length ? 7 : 2) + wz; doc.setFont('GRuhig', 'normal'); doc.setFontSize(15); doc.text(wann2, SB / 2, y, { align: 'center', lineHeightFactor: 1.3 }); }
+  y += (wann.length - 1) * wz;
+  if (titel2.length) { y += 7 + tz; doc.setFont('GRuhig', 'normal'); doc.setFontSize(g); doc.text(titel2, SB / 2, y, { align: 'center', lineHeightFactor: 1.05 }); y += (titel2.length - 1) * tz; }
+  if (wann2.length) { y += (titel2.length ? 5 : 2) + wz; doc.setFont('GRuhig', 'normal'); doc.setFontSize(15); doc.text(wann2, SB / 2, y, { align: 'center', lineHeightFactor: 1.3 }); }
   if (S.credit) { doc.setFont(FS, 'normal'); doc.setFontSize(6.5); doc.text(text(S.credit), SB - 4, SH - 3, { align: 'right' }); }
 
   /* ---------- Seiten 2–3: Programm ---------- */
@@ -155,7 +171,20 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
   S.seiten.forEach((L, s) => {
     neueSeite();
     let y0 = 13;
-    if (s === 0) { doc.setFont('GDeutlich', 'normal'); doc.setFontSize(22); doc.setTextColor(f.kopf); doc.text('Programm', 11, y0 + 7); if (Z) { const w = doc.getTextWidth('Programm '); doc.setFont('GRuhig', 'normal'); doc.text(Z.programm, 11 + w, y0 + 7); } y0 += 14; }
+    const art = (S.art || [])[s] || 'zeiten';
+    if (art === 'text') { // Freie Textseite: Überschrift (optional), Absätze in Klar, fett = Laut
+      if (String((S.kopf || [])[s] || '').trim()) { doc.setFont('GDeutlich', 'normal'); doc.setFontSize(22); doc.setTextColor(f.kopf); doc.text(text(S.kopf[s]), 11, y0 + 7); y0 += 14; }
+      const fz = 13 * 1.5 / PT, breite = SB - 22;
+      const absatz = (html, schnitt, fett) => String(html || '').split('\n').forEach((abs) => {
+        if (!abs.trim()) { y0 += fz; return; }
+        const l = abs.split(/(<b>.*?<\/b>)/g).filter(Boolean).map((t) => ({ t: text(t.replace(/<\/?b>/g, '')), font: /^<b>/.test(t) ? fett : schnitt, farbe: f.tinte }));
+        y0 += laeufeSetzen(doc, l, 11, y0 + 13 / PT * 0.8, breite, 13, fz) * fz;
+      });
+      absatz((S.frei || [])[s], 'GKlar', 'GLaut');
+      if (Z && (S.frei2 || [])[s]) { y0 += fz * 0.5; absatz(S.frei2[s], 'GRuhig', 'GLaut'); }
+      return;
+    }
+    if (s === (S.art || ['zeiten']).indexOf('zeiten')) { doc.setFont('GDeutlich', 'normal'); doc.setFontSize(22); doc.setTextColor(f.kopf); doc.text('Programm', 11, y0 + 7); if (Z) { const w = doc.getTextWidth('Programm '); doc.setFont('GRuhig', 'normal'); doc.text(Z.programm, 11 + w, y0 + 7); } y0 += 14; }
     const laeufeVon = (z) => {
       const l = [];
       String(z.text).split(/(<b>.*?<\/b>)/g).filter(Boolean).forEach((t) =>
@@ -211,11 +240,14 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
     doc.text(o, x + 7, zy + 3, { baseline: 'middle' });
     if (Z && Z.legende[i]) { const w = doc.getTextWidth(o + ' '); doc.setFont('GRuhig', 'normal'); doc.text(Z.legende[i], x + 7 + w, zy + 3, { baseline: 'middle' }); }
   });
-  doc.setFont(FS, 'normal'); doc.setFontSize(9); doc.setTextColor(f.tinte);
-  const kz = String(S.kontakt).split('\n');
-  doc.text(kz, 11, SH - 10 - 1 - (kz.length - 1) * 9 * 1.45 * 0.3528, { lineHeightFactor: 1.45 });
   // Rückseite unten rechts: das Logo der gewählten Sektion (Logo-Maschine)
   const lw2 = svgLogo(sektLogoSvg || logoSvg), bw = Math.min(9 * lw2.verh, 80), bl = bw / lw2.verh;
+  // Kontakt links daneben, umbrochen nur an normalen Leerzeichen: PLZ und Ort bleiben zusammen.
+  const kzab = 9 * 1.45 / PT, kbr = SB - 22 - bw - 4;
+  const kl = String(S.kontakt).replace(/\b(\d{4,5}) (?=\S)/g, '$1\u00a0').replace(/ · /g, '\u00a0· ').split('\n').map((z) => [{ t: text(z), font: FS, farbe: f.tinte }]);
+  const kn = kl.reduce((a, l) => a + laeufeSetzen(doc, l, 0, 0, kbr, 9, kzab), 0);
+  let ky = SH - 10 - 1 - (kn - 1) * kzab;
+  kl.forEach((l) => { ky += laeufeSetzen(doc, l, 11, ky, kbr, 9, kzab) * kzab; });
   await doc.svg(lw2.el, { x: SB - 11 - bw, y: SH - 10 - bl, width: bw, height: bl });
 
   return doc;

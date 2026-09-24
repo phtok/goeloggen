@@ -88,6 +88,7 @@
   .titel h2{font-weight:var(--w-deutlich);font-size:34pt;line-height:1.05;margin:auto 0 0;text-wrap:balance}
   .titel .wann{font-weight:var(--w-deutlich);font-size:15pt;line-height:1.3;margin:0 0 auto;white-space:pre-line;font-variant-numeric:lining-nums}
   .titel .marke{height:6.5mm;margin:6mm 0 auto;filter:var(--marke-filter,brightness(0) invert(1))}
+  .titel .marke.sektion{height:11mm;max-width:118mm;object-fit:contain;filter:none}
   .titel .bild{flex:1;background:var(--soft) center/cover no-repeat;position:relative}
   .titel .credit{position:absolute;right:4mm;bottom:3mm;font-family:var(--ft);font-size:6.5pt;color:#fff; /* # ds-ok Druck-Credit auf Foto */
     text-shadow:0 0 2mm rgba(0,0,0,.6)} /* # ds-ok */
@@ -127,6 +128,12 @@
   .plus{display:flex;gap:var(--s2);margin-top:3mm;flex-wrap:wrap}
   .plus button{border-style:dashed}
 
+  .frei{gap:4mm;padding:13mm 11mm 10mm}
+  .frei h3{margin-left:0}
+  .frei .fliess{font-family:var(--font-display);font-weight:var(--w-klar);font-size:13pt;line-height:1.5;white-space:pre-line;max-width:62ch}
+  .frei .fliess b{font-weight:var(--w-laut)}
+  .frei .fliess.zweit{font-weight:var(--w-ruhig)}
+  .frei .plus{margin-top:auto}
   .info{padding:13mm 11mm 10mm;gap:5mm}
   .info h3{margin:0}
   .info .plan{flex:1 1 0;min-height:60mm;margin:-13mm -11mm 0;overflow:hidden} /* randabfallend oben und seitlich, harte Kante unten */
@@ -180,6 +187,7 @@
     <div class="reihe"><span class="lab" id="lab-farbe">Farbe</span><div class="fmenue" id="m-farbe"></div></div>
     <div class="reihe"><span class="lab" id="lab-schrift">Schrift</span><div class="fmenue" id="m-schrift"></div></div>
     <div class="reihe"><span class="lab" id="lab-sprache">Zweite Sprache</span><div class="fmenue" id="m-sprache"></div></div>
+    <div class="reihe"><span class="lab" id="lab-logo">Logo auf dem Titel</span><div class="fmenue" id="m-logo"></div></div>
     <div class="reihe"><span class="lab" id="lab-kante">Kante über dem Bild</span><div class="fmenue" id="m-kante"></div></div>
     <div class="reihe"><span class="lab" id="lab-marker">Marker auf der Karte</span><div class="fmenue" id="m-marker"></div></div>
     <div class="reihe"><span class="lab">Titelbild</span><div class="motive" id="motive"></div>
@@ -273,6 +281,7 @@ const BEISPIEL={farbe:"bereich",bild:MOTIVE[0][0],credit:"Foto: Xue Li",
     {zeit:"ab 16.30",text:"Ausklang und Getränke",ort:"Foyer",pause:true}
   ]],
   info:"Campus",plan:"lageplan-standard.svg?v=3",kante:"schraege",extra:[],orte:{},
+  art:["zeiten","zeiten"],frei:["",""],frei2:["",""],kopf:["",""],
   kontakt:"Goetheanum\nRüttiweg 45 · 4143 Dornach · Schweiz\nwww.goetheanum.ch",stimme:"alles"};
 
 const SPEICHER="goe-programmheft-live-1";
@@ -284,6 +293,8 @@ if(S.v!==2){S.v=2;S.orte={};delete S.unter;delete S.stich}
 if(!S.kante)S.kante="schraege";
 if(/^Foto: Goetheanum( \/ Xue Li)?$/.test(S.credit||""))S.credit="Foto: Xue Li";
 if(!S.v3){S.v3=1;S.stimme="alles";if(/^Goetheanum, Rüttiweg 45, 4143 Dornach\nwww\.goetheanum\.ch$/.test(S.kontakt||""))S.kontakt=BEISPIEL.kontakt}
+// Innenseiten: je «zeiten» (Programm mit Uhrzeiten) oder «text» (freier Text, z. B. Save the Date)
+if(!S.art)S.art=["zeiten","zeiten"];if(!S.frei)S.frei=["",""];if(!S.frei2)S.frei2=["",""];if(!S.kopf)S.kopf=["",""];
 const qk=new URLSearchParams(location.search).get("kante");if(qk)S.kante=qk;
 // Legende = Orte aus dem Programm (in Reihenfolge) + eigene Zusätze
 // Marker-Anordnung: «einzeln» (wie gesetzt), «ausweichen» (auseinanderrücken, Linie zum Ort),
@@ -306,7 +317,7 @@ function markerHtml(){const A=markerAnordnung(),Y=v=>v*MK_Y;
     `<line x1="${m.ax}" y1="${Y(m.ay)}" x2="${m.x}" y2="${Y(m.y)}" vector-effect="non-scaling-stroke"/>`).join("")}</svg>`
    +A.filter(m=>m.linie).map(m=>`<span class="mk-punkt" style="left:${m.ax}%;top:${Y(m.ay)}%"></span>`).join("")
    +A.map(m=>`<button type="button" class="mk${m.breit?" breit":""}" data-ort="${esc(m.o)}" style="left:${m.x}%;top:${Y(m.y)}%" title="${esc(m.o)} – ziehen zum Verschieben">${m.t}</button>`).join("")}
-function orte(){const l=[];S.seiten.flat().map(z=>(z.ort||"").trim()).concat(S.extra.map(x=>x.trim())).forEach(o=>{if(o&&!l.includes(o))l.push(o)});return l}
+function orte(){const l=[];S.seiten.filter((_,s)=>S.art[s]!=="text").flat().map(z=>(z.ort||"").trim()).concat(S.extra.map(x=>x.trim())).forEach(o=>{if(o&&!l.includes(o))l.push(o)});return l}
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 // Zeitspanne mit Halbgeviertstrich; keine unnötigen Nullen: 17 Uhr, 9.30, nie 17.00 oder 09.30.
@@ -321,6 +332,26 @@ const adresse=t=>String(t||"").replace(/\b(\d{4,5}) (?=\S)/g,"$1\u00a0").replace
 const SPR={en:{kurz:"EN",name:"Englisch",programm:"Programme",tage:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],monate:["January","February","March","April","May","June","July","August","September","October","November","December"]},
   fr:{kurz:"FR",name:"Französisch",programm:"Programme",tage:["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"],monate:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"]},
   es:{kurz:"ES",name:"Spanisch",programm:"Programa",tage:["domingo","lunes","martes","miércoles","jueves","viernes","sábado"],monate:["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]}};
+// Beispielübersetzung: steht noch das Beispiel im Folder, füllt die zweite Sprache sich mit vor.
+const BEISPIEL2={
+  en:{titel:"Open Day at the Goetheanum",texte:{"Ankommen, Kaffee und Tee":"Arrival, coffee and tea","Musikalische Eröffnung":"Musical opening",
+    "Begrüssung und Einführung – Vorname Name":"Welcome and introduction – First Name Last Name","<b>Bühne</b> – Einblick in die Probenarbeit":"<b>Stage</b> – a look at rehearsals",
+    "Pause":"Break","<b>Forschung</b> – Vorname Name; Vorname Name":"<b>Research</b> – First Name Last Name; First Name Last Name","<b>Kunst</b> – Führung durch das Haus":"<b>Art</b> – guided tour of the building",
+    "Mittagessen":"Lunch","<b>Garten</b> – Rundgang mit Vorname Name":"<b>Garden</b> – walk with First Name Last Name","Gespräch im Plenum":"Plenary conversation",
+    "Musikalischer Abschluss":"Musical close","Ausklang und Getränke":"Closing drinks"}},
+  fr:{titel:"Journée portes ouvertes au Goetheanum",texte:{"Ankommen, Kaffee und Tee":"Accueil, café et thé","Musikalische Eröffnung":"Ouverture musicale",
+    "Begrüssung und Einführung – Vorname Name":"Accueil et introduction – Prénom Nom","<b>Bühne</b> – Einblick in die Probenarbeit":"<b>Scène</b> – aperçu des répétitions",
+    "Pause":"Pause","<b>Forschung</b> – Vorname Name; Vorname Name":"<b>Recherche</b> – Prénom Nom ; Prénom Nom","<b>Kunst</b> – Führung durch das Haus":"<b>Art</b> – visite guidée du bâtiment",
+    "Mittagessen":"Déjeuner","<b>Garten</b> – Rundgang mit Vorname Name":"<b>Jardin</b> – promenade avec Prénom Nom","Gespräch im Plenum":"Échange en plénière",
+    "Musikalischer Abschluss":"Clôture musicale","Ausklang und Getränke":"Verre de clôture"}},
+  es:{titel:"Jornada de puertas abiertas en el Goetheanum",texte:{"Ankommen, Kaffee und Tee":"Llegada, café y té","Musikalische Eröffnung":"Apertura musical",
+    "Begrüssung und Einführung – Vorname Name":"Bienvenida e introducción – Nombre Apellido","<b>Bühne</b> – Einblick in die Probenarbeit":"<b>Escenario</b> – una mirada a los ensayos",
+    "Pause":"Pausa","<b>Forschung</b> – Vorname Name; Vorname Name":"<b>Investigación</b> – Nombre Apellido; Nombre Apellido","<b>Kunst</b> – Führung durch das Haus":"<b>Arte</b> – visita guiada al edificio",
+    "Mittagessen":"Almuerzo","<b>Garten</b> – Rundgang mit Vorname Name":"<b>Jardín</b> – paseo con Nombre Apellido","Gespräch im Plenum":"Conversación en plenario",
+    "Musikalischer Abschluss":"Cierre musical","Ausklang und Getränke":"Despedida con bebidas"}}};
+function beispielUebersetzen(sp){const B2=BEISPIEL2[sp];if(!B2)return;
+  if(S.titel===BEISPIEL.titel&&!S.titel2)S.titel2=B2.titel;
+  S.seiten.flat().forEach(z=>{if(!z.text2&&B2.texte[z.text])z.text2=B2.texte[z.text]})}
 const TAGE_DE=["sonntag","montag","dienstag","mittwoch","donnerstag","freitag","samstag"];
 function wannUebersetzen(w,sp){const L=SPR[sp];if(!L)return "";
   return String(w||"").split("\n").map(z=>{const m=z.match(/^(\w+),?\s*(\d{1,2})\.\s*(\S+)\s+(\d{4})$/i);
@@ -333,8 +364,21 @@ function wannUebersetzen(w,sp){const L=SPR[sp];if(!L)return "";
     if(sp==="es")return u+" h";
     return u})
   .join("\n")}
-// Ortsname in der zweiten Sprache (nur Englisch aus dem Kartenwerkzeug; sonst wie deutsch)
-function ortZweit(o){if(S.sprache2!=="en")return "";const x=ortFinden(o);const e=x&&(x.label.en||"").split(" · ")[0];return e&&normOrt(e)!==normOrt(o)&&normOrt(e)!==normOrt(x.label.de)?e:""}
+// Ortsname in der zweiten Sprache: von Hand gesetzt (S.leg2) oder vorgeschlagen –
+// Englisch aus dem Kartenwerkzeug, Französisch/Spanisch aus ORT_UEB. Eigennamen bleiben.
+const ORT_UEB={
+  "Haupteingang":["Entrée principale","Entrada principal"],"Südeingang":["Entrée sud","Entrada sur"],"Empfang":["Accueil","Recepción"],
+  "Infotisch":["Point info","Punto de información"],"Barrierefreier Zugang":["Accès sans obstacles","Acceso sin barreras"],"Toiletten":["Toilettes","Aseos"],
+  "Bahnhof":["Gare","Estación"],"Parkplatz":["Parking","Aparcamiento"],"Bushaltestelle":["Arrêt de bus","Parada de autobús"],
+  "Haupttreppe":["Escalier principal","Escalera principal"],"Nordtreppe":["Escalier nord","Escalera norte"],"Südtreppe":["Escalier sud","Escalera sur"],
+  "Grosser Saal":["Grande salle","Sala grande"],"Buchhandlung":["Librairie","Librería"],"Nordgalerie":["Galerie nord","Galería norte"],"Bibliothek":["Bibliothèque","Biblioteca"],
+  "Foyer":["Foyer","Vestíbulo"],"Speisehaus · Laden":["Restaurant · Boutique","Restaurante · Tienda"],"Kepler-Sternwarte":["Observatoire Kepler","Observatorio Kepler"],
+  "Gästehaus Friedwart":["Maison d’hôtes Friedwart","Casa de huéspedes Friedwart"],"Wasserspiel":["Flowforms","Flowforms"],
+  "Jugendsektionshaus":["Maison de la Section des jeunes","Casa de la Sección de Juventud"],"Studierendenwohnheim":["Résidence étudiante","Residencia de estudiantes"]};
+function ortVorschlag(o){const x=ortFinden(o);if(!x)return "";
+  const e=(S.sprache2==="en"?x.label.en||"":(ORT_UEB[x.label.de]||[])[S.sprache2==="fr"?0:1]||"").split(" · ")[0];
+  return e&&normOrt(e)!==normOrt(o)&&normOrt(e)!==normOrt(x.label.de)?e:""}
+function ortZweit(o){if(!S.sprache2)return "";const v=(S.leg2||{})[S.sprache2+":"+o];return v!=null?v:ortVorschlag(o)}
 const strich=s=>s.replace(/(\d)\s*[-–]\s*(\d)/g,"$1–$2")
   .replace(/\b(\d{1,2})[.:]00\b/g,"$1").replace(/\b0(\d)(?=[.:]\d\d|\b(?!\.\s?\w))/g,"$1").replace(/\b(\d{1,2})[:](\d\d)\b/g,"$1.$2");
 // Jede Zeitangabe trägt «Uhr» (9.30–10 Uhr, ab 16.30 Uhr).
@@ -342,11 +386,12 @@ const mitUhr=s=>{s=strich(s).trim();return /\d/.test(s)&&!/Uhr$/.test(s)?s+" Uhr
 S.wann=wannZeilen(S.wann);S.seiten.forEach(L=>L.forEach(z=>z.zeit=mitUhr(z.zeit)));
 
 // Nur Text und Fett überleben das Bearbeiten.
-function rein(html){
+function rein(html,zeilen=false){
   const d=document.createElement("div");d.innerHTML=html;
   const geh=n=>[...n.childNodes].map(c=>c.nodeType===3?esc(c.textContent)
-    :/^(B|STRONG)$/.test(c.nodeName)?`<b>${geh(c)}</b>`:c.nodeName==="BR"?" ":geh(c)).join("");
-  return geh(d).replace(/<b>\s*<\/b>/g,"");
+    :/^(B|STRONG)$/.test(c.nodeName)?`<b>${geh(c)}</b>`:c.nodeName==="BR"?(zeilen?"\n":" ")
+    :zeilen&&/^(DIV|P)$/.test(c.nodeName)?"\n"+geh(c):geh(c)).join("");
+  const t=geh(d).replace(/<b>\s*<\/b>/g,"");return zeilen?t.replace(/^\n/,""):t;
 }
 
 const I={
@@ -354,6 +399,7 @@ const I={
   plus:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
   weg:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   tasse:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 10h1.5a2.5 2.5 0 0 1 0 5H17M8 3v2M12 3v2"/></svg>',
+  tauschen:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></svg>',
   hoch:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>'};
 
 // Ein bearbeitbares Feld: pfad zeigt in den Zustand, z. B. "seiten.0.3.text".
@@ -367,14 +413,23 @@ function zeile(z,s,i){
     <span>${ed(`seiten.${s}.${i}.text`,z.text,"span","titeltext","Programmpunkt",true)}${S.sprache2?ed(`seiten.${s}.${i}.text2`,z.text2||"","span","zweit","Programmpunkt ("+SPR[S.sprache2].kurz+")",true):""}</span>
     <span class="ort">${nrVon(z.ort)}${ed(`seiten.${s}.${i}.ort`,z.ort,"span","","Ort")}</span>
     <span class="zwerk">
-      ${i>0||s>0?`<button type="button" data-tat="hoch" data-s="${s}" data-i="${i}" aria-label="Nach oben" title="Nach oben">${I.hoch}</button>`:""}
+      ${i>0||(s>0&&S.art[0]==="zeiten")?`<button type="button" data-tat="hoch" data-s="${s}" data-i="${i}" aria-label="Nach oben" title="Nach oben">${I.hoch}</button>`:""}
       <button type="button" data-tat="pause" data-s="${s}" data-i="${i}" aria-pressed="${!!z.pause}" title="Als Pause tönen">${I.tasse}Pause</button>
       <button type="button" data-tat="weg" data-s="${s}" data-i="${i}" aria-label="Programmpunkt entfernen" title="Entfernen">${I.weg}</button>
     </span></div>`;
 }
+const seitenWerk=s=>`<button type="button" data-tat="art" data-s="${s}">${S.art[s]==="text"?"Programm mit Uhrzeiten":"Freier Text"}</button>
+  <button type="button" data-tat="tauschen" data-s="${s}">${I.tauschen}Seiten tauschen</button>`;
 const plus=s=>`<div class="plus">
   <button type="button" data-tat="neu" data-s="${s}">${I.plus}Programmpunkt</button>
-  <button type="button" data-tat="neupause" data-s="${s}">${I.plus}Pause</button></div>`;
+  <button type="button" data-tat="neupause" data-s="${s}">${I.plus}Pause</button>${seitenWerk(s)}</div>`;
+// Freie Textseite: eigene Überschrift (leer = keine) und Text mit Absätzen, fett per Strg+B.
+const textSeite=s=>`<article class="seite prog frei" aria-label="Seite ${s+2}, Text">
+    ${ed(`kopf.${s}`,S.kopf[s],"h3","","Überschrift (leer lassen, wenn keine)")}
+    ${ed(`frei.${s}`,S.frei[s],"div","fliess",s?"Text, z. B. Anmeldung, Kosten, Kontakt":"Text, z. B. «Save the Date – das Programm folgt.»",true)}
+    ${S.sprache2?ed(`frei2.${s}`,S.frei2[s],"div","fliess zweit","Text ("+SPR[S.sprache2].kurz+")",true):""}
+    <div class="plus">${seitenWerk(s)}</div>
+  </article>`;
 
 function kontrast(hex){ // Weiss gegen eine Farbe, WCAG-Formel
   const c=document.createElement("canvas").getContext("2d");c.fillStyle=hex;const h=c.fillStyle;
@@ -397,11 +452,14 @@ async function karteFaerben(){
   KARTE_URL=URL.createObjectURL(new Blob([t],{type:"image/svg+xml"}));
   const img=document.querySelector("#karte img");if(img)img.src=KARTE_URL;
 }
+// Logo auf dem Titel: das der Sektion (weiss, zweizeilig) oder die Goetheanum-Marke.
+const titelLogoSektion=()=>S.titelLogo!=="goetheanum"&&/^sek-/.test(S.farbe);
+const svgUrl=t=>"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(t);
 // Sektionslogo aus der Logo-Maschine (apps/logos/engine.js), Original-Farben, Layout «Lang».
 const ORG={"bereich":"goetheanum","bereich-buehne":"buehne"};
-function sektionsLogo(f){
+function sektionsLogo(f,mode="original"){
   const org=ORG[f]||f.replace(/^sek-/,"");
-  try{return LogoEngine.svg({cat:org==="goetheanum"||org==="buehne"?"allgemein":"sektionen",org,layout:"desktop",mode:"original",lang:"de",txt:"",scale:1})}
+  try{return LogoEngine.svg({cat:org==="goetheanum"||org==="buehne"?"allgemein":"sektionen",org,layout:"desktop",mode,lang:"de",txt:"",scale:1})}
   catch(e){console.warn(e);return ""}
 }
 function bauen(){
@@ -419,20 +477,20 @@ function bauen(){
   b.innerHTML=`
   <article class="seite titel kante-${S.kante}" aria-label="Seite 1, Titel">
     <div class="feld">
-      <img class="marke" src="${logo}" alt="Goetheanum" />
+      ${titelLogoSektion()?`<img class="marke sektion" src="${svgUrl(sektionsLogo(f,"white"))}" alt="${esc(FARBEN.find(x=>x&&x[0]===f)?.[1]||"")}" />`:`<img class="marke" src="${logo}" alt="Goetheanum" />`}
       ${ed("titel",binden(S.titel),"h2","","Titel")}
       ${ed("wann",S.wann,"p","wann","Datum und Zeit")}
       ${S.sprache2?`${ed("titel2",binden(S.titel2||""),"h2","zweit","Titel ("+SPR[S.sprache2].kurz+")")}${ed("wann2",S.wann2||"","p","wann zweit","Datum ("+SPR[S.sprache2].kurz+")")}`:""}
     </div>
     <div class="bild" style="background-image:url('${S.bild}')">${ed("credit",S.credit,"span","credit","Foto: Name")}</div>
   </article>
-  <div class="doppel" aria-label="Innenseiten, ein Blatt">${[0,1].map(s=>`<article class="seite prog" aria-label="Seite ${s+2}, Programm">
-    ${s===0?`<h3>Programm${S.sprache2?` <span class="zweit">${SPR[S.sprache2].programm}</span>`:""}</h3>`:""}<div class="zeilen">${S.seiten[s].map((z,i)=>zeile(z,s,i)).join("")}</div>${plus(s)}
+  <div class="doppel" aria-label="Innenseiten, ein Blatt">${[0,1].map(s=>S.art[s]==="text"?textSeite(s):`<article class="seite prog" aria-label="Seite ${s+2}, Programm">
+    ${s===S.art.indexOf("zeiten")?`<h3>Programm${S.sprache2?` <span class="zweit">${SPR[S.sprache2].programm}</span>`:""}</h3>`:""}<div class="zeilen">${S.seiten[s].map((z,i)=>zeile(z,s,i)).join("")}</div>${plus(s)}
   </article>`).join("")}</div>
   <article class="seite info" aria-label="Seite 4, Campus">
     <div class="plan"><div class="karte" id="karte"><img src="${KARTE_URL||S.plan}" alt="Plan des Campus" />
       ${markerHtml()}</div></div>
-    <ol class="legende">${NR.map((o,k)=>{const z=ortZweit(o);return `<li><span class="n">${k+1}</span><span>${esc(o)}${z?` <span class="zweit">${esc(z)}</span>`:""}</span></li>`}).join("")}</ol>
+    <ol class="legende">${NR.map((o,k)=>`<li><span class="n">${k+1}</span><span>${esc(o)}${S.sprache2?" "+ed(`leg2:${S.sprache2}:${o}`,ortZweit(o),"span","zweit",SPR[S.sprache2].kurz):""}</span></li>`).join("")}</ol>
     ${NR.some(o=>!lage(o))?`<div class="offen">Noch nicht auf der Karte – auf den Plan ziehen:
       ${NR.map((o,k)=>lage(o)?"":`<button type="button" class="mk" data-ort="${esc(o)}" title="${esc(o)}">${k+1}</button> ${esc(o)}`).join(" ")}</div>`:""}
     <div class="plus">${S.extra.map((x,k)=>ed(`extra.${k}`,x,"span","","Ort")).join(" ")}<button type="button" data-tat="neuleg">${I.plus}Weiterer Ort</button></div>
@@ -452,7 +510,7 @@ function karteVersetzen(){const pl=document.querySelector(".info .plan"),k=$("ka
   KARTE_VERSATZ=v;k.style.marginTop=(-v*kh)+"px"}
 // Programmseiten füllen: Grad wächst bis 14 pt, Zeilenabstand je Seite bis unten.
 function einpassen(){
-  const seiten=[...document.querySelectorAll(".seite.prog")];
+  const seiten=[...document.querySelectorAll(".seite.prog:not(.frei)")];
   const passt=()=>seiten.every(s=>s.scrollHeight<=s.clientHeight+1);
   const setzen=(g,pad)=>seiten.forEach(s=>{s.style.setProperty("--grad",g+"pt");s.querySelector(".zeilen").style.setProperty("--pad",pad+"mm")});
   for(let g=14;g>10;g-=.5){setzen(g,3);if(passt())break}
@@ -477,19 +535,22 @@ function archivieren(art=null){
 
 const B=$("blaetter");
 B.addEventListener("input",e=>{const el=e.target.closest("[data-pfad]");if(!el)return;
-  setzen(el.dataset.pfad,el.isContentEditable&&el.getAttribute("contenteditable")==="true"?rein(el.innerHTML):el.innerText);
+  if(/^leg2:/.test(el.dataset.pfad)){(S.leg2??={})[el.dataset.pfad.slice(5)]=el.innerText.trim();sichern();return}
+  if(el.dataset.pfad==="kontakt"){S.kontakt=adresse(el.innerText);sichern();return}
+  setzen(el.dataset.pfad,el.isContentEditable&&el.getAttribute("contenteditable")==="true"?rein(el.innerHTML,/^frei2?\./.test(el.dataset.pfad)):el.innerText);
   einpassen();sichern()});
 B.addEventListener("focusout",e=>{const el=e.target.closest("[data-pfad]");
   if(el&&/ort$|^extra\./.test(el.dataset.pfad)&&!B.contains(e.relatedTarget)){setTimeout(bauen);return}
-  if(el&&/zeit$|^wann$/.test(el.dataset.pfad)){const v=/zeit$/.test(el.dataset.pfad)?mitUhr(el.innerText):wannZeilen(el.innerText);if(v!==el.innerText){el.innerText=v;setzen(el.dataset.pfad,v);sichern()}}});
+  if(el&&/zeit$|^wann$|^kontakt$/.test(el.dataset.pfad)){const p=el.dataset.pfad,v=p==="kontakt"?adresse(el.innerText):/zeit$/.test(p)?mitUhr(el.innerText):wannZeilen(el.innerText);if(v!==el.innerText){el.innerText=v;setzen(el.dataset.pfad,v);sichern()}}});
 B.addEventListener("keydown",e=>{const el=e.target.closest("[data-pfad]");if(!el||e.key!=="Enter")return;
-  if(/^(wann|kontakt)$/.test(el.dataset.pfad))return; // mehrzeilig erlaubt
+  if(/^(wann|kontakt|frei2?\.\d)$/.test(el.dataset.pfad))return; // mehrzeilig erlaubt
   e.preventDefault();
   const m=el.dataset.pfad.match(/^seiten\.(\d)\.(\d+)\./);
   if(m){const s=+m[1],i=+m[2];S.seiten[s].splice(i+1,0,{zeit:"",text:"",ort:""});bauen();fokus(`seiten.${s}.${i+1}.zeit`)}
   else el.blur()});
 B.addEventListener("paste",e=>{if(!e.target.closest("[data-pfad]"))return;e.preventDefault();
-  document.execCommand("insertText",false,(e.clipboardData.getData("text/plain")||"").replace(/\s*\n\s*/g," "))});
+  const t=e.clipboardData.getData("text/plain")||"";
+  document.execCommand("insertText",false,/^frei2?\./.test(e.target.closest("[data-pfad]").dataset.pfad)?t:t.replace(/\s*\n\s*/g," "))});
 B.addEventListener("click",e=>{const t=e.target.closest("[data-tat]");if(!t)return;
   const s=+t.dataset.s,i=+t.dataset.i,L=S.seiten[s];
   switch(t.dataset.tat){
@@ -498,6 +559,8 @@ B.addEventListener("click",e=>{const t=e.target.closest("[data-tat]");if(!t)retu
     case "neuleg":S.extra.push("");bauen();fokus(`extra.${S.extra.length-1}`);return;
     case "pause":L[i].pause=!L[i].pause;break;
     case "weg":L.splice(i,1);break;
+    case "art":S.art[s]=S.art[s]==="text"?"zeiten":"text";bauen();fokus(S.art[s]==="text"?`frei.${s}`:`seiten.${s}.0.zeit`);return;
+    case "tauschen":["seiten","art","frei","frei2","kopf"].forEach(k=>S[k].reverse());break;
     case "hoch":if(i>0)[L[i-1],L[i]]=[L[i],L[i-1]];else S.seiten[s-1].push(L.shift());break;
   }bauen()});
 function fokus(p){const el=B.querySelector(`[data-pfad="${p}"]`);if(el){el.focus()}}
@@ -532,7 +595,11 @@ menue("m-farbe","lab-farbe",FARBEN.map(x=>x&&[x[0],`<span class="punkt" style="b
 menue("m-schrift","lab-schrift",[["alles","Nur Hausschrift","var(--font-display)"],["titel","Titel in Hausschrift","var(--font-display)"],[false,"Funktionaler","var(--font-text)"]]
   .map(([v,n,f])=>[v,`<span style="font-family:${f}">${n}</span>`]),()=>S.stimme===true?"titel":(S.stimme||false),v=>S.stimme=v);
 menue("m-marker","lab-marker",[["zusammen","Zusammenfassen"],["einzeln","Einzeln, wie gesetzt"],["ausweichen","Ausweichen mit Linie"]],()=>S.marker||"zusammen",v=>S.marker=v);
-menue("m-sprache","lab-sprache",[["","Keine"],["en","Englisch"],["fr","Französisch"],["es","Spanisch"]],()=>S.sprache2||"",v=>{S.sprache2=v;if(v&&!S.wann2)S.wann2=wannUebersetzen(S.wann,v)});
+menue("m-sprache","lab-sprache",[["","Keine"],["en","Englisch"],["fr","Französisch"],["es","Spanisch"]],()=>S.sprache2||"",v=>{const alt=S.sprache2;S.sprache2=v;if(v&&(!S.wann2||alt))S.wann2=wannUebersetzen(S.wann,v);
+  // Sprache gewechselt: Beispieltexte der alten Sprache durch die neue ersetzen
+  if(alt&&BEISPIEL2[alt]){if(S.titel2===BEISPIEL2[alt].titel)S.titel2="";S.seiten.flat().forEach(z=>{if(z.text2===BEISPIEL2[alt].texte[z.text])z.text2=""})}
+  if(v)beispielUebersetzen(v)});
+menue("m-logo","lab-logo",[["sektion","Logo der Sektion"],["goetheanum","Goetheanum"]],()=>S.titelLogo||"sektion",v=>S.titelLogo=v);
 menue("m-kante","lab-kante",KANTEN.map(([k,n])=>[k,esc(n)]),()=>S.kante,v=>S.kante=v);
 MOTIVE.forEach(([f,n,c])=>{const b=document.createElement("button");b.type="button";b.dataset.f=f;
   b.style.backgroundImage=`url('${f}')`;b.title=n;b.setAttribute("aria-label","Titelbild: "+n);
@@ -562,11 +629,11 @@ function aufloesen(v){ // beliebige CSS-Farbe (auch color-mix) → #rrggbb, übe
   const d=document.createElement("i");d.style.color=v;B.append(d);const c=getComputedStyle(d).color;d.remove();
   const g=document.createElement("canvas").getContext("2d",{willReadFrequently:true});g.fillStyle=c;g.fillRect(0,0,1,1);
   return "#"+[...g.getImageData(0,0,1,1).data].slice(0,3).map(v=>v.toString(16).padStart(2,"0")).join("")}
-async function logoPng(weiss){
-  const i=await laden("../../assets/logos/goetheanum-logo.svg"),k=6;const c=document.createElement("canvas");
+async function logoPng(weiss,svg=null){
+  const i=await laden(svg?svgUrl(svg):"../../assets/logos/goetheanum-logo.svg"),k=svg?10:6;const c=document.createElement("canvas");
   c.width=i.naturalWidth*k;c.height=i.naturalHeight*k;const g=c.getContext("2d");g.drawImage(i,0,0,c.width,c.height);
   if(weiss){g.globalCompositeOperation="source-in";g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height)} // # ds-ok Druck-Logo
-  return {name:weiss?"logo-weiss.png":"logo.png",bytes:await alsBytes(c),b:c.width,h:c.height}}
+  return {name:svg?"logo-sektion-weiss.png":weiss?"logo-weiss.png":"logo.png",bytes:await alsBytes(c),b:c.width,h:c.height}}
 async function planPng(){
   const i=await laden(KARTE_URL||S.plan),c=document.createElement("canvas");c.width=2400;c.height=Math.round(2400*210/192);
   const g=c.getContext("2d");g.drawImage(i,0,0,c.width,c.height);const r=c.width*4.8/126/2; // Kreis wie im Heft
@@ -597,6 +664,7 @@ $("idml").onclick=async e=>{const k=e.currentTarget,alt=k.textContent;k.disabled
     const farben={name,akzent:aufloesen("var(--acc)"),ort:aufloesen("var(--ort)"),
       pause:aufloesen("color-mix(in srgb,var(--acc) 12%,#fff)"),gold:aufloesen("var(--mk)")}; // # ds-ok Tönung
     const bilder={titel:await titelBild(),plan:await planPng(),logo:await logoPng(true),logoBlau:await logoPng(false)};
+    if(titelLogoSektion())bilder.titelLogo=await logoPng(true,sektionsLogo(f,"white"));
     bilder.versatz=KARTE_VERSATZ;const zip=await baueIdml(S,farben,bilder,NR,S.sprache2?{programm:SPR[S.sprache2].programm,legende:NR.map(ortZweit)}:null);
     const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([zip],{type:"application/zip"}));
     a.download=dateiname("indesign")+".zip";a.click();archivieren("idml");setTimeout(()=>URL.revokeObjectURL(a.href),4000);
@@ -620,7 +688,7 @@ const pdfBauen=async e=>{const k=e.currentTarget,alt=k.textContent,druck=k.datas
     const grad=parseFloat(document.querySelector(".seite.prog").style.getPropertyValue("--grad"))||12;
     const logoSvg=await (await fetch("../../assets/logos/goetheanum-logo.svg")).text();
     const titel=druck?await zuschnitt(S.bild,154,103,300,.95):await zuschnitt(S.bild,148,100,150,.78);
-    const doc=await bauePdf(S,f,{titel,plan:await planOhneNummern(druck),marker:markerFuerExport(),versatz:KARTE_VERSATZ,zweit:S.sprache2?{programm:SPR[S.sprache2].programm,legende:NR.map(ortZweit)}:null},NR,lage,grad,logoSvg,druck,sektionsLogo(S.farbe));
+    const doc=await bauePdf(S,f,{titel,titelLogo:titelLogoSektion()?sektionsLogo(S.farbe,"white"):null,plan:await planOhneNummern(druck),marker:markerFuerExport(),versatz:KARTE_VERSATZ,zweit:S.sprache2?{programm:SPR[S.sprache2].programm,legende:NR.map(ortZweit)}:null},NR,lage,grad,logoSvg,druck,sektionsLogo(S.farbe));
     doc.save(dateiname(druck?"a5-druck-3mm":"a5-versand")+".pdf");archivieren(druck?"pdf-druck":"pdf-versand");
   }catch(err){console.error(err);k.textContent="PDF fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
   finally{k.disabled=false}k.textContent=alt};
