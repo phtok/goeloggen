@@ -135,7 +135,8 @@
       <button class="btn" type="button" id="bild-waehlen">Eigenes Bild</button><input type="file" id="f-bild" accept="image/*" hidden /></div>
     <div class="reihe"><span class="lab">Kante</span><div class="farbwahl" id="kanten" role="group" aria-label="Kante über dem Titelbild"></div></div>
     <div class="reihe">
-      <button class="btn primary" type="button" id="pdf">PDF herunterladen</button>
+      <button class="btn primary" type="button" id="pdf" data-druck="0">PDF für den Versand</button>
+      <button class="btn" type="button" id="pdf-druck" data-druck="1">PDF für die Druckerei</button>
       <button class="btn" type="button" id="idml">Für InDesign (IDML)</button>
       <button class="btn" type="button" id="zuruecksetzen">Beispiel wiederherstellen</button>
       <p class="hinweis">Fett: Text markieren und Strg+B. Alles bleibt in diesem Browser gespeichert.</p>
@@ -392,25 +393,29 @@ $("idml").onclick=async e=>{const k=e.currentTarget,alt=k.textContent;k.disabled
   }catch(err){console.error(err);k.textContent="Export fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
   finally{k.disabled=false}k.textContent=alt};
 // ---------- PDF: direkt geschrieben wie im Campusplan, kein Druckdialog
-async function zuschnitt(src,bmm,hmm){ // Titelbild wie object-fit: cover, 300 ppi
-  const i=await laden(src),c=document.createElement("canvas");c.width=Math.round(bmm/25.4*300);c.height=Math.round(hmm/25.4*300);
+// Versand: 150 ppi, stärker komprimiert. Druckerei: 300 ppi, Bild und Plan bis in den Beschnitt.
+async function zuschnitt(src,bmm,hmm,ppi,q){ // Titelbild wie object-fit: cover
+  const i=await laden(src),c=document.createElement("canvas");c.width=Math.round(bmm/25.4*ppi);c.height=Math.round(hmm/25.4*ppi);
   const s=Math.max(c.width/i.naturalWidth,c.height/i.naturalHeight),w=i.naturalWidth*s,h=i.naturalHeight*s;
-  c.getContext("2d").drawImage(i,(c.width-w)/2,(c.height-h)/2,w,h);return {url:c.toDataURL("image/jpeg",.92)}}
-async function planOhneNummern(){
-  const i=await laden(S.plan),c=document.createElement("canvas");c.width=2400;c.height=Math.round(2400*210/192);
-  c.getContext("2d").drawImage(i,0,0,c.width,c.height);return {url:c.toDataURL("image/png")}}
-$("pdf").onclick=async e=>{const k=e.currentTarget,alt=k.textContent;k.disabled=true;k.textContent="PDF wird gebaut …";
+  c.getContext("2d").drawImage(i,(c.width-w)/2,(c.height-h)/2,w,h);return {url:c.toDataURL("image/jpeg",q)}}
+async function planOhneNummern(druck){
+  const i=await laden(S.plan),c=document.createElement("canvas"),w=druck?2400:1000;c.width=w;c.height=Math.round(w*210/192);
+  const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);g.drawImage(i,0,0,c.width,c.height); // # ds-ok Papier
+  return {url:druck?c.toDataURL("image/png"):c.toDataURL("image/jpeg",.8)}}
+const pdfBauen=async e=>{const k=e.currentTarget,alt=k.textContent,druck=k.dataset.druck==="1";k.disabled=true;k.textContent="PDF wird gebaut …";
   try{
     const {bauePdf}=await import("./pdf.js");
     const f={akzent:aufloesen("var(--acc)"),ort:aufloesen("var(--ort)"),kopf:aufloesen("var(--kopf)"),tinte:"#23272b", // # ds-ok Tinte
       pause:aufloesen("color-mix(in srgb,var(--acc) 12%,#fff)"),linie:"#e0e0e0",gold:aufloesen("var(--gold-deep)")}; // # ds-ok Druck
     const grad=parseFloat(document.querySelector(".seite.prog").style.getPropertyValue("--grad"))||12;
     const logoSvg=await (await fetch("../../assets/logos/goetheanum-logo.svg")).text();
-    const doc=await bauePdf(S,f,{titel:await zuschnitt(S.bild,148,100),plan:await planOhneNummern()},NR,lage,grad,logoSvg);
+    const titel=druck?await zuschnitt(S.bild,154,103,300,.95):await zuschnitt(S.bild,148,100,150,.78);
+    const doc=await bauePdf(S,f,{titel,plan:await planOhneNummern(druck)},NR,lage,grad,logoSvg,druck);
     const name=(S.titel||"programmheft").toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-    doc.save(`${name||"programmheft"}-a5.pdf`);
+    doc.save(`${name||"programmheft"}-a5-${druck?"druck-3mm":"versand"}.pdf`);
   }catch(err){console.error(err);k.textContent="PDF fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
   finally{k.disabled=false}k.textContent=alt};
+$("pdf").onclick=pdfBauen;$("pdf-druck").onclick=pdfBauen;
 $("zuruecksetzen").onclick=()=>{S=structuredClone(BEISPIEL);bauen()};
 
 bauen();
