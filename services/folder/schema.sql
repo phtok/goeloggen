@@ -3,8 +3,8 @@
 -- Projekt: dagcsnfrlbpxcmdimnrw (Werkzeug-Backend, wie schmiede_* / qr_links).
 -- Jeder Folder, der im Editor entsteht, wird im Hintergrund als Stand (jsonb)
 -- gesichert: laufend beim Bearbeiten und bei jedem Export (mit Art des Exports).
--- Rohzeilen zu; schreiben per anon-RPC, lesen nur mit dem Cockpit-Schlüssel
--- der Schmiede (schmiede_key_ok) – ein Schlüssel für die internen Eingänge.
+-- Rohzeilen zu; schreiben und lesen nur über die RPCs. Lesen ohne Schlüssel
+-- (Beschluss 24. 9. 2026: versteckter Link / Backstage reicht).
 -- Anwenden: einmal im Supabase-SQL-Editor ausführen (idempotent).
 -- =============================================================================
 create table if not exists public.folder_archiv (
@@ -36,22 +36,22 @@ begin
 end; $$;
 grant execute on function public.folder_sichern(uuid, jsonb, text) to anon, authenticated;
 
--- Liste (nur mit Schlüssel), ohne den schweren Stand.
-create or replace function public.folder_liste(p_key text)
-returns table(id uuid, created_at timestamptz, updated_at timestamptz, titel text, farbe text, exporte jsonb)
-language plpgsql security definer set search_path to 'public' as $$
-begin
-  if not public.schmiede_key_ok(p_key) then return; end if;
-  return query select f.id, f.created_at, f.updated_at, f.titel, f.farbe, f.exporte
-                 from public.folder_archiv f order by f.updated_at desc;
-end; $$;
-grant execute on function public.folder_liste(text) to anon, authenticated;
+-- Alte Fassungen mit Schlüssel entfernen.
+drop function if exists public.folder_liste(text);
+drop function if exists public.folder_holen(text, uuid);
 
--- Einen Stand holen (nur mit Schlüssel).
-create or replace function public.folder_holen(p_key text, p_id uuid)
-returns jsonb language plpgsql security definer set search_path to 'public' as $$
-begin
-  if not public.schmiede_key_ok(p_key) then return null; end if;
-  return (select stand from public.folder_archiv where id = p_id);
-end; $$;
-grant execute on function public.folder_holen(text, uuid) to anon, authenticated;
+-- Liste, ohne den schweren Stand.
+create or replace function public.folder_liste()
+returns table(id uuid, created_at timestamptz, updated_at timestamptz, titel text, farbe text, exporte jsonb)
+language sql security definer set search_path to 'public' as $$
+  select f.id, f.created_at, f.updated_at, f.titel, f.farbe, f.exporte
+    from public.folder_archiv f order by f.updated_at desc;
+$$;
+grant execute on function public.folder_liste() to anon, authenticated;
+
+-- Einen Stand holen.
+create or replace function public.folder_holen(p_id uuid)
+returns jsonb language sql security definer set search_path to 'public' as $$
+  select stand from public.folder_archiv where id = p_id;
+$$;
+grant execute on function public.folder_holen(uuid) to anon, authenticated;
