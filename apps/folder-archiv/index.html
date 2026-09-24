@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- =============================================================================
-     Folder-Archiv · alle Goetheanum-Folder aus apps/programmheft/live.html
+     Folder-Archiv · alle Goetheanum-Folder aus /folder/ (apps/programmheft/live.html)
      Der Editor sichert jeden Folder im Hintergrund (laufend und bei jedem
      Export). Hier: Liste mit Exporten, «Öffnen» lädt den Stand in den Editor.
      Ohne Schlüssel: versteckter Link, im Menü nur im Backstage. Backend: services/folder/.
@@ -67,7 +67,7 @@
     c.querySelector('button').onclick = function(e){
       var b = e.currentTarget; b.disabled = true; b.textContent = 'Wird geladen …';
       rpc('folder_holen', { p_id: f.id }).then(function(stand){
-        localStorage.setItem(SPEICHER, JSON.stringify(stand)); location.href = '../programmheft/live.html';
+        localStorage.setItem(SPEICHER, JSON.stringify(stand)); location.href = '../../folder/';
       }).catch(function(){ b.disabled = false; b.textContent = 'Laden fehlgeschlagen'; });
     };
     return c;
@@ -75,6 +75,7 @@
   function laden(){
     el('boardSaid').textContent = 'Lade …'; el('boardSaid').className = 'said';
     rpc('folder_liste', {}).then(function(rows){
+      rows = (rows || []).filter(function(f){ var e = f.exporte || []; return !e.length || e[e.length - 1].art !== 'geloescht'; });
             var l = el('liste'); l.innerHTML = '';
       if(!rows || !rows.length){ el('boardSaid').textContent = 'Noch keine Folder.'; return; }
       rows.forEach(function(f){ l.appendChild(eintrag(f)); });

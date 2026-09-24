@@ -37,6 +37,17 @@ def main(site: str) -> None:
     erwartet = []
     for t in tools:
         slug, href, status = t.get("slug", ""), t.get("href", ""), t.get("status", "")
+        # «seite»: die kurze Adresse IST das Werkzeug (keine Weiterleitung) – eine Kopie der
+        # Seite mit <base> auf den Werkzeug-Ordner, damit alle relativen Pfade gleich bleiben.
+        # Wird bei jedem Lauf frisch erzeugt (Quelle bleibt apps/…); jeder Status.
+        if slug and t.get("seite") and href.startswith("apps/"):
+            quelle = root / href.split("?")[0].split("#")[0]
+            ordner = "../" + href.rsplit("/", 1)[0] + "/"
+            html = quelle.read_text(encoding="utf-8").replace("<head>", f'<head>\n<base href="{ordner}" />', 1)
+            (root / slug).mkdir(parents=True, exist_ok=True)
+            (root / slug / "index.html").write_text(html, encoding="utf-8")
+            print(f"seite: /{slug}/ = {href}")
+            continue
         if not slug or not href.startswith("apps/") or status not in ("live", "beta"):
             continue
         erwartet.append(slug)
