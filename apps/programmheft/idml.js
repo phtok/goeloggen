@@ -138,8 +138,8 @@ export async function baueIdml(S, farben, bilder, orte) {
     const sid = `sp${i + 1}`;
     return [sid, `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <idPkg:Spread xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="16.0">
-<Spread Self="${sid}" PageCount="1" BindingLocation="0" AllowPageShuffle="true" ItemTransform="1 0 0 1 0 ${n(i * (H + 40))}" ShowMasterItems="true" PageTransitionType="None">
-<Page Self="pg${i + 1}" Name="${i + 1}" AppliedMaster="n" GeometricBounds="0 0 ${n(H)} ${n(B)}" ItemTransform="1 0 0 1 ${n(OX)} ${n(OY)}" MasterPageTransform="1 0 0 1 0 0">
+<Spread Self="${sid}" PageCount="1" BindingLocation="0" AllowPageShuffle="true" ItemTransform="1 0 0 1 0 ${n(i * (H + 40))}" ShowMasterItems="true" SpreadHidden="false" PageTransitionType="None">
+<Page Self="pg${i + 1}" Name="${i + 1}" AppliedMaster="ms" GeometricBounds="0 0 ${n(H)} ${n(B)}" ItemTransform="1 0 0 1 ${n(OX)} ${n(OY)}" MasterPageTransform="1 0 0 1 0 0">
 <MarginPreference ColumnCount="1" ColumnGutter="12" Top="${n(13 * MM)}" Bottom="${n(10 * MM)}" Left="${n(9 * MM)}" Right="${n(9 * MM)}"/></Page>
 ${inhalt.join('\n')}
 </Spread></idPkg:Spread>`];
@@ -176,16 +176,23 @@ ${absatzformat('Datum', { schnitt: 'Deutlich', grad: 15, zab: 19.5, farbe: 'Colo
 ${absatzformat('Bildnachweis', { ...TX, grad: 6.5, zab: 8, farbe: 'Color/Paper', attr: 'Justification="RightAlign"' })}
 ${absatzformat('Programm Kopf', { schnitt: 'Deutlich', grad: 22, zab: 26, farbe: 'Color/Ort', attr: `SpaceAfter="${n(6 * MM)}"` })}
 ${absatzformat('Programm', { ...TX, grad: 12, zab: 16.8, attr: zeileAttr, tabs: tab(31) })}
-<ParagraphStyle Self="ParagraphStyle/Programm Pause" Name="Programm Pause" ParagraphShadingOn="true" ParagraphShadingColor="Color/Pause" ParagraphShadingTopOffset="${n(3 * MM)}" ParagraphShadingBottomOffset="${n(3 * MM)}" ParagraphShadingLeftOffset="${n(31 * MM + 3 * MM)}" ParagraphShadingRightOffset="0"><Properties><BasedOn type="string">ParagraphStyle/Programm</BasedOn></Properties></ParagraphStyle>
+<ParagraphStyle Self="ParagraphStyle/Programm Pause" Name="Programm Pause" ParagraphShadingOn="true" ParagraphShadingColor="Color/Pause" ParagraphShadingTopOffset="${n(3 * MM)}" ParagraphShadingBottomOffset="${n(3 * MM)}" ParagraphShadingLeftOffset="${n(31 * MM + 3 * MM)}" ParagraphShadingRightOffset="0"><Properties><BasedOn type="object">ParagraphStyle/Programm</BasedOn></Properties></ParagraphStyle>
 ${absatzformat('Legende', { ...TX, grad: 10, zab: 17, tabs: tab(6) })}
 ${absatzformat('Kontakt', { ...TX, grad: 9, zab: 13 })}
 </RootParagraphStyleGroup>
 <RootObjectStyleGroup Self="rosg"><ObjectStyle Self="ObjectStyle/$ID/[None]" Name="$ID/[None]"/><ObjectStyle Self="ObjectStyle/$ID/[Normal Graphics Frame]" Name="$ID/[Normal Graphics Frame]"/><ObjectStyle Self="ObjectStyle/$ID/[Normal Text Frame]" Name="$ID/[Normal Text Frame]"/></RootObjectStyleGroup>
 </idPkg:Styles>`;
 
+  // Musterseite A5: ohne sie legt InDesign eine Standard-Musterseite (Letter) samt eigener Seiten an.
+  const master = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<idPkg:MasterSpread xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="16.0">
+<MasterSpread Self="ms" Name="A-Musterseite" NamePrefix="A" BaseName="Musterseite" ShowMasterItems="true" PageCount="1" PrimaryTextFrame="n" ItemTransform="1 0 0 1 0 0">
+<Page Self="msp" Name="A" AppliedMaster="n" GeometricBounds="0 0 ${n(H)} ${n(B)}" ItemTransform="1 0 0 1 ${n(OX)} ${n(OY)}" MasterPageTransform="1 0 0 1 0 0">
+<MarginPreference ColumnCount="1" ColumnGutter="12" Top="${n(13 * MM)}" Bottom="${n(10 * MM)}" Left="${n(9 * MM)}" Right="${n(9 * MM)}"/></Page>
+</MasterSpread></idPkg:MasterSpread>`;
   const prefs = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <idPkg:Preferences xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="16.0">
-<DocumentPreference PageHeight="${n(H)}" PageWidth="${n(B)}" PagesPerDocument="4" FacingPages="false" DocumentBleedTopOffset="${n(3 * MM)}" DocumentBleedBottomOffset="${n(3 * MM)}" DocumentBleedInsideOrLeftOffset="${n(3 * MM)}" DocumentBleedOutsideOrRightOffset="${n(3 * MM)}" DocumentBleedUniformSize="true" PageBinding="LeftToRight"/>
+<DocumentPreference PageHeight="${n(H)}" PageWidth="${n(B)}" PagesPerDocument="4" FacingPages="false" AllowPageShuffle="true" Intent="PrintIntent" CreatePrimaryTextFrame="false" DocumentBleedTopOffset="${n(3 * MM)}" DocumentBleedBottomOffset="${n(3 * MM)}" DocumentBleedInsideOrLeftOffset="${n(3 * MM)}" DocumentBleedOutsideOrRightOffset="${n(3 * MM)}" DocumentBleedUniformSize="true" PageBinding="LeftToRight"/>
 <ViewPreference HorizontalMeasurementUnits="Millimeters" VerticalMeasurementUnits="Millimeters"/>
 </idPkg:Preferences>`;
 
@@ -197,6 +204,7 @@ ${absatzformat('Kontakt', { ...TX, grad: 9, zab: 13 })}
 <idPkg:Styles src="Resources/Styles.xml"/>
 <idPkg:Preferences src="Resources/Preferences.xml"/>
 <Layer Self="ly1" Name="Ebene 1" Visible="true" Locked="false" IgnoreWrap="false" ShowGuides="true" LockGuides="false" UI="true" Expendable="true" Printable="true"/>
+<idPkg:MasterSpread src="MasterSpreads/MasterSpread_ms.xml"/>
 ${spreads.map(([s]) => `<idPkg:Spread src="Spreads/Spread_${s}.xml"/>`).join('\n')}
 <idPkg:BackingStory src="XML/BackingStory.xml"/>
 ${stories.map(([s]) => `<idPkg:Story src="Stories/Story_${s}.xml"/>`).join('\n')}
@@ -211,6 +219,7 @@ ${stories.map(([s]) => `<idPkg:Story src="Stories/Story_${s}.xml"/>`).join('\n')
   t('Resources/Graphic.xml', graphic);
   t('Resources/Styles.xml', styles);
   t('Resources/Preferences.xml', prefs);
+  t('MasterSpreads/MasterSpread_ms.xml', master);
   t('XML/BackingStory.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <idPkg:BackingStory xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="16.0"><XmlStory Self="bs" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n"><ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/$ID/NormalParagraphStyle"><CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]"/></ParagraphStyleRange></XmlStory></idPkg:BackingStory>`);
   spreads.forEach(([s, xml]) => t(`Spreads/Spread_${s}.xml`, xml));
