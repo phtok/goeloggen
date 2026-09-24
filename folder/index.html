@@ -27,6 +27,7 @@
   .leiste{display:grid;gap:var(--s4);margin-bottom:var(--s6)}
   .leiste .reihe{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center}
   .leiste .lab{flex:0 0 100%}
+  .werkname{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);line-height:1.2;margin:0}
   .knoepfe .btn{flex:1 1 auto}
   .archiv summary{cursor:pointer;min-height:var(--tap);display:flex;align-items:center;font-family:var(--font-text);font-size:var(--t-small);color:var(--ink)}
   .archiv-liste{list-style:none;margin:var(--s3) 0 0;padding:0;display:grid;gap:var(--s1);max-height:24rem;overflow:auto}
@@ -166,13 +167,10 @@
 <script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
 
 <main class="wrap">
-  <section class="hero">
-    <span class="kicker">Veranstaltungen · Skizze</span>
-    <h1>Goetheanum Folder erstellen</h1>
-  </section>
 
   <div class="werk">
   <div class="leiste card soft">
+    <h1 class="werkname">Goetheanum Folder erstellen</h1>
     <div class="reihe"><span class="lab" id="lab-farbe">Farbe</span><div class="fmenue" id="m-farbe"></div></div>
     <div class="reihe"><span class="lab" id="lab-schrift">Schrift</span><div class="fmenue" id="m-schrift"></div></div>
     <div class="reihe"><span class="lab" id="lab-sprache">Zweite Sprache</span><div class="fmenue" id="m-sprache"></div></div>
