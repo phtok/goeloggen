@@ -172,7 +172,7 @@ zusätzlich auf der jeweiligen Werkzeug-Seite verlinkt.
 ### Die Redaktion: gegenlesen im Werkzeug, versenden als Mensch
 Die **Redaktionsseite** steht: `apps/werkzeugpost/` (Manifest-Eintrag
 «Werkzeugpost — Redaktion»). Alle Monats-Mails kommen aus **einer Quelle**
-(`services/werkzeugpost/mails.json`), je Monat eine Karte mit Status
+(`apps/werkzeugpost/mails.json`), je Monat eine Karte mit Status
 (Entwurf · in Redaktion · bereit · versandt), Betreff und Text direkt
 editierbar, **Mobilvorschau** im Telefon-Mockup samt Längen-Warnung. Die
 **Reihenfolge** tauschen Pfeile (Feld `pos`), zwei Ausgaben lassen sich
@@ -181,12 +181,18 @@ editierbar, **Mobilvorschau** im Telefon-Mockup samt Längen-Warnung. Die
 damit ist jede Fassung nachvollziehbar (Verlauf = Git-History).
 
 **Der Redaktionstisch ist eingebaut.** Sieben Personas
-(`services/werkzeugpost/personas.json`) lesen jede Mail unabhängig gegen —
+(`apps/werkzeugpost/personas.json`) lesen jede Mail unabhängig gegen —
 vier Mitarbeitende aus allen Generationen (Sekretariat, Technik,
 Wissenschaft, Betrieb), eine Texterin, die Leitung und ein Marken-Gast. Der
 Redakteur (KI) legt den Entwurf vor und sammelt die Voten; sie erscheinen je
-Ausgabe im Feld `tisch` und auf der Seite. Die Endredaktion macht der Mensch.
-Der Tisch ist damit für weitere Sessions parat.
+Ausgabe im Feld `tisch` und auf der Seite. **Jedes Votum trägt seine Vorschläge
+als Textstellen** (`vorschlaege[]`: `feld`, `suchen`, `ersetzen`, `warum`,
+`stand`): Die Seite legt sie zum *Übernehmen* oder *Ablehnen* vor, setzt die
+angenommene Fassung direkt in Betreff oder Text ein und schreibt den Entscheid
+nach `stand` zurück — *Zurücknehmen* macht eine Übernahme rückgängig. Wo zwei
+Personas dieselbe Stelle anders fassen (Jonas und Neumeier am Betreff), schliesst
+die eine Übernahme die andere aus; der Vorschlag meldet dann, dass seine Stelle
+nicht mehr dasteht. Die Endredaktion macht der Mensch — der Tisch rechnet nur vor.
 
 **Versand bewusst nicht automatisiert:** Die Mail predigt ‹Auftritt des
 Hauses, Stimme eines Menschen› — dann muss sie auch aus dem persönlichen
@@ -233,5 +239,5 @@ auf den Rest neugierig.*
 ---
 
 *Nächste Schritte: Serienname und Anrede (Sie/ihr) festlegen, Verteiler
-klären, Redaktionsseite (`apps/werkzeugpost/` + `services/werkzeugpost/`)
+klären, Redaktionsseite (`apps/werkzeugpost/`)
 bauen, Merkblatt-Reihe gestalten, September-Mail finalisieren.*

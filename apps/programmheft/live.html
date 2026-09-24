@@ -51,8 +51,10 @@
 
   .titel .feld{background:var(--acc);color:var(--on-acc);flex:0 0 60%;display:flex;flex-direction:column;
     justify-content:center;align-items:center;text-align:center;padding:14mm 12mm 18mm;gap:7mm;position:relative}
-  .titel .feld::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:9mm;background:#fff; /* # ds-ok Papier */
-    clip-path:path("M0 20 C 120 0, 260 40, 560 12 L 560 40 L 0 40 Z")}
+  .titel .feld{z-index:1;margin-bottom:-14mm;padding-bottom:26mm}
+  .kante-schraege .feld{clip-path:polygon(0 0,100% 0,100% calc(100% - 14mm),0 100%)}
+  .kante-trapez .feld{clip-path:polygon(0 0,100% 0,100% calc(100% - 14mm),78% 100%,22% 100%,0 calc(100% - 14mm))}
+  .kante-gerade .feld{margin-bottom:0;padding-bottom:18mm}
   .titel h2{font-weight:var(--w-deutlich);font-size:34pt;line-height:1.05;margin:auto 0 0;text-wrap:balance}
   .titel .wann{font-weight:var(--w-deutlich);font-size:15pt;line-height:1.3;margin:0;white-space:pre-line;font-variant-numeric:lining-nums}
   .titel .unter{font-size:11.5pt;line-height:1.4;margin:0;max-width:30em;text-wrap:balance}
@@ -85,12 +87,20 @@
 
   .info{padding:13mm 11mm 10mm;gap:5mm}
   .info h3{margin:0}
-  .info .plan{flex:1;min-height:60mm;display:grid;place-items:center;overflow:hidden}
-  .info .plan img{max-width:100%;max-height:100%;object-fit:contain}
+  .info .plan{flex:1 1 0;min-height:60mm;display:flex;justify-content:center}
+  .karte{position:relative;height:100%;max-width:100%;aspect-ratio:192/210}
+  .karte img{width:100%;height:100%;display:block}
+  .mk{position:absolute;transform:translate(-50%,-50%);width:6.5mm;height:6.5mm;border-radius:50%;border:.5mm solid #fff; /* # ds-ok Papier */
+    background:var(--gold-deep);color:var(--on-accent);display:grid;place-items:center;font-family:var(--font-text);
+    font-size:10pt;font-weight:700;font-variant-numeric:tabular-nums;cursor:grab;touch-action:none;padding:0}
+  .mk:active{cursor:grabbing}
+  .offen{font-family:var(--font-text);font-size:var(--t-small);display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap}
+  .offen .mk{position:static;transform:none}
+  .z .ort .nr{font-weight:700;font-variant-numeric:tabular-nums}
   .legende{columns:2;column-gap:6mm;font-family:var(--font-text);font-size:11pt;line-height:1.5;margin:0;padding:0;list-style:none}
   .legende li{display:flex;gap:2mm;break-inside:avoid;margin-bottom:1mm;align-items:baseline}
-  .legende .n{flex:0 0 5.5mm;height:5.5mm;border-radius:50%;background:var(--gold-deep);color:var(--on-accent);
-    display:grid;place-items:center;font-size:8pt;font-weight:700;font-variant-numeric:tabular-nums}
+  .legende .n{flex:0 0 6mm;height:6mm;border-radius:50%;background:var(--gold-deep);color:var(--on-accent);
+    display:grid;place-items:center;font-size:9pt;font-weight:700;font-variant-numeric:tabular-nums}
   .info .fuss{font-family:var(--font-text);font-size:9pt;line-height:1.45;display:flex;justify-content:space-between;align-items:end;gap:4mm}
   .info .fuss .kontakt{white-space:pre-line}
   .info .fuss img{height:5mm}
@@ -98,7 +108,7 @@
 
   @media print{
     @page{size:148mm 210mm;margin:0}
-    body>*:not(main),.hero,.leiste,.zwerk,.plus{display:none!important}
+    body>*:not(main),.hero,.leiste,.zwerk,.plus,.offen{display:none!important}
     main.wrap{max-width:none;padding:0;margin:0}
     .blaetter{display:block;padding:0}
     .ueberlauf{outline:0}
@@ -122,6 +132,7 @@
     <div class="reihe"><span class="lab">Farbe</span><div class="farbwahl" id="farbwahl" role="group" aria-label="Farbe"></div></div>
     <div class="reihe"><span class="lab">Titelbild</span><div class="motive" id="motive"></div>
       <button class="btn" type="button" id="bild-waehlen">Eigenes Bild</button><input type="file" id="f-bild" accept="image/*" hidden /></div>
+    <div class="reihe"><span class="lab">Kante</span><div class="farbwahl" id="kanten" role="group" aria-label="Kante über dem Titelbild"></div></div>
     <div class="reihe">
       <button class="btn primary" type="button" onclick="print()">Als PDF drucken</button>
       <button class="btn" type="button" id="zuruecksetzen">Beispiel wiederherstellen</button>
@@ -151,6 +162,10 @@ const MOTIVE=[["titelbild-goetheanum.jpg","Fenster hinter Lavendel","Foto: Goeth
   ["titel-campus.jpg","Westansicht, Campus-Fest","Foto: Goetheanum / Xue Li"],["titel-westtreppe.jpg","Westtreppenhaus","Foto: Goetheanum / Xue Li"],
   ["titel-luftbild.jpg","Luftbild des Campus","Foto: Goetheanum / Xue Li"],["titel-glashaus.jpg","Glashaus","Foto: Goetheanum / Xue Li"]];
 
+// Bekannte Orte auf dem Standardplan, in Prozent der Karte. Unbekannte zieht man selbst auf die Karte.
+const ORTE={"Grosser Saal":[47,60],"Grundsteinsaal":[53,61.5],"Foyer":[50,66.5],"Haupteingang":[48.7,73.7],
+  "Südeingang":[61.2,60],"Empfang":[51.9,70.6]};
+const KANTEN=[["schraege","Schräge wie im Logo"],["trapez","Trapez wie der Bau"],["gerade","Gerade"]];
 const BEISPIEL={farbe:"bereich",bild:MOTIVE[0][0],credit:"Foto: Goetheanum",
   titel:"Offener Tag am Goetheanum",wann:"Samstag, 17. Oktober 2026\n10.00–16.30",
   unter:"Das Haus, seine Arbeit und seine Menschen kennenlernen",stich:"Bühne · Forschung · Kunst · Garten",
@@ -169,12 +184,18 @@ const BEISPIEL={farbe:"bereich",bild:MOTIVE[0][0],credit:"Foto: Goetheanum",
     {zeit:"16.00–16.30",text:"Musikalischer Abschluss",ort:"Grosser Saal"},
     {zeit:"ab 16.30",text:"Ausklang und Getränke",ort:"Foyer",pause:true}
   ]],
-  info:"Lageplan",plan:"lageplan-standard.svg?v=2",leg:["Haupteingang","Südeingang","Empfang"],
+  info:"Campus",plan:"lageplan-standard.svg?v=3",kante:"schraege",extra:[],orte:ORTE,
   kontakt:"Goetheanum, Rüttiweg 45, 4143 Dornach\nwww.goetheanum.ch"};
 
 const SPEICHER="goe-programmheft-live-1";
 let S;try{S=JSON.parse(localStorage.getItem(SPEICHER))}catch(e){}
 if(!S)S=structuredClone(BEISPIEL);
+// Ältere Stände nachziehen
+if(!S.orte){S.orte=structuredClone(ORTE);S.extra=[];delete S.leg;if(S.info==="Lageplan")S.info="Campus";S.plan=BEISPIEL.plan}
+if(!S.kante)S.kante="schraege";
+const qk=new URLSearchParams(location.search).get("kante");if(qk)S.kante=qk;
+// Legende = Orte aus dem Programm (in Reihenfolge) + eigene Zusätze
+function orte(){const l=[];S.seiten.flat().map(z=>(z.ort||"").trim()).concat(S.extra.map(x=>x.trim())).forEach(o=>{if(o&&!l.includes(o))l.push(o)});return l}
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const strich=s=>s.replace(/(\d)\s*[-–]\s*(\d)/g,"$1–$2"); // Zeitspanne: Halbgeviertstrich
@@ -198,10 +219,11 @@ const I={
 const ed=(pfad,wert,tag="span",kl="",leer="",fett=false)=>
   `<${tag} class="${kl}" contenteditable="${fett?"true":"plaintext-only"}" spellcheck="true" data-pfad="${pfad}" data-leer="${esc(leer)}">${fett?wert:esc(wert)}</${tag}>`;
 
+let NR=[];const nrVon=o=>{const k=NR.indexOf((o||"").trim());return k<0?I.pin:`<span class="nr">${k+1}</span>`};
 function zeile(z,s,i){
   return `<div class="z${z.pause?" pause":""}">
     ${ed(`seiten.${s}.${i}.zeit`,z.zeit,"span","zeit","Zeit")}
-    <span>${ed(`seiten.${s}.${i}.text`,z.text,"span","","Programmpunkt",true)} <span class="ort">${I.pin}${ed(`seiten.${s}.${i}.ort`,z.ort,"span","","Ort")}</span></span>
+    <span>${ed(`seiten.${s}.${i}.text`,z.text,"span","","Programmpunkt",true)} <span class="ort">${nrVon(z.ort)}${ed(`seiten.${s}.${i}.ort`,z.ort,"span","","Ort")}</span></span>
     <span class="zwerk">
       ${i>0||s>0?`<button type="button" data-tat="hoch" data-s="${s}" data-i="${i}" aria-label="Nach oben" title="Nach oben">${I.hoch}</button>`:""}
       <button type="button" data-tat="pause" data-s="${s}" data-i="${i}" aria-pressed="${!!z.pause}" title="Als Pause tönen">${I.tasse}Pause</button>
@@ -214,13 +236,13 @@ const plus=s=>`<div class="plus">
 
 function bauen(){
   const f=S.farbe, logo="../../assets/logos/goetheanum-logo.svg";
-  const b=$("blaetter");
+  const b=$("blaetter");NR=orte();
   b.style.setProperty("--acc",`var(--${f})`);b.style.setProperty("--on-acc",auf(f));
   // Logo folgt der Schrift auf der Fläche: weiss, oder dunkel bei hellen Sektionsfarben.
   const hell=getComputedStyle(document.documentElement).getPropertyValue(`--on-${f}`).trim();
   b.style.setProperty("--marke-filter",hell&&hell!=="#fff"?"brightness(0)":"brightness(0) invert(1)");
   b.innerHTML=`
-  <article class="seite titel" aria-label="Seite 1, Titel">
+  <article class="seite titel kante-${S.kante}" aria-label="Seite 1, Titel">
     <div class="feld">
       <img class="marke" src="${logo}" alt="Goetheanum" />
       ${ed("titel",S.titel,"h2","","Titel")}
@@ -233,11 +255,14 @@ function bauen(){
   ${[0,1].map(s=>`<article class="seite prog" aria-label="Seite ${s+2}, Programm">
     ${s===0?"<h3>Programm</h3>":""}<div class="zeilen">${S.seiten[s].map((z,i)=>zeile(z,s,i)).join("")}</div>${plus(s)}
   </article>`).join("")}
-  <article class="seite info" aria-label="Seite 4, Lageplan">
+  <article class="seite info" aria-label="Seite 4, Campus">
     ${ed("info",S.info,"h3","","Überschrift")}
-    <div class="plan"><img src="${S.plan}" alt="Lageplan" /></div>
-    <ol class="legende">${S.leg.map((l,k)=>`<li><span class="n">${k+1}</span>${ed(`leg.${k}`,l,"span","","Ort")}</li>`).join("")}</ol>
-    <div class="plus"><button type="button" data-tat="neuleg">${I.plus}Ort in der Legende</button></div>
+    <div class="plan"><div class="karte" id="karte"><img src="${S.plan}" alt="Plan des Campus" />
+      ${NR.map((o,k)=>S.orte[o]?`<button type="button" class="mk" data-ort="${esc(o)}" style="left:${S.orte[o][0]}%;top:${S.orte[o][1]}%" title="${esc(o)} – ziehen zum Verschieben">${k+1}</button>`:"").join("")}</div></div>
+    <ol class="legende">${NR.map((o,k)=>`<li><span class="n">${k+1}</span>${esc(o)}</li>`).join("")}</ol>
+    ${NR.some(o=>!S.orte[o])?`<div class="offen">Noch nicht auf der Karte – auf den Plan ziehen:
+      ${NR.map((o,k)=>S.orte[o]?"":`<button type="button" class="mk" data-ort="${esc(o)}" title="${esc(o)}">${k+1}</button> ${esc(o)}`).join(" ")}</div>`:""}
+    <div class="plus">${S.extra.map((x,k)=>ed(`extra.${k}`,x,"span","","Ort")).join(" ")}<button type="button" data-tat="neuleg">${I.plus}Weiterer Ort</button></div>
     <div class="fuss">${ed("kontakt",S.kontakt,"span","kontakt","Kontakt")}<img src="${logo}" alt="Goetheanum" /></div>
   </article>`;
   einpassen();markieren();sichern();
@@ -263,6 +288,7 @@ B.addEventListener("input",e=>{const el=e.target.closest("[data-pfad]");if(!el)r
   setzen(el.dataset.pfad,el.isContentEditable&&el.getAttribute("contenteditable")==="true"?rein(el.innerHTML):el.innerText);
   einpassen();sichern()});
 B.addEventListener("focusout",e=>{const el=e.target.closest("[data-pfad]");
+  if(el&&/ort$|^extra\./.test(el.dataset.pfad)&&!B.contains(e.relatedTarget)){setTimeout(bauen);return}
   if(el&&/zeit$|^wann$/.test(el.dataset.pfad)){const v=strich(el.innerText);if(v!==el.innerText){el.innerText=v;setzen(el.dataset.pfad,v);sichern()}}});
 B.addEventListener("keydown",e=>{const el=e.target.closest("[data-pfad]");if(!el||e.key!=="Enter")return;
   if(/^(wann|kontakt)$/.test(el.dataset.pfad))return; // mehrzeilig erlaubt
@@ -277,7 +303,7 @@ B.addEventListener("click",e=>{const t=e.target.closest("[data-tat]");if(!t)retu
   switch(t.dataset.tat){
     case "neu":L.push({zeit:"",text:"",ort:""});bauen();fokus(`seiten.${s}.${L.length-1}.zeit`);return;
     case "neupause":L.push({zeit:"",text:"Pause",ort:"Foyer",pause:true});bauen();fokus(`seiten.${s}.${L.length-1}.zeit`);return;
-    case "neuleg":S.leg.push("");bauen();fokus(`leg.${S.leg.length-1}`);return;
+    case "neuleg":S.extra.push("");bauen();fokus(`extra.${S.extra.length-1}`);return;
     case "pause":L[i].pause=!L[i].pause;break;
     case "weg":L.splice(i,1);break;
     case "hoch":if(i>0)[L[i-1],L[i]]=[L[i],L[i-1]];else S.seiten[s-1].push(L.shift());break;
@@ -294,8 +320,20 @@ MOTIVE.forEach(([f,n,c])=>{const b=document.createElement("button");b.type="butt
   b.onclick=()=>{S.bild=f;S.credit=c;bauen()};$("motive").append(b)});
 function markieren(){
   document.querySelectorAll("#farbwahl button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===S.farbe));
+  document.querySelectorAll("#kanten button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===S.kante));
   document.querySelectorAll("#motive button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.f===S.bild));
 }
+KANTEN.forEach(([k,n])=>{const b=document.createElement("button");b.type="button";b.dataset.k=k;b.textContent=n;
+  b.onclick=()=>{S.kante=k;bauen()};$("kanten").append(b)});
+// Ortsnummern auf die Karte ziehen
+B.addEventListener("pointerdown",e=>{const m=e.target.closest(".mk");if(!m)return;e.preventDefault();
+  const o=m.dataset.ort,k=$("karte");let pos=null;
+  const zug=ev=>{const r=k.getBoundingClientRect();
+    pos=[(ev.clientX-r.left)/r.width*100,(ev.clientY-r.top)/r.height*100].map(v=>Math.round(Math.min(98,Math.max(2,v))*10)/10);
+    Object.assign(m.style,{position:"absolute",transform:"translate(-50%,-50%)",left:`${ev.clientX-m.offsetParent.getBoundingClientRect().left}px`,top:`${ev.clientY-m.offsetParent.getBoundingClientRect().top}px`})};
+  const los=()=>{removeEventListener("pointermove",zug);removeEventListener("pointerup",los);
+    if(pos){const r=k.getBoundingClientRect();S.orte[o]=pos;}bauen()};
+  addEventListener("pointermove",zug);addEventListener("pointerup",los)});
 $("bild-waehlen").onclick=()=>$("f-bild").click();
 $("f-bild").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;
   const r=new FileReader();r.onload=()=>{S.bild=r.result;S.credit="";bauen()};r.readAsDataURL(f)});

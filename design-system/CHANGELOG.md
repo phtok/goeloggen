@@ -16,6 +16,58 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 21. September 2026 — die Klappliste ausserhalb des Formulars (1.27.0)
+
+**Was.** Neue Utility `.select-inline` in `base.css`: eine Klappliste, die nicht
+in einem `.field` steht, sondern direkt an einem Datensatz — etwa in einer
+Tabellenzeile, wo eine Zuordnung geändert wird. Sie trägt dieselben Grundmasse
+wie das Formularfeld: Lese-Grotesk, 16px, Fingerziel 44px, Flächen aus Tokens.
+
+**Warum.** Beim Bau der Auswertung je Angebot im Kampagnen-Cockpit
+(`apps/sommer-zaehler/kosten.html`) bekam jeder Kostenposten eine Klappliste in
+der Zeile. Ohne Regel fällt der Browser auf seine eigene Klappliste zurück — in
+Chromium rund 13px. Das ist zweifach falsch: unter dem Floor von 14px (B03) und
+unter 16px, worauf iOS beim Antippen die Seite zoomt. Die Lösung lokal in
+`campaign.css` zu lassen hiesse, sie beim nächsten Werkzeug erneut zu erfinden.
+
+**Wirkung.** B03 (Mindestgrössen, Eingabefelder ≥16px), B04 (Fingerziel ≥44px),
+B05 (Flächen aus Tokens: `--field-bg`, `--line`). Gilt ab sofort überall;
+`.medit` bleibt, was es ist — ein Textknopf, kein Eingabefeld.
+
+---
+
+## 17. September 2026 — die Startseite hört auf zu wechseln (1.26.0)
+
+**Was.** Das Entdecker-Karussell auf der Startseite ist entfernt. Die eine
+Zeile, die jede Folie trug, steht jetzt auf der **Karte** selbst — gelesen aus
+`tools.json` (`desc`), nicht mehr aus einer zweiten, im `index.html`
+einbetonierten Liste. Mit dem Karussell fallen `reihenfolge.karussell` und
+`aus.karussell` weg; der Sortierer und die Edge Function `sortierer-commit`
+ordnen nur noch Schublade und Karten. Vier zu lange Beschreibungen (Campus-Karte,
+Sektionsfarben, Familienmenü, Tagungsprogramm) sind auf Kartenmass gekürzt.
+
+**Warum.** Befund des Auftraggebers: <q>Sind die kontraproduktiv?</q> — ja. Das
+Karussell war als Hinweis auf **weniger Bekanntes** gebaut (sechs Folien,
+8. Juli 2026); gewachsen war es auf dreizehn und zeigte damit genau die
+Werkzeuge, die zwei Zentimeter darunter ohnehin als Karte stehen. Ein Duplikat,
+das auf dem Handy den ersten Bildschirm besetzt und die Werkzeuge nach unten
+schiebt. Dass Wechselbilder übersprungen werden, steht als Erkenntnis längst im
+eigenen Haus (<a href="https://werkzeuge.goetheanum.ch/sehen/">Entwurfsgrundlagen</a>,
+Abschnitt <q>Karussells werden übersprungen</q>): gesehen wird die erste Folie,
+die folgenden nie. Zwölf Folien Pflegearbeit für null Blicke.
+
+**Wirkung.** Die Startseite ist wieder ein Werkzeugbrett: Zeichen, Titel, ein
+Satz, was das Werkzeug tut — 16 Karten, 16 Zeilen, keine Bewegung, kein
+Halt-Schalter, den es nur wegen der Bewegung brauchte (G03: was entbehrlich ist,
+entfällt). Die Zeile trägt `--t-small` (15–16 px, B03) in `--muted`
+(4.9:1 auf Papier, B02) bei Zeilenhöhe 1.5. Gemessen am gerenderten Blatt
+(Chromium, 1280 und 420 px): <q>Kein Verstoss gegen WCAG 2.2 AA bei 2
+Messungen</q> (DS08), ds-lint 0 Fehler. Eine Quelle für die Kartenzeile
+(`tools.json`) heisst: ein neues Werkzeug bringt seine Zeile mit, ohne dass
+jemand `index.html` anfasst.
+
+---
+
 ## 14. September 2026 — das Feld spricht nicht, es zeigt an (1.25.0)
 
 **Was.** Bedienelemente tragen im Fundament jetzt immer die Lese-Grotesk:

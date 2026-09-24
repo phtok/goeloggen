@@ -33,6 +33,21 @@ export const PLENUM_SLOTS = [
   { slot: 'sa_1430', teile: [{ tag: 3, zeit: '14:30' }] },
 ];
 
+/* Die Arbeitsgruppen laufen in zwei Fenstern. Das Blatt nennt deren Kanten als
+   feste Uhrzeiten (blatt.json › feste_slots) – hier steht, welche Uhrzeit welche
+   Kante ist, damit ein verschobenes Fenster auffliegt (abgleichen). */
+export const FENSTER_SLOTS = [
+  { block: 'vormittag', name: 'Arbeitsgruppen am Vormittag', von: 'zeit_1045', bis: 'zeit_1230' },
+  { block: 'nachmittag', name: 'Arbeitsgruppen am Nachmittag', von: 'zeit_1430', bis: 'zeit_1600' },
+];
+
+/* Gedolmetscht wird in sechs Sprachen. Auf dem Blatt nennt sich jede in ihrer
+   eigenen – von Hand gesetzte Pillen (slots.json › nur_pruefen). */
+export const SPRACHE_PILLE = {
+  Deutsch: 'Deutsch', Englisch: 'English', 'Französisch': 'Français',
+  Spanisch: 'Español', Italienisch: 'Italiano', Chinesisch: '中文',
+};
+
 const KURZ = ['Mi', 'Do', 'Fr', 'Sa'];
 
 /* Text ohne Leerraum und Umbrüche – zum Vergleichen von Hand gesetzter
@@ -50,6 +65,15 @@ function titelzeile(en, de, schwelle, eineZeile) {
   if (!de) return { laut: en };
   const zusammen = eineZeile === true || (eineZeile !== false && en.length + de.length <= schwelle);
   return zusammen ? { laut: en, ruhig: de } : { runs: [{ laut: true, text: `${en}\n` }, { ruhig: true, text: de }] };
+}
+
+/* «4. bis 6. Februar • 10:45 - 12:30 • In den dreitägigen …» → die zwei Kanten
+   und die Tage, die dazu auf der Webseite stehen. */
+function fensterLesen(text) {
+  const z = /(\d{1,2})[:.](\d{2})\s*[-\u2013\u2014]\s*(\d{1,2})[:.](\d{2})/.exec(text || '');
+  if (!z) return null;
+  return { von: `${Number(z[1])}:${z[2]}`, bis: `${Number(z[3])}:${z[4]}`,
+    tage: String(text).split('\u2022')[0].trim() };
 }
 
 export function komponieren(webseite, blatt) {
@@ -79,7 +103,15 @@ export function komponieren(webseite, blatt) {
     datum_en: datumEn,
     stand: webseite.stand || '',
     quelle: webseite.quelle || '',
+    dolmetsch: t.dolmetsch || [],
+    fenster: {},
   };
+  // Die Zeitfenster der Arbeitsgruppen stehen auf der Webseite über den Listen.
+  for (const ag of webseite.arbeitsgruppen || []) {
+    if (!ag.fenster || tagung.fenster[ag.block]) continue;
+    const f = fensterLesen(ag.fenster);
+    if (f) tagung.fenster[ag.block] = f;
+  }
   if (t.motto && blatt.kopf.motto_de && t.motto !== blatt.kopf.motto_de.replace(/\n/g, ' ')) {
     merken('abgleich', `Motto auf der Webseite: «${t.motto}» – in blatt.json steht «${blatt.kopf.motto_de.replace(/\n/g, ' ')}».`);
   }
@@ -94,17 +126,10 @@ export function komponieren(webseite, blatt) {
     slots.tage.push({ stil: 'Daten', text: `${tag.datum_en}\t${tag.datum_de}`, umbruch: i < tage.length - 1 ? 'NextColumn' : undefined });
   });
 
-  // Kopf des Blatts: Motto, Untertitel, Tagungszeile – drei Absätze, wie gesetzt.
-  slots.kopf_en = [
-    { laut: blatt.kopf.motto_en },
-    { ruhig: blatt.kopf.untertitel_en },
-    { laut: `${blatt.kopf.tagung_en}\n${datumEn}` },
-  ];
-  slots.kopf_de = [
-    { ruhig: blatt.kopf.motto_de },
-    { ruhig: blatt.kopf.untertitel_de },
-    { laut: `${blatt.kopf.tagung_de}\n${datumDe}` },
-  ];
+  // Kopf des Blatts: Tagungszeile. Das Motto steht daneben in eigenen, von
+  // Hand gesetzten Rahmen (slots.json › motto_en/motto_de, nur prüfen).
+  slots.kopf_en = [{ laut: `${blatt.kopf.tagung_en}\n${datumEn}` }];
+  slots.kopf_de = [{ laut: `${blatt.kopf.tagung_de}\n${datumDe}` }];
   slots.stand = [
     { laut: `${blatt.stand.en}\nVisit our website for\nnews and registration` },
     { ruhig: `${blatt.stand.de}\nBesuchen Sie unsere Webseite\nfür Aktuelles und Anmeldung:` },
@@ -115,13 +140,14 @@ export function komponieren(webseite, blatt) {
 
   // Bild auf dem Umschlag – eine Angabe, zwei Stellen (Plakat und Rückseite).
   const mal = blatt.malerei || {};
+  // Der Titel des Bilds steht nur, wenn es einen hat.
   slots.malerei = [
     { laut: 'Painting on Cover' },
-    { ruhig: `Malerei auf dem Cover\n‹${mal.titel || 'Titel folgt'}›` },
+    { ruhig: mal.titel ? `Malerei auf dem Cover\n‹${mal.titel}›` : 'Malerei auf dem Cover' },
     { ruhig: mal.name || 'Name folgt' },
   ];
-  slots.plakat_malerei = [{ laut: `Painting: ${mal.name || 'Name folgt'}, ‹${mal.titel || 'Titel folgt'}›` }];
-  if (!mal.name || !mal.titel) merken('offen', 'Bild auf dem Umschlag: Name oder Titel fehlt – in blatt.json › malerei eintragen (steht auf Plakat und Rückseite).');
+  slots.plakat_malerei = [{ laut: `Painting: ${mal.name || 'Name folgt'}${mal.titel ? `, ‹${mal.titel}›` : ''}` }];
+  if (!mal.name) merken('offen', 'Bild auf dem Umschlag: Name fehlt – in blatt.json › malerei eintragen (steht auf Plakat und Rückseite).');
 
   // ---- Plenum → Rahmen ---------------------------------------------------
   const plenum = webseite.plenum || [];
@@ -167,22 +193,23 @@ export function komponieren(webseite, blatt) {
   for (const regel of PLENUM_SLOTS) {
     const absaetze = [];
     if (regel.art === 'morgen') {
-      // Titel und Art laufen über alle Spalten, darunter die Mitwirkenden je Tag
-      // in eigener Spalte. Was spannt und was nicht, sagt das Modell – sonst
-      // erbt eine Namenszeile den Spaltenlauf der Überschrift und schiebt die
-      // folgenden Tage aus dem Rahmen.
+      // Übertitel und Titel laufen über alle Spalten, darunter die Mitwirkenden
+      // je Tag in eigener Spalte. Was spannt und was nicht, sagt das Modell –
+      // sonst erbt eine Namenszeile den Spaltenlauf der Überschrift und schiebt
+      // die folgenden Tage aus dem Rahmen.
       const o = ueber[regel.slot] || {};
       const erste = eventsBei(regel.teile[0].tag, regel.teile[0].zeit)[0] || {};
       const en = gueltig(o.titel_en, erste.titel_en || erste.art_en || '', regel.slot, 'titel_en');
       const de = gueltig(o.titel_de, erste.titel_de || erste.art_de || '', regel.slot, 'titel_de');
-      absaetze.push({ ...titelzeile(en, de, schwelle, o.eine_zeile), spanne: 'alle', quelle: { schluessel: regel.slot, feld: 'titel' } });
-      // Die Art («Michaelbrief · Michael Letter») steht als eigene Zeile darunter,
-      // wenn die Webseite sie neben dem Titel nennt.
-      const artEn = o.art_en !== undefined ? o.art_en : (erste.art_en || '');
-      const artDe = o.art_de !== undefined ? o.art_de : (erste.art_de || '');
+      // Die Art («Michael Letter · Michaelbrief») ist der Übertitel aller drei
+      // Vormittage – sie steht über dem Titel, nicht darunter.
+      const artEn = gueltig(o.art_en, erste.art_en || '', regel.slot, 'art_en');
+      const artDe = gueltig(o.art_de, erste.art_de || '', regel.slot, 'art_de');
       if ((artEn || artDe) && (en || de) && `${artEn}${artDe}` !== `${en}${de}`) {
-        absaetze.push({ ...titelzeile(artEn, artDe, schwelle, o.art_eine_zeile !== false), spanne: 'alle' });
+        absaetze.push({ ...titelzeile(artEn, artDe, schwelle, o.art_eine_zeile !== false),
+          spanne: 'alle', quelle: { schluessel: regel.slot, feld: 'art' } });
       }
+      absaetze.push({ ...titelzeile(en, de, schwelle, o.eine_zeile), spanne: 'alle', quelle: { schluessel: regel.slot, feld: 'titel' } });
       const titelGleich = new Set();
       regel.teile.forEach((teil, i) => {
         const evs = eventsBei(teil.tag, teil.zeit);
@@ -299,10 +326,12 @@ export function tagesansicht(modell, blatt) {
       if (z.teil !== undefined) {
         const teile = spalten(liste);
         if (z.teil === 'tag') {
-          // Rahmen mit Titel über allen Spalten: teile[0] = [Titel, Namen Spalte 1],
-          // teile[1…] = Namen der weiteren Spalten. Titel je Tag wiederholen.
+          // Rahmen mit Kopf über allen Spalten: teile[0] = [Kopf…, Namen Spalte 1],
+          // teile[1…] = Namen der weiteren Spalten. Der Kopf (Übertitel und Titel,
+          // erkennbar am Spaltenlauf) wird je Tag wiederholt.
           const idx = z.tag.indexOf(ti);
-          liste = idx === 0 ? teile[0] : [teile[0][0], ...(teile[idx] || [])];
+          const kopf = teile[0].filter((a) => a && a.spanne === 'alle');
+          liste = idx === 0 ? teile[0] : [...kopf, ...(teile[idx] || [])];
         } else {
           liste = teile[z.teil] || [];
         }
@@ -324,22 +353,75 @@ export function absatzText(a) {
   return teile.join(a.laut && a.ruhig ? '\u2002' : '');
 }
 
-/* Abgleich der von Hand gesetzten Rahmen (slots.json › nur_pruefen): stimmt
-   das, was in der Vorlage steht, noch mit den Daten überein? Verglichen wird
-   ohne Rücksicht auf Zeilenumbrüche und Leerraum. */
+/* Abgleich: Was von Hand gesetzt ist, fasst der Export nicht an – hier steht,
+   ob es noch zu den Daten passt. Drei Paare: Motto und Plakatzeilen (slots.json ›
+   nur_pruefen), die Uhrzeiten der Arbeitsgruppen-Fenster und die sechs
+   Dolmetsch-Sprachen. Verglichen wird ohne Rücksicht auf Leerraum und Umbrüche. */
 export function abgleichen(modell, slots) {
   const nackt = (s) => String(s || '').replace(/[\s\u2028\u2002\u2009]+/g, ' ').replace(/[–—]/g, '-').trim().toLowerCase();
+  const slotText = (a) => (Array.isArray(a) ? a.map(absatzText).join(' ') : absatzText(a)).trim();
+  // Bis-Strich mit Wortverbindern: eine Zeitspanne bricht nicht über die Zeile.
+  const spanne = (von, bis) => `${von}\u2060–\u2060${bis}`;
   const soll = {
-    motto: `${modell.tagung.motto_en} ${modell.tagung.motto_de}`,
-    datum: `${modell.tagung.datum_en} ${modell.tagung.datum_de}`,
+    motto_en: modell.tagung.motto_en,
+    motto_de: modell.tagung.motto_de,
+    datum_en: modell.tagung.datum_en,
+    datum_de: modell.tagung.datum_de,
   };
   const aus = [];
+  const pillen = [];
+
+  // Von Hand gesetzte Rahmen: steht in der Vorlage noch, was die Daten sagen?
   for (const [name, slot] of Object.entries(slots.slots || {})) {
     if (!slot.nur_pruefen) continue;
     const ist = slot.vorlage || '';
+    if (slot.feld === 'dolmetsch') { pillen.push({ slot: name, ist: ist.trim() }); continue; }
+    const wie = slot.name || name;
     const woerter = nackt(soll[slot.feld] || '').split(' ').filter((w) => w.length > 3);
     const fehlt = woerter.filter((w) => !nackt(ist).includes(w));
-    aus.push({ slot: name, ist, soll: soll[slot.feld] || '', stimmt: fehlt.length === 0, fehlt });
+    aus.push({ slot: name, stimmt: fehlt.length === 0, text: fehlt.length === 0
+      ? `${wie}: ${ist}`
+      : `${wie}: in der Vorlage steht «${ist}» – in den Daten fehlt ${fehlt.join(', ')}.` });
   }
+
+  // Zeitfenster der Arbeitsgruppen: Webseite gegen die festen Uhrzeiten des Blatts.
+  for (const regel of FENSTER_SLOTS) {
+    const blattVon = slotText(modell.slots[regel.von]);
+    const blattBis = slotText(modell.slots[regel.bis]);
+    const f = (modell.tagung.fenster || {})[regel.block];
+    if (!f) {
+      aus.push({ slot: regel.block, stimmt: false,
+        text: `${regel.name}: die Webseite nennt kein Zeitfenster – ${spanne(blattVon, blattBis)} auf dem Blatt bleibt ungeprüft.` });
+      continue;
+    }
+    const stimmt = zeitNorm(blattVon) === zeitNorm(f.von) && zeitNorm(blattBis) === zeitNorm(f.bis);
+    aus.push({ slot: regel.block, stimmt, text: stimmt
+      ? `${regel.name}: ${spanne(blattVon, blattBis)}, ${f.tage}.`
+      : `${regel.name}: auf dem Blatt ${spanne(blattVon, blattBis)}, auf der Webseite ${spanne(f.von, f.bis)}. In blatt.json › feste_slots nachziehen (${regel.von}, ${regel.bis}).` });
+  }
+
+  // Dolmetsch-Sprachen: die Pillen des Blatts gegen die Sprachen der Webseite.
+  if (pillen.length) {
+    const web = modell.tagung.dolmetsch || [];
+    const unbekannt = web.filter((s) => !SPRACHE_PILLE[s]);
+    const sollP = web.filter((s) => SPRACHE_PILLE[s]).map((s) => SPRACHE_PILLE[s]);
+    const istP = pillen.map((p) => p.ist);
+    const teile = [];
+    if (!web.length) {
+      // Kein Satz «werden nach … gedolmetscht» gefunden – dann sagt das Blatt nichts Falsches,
+      // sondern die Webseite nichts mehr. Die Pillen bleiben, wie sie stehen.
+      teile.push('die Webseite nennt keine Sprachen mehr – der Satz «werden nach … gedolmetscht» hat sich geändert.');
+    } else {
+      const fehlt = sollP.filter((s) => !istP.includes(s));
+      const zuviel = istP.filter((s) => !sollP.includes(s));
+      if (fehlt.length) teile.push(`auf dem Blatt fehlt ${fehlt.join(', ')} – Pille in InDesign ergänzen.`);
+      if (zuviel.length) teile.push(`${zuviel.join(', ')} steht nur auf dem Blatt – Pille entfernen.`);
+      if (unbekannt.length) teile.push(`${unbekannt.join(', ')} steht neu auf der Webseite – Name der Pille in programm.js › SPRACHE_PILLE ergänzen.`);
+    }
+    aus.push({ slot: 'dolmetsch', stimmt: teile.length === 0, text: teile.length === 0
+      ? `Dolmetsch-Sprachen: ${istP.join(' · ')}.`
+      : `Dolmetsch-Sprachen: ${teile.join(' ')}` });
+  }
+
   return aus;
 }

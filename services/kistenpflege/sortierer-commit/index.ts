@@ -4,7 +4,7 @@
 // Nimmt vom Sortierer/Ordner-Editor Änderungen an der Menü-Struktur und schreibt
 // gezielt in die tools.json auf GitHub — per Contents-API, mit dem aktuellen
 // Stand als Basis (kein Stale-Clobber). Body (alle Felder optional, mindestens
-// eines): reihenfolge {schublade,karten,karussell,aus} · welten {public,intern}
+// eines): reihenfolge {schublade,karten,aus} · welten {public,intern}
 // · cats {slug: cat}. Nur die betroffenen Blöcke/Felder werden ersetzt, der Rest
 // bleibt byte-genau. Ein GitHub-Token liegt serverseitig, nie im Browser.
 // Kein Passwort: statt dessen nimmt die Funktion nur Aufrufe von den eigenen
@@ -128,7 +128,6 @@ Deno.serve(async (req) => {
   try {
     const parsed = JSON.parse(text);
     known = new Set((parsed.tools || []).map((t: { slug?: string }) => t.slug).filter(Boolean));
-    known.add("empfehlungen"); // Karussell-Extra ohne eigenes Werkzeug
   } catch {
     return json(500, { error: "tools.json (aktuell) ist kein gültiges JSON." }, origin);
   }
@@ -140,14 +139,14 @@ Deno.serve(async (req) => {
   // --- reihenfolge (optional) ---
   if (hasReihenfolge) {
     const r = body.reihenfolge;
-    const ok3 = ["schublade", "karten", "karussell"].every(
+    const ok2 = ["schublade", "karten"].every(
       (k) => Array.isArray(r[k]) && r[k].every((s: unknown) => typeof s === "string"),
     );
-    if (!ok3) return json(400, { error: "reihenfolge (schublade/karten/karussell als Slug-Listen) fehlt." }, origin);
-    const neu = { schublade: clean(r.schublade), karten: clean(r.karten), karussell: clean(r.karussell) };
+    if (!ok2) return json(400, { error: "reihenfolge (schublade/karten als Slug-Listen) fehlt." }, origin);
+    const neu = { schublade: clean(r.schublade), karten: clean(r.karten) };
     const a = r.aus && typeof r.aus === "object" ? r.aus : {};
     const cleanAus = (x: unknown) => Array.isArray(x) ? clean(x.filter((s) => typeof s === "string") as string[]) : [];
-    const aus = { schublade: cleanAus(a.schublade), karussell: cleanAus(a.karussell), karten: cleanAus(a.karten) };
+    const aus = { schublade: cleanAus(a.schublade), karten: cleanAus(a.karten) };
     const hm = next.match(/"reihenfolge"[\s\S]*?"\$hinweis":\s*("(?:[^"\\]|\\.)*")/);
     const hinweis = hm ? hm[1] : JSON.stringify("Vom Sortierer gepflegte Reihenfolgen (Slugs). Startseite und Schublade lesen sie; fehlt ein Eintrag, gilt die eingebaute Vorgabe. aus = je Fläche ausgeblendet (bleibt per Direktlink und in der Intern-Ansicht erreichbar). Verlauf = Git.");
     const block =
@@ -155,8 +154,7 @@ Deno.serve(async (req) => {
       '    "$hinweis": ' + hinweis + ',\n' +
       '    "schublade": ' + arr(neu.schublade) + ',\n' +
       '    "karten": ' + arr(neu.karten) + ',\n' +
-      '    "karussell": ' + arr(neu.karussell) + ',\n' +
-      '    "aus": { "schublade": ' + arr(aus.schublade) + ', "karussell": ' + arr(aus.karussell) + ', "karten": ' + arr(aus.karten) + " }\n" +
+      '    "aus": { "schublade": ' + arr(aus.schublade) + ', "karten": ' + arr(aus.karten) + " }\n" +
       "  }";
     const re = /"reihenfolge"\s*:\s*\{[\s\S]*?\n {2}\}/;
     next = re.test(next) ? next.replace(re, block) : next.replace(/\n\}\s*$/, ",\n  " + block + "\n}");

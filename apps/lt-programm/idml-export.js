@@ -17,7 +17,7 @@
    Node:     node apps/lt-programm/idml-export.js [--ziel LT27-2027.idml]
    ------------------------------------------------------------------------- */
 
-import { komponieren } from './programm.js';
+import { komponieren, abgleichen } from './programm.js';
 
 // ---------------------------------------------------------------- Zip lesen
 
@@ -304,6 +304,7 @@ if (istNode) {
     fs.writeFileSync(ziel, bytes);
     protokoll.forEach((z) => console.log(z));
     modell.hinweise.forEach((h) => console.log(`! ${h.art}: ${h.text}`));
+    abgleichen(modell, slots).filter((a) => !a.stimmt).forEach((a) => console.log(`! abgleich: ${a.text}`));
     console.log(`geschrieben: ${ziel} (${bytes.length} Bytes)`);
   }
 }

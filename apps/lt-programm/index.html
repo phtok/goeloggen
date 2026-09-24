@@ -97,8 +97,8 @@
 
   <section>
     <div class="shead">
-      <h2>Kopf</h2>
-      <p>Die Plakatseite ist von Hand gesetzt (unterschnitten) – der Export fasst sie nicht an. Hier steht nur, ob sie noch zu den Daten passt.</p>
+      <h2>Abgleich</h2>
+      <p>Von Hand Gesetztes fasst der Export nicht an. Hier steht, ob es noch zu den Daten der Webseite passt: Plakatzeile, Zeitfenster der Arbeitsgruppen, Dolmetsch-Sprachen.</p>
     </div>
     <ul class="hinweise" id="abgleich"></ul>
     <div class="kopf">
@@ -208,8 +208,7 @@
     ab.replaceChildren();
     for (const a of abgleichen(modell, slots)) {
       const li = el('li');
-      li.append(el('span', 'chip', a.stimmt ? 'stimmt' : 'prüfen'),
-        el('span', '', a.stimmt ? `${a.slot}: ${a.ist}` : `${a.slot}: in der Vorlage steht «${a.ist}» – in den Daten fehlt ${a.fehlt.join(', ')}.`));
+      li.append(el('span', 'chip', a.stimmt ? 'stimmt' : 'prüfen'), el('span', '', a.text));
       ab.append(li);
     }
 
