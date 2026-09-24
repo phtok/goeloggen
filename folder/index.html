@@ -284,6 +284,8 @@ const BEISPIEL={farbe:"bereich",bild:MOTIVE[0][0],credit:"Foto: Xue Li",
   art:["zeiten","zeiten"],frei:["",""],frei2:["",""],kopf:["",""],
   kontakt:"Goetheanum\nRüttiweg 45 · 4143 Dornach · Schweiz\nwww.goetheanum.ch",stimme:"alles"};
 
+// Stand der Export-Bausteine: bei jeder Änderung an pdf.js/idml.js erhöhen, sonst mischt der Browser-Cache alt und neu.
+const BAU="2026-09-24c";
 const SPEICHER="goe-programmheft-live-1";
 let S;try{S=JSON.parse(localStorage.getItem(SPEICHER))}catch(e){}
 if(!S)S=structuredClone(BEISPIEL);
@@ -659,7 +661,7 @@ async function titelBild(){
   const png=bytes[0]===0x89;return {name:png?"titelbild.png":"titelbild.jpg",bytes,b:i.naturalWidth,h:i.naturalHeight}}
 $("idml").onclick=async e=>{const k=e.currentTarget,alt=k.textContent;k.disabled=true;k.textContent="Wird gepackt …";
   try{
-    const {baueIdml}=await import("./idml.js");
+    const {baueIdml}=await import("./idml.js?v="+BAU);
     const f=S.farbe,name=(FARBEN.find(x=>x&&x[0]===f)||[,f])[1];
     const farben={name,akzent:aufloesen("var(--acc)"),ort:aufloesen("var(--ort)"),
       pause:aufloesen("color-mix(in srgb,var(--acc) 12%,#fff)"),gold:aufloesen("var(--mk)")}; // # ds-ok Tönung
@@ -682,7 +684,7 @@ async function planOhneNummern(druck){
   return {url:druck?c.toDataURL("image/png"):c.toDataURL("image/jpeg",.8)}}
 const pdfBauen=async e=>{const k=e.currentTarget,alt=k.textContent,druck=k.dataset.druck==="1";k.disabled=true;k.textContent="PDF wird gebaut …";
   try{
-    const {bauePdf}=await import("./pdf.js");
+    const {bauePdf}=await import("./pdf.js?v="+BAU);
     const f={akzent:aufloesen("var(--acc)"),ort:aufloesen("var(--ort)"),kopf:aufloesen("var(--kopf)"),tinte:"#23272b", // # ds-ok Tinte
       pause:aufloesen("color-mix(in srgb,var(--acc) 12%,#fff)"),linie:"#e0e0e0",gold:aufloesen("var(--mk)")}; // # ds-ok Druck
     const grad=parseFloat(document.querySelector(".seite.prog").style.getPropertyValue("--grad"))||12;
