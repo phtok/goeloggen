@@ -378,6 +378,7 @@
     },
     {
       "slug": "folder",
+      "seite": true,
       "cat": "generatoren",
       "status": "entwurf",
       "tag": "Veranstaltungen",
