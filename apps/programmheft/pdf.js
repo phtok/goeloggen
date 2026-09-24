@@ -184,7 +184,7 @@ export async function bauePdf(S, f, bilder, orte, lage, grad, logoSvg, druck = f
       if (Z && (S.frei2 || [])[s]) { y0 += fz * 0.5; absatz(S.frei2[s], 'GRuhig', 'GLaut'); }
       return;
     }
-    if (s === (S.art || ['zeiten']).indexOf('zeiten')) { doc.setFont('GDeutlich', 'normal'); doc.setFontSize(22); doc.setTextColor(f.kopf); doc.text('Programm', 11, y0 + 7); if (Z) { const w = doc.getTextWidth('Programm '); doc.setFont('GRuhig', 'normal'); doc.text(Z.programm, 11 + w, y0 + 7); } y0 += 14; }
+    if (false) { /* Kopf «Programm» entfällt: die Zeittafel erklärt sich selbst */ doc.setFont('GDeutlich', 'normal'); doc.setFontSize(22); doc.setTextColor(f.kopf); doc.text('Programm', 11, y0 + 7); if (Z) { const w = doc.getTextWidth('Programm '); doc.setFont('GRuhig', 'normal'); doc.text(Z.programm, 11 + w, y0 + 7); } y0 += 14; }
     const laeufeVon = (z) => {
       const l = [];
       String(z.text).split(/(<b>.*?<\/b>)/g).filter(Boolean).forEach((t) =>
