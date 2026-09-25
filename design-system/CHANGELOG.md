@@ -16,6 +16,27 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 25. September 2026 — das Akkordeon trägt den Faden (Schau-Seite, Version unverändert)
+
+**Was.** Auf `akkordeon.html` steht nur noch das Kleid **Faden** vorn, samt
+Einbau-Code. Blüte und Kapsel liegen eingeklappt am Seitenende unter
+«Alternativen»; ein Direktlink auf eine ihrer Fragen öffnet den Bereich. Die
+Schritt-Nummern 1–3 entfallen, weil es keine Reihenfolge mehr gibt (G03), und
+die überholte Beschreibung der Kapsel («Pille», «bleibt rund», vor 1.21.1)
+ist berichtigt.
+
+**Warum.** Der Auftraggeber hat nach der Empfehlung entschieden: ein Modell
+statt dreier gleichrangiger. Die Antworten der FAQ laufen über zwanzig Zeilen
+und mehr; der Faden lässt sie frei auf dem Papier stehen, während Blüte und
+Kapsel sie in eine Fläche fassen, die mit jeder Zeile schwerer wird (Regel
+1.21.2: die Farbe zeigt den Zustand, das Papier trägt den Text). Drei Kleider
+zur freien Wahl in Craft hiessen drei Erscheinungen auf goetheanum.ch.
+
+**Wirkung.** Nur die Schau-Seite und ihr Hub-Eintrag. `akkordeon.css` behält
+alle drei Kleider, bis über die Alternativen endgültig entschieden ist. Offen
+dort: die Zeiger-Nase der Blüte richtet sich nach der Breite der Antwort
+(48ch), nicht der Karte, und steht darum rund 140 px links vom Knopf.
+
 ## 21. September 2026 — die Klappliste ausserhalb des Formulars (1.27.0)
 
 **Was.** Neue Utility `.select-inline` in `base.css`: eine Klappliste, die nicht
