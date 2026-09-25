@@ -16,7 +16,7 @@ Schauseite (lebend, rendert aus den Tokens): [`index.html`](index.html).
 | `base.css` | Basis-Komponenten (Kopf, Fuss, Karten, Knöpfe, Felder) und die Typo-Regeln als Voreinstellung. Setzt `tokens.css` voraus. Darin auch die Ton-Bausteine `.band`, `.kasten`, `.chip.ton`, `.btn.ton`, `.card.ton` – sie färben sich unter `data-sek`. |
 | `index.html` | Die Schauseite – Schaufenster und Werkbank zugleich. |
 | `starter.html` | Leeres Werkzeug mit allem Verdrahteten. Startpunkt für jede neue Seite. |
-| `akkordeon.css` · `akkordeon.js` | Modul Akkordeon: drei Kleider (Blüte, Faden, Kapsel) auf einer Mechanik, Sektionsfarben per `data-sek`. Schau und Code zum Kopieren: `../akkordeon.html`. |
+| `akkordeon.css` · `akkordeon.js` | Modul Akkordeon: Kleid **Faden** ist gesetzt, Blüte und Kapsel bleiben als Alternativen auf derselben Mechanik, Sektionsfarben per `data-sek`. Schau und Code zum Kopieren: `../akkordeon.html`. |
 
 Verwandte Quellen ausserhalb dieses Ordners: die Typo-Regeln liegen in
 `assets/typografie/goetheanum-typo-tokens.json` (`$regeln`) und ausführbar in
