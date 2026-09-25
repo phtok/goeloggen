@@ -114,6 +114,7 @@
   .titel h2.zweit{margin-top:3mm}
   .kopf2{margin:0 0 6mm 2mm}
   .kopf2 .zweit{font-weight:var(--w-ruhig)}
+  .blaetter.ohne-trennung,.blaetter.ohne-trennung *{hyphens:manual;-webkit-hyphens:manual}
   .blaetter.alles{--ft:var(--font-display);--fw:var(--w-laut)}
   .z .ort{color:var(--ort);display:inline-flex;align-items:baseline;align-self:start;justify-self:end;gap:.15em;white-space:nowrap} /* Ort rechtsbündig */
   .z .ort svg{width:.8em;height:.8em;fill:currentColor;flex:none;align-self:center}
@@ -186,7 +187,9 @@
     <h1 class="werkname">Goetheanum Folder erstellen</h1>
     <div class="reihe"><span class="lab" id="lab-farbe">Farbe</span><div class="fmenue" id="m-farbe"></div></div>
     <div class="reihe"><span class="lab" id="lab-schrift">Schrift</span><div class="fmenue" id="m-schrift"></div></div>
+    <div class="reihe"><span class="lab" id="lab-sprache1">Sprache</span><div class="fmenue" id="m-sprache1"></div></div>
     <div class="reihe"><span class="lab" id="lab-sprache">Zweite Sprache</span><div class="fmenue" id="m-sprache"></div></div>
+    <div class="reihe"><span class="lab" id="lab-trennung">Silbentrennung</span><div class="fmenue" id="m-trennung"></div></div>
     <div class="reihe"><span class="lab" id="lab-logo">Logo auf dem Titel</span><div class="fmenue" id="m-logo"></div></div>
     <div class="reihe"><span class="lab" id="lab-kante">Kante über dem Bild</span><div class="fmenue" id="m-kante"></div></div>
     <div class="reihe"><span class="lab" id="lab-marker">Marker auf der Karte</span><div class="fmenue" id="m-marker"></div></div>
@@ -248,7 +251,7 @@ const abstand=(a,b)=>{const d=[...Array(b.length+1).keys()];for(let i=1;i<=a.len
   for(let j=1;j<=b.length;j++){const t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return d[b.length]};
 let ORT_NAMEN=null;
 function ortFinden(name){const n=normOrt(name);if(!n)return null;
-  if(!ORT_NAMEN){ORT_NAMEN=[];ORTE.forEach(o=>[o.label.de,o.label.en,...o.label.de.split(" · "),...(o.label.en||"").split(" · ")]
+  if(!ORT_NAMEN){ORT_NAMEN=[];ORTE.forEach(o=>[o.label.de,o.label.en,...o.label.de.split(" · "),...(o.label.en||"").split(" · "),...(ORT_UEB[o.label.de]||[]).flatMap(u=>[u,...u.split(" · ")])]
     .forEach(l=>{const k=normOrt(l);if(k)ORT_NAMEN.push([k,o])}));
     Object.entries(SPITZNAMEN).forEach(([k,v])=>{const o=ORTE.find(o=>o.label.de===v);if(o)ORT_NAMEN.push([normOrt(k),o])})}
   const gleich=ORT_NAMEN.find(([k])=>k===n);if(gleich)return gleich[1];
@@ -324,16 +327,19 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 // Zeitspanne mit Halbgeviertstrich; keine unnötigen Nullen: 17 Uhr, 9.30, nie 17.00 oder 09.30.
 // Datum: einzeilig getippt → vor der Uhrzeit umbrechen (G22), «Uhr» ergänzen.
-const wannZeilen=w=>{w=strich(String(w||"")).replace(/(\d{4}),?\s+(?=(ab\s+)?\d{1,2}([.:]\d{2})?\s*[–-])/,"$1\n");
-  return w.split("\n").map(z=>/^(ab\s+)?\d{1,2}([.:]\d{2})?(–\d{1,2}([.:]\d{2})?)?$/.test(z.trim())?z.trim()+" Uhr":z).join("\n")};
+const wannZeilen=(w,sp=S.sprache1||"de")=>{w=String(w||"").replace(/(\d{4}),?\s+(?=(ab|from|dès|desde las)?\s*\d{1,2}([.:]\d{2}|\s*h\s*\d{2})?\s*[–-])/,"$1\n");
+  return w.split("\n").map(z=>istZeit(z)?zeitSetzen(zeitNeutral(z),sp):z).join("\n")};
 // Titel: kurze Wörter nicht am Zeilenende stehen lassen («Offener Tag / am Goetheanum»).
-const binden=t=>String(t||"").replace(/(^|\s)(am|im|an|in|zu|zum|zur|und|für|von|vom|mit|bei|auf|aus|um|der|die|das|des|dem|den|ein|eine) /gi,"$1$2\u00a0");
+const BINDE={de:"am|im|an|in|zu|zum|zur|und|für|von|vom|mit|bei|auf|aus|um|der|die|das|des|dem|den|ein|eine",
+  en:"a|an|the|of|to|in|at|on|and|for|with|by|from",fr:"à|au|aux|de|du|des|le|la|les|un|une|et|en|pour|sur|dans|avec",es:"a|al|de|del|el|la|los|las|un|una|y|e|en|con|por|para"};
+const binden=(t,sp=S.sprache1||"de")=>String(t||"").replace(new RegExp(`(^|\\s)(${BINDE[sp]||BINDE.de}) `,"gi"),"$1$2\u00a0");
 // Adresse: Postleitzahl und Ort zusammen, «·» bleibt am Wort davor.
 const adresse=t=>String(t||"").replace(/\b(\d{4,5}) (?=\S)/g,"$1\u00a0").replace(/ · /g,"\u00a0· ");
 // Zweite Sprache: Kurzname, Kopf «Programm», Datum aus dem deutschen ableiten.
-const SPR={en:{kurz:"EN",name:"Englisch",programm:"Programme",tage:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],monate:["January","February","March","April","May","June","July","August","September","October","November","December"]},
-  fr:{kurz:"FR",name:"Französisch",programm:"Programme",tage:["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"],monate:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"]},
-  es:{kurz:"ES",name:"Spanisch",programm:"Programa",tage:["domingo","lunes","martes","miércoles","jueves","viernes","sábado"],monate:["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]}};
+const SPR={de:{kurz:"DE",name:"Deutsch",lang:"de-CH",programm:"Programm",pause:"Pause",tage:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"],monate:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]},
+  en:{kurz:"EN",name:"Englisch",lang:"en-GB",programm:"Programme",pause:"Break",tage:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],monate:["January","February","March","April","May","June","July","August","September","October","November","December"]},
+  fr:{kurz:"FR",name:"Französisch",lang:"fr-CH",programm:"Programme",pause:"Pause",tage:["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"],monate:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"]},
+  es:{kurz:"ES",name:"Spanisch",lang:"es",programm:"Programa",pause:"Pausa",tage:["domingo","lunes","martes","miércoles","jueves","viernes","sábado"],monate:["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]}};
 // Beispielübersetzung: steht noch das Beispiel im Folder, füllt die zweite Sprache sich mit vor.
 const BEISPIEL2={
   en:{titel:"Open Day at the Goetheanum",texte:{"Ankommen, Kaffee und Tee":"Arrival, coffee and tea","Musikalische Eröffnung":"Musical opening",
@@ -351,21 +357,30 @@ const BEISPIEL2={
     "Pause":"Pausa","<b>Forschung</b> – Vorname Name; Vorname Name":"<b>Investigación</b> – Nombre Apellido; Nombre Apellido","<b>Kunst</b> – Führung durch das Haus":"<b>Arte</b> – visita guiada al edificio",
     "Mittagessen":"Almuerzo","<b>Garten</b> – Rundgang mit Vorname Name":"<b>Jardín</b> – paseo con Nombre Apellido","Gespräch im Plenum":"Conversación en plenario",
     "Musikalischer Abschluss":"Cierre musical","Ausklang und Getränke":"Despedida con bebidas"}}};
-function beispielUebersetzen(sp){const B2=BEISPIEL2[sp];if(!B2)return;
-  if(S.titel===BEISPIEL.titel&&!S.titel2)S.titel2=B2.titel;
-  S.seiten.flat().forEach(z=>{if(!z.text2&&B2.texte[z.text])z.text2=B2.texte[z.text]})}
-const TAGE_DE=["sonntag","montag","dienstag","mittwoch","donnerstag","freitag","samstag"];
-function wannUebersetzen(w,sp){const L=SPR[sp];if(!L)return "";
-  return String(w||"").split("\n").map(z=>{const m=z.match(/^(\w+),?\s*(\d{1,2})\.\s*(\S+)\s+(\d{4})$/i);
-    if(m){const t=TAGE_DE.indexOf(m[1].toLowerCase()),mo=MONATE.indexOf(m[3].toLowerCase()),tag=L.tage[t]||m[1],mon=L.monate[mo]||m[3],d=+m[2];
-      if(sp==="en")return `${tag}, ${d} ${mon} ${m[4]}`;
-      if(sp==="fr")return `${tag[0].toUpperCase()+tag.slice(1)} ${d===1?"1er":d} ${mon} ${m[4]}`;
-      return `${tag[0].toUpperCase()+tag.slice(1)}, ${d} de ${mon} de ${m[4]}`}
-    const u=z.replace(/\s*Uhr$/,"");if(u===z)return z;
-    if(sp==="fr")return u.replace(/(\d{1,2})\.(\d{2})/g,"$1 h $2").replace(/(^|–)(\d{1,2})(?=–|$)/g,"$1$2 h").replace(/–/g," – ");
-    if(sp==="es")return u+" h";
-    return u})
-  .join("\n")}
+// Beispieltexte folgen der Sprachwahl: Hauptsprache oben, zweite darunter. Eigene Texte bleiben.
+const ohneNb=t=>String(t||"").replace(/\u00a0/g," ");
+const bspText=(sp,k)=>sp==="de"?k:(BEISPIEL2[sp]?.texte[k]??k);
+const bspTitel=sp=>sp==="de"?BEISPIEL.titel:BEISPIEL2[sp]?.titel;
+const bspKey=t=>{t=ohneNb(t);for(const k of Object.keys(BEISPIEL2.en.texte))if(["de","en","fr","es"].some(sp=>bspText(sp,k)===t))return k;return null};
+const istBspTitel=t=>["de","en","fr","es"].some(sp=>bspTitel(sp)===ohneNb(t));
+function beispielSprachen(){const s1=S.sprache1||"de",s2=S.sprache2;
+  if(istBspTitel(S.titel)){S.titel=bspTitel(s1);if(!S.titel2||istBspTitel(S.titel2))S.titel2=s2?bspTitel(s2):""}
+  S.seiten.flat().forEach(z=>{const k=bspKey(z.text);if(k==null)return;z.text=bspText(s1,k);
+    if(!z.text2||bspKey(z.text2)!=null)z.text2=s2?bspText(s2,k):""})}
+// Datum in einer Sprache lesen: Wochentag, Tag, Monat, Jahr (Namen aus SPR).
+const klein=t=>t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+function datumLesen(z,sp){const L=SPR[sp]||SPR.de,w=klein(z),y=w.match(/\b(\d{4})\b/);if(!y)return null;
+  const mo=L.monate.findIndex(m=>new RegExp(`\\b${klein(m)}\\b`).test(w));if(mo<0)return null;
+  const t=L.tage.findIndex(x=>new RegExp(`\\b${klein(x)}\\b`).test(w)),d=w.replace(y[0],"").match(/\b(\d{1,2})(\.|er)?\b/);
+  return d?{t,d:+d[1],m:mo,y:y[1]}:null}
+function datumSetzen(D,sp){const L=SPR[sp],gross=x=>x?x[0].toUpperCase()+x.slice(1):"",tag=D.t>=0?L.tage[D.t]:"",mon=L.monate[D.m];
+  if(sp==="de")return `${tag?tag+", ":""}${D.d}. ${mon} ${D.y}`;
+  if(sp==="en")return `${tag?tag+", ":""}${D.d} ${mon} ${D.y}`;
+  if(sp==="fr")return `${tag?gross(tag)+" ":""}${D.d===1?"1er":D.d} ${mon} ${D.y}`;
+  return `${tag?gross(tag)+", ":""}${D.d} de ${mon} de ${D.y}`}
+function wannUebersetzen(w,von,nach){if(!SPR[nach])return "";
+  return String(w||"").split("\n").map(z=>{const D=datumLesen(z,von);if(D)return datumSetzen(D,nach);
+    return istZeit(z)?zeitSetzen(zeitNeutral(z),nach):z}).join("\n")}
 // Ortsname in der zweiten Sprache: von Hand gesetzt (S.leg2) oder vorgeschlagen –
 // Englisch aus dem Kartenwerkzeug, Französisch/Spanisch aus ORT_UEB. Eigennamen bleiben.
 const ORT_UEB={
@@ -377,15 +392,28 @@ const ORT_UEB={
   "Foyer":["Foyer","Vestíbulo"],"Speisehaus · Laden":["Restaurant · Boutique","Restaurante · Tienda"],"Kepler-Sternwarte":["Observatoire Kepler","Observatorio Kepler"],
   "Gästehaus Friedwart":["Maison d’hôtes Friedwart","Casa de huéspedes Friedwart"],"Wasserspiel":["Flowforms","Flowforms"],
   "Jugendsektionshaus":["Maison de la Section des jeunes","Casa de la Sección de Juventud"],"Studierendenwohnheim":["Résidence étudiante","Residencia de estudiantes"]};
-function ortVorschlag(o){const x=ortFinden(o);if(!x)return "";
-  const e=(S.sprache2==="en"?x.label.en||"":(ORT_UEB[x.label.de]||[])[S.sprache2==="fr"?0:1]||"").split(" · ")[0];
-  return e&&normOrt(e)!==normOrt(o)&&normOrt(e)!==normOrt(x.label.de)?e:""}
+// Ortsname in einer Sprache; leer, wenn unbekannt oder gleich geschrieben (Eigennamen bleiben).
+function ortIn(o,sp){const x=ortFinden(o);if(!x)return "";
+  const e=(sp==="de"?x.label.de:sp==="en"?x.label.en||"":(ORT_UEB[x.label.de]||[])[sp==="fr"?0:1]||"").split(" · ")[0];
+  return e&&normOrt(e)!==normOrt(o)?e:""}
+const ortVorschlag=o=>ortIn(o,S.sprache2);
 function ortZweit(o){if(!S.sprache2)return "";const v=(S.leg2||{})[S.sprache2+":"+o];return v!=null?v:ortVorschlag(o)}
 const strich=s=>s.replace(/(\d)\s*[-–]\s*(\d)/g,"$1–$2")
   .replace(/\b(\d{1,2})[.:]00\b/g,"$1").replace(/\b0(\d)(?=[.:]\d\d|\b(?!\.\s?\w))/g,"$1").replace(/\b(\d{1,2})[:](\d\d)\b/g,"$1.$2");
-// Jede Zeitangabe trägt «Uhr» (9.30–10 Uhr, ab 16.30 Uhr).
-const mitUhr=s=>{s=strich(s).trim();return /\d/.test(s)&&!/Uhr$/.test(s)?s+" Uhr":s};
-S.wann=wannZeilen(S.wann);S.seiten.forEach(L=>L.forEach(z=>z.zeit=mitUhr(z.zeit)));
+// Zeiten sprachneutral gespeichert («9.30–10», «ab 16.30»), gesetzt nach der Hauptsprache:
+// de 9.30–10 Uhr · en 9:30–10:00 · fr 9 h 30 – 10 h · es 9:30–10:00 h (ab: from, dès, desde las).
+const zeitNeutral=s=>strich(String(s||"").trim()
+  .replace(/^(ab|from|dès|à partir de|desde las|desde|a partir de las)\s+/i,"ab ")
+  .replace(/(\d{1,2})\s*h\s*(\d{2})/g,"$1.$2").replace(/(\d{1,2})\s*h\b/g,"$1")
+  .replace(/\s*(Uhr|h)\s*$/i,"").replace(/\s*[–-]\s*/g,"–")).trim();
+const istZeit=z=>/^(ab )?\d{1,2}(\.\d{2})?(–\d{1,2}(\.\d{2})?)?$/.test(zeitNeutral(z));
+function zeitSetzen(n,sp=S.sprache1||"de"){if(!/\d/.test(n||""))return n||"";
+  const ab=/^ab /.test(n),k=n.replace(/^ab /,""),hm=t=>{const [h,m]=t.split(".");return [h,m]};
+  if(sp==="en")return (ab?"from ":"")+k.split("–").map(t=>{const [h,m]=hm(t);return h+":"+(m||"00")}).join("–");
+  if(sp==="fr")return (ab?"dès ":"")+k.split("–").map(t=>{const [h,m]=hm(t);return h+" h"+(m?" "+m:"")}).join(" – ");
+  if(sp==="es")return (ab?"desde las ":"")+k.split("–").map(t=>{const [h,m]=hm(t);return h+":"+(m||"00")}).join("–")+" h";
+  return n+" Uhr"}
+S.wann=wannZeilen(S.wann);S.seiten.forEach(L=>L.forEach(z=>z.zeit=zeitNeutral(z.zeit)));
 
 // Nur Text und Fett überleben das Bearbeiten.
 function rein(html,zeilen=false){
@@ -411,7 +439,7 @@ const ed=(pfad,wert,tag="span",kl="",leer="",fett=false)=>
 let NR=[];const nrVon=o=>{const k=NR.indexOf((o||"").trim());return k<0?I.pin:`<span class="nr">${k+1}</span>`};
 function zeile(z,s,i){
   return `<div class="z${z.pause?" pause":""}">
-    ${ed(`seiten.${s}.${i}.zeit`,z.zeit,"span","zeit","Zeit")}
+    ${ed(`seiten.${s}.${i}.zeit`,zeitSetzen(z.zeit),"span","zeit","Zeit")}
     <span>${ed(`seiten.${s}.${i}.text`,z.text,"span","titeltext","Programmpunkt",true)}${S.sprache2?ed(`seiten.${s}.${i}.text2`,z.text2||"","span","zweit","Programmpunkt ("+SPR[S.sprache2].kurz+")",true):""}</span>
     <span class="ort">${nrVon(z.ort)}${ed(`seiten.${s}.${i}.ort`,z.ort,"span","","Ort")}</span>
     <span class="zwerk">
@@ -461,12 +489,13 @@ const svgUrl=t=>"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(t);
 const ORG={"bereich":"goetheanum","bereich-buehne":"buehne"};
 function sektionsLogo(f,mode="original"){
   const org=ORG[f]||f.replace(/^sek-/,"");
-  try{return LogoEngine.svg({cat:org==="goetheanum"||org==="buehne"?"allgemein":"sektionen",org,layout:"desktop",mode,lang:"de",txt:"",scale:1})}
+  try{return LogoEngine.svg({cat:org==="goetheanum"||org==="buehne"?"allgemein":"sektionen",org,layout:"desktop",mode,lang:S.sprache1||"de",txt:"",scale:1})}
   catch(e){console.warn(e);return ""}
 }
 function bauen(){
   const f=S.farbe, logo="../../assets/logos/goetheanum-logo.svg", sektLogo=sektionsLogo(f);
   const b=$("blaetter");NR=orte();b.classList.toggle("stimme",!!S.stimme);b.classList.toggle("alles",S.stimme==="alles");b.classList.toggle("zwei",!!S.sprache2);
+  b.classList.toggle("ohne-trennung",S.trennung===false);b.lang=SPR[S.sprache1||"de"].lang;
   // Schrift und Logo auf der Fläche immer weiss (B01). Trägt Weiss auf der Grundfarbe
 // nicht (unter 4.5:1), steht die abgedunkelte Variante des Farbsystems (-dunkel).
 // Werte aus dem hellen Satz der Tokens: das Papier ist immer weiss, auch im Dunkelmodus.
@@ -482,7 +511,7 @@ function bauen(){
       ${titelLogoSektion()?`<img class="marke sektion" src="${svgUrl(sektionsLogo(f,"white"))}" alt="${esc(FARBEN.find(x=>x&&x[0]===f)?.[1]||"")}" />`:`<img class="marke" src="${logo}" alt="Goetheanum" />`}
       ${ed("titel",binden(S.titel),"h2","","Titel")}
       ${ed("wann",S.wann,"p","wann","Datum und Zeit")}
-      ${S.sprache2?`${ed("titel2",binden(S.titel2||""),"h2","zweit","Titel ("+SPR[S.sprache2].kurz+")")}${ed("wann2",S.wann2||"","p","wann zweit","Datum ("+SPR[S.sprache2].kurz+")")}`:""}
+      ${S.sprache2?`${ed("titel2",binden(S.titel2||"",S.sprache2),"h2","zweit","Titel ("+SPR[S.sprache2].kurz+")")}${ed("wann2",S.wann2||"","p","wann zweit","Datum ("+SPR[S.sprache2].kurz+")")}`:""}
     </div>
     <div class="bild" style="background-image:url('${S.bild}')">${ed("credit",S.credit,"span","credit","Foto: Name")}</div>
   </article>
@@ -498,6 +527,7 @@ function bauen(){
     <div class="plus">${S.extra.map((x,k)=>ed(`extra.${k}`,x,"span","","Ort")).join(" ")}<button type="button" data-tat="neuleg">${I.plus}Weiterer Ort</button></div>
     <div class="fuss">${ed("kontakt",adresse(S.kontakt),"span","kontakt","Kontakt")}<img class="sektlogo" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(sektLogo)}" alt="${esc(FARBEN.find(x=>x&&x[0]===f)?.[1]||"Goetheanum")}" /></div>
   </article>`;
+  if(S.sprache2)b.querySelectorAll(".zweit").forEach(e=>e.lang=SPR[S.sprache2].lang);
   einpassen();karteVersetzen();markieren();sichern();karteFaerben();
 }
 
@@ -539,11 +569,14 @@ const B=$("blaetter");
 B.addEventListener("input",e=>{const el=e.target.closest("[data-pfad]");if(!el)return;
   if(/^leg2:/.test(el.dataset.pfad)){(S.leg2??={})[el.dataset.pfad.slice(5)]=el.innerText.trim();sichern();return}
   if(el.dataset.pfad==="kontakt"){S.kontakt=adresse(el.innerText);sichern();return}
+  if(/zeit$/.test(el.dataset.pfad)){setzen(el.dataset.pfad,zeitNeutral(el.innerText));einpassen();sichern();return}
   setzen(el.dataset.pfad,el.isContentEditable&&el.getAttribute("contenteditable")==="true"?rein(el.innerHTML,/^frei2?\./.test(el.dataset.pfad)):el.innerText);
   einpassen();sichern()});
 B.addEventListener("focusout",e=>{const el=e.target.closest("[data-pfad]");
   if(el&&/ort$|^extra\./.test(el.dataset.pfad)&&!B.contains(e.relatedTarget)){setTimeout(bauen);return}
-  if(el&&/zeit$|^wann$|^kontakt$/.test(el.dataset.pfad)){const p=el.dataset.pfad,v=p==="kontakt"?adresse(el.innerText):/zeit$/.test(p)?mitUhr(el.innerText):wannZeilen(el.innerText);if(v!==el.innerText){el.innerText=v;setzen(el.dataset.pfad,v);sichern()}}});
+  if(el&&/zeit$|^wann$|^kontakt$/.test(el.dataset.pfad)){const p=el.dataset.pfad;
+    if(/zeit$/.test(p)){const n=zeitNeutral(el.innerText),v=zeitSetzen(n);setzen(p,n);if(v!==el.innerText)el.innerText=v;sichern();return}
+    const v=p==="kontakt"?adresse(el.innerText):wannZeilen(el.innerText);if(v!==el.innerText){el.innerText=v;setzen(p,v);sichern()}}});
 B.addEventListener("keydown",e=>{const el=e.target.closest("[data-pfad]");if(!el||e.key!=="Enter")return;
   if(/^(wann|kontakt|frei2?\.\d)$/.test(el.dataset.pfad))return; // mehrzeilig erlaubt
   e.preventDefault();
@@ -557,7 +590,7 @@ B.addEventListener("click",e=>{const t=e.target.closest("[data-tat]");if(!t)retu
   const s=+t.dataset.s,i=+t.dataset.i,L=S.seiten[s];
   switch(t.dataset.tat){
     case "neu":L.push({zeit:"",text:"",ort:""});bauen();fokus(`seiten.${s}.${L.length-1}.zeit`);return;
-    case "neupause":L.push({zeit:"",text:"Pause",ort:"Foyer",pause:true});bauen();fokus(`seiten.${s}.${L.length-1}.zeit`);return;
+    case "neupause":L.push({zeit:"",text:SPR[S.sprache1||"de"].pause,...(S.sprache2?{text2:SPR[S.sprache2].pause}:{}),ort:"Foyer",pause:true});bauen();fokus(`seiten.${s}.${L.length-1}.zeit`);return;
     case "neuleg":S.extra.push("");bauen();fokus(`extra.${S.extra.length-1}`);return;
     case "pause":L[i].pause=!L[i].pause;break;
     case "weg":L.splice(i,1);break;
@@ -597,10 +630,25 @@ menue("m-farbe","lab-farbe",FARBEN.map(x=>x&&[x[0],`<span class="punkt" style="b
 menue("m-schrift","lab-schrift",[["alles","Nur Hausschrift","var(--font-display)"],["titel","Titel in Hausschrift","var(--font-display)"],[false,"Funktionaler","var(--font-text)"]]
   .map(([v,n,f])=>[v,`<span style="font-family:${f}">${n}</span>`]),()=>S.stimme===true?"titel":(S.stimme||false),v=>S.stimme=v);
 menue("m-marker","lab-marker",[["zusammen","Zusammenfassen"],["einzeln","Einzeln, wie gesetzt"],["ausweichen","Ausweichen mit Linie"]],()=>S.marker||"zusammen",v=>S.marker=v);
-menue("m-sprache","lab-sprache",[["","Keine"],["en","Englisch"],["fr","Französisch"],["es","Spanisch"]],()=>S.sprache2||"",v=>{const alt=S.sprache2;S.sprache2=v;if(v&&(!S.wann2||alt))S.wann2=wannUebersetzen(S.wann,v);
-  // Sprache gewechselt: Beispieltexte der alten Sprache durch die neue ersetzen
-  if(alt&&BEISPIEL2[alt]){if(S.titel2===BEISPIEL2[alt].titel)S.titel2="";S.seiten.flat().forEach(z=>{if(z.text2===BEISPIEL2[alt].texte[z.text])z.text2=""})}
-  if(v)beispielUebersetzen(v)});
+// Sprachen: die erste ist die Hauptsprache (Deutlich), die zweite steht darunter (Ruhig).
+// Wählt man die bisherige zweite als erste, tauschen beide Sprachen ihre Plätze samt Text.
+function sprachenSetzen(n1,n2){const a1=S.sprache1||"de",a2=S.sprache2||"";
+  if(n1===a1&&n2===a2)return;
+  if(n1===a2&&n2===a1){const t=(o,a,b)=>{[o[a],o[b]]=[o[b]??"",o[a]??""]};
+    t(S,"titel","titel2");t(S,"wann","wann2");S.seiten.flat().forEach(z=>t(z,"text","text2"));
+    [S.frei,S.frei2]=[S.frei2||["",""],S.frei||["",""]]}
+  else if(n1!==a1)S.wann=wannUebersetzen(S.wann,a1,n1);
+  // Ortsnamen folgen der Hauptsprache, soweit der Ort bekannt ist
+  if(n1!==a1){const um=o=>ortIn(o,n1)||o,orte={};Object.entries(S.orte).forEach(([o,p])=>orte[um(o)]=p);S.orte=orte;
+    S.seiten.flat().forEach(z=>{if(z.ort)z.ort=um(z.ort)});S.extra=S.extra.map(um)}
+  S.sprache1=n1;S.sprache2=n2;
+  if(n2&&!(n1===a2&&n2===a1))S.wann2=wannUebersetzen(S.wann,n1,n2);
+  beispielSprachen()}
+const SPRACHEN=[["de","Deutsch"],["en","Englisch"],["fr","Französisch"],["es","Spanisch"]];
+menue("m-sprache1","lab-sprache1",SPRACHEN,()=>S.sprache1||"de",v=>sprachenSetzen(v,v===S.sprache2?(S.sprache1||"de"):(S.sprache2||"")));
+menue("m-sprache","lab-sprache",[["","Keine"],...SPRACHEN],()=>S.sprache2||"",v=>{const a1=S.sprache1||"de";
+  if(v===a1){if(S.sprache2)sprachenSetzen(S.sprache2,a1);return}sprachenSetzen(a1,v)});
+menue("m-trennung","lab-trennung",[["an","An"],["aus","Aus"]],()=>S.trennung===false?"aus":"an",v=>S.trennung=v==="an");
 menue("m-logo","lab-logo",[["sektion","Logo der Sektion"],["goetheanum","Goetheanum"]],()=>S.titelLogo||"sektion",v=>S.titelLogo=v);
 menue("m-kante","lab-kante",KANTEN.map(([k,n])=>[k,esc(n)]),()=>S.kante,v=>S.kante=v);
 MOTIVE.forEach(([f,n,c])=>{const b=document.createElement("button");b.type="button";b.dataset.f=f;
@@ -623,6 +671,9 @@ B.addEventListener("pointerdown",e=>{const m=e.target.closest(".mk");if(!m)retur
 $("bild-waehlen").onclick=()=>$("f-bild").click();
 $("f-bild").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;
   const r=new FileReader();r.onload=()=>{S.bild=r.result;S.credit="Foto: ";bauen()};r.readAsDataURL(f)});
+// Für die Exporte: Zeiten in der Hauptsprache gesetzt, Titel je Sprache gebunden.
+function exportStand(){const X=structuredClone(S);X.seiten.forEach(L=>L.forEach(z=>z.zeit=zeitSetzen(z.zeit)));
+  X.titel=binden(S.titel);if(S.titel2)X.titel2=binden(S.titel2,S.sprache2);return X}
 // ---------- IDML: InDesign-Paket mit Bildern im Ordner «Links»
 const laden=src=>new Promise((ok,nein)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=nein;i.src=src});
 const alsBytes=c=>new Promise(ok=>c.toBlob(async b=>ok(new Uint8Array(await b.arrayBuffer())),"image/png"));
@@ -653,8 +704,8 @@ const MONATE=["januar","februar","märz","april","mai","juni","juli","august","s
 function dateiname(art){
   const slug=t=>String(t||"").toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
   const sekt=(FARBEN.find(x=>x&&x[0]===S.farbe)||[,""])[1].replace(/^(Allgemeine Anthroposophische )?Sektion (für )?/,"");
-  const m=String(S.wann).toLowerCase().match(/(\d{1,2})\.\s*([a-zäöü]+)\s+(\d{4})/),mo=m&&MONATE.indexOf(m[2])+1;
-  const datum=m&&mo?`${m[3]}-${String(mo).padStart(2,"0")}-${m[1].padStart(2,"0")}`:"";
+  const D=String(S.wann).split("\n").map(z=>datumLesen(z,S.sprache1||"de")).find(Boolean);
+  const datum=D?`${D.y}-${String(D.m+1).padStart(2,"0")}-${String(D.d).padStart(2,"0")}`:"";
   return [slug(S.titel)||"folder",slug(sekt),datum,art].filter(Boolean).join("_")}
 async function titelBild(){
   const bytes=new Uint8Array(await (await fetch(S.bild)).arrayBuffer()),i=await laden(S.bild);
@@ -667,7 +718,7 @@ $("idml").onclick=async e=>{const k=e.currentTarget,alt=k.textContent;k.disabled
       pause:aufloesen("color-mix(in srgb,var(--acc) 12%,#fff)"),gold:aufloesen("var(--mk)")}; // # ds-ok Tönung
     const bilder={titel:await titelBild(),plan:await planPng(),logo:await logoPng(true),logoBlau:await logoPng(false)};
     if(titelLogoSektion())bilder.titelLogo=await logoPng(true,sektionsLogo(f,"white"));
-    bilder.versatz=KARTE_VERSATZ;const zip=await baueIdml(S,farben,bilder,NR,S.sprache2?{programm:SPR[S.sprache2].programm,legende:NR.map(ortZweit)}:null);
+    bilder.versatz=KARTE_VERSATZ;const zip=await baueIdml(exportStand(),farben,bilder,NR,S.sprache2?{programm:SPR[S.sprache2].programm,legende:NR.map(ortZweit)}:null);
     const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([zip],{type:"application/zip"}));
     a.download=dateiname("indesign")+".zip";a.click();archivieren("idml");setTimeout(()=>URL.revokeObjectURL(a.href),4000);
   }catch(err){console.error(err);k.textContent="Export fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
@@ -690,7 +741,7 @@ const pdfBauen=async e=>{const k=e.currentTarget,alt=k.textContent,druck=k.datas
     const grad=parseFloat(document.querySelector(".seite.prog").style.getPropertyValue("--grad"))||12;
     const logoSvg=await (await fetch("../../assets/logos/goetheanum-logo.svg")).text();
     const titel=druck?await zuschnitt(S.bild,154,103,300,.95):await zuschnitt(S.bild,148,100,150,.78);
-    const doc=await bauePdf(S,f,{titel,titelLogo:titelLogoSektion()?sektionsLogo(S.farbe,"white"):null,plan:await planOhneNummern(druck),marker:markerFuerExport(),versatz:KARTE_VERSATZ,zweit:S.sprache2?{programm:SPR[S.sprache2].programm,legende:NR.map(ortZweit)}:null},NR,lage,grad,logoSvg,druck,sektionsLogo(S.farbe));
+    const doc=await bauePdf(exportStand(),f,{titel,titelLogo:titelLogoSektion()?sektionsLogo(S.farbe,"white"):null,plan:await planOhneNummern(druck),marker:markerFuerExport(),versatz:KARTE_VERSATZ,zweit:S.sprache2?{programm:SPR[S.sprache2].programm,legende:NR.map(ortZweit)}:null},NR,lage,grad,logoSvg,druck,sektionsLogo(S.farbe));
     doc.save(dateiname(druck?"a5-druck-3mm":"a5-versand")+".pdf");archivieren(druck?"pdf-druck":"pdf-versand");
   }catch(err){console.error(err);k.textContent="PDF fehlgeschlagen";setTimeout(()=>k.textContent=alt,3000);return}
   finally{k.disabled=false}k.textContent=alt};
