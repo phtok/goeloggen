@@ -358,6 +358,8 @@
     var pct = ziel > 0 ? Math.round(total / ziel * 100) : 0;
     el('kZiel').textContent = pct + ' %';
     el('kTempo').textContent = t.tempo.toFixed(1).replace('.', ',');
+    // Nach der Frist ist ein Tagestempo eine Erinnerung, keine Auskunft (G03).
+    el('kTempo').parentNode.hidden = !(t.rest > 0);
     // «Abos/Tag nötig» beantwortet nur eine Frage: Was fehlt noch bis zur
     // Zielmarke? Ist sie übertroffen oder die Aktion vorbei, fehlt nichts mehr
     // – die Kachel stand dann auf 0,0 und sagte nichts (G03: was entbehrlich
@@ -410,7 +412,9 @@
         var top = document.createElement('span');
         top.textContent = 'Spitze ' + fmt(t.byDay[spitze] || 0) + ' am ' + new Date(spitze + 'T00:00:00').toLocaleDateString('de-CH', { day:'numeric', month:'numeric' });
         var bis = document.createElement('span');
-        bis.textContent = 'heute ' + fmt(t.byDay[alle[alle.length - 1]] || 0);
+        var letzter = alle[alle.length - 1];
+        bis.textContent = (t.rest > 0 ? 'heute ' : dmy(new Date(letzter + 'T00:00:00')) + ' · ') +
+                          fmt(t.byDay[letzter] || 0);
         lab.appendChild(von); lab.appendChild(top); lab.appendChild(bis);
       }
     }
@@ -1966,7 +1970,9 @@
     if (card){
       if(!kohorten || !kohorten.length){ card.innerHTML = '<div class="empty">Noch keine Kohorte.</div>'; }
       else {
-        var k = kohorten[kohorten.length - 1];
+        // Die früheste Kohorte mit offenen Entscheidungen – die, über die als
+        // Nächstes entschieden wird; sind alle entschieden, die letzte.
+        var k = kohorten.filter(function(x){ return Number(x.offen) > 0; })[0] || kohorten[kohorten.length - 1];
         var neu = Number(k.neu), bleibt = Number(k.bleibt), offen = Number(k.offen);
         var projektiert = bleibt + Math.round(offen * mischQuote(stats, ref));
         var quote = neu > 0 ? Math.round(projektiert / neu * 100) : 0;
@@ -1983,7 +1989,14 @@
         card.querySelector('.ring .inner').textContent = quote + '%';
         card.querySelector('.txt b').textContent = '~' + fmt(projektiert) + ' bleiben voraussichtlich zahlend';
         card.querySelector('.txt .m').textContent = fmt(offen) + ' Entscheidungen noch offen · ' + fmt(bleibt) + ' bereits umgewandelt';
-        card.querySelector('.chip').textContent = 'Szenario ' + ref.name + ' · noch hat keine Kohorte entschieden';
+        // Nach dem Entscheidungstag ohne gemeldete Umwandlung wäre «noch hat
+        // keine Kohorte entschieden» falsch: entschieden ist, gemeldet nicht.
+        var faellig = kohorten.filter(function(x){ return new Date(x.entscheidung_ab + 'T00:00:00') <= new Date(); });
+        var gemeldet = faellig.some(function(x){ return Number(x.bleibt) > 0; });
+        card.querySelector('.chip').textContent = 'Szenario ' + ref.name + ' · ' +
+          (!faellig.length ? 'noch hat keine Kohorte entschieden'
+           : gemeldet ? 'erste Kohorte entschieden'
+           : 'Entscheidung fällig seit ' + dmy(new Date(faellig[0].entscheidung_ab + 'T00:00:00')) + ', noch keine Umwandlung gemeldet');
       }
     }
 
@@ -2292,13 +2305,20 @@
     };
     var kosten = (posten || []).reduce(function(s, k){ return s + (Number(k.betrag) || 0); }, 0);
     var ref = (revenue && revenue.szenario) || referenzSzenario();
+    // Der Umsatz steht hier als Spanne, nicht als Referenzzahl: Eine einzelne
+    // grosse Zahl liest sich als Ergebnis, solange keine Kohorte entschieden
+    // hat (#526). Die Referenz nennt die Notiz.
+    var spanne = szenarien().map(function(sz){ return projectRevenue(stats || [], sz).chfGesamt; });
+    var tsd = function(n){ return Math.round(n / 1000).toLocaleString('de-CH'); };
+    var abos = je('wos') + je('gtv');
     var karten = [
-      { n:'Wochenschrift', w:fmt(je('wos')), m:'Papier und Digital, Deutsch und Englisch' },
-      { n:'goetheanum.tv', w:fmt(je('gtv')), m:'ein Strom, Sprache dort nicht gemessen' },
-      { n:'Folgejahr-Umsatz', w:geld(revenue ? revenue.chfGesamt : 0),
-        m:'Szenario ' + ref.name + ' – eine Rechnung, keine Messung' },
-      { n:'Kosten erfasst', w:geld(kosten),
-        m:kosten > 0 ? 'Stand der Kosten-Seite' : 'noch nichts erfasst' }
+      { n:'Wochenschrift', w:fmt(je('wos')), m:'neue Abos, Papier und Digital' },
+      { n:'goetheanum.tv', w:fmt(je('gtv')), m:'neue Abos' },
+      { n:'Folgejahr-Umsatz, ' + CONFIG.waehrung,
+        w:spanne.length ? tsd(Math.min.apply(null, spanne)) + '–' + tsd(Math.max.apply(null, spanne)) + ' Tsd.' : '–',
+        m:ref.name + ' ' + geld(revenue ? revenue.chfGesamt : 0) + ' · gerechnet, nicht gemessen' },
+      { n:'Kosten', w:geld(kosten),
+        m:kosten > 0 && abos > 0 ? geldFein(kosten / abos) + ' je Abo' : 'noch nichts erfasst' }
     ];
     host.innerHTML = '';
     karten.forEach(function(k){

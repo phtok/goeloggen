@@ -326,3 +326,16 @@
     .conv{gap:var(--s4)}
     .ring{width:88px;height:88px} .ring .inner{width:64px;height:64px}
   }
+
+  /* Schlussbericht: Sprungleiste unter dem Titel – die Fragen, nach denen
+     der Bericht gegliedert ist. Links, kein Schmuck (G03); Fingerziel B04. */
+  .sprung{display:flex;flex-wrap:wrap;gap:0 var(--s5);margin-top:var(--s5);font-family:var(--font-text);font-size:var(--t-small)}
+  .sprung a{min-height:var(--tap);display:inline-flex;align-items:center}
+  /* Lehren: Kernsatz offen, Begründung in der Klappe. Eine Liste, die man in
+     einer Bildschirmhöhe überfliegt. */
+  .befunde{font-family:var(--font-text)}
+  .befund{border-top:1px solid var(--line-soft)}
+  .befund:first-child{border-top:0}
+  .befund>summary{cursor:pointer;font-weight:600;color:var(--ink);min-height:var(--tap);padding:var(--s2) 0;line-height:1.45}
+  .befund>p{max-width:min(var(--measure),100%);line-height:var(--lh-body);margin:0 0 var(--s4)}
+  .panel>.zb-form:first-child{margin-top:0}
