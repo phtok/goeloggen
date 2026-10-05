@@ -79,16 +79,33 @@ $$;
 create or replace function public.sommer2026_kohorten()
 returns table(kohorte date, neu bigint, bleibt bigint, gekuendigt bigint, offen bigint, entscheidung_ab date)
 language sql security definer set search_path to 'public' as $$
-  select date_trunc('month', signed_up_at)::date                        as kohorte,
-         count(*)::bigint                                                as neu,
-         count(*) filter (where status = 'bleibt')::bigint              as bleibt,
-         count(*) filter (where status = 'gekuendigt')::bigint          as gekuendigt,
-         count(*) filter (where status in ('neu','laeuft-aus'))::bigint  as offen,
-         (date_trunc('month', signed_up_at) + interval '3 months')::date as entscheidung_ab
-    from public.sommer2026_signups
+  -- Die Gratiszeit dauert 90 Tage ab Anmeldung, nicht ab Monatsanfang:
+  -- entscheidung_ab ist der erste Fälligkeitstag der Kohorte (seit 5. 10. 2026).
+  select date_trunc('month', signed_up_at)::date                         as kohorte,
+         count(*)::bigint                                                 as neu,
+         count(*) filter (where status = 'bleibt')::bigint                as bleibt,
+         count(*) filter (where status = 'gekuendigt')::bigint            as gekuendigt,
+         count(*) filter (where status in ('neu','laeuft-aus'))::bigint   as offen,
+         (min(signed_up_at) + interval '90 days')::date                   as entscheidung_ab
+    from public.sommer2026_neuabos
    group by date_trunc('month', signed_up_at)
    order by kohorte;
 $$;
+
+-- 3b) Die Fälligen: goetheanum.tv-Abos, deren 90 Gratistage um sind – gemessen,
+-- weil allein dort ein Webhook Zahlung (→ bleibt) und Kündigung meldet.
+-- «ohne Zahlung» = faellig − bleibt − gekuendigt (meist fehlgeschlagene Zahlung).
+create or replace function public.sommer2026_faellig()
+returns table(faellig bigint, bleibt bigint, gekuendigt bigint, naechste date)
+language sql security definer set search_path to 'public' as $$
+  select count(*) filter (where signed_up_at + interval '90 days' <= now())::bigint,
+         count(*) filter (where signed_up_at + interval '90 days' <= now() and status = 'bleibt')::bigint,
+         count(*) filter (where signed_up_at + interval '90 days' <= now() and status = 'gekuendigt')::bigint,
+         min((signed_up_at + interval '90 days')::date) filter (where signed_up_at + interval '90 days' > now())
+    from public.sommer2026_neuabos
+   where produkt = 'gtv';
+$$;
+grant execute on function public.sommer2026_faellig() to anon, authenticated;
 
 -- 4) Attribution: Anmeldungen je Herkunftsweg
 create or replace function public.sommer2026_kanaele()

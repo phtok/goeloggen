@@ -6,8 +6,10 @@
 //
 // Aktions-Isolierung: jede Neuanmeldung im Aktionszeitraum → status 'neu' (jeder
 // Trial hinterlegt eine Karte, darum ist transaction_id KEIN Unterscheidungsmerkmal).
-// Zahlungen setzen (noch) KEIN 'bleibt' – die Umwandlung wird erst nach der
-// 3-Monats-Frist bestimmt. Kündigung → 'gekuendigt'.
+// Eine Zahlung über 0 frühestens 80 Tage nach der Anmeldung ist die erste
+// nach der Gratiszeit (90 Tage) → 'bleibt' (seit 5. Oktober 2026; davor
+// gab es diesen Schritt nicht). Frühere Zahlungen sind die 0.00-Karten-
+// hinterlegung des Trials. Kündigung → 'gekuendigt'.
 // Optional schärfer via aktion_coupon / aktion_plan.
 //
 // Verlängerung ≠ Abschluss (Beschluss 10. August 2026): Uscreen feuert
@@ -222,10 +224,12 @@ Deno.serve(async (req) => {
   const isCancel = /(cancel|refund|expire|churn|delet)/.test(e);
 
   if (isCancel) { await patchStatus(dedupKey, "gekuendigt"); return json({ ok: true, status: "gekuendigt" }); }
-  // Jeder Trial hinterlegt eine Karte → Zahlung fällt sofort an. Darum setzt eine
-  // Zahlung (noch) KEIN 'bleibt': die echte Umwandlung wird erst nach der
-  // 3-Monats-Frist bestimmt (separater Schritt im Oktober). EIN Feld wird aber
-  // mitgenommen: das Herkunftsland – nur die Zahlung trägt es.
+  // Jeder Trial hinterlegt eine Karte → bei der Anmeldung fällt eine Zahlung
+  // über 0.00 an. Die Umwandlung ist erst die erste Zahlung über 0 nach der
+  // Gratiszeit: 90 Tage, geprüft mit 80 Tagen Abstand zur Anmeldung, damit
+  // keine frühe Sofortzahlung als Umwandlung zählt. Gesetzt wird nur auf
+  // einer Zeile, die noch 'neu' ist. Ausserdem trägt nur die Zahlung das
+  // Herkunftsland.
   if (isPay && !isNew) {
     const herkunft = landAus(data);
     if (herkunft) {
@@ -234,7 +238,18 @@ Deno.serve(async (req) => {
         body: JSON.stringify({ land: herkunft }),
       }).catch(() => {});
     }
-    return json({ ok: true, note: "Zahlung ignoriert (Umwandlung erst nach 3 Monaten)", land: !!herkunft });
+    const betrag = Number(pick(data, ["amount", "total", "price"]) ?? 0);
+    let umgewandelt = false;
+    if (betrag > 0) {
+      const grenze = new Date(Date.now() - 80 * 24 * 3600 * 1000).toISOString();
+      const r = await fetch(`${SB}/rest/v1/sommer2026_signups?dedup_key=eq.${encodeURIComponent(dedupKey)}` +
+        `&status=eq.neu&signed_up_at=lt.${encodeURIComponent(grenze)}`, {
+        method: "PATCH", headers: { ...H, Prefer: "return=representation" },
+        body: JSON.stringify({ status: "bleibt" }),
+      }).then((x) => x.ok ? x.json() : []).catch(() => []);
+      umgewandelt = Array.isArray(r) && r.length > 0;
+    }
+    return json({ ok: true, note: umgewandelt ? "Umwandlung → bleibt" : "Zahlung ohne Umwandlung", land: !!herkunft });
   }
 
   // «User Created» ist KEINE Aktions-Anmeldung (Registrierung ≠ Abo) – aber es
