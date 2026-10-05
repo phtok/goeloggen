@@ -1989,14 +1989,18 @@
         card.querySelector('.ring .inner').textContent = quote + '%';
         card.querySelector('.txt b').textContent = '~' + fmt(projektiert) + ' bleiben voraussichtlich zahlend';
         card.querySelector('.txt .m').textContent = fmt(offen) + ' Entscheidungen noch offen · ' + fmt(bleibt) + ' bereits umgewandelt';
-        // Nach dem Entscheidungstag ohne gemeldete Umwandlung wäre «noch hat
-        // keine Kohorte entschieden» falsch: entschieden ist, gemeldet nicht.
-        var faellig = kohorten.filter(function(x){ return new Date(x.entscheidung_ab + 'T00:00:00') <= new Date(); });
-        var gemeldet = faellig.some(function(x){ return Number(x.bleibt) > 0; });
-        card.querySelector('.chip').textContent = 'Szenario ' + ref.name + ' · ' +
-          (!faellig.length ? 'noch hat keine Kohorte entschieden'
-           : gemeldet ? 'erste Kohorte entschieden'
-           : 'Entscheidung fällig seit ' + dmy(new Date(faellig[0].entscheidung_ab + 'T00:00:00')) + ', noch keine Umwandlung gemeldet');
+        // Gemessen statt gerechnet, sobald Gratiszeiten ablaufen: goetheanum.tv
+        // meldet Zahlung und Kündigung, die Fälligen stehen darum als Zählung
+        // da. «ohne Zahlung» heisst fällig, aber weder bezahlt noch gekündigt –
+        // meist eine fehlgeschlagene Zahlung, die Uscreen noch einmal versucht.
+        var chip = card.querySelector('.chip');
+        chip.textContent = 'Szenario ' + ref.name;
+        rpc('sommer2026_faellig').then(function(r){
+          var f = (r && r[0]) || {};
+          var fae = Number(f.faellig) || 0, faeB = Number(f.bleibt) || 0, faeG = Number(f.gekuendigt) || 0;
+          if (fae > 0) chip.textContent = 'goetheanum.tv bisher fällig ' + fmt(fae) + ' · bezahlt ' + fmt(faeB) +
+            ' · gekündigt ' + fmt(faeG) + ' · ohne Zahlung ' + fmt(fae - faeB - faeG);
+        }).catch(function(){});
       }
     }
 

@@ -171,8 +171,12 @@ verfeinern.
 - **Aktions-Isolierung:** jede Neuanmeldung (`subscription_assigned` u. ä.) im
   Aktionszeitraum zählt als `neu`. Trials hinterlegen eine Kreditkarte, darum ist
   `transaction_id` **kein** Unterscheidungsmerkmal. Verlängerungen legen nichts an
-  (nur Neuanmeldungen). Kündigung → `gekuendigt`. **Zahlungen setzen vorerst kein
-  `bleibt`** – die Umwandlung wird erst nach der 3-Monats-Frist bestimmt. Zeitlich
+  (nur Neuanmeldungen). Kündigung → `gekuendigt`. **Umwandlung (seit 5. Oktober
+  2026):** die erste Zahlung über 0 frühestens 80 Tage nach der Anmeldung setzt
+  `bleibt` (Gratiszeit 90 Tage; die 0.00-Zahlung bei der Anmeldung ist nur die
+  hinterlegte Karte). Die bis dahin eingegangenen Zahlungen sind einmalig aus
+  dem Roh-Log nachgetragen; `sommer2026_faellig()` zählt fällig · bezahlt ·
+  gekündigt. Zeitlich
   begrenzt durch `aktion_start` **und `aktion_ende`**; schärfer stellbar über
   `aktion_coupon` / `aktion_plan`.
 - **Die Aktion hat ein Ende (`aktion_ende`, seit 25. August).** Nach hinten war
