@@ -107,6 +107,29 @@ language sql security definer set search_path to 'public' as $$
 $$;
 grant execute on function public.sommer2026_faellig() to anon, authenticated;
 
+-- 3c) Tatsächliche Einnahmen der Aktions-Abos (goetheanum.tv): je Zahlung ein
+-- success_recurring über 0, entdoppelt über transaction_id, je Währung (Uscreen
+-- belastet je Land in CHF, EUR oder USD). Ohne 0.00-Kartenhinterlegung und ohne
+-- Einzelkäufe. Die Wochenschrift hat keinen Meldeweg für Zahlungen.
+create or replace function public.sommer2026_einnahmen()
+returns table(waehrung text, zahlungen bigint, abos bigint, summe numeric)
+language sql security definer set search_path to 'public' as $$
+  with z as (
+    select distinct on (r.payload->>'transaction_id')
+           coalesce(upper(r.payload->>'currency'), 'EUR') as waehrung,
+           (r.payload->>'amount')::numeric                 as betrag,
+           n.ext_id
+      from public.sommer2026_neuabos n
+      join public.sommer2026_ingest_raw r
+        on r.source = 'uscreen' and r.event = 'success_recurring'
+       and r.payload->>'user_id' = n.ext_id and r.received_at > n.signed_up_at
+     where n.produkt = 'gtv' and coalesce((r.payload->>'amount')::numeric, 0) > 0
+  )
+  select waehrung, count(*)::bigint, count(distinct ext_id)::bigint, sum(betrag)
+    from z group by waehrung order by waehrung;
+$$;
+grant execute on function public.sommer2026_einnahmen() to anon, authenticated;
+
 -- 4) Attribution: Anmeldungen je Herkunftsweg
 create or replace function public.sommer2026_kanaele()
 returns table(kanal text, n bigint)

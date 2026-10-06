@@ -333,9 +333,10 @@
   .sprung a{min-height:var(--tap);display:inline-flex;align-items:center}
   /* Lehren: Kernsatz offen, Begründung in der Klappe. Eine Liste, die man in
      einer Bildschirmhöhe überfliegt. */
-  .befunde{font-family:var(--font-text)}
-  .befund{border-top:1px solid var(--line-soft)}
-  .befund:first-child{border-top:0}
-  .befund>summary{cursor:pointer;font-weight:600;color:var(--ink);min-height:var(--tap);padding:var(--s2) 0;line-height:1.45}
-  .befund>p{max-width:min(var(--measure),100%);line-height:var(--lh-body);margin:0 0 var(--s4)}
+  /* Kernsatz und Begründung in Hinweisgrösse: die Liste ist Nachlese, nicht
+     Hauptsache. Die Begründung steht unter dem Kernsatz eingerückt und
+     gedämpft – Struktur, keine Auszeichnung (G01). */
+  .befunde{font-family:var(--font-text);font-size:var(--t-small);line-height:1.5}
+  .befund>summary{cursor:pointer;font-weight:600;color:var(--ink);min-height:var(--tap);padding:.6em 0;box-sizing:border-box}
+  .befund>p{max-width:min(var(--measure),100%);color:var(--muted);line-height:1.6;margin:0 0 var(--s4) 1.15em}
   .panel>.zb-form:first-child{margin-top:0}

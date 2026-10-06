@@ -82,6 +82,9 @@
     // Umrechnung EUR→CHF – nur für die Summenzeile (EUR-Umsatz in die
     // CHF-Gesamtsumme einrechnen). Bei Kursbewegung hier nachführen.
     eurChf: 0.93,
+    // Nur für die tatsächlichen Einnahmen: Uscreen belastet je nach Land auch
+    // in USD. Kurs grob, Stand Oktober 2026 – das Ergebnis trägt darum ein ≈.
+    usdChf: 0.80,
     // ECHTE Preise (Stand 17.7.2026): Wochenschrift aus den vier Kampagnen-
     // Formularen (Paperform, CHF/EUR × Papier&Online/Online), goetheanum.tv aus
     // dem Uscreen-Store (rechnet ausschliesslich in EUR: 14.90/Monat, 149/Jahr).
@@ -353,7 +356,8 @@
     var t = tempoUndPrognose(timeline);
     var ziel = CONFIG.zielGesamt || 0;
     el('standZahl').textContent = fmt(total);
-    el('standUnter').textContent = 'neue Abos · Ziel ' + fmt(ziel) +
+    var jeP = function(p){ return (lastStats || []).reduce(function(s, r){ return r.produkt === p ? s + Number(r.n || 0) : s; }, 0); };
+    el('standUnter').textContent = 'neue Abos · ' + fmt(jeP('wos')) + ' Wochenschrift · ' + fmt(jeP('gtv')) + ' goetheanum.tv · Ziel ' + fmt(ziel) +
       (t.rest > 0 ? (' · noch ' + t.rest + ' Tage bis ' + dmy(new Date(CONFIG.ende + 'T00:00:00'))) : ' · Aktion beendet');
     var pct = ziel > 0 ? Math.round(total / ziel * 100) : 0;
     el('kZiel').textContent = pct + ' %';
@@ -2315,22 +2319,38 @@
     var spanne = szenarien().map(function(sz){ return projectRevenue(stats || [], sz).chfGesamt; });
     var tsd = function(n){ return Math.round(n / 1000).toLocaleString('de-CH'); };
     var abos = je('wos') + je('gtv');
+    // Drei Geldzahlen nebeneinander: was wirklich eingegangen ist (gemessen),
+    // was das Folgejahr bringen kann (gerechnet, als Spanne) und was die
+    // Aktion gekostet hat. Die Abozahlen je Angebot stehen unter der grossen Zahl.
     var karten = [
-      { n:'Wochenschrift', w:fmt(je('wos')), m:'neue Abos, Papier und Digital' },
-      { n:'goetheanum.tv', w:fmt(je('gtv')), m:'neue Abos' },
+      { id:'kEinnahmen', n:'Eingenommen bisher, ' + CONFIG.waehrung, w:'–', m:'lädt …' },
       { n:'Folgejahr-Umsatz, ' + CONFIG.waehrung,
         w:spanne.length ? tsd(Math.min.apply(null, spanne)) + '–' + tsd(Math.max.apply(null, spanne)) + ' Tsd.' : '–',
-        m:ref.name + ' ' + geld(revenue ? revenue.chfGesamt : 0) + ' · gerechnet, nicht gemessen' },
+        m:'gerechnet, nicht gemessen · ' + ref.name + ' ' + geld(revenue ? revenue.chfGesamt : 0) },
       { n:'Kosten', w:geld(kosten),
         m:kosten > 0 && abos > 0 ? geldFein(kosten / abos) + ' je Abo' : 'noch nichts erfasst' }
     ];
     host.innerHTML = '';
     karten.forEach(function(k){
-      var d = document.createElement('div'); d.className = 'kennzahl';
+      var d = document.createElement('div'); d.className = 'kennzahl'; if (k.id) d.id = k.id;
       var n = document.createElement('div'); n.className = 'k-label'; n.textContent = k.n;
       var w = document.createElement('div'); w.className = 'k-wert'; w.textContent = k.w;
       var m = document.createElement('div'); m.className = 'k-note'; m.textContent = k.m;
       d.appendChild(n); d.appendChild(w); d.appendChild(m); host.appendChild(d);
+    });
+    // Tatsächliche Einnahmen: jede Abo-Zahlung nach der Gratiszeit, wie
+    // Uscreen sie meldet (je Land in CHF, EUR oder USD). Für die Wochenschrift
+    // gibt es keinen Meldeweg – sie fehlt hier, statt geschätzt zu werden.
+    rpc('sommer2026_einnahmen').then(function(rows){
+      var kurs = { CHF:1, EUR:CONFIG.eurChf, USD:CONFIG.usdChf || CONFIG.eurChf };
+      var chf = 0, zahl = 0;
+      (rows || []).forEach(function(r){ chf += (Number(r.summe) || 0) * (kurs[r.waehrung] || CONFIG.eurChf); zahl += Number(r.zahlungen) || 0; });
+      var karte = el('kEinnahmen'); if (!karte) return;
+      karte.querySelector('.k-wert').textContent = '≈ ' + fmt(Math.round(chf));
+      karte.querySelector('.k-note').textContent = fmt(zahl) + (zahl === 1 ? ' Abo-Zahlung' : ' Abo-Zahlungen') +
+        ' nach der Gratiszeit · nur goetheanum.tv, die Wochenschrift meldet keine Zahlungen';
+    }).catch(function(){
+      var karte = el('kEinnahmen'); if (karte) karte.querySelector('.k-note').textContent = 'nicht ladbar';
     });
   }
 
