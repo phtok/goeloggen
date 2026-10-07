@@ -75,6 +75,15 @@ einmal mit geladenen, einmal mit gesperrten Bildern:
 | Outlook neu / Web | ☐ | ☐ | ☐ |
 | Gmail Web | ☐ | ☐ | ☐ |
 
+### Befund 7. 10. 2026 (Apple Mail, macOS)
+
+- Bild geladen: Logo sitzt, keine Büroklammer.
+- Bilder gesperrt: ‹Goetheanum› erscheint als blauer Text (Apple zeichnet
+  einen dünnen Rahmen darum).
+- **Dunkelmodus:** Mit Logo zeigt Apple Mail die empfangene Mail hell; ohne
+  Logo dunkel. Gegentest mit `?logo=a|b|c` (a = wie gebaut, b = ohne
+  mso-Weiche, c = nacktes Bild): welche Variante bleibt dunkel?
+
 ## Nicht-Ziele
 
 - Kein Backend für die Signatur, keine Datenübertragung von Eingaben (nur anonyme, insert-only Nutzungsstatistik ohne Eingaben).
