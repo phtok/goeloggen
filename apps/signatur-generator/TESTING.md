@@ -36,10 +36,13 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 
 ## Funktion / Rollout
 
-- [ ] `localStorage` (`goe-signatur-v3`): Eingaben überstehen ein Reload; alte Versionen erzeugen keinen kaputten Zustand.
-- [ ] Query-Prefill: `?name=Test&role=Probe` füllt die Felder.
-- [ ] ‹Beispiel einfügen› / ‹Felder leeren› funktionieren.
-- [ ] Mehrzeilige Felder (Funktion, Website, PS) wachsen mit dem Inhalt.
+- [ ] `localStorage` (`goe-signatur-v4`): Eingaben überstehen ein Reload und führen direkt zu Schritt 4; ein v3-Stand wird übernommen (Sektions-/Bereichszeilen der Funktion werden zur Zugehörigkeit).
+- [ ] Vier Schritte (Du · Zugehörigkeit · Kontakt · Signatur) sind jederzeit anwählbar; ‹ändern› an einer Zeile springt in ihren Schritt.
+- [ ] Jede Zeile lässt sich ausblenden; ‹Minimal› = Name · Goetheanum · goetheanum.ch, ‹Vollständig› = alle (Hochschule nur bei Sektion).
+- [ ] Sprache Deutsch / Deutsch + English / English: Sektion, Hochschule, Gesellschaft und Funktion folgen.
+- [ ] Query-Prefill: `?name=Test&role=Probe&unit=ms&lang=de-en` füllt die Felder.
+- [ ] ‹Beispiel einfügen› (Schritt 1) / ‹Neu beginnen› (Schritt 4) funktionieren.
+- [ ] Mehrzeilige Felder (Funktion, Eigene Angabe, Website, PS) wachsen mit dem Inhalt.
 - [ ] Empfehlungen erscheinen als Textabschnitt unter dem Generator.
 
 ## Nicht-Ziele
