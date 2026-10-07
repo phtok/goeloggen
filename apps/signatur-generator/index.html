@@ -607,9 +607,10 @@ const linkLine = (items, color) => items.length ? [{
   text: items.map(i => i.text).join(" · ")
 }] : [];
 
-// Vier Blöcke, je mit Leerzeile abgesetzt: wer (Person, Funktion, Sektion
-// oder Bereich samt deren Websites) · wie erreichbar · wo (Hochschule,
-// Gesellschaft, Adresse) · Goetheanum als Schlusszeile, Schriftzug oder Logo.
+// Blöcke, je mit Leerzeile abgesetzt: wer (Person, Funktion, Sektion oder
+// Bereich samt deren Websites) · wie erreichbar · Haus (Hochschule,
+// Gesellschaft) · Adresse · Goetheanum als Schluss, Schriftzug oder Logo
+// (das Logo mit doppeltem Abstand).
 function collectLines() {
   const L = [];
   const add = (id, group, label, step, rows) => { if (rows.length) L.push({ id, group, label, step, rows }); };
@@ -631,7 +632,7 @@ function collectLines() {
   const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
   // Mit Logo trägt die Adresse den Namen ‹Goetheanum› (blau, verlinkt): Bei
   // gesperrten Bildern bleibt die Logo-Stelle leer, der Name steht trotzdem da.
-  add("address", "haus", "Adresse", "adr", logoWanted()
+  add("address", "adresse", "Adresse", "adr", logoWanted()
     ? [{ html: "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">Goetheanum</a> · " + esc(addr),
          text: "Goetheanum · " + addr }]
     : plainRows([addr]));
@@ -706,7 +707,12 @@ function buildSignature() {
   // Blöcke je mit Leerzeile abgesetzt (siehe collectLines).
   let group = null;
   collectLines().filter(l => isOn(l.id)).forEach(l => {
-    if (l.group !== group) { gap(); group = l.group; }
+    if (l.group !== group) {
+      gap();
+      // Das Logo bekommt doppelten Abstand: es schliesst, es gehört nicht zur Adresse.
+      if (l.group === "marke" && logoWanted()) gap();
+      group = l.group;
+    }
     l.rows.forEach(r => push(r.html, r.text));
   });
 
