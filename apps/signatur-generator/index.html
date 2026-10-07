@@ -316,7 +316,7 @@
             <input type="checkbox" id="showLogo" />
             <span>
               <span class="lo-lab">Logo statt Schriftzug ‹Goetheanum›</span>
-              <span class="lo-sub">Für Apple Mail · nur mit Adresse. Outlook übernimmt es nicht.</span>
+              <span class="lo-sub">Nur für Apple Mail · nur mit Adresse. Gmail und Outlook übernehmen es nicht.</span>
             </span>
           </label>
         </div>
@@ -622,10 +622,11 @@ function collectLines() {
   add("web", "person", "Website", 2, linkLine(splitLines(val("web"))
     .filter(w => stripWww(w).toLowerCase() !== HAUS_WEB)
     .map(w => ({ href: webHref(w), text: stripWww(w) })), MAIL_BLUE));
-  // Telefonnummern als tel:-Link in Theme-Farbe (inherit) – dark-mode-fest; eine Zeile.
+  // Telefonnummern als tel:-Link in Mail-Blau wie die Websites; eine Zeile.
+  // (color:inherit streichen die Editoren von Gmail und Outlook – dann käme Standard-Blau.)
   add("tel", "kontakt", "Telefon", 1, linkLine(["phone", "mobile"].map(val).filter(Boolean)
     .filter((t, i, a) => a.indexOf(t) === i)
-    .map(t => ({ href: telHref(t), text: t })), "inherit"));
+    .map(t => ({ href: telHref(t), text: t })), MAIL_BLUE));
   add("hochschule", "haus", "Hochschule", 2, plainRows(inLang([term("hochschule", "de")], [term("hochschule", "en")])));
   add("aag", "haus", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
   // Adresse auf EINER Zeile (mit Mittelpunkt), als reiner Text: Der
