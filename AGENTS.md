@@ -26,9 +26,9 @@ https://github.com/phtok/goeloggen – mit vollem Verlauf, Remote `github`.
 
 Claude-Kapazität ist knapp; jeder Subagent baut einen eigenen, teuren
 Kontext auf. Zwei Regeln für jede Session: Subagenten standardmässig auf
-Sonnet starten (`model: "sonnet"` im Agent-Aufruf; das grosse Modell nur
-für Architektur, kniffliges Debugging oder adversariales Review grosser
-Änderungen). Und kein Personalaufmarsch für Einzeiler: Konrad
+Sonnet starten (`model: "sonnet"` im Agent-Aufruf, seit 28. 9. 2026 ist das
+Sonnet 5.5; das grosse Modell, derzeit Opus 5.5, nur für Architektur,
+kniffliges Debugging oder adversariales Review grosser Änderungen). Und kein Personalaufmarsch für Einzeiler: Konrad
 (`korrektor-goeloggen`) und Martha (`metteurin-goeloggen`) werden nur bei
 inhaltlicher Satz- oder Gestaltungsarbeit gerufen — nicht für Tippfehler
 oder Doku-Einzeiler; die Prüfmaschinen (Hook + CI) laufen ohnehin.
