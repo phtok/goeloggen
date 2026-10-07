@@ -78,7 +78,10 @@ liest die mso-Weiche und bekommt den Textlink.
 | Schriftzug ohne Logo | dunkel | – |
 
 Schluss: Jedes `<img>` schaltet Apple Mail auf hell, auch gesperrt. Gebaut
-ist darum der Hintergrund. Keine Büroklammer in allen Varianten.
+ist darum der Hintergrund. Keine Büroklammer in allen Varianten. Damit der
+Name bei gesperrten Bildern nie fehlt, beginnt die Adresse mit Logo mit
+**‹Goetheanum›** (halbfett, Textfarbe, verlinkt; Zeile dann nicht
+ausblendbar). Abstand: eine Leerzeile vor der Adresse, zwei vor dem Logo.
 
 ### Noch offen
 

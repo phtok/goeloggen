@@ -630,11 +630,12 @@ function collectLines() {
   add("aag", "haus", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
   // Adresse auf EINER Zeile (mit Mittelpunkt)
   const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
-  // Mit Logo trägt die Adresse den Namen ‹Goetheanum› (Textfarbe, verlinkt wie
-  // die Telefonnummer): Das Logo bleibt die einzige blaue Marke; bei gesperrten
-  // Bildern bleibt dessen Stelle leer, der Name steht trotzdem da.
+  // Mit Logo trägt die Adresse den Namen ‹Goetheanum›, halbfett in Textfarbe,
+  // verlinkt (G01: genau ein Merkmal, wie der Name oben). Das Logo bleibt die
+  // einzige blaue Marke; bei gesperrten Bildern bleibt dessen Stelle leer, der
+  // Name steht trotzdem gut sichtbar da (Beschluss 7. 10. 2026).
   add("address", "adresse", "Adresse", "adr", logoWanted()
-    ? [{ html: "<a href=\"https://" + HAUS_WEB + "\" style=\"color:inherit;text-decoration:none;\">Goetheanum</a> · " + esc(addr),
+    ? [{ html: "<a href=\"https://" + HAUS_WEB + "\" style=\"color:inherit;text-decoration:none;font-weight:600;\">Goetheanum</a> · " + esc(addr),
          text: "Goetheanum · " + addr }]
     : plainRows([addr]));
   // ‹Goetheanum› ist selbst der Link zur Website; das Blau zeichnet ihn aus.
