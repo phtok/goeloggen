@@ -36,24 +36,42 @@ jobs:
   # ein Tor, indem die eine Zeile «continue-on-error» hier verschwindet. Sonst
   # wäre jeder Push von Anfang an rot, und ein Tor, das immer rot steht, hütet
   # nichts.
+  #
+  # Schnell, weil (1) ein PR nur die Seiten misst, die sein Unterschied berühren
+  # kann (--seit; der Push auf main misst das ganze Haus), (2) mehrere Fenster
+  # zugleich messen (--parallel) und (3) kein Browser geholt wird: der Läufer
+  # bringt Google Chrome schon mit. Nur wenn der fehlt, wird Chromium geladen.
   barrierefreiheit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Chromium holen
+          cache: npm
+          cache-dependency-path: tools/package-lock.json
+      - name: Pakete und Browser
         working-directory: tools
         run: |
-          npm install --no-audit --no-fund
-          npx playwright install --with-deps chromium
-      - name: barrierefreiheit (WCAG 2.2 AA, alle Seiten)
+          npm ci --no-audit --no-fund
+          chrome="$(command -v google-chrome || true)"
+          if [ -z "$chrome" ]; then
+            npx playwright install --with-deps chromium
+          else
+            echo "CHROMIUM_PATH=$chrome" >> "$GITHUB_ENV"
+          fi
+      - name: barrierefreiheit (WCAG 2.2 AA)
         continue-on-error: true
         run: |
           set +e
-          node tools/barrierefreiheit.mjs --check | tee wcag.txt
-          stand=$?
+          umfang=""
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            umfang="--seit origin/${{ github.base_ref }}"
+          fi
+          node tools/barrierefreiheit.mjs --check --parallel 4 $umfang | tee wcag.txt
+          stand=${PIPESTATUS[0]}
           {
             echo '## Barrierefreiheit · WCAG 2.2 AA (DS08)'
             echo '```'

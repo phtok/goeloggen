@@ -125,7 +125,47 @@ const spur = args.includes('--spur')
 const alles = args.includes('--alles')
 const nur = args.includes('--seite') ? args[args.indexOf('--seite') + 1] : null
 const nurRegel = args.includes('--regel') ? args[args.indexOf('--regel') + 1] : null
+const seit = args.includes('--seit') ? args[args.indexOf('--seit') + 1] : null
+const zugleich = Math.max(1, Number(args.includes('--parallel')
+  ? args[args.indexOf('--parallel') + 1] : process.env.A11Y_PARALLEL || 4) || 1)
 const browserPfad = process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium'
+
+// --seit <ref>: nur messen, was der Unterschied zu <ref> berühren kann. Ein PR
+// ändert meist eine Seite; das ganze Haus zu messen kostet dann Minuten für
+// nichts. Darum: geänderte Seiten selbst, dazu jede Seite, die eine geänderte
+// Datei beim Namen einbindet (tools.json etwa die Übersichten, die es lesen;
+// das Menü daraus ist auf allen Seiten dasselbe Bauteil). Was alle Seiten
+// trägt (design-system/, Schriften) oder sich keiner Seite zuordnen lässt,
+// löst den vollen Lauf aus –
+// im Zweifel lieber zu viel messen als zu wenig. Nach dem Merge misst main
+// ohnehin das ganze Haus.
+const OHNE_WIRKUNG = /\.(md|py|ya?ml|txt|pdf|zip|idml|indd|docx|pptx|xlsx|csv|sql|ts)$|^(tools|docs|todo|archive|reference|services|\.github|\.claude)\/|^sektionen\.json$/
+const TRAEGT_ALLES = /^(design-system|assets\/fonts)\//
+function betroffen (liste) {
+  if (!seit) return { liste, grund: null }
+  let geaendert
+  try {
+    const basis = execFileSync('git', ['merge-base', seit, 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim()
+    geaendert = execFileSync('git', ['diff', '--name-only', basis, 'HEAD'], { cwd: ROOT, encoding: 'utf8' })
+      .split('\n').map(l => l.trim()).filter(Boolean)
+  } catch (e) {
+    return { liste, grund: `kein Vergleich mit ${seit} möglich – volles Haus` }
+  }
+  const texte = new Map(liste.map(s => [s.pfad, readFileSync(join(ROOT, s.pfad), 'utf8')]))
+  const wahl = new Set()
+  for (const datei of geaendert) {
+    if (texte.has(datei)) { wahl.add(datei); continue }
+    if (OHNE_WIRKUNG.test(datei)) continue
+    if (TRAEGT_ALLES.test(datei)) return { liste, grund: `${datei} trägt alle Seiten – volles Haus` }
+    if (datei.endsWith('.html')) continue            // ausserhalb des Geltungsbereichs oder gelöscht
+    const name = datei.split('/').pop()
+    const nutzer = liste.filter(s => texte.get(s.pfad).includes(name))
+    if (!nutzer.length) return { liste, grund: `${datei} keiner Seite zuzuordnen – volles Haus` }
+    nutzer.forEach(s => wahl.add(s.pfad))
+  }
+  return { liste: liste.filter(s => wahl.has(s.pfad)),
+           grund: `${wahl.size} von ${liste.length} Seiten berührt (seit ${seit})` }
+}
 
 const browser = await chromium.launch(
   existsSync(browserPfad) ? { executablePath: browserPfad } : {})
@@ -135,10 +175,8 @@ const alle = []
 const nachRegel = new Map()
 const fortgegangen = new Set()   // Brücken-Seiten, die sich selbst weiterschicken
 
-for (const { pfad, artefakt } of seiten()) {
-  if (nur && pfad !== nur) continue
-  if (spur) console.error(`— ${pfad}`)
-  for (const achse of ACHSEN) {
+async function messe ({ pfad, artefakt, achse }) {
+  {
     // Eigener Kontext statt browser.newPage(): axe legt für seine Prüfung
     // eine zweite Seite an, und ein von newPage() erzeugter Kontext lässt
     // genau das nicht zu.
@@ -165,8 +203,8 @@ for (const { pfad, artefakt } of seiten()) {
       // fortgeht, wird gezählt und übersprungen.
       if (!seite.url().startsWith(`http://127.0.0.1:${server.port}`)) {
         fortgegangen.add(pfad)
-        if (spur) console.error(`  ${achse.tag}\tleitet weiter`)
-        continue
+        if (spur) console.error(`— ${pfad}  ${achse.tag}\tleitet weiter`)
+        return
       }
       await durchblaettern(seite)
 
@@ -194,7 +232,7 @@ for (const { pfad, artefakt } of seiten()) {
 
       for (const f of funde) nachRegel.set(f.id, (nachRegel.get(f.id) || 0) + f.stellen.length)
       if (funde.length) alle.push({ pfad, achse: achse.tag, funde })
-      if (spur) console.error(`  ${achse.tag}\t${funde.length || '·'}`)
+      if (spur) console.error(`— ${pfad}  ${achse.tag}\t${funde.length || '·'}`)
     } catch (e) {
       alle.push({ pfad, achse: achse.tag,
                   funde: [{ id: 'lädt nicht', norm: true, schwere: 'kritisch',
@@ -204,6 +242,20 @@ for (const { pfad, artefakt } of seiten()) {
     }
   }
 }
+
+// Mehrere Fenster zugleich: jede Messung hat ihren eigenen Kontext, also
+// stören sie sich nicht. Die Ausgabe wird danach geordnet, damit der Bericht
+// gleich aussieht, egal welche Messung zuerst fertig war.
+const auswahl = betroffen(seiten().filter(s => !nur || s.pfad === nur))
+if (auswahl.grund) console.log(auswahl.grund)
+const auftraege = auswahl.liste.flatMap(s => ACHSEN.map(achse => ({ ...s, achse })))
+let naechster = 0
+await Promise.all(Array.from({ length: Math.min(zugleich, auftraege.length) }, async () => {
+  while (naechster < auftraege.length) await messe(auftraege[naechster++])
+}))
+const RANG = new Map(ACHSEN.map((a, i) => [a.tag, i]))
+alle.sort((a, b) => a.pfad.localeCompare(b.pfad) || RANG.get(a.achse) - RANG.get(b.achse))
+
 server.zu()
 await browser.close()
 
