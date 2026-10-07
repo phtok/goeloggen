@@ -16,6 +16,24 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 7. Oktober 2026 — Startseite: Sprungleiste, «Von Zeit zu Zeit», Fingerziele der Sprungleiste (nav.css, Version unverändert)
+
+**Was.** Die Startseite trägt die Haus-Sprungleiste (`data-onpage`,
+`.dsnav-onpage`) mit den drei Gruppen; ein Tipp springt zur Gruppe, die
+Leiste klebt unter der Kopfzeile. Die mittlere Gruppe heisst jetzt **Von
+Zeit zu Zeit** statt «Farben, Sprachen, Typografie». In `nav.css` tragen die
+Links der Sprungleiste die Höhe selbst: `min-height:var(--tap)` statt
+Zeilen-Padding, also 44 px statt rund 37 px. Das gilt auf allen Seiten mit
+Sprungleiste.
+
+**Warum.** Auf dem Telefon ist «Jeden Tag» sechs Karten hoch; ohne Leiste
+erfuhr niemand, dass weiter unten zwei Gruppen folgen. Der alte mittlere
+Titel war im Kontext unbrauchbar (Entscheid Auftraggeber): Alle drei Titel
+sagen jetzt, wie oft man ein Werkzeug braucht, und die Leiste steht auf
+390 px ohne Wischen ganz. Die Fingerziele lagen unter B04.
+
+---
+
 ## 7. Oktober 2026 — Startseite in drei Gruppen nach Anlass (Startseite, Version unverändert)
 
 **Was.** Die Karten der Startseite stehen in drei Gruppen: **Jeden Tag**
