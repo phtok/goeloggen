@@ -629,14 +629,24 @@ function collectLines() {
   add("aag", "haus", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
   // Adresse auf EINER Zeile (mit Mittelpunkt)
   const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
-  add("address", "haus", "Adresse", "adr", plainRows([addr]));
+  // Mit Logo trägt die Adresse den Namen ‹Goetheanum› (blau, verlinkt): Bei
+  // gesperrten Bildern bleibt die Logo-Stelle leer, der Name steht trotzdem da.
+  add("address", "haus", "Adresse", "adr", logoWanted()
+    ? [{ html: "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">Goetheanum</a> · " + esc(addr),
+         text: "Goetheanum · " + addr }]
+    : plainRows([addr]));
   // ‹Goetheanum› ist selbst der Link zur Website; das Blau zeichnet ihn aus.
   // Im Klartext gibt es keine Links, dort steht die Adresse dabei.
-  add("goetheanum", "marke", "Goetheanum", 0, [{ html: goetheanumHtml(), text: "Goetheanum · " + HAUS_WEB }]);
+  add("goetheanum", "marke", "Goetheanum", 0, [{ html: goetheanumHtml(), text: (logoWanted() ? "" : "Goetheanum · ") + HAUS_WEB }]);
   return L;
 }
 function defaultOn(id) { return id === "hochschule" ? state.unitKind === "sektion" : true; }
-function isOn(id) { return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id); }
+// Mit Logo bleibt die Adresse stehen: Sie trägt dann den Namen (siehe collectLines).
+const PFLICHT = id => id === "address" && logoWanted();
+function isOn(id) {
+  if (PFLICHT(id)) return true;
+  return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id);
+}
 
 /* ---------- Schriftzug oder Logo ---------- */
 // Ohne Logo: ‹Goetheanum› in Mail-Blau, verlinkt. Mit Logo (Backend-Versuch,
@@ -719,7 +729,7 @@ function renderZeilen() {
     group = l.group;
     const on = isOn(l.id), id = "z-" + l.id;
     html += "<li class=\"" + (on ? "" : "aus") + "\"><label for=\"" + id + "\">" +
-      "<input type=\"checkbox\" id=\"" + id + "\" data-zeile=\"" + l.id + "\"" + (on ? " checked" : "") + " />" +
+      "<input type=\"checkbox\" id=\"" + id + "\" data-zeile=\"" + l.id + "\"" + (on ? " checked" : "") + (PFLICHT(l.id) ? " disabled" : "") + " />" +
       "<span class=\"z-text\">" + l.rows.map(r => esc(r.text)).join("<br>") +
       (l.rows[0].text === l.label ? "" : "<small>" + esc(l.label) + "</small>") + "</span></label>" +
       (l.step ? "<button type=\"button\" class=\"z-edit\" data-goto=\"" + l.step + "\" aria-label=\"" + esc(l.label) + " ändern\">ändern</button>" : "<span></span>") +
