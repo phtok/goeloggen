@@ -69,7 +69,7 @@ gepflegt, **nicht** hier — deshalb ist `mcpServers` leer. Für einen
 
 ## Sortierer «Direkt speichern» (Edge Function)
 
-Der Sortierer (`sortierer.html`) und der Ordner-Editor (`ordner.html`) committen
+Der Ordnen-Modus der Startseite (`index.html?ordnen`, früher `sortierer.html`) und der Ordner-Editor (`ordner.html`) committen
 die Menü-Struktur direkt, statt sie zu exportieren. Dahinter steht die Edge
 Function `services/kistenpflege/sortierer-commit/index.ts` (Projekt
 `dagcsnfrlbpxcmdimnrw`). Sie schreibt **ausschliesslich** die Menü-Felder

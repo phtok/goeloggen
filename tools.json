@@ -517,7 +517,7 @@
       "title": "Sortierer",
       "short": "Sortierer",
       "href": "sortierer.html",
-      "desc": "Schublade und Karten der Startseite selbst ordnen – ziehen, Reihenfolge exportieren, committen. Eine Quelle (tools.json → reihenfolge), Verlauf = Git.",
+      "desc": "Startseite und Schublade live ordnen: verschieben, ausblenden, speichern. Öffnet die Startseite im Ordnen-Modus.",
       "such": "Sortierer Reihenfolge ordnen sortieren Schublade Karten Startseite Menü Navigation Kistenpflege"
     },
     {
