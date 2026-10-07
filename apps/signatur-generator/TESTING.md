@@ -87,7 +87,7 @@ ausblendbar). Abstand: eine Leerzeile vor der Adresse, zwei vor dem Logo.
 
 | Client | Logo sichtbar | Dunkelmodus | Adresse |
 |---|---|---|---|
-| Gmail Web (Chrome, hell) | ✅ | – | wurde zum blauen Maps-Link → selbst verlinkt in Textfarbe (#648); danach in Textfarbe ✅ (iOS-App, hell und dunkel) |
+| Gmail Web (Chrome, hell) | ✅ | – | wurde zum blauen Maps-Link → selbst verlinkt in Textfarbe (#648); danach in Textfarbe ✅ (Web und iOS-App, hell und dunkel) |
 | Gmail iOS | ✅ | ✅ dunkel, auch mit Logo | wie Web |
 
 ### Befund 7. 10. 2026 (Mail iOS)
@@ -96,12 +96,24 @@ ausblendbar). Abstand: eine Leerzeile vor der Adresse, zwei vor dem Logo.
 |---|---|---|---|
 | Mail (iOS) | ✅ | ✅ dunkel, auch mit Logo | ‹Goetheanum› halbfett ✅; Apples Datenerkennung setzt einen feinen Unterstrich in Textfarbe (vor #648 gesendet) |
 
+### Befund 7. 10. 2026 (Outlook im Browser, goetheanum.ch)
+
+| | ohne Logo | mit Logo |
+|---|---|---|
+| Adresse ruhig (Textfarbe) | ✅ | ✅ |
+| ‹Goetheanum› sichtbar | ✅ blau am Schluss | ✅ halbfett in der Adresse |
+| Logo | – | ❌ Hintergrundbild entfernt, kein Hinweis «Bilder anzeigen»; der Link bleibt als leere Fläche |
+
+Schluss: In Outlook im Browser greift der Ersatz – der Name steht halbfett in
+der Adresse, die Logo-Stelle bleibt leer. Nachladen lässt sich das Logo dort
+nicht.
+
 ### Noch offen
 
 | Client | Logo sichtbar | Dunkelmodus | Bilder gesperrt |
 |---|---|---|---|
-| Gmail | – | – | ☐ |
-| Outlook neu / Web | ☐ | ☐ | ☐ |
+| Gmail, Mail iOS (Bilder gesperrt) | – | – | ☐ |
+| Outlook im Browser, Dunkelmodus | – | ☐ | – |
 | Outlook klassisch (Windows) | – (Textlink) | ☐ | ☐ |
 | Mail (iOS) | – | – | ☐ |
 
