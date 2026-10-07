@@ -16,6 +16,32 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 7. Oktober 2026 — Kartenbilder der Startseite: das Ding, nicht das Symbol (Startseite, Version unverändert)
+
+**Was.** Vier Kartenbilder auf `index.html` neu: **Programmheft** zeigt das
+offene A5-Heft (links Titelbild mit Goldtitel, rechts Zeitplan mit Uhrzeit in
+Gold), statt des Anfangsbuchstabens «P», den die Startseite für Werkzeuge ohne
+eigenes Bild einsetzt. **Werkzeug-Abo** zeigt einen Brief im Strich mit
+Gold-Punkt für «es gibt Neues» statt des fetten `@`. **Kurzlink** zeigt die
+kurze Adresse `…/s/hoi` im Adressfeld, der Kurz-Teil in Gold, statt zweier
+Kettenglieder. **Übersetzungen**: Rahmen jetzt in `--muted` (vorher `--line`,
+10 % deckend, unter 3:1), die Ausgangssprache DE im Goldrahmen.
+
+**Warum.** Der Auftraggeber empfand das «P», das schwarze `@` und das
+Kettenglied als unschön; entschieden nach Vorschau (Heft und Brief,
+Kurz-Adresse, nur DE in Gold).
+
+**Leitlinien für Kartenbilder** (bisher nur als Kommentar in `index.html`):
+1. **Das Ding zeigen**, das das Werkzeug erzeugt, kein abstraktes Symbol.
+2. **Strichzeichnung**: Kontur `--muted` 1.6px, Textzeilen als Balken.
+3. **Höchstens ein Gold-Akzent** (`--gold-ink`), meist Titel oder das
+   Entscheidende (G01/G03).
+4. **Nur Token-Farben**, hell wie dunkel tragend (B05); Ränder ≥3:1 (B02).
+5. Jedes Werkzeug in `tools.json` bekommt ein eigenes Bild; der
+   Buchstaben-Ersatz ist nur Notbehelf.
+
+---
+
 ## 25. September 2026 — das Akkordeon trägt den Faden (Schau-Seite, Version unverändert)
 
 **Was.** Auf `akkordeon.html` steht nur noch das Kleid **Faden** vorn, samt
