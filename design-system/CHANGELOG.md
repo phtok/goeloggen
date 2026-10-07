@@ -16,6 +16,36 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 7. Oktober 2026 — Startseite in drei Gruppen nach Anlass (Startseite, Version unverändert)
+
+**Was.** Die Karten der Startseite stehen in drei Gruppen: **Jeden Tag**
+(Logos, QR-Code und Kurzlink, PowerPoint-Vorlagen, Campus-Karte,
+Programmheft, Icons), **Farben, Sprachen, Typografie** (Übersetzungen,
+Sektionsfarben, Typografie) und zuletzt **Einmal einrichten** (Schriften,
+Signatur, Visitenkarten, Wallpaper, Werkzeug-Abo, Familienmenü). Die
+Zugehörigkeit steht in `tools.json` → `gruppen.startseite`; die Folge
+innerhalb einer Gruppe kommt weiter aus `reihenfolge.karten`, nicht
+Zugeordnetes läuft in die letzte Gruppe. Gruppenüberschrift in `--t-h2`,
+Kartentitel werden `h3`; Haarlinie und Luft aus `section` (base.css) trennen.
+**QR-Code und Kurzlink** sind eine Karte (dasselbe Werkzeug); die eigene
+Kurzlink-Karte ist auf der Startseite ausgeblendet, bleibt im Menü und per
+Direktlink. 15 statt 16 Karten.
+
+**Warum.** Sechzehn gleichrangige Karten waren auf einen Blick zu viel; das
+Karussell hatte keine Orientierung gestiftet. Gruppiert wird nach dem, was
+jemand erledigen will, nicht nach Werkzeugart. Die Zuordnung hat der
+Auftraggeber entschieden: Visitenkarte, Signatur und Schriften braucht man
+einmal (Onboarding), Logos, Links, QR und Vorlagen täglich. Die Aufrufzahlen
+(statistik.html: Logos 646, Schriften 198) stützen das. Verworfen wurde eine
+kompakte Darstellung der hinteren Gruppen (nur Bild und Titel): ohne
+Beschreibung blieb unklar, was in der Karte steckt.
+
+**Wirkung.** Löst den Beschluss vom 8. Juli 2026 ab («nur die Karten, keine
+Überschriften»). Der Ordnen-Modus (`?ordnen`) sortiert weiter flach; seine
+Folge gilt innerhalb der Gruppen.
+
+---
+
 ## 7. Oktober 2026 — Kartenbilder der Startseite: das Ding, nicht das Symbol (Startseite, Version unverändert)
 
 **Was.** Vier Kartenbilder auf `index.html` neu: **Programmheft** zeigt das
