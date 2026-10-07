@@ -316,7 +316,7 @@
             <input type="checkbox" id="showLogo" />
             <span>
               <span class="lo-lab">Logo statt Schriftzug ‹Goetheanum›</span>
-              <span class="lo-sub">Backend-Versuch · verlinkt zu goetheanum.ch. Bei gesperrten Bildern bleibt die Stelle leer; das klassische Outlook zeigt den Schriftzug. Kein Anhang, kein Tracking.</span>
+              <span class="lo-sub">Für Apple Mail und Gmail · nur zusammen mit der Adresse. Outlook im Browser übernimmt es nicht.</span>
             </span>
           </label>
         </div>
@@ -628,65 +628,41 @@ function collectLines() {
     .map(t => ({ href: telHref(t), text: t })), "inherit"));
   add("hochschule", "haus", "Hochschule", 2, plainRows(inLang([term("hochschule", "de")], [term("hochschule", "en")])));
   add("aag", "haus", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
-  // Adresse auf EINER Zeile (mit Mittelpunkt)
+  // Adresse auf EINER Zeile (mit Mittelpunkt), als reiner Text: Der
+  // Signatur-Editor von Outlook im Browser entfernt color:inherit an Links und
+  // färbt eine verlinkte Adresse blau (Test 7. 10. 2026). Ein Wortverbinder
+  // (U+2060) in der Postleitzahl hält Gmail davon ab, sie selbst zum blauen
+  // Karten-Link zu machen.
   const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
-  // Mit Logo trägt die Adresse den Namen ‹Goetheanum›, halbfett in Textfarbe,
-  // verlinkt (G01: genau ein Merkmal, wie der Name oben). Das Logo bleibt die
-  // einzige blaue Marke; bei gesperrten Bildern bleibt dessen Stelle leer, der
-  // Name steht trotzdem gut sichtbar da (Beschluss 7. 10. 2026).
-  // Gmail und Apple Mail machen eine nackte Adresse von sich aus zum blauen,
-  // unterstrichenen Karten-Link. Darum verlinken wir sie selbst – in Textfarbe,
-  // ohne Unterstrich, wie die Telefonnummer; ein Klick öffnet trotzdem die Karte.
-  const addrHtml = "<a href=\"https://www.google.com/maps/search/?api=1&amp;query=" +
-    encodeURIComponent((logoWanted() ? "Goetheanum, " : "") + addr.replace(/ · /g, ", ")) +
-    "\" style=\"color:inherit;text-decoration:none;\">" + esc(addr) + "</a>";
-  const addrText = esc(addr).replace(/\b(\d{2})(\d{2})\b/, "$1&#8288;$2");
-  if (LOGO_IMG && logoWanted()) {
-    add("address", "adresse", "Adresse", "adr", [{ html: "<b>Goetheanum</b> · " + addrText, text: "Goetheanum · " + addr }]);
-  } else add("address", "adresse", "Adresse", "adr", logoWanted()
-    ? [{ html: "<a href=\"https://" + HAUS_WEB + "\" style=\"color:inherit;text-decoration:none;font-weight:600;\">Goetheanum</a> · " + addrHtml,
-         text: "Goetheanum · " + addr }]
+  const addrHtml = esc(addr).replace(/\b(\d{2})(\d{2})\b/, "$1&#8288;$2");
+  // Mit Logo beginnt die Adresse mit ‹Goetheanum›, halbfett (G01: genau ein
+  // Merkmal): Wo das Logo nicht ankommt, steht der Name trotzdem gut sichtbar
+  // da (Beschluss 7. 10. 2026).
+  add("address", "adresse", "Adresse", "adr", logoAktiv()
+    ? [{ html: "<span style=\"font-weight:600;\">Goetheanum</span> · " + addrHtml, text: "Goetheanum · " + addr }]
     : [{ html: addrHtml, text: addr }]);
   // ‹Goetheanum› ist selbst der Link zur Website; das Blau zeichnet ihn aus.
   // Im Klartext gibt es keine Links, dort steht die Adresse dabei.
-  add("goetheanum", "marke", "Goetheanum", 0, [{ html: goetheanumHtml(), text: (logoWanted() ? "" : "Goetheanum · ") + HAUS_WEB }]);
+  add("goetheanum", "marke", "Goetheanum", 0, [{ html: goetheanumHtml(), text: (logoAktiv() ? "" : "Goetheanum · ") + HAUS_WEB }]);
   return L;
 }
 function defaultOn(id) { return id === "hochschule" ? state.unitKind === "sektion" : true; }
-// Mit Logo bleibt die Adresse stehen: Sie trägt dann den Namen (siehe collectLines).
-const PFLICHT = id => id === "address" && logoWanted();
-function isOn(id) {
-  if (PFLICHT(id)) return true;
-  return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id);
-}
+function isOn(id) { return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id); }
+// Das Logo kommt nur zusammen mit der Adresse: Sie trägt dann den Namen als
+// Ersatz. Ohne Adresse (z. B. ‹Minimal›) schliesst der blaue Schriftzug.
+function logoAktiv() { return logoWanted() && isOn("address"); }
 
 /* ---------- Schriftzug oder Logo ---------- */
-// Ohne Logo: ‹Goetheanum› in Mail-Blau, verlinkt. Mit Logo (Backend-Versuch,
-// nur Intern-Ansicht) steht an derselben Stelle das Bild, und sein alt-Text
-// ist wieder ‹Goetheanum›: Wo das Bild nicht lädt, zeigen Gmail und Outlook
-// Web den Text als Link. Das klassische Outlook (Word-Engine) zeigte statt
-// dessen ein Kästchen – es liest als einziges die mso-Weiche und bekommt den
-// Textlink; mso-hide:all hält das Bild dort zusätzlich fern. Apple Mail zeigt
-// bei gesperrten Bildern nichts – vor der Freigabe mit echten Testmails prüfen
-// (TESTING.md).
-// Ohne Logo: ‹Goetheanum› in Mail-Blau, verlinkt. Mit Logo (Backend-Versuch,
-// nur Intern-Ansicht) steht an derselben Stelle das Logo – als CSS-Hintergrund,
-// nicht als <img>: Getestet am 7. 10. 2026 in Apple Mail schaltet JEDES <img>
-// (auch gesperrt, auch ohne Stil) die Mail im Dunkelmodus auf hell; das
-// Hintergrundbild lässt sie dunkel. Preis: Bei gesperrten Bildern bleibt die
-// Stelle leer. Das klassische Outlook (Word-Engine) zeigt keine Hintergründe;
-// es liest als einziges die mso-Weiche und bekommt den Textlink.
-// Test (nur Intern, ?logo=img): Logo als <img> statt Hintergrund, weil der
-// Signatur-Editor von Outlook im Browser Hintergründe beim Einfügen löscht und
-// color:inherit an Links entfernt (Test 7. 10. 2026). Dazu ‹Goetheanum› und
-// Adresse als reiner Text; ein Wortverbinder (U+2060) in der Postleitzahl soll
-// verhindern, dass Gmail die Adresse zum blauen Karten-Link macht.
-const LOGO_IMG = /[?&]logo=img\b/.test(location.search);
+// Ohne Logo: ‹Goetheanum› in Mail-Blau, verlinkt. Mit Logo (nur Intern-Ansicht)
+// steht an derselben Stelle das Logo – als CSS-Hintergrund, nicht als <img>:
+// In Apple Mail schaltet jedes <img> die Mail im Dunkelmodus auf hell, das
+// Hintergrundbild lässt sie dunkel (Test 7. 10. 2026). Outlook im Browser
+// zeigt es nicht und verwirft es beim Einfügen in den Signatur-Editor; das
+// klassische Outlook bekommt über die mso-Weiche den Textlink. In allen Fällen
+// steht der Name halbfett in der Adresse.
 function goetheanumHtml() {
-  if (LOGO_IMG && logoWanted()) return "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" +
-    "<img src=\"" + LOGO_URL + "\" width=\"100\" height=\"17\" alt=\"Goetheanum\" style=\"display:block;border:0;\" /></a>";
   const link = inner => "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" + inner + "</a>";
-  if (!logoWanted()) return link("Goetheanum");
+  if (!logoAktiv()) return link("Goetheanum");
   return "<!--[if mso]>" + link("Goetheanum") + "<![endif]-->" +
     "<!--[if !mso]><!--><a href=\"https://" + HAUS_WEB + "\" aria-label=\"Goetheanum\" style=\"display:inline-block;border:0;text-decoration:none;\">" +
     "<div style=\"width:100px;height:17px;background-image:url('" + LOGO_URL + "');background-repeat:no-repeat;" +
@@ -729,7 +705,7 @@ function buildSignature() {
     if (l.group !== group) {
       gap();
       // Das Logo bekommt doppelten Abstand: es schliesst, es gehört nicht zur Adresse.
-      if (l.group === "marke" && logoWanted()) gap();
+      if (l.group === "marke" && logoAktiv()) gap();
       group = l.group;
     }
     l.rows.forEach(r => push(r.html, r.text));
@@ -754,7 +730,7 @@ function renderZeilen() {
     group = l.group;
     const on = isOn(l.id), id = "z-" + l.id;
     html += "<li class=\"" + (on ? "" : "aus") + "\"><label for=\"" + id + "\">" +
-      "<input type=\"checkbox\" id=\"" + id + "\" data-zeile=\"" + l.id + "\"" + (on ? " checked" : "") + (PFLICHT(l.id) ? " disabled" : "") + " />" +
+      "<input type=\"checkbox\" id=\"" + id + "\" data-zeile=\"" + l.id + "\"" + (on ? " checked" : "") + " />" +
       "<span class=\"z-text\">" + l.rows.map(r => esc(r.text)).join("<br>") +
       (l.rows[0].text === l.label ? "" : "<small>" + esc(l.label) + "</small>") + "</span></label>" +
       (l.step ? "<button type=\"button\" class=\"z-edit\" data-goto=\"" + l.step + "\" aria-label=\"" + esc(l.label) + " ändern\">ändern</button>" : "<span></span>") +

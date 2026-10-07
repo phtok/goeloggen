@@ -108,11 +108,27 @@ Schluss: In Outlook im Browser greift der Ersatz – der Name steht halbfett in
 der Adresse, die Logo-Stelle bleibt leer. Nachladen lässt sich das Logo dort
 nicht.
 
+### Befund 7. 10. 2026 (Einfügen in Outlook im Browser)
+
+Signatur in die Signatur-Einstellungen von Outlook im Browser eingefügt:
+- Das Hintergrund-Logo wird beim Einfügen gelöscht; auch ein `<img>` kommt
+  nicht durch. Bilder nimmt der Editor nur als hochgeladene Datei – die reist
+  als eingebetteter Anhang mit (Büroklammer), was ‹Bildersturm?› ausschliesst.
+- `color:inherit` an Links wird entfernt: verlinkte Adresse und ‹Goetheanum›
+  werden blau. Darum ist die Adresse jetzt reiner Text; ein Wortverbinder
+  (U+2060) in der Postleitzahl soll Gmails Karten-Link verhindern (☐ prüfen).
+
+Beschluss: Standard für alle bleibt der blaue Schriftzug ‹Goetheanum›. Das
+Logo bleibt eine Möglichkeit für Apple Mail und Gmail, nur zusammen mit der
+Adresse (ohne Adresse – ‹Minimal› – schliesst der Schriftzug).
+
 ### Noch offen
 
 | Client | Logo sichtbar | Dunkelmodus | Bilder gesperrt |
 |---|---|---|---|
 | Gmail, Mail iOS (Bilder gesperrt) | – | – | ☐ |
+| Einfügen in Apple Mail / Gmail-Einstellungen: Logo bleibt? | ☐ | – | – |
+| Gmail: Adresse mit Wortverbinder ohne Karten-Link? | – | – | – |
 | Outlook im Browser, Dunkelmodus | – | ☐ | – |
 | Outlook klassisch (Windows) | – (Textlink) | ☐ | ☐ |
 
