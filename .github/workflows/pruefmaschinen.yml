@@ -47,11 +47,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: tools/package-lock.json
+      # Node bringt der Läufer mit; fünf Pakete installieren sich ohne Cache in
+      # einer Sekunde – setup-node kostete mit Download mehr, als es sparte.
       - name: Pakete und Browser
         working-directory: tools
         run: |
@@ -79,3 +76,20 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
           exit $stand
+      # VERSUCH (wird wieder entfernt): kalter Start von chrome-headless-shell
+      # gegen den vorinstallierten Chrome (dessen Zeit steht im Schritt davor).
+      - name: Versuch chrome-headless-shell
+        continue-on-error: true
+        working-directory: tools
+        run: |
+          s=$(date +%s.%N); npx playwright install --only-shell chromium >/dev/null; e=$(date +%s.%N)
+          echo "Installation: $(echo "$e - $s" | bc) s"
+          node -e '
+            const { chromium } = require("playwright-core");
+            (async () => {
+              for (const [name, opt] of [["headless-shell", {}], ["google-chrome", { executablePath: process.env.CHROMIUM_PATH }],
+                                         ["headless-shell warm", {}], ["google-chrome warm", { executablePath: process.env.CHROMIUM_PATH }]]) {
+                const t = Date.now(); const b = await chromium.launch(opt); const p = await b.newPage();
+                await p.setContent("<p>x</p>"); console.log(name + ": " + (Date.now() - t) + " ms"); await b.close();
+              }
+            })();'

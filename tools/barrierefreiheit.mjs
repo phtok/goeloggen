@@ -167,9 +167,11 @@ function betroffen (liste) {
            grund: `${wahl.size} von ${liste.length} Seiten berührt (seit ${seit})` }
 }
 
-const browser = await chromium.launch(
-  existsSync(browserPfad) ? { executablePath: browserPfad } : {})
-const server = await serviere(ROOT)
+// Zeitmarken auf stderr: der Bericht (stdout) bleibt gleich, das CI-Protokoll
+// zeigt, wohin die Sekunden gehen.
+const T0 = Date.now()
+const marke = was => console.error(`[${((Date.now() - T0) / 1000).toFixed(1)} s] ${was}`)
+let browser = null, server = null
 let gemessen = 0
 const alle = []
 const nachRegel = new Map()
@@ -249,6 +251,14 @@ async function messe ({ pfad, artefakt, achse }) {
 const auswahl = betroffen(seiten().filter(s => !nur || s.pfad === nur))
 if (auswahl.grund) console.log(auswahl.grund)
 const auftraege = auswahl.liste.flatMap(s => ACHSEN.map(achse => ({ ...s, achse })))
+marke(`${auftraege.length} Messungen ausgewählt`)
+// Ein Browser nur, wenn es etwas zu messen gibt – sein kalter Start ist der
+// teuerste Schritt eines kleinen PR.
+if (auftraege.length) {
+  browser = await chromium.launch(existsSync(browserPfad) ? { executablePath: browserPfad } : {})
+  server = await serviere(ROOT)
+  marke('Browser bereit')
+}
 let naechster = 0
 await Promise.all(Array.from({ length: Math.min(zugleich, auftraege.length) }, async () => {
   while (naechster < auftraege.length) await messe(auftraege[naechster++])
@@ -256,8 +266,9 @@ await Promise.all(Array.from({ length: Math.min(zugleich, auftraege.length) }, a
 const RANG = new Map(ACHSEN.map((a, i) => [a.tag, i]))
 alle.sort((a, b) => a.pfad.localeCompare(b.pfad) || RANG.get(a.achse) - RANG.get(b.achse))
 
-server.zu()
-await browser.close()
+marke('gemessen')
+if (server) server.zu()
+if (browser) await browser.close()
 
 for (const s of alle) {
   console.log(`!!  ${s.pfad}  (${s.achse})`)
