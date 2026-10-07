@@ -647,13 +647,20 @@ function isOn(id) { return Object.prototype.hasOwnProperty.call(state.on, id) ? 
 // Textlink; mso-hide:all hält das Bild dort zusätzlich fern. Apple Mail zeigt
 // bei gesperrten Bildern nichts – vor der Freigabe mit echten Testmails prüfen
 // (TESTING.md).
+// Testvarianten (nur Intern, ?logo=a|b|c): was schaltet in Apple Mail den
+// Dunkelmodus ab? a = wie gebaut (mso-Weiche + gestaltetes Bild), b = ohne
+// mso-Weiche, c = nacktes Bild ohne Stil. Nach dem Test bleibt eine übrig.
+const LOGO_VARIANTE = (/[?&]logo=([abc])/.exec(location.search) || [, "a"])[1];
 function goetheanumHtml() {
   const link = (inner, extra) => "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;" + (extra || "") + "\">" + inner + "</a>";
   if (!logoWanted()) return link("Goetheanum");
+  const bildStil = "display:block;border:0;outline:none;margin:2px 0 0;font-family:" + CFONT.replace(/'/g, "") +
+    ";font-size:12px;line-height:17px;color:" + MAIL_BLUE + ";";
+  const bild = stil => "<img src=\"" + LOGO_URL + "\" width=\"100\" height=\"17\" alt=\"Goetheanum\"" + (stil ? " style=\"" + stil + "\"" : "") + " />";
+  if (LOGO_VARIANTE === "c") return "<a href=\"https://" + HAUS_WEB + "\">" + bild("") + "</a>";
+  if (LOGO_VARIANTE === "b") return link(bild(bildStil), "display:inline-block;");
   return "<!--[if mso]>" + link("Goetheanum") + "<![endif]-->" +
-    "<!--[if !mso]><!-->" + link("<img src=\"" + LOGO_URL + "\" width=\"100\" height=\"17\" alt=\"Goetheanum\" " +
-      "style=\"display:block;border:0;outline:none;margin:2px 0 0;mso-hide:all;font-family:" + CFONT.replace(/'/g, "") +
-      ";font-size:12px;line-height:17px;color:" + MAIL_BLUE + ";\" />", "display:inline-block;") + "<!--<![endif]-->";
+    "<!--[if !mso]><!-->" + link(bild(bildStil + "mso-hide:all;"), "display:inline-block;") + "<!--<![endif]-->";
 }
 
 /* ---------- Signatur: einfaches div/br-Markup, alle Stile inline ---------- */
