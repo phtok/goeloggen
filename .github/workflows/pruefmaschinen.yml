@@ -41,6 +41,8 @@ jobs:
   # kann (--seit; der Push auf main misst das ganze Haus), (2) mehrere Fenster
   # zugleich messen (--parallel) und (3) kein Browser geholt wird: der Läufer
   # bringt Google Chrome schon mit. Nur wenn der fehlt, wird Chromium geladen.
+  # Gemessen am 7. 10. 2026: chrome-headless-shell startet kalt in 0,2 s statt
+  # 7 s, kostet aber 4,2 s Installation je Lauf – netto kein Gewinn, verworfen.
   barrierefreiheit:
     runs-on: ubuntu-latest
     steps:
@@ -76,20 +78,3 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
           exit $stand
-      # VERSUCH (wird wieder entfernt): kalter Start von chrome-headless-shell
-      # gegen den vorinstallierten Chrome (dessen Zeit steht im Schritt davor).
-      - name: Versuch chrome-headless-shell
-        continue-on-error: true
-        working-directory: tools
-        run: |
-          s=$(date +%s.%N); npx playwright install --only-shell chromium >/dev/null; e=$(date +%s.%N)
-          echo "Installation: $(echo "$e - $s" | bc) s"
-          node -e '
-            const { chromium } = require("playwright-core");
-            (async () => {
-              for (const [name, opt] of [["headless-shell", {}], ["google-chrome", { executablePath: process.env.CHROMIUM_PATH }],
-                                         ["headless-shell warm", {}], ["google-chrome warm", { executablePath: process.env.CHROMIUM_PATH }]]) {
-                const t = Date.now(); const b = await chromium.launch(opt); const p = await b.newPage();
-                await p.setContent("<p>x</p>"); console.log(name + ": " + (Date.now() - t) + " ms"); await b.close();
-              }
-            })();'
