@@ -83,11 +83,18 @@ Name bei gesperrten Bildern nie fehlt, beginnt die Adresse mit Logo mit
 **‹Goetheanum›** (halbfett, Textfarbe, verlinkt; Zeile dann nicht
 ausblendbar). Abstand: eine Leerzeile vor der Adresse, zwei vor dem Logo.
 
+### Befund 7. 10. 2026 (Gmail)
+
+| Client | Logo sichtbar | Dunkelmodus | Adresse |
+|---|---|---|---|
+| Gmail Web (Chrome, hell) | ✅ | – | wurde zum blauen Maps-Link → selbst verlinkt in Textfarbe (#648) |
+| Gmail iOS | ✅ | ✅ dunkel, auch mit Logo | wie Web |
+
 ### Noch offen
 
 | Client | Logo sichtbar | Dunkelmodus | Bilder gesperrt |
 |---|---|---|---|
-| Gmail Web | ☐ | ☐ | ☐ |
+| Gmail (Adresse nach #648 schwarz?) | – | – | ☐ |
 | Outlook neu / Web | ☐ | ☐ | ☐ |
 | Outlook klassisch (Windows) | – (Textlink) | ☐ | ☐ |
 | Mail (iOS) | ☐ | ☐ | ☐ |
