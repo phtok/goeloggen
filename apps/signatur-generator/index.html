@@ -570,7 +570,6 @@ const val = k => els[k].value.trim();
 const valD = k => val(k) || DEFAULTS[k] || "";
 const splitLines = s => String(s || "").split(/\r?\n/).map(x => x.trim()).filter(Boolean);
 const webHref = w => !w ? "" : (/^https?:\/\//i.test(w) ? w : "https://" + w);
-const telHref = p => "tel:" + String(p || "").replace(/[^\d+]/g, "");
 const stripWww = w => String(w).replace(/^https?:\/\//i, "").replace(/^www\./i, "").replace(/\/+$/, "");
 
 /* ---------- Zeilen der Signatur: eine Liste, die Vorschau UND Häkchen speist ---------- */
@@ -601,6 +600,12 @@ function unitLines() {
 const plainRows = arr => arr.map(t => ({ html: esc(t), text: t }));
 const linkHtml = (href, text, color) =>
   "<a href=\"" + esc(href) + "\" style=\"color:" + color + ";text-decoration:none;\">" + esc(text) + "</a>";
+// Adresse und Telefon als Text, jedes Wort in eigenem <span>: So erkennt
+// Gmail sie nicht und macht keinen blauen Karten- oder Telefon-Link daraus
+// (Wortverbinder, geschützte Leerzeichen, unsichtbare Trenner halfen nicht).
+// Der wirkungslose Stil hält die spans beim Einfügen in Outlook am Leben –
+// leere räumt Outlook weg (Test 7. 10. 2026, Varianten G/H/I).
+const wortSpans = t => esc(t).replace(/[^\s·]+/g, w => "<span style=\"letter-spacing:0px;\">" + w + "</span>");
 // Mehrere Links auf einer Zeile, mit Mittelpunkt getrennt.
 const linkLine = (items, color) => items.length ? [{
   html: items.map(i => linkHtml(i.href, i.text, color)).join(" · "),
@@ -622,23 +627,18 @@ function collectLines() {
   add("web", "person", "Website", 2, linkLine(splitLines(val("web"))
     .filter(w => stripWww(w).toLowerCase() !== HAUS_WEB)
     .map(w => ({ href: webHref(w), text: stripWww(w) })), MAIL_BLUE));
-  // Telefonnummern als tel:-Link in Mail-Blau wie die Websites; eine Zeile.
-  // (color:inherit streichen die Editoren von Gmail und Outlook – dann käme Standard-Blau.)
-  add("tel", "kontakt", "Telefon", 1, linkLine(["phone", "mobile"].map(val).filter(Boolean)
-    .filter((t, i, a) => a.indexOf(t) === i)
-    .map(t => ({ href: telHref(t), text: t })), MAIL_BLUE));
+  // Telefonnummern als Text auf einer Zeile, wie die Adresse: Einen tel:-Link
+  // entfärbt Outlook, Gmail macht ihn dann Standard-Blau mit Unterstrich.
+  const tel = ["phone", "mobile"].map(val).filter(Boolean)
+    .filter((t, i, a) => a.indexOf(t) === i).join(" · ");
+  add("tel", "kontakt", "Telefon", 1, tel ? [{ html: wortSpans(tel), text: tel }] : []);
   add("hochschule", "haus", "Hochschule", 2, plainRows(inLang([term("hochschule", "de")], [term("hochschule", "en")])));
   add("aag", "haus", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
   // Adresse auf EINER Zeile (mit Mittelpunkt), als reiner Text: Der
   // Signatur-Editor von Outlook im Browser entfernt color:inherit an Links und
-  // färbt eine verlinkte Adresse blau. Jedes Wort steht in eigenem <span> –
-  // so erkennt Gmail die Adresse nicht und macht keinen blauen Karten-Link
-  // daraus (Test 7. 10. 2026: Wortverbinder, geschützte Leerzeichen und
-  // unsichtbare Trenner halfen nicht, die spans schon).
+  // färbt eine verlinkte Adresse blau.
   const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
-  // Der (wirkungslose) Stil hält die spans beim Einfügen in Outlook am Leben;
-  // leere spans räumt Outlook weg, dann verlinkt Gmail wieder (Test G/H/I).
-  const addrHtml = esc(addr).replace(/[^\s·]+/g, w => "<span style=\"letter-spacing:0px;\">" + w + "</span>");
+  const addrHtml = wortSpans(addr);
   // Mit Logo beginnt die Adresse mit ‹Goetheanum›, halbfett (G01: genau ein
   // Merkmal): Wo das Logo nicht ankommt, steht der Name trotzdem gut sichtbar
   // da (Beschluss 7. 10. 2026).
