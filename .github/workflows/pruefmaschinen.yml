@@ -41,17 +41,16 @@ jobs:
   # kann (--seit; der Push auf main misst das ganze Haus), (2) mehrere Fenster
   # zugleich messen (--parallel) und (3) kein Browser geholt wird: der Läufer
   # bringt Google Chrome schon mit. Nur wenn der fehlt, wird Chromium geladen.
+  # Gemessen am 7. 10. 2026: chrome-headless-shell startet kalt in 0,2 s statt
+  # 7 s, kostet aber 4,2 s Installation je Lauf – netto kein Gewinn, verworfen.
   barrierefreiheit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: tools/package-lock.json
+      # Node bringt der Läufer mit; fünf Pakete installieren sich ohne Cache in
+      # einer Sekunde – setup-node kostete mit Download mehr, als es sparte.
       - name: Pakete und Browser
         working-directory: tools
         run: |
