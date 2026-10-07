@@ -121,6 +121,41 @@
   .thumb .lnk{width:58px;height:58px;display:block}
   .thumb .lnk g{fill:none;stroke:var(--ink);stroke-width:3.6;stroke-linecap:round}
 
+  /* Ordnen-Modus (?ordnen, assets/ordnen.js): die Startseite live, darauf die
+     Sortier-Griffe. Leiste klebt unter der Kopfzeile; Aktion = Blau (.btn),
+     Fläche wählen = Gold-Pille (.seg, B01). Ziele ≥44px (B04). */
+  .ord-bar{position:sticky;top:var(--header-h);z-index:20;display:flex;flex-wrap:wrap;align-items:center;
+    gap:var(--s2) var(--s3);margin:calc(-1 * var(--s4)) 0 var(--s5);padding:var(--s3) 0;
+    background:var(--paper);border-bottom:1px solid var(--line)}
+  .ord-bar .btn{min-height:var(--tap)}
+  .ord-status{margin:0;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .ord-status.err{color:var(--bad)}
+  .ord-luft{flex:1 1 auto}
+  .ord-item{display:flex;flex-direction:column;gap:var(--s2);cursor:grab}
+  .ord-item>.tile{flex:1 1 auto}
+  .ord-item.zieht{opacity:.5}
+  .ord-item.ueber>.tile,.ord-item.ueber.dsnav-link{box-shadow:inset 0 0 0 2px var(--gold-deep)}
+  .ord-ctl{display:flex;gap:var(--s2)}
+  .ord-k{min-width:var(--tap);min-height:var(--tap);padding:0 var(--s3);font-family:var(--font-text);font-size:var(--t-small)}
+  .ord-item .ord-ctl .ord-k[data-akt="aus"]{margin-left:auto}
+  /* Schublade: dieselbe Fläche wie das Menü (nav.css), hier in der Seite stehend. */
+  .ord-schublade{width:min(420px,100%);border:1px solid var(--line);border-radius:var(--r-card);
+    background:var(--paper);overflow:hidden}
+  .ord-schublade .dhead{display:flex;align-items:center;padding:0 22px;height:var(--header-h);border-bottom:1px solid var(--line)}
+  .ord-schublade .dhead .t{font-weight:var(--w-deutlich);font-size:15px}
+  .ord-schublade .body{padding:var(--s2) 0}
+  .ord-schublade .dsnav-link.ord-item{flex-direction:row;padding-right:var(--s2)}
+  .ord-schublade .ord-ctl{margin-left:auto;gap:4px}
+  .ord-k[data-akt="vor"],.ord-k[data-akt="nach"]{font-size:20px}
+  .goe-ordnen .dsnav-invite{display:none}
+  @media(max-width:720px){.ord-bar{position:static}}
+  .ord-aus{margin-top:var(--s8)}
+  .ord-aus h2{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:20px;margin:0 0 var(--s3)}
+  .ord-aus ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:var(--s2)}
+  .ord-aus li{display:flex;align-items:center;gap:var(--s3);padding:4px 4px 4px var(--s4);
+    border:1px dashed var(--line);border-radius:var(--r-control);color:var(--muted);
+    font-family:var(--font-text);font-size:var(--t-small)}
+
   /* Reduzierte Bewegung: die Karte hebt sich nicht an. */
   @media(prefers-reduced-motion:reduce){.tile:hover{transform:none}}
 </style>
@@ -207,7 +242,16 @@
     var grid = document.getElementById("cards");
     tools.forEach(function(t){ grid.appendChild(tile(t)); });
   }
-  fetch("tools.json").then(function(r){ return r.json(); }).then(render).catch(function(){
+  // Ordnen-Modus (?ordnen): dieselbe Seite, dazu die Sortier-Griffe (assets/ordnen.js).
+  var ORDNEN = /[?&]ordnen\b/.test(location.search);
+  function start(man){
+    if (!ORDNEN) return render(man);
+    var sc = document.createElement("script");
+    sc.src = "assets/ordnen.js";
+    sc.onload = function(){ window.goeOrdnen(man, tile); };
+    document.body.appendChild(sc);
+  }
+  fetch("tools.json").then(function(r){ return r.json(); }).then(start).catch(function(){
     document.getElementById("cards").innerHTML = '<p class="meta">Werkzeugliste konnte nicht geladen werden.</p>';
   });
 })();
