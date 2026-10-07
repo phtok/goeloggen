@@ -63,26 +63,34 @@ Paare auf einer Zeile (bis 56 Zeichen), lange untereinander.
 
 ## Logo (Backend-Versuch, nur Intern-Ansicht)
 
-Das Logo steht an Stelle des Schriftzugs ‹Goetheanum› als Schlusszeile, verlinkt, mit
-`alt="Goetheanum"`. Klassisches Outlook (Windows) liest die mso-Weiche und
-bekommt den Textlink. Vor einer Freigabe je Client eine echte Testmail,
-einmal mit geladenen, einmal mit gesperrten Bildern:
+Das Logo steht an Stelle des Schriftzugs ‹Goetheanum› als Schlusszeile,
+verlinkt, als **CSS-Hintergrund** (kein `<img>`). Klassisches Outlook (Windows)
+liest die mso-Weiche und bekommt den Textlink.
 
-| Client | Bild geladen | Bilder gesperrt → ‹Goetheanum›-Link | kein Anhang |
+### Befund 7. 10. 2026 (Apple Mail, macOS, Dunkelmodus)
+
+| Variante | Dunkelmodus beim Empfang | Bilder gesperrt |
+|---|---|---|
+| `<img>` mit mso-Weiche und Stil | hell | ‹Goetheanum› als Text im Rahmen |
+| `<img>` ohne mso-Weiche | hell | wie oben |
+| `<img>` nackt | hell | wie oben |
+| CSS-Hintergrund | **dunkel**, Logo sichtbar | Stelle leer |
+| Schriftzug ohne Logo | dunkel | – |
+
+Schluss: Jedes `<img>` schaltet Apple Mail auf hell, auch gesperrt. Gebaut
+ist darum der Hintergrund. Keine Büroklammer in allen Varianten. Damit der
+Name bei gesperrten Bildern nie fehlt, beginnt die Adresse mit Logo mit
+**‹Goetheanum›** (halbfett, Textfarbe, verlinkt; Zeile dann nicht
+ausblendbar). Abstand: eine Leerzeile vor der Adresse, zwei vor dem Logo.
+
+### Noch offen
+
+| Client | Logo sichtbar | Dunkelmodus | Bilder gesperrt |
 |---|---|---|---|
-| Apple Mail (macOS/iOS) | ☐ | ☐ (erwartet: nichts) | ☐ |
-| Outlook klassisch (Windows) | – (Textlink) | ☐ | ☐ |
-| Outlook neu / Web | ☐ | ☐ | ☐ |
 | Gmail Web | ☐ | ☐ | ☐ |
-
-### Befund 7. 10. 2026 (Apple Mail, macOS)
-
-- Bild geladen: Logo sitzt, keine Büroklammer.
-- Bilder gesperrt: ‹Goetheanum› erscheint als blauer Text (Apple zeichnet
-  einen dünnen Rahmen darum).
-- **Dunkelmodus:** Mit Logo zeigt Apple Mail die empfangene Mail hell; ohne
-  Logo dunkel. Gegentest mit `?logo=a|b|c` (a = wie gebaut, b = ohne
-  mso-Weiche, c = nacktes Bild): welche Variante bleibt dunkel?
+| Outlook neu / Web | ☐ | ☐ | ☐ |
+| Outlook klassisch (Windows) | – (Textlink) | ☐ | ☐ |
+| Mail (iOS) | ☐ | ☐ | ☐ |
 
 ## Nicht-Ziele
 

@@ -316,7 +316,7 @@
             <input type="checkbox" id="showLogo" />
             <span>
               <span class="lo-lab">Logo statt Schriftzug ‹Goetheanum›</span>
-              <span class="lo-sub">Backend-Versuch · verlinkt zu goetheanum.ch. Fehlt das Bild, steht ‹Goetheanum› als Link da; das klassische Outlook bekommt gleich den Link. Kein Anhang, kein Tracking.</span>
+              <span class="lo-sub">Backend-Versuch · verlinkt zu goetheanum.ch. Bei gesperrten Bildern bleibt die Stelle leer; das klassische Outlook zeigt den Schriftzug. Kein Anhang, kein Tracking.</span>
             </span>
           </label>
         </div>
@@ -607,9 +607,10 @@ const linkLine = (items, color) => items.length ? [{
   text: items.map(i => i.text).join(" · ")
 }] : [];
 
-// Vier Blöcke, je mit Leerzeile abgesetzt: wer (Person, Funktion, Sektion
-// oder Bereich samt deren Websites) · wie erreichbar · wo (Hochschule,
-// Gesellschaft, Adresse) · Goetheanum als Schlusszeile, Schriftzug oder Logo.
+// Blöcke, je mit Leerzeile abgesetzt: wer (Person, Funktion, Sektion oder
+// Bereich samt deren Websites) · wie erreichbar · Haus (Hochschule,
+// Gesellschaft) · Adresse · Goetheanum als Schluss, Schriftzug oder Logo
+// (das Logo mit doppeltem Abstand).
 function collectLines() {
   const L = [];
   const add = (id, group, label, step, rows) => { if (rows.length) L.push({ id, group, label, step, rows }); };
@@ -629,14 +630,26 @@ function collectLines() {
   add("aag", "haus", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
   // Adresse auf EINER Zeile (mit Mittelpunkt)
   const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
-  add("address", "haus", "Adresse", "adr", plainRows([addr]));
+  // Mit Logo trägt die Adresse den Namen ‹Goetheanum›, halbfett in Textfarbe,
+  // verlinkt (G01: genau ein Merkmal, wie der Name oben). Das Logo bleibt die
+  // einzige blaue Marke; bei gesperrten Bildern bleibt dessen Stelle leer, der
+  // Name steht trotzdem gut sichtbar da (Beschluss 7. 10. 2026).
+  add("address", "adresse", "Adresse", "adr", logoWanted()
+    ? [{ html: "<a href=\"https://" + HAUS_WEB + "\" style=\"color:inherit;text-decoration:none;font-weight:600;\">Goetheanum</a> · " + esc(addr),
+         text: "Goetheanum · " + addr }]
+    : plainRows([addr]));
   // ‹Goetheanum› ist selbst der Link zur Website; das Blau zeichnet ihn aus.
   // Im Klartext gibt es keine Links, dort steht die Adresse dabei.
-  add("goetheanum", "marke", "Goetheanum", 0, [{ html: goetheanumHtml(), text: "Goetheanum · " + HAUS_WEB }]);
+  add("goetheanum", "marke", "Goetheanum", 0, [{ html: goetheanumHtml(), text: (logoWanted() ? "" : "Goetheanum · ") + HAUS_WEB }]);
   return L;
 }
 function defaultOn(id) { return id === "hochschule" ? state.unitKind === "sektion" : true; }
-function isOn(id) { return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id); }
+// Mit Logo bleibt die Adresse stehen: Sie trägt dann den Namen (siehe collectLines).
+const PFLICHT = id => id === "address" && logoWanted();
+function isOn(id) {
+  if (PFLICHT(id)) return true;
+  return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id);
+}
 
 /* ---------- Schriftzug oder Logo ---------- */
 // Ohne Logo: ‹Goetheanum› in Mail-Blau, verlinkt. Mit Logo (Backend-Versuch,
@@ -647,20 +660,20 @@ function isOn(id) { return Object.prototype.hasOwnProperty.call(state.on, id) ? 
 // Textlink; mso-hide:all hält das Bild dort zusätzlich fern. Apple Mail zeigt
 // bei gesperrten Bildern nichts – vor der Freigabe mit echten Testmails prüfen
 // (TESTING.md).
-// Testvarianten (nur Intern, ?logo=a|b|c): was schaltet in Apple Mail den
-// Dunkelmodus ab? a = wie gebaut (mso-Weiche + gestaltetes Bild), b = ohne
-// mso-Weiche, c = nacktes Bild ohne Stil. Nach dem Test bleibt eine übrig.
-const LOGO_VARIANTE = (/[?&]logo=([abc])/.exec(location.search) || [, "a"])[1];
+// Ohne Logo: ‹Goetheanum› in Mail-Blau, verlinkt. Mit Logo (Backend-Versuch,
+// nur Intern-Ansicht) steht an derselben Stelle das Logo – als CSS-Hintergrund,
+// nicht als <img>: Getestet am 7. 10. 2026 in Apple Mail schaltet JEDES <img>
+// (auch gesperrt, auch ohne Stil) die Mail im Dunkelmodus auf hell; das
+// Hintergrundbild lässt sie dunkel. Preis: Bei gesperrten Bildern bleibt die
+// Stelle leer. Das klassische Outlook (Word-Engine) zeigt keine Hintergründe;
+// es liest als einziges die mso-Weiche und bekommt den Textlink.
 function goetheanumHtml() {
-  const link = (inner, extra) => "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;" + (extra || "") + "\">" + inner + "</a>";
+  const link = inner => "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" + inner + "</a>";
   if (!logoWanted()) return link("Goetheanum");
-  const bildStil = "display:block;border:0;outline:none;margin:2px 0 0;font-family:" + CFONT.replace(/'/g, "") +
-    ";font-size:12px;line-height:17px;color:" + MAIL_BLUE + ";";
-  const bild = stil => "<img src=\"" + LOGO_URL + "\" width=\"100\" height=\"17\" alt=\"Goetheanum\"" + (stil ? " style=\"" + stil + "\"" : "") + " />";
-  if (LOGO_VARIANTE === "c") return "<a href=\"https://" + HAUS_WEB + "\">" + bild("") + "</a>";
-  if (LOGO_VARIANTE === "b") return link(bild(bildStil), "display:inline-block;");
   return "<!--[if mso]>" + link("Goetheanum") + "<![endif]-->" +
-    "<!--[if !mso]><!-->" + link(bild(bildStil + "mso-hide:all;"), "display:inline-block;") + "<!--<![endif]-->";
+    "<!--[if !mso]><!--><a href=\"https://" + HAUS_WEB + "\" aria-label=\"Goetheanum\" style=\"display:inline-block;border:0;text-decoration:none;\">" +
+    "<div style=\"width:100px;height:17px;background-image:url('" + LOGO_URL + "');background-repeat:no-repeat;" +
+    "background-position:left center;background-size:contain;\"></div></a><!--<![endif]-->";
 }
 
 /* ---------- Signatur: einfaches div/br-Markup, alle Stile inline ---------- */
@@ -696,7 +709,12 @@ function buildSignature() {
   // Blöcke je mit Leerzeile abgesetzt (siehe collectLines).
   let group = null;
   collectLines().filter(l => isOn(l.id)).forEach(l => {
-    if (l.group !== group) { gap(); group = l.group; }
+    if (l.group !== group) {
+      gap();
+      // Das Logo bekommt doppelten Abstand: es schliesst, es gehört nicht zur Adresse.
+      if (l.group === "marke" && logoWanted()) gap();
+      group = l.group;
+    }
     l.rows.forEach(r => push(r.html, r.text));
   });
 
@@ -719,7 +737,7 @@ function renderZeilen() {
     group = l.group;
     const on = isOn(l.id), id = "z-" + l.id;
     html += "<li class=\"" + (on ? "" : "aus") + "\"><label for=\"" + id + "\">" +
-      "<input type=\"checkbox\" id=\"" + id + "\" data-zeile=\"" + l.id + "\"" + (on ? " checked" : "") + " />" +
+      "<input type=\"checkbox\" id=\"" + id + "\" data-zeile=\"" + l.id + "\"" + (on ? " checked" : "") + (PFLICHT(l.id) ? " disabled" : "") + " />" +
       "<span class=\"z-text\">" + l.rows.map(r => esc(r.text)).join("<br>") +
       (l.rows[0].text === l.label ? "" : "<small>" + esc(l.label) + "</small>") + "</span></label>" +
       (l.step ? "<button type=\"button\" class=\"z-edit\" data-goto=\"" + l.step + "\" aria-label=\"" + esc(l.label) + " ändern\">ändern</button>" : "<span></span>") +
