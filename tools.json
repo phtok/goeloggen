@@ -212,8 +212,8 @@
       "title": "Signatur",
       "short": "Signatur",
       "href": "apps/signatur-generator/",
-      "desc": "Outlook-robuste E-Mail-Signatur nach gemeinsamer Vorlage – kopieren und einsetzen.",
-      "such": "E-Mail Mail Outlook Signatur Fusszeile"
+      "desc": "E-Mail-Signatur in vier Schritten: Name, Sektion oder Bereich, Kontakt – dann jede Zeile ein- oder ausblenden, Deutsch und English. Kopieren und einsetzen.",
+      "such": "E-Mail Mail Outlook Signatur Fusszeile Sektion Hochschule English"
     },
     {
       "slug": "editor",

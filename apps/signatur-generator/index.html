@@ -53,6 +53,30 @@
   .fold[open]>summary::after{content:"–"}
   .fold-body{display:grid;gap:var(--s3);margin-top:var(--s3)}
 
+  /* Schrittleiste wie in ‹Mein Campusplan›: jede Station anwählbar, die aktuelle in Tinte. */
+  .schritte{list-style:none;margin:0 0 var(--s5);padding:0;display:flex;gap:var(--s1) var(--s3);flex-wrap:wrap}
+  .schritte button{display:inline-flex;align-items:center;gap:var(--s2);min-height:var(--tap);padding:0;
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);background:none;border:0;cursor:pointer}
+  .schritte button[aria-current="step"]{color:var(--ink);font-weight:600}
+  .schritte .step-num{top:0}
+  .schrittfuss{margin-top:var(--s5)}
+  .schrittfuss #stepBack[hidden],.schrittfuss #stepNext[hidden]{display:none}
+
+  /* Schritt 4: jede Zeile der Signatur ein- und ausblenden. */
+  .presets{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);flex-wrap:wrap;margin-bottom:var(--s3)}
+  .zeilen{list-style:none;margin:0 0 var(--s4);padding:0;display:grid;gap:2px}
+  .zeilen li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:var(--s2);
+    min-height:var(--tap);border-radius:var(--r-control)}
+  .zeilen li:hover{background:var(--soft)}
+  .zeilen label{display:contents;cursor:pointer}
+  .zeilen input[type="checkbox"]{width:22px;height:22px;margin:0 var(--s1);accent-color:var(--gold-deep);cursor:pointer}
+  .zeilen .z-text{font-family:var(--font-text);font-size:var(--t-small);line-height:1.35;color:var(--ink);min-width:0;overflow-wrap:anywhere}
+  .zeilen .z-text small{display:block;font-size:var(--t-micro);color:var(--muted)}
+  .zeilen li.aus .z-text{color:var(--muted)}
+  .zeilen .z-edit{font-family:var(--font-text);font-size:var(--t-micro);color:var(--gold-ink);background:none;border:0;
+    min-height:var(--tap);padding:0 var(--s2);cursor:pointer}
+  .zeilen .z-gap{min-height:var(--s2)}
+
   .btnrow{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center;margin-top:var(--s6)}
   /* .btn-Basisrolle bleibt kanonisch (base.css); nur der Grössen-Modifier ist lokal,
      entkoppelt vom .btn-Präfix damit der DS04-Checker ihn nicht als Redefinition
@@ -196,84 +220,133 @@
     </div>
 
     <div class="work">
-      <!-- Formular -->
-      <div class="card soft">
-        <fieldset class="fset">
-          <label class="field"><span class="lab"><span>Name</span></span>
-            <input type="text" id="name" placeholder="Edith Maryon" autocomplete="name" />
-          </label>
-          <label class="field"><span class="lab"><span>Funktion / Bereich / Sektion</span> <span class="sublab">optional, je Zeile eine</span></span>
-            <textarea id="role" rows="2" placeholder="Sektion für Bildende Künste&#10;Visual Art Section"></textarea>
-          </label>
-          <label class="field"><span class="lab"><span>Telefon</span> <span class="sublab">optional</span></span>
-            <input type="tel" id="phone" placeholder="+41 61 706 44 21" autocomplete="tel" />
-          </label>
-          <label class="field"><span class="lab"><span>Mobil</span> <span class="sublab">optional</span></span>
-            <input type="tel" id="mobile" placeholder="+41 79 000 00 00" autocomplete="tel" />
-          </label>
-          <label class="field"><span class="lab"><span>Website</span> <span class="sublab">optional, mehrere je Zeile</span></span>
-            <textarea id="web" rows="2" placeholder="goetheanum.ch"></textarea>
-          </label>
-        </fieldset>
+      <!-- Formular: vier Schritte, vom Namen bis zur fertigen Signatur -->
+      <div class="card soft" id="formCard">
+        <ol class="schritte" id="schritte">
+          <li><button type="button" data-step="1" aria-current="step"><span class="step-num"><b>1</b></span>Du</button></li>
+          <li><button type="button" data-step="2"><span class="step-num"><b>2</b></span>Zugehörigkeit</button></li>
+          <li><button type="button" data-step="3"><span class="step-num"><b>3</b></span>Kontakt</button></li>
+          <li><button type="button" data-step="4"><span class="step-num"><b>4</b></span>Signatur</button></li>
+        </ol>
 
-        <details class="fold">
-          <summary>Organisation &amp; Adresse <span class="sub">meist unverändert</span></summary>
-          <div class="fold-body">
-            <label class="field"><span class="lab"><span>Organisation – Hauptzeile</span> <span class="sublab">erscheint blau</span></span>
-              <input type="text" id="org1" placeholder="Goetheanum" />
+        <div class="schritt" data-step="1">
+          <fieldset class="fset">
+            <label class="field"><span class="lab"><span>Name</span></span>
+              <input type="text" id="name" placeholder="Edith Maryon" autocomplete="name" />
             </label>
-            <label class="field"><span class="lab"><span>Organisation – Unterzeile</span> <span class="sublab">mehrzeilig möglich</span></span>
-              <textarea id="org2" rows="2" placeholder="Allgemeine Anthroposophische Gesellschaft&#10;General Anthroposophical Society"></textarea>
+            <label class="field"><span class="lab"><span>Funktion</span> <span class="sublab">optional, je Zeile eine</span></span>
+              <textarea id="role" rows="1" placeholder="Leiterin"></textarea>
             </label>
-            <label class="field"><span class="lab"><span>Strasse / Nr.</span></span>
-              <input type="text" id="street" placeholder="Rüttiweg 45" />
+            <label class="field" id="roleEnField"><span class="lab"><span>Funktion auf Englisch</span> <span class="sublab">optional</span></span>
+              <textarea id="roleEn" rows="1" placeholder="Head"></textarea>
             </label>
-            <label class="field"><span class="lab"><span>PLZ / Ort</span></span>
-              <span class="input-wrap">
-                <input type="text" id="city" placeholder="4143 Dornach" />
-                <a class="btn-mini" href="../../assets/merkblaetter/das-kuerzel-vor-der-zahl.pdf" target="_blank" rel="noopener"
-                   title="Merkblatt: Das Kürzel vor der Zahl – warum CH-4143 nicht ins Adressfeld gehört (PDF)">beachten</a>
-              </span>
-            </label>
-            <label class="field"><span class="lab"><span>Land</span></span>
-              <input type="text" id="country" placeholder="Switzerland" />
-            </label>
-          </div>
-        </details>
-
-        <details class="fold" id="psFold">
-          <summary>Meistgelesen <span class="sub">Platz für eine Veranstaltung</span></summary>
-          <div class="fold-body">
-            <label class="field"><span class="lab"><span>PS-Text</span> <span class="counter" id="psCount">0/120</span></span>
-              <textarea id="ps" rows="2" maxlength="120" placeholder="Faust 1+2 · Drei mal im Sommer 2027"></textarea>
-            </label>
-            <label class="field"><span class="lab"><span>Link</span> <span class="sublab">optional</span></span>
-              <input type="url" id="pslink" placeholder="www.faust.jetzt" />
-            </label>
-            <label class="field"><span class="lab"><span>Gültig bis</span> <span class="sublab">für die Erinnerung</span></span>
-              <input type="date" id="psuntil" />
-            </label>
-            <div class="btnrow" style="margin-top:0">
-              <button type="button" class="btn small" id="icsBtn">Erinnerung in den Kalender</button>
-            </div>
-          </div>
-        </details>
-
-        <label class="logo-opt" id="logoOpt" hidden>
-          <input type="checkbox" id="showLogo" />
-          <span>
-            <span class="lo-lab">Logo unter der Signatur</span>
-            <span class="lo-sub">Backend-Versuch · Marke + Wortmarke, verlinkt zu goetheanum.ch. Kein Anhang, kein Tracking (auf unserem Server).</span>
-          </span>
-        </label>
-        <div class="logo-tech" id="logoTech" hidden>
-          <label><input type="radio" name="logoTech" value="bg" checked /> <span>Fail-silent <span class="lt-sub">(Apple Mail, Gmail · bei Blockade nichts, aber in Outlook unsichtbar)</span></span></label>
-          <label><input type="radio" name="logoTech" value="img" /> <span>Auch Outlook <span class="lt-sub">(img · zeigt in Outlook, dafür Platzhalter-Kästchen bei blockierten Bildern)</span></span></label>
+          </fieldset>
         </div>
 
-        <div class="btnrow">
+        <div class="schritt" data-step="2" hidden>
+          <fieldset class="fset">
+            <span class="lab">Wo arbeitest du?</span>
+            <div class="seg" id="unitKind" role="group" aria-label="Zugehörigkeit">
+              <button type="button" data-kind="sektion" aria-pressed="false">Sektion</button>
+              <button type="button" data-kind="bereich" aria-pressed="false">Bereich</button>
+              <button type="button" data-kind="eigene" aria-pressed="false">Eigene Angabe</button>
+              <button type="button" data-kind="" aria-pressed="true">Nur Goetheanum</button>
+            </div>
+            <label class="field" id="unitField" hidden><span class="lab"><span id="unitLab">Sektion</span></span>
+              <select id="unit"></select>
+            </label>
+            <label class="field" id="unitCustomField" hidden><span class="lab"><span>Eigene Angabe</span> <span class="sublab">je Zeile eine</span></span>
+              <textarea id="unitCustom" rows="2" placeholder="Forschungsinstitut am Goetheanum"></textarea>
+            </label>
+            <span class="lab">Sprache der Signatur</span>
+            <div class="seg" id="lang" role="group" aria-label="Sprache der Signatur">
+              <button type="button" data-lang="de" aria-pressed="true">Deutsch</button>
+              <button type="button" data-lang="de-en" aria-pressed="false">Deutsch + English</button>
+              <button type="button" data-lang="en" aria-pressed="false">English</button>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="schritt" data-step="3" hidden>
+          <fieldset class="fset">
+            <label class="field"><span class="lab"><span>Telefon</span> <span class="sublab">optional</span></span>
+              <input type="tel" id="phone" placeholder="+41 61 706 44 21" autocomplete="tel" />
+            </label>
+            <label class="field"><span class="lab"><span>Mobil</span> <span class="sublab">optional</span></span>
+              <input type="tel" id="mobile" placeholder="+41 79 000 00 00" autocomplete="tel" />
+            </label>
+            <label class="field"><span class="lab"><span>Website</span> <span class="sublab">mehrere je Zeile</span></span>
+              <textarea id="web" rows="1" placeholder="goetheanum.ch"></textarea>
+            </label>
+            <button type="button" class="btn ghost small" id="secWeb" hidden></button>
+          </fieldset>
+        </div>
+
+        <div class="schritt" data-step="4" hidden>
+          <div class="presets">
+            <span class="lab">Zeilen</span>
+            <div class="btnrow" id="presets" style="margin-top:0">
+              <button type="button" class="btn ghost small" data-preset="min">Minimal</button>
+              <button type="button" class="btn ghost small" data-preset="all">Vollständig</button>
+            </div>
+          </div>
+          <ul class="zeilen" id="zeilen"></ul>
+
+          <details class="fold">
+            <summary>Adresse <span class="sub">meist unverändert</span></summary>
+            <div class="fold-body">
+              <label class="field"><span class="lab"><span>Strasse / Nr.</span></span>
+                <input type="text" id="street" placeholder="Rüttiweg 45" />
+              </label>
+              <label class="field"><span class="lab"><span>PLZ / Ort</span></span>
+                <span class="input-wrap">
+                  <input type="text" id="city" placeholder="4143 Dornach" />
+                  <a class="btn-mini" href="../../assets/merkblaetter/das-kuerzel-vor-der-zahl.pdf" target="_blank" rel="noopener"
+                     title="Merkblatt: Das Kürzel vor der Zahl – warum CH-4143 nicht ins Adressfeld gehört (PDF)">beachten</a>
+                </span>
+              </label>
+              <label class="field"><span class="lab"><span>Land</span></span>
+                <input type="text" id="country" placeholder="Switzerland" />
+              </label>
+            </div>
+          </details>
+
+          <details class="fold" id="psFold">
+            <summary>Meistgelesen <span class="sub">Platz für eine Veranstaltung</span></summary>
+            <div class="fold-body">
+              <label class="field"><span class="lab"><span>PS-Text</span> <span class="counter" id="psCount">0/120</span></span>
+                <textarea id="ps" rows="2" maxlength="120" placeholder="Faust 1+2 · Drei mal im Sommer 2027"></textarea>
+              </label>
+              <label class="field"><span class="lab"><span>Link</span> <span class="sublab">optional</span></span>
+                <input type="url" id="pslink" placeholder="www.faust.jetzt" />
+              </label>
+              <label class="field"><span class="lab"><span>Gültig bis</span> <span class="sublab">für die Erinnerung</span></span>
+                <input type="date" id="psuntil" />
+              </label>
+              <div class="btnrow" style="margin-top:0">
+                <button type="button" class="btn small" id="icsBtn">Erinnerung in den Kalender</button>
+              </div>
+            </div>
+          </details>
+
+          <label class="logo-opt" id="logoOpt" hidden>
+            <input type="checkbox" id="showLogo" />
+            <span>
+              <span class="lo-lab">Logo unter der Signatur</span>
+              <span class="lo-sub">Backend-Versuch · Marke + Wortmarke, verlinkt zu goetheanum.ch. Kein Anhang, kein Tracking (auf unserem Server).</span>
+            </span>
+          </label>
+          <div class="logo-tech" id="logoTech" hidden>
+            <label><input type="radio" name="logoTech" value="bg" checked /> <span>Fail-silent <span class="lt-sub">(Apple Mail, Gmail · bei Blockade nichts, aber in Outlook unsichtbar)</span></span></label>
+            <label><input type="radio" name="logoTech" value="img" /> <span>Auch Outlook <span class="lt-sub">(img · zeigt in Outlook, dafür Platzhalter-Kästchen bei blockierten Bildern)</span></span></label>
+          </div>
+        </div>
+
+        <div class="btnrow schrittfuss">
+          <button type="button" class="btn" id="stepBack">Zurück</button>
+          <button type="button" class="btn primary" id="stepNext">Weiter</button>
           <button type="button" class="btn ghost" id="fillExample">Beispiel einfügen</button>
-          <button type="button" class="btn ghost" id="clearAll">Felder leeren</button>
+          <button type="button" class="btn ghost" id="clearAll">Neu beginnen</button>
         </div>
         <p class="privacy">Deine Eingaben bleiben in deinem Browser gespeichert – nichts verlässt dein Gerät.</p>
       </div>
@@ -459,6 +532,8 @@
   <span><strong>Goetheanum</strong> · E-Mail-Signatur</span>
 </div></footer>
 
+<script src="../../assets/goe-orgs.js"></script>
+<script src="../../assets/goe-terms.js"></script>
 <script>
 "use strict";
 
@@ -482,27 +557,32 @@ function logoTech() {
   return r ? r.value : "bg";
 }
 
-const FIELDS = ["name","role","phone","mobile","web","org1","org2","street","city","country","ps","pslink","psuntil"];
-const STORE_KEY = "goe-signatur-v3";
+const FIELDS = ["name","role","roleEn","unitCustom","phone","mobile","web","street","city","country","ps","pslink","psuntil"];
+const STORE_KEY = "goe-signatur-v4";
+const OLD_KEY = "goe-signatur-v3";
+// Leere Felder fallen auf das Haus zurück; weg kommt eine Zeile über ihr Häkchen.
+const DEFAULTS = { web: "goetheanum.ch", street: "Rüttiweg 45", city: "4143 Dornach", country: "Switzerland" };
+
+// Namen aus der einen Quelle (assets/goe-orgs.js, assets/goe-terms.js) – nicht kopieren.
+const ORGS_ = window.GOE_GCI_ORGS || {};
+const UNIT_KEYS = { sektion: window.GOE_HOCHSCHULE_KEYS || [], bereich: window.GOE_BEREICHE_KEYS || [] };
+const SEC_WEB = window.GOE_SECTION_WEBSITES || {};
+const TERMS = window.GOE_TERMS || {};
+const term = (k, l) => (TERMS[k] && TERMS[k][l]) || "";
 
 const EXAMPLE = {
   name: "Edith Maryon",
-  role: "Sektion für Bildende Künste\nVisual Art Section",
+  role: "Leiterin",
+  roleEn: "Head",
+  unitKind: "sektion", unit: "sbk", lang: "de-en",
   phone: "+41 61 706 44 21",
-  mobile: "",
-  web: "goetheanum.ch",
-  org1: "Goetheanum",
-  org2: "Allgemeine Anthroposophische Gesellschaft\nGeneral Anthroposophical Society",
-  street: "Rüttiweg 45",
-  city: "4143 Dornach",
-  country: "Switzerland",
   // Haus-PS: gehört allen Abteilungen, hält bis Ende Juli 2027.
   ps: "Faust 1+2 · Drei mal im Sommer 2027",
   pslink: "www.faust.jetzt",
   psuntil: "2027-07-31"
 };
 
-const state = { mode: "light", plain: "" };
+const state = { mode: "light", plain: "", step: 1, unitKind: "", unit: "", lang: "de", on: {} };
 const els = {};
 FIELDS.forEach(k => { els[k] = document.getElementById(k); });
 
@@ -511,9 +591,52 @@ function esc(s) {
   return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 const val = k => els[k].value.trim();
+const valD = k => val(k) || DEFAULTS[k] || "";
+const splitLines = s => String(s || "").split(/\r?\n/).map(x => x.trim()).filter(Boolean);
 const webHref = w => !w ? "" : (/^https?:\/\//i.test(w) ? w : "https://" + w);
 const telHref = p => "tel:" + String(p || "").replace(/[^\d+]/g, "");
 const stripWww = w => String(w).replace(/^https?:\/\//i, "").replace(/^www\./i, "").replace(/\/+$/, "");
+
+/* ---------- Zeilen der Signatur: eine Liste, die Vorschau UND Häkchen speist ---------- */
+// Je Sprache: de, en oder beide (Englisch direkt unter der deutschen Zeile).
+function inLang(de, en) {
+  de = de.filter(Boolean); en = en.filter(Boolean);
+  if (state.lang === "en") return en.length ? en : de;
+  if (state.lang === "de") return de;
+  return de.concat(en.filter(l => de.indexOf(l) === -1));
+}
+function unitLines() {
+  if (state.unitKind === "eigene") return splitLines(val("unitCustom"));
+  const o = state.unitKind && ORGS_[state.unit];
+  return o ? inLang([o.name_de], [o.name_en || o.name_de]) : [];
+}
+const plainRows = arr => arr.map(t => ({ html: esc(t), text: t }));
+const linkRow = (href, text, color) =>
+  ({ html: "<a href=\"" + esc(href) + "\" style=\"color:" + color + ";text-decoration:none;\">" + esc(text) + "</a>", text });
+
+function collectLines() {
+  const L = [];
+  const add = (id, group, label, step, rows) => { if (rows.length) L.push({ id, group, label, step, rows }); };
+  const name = val("name");
+  add("name", "person", "Name", 1, name ? [{ html: "<span style=\"font-weight:600;\">" + esc(name) + "</span>", text: name }] : []);
+  add("role", "person", "Funktion", 1, plainRows(inLang(splitLines(val("role")), splitLines(val("roleEn")))));
+  // Telefonnummern als tel:-Link, aber Theme-Farbe (inherit) – dark-mode-fest
+  if (val("phone")) add("phone", "kontakt", "Telefon", 3, [linkRow(telHref(val("phone")), val("phone"), "inherit")]);
+  if (val("mobile")) add("mobile", "kontakt", "Mobil", 3, [linkRow(telHref(val("mobile")), val("mobile"), "inherit")]);
+  add("unit", "org", state.unitKind === "bereich" ? "Bereich" : "Sektion", 2, plainRows(unitLines()));
+  add("hochschule", "org", "Hochschule", 2, plainRows(inLang([term("hochschule", "de")], [term("hochschule", "en")])));
+  // Goetheanum in Mail-Blau (wie die Web-Links)
+  add("goetheanum", "org", "Goetheanum", 0, [{ html: "<span style=\"color:" + MAIL_BLUE + ";\">Goetheanum</span>", text: "Goetheanum" }]);
+  add("aag", "org", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
+  // Adresse auf EINER Zeile (mit Mittelpunkt)
+  const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
+  add("address", "org", "Adresse", "adr", plainRows([addr]));
+  // Web-Links in Mail-Blau, www entfällt in der Anzeige
+  add("web", "org", "Website", 3, splitLines(valD("web")).map(w => linkRow(webHref(w), stripWww(w), MAIL_BLUE)));
+  return L;
+}
+function defaultOn(id) { return id === "hochschule" ? state.unitKind === "sektion" : true; }
+function isOn(id) { return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id); }
 
 /* ---------- Signatur: einfaches div/br-Markup, alle Stile inline ---------- */
 // Keine Tabellen, keine <p>, kein Bild, keine Hintergrundfarbe. Fliesstext ohne color
@@ -543,45 +666,24 @@ function buildSignature() {
   }
 
   // Abgrenzender Unterstrich – immer, auch ohne PS (trennt Mailtext und Signatur).
-  push("_", "_"); gap();
+  push("_", "_");
 
-  // Person
-  if (val("name")) push("<span style=\"font-weight:600;\">" + esc(val("name")) + "</span>", val("name"));
-  val("role").split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(l => push(esc(l), l));
-
-  // Organisation – Goetheanum fett und blau (wie der Name im Gewicht)
-  const hasPerson = rows.some(r => !r.gap && r.text !== "_");
-  if (val("org1") || val("org2")) { if (hasPerson) gap(); }
-  if (val("org1")) push("<span style=\"color:" + MAIL_BLUE + ";\">" + esc(val("org1")) + "</span>", val("org1"));
-  val("org2").split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(l => push(esc(l), l));
-
-  // Adresse auf EINER Zeile (mit Mittelpunkt), eine Stufe kleiner
-  const addr = [val("street"), val("city"), val("country")].filter(Boolean).join(" · ");
-  if (addr) push(esc(addr), addr);
-
-  // Kontaktblock (Telefon/Mobil/Web) mit Leerzeile von Organisation/Adresse absetzen
-  if ((val("phone") || val("mobile") || val("web").trim()) && rows.some(r => !r.gap)) gap();
-
-  // Kontakt: Telefonnummern als tel:-Link, aber Theme-Farbe (inherit) – dark-mode-fest
-  if (val("phone")) push("<a href=\"" + telHref(val("phone")) + "\" style=\"color:inherit;text-decoration:none;\">" + esc(val("phone")) + "</a>", val("phone"));
-  if (val("mobile")) push("<a href=\"" + telHref(val("mobile")) + "\" style=\"color:inherit;text-decoration:none;\">" + esc(val("mobile")) + "</a>", val("mobile"));
-
-  // Web-Links in Mail-Blau, www entfällt in der Anzeige
-  val("web").split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(w => {
-    const d = stripWww(w);
-    push("<a href=\"" + esc(webHref(w)) + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" + esc(d) + "</a>", d);
+  // Drei Blöcke – Person, Kontakt, Haus –, je mit Leerzeile abgesetzt.
+  let group = null;
+  collectLines().filter(l => isOn(l.id)).forEach(l => {
+    if (l.group !== group) { gap(); group = l.group; }
+    l.rows.forEach(r => push(r.html, r.text));
   });
 
   const hl = [], tl = [];
   rows.forEach(r => { if (r.gap) { hl.push(""); tl.push(""); } else { hl.push(r.html); tl.push(r.text); } });
-  while (hl.length && hl[0] === "") { hl.shift(); tl.shift(); }
   while (hl.length && hl[hl.length - 1] === "") { hl.pop(); tl.pop(); }
 
-  // Backend-Versuch (nur Intern-Ansicht): fail-silent Logo an der Spitze der
-  // Signatur, gleich nach dem Trennstrich. Leeres alt = kein Text, wenn das
-  // Bild blockiert/nicht geladen wird → nichts statt kaputtem Rahmen. Nur im
-  // HTML, nie im Klartext. URL absolut auf die Produktiv-Domain (E-Mail braucht
-  // das); auf GitHub-Pages liegen uns keine Zugriffslogs vor → kein Tracking.
+  // Backend-Versuch (nur Intern-Ansicht): fail-silent Logo unter der Signatur.
+  // Leeres alt = kein Text, wenn das Bild blockiert/nicht geladen wird → nichts
+  // statt kaputtem Rahmen. Nur im HTML, nie im Klartext. URL absolut auf die
+  // Produktiv-Domain (E-Mail braucht das); auf GitHub-Pages liegen uns keine
+  // Zugriffslogs vor → kein Tracking.
   if (logoWanted()) {
     // Logo klein, mit Abstand UNTER allen Daten, verlinkt zu goetheanum.ch.
     // Zwei Techniken (Backend-Wahl):
@@ -592,8 +694,7 @@ function buildSignature() {
     let logo;
     if (logoTech() === "img") {
       // alt="" → bei blockierten Bildern nur das Kästchen, KEIN Text daneben.
-      // Link-Name für Screenreader über aria-label am <a> (erscheint nicht im
-      // Kästchen).
+      // Link-Name für Screenreader über aria-label am <a>.
       logo = "<a href=\"https://goetheanum.ch\" aria-label=\"Goetheanum\" style=\"text-decoration:none;border:0;\">" +
         "<img src=\"" + LOGO_URL + "\" width=\"100\" height=\"17\" alt=\"\" " +
         "style=\"display:block;border:0;outline:none;text-decoration:none;margin:30px 0 0;-ms-interpolation-mode:bicubic;\" /></a>";
@@ -609,17 +710,123 @@ function buildSignature() {
   return { html, text };
 }
 
+/* ---------- Schritt 4: Zeilen ein-/ausblenden ---------- */
+function renderZeilen() {
+  const ul = document.getElementById("zeilen");
+  const focusId = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.zeile : null;
+  let group = null, html = "";
+  collectLines().forEach(l => {
+    if (group && l.group !== group) html += "<li class=\"z-gap\" aria-hidden=\"true\"></li>";
+    group = l.group;
+    const on = isOn(l.id), id = "z-" + l.id;
+    html += "<li class=\"" + (on ? "" : "aus") + "\"><label for=\"" + id + "\">" +
+      "<input type=\"checkbox\" id=\"" + id + "\" data-zeile=\"" + l.id + "\"" + (on ? " checked" : "") + " />" +
+      "<span class=\"z-text\">" + l.rows.map(r => esc(r.text)).join("<br>") +
+      (l.rows[0].text === l.label ? "" : "<small>" + esc(l.label) + "</small>") + "</span></label>" +
+      (l.step ? "<button type=\"button\" class=\"z-edit\" data-goto=\"" + l.step + "\" aria-label=\"" + esc(l.label) + " ändern\">ändern</button>" : "<span></span>") +
+      "</li>";
+  });
+  ul.innerHTML = html;
+  if (focusId) { const f = ul.querySelector("[data-zeile=\"" + focusId + "\"]"); if (f) f.focus(); }
+}
+document.getElementById("zeilen").addEventListener("change", e => {
+  const id = e.target.dataset.zeile; if (!id) return;
+  state.on[id] = e.target.checked;
+  onInput();
+});
+document.getElementById("zeilen").addEventListener("click", e => {
+  const b = e.target.closest("[data-goto]"); if (!b) return;
+  const g = b.dataset.goto;
+  if (g === "adr") { const f = els.street.closest("details"); f.open = true; els.street.focus(); return; }
+  showStep(+g, true);
+});
+document.getElementById("presets").addEventListener("click", e => {
+  const b = e.target.closest("[data-preset]"); if (!b) return;
+  if (b.dataset.preset === "all") state.on = {};
+  else { state.on = {}; collectLines().forEach(l => { state.on[l.id] = ["name", "goetheanum", "web"].indexOf(l.id) !== -1; }); }
+  onInput();
+});
+
 function render() {
   const sig = buildSignature();
   state.plain = sig.text;
   document.getElementById("sigPreview").innerHTML = sig.html;
+  renderZeilen();
   updatePsCount();
 }
+
+/* ---------- Schritte ---------- */
+function showStep(n, focus) {
+  state.step = Math.max(1, Math.min(4, n));
+  document.querySelectorAll(".schritt").forEach(d => { d.hidden = +d.dataset.step !== state.step; });
+  document.querySelectorAll("#schritte button").forEach(b => {
+    if (+b.dataset.step === state.step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+  });
+  document.getElementById("stepBack").hidden = state.step === 1;
+  const next = document.getElementById("stepNext");
+  next.hidden = state.step === 4;
+  next.textContent = state.step === 3 ? "Zur Signatur" : "Weiter";
+  document.getElementById("fillExample").hidden = state.step !== 1;
+  document.getElementById("clearAll").hidden = state.step !== 4;
+  if (focus) {
+    const first = document.querySelector(".schritt[data-step=\"" + state.step + "\"] input, .schritt[data-step=\"" + state.step + "\"] button");
+    if (first) first.focus({ preventScroll: true });
+    document.getElementById("formCard").scrollIntoView({ block: "nearest" });
+  }
+}
+document.getElementById("schritte").addEventListener("click", e => {
+  const b = e.target.closest("button[data-step]"); if (b) showStep(+b.dataset.step, true);
+});
+document.getElementById("stepBack").addEventListener("click", () => showStep(state.step - 1, true));
+document.getElementById("stepNext").addEventListener("click", () => showStep(state.step + 1, true));
+
+/* ---------- Zugehörigkeit + Sprache ---------- */
+function syncUnitUi() {
+  document.querySelectorAll("#unitKind button").forEach(b =>
+    b.setAttribute("aria-pressed", b.dataset.kind === state.unitKind ? "true" : "false"));
+  const keys = UNIT_KEYS[state.unitKind];
+  const field = document.getElementById("unitField"), sel = document.getElementById("unit");
+  field.hidden = !keys;
+  document.getElementById("unitCustomField").hidden = state.unitKind !== "eigene";
+  if (keys) {
+    document.getElementById("unitLab").textContent = state.unitKind === "bereich" ? "Bereich" : "Sektion";
+    if (keys.indexOf(state.unit) === -1) state.unit = "";
+    sel.innerHTML = "<option value=\"\">– bitte wählen –</option>" + keys.map(k =>
+      "<option value=\"" + esc(k) + "\"" + (k === state.unit ? " selected" : "") + ">" +
+      esc((ORGS_[k] && ORGS_[k].name_de) || k) + "</option>").join("");
+  }
+  document.querySelectorAll("#lang button").forEach(b =>
+    b.setAttribute("aria-pressed", b.dataset.lang === state.lang ? "true" : "false"));
+  document.getElementById("roleEnField").hidden = state.lang === "de";
+  syncSecWeb();
+}
+// Sektions-Website als Vorschlag, solange sie nicht schon drinsteht.
+function syncSecWeb() {
+  const sw = state.unitKind === "sektion" && SEC_WEB[state.unit];
+  const swBtn = document.getElementById("secWeb");
+  swBtn.hidden = !sw || els.web.value.indexOf(sw) !== -1;
+  if (sw) swBtn.textContent = "+ " + sw;
+}
+document.getElementById("unitKind").addEventListener("click", e => {
+  const b = e.target.closest("button[data-kind]"); if (!b) return;
+  state.unitKind = b.dataset.kind; syncUnitUi(); onInput();
+});
+document.getElementById("unit").addEventListener("change", e => { state.unit = e.target.value; syncUnitUi(); onInput(); });
+document.getElementById("lang").addEventListener("click", e => {
+  const b = e.target.closest("button[data-lang]"); if (!b) return;
+  state.lang = b.dataset.lang; syncUnitUi(); onInput();
+});
+document.getElementById("secWeb").addEventListener("click", () => {
+  const sw = SEC_WEB[state.unit]; if (!sw) return;
+  const cur = els.web.value.trim();
+  els.web.value = (cur || DEFAULTS.web) + "\n" + sw;
+  syncUnitUi(); onInput();
+});
 
 /* ---------- Persistenz + Prefill ---------- */
 function save() {
   try {
-    const data = { mode: state.mode };
+    const data = { mode: state.mode, unitKind: state.unitKind, unit: state.unit, lang: state.lang, on: state.on };
     FIELDS.forEach(k => { data[k] = els[k].value; });
     const box = document.getElementById("showLogo");
     if (box) data.showLogo = box.checked;
@@ -627,11 +834,40 @@ function save() {
     localStorage.setItem(STORE_KEY, JSON.stringify(data));
   } catch (e) {}
 }
+// v3 kannte freie Zeilen für Funktion und Organisation. Eine Zeile, die einer
+// Sektion oder einem Bereich entspricht, wird zur Zugehörigkeit; Englisch daneben
+// schaltet die Signatur zweisprachig.
+function fromV3(d) {
+  const out = { name: d.name, phone: d.phone, mobile: d.mobile, web: d.web, street: d.street, city: d.city,
+    country: d.country, ps: d.ps, pslink: d.pslink, psuntil: d.psuntil, mode: d.mode, showLogo: d.showLogo, logoTech: d.logoTech };
+  const keep = [];
+  splitLines(d.role).forEach(l => {
+    const k = Object.keys(ORGS_).find(x => ORGS_[x].name_de === l || ORGS_[x].name_en === l);
+    const kind = k && (UNIT_KEYS.sektion.indexOf(k) !== -1 ? "sektion" : UNIT_KEYS.bereich.indexOf(k) !== -1 ? "bereich" : "");
+    if (kind) { out.unitKind = kind; out.unit = k; if (ORGS_[k].name_en === l && ORGS_[k].name_en !== ORGS_[k].name_de) out.lang = "de-en"; }
+    else keep.push(l);
+  });
+  out.role = keep.join("\n");
+  if (/General Anthroposophical Society/.test(d.org2 || "")) out.lang = out.lang || "de-en";
+  return out;
+}
+function setFields(obj) {
+  FIELDS.forEach(k => { els[k].value = obj[k] || ""; });
+  state.unitKind = obj.unitKind || "";
+  state.unit = obj.unit || "";
+  state.lang = ["de", "de-en", "en"].indexOf(obj.lang) !== -1 ? obj.lang : "de";
+  state.on = (obj.on && typeof obj.on === "object") ? obj.on : {};
+  syncUnitUi();
+}
 function loadStored() {
   try {
-    const data = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+    let data = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+    if (!data) {
+      const old = JSON.parse(localStorage.getItem(OLD_KEY) || "null");
+      if (old) data = fromV3(old);
+    }
     if (!data) return false;
-    FIELDS.forEach(k => { if (typeof data[k] === "string") els[k].value = data[k]; });
+    setFields(data);
     const box = document.getElementById("showLogo");
     if (box && data.showLogo) box.checked = true;
     if (data.logoTech) {
@@ -646,9 +882,16 @@ function applyQuery() {
   const q = new URLSearchParams(location.search);
   let any = false;
   FIELDS.forEach(k => { if (q.has(k)) { els[k].value = q.get(k); any = true; } });
+  if (q.has("unit")) {
+    const k = q.get("unit");
+    state.unit = k;
+    state.unitKind = UNIT_KEYS.sektion.indexOf(k) !== -1 ? "sektion" : UNIT_KEYS.bereich.indexOf(k) !== -1 ? "bereich" : "";
+    any = true;
+  }
+  if (["de", "de-en", "en"].indexOf(q.get("lang")) !== -1) { state.lang = q.get("lang"); any = true; }
+  syncUnitUi();
   return any;
 }
-function setFields(obj) { FIELDS.forEach(k => { els[k].value = obj[k] || ""; }); }
 
 /* ---------- Vorschau hell/dunkel (unabhängig vom Seiten-Theme) ---------- */
 function setMode(m, doSave) {
@@ -713,11 +956,11 @@ document.getElementById("icsBtn").addEventListener("click", function () {
 
 /* ---------- Eingaben verdrahten ---------- */
 function autoGrow(el) { if (!el || el.tagName !== "TEXTAREA") return; el.style.height = "auto"; el.style.height = el.scrollHeight + "px"; }
-function growAll() { autoGrow(els.role); autoGrow(els.web); autoGrow(els.ps); autoGrow(els.org2); }
-function onInput() { resetCopied(); render(); growAll(); checkExpiry(); save(); }
+function growAll() { ["role", "roleEn", "unitCustom", "web", "ps"].forEach(k => autoGrow(els[k])); }
+function onInput() { resetCopied(); syncSecWeb(); render(); growAll(); checkExpiry(); save(); }
 FIELDS.forEach(k => els[k].addEventListener("input", onInput));
 
-document.getElementById("fillExample").addEventListener("click", () => { setFields(EXAMPLE); onInput(); });
+document.getElementById("fillExample").addEventListener("click", () => { setFields(EXAMPLE); onInput(); showStep(4, true); });
 
 // Brücke aus der Empfehlung ‹Meistgelesen›: Fold öffnen, hinspringen, Feld fokussieren.
 document.getElementById("empfPsJump").addEventListener("click", () => {
@@ -730,7 +973,7 @@ document.querySelectorAll("a[data-fold]").forEach(a => a.addEventListener("click
   const t = document.getElementById(a.getAttribute("data-fold"));
   if (t) t.open = true;
 }));
-document.getElementById("clearAll").addEventListener("click", () => { setFields({}); onInput(); });
+document.getElementById("clearAll").addEventListener("click", () => { setFields({}); onInput(); showStep(1, true); });
 
 // Backend-Versuch: Logo-Häkchen, Technik-Wahl und Kopplung an die Intern-Ansicht.
 function syncLogoTech() {
@@ -1075,10 +1318,12 @@ if (location.hostname === "werkzeuge.goetheanum.ch" && location.pathname.indexOf
 
 const hadStored = loadStored();
 const hadQuery = applyQuery();
-if (!hadStored && !hadQuery) setFields(EXAMPLE);
+// Wer schon eine Signatur hat, landet bei ihr; wer neu ist, beginnt beim Namen.
+showStep(hadStored && val("name") ? 4 : 1, false);
 // Ein gefülltes PS zeigt sich auch im Formular – der Fold klappt dann auf.
 if (val("ps") || val("pslink")) document.getElementById("psFold").open = true;
 setMode(state.mode, false);
+syncUnitUi();
 syncIntern();   // Logo-Option nur in der Intern-Ansicht zeigen (rendert mit)
 growAll();
 checkExpiry();
