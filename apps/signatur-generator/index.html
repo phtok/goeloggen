@@ -312,11 +312,11 @@
             </div>
           </details>
 
-          <label class="logo-opt" id="logoOpt" hidden>
+          <label class="logo-opt" id="logoOpt">
             <input type="checkbox" id="showLogo" />
             <span>
               <span class="lo-lab">Logo statt Schriftzug ‹Goetheanum›</span>
-              <span class="lo-sub">Für Apple Mail und Gmail · nur zusammen mit der Adresse. Outlook im Browser übernimmt es nicht.</span>
+              <span class="lo-sub">Für Apple Mail · nur mit Adresse. Outlook übernimmt es nicht.</span>
             </span>
           </label>
         </div>
@@ -522,14 +522,14 @@
 const MAIL_BLUE = "#4183B4"; // ds-ok: Artefakt-Farbe im Mail-Output (theme-unabhängig)
 const CFONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
 
-// Backend-Versuch: Logo (Icon + Wortmarke, both-modes-Blau #4183B4) an Stelle des Schriftzugs.
+// Logo (Icon + Wortmarke, both-modes-Blau #4183B4) an Stelle des Schriftzugs.
 // Absolute Produktiv-URL (E-Mail braucht absolute Bild-Adressen).
 const LOGO_URL = "https://werkzeuge.goetheanum.ch/assets/logos/goetheanum-signatur-logo.png";
-// Gewünscht nur, wenn Intern-Ansicht an UND Häkchen gesetzt – so bleibt es Backend.
+// Freigegeben für alle (7. 10. 2026), nachdem es das Einfügen in Apple Mail
+// übersteht; Outlook im Browser verwirft es, dort bleibt der Name in der Adresse.
 function logoWanted() {
-  const on = !!(window.goeIntern && window.goeIntern());
   const box = document.getElementById("showLogo");
-  return on && box && box.checked;
+  return !!(box && box.checked);
 }
 
 const FIELDS = ["name","role","roleEn","unitCustom","phone","mobile","web","street","city","country","ps","pslink","psuntil"];
@@ -630,11 +630,12 @@ function collectLines() {
   add("aag", "haus", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
   // Adresse auf EINER Zeile (mit Mittelpunkt), als reiner Text: Der
   // Signatur-Editor von Outlook im Browser entfernt color:inherit an Links und
-  // färbt eine verlinkte Adresse blau (Test 7. 10. 2026). Ein Wortverbinder
-  // (U+2060) in der Postleitzahl hält Gmail davon ab, sie selbst zum blauen
-  // Karten-Link zu machen.
+  // färbt eine verlinkte Adresse blau. Jedes Wort steht in eigenem <span> –
+  // so erkennt Gmail die Adresse nicht und macht keinen blauen Karten-Link
+  // daraus (Test 7. 10. 2026: Wortverbinder, geschützte Leerzeichen und
+  // unsichtbare Trenner halfen nicht, die spans schon).
   const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
-  const addrHtml = esc(addr).replace(/\b(\d{2})(\d{2})\b/, "$1&#8288;$2");
+  const addrHtml = esc(addr).replace(/[^\s·]+/g, w => "<span>" + w + "</span>");
   // Mit Logo beginnt die Adresse mit ‹Goetheanum›, halbfett (G01: genau ein
   // Merkmal): Wo das Logo nicht ankommt, steht der Name trotzdem gut sichtbar
   // da (Beschluss 7. 10. 2026).
@@ -981,14 +982,8 @@ document.querySelectorAll("a[data-fold]").forEach(a => a.addEventListener("click
 }));
 document.getElementById("clearAll").addEventListener("click", () => { setFields({}); onInput(); showStep(1, true); });
 
-// Backend-Versuch: Logo-Häkchen, gekoppelt an die Intern-Ansicht.
 document.getElementById("showLogo").addEventListener("change", () => { render(); resetCopied(); save(); });
-function syncIntern() {
-  const on = !!(window.goeIntern && window.goeIntern());
-  document.getElementById("logoOpt").hidden = !on;
-  render(); // Logo-Einblendung hängt an der Intern-Ansicht
-}
-window.addEventListener("goe:intern", syncIntern);
+function syncIntern() { render(); }
 
 /* ---------- Status / Kopier-Feedback ---------- */
 function flash(btn, label) {
