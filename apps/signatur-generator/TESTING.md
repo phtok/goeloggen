@@ -87,7 +87,7 @@ ausblendbar). Abstand: eine Leerzeile vor der Adresse, zwei vor dem Logo.
 
 | Client | Logo sichtbar | Dunkelmodus | Adresse |
 |---|---|---|---|
-| Gmail Web (Chrome, hell) | ✅ | – | wurde zum blauen Maps-Link → selbst verlinkt in Textfarbe (#648) |
+| Gmail Web (Chrome, hell) | ✅ | – | wurde zum blauen Maps-Link → selbst verlinkt in Textfarbe (#648); danach in Textfarbe ✅ (iOS-App, hell und dunkel) |
 | Gmail iOS | ✅ | ✅ dunkel, auch mit Logo | wie Web |
 
 ### Befund 7. 10. 2026 (Mail iOS)
@@ -100,7 +100,7 @@ ausblendbar). Abstand: eine Leerzeile vor der Adresse, zwei vor dem Logo.
 
 | Client | Logo sichtbar | Dunkelmodus | Bilder gesperrt |
 |---|---|---|---|
-| Gmail (Adresse nach #648 schwarz?) | – | – | ☐ |
+| Gmail | – | – | ☐ |
 | Outlook neu / Web | ☐ | ☐ | ☐ |
 | Outlook klassisch (Windows) | – (Textlink) | ☐ | ☐ |
 | Mail (iOS) | – | – | ☐ |
