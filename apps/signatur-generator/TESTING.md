@@ -138,12 +138,18 @@ Adresse (ohne Adresse – ‹Minimal› – schliesst der Schriftzug).
   `color:inherit` am Telefon-Link (Standard-Blau). Adresse bleibt Text,
   ‹Goetheanum› halbfett. → Logo nur für Apple Mail; Telefon in Mail-Blau.
 
+- **Einfügen in Outlook im Browser, gelesen in Gmail:** leere Wort-spans
+  räumt Outlook weg – Gmail verlinkt die Adresse wieder. Spans mit
+  `font-weight:400` oder `white-space:nowrap` wurden stückweise verlinkt;
+  mit `letter-spacing:0px` blieb die Adresse Text (gebaut). Das Telefon kommt
+  in Standard-Blau mit Unterstrich an: Outlook nimmt dem `tel:`-Link die Farbe
+  oder den Link, Gmail verlinkt die Nummer selbst.
+
 ### Noch offen
 
 | Client | Logo sichtbar | Dunkelmodus | Bilder gesperrt |
 |---|---|---|---|
 | Gmail, Mail iOS (Bilder gesperrt) | – | – | ☐ |
-| Einfügen in Outlook im Browser: Adresse mit spans in Textfarbe? | – | – | ☐ |
 | Outlook im Browser, Dunkelmodus | – | ☐ | – |
 | Outlook klassisch (Windows) | – (Textlink) | ☐ | ☐ |
 
