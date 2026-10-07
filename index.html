@@ -191,7 +191,8 @@
 </head>
 <body>
 
-<script src="design-system/nav.js" data-root="./" data-active="start"></script>
+<!-- Sprungleiste zu den Gruppen (Haus-Komponente .dsnav-onpage); Anker = gruppen.startseite[].id in tools.json. -->
+<script src="design-system/nav.js" data-root="./" data-active="start" data-onpage="Jeden Tag:#jeden-tag|Von Zeit zu Zeit:#von-zeit-zu-zeit|Einmal einrichten:#einrichten"></script>
 
 <main class="wrap" id="inhalt">
   <h1 class="sr-only">Goetheanum Werkzeuge</h1>
@@ -279,12 +280,13 @@
     var teile = G.map(function(g){
       var drin = tools.filter(function(t){ return g.slugs.indexOf(t.slug) >= 0; });
       frei = frei.filter(function(t){ return drin.indexOf(t) < 0; });
-      return { titel: g.titel, tools: drin };
+      return { id: g.id, titel: g.titel, tools: drin };
     });
     teile[teile.length - 1].tools = teile[teile.length - 1].tools.concat(frei);
     teile.forEach(function(g){
       if (!g.tools.length) return;
       var sec = document.createElement("section");
+      if (g.id) sec.id = g.id;
       sec.innerHTML = '<h2 class="gk">' + esc(g.titel) + '</h2>';
       var box = document.createElement("div"); box.className = "grid";
       g.tools.forEach(function(t){ box.appendChild(tile(t)); });

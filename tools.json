@@ -820,11 +820,11 @@
     "aus": { "schublade": ["lt-programm", "design-system"], "karten": ["design-system", "lt-programm", "kurzlink"] }
   },
   "gruppen": {
-    "$hinweis": "Gruppen der Startseite nach Anlass (Entscheid Auftraggeber, 7. Oktober 2026). Zugehörigkeit hier; die Folge innerhalb einer Gruppe kommt aus reihenfolge.karten. Nicht Zugeordnetes erscheint in der letzten Gruppe.",
+    "$hinweis": "Gruppen der Startseite nach Anlass (Entscheid Auftraggeber, 7. Oktober 2026). Zugehörigkeit hier; die Folge innerhalb einer Gruppe kommt aus reihenfolge.karten. Nicht Zugeordnetes erscheint in der letzten Gruppe. id = Sprunganker; muss zu data-onpage in index.html passen.",
     "startseite": [
-      { "titel": "Jeden Tag", "slugs": ["logo-generator", "qr-generator", "powerpoint", "karten", "programmheft", "icons"] },
-      { "titel": "Farben, Sprachen, Typografie", "slugs": ["uebersetzungen", "sektionsfarben", "typografie"] },
-      { "titel": "Einmal einrichten", "slugs": ["schriften", "signatur", "visitenkarten", "wallpaper", "abo", "familie"] }
+      { "id": "jeden-tag", "titel": "Jeden Tag", "slugs": ["logo-generator", "qr-generator", "powerpoint", "karten", "programmheft", "icons"] },
+      { "id": "von-zeit-zu-zeit", "titel": "Von Zeit zu Zeit", "slugs": ["uebersetzungen", "sektionsfarben", "typografie"] },
+      { "id": "einrichten", "titel": "Einmal einrichten", "slugs": ["schriften", "signatur", "visitenkarten", "wallpaper", "abo", "familie"] }
     ]
   },
   "welten": {
