@@ -27,6 +27,7 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 - [ ] **Kein Anhang-Symbol (Büroklammer)** beim Empfänger — d. h. wirklich kein Bild im Markup.
 - [ ] **Fliesstext ohne feste Farbe:** Name/Funktion/Adresse erscheinen im Dark Mode hell, im Light Mode dunkel (erben Theme).
 - [ ] **Keine Grautöne**, keine Trennlinie, keine Hintergrundfarbe.
+- [ ] **‹Goetheanum›** ist selbst der Link zu goetheanum.ch (keine eigene Zeile goetheanum.ch mehr); im Klartext ‹Goetheanum · goetheanum.ch›.
 - [ ] **Mail-Blau** (`#4183B4`) für ‹Goetheanum› und Web-Links — lesbar auf hellem UND dunklem Grund (Kontrast 4.09:1 / 4.07:1, im Code dokumentiert).
 - [ ] **Hierarchie** über Grösse/Gewicht: Name in 600, Adresse eine Stufe kleiner.
 - [ ] **Links** funktionieren: Website (`https`), Telefon/Mobil (`tel:`), PS-Link.
@@ -36,14 +37,28 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 
 ## Funktion / Rollout
 
-- [ ] `localStorage` (`goe-signatur-v4`): Eingaben überstehen ein Reload und führen direkt zu Schritt 4; ein v3-Stand wird übernommen (Sektions-/Bereichszeilen der Funktion werden zur Zugehörigkeit).
-- [ ] Vier Schritte (Du · Zugehörigkeit · Kontakt · Signatur) sind jederzeit anwählbar; ‹ändern› an einer Zeile springt in ihren Schritt.
-- [ ] Jede Zeile lässt sich ausblenden; ‹Minimal› = Name · Goetheanum · goetheanum.ch, ‹Vollständig› = alle (Hochschule nur bei Sektion).
+- [ ] `localStorage` (`goe-signatur-v4`): Eingaben überstehen ein Reload und führen direkt zu Schritt 3; ein v3-Stand wird übernommen (Sektions-/Bereichszeilen der Funktion werden zur Zugehörigkeit).
+- [ ] Drei Schritte (Du · Zugehörigkeit · Signatur) sind jederzeit anwählbar; ‹ändern› an einer Zeile springt in ihren Schritt.
+- [ ] Jede Zeile lässt sich ausblenden; ‹Minimal› = Name · Goetheanum, ‹Vollständig› = alle (Hochschule nur bei Sektion).
 - [ ] Sprache Deutsch / Deutsch + English / English: Sektion, Hochschule, Gesellschaft und Funktion folgen.
 - [ ] Query-Prefill: `?name=Test&role=Probe&unit=ms&lang=de-en` füllt die Felder.
-- [ ] ‹Beispiel einfügen› (Schritt 1) / ‹Neu beginnen› (Schritt 4) funktionieren.
+- [ ] ‹Beispiel einfügen› (Schritt 1) / ‹Neu beginnen› (Schritt 3) funktionieren.
 - [ ] Mehrzeilige Felder (Funktion, Eigene Angabe, Website, PS) wachsen mit dem Inhalt.
 - [ ] Empfehlungen erscheinen als Textabschnitt unter dem Generator.
+
+## Logo (Backend-Versuch, nur Intern-Ansicht)
+
+Das Logo steht an Stelle des Schriftzugs ‹Goetheanum›, verlinkt, mit
+`alt="Goetheanum"`. Klassisches Outlook (Windows) liest die mso-Weiche und
+bekommt den Textlink. Vor einer Freigabe je Client eine echte Testmail,
+einmal mit geladenen, einmal mit gesperrten Bildern:
+
+| Client | Bild geladen | Bilder gesperrt → ‹Goetheanum›-Link | kein Anhang |
+|---|---|---|---|
+| Apple Mail (macOS/iOS) | ☐ | ☐ (erwartet: nichts) | ☐ |
+| Outlook klassisch (Windows) | – (Textlink) | ☐ | ☐ |
+| Outlook neu / Web | ☐ | ☐ | ☐ |
+| Gmail Web | ☐ | ☐ | ☐ |
 
 ## Nicht-Ziele
 
