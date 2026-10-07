@@ -64,10 +64,15 @@ gelten B01–B05 gemessen statt behauptet.
     node tools/barrierefreiheit.mjs --regel select-name      # nur eine Regelsorte
     node tools/barrierefreiheit.mjs --alles                  # samt Empfehlungen
     node tools/barrierefreiheit.mjs --spur                   # Fortschritt je Seite
+    node tools/barrierefreiheit.mjs --seit origin/main       # nur, was der Unterschied berührt
+    node tools/barrierefreiheit.mjs --parallel 4             # Fenster zugleich (Vorgabe 4)
 
-Einmalig `cd tools && npm install`. Der ganze Lauf dauert rund sechs Minuten —
+Einmalig `cd tools && npm install`. Der ganze Lauf dauert mit vier Fenstern
+rund zwei Minuten (nacheinander waren es sechs, der Bericht ist derselbe) —
 darum läuft er **nicht** im Commit-Hook, sondern als eigener Job in
-`pruefmaschinen.yml`. Mit `--seite` sind es Sekunden.
+`pruefmaschinen.yml`. Dort misst ein PR nur die Seiten, die sein Unterschied
+berühren kann (`--seit`, meist 10–25 Sekunden); der Push auf `main` misst das
+ganze Haus. Mit `--seite` sind es Sekunden.
 
 ## Zwei Griffe, ohne die der Lauf lügt
 

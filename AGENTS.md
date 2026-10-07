@@ -70,11 +70,13 @@ lassen** — das Regelwerk **nicht** eigenmächtig umschreiben.
 **Seit dem 8. August 2026 gemessen, nicht behauptet:** `node
 tools/barrierefreiheit.mjs` (Regel **DS08**) lädt jede Seite des
 Geltungsbereichs in Chromium auf 390 px und 1440 px und lässt `axe-core` die
-normativen Kriterien prüfen. Der Lauf dauert rund sechs Minuten und läuft
-darum **nicht** im Commit-Hook, sondern als eigener Job in
-`pruefmaschinen.yml` — vorerst **berichtend**, bis der Rückstand der
-Erstmessung abgetragen ist (`CHANGELOG-a11y.md`, Block D). `--seite <pfad>`
-prüft eine einzelne Seite in Sekunden, `--regel <id>` nur eine Regelsorte.
+normativen Kriterien prüfen. Das ganze Haus dauert rund zwei Minuten (vier
+Fenster zugleich) und läuft darum **nicht** im Commit-Hook, sondern als
+eigener Job in `pruefmaschinen.yml` — vorerst **berichtend**, bis der
+Rückstand der Erstmessung abgetragen ist (`CHANGELOG-a11y.md`, Block D). Ein
+PR misst dort nur die Seiten, die sein Unterschied berührt (`--seit`,
+Sekunden); `main` misst alles. `--seite <pfad>` prüft eine einzelne Seite,
+`--regel <id>` nur eine Regelsorte.
 
 Für jede Web-Oberfläche gilt, geprüft (Kontraste rechnen, nicht schätzen):
 - **B01 Kein dunkler Text auf farbigem Grund.** Auf Blau/Gold/Grün steht
