@@ -196,10 +196,6 @@
   .logo-opt input{margin-top:2px;width:16px;height:16px;flex:none}
   .logo-opt .lo-lab{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);display:block}
   .logo-opt .lo-sub{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.5;display:block;margin-top:2px}
-  .logo-tech{display:grid;gap:var(--s2);margin:var(--s2) 0 0 var(--s2);padding-left:var(--s4);border-left:1px dashed var(--line)}
-  .logo-tech label{display:flex;gap:var(--s2);align-items:flex-start;font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);cursor:pointer}
-  .logo-tech input{margin-top:3px;flex:none}
-  .logo-tech .lt-sub{color:var(--muted);font-size:var(--t-micro)}
 
   @media(max-width:560px){
     .mail-stage{padding:var(--s4)}
@@ -225,8 +221,7 @@
         <ol class="schritte" id="schritte">
           <li><button type="button" data-step="1" aria-current="step"><span class="step-num"><b>1</b></span>Du</button></li>
           <li><button type="button" data-step="2"><span class="step-num"><b>2</b></span>Zugehörigkeit</button></li>
-          <li><button type="button" data-step="3"><span class="step-num"><b>3</b></span>Kontakt</button></li>
-          <li><button type="button" data-step="4"><span class="step-num"><b>4</b></span>Signatur</button></li>
+          <li><button type="button" data-step="3"><span class="step-num"><b>3</b></span>Signatur</button></li>
         </ol>
 
         <div class="schritt" data-step="1">
@@ -240,19 +235,18 @@
             <label class="field" id="roleEnField"><span class="lab"><span>Funktion auf Englisch</span> <span class="sublab">optional</span></span>
               <textarea id="roleEn" rows="1" placeholder="Head"></textarea>
             </label>
+            <label class="field"><span class="lab"><span>Telefon</span> <span class="sublab">optional</span></span>
+              <input type="tel" id="phone" placeholder="+41 61 706 44 21" autocomplete="tel" />
+            </label>
+            <label class="field"><span class="lab"><span>Mobil</span> <span class="sublab">optional</span></span>
+              <input type="tel" id="mobile" placeholder="+41 79 000 00 00" autocomplete="tel" />
+            </label>
           </fieldset>
         </div>
 
         <div class="schritt" data-step="2" hidden>
           <fieldset class="fset">
-            <span class="lab">Wo arbeitest du?</span>
-            <div class="seg" id="unitKind" role="group" aria-label="Zugehörigkeit">
-              <button type="button" data-kind="sektion" aria-pressed="false">Sektion</button>
-              <button type="button" data-kind="bereich" aria-pressed="false">Bereich</button>
-              <button type="button" data-kind="eigene" aria-pressed="false">Eigene Angabe</button>
-              <button type="button" data-kind="" aria-pressed="true">Nur Goetheanum</button>
-            </div>
-            <label class="field" id="unitField" hidden><span class="lab"><span id="unitLab">Sektion</span></span>
+            <label class="field"><span class="lab"><span>Wo arbeitest du?</span></span>
               <select id="unit"></select>
             </label>
             <label class="field" id="unitCustomField" hidden><span class="lab"><span>Eigene Angabe</span> <span class="sublab">je Zeile eine</span></span>
@@ -264,25 +258,14 @@
               <button type="button" data-lang="de-en" aria-pressed="false">Deutsch + English</button>
               <button type="button" data-lang="en" aria-pressed="false">English</button>
             </div>
-          </fieldset>
-        </div>
-
-        <div class="schritt" data-step="3" hidden>
-          <fieldset class="fset">
-            <label class="field"><span class="lab"><span>Telefon</span> <span class="sublab">optional</span></span>
-              <input type="tel" id="phone" placeholder="+41 61 706 44 21" autocomplete="tel" />
-            </label>
-            <label class="field"><span class="lab"><span>Mobil</span> <span class="sublab">optional</span></span>
-              <input type="tel" id="mobile" placeholder="+41 79 000 00 00" autocomplete="tel" />
-            </label>
-            <label class="field"><span class="lab"><span>Website</span> <span class="sublab">mehrere je Zeile</span></span>
-              <textarea id="web" rows="1" placeholder="goetheanum.ch"></textarea>
+            <label class="field"><span class="lab"><span>Weitere Website</span> <span class="sublab">optional, je Zeile eine</span></span>
+              <textarea id="web" rows="1" placeholder="sbk.goetheanum.org"></textarea>
             </label>
             <button type="button" class="btn ghost small" id="secWeb" hidden></button>
           </fieldset>
         </div>
 
-        <div class="schritt" data-step="4" hidden>
+        <div class="schritt" data-step="3" hidden>
           <div class="presets">
             <span class="lab">Zeilen</span>
             <div class="btnrow" id="presets" style="margin-top:0">
@@ -332,14 +315,10 @@
           <label class="logo-opt" id="logoOpt" hidden>
             <input type="checkbox" id="showLogo" />
             <span>
-              <span class="lo-lab">Logo unter der Signatur</span>
-              <span class="lo-sub">Backend-Versuch · Marke + Wortmarke, verlinkt zu goetheanum.ch. Kein Anhang, kein Tracking (auf unserem Server).</span>
+              <span class="lo-lab">Logo statt Schriftzug ‹Goetheanum›</span>
+              <span class="lo-sub">Backend-Versuch · verlinkt zu goetheanum.ch. Fehlt das Bild, steht ‹Goetheanum› als Link da; das klassische Outlook bekommt gleich den Link. Kein Anhang, kein Tracking.</span>
             </span>
           </label>
-          <div class="logo-tech" id="logoTech" hidden>
-            <label><input type="radio" name="logoTech" value="bg" checked /> <span>Fail-silent <span class="lt-sub">(Apple Mail, Gmail · bei Blockade nichts, aber in Outlook unsichtbar)</span></span></label>
-            <label><input type="radio" name="logoTech" value="img" /> <span>Auch Outlook <span class="lt-sub">(img · zeigt in Outlook, dafür Platzhalter-Kästchen bei blockierten Bildern)</span></span></label>
-          </div>
         </div>
 
         <div class="btnrow schrittfuss">
@@ -543,7 +522,7 @@
 const MAIL_BLUE = "#4183B4"; // ds-ok: Artefakt-Farbe im Mail-Output (theme-unabhängig)
 const CFONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
 
-// Backend-Versuch: fail-silent Logo (Icon + Wortmarke, both-modes-Blau #4183B4).
+// Backend-Versuch: Logo (Icon + Wortmarke, both-modes-Blau #4183B4) an Stelle des Schriftzugs.
 // Absolute Produktiv-URL (E-Mail braucht absolute Bild-Adressen).
 const LOGO_URL = "https://werkzeuge.goetheanum.ch/assets/logos/goetheanum-signatur-logo.png";
 // Gewünscht nur, wenn Intern-Ansicht an UND Häkchen gesetzt – so bleibt es Backend.
@@ -552,16 +531,13 @@ function logoWanted() {
   const box = document.getElementById("showLogo");
   return on && box && box.checked;
 }
-function logoTech() {
-  const r = document.querySelector("input[name=\"logoTech\"]:checked");
-  return r ? r.value : "bg";
-}
 
 const FIELDS = ["name","role","roleEn","unitCustom","phone","mobile","web","street","city","country","ps","pslink","psuntil"];
 const STORE_KEY = "goe-signatur-v4";
 const OLD_KEY = "goe-signatur-v3";
-// Leere Felder fallen auf das Haus zurück; weg kommt eine Zeile über ihr Häkchen.
-const DEFAULTS = { web: "goetheanum.ch", street: "Rüttiweg 45", city: "4143 Dornach", country: "Switzerland" };
+// Leere Adressfelder fallen auf das Haus zurück; weg kommt eine Zeile über ihr Häkchen.
+const HAUS_WEB = "goetheanum.ch";
+const DEFAULTS = { street: "Rüttiweg 45", city: "4143 Dornach", country: "Switzerland" };
 
 // Namen aus der einen Quelle (assets/goe-orgs.js, assets/goe-terms.js) – nicht kopieren.
 const ORGS_ = window.GOE_GCI_ORGS || {};
@@ -621,22 +597,44 @@ function collectLines() {
   add("name", "person", "Name", 1, name ? [{ html: "<span style=\"font-weight:600;\">" + esc(name) + "</span>", text: name }] : []);
   add("role", "person", "Funktion", 1, plainRows(inLang(splitLines(val("role")), splitLines(val("roleEn")))));
   // Telefonnummern als tel:-Link, aber Theme-Farbe (inherit) – dark-mode-fest
-  if (val("phone")) add("phone", "kontakt", "Telefon", 3, [linkRow(telHref(val("phone")), val("phone"), "inherit")]);
-  if (val("mobile")) add("mobile", "kontakt", "Mobil", 3, [linkRow(telHref(val("mobile")), val("mobile"), "inherit")]);
+  if (val("phone")) add("phone", "kontakt", "Telefon", 1, [linkRow(telHref(val("phone")), val("phone"), "inherit")]);
+  if (val("mobile")) add("mobile", "kontakt", "Mobil", 1, [linkRow(telHref(val("mobile")), val("mobile"), "inherit")]);
   add("unit", "org", state.unitKind === "bereich" ? "Bereich" : "Sektion", 2, plainRows(unitLines()));
   add("hochschule", "org", "Hochschule", 2, plainRows(inLang([term("hochschule", "de")], [term("hochschule", "en")])));
   // Goetheanum in Mail-Blau (wie die Web-Links)
-  add("goetheanum", "org", "Goetheanum", 0, [{ html: "<span style=\"color:" + MAIL_BLUE + ";\">Goetheanum</span>", text: "Goetheanum" }]);
+  // ‹Goetheanum› ist selbst der Link zur Website; das Blau zeichnet ihn aus.
+  // Im Klartext gibt es keine Links, dort steht die Adresse dabei.
+  add("goetheanum", "org", "Goetheanum", 0, [{ html: goetheanumHtml(), text: "Goetheanum · " + HAUS_WEB }]);
   add("aag", "org", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
   // Adresse auf EINER Zeile (mit Mittelpunkt)
   const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
   add("address", "org", "Adresse", "adr", plainRows([addr]));
   // Web-Links in Mail-Blau, www entfällt in der Anzeige
-  add("web", "org", "Website", 3, splitLines(valD("web")).map(w => linkRow(webHref(w), stripWww(w), MAIL_BLUE)));
+  // Weitere Websites (Sektion, Projekt); goetheanum.ch steckt schon im Schriftzug.
+  add("web", "org", "Website", 2, splitLines(val("web")).filter(w => stripWww(w).toLowerCase() !== HAUS_WEB)
+    .map(w => linkRow(webHref(w), stripWww(w), MAIL_BLUE)));
   return L;
 }
 function defaultOn(id) { return id === "hochschule" ? state.unitKind === "sektion" : true; }
 function isOn(id) { return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id); }
+
+/* ---------- Schriftzug oder Logo ---------- */
+// Ohne Logo: ‹Goetheanum› in Mail-Blau, verlinkt. Mit Logo (Backend-Versuch,
+// nur Intern-Ansicht) steht an derselben Stelle das Bild, und sein alt-Text
+// ist wieder ‹Goetheanum›: Wo das Bild nicht lädt, zeigen Gmail und Outlook
+// Web den Text als Link. Das klassische Outlook (Word-Engine) zeigte statt
+// dessen ein Kästchen – es liest als einziges die mso-Weiche und bekommt den
+// Textlink; mso-hide:all hält das Bild dort zusätzlich fern. Apple Mail zeigt
+// bei gesperrten Bildern nichts – vor der Freigabe mit echten Testmails prüfen
+// (TESTING.md).
+function goetheanumHtml() {
+  const link = (inner, extra) => "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;" + (extra || "") + "\">" + inner + "</a>";
+  if (!logoWanted()) return link("Goetheanum");
+  return "<!--[if mso]>" + link("Goetheanum") + "<![endif]-->" +
+    "<!--[if !mso]><!-->" + link("<img src=\"" + LOGO_URL + "\" width=\"100\" height=\"17\" alt=\"Goetheanum\" " +
+      "style=\"display:block;border:0;outline:none;margin:3px 0;mso-hide:all;font-family:" + CFONT.replace(/'/g, "") +
+      ";font-size:12px;line-height:17px;color:" + MAIL_BLUE + ";\" />", "display:inline-block;") + "<!--<![endif]-->";
+}
 
 /* ---------- Signatur: einfaches div/br-Markup, alle Stile inline ---------- */
 // Keine Tabellen, keine <p>, kein Bild, keine Hintergrundfarbe. Fliesstext ohne color
@@ -679,32 +677,6 @@ function buildSignature() {
   rows.forEach(r => { if (r.gap) { hl.push(""); tl.push(""); } else { hl.push(r.html); tl.push(r.text); } });
   while (hl.length && hl[hl.length - 1] === "") { hl.pop(); tl.pop(); }
 
-  // Backend-Versuch (nur Intern-Ansicht): fail-silent Logo unter der Signatur.
-  // Leeres alt = kein Text, wenn das Bild blockiert/nicht geladen wird → nichts
-  // statt kaputtem Rahmen. Nur im HTML, nie im Klartext. URL absolut auf die
-  // Produktiv-Domain (E-Mail braucht das); auf GitHub-Pages liegen uns keine
-  // Zugriffslogs vor → kein Tracking.
-  if (logoWanted()) {
-    // Logo klein, mit Abstand UNTER allen Daten, verlinkt zu goetheanum.ch.
-    // Zwei Techniken (Backend-Wahl):
-    //  bg  – CSS-Hintergrund: fail-silent (blockiert → leerer Raum, kein
-    //        Bruch), zeigt in Apple Mail/Gmail, in Outlook still.
-    //  img – <img>: zeigt auch in Outlook, dafür Platzhalter-Kästchen bei
-    //        blockierten Bildern (in Outlook nicht vermeidbar).
-    let logo;
-    if (logoTech() === "img") {
-      // alt="" → bei blockierten Bildern nur das Kästchen, KEIN Text daneben.
-      // Link-Name für Screenreader über aria-label am <a>.
-      logo = "<a href=\"https://goetheanum.ch\" aria-label=\"Goetheanum\" style=\"text-decoration:none;border:0;\">" +
-        "<img src=\"" + LOGO_URL + "\" width=\"100\" height=\"17\" alt=\"\" " +
-        "style=\"display:block;border:0;outline:none;text-decoration:none;margin:30px 0 0;-ms-interpolation-mode:bicubic;\" /></a>";
-    } else {
-      logo = "<a href=\"https://goetheanum.ch\" aria-label=\"Goetheanum\" style=\"display:inline-block;border:0;text-decoration:none;\">" +
-        "<div style=\"width:100px;height:17px;background:url('" + LOGO_URL + "') no-repeat left center/contain;margin:30px 0 0;\"></div></a>";
-    }
-    hl.push(logo);
-  }
-
   const html = psHtml + "<div style=\"font-family:" + CFONT + ";font-size:12px;line-height:1.3;\">" + (hl.join("<br>") || "&nbsp;") + "</div>";
   const text = psText.concat(tl).join("\n");
   return { html, text };
@@ -743,7 +715,7 @@ document.getElementById("zeilen").addEventListener("click", e => {
 document.getElementById("presets").addEventListener("click", e => {
   const b = e.target.closest("[data-preset]"); if (!b) return;
   if (b.dataset.preset === "all") state.on = {};
-  else { state.on = {}; collectLines().forEach(l => { state.on[l.id] = ["name", "goetheanum", "web"].indexOf(l.id) !== -1; }); }
+  else { state.on = {}; collectLines().forEach(l => { state.on[l.id] = ["name", "goetheanum"].indexOf(l.id) !== -1; }); }
   onInput();
 });
 
@@ -757,17 +729,17 @@ function render() {
 
 /* ---------- Schritte ---------- */
 function showStep(n, focus) {
-  state.step = Math.max(1, Math.min(4, n));
+  state.step = Math.max(1, Math.min(3, n));
   document.querySelectorAll(".schritt").forEach(d => { d.hidden = +d.dataset.step !== state.step; });
   document.querySelectorAll("#schritte button").forEach(b => {
     if (+b.dataset.step === state.step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
   });
   document.getElementById("stepBack").hidden = state.step === 1;
   const next = document.getElementById("stepNext");
-  next.hidden = state.step === 4;
-  next.textContent = state.step === 3 ? "Zur Signatur" : "Weiter";
+  next.hidden = state.step === 3;
+  next.textContent = state.step === 2 ? "Zur Signatur" : "Weiter";
   document.getElementById("fillExample").hidden = state.step !== 1;
-  document.getElementById("clearAll").hidden = state.step !== 4;
+  document.getElementById("clearAll").hidden = state.step !== 3;
   if (focus) {
     const first = document.querySelector(".schritt[data-step=\"" + state.step + "\"] input, .schritt[data-step=\"" + state.step + "\"] button");
     if (first) first.focus({ preventScroll: true });
@@ -781,20 +753,21 @@ document.getElementById("stepBack").addEventListener("click", () => showStep(sta
 document.getElementById("stepNext").addEventListener("click", () => showStep(state.step + 1, true));
 
 /* ---------- Zugehörigkeit + Sprache ---------- */
+// Eine Liste für alles: Sektionen, Bereiche, eigene Angabe, nur Goetheanum.
+// Wert = ‹art:schlüssel›, damit eine Auswahl Art und Einheit zugleich setzt.
+(function fillUnit() {
+  const opt = (v, t) => "<option value=\"" + esc(v) + "\">" + esc(t) + "</option>";
+  const grp = (label, kind) => "<optgroup label=\"" + label + "\">" +
+    UNIT_KEYS[kind].map(k => opt(kind + ":" + k, (ORGS_[k] && ORGS_[k].name_de) || k)).join("") + "</optgroup>";
+  document.getElementById("unit").innerHTML = opt("", "Nur Goetheanum") +
+    grp("Sektionen", "sektion") + grp("Bereiche", "bereich") + opt("eigene", "Eigene Angabe …");
+})();
 function syncUnitUi() {
-  document.querySelectorAll("#unitKind button").forEach(b =>
-    b.setAttribute("aria-pressed", b.dataset.kind === state.unitKind ? "true" : "false"));
-  const keys = UNIT_KEYS[state.unitKind];
-  const field = document.getElementById("unitField"), sel = document.getElementById("unit");
-  field.hidden = !keys;
+  const sel = document.getElementById("unit");
+  if (state.unitKind === "eigene") sel.value = "eigene";
+  else if (state.unitKind && UNIT_KEYS[state.unitKind].indexOf(state.unit) !== -1) sel.value = state.unitKind + ":" + state.unit;
+  else { state.unitKind = ""; state.unit = ""; sel.value = ""; }
   document.getElementById("unitCustomField").hidden = state.unitKind !== "eigene";
-  if (keys) {
-    document.getElementById("unitLab").textContent = state.unitKind === "bereich" ? "Bereich" : "Sektion";
-    if (keys.indexOf(state.unit) === -1) state.unit = "";
-    sel.innerHTML = "<option value=\"\">– bitte wählen –</option>" + keys.map(k =>
-      "<option value=\"" + esc(k) + "\"" + (k === state.unit ? " selected" : "") + ">" +
-      esc((ORGS_[k] && ORGS_[k].name_de) || k) + "</option>").join("");
-  }
   document.querySelectorAll("#lang button").forEach(b =>
     b.setAttribute("aria-pressed", b.dataset.lang === state.lang ? "true" : "false"));
   document.getElementById("roleEnField").hidden = state.lang === "de";
@@ -807,11 +780,11 @@ function syncSecWeb() {
   swBtn.hidden = !sw || els.web.value.indexOf(sw) !== -1;
   if (sw) swBtn.textContent = "+ " + sw;
 }
-document.getElementById("unitKind").addEventListener("click", e => {
-  const b = e.target.closest("button[data-kind]"); if (!b) return;
-  state.unitKind = b.dataset.kind; syncUnitUi(); onInput();
+document.getElementById("unit").addEventListener("change", e => {
+  const [kind, key] = e.target.value.split(":");
+  state.unitKind = kind || ""; state.unit = key || "";
+  syncUnitUi(); onInput();
 });
-document.getElementById("unit").addEventListener("change", e => { state.unit = e.target.value; syncUnitUi(); onInput(); });
 document.getElementById("lang").addEventListener("click", e => {
   const b = e.target.closest("button[data-lang]"); if (!b) return;
   state.lang = b.dataset.lang; syncUnitUi(); onInput();
@@ -819,7 +792,7 @@ document.getElementById("lang").addEventListener("click", e => {
 document.getElementById("secWeb").addEventListener("click", () => {
   const sw = SEC_WEB[state.unit]; if (!sw) return;
   const cur = els.web.value.trim();
-  els.web.value = (cur || DEFAULTS.web) + "\n" + sw;
+  els.web.value = cur ? cur + "\n" + sw : sw;
   syncUnitUi(); onInput();
 });
 
@@ -830,7 +803,6 @@ function save() {
     FIELDS.forEach(k => { data[k] = els[k].value; });
     const box = document.getElementById("showLogo");
     if (box) data.showLogo = box.checked;
-    data.logoTech = logoTech();
     localStorage.setItem(STORE_KEY, JSON.stringify(data));
   } catch (e) {}
 }
@@ -839,7 +811,7 @@ function save() {
 // schaltet die Signatur zweisprachig.
 function fromV3(d) {
   const out = { name: d.name, phone: d.phone, mobile: d.mobile, web: d.web, street: d.street, city: d.city,
-    country: d.country, ps: d.ps, pslink: d.pslink, psuntil: d.psuntil, mode: d.mode, showLogo: d.showLogo, logoTech: d.logoTech };
+    country: d.country, ps: d.ps, pslink: d.pslink, psuntil: d.psuntil, mode: d.mode, showLogo: d.showLogo };
   const keep = [];
   splitLines(d.role).forEach(l => {
     const k = Object.keys(ORGS_).find(x => ORGS_[x].name_de === l || ORGS_[x].name_en === l);
@@ -870,10 +842,6 @@ function loadStored() {
     setFields(data);
     const box = document.getElementById("showLogo");
     if (box && data.showLogo) box.checked = true;
-    if (data.logoTech) {
-      const r = document.querySelector("input[name=\"logoTech\"][value=\"" + data.logoTech + "\"]");
-      if (r) r.checked = true;
-    }
     if (data.mode) setMode(data.mode, false);
     return true;
   } catch (e) { return false; }
@@ -960,7 +928,7 @@ function growAll() { ["role", "roleEn", "unitCustom", "web", "ps"].forEach(k => 
 function onInput() { resetCopied(); syncSecWeb(); render(); growAll(); checkExpiry(); save(); }
 FIELDS.forEach(k => els[k].addEventListener("input", onInput));
 
-document.getElementById("fillExample").addEventListener("click", () => { setFields(EXAMPLE); onInput(); showStep(4, true); });
+document.getElementById("fillExample").addEventListener("click", () => { setFields(EXAMPLE); onInput(); showStep(3, true); });
 
 // Brücke aus der Empfehlung ‹Meistgelesen›: Fold öffnen, hinspringen, Feld fokussieren.
 document.getElementById("empfPsJump").addEventListener("click", () => {
@@ -975,18 +943,11 @@ document.querySelectorAll("a[data-fold]").forEach(a => a.addEventListener("click
 }));
 document.getElementById("clearAll").addEventListener("click", () => { setFields({}); onInput(); showStep(1, true); });
 
-// Backend-Versuch: Logo-Häkchen, Technik-Wahl und Kopplung an die Intern-Ansicht.
-function syncLogoTech() {
-  const box = document.getElementById("showLogo");
-  document.getElementById("logoTech").hidden = !(box && box.checked);
-}
-document.getElementById("showLogo").addEventListener("change", () => { syncLogoTech(); render(); resetCopied(); save(); });
-document.querySelectorAll("input[name=\"logoTech\"]").forEach(r =>
-  r.addEventListener("change", () => { render(); resetCopied(); save(); }));
+// Backend-Versuch: Logo-Häkchen, gekoppelt an die Intern-Ansicht.
+document.getElementById("showLogo").addEventListener("change", () => { render(); resetCopied(); save(); });
 function syncIntern() {
   const on = !!(window.goeIntern && window.goeIntern());
   document.getElementById("logoOpt").hidden = !on;
-  if (!on) document.getElementById("logoTech").hidden = true; else syncLogoTech();
   render(); // Logo-Einblendung hängt an der Intern-Ansicht
 }
 window.addEventListener("goe:intern", syncIntern);
@@ -1319,7 +1280,7 @@ if (location.hostname === "werkzeuge.goetheanum.ch" && location.pathname.indexOf
 const hadStored = loadStored();
 const hadQuery = applyQuery();
 // Wer schon eine Signatur hat, landet bei ihr; wer neu ist, beginnt beim Namen.
-showStep(hadStored && val("name") ? 4 : 1, false);
+showStep(hadStored && val("name") ? 3 : 1, false);
 // Ein gefülltes PS zeigt sich auch im Formular – der Fold klappt dann auf.
 if (val("ps") || val("pslink")) document.getElementById("psFold").open = true;
 setMode(state.mode, false);
