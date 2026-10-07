@@ -46,9 +46,24 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 - [ ] Mehrzeilige Felder (Funktion, Eigene Angabe, Website, PS) wachsen mit dem Inhalt.
 - [ ] Empfehlungen erscheinen als Textabschnitt unter dem Generator.
 
+## Testpersonen (Aufbau prüfen)
+
+Reihenfolge der Blöcke: wer (Name, Funktion, Sektion/Bereich, deren Websites)
+· Telefon (eine Zeile) · Haus (Hochschule, Gesellschaft, Adresse) ·
+‹Goetheanum› als Schluss (Schriftzug oder Logo). Zweisprachig stehen kurze
+Paare auf einer Zeile (bis 56 Zeichen), lange untereinander.
+
+| Person | Eingabe | Erwartet |
+|---|---|---|
+| Minimal | Name, ‹Minimal› | Name · Goetheanum |
+| Sektionsleitung | Leiterin/Head, Bildende Künste, DE+EN, ein Telefon, sbk.goetheanum.org | ‹Leiterin · Head›, ‹Sektion für Bildende Künste · Visual Arts Section›, Hochschule an |
+| Bereich, viel Kontakt | Kommunikation, DE+EN, Telefon + Mobil, zwei Websites | Telefone und Websites je auf einer Zeile, Websites im ersten Block |
+| Nur Englisch | Medical Section, Coordinator | nur englische Zeilen |
+| Lange Sektion | Heilpädagogik, DE+EN | Sektionsname auf zwei Zeilen |
+
 ## Logo (Backend-Versuch, nur Intern-Ansicht)
 
-Das Logo steht an Stelle des Schriftzugs ‹Goetheanum›, verlinkt, mit
+Das Logo steht an Stelle des Schriftzugs ‹Goetheanum› als Schlusszeile, verlinkt, mit
 `alt="Goetheanum"`. Klassisches Outlook (Windows) liest die mso-Weiche und
 bekommt den Textlink. Vor einer Freigabe je Client eine echte Testmail,
 einmal mit geladenen, einmal mit gesperrten Bildern:

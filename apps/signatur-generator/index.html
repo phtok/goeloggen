@@ -575,11 +575,23 @@ const stripWww = w => String(w).replace(/^https?:\/\//i, "").replace(/^www\./i, 
 
 /* ---------- Zeilen der Signatur: eine Liste, die Vorschau UND Häkchen speist ---------- */
 // Je Sprache: de, en oder beide (Englisch direkt unter der deutschen Zeile).
+// Je Sprache: de, en oder beide. Beide: kurze Paare auf EINER Zeile
+// (‹Kommunikation · Communication›), lange untereinander – sonst bricht die
+// Zeile im Mailprogramm unkontrolliert um.
+const PAAR_MAX = 56;
 function inLang(de, en) {
   de = de.filter(Boolean); en = en.filter(Boolean);
   if (state.lang === "en") return en.length ? en : de;
-  if (state.lang === "de") return de;
-  return de.concat(en.filter(l => de.indexOf(l) === -1));
+  if (state.lang === "de" || !en.length) return de;
+  const out = [];
+  const n = Math.max(de.length, en.length);
+  for (let i = 0; i < n; i++) {
+    const d = de[i], e = en[i];
+    if (d && e && d !== e) {
+      if ((d + " · " + e).length <= PAAR_MAX) out.push(d + " · " + e); else out.push(d, e);
+    } else out.push(d || e);
+  }
+  return out;
 }
 function unitLines() {
   if (state.unitKind === "eigene") return splitLines(val("unitCustom"));
@@ -587,32 +599,40 @@ function unitLines() {
   return o ? inLang([o.name_de], [o.name_en || o.name_de]) : [];
 }
 const plainRows = arr => arr.map(t => ({ html: esc(t), text: t }));
-const linkRow = (href, text, color) =>
-  ({ html: "<a href=\"" + esc(href) + "\" style=\"color:" + color + ";text-decoration:none;\">" + esc(text) + "</a>", text });
+const linkHtml = (href, text, color) =>
+  "<a href=\"" + esc(href) + "\" style=\"color:" + color + ";text-decoration:none;\">" + esc(text) + "</a>";
+// Mehrere Links auf einer Zeile, mit Mittelpunkt getrennt.
+const linkLine = (items, color) => items.length ? [{
+  html: items.map(i => linkHtml(i.href, i.text, color)).join(" · "),
+  text: items.map(i => i.text).join(" · ")
+}] : [];
 
+// Vier Blöcke, je mit Leerzeile abgesetzt: wer (Person, Funktion, Sektion
+// oder Bereich samt deren Websites) · wie erreichbar · wo (Hochschule,
+// Gesellschaft, Adresse) · Goetheanum als Schlusszeile, Schriftzug oder Logo.
 function collectLines() {
   const L = [];
   const add = (id, group, label, step, rows) => { if (rows.length) L.push({ id, group, label, step, rows }); };
   const name = val("name");
   add("name", "person", "Name", 1, name ? [{ html: "<span style=\"font-weight:600;\">" + esc(name) + "</span>", text: name }] : []);
   add("role", "person", "Funktion", 1, plainRows(inLang(splitLines(val("role")), splitLines(val("roleEn")))));
-  // Telefonnummern als tel:-Link, aber Theme-Farbe (inherit) – dark-mode-fest
-  if (val("phone")) add("phone", "kontakt", "Telefon", 1, [linkRow(telHref(val("phone")), val("phone"), "inherit")]);
-  if (val("mobile")) add("mobile", "kontakt", "Mobil", 1, [linkRow(telHref(val("mobile")), val("mobile"), "inherit")]);
-  add("unit", "org", state.unitKind === "bereich" ? "Bereich" : "Sektion", 2, plainRows(unitLines()));
-  add("hochschule", "org", "Hochschule", 2, plainRows(inLang([term("hochschule", "de")], [term("hochschule", "en")])));
-  // Goetheanum in Mail-Blau (wie die Web-Links)
-  // ‹Goetheanum› ist selbst der Link zur Website; das Blau zeichnet ihn aus.
-  // Im Klartext gibt es keine Links, dort steht die Adresse dabei.
-  add("goetheanum", "org", "Goetheanum", 0, [{ html: goetheanumHtml(), text: "Goetheanum · " + HAUS_WEB }]);
-  add("aag", "org", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
+  add("unit", "person", state.unitKind === "bereich" ? "Bereich" : "Sektion", 2, plainRows(unitLines()));
+  // Websites gehören zur Sektion/zum Bereich; goetheanum.ch steckt im Schlusswort.
+  add("web", "person", "Website", 2, linkLine(splitLines(val("web"))
+    .filter(w => stripWww(w).toLowerCase() !== HAUS_WEB)
+    .map(w => ({ href: webHref(w), text: stripWww(w) })), MAIL_BLUE));
+  // Telefonnummern als tel:-Link in Theme-Farbe (inherit) – dark-mode-fest; eine Zeile.
+  add("tel", "kontakt", "Telefon", 1, linkLine(["phone", "mobile"].map(val).filter(Boolean)
+    .filter((t, i, a) => a.indexOf(t) === i)
+    .map(t => ({ href: telHref(t), text: t })), "inherit"));
+  add("hochschule", "haus", "Hochschule", 2, plainRows(inLang([term("hochschule", "de")], [term("hochschule", "en")])));
+  add("aag", "haus", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
   // Adresse auf EINER Zeile (mit Mittelpunkt)
   const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
-  add("address", "org", "Adresse", "adr", plainRows([addr]));
-  // Web-Links in Mail-Blau, www entfällt in der Anzeige
-  // Weitere Websites (Sektion, Projekt); goetheanum.ch steckt schon im Schriftzug.
-  add("web", "org", "Website", 2, splitLines(val("web")).filter(w => stripWww(w).toLowerCase() !== HAUS_WEB)
-    .map(w => linkRow(webHref(w), stripWww(w), MAIL_BLUE)));
+  add("address", "haus", "Adresse", "adr", plainRows([addr]));
+  // ‹Goetheanum› ist selbst der Link zur Website; das Blau zeichnet ihn aus.
+  // Im Klartext gibt es keine Links, dort steht die Adresse dabei.
+  add("goetheanum", "marke", "Goetheanum", 0, [{ html: goetheanumHtml(), text: "Goetheanum · " + HAUS_WEB }]);
   return L;
 }
 function defaultOn(id) { return id === "hochschule" ? state.unitKind === "sektion" : true; }
@@ -632,7 +652,7 @@ function goetheanumHtml() {
   if (!logoWanted()) return link("Goetheanum");
   return "<!--[if mso]>" + link("Goetheanum") + "<![endif]-->" +
     "<!--[if !mso]><!-->" + link("<img src=\"" + LOGO_URL + "\" width=\"100\" height=\"17\" alt=\"Goetheanum\" " +
-      "style=\"display:block;border:0;outline:none;margin:3px 0;mso-hide:all;font-family:" + CFONT.replace(/'/g, "") +
+      "style=\"display:block;border:0;outline:none;margin:2px 0 0;mso-hide:all;font-family:" + CFONT.replace(/'/g, "") +
       ";font-size:12px;line-height:17px;color:" + MAIL_BLUE + ";\" />", "display:inline-block;") + "<!--<![endif]-->";
 }
 
@@ -666,7 +686,7 @@ function buildSignature() {
   // Abgrenzender Unterstrich – immer, auch ohne PS (trennt Mailtext und Signatur).
   push("_", "_");
 
-  // Drei Blöcke – Person, Kontakt, Haus –, je mit Leerzeile abgesetzt.
+  // Blöcke je mit Leerzeile abgesetzt (siehe collectLines).
   let group = null;
   collectLines().filter(l => isOn(l.id)).forEach(l => {
     if (l.group !== group) { gap(); group = l.group; }
