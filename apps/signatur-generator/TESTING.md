@@ -115,7 +115,6 @@ nicht.
 | Gmail, Mail iOS (Bilder gesperrt) | – | – | ☐ |
 | Outlook im Browser, Dunkelmodus | – | ☐ | – |
 | Outlook klassisch (Windows) | – (Textlink) | ☐ | ☐ |
-| Mail (iOS) | – | – | ☐ |
 
 ## Nicht-Ziele
 
