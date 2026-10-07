@@ -119,7 +119,7 @@ Signatur in die Signatur-Einstellungen von Outlook im Browser eingefügt:
   (U+2060) in der Postleitzahl soll Gmails Karten-Link verhindern (☐ prüfen).
 
 Beschluss: Standard für alle bleibt der blaue Schriftzug ‹Goetheanum›. Das
-Logo bleibt eine Möglichkeit für Apple Mail und Gmail, nur zusammen mit der
+Logo bleibt eine Möglichkeit für Apple Mail, nur zusammen mit der
 Adresse (ohne Adresse – ‹Minimal› – schliesst der Schriftzug).
 
 ### Befund 7. 10. 2026 (Einfügen in Apple Mail, Gmail-Adresse)
@@ -132,12 +132,17 @@ Adresse (ohne Adresse – ‹Minimal› – schliesst der Schriftzug).
   Trenner in den Wörtern. Geholfen: jedes Wort in eigenem `<span>` (gebaut),
   oder selbst verlinkt (wird in Outlook blau, darum verworfen).
 
+- **Einfügen in Gmail (Einstellungen), gesendet an Outlook und Apple Mail:**
+  Gmail streicht `background-size` – das Logo erscheint in Originalgrösse,
+  auf 100 × 17 px beschnitten, als Bruchstücke. Gmail streicht auch
+  `color:inherit` am Telefon-Link (Standard-Blau). Adresse bleibt Text,
+  ‹Goetheanum› halbfett. → Logo nur für Apple Mail; Telefon in Mail-Blau.
+
 ### Noch offen
 
 | Client | Logo sichtbar | Dunkelmodus | Bilder gesperrt |
 |---|---|---|---|
 | Gmail, Mail iOS (Bilder gesperrt) | – | – | ☐ |
-| Einfügen in Gmail-Einstellungen: Logo bleibt? | ☐ | – | – |
 | Einfügen in Outlook im Browser: Adresse mit spans in Textfarbe? | – | – | ☐ |
 | Outlook im Browser, Dunkelmodus | – | ☐ | – |
 | Outlook klassisch (Windows) | – (Textlink) | ☐ | ☐ |
