@@ -640,7 +640,10 @@ function collectLines() {
   const addrHtml = "<a href=\"https://www.google.com/maps/search/?api=1&amp;query=" +
     encodeURIComponent((logoWanted() ? "Goetheanum, " : "") + addr.replace(/ · /g, ", ")) +
     "\" style=\"color:inherit;text-decoration:none;\">" + esc(addr) + "</a>";
-  add("address", "adresse", "Adresse", "adr", logoWanted()
+  const addrText = esc(addr).replace(/\b(\d{2})(\d{2})\b/, "$1&#8288;$2");
+  if (LOGO_IMG && logoWanted()) {
+    add("address", "adresse", "Adresse", "adr", [{ html: "<b>Goetheanum</b> · " + addrText, text: "Goetheanum · " + addr }]);
+  } else add("address", "adresse", "Adresse", "adr", logoWanted()
     ? [{ html: "<a href=\"https://" + HAUS_WEB + "\" style=\"color:inherit;text-decoration:none;font-weight:600;\">Goetheanum</a> · " + addrHtml,
          text: "Goetheanum · " + addr }]
     : [{ html: addrHtml, text: addr }]);
@@ -673,7 +676,15 @@ function isOn(id) {
 // Hintergrundbild lässt sie dunkel. Preis: Bei gesperrten Bildern bleibt die
 // Stelle leer. Das klassische Outlook (Word-Engine) zeigt keine Hintergründe;
 // es liest als einziges die mso-Weiche und bekommt den Textlink.
+// Test (nur Intern, ?logo=img): Logo als <img> statt Hintergrund, weil der
+// Signatur-Editor von Outlook im Browser Hintergründe beim Einfügen löscht und
+// color:inherit an Links entfernt (Test 7. 10. 2026). Dazu ‹Goetheanum› und
+// Adresse als reiner Text; ein Wortverbinder (U+2060) in der Postleitzahl soll
+// verhindern, dass Gmail die Adresse zum blauen Karten-Link macht.
+const LOGO_IMG = /[?&]logo=img\b/.test(location.search);
 function goetheanumHtml() {
+  if (LOGO_IMG && logoWanted()) return "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" +
+    "<img src=\"" + LOGO_URL + "\" width=\"100\" height=\"17\" alt=\"Goetheanum\" style=\"display:block;border:0;\" /></a>";
   const link = inner => "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" + inner + "</a>";
   if (!logoWanted()) return link("Goetheanum");
   return "<!--[if mso]>" + link("Goetheanum") + "<![endif]-->" +
