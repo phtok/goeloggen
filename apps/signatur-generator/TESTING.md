@@ -122,13 +122,23 @@ Beschluss: Standard für alle bleibt der blaue Schriftzug ‹Goetheanum›. Das
 Logo bleibt eine Möglichkeit für Apple Mail und Gmail, nur zusammen mit der
 Adresse (ohne Adresse – ‹Minimal› – schliesst der Schriftzug).
 
+### Befund 7. 10. 2026 (Einfügen in Apple Mail, Gmail-Adresse)
+
+- **Apple Mail:** Logo-Signatur aus dem Generator eingefügt und gesendet –
+  Logo kommt an, Mail bleibt im Dunkelmodus dunkel, ‹Goetheanum› halbfett,
+  Abstände stimmen. → Logo-Häkchen für alle freigegeben (‹Für Apple Mail›).
+- **Gmail-Adresse:** Gmail macht eine Postadresse zum blauen Karten-Link. Nicht
+  geholfen: Wortverbinder in der PLZ, geschützte Leerzeichen, unsichtbare
+  Trenner in den Wörtern. Geholfen: jedes Wort in eigenem `<span>` (gebaut),
+  oder selbst verlinkt (wird in Outlook blau, darum verworfen).
+
 ### Noch offen
 
 | Client | Logo sichtbar | Dunkelmodus | Bilder gesperrt |
 |---|---|---|---|
 | Gmail, Mail iOS (Bilder gesperrt) | – | – | ☐ |
-| Einfügen in Apple Mail / Gmail-Einstellungen: Logo bleibt? | ☐ | – | – |
-| Gmail: Adresse mit Wortverbinder ohne Karten-Link? | – | – | – |
+| Einfügen in Gmail-Einstellungen: Logo bleibt? | ☐ | – | – |
+| Einfügen in Outlook im Browser: Adresse mit spans in Textfarbe? | – | – | ☐ |
 | Outlook im Browser, Dunkelmodus | – | ☐ | – |
 | Outlook klassisch (Windows) | – (Textlink) | ☐ | ☐ |
 
