@@ -242,10 +242,10 @@
       "cat": "generatoren",
       "status": "live",
       "tag": "QR",
-      "title": "QR-Code-Generator",
+      "title": "QR-Code und Kurzlink",
       "short": "QR-Codes",
       "href": "apps/qr-generator/",
-      "desc": "QR-Codes für Link, WLAN, Kontakt, E-Mail und Text – im Hausstil, mit Kurzlink und einfacher Scan-Statistik, ohne Fremddienst.",
+      "desc": "QR-Codes und kurze, hauseigene Adressen – im Hausstil, tippbar, nach dem Druck umhängbar, ohne Fremddienst.",
       "such": "QR Code Generator Kurzlink WLAN WiFi vCard Kontakt E-Mail Statistik Scans"
     },
     {
@@ -816,8 +816,16 @@
   "reihenfolge": {
     "$hinweis": "Vom Sortierer gepflegte Reihenfolgen (Slugs). Startseite und Schublade lesen sie; fehlt ein Eintrag, gilt die eingebaute Vorgabe. aus = je Fläche ausgeblendet (bleibt per Direktlink und in der Intern-Ansicht erreichbar). Verlauf = Git.",
     "schublade": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "qr-generator", "kurzlink", "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint", "wallpaper", "programmheft", "familie", "abo"],
-    "karten": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "uebersetzungen", "qr-generator", "kurzlink", "typografie", "powerpoint", "programmheft", "wallpaper", "karten", "sektionsfarben", "familie", "abo"],
-    "aus": { "schublade": ["lt-programm", "design-system"], "karten": ["design-system", "lt-programm"] }
+    "karten": ["logo-generator", "qr-generator", "powerpoint", "karten", "programmheft", "icons", "uebersetzungen", "sektionsfarben", "typografie", "schriften", "signatur", "visitenkarten", "wallpaper", "abo", "familie"],
+    "aus": { "schublade": ["lt-programm", "design-system"], "karten": ["design-system", "lt-programm", "kurzlink"] }
+  },
+  "gruppen": {
+    "$hinweis": "Gruppen der Startseite nach Anlass (Entscheid Auftraggeber, 7. Oktober 2026). Zugehörigkeit hier; die Folge innerhalb einer Gruppe kommt aus reihenfolge.karten. Nicht Zugeordnetes erscheint in der letzten Gruppe.",
+    "startseite": [
+      { "titel": "Jeden Tag", "slugs": ["logo-generator", "qr-generator", "powerpoint", "karten", "programmheft", "icons"] },
+      { "titel": "Farben, Sprachen, Typografie", "slugs": ["uebersetzungen", "sektionsfarben", "typografie"] },
+      { "titel": "Einmal einrichten", "slugs": ["schriften", "signatur", "visitenkarten", "wallpaper", "abo", "familie"] }
+    ]
   },
   "welten": {
     "$hinweis": "Die Ordner der Schublade. public = für alle sichtbar, intern = nur Backstage. Ein Werkzeug gehört über sein cat-Feld in eine Welt (welt.cats). Reihenfolge = Anzeigefolge. sub = verschachtelte Kisten. Vom Ordner-Editor gepflegt; fehlt welten, gilt die in nav.js eingebaute Vorgabe.",
