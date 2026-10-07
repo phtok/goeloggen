@@ -636,10 +636,9 @@ function collectLines() {
   // daraus (Test 7. 10. 2026: Wortverbinder, geschützte Leerzeichen und
   // unsichtbare Trenner halfen nicht, die spans schon).
   const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
-  // Test 7. 10. 2026 (?adr=g|h|i): überlebt ein Span mit Stil das Einfügen in Outlook?
-  const ADR_TEST = { g: " style=\"font-weight:400;\"", h: " style=\"white-space:nowrap;\"", i: " style=\"letter-spacing:0px;\"" };
-  const adrStil = ADR_TEST[(new URLSearchParams(location.search).get("adr") || "").toLowerCase()] || "";
-  const addrHtml = esc(addr).replace(/[^\s·]+/g, w => "<span" + adrStil + ">" + w + "</span>");
+  // Der (wirkungslose) Stil hält die spans beim Einfügen in Outlook am Leben;
+  // leere spans räumt Outlook weg, dann verlinkt Gmail wieder (Test G/H/I).
+  const addrHtml = esc(addr).replace(/[^\s·]+/g, w => "<span style=\"letter-spacing:0px;\">" + w + "</span>");
   // Mit Logo beginnt die Adresse mit ‹Goetheanum›, halbfett (G01: genau ein
   // Merkmal): Wo das Logo nicht ankommt, steht der Name trotzdem gut sichtbar
   // da (Beschluss 7. 10. 2026).
