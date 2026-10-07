@@ -30,7 +30,7 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 - [ ] **‹Goetheanum›** ist selbst der Link zu goetheanum.ch (keine eigene Zeile goetheanum.ch mehr); im Klartext ‹Goetheanum · goetheanum.ch›.
 - [ ] **Mail-Blau** (`#4183B4`) für ‹Goetheanum› und Web-Links — lesbar auf hellem UND dunklem Grund (Kontrast 4.09:1 / 4.07:1, im Code dokumentiert).
 - [ ] **Hierarchie** über Grösse/Gewicht: Name in 600, Adresse eine Stufe kleiner.
-- [ ] **Links** funktionieren: Website (`https`), Telefon/Mobil (`tel:`), PS-Link.
+- [ ] **Links** funktionieren: Website (`https`), PS-Link. Telefon und Adresse sind bewusst Text (kein Gmail-Autolink).
 - [ ] **‹Nur Text kopieren›** liefert saubere Klartext-Fassung (Zeilenumbrüche, keine HTML-Reste).
 - [ ] **PS-Modul:** 120-Zeichen-Zähler, Darstellung `PS: … — Link`, ‹Erinnerung in den Kalender› lädt eine `.ics`, die in Apple Kalender und Outlook korrekt öffnet; abgelaufenes PS zeigt beim Laden einen Hinweis.
 - [ ] **Vorschau Hell/Dunkel** schaltet den Bühnen-Hintergrund; gerendert wird exakt das kopierte Markup.
@@ -143,7 +143,9 @@ Adresse (ohne Adresse – ‹Minimal› – schliesst der Schriftzug).
   `font-weight:400` oder `white-space:nowrap` wurden stückweise verlinkt;
   mit `letter-spacing:0px` blieb die Adresse Text (gebaut). Das Telefon kommt
   in Standard-Blau mit Unterstrich an: Outlook nimmt dem `tel:`-Link die Farbe
-  oder den Link, Gmail verlinkt die Nummer selbst.
+  oder den Link, Gmail verlinkt die Nummer selbst. → Telefon ebenfalls als
+  Text in Wort-spans (Beschluss 7. 10. 2026); am Handy evtl. nicht antippbar –
+  noch zu prüfen.
 
 ### Noch offen
 
