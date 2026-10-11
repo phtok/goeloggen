@@ -742,6 +742,12 @@
       "desc": "Strategieblatt nach Neumeier, Fundament, Architektur, Fahrplan."
     },
     {
+      "title": "Tagungs-Reader – Konzept",
+      "tag": "Konzept",
+      "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/lt-reader-konzept.md",
+      "desc": "Der Reader der Landwirtschaftlichen Tagung online gebaut: ein Jahrgang ist eine Datei, vier Werkstätten (Motiv & Farben, Karte, Inhalte, Programm), 20-Seiten-Vorschau, IDML und Druck-PDF/X-4. Entscheid offen."
+    },
+    {
       "title": "Campus-Kartentool – Pflichtenheft",
       "tag": "Spec",
       "href": "https://github.com/phtok/goeloggen/blob/main/docs/specs/campus-kartentool-pflichtenheft.md",
