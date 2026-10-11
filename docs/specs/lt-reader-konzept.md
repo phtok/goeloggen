@@ -1,6 +1,20 @@
 # Tagungs-Reader – Konzept (Landwirtschaftliche Tagung, ab 2027)
 
-Stand: 11. Oktober 2026 · Status: **beschlossen; Etappe 1 gebaut** (Werkzeug: https://werkzeuge.goetheanum.ch/apps/lt-reader/, Anleitung: `apps/lt-reader/ANLEITUNG.md`)
+Stand: 11. Oktober 2026 · Status: **beschlossen; Etappen 1 und 2 gebaut** (Werkzeug: https://werkzeuge.goetheanum.ch/apps/lt-reader/, Anleitung: `apps/lt-reader/ANLEITUNG.md`)
+
+**Kurskorrektur nach dem Vergleich mit den Vorlagen (11. 10. 2026, Auftraggeber):**
+Die Seiten werden nicht frei in HTML nachgebaut, sondern **aus dem IDML der
+Vorlage gezeichnet** (`apps/lt-reader/idml-seite.js`: Flächen, Tönungen,
+Dämpfer mit Verlaufs-Feder, gespiegelte Bilder im Rahmen-Beschnitt, Logo- und
+QR-Polygone, Textrahmen mit Graden, Einzügen, Spalten, verketteten Rahmen).
+Getauscht werden nur Texte, Bilder und Farben. Geschrieben wird **direkt im
+Blatt**, jede Änderung steht im Verlauf (vorher/nachher, wer, wann). Die Karte
+kommt aus dem **Kartentool** (Schnittstelle `window.Kartentool`, `?einbett`,
+feste Nummern) in den Farben der **Faltblatt-Palette** (Farbleiste mit neun
+Feldern auf der Montagefläche von `apps/lt-programm/vorlage/LT27.idml`). Die
+Abschnitte unten zu ‹Inhalte-Werkstatt› und ‹Seitenplan als Daten› gelten in
+dieser Form nicht mehr; die Vorlage ist die Wahrheit, der Jahrgang trägt nur
+Abweichungen (Texte je Rahmen, Ersetzungen, Bilder, Farben, Karte).
 Beschluss des Auftraggebers (11. 10. 2026): Druckweg 2027 über IDML → InDesign → PDF/X;
 die Druckstrasse (Etappe 4) folgt, wenn mehr Erfahrung da ist.
 Auftrag: Der Reader der Landwirtschaftlichen Tagung soll online zusammengebaut
@@ -215,8 +229,11 @@ die Vorschau meldet, wenn die Bogenzahl nicht mehr durch vier teilbar ist.
    Vorschau-PDF über den Druckdialog (A5 + 3 mm, Schnittmarken), Motiv-Upload
    mit Farbvorschlag und Kontrast-Readouts. Danach kann die Sektion Texte
    pflegen.
-2. **Motiv & Farben und Karte.** Palette aus dem Motiv, Rollen mit Kontrast,
-   Kartentool eingebettet, Orte aus dem Programm, Legende automatisch.
+2. **Vorlage als Blatt, Karte, Palette – gebaut (11. 10. 2026).** IDML-Zeichner,
+   Schreiben im Blatt mit Verlauf, Ersetzungen statt Platzhalter, Kartentool
+   eingebettet (feste Nummern, kompakte Legende) in den Rollen der
+   Faltblatt-Palette, Zeitplan-Swatches je Vorlage zuweisbar. Orte aus dem
+   Programm automatisch markieren folgt mit Etappe 3.
 3. **Programm-Seiten und IDML.** Workshop-, Führungs- und Open-Space-Seiten
    aus der Webseite, Seitenfluss, vollständiger IDML-Export mit eingesetzter
    Programm-Doppelseite. Danach ist der InDesign-Weg vollständig.
