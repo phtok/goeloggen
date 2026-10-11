@@ -143,8 +143,12 @@ export function seiteZeichnen(doc, name, opts = {}) {
   // opts.haelfte: 'links' | 'rechts' – eine Doppelseite (z. B. Faltblatt-Rückseite) als zwei Blätter
   let x0 = seite.x, w = seite.w;
   if (opts.haelfte === 'links') w = seite.w / 2; else if (opts.haelfte === 'rechts') { x0 = seite.x + seite.w / 2; w = seite.w / 2; }
-  el.innerHTML = `<svg class="blatt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="${n3(x0 - b)} ${n3(seite.y - b)} ${n3(w + 2 * b)} ${n3(seite.h + 2 * b)}" width="${n3((w + 2 * b) / PT)}mm" height="${n3((seite.h + 2 * b) / PT)}mm">
-    <defs>${defs.join('')}</defs><rect x="${n3(x0 - b)}" y="${n3(seite.y - b)}" width="${n3(w + 2 * b)}" height="${n3(seite.h + 2 * b)}" fill="#ffffff"/>${inhalt}</svg>`;
+  // Die Zeichnung steht in natürlicher Grösse (1 Einheit = 1 px) und wird vom Halter per
+  // CSS-Transform auf Punkt gebracht (× 96/72). So bleiben foreignObjects auch in
+  // WebKit/iOS richtig skaliert – ein skalierendes viewBox oder ‹zoom› lässt sie dort stehen.
+  const W = w + 2 * b, H = seite.h + 2 * b;
+  el.innerHTML = `<div class="leinwand" style="width:${n3(W)}px;height:${n3(H)}px"><svg class="blatt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="${n3(x0 - b)} ${n3(seite.y - b)} ${n3(W)} ${n3(H)}" width="${n3(W)}" height="${n3(H)}">
+    <defs>${defs.join('')}</defs><rect x="${n3(x0 - b)}" y="${n3(seite.y - b)}" width="${n3(W)}" height="${n3(H)}" fill="#ffffff"/>${inhalt}</svg></div>`;
   return el;
 }
 
@@ -200,13 +204,17 @@ function formZeichnen(ctx, el, m) {
     const link = bild.getElementsByTagName('Link')[0];
     const uri = link ? decodeURIComponent(link.getAttribute('LinkResourceURI') || '') : '';
     const basename = uri.split('/').pop();
-    const url = (opts.bilder || {})[basename] || (opts.bilder || {})['*' + basename.split('.').pop()] || null;
+    const eintrag = (opts.bilder || {})[basename] || (opts.bilder || {})['*' + basename.split('.').pop()] || null;
+    // Eintrag: Pfad (ersetzt die Originaldatei, Lage und Beschnitt wie in der Vorlage)
+    // oder { datei, rahmen: true } (Bild in den Rahmen eingepasst – etwa ein Ausschnitt aus dem PDF)
+    const url = eintrag && typeof eintrag === 'object' ? eintrag.datei : eintrag;
+    const inRahmen = !!(eintrag && typeof eintrag === 'object' && eintrag.rahmen);
     const gb = bild.getElementsByTagName('GraphicBounds')[0];
     const bm = matrix(bild.getAttribute('ItemTransform'));
     const bb = bbox(pts);
     const clipId = `clip${++laufId}`;
     ctx.defs.push(`<clipPath id="${clipId}"><path d="${d}"/></clipPath>`);
-    if (url && gb) {
+    if (url && gb && !inRahmen) {
       const L = +gb.getAttribute('Left'), T = +gb.getAttribute('Top'), R = +gb.getAttribute('Right'), B = +gb.getAttribute('Bottom');
       inner = `<g clip-path="url(#${clipId})"><image href="${esc(url)}" x="${n3(L)}" y="${n3(T)}" width="${n3(R - L)}" height="${n3(B - T)}" preserveAspectRatio="none" transform="${mStr(bm)}"/></g>`;
     } else if (url) {

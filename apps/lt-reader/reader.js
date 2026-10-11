@@ -112,7 +112,7 @@ function bauen() {
   let i = 0;
   const bogen = (els, label) => {
     const w = document.createElement("div"); w.className = "bogen";
-    const d = document.createElement("div"); d.className = "doppel"; els.forEach((e) => d.appendChild(e));
+    const d = document.createElement("div"); d.className = "doppel"; els.forEach((e) => { const h = document.createElement("div"); h.className = "seite-halter"; h.appendChild(e); d.appendChild(h); });
     w.appendChild(d); w.insertAdjacentHTML("beforeend", `<p class="unterschrift">${label}</p>`); B.appendChild(w);
   };
   while (i < seiten.length) {
@@ -130,6 +130,8 @@ function zoomen() {
   const breit = B.clientWidth || 800, seite = 154 / 25.4 * 96;
   const z = window.innerWidth < 700 ? Math.min(1, (breit - 4) / seite) : Math.min(1, (breit - 8) / (2 * seite + 2));
   B.style.setProperty("--z", z.toFixed(3));
+  // Halter auf die verkleinerte Grösse bringen (Transform ändert das Layoutmass nicht)
+  B.querySelectorAll(".seite-halter").forEach((h) => { h.style.width = `${(seite * z).toFixed(1)}px`; h.style.height = `${(216 / 25.4 * 96 * z).toFixed(1)}px`; });
 }
 window.addEventListener("resize", zoomen);
 
@@ -252,7 +254,7 @@ function werkstatt() {
         <div class="tat"><button type="button" data-tat="hoch" data-pfad="ersetzungen" data-i="${i}" aria-label="nach oben">↑</button><button type="button" class="weg" data-tat="weg" data-pfad="ersetzungen" data-i="${i}">entfernen</button></div></div>`).join("")}
       <div class="tat"><button type="button" data-tat="neu" data-pfad="ersetzungen" data-neu='{"von":"","nach":""}'>+ Ersetzung</button></div></div></div>`;
   } else if (REITER === "motiv") {
-    const motivKey = Object.keys(S.bilder || {}).find((k) => /\.jpe?g$|\.png$/i.test(k) && !/logo|Logo|badge|signet|Element/.test(k)) || "";
+    const motivKey = Object.keys(S.bilder || {}).find((k) => typeof S.bilder[k] === "string" && /\.jpe?g$|\.png$/i.test(k)) || "";
     const motiv = motivKey ? S.bilder[motivKey] : "";
     h += `<div class="block"><p class="titel">Motiv</p>${motiv ? `<img class="motivbild" src="${esc(motiv)}" alt="Motiv" />` : `<p class="hinweis">Kein Motiv zugeordnet.</p>`}
       <p class="hinweis">Rahmen der Vorlage: <b>${esc(motivKey || "–")}</b>. Ein neues Bild ersetzt es in der Vorschau; der Druck nimmt die Originaldatei in InDesign.</p>
