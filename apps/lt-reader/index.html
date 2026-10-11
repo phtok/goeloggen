@@ -153,7 +153,7 @@
   .logo-raster{display:grid;grid-template-columns:repeat(3,1fr);gap:9mm 8mm;align-items:center;justify-items:center;margin-top:4mm}
   .logo-raster img{max-width:30mm;max-height:18mm;object-fit:contain}
   .logo-raster .leer{width:30mm;height:14mm;border:.3mm dashed rgba(20,24,28,.3);border-radius:1mm;display:flex;align-items:center;justify-content:center; /* # ds-ok Platzhalter auf Papier */
-    font-family:var(--font-text);font-size:.76em;color:rgba(20,24,28,.5)} /* # ds-ok */
+    font-family:var(--font-text);font-size:.76em;color:rgba(20,24,28,.66)} /* # ds-ok 5.9:1 */
 
   /* Kasten links (Führungen, Open Spaces, Workshops-Kopf) */
   .kaestchen-reihe{display:grid;grid-template-columns:34mm 1fr 1fr;gap:6mm;align-items:start}
@@ -179,7 +179,7 @@
 
   /* Karte */
   .karte-seite img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 40%}
-  .karte-seite .leer{position:absolute;inset:0;background:var(--grau);display:flex;align-items:center;justify-content:center;font-family:var(--font-text);font-size:1em;color:rgba(20,24,28,.55)} /* # ds-ok */
+  .karte-seite .leer{position:absolute;inset:0;background:var(--grau);display:flex;align-items:center;justify-content:center;font-family:var(--font-text);font-size:1em;color:rgba(20,24,28,.66)} /* # ds-ok 5.9:1 */
 
   /* Titel und Rückseite */
   .titel-seite .motiv,.rueck-seite .motiv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -204,7 +204,7 @@
   .prog-seite .punkt-z{display:grid;grid-template-columns:9mm 1fr;gap:1.5mm;padding:1.6mm 0;border-top:.2mm solid rgba(20,24,28,.12)} /* # ds-ok Haarlinie */
   .prog-seite .punkt-z .uhr{font-weight:var(--w-deutlich);font-variant-numeric:tabular-nums}
   .prog-seite .punkt-z .wer{font-weight:var(--w-ruhig)}
-  .prog-seite .etappe{margin-top:auto;font-family:var(--font-text);font-size:.82em;color:rgba(20,24,28,.55)} /* # ds-ok Vorschau-Hinweis */
+  .prog-seite .etappe{margin-top:auto;font-family:var(--font-text);font-size:.82em;color:rgba(20,24,28,.66)} /* # ds-ok Vorschau-Hinweis, 5.9:1 */
 
   /* Workshops */
   .ws-seite .spalten{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;flex:1 1 auto;min-height:0}
@@ -250,12 +250,12 @@
     <aside class="leiste" id="leiste" aria-label="Werkstatt">
       <p class="stand" id="stand">Lade …</p>
       <label class="field"><span class="lab">Wer arbeitet gerade? (Vorname, für die Sicherung)</span><input type="text" id="von" autocomplete="given-name" /></label>
-      <div class="reiter seg" id="reiter" role="tablist">
-        <button type="button" role="tab" data-reiter="inhalte" aria-pressed="true">Inhalte</button>
-        <button type="button" role="tab" data-reiter="motiv" aria-pressed="false">Motiv &amp; Farben</button>
-        <button type="button" role="tab" data-reiter="karte" aria-pressed="false">Karte</button>
-        <button type="button" role="tab" data-reiter="programm" aria-pressed="false">Programm</button>
-        <button type="button" role="tab" data-reiter="export" aria-pressed="false">Export</button>
+      <div class="reiter seg" id="reiter" aria-label="Werkstätten">
+        <button type="button" data-reiter="inhalte" aria-pressed="true">Inhalte</button>
+        <button type="button" data-reiter="motiv" aria-pressed="false">Motiv &amp; Farben</button>
+        <button type="button" data-reiter="karte" aria-pressed="false">Karte</button>
+        <button type="button" data-reiter="programm" aria-pressed="false">Programm</button>
+        <button type="button" data-reiter="export" aria-pressed="false">Export</button>
       </div>
       <div id="werkstatt"></div>
     </aside>
