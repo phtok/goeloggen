@@ -24,20 +24,62 @@
  },
  "bilder": {
   "UniversalUpscaler_Pro_Precise_2_1f1b0271-53d5-6470-b2c3-a3633b8a30ec_ph.jpg": "jahrgaenge/2027-motiv.jpg",
-  "ErdmannHAUSER_Logo_web.png": "jahrgaenge/2027-logos/ErdmannHAUSER_Logo_web.png.png",
-  "Mahlestiftung.png": "jahrgaenge/2027-logos/Mahlestiftung.png.png",
-  "brand-oikopolis.svg.webp": "jahrgaenge/2027-logos/brand-oikopolis.svg.webp.png",
-  "logo.svg": "jahrgaenge/2027-logos/logo.svg.png",
-  "demeter_logo_rgb.png": "jahrgaenge/2027-logos/demeter_logo_rgb.png.png",
-  "logo-biodynamic-federation-1.svg": "jahrgaenge/2027-logos/logo-biodynamic-federation-1.svg.png",
-  "Voelkel-Logo-2019.png": "jahrgaenge/2027-logos/Voelkel-Logo-2019.png.png",
-  "sagst-signet.465c329f.svg": "jahrgaenge/2027-logos/sagst-signet.465c329f.svg.png",
-  "sonett_logo_en_4c_horizontal.eps": "jahrgaenge/2027-logos/sonett_logo_en_4c_horizontal.eps.png",
-  "Kultursaat-c49e5e6f.png": "jahrgaenge/2027-logos/Kultursaat-c49e5e6f.png.png",
-  "logo-b0dab30a.png": "jahrgaenge/2027-logos/logo-b0dab30a.png.png",
-  "Element 1.svg": "jahrgaenge/2027-logos/Element_1.svg.png",
-  "Odin+logo+2023-149w.png.webp": "jahrgaenge/2027-logos/Odin_logo_2023-149w.png.webp.png",
-  "BioMarkt_Badge_100mm_CMYK-b24cf856-149w.png.webp": "jahrgaenge/2027-logos/BioMarkt_Badge_100mm_CMYK-b24cf856-149w.png.webp.png"
+  "ErdmannHAUSER_Logo_web.png": {
+   "datei": "jahrgaenge/2027-logos/ErdmannHAUSER_Logo_web.png.png",
+   "rahmen": true
+  },
+  "Mahlestiftung.png": {
+   "datei": "jahrgaenge/2027-logos/Mahlestiftung.png.png",
+   "rahmen": true
+  },
+  "brand-oikopolis.svg.webp": {
+   "datei": "jahrgaenge/2027-logos/brand-oikopolis.svg.webp.png",
+   "rahmen": true
+  },
+  "logo.svg": {
+   "datei": "jahrgaenge/2027-logos/logo.svg.png",
+   "rahmen": true
+  },
+  "demeter_logo_rgb.png": {
+   "datei": "jahrgaenge/2027-logos/demeter_logo_rgb.png.png",
+   "rahmen": true
+  },
+  "logo-biodynamic-federation-1.svg": {
+   "datei": "jahrgaenge/2027-logos/logo-biodynamic-federation-1.svg.png",
+   "rahmen": true
+  },
+  "Voelkel-Logo-2019.png": {
+   "datei": "jahrgaenge/2027-logos/Voelkel-Logo-2019.png.png",
+   "rahmen": true
+  },
+  "sagst-signet.465c329f.svg": {
+   "datei": "jahrgaenge/2027-logos/sagst-signet.465c329f.svg.png",
+   "rahmen": true
+  },
+  "sonett_logo_en_4c_horizontal.eps": {
+   "datei": "jahrgaenge/2027-logos/sonett_logo_en_4c_horizontal.eps.png",
+   "rahmen": true
+  },
+  "Kultursaat-c49e5e6f.png": {
+   "datei": "jahrgaenge/2027-logos/Kultursaat-c49e5e6f.png.png",
+   "rahmen": true
+  },
+  "logo-b0dab30a.png": {
+   "datei": "jahrgaenge/2027-logos/logo-b0dab30a.png.png",
+   "rahmen": true
+  },
+  "Element 1.svg": {
+   "datei": "jahrgaenge/2027-logos/Element_1.svg.png",
+   "rahmen": true
+  },
+  "Odin+logo+2023-149w.png.webp": {
+   "datei": "jahrgaenge/2027-logos/Odin_logo_2023-149w.png.webp.png",
+   "rahmen": true
+  },
+  "BioMarkt_Badge_100mm_CMYK-b24cf856-149w.png.webp": {
+   "datei": "jahrgaenge/2027-logos/BioMarkt_Badge_100mm_CMYK-b24cf856-149w.png.webp.png",
+   "rahmen": true
+  }
  },
  "ersetzungen": [
   {

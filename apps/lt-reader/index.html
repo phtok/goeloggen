@@ -82,12 +82,16 @@
   /* ---------- Die Seiten (Druck-Artefakt: Papier weiss) ---------- */
   .blaetter{display:flex;flex-direction:column;align-items:center;gap:var(--s6);padding-bottom:var(--s8)}
   .doppel{display:flex;position:relative}
-  .doppel .seite+.seite{border-left:1px dashed var(--line)}
-  @media (max-width:699px){.doppel{flex-direction:column}.doppel .seite+.seite{border-left:0}}
+  .doppel .seite-halter+.seite-halter{border-left:1px dashed var(--line)}
+  @media (max-width:699px){.doppel{flex-direction:column}.doppel .seite-halter+.seite-halter{border-left:0}}
   .unterschrift{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);text-align:center;margin:var(--s1) 0 0}
   .bogen{display:grid;gap:var(--s1);justify-items:center}
-  .seite{width:154mm;height:216mm;flex:none;zoom:var(--z,1);background:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow-card);border:1px solid var(--line)} /* # ds-ok Papier */
-  .seite svg{display:block;width:154mm;height:216mm}
+  /* Skalierung per Transform, nie per zoom: foreignObjects (Textrahmen) folgen in WebKit/iOS nur dem Transform */
+  .seite-halter{flex:none;position:relative;width:154mm;height:216mm;overflow:hidden}
+  .seite{width:154mm;height:216mm;transform:scale(var(--z,1));transform-origin:0 0;background:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow-card);border:1px solid var(--line)} /* # ds-ok Papier */
+  .seite .leinwand{transform:scale(1.33333);transform-origin:0 0}
+  .seite svg{display:block}
+  .karte-seite svg{width:154mm;height:216mm}
   .seite::before{content:"";position:absolute;inset:3mm;border:.2mm dashed rgba(20,24,28,.25);pointer-events:none;z-index:5} /* # ds-ok Endformat-Linie, nur Vorschau */
   .karte-seite .leer{position:absolute;inset:3mm;display:flex;align-items:center;justify-content:center;font-family:var(--font-text);font-size:10pt;color:#4e5358;background:#f3f4f2} /* # ds-ok Platzhalter auf Papier, 6.6:1 */
   .tf{outline:none;cursor:text}
@@ -106,9 +110,10 @@
     .werk{display:block;margin:0;gap:0}
     .blaetter{display:block;padding:0;gap:0;border:0;margin:0}
     .doppel,.bogen{display:block}
-    .doppel .seite+.seite{border:0}
-    .seite{zoom:1;box-shadow:none;border:0;break-after:page;print-color-adjust:exact;-webkit-print-color-adjust:exact;margin:0}
-    .bogen:last-child .seite:last-child{break-after:auto}
+    .doppel .seite-halter+.seite-halter{border:0}
+    .seite-halter{width:154mm!important;height:216mm!important;break-after:page;margin:0}
+    .seite{transform:none;box-shadow:none;border:0;print-color-adjust:exact;-webkit-print-color-adjust:exact;margin:0}
+    .bogen:last-child .seite-halter:last-child{break-after:auto}
     .seite::before{display:none}
     .tf,.tf:hover,.tf:focus{box-shadow:none}
     iframe{display:none}
