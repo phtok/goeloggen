@@ -1,0 +1,856 @@
+{
+ "$hinweis": "Jahrgangsdatei des Tagungs-Readers (apps/lt-reader/). Platzhalter {jahr} {datum_de} … werden beim Setzen aus ‹tagung› ersetzt. pruefung: vorjahr | geprueft | geaendert je Block.",
+ "jahr": 2027,
+ "fassung": 1,
+ "tagung": {
+  "name_en": "Agriculture Conference",
+  "name_de": "Landwirtschaftliche Tagung",
+  "motto_en": "Working with the Intelligence of Life",
+  "motto_de": "Mit der Intelligenz des Lebens arbeiten",
+  "datum_en": "3 to 6 February 2027",
+  "datum_de": "3. bis 6. Februar 2027",
+  "tag1": "2027-02-03",
+  "tag4": "2027-02-06",
+  "webseite": "agriculture-conference.org",
+  "bildnachweis": "Artwork: Esther Gerster",
+  "rabattcode": "LWT2027TN",
+  "aufzeichnung_bis_en": "March 2027",
+  "aufzeichnung_bis_de": "März 2027",
+  "sektion_en": "Section for Agriculture",
+  "sektion_de": "Sektion für Landwirtschaft",
+  "adresse": "Hügelweg 59, 4143 Dornach, Schweiz\n+41 61 706 42 12\nagriculture@goetheanum.ch",
+  "links": "www.sektion-landwirtschaft.org\nwww.agriculture-conference.org"
+ },
+ "motiv": {
+  "datei": "jahrgaenge/2027-motiv.jpg",
+  "name": "Esther Gerster, Malerei (Plakat 2027)"
+ },
+ "farben": {
+  "tagung": "#5f9c23",
+  "tinte": "#31621c",
+  "marker": "#b23543",
+  "treppe": "#0061a9"
+ },
+ "logos": [],
+ "seiten": [
+  {
+   "art": "titel"
+  },
+  {
+   "art": "legende"
+  },
+  {
+   "art": "karte"
+  },
+  {
+   "art": "text",
+   "zeilen": [
+    [
+     [
+      "support"
+     ]
+    ]
+   ]
+  },
+  {
+   "art": "text",
+   "zeilen": [
+    [
+     [
+      "welcome"
+     ],
+     [
+      "languages"
+     ]
+    ]
+   ]
+  },
+  {
+   "art": "text",
+   "zeilen": [
+    [
+     [
+      "einfuehrungen"
+     ]
+    ]
+   ]
+  },
+  {
+   "art": "text",
+   "zeilen": [
+    [
+     [
+      "meals",
+      "internet"
+     ],
+     [
+      "oeffnungszeiten"
+     ]
+    ]
+   ]
+  },
+  {
+   "art": "text",
+   "zeilen": [
+    [
+     [
+      "finanz"
+     ],
+     [
+      "zertifikat"
+     ]
+    ],
+    [
+     [
+      "feedback#en"
+     ],
+     [
+      "feedback#de"
+     ]
+    ]
+   ]
+  },
+  {
+   "art": "text",
+   "zeilen": [
+    [
+     [
+      "publikationen"
+     ]
+    ]
+   ]
+  },
+  {
+   "art": "programm",
+   "seite": "links"
+  },
+  {
+   "art": "programm",
+   "seite": "rechts"
+  },
+  {
+   "art": "workshops",
+   "block": "vormittag"
+  },
+  {
+   "art": "workshops",
+   "block": "nachmittag"
+  },
+  {
+   "art": "text",
+   "zeilen": [
+    [
+     [
+      "fuehrungen"
+     ]
+    ],
+    [
+     [
+      "openspaces"
+     ]
+    ]
+   ]
+  },
+  {
+   "art": "text",
+   "zeilen": [
+    [
+     [
+      "festabend"
+     ],
+     [
+      "aufzeichnungen"
+     ]
+    ]
+   ]
+  },
+  {
+   "art": "text",
+   "zeilen": [
+    [
+     [
+      "notizen"
+     ]
+    ]
+   ]
+  },
+  {
+   "art": "leer"
+  },
+  {
+   "art": "rueckseite"
+  }
+ ],
+ "bloecke": [
+  {
+   "id": "welcome",
+   "art": "text",
+   "kopf_en": "Welcome",
+   "kopf_de": "Willkommen",
+   "en": "We warmly welcome you to the {name_en} {jahr} ‹{motto_en}›. We extend our gratitude to all contributors from the biodynamic movement who shape this conference with their contributions, as well as to the partner organizations, foundations, and sponsors, whose support enables us to realize this conference together.",
+   "de": "Wir heissen Sie herzlich willkommen zur {name_de} {jahr} ‹{motto_de}›. Ein grosser Dank gilt allen Mitwirkenden aus der biodynamischen Bewegung, die diese Tagung durch ihre Beiträge gestalten, sowie den Partnerorganisationen, Stiftungen und Sponsoren, durch deren Unterstützung wir die Landwirtschaftliche Tagung gemeinsam umsetzen können."
+  },
+  {
+   "id": "languages",
+   "art": "text",
+   "kopf_en": "Languages",
+   "kopf_de": "Sprachen",
+   "en": "All events in the Main Auditorium are simultaneously interpreted into English, French, German, Italian, Spanish, and Chinese. The German events are also interpreted into Dutch. You can borrow a receiver at the information desk to listen to the interpretation. The device can also be used for hearing amplification. Receivers must be handed in overnight for charging. Please return your device to the information desk at the end of the conference.",
+   "de": "Alle Veranstaltungen im Grossen Saal werden simultan ins Deutsche, Englische, Französische, Italienische, Spanische und Chinesische übersetzt. Alle deutschen Veranstaltungen werden zusätzlich ins Niederländische übersetzt. Am Infotisch erhalten Sie ein Empfangsgerät, mit dem Sie die Simultanübersetzungen hören können. Die Geräte können auch zur Hörverstärkung genutzt werden. Sie müssen über Nacht zum Aufladen abgegeben werden. Bitte geben Sie Ihr Gerät am Ende der Konferenz am Infotisch zurück."
+  },
+  {
+   "id": "einfuehrungen",
+   "art": "sprachen",
+   "kopf_en": "Introductions",
+   "kopf_de": "Einführungen",
+   "eintraege": [
+    {
+     "sprache": "English · EN",
+     "text": "English-speaking conference attendees are warmly invited to join a welcome and orientation session in English language. You will receive a brief introduction to the conference structure, to the campus, the different buildings and the locations of rooms and facilities. The session takes place on {tag2_en} from 14:15 to 14:45. Please come to the",
+     "raum": "Konferenzraum · 1st",
+     "marker": "S"
+    },
+    {
+     "sprache": "Français · FR",
+     "text": "Les participants francophones à la conférence sont chaleureusement invités à participer à une session d’accueil et d’orientation en français. Vous recevrez une brève introduction à la structure de la conférence, au campus, aux différents bâtiments et à l’emplacement des salles et des installations. La session aura lieu le {tag2_fr} de 14h15 à 14h45. Veuillez vous rendre au",
+     "raum": "Seminarraum · 4th",
+     "marker": "S"
+    },
+    {
+     "sprache": "Español · ES",
+     "text": "Los asistentes hispanohablantes a la conferencia están cordialmente invitados a participar en una sesión de bienvenida y orientación en lengua española. Se les presentará brevemente la estructura de la conferencia, el campus, los distintos edificios y la ubicación de las salas e instalaciones. La sesión tendrá lugar el {tag2_es} de 14:15 a 14:45. Acuda al",
+     "raum": "Ostsaal 1",
+     "marker": "14"
+    },
+    {
+     "sprache": "Italiano · IT",
+     "text": "I partecipanti alla conferenza di lingua italiana sono caldamente invitati a partecipare a una sessione di benvenuto e orientamento in lingua italiana. Riceveranno una breve introduzione alla struttura della conferenza, al campus, ai diversi edifici e all’ubicazione delle camere e delle strutture. La sessione si terrà il {tag2_it} dalle 14:15 alle 14:45. Si prega di venire al",
+     "raum": "Ostsaal 4",
+     "marker": "14"
+    },
+    {
+     "sprache": "Chinese · 中文",
+     "text": "我们热忱地邀请中文参会者参加特别组织的中文欢迎会。我们将向您简要介绍会议日程、园区布局、不同的建筑，以及房间和设施的位置。欢迎会将于{tag2_zh}14:15至14:45举行。请前往",
+     "raum": "Ostsaal 3",
+     "marker": "14"
+    },
+    {
+     "sprache": "Nederlands · NL",
+     "text": "Nederlandstalige conferentiegangers worden van harte uitgenodigd voor een welkomst- en oriëntatiesessie in het Nederlands. Je krijgt een korte introductie over de structuur van de conferentie, de campus, de verschillende gebouwen en de locaties van de zalen en faciliteiten. De sessie vindt plaats op {tag2_nl} van 14:15 tot 14:45 uur. Kom naar het",
+     "raum": "Ostsaal 4",
+     "marker": "14"
+    }
+   ]
+  },
+  {
+   "id": "meals",
+   "art": "zeilen",
+   "kopf_en": "Meals",
+   "kopf_de": "Verpflegung",
+   "en": "Lunch, coffee breaks, and the festive dinner on {tag4_en} are included in your ticket. Breakfast and dinner can be purchased separately at the reception. If you have ordered a lactose-free or gluten-free lunch, please come to the Speisehaus.",
+   "de": "Mittagessen, Pausenverpflegung und der festliche Abend am {tag4_de} sind in der Tagungskarte inbegriffen. Frühstück und Abendessen können separat am Empfang erworben werden. Wenn Sie ein laktosefreies oder glutenfreies Mittagessen bestellt haben, kommen Sie bitte ins Speisehaus.",
+   "eintraege": [
+    {
+     "en": "Breakfast 7:00 · Speisehaus [45]",
+     "de": "Frühstück 7:00 Uhr"
+    },
+    {
+     "en": "Lunch 12:30–14:30\nSchreinerei + Speisehaus [20] [45]",
+     "de": "Mittagessen 12:30–14:30 Uhr"
+    },
+    {
+     "en": "Dinner 18:30–19:45 · Schreinerei [20]",
+     "de": "Abendessen 18:30–19:45 Uhr"
+    },
+    {
+     "en": "Night café from 22:00 · Speisehaus [45]",
+     "de": "Nachtcafé ab 22 Uhr"
+    }
+   ]
+  },
+  {
+   "id": "internet",
+   "art": "text",
+   "kopf_en": "Internet [12] [20]",
+   "kopf_de": "",
+   "en": "There is access to free WiFi in the South Gallery, in the Foyer, in the Bookshop, at the Info Desk and in the Schreinerei. Network: Goetheanum. No password is required.",
+   "de": "Zugang zu freiem WiFi gibt es in der Südgalerie, im Foyer, in der Buchhandlung, am Infotisch und in der Schreinerei. Netzwerk: Goetheanum (ohne Passwort)."
+  },
+  {
+   "id": "oeffnungszeiten",
+   "art": "orte",
+   "kopf_en": "Opening hours",
+   "kopf_de": "Öffnungszeiten",
+   "eintraege": [
+    {
+     "ort_en": "Goetheanum 7:30–22:00",
+     "ort_de": "",
+     "marker": "1 2",
+     "zeiten": [
+      {
+       "en": "Café",
+       "de": "",
+       "zeit": "7:30–20:00"
+      }
+     ]
+    },
+    {
+     "ort_en": "Book Shop",
+     "ort_de": "Buchhandlung",
+     "marker": "4",
+     "zeiten": [
+      {
+       "en": "Wednesday",
+       "de": "Mittwoch",
+       "zeit": "10:00–18:00"
+      },
+      {
+       "en": "Thursday",
+       "de": "Donnerstag",
+       "zeit": "10:00–20:00"
+      }
+     ]
+    },
+    {
+     "ort_en": "Main Auditorium",
+     "ort_de": "Grosser Saal",
+     "marker": "M N S",
+     "zeiten": [
+      {
+       "en": "",
+       "de": "",
+       "zeit": "13:30–14:30"
+      }
+     ]
+    },
+    {
+     "ort_en": "Sculpture Group",
+     "ort_de": "Holzskulptur",
+     "marker": "S",
+     "zeiten": [
+      {
+       "en": "Wednesday + Thursday",
+       "de": "Mittwoch + Donnerstag",
+       "zeit": "14:30–15:30 + 18:45–19:45"
+      },
+      {
+       "en": "Friday",
+       "de": "Freitag",
+       "zeit": "14:00–16:00"
+      },
+      {
+       "en": "Saturday",
+       "de": "Samstag",
+       "zeit": "10:00–12:00 + 14:00–16:00"
+      }
+     ]
+    },
+    {
+     "ort_en": "Model of the First Goetheanum",
+     "ort_de": "Modell Erstes Goetheanum",
+     "marker": "41",
+     "zeiten": [
+      {
+       "en": "Thursday",
+       "de": "Donnerstag",
+       "zeit": "13:30–14:30"
+      },
+      {
+       "en": "Friday + Saturday",
+       "de": "Freitag + Samstag",
+       "zeit": "13:30–16:00"
+      }
+     ]
+    },
+    {
+     "ort_en": "High Studio",
+     "ort_de": "Hochatelier",
+     "marker": "42",
+     "zeiten": [
+      {
+       "en": "Thursday",
+       "de": "Donnerstag",
+       "zeit": "13:30–14:30"
+      },
+      {
+       "en": "Friday",
+       "de": "Freitag",
+       "zeit": "13:30–15:30"
+      },
+      {
+       "en": "Saturday",
+       "de": "Samstag",
+       "zeit": "13:30–14:30"
+      }
+     ]
+    },
+    {
+     "ort_en": "Rudolf Steiner Atelier",
+     "ort_de": "",
+     "marker": "40",
+     "zeiten": [
+      {
+       "en": "Wednesday",
+       "de": "Mittwoch",
+       "zeit": "18:45–19:45"
+      },
+      {
+       "en": "Thursday",
+       "de": "Donnerstag",
+       "zeit": "13:30–14:30 + 18:45–19:45"
+      },
+      {
+       "en": "Friday",
+       "de": "Freitag",
+       "zeit": "13:30–15:00"
+      },
+      {
+       "en": "Saturday",
+       "de": "Samstag",
+       "zeit": "13:30–14:30"
+      }
+     ]
+    },
+    {
+     "ort_en": "Artists’ Flat Edith Maryon",
+     "ort_de": "Künstlerwohnung Edith Maryon",
+     "marker": "43",
+     "zeiten": [
+      {
+       "en": "Friday",
+       "de": "Freitag",
+       "zeit": "15:30–16:30"
+      }
+     ]
+    },
+    {
+     "ort_en": "Yellow Room and Blue Room, 1st Floor",
+     "ort_de": "Gelbes und Blaues Zimmer, 1. Etage",
+     "marker": "M",
+     "zeiten": [
+      {
+       "en": "Wednesday",
+       "de": "Mittwoch",
+       "zeit": "18:45–19:45"
+      },
+      {
+       "en": "Thursday",
+       "de": "Donnerstag",
+       "zeit": "18:45–19:45"
+      },
+      {
+       "en": "Friday",
+       "de": "Freitag",
+       "zeit": "15:00–17:00"
+      },
+      {
+       "en": "Saturday",
+       "de": "Samstag",
+       "zeit": "15:00–17:00"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "finanz",
+   "art": "text",
+   "kopf_en": "Financial Support",
+   "kopf_de": "Finanzielle Unterstützung",
+   "en": "If you have applied for financial support, you can collect your payment on {tag2_en} and {tag3_en} as listed below. We can only pay support that was requested by January {jahr} and approved by the Section.\n\nGoetheanum Konferenzraum [S]\nWednesday + Thursday\n13:00–14:15",
+   "de": "Wenn Sie finanzielle Unterstützung beantragt haben, können Sie die Auszahlung am {tag2_de} und {tag3_de} zu den unten angegebenen Uhrzeiten entgegennehmen. Beachten Sie, dass nur Unterstützungen ausbezahlt werden können, die bis Januar {jahr} angemeldet und von der Sektion schriftlich bestätigt wurden.\n\nMittwoch + Donnerstag"
+  },
+  {
+   "id": "zertifikat",
+   "art": "text",
+   "kopf_en": "Certificate of Participation",
+   "kopf_de": "Teilnahmezertifikat",
+   "en": "To receive your certificate of participation, please visit:\n> tickets.goetheanum.ch/6LT/resend\nand enter your email address. Then, check your inbox for an email from us and click on the link included in the message. Once you open the link, you can click on ‹Download certificate› to download your certificate of participation as a PDF.",
+   "de": "Um Ihr Teilnahmezertifikat zu erhalten, gehen Sie bitte auf:\n> tickets.goetheanum.ch/6LT/resend\nund geben Sie dort Ihre E-Mail-Adresse ein. Überprüfen Sie anschliessend Ihren Posteingang auf eine E-Mail von uns und klicken Sie auf den darin enthaltenen Link. Nach dem Öffnen des Links haben Sie die Möglichkeit, auf ‹Zertifikat herunterladen› zu klicken und Ihr Teilnahmezertifikat als PDF zu erhalten."
+  },
+  {
+   "id": "feedback",
+   "art": "text",
+   "kopf_en": "Your Feedback",
+   "kopf_de": "Ihr Feedback",
+   "en": "The team at the Section for Agriculture is looking forward to hearing your impressions and suggestions on the conference. You can share them with us at\n> {webseite}/feedback\nYour perspectives help us shape future conferences and align them with the wishes and needs of the conference community.",
+   "de": "Das Team der Sektion für Landwirtschaft freut sich, von Ihren Eindrücken und Vorschlägen zu hören. Sie können uns diese gerne unter\n> {webseite}/feedback\nmitteilen. Ihr Feedback hilft uns dabei, zukünftige Tagungen zu gestalten und sie an den Bedürfnissen und Wünschen der Tagungsgemeinschaft auszurichten."
+  },
+  {
+   "id": "publikationen",
+   "art": "liste",
+   "kopf_en": "Publications",
+   "kopf_de": "Publikationen",
+   "eintraege": [
+    {
+     "text": "Tanja Baumgartner: Verwandlungskräfte der Eurythmie: Bewege Dich gesund! Futurum Verlag",
+     "laut": false
+    },
+    {
+     "text": "Martin Buber: Ich und Du, Gütersloher Verlagshaus",
+     "laut": false
+    },
+    {
+     "text": "Martin Buber: I and Thou, Charles Scribner’s Sons Verlag",
+     "laut": true
+    },
+    {
+     "text": "Dieter Brüll: Der anthroposophische Sozialimpuls, Novalis Verlag",
+     "laut": false
+    },
+    {
+     "text": "Marion Haas & Stéphane Cozon: La biodynamie pour tous, Editions du Rouergue",
+     "laut": false
+    },
+    {
+     "text": "Stéphane Cozon, Marion Haas: Et si ma fourchette pouvait sauver la planète? Le guide de l’alimentation responsable, Editions du Rouergue",
+     "laut": false
+    },
+    {
+     "text": "Trauger Groh: Farms of Tomorrow Revisited, Bio-Dynamic Farming & Gardening",
+     "laut": true
+    },
+    {
+     "text": "Rudolf Steiner: Anthroposophical Leading Thoughts, GA 26",
+     "laut": true
+    },
+    {
+     "text": "Rudolf Steiner: Anthroposophische Leitsätze, GA 26",
+     "laut": false
+    },
+    {
+     "text": "Rudolf Steiner: Die Bhagavad Gita und die Paulusbriefe, Rudolf Steiner Verlag, GA 142",
+     "laut": false
+    },
+    {
+     "text": "Rudolf Steiner: Landwirtschaftlicher Kurs: Geisteswissenschaftliche Grundlagen zum Gedeihen der Landwirtschaft, GA 327",
+     "laut": false
+    },
+    {
+     "text": "Rudolf Steiner: Soziale Zukunft, GA 332a",
+     "laut": false
+    },
+    {
+     "text": "Harrie Salman: Die Soziale Welt als Mysterienstätte, Edition Widar",
+     "laut": false
+    },
+    {
+     "text": "Peter Selg: Die Arbeit des Einzelnen und der Geist der Gemeinschaft, Verlag am Goetheanum",
+     "laut": false
+    },
+    {
+     "text": "Max Stirner: Der Einzige und sein Eigentum, Reclam Verlag",
+     "laut": false
+    },
+    {
+     "text": "Emanuele Tellini: Il manifestarsi dell’invisibile nell’essere pianta, Editrice Antroposofica",
+     "laut": false
+    },
+    {
+     "text": "Hans Christoph Vahle: Die Pflanzendecke unserer Landschaften. Eine Vegetationskunde, Verlag Freies Geistesleben",
+     "laut": false
+    }
+   ],
+   "nachsatz_en": "Many of these titles are available at the Goetheanum Bookshop. The Bookshop welcomes your visit.",
+   "nachsatz_de": "Viele dieser Titel sind in der Buchhandlung am Goetheanum erhältlich. Die Buchhandlung freut sich auf Ihren Besuch."
+  },
+  {
+   "id": "fuehrungen",
+   "art": "fuehrungen",
+   "kopf_en": "Guided tours",
+   "kopf_de": "Führungen",
+   "zeit": "13:15–14:15",
+   "hinweis_en": "Please sign up on the registration list at the information desk if you would like to take part in these guided tour. Meeting Point: Main Entrance [1]",
+   "hinweis_de": "Bitte tragen Sie sich in die Teilnahmeliste ein, die am Infotisch ausliegt. Treffpunkt: Haupteingang [1]",
+   "tage": [
+    {
+     "datum_en": "{tag3_en}",
+     "datum_de": "{tag3_de}",
+     "eintraege": [
+      {
+       "sprache": "DE",
+       "titel": "Die farbigen Fenster im Grossen Saal",
+       "name": "Esther Gerster"
+      },
+      {
+       "sprache": "EN",
+       "titel": "The Ceiling Paintings in the Main Auditorium",
+       "name": "Ronald Templeton"
+      },
+      {
+       "sprache": "IT",
+       "titel": "Visita guidata della Sala Grande",
+       "name": "Giuseppe Acconcia"
+      }
+     ]
+    },
+    {
+     "datum_en": "{tag4_en}",
+     "datum_de": "{tag4_de}",
+     "eintraege": [
+      {
+       "sprache": "DE",
+       "titel": "Die Deckenmalerei im Grossen Saal",
+       "name": "Esther Gerster"
+      },
+      {
+       "sprache": "EN",
+       "titel": "The Coloured Windows in the Main Auditorium",
+       "name": "Ronald Templeton"
+      },
+      {
+       "sprache": "ES",
+       "titel": "Visita guiada de la Sala Grande",
+       "name": ""
+      },
+      {
+       "sprache": "FR",
+       "titel": "Visite guidée de la Grande Salle",
+       "name": "Silvana Gabrielli"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "openspaces",
+   "art": "openspaces",
+   "kopf_en": "Open Spaces",
+   "kopf_de": "",
+   "zeit": "16:00–17:00",
+   "eintraege": [
+    {
+     "sprachen": "NL · EN · DE",
+     "titel_en": "Demeter Netherlands",
+     "titel_de": "Demeter Niederlande",
+     "name": "Bert van Ruitenbeek",
+     "ort": "Konferenzraum [S]",
+     "wann": "{tag3_de} 16:00"
+    },
+    {
+     "sprachen": "NL · EN · DE",
+     "titel_en": "Biodynamic Youth",
+     "titel_de": "",
+     "name": "",
+     "ort": "Konferenzraum [S]",
+     "wann": "{tag3_kurz}+{tag4_kurz} 16:00"
+    }
+   ]
+  },
+  {
+   "id": "festabend",
+   "art": "text",
+   "kopf_en": "Festive Evening",
+   "kopf_de": "Festlicher Abend",
+   "en": "The Festive Evening on Friday begins at 18:30 with a dinner buffet. At 19:30, the program splits into two parts: Conference scholarship holders from around the world will present folkloric dances, songs, and poetry in the West Staircase [M]. Please take your place on the steps below and above the middle floor (seating is not available in the staircase). Music and dance with Bruno Bousquet and his band, as well as with French students and Olivier Clisson, will take place in the Schreinerei Hall. You are welcome to enjoy one or both parts of the evening according to your preference.",
+   "de": "Der Festliche Abend am Freitag beginnt um 18:30 Uhr mit einem Abendbuffet. Ab 19:30 Uhr teilt sich das Programm in zwei Teile: Die Tagungsstipendiaten aus aller Welt präsentieren folkloristische Tänze, Lieder und Gedichte im Westtreppenhaus [M]. Bitte nehmen Sie auf den Stufen unterhalb und oberhalb des Mittelgeschosses Platz (im Treppenhaus gibt es keine Sitzplätze). Musik und Tanz mit Bruno Bousquet und seiner Band, sowie mit französischen Studierenden und Olivier Clisson, finden im Schreinerei-Saal statt. Sie sind herzlich eingeladen, einen oder beide Programmpunkte des Abends nach Belieben zu besuchen."
+  },
+  {
+   "id": "aufzeichnungen",
+   "art": "text",
+   "kopf_en": "Recordings",
+   "kopf_de": "Aufzeichnungen",
+   "en": "Your conference ticket includes free access to the recordings, which are available on Goetheanum TV until {aufzeichnung_bis_en}. The recordings include all plenary sessions in the Main Auditorium, except for the eurythmy performance. You can activate your free access on\n> {webseite}/replay\nPlease enter the code {rabattcode} during the checkout. If you have any questions, don’t hesitate to contact support at Goetheanum TV.",
+   "de": "Ihre Tagungskarte beinhaltet einen kostenlosen Zugang zu den Aufzeichnungen, die bis {aufzeichnung_bis_de} auf Goetheanum TV verfügbar sind. Die Aufzeichnungen umfassen alle Plenarveranstaltungen im Grossen Saal mit Ausnahme der Eurythmieaufführung. Sie können Ihren kostenlosen Zugang auf\n> {webseite}/replay\naktivieren. Bitte geben Sie den Rabattcode {rabattcode} am Ende des Bestellvorgangs ein. Bei Fragen wenden Sie sich gerne direkt an den Support von Goetheanum TV."
+  },
+  {
+   "id": "notizen",
+   "art": "text",
+   "kopf_en": "Notes",
+   "kopf_de": "Notizen",
+   "en": "",
+   "de": ""
+  },
+  {
+   "id": "support",
+   "art": "logos",
+   "kopf_en": "Support",
+   "kopf_de": "Unterstützung"
+  },
+  {
+   "id": "legende",
+   "art": "legende",
+   "orte": [
+    {
+     "nr": "1",
+     "name": "Main Entrance"
+    },
+    {
+     "nr": "2",
+     "name": "South Entrance"
+    },
+    {
+     "nr": "3",
+     "name": "Reception/Empfang"
+    },
+    {
+     "nr": "4",
+     "name": "Info Desk"
+    },
+    {
+     "nr": "5",
+     "name": "Bookshop"
+    },
+    {
+     "nr": "6",
+     "name": "North Gallery"
+    },
+    {
+     "nr": "7",
+     "name": "Library"
+    },
+    {
+     "nr": "10",
+     "name": "Grundsteinsaal"
+    },
+    {
+     "nr": "11",
+     "name": "Terrassensaal"
+    },
+    {
+     "nr": "12",
+     "name": "Wandelhalle"
+    },
+    {
+     "nr": "13",
+     "name": "Im Hof"
+    },
+    {
+     "nr": "14",
+     "name": "Ostsäle 1–4"
+    },
+    {
+     "nr": "15",
+     "name": "Foyer"
+    },
+    {
+     "nr": "20",
+     "name": "Schreinereisaal"
+    },
+    {
+     "nr": "21",
+     "name": "Plastizierraum"
+    },
+    {
+     "nr": "22",
+     "name": "Gartenatelier"
+    },
+    {
+     "nr": "23",
+     "name": "Backofen"
+    },
+    {
+     "nr": "24",
+     "name": "Schreinerei Südsaal"
+    },
+    {
+     "nr": "30",
+     "name": "English Studies"
+    },
+    {
+     "nr": "31",
+     "name": "Halde"
+    },
+    {
+     "nr": "32",
+     "name": "Glashaus"
+    },
+    {
+     "nr": "33",
+     "name": "Studierendenwohnheim"
+    },
+    {
+     "nr": "34",
+     "name": "Haus Schuurman"
+    },
+    {
+     "nr": "35",
+     "name": "Färberei"
+    },
+    {
+     "nr": "36",
+     "name": "Holzhaus"
+    },
+    {
+     "nr": "37",
+     "name": "AfaP"
+    },
+    {
+     "nr": "38",
+     "name": "Trigon"
+    },
+    {
+     "nr": "40",
+     "name": "Rudolf Steiner Atelier"
+    },
+    {
+     "nr": "41",
+     "name": "1st Goetheanum Model"
+    },
+    {
+     "nr": "42",
+     "name": "Hochatelier"
+    },
+    {
+     "nr": "43",
+     "name": "Edith Maryon Flat"
+    },
+    {
+     "nr": "44",
+     "name": "Rudolf Steiner Archive"
+    },
+    {
+     "nr": "45",
+     "name": "Speisehaus · Schweizer Landesgesellschaft"
+    },
+    {
+     "nr": "46",
+     "name": "Train Station"
+    },
+    {
+     "nr": "P",
+     "name": "Parking"
+    }
+   ],
+   "treppen": [
+    {
+     "kuerzel": "M",
+     "name": "Main Stairs",
+     "lift": "",
+     "etagen": "Gallery · 1st Floor\nGrosser Saal · 2nd Floor"
+    },
+    {
+     "kuerzel": "N",
+     "name": "North Stairs",
+     "lift": "North Lift",
+     "etagen": "Gallery · 1st Floor\nGrosser Saal · 2nd Floor\nNordsaal · 5th Floor\nNordatelier · 6th Floor"
+    },
+    {
+     "kuerzel": "S",
+     "name": "South Stairs",
+     "lift": "South Lift",
+     "etagen": "Konferenzraum · 1st Floor\nGallery · 1st Floor\nGrosser Saal · 2nd Floor\nSeminarraum · 4th Floor\nWooden Sculpture · 5th Floor\nSüdatelier · 6th Floor"
+    }
+   ]
+  }
+ ],
+ "pruefung": {
+  "welcome": "vorjahr",
+  "languages": "vorjahr",
+  "einfuehrungen": "vorjahr",
+  "meals": "vorjahr",
+  "internet": "vorjahr",
+  "oeffnungszeiten": "vorjahr",
+  "finanz": "vorjahr",
+  "zertifikat": "vorjahr",
+  "feedback": "vorjahr",
+  "publikationen": "vorjahr",
+  "fuehrungen": "vorjahr",
+  "openspaces": "vorjahr",
+  "festabend": "vorjahr",
+  "aufzeichnungen": "vorjahr",
+  "notizen": "vorjahr",
+  "support": "vorjahr",
+  "legende": "vorjahr"
+ }
+}
