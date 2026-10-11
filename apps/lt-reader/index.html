@@ -1,0 +1,268 @@
+<!doctype html>
+<!-- =============================================================================
+     Tagungs-Reader · Landwirtschaftliche Tagung
+     Der Reader (20 Seiten A5) wird aus einer Jahrgangsdatei gesetzt: Werkstätten
+     links (Inhalte, Motiv & Farben, Karte, Programm, Export), die Seiten rechts.
+     Konzept: docs/specs/lt-reader-konzept.md · Anleitung: ANLEITUNG.md
+     Satz nach Hausregeln (G01 zweisprachig: EN Deutlich, DE Ruhig; G05; G25; B01).
+     Papier bleibt weiss, auch im dunklen Modus – das Blatt ist ein Druck-Artefakt (# ds-ok).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Tagungs-Reader · Goetheanum</title>
+<meta name="description" content="Der Reader der Landwirtschaftlichen Tagung: Inhalte pflegen, alle Seiten sehen, als PDF und IDML ausgeben." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<style>
+  .hero{padding-block:clamp(28px,5vw,48px) var(--s5)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(28px,4.6vw,44px)}
+  .hero .lede{margin-top:var(--s3);color:var(--muted);font-size:var(--t-lede);line-height:1.5;max-width:58ch}
+
+  /* ---------- Werkstatt ---------- */
+  .werk{margin-top:var(--s6);display:grid;gap:var(--s6);min-width:0}
+  .leiste,.blaetter{min-width:0;max-width:100%}
+  @media (min-width:1100px){
+    main.wrap{max-width:none}
+    .werk{grid-template-columns:minmax(20rem,25rem) minmax(0,1fr);align-items:start}
+    .leiste{position:sticky;top:calc(var(--header-h) + var(--s4));max-height:calc(100vh - var(--s8));overflow:auto;padding-right:var(--s2)}
+  }
+  .leiste{display:grid;gap:var(--s4);align-content:start}
+  .stand{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.5;margin:0}
+  .stand b{color:var(--ink);font-weight:600}
+  .reiter{display:flex;flex-wrap:wrap;gap:var(--s1)}
+  .reiter button{flex:1 1 auto}
+  .block{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s4);display:grid;gap:var(--s3)}
+  .block>summary,.block .kopfzeile{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;cursor:pointer;min-height:var(--tap);list-style:none}
+  .block>summary::-webkit-details-marker{display:none}
+  .block .titel{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);flex:1 1 auto;margin:0}
+  .block .wo{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted)}
+  .ampel{display:inline-flex;gap:var(--s1)}
+  .ampel button{min-height:var(--tap);min-width:var(--tap);padding:0 var(--s2);border:1px solid var(--line);border-radius:var(--r-pill);background:var(--field-bg);
+    font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);cursor:pointer}
+  .ampel button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent)}
+  .ampel button[data-wert="geprueft"][aria-pressed="true"]{background:var(--ok);border-color:var(--ok)}
+  .punkt{display:inline-block;width:.75rem;height:.75rem;border-radius:50%;background:var(--gold-deep);flex:none}
+  .punkt.geprueft{background:var(--ok)}
+  .punkt.geaendert{background:var(--blue-solid)}
+  .felder{display:grid;gap:var(--s3)}
+  .felder textarea{min-height:7rem;font-family:var(--font-text);line-height:1.5}
+  .felder textarea.lang{min-height:11rem}
+  .liste{display:grid;gap:var(--s2);padding:var(--s3);border:1px solid var(--line-soft);border-radius:var(--r-control);background:var(--soft)}
+  .liste .eintrag{display:grid;gap:var(--s2);padding:var(--s2) 0;border-top:1px solid var(--line-soft)}
+  .liste .eintrag:first-of-type{border-top:0}
+  .liste .zeile{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+  .liste .zeile.drei{grid-template-columns:1fr 1fr 6rem}
+  .liste .tat{display:flex;gap:var(--s1);justify-content:flex-end}
+  .liste .tat button{min-height:var(--tap);min-width:var(--tap);padding:0 var(--s2);border:1px solid var(--line);border-radius:var(--r-control);background:var(--field-bg);color:var(--ink);font-family:var(--font-text);font-size:var(--t-micro);cursor:pointer}
+  .liste .tat button.weg{color:var(--bad)}
+  .liste .lab{font-size:var(--t-micro)}
+  .hinweis{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.5;margin:0}
+  .hinweis a{color:var(--gold-ink)}
+  .meldung{font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;margin:0;padding:var(--s3);border-radius:var(--r-control);background:var(--soft);border-left:4px solid var(--gold-deep)}
+  .meldung.bad{border-left-color:var(--bad)}
+  .meldung.ok{border-left-color:var(--ok)}
+  .knoepfe{display:flex;flex-wrap:wrap;gap:var(--s2)}
+  .knoepfe .btn{flex:1 1 auto}
+  .farbe{display:grid;grid-template-columns:var(--tap) 1fr auto;gap:var(--s2);align-items:center}
+  .farbe input[type=color]{width:var(--tap);height:var(--tap);padding:0;border:1px solid var(--line);border-radius:var(--r-control);background:none}
+  .farbe .wert{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);font-variant-numeric:tabular-nums}
+  .farbe .wert b{font-weight:600;color:var(--ink)}
+  .farbe .wert.bad b{color:var(--bad)}
+  .vorschlag{display:flex;flex-wrap:wrap;gap:var(--s1)}
+  .vorschlag button{width:var(--tap);height:var(--tap);border:2px solid transparent;border-radius:var(--r-control);cursor:pointer;padding:0}
+  .vorschlag button[aria-pressed="true"]{border-color:var(--ink)}
+  .motivbild{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--r-control);background:var(--soft)}
+  .logoliste{display:grid;gap:var(--s2)}
+  .logoliste .eintrag{display:grid;grid-template-columns:4rem 1fr auto;gap:var(--s2);align-items:center}
+  .logoliste img{width:4rem;height:3rem;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:var(--r-control)} /* # ds-ok Logo auf Papier */
+  .fassungen{list-style:none;margin:0;padding:0;display:grid;gap:var(--s1);max-height:18rem;overflow:auto}
+  .fassungen button{width:100%;min-height:var(--tap);padding:var(--s1) var(--s2);text-align:left;border:1px solid var(--line);border-radius:var(--r-control);background:var(--paper);color:var(--ink);font-family:var(--font-text);font-size:var(--t-small);cursor:pointer}
+  .fassungen .wann{color:var(--muted)}
+  .offen{margin:0;padding-left:1.2em;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;color:var(--ink)}
+
+  /* ---------- Die Seiten ---------- */
+  .blaetter{display:flex;flex-direction:column;align-items:center;gap:var(--s6);padding-bottom:var(--s8);
+    --papier:#fff;--tinte-schwarz:#23272b;--grau:#eef0ef;--acc:#5f9c23;--acc-dunkel:#3f6a17;--acc-ink:#31621c;--marker:#e9546b;--treppe:#3b82c4} /* # ds-ok Druckfarben, aus der Jahrgangsdatei gesetzt */
+  .doppel{display:flex;gap:0;position:relative}
+  .doppel .seite+.seite{border-left:1px dashed var(--line)}
+  @media (max-width:699px){.doppel{flex-direction:column}.doppel .seite+.seite{border-left:0}}
+  .unterschrift{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);text-align:center;margin:var(--s1) 0 0}
+  .bogen{display:grid;gap:var(--s1);justify-items:center}
+  .seite{width:154mm;height:216mm;flex:none;zoom:var(--z,1);background:var(--papier);color:var(--tinte-schwarz);position:relative;overflow:hidden;
+    box-shadow:var(--shadow-card);border:1px solid var(--line);font-family:var(--font-display);font-weight:var(--w-klar);
+    font-size:calc(9.2pt * var(--grad,1));line-height:1.38;hyphens:auto;-webkit-hyphens:auto}
+  .seite[data-grad]:not([data-grad=""])::after{content:attr(data-grad) " %";position:absolute;right:5mm;bottom:5mm;z-index:6;font-family:var(--font-text);font-size:8pt;
+    color:#fff;background:#6b7177;padding:1mm 2mm;border-radius:1mm} /* # ds-ok Vorschau-Hinweis: Seite verkleinert */
+  .seite::before{content:"";position:absolute;inset:3mm;border:.2mm dashed rgba(20,24,28,.25);pointer-events:none;z-index:5} /* # ds-ok Endformat-Linie, nur Vorschau */
+  .seite.ueberlauf::after{content:"läuft über";position:absolute;right:5mm;bottom:5mm;z-index:6;font-family:var(--font-text);font-size:8pt;
+    color:#fff;background:#b3261e;padding:1mm 2mm;border-radius:1mm} /* # ds-ok Vorschau-Warnung */
+  .inhalt{position:absolute;inset:3mm;padding:12mm 11mm 11mm;display:flex;flex-direction:column;gap:5mm}
+  .inhalt.voll{padding:0}
+  .ganz{position:absolute;inset:0}
+
+  /* Zweisprachig: EN Deutlich, DE Ruhig – gleiche Grösse, nur das Gewicht (G01) */
+  .seite .en{font-weight:var(--w-deutlich)}
+  .seite .de{font-weight:var(--w-ruhig)}
+  .seite p{margin:0}
+  .seite p+p{margin-top:.55em}
+  .seite .adresse{display:block;padding-left:2.2em;font-weight:var(--w-deutlich)}
+  .kopf{display:flex;flex-direction:column;font-size:1.63em;line-height:1.25;margin:0 0 .55em}
+  .kopf .en{font-weight:var(--w-deutlich)}
+  .kopf .de{font-weight:var(--w-ruhig)}
+  .kopf.klein{font-size:1.2em;margin-bottom:.3em}
+  .text-seite .reihen{display:grid;gap:7mm;flex:1 1 auto;min-height:0}
+  .reihe{display:grid;grid-template-columns:1fr 1fr;gap:7mm;align-items:start}
+  .reihe.eins{grid-template-columns:1fr}
+  .spalte{display:grid;gap:6mm;align-content:start;min-width:0}
+  .block-seite{display:grid;gap:2mm}
+
+  .pille{display:inline-flex;align-items:center;justify-content:center;min-width:1.55em;height:1.55em;padding:0 .35em;margin:0 .1em;border-radius:1em;
+    background:var(--marker);color:#fff;font-family:var(--font-text);font-weight:700;font-size:.78em;line-height:1;vertical-align:.08em;font-variant-numeric:tabular-nums} /* # ds-ok Weiss auf Marker */
+  .pille.treppe{background:var(--treppe)}
+  .kopf .pille{font-size:.6em;vertical-align:.25em}
+
+  /* Zeilen (Verpflegung) */
+  .zeilen-liste{display:grid;gap:.45em;margin-top:.6em;font-size:.93em}
+  .zeilen-liste .en{white-space:pre-line}
+
+  /* Orte (Öffnungszeiten) */
+  .orte-liste{display:grid;gap:.55em;font-size:.88em;line-height:1.27}
+  .ort .ortname{display:flex;flex-wrap:wrap;gap:0 .35em;align-items:baseline;color:var(--acc-ink)}
+  .ort .ortname .en{font-weight:var(--w-deutlich)}
+  .ort .ortname .de{font-weight:var(--w-ruhig)}
+  .ort .zeit{display:flex;flex-wrap:wrap;gap:0 .35em}
+  .ort .zeit .uhr{font-weight:var(--w-deutlich);font-variant-numeric:tabular-nums}
+
+  /* Sprachen (Einführungen) */
+  .sprachen-liste{display:grid;grid-template-columns:1fr 1fr;gap:4mm 7mm}
+  .sprachen-liste .sprache{color:var(--acc-ink);font-weight:var(--w-deutlich);margin-bottom:.6mm}
+  .sprachen-liste .fremd{font-weight:var(--w-ruhig)}
+
+  /* Liste (Publikationen) */
+  .pub-liste{column-count:2;column-gap:7mm;margin:0;padding:0;list-style:none}
+  .pub-liste li{break-inside:avoid;margin:0 0 1.4mm;font-weight:var(--w-ruhig)}
+  .pub-liste li.laut{font-weight:var(--w-deutlich)}
+  .nachsatz{margin-top:4mm;column-count:2;column-gap:7mm}
+
+  /* Logos */
+  .logo-raster{display:grid;grid-template-columns:repeat(3,1fr);gap:9mm 8mm;align-items:center;justify-items:center;margin-top:4mm}
+  .logo-raster img{max-width:30mm;max-height:18mm;object-fit:contain}
+  .logo-raster .leer{width:30mm;height:14mm;border:.3mm dashed rgba(20,24,28,.3);border-radius:1mm;display:flex;align-items:center;justify-content:center; /* # ds-ok Platzhalter auf Papier */
+    font-family:var(--font-text);font-size:.76em;color:rgba(20,24,28,.66)} /* # ds-ok 5.9:1 */
+
+  /* Kasten links (Führungen, Open Spaces, Workshops-Kopf) */
+  .kaestchen-reihe{display:grid;grid-template-columns:34mm 1fr 1fr;gap:6mm;align-items:start}
+  .kaestchen{background:var(--grau);border-radius:2mm;padding:5mm 4mm;font-size:.93em;display:grid;gap:.9em}
+  .kaestchen .kopf{font-size:1.45em;margin:0}
+  .kaestchen .zeit{font-size:1.45em;font-weight:var(--w-ruhig);font-variant-numeric:tabular-nums}
+  .kaestchen.farbig{background:var(--acc-dunkel);color:#fff} /* # ds-ok Weiss auf Tagungsfarbe (B01) */
+  .kaestchen.farbig .kopf{color:#fff} /* # ds-ok */
+  .tag-kopf{font-size:1.36em;line-height:1.25;margin-bottom:.7em}
+  .tag-kopf .de{display:block}
+  .fuehrung{margin-bottom:3mm}
+  .fuehrung .sprache,.open .sprache{font-weight:var(--w-ruhig);color:var(--acc-ink)}
+  .fuehrung .titel{font-weight:var(--w-deutlich)}
+  .fuehrung .name,.open .name{font-weight:var(--w-ruhig)}
+  .open .titel{font-weight:var(--w-deutlich)}
+
+  /* Legende */
+  .legende-spalten{display:grid;grid-template-columns:1fr 1fr;gap:6mm;font-size:.89em;line-height:1.3}
+  .legende-spalten p{display:flex;gap:1.6mm;align-items:baseline;margin:0 0 .7mm}
+  .legende-spalten .pille{flex:none;min-width:1.7em;height:1.7em;font-size:.8em}
+  .legende-spalten .gruppe{margin-top:2.6mm}
+  .legende-spalten .etage{padding-left:2.2em;font-weight:var(--w-ruhig)}
+
+  /* Karte */
+  .karte-seite img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 40%}
+  .karte-seite .leer{position:absolute;inset:0;background:var(--grau);display:flex;align-items:center;justify-content:center;font-family:var(--font-text);font-size:1em;color:rgba(20,24,28,.66)} /* # ds-ok 5.9:1 */
+
+  /* Titel und Rückseite */
+  .titel-seite .motiv,.rueck-seite .motiv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .titel-seite .ohne,.rueck-seite .ohne{position:absolute;inset:0;background:linear-gradient(160deg,var(--acc) 0%,var(--acc-dunkel) 100%)}
+  .titel-seite .inhalt,.rueck-seite .inhalt{color:#fff;text-shadow:0 0 1.2mm rgba(0,0,0,.25)} /* # ds-ok Weiss auf Motiv */
+  .titel-seite .oben{display:flex;justify-content:space-between;align-items:flex-start;gap:4mm;font-size:1.03em;line-height:1.25;font-weight:var(--w-deutlich)}
+  .titel-seite .marke{display:flex;gap:2mm;align-items:flex-start}
+  .titel-seite .marke img{height:7mm;filter:brightness(0) invert(1)}
+  .titel-seite .marke span{display:block}
+  .titel-seite .motto{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;gap:0;padding:0 2mm}
+  .titel-seite .motto .en{font-size:3.26em;line-height:1.02;font-weight:var(--w-deutlich);text-wrap:balance}
+  .titel-seite .motto .de{font-size:3.26em;line-height:1.02;font-weight:var(--w-ruhig);text-align:right;margin-top:1mm;text-wrap:balance}
+  .titel-seite .unten{display:flex;justify-content:space-between;align-items:flex-end;font-size:1.03em;line-height:1.25;font-weight:var(--w-deutlich);text-shadow:0 0 2mm rgba(0,0,0,.5)} /* # ds-ok Lesbarkeit auf hellem Motiv */
+  .titel-seite .unten .credit{font-family:var(--font-text);font-size:.7em}
+  .rueck-seite .adresse-block{font-size:1.14em;line-height:1.35;font-weight:var(--w-deutlich);white-space:pre-line;text-shadow:0 0 1.2mm rgba(0,0,0,.3)} /* # ds-ok */
+  .rueck-seite .adresse-block .de{display:block;font-weight:var(--w-ruhig)}
+
+  /* Programm (Etappe 3 – vorerst schlichte Tagesliste) */
+  .prog-seite .tage{display:grid;grid-template-columns:1fr 1fr;gap:5mm;font-size:.89em}
+  .prog-seite .tag>.kopf{background:var(--acc-dunkel);color:#fff;padding:2mm 3mm;border-radius:1.5mm;font-size:1.35em} /* # ds-ok Weiss auf Tagungsfarbe */
+  .prog-seite .tag>.kopf .de{color:#fff} /* # ds-ok */
+  .prog-seite .punkt-z{display:grid;grid-template-columns:9mm 1fr;gap:1.5mm;padding:1.6mm 0;border-top:.2mm solid rgba(20,24,28,.12)} /* # ds-ok Haarlinie */
+  .prog-seite .punkt-z .uhr{font-weight:var(--w-deutlich);font-variant-numeric:tabular-nums}
+  .prog-seite .punkt-z .wer{font-weight:var(--w-ruhig)}
+  .prog-seite .etappe{margin-top:auto;font-family:var(--font-text);font-size:.82em;color:rgba(20,24,28,.66)} /* # ds-ok Vorschau-Hinweis, 5.9:1 */
+
+  /* Workshops */
+  .ws-seite .spalten{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;flex:1 1 auto;min-height:0}
+  .ws-seite .sp{min-width:0;display:grid;align-content:start;gap:2.2mm;overflow:hidden}
+  .ws{font-size:.85em;line-height:1.26;break-inside:avoid}
+  .ws .nr{color:var(--acc-ink);font-weight:var(--w-ruhig);font-family:var(--font-text);font-size:.92em}
+  .ws .t1{font-weight:var(--w-deutlich);color:var(--acc-ink)}
+  .ws .t2{font-weight:var(--w-klar)}
+  .ws .wer{font-weight:var(--w-ruhig)}
+  .ws .ort{font-weight:var(--w-ruhig)}
+
+  /* Druck: A5 mit 3 mm Beschnitt, Schnittmarken */
+  .marke-s{display:none}
+  @media print{
+    @page{size:154mm 216mm;margin:0}
+    body>*:not(main),.hero,.leiste,.unterschrift,.doppel .seite+.seite{border:0}
+    body>*:not(main),.hero,.leiste,.unterschrift{display:none!important}
+    html,body{margin:0!important;padding:0!important;height:auto!important}
+    main.wrap{max-width:none!important;padding:0!important;margin:0!important}
+    .werk{display:block;margin:0;gap:0}
+    .blaetter{display:block;padding:0;gap:0;border:0;margin:0}
+    .doppel,.bogen{display:block}
+    .seite{zoom:1;box-shadow:none;border:0;break-after:page;print-color-adjust:exact;-webkit-print-color-adjust:exact;margin:0}
+    .bogen:last-child .seite:last-child{break-after:auto}
+    .blaetter[aria-hidden="true"],.seite[data-grad]::after{display:none}
+    .seite::before,.seite.ueberlauf::after{display:none}
+    .marke-s{display:block;position:absolute;z-index:7;background:#000} /* # ds-ok Schnittmarke */
+    .marke-s.h{width:2.5mm;height:.1mm}.marke-s.v{width:.1mm;height:2.5mm}
+  }
+</style>
+</head>
+<body>
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Sektion für Landwirtschaft</span>
+    <h1>Tagungs-Reader</h1>
+    <p class="lede">Der Reader der Landwirtschaftlichen Tagung: Inhalte pflegen, alle zwanzig Seiten sehen, als PDF und IDML ausgeben. Jedes Jahr aus der Datei des Vorjahres.</p>
+  </section>
+
+  <div class="werk">
+    <aside class="leiste" id="leiste" aria-label="Werkstatt">
+      <p class="stand" id="stand">Lade …</p>
+      <label class="field"><span class="lab">Wer arbeitet gerade? (Vorname, für die Sicherung)</span><input type="text" id="von" autocomplete="given-name" /></label>
+      <div class="reiter seg" id="reiter" aria-label="Werkstätten">
+        <button type="button" data-reiter="inhalte" aria-pressed="true">Inhalte</button>
+        <button type="button" data-reiter="motiv" aria-pressed="false">Motiv &amp; Farben</button>
+        <button type="button" data-reiter="karte" aria-pressed="false">Karte</button>
+        <button type="button" data-reiter="programm" aria-pressed="false">Programm</button>
+        <button type="button" data-reiter="export" aria-pressed="false">Export</button>
+      </div>
+      <div id="werkstatt"></div>
+    </aside>
+    <section class="blaetter" id="blaetter" aria-label="Seiten des Readers"></section>
+  </div>
+</main>
+
+<script src="reader.js"></script>
+</body>
+</html>

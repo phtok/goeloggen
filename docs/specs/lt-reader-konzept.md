@@ -1,6 +1,8 @@
 # Tagungs-Reader – Konzept (Landwirtschaftliche Tagung, ab 2027)
 
-Stand: 11. Oktober 2026 · Status: **Konzept, Entscheid offen**
+Stand: 11. Oktober 2026 · Status: **beschlossen; Etappe 1 gebaut** (Werkzeug: https://werkzeuge.goetheanum.ch/apps/lt-reader/, Anleitung: `apps/lt-reader/ANLEITUNG.md`)
+Beschluss des Auftraggebers (11. 10. 2026): Druckweg 2027 über IDML → InDesign → PDF/X;
+die Druckstrasse (Etappe 4) folgt, wenn mehr Erfahrung da ist.
 Auftrag: Der Reader der Landwirtschaftlichen Tagung soll online zusammengebaut
 werden – von den Mitarbeitenden der Sektion, jedes Jahr neu, mit sauberer
 Vorschau, integrierter Campus-Karte in der Tagungsfarbe, Programmdaten von der
@@ -152,7 +154,7 @@ die Vorschau meldet, wenn die Bogenzahl nicht mehr durch vier teilbar ist.
 
 ## Speichern, Teilen, Jahrgänge
 
-- Ein Datensatz je Jahrgang in Supabase (`reader_archiv`, Muster
+- Ein Datensatz je Jahrgang in Supabase (`reader_jahrgang`, Muster
   `folder_archiv`): Autosave beim Tippen, kein Login, versteckter Link im
   Backstage. Jede Sicherung legt eine Fassung ab; «zuletzt gesichert um …
   von …» (Name aus einem freiwilligen Feld) steht oben. Mehrere Personen
@@ -204,11 +206,15 @@ die Vorschau meldet, wenn die Bogenzahl nicht mehr durch vier teilbar ist.
 
 ## Etappen (je ein PR, je einzeln brauchbar)
 
-1. **Gerüst und Inhalte.** `apps/lt-reader/` aus dem Starter, Jahrgangsdatei
-   2027 aus den Texten des IDML 2027 erzeugt (die Stories tragen alle Texte,
-   Platzhalter werden beim Erzeugen gesetzt), Inhalte-Werkstatt mit Ampeln,
-   Vorschau aller 20 Seiten, Speicherung in `reader_archiv`, Vorschau-PDF.
-   Danach kann die Sektion Texte pflegen.
+1. **Gerüst und Inhalte – gebaut (11. 10. 2026).** `apps/lt-reader/` aus dem
+   Starter, Jahrgangsdatei 2027 aus den Texten des IDML 2027 erzeugt
+   (Platzhalter gesetzt), Inhalte-Werkstatt mit Ampeln, Vorschau aller
+   20 Seiten (Textseiten atmen bis 14 % kleiner, dann Überlauf-Warnung),
+   Arbeitsgruppen fliessen aus dem Stand der Webseite durch Spalten,
+   Speicherung in `reader_jahrgang` mit Fassungen und Konflikt-Sperre,
+   Vorschau-PDF über den Druckdialog (A5 + 3 mm, Schnittmarken), Motiv-Upload
+   mit Farbvorschlag und Kontrast-Readouts. Danach kann die Sektion Texte
+   pflegen.
 2. **Motiv & Farben und Karte.** Palette aus dem Motiv, Rollen mit Kontrast,
    Kartentool eingebettet, Orte aus dem Programm, Legende automatisch.
 3. **Programm-Seiten und IDML.** Workshop-, Führungs- und Open-Space-Seiten
@@ -224,11 +230,29 @@ rechtzeitig besteht.
 
 ## Entscheide, die der Auftraggeber trifft
 
-- **Druckweg 2027:** IDML → InDesign → PDF/X (bewährt, Etappe 3) als
-  Pflicht, Druckstrasse (Etappe 4) als Zugabe – oder Druckstrasse von
-  Anfang an als Hauptweg. Empfehlung: IDML zuerst.
+- **Druckweg 2027 (entschieden 11. 10. 2026):** IDML → InDesign → PDF/X als
+  Pflicht (Etappe 3); die Druckstrasse (Etappe 4) folgt später, wenn mehr
+  Erfahrung da ist.
 - Output Intent: PSO Coated v3 (FOGRA51) angenommen; falls die Druckerei ein
   anderes Profil verlangt, ist es ein Parameter der Strasse.
+
+## Ausblick: Plakat und Folder aus derselben Datei (Frage des Auftraggebers, 11. 10. 2026)
+
+Ja, das geht und ist der natürliche nächste Schritt nach Etappe 4. Beide
+Drucksachen brauchen nur, was die Jahrgangsdatei ohnehin trägt:
+
+- **Plakat A1** = die Titelseite des Readers in Plakatgrösse: Motiv, Motto
+  EN/DE, Tagungsname, Datum, QR, Logo. Ein weiteres Ausgabeformat des
+  Seitentyps «titel», mit eigenem Satz der Plakatzeilen (Unterschneidung von
+  Hand bleibt in InDesign).
+- **Folder A5** = Titelseite (wie Plakat, Motiv und Motto) plus die
+  Programm-Doppelseite, die das Tagungsprogramm heute schon aus der Vorlage
+  exportiert. Der Folder wird damit ein Export des Readers, kein eigenes
+  Werkzeug; die Vorlage `apps/lt-programm/vorlage/LT27.idml` bleibt die
+  Rückseite.
+
+Voraussetzung ist, dass Motiv und Farben (Werkstatt 1) stehen; dann sind
+Plakat und Folder eine Etappe 5 mit zwei Exportknöpfen, kein neues Konzept.
 
 ## Was dieses Konzept bewusst nicht tut
 
