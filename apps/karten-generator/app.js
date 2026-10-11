@@ -514,6 +514,9 @@ let nummern = {};
 
 function nummernBerechnen() {
   nummern = {};
+  // Feste Nummern (Reader-Kartenseiten): jeder Ort behält die Nummer der Vorlage,
+  // damit Texte wie ‹Speisehaus 45› stimmen — statt fortlaufend neu zu zählen.
+  if (state.festeNummern) return;
   let n = 1;
   alleOrte().filter(ortAktiv).forEach((ort) => {
     if (ort.art === "treppe" || !/^\d+$/.test(ort.marker)) return;
@@ -1663,13 +1666,20 @@ function standAlsJson() {
     logo: { ...state.logo, basis: LOGO_STANDARD.breite },
     titelLogo: state.titelLogo,
     preset: state.preset, farben: state.farben,
+    festeNummern: Boolean(state.festeNummern),
     basiskarte: state.basiskarte,
     aquarellDeckkraft: state.aquarellDeckkraft,
     schriftzuege: state.schriftzuege
   };
 }
 
+// Einbettung (Tagungs-Reader lädt das Werkzeug unsichtbar und holt die Szene):
+// ?einbett unterdrückt Laden und Sichern im Browser-Speicher, damit der eigene
+// Stand des Kartentools unberührt bleibt.
+const EINBETT = new URLSearchParams(location.search).has("einbett");
+
 function speichern() {
+  if (EINBETT) return;
   try {
     localStorage.setItem(SPEICHER_SCHLUESSEL, JSON.stringify(standAlsJson()));
   } catch (fehler) {
@@ -1701,6 +1711,7 @@ function standAnwenden(s) {
       ? { klein: Boolean(s.wiesen.klein), gross: Boolean(s.wiesen.gross) }
       : { klein: false, gross: false };
     state.kompakt = Boolean(s.kompakt);
+    state.festeNummern = Boolean(s.festeNummern);
     if (s.ausschnitt && typeof s.ausschnitt.skala === "number") {
       state.ausschnitt = {
         skala: Math.min(1.8, Math.max(0.7, s.ausschnitt.skala)),
@@ -1751,6 +1762,7 @@ function standAnwenden(s) {
 }
 
 function laden() {
+  if (EINBETT) return;
   let roh = null;
   try { roh = localStorage.getItem(SPEICHER_SCHLUESSEL); } catch (fehler) { return; }
   if (!roh) return;
@@ -2355,4 +2367,21 @@ function render() {
   renderVarianten();
   render();
   zoomEinpassen();
+  if (window.__kartentoolBereit) window.__kartentoolBereit(window.Kartentool);
 })();
+
+/* ---------- Schnittstelle für einbettende Werkzeuge (apps/lt-reader) ----------
+   stand()        – Zustand als JSON (wie im Browser-Speicher)
+   anwenden(s)    – Zustand setzen und neu zeichnen (Teilangaben werden mit dem Standard ergänzt)
+   szene(b)       – die Blattszene als SVG-Markup (mm, Blatt 297 × 210; b = Anschnitt in mm)
+   orte()         – alle Orte (id, Kategorie, Label, Marker)
+   bereit         – Promise, erfüllt nach dem ersten Satz */
+window.Kartentool = {
+  stand: standAlsJson,
+  anwenden(s) { standAnwenden({ ...standAlsJson(), ...s }); render(); },
+  szene: szeneMarkup,
+  orte: () => ORTE.map((o) => ({ id: o.id, kategorie: o.kategorie, art: o.art, label: o.label, marker: o.marker })),
+  farbenRollen: ROLLEN.map((r) => r[0]),
+  masse: { blatt: SZENE, falz: KARTE.falz },
+  bereit: new Promise((r) => { window.__kartentoolBereit = r; })
+};
