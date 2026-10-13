@@ -68,26 +68,28 @@ Daten, zwei Rohentwürfe), 12 Bühnenfavoriten und 5 Porträts von Ludowika Held
 Hochformate sind 3000 × 4500 px, bei A2 knapp 190 dpi: für Entwürfe genug,
 für den Druck die Originale aus dem Drive-Ordner nehmen.
 
-**Weitere Favoriten aus «Allbilde»** (Sichtung vom 13. 10.: rund 3400
-verkleinerte Fotos angesehen, dunkle Bilder und Serien-Dubletten
-aussortiert). Dateinamen im Paket mit Präfix `F1_` (Faust 1) oder `F2_`
-(Faust 2):
+**Bewertung der Allbilde-Auswahl durch den Auftraggeber** (13. 10.; Sichtung
+von rund 3400 verkleinerten Fotos, dunkle Bilder und Serien-Dubletten
+vorab aussortiert; Präfix `F1_` = Faust 1, `F2_` = Faust 2):
 
-- Hochformat, viel Raum für Titel: `F2_SA701562`, `F2_SA701565` (Mann, Arme zum
-  Himmel, reines Blau); `F2_SA701066`, `F2_SA701075` (Figur mit Armen zum
-  Mond); `F2_SA701266`, `F2_SA701270` (Wassergeist mit Krone neben dem Mond);
-  `F2_SA701110` (grosser Mond, kaum Figur)
-- Mit Biss: `F1_SA709037`, `F1_SA709039` (Gretchen mit gelben Mimosen auf
-  Schwarz, passt zu Gold); `F2_SA701599`, `F2_SA701602` (Handstand unter dem
-  Ast vor Blau); `F1_SA709122`, `F1_SA709124` (Frau mit Fahrrad auf blauer
-  Bühne, quer)
-- Szenisch: `F1_SA708004` (Student mit Bücherstapel); `F1_SA708170` (Faust
-  hält sich die Ohren zu, quer); `F2_SA700522`, `F2_SA700545` (Homunculus in
-  der Glaskugel); `F2_SA702020`, `F2_SA702036` (weisse Engel vor Violett);
-  `F1_SA707794` (schwarzer Pudel in der Bibliothek, quer)
-- Übrige Auswahl im Paket: `F1_SA707301`, `F1_SA707757`, `F1_SA707865`,
-  `F1_SA707899`, `F1_SA709517`, `F2_SA700782`, `F2_SA701388`,
-  `F2_SA702082`, `F2_SA709835`, `F2_SA709878`, `F2_SA709936`
+- **Ja:** `F1_SA707865` (blaue Schleier-Geister um Faust, dunkel, quer),
+  `F1_SA707899` (Mephisto hell mit Brief vor der Bibliothek, hoch)
+- **Vielleicht:** `F2_SA701066`, `F2_SA701075` (Figur mit Armen zum Mond),
+  `F2_SA701266`, `F2_SA701270` (Wassergeist mit Krone neben dem Mond),
+  `F2_SA701110` (grosser Mond, kaum Figur), `F1_SA708170` (Faust hält sich
+  die Ohren zu, zwei Mephisto, quer), `F2_SA701388` (Frau in Weiss mit langem
+  Tuch, hoch)
+- **Nein:** alle 22 übrigen der 31, darunter Arme zum Himmel
+  (`F2_SA701562`, `F2_SA701565`), Gretchen mit Mimosen, Handstand, Fahrrad,
+  Student mit Büchern, Homunculus, Engel, Pudel, Mantelwurf, Laser
+
+Lesart: gefragt sind dunkle, geheimnisvolle Stimmungen mit Figuren, Mond und
+Schleiern; helle, heitere oder sehr szenische Bilder und das reine Blau
+kommen nicht an. Die Bilder liegen alle 31 im Paket
+(`faust-bilder-klein/allbilde-auswahl/`), gebraucht werden die Ja- und
+Vielleicht-Bilder. Die früheren Favoriten (Mond-Serie `SA701200`, `SA701211`,
+`SA701216`, Silhouette `SA701700`, Ast und Säule `SA701664` usw.) sind
+nicht bewertet.
 
 Ungesichtet: Die Originale von «Faust 2» (2065 Dateien) kennt die Sichtung nur
 über die 896 verkleinerten («Faust 2 Klein»); der Ordner «Faust 1» (301
