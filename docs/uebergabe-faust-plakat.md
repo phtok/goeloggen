@@ -12,13 +12,14 @@ Spreads dazu.
 
 ## Was der Auftraggeber in die neue Sitzung mitbringt
 
-Die Dateien der alten Sitzung sind weg. Nötig sind:
+Die Dateien der alten Sitzung sind weg. Nötig ist **eine** Datei:
 
-1. `Plakate-2026_mini.idml` (Schriftzug, Logo, Daten, zwei Rohentwürfe)
-2. die vier ZIPs `entwurf-faust-bilder-teil1…4.zip` (12 Bühnenfavoriten im
-   Original, 5 Porträts von Ludowika Held)
-
-Fehlen die ZIPs, lassen sie sich neu holen (siehe unten).
+`faust-plakat-paket.zip` (9,7 MB): `Plakate-2026_mini.idml` (Schriftzug, Logo,
+Daten, zwei Rohentwürfe), 12 Bühnenfavoriten und 5 Porträts von Ludowika Held
+(`faust-bilder-klein/`), dazu 31 weitere Favoriten aus «Allbilde»
+(`faust-bilder-klein/allbilde-auswahl/`). Alle Bilder sind auf höchstens
+2000 px verkleinert; die Originale für den Druck stehen im Drive-Ordner
+(siehe «Bilder neu holen»).
 
 ## Das IDML (Befund)
 
@@ -67,6 +68,33 @@ Fehlen die ZIPs, lassen sie sich neu holen (siehe unten).
 Hochformate sind 3000 × 4500 px, bei A2 knapp 190 dpi: für Entwürfe genug,
 für den Druck die Originale aus dem Drive-Ordner nehmen.
 
+**Bewertung der Allbilde-Auswahl durch den Auftraggeber** (13. 10.; Sichtung
+von rund 3400 verkleinerten Fotos, dunkle Bilder und Serien-Dubletten
+vorab aussortiert; Präfix `F1_` = Faust 1, `F2_` = Faust 2):
+
+- **Ja:** `F1_SA707865` (blaue Schleier-Geister um Faust, dunkel, quer),
+  `F1_SA707899` (Mephisto hell mit Brief vor der Bibliothek, hoch)
+- **Vielleicht:** `F2_SA701066`, `F2_SA701075` (Figur mit Armen zum Mond),
+  `F2_SA701266`, `F2_SA701270` (Wassergeist mit Krone neben dem Mond),
+  `F2_SA701110` (grosser Mond, kaum Figur), `F1_SA708170` (Faust hält sich
+  die Ohren zu, zwei Mephisto, quer), `F2_SA701388` (Frau in Weiss mit langem
+  Tuch, hoch)
+- **Nein:** alle 22 übrigen der 31, darunter Arme zum Himmel
+  (`F2_SA701562`, `F2_SA701565`), Gretchen mit Mimosen, Handstand, Fahrrad,
+  Student mit Büchern, Homunculus, Engel, Pudel, Mantelwurf, Laser
+
+Lesart: gefragt sind dunkle, geheimnisvolle Stimmungen mit Figuren, Mond und
+Schleiern; helle, heitere oder sehr szenische Bilder und das reine Blau
+kommen nicht an. Die Bilder liegen alle 31 im Paket
+(`faust-bilder-klein/allbilde-auswahl/`), gebraucht werden die Ja- und
+Vielleicht-Bilder. Die früheren Favoriten (Mond-Serie `SA701200`, `SA701211`,
+`SA701216`, Silhouette `SA701700`, Ast und Säule `SA701664` usw.) sind
+nicht bewertet.
+
+Ungesichtet: Die Originale von «Faust 2» (2065 Dateien) kennt die Sichtung nur
+über die 896 verkleinerten («Faust 2 Klein»); der Ordner «Faust 1» (301
+Dateien) liegt daneben.
+
 **Ludowika Held** (5 Bilder von filmmakers.eu, 1440 × 2160 px, © Lev
 Gonopolsky): https://www.filmmakers.eu/de/actors/ludowika-held. Ihr
 Instagram `ludowikaheld` ist nur mit Anmeldung sichtbar; der Auftraggeber
@@ -75,10 +103,15 @@ liefert die Porträts von dort selbst. Bessere Porträts über die Agentur
 
 ## Bilder neu holen (falls nötig)
 
-Der Drive-Ordner ist eine Synology-Drive-Freigabe: Die Seite lädt per
+Den Freigabe-Link gibt der Auftraggeber in der Sitzung mit; er steht bewusst
+nicht im Repo. Der Drive-Ordner ist eine Synology-Drive-Freigabe: Die Seite lädt per
 JavaScript, die Dateien lassen sich nur im Browser (Playwright/Chromium) mit
 dem Sitzungs-Token über `SYNO.SynologyDrive.Files` (`list`, `download`)
-abholen. Die Filmmakers-Bilder stehen als `imgproxy.filmmakers.eu/…rt:fit/w:3840…jpg`
+abholen. Struktur: `Allbilde/Faust 1/Faust1_JPEG` (2470 Originale),
+`Allbilde/Faust 1 Klein` (2470), `Allbilde/Faust 2/Faust 2` (2065),
+`Allbilde/Faust 2 Klein` (896). Die `list`-Antwort ist auf 1000 Einträge
+begrenzt (`offset` weiterzählen). Die Dateinamen der Favoriten gelten in den
+Original- und Klein-Ordnern gleich. Die Filmmakers-Bilder stehen als `imgproxy.filmmakers.eu/…rt:fit/w:3840…jpg`
 direkt im HTML.
 
 ## Regeln für die Gestaltung
