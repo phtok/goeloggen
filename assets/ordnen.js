@@ -28,6 +28,13 @@
 
     // Stand der Datei, bereinigt: fehlende Werkzeuge hinten anhängen,
     // verschwundene entfernen; bewusst Ausgeblendetes bleibt ausgeblendet.
+    // Ausgeblendete Entwürfe (noch nicht öffentlich) unsichtbar mitführen, sonst
+    // fielen sie beim Speichern heraus und stünden beim Freischalten auf der Startseite.
+    var bekannt = (man.tools || []).map(function (t) { return t.slug; });
+    var ruhend = {}, A0 = (man.reihenfolge && man.reihenfolge.aus) || {};
+    FLAECHEN.forEach(function (k) {
+      ruhend[k] = (Array.isArray(A0[k]) ? A0[k] : []).filter(function (x) { return slugs.indexOf(x) < 0 && bekannt.indexOf(x) >= 0; });
+    });
     function bereinigt(R) {
       R = R || {}; var A = R.aus || {};
       var s = { an: {}, aus: {} };
@@ -203,7 +210,8 @@
 
     function nutzlast() {
       return { reihenfolge: { schublade: stand.an.schublade, karten: stand.an.karten,
-        aus: { schublade: stand.aus.schublade, karten: stand.aus.karten } } };
+        aus: { schublade: stand.aus.schublade.concat(ruhend.schublade || []),
+               karten: stand.aus.karten.concat(ruhend.karten || []) } } };
     }
     var speichernBtn = bar.querySelector('[data-tu="speichern"]');
     speichernBtn.addEventListener("click", function () {

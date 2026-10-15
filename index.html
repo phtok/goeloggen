@@ -40,6 +40,17 @@
   .gruppen .gk{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h2);line-height:1.15;margin:0 0 var(--s5);color:var(--ink)}
   .gruppen .grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
   @media (max-width:420px){.gruppen .grid{grid-template-columns:1fr}}
+  /* Feature (tools.json → gruppen.feature): ein Werkzeug gross vorn. Dieselbe
+     Karte, nur in der Fläche – Bild und Text nebeneinander, Titel eine Stufe
+     grösser, Satz als Lede (eigene Strukturebene, G01-Ausnahme). Kicker
+     normal, nicht versal (G05). */
+  .feature .tile{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);align-items:center;gap:var(--s4) var(--s7);padding:var(--s6)}
+  .feature .thumb{height:auto;min-height:200px}
+  .feature .thumb>*{transform:scale(1.9)}
+  .feature .tile h3{font-size:var(--t-h1)}
+  .feature .tile p{font-size:var(--t-body);line-height:var(--lh-body);max-width:46ch;margin-top:var(--s3)}
+  .feature .kicker{display:block}
+  @media (max-width:640px){.feature .tile{grid-template-columns:1fr}.feature .thumb{min-height:150px}.feature .thumb>*{transform:scale(1.5)}}
 
   /* Greifbare Mini-Werkzeuge je Karte – das Erzeugnis als Erkennungszeichen. */
   .thumb{height:96px;display:grid;place-items:center;border-radius:10px;background:var(--paper);
@@ -276,6 +287,17 @@
     // Gruppen nach Anlass: Zugehörigkeit aus tools.json → gruppen, Folge innerhalb
     // der Gruppe aus der Reihenfolge oben. Nicht Zugeordnetes läuft in die letzte Gruppe.
     grid.className = "gruppen";
+    // Feature: ein Werkzeug gross vorn (tools.json → gruppen.feature), in seiner Gruppe nicht doppelt.
+    var feat = tools.filter(function(t){ return t.slug === man.gruppen.feature; })[0];
+    if (feat) {
+      tools = tools.filter(function(t){ return t !== feat; });
+      var fs = document.createElement("section");
+      fs.className = "feature"; fs.setAttribute("aria-label", "Aktuell");
+      var ft = tile(feat), fx = document.createElement("div");
+      fx.innerHTML = '<span class="kicker">Aktuell</span>';
+      while (ft.children.length > 1) fx.appendChild(ft.children[1]);
+      ft.appendChild(fx); fs.appendChild(ft); grid.appendChild(fs);
+    }
     var frei = tools.slice();
     var teile = G.map(function(g){
       var drin = tools.filter(function(t){ return g.slugs.indexOf(t.slug) >= 0; });
@@ -302,7 +324,9 @@
     sc.onload = function(){ window.goeOrdnen(man, tile); };
     document.body.appendChild(sc);
   }
-  fetch("tools.json").then(function(r){ return r.json(); }).then(start).catch(function(){
+  // no-cache: beim Server nachfragen (ETag), sonst zeigt der Browser bis zu zehn
+  // Minuten den alten Stand – eine Sortierer-Speicherung schiene nicht zu greifen.
+  fetch("tools.json", { cache: "no-cache" }).then(function(r){ return r.json(); }).then(start).catch(function(){
     document.getElementById("cards").innerHTML = '<p class="meta">Werkzeugliste konnte nicht geladen werden.</p>';
   });
 })();
