@@ -70,6 +70,10 @@
   .zeilen li:hover{background:var(--soft)}
   .zeilen label{display:contents;cursor:pointer}
   .zeilen input[type="checkbox"]{width:22px;height:22px;margin:0 var(--s1);accent-color:var(--gold-deep);cursor:pointer}
+  /* Meistgelesen abschalten: dasselbe Häkchen wie die Zeilen; der Text bleibt. */
+  .ps-an{display:flex;align-items:center;gap:var(--s2);min-height:var(--tap);margin-bottom:var(--s2);cursor:pointer;
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--ink)}
+  .ps-an input{width:22px;height:22px;margin:0 var(--s1);accent-color:var(--gold-deep);cursor:pointer}
   .zeilen .z-text{font-family:var(--font-text);font-size:var(--t-small);line-height:1.35;color:var(--ink);min-width:0;overflow-wrap:anywhere}
   .zeilen .z-text small{display:block;font-size:var(--t-micro);color:var(--muted)}
   .zeilen li.aus .z-text{color:var(--muted)}
@@ -302,8 +306,9 @@
           </details>
 
           <details class="fold" id="psFold">
-            <summary>Meistgelesen <span class="sub">Platz für eine Veranstaltung</span></summary>
+            <summary>Meistgelesen <span class="sub" id="psSub">Platz für eine Veranstaltung</span></summary>
             <div class="fold-body">
+              <label class="ps-an"><input type="checkbox" id="psAn" checked /> <span>In der Signatur zeigen</span></label>
               <label class="field"><span class="lab"><span>PS-Text</span> <span class="counter" id="psCount">0/120</span></span>
                 <textarea id="ps" rows="2" maxlength="120" placeholder="Faust 1+2 · Drei mal im Sommer 2027"></textarea>
               </label>
@@ -694,7 +699,9 @@ function buildSignature() {
   // PS zuoberst – es gehört zum Anschreiben, nicht zur Signatur. Deshalb OHNE
   // eigene Schrift/Grösse: Es erbt den Mailtext des Clients und steht so in
   // jedem Programm auf Augenhöhe (Apple Mail 16px, Outlook ~15px, Gmail 13px).
-  const ps = val("ps"), pslink = val("pslink");
+  // Abgeschaltet (Häkchen in ‹Meistgelesen›): kein PS, der Text bleibt für später.
+  const psAn = isOn("ps");
+  const ps = psAn ? val("ps") : "", pslink = psAn ? val("pslink") : "";
   let psHtml = "";
   const psText = [];
   if (ps) {
@@ -766,8 +773,11 @@ document.getElementById("zeilen").addEventListener("click", e => {
 });
 document.getElementById("presets").addEventListener("click", e => {
   const b = e.target.closest("[data-preset]"); if (!b) return;
+  // Die Vorgaben schalten nur Zeilen; das PS (Meistgelesen) behält seinen Schalter.
+  const ps = state.on.ps;
   if (b.dataset.preset === "all") state.on = {};
   else { state.on = {}; collectLines().forEach(l => { state.on[l.id] = ["name", "goetheanum"].indexOf(l.id) !== -1; }); }
+  if (ps !== undefined) state.on.ps = ps;
   onInput();
 });
 
@@ -777,7 +787,11 @@ function render() {
   document.getElementById("sigPreview").innerHTML = sig.html;
   renderZeilen();
   updatePsCount();
+  const psAn = isOn("ps");
+  document.getElementById("psAn").checked = psAn;
+  document.getElementById("psSub").textContent = psAn ? "Platz für eine Veranstaltung" : "ausgeschaltet";
 }
+document.getElementById("psAn").addEventListener("change", e => { state.on.ps = e.target.checked; onInput(); });
 
 /* ---------- Schritte ---------- */
 function showStep(n, focus) {
@@ -949,7 +963,7 @@ function checkExpiry() {
   const until = val("psuntil");
   const old = document.getElementById("expiryNote");
   if (old) old.remove();
-  if (until && val("ps") && until < todayISO()) {
+  if (until && val("ps") && isOn("ps") && until < todayISO()) {
     const note = document.createElement("div");
     note.className = "expiry-note"; note.id = "expiryNote";
     note.textContent = "Dein PS ist abgelaufen – aktualisieren oder das PS-Modul leeren?";
