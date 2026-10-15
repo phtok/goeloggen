@@ -81,8 +81,9 @@ liest die mso-Weiche und bekommt den Textlink.
 Schluss: Jedes `<img>` schaltet Apple Mail auf hell, auch gesperrt. Gebaut
 ist darum der Hintergrund. Keine Büroklammer in allen Varianten. Damit der
 Name bei gesperrten Bildern nie fehlt, beginnt die Adresse mit Logo mit
-**‹Goetheanum›** (halbfett, Textfarbe, verlinkt; Zeile dann nicht
-ausblendbar). Abstand: eine Leerzeile vor der Adresse, zwei vor dem Logo.
+**‹Goetheanum›** (Mail-Blau, verlinkt; seit 15. 10. 2026, vorher halbfett). Ist die Adresse aus
+(z. B. ‹Minimal›), steht ‹· Goetheanum› verlinkt hinter dem Namen (Entscheid 15. 10. 2026).
+Die Zeile ‹Goetheanum› ist nicht abschaltbar – sie steht in jeder Signatur.
 
 ### Befund 7. 10. 2026 (Gmail)
 
