@@ -332,7 +332,7 @@
             <input type="checkbox" id="showLogo" />
             <span>
               <span class="lo-lab">Logo statt Schriftzug ‹Goetheanum›</span>
-              <span class="lo-sub">Nur für Apple Mail · nur mit Adresse. Gmail und Outlook können es nicht anzeigen.</span>
+              <span class="lo-sub">Nur für Apple Mail. Gmail und Outlook können es nicht anzeigen.</span>
             </span>
           </label>
         </div>
@@ -639,7 +639,10 @@ function collectLines() {
   const L = [];
   const add = (id, group, label, step, rows) => { if (rows.length) L.push({ id, group, label, step, rows }); };
   const name = val("name");
-  add("name", "person", "Name", 1, name ? [{ html: "<span style=\"font-weight:600;\">" + esc(name) + "</span>", text: name }] : []);
+  // Logo ohne Adresse (z. B. ‹Minimal›): Wo das Logo nicht ankommt (Gmail,
+  // Outlook), trägt die Namenszeile den Namen des Hauses (Entscheid 15. 10. 2026).
+  const haus = logoAktiv() && !isOn("address") ? " · Goetheanum" : "";
+  add("name", "person", "Name", 1, name ? [{ html: "<span style=\"font-weight:600;\">" + esc(name) + "</span>" + haus, text: name + haus }] : []);
   add("role", "person", "Funktion", 1, plainRows(inLang(splitLines(val("role")), splitLines(val("roleEn")))));
   add("unit", "person", state.unitKind === "bereich" ? "Bereich" : "Sektion", 2, plainRows(unitLines()));
   // Websites gehören zur Sektion/zum Bereich; goetheanum.ch steckt im Schlusswort.
@@ -673,9 +676,9 @@ function collectLines() {
 }
 function defaultOn(id) { return id === "hochschule" ? state.unitKind === "sektion" : true; }
 function isOn(id) { return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id); }
-// Das Logo kommt nur zusammen mit der Adresse: Sie trägt dann den Namen als
-// Ersatz. Ohne Adresse (z. B. ‹Minimal›) steht der blaue Schriftzug.
-function logoAktiv() { return logoWanted() && isOn("address"); }
+// Mit Logo braucht es den Namen als Text, wo das Logo nicht ankommt: in der
+// Adresse (halbfett vorn) oder, ist sie aus, hinter dem Namen.
+function logoAktiv() { return logoWanted() && isOn("goetheanum"); }
 
 /* ---------- Schriftzug oder Logo ---------- */
 // Ohne Logo: ‹Goetheanum› in Mail-Blau, verlinkt. Mit Logo (nur Intern-Ansicht)
@@ -684,7 +687,7 @@ function logoAktiv() { return logoWanted() && isOn("address"); }
 // Hintergrundbild lässt sie dunkel (Test 7. 10. 2026). Outlook im Browser
 // zeigt es nicht und verwirft es beim Einfügen in den Signatur-Editor; das
 // klassische Outlook bekommt über die mso-Weiche den Textlink. In allen Fällen
-// steht der Name halbfett in der Adresse.
+// steht der Name als Text da: halbfett in der Adresse oder hinter dem Namen.
 function goetheanumHtml() {
   const link = inner => "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" + inner + "</a>";
   if (!logoAktiv()) return link("Goetheanum");
