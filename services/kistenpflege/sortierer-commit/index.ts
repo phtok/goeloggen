@@ -5,7 +5,7 @@
 // gezielt in die tools.json auf GitHub — per Contents-API, mit dem aktuellen
 // Stand als Basis (kein Stale-Clobber). Body (alle Felder optional, mindestens
 // eines): reihenfolge {schublade,karten,aus} · welten {public,intern}
-// · cats {slug: cat}. Nur die betroffenen Blöcke/Felder werden ersetzt, der Rest
+// · cats {slug: cat} · feature (Slug oder "" → gruppen.feature). Nur die betroffenen Blöcke/Felder werden ersetzt, der Rest
 // bleibt byte-genau. Ein GitHub-Token liegt serverseitig, nie im Browser.
 // Kein Passwort: statt dessen nimmt die Funktion nur Aufrufe von den eigenen
 // Werkzeugseiten an (Herkunfts-Sperre, siehe ERLAUBT). Das ist eine Hürde gegen
@@ -103,8 +103,9 @@ Deno.serve(async (req) => {
   const hasReihenfolge = !!body.reihenfolge;
   const hasWelten = !!(body.welten && typeof body.welten === "object");
   const hasCats = !!(body.cats && typeof body.cats === "object");
-  if (!hasReihenfolge && !hasWelten && !hasCats) {
-    return json(400, { error: "Nichts zu tun (reihenfolge / welten / cats fehlen)." }, origin);
+  const hasFeature = typeof body.feature === "string";
+  if (!hasReihenfolge && !hasWelten && !hasCats && !hasFeature) {
+    return json(400, { error: "Nichts zu tun (reihenfolge / welten / cats / feature fehlen)." }, origin);
   }
 
   const gh = {
@@ -194,6 +195,17 @@ Deno.serve(async (req) => {
       next = next.replace(re, `$1"${cat}"`);
     }
     applied.push("cats");
+  }
+
+  // --- feature (optional) — das hervorgehobene Werkzeug der Startseite ---
+  if (hasFeature) {
+    const f = known.has(body.feature) ? body.feature : "";
+    const re = /("gruppen"\s*:\s*\{\n\s*"\$hinweis":\s*"(?:[^"\\]|\\.)*",\n\s*"feature"\s*:\s*)"[^"]*"/;
+    const ohne = /("gruppen"\s*:\s*\{\n(\s*)"\$hinweis":\s*"(?:[^"\\]|\\.)*",\n)/;
+    const vorher = next;
+    next = re.test(next) ? next.replace(re, `$1${JSON.stringify(f)}`)
+      : next.replace(ohne, `$1$2"feature": ${JSON.stringify(f)},\n`);
+    if (next !== vorher) applied.push("feature");
   }
 
   if (next === text) return json(200, { ok: true, unchanged: true }, origin);
