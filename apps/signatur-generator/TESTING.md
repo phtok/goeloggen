@@ -48,9 +48,10 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 
 ## Testpersonen (Aufbau prüfen)
 
-Reihenfolge der Blöcke: wer (Name, Funktion, Sektion/Bereich, deren Websites)
-· Telefon (eine Zeile) · Haus (Hochschule, Gesellschaft, Adresse) ·
-‹Goetheanum› als Schluss (Schriftzug oder Logo). Zweisprachig stehen kurze
+Reihenfolge der Blöcke (Variante B2, 15. 10. 2026): wer (Name, Funktion,
+Sektion/Bereich, deren Websites) · kleine Leerzeile · Telefon (eine Zeile) ·
+zwei Leerzeilen · ‹Goetheanum› (Schriftzug, danach kleine Leerzeile; oder Logo,
+danach eine Leerzeile) · Hochschule, Gesellschaft · Adresse. Zweisprachig stehen kurze
 Paare auf einer Zeile (bis 56 Zeichen), lange untereinander.
 
 | Person | Eingabe | Erwartet |
@@ -63,7 +64,7 @@ Paare auf einer Zeile (bis 56 Zeichen), lange untereinander.
 
 ## Logo (Backend-Versuch, nur Intern-Ansicht)
 
-Das Logo steht an Stelle des Schriftzugs ‹Goetheanum› als Schlusszeile,
+Das Logo steht an Stelle des Schriftzugs ‹Goetheanum› über Hochschule und Gesellschaft,
 verlinkt, als **CSS-Hintergrund** (kein `<img>`). Klassisches Outlook (Windows)
 liest die mso-Weiche und bekommt den Textlink.
 
