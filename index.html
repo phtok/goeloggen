@@ -302,7 +302,9 @@
     sc.onload = function(){ window.goeOrdnen(man, tile); };
     document.body.appendChild(sc);
   }
-  fetch("tools.json").then(function(r){ return r.json(); }).then(start).catch(function(){
+  // no-cache: beim Server nachfragen (ETag), sonst zeigt der Browser bis zu zehn
+  // Minuten den alten Stand – eine Sortierer-Speicherung schiene nicht zu greifen.
+  fetch("tools.json", { cache: "no-cache" }).then(function(r){ return r.json(); }).then(start).catch(function(){
     document.getElementById("cards").innerHTML = '<p class="meta">Werkzeugliste konnte nicht geladen werden.</p>';
   });
 })();

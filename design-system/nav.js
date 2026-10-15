@@ -545,7 +545,8 @@
   }
 
   // --- Manifest laden --------------------------------------------------------
-  fetch(TOOLS).then(function (r) { return r.json(); }).then(function (m) {
+  // no-cache: beim Server nachfragen (ETag) – ein Sortierer-Stand gilt sofort.
+  fetch(TOOLS, { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (m) {
     ALL = m.tools || [];
     // Ordnerstruktur (Welten) aus den Daten, wenn vorhanden (tools.json → welten,
     // vom Ordner-Editor gepflegt); sonst gilt die oben eingebaute Vorgabe. Die
