@@ -1,6 +1,6 @@
 # Werkzeuge-Mail für Mitarbeitende — Jahresplan
 
-*Monatliche Mail ab September 2026: je Monat ein Werkzeug. Absender: Philipp Tok
+*Monatliche Mail ab Oktober 2026: je Monat ein Werkzeug. Absender: Philipp Tok
 und Stefan Hasler, je nach Werkzeug mit Co-Autorin oder Co-Autor. Grundlage:
 Strategieblatt (`docs/strategie.md`) — Durchsetzung gelingt nicht über Verbote,
 sondern weil der konforme Weg der einfachste ist. Die Mail ist die Einladung
@@ -28,6 +28,14 @@ sofort als Folge der Serie erkennbar ist.
 Die Reihenfolge folgt drei Logiken zugleich: **Saison** (was gerade ansteht),
 **Aufbau** (jedes Werkzeug bereitet das nächste vor) und **Aufwandskurve**
 (mit dem kleinsten Griff beginnen, Vertrauen aufbauen, dann Grösseres).
+
+**Erster Jahrgang um einen Monat versetzt (Entscheid Auftraggeber, 15. Oktober
+2026):** die erste Mail erscheint im Oktober 2026, die Abfolge bleibt und rückt
+geschlossen nach – Signatur Oktober, Schriften November, PowerPoint Dezember,
+Wallpaper Januar, Visitenkarten Februar, Logos März, QR-Code April, Campus-Karte
+Mai, Übersetzungen Juni, Icons Juli. Die Tabelle zeigt den Bogen, wie er ab dem
+zweiten Jahrgang gedacht ist; der Redaktionstisch (`apps/werkzeugpost/mails.json`)
+führt die geltenden Monate.
 
 | Monat | Werkzeug | Warum jetzt | Blick dahinter (Identitätsstück) |
 |---|---|---|---|

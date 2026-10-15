@@ -21,7 +21,7 @@
     {
       "id": "2026-09-signatur",
       "pos": 1,
-      "monat": "September 2026",
+      "monat": "Oktober 2026",
       "status": "in_redaktion",
       "werkzeuge": [
         "signatur"
@@ -29,7 +29,7 @@
       "anlass": "Saisonbeginn; kleinster Aufwand, grösster kollektiver Effekt",
       "identitaetssatz": "Jede Mail aus dem Haus ist ein kleiner Auftritt des Goetheanum — und zugleich die Stimme eines Menschen.",
       "betreff": "E-Mails, die gelesen werden",
-      "body": "Liebe Mitarbeitende,\n\nab heute stellen wir euch monatlich ein Werkzeug vor, das die tägliche Arbeit erleichtert und unseren gemeinsamen Auftritt stärkt. Den Anfang macht die E-Mail-Signatur:\n\nJede Mail aus dem Haus ist ein kleiner Auftritt des Goetheanum — und zugleich die Stimme eines Menschen. Beides ist in drei Minuten eingerichtet:\n\n1. Öffnen: werkzeuge.goetheanum.ch/signatur\n2. Name und Angaben eintragen — die Vorschau zeigt sofort das Ergebnis\n3. Kopieren, in Outlook oder Apple Mail einsetzen, fertig.\n\nZwei Zeilen sind gesetzt, alles Weitere wählst du selbst — die Signatur ist deine. Auf der Seite warten dazu elf Handgriffe für Mails, die gelesen werden — und warum Bilder in der Signatur stören.\n\nWenn etwas klemmt: einfach antworten, wir lesen mit.\n\nHerzlich\nPhilipp Tok & Stefan Hasler\n\nPS: Im Oktober folgt die Hausschrift für euren Rechner.",
+      "body": "Liebe Mitarbeitende,\n\nab heute stellen wir euch monatlich ein Werkzeug vor, das die tägliche Arbeit erleichtert und unseren gemeinsamen Auftritt stärkt. Den Anfang macht die E-Mail-Signatur:\n\nJede Mail aus dem Haus ist ein kleiner Auftritt des Goetheanum — und zugleich die Stimme eines Menschen. Beides ist in drei Minuten eingerichtet:\n\n1. Öffnen: werkzeuge.goetheanum.ch/signatur\n2. Name und Angaben eintragen — die Vorschau zeigt sofort das Ergebnis\n3. Kopieren, in Outlook oder Apple Mail einsetzen, fertig.\n\nZwei Zeilen sind gesetzt, alles Weitere wählst du selbst — die Signatur ist deine. Auf der Seite warten dazu elf Handgriffe für Mails, die gelesen werden — und warum Bilder in der Signatur stören.\n\nWenn etwas klemmt: einfach antworten, wir lesen mit.\n\nHerzlich\nPhilipp Tok & Stefan Hasler\n\nPS: Im November folgt die Hausschrift für euren Rechner.",
       "anhang": {
         "titel": "Elf Handgriffe für Mails, die gelesen werden",
         "quelle": "apps/signatur-generator/ (PDF-Knopf vorhanden)",
@@ -169,12 +169,12 @@
     {
       "id": "2026-10-schriften",
       "pos": 2,
-      "monat": "Oktober 2026",
+      "monat": "November 2026",
       "status": "entwurf",
       "werkzeuge": [
         "schriften"
       ],
-      "anlass": "Die Stimme des Hauses auf jeden Rechner; Voraussetzung für November",
+      "anlass": "Die Stimme des Hauses auf jeden Rechner; Voraussetzung für Dezember",
       "betreff": "",
       "body": "",
       "anhang": {
@@ -187,12 +187,12 @@
     {
       "id": "2026-11-powerpoint",
       "pos": 3,
-      "monat": "November 2026",
+      "monat": "Dezember 2026",
       "status": "entwurf",
       "werkzeuge": [
         "powerpoint"
       ],
-      "anlass": "Jahresberichte, Gremien, Tagungen; baut auf Oktober auf",
+      "anlass": "Jahresberichte, Gremien, Tagungen; baut auf November auf",
       "betreff": "",
       "body": "",
       "anhang": {
@@ -205,7 +205,7 @@
     {
       "id": "2026-12-wallpaper",
       "pos": 4,
-      "monat": "Dezember 2026",
+      "monat": "Januar 2027",
       "status": "entwurf",
       "werkzeuge": [
         "wallpaper"
@@ -223,7 +223,7 @@
     {
       "id": "2027-01-visitenkarten",
       "pos": 5,
-      "monat": "Januar 2027",
+      "monat": "Februar 2027",
       "status": "entwurf",
       "werkzeuge": [
         "visitenkarten"
@@ -241,7 +241,7 @@
     {
       "id": "2027-02-logos",
       "pos": 6,
-      "monat": "Februar 2027",
+      "monat": "März 2027",
       "status": "entwurf",
       "werkzeuge": [
         "logo-generator"
@@ -259,7 +259,7 @@
     {
       "id": "2027-03-qr",
       "pos": 7,
-      "monat": "März 2027",
+      "monat": "April 2027",
       "status": "entwurf",
       "werkzeuge": [
         "qr-generator"
@@ -277,7 +277,7 @@
     {
       "id": "2027-04-karten",
       "pos": 8,
-      "monat": "April 2027",
+      "monat": "Mai 2027",
       "status": "entwurf",
       "werkzeuge": [
         "karten"
@@ -295,7 +295,7 @@
     {
       "id": "2027-05-uebersetzungen",
       "pos": 9,
-      "monat": "Mai 2027",
+      "monat": "Juni 2027",
       "status": "entwurf",
       "werkzeuge": [
         "uebersetzungen"
@@ -313,7 +313,7 @@
     {
       "id": "2027-06-icons",
       "pos": 10,
-      "monat": "Juni 2027",
+      "monat": "Juli 2027",
       "status": "entwurf",
       "werkzeuge": [
         "icons"
