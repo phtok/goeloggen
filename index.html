@@ -293,10 +293,9 @@
     // Gruppen nach Anlass: Zugehörigkeit aus tools.json → gruppen, Folge innerhalb
     // der Gruppe aus der Reihenfolge oben. Nicht Zugeordnetes läuft in die letzte Gruppe.
     grid.className = "gruppen";
-    // Feature: ein Werkzeug gross vorn (tools.json → gruppen.feature), in seiner Gruppe nicht doppelt.
+    // Feature: ein Werkzeug gross vorn (tools.json → gruppen.feature); es bleibt auch in seiner Gruppe.
     var feat = tools.filter(function(t){ return t.slug === man.gruppen.feature; })[0];
     if (feat) {
-      tools = tools.filter(function(t){ return t !== feat; });
       var fs = document.createElement("section");
       fs.className = "feature"; fs.setAttribute("aria-label", "Aktuell");
       var ft = tile(feat), fx = document.createElement("div");

@@ -837,7 +837,7 @@
     "aus": { "schublade": ["lt-programm", "lt-reader", "design-system"], "karten": ["design-system", "lt-programm", "lt-reader", "kurzlink", "programmheft"] }
   },
   "gruppen": {
-    "$hinweis": "Gruppen der Startseite nach Anlass (Entscheid Auftraggeber, 7. Oktober 2026). Zugehörigkeit hier; die Folge innerhalb einer Gruppe kommt aus reihenfolge.karten. Nicht Zugeordnetes erscheint in der letzten Gruppe. id = Sprunganker; muss zu data-onpage in index.html passen. feature = Slug des Werkzeugs, das gross vorn steht (in seiner Gruppe dann nicht doppelt); leer = keins.",
+    "$hinweis": "Gruppen der Startseite nach Anlass (Entscheid Auftraggeber, 7. Oktober 2026). Zugehörigkeit hier; die Folge innerhalb einer Gruppe kommt aus reihenfolge.karten. Nicht Zugeordnetes erscheint in der letzten Gruppe. id = Sprunganker; muss zu data-onpage in index.html passen. feature = Slug des Werkzeugs, das gross vorn steht (steht zusätzlich in seiner Gruppe); leer = keins.",
     "feature": "signatur",
     "startseite": [
       { "id": "jeden-tag", "titel": "Jeden Tag", "slugs": ["logo-generator", "qr-generator", "powerpoint", "karten", "programmheft", "icons"] },
