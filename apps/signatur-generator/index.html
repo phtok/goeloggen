@@ -641,8 +641,9 @@ function collectLines() {
   const name = val("name");
   // Logo ohne Adresse (z. B. ‹Minimal›): Wo das Logo nicht ankommt (Gmail,
   // Outlook), trägt die Namenszeile den Namen des Hauses (Entscheid 15. 10. 2026).
-  const haus = logoAktiv() && !isOn("address") ? " · Goetheanum" : "";
-  add("name", "person", "Name", 1, name ? [{ html: "<span style=\"font-weight:600;\">" + esc(name) + "</span>" + haus, text: name + haus }] : []);
+  const haus = logoAktiv() && !isOn("address");
+  add("name", "person", "Name", 1, name ? [{ html: "<span style=\"font-weight:600;\">" + esc(name) + "</span>" + (haus ? " · " + goetheanumLink() : ""),
+    text: name + (haus ? " · Goetheanum" : "") }] : []);
   add("role", "person", "Funktion", 1, plainRows(inLang(splitLines(val("role")), splitLines(val("roleEn")))));
   add("unit", "person", state.unitKind === "bereich" ? "Bereich" : "Sektion", 2, plainRows(unitLines()));
   // Websites gehören zur Sektion/zum Bereich; goetheanum.ch steckt im Schlusswort.
@@ -666,18 +667,19 @@ function collectLines() {
   // färbt eine verlinkte Adresse blau.
   const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
   const addrHtml = wortSpans(addr);
-  // Mit Logo beginnt die Adresse mit ‹Goetheanum›, halbfett (G01: genau ein
-  // Merkmal): Wo das Logo nicht ankommt, steht der Name trotzdem gut sichtbar
-  // da (Beschluss 7. 10. 2026).
+  // Mit Logo beginnt die Adresse mit ‹Goetheanum› als blauer Link: Wo das
+  // Logo nicht ankommt, steht der Name trotzdem lesbar und verlinkt da
+  // (Beschluss 7. 10. 2026, verlinkt seit 15. 10. 2026).
   add("address", "adresse", "Adresse", "adr", logoAktiv()
-    ? [{ html: "<span style=\"font-weight:600;\">Goetheanum</span> · " + addrHtml, text: "Goetheanum · " + addr }]
+    ? [{ html: goetheanumLink() + " · " + addrHtml, text: "Goetheanum · " + addr }]
     : [{ html: addrHtml, text: addr }]);
   return L;
 }
 function defaultOn(id) { return id === "hochschule" ? state.unitKind === "sektion" : true; }
-function isOn(id) { return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id); }
+// ‹Goetheanum› steht in jeder Signatur (Entscheid 15. 10. 2026): nicht abschaltbar.
+function isOn(id) { if (id === "goetheanum") return true; return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id); }
 // Mit Logo braucht es den Namen als Text, wo das Logo nicht ankommt: in der
-// Adresse (halbfett vorn) oder, ist sie aus, hinter dem Namen.
+// Adresse (vorn) oder, ist sie aus, hinter dem Namen – als blauer Link.
 function logoAktiv() { return logoWanted() && isOn("goetheanum"); }
 
 /* ---------- Schriftzug oder Logo ---------- */
@@ -687,7 +689,11 @@ function logoAktiv() { return logoWanted() && isOn("goetheanum"); }
 // Hintergrundbild lässt sie dunkel (Test 7. 10. 2026). Outlook im Browser
 // zeigt es nicht und verwirft es beim Einfügen in den Signatur-Editor; das
 // klassische Outlook bekommt über die mso-Weiche den Textlink. In allen Fällen
-// steht der Name als Text da: halbfett in der Adresse oder hinter dem Namen.
+// steht der Name als blauer Text-Link da: in der Adresse oder hinter dem Namen.
+// ‹Goetheanum› als Text-Link in Mail-Blau – Ersatz, wo das Logo nicht ankommt.
+function goetheanumLink() {
+  return "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">Goetheanum</a>";
+}
 function goetheanumHtml() {
   const link = inner => "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" + inner + "</a>";
   if (!logoAktiv()) return link("Goetheanum");
@@ -700,6 +706,18 @@ function goetheanumHtml() {
 /* ---------- Signatur: einfaches div/br-Markup, alle Stile inline ---------- */
 // Keine Tabellen, keine <p>, kein Bild, keine Hintergrundfarbe. Fliesstext ohne color
 // (erbt Theme des Mailprogramms → Dark-Mode-fest); Mail-Blau nur für Goetheanum und Web-Links.
+// Zweisprachig: Hochschule und Gesellschaft erst beide deutsch, dann beide
+// englisch (Entscheid 15. 10. 2026) – nicht Name für Name abwechselnd. Greift
+// nur, wo jede Zeile als Paar untereinander steht (zu lang für eine Zeile).
+function hausSprachen(lines) {
+  const haus = lines.filter(l => l.group === "haus");
+  if (state.lang !== "de-en" || haus.length < 2 || haus.some(l => l.rows.length !== 2)) return lines;
+  const rows = haus.map(l => l.rows[0]).concat(haus.map(l => l.rows[1]));
+  const i = lines.indexOf(haus[0]);
+  return lines.filter(l => l.group !== "haus").slice(0, i)
+    .concat([{ id: "haus", group: "haus", rows }])
+    .concat(lines.filter(l => l.group !== "haus").slice(i));
+}
 function buildSignature() {
   const rows = []; // {html, text} oder {gap:true}
   const push = (html, text) => rows.push({ html, text });
@@ -733,7 +751,7 @@ function buildSignature() {
   // Variante B2 (15. 10. 2026): Telefon nur mit kleiner Leerzeile an der
   // Person; über ‹Goetheanum› doppelt, darunter klein – Schriftzug wie Logo.
   let group = null;
-  collectLines().filter(l => isOn(l.id)).forEach(l => {
+  hausSprachen(collectLines().filter(l => isOn(l.id))).forEach(l => {
     if (l.group !== group) {
       if (group === "person" && l.group === "kontakt") gap(true);
       else if (l.group === "marke") { gap(); gap(); }
@@ -772,7 +790,7 @@ function renderZeilen() {
     group = l.group;
     const on = isOn(l.id), id = "z-" + l.id;
     html += "<li class=\"" + (on ? "" : "aus") + "\"><label for=\"" + id + "\">" +
-      "<input type=\"checkbox\" id=\"" + id + "\" data-zeile=\"" + l.id + "\"" + (on ? " checked" : "") + " />" +
+      "<input type=\"checkbox\" id=\"" + id + "\" data-zeile=\"" + l.id + "\"" + (on ? " checked" : "") + (l.id === "goetheanum" ? " disabled" : "") + " />" +
       "<span class=\"z-text\">" + l.rows.map(r => esc(r.text)).join("<br>") +
       (l.rows[0].text === l.label ? "" : "<small>" + esc(l.label) + "</small>") + "</span></label>" +
       (l.step ? "<button type=\"button\" class=\"z-edit\" data-goto=\"" + l.step + "\" aria-label=\"" + esc(l.label) + " ändern\">ändern</button>" : "<span></span>") +
