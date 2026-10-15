@@ -651,6 +651,11 @@ function collectLines() {
   const tel = ["phone", "mobile"].map(val).filter(Boolean)
     .filter((t, i, a) => a.indexOf(t) === i).join(" · ");
   add("tel", "kontakt", "Telefon", 1, tel ? [{ html: wortSpans(tel), text: tel }] : []);
+  // ‹Goetheanum› steht über Hochschule und Gesellschaft: das Haus vor seinen
+  // Institutionen (Entscheid Auftraggeber 15. 10. 2026, Variante B2).
+  // ‹Goetheanum› ist selbst der Link zur Website; das Blau zeichnet ihn aus.
+  // Im Klartext gibt es keine Links, dort steht die Adresse dabei.
+  add("goetheanum", "marke", "Goetheanum", 0, [{ html: goetheanumHtml(), text: (logoAktiv() ? "" : "Goetheanum · ") + HAUS_WEB }]);
   add("hochschule", "haus", "Hochschule", 2, plainRows(inLang([term("hochschule", "de")], [term("hochschule", "en")])));
   add("aag", "haus", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
   // Adresse auf EINER Zeile (mit Mittelpunkt), als reiner Text: Der
@@ -664,15 +669,12 @@ function collectLines() {
   add("address", "adresse", "Adresse", "adr", logoAktiv()
     ? [{ html: "<span style=\"font-weight:600;\">Goetheanum</span> · " + addrHtml, text: "Goetheanum · " + addr }]
     : [{ html: addrHtml, text: addr }]);
-  // ‹Goetheanum› ist selbst der Link zur Website; das Blau zeichnet ihn aus.
-  // Im Klartext gibt es keine Links, dort steht die Adresse dabei.
-  add("goetheanum", "marke", "Goetheanum", 0, [{ html: goetheanumHtml(), text: (logoAktiv() ? "" : "Goetheanum · ") + HAUS_WEB }]);
   return L;
 }
 function defaultOn(id) { return id === "hochschule" ? state.unitKind === "sektion" : true; }
 function isOn(id) { return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id); }
 // Das Logo kommt nur zusammen mit der Adresse: Sie trägt dann den Namen als
-// Ersatz. Ohne Adresse (z. B. ‹Minimal›) schliesst der blaue Schriftzug.
+// Ersatz. Ohne Adresse (z. B. ‹Minimal›) steht der blaue Schriftzug.
 function logoAktiv() { return logoWanted() && isOn("address"); }
 
 /* ---------- Schriftzug oder Logo ---------- */
@@ -698,7 +700,7 @@ function goetheanumHtml() {
 function buildSignature() {
   const rows = []; // {html, text} oder {gap:true}
   const push = (html, text) => rows.push({ html, text });
-  const gap = () => rows.push({ gap: true });
+  const gap = (klein) => rows.push({ gap: klein ? "klein" : "voll" });
 
   // PS zuoberst – es gehört zum Anschreiben, nicht zur Signatur. Deshalb OHNE
   // eigene Schrift/Grösse: Es erbt den Mailtext des Clients und steht so in
@@ -724,23 +726,35 @@ function buildSignature() {
   // Abgrenzender Unterstrich – immer, auch ohne PS (trennt Mailtext und Signatur).
   push("_", "_");
 
-  // Blöcke je mit Leerzeile abgesetzt (siehe collectLines).
+  // Blöcke je mit Leerzeile abgesetzt (siehe collectLines). Abstände nach
+  // Variante B2 (15. 10. 2026): Telefon nur mit kleiner Leerzeile an der
+  // Person; über ‹Goetheanum› doppelt, darunter klein – Schriftzug wie Logo.
   let group = null;
   collectLines().filter(l => isOn(l.id)).forEach(l => {
     if (l.group !== group) {
-      gap();
-      // Das Logo bekommt doppelten Abstand: es schliesst, es gehört nicht zur Adresse.
-      if (l.group === "marke" && logoAktiv()) gap();
+      if (group === "person" && l.group === "kontakt") gap(true);
+      else if (l.group === "marke") { gap(); gap(); }
+      else if (group === "marke") gap(true);
+      else gap();
       group = l.group;
     }
     l.rows.forEach(r => push(r.html, r.text));
   });
+  while (rows.length && rows[rows.length - 1].gap) rows.pop();
 
-  const hl = [], tl = [];
-  rows.forEach(r => { if (r.gap) { hl.push(""); tl.push(""); } else { hl.push(r.html); tl.push(r.text); } });
-  while (hl.length && hl[hl.length - 1] === "") { hl.pop(); tl.pop(); }
-
-  const html = psHtml + "<div style=\"font-family:" + CFONT + ";font-size:" + state.px + "px;line-height:1.3;\">" + (hl.join("<br>") || "&nbsp;") + "</div>";
+  // Eine kleine Leerzeile lässt sich mit <br> nicht setzen (die Zeile hat
+  // immer volle Höhe): Dort wird der Block geteilt und ein niedriger Abstand-
+  // Div eingeschoben. Im Klartext fällt sie weg.
+  const div = "<div style=\"font-family:" + CFONT + ";font-size:" + state.px + "px;line-height:1.3;\">";
+  const klein = Math.round(state.px * 0.65);
+  const zwischen = "<div style=\"font-size:" + klein + "px;line-height:" + klein + "px;mso-line-height-rule:exactly;\">&nbsp;</div>";
+  const teile = [[]], tl = [];
+  rows.forEach(r => {
+    if (r.gap === "klein") { teile.push([]); return; }
+    teile[teile.length - 1].push(r.gap ? "" : r.html);
+    tl.push(r.gap ? "" : r.text);
+  });
+  const html = psHtml + (teile.map(t => div + (t.join("<br>") || "&nbsp;") + "</div>").join(zwischen));
   const text = psText.concat(tl).join("\n");
   return { html, text };
 }
