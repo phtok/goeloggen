@@ -833,8 +833,8 @@
   "reihenfolge": {
     "$hinweis": "Vom Sortierer gepflegte Reihenfolgen (Slugs). Startseite und Schublade lesen sie; fehlt ein Eintrag, gilt die eingebaute Vorgabe. aus = je Fläche ausgeblendet (bleibt per Direktlink und in der Intern-Ansicht erreichbar). Verlauf = Git.",
     "schublade": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "qr-generator", "kurzlink", "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint", "wallpaper", "programmheft", "familie", "abo"],
-    "karten": ["logo-generator", "qr-generator", "powerpoint", "karten", "icons", "uebersetzungen", "sektionsfarben", "typografie", "schriften", "signatur", "visitenkarten", "wallpaper", "abo", "familie"],
-    "aus": { "schublade": ["lt-programm", "design-system"], "karten": ["design-system", "lt-programm", "kurzlink", "programmheft"] }
+    "karten": ["qr-generator", "logo-generator", "powerpoint", "karten", "icons", "uebersetzungen", "sektionsfarben", "typografie", "schriften", "signatur", "visitenkarten", "wallpaper", "abo", "familie"],
+    "aus": { "schublade": ["lt-programm", "design-system", "lt-reader"], "karten": ["design-system", "lt-programm", "kurzlink", "programmheft", "lt-reader"] }
   },
   "gruppen": {
     "$hinweis": "Gruppen der Startseite nach Anlass (Entscheid Auftraggeber, 7. Oktober 2026). Zugehörigkeit hier; die Folge innerhalb einer Gruppe kommt aus reihenfolge.karten. Nicht Zugeordnetes erscheint in der letzten Gruppe. id = Sprunganker; muss zu data-onpage in index.html passen.",
