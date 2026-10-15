@@ -1,9 +1,9 @@
 /* Ordnen-Modus der Startseite (index.html?ordnen).
    Zeigt die Startseite so, wie sie live steht – dieselben Karten, dieselbe
    Schublade –, und legt die Sortier-Griffe direkt darauf: verschieben (Ziehen
-   oder Pfeile), ausblenden, wieder einblenden. Speichern schreibt
-   tools.json → reihenfolge über die Edge Function sortierer-commit (Verlauf =
-   Git). Ersetzt die getrennte Listen-Ansicht des alten Sortierers.
+   oder Pfeile), ausblenden, wieder einblenden, eine Karte hervorheben.
+   Speichern schreibt tools.json → reihenfolge und gruppen.feature über die
+   Edge Function sortierer-commit (Verlauf = Git). Ersetzt die getrennte Listen-Ansicht des alten Sortierers.
    Aufruf: window.goeOrdnen(manifest, tile) – tile(t) baut die echte Karte. */
 (function () {
   "use strict";
@@ -46,11 +46,18 @@
       });
       return s;
     }
-    var datei = bereinigt(man.reihenfolge);
+    // Hervorgehoben (tools.json → gruppen.feature): nur ein öffentliches,
+    // eingeblendetes Werkzeug; sonst keins.
+    function mitFeature(s, f) {
+      s.feature = (f && slugs.indexOf(f) >= 0 && s.aus.karten.indexOf(f) < 0) ? f : "";
+      return s;
+    }
+    var datei = mitFeature(bereinigt(man.reihenfolge), man.gruppen && man.gruppen.feature);
     var stand = kopie(datei);
     try {
       var e = JSON.parse(localStorage.getItem(LS) || "null");
-      if (e && e.an && e.aus) stand = bereinigt({ karten: e.an.karten, schublade: e.an.schublade, aus: e.aus });
+      if (e && e.an && e.aus) stand = mitFeature(bereinigt({ karten: e.an.karten, schublade: e.an.schublade, aus: e.aus }),
+        "feature" in e ? e.feature : datei.feature);
     } catch (x) {}
     var flaeche = "karten";
     try { if (sessionStorage.getItem(LS + "-flaeche") === "schublade") flaeche = "schublade"; } catch (x) {}
@@ -110,13 +117,15 @@
       cards.innerHTML = ""; schublade.innerHTML = "";
       if (flaeche === "karten") {
         an.forEach(function (s, i) {
-          var w = document.createElement("div");
-          w.className = "ord-item"; w.draggable = true; w.setAttribute("data-i", i);
+          var w = document.createElement("div"), f = stand.feature === s;
+          w.className = "ord-item" + (f ? " ord-feature" : ""); w.draggable = true; w.setAttribute("data-i", i);
           var t = tile(bySlug[s]); t.draggable = false; t.tabIndex = -1;
           w.appendChild(t);
           w.insertAdjacentHTML("beforeend", '<div class="ord-ctl">' +
             knopf("vor", i, "‹", name(s) + " nach vorn", i === 0) +
             knopf("nach", i, "›", name(s) + " nach hinten", i === n - 1) +
+            '<button class="btn ord-k" type="button" data-akt="feature" data-i="' + i + '" aria-pressed="' + f + '">' +
+              (f ? "Hervorgehoben" : "Hervorheben") + '</button>' +
             knopf("aus", i, "Ausblenden", name(s) + " ausblenden") + '</div>');
           cards.appendChild(w);
         });
@@ -172,8 +181,15 @@
         var z = akt === "vor" ? i - 1 : i + 1;
         aendern(function (an) { if (z >= 0 && z < an.length) an.splice(z, 0, an.splice(i, 1)[0]); },
           '.ord-item[data-i="' + z + '"] [data-akt="' + akt + '"]');
+      } else if (akt === "feature") {
+        // Ein Klick hebt hervor, der zweite nimmt es zurück; es gibt höchstens eins.
+        aendern(function (an) { stand.feature = stand.feature === an[i] ? "" : an[i]; },
+          '.ord-item[data-i="' + i + '"] [data-akt="feature"]');
       } else if (akt === "aus") {
-        aendern(function (an, aus) { aus.push(an.splice(i, 1)[0]); },
+        aendern(function (an, aus) {
+          if (flaeche === "karten" && stand.feature === an[i]) stand.feature = "";
+          aus.push(an.splice(i, 1)[0]);
+        },
           '.ord-item[data-i="' + i + '"] [data-akt="aus"]');
       } else if (akt === "ein") {
         aendern(function (an, aus) { an.push(aus.splice(i, 1)[0]); },
@@ -211,7 +227,7 @@
     function nutzlast() {
       return { reihenfolge: { schublade: stand.an.schublade, karten: stand.an.karten,
         aus: { schublade: stand.aus.schublade.concat(ruhend.schublade || []),
-               karten: stand.aus.karten.concat(ruhend.karten || []) } } };
+               karten: stand.aus.karten.concat(ruhend.karten || []) } }, feature: stand.feature };
     }
     var speichernBtn = bar.querySelector('[data-tu="speichern"]');
     speichernBtn.addEventListener("click", function () {
