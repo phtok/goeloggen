@@ -50,8 +50,8 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 
 Reihenfolge der Blöcke (Variante B2, 15. 10. 2026): wer (Name, Funktion,
 Sektion/Bereich, deren Websites) · kleine Leerzeile · Telefon (eine Zeile) ·
-zwei Leerzeilen · ‹Goetheanum› (Schriftzug, danach kleine Leerzeile; oder Logo,
-danach eine Leerzeile) · Hochschule, Gesellschaft · Adresse. Zweisprachig stehen kurze
+zwei Leerzeilen · ‹Goetheanum› (Schriftzug oder Logo) · kleine Leerzeile ·
+Hochschule, Gesellschaft · Adresse. Zweisprachig stehen kurze
 Paare auf einer Zeile (bis 56 Zeichen), lange untereinander.
 
 | Person | Eingabe | Erwartet |
