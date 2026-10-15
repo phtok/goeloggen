@@ -195,6 +195,10 @@
 
   .privacy{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.5;margin-top:var(--s3)}
   /* Backend-Versuch: Logo-Option, nur in der Intern-Ansicht sichtbar (JS). */
+  /* Unterpunkt der Zeile ‹Goetheanum›: eingerückt auf die Textkante der Zeilen. */
+  .zeilen li.z-logo{display:block;min-height:0}
+  .zeilen li.z-logo:hover{background:none}
+  .zeilen li.z-logo .logo-opt{display:flex;border:0;padding:0;margin:0 0 var(--s2) calc(22px + 2 * var(--s1) + var(--s2))}
   .logo-opt{display:flex;gap:var(--s2);align-items:flex-start;margin-top:var(--s4);
     padding:var(--s3);border:1px dashed var(--line);border-radius:var(--r-card);cursor:pointer}
   .logo-opt input{margin-top:2px;width:16px;height:16px;flex:none}
@@ -757,7 +761,18 @@ function renderZeilen() {
       (l.step ? "<button type=\"button\" class=\"z-edit\" data-goto=\"" + l.step + "\" aria-label=\"" + esc(l.label) + " ändern\">ändern</button>" : "<span></span>") +
       "</li>";
   });
+  // Die Logo-Option hängt als Unterpunkt unter der Zeile ‹Goetheanum›: vor dem
+  // Neuzeichnen herauslösen (behält Zustand und Listener), danach einsetzen.
+  const logoOpt = document.getElementById("logoOpt");
+  if (logoOpt && ul.contains(logoOpt)) logoOpt.remove();
   ul.innerHTML = html;
+  const goe = ul.querySelector("[data-zeile=\"goetheanum\"]");
+  if (logoOpt && goe) {
+    const li = document.createElement("li");
+    li.className = "z-logo"; li.hidden = !isOn("goetheanum");
+    li.appendChild(logoOpt);
+    goe.closest("li").after(li);
+  }
   if (focusId) { const f = ul.querySelector("[data-zeile=\"" + focusId + "\"]"); if (f) f.focus(); }
 }
 document.getElementById("zeilen").addEventListener("change", e => {
