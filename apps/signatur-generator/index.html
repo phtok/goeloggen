@@ -690,9 +690,13 @@ function logoAktiv() { return logoWanted() && isOn("goetheanum"); }
 // zeigt es nicht und verwirft es beim Einfügen in den Signatur-Editor; das
 // klassische Outlook bekommt über die mso-Weiche den Textlink. In allen Fällen
 // steht der Name als blauer Text-Link da: in der Adresse oder hinter dem Namen.
-// ‹Goetheanum› als Text-Link in Mail-Blau – Ersatz, wo das Logo nicht ankommt.
+// ‹Goetheanum› als Text-Link – Ersatz, wo das Logo nicht ankommt (Gmail,
+// Outlook). Grau und halbfett, damit er neben dem blauen Logo nicht als
+// zweite Marke liest (Entscheid 16. 10. 2026). #767676: 4.5:1 auf Weiss,
+// auch auf dunklem Grund lesbar.
+const ERSATZ_GRAU = "#767676"; // ds-ok: Artefakt-Farbe im Mail-Output
 function goetheanumLink() {
-  return "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">Goetheanum</a>";
+  return "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + ERSATZ_GRAU + ";font-weight:600;text-decoration:none;\">Goetheanum</a>";
 }
 function goetheanumHtml() {
   const link = inner => "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" + inner + "</a>";
