@@ -1254,13 +1254,15 @@ function buildEmpfPdf(d, F) {
 
   // Titelei links
   let y = H - M - 8;
-  T(M, y, "ELF EMPFEHLUNGEN", 8.5, "F3", GOLD, 0.9); y -= 32;
+  T(M, y, "Elf Empfehlungen", 9, "F3", GOLD, 0.25); y -= 32;   // Kicker normal, nicht versal (G05)
   T(M, y, "Diese Mail wird gelesen", 22, "F3", INK); y -= 24;
   for (const l of pdfWrap(d.lede, colW, 10, ledeTab)) { T(M, y, l, 10, "F4", MUT); y -= 15; }
   const top = Math.min(y, illuBottom) - 26, bottom = M + 34;
   let cx = M, cy = top;
   d.items.forEach((it, idx) => {
-    if (idx === 6) { cx = M + colW + GAP; cy = top; }   // Umbruch nach der 6. Empfehlung
+    // Umbruch nach der 6. Empfehlung – nur, wenn die linke Spalte nicht schon
+    // vorher übergelaufen ist; sonst lägen zwei Blöcke übereinander.
+    if (idx === 6 && cx === M) { cx = M + colW + GAP; cy = top; }
     const bodyLines = it.body.flatMap(p => pdfWrap(p, colW, 9.2, bodyTab).concat([" "])); bodyLines.pop();
     const blockH = 18 + bodyLines.length * 13.4 + 24;
     if (cy - blockH < bottom && cx === M) { cx = M + colW + GAP; cy = top; }
@@ -1275,7 +1277,7 @@ function buildEmpfPdf(d, F) {
   });
   if (d.ps) T(cx, cy, d.ps, 9.2, "F1", GOLD);
   T(M, M - 20, "werkzeuge.goetheanum.ch/signatur", 7.5, "F1", MUT);
-  const stamp = "Stand Juli 2026";
+  const stamp = "Stand Oktober 2026";
   T(W - M - strW(stamp, 7.5, bodyTab), M - 20, stamp, 7.5, "F1", MUT);
 
   // ---- Objekte (dynamisch: eingebettete Fonts brauchen je 3 Objekte) ----
@@ -1329,7 +1331,13 @@ function collectEmpf() {
     items: [...document.querySelectorAll("#empfehlungen .empf-item")].map((it, i) => ({
       num: it.dataset.ico || String(i + 1),
       title: it.querySelector("h3").textContent.replace(/\s+/g, " ").trim(),
-      body: [...it.querySelectorAll("p")].map(p => p.textContent.replace(/\s+/g, " ").trim())
+      // Sprung- und Verweis-Links der Seite («→ PS eintragen») führen im PDF
+      // nirgendwohin, und den Pfeil kennt der PDF-Zeichensatz nicht: weg damit.
+      body: [...it.querySelectorAll("p")].map(p => {
+        const c = p.cloneNode(true);
+        c.querySelectorAll("a").forEach(a => { if (/^\s*→/.test(a.textContent)) a.remove(); });
+        return c.textContent.replace(/\s+/g, " ").trim();
+      })
     }))
   };
 }
