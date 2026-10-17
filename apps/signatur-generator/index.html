@@ -1179,7 +1179,7 @@ function buildEmpfPdf(d, F) {
   const W = 595.28, H = 841.89, M = 56, GAP = 30, colW = (W - 2 * M - GAP) / 2;
   const INK = "0.14 0.15 0.17 rg", MUT = "0.42 0.44 0.47 rg", GOLD = "0.54 0.40 0.16 rg";
   const hausTab = F.deutlich ? GW : null, ledeTab = F.klar ? KW : null, bodyTab = F.source ? SW : null;
-  const ops = [];
+  const ops = [], annots = [];   // annots: klickbare Flächen {x,y,w,h,url}
   const T = (x, y, t, size, font, color, tc) =>
     ops.push("BT /" + font + " " + size + " Tf " + (tc || 0) + " Tc " + color +
       " 1 0 0 1 " + (+x.toFixed(2)) + " " + (+y.toFixed(2)) + " Tm (" + pdfWin(t) + ") Tj ET");
@@ -1264,7 +1264,8 @@ function buildEmpfPdf(d, F) {
     // vorher übergelaufen ist; sonst lägen zwei Blöcke übereinander.
     if (idx === 6 && cx === M) { cx = M + colW + GAP; cy = top; }
     const bodyLines = it.body.flatMap(p => pdfWrap(p, colW, 9.2, bodyTab).concat([" "])); bodyLines.pop();
-    const blockH = 18 + bodyLines.length * 13.4 + 24;
+    const links = it.links || [];
+    const blockH = 18 + (bodyLines.length + links.length) * 13.4 + 24;
     if (cy - blockH < bottom && cx === M) { cx = M + colW + GAP; cy = top; }
     icon(it.num, cx, cy);
     T(cx + 22, cy, it.title, 11.5, "F3", INK);
@@ -1272,6 +1273,12 @@ function buildEmpfPdf(d, F) {
     for (const l of bodyLines) {
       if (l === " ") { cy -= 5; continue; }
       T(cx, cy, l, 9.2, "F1", INK); cy -= 13.4;
+    }
+    for (const ln of links) {
+      const t = "› " + ln.text;
+      T(cx, cy, t, 9.2, "F1", GOLD);
+      annots.push({ x: cx, y: cy - 3, w: strW(t, 9.2, bodyTab), h: 13, url: ln.url });
+      cy -= 13.4;
     }
     cy -= 24;
   });
@@ -1295,13 +1302,15 @@ function buildEmpfPdf(d, F) {
   ];
   let next = 5;
   for (const fd of FONTDEFS) { fd.obj = next; next += fd.bytes ? 3 : 1; }
+  annots.forEach(a => { a.obj = next++; });
   const nObjs = next - 1;
   const resStr = FONTDEFS.map(fd => "/" + fd.res + " " + fd.obj + " 0 R").join(" ");
 
   push(latin("%PDF-1.4\n"));
   pushObj(1, "<< /Type /Catalog /Pages 2 0 R >>");
   pushObj(2, "<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
-  pushObj(3, "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 " + W + " " + H + "] /Resources << /Font << " + resStr + " >> >> /Contents 4 0 R >>");
+  pushObj(3, "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 " + W + " " + H + "] /Resources << /Font << " + resStr + " >> >>" +
+    (annots.length ? " /Annots [" + annots.map(a => a.obj + " 0 R").join(" ") + "]" : "") + " /Contents 4 0 R >>");
   pushObj(4, "<< /Length " + content.length + " >>\nstream\n" + content + "\nendstream");
   for (const fd of FONTDEFS) {
     if (!fd.bytes) { pushObj(fd.obj, "<< /Type /Font /Subtype /Type1 /BaseFont /" + fd.fb + " /Encoding /WinAnsiEncoding >>"); continue; }
@@ -1311,6 +1320,10 @@ function buildEmpfPdf(d, F) {
     push(latin((fd.obj + 2) + " 0 obj\n<< /Length " + fd.bytes.length + " /Length1 " + fd.bytes.length + " >>\nstream\n"));
     push(fd.bytes);
     push(latin("\nendstream\nendobj\n"));
+  }
+  for (const a of annots) {
+    pushObj(a.obj, "<< /Type /Annot /Subtype /Link /Border [0 0 0] /Rect [" + [a.x, a.y, a.x + a.w, a.y + a.h].map(fxn).join(" ") +
+      "] /A << /S /URI /URI (" + a.url.replace(/[()\\]/g, m => "\\" + m) + ") >> >>");
   }
   const xref = pos;
   let xr = "xref\n0 " + (nObjs + 1) + "\n0000000000 65535 f \n";
@@ -1322,6 +1335,7 @@ function buildEmpfPdf(d, F) {
   return out;
 }
 /* PDF-END */
+const PDF_BASIS = "https://werkzeuge.goetheanum.ch/apps/signatur-generator/";
 function collectEmpf() {
   const head = document.querySelector("#empfehlungen .empf-head");
   const psEl = document.querySelector("#empfehlungen .empf-ps");
@@ -1331,13 +1345,18 @@ function collectEmpf() {
     items: [...document.querySelectorAll("#empfehlungen .empf-item")].map((it, i) => ({
       num: it.dataset.ico || String(i + 1),
       title: it.querySelector("h3").textContent.replace(/\s+/g, " ").trim(),
-      // Sprung- und Verweis-Links der Seite («→ PS eintragen») führen im PDF
-      // nirgendwohin, und den Pfeil kennt der PDF-Zeichensatz nicht: weg damit.
+      // Verweis-Links der Seite («→ Was in der Schweiz gilt») kommen als eigene,
+      // klickbare Zeilen ins PDF – mit voller Adresse auf die Live-Seite; den
+      // Pfeil kennt der PDF-Zeichensatz nicht, dort steht ‹››.
       body: [...it.querySelectorAll("p")].map(p => {
         const c = p.cloneNode(true);
         c.querySelectorAll("a").forEach(a => { if (/^\s*→/.test(a.textContent)) a.remove(); });
         return c.textContent.replace(/\s+/g, " ").trim();
-      })
+      }),
+      links: [...it.querySelectorAll("p a")].filter(a => /^\s*→/.test(a.textContent)).map(a => ({
+        text: a.textContent.replace(/^\s*→\s*/, "").replace(/\s+/g, " ").trim(),
+        url: new URL(a.getAttribute("href"), PDF_BASIS).href
+      }))
     }))
   };
 }
@@ -1405,6 +1424,13 @@ if (TRACK_ON) {
 if (location.hostname === "werkzeuge.goetheanum.ch" && location.pathname.indexOf("/apps/signatur-generator") === 0) {
   try { history.replaceState(null, "", "/signatur/" + location.search + location.hash); } catch (e) {}
 }
+
+// Kommt jemand über einen Anker (z. B. aus dem PDF: #chFussnote), ist der
+// zugeklappte Abschnitt offen und im Blick.
+(function () {
+  const t = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (t && t.tagName === "DETAILS") { t.open = true; setTimeout(() => t.scrollIntoView(), 0); }
+})();
 
 const hadStored = loadStored();
 const hadQuery = applyQuery();
