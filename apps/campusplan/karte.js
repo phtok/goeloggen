@@ -10,17 +10,12 @@
 let kartentoolVersprechen = null;
 
 /* Lagen, die der Gästeplan anders setzt als der Katalog des Kartentools
-   (Blatt-mm). Toiletten: die Pille liegt im Katalog auf dem Grossen Saal und
-   rückt unter den Schriftzug. Nordgalerie, Jugendsektion und Bibliothek
-   nach Angabe des Auftraggebers (18. 10. 2026): die Nordgalerie links und
-   etwas höher als die Pädagogische Sektion; Jugendsektion und Bibliothek
-   teilen sich einen Eingang, die Jugendsektion gleich hinter der Tür, zur
-   Bibliothek führt ein langer Gang. */
+   (Blatt-mm). Toiletten: die Pille liegt im Katalog auf dem Grossen Saal; im
+   Gästeplan stehen beide oft zugleich, die Pille rückt darum unter den
+   Schriftzug. Korrekturen, die überall gelten, gehören in den Katalog
+   (tools/karten/extract-marker-positionen.py, KORREKTUREN). */
 const KATALOG_LAGEN = {
-  "wc-goetheanum": [197.24, 121.0],
-  "o6": [184.7, 130.6],
-  "s-jugend": [193.2, 108.2],
-  "o7": [199.6, 109.0]
+  "wc-goetheanum": [197.24, 121.0]
 };
 
 function kartentoolLaden() {

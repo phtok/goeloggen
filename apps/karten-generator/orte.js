@@ -500,15 +500,15 @@ const ORTE = [
     "marker": "15",
     "art": "ort",
     "kategorie": "saele",
-    "farbe": "rot",
+    "farbe": "blau",
     "label": {
       "de": "Foyer",
       "en": "Foyer"
     },
     "positionen": [
       [
-        198.47,
-        135.39
+        198.5,
+        134.2
       ]
     ],
     "gebaeude": "campusbau-53"
@@ -669,8 +669,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        191.33,
-        132.57
+        184.7,
+        130.6
       ]
     ],
     "gebaeude": "campusbau-53"
@@ -687,8 +687,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        193.21,
-        107.6
+        195.4,
+        107.8
       ]
     ],
     "gebaeude": "campusbau-52"
@@ -1267,8 +1267,8 @@ const ORTE = [
     },
     "positionen": [
       [
-        192.92,
-        109.33
+        191.0,
+        107.8
       ]
     ]
   },
