@@ -73,7 +73,7 @@ Anfrage ist alles zugänglich»).
 | Künstlerwohnung Edith Maryon | Unteres Eurythmiehaus, Rüttiweg 30, 1. Etage. | G2 | belegt |
 | Nordgalerie (Erdgeschoss) | Im Erdgeschoss: allgemeine Informationen zum Goetheanum und zu Rudolf Steiner. | AG (18. 10. 2026: «Nordgalerie ist im EG! Allgemeine Infos zum Goe und Steiner») | belegt durch Auftraggeber |
 | Foyer | Dauerausstellung zu den Sektionen der Hochschule und zur Geschichte des Goetheanum; während grosser Tagungen abgebaut. | AG (18. 10. 2026) · Lage im Bau geschätzt | belegt durch Auftraggeber |
-| Galerie, 1. Etage (eigener Ort, nicht die Nordgalerie) | *laufende Ausstellung, live* — z. B. «Ausstellung: Kosmische Botanik (Walther Roggenkamp 1926 bis 1995), bis 22. November» | SBK (https://sbk.goetheanum.org/veranstaltungen/ausstellungen und Einzelseite), Flyer («Kunstgalerie im Goetheanum, 1. Etage») · Öffnungszeiten = Zeiten des Baus (Annahme, zu bestätigen) | belegt, live |
+| Galerie, 1. Etage (eigener Ort, nicht die Nordgalerie) | *laufende Ausstellung, live* — z. B. «Ausstellung: Kosmische Botanik (Walther Roggenkamp 1926 bis 1995), bis 22. November» | SBK (https://sbk.goetheanum.org/veranstaltungen/ausstellungen und Einzelseite), Flyer («Kunstgalerie im Goetheanum, 1. Etage») · Öffnungszeiten = Zeiten des Baus (Auftraggeber, 18. 10. 2026); Blauer und Gelber Saal nur mit Saaldienst | belegt, live |
 | Buchhandlung, Bibliothek | *kein Einzeiler* | — | — |
 
 ## Essen und Verweilen
@@ -122,5 +122,10 @@ wir umsichtig sein.» Folgen:
   (Auftraggeber, 18. 10. 2026). Ihre Öffnungszeiten gehören auf die
   Ausstellungsseite der Sektion; noch nicht veröffentlicht, der Auftraggeber
   mahnt es an. Sobald die Seite sie nennt, liest die Function sie
-  (`ausstellungen[].fenster`) und die Galerie trägt sie statt der Zeiten des
-  Baus; bis dahin meldet der tägliche Wächter einen Hinweis.
+  (`ausstellungen[].fenster`) und die Säle tragen sie; bis dahin meldet der
+  tägliche Wächter einen Hinweis.
+- Die Galerie selbst ist zu den Zeiten des Baus offen; nur Blauer und Gelber
+  Saal weichen ab und sind nur mit Saaldienst zu betreten (Auftraggeber,
+  18. 10. 2026). Der Plan rechnet mit den Zeiten des Baus und nennt die Säle
+  als zweiten Teil: «Blauer und Gelber Saal nur mit Saaldienst», mit Zeiten,
+  sobald die Ausstellungsseite sie nennt.

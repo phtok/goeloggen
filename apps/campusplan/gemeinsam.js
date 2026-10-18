@@ -50,7 +50,7 @@ const UI = {
   "stationen-titel": { de: "Die Stationen", en: "The stops" },
   "pdf-link-hint": { de: "Derselbe Plan auf dem Telefon: Link öffnen oder QR-Code scannen, unterwegs abhaken.",
                      en: "The same plan on your phone: open the link or scan the QR code, tick off as you go." },
-  "datum-lab": { de: "Besuchstag, wenn du ihn schon kennst", en: "Day of your visit, if you know it" },
+  "datum-lab": { de: "Anderer Tag", en: "Another day" },
   "geschlossen-am": { de: "am Besuchstag geschlossen", en: "closed on your visit day" },
   "heute-zu": { de: "heute geschlossen", en: "closed today" },
   ausnahmen: { de: "aktuelle Ausnahmen", en: "current exceptions" },
@@ -89,6 +89,16 @@ const UI = {
   weiter: { de: "Weiter", en: "Next" },
   zurueck: { de: "Zurück", en: "Back" },
   "plan-zeigen": { de: "Plan zeigen", en: "Show plan" },
+  "tage-titel": { de: "Wann kommst du?", en: "When are you coming?" },
+  "tage-hilfe": { de: "Die nächsten Tage nach deinen Interessen: was offen ist und wann geführt wird.",
+                  en: "The next days for your interests: what is open and when there is a tour." },
+  empfohlen: { de: "Empfohlen", en: "Recommended" },
+  "alles-offen": { de: "alles offen", en: "all open" },
+  zu: { de: "zu", en: "closed" },
+  "fuehrung-um": { de: "Führung", en: "Tour" },
+  "oez-titel": { de: "Öffnungszeiten der gewählten Orte", en: "Opening hours of the chosen places" },
+  "oez-ort": { de: "Ort", en: "Place" },
+  "oez-zeiten": { de: "Öffnungszeiten", en: "Opening hours" },
   "fuehrung-titel": { de: "Mit Führung", en: "With a guided tour" },
   "fuehrung-hilfe": { de: "Mit einer Führung ist alles zugänglich, auch innen in den Häusern der Architektursammlung.",
                       en: "With a guided tour everything is open, including the inside of the architecture collection’s houses." },
@@ -263,7 +273,7 @@ function liveBlock(teil) {
 }
 
 function teilZeiten(teil) {
-  // Galerie: die Öffnungszeiten der Ausstellung gehen vor, sobald ihre Seite sie nennt.
+  // Säle der Galerie: die Öffnungszeiten der Ausstellung gehen vor, sobald ihre Seite sie nennt.
   if (teil.ausstellung) {
     const a = ausstellungAm(planTag());
     if (a && a.fenster.length) return { fenster: a.fenster, ersterImMonat: false, zuMonate: [], zuZeitraeume: [], live: true };
@@ -421,6 +431,7 @@ function zeitenText(g) {
       const namen = z.zuMonate.map((m) => MONAT_NAME[sp][m - 1]);
       tageTeil += `, ${namen.join(und)} ${sp === "en" ? "closed" : "geschlossen"}`;
     }
+    if (teil.nach) tageTeil = tageTeil ? `${tageTeil}, ${t(teil.nach)}` : t(teil.nach);
     return [teil.vor ? t(teil.vor) : "", tageTeil].filter(Boolean).join(" ");
   }).join(", ");
   return g.hinweis ? `${text}; ${t(g.hinweis)}` : text;

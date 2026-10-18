@@ -89,7 +89,8 @@ const NEUE_ORTE = [
    Zeile zeigt die laufende Ausstellung (Sektion für Bildende Künste, live),
    saele = die Säle der Galerie, für die kommenden Teile genannt. Ein Teil
    mit ausstellung: true nimmt die Öffnungszeiten der Ausstellung, sobald
-   ihre Seite sie nennt, sonst die eigenen (hier: die des Baus).
+   ihre Seite sie nennt, sonst die eigenen; nach = Nachsatz im Text (z. B.
+   «nur mit Saaldienst»).
    ausnahmen = Seite mit tagesaktuellen Einschränkungen (Grosser Saal,
    Glashaus) — die Zeile verlinkt sie; live = Schlüssel in der Antwort der
    Edge Function, die zum Besuchstag die Tageszeile liefert.
@@ -274,9 +275,13 @@ const GAESTE = [
                  en: "Named after Helene Finckh (1883 to 1960), Rudolf Steiner's most important stenographer, who took down some 1,700 of his lectures from 1915. Hügelweg 64 A, above the car park." } },
   // Ab hier neu am 18. 10. 2026 — hinten angehängt (Bit im geteilten Link).
   { id: "n-galerie", thema: "kultur", rang: 2, gehfolge: 9.5, dauer: 20, zugang: "betreten", ausstellung: true,
-    // Blauer und Gelber Saal gehören zur Galerie (Auftraggeber, 18. 10. 2026).
+    // Die Galerie hat die Zeiten des Baus. Blauer und Gelber Saal gehören zu
+    // ihr, weichen aber ab: nur mit Saaldienst, zu den Zeiten der Ausstellung,
+    // sobald deren Seite sie nennt (Auftraggeber, 18. 10. 2026).
     saele: { de: "Blauer und Gelber Saal", en: "Blue and Yellow Halls" },
-    oeffnung: [{ quelle: "Goetheanum", ausstellung: true, fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }] },
+    oeffnung: [{ quelle: "Goetheanum", fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] },
+      { ausstellung: true, vor: { de: "Blauer und Gelber Saal", en: "Blue and Yellow Halls" },
+        nach: { de: "nur mit Saaldienst", en: "only with a hall attendant" }, fenster: [] }] },
   { id: "n-foyer", thema: "kultur", rang: 3, gehfolge: 2.5, dauer: 15, zugang: "betreten",
     oeffnung: [{ quelle: "Goetheanum", fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }],
     einzeiler: { de: "Dauerausstellung zu den Sektionen der Hochschule und zur Geschichte des Goetheanum; während grosser Tagungen abgebaut.",
