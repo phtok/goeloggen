@@ -9,6 +9,20 @@
 
 let kartentoolVersprechen = null;
 
+/* Lagen, die der Gästeplan anders setzt als der Katalog des Kartentools
+   (Blatt-mm). Toiletten: die Pille liegt im Katalog auf dem Grossen Saal und
+   rückt unter den Schriftzug. Nordgalerie, Jugendsektion und Bibliothek
+   nach Angabe des Auftraggebers (18. 10. 2026): die Nordgalerie links und
+   etwas höher als die Pädagogische Sektion; Jugendsektion und Bibliothek
+   teilen sich einen Eingang, die Jugendsektion gleich hinter der Tür, zur
+   Bibliothek führt ein langer Gang. */
+const KATALOG_LAGEN = {
+  "wc-goetheanum": [197.24, 121.0],
+  "o6": [184.7, 130.6],
+  "s-jugend": [193.2, 108.2],
+  "o7": [199.6, 109.0]
+};
+
 function kartentoolLaden() {
   if (!kartentoolVersprechen) {
     kartentoolVersprechen = new Promise((loesen, ablehnen) => {
@@ -49,19 +63,15 @@ function kartenStand(plan) {
     if (g && g.name) labels[id] = t(g.name);   // Name im Gästeplan (z. B. Galerie statt Nordgalerie)
   });
   const eigene = NEUE_ORTE.filter((o) => ids.includes(o.id)).map((o) => ({
-    id: o.id, label: t(o.label), farbe: "blau", x: o.positionen[0][0], y: o.positionen[0][1], marker: "0"
+    id: o.id, label: t(o.label), farbe: o.farbe || "blau", x: o.positionen[0][0], y: o.positionen[0][1], marker: "0"
   }));
   NEUE_ORTE.forEach((o) => { if (ids.includes(o.id) && o.gebaeude) gebaeudeAn.push(o.gebaeude); });
   return {
     titel: plan.titel || "", untertitel: plan.untertitel || "",
     sprache: state.sprache, format: "a4", beschnitt: false, marken: false,
     an: ids.filter((id) => katalog.has(id)).concat(eigene.map((e) => e.id)),
-    // Die Toiletten-Pille liegt im Katalog genau auf dem Grossen Saal; im
-    // Gästeplan stehen beide oft zugleich — die Pille rückt darum in den
-    // freien Teil des Baus darüber, unter den Schriftzug (darunter stehen
-    // Nordgalerie, Foyer und Galerie; alle bleiben im Goetheanum).
     eigene, teileAus, notizenAus: {}, labels, markerFarben: {},
-    positionen: { "wc-goetheanum": [197.24, 121.0] },
+    positionen: KATALOG_LAGEN,
     gebaeudeAn, gebaeudeAus: [],
     folge: plan.nummeriert.map((g) => g.id),
     legende: plan.legende !== false,
