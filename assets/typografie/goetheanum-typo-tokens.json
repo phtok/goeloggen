@@ -141,7 +141,7 @@
     "G04": "Schwerer als Laut nie im Dokument. Flüstern und Schreien sind Grafikmittel im Variable Font, kein Bürosatz.",
     "G05": "Hervorhebung durch Laut – nicht durch Unterstreichen, Sperren oder VERSALIEN.",
     "G10": "Zeilenlänge 45–75 Zeichen, Ziel ~66 / neun Wörter. CSS min(39ch,100%); ch misst die 0, die schmale Schrift läuft enger (46ch = 78 gezählt).",
-    "G11": "Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit (Fliesstext 1.4–1.6). Der Wert ist keine Konstante, sondern Funktion des Masses – ändert sich die Spalte, wird der Durchschuss nachgezogen.",
+    "G11": "Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit (Fliesstext 1.4–1.6). Der Wert ist keine Konstante, sondern Funktion des Masses – ändert sich die Spalte, wird der Durchschuss nachgezogen. Lesetext ≥1.5 (B04, Entscheid Auftraggeber 18. 10. 2026).",
     "G12": "Flattersatz linksbündig ist der Normalfall. Blocksatz nur mit Trennung und Kontrolle. Der Rand ist Handarbeit: keine zu kurzen Schlusszeilen, keine Lochzeilen, keine verwaiste Zeile am Spaltenfuss/-kopf (Schusterjunge, Hurenkind). Im Web: text-wrap pretty, widows/orphans ≥ 2, hyphens auto.",
     "G16": "Anführung: einfache Guillemets nach aussen – ‹…› für alles, auch die zweite Ebene. Keine \"...\", keine „…\".",
     "G17": "Echte Kapitälchen (smcp/c2sc, ab v2.6) nur im Fliesstext für Abkürzungen – nie als Schmuck; relational lesen sie schlechter als Minuskeln. Nie durch Verkleinern von Versalien vortäuschen (Kunst-Kapitälchen). Versal-Abkürzungen dürfen Versal bleiben.",

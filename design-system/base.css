@@ -102,7 +102,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .kennzahlen{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:var(--s4)}
 .kennzahl{background:var(--soft);border:1px solid var(--line);border-radius:var(--r-card);
   padding:var(--s6);display:flex;flex-direction:column;gap:var(--s2)}
-.kennzahl .k-label{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.4}
+.kennzahl .k-label{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:var(--lh-min)}
 .kennzahl .k-wert{font-family:var(--font-display);font-weight:var(--w-strong);
   font-size:clamp(26px,3.2vw,34px);color:var(--ink);
   font-variant-numeric:tabular-nums lining-nums;line-height:var(--lh-tight)}
@@ -185,9 +185,10 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 /* --- Knöpfe = AKTION -------------------------------------------------------- */
 /* Aktion = Blau (Zustand/Tun); die primäre Aktion ist gefüllt. Klar getrennt von
    der Auswahl-Pille (Gold). Mind. Fingerziel auf Touch. */
-.btn{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-size:15px;line-height:1.2;
+.btn{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-size:var(--t-small);line-height:1.2;
   font-weight:var(--w-deutlich);   /* B2: Goetheanum-Label <18px braucht Deutlich (Beier) */
-  padding:10px 16px;border-radius:var(--r-control);border:1px solid var(--line);color:var(--ink);
+  min-height:var(--tap);           /* B04: Fingerziel 44px auf ALLEN Breiten */
+  padding:10px 16px;border-radius:var(--r-control);border:1px solid var(--line-control);color:var(--ink);   /* B02: Rand ≥3:1 */
   background:var(--field-bg);text-align:center;cursor:pointer;transition:.15s}
 .btn:hover{border-color:var(--blue)}
 .btn.primary{background:var(--blue-solid);border-color:var(--blue-solid);color:var(--on-accent);font-weight:var(--w-strong)}
@@ -215,15 +216,30 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
    Schrift. line-height:var(--lh-tight) bleibt zusätzlich nötig, sonst reisst
    ein zweizeiliges Pillen-Label (z. B. ‹SVG 48›) weit auseinander. */
 .seg button{display:inline-flex;align-items:center;justify-content:center;text-align:center;
-  font:inherit;font-size:14.5px;font-weight:var(--w-deutlich);line-height:var(--lh-tight);padding:8px 15px;border:1px solid var(--line);border-radius:var(--r-pill);
+  font:inherit;font-size:var(--t-small);font-weight:var(--w-deutlich);line-height:var(--lh-tight);   /* B03: Label ≥15px */
+  min-height:var(--tap);   /* B04: Fingerziel 44px auf ALLEN Breiten */
+  padding:8px 15px;border:1px solid var(--line-control);border-radius:var(--r-pill);   /* B02: Rand ≥3:1 */
   background:var(--field-bg);color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
 .seg button:hover{border-color:var(--gold-ink)}
 .seg button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent);font-weight:var(--w-strong)}
 
-/* Bequeme Fingerziele auf dem Handy (Apple 44 / Material 48 / WCAG 24). */
-@media(max-width:560px){
-  .seg button,.btn{min-height:var(--tap)}
-}
+/* --- Wahl-Kachel = WAHL mit Beschreibung (aufgenommen 18. 10. 2026) ----------
+   Wie die Pille, nur grösser und mit zweiter Zeile: eine Auswahl, deren Optionen
+   einen Satz Erklärung brauchen (Themen, Zeiten). Gewählt = Gold/Weiss wie
+   .seg (B01, 4.55:1); der Rand ist ein Bedienelement-Rand (B02). Nur an
+   <button class="kachel" aria-pressed>: das Element-Präfix hält fremde
+   .kachel-Spielarten (Telefon-Mockup mit <span class="kachel">) unberührt.
+   Markup: <div class="kacheln"><button class="kachel" aria-pressed="false">
+   <span class="k-name">Name</span><span class="k-kurz">Beschreibung</span></button>… */
+.kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:var(--s3)}
+button.kachel{display:grid;gap:var(--s1);text-align:left;font:inherit;padding:var(--s4);min-height:var(--tap);
+  border:1px solid var(--line-control);border-radius:var(--r-card);background:var(--field-bg);color:var(--ink);cursor:pointer;
+  transition:border-color .15s,background .15s,color .15s}
+button.kachel:hover{border-color:var(--gold-ink)}
+button.kachel .k-name{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);line-height:var(--lh-tight)}
+button.kachel .k-kurz{font-family:var(--font-text);font-size:var(--t-small);line-height:var(--lh-min);color:var(--muted)}
+button.kachel[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent)}
+button.kachel[aria-pressed="true"] .k-kurz{color:var(--on-accent)}
 
 /* --- Formularfelder -------------------------------------------------------- */
 /* Bedienelemente tragen IMMER die Lese-Grotesk – geschlossen wie geöffnet.
@@ -243,7 +259,7 @@ input,select,textarea,optgroup,option{font-family:var(--font-text)}
 .field>.lab{font-size:var(--t-small);color:var(--muted);letter-spacing:.01em}
 .field input,.field textarea,.field select{
   width:100%;font-family:var(--font-text);font-size:16px;font-weight:400;line-height:1.3;color:var(--ink);
-  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 12px;outline:none;
+  background:var(--field-bg);border:1px solid var(--line-control);border-radius:var(--r-control);padding:11px 12px;outline:none;   /* B02 */
   transition:border-color .15s,box-shadow .15s;
 }
 /* Eingaben in der Lese-Grotesk (Source Sans 3): lesbarer als die Display-Schrift. */
@@ -254,7 +270,7 @@ input,select,textarea,optgroup,option{font-family:var(--font-text)}
 .ds-select>select{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}  /* nativ versteckt, bleibt Quelle der Wahrheit */
 .ds-select__btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
   font-family:var(--font-text);font-size:16px;font-weight:400;line-height:1.3;color:var(--ink);text-align:left;
-  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);padding:11px 12px;cursor:pointer;min-height:var(--tap)}
+  background:var(--field-bg);border:1px solid var(--line-control);border-radius:var(--r-control);padding:11px 12px;cursor:pointer;min-height:var(--tap)}   /* B02 */
 .ds-select__btn::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
   transform:translateY(-2px) rotate(45deg);flex:0 0 auto}
 .ds-select__btn:hover{border-color:var(--gold-deep)}
@@ -269,7 +285,7 @@ input,select,textarea,optgroup,option{font-family:var(--font-text)}
    (B04), Flächen aus Tokens (B05). Ohne diese Regel fiele der Browser auf
    seine eigene Klappliste mit rund 13px zurück. */
 .select-inline{font-family:var(--font-text);font-size:16px;font-weight:400;line-height:1.3;color:var(--ink);
-  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);
+  background:var(--field-bg);border:1px solid var(--line-control);border-radius:var(--r-control);   /* B02 */
   padding:8px 10px;min-height:var(--tap);max-width:100%;outline:none}
 .select-inline:hover{border-color:var(--gold-deep)}
 .select-inline:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
@@ -361,7 +377,7 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
 .kicker,.kick{display:inline-block;font-family:var(--font-display);color:var(--gold-ink);font-size:var(--t-micro);letter-spacing:.03em;font-weight:var(--w-deutlich);line-height:1.3;margin-bottom:var(--s2)}
 
 /* Anriss unter dem Titel. */
-.lede{font-size:var(--t-lede);color:var(--muted);line-height:1.45;max-width:54ch}
+.lede{font-size:var(--t-lede);color:var(--muted);line-height:var(--lh-min);max-width:54ch}   /* B04: Lesetext ≥1.5 (vor G11) */
 
 /* --- Die Schrift-Grenze: Identität vs. Lesbarkeit ----------------------------
    Goetheanum ist DISPLAY – die STIMME. Sie trägt alles, was als Sprache gelesen
@@ -376,10 +392,10 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
 .note,.hint,.help,.desc,.subhead{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);line-height:1.6;max-width:62ch}
 
 /* Legende, Bildunterschrift, Datum, Byline – das knappe Beiwerk. */
-.meta,.cap,.caption,.legend,.byline{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);line-height:1.45}
+.meta,.cap,.caption,.legend,.byline{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);line-height:var(--lh-min)}   /* B04 */
 
 /* Aufschrift eines Bedienelements oder Werts – getrackt, nie versal (G05). */
-.lab,.role{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);letter-spacing:.01em;line-height:1.35}
+.lab,.role{font-family:var(--font-text);color:var(--muted);font-size:var(--t-small);letter-spacing:.01em;line-height:var(--lh-min)}   /* B04: Label kann umbrechen */
 .lab b,.lab strong,.role b,.role strong{color:var(--ink);font-weight:600}
 
 /* Live-Ausgabe / Ableseband – ruhig, Zahlen dicktengleich (G25). */
@@ -412,8 +428,8 @@ img,svg,canvas,video{max-width:100%}
   /* Mobil bleibt der seitliche Rand grosszügig (Luft nach aussen, Lesbarkeit) –
      nicht verkleinern. 22px Untergrenze, damit Text nie am Glas klebt. */
   .wrap{padding-left:max(22px,env(safe-area-inset-left));padding-right:max(22px,env(safe-area-inset-right))}
-  /* Fingerziele ≥44px auf Touch: Knöpfe, Pillen, Felder, Klapplisten (B04). */
-  .btn,.seg button{min-height:var(--tap)}
+  /* Fingerziele ≥44px auf Touch: Felder, Klapplisten (B04). Knöpfe und Pillen
+     tragen ihr Fingerziel seit 1.28.0 auf allen Breiten selbst. */
   .field input,.field textarea,.field select,.ds-select__btn{min-height:var(--tap)}
   /* Köpfe brechen um statt zu quetschen. */
   .shead{gap:var(--s3)}
@@ -522,7 +538,7 @@ img,svg,canvas,video{max-width:100%}
 /* --- Newsletter-Einstieg (ein Feld, ein Knopf – B03: Eingabe ≥16px) ---------- */
 .subscribe{display:flex;gap:var(--s2);flex-wrap:wrap;max-width:460px}
 .subscribe input{flex:1 1 220px;font-family:var(--font-text);font-size:16px;color:var(--ink);
-  background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-control);
+  background:var(--field-bg);border:1px solid var(--line-control);border-radius:var(--r-control);   /* B02 */
   padding:10px 14px;min-height:var(--tap);outline:none}
 .subscribe input:focus{border-color:var(--gold)}
 
