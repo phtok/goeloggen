@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Goetheanum Sehen – Wireframe v0.1</title>
+<meta name="description" content="Klickbarer Low-fi-Prototyp der Videoplattform: sieben Seitentypen, ein Cover-Format, Zeilen statt Kacheln.">
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg">
+
+<!-- Fundament einbinden, nicht kopieren (DS01). -->
+<link rel="stylesheet" href="../design-system/tokens.css">
+<link rel="stylesheet" href="../design-system/base.css">
+
+<style>
+  /* =========================================================================
+     Wireframe der Videoplattform – bewusst Low-fi: keine Bilder, keine Farben
+     ausser den Sektionsfarben, Standbilder sind Flächen mit Play-Zeichen.
+     Alle Werte aus den Tokens; die eigene Grau-Palette der Fassung v0.1
+     (--ink-2/--box/--rule) ist aufgelöst: --muted, --soft, --line.
+     Der eigene <header> ist die Kopfleiste des PROTOTYPS (das gezeigte
+     Produkt), nicht die Werkzeug-Kopfleiste – die Seite läuft ohne nav.js,
+     weil sie im Geräterahmen der Präsentation steckt.  # ds-ok
+     ========================================================================= */
+
+  body{background:var(--paper);color:var(--ink);font-size:var(--t-small);line-height:1.5}
+
+  /* --- Kopf des Prototyps ------------------------------------------------- */
+  .wtop{border-bottom:1px solid var(--line)}
+  .wbar{max-width:var(--maxw);margin:0 auto;padding:var(--s3) var(--s5);
+    display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap}
+  .mark{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);line-height:1.2}
+  .mark span{color:var(--muted)}
+  .verbs{display:flex;gap:var(--s3)}
+  .verbs a{font-family:var(--font-display);font-size:var(--t-small);color:var(--muted);
+    padding:var(--s1) 0;border-bottom:2px solid transparent}
+  .verbs a.on{color:var(--ink);border-bottom-color:var(--ton,var(--gold))}
+  .wbar .right{margin-left:auto;display:flex;gap:var(--s3);align-items:center}
+  .wbar .right a{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+
+  /* --- Seiten (Hash-Routing) ---------------------------------------------- */
+  .page{display:none;max-width:var(--maxw);margin:0 auto;padding:var(--s5) var(--s5) var(--s8);border-top:0}
+  .page.on{display:block}
+  .page h1{font-size:var(--t-h2);margin-bottom:var(--s1)}
+  .page h2{font-family:var(--font-text);font-size:var(--t-small);font-weight:400;color:var(--muted);
+    line-height:1.4;margin:var(--s7) 0 var(--s2);padding-bottom:var(--s1);border-bottom:1px solid var(--line)}
+  .page h2:first-of-type{margin-top:0}
+
+  /* --- Standbild: das einzige Cover-Format -------------------------------- */
+  .still{background:var(--soft);border:1px solid var(--line);aspect-ratio:16/9;
+    border-radius:var(--r-control);position:relative;display:block;overflow:hidden}
+  .still::after{content:"";position:absolute;left:50%;top:50%;width:0;height:0;
+    border-left:14px solid var(--muted);border-top:9px solid transparent;border-bottom:9px solid transparent;
+    transform:translate(-40%,-50%)}
+  .still .dur{position:absolute;right:var(--s1);bottom:var(--s1);font-family:var(--font-text);
+    font-size:var(--t-micro);background:var(--paper);border:1px solid var(--line);
+    padding:0 var(--s1);border-radius:var(--r-control);color:var(--muted)}
+  .still .prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--line)}
+  .still .prog i{display:block;height:3px;background:var(--ton,var(--gold))}
+  .still.kommt{background:var(--paper);border-style:dashed}
+  .still.kommt::after{display:none}
+  .portrait{width:72px;height:72px;border-radius:var(--r-pill);background:var(--soft);
+    border:1px solid var(--line);flex:none}
+
+  /* --- Die vier Textelemente pro Video ------------------------------------ */
+  .ey{font-family:var(--font-text);font-size:var(--t-small);color:var(--ton-ink,var(--muted));margin-bottom:2px}
+  .ti{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);
+    line-height:var(--lh-tight);margin:0 0 var(--s1)}
+  .me{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .abriss{margin-top:var(--s3)}
+
+  /* --- Wochen-Lead: ein Video, redaktionell gesetzt ------------------------ */
+  .lead{display:grid;gap:var(--s4)}
+  .lead .ti{font-size:var(--t-h3)}
+  @media(min-width:760px){.lead{grid-template-columns:3fr 2fr;align-items:end}.lead .ti{font-size:var(--t-h2)}}
+
+  /* --- Zeilen statt Kacheln ------------------------------------------------ */
+  .rows{display:flex;flex-direction:column}
+  .row{display:grid;grid-template-columns:128px minmax(0,1fr);gap:var(--s3);
+    padding:var(--s3) 0;border-bottom:1px solid var(--line);align-items:start}
+  .row .still::after{border-left-width:10px;border-top-width:6px;border-bottom-width:6px}
+  .row.text{grid-template-columns:minmax(0,1fr)}
+  @media(min-width:760px){.row{grid-template-columns:200px minmax(0,1fr)}}
+  /* In der schmalen Nebenspalte bleibt das Standbild klein – sonst frisst es
+     die Textspalte und die Titel brechen Wort für Wort. */
+  .watch aside .row{grid-template-columns:96px minmax(0,1fr)}
+  .row:hover .ti{text-decoration:underline;text-underline-offset:3px}
+
+  /* --- Raster der Feld-Seite ----------------------------------------------- */
+  .grid{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s5) var(--s4)}
+  @media(min-width:560px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(min-width:900px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  .tile .ey{margin-top:var(--s2)}
+
+  /* --- Felder = Sektionen (Farben aus dem Design-System) ------------------- */
+  .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s2)}
+  @media(min-width:760px){.fields{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  .fields a{display:flex;justify-content:space-between;align-items:center;gap:var(--s2);
+    min-height:var(--tap);padding:var(--s2) var(--s3);font-family:var(--font-text);font-size:var(--t-small);
+    border:1px solid var(--line);border-left:4px solid var(--ton,var(--gold));border-radius:var(--r-control)}
+  .fields a:hover{background:var(--ton-hell,var(--soft))}
+  .fields a small{color:var(--muted);font-size:var(--t-micro);font-variant-numeric:tabular-nums lining-nums}
+
+  /* --- Videoseite ---------------------------------------------------------- */
+  .watch{display:grid;gap:var(--s5)}
+  @media(min-width:900px){.watch{grid-template-columns:minmax(0,2fr) minmax(280px,1fr);align-items:start}}
+  .player{position:relative}
+  .player .scrub{position:absolute;left:var(--s3);right:var(--s3);bottom:var(--s3);height:4px;display:flex;gap:3px}
+  .player .scrub i{display:block;flex:1;background:var(--line)}
+  .player .scrub i.done{background:var(--ton,var(--gold))}
+  .acts{display:flex;flex-wrap:wrap;gap:var(--s2);margin:var(--s3) 0 var(--s1)}
+  .chap{display:flex;justify-content:space-between;gap:var(--s3);padding:var(--s2) 0;
+    border-bottom:1px solid var(--line);font-family:var(--font-text);font-size:var(--t-small)}
+  .chap.now{font-weight:600;color:var(--ton-ink,var(--ink))}
+  .chap span{color:var(--muted);flex:none;font-variant-numeric:tabular-nums lining-nums}
+  .search{display:flex;gap:var(--s2);margin-top:var(--s3)}
+  .search input{flex:1;min-width:0;font-family:var(--font-text);font-size:16px;color:var(--ink);
+    background:var(--field-bg);padding:var(--s2) var(--s3);border:1px solid var(--line);border-radius:var(--r-control)}
+
+  /* --- Newsletter ---------------------------------------------------------- */
+  .mail{max-width:560px;margin:0 auto;border:1px solid var(--line);border-radius:var(--r-card);
+    padding:var(--s6) var(--s5);background:var(--paper)}
+  .mail .row{grid-template-columns:96px minmax(0,1fr)}
+  .mail h1{font-size:var(--t-h3)}
+  .mail .mfoot{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);
+    margin-top:var(--s6);line-height:1.55}
+  .pref{display:flex;flex-wrap:wrap;gap:var(--s1);margin-top:var(--s3)}
+  .pref .on{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent)}
+
+  /* --- Inventar-Modus: beschriftet jedes Element -------------------------- */
+  body.inv .still::before,body.inv .ey::before,body.inv .ti::before,body.inv .me::before,
+  body.inv .portrait::before,body.inv .abriss::before{
+    content:attr(data-inv);font-family:var(--font-text);font-size:var(--t-micro);font-weight:400;
+    color:var(--bad);line-height:1.2;display:block;margin-bottom:2px}
+  body.inv .still::before{position:absolute;left:var(--s1);top:var(--s1)}
+  body.inv .portrait{position:relative}
+  body.inv .portrait::before{position:absolute;top:100%;left:0;white-space:nowrap}
+  body.inv .still,body.inv .ey,body.inv .ti,body.inv .me,body.inv .abriss{
+    outline:1px dashed var(--bad);outline-offset:1px}
+
+  .wfoot{max-width:var(--maxw);margin:var(--s8) auto 0;padding:var(--s4) var(--s5);
+    border-top:1px solid var(--line);font-family:var(--font-text);font-size:var(--t-small);
+    color:var(--muted);display:flex;gap:var(--s4);flex-wrap:wrap}
+  .wnote{max-width:var(--maxw);margin:var(--s6) auto 0;padding:0 var(--s5)}
+</style>
+</head>
+<body>
+
+<header class="wtop">
+  <div class="wbar">
+    <a class="mark" href="#start">Goetheanum <span>Sehen</span></a>
+    <nav class="verbs" aria-label="Tätigkeiten">
+      <a href="#woche">Lesen</a>
+      <a href="#start" class="on">Sehen</a>
+      <a href="#start">Hören</a>
+      <a href="#start">Kommen</a>
+    </nav>
+    <div class="right">
+      <button class="btn ghost" type="button" id="invbtn" aria-pressed="false">Inventar</button>
+      <a href="#person">Suche</a>
+      <a href="#newsletter">Meine Woche</a>
+    </div>
+  </div>
+</header>
+
+<!-- START -->
+<section class="page on" id="start">
+  <h2>Diese Woche · KW 37</h2>
+  <a class="lead" href="#video" data-sek="ms">
+    <div class="still" data-inv="Standbild 16:9">
+      <span class="dur">48 Min</span>
+    </div>
+    <div>
+      <p class="ey" data-inv="Eyebrow: Feld · Format">Medizin · Vortrag</p>
+      <p class="ti" data-inv="Titel (max. 2 Zeilen)">Was heilt? Rhythmus als Grundlage der Therapie</p>
+      <p class="me" data-inv="Person · Dauer/Kapitel">Matthias Girke · 6 Kapitel</p>
+    </div>
+  </a>
+
+  <h2>Weiter schauen</h2>
+  <div class="rows">
+    <a class="row" href="#video" data-sek="srmk">
+      <div class="still" data-inv="Standbild 16:9"><span class="prog"><i style="width:62%"></i></span></div>
+      <div><p class="ey">Bühne · Kurs 2/6</p><p class="ti">Eurythmie und Sprache, Teil 2</p><p class="me">Stefan Hasler · noch 14 Min</p></div>
+    </a>
+  </div>
+
+  <h2>Neu in dieser Woche</h2>
+  <div class="rows">
+    <a class="row" href="#video" data-sek="lws"><div class="still"></div><div><p class="ey">Landwirtschaft · Gespräch</p><p class="ti">Boden, Präparate, Klima</p><p class="me">Ueli Hurter · 32 Min</p></div></a>
+    <a class="row" href="#video" data-sek="srmk"><div class="still"></div><div><p class="ey">Bühne · Aufführung</p><p class="ti">Faust II, «Klassische Walpurgisnacht»</p><p class="me">Goetheanum-Bühne · 1 Std 12 Min</p></div></a>
+    <a class="row" href="#video" data-sek="ps"><div class="still"></div><div><p class="ey">Pädagogik · Kurs 3/8</p><p class="ti">Rhythmus im Schultag</p><p class="me">Constanza Kaliks · 21 Min</p></div></a>
+    <a class="row" href="#video" data-sek="nws"><div class="still"></div><div><p class="ey">Naturwissenschaft · Vortrag</p><p class="ti">Goethes Farbenlehre im Experiment</p><p class="me">Johannes Kühl · 54 Min</p></div></a>
+  </div>
+
+  <h2>Dazu lesen · Das Goetheanum Nr. 37</h2>
+  <div class="rows">
+    <a class="row text" href="#woche" data-sek="ms"><div><p class="ey">Essay · 8 Min Lesezeit</p><p class="ti">Der Puls der Heilung</p><p class="me">Wolfgang Held – zum Vortrag von Matthias Girke</p></div></a>
+    <a class="row text" href="#woche" data-sek="lws"><div><p class="ey">Bericht · 4 Min Lesezeit</p><p class="ti">Was die Präparate mit dem Wetter zu tun haben</p><p class="me">Gilda Bartel</p></div></a>
+  </div>
+
+  <h2>Felder</h2>
+  <div class="fields">
+    <a href="#feld" data-sek="ms">Medizin <small>84</small></a>
+    <a href="#feld" data-sek="lws">Landwirtschaft <small>61</small></a>
+    <a href="#feld" data-sek="ps">Pädagogik <small>57</small></a>
+    <a href="#feld" data-sek="srmk">Bühne und Eurythmie <small>112</small></a>
+    <a href="#feld" data-sek="nws">Naturwissenschaft <small>39</small></a>
+    <a href="#feld" data-sek="sbk">Bildende Kunst <small>28</small></a>
+    <a href="#feld" data-sek="szw">Sozialwissenschaft <small>33</small></a>
+    <a href="#feld" data-sek="aas">Anthroposophie <small>146</small></a>
+  </div>
+
+  <h2>Reihen</h2>
+  <div class="rows">
+    <a class="row" href="#reihe" data-sek="ps"><div class="still"></div><div><p class="ey">Reihe · 8 Folgen · 2 Std 34 Min</p><p class="ti">Rhythmus im Schultag</p><p class="me">Constanza Kaliks · Folge 3 ist neu</p></div></a>
+    <a class="row" href="#reihe" data-sek="lws"><div class="still"></div><div><p class="ey">Tagung · 14 Beiträge · 9 Std 12 Min</p><p class="ti">Landwirtschaftliche Tagung 2026</p><p class="me">Februar 2026</p></div></a>
+  </div>
+</section>
+
+<!-- FELD -->
+<section class="page" id="feld" data-sek="ms">
+  <p class="ey">Feld</p>
+  <h1>Medizin</h1>
+  <p class="lede">Vorträge, Gespräche und Kurse der Medizinischen Sektion. 84 Videos, 12 Reihen, wöchentlich neu.</p>
+
+  <h2>Neu</h2>
+  <div class="grid">
+    <a class="tile" href="#video"><div class="still"><span class="dur">48 Min</span></div><p class="ey">Vortrag</p><p class="ti">Was heilt? Rhythmus als Grundlage der Therapie</p><p class="me">Matthias Girke</p></a>
+    <a class="tile" href="#video"><div class="still"><span class="dur">41 Min</span></div><p class="ey">Vortrag</p><p class="ti">Wärme als Organ</p><p class="me">Georg Soldner</p></a>
+    <a class="tile" href="#video"><div class="still"><span class="dur">27 Min</span></div><p class="ey">Gespräch</p><p class="ti">Pflege zwischen Technik und Berührung</p><p class="me">Rolf Heine, Ada van der Star</p></a>
+    <a class="tile" href="#video"><div class="still"><span class="dur">1 Std 3 Min</span></div><p class="ey">Tagung</p><p class="ti">Eröffnung der Jahreskonferenz 2026</p><p class="me">Matthias Girke, Georg Soldner</p></a>
+    <a class="tile" href="#video"><div class="still"><span class="dur">18 Min</span></div><p class="ey">Kurs 1/5</p><p class="ti">Grundbegriffe der anthroposophischen Medizin</p><p class="me">Georg Soldner</p></a>
+    <a class="tile" href="#video"><div class="still"><span class="dur">36 Min</span></div><p class="ey">Gespräch</p><p class="ti">Was Kinder krank macht</p><p class="me">Karin Michael</p></a>
+  </div>
+
+  <h2>Reihen in diesem Feld</h2>
+  <div class="rows">
+    <a class="row" href="#reihe"><div class="still"></div><div><p class="ey">Kurs · 5 Folgen · 2 Std 41 Min</p><p class="ti">Grundbegriffe der anthroposophischen Medizin</p><p class="me">Georg Soldner</p></div></a>
+    <a class="row" href="#reihe"><div class="still"></div><div><p class="ey">Tagung · 22 Beiträge · 14 Std 5 Min</p><p class="ti">Jahreskonferenz 2026</p><p class="me">September 2026</p></div></a>
+  </div>
+
+  <h2>Dazu lesen</h2>
+  <div class="rows">
+    <a class="row text" href="#woche"><div><p class="ey">Essay · Nr. 37</p><p class="ti">Der Puls der Heilung</p><p class="me">Wolfgang Held</p></div></a>
+    <a class="row text" href="#woche"><div><p class="ey">Interview · Nr. 34</p><p class="ti">«Fieber ist eine Leistung»</p><p class="me">Georg Soldner im Gespräch</p></div></a>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section class="page" id="video" data-sek="ms">
+  <div class="watch">
+    <div>
+      <div class="still player" data-inv="Player 16:9 (Mux)">
+        <div class="scrub"><i class="done" style="flex:2"></i><i style="flex:3"></i><i style="flex:1"></i><i style="flex:2"></i><i style="flex:2"></i><i style="flex:1"></i></div>
+      </div>
+      <div style="padding-top:var(--s4)">
+        <p class="ey" data-inv="Eyebrow: Feld · Format · Datum">Medizin · Vortrag · 4. September 2026</p>
+        <h1 data-inv="Titel">Was heilt? Rhythmus als Grundlage der Therapie</h1>
+        <p class="me" data-inv="Person · Dauer">Matthias Girke · 48 Min</p>
+        <p class="note abriss" data-inv="Teaser (2–3 Sätze)">Herzschlag und Atem stehen im Verhältnis vier zu eins. Was passiert, wenn dieses Verhältnis kippt – im Fieber, im Schlaf, in der Krise? Matthias Girke zeigt, warum Rhythmus in der anthroposophischen Medizin nicht Metapher, sondern Therapie ist.</p>
+      </div>
+      <div class="acts">
+        <button class="btn" type="button">Merken</button>
+        <button class="btn" type="button">Teilen ab 7:40</button>
+        <button class="btn" type="button">Nur Audio</button>
+        <button class="btn" type="button">1,5×</button>
+        <button class="btn" type="button">Untertitel</button>
+      </div>
+    </div>
+    <aside>
+      <h2>Kapitel</h2>
+      <div class="chap"><span>Einleitung: Was ist Rhythmus?</span><span>0:00</span></div>
+      <div class="chap now"><span>Herz und Atem im Verhältnis 4:1</span><span>7:40</span></div>
+      <div class="chap"><span>Schlaf, Wachen, Fieber</span><span>19:05</span></div>
+      <div class="chap"><span>Der Tagesrhythmus in der Klinik</span><span>28:30</span></div>
+      <div class="chap"><span>Fallbeispiel: Erschöpfung</span><span>36:10</span></div>
+      <div class="chap"><span>Fragen aus dem Saal</span><span>42:00</span></div>
+      <div class="search">
+        <label class="sr-only" for="wtranskript">Im Transkript suchen</label>
+        <input id="wtranskript" type="search" placeholder="Im Transkript suchen">
+        <button class="btn" type="button">Suchen</button>
+      </div>
+
+      <h2>Dazu lesen</h2>
+      <a class="row text" href="#woche"><div><p class="ey">Essay · Nr. 37 · 8 Min</p><p class="ti">Der Puls der Heilung</p><p class="me">Wolfgang Held</p></div></a>
+
+      <h2>Von Matthias Girke</h2>
+      <a class="row text" href="#person"><div><p class="ti">11 weitere Videos</p><p class="me">Leiter der Medizinischen Sektion</p></div></a>
+
+      <h2>Aus derselben Reihe</h2>
+      <a class="row" href="#video"><div class="still"></div><div><p class="ti">Wärme als Organ</p><p class="me">Georg Soldner · 41 Min</p></div></a>
+      <a class="row" href="#video"><div class="still"></div><div><p class="ti">Pflege zwischen Technik und Berührung</p><p class="me">Rolf Heine · 27 Min</p></div></a>
+    </aside>
+  </div>
+</section>
+
+<!-- PERSON -->
+<section class="page" id="person" data-sek="ms">
+  <div style="display:flex;gap:var(--s4);align-items:center;margin-bottom:var(--s2)">
+    <div class="portrait" data-inv="Porträt 1:1"></div>
+    <div><h1>Matthias Girke</h1><p class="me">Arzt, Leiter der Medizinischen Sektion am Goetheanum</p></div>
+  </div>
+  <p class="lede">12 Videos, 4 Essays, 1 Reihe.</p>
+
+  <h2>Videos</h2>
+  <div class="rows">
+    <a class="row" href="#video"><div class="still"></div><div><p class="ey">Medizin · Vortrag</p><p class="ti">Was heilt? Rhythmus als Grundlage der Therapie</p><p class="me">48 Min · September 2026</p></div></a>
+    <a class="row" href="#video"><div class="still"></div><div><p class="ey">Medizin · Tagung</p><p class="ti">Eröffnung der Jahreskonferenz 2026</p><p class="me">1 Std 3 Min · September 2026</p></div></a>
+    <a class="row" href="#video"><div class="still"></div><div><p class="ey">Medizin · Gespräch</p><p class="ti">Sterben als Übergang</p><p class="me">44 Min · Mai 2026</p></div></a>
+  </div>
+
+  <h2>Texte</h2>
+  <div class="rows">
+    <a class="row text" href="#woche"><div><p class="ey">Essay · Nr. 29</p><p class="ti">Die Kunst des Wartens</p><p class="me">6 Min Lesezeit</p></div></a>
+    <a class="row text" href="#woche"><div><p class="ey">Interview · Nr. 18</p><p class="ti">«Medizin beginnt mit Zuhören»</p><p class="me">9 Min Lesezeit</p></div></a>
+  </div>
+</section>
+
+<!-- REIHE -->
+<section class="page" id="reihe" data-sek="ps">
+  <p class="ey">Reihe · Pädagogik · wöchentlich, freitags</p>
+  <h1>Rhythmus im Schultag</h1>
+  <p class="lede">Acht Folgen mit Constanza Kaliks, zusammen 2 Std 34 Min. Folge 3 ist neu, Folge 4 erscheint am 18. September 2026.</p>
+  <div class="acts"><button class="btn ton" type="button">Reihe abonnieren</button><button class="btn" type="button">Bei Folge 1 beginnen</button></div>
+
+  <h2>Folgen</h2>
+  <div class="rows">
+    <a class="row" href="#video"><div class="still"><span class="prog"><i style="width:100%"></i></span></div><div><p class="ey">Folge 1 · gesehen</p><p class="ti">Der Morgen</p><p class="me">19 Min</p></div></a>
+    <a class="row" href="#video"><div class="still"><span class="prog"><i style="width:100%"></i></span></div><div><p class="ey">Folge 2 · gesehen</p><p class="ti">Ein- und Ausatmen im Unterricht</p><p class="me">24 Min</p></div></a>
+    <a class="row" href="#video"><div class="still"><span class="dur">21 Min</span></div><div><p class="ey">Folge 3 · neu</p><p class="ti">Die Pause</p><p class="me">21 Min</p></div></a>
+    <a class="row" href="#reihe"><div class="still kommt"></div><div><p class="ey">Folge 4 · 18. September 2026</p><p class="ti">Der Nachmittag</p><p class="me">erscheint freitags</p></div></a>
+  </div>
+
+  <h2>Dazu lesen</h2>
+  <div class="rows">
+    <a class="row text" href="#woche"><div><p class="ey">Essay · Nr. 35</p><p class="ti">Warum Kinder Wiederholung brauchen</p><p class="me">Constanza Kaliks · 7 Min</p></div></a>
+  </div>
+</section>
+
+<!-- WOCHENSCHRIFT-AUSGABE -->
+<section class="page" id="woche" data-sek="ms">
+  <p class="ey">Das Goetheanum · Nr. 37 · 11. September 2026</p>
+  <h1>Der Puls der Heilung</h1>
+  <p class="lede">Wolfgang Held über Rhythmus, Fieber und die Frage, was in der Medizin eigentlich heilt. 8 Minuten Lesezeit.</p>
+  <p class="note">[Essaytext – die Wochenschrift-Seite ist ein eigenes Frontend auf derselben Datenbank. Hier nur der Verweisblock.]</p>
+
+  <h2>Dazu sehen</h2>
+  <div class="rows">
+    <a class="row" href="#video"><div class="still"><span class="dur">48 Min</span></div><div><p class="ey">Medizin · Vortrag</p><p class="ti">Was heilt? Rhythmus als Grundlage der Therapie</p><p class="me">Matthias Girke · Kapitel 2 passt zum Essay</p></div></a>
+  </div>
+
+  <h2>In dieser Ausgabe</h2>
+  <div class="rows">
+    <a class="row text" href="#woche"><div><p class="ey">Bericht</p><p class="ti">Was die Präparate mit dem Wetter zu tun haben</p><p class="me">Gilda Bartel · 4 Min</p></div></a>
+    <a class="row text" href="#woche"><div><p class="ey">Gespräch</p><p class="ti">Faust in der Walpurgisnacht</p><p class="me">Andrea Pfaehler mit dem Ensemble · 6 Min</p></div></a>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="page" id="newsletter">
+  <div class="mail">
+    <p class="ey">Goetheanum · Woche 37 · für Philipp</p>
+    <h1>Diese Woche: Rhythmus</h1>
+    <p class="me">Ein Vortrag, ein Essay und Folge 3 deiner Reihe.</p>
+
+    <h2>Sehen</h2>
+    <a class="row" href="#video" data-sek="ms"><div class="still"></div><div><p class="ey">Medizin · 48 Min</p><p class="ti">Was heilt? Rhythmus als Grundlage der Therapie</p><p class="me">Matthias Girke</p></div></a>
+    <a class="row" href="#reihe" data-sek="ps"><div class="still"></div><div><p class="ey">Deine Reihe · Folge 3 · 21 Min</p><p class="ti">Die Pause</p><p class="me">Constanza Kaliks</p></div></a>
+
+    <h2>Lesen</h2>
+    <a class="row text" href="#woche"><div><p class="ey">Essay · 8 Min</p><p class="ti">Der Puls der Heilung</p><p class="me">Wolfgang Held</p></div></a>
+    <a class="row text" href="#woche"><div><p class="ey">Bericht · 4 Min</p><p class="ti">Was die Präparate mit dem Wetter zu tun haben</p><p class="me">Gilda Bartel</p></div></a>
+
+    <h2>Kommen</h2>
+    <a class="row text" href="#start"><div><p class="ey">Goetheanum · 26. bis 28. September 2026</p><p class="ti">Michaeli-Tagung</p><p class="me">Programm und Anmeldung</p></div></a>
+
+    <h2>Deine Felder</h2>
+    <div class="pref">
+      <span class="chip on">Medizin</span><span class="chip on">Pädagogik</span><span class="chip">Landwirtschaft</span>
+      <span class="chip on">Bühne und Eurythmie</span><span class="chip">Naturwissenschaft</span><span class="chip">Anthroposophie</span>
+    </div>
+    <p class="mfoot">Du bekommst diese Mail freitags, weil du Goetheanum Sehen und Das Goetheanum abonniert hast. Felder ändern · Abmelden</p>
+  </div>
+</section>
+
+<p class="note wnote">Wireframe v0.1 · Ein Cover-Format (Standbild 16:9), ein Porträt (1:1), keine Banner. Pro Video vier Textelemente in Listen, sieben auf der Videoseite. Reihen und Tagungen tragen ihren Umfang: Zahl der Folgen und Gesamtdauer. <q>Inventar</q> oben rechts beschriftet sie.</p>
+
+<div class="wfoot"><span>Start</span><span>Feld</span><span>Video</span><span>Person</span><span>Reihe</span><span>Wochenschrift</span><span>Newsletter</span></div>
+
+<script>
+  (function () {
+    var invbtn = document.getElementById('invbtn');
+    invbtn.addEventListener('click', function () {
+      var an = document.body.classList.toggle('inv');
+      invbtn.setAttribute('aria-pressed', an ? 'true' : 'false');
+    });
+
+    function route() {
+      var id = (location.hash || '#start').slice(1);
+      var pages = document.querySelectorAll('.page');
+      var found = false;
+      pages.forEach(function (p) { var on = p.id === id; p.classList.toggle('on', on); if (on) found = true; });
+      if (!found) { pages[0].classList.add('on'); }
+      document.querySelectorAll('.verbs a').forEach(function (a) {
+        a.classList.toggle('on', (id === 'woche') ? a.textContent === 'Lesen' : a.textContent === 'Sehen');
+      });
+      window.scrollTo(0, 0);
+    }
+    window.addEventListener('hashchange', route);
+    route();
+
+    // Die Präsentation steuert den Prototyp von aussen (Seitentyp, Inventar).
+    window.addEventListener('message', function (e) {
+      if (e.source !== window.parent || !e.data || typeof e.data !== 'object') return;
+      if (e.data.seite) { location.hash = '#' + String(e.data.seite).replace(/[^a-z]/g, ''); }
+      if (typeof e.data.inventar === 'boolean') {
+        document.body.classList.toggle('inv', e.data.inventar);
+        invbtn.setAttribute('aria-pressed', e.data.inventar ? 'true' : 'false');
+      }
+    });
+  })();
+</script>
+</body>
+</html>

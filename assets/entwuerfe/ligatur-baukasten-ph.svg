@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 3322 5802.3">
+  <!-- Generator: Adobe Illustrator 30.5.1, SVG Export Plug-In . SVG Version: 2.1.4 Build 3)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #111;
+      }
+
+      .st1 {
+        fill: #9aa0a6;
+        font-size: 34px;
+      }
+
+      .st1, .st2 {
+        font-family: Helvetica, Helvetica;
+        isolation: isolate;
+      }
+
+      .st2 {
+        fill: #23272b;
+        font-size: 46px;
+      }
+
+      .st3 {
+        fill: none;
+        stroke: #cdd2d6;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <g id="metriken">
+    <line class="st3" y1="859.5" x2="3322" y2="859.5"/>
+    <line class="st3" y1="359.5" x2="3322" y2="359.5"/>
+    <line class="st3" y1="169.5" x2="3322" y2="169.5"/>
+    <line class="st3" y1="1079.5" x2="3322" y2="1079.5"/>
+    <text class="st2" transform="translate(0 39.5)"><tspan x="0" y="0">Deine Ligaturen (Klar)</tspan></text>
+    <text class="st1" transform="translate(30.0001 1189.4989)"><tspan x="0" y="0">ff-standard</tspan></text>
+    <text class="st1" transform="translate(728.0001 1189.4989)"><tspan x="0" y="0">ff-wortende</tspan></text>
+    <text class="st1" transform="translate(1495.0001 1189.4989)"><tspan x="0" y="0">fi-weit</tspan></text>
+    <text class="st1" transform="translate(2011.9987 1189.4989)"><tspan x="0" y="0">fl</tspan></text>
+    <text class="st1" transform="translate(2569.9982 1189.4989)"><tspan x="0" y="0">ft</tspan></text>
+    <path class="st3" d="M3322,2579.5"/>
+    <line class="st3" y1="3859.5" x2="3322" y2="3859.5"/>
+    <line class="st3" y1="3359.5" x2="3322" y2="3359.5"/>
+    <line class="st3" y1="3169.5" x2="3322" y2="3169.5"/>
+    <line class="st3" y1="4079.5" x2="3322" y2="4079.5"/>
+    <text class="st2" transform="translate(.0004 3039.4988)"><tspan x="0" y="0">Einzelbuchstaben — Laut (fett)</tspan></text>
+    <line class="st3" y1="5359.5" x2="3322" y2="5359.5"/>
+    <line class="st3" y1="4859.5" x2="3322" y2="4859.5"/>
+    <line class="st3" y1="4669.5" x2="3322" y2="4669.5"/>
+    <line class="st3" y1="5579.5" x2="3322" y2="5579.5"/>
+    <text class="st2" transform="translate(.0004 4539.4987)"><tspan x="0" y="0">Einzelbuchstaben — Leise (duenn)</tspan></text>
+  </g>
+  <g id="r0-ff-standard">
+    <path class="st0" d="M169,431.5h127v-72h-127v-39c0-76,11-115,61-115s73,7,73,7l1-69s-58-10-90-10c-90,0-129,52-129,186v40H30v72h55v648h76l7-220,1-428ZM433.4,431.5h127v-72h-127v-39c0-76,11-115,61-115s73,7,73,7l1-69s-58-10-90-10c-90,0-129,52-129,186v40h-55v72h55v648h76l7-220,1-428Z"/>
+  </g>
+  <g id="r0-ff-wortende">
+    <path class="st0" d="M867.4,431.5h127v-72h-127v-39c0-76,11-115,61-115s73,7,73,7l1-69s-58-10-90-10c-90,0-129,52-129,186v40h-55v72h55v648h76l7-220,1-428ZM1133.1,431.5h127v-72h-127v-39c0-76,11-115,61-115s139.5,14.9,139.5,14.9l1-69s-124.5-17.9-156.5-17.9c-90,0-129,52-129,186v40h-55v72h55v648h76l7-220,1-428Z"/>
+  </g>
+  <g id="r0-fi-weit">
+    <path class="st0" d="M1633.6,431.5h138.9v-72h-138.9v-39c0-76,11-115,61-115s156.8,14.9,156.8,14.9l.6-69s-141.4-17.9-173.4-17.9c-90,0-129,52-129,186v40h-55v72h55v648h76l7-220,1-428ZM1769.4,859.5h83v-500h-83v500Z"/>
+  </g>
+  <g id="r0-fl">
+    <path class="st0" d="M2151.4,431.5h126.5v-72h-126.5v-39c0-76,11-115,61-115s156.9,12.2,156.9,12.2l.6-69s-141.5-15.2-173.5-15.2c-90,0-129,52-129,186v40h-55v72h55v648h76l7-220,1-428ZM2326.3,859.5h84V144.5h-84v715Z"/>
+  </g>
+  <g id="r0-ft">
+    <path class="st0" d="M2709.3,431.5h126.5v-72h-126.5v-39c0-76,11-115,61-115s198.7,13,198.7,13l1.1-69s-183.8-16-215.8-16c-90,0-129,52-129,186v40h-55v72h55v648h76l7-220,1-428h0ZM3105,431.5v-72h-136v-145l-83-5v507c0,97,28,153,132,153s93-13,93-13l-4-65s-47,6-78,6c-45,0-60-33-60-86v-281l136,1Z"/>
+  </g>
+  <g>
+    <g id="r2-f">
+      <path class="st0" d="M188,3452.5h116v-93h-116v-29c0-59,7-97,50-97s71,6,71,6l1-88s-65-11-97-11c-91,0-133,55-133,189v30H30v93h50v622h100l8-215v-407Z"/>
+    </g>
+    <g id="r2-f1" data-name="r2-f">
+      <path class="st0" d="M462,3452.5h116v-93h-116v-29c0-59,7-97,50-97s71,6,71,6l1-88s-65-11-97-11c-91,0-133,55-133,189v30h-50v93h50v622h100l8-215v-407Z"/>
+    </g>
+  </g>
+  <g>
+    <g id="r2-f2" data-name="r2-f">
+      <path class="st0" d="M886.8,3452.5h116v-93h-116v-29c0-59,7-97,50-97s71,6,71,6l1-88s-65-11-97-11c-91,0-133,55-133,189v30h-50v93h50v622h100l8-215v-407Z"/>
+    </g>
+    <g id="r2-f3" data-name="r2-f">
+      <path class="st0" d="M1158.8,3452.5h101.1v-93h-101.1v-29c0-59,7-97,50-97s124.8,6,124.8,6l1-88s-118.8-11-150.8-11c-91,0-133,55-133,189v30h-50v93h50v622h100l8-215v-407Z"/>
+    </g>
+  </g>
+  <g>
+    <g id="r2-f4" data-name="r2-f">
+      <path class="st0" d="M2174.2,3453.5h90.2v-93h-90.2v-29c0-59,7-97,50-97s144.3,6,144.3,6l1-88s-138.3-11-170.3-11c-91,0-133,55-133,189v30h-50v93h50v622h100l8-215v-407Z"/>
+    </g>
+    <g id="r2-l">
+      <path class="st0" d="M2301.3,3858.5h109v-708h-109v708Z"/>
+    </g>
+  </g>
+  <g>
+    <g id="r2-f5" data-name="r2-f">
+      <path class="st0" d="M2733.6,3453.5h102.2v-93h-102.2v-29c0-59,7-97,50-97s200.2,5.5,200.2,5.5l1-88s-194.2-10.5-226.2-10.5c-91,0-133,55-133,189v30h-50v93h50v622h100l8-215v-407Z"/>
+    </g>
+    <g id="r2-t">
+      <path class="st0" d="M3105.8,3452.5v-93h-122v-137h-108v489c0,102,27,159,139,159s95-15,95-15l-5-83s-43,6-75,6-46-29-46-73v-253h122Z"/>
+    </g>
+  </g>
+  <g>
+    <g id="r3-f">
+      <path class="st0" d="M136,4904.5h144v-45h-144v-52c0-98,18-138,77-138s77,8,77,8v-43s-48-10-81-10c-86,0-122,48-122,182v53H25v45h62v682h46l4-227-1-455Z"/>
+    </g>
+    <g id="r3-f1" data-name="r3-f">
+      <path class="st0" d="M381.1,4904.5h144v-45h-144v-52c0-98,18-138,77-138s77,8,77,8v-43s-48-10-81-10c-86,0-122,48-122,182v53h-62v45h62v682h46l4-227-1-455Z"/>
+    </g>
+  </g>
+  <g>
+    <g id="r3-f2" data-name="r3-f">
+      <path class="st0" d="M839.5,4904.5h144v-45h-144v-52c0-98,18-138,77-138s77,8,77,8v-43s-48-10-81-10c-86,0-122,48-122,182v53h-62v45h62v682h46l4-227-1-455Z"/>
+    </g>
+    <g id="r3-f3" data-name="r3-f">
+      <path class="st0" d="M1084.5,4904.5h144v-45h-144v-52c0-98,18-138,77-138s144.5,8,144.5,8v-43s-115.5-10-148.5-10c-86,0-122,48-122,182v53h-62v45h62v682h46l4-227-1-455Z"/>
+    </g>
+  </g>
+  <g>
+    <g id="r2-f6" data-name="r2-f">
+      <path class="st0" d="M1658.1,3452.5h101.1v-93h-101.1v-29c0-59,7-97,50-97s144.3,6,144.3,6l1-88s-138.3-11-170.3-11c-91,0-133,55-133,189v30h-50v93h50v622h100l8-215v-407Z"/>
+    </g>
+    <rect class="st0" x="1744.4" y="3359.5" width="108" height="500"/>
+  </g>
+  <text class="st1" transform="translate(85 4230.4579)"><tspan x="0" y="0">ff-standard</tspan></text>
+  <text class="st1" transform="translate(783 4230.4579)"><tspan x="0" y="0">ff-wortende</tspan></text>
+  <text class="st1" transform="translate(1550 4230.4579)"><tspan x="0" y="0">fi-weit</tspan></text>
+  <text class="st1" transform="translate(2066.9986 4230.4579)"><tspan x="0" y="0">fl</tspan></text>
+  <text class="st1" transform="translate(2624.998 4230.4579)"><tspan x="0" y="0">ft</tspan></text>
+  <text class="st1" transform="translate(85 5785.9797)"><tspan x="0" y="0">ff-standard</tspan></text>
+  <text class="st1" transform="translate(783 5785.9797)"><tspan x="0" y="0">ff-wortende</tspan></text>
+  <text class="st1" transform="translate(1550 5785.9797)"><tspan x="0" y="0">fi-weit</tspan></text>
+  <text class="st1" transform="translate(2066.9986 5785.9797)"><tspan x="0" y="0">fl</tspan></text>
+  <text class="st1" transform="translate(2624.998 5785.9797)"><tspan x="0" y="0">ft</tspan></text>
+  <g>
+    <g id="r3-dotlessi">
+      <path class="st0" d="M1802.3,5359.9h50v-500h-50v500Z"/>
+    </g>
+    <g id="r3-f4" data-name="r3-f">
+      <path class="st0" d="M1630.7,4904.9h175.7v-45h-175.7v-52c0-98,18-138,77-138s144.5,8,144.5,8v-43s-115.5-10-148.5-10c-86,0-122,48-122,182v53h-62v45h62v682h46l4-227-1-455Z"/>
+    </g>
+  </g>
+  <g>
+    <g id="r3-l">
+      <path class="st0" d="M2358.7,5359.9h49v-725h-49v725Z"/>
+    </g>
+    <g id="r3-f5" data-name="r3-f">
+      <path class="st0" d="M2137.2,4904.5h175.7v-45h-175.7v-52c0-98,18-138,77-138s144.5,8,144.5,8v-43s-115.5-10-148.5-10c-86,0-122,48-122,182v53h-62v45h62v682h46l4-227-1-455Z"/>
+    </g>
+  </g>
+  <g>
+    <g id="r3-t">
+      <path class="st0" d="M3123.1,4904.3v-45h-153v-213.5h-49v578.5c0,89,29,145,123,145s89-10,89-10l-3-41s-54,6-82,6c-56,0-78-38-78-103v-318l153,1Z"/>
+    </g>
+    <g id="r3-f6" data-name="r3-f">
+      <path class="st0" d="M2675.1,4904.5h175.7v-45h-175.7v-52c0-98,18-138,77-138s217.8,8,217.8,8l.2-43s-189-10-222-10c-86,0-122,48-122,182v53h-62v45h62v682h46l4-227-1-455Z"/>
+    </g>
+  </g>
+</svg>

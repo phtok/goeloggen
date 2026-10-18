@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+<title>Goetheanum Werkzeuge</title>
+<meta name="description" content="Werkzeuge für das Goetheanum: Logos, Schriften, E-Mail-Signatur, Visitenkarten und das Design-System." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Icon-Webfont nur fürs Karten-Mini-Visual (das Erzeugnis als Erkennungszeichen). */
+  @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2") format("woff2");font-display:block}
+
+  /* Startseite: nur die Karten – kein Hero, keine Überschriften, keine Erklärungen.
+     Atem unter dem Header, aber knapp (‹zu viel Luft über den Karten› –
+     Entscheid Auftraggeber, 8. Juli 2026). main.wrap, sonst gewinnt .wrap (0 26px)
+     und der Abstand oben bliebe wirkungslos – nur top/bottom setzen. */
+  main.wrap{padding-top:clamp(36px,5vw,60px);padding-bottom:clamp(40px,6vw,64px)}
+  .grid{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+
+  .tile{position:relative;display:flex;flex-direction:column;gap:var(--s3);border:1px solid var(--line);
+    border-radius:var(--r-card);padding:var(--s6);background:var(--paper);text-decoration:none;color:var(--ink);
+    transition:border-color .15s,box-shadow .15s,transform .15s}
+  .tile:hover{border-color:var(--gold-ink);box-shadow:var(--shadow-card);transform:translateY(-1px)}
+  .tile h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:20px;line-height:1.15;display:flex;align-items:center;gap:9px;margin:0}
+  .tile h3 .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s,color .15s}
+  .tile:hover h3 .arr{color:var(--gold-ink);transform:translateX(3px)}
+  /* Ein Satz, was das Werkzeug tut – aus tools.json (desc), eine Quelle. */
+  .tile p{margin:0;color:var(--muted);font-size:var(--t-small);line-height:1.5;max-width:40ch}
+
+  /* Gruppen nach Anlass (tools.json → gruppen, Entscheid Auftraggeber 7. 10. 2026):
+     drei Überschriften als eigene Strukturebene (G01-Ausnahme), deutlich grösser
+     als die Kartentitel; Haarlinie und Luft (section aus base.css) trennen die
+     Gruppen, damit jede als Einheit liest. */
+  .gruppen{display:grid}
+  .gruppen section:first-child{border-top:0;padding-top:0}
+  .gruppen .gk{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h2);line-height:1.15;margin:0 0 var(--s5);color:var(--ink)}
+  .gruppen .grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+  @media (max-width:420px){.gruppen .grid{grid-template-columns:1fr}}
+  /* Feature (tools.json → gruppen.feature): ein Werkzeug gross vorn. Dieselbe
+     Karte, nur in der Fläche – Bild und Text nebeneinander, Titel eine Stufe
+     grösser, Satz als Lede (eigene Strukturebene, G01-Ausnahme). Kicker
+     normal, nicht versal (G05). */
+  .feature .tile{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);align-items:center;gap:var(--s4) var(--s7);padding:var(--s6)}
+  .feature .thumb{height:auto;min-height:200px}
+  .feature .thumb>*{transform:scale(1.9)}
+  .feature .tile h3{font-size:var(--t-h1)}
+  .feature .tile p{font-size:var(--t-body);line-height:var(--lh-body);max-width:46ch;margin-top:var(--s3)}
+  .feature .kicker{display:block}
+  @media (max-width:640px){.feature .tile{grid-template-columns:1fr}.feature .thumb{min-height:150px}.feature .thumb>*{transform:scale(1.5)}}
+
+  /* Greifbare Mini-Werkzeuge je Karte – das Erzeugnis als Erkennungszeichen. */
+  .thumb{height:96px;display:grid;place-items:center;border-radius:10px;background:var(--paper);
+    border:1px solid var(--line-soft);overflow:hidden}
+  .thumb img{height:46px;width:auto;display:block}
+  /* Buchstaben-Probe (Schriften) */
+  .thumb .spec{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:46px;line-height:1;color:var(--ink);letter-spacing:.02em}
+  /* Werkzeug-Abo: der Brief im Strich der Nachbarn (vk/ppt), dazu ein Gold-Punkt
+     für ‹es gibt Neues› – der eine Akzent (G01/G03). Ring in --paper löst den
+     Punkt von der Kante, hell wie dunkel (B05). */
+  .thumb .mail{width:66px;height:44px;border:1.6px solid var(--muted);border-radius:5px;position:relative}
+  .thumb .mail svg{position:absolute;inset:0;width:100%;height:100%}
+  .thumb .mail path{fill:none;stroke:var(--muted);stroke-width:1.6;stroke-linejoin:round}
+  .thumb .mail b{position:absolute;top:-7px;right:-7px;width:16px;height:16px;border-radius:50%;background:var(--gold-ink);border:2.5px solid var(--paper)}
+  /* Programmheft: das offene A5-Heft – links Titelbild mit Goldtitel, rechts der
+     Zeitplan (Uhrzeit in Gold, Ort grau). */
+  .thumb .heft{display:flex}
+  .thumb .heft>span{width:40px;height:56px;border:1.6px solid var(--muted);display:grid;align-content:start;gap:5px;padding:6px}
+  .thumb .heft>span:first-child{border-radius:4px 0 0 4px;border-right-width:.8px}
+  .thumb .heft>span:last-child{border-radius:0 4px 4px 0;border-left-width:.8px}
+  .thumb .heft u{display:block;height:17px;background:var(--line);border-radius:2px;text-decoration:none}
+  .thumb .heft b{display:block;height:4.5px;width:80%;background:var(--gold-ink);border-radius:2px}
+  .thumb .heft i{display:flex;gap:3px}
+  .thumb .heft i:before{content:"";width:7px;height:3px;background:var(--gold-ink);border-radius:2px}
+  .thumb .heft i:after{content:"";flex:1;height:3px;background:var(--muted);border-radius:2px}
+  /* Familienmenü: der Schweber, wie er auf der fremden Seite steht – Kreis aus
+     Papier, Ring und Zeichen in Blau (identisch zu familie.css, darum auch hier
+     ohne festen Farbwert: B05/DS04, hält hell wie dunkel). */
+  .thumb .fam{width:58px;height:58px;display:block;color:var(--blue)}
+  .thumb .fam .grund{fill:var(--paper);stroke:currentColor;stroke-width:1.35}
+  .thumb .fam path{fill:currentColor}
+  /* Visitenkarte */
+  .thumb .vk{width:58px;height:37px;border:1.6px solid var(--muted);border-radius:4px;display:grid;align-content:center;gap:5px;padding:8px}
+  .thumb .vk i{display:block;height:2px;background:var(--muted);border-radius:2px}
+  .thumb .vk i:nth-child(1){width:64%}.thumb .vk i:nth-child(2){width:42%}
+  /* Signatur-Block: blaue Kante + Zeilen (wie die echte Trennlinie) */
+  .thumb .sig{display:flex;gap:10px;align-items:center}
+  .thumb .sig>b{width:3px;height:40px;background:var(--blue);border-radius:2px;display:block}
+  .thumb .sig>span{display:grid;gap:6px}
+  .thumb .sig i{display:block;height:2.5px;background:var(--muted);border-radius:2px}
+  .thumb .sig i:nth-child(1){width:56px}.thumb .sig i:nth-child(2){width:40px}.thumb .sig i:nth-child(3){width:48px}
+  /* Webfont: Schrift im Browser-Fenster */
+  .thumb .win{width:78px;height:58px;border:1.6px solid var(--muted);border-radius:6px;position:relative;display:grid;place-items:center;overflow:hidden}
+  .thumb .win>b{position:absolute;top:0;left:0;right:0;height:14px;background:var(--line-soft);border-bottom:1.4px solid var(--muted)}
+  .thumb .win>em{font-family:var(--font-display);font-weight:var(--w-deutlich);font-style:normal;font-size:26px;color:var(--ink);margin-top:11px}
+  /* Typografie: gesetzter Absatz, erste Zeile als goldene Überschrift */
+  .thumb .para{display:grid;gap:6px;width:66px}
+  .thumb .para i{display:block;height:3px;border-radius:2px;background:var(--muted)}
+  .thumb .para i:nth-child(1){background:var(--gold-ink);width:72%;height:4.5px}
+  .thumb .para i:nth-child(2){width:100%}.thumb .para i:nth-child(3){width:100%}.thumb .para i:nth-child(4){width:60%}
+  /* Design-System: Farbfelder */
+  .thumb .sw{display:flex;gap:9px}
+  .thumb .sw i{width:20px;height:20px;border-radius:5px;display:block}
+  /* Design-System: Mini-Bauplan – Struktur (Leiste, Zeilen) + Farbe (Chips) */
+  .thumb .sys{display:grid;gap:6px;width:122px}
+  .thumb .sys .bar{height:13px;border-radius:4px;background:var(--blue)}
+  .thumb .sys .ln{height:7px;border-radius:3px;background:var(--line)}
+  .thumb .sys .ln.s{width:60%}
+  .thumb .sys .chips{display:flex;gap:6px;margin-top:3px}
+  .thumb .sys .chips i{width:18px;height:18px;border-radius:5px;display:block}
+  /* Icons: drei Piktogramme aus dem Icon-Webfont (currentColor – folgt Hell/Dunkel) */
+  .thumb .icons{font-family:"G Icons";font-size:36px;line-height:1;color:var(--ink);display:flex;gap:14px}
+  /* PowerPoint: eine Folie mit Titelzeile (statt mehrdeutigem „P") */
+  .thumb .ppt{width:76px;height:56px;border:1.6px solid var(--muted);border-radius:5px;display:grid;align-content:start;gap:6px;padding:9px}
+  .thumb .ppt b{display:block;height:7px;width:62%;background:var(--gold-ink);border-radius:2px}
+  .thumb .ppt i{display:block;height:3px;background:var(--muted);border-radius:2px}
+  .thumb .ppt i:nth-child(2){width:100%}.thumb .ppt i:nth-child(3){width:76%}
+  /* Übersetzungen: vier Sprach-Marken, die Ausgangssprache im Goldrahmen – ein
+     Akzent (G03). Rahmen in --muted statt --line, damit sie ≥3:1 tragen (B02). */
+  .thumb .tr{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+  .thumb .tr i{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:15px;font-style:normal;color:var(--ink);border:1.6px solid var(--muted);border-radius:6px;padding:3px 9px}
+  .thumb .tr i:first-child{border-color:var(--gold-ink)}
+  /* Editor: Text mit einer offenen Frage (Gold-Markierung), wie in der Marginalspalte */
+  .thumb .ed{display:grid;gap:6px;width:66px}
+  .thumb .ed i{display:block;height:3px;border-radius:2px;background:var(--muted)}
+  .thumb .ed i:nth-child(1){width:100%}
+  .thumb .ed i.mk{background:var(--gold-ink);width:44%}
+  .thumb .ed i:nth-child(3){width:82%}
+  /* Campus-Karte: ein schematisches Zeichen (Baukörper, generische Wege, zwei
+     Marken) – Symbol, kein Grundriss, behauptet keinen realen Wegverlauf. Die
+     Kartenfarben sind Artefakt (das DING ist farbig), kein Theme. */
+  .thumb .karte{width:88px;height:60px;border-radius:7px;display:block}
+
+  /* QR-Code – ein echter, scannbarer QR (führt über tools.goetheanum.ch/s/hoi
+     zum Werkzeug selbst). Zwei Fassungen: dunkel auf hell (Light) und invertiert
+     hell auf dunkel (Dark) – die passende steht je nach Theme, gesteuert über
+     data-theme UND prefers-color-scheme. */
+  .thumb .qrg{width:66px;height:66px;border-radius:8px;display:block}
+  .thumb .qrgd{display:none}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .thumb .qrgl{display:none}
+    :root:not([data-theme="light"]) .thumb .qrgd{display:block}
+  }
+  :root[data-theme="dark"] .thumb .qrgl{display:none}
+  :root[data-theme="dark"] .thumb .qrgd{display:block}
+  :root[data-theme="light"] .thumb .qrgl{display:block}
+  :root[data-theme="light"] .thumb .qrgd{display:none}
+
+  /* Wallpaper: ein Motiv, aber im Card-Gesetz – kontaktiert in einem kleinen
+     gerahmten Bildchen, mittig mit Luft, nicht randlos über die ganze Kachel. */
+  .thumb .wp{width:96px;height:54px;border-radius:6px;overflow:hidden;display:block}
+  .thumb .wp img{width:100%;height:100%;object-fit:cover;display:block}
+
+  /* Kurzlink: das Ding selbst – die kurze Adresse im Adressfeld, der Kurz-Teil
+     in Gold (ein Merkmal, G01). Daten-Schrift (Source), 16px (B03). */
+  .thumb .adr{font-family:var(--font-text);font-size:16px;font-weight:var(--w-strong);color:var(--ink);border:1.6px solid var(--muted);border-radius:999px;padding:5px 12px}
+  .thumb .qrk{display:flex;align-items:center;gap:14px}
+  .thumb .qrk .qrg{width:56px;height:56px}
+  .thumb .adr em{font-style:normal;color:var(--gold-ink)}
+
+  /* Ordnen-Modus (?ordnen, assets/ordnen.js): die Startseite live, darauf die
+     Sortier-Griffe. Leiste klebt unter der Kopfzeile; Aktion = Blau (.btn),
+     Fläche wählen = Gold-Pille (.seg, B01). Ziele ≥44px (B04). */
+  .ord-bar{position:sticky;top:var(--header-h);z-index:20;display:flex;flex-wrap:wrap;align-items:center;
+    gap:var(--s2) var(--s3);margin:calc(-1 * var(--s4)) 0 var(--s5);padding:var(--s3) 0;
+    background:var(--paper);border-bottom:1px solid var(--line)}
+  .ord-bar .btn{min-height:var(--tap)}
+  .ord-status{margin:0;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .ord-status.err{color:var(--bad)}
+  .ord-luft{flex:1 1 auto}
+  .ord-item{display:flex;flex-direction:column;gap:var(--s2);cursor:grab}
+  .ord-item>.tile{flex:1 1 auto}
+  .ord-item.zieht{opacity:.5}
+  .ord-item.ueber>.tile,.ord-item.ueber.dsnav-link{box-shadow:inset 0 0 0 2px var(--gold-deep)}
+  .ord-ctl{display:flex;gap:var(--s2)}
+  .ord-k{min-width:var(--tap);min-height:var(--tap);padding:0 var(--s3);font-family:var(--font-text);font-size:var(--t-small)}
+  .ord-item .ord-ctl .ord-k[data-akt="aus"]{margin-left:auto}
+  /* Hervorheben: gewählt = Gold-Pille wie .seg (dunkles Gold + Weiss, B01); die
+     Karte trägt denselben Gold-Rand wie beim Ziehen. */
+  .ord-k[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent);font-weight:var(--w-strong)}
+  .ord-feature>.tile{box-shadow:inset 0 0 0 2px var(--gold-deep)}
+  .ord-item .ord-ctl{flex-wrap:wrap}
+  .ord-item .ord-ctl .ord-k[data-akt="feature"]{order:1;flex:1 1 100%}
+  /* Schublade: dieselbe Fläche wie das Menü (nav.css), hier in der Seite stehend. */
+  .ord-schublade{width:min(420px,100%);border:1px solid var(--line);border-radius:var(--r-card);
+    background:var(--paper);overflow:hidden}
+  .ord-schublade .dhead{display:flex;align-items:center;padding:0 22px;height:var(--header-h);border-bottom:1px solid var(--line)}
+  .ord-schublade .dhead .t{font-weight:var(--w-deutlich);font-size:15px}
+  .ord-schublade .body{padding:var(--s2) 0}
+  .ord-schublade .dsnav-link.ord-item{flex-direction:row;padding-right:var(--s2)}
+  .ord-schublade .ord-ctl{margin-left:auto;gap:4px}
+  .ord-k[data-akt="vor"],.ord-k[data-akt="nach"]{font-size:20px}
+  .goe-ordnen .dsnav-invite{display:none}
+  @media(max-width:720px){.ord-bar{position:static}}
+  .ord-aus{margin-top:var(--s8)}
+  .ord-aus h2{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:20px;margin:0 0 var(--s3)}
+  .ord-aus ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:var(--s2)}
+  .ord-aus li{display:flex;align-items:center;gap:var(--s3);padding:4px 4px 4px var(--s4);
+    border:1px dashed var(--line);border-radius:var(--r-control);color:var(--muted);
+    font-family:var(--font-text);font-size:var(--t-small)}
+
+  /* Reduzierte Bewegung: die Karte hebt sich nicht an. */
+  @media(prefers-reduced-motion:reduce){.tile:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<!-- Sprungleiste zu den Gruppen (Haus-Komponente .dsnav-onpage); Anker = gruppen.startseite[].id in tools.json. -->
+<script src="design-system/nav.js" data-root="./" data-active="start" data-onpage="Jeden Tag:#jeden-tag|Von Zeit zu Zeit:#von-zeit-zu-zeit|Einmal einrichten:#einrichten"></script>
+
+<main class="wrap" id="inhalt">
+  <h1 class="sr-only">Goetheanum Werkzeuge</h1>
+  <div class="grid" id="cards"></div>
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong> · Werkzeuge</span>
+    <span>Allgemeine Anthroposophische Gesellschaft · <a href="https://www.goetheanum.ch">goetheanum.ch</a></span>
+  </div>
+</footer>
+
+<script>
+"use strict";
+(function(){
+  // Karten flach nach Priorität (keine Kategorien); Unbekannte ans Ende.
+  // Webfont wohnt jetzt in Schriften, Zeichen in Logos – darum keine eigene Karte.
+  // Neue Ordnung (Entscheid Auftraggeber, 8. Juli 2026).
+  var ORDER = ["logo-generator","signatur","visitenkarten","schriften",
+    "icons","uebersetzungen","qr-generator","kurzlink","typografie","powerpoint",
+    "wallpaper","karten","sektionsfarben","design-system",
+    "editor"];
+  // Greifbar: jedes Zeichen zeigt das DING, das das Werkzeug erzeugt.
+  var VISUAL = {
+    "logo-generator":  '<img src="assets/logos/goetheanum-marke.svg" alt="">',               // die blanke Marke (aus der Engine, DS08)
+    "visitenkarten":   '<span class="vk"><i></i><i></i></span>',                               // eine Karte
+    "signatur":        '<span class="sig"><b></b><span><i></i><i></i><i></i></span></span>',   // Signatur-Block (blaue Kante + Zeilen)
+    "schriften":       '<span class="spec">Ag</span>',                                         // Buchstaben-Probe
+    "icons":           '<span class="icons" aria-hidden="true">gfx</span>',                     // drei Piktogramme (WLAN · Garderobe · Rollstuhl)
+    "schrift-webfont": '<span class="win"><b></b><em>Aa</em></span>',                          // Schrift im Browser-Fenster
+    "typografie":      '<span class="para"><i></i><i></i><i></i><i></i></span>',               // gesetzter Absatz
+    "design-system":   '<span class="sys"><i class="bar"></i><i class="ln"></i><i class="ln s"></i><span class="chips"><i style="background:var(--gold)"></i><i style="background:var(--sek-ms)"></i><i style="background:var(--gold-deep)"></i></span></span>', // Mini-Bauplan: Struktur + Farbe
+    "sektionsfarben":  '<span class="sw"><i style="background:var(--sek-szw)"></i><i style="background:var(--sek-lws)"></i><i style="background:var(--sek-ms)"></i><i style="background:var(--sek-js)"></i></span>', // vier Sektionsfarben
+    "zeichen":         '<span style="background:#fff;border-radius:8px;width:100%;height:100%;display:grid;place-items:center"><img src="assets/zeichen/hochschulzeichen.png" alt="" style="max-height:66px;max-width:78%"></span>', // Rudolf-Steiner-Zeichen auf weissem Papier
+    "wallpaper":       '<span class="wp"><img src="assets/wallpaper/goetheanum-wallpaper-48.jpg" alt=""></span>', // ein Motiv, im Card-Gesetz gerahmt
+    "powerpoint":      '<span class="ppt"><b></b><i></i><i></i></span>', // eine Folie mit Titel
+    "uebersetzungen":  '<span class="tr"><i>DE</i><i>EN</i><i>FR</i><i>ES</i></span>', // vier Sprachen
+    "editor":          '<span class="ed"><i></i><i class="mk"></i><i></i></span>', // Text mit offener Frage
+    "karten":          '<svg class="karte" viewBox="0 0 100 68" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="100" height="68" fill="#8abfe5"/><path d="M-4 52 Q40 40 104 54" stroke="#ffffff" stroke-width="4.2" fill="none" stroke-linecap="round"/><path d="M30 -4 Q44 30 40 72" stroke="#ffffff" stroke-width="4.2" fill="none" stroke-linecap="round"/><path d="M50 34 L96 46" stroke="#ffffff" stroke-width="3.4" fill="none" stroke-linecap="round"/><rect x="40" y="22" width="26" height="20" rx="6" fill="#0067b2"/><circle cx="70" cy="24" r="4.2" fill="#caa04e" stroke="#ffffff" stroke-width="1.4"/><circle cx="33" cy="50" r="4.2" fill="#ec5f6c" stroke="#ffffff" stroke-width="1.4"/></svg>', // schematisches Campus-Zeichen, kein Grundriss
+    "qr-generator":    '<span class="qrk"><img class="qrg qrgl" src="assets/qr-werkzeug.svg" alt=""><img class="qrg qrgd" src="assets/qr-werkzeug-dark.svg" alt=""><span class="adr" aria-hidden="true">…/s/<em>hoi</em></span></span>', // echter QR (Light + Dark) neben der Kurz-Adresse: ein Werkzeug, beides
+    "kurzlink":        '<span class="adr" aria-hidden="true">…/s/<em>hoi</em></span>',              // die kurze Adresse selbst
+    "abo":             '<span class="mail"><svg viewBox="0 0 66 44" aria-hidden="true"><path d="M2 3 L33 25 L64 3"/></svg><b></b></span>', // Brief + Gold-Punkt ‹Neues›
+    "programmheft":    '<span class="heft"><span><u></u><b></b></span><span><i></i><i></i><i></i><i></i></span></span>', // offenes Heft: Titelbild | Zeitplan
+    "familie":         '<svg class="fam" viewBox="0 0 28.3465 28.3465" aria-hidden="true"><circle class="grund" cx="14.173" cy="14.173" r="13.5"/><path d="m11.3891,8.0134l8.1716-2.8083v17.0421h-4.8546l.0057-6.2604c.0024-.4052-.0696-.7838-.1957-1.1631-.3842-1.1566-3.1269-6.8104-3.1269-6.8104"/><path d="m11.041,11.0259s2.4766,3.9592,2.4766,4.8845l.0388,6.3364h-2.8617l-.0178-2.1782c-.0283-1.3208-3.025-5.0471-3.025-5.0471l3.389-3.9956Z"/><path d="m6.7607,19.7208l1.9048-1.3532s.8921,1.4899.9714,2.0124c.0801.5225.0162,1.8676.0162,1.8676h-2.0253s.004-.491.0065-.7085c.0057-.385-.1165-.7142-.3033-1.0304-.0874-.148-.4926-.6616-.5702-.7878"/></svg>' // der Schweber selbst: Marke im Kreis
+  };
+  function visual(t){
+    var v = VISUAL[t.slug] || ('<span class="spec">' + (t.title || "?").slice(0, 1) + '</span>');
+    return '<span class="thumb">' + v + '</span>';
+  }
+  function isExt(h){ return /^https?:/.test(h); }
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  function tile(t){
+    var a = document.createElement("a");
+    a.className = "tile";
+    a.href = t.href;
+    if (isExt(t.href)) { a.target = "_blank"; a.rel = "noopener"; }
+    a.innerHTML = visual(t) + '<h3>' + t.title + ' <span class="arr">›</span></h3>' +
+                  (t.desc ? '<p>' + esc(t.desc) + '</p>' : '');
+    return a;
+  }
+  function render(man){
+    // Öffentliche Welten (Backstage wie schau/schriftpflege/kistenpflege bleibt draussen).
+    var PUBLIC = ["generatoren", "schrift", "system", "anwendung"];
+    var tools = (man.tools || []).filter(function(t){
+      return PUBLIC.indexOf(t.cat) >= 0 && (t.status === "live" || t.status === "beta");
+    });
+    // Reihenfolgen pflegt der Sortierer (tools.json → reihenfolge); sonst die Vorgaben.
+    var R = man.reihenfolge || {};
+    var AUS = R.aus || {};
+    // Ausgeblendete Karten (Sortierer): weg von der Startseite, per Direktlink/Menü erreichbar.
+    var ausKarten = AUS.karten || [];
+    tools = tools.filter(function(t){ return ausKarten.indexOf(t.slug) < 0; });
+    var kartenOrder = (R.karten && R.karten.length) ? R.karten : ORDER;
+    var rank = function(t){ var k = kartenOrder.indexOf(t.slug); return k < 0 ? 999 : k; };
+    tools.sort(function(a,b){ return rank(a) - rank(b); });
+    var grid = document.getElementById("cards");
+    var G = man.gruppen && man.gruppen.startseite;
+    if (!G || !G.length) { tools.forEach(function(t){ grid.appendChild(tile(t)); }); return; }
+    // Gruppen nach Anlass: Zugehörigkeit aus tools.json → gruppen, Folge innerhalb
+    // der Gruppe aus der Reihenfolge oben. Nicht Zugeordnetes läuft in die letzte Gruppe.
+    grid.className = "gruppen";
+    // Feature: ein Werkzeug gross vorn (tools.json → gruppen.feature); es bleibt auch in seiner Gruppe.
+    var feat = tools.filter(function(t){ return t.slug === man.gruppen.feature; })[0];
+    if (feat) {
+      var fs = document.createElement("section");
+      fs.className = "feature"; fs.setAttribute("aria-label", "Aktuell");
+      var ft = tile(feat), fx = document.createElement("div");
+      fx.innerHTML = '<span class="kicker">Aktuell</span>';
+      while (ft.children.length > 1) fx.appendChild(ft.children[1]);
+      ft.appendChild(fx); fs.appendChild(ft); grid.appendChild(fs);
+    }
+    var frei = tools.slice();
+    var teile = G.map(function(g){
+      var drin = tools.filter(function(t){ return g.slugs.indexOf(t.slug) >= 0; });
+      frei = frei.filter(function(t){ return drin.indexOf(t) < 0; });
+      return { id: g.id, titel: g.titel, tools: drin };
+    });
+    teile[teile.length - 1].tools = teile[teile.length - 1].tools.concat(frei);
+    teile.forEach(function(g){
+      if (!g.tools.length) return;
+      var sec = document.createElement("section");
+      if (g.id) sec.id = g.id;
+      sec.innerHTML = '<h2 class="gk">' + esc(g.titel) + '</h2>';
+      var box = document.createElement("div"); box.className = "grid";
+      g.tools.forEach(function(t){ box.appendChild(tile(t)); });
+      sec.appendChild(box); grid.appendChild(sec);
+    });
+  }
+  // Ordnen-Modus (?ordnen): dieselbe Seite, dazu die Sortier-Griffe (assets/ordnen.js).
+  var ORDNEN = /[?&]ordnen\b/.test(location.search);
+  function start(man){
+    if (!ORDNEN) return render(man);
+    var sc = document.createElement("script");
+    sc.src = "assets/ordnen.js";
+    sc.onload = function(){ window.goeOrdnen(man, tile); };
+    document.body.appendChild(sc);
+  }
+  // no-cache: beim Server nachfragen (ETag), sonst zeigt der Browser bis zu zehn
+  // Minuten den alten Stand – eine Sortierer-Speicherung schiene nicht zu greifen.
+  fetch("tools.json", { cache: "no-cache" }).then(function(r){ return r.json(); }).then(start).catch(function(){
+    document.getElementById("cards").innerHTML = '<p class="meta">Werkzeugliste konnte nicht geladen werden.</p>';
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+# Abgleich des Tagungsprogramms mit agriculture-conference.org — auf Abruf.
+#
+# Regelmässig läuft hier nichts (Beschluss 16. 9. 2026: «vier Mal am Tag ist
+# viel zu oft»). Den frischen Stand holt der Knopf «Von der Webseite holen»
+# auf https://werkzeuge.goetheanum.ch/apps/lt-programm/ — der zeigt und
+# exportiert sofort, ohne irgendetwas zu speichern.
+#
+# Dieser Lauf ist für den anderen Fall: den geholten Stand als
+# apps/lt-programm/webseite.json ins Repo schreiben, damit die Seite ihn
+# auch ohne Abruf zeigt und der Verlauf im Git steht. Von Hand starten:
+# Actions → «LT-Programm: Stand holen» → Run workflow.
+name: "LT-Programm: Stand holen"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lt-programm-stand
+  cancel-in-progress: false
+
+jobs:
+  holen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Programmseite holen und mit dem Stand vergleichen
+        id: holen
+        run: |
+          set +e
+          node apps/lt-programm/holen.mjs --pruefen
+          rc=$?
+          set -e
+          if [ "$rc" = "1" ]; then echo "geaendert=ja" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [ "$rc" = "0" ]; then echo "geaendert=nein" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "Seite nicht wie erwartet lesbar (Exit $rc)"; exit "$rc"
+      - name: Neuen Stand committen
+        if: steps.holen.outputs.geaendert == 'ja'
+        run: |
+          git config user.name "lt-programm"
+          git config user.email "werkzeuge@goetheanum.ch"
+          git add apps/lt-programm/webseite.json
+          git commit -m "LT-Programm: Stand der Webseite $(date -u +%Y-%m-%d) übernommen"
+          git push

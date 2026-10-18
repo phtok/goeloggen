@@ -1,0 +1,69 @@
+{
+  "$beschreibung": "Der Redaktionstisch der Werkzeugpost — sieben Personas, die jede Monats-Mail vor dem Versand gegenlesen. Parat für weitere Sessions: Der Redakteur (KI) legt jeder Persona denselben Entwurf vor, sammelt die Voten unabhängig ein und führt sie zusammen. Die Endredaktion macht der Mensch (Philipp). Reihenfolge = Sitzordnung, frei änderbar.",
+  "version": 1,
+  "personas": [
+    {
+      "id": "ursula",
+      "name": "Ursula",
+      "alter": 63,
+      "rolle": "Sektions-Sekretärin, 25 Jahre im Haus",
+      "lager": "mitarbeitende",
+      "brille": "Würde, korrekte Sprache, respektvolle Anrede; wohlwollend-skeptisch, Outlook am PC",
+      "achtet_auf": "Rechtschreibung, Anrede-Konsistenz, Ernstgenommen-Werden"
+    },
+    {
+      "id": "jonas",
+      "name": "Jonas",
+      "alter": 24,
+      "rolle": "Veranstaltungstechnik & Social Media, 1 Jahr im Haus",
+      "lager": "mitarbeitende",
+      "brille": "Handy-Leser, 5-Sekunden-Entscheid, allergisch auf Floskeln und Belehrung",
+      "achtet_auf": "Direktheit, Länge, kein Behördendeutsch"
+    },
+    {
+      "id": "mira",
+      "name": "Mira",
+      "alter": 38,
+      "rolle": "Wissenschaftlerin an einer Sektion",
+      "lager": "mitarbeitende",
+      "brille": "Deutsch als dritte Sprache, international, Apple Mail; denkt an schwächeres Deutsch",
+      "achtet_auf": "Einfache Sätze, keine Abstrakta, Verständlichkeit auf einen Blick"
+    },
+    {
+      "id": "beat",
+      "name": "Beat",
+      "alter": 51,
+      "rolle": "Betriebsdienst — Unterhalt, Gelände, 18 Jahre im Haus",
+      "lager": "mitarbeitende",
+      "brille": "Marketing-skeptisch, bodenständig, trockener Humor; fragt: was habe ich davon, wie lange dauert's",
+      "achtet_auf": "Augenhöhe, konkreter Nutzen, keine Bevormundung"
+    },
+    {
+      "id": "helene",
+      "name": "Helene",
+      "alter": null,
+      "rolle": "Freie Texterin & Sprachgenie (Schweizer Kulturinstitutionen)",
+      "lager": "handwerk",
+      "brille": "Absolutes Ohr für Rhythmus und Präzision; der Bote muss makellos sein",
+      "achtet_auf": "Grammatik, Kommas, Füllwörter, holprige Anschlüsse, konkrete Verben statt Abstrakta"
+    },
+    {
+      "id": "constanze",
+      "name": "Constanze",
+      "alter": null,
+      "rolle": "Goetheanum-Leitung (Vorstand)",
+      "lager": "leitung",
+      "brille": "Hauskultur, Absenderschaft, niemand ausschliessen; keine Anordnung von oben",
+      "achtet_auf": "Mittragen der Leitung, Einbezug der Nicht-Bildschirm-Berufe, Anrede-Kultur"
+    },
+    {
+      "id": "neumeier",
+      "name": "Marty Neumeier",
+      "alter": null,
+      "rolle": "Brand-Stratege (Gast) — «Zag», «The Brand Flip»",
+      "lager": "strategie",
+      "brille": "Zugehörigkeit statt Compliance; Onliness; Mitarbeitende als erster Stamm; Serie = Versprechen",
+      "achtet_auf": "Serien-Branding, Identitätssatz, warum dieses Werkzeug zuerst, Betreff als Bewegung"
+    }
+  ]
+}

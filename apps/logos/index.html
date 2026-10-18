@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+<title>Logos – Goetheanum</title>
+<meta name="description" content="Das Logo des Goetheanum: Sektions- und Bereichslogos in der Hausschrift erzeugen und herunterladen – mit Begleitschreiben (wer, was, wie; Regeln und Verbote)." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<style>
+  /* Seitenkopf (.hero/h1/.lede) kommt aus base.css – keine eigene Grösse/Farbe. */
+
+  /* Werkzeug – zwei Spalten, Vorschau OBEN-BÜNDIG mit der Auswahl und klebend. */
+  .tool{display:grid;gap:var(--s6);grid-template-columns:1fr}
+  @media(min-width:860px){.tool{grid-template-columns:minmax(290px,350px) 1fr;align-items:start}}
+  .controls{display:grid;gap:var(--s4)}
+  .seg .brk{flex-basis:100%;height:0}
+
+  /* Rechte Spalte, von oben nach unten: Vorschau → Erklärzeile → Format → die EINE
+     Aktion. Alles reist zusammen (klebend), während links die Logo-Bestimmung scrollt. */
+  .preview{position:sticky;top:calc(var(--header-h) + var(--s4))}
+  .stage{display:grid;place-items:center;min-height:300px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft);padding:clamp(24px,5vw,56px)}
+  .stage.dark{background:#23272b}  /* # ds-ok: Logo-auf-Dunkel-Vorschau – feste Farbe, kein Theme-Ton */
+  .stage svg,.stage img{max-width:100%;height:auto;max-height:340px;display:block}
+  /* Erklärzeile direkt unter der Vorschau, ÜBER den Pillen: erst wofür, dann womit. */
+  .fmthint{color:var(--muted);font-size:var(--t-small);line-height:1.45;margin:var(--s3) 0 var(--s2);min-height:2.6em}
+  /* Alle Formate in EINER Zeile – gleich breit, kein Umbruch. */
+  #fmt{display:flex;gap:6px}
+  #fmt button{flex:1 1 0;min-width:0;padding:8px 4px}
+  /* EINE Aktion direkt unter der Anwahl: gross, blau (= Tun), unverwechselbar mit den Gold-Pillen. */
+  .download{margin-top:var(--s3)}
+  .download .btn{width:100%;font-size:16px;padding:14px}
+  /* Farbe als vier Kreise – lockert die Auswahl auf. */
+  .swatches{display:flex;gap:10px;flex-wrap:wrap}
+  .swatches button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);cursor:pointer;padding:0}
+  .swatches button[aria-pressed="true"]{outline:2px solid var(--gold-deep);outline-offset:2px}
+  /* Ausnahme-Kreis (frei umfärben) – Regenbogen zeigt: keine feste Hausfarbe. */
+  .swatches button.free{background:conic-gradient(var(--sek-szw),var(--sek-hpise),var(--sek-lws),var(--sek-mas),var(--sek-aas),var(--sek-szw))}
+
+  /* Versteckte Profi-Optionen (Backstage): erscheinen NUR mit der Intern-Ansicht
+     (nav.js, „intern" tippen) – gleiches Schloss wie die Backstage-Welten. Bewusst
+     abgesetzt (gestrichelt, Gold-Kicker), damit klar ist: Sonderfall, nicht Alltag. */
+  .adv{border:1px dashed var(--gold-deep);border-radius:var(--r-card);padding:var(--s4);display:grid;gap:var(--s3);background:var(--soft)}
+  .adv[hidden]{display:none}   /* sonst überstimmt .adv{display:grid} das hidden-Attribut */
+  .adv .lab{color:var(--gold-ink);font-weight:var(--w-strong)}
+  .advrow{display:grid;gap:6px}
+  .advlab{font-size:var(--t-small);color:var(--muted)}
+  .advinput{font:inherit;font-size:16px;padding:10px 12px;min-height:var(--tap);border:1px solid var(--line);border-radius:var(--r-control);background:var(--field-bg);color:var(--ink)}
+  .advcolors{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .advcolors input[type=color]{width:var(--tap);height:var(--tap);padding:0;border:1px solid var(--line);border-radius:var(--r-control);background:none;cursor:pointer}
+  .advnote{font-size:var(--t-small);line-height:1.5;color:var(--muted);margin:0}
+
+  /* Mobil: zuoberst Vorschau + Format + die EINE Aktion – primär lädt das gemeinsame
+     Logo zum Download ein. Die Sonderfassungen (Auswahl) stehen darunter. Nur die
+     Mini-Vorschau klebt, damit Format und Aktion mitscrollen. */
+  @media(max-width:859px){
+    .tool{grid-template-columns:1fr;gap:var(--s4)}
+    .preview{order:-1}
+    .stage{position:sticky;top:var(--header-h);z-index:10;min-height:0;padding:var(--s3);background:var(--paper);border-bottom:1px solid var(--line-soft)}
+    .stage svg,.stage img{max-height:150px}
+  }
+
+  /* Begleitschreiben als PDF drucken: nur das Blatt zeigen */
+  @media print{
+    .dsnav,.dsnav-drawer,.dsnav-backdrop,.dsnav-toast,.hero,#werkzeug,.ds-footer,.pdfbtn{display:none !important}
+    body{background:var(--paper)}
+    main.wrap{max-width:none;padding:0}
+    .sheet{margin-top:0;border:0;padding:0}
+    .empf-hero{display:none}   /* Hero-Logo im Druck weglassen – Stufe 1 zeigt es ohnehin */
+  }
+
+  /* Begleitschreiben */
+  /* Kein Rahmen-Kasten mehr ums Blatt (verschlang mobil Bildschirm bei noch
+     kleinem Text) – der Inhalt steht direkt in der Sektion wie überall sonst. */
+  .sheet{margin-top:var(--s4)}
+  .sheet h3{display:flex;gap:8px;align-items:center;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:16px;margin-bottom:6px}
+  .sheet p{color:var(--ink);font-size:var(--t-small);line-height:1.6;max-width:62ch;text-align:left}
+  .sheet p.lead{font-size:var(--t-body);max-width:66ch}
+  .vstrip{display:flex;gap:var(--s4);flex-wrap:wrap;align-items:flex-end;margin:var(--s3) 0}
+  .vstrip figure{margin:0;text-align:center}
+  .vstrip .box{border:1px solid var(--line);border-radius:10px;background:var(--soft);padding:14px;display:grid;place-items:center;min-height:84px}
+  .vstrip .box.dark{background:#23272b}  /* # ds-ok: Logo-auf-Dunkel-Vorschau */
+  .vstrip svg{height:46px;width:auto;max-width:200px}
+  .vstrip figcaption{color:var(--muted);font-size:var(--t-micro);margin-top:6px}
+
+  /* --- Hinweise im Stil der ‹Elf Empfehlungen› (Signatur) --------------------
+     Weiche Karte mit Gold-Kante, Kicker/Titel/Intro neben einer Illustration,
+     knappe Merkposten, PS + PDF-Knopf. Die grossen echten Marken bleiben gross
+     (drei Stufen als Feature-Reihen); nur das Handwerk läuft im zweispaltigen
+     Fluss wie die Empfehlungen. */
+  .empf-card{border-top:3px solid var(--gold)}
+  .empf-top{display:flex;flex-direction:column;gap:var(--s6);margin-bottom:var(--s8)}
+  .empf-head{order:2}
+  .empf-hero{order:1}
+  @media(min-width:720px){
+    .empf-top{flex-direction:row;gap:var(--s8);align-items:center;justify-content:space-between}
+    .empf-head{order:0;flex:1 1 auto}
+    .empf-hero{order:0;flex:0 1 300px}
+  }
+  .empf-head h2{font-size:var(--t-h2)}
+  .empf-head .lead{font-family:var(--font-text);color:var(--ink);font-size:var(--t-small);line-height:1.6;margin-top:var(--s2);max-width:52ch}
+  .empf-hero .box{border:1px solid var(--line);border-radius:12px;background:var(--soft);padding:24px;display:grid;place-items:center;min-height:104px}
+  .empf-hero svg{height:54px;width:auto;max-width:100%}
+
+  /* Drei Stufen (Logo · Fachlogo · Zeichen): Titel, dann grosses Visual, dann
+     Text – gleiche Reihenfolge auf allen Breiten (kein Umschichten nötig). */
+  .tier{margin-top:var(--s6)}
+  .tier h3{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);margin:0 0 var(--s1);display:flex;gap:.5ch;align-items:center}
+  .tier .vstrip{margin:var(--s3) 0}
+  .tier .vstrip .box{min-height:120px;padding:18px;flex:1 1 0}
+  .tier .vstrip svg,.tier .vstrip img{height:68px;width:auto;max-width:100%;display:block}
+  .tier p{font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;color:var(--ink);max-width:62ch}
+
+  /* Handwerk: zweispaltiger Merkposten-Fluss wie die Empfehlungen. */
+  .hr-soft{height:1px;background:var(--line);border:0;margin:var(--s8) 0 var(--s6)}
+  .empf{font-family:var(--font-text)}
+  @media(min-width:720px){.empf{columns:2;column-gap:var(--s8)}}
+  .empf-item{break-inside:avoid;margin:0 0 var(--s6)}
+  .empf-item h3{font-family:var(--font-display);font-weight:var(--w-strong);font-size:var(--t-h3);margin:0 0 var(--s2)}
+  .empf-item p{font-size:var(--t-small);line-height:1.6;color:var(--ink);margin:0 0 var(--s2);max-width:46ch}
+  .empf-item .vstrip{margin:var(--s2) 0 0;align-items:flex-start}
+  .empf-item .vstrip .box{min-height:60px;padding:9px}
+  .empf-item .vstrip svg{height:30px}
+  .empf-item .vstrip figcaption{font-size:var(--t-micro)}
+  .pikto{width:50px;height:50px;display:block;margin-bottom:var(--s2);fill:none;stroke:var(--muted);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .pikto .acc{stroke:var(--gold-ink)}
+  .pikto .slash{stroke:var(--bad);opacity:.75}
+
+  .empf-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s8)}
+  .empf-ps{font-family:var(--font-text);color:var(--gold-ink);font-size:var(--t-small);margin:0;max-width:46ch}
+
+  /* .note kommt aus base.css (kanonische Hinweis-Rolle). */
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-section="generatoren" data-active="logo-generator"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <h1>Goetheanum-Logo</h1>
+  </section>
+
+  <!-- ===================== WERKZEUG ===================== -->
+  <section id="werkzeug">
+    <div class="tool">
+      <div class="controls">
+        <label class="field">
+          <span class="lab">Kategorie</span>
+          <select id="cat"></select>
+        </label>
+        <label class="field" id="orgField">
+          <span class="lab">Sektion / Bereich</span>
+          <select id="org"></select>
+        </label>
+        <label class="field" id="layoutField">
+          <span class="lab">Layout</span>
+          <select id="layout"></select>
+        </label>
+        <label class="field" id="langField">
+          <span class="lab">Sprache</span>
+          <select id="lang"></select>
+        </label>
+        <div class="field">
+          <span class="lab">Farbe</span>
+          <div class="swatches" id="mode"></div>
+        </div>
+
+        <!-- Versteckt: erscheint nur in der Intern-/Backstage-Ansicht (nav.js).
+             Zwei Sonderfälle: Zeile 2 frei beschriften und frei umfärben. -->
+        <div class="field adv" id="advField" hidden>
+          <span class="lab">Backstage · frei</span>
+          <label class="advrow">
+            <span class="advlab">Eigener Text (Zeile 2)</span>
+            <input id="advtext" class="advinput" type="text" autocomplete="off" spellcheck="false" placeholder="Auto: Sektionsname" />
+          </label>
+          <div class="advrow">
+            <span class="advlab">Eigene Farbe (Zeile 2 / Bild · Goetheanum-Zeile)</span>
+            <div class="advcolors">
+              <input id="advBc" type="color" value="#0061a9" aria-label="Farbe Zeile 2 und Bildmarke" />
+              <input id="advL1c" type="color" value="#575756" aria-label="Farbe Goetheanum-Zeile" />
+              <button id="advReset" class="btn" type="button">zurück zu Original</button>
+            </div>
+          </div>
+          <p class="advnote">Frei umbenennen und umfärben weicht von den Hausregeln ab (<q>nie umfärben</q>, G03 Weglassen) – nur für Sonderfälle, bewusst und sparsam. Für die Breite gilt das fertige Logo.</p>
+        </div>
+      </div>
+
+      <div class="preview">
+        <div class="stage" id="stage"><span class="meta">…</span></div>
+        <!-- Erklärzeile unter der Vorschau, dann die sechs Formate, dann die EINE Aktion. -->
+        <p class="fmthint" id="fmthint"></p>
+        <div class="seg" id="fmt" role="group" aria-label="Format"></div>
+        <div class="download">
+          <button class="btn primary" id="dl" type="button">herunterladen</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BEGLEITSCHREIBEN ===================== -->
+  <section id="begleitschreiben">
+    <div class="sheet card soft empf-card">
+
+      <div class="empf-top">
+        <div class="empf-head">
+          <span class="kicker">Goetheanum · Grafik</span>
+          <h2>Wiedererkennen schafft Vertrauen</h2>
+          <p class="lead">Unser Logo ist das Goetheanum, wo wir nicht selbst im Raum stehen — darum überall dasselbe, fertig aus diesem Werkzeug, nie nachbauen. Diese Hinweise sagen: welches Zeichen, wann, in welchem Format.</p>
+        </div>
+        <div class="empf-hero" id="vHead"></div>
+      </div>
+
+      <div class="tier">
+        <h3><span class="step-num"><span>1</span></span> Das allgemeine Logo grüsst</h3>
+        <div class="vstrip" id="vTier1"></div>
+        <p>Fürs breite Publikum, in allen Medien — im Zweifel dieses. Wortmarke in der Hausschrift (<strong>variables Gewicht 400</strong>), dazu das Icon fürs Kleine.</p>
+      </div>
+
+      <div class="tier">
+        <h3><span class="step-num"><span>2</span></span> Das Fachlogo ordnet zu</h3>
+        <div class="vstrip" id="vTier2"></div>
+        <p>Sektion oder Bereich als <strong>Absender</strong> — fürs Fachliche: Kolloquium, Briefschaften, Visitenkarten, eigene Webseiten. Öffentliche Anlässe tragen das allgemeine Logo. <span class="note" style="display:inline">Tipp: Schauseite allgemeines Logo, Rückseite das Sektionslogo als Absender.</span></p>
+      </div>
+
+      <div class="tier">
+        <h3><span class="step-num"><span>3</span></span> Das Zeichen eröffnet</h3>
+        <div class="vstrip" id="vTier3"></div>
+        <p>Steiners <a href="../../zeichen.html">Zeichen für Hochschule, Gesellschaft und Bau-Administration</a> sind ein <strong>Erbe</strong>: Sie tragen ihr Zentrum ausser sich und schenken dem Folgenden Raum. <strong>Nur auf Papier und im Hochformat</strong>, festlich — nie anstatt des Logos, nur dazu.</p>
+      </div>
+
+      <hr class="hr-soft">
+
+      <div class="empf">
+        <div class="empf-item">
+          <h3>Lang oder kurz?</h3>
+          <p>Lang ist der Standard, wo Platz ist. Kurz an engen Stellen oder bei langem Namen. Icon · Kreis · Quadrat fürs Kleine – nur wo der Kontext schon ‹Goetheanum› sagt.</p>
+          <div class="vstrip" id="vVariants"></div>
+        </div>
+
+        <div class="empf-item">
+          <h3>Nie umfärben</h3>
+          <p>Original (Hausfarbe auf hell) · Weiss (auf dunkel oder Bild) · Schwarz (einfarbig) · Grau (Ausnahme). Keine Verläufe.</p>
+          <div class="vstrip" id="vColors"></div>
+        </div>
+
+        <div class="empf-item">
+          <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="7" width="34" height="34" rx="3" stroke-dasharray="4 5"/><rect x="18" y="18" width="12" height="12" rx="2" class="acc"/></svg>
+          <h3>Luft ringsum</h3>
+          <p>Rundum Luft in Höhe des Zeichens – nichts dringt ein: kein Text, keine Grafik, kein zweites Logo. Richtwert ~25 mm oder ~120 px Breite. <span class="note" style="display:inline">Exakte Werte aus dem Logopaket.</span></p>
+        </div>
+
+        <div class="empf-item">
+          <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><path d="M13 6h15l7 7v29H13z"/><path d="M28 6v7h7"/><circle cx="19" cy="29" r="2.4" class="acc"/><circle cx="30" cy="34" r="2.4" class="acc"/><line x1="19" y1="29" x2="30" y2="34" class="acc"/></svg>
+          <h3>SVG oder PNG?</h3>
+          <p>SVG für Web und Druck (Vektor), PNG für Pixel. Beides aus diesem Werkzeug. Ruhiger Grund mit genug Kontrast; auf Foto oder Dunkel die Weiss-Variante.</p>
+        </div>
+      </div>
+
+      <div class="empf-foot">
+        <p class="empf-ps">PS: Im Zweifel das blaue Logo – es passt fast überall.</p>
+        <button class="btn primary pdfbtn" id="pdfSheet" type="button">Als PDF speichern</button>
+      </div>
+
+      <p class="note" style="margin-top:var(--s4)">Die Zeichen liegen als <a href="../../zeichen.html">eigene Seite</a> (Vorschau und Pakete). · Grundlage: Werkstatt-Artikel und Leitsystem-Grundsätze auf grafik.goetheanum.ch; Struktur nach gängigen Logo-Richtlinien (u. a. Smithsonian, UC Santa Barbara, Mailchimp).</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum</strong> · Logos</span>
+    <span><a href="../../">Übersicht</a> · <a href="../../schriften.html">Schriften</a></span>
+  </div>
+</footer>
+
+<script src="../../assets/goe-orgs.js"></script>
+<script src="engine.js"></script>
+<script src="export.js"></script>
+<script>
+"use strict";
+(function(){
+  var E = window.LogoEngine;
+  // Default = das eigentliche Logo: blaues, einzeiliges Goetheanum-Basislogo.
+  var sel = { cat:"allgemein", org:"goetheanum", layout:"desktop", tribase:"desktop", mode:"original", lang:"de", fmt:"svg", scale:2.635, txt:"", bc:"#0061a9", l1c:"#575756" };
+
+  var LAYOUT_LABELS = [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"],["square","Quadrat"]];
+  var LANG_LABELS   = [["de","Deutsch"],["en","English"],["fr","Français"],["es","Español"]];
+  // Farbkreise – feste Farben (zeigen die echte Logo-Farbe, unabhängig vom Theme).
+  // ‹Original› zeigt die jeweilige Organisationsfarbe (ORGS[org].color).
+  var MODE_SWATCH   = [["original","Original","#0061a9"],["white","Weiss","#ffffff"],["black","Schwarz","#23272b"],["gray","Grau","#9aa0a6"]];
+  // Reihenfolge nach Gebrauch/Gewohnheit; Pillen 3 + 3.
+  var FMT_LABELS    = [["png","PNG"],["jpg","JPG"],["pdf","PDF"],["svg","SVG"],["svg48","SVG 48"],["webp","WebP"]];
+  // Erklärzeile: erst wofür (Anwendung), dann womit (Pixel/Vektor).
+  var FMT_HINT = {
+    png:"Geeignet für Office (Word, PowerPoint, Outlook) — Pixel mit Transparenz",
+    jpg:"Geeignet für Fotos und Mail — Pixel auf weissem Grund",
+    pdf:"Geeignet für den Druck — Vektor-PDF auf Weiss",
+    svg:"Geeignet für Web und Druck — skalierbarer Vektor",
+    svg48:"Geeignet für feste Höhen und Icons — Vektor, Höhe exakt 48 px, Breite folgt dem Inhalt",
+    webp:"Geeignet für moderne Webseiten — kleiner Pixel mit Transparenz"
+  };
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  // Kategorie als Liste (Klappwahl): oben die zwei festen Allgemein-Logos
+  // (Goetheanum, Bühne), darunter die drei wählbaren Kategorien.
+  var CAT_OPTS = [
+    { label:"Allgemein",    cat:"allgemein",    org:"goetheanum" },
+    { label:"Bühne",        cat:"allgemein",    org:"buehne" },
+    { label:"Sektionen",    cat:"sektionen" },
+    { label:"Bereiche",     cat:"bereiche" },
+    { label:"Teilbereiche", cat:"teilbereiche" },
+    { label:"Medien",       cat:"medien" }
+  ];
+
+  // --- Medien: eigenständige Markenzeichen, fertige Dateien (kein Engine-Satz) ---
+  // Geladen aus assets/logos/medien/manifest.json. Marke→Form→Farbe→[Formate].
+  var MEDIA = null;
+  var MEDIA_BASE = "../../assets/logos/medien/";
+  var MEDIA_FORM_LABELS = { "lockup":"Lockup", "icon-point":"Icon · Kreis", "icon-square":"Icon · Quadrat",
+    "icon-transparent":"Icon · frei", "full":"Voll", "short":"Kurz" };
+  var MEDIA_COLOR = [["farbe","Farbe","#0061a9"],["schwarz","Schwarz","#23272b"],["weiss","Weiss","#ffffff"],["grau","Grau","#9aa0a6"]];
+  var MEDIA_FMT = [["png","PNG"],["jpg","JPG"],["pdf","PDF"],["svg","SVG"]];
+  var MEDIA_FMT_HINT = {
+    png:"Geeignet für Web und Office — Pixel mit Transparenz",
+    jpg:"Geeignet für Fotos und Mail — Pixel auf weissem Grund",
+    pdf:"Geeignet für den Druck — Vektor-PDF (CMYK)",
+    svg:"Geeignet für Web und Druck — skalierbarer Vektor"
+  };
+  function isMedia(){ return sel.cat === "medien"; }
+  function mediaForms(brand){ return (MEDIA && MEDIA[brand]) ? Object.keys(MEDIA[brand].forms) : []; }
+  function mediaColors(brand, form){ var f = MEDIA && MEDIA[brand] && MEDIA[brand].forms[form]; return f ? Object.keys(f) : []; }
+  function mediaFmts(brand, form, color){ var f = MEDIA && MEDIA[brand] && MEDIA[brand].forms[form]; return (f && f[color]) ? f[color].slice() : []; }
+  function mediaFile(fmt){
+    var stem = (fmt === "pdf") ? "print." : "web.";
+    return MEDIA_BASE + sel.org + "/" + sel.layout + "/" + sel.mode + "/" + stem + fmt;
+  }
+  function mediaPreviewSrc(){
+    var av = mediaFmts(sel.org, sel.layout, sel.mode);
+    var f = (av.indexOf("svg") >= 0) ? "svg" : (av.indexOf("png") >= 0 ? "png" : av[0]);
+    return MEDIA_BASE + sel.org + "/" + sel.layout + "/" + sel.mode + "/web." + f;
+  }
+  // Beim Wechsel in/aus Medien die Auswahl auf gültige Werte bringen.
+  function mediaDefaults(){
+    if (!MEDIA) return;
+    if (mediaForms(sel.org).length === 0) sel.org = Object.keys(MEDIA)[0];
+    if (mediaForms(sel.org).indexOf(sel.layout) < 0) sel.layout = mediaForms(sel.org)[0];
+    if (mediaColors(sel.org, sel.layout).indexOf(sel.mode) < 0) sel.mode = mediaColors(sel.org, sel.layout)[0];
+    if (mediaFmts(sel.org, sel.layout, sel.mode).indexOf(sel.fmt) < 0) sel.fmt = mediaFmts(sel.org, sel.layout, sel.mode)[0];
+  }
+  function logoDefaults(){
+    if (["original","white","black","gray"].indexOf(sel.mode) < 0) sel.mode = "original";
+    if (["png","jpg","pdf","svg","svg48","webp"].indexOf(sel.fmt) < 0) sel.fmt = "svg";
+    sel.layout = "desktop"; sel.tribase = "desktop"; sel.lang = "de";
+  }
+  // Feld-Beschriftungen folgen dem Modus (Marke/Form bei Medien).
+  function syncLabels(){
+    var ol = document.querySelector("#orgField .lab"); if (ol) ol.textContent = isMedia() ? "Marke" : "Sektion / Bereich";
+    var ll = document.querySelector("#layoutField .lab"); if (ll) ll.textContent = isMedia() ? "Form" : "Layout";
+  }
+  function catVal(o){ return o.org ? (o.cat + ":" + o.org) : o.cat; }
+  function fillCats(){
+    var s = $("cat"); s.innerHTML = "";
+    CAT_OPTS.forEach(function(o){
+      var op = document.createElement("option");
+      op.value = catVal(o); op.textContent = o.label; s.appendChild(op);
+    });
+    s.value = (sel.cat === "allgemein") ? (sel.cat + ":" + sel.org) : sel.cat;
+  }
+  function fillOrgs(){
+    var o = $("org"); o.innerHTML = "";
+    if (isMedia()){
+      Object.keys(MEDIA || {}).forEach(function(key){
+        var opt = document.createElement("option");
+        opt.value = key; opt.textContent = MEDIA[key].label; o.appendChild(opt);
+      });
+      if (mediaForms(sel.org).length === 0) sel.org = Object.keys(MEDIA)[0];
+      o.value = sel.org; return;
+    }
+    (CATS[sel.cat].items || []).forEach(function(key){
+      var opt = document.createElement("option");
+      opt.value = key; opt.textContent = ORGS[key] ? ORGS[key].name_de : key;
+      o.appendChild(opt);
+    });
+    if (CATS[sel.cat].items.indexOf(sel.org) === -1) sel.org = CATS[sel.cat].items[0];
+    o.value = sel.org;
+  }
+  // Die Sektion/Bereich-Auswahl nur zeigen, wenn eine wählbare Kategorie aktiv ist.
+  function syncOrgField(){ var f = $("orgField"); if (f) f.style.display = (sel.cat === "allgemein") ? "none" : ""; }
+  function fillSel(id, pairs, current){
+    var s = $(id); s.innerHTML = "";
+    pairs.forEach(function(p){
+      var op = document.createElement("option");
+      op.value = p[0]; op.textContent = p[1]; s.appendChild(op);
+    });
+    s.value = current;
+  }
+
+  // --- Nur zeigen, was tatsächlich Option ist (Basis: alter Generator) -------
+  function orgLangs(org){
+    var o = ORGS[org] || {}, base = o.name_de;
+    return LANG_LABELS.filter(function(l){
+      var n = o["name_" + l[0]]; if (!n) return false;
+      return l[0] === "de" || n !== base;     // andere Sprache nur, wenn der Name abweicht
+    });
+  }
+  function hasKurz(org){
+    var o = ORGS[org] || {};
+    return ["de","en","fr","es"].some(function(l){ var s=o["short_"+l], n=o["name_"+l]; return s && n && s !== n; });
+  }
+  // Dreizeiler nur, wo eine Vorlage existiert (alter Generator: srmk, hpise).
+  // srmk hat eine Breite; hpise zwei (lang/kurz, in der Engine über tribase).
+  // Der Optionswert trägt die Breite mit: ‹triline› (lang) bzw. ‹triline:mobile› (kurz).
+  // Vorlagen gibt es nur für Deutsch und Englisch – nur dort den Dreizeiler zeigen
+  // (nichts erfinden, wo keine gesetzte Vorlage existiert).
+  var TRILINE_LANGS = { srmk:["de","en"], hpise:["de","en"] };
+  function trilineOpts(org){
+    if (sel.cat !== "sektionen") return [];
+    var langs = TRILINE_LANGS[org]; if (!langs || langs.indexOf(sel.lang) < 0) return [];
+    if (org === "srmk")  return [["triline","Dreizeiler"]];
+    if (org === "hpise") return [["triline","Dreizeiler lang"],["triline:mobile","Dreizeiler kurz"]];
+    return [];
+  }
+  function orgLayouts(org){
+    var out = [["desktop","Lang"]];
+    if (hasKurz(org)) out.push(["mobile","Kurz"]);
+    trilineOpts(org).forEach(function(p){ out.push(p); });
+    out.push(["icon","Icon"],["point","Kreis"],["square","Quadrat"]);
+    return out;
+  }
+  // Layout-Wert ↔ sel (layout + tribase) übersetzen.
+  function setLayoutFromValue(v){
+    var i = v.indexOf(":");
+    if (i >= 0){ sel.layout = v.slice(0, i); sel.tribase = v.slice(i + 1); }
+    else { sel.layout = v; sel.tribase = "desktop"; }
+  }
+  function layoutValue(){
+    return (sel.layout === "triline" && sel.tribase === "mobile") ? "triline:mobile" : sel.layout;
+  }
+  function fillLayout(){
+    if (isMedia()){
+      var fopts = mediaForms(sel.org).map(function(k){ return [k, MEDIA_FORM_LABELS[k] || k]; });
+      if (!fopts.some(function(p){ return p[0] === sel.layout; })) sel.layout = fopts[0][0];
+      fillSel("layout", fopts, sel.layout); return;
+    }
+    var opts = orgLayouts(sel.org), cur = layoutValue();
+    if (!opts.some(function(p){ return p[0] === cur; })) { setLayoutFromValue(opts[0][0]); cur = layoutValue(); }
+    fillSel("layout", opts, cur);
+  }
+  function fillLang(){
+    if (isMedia()){ $("langField").style.display = "none"; return; }   // Medien haben keine Sprachvarianten
+    var opts = orgLangs(sel.org);
+    if (!opts.some(function(p){ return p[0] === sel.lang; })) sel.lang = (opts[0] || ["de"])[0];
+    fillSel("lang", opts, sel.lang);
+    $("langField").style.display = (opts.length > 1) ? "" : "none";   // nur eine Sprache = keine Wahl
+  }
+  function fillSwatch(){
+    var box = $("mode"); box.innerHTML = "";
+    if (isMedia()){
+      var present = mediaColors(sel.org, sel.layout);
+      MEDIA_COLOR.forEach(function(p){
+        if (present.indexOf(p[0]) < 0) return;
+        var b = document.createElement("button");
+        b.type = "button"; b.title = p[1]; b.dataset.val = p[0]; b.style.background = p[2];
+        b.setAttribute("aria-pressed", String(p[0] === sel.mode));
+        box.appendChild(b);
+      });
+      return;
+    }
+    MODE_SWATCH.forEach(function(p){
+      var b = document.createElement("button");
+      var col = (p[0] === "original" && ORGS[sel.org] && ORGS[sel.org].color) ? ORGS[sel.org].color : p[2];
+      b.type = "button"; b.title = p[1]; b.dataset.val = p[0]; b.style.background = col;
+      b.setAttribute("aria-pressed", String(p[0] === sel.mode));
+      box.appendChild(b);
+    });
+    // Ausnahme (frei umfärben) nur in der Backstage-Ansicht – als Regenbogen-Kreis.
+    if (advActive()){
+      var fb = document.createElement("button");
+      fb.type = "button"; fb.className = "free"; fb.title = "Ausnahme – frei umfärben"; fb.dataset.val = "ausnahme";
+      fb.setAttribute("aria-pressed", String(sel.mode === "ausnahme"));
+      box.appendChild(fb);
+    }
+  }
+  function fmtHint(code){ return (isMedia() ? MEDIA_FMT_HINT[code] : FMT_HINT[code]) || ""; }
+  // Die Erklärzeile IST der Hinweis (beginnt mit „Geeignet für …"); das gewählte
+  // Format zeigt die goldene Pille – kein vorangestellter Name nötig.
+  function fmtLine(code){ return fmtHint(code); }
+  function fillFmt(){
+    var box = $("fmt"); box.innerHTML = "";
+    var pairs = isMedia() ? MEDIA_FMT : FMT_LABELS;
+    var present = isMedia() ? mediaFmts(sel.org, sel.layout, sel.mode) : null;
+    pairs.forEach(function(p){
+      if (present && present.indexOf(p[0]) < 0) return;
+      var b = document.createElement("button");
+      b.type = "button"; b.textContent = p[1]; b.dataset.val = p[0]; b.title = fmtHint(p[0]);
+      b.setAttribute("aria-pressed", String(p[0] === sel.fmt));
+      b.addEventListener("mouseenter", function(){ $("fmthint").textContent = fmtLine(p[0]); });
+      box.appendChild(b);
+    });
+  }
+
+  // --- Versteckte Profi-Optionen, gekoppelt an die Backstage-Ansicht ----------
+  // Sichtbar NUR, wenn die Intern-/Backstage-Ansicht an ist (nav.js: window.goeIntern).
+  // Die Engine kann beides bereits: Zeile-2-Text (sel.txt) und freie Farben über den
+  // Modus ‹ausnahme› (dann übernimmt sie sel.bc/sel.l1c unverändert).
+  function advActive(){ return !!(window.goeIntern && window.goeIntern()); }
+  function applyCustomColor(){ sel.mode = "ausnahme"; sel.bc = $("advBc").value; sel.l1c = $("advL1c").value; }
+  function syncAdvVisible(){
+    var f = $("advField"); if (!f) return;
+    f.hidden = !(advActive() && !isMedia());
+    if (!advActive()){            // Backstage aus → alle freien Eingaben zurücknehmen
+      var changed = false;
+      if (sel.txt){ sel.txt = ""; var t = $("advtext"); if (t) t.value = ""; changed = true; }
+      if (sel.mode === "ausnahme"){ sel.mode = "original"; changed = true; }
+      if (changed){ fillSwatch(); fillFmt(); updateDl(); render(); }
+    }
+  }
+
+  function currentSVG(){ return E.svg(sel); }
+
+  function render(){
+    var stage = $("stage");
+    if (isMedia()){
+      stage.classList.toggle("dark", sel.mode === "weiss");
+      var img = document.createElement("img");
+      img.alt = (MEDIA[sel.org] ? MEDIA[sel.org].label : "") + " – " + (MEDIA_FORM_LABELS[sel.layout] || sel.layout);
+      img.src = mediaPreviewSrc();
+      stage.innerHTML = ""; stage.appendChild(img);
+      return;
+    }
+    stage.classList.toggle("dark", sel.mode === "white");
+    stage.innerHTML = currentSVG();
+  }
+
+  function fileBase(){
+    if (isMedia()) return "goetheanum-medien-" + sel.org + "-" + sel.layout + "-" + sel.mode;
+    var lay = (sel.layout === "triline" && sel.tribase === "mobile") ? "triline-kurz" : sel.layout;
+    return "goetheanum-" + sel.org + "-" + lay + "-" + sel.mode;
+  }
+
+  // Format ist eine WAHL; das Herunterladen die EINE Aktion. Der Knopf nennt das gewählte Format.
+  function fmtLabel(){ var pairs = isMedia() ? MEDIA_FMT : FMT_LABELS; var p = pairs.filter(function(x){return x[0]===sel.fmt;})[0]; return p ? p[1] : "SVG"; }
+  function updateDl(){
+    var dl = $("dl"); if (dl) dl.textContent = "als " + fmtLabel() + " herunterladen";
+    var h = $("fmthint"); if (h) h.textContent = fmtLine(sel.fmt);
+  }
+
+  // Begleitschreiben-Visuals aus der Engine (defensiv: Abschnitt kann sich ändern).
+  // Farbe braucht kein volles Lockup je Modus (das Lockup zeigt schon ‹Formen›) –
+  // ein Punkt-Icon genügt, um die Farbe selbst zu zeigen.
+  function buildVisuals(){
+    var vv = $("vVariants"); if (!vv || !$("vColors")) return;
+    [["desktop","Lang"],["mobile","Kurz"],["icon","Icon"],["point","Kreis"]].forEach(function(p){
+      vv.appendChild(figure(E.svg({cat:"sektionen",org:"aas",layout:p[0],mode:"original",lang:"de",scale:2.635,txt:""}), p[1], false));
+    });
+    // Kreis (layout:"point") – dieselbe Icon-in-Kreis-Variante, die das Werkzeug
+    // selbst anbietet. Zeigt die Farbe AM Icon statt als loser Punkt; Weiss
+    // braucht den dunklen Kasten, sonst unsichtbar (wie schon bei ‹Formen›).
+    var vc = $("vColors");
+    MODE_SWATCH.forEach(function(p){
+      vc.appendChild(figure(E.svg({cat:"allgemein",org:"goetheanum",layout:"point",mode:p[0],scale:2.635}), p[1], p[0] === "white"));
+    });
+  }
+  function figure(svg, cap, dark){
+    var f = document.createElement("figure");
+    f.innerHTML = '<div class="box'+(dark?' dark':'')+'">'+svg+'</div><figcaption>'+cap+'</figcaption>';
+    return f;
+  }
+
+  // Die drei Stufen (Hinweise): echtes Basislogo, echte Fachlogos, echte Zeichen –
+  // nie nachgezeichnet, nie erfunden. Stufe 3 zeigt die offiziellen Vorschau-Bilder,
+  // dieselben wie auf zeichen.html (eine Quelle, kein Nachbau der Marken hier).
+  function buildTierVisuals(){
+    var hd = $("vHead");
+    if (hd){ hd.innerHTML = '<div class="box">' + E.svg({cat:"allgemein",org:"goetheanum",layout:"desktop",mode:"original",scale:2.635}) + '</div>'; }
+    var t1 = $("vTier1"), t2 = $("vTier2"), t3 = $("vTier3");
+    if (t1){
+      t1.appendChild(figure(E.svg({cat:"allgemein",org:"goetheanum",layout:"desktop",mode:"original",scale:2.635}), "Logo", false));
+      t1.appendChild(figure(E.svg({cat:"allgemein",org:"goetheanum",layout:"icon",mode:"original",scale:2.635}), "Icon", false));
+    }
+    if (t2){
+      t2.appendChild(figure(E.svg({cat:"sektionen",org:"ps",layout:"mobile",mode:"original",lang:"de",scale:2.635}), "Pädagogik", false));
+      t2.appendChild(figure(E.svg({cat:"sektionen",org:"sbk",layout:"mobile",mode:"original",lang:"de",scale:2.635}), "Bildende Künste", false));
+    }
+    if (t3){
+      [["hochschulzeichen","Hochschule"],["gesellschaftszeichen","Gesellschaft"],["bau-administration","Bau-Administration"]].forEach(function(p){
+        var f = document.createElement("figure");
+        f.innerHTML = '<div class="box"><img src="../../assets/zeichen/' + p[0] + '.png" alt="' + p[1] + '" /></div><figcaption>' + p[1] + '</figcaption>';
+        t3.appendChild(f);
+      });
+    }
+  }
+
+  // Verdrahtung
+  function wire(){
+    fillCats(); fillOrgs(); syncOrgField(); syncLabels();
+    fillLayout(); fillLang(); fillSwatch(); fillFmt(); updateDl();
+    $("cat").addEventListener("change", function(){
+      var v = this.value, i = v.indexOf(":"), wasMedia = isMedia();
+      if (i >= 0){ sel.cat = "allgemein"; sel.org = v.slice(i + 1); }   // feste Org (Allgemein/Bühne)
+      else { sel.cat = v; }
+      if (!isMedia() && wasMedia) logoDefaults();
+      syncLabels();
+      fillOrgs(); syncOrgField();
+      if (sel.cat !== "allgemein") sel.org = $("org").value;
+      if (isMedia()) mediaDefaults();
+      fillLayout(); fillLang(); fillSwatch(); fillFmt(); updateDl();
+      syncAdvVisible();
+      render();
+    });
+    $("org").addEventListener("change", function(){ sel.org = this.value; if (isMedia()) mediaDefaults(); fillLayout(); fillLang(); fillSwatch(); fillFmt(); updateDl(); render(); });
+    $("layout").addEventListener("change", function(){
+      if (isMedia()){ sel.layout = this.value; mediaDefaults(); fillSwatch(); fillFmt(); updateDl(); }
+      else setLayoutFromValue(this.value);
+      render();
+    });
+    $("lang").addEventListener("change", function(){ sel.lang = this.value; fillLayout(); render(); });
+    $("mode").addEventListener("click", function(e){
+      var b=e.target.closest("button"); if(!b)return;
+      sel.mode=b.dataset.val;
+      if (sel.mode === "ausnahme"){   // Ausnahme-Kreis: Felder mit der Originalfarbe vorbelegen, dann frei
+        $("advBc").value = (ORGS[sel.org] && ORGS[sel.org].color) || "#0061a9";
+        $("advL1c").value = "#575756";
+        applyCustomColor();
+      }
+      fillSwatch(); if (isMedia()){ mediaDefaults(); fillFmt(); updateDl(); } render();
+    });
+    $("fmt").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b)return; sel.fmt=b.dataset.val; fillFmt(); updateDl(); });
+    $("fmt").addEventListener("mouseleave", function(){ $("fmthint").textContent = fmtLine(sel.fmt); });
+    $("dl").addEventListener("click", function(){
+      if (isMedia()){
+        var a = document.createElement("a"); a.href = mediaFile(sel.fmt); a.download = fileBase() + "." + sel.fmt;
+        document.body.appendChild(a); a.click(); a.remove();   // nav.js zählt den a[download]-Klick mit
+        return;
+      }
+      if (window.goeStat) window.goeStat("download", sel.fmt);   // Engine-Download selbst melden
+      // SVG48 dient festen Höhen/Icons; die Sprache im Dateinamen hält Sprachvarianten auseinander.
+      var outBase = fileBase();
+      if (sel.fmt === "svg48") outBase += "-" + sel.lang;
+      LogoExport[sel.fmt](currentSVG(), outBase);
+    });
+    // Versteckte Profi-Felder verdrahten.
+    $("advtext").addEventListener("input", function(){ sel.txt = this.value; render(); });
+    $("advBc").addEventListener("input", function(){ applyCustomColor(); fillSwatch(); render(); });
+    $("advL1c").addEventListener("input", function(){ applyCustomColor(); fillSwatch(); render(); });
+    $("advReset").addEventListener("click", function(){ sel.mode = "original"; fillSwatch(); render(); });
+    // An die Backstage-Ansicht koppeln: ein-/ausblenden mit „intern" (nav.js).
+    window.addEventListener("goe:intern", function(){ fillSwatch(); syncAdvVisible(); render(); });
+    syncAdvVisible();
+    var pb = $("pdfSheet"); if (pb) pb.addEventListener("click", function(){ window.print(); });
+    render();
+    buildVisuals();
+    buildTierVisuals();
+  }
+  // Medien-Manifest laden (für die Kategorie ‹Medien›), dann verdrahten.
+  function init(){
+    if (!E || typeof ORGS === "undefined") { $("stage").innerHTML = '<span class="meta">Engine nicht geladen.</span>'; return; }
+    fetch(MEDIA_BASE + "manifest.json").then(function(r){ return r.json(); })
+      .then(function(m){ MEDIA = m; }).catch(function(){ MEDIA = null; })
+      .then(function(){ wire(); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
+})();
+</script>
+<script src="../../design-system/select.js"></script>
+</body>
+</html>
