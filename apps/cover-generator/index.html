@@ -1649,6 +1649,7 @@ of Language</textarea>
 
         const strip = document.createElement("div");
         strip.className = "thumb-strip";
+        strip.tabIndex = 0;
         variantsForBlock(block).forEach((variant) => {
           const thumbJob = {
             kind: block.kind,
