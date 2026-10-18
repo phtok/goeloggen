@@ -50,7 +50,7 @@ Anfrage ist alles zugänglich»).
 | Haus de Jaager | Von Steiner für den Nachlass des Bildhauers Jacques de Jaager entworfen: Wohnhaus und Ausstellungsatelier in einem (1921/22). | G1 wörtlich | belegt |
 | Eurythmiehaus | Drei Wohnhäuser für die Eurythmistinnen und Eurythmisten am Goetheanum; die Bildhauerin Edith Maryon entwarf mit und wohnte hier (1921). | G1 wörtlich | belegt |
 | Verlagshaus | Nach Skizzen Steiners als Büchermagazin des Philosophisch-Anthroposophischen Verlags gebaut, heute Lager; das umhüllende Dach weist auf das Gewölbe des Zweiten Goetheanum (1924). | G1 («Das Verlagshaus (1924) wurde als Büchermagazin … errichtet … flachkupplige und umhüllende Dach … weist auf das überspannende Gewölbe»), WV («1924 … nach Skizzen Rudolf Steiners in Holzbauweise … Büchermagazin»), AG («heute als Lager») | belegt |
-| Helene-Finckh-Haus | Benannt nach Helene Finckh (1883 bis 1960), Rudolf Steiners wichtigster Stenographin, die ab 1915 rund 1700 seiner Vorträge mitschrieb. Hügelweg 64 A, oberhalb des Parkplatzes. | RSA (1883–1960, «wichtigste und genaueste Stenographin», ab 1915 rund 1700 Vorträge), G2 (Adresse), AG | belegt; offen: Bezug des Hauses zu ihr (Wohnhaus? Arbeitsort?) — RSA nennt eine Baracke im Gartenpark als Arbeitsort |
+| Helene-Finckh-Haus | Arbeitshaus von Helene Finckh (1883 bis 1960), die ab 1915 rund 1700 Vorträge Rudolf Steiners mitschrieb (rund ein Drittel); hier übertrug sie ihre Stenogramme in Maschinenschrift. Ausstellung zu Leben und Werk (Schreibmaschine ihrer Zeit, Kopie ihres Schreibtischs), eingerichtet von Rudolf Steiner Archiv und Goetheanum. Hügelweg 64 A, samstags 15–16 Uhr. | Pressemitteilung Goetheanum vom 2. 7. 2026 (https://www.mynewsdesk.com/de/goetheanum/pressreleases/goetheanum-campus-ausstellung-uber-die-stenografin-helene-finckh-3456630), RSA, AG (18. 10. 2026: «Helene hat da gearbeitet») | belegt |
 | Haus Schuurman | *nicht im Gästeplan* | G1 hat einen Absatz (1924, Musikerpaar Schuurman) — Aufnahme möglich | Frage an AG |
 
 ## Gartenpark
@@ -129,3 +129,18 @@ wir umsichtig sein.» Folgen:
   18. 10. 2026). Der Plan rechnet mit den Zeiten des Baus und nennt die Säle
   als zweiten Teil: «Blauer und Gelber Saal nur mit Saaldienst», mit Zeiten,
   sobald die Ausstellungsseite sie nennt.
+
+## Lagen im Goetheanum (18. Oktober 2026)
+
+Nach Angabe des Auftraggebers am Kartenbild:
+- **Foyer** in der unteren Mitte des Baus (198.5/143.0 mm), die **Galerie,
+  1. Etage** genau darüber (198.5/138.6). Beide rot wie Säle und Treppen im
+  Katalog des Kartentools; die Treppenhäuser ebenfalls rot.
+- **Nordgalerie** links und etwas höher als die Pädagogische Sektion
+  (184.7/130.6; Katalog 191.33/132.57, dort deckte sie die Sektion).
+- **Jugendsektion und Bibliothek** teilen sich einen Eingang an der Nordseite:
+  die Jugendsektion gleich hinter der Tür (193.2/108.2), zur Bibliothek führt
+  ein langer Gang (199.6/109.0; Richtung des Gangs angenommen, zu bestätigen).
+- Die Lagen gelten im Gästeplan (`apps/campusplan/karte.js`, `KATALOG_LAGEN`).
+  Der Katalog des Kartentools wird aus den LT25-Kartenseiten erzeugt
+  (`tools/karten/extract-marker-positionen.py`) und trägt die alten Lagen.

@@ -54,15 +54,16 @@ const ZUGANG = {
    Menschheitsrepräsentant und Café stehen seit dem 14. September 2026 im
    Katalog des Kartentools (tools/karten/extract-marker-positionen.py). */
 const NEUE_ORTE = [
-  { id: "n-treppen", label: { de: "Treppenhäuser", en: "Staircases" },
+  // farbe wie im Katalog des Kartentools: rot = Säle und Treppen.
+  { id: "n-treppen", label: { de: "Treppenhäuser", en: "Staircases" }, farbe: "rot",
     positionen: [[184.3, 125.9]], gebaeude: "campusbau-53" },
-  // Galerie in der 1. Etage (mit Blauem und Gelbem Saal) und Foyer im
-  // Erdgeschoss (Auftraggeber, 18. 10. 2026). Lage im Bau geschätzt: die
-  // Galerie liegt ein Geschoss höher, die Marke steht symbolisch im Bau.
-  { id: "n-galerie", label: { de: "Galerie, 1. Etage", en: "Gallery, 1st floor" },
-    positionen: [[205.0, 141.0]], gebaeude: "campusbau-53", lageGeschaetzt: true },
-  { id: "n-foyer", label: { de: "Foyer", en: "Foyer" },
-    positionen: [[193.0, 146.0]], gebaeude: "campusbau-53", lageGeschaetzt: true },
+  // Foyer in der unteren Mitte des Baus, die Galerie der 1. Etage genau
+  // darüber; die Marke steht dicht über der des Foyers (Auftraggeber,
+  // 18. 10. 2026; der Katalog führt das Foyer als v15 bei 198.47/135.39).
+  { id: "n-galerie", label: { de: "Galerie, 1. Etage", en: "Gallery, 1st floor" }, farbe: "rot",
+    positionen: [[198.5, 138.6]], gebaeude: "campusbau-53" },
+  { id: "n-foyer", label: { de: "Foyer", en: "Foyer" }, farbe: "rot",
+    positionen: [[198.5, 143.0]], gebaeude: "campusbau-53" },
   // Öffentliche Führung: Treffpunkt am Empfang.
   { id: "x-fuehrung", label: { de: "Öffentliche Führung", en: "Public guided tour" },
     positionen: [[209.5, 145.5]], gebaeude: "campusbau-53" }
@@ -271,8 +272,8 @@ const GAESTE = [
   // Nachtrag 14. 9.: das Helene-Finckh-Haus ist samstags offen (goetheanum.ch)
   { id: "h-finckh", thema: "sammlung", rang: 10, gehfolge: 18, dauer: 10, zugang: "betreten",
     oeffnung: [{ quelle: "Helene-Finckh-Haus", fenster: [{ tage: [6], von: "15:00", bis: "16:00" }] }],
-    einzeiler: { de: "Benannt nach Helene Finckh (1883 bis 1960), Rudolf Steiners wichtigster Stenographin, die ab 1915 rund 1700 seiner Vorträge mitschrieb. Hügelweg 64 A, oberhalb des Parkplatzes.",
-                 en: "Named after Helene Finckh (1883 to 1960), Rudolf Steiner's most important stenographer, who took down some 1,700 of his lectures from 1915. Hügelweg 64 A, above the car park." } },
+    einzeiler: { de: "Arbeitshaus von Helene Finckh (1883 bis 1960), die ab 1915 rund 1700 Vorträge Rudolf Steiners mitschrieb; hier übertrug sie ihre Stenogramme in Maschinenschrift. Ausstellung zu Leben und Werk. Hügelweg 64 A, oberhalb des Parkplatzes.",
+                 en: "Work house of Helene Finckh (1883 to 1960), who took down some 1,700 of Rudolf Steiner's lectures from 1915; here she typed up her shorthand. Exhibition on her life and work. Hügelweg 64 A, above the car park." } },
   // Ab hier neu am 18. 10. 2026 — hinten angehängt (Bit im geteilten Link).
   { id: "n-galerie", thema: "kultur", rang: 2, gehfolge: 9.5, dauer: 20, zugang: "betreten", ausstellung: true,
     // Die Galerie hat die Zeiten des Baus. Blauer und Gelber Saal gehören zu
