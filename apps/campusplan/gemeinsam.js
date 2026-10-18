@@ -188,6 +188,16 @@ function ortMarker(id) {
   return o && o.marker && /^[A-Z]{1,2}$/.test(o.marker) ? o.marker : "";
 }
 
+// Nummern der Liste wie auf der Karte: Orte, die das Kartentool mit eigenen
+// Zeichen zeigt (Treppenhäuser: M, N, S), tragen ihr Zeichen und zählen
+// nicht mit.
+function listenNummern(nummeriert) {
+  const nummern = {};
+  let n = 1;
+  nummeriert.forEach((g) => { nummern[g.id] = g.karte ? g.zeichen : String(n++); });
+  return nummern;
+}
+
 // Zeigt die gewählte öffentliche Führung diesen Ort ohnehin?
 function inFuehrung(id) {
   const f = gast("x-fuehrung");

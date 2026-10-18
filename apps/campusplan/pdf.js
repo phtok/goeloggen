@@ -205,7 +205,8 @@ async function planPdf() {
     return spalten;
   };
 
-  const eintraege = nummeriert.map((g, i) => vermessen(g, i + 1)).concat(anreise.map((g) => vermessen(g, 0)));
+  const nummern = listenNummern(nummeriert);
+  const eintraege = nummeriert.map((g) => vermessen(g, nummern[g.id])).concat(anreise.map((g) => vermessen(g, 0)));
   // So wenige Blätter wie nötig, und über alle gleichmässig: die kleinste
   // Spaltenhöhe, mit der alles in 3 × Blattzahl Spalten passt.
   const passt = (h, n) => packen(eintraege, h, SPALTEN * n - 1).length <= SPALTEN * n;

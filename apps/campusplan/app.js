@@ -93,9 +93,10 @@ function planZeichnen() {
   const { nummeriert, anreise, plan } = stationen();
   const pausen = {};
   if (plan) plan.eintraege.forEach((e, i) => { const n = plan.eintraege[i + 1]; if (e.pause && n) pausen[n.id] = e; });
-  document.getElementById("stationen").innerHTML = nummeriert.map((g, i) =>
+  const nummern = listenNummern(nummeriert);
+  document.getElementById("stationen").innerHTML = nummeriert.map((g) =>
     (pausen[g.id] ? `<li class="pause hint">${ui("pause-bis")} ${uhrZeit(pausen[g.id].bis)}</li>` : "") +
-    zeileMarkup(g, i + 1, true, plan)).join("");
+    zeileMarkup(g, nummern[g.id], true, plan)).join("");
   document.getElementById("anreise").innerHTML = anreise.map((g) => zeileMarkup(g, "", true, null)).join("");
   document.getElementById("anreise-titel").hidden = !anreise.length;
 

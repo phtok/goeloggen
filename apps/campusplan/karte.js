@@ -43,7 +43,9 @@ function kartentoolLaden() {
    ersten Teil — wie die Liste des Plans. */
 function kartenStand(plan) {
   const katalog = new Set(ORTE.map((o) => o.id));
-  const ids = plan.nummeriert.concat(plan.anreise).map((g) => g.id);
+  // Orte mit Kartentool-Zeichen (karte) stehen mit diesen Katalog-Orten auf
+  // der Karte statt mit einer eigenen Marke.
+  const ids = plan.nummeriert.concat(plan.anreise).flatMap((g) => g.karte || [g.id]);
   const teileAus = {};
   const gebaeudeAn = [];
   const labels = {};
@@ -68,7 +70,7 @@ function kartenStand(plan) {
     eigene, teileAus, notizenAus: {}, labels, markerFarben: {},
     positionen: KATALOG_LAGEN,
     gebaeudeAn, gebaeudeAus: [],
-    folge: plan.nummeriert.map((g) => g.id),
+    folge: plan.nummeriert.flatMap((g) => g.karte || [g.id]),
     legende: plan.legende !== false,
     festeNummern: false, kompakt: false, preset: "gedeckt", basiskarte: "vektor",
     ausschnitt: { skala: 1, dx: 0, dy: 0 }
@@ -95,6 +97,13 @@ async function kartenSzene(plan) {
     const o = ORTE.find((x) => x.id === id) || NEUE_ORTE.find((x) => x.id === id);
     const p = stand.positionen[id] || (o && o.positionen && o.positionen[0]);
     if (p) lagen[id] = p;
+  });
+  // Orte mit Kartentool-Zeichen: Farbe ihres ersten Zeichens, Lage aus
+  // NEUE_ORTE (für Zoom und Abhaken am Telefon).
+  plan.nummeriert.filter((g) => g.karte).forEach((g) => {
+    farben[g.id] = K.markenFarbe(g.karte[0]);
+    const o = NEUE_ORTE.find((x) => x.id === g.id);
+    if (o) lagen[g.id] = o.positionen[0];
   });
   return { markup, farben, lagen, breite: K.masse.blatt.breite, hoehe: K.masse.blatt.hoehe };
 }
