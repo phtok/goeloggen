@@ -93,7 +93,7 @@
   /* --- Code-Konsole (eigenständige, THEME-FESTE Fläche – gleich in Hell/Dunkel,
      wie eine Entwickler-Konsole; Syntaxpalette für Dunkel ausgelegt). --------- */
   --code-bg:#1f2428; --code-bg2:#2b3137; --code-ink:#e8eef2;
-  --code-key:#9ecbff; --code-str:#c3e88d; --code-comment:#7f868d;
+  --code-key:#9ecbff; --code-str:#c3e88d; --code-comment:#98a0a8;
 
   /* --- Bühne (Medien-/Katalogfläche, THEME-FEST dunkel wie die Konsole) -----
      Für Video-Kacheln und Katalog-Bänder (Webfamilie-Befund §3/§4, Vorbild

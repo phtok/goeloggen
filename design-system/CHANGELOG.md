@@ -16,6 +16,13 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 18. Oktober 2026 — Code-Kommentar lesbar (1.28.2)
+
+**Was.** `tokens.css`: `--code-comment` `#7f868d` → `#98a0a8`. **Warum.** axe
+`color-contrast` (WCAG 1.4.3): Kommentare in Code-Blöcken lagen mit 4.24:1 auf
+`--code-bg` unter 4.5:1. **Wirkung.** 5.91:1 auf `--code-bg`, 4.96:1 auf
+`--code-bg2`; alle Code-Blöcke im Haus.
+
 ## 18. Oktober 2026 — Navigation: Einladungs-Chip abschaltbar (1.28.1)
 
 **Was.** `nav.js` liest am Skript-Tag `data-invite="aus"`. Dann erscheint der
