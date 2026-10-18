@@ -276,7 +276,7 @@ wirkt nur in Sessions mit genau diesem einen Repo — eine Session mit
 mehreren Repos liest keine Freigabe-Regeln. Wesentliche Sessions darum
 mit einem Repo starten.
 
-## Sessionwechsel: Zeichen geben, Nachfolgerin anbieten, Modell prüfen
+## Sessionwechsel: Zeichen geben, Nachfolgerin oder Archiv anbieten, Modell prüfen
 
 Beschluss des Inhabers (18. 10. 2026), **gilt in allen Repos** (gleicher
 Abschnitt in jeder `CLAUDE.md`). Lange Sessions sind der grösste
@@ -305,9 +305,21 @@ Stand (Branch, PR, erledigt, offen), wo es geschrieben steht, nächster
 Schritt. Verweisen statt nacherzählen. Läuft die neue Session
 (`get_session` mit ihrer ID), meldet die alte den Titel und archiviert
 sich selbst (`archive_session` mit der eigenen ID aus `get_session` ohne
-ID). Ist die Arbeit fertig und kommt nichts nach, archiviert sich die
-Session nach dem ‹fertig› des Inhabers. Vorher müssen alle beobachteten
-PRs gemergt oder geschlossen sein.
+ID).
+
+**Auftrag erledigt: Archivieren anbieten** (Regel des Inhabers, 18. 10.
+2026). Ist der Auftrag erledigt und kommt nichts nach, bietet die
+Session von sich aus an, sich zu archivieren — als letzte Zeile der
+Antwort:
+
+> Auftrag erledigt — <was>. Soll ich mich archivieren? **Sag ‹ja›.**
+
+Bei ‹ja› (oder ‹fertig›) archiviert sie sich (`archive_session` mit der
+eigenen ID). Nie ungefragt archivieren.
+
+**In beiden Fällen** erst, wenn der Stand gesichert ist und alle
+beobachteten PRs gemergt oder geschlossen sind. Wartet noch ein PR auf
+seine Checks, kommt das Angebot nach dem Merge.
 
 **Modellwahl** bei dieser Gelegenheit, für die Arbeit, die noch kommt:
 - **Haiku 5.5** — nur nachschauen und melden: Stand abfragen, einen PR
