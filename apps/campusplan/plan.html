@@ -27,7 +27,7 @@
   /* Nur Seiten-Eigenes; Werte aus den Tokens. */
   .kopf{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;padding-block:var(--s5) var(--s4)}
   .kopf h1{margin:0}
-  .kopf .readout{display:block;margin-top:var(--s1)}
+  .kopf .readout,.kopf .zeiten-hint{display:block;margin-top:var(--s1)}
 
   /* Karte: steht am Telefon oben fest, die Liste läuft darunter durch.
      Der Finger zieht und zoomt die Karte, nie die Seite. */
@@ -86,6 +86,7 @@
     <div>
       <h1 id="titel">Mein Besuch</h1>
       <span class="readout" id="summe"></span>
+      <span class="hint zeiten-hint" id="zeiten-hint" hidden></span>
     </div>
     <div class="seg" id="sprache-seg" aria-label="Sprache">
       <button type="button" data-sprache="de" aria-pressed="true">Deutsch</button>

@@ -82,7 +82,7 @@ function zeileMarkup(g, nummer, imPlan, plan) {
   return `<li class="${klassen}" data-id="${id}">${kasten}${nr}<span class="stn-text">` +
     (termin ? `<span class="stn-zeit">${spanneText(termin)}</span>` : "") +
     `<span class="stn-name">${name}</span>` +
-    (g.einzeiler ? `<span class="stn-line">${t(g.einzeiler)}</span>` : "") +
+    (einzeilerText(g) ? `<span class="stn-line">${esc(einzeilerText(g))}</span>` : "") +
     (meta ? `<span class="meta">${meta}</span>` : "") +
     (ausserhalb ? `<span class="meta stn-zu">${ui("ausserhalb")}</span>` : "") + `</span></li>`;
 }
@@ -115,6 +115,9 @@ function planZeichnen() {
   }
   hinweis.textContent = text;
   hinweis.hidden = !text;
+  const stand = document.getElementById("zeiten-hint");
+  stand.textContent = zeitenHinweis(nummeriert);
+  stand.hidden = !stand.textContent;
 
   // Mehr Orte: je Thema, was nicht im Plan ist — zum Dazunehmen.
   const gewaehlt = THEMEN.filter((th) => state.themen.has(th.id) || GAESTE.some((g) => g.thema === th.id && state.an.has(g.id)));

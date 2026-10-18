@@ -109,9 +109,9 @@ async function planPdf() {
   /* ---------- Blatt 2 ff.: die Stationen ---------- */
   // Drei Spalten. Erst wird jeder Eintrag vermessen, dann verteilt und
   // ausgeglichen (Einträge brechen nie über Spalten).
-  // Mit Zeitplan steht die Uhrzeit rechts in der Namenszeile (tabellarisch,
-  // G25), Pausen als eigene leise Zeile darüber.
-  const SPALTEN = 3, ABSTAND = 8;
+  // Mit Zeitplan steht die Uhrzeit als eigene Zeile über dem Namen,
+  // Pausen als leise Zeile darüber.
+  const SPALTEN = 3, ABSTAND = 14;
   const spalteB = (PDF_SEITE.b - 2 * PDF_RAND - (SPALTEN - 1) * ABSTAND) / SPALTEN;
   const spaltenX = Array.from({ length: SPALTEN }, (_, i) => PDF_RAND + i * (spalteB + ABSTAND));
   const kopfY = PDF_RAND + 12;                       // unter dem Titel
@@ -123,58 +123,60 @@ async function planPdf() {
     const termin = zeitplanVon(plan, g.id);
     const textB = spalteB - 9;
     doc.setFont("GoetheanumDeutlich", "normal"); doc.setFontSize(11);
-    const nameZeilen = doc.splitTextToSize(ortName(g.id), textB - (termin ? 24 : 0));
+    const nameZeilen = doc.splitTextToSize(ortName(g.id), textB);
     doc.setFont("SourceSans3", "normal"); doc.setFontSize(9.5);
-    const einZeilen = g.einzeiler ? doc.splitTextToSize(t(g.einzeiler), textB) : [];
+    const einZeilen = einzeilerText(g) ? doc.splitTextToSize(einzeilerText(g), textB) : [];
     const meta = [g.zugang ? t(ZUGANG[g.zugang]) : "", g.dauer ? dauerText(g.dauer) : "", zeitenText(g)].filter(Boolean).join(" · ");
     const tag = planTag();
     const geschlossen = tag && ortGeschlossenAm(g, tag);
     const live = ausnahmeAm(g, tag);
     const zusatz = (geschlossen ? ` · ${ui("geschlossen-am")}` : "") + (live && !live.zu ? ` · ${ui("an-diesem-tag")} ${live.text}` : "")
-      + (plan && plan.ausserhalb.includes(g.id) ? ` · ${ui("ausserhalb")}` : "");
+      + (plan && plan.ausserhalb.includes(g.id) ? ` · ${ui("ausserhalb")}` : "")
+      + (zeitenBestaetigt(g) === false ? ` · ${ui("nicht-bestaetigt")}, ${ui("pruefen")}` : "");
     doc.setFontSize(8.5);
     const metaZeilen = meta || zusatz ? doc.splitTextToSize(pdfText(meta + zusatz), textB) : [];
     const pause = pausen[g.id];
-    const hoehe = (pause ? 5 : 0) + nameZeilen.length * 4.6 + einZeilen.length * 4.1 + metaZeilen.length * 3.8 + 4;
+    const hoehe = (pause ? 5 : 0) + (termin ? 4.4 : 0) + nameZeilen.length * 4.6 + einZeilen.length * 4.1 + metaZeilen.length * 3.8 + 4;
     return { g, nummer, termin, pause, nameZeilen, einZeilen, metaZeilen, hoehe };
   };
 
-  // Der Weg aufs Telefon läuft als letzter Eintrag mit: Hinweis, QR-Code, Link.
+  // Der Weg aufs Telefon gehört nicht zur Liste: er steht fest unten rechts
+  // auf dem letzten Blatt — QR-Code an der rechten Kante, Hinweis und Link
+  // links daneben. Die letzte Spalte endet darüber.
   const QR_G = 20;
-  const telefonBlock = () => {
-    doc.setFont("SourceSans3", "normal"); doc.setFontSize(8);
-    const hinweis = doc.splitTextToSize(ui("pdf-link-hint"), spalteB);
+  const qrX = PDF_SEITE.b - PDF_RAND - QR_G, qrY = PDF_SEITE.h - PDF_RAND - QR_G;
+  const telefonX = spaltenX[SPALTEN - 1], telefonB = qrX - 4 - telefonX;
+  doc.setFont("SourceSans3", "normal"); doc.setFontSize(8);
+  const telefonHinweis = doc.splitTextToSize(ui("pdf-link-hint"), telefonB);
+  doc.setFontSize(7.5);
+  const telefonAdresse = doc.splitTextToSize(link, telefonB);
+  const telefonH = Math.max(QR_G, telefonHinweis.length * 3.6 + 2 + telefonAdresse.length * 3.3);
+  const telefonOben = PDF_SEITE.h - PDF_RAND - telefonH;
+  const telefonZeichnen = () => {
+    pdfQrMalen(doc, link, qrX, qrY, QR_G);
+    doc.setFont("SourceSans3", "normal"); doc.setFontSize(8); doc.setTextColor(PDF_FARBEN.leise);
+    doc.text(telefonHinweis, telefonX, telefonOben + 2.6);
     doc.setFontSize(7.5);
-    const adresse = doc.splitTextToSize(link, spalteB);
-    return { telefon: true, hinweis, adresse, hoehe: 4 + hinweis.length * 3.6 + 2 + QR_G + 3 + adresse.length * 3.3 };
+    doc.text(telefonAdresse, telefonX, telefonOben + 2.6 + telefonHinweis.length * 3.6 + 2);
   };
 
   const zeichnen = (e, xx, y) => {
-    if (e.telefon) {
-      y += 4;
-      doc.setFont("SourceSans3", "normal"); doc.setFontSize(8); doc.setTextColor(PDF_FARBEN.leise);
-      doc.text(e.hinweis, xx, y + 2.6);
-      y += e.hinweis.length * 3.6 + 2;
-      pdfQrMalen(doc, link, xx, y, QR_G);
-      y += QR_G + 3;
-      doc.setFontSize(7.5);
-      doc.text(e.adresse, xx, y + 2.4);
-      return;
-    }
     const tx = xx + 9;
     if (e.pause) {
       doc.setFont("SourceSans3", "normal"); doc.setFontSize(8.5); doc.setTextColor(PDF_FARBEN.leise);
       doc.text(pdfText(`${ui("pause-bis")} ${uhrZeit(e.pause.bis)}`), tx, y + 2.6);
       y += 5;
     }
+    if (e.termin) {
+      // Uhrzeit als eigene Zeile über dem Namen, auf der Textkante — wie am Telefon.
+      doc.setFont("SourceSans3Semibold", "normal"); doc.setFontSize(9); doc.setTextColor(PDF_FARBEN.tinte);
+      doc.text(pdfText(spanneText(e.termin)), tx, y + 2.9);
+      y += 4.4;
+    }
     if (e.nummer) pdfMarke(doc, xx + 3, y + 2.6, 2.6, e.nummer, farbe(e.g.id, PDF_FARBEN.marke));
     else pdfMarke(doc, xx + 3, y + 2.6, 2.4, ortMarker(e.g.id) || "·", farbe(e.g.id, PDF_FARBEN.anreise));
     doc.setTextColor(PDF_FARBEN.tinte); doc.setFont("GoetheanumDeutlich", "normal"); doc.setFontSize(11);
     doc.text(e.nameZeilen, tx, y + 3.6);
-    if (e.termin) {
-      doc.setFont("SourceSans3Semibold", "normal"); doc.setFontSize(9.5);
-      doc.text(pdfText(spanneText(e.termin)), xx + spalteB, y + 3.6, { align: "right" });
-    }
     let yy = y + e.nameZeilen.length * 4.6;
     if (e.einZeilen.length) {
       doc.setFont("SourceSans3", "normal"); doc.setFontSize(9.5); doc.setTextColor(PDF_FARBEN.tinte);
@@ -187,28 +189,33 @@ async function planPdf() {
     }
   };
 
-  // Spalten eines Blatts bei Höchsthöhe h: der Reihe nach füllen.
-  const packen = (liste, h) => {
+  // Spalten bei Höchsthöhe h der Reihe nach füllen; die letzte Spalte des
+  // letzten Blatts (Index `letzte`) endet über dem Telefon-Block.
+  const letzteKap = telefonOben - 6 - kopfY;
+  const packen = (liste, h, letzte) => {
     const spalten = [[]];
     let belegt = 0;
+    const kap = () => (spalten.length - 1 === letzte ? Math.min(h, letzteKap) : h);
     liste.forEach((e) => {
-      if (belegt + e.hoehe > h && spalten[spalten.length - 1].length) { spalten.push([]); belegt = 0; }
+      if (belegt + e.hoehe > kap() && spalten[spalten.length - 1].length) { spalten.push([]); belegt = 0; }
       spalten[spalten.length - 1].push(e);
       belegt += e.hoehe;
     });
     return spalten;
   };
 
-  const eintraege = nummeriert.map((g, i) => vermessen(g, i + 1)).concat(anreise.map((g) => vermessen(g, 0)), [telefonBlock()]);
+  const eintraege = nummeriert.map((g, i) => vermessen(g, i + 1)).concat(anreise.map((g) => vermessen(g, 0)));
   // So wenige Blätter wie nötig, und über alle gleichmässig: die kleinste
   // Spaltenhöhe, mit der alles in 3 × Blattzahl Spalten passt.
-  const blattzahl = Math.ceil(packen(eintraege, spalteH).length / SPALTEN);
+  const passt = (h, n) => packen(eintraege, h, SPALTEN * n - 1).length <= SPALTEN * n;
+  let blattzahl = Math.max(1, Math.ceil(packen(eintraege, spalteH, -1).length / SPALTEN));
+  while (!passt(spalteH, blattzahl)) blattzahl += 1;
   let lo = Math.max(...eintraege.map((e) => e.hoehe)), hi = spalteH;
   while (hi - lo > 0.5) {
     const mitte = (lo + hi) / 2;
-    if (packen(eintraege, mitte).length <= SPALTEN * blattzahl) hi = mitte; else lo = mitte;
+    if (passt(mitte, blattzahl)) hi = mitte; else lo = mitte;
   }
-  const alleSpalten = packen(eintraege, hi);
+  const alleSpalten = packen(eintraege, hi, SPALTEN * blattzahl - 1);
   const blaetter = [];
   for (let i = 0; i < alleSpalten.length; i += SPALTEN) blaetter.push(alleSpalten.slice(i, i + SPALTEN));
 
@@ -222,6 +229,7 @@ async function planPdf() {
       let y = kopfY;
       spalte.forEach((e) => { zeichnen(e, spaltenX[i], y); y += e.hoehe; });
     });
+    if (b === blaetter.length - 1) telefonZeichnen();
   });
 
   const name = `campusplan${state.datum ? "-" + state.datum : ""}.pdf`;
