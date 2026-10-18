@@ -109,9 +109,9 @@ async function planPdf() {
   /* ---------- Blatt 2 ff.: die Stationen ---------- */
   // Drei Spalten. Erst wird jeder Eintrag vermessen, dann verteilt und
   // ausgeglichen (Einträge brechen nie über Spalten).
-  // Mit Zeitplan steht die Uhrzeit rechts in der Namenszeile (tabellarisch,
-  // G25), Pausen als eigene leise Zeile darüber.
-  const SPALTEN = 3, ABSTAND = 8;
+  // Mit Zeitplan steht die Uhrzeit als eigene Zeile über dem Namen,
+  // Pausen als leise Zeile darüber.
+  const SPALTEN = 3, ABSTAND = 14;
   const spalteB = (PDF_SEITE.b - 2 * PDF_RAND - (SPALTEN - 1) * ABSTAND) / SPALTEN;
   const spaltenX = Array.from({ length: SPALTEN }, (_, i) => PDF_RAND + i * (spalteB + ABSTAND));
   const kopfY = PDF_RAND + 12;                       // unter dem Titel
@@ -123,7 +123,7 @@ async function planPdf() {
     const termin = zeitplanVon(plan, g.id);
     const textB = spalteB - 9;
     doc.setFont("GoetheanumDeutlich", "normal"); doc.setFontSize(11);
-    const nameZeilen = doc.splitTextToSize(ortName(g.id), textB - (termin ? 24 : 0));
+    const nameZeilen = doc.splitTextToSize(ortName(g.id), textB);
     doc.setFont("SourceSans3", "normal"); doc.setFontSize(9.5);
     const einZeilen = einzeilerText(g) ? doc.splitTextToSize(einzeilerText(g), textB) : [];
     const meta = [g.zugang ? t(ZUGANG[g.zugang]) : "", g.dauer ? dauerText(g.dauer) : "", zeitenText(g)].filter(Boolean).join(" · ");
@@ -136,7 +136,7 @@ async function planPdf() {
     doc.setFontSize(8.5);
     const metaZeilen = meta || zusatz ? doc.splitTextToSize(pdfText(meta + zusatz), textB) : [];
     const pause = pausen[g.id];
-    const hoehe = (pause ? 5 : 0) + nameZeilen.length * 4.6 + einZeilen.length * 4.1 + metaZeilen.length * 3.8 + 4;
+    const hoehe = (pause ? 5 : 0) + (termin ? 4.4 : 0) + nameZeilen.length * 4.6 + einZeilen.length * 4.1 + metaZeilen.length * 3.8 + 4;
     return { g, nummer, termin, pause, nameZeilen, einZeilen, metaZeilen, hoehe };
   };
 
@@ -168,14 +168,16 @@ async function planPdf() {
       doc.text(pdfText(`${ui("pause-bis")} ${uhrZeit(e.pause.bis)}`), tx, y + 2.6);
       y += 5;
     }
+    if (e.termin) {
+      // Uhrzeit als eigene Zeile über dem Namen, auf der Textkante — wie am Telefon.
+      doc.setFont("SourceSans3Semibold", "normal"); doc.setFontSize(9); doc.setTextColor(PDF_FARBEN.tinte);
+      doc.text(pdfText(spanneText(e.termin)), tx, y + 2.9);
+      y += 4.4;
+    }
     if (e.nummer) pdfMarke(doc, xx + 3, y + 2.6, 2.6, e.nummer, farbe(e.g.id, PDF_FARBEN.marke));
     else pdfMarke(doc, xx + 3, y + 2.6, 2.4, ortMarker(e.g.id) || "·", farbe(e.g.id, PDF_FARBEN.anreise));
     doc.setTextColor(PDF_FARBEN.tinte); doc.setFont("GoetheanumDeutlich", "normal"); doc.setFontSize(11);
     doc.text(e.nameZeilen, tx, y + 3.6);
-    if (e.termin) {
-      doc.setFont("SourceSans3Semibold", "normal"); doc.setFontSize(9.5);
-      doc.text(pdfText(spanneText(e.termin)), xx + spalteB, y + 3.6, { align: "right" });
-    }
     let yy = y + e.nameZeilen.length * 4.6;
     if (e.einZeilen.length) {
       doc.setFont("SourceSans3", "normal"); doc.setFontSize(9.5); doc.setTextColor(PDF_FARBEN.tinte);
