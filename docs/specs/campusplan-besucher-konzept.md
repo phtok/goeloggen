@@ -478,3 +478,30 @@ Legende — bei mehr als 22 Stationen enger gesetzt, was nicht mehr passt,
 verweist auf Blatt 2. Blatt 2 und folgende: alle Stationen mit Einzeiler,
 Zugang, Dauer und Zeiten in zwei Spalten, unten Link und QR-Code fürs
 Telefon. Kein Beschnitt, keine Marken: A4 quer für den Drucker zuhause.
+
+## 13 · Drei Türen statt einer Seite (Entscheid Auftraggeber, 18. Oktober 2026)
+
+Rückmeldung: «Warum gibt Mein Campusplan nicht die gleiche Karte aus wie der
+Kartengenerator?» Befund: Der Campusplan zeichnete die Karte selbst (nacktes
+Gelände, eigene kleine Marken), im PDF ein zweites Mal — ohne Gebäudenamen,
+Kompass und Legende des Kartentools. Entscheid: **drei getrennte Teile, die
+nicht vermischt werden**, dazu ein vorgeschlagener Zeitplan.
+
+1. **Auswahl** (`apps/campusplan/`): Interessen, Zeit, Besuchstag. Ergebnis
+   ist der Link — keine Karte auf dieser Seite.
+2. **A4 zum Ausdrucken** (PDF): Blatt 1 ist die Karte des Kartentools selbst,
+   nicht nachgebaut. `apps/campusplan/karte.js` lädt das Kartentool
+   unsichtbar (`?einbett`, wie der Tagungs-Reader) und holt über
+   `window.Kartentool` die Blattszene. Neu im Kartentool dafür: `folge`
+   (Ort-ids in Rundweg-Reihenfolge — nummeriert in dieser Folge, Legende
+   ohne Gruppenköpfe in dieser Folge), `markenFarbe(id)`, `ueberlauf()`.
+   Blatt 2 ff.: Stationen, Zeitplan, Link und QR-Code.
+3. **Telefon** (Link): nur Karte (dieselbe Szene, zoombar) und Abhak-Liste.
+
+Dazu **Zeitplan mit Öffnungszeiten**: Die Zeiten werden **immer aktuell mit
+goetheanum.ch abgeglichen** (Auftrag 18. 10.) — die Edge Function liest die
+Öffnungszeiten-Seite live, die Werte in `gaeste.js` sind nur der Rückfall.
+
+Nebenbefund am Kartentool: Markenblau #0061a9 verschwand auf dem
+Goetheanum-Blau #0067b2. Die Vektorkarte führt darum jetzt einen weissen
+Rand in Schriftstärke um jede Marke (wie die Aquarell-Karte).

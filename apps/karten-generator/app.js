@@ -117,7 +117,8 @@ const state = {
   positionen: {},      // Ort-id -> [x, y] (verschobene Marke, Standardlage)
   eigene: [],          // { id, label, farbe, x, y, marker } — x/y in Blatt-mm der Standardlage
   wiesen: { klein: false, gross: false },
-  kompakt: false,       // kompakte Legende (kleinerer Grad, engere Zeilen)
+  folge: [],           // Ort-ids in vorgegebener Reihenfolge (Campusplan), sonst leer
+  kompakt: false,      // kompakte Legende (kleinerer Grad, engere Zeilen)
   ausschnitt: { skala: 1, dx: 0, dy: 0 },  // Kartenausschnitt relativ zur Standardlage
   logo: { x: null, y: null, skala: 1 },    // Campus-Logo: Mitte (mm) + Grösse
   titelLogo: null,     // { markup, verhaeltnis, breite } — Sonderlogo statt Titel
@@ -518,6 +519,18 @@ function nummernBerechnen() {
   // damit Texte wie ‹Speisehaus 45› stimmen — statt fortlaufend neu zu zählen.
   if (state.festeNummern) return;
   let n = 1;
+  // Vorgegebene Folge (Campusplan: Rundweg): die Orte der Folge zählen in
+  // dieser Reihenfolge ab 1, auch Buchstabenmarken; alle übrigen behalten
+  // ihre Marke (Bahnhof, Bus, WC).
+  if (state.folge.length) {
+    state.folge.forEach((id) => {
+      const ort = alleOrte().find((o) => o.id === id);
+      if (!ort || !ortAktiv(ort) || ort.art === "treppe") return;
+      nummern[id] = String(n);
+      n += 1;
+    });
+    return;
+  }
   alleOrte().filter(ortAktiv).forEach((ort) => {
     if (ort.art === "treppe" || !/^\d+$/.test(ort.marker)) return;
     nummern[ort.id] = String(n);
@@ -623,8 +636,11 @@ function markenKreis(x, y, hex, text, r, symbol, feldBreite, voll) {
   const invers = stil && !voll;
   const scheibe = invers ? "#ffffff" : hex;
   const zeichen = invers ? hex : "#ffffff";
+  // Vektorkarte: ein weisser Rand in Schriftstärke trennt die Marke vom
+  // Grund — ohne ihn verschwand das Markenblau auf dem Goetheanum-Blau
+  // (#0061a9 auf #0067b2, Befund Campusplan 18. Oktober 2026).
   const rand = invers ? ` stroke="${hex}" stroke-width="${MARKER_RAND_AQUARELL}"`
-    : (stil && voll ? ` stroke="#ffffff" stroke-width="${MARKER_RAND_AQUARELL}"` : "");
+    : ` stroke="#ffffff" stroke-width="${MARKER_RAND_AQUARELL}"`;
   // Kreiszahl nach dem Sonderelement des Design-Systems (.step-num):
   // Hausschrift Laut, fester Kreis, Tintenmitte der Ziffern auf der
   // Kreismitte (ZIFFERN_SITZ). Grad = 0.5 × Durchmesser — eine Spur
@@ -899,12 +915,22 @@ function legendeZeilen() {
   let vorher = null;
   const namen = {};
   KATEGORIEN.forEach((k) => { namen[k.id] = k.name; });
-  const aktive = alleOrte().filter(ortAktiv);
+  let aktive = alleOrte().filter(ortAktiv);
+  // Mit vorgegebener Folge läuft die Legende in dieser Reihenfolge, ohne
+  // Gruppenköpfe; die Orte ausserhalb der Folge folgen nach einem Abstand.
+  const folge = state.folge;
+  if (folge.length) {
+    const rang = (o) => (folge.includes(o.id) ? folge.indexOf(o.id) : folge.length);
+    aktive = aktive.map((o, i) => ({ o, i })).sort((a, b) => rang(a.o) - rang(b.o) || a.i - b.i).map(({ o }) => o);
+  }
   // Gruppenköpfe nur, wenn mehr als eine Kategorie vertreten ist —
   // eine kleine Karte mit drei Orten braucht keine Zwischenzeile.
   const kategorien = new Set(aktive.map((o) => o.kategorie || "eigene"));
-  const mitKoepfen = kategorien.size > 1;
+  const mitKoepfen = kategorien.size > 1 && !folge.length;
   aktive.forEach((ort) => {
+    if (folge.length && vorher && folge.includes(vorher.id) && !folge.includes(ort.id)) {
+      zeilen.push({ typ: "abstand", hoehe: L.gruppe });
+    }
     const kategorie = ort.kategorie || "eigene";
     // Gleiche Zeilen zusammenlegen: zwei Toiletten-Marker auf der Karte
     // brauchen nur EINE Legendenzeile (gleicher Text, gleiche Marke).
@@ -1667,6 +1693,7 @@ function standAlsJson() {
     titelLogo: state.titelLogo,
     preset: state.preset, farben: state.farben,
     festeNummern: Boolean(state.festeNummern),
+    folge: state.folge,
     basiskarte: state.basiskarte,
     aquarellDeckkraft: state.aquarellDeckkraft,
     schriftzuege: state.schriftzuege
@@ -1712,6 +1739,7 @@ function standAnwenden(s) {
       : { klein: false, gross: false };
     state.kompakt = Boolean(s.kompakt);
     state.festeNummern = Boolean(s.festeNummern);
+    state.folge = Array.isArray(s.folge) ? s.folge.filter((id) => typeof id === "string") : [];
     if (s.ausschnitt && typeof s.ausschnitt.skala === "number") {
       state.ausschnitt = {
         skala: Math.min(1.8, Math.max(0.7, s.ausschnitt.skala)),
@@ -2355,7 +2383,9 @@ function render() {
 (async function start() {
   laden();
   logoErzeugen();
-  await Promise.all([ladeGelaende(), ladeIkonen(), ladeAquarell()]);
+  // Eingebettet (Reader, Campusplan) läuft nur die Vektorkarte — das
+  // Aquarell (gut 500 KB) wird dort nicht gebraucht, auf dem Telefon nicht geladen.
+  await Promise.all([ladeGelaende(), ladeIkonen(), EINBETT ? null : ladeAquarell()]);
   // Schriften vor dem ersten Satz laden — die Label-Zentrierung misst
   // mit der echten Hausschrift, nicht mit der Ausweichschrift.
   try {
@@ -2375,11 +2405,15 @@ function render() {
    anwenden(s)    – Zustand setzen und neu zeichnen (Teilangaben werden mit dem Standard ergänzt)
    szene(b)       – die Blattszene als SVG-Markup (mm, Blatt 297 × 210; b = Anschnitt in mm)
    orte()         – alle Orte (id, Kategorie, Label, Marker)
+   markenFarbe(id) – Füllfarbe der Marke eines Orts (Hex), wie in der Szene
+   ueberlauf()    – true, wenn die Legende der letzten Szene nicht aufs Blatt passte
    bereit         – Promise, erfüllt nach dem ersten Satz */
 window.Kartentool = {
   stand: standAlsJson,
   anwenden(s) { standAnwenden({ ...standAlsJson(), ...s }); render(); },
   szene: szeneMarkup,
+  markenFarbe: (id) => { const ort = alleOrte().find((o) => o.id === id); return ort ? ortFarbeHex(ort) : ""; },
+  ueberlauf: () => legendeUeberlauf,
   orte: () => ORTE.map((o) => ({ id: o.id, kategorie: o.kategorie, art: o.art, label: o.label, marker: o.marker })),
   farbenRollen: ROLLEN.map((r) => r[0]),
   masse: { blatt: SZENE, falz: KARTE.falz },
