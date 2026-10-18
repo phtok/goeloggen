@@ -50,7 +50,7 @@ function zeileMarkup(g, nummer, plan) {
   const klassen = ["stn", anreise ? "anreise" : "", state.fokus === id ? "fokus" : "", abgehakt ? "abgehakt" : ""].filter(Boolean).join(" ");
   return `<li class="${klassen}" data-id="${id}">${kasten}${nr}` +
     `<span class="stn-text">${termin ? `<span class="stn-zeit">${spanneText(termin)}</span>` : ""}<span class="stn-name">${name}</span>` +
-    (g.einzeiler ? `<span class="stn-line">${t(g.einzeiler)}</span>` : "") +
+    (einzeilerText(g) ? `<span class="stn-line">${esc(einzeilerText(g))}</span>` : "") +
     (meta ? `<span class="meta">${meta}</span>` : "") +
     (aussen ? `<span class="meta stn-zu">${ui("ausserhalb")}</span>` : "") + `</span></li>`;
 }
@@ -73,6 +73,9 @@ function listeZeichnen() {
   const b = nummeriert.filter((g) => state.besucht.has(g.id)).length;
   const tag = state.datum ? ` · ${datumText(state.datum)}` : "";
   document.getElementById("summe").textContent = `${b} ${ui("von")} ${nummeriert.length} ${ui("besucht")}${tag}`;
+  const stand = document.getElementById("zeiten-hint");
+  stand.textContent = zeitenHinweis(nummeriert);
+  stand.hidden = !stand.textContent;
 }
 
 function texteSetzen() {

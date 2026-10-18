@@ -125,13 +125,14 @@ async function planPdf() {
     doc.setFont("GoetheanumDeutlich", "normal"); doc.setFontSize(11);
     const nameZeilen = doc.splitTextToSize(ortName(g.id), textB - (termin ? 24 : 0));
     doc.setFont("SourceSans3", "normal"); doc.setFontSize(9.5);
-    const einZeilen = g.einzeiler ? doc.splitTextToSize(t(g.einzeiler), textB) : [];
+    const einZeilen = einzeilerText(g) ? doc.splitTextToSize(einzeilerText(g), textB) : [];
     const meta = [g.zugang ? t(ZUGANG[g.zugang]) : "", g.dauer ? dauerText(g.dauer) : "", zeitenText(g)].filter(Boolean).join(" · ");
     const tag = planTag();
     const geschlossen = tag && ortGeschlossenAm(g, tag);
     const live = ausnahmeAm(g, tag);
     const zusatz = (geschlossen ? ` · ${ui("geschlossen-am")}` : "") + (live && !live.zu ? ` · ${ui("an-diesem-tag")} ${live.text}` : "")
-      + (plan && plan.ausserhalb.includes(g.id) ? ` · ${ui("ausserhalb")}` : "");
+      + (plan && plan.ausserhalb.includes(g.id) ? ` · ${ui("ausserhalb")}` : "")
+      + (zeitenBestaetigt(g) === false ? ` · ${ui("nicht-bestaetigt")}, ${ui("pruefen")}` : "");
     doc.setFontSize(8.5);
     const metaZeilen = meta || zusatz ? doc.splitTextToSize(pdfText(meta + zusatz), textB) : [];
     const pause = pausen[g.id];

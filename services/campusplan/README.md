@@ -67,7 +67,36 @@ nur auf die eigenen Werte zurück, wenn die Seite nicht erreichbar ist oder
 der Ort dort fehlt. Aus den Fenstern rechnet der Plan Text, «geschlossen» und
 den Zeitplan; eine Tagesausnahme des Grossen Saals ersetzt das Fenster des Tags.
 
-## Monatlicher Wächter über die festen Zeiten
+## Alle Quellen live (seit 18. Oktober 2026, zweite Runde)
+
+Auftrag: «Alle Öffnungszeiten aktuell abgleichen!» Die Function liest jetzt
+jede Website, auf der ein Ort des Plans seine Zeiten pflegt, mit einem
+gemeinsamen Parser (Ort / Tage / Zeit, in einer oder zwei Zeilen):
+
+| `seite` | Website | erkannt |
+|---|---|---|
+| `zeiten` | https://goetheanum.ch/de/campus/oeffnungszeiten | alle Orte der Seite |
+| `buchhandlung` | https://www.goetheanum-buchhandlung.ch/pages/oeffnungszeiten | «Allgemeine Öffnungszeiten» |
+| `bibliothek` | https://goetheanum.ch/de/dokumentation/bibliothek | «Öffnungszeiten» samt Ferien (`zuZeitraeume`) |
+| `archiv` | https://www.rudolf-steiner.com/ | «Lesesaal & Shop» |
+| `speisehaus` | https://www.speisehaus.ch/ | «Laden», «Wandelhalle» |
+
+Dazu `ausstellungen`: die laufenden Ausstellungen der Sektion für Bildende
+Künste (https://sbk.goetheanum.org/veranstaltungen/ausstellungen) mit ihren
+Teilen und Daten aus der Einzelseite; der Plan zeigt sie bei der Galerie.
+
+Jeder Zeitenblock trägt `seite`; `gaeste.js` nennt je Ort `seite` und
+`quelle`. Erkennt die Function auf einer erreichbaren Seite nichts, steht das
+in `fehler`. Der Plan zeigt jeden Ort, dessen Zeiten nicht live gefunden
+wurden, als «Zeiten heute nicht bestätigt, vor dem Besuch prüfen» mit Link,
+und oben einen Satz zum Stand aller Orte.
+
+## Wächter
+
+**Täglich** prüft `python3 tools/oeffnungszeiten-pruefen.py --live`, dass die
+Function fehlerfrei lief und jede `quelle` aus `gaeste.js` live gefunden wird;
+eine Lücke eröffnet ein Issue (Label campusplan). **Monatlich** zusätzlich der
+Textvergleich der festen Zeiten:
 
 Die festen Öffnungszeiten in `apps/campusplan/gaeste.js` stammen von sechs
 Seiten (goetheanum.ch, Buchhandlung, Bibliothek, rudolf-steiner.com,
