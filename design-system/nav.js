@@ -18,6 +18,9 @@
    FOKUS: öffentlich nur Fertiges (live/beta). INTERN (Pflege) blendet ALLES ein
    (alle Status + Backstage-Welten). Auslöser: das Wort „intern" tippen, oder
    einmalig ?intern an die URL. Gemerkt im localStorage; aus: erneut „intern".
+
+   data-invite="aus" am Skript-Tag blendet den Chip „Fehlt Dir etwas?" aus –
+   für Seiten mit eigener Aktionsleiste am unteren Rand.
    ============================================================================= */
 (function () {
   var s = document.currentScript;
@@ -308,8 +311,11 @@
   // Globaler Feedback-Einblender (unten, dezent, wegklickbar). Eine einladende
   // Frage statt Beta-Hinweis: motiviert zur Rückmeldung und öffnet die Mail mit
   // vorbereitetem Betreff samt aktueller Seite – niedrige Schwelle.
+  // Seiten mit eigener Aktionsleiste unten (z. B. Schritte mit Weiter-Knopf)
+  // schalten ihn mit data-invite="aus" am nav.js-Script ab — sonst läge er
+  // über dem Knopf (Befund Campusplan, 18. 10. 2026).
   var INVITE_KEY = "goeInviteSeen";
-  var inviteSeen = false; try { inviteSeen = localStorage.getItem(INVITE_KEY) === "1"; } catch (e) {}
+  var inviteSeen = (s && s.dataset.invite === "aus"); try { inviteSeen = inviteSeen || localStorage.getItem(INVITE_KEY) === "1"; } catch (e) {}
   if (!inviteSeen) {
     var subj = encodeURIComponent("Rückmeldung – " + (document.title || "Goetheanum Werkzeuge"));
     var invite = el("div", "dsnav-invite");

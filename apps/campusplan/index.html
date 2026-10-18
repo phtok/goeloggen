@@ -27,6 +27,19 @@
   .kopfzeile{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);flex-wrap:wrap}
   main section + section{margin-top:var(--s8)}
 
+  /* Drei Schritte, je eine Frage; die Leiste unten trägt Zurück und Weiter
+     und bleibt am Telefon im Blick (sticky). Aktueller Schritt: dunkle
+     statt leiser Schrift (ein Merkmal, G01). */
+  .schritte{list-style:none;margin:0 0 var(--s6);padding:0;display:flex;gap:var(--s2) var(--s4);flex-wrap:wrap}
+  .schritte button{display:inline-flex;align-items:center;gap:var(--s2);min-height:var(--tap);padding:0;border:0;background:none;
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);cursor:pointer}
+  .schritte button[aria-current="step"]{color:var(--ink)}
+  .schritte .step-num{top:0}
+  .schrittleiste{position:sticky;bottom:0;z-index:5;display:flex;gap:var(--s3);justify-content:space-between;align-items:center;
+    margin-top:var(--s7);padding-block:var(--s3);background:var(--paper);border-top:1px solid var(--line)}
+  .schrittleiste .btn{min-height:var(--tap)}
+  .schrittleiste .btn.primary{margin-left:auto}
+
   /* Kacheln (.kacheln, button.kachel): Fundament, base.css. Hier nur die Zeiten-Variante. */
   .umstaende{margin-top:var(--s4)}
   .zeiten{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--s3);max-width:640px}
@@ -67,11 +80,17 @@
   .linkfeld input{width:100%;min-height:var(--tap);font-family:var(--font-text);font-size:16px;padding:0 var(--s3);
     border:1px solid var(--line);border-radius:var(--r-control);background:var(--field-bg);color:var(--ink)}
   .fuss{margin-block:var(--s8)}
+
+  /* Führungen: öffentliche (Station im Zeitplan) und private (Formular je Thema). */
+  .fuehrung-liste{list-style:none;margin:0;padding:0;display:grid;gap:var(--s1)}
+  .fuehrung-liste a{display:inline-flex;align-items:center;min-height:var(--tap)}
+  .fuehrung-wahl{display:flex;align-items:center;gap:var(--s2);min-height:var(--tap);cursor:pointer}
+  .fuehrung-wahl input{width:26px;height:26px;margin:0;accent-color:var(--gold-deep)}
 </style>
 </head>
 <body>
 
-<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
+<script src="../../design-system/nav.js?v=1.28.1" data-root="../../" data-variant="werkzeug" data-invite="aus"></script>
 
 <main class="wrap">
 
@@ -89,7 +108,13 @@
     <p class="lede" data-ui="lede">Interessen und Zeit wählen – der Plan kommt als A4-Blatt zum Ausdrucken und als Link fürs Telefon.</p>
   </section>
 
-  <section id="interessen">
+  <ol class="schritte" id="schritte" aria-label="Schritte">
+    <li><button type="button" data-schritt="1" aria-current="step"><span class="step-num"><b>1</b></span><span data-ui="s1-titel">Interessen</span></button></li>
+    <li><button type="button" data-schritt="2"><span class="step-num"><b>2</b></span><span data-ui="s2-titel">Tag und Zeit</span></button></li>
+    <li><button type="button" data-schritt="3"><span class="step-num"><b>3</b></span><span data-ui="s3-titel">Dein Plan</span></button></li>
+  </ol>
+
+  <section id="interessen" data-teil="1">
     <div class="shead">
       <h2 data-ui="s1-frage">Was zieht dich an?</h2>
       <p data-ui="s1-hilfe">Eines oder mehrere wählen. Der Plan füllt sich daraus von selbst.</p>
@@ -100,7 +125,7 @@
     </div>
   </section>
 
-  <section id="zeit">
+  <section id="zeit" data-teil="2" hidden>
     <div class="shead">
       <h2 data-ui="s2-frage">Wie viel Zeit hast du?</h2>
       <p data-ui="s2-hilfe">Die Zeit entscheidet, wie viele Orte auf den Plan kommen.</p>
@@ -119,7 +144,7 @@
     </div>
   </section>
 
-  <section id="plan">
+  <section id="plan" data-teil="3" hidden>
     <div class="shead">
       <h2 data-ui="s3-titel">Dein Plan</h2>
       <p class="readout" id="summe"></p>
@@ -132,7 +157,28 @@
     <div id="mehr-orte"></div>
   </section>
 
-  <section id="mitnehmen">
+  <section id="fuehrungen" data-teil="3" hidden>
+    <div class="shead">
+      <h2 data-ui="fuehrung-titel">Mit Führung</h2>
+      <p data-ui="fuehrung-hilfe">Mit einer Führung ist alles zugänglich, auch innen in den Häusern der Architektursammlung.</p>
+    </div>
+    <div class="wege">
+      <div class="weg">
+        <h3 data-ui="fuehrung-oeffentlich">Öffentliche Führung</h3>
+        <p class="hint" id="fuehrung-text"></p>
+        <label class="fuehrung-wahl" id="fuehrung-wahl"><input type="checkbox" id="fuehrung-dabei" /> <span data-ui="fuehrung-in-plan">In den Plan aufnehmen</span></label>
+        <div class="knoepfe"><a class="btn" id="fuehrung-buchen" href="https://tickets.goetheanum.ch/6FUE/" target="_blank" rel="noopener" data-ui="fuehrung-buchen">Führung buchen</a></div>
+      </div>
+      <div class="weg">
+        <h3 data-ui="fuehrung-privat">Private Führung nach Vereinbarung</h3>
+        <p class="hint" data-ui="fuehrung-privat-hint">Allein oder mit einer Gruppe, Uhrzeit nach Absprache. Passend zu deinen Interessen:</p>
+        <ul class="fuehrung-liste" id="fuehrung-themen"></ul>
+        <p><a href="https://goetheanum.ch/de/campus/fuehrungen" target="_blank" rel="noopener" data-ui="fuehrung-alle">Alle Führungen</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="mitnehmen" data-teil="3" hidden>
     <div class="shead">
       <h2 data-ui="mitnehmen">Mitnehmen</h2>
     </div>
@@ -159,7 +205,10 @@
     </div>
   </section>
 
-  <p class="hint fuss"><span data-ui="fuehrung-hint">Mit einer Führung ist alles zugänglich, auch die Häuser der Architektursammlung.</span> <a href="https://goetheanum.ch/de/campus/fuehrungen" target="_blank" rel="noopener" data-ui="fuehrung-link">Führungen buchen</a></p>
+  <div class="schrittleiste" id="schrittleiste">
+    <button type="button" class="btn" id="zurueck" data-ui="zurueck" hidden>Zurück</button>
+    <button type="button" class="btn primary" id="weiter" data-ui="weiter">Weiter</button>
+  </div>
 
 </main>
 

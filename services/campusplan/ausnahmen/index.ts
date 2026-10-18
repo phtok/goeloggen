@@ -32,6 +32,7 @@ const QUELLEN = {
   archiv: "https://www.rudolf-steiner.com/",
   speisehaus: "https://www.speisehaus.ch/",
   ausstellungen: "https://sbk.goetheanum.org/veranstaltungen/ausstellungen",
+  fuehrungen: "https://goetheanum.ch/de/campus/fuehrungen",
 };
 const ZEITEN_SEITEN = ["zeiten", "buchhandlung", "bibliothek", "archiv", "speisehaus"] as const;
 const CACHE_SEK = 3600;
@@ -41,7 +42,7 @@ type Fenster = { tage: number[]; von: string; bis: string };
 type Zeitraum = { von: string; bis: string };
 type Zeiten = {
   seite: string; titel: string; kontext: string[]; fenster: Fenster[];
-  ersterImMonat?: boolean; zuMonate?: number[]; zuZeitraeume?: Zeitraum[];
+  ersterImMonat?: boolean; zuMonate?: number[]; zuZeitraeume?: Zeitraum[]; anmeldung?: string;
 };
 type Teil = { titel: string; von: string; bis: string };
 type Ausstellung = { titel: string; untertitel: string; von: string; bis: string; link: string; teile: Teil[]; fenster: Fenster[] };
@@ -234,6 +235,27 @@ function zeitenParsen(liste: string[], seite: string): Zeiten[] {
   return ergebnis;
 }
 
+/* ---------- Öffentliche Führung ----------
+   «Öffentliche Führung / Jeden Samstag um 14.00 Uhr. Treffpunkt am Goetheanum
+   Empfang. Anmeldung bis 11.30 Uhr am Samstag erforderlich. / … Ca. 80 Min. …»
+   → ein Zeitfenster genau so lang wie die Führung (Beginn fest). */
+function fuehrungParsen(liste: string[]): Zeiten[] {
+  const i = liste.findIndex((z) => /^Öffentliche Führung$/i.test(z));
+  if (i < 0) return [];
+  const text = liste.slice(i + 1, i + 4).join(" ");
+  const m = text.match(/Jeden\s+([A-Za-zä]+)\s+um\s+(\d{1,2})[.:](\d{2})\s*Uhr/i);
+  const tag = m ? TAG_WORT[m[1].toLowerCase()] : undefined;
+  if (!m || tag == null) return [];
+  const dauer = Number((text.match(/Ca\.\s*(\d+)\s*Min/i) ?? [])[1] ?? 80);
+  const beginn = Number(m[2]) * 60 + Number(m[3]), ende = beginn + dauer;
+  const an = text.match(/Anmeldung bis\s+(\d{1,2})[.:](\d{2})\s*Uhr/i);
+  return [{
+    seite: "fuehrungen", titel: "Öffentliche Führung", kontext: [],
+    fenster: [{ tage: [tag], von: uhr(m[2], m[3]), bis: uhr(String(Math.floor(ende / 60)), String(ende % 60).padStart(2, "0")) }],
+    anmeldung: an ? uhr(an[1], an[2]) : undefined,
+  }];
+}
+
 /* ---------- Ausstellungen der Sektion für Bildende Künste ----------
    Liste: «Walther Roggenkamp 1926 bis 1995 / 18.09.2026 – 01.03.2027 /
    Drei Ausstellungen im Goetheanum / Weiterlesen». Die Einzelseite nennt die
@@ -320,8 +342,8 @@ async function laden(): Promise<Antwort> {
   };
   // Speisehaus und Archiv führen die Zeiten ausserhalb von <main>.
   const nurMain: Record<string, boolean> = { zeiten: true, buchhandlung: true, bibliothek: true, archiv: false, speisehaus: false };
-  const [saal, glashaus, ...seiten] = await Promise.all([
-    hole(QUELLEN.saal), hole(QUELLEN.glashaus),
+  const [saal, glashaus, fuehrungSeite, ...seiten] = await Promise.all([
+    hole(QUELLEN.saal), hole(QUELLEN.glashaus), hole(QUELLEN.fuehrungen),
     ...ZEITEN_SEITEN.map((s) => hole(QUELLEN[s], nurMain[s])),
   ]);
   const zeiten: Zeiten[] = [];
@@ -330,6 +352,9 @@ async function laden(): Promise<Antwort> {
     if (seiten[i].length && !bloecke.length) fehler.push(`${QUELLEN[s]}: keine Öffnungszeiten erkannt`);
     zeiten.push(...bloecke);
   });
+  const fuehrung = fuehrungParsen(fuehrungSeite);
+  if (fuehrungSeite.length && !fuehrung.length) fehler.push(`${QUELLEN.fuehrungen}: öffentliche Führung nicht erkannt`);
+  zeiten.push(...fuehrung);
   let ausstellungen: Ausstellung[] = [];
   try { ausstellungen = await ausstellungenLaden(holeRoh); }
   catch (e) { fehler.push(`${QUELLEN.ausstellungen}: ${(e as Error).message}`); }
