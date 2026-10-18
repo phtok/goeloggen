@@ -94,6 +94,7 @@ Browsers. Solche Blätter werden gezählt und übersprungen.
 | D1 | `role="tablist"` → `role="group"` auf beiden Tastatur-Umschaltern | `icons.html` | WCAG 1.3.1 – die Knöpfe sind Umschalter mit `aria-pressed`, keine Reiter; `tablist` verlangt Kinder mit `role="tab"` |
 | D2 | `role="group"` auf dem Ausgabe-Block ergänzt | `apps/bewegte-schrift/index.html` | WCAG 4.1.2 – `aria-label` auf einem `<pre>` ohne Rolle ist unzulässig; erst die Rolle macht die Beschriftung gültig |
 | D3 | `tabindex="0"` auf allen 14 `.tablewrap`-Behältern der Kampagnen-App (Cockpit, Kosten, Aktivitäten, Multiplikatoren) | `apps/sommer-zaehler/*.html`, `apps/sommer-zaehler/campaign.css` | WCAG 2.1.1 – `scrollable-region-focusable`. Die Tabellen sind breiter als ein Telefon; ohne Tabstopp kam die Tastatur nie an die rechten Spalten. Anlass: die neue Tabelle <q>Getrennt nach Angebot</q> hätte eine fünfzehnte Stelle desselben Musters hinzugefügt. Gemessen danach: alle vier Seiten ohne Verstoss (21. 9. 2026) |
+| D4 | Auswahl- und Eingabefelder erhalten Namen: `aria-label` an `<select>` (Ordnerwahl, Portrait), `<label for>` an allen Schiebereglern, `aria-label` an Textfeldern und Datei-Eingaben | `ordner.html`, `werkzeug.html`, `ineinander.html`, `kerning.html`, `ligvorschau.html`, `schrift-webfont.html`, `tester.html`, `apps/cover-generator/index.html`, `apps/qr-generator/index.html` | WCAG 4.1.2 – `select-name` (130 Stellen) und `label` (82 Stellen). Gemessen danach: alle neun Seiten ohne Verstoss (18. 10. 2026) |
 
 ## Rückstand aus der Erstmessung
 
