@@ -66,7 +66,7 @@ function listeZeichnen() {
     });
   }
   document.getElementById("stationen").innerHTML = nummeriert.map((g, i) =>
-    (pausen[g.id] ? `<li class="pause hint">${ui("pause-bis")} ${uhrText(pausen[g.id].bis)}${state.sprache === "en" ? "" : " Uhr"}</li>` : "") +
+    (pausen[g.id] ? `<li class="pause hint">${ui("pause-bis")} ${uhrZeit(pausen[g.id].bis)}</li>` : "") +
     zeileMarkup(g, i + 1, plan)).join("");
   document.getElementById("anreise").innerHTML = anreise.map((g) => zeileMarkup(g, "", null)).join("");
   document.getElementById("anreise-titel").hidden = !anreise.length;

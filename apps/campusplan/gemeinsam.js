@@ -12,31 +12,22 @@ const PLAN_SEITE = "plan.html";
 /* ---------- Texte ---------- */
 
 const UI = {
-  "s1-titel": { de: "Themen", en: "Themes" },
-  "s2-titel": { de: "Zeit", en: "Time" },
   "s3-titel": { de: "Dein Plan", en: "Your plan" },
   "s1-frage": { de: "Was zieht dich an?", en: "What draws you in?" },
   "s1-hilfe": { de: "Eines oder mehrere wählen. Der Plan füllt sich daraus von selbst.",
                 en: "Pick one or more. The plan fills itself from your choice." },
   "s2-frage": { de: "Wie viel Zeit hast du?", en: "How much time do you have?" },
-  "s2-hilfe": { de: "Die Zeit entscheidet, wie viele Orte auf den Plan kommen. Ändern geht später jederzeit.",
-                en: "Time decides how many places make the plan. You can change it any time." },
-  weiter: { de: "Weiter", en: "Next" },
-  zurueck: { de: "Zurück", en: "Back" },
-  "plan-zeigen": { de: "Plan zeigen", en: "Show plan" },
-  "zurueck-zeit": { de: "Zurück zur Zeit", en: "Back to time" },
-  neu: { de: "Neu beginnen", en: "Start over" },
+  "s2-hilfe": { de: "Die Zeit entscheidet, wie viele Orte auf den Plan kommen.",
+                en: "Time decides how many places make the plan." },
   link: { de: "Link kopieren", en: "Copy link" },
   qr: { de: "QR-Code", en: "QR code" },
   "link-lab": { de: "Dein Link, zum Weitergeben oder aufs Telefon", en: "Your link, to share or to open on your phone" },
   "plan-aendern": { de: "Plan ändern", en: "Change plan" },
   "plan-hint": { de: "Abgehakt wird nur auf diesem Gerät gespeichert. Der Link bleibt gleich.",
                  en: "Ticks are stored on this device only. The link stays the same." },
-  "karte-hint": { de: "Ziehen bewegt die Karte, zwei Finger zoomen. Ein Tipp auf eine Nummer springt zur Station.",
-                  en: "Drag to move the map, pinch to zoom. Tap a number to jump to its station." },
   titel: { de: "Mein Campusplan", en: "My Campus Plan" },
-  lede: { de: "Den eigenen Besuch am Goetheanum planen: Themen wählen, Zeit wählen, fertig. Den Plan als PDF mitnehmen oder als Link aufs Telefon und unterwegs abhaken.",
-          en: "Plan your own visit to the Goetheanum: pick themes, pick a time, done. Take the plan as a PDF or as a link on your phone and tick off places as you go." },
+  lede: { de: "Interessen und Zeit wählen – der Plan kommt als A4-Blatt zum Ausdrucken und als Link fürs Telefon.",
+          en: "Pick your interests and your time – the plan comes as an A4 sheet to print and as a link for your phone." },
   besuch: { de: "Mein Besuch", en: "My visit" },
   stationen: { de: "Stationen", en: "stops" },
   etwa: { de: "etwa", en: "about" },
@@ -52,25 +43,20 @@ const UI = {
   anreise: { de: "Anreise und Service", en: "Arrival and service" },
   min: { de: "Min.", en: "min" },
   std: { de: "Std.", en: "h" },
-  "lage-hint": { de: "Lage noch nicht am Gelände geprüft:", en: "Position not yet checked on site:" },
   "wc": { de: "Toiletten", en: "Toilets" },
   pdf: { de: "PDF herunterladen", en: "Download PDF" },
   "pdf-laeuft": { de: "PDF wird erzeugt …", en: "Creating PDF …" },
   "pdf-fehler": { de: "PDF konnte nicht erzeugt werden.", en: "The PDF could not be created." },
-  blatt: { de: "Blatt", en: "sheet" },
   "stationen-titel": { de: "Die Stationen", en: "The stops" },
   "pdf-link-hint": { de: "Derselbe Plan auf dem Telefon: Link öffnen oder QR-Code scannen, unterwegs abhaken.",
                      en: "The same plan on your phone: open the link or scan the QR code, tick off as you go." },
   "datum-lab": { de: "Besuchstag, wenn du ihn schon kennst", en: "Day of your visit, if you know it" },
-  "datum-hint": { de: "Mit Besuchstag kommen nur Orte in den Plan, die an diesem Tag offen sind. Geschlossene bleiben unter «Mehr Orte» und sind markiert.",
-                  en: "With a visit day, only places open on that day make the plan. Closed ones stay under «More places», marked." },
   "geschlossen-am": { de: "am Besuchstag geschlossen", en: "closed on your visit day" },
   "heute-zu": { de: "heute geschlossen", en: "closed today" },
   ausnahmen: { de: "aktuelle Ausnahmen", en: "current exceptions" },
   "an-diesem-tag": { de: "an diesem Tag", en: "on this day" },
   "orte-zu": { de: "Orte sind an diesem Tag zu und nicht im Plan", en: "places are closed that day and left out" },
   "ort-zu": { de: "Ort ist an diesem Tag zu und nicht im Plan", en: "place is closed that day and left out" },
-  "alles-offen": { de: "alle Orte des Plans sind offen", en: "every place in the plan is open" },
   "fuehrung-hint": { de: "Mit einer Führung ist alles zugänglich, auch die Häuser der Architektursammlung.", en: "With a guided tour everything is accessible, including the houses of the architecture collection." },
   "fuehrung-link": { de: "Führungen buchen", en: "Book a guided tour" },
   "nummer-hint": { de: "Ein Tipp auf eine Nummer in der Liste zeigt den Ort auf der Karte – und umgekehrt.",
@@ -78,8 +64,16 @@ const UI = {
   "pause-bis": { de: "Pause bis", en: "Break until" },
   "ausserhalb": { de: "passt an diesem Tag nicht in die Öffnungszeiten", en: "does not fit the opening hours that day" },
   "ankunft-lab": { de: "Ankunft", en: "Arrival" },
-  "ankunft-hint": { de: "Mit Besuchstag und Ankunft schlägt der Plan einen Zeitplan vor, nach den aktuellen Öffnungszeiten.",
-                    en: "With a visit day and arrival time the plan suggests a schedule, based on the current opening hours." },
+  "ankunft-hint": { de: "Mit Besuchstag schlägt der Plan einen Zeitplan vor, nach den aktuellen Öffnungszeiten.",
+                    en: "With a visit day the plan suggests a schedule, based on the current opening hours." },
+  mitnehmen: { de: "Mitnehmen", en: "Take it along" },
+  "a4-titel": { de: "A4 zum Ausdrucken", en: "A4 to print" },
+  "a4-hint": { de: "Die Campus-Karte mit deinen Stationen, dazu ein Blatt mit allen Orten und dem Link.",
+               en: "The campus map with your stops, plus a sheet with every place and the link." },
+  "telefon-titel": { de: "Aufs Telefon", en: "On your phone" },
+  "telefon-hint": { de: "QR-Code scannen oder den Link schicken – unterwegs Karte und Stationen zum Abhaken.",
+                    en: "Scan the QR code or send the link – map and stops to tick off as you go." },
+  "plan-oeffnen": { de: "Ansehen", en: "View" },
   zeitplan: { de: "Zeitplan", en: "Schedule" },
   "karte-laedt": { de: "Karte wird geladen …", en: "Loading map …" },
   "karte-fehlt": { de: "Die Karte konnte nicht geladen werden. Die Liste gilt trotzdem.", en: "The map could not be loaded. The list still works." },
@@ -230,9 +224,21 @@ function minuten(hhmm) {
   return h * 60 + (m || 0);
 }
 
+// Uhrzeit: volle Stunde ohne Minuten («10», G22), sonst «13.30»; englisch «10:00».
 function uhrText(min) {
   const h = Math.floor(min / 60), m = min % 60;
-  return state.sprache === "en" ? `${h}:${String(m).padStart(2, "0")}` : `${h}.${String(m).padStart(2, "0")}`;
+  if (state.sprache === "en") return `${h}:${String(m).padStart(2, "0")}`;
+  return m ? `${h}.${String(m).padStart(2, "0")}` : String(h);
+}
+
+// Einheit nach schmalem geschütztem Leerzeichen (U+202F, G20): «10 Uhr», «20 Min.».
+function einheit(zahl, wort) {
+  return wort ? `${zahl}\u202f${wort}` : String(zahl);
+}
+
+// «13.30 Uhr» (englisch ohne Einheit).
+function uhrZeit(min) {
+  return einheit(uhrText(min), state.sprache === "en" ? "" : "Uhr");
 }
 
 // Zeitfenster des massgeblichen Teils an einem Tag, in Minuten:
@@ -273,7 +279,7 @@ function tageText(tage) {
     if (i && (vorher + 1) % 7 === d) laeufe[laeufe.length - 1].push(d); else laeufe.push([d]);
   });
   const und = sp === "en" ? " and " : " und ";
-  const teile = laeufe.flatMap((l) => (l.length >= 3 ? [`${TAG_KURZ[sp][l[0]]}–${TAG_KURZ[sp][l[l.length - 1]]}`] : l.map((d) => TAG_KURZ[sp][d])));
+  const teile = laeufe.flatMap((l) => (l.length >= 3 ? [`${TAG_KURZ[sp][l[0]]}\u2060–\u2060${TAG_KURZ[sp][l[l.length - 1]]}`] : l.map((d) => TAG_KURZ[sp][d])));
   return teile.length === 2 ? teile.join(und) : teile.join(", ");
 }
 
@@ -282,7 +288,7 @@ function zeitenText(g) {
   if (!g.oeffnung) return "";
   const sp = state.sprache === "en" ? "en" : "de";
   const und = sp === "en" ? " and " : " und ";
-  const uhr = sp === "en" ? "" : " Uhr";
+  const uhr = sp === "en" ? "" : "\u202fUhr";
   const text = g.oeffnung.map((teil) => {
     const z = teilZeiten(teil);
     const gruppen = [];
@@ -358,10 +364,10 @@ function zeitplan(liste) {
   return { eintraege, ausserhalb, ende: eintraege.length ? eintraege[eintraege.length - 1].bis : jetzt };
 }
 
-// «13.30–14.00 Uhr» für einen Eintrag des Zeitplans.
+// «13.30–14 Uhr» für einen Eintrag des Zeitplans.
 function spanneText(e) {
   const spanne = e.bis > e.von ? `${uhrText(e.von)}\u2060–\u2060${uhrText(e.bis)}` : uhrText(e.von);
-  return `${spanne}${state.sprache === "en" ? "" : " Uhr"}`;
+  return einheit(spanne, state.sprache === "en" ? "" : "Uhr");
 }
 
 function zeitplanVon(plan, id) {
@@ -382,9 +388,9 @@ function planMinuten() {
 }
 
 function dauerText(minuten) {
-  if (minuten < 60) return `${minuten} ${ui("min")}`;
+  if (minuten < 60) return einheit(minuten, ui("min"));
   const h = Math.floor(minuten / 60), m = minuten % 60;
-  return m ? `${h} ${ui("std")} ${m} ${ui("min")}` : `${h} ${ui("std")}`;
+  return m ? `${einheit(h, ui("std"))} ${einheit(m, ui("min"))}` : einheit(h, ui("std"));
 }
 
 /* ---------- Link: der Plan ist die URL ---------- */

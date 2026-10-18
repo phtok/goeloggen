@@ -1,14 +1,16 @@
 <!doctype html>
-<!-- Campusplan für Gäste · Laborseite (Konzept: docs/specs/campusplan-besucher-konzept.md, § 9)
-     Gebaut aus design-system/starter.html. Karte und Ortskatalog kommen aus
-     apps/karten-generator/ (eine Quelle, zwei Türen). -->
+<!-- Campusplan für Gäste · die Auswahl (Laborseite; Konzept:
+     docs/specs/campusplan-besucher-konzept.md, § 13 «drei Türen»).
+     Hier wird nur gewählt: Interessen, Zeit, Besuchstag. Ergebnis sind das
+     A4-Blatt (PDF, Karte des Kartentools) und der Link aufs Telefon (plan.html).
+     Gebaut aus design-system/starter.html. -->
 <html lang="de-CH">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
 <title>Mein Campusplan · Goetheanum</title>
-<meta name="description" content="Den eigenen Besuch am Goetheanum planen: Themen wählen, Zeit wählen, Plan drucken oder als Link aufs Telefon nehmen und unterwegs abhaken." />
+<meta name="description" content="Den eigenen Besuch am Goetheanum planen: Interessen und Zeit wählen, den Plan als A4 drucken oder als Link aufs Telefon nehmen." />
 <link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
 
 <link rel="stylesheet" href="../../design-system/tokens.css" />
@@ -18,17 +20,11 @@
 <style>
   /* Nur Seiten-Eigenes. Alles Gemeinsame steht in base.css; Werte aus den Tokens. */
   .hero{padding-block:clamp(28px,5vw,56px) var(--s6)}
-  main section{scroll-margin-top:calc(var(--header-h) + var(--s4))}
   .hero h1{max-width:18ch}
   .kopfzeile{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);flex-wrap:wrap}
+  main section + section{margin-top:var(--s8)}
 
-  /* Schrittleiste: drei Stationen, die aktuelle in Gold (Auswahl-Klang). */
-  .schritte{list-style:none;margin:0 0 var(--s6);padding:0;display:flex;gap:var(--s2);flex-wrap:wrap}
-  .schritte li{display:inline-flex;align-items:center;gap:var(--s2);font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);min-height:var(--tap)}
-  .schritte li[aria-current="step"]{color:var(--ink);font-weight:600}
-  .schritte .step-num{top:0}
-
-  /* Themen-Kacheln: Wahl = Gold/Weiss wie die Pille (.seg). */
+  /* Kacheln: Wahl = Gold/Weiss wie die Pille (.seg). */
   .kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:var(--s3)}
   .kachel{display:grid;gap:var(--s1);text-align:left;font:inherit;padding:var(--s4);min-height:var(--tap);
     border:1px solid var(--line);border-radius:var(--r-card);background:var(--field-bg);color:var(--ink);cursor:pointer;
@@ -38,78 +34,45 @@
   .kachel .k-kurz{font-family:var(--font-text);font-size:var(--t-small);line-height:1.4;color:var(--muted)}
   .kachel[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent)}
   .kachel[aria-pressed="true"] .k-kurz{color:var(--on-accent)}
-
-  /* Zeit-Knöpfe: grosse Wahl, gleiche Sprache wie die Kacheln. */
-  .zeiten{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:var(--s3);max-width:640px}
+  .umstaende{margin-top:var(--s4)}
+  .zeiten{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--s3);max-width:640px}
   .zeiten .kachel{text-align:center;justify-items:center}
+  .tag{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s4);margin-top:var(--s5);max-width:640px}
+  .tag input{min-height:var(--tap);font-size:16px}
+  .tag .hint{grid-column:1 / -1}
 
-  .schrittfuss{display:flex;gap:var(--s3);flex-wrap:wrap;margin-top:var(--s6);align-items:center}
-  .schrittfuss .btn{min-height:var(--tap)}
-  .umstaende{margin-top:var(--s6)}
-
-  /* Karte: Fläche in Papierfarbe, der Finger zieht und zoomt — nie die Seite. */
-  .karte-box{position:relative;border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;background:var(--soft)}
-  .karte-box svg{display:block;width:100%;height:min(58vh,560px);touch-action:none;cursor:grab;user-select:none}
-  .karte-box svg.zieht{cursor:grabbing}
-  .karte-box svg text{letter-spacing:normal;word-spacing:normal}
-  .karte-tools{position:absolute;right:var(--s3);bottom:var(--s3);display:grid;gap:var(--s2)}
-  .karte-tools .btn{min-width:var(--tap);min-height:var(--tap);padding:0;font-size:var(--t-body);box-shadow:var(--shadow-card)}
-  #karte [data-aktiv]{fill:var(--karte-goetheanum,var(--blue-solid))}
-  /* Die Karte ist ein Artefakt mit festen Farben (Kartentool-Palette); Marken-
-     füllungen, Ring und Grad stehen darum als SVG-Attribute in app.js, gerechnet
-     gegen die Kartengründe (Konzept § 12, Punkt 10) — nicht als Theme-Tokens. */
-  .marke{cursor:pointer}
-  .marke.fokus circle{stroke-width:.9}
-  .marke text{font-family:var(--font-text);font-weight:600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
-
-  /* Stationen: eine Zeile je Ort, Fingerziel 44px, Kästchen links, Karte rechts. */
-  .plan{display:grid;gap:var(--s5);margin-top:var(--s5)}
-  .stationen{list-style:none;margin:0;padding:0;display:grid;gap:var(--s1)}
-  .stn{display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:var(--s3);
-    min-height:var(--tap);padding:var(--s2) var(--s2);border-radius:var(--r-control);border:1px solid transparent}
-  .stn:hover{background:var(--soft)}
-  .stn.fokus{border-color:var(--gold-ink);background:var(--soft)}
-  /* Das Kästchen sitzt in einem 44-px-Feld (B04): der ganze Bereich ist das Ziel. */
+  /* Der Plan: eine Zeile je Ort, Fingerziel 44px (B04), Kästchen = dabei. */
+  .stationen{list-style:none;margin:0;padding:0;display:grid;gap:var(--s1);max-width:72ch}
+  .stn{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:var(--s2) var(--s3);
+    min-height:var(--tap);padding:var(--s2) var(--s2) var(--s2) 0}
   .stn .stn-check{display:grid;place-items:center;width:var(--tap);height:var(--tap);cursor:pointer}
   .stn input[type="checkbox"]{width:26px;height:26px;margin:0;accent-color:var(--gold-deep);cursor:pointer}
   .stn .step-num{top:0;font-size:1rem}
-  .stn.abgehakt .step-num{background:var(--ok)}
   .stn .stn-text{display:grid;gap:2px;min-width:0}
-  .stn .stn-name{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);line-height:var(--lh-tight)}
-  .stn.abgehakt .stn-name{color:var(--muted)}
-  .stn .stn-line{font-family:var(--font-text);font-size:var(--t-small);line-height:1.45;color:var(--ink)}
-  .stn .stn-karte{min-width:var(--tap);min-height:var(--tap);padding:0 var(--s3)}
-  .stn .stn-zu{color:var(--bad);font-weight:600}
-  .stn .stn-live{color:var(--ok-ink);font-weight:600}
-  .besuchstag{margin-top:var(--s6);max-width:360px}
-  .besuchstag{display:grid;gap:var(--s4)}
-  .besuchstag input[type="date"],.besuchstag input[type="time"]{min-height:var(--tap);font-size:16px}
   .stn .stn-zeit{font-family:var(--font-text);font-size:var(--t-small);font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
-  .stationen .pause{padding-left:calc(2 * var(--tap))}
-  .pdf-hint{margin-top:var(--s2)}
-  .stn.anreise{grid-template-columns:1fr auto}
+  .stn .stn-name{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);line-height:var(--lh-tight)}
+  .stn .stn-line{font-family:var(--font-text);font-size:var(--t-small);line-height:1.45;color:var(--ink)}
+  .stn .stn-zu{color:var(--bad)}
+  .stn .stn-live{color:var(--ok-ink)}
+  .stn.anreise{grid-template-columns:1fr;padding-left:calc(var(--tap) + var(--s3))}
+  .stn.weg-aus{grid-template-columns:auto 1fr}
+  .stationen .pause{padding-left:calc(var(--tap) + var(--s3))}
+  .plan-hint{margin-bottom:var(--s4)}
+  .unter{margin-top:var(--s5)}
+  .mehr{margin-top:var(--s3);max-width:72ch}
   .mehr summary{cursor:pointer;min-height:var(--tap);display:flex;align-items:center;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body)}
-  .mehr .stationen{margin-top:var(--s2)}
-  .plan-summe{display:flex;gap:var(--s4);flex-wrap:wrap;align-items:baseline}
-  .ausgabe{display:grid;gap:var(--s3)}
-  .ausgabe .knoepfe{display:flex;gap:var(--s3);flex-wrap:wrap}
-  .ausgabe .knoepfe .btn{min-height:var(--tap)}
-  .linkfeld{display:grid;gap:var(--s2)}
+
+  /* Mitnehmen: zwei Wege nebeneinander, je eine Handlung. */
+  .wege{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s5)}
+  .weg{display:grid;gap:var(--s3);align-content:start;padding:var(--s5);border:1px solid var(--line);border-radius:var(--r-card);background:var(--field-bg)}
+  .weg h3{margin:0}
+  .weg .knoepfe{display:flex;gap:var(--s3);flex-wrap:wrap}
+  .weg .btn{min-height:var(--tap)}
+  #qr-box{width:min(200px,100%)}
+  #qr-box svg{display:block;width:100%;height:auto}
   .linkfeld input{width:100%;min-height:var(--tap);font-family:var(--font-text);font-size:16px;padding:0 var(--s3);
     border:1px solid var(--line);border-radius:var(--r-control);background:var(--field-bg);color:var(--ink)}
-  #qr-box{max-width:260px}
-  #qr-box svg{display:block;width:100%;height:auto}
-  .hinweis-lage{margin-top:var(--s5)}
-
-  @media (min-width:900px){
-    .plan{grid-template-columns:minmax(0,1.2fr) minmax(320px,1fr);align-items:start}
-    .plan .karte-spalte{position:sticky;top:calc(var(--header-h) + var(--s4))}
-  }
-  @media (max-width:480px){
-    .stn{grid-template-columns:auto auto 1fr;gap:var(--s2)}
-    .stn .stn-karte{grid-column:2 / -1;justify-self:start}
-  }
-
+  .fuss{margin-block:var(--s8)}
 </style>
 </head>
 <body>
@@ -122,23 +85,17 @@
     <div class="kopfzeile">
       <div>
         <span class="kicker">Campus · Labor</span>
-        <h1 id="titel">Mein Campusplan</h1>
+        <h1 data-ui="titel">Mein Campusplan</h1>
       </div>
       <div class="seg" id="sprache-seg" aria-label="Sprache">
         <button type="button" data-sprache="de" aria-pressed="true">Deutsch</button>
         <button type="button" data-sprache="en" aria-pressed="false">English</button>
       </div>
     </div>
-    <p class="lede" id="lede">Den eigenen Besuch am Goetheanum planen: Themen wählen, Zeit wählen, fertig. Den Plan als PDF mitnehmen oder als Link aufs Telefon und unterwegs abhaken.</p>
+    <p class="lede" data-ui="lede">Interessen und Zeit wählen – der Plan kommt als A4-Blatt zum Ausdrucken und als Link fürs Telefon.</p>
   </section>
 
-  <ol class="schritte" id="schritte">
-    <li data-schritt="1" aria-current="step"><span class="step-num"><b>1</b></span><span data-ui="s1-titel">Themen</span></li>
-    <li data-schritt="2"><span class="step-num"><b>2</b></span><span data-ui="s2-titel">Zeit</span></li>
-    <li data-schritt="3"><span class="step-num"><b>3</b></span><span data-ui="s3-titel">Dein Plan</span></li>
-  </ol>
-
-  <section id="s1">
+  <section id="interessen">
     <div class="shead">
       <h2 data-ui="s1-frage">Was zieht dich an?</h2>
       <p data-ui="s1-hilfe">Eines oder mehrere wählen. Der Plan füllt sich daraus von selbst.</p>
@@ -147,81 +104,67 @@
     <div class="umstaende">
       <div class="seg" id="umstaende" aria-label="Umstände"></div>
     </div>
-    <div class="schrittfuss">
-      <button type="button" class="btn primary" id="s1-weiter" data-ui="weiter">Weiter</button>
-      <span class="hint" id="s1-hint"></span>
-    </div>
   </section>
 
-  <section id="s2" hidden>
+  <section id="zeit">
     <div class="shead">
       <h2 data-ui="s2-frage">Wie viel Zeit hast du?</h2>
-      <p data-ui="s2-hilfe">Die Zeit entscheidet, wie viele Orte auf den Plan kommen. Ändern geht später jederzeit.</p>
+      <p data-ui="s2-hilfe">Die Zeit entscheidet, wie viele Orte auf den Plan kommen.</p>
     </div>
     <div class="zeiten" id="zeiten"></div>
-    <div class="besuchstag">
+    <div class="tag">
       <label class="field">
         <span class="lab" data-ui="datum-lab">Besuchstag, wenn du ihn schon kennst</span>
         <input type="date" id="datum" />
-        <span class="hint" data-ui="datum-hint">Mit Besuchstag kommen nur Orte in den Plan, die an diesem Tag offen sind. Geschlossene bleiben unter «Mehr Orte» und sind markiert.</span>
       </label>
       <label class="field">
         <span class="lab" data-ui="ankunft-lab">Ankunft</span>
         <input type="time" id="ankunft" value="10:00" step="300" />
-        <span class="hint" data-ui="ankunft-hint">Mit Besuchstag und Ankunft schlägt der Plan einen Zeitplan vor, nach den aktuellen Öffnungszeiten.</span>
       </label>
-    </div>
-    <div class="schrittfuss">
-      <button type="button" class="btn" id="s2-zurueck" data-ui="zurueck">Zurück</button>
-      <button type="button" class="btn primary" id="s2-weiter" data-ui="plan-zeigen">Plan zeigen</button>
+      <span class="hint" data-ui="ankunft-hint">Mit Besuchstag schlägt der Plan einen Zeitplan vor, nach den aktuellen Öffnungszeiten.</span>
     </div>
   </section>
 
-  <section id="s3" hidden>
+  <section id="plan">
     <div class="shead">
-      <h2 id="s3-frage">Dein Plan</h2>
-      <p class="plan-summe"><span class="readout" id="summe"></span><span class="readout" id="datum-info"></span></p>
+      <h2 data-ui="s3-titel">Dein Plan</h2>
+      <p class="readout" id="summe"></p>
     </div>
+    <p class="hint plan-hint" id="plan-hint" hidden></p>
+    <ol class="stationen" id="stationen"></ol>
+    <p class="lab unter" id="anreise-titel" data-ui="anreise" hidden>Anreise und Service</p>
+    <ol class="stationen" id="anreise"></ol>
+    <div id="mehr-orte"></div>
+  </section>
 
-    <div class="plan">
-      <div class="karte-spalte">
-        <div class="karte-box" id="karte-box">
-          <div class="karte-tools" aria-label="Karte">
-            <button type="button" class="btn" id="zoom-in" aria-label="Vergrössern">+</button>
-            <button type="button" class="btn" id="zoom-out" aria-label="Verkleinern">−</button>
-            <button type="button" class="btn" id="zoom-alle" aria-label="Ganzer Plan">⌂</button>
-          </div>
-        </div>
-        <p class="hint" id="karte-hint" data-ui="karte-hint">Ziehen bewegt die Karte, zwei Finger zoomen. Ein Tipp auf eine Nummer springt zur Station.</p>
+  <section id="mitnehmen">
+    <div class="shead">
+      <h2 data-ui="mitnehmen">Mitnehmen</h2>
+    </div>
+    <div class="wege">
+      <div class="weg">
+        <h3 data-ui="a4-titel">A4 zum Ausdrucken</h3>
+        <p class="hint" data-ui="a4-hint">Die Campus-Karte mit deinen Stationen, dazu ein Blatt mit allen Orten und dem Link.</p>
+        <div class="knoepfe"><button type="button" class="btn primary" id="pdf" data-ui="pdf">PDF herunterladen</button></div>
       </div>
-
-      <div>
-        <ol class="stationen" id="stationen"></ol>
-        <div id="mehr-orte"></div>
-
-        <div class="ausgabe" id="ausgabe">
-          <div class="knoepfe">
-            <button type="button" class="btn primary" id="pdf" data-ui="pdf">PDF herunterladen</button>
-            <button type="button" class="btn" id="link-kopieren" data-ui="link">Link kopieren</button>
-            <button type="button" class="btn" id="qr-zeigen" data-ui="qr">QR-Code</button>
-          </div>
-          <div class="linkfeld" id="linkfeld" hidden>
-            <span class="lab" data-ui="link-lab">Dein Link, zum Weitergeben oder aufs Telefon</span>
-            <input type="text" id="link-wert" readonly aria-label="Link zum Plan" />
-            <span class="hint" id="link-hint"></span>
-          </div>
-          <div id="qr-box" hidden></div>
-          <div class="schrittfuss">
-            <button type="button" class="btn" id="s3-zurueck" data-ui="zurueck-zeit">Zurück zur Zeit</button>
-            <button type="button" class="btn" id="neu" data-ui="neu">Neu beginnen</button>
-          </div>
+      <div class="weg">
+        <h3 data-ui="telefon-titel">Aufs Telefon</h3>
+        <p class="hint" data-ui="telefon-hint">QR-Code scannen oder den Link schicken – unterwegs Karte und Stationen zum Abhaken.</p>
+        <div id="qr-box"></div>
+        <div class="knoepfe">
+          <button type="button" class="btn" id="link-kopieren" data-ui="link">Link kopieren</button>
+          <a class="btn" id="plan-oeffnen" href="plan.html" target="_blank" rel="noopener" data-ui="plan-oeffnen">Ansehen</a>
         </div>
-
-        <p class="hint hinweis-lage"><span data-ui="fuehrung-hint">Mit einer Führung ist alles zugänglich, auch die Häuser der Architektursammlung.</span> <a href="https://goetheanum.ch/de/campus/fuehrungen" target="_blank" rel="noopener" data-ui="fuehrung-link">Führungen buchen</a></p>
-        <p class="hint hinweis-lage" id="lage-hint" hidden></p>
+        <label class="field linkfeld" id="linkfeld" hidden>
+          <span class="lab" data-ui="link-lab">Dein Link, zum Weitergeben oder aufs Telefon</span>
+          <input type="text" id="link-wert" readonly />
+          <span class="hint" id="link-hint"></span>
+        </label>
       </div>
     </div>
   </section>
+
+  <p class="hint fuss"><span data-ui="fuehrung-hint">Mit einer Führung ist alles zugänglich, auch die Häuser der Architektursammlung.</span> <a href="https://goetheanum.ch/de/campus/fuehrungen" target="_blank" rel="noopener" data-ui="fuehrung-link">Führungen buchen</a></p>
 
 </main>
 

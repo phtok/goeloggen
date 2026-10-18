@@ -45,6 +45,12 @@ function pdfSchriften() {
   return pdfSchriftenVersprechen;
 }
 
+// Wortverbinder und schmale Leerzeichen der Bildschirmfassung kennen die
+// PDF-Schriften nicht: Verbinder fällt weg, das schmale wird ein normales.
+function pdfText(text) {
+  return String(text).replace(/\u2060/g, "").replace(/\u202f/g, " ");
+}
+
 function pdfDatumText(iso, sprache) {
   if (!iso) return "";
   const [j, m, t] = iso.split("-").map(Number);
@@ -93,8 +99,8 @@ async function planPdf() {
   const spanne = plan && plan.eintraege.length
     ? spanneText({ von: plan.eintraege[0].von, bis: plan.ende })
     : `${ui("etwa")} ${dauerText(planMinuten())}`;
-  const untertitel = [datum, `${nummeriert.length} ${ui("stationen")} · ${spanne}`].filter(Boolean).join(" · ").replace(/\u2060/g, "");
-  const szene = await kartenSzene({ nummeriert, anreise, titel: ui("besuch"), untertitel });
+  const untertitel = [datum, `${nummeriert.length} ${ui("stationen")} · ${spanne}`].filter(Boolean).join(" · ");
+  const szene = await kartenSzene({ nummeriert, anreise, titel: ui("besuch"), untertitel: pdfText(untertitel) });
   const farbe = (id, ersatz) => szene.farben[id] || ersatz;
   const svgText = `<svg xmlns="http://www.w3.org/2000/svg" width="${PDF_SEITE.b}mm" height="${PDF_SEITE.h}mm" viewBox="0 0 ${szene.breite} ${szene.hoehe}">${szene.markup}</svg>`;
   const svgElement = new DOMParser().parseFromString(svgText, "image/svg+xml").documentElement;
@@ -132,8 +138,7 @@ async function planPdf() {
     const zusatz = (geschlossen ? ` · ${ui("geschlossen-am")}` : "") + (live && !live.zu ? ` · ${ui("an-diesem-tag")} ${live.text}` : "")
       + (plan && plan.ausserhalb.includes(g.id) ? ` · ${ui("ausserhalb")}` : "");
     doc.setFontSize(8.5);
-    // Wortverbinder der Bildschirmfassung kennt die PDF-Schrift nicht.
-    const metaZeilen = meta || zusatz ? doc.splitTextToSize((meta + zusatz).replace(/\u2060/g, ""), textB) : [];
+    const metaZeilen = meta || zusatz ? doc.splitTextToSize(pdfText(meta + zusatz), textB) : [];
     const pause = pausen[g.id];
     const hoehe = (pause ? 5 : 0) + nameZeilen.length * 4.6 + einZeilen.length * 4.1 + metaZeilen.length * 3.8 + 4;
     if (y + hoehe > untenMax) {
@@ -143,7 +148,7 @@ async function planPdf() {
     const xx = spalten[spalte], tx = xx + 9;
     if (pause) {
       doc.setFont("SourceSans3", "normal"); doc.setFontSize(8.5); doc.setTextColor(PDF_FARBEN.leise);
-      doc.text(`${ui("pause-bis")} ${uhrText(pause.bis)}${state.sprache === "en" ? "" : " Uhr"}`, tx, y + 2.6);
+      doc.text(pdfText(`${ui("pause-bis")} ${uhrZeit(pause.bis)}`), tx, y + 2.6);
       y += 5;
     }
     if (nummer) pdfMarke(doc, xx + 3, y + 2.6, 2.6, nummer, farbe(g.id, PDF_FARBEN.marke));
@@ -152,7 +157,7 @@ async function planPdf() {
     doc.text(nameZeilen, tx, y + 3.6);
     if (termin) {
       doc.setFont("SourceSans3Semibold", "normal"); doc.setFontSize(9.5);
-      doc.text(spanneText(termin).replace(/\u2060/g, ""), xx + spalteB, y + 3.6, { align: "right" });
+      doc.text(pdfText(spanneText(termin)), xx + spalteB, y + 3.6, { align: "right" });
     }
     let yy = y + nameZeilen.length * 4.6;
     if (einZeilen.length) {
