@@ -1,0 +1,154 @@
+<!doctype html>
+<!-- =============================================================================
+     Tagungs-Reader · Landwirtschaftliche Tagung
+     Die Seiten des Readers (20 × A5) kommen aus der InDesign-Vorlage (IDML) und
+     werden im Blatt gezeichnet; geschrieben wird direkt im Blatt. Die Karte
+     (Seiten 2–3) zeichnet das Kartentool, unsichtbar eingebettet.
+     Konzept: docs/specs/lt-reader-konzept.md · Anleitung: ANLEITUNG.md
+     Papier bleibt weiss, auch im dunklen Modus – das Blatt ist ein Druck-Artefakt (# ds-ok).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Tagungs-Reader · Goetheanum</title>
+<meta name="description" content="Der Reader der Landwirtschaftlichen Tagung: Seiten aus der InDesign-Vorlage, Texte direkt im Blatt schreiben, Karte aus dem Kartentool, Ausgabe als PDF und IDML." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<!-- Schrift der Vorlage für die Lauftexte (Titillium, wie im IDML gesetzt) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" />
+<style>
+  /* Schriften der Kartenszene (wie im Kartentool, apps/karten-generator/index.html) */
+  @font-face{font-family:"GoetheanumDeutlich";src:url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:"GoetheanumLaut";src:url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:"SourceSans3Semibold";src:url("../../assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2") format("woff2");font-weight:600;font-style:normal;font-display:swap}
+
+  .hero{padding-block:clamp(28px,5vw,48px) var(--s5)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(28px,4.6vw,44px)}
+  .hero .lede{margin-top:var(--s3);color:var(--muted);font-size:var(--t-lede);line-height:1.5;max-width:58ch}
+
+  /* ---------- Werkstatt ---------- */
+  .werk{margin-top:var(--s6);display:grid;gap:var(--s6);min-width:0}
+  .leiste,.blaetter{min-width:0;max-width:100%}
+  @media (min-width:1100px){
+    main.wrap{max-width:none}
+    .werk{grid-template-columns:minmax(20rem,25rem) minmax(0,1fr);align-items:start}
+    .leiste{position:sticky;top:calc(var(--header-h) + var(--s4));max-height:calc(100vh - var(--s8));overflow:auto;padding-right:var(--s2)}
+  }
+  .leiste{display:grid;gap:var(--s4);align-content:start}
+  .stand{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.5;margin:0}
+  .stand b{color:var(--ink);font-weight:600}
+  .reiter{display:flex;flex-wrap:wrap;gap:var(--s1)}
+  .reiter button{flex:1 1 auto}
+  .block{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s4);display:grid;gap:var(--s3)}
+  .block .titel{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);margin:0}
+  .hinweis{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:1.5;margin:0}
+  .hinweis a{color:var(--gold-ink)}
+  .hinweis b{color:var(--ink);font-weight:600}
+  .meldung{font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;margin:0;padding:var(--s3);border-radius:var(--r-control);background:var(--soft);border-left:4px solid var(--gold-deep)}
+  .meldung.bad{border-left-color:var(--bad)}
+  .meldung.ok{border-left-color:var(--ok)}
+  .knoepfe{display:flex;flex-wrap:wrap;gap:var(--s2)}
+  .knoepfe .btn{flex:1 1 auto}
+  .liste{display:grid;gap:var(--s2);padding:var(--s3);border:1px solid var(--line-soft);border-radius:var(--r-control);background:var(--soft)}
+  .liste .eintrag{display:grid;gap:var(--s2);padding:var(--s2) 0;border-top:1px solid var(--line-soft)}
+  .liste .eintrag:first-of-type{border-top:0}
+  .liste .zeile{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+  .liste .tat,.ampel{display:flex;gap:var(--s1);justify-content:flex-end;flex-wrap:wrap}
+  .liste .tat button,.ampel button{min-height:var(--tap);min-width:var(--tap);padding:0 var(--s2);border:1px solid var(--line);border-radius:var(--r-control);background:var(--field-bg);color:var(--ink);font-family:var(--font-text);font-size:var(--t-micro);cursor:pointer}
+  .liste .tat button.weg,.ampel button.weg{color:var(--bad)}
+  .offen{margin:0;padding-left:1.2em;font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;color:var(--ink);display:grid;gap:var(--s2)}
+  .farbe{display:grid;grid-template-columns:var(--tap) 1fr auto;gap:var(--s2);align-items:center}
+  .farbe input[type=color]{width:var(--tap);height:var(--tap);padding:0;border:1px solid var(--line);border-radius:var(--r-control);background:none}
+  .farbe .wert{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);font-variant-numeric:tabular-nums}
+  .farbe .wert b{font-weight:600;color:var(--ink)}
+  .vorschlag{display:flex;flex-wrap:wrap;gap:var(--s1)}
+  .vorschlag button{width:var(--tap);height:var(--tap);border:2px solid transparent;border-radius:var(--r-control);cursor:pointer;padding:0}
+  .vorschlag button:hover{border-color:var(--ink)}
+  .motivbild{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--r-control);background:var(--soft)}
+  .orte{display:grid;gap:var(--s1);margin-bottom:var(--s3)}
+  .ort-wahl{display:flex;gap:var(--s2);align-items:center;min-height:var(--tap);font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);cursor:pointer}
+  .ort-wahl .marke{display:inline-flex;align-items:center;justify-content:center;min-width:1.8em;height:1.8em;border-radius:1em;background:var(--soft);border:1px solid var(--line);font-size:var(--t-micro);font-variant-numeric:tabular-nums}
+  .fassungen,.verlauf{list-style:none;margin:0;padding:0;display:grid;gap:var(--s1);max-height:24rem;overflow:auto}
+  .fassungen button{width:100%;min-height:var(--tap);padding:var(--s1) var(--s2);text-align:left;border:1px solid var(--line);border-radius:var(--r-control);background:var(--paper);color:var(--ink);font-family:var(--font-text);font-size:var(--t-small);cursor:pointer}
+  .fassungen .wann,.verlauf .wann{color:var(--muted)}
+  .verlauf li{font-family:var(--font-text);font-size:var(--t-small);line-height:1.45;padding:var(--s2) 0;border-top:1px solid var(--line-soft)}
+  .verlauf .vorher{color:var(--muted);text-decoration:line-through}
+  .verlauf .nachher{color:var(--ink)}
+
+  /* ---------- Die Seiten (Druck-Artefakt: Papier weiss) ---------- */
+  .blaetter{display:flex;flex-direction:column;align-items:center;gap:var(--s6);padding-bottom:var(--s8)}
+  .doppel{display:flex;position:relative}
+  .doppel .seite-halter+.seite-halter{border-left:1px dashed var(--line)}
+  @media (max-width:699px){.doppel{flex-direction:column}.doppel .seite-halter+.seite-halter{border-left:0}}
+  .unterschrift{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);text-align:center;margin:var(--s1) 0 0}
+  .bogen{display:grid;gap:var(--s1);justify-items:center}
+  /* Skalierung per Transform, nie per zoom: foreignObjects (Textrahmen) folgen in WebKit/iOS nur dem Transform */
+  .seite-halter{flex:none;position:relative;width:154mm;height:216mm;overflow:hidden}
+  .seite{width:154mm;height:216mm;transform:scale(var(--z,1));transform-origin:0 0;background:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow-card);border:1px solid var(--line)} /* # ds-ok Papier */
+  .seite .leinwand{transform:scale(1.33333);transform-origin:0 0}
+  .seite svg{display:block}
+  .karte-seite svg{width:154mm;height:216mm}
+  .seite::before{content:"";position:absolute;inset:3mm;border:.2mm dashed rgba(20,24,28,.25);pointer-events:none;z-index:5} /* # ds-ok Endformat-Linie, nur Vorschau */
+  .karte-seite .leer{position:absolute;inset:3mm;display:flex;align-items:center;justify-content:center;font-family:var(--font-text);font-size:10pt;color:#4e5358;background:#f3f4f2} /* # ds-ok Platzhalter auf Papier, 6.6:1 */
+  .tf{outline:none;cursor:text}
+  .tf p{margin:0;hyphens:auto;-webkit-hyphens:auto;text-wrap:wrap;orphans:1;widows:1} /* greedy wie InDesign; ‹pretty› zöge Wörter in die letzte Zeile */
+  .tf:hover{box-shadow:0 0 0 .4mm rgba(148,112,46,.35)} /* # ds-ok Bearbeitungsrahmen */
+  .tf:focus{box-shadow:0 0 0 .6mm #94702e} /* # ds-ok Hausgold-Fokus */
+  .tf.uebersatz{box-shadow:0 0 0 .6mm #b3261e} /* # ds-ok Übersatz-Warnung */
+  .tf .tab{white-space:pre}
+
+  /* Druck: A5 mit 3 mm Beschnitt */
+  @media print{
+    @page{size:154mm 216mm;margin:0}
+    html,body{margin:0!important;padding:0!important;height:auto!important}
+    body>*:not(main),.hero,.leiste,.unterschrift{display:none!important}
+    main.wrap{max-width:none!important;padding:0!important;margin:0!important}
+    .werk{display:block;margin:0;gap:0}
+    .blaetter{display:block;padding:0;gap:0;border:0;margin:0}
+    .doppel,.bogen{display:block}
+    .doppel .seite-halter+.seite-halter{border:0}
+    .seite-halter{width:154mm!important;height:216mm!important;break-after:page;margin:0}
+    .seite{transform:none;box-shadow:none;border:0;print-color-adjust:exact;-webkit-print-color-adjust:exact;margin:0}
+    .bogen:last-child .seite-halter:last-child{break-after:auto}
+    .seite::before{display:none}
+    .tf,.tf:hover,.tf:focus{box-shadow:none}
+    iframe{display:none}
+  }
+</style>
+</head>
+<body>
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Sektion für Landwirtschaft</span>
+    <h1>Tagungs-Reader</h1>
+    <p class="lede">Der Reader der Landwirtschaftlichen Tagung, Seite für Seite aus der InDesign-Vorlage. Texte direkt im Blatt schreiben, Karte aus dem Kartentool, Ausgabe als PDF und IDML.</p>
+  </section>
+
+  <div class="werk">
+    <aside class="leiste" id="leiste" aria-label="Werkstatt">
+      <p class="stand" id="stand">Lade …</p>
+      <label class="field"><span class="lab">Wer arbeitet gerade? (Vorname, für Sicherung und Verlauf)</span><input type="text" id="von" autocomplete="given-name" /></label>
+      <div class="reiter seg" id="reiter" aria-label="Werkstätten">
+        <button type="button" data-reiter="stand" aria-pressed="true">Stand</button>
+        <button type="button" data-reiter="ersetzungen" aria-pressed="false">Ersetzungen</button>
+        <button type="button" data-reiter="motiv" aria-pressed="false">Motiv &amp; Farben</button>
+        <button type="button" data-reiter="karte" aria-pressed="false">Karte</button>
+        <button type="button" data-reiter="programm" aria-pressed="false">Programm</button>
+        <button type="button" data-reiter="verlauf" aria-pressed="false">Verlauf</button>
+        <button type="button" data-reiter="export" aria-pressed="false">Export</button>
+      </div>
+      <div id="werkstatt"></div>
+    </aside>
+    <section class="blaetter" id="blaetter" aria-label="Seiten des Readers"></section>
+  </div>
+</main>
+
+<script type="module" src="reader.js"></script>
+</body>
+</html>

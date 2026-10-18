@@ -1,0 +1,24 @@
+name = "goetheanum-visitenkarten-email"
+main = "visitenkarten-email-worker.js"
+compatibility_date = "2025-01-01"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGINS = "https://grafik.goetheanum.ch,https://www.grafik.goetheanum.ch,https://phtok.github.io,null"
+FROM_EMAIL = "Goetheanum Grafik <grafik@goe.saetzerei.com>"
+REPLY_TO_EMAIL = "philipp.tok@goetheanum.ch"
+ALERT_EMAIL = "philipp@saetzerei.com"
+# Optional explicit direct mode:
+# FORCE_TO_EMAIL = ""
+# Optional fallback while no sender domain is verified in Resend:
+# FROM_EMAIL = "onboarding@resend.dev"
+# FORCE_TO_EMAIL = "philipp@saetzerei.com"
+# ALERT_EMAIL = "philipp@saetzerei.com"
+APP_URL = "https://grafik.goetheanum.ch/visitenkarten"
+RATE_LIMIT_MAX = "12"
+RATE_LIMIT_WINDOW_SEC = "900"
+MAX_ATTACHMENT_BYTES = "14680064"
+DRY_RUN = "0"
+
+# Required secret:
+# wrangler secret put RESEND_API_KEY

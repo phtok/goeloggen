@@ -1,0 +1,228 @@
+{
+ "$hinweis": "Jahrgangsdatei des Tagungs-Readers (Fassung 2). Die Seiten kommen aus der IDML-Vorlage; hier steht nur, was davon abweicht: texte (Rahmen-Überschreibungen, Schlüssel = Story-ID), ersetzungen (auf alle Textseiten, in Reihenfolge), bilder (Link-Dateiname der Vorlage → Datei), farben, karte, pruefung, verlauf.",
+ "jahr": 2027,
+ "fassung": 2,
+ "vorlage": "vorlage/LT27-Reader.idml",
+ "tagung": {
+  "name_en": "Agriculture Conference",
+  "name_de": "Landwirtschaftliche Tagung",
+  "motto_en": "Working with the Intelligence of Life",
+  "motto_de": "Mit der Intelligenz des Lebens arbeiten",
+  "datum_en": "3 to 6 February 2027",
+  "datum_de": "3. bis 6. Februar 2027",
+  "tag1": "2027-02-03",
+  "tag4": "2027-02-06",
+  "webseite": "agriculture-conference.org",
+  "bildnachweis": "Artwork: Esther Gerster",
+  "rabattcode": "LWT2027TN",
+  "aufzeichnung_bis_en": "March 2027",
+  "aufzeichnung_bis_de": "März 2027",
+  "sektion_en": "Section for Agriculture",
+  "sektion_de": "Sektion für Landwirtschaft",
+  "adresse": "Hügelweg 59, 4143 Dornach, Schweiz\n+41 61 706 42 12\nagriculture@goetheanum.ch",
+  "links": "www.sektion-landwirtschaft.org\nwww.agriculture-conference.org"
+ },
+ "bilder": {
+  "UniversalUpscaler_Pro_Precise_2_1f1b0271-53d5-6470-b2c3-a3633b8a30ec_ph.jpg": "jahrgaenge/2027-motiv.jpg",
+  "ErdmannHAUSER_Logo_web.png": {
+   "datei": "jahrgaenge/2027-logos/ErdmannHAUSER_Logo_web.png.png",
+   "rahmen": true
+  },
+  "Mahlestiftung.png": {
+   "datei": "jahrgaenge/2027-logos/Mahlestiftung.png.png",
+   "rahmen": true
+  },
+  "brand-oikopolis.svg.webp": {
+   "datei": "jahrgaenge/2027-logos/brand-oikopolis.svg.webp.png",
+   "rahmen": true
+  },
+  "logo.svg": {
+   "datei": "jahrgaenge/2027-logos/logo.svg.png",
+   "rahmen": true
+  },
+  "demeter_logo_rgb.png": {
+   "datei": "jahrgaenge/2027-logos/demeter_logo_rgb.png.png",
+   "rahmen": true
+  },
+  "logo-biodynamic-federation-1.svg": {
+   "datei": "jahrgaenge/2027-logos/logo-biodynamic-federation-1.svg.png",
+   "rahmen": true
+  },
+  "Voelkel-Logo-2019.png": {
+   "datei": "jahrgaenge/2027-logos/Voelkel-Logo-2019.png.png",
+   "rahmen": true
+  },
+  "sagst-signet.465c329f.svg": {
+   "datei": "jahrgaenge/2027-logos/sagst-signet.465c329f.svg.png",
+   "rahmen": true
+  },
+  "sonett_logo_en_4c_horizontal.eps": {
+   "datei": "jahrgaenge/2027-logos/sonett_logo_en_4c_horizontal.eps.png",
+   "rahmen": true
+  },
+  "Kultursaat-c49e5e6f.png": {
+   "datei": "jahrgaenge/2027-logos/Kultursaat-c49e5e6f.png.png",
+   "rahmen": true
+  },
+  "logo-b0dab30a.png": {
+   "datei": "jahrgaenge/2027-logos/logo-b0dab30a.png.png",
+   "rahmen": true
+  },
+  "Element 1.svg": {
+   "datei": "jahrgaenge/2027-logos/Element_1.svg.png",
+   "rahmen": true
+  },
+  "Odin+logo+2023-149w.png.webp": {
+   "datei": "jahrgaenge/2027-logos/Odin_logo_2023-149w.png.webp.png",
+   "rahmen": true
+  },
+  "BioMarkt_Badge_100mm_CMYK-b24cf856-149w.png.webp": {
+   "datei": "jahrgaenge/2027-logos/BioMarkt_Badge_100mm_CMYK-b24cf856-149w.png.webp.png",
+   "rahmen": true
+  }
+ },
+ "ersetzungen": [
+  {
+   "von": "4 and 5 February",
+   "nach": "3 and 4 February"
+  },
+  {
+   "von": "am 4. und 5. Februar",
+   "nach": "am 3. und 4. Februar"
+  },
+  {
+   "von": "5.+6. Februar",
+   "nach": "4.+5. Februar"
+  },
+  {
+   "von": "on 4 February",
+   "nach": "on 3 February"
+  },
+  {
+   "von": "4 février",
+   "nach": "3 février"
+  },
+  {
+   "von": "4 de febrero",
+   "nach": "3 de febrero"
+  },
+  {
+   "von": "4 febbraio",
+   "nach": "3 febbraio"
+  },
+  {
+   "von": "4 februari",
+   "nach": "3 februari"
+  },
+  {
+   "von": "2月4日",
+   "nach": "2月3日"
+  },
+  {
+   "von": "5 February",
+   "nach": "4 February"
+  },
+  {
+   "von": "5. Februar",
+   "nach": "4. Februar"
+  },
+  {
+   "von": "6 February",
+   "nach": "5 February"
+  },
+  {
+   "von": "6. Februar",
+   "nach": "5. Februar"
+  },
+  {
+   "von": "LWT2026TN",
+   "nach": "LWT2027TN"
+  },
+  {
+   "von": "March 2026",
+   "nach": "March 2027"
+  },
+  {
+   "von": "2026",
+   "nach": "2027",
+   "seiten": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+   ]
+  },
+  {
+   "von": "You Never Farm Alone – Living Communities for the Future",
+   "nach": "Working with the Intelligence of Life"
+  },
+  {
+   "von": "You Never Farm Alone – Lebendige Gemeinschaften für die Zukunft",
+   "nach": "Mit der Intelligenz des Lebens arbeiten"
+  }
+ ],
+ "texte": {},
+ "pruefung": {},
+ "farben": {
+  "swatches": {},
+  "karte": {}
+ },
+ "karte": {
+  "sprache": "en",
+  "kompakt": true,
+  "an": [
+   "o1",
+   "o2",
+   "o3",
+   "o4",
+   "o5",
+   "o6",
+   "o7",
+   "v10",
+   "v11",
+   "v12",
+   "v13",
+   "v14",
+   "v15",
+   "v20",
+   "v21",
+   "v22",
+   "v23",
+   "v24",
+   "v30",
+   "v31",
+   "v32",
+   "v33",
+   "v34",
+   "v35",
+   "v36",
+   "v37",
+   "v38",
+   "o40",
+   "o41",
+   "o42",
+   "o43",
+   "o44",
+   "o45",
+   "f46",
+   "f-p",
+   "f-bus",
+   "t-main",
+   "t-nord",
+   "t-sued"
+  ]
+ },
+ "verlauf": []
+}

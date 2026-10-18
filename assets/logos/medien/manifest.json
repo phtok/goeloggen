@@ -1,0 +1,372 @@
+{
+ "goetheanum-ch": {
+  "label": "Goetheanum.ch",
+  "forms": {
+   "lockup": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   },
+   "icon-point": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   },
+   "icon-square": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   },
+   "icon-transparent": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   }
+  }
+ },
+ "goetheanum-tv": {
+  "label": "Goetheanum.tv",
+  "forms": {
+   "lockup": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   },
+   "icon-point": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   },
+   "icon-square": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   },
+   "icon-transparent": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   }
+  }
+ },
+ "socialmedia": {
+  "label": "Social Media",
+  "forms": {
+   "lockup": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   },
+   "icon-point": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   },
+   "icon-square": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   },
+   "icon-transparent": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   }
+  }
+ },
+ "wochenschrift": {
+  "label": "Wochenschrift",
+  "forms": {
+   "full": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   },
+   "short": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ],
+    "weiss": [
+     "svg",
+     "png",
+     "pdf"
+    ],
+    "grau": [
+     "svg",
+     "png",
+     "jpg",
+     "pdf"
+    ]
+   }
+  }
+ }
+}

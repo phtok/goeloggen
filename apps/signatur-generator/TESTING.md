@@ -1,0 +1,195 @@
+# Signatur-Generator v2 — Test-Matrix
+
+Das Tool erzeugt eine **reine Text-Signatur** (`div`/`<br>`, alle Stile inline,
+kein Bild, keine Tabelle, kein `<style>`, keine Hintergrundfarbe). Ziel: übersteht
+das Einfügen unverändert und bleibt **hell wie dunkel** lesbar.
+
+E-Mail-HTML rendert je Client anders — vor grösseren Änderungen an
+`buildSignature()` bitte real gegenprüfen: **echte Testmail an sich selbst**,
+in den unten genannten Clients öffnen. Vorschau ≠ Realität.
+
+## Akzeptanz je Client (einfügen + Testmail, hell UND dunkel)
+
+| Client | Einfügen | Empfang Hell | Empfang Dunkel |
+|---|---|---|---|
+| Apple Mail (macOS) | ☐ | ☐ | ☐ |
+| Mail (iOS/iPadOS) | ☐ | ☐ | ☐ |
+| Outlook neu (Mac/Windows) | ☐ | ☐ | ☐ |
+| Outlook klassisch (Windows) | ☐ | ☐ | ☐ |
+| Outlook Web | ☐ | ☐ | ☐ |
+| Gmail Web | ☐ | ☐ | ☐ |
+
+Workflow: ‹Signatur kopieren› → im Client unter Einstellungen → Signaturen
+einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deaktivieren.
+
+## Prüfpunkte
+
+- [ ] **Kein Anhang-Symbol (Büroklammer)** beim Empfänger — d. h. wirklich kein Bild im Markup.
+- [ ] **Fliesstext ohne feste Farbe:** Name/Funktion/Adresse erscheinen im Dark Mode hell, im Light Mode dunkel (erben Theme).
+- [ ] **Keine Grautöne**, keine Trennlinie, keine Hintergrundfarbe.
+- [ ] **‹Goetheanum›** ist selbst der Link zu goetheanum.ch (keine eigene Zeile goetheanum.ch mehr); im Klartext ‹Goetheanum · goetheanum.ch›.
+- [ ] **Mail-Blau** (`#4183B4`) für ‹Goetheanum› und Web-Links — lesbar auf hellem UND dunklem Grund (Kontrast 4.09:1 / 4.07:1, im Code dokumentiert).
+- [ ] **Hierarchie** über Grösse/Gewicht: Name in 600, Adresse eine Stufe kleiner.
+- [ ] **Links** funktionieren: Website (`https`), PS-Link. Telefon und Adresse sind bewusst Text (kein Gmail-Autolink).
+- [ ] **‹Nur Text kopieren›** liefert saubere Klartext-Fassung (Zeilenumbrüche, keine HTML-Reste).
+- [ ] **PS-Modul:** 120-Zeichen-Zähler, Darstellung `PS: … — Link`, ‹Erinnerung in den Kalender› lädt eine `.ics`, die in Apple Kalender und Outlook korrekt öffnet; abgelaufenes PS zeigt beim Laden einen Hinweis.
+- [ ] **Vorschau Hell/Dunkel** schaltet den Bühnen-Hintergrund; gerendert wird exakt das kopierte Markup.
+
+## Funktion / Rollout
+
+- [ ] `localStorage` (`goe-signatur-v4`): Eingaben überstehen ein Reload und führen direkt zu Schritt 3; ein v3-Stand wird übernommen (Sektions-/Bereichszeilen der Funktion werden zur Zugehörigkeit).
+- [ ] Drei Schritte (Du · Zugehörigkeit · Signatur) sind jederzeit anwählbar; ‹ändern› an einer Zeile springt in ihren Schritt.
+- [ ] Jede Zeile lässt sich ausblenden; ‹Minimal› = Name · Goetheanum, ‹Vollständig› = alle (Hochschule nur bei Sektion).
+- [ ] Sprache Deutsch / Deutsch + English / English: Sektion, Hochschule, Gesellschaft und Funktion folgen.
+- [ ] Query-Prefill: `?name=Test&role=Probe&unit=ms&lang=de-en` füllt die Felder.
+- [ ] ‹Beispiel einfügen› (Schritt 1) / ‹Neu beginnen› (Schritt 3) funktionieren.
+- [ ] Mehrzeilige Felder (Funktion, Eigene Angabe, Website, PS) wachsen mit dem Inhalt.
+- [ ] Empfehlungen erscheinen als Textabschnitt unter dem Generator.
+
+## Testpersonen (Aufbau prüfen)
+
+Reihenfolge der Blöcke (Variante B2, 15. 10. 2026): wer (Name, Funktion,
+Sektion/Bereich, deren Websites) · kleine Leerzeile · Telefon (eine Zeile) ·
+zwei Leerzeilen · ‹Goetheanum› (Schriftzug oder Logo) · kleine Leerzeile ·
+Hochschule, Gesellschaft · Adresse. Zweisprachig stehen kurze
+Paare auf einer Zeile (bis 56 Zeichen), lange untereinander.
+
+| Person | Eingabe | Erwartet |
+|---|---|---|
+| Minimal | Name, ‹Minimal› | Name · Goetheanum |
+| Sektionsleitung | Leiterin/Head, Bildende Künste, DE+EN, ein Telefon, sbk.goetheanum.org | ‹Leiterin · Head›, ‹Sektion für Bildende Künste · Visual Arts Section›, Hochschule an |
+| Bereich, viel Kontakt | Kommunikation, DE+EN, Telefon + Mobil, zwei Websites | Telefone und Websites je auf einer Zeile, Websites im ersten Block |
+| Nur Englisch | Medical Section, Coordinator | nur englische Zeilen |
+| Lange Sektion | Heilpädagogik, DE+EN | Sektionsname auf zwei Zeilen |
+
+## Logo (Backend-Versuch, nur Intern-Ansicht)
+
+Das Logo steht an Stelle des Schriftzugs ‹Goetheanum› über Hochschule und Gesellschaft,
+verlinkt, als **CSS-Hintergrund** (kein `<img>`). Klassisches Outlook (Windows)
+liest die mso-Weiche und bekommt den Textlink.
+
+### Befund 7. 10. 2026 (Apple Mail, macOS, Dunkelmodus)
+
+| Variante | Dunkelmodus beim Empfang | Bilder gesperrt |
+|---|---|---|
+| `<img>` mit mso-Weiche und Stil | hell | ‹Goetheanum› als Text im Rahmen |
+| `<img>` ohne mso-Weiche | hell | wie oben |
+| `<img>` nackt | hell | wie oben |
+| CSS-Hintergrund | **dunkel**, Logo sichtbar | Stelle leer |
+| Schriftzug ohne Logo | dunkel | – |
+
+Schluss: Jedes `<img>` schaltet Apple Mail auf hell, auch gesperrt. Gebaut
+ist darum der Hintergrund. Keine Büroklammer in allen Varianten. Damit der
+Name bei gesperrten Bildern nie fehlt, beginnt die Adresse mit Logo mit
+**‹Goetheanum›** (grau #767676, halbfett, verlinkt; seit 16. 10. 2026). Ist die Adresse aus
+(z. B. ‹Minimal›), steht ‹· Goetheanum› verlinkt hinter dem Namen (Entscheid 15. 10. 2026).
+Die Zeile ‹Goetheanum› ist nicht abschaltbar – sie steht in jeder Signatur.
+
+### Befund 7. 10. 2026 (Gmail)
+
+| Client | Logo sichtbar | Dunkelmodus | Adresse |
+|---|---|---|---|
+| Gmail Web (Chrome, hell) | ✅ | – | wurde zum blauen Maps-Link → selbst verlinkt in Textfarbe (#648); danach in Textfarbe ✅ (Web und iOS-App, hell und dunkel) |
+| Gmail iOS | ✅ | ✅ dunkel, auch mit Logo | wie Web |
+
+### Befund 7. 10. 2026 (Mail iOS)
+
+| Client | Logo sichtbar | Dunkelmodus | Adresse |
+|---|---|---|---|
+| Mail (iOS) | ✅ | ✅ dunkel, auch mit Logo | ‹Goetheanum› halbfett ✅; Apples Datenerkennung setzt einen feinen Unterstrich in Textfarbe (vor #648 gesendet) |
+
+### Befund 7. 10. 2026 (Outlook im Browser, goetheanum.ch)
+
+| | ohne Logo | mit Logo |
+|---|---|---|
+| Adresse ruhig (Textfarbe) | ✅ | ✅ |
+| ‹Goetheanum› sichtbar | ✅ blau am Schluss | ✅ halbfett in der Adresse |
+| Logo | – | ❌ Hintergrundbild entfernt, kein Hinweis «Bilder anzeigen»; der Link bleibt als leere Fläche |
+
+Schluss: In Outlook im Browser greift der Ersatz – der Name steht halbfett in
+der Adresse, die Logo-Stelle bleibt leer. Nachladen lässt sich das Logo dort
+nicht.
+
+### Befund 7. 10. 2026 (Einfügen in Outlook im Browser)
+
+Signatur in die Signatur-Einstellungen von Outlook im Browser eingefügt:
+- Das Hintergrund-Logo wird beim Einfügen gelöscht; auch ein `<img>` kommt
+  nicht durch. Bilder nimmt der Editor nur als hochgeladene Datei – die reist
+  als eingebetteter Anhang mit (Büroklammer), was ‹Bildersturm?› ausschliesst.
+- `color:inherit` an Links wird entfernt: verlinkte Adresse und ‹Goetheanum›
+  werden blau. Darum ist die Adresse jetzt reiner Text; ein Wortverbinder
+  (U+2060) in der Postleitzahl soll Gmails Karten-Link verhindern (☐ prüfen).
+
+Beschluss: Standard für alle bleibt der blaue Schriftzug ‹Goetheanum›. Das
+Logo bleibt eine Möglichkeit für Apple Mail, nur zusammen mit der
+Adresse (ohne Adresse – ‹Minimal› – schliesst der Schriftzug).
+
+### Befund 7. 10. 2026 (Einfügen in Apple Mail, Gmail-Adresse)
+
+- **Apple Mail:** Logo-Signatur aus dem Generator eingefügt und gesendet –
+  Logo kommt an, Mail bleibt im Dunkelmodus dunkel, ‹Goetheanum› halbfett,
+  Abstände stimmen. → Logo-Häkchen für alle freigegeben (‹Für Apple Mail›).
+- **Gmail-Adresse:** Gmail macht eine Postadresse zum blauen Karten-Link. Nicht
+  geholfen: Wortverbinder in der PLZ, geschützte Leerzeichen, unsichtbare
+  Trenner in den Wörtern. Geholfen: jedes Wort in eigenem `<span>` (gebaut),
+  oder selbst verlinkt (wird in Outlook blau, darum verworfen).
+
+- **Einfügen in Gmail (Einstellungen), gesendet an Outlook und Apple Mail:**
+  Gmail streicht `background-size` – das Logo erscheint in Originalgrösse,
+  auf 100 × 17 px beschnitten, als Bruchstücke. Gmail streicht auch
+  `color:inherit` am Telefon-Link (Standard-Blau). Adresse bleibt Text,
+  ‹Goetheanum› halbfett. → Logo nur für Apple Mail; Telefon in Mail-Blau.
+
+- **Einfügen in Outlook im Browser, gelesen in Gmail:** leere Wort-spans
+  räumt Outlook weg – Gmail verlinkt die Adresse wieder. Spans mit
+  `font-weight:400` oder `white-space:nowrap` wurden stückweise verlinkt;
+  mit `letter-spacing:0px` blieb die Adresse Text (gebaut). Das Telefon kommt
+  in Standard-Blau mit Unterstrich an: Outlook nimmt dem `tel:`-Link die Farbe
+  oder den Link, Gmail verlinkt die Nummer selbst. → Telefon ebenfalls als
+  Text in Wort-spans (Beschluss 7. 10. 2026); am Handy evtl. nicht antippbar –
+  noch zu prüfen.
+
+### Recherche 18. 10. 2026: Logo auch für Outlook, ohne Anhang
+
+Auflage: Das Logo darf beim Empfänger nie als Anhang (Büroklammer)
+erscheinen. Das schliesst jedes eingebettete Bild (`cid:`) aus – genau das
+macht aber jeder Signatur-Editor von Outlook neu, Outlook im Browser und
+Outlook für Mac aus einem eingefügten Bild. Übrig bleiben **verlinkte**
+Bilder (`<img src="https://…">`, kein Anhang) und der Weg über den Server.
+
+| Weg | Logo in Outlook | Anhang | Haken |
+|---|---|---|---|
+| **Outlook klassisch (Windows):** Signatur-Editor → Bild einfügen → URL ins Feld ‹Dateiname› → Pfeil neben ‹Einfügen› → **‹Mit Datei verknüpfen›** | ✅ | keiner (bleibt Link) | nur klassisches Outlook; ‹Einfügen› allein bettet ein; Registry `Send Pictures With Document` = 0 bei alten Versionen |
+| **Outlook neu, Outlook im Browser, Outlook für Mac:** Editor lässt nur hochgeladene Bilder zu | ❌ | ja (`cid`) | Verlinkte Bilder werden beim Einfügen entfernt (Befund 7. 10.) – kein Weg ohne Anhang |
+| **Exchange-Online-Nachrichtenflussregel** (‹Haftungsausschluss anfügen›): HTML mit verlinktem `<img>` und Platzhaltern (`%%DisplayName%%`, `%%Title%%`, `%%Phone%%` …), max. 5000 Zeichen | ✅ überall, auch Apple Mail, iPhone, Outlook mobil | keiner | hängt am Ende der **ganzen** Nachricht, bei Antworten also unter dem Zitat; beim Schreiben unsichtbar; Ausnahme nötig, sonst stapelt es sich |
+| **Dienst (Exclaimer, CodeTwo u. a.):** Server- oder Add-in-Signatur mit gehosteten Bildern, zentral je Person | ✅ überall | keiner (gehostet) | Lizenz, grob 1–2 CHF je Person und Monat; eigener Betrieb |
+
+Dunkelmodus Apple Mail: jedes `<img>` schaltet die Mail auf hell (Befund
+7. 10.) – das gilt für alle Wege mit verlinktem Bild, auch für den Server.
+Bilder gesperrt: Outlook klassisch lädt verlinkte Bilder nur von sicheren
+Absendern; Outlook neu und im Browser laden sie über Microsofts Bild-Proxy.
+
+Mail-Setup goetheanum.ch (DNS, 18. 10.): MX bei Heinlein, Autodiscover zeigt
+auf Microsoft, SPF trägt beide – vermutlich Microsoft-365-Postfächer hinter
+einem Heinlein-Gateway. **Von der IT bestätigen lassen**, bevor der
+Server-Weg geplant wird.
+
+**Empfehlung:** Text-Signatur aus dem Generator bleibt für alle. Das Logo
+hängt eine Nachrichtenflussregel an – nur an **neue** Nachrichten (Ausnahme:
+Kopfzeile `In-Reply-To` vorhanden), nur nach aussen, als verlinktes Bild
+unter der Signatur. So kommt es aus jedem Client, ohne Anhang, und stört
+keine Antwort. Zweite Wahl: Dienst mit gehosteten Bildern, falls die IT die
+Regel nicht pflegen will.
+
+### Noch offen
+
+| Client | Logo sichtbar | Dunkelmodus | Bilder gesperrt |
+|---|---|---|---|
+| Gmail, Mail iOS (Bilder gesperrt) | – | – | ☐ |
+| Outlook im Browser, Dunkelmodus | – | ☐ | – |
+| Outlook klassisch (Windows) | – (Textlink) | ☐ | ☐ |
+
+## Nicht-Ziele
+
+- Kein Backend für die Signatur, keine Datenübertragung von Eingaben (nur anonyme, insert-only Nutzungsstatistik ohne Eingaben).
+- Keine Mehrfach-/Kurzvariante, kein `.htm`-Download, kein Logo-/Bild-Upload.

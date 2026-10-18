@@ -1,0 +1,99 @@
+{
+  "_hinweis": "Grenzgänger · Wellen-Copy je Zielkreis (ein Motiv = ein Griff-Segment). Redaktionelle Quelle der Drei-Wellen-Strecke; Struktur = services/mailing-sommer2026/heroes.json. Würde-Regeln (Charta §2.2): keine falsche Verknappung, ehrliche Konditionen in w3, höchstens drei Wellen. Betreffzeilen beim Aktivieren nach marketing_griffe.wellen_betreff übernehmen (services/lead-agent/README.md). Motive referenzieren die Sommer-JPGs (../mailing-sommer2026/assets/motive/) — keine Binär-Doppel.",
+  "motive": {
+    "eltern": {
+      "label": "Waldorf-Eltern",
+      "segment": "g001",
+      "variationen": [
+        { "id": "e1", "bild": "../mailing-sommer2026/assets/motive/read-garden.jpg", "stil": "still", "center": [0.5, 0.45], "alt": "Lesen im Garten" },
+        { "id": "e2", "bild": "../mailing-sommer2026/assets/motive/vor-dem-bau.jpg", "stil": "still", "center": [0.5, 0.4], "alt": "Vor dem Goetheanum-Bau" },
+        { "id": "e3", "bild": "../mailing-sommer2026/assets/motive/picknick.jpg", "stil": "still", "center": [0.5, 0.5], "alt": "Picknick im Grünen" }
+      ],
+      "de": {
+        "cta_labels": {
+          "wos": "Zur Auswahl",
+          "gtv": "Auf goetheanum.tv ansehen"
+        }
+      },
+      "en": {
+        "cta_labels": {
+          "wos": "To the selection",
+          "gtv": "Watch on goetheanum.tv"
+        }
+      }
+    }
+  },
+  "kleinzeile": {
+    "eltern": {
+      "de": "Die Eltern-Post ist und bleibt frei · höchstens drei Begleit-Briefe · Abmeldung mit einem Klick",
+      "en": "The Parents Letter is and stays free · no more than three companion notes · unsubscribe with one click"
+    }
+  },
+  "proof": {
+    "de": "Seit 1921 aus dem Goetheanum in Dornach — die Wochenschrift und goetheanum.tv",
+    "en": "From the Goetheanum in Dornach since 1921 — the weekly and goetheanum.tv"
+  },
+  "badge": {
+    "de": "Die Waldorf-Eltern-Post",
+    "en": "The Waldorf Parents Letter"
+  },
+  "wellenplan": {
+    "g001": {
+      "w1": "eltern/e1",
+      "w2": "eltern/e2",
+      "w3": "eltern/e3"
+    }
+  },
+  "wellen": {
+    "eltern": {
+      "w1": {
+        "de": {
+          "betreff": "Willkommen — Ihre erste Auswahl",
+          "botschaft": "Schön, dass Sie lesen.",
+          "text": "Ihre erste Auswahl ist da: Woche für Woche schreiben in der Wochenschrift Menschen über das, was Kindheit trägt — vom ersten Schultag bis zur Frage, wie viel Bildschirm ein Kind verträgt. Drei Stücke haben wir für Sie ausgewählt; das erste liegt einen Klick entfernt.",
+          "alt": "Ihre erste Auswahl ist da",
+          "preheader": "Drei Stücke zu Erziehung, Kindheit und Medienmündigkeit — ausgewählt für Sie."
+        },
+        "en": {
+          "betreff": "Welcome — your first selection",
+          "botschaft": "Good to have you reading.",
+          "text": "Your first selection is here: week after week, the Goetheanum weekly writes about what carries childhood — from the first day of school to the question of how much screen time a child can bear. We have picked three pieces for you; the first is one click away.",
+          "alt": "Your first selection is here",
+          "preheader": "Three pieces on education, childhood and media literacy — selected for you."
+        }
+      },
+      "w2": {
+        "de": {
+          "betreff": "Drei Stücke, die bleiben",
+          "botschaft": "Manches versteht man erst im Gespräch.",
+          "text": "Zum Lesen kommt das Sehen: Auf goetheanum.tv sprechen Pädagoginnen, Ärzte und Forschende über Erziehung und Aufwachsen — Gespräche in ganzer Länge, nicht in Schnipseln. Ein guter Anfang sind die Beiträge über Medienmündigkeit und Kindheit.",
+          "alt": "Gespräche in ganzer Länge",
+          "preheader": "Auf goetheanum.tv sprechen Pädagoginnen, Ärzte und Forschende — in ganzer Länge."
+        },
+        "en": {
+          "betreff": "Three pieces that stay with you",
+          "botschaft": "Some things you only grasp in conversation.",
+          "text": "Watching joins reading: on goetheanum.tv, educators, physicians and researchers talk about upbringing and growing up — conversations at full length, not in snippets. The pieces on media literacy and childhood are a good place to start.",
+          "alt": "Conversations at full length",
+          "preheader": "On goetheanum.tv, educators, physicians and researchers speak — at full length."
+        }
+      },
+      "w3": {
+        "de": {
+          "betreff": "Wenn Sie weiterlesen möchten — das Abo im Klartext",
+          "botschaft": "Die Eltern-Post bleibt frei. Und wer mehr will?",
+          "text": "An der freien Eltern-Post ändert sich nichts. Wer mehr möchte, bekommt mit dem Abo der Wochenschrift jede Woche das ganze Blatt — gedruckt oder digital — und mit goetheanum.tv alle Aufzeichnungen. Die Konditionen stehen offen auf der Seite; das Abo endet, wann Sie es beenden.",
+          "alt": "Das ganze Blatt, jede Woche",
+          "preheader": "Ehrliche Konditionen, offen auf der Seite — das Abo endet, wann Sie es beenden."
+        },
+        "en": {
+          "betreff": "If you want to keep reading — the subscription, plainly",
+          "botschaft": "The Parents Letter stays free. And if you want more?",
+          "text": "Nothing changes about the free Parents Letter. If you want more, a subscription to the weekly brings you the whole paper every week — in print or digitally — and goetheanum.tv opens all recordings. The terms are stated openly on the page; the subscription ends whenever you end it.",
+          "alt": "The whole paper, every week",
+          "preheader": "Honest terms, stated openly on the page — the subscription ends whenever you end it."
+        }
+      }
+    }
+  }
+}

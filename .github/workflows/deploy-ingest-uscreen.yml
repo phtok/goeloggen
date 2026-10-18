@@ -1,0 +1,47 @@
+# Deploy der Edge Function «ingest-uscreen» — automatisch bei Änderung.
+# -----------------------------------------------------------------------------
+# Warum es diesen Workflow gibt: Die Funktion wurde bisher von Hand deployt, und
+# genau das ist einmal ausgeblieben — Verbesserung #482 («Sprache aus dem
+# Link-Register») lag ab dem 19. Juli im Repo, während in der Produktion noch der
+# Stand vom 18. Juli lief. Ein Repo, das nicht deployt, ist eine Behauptung.
+# Darum: was auf main liegt, ist auch, was läuft.
+#
+# Voraussetzung (bereits eingerichtet für «Deploy sortierer-commit»):
+#   Repo-Secret SUPABASE_ACCESS_TOKEN
+#   (https://supabase.com/dashboard/account/tokens → «Generate new token»).
+#
+# verify_jwt bleibt aus: die Funktion prüft selbst (?key=<webhook_secret>) und
+# wird von Uscreen ohne JWT aufgerufen.
+name: Deploy ingest-uscreen
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "services/sommer-zaehler/ingest-uscreen/index.ts"
+      - ".github/workflows/deploy-ingest-uscreen.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_REF: dagcsnfrlbpxcmdimnrw
+    steps:
+      - uses: actions/checkout@v4
+      - name: Supabase-CLI bereitstellen
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Token prüfen
+        run: |
+          if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
+            echo "::error::Secret SUPABASE_ACCESS_TOKEN fehlt. Anleitung im Workflow-Kopf." && exit 1
+          fi
+      - name: Funktion ins CLI-Layout kopieren
+        run: |
+          mkdir -p supabase/functions/ingest-uscreen
+          cp services/sommer-zaehler/ingest-uscreen/index.ts supabase/functions/ingest-uscreen/index.ts
+      - name: Deploy
+        run: supabase functions deploy ingest-uscreen --project-ref "$PROJECT_REF" --no-verify-jwt

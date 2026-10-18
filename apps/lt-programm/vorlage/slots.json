@@ -1,0 +1,369 @@
+{
+ "$beschreibung": "Welcher Textrahmen der InDesign-Vorlage welchen Inhalt trägt. Schlüssel = Slot-Name im Blattmodell, story = Story-ID im IDML. «vorlage» ist der Text der letzten Fassung – zur Orientierung. «nur_pruefen»: der Export schreibt diesen Rahmen NICHT (er ist von Hand gesetzt, z. B. unterschnitten); die Vorschau vergleicht ihn nur mit den Daten und meldet Abweichungen. Ändert sich die Vorlage in InDesign, IDs mit `node apps/lt-programm/holen.mjs --vorlage` bzw. `python3 tools/lt-programm-idml-lesen.py` prüfen.",
+ "vorlage": "LT27.idml",
+ "seite": "2",
+ "slots": {
+  "tage": {
+   "story": "ue56",
+   "art": "tage",
+   "spalten": 4,
+   "vorlage": "Wednesday Mittwoch / February 4 … Saturday Samstag / February 7"
+  },
+  "kopf_en": {
+   "story": "uee0",
+   "art": "kopf",
+   "vorlage": "Agriculture Conference 3–6 February 2027"
+  },
+  "motto_en": {
+   "story": "u1423",
+   "art": "abgleich",
+   "name": "Motto Rückseite EN",
+   "nur_pruefen": true,
+   "feld": "motto_en",
+   "vorlage": "Working With the Intelligence of Life",
+   "warum": "Von Hand gesetzt: ein Wort je Zeile. Setzt der Mensch."
+  },
+  "kopf_de": {
+   "story": "uf1f",
+   "art": "kopf",
+   "vorlage": "Landwirtschaftliche Tagung 3. bis 6. Februar 2027"
+  },
+  "motto_de": {
+   "story": "u149c",
+   "art": "abgleich",
+   "name": "Motto Rückseite DE",
+   "nur_pruefen": true,
+   "feld": "motto_de",
+   "vorlage": "Mit der Intelligenz des Lebens arbeiten",
+   "warum": "Von Hand gesetzt: ein Wort je Zeile. Setzt der Mensch."
+  },
+  "stand": {
+   "story": "uea4",
+   "art": "text",
+   "vorlage": "As of September 2026 / Stand September 2026 / www.agriculture-conference.org"
+  },
+  "einleitung": {
+   "story": "u108e",
+   "art": "text",
+   "vorlage": "Under the guiding theme ‹Working with the Intelligence of Life› … / Unter dem Leitgedanken «Mit der Intelligenz des Lebens arbeiten» …"
+  },
+  "willkommen": {
+   "story": "uf60",
+   "art": "text",
+   "vorlage": "Welcome Willkommen"
+  },
+  "kopf_ag": {
+   "story": "u10a8",
+   "art": "text",
+   "vorlage": "Workshops Arbeitsgruppen"
+  },
+  "sprachen_hinweis": {
+   "story": "u1043",
+   "art": "text",
+   "vorlage": "Plenary sessions are available in the following languages: / Die Plenarveranstaltungen werden in folgende Sprachen gedolmetscht:"
+  },
+  "sprache_de": {
+   "story": "ufc6",
+   "art": "abgleich",
+   "feld": "dolmetsch",
+   "nur_pruefen": true,
+   "vorlage": "Deutsch"
+  },
+  "sprache_en": {
+   "story": "uff8",
+   "art": "abgleich",
+   "feld": "dolmetsch",
+   "nur_pruefen": true,
+   "vorlage": "English"
+  },
+  "sprache_fr": {
+   "story": "u1011",
+   "art": "abgleich",
+   "feld": "dolmetsch",
+   "nur_pruefen": true,
+   "vorlage": "Français"
+  },
+  "sprache_es": {
+   "story": "ufdf",
+   "art": "abgleich",
+   "feld": "dolmetsch",
+   "nur_pruefen": true,
+   "vorlage": "Español"
+  },
+  "sprache_it": {
+   "story": "ufad",
+   "art": "abgleich",
+   "feld": "dolmetsch",
+   "nur_pruefen": true,
+   "vorlage": "Italiano"
+  },
+  "sprache_zh": {
+   "story": "u102a",
+   "art": "abgleich",
+   "feld": "dolmetsch",
+   "nur_pruefen": true,
+   "vorlage": "中文"
+  },
+  "malerei": {
+   "story": "u13ad",
+   "art": "text",
+   "vorlage": "Painting on Cover / Malerei auf dem Cover / Esther Gerster",
+   "seite": "2"
+  },
+  "mi_klasse": {
+   "story": "ud28",
+   "art": "zeitplan",
+   "vorlage": "8th Class Lesson for members of the First Class – Free rendering / 8. Klassenstunde … / Ueli Hurter · Eduardo Rincón"
+  },
+  "mi_checkin": {
+   "story": "u126f",
+   "art": "zeitplan",
+   "vorlage": "Check-in Check-in"
+  },
+  "mi_1500": {
+   "story": "u12ec",
+   "art": "zeitplan",
+   "vorlage": "Opening Eröffnung … / Farming – The Foundation of Community …"
+  },
+  "mi_1700": {
+   "story": "u12d3",
+   "art": "zeitplan",
+   "vorlage": "Reimagining Human and Organisational Potential … / Aonghus Gordon · Tara Gratton"
+  },
+  "mi_do_2000": {
+   "story": "u131e",
+   "art": "zeitplan",
+   "spalten": 2,
+   "vorlage": "Collaboration from Free Will … | Eurythmy: Consonance …"
+  },
+  "morgen_0830": {
+   "story": "uc12",
+   "art": "zeitplan",
+   "spalten": 3,
+   "vorlage": "From Wisdom to Freedom … / Working with the Michael Letter … / Namen je Tag in drei Spalten"
+  },
+  "do_1700": {
+   "story": "ucc4",
+   "art": "zeitplan",
+   "vorlage": "Re-Thinking Economic Activity …"
+  },
+  "fr_1700": {
+   "story": "ucdd",
+   "art": "zeitplan",
+   "vorlage": "Integrating Healing, Education, Agriculture, and Social Arts …"
+  },
+  "fr_1900": {
+   "story": "ucf6",
+   "art": "zeitplan",
+   "vorlage": "Festive evening Festlicher Abend / Schreinerei Saal + Wandelhalle"
+  },
+  "sa_1430": {
+   "story": "u1338",
+   "art": "zeitplan",
+   "vorlage": "Closing Abschluss / Building Communities of Research and Knowledge … / The Courage for Community …"
+  },
+  "kopf_vormittag": {
+   "story": "ud74",
+   "art": "zeitplan",
+   "vorlage": "Morning Workshops Arbeitsgruppen am Vormittag"
+  },
+  "kopf_nachmittag": {
+   "story": "ud8e",
+   "art": "zeitplan",
+   "vorlage": "Afternoon Workshops Arbeitsgruppen am Nachmittag"
+  },
+  "pause_do": {
+   "story": "uc60",
+   "art": "zeitplan",
+   "vorlage": "Coffee break · Guided tours Kaffeepause · Führungen"
+  },
+  "pause_lang": {
+   "story": "uc2e",
+   "art": "zeitplan",
+   "vorlage": "Coffee break Kaffeepause (über drei Tage)"
+  },
+  "pause_mi": {
+   "story": "uc47",
+   "art": "zeitplan",
+   "vorlage": "Coffee break Kaffeepause (Mittwoch)"
+  },
+  "mittag": {
+   "story": "ucab",
+   "art": "zeitplan",
+   "vorlage": "Lunch Mittagessen"
+  },
+  "abendessen": {
+   "story": "uc79",
+   "art": "zeitplan",
+   "vorlage": "Dinner Abendessen"
+  },
+  "nachtcafe": {
+   "story": "ue72",
+   "art": "zeitplan",
+   "vorlage": "Night Café Nachtcafé"
+  },
+  "ende": {
+   "story": "u123d",
+   "art": "zeitplan",
+   "vorlage": "End Ende"
+  },
+  "zeit_mi_1130": {
+   "story": "ud0f",
+   "art": "zeit",
+   "vorlage": "11:30"
+  },
+  "zeit_mi_1300": {
+   "story": "u1256",
+   "art": "zeit",
+   "vorlage": "13:00"
+  },
+  "zeit_mi_1500": {
+   "story": "u1305",
+   "art": "zeit",
+   "vorlage": "15:00"
+  },
+  "zeit_mi_1630": {
+   "story": "udd9",
+   "art": "zeit",
+   "vorlage": "16:30"
+  },
+  "zeit_mi_1700": {
+   "story": "u12a1",
+   "art": "zeit",
+   "vorlage": "17:00"
+  },
+  "zeit_mi_1830": {
+   "story": "ue24",
+   "art": "zeit",
+   "vorlage": "18:30"
+  },
+  "zeit_mi_2000": {
+   "story": "u12ba",
+   "art": "zeit",
+   "vorlage": "20:00"
+  },
+  "zeit_mi_2200": {
+   "story": "ue8b",
+   "art": "zeit",
+   "vorlage": "22:00"
+  },
+  "zeit_0830": {
+   "story": "uda7",
+   "art": "zeit",
+   "vorlage": "8:30"
+  },
+  "zeit_1000": {
+   "story": "udc0",
+   "art": "zeit",
+   "vorlage": "10:00"
+  },
+  "zeit_1045": {
+   "story": "ud41",
+   "art": "zeit",
+   "vorlage": "10:45"
+  },
+  "zeit_1230": {
+   "story": "udf2",
+   "art": "zeit",
+   "vorlage": "12:30"
+  },
+  "zeit_1430": {
+   "story": "ud5b",
+   "art": "zeit",
+   "vorlage": "14:30"
+  },
+  "zeit_1600": {
+   "story": "ue0b",
+   "art": "zeit",
+   "vorlage": "16:00"
+  },
+  "zeit_1700": {
+   "story": "uc92",
+   "art": "zeit",
+   "vorlage": "17:00"
+  },
+  "zeit_2000": {
+   "story": "u1288",
+   "art": "zeit",
+   "vorlage": "20:00"
+  },
+  "zeit_fr_1900": {
+   "story": "ue3d",
+   "art": "zeit",
+   "vorlage": "19:00"
+  },
+  "zeit_sa_1430": {
+   "story": "u1351",
+   "art": "zeit",
+   "vorlage": "14:30"
+  },
+  "zeit_sa_1615": {
+   "story": "u1223",
+   "art": "zeit",
+   "vorlage": "16:15"
+  },
+  "arbeitsgruppen": {
+   "story": "uebd",
+   "art": "arbeitsgruppen",
+   "spalten": 11,
+   "vorlage": "Morning Vormittag · 1 · DE · EN · … · Afternoon Nachmittag · 30 … 55"
+  },
+  "plakat_motto_en": {
+   "story": "u253a",
+   "art": "abgleich",
+   "name": "Plakatzeile Motto EN",
+   "seite": "1",
+   "nur_pruefen": true,
+   "feld": "motto_en",
+   "vorlage": "Working With the Intelligence of Life",
+   "warum": "Von Hand unterschnitten (Laufweite −40 nach g/h/e/f, Horizontalskalierung 98). Setzt der Mensch."
+  },
+  "plakat_motto_de": {
+   "story": "u2521",
+   "art": "abgleich",
+   "name": "Plakatzeile Motto DE",
+   "seite": "1",
+   "nur_pruefen": true,
+   "feld": "motto_de",
+   "vorlage": "Mit der Intelligenz des Lebens arbeiten",
+   "warum": "Von Hand unterschnitten (Laufweite −40 nach g/h/e/f, Horizontalskalierung 98). Setzt der Mensch."
+  },
+  "plakat_datum_en": {
+   "story": "u2554",
+   "art": "abgleich",
+   "name": "Plakatzeile Datum EN",
+   "seite": "1",
+   "nur_pruefen": true,
+   "feld": "datum_en",
+   "vorlage": "Agriculture Conference 3 to 6 February 2027"
+  },
+  "plakat_datum_de": {
+   "story": "u24ca",
+   "art": "abgleich",
+   "name": "Plakatzeile Datum DE",
+   "seite": "1",
+   "nur_pruefen": true,
+   "feld": "datum_de",
+   "vorlage": "Landwirtschaftliche Tagung 3. bis 6. Februar 2027"
+  },
+  "plakat_malerei": {
+   "story": "u2508",
+   "art": "text",
+   "seite": "1",
+   "vorlage": "Painting: Esther Gerster"
+  }
+ },
+ "absatzformate_arbeitsgruppen": {
+  "kopf": "AG_Header",
+  "sprache": "AG_Sprache",
+  "titel_vormittag": "AG-26",
+  "titel_nachmittag": "AG-26 Afternoon",
+  "titel_zweitsprache": "AG-26_grau",
+  "titel_chinesisch": "AG-Chinese",
+  "namen": "AG_Namen"
+ },
+ "seiten": {
+  "plakat": "1",
+  "rueckseite": "2"
+ }
+}

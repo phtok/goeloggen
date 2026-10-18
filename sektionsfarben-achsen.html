@@ -1,0 +1,342 @@
+<!doctype html>
+<!-- =============================================================================
+     Doppelfarben: die Sektionen auf den Achsen von Goethes Farbenkreis
+     -----------------------------------------------------------------------------
+     Laborseite (Strategie, zur Entscheidung durch die Sektionsleitungen).
+     Vierte Fassung des alternativen Farbkonzepts, Auftrag 21. September 2026:
+     jede Sektion steht nicht auf einem Punkt, sondern auf einer ACHSE des Kreises –
+     ein Leuchten und ein Grund, die einander fordern (Zur Farbenlehre, §§ 805–812).
+     Damit bleibt das Gelb ein Gelb, und Goetheanum-Blau und Bühnengold setzen sich
+     als Monofarben ab.
+     Werte kommen gerechnet aus assets/sek-achsen.js (tools/sek-achsen.py); die Seite
+     setzt sie als Custom Properties (--a-*), damit alle Flächen über var() laufen
+     (DS02/DS07) und der Dunkelmodus aus den Tokens kippt (B05).
+     Laborseite: darf herleiten und vergleichen (CLAUDE.md, Ausnahme für Labor).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Doppelfarben auf Goethes Achsen · Goetheanum</title>
+<meta name="description" content="Farbkonzept für die zwölf Sektionen: jede steht auf einer Achse von Goethes Farbenkreis – ein Leuchten und ein Grund, die einander fordern. Gelb bleibt Gelb, Goetheanum-Blau und Bühnengold bleiben Monofarben." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Nur Seitenlayout. Farben/Schrift/Hell-Dunkel aus tokens.css/base.css; die
+     Achsentöne setzt das Skript als --a-* auf :root. */
+  .artkopf{padding-block:clamp(36px,6vw,64px) var(--s6);max-width:min(72ch,100%)}
+  .artkopf h1{max-width:20ch}
+  .artkopf .lede{margin-top:var(--s4)}
+  .artkopf .byline{margin-top:var(--s4)}
+  .grp{margin-top:var(--s8)}
+  .grp > h2{font-size:var(--t-h2);margin-bottom:var(--s2)}
+  .grp > .desc{max-width:62ch}
+  .grp > .prose{margin-top:var(--s4)}
+  .regeln{list-style:none;margin:var(--s4) 0 0;padding:0;display:grid;gap:var(--s2);max-width:62ch}
+  .regeln li{border-left:3px solid var(--gold);background:var(--soft);padding:var(--s3) var(--s4);
+    font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-body)}
+  .regeln b{font-family:var(--font-display);font-weight:var(--w-deutlich)}
+
+  /* --- Der Kreis ------------------------------------------------------------- */
+  .kreis-wrap{overflow-x:auto;margin-top:var(--s5);padding-bottom:var(--s2)}
+  .kreis{display:block;width:min(100%,760px);min-width:560px;margin:0 auto;font-family:var(--font-text)}
+  .kreis .ort{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:22px;fill:var(--on-accent)}
+  .kreis .nr{font-weight:600;font-size:23px}
+  .kreis .mitte{font-size:19px;fill:var(--muted)}
+  .kreis .sektor{stroke:var(--paper);stroke-width:2}
+  .kreis .frei{stroke:var(--paper);stroke-width:2;stroke-dasharray:6 4}
+  .kreis .diam{stroke:var(--line);stroke-width:2}
+  @media(max-width:600px){
+    .kreis{min-width:0}
+    .kreis .ort,.kreis .mitte{display:none}
+    .kreis .nr{font-size:38px}
+  }
+
+  /* --- Die sechs Achsen ------------------------------------------------------- */
+  .achsen{display:grid;gap:var(--s5);margin-top:var(--s5)}
+  @media(min-width:900px){.achsen{grid-template-columns:1fr 1fr}}
+  .ach{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);overflow:hidden;
+    display:flex;flex-direction:column}
+  .ach > h3{font-size:var(--t-h3);margin:0;padding:var(--s4) var(--s4) var(--s1)}
+  .ach > .satz{font-family:var(--font-text);font-size:var(--t-small);line-height:1.5;margin:0;
+    padding:0 var(--s4) var(--s3);max-width:52ch}
+  .paar{display:grid;grid-template-columns:1fr 1fr}
+  .paar .seite{padding:var(--s4);min-height:164px;display:flex;flex-direction:column;justify-content:space-between;gap:var(--s3)}
+  .paar .rolle{font-family:var(--font-text);font-size:var(--t-micro);line-height:1.3}
+  .paar .sek{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);line-height:1.15}
+  .paar .probe{font-family:var(--font-text);font-size:var(--t-small);line-height:1.45}
+  .paar .hx{font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.02em}
+  .ach .zahlen{display:flex;flex-wrap:wrap;gap:var(--s1) var(--s3);padding:var(--s3) var(--s4) var(--s4);
+    font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);font-variant-numeric:tabular-nums}
+  .ach .zahlen b{color:var(--ink);font-weight:600}
+
+  /* --- Die zwölf Sektionen ---------------------------------------------------- */
+  .karten{display:grid;gap:var(--s4);margin-top:var(--s4)}
+  @media(min-width:900px){.karten{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:600px) and (max-width:899px){.karten{grid-template-columns:1fr 1fr}}
+  .sk{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);overflow:hidden;display:flex;flex-direction:column}
+  .sk .band{min-height:96px;padding:var(--s3) var(--s4);display:flex;flex-direction:column;justify-content:flex-end;gap:2px}
+  .sk .band .nr{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);line-height:1.1}
+  .sk .band .zeichen{font-family:var(--font-text);font-size:var(--t-micro);line-height:1.3}
+  .sk .kopf{padding:var(--s4) var(--s4) 0}
+  .sk .kopf h4{font-size:var(--t-body);margin:0 0 var(--s1);line-height:1.25}
+  .sk .kopf .satz{font-family:var(--font-text);font-size:var(--t-small);line-height:1.45;margin:0 0 var(--s2)}
+  .sk .orte{display:flex;flex-wrap:wrap;gap:var(--s1) var(--s2);align-items:center}
+  .sk .grund-text{font-family:var(--font-text);font-size:var(--t-small);line-height:1.55;padding:var(--s3) var(--s4) 0;max-width:46ch;flex:1}
+  .sk .werte{display:flex;flex-wrap:wrap;gap:var(--s2);padding:var(--s3) var(--s4) var(--s4);align-items:center}
+  .wert{font:inherit;font-family:var(--font-text);font-size:var(--t-small);font-variant-numeric:tabular-nums;
+    color:var(--ink);background:var(--field-bg);border:1px solid var(--line);border-radius:var(--r-pill);
+    padding:var(--pille-y) var(--pille-x);cursor:copy;min-height:36px;display:inline-flex;align-items:center;gap:.5em}
+  .wert:hover{border-color:var(--blue)}
+  .wert .art{color:var(--muted);font-size:var(--t-micro)}
+  .punkt{width:.9em;height:.9em;border-radius:50%;border:1px solid var(--line);flex:none;display:inline-block;vertical-align:-.1em}
+  .wandert{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);border:1px dashed var(--line);
+    border-radius:var(--r-pill);padding:var(--pille-y) var(--pille-x);line-height:1.2}
+
+  /* --- Monofarben -------------------------------------------------------------- */
+  .mono{display:grid;gap:var(--s4);margin-top:var(--s4)}
+  @media(min-width:700px){.mono{grid-template-columns:1fr 1fr}}
+  .mk{border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;background:var(--paper)}
+  /* Die Fläche zeigt die Farbe, die Schrift steht darunter auf Papier: das
+     Bühnengold trägt Weiss nur gross (gemessen 3.8:1) – hier wird nichts
+     behauptet, was die Fläche nicht hält (B01/B02). */
+  .mk .flaeche{min-height:110px}
+  .mk .kopf{padding:var(--s4) var(--s4) 0}
+  .mk .kopf h3{font-size:var(--t-h3);margin:0}
+  .mk .kopf .hx{font-family:var(--font-mono);font-size:var(--t-micro);color:var(--muted);letter-spacing:.02em;margin-top:2px}
+  .mk p{font-family:var(--font-text);font-size:var(--t-small);line-height:1.55;padding:var(--s3) var(--s4) 0;margin:0;max-width:46ch}
+  .mk p.meta{padding-bottom:var(--s4)}
+
+  /* --- Anwendung ---------------------------------------------------------------- */
+  .waehler{display:flex;gap:var(--s2);overflow-x:auto;padding:var(--s2) 0 var(--s3);margin-top:var(--s4);scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+  .waehler button{flex:none;font:inherit;font-family:var(--font-text);font-size:var(--t-small);min-height:var(--tap);
+    padding:var(--pille-y) var(--pille-x);border-radius:var(--r-pill);border:1px solid var(--line);
+    background:var(--field-bg);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:.5em}
+  .waehler button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--on-accent)}
+  .anw{display:grid;gap:var(--s4)}
+  @media(min-width:760px){.anw{grid-template-columns:1fr 1fr}}
+  .bsp{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s4);display:flex;flex-direction:column;gap:var(--s3)}
+  .bsp > .meta{order:9}
+  .kopfband{border-radius:var(--r-control);padding:var(--s5) var(--s4);display:flex;flex-direction:column;gap:var(--s2)}
+  /* Der Kicker erbt die Schriftfarbe des Bandes – base.css setzt sonst Goldtinte,
+     die auf einer leuchtenden Fläche nicht trägt (B02). */
+  .kopfband .kick{font-family:var(--font-text);font-size:var(--t-small);letter-spacing:.02em;color:inherit}
+  .kopfband h3{font-size:var(--t-h3);margin:0;max-width:22ch}
+  .kopfband p{font-family:var(--font-text);font-size:var(--t-small);line-height:1.45;margin:0}
+  .zeichenreihe{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center}
+  .achip{font-family:var(--font-text);font-size:var(--t-small);border-radius:var(--r-pill);
+    padding:var(--pille-y) var(--pille-x);min-height:32px;display:inline-flex;align-items:center}
+  .aknopf{font:inherit;font-family:var(--font-text);font-size:var(--t-body);border:0;border-radius:var(--r-control);
+    padding:var(--s3) var(--s5);min-height:var(--tap);cursor:pointer}
+  .textprobe h3{font-size:var(--t-h3);margin:0 0 var(--s2)}
+  .textprobe p{font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure)}
+
+  .fineprint{margin-top:var(--s8);color:var(--muted);font-size:var(--t-small);max-width:64ch;font-family:var(--font-text);line-height:1.6}
+  .fineprint b{color:var(--ink);font-weight:600}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);
+    padding:8px 16px;border-radius:var(--r-pill);font-family:var(--font-text);font-size:var(--t-small);
+    opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-active="sektionsfarben-achsen" data-variant="werkzeug"
+        data-onpage="Gedanke:#gedanke|Kreis:#kreis|Achsen:#achsen|Sektionen:#sektionen|Anwendung:#anwendung|Offen:#offen"></script>
+
+<main class="wrap">
+  <div class="artkopf">
+    <span class="kicker">Labor · Farbkonzept</span>
+    <h1>Doppelfarben: die Sektionen auf den Achsen</h1>
+    <p class="lede">Keine Sektion steht auf einem Punkt des Farbenkreises, sondern auf einer Achse:
+      einem Leuchten und einem Grund, die einander fordern. So bleibt das Gelb ein Gelb, jede Sektion
+      bekommt ein unverwechselbares Paar – und Goetheanum-Blau und Bühnengold setzen sich als
+      Monofarben davon ab.</p>
+    <p class="byline"><b>Entwurf</b> · 21. September 2026 · vierte Fassung · für die Sektionsleitungen</p>
+    <ul class="regeln">
+      <li><b>Keine Farbe ist für sich ganz.</b> Goethes Auge fordert zu jeder Farbe die
+        entgegengesetzte: <q>Gelb fordert Rot-Blau, Blau fordert Rot-Gelb, Purpur fordert Grün</q>
+        (§§ 809–810). Die Achse ist darum keine Erfindung, sondern die Form, in der der Kreis gelesen
+        werden will.</li>
+      <li><b>Zwei Farben sind keine Bequemlichkeit, sondern Physik.</b> Eine Farbe der Lichtseite
+        verliert ihre Farbigkeit, sobald sie tief genug wird, um Weiss zu tragen – Gelb wird Oliv.
+        Eine Farbe der Minusseite verliert sie, sobald sie hell genug zum Leuchten wird. Die Achse
+        gibt jeder Sektion beides.</li>
+      <li><b>Daraus folgt eine einzige Regel:</b> auf jeder Fläche steht, was sie trägt. Trägt sie
+        Weiss, steht Weiss darauf – und die geforderte Farbe leuchtet als Zeichen. Trägt sie kein
+        Weiss, weil sie zu nah am Licht steht, dann schreibt die geforderte Farbe darauf. Beide
+        Fälle sind gemessen, keiner geschätzt.</li>
+      <li><b>Sechs Achsen, zwölf Sektionen, zwei Monofarben.</b> Jede Achse trägt zwei Sektionen:
+        eine leuchtet, die andere trägt. Goetheanum-Blau und Bühnengold stehen auf keiner Achse –
+        sie bleiben einfarbig und sind im Hausbild genau daran zu erkennen.</li>
+    </ul>
+  </div>
+
+  <section class="grp" id="gedanke">
+    <h2>Der Gedanke</h2>
+    <p class="desc">Warum zwei Farben je Sektion – und warum gerade diese zwei.</p>
+    <div class="prose">
+      <p><b>Der Kreis ist eine Polarität, kein Musterbuch.</b> Goethe ordnet die Farben nicht nach
+        Geschmack, sondern nach ihrer Herkunft aus Licht und Finsternis: eine Plusseite, die
+        <q>regsam, lebhaft, strebend</q> stimmt, und eine Minusseite der Ferne und der Ruhe. Gelb
+        steht dem Licht am nächsten, Blau der Finsternis. Wer eine Sektion auf einen Punkt dieses
+        Kreises stellt, gibt ihr darum unweigerlich auch eine Helligkeit – und damit entweder das
+        Leuchten oder die Fähigkeit, Schrift zu tragen. Nie beides.</p>
+      <p><b>Das Auge stellt die Totalität selbst her.</b> Goethe beschreibt, wie das Auge zu jeder
+        Farbe die fehlende fordert und sie im Nachbild erzeugt. Diese geforderte Farbe ist keine
+        Zutat, sondern gehört zur ersten dazu. Eine Sektion, die ihre Farbe und deren geforderte
+        Farbe führt, führt also nicht zwei Farben, sondern <b>eine ganze</b>.</p>
+      <p><b>Die Probe aus der Praxis.</b> PostFinance hält ihr Gelb genau so: die Fläche ist
+        <span id="pf-gelb">#FFCC00</span>, geschrieben wird in Petrol
+        <span id="pf-petrol">#004B5A</span> – gemessen an den Marken-Variablen
+        der eigenen Seite. Das Gelb trägt keinen Text und muss es nicht; es leuchtet, und die zweite
+        Farbe arbeitet. Der Unterschied zu diesem Vorschlag ist nur die Herleitung: PostFinance
+        wählt das Petrol, Goethes Kreis <b>fordert</b> es.</p>
+      <p><b>Was die Sektionen davon haben.</b> Zwölf Farbtöne liegen auf einem Kreis
+        notwendigerweise dicht beieinander; zwölf <b>Paare</b> tun es nicht. Wer bisher nur an
+        seinem Blau von den Nachbarn zu unterscheiden war, hat jetzt ein Paar – Blau mit Zinnober,
+        Blau mit Bernstein, Meergrün mit Purpurrot. Die Nähe auf dem Kreis wird damit lesbar,
+        statt verwischt zu werden.</p>
+    </div>
+  </section>
+
+  <section class="grp" id="kreis">
+    <h2>Der Kreis</h2>
+    <p class="desc">Purpur steht oben, die warme Seite rechts. Innen liegen Goethes sechs Farben,
+      aussen die zwölf Plätze der Sektionen; die Linien durch die Mitte sind die sechs Achsen. Die beiden Monofarben des Hauses stehen auf keiner
+      Achse und darum auch nicht im Ring – sie sind weiter unten aufgeführt.</p>
+    <div class="kreis-wrap"><svg class="kreis" id="svg-kreis" viewBox="0 0 760 760" role="img" aria-labelledby="kreis-t"><title id="kreis-t">Goethes Farbenkreis mit zwölf Sektionsplätzen, sechs Achsen und den beiden Monofarben des Hauses</title></svg></div>
+    <p class="meta">Die Ziffern zählen im Uhrzeigersinn ab Purpur. Jede Linie verbindet zwei
+      Sektionen, die einander fordern. Die Reihenfolge im Ring ist zugleich die Verwandtschaft:
+      Bildende und Redende Künste stehen nebeneinander, Jugend neben Pädagogik, Pädagogik neben
+      Heilpädagogik, Heilpädagogik neben Landwirtschaft, Landwirtschaft neben Naturwissenschaft,
+      Sozialwissenschaft neben Medizin, Medizin neben der Allgemeinen. Wer sich ähnlich sieht,
+      ist verwandt.</p>
+  </section>
+
+  <section class="grp" id="achsen">
+    <h2>Die sechs Achsen</h2>
+    <p class="desc">Jede Achse trägt zwei Sektionen, die einander fordern. Auf jeder Fläche steht,
+      was sie trägt: Weiss auf den tragenden, die geforderte Farbe auf den leuchtenden. Die Zahlen
+      sind am gerenderten Blatt gemessen.</p>
+    <div class="achsen" id="achsen-liste"></div>
+  </section>
+
+  <section class="grp" id="sektionen">
+    <h2>Die zwölf Sektionen</h2>
+    <p class="desc">Jede Karte zeigt die Fläche, wie die Sektion sie führt, ihren Ort auf dem Kreis,
+      den Grund aus Goethes Text und die Belegstelle. <q>Wandert</q> sagt, was sich gegenüber der
+      bisherigen Fassung ändert.</p>
+    <div class="karten" id="sektionen-liste"></div>
+  </section>
+
+  <section class="grp" id="monofarben">
+    <h2>Die beiden Monofarben</h2>
+    <p class="desc">Was keine Achse hat, steht für sich. Das Markenblau trägt Weiss auch klein; das
+      Bühnengold ist gedeckt und trägt es nur gross – darum steht die Schrift hier neben der Fläche,
+      nicht darauf. Darunter steht, wie weit der nächste Sektionston absteht; der Abstand entsteht
+      über Helligkeit und Buntheit, nicht über den Farbton.</p>
+    <div class="mono" id="mono-liste"></div>
+  </section>
+
+  <section class="grp" id="anwendung">
+    <h2>Anwendung</h2>
+    <p class="desc">Sektion wählen – die Bausteine zeigen sich in ihrem Paar. Ob die Fläche Weiss
+      trägt, entscheidet, was Schrift wird und was Zeichen.</p>
+    <div class="waehler" id="waehler" role="group" aria-label="Sektion wählen"></div>
+    <div class="anw" id="anw">
+      <div class="bsp">
+        <div class="kopfband" id="bsp-band">
+          <span class="kick" id="bsp-kick">Tagung · 14. bis 16. Mai</span>
+          <h3 id="bsp-titel">Titel der Sektion</h3>
+          <p>Freie Hochschule für Geisteswissenschaft · Goetheanum, Dornach</p>
+        </div>
+        <p class="meta" id="bsp-band-meta">Kopfband</p>
+      </div>
+      <div class="bsp">
+        <div class="zeichenreihe">
+          <span class="achip" id="bsp-chip1">Sektion</span>
+          <span class="achip" id="bsp-chip2">Rundbrief 3/2026</span>
+          <button class="aknopf" type="button" id="bsp-knopf">Zur Sektion</button>
+        </div>
+        <p class="meta" id="bsp-zeichen-meta">Chip und Knopf</p>
+      </div>
+      <div class="bsp textprobe">
+        <div>
+          <span class="kicker" id="bsp-kick2">Sektion</span>
+          <h3 id="bsp-titel2">Forschung und Praxis im Gespräch</h3>
+          <p>Im Lauftext auf Papier schreibt jede Sektion in der tragenden Farbe ihrer Achse –
+            auch die, deren Fläche leuchtet. Diese Farbe hält auf Weiss mindestens 4.5:1 und bleibt
+            im Dunkelmodus lesbar.</p>
+        </div>
+        <p class="meta" id="bsp-text-meta">Kicker, Titel und Lauftext</p>
+      </div>
+      <div class="bsp">
+        <div class="kopfband" id="bsp-gegen"></div>
+        <p class="meta">Die Partnersektion derselben Achse – dieselben zwei Farben, vertauschte Rollen</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="grp" id="offen">
+    <h2>Was zu entscheiden ist</h2>
+    <div class="prose">
+      <p><b>Die drei Wünsche sind eingearbeitet.</b> Die Redenden und Musizierenden Künste stehen im
+        Gelbrot – dem Rot, das Goethe <q>die aktive Seite in ihrer höchsten Energie</q> nennt
+        (§ 775). Es ist ein <b>tiefes</b> Rot, das Weiss trägt: Gelbrot ist die einzige Farbe der
+        Lichtseite, die tief werden kann, ohne schmutzig zu werden – deshalb kann die Bühne ihren
+        Bühnencharakter wirklich in der Farbe führen, mit einem leuchtenden Blau als Zeichen darauf.
+        Die Pädagogische Sektion behält das Gelb, jetzt ungebremst, weil sie es nicht mehr als
+        Schriftfarbe missbrauchen muss. Die Sozialwissenschaftliche Sektion, die sich neu aufstellt,
+        nimmt den Platz gegenüber der Pädagogik ein und teilt mit ihr die Achse.</p>
+      <p><b>Die Nähe zur Allgemeinen Sektion ist ablesbar.</b> Die Medizinische Sektion liegt im
+        Rotblau unmittelbar neben dem Purpur; die Pädagogische schreibt im Blaurot, dem zweiten
+        Feld daneben. Darüber hinaus gilt: <b>alle</b> zwölf Sektionen schreiben in der Hälfte des
+        Kreises, die im Purpur der Allgemeinen gipfelt. Die Allgemeine ist nicht Nachbarin von
+        zweien, sondern der Pol, in dem die tragende Hälfte zusammenläuft.</p>
+      <p><b>Eine Hausregel braucht eine Ergänzung.</b> Regel B01 sagt heute: kein dunkler Text auf
+        farbigem Grund, auf Farbe steht Weiss. Für die leuchtenden Flächen (Gelb, Gelbgrün, Rotgelb)
+        ist das unmöglich – dort steht der Grund der Achse, gemessen über 4.5:1. Die Regel müsste
+        also lauten: <b>auf jeder Fläche steht, was sie trägt</b> – Weiss, wo die Fläche tief ist,
+        die geforderte Farbe, wo sie leuchtet. Das ist eine Entscheidung des Auftraggebers, nicht
+        der Werkstatt.</p>
+      <p><b>Zwei Nachbarschaften sind eng – gewollt und gemessen.</b> Die Naturwissenschaftliche und
+        die Mathematisch-Astronomische Sektion stehen zwanzig Grad auseinander; ihre Flächen sind
+        beide tief (Meergrün und Petrolblau) und unterscheiden sich im Farbton, nicht in der Tiefe.
+        Dasselbe gilt für Landwirtschaft und Heilpädagogik im Grün. Das ist die Folge der Ordnung:
+        Nachbarn auf dem Kreis sind verwandte Sektionen. Wer sie stärker trennen will, muss die
+        Reihenfolge ändern – nicht die Bauart.</p>
+      <p><b>Das Markenblau steht freier als heute.</b> Das Goetheanum-Blau liegt zehn Grad neben der
+        Mathematisch-Astronomischen Sektion; weil deren Fläche jetzt tief ist, stehen die beiden
+        weiter auseinander als in der heutigen Fassung. Das Bühnengold liegt sieben Grad neben dem
+        Gelb der Pädagogik, ist aber gedeckt, wo jenes leuchtet. Die gemessenen Abstände stehen bei
+        den Monofarben.</p>
+      <p><b>Das Veto bleibt.</b> Jede Sektion sieht ihren Ort, ihre Rolle, ihr Paar und die
+        Belegstelle. Wer den Platz nicht will, sagt es; dann wird die Achse neu besetzt – der Kreis
+        bleibt. Was sich nicht verschieben lässt, ohne das Ganze zu verlieren, ist die Bauart:
+        Leuchten und Grund gehören zusammen.</p>
+    </div>
+  </section>
+
+  <p class="fineprint">
+    <b>Quelle.</b> Johann Wolfgang Goethe, Zur Farbenlehre (1810), Didaktischer Teil, sechste
+    Abteilung <q>Sinnlich-sittliche Wirkung der Farbe</q>, §§ 758–829; Farbenkreis 1809.
+    Zitate in Schweizer Schreibung. <b>Werte.</b> Gerechnet in OKLCH (tools/sek-achsen.py, Daten in
+    assets/sek-achsen.js), jede Bedingung im Skript geprüft und auf dieser Seite am gerenderten
+    Blatt nachgemessen. <b>Vorbild.</b> Die Farbwerte von PostFinance sind den CSS-Variablen der
+    Seite postfinance.ch entnommen. Die früheren Fassungen stehen auf
+    <a href="sektionsfarben-goethe.html">Sektionen auf Goethes Farbenkreis</a>,
+    <a href="sektionsfarben-goethe-varianten.html">Varianten</a> und im
+    <a href="sektionsfarben-modell.html">Farbmodell</a>; das heutige Konzept auf
+    <a href="sektionsfarben.html">Sektionsfarben</a>.
+  </p>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/sek-achsen.js"></script>
+<script src="assets/sek-achsen-seite.js"></script>
+</body>
+</html>

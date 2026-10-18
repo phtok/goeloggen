@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 5087 1167.3">
+  <!-- Generator: Adobe Illustrator 30.5.1, SVG Export Plug-In . SVG Version: 2.1.4 Build 3)  -->
+  <defs>
+    <style>
+      .st0 {
+        font-size: 36px;
+      }
+
+      .st0, .st1, .st2, .st3, .st4 {
+        isolation: isolate;
+      }
+
+      .st0, .st1, .st3, .st4 {
+        font-family: Helvetica, Helvetica;
+      }
+
+      .st0, .st4 {
+        fill: #23272b;
+      }
+
+      .st5 {
+        fill: #111;
+      }
+
+      .st1 {
+        fill: #6b7177;
+        font-size: 24px;
+      }
+
+      .st2 {
+        opacity: .8;
+        stroke: #c98a2b;
+        stroke-dasharray: 10 8;
+        stroke-width: 3px;
+      }
+
+      .st2, .st6 {
+        fill: none;
+      }
+
+      .st3 {
+        fill: #9aa0a6;
+        font-size: 28px;
+      }
+
+      .st4 {
+        font-size: 30px;
+      }
+
+      .st6 {
+        stroke: #cdd2d6;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <text class="st0" transform="translate(0 30.9)"><tspan x="0" y="0">Laut neu zeichnen — am korrekten Gewicht (v2.4.1)</tspan></text>
+  <text class="st1" transform="translate(0 70.9)"><tspan x="0" y="0">Schwarz = echte v2.4.1-Laut-Buchstaben (richtige Fette, editierbar). Gold gestrichelt = deine bisherige Bogenform (Form/Reichweite). Ziehe die Bögen am schwarzen f auf diese Reichweite.</tspan></text>
+  <line class="st6" y1="772.9" x2="5087" y2="772.9"/>
+  <text class="st3" transform="translate(4827 762.9106)"><tspan x="0" y="0">Grundlinie</tspan></text>
+  <line class="st6" y1="272.9" x2="5087" y2="272.9"/>
+  <text class="st3" transform="translate(4827 262.911)"><tspan x="0" y="0">x-Höhe</tspan></text>
+  <line class="st6" y1="57.9" x2="5087" y2="57.9"/>
+  <text class="st3" transform="translate(4827 47.911)"><tspan x="0" y="0">Versal/Oberlänge</tspan></text>
+  <line class="st6" y1="1022.9" x2="5087" y2="1022.9"/>
+  <text class="st3" transform="translate(4827 1012.9108)"><tspan x="0" y="0">Unterlänge</tspan></text>
+  <path class="st2" d="M1650,365.9h101.1v-93h-101.1v-29c0-59,7-97,50-97s124.8,6,124.8,6l1-88s-118.8-11-150.8-11c-91,0-133,55-133,189v30h-50v93h50v622h100l8-215v-407Z"/>
+  <path class="st2" d="M2274,365.9h101.1v-93h-101.1v-29c0-59,7-97,50-97s144.3,6,144.3,6l1-88s-138.3-11-170.3-11c-91,0-133,55-133,189v30h-50v93h50v622h100l8-215v-407Z"/>
+  <path class="st2" d="M3207,366.9h90.2v-93h-90.2v-29c0-59,7-97,50-97s144.3,6,144.3,6l1-88s-138.3-11-170.3-11c-91,0-133,55-133,189v30h-50v93h50v622h100l8-215v-407Z"/>
+  <path class="st2" d="M4141,366.9h102.2v-93h-102.2v-29c0-59,7-97,50-97s200.2,5.5,200.2,5.5l1-88s-194.2-10.5-226.2-10.5c-91,0-133,55-133,189v30h-50v93h50v622h100l8-215v-407Z"/>
+  <path class="st5" d="M251,379.9h107v-107h-107v-22c0-48,4-85,42-85s69,5,69,5l2-101s-70-12-101-12c-92,0-136,57-136,191v23h-47v107h47v605h115l10-212-1-392Z"/>
+  <path class="st5" d="M528.8,380.9h107v-107h-107v-22c0-48,4-85,42-85s69,5,69,5l2-101s-70-12-101-12c-92,0-136,57-136,191v23h-47v107h47v605h115l10-212-1-392Z"/>
+  <path class="st5" d="M1387.2,379.9h107v-107h-107v-22c0-48,4-85,42-85s69,5,69,5l2-101s-70-12-101-12c-92,0-136,57-136,191v23h-47v107h47v605h115l10-212-1-392Z"/>
+  <path class="st5" d="M1663,380.8h107v-107h-107v-22c0-48,4-85,42-85s119.8,5,119.8,5l2-101s-120.8-12-151.8-12c-92,0-136,57-136,191v23h-47v107h47v605h115l10-212-1-392Z"/>
+  <path class="st5" d="M2287,379.9h130.5v-107h-130.5v-22c0-48,4-85,42-85s213.5,5,213.5,5l2-101s-214.5-12-245.5-12c-92,0-136,57-136,191v23h-47v107h47v605h115l10-212-1-392Z"/>
+  <path class="st5" d="M3182.4,379.9h107.6v-107h-107.6v-22c0-48,4-85,42-85s143.5,5,143.5,5l2-101s-144.5-12-175.5-12c-92,0-136,57-136,191v23h-47v107h47v605h115l10-212-1-392Z"/>
+  <path class="st5" d="M2417.5,772.9h126v-500h-126v500Z"/>
+  <path class="st5" d="M3360.2,772.9h126V69.9h-126v703Z"/>
+  <path class="st5" d="M4154,379.9h96.1v-107h-96.1v-22c0-48,4-85,42-85s234,5,234,5l2-101s-235-12-266-12c-92,0-136,57-136,191v23h-47v107h47v605h115l10-212-1-392Z"/>
+  <path class="st5" d="M4544,379.9v-107h-114v-131h-125v479c0,106,27,164,143,164s97-17,97-17l-6-95s-39,5-73,5-37-26-37-64v-233l115-1Z"/>
+  <text class="st4" transform="translate(80 1152.9108)"><tspan x="0" y="0">ff-standard</tspan></text>
+  <text class="st4" transform="translate(1098 1152.9108)"><tspan x="0" y="0">ff-wortende</tspan></text>
+  <text class="st4" transform="translate(2116 1152.9108)"><tspan x="0" y="0">fi-weit</tspan></text>
+  <text class="st4" transform="translate(3049 1152.9108)"><tspan x="0" y="0">fl</tspan></text>
+  <text class="st4" transform="translate(3983 1152.9108)"><tspan x="0" y="0">ft</tspan></text>
+</svg>

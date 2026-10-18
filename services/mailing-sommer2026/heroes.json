@@ -1,0 +1,443 @@
+{
+  "_hinweis": "Einzige redaktionelle Quelle. Wellen-Copy NUR unter `wellen` (je Welle × Sprache, optional `preheader`); `motive` trägt Label, Segment, CTA-Labels und Bildvariationen. Bilder = echte lokale Dateien (assets/motive/). Motiv↔Segment: lesen→nurtv, sehen→nurws, beides→noabo. CTA-Ziele je Welle stehen strukturell in config.json (wellen_ctas, Attribution).",
+  "motive": {
+    "lesen": {
+      "label": "Lesen · Die Wochenschrift",
+      "segment": "nurtv",
+      "variationen": [
+        {
+          "id": "garten",
+          "bild": "assets/motive/read-garden.jpg",
+          "stil": "voll",
+          "alt": "Im Garten lesen"
+        },
+        {
+          "id": "see",
+          "bild": "assets/motive/read-lake.jpg",
+          "stil": "voll",
+          "center": [
+            0.62,
+            0.4
+          ],
+          "alt": "Am See lesen"
+        },
+        {
+          "id": "abendlicht",
+          "bild": "assets/motive/sunset-goetheanum.jpg",
+          "stil": "voll",
+          "alt": "Lesen im Abendlicht"
+        }
+      ],
+      "de": {
+        "cta_labels": {
+          "wos": "Mehr erfahren →"
+        },
+        "alternativen": [
+          "Lesen, wo der Sommer Sie hinträgt",
+          "Ihren Sommer mit nachhaltigen Gedanken verbringen",
+          "Jede Woche denkt ein erfahrener Mensch vor Ihnen laut — und Sie sehen weiter als allein."
+        ]
+      },
+      "en": {
+        "cta_labels": {
+          "wos": "Learn more →"
+        },
+        "alternativen": [
+          "Read wherever the summer takes you",
+          "Spend your summer with lasting thoughts",
+          "Each week, someone thinks out loud for you — and you leave seeing more than you brought."
+        ]
+      }
+    },
+    "sehen": {
+      "label": "Sehen · goetheanum.tv",
+      "segment": "nurws",
+      "variationen": [
+        {
+          "id": "pergola",
+          "bild": "assets/motive/tv-pergola.jpg",
+          "stil": "voll",
+          "center": [
+            0.45,
+            0.5
+          ],
+          "alt": "goetheanum.tv unter der Pergola"
+        },
+        {
+          "id": "terrasse",
+          "bild": "assets/motive/gtv-terrasse.jpg",
+          "stil": "voll",
+          "center": [
+            0.5,
+            0.55
+          ],
+          "alt": "goetheanum.tv auf der Sommerterrasse"
+        },
+        {
+          "id": "haengematte",
+          "bild": "assets/motive/gtv-haengematte.jpg",
+          "stil": "voll",
+          "center": [
+            0.5,
+            0.45
+          ],
+          "alt": "goetheanum.tv in der Hängematte am See"
+        }
+      ],
+      "de": {
+        "cta_labels": {
+          "gtv": "Mehr erfahren →"
+        },
+        "alternativen": [
+          "Wo immer Sie diesen Sommer verbringen",
+          "Über 800 Videos — einen Sommer lang gratis",
+          "Über 800 Mal einem Menschen beim Denken zusehen — Saal und Bühne offen, wann Sie wollen."
+        ]
+      },
+      "en": {
+        "cta_labels": {
+          "gtv": "Learn more →"
+        },
+        "alternativen": [
+          "Wherever you spend this summer",
+          "Over 800 videos — one summer, free",
+          "Watch a person think, more than 800 times — the Goetheanum’s hall open whenever you are."
+        ]
+      }
+    },
+    "beides": {
+      "label": "Beides · Das ganze Goetheanum",
+      "segment": "noabo",
+      "variationen": [
+        {
+          "id": "abendlicht",
+          "bild": "assets/motive/sunset-goetheanum.jpg",
+          "stil": "voll",
+          "alt": "Das Goetheanum im Abendlicht"
+        },
+        {
+          "id": "vor-dem-bau",
+          "bild": "assets/motive/vor-dem-bau.jpg",
+          "stil": "voll",
+          "center": [
+            0.5,
+            0.6
+          ],
+          "alt": "Hefte vor dem Goetheanum"
+        },
+        {
+          "id": "picknick",
+          "bild": "assets/motive/picknick.jpg",
+          "stil": "voll",
+          "alt": "Sommer-Picknick mit dem Goetheanum"
+        },
+        {
+          "id": "tv-haengematte",
+          "bild": "assets/motive/gtv-haengematte.jpg",
+          "stil": "voll",
+          "center": [
+            0.5,
+            0.45
+          ],
+          "alt": "goetheanum.tv in der Hängematte"
+        },
+        {
+          "id": "tv-terrasse",
+          "bild": "assets/motive/gtv-terrasse.jpg",
+          "stil": "voll",
+          "center": [
+            0.5,
+            0.55
+          ],
+          "alt": "goetheanum.tv auf der Sommerterrasse"
+        }
+      ],
+      "de": {
+        "cta_labels": {
+          "uebersicht": "Mehr erfahren →",
+          "wos": "Lesen wählen →",
+          "gtv": "Sehen wählen →"
+        },
+        "alternativen": [
+          "Wählen Sie: lesen oder streamen",
+          "Zwei Angebote, ein Sommer — bis 8. August",
+          "Zusehen, wie Menschen laut denken — und die eigenen Fragen bekommen Gesellschaft."
+        ]
+      },
+      "en": {
+        "cta_labels": {
+          "uebersicht": "Learn more →",
+          "wos": "Choose reading →",
+          "gtv": "Choose watching →"
+        },
+        "alternativen": [
+          "Choose: read or stream",
+          "Two offers, one summer — until 8 August",
+          "Watch people think out loud — and your own questions find company."
+        ]
+      }
+    }
+  },
+  "kleinzeile": {
+    "lesen": {
+      "de": "Drei Monate kostenlos, danach läuft das Abo regulär weiter · jederzeit ohne Begründung kündbar · Aktion bis 8. August 2026.",
+      "en": "Three months free, then the subscription continues at the regular price · cancel anytime, no reason needed · offer ends 8 August 2026."
+    },
+    "sehen": {
+      "de": "Drei Monate kostenlos, danach läuft das Abo regulär weiter · jederzeit kündbar, ein Klick im Konto · Aktion bis 8. August 2026.",
+      "en": "Three months free, then the subscription continues at the regular price · cancel anytime with one click in your account · offer ends 8 August 2026."
+    },
+    "beides": {
+      "de": "Beide Angebote kombinierbar · drei Monate kostenlos,\ndanach läuft das Abo regulär weiter, jederzeit kündbar ·\nnur bis 8. August 2026.",
+      "en": "Both offers can be combined · three months free,\nthen the subscription continues at the regular price, cancel anytime ·\nonly until 8 August 2026."
+    }
+  },
+  "proof": {
+    "de": "Stimmen und Gesichter der Anthroposophie von heute",
+    "en": "Voices and faces of anthroposophy today"
+  },
+  "badge": {
+    "de": "Sommerangebot 2026",
+    "en": "Summer offer 2026"
+  },
+  "ps": {
+    "_hinweis": "Leises Teilen-PS unter der Kleinzeile. link_wort wird in build_editor.py zum Teilen-Link auf das Angebot der jeweiligen Gruppe (nie auf ein schon bezahltes Produkt) mit eigenem utm_content w{n}_{seg}_share. wellen = nur diese Wellen tragen das PS (Frist-Mails w3/w3b ausgenommen: die letzte Erinnerung trägt einen einzigen klaren Ruf).",
+    "wellen": [
+      "w1",
+      "w2"
+    ],
+    "de": {
+      "text": "PS: Kennen Sie jemanden, dem dieser Sommer gefiele?\nGeben Sie die Einladung gern weiter.",
+      "link_wort": "Einladung"
+    },
+    "en": {
+      "text": "PS: Know someone this summer would suit?\nDo pass the invitation on.",
+      "link_wort": "invitation"
+    }
+  },
+  "auswahl": {
+    "lesen": "garten",
+    "sehen": "pergola",
+    "beides": "abendlicht"
+  },
+  "wellenplan": {
+    "nurtv": {
+      "w1": "lesen/garten",
+      "w2": "lesen/abendlicht",
+      "w3": "lesen/see",
+      "w3b": "lesen/abendlicht"
+    },
+    "nurws": {
+      "w1": "sehen/pergola",
+      "w2": "sehen/terrasse",
+      "w3": "sehen/haengematte",
+      "w3b": "sehen/pergola"
+    },
+    "noabo": {
+      "w1": "beides/abendlicht",
+      "w2": "beides/tv-haengematte",
+      "w3": "beides/picknick",
+      "w3b": "beides/tv-terrasse"
+    }
+  },
+  "wellen": {
+    "lesen": {
+      "w1": {
+        "de": {
+          "betreff": "Ihr freier Zugang zur Wochenschrift Das Goetheanum",
+          "botschaft": "Drei freie Monate für Sie",
+          "text": "Die Wochenschrift ‹Das Goetheanum› erweitert den Horizont – auf Papier oder online – und beleuchtet brisante Themen. Sie erhalten drei Monate lang uneingeschränkten Zugriff auf das gesamte Archiv seit 2022.",
+          "alt": "Drei Monate im Freien lesen — gratis",
+          "preheader": "Drei Monate freien Zugang für alle, die gerne in Ruhe auf Papier oder online lesen."
+        },
+        "en": {
+          "betreff": "Your free access to the weekly Das Goetheanum",
+          "botschaft": "Three free months for you",
+          "text": "The weekly ‹Das Goetheanum› broadens your horizon – on paper or online – and takes on pressing questions. You receive three months of unlimited access to the entire archive since 2022.",
+          "alt": "Read in the open air — three months free",
+          "preheader": "Three months of free access — for anyone who likes to read in peace, on paper or online."
+        }
+      },
+      "w2": {
+        "de": {
+          "betreff": "Ihr kostenloser Zugang – noch bis zum 8. August",
+          "botschaft": "Ihr kostenloser Zugang steht noch bereit",
+          "text": "Das Angebot gilt bis zum 8. August und erlaubt Ihnen, die Wochenschrift ‹Das Goetheanum› drei Monate lang kostenlos zu testen. Jetzt freischalten.",
+          "alt": "Lesestoff, der den Sommer überdauert — gratis",
+          "preheader": "Der kostenlose Zugang für drei Monate ist ein Angebot, das nur bis zum 8. August gilt."
+        },
+        "en": {
+          "betreff": "Your free access — still open until 8 August",
+          "botschaft": "Your free access is still waiting",
+          "text": "The offer runs until 8 August and lets you try the weekly ‹Das Goetheanum› free for three months. Unlock it now.",
+          "alt": "Reading that outlasts the summer — free",
+          "preheader": "Free access for three months — an offer that runs only until 8 August."
+        }
+      },
+      "w3": {
+        "de": {
+          "betreff": "Nur noch bis morgen, Samstag: drei Monate gratis lesen",
+          "botschaft": "Nur noch bis morgen, 8. August",
+          "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zur Wochenschrift ‹Das Goetheanum› – auf Papier oder online – erhalten, morgen, am Samstag, 8. August, endet. Jetzt freischalten.",
+          "alt": "Bis morgen: drei Monate gratis lesen — jetzt starten",
+          "preheader": "Das Angebot für drei kostenlose Monate ‹Das Goetheanum› läuft morgen, am Samstag, 8. August, aus."
+        },
+        "en": {
+          "betreff": "Only until tomorrow, Saturday: three months free",
+          "botschaft": "Only until tomorrow, 8 August",
+          "text": "A reminder that the summer offer — three months of free access to the weekly ‹Das Goetheanum›, on paper or online — ends tomorrow, Saturday 8 August. Unlock it now.",
+          "alt": "Until tomorrow: three months of free reading — start now",
+          "preheader": "The offer of three free months of ‹Das Goetheanum› ends tomorrow, Saturday 8 August."
+        }
+      },
+      "w3b": {
+        "de": {
+          "betreff": "Heute läuft das Angebot aus — drei Monate gratis lesen",
+          "botschaft": "Nur noch heute, 8. August",
+          "text": "Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie die Wochenschrift ‹Das Goetheanum› drei Monate lang kostenlos lesen. Jetzt freischalten.",
+          "alt": "Heute letzter Tag: drei Monate gratis lesen — jetzt starten",
+          "preheader": "Nur noch heute, Samstag, 8. August: drei Monate ‹Das Goetheanum› gratis."
+        },
+        "en": {
+          "betreff": "The offer closes today — three months of free reading",
+          "botschaft": "Only today, 8 August",
+          "text": "Today, Saturday 8 August, the summer offer closes. Until then you can read the weekly ‹Das Goetheanum› free for three months. Unlock it now.",
+          "alt": "Last day today: three months of free reading — start now",
+          "preheader": "Only today, Saturday 8 August: three months of ‹Das Goetheanum› free."
+        }
+      }
+    },
+    "sehen": {
+      "w1": {
+        "de": {
+          "betreff": "Ihr freier Zugang zu goetheanum.tv",
+          "botschaft": "Drei freie Monate für Sie",
+          "text": "goetheanum.tv öffnet Ihnen die ganze Mediathek – über 800 Beiträge, wöchentlich neu: Vorträge, Reportagen und Aufführungen, nah am Leben am Goetheanum. Sie erhalten drei Monate lang uneingeschränkten Zugriff.",
+          "alt": "Die ganze Mediathek — drei Monate gratis",
+          "preheader": "Drei Monate die ganze Mediathek — über 800 Beiträge, wöchentlich neu."
+        },
+        "en": {
+          "betreff": "Your free access to goetheanum.tv",
+          "botschaft": "Three free months for you",
+          "text": "goetheanum.tv opens the whole media library to you – over 800 items, new each week: lectures, reportages and performances, close to life at the Goetheanum. You receive three months of unlimited access.",
+          "alt": "The whole media library — three months free",
+          "preheader": "Three months of the whole media library — over 800 items, new each week."
+        }
+      },
+      "w2": {
+        "de": {
+          "betreff": "Ihr kostenloser Zugang – noch bis zum 8. August",
+          "botschaft": "Ihr kostenloser Zugang steht noch bereit",
+          "text": "Das Angebot gilt bis zum 8. August und erlaubt Ihnen, goetheanum.tv drei Monate lang kostenlos zu testen. Jetzt freischalten.",
+          "alt": "Drei Monate weiter sehen — gratis",
+          "preheader": "Drei Monate goetheanum.tv – das Angebot gilt nur bis zum 8. August."
+        },
+        "en": {
+          "betreff": "Your free access — still open until 8 August",
+          "botschaft": "Your free access is still waiting",
+          "text": "The offer runs until 8 August and lets you try goetheanum.tv free for three months. Unlock it now.",
+          "alt": "Three more months of watching — free",
+          "preheader": "Three months of goetheanum.tv – the offer runs only until 8 August."
+        }
+      },
+      "w3": {
+        "de": {
+          "betreff": "Nur noch bis morgen, Samstag: drei Monate goetheanum.tv gratis",
+          "botschaft": "Nur noch bis morgen, 8. August",
+          "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie drei Monate lang kostenlosen Zugang zu goetheanum.tv erhalten, morgen, am Samstag, 8. August, endet. Jetzt freischalten.",
+          "alt": "Bis morgen: drei Monate goetheanum.tv gratis — jetzt starten",
+          "preheader": "Das Angebot für drei kostenlose Monate goetheanum.tv läuft morgen, am Samstag, 8. August, aus."
+        },
+        "en": {
+          "betreff": "Only until tomorrow, Saturday: three months of goetheanum.tv",
+          "botschaft": "Only until tomorrow, 8 August",
+          "text": "A reminder that the summer offer — three months of free access to goetheanum.tv — ends tomorrow, Saturday 8 August. Unlock it now.",
+          "alt": "Until tomorrow: three months of goetheanum.tv free — start now",
+          "preheader": "The offer of three free months of goetheanum.tv ends tomorrow, Saturday 8 August."
+        }
+      },
+      "w3b": {
+        "de": {
+          "betreff": "Heute läuft das Angebot aus — drei Monate goetheanum.tv gratis",
+          "botschaft": "Nur noch heute, 8. August",
+          "text": "Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie goetheanum.tv drei Monate lang kostenlos sehen. Jetzt freischalten.",
+          "alt": "Heute letzter Tag: drei Monate goetheanum.tv gratis — jetzt starten",
+          "preheader": "Nur noch heute, Samstag, 8. August: drei Monate goetheanum.tv gratis."
+        },
+        "en": {
+          "betreff": "The offer closes today — three months of goetheanum.tv",
+          "botschaft": "Only today, 8 August",
+          "text": "Today, Saturday 8 August, the summer offer closes. Until then you can watch goetheanum.tv free for three months. Unlock it now.",
+          "alt": "Last day today: three months of goetheanum.tv free — start now",
+          "preheader": "Only today, Saturday 8 August: three months of goetheanum.tv free."
+        }
+      }
+    },
+    "beides": {
+      "w1": {
+        "de": {
+          "betreff": "Ihr freier Zugang zum Goetheanum – lesen und sehen",
+          "botschaft": "Drei freie Monate für Sie",
+          "text": "Das Goetheanum gibt es in Wort und im Bild: die Wochenschrift ‹Das Goetheanum› und die Mediathek goetheanum.tv. Lernen Sie beide diesen Sommer drei Monate kostenlos kennen – einzeln oder zusammen.",
+          "alt": "Lesen, sehen – oder beides. Drei Monate gratis.",
+          "preheader": "Wochenschrift und goetheanum.tv – drei Monate gratis, bis 8. August."
+        },
+        "en": {
+          "betreff": "Your free access to the Goetheanum – read and watch",
+          "botschaft": "Three free months for you",
+          "text": "The Goetheanum exists in words and in image: the weekly ‹Das Goetheanum› and the media library goetheanum.tv. Get to know both this summer, three months free – separately or together.",
+          "alt": "Read, watch – or both. Three months free.",
+          "preheader": "The weekly and goetheanum.tv – three months free, until 8 August."
+        }
+      },
+      "w2": {
+        "de": {
+          "betreff": "Ihr kostenloser Zugang – noch bis zum 8. August",
+          "botschaft": "Ihr kostenloser Zugang steht noch bereit",
+          "text": "Das Angebot gilt bis zum 8. August: die Wochenschrift ‹Das Goetheanum› und goetheanum.tv drei Monate lang kostenlos testen – einzeln oder zusammen. Jetzt freischalten.",
+          "alt": "Noch bis 8. August: drei Monate kostenlos",
+          "preheader": "Wochenschrift und/oder goetheanum.tv, drei Monate kostenlos – bis 8. August."
+        },
+        "en": {
+          "betreff": "Your free access — still open until 8 August",
+          "botschaft": "Your free access is still waiting",
+          "text": "The offer runs until 8 August: try the weekly ‹Das Goetheanum› and goetheanum.tv free for three months – separately or together. Unlock it now.",
+          "alt": "Still until 8 August: three months free",
+          "preheader": "The weekly and/or goetheanum.tv, three months free – until 8 August."
+        }
+      },
+      "w3": {
+        "de": {
+          "betreff": "Nur noch bis morgen, Samstag: drei Monate gratis",
+          "botschaft": "Nur noch bis morgen, 8. August",
+          "text": "Wir möchten Sie daran erinnern, dass das Sommerangebot, mit dem Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen, morgen, am Samstag, 8. August, endet. Jetzt freischalten.",
+          "alt": "Bis morgen: drei Monate gratis lesen oder sehen — jetzt starten",
+          "preheader": "Drei Monate lesen und/oder sehen, kostenlos – morgen, am Samstag, 8. August, läuft das Angebot aus."
+        },
+        "en": {
+          "betreff": "Only until tomorrow, Saturday: three months free",
+          "botschaft": "Only until tomorrow, 8 August",
+          "text": "A reminder that the summer offer — three months of free access to the Goetheanum, to read and/or watch — ends tomorrow, Saturday 8 August. Unlock it now.",
+          "alt": "Until tomorrow: three months free to read or watch — start now",
+          "preheader": "Three months of reading and/or watching, free – the offer ends tomorrow, Saturday 8 August."
+        }
+      },
+      "w3b": {
+        "de": {
+          "betreff": "Heute läuft das Angebot aus — drei Monate gratis",
+          "botschaft": "Nur noch heute, 8. August",
+          "text": "Heute, am Samstag, 8. August, läuft das Sommerangebot aus. Bis dahin können Sie das Goetheanum drei Monate lang kostenlos lesen und/oder sehen. Jetzt freischalten.",
+          "alt": "Heute letzter Tag: drei Monate gratis — jetzt starten",
+          "preheader": "Nur noch heute, Samstag, 8. August: drei Monate Goetheanum gratis."
+        },
+        "en": {
+          "betreff": "The offer closes today — three months free",
+          "botschaft": "Only today, 8 August",
+          "text": "Today, Saturday 8 August, the summer offer closes. Until then you can read and/or watch the Goetheanum free for three months. Unlock it now.",
+          "alt": "Last day today: three months free — start now",
+          "preheader": "Only today, Saturday 8 August: three months of the Goetheanum free."
+        }
+      }
+    }
+  }
+}

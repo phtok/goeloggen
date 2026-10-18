@@ -1,0 +1,184 @@
+# A11y- & Typografie-Sanierung (WCAG 2.2 AA · Sofie Beier)
+
+Branch `a11y-typo-refactor`, ein Commit pro Aufgabe. Nachweis je Aufgabe:
+**Was · Datei · Begründung (SC / Beier / Messwert)**.
+
+## Block A — Zugänglichkeit
+
+| ID | Was | Datei | Begründung |
+|----|-----|-------|------------|
+| A1 | Verstecktes `h1` als erstes `main`-Kind; Kachel-Titel `h3`→`h2`; `main#inhalt` | `index.html` | WCAG 1.3.1 / 2.4.6 – genau ein `h1`, keine übersprungene Ebene (verifiziert: 1× h1, dann h2) |
+| A2 | Dauerhafter Halt/Weiter-Schalter; Timer läuft nicht bei `paused`; bei `prefers-reduced-motion` von Anfang gestoppt; Punkt-Trefferfläche 26 px via `::before`; aktiver Punkt `aria-current` | `index.html` | WCAG 2.2.2 (Auto-Lauf 6.5 s) · 2.5.8 (Ziel ≥ 24 px). Verifiziert: Index bleibt nach Halt über 7 s stehen; Auto-Lauf ohne Halt läuft |
+| A3 | Fokus in den Dialog (erst Schliessen-Knopf, kein Auto-Fokus ins Suchfeld), `aria-modal`, Tab-Falle nur sichtbare Elemente, Fokus zurück auf Burger | `design-system/nav.js` | WCAG 2.4.3 + ARIA-Dialog. Verifiziert: Öffnen→Close-Knopf, Shift+Tab wraps, Escape→Burger |
+| A4 | Globaler Sprunglink „Zum Inhalt" (setzt `id=inhalt` auf `<main>`, nach DOM-Ready) | `design-system/nav.js`, `design-system/nav.css` | WCAG 2.4.1 (Verbesserung). Verifiziert auf Startseite + Icons: erstes Tab zeigt/aktiviert den Link |
+| A5 | `--gold-ink` `#94702e`→`#8a6728` | `design-system/tokens.css` | WCAG 1.4.3 – auf `--soft` von **4.29** → **4.89:1**, auf Weiss **5.18:1** (Formel des Auftrags) |
+| A6 | Je Sektionsfarbe `--on-sek-*` (Weiss nur ≥ 4.5:1, sonst dunkler Sektionston); Checker im Hook | `design-system/tokens.css`, `tools/check-on-sek.py`, `tools/hooks/pre-commit` | WCAG 1.4.3 – lws/js/hpise u. a. versagen mit Weiss; 6 dunkle Töne ≥ 4.6:1, 7× Weiss. Build bricht bei Unterschreiten |
+| A7 | Text-tragende Seiten-Toolbars `height`→`min-height`; kanonische Rollen waren schon padding-/`min-height`-basiert | `typografie.html`, `werkzeug.html` | WCAG 1.4.12 – Text-Spacing-Test (LH 1.5 / LS .12 / WS .16 / ¶ 2em) auf Startseite, Icons, Sektionsfarben: kein Clipping |
+| A8 | Globaler `@media(prefers-reduced-motion:reduce)`-Block; `.tile:hover` ohne transform | `design-system/base.css`, `index.html` | WCAG 2.3.3 – Übergänge und weiches Scrollen aus |
+| A9 | `lang` je fremdsprachiger Tabellenzelle (en/fr/es) | `uebersetzungen.html` | WCAG 3.1.2 – verifiziert: Zell-`lang` = `["-","en","fr","es","-"]` |
+
+## Block B — Typografie & Lesbarkeit (Beier)
+
+| ID | Was | Datei | Begründung |
+|----|-----|-------|------------|
+| B1 | `.note/.hint/.help/.desc/.subhead` → `--font-text` (Source) | `design-system/base.css` | Kondensierung/geschlossene Aperturen der Display schaden kleinem, dichtem Lesetext |
+| B2 | `.kicker/.kick` Klar→Deutlich; `.btn`, `.seg button` explizit Deutlich | `design-system/base.css` | Fettung hilft bei kleinen Sehwinkeln; Stammbreite Klar bei ~13.5 px grenzwertig |
+| B3 | `body` (→`.lede`) `letter-spacing:.02em`; `h1,h2` auf 0 | `design-system/base.css` | Tracking-/Crowding-Nutzen gilt Lese-/Kleingraden, nicht grossen Titeln |
+| B4 | `size-adjust:103%` (500/486) auf alle Source-Faces | `design-system/tokens.css` | Wahrgenommene Grösse = x-Höhe; gleiche px → gleiche Wirkung, stabiler Fallback |
+| B5 | `ascent-override:75%; descent-override:25%; line-gap-override:0%` auf BEIDE Faces | `design-system/tokens.css` | `usWinAscent` 1114 ⇒ uneinheitlicher Durchschuss/Grundlinie. Verifiziert: À/Ü/Ǻ clippen bei LH 1.66 nicht, beide Faces gleiche Boxhöhe; Font-Bug U+01FA separat behoben (#213/#218) |
+| B6 | `type-scale.json` (kanonische Leiter) + `tools/check-type-scale.py` (TS1/TS2) im Hook | `design-system/type-scale.json`, `tools/check-type-scale.py`, `tools/hooks/pre-commit` | „Konformität durch Konstruktion": Goetheanum-Rolle < 18 px braucht Deutlich; Leise ≥ 22 px. Regeln an synthetischen Verstössen getestet |
+| B7 | Dunkelmodus-Gewichtsabsenkung nur an grossen Display-Rollen (h1/h2/`.h-display`→540); Kleintext/UI behält Hell-Gewicht | `design-system/tokens.css`, `design-system/base.css` | Beier – Fettung hilft klein; kleiner Text soll im Dunkeln nicht dünner werden. Verifiziert: h1 580→540, Kicker/Knopf/Body unverändert. **Abweichung:** Kicker (klein) bleibt Deutlich statt reduziert – erfüllt die Abnahme „kleiner Text nicht leichter" und wahrt B2 |
+
+## Block C — Leseschrift-Umschalter
+
+| ID | Was | Datei | Begründung |
+|----|-----|-------|------------|
+| C | Kopfzeilen-Schalter „Lesemodus" neben Hell/Dunkel (A-Icon, das die Leseschrift zeigt + Gold-Ring als Zustand); tauscht `body` + `.lede` Display→Source, erhöht Spacing; Titel/Kicker/Kopfzeile bleiben Goetheanum; Zustand in `localStorage('goeRead')`, vor dem Paint gesetzt | `design-system/nav.js`, `design-system/nav.css`, `design-system/base.css` | Nutzerkontrolle ist der best belegte inklusive Faktor. Verifiziert: aus→body Goetheanum; ein→body/lede Source, h1/Kicker bleiben Goetheanum, Icon-A wird Source, Zustand überlebt Reload (kein FOUC). Grösse via B4 stabil; Reflow durch A7 abgesichert. **Symbol:** A mit Font-Wechsel + Gold-Ring statt reiner Buchstabenform (bei 17 px sonst zu subtil) |
+
+## Bewahrt (nicht angefasst)
+Fluide rem-Skala · Zeilenhöhe 1.66 · Mass ~62 ch · Betonung nur über Gewicht ·
+`hyphens`/`text-wrap:pretty`/orphans/widows · Flattersatz · 44-px-Ziele ·
+`:focus-visible` · selbstgehostete OFL-Schriften · `scroll-padding-top` · Landmarken.
+
+## Prüfhinweis (PR)
+Empfohlen: eine Runde reine Tastaturbedienung durch Karussell (Halt/Weiter, Punkte)
+und Schublade (Öffnen→Fokus, Tab-Falle, Escape→Burger), plus ein Screenreader-Durchgang
+(VoiceOver/NVDA). Keine visuelle Regression Hell **und** Dunkel (Startseite + Schriften geprüft).
+Design-System-Score bleibt 100 % (29/29).
+
+
+---
+
+# Block D — die Maschine misst (8. August 2026)
+
+Bis hierher war die Sanierung Handarbeit mit Nachweis. Seit dem 8. August
+misst sie eine Maschine: **`tools/barrierefreiheit.mjs`** (Regel **DS08** im
+Kontrakt) lädt jede Seite des Geltungsbereichs in Chromium auf zwei Achsen —
+390 px (Telefon) und 1440 px (Schreibtisch) — und lässt `axe-core` die
+**normativen** Erfolgskriterien der WCAG 2.2 auf Stufe A und AA prüfen. Damit
+gelten B01–B05 gemessen statt behauptet.
+
+    node tools/barrierefreiheit.mjs                          # Bericht
+    node tools/barrierefreiheit.mjs --check                  # als Tor
+    node tools/barrierefreiheit.mjs --seite ordner.html      # nur eine Seite
+    node tools/barrierefreiheit.mjs --regel select-name      # nur eine Regelsorte
+    node tools/barrierefreiheit.mjs --alles                  # samt Empfehlungen
+    node tools/barrierefreiheit.mjs --spur                   # Fortschritt je Seite
+    node tools/barrierefreiheit.mjs --seit origin/main       # nur, was der Unterschied berührt
+    node tools/barrierefreiheit.mjs --parallel 4             # Fenster zugleich (Vorgabe 4)
+
+Einmalig `cd tools && npm install`. Der ganze Lauf dauert mit vier Fenstern
+rund zwei Minuten (nacheinander waren es sechs, der Bericht ist derselbe) —
+darum läuft er **nicht** im Commit-Hook, sondern als eigener Job in
+`pruefmaschinen.yml`. Dort misst ein PR nur die Seiten, die sein Unterschied
+berühren kann (`--seit`, meist 10–25 Sekunden); der Push auf `main` misst das
+ganze Haus. Mit `--seite` sind es Sekunden.
+
+## Zwei Griffe, ohne die der Lauf lügt
+
+**Durchblättern vor dem Messen.** Wer eine Seite misst, ohne sie einmal
+durchzuscrollen, misst bei allen Blättern mit Einblende-Effekt Schrift in
+Grundfarbe auf Grund. Der Prüfer blättert darum jede Seite einmal durch.
+
+**Wer weiterleitet, wird übersprungen.** `services/sommer-zaehler/kurzlink-site/404.html`
+ist eine Brücke: sie liest den Pfad und schickt weiter. Ihr Ziel liegt
+ausserhalb, wird abgewiesen, und Chromium malt an ihrer Stelle seine eigene
+Fehlerseite — die dann gemessen würde. Genau das war der einzige
+`meta-viewport`-Fund der Erstmessung: nicht unsere Seite, sondern die des
+Browsers. Solche Blätter werden gezählt und übersprungen.
+
+## Sofort behoben
+
+| ID | Was | Datei | Begründung |
+|----|-----|-------|------------|
+| D1 | `role="tablist"` → `role="group"` auf beiden Tastatur-Umschaltern | `icons.html` | WCAG 1.3.1 – die Knöpfe sind Umschalter mit `aria-pressed`, keine Reiter; `tablist` verlangt Kinder mit `role="tab"` |
+| D2 | `role="group"` auf dem Ausgabe-Block ergänzt | `apps/bewegte-schrift/index.html` | WCAG 4.1.2 – `aria-label` auf einem `<pre>` ohne Rolle ist unzulässig; erst die Rolle macht die Beschriftung gültig |
+| D3 | `tabindex="0"` auf allen 14 `.tablewrap`-Behältern der Kampagnen-App (Cockpit, Kosten, Aktivitäten, Multiplikatoren) | `apps/sommer-zaehler/*.html`, `apps/sommer-zaehler/campaign.css` | WCAG 2.1.1 – `scrollable-region-focusable`. Die Tabellen sind breiter als ein Telefon; ohne Tabstopp kam die Tastatur nie an die rechten Spalten. Anlass: die neue Tabelle <q>Getrennt nach Angebot</q> hätte eine fünfzehnte Stelle desselben Musters hinzugefügt. Gemessen danach: alle vier Seiten ohne Verstoss (21. 9. 2026) |
+| D4 | Auswahl- und Eingabefelder erhalten Namen: `aria-label` an `<select>` (Ordnerwahl, Portrait), `<label for>` an allen Schiebereglern, `aria-label` an Textfeldern und Datei-Eingaben | `ordner.html`, `werkzeug.html`, `ineinander.html`, `kerning.html`, `ligvorschau.html`, `schrift-webfont.html`, `tester.html`, `apps/cover-generator/index.html`, `apps/qr-generator/index.html` | WCAG 4.1.2 – `select-name` (130 Stellen) und `label` (82 Stellen). Gemessen danach: alle neun Seiten ohne Verstoss (18. 10. 2026) |
+| D5 | `tabindex="0"` an scrollbaren Behältern (Tabellen, Vorschaustreifen, Radar) | `apps/cover-generator`, `apps/karten-generator`, `apps/utm-generator`, `design-system/index.html`, `design-system/stilprobe-warm.html`, `marketing-maschine.html`, `sektionsfarben-*.html`, `uebersetzungen.html` | WCAG 2.1.1 – `scrollable-region-focusable`. Gemessen danach: ohne Verstoss |
+| D6 | Links im Satz unterstrichen: Fusszeilen-Regel in `base.css` (1.28.2), Signatur-Generator `.hint a`/`.empf a` | `design-system/base.css`, `apps/signatur-generator/index.html` | WCAG 1.4.1 – `link-in-text-block`. Gemessen danach: ohne Verstoss |
+| D7 | Farbmuster: Kopieren-Knopf und Link «Anwendung» nicht mehr ineinander (`div.sw` > `button.sw-k` + Link daneben) | `design-system/index.html` | WCAG 4.1.2 – `nested-interactive` (30 Stellen). Gemessen danach: ohne Verstoss |
+| D8 | Kontrast gerechnet: `.stage` in `werkzeug.html` bekommt `--ink` (die Bühne des Fundaments setzt helle Schrift); Code-Kommentar-Token; `--ok`→`--ok-ink` bzw. `--good`→`--ok-ink` und `--bad` als Text; Abonnieren-Knopf Weiss (`--on-accent`); Plakatmarke ohne Deckkraft; leere Tastenfelder ohne Deckkraft auf der Schrift | `werkzeug.html`, `design-system/tokens.css`, `tester.html`, `typografie.html`, `vorschau.html`, `perspektiven/dasgoetheanum.html`, `perspektiven/goetheanum-tv.html`, `icons.html` | WCAG 1.4.3 – `color-contrast`. Gemessen danach: ohne Verstoss. **Offen (Entscheid nötig):** `sektionsfarben-goethe-varianten.html`, `sektionsfarben-modell.html` (Farbmuster zeigen ihre Kontrastfehler absichtlich), `apps/gtv-naming`, `apps/grenzgaenger-mails`, `apps/signatur-generator` (Markenfarben in Mail-/Mockup-Artefakten) |
+| D9 | Grenzgänger-Mails: Fusszeile `#9A9AA6` → `#6d6d7c` (2.53 → 4.64:1 auf dem Nebel-Grund `#F6F4F2`); Quelle `config.json` beider Mail-Fabriken mitgezogen | `apps/grenzgaenger-mails/`, `services/mailing-grenzgaenger/config.json`, `services/mailing-sommer2026/config.json` | WCAG 1.4.3 – echte, versendete Mails; Entscheid Auftraggeber 18. 10. 2026 |
+| D10 | GTV-Mockup: Grau `#6f7c87` → `#6a7681` (4.64:1), Suchfeld `#8b958d` → `#6d776f` (4.65:1) | `apps/gtv-naming/index.html` | WCAG 1.4.3 – gleicher Farbton, kaum sichtbar dunkler |
+| D11 | Programmheft: Skizzen `zz-einzeln.html` und `zz-ausweichen.html` zurückgezogen (der Editor steht auf «Zusammenfassen»); «Ausweichen» rückt Marken auf 1.75 Durchmesser auseinander statt 1.15 | `apps/programmheft/live.html`, `folder/index.html` | WCAG 2.5.8 – Mitte zu Mitte ≥24 px auch auf 390 px; «Wie gesetzt» bleibt bewusste Wahl des Setzers |
+| D12 | `data-muster` (Kontrakt `muster_selektor`): Farbmuster fallen aus der Kontrastprüfung | `tools/barrierefreiheit.mjs`, `sektionsfarben-goethe-varianten.html`, `sektionsfarben-modell.html`, `apps/signatur-generator/index.html` | Muster zeigen Farbe vor, auch die zu blasse; Signatur-Blau kann auf hellem und dunklem Grund nicht zugleich 4.5:1 halten (ratifiziert 18. 10. 2026) |
+| D13 | Kicker im `.band` ohne Deckkraft (Fundament 1.28.5) | `design-system/base.css` | WCAG 1.4.3 – Weiss auf der Sektionsfläche 4.61:1, mit 85 % Deckkraft darunter |
+
+## Rückstand aus der Erstmessung
+
+**70 Verstösse, 419 betroffene Stellen, 120 Messungen** (Lauf der CI). Sechs
+Regelsorten — und der Rückstand ist stark konzentriert: **zwei Seiten tragen
+ein Viertel davon.**
+
+**Der Lauf ist nicht auf jedem Rechner deckungsgleich.** Ob ein Fingerziel
+unter das Mass fällt oder ein Behälter überläuft, hängt an Schriftmetrik und
+Chromium-Bauart: derselbe Stand ergab lokal 28, in der CI 48
+`target-size`-Funde. **Im Zweifel gilt der CI-Lauf** — er misst auf der
+Maschine, die auch das Tor bedient. Die Zahlen unten sind seine.
+
+| Regel | Stellen | Seiten | Was zu tun ist |
+|---|---:|---:|---|
+| `color-contrast` | 145 | 14 | Kontrast unter 4.5:1 (B02). Rechnen, nicht schätzen; der Fund nennt Ist-Wert und Sollwert |
+| `select-name` | 106 | 2 | Auswahlfelder ohne zugänglichen Namen — ein Platzhalter genügt dort nicht |
+| `label` | 82 | 8 | Eingabefelder ohne Beschriftung (WCAG 4.1.2) |
+| `target-size` | 48 | 2 | Fingerziele unter dem Mass (B04) |
+| `link-in-text-block` | 22 | 4 | Links im Fliesstext, die sich allein durch Farbe unterscheiden (WCAG 1.4.1) |
+| `scrollable-region-focusable` | 16 | 10 | Behälter mit `overflow: auto` ohne `tabindex="0"` — die Tastatur kommt nicht an den verborgenen Teil. **Die vier Seiten der Kampagnen-App sind seit dem 21. 9. 2026 erledigt (D3).** |
+
+Die dicksten Brocken zuerst:
+
+| Stellen | Seite | Was |
+|---:|---|---|
+| 52 | `ordner.html` | ausschliesslich `select-name` — eine Seite, ein Muster, ein Durchgang |
+| 38 | `werkzeug.html` | 23× Kontrast, 15× fehlende Beschriftung |
+| 12 | `index.html` | `target-size` |
+| 12 | `ineinander.html` | `label` |
+| 12 | `schrift-webfont.html` | 11× Kontrast, 1× `label` |
+| 10 | `apps/gtv-naming/index.html` | Kontrast |
+
+**Merke für neue Seiten**
+
+- Jeder Behälter mit `overflow: auto` braucht `tabindex="0"`.
+- Jedes Auswahl- und Eingabefeld braucht einen Namen — `<label for>` oder
+  `aria-label`; ein Platzhalter ist keiner.
+- Links im Fliesstext brauchen mehr als Farbe (Unterstreichung).
+- Kontrast wird gerechnet: 4.5:1 für Lesetext, 3:1 für grosse oder fette
+  Schrift und für Ränder von Bedienelementen.
+
+## Aus dem Bericht wird ein Tor
+
+**Stand 18. 10. 2026:** Der Rückstand ist abgetragen (D1–D13, 0 Verstösse bei
+152 Messungen). Der Auftraggeber hat entschieden: **kein Tor**, aber
+**jedes Mal Bescheid**, wenn etwas nicht stimmt. Der Job kommentiert darum
+einen PR mit Funden und eröffnet auf `main` ein Issue (Label
+`barrierefreiheit`), das er bei Grün selbst schliesst.
+
+Der Job `barrierefreiheit` in `pruefmaschinen.yml` läuft bereits mit
+`--check`, darf aber scheitern (`continue-on-error`), solange der Rückstand
+oben offen ist. Ist er abgetragen, verschwindet diese eine Zeile — dann
+blockiert ein Verstoss den Merge wie `typo-check` und `ds-lint`. Ein Tor, das
+von Anfang an rot steht, hütet nichts.
+
+**Grenze:** rund ein Drittel der WCAG-Kriterien ist überhaupt maschinell
+prüfbar. Ein grüner Lauf heisst «keine der prüfbaren Regeln verletzt» — nicht
+«zugänglich». Der Prüfhinweis oben (Tastaturrunde, Screenreader-Durchgang)
+bleibt gültig; die Maschine ersetzt ihn nicht, sie hält ihm den Rücken frei.
+
+**Zweite Grenze, am 8. August am eigenen Fall gesehen:** Der Lauf misst, was
+beim Laden dasteht. **Nicht gemessen wird, was in einer geschlossenen
+`<details>`-Klappe liegt oder erst aus dem Backend nachgeladen wird** — im
+Cockpit also der halbe Inhalt. Dort fiel eine Pille auf der Szenario-Karte mit
+**4.42:1** durch (nötig 4.5), während dieselbe Pille auf der helleren Fläche
+4.66:1 hielt: Der Goldton mischte über `transparent` und nahm die Farbe der
+Fläche an, auf der er lag (behoben in `apps/sommer-zaehler/campaign.css`, jetzt
+über `--paper` gemischt: 4.70:1 hell, 5.19:1 dunkel).
+
+Wer dynamische Oberflächen prüft, muss die Klappen also öffnen und Daten
+unterlegen — Rezept dafür steht in `CLAUDE.md` unter ‹Die Maschine prüft die
+Regel, das Auge prüft das Gewicht›. Und beim Nachrechnen von Hand: Chromium
+gibt Farben auch als `color(srgb …)` mit Werten von 0 bis 1 zurück, nicht nur
+als `rgb()` mit 0 bis 255. Wer stumpf durch 255 teilt, misst Unsinn — erst
+diese Verwechslung liess die Pille wie 4.03:1 aussehen. Sicherer ist, die
+Farben vom Browser auf ein Canvas malen und das Pixel auslesen zu lassen; dann
+stimmt auch die Alpha-Überlagerung.

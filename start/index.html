@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goetheanum Grafik – Werkzeuge</title>
+<meta name="description" content="Werkzeuge für das Goetheanum: Generatoren, Schriften, Typografie und Werkstatt – an einem Ort." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../design-system/tokens.css" />
+<link rel="stylesheet" href="../design-system/base.css" />
+<style>
+  /* Übersicht-spezifisch (Hero, Karten-Raster, Werkstatt-Liste) */
+  .hero{padding:clamp(48px,9vw,96px) 0 var(--s8)}
+  .hero .kick{color:var(--gold-ink);font-size:var(--t-small);letter-spacing:.08em;margin-bottom:var(--s4)}
+  .hero h1{font-family:var(--font);font-weight:700;font-size:clamp(34px,6.4vw,64px);max-width:16ch}
+  .hero .lede{margin-top:var(--s6);color:var(--ink);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+  .hero .meta{margin-top:var(--s8);display:flex;gap:var(--s2);flex-wrap:wrap}
+
+  .grid{display:grid;gap:var(--s4);grid-template-columns:1fr}
+  @media(min-width:620px){.grid{grid-template-columns:1fr 1fr}}
+  @media(min-width:920px){.grid.cols3{grid-template-columns:1fr 1fr 1fr}}
+  .tile{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s6);
+        background:var(--paper);transition:border-color .15s,box-shadow .15s,transform .15s;min-height:148px}
+  .tile:hover{border-color:var(--gold);box-shadow:var(--shadow-card);transform:translateY(-1px)}
+  .tile.is-live{background:var(--soft)}
+  .tile .tag{color:var(--gold-ink);font-size:var(--t-micro);letter-spacing:.06em;margin-bottom:var(--s2)}
+  .tile h3{font-family:var(--font);font-weight:var(--w-strong);font-size:19px;line-height:1.15;display:flex;align-items:center;gap:8px}
+  .tile h3 .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s,color .15s}
+  .tile:hover h3 .arr{color:var(--gold-deep);transform:translateX(3px)}
+  .tile p{margin-top:var(--s2);color:var(--muted);font-size:14px;line-height:1.5}
+  .badge{position:absolute;top:var(--s4);right:var(--s4);font-size:var(--t-micro);letter-spacing:.04em;
+         color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:2px 9px}
+  .badge.beta{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 30%,transparent)}
+  .badge.entwurf{color:var(--gold-ink);border-color:color-mix(in srgb,var(--gold) 30%,transparent)}
+  .badge.geparkt{color:var(--muted)}
+
+  .list{display:grid;gap:0;grid-template-columns:1fr}
+  @media(min-width:680px){.list{grid-template-columns:1fr 1fr}}
+  .row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s4);padding:var(--s3) 0;border-top:1px solid var(--line-soft)}
+  .row:hover .rt{color:var(--gold-deep)}
+  .rt{font-family:var(--font);font-weight:var(--w-strong);font-size:15px}
+  .rd{color:var(--muted);font-size:var(--t-small);text-align:right;flex:1 1 auto}
+
+  /* Bau-Workflow (hier in der Werkstatt, nicht auf der Schauseite) */
+  .steps{counter-reset:s;display:grid;gap:var(--s3)}
+  .steps li{list-style:none;display:grid;grid-template-columns:38px 1fr;gap:var(--s4);align-items:start}
+  .steps li::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:var(--r-pill);background:var(--gold-deep);color:var(--on-accent);font-weight:var(--w-strong)}
+  .steps b{font-weight:var(--w-strong)}
+  .steps .d{color:var(--muted);font-size:14px;line-height:1.5}
+  .demo{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center}
+</style>
+</head>
+<body>
+
+<header class="ds-header"><!-- # ds-ok Hub hat eigene Leiste mit Manifest-Nav --><div class="wrap bar">
+  <a class="brand" href="./" aria-label="Goetheanum Grafik – Startseite">
+    <img class="lockup" src="../assets/logos/goetheanum-werkzeuge.svg" alt="Goetheanum Werkzeuge" />
+  </a>
+  <nav class="top" id="nav"></nav>
+</div></header>
+
+<main>
+  <div class="wrap hero">
+    <div class="kick">Goetheanum</div>
+    <h1>Werkzeuge für ein einheitliches Bild.</h1>
+    <p class="lede">Alles an einem Ort: Generatoren für Logo, Visitenkarten und E-Mail-Signatur,
+      die Hausschrift mit ihren Regeln und die Werkstatt dahinter. Schlank, im Browser, ohne Login –
+      individuell gepflegt, einheitlich im Bild.</p>
+    <div class="meta" id="heroMeta"></div>
+  </div>
+
+  <div class="wrap" id="sections"></div>
+
+  <div class="wrap">
+    <section id="bauen">
+      <div class="shead">
+        <h2>So baust du ein neues Werkzeug</h2>
+        <p>Schnell und regelkonform – weil das System eingebunden, nicht kopiert wird. Vier Schritte, und nichts muss hinterher geprüft werden. Was bereitsteht, zeigt das <a href="../design-system/">Design-System</a>.</p>
+      </div>
+      <ol class="steps">
+        <li><div><b>Starter kopieren.</b> <span class="d"><a href="../design-system/starter.html">starter.html</a> ist ein leeres Werkzeug mit verdrahtetem Webfont, Tokens, Kopf, Fuss und korrektem Kicker. Du fängst nie bei null an.</span></div></li>
+        <li><div><b>Mitte füllen.</b> <span class="d">Nur den werkzeug-eigenen Teil setzen. Alles drumherum ist schon CI; greife auf die Tokens zu (<code>var(--gold)</code>, <code>var(--s6)</code>), erfinde keine neuen Werte.</span></div></li>
+        <li><div><b>Eintragen.</b> <span class="d">Eine Zeile in <code>tools.json</code> – das Werkzeug erscheint automatisch in diesem Hub.</span></div></li>
+        <li><div><b>Committen.</b> <span class="d">Beim Commit prüfen die Hooks automatisch: <code>tools/typo-check.py</code> die Sprache, <code>tools/ds-lint.py</code> die Gestalt. Der Mensch prüft nie von Auge.</span></div></li>
+      </ol>
+      <div class="demo" style="margin-top:var(--s6)">
+        <a class="btn primary" href="../design-system/starter.html">Starter öffnen</a>
+        <a class="btn" href="../design-system/starter-artikel.html">Artikel-Starter öffnen</a>
+        <a class="btn" href="../design-system/README.md">Workflow-Doku</a>
+        <a class="btn ghost" href="../tools.json">Manifest ansehen</a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="ds-footer"><div class="wrap frow">
+  <span><strong>Goetheanum Grafik</strong> · Werkzeuge</span>
+  <span>Allgemeine Anthroposophische Gesellschaft · <a href="https://www.goetheanum.ch">goetheanum.ch</a></span>
+</div></footer>
+
+<script>
+"use strict";
+
+/* ---------- Übersicht aus dem Manifest rendern ---------- */
+const STATUS_LABEL = { beta: "Beta", entwurf: "Entwurf", geparkt: "Geparkt" };
+
+// Hub liegt in /start/ – Werkzeuge eine Ebene höher. Externe Links bleiben absolut.
+const BASE = "../";
+function url(h){ return /^https?:/.test(h) ? h : BASE + h; }
+function ext(a, href){ if(/^https?:/.test(href)){ a.target = "_blank"; a.rel = "noopener"; } }
+
+function tile(t){
+  const a = document.createElement("a");
+  a.className = "tile" + (t.status === "live" ? " is-live" : "");
+  a.href = url(t.href); a.dataset.slug = t.slug; a.dataset.cat = t.cat; ext(a, t.href);
+  const badge = STATUS_LABEL[t.status]
+    ? `<span class="badge ${t.status}">${STATUS_LABEL[t.status]}</span>` : "";
+  a.innerHTML =
+    `${badge}<span class="tag">${t.tag || ""}</span>` +
+    `<h3>${t.title} <span class="arr">→</span></h3>` +
+    `<p>${t.desc || ""}</p>`;
+  return a;
+}
+function row(t){
+  const a = document.createElement("a");
+  a.className = "row"; a.href = url(t.href); a.dataset.slug = t.slug; a.dataset.cat = t.cat; ext(a, t.href);
+  a.innerHTML = `<span class="rt">${t.title}</span><span class="rd">${t.desc || ""}</span>`;
+  return a;
+}
+
+function render(manifest){
+  const sections = document.getElementById("sections");
+  const nav = document.getElementById("nav");
+  manifest.categories.forEach(cat => {
+    const tools = manifest.tools.filter(t => t.cat === cat.id);
+    if(!tools.length) return;
+
+    nav.insertAdjacentHTML("beforeend", `<a href="#${cat.id}">${cat.title}</a>`);
+
+    const sec = document.createElement("section");
+    sec.id = cat.id;
+    sec.innerHTML = `<div class="shead"><h2>${cat.title}</h2><p>${cat.intro || ""}</p></div>`;
+
+    // Werkstatt & geparkte Projekte als ruhige Liste, sonst Karten-Raster
+    if(cat.id === "werkstatt" || cat.id === "geparkt"){
+      const list = document.createElement("div"); list.className = "list";
+      tools.forEach(t => list.appendChild(row(t)));
+      sec.appendChild(list);
+    } else {
+      const grid = document.createElement("div"); grid.className = "grid cols3";
+      tools.forEach(t => grid.appendChild(tile(t)));
+      sec.appendChild(grid);
+    }
+    sections.appendChild(sec);
+  });
+
+  // Konzepte & Dokumente (interner Hub – zum schnellen Einsehen)
+  if(Array.isArray(manifest.docs) && manifest.docs.length){
+    nav.insertAdjacentHTML("beforeend", `<a href="#dokumente">Dokumente</a>`);
+    const sec = document.createElement("section"); sec.id = "dokumente";
+    sec.innerHTML = `<div class="shead"><h2>Konzepte &amp; Dokumente</h2>` +
+      `<p>Strategie, Pflichtenhefte und Schrift-Dokumentation – öffnet auf GitHub.</p></div>`;
+    const list = document.createElement("div"); list.className = "list";
+    manifest.docs.forEach(d => {
+      const a = document.createElement("a"); a.className = "row"; a.href = d.href;
+      a.dataset.slug = "doc:" + (d.title || ""); a.dataset.cat = "dokumente"; ext(a, d.href);
+      a.innerHTML = `<span class="rt">${d.title}</span><span class="rd">${d.desc || ""}</span>`;
+      list.appendChild(a);
+    });
+    sec.appendChild(list); sections.appendChild(sec);
+  }
+
+  // Der statische Bau-Workflow steht nach den Manifest-Sektionen – Nav-Eintrag dazu.
+  nav.insertAdjacentHTML("beforeend", `<a href="#bauen">Bauen</a>`);
+
+  // Hero-Kennzahlen aus dem Manifest
+  const gen = manifest.tools.filter(t => t.cat === "generatoren").length;
+  document.getElementById("heroMeta").innerHTML =
+    `<span class="chip"><b>${gen}</b> Generatoren</span>` +
+    `<span class="chip"><b>Variable</b> Hausschrift</span>` +
+    `<span class="chip">Typografie als <b>System</b></span>`;
+}
+
+fetch("../tools.json")
+  .then(r => r.json())
+  .then(render)
+  .catch(() => {
+    document.getElementById("sections").innerHTML =
+      '<section><p style="color:var(--muted)">Werkzeugliste konnte nicht geladen werden.</p></section>';
+  });
+
+/* ---------- Anonyme Nutzungsstatistik (Supabase, insert-only) ----------
+   Anonyme Summen: Besuch, geöffnetes Werkzeug, Verweildauer. Keine IP, keine
+   Cookies, kein Drittdienst. Nur Live-Site. Auswertung: ../statistik.html. */
+const TRACK_URL = "https://dagcsnfrlbpxcmdimnrw.supabase.co/rest/v1/landing_events";
+const TRACK_KEY = "sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY";
+const TRACK_ON  = location.hostname === "phtok.github.io";
+const SID = (() => {
+  try {
+    let s = sessionStorage.getItem("goeLandingSid");
+    if(!s){ s = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem("goeLandingSid", s); }
+    return s;
+  } catch(e){ return "x" + Date.now().toString(36); }
+})();
+function track(event, payload){
+  if(!TRACK_ON) return;
+  try {
+    fetch(TRACK_URL, {
+      method:"POST", keepalive:true,
+      headers:{ apikey:TRACK_KEY, "Content-Type":"application/json", Prefer:"return=minimal" },
+      body:JSON.stringify({ session_id:SID, event:event, payload:payload || {} })
+    }).catch(() => {});
+  } catch(e){}
+}
+document.addEventListener("click", e => {
+  const a = e.target.closest("a.tile, a.row");
+  if(!a) return;
+  track("open", { tool: a.dataset.slug || "?", sec: a.dataset.cat || "" });
+}, true);
+
+let activeSec = 0;
+if(TRACK_ON){
+  track("visit", {
+    ref:(document.referrer||"").slice(0,200), lang:navigator.language||"",
+    w:screen.width, h:screen.height, mob:/Mobi|Android|iPhone|iPad/.test(navigator.userAgent)
+  });
+  setInterval(() => {
+    if(document.visibilityState === "visible"){ activeSec += 30; track("heartbeat", { t:activeSec }); }
+  }, 30000);
+  addEventListener("pagehide", () => track("leave", { t:activeSec }));
+}
+</script>
+</body>
+</html>

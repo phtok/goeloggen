@@ -1,0 +1,249 @@
+<!doctype html>
+<!-- Campusplan für Gäste · die Auswahl (Laborseite; Konzept:
+     docs/specs/campusplan-besucher-konzept.md, § 13 «drei Türen»).
+     Hier wird nur gewählt: Interessen, Zeit, Besuchstag. Ergebnis sind das
+     A4-Blatt (PDF, Karte des Kartentools) und der Link aufs Telefon (plan.html).
+     Gebaut aus design-system/starter.html. -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Besuch am Goetheanum planen</title>
+<meta name="description" content="Den eigenen Besuch am Goetheanum planen: Interessen und Zeit wählen, den Plan als A4 drucken oder als Link aufs Telefon nehmen." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<!-- Versionsmarke (?v=): neue Seite und neues Fundament kommen zusammen an —
+     ein Telefon mit altem base.css im Cache zeigte sonst die Kacheln ungestaltet
+     (18. 10. 2026). Bei jeder Aufnahme ins Fundament mit der Version erhöhen. -->
+<link rel="stylesheet" href="../../design-system/tokens.css?v=1.28.5" />
+<link rel="stylesheet" href="../../design-system/base.css?v=1.28.5" />
+<link rel="stylesheet" href="../../design-system/nav.css?v=1.28.5" />
+
+<style>
+  /* Nur Seiten-Eigenes. Alles Gemeinsame steht in base.css; Werte aus den Tokens. */
+  .hero{padding-block:clamp(28px,5vw,56px) var(--s6)}
+  .hero h1{max-width:18ch}
+  .kopfzeile{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);flex-wrap:wrap}
+  main section + section{margin-top:var(--s8)}
+
+  /* Drei Schritte, je eine Frage; die Leiste unten trägt Zurück und Weiter
+     und bleibt am Telefon im Blick (sticky). Aktueller Schritt: dunkle
+     statt leiser Schrift (ein Merkmal, G01). */
+  .schritte{list-style:none;margin:0 0 var(--s6);padding:0;display:flex;gap:var(--s2) var(--s4);flex-wrap:wrap}
+  .schritte button{display:inline-flex;align-items:center;gap:var(--s2);min-height:var(--tap);padding:0;border:0;background:none;
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);cursor:pointer}
+  .schritte button[aria-current="step"]{color:var(--ink)}
+  .schritte .step-num{top:0}
+  .schrittleiste{position:sticky;bottom:0;z-index:5;display:flex;gap:var(--s3);justify-content:space-between;align-items:center;
+    margin-top:var(--s7);padding-block:var(--s3);background:var(--paper);border-top:1px solid var(--line)}
+  .schrittleiste .btn{min-height:var(--tap)}
+  .schrittleiste .btn.primary{margin-left:auto}
+
+  /* Kacheln (.kacheln, button.kachel): Fundament, base.css. Hier nur die Zeiten-Variante. */
+  .umstaende{margin-top:var(--s4)}
+  .zeiten{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--s3);max-width:640px}
+  .zeiten .kachel{text-align:center;justify-items:center}
+  .tage-kopf{margin-top:var(--s6)}
+  .tage{grid-template-columns:repeat(auto-fill,minmax(min(100%,140px),1fr));max-width:880px}
+  details.oez{margin-top:var(--s5);max-width:880px}
+  .oez table{width:100%}
+  .oez td:first-child{width:40%}
+  .tag{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s4);margin-top:var(--s5);max-width:640px}
+  .tag input{min-height:var(--tap);font-size:16px}
+  .tag .hint{grid-column:1 / -1}
+
+  /* Der Plan: eine Zeile je Ort, Fingerziel 44px (B04), Kästchen = dabei. */
+  .stationen{list-style:none;margin:0;padding:0;display:grid;gap:var(--s1);max-width:72ch}
+  .stn{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:var(--s2) var(--s3);
+    min-height:var(--tap);padding:var(--s2) var(--s2) var(--s2) 0}
+  .stn .stn-check{display:grid;place-items:center;width:var(--tap);height:var(--tap);cursor:pointer}
+  .stn input[type="checkbox"]{width:26px;height:26px;margin:0;accent-color:var(--gold-deep);cursor:pointer}
+  .stn .step-num{top:0;font-size:1rem}
+  .stn .stn-text{display:grid;gap:2px;min-width:0}
+  .stn .stn-zeit{font-family:var(--font-text);font-size:var(--t-small);font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .stn .stn-name{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);line-height:var(--lh-tight)}
+  .stn .stn-line{font-family:var(--font-text);font-size:var(--t-small);line-height:1.45;color:var(--ink)}
+  .stn .stn-zu{color:var(--bad)}
+  .stn .stn-live{color:var(--ok-ink)}
+  .stn.anreise{grid-template-columns:1fr;padding-left:calc(var(--tap) + var(--s3))}
+  .stn.weg-aus{grid-template-columns:auto 1fr}
+  .stationen .pause{padding-left:calc(var(--tap) + var(--s3))}
+  .plan-hint{margin-bottom:var(--s4)}
+  .unter{margin-top:var(--s5)}
+  .mehr{margin-top:var(--s3);max-width:72ch}
+  .mehr summary{cursor:pointer;min-height:var(--tap);display:flex;align-items:center;font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body)}
+
+  /* Mitnehmen: zwei Wege nebeneinander, je eine Handlung. */
+  .wege{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s5)}
+  .weg{display:grid;gap:var(--s3);align-content:start;padding:var(--s5);border:1px solid var(--line);border-radius:var(--r-card);background:var(--field-bg)}
+  .weg h3{margin:0}
+  .weg .knoepfe{display:flex;gap:var(--s3);flex-wrap:wrap}
+  .weg .btn{min-height:var(--tap)}
+  #qr-box{width:min(200px,100%)}
+  #qr-box svg{display:block;width:100%;height:auto}
+  .linkfeld input{width:100%;min-height:var(--tap);font-family:var(--font-text);font-size:16px;padding:0 var(--s3);
+    border:1px solid var(--line);border-radius:var(--r-control);background:var(--field-bg);color:var(--ink)}
+  .fuss{margin-block:var(--s8)}
+
+  /* Führungen: öffentliche (Station im Zeitplan) und private (Formular je Thema). */
+  .fuehrung-liste{list-style:none;margin:0;padding:0;display:grid;gap:var(--s1)}
+  .fuehrung-liste a{display:inline-flex;align-items:center;min-height:var(--tap)}
+  .fuehrung-wahl{display:flex;align-items:center;gap:var(--s2);min-height:var(--tap);cursor:pointer}
+  .fuehrung-wahl input{width:26px;height:26px;margin:0;accent-color:var(--gold-deep)}
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js?v=1.28.5" data-root="../../" data-variant="werkzeug" data-invite="aus"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="kopfzeile">
+      <div>
+        <span class="kicker">Campus · Labor</span>
+        <h1 data-ui="titel">Besuch am Goetheanum planen</h1>
+      </div>
+      <div class="seg" id="sprache-seg" aria-label="Sprache">
+        <button type="button" data-sprache="de" aria-pressed="true">Deutsch</button>
+        <button type="button" data-sprache="en" aria-pressed="false">English</button>
+      </div>
+    </div>
+    <p class="lede" data-ui="lede">Interessen und Zeit wählen – der Plan kommt als A4-Blatt zum Ausdrucken und als Link fürs Telefon.</p>
+  </section>
+
+  <ol class="schritte" id="schritte" aria-label="Schritte">
+    <li><button type="button" data-schritt="1" aria-current="step"><span class="step-num"><b>1</b></span><span data-ui="s1-titel">Interessen</span></button></li>
+    <li><button type="button" data-schritt="2"><span class="step-num"><b>2</b></span><span data-ui="s2-titel">Tag und Zeit</span></button></li>
+    <li><button type="button" data-schritt="3"><span class="step-num"><b>3</b></span><span data-ui="s3-titel">Dein Plan</span></button></li>
+  </ol>
+
+  <section id="interessen" data-teil="1">
+    <div class="shead">
+      <h2 data-ui="s1-frage">Was zieht dich an?</h2>
+      <p data-ui="s1-hilfe">Eines oder mehrere wählen. Der Plan füllt sich daraus von selbst.</p>
+    </div>
+    <div class="kacheln" id="themen"></div>
+    <div class="umstaende">
+      <div class="seg" id="umstaende" aria-label="Umstände"></div>
+    </div>
+  </section>
+
+  <section id="zeit" data-teil="2" hidden>
+    <div class="shead">
+      <h2 data-ui="s2-frage">Wie viel Zeit hast du?</h2>
+      <p data-ui="s2-hilfe">Die Zeit entscheidet, wie viele Orte auf den Plan kommen.</p>
+    </div>
+    <div class="zeiten" id="zeiten"></div>
+    <div class="shead tage-kopf">
+      <h2 data-ui="tage-titel">Wann kommst du?</h2>
+      <p data-ui="tage-hilfe">Die nächsten Tage nach deinen Interessen: was offen ist und wann geführt wird.</p>
+    </div>
+    <div class="kacheln tage" id="tage"></div>
+    <div class="tag">
+      <label class="field">
+        <span class="lab" data-ui="datum-lab">Besuchstag, wenn du ihn schon kennst</span>
+        <input type="date" id="datum" />
+      </label>
+      <label class="field">
+        <span class="lab" data-ui="ankunft-lab">Ankunft</span>
+        <input type="time" id="ankunft" value="10:00" step="300" />
+      </label>
+      <span class="hint" data-ui="ankunft-hint">Mit Besuchstag schlägt der Plan einen Zeitplan vor, nach den aktuellen Öffnungszeiten.</span>
+    </div>
+    <details class="mehr oez">
+      <summary data-ui="oez-titel">Öffnungszeiten der gewählten Orte</summary>
+      <table>
+        <thead><tr><th scope="col" data-ui="oez-ort">Ort</th><th scope="col" data-ui="oez-zeiten">Öffnungszeiten</th></tr></thead>
+        <tbody id="oez-zeilen"></tbody>
+      </table>
+    </details>
+  </section>
+
+  <section id="plan" data-teil="3" hidden>
+    <div class="shead">
+      <h2 data-ui="s3-titel">Dein Plan</h2>
+      <p class="readout" id="summe"></p>
+    </div>
+    <p class="hint plan-hint" id="plan-hint" hidden></p>
+    <p class="hint plan-hint" id="zeiten-hint" hidden></p>
+    <ol class="stationen" id="stationen"></ol>
+    <p class="lab unter" id="anreise-titel" data-ui="anreise" hidden>Anreise und Service</p>
+    <ol class="stationen" id="anreise"></ol>
+    <div id="mehr-orte"></div>
+  </section>
+
+  <section id="fuehrungen" data-teil="3" hidden>
+    <div class="shead">
+      <h2 data-ui="fuehrung-titel">Mit Führung</h2>
+      <p data-ui="fuehrung-hilfe">Mit einer Führung ist alles zugänglich, auch innen in den Häusern der Architektursammlung.</p>
+    </div>
+    <div class="wege">
+      <div class="weg">
+        <h3 data-ui="fuehrung-oeffentlich">Öffentliche Führung</h3>
+        <p class="hint" id="fuehrung-text"></p>
+        <label class="fuehrung-wahl" id="fuehrung-wahl"><input type="checkbox" id="fuehrung-dabei" /> <span data-ui="fuehrung-in-plan">In den Plan aufnehmen</span></label>
+        <div class="knoepfe"><a class="btn" id="fuehrung-buchen" href="https://tickets.goetheanum.ch/6FUE/" target="_blank" rel="noopener" data-ui="fuehrung-buchen">Führung buchen</a></div>
+      </div>
+      <div class="weg">
+        <h3 data-ui="fuehrung-privat">Private Führung nach Vereinbarung</h3>
+        <p class="hint" data-ui="fuehrung-privat-hint">Allein oder mit einer Gruppe, Uhrzeit nach Absprache. Passend zu deinen Interessen:</p>
+        <ul class="fuehrung-liste" id="fuehrung-themen"></ul>
+        <p><a href="https://goetheanum.ch/de/campus/fuehrungen" target="_blank" rel="noopener" data-ui="fuehrung-alle">Alle Führungen</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="mitnehmen" data-teil="3" hidden>
+    <div class="shead">
+      <h2 data-ui="mitnehmen">Mitnehmen</h2>
+    </div>
+    <div class="wege">
+      <div class="weg">
+        <h3 data-ui="a4-titel">A4 zum Ausdrucken</h3>
+        <p class="hint" data-ui="a4-hint">Die Campus-Karte mit deinen Stationen, dazu ein Blatt mit allen Orten und dem Link.</p>
+        <div class="knoepfe"><button type="button" class="btn primary" id="pdf" data-ui="pdf">PDF herunterladen</button></div>
+      </div>
+      <div class="weg">
+        <h3 data-ui="telefon-titel">Aufs Telefon</h3>
+        <p class="hint" data-ui="telefon-hint">QR-Code scannen oder den Link schicken – unterwegs Karte und Stationen zum Abhaken.</p>
+        <div id="qr-box"></div>
+        <div class="knoepfe">
+          <button type="button" class="btn" id="link-kopieren" data-ui="link">Link kopieren</button>
+          <a class="btn" id="plan-oeffnen" href="plan.html" target="_blank" rel="noopener" data-ui="plan-oeffnen">Ansehen</a>
+        </div>
+        <label class="field linkfeld" id="linkfeld" hidden>
+          <span class="lab" data-ui="link-lab">Dein Link, zum Weitergeben oder aufs Telefon</span>
+          <input type="text" id="link-wert" readonly />
+          <span class="hint" id="link-hint"></span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <div class="schrittleiste" id="schrittleiste">
+    <button type="button" class="btn" id="zurueck" data-ui="zurueck" hidden>Zurück</button>
+    <button type="button" class="btn primary" id="weiter" data-ui="weiter">Weiter</button>
+  </div>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong> · Besuch planen, Labor</span>
+    <span><a href="../karten-generator/">Kartentool</a></span>
+  </div>
+</footer>
+
+<script src="../karten-generator/orte.js"></script>
+<script src="gaeste.js"></script>
+<script src="gemeinsam.js"></script>
+<script src="../qr-generator/vendor/qrcode.js"></script>
+<script src="../karten-generator/vendor/jspdf.umd.min.js"></script>
+<script src="../karten-generator/vendor/svg2pdf.umd.min.js"></script>
+<script src="karte.js"></script>
+<script src="pdf.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

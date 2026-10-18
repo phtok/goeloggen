@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 2490.8 1144.1">
+  <!-- Generator: Adobe Illustrator 30.5.1, SVG Export Plug-In . SVG Version: 2.1.4 Build 3)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: none;
+        stroke: #cfcabe;
+      }
+
+      .st1 {
+        fill: #111;
+      }
+
+      .st2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <rect class="st2" width="929" height="1120"/>
+  <g id="metriken">
+    <line class="st0" y1="820" x2="929" y2="820"/>
+    <line class="st0" y1="320" x2="929" y2="320"/>
+    <line class="st0" y1="130" x2="929" y2="130"/>
+    <line class="st0" y1="1040" x2="929" y2="1040"/>
+  </g>
+  <g id="numero">
+    <path class="st1" d="M145,820h85V215h16l238,605h143V130h-82v602h-17L291,130h-146v690Z"/>
+    <path class="st1" d="M655,428h194.4v-52h-194.4v52Z"/>
+  </g>
+  <rect class="st2" x="1316" y="24.1" width="929" height="1120"/>
+  <g id="metriken1" data-name="metriken">
+    <line class="st0" x1="1316" y1="844.1" x2="2245" y2="844.1"/>
+    <line class="st0" x1="1316" y1="344.1" x2="2245" y2="344.1"/>
+    <line class="st0" x1="1316" y1="154.1" x2="2245" y2="154.1"/>
+    <line class="st0" x1="1316" y1="1064.1" x2="2245" y2="1064.1"/>
+  </g>
+  <g id="numero1" data-name="numero">
+    <path class="st1" d="M1461,844.1h85V239.1h16l238,605h143V154.1h-82v602h-17l-237-602h-146v690Z"/>
+    <path class="st1" d="M1971,452.1h194.4v-52h-194.4v52Z"/>
+  </g>
+  <path d="M2152.1,258.8c0,58.5-17,104.9-83.9,104.9s-83.9-46.5-83.9-104.9,18.5-104.1,83.9-104.1,83.9,45.6,83.9,104.1ZM2104.1,258.8c0-35.6-6.3-61.2-35.9-61.2s-35.9,25.6-35.9,61.2,5.5,62.2,35.9,62.2,35.9-26.9,35.9-62.2Z"/>
+  <circle class="st1" cx="755.1" cy="237.1" r="107.1"/>
+  <circle class="st2" cx="755.1" cy="237.1" r="53.7"/>
+</svg>
