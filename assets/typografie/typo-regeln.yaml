@@ -125,6 +125,10 @@
   regel: 45–75 Zeichen je Zeile, Ziel ~66 / neun Wörter. CSS min(39ch,100%); ch misst die 0, schmale Schrift läuft enger (46ch = 78 gezählt). Gilt der Lesetypografie; Tabellen/Signaletik haben eigenes Mass.
   pruefung: lm
   schwere: empfehlung
+- id: G11-zeilenabstand
+  regel: Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit (Fliesstext 1.4–1.6). Lesetext ≥1.5 (B04, Entscheid Auftraggeber 18. 10. 2026).
+  pruefung: lm
+  schwere: empfehlung
 - id: G25-ziffern
   regel: Grundton im Fliesstext proportionale Versalziffern; in Tabellen, Listen und Beträgen zwingend tnum (dicktengleich), rechtsbündig und exakt untereinander, nie mit Leerzeichen ausgerichtet. Kurzziffern (onum) für Mengentext mit vielen Zahlen. Keine Mediävalziffern durch Verkleinern vortäuschen.
   pruefung: lm

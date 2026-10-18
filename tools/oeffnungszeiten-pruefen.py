@@ -8,6 +8,14 @@ letzten Stand etwas geändert hat — dann ist gaeste.js von Hand zu prüfen.
 
   python3 tools/oeffnungszeiten-pruefen.py            # Stand neu schreiben
   python3 tools/oeffnungszeiten-pruefen.py --pruefen  # vergleichen; Abweichung → Exit 1
+  python3 tools/oeffnungszeiten-pruefen.py --live     # Live-Abgleich prüfen; Lücke → Exit 1
+
+--live (täglich, seit 18. Oktober 2026): fragt die Edge Function
+campusplan-ausnahmen frisch ab und prüft, dass sie fehlerfrei lief und jeder
+Ort mit `quelle` in apps/campusplan/gaeste.js dort gefunden wird — sonst
+rechnet der Plan mit Rückfallwerten und sagt «nicht bestätigt». Der Plan
+selbst liest die Zeiten bei jedem Aufruf live; dieser Lauf bemerkt nur, wenn
+eine Website ihren Aufbau ändert und der Parser nachgezogen werden muss.
 
 Der monatliche Lauf steht in .github/workflows/oeffnungszeiten-waechter.yml
 und eröffnet bei Abweichung ein Issue mit dem Unterschied. Die Seiten mit
@@ -73,7 +81,57 @@ def holen(url: str) -> str:
         return antwort.read().decode("utf-8", errors="replace")
 
 
+FUNCTION_URL = "https://dagcsnfrlbpxcmdimnrw.supabase.co/functions/v1/campusplan-ausnahmen?frisch"
+GAESTE = REPO / "apps" / "campusplan" / "gaeste.js"
+
+
+def live_pruefen() -> int:
+    """Edge Function frisch abfragen; jede quelle aus gaeste.js muss gefunden werden."""
+    import json
+    try:
+        antwort = json.loads(holen(FUNCTION_URL))
+    except Exception as fehler:
+        return _live_bericht([f"Edge Function nicht erreichbar: {fehler}"])
+    bloecke = antwort.get("zeiten") or []
+    luecken = [f"Quelle gestört: {f}" for f in antwort.get("fehler") or []]
+    # { seite: "…", quelle: "…" } in derselben Objekt-Klammer; ohne seite = goetheanum.ch.
+    for treffer in re.finditer(r'\{\s*(?:seite:\s*"([^"]+)",\s*)?quelle:\s*"([^"]+)"', GAESTE.read_text(encoding="utf-8")):
+        seite, quelle = treffer.group(1) or "zeiten", treffer.group(2)
+        kandidaten = [b for b in bloecke if (b.get("seite") or "zeiten") == seite]
+        gefunden = any(b["titel"] == quelle or quelle in b["titel"] or quelle in (b.get("kontext") or []) for b in kandidaten)
+        print(f"  {'=' if gefunden else '≠'} {seite}: {quelle}")
+        if not gefunden:
+            luecken.append(f"«{quelle}» ({seite}) live nicht gefunden")
+    if not antwort.get("ausstellungen"):
+        print("  ! keine laufende Ausstellung gelesen")
+    for a in antwort.get("ausstellungen") or []:
+        if not a.get("fenster"):
+            # Kein Fehler, nur ein Hinweis: die Galerie trägt dann die Zeiten des Baus.
+            print(f"  ! Ausstellung «{a.get('titel')}»: keine Öffnungszeiten auf {a.get('link')}")
+    return _live_bericht(luecken)
+
+
+def _live_bericht(luecken: list[str]) -> int:
+    if not luecken:
+        print("Live-Abgleich vollständig.")
+        return 0
+    bericht = REPO / "oeffnungszeiten-abweichungen.md"
+    bericht.write_text(
+        "# Öffnungszeiten: Live-Abgleich lückenhaft\n\n"
+        "Der Campusplan zeigt für diese Orte «nicht bestätigt» und rechnet mit Rückfallwerten. "
+        "Meist hat eine Website ihren Aufbau geändert: Parser in "
+        "`services/campusplan/ausnahmen/index.ts` nachziehen oder `quelle` in "
+        "`apps/campusplan/gaeste.js` anpassen.\n\n"
+        + "\n".join(f"- {l}" for l in luecken) + "\n",
+        encoding="utf-8",
+    )
+    print(f"\n{len(luecken)} Lücke(n) — Bericht: {bericht}")
+    return 1
+
+
 def main() -> int:
+    if "--live" in sys.argv:
+        return live_pruefen()
     pruefen = "--pruefen" in sys.argv
     STAND.mkdir(parents=True, exist_ok=True)
     abweichungen: list[str] = []

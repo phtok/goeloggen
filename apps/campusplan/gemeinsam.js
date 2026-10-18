@@ -75,6 +75,15 @@ const UI = {
                     en: "Scan the QR code or send the link – map and stops to tick off as you go." },
   "plan-oeffnen": { de: "Ansehen", en: "View" },
   zeitplan: { de: "Zeitplan", en: "Schedule" },
+  "nicht-bestaetigt": { de: "Zeiten heute nicht bestätigt", en: "hours not confirmed today" },
+  pruefen: { de: "vor dem Besuch prüfen", en: "check before you go" },
+  "zeiten-live": { de: "Öffnungszeiten heute von den Websites der Orte gelesen.", en: "Opening hours read today from the places’ own websites." },
+  "zeiten-offen-1": { de: "Ort: Öffnungszeiten heute nicht bestätigt – bitte vor dem Besuch prüfen.", en: "place: opening hours not confirmed today – please check before you go." },
+  "zeiten-offen": { de: "Orte: Öffnungszeiten heute nicht bestätigt – bitte vor dem Besuch prüfen.", en: "places: opening hours not confirmed today – please check before you go." },
+  ausstellung: { de: "Ausstellung", en: "Exhibition" },
+  bis: { de: "bis", en: "until" },
+  ab: { de: "ab", en: "from" },
+  "ausstellung-wechselnd": { de: "Wechselnde Ausstellungen der Sektion für Bildende Künste.", en: "Changing exhibitions of the Section for Visual Arts." },
   "karte-laedt": { de: "Karte wird geladen …", en: "Loading map …" },
   "karte-fehlt": { de: "Die Karte konnte nicht geladen werden. Die Liste gilt trotzdem.", en: "The map could not be loaded. The list still works." },
   "plan-leer": { de: "Dieser Link enthält keinen Plan.", en: "This link holds no plan." },
@@ -95,7 +104,8 @@ const state = {
   code: "",                   // Plan-Code aus dem Link
   datum: "",                  // Besuchstag ISO (optional)
   ankunft: "10:00",           // Ankunftszeit für den Zeitplan
-  ausnahmen: null,            // Antwort der Edge Function (saal, glashaus) oder null
+  ausnahmen: null,            // Antwort der Edge Function (zeiten, saal, glashaus, ausstellungen) oder null
+  zeitenStand: "laedt",       // ‹laedt› | ‹live› (Antwort da) | ‹fehler› (Function nicht erreichbar)
   fokus: null
 };
 
@@ -106,6 +116,11 @@ const ORT_NACH_ID = {};
 ORTE_ALLE.forEach((o) => { ORT_NACH_ID[o.id] = o; });
 const GAST_NACH_ID = {};
 GAESTE.forEach((g) => { GAST_NACH_ID[g.id] = g; });
+
+// Text von fremden Websites (Ausstellungen, Tagesausnahmen) kommt nur maskiert ins HTML.
+function esc(text) {
+  return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
 
 function t(wert) {
   if (wert && typeof wert === "object") return wert[state.sprache] || wert.de;
@@ -118,6 +133,8 @@ function ortName(id) {
   const o = ort(id);
   if (!o) return id;
   if (id === "wc-goetheanum") return ui("wc");
+  const g = gast(id);
+  if (g && g.name) return t(g.name);
   if (o.teile) return t(o.teile[0]);
   return t(o.label);
 }
@@ -175,8 +192,10 @@ async function ausnahmenLaden(danach) {
     const r = await fetch(AUSNAHMEN_URL);
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     state.ausnahmen = await r.json();
+    state.zeitenStand = "live";
   } catch (fehler) {
-    state.ausnahmen = null;   // ohne Live-Daten bleibt der Link auf die Seite
+    state.ausnahmen = null;   // ohne Live-Daten: Rückfallwerte, offen als «nicht bestätigt»
+    state.zeitenStand = "fehler";
   }
   if (danach) danach();
 }
@@ -204,7 +223,9 @@ function ortGeschlossenAm(g, iso) {
 // Der Block der Öffnungszeiten-Seite zu einem Teil: gleicher Titel, sonst
 // Titel enthält die Quelle (Ausstellungstitel), sonst Kontext (Ortszeile davor).
 function liveBlock(teil) {
-  const liste = state.ausnahmen && Array.isArray(state.ausnahmen.zeiten) ? state.ausnahmen.zeiten : [];
+  const seite = teil.seite || "zeiten";
+  const liste = state.ausnahmen && Array.isArray(state.ausnahmen.zeiten)
+    ? state.ausnahmen.zeiten.filter((b) => (b.seite || "zeiten") === seite) : [];
   if (!teil.quelle || !liste.length) return null;
   return liste.find((b) => b.titel === teil.quelle)
     || liste.find((b) => b.titel.includes(teil.quelle))
@@ -212,11 +233,75 @@ function liveBlock(teil) {
 }
 
 function teilZeiten(teil) {
+  // Galerie: die Öffnungszeiten der Ausstellung gehen vor, sobald ihre Seite sie nennt.
+  if (teil.ausstellung) {
+    const a = ausstellungAm(planTag());
+    if (a && a.fenster.length) return { fenster: a.fenster, ersterImMonat: false, zuMonate: [], zuZeitraeume: [], live: true };
+  }
   const live = liveBlock(teil);
   if (live && live.fenster.length) {
-    return { fenster: live.fenster, ersterImMonat: Boolean(live.ersterImMonat), zuMonate: live.zuMonate || [], live: true };
+    return { fenster: live.fenster, ersterImMonat: Boolean(live.ersterImMonat), zuMonate: live.zuMonate || [],
+      zuZeitraeume: live.zuZeitraeume || [], live: true };
   }
-  return { fenster: teil.fenster || [], ersterImMonat: Boolean(teil.ersterImMonat), zuMonate: teil.zuMonate || [], live: false };
+  return { fenster: teil.fenster || [], ersterImMonat: Boolean(teil.ersterImMonat), zuMonate: teil.zuMonate || [],
+    zuZeitraeume: [], live: false };
+}
+
+// Sind die Zeiten eines Orts heute live von der Website bestätigt? null =
+// der Ort hat keine Zeiten (draussen, auf Anfrage) oder die Antwort steht noch aus.
+function zeitenBestaetigt(g) {
+  if (!g.oeffnung || state.zeitenStand === "laedt") return null;
+  return g.oeffnung.every((teil) => !teil.quelle || teilZeiten(teil).live);
+}
+
+// Website, auf der ein Ort seine Zeiten pflegt (für «vor dem Besuch prüfen»).
+function zeitenSeite(g) {
+  const teil = g.oeffnung && g.oeffnung.find((x) => x.quelle) || {};
+  return ZEITEN_SEITEN[teil.seite || "zeiten"];
+}
+
+// Laufende Ausstellung der Galerie am Plantag (sonst heute): der Teil, der
+// an dem Tag läuft, sonst die Ausstellung selbst.
+// Laufende Ausstellung der Galerie am Plantag (sonst heute): alle Teile, die
+// an dem Tag laufen (sonst die Ausstellung selbst), und die Teile, die als
+// nächste beginnen (gleiches Startdatum).
+function ausstellungAm(iso) {
+  const liste = state.ausnahmen && Array.isArray(state.ausnahmen.ausstellungen) ? state.ausnahmen.ausstellungen : [];
+  const tag = iso || heuteIso();
+  const a = liste.find((x) => x.von <= tag && x.bis >= tag);
+  if (!a) return null;
+  const teile = a.teile || [];
+  const laufend = teile.filter((x) => x.von <= tag && x.bis >= tag);
+  const spaeter = teile.filter((x) => x.von > tag).sort((x, y) => (x.von < y.von ? -1 : 1));
+  const naechste = spaeter.filter((x) => x.von === (spaeter[0] && spaeter[0].von));
+  return {
+    titel: laufend.length ? laufend.map((x) => x.titel).join(", ") : a.titel,
+    reihe: laufend.length ? a.titel : a.untertitel,
+    bis: laufend.length ? laufend[0].bis : a.bis,
+    naechste: naechste.length ? { von: naechste[0].von, titel: naechste.map((x) => x.titel).join(", ") } : null,
+    fenster: a.fenster || [],
+    link: a.link
+  };
+}
+
+function kurzDatum(iso) {
+  const [j, m, tag] = iso.split("-").map(Number);
+  return new Date(j, m - 1, tag).toLocaleDateString(state.sprache === "en" ? "en-GB" : "de-CH", { day: "numeric", month: "long" });
+}
+
+// Die Zeile unter dem Namen: bei der Galerie die laufende Ausstellung, sonst der Einzeiler.
+function einzeilerText(g) {
+  if (g.ausstellung) {
+    const a = ausstellungAm(planTag());
+    if (a) {
+      const jetzt = `${ui("ausstellung")}: ${a.titel}${a.reihe ? ` (${a.reihe})` : ""}, ${ui("bis")} ${kurzDatum(a.bis)}.`;
+      const dann = a.naechste
+        ? ` ${g.saele ? `${t(g.saele)} ` : ""}${ui("ab")} ${kurzDatum(a.naechste.von)}: ${a.naechste.titel}.` : "";
+      return jetzt + dann;
+    }
+    return state.zeitenStand === "laedt" ? "" : ui("ausstellung-wechselnd");
+  }
+  return g.einzeiler ? t(g.einzeiler) : "";
 }
 
 function minuten(hhmm) {
@@ -256,6 +341,7 @@ function fensterAm(g, iso) {
   const [j, mo, tag] = iso.split("-").map(Number);
   const wochentag = new Date(j, mo - 1, tag).getDay();
   if (z.zuMonate.includes(mo)) return [];
+  if (z.zuZeitraeume.some((r) => r.von <= iso && r.bis >= iso)) return [];
   if (z.ersterImMonat && tag > 7) return [];
   return z.fenster.filter((f) => f.tage.includes(wochentag))
     .map((f) => ({ von: minuten(f.von), bis: minuten(f.bis) })).sort((x, y) => x.von - y.von);
@@ -476,6 +562,16 @@ function metaMarkup(g) {
   const zuText = state.modus === "plan" && !state.datum ? ui("heute-zu") : ui("geschlossen-am");
   return [zugang, g.dauer ? dauerText(g.dauer) : "", zeitenText(g)].filter(Boolean).join(" · ")
     + (zu ? ` · <span class="stn-zu">${zuText}</span>` : "")
-    + (live && !live.zu ? ` · <span class="stn-live">${ui("an-diesem-tag")} ${live.text}</span>` : "")
-    + (g.ausnahmen && !state.ausnahmen ? ` · <a href="${g.ausnahmen}" target="_blank" rel="noopener">${ui("ausnahmen")}</a>` : "");
+    + (live && !live.zu ? ` · <span class="stn-live">${ui("an-diesem-tag")} ${esc(live.text)}</span>` : "")
+    + (g.ausnahmen && !state.ausnahmen ? ` · <a href="${g.ausnahmen}" target="_blank" rel="noopener">${ui("ausnahmen")}</a>` : "")
+    + (zeitenBestaetigt(g) === false
+      ? ` · <span class="stn-zu">${ui("nicht-bestaetigt")}</span>, <a href="${zeitenSeite(g)}" target="_blank" rel="noopener">${ui("pruefen")}</a>` : "");
+}
+
+// Ein Satz über den Stand der Öffnungszeiten aller Orte des Plans.
+function zeitenHinweis(liste) {
+  if (state.zeitenStand === "laedt") return "";
+  const offen = liste.filter((g) => zeitenBestaetigt(g) === false).length;
+  if (!offen) return liste.some((g) => g.oeffnung) ? ui("zeiten-live") : "";
+  return `${offen} ${ui(offen === 1 ? "zeiten-offen-1" : "zeiten-offen")}`;
 }

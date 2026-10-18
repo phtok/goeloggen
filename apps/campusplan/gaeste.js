@@ -63,15 +63,23 @@ const NEUE_ORTE = [
    (0 = Sonntag, 1 = Montag …), von, bis }, dazu wahlweise ersterImMonat,
    zuMonate (1–12), vor (Vorsatz im Text, z. B. «innen»). Aus den Fenstern
    wird auch der Text der Zeile gesetzt.
-   quelle = der Ort auf https://goetheanum.ch/de/campus/oeffnungszeiten. Diese
-   Seite liest die Edge Function campusplan-ausnahmen live (services/campusplan/):
-   der Plan rechnet immer mit dem Stand der Website (Auftrag 18. Oktober 2026),
-   die Fenster hier sind nur der Rückfall, wenn sie nicht erreichbar ist.
-   Ohne quelle (eigene Website des Orts, monatlich bewacht durch
-   tools/oeffnungszeiten-pruefen.py): Buchhandlung (goetheanum-buchhandlung.ch),
-   Bibliothek (goetheanum.ch/en/documentation/library), Archiv-Lesesaal
-   (rudolf-steiner.com), Speisehaus-Laden und Vitalshop (speisehaus.ch).
-   Stand der Rückfallwerte: 18. Oktober 2026.
+   seite + quelle = woher die Zeiten live kommen: seite ist die Website (ohne
+   Angabe goetheanum.ch/de/campus/oeffnungszeiten; sonst buchhandlung,
+   bibliothek, archiv, speisehaus — Adressen in ZEITEN_SEITEN), quelle der Ort
+   dort (Titel oder Teil davon). Alle Seiten liest die Edge Function
+   campusplan-ausnahmen live (services/campusplan/): der Plan rechnet immer
+   mit dem Stand der Websites (Aufträge 18. Oktober 2026: «Alle Öffnungszeiten
+   aktuell abgleichen!»). Die Fenster hier sind nur der Rückfall; greift er,
+   sagt der Plan «nicht bestätigt» und verlinkt die Seite. Ein täglicher
+   Wächter prüft, dass jede quelle live gefunden wird
+   (.github/workflows/oeffnungszeiten-waechter.yml).
+   Orte im Goetheanum ohne eigene Zeiten (Haupteingang, Treppenhäuser,
+   Galerie) tragen die Zeiten des Baus. Stand der Rückfallwerte: 18. Oktober 2026.
+   name = Name im Gästeplan, wenn er vom Katalog abweicht; ausstellung = die
+   Zeile zeigt die laufende Ausstellung (Sektion für Bildende Künste, live),
+   saele = die Säle der Galerie, für die kommenden Teile genannt. Ein Teil
+   mit ausstellung: true nimmt die Öffnungszeiten der Ausstellung, sobald
+   ihre Seite sie nennt, sonst die eigenen (hier: die des Baus).
    ausnahmen = Seite mit tagesaktuellen Einschränkungen (Grosser Saal,
    Glashaus) — die Zeile verlinkt sie; live = Schlüssel in der Antwort der
    Edge Function, die zum Besuchstag die Tageszeile liefert.
@@ -82,8 +90,20 @@ const NEUE_ORTE = [
    ‹Mit Kindern› nach vorn. gehfolge = Reihenfolge des Rundwegs. */
 const TAEGLICH = [0, 1, 2, 3, 4, 5, 6];
 
+// Websites der Öffnungszeiten (wie in der Edge Function) — der Plan verlinkt
+// sie, wenn eine Zeit nicht live bestätigt ist.
+const ZEITEN_SEITEN = {
+  zeiten: "https://goetheanum.ch/de/campus/oeffnungszeiten",
+  buchhandlung: "https://www.goetheanum-buchhandlung.ch/pages/oeffnungszeiten",
+  bibliothek: "https://goetheanum.ch/de/dokumentation/bibliothek",
+  archiv: "https://www.rudolf-steiner.com/",
+  speisehaus: "https://www.speisehaus.ch/",
+  ausstellungen: "https://sbk.goetheanum.org/veranstaltungen/ausstellungen"
+};
+
 const GAESTE = [
-  { id: "o1", thema: "basis", gehfolge: 1, dauer: 0, zugang: "betreten" },
+  { id: "o1", thema: "basis", gehfolge: 1, dauer: 0, zugang: "betreten",
+    oeffnung: [{ quelle: "Goetheanum", fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }] },
   { id: "o3", thema: "basis", gehfolge: 2, dauer: 5, zugang: "betreten",
     oeffnung: [{ quelle: "Kartenverkauf am Empfang", fenster: [{ tage: [2, 3, 4, 5, 6, 0], von: "09:00", bis: "18:00" }] }] },
   { id: "wc-goetheanum", thema: "anreise", gehfolge: 0, dauer: 0 },
@@ -107,9 +127,10 @@ const GAESTE = [
     oeffnung: [{ quelle: "Goetheanum", fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] },
       { quelle: "Vital-Café in der Wandelhalle", vor: { de: "Vital-Café", en: "Vital café" }, fenster: [{ tage: TAEGLICH, von: "09:00", bis: "17:00" }] }],
     einzeiler: { de: "Die Halle mit dem Vital-Café.", en: "The hall with the Vital café." } },
-  { id: "n-treppen", thema: "bau", rang: 4, gehfolge: 7, dauer: 10, zugang: "betreten",
-    einzeiler: { de: "Das westliche Treppenhaus gilt als besonders bemerkenswert; Nord- und Südtreppe mit Liften zu Galerie und Grossem Saal.",
-                 en: "The western staircase is considered especially remarkable; north and south stairs with lifts to the gallery and the Great Hall." } },
+  { id: "n-treppen", thema: "bau", rang: 4, gehfolge: 7, dauer: 25, zugang: "betreten",
+    oeffnung: [{ quelle: "Goetheanum", fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }],
+    einzeiler: { de: "Drei öffentliche Treppenhäuser, jedes eine architektonische Besonderheit: im Westtreppenhaus ganz oben das Rote Fenster, Nord- und Südtreppenhaus mit je einem Lift.",
+                 en: "Three public staircases, each an architectural highlight: the Red Window at the very top of the west staircase; the north and south staircases each have a lift." } },
 
   // Architektursammlung
   { id: "h-heizhaus", thema: "sammlung", rang: 1, gehfolge: 17, dauer: 10, zugang: "aussen",
@@ -120,14 +141,14 @@ const GAESTE = [
     ausnahmen: "https://goetheanum.ch/de/campus/oeffnungszeiten-ausstellung-goethe", live: "glashaus",
     einzeiler: { de: "Schleifatelier für die farbigen Fenster des Grossen Saals; die zwei Kuppeln des Ersten Goetheanum, hier auseinandergezogen und gleich gross (1914).",
                  en: "Grinding studio for the coloured windows of the Great Hall; the two domes of the First Goetheanum, here pulled apart and of equal size (1914)." } },
-  { id: "h-schreinerei", thema: "sammlung", rang: 3, gehfolge: 12, dauer: 10, zugang: "betreten",
+  { id: "h-schreinerei", thema: "sammlung", rang: 3, gehfolge: 12, dauer: 10, zugang: "aussen",
     einzeiler: { de: "Die Bauhütte des Ersten Goetheanum, in der Steiner arbeitete und 1925 starb (1913).",
                  en: "The building lodge of the First Goetheanum, where Steiner worked and died in 1925 (1913)." } },
   { id: "o44", thema: "sammlung", rang: 4, gehfolge: 29, dauer: 10, zugang: "aussen", gebaeude: ["campusbau-45"],
-    oeffnung: [{ vor: { de: "Lesesaal und Shop des Archivs", en: "Archive reading room and shop" }, fenster: [{ tage: [1, 2, 3, 4, 5], von: "15:00", bis: "18:00" }] }],
+    oeffnung: [{ seite: "archiv", quelle: "Lesesaal & Shop", vor: { de: "Lesesaal und Shop des Archivs", en: "Archive reading room and shop" }, fenster: [{ tage: [1, 2, 3, 4, 5], von: "15:00", bis: "18:00" }] }],
     einzeiler: { de: "Von Steiner als Wohnhaus für die Familie Grossheintz entworfen, zum Dank für die Schenkung des Geländes; heute Rudolf-Steiner-Archiv (1915).",
                  en: "Designed by Steiner as a home for the Grossheintz family in thanks for donating the land; today the Rudolf Steiner Archive (1915)." } },
-  { id: "v31", thema: "sammlung", rang: 5, gehfolge: 32, dauer: 15, zugang: "betreten", kinder: true,
+  { id: "v31", thema: "sammlung", rang: 5, gehfolge: 32, dauer: 15, zugang: "aussen", kinder: true,
     einzeiler: { de: "Den Anbau entwarf Steiner 1924 als Proberaum für die Eurythmie; seine zwei Pfeiler an der Westfront kehren am Zweiten Goetheanum wieder.",
                  en: "Steiner designed the extension in 1924 as a eurythmy rehearsal room; its two pillars on the west front return on the Second Goetheanum." } },
   { id: "h-trafo", thema: "sammlung", rang: 6, gehfolge: 26, dauer: 10, zugang: "aussen",
@@ -165,7 +186,7 @@ const GAESTE = [
 
   // Bücher, Kunst, Ausstellungen
   { id: "o5", thema: "kultur", rang: 1, gehfolge: 4, dauer: 20, zugang: "betreten",
-    oeffnung: [{ fenster: [{ tage: [2, 3, 4, 5], von: "10:00", bis: "18:00" }, { tage: [6], von: "10:00", bis: "17:00" }, { tage: [0], von: "11:00", bis: "16:00" }] }] },
+    oeffnung: [{ seite: "buchhandlung", quelle: "Allgemeine Öffnungszeiten", fenster: [{ tage: [2, 3, 4, 5], von: "10:00", bis: "18:00" }, { tage: [6], von: "10:00", bis: "17:00" }, { tage: [0], von: "11:00", bis: "16:00" }] }] },
   { id: "o41", thema: "kultur", rang: 2, gehfolge: 13, dauer: 30, zugang: "betreten",
     oeffnung: [{ quelle: "Baugeschichte und Modell Erstes Goetheanum", fenster: [{ tage: [5, 6, 0], von: "14:00", bis: "16:00" }] }],
     einzeiler: { de: "Modell des Ersten Goetheanum, das in der Silvesternacht 1922 abbrannte. Schreinerei Südsaal links, Eintritt CHF 5.",
@@ -173,9 +194,13 @@ const GAESTE = [
   { id: "o40", thema: "kultur", rang: 3, gehfolge: 14, dauer: 15, zugang: "betreten",
     oeffnung: [{ quelle: "Rudolf Steiner Atelier", fenster: [{ tage: [5], von: "14:00", bis: "15:00" }] }],
     einzeiler: { de: "Schreinerei, rechter Eingang.", en: "Schreinerei, right-hand entrance." } },
-  { id: "o6", thema: "kultur", rang: 4, gehfolge: 9, dauer: 20, zugang: "betreten" },
+  { id: "o6", thema: "kultur", rang: 4, gehfolge: 9, dauer: 20, zugang: "betreten", ausstellung: true,
+    name: { de: "Galerie, 1. Etage", en: "Gallery, 1st floor" },
+    // Blauer und Gelber Saal gehören zur Galerie (Auftraggeber, 18. 10. 2026).
+    saele: { de: "Blauer und Gelber Saal", en: "Blue and Yellow Halls" },
+    oeffnung: [{ quelle: "Goetheanum", ausstellung: true, fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }] },
   { id: "o7", thema: "kultur", rang: 5, gehfolge: 10, dauer: 20, zugang: "betreten",
-    oeffnung: [{ fenster: [{ tage: [2, 4, 5], von: "14:00", bis: "18:00" }] }] },
+    oeffnung: [{ seite: "bibliothek", quelle: "Öffnungszeiten", fenster: [{ tage: [2, 4, 5], von: "14:00", bis: "18:00" }] }] },
   { id: "o42", thema: "kultur", rang: 6, gehfolge: 15, dauer: 10, zugang: "betreten",
     oeffnung: [{ quelle: "Hochatelier", fenster: [{ tage: [5], von: "14:30", bis: "15:30" }] }],
     einzeiler: { de: "Blaues Holzhaus im Südwesten der Schreinerei: hier arbeiteten Steiner und Edith Maryon 1914 bis 1925 an der Holzskulptur; ihr 1:1-Modell steht noch heute hier.",
@@ -189,10 +214,10 @@ const GAESTE = [
   // Wandelhalle (v12). Die Zeile bleibt, damit das Link-Bit nicht rutscht.
   { id: "o8", thema: "aus", rang: 99, gehfolge: 0, dauer: 0 },
   { id: "o45", thema: "essen", rang: 2, gehfolge: 27, dauer: 60, zugang: "betreten", kinder: true,
-    oeffnung: [{ vor: { de: "Laden", en: "Shop" }, fenster: [{ tage: [1, 2, 3, 4, 5], von: "08:00", bis: "18:30" }, { tage: [6, 0], von: "08:00", bis: "16:00" }] }],
+    oeffnung: [{ seite: "speisehaus", quelle: "Laden", vor: { de: "Laden", en: "Shop" }, fenster: [{ tage: [1, 2, 3, 4, 5], von: "08:00", bis: "18:30" }, { tage: [6, 0], von: "08:00", bis: "16:00" }] }],
     hinweis: { de: "Restaurant zurzeit geschlossen", en: "restaurant currently closed" } },
   { id: "f-vital", thema: "essen", rang: 3, gehfolge: 28, dauer: 15, zugang: "betreten",
-    oeffnung: [{ fenster: [{ tage: [1, 2, 3, 4, 5], von: "08:00", bis: "18:30" }, { tage: [6, 0], von: "08:00", bis: "16:00" }] }] },
+    oeffnung: [{ seite: "speisehaus", quelle: "Laden", fenster: [{ tage: [1, 2, 3, 4, 5], von: "08:00", bis: "18:30" }, { tage: [6, 0], von: "08:00", bis: "16:00" }] }] },
   { id: "v23", thema: "essen", rang: 4, gehfolge: 16, dauer: 15, zugang: "anfrage",
     einzeiler: { de: "Ein Eurythmiesaal bei der Schreinerei; im Sommer wird er so heiss, dass er seinen Spitznamen bekam.",
                  en: "A eurythmy hall by the Schreinerei; in summer it gets so hot that it earned its nickname." } },

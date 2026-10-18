@@ -35,7 +35,7 @@ Anfrage ist alles zugänglich»).
 | Grosser Saal | Knapp tausend Plätze unter einer Deckenmalerei in Pflanzenfarben, farbige Glasfenster von 1945. | G1 («der grosse Saal (1000 Plätze)»), W (Deckenmalerei mit Pflanzenfarben, Fenster Pfingsten 1945) | belegt |
 | Holzskulptur | Die monumentale Skulptur des Menschheitsrepräsentanten: über acht Meter Holz, von Rudolf Steiner und Edith Maryon ab 1914. | G1 («monumentalen Skulptur des Menschheitsrepräsentanten»), W (über 8 m, ab August 1914); Name der Station nach G2 («Ausstellungsraum mit Holzskulptur») | belegt |
 | Wandelhalle | Die Halle mit dem Vital-Café. | G2 («Vital-Café in der Wandelhalle») | belegt |
-| Treppenhäuser | Das westliche Treppenhaus gilt als besonders bemerkenswert; Nord- und Südtreppe mit Liften zu Galerie und Grossem Saal. | G1 («Besonders bemerkenswert sind der grosse Saal … und sein westliches Treppenhaus»), K (Lifte, Etagen) | belegt |
+| Treppenhäuser | Drei öffentliche Treppenhäuser, jedes eine architektonische Besonderheit: im Westtreppenhaus ganz oben das Rote Fenster, Nord- und Südtreppenhaus mit je einem Lift. | AG (18. 10. 2026: «Alle drei öffentlichen Treppenhäuser sind architektonische Besonderheiten … das Rote Fenster im Westtreppenhaus ganz oben … Nord und Süd besitzen je einen Fahrstuhl»), G1 (westliches Treppenhaus), K (Lifte) · Dauer 25 statt 10 Min. (AG: «sehr knapp geschätzt») | belegt durch Auftraggeber |
 
 ## Architektursammlung
 
@@ -71,7 +71,8 @@ Anfrage ist alles zugänglich»).
 | Rudolf-Steiner-Atelier | Schreinerei, rechter Eingang. | G2 | belegt |
 | Hochatelier | Blaues Holzhaus im Südwesten der Schreinerei: hier arbeiteten Steiner und Edith Maryon 1914 bis 1925 an der Holzskulptur; ihr 1:1-Modell steht noch heute hier. | G2 (Lage), AW (Atelier Steiners und Maryons 1914–1925, «1:1-Modell» erhalten), AG | belegt |
 | Künstlerwohnung Edith Maryon | Unteres Eurythmiehaus, Rüttiweg 30, 1. Etage. | G2 | belegt |
-| Nordgalerie, Buchhandlung, Bibliothek | *kein Einzeiler* | — | — |
+| Galerie, 1. Etage (Katalog: Nordgalerie) | *laufende Ausstellung, live* — z. B. «Ausstellung: Kosmische Botanik (Walther Roggenkamp 1926 bis 1995), bis 22. November» | SBK (https://sbk.goetheanum.org/veranstaltungen/ausstellungen und Einzelseite), Flyer («Kunstgalerie im Goetheanum, 1. Etage») · Öffnungszeiten = Zeiten des Baus (Annahme, zu bestätigen) | belegt, live |
+| Buchhandlung, Bibliothek | *kein Einzeiler* | — | — |
 
 ## Essen und Verweilen
 
@@ -97,3 +98,27 @@ Great Hall · Wood Sculpture · Edith Maryon Flat.
 
 Bezug des Helene-Finckh-Hauses zu ihr (Wohnhaus oder Arbeitsort); ob Haus
 Schuurman (G1) in die Architektursammlung soll; was die Nordgalerie zeigt.
+
+## Zugang und Öffnungszeiten (18. Oktober 2026)
+
+Auftrag: «Alle Öffnungszeiten aktuell abgleichen! Das ist zu frustrierend,
+nach spezifischer Planung vor einer verschlossenen Tür zu stehen. Da dürfen
+wir umsichtig sein.» Folgen:
+
+- Jeder Ort mit Öffnungszeiten liest sie live von seiner Website
+  (goetheanum.ch, Buchhandlung, Bibliothek samt Ferien, Rudolf Steiner Archiv,
+  Vital Speisehaus); gelingt das nicht, sagt der Plan «nicht bestätigt» und
+  verlinkt die Seite. Täglicher Wächter: `oeffnungszeiten-pruefen.py --live`.
+- Haupteingang, Treppenhäuser und Galerie tragen die Zeiten des Baus
+  (täglich 9–20 Uhr, live von goetheanum.ch).
+- Schreinerei und Rudolf Steiner Halde stehen jetzt auf «von aussen, innen mit
+  Führung» statt «zu betreten»: für beide Bauten nennt keine Quelle freie
+  Öffnungszeiten (innen öffentlich sind nur die eigenen Stationen
+  Baugeschichte/Modell und Rudolf-Steiner-Atelier mit ihren Zeiten).
+- Blauer und Gelber Saal gehören zur Galerie in der 1. Etage; bis 4. Dezember
+  2026 nicht bespielt, ab dann «Olav Åsteson» und «Schrift und Gestalt»
+  (Auftraggeber, 18. 10. 2026). Ihre Öffnungszeiten gehören auf die
+  Ausstellungsseite der Sektion; noch nicht veröffentlicht, der Auftraggeber
+  mahnt es an. Sobald die Seite sie nennt, liest die Function sie
+  (`ausstellungen[].fenster`) und die Galerie trägt sie statt der Zeiten des
+  Baus; bis dahin meldet der tägliche Wächter einen Hinweis.

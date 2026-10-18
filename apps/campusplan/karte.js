@@ -37,6 +37,7 @@ function kartenStand(plan) {
   const ids = plan.nummeriert.concat(plan.anreise).map((g) => g.id);
   const teileAus = {};
   const gebaeudeAn = [];
+  const labels = {};
   ids.forEach((id) => {
     const o = ort(id);
     if (o && o.teile) {
@@ -45,6 +46,7 @@ function kartenStand(plan) {
     }
     const g = gast(id);
     if (g && g.gebaeude) gebaeudeAn.push(...g.gebaeude);
+    if (g && g.name) labels[id] = t(g.name);   // Name im Gästeplan (z. B. Galerie statt Nordgalerie)
   });
   const eigene = NEUE_ORTE.filter((o) => ids.includes(o.id)).map((o) => ({
     id: o.id, label: t(o.label), farbe: "blau", x: o.positionen[0][0], y: o.positionen[0][1], marker: "0"
@@ -57,7 +59,7 @@ function kartenStand(plan) {
     // Die Toiletten-Pille liegt im Katalog genau auf dem Grossen Saal; im
     // Gästeplan stehen beide oft zugleich — die Pille rückt darum in den
     // freien Teil des Baus darunter (beide bleiben im Goetheanum).
-    eigene, teileAus, notizenAus: {}, labels: {}, markerFarben: {},
+    eigene, teileAus, notizenAus: {}, labels, markerFarben: {},
     positionen: { "wc-goetheanum": [197.24, 134.5] },
     gebaeudeAn, gebaeudeAus: [],
     folge: plan.nummeriert.map((g) => g.id),

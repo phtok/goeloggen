@@ -16,6 +16,49 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 18. Oktober 2026 — Zeilenabstand ≥ 1.5, Ränder von Bedienelementen ≥ 3:1, Fingerziele 44 px, die Wahl-Kachel (1.28.0)
+
+**Was.** Vier Aufnahmen aus Konrads Review am Campusplan, alle im Fundament.
+(1) **Zeilenabstand (B04):** neues Token `--lh-min: 1.5`; `.lede`, `.meta`-Gruppe
+(`.cap .caption .legend .byline`), `.lab`/`.role` und `.kennzahl .k-label`
+standen auf 1.35–1.45 und liegen jetzt bei 1.5. (2) **Rand von Bedienelementen
+(B02, WCAG 1.4.11):** neues Token `--line-control`; es umrandet Eingabefelder,
+Klappliste (`.ds-select__btn`, `.select-inline`), Newsletter-Feld, `.seg button`,
+`.btn` (nicht `.primary`/`.ok`/`.ton`, die tragen ihre Füllfarbe als Rand) und die
+Kachel. `--line` bleibt unverändert die dekorative Trennlinie. (3) **Fingerziele
+und Grade (B03/B04):** `.seg button` und `.btn` haben auf allen Breiten
+`min-height: var(--tap)` (44 px, vorher nur unter 561 px; die Pille mass ab
+561 px rund 35 px) und `font-size: var(--t-small)` (15–16 px; vorher 14.5 bzw.
+fest 15). (4) **Wahl-Kachel:** `.kacheln` und `button.kachel` (Gold/Weiss bei
+`aria-pressed="true"`) aus `apps/campusplan/index.html` ins Fundament gehoben;
+der lokale Block dort ist entfernt, nur die Zeiten-Variante (`.zeiten .kachel`)
+bleibt Seiten-Eigenes. `kacheln` und `kachel` stehen in `contract.json` unter den
+kanonischen Rollen (DS04).
+
+**Gerechnet (WCAG-Kontrastverhältnis, B02).** `--line-control` Hell `#858b91`:
+3.44:1 auf `--paper`, 3.44:1 auf `--field-bg`, 3.25:1 auf `--soft`. Dunkel
+`#717880`: 3.95:1 auf `--paper`, 3.54:1 auf `--field-bg` und `--soft`. Welt warm
+`#857f72`: 3.72:1 auf `--paper`, 3.82:1 auf `--field-bg`, 3.41:1 auf `--soft`.
+Vorher (`--line` auf Grund gemischt): Hell 1.23:1, Dunkel 1.56:1, warm 1.27:1.
+
+**Warum.** Entscheid des Auftraggebers am 18. 10. 2026: «Fundament optimieren
+und ins Designsystem einfliessen lassen», und zum Zeilenabstand «ja», also **B04
+geht vor G11**. Der Vermerk steht in G11 (`goetheanum-typo-tokens.json` `$regeln`,
+`typo-regeln.yaml`): «Lesetext ≥1.5 (B04, Entscheid Auftraggeber 18. 10. 2026)»;
+der Wortlaut sonst unberührt. `--line` global zu verdunkeln hätte jede Karten-
+und Tabellenlinie mitgezogen; darum ein eigener Token für die Funktion «Rand
+eines Bedienelements».
+
+**Wirkung.** `tokens.css` (`--lh-min`, `--line-control` in Hell, Dunkel, Welt
+warm), `base.css` (Rollen, `.btn`, `.seg button`, Felder, `.kacheln`/`button.kachel`;
+die Mobil-Sonderregel für `min-height` entfällt, weil die Grundregel jetzt für
+alle Breiten gilt), `contract.json` 1.28.0. Die Kachel ist an `button.kachel`
+gebunden, weil `perspektiven/my-goetheanum.html` ein `<span class="kachel">` als
+Telefon-Mockup nutzt. Offen (nicht geändert): `typografie.html` Zeile 117 nennt
+noch «Fliesstext 1.4–1.6», ebenfalls der ältere Wortlaut von G11.
+
+---
+
 ## 7. Oktober 2026 — Startseite: Sprungleiste, «Von Zeit zu Zeit», Fingerziele der Sprungleiste (nav.css, Version unverändert)
 
 **Was.** Die Startseite trägt die Haus-Sprungleiste (`data-onpage`,
