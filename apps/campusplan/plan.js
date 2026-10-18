@@ -32,8 +32,10 @@ function nummerFarbe(id) {
   return (hex && LISTEN_FARBEN[hex.toLowerCase()]) || "";
 }
 
-function zeileMarkup(g, nummer) {
+function zeileMarkup(g, nummer, plan) {
   const id = g.id;
+  const termin = zeitplanVon(plan, id);
+  const aussen = plan && plan.ausserhalb.includes(id);
   const anreise = g.thema === "anreise";
   const abgehakt = state.besucht.has(id);
   const name = ortName(id);
@@ -47,15 +49,26 @@ function zeileMarkup(g, nummer) {
     `<span class="step-num blue"${stil}><b>${anreise ? ortMarker(id) || "·" : nummer}</b></span></button>`;
   const klassen = ["stn", anreise ? "anreise" : "", state.fokus === id ? "fokus" : "", abgehakt ? "abgehakt" : ""].filter(Boolean).join(" ");
   return `<li class="${klassen}" data-id="${id}">${kasten}${nr}` +
-    `<span class="stn-text"><span class="stn-name">${name}</span>` +
+    `<span class="stn-text">${termin ? `<span class="stn-zeit">${spanneText(termin)}</span>` : ""}<span class="stn-name">${name}</span>` +
     (g.einzeiler ? `<span class="stn-line">${t(g.einzeiler)}</span>` : "") +
-    (meta ? `<span class="meta">${meta}</span>` : "") + `</span></li>`;
+    (meta ? `<span class="meta">${meta}</span>` : "") +
+    (aussen ? `<span class="meta stn-zu">${ui("ausserhalb")}</span>` : "") + `</span></li>`;
 }
 
 function listeZeichnen() {
-  const { nummeriert, anreise } = stationen();
-  document.getElementById("stationen").innerHTML = nummeriert.map((g, i) => zeileMarkup(g, i + 1)).join("");
-  document.getElementById("anreise").innerHTML = anreise.map((g) => zeileMarkup(g, "")).join("");
+  const { nummeriert, anreise, plan } = stationen();
+  // Mit Zeitplan stehen die Pausen zwischen den Stationen, an ihrem Platz.
+  const pausen = {};
+  if (plan) {
+    plan.eintraege.forEach((e, i) => {
+      const naechste = plan.eintraege[i + 1];
+      if (e.pause && naechste) pausen[naechste.id] = e;
+    });
+  }
+  document.getElementById("stationen").innerHTML = nummeriert.map((g, i) =>
+    (pausen[g.id] ? `<li class="pause hint">${ui("pause-bis")} ${uhrText(pausen[g.id].bis)}${state.sprache === "en" ? "" : " Uhr"}</li>` : "") +
+    zeileMarkup(g, i + 1, plan)).join("");
+  document.getElementById("anreise").innerHTML = anreise.map((g) => zeileMarkup(g, "", null)).join("");
   document.getElementById("anreise-titel").hidden = !anreise.length;
   const b = nummeriert.filter((g) => state.besucht.has(g.id)).length;
   const tag = state.datum ? ` · ${datumText(state.datum)}` : "";
@@ -313,7 +326,9 @@ function start() {
   }
   besuchtLaden();
   listeZeichnen();
-  ausnahmenLaden(listeZeichnen);
+  // Kommen die Öffnungszeiten live an, kann sich der Zeitplan ändern —
+  // Liste und Nummern der Karte ziehen nach.
+  ausnahmenLaden(() => { listeZeichnen(); if (szene) karteZeichnen(); });
   karteZeichnen();
 }
 

@@ -82,15 +82,18 @@ async function planPdf() {
     doc.addFont(`${name}.ttf`, name, "normal");
   });
 
-  const { nummeriert, anreise } = stationen();
+  const { nummeriert, anreise, plan } = stationen();
   const datum = pdfDatumText(state.datum, state.sprache);
-  const titel = state.modus === "plan" ? ui("besuch") : ui("titel");
+  const titel = ui("besuch");
   const link = planLink();
 
   /* ---------- Blatt 1: die Karte des Kartentools ---------- */
   // Dieselbe Blattszene wie im Kartentool (Gebäudenamen, Kompass, Legende,
   // Logo), nur mit den Orten des Plans in Gehfolge — ganz durch svg2pdf.
-  const untertitel = [datum, `${nummeriert.length} ${ui("stationen")} · ${ui("etwa")} ${dauerText(planMinuten())}`].filter(Boolean).join(" · ");
+  const spanne = plan && plan.eintraege.length
+    ? spanneText({ von: plan.eintraege[0].von, bis: plan.ende })
+    : `${ui("etwa")} ${dauerText(planMinuten())}`;
+  const untertitel = [datum, `${nummeriert.length} ${ui("stationen")} · ${spanne}`].filter(Boolean).join(" · ").replace(/\u2060/g, "");
   const szene = await kartenSzene({ nummeriert, anreise, titel: ui("besuch"), untertitel });
   const farbe = (id, ersatz) => szene.farben[id] || ersatz;
   const svgText = `<svg xmlns="http://www.w3.org/2000/svg" width="${PDF_SEITE.b}mm" height="${PDF_SEITE.h}mm" viewBox="0 0 ${szene.breite} ${szene.hoehe}">${szene.markup}</svg>`;
@@ -106,35 +109,51 @@ async function planPdf() {
   y = PDF_RAND;
   const untenMax = PDF_SEITE.h - PDF_RAND - 30; // Platz für QR und Link unten
   doc.setFont("GoetheanumDeutlich", "normal"); doc.setFontSize(14); doc.setTextColor(PDF_FARBEN.tinte);
-  doc.text(`${titel} · ${ui("stationen-titel")}`, PDF_RAND, y + 5);
+  doc.text(`${titel} · ${plan ? ui("zeitplan") : ui("stationen-titel")}`, PDF_RAND, y + 5);
   y += 12;
   const spaltenStart = y;
+  // Mit Zeitplan steht die Uhrzeit rechts in der Namenszeile (tabellarisch,
+  // G25), Pausen als eigene leise Zeile dazwischen.
+  const pausen = {};
+  if (plan) plan.eintraege.forEach((e, i) => { const n = plan.eintraege[i + 1]; if (e.pause && n) pausen[n.id] = e; });
   const eintrag = (g, nummer) => {
-    const x = spalten[spalte];
-    const textX = x + 9;
+    const termin = zeitplanVon(plan, g.id);
+    const zeitB = termin ? 30 : 0;
     const textB = spalteB - 9;
-    const name = g.id === "wc-goetheanum" ? ui("wc") : ortName(g.id);
+    const name = ortName(g.id);
     doc.setFont("GoetheanumDeutlich", "normal"); doc.setFontSize(11);
-    const nameZeilen = doc.splitTextToSize(name, textB);
+    const nameZeilen = doc.splitTextToSize(name, textB - zeitB);
     doc.setFont("SourceSans3", "normal"); doc.setFontSize(9.5);
     const einZeilen = g.einzeiler ? doc.splitTextToSize(t(g.einzeiler), textB) : [];
-    const meta = [g.zugang ? t(ZUGANG[g.zugang]) : "", g.dauer ? dauerText(g.dauer) : "", g.zeiten ? t(g.zeiten) : ""].filter(Boolean).join(" · ");
+    const meta = [g.zugang ? t(ZUGANG[g.zugang]) : "", g.dauer ? dauerText(g.dauer) : "", zeitenText(g)].filter(Boolean).join(" · ");
     const tag = planTag();
     const geschlossen = tag && ortGeschlossenAm(g, tag);
     const live = ausnahmeAm(g, tag);
-    const zusatz = (geschlossen ? ` · ${ui("geschlossen-am")}` : "") + (live && !live.zu ? ` · ${ui("an-diesem-tag")} ${live.text}` : "");
+    const zusatz = (geschlossen ? ` · ${ui("geschlossen-am")}` : "") + (live && !live.zu ? ` · ${ui("an-diesem-tag")} ${live.text}` : "")
+      + (plan && plan.ausserhalb.includes(g.id) ? ` · ${ui("ausserhalb")}` : "");
     doc.setFontSize(8.5);
-    const metaZeilen = meta || zusatz ? doc.splitTextToSize(meta + zusatz, textB) : [];
-    const hoehe = nameZeilen.length * 4.6 + einZeilen.length * 4.1 + metaZeilen.length * 3.8 + 4;
+    // Wortverbinder der Bildschirmfassung kennt die PDF-Schrift nicht.
+    const metaZeilen = meta || zusatz ? doc.splitTextToSize((meta + zusatz).replace(/\u2060/g, ""), textB) : [];
+    const pause = pausen[g.id];
+    const hoehe = (pause ? 5 : 0) + nameZeilen.length * 4.6 + einZeilen.length * 4.1 + metaZeilen.length * 3.8 + 4;
     if (y + hoehe > untenMax) {
       if (spalte === 0) { spalte = 1; y = spaltenStart; }
       else { doc.addPage(); spalte = 0; y = PDF_RAND; }
     }
     const xx = spalten[spalte], tx = xx + 9;
+    if (pause) {
+      doc.setFont("SourceSans3", "normal"); doc.setFontSize(8.5); doc.setTextColor(PDF_FARBEN.leise);
+      doc.text(`${ui("pause-bis")} ${uhrText(pause.bis)}${state.sprache === "en" ? "" : " Uhr"}`, tx, y + 2.6);
+      y += 5;
+    }
     if (nummer) pdfMarke(doc, xx + 3, y + 2.6, 2.6, nummer, farbe(g.id, PDF_FARBEN.marke));
     else pdfMarke(doc, xx + 3, y + 2.6, 2.4, ortMarker(g.id) || "·", farbe(g.id, PDF_FARBEN.anreise));
     doc.setTextColor(PDF_FARBEN.tinte); doc.setFont("GoetheanumDeutlich", "normal"); doc.setFontSize(11);
     doc.text(nameZeilen, tx, y + 3.6);
+    if (termin) {
+      doc.setFont("SourceSans3Semibold", "normal"); doc.setFontSize(9.5);
+      doc.text(spanneText(termin).replace(/\u2060/g, ""), xx + spalteB, y + 3.6, { align: "right" });
+    }
     let yy = y + nameZeilen.length * 4.6;
     if (einZeilen.length) {
       doc.setFont("SourceSans3", "normal"); doc.setFontSize(9.5); doc.setTextColor(PDF_FARBEN.tinte);
