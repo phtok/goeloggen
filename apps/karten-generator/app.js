@@ -118,6 +118,7 @@ const state = {
   eigene: [],          // { id, label, farbe, x, y, marker } — x/y in Blatt-mm der Standardlage
   wiesen: { klein: false, gross: false },
   folge: [],           // Ort-ids in vorgegebener Reihenfolge (Campusplan), sonst leer
+  legende: true,       // false = Szene ohne Legende (Telefonansicht des Campusplans)
   kompakt: false,      // kompakte Legende (kleinerer Grad, engere Zeilen)
   ausschnitt: { skala: 1, dx: 0, dy: 0 },  // Kartenausschnitt relativ zur Standardlage
   logo: { x: null, y: null, skala: 1 },    // Campus-Logo: Mitte (mm) + Grösse
@@ -1121,7 +1122,7 @@ function szeneMarkup(anschnitt) {
         + (state.untertitel.trim() ? `<text x="10.5" y="${(5.5 + titelLogoHoehe() + 5.6).toFixed(2)}" font-size="3.35" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(state.untertitel.trim())}</text>` : "")
       : (titel ? `<text x="10.5" y="14.2" font-size="5.3" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(titel)}</text>` : "")
         + (titel && state.untertitel.trim() ? `<text x="10.5" y="20.2" font-size="3.35" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(state.untertitel.trim())}</text>` : "")}
-    ${legendeMarkup()}
+    ${state.legende ? legendeMarkup() : ""}
     ${logoMarkup()}
   `;
 }
@@ -1694,6 +1695,7 @@ function standAlsJson() {
     preset: state.preset, farben: state.farben,
     festeNummern: Boolean(state.festeNummern),
     folge: state.folge,
+    legende: state.legende,
     basiskarte: state.basiskarte,
     aquarellDeckkraft: state.aquarellDeckkraft,
     schriftzuege: state.schriftzuege
@@ -1740,6 +1742,7 @@ function standAnwenden(s) {
     state.kompakt = Boolean(s.kompakt);
     state.festeNummern = Boolean(s.festeNummern);
     state.folge = Array.isArray(s.folge) ? s.folge.filter((id) => typeof id === "string") : [];
+    state.legende = s.legende !== false;
     if (s.ausschnitt && typeof s.ausschnitt.skala === "number") {
       state.ausschnitt = {
         skala: Math.min(1.8, Math.max(0.7, s.ausschnitt.skala)),
