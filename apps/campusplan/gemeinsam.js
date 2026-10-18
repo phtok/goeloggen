@@ -82,6 +82,7 @@ const UI = {
   "zeiten-offen": { de: "Orte: Öffnungszeiten heute nicht bestätigt – bitte vor dem Besuch prüfen.", en: "places: opening hours not confirmed today – please check before you go." },
   ausstellung: { de: "Ausstellung", en: "Exhibition" },
   bis: { de: "bis", en: "until" },
+  ab: { de: "ab", en: "from" },
   "ausstellung-wechselnd": { de: "Wechselnde Ausstellungen der Sektion für Bildende Künste.", en: "Changing exhibitions of the Section for Visual Arts." },
   "karte-laedt": { de: "Karte wird geladen …", en: "Loading map …" },
   "karte-fehlt": { de: "Die Karte konnte nicht geladen werden. Die Liste gilt trotzdem.", en: "The map could not be loaded. The list still works." },
@@ -232,6 +233,11 @@ function liveBlock(teil) {
 }
 
 function teilZeiten(teil) {
+  // Galerie: die Öffnungszeiten der Ausstellung gehen vor, sobald ihre Seite sie nennt.
+  if (teil.ausstellung) {
+    const a = ausstellungAm(planTag());
+    if (a && a.fenster.length) return { fenster: a.fenster, ersterImMonat: false, zuMonate: [], zuZeitraeume: [], live: true };
+  }
   const live = liveBlock(teil);
   if (live && live.fenster.length) {
     return { fenster: live.fenster, ersterImMonat: Boolean(live.ersterImMonat), zuMonate: live.zuMonate || [],
@@ -256,13 +262,26 @@ function zeitenSeite(g) {
 
 // Laufende Ausstellung der Galerie am Plantag (sonst heute): der Teil, der
 // an dem Tag läuft, sonst die Ausstellung selbst.
+// Laufende Ausstellung der Galerie am Plantag (sonst heute): alle Teile, die
+// an dem Tag laufen (sonst die Ausstellung selbst), und die Teile, die als
+// nächste beginnen (gleiches Startdatum).
 function ausstellungAm(iso) {
   const liste = state.ausnahmen && Array.isArray(state.ausnahmen.ausstellungen) ? state.ausnahmen.ausstellungen : [];
   const tag = iso || heuteIso();
   const a = liste.find((x) => x.von <= tag && x.bis >= tag);
   if (!a) return null;
-  const teil = (a.teile || []).find((x) => x.von <= tag && x.bis >= tag);
-  return { titel: teil ? teil.titel : a.titel, reihe: teil ? a.titel : a.untertitel, bis: teil ? teil.bis : a.bis, link: a.link };
+  const teile = a.teile || [];
+  const laufend = teile.filter((x) => x.von <= tag && x.bis >= tag);
+  const spaeter = teile.filter((x) => x.von > tag).sort((x, y) => (x.von < y.von ? -1 : 1));
+  const naechste = spaeter.filter((x) => x.von === (spaeter[0] && spaeter[0].von));
+  return {
+    titel: laufend.length ? laufend.map((x) => x.titel).join(", ") : a.titel,
+    reihe: laufend.length ? a.titel : a.untertitel,
+    bis: laufend.length ? laufend[0].bis : a.bis,
+    naechste: naechste.length ? { von: naechste[0].von, titel: naechste.map((x) => x.titel).join(", ") } : null,
+    fenster: a.fenster || [],
+    link: a.link
+  };
 }
 
 function kurzDatum(iso) {
@@ -274,7 +293,12 @@ function kurzDatum(iso) {
 function einzeilerText(g) {
   if (g.ausstellung) {
     const a = ausstellungAm(planTag());
-    if (a) return `${ui("ausstellung")}: ${a.titel}${a.reihe ? ` (${a.reihe})` : ""}, ${ui("bis")} ${kurzDatum(a.bis)}`;
+    if (a) {
+      const jetzt = `${ui("ausstellung")}: ${a.titel}${a.reihe ? ` (${a.reihe})` : ""}, ${ui("bis")} ${kurzDatum(a.bis)}.`;
+      const dann = a.naechste
+        ? ` ${g.saele ? `${t(g.saele)} ` : ""}${ui("ab")} ${kurzDatum(a.naechste.von)}: ${a.naechste.titel}.` : "";
+      return jetzt + dann;
+    }
     return state.zeitenStand === "laedt" ? "" : ui("ausstellung-wechselnd");
   }
   return g.einzeiler ? t(g.einzeiler) : "";

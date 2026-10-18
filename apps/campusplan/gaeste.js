@@ -76,7 +76,10 @@ const NEUE_ORTE = [
    Orte im Goetheanum ohne eigene Zeiten (Haupteingang, Treppenhäuser,
    Galerie) tragen die Zeiten des Baus. Stand der Rückfallwerte: 18. Oktober 2026.
    name = Name im Gästeplan, wenn er vom Katalog abweicht; ausstellung = die
-   Zeile zeigt die laufende Ausstellung (Sektion für Bildende Künste, live).
+   Zeile zeigt die laufende Ausstellung (Sektion für Bildende Künste, live),
+   saele = die Säle der Galerie, für die kommenden Teile genannt. Ein Teil
+   mit ausstellung: true nimmt die Öffnungszeiten der Ausstellung, sobald
+   ihre Seite sie nennt, sonst die eigenen (hier: die des Baus).
    ausnahmen = Seite mit tagesaktuellen Einschränkungen (Grosser Saal,
    Glashaus) — die Zeile verlinkt sie; live = Schlüssel in der Antwort der
    Edge Function, die zum Besuchstag die Tageszeile liefert.
@@ -193,7 +196,9 @@ const GAESTE = [
     einzeiler: { de: "Schreinerei, rechter Eingang.", en: "Schreinerei, right-hand entrance." } },
   { id: "o6", thema: "kultur", rang: 4, gehfolge: 9, dauer: 20, zugang: "betreten", ausstellung: true,
     name: { de: "Galerie, 1. Etage", en: "Gallery, 1st floor" },
-    oeffnung: [{ quelle: "Goetheanum", fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }] },
+    // Blauer und Gelber Saal gehören zur Galerie (Auftraggeber, 18. 10. 2026).
+    saele: { de: "Blauer und Gelber Saal", en: "Blue and Yellow Halls" },
+    oeffnung: [{ quelle: "Goetheanum", ausstellung: true, fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }] },
   { id: "o7", thema: "kultur", rang: 5, gehfolge: 10, dauer: 20, zugang: "betreten",
     oeffnung: [{ seite: "bibliothek", quelle: "Öffnungszeiten", fenster: [{ tage: [2, 4, 5], von: "14:00", bis: "18:00" }] }] },
   { id: "o42", thema: "kultur", rang: 6, gehfolge: 15, dauer: 10, zugang: "betreten",

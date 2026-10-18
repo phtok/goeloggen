@@ -104,6 +104,10 @@ def live_pruefen() -> int:
             luecken.append(f"«{quelle}» ({seite}) live nicht gefunden")
     if not antwort.get("ausstellungen"):
         print("  ! keine laufende Ausstellung gelesen")
+    for a in antwort.get("ausstellungen") or []:
+        if not a.get("fenster"):
+            # Kein Fehler, nur ein Hinweis: die Galerie trägt dann die Zeiten des Baus.
+            print(f"  ! Ausstellung «{a.get('titel')}»: keine Öffnungszeiten auf {a.get('link')}")
     return _live_bericht(luecken)
 
 
