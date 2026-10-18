@@ -346,7 +346,7 @@ WILLKOMMEN = [
      [[198.6, 127.5]], {"gebaeude": "campusbau-53"}),
     ("o46", "46", "ausstellung",
      {"de": "Holzskulptur", "en": "Wood Sculpture"},  # Bezeichnung wie goetheanum.ch («Ausstellungsraum mit Holzskulptur»)
-     [[210.8, 121.5]], {"gebaeude": "campusbau-53"}),
+     [[210.8, 119.8]], {"gebaeude": "campusbau-53"}),  # etwas höher, frei von der Südtreppe (Auftraggeber, 18. 10. 2026)
 ]
 
 # Eingänge & Empfang tragen standardmässig Gold (Entscheid Auftraggeber,
