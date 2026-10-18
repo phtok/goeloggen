@@ -30,12 +30,13 @@ jobs:
   # gerenderten Blatt. axe-core prüft die normativen Kriterien der WCAG 2.2
   # (A und AA) in Chromium. Eigener Job, weil er einen Browser braucht.
   #
-  # NOCH KEIN TOR: der Schritt läuft mit --check, darf aber scheitern
-  # (continue-on-error), solange der Rückstand aus der Erstmessung offen ist —
-  # er steht in CHANGELOG-a11y.md. Ist der abgetragen, wird aus dem Bericht
-  # ein Tor, indem die eine Zeile «continue-on-error» hier verschwindet. Sonst
-  # wäre jeder Push von Anfang an rot, und ein Tor, das immer rot steht, hütet
-  # nichts.
+  # KEIN TOR, ABER BESCHEID: der Schritt läuft mit --check, darf aber
+  # scheitern (continue-on-error). Der Rückstand der Erstmessung ist seit dem
+  # 18. 10. 2026 abgetragen (CHANGELOG-a11y.md, D1–D13); der Auftraggeber hat
+  # entschieden, dass die Messung trotzdem berichtend bleibt und dafür jedes
+  # Mal Bescheid gibt, wenn etwas nicht stimmt: auf einem PR als Kommentar, auf
+  # main als Issue (Label barrierefreiheit), das sich bei Grün selbst schliesst.
+  # Zum Tor wird sie, indem die Zeile «continue-on-error» verschwindet.
   #
   # Schnell, weil (1) ein PR nur die Seiten misst, die sein Unterschied berühren
   # kann (--seit; der Push auf main misst das ganze Haus), (2) mehrere Fenster
@@ -45,6 +46,10 @@ jobs:
   # 7 s, kostet aber 4,2 s Installation je Lauf – netto kein Gewinn, verworfen.
   barrierefreiheit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -62,6 +67,7 @@ jobs:
             echo "CHROMIUM_PATH=$chrome" >> "$GITHUB_ENV"
           fi
       - name: barrierefreiheit (WCAG 2.2 AA)
+        id: messung
         continue-on-error: true
         run: |
           set +e
@@ -78,3 +84,45 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
           exit $stand
+      # Bescheid geben (Auftrag 18. 10. 2026): jeder Fund wird gemeldet.
+      - name: Bescheid auf dem PR
+        if: github.event_name == 'pull_request' && steps.messung.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "**Barrierefreiheit (DS08): die Messung meldet Verstösse** auf den Seiten, die dieser PR berührt."
+            echo
+            echo "Lauf: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            echo
+            echo '```'
+            tail -n 80 wcag.txt
+            echo '```'
+          } > bericht.md
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file bericht.md || true
+      - name: Bescheid auf main
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          kopf="Barrierefreiheit: Verstösse auf main"
+          offen="$(gh issue list --label barrierefreiheit --state open --search "$kopf in:title" --json number --jq '.[0].number // empty' 2>/dev/null || true)"
+          if [ "${{ steps.messung.outcome }}" = "failure" ]; then
+            {
+              echo "Die Messung auf \`main\` (${GITHUB_SHA::7}) meldet Verstösse gegen WCAG 2.2 AA."
+              echo
+              echo "Lauf: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+              echo
+              echo '```'
+              tail -n 80 wcag.txt
+              echo '```'
+            } > bericht.md
+            if [ -n "$offen" ]; then
+              gh issue comment "$offen" --body-file bericht.md
+            else
+              gh label create barrierefreiheit --color B60205 --description "Funde der Barrierefreiheits-Messung (DS08)" --force >/dev/null 2>&1 || true
+              gh issue create --title "$kopf" --label barrierefreiheit --body-file bericht.md
+            fi
+          elif [ -n "$offen" ]; then
+            gh issue close "$offen" --comment "Wieder grün: kein Verstoss mehr auf \`main\` (${GITHUB_SHA::7})."
+          fi
