@@ -97,6 +97,7 @@ Browsers. Solche Blätter werden gezählt und übersprungen.
 | D5 | `tabindex="0"` an scrollbaren Behältern (Tabellen, Vorschaustreifen, Radar) | `apps/cover-generator`, `apps/karten-generator`, `apps/utm-generator`, `design-system/index.html`, `design-system/stilprobe-warm.html`, `marketing-maschine.html`, `sektionsfarben-*.html`, `uebersetzungen.html` | WCAG 2.1.1 – `scrollable-region-focusable`. Gemessen danach: ohne Verstoss |
 | D6 | Links im Satz unterstrichen: Fusszeilen-Regel in `base.css` (1.28.2), Signatur-Generator `.hint a`/`.empf a` | `design-system/base.css`, `apps/signatur-generator/index.html` | WCAG 1.4.1 – `link-in-text-block`. Gemessen danach: ohne Verstoss |
 | D7 | Farbmuster: Kopieren-Knopf und Link «Anwendung» nicht mehr ineinander (`div.sw` > `button.sw-k` + Link daneben) | `design-system/index.html` | WCAG 4.1.2 – `nested-interactive` (30 Stellen). Gemessen danach: ohne Verstoss |
+| D4 | Auswahl- und Eingabefelder erhalten Namen: `aria-label` an `<select>` (Ordnerwahl, Portrait), `<label for>` an allen Schiebereglern, `aria-label` an Textfeldern und Datei-Eingaben | `ordner.html`, `werkzeug.html`, `ineinander.html`, `kerning.html`, `ligvorschau.html`, `schrift-webfont.html`, `tester.html`, `apps/cover-generator/index.html`, `apps/qr-generator/index.html` | WCAG 4.1.2 – `select-name` (130 Stellen) und `label` (82 Stellen). Gemessen danach: alle neun Seiten ohne Verstoss (18. 10. 2026) |
 
 ## Rückstand aus der Erstmessung
 

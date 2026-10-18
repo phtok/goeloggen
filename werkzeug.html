@@ -65,14 +65,14 @@
       <p class="line" id="mixOut" style="min-height:1.4em"></p>
       <p class="line" id="mixSmall" style="font-size:var(--t-small);line-height:1.75;color:var(--muted);max-width:48ch;margin-top:14px"></p>
     </div>
-    <textarea id="mixIn" rows="3" spellcheck="false" style="width:100%;font-family:inherit;font-size:15px;color:inherit;background:var(--field-bg);border:1px solid var(--line);border-radius:10px;padding:11px 13px;resize:vertical;line-height:1.5">Mitglied {BE}3477 trat 1923 bei · {AGB} §3 · {ISBN} 978-3 · das {GOETHEANUM} zählte am 24.6.1923 genau 1487 Gäste; vgl. {Bd}. II, S. 36.</textarea>
+    <textarea id="mixIn" aria-label="Mischtext" rows="3" spellcheck="false" style="width:100%;font-family:inherit;font-size:15px;color:inherit;background:var(--field-bg);border:1px solid var(--line);border-radius:10px;padding:11px 13px;resize:vertical;line-height:1.5">Mitglied {BE}3477 trat 1923 bei · {AGB} §3 · {ISBN} 978-3 · das {GOETHEANUM} zählte am 24.6.1923 genau 1487 Gäste; vgl. {Bd}. II, S. 36.</textarea>
     <div class="sixgrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;margin-top:20px">
       <div>
         <div style="font-weight:600;margin-bottom:10px">Kurzziffern</div>
         <div class="ctrls">
-          <div class="ctrl"><label>Höhe <b><span id="figH-v">533</span></b></label><input type="range" id="figH" min="460" max="690" value="533"></div>
-          <div class="ctrl"><label>Gewicht (Dicke) <b><span id="figW-v">520</span></b></label><input type="range" id="figW" min="190" max="725" value="520"></div>
-          <div class="ctrl"><label>Laufweite <b><span id="figT-v">+10</span></b></label><input type="range" id="figT" min="-30" max="160" value="10"></div>
+          <div class="ctrl"><label for="figH">Höhe <b><span id="figH-v">533</span></b></label><input type="range" id="figH" min="460" max="690" value="533"></div>
+          <div class="ctrl"><label for="figW">Gewicht (Dicke) <b><span id="figW-v">520</span></b></label><input type="range" id="figW" min="190" max="725" value="520"></div>
+          <div class="ctrl"><label for="figT">Laufweite <b><span id="figT-v">+10</span></b></label><input type="range" id="figT" min="-30" max="160" value="10"></div>
         </div>
         <div class="readout">
           <span class="ro-code" id="figCode"></span>
@@ -83,9 +83,9 @@
       <div>
         <div style="font-weight:600;margin-bottom:10px">Kapitälchen</div>
         <div class="ctrls">
-          <div class="ctrl"><label>Höhe <b><span id="capH-v">511</span></b></label><input type="range" id="capH" min="460" max="690" value="511"></div>
-          <div class="ctrl"><label>Gewicht (Dicke) <b><span id="capW-v">550</span></b></label><input type="range" id="capW" min="190" max="725" value="550"></div>
-          <div class="ctrl"><label>Laufweite <b><span id="capT-v">30</span></b></label><input type="range" id="capT" min="-30" max="160" value="30"></div>
+          <div class="ctrl"><label for="capH">Höhe <b><span id="capH-v">511</span></b></label><input type="range" id="capH" min="460" max="690" value="511"></div>
+          <div class="ctrl"><label for="capW">Gewicht (Dicke) <b><span id="capW-v">550</span></b></label><input type="range" id="capW" min="190" max="725" value="550"></div>
+          <div class="ctrl"><label for="capT">Laufweite <b><span id="capT-v">30</span></b></label><input type="range" id="capT" min="-30" max="160" value="30"></div>
         </div>
         <div class="readout">
           <span class="ro-code" id="capCode"></span>
@@ -105,10 +105,10 @@
       <p class="cmp">Grundziffern zum Vergleich: 1&nbsp;&nbsp;8&nbsp;&nbsp;2&nbsp;&nbsp;3</p>
     </div>
     <div class="ctrls">
-      <div class="ctrl"><label>Höhe <b><span id="supH-v">320</span></b></label><input type="range" id="supH" min="250" max="690" value="320"></div>
-      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="supW-v">700</span></b></label><input type="range" id="supW" min="190" max="725" value="700"></div>
-      <div class="ctrl"><label>Versatz (über Grundlinie) <b><span id="supO-v">+460</span></b></label><input type="range" id="supO" min="0" max="560" value="460"></div>
-      <div class="ctrl"><label>Laufweite <b><span id="supT-v">0</span></b></label><input type="range" id="supT" min="-30" max="160" value="0"></div>
+      <div class="ctrl"><label for="supH">Höhe <b><span id="supH-v">320</span></b></label><input type="range" id="supH" min="250" max="690" value="320"></div>
+      <div class="ctrl"><label for="supW">Gewicht (Dicke) <b><span id="supW-v">700</span></b></label><input type="range" id="supW" min="190" max="725" value="700"></div>
+      <div class="ctrl"><label for="supO">Versatz (über Grundlinie) <b><span id="supO-v">+460</span></b></label><input type="range" id="supO" min="0" max="560" value="460"></div>
+      <div class="ctrl"><label for="supT">Laufweite <b><span id="supT-v">0</span></b></label><input type="range" id="supT" min="-30" max="160" value="0"></div>
     </div>
     <div class="readout">
       <span class="ro-code" id="supCode"></span>
@@ -126,10 +126,10 @@
       <p class="cmp">Grundziffern zum Vergleich: 2&nbsp;&nbsp;4&nbsp;&nbsp;1</p>
     </div>
     <div class="ctrls">
-      <div class="ctrl"><label>Höhe <b><span id="subH-v">320</span></b></label><input type="range" id="subH" min="250" max="690" value="320"></div>
-      <div class="ctrl"><label>Gewicht (Dicke) <b><span id="subW-v">700</span></b></label><input type="range" id="subW" min="190" max="725" value="700"></div>
-      <div class="ctrl"><label>Versatz (unter Grundlinie) <b><span id="subO-v">-110</span></b></label><input type="range" id="subO" min="-300" max="60" value="-110"></div>
-      <div class="ctrl"><label>Laufweite <b><span id="subT-v">0</span></b></label><input type="range" id="subT" min="-30" max="160" value="0"></div>
+      <div class="ctrl"><label for="subH">Höhe <b><span id="subH-v">320</span></b></label><input type="range" id="subH" min="250" max="690" value="320"></div>
+      <div class="ctrl"><label for="subW">Gewicht (Dicke) <b><span id="subW-v">700</span></b></label><input type="range" id="subW" min="190" max="725" value="700"></div>
+      <div class="ctrl"><label for="subO">Versatz (unter Grundlinie) <b><span id="subO-v">-110</span></b></label><input type="range" id="subO" min="-300" max="60" value="-110"></div>
+      <div class="ctrl"><label for="subT">Laufweite <b><span id="subT-v">0</span></b></label><input type="range" id="subT" min="-30" max="160" value="0"></div>
     </div>
     <div class="readout">
       <span class="ro-code" id="subCode"></span>
