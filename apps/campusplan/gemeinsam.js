@@ -75,6 +75,12 @@ const UI = {
   "fuehrung-link": { de: "Führungen buchen", en: "Book a guided tour" },
   "nummer-hint": { de: "Ein Tipp auf eine Nummer in der Liste zeigt den Ort auf der Karte – und umgekehrt.",
                    en: "Tap a number in the list to see the place on the map – and the other way round." },
+  "pause-bis": { de: "Pause bis", en: "Break until" },
+  "ausserhalb": { de: "passt an diesem Tag nicht in die Öffnungszeiten", en: "does not fit the opening hours that day" },
+  "ankunft-lab": { de: "Ankunft", en: "Arrival" },
+  "ankunft-hint": { de: "Mit Besuchstag und Ankunft schlägt der Plan einen Zeitplan vor, nach den aktuellen Öffnungszeiten.",
+                    en: "With a visit day and arrival time the plan suggests a schedule, based on the current opening hours." },
+  zeitplan: { de: "Zeitplan", en: "Schedule" },
   "karte-laedt": { de: "Karte wird geladen …", en: "Loading map …" },
   "karte-fehlt": { de: "Die Karte konnte nicht geladen werden. Die Liste gilt trotzdem.", en: "The map could not be loaded. The list still works." },
   "plan-leer": { de: "Dieser Link enthält keinen Plan.", en: "This link holds no plan." },
@@ -94,6 +100,7 @@ const state = {
   besucht: new Set(),         // Ort-IDs abgehakt (nur Telefon)
   code: "",                   // Plan-Code aus dem Link
   datum: "",                  // Besuchstag ISO (optional)
+  ankunft: "10:00",           // Ankunftszeit für den Zeitplan
   ausnahmen: null,            // Antwort der Edge Function (saal, glashaus) oder null
   fokus: null
 };
@@ -140,11 +147,21 @@ function ortMarker(id) {
 
 function stationen() {
   // Nummerierte Stationen in Gehreihenfolge; Anreise separat, ohne Nummer.
+  // Gibt es einen Zeitplan (Besuchstag bekannt), zählen die Nummern in
+  // seiner Reihenfolge — Karte, Liste und Uhrzeiten laufen dann gleich;
+  // was an dem Tag nicht in die Öffnungszeiten passt, folgt am Ende.
   // Grabsteine (thema ‹aus›) und unbekannte IDs aus alten Links fallen still weg.
   const liste = [...state.an].map((id) => gast(id)).filter((g) => g && g.thema !== "aus" && ort(g.id));
-  const nummeriert = liste.filter((g) => g.thema !== "anreise").sort((a, b) => a.gehfolge - b.gehfolge);
+  let nummeriert = liste.filter((g) => g.thema !== "anreise").sort((a, b) => a.gehfolge - b.gehfolge);
   const anreise = liste.filter((g) => g.thema === "anreise");
-  return { nummeriert, anreise };
+  const plan = zeitplan(nummeriert);
+  if (plan) {
+    const rang = {};
+    plan.eintraege.forEach((e, i) => { if (e.id) rang[e.id] = i; });
+    nummeriert = nummeriert.map((g, i) => ({ g, i }))
+      .sort((a, b) => (rang[a.g.id] ?? 1e3 + a.i) - (rang[b.g.id] ?? 1e3 + b.i)).map(({ g }) => g);
+  }
+  return { nummeriert, anreise, plan };
 }
 
 /* ---------- Tage und Öffnungs-Ausnahmen ---------- */
@@ -177,14 +194,178 @@ function ausnahmeAm(g, iso) {
   return liste.find((e) => e.datum === iso) || null;
 }
 
+// Zu ist ein Ort, den man betritt, wenn er an dem Tag kein Zeitfenster hat
+// (oder die Tagesausnahme ihn schliesst). Was man von aussen sieht, ist nie zu.
 function ortGeschlossenAm(g, iso) {
   if (!iso) return false;
   const a = ausnahmeAm(g, iso);
   if (a && a.zu) return true;
-  if (!g.geschlossen) return false;
-  const [j, m, tag] = iso.split("-").map(Number);
-  const wochentag = new Date(j, m - 1, tag).getDay();
-  return g.geschlossen.includes(wochentag);
+  if (g.zugang === "aussen") return false;
+  const f = fensterAm(g, iso);
+  return Boolean(f && !f.length);
+}
+
+/* ---------- Öffnungszeiten: live von goetheanum.ch, sonst Rückfall ---------- */
+
+// Der Block der Öffnungszeiten-Seite zu einem Teil: gleicher Titel, sonst
+// Titel enthält die Quelle (Ausstellungstitel), sonst Kontext (Ortszeile davor).
+function liveBlock(teil) {
+  const liste = state.ausnahmen && Array.isArray(state.ausnahmen.zeiten) ? state.ausnahmen.zeiten : [];
+  if (!teil.quelle || !liste.length) return null;
+  return liste.find((b) => b.titel === teil.quelle)
+    || liste.find((b) => b.titel.includes(teil.quelle))
+    || liste.find((b) => (b.kontext || []).includes(teil.quelle)) || null;
+}
+
+function teilZeiten(teil) {
+  const live = liveBlock(teil);
+  if (live && live.fenster.length) {
+    return { fenster: live.fenster, ersterImMonat: Boolean(live.ersterImMonat), zuMonate: live.zuMonate || [], live: true };
+  }
+  return { fenster: teil.fenster || [], ersterImMonat: Boolean(teil.ersterImMonat), zuMonate: teil.zuMonate || [], live: false };
+}
+
+function minuten(hhmm) {
+  const [h, m] = String(hhmm).split(/[:.]/).map(Number);
+  return h * 60 + (m || 0);
+}
+
+function uhrText(min) {
+  const h = Math.floor(min / 60), m = min % 60;
+  return state.sprache === "en" ? `${h}:${String(m).padStart(2, "0")}` : `${h}.${String(m).padStart(2, "0")}`;
+}
+
+// Zeitfenster des massgeblichen Teils an einem Tag, in Minuten:
+// null = keine Angabe (immer zugänglich), [] = an dem Tag zu.
+// Eine Tagesausnahme (Grosser Saal «14.00–14.20») ersetzt das Fenster.
+function fensterAm(g, iso) {
+  if (!g.oeffnung || !g.oeffnung.length || !iso) return null;
+  const a = ausnahmeAm(g, iso);
+  if (a && a.zu) return [];
+  if (a && a.zeit) {
+    const m = a.zeit.match(/(\d{1,2})[.:](\d{2})\s*[–-]\s*(\d{1,2})[.:](\d{2})/);
+    if (m) return [{ von: minuten(`${m[1]}:${m[2]}`), bis: minuten(`${m[3]}:${m[4]}`) }];
+  }
+  const z = teilZeiten(g.oeffnung[0]);
+  const [j, mo, tag] = iso.split("-").map(Number);
+  const wochentag = new Date(j, mo - 1, tag).getDay();
+  if (z.zuMonate.includes(mo)) return [];
+  if (z.ersterImMonat && tag > 7) return [];
+  return z.fenster.filter((f) => f.tage.includes(wochentag))
+    .map((f) => ({ von: minuten(f.von), bis: minuten(f.bis) })).sort((x, y) => x.von - y.von);
+}
+
+const TAG_KURZ = { de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"], en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] };
+const MONAT_NAME = {
+  de: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+  en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+};
+
+// Tage als Text: alle sieben = täglich, Läufe ab drei Tagen mit Bis-Strich
+// (Mo–Do, Di–So über den Sonntag), sonst aufgezählt.
+function tageText(tage) {
+  const sp = state.sprache === "en" ? "en" : "de";
+  if (tage.length === 7) return sp === "en" ? "daily" : "täglich";
+  const folge = [1, 2, 3, 4, 5, 6, 0].filter((d) => tage.includes(d));
+  const laeufe = [];
+  folge.forEach((d, i) => {
+    const vorher = folge[i - 1];
+    if (i && (vorher + 1) % 7 === d) laeufe[laeufe.length - 1].push(d); else laeufe.push([d]);
+  });
+  const und = sp === "en" ? " and " : " und ";
+  const teile = laeufe.flatMap((l) => (l.length >= 3 ? [`${TAG_KURZ[sp][l[0]]}–${TAG_KURZ[sp][l[l.length - 1]]}`] : l.map((d) => TAG_KURZ[sp][d])));
+  return teile.length === 2 ? teile.join(und) : teile.join(", ");
+}
+
+// Öffnungszeiten eines Orts als Text, aus den (live gelesenen) Fenstern.
+function zeitenText(g) {
+  if (!g.oeffnung) return "";
+  const sp = state.sprache === "en" ? "en" : "de";
+  const und = sp === "en" ? " and " : " und ";
+  const uhr = sp === "en" ? "" : " Uhr";
+  const text = g.oeffnung.map((teil) => {
+    const z = teilZeiten(teil);
+    const gruppen = [];
+    z.fenster.forEach((f) => {
+      const schluessel = [...f.tage].sort().join(",");
+      const gr = gruppen.find((x) => x.schluessel === schluessel);
+      // Wortverbinder (U+2060) um den Bis-Strich: die Spanne bricht nicht um.
+      const spanne = `${uhrText(minuten(f.von))}\u2060–\u2060${uhrText(minuten(f.bis))}`;
+      if (gr) gr.spannen.push(spanne); else gruppen.push({ schluessel, tage: f.tage, spannen: [spanne] });
+    });
+    let tageTeil = gruppen.map((gr) => `${z.ersterImMonat ? (sp === "en" ? "first Friday of the month" : "jeden ersten Freitag im Monat") : tageText(gr.tage)} ${gr.spannen.join(und)}`).join(", ");
+    if (tageTeil) tageTeil += uhr;
+    if (z.zuMonate.length) {
+      const namen = z.zuMonate.map((m) => MONAT_NAME[sp][m - 1]);
+      tageTeil += `, ${namen.join(und)} ${sp === "en" ? "closed" : "geschlossen"}`;
+    }
+    return [teil.vor ? t(teil.vor) : "", tageTeil].filter(Boolean).join(" ");
+  }).join(", ");
+  return g.hinweis ? `${text}; ${t(g.hinweis)}` : text;
+}
+
+/* ---------- Zeitplan ---------- */
+
+// Vorschlag für den Tag: ab der Ankunft durch die Stationen, mit WEGZEIT
+// dazwischen. Dran ist, was jetzt offen ist, in Gehfolge — aber nur, wenn
+// danach das Fenster, das als nächstes schliesst, noch erreichbar bleibt;
+// sonst geht dieses vor. Ist nichts offen, wird gewartet (Pause bis zur
+// nächsten Öffnung). Was an dem Tag nicht passt, steht in ‹ausserhalb›.
+// Ohne Besuchstag kein Zeitplan.
+function zeitplan(liste) {
+  const iso = planTag();
+  if (!iso || !liste.length) return null;
+  let jetzt = minuten(state.ankunft || "10:00");
+  if (state.modus === "plan" && !state.datum) {
+    // Am Telefon ohne Besuchstag gilt heute — und frühestens jetzt.
+    const d = new Date();
+    jetzt = Math.max(jetzt, Math.ceil((d.getHours() * 60 + d.getMinutes()) / 5) * 5);
+  }
+  const offen = liste.map((g) => ({ g, fenster: g.zugang === "aussen" ? null : fensterAm(g, iso) }));
+  const eintraege = [];
+  const ausserhalb = [];
+  // Frühester Beginn ab t in einem Fenster, mit Dauer (bei kurzem Fenster
+  // dessen Länge); null = heute nicht mehr.
+  const beginn = (o, t) => {
+    if (!o.fenster) return { von: t, dauer: o.g.dauer };
+    for (const f of o.fenster) {
+      const dauer = Math.min(o.g.dauer, f.bis - f.von);
+      const von = Math.max(t, f.von);
+      if (von + dauer <= f.bis) return { von, dauer, schluss: f.bis - dauer };
+    }
+    return null;
+  };
+  let rest = offen.slice();
+  while (rest.length) {
+    rest = rest.filter((o) => { if (beginn(o, jetzt)) return true; ausserhalb.push(o.g.id); return false; });
+    if (!rest.length) break;
+    const mit = rest.map((o) => ({ o, b: beginn(o, jetzt) }));
+    const gebunden = mit.filter((x) => x.b.schluss != null).sort((x, y) => x.b.schluss - y.b.schluss);
+    const offenJetzt = mit.filter((x) => x.b.von === jetzt);
+    const passt = (x) => {
+      const ende = jetzt + x.b.dauer + (x.o.g.dauer ? WEGZEIT : 0);
+      const knapp = gebunden.find((y) => y.o !== x.o);
+      return !knapp || ende <= knapp.b.schluss;
+    };
+    const wahl = offenJetzt.find(passt)
+      || (offenJetzt.length ? gebunden[0] || offenJetzt[0]
+        : mit.slice().sort((x, y) => x.b.von - y.b.von)[0]);
+    if (wahl.b.von > jetzt) eintraege.push({ pause: true, von: jetzt, bis: wahl.b.von });
+    eintraege.push({ id: wahl.o.g.id, von: wahl.b.von, bis: wahl.b.von + wahl.b.dauer });
+    jetzt = wahl.b.von + wahl.b.dauer + (wahl.o.g.dauer ? WEGZEIT : 0);
+    rest = rest.filter((o) => o !== wahl.o);
+  }
+  return { eintraege, ausserhalb, ende: eintraege.length ? eintraege[eintraege.length - 1].bis : jetzt };
+}
+
+// «13.30–14.00 Uhr» für einen Eintrag des Zeitplans.
+function spanneText(e) {
+  const spanne = e.bis > e.von ? `${uhrText(e.von)}\u2060–\u2060${uhrText(e.bis)}` : uhrText(e.von);
+  return `${spanne}${state.sprache === "en" ? "" : " Uhr"}`;
+}
+
+function zeitplanVon(plan, id) {
+  return plan ? plan.eintraege.find((e) => e.id === id) || null : null;
 }
 
 function datumText(iso) {
@@ -233,6 +414,7 @@ function planHash() {
   if (state.umstaende.kinder) teile.push("k=1");
   if (state.umstaende.barrierefrei) teile.push("b=1");
   if (state.datum) teile.push(`d=${state.datum}`);
+  if (state.ankunft && state.ankunft !== "10:00") teile.push(`a=${state.ankunft.replace(":", "")}`);
   return `#${teile.join("&")}`;
 }
 
@@ -258,6 +440,7 @@ function hashAnwenden(h) {
   state.umstaende.kinder = h.k === "1";
   state.umstaende.barrierefrei = h.b === "1";
   if (/^\d{4}-\d{2}-\d{2}$/.test(h.d || "")) state.datum = h.d;
+  if (/^\d{4}$/.test(h.a || "")) state.ankunft = `${h.a.slice(0, 2)}:${h.a.slice(2)}`;
 }
 
 /* ---------- Abhaken (nur dieses Gerät) ---------- */
@@ -285,7 +468,7 @@ function metaMarkup(g) {
   const zu = ortGeschlossenAm(g, tag);
   const live = ausnahmeAm(g, tag);
   const zuText = state.modus === "plan" && !state.datum ? ui("heute-zu") : ui("geschlossen-am");
-  return [zugang, g.dauer ? dauerText(g.dauer) : "", g.zeiten ? t(g.zeiten) : ""].filter(Boolean).join(" · ")
+  return [zugang, g.dauer ? dauerText(g.dauer) : "", zeitenText(g)].filter(Boolean).join(" · ")
     + (zu ? ` · <span class="stn-zu">${zuText}</span>` : "")
     + (live && !live.zu ? ` · <span class="stn-live">${ui("an-diesem-tag")} ${live.text}</span>` : "")
     + (g.ausnahmen && !state.ausnahmen ? ` · <a href="${g.ausnahmen}" target="_blank" rel="noopener">${ui("ausnahmen")}</a>` : "");

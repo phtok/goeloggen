@@ -317,8 +317,11 @@ function zeitenZeichnen() {
     `<span class="k-name">${t(z.name)}</span></button>`).join("");
 }
 
-function zeileMarkup(g, nummer, imPlan) {
+function zeileMarkup(g, nummer, imPlan, plan) {
   const id = g.id;
+  const termin = imPlan ? zeitplanVon(plan, id) : null;
+  const zeit = termin ? `<span class="stn-zeit">${spanneText(termin)}</span>` : "";
+  const aussen = imPlan && plan && plan.ausserhalb.includes(id) ? `<span class="meta stn-zu">${ui("ausserhalb")}</span>` : "";
   const o = ort(id);
   const anreise = g.thema === "anreise";
   const meta = metaMarkup(g);
@@ -331,17 +334,23 @@ function zeileMarkup(g, nummer, imPlan) {
   const zeigen = imPlan
     ? `<button type="button" class="btn stn-karte" data-zeigen="${id}" aria-label="${name}: ${ui("karte-knopf")}">${ui("karte-knopf")}</button>` : "";
   return `<li class="${klassen}" data-id="${id}">${kasten}${nr}` +
-    `<span class="stn-text"><span class="stn-name">${name}</span>${zeile}${meta ? `<span class="meta">${meta}</span>` : ""}</span>${zeigen}</li>`;
+    `<span class="stn-text">${zeit}<span class="stn-name">${name}</span>${zeile}${meta ? `<span class="meta">${meta}</span>` : ""}${aussen}</span>${zeigen}</li>`;
 }
 
 function planZeichnen() {
-  const { nummeriert, anreise } = stationen();
+  const { nummeriert, anreise, plan } = stationen();
   const liste = document.getElementById("stationen");
-  liste.innerHTML = nummeriert.map((g, i) => zeileMarkup(g, i + 1, true)).join("") +
+  const pausen = {};
+  if (plan) plan.eintraege.forEach((e, i) => { const n = plan.eintraege[i + 1]; if (e.pause && n) pausen[n.id] = e; });
+  liste.innerHTML = nummeriert.map((g, i) =>
+    (pausen[g.id] ? `<li class="pause hint">${ui("pause-bis")} ${uhrText(pausen[g.id].bis)}${state.sprache === "en" ? "" : " Uhr"}</li>` : "") +
+    zeileMarkup(g, i + 1, true, plan)).join("") +
     (anreise.length ? `<li class="lab" style="margin-top:var(--s3)">${ui("anreise")}</li>` : "") +
     anreise.map((g) => zeileMarkup(g, "", true)).join("");
 
-  document.getElementById("summe").textContent = `${nummeriert.length} ${ui("stationen")} · ${ui("etwa")} ${dauerText(planMinuten())}`;
+  const spanne = plan && plan.eintraege.length ? spanneText({ von: plan.eintraege[0].von, bis: plan.ende })
+    : `${ui("etwa")} ${dauerText(planMinuten())}`;
+  document.getElementById("summe").textContent = `${nummeriert.length} ${ui("stationen")} · ${spanne}`;
   const info = document.getElementById("datum-info");
   const tag = planTag();
   if (tag) {
@@ -452,10 +461,12 @@ function verdrahten() {
   document.getElementById("neu").addEventListener("click", () => {
     state.themen.clear(); state.umstaende = { kinder: false, barrierefrei: false }; state.zeit = "halb"; state.an.clear();
     state.datum = ""; document.getElementById("datum").value = "";
+    state.ankunft = "10:00"; document.getElementById("ankunft").value = "10:00";
     window.location.hash = "";
     alles(); schrittZeigen(1);
   });
   document.getElementById("datum").addEventListener("change", (e) => { state.datum = e.target.value || ""; });
+  document.getElementById("ankunft").addEventListener("change", (e) => { state.ankunft = e.target.value || "10:00"; });
   ["pdf"].forEach((id) => {
     document.getElementById(id).addEventListener("click", async () => {
       const knopf = document.getElementById(id);
@@ -513,6 +524,7 @@ async function start() {
   if (h.p) { window.location.replace(PLAN_SEITE + window.location.hash); return; }
   hashAnwenden(h);
   if (state.datum) document.getElementById("datum").value = state.datum;
+  document.getElementById("ankunft").value = state.ankunft;
   verdrahten();
   ausnahmenLaden(() => { if (state.schritt === 3) planZeichnen(); });
   await ladeGelaende();

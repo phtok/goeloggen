@@ -505,3 +505,16 @@ goetheanum.ch abgeglichen** (Auftrag 18. 10.) — die Edge Function liest die
 Nebenbefund am Kartentool: Markenblau #0061a9 verschwand auf dem
 Goetheanum-Blau #0067b2. Die Vektorkarte führt darum jetzt einen weissen
 Rand in Schriftstärke um jede Marke (wie die Aquarell-Karte).
+
+### Zeitplan mit Öffnungszeiten (gebaut 18. Oktober 2026)
+
+Die Edge Function `campusplan-ausnahmen` liest jetzt auch
+https://goetheanum.ch/de/campus/oeffnungszeiten und liefert jeden Ort als
+Zeitfenster (`services/campusplan/README.md`). `gaeste.js` führt die Zeiten
+nicht mehr als Satz, sondern als `oeffnung` mit Fenstern (Rückfall) und
+`quelle` (Ort auf der Website); Text, «geschlossen» und Zeitplan rechnen mit
+den Live-Fenstern. Mit Besuchstag (und Ankunft, Standard 10 Uhr) schlägt der
+Plan einen Zeitplan vor: was jetzt offen ist, in Gehfolge — aber nur, wenn
+das Fenster, das als nächstes schliesst, erreichbar bleibt; sonst geht es
+vor, nötigenfalls mit Pause. Die Nummern auf Karte und Liste folgen dann dem
+Zeitplan. Am Telefon ohne Besuchstag gilt heute, ab jetzt.

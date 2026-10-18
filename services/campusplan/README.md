@@ -8,6 +8,11 @@ Deployment.
 
 ## Edge Function `campusplan-ausnahmen`
 
+Deploy: automatisch beim Merge nach `main`
+(`.github/workflows/deploy-campusplan-ausnahmen.yml`), von Hand über
+«Run workflow». Seit 18. Oktober 2026 liefert sie auch die **Öffnungszeiten**
+(siehe unten).
+
 Grosser Saal und Glashaus-Ausstellung haben tagesaktuelle Einschränkungen
 (Veranstaltungen, Proben, Schliesstage), die das Haus auf zwei Seiten von
 goetheanum.ch als Textlisten pflegt:
@@ -36,6 +41,31 @@ dann den Link auf die Seite statt der Tageszeile.
 Der Plan (`apps/campusplan/app.js`) fragt die Function beim Start und
 zeigt zum Besuchstag «an diesem Tag 14.00–14.20 Uhr» oder «an diesem Tag
 geschlossen»; ein geschlossener Ort fällt aus der Vorauswahl.
+
+## Öffnungszeiten live (seit 18. Oktober 2026)
+
+Auftrag: «Die Öffnungszeiten müssen immer aktuell mit der Goetheanum-Webseite
+abgeglichen werden.» Die Function liest darum zusätzlich
+https://goetheanum.ch/de/campus/oeffnungszeiten und gibt jeden Ort als
+Zeitfenster zurück:
+
+```
+"zeiten": [
+  { "titel": "Grosser Saal", "kontext": [".", "Besichtigungen"],
+    "fenster": [{ "tage": [0,1,2,3,4,5,6], "von": "13:30", "bis": "14:30" }] },
+  { "titel": "Haus de Jaager", …, "fenster": [{ "tage": [5], "von": "15:00", "bis": "16:00" }],
+    "ersterImMonat": true, "zuMonate": [7, 8] }, …
+]
+```
+
+Gelesen werden Zeilen wie «Mo. bis Do.: 14.30 - 15.30 Uhr», «Täglich: …»,
+«Sa. und So.: …», «Jeden ersten Freitag im Monat: …», Folgezeilen
+«und 14.00 - 16.00 Uhr» und «Juli und August 2026 geschlossen». Der Ort ist
+die Zeile davor. In `apps/campusplan/gaeste.js` trägt jeder Ort dieser Seite
+`quelle` (Titel oder Teil davon); der Plan nimmt die Live-Fenster und fällt
+nur auf die eigenen Werte zurück, wenn die Seite nicht erreichbar ist oder
+der Ort dort fehlt. Aus den Fenstern rechnet der Plan Text, «geschlossen» und
+den Zeitplan; eine Tagesausnahme des Grossen Saals ersetzt das Fenster des Tags.
 
 ## Monatlicher Wächter über die festen Zeiten
 
