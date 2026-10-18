@@ -81,7 +81,7 @@ function listeZeichnen() {
 function texteSetzen() {
   document.querySelectorAll("[data-ui]").forEach((el) => { el.textContent = ui(el.dataset.ui); });
   document.getElementById("titel").textContent = ui("besuch");
-  document.title = `${ui("besuch")} · Goetheanum`;
+  document.title = ui("besuch");
   document.documentElement.lang = state.sprache === "en" ? "en" : "de-CH";
   document.querySelectorAll("#sprache-seg button").forEach((b) => {
     b.setAttribute("aria-pressed", String(b.dataset.sprache === state.sprache));

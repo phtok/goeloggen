@@ -71,7 +71,9 @@ Anfrage ist alles zugänglich»).
 | Rudolf-Steiner-Atelier | Schreinerei, rechter Eingang. | G2 | belegt |
 | Hochatelier | Blaues Holzhaus im Südwesten der Schreinerei: hier arbeiteten Steiner und Edith Maryon 1914 bis 1925 an der Holzskulptur; ihr 1:1-Modell steht noch heute hier. | G2 (Lage), AW (Atelier Steiners und Maryons 1914–1925, «1:1-Modell» erhalten), AG | belegt |
 | Künstlerwohnung Edith Maryon | Unteres Eurythmiehaus, Rüttiweg 30, 1. Etage. | G2 | belegt |
-| Galerie, 1. Etage (Katalog: Nordgalerie) | *laufende Ausstellung, live* — z. B. «Ausstellung: Kosmische Botanik (Walther Roggenkamp 1926 bis 1995), bis 22. November» | SBK (https://sbk.goetheanum.org/veranstaltungen/ausstellungen und Einzelseite), Flyer («Kunstgalerie im Goetheanum, 1. Etage») · Öffnungszeiten = Zeiten des Baus (Annahme, zu bestätigen) | belegt, live |
+| Nordgalerie (Erdgeschoss) | Im Erdgeschoss: allgemeine Informationen zum Goetheanum und zu Rudolf Steiner. | AG (18. 10. 2026: «Nordgalerie ist im EG! Allgemeine Infos zum Goe und Steiner») | belegt durch Auftraggeber |
+| Foyer | Dauerausstellung zu den Sektionen der Hochschule und zur Geschichte des Goetheanum; während grosser Tagungen abgebaut. | AG (18. 10. 2026) · Lage im Bau geschätzt | belegt durch Auftraggeber |
+| Galerie, 1. Etage (eigener Ort, nicht die Nordgalerie) | *laufende Ausstellung, live* — z. B. «Ausstellung: Kosmische Botanik (Walther Roggenkamp 1926 bis 1995), bis 22. November» | SBK (https://sbk.goetheanum.org/veranstaltungen/ausstellungen und Einzelseite), Flyer («Kunstgalerie im Goetheanum, 1. Etage») · Öffnungszeiten = Zeiten des Baus (Annahme, zu bestätigen) | belegt, live |
 | Buchhandlung, Bibliothek | *kein Einzeiler* | — | — |
 
 ## Essen und Verweilen

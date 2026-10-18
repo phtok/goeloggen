@@ -716,10 +716,10 @@
       "cat": "labor",
       "status": "entwurf",
       "tag": "Campus",
-      "title": "Mein Campusplan",
-      "short": "Campusplan",
+      "title": "Besuch am Goetheanum planen",
+      "short": "Besuch planen",
       "href": "apps/campusplan/",
-      "desc": "Den eigenen Besuch planen: Themen wählen, Zeit wählen, fertig – Plan drucken oder als Link aufs Telefon nehmen und unterwegs abhaken. Laborfassung zur Erprobung.",
+      "desc": "Den eigenen Besuch planen: Interessen und Zeit wählen – die Karte als A4 zum Ausdrucken, der Plan als Link aufs Telefon zum Abhaken. Laborfassung zur Erprobung.",
       "such": "Campusplan Besucher Gäste Besuch planen Rundgang Karte Telefon abhaken Link QR Labor"
     },
     {
