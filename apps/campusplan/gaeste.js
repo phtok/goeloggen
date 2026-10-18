@@ -55,8 +55,11 @@ const ZUGANG = {
    Katalog des Kartentools (tools/karten/extract-marker-positionen.py). */
 const NEUE_ORTE = [
   // farbe wie im Katalog des Kartentools: rot = Säle und Treppen.
+  // Treppenhäuser: auf der Karte die drei Treppen-Zeichen des Kartentools
+  // (karte, zeichen: siehe GAESTE); die Lage hier dient Zoom und Abhaken
+  // und liegt auf der Haupttreppe mit dem Roten Fenster.
   { id: "n-treppen", label: { de: "Treppenhäuser", en: "Staircases" }, farbe: "rot",
-    positionen: [[184.3, 125.9]], gebaeude: "campusbau-53" },
+    positionen: [[198.6, 145.99]], gebaeude: "campusbau-53" },
   // Foyer (Erdgeschoss, blau) in der unteren Mitte des Baus, auf der Lage
   // des Katalog-Foyers v15; die Galerie der 1. Etage (rot) darunter auf dem
   // Blatt (Auftraggeber, 18. 10. 2026).
@@ -160,7 +163,12 @@ const GAESTE = [
     oeffnung: [{ quelle: "Goetheanum", fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] },
       { quelle: "Vital-Café in der Wandelhalle", vor: { de: "Vital-Café", en: "Vital café" }, fenster: [{ tage: TAEGLICH, von: "09:00", bis: "17:00" }] }],
     einzeiler: { de: "Die Halle mit dem Vital-Café.", en: "The hall with the Vital café." } },
+  // karte = Katalog-Orte, die auf der Karte statt einer Nummer stehen (die
+  // drei Treppenhäuser mit Liften, Zeichen M, N, S); zeichen = was die Liste
+  // an Stelle der Nummer zeigt. Solche Orte zählen bei den Nummern nicht mit,
+  // wie im Kartentool (Auftraggeber, 18. 10. 2026).
   { id: "n-treppen", thema: "bau", rang: 4, gehfolge: 7, dauer: 25, zugang: "betreten",
+    karte: ["t-main", "t-nord", "t-sued"], zeichen: "M",
     oeffnung: [{ quelle: "Goetheanum", fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }],
     einzeiler: { de: "Drei öffentliche Treppenhäuser, jedes eine architektonische Besonderheit: im Westtreppenhaus ganz oben das Rote Fenster, Nord- und Südtreppenhaus mit je einem Lift.",
                  en: "Three public staircases, each an architectural highlight: the Red Window at the very top of the west staircase; the north and south staircases each have a lift." } },
