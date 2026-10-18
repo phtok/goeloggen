@@ -302,10 +302,17 @@ Nie mitten in einer Etappe, nie ungefragt starten.
 ein Repo (`source_url`), das gewählte `model`, ein Titel, und als
 `prompt` eine Übergabe, die ohne den alten Verlauf trägt — Auftrag,
 Stand (Branch, PR, erledigt, offen), wo es geschrieben steht, nächster
-Schritt. Verweisen statt nacherzählen. Danach den Titel melden und in
-der alten Session nichts Neues mehr anfangen.
+Schritt. Verweisen statt nacherzählen. Läuft die neue Session
+(`get_session` mit ihrer ID), meldet die alte den Titel und archiviert
+sich selbst (`archive_session` mit der eigenen ID aus `get_session` ohne
+ID). Ist die Arbeit fertig und kommt nichts nach, archiviert sich die
+Session nach dem ‹fertig› des Inhabers. Vorher müssen alle beobachteten
+PRs gemergt oder geschlossen sein.
 
 **Modellwahl** bei dieser Gelegenheit, für die Arbeit, die noch kommt:
+- **Haiku 5.5** — nur nachschauen und melden: Stand abfragen, einen PR
+  bis grün beobachten, Posteingang lesen, Zustellung prüfen. Nichts
+  schreiben, was ein Tor prüft.
 - **Sonnet 5.5** — Arbeit nach klarem Plan: Korrekturen einarbeiten,
   Doku nachführen, Belege prüfen, Massenänderungen, Deploy begleiten.
 - **Opus 5.5** (Standard) — Seiten bauen, gestalten, Texte setzen,
