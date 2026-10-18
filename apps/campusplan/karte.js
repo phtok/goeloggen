@@ -61,6 +61,7 @@ function kartenStand(plan) {
     positionen: { "wc-goetheanum": [197.24, 134.5] },
     gebaeudeAn, gebaeudeAus: [],
     folge: plan.nummeriert.map((g) => g.id),
+    legende: plan.legende !== false,
     festeNummern: false, kompakt: false, preset: "gedeckt", basiskarte: "vektor",
     ausschnitt: { skala: 1, dx: 0, dy: 0 }
   };
@@ -68,17 +69,24 @@ function kartenStand(plan) {
 
 /* Blattszene des Plans. Passt die Legende nicht, setzt das Kartentool sie
    kompakt (kleinerer Grad, engere Zeilen). Liefert das SVG-Markup ohne
-   Wurzel und die Markenfarben je Ort (für Liste und Stationenblatt). */
+   Wurzel, die Markenfarben je Ort (für Liste und Stationenblatt) und die
+   Lage jeder Marke in Blatt-mm (für Zoom und Abhak-Zeichen am Telefon). */
 async function kartenSzene(plan) {
   const K = await kartentoolLaden();
   const stand = kartenStand(plan);
   K.anwenden(stand);
   let markup = K.szene(0);
-  if (K.ueberlauf()) {
+  if (stand.legende && K.ueberlauf()) {
     K.anwenden({ ...stand, kompakt: true });
     markup = K.szene(0);
   }
   const farben = {};
   stand.an.forEach((id) => { farben[id] = K.markenFarbe(id); });
-  return { markup, farben, breite: K.masse.blatt.breite, hoehe: K.masse.blatt.hoehe };
+  const lagen = {};
+  stand.an.forEach((id) => {
+    const o = ORTE.find((x) => x.id === id) || NEUE_ORTE.find((x) => x.id === id);
+    const p = stand.positionen[id] || (o && o.positionen && o.positionen[0]);
+    if (p) lagen[id] = p;
+  });
+  return { markup, farben, lagen, breite: K.masse.blatt.breite, hoehe: K.masse.blatt.hoehe };
 }
