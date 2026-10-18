@@ -777,7 +777,7 @@ const ORTE = [
     "positionen": [
       [
         210.8,
-        121.5
+        119.8
       ]
     ],
     "gebaeude": "campusbau-53"
