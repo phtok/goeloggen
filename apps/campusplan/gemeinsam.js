@@ -224,9 +224,21 @@ function minuten(hhmm) {
   return h * 60 + (m || 0);
 }
 
+// Uhrzeit: volle Stunde ohne Minuten («10», G22), sonst «13.30»; englisch «10:00».
 function uhrText(min) {
   const h = Math.floor(min / 60), m = min % 60;
-  return state.sprache === "en" ? `${h}:${String(m).padStart(2, "0")}` : `${h}.${String(m).padStart(2, "0")}`;
+  if (state.sprache === "en") return `${h}:${String(m).padStart(2, "0")}`;
+  return m ? `${h}.${String(m).padStart(2, "0")}` : String(h);
+}
+
+// Einheit nach schmalem geschütztem Leerzeichen (U+202F, G20): «10 Uhr», «20 Min.».
+function einheit(zahl, wort) {
+  return wort ? `${zahl}\u202f${wort}` : String(zahl);
+}
+
+// «13.30 Uhr» (englisch ohne Einheit).
+function uhrZeit(min) {
+  return einheit(uhrText(min), state.sprache === "en" ? "" : "Uhr");
 }
 
 // Zeitfenster des massgeblichen Teils an einem Tag, in Minuten:
@@ -267,7 +279,7 @@ function tageText(tage) {
     if (i && (vorher + 1) % 7 === d) laeufe[laeufe.length - 1].push(d); else laeufe.push([d]);
   });
   const und = sp === "en" ? " and " : " und ";
-  const teile = laeufe.flatMap((l) => (l.length >= 3 ? [`${TAG_KURZ[sp][l[0]]}–${TAG_KURZ[sp][l[l.length - 1]]}`] : l.map((d) => TAG_KURZ[sp][d])));
+  const teile = laeufe.flatMap((l) => (l.length >= 3 ? [`${TAG_KURZ[sp][l[0]]}\u2060–\u2060${TAG_KURZ[sp][l[l.length - 1]]}`] : l.map((d) => TAG_KURZ[sp][d])));
   return teile.length === 2 ? teile.join(und) : teile.join(", ");
 }
 
@@ -276,7 +288,7 @@ function zeitenText(g) {
   if (!g.oeffnung) return "";
   const sp = state.sprache === "en" ? "en" : "de";
   const und = sp === "en" ? " and " : " und ";
-  const uhr = sp === "en" ? "" : " Uhr";
+  const uhr = sp === "en" ? "" : "\u202fUhr";
   const text = g.oeffnung.map((teil) => {
     const z = teilZeiten(teil);
     const gruppen = [];
@@ -352,10 +364,10 @@ function zeitplan(liste) {
   return { eintraege, ausserhalb, ende: eintraege.length ? eintraege[eintraege.length - 1].bis : jetzt };
 }
 
-// «13.30–14.00 Uhr» für einen Eintrag des Zeitplans.
+// «13.30–14 Uhr» für einen Eintrag des Zeitplans.
 function spanneText(e) {
   const spanne = e.bis > e.von ? `${uhrText(e.von)}\u2060–\u2060${uhrText(e.bis)}` : uhrText(e.von);
-  return `${spanne}${state.sprache === "en" ? "" : " Uhr"}`;
+  return einheit(spanne, state.sprache === "en" ? "" : "Uhr");
 }
 
 function zeitplanVon(plan, id) {
@@ -376,9 +388,9 @@ function planMinuten() {
 }
 
 function dauerText(minuten) {
-  if (minuten < 60) return `${minuten} ${ui("min")}`;
+  if (minuten < 60) return einheit(minuten, ui("min"));
   const h = Math.floor(minuten / 60), m = minuten % 60;
-  return m ? `${h} ${ui("std")} ${m} ${ui("min")}` : `${h} ${ui("std")}`;
+  return m ? `${einheit(h, ui("std"))} ${einheit(m, ui("min"))}` : einheit(h, ui("std"));
 }
 
 /* ---------- Link: der Plan ist die URL ---------- */

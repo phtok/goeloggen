@@ -92,7 +92,7 @@ function planZeichnen() {
   const pausen = {};
   if (plan) plan.eintraege.forEach((e, i) => { const n = plan.eintraege[i + 1]; if (e.pause && n) pausen[n.id] = e; });
   document.getElementById("stationen").innerHTML = nummeriert.map((g, i) =>
-    (pausen[g.id] ? `<li class="pause hint">${ui("pause-bis")} ${uhrText(pausen[g.id].bis)}${state.sprache === "en" ? "" : " Uhr"}</li>` : "") +
+    (pausen[g.id] ? `<li class="pause hint">${ui("pause-bis")} ${uhrZeit(pausen[g.id].bis)}</li>` : "") +
     zeileMarkup(g, i + 1, true, plan)).join("");
   document.getElementById("anreise").innerHTML = anreise.map((g) => zeileMarkup(g, "", true, null)).join("");
   document.getElementById("anreise-titel").hidden = !anreise.length;
