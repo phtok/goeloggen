@@ -232,6 +232,6 @@ async function planPdf() {
     if (b === blaetter.length - 1) telefonZeichnen();
   });
 
-  const name = `campusplan${state.datum ? "-" + state.datum : ""}.pdf`;
+  const name = `besuch-goetheanum${state.datum ? "-" + state.datum : ""}.pdf`;
   doc.save(name);
 }

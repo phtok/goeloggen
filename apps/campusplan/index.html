@@ -9,13 +9,16 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
-<title>Mein Campusplan · Goetheanum</title>
+<title>Besuch am Goetheanum planen</title>
 <meta name="description" content="Den eigenen Besuch am Goetheanum planen: Interessen und Zeit wählen, den Plan als A4 drucken oder als Link aufs Telefon nehmen." />
 <link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
 
-<link rel="stylesheet" href="../../design-system/tokens.css" />
-<link rel="stylesheet" href="../../design-system/base.css" />
-<link rel="stylesheet" href="../../design-system/nav.css" />
+<!-- Versionsmarke (?v=): neue Seite und neues Fundament kommen zusammen an —
+     ein Telefon mit altem base.css im Cache zeigte sonst die Kacheln ungestaltet
+     (18. 10. 2026). Bei jeder Aufnahme ins Fundament mit der Version erhöhen. -->
+<link rel="stylesheet" href="../../design-system/tokens.css?v=1.28.0" />
+<link rel="stylesheet" href="../../design-system/base.css?v=1.28.0" />
+<link rel="stylesheet" href="../../design-system/nav.css?v=1.28.0" />
 
 <style>
   /* Nur Seiten-Eigenes. Alles Gemeinsame steht in base.css; Werte aus den Tokens. */
@@ -76,7 +79,7 @@
     <div class="kopfzeile">
       <div>
         <span class="kicker">Campus · Labor</span>
-        <h1 data-ui="titel">Mein Campusplan</h1>
+        <h1 data-ui="titel">Besuch am Goetheanum planen</h1>
       </div>
       <div class="seg" id="sprache-seg" aria-label="Sprache">
         <button type="button" data-sprache="de" aria-pressed="true">Deutsch</button>
@@ -162,7 +165,7 @@
 
 <footer class="ds-footer">
   <div class="wrap frow">
-    <span><strong>Goetheanum Grafik</strong> · Campusplan, Labor</span>
+    <span><strong>Goetheanum Grafik</strong> · Besuch planen, Labor</span>
     <span><a href="../karten-generator/">Kartentool</a></span>
   </div>
 </footer>

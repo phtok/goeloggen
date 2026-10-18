@@ -58,9 +58,10 @@ function kartenStand(plan) {
     an: ids.filter((id) => katalog.has(id)).concat(eigene.map((e) => e.id)),
     // Die Toiletten-Pille liegt im Katalog genau auf dem Grossen Saal; im
     // Gästeplan stehen beide oft zugleich — die Pille rückt darum in den
-    // freien Teil des Baus darunter (beide bleiben im Goetheanum).
+    // freien Teil des Baus darüber, unter den Schriftzug (darunter stehen
+    // Nordgalerie, Foyer und Galerie; alle bleiben im Goetheanum).
     eigene, teileAus, notizenAus: {}, labels, markerFarben: {},
-    positionen: { "wc-goetheanum": [197.24, 134.5] },
+    positionen: { "wc-goetheanum": [197.24, 121.0] },
     gebaeudeAn, gebaeudeAus: [],
     folge: plan.nummeriert.map((g) => g.id),
     legende: plan.legende !== false,

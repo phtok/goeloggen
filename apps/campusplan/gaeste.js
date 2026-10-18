@@ -55,7 +55,14 @@ const ZUGANG = {
    Katalog des Kartentools (tools/karten/extract-marker-positionen.py). */
 const NEUE_ORTE = [
   { id: "n-treppen", label: { de: "Treppenhäuser", en: "Staircases" },
-    positionen: [[184.3, 125.9]], gebaeude: "campusbau-53" }
+    positionen: [[184.3, 125.9]], gebaeude: "campusbau-53" },
+  // Galerie in der 1. Etage (mit Blauem und Gelbem Saal) und Foyer im
+  // Erdgeschoss (Auftraggeber, 18. 10. 2026). Lage im Bau geschätzt: die
+  // Galerie liegt ein Geschoss höher, die Marke steht symbolisch im Bau.
+  { id: "n-galerie", label: { de: "Galerie, 1. Etage", en: "Gallery, 1st floor" },
+    positionen: [[205.0, 141.0]], gebaeude: "campusbau-53", lageGeschaetzt: true },
+  { id: "n-foyer", label: { de: "Foyer", en: "Foyer" },
+    positionen: [[193.0, 146.0]], gebaeude: "campusbau-53", lageGeschaetzt: true }
 ];
 
 /* oeffnung = Öffnungszeiten als Zeitfenster, ein Eintrag je Teil (der erste
@@ -194,11 +201,10 @@ const GAESTE = [
   { id: "o40", thema: "kultur", rang: 3, gehfolge: 14, dauer: 15, zugang: "betreten",
     oeffnung: [{ quelle: "Rudolf Steiner Atelier", fenster: [{ tage: [5], von: "14:00", bis: "15:00" }] }],
     einzeiler: { de: "Schreinerei, rechter Eingang.", en: "Schreinerei, right-hand entrance." } },
-  { id: "o6", thema: "kultur", rang: 4, gehfolge: 9, dauer: 20, zugang: "betreten", ausstellung: true,
-    name: { de: "Galerie, 1. Etage", en: "Gallery, 1st floor" },
-    // Blauer und Gelber Saal gehören zur Galerie (Auftraggeber, 18. 10. 2026).
-    saele: { de: "Blauer und Gelber Saal", en: "Blue and Yellow Halls" },
-    oeffnung: [{ quelle: "Goetheanum", ausstellung: true, fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }] },
+  { id: "o6", thema: "kultur", rang: 4, gehfolge: 9, dauer: 15, zugang: "betreten",
+    oeffnung: [{ quelle: "Goetheanum", fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }],
+    einzeiler: { de: "Im Erdgeschoss: allgemeine Informationen zum Goetheanum und zu Rudolf Steiner.",
+                 en: "On the ground floor: general information about the Goetheanum and Rudolf Steiner." } },
   { id: "o7", thema: "kultur", rang: 5, gehfolge: 10, dauer: 20, zugang: "betreten",
     oeffnung: [{ seite: "bibliothek", quelle: "Öffnungszeiten", fenster: [{ tage: [2, 4, 5], von: "14:00", bis: "18:00" }] }] },
   { id: "o42", thema: "kultur", rang: 6, gehfolge: 15, dauer: 10, zugang: "betreten",
@@ -241,5 +247,14 @@ const GAESTE = [
   { id: "h-finckh", thema: "sammlung", rang: 10, gehfolge: 18, dauer: 10, zugang: "betreten",
     oeffnung: [{ quelle: "Helene-Finckh-Haus", fenster: [{ tage: [6], von: "15:00", bis: "16:00" }] }],
     einzeiler: { de: "Benannt nach Helene Finckh (1883 bis 1960), Rudolf Steiners wichtigster Stenographin, die ab 1915 rund 1700 seiner Vorträge mitschrieb. Hügelweg 64 A, oberhalb des Parkplatzes.",
-                 en: "Named after Helene Finckh (1883 to 1960), Rudolf Steiner's most important stenographer, who took down some 1,700 of his lectures from 1915. Hügelweg 64 A, above the car park." } }
+                 en: "Named after Helene Finckh (1883 to 1960), Rudolf Steiner's most important stenographer, who took down some 1,700 of his lectures from 1915. Hügelweg 64 A, above the car park." } },
+  // Ab hier neu am 18. 10. 2026 — hinten angehängt (Bit im geteilten Link).
+  { id: "n-galerie", thema: "kultur", rang: 2, gehfolge: 9.5, dauer: 20, zugang: "betreten", ausstellung: true,
+    // Blauer und Gelber Saal gehören zur Galerie (Auftraggeber, 18. 10. 2026).
+    saele: { de: "Blauer und Gelber Saal", en: "Blue and Yellow Halls" },
+    oeffnung: [{ quelle: "Goetheanum", ausstellung: true, fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }] },
+  { id: "n-foyer", thema: "kultur", rang: 3, gehfolge: 2.5, dauer: 15, zugang: "betreten",
+    oeffnung: [{ quelle: "Goetheanum", fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }],
+    einzeiler: { de: "Dauerausstellung zu den Sektionen der Hochschule und zur Geschichte des Goetheanum; während grosser Tagungen abgebaut.",
+                 en: "Permanent exhibition on the Sections of the School and the history of the Goetheanum; taken down during large conferences." } }
 ];
