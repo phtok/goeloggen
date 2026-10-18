@@ -132,6 +132,7 @@ async function planPdf() {
     const live = ausnahmeAm(g, tag);
     const zusatz = (geschlossen ? ` · ${ui("geschlossen-am")}` : "") + (live && !live.zu ? ` · ${ui("an-diesem-tag")} ${live.text}` : "")
       + (plan && plan.ausserhalb.includes(g.id) ? ` · ${ui("ausserhalb")}` : "")
+      + (inFuehrung(g.id) ? ` · ${ui("in-fuehrung")}` : "")
       + (zeitenBestaetigt(g) === false ? ` · ${ui("nicht-bestaetigt")}, ${ui("pruefen")}` : "");
     doc.setFontSize(8.5);
     const metaZeilen = meta || zusatz ? doc.splitTextToSize(pdfText(meta + zusatz), textB) : [];

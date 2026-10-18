@@ -46,7 +46,7 @@ const ZUGANG = {
   betreten: { de: "zu betreten", en: "open to enter" },
   aussen: { de: "von aussen, innen mit Führung", en: "from outside, inside with a guided tour" },
   anfrage: { de: "auf Anfrage", en: "on request" },
-  fuehrung: { de: "mit Führung", en: "with a guided tour" }
+  fuehrung: { de: "mit Anmeldung", en: "booking required" }
 };
 
 /* Orte, die es nur im Gästeplan gibt (kein Katalog-Ort). Lage in Blatt-mm.
@@ -62,7 +62,10 @@ const NEUE_ORTE = [
   { id: "n-galerie", label: { de: "Galerie, 1. Etage", en: "Gallery, 1st floor" },
     positionen: [[205.0, 141.0]], gebaeude: "campusbau-53", lageGeschaetzt: true },
   { id: "n-foyer", label: { de: "Foyer", en: "Foyer" },
-    positionen: [[193.0, 146.0]], gebaeude: "campusbau-53", lageGeschaetzt: true }
+    positionen: [[193.0, 146.0]], gebaeude: "campusbau-53", lageGeschaetzt: true },
+  // Öffentliche Führung: Treffpunkt am Empfang.
+  { id: "x-fuehrung", label: { de: "Öffentliche Führung", en: "Public guided tour" },
+    positionen: [[209.5, 145.5]], gebaeude: "campusbau-53" }
 ];
 
 /* oeffnung = Öffnungszeiten als Zeitfenster, ein Eintrag je Teil (der erste
@@ -105,7 +108,28 @@ const ZEITEN_SEITEN = {
   bibliothek: "https://goetheanum.ch/de/dokumentation/bibliothek",
   archiv: "https://www.rudolf-steiner.com/",
   speisehaus: "https://www.speisehaus.ch/",
-  ausstellungen: "https://sbk.goetheanum.org/veranstaltungen/ausstellungen"
+  ausstellungen: "https://sbk.goetheanum.org/veranstaltungen/ausstellungen",
+  fuehrungen: "https://goetheanum.ch/de/campus/fuehrungen"
+};
+
+// Führungen (https://goetheanum.ch/de/campus/fuehrungen, Stand 18. 10. 2026):
+// die öffentliche Führung bucht man über die Ticketseite, private
+// Themenführungen über das Formular mit vorgewähltem Thema. Je Thema des
+// Plans die passenden Führungen; mit Kindern die Kinderführungen.
+const FUEHRUNGEN = {
+  seite: "https://goetheanum.ch/de/campus/fuehrungen",
+  oeffentlich: "https://tickets.goetheanum.ch/6FUE/",
+  formular: "https://xbniypxl.paperform.co/?thema=",
+  formularKinder: "https://ips3zkc1.paperform.co/?thema=",
+  themen: {
+    bau: ["Allgemeine Goetheanum-Führung", "Architekturführung", "Die Deckengemälde im Grossen Saal",
+      "Die farbigen Fenster im Grossen Saal", "Die Entwicklung der Holzplastik"],
+    sammlung: ["Architekturführung", "Architekturpfadführung Dornach-Arlesheim"],
+    garten: ["Goetheanum Gartenpark", "Felsliweg/Philosophenweg"],
+    kultur: ["Allgemeine Goetheanum-Führung"],
+    sektionen: ["Allgemeine Goetheanum-Führung"]
+  },
+  kinder: ["Schatzsuche", "Wo ist der Kopf zum Drachenschwanz?", "Vom Keller bis zum Dach"]
 };
 
 const GAESTE = [
@@ -256,5 +280,14 @@ const GAESTE = [
   { id: "n-foyer", thema: "kultur", rang: 3, gehfolge: 2.5, dauer: 15, zugang: "betreten",
     oeffnung: [{ quelle: "Goetheanum", fenster: [{ tage: TAEGLICH, von: "09:00", bis: "20:00" }] }],
     einzeiler: { de: "Dauerausstellung zu den Sektionen der Hochschule und zur Geschichte des Goetheanum; während grosser Tagungen abgebaut.",
-                 en: "Permanent exhibition on the Sections of the School and the history of the Goetheanum; taken down during large conferences." } }
+                 en: "Permanent exhibition on the Sections of the School and the history of the Goetheanum; taken down during large conferences." } },
+  // Öffentliche Führung (samstags, live von der Führungsseite) — nur auf Wunsch
+  // im Plan (Schritt 3), kein Thema der Vorauswahl.
+  // umfasst: Stationen, die die Führung zeigt (Grosser Saal, Ausstellungsraum
+  // mit Holzskulptur) — mit Führung im Plan werden sie nicht doppelt geplant.
+  { id: "x-fuehrung", thema: "fuehrung", gehfolge: 2.6, dauer: 80, zugang: "fuehrung", buchen: FUEHRUNGEN.oeffentlich,
+    umfasst: ["v16", "o46"],
+    oeffnung: [{ seite: "fuehrungen", quelle: "Öffentliche Führung", fenster: [{ tage: [6], von: "14:00", bis: "15:20" }] }],
+    einzeiler: { de: "Treffpunkt am Empfang: Geschichte des Goetheanum, Rudolf Steiner und die Anthroposophie, Architektur, Grosser Saal und Ausstellungsraum; Deutsch und Englisch.",
+                 en: "Meeting point at reception: history of the Goetheanum, Rudolf Steiner and anthroposophy, architecture, Great Hall and exhibition room; German and English." } }
 ];

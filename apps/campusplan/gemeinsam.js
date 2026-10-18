@@ -84,6 +84,27 @@ const UI = {
   bis: { de: "bis", en: "until" },
   ab: { de: "ab", en: "from" },
   "ausstellung-wechselnd": { de: "Wechselnde Ausstellungen der Sektion für Bildende Künste.", en: "Changing exhibitions of the Section for Visual Arts." },
+  "s1-titel": { de: "Interessen", en: "Interests" },
+  "s2-titel": { de: "Tag und Zeit", en: "Day and time" },
+  weiter: { de: "Weiter", en: "Next" },
+  zurueck: { de: "Zurück", en: "Back" },
+  "plan-zeigen": { de: "Plan zeigen", en: "Show plan" },
+  "fuehrung-titel": { de: "Mit Führung", en: "With a guided tour" },
+  "fuehrung-hilfe": { de: "Mit einer Führung ist alles zugänglich, auch innen in den Häusern der Architektursammlung.",
+                      en: "With a guided tour everything is open, including the inside of the architecture collection’s houses." },
+  "fuehrung-oeffentlich": { de: "Öffentliche Führung", en: "Public guided tour" },
+  "fuehrung-privat": { de: "Private Führung nach Vereinbarung", en: "Private tour by arrangement" },
+  "fuehrung-privat-hint": { de: "Allein oder mit einer Gruppe, Uhrzeit nach Absprache. Passend zu deinen Interessen:",
+                            en: "On your own or with a group, time by arrangement. Matching your interests:" },
+  "fuehrung-in-plan": { de: "In den Plan aufnehmen", en: "Add to the plan" },
+  "fuehrung-nur-samstag": { de: "Findet samstags statt – mit einem Samstag als Besuchstag kommt sie in den Zeitplan.",
+                            en: "Takes place on Saturdays – choose a Saturday as visit day to add it to the schedule." },
+  "fuehrung-alle": { de: "Alle Führungen", en: "All guided tours" },
+  buchen: { de: "buchen", en: "book" },
+  "fuehrung-buchen": { de: "Führung buchen", en: "Book the tour" },
+  "anmeldung-bis": { de: "Anmeldung bis", en: "register by" },
+  "mit-fuehrung": { de: "mit Führung", en: "with a guided tour" },
+  "in-fuehrung": { de: "in der öffentlichen Führung enthalten", en: "included in the public guided tour" },
   "karte-laedt": { de: "Karte wird geladen …", en: "Loading map …" },
   "karte-fehlt": { de: "Die Karte konnte nicht geladen werden. Die Liste gilt trotzdem.", en: "The map could not be loaded. The list still works." },
   "plan-leer": { de: "Dieser Link enthält keinen Plan.", en: "This link holds no plan." },
@@ -104,6 +125,7 @@ const state = {
   code: "",                   // Plan-Code aus dem Link
   datum: "",                  // Besuchstag ISO (optional)
   ankunft: "10:00",           // Ankunftszeit für den Zeitplan
+  fuehrung: false,            // öffentliche Führung im Plan (Auswahl, Schritt 3)
   ausnahmen: null,            // Antwort der Edge Function (zeiten, saal, glashaus, ausstellungen) oder null
   zeitenStand: "laedt",       // ‹laedt› | ‹live› (Antwort da) | ‹fehler› (Function nicht erreichbar)
   fokus: null
@@ -156,6 +178,12 @@ function ortMarker(id) {
   return o && o.marker && /^[A-Z]{1,2}$/.test(o.marker) ? o.marker : "";
 }
 
+// Zeigt die gewählte öffentliche Führung diesen Ort ohnehin?
+function inFuehrung(id) {
+  const f = gast("x-fuehrung");
+  return state.an.has("x-fuehrung") && Boolean(f && f.umfasst && f.umfasst.includes(id));
+}
+
 function stationen() {
   // Nummerierte Stationen in Gehreihenfolge; Anreise separat, ohne Nummer.
   // Gibt es einen Zeitplan (Besuchstag bekannt), zählen die Nummern in
@@ -165,10 +193,12 @@ function stationen() {
   const liste = [...state.an].map((id) => gast(id)).filter((g) => g && g.thema !== "aus" && ort(g.id));
   let nummeriert = liste.filter((g) => g.thema !== "anreise").sort((a, b) => a.gehfolge - b.gehfolge);
   const anreise = liste.filter((g) => g.thema === "anreise");
-  const plan = zeitplan(nummeriert);
+  const plan = zeitplan(nummeriert.filter((g) => !inFuehrung(g.id)));
   if (plan) {
     const rang = {};
     plan.eintraege.forEach((e, i) => { if (e.id) rang[e.id] = i; });
+    // Was die Führung zeigt, steht gleich nach ihr.
+    nummeriert.forEach((g) => { if (inFuehrung(g.id) && rang["x-fuehrung"] != null) rang[g.id] = rang["x-fuehrung"] + 0.5; });
     nummeriert = nummeriert.map((g, i) => ({ g, i }))
       .sort((a, b) => (rang[a.g.id] ?? 1e3 + a.i) - (rang[b.g.id] ?? 1e3 + b.i)).map(({ g }) => g);
   }
@@ -434,14 +464,15 @@ function zeitplan(liste) {
     const mit = rest.map((o) => ({ o, b: beginn(o, jetzt) }));
     const gebunden = mit.filter((x) => x.b.schluss != null).sort((x, y) => x.b.schluss - y.b.schluss);
     const offenJetzt = mit.filter((x) => x.b.von === jetzt);
+    // Passt x, ohne dass das Fenster, das als nächstes schliesst, verloren geht?
     const passt = (x) => {
-      const ende = jetzt + x.b.dauer + (x.o.g.dauer ? WEGZEIT : 0);
+      const ende = x.b.von + x.b.dauer + (x.o.g.dauer ? WEGZEIT : 0);
       const knapp = gebunden.find((y) => y.o !== x.o);
       return !knapp || ende <= knapp.b.schluss;
     };
     const wahl = offenJetzt.find(passt)
       || (offenJetzt.length ? gebunden[0] || offenJetzt[0]
-        : mit.slice().sort((x, y) => x.b.von - y.b.von)[0]);
+        : mit.slice().sort((x, y) => x.b.von - y.b.von).find(passt) || gebunden[0]);
     if (wahl.b.von > jetzt) eintraege.push({ pause: true, von: jetzt, bis: wahl.b.von });
     eintraege.push({ id: wahl.o.g.id, von: wahl.b.von, bis: wahl.b.von + wahl.b.dauer });
     jetzt = wahl.b.von + wahl.b.dauer + (wahl.o.g.dauer ? WEGZEIT : 0);
@@ -554,8 +585,23 @@ function besuchtSpeichern() {
 
 /* ---------- Zeile eines Orts: Zugang, Dauer, Zeiten, Tageslage ---------- */
 
+// Anmeldeschluss der öffentlichen Führung (live von der Führungsseite).
+function fuehrungAnmeldung() {
+  const b = liveBlock({ seite: "fuehrungen", quelle: "Öffentliche Führung" });
+  return b && b.anmeldung ? minuten(b.anmeldung) : null;
+}
+
 function metaMarkup(g) {
-  const zugang = g.zugang ? t(ZUGANG[g.zugang]) : "";
+  // «innen mit Führung» verlinkt die Führungen; die öffentliche Führung ihre Buchung.
+  let zugang = g.zugang ? t(ZUGANG[g.zugang]) : "";
+  if (g.zugang === "aussen") {
+    zugang = zugang.replace(ui("mit-fuehrung"), `<a href="${FUEHRUNGEN.seite}" target="_blank" rel="noopener">${ui("mit-fuehrung")}</a>`);
+  }
+  if (g.buchen) {
+    const an = fuehrungAnmeldung();
+    zugang += (an != null ? ` · ${ui("anmeldung-bis")} ${uhrZeit(an)}` : "")
+      + ` · <a href="${g.buchen}" target="_blank" rel="noopener">${ui("buchen")}</a>`;
+  }
   const tag = planTag();
   const zu = ortGeschlossenAm(g, tag);
   const live = ausnahmeAm(g, tag);
@@ -564,6 +610,7 @@ function metaMarkup(g) {
     + (zu ? ` · <span class="stn-zu">${zuText}</span>` : "")
     + (live && !live.zu ? ` · <span class="stn-live">${ui("an-diesem-tag")} ${esc(live.text)}</span>` : "")
     + (g.ausnahmen && !state.ausnahmen ? ` · <a href="${g.ausnahmen}" target="_blank" rel="noopener">${ui("ausnahmen")}</a>` : "")
+    + (inFuehrung(g.id) ? ` · ${ui("in-fuehrung")}` : "")
     + (zeitenBestaetigt(g) === false
       ? ` · <span class="stn-zu">${ui("nicht-bestaetigt")}</span>, <a href="${zeitenSeite(g)}" target="_blank" rel="noopener">${ui("pruefen")}</a>` : "");
 }

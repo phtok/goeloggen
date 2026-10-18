@@ -16,6 +16,18 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 18. Oktober 2026 — Navigation: Einladungs-Chip abschaltbar (1.28.1)
+
+**Was.** `nav.js` liest am Skript-Tag `data-invite="aus"`. Dann erscheint der
+Chip «Fehlt Dir etwas?» unten rechts nicht. **Warum.** Seiten mit eigener
+Aktionsleiste am unteren Rand verdecken sonst ihren eigenen Knopf mit dem
+Chip; am Telefon lag er beim Campusplan genau auf «Weiter». **Wirkung.** Nur
+Seiten, die das Attribut setzen, sind betroffen. Erste Nutzerin ist
+`apps/campusplan/` mit ihrer Schrittleiste. Die Rückmeldung bleibt über das
+Menü erreichbar.
+
+---
+
 ## 18. Oktober 2026 — Zeilenabstand ≥ 1.5, Ränder von Bedienelementen ≥ 3:1, Fingerziele 44 px, die Wahl-Kachel (1.28.0)
 
 **Was.** Vier Aufnahmen aus Konrads Review am Campusplan, alle im Fundament.

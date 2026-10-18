@@ -1,8 +1,8 @@
 "use strict";
 
-/* Campusplan für Gäste — die Auswahl (Laborseite, Konzept § 13).
-   Eine Seite, keine Schritte: Interessen, Zeit und Besuchstag wählen, der
-   Plan darunter füllt sich sofort. Mitgenommen wird er als A4-Blatt (pdf.js,
+/* Besuch am Goetheanum planen — die Auswahl (Laborseite, Konzept § 13).
+   Drei Schritte, je eine Frage: Interessen → Tag und Zeit → Dein Plan (mit
+   Führungen und Mitnehmen). Der Plan rechnet bei jeder Wahl im Hintergrund mit. Mitgenommen wird er als A4-Blatt (pdf.js,
    Karte des Kartentools) oder als Link aufs Telefon (plan.html). Die Karte
    selbst steht hier nicht — sie gehört zu den beiden Ausgaben.
    Gemeinsames (Texte, Zustand, Link, Öffnungszeiten, Zeitplan) in gemeinsam.js. */
@@ -21,6 +21,7 @@ function immerDabei() {
 
 function vorauswahl() {
   const an = new Set(immerDabei());
+  if (state.fuehrung) an.add("x-fuehrung");   // die öffentliche Führung bleibt, wenn gewählt
   const kandidaten = GAESTE.filter((g) => {
     if (g.thema === "basis" || g.thema === "anreise") return false;
     if (state.umstaende.barrierefrei && g.barrierefrei === false) return false;
@@ -130,7 +131,54 @@ function planZeichnen() {
       `<ol class="stationen">${offen.sort((a, b) => a.rang - b.rang).map((g) => zeileMarkup(g, "", false, null)).join("")}</ol></details>`;
   }).join("");
 
+  fuehrungenZeichnen();
   ausgabeZeichnen();
+}
+
+// Führungen: die öffentliche (samstags, als Station im Zeitplan) und private
+// Themenführungen passend zu den gewählten Interessen.
+function fuehrungenZeichnen() {
+  const b = liveBlock({ seite: "fuehrungen", quelle: "Öffentliche Führung" });
+  const f = (b && b.fenster[0]) || gast("x-fuehrung").oeffnung[0].fenster[0];
+  const an = fuehrungAnmeldung();
+  const dauer = minuten(f.bis) - minuten(f.von);
+  const tagName = new Date(2026, 0, 4 + f.tage[0]).toLocaleDateString(state.sprache === "en" ? "en-GB" : "de-CH", { weekday: "long" });
+  const satz = state.sprache === "en"
+    ? `Every ${tagName} at ${uhrZeit(minuten(f.von))}, about ${einheit(dauer, ui("min"))}; meeting point at reception.`
+    : `Jeden ${tagName} um ${uhrZeit(minuten(f.von))}, rund ${einheit(dauer, ui("min"))}; Treffpunkt am Empfang.`;
+  document.getElementById("fuehrung-text").textContent = satz
+    + (an != null ? ` ${ui("anmeldung-bis")} ${uhrZeit(an)}.` : "");
+  // In den Plan nur, wenn der Besuchstag passt (ohne Besuchstag immer).
+  const passt = !state.datum || !ortGeschlossenAm(gast("x-fuehrung"), state.datum);
+  const box = document.getElementById("fuehrung-dabei");
+  box.checked = state.an.has("x-fuehrung");
+  box.disabled = !passt && !box.checked;
+  const wahl = document.getElementById("fuehrung-wahl");
+  wahl.title = passt ? "" : ui("fuehrung-nur-samstag");
+  wahl.querySelector("span").textContent = passt ? ui("fuehrung-in-plan") : ui("fuehrung-nur-samstag");
+
+  const themen = [...state.themen].filter((th) => FUEHRUNGEN.themen[th]);
+  const namen = [...new Set(themen.flatMap((th) => FUEHRUNGEN.themen[th]))];
+  const links = namen.map((n) => ({ n, url: FUEHRUNGEN.formular + encodeURIComponent(n) }))
+    .concat(state.umstaende.kinder ? FUEHRUNGEN.kinder.map((n) => ({ n, url: FUEHRUNGEN.formularKinder + encodeURIComponent(n) })) : []);
+  const liste = links.length ? links : [{ n: "Allgemeine Goetheanum-Führung", url: FUEHRUNGEN.formular + encodeURIComponent("Allgemeine Goetheanum-Führung") }];
+  document.getElementById("fuehrung-themen").innerHTML = liste.map((x) =>
+    `<li><a href="${x.url}" target="_blank" rel="noopener">${esc(x.n)}</a></li>`).join("");
+}
+
+/* ---------- Schritte ---------- */
+
+function schrittZeigen(n, scrollen) {
+  state.schritt = n;
+  document.querySelectorAll("[data-teil]").forEach((el) => { el.hidden = Number(el.dataset.teil) !== n; });
+  document.querySelectorAll("#schritte button").forEach((b) => {
+    if (Number(b.dataset.schritt) === n) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+  });
+  const zurueck = document.getElementById("zurueck"), weiter = document.getElementById("weiter");
+  zurueck.hidden = n === 1;
+  weiter.hidden = n === 3;
+  weiter.textContent = n === 2 ? ui("plan-zeigen") : ui("weiter");
+  if (scrollen) document.getElementById("schritte").scrollIntoView({ block: "start", behavior: "smooth" });
 }
 
 // Link und QR folgen jedem Wechsel — was hier steht, ist immer der Plan darüber.
@@ -170,7 +218,18 @@ function verdrahten() {
     const b = e.target.closest("button[data-sprache]");
     if (!b) return;
     state.sprache = b.dataset.sprache;
-    texteSetzen(); wahlZeichnen(); planZeichnen();
+    texteSetzen(); wahlZeichnen(); planZeichnen(); schrittZeigen(state.schritt);
+  });
+  document.getElementById("schritte").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-schritt]");
+    if (b) schrittZeigen(Number(b.dataset.schritt), true);
+  });
+  document.getElementById("weiter").addEventListener("click", () => schrittZeigen(Math.min(3, state.schritt + 1), true));
+  document.getElementById("zurueck").addEventListener("click", () => schrittZeigen(Math.max(1, state.schritt - 1), true));
+  document.getElementById("fuehrung-dabei").addEventListener("change", (e) => {
+    state.fuehrung = e.target.checked;
+    if (state.fuehrung) state.an.add("x-fuehrung"); else state.an.delete("x-fuehrung");
+    planZeichnen();
   });
   document.getElementById("themen").addEventListener("click", (e) => {
     const b = e.target.closest(".kachel");
@@ -241,12 +300,16 @@ function start() {
     // ‹Plan ändern› von der Telefonansicht: den Plan zur Bearbeitung laden,
     // Themen aus dem Plan zurücklesen, damit ‹Mehr Orte› die richtigen Gruppen zeigt.
     state.an = dekodieren(h.e);
-    state.themen = new Set([...state.an].map((id) => gast(id) && gast(id).thema).filter((th) => th && th !== "basis" && th !== "anreise"));
+    state.fuehrung = state.an.has("x-fuehrung");
+    state.themen = new Set([...state.an].map((id) => gast(id) && gast(id).thema)
+      .filter((th) => THEMEN.some((x) => x.id === th)));
     history.replaceState(null, "", window.location.pathname);
     wahlZeichnen();
     planZeichnen();
+    schrittZeigen(3);
   } else {
     neuZusammenstellen();
+    schrittZeigen(1);
   }
   // Kommen die Öffnungszeiten live an, rechnet der Plan neu (Text, Zeitplan).
   ausnahmenLaden(planZeichnen);
