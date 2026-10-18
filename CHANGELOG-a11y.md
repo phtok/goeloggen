@@ -148,6 +148,12 @@ Die dicksten Brocken zuerst:
 
 ## Aus dem Bericht wird ein Tor
 
+**Stand 18. 10. 2026:** Der Rückstand ist abgetragen (D1–D13, 0 Verstösse bei
+152 Messungen). Der Auftraggeber hat entschieden: **kein Tor**, aber
+**jedes Mal Bescheid**, wenn etwas nicht stimmt. Der Job kommentiert darum
+einen PR mit Funden und eröffnet auf `main` ein Issue (Label
+`barrierefreiheit`), das er bei Grün selbst schliesst.
+
 Der Job `barrierefreiheit` in `pruefmaschinen.yml` läuft bereits mit
 `--check`, darf aber scheitern (`continue-on-error`), solange der Rückstand
 oben offen ist. Ist er abgetragen, verschwindet diese eine Zeile — dann

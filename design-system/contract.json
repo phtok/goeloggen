@@ -205,7 +205,7 @@
     ],
     "werkzeug": "node tools/barrierefreiheit.mjs --check",
     "pruefung": "Gemessen, nicht gelesen: Chromium lädt jede Seite des Geltungsbereichs auf 390 px (Telefon) und 1440 px (Schreibtisch), blättert sie einmal durch, damit eingeblendete Abschnitte ihre echten Farben zeigen, und lässt axe-core prüfen. Was weiterleitet, wird übersprungen statt gemessen — sonst misst der Lauf die Fehlerseite des Browsers.",
-    "stand": "Berichtend, nicht blockierend: die Erstmessung vom 8. August 2026 hat einen Rückstand ergeben, der in CHANGELOG-a11y.md steht (Abschnitt «Block D»). Erst wenn er abgetragen ist, wird DS08 zum Tor.",
+    "stand": "Berichtend, nicht blockierend (Entscheid 18. Oktober 2026, nachdem der Rückstand der Erstmessung abgetragen war; CHANGELOG-a11y.md, Block D). Jeder Fund wird gemeldet: auf dem PR als Kommentar, auf main als Issue mit Label barrierefreiheit, das sich bei Grün selbst schliesst.",
     "grenze": "Rund ein Drittel der Kriterien ist maschinell prüfbar. Ein grüner Lauf heisst «keine der prüfbaren Regeln verletzt» — nicht «zugänglich». Beschriftungen, Reihenfolge und Verständlichkeit bleiben Sache der Aufmerksamkeit.",
     "artefakt_dateien": [],
     "artefakt_hinweis": "Physische Farben sind keine Bildschirmflächen — eine gedruckte Karte ist weiss, weil das Papier weiss ist. Blätter, deren Farben dem Papier gehören, stehen hier; dort entfällt allein die Kontrastprüfung, alle anderen Kriterien gelten weiter. Das ist die Entsprechung zum «# ds-ok» in den Stilblättern: die Maschine schlägt vor, der Mensch ratifiziert.",

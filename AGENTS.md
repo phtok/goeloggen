@@ -72,8 +72,10 @@ tools/barrierefreiheit.mjs` (Regel **DS08**) lädt jede Seite des
 Geltungsbereichs in Chromium auf 390 px und 1440 px und lässt `axe-core` die
 normativen Kriterien prüfen. Das ganze Haus dauert rund zwei Minuten (vier
 Fenster zugleich) und läuft darum **nicht** im Commit-Hook, sondern als
-eigener Job in `pruefmaschinen.yml` — vorerst **berichtend**, bis der
-Rückstand der Erstmessung abgetragen ist (`CHANGELOG-a11y.md`, Block D). Ein
+eigener Job in `pruefmaschinen.yml` — **berichtend, nicht blockierend**
+(Rückstand seit 18. 10. 2026 abgetragen, Entscheid: kein Tor). Dafür gibt er
+bei jedem Fund **Bescheid**: auf dem PR als Kommentar, auf `main` als Issue
+mit Label `barrierefreiheit`, das sich bei Grün selbst schliesst. Ein
 PR misst dort nur die Seiten, die sein Unterschied berührt (`--seit`,
 Sekunden); `main` misst alles. `--seite <pfad>` prüft eine einzelne Seite,
 `--regel <id>` nur eine Regelsorte.
