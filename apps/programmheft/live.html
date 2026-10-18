@@ -311,7 +311,7 @@ function markerAnordnung(){
     return g.map(G=>{const ks=G.map(p=>p.k+1).sort((a,b)=>a-b),fort=ks.every((v,i)=>!i||v===ks[i-1]+1);
       return {o:G.map(p=>p.o).join("|"),x:G.reduce((a,p)=>a+p.ax,0)/G.length,y:G.reduce((a,p)=>a+p.ay,0)/G.length,t:ks.length>2&&fort?ks[0]+"–"+ks.at(-1):ks.join(", "),breit:ks.length>1}})}
   if(modus==="ausweichen")for(let it=0;it<80;it++)for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
-    const a=P[i],b=P[j],dx=b.x-a.x||.01,dy=b.y-a.y,d=Math.hypot(dx,dy),min=MK_D*1.15;
+    const a=P[i],b=P[j],dx=b.x-a.x||.01,dy=b.y-a.y,d=Math.hypot(dx,dy),min=MK_D*1.75; // 1.75: Mitte zu Mitte ≥24 px auch am Telefon (WCAG 2.5.8, B04)
     if(d<min){const f=(min-d)/2/d;a.x-=dx*f;a.y-=dy*f;b.x+=dx*f;b.y+=dy*f}}
   return P.map(p=>({o:p.o,x:p.x,y:p.y,t:String(p.k+1),ax:p.ax,ay:p.ay,linie:Math.hypot(p.x-p.ax,p.y-p.ay)>MK_D*.3}))}
 // Für PDF/InDesign: dieselbe Anordnung wie in der Vorschau, y in % der Kartenhöhe.

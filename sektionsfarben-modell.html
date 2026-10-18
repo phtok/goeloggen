@@ -357,7 +357,7 @@
 
   // --- Die Leiter --------------------------------------------------------------------
   function stufe(cls,bgVar,fgVar,ab,gross){
-    var d=el("div","stufe "+cls); d.style.background="var("+bgVar+")"; d.style.color="var("+fgVar+")";
+    var d=el("div","stufe "+cls); d.dataset.muster=""; d.style.background="var("+bgVar+")"; d.style.color="var("+fgVar+")";
     d.appendChild(el("div","ab"+(gross?" gross":""),ab)); d.appendChild(el("div","k")); return d;
   }
   function zeile(s){

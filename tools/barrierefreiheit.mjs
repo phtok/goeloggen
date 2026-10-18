@@ -44,6 +44,7 @@ const REGEL = KONTRAKT.barrierefreiheit ?? {}
 // darf sich nur auf Gesetz stützen.
 const NORM = REGEL.stufen ?? ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa']
 const RAT = ['best-practice']
+const MUSTER = REGEL.muster_selektor ?? '[data-muster]'
 
 // Zwei Achsen: nur zwei Kriterien der Norm hängen überhaupt an der
 // Fensterbreite — die Grösse der Fingerziele (2.5.8) und der Umbruch ohne
@@ -218,6 +219,18 @@ async function messe ({ pfad, artefakt, achse }) {
       if (artefakt) bau.disableRules(['color-contrast'])
       const ergebnis = await bau.analyze()
       gemessen++
+
+      // Farbmuster zeigen Farbe vor, auch die zu blasse — das ist ihr Inhalt.
+      // Was im Markup als [data-muster] gekennzeichnet ist, fällt aus der
+      // Kontrastprüfung, sonst aus nichts (Kontrakt: muster_selektor).
+      for (const v of ergebnis.violations) {
+        if (v.id !== 'color-contrast') continue
+        const drin = await seite.evaluate(({ ziele, sel }) => ziele.map(z =>
+          z.length === 1 && Boolean(document.querySelector(z[0])?.closest(sel))),
+          { ziele: v.nodes.map(n => n.target), sel: MUSTER })
+        v.nodes = v.nodes.filter((_, i) => !drin[i])
+      }
+      ergebnis.violations = ergebnis.violations.filter(v => v.nodes.length)
 
       const funde = ergebnis.violations
         .filter(v => !nurRegel || v.id === nurRegel)

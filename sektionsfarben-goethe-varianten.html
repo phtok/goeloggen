@@ -174,9 +174,9 @@
     var f=el("div","felder");
     p.farben.forEach(function(c){
       var d=el("div","feld");
-      var fl=el("div","flaeche",String(NR[c.key])); fl.style.background=c.hex; fl.title=D.namen[c.key]+" "+c.hex.toUpperCase();
+      var fl=el("div","flaeche",String(NR[c.key])); fl.dataset.muster=""; fl.style.background=c.hex; fl.title=D.namen[c.key]+" "+c.hex.toUpperCase();
       d.appendChild(fl);
-      var s=el("div","als-schrift"); s.textContent=KURZ[c.key]; s.title=D.namen[c.key]; s.style.color=c.hex; d.appendChild(s);
+      var s=el("div","als-schrift"); s.dataset.muster=""; s.textContent=KURZ[c.key]; s.title=D.namen[c.key]; s.style.color=c.hex; d.appendChild(s);
       var k=el("div","k"); k.innerHTML=(c.weiss>=4.5?"<b>":"<span class=nein>")+fmt(c.weiss)+(c.weiss>=4.5?"</b>":"</span>")+" · "+(c.soft>=4.5?fmt(c.soft):"<span class=nein>"+fmt(c.soft)+"</span>");
       d.appendChild(k); f.appendChild(d);
     });

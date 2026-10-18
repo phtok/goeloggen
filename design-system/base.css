@@ -135,7 +135,6 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .band{background:var(--ton-dunkel,var(--gold-deep));color:var(--on-accent);
   border-radius:var(--r-control);padding:var(--s5) var(--s5) var(--s6)}
 .band h1,.band h2,.band h3,.band p,.band .kicker,.band .kick,.band .lede{color:var(--on-accent)}
-.band .kicker,.band .kick{opacity:.85}
 .band p{font-family:var(--font-text);font-size:var(--t-small);line-height:1.6;margin-top:var(--s2)}
 .kasten{background:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));color:var(--ink);
   border-left:4px solid var(--ton-dunkel,var(--gold-deep));
