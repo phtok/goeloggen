@@ -16,6 +16,13 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 18. Oktober 2026 — Fusszeilen-Links unterstrichen (1.28.2)
+
+**Was.** `base.css`: Links direkt in `footer .wrap` tragen die Link-Konvention
+(Gold-Ink, Unterstreichung) wie `p a`. **Warum.** axe `link-in-text-block`
+(WCAG 1.4.1): Links im Satz dürfen sich nicht allein durch Farbe abheben.
+**Wirkung.** Fusszeilen von schrift-vergleich, typografie, vorschau.
+
 ## 18. Oktober 2026 — Navigation: Einladungs-Chip abschaltbar (1.28.1)
 
 **Was.** `nav.js` liest am Skript-Tag `data-invite="aus"`. Dann erscheint der
