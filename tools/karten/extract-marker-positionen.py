@@ -228,9 +228,10 @@ WILLKOMMEN = [
     ("s-schoene", "d", "sektionen",
      {"de": "Sektion für Schöne Wissenschaften", "en": "Section for the Literary Arts and Humanities"},
      [[149.93, 170.31]], {"gebaeude": "campusbau-41"}),
+    # Neben der Bibliothek an der Nordtür (Auftraggeber, 18. 10. 2026).
     ("s-jugend", "e", "sektionen",
      {"de": "Jugendsektion", "en": "Youth Section"},
-     [[192.92, 109.33]]),
+     [[191.0, 107.8]]),
     # Lage vom Auftraggeber justiert; der Pfeil bleibt — das Haus wird vom
     # Blatt angeschnitten und liegt weiter hinten im Weg.
     ("s-medizin", "f", "sektionen",
@@ -379,6 +380,21 @@ KARTENBEREICH_X = {0: 100.0, 1: 0.0}
 AUSNAHMEN = [
     ("5", 198.99, 172.47, 1.0),
 ]
+
+# Korrekturen des Auftraggebers an Lage und Farbe einzelner Orte, gegenüber
+# der Quelle (Blatt-mm). Angewandt nach dem Einlesen, gelten im Kartentool
+# und in jedem Werkzeug, das den Katalog nutzt (18. Oktober 2026):
+# - Foyer: Erdgeschoss, darum blau; in der unteren Mitte des Baus, über der
+#   Galerie der 1. Etage (die führt der Gästeplan als eigenen Ort).
+# - Nordgalerie: links und etwas höher als die Pädagogische Sektion, die sie
+#   in der Quelle deckte.
+# - Bibliothek und Jugendsektion: nur durch die Nordtür erreichbar; beide
+#   stehen beisammen und markieren das Tor (Jugendsektion: WILLKOMMEN).
+KORREKTUREN = {
+    "v15": {"positionen": [[198.5, 134.2]], "farbe": "blau"},
+    "o6": {"positionen": [[184.7, 130.6]]},
+    "o7": {"positionen": [[195.4, 107.8]]},
+}
 
 
 def pfadpunkte(pfad):
@@ -552,6 +568,7 @@ def orte_bauen(funde):
             "positionen": positionen,
         }
         ort.update(extra)
+        ort.update(KORREKTUREN.get(oid, {}))
         if badges:
             ort["badges"] = badges
         if oid in GEBAEUDE_JE_ORT:

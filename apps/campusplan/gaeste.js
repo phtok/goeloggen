@@ -57,13 +57,13 @@ const NEUE_ORTE = [
   // farbe wie im Katalog des Kartentools: rot = Säle und Treppen.
   { id: "n-treppen", label: { de: "Treppenhäuser", en: "Staircases" }, farbe: "rot",
     positionen: [[184.3, 125.9]], gebaeude: "campusbau-53" },
-  // Foyer in der unteren Mitte des Baus, die Galerie der 1. Etage genau
-  // darüber; die Marke steht dicht über der des Foyers (Auftraggeber,
-  // 18. 10. 2026; der Katalog führt das Foyer als v15 bei 198.47/135.39).
+  // Foyer (Erdgeschoss, blau) in der unteren Mitte des Baus, auf der Lage
+  // des Katalog-Foyers v15; die Galerie der 1. Etage (rot) darunter auf dem
+  // Blatt (Auftraggeber, 18. 10. 2026).
   { id: "n-galerie", label: { de: "Galerie, 1. Etage", en: "Gallery, 1st floor" }, farbe: "rot",
     positionen: [[198.5, 138.6]], gebaeude: "campusbau-53" },
-  { id: "n-foyer", label: { de: "Foyer", en: "Foyer" }, farbe: "rot",
-    positionen: [[198.5, 143.0]], gebaeude: "campusbau-53" },
+  { id: "n-foyer", label: { de: "Foyer", en: "Foyer" },
+    positionen: [[198.5, 134.2]], gebaeude: "campusbau-53" },
   // Öffentliche Führung: Treffpunkt am Empfang.
   { id: "x-fuehrung", label: { de: "Öffentliche Führung", en: "Public guided tour" },
     positionen: [[209.5, 145.5]], gebaeude: "campusbau-53" }

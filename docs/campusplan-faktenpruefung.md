@@ -132,15 +132,13 @@ wir umsichtig sein.» Folgen:
 
 ## Lagen im Goetheanum (18. Oktober 2026)
 
-Nach Angabe des Auftraggebers am Kartenbild:
-- **Foyer** in der unteren Mitte des Baus (198.5/143.0 mm), die **Galerie,
-  1. Etage** genau darüber (198.5/138.6). Beide rot wie Säle und Treppen im
-  Katalog des Kartentools; die Treppenhäuser ebenfalls rot.
+Nach Angabe des Auftraggebers am Kartenbild, eingearbeitet in den Katalog des
+Kartentools (`tools/karten/extract-marker-positionen.py`, `KORREKTUREN`) und
+damit auch im Gästeplan:
+- **Foyer** (Erdgeschoss, blau) in der unteren Mitte des Baus (198.5/134.2),
+  die **Galerie, 1. Etage** (rot, wie die Treppenhäuser) auf dem Blatt
+  darunter (198.5/138.6, nur im Gästeplan).
 - **Nordgalerie** links und etwas höher als die Pädagogische Sektion
-  (184.7/130.6; Katalog 191.33/132.57, dort deckte sie die Sektion).
-- **Jugendsektion und Bibliothek** teilen sich einen Eingang an der Nordseite:
-  die Jugendsektion gleich hinter der Tür (193.2/108.2), zur Bibliothek führt
-  ein langer Gang (199.6/109.0; Richtung des Gangs angenommen, zu bestätigen).
-- Die Lagen gelten im Gästeplan (`apps/campusplan/karte.js`, `KATALOG_LAGEN`).
-  Der Katalog des Kartentools wird aus den LT25-Kartenseiten erzeugt
-  (`tools/karten/extract-marker-positionen.py`) und trägt die alten Lagen.
+  (184.7/130.6; Quelle 191.33/132.57, dort deckte sie die Sektion).
+- **Jugendsektion und Bibliothek** sind nur durch die Nordtür erreichbar und
+  stehen beisammen am Tor (191.0/107.8 und 195.4/107.8).
