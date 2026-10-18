@@ -149,6 +149,38 @@ Adresse (ohne Adresse – ‹Minimal› – schliesst der Schriftzug).
   Text in Wort-spans (Beschluss 7. 10. 2026); am Handy evtl. nicht antippbar –
   noch zu prüfen.
 
+### Recherche 18. 10. 2026: Logo auch für Outlook, ohne Anhang
+
+Auflage: Das Logo darf beim Empfänger nie als Anhang (Büroklammer)
+erscheinen. Das schliesst jedes eingebettete Bild (`cid:`) aus – genau das
+macht aber jeder Signatur-Editor von Outlook neu, Outlook im Browser und
+Outlook für Mac aus einem eingefügten Bild. Übrig bleiben **verlinkte**
+Bilder (`<img src="https://…">`, kein Anhang) und der Weg über den Server.
+
+| Weg | Logo in Outlook | Anhang | Haken |
+|---|---|---|---|
+| **Outlook klassisch (Windows):** Signatur-Editor → Bild einfügen → URL ins Feld ‹Dateiname› → Pfeil neben ‹Einfügen› → **‹Mit Datei verknüpfen›** | ✅ | keiner (bleibt Link) | nur klassisches Outlook; ‹Einfügen› allein bettet ein; Registry `Send Pictures With Document` = 0 bei alten Versionen |
+| **Outlook neu, Outlook im Browser, Outlook für Mac:** Editor lässt nur hochgeladene Bilder zu | ❌ | ja (`cid`) | Verlinkte Bilder werden beim Einfügen entfernt (Befund 7. 10.) – kein Weg ohne Anhang |
+| **Exchange-Online-Nachrichtenflussregel** (‹Haftungsausschluss anfügen›): HTML mit verlinktem `<img>` und Platzhaltern (`%%DisplayName%%`, `%%Title%%`, `%%Phone%%` …), max. 5000 Zeichen | ✅ überall, auch Apple Mail, iPhone, Outlook mobil | keiner | hängt am Ende der **ganzen** Nachricht, bei Antworten also unter dem Zitat; beim Schreiben unsichtbar; Ausnahme nötig, sonst stapelt es sich |
+| **Dienst (Exclaimer, CodeTwo u. a.):** Server- oder Add-in-Signatur mit gehosteten Bildern, zentral je Person | ✅ überall | keiner (gehostet) | Lizenz, grob 1–2 CHF je Person und Monat; eigener Betrieb |
+
+Dunkelmodus Apple Mail: jedes `<img>` schaltet die Mail auf hell (Befund
+7. 10.) – das gilt für alle Wege mit verlinktem Bild, auch für den Server.
+Bilder gesperrt: Outlook klassisch lädt verlinkte Bilder nur von sicheren
+Absendern; Outlook neu und im Browser laden sie über Microsofts Bild-Proxy.
+
+Mail-Setup goetheanum.ch (DNS, 18. 10.): MX bei Heinlein, Autodiscover zeigt
+auf Microsoft, SPF trägt beide – vermutlich Microsoft-365-Postfächer hinter
+einem Heinlein-Gateway. **Von der IT bestätigen lassen**, bevor der
+Server-Weg geplant wird.
+
+**Empfehlung:** Text-Signatur aus dem Generator bleibt für alle. Das Logo
+hängt eine Nachrichtenflussregel an – nur an **neue** Nachrichten (Ausnahme:
+Kopfzeile `In-Reply-To` vorhanden), nur nach aussen, als verlinktes Bild
+unter der Signatur. So kommt es aus jedem Client, ohne Anhang, und stört
+keine Antwort. Zweite Wahl: Dienst mit gehosteten Bildern, falls die IT die
+Regel nicht pflegen will.
+
 ### Noch offen
 
 | Client | Logo sichtbar | Dunkelmodus | Bilder gesperrt |
