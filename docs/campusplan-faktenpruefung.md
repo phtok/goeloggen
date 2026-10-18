@@ -115,5 +115,10 @@ wir umsichtig sein.» Folgen:
   Führung» statt «zu betreten»: für beide Bauten nennt keine Quelle freie
   Öffnungszeiten (innen öffentlich sind nur die eigenen Stationen
   Baugeschichte/Modell und Rudolf-Steiner-Atelier mit ihren Zeiten).
-- Offen: wo der Blaue und der Gelbe Saal liegen und wo ihre Zeiten stehen —
-  online nicht auffindbar, Rückfrage an den Auftraggeber.
+- Blauer und Gelber Saal gehören zur Galerie in der 1. Etage; bis 4. Dezember
+  2026 nicht bespielt, ab dann «Olav Åsteson» und «Schrift und Gestalt»
+  (Auftraggeber, 18. 10. 2026). Ihre Öffnungszeiten gehören auf die
+  Ausstellungsseite der Sektion; noch nicht veröffentlicht, der Auftraggeber
+  mahnt es an. Sobald die Seite sie nennt, liest die Function sie
+  (`ausstellungen[].fenster`) und die Galerie trägt sie statt der Zeiten des
+  Baus; bis dahin meldet der tägliche Wächter einen Hinweis.

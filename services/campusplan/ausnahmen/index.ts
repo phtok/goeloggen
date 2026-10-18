@@ -44,7 +44,7 @@ type Zeiten = {
   ersterImMonat?: boolean; zuMonate?: number[]; zuZeitraeume?: Zeitraum[];
 };
 type Teil = { titel: string; von: string; bis: string };
-type Ausstellung = { titel: string; untertitel: string; von: string; bis: string; link: string; teile: Teil[] };
+type Ausstellung = { titel: string; untertitel: string; von: string; bis: string; link: string; teile: Teil[]; fenster: Fenster[] };
 type Antwort = {
   stand: string;
   quellen: typeof QUELLEN;
@@ -281,15 +281,20 @@ async function ausstellungenLaden(hole: (url: string, nurMain?: boolean) => Prom
     aus.push({
       titel: z[i - 1], untertitel: z[i + 1] && z[i + 1] !== "Weiterlesen" ? z[i + 1] : "",
       von: `${m[3]}-${m[2]}-${m[1]}`, bis: `${m[6]}-${m[5]}-${m[4]}`,
-      link: links[aus.length] ?? QUELLEN.ausstellungen, teile: [],
+      link: links[aus.length] ?? QUELLEN.ausstellungen, teile: [], fenster: [],
     });
   }
   const heute = new Date().toISOString().slice(0, 10);
   await Promise.all(aus.filter((a) => a.bis >= heute).map(async (a) => {
     if (a.link === QUELLEN.ausstellungen) return;
     try {
-      a.teile = teileParsen((await hole(a.link, false)).zeilen, a.untertitel)
+      const seite = (await hole(a.link, false)).zeilen;
+      a.teile = teileParsen(seite, a.untertitel)
         .map((t) => ({ ...t, bis: t.bis > a.bis ? a.bis : t.bis }));
+      // Öffnungszeiten der Ausstellung, sobald die Seite sie nennt (Stand
+      // 18. 10. 2026 noch nicht) — dann gelten sie für die Galerie statt der
+      // Zeiten des Baus.
+      a.fenster = zeitenParsen(seite, "ausstellung").find((b) => b.fenster.length)?.fenster ?? [];
     } catch { /* Teile fehlen, die Ausstellung bleibt */ }
   }));
   return aus.filter((a) => a.bis >= heute);
