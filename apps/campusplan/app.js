@@ -1,7 +1,8 @@
 "use strict";
 
 /* Besuch am Goetheanum planen — die Auswahl (Laborseite, Konzept § 13).
-   Drei Schritte, je eine Frage: Interessen → Tag und Zeit → Dein Plan (mit
+   Drei Schritte, je eine Frage: Interessen → Tag und Zeit (mit den nächsten
+   Tagen im Überblick: was offen ist, wann geführt wird) → Dein Plan (mit
    Führungen und Mitnehmen). Der Plan rechnet bei jeder Wahl im Hintergrund mit. Mitgenommen wird er als A4-Blatt (pdf.js,
    Karte des Kartentools) oder als Link aufs Telefon (plan.html). Die Karte
    selbst steht hier nicht — sie gehört zu den beiden Ausgaben.
@@ -132,6 +133,7 @@ function planZeichnen() {
   }).join("");
 
   fuehrungenZeichnen();
+  tageZeichnen();
   ausgabeZeichnen();
 }
 
@@ -164,6 +166,79 @@ function fuehrungenZeichnen() {
   const liste = links.length ? links : [{ n: "Allgemeine Goetheanum-Führung", url: FUEHRUNGEN.formular + encodeURIComponent("Allgemeine Goetheanum-Führung") }];
   document.getElementById("fuehrung-themen").innerHTML = liste.map((x) =>
     `<li><a href="${x.url}" target="_blank" rel="noopener">${esc(x.n)}</a></li>`).join("");
+}
+
+/* ---------- Besuchstag: die nächsten Tage im Überblick ---------- */
+
+function isoPlus(iso, tage) {
+  const [j, m, d] = iso.split("-").map(Number);
+  const x = new Date(j, m - 1, d + tage);
+  return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`;
+}
+
+// Die Orte, an denen sich der Tag misst: was im Plan steht und was die
+// gewählten Interessen dazubringen — unabhängig davon, ob es am gewählten
+// Tag offen ist. Was man nur von aussen sieht, ist nie zu und zählt nicht.
+function tagesOrte() {
+  return GAESTE.filter((g) => g.oeffnung && g.zugang !== "aussen" && g.thema !== "anreise" && g.thema !== "aus"
+    && g.thema !== "fuehrung" && ort(g.id)
+    && !(state.umstaende.barrierefrei && g.barrierefrei === false)
+    && (state.an.has(g.id) || g.thema === "basis" || state.themen.has(g.thema) || (state.umstaende.kinder && g.kinder)))
+    .sort((a, b) => a.gehfolge - b.gehfolge);
+}
+
+// Ein Tag: was zu ist (gewichtet nach Rang), Tageszeiten aus den
+// Ausnahmeseiten (Grosser Saal, Glashaus) und die öffentliche Führung.
+function tagBewerten(iso, orte) {
+  const zu = orte.filter((g) => ortGeschlossenAm(g, iso));
+  const gewicht = (g) => (g.thema === "basis" || g.rang === 1 ? 3 : g.rang === 2 ? 2 : 1);
+  const fuehrung = fensterAm(gast("x-fuehrung"), iso);
+  const sonder = orte.filter((g) => !zu.includes(g)).map((g) => {
+    const a = ausnahmeAm(g, iso);
+    const f = a && a.zeit ? fensterAm(g, iso) : null;
+    return f && f.length ? `${ortName(g.id)} ${spanneText(f[0])}` : "";
+  }).filter(Boolean);
+  return {
+    iso, zu, sonder,
+    fuehrung: fuehrung && fuehrung.length ? fuehrung[0] : null,
+    punkte: zu.reduce((n, g) => n + gewicht(g), 0) + (state.fuehrung && !(fuehrung && fuehrung.length) ? 5 : 0)
+  };
+}
+
+// Was zu ist: bis zwei Orte mit Namen, sonst gezählt («11 von 16 Orten offen»).
+function zuText(zu, alle) {
+  const en = state.sprache === "en";
+  if (!zu.length) return ui("alles-offen");
+  if (zu.length <= 2) return `${en ? "only " : "nur "}${zu.map((g) => ortName(g.id)).join(en ? " and " : " und ")} ${ui("zu")}`;
+  return en ? `${alle - zu.length} of ${alle} places open` : `${alle - zu.length} von ${alle} Orten offen`;
+}
+
+function tageZeichnen() {
+  const heute = heuteIso();
+  // Sieben Tage ab heute; liegt der Besuchstag weiter weg, um ihn herum.
+  const start = state.datum && state.datum > isoPlus(heute, 6) ? isoPlus(state.datum, -3) : heute;
+  const orte = tagesOrte();
+  const tage = Array.from({ length: 7 }, (_, i) => tagBewerten(isoPlus(start, i), orte));
+  // Empfohlen nur, wenn es einen Unterschied macht und er wenige Tage trifft.
+  const min = Math.min(...tage.map((x) => x.punkte)), max = Math.max(...tage.map((x) => x.punkte));
+  const beste = tage.filter((x) => x.punkte === min);
+  const empfehlen = min < max && beste.length <= 3;
+  const sp = state.sprache === "en" ? "en-GB" : "de-CH";
+  document.getElementById("tage").innerHTML = tage.map((x) => {
+    const [j, m, d] = x.iso.split("-").map(Number);
+    const name = new Date(j, m - 1, d).toLocaleDateString(sp, { weekday: "short", day: "numeric", month: "long" });
+    const teile = [];
+    if (empfehlen && beste.includes(x)) teile.push(ui("empfohlen"));
+    teile.push(zuText(x.zu, orte.length));
+    teile.push(...x.sonder);
+    if (x.fuehrung) teile.push(`${ui("fuehrung-um")} ${uhrZeit(x.fuehrung.von)}`);
+    const kurz = teile.join(" · ");
+    return `<button type="button" class="kachel" data-tag="${x.iso}" aria-pressed="${state.datum === x.iso}">` +
+      `<span class="k-name">${esc(name)}</span><span class="k-kurz">${esc(kurz.charAt(0).toUpperCase() + kurz.slice(1))}</span></button>`;
+  }).join("");
+  // Wann was offen ist: die Zeiten der Orte, an denen sich der Tag misst.
+  document.getElementById("oez-zeilen").innerHTML = orte.map((g) =>
+    `<tr><td>${esc(ortName(g.id))}</td><td>${esc(zeitenText(g))}</td></tr>`).join("");
 }
 
 /* ---------- Schritte ---------- */
@@ -251,6 +326,14 @@ function verdrahten() {
     neuZusammenstellen();
   });
   document.getElementById("datum").addEventListener("change", (e) => { state.datum = e.target.value || ""; neuZusammenstellen(); });
+  // Ein Tag aus der Übersicht wird Besuchstag; noch einmal getippt, wieder offen.
+  document.getElementById("tage").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-tag]");
+    if (!b) return;
+    state.datum = state.datum === b.dataset.tag ? "" : b.dataset.tag;
+    document.getElementById("datum").value = state.datum;
+    neuZusammenstellen();
+  });
   document.getElementById("ankunft").addEventListener("change", (e) => { state.ankunft = e.target.value || "10:00"; planZeichnen(); });
 
   document.getElementById("plan").addEventListener("change", (e) => {
