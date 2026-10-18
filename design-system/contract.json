@@ -1,6 +1,6 @@
 {
   "$schema": "https://goetheanum/design-system/contract.schema.json",
-  "version": "1.28.3",
+  "version": "1.28.5",
   "titel": "Goetheanum Design-System – Struktur-Vertrag",
   "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
   "geltungsbereich": {
@@ -208,7 +208,9 @@
     "stand": "Berichtend, nicht blockierend: die Erstmessung vom 8. August 2026 hat einen Rückstand ergeben, der in CHANGELOG-a11y.md steht (Abschnitt «Block D»). Erst wenn er abgetragen ist, wird DS08 zum Tor.",
     "grenze": "Rund ein Drittel der Kriterien ist maschinell prüfbar. Ein grüner Lauf heisst «keine der prüfbaren Regeln verletzt» — nicht «zugänglich». Beschriftungen, Reihenfolge und Verständlichkeit bleiben Sache der Aufmerksamkeit.",
     "artefakt_dateien": [],
-    "artefakt_hinweis": "Physische Farben sind keine Bildschirmflächen — eine gedruckte Karte ist weiss, weil das Papier weiss ist. Blätter, deren Farben dem Papier gehören, stehen hier; dort entfällt allein die Kontrastprüfung, alle anderen Kriterien gelten weiter. Das ist die Entsprechung zum «# ds-ok» in den Stilblättern: die Maschine schlägt vor, der Mensch ratifiziert."
+    "artefakt_hinweis": "Physische Farben sind keine Bildschirmflächen — eine gedruckte Karte ist weiss, weil das Papier weiss ist. Blätter, deren Farben dem Papier gehören, stehen hier; dort entfällt allein die Kontrastprüfung, alle anderen Kriterien gelten weiter. Das ist die Entsprechung zum «# ds-ok» in den Stilblättern: die Maschine schlägt vor, der Mensch ratifiziert.",
+    "muster_selektor": "[data-muster]",
+    "muster_hinweis": "Farbmuster zeigen Farbe vor, auch die zu blasse (Sektionsfarben als Schrift, Kontraststufen, die Vorschau einer Mail-Signatur). Was im Markup data-muster trägt, fällt aus der Kontrastprüfung, sonst aus nichts. Die Kennzeichnung ist eine Ratifizierung des Menschen, wie «# ds-ok»; Lesetext trägt sie nie."
   },
   "tokens": {
     "ds_id": "DS10",

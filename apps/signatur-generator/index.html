@@ -357,7 +357,7 @@
           <div class="mail-stage light" id="mailStage">
             <div class="mail-body">
               <div class="mail-greeting">Mit besten Grüssen<br />…</div>
-              <div id="sigPreview"></div>
+              <div id="sigPreview" data-muster></div>
             </div>
           </div>
           <p class="scroll-hint" aria-hidden="true">↔ In Originalgrösse – seitwärts wischen, falls nötig.</p>
@@ -533,6 +533,8 @@
 /* ---------- Konstanten ---------- */
 // Mail-Blau: aufgehellte Variante des Goetheanum-Markenblaus #0061a9 (gleicher Farbton).
 // WCAG-Kontrast 4.09:1 gegen #FFFFFF und 4.07:1 gegen #1E1E1E – lesbar auf hellem UND dunklem Grund.
+// 4.5:1 auf beiden Gründen zugleich ist rechnerisch ausgeschlossen; dieser Ton ist der beste
+// Ausgleich. Ratifiziert 18. 10. 2026, die Vorschau trägt darum data-muster (DS08).
 const MAIL_BLUE = "#4183B4"; // ds-ok: Artefakt-Farbe im Mail-Output (theme-unabhängig)
 const CFONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
 

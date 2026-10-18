@@ -16,6 +16,28 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 18. Oktober 2026 — Kicker im Band ohne Deckkraft (1.28.5)
+
+**Was.** `base.css`: `.band .kicker, .band .kick` verlieren `opacity:.85`.
+**Warum.** axe `color-contrast` (WCAG 1.4.3): Weiss auf der dunklen Sektions-
+fläche hält 4.61:1 (Natur, `#c55100`), mit 85 % Deckkraft fiel der 14-px-Kicker
+darunter. Grösse und Gewicht unterscheiden ihn ohnehin (G03: kleiner Text
+nicht leichter). **Wirkung.** Jedes `.band` im Haus.
+
+## 18. Oktober 2026 — Farbmuster ratifiziert: data-muster (1.28.4)
+
+**Was.** Neuer Kontrakt-Eintrag `barrierefreiheit.muster_selektor`
+(`[data-muster]`); `tools/barrierefreiheit.mjs` nimmt so gekennzeichnete
+Elemente aus der Kontrastprüfung, sonst aus nichts. **Warum.** Farbmuster
+zeigen Farbe vor, auch die zu blasse: Sektionsnamen in der eigenen Farbe
+(`sektionsfarben-goethe-varianten.html`), die Kontraststufen
+(`sektionsfarben-modell.html`), die Vorschau der Mail-Signatur, deren Blau auf
+hellem und dunklem Mail-Grund zugleich bestehen muss (4.5:1 auf beiden ist
+rechnerisch ausgeschlossen, 4.09/4.07:1 der beste Ausgleich). Entscheid des
+Auftraggebers vom 18. 10. 2026. **Wirkung.** Wie `artefakt_dateien`, aber je
+Element statt je Blatt: die übrige Seite bleibt voll geprüft. Lesetext trägt
+das Attribut nie.
+
 ## 18. Oktober 2026 — Code-Kommentar lesbar (1.28.3)
 
 **Was.** `tokens.css`: `--code-comment` `#7f868d` → `#98a0a8`. **Warum.** axe
