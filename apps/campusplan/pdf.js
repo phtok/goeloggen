@@ -105,30 +105,25 @@ async function planPdf() {
   const svgText = `<svg xmlns="http://www.w3.org/2000/svg" width="${PDF_SEITE.b}mm" height="${PDF_SEITE.h}mm" viewBox="0 0 ${szene.breite} ${szene.hoehe}">${szene.markup}</svg>`;
   const svgElement = new DOMParser().parseFromString(svgText, "image/svg+xml").documentElement;
   await doc.svg(svgElement, { x: 0, y: 0, width: PDF_SEITE.b, height: PDF_SEITE.h });
-  let y;
 
   /* ---------- Blatt 2 ff.: die Stationen ---------- */
-  doc.addPage();
-  const spalteB = (PDF_SEITE.b - 2 * PDF_RAND - 10) / 2;
-  const spalten = [PDF_RAND, PDF_RAND + spalteB + 10];
-  let spalte = 0;
-  y = PDF_RAND;
-  const untenMax = PDF_SEITE.h - PDF_RAND - 30; // Platz für QR und Link unten
-  doc.setFont("GoetheanumDeutlich", "normal"); doc.setFontSize(14); doc.setTextColor(PDF_FARBEN.tinte);
-  doc.text(`${titel} · ${plan ? ui("zeitplan") : ui("stationen-titel")}`, PDF_RAND, y + 5);
-  y += 12;
-  const spaltenStart = y;
+  // Drei Spalten. Erst wird jeder Eintrag vermessen, dann verteilt und
+  // ausgeglichen (Einträge brechen nie über Spalten).
   // Mit Zeitplan steht die Uhrzeit rechts in der Namenszeile (tabellarisch,
-  // G25), Pausen als eigene leise Zeile dazwischen.
+  // G25), Pausen als eigene leise Zeile darüber.
+  const SPALTEN = 3, ABSTAND = 8;
+  const spalteB = (PDF_SEITE.b - 2 * PDF_RAND - (SPALTEN - 1) * ABSTAND) / SPALTEN;
+  const spaltenX = Array.from({ length: SPALTEN }, (_, i) => PDF_RAND + i * (spalteB + ABSTAND));
+  const kopfY = PDF_RAND + 12;                       // unter dem Titel
+  const spalteH = PDF_SEITE.h - PDF_RAND - kopfY;
   const pausen = {};
   if (plan) plan.eintraege.forEach((e, i) => { const n = plan.eintraege[i + 1]; if (e.pause && n) pausen[n.id] = e; });
-  const eintrag = (g, nummer) => {
+
+  const vermessen = (g, nummer) => {
     const termin = zeitplanVon(plan, g.id);
-    const zeitB = termin ? 30 : 0;
     const textB = spalteB - 9;
-    const name = ortName(g.id);
     doc.setFont("GoetheanumDeutlich", "normal"); doc.setFontSize(11);
-    const nameZeilen = doc.splitTextToSize(name, textB - zeitB);
+    const nameZeilen = doc.splitTextToSize(ortName(g.id), textB - (termin ? 24 : 0));
     doc.setFont("SourceSans3", "normal"); doc.setFontSize(9.5);
     const einZeilen = g.einzeiler ? doc.splitTextToSize(t(g.einzeiler), textB) : [];
     const meta = [g.zugang ? t(ZUGANG[g.zugang]) : "", g.dauer ? dauerText(g.dauer) : "", zeitenText(g)].filter(Boolean).join(" · ");
@@ -141,48 +136,93 @@ async function planPdf() {
     const metaZeilen = meta || zusatz ? doc.splitTextToSize(pdfText(meta + zusatz), textB) : [];
     const pause = pausen[g.id];
     const hoehe = (pause ? 5 : 0) + nameZeilen.length * 4.6 + einZeilen.length * 4.1 + metaZeilen.length * 3.8 + 4;
-    if (y + hoehe > untenMax) {
-      if (spalte === 0) { spalte = 1; y = spaltenStart; }
-      else { doc.addPage(); spalte = 0; y = PDF_RAND; }
+    return { g, nummer, termin, pause, nameZeilen, einZeilen, metaZeilen, hoehe };
+  };
+
+  // Der Weg aufs Telefon läuft als letzter Eintrag mit: Hinweis, QR-Code, Link.
+  const QR_G = 20;
+  const telefonBlock = () => {
+    doc.setFont("SourceSans3", "normal"); doc.setFontSize(8);
+    const hinweis = doc.splitTextToSize(ui("pdf-link-hint"), spalteB);
+    doc.setFontSize(7.5);
+    const adresse = doc.splitTextToSize(link, spalteB);
+    return { telefon: true, hinweis, adresse, hoehe: 4 + hinweis.length * 3.6 + 2 + QR_G + 3 + adresse.length * 3.3 };
+  };
+
+  const zeichnen = (e, xx, y) => {
+    if (e.telefon) {
+      y += 4;
+      doc.setFont("SourceSans3", "normal"); doc.setFontSize(8); doc.setTextColor(PDF_FARBEN.leise);
+      doc.text(e.hinweis, xx, y + 2.6);
+      y += e.hinweis.length * 3.6 + 2;
+      pdfQrMalen(doc, link, xx, y, QR_G);
+      y += QR_G + 3;
+      doc.setFontSize(7.5);
+      doc.text(e.adresse, xx, y + 2.4);
+      return;
     }
-    const xx = spalten[spalte], tx = xx + 9;
-    if (pause) {
+    const tx = xx + 9;
+    if (e.pause) {
       doc.setFont("SourceSans3", "normal"); doc.setFontSize(8.5); doc.setTextColor(PDF_FARBEN.leise);
-      doc.text(pdfText(`${ui("pause-bis")} ${uhrZeit(pause.bis)}`), tx, y + 2.6);
+      doc.text(pdfText(`${ui("pause-bis")} ${uhrZeit(e.pause.bis)}`), tx, y + 2.6);
       y += 5;
     }
-    if (nummer) pdfMarke(doc, xx + 3, y + 2.6, 2.6, nummer, farbe(g.id, PDF_FARBEN.marke));
-    else pdfMarke(doc, xx + 3, y + 2.6, 2.4, ortMarker(g.id) || "·", farbe(g.id, PDF_FARBEN.anreise));
+    if (e.nummer) pdfMarke(doc, xx + 3, y + 2.6, 2.6, e.nummer, farbe(e.g.id, PDF_FARBEN.marke));
+    else pdfMarke(doc, xx + 3, y + 2.6, 2.4, ortMarker(e.g.id) || "·", farbe(e.g.id, PDF_FARBEN.anreise));
     doc.setTextColor(PDF_FARBEN.tinte); doc.setFont("GoetheanumDeutlich", "normal"); doc.setFontSize(11);
-    doc.text(nameZeilen, tx, y + 3.6);
-    if (termin) {
+    doc.text(e.nameZeilen, tx, y + 3.6);
+    if (e.termin) {
       doc.setFont("SourceSans3Semibold", "normal"); doc.setFontSize(9.5);
-      doc.text(pdfText(spanneText(termin)), xx + spalteB, y + 3.6, { align: "right" });
+      doc.text(pdfText(spanneText(e.termin)), xx + spalteB, y + 3.6, { align: "right" });
     }
-    let yy = y + nameZeilen.length * 4.6;
-    if (einZeilen.length) {
+    let yy = y + e.nameZeilen.length * 4.6;
+    if (e.einZeilen.length) {
       doc.setFont("SourceSans3", "normal"); doc.setFontSize(9.5); doc.setTextColor(PDF_FARBEN.tinte);
-      doc.text(einZeilen, tx, yy + 2.6);
-      yy += einZeilen.length * 4.1;
+      doc.text(e.einZeilen, tx, yy + 2.6);
+      yy += e.einZeilen.length * 4.1;
     }
-    if (metaZeilen.length) {
+    if (e.metaZeilen.length) {
       doc.setFont("SourceSans3", "normal"); doc.setFontSize(8.5); doc.setTextColor(PDF_FARBEN.leise);
-      doc.text(metaZeilen, tx, yy + 2.4);
-      yy += metaZeilen.length * 3.8;
+      doc.text(e.metaZeilen, tx, yy + 2.4);
     }
-    y = yy + 4;
   };
-  nummeriert.forEach((g, i) => eintrag(g, i + 1));
-  anreise.forEach((g) => eintrag(g, 0));
 
-  // Link und QR unten auf dem letzten Blatt.
-  const qrG = 22;
-  const qrX = PDF_SEITE.b - PDF_RAND - qrG, qrY = PDF_SEITE.h - PDF_RAND - qrG;
-  pdfQrMalen(doc, link, qrX, qrY, qrG);
-  doc.setFont("SourceSans3", "normal"); doc.setFontSize(8); doc.setTextColor(PDF_FARBEN.leise);
-  doc.text(ui("pdf-link-hint"), PDF_RAND, qrY + 4, { maxWidth: qrX - PDF_RAND - 6 });
-  doc.setFontSize(7.5);
-  doc.text(link, PDF_RAND, qrY + 9, { maxWidth: qrX - PDF_RAND - 6 });
+  // Spalten eines Blatts bei Höchsthöhe h: der Reihe nach füllen.
+  const packen = (liste, h) => {
+    const spalten = [[]];
+    let belegt = 0;
+    liste.forEach((e) => {
+      if (belegt + e.hoehe > h && spalten[spalten.length - 1].length) { spalten.push([]); belegt = 0; }
+      spalten[spalten.length - 1].push(e);
+      belegt += e.hoehe;
+    });
+    return spalten;
+  };
+
+  const eintraege = nummeriert.map((g, i) => vermessen(g, i + 1)).concat(anreise.map((g) => vermessen(g, 0)), [telefonBlock()]);
+  // So wenige Blätter wie nötig, und über alle gleichmässig: die kleinste
+  // Spaltenhöhe, mit der alles in 3 × Blattzahl Spalten passt.
+  const blattzahl = Math.ceil(packen(eintraege, spalteH).length / SPALTEN);
+  let lo = Math.max(...eintraege.map((e) => e.hoehe)), hi = spalteH;
+  while (hi - lo > 0.5) {
+    const mitte = (lo + hi) / 2;
+    if (packen(eintraege, mitte).length <= SPALTEN * blattzahl) hi = mitte; else lo = mitte;
+  }
+  const alleSpalten = packen(eintraege, hi);
+  const blaetter = [];
+  for (let i = 0; i < alleSpalten.length; i += SPALTEN) blaetter.push(alleSpalten.slice(i, i + SPALTEN));
+
+  blaetter.forEach((spalten, b) => {
+    doc.addPage();
+    if (b === 0) {
+      doc.setFont("GoetheanumDeutlich", "normal"); doc.setFontSize(14); doc.setTextColor(PDF_FARBEN.tinte);
+      doc.text(`${titel} · ${plan ? ui("zeitplan") : ui("stationen-titel")}`, PDF_RAND, PDF_RAND + 5);
+    }
+    spalten.forEach((spalte, i) => {
+      let y = kopfY;
+      spalte.forEach((e) => { zeichnen(e, spaltenX[i], y); y += e.hoehe; });
+    });
+  });
 
   const name = `campusplan${state.datum ? "-" + state.datum : ""}.pdf`;
   doc.save(name);
