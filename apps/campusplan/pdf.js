@@ -140,28 +140,27 @@ async function planPdf() {
     return { g, nummer, termin, pause, nameZeilen, einZeilen, metaZeilen, hoehe };
   };
 
-  // Der Weg aufs Telefon läuft als letzter Eintrag mit: Hinweis, QR-Code, Link.
+  // Der Weg aufs Telefon gehört nicht zur Liste: er steht fest unten rechts
+  // auf dem letzten Blatt — QR-Code an der rechten Kante, Hinweis und Link
+  // links daneben. Die letzte Spalte endet darüber.
   const QR_G = 20;
-  const telefonBlock = () => {
-    doc.setFont("SourceSans3", "normal"); doc.setFontSize(8);
-    const hinweis = doc.splitTextToSize(ui("pdf-link-hint"), spalteB);
+  const qrX = PDF_SEITE.b - PDF_RAND - QR_G, qrY = PDF_SEITE.h - PDF_RAND - QR_G;
+  const telefonX = spaltenX[SPALTEN - 1], telefonB = qrX - 4 - telefonX;
+  doc.setFont("SourceSans3", "normal"); doc.setFontSize(8);
+  const telefonHinweis = doc.splitTextToSize(ui("pdf-link-hint"), telefonB);
+  doc.setFontSize(7.5);
+  const telefonAdresse = doc.splitTextToSize(link, telefonB);
+  const telefonH = Math.max(QR_G, telefonHinweis.length * 3.6 + 2 + telefonAdresse.length * 3.3);
+  const telefonOben = PDF_SEITE.h - PDF_RAND - telefonH;
+  const telefonZeichnen = () => {
+    pdfQrMalen(doc, link, qrX, qrY, QR_G);
+    doc.setFont("SourceSans3", "normal"); doc.setFontSize(8); doc.setTextColor(PDF_FARBEN.leise);
+    doc.text(telefonHinweis, telefonX, telefonOben + 2.6);
     doc.setFontSize(7.5);
-    const adresse = doc.splitTextToSize(link, spalteB);
-    return { telefon: true, hinweis, adresse, hoehe: 4 + hinweis.length * 3.6 + 2 + QR_G + 3 + adresse.length * 3.3 };
+    doc.text(telefonAdresse, telefonX, telefonOben + 2.6 + telefonHinweis.length * 3.6 + 2);
   };
 
   const zeichnen = (e, xx, y) => {
-    if (e.telefon) {
-      y += 4;
-      doc.setFont("SourceSans3", "normal"); doc.setFontSize(8); doc.setTextColor(PDF_FARBEN.leise);
-      doc.text(e.hinweis, xx, y + 2.6);
-      y += e.hinweis.length * 3.6 + 2;
-      pdfQrMalen(doc, link, xx, y, QR_G);
-      y += QR_G + 3;
-      doc.setFontSize(7.5);
-      doc.text(e.adresse, xx, y + 2.4);
-      return;
-    }
     const tx = xx + 9;
     if (e.pause) {
       doc.setFont("SourceSans3", "normal"); doc.setFontSize(8.5); doc.setTextColor(PDF_FARBEN.leise);
@@ -190,28 +189,33 @@ async function planPdf() {
     }
   };
 
-  // Spalten eines Blatts bei Höchsthöhe h: der Reihe nach füllen.
-  const packen = (liste, h) => {
+  // Spalten bei Höchsthöhe h der Reihe nach füllen; die letzte Spalte des
+  // letzten Blatts (Index `letzte`) endet über dem Telefon-Block.
+  const letzteKap = telefonOben - 6 - kopfY;
+  const packen = (liste, h, letzte) => {
     const spalten = [[]];
     let belegt = 0;
+    const kap = () => (spalten.length - 1 === letzte ? Math.min(h, letzteKap) : h);
     liste.forEach((e) => {
-      if (belegt + e.hoehe > h && spalten[spalten.length - 1].length) { spalten.push([]); belegt = 0; }
+      if (belegt + e.hoehe > kap() && spalten[spalten.length - 1].length) { spalten.push([]); belegt = 0; }
       spalten[spalten.length - 1].push(e);
       belegt += e.hoehe;
     });
     return spalten;
   };
 
-  const eintraege = nummeriert.map((g, i) => vermessen(g, i + 1)).concat(anreise.map((g) => vermessen(g, 0)), [telefonBlock()]);
+  const eintraege = nummeriert.map((g, i) => vermessen(g, i + 1)).concat(anreise.map((g) => vermessen(g, 0)));
   // So wenige Blätter wie nötig, und über alle gleichmässig: die kleinste
   // Spaltenhöhe, mit der alles in 3 × Blattzahl Spalten passt.
-  const blattzahl = Math.ceil(packen(eintraege, spalteH).length / SPALTEN);
+  const passt = (h, n) => packen(eintraege, h, SPALTEN * n - 1).length <= SPALTEN * n;
+  let blattzahl = Math.max(1, Math.ceil(packen(eintraege, spalteH, -1).length / SPALTEN));
+  while (!passt(spalteH, blattzahl)) blattzahl += 1;
   let lo = Math.max(...eintraege.map((e) => e.hoehe)), hi = spalteH;
   while (hi - lo > 0.5) {
     const mitte = (lo + hi) / 2;
-    if (packen(eintraege, mitte).length <= SPALTEN * blattzahl) hi = mitte; else lo = mitte;
+    if (passt(mitte, blattzahl)) hi = mitte; else lo = mitte;
   }
-  const alleSpalten = packen(eintraege, hi);
+  const alleSpalten = packen(eintraege, hi, SPALTEN * blattzahl - 1);
   const blaetter = [];
   for (let i = 0; i < alleSpalten.length; i += SPALTEN) blaetter.push(alleSpalten.slice(i, i + SPALTEN));
 
@@ -225,6 +229,7 @@ async function planPdf() {
       let y = kopfY;
       spalte.forEach((e) => { zeichnen(e, spaltenX[i], y); y += e.hoehe; });
     });
+    if (b === blaetter.length - 1) telefonZeichnen();
   });
 
   const name = `campusplan${state.datum ? "-" + state.datum : ""}.pdf`;
