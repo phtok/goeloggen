@@ -29,6 +29,8 @@
 
   /* Farb-Swatches */
   .sw{border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;background:var(--paper);cursor:pointer;text-align:left;font:inherit}
+  .sw-k{display:block;width:100%;padding:0;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer}
+  .sw .ds-zeile{padding-top:0}
   .sw .chip-c{height:84px}
   .sw .chip-v{display:flex;height:22px}
   .sw .chip-v i{flex:1}
@@ -181,7 +183,7 @@
       <h2>Begriffe &amp; Übersetzungen</h2>
       <p>Wiederkehrende institutionelle Begriffe – damit <q>Freie Hochschule für Geisteswissenschaft</q>, <q>Allgemeine Anthroposophische Gesellschaft</q> und Co. überall identisch und korrekt übersetzt erscheinen. Quelle: <code>assets/goe-terms.js</code>. de/en aus den Werkzeugen bestätigt; fr/es als Vorschlag, vom Auftraggeber zu ratifizieren.</p>
     </div>
-    <div class="card" style="overflow-x:auto">
+    <div class="card" style="overflow-x:auto" tabindex="0">
       <table id="terms-table">
         <thead><tr><th>Deutsch</th><th>English</th><th>Français</th><th>Español</th><th>Status</th></tr></thead>
         <tbody id="terms-body"><tr><td class="meta" colspan="5">lädt aus der Quelle …</td></tr></tbody>
@@ -369,7 +371,7 @@
     </div>
 
     <span class="kicker" style="margin-top:var(--s6);display:inline-block">Freiheitsgrade je Rolle · fest prüft die Maschine, frei entscheidet die Seite</span>
-    <div class="card" style="margin-top:var(--s3);overflow-x:auto">
+    <div class="card" style="margin-top:var(--s3);overflow-x:auto" tabindex="0">
       <table>
         <thead><tr><th>Rolle</th><th>Fest (Vertrag)</th><th>Frei (Spielraum)</th></tr></thead>
         <tbody>
@@ -482,12 +484,16 @@ function buildSwatches(tok,typo){
   order.forEach(k=>{
     const c=tok.color[k]; if(!c) return;
     const hex=c.$value;
-    const b=el("button","sw");
-    b.innerHTML =
-      `<div class="chip-c" style="background:${hex}; ${k==='paper'?'border-bottom:1px solid var(--line)':''}"></div>`+
-      `<div class="body"><div class="nm">${k}</div><div class="hx">${hex}</div>`+
-      `<div class="ds">${c.$description||""}${kontrast[k]?" · "+kontrast[k]:""}</div></div>`;
-    b.addEventListener("click",()=>{navigator.clipboard?.writeText(hex);toast(hex+" kopiert");});
+    const b=el("div","sw");
+    const k_=el("button","sw-k");
+    k_.innerHTML =
+      `<div class="chip-c" style="background:${hex}"></div>`+
+      (varianten?`<div class="chip-v" aria-hidden="true"><i style="background:var(--${fam}-${k}-dunkel)"></i><i style="background:var(--${fam}-${k}-hell)"></i></div>`:"")+
+      `<div class="body"><div class="nm">${v.$description||k}</div>`+
+      `<div class="hx">--${fam}-${k} · ${hex}</div></div>`;
+    k_.addEventListener("click",()=>{navigator.clipboard?.writeText(hex);toast(hex+" kopiert");});
+    b.appendChild(k_);
+    if(varianten){const d=el("div","body ds-zeile");d.innerHTML=`<div class="ds">dazu -dunkel (Weiss drauf) · -hell (Ink drauf) · -ink (als Text) – <a href="../sektionsfarben.html">Anwendung</a></div>`;b.appendChild(d);}
     wrap.appendChild(b);
   });
 }

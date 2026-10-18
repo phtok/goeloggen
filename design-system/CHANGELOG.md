@@ -16,12 +16,19 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
-## 18. Oktober 2026 — Code-Kommentar lesbar (1.28.2)
+## 18. Oktober 2026 — Code-Kommentar lesbar (1.28.3)
 
 **Was.** `tokens.css`: `--code-comment` `#7f868d` → `#98a0a8`. **Warum.** axe
 `color-contrast` (WCAG 1.4.3): Kommentare in Code-Blöcken lagen mit 4.24:1 auf
 `--code-bg` unter 4.5:1. **Wirkung.** 5.91:1 auf `--code-bg`, 4.96:1 auf
 `--code-bg2`; alle Code-Blöcke im Haus.
+
+## 18. Oktober 2026 — Fusszeilen-Links unterstrichen (1.28.2)
+
+**Was.** `base.css`: Links direkt in `footer .wrap` tragen die Link-Konvention
+(Gold-Ink, Unterstreichung) wie `p a`. **Warum.** axe `link-in-text-block`
+(WCAG 1.4.1): Links im Satz dürfen sich nicht allein durch Farbe abheben.
+**Wirkung.** Fusszeilen von schrift-vergleich, typografie, vorschau.
 
 ## 18. Oktober 2026 — Navigation: Einladungs-Chip abschaltbar (1.28.1)
 

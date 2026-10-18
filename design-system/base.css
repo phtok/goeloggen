@@ -32,9 +32,9 @@ a{color:inherit;text-decoration:none}
    Unterstreichen ist hier keine Betonung (G05 verbietet Betonung durch
    Unterstreichen im Fliesstext), sondern die Link-Konvention selbst – DS05
    nimmt Links davon ausdrücklich aus. */
-p a,li a,.note a,.hint a,.help a,.desc a{color:var(--gold-ink);text-decoration:underline;
+p a,li a,.note a,.hint a,.help a,.desc a,footer .wrap > a{color:var(--gold-ink);text-decoration:underline;
   text-decoration-color:color-mix(in srgb,var(--gold-ink) 45%,transparent);text-underline-offset:.15em}
-p a:hover,li a:hover,.note a:hover,.hint a:hover,.help a:hover,.desc a:hover{text-decoration-color:currentColor}
+p a:hover,li a:hover,.note a:hover,.hint a:hover,.help a:hover,.desc a:hover,footer .wrap > a:hover{text-decoration-color:currentColor}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
 
 /* Display-Schrift trägt die Titel – mit fester, gemessener Skala aus EINER Quelle.

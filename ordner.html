@@ -182,8 +182,7 @@
       var sel = opts.replace('value="'+esc(toolCat[s])+'"', 'value="'+esc(toolCat[s])+'" selected');
       return '<li class="werk">'+
                '<span class="wer"><b>'+esc(toolInfo[s].title)+'</b><small>'+esc(s)+(toolInfo[s].status?' · '+esc(toolInfo[s].status):'')+'</small></span>'+
-               '<label class="lab" style="position:absolute;left:-9999px">Ordner für '+esc(toolInfo[s].title)+'</label>'+
-               '<select data-move="'+esc(s)+'">'+sel+'</select>'+
+               '<select data-move="'+esc(s)+'" aria-label="Ordner für '+esc(toolInfo[s].title)+'">'+sel+'</select>'+
              '</li>';
     }).join("") : '<li class="werk-leer">Noch keine Werkzeuge in diesem Ordner.</li>';
 

@@ -1559,6 +1559,7 @@ of Language</textarea>
         deField.className = "field";
         deField.innerHTML = "<label>Folgentitel DE</label>";
         const de = document.createElement("textarea");
+        de.setAttribute("aria-label", "Folgentitel DE");
         de.value = ep.titleDe;
         de.addEventListener("input", () => {
           ep.titleDe = de.value;
@@ -1571,6 +1572,7 @@ of Language</textarea>
         enField.className = "field";
         enField.innerHTML = "<label>Folgentitel EN</label>";
         const en = document.createElement("textarea");
+        en.setAttribute("aria-label", "Folgentitel EN");
         en.value = ep.titleEn;
         en.addEventListener("input", () => {
           ep.titleEn = en.value;
@@ -1583,6 +1585,7 @@ of Language</textarea>
         typeField.className = "field";
         typeField.innerHTML = "<label>Portrait</label>";
         const sel = document.createElement("select");
+        sel.setAttribute("aria-label", "Portrait");
         [
           ["single", "Single"],
           ["double", "Double"],
@@ -1606,6 +1609,7 @@ of Language</textarea>
         uploadField.innerHTML = "<label>Upload Portraet</label>";
         const upload = document.createElement("input");
         upload.type = "file";
+        upload.setAttribute("aria-label", "Upload Portraet");
         upload.accept = "image/png,image/jpeg,image/webp";
         upload.addEventListener("change", async (e) => {
           const file = e.target.files?.[0];
@@ -1645,6 +1649,7 @@ of Language</textarea>
 
         const strip = document.createElement("div");
         strip.className = "thumb-strip";
+        strip.tabIndex = 0;
         variantsForBlock(block).forEach((variant) => {
           const thumbJob = {
             kind: block.kind,
