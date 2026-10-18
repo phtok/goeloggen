@@ -142,7 +142,7 @@
     var rLa=sLa/sKl, rLe=sKl/sLe;
     var tag=rLa>=1.5?' ✓ kräftig':(rLa>=1.35?' · grenzwertig':' · zu schwach');
     document.getElementById('rLaut').textContent=fmt(rLa)+'×'+tag;
-    document.getElementById('rLaut').style.color=rLa>=1.5?'var(--ok)':(rLa>=1.35?'var(--warn)':'#c0473f');
+    document.getElementById('rLaut').style.color=rLa>=1.5?'var(--ok-ink)':(rLa>=1.35?'var(--warn)':'var(--bad)');
     document.getElementById('rLeise').textContent=fmt(rLe)+'×';
     document.getElementById('choice').textContent='Leise '+le+' · Klar '+kl+' · Laut '+la;
     var vd=document.getElementById('verdict');
