@@ -24,16 +24,7 @@
   .kopfzeile{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);flex-wrap:wrap}
   main section + section{margin-top:var(--s8)}
 
-  /* Kacheln: Wahl = Gold/Weiss wie die Pille (.seg). */
-  .kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:var(--s3)}
-  .kachel{display:grid;gap:var(--s1);text-align:left;font:inherit;padding:var(--s4);min-height:var(--tap);
-    border:1px solid var(--line);border-radius:var(--r-card);background:var(--field-bg);color:var(--ink);cursor:pointer;
-    transition:border-color .15s,background .15s,color .15s}
-  .kachel:hover{border-color:var(--gold-ink)}
-  .kachel .k-name{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);line-height:var(--lh-tight)}
-  .kachel .k-kurz{font-family:var(--font-text);font-size:var(--t-small);line-height:1.4;color:var(--muted)}
-  .kachel[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent)}
-  .kachel[aria-pressed="true"] .k-kurz{color:var(--on-accent)}
+  /* Kacheln (.kacheln, button.kachel): Fundament, base.css. Hier nur die Zeiten-Variante. */
   .umstaende{margin-top:var(--s4)}
   .zeiten{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--s3);max-width:640px}
   .zeiten .kachel{text-align:center;justify-items:center}
