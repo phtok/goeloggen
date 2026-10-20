@@ -605,8 +605,9 @@ const linkLine = (items, color) => items.length ? [{
 
 // Blöcke, je mit Leerzeile abgesetzt: wer (Person, Funktion, Sektion oder
 // Bereich samt deren Websites) · wie erreichbar · Haus (Hochschule,
-// Gesellschaft) · Adresse. Ein Logo setzt der Generator nicht mehr
-// (Logo-Option entfernt 20. 10. 2026, wird anders gelöst).
+// Gesellschaft) · Adresse. Das Logo setzt nicht der Generator, sondern die
+// Nachrichtenflussregel der EDV unter die Signatur (eingebaut 20. 10. 2026,
+// siehe edv-anfrage-logo-regel.md).
 function collectLines() {
   const L = [];
   const add = (id, group, label, step, rows) => { if (rows.length) L.push({ id, group, label, step, rows }); };

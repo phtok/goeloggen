@@ -65,8 +65,9 @@ Paare auf einer Zeile (bis 56 Zeichen), lange untereinander.
 ## Logo (Backend-Versuch, nur Intern-Ansicht)
 
 **Entfernt am 20. 10. 2026:** Die Logo-Option ist aus dem Generator
-genommen; das Logo wird anders gelöst. Die Befunde unten bleiben als
-Archiv stehen.
+genommen. Das Logo hängt jetzt die Nachrichtenflussregel der EDV unter
+die Signatur (eingebaut und bestätigt 20. 10. 2026, siehe
+`edv-anfrage-logo-regel.md`). Die Befunde unten bleiben als Archiv stehen.
 
 Das Logo steht an Stelle des Schriftzugs ‹Goetheanum› über Hochschule und Gesellschaft,
 verlinkt, als **CSS-Hintergrund** (kein `<img>`). Klassisches Outlook (Windows)
