@@ -344,10 +344,12 @@
             <div class="mail-body">
               <div class="mail-greeting">Mit besten Grüssen<br />…</div>
               <div id="sigPreview" data-muster></div>
-              <div class="server-logo"><img src="../../assets/logos/goetheanum-signatur-logo.png" width="100" height="17" alt="Goetheanum-Logo" /></div>
+              <!-- Server-Logo: ausgeblendet bis zur Freigabe der Leitung (20. 10. 2026).
+                   Einschalten: hidden an den drei Stellen mit data-serverlogo entfernen. -->
+              <div class="server-logo" data-serverlogo hidden><img src="../../assets/logos/goetheanum-signatur-logo.png" width="100" height="17" alt="Goetheanum-Logo" /></div>
             </div>
           </div>
-          <p class="hint stage-note"><strong>Das Logo setzt der Mail-Server automatisch darunter</strong> – bei jeder Mail nach aussen, nicht bei internen. Es gehört nicht in die Signatur.</p>
+          <p class="hint stage-note" data-serverlogo hidden><strong>Das Logo kommt automatisch dazu:</strong> Der Mail-Server setzt es unter jede Mail nach aussen. Du musst es nicht selbst einfügen.</p>
           <p class="scroll-hint" aria-hidden="true">↔ In Originalgrösse – seitwärts wischen, falls nötig.</p>
 
           <div class="btnrow">
@@ -386,8 +388,8 @@
               Bewusst schlicht – damit die Signatur überall gleich ankommt:
               <ul>
                 <li><strong>Bilder</strong> erscheinen in Apple Mail als Anhang (Büroklammer), brechen im Dark Mode,
-                  blähen jede Mail auf und werden vielerorts blockiert. Das Logo hängt darum der Mail-Server
-                  an, verlinkt und ohne Anhang.</li>
+                  blähen jede Mail auf und werden vielerorts blockiert.<span data-serverlogo hidden> Das Logo hängt darum der Mail-Server
+                  an, verlinkt und ohne Anhang.</span></li>
                 <li><strong>Keine festen Textfarben:</strong> der Text erbt die Theme-Farbe des Programms und bleibt
                   hell wie dunkel lesbar; das Markenblau ist eine mailtaugliche, kontraststarke Variante.</li>
               </ul>
@@ -613,8 +615,8 @@ const linkLine = (items, color) => items.length ? [{
 // Blöcke, je mit Leerzeile abgesetzt: wer (Person, Funktion, Sektion oder
 // Bereich samt deren Websites) · wie erreichbar · Haus (Hochschule,
 // Gesellschaft) · Adresse. Das Logo setzt nicht der Generator, sondern die
-// Nachrichtenflussregel der EDV unter die Signatur (eingebaut 20. 10. 2026,
-// siehe edv-anfrage-logo-regel.md).
+// Nachrichtenflussregel der EDV (siehe edv-anfrage-logo-regel.md; Stand
+// 20. 10. 2026: im Test, Freigabe der Leitung ausstehend).
 function collectLines() {
   const L = [];
   const add = (id, group, label, step, rows) => { if (rows.length) L.push({ id, group, label, step, rows }); };
@@ -652,7 +654,7 @@ function isOn(id) { if (id === "goetheanum") return true; return Object.prototyp
 
 /* ---------- Schriftzug ---------- */
 // ‹Goetheanum› grau, verlinkt (Entscheid 20. 10. 2026): Die Marke trägt das
-// blaue Logo, das der Server nach aussen darunter setzt. Der Schriftzug bleibt
+// blaue Logo, das der Server nach aussen darunter setzt (sobald freigegeben). Der Schriftzug bleibt
 // als Name des Hauses über der Adresse und als Ersatz, wo das Bild nicht
 // geladen wird. #767676: 4.5:1 auf Weiss, auf dunklem Grund lesbar.
 const HAUS_GRAU = "#767676"; // ds-ok: Artefakt-Farbe im Mail-Output (theme-unabhängig)
