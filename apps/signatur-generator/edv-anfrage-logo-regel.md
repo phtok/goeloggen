@@ -1,5 +1,9 @@
 # Anfrage an die EDV: Logo unter der E-Mail-Signatur per Nachrichtenflussregel
 
+**Umgesetzt:** Die EDV hat die Regel am 20. 10. 2026 eingebaut und
+bestätigt. Das Logo erscheint unter der Text-Signatur; der Generator bietet
+keine eigene Logo-Option mehr an.
+
 Stand 18. 10. 2026. Hintergrund und Vergleich der Wege: `TESTING.md`,
 Abschnitt «Recherche 18. 10. 2026». Der Text unten ist zum Kopieren gedacht.
 
