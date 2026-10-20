@@ -101,6 +101,10 @@
   .mail-stage.dark{background:#1e1e1e;color:#e8e8e8;border-color:#333333} /* # ds-ok Artefakt (Empfänger dunkel) */
   .mail-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.5} /* # ds-ok Artefakt: simuliert den Mail-Client */
   .mail-greeting{opacity:.6;margin-bottom:14px}
+  /* Logo der EDV-Regel: hängt der Server an, nicht Teil der kopierten Signatur. */
+  .server-logo{margin-top:28px} /* # ds-ok Artefakt: Abstand wie in der Empfänger-Mail */
+  .server-logo img{display:block;width:100px;height:auto}
+  .stage-note{margin-top:var(--s3)}
   .scroll-hint{display:none}
 
   /* Farbe/Grösse aus der kanonischen .hint-Rolle (base.css) – DS04 */
@@ -340,8 +344,12 @@
             <div class="mail-body">
               <div class="mail-greeting">Mit besten Grüssen<br />…</div>
               <div id="sigPreview" data-muster></div>
+              <!-- Server-Logo: ausgeblendet bis zur Freigabe der Leitung (20. 10. 2026).
+                   Einschalten: hidden an den drei Stellen mit data-serverlogo entfernen. -->
+              <div class="server-logo" data-serverlogo hidden><img src="../../assets/logos/goetheanum-signatur-logo.png" width="100" height="17" alt="Goetheanum-Logo" /></div>
             </div>
           </div>
+          <p class="hint stage-note" data-serverlogo hidden><strong>Das Logo kommt automatisch dazu:</strong> Der Mail-Server setzt es unter jede Mail nach aussen. Du musst es nicht selbst einfügen.</p>
           <p class="scroll-hint" aria-hidden="true">↔ In Originalgrösse – seitwärts wischen, falls nötig.</p>
 
           <div class="btnrow">
@@ -380,7 +388,8 @@
               Bewusst schlicht – damit die Signatur überall gleich ankommt:
               <ul>
                 <li><strong>Bilder</strong> erscheinen in Apple Mail als Anhang (Büroklammer), brechen im Dark Mode,
-                  blähen jede Mail auf und werden vielerorts blockiert.</li>
+                  blähen jede Mail auf und werden vielerorts blockiert.<span data-serverlogo hidden> Das Logo hängt darum der Mail-Server
+                  an, verlinkt und ohne Anhang.</span></li>
                 <li><strong>Keine festen Textfarben:</strong> der Text erbt die Theme-Farbe des Programms und bleibt
                   hell wie dunkel lesbar; das Markenblau ist eine mailtaugliche, kontraststarke Variante.</li>
               </ul>
@@ -606,8 +615,8 @@ const linkLine = (items, color) => items.length ? [{
 // Blöcke, je mit Leerzeile abgesetzt: wer (Person, Funktion, Sektion oder
 // Bereich samt deren Websites) · wie erreichbar · Haus (Hochschule,
 // Gesellschaft) · Adresse. Das Logo setzt nicht der Generator, sondern die
-// Nachrichtenflussregel der EDV unter die Signatur (eingebaut 20. 10. 2026,
-// siehe edv-anfrage-logo-regel.md).
+// Nachrichtenflussregel der EDV (siehe edv-anfrage-logo-regel.md; Stand
+// 20. 10. 2026: im Test, Freigabe der Leitung ausstehend).
 function collectLines() {
   const L = [];
   const add = (id, group, label, step, rows) => { if (rows.length) L.push({ id, group, label, step, rows }); };
@@ -626,7 +635,7 @@ function collectLines() {
   add("tel", "kontakt", "Telefon", 1, tel ? [{ html: wortSpans(tel), text: tel }] : []);
   // ‹Goetheanum› steht über Hochschule und Gesellschaft: das Haus vor seinen
   // Institutionen (Entscheid Auftraggeber 15. 10. 2026, Variante B2).
-  // ‹Goetheanum› ist selbst der Link zur Website; das Blau zeichnet ihn aus.
+  // ‹Goetheanum› ist selbst der Link zur Website, grau gesetzt (siehe goetheanumHtml).
   // Im Klartext gibt es keine Links, dort steht die Adresse dabei.
   add("goetheanum", "marke", "Goetheanum", 0, [{ html: goetheanumHtml(), text: "Goetheanum · " + HAUS_WEB }]);
   add("hochschule", "haus", "Hochschule", 2, plainRows(inLang([term("hochschule", "de")], [term("hochschule", "en")])));
@@ -644,14 +653,18 @@ function defaultOn(id) { return id === "hochschule" ? state.unitKind === "sektio
 function isOn(id) { if (id === "goetheanum") return true; return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id); }
 
 /* ---------- Schriftzug ---------- */
-// ‹Goetheanum› in Mail-Blau, verlinkt.
+// ‹Goetheanum› grau, verlinkt (Entscheid 20. 10. 2026): Die Marke trägt das
+// blaue Logo, das der Server nach aussen darunter setzt (sobald freigegeben). Der Schriftzug bleibt
+// als Name des Hauses über der Adresse und als Ersatz, wo das Bild nicht
+// geladen wird. #767676: 4.5:1 auf Weiss, auf dunklem Grund lesbar.
+const HAUS_GRAU = "#767676"; // ds-ok: Artefakt-Farbe im Mail-Output (theme-unabhängig)
 function goetheanumHtml() {
-  return "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">Goetheanum</a>";
+  return "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + HAUS_GRAU + ";text-decoration:none;\">Goetheanum</a>";
 }
 
 /* ---------- Signatur: einfaches div/br-Markup, alle Stile inline ---------- */
 // Keine Tabellen, keine <p>, kein Bild, keine Hintergrundfarbe. Fliesstext ohne color
-// (erbt Theme des Mailprogramms → Dark-Mode-fest); Mail-Blau nur für Goetheanum und Web-Links.
+// (erbt Theme des Mailprogramms → Dark-Mode-fest); Mail-Blau nur für Web-Links, ‹Goetheanum› grau.
 // Zweisprachig: Hochschule und Gesellschaft erst beide deutsch, dann beide
 // englisch (Entscheid 15. 10. 2026) – nicht Name für Name abwechselnd. Greift
 // nur, wo jede Zeile als Paar untereinander steht (zu lang für eine Zeile).
