@@ -628,11 +628,16 @@ function collectLines() {
   add("web", "person", "Website", 2, linkLine(splitLines(val("web"))
     .filter(w => stripWww(w).toLowerCase() !== HAUS_WEB)
     .map(w => ({ href: webHref(w), text: stripWww(w) })), MAIL_BLUE));
-  // Telefonnummern als Text auf einer Zeile, wie die Adresse: Einen tel:-Link
-  // entfärbt Outlook, Gmail macht ihn dann Standard-Blau mit Unterstrich.
-  const tel = ["phone", "mobile"].map(val).filter(Boolean)
-    .filter((t, i, a) => a.indexOf(t) === i).join(" · ");
-  add("tel", "kontakt", "Telefon", 1, tel ? [{ html: wortSpans(tel), text: tel }] : []);
+  // Telefonnummern auf einer Zeile, als tel:-Link in Mail-Blau wie die
+  // Websites: Als reiner Text erkennt Mail (iOS) sie trotzdem und
+  // unterstreicht jedes Wort einzeln (Befund 21. 10. 2026). Die Wort-spans
+  // im Link bleiben: Nimmt Outlook im Browser den Link weg, verlinkt Gmail
+  // die Nummer trotzdem nicht selbst (Befund 7. 10. 2026).
+  const tels = ["phone", "mobile"].map(val).filter(Boolean)
+    .filter((t, i, a) => a.indexOf(t) === i);
+  const telLink = t => "<a href=\"tel:" + esc(t.replace(/\(0\)/g, "").replace(/[^\d+]/g, "")) +
+    "\" style=\"color:" + MAIL_BLUE + ";text-decoration:none;\">" + wortSpans(t) + "</a>";
+  add("tel", "kontakt", "Telefon", 1, tels.length ? [{ html: tels.map(telLink).join(" · "), text: tels.join(" · ") }] : []);
   // ‹Goetheanum› steht über Hochschule und Gesellschaft: das Haus vor seinen
   // Institutionen (Entscheid Auftraggeber 15. 10. 2026, Variante B2).
   // ‹Goetheanum› ist selbst der Link zur Website, grau gesetzt (siehe goetheanumHtml).
@@ -706,15 +711,18 @@ function buildSignature() {
   // Abgrenzender Unterstrich – immer, auch ohne PS (trennt Mailtext und Signatur).
   push("_", "_");
 
-  // Blöcke je mit Leerzeile abgesetzt (siehe collectLines). Abstände nach
-  // Variante B2 (15. 10. 2026): Telefon nur mit kleiner Leerzeile an der
-  // Person; über ‹Goetheanum› doppelt, darunter klein.
+  // Blöcke je mit Leerzeile abgesetzt (siehe collectLines). Telefon mit
+  // kleiner Leerzeile an der Person; über ‹Goetheanum› eine Leerzeile, ab da
+  // ein Block mit kleinen Leerzeilen bis zur Adresse – so bleibt er ruhig,
+  // auch wenn Hochschule oder Gesellschaft fehlen (Entscheid 21. 10. 2026).
+  // Mit Logo statt Schriftzug (bis #702, Stand cf9262f^) waren es über dem
+  // Logo zwei Leerzeilen und vor der Adresse eine volle: Kommt das Logo
+  // zurück in die Signatur, diese Abstände wieder prüfen.
   let group = null;
   hausSprachen(collectLines().filter(l => isOn(l.id))).forEach(l => {
     if (l.group !== group) {
       if (group === "person" && l.group === "kontakt") gap(true);
-      else if (l.group === "marke") { gap(); gap(); }
-      else if (group === "marke") gap(true);
+      else if (group === "marke" || group === "haus") gap(true);
       else gap();
       group = l.group;
     }
