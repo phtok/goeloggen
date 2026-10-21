@@ -30,7 +30,7 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 - [ ] **‹Goetheanum›** ist selbst der Link zu goetheanum.ch (keine eigene Zeile goetheanum.ch mehr); im Klartext ‹Goetheanum · goetheanum.ch›.
 - [ ] **Mail-Blau** (`#4183B4`) für ‹Goetheanum› und Web-Links — lesbar auf hellem UND dunklem Grund (Kontrast 4.09:1 / 4.07:1, im Code dokumentiert).
 - [ ] **Hierarchie** über Grösse/Gewicht: Name in 600, Adresse eine Stufe kleiner.
-- [ ] **Links** funktionieren: Website (`https`), PS-Link. Telefon und Adresse sind bewusst Text (kein Gmail-Autolink).
+- [ ] **Links** funktionieren: Website (`https`), PS-Link. Telefon als `tel:`-Link in Mail-Blau (am Handy antippbar), Adresse bewusst Text (kein Gmail-Autolink).
 - [ ] **‹Nur Text kopieren›** liefert saubere Klartext-Fassung (Zeilenumbrüche, keine HTML-Reste).
 - [ ] **PS-Modul:** 120-Zeichen-Zähler, Darstellung `PS: … — Link`, ‹Erinnerung in den Kalender› lädt eine `.ics`, die in Apple Kalender und Outlook korrekt öffnet; abgelaufenes PS zeigt beim Laden einen Hinweis.
 - [ ] **Vorschau Hell/Dunkel** schaltet den Bühnen-Hintergrund; gerendert wird exakt das kopierte Markup.
@@ -48,11 +48,19 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 
 ## Testpersonen (Aufbau prüfen)
 
-Reihenfolge der Blöcke (Variante B2, 15. 10. 2026): wer (Name, Funktion,
-Sektion/Bereich, deren Websites) · kleine Leerzeile · Telefon (eine Zeile) ·
-zwei Leerzeilen · ‹Goetheanum› (Schriftzug oder Logo) · kleine Leerzeile ·
-Hochschule, Gesellschaft · Adresse. Zweisprachig stehen kurze
-Paare auf einer Zeile (bis 56 Zeichen), lange untereinander.
+Reihenfolge der Blöcke (Variante B2, 15. 10. 2026; Abstände 21. 10. 2026):
+wer (Name, Funktion, Sektion/Bereich, deren Websites) · kleine Leerzeile ·
+Telefon (eine Zeile) · eine Leerzeile · ‹Goetheanum› · kleine Leerzeile ·
+Hochschule, Gesellschaft · kleine Leerzeile · Adresse. Fehlen Hochschule und
+Gesellschaft, folgt die Adresse mit kleiner Leerzeile auf ‹Goetheanum›.
+Zweisprachig stehen kurze Paare auf einer Zeile (bis 56 Zeichen), lange
+untereinander.
+
+**Merkposten Logo:** Mit Logo statt Schriftzug (bis #702) standen über dem
+Logo zwei Leerzeilen, darunter eine kleine, vor der Adresse eine volle
+(Code: `git show cf9262f^:apps/signatur-generator/index.html`, Funktion
+`buildSignature`). Kommt das Logo zurück in die Signatur, diese Abstände
+wieder prüfen.
 
 | Person | Eingabe | Erwartet |
 |---|---|---|
@@ -153,6 +161,18 @@ Adresse (ohne Adresse – ‹Minimal› – schliesst der Schriftzug).
   oder den Link, Gmail verlinkt die Nummer selbst. → Telefon ebenfalls als
   Text in Wort-spans (Beschluss 7. 10. 2026); am Handy evtl. nicht antippbar –
   noch zu prüfen.
+
+### Befund 21. 10. 2026 (Mail iOS, Dunkelmodus, Signatur Christiane Haid)
+
+- **Telefon als Text in Wort-spans:** Mail (iOS) erkennt die Nummer trotzdem,
+  färbt sie Link-Blau und unterstreicht jedes Wort einzeln. → Telefon wieder
+  als `tel:`-Link in Mail-Blau, ohne Unterstrich; die Wort-spans bleiben im
+  Link als Rückfall, falls Outlook im Browser den Link entfernt. ☐ prüfen:
+  Einfügen in Outlook im Browser, gelesen in Gmail und Mail (iOS).
+- **Adresse:** Apples Datenerkennung setzt einen feinen grauen Unterstrich,
+  ebenfalls stückweise. Bleibt vorerst so.
+- **PS unten, in Times:** nicht aus dem Generator (der setzt das PS über den
+  Strich, ohne eigene Schrift) – von Hand unter die Signatur gesetzt.
 
 ### Recherche 18. 10. 2026: Logo auch für Outlook, ohne Anhang
 
