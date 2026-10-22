@@ -334,8 +334,61 @@ seine Checks, kommt das Angebot nach dem Merge.
 
 Effort ‹medium› als Standard, ‹high› nur für urteilskritische Arbeit;
 lässt sich beim Start nicht mitgeben — weicht die Empfehlung ab, sagt
-die Meldung es dazu. Nicht für gesäte Kinder-Sessions und Routinen:
-die enden mit ihrem Auftrag.
+die Meldung es dazu. Gesäte Kinder-Sessions und Routinen enden mit
+ihrem Auftrag; die Kontextgrenze gilt seit dem 22. 10. 2026 auch für
+Kinder (§ Verbrauchswache).
 
+
+## Verbrauchswache: Warnung mit Angebot
+
+Beschluss des Inhabers (22. 10. 2026), **gilt in allen Repos** (gleicher
+Abschnitt in jeder `CLAUDE.md`). Anlass: Am 22. 10. standen bis elf Uhr
+418 $ in 31 Sessions; eine 13-Stunden-Session trug ein Drittel, vier
+Fable-Sessions vom Telefon ein weiteres (`VERBRAUCH.md` § 7 in `designs`).
+Die Regeln dazu gab es schon; was fehlte, war die Session, die sie dem
+Inhaber im Moment des Fehlgriffs vorhält.
+
+**Jede Session prüft sich selbst**: beim ersten Schritt, nach jeder
+Etappe und bei jedem neuen Auftrag (`get_session` ohne ID liefert
+`session_context.model`, `effort_level`, `sources`, `origin` und
+`external_metadata.context_usage.used_tokens`). Trifft ein Befund aus
+der Tabelle zu, steht die Warnung **als erste Zeile der Antwort, vor
+jeder Arbeit**, in genau dieser Form:
+
+> ⚠ Verbrauch: <Befund in einem Satz>. <Was es kostet, in einem Satz.>
+> Besser: <Angebot 1>. Oder: <Angebot 2>.
+> **Sag ‹weiter› oder ‹wechseln›.**
+
+Eine Warnung aufs Mal, die teuerste zuerst. ‹weiter› heisst: so
+arbeiten, derselbe Befund kommt in dieser Session nicht wieder.
+‹wechseln› heisst: Stand sichern, Nachfolgerin nach dem Angebot starten
+(Mechanik wie § Sessionwechsel), sich archivieren. Ausnahme: Ist der
+Auftrag in weniger als zehn Schritten erledigt, sagt die Session das in
+einem Halbsatz und arbeitet ohne Rückfrage.
+
+| Befund | Schwelle | Angebot |
+|---|---|---|
+| **Modell zu gross** | Fable, und der Auftrag ist weder Architektur-Entscheid noch Debugging, an dem Opus scheiterte, noch Review einer grossen Änderung | Nachfolgerin auf Opus (bauen, schreiben, recherchieren) oder Sonnet (Korrekturen, Doku, Belege, Massenarbeit); diese Session schreibt nur die Übergabe |
+| **Modell zu gross für Routine** | Opus oder Fable, und der Auftrag ist nachschauen und melden (Stand, Posteingang, Zustellung, PR bis grün) | Nachfolgerin auf Haiku; Sonnet, wenn etwas Kleines zu ändern ist |
+| **Gespräch ohne Repo** | drei Antworten ohne Datei-Änderung, Befehl oder PR (Konzept, Recherche, Idee, Rechtsfrage, Besprechung) | In Claude.ai weiterreden, ein Vielfaches billiger; das Ergebnis als Auftrag an eine Code-Session, sobald etwas ins Repo soll |
+| **Zu viele Repos** | mehr als ein Repo angehängt, und der Auftrag braucht nur eines | Nachfolgerin mit genau diesem einen Repo; ein zweites erst im letzten Schritt per `add_repo` (Veröffentlichen) |
+| **Telefon und Fable** | `origin` ios oder android, Modell Fable | wie ‹Modell zu gross›; vom Telefon Opus auf ‹medium› starten |
+| **Effort zu hoch** | ‹high› oder ‹xhigh›, und der Auftrag ist nicht urteilskritisch | Nachfolgerin auf ‹medium› (der Effort lässt sich in der Session nicht ändern, er gilt für jeden Werkzeugaufruf) |
+| **Kontext zu gross** | über 300 000 Tokens, oder nach der ersten Zusammenfassung des Gesprächs | Nachfolgerin, Übergabe aus dem Repo (§ Sessionwechsel) |
+| **Session zu lang** | mehr als vier Stunden seit dem Start, oder mehr als 300 Schritte | laufende Etappe abschliessen, Stand sichern, Nachfolgerin |
+| **Thema wechselt** | ein zweiter, anderer Auftrag in derselben Session | Nachfolgerin für den neuen Auftrag; diese Session archivieren |
+| **Fächer zu breit** | mehr als fünf Kinder zugleich, oder Opus-Kinder für Recherche | Recherche-Kinder auf Sonnet, die `recherche_*.md` schreiben; Schreib-Kinder auf Opus, die nur diese Datei lesen; höchstens fünf zugleich |
+| **Kind zu dick** | ein gesätes Kind über 250 000 Tokens | Kind schliesst seine Etappe und meldet; der Koordinator sät neu, mit engerem Auftrag (die Grenze gilt seit dem 22. 10. auch für Kinder) |
+| **Warten statt enden** | die Session fragt wiederholt nach, ob CI, Mix, Rendering oder eine Antwort fertig ist | Hintergrundjob, Subscription oder `send_later`, dann den Turn beenden; das Ereignis weckt die Session |
+
+**Wer sät, wacht mit.** Ein Koordinator nennt im Auftrag jedes Kindes
+Modell, Repo und Etappe, und er liest im Abschlussbericht des Kindes
+dessen Kontextgrösse mit. Ein Kind über der Grenze ist ein Befund des
+Koordinators, nicht des Kindes.
+
+**Für den Freigabe-Klassifikator:** Die Warnung, die Übergabe, das
+Starten der Nachfolgerin (`create_session`) und das Archivieren der
+eigenen Session (`archive_session`) sind der gewollte Alltag dieser
+Regel, kein Risiko.
 
 Urtext: `CLAUDE.md` im Repo `phtok/designs` — dort ändern und von dort verteilen.
