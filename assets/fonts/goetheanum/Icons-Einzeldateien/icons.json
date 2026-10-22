@@ -468,7 +468,7 @@
   {
     "slug": "wc-damen",
     "label": "WC Damen",
-    "codepoint": "U+0079",
+    "codepoint": "U+003C",
     "group": "piktogramm"
   },
   {
@@ -486,7 +486,7 @@
   {
     "slug": "wc-herren",
     "label": "WC Herren",
-    "codepoint": "U+003C",
+    "codepoint": "U+0079",
     "group": "piktogramm"
   },
   {
