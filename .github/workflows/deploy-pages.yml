@@ -6,7 +6,7 @@ name: Deploy GitHub Pages
 #
 # Veroeffentlicht wird ein kuratiertes Bundle: alle Tool-/Launcher-HTML im Root,
 # die Ordner apps/ (fertige Onepager), start/ + design-system/ (neue Baustelle),
-# das Manifest tools.json sowie die gemeinsamen assets/. Quellordner wie archive/,
+# das Manifest tools.json, die gemeinsamen assets/ sowie das Archiv living-connections/. Quellordner wie archive/,
 # reference/, docs/, todo/, collections/, services/, tools/, workers/ bleiben aussen vor.
 
 on:
@@ -44,7 +44,7 @@ jobs:
           test -f _site/logo-generator.html
 
           # Ganze Ordner wholesale – so werden neue Tools automatisch mitveroeffentlicht.
-          for d in apps start design-system assets; do
+          for d in apps start design-system assets living-connections; do
             if [ -d "$d" ]; then cp -R "$d" "_site/$d"; fi
           done
 
