@@ -15,7 +15,7 @@
 # Die Liste ist abgeleitet, nicht geraten: sie ist genau das, was
 # deploy-pages.yml NICHT ins Bundle kopiert. Aendert sich dort etwas, hier
 # mitziehen. Veroeffentlicht bleiben: alle *.html im Wurzelordner, apps/,
-# start/, design-system/, assets/, tools.json, robots.txt, CNAME sowie die
+# start/, design-system/, assets/, living-connections/, tools.json, robots.txt, CNAME sowie die
 # eingecheckten Weiterleitungen (Abschnitts-Pfade und Kurz-Adressen).
 #
 # Wird die Pages-Quelle auf ‹GitHub Actions› umgestellt, faellt der Branch-Lauf
