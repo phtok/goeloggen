@@ -392,3 +392,22 @@ eigenen Session (`archive_session`) sind der gewollte Alltag dieser
 Regel, kein Risiko.
 
 Urtext: `CLAUDE.md` im Repo `phtok/designs` — dort ändern und von dort verteilen.
+## Umbrüche: immer schön
+
+Anweisung des Inhabers (18. 10. 2026: ‹Immer!!!: Umbrüche ausgleichen!›,
+erneuert am 26. 10. 2026: ‹Bitte alle Umbrüche immer schön machen›),
+**gilt in allen Repos** (gleicher Abschnitt in jeder `CLAUDE.md`). Wo Text
+umbricht, wird er gesetzt, nicht dem Zufall überlassen: in Titeln, Karten,
+Knöpfen, Listen, Meldungen, Mails und im Fuss.
+
+- **Titel und kurze Texte ausgleichen** (`text-wrap: balance`), Fliesstext
+  ohne einzelnes Wort in der Schlusszeile (`text-wrap: pretty`, am `body`).
+- **Zusammenhalten, was zusammengehört**, mit festem Leerzeichen (`&nbsp;`,
+  in JSON `\u00a0`): Zahl und Wort (‹18 Folgen›, ‹S. 12›), Vor- und
+  Nachname, ‹je Folge›, ‹z. B.›.
+- **Mit dem Auge prüfen**, bevor ein Bild gezeigt oder gemergt wird: schmal
+  (375 px) und breit, hell und dunkel. Ein grüner Prüfer ersetzt den Blick
+  nicht (in `designs` misst K19 nur einen Teil davon).
+- Silbentrennung sparsam: Hauswissen in `designs` →
+  `rsa/design-system/silbentrennung.md`.
+
