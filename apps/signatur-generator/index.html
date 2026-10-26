@@ -196,6 +196,16 @@
   .empf-ill .lostcap{fill:var(--bad);font-family:var(--font-text);opacity:.85}
 
   .privacy{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.5;margin-top:var(--s3)}
+  /* Logo-Option (wieder eingebaut 26. 10. 2026). */
+  /* Unterpunkt der Zeile ‹Goetheanum›: eingerückt auf die Textkante der Zeilen. */
+  .zeilen li.z-logo{display:block;min-height:0}
+  .zeilen li.z-logo:hover{background:none}
+  .zeilen li.z-logo .logo-opt{display:flex;border:0;padding:0;margin:0 0 var(--s2) calc(22px + 2 * var(--s1) + var(--s2))}
+  .logo-opt{display:flex;gap:var(--s2);align-items:flex-start;margin-top:var(--s4);
+    padding:var(--s3);border:1px dashed var(--line);border-radius:var(--r-card);cursor:pointer}
+  .logo-opt input{margin-top:2px;width:16px;height:16px;flex:none}
+  .logo-opt .lo-lab{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);display:block}
+  .logo-opt .lo-sub{font-family:var(--font-text);font-size:var(--t-micro);color:var(--muted);line-height:1.5;display:block;margin-top:2px}
 
   @media(max-width:560px){
     .mail-stage{padding:var(--s4)}
@@ -319,6 +329,14 @@
               </div>
             </div>
           </details>
+
+          <label class="logo-opt" id="logoOpt">
+            <input type="checkbox" id="showLogo" />
+            <span>
+              <span class="lo-lab">Logo statt Schriftzug ‹Goetheanum›</span>
+              <span class="lo-sub">Nur für Apple Mail. Gmail und Outlook können es nicht anzeigen.</span>
+            </span>
+          </label>
         </div>
 
         <div class="btnrow schrittfuss">
@@ -529,6 +547,17 @@
 const MAIL_BLUE = "#4183B4"; // ds-ok: Artefakt-Farbe im Mail-Output (theme-unabhängig)
 const CFONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
 
+// Logo (Icon + Wortmarke, both-modes-Blau #4183B4) an Stelle des Schriftzugs.
+// Absolute Produktiv-URL (E-Mail braucht absolute Bild-Adressen).
+const LOGO_URL = "https://werkzeuge.goetheanum.ch/assets/logos/goetheanum-signatur-logo.png";
+// Für alle (7. 10. 2026; entfernt 20. 10., wieder eingebaut 26. 10. 2026: das
+// Logo per Server-Regel lässt auf sich warten). Outlook im Browser verwirft es,
+// dort bleibt der Name in der Adresse.
+function logoWanted() {
+  const box = document.getElementById("showLogo");
+  return !!(box && box.checked);
+}
+
 const FIELDS = ["name","role","roleEn","unitCustom","phone","mobile","web","street","city","country","ps","pslink","psuntil"];
 const STORE_KEY = "goe-signatur-v4";
 const OLD_KEY = "goe-signatur-v3";
@@ -614,14 +643,17 @@ const linkLine = (items, color) => items.length ? [{
 
 // Blöcke, je mit Leerzeile abgesetzt: wer (Person, Funktion, Sektion oder
 // Bereich samt deren Websites) · wie erreichbar · Haus (Hochschule,
-// Gesellschaft) · Adresse. Das Logo setzt nicht der Generator, sondern die
-// Nachrichtenflussregel der EDV (siehe edv-anfrage-logo-regel.md; Stand
-// 20. 10. 2026: im Test, Freigabe der Leitung ausstehend).
+// Gesellschaft) · Adresse. Auf Wunsch steht an Stelle des Schriftzugs
+// ‹Goetheanum› das Logo (Logo-Option, Apple Mail).
 function collectLines() {
   const L = [];
   const add = (id, group, label, step, rows) => { if (rows.length) L.push({ id, group, label, step, rows }); };
   const name = val("name");
-  add("name", "person", "Name", 1, name ? [{ html: "<span style=\"font-weight:600;\">" + esc(name) + "</span>", text: name }] : []);
+  // Logo ohne Adresse (z. B. ‹Minimal›): Wo das Logo nicht ankommt (Gmail,
+  // Outlook), trägt die Namenszeile den Namen des Hauses (Entscheid 15. 10. 2026).
+  const haus = logoAktiv() && !isOn("address");
+  add("name", "person", "Name", 1, name ? [{ html: "<span style=\"font-weight:600;\">" + esc(name) + "</span>" + (haus ? " · " + goetheanumLink() : ""),
+    text: name + (haus ? " · Goetheanum" : "") }] : []);
   add("role", "person", "Funktion", 1, plainRows(inLang(splitLines(val("role")), splitLines(val("roleEn")))));
   add("unit", "person", state.unitKind === "bereich" ? "Bereich" : "Sektion", 2, plainRows(unitLines()));
   // Websites gehören zur Sektion/zum Bereich; goetheanum.ch steckt im Schlusswort.
@@ -642,7 +674,7 @@ function collectLines() {
   // Institutionen (Entscheid Auftraggeber 15. 10. 2026, Variante B2).
   // ‹Goetheanum› ist selbst der Link zur Website, grau gesetzt (siehe goetheanumHtml).
   // Im Klartext gibt es keine Links, dort steht die Adresse dabei.
-  add("goetheanum", "marke", "Goetheanum", 0, [{ html: goetheanumHtml(), text: "Goetheanum · " + HAUS_WEB }]);
+  add("goetheanum", "marke", "Goetheanum", 0, [{ html: goetheanumHtml(), text: (logoAktiv() ? "" : "Goetheanum · ") + HAUS_WEB }]);
   add("hochschule", "haus", "Hochschule", 2, plainRows(inLang([term("hochschule", "de")], [term("hochschule", "en")])));
   add("aag", "haus", "Gesellschaft", 0, plainRows(inLang([term("aag", "de")], [term("aag", "en")])));
   // Adresse auf EINER Zeile (mit Mittelpunkt), als reiner Text: Der
@@ -650,21 +682,43 @@ function collectLines() {
   // färbt eine verlinkte Adresse blau.
   const addr = [valD("street"), valD("city"), valD("country")].filter(Boolean).join(" · ");
   const addrHtml = wortSpans(addr);
-  add("address", "adresse", "Adresse", "adr", [{ html: addrHtml, text: addr }]);
+  // Mit Logo beginnt die Adresse mit ‹Goetheanum› als Link: Wo das Logo nicht
+  // ankommt, steht der Name trotzdem lesbar und verlinkt da (Beschluss
+  // 7. 10. 2026, verlinkt seit 15. 10. 2026).
+  add("address", "adresse", "Adresse", "adr", logoAktiv()
+    ? [{ html: goetheanumLink() + " · " + addrHtml, text: "Goetheanum · " + addr }]
+    : [{ html: addrHtml, text: addr }]);
   return L;
 }
 function defaultOn(id) { return id === "hochschule" ? state.unitKind === "sektion" : true; }
 // ‹Goetheanum› steht in jeder Signatur (Entscheid 15. 10. 2026): nicht abschaltbar.
 function isOn(id) { if (id === "goetheanum") return true; return Object.prototype.hasOwnProperty.call(state.on, id) ? !!state.on[id] : defaultOn(id); }
+// Mit Logo braucht es den Namen als Text, wo das Logo nicht ankommt: in der
+// Adresse (vorn) oder, ist sie aus, hinter dem Namen – als Link.
+function logoAktiv() { return logoWanted() && isOn("goetheanum"); }
 
-/* ---------- Schriftzug ---------- */
-// ‹Goetheanum› grau, verlinkt (Entscheid 20. 10. 2026): Die Marke trägt das
-// blaue Logo, das der Server nach aussen darunter setzt (sobald freigegeben). Der Schriftzug bleibt
-// als Name des Hauses über der Adresse und als Ersatz, wo das Bild nicht
-// geladen wird. #767676: 4.5:1 auf Weiss, auf dunklem Grund lesbar.
+/* ---------- Schriftzug oder Logo ---------- */
+// Ohne Logo: ‹Goetheanum› grau, verlinkt (Entscheid 20. 10. 2026): Die Marke
+// trägt das blaue Logo. #767676: 4.5:1 auf Weiss, auf dunklem Grund lesbar.
+// Mit Logo steht an derselben Stelle das Logo – als CSS-Hintergrund, nicht
+// als <img>: In Apple Mail schaltet jedes <img> die Mail im Dunkelmodus auf
+// hell, das Hintergrundbild lässt sie dunkel (Test 7. 10. 2026). Outlook im
+// Browser zeigt es nicht und verwirft es beim Einfügen in den Signatur-Editor;
+// das klassische Outlook bekommt über die mso-Weiche den Textlink. In allen
+// Fällen steht der Name als Text-Link da: in der Adresse oder hinter dem Namen.
 const HAUS_GRAU = "#767676"; // ds-ok: Artefakt-Farbe im Mail-Output (theme-unabhängig)
+// ‹Goetheanum› als Ersatz, wo das Logo nicht ankommt: grau und halbfett,
+// damit er neben dem blauen Logo nicht als zweite Marke liest (16. 10. 2026).
+function goetheanumLink() {
+  return "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + HAUS_GRAU + ";font-weight:600;text-decoration:none;\">Goetheanum</a>";
+}
 function goetheanumHtml() {
-  return "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + HAUS_GRAU + ";text-decoration:none;\">Goetheanum</a>";
+  const link = inner => "<a href=\"https://" + HAUS_WEB + "\" style=\"color:" + HAUS_GRAU + ";text-decoration:none;\">" + inner + "</a>";
+  if (!logoAktiv()) return link("Goetheanum");
+  return "<!--[if mso]>" + link("Goetheanum") + "<![endif]-->" +
+    "<!--[if !mso]><!--><a href=\"https://" + HAUS_WEB + "\" aria-label=\"Goetheanum\" style=\"display:inline-block;border:0;text-decoration:none;\">" +
+    "<div style=\"width:100px;height:17px;background-image:url('" + LOGO_URL + "');background-repeat:no-repeat;" +
+    "background-position:left center;background-size:contain;\"></div></a><!--<![endif]-->";
 }
 
 /* ---------- Signatur: einfaches div/br-Markup, alle Stile inline ---------- */
@@ -715,13 +769,15 @@ function buildSignature() {
   // kleiner Leerzeile an der Person; über ‹Goetheanum› eine Leerzeile, ab da
   // ein Block mit kleinen Leerzeilen bis zur Adresse – so bleibt er ruhig,
   // auch wenn Hochschule oder Gesellschaft fehlen (Entscheid 21. 10. 2026).
-  // Mit Logo statt Schriftzug (bis #702, Stand cf9262f^) waren es über dem
-  // Logo zwei Leerzeilen und vor der Adresse eine volle: Kommt das Logo
-  // zurück in die Signatur, diese Abstände wieder prüfen.
+  // Mit Logo wie vor #702: über dem Logo zwei Leerzeilen, darunter klein,
+  // vor der Adresse eine volle (sie beginnt dann mit ‹Goetheanum›).
+  const logo = logoAktiv();
   let group = null;
   hausSprachen(collectLines().filter(l => isOn(l.id))).forEach(l => {
     if (l.group !== group) {
       if (group === "person" && l.group === "kontakt") gap(true);
+      else if (logo && l.group === "marke") { gap(); gap(); }
+      else if (logo && l.group === "adresse") gap();
       else if (group === "marke" || group === "haus") gap(true);
       else gap();
       group = l.group;
@@ -763,7 +819,18 @@ function renderZeilen() {
       (l.step ? "<button type=\"button\" class=\"z-edit\" data-goto=\"" + l.step + "\" aria-label=\"" + esc(l.label) + " ändern\">ändern</button>" : "<span></span>") +
       "</li>";
   });
+  // Die Logo-Option hängt als Unterpunkt unter der Zeile ‹Goetheanum›: vor dem
+  // Neuzeichnen herauslösen (behält Zustand und Listener), danach einsetzen.
+  const logoOpt = document.getElementById("logoOpt");
+  if (logoOpt && ul.contains(logoOpt)) logoOpt.remove();
   ul.innerHTML = html;
+  const goe = ul.querySelector("[data-zeile=\"goetheanum\"]");
+  if (logoOpt && goe) {
+    const li = document.createElement("li");
+    li.className = "z-logo";
+    li.appendChild(logoOpt);
+    goe.closest("li").after(li);
+  }
   if (focusId) { const f = ul.querySelector("[data-zeile=\"" + focusId + "\"]"); if (f) f.focus(); }
 }
 document.getElementById("zeilen").addEventListener("change", e => {
@@ -879,6 +946,7 @@ function save() {
   try {
     const data = { mode: state.mode, unitKind: state.unitKind, unit: state.unit, lang: state.lang, on: state.on, px: state.px };
     FIELDS.forEach(k => { data[k] = els[k].value; });
+    data.showLogo = document.getElementById("showLogo").checked;
     localStorage.setItem(STORE_KEY, JSON.stringify(data));
   } catch (e) {}
 }
@@ -887,7 +955,7 @@ function save() {
 // schaltet die Signatur zweisprachig.
 function fromV3(d) {
   const out = { name: d.name, phone: d.phone, mobile: d.mobile, web: d.web, street: d.street, city: d.city,
-    country: d.country, ps: d.ps, pslink: d.pslink, psuntil: d.psuntil, mode: d.mode };
+    country: d.country, ps: d.ps, pslink: d.pslink, psuntil: d.psuntil, mode: d.mode, showLogo: d.showLogo };
   const keep = [];
   splitLines(d.role).forEach(l => {
     const k = Object.keys(ORGS_).find(x => ORGS_[x].name_de === l || ORGS_[x].name_en === l);
@@ -917,6 +985,7 @@ function loadStored() {
     }
     if (!data) return false;
     setFields(data);
+    document.getElementById("showLogo").checked = !!data.showLogo;
     if (data.mode) setMode(data.mode, false);
     return true;
   } catch (e) { return false; }
@@ -1017,6 +1086,7 @@ document.querySelectorAll("a[data-fold]").forEach(a => a.addEventListener("click
   if (t) t.open = true;
 }));
 document.getElementById("clearAll").addEventListener("click", () => { setFields({}); onInput(); showStep(1, true); });
+document.getElementById("showLogo").addEventListener("change", () => { render(); resetCopied(); save(); });
 
 
 /* ---------- Status / Kopier-Feedback ---------- */
