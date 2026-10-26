@@ -212,8 +212,8 @@
     "fontonly": true
   },
   {
-    "slug": "wc-damen-text",
-    "label": "WC Damen · mit Text",
+    "slug": "wc-herren-text",
+    "label": "WC Herren · mit Text",
     "codepoint": "U+0059",
     "group": "piktogramm-text",
     "fontonly": true
@@ -468,7 +468,7 @@
   {
     "slug": "wc-damen",
     "label": "WC Damen",
-    "codepoint": "U+0079",
+    "codepoint": "U+003C",
     "group": "piktogramm"
   },
   {
@@ -486,7 +486,7 @@
   {
     "slug": "wc-herren",
     "label": "WC Herren",
-    "codepoint": "U+003C",
+    "codepoint": "U+0079",
     "group": "piktogramm"
   },
   {

@@ -1,0 +1,18 @@
+/* Living Connections – Archiv. Nur Seitenlayout; Farben, Schrift und Rollen
+   kommen aus design-system/tokens.css und base.css. */
+.artkopf{padding-block:clamp(36px,6vw,64px) var(--s6);max-width:min(72ch,100%)}
+.artkopf h1{max-width:24ch}
+.artkopf .kicker{margin-top:var(--s4)}
+.artkopf .lede{margin-top:var(--s4)}
+.block{margin-bottom:var(--s8)}
+.block h2{margin-bottom:var(--s4)}
+.prose h2,.prose h3,.prose h4{margin-top:var(--s6);margin-bottom:var(--s2)}
+.prose figure{margin-block:var(--s6)}
+.prose img{max-width:min(100%,420px);height:auto;display:block}
+.prose figcaption{color:var(--muted);font-size:var(--t-small);margin-top:var(--s2)}
+.prose audio{width:100%;display:block}
+.prose blockquote{border-left:2px solid var(--line);padding-left:var(--s4);margin-inline:0}
+.verzeichnis,.dokumente{list-style:none;padding:0;max-width:min(var(--measure),100%)}
+.verzeichnis li,.dokumente li{padding-block:var(--s2);border-bottom:1px solid var(--line)}
+.verzeichnis a,.dokumente a{display:inline-block;min-height:var(--tap);padding-block:10px}
+.verzeichnis .meta,.dokumente .meta{display:block;color:var(--muted);font-family:var(--font-text);font-size:var(--t-small)}

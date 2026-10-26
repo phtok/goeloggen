@@ -658,6 +658,17 @@
       "desc": "Produktionssammlung aus Jahrgängen (PDFs, Zeichnungen). Struktur vorbereitet."
     },
     {
+      "slug": "living-connections",
+      "cat": "archiv",
+      "status": "live",
+      "tag": "Archiv",
+      "title": "Living Connections",
+      "short": "Living Connections",
+      "href": "living-connections/",
+      "desc": "Interviews über anthroposophische Meditation und die Tagungen 2017, 2021 und 2022 – Archiv der früheren Website living-connections.info.",
+      "such": "Living Connections Meditation Interviews Tagung Archiv Inessa Guseva Allgemeine Anthroposophische Sektion"
+    },
+    {
       "slug": "logo-generator-alt",
       "cat": "archiv",
       "status": "geparkt",
