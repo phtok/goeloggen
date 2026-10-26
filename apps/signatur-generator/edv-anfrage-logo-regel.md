@@ -3,9 +3,13 @@
 **Im Test (20. 10. 2026):** Die EDV hat die Regel eingebaut, bisher nur
 für den Absender von Oliver Pauletto getestet. Die Freigabe der Leitung für
 alle Absender steht aus. Offen: ob Antworten und Weiterleitungen wie
-beschrieben ausgenommen sind. Der Generator bietet keine eigene
-Logo-Option mehr an; sein Hinweis auf das Server-Logo ist bis zur Freigabe
-ausgeblendet (`data-serverlogo`).
+beschrieben ausgenommen sind. Der Hinweis des Generators auf das
+Server-Logo ist bis zur Freigabe ausgeblendet (`data-serverlogo`).
+
+**26. 10. 2026:** Weil die Freigabe auf sich warten lässt, ist die
+Logo-Option im Generator wieder eingebaut (Logo statt Schriftzug, Apple
+Mail). Kommt die Server-Regel für alle, die Option wieder herausnehmen –
+sonst steht das Logo doppelt.
 
 Stand 18. 10. 2026. Hintergrund und Vergleich der Wege: `TESTING.md`,
 Abschnitt «Recherche 18. 10. 2026». Der Text unten ist zum Kopieren gedacht.

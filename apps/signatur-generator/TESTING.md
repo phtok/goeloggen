@@ -72,10 +72,10 @@ wieder prüfen.
 
 ## Logo (Backend-Versuch, nur Intern-Ansicht)
 
-**Entfernt am 20. 10. 2026:** Die Logo-Option ist aus dem Generator
-genommen. Das Logo hängt jetzt die Nachrichtenflussregel der EDV unter
-die Signatur (im Test seit 20. 10. 2026, Freigabe der
-Leitung ausstehend; siehe `edv-anfrage-logo-regel.md`). Die Befunde unten bleiben als Archiv stehen.
+**Entfernt am 20. 10. 2026, wieder eingebaut am 26. 10. 2026:** Die
+Server-Regel der EDV wartet auf die Freigabe der Leitung (siehe
+`edv-anfrage-logo-regel.md`). Bis dahin gilt wieder der Stand unten, mit
+einer Änderung: der Schriftzug ohne Logo steht grau (#767676) statt blau.
 
 Das Logo steht an Stelle des Schriftzugs ‹Goetheanum› über Hochschule und Gesellschaft,
 verlinkt, als **CSS-Hintergrund** (kein `<img>`). Klassisches Outlook (Windows)
