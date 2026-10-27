@@ -84,7 +84,11 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:vercel.com)",
       "WebFetch(domain:supabase.com)",
-      "WebFetch(domain:werkzeuge.goetheanum.ch)"
+      "WebFetch(domain:werkzeuge.goetheanum.ch)",
+      "mcp__Vercel__get_*",
+      "mcp__Vercel__list_*",
+      "mcp__Vercel__search_vercel_documentation",
+      "WebFetch(domain:*.saetzerei.com)"
     ]
   }
 }
