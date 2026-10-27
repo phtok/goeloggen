@@ -16,6 +16,15 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 27. Oktober 2026 — Ton-Chip wirkt wieder (1.28.6)
+
+**Was.** `base.css`: Ein Kommentarsatz zum Ton-Chip stand hinter dem
+schliessenden `*/` und damit im CSS; der Browser las ihn als Selektor und
+verwarf die ganze Regel `.chip.ton`. Der Satz steht jetzt im Kommentar.
+**Warum.** Gefunden beim Bau der Laborseite Navigations-Architektur: ‹Priorität›
+sah aus wie jeder andere Chip. **Wirkung.** Jeder `.chip.ton` im Haus trägt
+wieder Ton-Fläche und `--ton-ink` (Sektionsfarben-Seiten, Navigations-Architektur).
+
 ## 18. Oktober 2026 — Kicker im Band ohne Deckkraft (1.28.5)
 
 **Was.** `base.css`: `.band .kicker, .band .kick` verlieren `opacity:.85`.

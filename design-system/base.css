@@ -119,7 +119,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
    Innenabstand aus Tokens, Zeilenhöhe wie Lesetext, Umbruch erlaubt. Der Goldton
    mischt über --paper, NICHT über transparent, sonst nimmt er die Farbe der
    Fläche an, auf der er liegt, und frisst den Kontrast von --gold-ink (B02;
-   auf einer --soft-Karte gemessene 4.42:1 statt der nötigen 4.5:1). */
+   auf einer --soft-Karte gemessene 4.42:1 statt der nötigen 4.5:1).
    Seit 1.17.0 nimmt der Chip die TON-Rollen: ohne data-sek ist --ton-hell genau
    dieser Goldton, unter <div data-sek="nws"> färbt er sich mit. */
 .chip.ton{display:inline-block;border-color:transparent;border-radius:var(--r-control);
