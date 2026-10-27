@@ -85,7 +85,7 @@ nav.top a:hover{color:var(--gold-ink)}
 /* --- Abschnitte ------------------------------------------------------------ */
 section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .shead{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s8);margin-bottom:var(--s6);flex-wrap:wrap}
-.shead h2{font-size:var(--t-h2);flex:0 0 auto}
+.shead h2{font-size:var(--t-h2);flex:0 1 auto;min-width:0}
 .shead p{color:var(--muted);font-size:var(--t-small);line-height:1.6;max-width:58ch;flex:1 1 320px}
 
 /* --- Karte ----------------------------------------------------------------- */

@@ -642,6 +642,17 @@
       "such": "Kampagne Drehbuch Ablauf Playbook Anleitung Schritte Phasen Checkliste UTM ActiveCampaign Mailing Messkette"
     },
     {
+      "slug": "abo-motive",
+      "cat": "kampagne",
+      "status": "intern",
+      "tag": "Aktion",
+      "title": "Abo-Motive",
+      "short": "Abo-Motive",
+      "href": "apps/abo-motive/",
+      "desc": "Warum Menschen abonnieren und bleiben — drei Befunde, die Frage ‹Gratis oder bezahlt?› und der Plan der Weihnachtsaktion.",
+      "such": "Abo Abonnement Motive Probeabo Gratis Gratisprobe Konversion Kündigung Weihnachten Geschenkabo Wochenschrift goetheanum.tv Befunde"
+    },
+    {
       "slug": "campus-karten",
       "cat": "geparkt",
       "status": "geparkt",

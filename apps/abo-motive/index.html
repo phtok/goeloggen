@@ -1,0 +1,329 @@
+<!doctype html>
+<!-- =============================================================================
+     Abo-Motive · Kampagnenseite (intern)
+     Drei Befunde zu den Abo-Motiven, die Frage ‹Gratis oder bezahlt?› und der
+     Plan der Weihnachtsaktion. Text aus docs/abo-motive/seitentext.md; die vollen
+     Dossiers liegen intern im Google-Drive-Ordner (Fuss), nicht im Repo.
+     Chrome aus tokens.css/base.css (DS01/DS02); Kicker normal (G05); Leitzahlen
+     gleich gross in Source Sans 3, tabellarisch (G25); Betonung Laut (G01/G05).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Abo-Motive · Goetheanum</title>
+<meta name="description" content="Warum Menschen abonnieren und bleiben — drei Befunde, die Frage ‹Gratis oder bezahlt?› und der Plan der Weihnachtsaktion." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  /* Nur seiteneigene Gestalt; alles Gemeinsame aus base.css, nur Tokens (DS02). */
+  h1,h2,h3{text-wrap:balance}
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+  .lese{line-height:var(--lh-body)}
+  h3{font-size:var(--t-h3);font-weight:var(--w-deutlich);line-height:1.25;margin:0}
+  .block{display:grid;gap:var(--s4);margin-top:var(--s8)}
+  .block > h3{margin:0}
+  ul.liste,ol.liste{margin:0;padding-left:1.3em;display:grid;gap:var(--s2);line-height:var(--lh-body)}
+  .liste li::marker{color:var(--gold-ink)}
+  ol.liste li::marker{font-family:var(--font-text);font-weight:600}
+
+  /* Drei Befunde: gleich wichtig, darum gleich gross (CLAUDE.md, Auge prüft Gewicht). */
+  .befunde{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:var(--s5)}
+  .befund{display:grid;grid-template-rows:auto auto auto 1fr auto;gap:var(--s3);min-width:0}
+  .befund .nr{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .wert{margin:0;font-family:var(--font-text);font-weight:600;font-size:clamp(36px,4vw,44px);line-height:1.1;color:var(--blue);font-variant-numeric:tabular-nums lining-nums}
+  .wert-label{margin:var(--s1) 0 0;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:var(--lh-min)}
+  .befund ul{margin:0;padding-left:1.1em;display:grid;gap:var(--s2);align-content:start;line-height:1.55}
+  .umsetzung{margin:0;border-top:1px solid var(--line);padding-top:var(--s3);line-height:1.55}
+  .umsetzung .lab{display:block}
+  .kernsatz{margin:var(--s8) 0 0;font-size:clamp(22px,2.6vw,27px);line-height:1.4;max-width:var(--measure);padding-left:var(--s5);border-left:3px solid var(--gold-deep)}
+
+  /* Gratis oder bezahlt: Belege und Einwände gleichwertig, gleiche Fläche, gleicher Grad. */
+  .abwaegung{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:var(--s5);margin-top:var(--s8)}
+  .abwaegung .card{display:grid;gap:var(--s4);align-content:start}
+  .abwaegung .card > p{margin:0;line-height:var(--lh-body)}
+  .rechnung{display:grid;gap:var(--s4)}
+  .rechnung table{width:100%;max-width:560px}
+  .rechnung th,.rechnung td{padding:var(--s3)}
+  .rechnung td.num,.rechnung th.num{white-space:nowrap}
+  .wege{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:var(--s4)}
+  .wege .card{display:grid;gap:var(--s2);align-content:start}
+  .wege .card p{margin:0;line-height:var(--lh-body)}
+  .regel{margin:0;max-width:var(--measure);line-height:var(--lh-body)}
+
+  /* Weihnachtsaktion */
+  .plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:var(--s5) var(--s8);margin-top:var(--s6)}
+  .plan > div{display:grid;gap:var(--s2);align-content:start;min-width:0}
+  .plan p{margin:0;line-height:var(--lh-body)}
+  .ablauf{margin:0;padding:0;list-style:none;border-top:1px solid var(--line);max-width:880px}
+  .ablauf li{display:grid;grid-template-columns:12rem 1fr;gap:var(--s1) var(--s5);padding:var(--s3) 0;border-bottom:1px solid var(--line);line-height:1.55}
+  .ablauf .wann{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);font-variant-numeric:tabular-nums lining-nums;padding-top:2px}
+  @media (max-width:560px){.ablauf li{grid-template-columns:1fr}}
+  .lassen{display:flex;flex-wrap:wrap;gap:var(--s2);margin:0;padding:0;list-style:none}
+
+  .quellen{display:grid;gap:var(--s2);margin:0;padding-left:1.2em;font-family:var(--font-text);font-size:var(--t-small);line-height:var(--lh-min)}
+  .quellen li::marker{color:var(--muted)}
+  .quellen a{display:inline-block;min-height:var(--tap);padding-block:10px}
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Kampagne · Stand 27.&nbsp;Oktober 2026</span>
+    <h1>Warum Menschen abonnieren und bleiben</h1>
+    <p class="lede">Gekauft wird von denen, die schon dazugehören. Verloren gehen sie,
+    weil aus dem Probeabo keine Gewohnheit wird. Und wer fern von Dornach lebt,
+    bleibt drei- bis viermal häufiger.</p>
+  </section>
+
+  <!-- ====================== Drei Befunde ====================== -->
+  <section aria-labelledby="h-befunde">
+    <div class="shead"><h2 id="h-befunde">Drei Befunde</h2></div>
+
+    <div class="befunde">
+      <article class="card soft befund">
+        <span class="nr">Befund 1</span>
+        <h3>Gekauft wird aus Zugehörigkeit, nicht aus Neugier</h3>
+        <div>
+          <p class="wert">89&nbsp;%</p>
+          <p class="wert-label">der 1037&nbsp;Probeabos im Sommer kamen über die eigene Liste oder direkt</p>
+        </div>
+        <ul>
+          <li>Bezahlte Anzeigen: 309&nbsp;000 Einblendungen, CHF&nbsp;460, 2&nbsp;zahlende Kunden.</li>
+          <li>Selbstauskunft: «Mitglied», «Waldorflehrerin», «Zweig». Niemand nennt einen Beitrag.</li>
+        </ul>
+        <p class="umsetzung"><span class="lab">Umsetzung</span>Budget in die eigene Liste und in die Weitergabe. Bezahlte Social-Anzeigen streichen.</p>
+      </article>
+
+      <article class="card soft befund">
+        <span class="nr">Befund 2</span>
+        <h3>Drei Gratismonate bringen Anmeldungen, nicht Abonnenten</h3>
+        <div>
+          <p class="wert">21&nbsp;%</p>
+          <p class="wert-label">der entschiedenen TV-Probeabos bleiben zahlend (vorläufig)</p>
+        </div>
+        <ul>
+          <li>51&nbsp;% der Kündigungen fallen auf Tag 61–85, direkt nach der Mail vor der ersten Abbuchung.</li>
+          <li>Geplant hatten wir im August mindestens 35&nbsp;%.</li>
+        </ul>
+        <p class="umsetzung"><span class="lab">Umsetzung</span>Eine Premiere pro Woche, Jahresabo als Standard, Erinnerung mit Inhalt statt mit Betrag. Gratis gegen bezahlten Einstieg testen (<a href="#gratis">eigener Abschnitt</a>).</p>
+      </article>
+
+      <article class="card soft befund">
+        <span class="nr">Befund 3</span>
+        <h3>Wer fern von Dornach lebt, zahlt am treuesten</h3>
+        <div>
+          <p class="wert">46&nbsp;% · 11&nbsp;%</p>
+          <p class="wert-label">bleiben in den USA · in Deutschland</p>
+        </div>
+        <ul>
+          <li>Niederlande 38&nbsp;%, Grossbritannien 31&nbsp;%, Schweiz 25&nbsp;%.</li>
+          <li>Englisch digital war das meistgewählte Wochenschrift-Abo, bei der kleineren Liste.</li>
+        </ul>
+        <p class="umsetzung"><span class="lab">Umsetzung</span>Englisch und Übersee vor jeder weiteren deutschen Kampagne, mit Preisen in USD.</p>
+      </article>
+    </div>
+
+    <p class="kernsatz">«Sie gehören dazu. Das ist Ihr Stück Dornach, jede Woche.»</p>
+  </section>
+
+  <!-- ====================== Gratis oder bezahlt? ====================== -->
+  <section id="gratis" aria-labelledby="h-gratis">
+    <div class="shead"><h2 id="h-gratis">Gratis oder bezahlt? Was die Sommer-Aktion zeigt</h2></div>
+
+    <p class="lese">Die drei Gratismonate haben ihr Ziel erreicht: 1037&nbsp;Anmeldungen
+    bei 1000 geplanten. Gemessen wird ein Abo aber erst, wenn es bezahlt wird. Dort
+    liegt die Aktion deutlich unter unserer eigenen Planung.</p>
+
+    <div class="block">
+      <h3>Was die Gratisprobe geleistet hat</h3>
+      <ul class="liste lese">
+        <li>1037&nbsp;Probeabos, das Ziel erreicht.</li>
+        <li>Viele neue Adressen: 394&nbsp;Anmeldungen aus der Liste ohne Abo.</li>
+        <li>Ein digitales Probeabo kostet in der Gratiszeit nichts.</li>
+      </ul>
+    </div>
+
+    <div class="abwaegung">
+      <article class="card soft" aria-labelledby="h-belege">
+        <h3 id="h-belege">Fünf Belege, dass sie nicht bindet</h3>
+        <ol class="liste">
+          <li><strong>Unter der eigenen Planung.</strong> Für goetheanum.tv rechneten wir
+            im August mit 35&nbsp;% (vorsichtig), 50&nbsp;% (erwartet) oder 65&nbsp;% (gut).
+            Gemessen: 21&nbsp;% der bisher entschiedenen Probeabos (58 bleiben,
+            212 gekündigt).</li>
+          <li><strong>Entschieden wird an der Rechnung, nicht am Inhalt.</strong> Nur 20 der
+            212 Kündigungen fielen in die erste Woche. 108 fielen auf Tag 61–85, gleich
+            nach der Erinnerung vor der ersten Abbuchung. Die Gratiszeit hat die
+            Preisfrage drei Monate verschoben, nicht beantwortet.</li>
+          <li><strong>Gratis zieht die an, die wieder gehen.</strong> In Deutschland
+            bleiben 11&nbsp;%, in den USA 46&nbsp;%. Die deutsche Liste ohne Abo brachte die
+            meisten Anmeldungen und kaum Zahlende.</li>
+          <li><strong>Teuer je Zahlendem.</strong> Die Aktion kostete rund CHF&nbsp;15&nbsp;500
+            mit Arbeitszeit; eingenommen sind bisher rund CHF&nbsp;1700. Ein zahlender
+            TV-Kunde kostete bisher rund CHF&nbsp;270. Ein Papier-Probeabo kostet in der
+            Gratiszeit CHF&nbsp;17.26 (rund zehn Hefte Druck und Versand).</li>
+          <li><strong>Die Branche sieht dasselbe.</strong> Bindung nach dem ersten Monat:
+            ohne Probe 86&nbsp;%, bezahlte Probe 81&nbsp;%, Gratisprobe 62&nbsp;% (Piano). Das
+            Ende des Probeangebots ist einer der drei häufigsten Kündigungsgründe
+            (Reuters&nbsp;2023).</li>
+        </ol>
+      </article>
+
+      <article class="card soft" aria-labelledby="h-dagegen">
+        <h3 id="h-dagegen">Was dagegen spricht</h3>
+        <p>Diese Einwände sind berechtigt und gehören auf die Seite:</p>
+        <ul class="liste">
+          <li><strong>Die Begleitung fehlte.</strong> Die geplante Mail-Strecke für die
+            Gratismonate (Willkommen, Halbzeit, Erinnerung mit Inhalten) wurde 2026 nie
+            gebaut. Ein Teil der schwachen Quote kann daran liegen.</li>
+          <li><strong>Die Probe öffnet Türen.</strong> 29&nbsp;% der zahlenden Deutschen
+            nennen ein Probeabo oder einen Rabatt als Grund für ihr erstes Abo
+            (Reuters&nbsp;2023).</li>
+          <li><strong>Der Vergleich fehlt.</strong> Wie viele ohne Gratiszeit gekommen
+            wären, weiss niemand. Die Sommer-Aktion hatte keine Gegengruppe.</li>
+          <li><strong>Die Zahl ist vorläufig.</strong> 204 Juli-Probeabos haben weder
+            Zahlung noch Kündigung gemeldet. Für die Wochenschrift fehlt die Quote ganz;
+            dort hatte bis Mitte August niemand gekündigt.</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="block rechnung">
+      <h3>Rechenbeispiel</h3>
+      <p class="lese">Bleiben die offenen TV-Probeabos wie die entschiedenen, werden aus
+      628 Gratis-Anmeldungen rund 130&nbsp;Zahlende. Ein bezahlter Einstieg, der wie im
+      Branchenschnitt bindet (81&nbsp;%), braucht dafür rund 160&nbsp;Anmeldungen, ein
+      Viertel. Das ist ein Grössenvergleich, keine Prognose.</p>
+      <table>
+        <thead>
+          <tr><th scope="col">Weg</th><th scope="col" class="num">Anmeldungen</th><th scope="col" class="num">Zahlende</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Gratiszeit</th><td class="num">628</td><td class="num">rund 130</td></tr>
+          <tr><th scope="row">Bezahlter Einstieg (81&nbsp;%)</th><td class="num">rund 160</td><td class="num">rund 130</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="block">
+      <h3>Vorschlag: nicht beschliessen, testen</h3>
+      <p class="lese">Bei der nächsten Aktion für Selbstbezug (Jahreswechsel) zwei Wege
+      nebeneinander, an dieselbe Liste:</p>
+      <div class="wege">
+        <div class="card">
+          <span class="lab">Weg A</span>
+          <p>Ein Gratismonat, diesmal mit Begleitstrecke.</p>
+        </div>
+        <div class="card">
+          <span class="lab">Weg B</span>
+          <p>Ein bezahlter Einstieg: Probemonat zum kleinen Preis oder Jahresabo mit
+          Mitgliederrabatt.</p>
+        </div>
+      </div>
+      <p class="regel"><strong>Gezählt werden Zahlende nach 90&nbsp;Tagen und Ertrag je
+      Empfänger, nicht Anmeldungen.</strong> Die Entscheidungsregel steht vor dem Start
+      fest. Reichen die Fälle nicht für einen klaren Unterschied, gilt der Versuch als
+      Erkundung.</p>
+    </div>
+  </section>
+
+  <!-- ====================== Weihnachtsaktion ====================== -->
+  <section aria-labelledby="h-weihnachten">
+    <div class="shead"><h2 id="h-weihnachten">Weihnachtsaktion: «Schenken Sie ein Jahr Dornach»</h2></div>
+
+    <p class="lese">Ein <strong>Geschenkabo</strong> trifft alle drei Befunde zugleich.
+    Wer dazugehört, holt jemanden dazu. Es ist die Weitergabe, die wirkt, und ein
+    bezahlter Einstieg statt einer Gratisprobe.</p>
+
+    <div class="plan">
+      <div>
+        <h3>Angebot</h3>
+        <p>Ein Jahr Wochenschrift, Papier oder digital, auf Wunsch mit goetheanum.tv.
+        Kein Gratismonat, kein Rabatt als Hauptargument.</p>
+      </div>
+      <div>
+        <h3>Wen wir ansprechen</h3>
+        <p>Nur die eigene Liste, deutsch und englisch zugleich. Dazu ein Kollegiums- und
+        Zweig-Abo als Geschenk an eine Gruppe.</p>
+      </div>
+      <div>
+        <h3>Was die Beschenkten erleben</h3>
+        <p>An jedem Adventssonntag eine Premiere auf goetheanum.tv, aus den vier
+        meistgesehenen Bereichen (Medizin, Naturwissenschaft, Landwirtschaft,
+        Sozialwissenschaft: 65&nbsp;% der Sehdauer).</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3>Ablauf</h3>
+      <ol class="ablauf">
+        <li><span class="wann">Ende November</span><span>Erste Welle an die eigene Liste, DE und EN</span></li>
+        <li><time class="wann" datetime="2026-11-29">29.&nbsp;November</time><span>1.&nbsp;Advent: erste Premiere, sichtbar im Angebot</span></li>
+        <li><span class="wann">Anfang Dezember</span><span>Erinnerung mit der nächsten Premiere</span></li>
+        <li><span class="wann">Vor Bestellschluss</span><span>«Letzte Bestellung für Weihnachten», nur an Öffner (im Sommer beste Klickquote, 12,1&nbsp;%). Datum für Papier mit dem Verlag klären.</span></li>
+        <li><span class="wann">6., 13., 20.&nbsp;Dezember</span><span>Premieren am 2., 3. und 4.&nbsp;Advent</span></li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <h3>Weglassen</h3>
+      <ul class="lassen">
+        <li class="chip">Bezahlte Social-Anzeigen</li>
+        <li class="chip">«Entdecken Sie»</li>
+        <li class="chip">Rabatt als Hauptargument</li>
+        <li class="chip">Deutsche Liste ohne Abo, ohne neuen Anlass</li>
+      </ul>
+      <p class="note">Geschenkabos verlängern sich nicht von selbst. Das Gespräch mit den
+      Beschenkten im Herbst 2027 jetzt schon einplanen.</p>
+    </div>
+  </section>
+
+  <!-- ====================== Offen ====================== -->
+  <section aria-labelledby="h-offen">
+    <div class="shead"><h2 id="h-offen">Offen</h2></div>
+    <ul class="liste lese">
+      <li>Die 21&nbsp;% sind vorläufig: 204 Juli-Probeabos ohne Zahlung oder Kündigung.</li>
+      <li>Wochenschrift-Konversion fehlt: 409&nbsp;Probeabos stehen auf «neu».</li>
+      <li>Keine Reichweitenzahl zeigen: Die Mediadaten nennen je nach Fassung 57&nbsp;000
+        oder 50&nbsp;600 Besuche im Monat.</li>
+      <li>Zwei Tonlagen: die eigene Liste über Zugehörigkeit ansprechen, die Beschenkten
+        über ein konkretes Thema.</li>
+    </ul>
+  </section>
+
+  <!-- ====================== Quellen ====================== -->
+  <section aria-labelledby="h-quellen">
+    <div class="shead"><h2 id="h-quellen">Quellen</h2></div>
+    <ul class="quellen">
+      <li><a href="https://drive.google.com/drive/folders/1HiX0_yfIG-IWy0IvIrc5J_oe2GBssPoW">Volle Dossiers (intern, Google&nbsp;Drive)</a>:
+        Kurzanalyse «Warum abonnieren Menschen die Wochenschrift und goetheanum.tv?» und
+        Marketingdossier «Abomotive», beide 27.&nbsp;10.&nbsp;2026</li>
+      <li><a href="../../docs/einnahmen-perspektive-10-08.md">Planungsquoten August</a></li>
+      <li><a href="../../docs/probeabo-kosten-12-08.md">Kosten Papier-Probeabo</a></li>
+      <li><a href="../../docs/kampagnen-drehbuch.md">Fehlende Begleitstrecke</a> (Kampagnen-Drehbuch, Phase&nbsp;6.3)</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Abo-Motive</strong> · Stand 27.&nbsp;Oktober 2026</span>
+    <span><a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
