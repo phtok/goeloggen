@@ -1,0 +1,437 @@
+<!doctype html>
+<!-- =============================================================================
+     Goetheanum-Werkzeug · NAVIGATIONS-ARCHITEKTUR (Labor)
+     -----------------------------------------------------------------------------
+     Konzept für die Informationsarchitektur von goetheanum.ch: fünf Navigations-
+     punkte, Submenüs, Mega-Menü, URL-Struktur, Seiteninventar, Prinzipien.
+     Laborseite (tools.json cat: labor) – Erklärungen sind hier erlaubt.
+
+     Vom Starter gebaut: tokens.css + base.css EINGEBUNDEN. Status-Marken als
+     .chip (nie versal, G05); nur ‹Priorität› trägt Ton (.chip.ton) – eine Marke,
+     ein Merkmal (G01/G03). Bereiche nummeriert statt farbcodiert (G03).
+     ============================================================================= -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+<title>Navigations-Architektur · Goetheanum</title>
+<meta name="description" content="Konzept für die Navigation von goetheanum.ch: fünf Hauptpunkte, Submenüs, URL-Struktur und Seiteninventar." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+
+<style>
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
+  .hero h1{font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
+  .hero .lede{margin-top:var(--s6);text-wrap:balance;hyphens:manual}
+  section.hero{margin-bottom:0}
+
+  .eckdaten{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:var(--s4);margin-top:var(--s7)}
+
+  .inhalt{display:flex;flex-wrap:wrap;gap:var(--s2);margin-block:var(--s6) var(--s8);padding:0;list-style:none}
+  .inhalt a{display:inline-flex;align-items:center;min-height:var(--tap);padding:0 var(--s4);
+    border:1px solid var(--line);border-radius:var(--r-pill);font-family:var(--font-text);
+    font-size:var(--t-small);color:var(--ink);text-decoration:none}
+  .inhalt a:hover,.inhalt a:focus-visible{border-color:var(--gold-deep)}
+
+  section{margin-bottom:clamp(48px,8vw,88px);scroll-margin-top:calc(var(--header-h,64px) + var(--s4))}
+  .shead h2{text-wrap:balance}
+
+  .legende{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s5);font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .legende span{display:inline-flex;align-items:center;gap:var(--s2)}
+
+  /* Hauptpunkte */
+  .punkte{display:grid;gap:var(--s3);padding:0;list-style:none}
+  .punkt{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s4);align-items:start;
+    padding:var(--s5);border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper)}
+  .punkt .nr{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);color:var(--gold-ink);line-height:1.2;min-width:2ch}
+  .punkt h3{text-wrap:balance}
+  .punkt p{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:var(--s1)}
+  .marken{display:flex;flex-wrap:wrap;gap:var(--s2);justify-content:flex-end}
+  @media(max-width:640px){.punkt{grid-template-columns:auto 1fr}.punkt .marken{grid-column:2;justify-content:flex-start}}
+
+  /* Baum */
+  .baum,.baum ul{list-style:none;padding:0;margin:0}
+  .baum > li{padding:var(--s4) 0;border-top:1px solid var(--line)}
+  .baum > li:last-child{border-bottom:1px solid var(--line)}
+  .knoten{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s2) var(--s4);align-items:baseline}
+  .knoten h3{font-size:var(--t-body);font-weight:var(--w-deutlich);text-wrap:balance}
+  .knoten .note{display:block;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:var(--s1)}
+  .baum ul{margin-top:var(--s3);margin-left:var(--s2);padding-left:var(--s5);border-left:1px solid var(--line)}
+  .baum ul li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s2) var(--s4);align-items:baseline;
+    padding:var(--s2) 0;font-family:var(--font-text);font-size:var(--t-small)}
+  .baum .marken{justify-content:flex-start}
+
+  .kasten{margin-top:var(--s6);max-width:min(var(--measure),100%);text-wrap:pretty}
+
+  /* Mega-Menü-Mockup */
+  .mega{border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;background:var(--paper)}
+  .mega-kopf{display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--s2);padding:var(--s3) var(--s5);
+    background:var(--soft);border-bottom:1px solid var(--line);font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .mega-kopf b{color:var(--ink);font-weight:600}
+  .mega-leib{display:grid;grid-template-columns:minmax(180px,220px) 1fr}
+  .mega-seite{list-style:none;padding:var(--s3) 0;margin:0;border-right:1px solid var(--line);background:var(--soft)}
+  .mega-seite li{padding:var(--s2) var(--s5);font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);border-left:3px solid transparent}
+  .mega-seite li.aktiv{color:var(--ink);background:var(--paper);border-left-color:var(--gold-deep)}
+  .mega-spalten{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr));gap:var(--s6);padding:var(--s5) var(--s6)}
+  .mega-spalten h4{font-size:var(--t-small);font-family:var(--font-text);font-weight:600;color:var(--muted);
+    padding-bottom:var(--s2);margin-bottom:var(--s2);border-bottom:1px solid var(--line)}
+  .mega-spalten ul{list-style:none;padding:0;margin:0}
+  .mega-spalten li{padding:var(--s1) 0;font-family:var(--font-text);font-size:var(--t-small)}
+  .mega-spalten .band h4{color:var(--on-accent);border-color:var(--on-accent-muted)}
+  .mega-spalten .band .titel{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);margin-top:var(--s2);text-wrap:balance}
+  @media(max-width:720px){.mega-leib{grid-template-columns:1fr}.mega-seite{border-right:0;border-bottom:1px solid var(--line)}}
+
+  /* URL-Baum */
+  .urls{font-family:var(--font-mono);font-size:var(--t-small);line-height:1.9;background:var(--code-bg);color:var(--code-ink);
+    border-radius:var(--r-card);padding:var(--s5) var(--s6);overflow-x:auto;white-space:pre;margin:0}
+  .urls .kom{color:var(--code-comment)}
+
+  /* Inventar */
+  .tabelle{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-card)}
+  table{width:100%;border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small)}
+  th,td{text-align:left;vertical-align:top;padding:var(--s3) var(--s4);border-bottom:1px solid var(--line)}
+  th{font-weight:600;color:var(--muted);background:var(--soft)}
+  tr:last-child td{border-bottom:0}
+  td code{font-family:var(--font-mono);white-space:nowrap}
+  caption{caption-side:top;text-align:left;padding:var(--s3) var(--s4);color:var(--muted);font-family:var(--font-text);font-size:var(--t-small)}
+
+  /* Prinzipien */
+  .prinzipien{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:var(--s5);padding:0;list-style:none;counter-reset:p}
+  .prinzipien li{counter-increment:p}
+  .prinzipien h3{text-wrap:balance}
+  .prinzipien h3::before{content:counter(p,decimal-leading-zero);display:block;color:var(--gold-ink);font-size:var(--t-small);margin-bottom:var(--s2)}
+  .prinzipien p{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:var(--s2);line-height:var(--lh-body);text-wrap:pretty}
+</style>
+</head>
+<body>
+
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Informationsarchitektur · Konzept</span>
+    <h1>Navigations-Architektur goetheanum.ch</h1>
+    <p class="lede">Sitemap, Submenüs und Seitenhierarchie aus Sicht der Besucher statt der Organisation – von der Absicht zur Information in höchstens zwei&nbsp;Klicks.</p>
+    <div class="eckdaten">
+      <div class="kennzahl"><span class="k-label">Stand</span><span class="k-wert">1.0</span><span class="k-note">Konzept, April 2026</span></div>
+      <div class="kennzahl"><span class="k-label">Hauptpunkte</span><span class="k-wert">5</span><span class="k-note">statt heute 6</span></div>
+      <div class="kennzahl"><span class="k-label">Klicks bis zur Information</span><span class="k-wert">≤&nbsp;2</span><span class="k-note">für alles häufig Gesuchte</span></div>
+    </div>
+  </section>
+
+  <nav aria-label="Inhalt">
+    <ul class="inhalt">
+      <li><a href="#gesamt">Gesamtstruktur</a></li>
+      <li><a href="#n1">Was ist das Goetheanum?</a></li>
+      <li><a href="#n2">Veranstaltungen</a></li>
+      <li><a href="#n3">Lernen &amp; Forschen</a></li>
+      <li><a href="#n4">Unterstützen</a></li>
+      <li><a href="#n5">Mitgliederbereich</a></li>
+      <li><a href="#mega">Mega-Menü</a></li>
+      <li><a href="#urls">URL-Struktur</a></li>
+      <li><a href="#inventar">Seiteninventar</a></li>
+      <li><a href="#prinzipien">Prinzipien</a></li>
+    </ul>
+  </nav>
+
+  <section id="gesamt">
+    <div class="shead">
+      <h2>Die fünf Navigationspunkte</h2>
+      <p>Hauptnavigation der Site, sichtbar in der globalen Kopfzeile.</p>
+    </div>
+
+    <div class="legende" style="margin-bottom:var(--s5)">
+      <span><span class="chip ton">Priorität</span> häufig gesucht</span>
+      <span><span class="chip">Neu</span> neue Seite oder neues Konzept</span>
+      <span><span class="chip">Extern</span> eigene Domain</span>
+      <span><span class="chip">Zusammenführen</span> bestehende Seiten bündeln</span>
+      <span><span class="chip">Login</span> nur für Mitglieder</span>
+      <span><span class="chip">Filter</span> filterbar, dynamisch</span>
+    </div>
+
+    <ol class="punkte">
+      <li class="punkt"><span class="nr">1</span><div><h3>Was ist das Goetheanum?</h3><p>Für Neugierige, Touristen, Medien, Erstbesucher</p></div><div class="marken"><span class="chip ton">Priorität</span><span class="chip">Neu formuliert</span></div></li>
+      <li class="punkt"><span class="nr">2</span><div><h3>Veranstaltungen</h3><p>Kalender, Tickets, Konferenzen, Bühne, Livestream</p></div><div class="marken"><span class="chip ton">Priorität</span><span class="chip">Filter</span></div></li>
+      <li class="punkt"><span class="nr">3</span><div><h3>Lernen &amp; Forschen</h3><p>Für Studierende, Fachpublikum, Weiterbildungsinteressierte</p></div><div class="marken"><span class="chip">Aus Schule + Sektionen</span></div></li>
+      <li class="punkt"><span class="nr">4</span><div><h3>Unterstützen</h3><p>Newsletter, Mitgliedschaft, Spenden – alle Bindungsformen</p></div><div class="marken"><span class="chip">Neu</span></div></li>
+      <li class="punkt"><span class="nr">5</span><div><h3>Mitgliederbereich</h3><p>Login-geschützt: Mitgliederversammlung, Protokolle, Dokumente</p></div><div class="marken"><span class="chip">Login</span></div></li>
+    </ol>
+
+    <p class="kasten"><b>Was wegfällt:</b> <q>Schule</q>, <q>Sektionen</q> und <q>Gesellschaft</q> verschwinden aus der Hauptnavigation. Sie beantworten Fragen, die Besucher nicht stellen. Sie erscheinen unter den neuen Begriffen als zweite Ebene, diktieren aber nicht mehr die Struktur. <q>Campus</q> geht in <q>Was ist das Goetheanum?</q> auf.</p>
+  </section>
+
+  <section id="n1">
+    <div class="shead">
+      <h2>1 · Was ist das Goetheanum?</h2>
+      <p>Einstieg für den Erstkontakt: klärt die Identität, öffnet die Türen.</p>
+    </div>
+    <ul class="baum">
+      <li>
+        <div class="knoten"><div><h3>Das Gebäude</h3><span class="note">Architektur, Räume, Führungen – visuelle Einführung</span></div><div class="marken"><span class="chip ton">Priorität</span></div></div>
+        <ul>
+          <li>Führungen buchen <span class="chip ton">Priorität</span></li>
+          <li>Öffnungszeiten &amp; Eintritt <span class="chip ton">Priorität</span></li>
+          <li>Architekturspaziergang <span class="chip">Extern</span></li>
+          <li>Ausstellungen &amp; Glasfenster</li>
+        </ul>
+      </li>
+      <li>
+        <div class="knoten"><div><h3>Rudolf Steiner</h3><span class="note">Biografie, Werk, Relevanz heute</span></div><div class="marken"><span class="chip ton">Priorität</span></div></div>
+        <ul>
+          <li>Leben &amp; Werk</li>
+          <li>Rudolf Steiner Archiv <span class="chip">Extern</span></li>
+          <li>Steiners Schriften online</li>
+        </ul>
+      </li>
+      <li>
+        <div class="knoten"><div><h3>Anthroposophie – eine Einführung</h3><span class="note">Für Neugierige ohne Vorkenntnisse</span></div><div class="marken"><span class="chip">Neu</span></div></div>
+        <ul>
+          <li>Grundbegriffe</li>
+          <li>Anthroposophie in der Welt: Waldorf, Biodynamik, Medizin …</li>
+          <li>Häufige Fragen <span class="chip">Neu</span></li>
+        </ul>
+      </li>
+      <li>
+        <div class="knoten"><div><h3>Besuchen &amp; Ankommen</h3><span class="note">Praktisches für den Besuch – bisher vergraben</span></div><div class="marken"><span class="chip ton">Priorität</span><span class="chip">Neu gebündelt</span></div></div>
+        <ul>
+          <li>Anreise, Parken, Karte</li>
+          <li>Restaurant Speisehaus <span class="chip">Extern</span></li>
+          <li>Buchhandlung <span class="chip">Extern</span></li>
+          <li>Bibliothek</li>
+          <li>Übernachtung in der Nähe</li>
+        </ul>
+      </li>
+      <li><div class="knoten"><div><h3>Presse &amp; Medien</h3><span class="note">Pressematerial, Bildarchiv, Ansprechpersonen</span></div></div></li>
+      <li><div class="knoten"><div><h3>Geschichte</h3><span class="note">Vom Johannesbau 1913 bis heute</span></div></div></li>
+    </ul>
+    <p class="kasten"><b>Kernentscheidung:</b> Diese Seite gibt es heute nicht. Es gibt eine Campus-Seite und eine Seite zur Geschichte der Gesellschaft, aber keine klare Antwort auf die Frage, was das hier eigentlich ist. Die neue Seite beginnt mit einem einzigen Satz, der die Institution für Aussenstehende beschreibt, und verzweigt sich dann.</p>
+  </section>
+
+  <section id="n2">
+    <div class="shead">
+      <h2>2 · Veranstaltungen</h2>
+      <p>Vermutlich der meistbesuchte Bereich – muss auf einen Blick lesbar sein.</p>
+    </div>
+    <ul class="baum">
+      <li>
+        <div class="knoten"><div><h3>Kalender – alle Veranstaltungen</h3><span class="note">Filter: Sprache · Typ · Datum · Saal · online oder vor Ort</span></div><div class="marken"><span class="chip ton">Priorität</span><span class="chip">Sprachfilter neu</span></div></div>
+        <ul>
+          <li>Filter Sprache: Deutsch, Englisch, Französisch, zweisprachig <span class="chip">Neu</span></li>
+          <li>Filter Typ: Konferenz, Vortrag, Aufführung, Kurs, Livestream</li>
+          <li>Einzelveranstaltung mit Sprache als Marke</li>
+        </ul>
+      </li>
+      <li><div class="knoten"><div><h3>Tickets</h3><span class="note">Direktlink zum Ticketshop, immer sichtbar</span></div><div class="marken"><span class="chip ton">Priorität</span><span class="chip">Extern</span></div></div></li>
+      <li><div class="knoten"><div><h3>Konferenzen &amp; Tagungen</h3><span class="note">Jahrestagungen, Fachkongresse, internationale Konferenzen</span></div></div></li>
+      <li>
+        <div class="knoten"><div><h3>Bühne &amp; Aufführungen</h3><span class="note">Theater, Eurythmie, Gastspiele</span></div><div class="marken"><span class="chip">Extern</span></div></div>
+        <ul>
+          <li>Spielplan</li>
+          <li>Ensemble &amp; Künstler</li>
+          <li>Tickets für Aufführungen</li>
+        </ul>
+      </li>
+      <li><div class="knoten"><div><h3>Online – Livestream &amp; Goetheanum&nbsp;TV</h3><span class="note">Webinare, Livestreams, Aufzeichnungen</span></div><div class="marken"><span class="chip">Extern</span></div></div></li>
+      <li><div class="knoten"><div><h3>Veranstaltungsort &amp; Anreise</h3><span class="note">Saal, Abendkasse, Parken</span></div><div class="marken"><span class="chip ton">Priorität</span></div></div></li>
+    </ul>
+    <p class="kasten"><b>Dringendste Verbesserung:</b> Jede Veranstaltung braucht ein Pflichtfeld Veranstaltungssprache (Deutsch, Englisch, Französisch, zweisprachig, ohne Sprache). Am Empfang ist das die meistgestellte Frage, und auf vielen Einträgen fehlt die Antwort. Der Kalender bekommt den Sprachfilter als ersten Filter.</p>
+  </section>
+
+  <section id="n3">
+    <div class="shead">
+      <h2>3 · Lernen &amp; Forschen</h2>
+      <p>Schule und Sektionen zusammengeführt – ein Einstieg für alle Bildungsangebote.</p>
+    </div>
+    <ul class="baum">
+      <li>
+        <div class="knoten"><div><h3>Studienangebote – Übersicht</h3><span class="note">Alle Wege ins Studium auf einer Seite</span></div><div class="marken"><span class="chip ton">Priorität</span><span class="chip">Neu</span></div></div>
+        <ul>
+          <li>Studienjahr Anthroposophie</li>
+          <li>Künste: Eurythmie, Plastik, Sprachgestaltung …</li>
+          <li>Pädagogik: Waldorf-Lehrerstudium</li>
+          <li>Landwirtschaft: biodynamisch</li>
+          <li>Medizin &amp; Therapie</li>
+          <li>Einheitliches Anmeldeformular <span class="chip">Neu</span></li>
+        </ul>
+      </li>
+      <li><div class="knoten"><div><h3>Kurse &amp; Weiterbildung</h3><span class="note">Seminare, Workshops, Intensivkurse für Berufstätige</span></div></div></li>
+      <li>
+        <div class="knoten"><div><h3>Die Sektionen</h3><span class="note">Forschungs- und Arbeitsfelder der Hochschule für Geisteswissenschaft</span></div></div>
+        <ul>
+          <li>Allgemeine Anthroposophische Sektion <span class="chip">Extern</span></li>
+          <li>Naturwissenschaft <span class="chip">Extern</span></li>
+          <li>Pädagogik <span class="chip">Extern</span></li>
+          <li>Medizin <span class="chip">Extern</span></li>
+          <li>Landwirtschaft <span class="chip">Extern</span></li>
+          <li>Bildende Künste · Darstellende Künste · Schöne Wissenschaften</li>
+          <li>weitere Sektionen</li>
+        </ul>
+      </li>
+      <li><div class="knoten"><div><h3>Goetheanum&nbsp;TV</h3><span class="note">Vorträge, Kurse, Aufzeichnungen</span></div><div class="marken"><span class="chip">Extern</span></div></div></li>
+      <li>
+        <div class="knoten"><div><h3>Bibliothek &amp; Archiv</h3><span class="note">Bibliothek, Rudolf Steiner Archiv, Dokumentation</span></div></div>
+        <ul>
+          <li>Bibliothek: Öffnungszeiten, Katalog</li>
+          <li>Rudolf Steiner Archiv <span class="chip">Extern</span></li>
+        </ul>
+      </li>
+      <li><div class="knoten"><div><h3>Publikationen</h3><span class="note">Wochenschrift, Verlag, Elemente der Naturwissenschaft</span></div></div></li>
+    </ul>
+    <p class="kasten"><b>Kernproblem heute:</b> Wer ein Studium am Goetheanum sucht, landet auf drei verschiedenen Seiten (Schule, Sektionssite, Sekretariat) und findet kein einheitliches Anmeldeformular. Die neue Übersicht sammelt alle Bildungswege, jeweils mit einem direkten nächsten Schritt.</p>
+  </section>
+
+  <section id="n4">
+    <div class="shead">
+      <h2>4 · Unterstützen</h2>
+      <p>Alle Bindungsformen unter einem Dach, geordnet nach Verbindlichkeit.</p>
+    </div>
+    <ul class="baum">
+      <li><div class="knoten"><div><h3>Newsletter abonnieren</h3><span class="note">Kostenlos, wöchentlich, ohne Mitgliedschaft</span></div><div class="marken"><span class="chip ton">Priorität</span></div></div></li>
+      <li><div class="knoten"><div><h3>Wochenschrift <q>Das Goetheanum</q> abonnieren</h3><span class="note">Gedruckt und digital, seit 1921</span></div><div class="marken"><span class="chip">Extern</span></div></div></li>
+      <li>
+        <div class="knoten"><div><h3>Mitglied werden</h3><span class="note">Anthroposophische Gesellschaft, weltweit rund 52&nbsp;000 Mitglieder</span></div><div class="marken"><span class="chip ton">Priorität</span></div></div>
+        <ul>
+          <li>Was bedeutet Mitgliedschaft? <span class="chip">Neu</span></li>
+          <li>Anmeldeformular</li>
+          <li>Landesgesellschaften weltweit</li>
+        </ul>
+      </li>
+      <li><div class="knoten"><div><h3>Spenden</h3><span class="note">Einmalig oder regelmässig</span></div><div class="marken"><span class="chip">Extern</span></div></div></li>
+      <li><div class="knoten"><div><h3>Ehrenamtlich mitwirken</h3><span class="note">Freiwilligenarbeit am Goetheanum</span></div><div class="marken"><span class="chip">Neu</span></div></div></li>
+      <li><div class="knoten"><div><h3>Stellenangebote</h3><span class="note">Offene Stellen am Goetheanum</span></div></div></li>
+    </ul>
+    <p class="kasten"><b>Heute verstreut:</b> Der Newsletter-Link steckt in der Kopfleiste, Spenden laufen über eine andere Domain, <q>Mitglied werden</q> liegt unter <q>Society</q>. Dieser Bereich bündelt alle Wege, vom kostenlosen Newsletter bis zur Jahresspende.</p>
+  </section>
+
+  <section id="n5">
+    <div class="shead">
+      <h2>5 · Mitgliederbereich</h2>
+      <p>Login-geschützt, klar abgetrennt, kein Mischbereich.</p>
+    </div>
+    <ul class="baum">
+      <li><div class="knoten"><div><h3>Mein Profil &amp; Mitgliedschaft</h3><span class="note">Daten, Beiträge, Kündigung</span></div></div></li>
+      <li><div class="knoten"><div><h3>Jahresversammlung</h3><span class="note">Protokolle, Traktanden, Abstimmungen</span></div></div></li>
+      <li><div class="knoten"><div><h3>Mitglieder-Nachrichten</h3><span class="note">Interne Mitteilungen, Briefe des Vorstands</span></div></div></li>
+      <li><div class="knoten"><div><h3>Sektionszugang</h3><span class="note">Inhalte der Sektionen nur für Mitglieder</span></div></div></li>
+      <li><div class="knoten"><div><h3>Passwort vergessen</h3><span class="note">Gut sichtbar – häufigste Anfrage an den Support</span></div><div class="marken"><span class="chip ton">Priorität</span></div></div></li>
+    </ul>
+    <p class="kasten"><b>Heute das Problem:</b> Der Login-Bereich ist mit öffentlichen Inhalten gemischt; Mitglieder verlieren sich auf der Suche nach dem Protokoll der Jahresversammlung. Lösung: ein vollständig getrennter Bereich mit eigener Startseite nach dem Login.</p>
+  </section>
+
+  <section id="mega">
+    <div class="shead">
+      <h2>Mega-Menü</h2>
+      <p>Beispiel: Zeiger auf <q>Veranstaltungen</q> in der Hauptnavigation.</p>
+    </div>
+    <div class="mega" aria-label="Skizze des Mega-Menüs">
+      <div class="mega-kopf"><span>Mega-Menü, geöffnet</span><b>Veranstaltungen</b></div>
+      <div class="mega-leib">
+        <ul class="mega-seite">
+          <li class="aktiv">Alle Veranstaltungen</li>
+          <li>Konferenzen</li>
+          <li>Bühne &amp; Aufführungen</li>
+          <li>Kurse &amp; Seminare</li>
+          <li>Vorträge</li>
+          <li>Online &amp; Livestream</li>
+        </ul>
+        <div class="mega-spalten">
+          <div><h4>Schnellzugriff</h4><ul><li>Kalender öffnen</li><li>Nächste Führung</li><li>Tickets kaufen</li><li>Öffnungszeiten</li></ul></div>
+          <div><h4>Sprache wählen</h4><ul><li>Deutsch</li><li>Englisch</li><li>Französisch</li><li>Zweisprachig</li></ul></div>
+          <div class="band"><h4>Nächste Konferenz</h4><p class="titel">Karma und Reinkarnation</p><p>12.–15.&nbsp;April 2026</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="urls">
+    <div class="shead">
+      <h2>URL-Struktur</h2>
+      <p>Flach, sprechend, ohne Organisationsjargon.</p>
+    </div>
+<pre class="urls" tabindex="0" aria-label="URL-Baum">goetheanum.ch/
+├─ was-ist-das-goetheanum/
+│  ├─ das-gebaeude/
+│  ├─ rudolf-steiner/
+│  ├─ anthroposophie/
+│  ├─ besuchen/          <span class="kom">← heute /campus/opening-hours</span>
+│  ├─ fuehrungen/
+│  └─ presse/
+├─ veranstaltungen/
+│  ├─ kalender/          <span class="kom">← mit ?sprache=en&amp;typ=vortrag</span>
+│  ├─ konferenzen/
+│  ├─ buehne/
+│  ├─ online/
+│  └─ tickets/           <span class="kom">→ tickets.goetheanum.ch</span>
+├─ lernen/
+│  ├─ studium/           <span class="kom">← heute auf fünf Sites verteilt</span>
+│  ├─ kurse/
+│  ├─ sektionen/
+│  ├─ bibliothek/
+│  └─ publikationen/
+├─ unterstuetzen/
+│  ├─ newsletter/
+│  ├─ mitglied-werden/   <span class="kom">← heute /en/society/become-a-member</span>
+│  ├─ spenden/
+│  └─ stellenangebote/
+└─ mitglieder/           <span class="kom">← Login-Bereich</span></pre>
+  </section>
+
+  <section id="inventar">
+    <div class="shead">
+      <h2>Seiteninventar</h2>
+      <p>Was bleibt, was kommt, was geht.</p>
+    </div>
+    <div class="tabelle" tabindex="0" role="region" aria-label="Seiteninventar">
+      <table>
+        <caption>14 Seiten bewertet</caption>
+        <thead><tr><th scope="col">Seite heute</th><th scope="col">Entscheid</th><th scope="col">Neue Heimat</th><th scope="col">Begründung</th></tr></thead>
+        <tbody>
+          <tr><td><code>/campus</code></td><td>Aufteilen</td><td><code>/was-ist…</code> + <code>/veranstaltungen</code></td><td>Mischt Besucherinfo und Kulturprogramm</td></tr>
+          <tr><td><code>/campus/opening-hours</code></td><td>Aufwerten</td><td><code>/was-ist…/besuchen</code></td><td>Meistgesucht, muss sichtbarer sein</td></tr>
+          <tr><td><code>/school</code></td><td>Umbenennen</td><td><code>/lernen</code></td><td><q>School</q> ist für die Öffentlichkeit unklar</td></tr>
+          <tr><td><code>/sections</code></td><td>Integrieren</td><td><code>/lernen/sektionen</code></td><td>Kein eigener Menüpunkt nötig</td></tr>
+          <tr><td><code>/society</code></td><td>Aufteilen</td><td><code>/unterstuetzen</code> + <code>/mitglieder</code></td><td>Zu viel auf einer Seite, unklar benannt</td></tr>
+          <tr><td><code>/society/become-a-member</code></td><td>Aufwerten</td><td><code>/unterstuetzen/mitglied-werden</code></td><td>Heute zu tief vergraben</td></tr>
+          <tr><td><code>/society/rudolf-steiner</code></td><td>Verschieben</td><td><code>/was-ist…/rudolf-steiner</code></td><td>Inhaltlich kein Gesellschaftsthema</td></tr>
+          <tr><td><code>/events</code></td><td>Behalten, stärken</td><td><code>/veranstaltungen</code></td><td>Kernseite, Sprachfilter ergänzen</td></tr>
+          <tr><td><code>/calendar</code></td><td>Integrieren</td><td><code>/veranstaltungen/kalender</code></td><td>Zwei Adressen für dasselbe</td></tr>
+          <tr><td><code>/media-department</code></td><td>Verschieben</td><td><code>/was-ist…/presse</code></td><td>Kein eigener Menüpunkt nötig</td></tr>
+          <tr><td>Anthroposophie erklärt</td><td>Neu erstellen</td><td><code>/was-ist…/anthroposophie</code></td><td>Fehlt heute, dringend nötig</td></tr>
+          <tr><td>Studienangebote</td><td>Neu erstellen</td><td><code>/lernen/studium</code></td><td>Heute auf fünf Sites verteilt</td></tr>
+          <tr><td>Häufige Fragen</td><td>Neu erstellen</td><td><code>/was-ist…/anthroposophie#fragen</code></td><td>Häufigste Frustration am Empfang</td></tr>
+          <tr><td>Newsletter</td><td>Neu, gut sichtbar</td><td><code>/unterstuetzen/newsletter</code></td><td>Heute nur ein versteckter Link</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="prinzipien">
+    <div class="shead">
+      <h2>Prinzipien</h2>
+    </div>
+    <ol class="prinzipien">
+      <li class="card"><h3>Absicht vor Institution</h3><p>Besucher denken nicht in Organigrammen. Die Navigation spiegelt ihre Absicht, nicht die Struktur der Allgemeinen Anthroposophischen Gesellschaft. <q>Schule</q> und <q>Sektionen</q> sind interne Begriffe; <q>Lernen &amp; Forschen</q> ist eine Absicht.</p></li>
+      <li class="card"><h3>Zwei Klicks zur Information</h3><p>Was häufig gesucht wird, liegt höchstens zwei Klicks von der Startseite entfernt: Öffnungszeiten, Führungen, Tickets, Mitgliedschaft, Newsletter.</p></li>
+      <li class="card"><h3>Sprache als Pflichtfeld</h3><p>Jede Veranstaltung zeigt ihre Sprache – als Marke, als Filter, als erste Angabe nach Datum und Uhrzeit. Das ist heute die häufigste unbeantwortete Frage.</p></li>
+      <li class="card"><h3>Offen für alle, sichtbar</h3><p>Das Goetheanum ist keine geschlossene Gesellschaft. Das steht auf der Startseite, mit den Öffnungszeiten: Für den Eintritt braucht es keine Mitgliedschaft. Digital muss das so klar sein wie am Empfang.</p></li>
+      <li class="card"><h3>Satelliten einbinden</h3><p>Sektionssites, Goetheanum&nbsp;TV, Bühne, Verlag: eigenständig, doch den Besuchern ist das gleich. Von goetheanum.ch aus ist jede dieser Seiten mit einem Klick erreichbar, mit klarem Rückweg.</p></li>
+      <li class="card"><h3>Empfang entlasten</h3><p>Jede Frage, die täglich am Empfang gestellt wird, beantwortet die Website nicht. Das Ziel ist nicht eine schöne Site, sondern eine, die weniger Anrufe auslöst.</p></li>
+    </ol>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="../../design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

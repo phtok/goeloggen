@@ -411,6 +411,17 @@
       "such": "Animation bewegte Schrift Typo GSAP wght Gewicht variable Font Auftakt Nähe Sog Atem Welle Bewegung"
     },
     {
+      "slug": "navigations-architektur",
+      "cat": "labor",
+      "status": "entwurf",
+      "tag": "Konzept",
+      "title": "Navigations-Architektur",
+      "short": "Navigation",
+      "href": "apps/navigations-architektur/",
+      "desc": "Konzept für goetheanum.ch: fünf Hauptpunkte nach Besucherabsicht, Submenüs, Mega-Menü, URL-Struktur und Seiteninventar.",
+      "such": "Navigation Informationsarchitektur IA Sitemap Website goetheanum.ch Menü Mega-Menü URL Seiteninventar Konzept Besucher"
+    },
+    {
       "slug": "schriften",
       "cat": "schrift",
       "status": "live",
