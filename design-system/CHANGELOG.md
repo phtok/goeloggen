@@ -16,6 +16,15 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 27. Oktober 2026 — Lange Abschnittstitel brechen um (1.28.7)
+
+**Was.** `base.css`: `.shead h2` schrumpft jetzt (`flex:0 1 auto;
+min-width:0`) statt auf seiner Länge zu bestehen. **Warum.** Gefunden beim
+Bau der Kampagnenseite Abo-Motive: Ein Titel wie ‹Gratis oder bezahlt? Was die
+Sommer-Aktion zeigt› lief auf 420 px über den Rand und erzeugte einen
+waagrechten Bildlauf (WCAG 1.4.10). **Wirkung.** Jeder `.shead`-Titel im Haus
+bricht auf schmalen Schirmen um; breit ändert sich nichts.
+
 ## 27. Oktober 2026 — Ton-Chip wirkt wieder (1.28.6)
 
 **Was.** `base.css`: Ein Kommentarsatz zum Ton-Chip stand hinter dem
