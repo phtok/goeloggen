@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+<title>Guillemets · Goetheanum</title>
+<meta name="description" content="Die Anführungszeichen der Hausschrift im Satz, in allen sieben Schnitten – Befund zur Doppelform in v2.7." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+
+<style>
+  /* Schnitte einzeln laden, damit jede Zeile den echten statischen Schnitt zeigt
+     (wie schriften.html); die Extreme kommen aus dem Variable Font. */
+  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Ruhig";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Ruhig.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Deutlich";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Variabel";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.7.woff2") format("woff2");font-weight:190 725;font-display:swap}
+  /* Die Original-Auslieferung v1.4.43, nur für den Vorher-Vergleich (Teilsatz). */
+  @font-face{font-family:"V1 Leise";src:url("assets/fonts/goetheanum/Befund/v1.4.43-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"V1 Klar";src:url("assets/fonts/goetheanum/Befund/v1.4.43-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"V1 Laut";src:url("assets/fonts/goetheanum/Befund/v1.4.43-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
+
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+  section{margin-top:var(--s8)}
+
+  .fluestern{font-family:"G Variabel";font-variation-settings:"wght" 190}
+  .leise{font-family:"G Leise"} .ruhig{font-family:"G Ruhig"} .klar{font-family:"G Klar"}
+  .deutlich{font-family:"G Deutlich"} .laut{font-family:"G Laut"}
+  .schreien{font-family:"G Variabel";font-variation-settings:"wght" 725}
+  .v1-leise{font-family:"V1 Leise"} .v1-klar{font-family:"V1 Klar"} .v1-laut{font-family:"V1 Laut"}
+
+  /* Eine Zeile je Schnitt: Etikett, grosser Satz, Lesegrad. */
+  .reihe{display:grid;grid-template-columns:1fr;gap:var(--s2) var(--s6);padding-block:var(--s5);border-bottom:1px solid var(--line-soft);align-items:baseline}
+  @media(min-width:900px){.reihe{grid-template-columns:9rem 1fr 1fr}}
+  .reihe .tag{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:var(--lh-min)}
+  .reihe .tag b{display:block;font-family:var(--font);font-weight:var(--w-deutlich);color:var(--ink);font-size:var(--t-body)}
+  .reihe .gross{font-size:clamp(26px,3.6vw,38px);line-height:1.15;text-wrap:balance}
+  .reihe .lese{font-size:var(--t-body);line-height:var(--lh-body);color:var(--ink)}
+
+  /* Die vier Zeichen allein, gross, mit x-Höhe als Linie. */
+  .zeichen{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:var(--s4)}
+  .zeichen .z{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s4);text-align:center}
+  .zeichen .z .g{font-size:clamp(64px,8vw,96px);line-height:1;padding-block:var(--s3)}
+  .zeichen .z .t{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+
+  .masse td:first-child,.masse th:first-child{font-family:var(--font-text)}
+</style>
+</head>
+<body>
+
+<script src="design-system/nav.js" data-root="./" data-section="schriftpflege" data-active="guillemets" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Schriftpflege · Befund</span>
+    <h1>Guillemets im&nbsp;Satz</h1>
+    <p class="lede">Die Anführungszeichen der Hausschrift in allen sieben Schnitten. Die einfache Form ‹…› trägt den Haussatz; die doppelte Form ist in v2.7 beschädigt.</p>
+  </section>
+
+  <section id="satz">
+    <div class="shead">
+      <h2>Alle Schnitte, ein&nbsp;Satz</h2>
+      <p>Links gross, rechts im Lesegrad. Die doppelte Form steht hier nur zur Schau; der Haussatz kennt allein die einfache (G16).</p>
+    </div>
+
+    <div class="reihe"><div class="tag"><b>Flüstern</b>190 · nur variabel</div>
+      <p class="gross fluestern" data-typo-ignore>Sie sagte «nein», er sagte ‹vielleicht›.</p>
+      <p class="lese fluestern" data-typo-ignore>Im Protokoll steht «Vertagt» – und darunter, klein, ‹bis Ostern›. Der Satz endet ohne Punkt.</p></div>
+    <div class="reihe"><div class="tag"><b>Leise</b>265 · Kursiv-Rolle</div>
+      <p class="gross leise" data-typo-ignore>Sie sagte «nein», er sagte ‹vielleicht›.</p>
+      <p class="lese leise" data-typo-ignore>Im Protokoll steht «Vertagt» – und darunter, klein, ‹bis Ostern›. Der Satz endet ohne Punkt.</p></div>
+    <div class="reihe"><div class="tag"><b>Ruhig</b>350 · Lesetext</div>
+      <p class="gross ruhig" data-typo-ignore>Sie sagte «nein», er sagte ‹vielleicht›.</p>
+      <p class="lese ruhig" data-typo-ignore>Im Protokoll steht «Vertagt» – und darunter, klein, ‹bis Ostern›. Der Satz endet ohne Punkt.</p></div>
+    <div class="reihe"><div class="tag"><b>Klar</b>440 · Standard</div>
+      <p class="gross klar" data-typo-ignore>Sie sagte «nein», er sagte ‹vielleicht›.</p>
+      <p class="lese klar" data-typo-ignore>Im Protokoll steht «Vertagt» – und darunter, klein, ‹bis Ostern›. Der Satz endet ohne Punkt.</p></div>
+    <div class="reihe"><div class="tag"><b>Deutlich</b>580 · Titel</div>
+      <p class="gross deutlich" data-typo-ignore>Sie sagte «nein», er sagte ‹vielleicht›.</p>
+      <p class="lese deutlich" data-typo-ignore>Im Protokoll steht «Vertagt» – und darunter, klein, ‹bis Ostern›. Der Satz endet ohne Punkt.</p></div>
+    <div class="reihe"><div class="tag"><b>Laut</b>680 · Fett</div>
+      <p class="gross laut" data-typo-ignore>Sie sagte «nein», er sagte ‹vielleicht›.</p>
+      <p class="lese laut" data-typo-ignore>Im Protokoll steht «Vertagt» – und darunter, klein, ‹bis Ostern›. Der Satz endet ohne Punkt.</p></div>
+    <div class="reihe"><div class="tag"><b>Schreien</b>725 · nur variabel</div>
+      <p class="gross schreien" data-typo-ignore>Sie sagte «nein», er sagte ‹vielleicht›.</p>
+      <p class="lese schreien" data-typo-ignore>Im Protokoll steht «Vertagt» – und darunter, klein, ‹bis Ostern›. Der Satz endet ohne Punkt.</p></div>
+  </section>
+
+  <section id="zeichen">
+    <div class="shead">
+      <h2>Die vier Zeichen, gross</h2>
+      <p>Einfach ‹ › und doppelt « » je Schnitt. Bei der doppelten Form wandern die beiden Winkel von Flüstern bis Schreien durcheinander hindurch; in Klar liegen sie fast deckungsgleich.</p>
+    </div>
+    <div class="zeichen" data-typo-ignore>
+      <div class="z fluestern"><div class="g">‹›«»</div><div class="t">Flüstern 190</div></div>
+      <div class="z leise"><div class="g">‹›«»</div><div class="t">Leise 265</div></div>
+      <div class="z ruhig"><div class="g">‹›«»</div><div class="t">Ruhig 350</div></div>
+      <div class="z klar"><div class="g">‹›«»</div><div class="t">Klar 440</div></div>
+      <div class="z deutlich"><div class="g">‹›«»</div><div class="t">Deutlich 580</div></div>
+      <div class="z laut"><div class="g">‹›«»</div><div class="t">Laut 680</div></div>
+      <div class="z schreien"><div class="g">‹›«»</div><div class="t">Schreien 725</div></div>
+    </div>
+  </section>
+
+  <section id="vorher">
+    <div class="shead">
+      <h2>Vorher: die Auslieferung v1.4.43</h2>
+      <p>Dieselben Sätze in den drei Originalschnitten. Dort stehen beide Winkel sauber nebeneinander – der Schaden ist beim Umbau zum Variable Font (v2.5) entstanden.</p>
+    </div>
+    <div class="reihe"><div class="tag"><b>Leise</b>v1.4.43</div>
+      <p class="gross v1-leise" data-typo-ignore>Sie sagte «nein», er sagte ‹vielleicht›.</p>
+      <p class="lese v1-leise" data-typo-ignore>Im Protokoll steht «Vertagt» – und darunter, klein, ‹bis Ostern›.</p></div>
+    <div class="reihe"><div class="tag"><b>Klar</b>v1.4.43</div>
+      <p class="gross v1-klar" data-typo-ignore>Sie sagte «nein», er sagte ‹vielleicht›.</p>
+      <p class="lese v1-klar" data-typo-ignore>Im Protokoll steht «Vertagt» – und darunter, klein, ‹bis Ostern›.</p></div>
+    <div class="reihe"><div class="tag"><b>Laut</b>v1.4.43</div>
+      <p class="gross v1-laut" data-typo-ignore>Sie sagte «nein», er sagte ‹vielleicht›.</p>
+      <p class="lese v1-laut" data-typo-ignore>Im Protokoll steht «Vertagt» – und darunter, klein, ‹bis Ostern›.</p></div>
+  </section>
+
+  <section id="nebenbefund">
+    <div class="shead">
+      <h2>Nebenbefund: gleiche Ursache</h2>
+      <p>Vier weitere Zeichen wandern auf dieselbe Art durcheinander: die tiefen Anführungen „ und ‚, das Geteiltzeichen ÷ und die Raute ◊.</p>
+    </div>
+    <div class="zeichen" data-typo-ignore>
+      <div class="z fluestern"><div class="g">„‚÷◊</div><div class="t">Flüstern 190</div></div>
+      <div class="z leise"><div class="g">„‚÷◊</div><div class="t">Leise 265</div></div>
+      <div class="z ruhig"><div class="g">„‚÷◊</div><div class="t">Ruhig 350</div></div>
+      <div class="z klar"><div class="g">„‚÷◊</div><div class="t">Klar 440</div></div>
+      <div class="z deutlich"><div class="g">„‚÷◊</div><div class="t">Deutlich 580</div></div>
+      <div class="z laut"><div class="g">„‚÷◊</div><div class="t">Laut 680</div></div>
+      <div class="z schreien"><div class="g">„‚÷◊</div><div class="t">Schreien 725</div></div>
+    </div>
+  </section>
+
+  <section id="masse">
+    <div class="shead">
+      <h2>Gemessen</h2>
+      <p>Breite der Zeichnung in Einheiten (1000 je Geviert). Die einfache Form wächst mit dem Gewicht; die doppelte fällt bis Klar auf die Breite einer einzelnen und springt dann hoch.</p>
+    </div>
+    <table class="masse" data-typo-ignore>
+      <thead><tr><th>Schnitt</th><th class="num">‹ einfach</th><th class="num">« doppelt</th><th class="num">„ tief</th></tr></thead>
+      <tbody>
+        <tr><td>Flüstern 190</td><td class="num">156</td><td class="num">350</td><td class="num">182</td></tr>
+        <tr><td>Leise 265</td><td class="num">164</td><td class="num">294</td><td class="num">153</td></tr>
+        <tr><td>Ruhig 350</td><td class="num">172</td><td class="num">232</td><td class="num">120</td></tr>
+        <tr><td>Klar 440</td><td class="num">181</td><td class="num">198</td><td class="num">152</td></tr>
+        <tr><td>Deutlich 580</td><td class="num">195</td><td class="num">332</td><td class="num">255</td></tr>
+        <tr><td>Laut 680</td><td class="num">206</td><td class="num">428</td><td class="num">329</td></tr>
+        <tr><td>Schreien 725</td><td class="num">210</td><td class="num">471</td><td class="num">363</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="schriften.html">Schriften</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

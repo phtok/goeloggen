@@ -80,6 +80,34 @@ glyphs" verbleibt: legacy/feature-bezogene Glyphen, harmlos).
 - **Master-Drift** (CapHeight 685/690/697): Outline-Thema der Quelle, nicht am
   Binary reparierbar.
 
+## Befund 29. 10. 2026: Doppel-Guillemets « » kreuzen sich (v2.7)
+
+Anschauung: https://werkzeuge.goetheanum.ch/guillemets.html (alle sieben
+Schnitte im Satz, dazu der Vorher-Vergleich mit v1.4.43).
+
+- **Was.** In `« »` (U+00AB/BB) stehen die beiden Winkel im Variable Font
+  v2.7 am dünnen Ende (Flüstern 190) in der Reihenfolge links/rechts, am
+  fetten Ende (Schreien 725) rechts/links. Dazwischen wandern die Konturen
+  durcheinander hindurch: in **Klar liegen sie fast deckungsgleich** – das
+  Zeichen liest sich als eine einzelne, fette Winkelklammer (Breite 198
+  Einheiten gegen 181 für `‹`). Ruhig und Deutlich zeigen überlappende
+  Winkel. Die statischen Schnitte v2.7 und die Office-TTF sind aus dem
+  Variable Font instanziert und tragen denselben Schaden.
+- **Gleiche Ursache** bei `„` (U+201E), `‚` (U+201A, in Klar nur 7 Einheiten
+  breit – praktisch unsichtbar), `÷` (U+00F7) und `◊` (U+25CA).
+- **Herkunft.** Die Original-Auslieferung v1.4.43 (`tools/goetheanum-fontfix/
+  input/`) ist heil: beide Winkel getrennt, über alle Gewichte konsistent.
+  Der Schaden entstand beim Neubau des Variable Fonts in v2.5 (die
+  Masterkonturen wurden ohne gleiche Konturreihenfolge zusammengeführt).
+- **Nicht betroffen:** `‹ ›` (U+2039/203A), die Hausform nach G16.
+- **Reparatur (offen).** Im Variable Font die Konturreihenfolge der
+  genannten Glyphen über alle Master angleichen (am dünnen Master messen,
+  fetten Master danach sortieren) oder die Glyphen aus v1.4.43 gewichtsrichtig
+  neu interpolieren; danach die statischen Schnitte, Office-TTF und Webfonts
+  aus `tools/goetheanum-fontfix/` neu erzeugen und die Messung in
+  `guillemets.html` nachführen. Prüfmass: Breite `«` muss mit dem Gewicht
+  monoton wachsen (heute 350 · 294 · 232 · 198 · 332 · 428 · 471).
+
 ## Reproduzieren
 Siehe `tools/goetheanum-fontfix/` (Skripte, Titillium-Quellen, Original-Inputs):
 ```
