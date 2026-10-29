@@ -100,6 +100,39 @@ Schnitte im Satz, dazu der Vorher-Vergleich mit v1.4.43).
   Der Schaden entstand beim Neubau des Variable Fonts in v2.5 (die
   Masterkonturen wurden ohne gleiche Konturreihenfolge zusammengeführt).
 - **Nicht betroffen:** `‹ ›` (U+2039/203A), die Hausform nach G16.
+
+### Durchgang durch alle 637 Glyphen (29. 10. 2026, Kontur für Kontur)
+
+Gemessen am Variable Font v2.7 an sieben Gewichten (190 … 725): Konturlage,
+Konturbreite und -höhe, Drehsinn, Vorschub, Tintenfläche gegen den
+Familien-Median. Dazu Proof-Bögen bei 350/440/580 mit dem Auge geprüft.
+
+**Kreuzende Konturen (sichtbarer Schaden), neben « » „ ‚ ÷ ◊:**
+- `%` (U+0025): der obere Kreis kippt – Fläche bei Flüstern 1,6-mal so gross
+  wie in Klar, bei Ruhig und Leise ein Halbmond mit Kerbe, bei Deutlich ein
+  gefüllter Punkt. **Häufig gebraucht, dringendster Fall nach « ».**
+- `Ű` (U+0170): die zwei Akut-Striche kreuzen sich, in Ruhig und Klar ein
+  einzelner Winkel. `ű` (U+0171) ist heil.
+- Kleinkapitalen (`smcp`/`c2sc`): `ű` → cid00595 (Doppelakut verschmilzt zu
+  Punkten) und `ǻ` → cid00602 (Ring kippt bei Deutlich zum Klecks).
+
+**Vorschub:** `⁄` Bruchstrich (U+2044): 600 · 600 · 600 · **17** · 527 ·
+251 · 54 – ab Klar läuft ‹1⁄2› ineinander. Das ist der bekannte
+Titillium-`fraction`-Fehler (65521), der über die Variable zurückkam.
+
+**Starr (gleiche Form in jedem Gewicht, also in Flüstern zu fett, in
+Schreien zu dünn):** die `case`-Formen von `¿ ¡ – — · ( ) [ ] { }` (elf
+Glyphen, greifen bei Versalsatz), der Punkt `•` (U+2022). **Ab Klar starr**
+(wachsen nicht mehr mit): `Ą` (U+0104), `Į` (U+012E), `$` (bekannt).
+**Ab Ruhig starr:** Kleinkapitalen von `å ą į ŋ`. Dazu 53 unkodierte,
+über kein Feature erreichbare Restglyphen mit starrer Form – kein Schaden,
+nur Ballast (u. a. ein zweiter Satz Ziffern und Akzente).
+
+**Geringfügig:** `ĺ` (U+013A) trägt den Akut in Flüstern über dem Stamm, ab
+Deutlich rechts daneben; `¨` (U+00A8) halbiert seinen Vorschub 791 → 514.
+
+**Heil, ausdrücklich geprüft:** Ziffern (Flächenverlauf wie `n`/`o`),
+`: ; = " ! ? … ‰ ( ) @ & ß ẞ`, alle Umlaute, `‹ ›`.
 - **Reparatur (offen).** Im Variable Font die Konturreihenfolge der
   genannten Glyphen über alle Master angleichen (am dünnen Master messen,
   fetten Master danach sortieren) oder die Glyphen aus v1.4.43 gewichtsrichtig
