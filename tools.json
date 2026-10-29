@@ -455,6 +455,17 @@
       "such": "Typografie Satz Regeln Hausregeln Mikrotypografie"
     },
     {
+      "slug": "guillemets",
+      "cat": "schriftpflege",
+      "status": "entwurf",
+      "tag": "Befund",
+      "title": "Guillemets",
+      "short": "Guillemets",
+      "href": "guillemets.html",
+      "desc": "Die Anführungszeichen der Hausschrift im Satz, in allen sieben Schnitten – mit dem Vorher-Vergleich zu v1.4.43.",
+      "such": "Guillemets Anführungszeichen Anführung Zitat Schnitte Befund Schriftpflege"
+    },
+    {
       "slug": "schrift-vergleich",
       "cat": "schriftpflege",
       "status": "beta",
