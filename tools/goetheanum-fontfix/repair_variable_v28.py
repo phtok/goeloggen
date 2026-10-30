@@ -7,23 +7,60 @@
 # 0,43 · 0,46 · 0,76; hier aus a–z A–Z gemessen, nicht eingetippt). Eine
 # beschädigte Glyphe wird darum aus ihren zwei heilen Ankern neu als Blend
 # gebaut:
-#   kreuzend   (« » „ ‚ ÷ ◊ % Ű, Kapitälchen ű, Null mit Strich): die Endmaster
+#   kreuzend   (« » „ ‚ ÷ ◊ % Ű, Null mit Strich): die Endmaster
 #              sind je für sich heil, aber Konturreihenfolge, Startpunkt oder
 #              Drehsinn passen nicht zusammen → 725 auf die Ordnung von 190
 #              bringen, Innenmaster aus t.
-#   halb starr (Ą Į $ ab Klar; Kapitälchen å ą į ŋ ab Ruhig): 190 und Klar
-#              sind heil → 725 = 190 + (Klar − 190) / t(440), Innenmaster aus t.
-#   oben flach (beim Prüflauf über alle Glyphen gefunden: € ǿ und die
-#              Kapitälchen m y ñ ý ÿ ħ ń ň ŧ ŷ ž ǿ): 725 bleibt fast beim Wert
-#              von Deutlich stehen; 190 bis Deutlich sind heil → wie halb starr.
+#   halb starr (Ą Į $ ab Klar): 190 und Klar sind heil →
+#              725 = 190 + (Klar − 190) / t(440), Innenmaster aus t.
+#   Kapitälchen å ŋ (zweite Prüfung, 30. 10. 2026): in der Variable ab Klar
+#              zu leicht. Die statischen Schnitte Leise und Klar der
+#              v1.4.43-Linie tragen sie gesund (Laut ist von derselben Klemme
+#              betroffen) → 190 und 725 aus diesen zwei Stützstellen.
+#   Kapitälchen q &: in Flüstern zu schwer; Klar und Deutlich sind heil →
+#              190 und 725 aus diesen zwei Mastern.
+#   Kapitälchen ű: neu aus Kapitälchen u plus dem Doppelakut des
+#              Kapitälchen-ő (wie Û).
+#   Kapitälchen ą į: in beiden Linien ab Klar zu leicht oder starr → neu aus
+#              Kapitälchen a bzw. i plus dem Ogonek ˛ der Schrift, gesetzt wie
+#              bei ą bzw. į (Abstand zum rechten Rand und Tiefe je Master).
+#   oben flach (€ Å Ǻ Ŋ ẞ, alle Kapitälchen und Kurzziffern): 725 bleibt fast
+#              beim Wert von Deutlich stehen; 190 bis Deutlich sind heil → wie
+#              halb starr. Ursache bei Kapitälchen/Kurzziffern: build.py nimmt
+#              die Versalie/Ziffer bei Gewicht +110 bzw. +80 und verkleinert
+#              sie, klemmt das Gewicht aber auf min(725, …) – oberhalb Deutlich
+#              entsteht so fast dieselbe Form. Das kalibrierte Modell bleibt,
+#              nur die Klemme fällt. Für Kapitälchen und Kurzziffern greift die
+#              Regel selbsttätig, wo 190–600 auf der Mischgeraden liegen und
+#              725 davon abweicht.
+#   Ø ø Ǿ ǿ, Kapitälchen ø ǿ: der Schrägstrich ist in die Kontur des O
+#              eingeschnitten und wächst über die Achse nur auf das 1,9-Fache
+#              (der Schrägstrich / auf das 3,7-Fache) – in Laut viel zu
+#              dünn. Neu: das gesunde O/o plus ein eigener Strich in Lage und
+#              Länge des alten, Strichstärke senkrecht 0,92 × Seitenstrich des
+#              O, wie beim / (das Verhältnis wird je Master gemessen). Unter
+#              dem Akut von Ǿ ǿ endet der Strich bündig mit dem O, sonst
+#              stösst er in den fetten Schnitten an den Akzent.
 #   Û, Kapitälchen û (ebenfalls beim Durchlauf gefunden): der Zirkumflex steht
 #              schon in Klar 83 Einheiten links und 90 zu hoch, in Schreien
 #              weit daneben → neu gesetzt aus U plus dem Zirkumflex von Ô, je
 #              Master um die Mittendifferenz U/O versetzt.
 #   Kapitälchen ǻ: bis Klar starr, darüber kreuzend → neu gesetzt aus dem
-#              reparierten Kapitälchen-å plus Akut (wie repair_smallcap_01FA.py).
+#              reparierten Kapitälchen-å plus dem Akut des Kapitälchen-á, mit
+#              dessen Abstand über dem Ring.
 #   starr      (case-Formen von ¿ ¡ – — · ( ) [ ] { }): Kontur für Kontur von
-#              der Grundform abgeleitet (gleiche Form, fester Versatz).
+#              der Grundform abgeleitet (gleiche Form und Vorschub, fester
+#              Versatz). Die Striche – — standen nur 30 Einheiten höher als im
+#              Gemeinsatz, unter der Versalmitte; jetzt steht ihre Mitte auf dem
+#              Querbalken des H (349, +82). Neu: case-Form des Bindestrichs
+#              (- ‐ ‑ und weiches Trennzeichen), bisher fehlte sie.
+#   « »        danach exakt aus zwei ‹ bzw. › gesetzt (» stand 5–8 Einheiten zu
+#              hoch), mit der Lücke der Original-Auslieferung v1.4.43 (≈ 84,
+#              über die Schnitte eingepasst) statt der engen Titillium-Lücke
+#              38 · 44 · 51; der Vorschub wächst entsprechend (HVAR).
+#   ‚ „        danach exakt ’ bzw. ” nach unten auf die Tiefe des Kommas
+#              versetzt, die linke Kante bleibt (die v1.4.43 taugt hier nicht
+#              als Vorbild, ihr ‚ ist ein Splitter).
 #   •          aus dem Punkt: wächst je Master um so viel wie der Punkt.
 #   ⁄          Vorschub klein und mit dem Gewicht wachsend wie in v1.4.43
 #              (dort 6 · 19 · 36), statt 600 · … · 17 · … · 54.
@@ -40,16 +77,32 @@ REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
 VARDIR = os.path.join(REPO, "assets/fonts/goetheanum/Variable")
 
 CROSSED = [0x00AB, 0x00BB, 0x201E, 0x201A, 0x00F7, 0x25CA, 0x0025, 0x0170,
-           ("smcp", 0x0171), ("zero", 0x0030)]
-HALF_RIGID = [0x0104, 0x012E, 0x0024, ("smcp", 0x00E5), ("smcp", 0x0105),
-              ("smcp", 0x012F), ("smcp", 0x014B)]
-FLAT_TOP = [0x20AC, 0x01FF] + [("smcp", ord(c)) for c in "myñýÿħńňŧŷžǿ"]
+           ("zero", 0x0030)]
+HALF_RIGID = [0x0104, 0x012E, 0x0024]
+STATIC_FIT = [("smcp", ord(c)) for c in "åŋ"]
+STATIC_SOURCE = ("4ee0d72", "assets/fonts/goetheanum/Fonts/Goetheanum-Schrift-v2.7-%s.otf",
+                 {"Leise": 265, "Klar": 440})   # Stand vor der Reparatur; Laut trägt die Klemme
+TWO_MASTER = [("smcp", ord(c)) for c in "q&"]   # aus Klar (440) und Deutlich-Master (600)
+SMALLCAP_FEATURES = ("smcp", "c2sc", "onum")
+SLASH = [(0x00D8, 0x004F, None), (0x00F8, 0x006F, None),       # Ziel, Grundform, Lage des Strichs von
+         (("smcp", 0x00F8), ("smcp", 0x006F), None),
+         (0x01FE, 0x004F, 0x00D8), (0x01FF, 0x006F, 0x00F8),
+         (("smcp", 0x01FF), ("smcp", 0x006F), ("smcp", 0x00F8))]
+OGONEK = [(("smcp", 0x0105), ("smcp", 0x0061), 0x0105, 0x0061),   # Ziel, Grundform, Vorbild, dessen Grundform
+          (("smcp", 0x012F), ("smcp", 0x0069), 0x012F, 0x0069)]
+FLAT_TOP = [0x20AC, 0x00C5, 0x01FA, 0x014A, 0x1E9E]
 ACCENT = [(0x00DB, 0x0055, 0x00D4, 0x004F),     # Ziel, Grundform, Spender, dessen Grundform
-          (("smcp", 0x00FB), ("smcp", 0x0075), ("smcp", 0x00F4), ("smcp", 0x006F))]
+          (("smcp", 0x00FB), ("smcp", 0x0075), ("smcp", 0x00F4), ("smcp", 0x006F)),
+          (("smcp", 0x0171), ("smcp", 0x0075), ("smcp", 0x0151), ("smcp", 0x006F))]
 RING_ACUTE = ("smcp", 0x01FB)                   # ǻ: bis Klar starr, darüber kreuzend
-GAP = 28                                        # Akut über dem Ring, wie repair_smallcap_01FA.py
+ACUTE_SC = (("smcp", 0x00E1), ("smcp", 0x0061))  # Akut-Spender: Kapitälchen á über a
 CASE = [0x00BF, 0x00A1, 0x2013, 0x2014, 0x00B7, 0x0028, 0x0029, 0x005B,
-        0x005D, 0x007B, 0x007D]
+        0x005D, 0x007B, 0x007D, 0x002D]
+CASE_DASH = (0x002D, 0x2013, 0x2014)            # Striche: zur Versalmitte gestellt
+HYPHENS = (0x002D, 0x2010, 0x2011, 0x00AD)      # teilen sich die neue case-Form
+GUILL = [(0x00AB, 0x2039), (0x00BB, 0x203A)]     # doppelt aus einfach
+GUILL_SOURCE = ("input/Goetheanum-Schrift-v1.4.43-%s.otf", {"Leise": 265, "Klar": 440, "Laut": 680})
+LOWQ = [(0x201A, 0x2019), (0x201E, 0x201D)]      # tief aus hoch, auf Kommatiefe
 BULLET, PERIOD, FRACTION = 0x2022, 0x002E, 0x2044
 FRACTION_ADV = (4, 17)                          # Vorschub bei 190 und Klar (440)
 
@@ -63,6 +116,7 @@ class VF:
         s.regions = [r.VarRegionAxis[0] for r in vs.VarRegionList.Region]
         s.regions = [(a.StartCoord, a.PeakCoord, a.EndCoord) for a in s.regions]
         s.peaks = [r[1] for r in s.regions]
+        s.fixed = {}
         assert [len(d.VarRegionIndex) for d in vs.VarData] == [len(s.regions)], \
             "erwartet genau ein VarData über alle Regionen"
         # Master-Reihenfolge hier: 190, …, Klar (Default), …, 725
@@ -82,6 +136,8 @@ class VF:
         return contours(pen.value)
 
     def masters(s, g):
+        # schon reparierte Glyphen liefern ihre neuen Master (Bausteine für Komposita)
+        if g in s.fixed: return s.fixed[g]
         # auf ganze Einheiten: so liest ein zweiter Lauf exakt dieselben Anker
         return [mapc(s.outline(g, v), lambda p: (round(p[0]), round(p[1]))) for v in s.locs]
 
@@ -287,16 +343,75 @@ def repair_half_rigid(vf, t, g):
     B = mix(A, D, 1.0 / t[di])                   # 725 = 190 + (Klar − 190) / t(Klar)
     return [mix(A, B, ti) for ti in t]
 
-def repair_composed_ring_acute(vf, t, g, ring_sc, acute):
-    """Kapitälchen ǻ wie in repair_smallcap_01FA.py: Kapitälchen-å (repariert) plus
-    Akut, mittig und GAP über dem Ring – je Master gesetzt."""
+def bounds(cs):
+    b = [bbox(c) for c in cs]
+    return (min(q[0] for q in b), min(q[1] for q in b), max(q[2] for q in b), max(q[3] for q in b))
+
+def repair_composed_ring_acute(vf, t, ring_sc, acute_src, acute_base):
+    """Kapitälchen ǻ: Kapitälchen-å (repariert) plus der Akut des Kapitälchen-á,
+    waagrecht auf den Ring gemittelt, mit dem Abstand, den er über dem a hat."""
     out = []
-    for A, C in zip(ring_sc, vf.masters(acute)):
-        ax = [bbox(c) for c in A]; cx = [bbox(c) for c in C]
-        ax0, ax1, ay1 = min(b[0] for b in ax), max(b[2] for b in ax), max(b[3] for b in ax)
-        cx0, cx1, cy0 = min(b[0] for b in cx), max(b[2] for b in cx), min(b[1] for b in cx)
-        dx = (ax0 + ax1) / 2 - (cx0 + cx1) / 2; dy = ay1 + GAP - cy0
-        out.append(A + mapc(C, lambda p, dx=dx, dy=dy: (p[0] + dx, p[1] + dy)))
+    for R, D, B in zip(ring_sc, vf.masters(acute_src), vf.masters(acute_base)):
+        top = bounds(B)[3]
+        acute = [c for c in D if bbox(c)[1] > top - 20]
+        ring = [c for c in R if bbox(c)[1] > top - 60] or R
+        rx0, _, rx1, ry1 = bounds(ring)
+        ax0, ay0, ax1, _ = bounds(acute)
+        dx = (rx0 + rx1) / 2 - (ax0 + ax1) / 2; dy = ry1 + (ay0 - top) - ay0
+        out.append(R + mapc(acute, lambda p, dx=dx, dy=dy: (p[0] + dx, p[1] + dy)))
+    return out
+
+def static_masters(vf, t, key):
+    """Kapitälchen aus den statischen Schnitten der v1.4.43-Linie (git-Stand vor
+    der Reparatur): 190 und 725 per kleinste Quadrate auf der Mischgeraden."""
+    import subprocess, io
+    rev, pattern, cuts = STATIC_SOURCE
+    def t_at(w):
+        v = (w - 440) / 250 if w < 440 else (w - 440) / 285
+        L = vf.locs
+        for i in range(len(L) - 1):
+            if L[i] <= v <= L[i + 1]:
+                return t[i] + (t[i + 1] - t[i]) * (v - L[i]) / (L[i + 1] - L[i])
+    samples = []
+    for cut, w in cuts.items():
+        blob = subprocess.run(["git", "-C", REPO, "show", "%s:%s" % (rev, pattern % cut)],
+                              capture_output=True, check=True).stdout
+        f = TTFont(io.BytesIO(blob)); g = gsub_single(f, f.getBestCmap()[key[1]], key[0])
+        pen = RecordingPen(); f.getGlyphSet()[g].draw(pen)
+        samples.append((t_at(w), contours(pen.value)))
+    ref = samples[-1][1]
+    samples = [(tt, cs) for tt, cs in samples
+               if [seg_ops(c) for c in cs] == [seg_ops(c) for c in ref]]
+    n = len(samples); mt = sum(tt for tt, _ in samples) / n
+    sxx = sum((tt - mt) ** 2 for tt, _ in samples)
+    def fit(*pts):                                # ein Punkt je Schnitt → (190, 725)
+        my = [sum(p[i] for p in pts) / n for i in (0, 1)]
+        b = [sum((tt - mt) * (p[i] - my[i]) for (tt, _), p in zip(samples, pts)) / sxx for i in (0, 1)]
+        a = [my[i] - b[i] * mt for i in (0, 1)]
+        return (a[0], a[1]), (a[0] + b[0], a[1] + b[1])
+    A = []; B = []
+    for ci, c in enumerate(ref):
+        sA = fit(*[cs[ci][0] for _, cs in samples]); sa, sb = sA
+        segA, segB = [], []
+        for si, (op, ps) in enumerate(c[1]):
+            pa, pb = [], []
+            for pi in range(len(ps)):
+                a, b = fit(*[cs[ci][1][si][1][pi] for _, cs in samples]); pa.append(a); pb.append(b)
+            segA.append((op, pa)); segB.append((op, pb))
+        A.append([sa, segA]); B.append([sb, segB])
+    return [mix(A, B, ti) for ti in t]
+
+def repair_ogonek(vf, t, base, model, model_base):
+    """Kapitälchen mit Ogonek: Grundform plus ˛, je Master so gesetzt wie das
+    Ogonek im Vorbild (ą/į) zur rechten Kante seiner Grundform (a/i) steht."""
+    ogo = vf.masters(vf.cmap[0x02DB])
+    out = []
+    for B, M, MB, O in zip(vf.masters(base), vf.masters(model), vf.masters(model_base), ogo):
+        mp = [p for c in M for p in points(c) if p[1] < -20]          # Ogonek-Teil im Vorbild
+        mx1, my0 = max(p[0] for p in mp), min(p[1] for p in mp)
+        ox0, oy0, ox1, _ = bounds(O)
+        dx = bounds(B)[2] + (mx1 - bounds(MB)[2]) - ox1; dy = my0 - oy0
+        out.append(B + mapc(O, lambda p, dx=dx, dy=dy: (p[0] + dx, p[1] + dy)))
     return out
 
 def repair_accent(vf, t, base, donor, donor_base):
@@ -314,7 +429,103 @@ def repair_accent(vf, t, base, donor, donor_base):
         out.append(B + mapc([D[i] for i in marks], lambda p, dx=dx: (p[0] + dx, p[1])))
     return out
 
-def repair_case(vf, t, g, base):
+def flat_top_error(vf, t, g):
+    """(Abweichung 335, 600, 725) von der Mischgeraden durch 190 und Klar."""
+    ms = vf.masters(g); di = vf.locs.index(0.0)
+    F = [flat(m) for m in ms]
+    B = [a + (d - a) / t[di] for a, d in zip(F[0], F[di])]
+    err = lambda i: max([abs(a + t[i] * (b - a) - x) for a, b, x in zip(F[0], B, F[i])] or [0])
+    return err(1), err(len(t) - 2), err(len(t) - 1)
+
+def feature_targets(ft, feats):
+    out = set(); gsub = ft["GSUB"].table
+    for fr in gsub.FeatureList.FeatureRecord:
+        if fr.FeatureTag not in feats: continue
+        for li in fr.Feature.LookupListIndex:
+            L = gsub.LookupList.Lookup[li]
+            for st in L.SubTable:
+                if L.LookupType == 7: st = st.ExtSubTable
+                out.update(getattr(st, "mapping", {}).values())
+    return sorted(out)
+
+def repair_two_master(vf, t, g):
+    """190 und 725 aus Klar (440) und dem Master bei 600, die heil sind."""
+    ms = vf.masters(g); di = vf.locs.index(0.0); pi = len(t) - 2
+    k = t[di] / (t[pi] - t[di])
+    A = mix(ms[di], ms[pi], -k)                  # = D − t(D)·(P − D)/(t(P) − t(D))
+    B = mix(A, ms[di], 1.0 / t[di])
+    return [mix(A, B, ti) for ti in t]
+
+def perp_width(c):
+    """Senkrechte Strichstärke eines Parallelogramm-Strichs (/)."""
+    P = points(c)[:4]
+    d = (P[1][0] - P[0][0], P[1][1] - P[0][1]); L = (d[0] ** 2 + d[1] ** 2) ** 0.5
+    o = (P[3][0] - P[0][0], P[3][1] - P[0][1])
+    return abs(o[0] * d[1] - o[1] * d[0]) / L
+
+def side_stem(cs):
+    """Seitenstrich eines O: linke Innenkante minus linke Aussenkante."""
+    outer = max(cs, key=lambda c: abs(signed_area(c)))
+    inner = [c for c in cs if c is not outer]
+    return min(bbox(c)[0] for c in inner) - bbox(outer)[0], outer
+
+def repair_slash(vf, t, target, base, line_from=None):
+    """Ø-Formen: gesundes O/o plus eigener Strich (Lage und Länge des alten,
+    senkrechte Stärke wie beim / im Verhältnis zum Seitenstrich des O)."""
+    tm = repair_half_rigid(vf, t, target)        # Akzente (Ǿ ǿ) mit gesundem Verlauf
+    sm = vf.masters(vf.cmap[0x002F]); om = vf.masters(vf.cmap[0x004F])
+    out = []
+    lm = vf.masters(line_from) if line_from else tm
+    for T, B, SL, O, LN in zip(tm, vf.masters(base), sm, om, lm):
+        ratio = perp_width(SL[0]) / side_stem(O)[0]
+        stem, outer = side_stem(B)
+        x0, y0, x1, y1 = bounds(B)
+        acute = [c for c in T if bbox(c)[1] > y1 + 20]
+        P = {p for c in LN if bbox(c)[1] <= y1 + 20 for p in points(c)}
+        lo = [p for p in P if p[1] < y0 - 5]; hi = [p for p in P if p[1] > y1 + 5]
+        cb = (sum(p[0] for p in lo) / len(lo), sum(p[1] for p in lo) / len(lo))
+        ct = (sum(p[0] for p in hi) / len(hi), sum(p[1] for p in hi) / len(hi))
+        d = (ct[0] - cb[0], ct[1] - cb[1]); L = (d[0] ** 2 + d[1] ** 2) ** 0.5
+        h = ratio * stem / 2; n = (-d[1] / L * h, d[0] / L * h)
+        if acute:                                # unter dem Akzent endet der Strich bündig im O
+            ytop = y1 - abs(n[1]); f = (ytop - cb[1]) / d[1]
+            ct = (cb[0] + f * d[0], ytop)
+        q = [(cb[0] - n[0], cb[1] - n[1]), (ct[0] - n[0], ct[1] - n[1]),
+             (ct[0] + n[0], ct[1] + n[1]), (cb[0] + n[0], cb[1] + n[1])]
+        slash = [q[0], [("lineTo", [q[1]]), ("lineTo", [q[2]]), ("lineTo", [q[3]]), ("lineTo", [q[0]])]]
+        if (signed_area(slash) > 0) != (signed_area(outer) > 0): slash = reverse(slash)
+        out.append(B + [slash] + acute)
+    return out
+
+def ensure_case_hyphen(ft):
+    """Legt die case-Form des Bindestrichs an, falls sie fehlt (Kopie des
+    Bindestrichs, die Lage setzt repair_case) und hängt - ‐ ‑ und das weiche
+    Trennzeichen in die case-Ersetzung."""
+    cmap = ft.getBestCmap(); hy = cmap[0x002D]
+    gsub = ft["GSUB"].table
+    sub = None
+    for fr in gsub.FeatureList.FeatureRecord:
+        if fr.FeatureTag != "case": continue
+        for li in fr.Feature.LookupListIndex:
+            for st in gsub.LookupList.Lookup[li].SubTable:
+                if hasattr(st, "mapping"): sub = st
+    if hy in sub.mapping: return sub.mapping[hy]
+    td = ft["CFF2"].cff.topDictIndex[0]
+    src = td.CharStrings[hy]; src.decompile()
+    cs = type(src)(program=list(src.program), private=src.private, globalSubrs=src.globalSubrs)
+    name = "cid%05d" % (max(int(n[3:]) for n in td.charset if n.startswith("cid")) + 1)
+    td.CharStrings.charStringsIndex.append(cs)
+    td.CharStrings.charStrings[name] = len(td.CharStrings.charStringsIndex) - 1
+    td.charset.append(name)
+    if hasattr(td, "FDSelect") and td.FDSelect is not None: td.FDSelect.append(0)
+    ft["hmtx"].metrics[name] = ft["hmtx"][hy]
+    ft.setGlyphOrder(list(td.charset))
+    hv = ft["HVAR"].table.AdvWidthMap.mapping; hv[name] = hv[hy]
+    for cp in HYPHENS:
+        if cp in cmap: sub.mapping[cmap[cp]] = name
+    return name
+
+def repair_case(vf, t, g, base, dash=False):
     """Starre case-Form: Grundform je Master, um den festen Versatz der case-Form
     (Mitte zu Mitte, am Default gemessen) verschoben. Vorschub-Variation (HVAR)
     wie die Grundform."""
@@ -325,7 +536,12 @@ def repair_case(vf, t, g, base):
         return ((min(q[0] for q in b) + max(q[2] for q in b)) / 2,
                 (min(q[1] for q in b) + max(q[3] for q in b)) / 2)
     (tx, ty), (bx, by) = centre(tm[di]), centre(bm[di])
-    dx, dy = round(tx - bx), round(ty - by)
+    dx, dy = 0, round(ty - by)                  # gleiche Form, gleicher Vorschub
+    if dash:                                     # Mitte des Strichs auf den Querbalken des H
+        Hc = vf.masters(vf.cmap[0x0048])[di]; top = bounds(Hc)[3]
+        ys = {p[1] for c in Hc for p in points(c) if 10 < p[1] < top - 10}
+        B = bounds(bm[di])
+        dy = round(sum(ys) / len(ys) - (B[1] + B[3]) / 2)
     pick = []
     for c in tm[di]:
         best = None
@@ -340,7 +556,9 @@ def repair_case(vf, t, g, base):
         pick.append(best[1:])
     assert sorted(bi for bi, _ in pick) == list(range(len(bm[di]))), g
     hv = vf.ft["HVAR"].table.AdvWidthMap.mapping
-    hv[g] = hv[base]
+    hv[g] = hv[base]; vf.ft["hmtx"][g] = vf.ft["hmtx"][base]
+    if dash:                                     # der Strich ist eine Kontur: kein Suchen nötig
+        pick = [(i, 0) for i in range(len(bm[di]))]
     return [mapc([rotate(bm[mi][bi], k) for bi, k in pick], lambda p: (p[0] + dx, p[1] + dy))
             for mi in range(len(vf.locs))]
 
@@ -359,6 +577,68 @@ def repair_bullet(vf, t, g, period):
         pw, ph = pdim(vf.outline(period, v))
         sx, sy = (W + pw - pD[0]) / W, (H + ph - pD[1]) / H
         out.append(mapc(D, lambda p, sx=sx, sy=sy: (cx + (p[0] - cx) * sx, cy + (p[1] - cy) * sy)))
+    return out
+
+def t_at(vf, t, w):
+    v = (w - 440) / 250 if w < 440 else (w - 440) / 285
+    L = vf.locs
+    for i in range(len(L) - 1):
+        if L[i] <= v <= L[i + 1]:
+            return t[i] + (t[i + 1] - t[i]) * (v - L[i]) / (L[i + 1] - L[i])
+
+def advances(vf, g):
+    """Vorschub je Master (hmtx + HVAR)."""
+    hv = vf.ft["HVAR"].table; m = hv.AdvWidthMap.mapping[g]
+    vd = hv.VarStore.VarData[m >> 16]; row = vd.Item[m & 0xFFFF]
+    base = vf.ft["hmtx"][g][0]
+    return [base + sum(vf.scalar(vf.regions[r], v) * d for r, d in zip(vd.VarRegionIndex, row))
+            for v in vf.locs]
+
+def set_advances(vf, g, vals):
+    """Vorschub je Master über eine eigene HVAR-Zeile setzen."""
+    ft = vf.ft; d = solve(vf, vals)
+    hv = ft["HVAR"].table; store = hv.VarStore
+    vd_index = next(i for i, vd in enumerate(store.VarData) if len(vd.VarRegionIndex) == len(vf.regions))
+    vd = store.VarData[vd_index]
+    row = [int(round(d[1 + r])) for r in vd.VarRegionIndex]
+    mapped = hv.AdvWidthMap.mapping.get(g)
+    others = [k for k, v in hv.AdvWidthMap.mapping.items() if v == mapped and k != g]
+    if mapped is not None and (mapped >> 16) == vd_index and not others:
+        vd.Item[mapped & 0xFFFF] = row
+    else:
+        vd.Item.append(row); vd.ItemCount = len(vd.Item)
+        hv.AdvWidthMap.mapping[g] = (vd_index << 16) | (len(vd.Item) - 1)
+    ft["hmtx"][g] = (int(round(d[0])), ft["hmtx"][g][1])
+
+def guillemet_gap(vf, t):
+    """Lücke zwischen den Winkeln von « in der Original-Auslieferung v1.4.43,
+    je Schnitt gemessen und als Gerade über t eingepasst → Lücke je Master."""
+    pattern, cuts = GUILL_SOURCE; pts = []
+    for cut, w in cuts.items():
+        f = TTFont(os.path.join(HERE, pattern % cut)); pen = RecordingPen()
+        f.getGlyphSet()[f.getBestCmap()[0x00AB]].draw(pen)
+        b = sorted(bbox(c) for c in contours(pen.value))
+        pts.append((t_at(vf, t, w), b[1][0] - b[0][2]))
+    n = len(pts); mt = sum(p[0] for p in pts) / n; mg = sum(p[1] for p in pts) / n
+    k = sum((p[0] - mt) * (p[1] - mg) for p in pts) / sum((p[0] - mt) ** 2 for p in pts)
+    return [mg + k * (ti - mt) for ti in t]
+
+def repair_guillemet(vf, t, g, single, gaps):
+    """« » aus zwei exakten Kopien von ‹ ›: erste an ihrem Ort, zweite um Breite +
+    Lücke versetzt; der Vorschub wächst um denselben Versatz."""
+    sm = vf.masters(single); out = []; offs = []
+    for S, gap in zip(sm, gaps):
+        x0, _, x1, _ = bounds(S); off = round(x1 - x0 + gap); offs.append(off)
+        out.append(S + mapc(S, lambda p, off=off: (p[0] + off, p[1])))
+    set_advances(vf, g, [a + o for a, o in zip(advances(vf, single), offs)])
+    return out
+
+def repair_low_quote(vf, t, g, high):
+    """‚ „ = ’ ” nach unten auf die Tiefe des Kommas, linke Kante wie bisher."""
+    out = []
+    for T, H, C in zip(vf.masters(g), vf.masters(high), vf.masters(vf.cmap[0x002C])):
+        dx = bounds(T)[0] - bounds(H)[0]; dy = bounds(C)[1] - bounds(H)[1]
+        out.append(mapc(H, lambda p, dx=dx, dy=dy: (p[0] + dx, p[1] + dy)))
     return out
 
 def repair_fraction_advance(vf, t, g):
@@ -387,29 +667,49 @@ def repair_fraction_advance(vf, t, g):
 
 def main():
     path = sys.argv[1] if len(sys.argv) > 1 else sorted(glob.glob(os.path.join(VARDIR, "Goetheanum-Variabel-v*.otf")))[-1]
-    ft = TTFont(path, recalcTimestamp=False); vf = VF(ft)
+    ft = TTFont(path, recalcTimestamp=False)
+    ensure_case_hyphen(ft); vf = VF(ft)
     t = measure_t(vf)
     print("Mischfaktoren je Master", [round(unnorm(v)) for v in vf.locs], [round(x, 3) for x in t])
-    todo = []
-    for k in CROSSED: todo.append((vf.glyph(k), "kreuzend", repair_crossed))
-    for k in HALF_RIGID: todo.append((vf.glyph(k), "halb starr", repair_half_rigid))
-    for k in FLAT_TOP: todo.append((vf.glyph(k), "oben flach", repair_half_rigid))
     results = {}
-    for g, kind, fn in todo:
-        results[g] = (kind, fn(vf, t, g))
+    def put(g, kind, masters):                    # ganzzahlig, wie sie auch gelesen würden
+        masters = [mapc(m, lambda p: (round(p[0]), round(p[1]))) for m in masters]
+        results[g] = (kind, masters); vf.fixed[g] = masters
+    for k in CROSSED: put(vf.glyph(k), "kreuzend", repair_crossed(vf, t, vf.glyph(k)))
+    for k in HALF_RIGID: put(vf.glyph(k), "halb starr", repair_half_rigid(vf, t, vf.glyph(k)))
+    for k in FLAT_TOP: put(vf.glyph(k), "oben flach", repair_half_rigid(vf, t, vf.glyph(k)))
+    explicit = {vf.glyph(k) for k in STATIC_FIT + TWO_MASTER + [RING_ACUTE]} | \
+               {vf.glyph(a[0]) for a in ACCENT + OGONEK} | {vf.glyph(a[0]) for a in SLASH}
+    for g in feature_targets(ft, SMALLCAP_FEATURES):
+        if g in explicit or g in results: continue
+        e335, e600, e725 = flat_top_error(vf, t, g)
+        if e335 <= 3 and e600 <= 6.5 and e725 > 6:
+            put(g, "oben flach", repair_half_rigid(vf, t, g))
+    for k in STATIC_FIT: put(vf.glyph(k), "aus Leise/Klar", static_masters(vf, t, k))
+    for k in TWO_MASTER: put(vf.glyph(k), "aus Klar/600", repair_two_master(vf, t, vf.glyph(k)))
     for k, b, d, db in ACCENT:
-        results[vf.glyph(k)] = ("Akzent neu", repair_accent(vf, t, vf.glyph(b), vf.glyph(d), vf.glyph(db)))
-    ring = results[vf.glyph(("smcp", 0x00E5))][1]
-    results[vf.glyph(RING_ACUTE)] = ("Ring + Akut",
-        repair_composed_ring_acute(vf, t, vf.glyph(RING_ACUTE), ring, vf.cmap[0x00B4]))
+        put(vf.glyph(k), "Akzent neu", repair_accent(vf, t, vf.glyph(b), vf.glyph(d), vf.glyph(db)))
+    for k, b, m, mb in OGONEK:
+        put(vf.glyph(k), "+ Ogonek", repair_ogonek(vf, t, vf.glyph(b), vf.glyph(m), vf.glyph(mb)))
+    put(vf.glyph(RING_ACUTE), "Ring + Akut", repair_composed_ring_acute(
+        vf, t, vf.masters(vf.glyph(("smcp", 0x00E5))), vf.glyph(ACUTE_SC[0]), vf.glyph(ACUTE_SC[1])))
+    gaps = guillemet_gap(vf, t)
+    for k, sgl in GUILL: put(vf.cmap[k], "aus ‹ ›", repair_guillemet(vf, t, vf.cmap[k], vf.cmap[sgl], gaps))
+    for k, hi in LOWQ: put(vf.cmap[k], "aus ’ ”", repair_low_quote(vf, t, vf.cmap[k], vf.cmap[hi]))
+    print("  Lücke « » je Master", [round(x) for x in gaps])
+    for k, b, ln in SLASH:
+        put(vf.glyph(k), "Schrägstrich", repair_slash(vf, t, vf.glyph(k), vf.glyph(b),
+                                                     vf.glyph(ln) if ln else None))
     for cp in CASE:
         base = vf.cmap[cp]; g = gsub_single(ft, base, "case")
-        results[g] = ("case", repair_case(vf, t, g, base))
-    results[vf.cmap[BULLET]] = ("aus dem Punkt", repair_bullet(vf, t, vf.cmap[BULLET], vf.cmap[PERIOD]))
+        put(g, "case", repair_case(vf, t, g, base, dash=cp in CASE_DASH))
+    put(vf.cmap[BULLET], "aus dem Punkt", repair_bullet(vf, t, vf.cmap[BULLET], vf.cmap[PERIOD]))
     # erst alles messen, dann schreiben (die Reparaturen lesen den alten Stand)
+    from collections import Counter
     for g, (kind, masters) in results.items():
         write_glyph(vf, g, masters)
-        print("  %-9s %-12s" % (g, kind))
+    for kind, n in Counter(k for k, _ in results.values()).items():
+        print("  %3d × %s" % (n, kind))
     adv = repair_fraction_advance(vf, t, vf.cmap[FRACTION])
     print("  %-9s Vorschub je Master %s" % (vf.cmap[FRACTION], adv))
     ft.save(path)

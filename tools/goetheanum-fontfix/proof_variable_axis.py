@@ -4,6 +4,9 @@
 #   - Tintenfläche: wächst mit dem Gewicht (streng, Toleranz 0,5 %),
 #   - Tintenbreite: nimmt mit dem Gewicht nicht ab (Toleranz 2 Einheiten; nur
 #     für die Glyphen des Befunds – æ œ ∫ ŧ werden bewusst etwas schmaler),
+#   - Zuwachs oben: Fläche 580 → 725 im Verhältnis zu 440 → 580 nicht unter der
+#     Hälfte des Familien-Medians (fängt die Klemme, an der Kapitälchen,
+#     Kurzziffern und Ø oben stehen blieben),
 #   - Konturzentren: wandern zwischen Nachbarstufen um höchstens 40 Einheiten,
 #   - Vorschub ⁄ (U+2044): klein, ≥ 0 und mit dem Gewicht nicht fallend.
 # Ohne Argumente: die Glyphen des Befunds. --alle: jede erreichbare Glyphe
@@ -85,6 +88,16 @@ def main():
         ft = TTFont(path); instantiateVariableFont(ft, {"wght": w}, inplace=True)
         m[w] = measure(ft, glyphs)
     frac = base.getBestCmap()[0x2044]
+    def oben(g):
+        f = [m[w][g]["flaeche"] for w in (440, 580, 725)]
+        return (f[2] - f[1]) / (f[1] - f[0]) if f[1] - f[0] > 1 else None
+    alle_g = reachable(base, None)
+    for w in STUFEN:
+        if any(g not in m[w] for g in alle_g):
+            ft = TTFont(path); instantiateVariableFont(ft, {"wght": w}, inplace=True)
+            m[w].update(measure(ft, [g for g in alle_g if g not in m[w]]))
+    quoten = sorted(q for q in (oben(g) for g in alle_g if m[440][g]["zentren"]) if q is not None)
+    median_oben = quoten[len(quoten) // 2]
     fehler = 0
     for g in glyphs:
         row = [m[w][g] for w in STUFEN]
@@ -96,6 +109,9 @@ def main():
             probleme.append("Fläche " + " · ".join("%d" % round(x) for x in f))
         if g in breite_pruefen and any(b[i + 1] < b[i] - 2 for i in range(len(b) - 1)):
             probleme.append("Breite " + " · ".join("%d" % round(x) for x in b))
+        q = oben(g)
+        if q is not None and q < 0.5 * median_oben:
+            probleme.append("Zuwachs oben %.2f (Median %.2f)" % (q, median_oben))
         weg = 0
         for i in range(len(row) - 1):
             za, zb = row[i]["zentren"], row[i + 1]["zentren"]

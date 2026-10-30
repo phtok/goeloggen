@@ -47,6 +47,12 @@ Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
   Achse still; sie folgen jetzt dem Gewicht.
 - **`Û` und Kapitälchen-`û`:** Der Zirkumflex sass links und zu hoch; neu aus
   `U` und dem Zirkumflex von `Ô` gesetzt.
+- **Kapitälchen und Kurzziffern** wachsen jetzt bis Schreien mit (vorher ab
+  Deutlich stehen geblieben, auch im statischen Laut).
+- **Ø ø Ǿ ǿ** tragen in den fetten Schnitten einen Strich in Stammstärke.
+- **« »** mit der Lücke der Original-Auslieferung, **‚ „** exakt wie ’ ”.
+- **Versalsatz (`case`):** Striche auf dem Querbalken des H; neu die
+  case-Form des Bindestrichs.
 - **Bruchstrich `⁄`** (U+2044): Vorschub wieder klein und mit dem Gewicht
   wachsend (8 · 12 · 17 · 25 · 30 in Leise … Laut) wie in v1.4.43 – die
   Bruchform (`frac`) steht wieder geschlossen.
@@ -100,7 +106,7 @@ Zum Unterscheiden der Fassungen – welche Datei welchen Stand trägt:
 
 | Version | Kurz |
 |---------|------|
-| **v2.8** | Reparatur des Variable Font: kreuzende Konturen (`« » „ ‚ ÷ ◊ %`, `Ű`), starre Glyphen, `Û`, Bruchstrich-Vorschub; alle Lieferformen neu gebaut. |
+| **v2.8** | Reparatur des Variable Font: kreuzende Konturen (`« » „ ‚ ÷ ◊ %`, `Ű`), starre Glyphen, `Û`, Bruchstrich-Vorschub; Kapitälchen/Kurzziffern ohne Gewichtsklemme, `Ø`-Strich, case-Striche und -Bindestrich; alle Lieferformen neu gebaut. |
 | **v2.7** | Siebter Schnitt **Ruhig** (wght 350), die Buch-Zwischenstimme zwischen Leise und Klar. Schlummernde Null (`zero`) in den Überschneidungen gesäubert. |
 | **v2.6** | **Versaleszett ẞ**; typografische Spatien + geschützter Bindestrich (U+2011); Ziffern **proportional** (`pnum`) und Kurzziffern (`onum`), volle Ziffern-Parität; **f-Ligaturen** und **Kapitälchen** (smcp/c2sc). Versionssprung 2.5 → 2.6. |
 | **v2.5** | Titel-/Auszeichnungsschnitt **Deutlich** (wght 580). |

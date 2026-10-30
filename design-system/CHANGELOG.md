@@ -27,6 +27,11 @@ AUDIT.md`): in Klar las sich `«` als ein einzelner fetter Winkel, `‚` war
 praktisch unsichtbar, `%` kippte. **Wirkung.** Jede Seite mit der Hausschrift;
 Vorher/Nachher auf https://werkzeuge.goetheanum.ch/guillemets.html. Die
 v2.7-Adressen der versandten Mails bleiben als Kopien erreichbar.
+**Zweite Prüfung (30. Oktober).** Kapitälchen und Kurzziffern ohne die
+Gewichtsklemme aus `build.py`, Ø-Strich in Stammstärke, « » mit der Lücke
+der Auslieferung v1.4.43, ‚ „ exakt aus ’ ”, case-Striche auf dem
+H-Querbalken und eine case-Form für den Bindestrich (Einzelheiten in
+`AUDIT.md`).
 
 ## 27. Oktober 2026 — Lange Abschnittstitel brechen um (1.28.7)
 

@@ -165,6 +165,43 @@ Deutlich rechts daneben; `¨` (U+00A8) halbiert seinen Vorschub 791 → 514.
   Glyphen. Breite `«` jetzt 350 · 367 · 386 · 406 · 437 · 461 · 471.
   Vorher/Nachher: https://werkzeuge.goetheanum.ch/guillemets.html
 
+### Zweite Prüfung (30. 10. 2026, nach Rückmeldung des Inhabers)
+
+Jede reparierte Glyphe gross an allen sieben Stufen gegen v1.4.43, Titillium
+Thin…Bold und ihre natürlichen Partner gesetzt; dazu je Glyphe der Zuwachs
+oben (Fläche 580 → 725 gegen 440 → 580), der jetzt im Prüfmass steht.
+
+- **Kapitälchen und Kurzziffern, alle (117 Glyphen):** standen oberhalb von
+  Deutlich still. Ursache in `build.py` (v2.4.1): Versalie bzw. Ziffer bei
+  Gewicht +110 bzw. +80, verkleinert – aber `min(725, …)` geklemmt. Der
+  Kapitälchenstamm wuchs darum 76 (Klar) → 102 (Laut) → 103 (Schreien), die
+  Gemeinen 81 → 126 → 134. Dieselbe Klemme trägt der statische Laut. Behoben:
+  das kalibrierte Modell bleibt, die Klemme fällt (725 aus 190 und Klar
+  fortgeschrieben); in allen statischen Schnitten neu aus der Variable gesetzt.
+- **Kapitälchen å ą į ŋ q & ǻ:** zusätzlich in sich falsch (å ŋ ab Klar zu
+  leicht, q & in Flüstern zu schwer, ą į ab Klar starr – auch in den
+  statischen Schnitten). Neu: å ŋ aus Leise/Klar der v1.4.43-Linie, q & aus
+  Klar und Deutlich, ą į aus Kapitälchen a/i plus Ogonek ˛ (gesetzt wie bei
+  ą/į), ǻ aus Kapitälchen-å plus Akut des Kapitälchen-á (der Akut ´ war zu
+  gross), ű aus Kapitälchen-u plus Doppelakut des ő.
+- **Ø ø Ǿ ǿ, Kapitälchen ø ǿ:** Der eingeschnittene Schrägstrich wuchs nur
+  auf das 1,9-Fache (der / auf das 3,7-Fache): Strichstärke in Klar 58 statt
+  79, in Schreien 85 statt 130. Neu: gesundes O/o plus eigener Strich, senkrecht
+  0,92 × Seitenstrich des O wie beim /; unter dem Akut endet er bündig.
+- **Å Ǻ Ŋ ẞ €:** oben flach wie die Kapitälchen, gleich behoben.
+- **« »:** aus zwei exakten ‹ ›; » stand 5–8 Einheiten höher als ›. Die Lücke
+  war die enge der Titillium-Extreme (38 · 44 · 51), die Auslieferung v1.4.43
+  hat 87 · 84 · 83 – übernommen (87 … 82 über die Achse), Vorschub mit.
+- **‚ „:** exakt ’ ” auf Kommatiefe; vorher bis 30 Einheiten abweichend. Die
+  v1.4.43 taugt hier nicht als Vorbild (ihr ‚ ist ein Splitter, „ verschmolzen).
+- **case-Striche:** – — standen nur 30 Einheiten über dem Gemeinsatz (Mitte
+  297 statt Versalmitte); jetzt Mitte auf dem Querbalken des H (349). Die
+  case-Form des Bindestrichs fehlte ganz – angelegt für - ‐ ‑ und das weiche
+  Trennzeichen.
+- **Bewusst belassen:** • bleibt ein Quadrat (wie Titillium und v1.4.43, aber
+  jetzt mit dem Gewicht wachsend); die f-Ligaturen und µ verlaufen nicht
+  linear, sind aber in sich stimmig; ◊ folgt den Titillium-Extremen.
+
 ## Reproduzieren
 Siehe `tools/goetheanum-fontfix/` (Skripte, Titillium-Quellen, Original-Inputs):
 ```
