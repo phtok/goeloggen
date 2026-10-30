@@ -1,4 +1,4 @@
-# Goetheanum Schriften — `v2.7`
+# Goetheanum Schriften — `v2.8`
 
 Reparierte und optimierte Fassung des offiziellen Schriftpakets der Goetheanum
 Kommunikation (basierend auf der originalen v1.4.43, abgeleitet aus Titillium,
@@ -23,17 +23,39 @@ SIL OFL). Reparaturen und Begründung siehe
 ```css
 @font-face {
   font-family: "Goetheanum Schrift";
-  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.7-Klar.woff2") format("woff2");
+  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.8-Klar.woff2") format("woff2");
   font-weight: 440; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Goetheanum Schrift";
-  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2") format("woff2");
+  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.8-Laut.woff2") format("woff2");
   font-weight: 680; font-style: normal; font-display: swap;
 }
 ```
 
 Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
+
+## Neu in v2.8
+
+- **Kreuzende Konturen repariert.** Im Variable Font lagen bei `« » „ ‚ ÷ ◊ %`,
+  `Ű` und einigen Kapitälchen die Konturen an den beiden Enden der Achse in
+  anderer Reihenfolge, mit anderem Startpunkt oder Drehsinn; beim Interpolieren
+  liefen sie durcheinander (in Klar lag `«` fast deckungsgleich als ein
+  einzelner Winkel). Jetzt bleibt jede Kontur über die ganze Achse an ihrem Ort.
+- **Starre Glyphen wachsen mit.** Die `case`-Formen von `¿ ¡ – — · ( ) [ ] { }`,
+  der Punkt `•`, `Ą Į $`, `€ ǿ` und mehrere Kapitälchen standen über Teile der
+  Achse still; sie folgen jetzt dem Gewicht.
+- **`Û` und Kapitälchen-`û`:** Der Zirkumflex sass links und zu hoch; neu aus
+  `U` und dem Zirkumflex von `Ô` gesetzt.
+- **Bruchstrich `⁄`** (U+2044): Vorschub wieder klein und mit dem Gewicht
+  wachsend (8 · 12 · 17 · 25 · 30 in Leise … Laut) wie in v1.4.43 – die
+  Bruchform (`frac`) steht wieder geschlossen.
+- Statische Schnitte, Office-TTF, Webfonts und ZIPs neu daraus gebaut.
+  Vorher/Nachher: https://werkzeuge.goetheanum.ch/guillemets.html
+- Für schon versandte Mails bleiben die Adressen
+  `Webfonts/…/Goetheanum-Schrift-v2.7-Deutlich|Klar`, `Goetheanum-Variabel-v2.7`,
+  `Goetheanum-Icons-v2.7` und `Goetheanum-Pfeile-v2.7` erreichbar – als Kopien
+  der v2.8-Dateien, nicht im ZIP.
 
 ## Neu in v2.7
 
@@ -78,6 +100,7 @@ Zum Unterscheiden der Fassungen – welche Datei welchen Stand trägt:
 
 | Version | Kurz |
 |---------|------|
+| **v2.8** | Reparatur des Variable Font: kreuzende Konturen (`« » „ ‚ ÷ ◊ %`, `Ű`), starre Glyphen, `Û`, Bruchstrich-Vorschub; alle Lieferformen neu gebaut. |
 | **v2.7** | Siebter Schnitt **Ruhig** (wght 350), die Buch-Zwischenstimme zwischen Leise und Klar. Schlummernde Null (`zero`) in den Überschneidungen gesäubert. |
 | **v2.6** | **Versaleszett ẞ**; typografische Spatien + geschützter Bindestrich (U+2011); Ziffern **proportional** (`pnum`) und Kurzziffern (`onum`), volle Ziffern-Parität; **f-Ligaturen** und **Kapitälchen** (smcp/c2sc). Versionssprung 2.5 → 2.6. |
 | **v2.5** | Titel-/Auszeichnungsschnitt **Deutlich** (wght 580). |

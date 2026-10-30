@@ -65,16 +65,16 @@ pre .k{color:var(--code-key)}pre .s{color:var(--code-str)}pre .c{color:var(--cod
 <h2>Zwei Wege, die Schrift zu laden</h2>
 <div class="card">
   <p class="lead" style="margin-top:0"><b>A · Von der Hausadresse laden.</b> Am schnellsten: die Dateien direkt von <code>werkzeuge.goetheanum.ch</code> laden – über https, von jeder Domain nutzbar. Der Code steht unten.</p>
-  <p class="lead"><b>B · Selbst hosten</b> <span class="tag">für Produktion empfohlen</span><br>Die <code>.woff2</code> aus dem Download-Paket (Ordner <code>Webfonts/woff2/</code>) ins eigene Projekt legen – etwa <code>/fonts/</code> – und die <code>src</code>-URL relativ setzen: <code>url("/fonts/Goetheanum-Variabel-v2.7.woff2")</code>. Alles aus einer Herkunft, die robusteste Wahl für eine echte Website.</p>
+  <p class="lead"><b>B · Selbst hosten</b> <span class="tag">für Produktion empfohlen</span><br>Die <code>.woff2</code> aus dem Download-Paket (Ordner <code>Webfonts/woff2/</code>) ins eigene Projekt legen – etwa <code>/fonts/</code> – und die <code>src</code>-URL relativ setzen: <code>url("/fonts/Goetheanum-Variabel-v2.8.woff2")</code>. Alles aus einer Herkunft, die robusteste Wahl für eine echte Website.</p>
 </div>
 
 <h2>1 · Variable Font einbinden <span class="tag">empfohlen — eine Datei, 66 KB, alle Schnitte</span></h2>
 <div class="card">
 <pre><button class="copy" data-t="v">kopieren</button><code id="code-v"><span class="k">@font-face</span> {
   <span class="k">font-family</span>: <span class="s">"Goetheanum"</span>;
-  <span class="c">/* A · Hausadresse — oder B: url("/fonts/Goetheanum-Variabel-v2.7.woff2") */</span>
-  <span class="k">src</span>: <span class="k">url</span>(<span class="s">"https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.7.woff2"</span>) <span class="k">format</span>(<span class="s">"woff2"</span>),
-       <span class="k">url</span>(<span class="s">"https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.7.woff"</span>) <span class="k">format</span>(<span class="s">"woff"</span>);
+  <span class="c">/* A · Hausadresse — oder B: url("/fonts/Goetheanum-Variabel-v2.8.woff2") */</span>
+  <span class="k">src</span>: <span class="k">url</span>(<span class="s">"https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.8.woff2"</span>) <span class="k">format</span>(<span class="s">"woff2"</span>),
+       <span class="k">url</span>(<span class="s">"https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.8.woff"</span>) <span class="k">format</span>(<span class="s">"woff"</span>);
   <span class="k">font-weight</span>: 190 725;     <span class="c">/* variable Gewichtsachse */</span>
   <span class="k">font-style</span>: normal;
   <span class="k">font-display</span>: swap;
@@ -93,9 +93,9 @@ pre .k{color:var(--code-key)}pre .s{color:var(--code-str)}pre .c{color:var(--cod
 <h2>2 · Einzelne Schnitte (statisch)</h2>
 <div class="card">
 <pre><button class="copy" data-t="s">kopieren</button><code id="code-s"><span class="k">@font-face</span>{<span class="k">font-family</span>:<span class="s">"Goetheanum Klar"</span>;
-  <span class="k">src</span>:<span class="k">url</span>(<span class="s">"https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Klar.woff2"</span>) <span class="k">format</span>(<span class="s">"woff2"</span>);
+  <span class="k">src</span>:<span class="k">url</span>(<span class="s">"https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.8-Klar.woff2"</span>) <span class="k">format</span>(<span class="s">"woff2"</span>);
   <span class="k">font-weight</span>:400;<span class="k">font-display</span>:swap}
-<span class="c">/* B (selbst hosten): src:url("/fonts/Goetheanum-Schrift-v2.7-Klar.woff2") format("woff2"); */</span>
+<span class="c">/* B (selbst hosten): src:url("/fonts/Goetheanum-Schrift-v2.8-Klar.woff2") format("woff2"); */</span>
 <span class="c">/* ebenso: …-Leise.woff2 als "Goetheanum Leise", …-Ruhig.woff2 als "Goetheanum Ruhig", …-Laut.woff2 als "Goetheanum Laut" */</span></code></pre>
 <p class="note">Nutzung: <code>font-family:"Goetheanum Klar"</code>. Verfügbar: <b>Leise · Ruhig · Klar · Deutlich · Laut</b>.</p>
 </div>
@@ -112,9 +112,9 @@ pre .k{color:var(--code-key)}pre .s{color:var(--code-str)}pre .c{color:var(--cod
 <div class="card">
 <p class="lead" style="margin-top:0">Piktogramme und Pfeile liegen in <b>zwei eigenen Fonts</b> – nicht im Textfont. Man setzt sie nicht über ein Gewicht, sondern indem man einer Fläche die Icon- oder Pfeile-Schrift gibt und die passende <b>Taste</b> tippt. Welche Taste welches Zeichen ergibt (und jedes einzeln als SVG/PNG/PDF), zeigt die <a href="icons.html">Icon-Seite</a>.</p>
 <pre><button class="copy" data-t="i">kopieren</button><code id="code-i"><span class="k">@font-face</span>{ <span class="k">font-family</span>:<span class="s">"Goetheanum Icons"</span>;
-  <span class="k">src</span>:<span class="k">url</span>(<span class="s">"https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.7.woff2"</span>) <span class="k">format</span>(<span class="s">"woff2"</span>); <span class="k">font-display</span>:block }
+  <span class="k">src</span>:<span class="k">url</span>(<span class="s">"https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.8.woff2"</span>) <span class="k">format</span>(<span class="s">"woff2"</span>); <span class="k">font-display</span>:block }
 <span class="k">@font-face</span>{ <span class="k">font-family</span>:<span class="s">"Goetheanum Pfeile"</span>;
-  <span class="k">src</span>:<span class="k">url</span>(<span class="s">"https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Pfeile-v2.7.woff2"</span>) <span class="k">format</span>(<span class="s">"woff2"</span>); <span class="k">font-display</span>:block }
+  <span class="k">src</span>:<span class="k">url</span>(<span class="s">"https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Pfeile-v2.8.woff2"</span>) <span class="k">format</span>(<span class="s">"woff2"</span>); <span class="k">font-display</span>:block }
 
 <span class="c">/* Verwendung – Zeichen per Taste, nicht per Gewicht */</span>
 .icon  { <span class="k">font-family</span>:<span class="s">"Goetheanum Icons"</span>; }   <span class="c">/* &lt;span class="icon"&gt;h&lt;/span&gt;  → Piktogramm */</span>

@@ -133,13 +133,37 @@ Deutlich rechts daneben; `¨` (U+00A8) halbiert seinen Vorschub 791 → 514.
 
 **Heil, ausdrücklich geprüft:** Ziffern (Flächenverlauf wie `n`/`o`),
 `: ; = " ! ? … ‰ ( ) @ & ß ẞ`, alle Umlaute, `‹ ›`.
-- **Reparatur (offen).** Im Variable Font die Konturreihenfolge der
-  genannten Glyphen über alle Master angleichen (am dünnen Master messen,
-  fetten Master danach sortieren) oder die Glyphen aus v1.4.43 gewichtsrichtig
-  neu interpolieren; danach die statischen Schnitte, Office-TTF und Webfonts
-  aus `tools/goetheanum-fontfix/` neu erzeugen und die Messung in
-  `guillemets.html` nachführen. Prüfmass: Breite `«` muss mit dem Gewicht
-  monoton wachsen (heute 350 · 294 · 232 · 198 · 332 · 428 · 471).
+- **Behoben in v2.8 (29. 10. 2026).** Alle oben genannten Glyphen sind im
+  Variable Font neu als Blend gebaut (`tools/goetheanum-fontfix/
+  repair_variable_v28.py`). Grundlage: Bei den gesunden Glyphen ist jeder
+  innere Master (335 · 420 · 440 · 600) bis auf < 1 Einheit die lineare
+  Mischung der Endmaster 190 und 725 (Faktoren 0,27 · 0,43 · 0,46 · 0,76).
+  Kreuzende Glyphen: 725 auf Konturfolge, Startpunkt und Drehsinn von 190
+  gebracht, Innenmaster daraus. Halb starre (`Ą Į $`, Kapitälchen `å ą į ŋ`):
+  725 aus 190 und Klar fortgeschrieben. `case`-Formen aus der Grundform mit
+  festem Versatz, `•` wächst wie der Punkt, Kapitälchen `ǻ` aus dem
+  reparierten Kapitälchen-`å` plus Akut.
+  **Beim Prüflauf über alle 581 erreichbaren Glyphen nachgefunden und mit
+  behoben:** `€ ǿ` und die Kapitälchen `m y ñ ý ÿ ħ ń ň ŧ ŷ ž ǿ` blieben über
+  Deutlich fast stehen; bei `Û` und Kapitälchen-`û` sass der Zirkumflex schon
+  in Klar 83 Einheiten links und 90 zu hoch (neu aus `U` + Zirkumflex von `Ô`).
+  **Bruchstrich `⁄`:** Der Vorschub ist wieder klein und wächst mit dem
+  Gewicht (4 · 8 · 12 · 17 · 25 · 30 · 32), wie in v1.4.43 (6 · 19 · 36),
+  Titillium (0) und Source Sans (86). Die 600 der unteren Schnitte stammten
+  aus der Klemme für den Titillium-Fehler 65521; damit zerfiel die Bruchform
+  (`frac`) in ‹1⁄ 2›. Ohne `frac` überlappt der Strich die vollen Ziffern –
+  so ist das Zeichen gebaut.
+  **Statische Schnitte:** Ruhig und Deutlich sind ganz aus der Variable
+  instanziert und übernehmen jede Reparatur; Leise, Klar und Laut stammen aus
+  der v1.4.43-Linie und behalten ihre eigenen, gesunden Formen (z. B. die
+  `case`-Klammern in Laut). Selbst beschädigte Eigenformen wurden mit
+  ersetzt: `„` in Leise, Kapitälchen `ű` in Klar, Kapitälchen `û` in Klar
+  und Laut (`sync_statics_v28.py`).
+  **Prüfmass** (`proof_variable_axis.py`, an 190 · 265 · 350 · 440 · 580 ·
+  680 · 725): Tintenfläche wächst, Breite fällt nicht, Konturzentren wandern
+  höchstens 40 Einheiten je Stufe – 0 Verstösse über alle erreichbaren
+  Glyphen. Breite `«` jetzt 350 · 367 · 386 · 406 · 437 · 461 · 471.
+  Vorher/Nachher: https://werkzeuge.goetheanum.ch/guillemets.html
 
 ## Reproduzieren
 Siehe `tools/goetheanum-fontfix/` (Skripte, Titillium-Quellen, Original-Inputs):

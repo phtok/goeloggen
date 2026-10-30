@@ -100,8 +100,8 @@ function svgFontCss() {
   if (!svgFontCssPromise) {
     svgFontCssPromise = (async () => {
       const [deutlich, laut, wert] = await Promise.all([
-        dateiAlsBase64("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Deutlich.woff2"),
-        dateiAlsBase64("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.7-Laut.woff2"),
+        dateiAlsBase64("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.8-Deutlich.woff2"),
+        dateiAlsBase64("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.8-Laut.woff2"),
         dateiAlsBase64("../../assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2")
       ]);
       return `<defs><style>

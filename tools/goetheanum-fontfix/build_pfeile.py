@@ -26,8 +26,8 @@ from fontTools.pens.boundsPen import BoundsPen
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 FONTS = os.path.join(ROOT, "assets/fonts/goetheanum")
-ICON_OTF = os.path.join(FONTS, "Fonts/Goetheanum-Icons-v2.7.otf")
-VERSION = "2.7"
+ICON_OTF = os.path.join(FONTS, "Fonts/Goetheanum-Icons-v2.8.otf")
+VERSION = "2.8"
 
 # Grundtaste (Unicode) → Pfeil-/Kompass-Codepoint (PUA) desselben Glyphs.
 SCHEME = {
@@ -114,9 +114,9 @@ def _office_ttf():
 
 
 def _bundle_zips():
-    """Die vier Pfeile-Dateien ins Komplett-Bündel Goetheanum-Schriften-v2.7.zip legen."""
+    """Die vier Pfeile-Dateien ins Komplett-Bündel Goetheanum-Schriften-v2.8.zip legen."""
     import zipfile
-    zpath = os.path.join(FONTS, "Goetheanum-Schriften-v2.7.zip")
+    zpath = os.path.join(FONTS, "Goetheanum-Schriften-v2.8.zip")
     z = zipfile.ZipFile(zpath); items = {n: z.read(n) for n in z.namelist()}; z.close()
     base = "Goetheanum-Schriften-v%s/" % VERSION
     add = {

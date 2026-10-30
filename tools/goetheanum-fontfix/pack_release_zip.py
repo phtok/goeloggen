@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Packt das Download-ZIP Goetheanum-Schriften-v2.7.zip reproduzierbar aus dem
+# Packt das Download-ZIP Goetheanum-Schriften-v2.8.zip reproduzierbar aus dem
 # aktuellen Stand auf der Platte (Office-TTF, Variable, Webfonts, Icons/Pfeile,
 # Fallback, Beipackzettel, Lizenzen). Deterministisch (fester Zeitstempel,
 # sortiert), damit das Binär-Diff minimal bleibt. Nach Font- oder Beipack-
@@ -11,7 +11,7 @@ import os, glob, zipfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
 ROOT = os.path.join(REPO, "assets/fonts/goetheanum")
-VERSION = "2.7"
+VERSION = "2.8"
 TOP = "Goetheanum-Schriften-v%s" % VERSION
 
 def members():
@@ -24,8 +24,8 @@ def members():
     out += g("Office", "*.ttf")
     out += [os.path.join(ROOT, "OFL.txt"), os.path.join(ROOT, "README.md")]
     out += g("Variable", "*.otf")
-    out += g("Webfonts", "woff", "*.woff")
-    out += g("Webfonts", "woff2", "*.woff2")
+    out += g("Webfonts", "woff", "*-v%s*.woff" % VERSION)
+    out += g("Webfonts", "woff2", "*-v%s*.woff2" % VERSION)
     return [p for p in out if os.path.isfile(p)]
 
 def main():

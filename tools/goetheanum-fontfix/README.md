@@ -27,6 +27,19 @@ Zielgewicht interpoliert** (gemessen an der H-Fläche), nicht bloß kopiert.
 Bekannte Titillium-Fehler (z. B. der `fraction`-Glyph mit Vorschub 65521) werden
 nie übernommen.
 
+## Reparatur v2.8 (29. 10. 2026)
+Kreuzende, starre und verrutschte Glyphen des Variable Font (Befund in
+`AUDIT.md`), danach alle Lieferformen. Reihenfolge:
+```bash
+python3 repair_variable_v28.py     # Variable reparieren (+ ihre Webfonts)
+python3 proof_variable_axis.py     # Prüfmass, Exit 1 bei Verstoss (--alle: jede Glyphe)
+python3 sync_statics_v28.py        # Reparatur in die statischen Schnitte (+ Webfonts)
+python3 build_beipackzettel.py     # aus der Repo-Wurzel
+python3 build_office_ttf.py
+python3 pack_release_zip.py
+```
+Die Skripte sind idempotent; ein zweiter Lauf schreibt dieselben Glyphen.
+
 ## Verifikation
 ```bash
 pip install fontbakery
