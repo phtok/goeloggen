@@ -126,9 +126,14 @@ sind Zeichensatz und Funktionen der aktuellen Fassung abgebildet.
   und Pfeile-OTF werden weiterhin angeboten.
 - `Variable/` — variable OTF (CFF2), Web und Design: die ganze Gewichtsachse
 - `Webfonts/woff` und `Webfonts/woff2` — Web
+- `Installer/` — Skripte für Windows und Mac: Altbestand entfernen, neu installieren
 - `OFL.txt` — Lizenz · `Beipackzettel-…pdf` — Original-Beipackzettel
 
-**Vor jeder Neuinstallation:** ältere Goetheanum-Schriften entfernen — auch
+**Einfachster Weg:** die Skripte in `Installer/` entfernen alle älteren
+Goetheanum-Schriften und installieren die aktuelle Fassung in einem Schritt
+(Befehle und IT-Variante: `Installer/README.md`).
+
+**Von Hand, vor jeder Neuinstallation:** ältere Goetheanum-Schriften entfernen — auch
 die früher verteilten Desktop-OTF ([Anleitung von
 Apple](https://support.apple.com/de-de/guide/font-book/fntb2bcb512d/mac);
 Windows: Einstellungen → Personalisierung → Schriftarten). Alt und Neu
