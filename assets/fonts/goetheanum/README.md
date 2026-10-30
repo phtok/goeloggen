@@ -43,14 +43,15 @@ Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
   liefen sie durcheinander (in Klar lag `«` fast deckungsgleich als ein
   einzelner Winkel). Jetzt bleibt jede Kontur über die ganze Achse an ihrem Ort.
 - **Starre Glyphen wachsen mit.** Die `case`-Formen von `¿ ¡ – — · ( ) [ ] { }`,
-  der Punkt `•`, `Ą Į $`, `€ ǿ` und mehrere Kapitälchen standen über Teile der
-  Achse still; sie folgen jetzt dem Gewicht.
+  `Ą Į $`, `€ ǿ` und mehrere Kapitälchen standen über Teile der Achse still;
+  sie folgen jetzt dem Gewicht. Der Punkt `•` bleibt bewusst in jedem Schnitt
+  gleich gross.
 - **`Û` und Kapitälchen-`û`:** Der Zirkumflex sass links und zu hoch; neu aus
   `U` und dem Zirkumflex von `Ô` gesetzt.
 - **Kapitälchen und Kurzziffern** wachsen jetzt bis Schreien mit (vorher ab
   Deutlich stehen geblieben, auch im statischen Laut).
 - **Ø ø Ǿ ǿ** tragen in den fetten Schnitten einen Strich in Stammstärke.
-- **« »** mit der Lücke der Original-Auslieferung, **‚ „** exakt wie ’ ”.
+- **« »** aus zwei ‹ ›, **‚ „** exakt wie ’ ”.
 - **Versalsatz (`case`):** Striche auf dem Querbalken des H; neu die
   case-Form des Bindestrichs.
 - **Bruchstrich `⁄`** (U+2044): Vorschub wieder klein und mit dem Gewicht

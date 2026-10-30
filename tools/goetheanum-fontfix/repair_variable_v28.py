@@ -55,13 +55,14 @@
 #              Querbalken des H (349, +82). Neu: case-Form des Bindestrichs
 #              (- ‐ ‑ und weiches Trennzeichen), bisher fehlte sie.
 #   « »        danach exakt aus zwei ‹ bzw. › gesetzt (» stand 5–8 Einheiten zu
-#              hoch), mit der Lücke der Original-Auslieferung v1.4.43 (≈ 84,
-#              über die Schnitte eingepasst) statt der engen Titillium-Lücke
-#              38 · 44 · 51; der Vorschub wächst entsprechend (HVAR).
+#              hoch), mit der engen Lücke der Titillium-Extreme (38 in Flüstern,
+#              51 in Schreien, dazwischen über t; Entscheid des Inhabers
+#              30. 10. 2026 gegen die weite Lücke 84 der Auslieferung v1.4.43).
 #   ‚ „        danach exakt ’ bzw. ” nach unten auf die Tiefe des Kommas
 #              versetzt, die linke Kante bleibt (die v1.4.43 taugt hier nicht
 #              als Vorbild, ihr ‚ ist ein Splitter).
-#   •          aus dem Punkt: wächst je Master um so viel wie der Punkt.
+#   •          bleibt bewusst starr: in jedem Schnitt dasselbe Quadrat wie in
+#              Titillium und v1.4.43 (Entscheid des Inhabers 30. 10. 2026).
 #   ⁄          Vorschub klein und mit dem Gewicht wachsend wie in v1.4.43
 #              (dort 6 · 19 · 36), statt 600 · … · 17 · … · 54.
 # Jede Reparatur ist eine Funktion der Anker, die sie selbst nicht verändert –
@@ -101,7 +102,7 @@ CASE = [0x00BF, 0x00A1, 0x2013, 0x2014, 0x00B7, 0x0028, 0x0029, 0x005B,
 CASE_DASH = (0x002D, 0x2013, 0x2014)            # Striche: zur Versalmitte gestellt
 HYPHENS = (0x002D, 0x2010, 0x2011, 0x00AD)      # teilen sich die neue case-Form
 GUILL = [(0x00AB, 0x2039), (0x00BB, 0x203A)]     # doppelt aus einfach
-GUILL_SOURCE = ("input/Goetheanum-Schrift-v1.4.43-%s.otf", {"Leise": 265, "Klar": 440, "Laut": 680})
+GUILL_GAP = (38, 51)                             # Lücke bei 190 und 725 (Titillium Thin/Bold)
 LOWQ = [(0x201A, 0x2019), (0x201E, 0x201D)]      # tief aus hoch, auf Kommatiefe
 BULLET, PERIOD, FRACTION = 0x2022, 0x002E, 0x2044
 FRACTION_ADV = (4, 17)                          # Vorschub bei 190 und Klar (440)
@@ -563,21 +564,9 @@ def repair_case(vf, t, g, base, dash=False):
             for mi in range(len(vf.locs))]
 
 def repair_bullet(vf, t, g, period):
-    """• wächst je Master um so viel wie der Punkt (Breite und Höhe), um seine Mitte."""
-    di = vf.locs.index(0.0)
-    D = vf.masters(g)[di]; bx = [bbox(c) for c in D]
-    X0, Y0 = min(b[0] for b in bx), min(b[1] for b in bx)
-    X1, Y1 = max(b[2] for b in bx), max(b[3] for b in bx)
-    cx, cy, W, H = (X0 + X1) / 2, (Y0 + Y1) / 2, X1 - X0, Y1 - Y0
-    def pdim(cs):
-        b = [bbox(c) for c in cs]
-        return max(q[2] for q in b) - min(q[0] for q in b), max(q[3] for q in b) - min(q[1] for q in b)
-    pD = pdim(vf.outline(period, 0.0)); out = []
-    for v in vf.locs:
-        pw, ph = pdim(vf.outline(period, v))
-        sx, sy = (W + pw - pD[0]) / W, (H + ph - pD[1]) / H
-        out.append(mapc(D, lambda p, sx=sx, sy=sy: (cx + (p[0] - cx) * sx, cy + (p[1] - cy) * sy)))
-    return out
+    """• starr: in jedem Master die Form des Defaults (Quadrat wie Titillium)."""
+    D = vf.masters(g)[vf.locs.index(0.0)]
+    return [D for _ in vf.locs]
 
 def t_at(vf, t, w):
     v = (w - 440) / 250 if w < 440 else (w - 440) / 285
@@ -611,17 +600,10 @@ def set_advances(vf, g, vals):
     ft["hmtx"][g] = (int(round(d[0])), ft["hmtx"][g][1])
 
 def guillemet_gap(vf, t):
-    """Lücke zwischen den Winkeln von « in der Original-Auslieferung v1.4.43,
-    je Schnitt gemessen und als Gerade über t eingepasst → Lücke je Master."""
-    pattern, cuts = GUILL_SOURCE; pts = []
-    for cut, w in cuts.items():
-        f = TTFont(os.path.join(HERE, pattern % cut)); pen = RecordingPen()
-        f.getGlyphSet()[f.getBestCmap()[0x00AB]].draw(pen)
-        b = sorted(bbox(c) for c in contours(pen.value))
-        pts.append((t_at(vf, t, w), b[1][0] - b[0][2]))
-    n = len(pts); mt = sum(p[0] for p in pts) / n; mg = sum(p[1] for p in pts) / n
-    k = sum((p[0] - mt) * (p[1] - mg) for p in pts) / sum((p[0] - mt) ** 2 for p in pts)
-    return [mg + k * (ti - mt) for ti in t]
+    """Lücke zwischen den Winkeln von « je Master: linear über t zwischen den
+    Titillium-Extremen."""
+    a, b = GUILL_GAP
+    return [a + ti * (b - a) for ti in t]
 
 def repair_guillemet(vf, t, g, single, gaps):
     """« » aus zwei exakten Kopien von ‹ ›: erste an ihrem Ort, zweite um Breite +
@@ -703,7 +685,7 @@ def main():
     for cp in CASE:
         base = vf.cmap[cp]; g = gsub_single(ft, base, "case")
         put(g, "case", repair_case(vf, t, g, base, dash=cp in CASE_DASH))
-    put(vf.cmap[BULLET], "aus dem Punkt", repair_bullet(vf, t, vf.cmap[BULLET], vf.cmap[PERIOD]))
+    put(vf.cmap[BULLET], "starr (Entscheid)", repair_bullet(vf, t, vf.cmap[BULLET], vf.cmap[PERIOD]))
     # erst alles messen, dann schreiben (die Reparaturen lesen den alten Stand)
     from collections import Counter
     for g, (kind, masters) in results.items():

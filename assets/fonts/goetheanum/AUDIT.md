@@ -141,7 +141,7 @@ Deutlich rechts daneben; `¨` (U+00A8) halbiert seinen Vorschub 791 → 514.
   Kreuzende Glyphen: 725 auf Konturfolge, Startpunkt und Drehsinn von 190
   gebracht, Innenmaster daraus. Halb starre (`Ą Į $`, Kapitälchen `å ą į ŋ`):
   725 aus 190 und Klar fortgeschrieben. `case`-Formen aus der Grundform mit
-  festem Versatz, `•` wächst wie der Punkt, Kapitälchen `ǻ` aus dem
+  festem Versatz, Kapitälchen `ǻ` aus dem
   reparierten Kapitälchen-`å` plus Akut.
   **Beim Prüflauf über alle 581 erreichbaren Glyphen nachgefunden und mit
   behoben:** `€ ǿ` und die Kapitälchen `m y ñ ý ÿ ħ ń ň ŧ ŷ ž ǿ` blieben über
@@ -189,18 +189,22 @@ oben (Fläche 580 → 725 gegen 440 → 580), der jetzt im Prüfmass steht.
   79, in Schreien 85 statt 130. Neu: gesundes O/o plus eigener Strich, senkrecht
   0,92 × Seitenstrich des O wie beim /; unter dem Akut endet er bündig.
 - **Å Ǻ Ŋ ẞ €:** oben flach wie die Kapitälchen, gleich behoben.
-- **« »:** aus zwei exakten ‹ ›; » stand 5–8 Einheiten höher als ›. Die Lücke
-  war die enge der Titillium-Extreme (38 · 44 · 51), die Auslieferung v1.4.43
-  hat 87 · 84 · 83 – übernommen (87 … 82 über die Achse), Vorschub mit.
+- **« »:** aus zwei exakten ‹ ›; » stand 5–8 Einheiten höher als ›. Lücke:
+  die enge der Titillium-Extreme (38 in Flüstern … 51 in Schreien), nicht die
+  weite 84 der Auslieferung v1.4.43 (Entscheid des Inhabers, 30. 10. 2026,
+  nach Gegenüberstellung im Satz).
 - **‚ „:** exakt ’ ” auf Kommatiefe; vorher bis 30 Einheiten abweichend. Die
   v1.4.43 taugt hier nicht als Vorbild (ihr ‚ ist ein Splitter, „ verschmolzen).
 - **case-Striche:** – — standen nur 30 Einheiten über dem Gemeinsatz (Mitte
   297 statt Versalmitte); jetzt Mitte auf dem Querbalken des H (349). Die
   case-Form des Bindestrichs fehlte ganz – angelegt für - ‐ ‑ und das weiche
   Trennzeichen.
-- **Bewusst belassen:** • bleibt ein Quadrat (wie Titillium und v1.4.43, aber
-  jetzt mit dem Gewicht wachsend); die f-Ligaturen und µ verlaufen nicht
-  linear, sind aber in sich stimmig; ◊ folgt den Titillium-Extremen.
+- **Bewusst belassen:** • bleibt in jedem Schnitt dasselbe Quadrat wie in
+  Titillium und v1.4.43 (Entscheid des Inhabers, 30. 10. 2026; das Prüfmass
+  nimmt ihn aus). Die Kapitälchen behalten das kalibrierte Gewicht (Versalie
+  bei +110, verkleinert; in Klar Stamm 76 gegen 81 der Gemeinen) – ebenfalls
+  entschieden. Die f-Ligaturen und µ verlaufen nicht linear, sind aber in
+  sich stimmig; ◊ folgt den Titillium-Extremen.
 
 ## Reproduzieren
 Siehe `tools/goetheanum-fontfix/` (Skripte, Titillium-Quellen, Original-Inputs):

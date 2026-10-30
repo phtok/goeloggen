@@ -24,7 +24,7 @@ REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
 VARDIR = os.path.join(REPO, "assets/fonts/goetheanum/Variable")
 STUFEN = (190, 265, 350, 440, 580, 680, 725)
 BEFUND = [0x00AB, 0x00BB, 0x201E, 0x201A, 0x00F7, 0x25CA, 0x0025, 0x0170,
-          0x0104, 0x012E, 0x0024, 0x2022, 0x2044, 0x0171, 0x00E5, 0x0105,
+          0x0104, 0x012E, 0x0024, 0x2044, 0x0171, 0x00E5, 0x0105,
           0x012F, 0x014B, 0x01FB, 0x00BF, 0x00A1, 0x2013, 0x2014, 0x00B7,
           0x0028, 0x0029, 0x005B, 0x005D, 0x007B, 0x007D, 0x0030]
 # beim Durchlauf über alle Glyphen nachgefunden (Breite hier nicht geprüft:
@@ -33,6 +33,7 @@ NACHTRAG = [0x20AC, 0x01FF, 0x00DB] + [ord(c) for c in "myñýÿħńňŧŷžû"]
 FEATS = ("smcp", "case", "zero")
 LIGEN = ()
 MAXWEG = 40
+BEWUSST_STARR = {0x2022}                         # • (Entscheid des Inhabers 30. 10. 2026)
 
 
 def reachable(ft, cps=None):
@@ -102,6 +103,7 @@ def main():
     for g in glyphs:
         row = [m[w][g] for w in STUFEN]
         if not row[0]["zentren"]: continue
+        if g in names and names[g] in BEWUSST_STARR: continue
         label = "%s %s" % (g, chr(names[g]) if g in names else "")
         f = [r["flaeche"] for r in row]; b = [r["breite"] for r in row]
         probleme = []
