@@ -225,7 +225,21 @@ async function ladeIkonen() {
     }
   }));
   kompassInhalt = ikonen["kompass-2"] || null;
+  Object.entries(ikonen).forEach(([name, inhalt]) => { ikonPfade[name] = pfadeAusIkone(inhalt); });
   ikonBoxenMessen();
+}
+
+// Die Icons v2.7 sind reine Pfade (absolute M/L/H/V/C/Z), je mit
+// transform="scale(1,-1)". Als Formen gelesen, laufen sie in SVG und IDML
+// durch dieselbe Matrix.
+const ikonPfade = {};
+
+function pfadeAusIkone(inhalt) {
+  return Array.from(inhalt.matchAll(/<path\b([^>]*)>/g), ([, attribute]) => {
+    const d = (attribute.match(/\sd="([^"]*)"/) || [])[1] || "";
+    const spiegel = /transform="scale\(1,\s*-1\)"/.test(attribute);
+    return { d, m: spiegel ? [1, 0, 0, -1, 0, 0] : EINHEIT };
+  });
 }
 
 // Tinten-Boxen der Icons vermessen (die Einzeldateien tragen je eigene
@@ -250,27 +264,29 @@ function ikonBoxenMessen() {
 
 // Symbol in Zielgrösse (mm, längere Tintenkante) mit Tintenmitte auf (x, y);
 // leichter Konturauftrag in gleicher Farbe kräftigt die feinen Stege.
-function symbolMarkup(name, x, y, groesse, farbe, maxHoehe) {
-  const inhalt = ikonen[name];
+function symbolFormen(name, x, y, groesse, farbe, maxHoehe) {
+  const pfade = ikonPfade[name];
   const box = ikonBoxen[name];
-  if (!inhalt || !box) return "";
+  if (!pfade || !box) return [];
   let skala = groesse / Math.max(box.width, box.height);
   if (maxHoehe) skala = Math.min(groesse / box.width, maxHoehe / box.height);
   const tx = x - (box.x + box.width / 2) * skala;
   const ty = y - (box.y + box.height / 2) * skala;
-  const auftrag = (0.09 / skala).toFixed(1);  // ~0.09 mm Fettung
-  return `<g transform="translate(${tx.toFixed(3)} ${ty.toFixed(3)}) scale(${skala.toFixed(5)})"`
-    + ` fill="${farbe}" stroke="${farbe}" stroke-width="${auftrag}">${inhalt}</g>`;
+  const m = matrixMal(matVerschieben(tx, ty), matSkalieren(skala));
+  return pfade.map((p) => ({
+    form: "pfad", d: p.d, m: matrixMal(m, p.m),
+    fill: farbe, stroke: farbe, sw: 0.09   // ~0.09 mm Fettung
+  }));
 }
 
 // Icons v2.7: viewBox "16.2 -983.8 967.6 967.6", Inhalt y-gespiegelt.
 // Einbettung: Zielgrösse in mm, zentriert auf (x, y).
-function ikonMarkup(name, x, y, groesse, farbe, drehung) {
-  const inhalt = ikonen[name];
-  if (!inhalt) return "";
-  const skala = groesse / 967.6;
-  const dreh = drehung ? ` rotate(${drehung})` : "";
-  return `<g transform="translate(${x} ${y})${dreh} scale(${skala}) translate(-500 500)" fill="${farbe}">${inhalt}</g>`;
+function ikonFormen(name, x, y, groesse, farbe, drehung) {
+  const pfade = ikonPfade[name];
+  if (!pfade) return [];
+  const m = [matVerschieben(x, y), matDrehen(drehung || 0),
+    matSkalieren(groesse / 967.6), matVerschieben(-500, 500)].reduce(matrixMal);
+  return pfade.map((p) => ({ form: "pfad", d: p.d, m: matrixMal(m, p.m), fill: farbe }));
 }
 
 // Campus-Gebäude: aktiv (dunkel) durch Handschaltung oder einen aktiven
@@ -615,6 +631,86 @@ function zentrierterText(x, y, text, groesse, farbe) {
   }).join("");
 }
 
+/* ---------- Formen: eine Quelle für SVG und InDesign ----------
+   Marken, Beschriftung und Legende werden zuerst als Formen beschrieben
+   (Blatt-mm) und erst dann gezeichnet: als SVG (formenMarkup) oder als
+   IDML (idml.js liest szeneModell()). Arten:
+     kreis    {cx, cy, r}
+     rechteck {x, y, b, h, rx}
+     pfad     {d, m}  — d absolut (M/L/H/V/C/Z), m = Matrix wie SVG matrix()
+   je mit fill (null = keine Füllung) und optional stroke + sw (Strich in
+   Blatt-mm); dazu
+     text     {x, y, groesse, farbe, schrift, zeilen, zab, anker, winkel, rolle}
+   mit y = Grundlinie der ersten Zeile, zab = Zeilenabstand, anker ‹start›
+   oder ‹mitte›, winkel um (x, y), rolle = Absatzformat im IDML. */
+
+const EINHEIT = [1, 0, 0, 1, 0, 0];
+
+// Erst b, dann a (wie verschachtelte SVG-Transformationen).
+function matrixMal(a, b) {
+  return [
+    a[0] * b[0] + a[2] * b[1], a[1] * b[0] + a[3] * b[1],
+    a[0] * b[2] + a[2] * b[3], a[1] * b[2] + a[3] * b[3],
+    a[0] * b[4] + a[2] * b[5] + a[4], a[1] * b[4] + a[3] * b[5] + a[5]
+  ];
+}
+const matVerschieben = (x, y) => [1, 0, 0, 1, x, y];
+const matSkalieren = (s) => [s, 0, 0, s, 0, 0];
+function matDrehen(grad) {
+  const w = grad * Math.PI / 180;
+  return [Math.cos(w), Math.sin(w), -Math.sin(w), Math.cos(w), 0, 0];
+}
+
+function strichMarkup(f, faktor) {
+  return f.stroke ? ` stroke="${f.stroke}" stroke-width="${+(f.sw / (faktor || 1)).toFixed(4)}"` : "";
+}
+
+function textZeileMarkup(f, zeile, y) {
+  if (f.anker === "mitte" && f.schrift === SCHRIFT_ZAHL) {
+    return zentrierterText(f.x, y, zeile, f.groesse, f.farbe);
+  }
+  const x = f.anker === "mitte" ? f.x - textBreiteMm(zeile, f.schrift, f.groesse) / 2 : f.x;
+  const drehung = f.winkel ? ` transform="rotate(${f.winkel} ${f.x} ${f.y})"` : "";
+  return `<text x="${+x.toFixed(3)}" y="${+y.toFixed(3)}" font-size="${f.groesse}" fill="${f.farbe}"`
+    + ` font-family="${f.schrift}"${drehung}>${escapeXml(zeile)}</text>`;
+}
+
+function formMarkup(f) {
+  const z = (wert) => +wert.toFixed(3);
+  if (f.form === "kreis") {
+    return `<circle cx="${z(f.cx)}" cy="${z(f.cy)}" r="${z(f.r)}" fill="${f.fill}"${strichMarkup(f)} />`;
+  }
+  if (f.form === "rechteck") {
+    return `<rect x="${z(f.x)}" y="${z(f.y)}" width="${z(f.b)}" height="${z(f.h)}" rx="${z(f.rx)}"`
+      + ` fill="${f.fill}"${strichMarkup(f)} />`;
+  }
+  if (f.form === "pfad") {
+    const skala = Math.sqrt(Math.abs(f.m[0] * f.m[3] - f.m[1] * f.m[2]));
+    return `<path transform="matrix(${f.m.map((w) => +w.toFixed(6)).join(" ")})" d="${f.d}"`
+      + ` fill="${f.fill || "none"}"${strichMarkup(f, skala)} />`;
+  }
+  if (f.form === "text") {
+    return f.zeilen.map((zeile, index) => textZeileMarkup(f, zeile, f.y + index * (f.zab || 0))).join("");
+  }
+  return "";
+}
+
+function formenMarkup(formen) {
+  return formen.map(formMarkup).join("");
+}
+
+// Element = Gruppe von Formen, die zusammen gehören (eine Marke, ein Eintrag).
+function elementeMarkup(elemente) {
+  return elemente.map((e) => formenMarkup(e.formen)).join("");
+}
+
+function textForm(x, y, groesse, farbe, text, rolle, extra) {
+  return {
+    form: "text", x, y, groesse, farbe, schrift: SCHRIFT_SPRACHE,
+    zeilen: [String(text)], zab: 0, anker: "start", winkel: 0, rolle, ...extra
+  };
+}
+
 // Symbol-Marken sind eine Spur grösser als Zahlkreise (Piktos brauchen
 // Fläche); mehrere Piktos teilen sich eine Pille.
 const SYMBOL_FAKTOR = 1.25;
@@ -627,7 +723,7 @@ function markenBreite(ort, r) {
   return rr * 1.55 * (ort.symbol.length - 1) + 2 * rr;
 }
 
-function markenKreis(x, y, hex, text, r, symbol, feldBreite, voll) {
+function markenFormen(x, y, hex, text, r, symbol, feldBreite, voll) {
   // Aquarell: Scheibe weiss, die Kategoriefarbe wandert in Rand + Zeichen.
   // Ausnahme ‹voll› (Kategorie Verkehr): volle Scheibe wie die Treppen,
   // weisses Zeichen und weisser Rand — Bahnhof, Bus, Parkplatz und
@@ -640,8 +736,7 @@ function markenKreis(x, y, hex, text, r, symbol, feldBreite, voll) {
   // Vektorkarte: ein weisser Rand in Schriftstärke trennt die Marke vom
   // Grund — ohne ihn verschwand das Markenblau auf dem Goetheanum-Blau
   // (#0061a9 auf #0067b2, Befund Campusplan 18. Oktober 2026).
-  const rand = invers ? ` stroke="${hex}" stroke-width="${MARKER_RAND_AQUARELL}"`
-    : ` stroke="#ffffff" stroke-width="${MARKER_RAND_AQUARELL}"`;
+  const rand = { stroke: invers ? hex : "#ffffff", sw: MARKER_RAND_AQUARELL };
   // Kreiszahl nach dem Sonderelement des Design-Systems (.step-num):
   // Hausschrift Laut, fester Kreis, Tintenmitte der Ziffern auf der
   // Kreismitte (ZIFFERN_SITZ). Grad = 0.5 × Durchmesser — eine Spur
@@ -654,9 +749,8 @@ function markenKreis(x, y, hex, text, r, symbol, feldBreite, voll) {
     // eingepasst über die ganze Pille — Figuren bleiben erkennbar.
     const b = feldBreite * (r / 2.03);
     const h = r * 2.75;
-    return `<rect x="${(x - b / 2).toFixed(3)}" y="${(y - h / 2).toFixed(3)}"`
-      + ` width="${b.toFixed(3)}" height="${h.toFixed(3)}" rx="${(h / 2).toFixed(3)}" fill="${scheibe}"${rand} />`
-      + symbolMarkup(symbol, x, y, b - h * 0.7, zeichen, h * 0.72);
+    return [{ form: "rechteck", x: x - b / 2, y: y - h / 2, b, h, rx: h / 2, fill: scheibe, ...rand },
+      ...symbolFormen(symbol, x, y, b - h * 0.7, zeichen, h * 0.72)];
   }
   if (symbol) {
     const symbole = Array.isArray(symbol) ? symbol : [symbol];
@@ -664,25 +758,25 @@ function markenKreis(x, y, hex, text, r, symbol, feldBreite, voll) {
     if (symbole.length === 1) {
       // Das Pikto braucht Luft zum Kreisrand (Karte wie Liste) — 1.26 ×
       // Radius entspricht optisch dem Sitz der Ziffern im Zahlkreis.
-      return `<circle cx="${x}" cy="${y}" r="${rr}" fill="${scheibe}"${rand} />`
-        + symbolMarkup(symbole[0], x, y, rr * 1.26, zeichen);
+      return [{ form: "kreis", cx: x, cy: y, r: rr, fill: scheibe, ...rand },
+        ...symbolFormen(symbole[0], x, y, rr * 1.26, zeichen)];
     }
     const schritt = rr * 1.55;
     const breite = schritt * (symbole.length - 1) + 2 * rr;
-    let aus = `<rect x="${(x - breite / 2).toFixed(3)}" y="${(y - rr).toFixed(3)}"`
-      + ` width="${breite.toFixed(3)}" height="${(2 * rr).toFixed(3)}" rx="${rr}" fill="${scheibe}"${rand} />`;
+    const formen = [{ form: "rechteck", x: x - breite / 2, y: y - rr, b: breite, h: 2 * rr, rx: rr, fill: scheibe, ...rand }];
     symbole.forEach((s, index) => {
       const cx = x + (index - (symbole.length - 1) / 2) * schritt;
-      aus += symbolMarkup(s, cx, y, rr * 1.5, zeichen);
+      formen.push(...symbolFormen(s, cx, y, rr * 1.5, zeichen));
     });
-    return aus;
+    return formen;
   }
   const groesse = r;
-  return `<circle cx="${x}" cy="${y}" r="${r}" fill="${scheibe}"${rand} />`
-    + zentrierterText(x, y + groesse * ZIFFERN_SITZ, text, groesse, zeichen);
+  return [{ form: "kreis", cx: x, cy: y, r, fill: scheibe, ...rand },
+    { form: "text", x, y: y + groesse * ZIFFERN_SITZ, groesse, farbe: zeichen, schrift: SCHRIFT_ZAHL,
+      zeilen: [String(text)], zab: 0, anker: "mitte", winkel: 0, rolle: "ziffer" }];
 }
 
-function pfeilMarkup(x, y, r, hex, richtung) {
+function pfeilFormen(x, y, r, hex, richtung) {
   // Richtungs-Pfeil = Original-Icon ‹pfeil-rechts-fett›, gedreht —
   // der fette Schnitt entspricht den Vorlagenpfeilen an den Aussenmarken.
   // Richtung wahlweise benannt oder als Gradzahl (z. B. entlang einer Strasse).
@@ -691,10 +785,10 @@ function pfeilMarkup(x, y, r, hex, richtung) {
     : ({ rechts: 0, "unten-rechts": 45, "unten-links": 135 }[richtung] || 0);
   const abstand = r + 2.6;
   const dx = Math.cos(winkel * Math.PI / 180), dy = Math.sin(winkel * Math.PI / 180);
-  const spitze = ikonMarkup("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 4.4, hex, winkel);
+  const spitze = ikonFormen("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 4.4, hex, winkel);
   if (!aquarellMarkerStil()) return spitze;
   // Aquarell: weisse Unterlegung (grösseres Duplikat) als Kontur zum Grund.
-  return ikonMarkup("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 4.9, "#ffffff", winkel) + spitze;
+  return ikonFormen("pfeil-rechts-fett", x + dx * abstand, y + dy * abstand, 4.9, "#ffffff", winkel).concat(spitze);
 }
 
 /* Treppen- und Lift-Badges: exakte Vektorgeometrie der Vorlage
@@ -730,35 +824,38 @@ const LIFT_BADGES = {
   }
 };
 
-function treppenBadge(x, y, buchstabe, form, hex, mitRand) {
+function treppenBadgeFormen(x, y, buchstabe, form, hex, mitRand) {
   let farbe = hex || MARKER_FARBEN.rot;
   let flaeche = "#ffffff";
-  let weissrand = "";
+  let rand = {};
   // Aquarell: Badge invertiert — volle Scheibe, Zug/Buchstabe weiss, dazu
   // weisser Rand (Gegenstück zu den weissen Zielmarken). In der Legende
   // (mitRand) trennt die volle Scheibe auf dem Blattweiss von selbst.
   if (aquarellMarkerStil()) {
     flaeche = farbe;
     farbe = "#ffffff";
-    if (!mitRand) weissrand = ` stroke="#ffffff" stroke-width="${MARKER_RAND_AQUARELL}"`;
+    if (!mitRand) rand = { stroke: "#ffffff", sw: MARKER_RAND_AQUARELL };
   }
   const skala = mitRand ? 0.85 : 1;    // Legende wie die Vorlage kleiner
-  const ring = mitRand ? ` stroke="${farbe}" stroke-width="${(BADGE_RING / skala).toFixed(3)}"` : "";
-  const strich = `fill="none" stroke="${farbe}" stroke-width="${BADGE_STRICH}"`;
-  let kern;
+  if (mitRand) rand = { stroke: farbe, sw: BADGE_RING };
+  const m = matrixMal(matVerschieben(x, y), matSkalieren(skala));
+  const strich = { fill: null, stroke: farbe, sw: BADGE_STRICH * skala };
   if (form === "lift") {
     const b = LIFT_BADGES[buchstabe] || LIFT_BADGES.N;
     const mitte = buchstabe === "S" ? 0.334 : 0.107;  // Chevron-Mitte der Vorlage
-    kern = `<rect x="-1.33" y="${(mitte - 2.45).toFixed(3)}" width="2.66" height="4.9" rx="0.26" fill="${flaeche}"${ring}${weissrand} />`
-      + `<path d="${b.chevrons}" ${strich} />`
-      + `<path d="${b.buchstabe}" fill="${farbe}" />`;
-  } else {
-    const b = TREPPEN_BADGES[buchstabe] || TREPPEN_BADGES.M;
-    kern = `<circle cx="0" cy="0" r="2.39" fill="${flaeche}"${ring}${weissrand} />`
-      + `<path d="${b.zug}" ${strich} />`
-      + `<path d="${b.buchstabe}" fill="${farbe}" />`;
+    return [
+      { form: "rechteck", x: x - 1.33 * skala, y: y + (mitte - 2.45) * skala,
+        b: 2.66 * skala, h: 4.9 * skala, rx: 0.26 * skala, fill: flaeche, ...rand },
+      { form: "pfad", d: b.chevrons, m, ...strich },
+      { form: "pfad", d: b.buchstabe, m, fill: farbe }
+    ];
   }
-  return `<g transform="translate(${x} ${y})${skala === 1 ? "" : ` scale(${skala})`}">${kern}</g>`;
+  const b = TREPPEN_BADGES[buchstabe] || TREPPEN_BADGES.M;
+  return [
+    { form: "kreis", cx: x, cy: y, r: 2.39 * skala, fill: flaeche, ...rand },
+    { form: "pfad", d: b.zug, m, ...strich },
+    { form: "pfad", d: b.buchstabe, m, fill: farbe }
+  ];
 }
 
 // Gebäudenamen in der Hausschrift (Deutlich), optisch mittig in die Fläche
@@ -805,14 +902,15 @@ function aktuelleSchriftzuege() {
   return GEBAEUDE_LABELS_AQUARELL.map((l) => ({ ...l, ...(state.schriftzuege[l.text] || {}) }));
 }
 
-function gebaeudeLabelMarkup() {
+// Die Schriftzüge liegen auf der Karte: sie folgen dem Ausschnitt in Lage
+// und Grad, der Winkel bleibt.
+function gebaeudeLabelModell() {
   const labels = aquarellMarkerStil() ? aktuelleSchriftzuege() : GEBAEUDE_LABELS;
   return labels.map((l) => {
-    const drehung = l.winkel ? ` transform="rotate(${l.winkel} ${l.x} ${l.y})"` : "";
-    const links = l.x - textBreiteMm(l.text, SCHRIFT_SPRACHE, l.groesse) / 2;
-    return `<text x="${links.toFixed(3)}" y="${l.y}" font-size="${l.groesse}" fill="#ffffff"`
-      + ` font-family="${SCHRIFT_SPRACHE}"${drehung}>${escapeXml(l.text)}</text>`;
-  }).join("");
+    const [x, y] = anp(l.x, l.y);
+    return { formen: [textForm(x, y, l.groesse * state.ausschnitt.skala, "#ffffff", l.text, "gebaeude",
+      { anker: "mitte", winkel: l.winkel || 0 })] };
+  });
 }
 
 // On-Karte-Justage der Schriftzüge (Backend, nur Aquarell): Wort anfassen =
@@ -856,29 +954,35 @@ function ortPositionen(ort) {
   return ort.positionen || [];
 }
 
-function ortMarkup(ort) {
+// Ein Element je Marke auf dem Blatt (Kreis samt Ziffer, Pfeil, Badge).
+function ortModell(ort) {
   const hex = ortFarbeHex(ort);
-  let teile = "";
+  const elemente = [];
   if (ort.art === "treppe") {
     const liftAktiv = aktiveNotizen(ort).some(({ notiz }) => notiz.badge === "lift");
     const verschoben = state.positionen[ort.id];
-    (ort.badges || []).forEach((b, index) => {
+    (ort.badges || []).forEach((b) => {
       if (b.form === "lift" && !liftAktiv) return;
       const basis = verschoben
         ? [verschoben[0] + (b.x - ort.badges[0].x), verschoben[1] + (b.y - ort.badges[0].y)]
         : [b.x, b.y];
       const [x, y] = anp(basis[0], basis[1]);
-      teile += treppenBadge(x, y, ort.marker, b.form, hex);
+      elemente.push({ ort: ort.id, formen: treppenBadgeFormen(x, y, ort.marker, b.form, hex) });
     });
-    return teile;
+    return elemente;
   }
   ortPositionen(ort).forEach(([px, py]) => {
     const [x, y] = anp(px, py);
-    teile += markenKreis(x, y, hex, ortMarker(ort), 2.03, ort.symbol, ort.feldBreite,
+    const formen = markenFormen(x, y, hex, ortMarker(ort), 2.03, ort.symbol, ort.feldBreite,
       ort.kategorie === "verkehr");
-    if (ort.pfeil) teile += pfeilMarkup(x, y, 2.03, hex, ort.pfeil);
+    if (ort.pfeil) formen.push(...pfeilFormen(x, y, 2.03, hex, ort.pfeil));
+    elemente.push({ ort: ort.id, formen });
   });
-  return teile;
+  return elemente;
+}
+
+function ortMarkup(ort) {
+  return elementeMarkup(ortModell(ort));
 }
 
 /* ---------- Legende ---------- */
@@ -971,7 +1075,7 @@ function legendeZeilen() {
   return zeilen;
 }
 
-function legendeMarkup() {
+function legendeModell() {
   // Fliess-Layout: erst füllt sich Spalte 1, dann Spalte 2 —
   // die Spaltenzuteilung der Vorlage gilt nicht mehr.
   const L = LEGENDE_LAYOUT_aktiv();
@@ -982,7 +1086,9 @@ function legendeMarkup() {
     start = 5.5 + titelLogoHoehe() + (state.untertitel.trim() ? 5.6 + 4 : 0) + 9;
   }
   const untergrenze = SZENE.hoehe - 12;
-  let teile = "";
+  const elemente = [];
+  const text = (form) => elemente.push({ formen: [form] });
+  const marke = (formen) => elemente.push({ formen });
   let spalte = 0;
   let y = start;
   legendeUeberlauf = false;
@@ -1007,18 +1113,16 @@ function legendeMarkup() {
       // auf der Einrückung der Ortsnamen. Unterschieden wird mit GENAU
       // einem Merkmal (G01): leiser (TINTE_LEISE, gerechnet B02-fest) —
       // gleicher Grad wie die Einträge.
-      teile += `<text x="${x + L.labelAbstand}" y="${y}" font-size="${L.labelGroesse}"`
-        + ` fill="${TINTE_LEISE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(zeile.text)}</text>`;
+      text(textForm(x + L.labelAbstand, y, L.labelGroesse, TINTE_LEISE, zeile.text, "kopf"));
       y += zeile.hoehe;
       return;
     }
     if (zeile.typ === "notiz") {
       const n = zeile.notiz;
       if (n.badge === "lift") {
-        teile += treppenBadge(x, y - 0.9, zeile.ort.marker, "lift", ortFarbeHex(zeile.ort), true);
+        marke(treppenBadgeFormen(x, y - 0.9, zeile.ort.marker, "lift", ortFarbeHex(zeile.ort), true));
       }
-      teile += `<text x="${x + L.labelAbstand}" y="${y}" font-size="${L.notizGroesse}"`
-        + ` fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(sprachText(n))}</text>`;
+      text(textForm(x + L.labelAbstand, y, L.notizGroesse, TINTE, sprachText(n), "notiz"));
       y += zeile.hoehe;
       return;
     }
@@ -1026,7 +1130,7 @@ function legendeMarkup() {
     const hex = ortFarbeHex(ort);
     let textX = x + L.labelAbstand;
     if (ort.art === "treppe") {
-      teile += treppenBadge(x, y - 0.9, ort.marker, "treppe", hex, true);
+      marke(treppenBadgeFormen(x, y - 0.9, ort.marker, "treppe", hex, true));
     } else {
       // Breite Symbol-Pillen linksbündig zur Spalte, Text weicht aus;
       // Orte mit legendeText (Toiletten) zeigen in der Liste die
@@ -1036,17 +1140,19 @@ function legendeMarkup() {
       const symbol = ort.legendeText ? null : ort.symbol;
       const r = symbol ? 2.03 / SYMBOL_FAKTOR : 2.03;
       const b = markenBreite(ort, r);
-      teile += markenKreis(x - 2.03 + b / 2, y - 0.9, hex,
-        ort.legendeText || ortMarker(ort), r, symbol, undefined, ort.kategorie === "verkehr");
+      marke(markenFormen(x - 2.03 + b / 2, y - 0.9, hex,
+        ort.legendeText || ortMarker(ort), r, symbol, undefined, ort.kategorie === "verkehr"));
       textX = x + Math.max(L.labelAbstand, b - 2.03 + 1.6);
     }
-    zeile.zeilenTexte.forEach((text, index) => {
-      teile += `<text x="${textX}" y="${y + index * L.extraZeile}"`
-        + ` font-size="${L.labelGroesse}" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(text)}</text>`;
-    });
+    text(textForm(textX, y, L.labelGroesse, TINTE, "", "eintrag",
+      { zeilen: zeile.zeilenTexte, zab: L.extraZeile }));
     y += zeile.hoehe;
   });
-  return teile;
+  return elemente;
+}
+
+function legendeMarkup() {
+  return elementeMarkup(legendeModell());
 }
 
 /* ---------- Szene ---------- */
@@ -1069,6 +1175,13 @@ const LOGO_STANDARD = { x: 274.1, y: 12.2, breite: 31.7 };
 
 // Sonderlogo statt Titel (Backend-Funktion): hochgeladenes SVG links
 // oben; reine Pfade empfohlen — Text im SVG braucht eingebettete Schriften.
+// Lage = linke obere Ecke und Masse in Blatt-mm (auch für den IDML-Rahmen).
+function titelLogoLage() {
+  const l = state.titelLogo;
+  if (!l) return null;
+  return { x: 10.5, y: 5.5, breite: l.breite, hoehe: titelLogoHoehe() };
+}
+
 function titelLogoMarkup() {
   const l = state.titelLogo;
   if (!l) return "";
@@ -1082,24 +1195,53 @@ function titelLogoHoehe() {
   return l ? l.breite * l.vbHoehe / l.vbBreite : 0;
 }
 
-function logoMarkup() {
-  if (!logoInhalt) return "";
+function logoLage() {
+  if (!logoInhalt) return null;
   const breite = LOGO_STANDARD.breite * state.logo.skala;
   const hoehe = breite * logoInhalt.hoehe / logoInhalt.breite;
-  const skala = breite / logoInhalt.breite;
   const mx = state.logo.x != null ? state.logo.x : LOGO_STANDARD.x;
   const my = state.logo.y != null ? state.logo.y : LOGO_STANDARD.y;
-  return `<g transform="translate(${(mx - breite / 2).toFixed(2)} ${(my - hoehe / 2).toFixed(2)}) scale(${skala})">${logoInhalt.markup}</g>`;
+  return { x: +(mx - breite / 2).toFixed(2), y: +(my - hoehe / 2).toFixed(2), breite, hoehe };
 }
 
-function szeneMarkup(anschnitt) {
-  const b = anschnitt || 0;
-  const g = KARTE.gelaende;
-  const skala = g.breite / gelaendeMasse.breite;
-  const a = state.ausschnitt;
+function logoMarkup() {
+  const lage = logoLage();
+  if (!lage) return "";
+  return `<g transform="translate(${lage.x} ${lage.y}) scale(${lage.breite / logoInhalt.breite})">${logoInhalt.markup}</g>`;
+}
+
+// Titel und Untertitel oben links (beim Sonderlogo nur der Untertitel).
+function titelModell() {
   const titel = state.titel.trim();
+  const untertitel = state.untertitel.trim();
+  if (state.titelLogo) {
+    return untertitel
+      ? [{ formen: [textForm(10.5, +(5.5 + titelLogoHoehe() + 5.6).toFixed(2), 3.35, TINTE, untertitel, "untertitel")] }]
+      : [];
+  }
+  if (!titel) return [];
+  const elemente = [{ formen: [textForm(10.5, 14.2, 5.3, TINTE, titel, "titel")] }];
+  if (untertitel) elemente.push({ formen: [textForm(10.5, 20.2, 3.35, TINTE, untertitel, "untertitel")] });
+  return elemente;
+}
+
+/* Die Szene als Modell — dieselben Rechenwege wie das SVG, denn
+   szeneMarkup zeichnet genau dieses Modell. Der IDML-Export (idml.js)
+   setzt daraus native Objekte; die Grundkarte geht dort als PDF mit
+   (grundkarteSzeneMarkup). Alle Werte in Blatt-mm (SZENE). */
+function szeneModell() {
   nummernBerechnen();
-  const marker = alleOrte().filter(ortAktiv).map(ortMarkup).join("");
+  return {
+    gebaeude: gebaeudeLabelModell(),
+    marken: alleOrte().filter(ortAktiv).flatMap(ortModell),
+    titel: titelModell(),
+    legende: state.legende ? legendeModell() : [],
+    logo: logoLage(),
+    titelLogo: titelLogoLage()
+  };
+}
+
+function grundkarteDefsMarkup(b) {
   return `
     <defs>
       <clipPath id="blatt-clip">
@@ -1108,21 +1250,39 @@ function szeneMarkup(anschnitt) {
       ${wieseClipMarkup()}
       ${grundkarteModus() === "wiesen" ? aquarellWiesenClipMarkup() : ""}
     </defs>
-    <rect x="${-b}" y="${-b}" width="${SZENE.breite + 2 * b}" height="${SZENE.hoehe + 2 * b}" fill="#ffffff" />
-    <g clip-path="url(#blatt-clip)">
-      <g transform="translate(${a.dx} ${a.dy}) scale(${a.skala})">
+    <rect x="${-b}" y="${-b}" width="${SZENE.breite + 2 * b}" height="${SZENE.hoehe + 2 * b}" fill="#ffffff" />`;
+}
+
+function grundkarteGruppeMarkup() {
+  const g = KARTE.gelaende;
+  const skala = g.breite / gelaendeMasse.breite;
+  const a = state.ausschnitt;
+  return `<g transform="translate(${a.dx} ${a.dy}) scale(${a.skala})">
         <g id="gelaende" transform="translate(${g.x} ${g.y}) scale(${skala})">${grundkarteMarkup()}</g>
-        ${gebaeudeLabelMarkup()}
         ${kompassMarkup()}
-      </g>
-      ${marker}
+      </g>`;
+}
+
+// Nur die Grundkarte (Gelände, Aquarell, Kompass) ohne Marken und Text —
+// das verknüpfte PDF im IDML-Paket.
+function grundkarteSzeneMarkup(anschnitt) {
+  const b = anschnitt || 0;
+  return `${grundkarteDefsMarkup(b)}
+    <g clip-path="url(#blatt-clip)">${grundkarteGruppeMarkup()}</g>`;
+}
+
+function szeneMarkup(anschnitt) {
+  const b = anschnitt || 0;
+  const modell = szeneModell();
+  return `${grundkarteDefsMarkup(b)}
+    <g clip-path="url(#blatt-clip)">
+      ${grundkarteGruppeMarkup()}
+      ${elementeMarkup(modell.gebaeude)}
+      ${elementeMarkup(modell.marken)}
     </g>
-    ${state.titelLogo
-      ? titelLogoMarkup()
-        + (state.untertitel.trim() ? `<text x="10.5" y="${(5.5 + titelLogoHoehe() + 5.6).toFixed(2)}" font-size="3.35" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(state.untertitel.trim())}</text>` : "")
-      : (titel ? `<text x="10.5" y="14.2" font-size="5.3" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(titel)}</text>` : "")
-        + (titel && state.untertitel.trim() ? `<text x="10.5" y="20.2" font-size="3.35" fill="${TINTE}" font-family="${SCHRIFT_SPRACHE}">${escapeXml(state.untertitel.trim())}</text>` : "")}
-    ${state.legende ? legendeMarkup() : ""}
+    ${titelLogoMarkup()}
+    ${elementeMarkup(modell.titel)}
+    ${elementeMarkup(modell.legende)}
     ${logoMarkup()}
   `;
 }
