@@ -29,9 +29,10 @@ SVG der Vorschau und das IDML zeichnen beide daraus. **Warum.** Auftrag des
 Inhabers: Texte korrigieren und übersetzen, Marken verschieben, mit anderen
 Drucksachen montieren. Die Grundkarte bleibt PDF, weil 1689 Pfade samt Clips
 als native Polygone nur Grösse und Risiko brächten. **Wirkung.** Sprache in
-‹Goetheanum Schrift Deutlich›, Ziffern in ‹Goetheanum Schrift› Laut, wie im
-PDF; die Schriften liegen dem ZIP nicht bei (Lizenz), InDesign findet die
-installierten Office-TTF. Source Sans 3 kommt in der Karte nicht vor und hat
+‹Goetheanum Variabel› Deutlich, Ziffern in Laut. Die Variable v2.8 liegt
+samt OFL im Ordner ‹Document fonts› neben dem IDML; InDesign aktiviert sie
+beim Öffnen selbst (Nachtrag 30. Oktober, Wunsch des Inhabers). Dateinamen
+aller drei Exporte: `Campuskarte_<Titel>_A4`, Umlaute aufgelöst. Source Sans 3 kommt in der Karte nicht vor und hat
 darum kein Format (G03). Spezifikation: `docs/specs/campus-karte-idml.md`.
 
 ## 29. Oktober 2026 — Hausschrift v2.8: kreuzende Konturen repariert (Schrift, Version des Systems unverändert)

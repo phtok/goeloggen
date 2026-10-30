@@ -124,8 +124,13 @@ Dokument mit echten Objekten, dort, wo Bearbeitung Nutzen bringt:
   (`FirstBaselineOffset="FixedHeight"`), Rahmen wächst mit dem Text
   (automatische Grösse, keine Umbrüche). Formate: Titel, Untertitel, Gebäude,
   Legende Gruppe, Legende Eintrag, Legende Notiz, Ziffer.
-- **Schriften:** Sprache in ‹Goetheanum Schrift Deutlich› (eigene Familie im
-  Office-Set), Ziffern in ‹Goetheanum Schrift› Schnitt Laut.
+- **Schriften:** Sprache in ‹Goetheanum Variabel› Deutlich, Ziffern in Laut.
+  Die Variable v2.8 liegt samt `OFL.txt` im Ordner `Document fonts/` des
+  Pakets; InDesign aktiviert Schriften aus diesem Ordner beim Öffnen selbst
+  (Wunsch des Inhabers, 30. 10.: ‹die Schriften bitte mitliefern›).
+- **Dateiname** (PDF, SVG, IDML, ZIP): `Campuskarte_<Titel>_A4`, Titel wie
+  getippt, Umlaute aufgelöst, Wörter mit Bindestrich; ohne Titel
+  `Campuskarte_A4`.
 - **Ebenen:** in `designmap.xml` von unten nach oben (so stapelt auch die
   InDesign-Vorlage `apps/lt-programm/vorlage/LT27.idml`); die Grundkarte ist
   gesperrt.
