@@ -285,6 +285,66 @@ ${grundkarteSzeneMarkup(g.beschnitt / g.skala)}
   return { name: "grundkarte.pdf", bytes: await svgAlsPdfBytes(svgText, breite, hoehe), breite, hoehe };
 }
 
+/* ---------- IDML (InDesign) ----------
+   Grundkarte, Logo und Sonderlogo als verknüpfte PDFs, alles Übrige nativ
+   aus szeneModell() — gebaut in idml.js (Modul, erst beim Klick geladen). */
+
+// Stand der Export-Bausteine: bei jeder Änderung an idml.js erhöhen,
+// sonst mischt der Browser-Cache alt und neu.
+const IDML_BAU = "2026-10-30a";
+
+const FARB_NAMEN = { rot: "Rot", blau: "Blau", gruen: "Grün", grau: "Grau", gold: "Gold" };
+
+function idmlFarbnamen() {
+  const familie = aquarellMarkerStil() ? MARKER_FARBEN_AQUARELL : MARKER_FARBEN;
+  const namen = { [TINTE]: "Tinte", [TINTE_LEISE]: "Tinte leise" };
+  Object.entries(familie).forEach(([schluessel, hex]) => {
+    namen[hex.toLowerCase()] = `Marke ${FARB_NAMEN[schluessel] || schluessel}`;
+  });
+  return namen;
+}
+
+// Breite in Blatt-mm: Laut-Ziffern aus der Vorschubtabelle, Sprache wie
+// bei der Zentrierung der Schriftzüge.
+function idmlTextBreite(text, schrift, groesse) {
+  const zeichen = String(text).split("");
+  if (schrift === SCHRIFT_ZAHL && zeichen.every((z) => LAUT_VORSCHUB[z] != null)) {
+    return zeichen.reduce((summe, z) => summe + LAUT_VORSCHUB[z], 0) * groesse;
+  }
+  return textBreiteMm(text, schrift, groesse);
+}
+
+// Ein Logo (reine Pfade) als PDF in seiner Endgrösse.
+async function logoPdf(name, markup, viewBox, lage, skala) {
+  const breite = lage.breite * skala, hoehe = lage.hoehe * skala;
+  const svgText = `<svg xmlns="http://www.w3.org/2000/svg" width="${breite}mm" height="${hoehe}mm" viewBox="${viewBox}">${markup}</svg>`;
+  return { name, bytes: await svgAlsPdfBytes(svgText, breite, hoehe), breite, hoehe };
+}
+
+async function exportIdml() {
+  const g = exportGeometrie();
+  const modell = szeneModell();
+  const links = { grundkarte: await grundkartePdfBytes() };
+  if (modell.logo) {
+    links.logo = await logoPdf("logo.pdf", logoInhalt.markup,
+      `0 0 ${logoInhalt.breite} ${logoInhalt.hoehe}`, modell.logo, g.skala);
+  }
+  if (modell.titelLogo) {
+    const l = state.titelLogo;
+    links.titellogo = await logoPdf("titellogo.pdf", l.markup,
+      `${l.vbX || 0} ${l.vbY || 0} ${l.vbBreite} ${l.vbHoehe}`, modell.titelLogo, g.skala);
+  }
+  const { baueIdml } = await import(`./idml.js?v=${IDML_BAU}`);
+  const zip = await baueIdml({
+    modell, geometrie: g, links,
+    dateiname: dateiname("idml"),
+    farbnamen: idmlFarbnamen(),
+    immerFarben: [TINTE, TINTE_LEISE],
+    textBreite: idmlTextBreite
+  });
+  herunterladen(dateiname("zip"), new Blob([zip], { type: "application/zip" }), "application/zip");
+}
+
 /* ---------- Knöpfe ---------- */
 
 document.getElementById("download-pdf").addEventListener("click", async () => {
@@ -313,5 +373,22 @@ document.getElementById("download-svg").addEventListener("click", async () => {
     varianteAblegen();  // Download legt den Stand unter seinem Titel ab
   } finally {
     knopf.disabled = false;
+  }
+});
+
+document.getElementById("download-idml").addEventListener("click", async () => {
+  const knopf = document.getElementById("download-idml");
+  const beschriftung = knopf.textContent;
+  knopf.disabled = true;
+  knopf.textContent = "IDML wird gepackt …";
+  try {
+    await exportIdml();
+    varianteAblegen();  // Download legt den Stand unter seinem Titel ab
+  } catch (fehler) {
+    console.error(fehler);
+    window.alert("IDML-Export fehlgeschlagen. Bitte Konsole prüfen oder PDF exportieren.");
+  } finally {
+    knopf.disabled = false;
+    knopf.textContent = beschriftung;
   }
 });
