@@ -320,8 +320,8 @@
       "title": "Campus-Karte",
       "short": "Campus-Karte",
       "href": "apps/karten-generator/",
-      "desc": "Die Campus-Karte für Veranstaltungen – Orte wählen, eigene Marken setzen, druckfertiges Vektor-PDF in A4 oder A3.",
-      "such": "Karte Kartierung Campus Gelände Lageplan PDF A3 Schnittmarken Beschnitt Parkflächen"
+      "desc": "Die Campus-Karte für Veranstaltungen – Orte wählen, eigene Marken setzen, druckfertiges Vektor-PDF in A4 oder A3, zum Weiterbearbeiten als InDesign-Dokument.",
+      "such": "Karte Kartierung Campus Gelände Lageplan PDF A3 Schnittmarken Beschnitt Parkflächen InDesign IDML"
     },
     {
       "slug": "cover",
