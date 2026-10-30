@@ -6,7 +6,9 @@
    feldern und Absatzformaten — dieselben Formen, aus denen die Vorschau ihr
    SVG zeichnet (szeneModell() in app.js). Geliefert wird ein ZIP:
      <name>.idml
-     Links/  grundkarte.pdf, logo.pdf, ggf. titellogo.pdf
+     Links/           grundkarte.pdf, logo.pdf, ggf. titellogo.pdf
+     Document fonts/  Hausschrift (Variable, OFL) — InDesign aktiviert sie
+                      beim Öffnen selbst
    Spezifikation: docs/specs/campus-karte-idml.md
    ------------------------------------------------------------------------- */
 
@@ -78,7 +80,7 @@ export function pfadLesen(d) {
 }
 
 export async function baueIdml(e) {
-  const { modell, geometrie: g, dateiname, farbnamen = {}, textBreite, links = {} } = e;
+  const { modell, geometrie: g, dateiname, farbnamen = {}, textBreite, links = {}, schriften = [] } = e;
   const k = g.skala;                                    // Blatt-mm → Endformat-mm
   const B = g.trimBreite * MM, H = g.trimHoehe * MM;
   const OX = -B / 2, OY = -H / 2;                       // Seite mittig auf dem Druckbogen
@@ -230,7 +232,7 @@ ${inhalt.join('\n')}
 
   /* ---------- Formate ---------- */
   const schriftVon = (f) => (ROLLEN[f.rolle] && ROLLEN[f.rolle].schrift === 'zahl'
-    ? ['Goetheanum Schrift', 'Laut'] : ['Goetheanum Schrift Deutlich', 'Regular']);
+    ? ['Goetheanum Variabel', 'Laut'] : ['Goetheanum Variabel', 'Deutlich']);
   const absatzformate = [...formate.entries()].map(([rolle, f]) => {
     const [familie, schnitt] = schriftVon(f);
     const grad = pt(f.groesse);
@@ -313,5 +315,6 @@ ${stories.map(([s]) => `<idPkg:Story src="Stories/Story_${s}.xml"/>`).join('\n')
 
   const paket = new Map([[dateiname, idml]]);
   Object.values(links).filter((l) => l && l.bytes).forEach((l) => paket.set(`Links/${l.name}`, l.bytes));
+  schriften.forEach((f) => paket.set(`Document fonts/${f.name}`, f.bytes));
   return zipSchreiben(paket);
 }

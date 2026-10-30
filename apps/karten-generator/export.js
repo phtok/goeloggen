@@ -36,17 +36,16 @@ function exportGeometrie() {
   };
 }
 
+// Campuskarte_<Titel>_A4.<endung>: Titel wie getippt, Umlaute aufgelöst,
+// Wörter mit Bindestrich, nur Buchstaben, Ziffern und Bindestrich.
 function dateiname(endung) {
-  const g = exportGeometrie();
-  // Der Veranstaltungstitel benennt die Datei (Umlaute vereinfacht);
-  // ohne Titel bleibt der generische Name.
-  const slug = state.titel.trim().toLowerCase()
+  const titel = state.titel.trim()
+    .replace(/Ä/g, "Ae").replace(/Ö/g, "Oe").replace(/Ü/g, "Ue")
     .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
-    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-  const teile = [slug || "goetheanum-campuskarte", state.format, "quer"];
-  if (g.beschnitt) teile.push("3mm");
-  if (g.marken) teile.push("marken");
-  return `${teile.join("-")}.${endung}`;
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^A-Za-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const teile = ["Campuskarte", titel, state.format.toUpperCase()].filter(Boolean);
+  return `${teile.join("_")}.${endung}`;
 }
 
 function exportSvgString(fontCss) {
@@ -291,7 +290,19 @@ ${grundkarteSzeneMarkup(g.beschnitt / g.skala)}
 
 // Stand der Export-Bausteine: bei jeder Änderung an idml.js erhöhen,
 // sonst mischt der Browser-Cache alt und neu.
-const IDML_BAU = "2026-10-30a";
+const IDML_BAU = "2026-10-30b";
+
+// Die Hausschrift reist mit (SIL OFL, Lizenz liegt bei).
+const IDML_SCHRIFTEN = [
+  ["Goetheanum-Variabel-v2.8.otf", "../../assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.8.otf"],
+  ["OFL.txt", "../../assets/fonts/goetheanum/OFL.txt"]
+];
+
+async function dateiBytes(pfad) {
+  const antwort = await fetch(pfad);
+  if (!antwort.ok) throw new Error(`${pfad}: ${antwort.status}`);
+  return new Uint8Array(await antwort.arrayBuffer());
+}
 
 const FARB_NAMEN = { rot: "Rot", blau: "Blau", gruen: "Grün", grau: "Grau", gold: "Gold" };
 
@@ -334,9 +345,10 @@ async function exportIdml() {
     links.titellogo = await logoPdf("titellogo.pdf", l.markup,
       `${l.vbX || 0} ${l.vbY || 0} ${l.vbBreite} ${l.vbHoehe}`, modell.titelLogo, g.skala);
   }
+  const schriften = await Promise.all(IDML_SCHRIFTEN.map(async ([name, pfad]) => ({ name, bytes: await dateiBytes(pfad) })));
   const { baueIdml } = await import(`./idml.js?v=${IDML_BAU}`);
   const zip = await baueIdml({
-    modell, geometrie: g, links,
+    modell, geometrie: g, links, schriften,
     dateiname: dateiname("idml"),
     farbnamen: idmlFarbnamen(),
     immerFarben: [TINTE, TINTE_LEISE],
