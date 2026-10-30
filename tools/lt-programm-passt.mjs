@@ -152,9 +152,9 @@ function absaetzeLesen(xml, formate) {
 
 // ------------------------------------------------------------------- Messen
 const SCHNITT_DATEI = {
-  Leise: 'Goetheanum-Schrift-v2.7-Leise.otf', Ruhig: 'Goetheanum-Schrift-v2.7-Ruhig.otf',
-  Klar: 'Goetheanum-Schrift-v2.7-Klar.otf', Deutlich: 'Goetheanum-Schrift-v2.7-Deutlich.otf',
-  Laut: 'Goetheanum-Schrift-v2.7-Laut.otf',
+  Leise: 'Goetheanum-Schrift-v2.8-Leise.otf', Ruhig: 'Goetheanum-Schrift-v2.8-Ruhig.otf',
+  Klar: 'Goetheanum-Schrift-v2.8-Klar.otf', Deutlich: 'Goetheanum-Schrift-v2.8-Deutlich.otf',
+  Laut: 'Goetheanum-Schrift-v2.8-Laut.otf',
 };
 function schriftDatei(schnitt) {
   if (SCHNITT_DATEI[schnitt]) return SCHNITT_DATEI[schnitt];

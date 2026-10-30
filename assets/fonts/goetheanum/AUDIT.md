@@ -133,13 +133,78 @@ Deutlich rechts daneben; `¨` (U+00A8) halbiert seinen Vorschub 791 → 514.
 
 **Heil, ausdrücklich geprüft:** Ziffern (Flächenverlauf wie `n`/`o`),
 `: ; = " ! ? … ‰ ( ) @ & ß ẞ`, alle Umlaute, `‹ ›`.
-- **Reparatur (offen).** Im Variable Font die Konturreihenfolge der
-  genannten Glyphen über alle Master angleichen (am dünnen Master messen,
-  fetten Master danach sortieren) oder die Glyphen aus v1.4.43 gewichtsrichtig
-  neu interpolieren; danach die statischen Schnitte, Office-TTF und Webfonts
-  aus `tools/goetheanum-fontfix/` neu erzeugen und die Messung in
-  `guillemets.html` nachführen. Prüfmass: Breite `«` muss mit dem Gewicht
-  monoton wachsen (heute 350 · 294 · 232 · 198 · 332 · 428 · 471).
+- **Behoben in v2.8 (29. 10. 2026).** Alle oben genannten Glyphen sind im
+  Variable Font neu als Blend gebaut (`tools/goetheanum-fontfix/
+  repair_variable_v28.py`). Grundlage: Bei den gesunden Glyphen ist jeder
+  innere Master (335 · 420 · 440 · 600) bis auf < 1 Einheit die lineare
+  Mischung der Endmaster 190 und 725 (Faktoren 0,27 · 0,43 · 0,46 · 0,76).
+  Kreuzende Glyphen: 725 auf Konturfolge, Startpunkt und Drehsinn von 190
+  gebracht, Innenmaster daraus. Halb starre (`Ą Į $`, Kapitälchen `å ą į ŋ`):
+  725 aus 190 und Klar fortgeschrieben. `case`-Formen aus der Grundform mit
+  festem Versatz, Kapitälchen `ǻ` aus dem
+  reparierten Kapitälchen-`å` plus Akut.
+  **Beim Prüflauf über alle 581 erreichbaren Glyphen nachgefunden und mit
+  behoben:** `€ ǿ` und die Kapitälchen `m y ñ ý ÿ ħ ń ň ŧ ŷ ž ǿ` blieben über
+  Deutlich fast stehen; bei `Û` und Kapitälchen-`û` sass der Zirkumflex schon
+  in Klar 83 Einheiten links und 90 zu hoch (neu aus `U` + Zirkumflex von `Ô`).
+  **Bruchstrich `⁄`:** Der Vorschub ist wieder klein und wächst mit dem
+  Gewicht (4 · 8 · 12 · 17 · 25 · 30 · 32), wie in v1.4.43 (6 · 19 · 36),
+  Titillium (0) und Source Sans (86). Die 600 der unteren Schnitte stammten
+  aus der Klemme für den Titillium-Fehler 65521; damit zerfiel die Bruchform
+  (`frac`) in ‹1⁄ 2›. Ohne `frac` überlappt der Strich die vollen Ziffern –
+  so ist das Zeichen gebaut.
+  **Statische Schnitte:** Ruhig und Deutlich sind ganz aus der Variable
+  instanziert und übernehmen jede Reparatur; Leise, Klar und Laut stammen aus
+  der v1.4.43-Linie und behalten ihre eigenen, gesunden Formen (z. B. die
+  `case`-Klammern in Laut). Selbst beschädigte Eigenformen wurden mit
+  ersetzt: `„` in Leise, Kapitälchen `ű` in Klar, Kapitälchen `û` in Klar
+  und Laut (`sync_statics_v28.py`).
+  **Prüfmass** (`proof_variable_axis.py`, an 190 · 265 · 350 · 440 · 580 ·
+  680 · 725): Tintenfläche wächst, Breite fällt nicht, Konturzentren wandern
+  höchstens 40 Einheiten je Stufe – 0 Verstösse über alle erreichbaren
+  Glyphen. Breite `«` jetzt 350 · 367 · 386 · 406 · 437 · 461 · 471.
+  Vorher/Nachher: https://werkzeuge.goetheanum.ch/guillemets.html
+
+### Zweite Prüfung (30. 10. 2026, nach Rückmeldung des Inhabers)
+
+Jede reparierte Glyphe gross an allen sieben Stufen gegen v1.4.43, Titillium
+Thin…Bold und ihre natürlichen Partner gesetzt; dazu je Glyphe der Zuwachs
+oben (Fläche 580 → 725 gegen 440 → 580), der jetzt im Prüfmass steht.
+
+- **Kapitälchen und Kurzziffern, alle (117 Glyphen):** standen oberhalb von
+  Deutlich still. Ursache in `build.py` (v2.4.1): Versalie bzw. Ziffer bei
+  Gewicht +110 bzw. +80, verkleinert – aber `min(725, …)` geklemmt. Der
+  Kapitälchenstamm wuchs darum 76 (Klar) → 102 (Laut) → 103 (Schreien), die
+  Gemeinen 81 → 126 → 134. Dieselbe Klemme trägt der statische Laut. Behoben:
+  das kalibrierte Modell bleibt, die Klemme fällt (725 aus 190 und Klar
+  fortgeschrieben); in allen statischen Schnitten neu aus der Variable gesetzt.
+- **Kapitälchen å ą į ŋ q & ǻ:** zusätzlich in sich falsch (å ŋ ab Klar zu
+  leicht, q & in Flüstern zu schwer, ą į ab Klar starr – auch in den
+  statischen Schnitten). Neu: å ŋ aus Leise/Klar der v1.4.43-Linie, q & aus
+  Klar und Deutlich, ą į aus Kapitälchen a/i plus Ogonek ˛ (gesetzt wie bei
+  ą/į), ǻ aus Kapitälchen-å plus Akut des Kapitälchen-á (der Akut ´ war zu
+  gross), ű aus Kapitälchen-u plus Doppelakut des ő.
+- **Ø ø Ǿ ǿ, Kapitälchen ø ǿ:** Der eingeschnittene Schrägstrich wuchs nur
+  auf das 1,9-Fache (der / auf das 3,7-Fache): Strichstärke in Klar 58 statt
+  79, in Schreien 85 statt 130. Neu: gesundes O/o plus eigener Strich, senkrecht
+  0,92 × Seitenstrich des O wie beim /; unter dem Akut endet er bündig.
+- **Å Ǻ Ŋ ẞ €:** oben flach wie die Kapitälchen, gleich behoben.
+- **« »:** aus zwei exakten ‹ ›; » stand 5–8 Einheiten höher als ›. Lücke:
+  die enge der Titillium-Extreme (38 in Flüstern … 51 in Schreien), nicht die
+  weite 84 der Auslieferung v1.4.43 (Entscheid des Inhabers, 30. 10. 2026,
+  nach Gegenüberstellung im Satz).
+- **‚ „:** exakt ’ ” auf Kommatiefe; vorher bis 30 Einheiten abweichend. Die
+  v1.4.43 taugt hier nicht als Vorbild (ihr ‚ ist ein Splitter, „ verschmolzen).
+- **case-Striche:** – — standen nur 30 Einheiten über dem Gemeinsatz (Mitte
+  297 statt Versalmitte); jetzt Mitte auf dem Querbalken des H (349). Die
+  case-Form des Bindestrichs fehlte ganz – angelegt für - ‐ ‑ und das weiche
+  Trennzeichen.
+- **Bewusst belassen:** • bleibt in jedem Schnitt dasselbe Quadrat wie in
+  Titillium und v1.4.43 (Entscheid des Inhabers, 30. 10. 2026; das Prüfmass
+  nimmt ihn aus). Die Kapitälchen behalten das kalibrierte Gewicht (Versalie
+  bei +110, verkleinert; in Klar Stamm 76 gegen 81 der Gemeinen) – ebenfalls
+  entschieden. Die f-Ligaturen und µ verlaufen nicht linear, sind aber in
+  sich stimmig; ◊ folgt den Titillium-Extremen.
 
 ## Reproduzieren
 Siehe `tools/goetheanum-fontfix/` (Skripte, Titillium-Quellen, Original-Inputs):

@@ -21,7 +21,7 @@
     {
       "id": "schrift",
       "title": "Schrift & Typografie",
-      "intro": "Die Hausschrift v2.7 und die Regeln dazu – nachschlagen, vergleichen, einbinden."
+      "intro": "Die Hausschrift v2.8 und die Regeln dazu – nachschlagen, vergleichen, einbinden."
     },
     {
       "id": "anwendung",
@@ -462,7 +462,7 @@
       "title": "Guillemets",
       "short": "Guillemets",
       "href": "guillemets.html",
-      "desc": "Die Anführungszeichen der Hausschrift im Satz, in allen sieben Schnitten – mit dem Vorher-Vergleich zu v1.4.43.",
+      "desc": "Die Anführungszeichen der Hausschrift im Satz, in allen sieben Schnitten – vorher (v2.7) und nachher (v2.8), dazu v1.4.43.",
       "such": "Guillemets Anführungszeichen Anführung Zitat Schnitte Befund Schriftpflege"
     },
     {
@@ -844,10 +844,10 @@
       "desc": "Epics, User-Stories, Sprint-Vorschlag."
     },
     {
-      "title": "Hausschrift v2.7 – Dokumentation",
+      "title": "Hausschrift v2.8 – Dokumentation",
       "tag": "Schrift",
       "href": "https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/README.md",
-      "desc": "Schnitte, Variable Font, Neuerungen in v2.7."
+      "desc": "Schnitte, Variable Font, Neuerungen in v2.8."
     },
     {
       "title": "Hausschrift – Audit",

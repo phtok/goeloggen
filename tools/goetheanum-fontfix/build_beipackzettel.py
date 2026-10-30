@@ -4,13 +4,13 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.boundsPen import BoundsPen
 from fontTools.varLib.instancer import instantiateVariableFont
-FD="assets/fonts/goetheanum/Fonts/"; VF="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.7.otf"
+FD="assets/fonts/goetheanum/Fonts/"; VF="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.8.otf"
 def L(p): ft=TTFont(p);return (ft,ft.getGlyphSet(),ft.getBestCmap(),ft["head"].unitsPerEm)
-KP=FD+"Goetheanum-Schrift-v2.7-Klar.otf"; LAP=FD+"Goetheanum-Schrift-v2.7-Laut.otf"; LEP=FD+"Goetheanum-Schrift-v2.7-Leise.otf"; DEP=FD+"Goetheanum-Schrift-v2.7-Deutlich.otf"; RUP=FD+"Goetheanum-Schrift-v2.7-Ruhig.otf"
+KP=FD+"Goetheanum-Schrift-v2.8-Klar.otf"; LAP=FD+"Goetheanum-Schrift-v2.8-Laut.otf"; LEP=FD+"Goetheanum-Schrift-v2.8-Leise.otf"; DEP=FD+"Goetheanum-Schrift-v2.8-Deutlich.otf"; RUP=FD+"Goetheanum-Schrift-v2.8-Ruhig.otf"
 K=L(KP); LA=L(LAP); LE=L(LEP); D=L(DEP); RU=L(RUP)
 def varL(w):
     ft=TTFont(VF); instantiateVariableFont(ft,{"wght":w},inplace=True); return (ft,ft.getGlyphSet(),ft.getBestCmap(),ft["head"].unitsPerEm)
-IC=L(FD+"Goetheanum-Icons-v2.7.otf")
+IC=L(FD+"Goetheanum-Icons-v2.8.otf")
 # HarfBuzz fonts for real shaping (ligatures + OT features)
 def hbfont(path):
     blob=hb.Blob.from_file_path(path); face=hb.Face(blob); return hb.Font(face)
@@ -102,7 +102,7 @@ txt(K,"Pfeile & Kompass: eigener Font ‹Goetheanum Pfeile›, Seite 5.",9.5,RX+
 
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
-txt(K,"Goetheanum Schriften Version 2.7 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
+txt(K,"Goetheanum Schriften Version 2.8 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
 txt(K,"Ausbau & Optimierung 2026 durch Philipp Tok. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p1.svg","w").write("".join(S))
@@ -187,7 +187,7 @@ print("page2 rendered")
 import json as _json
 ICON_JSON={x["codepoint"]:x for x in _json.load(open("assets/fonts/goetheanum/Icons-Einzeldateien/icons.json"))}
 HAVE_ICON=set(int(cp[2:],16) for cp in ICON_JSON)
-PF=L(FD+"Goetheanum-Pfeile-v2.7.otf")
+PF=L(FD+"Goetheanum-Pfeile-v2.8.otf")
 
 # QWERTZ (DE) – (Basiszeichen, Umschaltzeichen) je Taste, Zeilen mit Versatz.
 KB_ROWS=[

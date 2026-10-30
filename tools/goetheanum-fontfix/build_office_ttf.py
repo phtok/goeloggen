@@ -22,16 +22,16 @@ OUT = os.path.join(REPO, "assets/fonts/goetheanum/Office")
 # ‹trio›  = RIBBI-Mitglied der Familie ‹Goetheanum Schrift› (Namen aus der Quelle)
 # ‹flach› = eigene Regular-Familie, im Namen wählbar
 JOBS = [
-    ("Goetheanum-Schrift-v2.7-Leise.otf",    "trio",  "GoetheanumSchriftLeise",          None),
-    ("Goetheanum-Schrift-v2.7-Ruhig.otf",    "flach", "GoetheanumSchriftRuhig",          "Goetheanum Schrift Ruhig"),
-    ("Goetheanum-Schrift-v2.7-Klar.otf",     "trio",  "GoetheanumSchriftKlar",           None),
-    ("Goetheanum-Schrift-v2.7-Deutlich.otf", "flach", "GoetheanumSchriftDeutlichOffice", "Goetheanum Schrift Deutlich"),
-    ("Goetheanum-Schrift-v2.7-Laut.otf",     "trio",  "GoetheanumSchriftLaut",           None),
-    ("Goetheanum-Icons-v2.7.otf",            "flach", "GoetheanumIconsOffice",           "Goetheanum Icons"),
-    ("Goetheanum-Pfeile-v2.7.otf",           "flach", "GoetheanumPfeileOffice",          "Goetheanum Pfeile"),
+    ("Goetheanum-Schrift-v2.8-Leise.otf",    "trio",  "GoetheanumSchriftLeise",          None),
+    ("Goetheanum-Schrift-v2.8-Ruhig.otf",    "flach", "GoetheanumSchriftRuhig",          "Goetheanum Schrift Ruhig"),
+    ("Goetheanum-Schrift-v2.8-Klar.otf",     "trio",  "GoetheanumSchriftKlar",           None),
+    ("Goetheanum-Schrift-v2.8-Deutlich.otf", "flach", "GoetheanumSchriftDeutlichOffice", "Goetheanum Schrift Deutlich"),
+    ("Goetheanum-Schrift-v2.8-Laut.otf",     "trio",  "GoetheanumSchriftLaut",           None),
+    ("Goetheanum-Icons-v2.8.otf",            "flach", "GoetheanumIconsOffice",           "Goetheanum Icons"),
+    ("Goetheanum-Pfeile-v2.8.otf",           "flach", "GoetheanumPfeileOffice",          "Goetheanum Pfeile"),
 ]
 
-# Design-Gewichte der flachen Schnitte (Schnitt-System v2.7; identisch zu
+# Design-Gewichte der flachen Schnitte (Schnitt-System v2.8; identisch zu
 # STAT/Webfonts). Das Trio behält seine Gewichte direkt aus der Quell-OTF.
 WEIGHTS = {"Ruhig": 350, "Deutlich": 580}
 
@@ -77,7 +77,7 @@ def setname(ft, mode, ps, family):
     nm = ft["name"]
     def S(i, v):
         nm.setName(v, i, 3, 1, 0x409); nm.setName(v, i, 1, 0, 0)
-    S(6, ps); S(3, "2.7;GOEA;" + ps)
+    S(6, ps); S(3, "2.8;GOEA;" + ps)
     os2 = ft["OS/2"]
     os2.fsType = 0                                            # installierbar einbettbar
     if mode == "trio":

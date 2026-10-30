@@ -18,7 +18,7 @@ from fontTools.pens.transformPen import TransformPen
 from fontTools.pens.boundsPen import BoundsPen
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
 FONTS = os.path.join(REPO, "assets/fonts/goetheanum/Fonts")
-VAR = os.path.join(REPO, "assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.7.otf")
+VAR = os.path.join(REPO, "assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.8.otf")
 WF = os.path.join(REPO, "assets/fonts/goetheanum/Webfonts")
 UNI = 0x01FA; GAP = 28
 LOCS = [{}, {"wght": -0.08}, {"wght": -0.42}, {"wght": -1.0}, {"wght": 0.561}, {"wght": 1.0}]
@@ -82,7 +82,7 @@ def repair_variable():
 
 def main():
     for cut in ("Leise", "Ruhig", "Klar", "Deutlich", "Laut"):
-        p = os.path.join(FONTS, "Goetheanum-Schrift-v2.7-%s.otf" % cut)
+        p = os.path.join(FONTS, "Goetheanum-Schrift-v2.8-%s.otf" % cut)
         print("  Ǻ neu:", cut if repair_static(p) else cut + " (fehlt)")
     repair_variable(); print("  Ǻ neu: Variabel (CFF2-Blend)")
     print("Ǻ (U+01FA) repariert – Å + Akut, gewichtsrichtig.")

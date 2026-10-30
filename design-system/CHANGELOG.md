@@ -16,6 +16,23 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 29. Oktober 2026 — Hausschrift v2.8: kreuzende Konturen repariert (Schrift, Version des Systems unverändert)
+
+**Was.** Variable Font, statische Schnitte, Office-TTF, Webfonts und ZIPs auf
+v2.8 gehoben; alle Einbindungen ziehen die neuen Dateinamen. Repariert:
+`« » „ ‚ ÷ ◊ % Ű` (Konturen kreuzten sich über die Achse), die `case`-Formen,
+`Ą Į $ € ǿ`, Kapitälchen, `Û` (verrutschter Zirkumflex) und der Vorschub
+des Bruchstrichs. **Warum.** Befund vom 29. Oktober (`assets/fonts/goetheanum/
+AUDIT.md`): in Klar las sich `«` als ein einzelner fetter Winkel, `‚` war
+praktisch unsichtbar, `%` kippte. **Wirkung.** Jede Seite mit der Hausschrift;
+Vorher/Nachher auf https://werkzeuge.goetheanum.ch/guillemets.html. Die
+v2.7-Adressen der versandten Mails bleiben als Kopien erreichbar.
+**Zweite Prüfung (30. Oktober).** Kapitälchen und Kurzziffern ohne die
+Gewichtsklemme aus `build.py`, Ø-Strich in Stammstärke, « » aus zwei ‹ ›
+(enge Lücke, • starr – beides Entscheid des Inhabers), ‚ „ exakt aus ’ ”, case-Striche auf dem
+H-Querbalken und eine case-Form für den Bindestrich (Einzelheiten in
+`AUDIT.md`).
+
 ## 27. Oktober 2026 — Lange Abschnittstitel brechen um (1.28.7)
 
 **Was.** `base.css`: `.shead h2` schrumpft jetzt (`flex:0 1 auto;
