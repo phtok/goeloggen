@@ -226,32 +226,31 @@ function pdfSchriftenLaden() {
   return pdfSchriftenPromise;
 }
 
-async function exportPdf() {
-  const g = exportGeometrie();
-  const schriften = await pdfSchriftenLaden();
-  const svgText = exportSvgString("");
+// SVG-Text als PDF-Bytes (Blattgrösse in mm). Schriften nur, wo Text im
+// SVG steht; die Gegenprobe des Aquarells gilt für jedes Blatt.
+async function svgAlsPdfBytes(svgText, breiteMm, hoeheMm, schriften) {
   const svgElement = new DOMParser()
     .parseFromString(svgText, "image/svg+xml").documentElement;
   const raster = rasterAufDatei(svgElement);
 
   const doc = new jspdf.jsPDF({
     unit: "pt",
-    format: [g.seiteBreite * MM_ZU_PT, g.seiteHoehe * MM_ZU_PT],
-    orientation: "landscape",
+    format: [breiteMm * MM_ZU_PT, hoeheMm * MM_ZU_PT],
+    orientation: breiteMm >= hoeheMm ? "landscape" : "portrait",
     compress: true
   });
-  schriften.forEach(([name, base64]) => {
+  (schriften || []).forEach(([name, base64]) => {
     doc.addFileToVFS(`${name}.ttf`, base64);
     doc.addFont(`${name}.ttf`, name, "normal");
   });
 
   await doc.svg(svgElement, {
     x: 0, y: 0,
-    width: g.seiteBreite * MM_ZU_PT,
-    height: g.seiteHoehe * MM_ZU_PT
+    width: breiteMm * MM_ZU_PT,
+    height: hoeheMm * MM_ZU_PT
   });
 
-  let bytes = new Uint8Array(doc.output("arraybuffer"));
+  const bytes = new Uint8Array(doc.output("arraybuffer"));
   // Gegenprobe statt Vertrauen: svg2pdf verschluckt einen gescheiterten
   // Bildeinbau lautlos. Trägt die Szene ein Raster, muss das PDF ein
   // Bild-XObject führen — sonst lieber gar keine Datei als ein Blatt
@@ -259,8 +258,91 @@ async function exportPdf() {
   if (raster && bytesSuchen(bytes, "/Subtype /Image", 0, false) < 0) {
     throw new Error("Aquarell-Blatt nicht ins PDF übernommen");
   }
+  return bytes;
+}
+
+async function exportPdf() {
+  const g = exportGeometrie();
+  const schriften = await pdfSchriftenLaden();
+  let bytes = await svgAlsPdfBytes(exportSvgString(""), g.seiteBreite, g.seiteHoehe, schriften);
   bytes = druckboxenEinsetzen(bytes, g);
   herunterladen(dateiname("pdf"), new Blob([bytes], { type: "application/pdf" }), "application/pdf");
+}
+
+/* ---------- Grundkarte allein (IDML-Verknüpfung) ----------
+   Nur Gelände, Aquarell und Kompass — ohne Marken, Text, Legende, Logo
+   und Schnittmarken. Blatt = Endformat plus Beschnitt; die Schnittmarken
+   zeichnet InDesign beim Export selbst. */
+async function grundkartePdfBytes() {
+  const g = exportGeometrie();
+  const breite = g.trimBreite + 2 * g.beschnitt;
+  const hoehe = g.trimHoehe + 2 * g.beschnitt;
+  const svgText = `<svg xmlns="http://www.w3.org/2000/svg" width="${breite}mm" height="${hoehe}mm" viewBox="0 0 ${breite} ${hoehe}">
+<g transform="translate(${g.beschnitt} ${g.beschnitt}) scale(${g.skala})">
+${grundkarteSzeneMarkup(g.beschnitt / g.skala)}
+</g>
+</svg>`;
+  return { name: "grundkarte.pdf", bytes: await svgAlsPdfBytes(svgText, breite, hoehe), breite, hoehe };
+}
+
+/* ---------- IDML (InDesign) ----------
+   Grundkarte, Logo und Sonderlogo als verknüpfte PDFs, alles Übrige nativ
+   aus szeneModell() — gebaut in idml.js (Modul, erst beim Klick geladen). */
+
+// Stand der Export-Bausteine: bei jeder Änderung an idml.js erhöhen,
+// sonst mischt der Browser-Cache alt und neu.
+const IDML_BAU = "2026-10-30a";
+
+const FARB_NAMEN = { rot: "Rot", blau: "Blau", gruen: "Grün", grau: "Grau", gold: "Gold" };
+
+function idmlFarbnamen() {
+  const familie = aquarellMarkerStil() ? MARKER_FARBEN_AQUARELL : MARKER_FARBEN;
+  const namen = { [TINTE]: "Tinte", [TINTE_LEISE]: "Tinte leise" };
+  Object.entries(familie).forEach(([schluessel, hex]) => {
+    namen[hex.toLowerCase()] = `Marke ${FARB_NAMEN[schluessel] || schluessel}`;
+  });
+  return namen;
+}
+
+// Breite in Blatt-mm: Laut-Ziffern aus der Vorschubtabelle, Sprache wie
+// bei der Zentrierung der Schriftzüge.
+function idmlTextBreite(text, schrift, groesse) {
+  const zeichen = String(text).split("");
+  if (schrift === SCHRIFT_ZAHL && zeichen.every((z) => LAUT_VORSCHUB[z] != null)) {
+    return zeichen.reduce((summe, z) => summe + LAUT_VORSCHUB[z], 0) * groesse;
+  }
+  return textBreiteMm(text, schrift, groesse);
+}
+
+// Ein Logo (reine Pfade) als PDF in seiner Endgrösse.
+async function logoPdf(name, markup, viewBox, lage, skala) {
+  const breite = lage.breite * skala, hoehe = lage.hoehe * skala;
+  const svgText = `<svg xmlns="http://www.w3.org/2000/svg" width="${breite}mm" height="${hoehe}mm" viewBox="${viewBox}">${markup}</svg>`;
+  return { name, bytes: await svgAlsPdfBytes(svgText, breite, hoehe), breite, hoehe };
+}
+
+async function exportIdml() {
+  const g = exportGeometrie();
+  const modell = szeneModell();
+  const links = { grundkarte: await grundkartePdfBytes() };
+  if (modell.logo) {
+    links.logo = await logoPdf("logo.pdf", logoInhalt.markup,
+      `0 0 ${logoInhalt.breite} ${logoInhalt.hoehe}`, modell.logo, g.skala);
+  }
+  if (modell.titelLogo) {
+    const l = state.titelLogo;
+    links.titellogo = await logoPdf("titellogo.pdf", l.markup,
+      `${l.vbX || 0} ${l.vbY || 0} ${l.vbBreite} ${l.vbHoehe}`, modell.titelLogo, g.skala);
+  }
+  const { baueIdml } = await import(`./idml.js?v=${IDML_BAU}`);
+  const zip = await baueIdml({
+    modell, geometrie: g, links,
+    dateiname: dateiname("idml"),
+    farbnamen: idmlFarbnamen(),
+    immerFarben: [TINTE, TINTE_LEISE],
+    textBreite: idmlTextBreite
+  });
+  herunterladen(dateiname("zip"), new Blob([zip], { type: "application/zip" }), "application/zip");
 }
 
 /* ---------- Knöpfe ---------- */
@@ -291,5 +373,22 @@ document.getElementById("download-svg").addEventListener("click", async () => {
     varianteAblegen();  // Download legt den Stand unter seinem Titel ab
   } finally {
     knopf.disabled = false;
+  }
+});
+
+document.getElementById("download-idml").addEventListener("click", async () => {
+  const knopf = document.getElementById("download-idml");
+  const beschriftung = knopf.textContent;
+  knopf.disabled = true;
+  knopf.textContent = "IDML wird gepackt …";
+  try {
+    await exportIdml();
+    varianteAblegen();  // Download legt den Stand unter seinem Titel ab
+  } catch (fehler) {
+    console.error(fehler);
+    window.alert("IDML-Export fehlgeschlagen. Bitte Konsole prüfen oder PDF exportieren.");
+  } finally {
+    knopf.disabled = false;
+    knopf.textContent = beschriftung;
   }
 });

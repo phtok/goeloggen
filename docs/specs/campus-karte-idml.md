@@ -1,6 +1,6 @@
 # Campus-Karte: IDML-Export – Spezifikation und Übergabe
 
-Stand: 30. Oktober 2026 · Status: **beschlossen, Bau offen** · Werkzeug:
+Stand: 30. Oktober 2026 · Status: **gebaut, erster Öffnungstest in InDesign offen** · Werkzeug:
 https://werkzeuge.goetheanum.ch/apps/karten-generator/
 
 Auftrag des Inhabers (30. 10. 2026): Die Campus-Karte soll neben PDF und SVG
@@ -111,10 +111,36 @@ Dokument mit echten Objekten, dort, wo Bearbeitung Nutzen bringt:
   Legende als Text mit Formaten, Beschnitt 3 mm sichtbar. Der erste Befund
   kommt als Issue oder in den PR.
 
+## Wie gebaut (30. 10. 2026)
+
+- **Modell:** `szeneModell()` in `app.js` liefert Elemente aus Formen
+  (`kreis`, `rechteck`, `pfad` mit Matrix, `text` mit Rolle); `szeneMarkup`
+  zeichnet genau diese Formen. Vor- und Nachher-Vergleich der Vorschau in
+  sechs Zuständen pixelgleich.
+- **Symbol-Marken nativ:** Die Icons v2.7 und die Treppen-Badges sind reine
+  Pfade (M/L/H/V/C/Z) – sie gehen als Polygone ins IDML, keine Zeichen-PDFs.
+  Jede Marke (Scheibe, Zeichen, Pfeil) ist eine Gruppe.
+- **Text:** ein Textrahmen je Text, Grundlinie fest auf dem Modell
+  (`FirstBaselineOffset="FixedHeight"`), Rahmen wächst mit dem Text
+  (automatische Grösse, keine Umbrüche). Formate: Titel, Untertitel, Gebäude,
+  Legende Gruppe, Legende Eintrag, Legende Notiz, Ziffer.
+- **Schriften:** Sprache in ‹Goetheanum Schrift Deutlich› (eigene Familie im
+  Office-Set), Ziffern in ‹Goetheanum Schrift› Schnitt Laut.
+- **Ebenen:** in `designmap.xml` von unten nach oben (so stapelt auch die
+  InDesign-Vorlage `apps/lt-programm/vorlage/LT27.idml`); die Grundkarte ist
+  gesperrt.
+- **Geprüft:** `xmllint --noout` über alle Teile, `Self`-IDs eindeutig,
+  `mimetype` zuerst und unkomprimiert, alle Farb- und Story-Verweise
+  aufgelöst; der Druckbogen nach SVG zurückgebaut und über die Vorschau
+  gelegt (Vektor, Aquarell, A3 mit Ausschnitt, Sonderlogo).
+- Der Pfadleser kennt nur absolute Befehle; ein anderes Zeichen bricht den
+  Export mit Meldung ab, statt still Falsches zu liefern.
+
 ## Offen, entscheidet der Inhaber beim ersten Öffnen
 
 - Ob die Symbol-Marken (Piktogramme) nativ gut genug sind oder lieber als
-  PDF-Links kommen.
+  PDF-Links kommen. (Gebaut: nativ.)
 - Ob die Gebäude-Schriftzüge auf der Grundkarte (im PDF) oder als eigene
   Textrahmen (verschiebbar, aber über dem verknüpften PDF) liegen sollen.
-  Empfehlung: Textrahmen, weil Übersetzung der Hauptnutzen ist.
+  Empfehlung: Textrahmen, weil Übersetzung der Hauptnutzen ist. (Gebaut:
+  Textrahmen auf der Ebene Beschriftung.)

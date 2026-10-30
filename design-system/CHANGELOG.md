@@ -16,6 +16,24 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 30. Oktober 2026 — Campus-Karte als InDesign-Dokument (Werkzeug, Version des Systems unverändert)
+
+**Was.** Das Kartentool (https://werkzeuge.goetheanum.ch/apps/karten-generator/)
+liefert neben PDF und SVG ein IDML-Paket: die Grundkarte (Gelände, Aquarell,
+Kompass) als verknüpftes PDF in `Links/`, alles Übrige nativ – Marken als
+gruppierte Ovale, Pillen und Pfade, Schriftzüge, Titel und Legende als
+Textrahmen mit Absatzformaten je Rolle, vier Ebenen (Grundkarte, Marken,
+Beschriftung, Legende), RGB-Farbfelder mit Namen, 3 mm Beschnitt im Dokument.
+Dafür beschreibt `szeneModell()` in `app.js` die Szene zuerst als Formen; das
+SVG der Vorschau und das IDML zeichnen beide daraus. **Warum.** Auftrag des
+Inhabers: Texte korrigieren und übersetzen, Marken verschieben, mit anderen
+Drucksachen montieren. Die Grundkarte bleibt PDF, weil 1689 Pfade samt Clips
+als native Polygone nur Grösse und Risiko brächten. **Wirkung.** Sprache in
+‹Goetheanum Schrift Deutlich›, Ziffern in ‹Goetheanum Schrift› Laut, wie im
+PDF; die Schriften liegen dem ZIP nicht bei (Lizenz), InDesign findet die
+installierten Office-TTF. Source Sans 3 kommt in der Karte nicht vor und hat
+darum kein Format (G03). Spezifikation: `docs/specs/campus-karte-idml.md`.
+
 ## 29. Oktober 2026 — Hausschrift v2.8: kreuzende Konturen repariert (Schrift, Version des Systems unverändert)
 
 **Was.** Variable Font, statische Schnitte, Office-TTF, Webfonts und ZIPs auf
