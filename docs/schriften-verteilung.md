@@ -138,6 +138,28 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
      Papiergruppe, nach 20–30 Durchgängen auswerten und dem Inhaber eine
      Regel «ab etwa N Wörtern Source Sans 3» vorschlagen (nicht ins
      Regelwerk ohne Freigabe).
+3. **Noto als Lesetext für alle Schriftsysteme** (Treibhaus, Frage des
+   Inhabers 31. 10.): https://werkzeuge.goetheanum.ch/lesetext-noto.html
+   Köpfe in der Hausschrift, darunter Lesetext in Source Sans 3 und Noto,
+   gleicher Grad, zehn Systeme (Latein, Griechisch, Kyrillisch direkt
+   nebeneinander; sonst Latein-Source neben dem Noto-System).
+   - **Befund Abdeckung:** Noto (Google, seit 2012) deckt rund 150
+     Schriftsysteme; Source Sans 3 nur Latein, Griechisch, Kyrillisch
+     (und Vietnamesisch). Noto Sans CJK **ist** Source Han Sans (Adobe und
+     Google gemeinsam), also für CJK keine Wahl zwischen beiden.
+   - **Befund Bild:** Noto Sans ist keine Einzelzeichnung, sondern eine
+     Sippe vieler Entwerfer mit abgestimmten Massen. Das Latein läuft
+     beim gleichen Grad sichtbar **grösser und breiter** als Source Sans 3
+     (höhere x-Höhe, offenere Weiten): derselbe deutsche Absatz in 18 px
+     ist in einer Zeile 1775 statt 1573 px lang, **13 % mehr Platz**
+     (gemessen 31. 10.). Noto Sans Arabic wirkt dagegen klein.
+   - **Empfehlung der Session:** Source Sans 3 bleibt die Lese-Grotesk für
+     Latein, Griechisch, Kyrillisch (schmaler, näher an der Hausschrift,
+     schon im Fundament). Noto ist die Reserve für jedes System, das
+     Source nicht hat (Hebräisch, Arabisch, Georgisch, Armenisch …), und
+     für CJK ohnehin dasselbe wie Source Han Sans. Entscheid beim Inhaber.
+   - Neue Probeschnitte: `notosans`, `notoarabic` (OFL, kein RFN laut
+     google/fonts), in `LIZENZEN.md` nachgetragen.
 
 3. **Schriftgrenze** (Treibhaus, gebaut 31. 10.): Blick-Werkzeug ohne Test
    und ohne Datenbank, Anschauungsmittel für das Lesbarkeits-Skillset:

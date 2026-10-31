@@ -1,0 +1,296 @@
+<!doctype html>
+<!-- Treibhaus: Noto als Lese-Grotesk für alle Schriftsysteme, neben Source Sans 3.
+     Schriften: assets/fonts/schriftsysteme/ (Subsets aus tools/schriftsysteme-probe.py –
+     nach jeder Text-Änderung neu laufen lassen). Befund: docs/schriften-verteilung.md. -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Lesetext Noto · Goetheanum</title>
+<meta name="description" content="Source Sans 3 und Noto Sans als Lesetext unter Köpfen in der Hausschrift, in zehn Schriftsystemen." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch;text-wrap:pretty;hyphens:manual}
+  .sprung{display:flex;flex-wrap:wrap;gap:var(--s2);list-style:none;margin:0;padding:0}
+  .sprung .chip{min-height:var(--tap);display:inline-flex;align-items:center;text-decoration:none}
+  .system{padding-top:var(--s8);scroll-margin-top:calc(var(--header-h) + var(--s4))}
+  .system h2{text-wrap:balance;padding-bottom:var(--s3);border-bottom:1px solid var(--line)}
+  .paar{display:grid;grid-template-columns:1fr;gap:var(--s7);margin-top:var(--s5)}
+  @media (min-width:900px){.paar{grid-template-columns:1fr 1fr}}
+  .block h3{font-family:var(--font-text);font-size:var(--t-small);font-weight:600;color:var(--muted);margin:0 0 var(--s4)}
+  .kopf{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:clamp(22px,2.6vw,28px);line-height:1.3;margin:0;text-wrap:balance}
+  .lese .txt{font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure);margin:var(--s3) 0 0;text-wrap:pretty;hyphens:manual}
+  .lese:lang(zh),.lese:lang(ja),.lese:lang(ko){line-break:strict}
+  .lese:lang(zh) .txt,.lese:lang(ja) .txt,.lese:lang(ko) .txt{line-height:1.8}
+  .lese:lang(ko){word-break:keep-all}
+  .lese:lang(ja){word-break:auto-phrase}
+  .lese:lang(ar) .txt{line-height:1.8}
+  @font-face{font-family:"P notoarabic";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/notoarabic-text.woff2") format("woff2")}
+  [data-f="notoarabic"]{font-family:"P notoarabic",var(--font-text)}
+  @font-face{font-family:"P notoarmenian";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/notoarmenian-text.woff2") format("woff2")}
+  [data-f="notoarmenian"]{font-family:"P notoarmenian",var(--font-text)}
+  @font-face{font-family:"P notogeorgian";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/notogeorgian-text.woff2") format("woff2")}
+  [data-f="notogeorgian"]{font-family:"P notogeorgian",var(--font-text)}
+  @font-face{font-family:"P notohebrew";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/notohebrew-text.woff2") format("woff2")}
+  [data-f="notohebrew"]{font-family:"P notohebrew",var(--font-text)}
+  @font-face{font-family:"P notosans";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/notosans-text.woff2") format("woff2")}
+  [data-f="notosans"]{font-family:"P notosans",var(--font-text)}
+  @font-face{font-family:"P sourcehanjp";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcehanjp-text.woff2") format("woff2")}
+  [data-f="sourcehanjp"]{font-family:"P sourcehanjp",var(--font-text)}
+  @font-face{font-family:"P sourcehankr";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcehankr-text.woff2") format("woff2")}
+  [data-f="sourcehankr"]{font-family:"P sourcehankr",var(--font-text)}
+  @font-face{font-family:"P sourcehansc";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcehansc-text.woff2") format("woff2")}
+  [data-f="sourcehansc"]{font-family:"P sourcehansc",var(--font-text)}
+  @font-face{font-family:"P sourcesans";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcesans-text.woff2") format("woff2")}
+  [data-f="sourcesans"]{font-family:"P sourcesans",var(--font-text)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Treibhaus · Schriften</span>
+    <h1>Noto als Lesetext für alle Schriftsysteme</h1>
+    <p class="lede">Köpfe in der Goetheanum Schrift, Lesetext in Source Sans&nbsp;3 und in Noto, gleicher Grad.</p>
+  </section>
+
+  <nav aria-label="Schriftsysteme">
+    <ul class="sprung"><li><a class="chip" href="#latein">Latein</a></li> <li><a class="chip" href="#griechisch">Griechisch</a></li> <li><a class="chip" href="#kyrillisch">Kyrillisch</a></li> <li><a class="chip" href="#hebraeisch">Hebräisch</a></li> <li><a class="chip" href="#arabisch">Arabisch</a></li> <li><a class="chip" href="#georgisch">Georgisch</a></li> <li><a class="chip" href="#armenisch">Armenisch</a></li> <li><a class="chip" href="#chinesisch">Chinesisch</a></li> <li><a class="chip" href="#japanisch">Japanisch</a></li> <li><a class="chip" href="#koreanisch">Koreanisch</a></li></ul>
+  </nav>
+
+    <section class="system" id="latein" aria-labelledby="h-latein">
+      <h2 id="h-latein">Latein</h2>
+      <div class="paar">
+        <div class="block">
+          <h3>Source Sans 3</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="de" data-f="sourcesans">
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+            <p class="txt">Der Bau aus Sichtbeton entstand nach einem Entwurf von Rudolf Steiner und wurde 1928 eröffnet. Er ersetzt das erste, hölzerne Goetheanum, das in der Silvesternacht 1922/23 abbrannte.</p>
+          </div>
+        </div>
+        <div class="block">
+          <h3>Noto Sans</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="de" data-f="notosans">
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+            <p class="txt">Der Bau aus Sichtbeton entstand nach einem Entwurf von Rudolf Steiner und wurde 1928 eröffnet. Er ersetzt das erste, hölzerne Goetheanum, das in der Silvesternacht 1922/23 abbrannte.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="system" id="griechisch" aria-labelledby="h-griechisch">
+      <h2 id="h-griechisch">Griechisch</h2>
+      <div class="paar">
+        <div class="block">
+          <h3>Source Sans 3</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="el" data-f="sourcesans">
+            <p class="txt">Το Γκαιτεάνουμ στο Ντόρναχ κοντά στη Βασιλεία είναι η έδρα της Γενικής Ανθρωποσοφικής Εταιρείας και της Ελεύθερης Ανώτατης Σχολής Πνευματικής Επιστήμης. Εδώ πραγματοποιούνται συνέδρια, θέατρο και ευρυθμία.</p>
+            <p class="txt">Το κτίριο από εμφανές σκυρόδεμα σχεδιάστηκε από τον Ρούντολφ Στάινερ και εγκαινιάστηκε το 1928. Αντικατέστησε το πρώτο, ξύλινο Γκαιτεάνουμ, που κάηκε τη νύχτα της Πρωτοχρονιάς 1922/23.</p>
+          </div>
+        </div>
+        <div class="block">
+          <h3>Noto Sans</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="el" data-f="notosans">
+            <p class="txt">Το Γκαιτεάνουμ στο Ντόρναχ κοντά στη Βασιλεία είναι η έδρα της Γενικής Ανθρωποσοφικής Εταιρείας και της Ελεύθερης Ανώτατης Σχολής Πνευματικής Επιστήμης. Εδώ πραγματοποιούνται συνέδρια, θέατρο και ευρυθμία.</p>
+            <p class="txt">Το κτίριο από εμφανές σκυρόδεμα σχεδιάστηκε από τον Ρούντολφ Στάινερ και εγκαινιάστηκε το 1928. Αντικατέστησε το πρώτο, ξύλινο Γκαιτεάνουμ, που κάηκε τη νύχτα της Πρωτοχρονιάς 1922/23.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="system" id="kyrillisch" aria-labelledby="h-kyrillisch">
+      <h2 id="h-kyrillisch">Kyrillisch</h2>
+      <div class="paar">
+        <div class="block">
+          <h3>Source Sans 3</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="ru" data-f="sourcesans">
+            <p class="txt">Гётеанум в Дорнахе под Базелем — резиденция Всеобщего антропософского общества и Свободной высшей школы духовной науки. Здесь проходят конференции, спектакли и эвритмия.</p>
+            <p class="txt">Здание из монолитного бетона построено по проекту Рудольфа Штайнера и открыто в 1928 году. Оно заменило первый, деревянный Гётеанум, сгоревший в новогоднюю ночь 1922/23 года.</p>
+          </div>
+        </div>
+        <div class="block">
+          <h3>Noto Sans</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="ru" data-f="notosans">
+            <p class="txt">Гётеанум в Дорнахе под Базелем — резиденция Всеобщего антропософского общества и Свободной высшей школы духовной науки. Здесь проходят конференции, спектакли и эвритмия.</p>
+            <p class="txt">Здание из монолитного бетона построено по проекту Рудольфа Штайнера и открыто в 1928 году. Оно заменило первый, деревянный Гётеанум, сгоревший в новогоднюю ночь 1922/23 года.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="system" id="hebraeisch" aria-labelledby="h-hebraeisch">
+      <h2 id="h-hebraeisch">Hebräisch</h2>
+      <div class="paar">
+        <div class="block">
+          <h3>Source Sans 3 · Latein</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="de" data-f="sourcesans">
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+            <p class="txt">Der Bau aus Sichtbeton entstand nach einem Entwurf von Rudolf Steiner und wurde 1928 eröffnet. Er ersetzt das erste, hölzerne Goetheanum, das in der Silvesternacht 1922/23 abbrannte.</p>
+          </div>
+        </div>
+        <div class="block">
+          <h3>Noto Sans Hebrew</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="he" dir="rtl" data-f="notohebrew">
+            <p class="txt">הגתאנום בדורנאך שליד באזל הוא מושבם של החברה האנתרופוסופית הכללית ושל בית הספר הגבוה החופשי למדע הרוח. כאן מתקיימים כנסים, תיאטרון ואוריתמיה.</p>
+            <p class="txt">המבנה מבטון חשוף נבנה על פי תכנונו של רודולף שטיינר ונחנך ב־1928. הוא החליף את הגתאנום הראשון, שהיה עשוי עץ ונשרף בליל השנה החדשה 1922/23.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="system" id="arabisch" aria-labelledby="h-arabisch">
+      <h2 id="h-arabisch">Arabisch</h2>
+      <div class="paar">
+        <div class="block">
+          <h3>Source Sans 3 · Latein</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="de" data-f="sourcesans">
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+            <p class="txt">Der Bau aus Sichtbeton entstand nach einem Entwurf von Rudolf Steiner und wurde 1928 eröffnet. Er ersetzt das erste, hölzerne Goetheanum, das in der Silvesternacht 1922/23 abbrannte.</p>
+          </div>
+        </div>
+        <div class="block">
+          <h3>Noto Sans Arabic</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="ar" dir="rtl" data-f="notoarabic">
+            <p class="txt">يقع غوتيانوم في دورناخ قرب بازل، وهو مقر الجمعية الأنثروبوسوفية العامة والمدرسة العليا الحرة لعلم الروح. تقام هنا المؤتمرات والعروض المسرحية وفن اليوريثمي.</p>
+            <p class="txt">شُيّد المبنى من الخرسانة المكشوفة وفق تصميم رودولف شتاينر وافتُتح عام 1928. وقد حلّ محل غوتيانوم الأول المصنوع من الخشب، الذي احترق ليلة رأس السنة 1922/23.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="system" id="georgisch" aria-labelledby="h-georgisch">
+      <h2 id="h-georgisch">Georgisch</h2>
+      <div class="paar">
+        <div class="block">
+          <h3>Source Sans 3 · Latein</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="de" data-f="sourcesans">
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+            <p class="txt">Der Bau aus Sichtbeton entstand nach einem Entwurf von Rudolf Steiner und wurde 1928 eröffnet. Er ersetzt das erste, hölzerne Goetheanum, das in der Silvesternacht 1922/23 abbrannte.</p>
+          </div>
+        </div>
+        <div class="block">
+          <h3>Noto Sans Georgian</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="ka" data-f="notogeorgian">
+            <p class="txt">გოეთეანუმი დორნახში, ბაზელთან ახლოს, ზოგადი ანთროპოსოფიული საზოგადოებისა და სულიერი მეცნიერების თავისუფალი უმაღლესი სკოლის ადგილსამყოფელია. აქ იმართება კონფერენციები, თეატრალური წარმოდგენები და ევრითმია.</p>
+            <p class="txt">შიშველი ბეტონის შენობა რუდოლფ შტაინერის პროექტით აშენდა და 1928 წელს გაიხსნა. მან შეცვალა პირველი, ხის გოეთეანუმი, რომელიც 1922/23 წლის საახალწლო ღამეს დაიწვა.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="system" id="armenisch" aria-labelledby="h-armenisch">
+      <h2 id="h-armenisch">Armenisch</h2>
+      <div class="paar">
+        <div class="block">
+          <h3>Source Sans 3 · Latein</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="de" data-f="sourcesans">
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+            <p class="txt">Der Bau aus Sichtbeton entstand nach einem Entwurf von Rudolf Steiner und wurde 1928 eröffnet. Er ersetzt das erste, hölzerne Goetheanum, das in der Silvesternacht 1922/23 abbrannte.</p>
+          </div>
+        </div>
+        <div class="block">
+          <h3>Noto Sans Armenian</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="hy" data-f="notoarmenian">
+            <p class="txt">Գյոթեանումը Դոռնախում՝ Բազելի մոտ, Համընդհանուր անթրոպոսոֆական ընկերության և Հոգևոր գիտության ազատ բարձրագույն դպրոցի նստավայրն է։ Այստեղ անցկացվում են համաժողովներ, թատերական ներկայացումներ և էվրիթմիա։</p>
+            <p class="txt">Տեսանելի բետոնից կառուցված շենքը նախագծել է Ռուդոլֆ Շտայները, և այն բացվել է 1928 թվականին։ Այն փոխարինեց առաջին՝ փայտե Գյոթեանումին, որն այրվեց 1922/23 թվականի Ամանորի գիշերը։</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="system" id="chinesisch" aria-labelledby="h-chinesisch">
+      <h2 id="h-chinesisch">Chinesisch</h2>
+      <div class="paar">
+        <div class="block">
+          <h3>Source Sans 3 · Latein</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="de" data-f="sourcesans">
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+            <p class="txt">Der Bau aus Sichtbeton entstand nach einem Entwurf von Rudolf Steiner und wurde 1928 eröffnet. Er ersetzt das erste, hölzerne Goetheanum, das in der Silvesternacht 1922/23 abbrannte.</p>
+          </div>
+        </div>
+        <div class="block">
+          <h3>Noto Sans SC = Source Han Sans SC</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="zh-Hans" data-f="sourcehansc">
+            <p class="txt">歌德堂位于巴塞尔附近的多尔纳赫，是普通人智学协会和精神科学自由学院的所在地。这里举办会议、戏剧和优律思美演出。</p>
+            <p class="txt">这座清水混凝土建筑依照鲁道夫·施泰纳的设计建造，于1928年落成。它取代了在1922至1923年跨年夜被焚毁的第一座木结构歌德堂。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="system" id="japanisch" aria-labelledby="h-japanisch">
+      <h2 id="h-japanisch">Japanisch</h2>
+      <div class="paar">
+        <div class="block">
+          <h3>Source Sans 3 · Latein</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="de" data-f="sourcesans">
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+            <p class="txt">Der Bau aus Sichtbeton entstand nach einem Entwurf von Rudolf Steiner und wurde 1928 eröffnet. Er ersetzt das erste, hölzerne Goetheanum, das in der Silvesternacht 1922/23 abbrannte.</p>
+          </div>
+        </div>
+        <div class="block">
+          <h3>Noto Sans JP = Source Han Sans JP</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="ja" data-f="sourcehanjp">
+            <p class="txt">バーゼル近郊ドルナッハのゲーテアヌムは、普遍アントロポゾフィー協会と精神科学自由大学の本部です。ここでは会議、演劇、オイリュトミーが催されます。</p>
+            <p class="txt">打ち放しコンクリートの建物はルドルフ・シュタイナーの設計により建てられ、1928年に開館しました。1922年から23年にかけての大晦日の夜に焼失した、木造の第一ゲーテアヌムに代わるものです。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="system" id="koreanisch" aria-labelledby="h-koreanisch">
+      <h2 id="h-koreanisch">Koreanisch</h2>
+      <div class="paar">
+        <div class="block">
+          <h3>Source Sans 3 · Latein</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="de" data-f="sourcesans">
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+            <p class="txt">Der Bau aus Sichtbeton entstand nach einem Entwurf von Rudolf Steiner und wurde 1928 eröffnet. Er ersetzt das erste, hölzerne Goetheanum, das in der Silvesternacht 1922/23 abbrannte.</p>
+          </div>
+        </div>
+        <div class="block">
+          <h3>Noto Sans KR = Source Han Sans KR</h3>
+          <p class="kopf" lang="de">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+          <div class="lese" lang="ko" data-f="sourcehankr">
+            <p class="txt">바젤 근교 도르나흐에 있는 괴테아눔은 일반 인지학협회와 정신과학 자유대학의 본부입니다. 이곳에서 학술대회, 연극, 오이리트미 공연이 열립니다.</p>
+            <p class="txt">노출 콘크리트로 지은 이 건물은 루돌프 슈타이너의 설계에 따라 세워져 1928년에 문을 열었습니다. 1922년에서 1923년으로 넘어가는 새해 전야에 불탄 첫 번째 목조 괴테아눔을 대신합니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="begleitschriften.html">Begleitschriften</a></span>
+  </div>
+</footer>
+</body>
+</html>
