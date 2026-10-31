@@ -116,13 +116,24 @@ Befund als `docs/befunde/…` und trägt Beschlüsse in
 
 ## Offen
 
+- [x] E1 Kursive (31. 10. 2026): Probe-Schnitt, Specimen
+      https://werkzeuge.goetheanum.ch/kursive-probe.html, Befund mit
+      Entscheidvorlage `docs/befunde/kursive-probe-e1-2026-10-31.md`.
+      E5 (Black-Probewort) im selben Befund, § 6.
+- [ ] Entscheid Inhaber zur Kursiven (Vorlage im Befund E1).
 - [ ] Titillium Pro beobachten (Serif-Fortschritt, Variable), halbjährlich.
 - [ ] Elbonium (Dribbble) nicht gesichtet; Bild vom Inhaber.
 - [x] **E2 Glyphen, Kerning, Metriken** – erledigt 31. 10. 2026: Hausschrift
       v2.9, Befund `docs/befunde/schrift-v29-titillium-pro.md`, Vergleich
       https://werkzeuge.goetheanum.ch/schrift-v29.html. Offen daraus:
       Entscheid, ob die Pfeile der ‹Goetheanum Pfeile› in den Textfont kommen.
-- [x] **E5 Black-Probewort** – erledigt mit E2 (Bild und Befund dort, § 6):
-      die Achse trägt linear bis etwa Stamm 190; ein Extrablack bräuchte
-      eigene, breitere Master.
-- [ ] E1 Kursive, E3 Listenziffern (baut auf v2.9), E4 Serif.
+- [x] **E5 Black-Probewort** – auch mit E2 an der v2.9 gerechnet (Befund
+      § 6): die Achse trägt linear bis etwa Stamm 190; ein Extrablack
+      bräuchte eigene, breitere Master.
+- [ ] E3 Listenziffern (baut auf v2.9).
+- [x] **E4 Serif** (31. 10. 2026): Probe-Font, Specimen
+      https://werkzeuge.goetheanum.ch/schrift-serif-probe.html, Befund mit
+      Einsatzgrenzen und Entscheidvorlage in
+      `docs/befunde/serif-probe-2026-10-31.md`. Offen: Entscheid des
+      Inhabers (Empfehlung: Serif als Stimme für Zitat, Lede, Titel; vorher
+      Ausbau-Etappe S1).

@@ -34,6 +34,17 @@ schliessen sich (AT −41 → −64, LT −80 → −104), woff2 +16 %. Befund:
 https://werkzeuge.goetheanum.ch/schrift-v29.html. `Goetheanum-Schrift-v2.8-Deutlich`
 bleibt für versandte Mails erreichbar.
 
+## 31. Oktober 2026 — Serif-Probe im Treibhaus (Version des Systems unverändert)
+
+**Was.** «Goetheanum Serif Probe» aus Titillium Pro Serif version_00
+(Chialab, OFL), gebaut mit `tools/goetheanum-fontfix/build_serif_probe.py`,
+abgelegt in `assets/fonts/proben/` (nicht im Paket), Specimen
+`schrift-serif-probe.html` (Treibhaus · Schriftentwicklung).
+**Warum.** Etappe E4, Auftrag des Inhabers: Serif testen, Grenzen klären.
+**Wirkung.** Keine auf das Fundament: kein Token, keine Rolle, Regelwerk
+unverändert. Vorschlag (Serif als Stimme für Zitat, Lede, Titel ab 24 px;
+Lesemass 54 ch) wartet auf den Entscheid, `docs/befunde/serif-probe-2026-10-31.md`.
+
 ## 31. Oktober 2026 — Treibhaus statt Labor (Version des Systems unverändert)
 
 **Beschluss des Auftraggebers.** Das Labor heisst ‹Treibhaus›: dort wächst,

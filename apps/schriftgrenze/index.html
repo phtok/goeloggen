@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Schriftgrenze · Goetheanum</title>
+<meta name="description" content="Goetheanum Klar neben Source Sans 3, Noto Sans oder Noto Serif, in verschiedenen Längen und Grössen." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="preload" href="../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.9.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="../../assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="schriftgrenze.css" />
+<!-- Hell/Dunkel wie nav.js (goeTheme, sonst System). Ohne nav.js, weil dessen
+     Lesemodus die Schrift tauschen und den Vergleich verfälschen würde. -->
+<script>try{var t=localStorage.getItem("goeTheme");document.documentElement.setAttribute("data-theme",t==="dark"||t==="light"?t:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"))}catch(e){}</script>
+</head>
+<body>
+<main>
+  <div class="wrap">
+    <header class="kopf">
+      <a class="kicker" href="../../">Treibhaus</a>
+      <h1>Schriftgrenze</h1>
+    </header>
+
+    <div class="regler">
+      <div class="regel">
+        <span class="lab" id="l-laenge">Länge</span>
+        <div class="seg" role="group" aria-labelledby="l-laenge" data-wahl="laenge">
+          <button type="button" data-wert="satz">Ein Satz</button>
+          <button type="button" data-wert="absatz">Ein Absatz</button>
+          <button type="button" data-wert="250">≈&nbsp;250 Wörter</button>
+          <button type="button" data-wert="500">≈&nbsp;500 Wörter</button>
+          <button type="button" data-wert="1000">≈&nbsp;1000 Wörter</button>
+        </div>
+      </div>
+      <div class="regel">
+        <span class="lab" id="l-gegen">Gegenüber</span>
+        <div class="seg" role="group" aria-labelledby="l-gegen" data-wahl="gegen">
+          <button type="button" data-wert="source">Source Sans 3</button>
+          <button type="button" data-wert="noto-sans">Noto Sans</button>
+          <button type="button" data-wert="noto-serif">Noto Serif</button>
+        </div>
+      </div>
+      <div class="regel">
+        <span class="lab" id="l-grad">Grösse in px</span>
+        <div class="seg" role="group" aria-labelledby="l-grad" data-wahl="grad">
+          <button type="button" data-wert="14">14</button>
+          <button type="button" data-wert="16">16</button>
+          <button type="button" data-wert="18">18</button>
+          <button type="button" data-wert="20">20</button>
+          <button type="button" data-wert="24">24</button>
+          <button type="button" data-wert="haus">Haus</button>
+        </div>
+      </div>
+      <div class="regel">
+        <span class="lab" id="l-mass">Mass</span>
+        <div class="seg" role="group" aria-labelledby="l-mass" data-wahl="mass">
+          <button type="button" data-wert="70">70 Zeichen</button>
+          <button type="button" data-wert="haus">Hausmass</button>
+        </div>
+      </div>
+      <div class="regel">
+        <span class="lab" id="l-schnitt">Schnitt der Hausschrift</span>
+        <div class="seg" role="group" aria-labelledby="l-schnitt" data-wahl="schnitt">
+          <button type="button" data-wert="ruhig">Ruhig</button>
+          <button type="button" data-wert="klar">Klar</button>
+          <button type="button" data-wert="deutlich">Deutlich</button>
+        </div>
+      </div>
+      <div class="regel">
+        <span class="lab" id="l-grund">Grund</span>
+        <div class="seg" role="group" aria-labelledby="l-grund" data-wahl="grund">
+          <button type="button" data-wert="light">Hell</button>
+          <button type="button" data-wert="dark">Dunkel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="paar" id="paar">
+    <section class="spalte" aria-labelledby="k-g">
+      <h2 id="k-g">Goetheanum <span data-schnitt-name>Klar</span></h2>
+      <p class="lab ablese" data-ablese="g"></p>
+      <div class="probe schrift-g" lang="de" data-probe="g"></div>
+    </section>
+    <section class="spalte" aria-labelledby="k-s">
+      <h2 id="k-s" data-gegen-name>Source Sans 3</h2>
+      <p class="lab ablese" data-ablese="s"></p>
+      <div class="probe schrift-s" lang="de" data-probe="s"></div>
+    </section>
+  </div>
+
+  <div class="druck" id="druck" aria-hidden="true"></div>
+
+  <footer class="quelle wrap">
+    <p class="lab" id="quelle"></p>
+    <p class="knopf" style="margin-top:var(--s4)"><button class="btn" type="button" id="drucken">Drucken (A4 quer, 9–12&nbsp;pt)</button></p>
+  </footer>
+</main>
+
+<script src="../lesetest/texte.js"></script>
+<script src="schriftgrenze.js"></script>
+</body>
+</html>
