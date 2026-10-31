@@ -99,11 +99,45 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
      von der Session übersetzt, **nicht** von Muttersprachlern geprüft. Vor
      jeder Verwendung ausserhalb der Probe gegenlesen lassen, besonders
      Georgisch und Armenisch.
-2. **Lesetest Hausschrift vs. Source Sans 3** (Treibhaus): gleiche Texte in vier
-   Längen (≈80, 250, 600, 1500 Wörter), Lesezeit, Verständnisfragen,
-   Anstrengung; jede Person liest beide Schriften, Reihenfolge wechselnd;
-   20–30 Personen, auch ältere, Bildschirm und Papier. Ergebnis: die Länge, ab
-   der Fliesstext in Source Sans 3 läuft.
+2. **Lesetest Hausschrift vs. Source Sans 3** (Treibhaus, gebaut 31. 10.):
+   `apps/lesetest/` – Test (`index.html`), Druckbogen (`druck.html`),
+   Auswertung (`auswertung.html`, mit `?demo` Beispieldaten). Speicher:
+   `services/lesetest/schema.sql` (Tabelle `lesetest_durchgang`, RPCs
+   `lesetest_beginnen`/`_abgeben`/`_ergebnisse`), angewandt vom Workflow
+   `lesetest-schema.yml`; Tabelle vom Inhaber freigegeben (31. 10.).
+   - **Entscheid Inhaber (31. 10.):** Längen ≈80/250/500/1000 statt
+     80/250/600/1500, damit es etwa zehn Minuten bleibt (sonst ≈15).
+   - **Texte:** acht Kurzprosa-Stücke von Franz Kafka (gemeinfrei), je zwei
+     pro Länge mit ähnlichem LIX (33–49): Kleine Fabel (76 Wörter) /
+     Zerstreutes Hinausschaun (86); Der Fahrgast (232) / Eine kaiserliche
+     Botschaft (320); Die Sorge des Hausvaters (472) / Vor dem Gesetz (585);
+     Ein Besuch im Bergwerk (875) / Kinder auf der Landstraße (1071).
+     Vorlagen Project Gutenberg (eBooks 21989, 23532) und Wikisource. Wortlaut
+     und Schreibweise (ß) wie Vorlage, Anführung ‹…› und Striche nach G16/G18.
+     Je Text drei Fragen; dazu ‹Kannte ich schon› (z. B. Vor dem Gesetz), die
+     Auswertung lässt solche Texte wahlweise weg.
+   - **Plan:** acht Gruppen (`plan.js`). Längen kurz → lang, je Person zwei
+     Texte in jeder Schrift; jede Kombination Text × Schrift je Länge kommt
+     über die Gruppen gleich oft vor. Bildschirm: die Datenbank gibt die
+     am wenigsten belegte Gruppe. Papier: Bogennummer = Gruppe; die Person
+     drückt am Telefon Start und Ende und beantwortet dort die Fragen.
+   - **Gleich gemacht:** Grad `--t-body`, Zeilenhöhe `--lh-body`, Laufweite
+     wie `body`; Gewicht Klar 440 ↔ Source 400 (Stamm 33 ↔ 34 px bei 400 px
+     gemessen); x-Höhe gleich über `size-adjust` in `tokens.css`.
+   - **Abweichung, Befund fürs Fundament:** gleiches Mass in **Zeichen**, nicht
+     `--measure`. 62ch ergeben in der Hausschrift **89 Zeichen** je Zeile
+     (ihre Null ist breit, `ch` misst die Null), in Source 70. Der Test setzt
+     beide auf 70 Zeichen (Klar 29 em, Source 31.5 em). Folge fürs Haus:
+     `--measure` ist für Fliesstext in der Hausschrift rund ein Viertel zu
+     breit. Nicht geändert, wartet auf den Inhaber.
+   - Auf dem Telefon füllen beide die Breite; dort fasst die Zeile in Klar
+     etwa 50, in Source etwa 46 Zeichen.
+   - **Ausschluss in der Auswertung:** unter 40 oder über 800 Wörter je
+     Minute, oder mehr als ein Fünftel der Lesezeit im verborgenen Tab.
+   - **Offen:** Einladung verschicken (Text im PR), Bogen 1–8 drucken für die
+     Papiergruppe, nach 20–30 Durchgängen auswerten und dem Inhaber eine
+     Regel «ab etwa N Wörtern Source Sans 3» vorschlagen (nicht ins
+     Regelwerk ohne Freigabe).
 
 ## Nächste Schritte hier (Installer-Strang)
 

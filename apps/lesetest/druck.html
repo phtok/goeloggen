@@ -1,0 +1,101 @@
+<!doctype html>
+<!-- Lesetest · Druckbogen. Acht Bogen (= acht Gruppen aus plan.js), je ein
+     Deckblatt und vier Texte in der zugeteilten Schrift. Der Bogen ist ein
+     Druck-Artefakt: immer hell, wie Papier. Gleicher Grad (11 pt), gleiche
+     Zeilenhöhe, gleiches Mass in Zeichen wie am Bildschirm (lesetest.css). -->
+<html lang="de-CH" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Lesetest · Druckbogen · Goetheanum</title>
+<meta name="description" content="Druckbogen für den Lesetest auf Papier: acht Bogen mit je vier Texten." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="lesetest.css" />
+<style>
+  .steuer{display:grid;gap:var(--s5);padding-block:clamp(32px,6vw,64px) var(--s6);border-top:0;max-width:min(var(--measure),100%)}
+  .steuer h1{font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,48px);line-height:var(--lh-tight);text-wrap:balance}
+  .steuer .lede{color:var(--muted);hyphens:manual}
+  .blatt{border:1px solid var(--line);border-radius:var(--r-card);padding:clamp(20px,5vw,56px);margin-block:var(--s6);background:var(--paper)}
+  .blatt .kopf{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-bottom:var(--s6);font-variant-numeric:tabular-nums}
+  .deck h2{font-weight:var(--w-deutlich);font-size:32px;line-height:var(--lh-tight);margin-bottom:var(--s5)}
+  .deck p,.deck li{font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-min);max-width:60ch;hyphens:manual}
+  .deck ol{padding-left:1.4em;display:grid;gap:var(--s2);margin-block:var(--s4)}
+  .deck .adresse{font-weight:600;overflow-wrap:anywhere}
+  .quelle{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:var(--s5);hyphens:manual}
+  @media print{
+    @page{size:A4;margin:20mm 22mm}
+    .steuer{display:none}
+    .wrap{max-width:none;padding:0}
+    .blatt{border:0;padding:0;margin:0;break-after:page}
+    .blatt .probe{font-size:11pt}
+    .blatt .kopf,.quelle{font-size:9pt}
+    .deck p,.deck li{font-size:11pt}
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section class="steuer">
+    <span class="kicker">Lesetest</span>
+    <h1>Druckbogen</h1>
+    <p class="lede">Je Person ein Bogen, die Nummern der Reihe nach verteilen: 1 bis 8, dann wieder 1. Einseitig drucken, ohne Anpassen der Grösse.</p>
+    <div class="seg" id="wahl" role="group" aria-label="Bogen wählen"></div>
+    <div class="knopfzeile"><button type="button" class="btn primary" id="drucken">Drucken</button></div>
+  </section>
+  <div id="bogen"></div>
+</main>
+<script src="texte.js"></script>
+<script src="plan.js"></script>
+<script>
+(function () {
+  const ADRESSE = "werkzeuge.goetheanum.ch/apps/lesetest/?bogen=";
+  const box = document.getElementById("bogen"), wahl = document.getElementById("wahl");
+  const q = new URLSearchParams(location.search);
+  let aktiv = Number(q.get("bogen")) || 0; // 0 = alle
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+
+  function bogen(n) {
+    const frag = document.createDocumentFragment();
+    const deck = el("article", "blatt deck");
+    deck.appendChild(el("p", "kopf", `Lesetest · Bogen ${n}`));
+    deck.appendChild(el("h2", null, `Bogen ${n}`));
+    deck.appendChild(el("p", null, "Auf diesem Bogen stehen vier kurze Texte. Lies sie nicht vorab."));
+    const ol = el("ol");
+    const a = el("li"); a.append("Öffne auf dem Telefon oder am Rechner: "); a.appendChild(el("span", "adresse", ADRESSE + n)); ol.appendChild(a);
+    ol.appendChild(el("li", null, "Die Seite sagt dir, wann du einen Text liest. Tippe zu Beginn und am Ende eines Texts auf den Knopf."));
+    ol.appendChild(el("li", null, "Nach jedem Text beantwortest du dort drei Fragen, ohne zurückzublättern."));
+    deck.appendChild(ol);
+    deck.appendChild(el("p", null, "Das dauert etwa zehn Minuten. Danke!"));
+    frag.appendChild(deck);
+    LESEPLAN.plan(n - 1).forEach((p) => {
+      const b = el("article", "blatt");
+      b.appendChild(el("p", "kopf", `Bogen ${n} · Text ${p.pos}`));
+      const pr = el("div", `probe schrift-${p.schrift.toLowerCase()}`);
+      pr.appendChild(el("h2", "probe-titel", p.text.titel));
+      p.text.absaetze.forEach((t) => pr.appendChild(el("p", null, t)));
+      b.appendChild(pr);
+      frag.appendChild(b);
+    });
+    return frag;
+  }
+  function zeichnen() {
+    box.textContent = "";
+    for (let n = 1; n <= 8; n++) if (!aktiv || aktiv === n) box.appendChild(bogen(n));
+    const quelle = el("p", "quelle", "Texte: Franz Kafka (gemeinfrei). Vorlagen: Project Gutenberg (Ein Landarzt, eBook 21989; Betrachtung, eBook 23532) und Wikisource (Kleine Fabel).");
+    box.lastElementChild && box.lastElementChild.appendChild(quelle);
+    wahl.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.n) === aktiv)));
+  }
+  [["Alle", 0], ...[1, 2, 3, 4, 5, 6, 7, 8].map((n) => [`Bogen ${n}`, n])].forEach(([t, n]) => {
+    const b = el("button", null, t); b.type = "button"; b.dataset.n = n;
+    b.addEventListener("click", () => { aktiv = n; zeichnen(); });
+    wahl.appendChild(b);
+  });
+  document.getElementById("drucken").addEventListener("click", () => window.print());
+  zeichnen();
+})();
+</script>
+</body>
+</html>
