@@ -117,8 +117,8 @@
       "tag": "Spenden",
       "title": "Spendenformular",
       "href": "spenden-formular.html",
-      "desc": "Prototyp eines neu gestalteten Spendenformulars für goetheanum.io: Betrag, Zahlungsart, Angaben und Dank mit lebender Logik, darunter das Akkordeon der Spendenseite im Kontext.",
-      "such": "Spenden Spendenformular Formular Betrag TWINT Karte PayPal QR-Rechnung Spendenbescheinigung monatlich einmalig goetheanum.io Akkordeon Bloom Übergang Prototyp"
+      "desc": "Spendenformular für goetheanum.io auf dem Formular-Baustein des Design-Systems: Betrag, Zahlungsart, Angaben und Dank mit lebender Logik, das Akkordeon der Spendenseite zu Gast und Code zum Kopieren.",
+      "such": "Spenden Spendenformular Formular Betrag TWINT Karte PayPal QR-Rechnung Spendenbescheinigung monatlich einmalig goetheanum.io Akkordeon Bloom Übergang Prototyp Baustein formular.css Craft"
     },
     {
       "slug": "folder-archiv",

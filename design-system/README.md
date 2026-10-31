@@ -17,6 +17,8 @@ Schauseite (lebend, rendert aus den Tokens): [`index.html`](index.html).
 | `index.html` | Die Schauseite – Schaufenster und Werkbank zugleich. |
 | `starter.html` | Leeres Werkzeug mit allem Verdrahteten. Startpunkt für jede neue Seite. |
 | `akkordeon.css` · `akkordeon.js` | Modul Akkordeon: Kleid **Faden** ist gesetzt, Blüte und Kapsel bleiben als Alternativen auf derselben Mechanik, Sektionsfarben per `data-sek`. Schau und Code zum Kopieren: `../akkordeon.html`. |
+| `formular.css` · `formular.js` | Modul Formular: Frequenz, Betrag mit freiem Feld, Zahlungsart, Personenfelder, Adresse nur bei Bescheinigung, Fehlerzusammenfassung, Knopf mit Betrag, Dank. Texte, Stufen und Zahlarten im Markup (`data-*`), Backend über `GoetheanumFormular.init(form).absenden`. Schau und Code zum Kopieren: `../spenden-formular.html`. |
+| `kopierbereich.js` | Kopierbereich der Schauseiten: lädt Code aus den Quelldateien (`data-quelle`) und rechnet den Token-Auszug aus `tokens.css` (`data-token-auszug`). |
 
 Verwandte Quellen ausserhalb dieses Ordners: die Typo-Regeln liegen in
 `assets/typografie/goetheanum-typo-tokens.json` (`$regeln`) und ausführbar in
