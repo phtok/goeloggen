@@ -82,6 +82,16 @@
       "such": "Lesetest Lesbarkeit Schrift Fliesstext Source Sans Goetheanum Klar Studie Lesezeit Verständnis Druckbogen Auswertung"
     },
     {
+      "slug": "schriftgrenze",
+      "cat": "treibhaus",
+      "status": "intern",
+      "tag": "Schrift",
+      "title": "Schriftgrenze",
+      "href": "apps/schriftgrenze/",
+      "desc": "Goetheanum Klar und Source Sans 3 nebeneinander, in fünf Längen und sechs Grössen. Zum Anschauen, wo die Grenze zwischen beiden liegt.",
+      "such": "Schriftgrenze Vergleich Schrift Fliesstext Source Sans Goetheanum Klar Ruhig Deutlich Grösse Lesemass Zeichen je Zeile Druck"
+    },
+    {
       "slug": "moodboard-lebendig",
       "cat": "treibhaus",
       "beet": "bewegung",

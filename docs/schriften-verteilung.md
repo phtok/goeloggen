@@ -139,6 +139,20 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
      Regel «ab etwa N Wörtern Source Sans 3» vorschlagen (nicht ins
      Regelwerk ohne Freigabe).
 
+3. **Schriftgrenze** (Treibhaus, gebaut 31. 10.): Blick-Werkzeug ohne Test
+   und ohne Datenbank, Anschauungsmittel für das Lesbarkeits-Skillset:
+   https://werkzeuge.goetheanum.ch/apps/schriftgrenze/
+   Goetheanum (Ruhig/Klar/Deutlich) und Source Sans 3 nebeneinander, gleich
+   gesetzt wie im Lesetest. Pillen: Länge (Satz, Absatz, ≈250/500/1000
+   Wörter, Texte aus `apps/lesetest/texte.js`), Grösse (14–24 px, Haus =
+   `--t-body`), Mass (70 Zeichen oder `--measure`), Grund (hell/dunkel).
+   Je Spalte gemessen: Zeichen je Zeile (Median der vollen Zeilen). Zustand
+   steht in der Adresse (`?laenge=…&grad=…&mass=…&schnitt=…`), ein Blick ist
+   so teilbar. Druck: A4 quer, dasselbe Paar in 9/10/11/12 pt.
+   - Auf 1280 px reicht die Breite bei Grösse Haus für das 70-Zeichen-Mass
+     gerade (Klar 70, Source 67); bei 24 px und beim Hausmass begrenzt die
+     Spalte, die Ablesezeile zeigt es ehrlich.
+
 ## Nächste Schritte hier (Installer-Strang)
 
 1. Source Sans 3 statisch, Goetheanum Kyrillisch, Goetheanum Arabisch bauen
