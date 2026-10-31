@@ -1,12 +1,12 @@
 # Befund E1: Kursive der Hausschrift aus Titillium Sans Pro Italic
 
 Stand: 31. 10. 2026. Etappe E1 aus `docs/recherche_titillium-pro.md`,
-Entscheid des Inhabers vom 31. 10.: «die Italics sind interessant, Einbau ins
-Haussystem erwägen, voll kompatibel». Dazu E5 (Black-Probewort), die sich an
+Entscheid des Inhabers vom 31. 10.: ‹die Italics sind interessant, Einbau ins
+Haussystem erwägen, voll kompatibel›. Dazu E5 (Black-Probewort), die sich an
 E1 hängt.
 
 - Probe-Schnitt: `assets/fonts/goetheanum/Probe/Goetheanum-Kursiv-Probe-Klar.otf`
-  und `.woff2` (Familie «Goetheanum Kursiv Probe», Version 0.100, **nicht im
+  und `.woff2` (Familie ‹Goetheanum Kursiv Probe›, Version 0.100, **nicht im
   Paket**; `pack_release_zip.py` erfasst den Ordner nicht)
 - Bau: `tools/goetheanum-fontfix/build_kursiv_probe.py` (idempotent, zweimal
   gebaut, gleiche Prüfsumme)
@@ -20,7 +20,7 @@ Die Pro-Kursive passt auf die Hausschrift: gleiche x-Höhe, gleiche Einheiten,
 und die Gewichte bilden sich fast eins zu eins ab. Die Upright-Formen sind in
 der Kursiven schon da – g, y, t entsprechen der Hausform, das einstöckige a
 und das gerade l hat Chialab als ss01/ss02 gezeichnet; die Probe macht sie zur
-Grundform. Offen sind eine Regelfrage (S01: «keine echte Kursive») und die
+Grundform. Offen sind eine Regelfrage (S01: ‹keine echte Kursive›) und die
 Office-Familie, in der Leise heute den Kursiv-Platz hält.
 
 ## 1 Messung
@@ -52,8 +52,9 @@ Bold 137 (waagrecht); dazwischen linear, wie im Audit.
 | Deutlich 580 | 110 | 112,5 | 575 |
 | Laut 680 | 129 | 131,9 | 674 |
 
-Ausser bei Leise decken sich die Hauszahlen mit der Pro-Gewichtsskala auf
-±10. Gebaut ist nur Klar (I-Stamm 83,5).
+Die Pro-Skala ist dabei an den Mastern festgemacht (Thin 100, Regular 400,
+Bold 700). Klar, Deutlich und Laut decken sich mit ihr auf ±10, Ruhig liegt
+16 darunter, Leise 53. Gebaut ist nur Klar (I-Stamm 83,5).
 
 **Breite** gegen Klar: n 508 / 503, o 504 / 486, H 668 / 619, Gemeine im
 Mittel 456,5 / 443. Ein Satz läuft in der Kursiven 2,7 % länger
@@ -71,7 +72,7 @@ Mediävalziffern (`onum`), die die Hausschrift führt.
 
 ## 2 Upright-Formen: nachziehen oder Text-Form lassen
 
-Angeschaut im Specimen (Abschnitt «Formen») und gross gerendert:
+Angeschaut im Specimen (Abschnitt ‹Formen›) und gross gerendert:
 
 - **g, y, t** der Pro-Kursiven entsprechen schon der Hausform: gerader
   y-Schwanz, aufrechter g-Abstrich, schlichtes t. Nichts nachzuziehen. (Die
@@ -105,6 +106,7 @@ punktgleich zum Master, geprüft an den vorhandenen Glyphen) oder als
 Komponenten vom Regular; 21 Glyphen (B, D, G und ihre Akzente u. a.), bei
 denen die woff2 beim Kompilieren Überlappungen entfernt hat, werden aus Thin
 und Regular fortgeschrieben – für Klar 13 % über Regular hinaus, unsichtbar.
+Eine (M.ss03, Listenzeichen) bleibt aus dem Bold-Master weg.
 Für Deutlich und Laut braucht es die echten Master. Es lohnt sich, Chialab
 darauf hinzuweisen (Issue im Repo); das ist eine Handlung nach aussen und
 bleibt dem Inhaber überlassen.
@@ -130,7 +132,7 @@ beiden für Grafikprogramme.
 
 - **Webfonts:** eine Datei dazu (Kursiv-Variable, woff2 ≈ 90 KB geschätzt,
   oder statisch Kursiv Klar ≈ 48 KB). `tokens.css` bekäme ein zweites
-  `@font-face` «Goetheanum» mit `font-style: italic`.
+  `@font-face` ‹Goetheanum› mit `font-style: italic`.
 - **Office-TTF (Trio):** heute ‹Goetheanum Schrift› = Klar (Regular) + Laut
   (Fett, ⌘B) + **Leise (Kursiv, ⌘I)**. Zwei Wege:
   a) Kursive als eigene Familie ‹Goetheanum Kursiv› neben Ruhig und Deutlich;
@@ -146,9 +148,9 @@ beiden für Grafikprogramme.
 
 ## 5 Regel, die widerspricht (melden, nicht umschreiben)
 
-`$regeln` S01 und `typo-regeln.yaml`: «Die Goetheanum Schrift … führt keine
-echte Kursive (Leise ist aufrechter Gegenton) … nicht vortäuschen.» Und
-«Zitate in Leise». `base.css` setzt `em`/`i` auf Laut, nicht kursiv. Wird die
+`$regeln` S01 und `typo-regeln.yaml`: ‹Die Goetheanum Schrift … führt keine
+echte Kursive (Leise ist aufrechter Gegenton) … nicht vortäuschen.› Und
+‹Zitate in Leise›. `base.css` setzt `em`/`i` auf Laut, nicht kursiv. Wird die
 Kursive eingebaut, muss S01 neu gefasst werden; das entscheidet der Inhaber.
 
 ## 6 E5: Black-Probewort
@@ -162,7 +164,7 @@ Black müsste dort gezeichnet, nicht gerechnet werden.
 ## Entscheidvorlage für den Inhaber
 
 1. **Einbauen?** Empfehlung: **ja**, als Kursiv-Variable in eigener Datei.
-   Die Messung trägt «voll kompatibel» bei x-Höhe, Zeilenhöhe und Gewicht.
+   Die Messung trägt ‹voll kompatibel› bei x-Höhe, Zeilenhöhe und Gewicht.
 2. **Form:** Empfehlung: **Upright-Formen** (ɑ, gerades l) als Grundform,
    Text-Formen als ss01/ss02.
 3. **Rollen:** Empfehlung: **Werktitel** und **Fremdwort** (dort ist heute
