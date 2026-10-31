@@ -16,6 +16,41 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 31. Oktober 2026 — Laborseite Bewegung in zehn Anwendungen (Labor, Version des Systems unverändert)
+
+**Was.** https://werkzeuge.goetheanum.ch/bewegung-anwendungen.html – die
+vorgeschlagenen Bewegungs-Tokens lebend in zehn Bausteinen: Klappmenü (Bloom,
+Deckkraft und Weg auf einer Uhr, auf 280 / zu 220 ms), Akkordeon (Bestand
+`akkordeon.css`, `--acc-kurve`/`--acc-dauer` seitenlokal auf `--kurve-bloom`/
+`--dauer-mittel` gestellt), Wahl-Pille und Wahl-Kachel (Anwahl in
+`--dauer-hauch`), Knopf und Dank (Berührung 120 ms, Dank wächst in 400 ms aus
+dem Knopf), bedingtes Feld (`grid-template-rows`, `--kurve-ein`/`--kurve-aus`),
+Meldung (Bestätigung kommt und geht, Fehler steht ohne Bewegung), Liste mit
+Staffel (einmal beim Hereinscrollen, sonst auf Klick), Reiter (Überblenden mit
+Höhen-Morph, `--kurve-flaeche`, 400 ms), Vollflächen-Menü (`<dialog>` mit
+nativem Fokusfang, `clip-path` 400 ms auf, 280 ms zu) und Seitenwechsel
+(Hauch → Band → Fläche, je eine `--staffel` versetzt). Je Tafel eine Tabelle
+der getragenen Tokens. Laborschalter ‹Normal · Reduziert› setzt alle
+`--dauer-*` und `--staffel` auf 0 s und schaltet Übergänge aus wie
+`base.css` unter `prefers-reduced-motion`.
+**Warum.** Auftrag ‹Zeig mir die Bewegungstokens in zehn verschiedenen
+Anwendungen!›; Grundlage `docs/recherche_uebergaenge-lebendig.md` § Vorschlag
+und `docs/memo-lebendige-gesten-2026-10-31.md`. **Wirkung.** Fundament
+unverändert; Tokens seitenlokal mit Namen und Werten des Vorschlags (wie
+moodboard-lebendig.html und spenden-formular.html). **Befunde für das
+Fundament** (zur Entscheidung): (1) `design-system/akkordeon.js` trägt 280/220
+ms und die Kurve als Literale und fragt `matchMedia` selbst – kann einem
+Token oder einem Seitenschalter nicht folgen; mit den Tokens im Fundament
+sollte es sie lesen. (2) `base.css` `.seg`/`button.kachel` laufen mit `.15s`
+ohne Kurve, `nav.css` mit `.12s`–`.22s ease` – Kandidaten für
+`--dauer-hauch`/`--kurve-bloom`. (3) Vollflächen brauchen ein eigenes Paar:
+auf `--dauer-lang`, zu `--dauer-mittel` (Verhältnis wie mittel/kurz); 220 ms
+wirken für eine ganze Fläche abgerissen. (4) Reiter: `.seg` kennt nur
+`aria-pressed`; eine `role="tablist"`-Spielart mit `aria-selected` fehlt im
+Fundament (hier seitenlokal mit denselben Werten).
+
+---
+
 ## 31. Oktober 2026 — Laborseite Spendenformular (Labor, Version des Systems unverändert)
 
 **Was.** https://werkzeuge.goetheanum.ch/spenden-formular.html – Prototyp

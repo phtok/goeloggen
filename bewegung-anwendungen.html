@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+<title>Bewegung in zehn Anwendungen · Goetheanum</title>
+<meta name="description" content="Die vorgeschlagenen Bewegungs-Tokens lebend in zehn Bausteinen der Goetheanum-Seiten und -Werkzeuge." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<link rel="stylesheet" href="design-system/akkordeon.css" />
+
+<style>
+  /* Bewegung – Vorschlag, noch nicht im Fundament
+     (docs/recherche_uebergaenge-lebendig.md § Vorschlag). Namen und Werte
+     wie auf moodboard-lebendig.html und spenden-formular.html. */
+  :root{
+    --kurve-bloom:cubic-bezier(.32,.08,.24,1);
+    --kurve-flaeche:cubic-bezier(.35,0,.5,1);
+    --kurve-ein:var(--kurve-bloom);
+    --kurve-aus:var(--kurve-bloom);
+    --dauer-hauch:120ms; --dauer-kurz:220ms; --dauer-mittel:280ms; --dauer-lang:400ms;
+    --weg:1.5rem; --staffel:40ms;
+  }
+  /* Laborschalter ‹reduziert›: dasselbe wie prefers-reduced-motion – Dauern auf
+     0 s, Übergänge aus wie in base.css. Startwert aus der Systemeinstellung (Skript). */
+  :root[data-bewegung="reduziert"]{--dauer-hauch:0s;--dauer-kurz:0s;--dauer-mittel:0s;--dauer-lang:0s;--staffel:0s}
+  :root[data-bewegung="reduziert"] *{transition:none!important}
+
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:var(--t-lede);line-height:1.55;max-width:46ch;text-wrap:balance}
+
+  .laborleiste{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s3) var(--s5);
+    padding:var(--s3) var(--s4);border:1px dashed var(--line-control);border-radius:var(--r-card);margin-bottom:var(--s6)}
+
+  /* --- Tafel: Titel, Bühne, darunter die Tokens ------------------------------ */
+  .tafel{border-top:1px solid var(--line);padding-block:var(--s8)}
+  .tafel>h2{font-size:var(--t-h2);text-wrap:balance;scroll-margin-top:var(--s8)}
+  .tafel>h2:focus{outline:none}
+  .buehne{position:relative;margin-top:var(--s5);border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft);
+    padding:var(--s6);display:grid;gap:var(--s5);align-content:start}
+  .buehne.hoch{min-height:21rem}
+  @media(max-width:560px){.buehne{padding:var(--s5) var(--s4)}}
+  .steuer{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center}
+  .tok{margin-top:var(--s4);font-size:var(--t-small);width:min(100%,34rem)}
+  .tok th,.tok td{padding:var(--s2) var(--s3) var(--s2) 0;vertical-align:baseline}
+  .tok th:last-child,.tok td:last-child{padding-right:0}
+  .tok thead th{color:var(--muted);font-weight:var(--w-text)}
+  .tok code{font-family:var(--font-mono);font-size:1em;white-space:nowrap}
+  .tok td.num{white-space:nowrap}
+  @media(max-width:480px){.tok td.num{white-space:normal}}
+
+  /* --- 1 · Klappmenü: Deckkraft und Aufstieg auf einer Uhr ------------------- */
+  .kopfleiste{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;
+    padding-bottom:var(--s3);border-bottom:1px solid var(--line-soft)}
+  .kopfleiste .marke{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body)}
+  .klapp{position:relative}
+  .klapp-ausloeser .ic{width:20px;height:20px;margin-left:var(--s2);transition:transform var(--dauer-kurz) var(--kurve-bloom)}
+  .klapp.offen .klapp-ausloeser .ic{transform:rotate(180deg);transition-duration:var(--dauer-mittel)}
+  .klapp-tafel{position:absolute;top:calc(100% + var(--s2));right:0;z-index:2;min-width:min(16rem,80vw);
+    list-style:none;margin:0;padding:var(--s2);background:var(--paper);border:1px solid var(--line-soft);
+    border-radius:var(--r-card);box-shadow:var(--shadow-card);
+    opacity:0;visibility:hidden;transform:translateY(var(--weg));
+    transition:opacity var(--dauer-kurz) var(--kurve-bloom),transform var(--dauer-kurz) var(--kurve-bloom),visibility 0s linear var(--dauer-kurz)}
+  .klapp.offen .klapp-tafel{opacity:1;visibility:visible;transform:none;
+    transition:opacity var(--dauer-mittel) var(--kurve-bloom),transform var(--dauer-mittel) var(--kurve-bloom),visibility 0s}
+  .klapp-tafel a{display:flex;align-items:center;min-height:var(--tap);padding:0 var(--s3);border-radius:var(--r-control);
+    color:var(--ink);text-decoration:none;transition:background-color var(--dauer-hauch) var(--kurve-bloom)}
+  .klapp-tafel a:hover{background:color-mix(in srgb,var(--gold) 14%,var(--paper))}
+
+  /* --- 2 · Akkordeon: Bestand, auf die Tokens gestellt ------------------------ */
+  .t-akk{--acc-kurve:var(--kurve-bloom);--acc-dauer:var(--dauer-mittel)}
+  .t-akk .acc-liste{background:var(--paper)}
+
+  /* --- 3 · Wahl: die Anwahl wechselt im Hauch --------------------------------- */
+  .t-wahl .seg button,.t-wahl button.kachel{
+    transition:background-color var(--dauer-hauch) var(--kurve-bloom),border-color var(--dauer-hauch) var(--kurve-bloom),color var(--dauer-hauch) var(--kurve-bloom)}
+  .t-wahl .kacheln{grid-template-columns:repeat(auto-fill,minmax(min(100%,13rem),1fr))}
+
+  /* --- 4 · Knopf: Berührung im Hauch, der Dank wächst aus ihm ----------------- */
+  .t-knopf .btn{transition:background-color var(--dauer-hauch) var(--kurve-bloom),border-color var(--dauer-hauch) var(--kurve-bloom),
+    filter var(--dauer-hauch) var(--kurve-bloom),transform var(--dauer-hauch) var(--kurve-bloom),opacity var(--dauer-hauch) var(--kurve-bloom)}
+  .t-knopf .btn:active{transform:scale(.97)}
+  .knopf-feld{max-width:28rem;display:grid}
+  .knopf-feld>.btn{justify-self:start}
+  .dank{border-radius:var(--r-control);overflow:hidden}
+  .dank:empty{display:none}
+  .dank-innen{background:color-mix(in srgb,var(--gold) 14%,var(--paper));padding:var(--s5) var(--s6) var(--s6);display:grid;gap:var(--s3)}
+  .dank-innen h3{font-size:var(--t-h3);text-wrap:balance}
+  .dank-innen h3:focus{outline:none}
+  .dank-innen .btn{justify-self:start}
+
+  /* --- 5 · Bedingtes Feld: wächst heran, verwelkt ----------------------------- */
+  .ja{display:flex;align-items:center;gap:var(--s3);min-height:var(--tap);font-family:var(--font-text);font-size:var(--t-body);cursor:pointer}
+  .ja input{width:22px;height:22px;margin:0;accent-color:var(--gold-deep)}
+  .wachsen{display:grid;grid-template-rows:0fr;opacity:0;max-width:28rem;
+    transition:grid-template-rows var(--dauer-kurz) var(--kurve-aus),opacity var(--dauer-kurz) var(--kurve-aus)}
+  .wachsen>div{overflow:hidden;min-height:0}
+  .wachsen .field{padding:var(--s1) var(--s1) var(--s2)}
+  .wachsen.offen{grid-template-rows:1fr;opacity:1;transition-duration:var(--dauer-mittel);transition-timing-function:var(--kurve-ein)}
+
+  /* --- 6 · Meldung: die Bestätigung kommt und geht beim Schliessen, der Fehler steht sofort */
+  .meldeplatz{display:grid;gap:var(--s3);max-width:30rem;min-height:9rem;align-content:start}
+  .toast{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;
+    padding:var(--s3) var(--s3) var(--s3) var(--s5);border-radius:var(--r-card);background:var(--paper);
+    border:1px solid var(--line-soft);box-shadow:var(--shadow-card);font-family:var(--font-text)}
+  .fehler-meldung{padding:var(--s3) var(--s4);border-left:4px solid var(--bad);background:var(--paper);
+    font-family:var(--font-text);color:var(--ink);transition:none}
+
+  /* --- 7 · Liste mit Staffel --------------------------------------------------- */
+  .karten{list-style:none;margin:0;padding:0;display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fill,minmax(min(100%,12rem),1fr))}
+  .karten .card{background:var(--paper);padding:var(--s4) var(--s5);min-height:5.5rem;display:grid;align-content:space-between;gap:var(--s2)}
+  .karten .k-name{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);line-height:var(--lh-tight);text-wrap:balance}
+
+  /* --- 8 · Reiter: ein Inhalt geht aus dem anderen hervor ---------------------- */
+  .reiter button[aria-selected="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent);font-weight:var(--w-strong)}
+  .reiter-flaeche{display:grid;max-width:34rem;background:var(--paper);border:1px solid var(--line-soft);border-radius:var(--r-card)}
+  .reiter-flaeche>[role="tabpanel"]{grid-area:1/1;padding:var(--s5)}
+  .reiter-flaeche>[role="tabpanel"]:focus-visible{outline:2px solid var(--blue);outline-offset:-2px;border-radius:var(--r-card)}
+  .reiter-flaeche ul{margin:0;padding-left:1.1em;display:grid;gap:var(--s2)}
+  .reiter-flaeche p{max-width:min(var(--measure),100%);text-wrap:pretty}
+
+  /* --- 9 · Vollflächen-Menü ---------------------------------------------------- */
+  body:has(dialog.vollflaeche[open]){overflow:hidden}
+  dialog.vollflaeche{position:fixed;inset:0;width:100vw;overscroll-behavior:contain;height:100%;max-width:none;max-height:none;margin:0;border:0;
+    padding:var(--s6) clamp(var(--s5),5vw,var(--s8));background:var(--blue-solid);color:var(--on-accent);overflow:auto}
+  dialog.vollflaeche::backdrop{background:transparent}
+  .vf-kopf{display:flex;justify-content:space-between;align-items:center;gap:var(--s4);max-width:var(--maxw);margin-inline:auto}
+  .vf-kopf .marke{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body)}
+  .vf-zu{background:transparent;border-color:var(--on-accent);color:var(--on-accent)}
+  .vf-zu:hover{background:color-mix(in srgb,var(--on-accent) 14%,transparent)}
+  .vf-zu:focus-visible,.vf-liste a:focus-visible{outline:2px solid var(--on-accent);outline-offset:3px}
+  .vf-liste{list-style:none;margin:var(--s8) auto 0;padding:0;display:grid;gap:var(--s2);max-width:var(--maxw)}
+  .vf-liste a{display:inline-flex;align-items:center;min-height:var(--tap);color:var(--on-accent);text-decoration:none;
+    font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h2);line-height:var(--lh-tight);text-wrap:balance}
+  .vf-liste a:hover{text-decoration:underline;text-underline-offset:.15em}
+
+  /* --- 10 · Seitenwechsel: Hauch → Band → Fläche ------------------------------- */
+  .seite{border:1px solid var(--line-soft);border-radius:var(--r-card);overflow:hidden;max-width:34rem;
+    background:var(--ton-hell);transition:background-color var(--dauer-lang) var(--kurve-flaeche)}
+  .s-band{background:var(--ton-dunkel);color:var(--on-accent);padding:var(--s3) var(--s5);
+    font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);
+    transition:background-color var(--dauer-lang) var(--kurve-flaeche) var(--staffel)}
+  .s-hauch{padding:var(--s5);display:grid;gap:var(--s4)}
+  .s-hauch .kicker{color:var(--ton-ink);transition:color var(--dauer-lang) var(--kurve-flaeche)}
+  .s-hauch h3{font-size:var(--t-h3);text-wrap:balance}
+  .s-flaeche{background:var(--ton-dunkel);color:var(--on-accent);border-radius:var(--r-control);padding:var(--s5);
+    font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);
+    transition:background-color var(--dauer-lang) var(--kurve-flaeche) calc(2 * var(--staffel))}
+</style>
+</head>
+<body>
+
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Labor · Bewegung</span>
+    <h1>Bewegung in zehn Anwendungen</h1>
+    <p class="lede">Zwei Kurven, vier Dauern, ein Weg, eine Staffel – angewendet auf&nbsp;das, was täglich auf&nbsp;den Seiten steht.</p>
+  </section>
+
+  <div class="laborleiste">
+    <span class="lab" id="l-bewegung">Bewegung</span>
+    <div class="seg" role="group" aria-labelledby="l-bewegung" id="bewegung-wahl">
+      <button type="button" data-wert="normal" aria-pressed="true">Normal</button>
+      <button type="button" data-wert="reduziert" aria-pressed="false">Reduziert</button>
+    </div>
+  </div>
+
+  <!-- 1 · Klappmenü -->
+  <section class="tafel" aria-labelledby="t-klappmenue">
+    <h2 id="t-klappmenue" tabindex="-1">Klappmenü</h2>
+    <div class="buehne hoch">
+      <div class="kopfleiste">
+        <span class="marke">Goetheanum</span>
+        <div class="klapp" id="klapp">
+          <button class="btn klapp-ausloeser" type="button" aria-expanded="false" aria-controls="klapp-tafel">Sektionen<svg class="ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></button>
+          <ul class="klapp-tafel" id="klapp-tafel">
+            <li><a href="#t-akkordeon">Akkordeon</a></li>
+            <li><a href="#t-wahl">Wahl-Pille und Wahl-Kachel</a></li>
+            <li><a href="#t-knopf">Knopf und Dank</a></li>
+            <li><a href="#t-feld">Bedingtes Feld</a></li>
+            <li><a href="#t-meldung">Meldung</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <table class="tok">
+      <thead><tr><th scope="col">Rolle</th><th scope="col">Token</th><th scope="col" class="num">Wert</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Kurve</th><td><code>--kurve-bloom</code></td><td class="num">(.32,&nbsp;.08,<wbr>&nbsp;.24,&nbsp;1)</td></tr>
+        <tr><th scope="row">Auf</th><td><code>--dauer-mittel</code></td><td class="num">280&nbsp;ms</td></tr>
+        <tr><th scope="row">Zu</th><td><code>--dauer-kurz</code></td><td class="num">220&nbsp;ms</td></tr>
+        <tr><th scope="row">Weg</th><td><code>--weg</code></td><td class="num">1.5&nbsp;rem</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 2 · Akkordeon -->
+  <section class="tafel t-akk" aria-labelledby="t-akkordeon">
+    <h2 id="t-akkordeon" tabindex="-1">Akkordeon</h2>
+    <div class="buehne">
+      <div class="acc-liste faden">
+        <details class="acc">
+          <summary><span class="frage">Wie öffnet sich eine Antwort?</span><span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l5 5 5-5"/></svg></span></summary>
+          <div class="acc-body"><div class="acc-inner"><p>Sie wächst heran: Höhe und Deckkraft auf&nbsp;einer Uhr, schneller Anfang, langes Ausklingen.</p></div></div>
+        </details>
+        <details class="acc">
+          <summary><span class="frage">Und wie schliesst sie sich?</span><span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l5 5 5-5"/></svg></span></summary>
+          <div class="acc-body"><div class="acc-inner"><p>Leichter, als sie sich geöffnet hat. Was geht, braucht weniger Zeit als&nbsp;das, was kommt.</p></div></div>
+        </details>
+        <details class="acc">
+          <summary><span class="frage">Was bleibt bei reduzierter Bewegung?</span><span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l5 5 5-5"/></svg></span></summary>
+          <div class="acc-body"><div class="acc-inner"><p>Der Raum öffnet sich sofort, ohne Weg. Der Inhalt ist derselbe.</p></div></div>
+        </details>
+      </div>
+    </div>
+    <table class="tok">
+      <thead><tr><th scope="col">Rolle</th><th scope="col">Token</th><th scope="col" class="num">Wert</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Kurve</th><td><code>--kurve-bloom</code></td><td class="num">(.32,&nbsp;.08,<wbr>&nbsp;.24,&nbsp;1)</td></tr>
+        <tr><th scope="row">Auf</th><td><code>--dauer-mittel</code></td><td class="num">280&nbsp;ms</td></tr>
+        <tr><th scope="row">Zu</th><td><code>--dauer-kurz</code></td><td class="num">220&nbsp;ms</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 3 · Wahl-Pille und Wahl-Kachel -->
+  <section class="tafel t-wahl" aria-labelledby="t-wahl">
+    <h2 id="t-wahl" tabindex="-1">Wahl-Pille und Wahl-Kachel</h2>
+    <div class="buehne">
+      <div class="seg" role="group" aria-label="Betrag" data-wahl>
+        <button type="button" aria-pressed="false">20&nbsp;CHF</button>
+        <button type="button" aria-pressed="true">50&nbsp;CHF</button>
+        <button type="button" aria-pressed="false">100&nbsp;CHF</button>
+        <button type="button" aria-pressed="false">200&nbsp;CHF</button>
+      </div>
+      <div class="kacheln" role="group" aria-label="Häufigkeit" data-wahl>
+        <button class="kachel" type="button" aria-pressed="true"><span class="k-name">Einmalig</span><span class="k-kurz">Eine Spende, jetzt</span></button>
+        <button class="kachel" type="button" aria-pressed="false"><span class="k-name">Monatlich</span><span class="k-kurz">Jeden Monat derselbe Betrag</span></button>
+        <button class="kachel" type="button" aria-pressed="false"><span class="k-name">Jährlich</span><span class="k-kurz">Einmal im Jahr</span></button>
+      </div>
+    </div>
+    <table class="tok">
+      <thead><tr><th scope="col">Rolle</th><th scope="col">Token</th><th scope="col" class="num">Wert</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Kurve</th><td><code>--kurve-bloom</code></td><td class="num">(.32,&nbsp;.08,<wbr>&nbsp;.24,&nbsp;1)</td></tr>
+        <tr><th scope="row">Auf und zu</th><td><code>--dauer-hauch</code></td><td class="num">120&nbsp;ms</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 4 · Knopf und Dank -->
+  <section class="tafel t-knopf" aria-labelledby="t-knopf">
+    <h2 id="t-knopf" tabindex="-1">Knopf und Dank</h2>
+    <div class="buehne">
+      <div class="knopf-feld">
+        <button class="btn primary" type="button" id="spenden-knopf">50&nbsp;CHF spenden</button>
+        <div class="dank" id="dank"></div>
+        <span class="sr-only" role="status" id="knopf-status"></span>
+      </div>
+    </div>
+    <table class="tok">
+      <thead><tr><th scope="col">Rolle</th><th scope="col">Token</th><th scope="col" class="num">Wert</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Kurve</th><td><code>--kurve-bloom</code></td><td class="num">(.32,&nbsp;.08,<wbr>&nbsp;.24,&nbsp;1)</td></tr>
+        <tr><th scope="row">Berührung</th><td><code>--dauer-hauch</code></td><td class="num">120&nbsp;ms</td></tr>
+        <tr><th scope="row">Dank auf</th><td><code>--dauer-lang</code></td><td class="num">400&nbsp;ms</td></tr>
+        <tr><th scope="row">Zeilen auf</th><td><code>--dauer-mittel</code></td><td class="num">280&nbsp;ms</td></tr>
+        <tr><th scope="row">Staffel</th><td><code>--staffel</code></td><td class="num">40&nbsp;ms</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 5 · Bedingtes Feld -->
+  <section class="tafel" aria-labelledby="t-feld">
+    <h2 id="t-feld" tabindex="-1">Bedingtes Feld</h2>
+    <div class="buehne">
+      <label class="ja"><input type="checkbox" id="beschein" aria-controls="adresse-feld" /> Spendenbescheinigung erwünscht</label>
+      <div class="wachsen" id="adresse-feld" inert>
+        <div>
+          <label class="field">
+            <span class="lab">Postadresse</span>
+            <textarea rows="3" autocomplete="street-address"></textarea>
+          </label>
+        </div>
+      </div>
+    </div>
+    <table class="tok">
+      <thead><tr><th scope="col">Rolle</th><th scope="col">Token</th><th scope="col" class="num">Wert</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Kurve auf</th><td><code>--kurve-ein</code></td><td class="num">(.32,&nbsp;.08,<wbr>&nbsp;.24,&nbsp;1)</td></tr>
+        <tr><th scope="row">Kurve zu</th><td><code>--kurve-aus</code></td><td class="num">(.32,&nbsp;.08,<wbr>&nbsp;.24,&nbsp;1)</td></tr>
+        <tr><th scope="row">Auf</th><td><code>--dauer-mittel</code></td><td class="num">280&nbsp;ms</td></tr>
+        <tr><th scope="row">Zu</th><td><code>--dauer-kurz</code></td><td class="num">220&nbsp;ms</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 6 · Meldung -->
+  <section class="tafel" aria-labelledby="t-meldung">
+    <h2 id="t-meldung" tabindex="-1">Meldung</h2>
+    <div class="buehne">
+      <div class="steuer">
+        <button class="btn primary" type="button" id="speichern">Speichern</button>
+        <button class="btn" type="button" id="fehlschlag">Ohne Verbindung speichern</button>
+      </div>
+      <div class="meldeplatz">
+        <div id="toast-ort" role="status"></div>
+        <div id="fehler-ort" role="alert"></div>
+      </div>
+    </div>
+    <table class="tok">
+      <thead><tr><th scope="col">Rolle</th><th scope="col">Token</th><th scope="col" class="num">Wert</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Kurve</th><td><code>--kurve-bloom</code></td><td class="num">(.32,&nbsp;.08,<wbr>&nbsp;.24,&nbsp;1)</td></tr>
+        <tr><th scope="row">Auf</th><td><code>--dauer-mittel</code></td><td class="num">280&nbsp;ms</td></tr>
+        <tr><th scope="row">Zu</th><td><code>--dauer-kurz</code></td><td class="num">220&nbsp;ms</td></tr>
+        <tr><th scope="row">Weg</th><td><code>--weg</code></td><td class="num">1.5&nbsp;rem</td></tr>
+        <tr><th scope="row">Fehler</th><td>–</td><td class="num">0&nbsp;ms</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 7 · Liste mit Staffel -->
+  <section class="tafel" aria-labelledby="t-liste">
+    <h2 id="t-liste" tabindex="-1">Liste mit Staffel</h2>
+    <div class="buehne">
+      <ul class="karten" id="karten">
+        <li class="card ton" data-sek="aas"><span class="k-name">Allgemeine Anthroposophie</span><span class="meta">Sektion</span></li>
+        <li class="card ton" data-sek="hpise"><span class="k-name">Heilpädagogik</span><span class="meta">Sektion</span></li>
+        <li class="card ton" data-sek="ps"><span class="k-name">Pädagogik</span><span class="meta">Sektion</span></li>
+        <li class="card ton" data-sek="ms"><span class="k-name">Medizin</span><span class="meta">Sektion</span></li>
+        <li class="card ton" data-sek="nws"><span class="k-name">Naturwissenschaften</span><span class="meta">Sektion</span></li>
+        <li class="card ton" data-sek="lws"><span class="k-name">Landwirtschaft</span><span class="meta">Sektion</span></li>
+      </ul>
+      <div class="steuer"><button class="btn" type="button" id="staffel-nochmal">Noch einmal</button></div>
+    </div>
+    <table class="tok">
+      <thead><tr><th scope="col">Rolle</th><th scope="col">Token</th><th scope="col" class="num">Wert</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Kurve</th><td><code>--kurve-bloom</code></td><td class="num">(.32,&nbsp;.08,<wbr>&nbsp;.24,&nbsp;1)</td></tr>
+        <tr><th scope="row">Auf</th><td><code>--dauer-mittel</code></td><td class="num">280&nbsp;ms</td></tr>
+        <tr><th scope="row">Staffel</th><td><code>--staffel</code></td><td class="num">40&nbsp;ms</td></tr>
+        <tr><th scope="row">Weg</th><td><code>--weg</code></td><td class="num">1.5&nbsp;rem</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 8 · Reiter -->
+  <section class="tafel" aria-labelledby="t-reiter">
+    <h2 id="t-reiter" tabindex="-1">Reiter</h2>
+    <div class="buehne">
+      <div class="seg reiter" role="tablist" aria-label="Tagung">
+        <button type="button" role="tab" id="r-programm" aria-selected="true" aria-controls="p-programm">Programm</button>
+        <button type="button" role="tab" id="r-anreise" aria-selected="false" aria-controls="p-anreise" tabindex="-1">Anreise</button>
+        <button type="button" role="tab" id="r-anmeldung" aria-selected="false" aria-controls="p-anmeldung" tabindex="-1">Anmeldung</button>
+      </div>
+      <div class="reiter-flaeche">
+        <div role="tabpanel" id="p-programm" aria-labelledby="r-programm" tabindex="0">
+          <ul><li>Vortrag</li><li>Gespräch in Gruppen</li><li>Eurythmie</li><li>Abschluss im Grossen Saal</li></ul>
+        </div>
+        <div role="tabpanel" id="p-anreise" aria-labelledby="r-anreise" tabindex="0" hidden>
+          <p>Mit dem Zug bis Dornach-Arlesheim, dann zu&nbsp;Fuss den Hügel hinauf.</p>
+        </div>
+        <div role="tabpanel" id="p-anmeldung" aria-labelledby="r-anmeldung" hidden>
+          <label class="field"><span class="lab">E-Mail</span><input type="email" autocomplete="email" /></label>
+        </div>
+      </div>
+    </div>
+    <table class="tok">
+      <thead><tr><th scope="col">Rolle</th><th scope="col">Token</th><th scope="col" class="num">Wert</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Kurve</th><td><code>--kurve-flaeche</code></td><td class="num">(.35,&nbsp;0,<wbr>&nbsp;.5,&nbsp;1)</td></tr>
+        <tr><th scope="row">Übergang</th><td><code>--dauer-lang</code></td><td class="num">400&nbsp;ms</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 9 · Vollflächen-Menü -->
+  <section class="tafel" aria-labelledby="t-dialog">
+    <h2 id="t-dialog" tabindex="-1">Vollflächen-Menü</h2>
+    <div class="buehne">
+      <div class="steuer"><button class="btn primary" type="button" id="vf-auf" aria-haspopup="dialog" aria-controls="vf">Menü</button></div>
+    </div>
+    <table class="tok">
+      <thead><tr><th scope="col">Rolle</th><th scope="col">Token</th><th scope="col" class="num">Wert</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Kurve</th><td><code>--kurve-flaeche</code></td><td class="num">(.35,&nbsp;0,<wbr>&nbsp;.5,&nbsp;1)</td></tr>
+        <tr><th scope="row">Auf</th><td><code>--dauer-lang</code></td><td class="num">400&nbsp;ms</td></tr>
+        <tr><th scope="row">Zu</th><td><code>--dauer-mittel</code></td><td class="num">280&nbsp;ms</td></tr>
+        <tr><th scope="row">Staffel</th><td><code>--staffel</code></td><td class="num">40&nbsp;ms</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 10 · Seitenwechsel -->
+  <section class="tafel" aria-labelledby="t-seite">
+    <h2 id="t-seite" tabindex="-1">Seitenwechsel</h2>
+    <div class="buehne">
+      <div class="seg" role="group" aria-label="Sektion" id="sek-wahl" data-wahl>
+        <button type="button" data-wert="goetheanum" aria-pressed="true">Goetheanum</button>
+        <button type="button" data-wert="hpise" aria-pressed="false">Heilpädagogik</button>
+        <button type="button" data-wert="lws" aria-pressed="false">Landwirtschaft</button>
+        <button type="button" data-wert="ms" aria-pressed="false">Medizin</button>
+      </div>
+      <div class="seite" data-sek="goetheanum" id="seite">
+        <div class="s-band" id="s-band">Goetheanum</div>
+        <div class="s-hauch">
+          <span class="kicker">Veranstaltungen</span>
+          <h3>Was in den nächsten Wochen stattfindet</h3>
+          <div class="s-flaeche">Herbsttagung</div>
+        </div>
+      </div>
+    </div>
+    <table class="tok">
+      <thead><tr><th scope="col">Rolle</th><th scope="col">Token</th><th scope="col" class="num">Wert</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Kurve</th><td><code>--kurve-flaeche</code></td><td class="num">(.35,&nbsp;0,<wbr>&nbsp;.5,&nbsp;1)</td></tr>
+        <tr><th scope="row">Übergang</th><td><code>--dauer-lang</code></td><td class="num">400&nbsp;ms</td></tr>
+        <tr><th scope="row">Staffel</th><td><code>--staffel</code></td><td class="num">40&nbsp;ms</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<dialog class="vollflaeche" id="vf" aria-label="Menü">
+  <div class="vf-kopf">
+    <span class="marke">Goetheanum</span>
+    <button class="btn vf-zu" type="button" id="vf-zu">Schliessen</button>
+  </div>
+  <nav aria-label="Tafeln">
+  <ul class="vf-liste">
+    <li><a href="#t-liste">Liste mit Staffel</a></li>
+    <li><a href="#t-reiter">Reiter</a></li>
+    <li><a href="#t-seite">Seitenwechsel</a></li>
+    <li><a href="#t-klappmenue">Klappmenü</a></li>
+  </ul>
+  </nav>
+</dialog>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var wurzel = document.documentElement;
+  function $(s, w){ return (w || document).querySelector(s); }
+  function $$(s, w){ return Array.prototype.slice.call((w || document).querySelectorAll(s)); }
+  /* Werte kommen aus den Tokens – der Laborschalter setzt sie auf 0 s. */
+  function wert(n){ return getComputedStyle(wurzel).getPropertyValue(n).trim(); }
+  function dauer(n){ var v = wert(n), z = parseFloat(v) || 0; return /ms$/.test(v) ? z : z * 1000; }
+  function kurve(n){ return wert(n) || "ease"; }
+  var kann = !!document.body.animate;
+
+  /* --- Laborschalter ------------------------------------------------------- */
+  var echt = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function bewegung(w){
+    wurzel.dataset.bewegung = w;
+    $$("#bewegung-wahl button").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.wert === w ? "true" : "false"); });
+  }
+  bewegung(echt.matches ? "reduziert" : "normal");
+  $("#bewegung-wahl").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if (b) bewegung(b.dataset.wert);
+  });
+
+  /* --- Einfachwahl (Pillen, Kacheln, Sektion) ------------------------------- */
+  $$("[data-wahl]").forEach(function(g){
+    g.addEventListener("click", function(e){
+      var b = e.target.closest("button"); if (!b) return;
+      $$("button", g).forEach(function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      g.dispatchEvent(new CustomEvent("gewaehlt", {detail:b}));
+    });
+  });
+
+  /* --- 1 · Klappmenü ----------------------------------------------------------- */
+  var klapp = $("#klapp"), ausloeser = $(".klapp-ausloeser", klapp);
+  function klappen(auf){
+    klapp.classList.toggle("offen", auf);
+    ausloeser.setAttribute("aria-expanded", auf ? "true" : "false");
+  }
+  ausloeser.addEventListener("click", function(){ klappen(!klapp.classList.contains("offen")); });
+  klapp.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && klapp.classList.contains("offen")) { klappen(false); ausloeser.focus(); }
+  });
+  document.addEventListener("click", function(e){ if (!klapp.contains(e.target)) klappen(false); });
+  klapp.addEventListener("focusout", function(e){ if (e.relatedTarget && !klapp.contains(e.relatedTarget)) klappen(false); });
+  $$(".klapp-tafel a").forEach(function(a){ a.addEventListener("click", function(){ klappen(false); }); });
+
+  /* --- 2 · Akkordeon: Höhe und Deckkraft auf einer Uhr ------------------------- */
+  $$(".t-akk details.acc").forEach(function(d){
+    var body = $(".acc-body", d), lauf = null;
+    $("summary", d).addEventListener("click", function(e){
+      e.preventDefault();
+      if (lauf) { lauf.cancel(); lauf = null; }
+      var k = kurve("--kurve-bloom");
+      if (!d.classList.contains("is-open")) {
+        d.open = true; d.classList.add("is-open");
+        var t = dauer("--dauer-mittel");
+        if (t && kann) lauf = body.animate([{height:"0px",opacity:0},{height:body.scrollHeight + "px",opacity:1}], {duration:t, easing:k});
+      } else {
+        d.classList.remove("is-open");
+        var z = dauer("--dauer-kurz");
+        if (!z || !kann) { d.open = false; return; }
+        lauf = body.animate([{height:body.offsetHeight + "px",opacity:1},{height:"0px",opacity:0}], {duration:z, easing:k});
+        lauf.onfinish = function(){ d.open = false; lauf = null; };
+      }
+    });
+  });
+
+  /* --- 4 · Knopf: warten, dann wächst der Dank aus ihm --------------------------- */
+  var knopf = $("#spenden-knopf"), dank = $("#dank");
+  knopf.addEventListener("click", function(){
+    knopf.disabled = true;
+    knopf.textContent = "Wird übermittelt …";
+    $("#knopf-status").textContent = "Wird übermittelt …";
+    setTimeout(danken, 700);
+  });
+  function danken(){
+    var hoehe = knopf.offsetHeight, blau = getComputedStyle(knopf).backgroundColor;
+    dank.innerHTML = '<div class="dank-innen"><h3 tabindex="-1">Danke.</h3>' +
+      '<p>Ihre Spende von 50 CHF ist angekommen.</p>' +
+      '<button class="btn" type="button" id="dank-neu">Noch einmal</button></div>';
+    knopf.hidden = true; $("#knopf-status").textContent = "";
+    var d = dauer("--dauer-lang"), k = kurve("--kurve-bloom"), innen = $(".dank-innen", dank);
+    if (d && kann) {
+      var hauch = getComputedStyle(innen).backgroundColor;
+      dank.animate([{height:hoehe + "px"},{height:dank.offsetHeight + "px"}], {duration:d, easing:k});
+      innen.animate([{backgroundColor:blau},{backgroundColor:hauch}], {duration:d, easing:k});
+      $$(".dank-innen > *", dank).forEach(function(x, i){
+        x.animate([{opacity:0},{opacity:1}], {duration:dauer("--dauer-mittel"), delay:d * .5 + i * dauer("--staffel"), easing:k, fill:"backwards"});
+      });
+    }
+    $("h3", dank).focus({preventScroll:true});
+    $("#dank-neu").addEventListener("click", function(){
+      dank.innerHTML = ""; knopf.hidden = false; knopf.disabled = false;
+      knopf.textContent = "50 CHF spenden"; knopf.focus();
+    });
+  }
+
+  /* --- 5 · Bedingtes Feld ----------------------------------------------------- */
+  var kaestchen = $("#beschein"), wachsen = $("#adresse-feld");
+  kaestchen.addEventListener("change", function(){
+    wachsen.classList.toggle("offen", kaestchen.checked);
+    wachsen.inert = !kaestchen.checked;
+  });
+
+  /* --- 6 · Meldung: die gute kommt und geht, der Fehler steht ------------------- */
+  var toastOrt = $("#toast-ort"), fehlerOrt = $("#fehler-ort");
+  $("#speichern").addEventListener("click", function(){
+    fehlerOrt.innerHTML = "";
+    toastOrt.innerHTML = '<div class="toast"><span>Gespeichert.</span><button class="btn" type="button">Schliessen</button></div>';
+    var t = $(".toast", toastOrt), d = dauer("--dauer-mittel");
+    if (d && kann) t.animate([{opacity:0,transform:"translateY(" + wert("--weg") + ")"},{opacity:1,transform:"none"}], {duration:d, easing:kurve("--kurve-bloom")});
+    $("button", t).addEventListener("click", function(){
+      var z = dauer("--dauer-kurz");
+      $("#speichern").focus();
+      if (!z || !kann) { toastOrt.innerHTML = ""; return; }
+      t.animate([{opacity:1,transform:"none"},{opacity:0,transform:"translateY(" + wert("--weg") + ")"}], {duration:z, easing:kurve("--kurve-bloom"), fill:"forwards"})
+        .onfinish = function(){ if (t.parentNode) toastOrt.innerHTML = ""; };
+    });
+  });
+  $("#fehlschlag").addEventListener("click", function(){
+    toastOrt.innerHTML = "";
+    fehlerOrt.innerHTML = "";
+    fehlerOrt.innerHTML = '<p class="fehler-meldung"><b>Nicht gespeichert.</b> Keine Verbindung – bitte später noch einmal versuchen.</p>';
+  });
+
+  /* --- 7 · Liste mit Staffel: einmal beim Hereinscrollen, sonst auf Klick -------- */
+  function staffeln(){
+    var d = dauer("--dauer-mittel"), st = dauer("--staffel"), k = kurve("--kurve-bloom");
+    if (!d || !kann) return;
+    $$("#karten > li").forEach(function(li, i){
+      li.animate([{opacity:0,transform:"translateY(" + wert("--weg") + ")"},{opacity:1,transform:"none"}],
+        {duration:d, delay:i * st, easing:k, fill:"backwards"});
+    });
+  }
+  $("#staffel-nochmal").addEventListener("click", staffeln);
+  if ("IntersectionObserver" in window) {
+    var beob = new IntersectionObserver(function(eintraege){
+      if (eintraege.some(function(x){ return x.isIntersecting; })) { beob.disconnect(); staffeln(); }
+    }, {threshold:.35});
+    beob.observe($("#karten"));
+  }
+
+  /* --- 8 · Reiter: ein Inhalt geht aus dem anderen hervor ------------------------ */
+  var reiter = $$(".reiter [role=tab]"), flaeche = $(".reiter-flaeche"), laeufe = [];
+  function zeigen(tab){
+    var neu = $("#" + tab.getAttribute("aria-controls"));
+    var vorher = reiter.filter(function(r){ return r.getAttribute("aria-selected") === "true"; })[0];
+    var alt = vorher && vorher !== tab ? $("#" + vorher.getAttribute("aria-controls")) : null;
+    if (!alt && !neu.hidden) return;
+    laeufe.forEach(function(a){ a.onfinish = null; a.cancel(); }); laeufe = [];
+    flaeche.style.overflow = "";
+    $$("[role=tabpanel]", flaeche).forEach(function(p){ p.inert = false; if (p !== neu && p !== alt) p.hidden = true; });
+    reiter.forEach(function(r){
+      var an = r === tab;
+      r.setAttribute("aria-selected", an ? "true" : "false");
+      r.tabIndex = an ? 0 : -1;
+    });
+    if (!alt) return;
+    var d = dauer("--dauer-lang"), k = kurve("--kurve-flaeche");
+    var h0 = flaeche.offsetHeight;
+    alt.hidden = true; neu.hidden = false;
+    if (!d || !kann) return;
+    var h1 = flaeche.offsetHeight;
+    alt.hidden = false; alt.inert = true;
+    laeufe = [
+      flaeche.animate([{height:h0 + "px"},{height:h1 + "px"}], {duration:d, easing:k}),
+      alt.animate([{opacity:1},{opacity:0}], {duration:d, easing:k, fill:"forwards"}),
+      neu.animate([{opacity:0},{opacity:1}], {duration:d, easing:k})
+    ];
+    flaeche.style.overflow = "hidden";
+    var dieser = laeufe;
+    laeufe[0].onfinish = function(){
+      if (laeufe !== dieser) return;
+      alt.hidden = true; alt.inert = false; dieser[1].cancel(); flaeche.style.overflow = ""; laeufe = [];
+    };
+  }
+  reiter.forEach(function(r, i){
+    r.addEventListener("click", function(){ zeigen(r); });
+    r.addEventListener("keydown", function(e){
+      var j = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? reiter.length - 1 : null;
+      if (j === null) return;
+      e.preventDefault();
+      var z = reiter[(j + reiter.length) % reiter.length];
+      z.focus(); zeigen(z);
+    });
+  });
+
+  /* --- 9 · Vollflächen-Menü: <dialog> fängt den Fokus selbst --------------------- */
+  var vf = $("#vf"), vfAuf = $("#vf-auf"), vfLauf = null;
+  var ZU = "inset(0 0 100% 0)", OFFEN = "inset(0 0 0 0)";
+  function vfOeffnen(){
+    if (vfLauf) vfLauf.cancel();
+    vf.showModal();
+    var d = dauer("--dauer-lang"), k = kurve("--kurve-flaeche");
+    if (!d || !kann) return;
+    vfLauf = vf.animate([{clipPath:ZU},{clipPath:OFFEN}], {duration:d, easing:k});
+    $$(".vf-liste li", vf).forEach(function(li, i){
+      li.animate([{opacity:0,transform:"translateY(" + wert("--weg") + ")"},{opacity:1,transform:"none"}],
+        {duration:dauer("--dauer-mittel"), delay:d * .5 + i * dauer("--staffel"), easing:kurve("--kurve-bloom"), fill:"backwards"});
+    });
+  }
+  function vfSchliessen(danach){
+    var fertig = function(){ vfLauf = null; vf.close(); if (danach) danach(); else vfAuf.focus(); };
+    var z = dauer("--dauer-mittel");
+    if (!z || !kann) { fertig(); return; }
+    if (vfLauf) vfLauf.cancel();
+    vfLauf = vf.animate([{clipPath:OFFEN},{clipPath:ZU}], {duration:z, easing:kurve("--kurve-flaeche"), fill:"forwards"});
+    vfLauf.onfinish = function(){ fertig(); this.cancel(); };
+  }
+  vfAuf.addEventListener("click", vfOeffnen);
+  $("#vf-zu").addEventListener("click", function(){ vfSchliessen(); });
+  vf.addEventListener("cancel", function(e){ e.preventDefault(); vfSchliessen(); });
+  $$(".vf-liste a", vf).forEach(function(a){
+    a.addEventListener("click", function(e){
+      e.preventDefault();
+      var ziel = $(a.getAttribute("href"));
+      vfSchliessen(function(){ ziel.scrollIntoView(); ziel.focus({preventScroll:true}); });
+    });
+  });
+
+  /* --- 10 · Seitenwechsel: die Sektion wechselt, die Farbe fliesst ---------------- */
+  $("#sek-wahl").addEventListener("gewaehlt", function(e){
+    var b = e.detail;
+    $("#seite").dataset.sek = b.dataset.wert;
+    $("#s-band").textContent = b.textContent;
+  });
+})();
+</script>
+</body>
+</html>
