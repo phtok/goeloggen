@@ -44,3 +44,6 @@ Daten aus der Datenbank, sonst prüft man eine Attrappe.
 
 Bei Änderungen an der Schnittzahl **alle** Beschreibungen mitziehen
 (schriften.html, schrift-webfont.html, README, tools.json, Beipackzettel).
+Bei neuer Fassung oder geänderten Dateinamen auch die Installer nachführen
+(`assets/fonts/goetheanum/Installer/windows.ps1` und `mac.sh`: Dateiliste und
+Fassungsnummer).
