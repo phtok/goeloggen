@@ -71,6 +71,16 @@
   ],
   "tools": [
     {
+      "slug": "moodboard-lebendig",
+      "cat": "labor",
+      "status": "intern",
+      "tag": "Labor",
+      "title": "Gesten des Lebendigen",
+      "href": "moodboard-lebendig.html",
+      "desc": "Bewegtes Moodboard: Wiederholung, Polarität, Steigerung, Reduktion, Übergang – und ein Baustein, der das Ganze enthält.",
+      "such": "Moodboard Bewegung Animation Bloom Kurve Übergang Steigerung Reduktion Polarität Wiederholung lebendig Metamorphose Labor"
+    },
+    {
       "slug": "schmiede",
       "cat": "labor",
       "status": "intern",
