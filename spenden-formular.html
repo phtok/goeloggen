@@ -14,20 +14,8 @@
 <link rel="stylesheet" href="design-system/akkordeon.css" />
 
 <style>
-  /* Bewegung – Vorschlag, noch nicht im Fundament
-     (docs/recherche_uebergaenge-lebendig.md § Vorschlag). Namen und Werte
-     genau wie dort; erst nach dem Entscheid des Auftraggebers in tokens.css. */
-  :root{
-    --kurve-bloom:cubic-bezier(.32,.08,.24,1);
-    --kurve-flaeche:cubic-bezier(.35,0,.5,1);
-    --kurve-ein:var(--kurve-bloom);
-    --kurve-aus:var(--kurve-bloom);
-    --dauer-hauch:120ms; --dauer-kurz:220ms; --dauer-mittel:280ms; --dauer-lang:400ms;
-    --weg:1.5rem; --staffel:40ms;
-  }
-  @media(prefers-reduced-motion:reduce){
-    :root{--dauer-hauch:0s;--dauer-kurz:0s;--dauer-mittel:0s;--dauer-lang:0s;--staffel:0s}
-  }
+  /* Bewegung: Kurven, Dauern, Weg und Staffel aus dem Fundament (tokens.css),
+     samt Nullung bei weniger Bewegung. */
   /* Die Wahl wächst vom Berührpunkt aus (Radius als animierbare Grösse). */
   @property --wuchs{syntax:"<percentage>";inherits:false;initial-value:0%}
 
@@ -393,6 +381,7 @@ Telefon: <a href="tel:+41617064420">+41&nbsp;61&nbsp;706&nbsp;44&nbsp;20</a></p>
     var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     return v.endsWith("ms") ? parseFloat(v) : parseFloat(v) * 1000 || 0;
   }
+  function kurve(){ return getComputedStyle(document.documentElement).getPropertyValue("--kurve-bloom").trim() || "ease"; }
   function zahl(n){
     var s = Number.isInteger(n) ? String(n) : n.toFixed(2);
     return n >= 10000 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, " ") : s;
@@ -449,7 +438,7 @@ Telefon: <a href="tel:+41617064420">+41&nbsp;61&nbsp;706&nbsp;44&nbsp;20</a></p>
     $$("#stufen button").forEach(function(b, i){
       b.textContent = STUFEN[f][i];
       b.setAttribute("aria-pressed", STUFEN[f][i] === stand.stufe ? "true" : "false");
-      if (sanft && d && b.animate) b.animate([{opacity:0},{opacity:1}], {duration:d, delay:i * st, easing:"cubic-bezier(.32,.08,.24,1)", fill:"backwards"});
+      if (sanft && d && b.animate) b.animate([{opacity:0},{opacity:1}], {duration:d, delay:i * st, easing:kurve(), fill:"backwards"});
     });
     knopfText(); zahlHinweis();
   }
@@ -610,7 +599,7 @@ Telefon: <a href="tel:+41617064420">+41&nbsp;61&nbsp;706&nbsp;44&nbsp;20</a></p>
     if (d && dank.animate) {
       var blau = getComputedStyle(knopf).backgroundColor;
       var hauch = getComputedStyle(innen).backgroundColor;
-      var k = "cubic-bezier(.32,.08,.24,1)";
+      var k = kurve();
       dank.animate([{height:hoehe + "px"},{height:ziel + "px"}], {duration:d, easing:k});
       innen.animate([{backgroundColor:blau},{backgroundColor:hauch}], {duration:d, easing:k});
       $$(".dank-innen > *", dank).forEach(function(x, i){

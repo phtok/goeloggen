@@ -16,6 +16,49 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 31. Oktober 2026 — Bewegung im Fundament (1.29.0)
+
+**Was.** `tokens.css` trägt einen Block Bewegung: `--kurve-bloom`
+`cubic-bezier(.32,.08,.24,1)`, `--kurve-flaeche` `cubic-bezier(.35,0,.5,1)`,
+`--kurve-ein`/`--kurve-aus` (beide wie Bloom), `--dauer-hauch` 120,
+`--dauer-kurz` 220, `--dauer-mittel` 280, `--dauer-lang` 400,
+`--dauer-flaeche-zu` 280&nbsp;ms, `--weg` 1.5&nbsp;rem, `--staffel` 40&nbsp;ms;
+gespiegelt in `tokens.json` (`duration`, `cubicBezier`). Bestand gehoben:
+`.btn`, `.seg`, `button.kachel` und die Felder von `.15s` ohne Kurve auf
+`--dauer-hauch` + `--kurve-bloom`; `nav.css` (Hinweis, Schleier, Schublade,
+Meldung, Gruppenpfeil) von `.12s`–`.22s ease` auf Tokens, die Schublade auf
+`--kurve-flaeche` mit `--dauer-kurz` (Länge wie bisher); `akkordeon.css`
+führt `--acc-kurve`/`--acc-dauer` als Zweitnamen von `--kurve-bloom`/
+`--dauer-mittel`; `akkordeon.js` liest Kurve und Dauern am Element per
+`getComputedStyle` statt fester 280/220&nbsp;ms (alte Werte als Rückfall).
+Die Kacheln im Hub (`index.html`) laufen auf `--dauer-hauch`. Die drei
+Laborseiten (moodboard-lebendig, spenden-formular, bewegung-anwendungen)
+lesen das Fundament statt eigener Definitionen; die Vollfläche schliesst
+dort in `--dauer-flaeche-zu`. Neuer DS04-Hinweis ‹Bewegung›
+(`contract.json` → `bewegung`): feste ms-/s-Werte und `cubic-bezier`-Literale
+in `transition`/`animation` einer Seite; 0&nbsp;s bleibt erlaubt.
+**Weniger Bewegung.** `tokens.css` setzt unter `prefers-reduced-motion`
+alle `--dauer-*` und `--staffel` auf 0&nbsp;s und `--weg` auf 0. Das harte
+`*{transition:none!important}` in `base.css` kann die Nullung noch **nicht
+ganz** ersetzen: 33 Stellen in Seiten tragen feste Dauern (die neuen
+DS04-Hinweise) und liefen sonst bei weniger Bewegung wieder. Darum bleibt
+das Netz, gilt aber nur noch für Seiten **ohne** `data-bewegung` am
+`<html>`. Eine Seite, die ganz über Tokens läuft, setzt das Attribut und
+wird überstimmbar: `reduziert` nullt immer, `normal` ist die ausdrückliche
+Wahl des Lesers und überstimmt die Systemeinstellung (WCAG 2.3.3 verlangt
+die Abschaltbarkeit, nicht das Verbot einer bewussten Wahl). Für Leser
+ohne Schalter ändert sich nichts. Sind die Hinweise abgetragen, kann das
+Netz fallen.
+**Warum.** Beschluss des Auftraggebers vom 31. Oktober 2026 («Sehr gut! Ins
+Design-System einpflegen!») zum Vorschlag in
+`docs/recherche_uebergaenge-lebendig.md`; Befunde (1)–(3) der Laborseite
+Bewegung. Leitbild `docs/memo-lebendige-gesten-2026-10-31.md`.
+**Wirkung.** Sichtbar anders nur: Berührungen laufen 120 statt 150&nbsp;ms
+mit Bloom-Kurve, Schleier und Meldung der Schublade 220 statt 180/200&nbsp;ms
+auf einer Uhr mit der Schublade. Version 1.28.7 → 1.29.0.
+
+---
+
 ## 31. Oktober 2026 — Laborseite Bewegung in zehn Anwendungen (Labor, Version des Systems unverändert)
 
 **Was.** https://werkzeuge.goetheanum.ch/bewegung-anwendungen.html – die

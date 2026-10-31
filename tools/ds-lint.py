@@ -296,6 +296,17 @@ def check_rules(cleaned, ref_text, base_off, findings, c, skip_lines, check_ds04
                     findings.append((sel_ln, "DS04", "hinweis",
                                      f".{hit} lokal redefiniert – kanonische Rolle aus base.css nutzen"))
                     break
+        # DS04 – Bewegung: feste Dauer oder Kurve statt Bewegungs-Token
+        # (contract.json → bewegung). Nur Seiten-CSS; das Fundament definiert
+        # die Tokens selbst. Hinweis-Stufe: zählt nicht gegen den Score.
+        bw = c.get("bewegung")
+        if check_ds04 and bw:
+            bm = re.search(bw["muster"], body)
+            if bm:
+                ln = lineno(ref_text, body_off + bm.start())
+                if ln not in skip_lines:
+                    findings.append((ln, "DS04", bw.get("schwere", "hinweis"),
+                                     "feste Dauer/Kurve – Bewegungs-Token nutzen (--dauer-*, --kurve-*)"))
         # DS05 – verbotene Hervorhebung
         if "text-transform" in body and "uppercase" in body:
             findings.append((sel_ln, "DS05", "hinweis",
