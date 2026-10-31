@@ -40,11 +40,18 @@ Frage auf den Antwortgrad zurück. Für goetheanum.io 21/18&nbsp;px
 und 8&nbsp;px von der rechten Kante («die Schrift klebt am Rahmen»); jetzt
 `--s4` auf beiden Seiten, auf allen Breiten. Blüte (16/16) und Kapsel
 (16/16) hielten das schon. Gemessen: Faden 420&nbsp;px Text 18&nbsp;px ab
-Aussenkante (2&nbsp;px Faden + 16), rechts 17&nbsp;px.
+Aussenkante (2&nbsp;px Faden + 16), rechts 17&nbsp;px. Dazu der Befund vom
+Telefon (`docs/befunde/akkordeon-faden-schmal-2026-10-31.md`): der Hover-Hauch
+blieb nach dem Tippen als Band stehen (Sticky Hover). Alle Hover-Regeln des
+Akkordeons liegen jetzt hinter `@media (hover:hover)`; die offene Zeile im
+Faden ist ruhig – keine Fläche, nur Tinte und das farbige Fadenstück.
+Geprüft mit Touch-Emulation (iPhone 13), getippt in allen drei Kleidern.
 **Kopierbereich** `kopierbereich.js`: Code auf `akkordeon.html` und
 `spenden-formular.html` lädt aus den Quelldateien, der Token-Auszug wird aus
 `tokens.css` gerechnet (hell, weniger Bewegung, dunkel) – die alten
 Abschriften auf `akkordeon.html` waren seit 1.29.0 veraltet.
+**Entscheid 31. 10.:** der Schalter `data-bewegung="normal"` bleibt im
+Fundament; ohne Schalter gilt die Systemeinstellung.
 **Warum.** Eine Verbesserung am Formular wird einmal gebaut und gilt überall
 (CLAUDE.md § Optimierungen fliessen zurück); ein Modul zu Gast nimmt den Grad
 des Hauses an.
