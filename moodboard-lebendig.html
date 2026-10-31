@@ -13,11 +13,11 @@
 <link rel="stylesheet" href="design-system/akkordeon.css" />
 
 <style>
-  /* Bewegung: die Bloom-Kurve und die Dauer «auf» kommen aus akkordeon.css
-     (--acc-kurve, --acc-dauer); «zu» und der Verzug je Glied einer Reihe sind
-     der Vorschlag der letzten Tafel, hier nur seitenweit. */
-  :root{--mb-zu:.22s;--mb-verzug:40ms}
-  @media(prefers-reduced-motion:reduce){:root{--mb-zu:0s;--mb-verzug:0ms}}
+  /* Bewegung: Bloom-Kurve und Dauer «auf» kommen aus akkordeon.css
+     (--acc-kurve, --acc-dauer); die übrigen Werte sind der Vorschlag der
+     letzten Tafel (docs/recherche_uebergaenge-lebendig.md), hier nur seitenweit. */
+  :root{--mb-zu:.22s;--mb-verzug:40ms;--mb-lang:.4s;--mb-kurve-flaeche:cubic-bezier(.35,0,.5,1)}
+  @media(prefers-reduced-motion:reduce){:root{--mb-zu:0s;--mb-verzug:0ms;--mb-lang:0s}}
 
   .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
   .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
@@ -85,11 +85,11 @@
   /* --- 5 · Übergang: Papier → Hauch → Band → Fläche ---------------------------- */
   .feld{position:relative;overflow:hidden;border-radius:var(--r-card);min-height:11rem;
     border:1px solid var(--line-soft);background:var(--paper);display:flex;align-items:flex-end;
-    transition:background var(--acc-dauer) var(--acc-kurve)}
+    transition:background var(--mb-lang) var(--mb-kurve-flaeche)}
   .feld .schicht{position:absolute;inset:0 0 auto 0;height:0;background:var(--ton-dunkel);
-    transition:height var(--acc-dauer) var(--acc-kurve)}
+    transition:height var(--mb-lang) var(--mb-kurve-flaeche)}
   .feld p{position:relative;padding:var(--s5);font-family:var(--font-display);font-weight:var(--w-deutlich);
-    font-size:var(--t-h3);color:var(--ink);transition:color var(--acc-dauer) var(--acc-kurve)}
+    font-size:var(--t-h3);color:var(--ink);transition:color var(--mb-lang) var(--mb-kurve-flaeche)}
   .feld[data-stufe="hauch"],.feld[data-stufe="band"]{background:var(--ton-hell)}
   .feld[data-stufe="band"] .schicht{height:34%}
   .feld[data-stufe="flaeche"]{background:var(--ton-dunkel)}
@@ -294,12 +294,15 @@
       <table>
         <thead><tr><th scope="col">Token</th><th scope="col" class="num">Wert</th></tr></thead>
         <tbody>
-          <tr><td><code>--kurve</code><span class="wofuer">alles, was auf- und zugeht</span></td><td class="num">cubic-bezier<wbr>(.32,&nbsp;.08,&nbsp;.24,&nbsp;1)</td></tr>
-          <tr><td><code>--dauer-auf</code><span class="wofuer">öffnen, wachsen, erscheinen</span></td><td class="num">280&nbsp;ms</td></tr>
-          <tr><td><code>--dauer-zu</code><span class="wofuer">schliessen, verwelken, gehen</span></td><td class="num">220&nbsp;ms</td></tr>
-          <tr><td><code>--dauer-hauch</code><span class="wofuer">Farbe und Rand bei Berührung</span></td><td class="num">150&nbsp;ms</td></tr>
-          <tr><td><code>--verzug-reihe</code><span class="wofuer">je Glied einer Reihe, höchstens 6&nbsp;Glieder</span></td><td class="num">40&nbsp;ms</td></tr>
-          <tr><td>weniger Bewegung<span class="wofuer">alle Dauern und Verzüge</span></td><td class="num">0&nbsp;s</td></tr>
+          <tr><td><code>--kurve-bloom</code><span class="wofuer">auf und zu kleiner Flächen</span></td><td class="num">cubic-bezier<wbr>(.32,&nbsp;.08,&nbsp;.24,&nbsp;1)</td></tr>
+          <tr><td><code>--kurve-flaeche</code><span class="wofuer">Vollflächen und Schiebewege</span></td><td class="num">cubic-bezier<wbr>(.35,&nbsp;0,&nbsp;.5,&nbsp;1)</td></tr>
+          <tr><td><code>--dauer-hauch</code><span class="wofuer">Berührung, Fokus, Farbwechsel</span></td><td class="num">120&nbsp;ms</td></tr>
+          <tr><td><code>--dauer-kurz</code><span class="wofuer">Austritt: schliessen, verwelken</span></td><td class="num">220&nbsp;ms</td></tr>
+          <tr><td><code>--dauer-mittel</code><span class="wofuer">Eintritt: öffnen, wachsen, erscheinen</span></td><td class="num">280&nbsp;ms</td></tr>
+          <tr><td><code>--dauer-lang</code><span class="wofuer">Dank, grosse Flächen; höchstens 500&nbsp;ms</span></td><td class="num">400&nbsp;ms</td></tr>
+          <tr><td><code>--weg</code><span class="wofuer">Lage-Weg beim Aufblühen</span></td><td class="num">1.5&nbsp;rem</td></tr>
+          <tr><td><code>--staffel</code><span class="wofuer">Versatz je Glied einer Reihe</span></td><td class="num">40&nbsp;ms</td></tr>
+          <tr><td>weniger Bewegung<span class="wofuer">alle Dauern und Versätze</span></td><td class="num">0&nbsp;s</td></tr>
         </tbody>
       </table>
     </div>
@@ -339,7 +342,7 @@
     });
   }
   var spiele = {
-    wiederholung: function(){ eintreten(reihe.children, {transform:"translateY(14px)", opacity:0}); },
+    wiederholung: function(){ eintreten(reihe.children, {transform:"translateY(-1.5rem)", opacity:0}); },
     steigerung: function(){ eintreten(document.querySelector("[data-stufen]").children, {transform:"scaleY(0)", opacity:0}); }
   };
   document.querySelectorAll("[data-spiel]").forEach(function(b){
@@ -368,8 +371,8 @@
     if (!kelch.animate) { kelch.hidden = !auf; return; }
     var h = kelch.scrollHeight; laeuft = true;
     var a = kelch.animate(auf
-      ? [{height:"0px", opacity:0, transform:"scale(.96)"}, {height:h + "px", opacity:1, transform:"none"}]
-      : [{height:h + "px", opacity:1, transform:"none"}, {height:"0px", opacity:0, transform:"scale(.96)"}],
+      ? [{height:"0px", opacity:0, transform:"translateY(-1.5rem)"}, {height:h + "px", opacity:1, transform:"none"}]
+      : [{height:h + "px", opacity:1, transform:"none"}, {height:"0px", opacity:0, transform:"translateY(-1.5rem)"}],
       {duration:dauer(auf ? AUF : ZU), easing:KURVE});
     a.onfinish = a.oncancel = function(){ laeuft = false; if (!auf) kelch.hidden = true; };
   });
