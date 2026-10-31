@@ -118,3 +118,9 @@ Befund als `docs/befunde/…` und trägt Beschlüsse in
 
 - [ ] Titillium Pro beobachten (Serif-Fortschritt, Variable), halbjährlich.
 - [ ] Elbonium (Dribbble) nicht gesichtet; Bild vom Inhaber.
+- [x] **E4 Serif** (31. 10. 2026): Probe-Font, Specimen
+      https://werkzeuge.goetheanum.ch/schrift-serif-probe.html, Befund mit
+      Einsatzgrenzen und Entscheidvorlage in
+      `docs/befunde/serif-probe-2026-10-31.md`. Offen: Entscheid des
+      Inhabers (Empfehlung: Serif als Stimme für Zitat, Lede, Titel; vorher
+      Ausbau-Etappe S1).
