@@ -72,6 +72,18 @@
       "such": "Begleitschrift Schriftsystem Griechisch Hebräisch Georgisch Armenisch Chinesisch Japanisch Koreanisch CJK Source Han Sans Noto Assistant FiraGO Treibhaus Labor"
     },
     {
+      "slug": "serif-probe",
+      "cat": "treibhaus",
+      "beet": "schrift",
+      "status": "intern",
+      "tag": "Treibhaus",
+      "title": "Serif-Probe",
+      "short": "Serif-Probe",
+      "href": "schrift-serif-probe.html",
+      "desc": "Der Serif-Prototyp der Titillium-Familie als Goetheanum Serif Probe neben der Hausschrift: Titel, Sektionsseite, Zitat, Lede, Mengentext, Karte.",
+      "such": "Serif Antiqua Slab Titillium Pro Serif Probe Zitat Lede Mengentext Sektion Schöne Wissenschaften Treibhaus Labor"
+    },
+    {
       "slug": "lesetest",
       "cat": "treibhaus",
       "status": "intern",
