@@ -116,5 +116,10 @@ Befund als `docs/befunde/…` und trägt Beschlüsse in
 
 ## Offen
 
+- [x] E1 Kursive (31. 10. 2026): Probe-Schnitt, Specimen
+      https://werkzeuge.goetheanum.ch/kursive-probe.html, Befund mit
+      Entscheidvorlage `docs/befunde/kursive-probe-e1-2026-10-31.md`.
+      E5 (Black-Probewort) im selben Befund, § 6.
+- [ ] Entscheid Inhaber zur Kursiven (Vorlage im Befund E1).
 - [ ] Titillium Pro beobachten (Serif-Fortschritt, Variable), halbjährlich.
 - [ ] Elbonium (Dribbble) nicht gesichtet; Bild vom Inhaber.
