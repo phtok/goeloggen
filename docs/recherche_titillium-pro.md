@@ -85,9 +85,36 @@ Lehren aus der Sichtung, zusätzlich zu den fünf Punkten oben:
    Rückstand; es heisst aber auch: Glyphen (a, g, y, t, l) lassen sich von
    keinem dieser Projekte direkt borgen, nur Versalien, Ziffern, Zeichen.
 
+## Entscheid des Inhabers (31. 10. 2026) und Etappen
+
+Der Inhaber hat entschieden: Kursive prüfen und einbauen, alle Lehren zu
+Glyphen, Kerning und Metriken übernehmen, Listenziffern aufnehmen, Serif
+testen und Grenzen klären, Black nur als Probewort. Jede Etappe läuft als
+eigene Session (Opus, Effort medium), Branch je Etappe, PR, Squash-Merge.
+
+**Faktenfrage zu den Listenziffern, geklärt:** Titillium Pro liefert je
+Stilset nur 36 Einzelglyphen (A–Z, 0–9), eingesetzt per einfacher
+Substitution. 10 bis 99 gibt es dort **nicht**. Für die Hausschrift sind
+1–99 machbar: zweistellige Zahlen werden per `calt`/`liga` aus
+Halbkreis- bzw. Halbquadrat-Bausteinen und schmalen Ziffern zusammengesetzt
+(linke Hälfte + Ziffer + Ziffer + rechte Hälfte); das sind rund 20 Bausteine
+pro Form statt 90 fertige Glyphen. Technik im Fontfix-Build mit fontTools.
+
+| Etappe | Inhalt | Ergebnis |
+|---|---|---|
+| **E1 Kursive** | Titillium Sans Pro Italic (Thin–Black) auf die Hausschrift abbilden: Vertikalmasse passen (500/700), Neigung messen, Upright-Formen (a, g, y, t, l) in der Kursiven nachziehen oder bewusst Text-Form lassen. Probe-Schnitt «Goetheanum Kursiv Klar» bauen, Specimen neben Klar. Prüfen: Variable mit ital-Achse (Muster Multa Pecunia) oder getrennte Datei | Probe-Font, Specimen-Seite, Befund mit Empfehlung; noch kein Paket |
+| **E2 Glyphen, Kerning, Metriken** | Abgleich Hausschrift v2.8 ↔ Sans Pro: fehlende Zeichen (607 vs. 454), Kerning-Paare für formgleiche Glyphen (Versalien, Ziffern, Zeichen) übernehmen, Chialabs Liste korrupter Glyphen gegen `AUDIT.md`, Vertikalmetriken (hhea/OS2) vergleichen. Skript in `tools/goetheanum-fontfix/`, idempotent | v2.9-Kandidat, Diff-Bericht, Webfonts und ZIP neu gepackt |
+| **E3 Listenziffern** | Kreis und Quadrat, Kontur und gefüllt, A–Z und 1–99, als ss03–ss06 in die Hausschrift; Bausteinlösung wie oben. Anwendung: Campus-Karte, Leitsystem, Beipackzettel | Glyphen im Font, Anschauungsseite, Doku im Beipackzettel |
+| **E4 Serif** | Titillium Pro Serif BETA als «Goetheanum Serif Probe»: Umlaute und Ligaturen ergänzen, auf Upright-a prüfen, Specimen in echten Anwendungen (Sektionsseite, Zitat, Lede, Mengentext, Karte). Grenzen klären: ab welchem Grad, welche Sektion, welche Anwendung; was fehlt bis zur Nutzbarkeit | Specimen-Seite (Treibhaus), Befund mit Einsatzgrenzen, Entscheidvorlage |
+| **E5 Black-Probewort** (klein, in E1 oder E2 mit) | Ein Probewort über Laut (680) hinaus extrapolieren (Richtung Titillio Extrablack), rendern, anschauen. Kein Schnitt, nur ein Bild | ein Bild, ein Satz Befund |
+
+Reihenfolge: E2 zuerst (liefert die Basis), E1 und E3 und E4 parallel
+danach; E5 hängt sich an E1. Jede Session liest diese Notiz und
+`CLAUDE-REF.md` § Schnitt-System, baut aus sauberem Stand, schreibt ihren
+Befund als `docs/befunde/…` und trägt Beschlüsse in
+`design-system/CHANGELOG.md` ein.
+
 ## Offen
 
 - [ ] Titillium Pro beobachten (Serif-Fortschritt, Variable), halbjährlich.
-- [ ] Kerning-Abgleich Sans Pro ↔ Hausschrift (Punkt 1) als eigene Etappe
-      in `tools/goetheanum-fontfix/`.
-- [ ] Entscheid Inhaber: Listenziffern (Punkt 3) in die Hausschrift aufnehmen?
+- [ ] Elbonium (Dribbble) nicht gesichtet; Bild vom Inhaber.
