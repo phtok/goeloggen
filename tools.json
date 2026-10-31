@@ -83,6 +83,18 @@
       "such": "Kursive Kursiv Italic Titillium Pro Probe Schnitt Werktitel Zitat Fremdwort Lede Upright Treibhaus Labor"
     },
     {
+      "slug": "serif-probe",
+      "cat": "treibhaus",
+      "beet": "schrift",
+      "status": "intern",
+      "tag": "Treibhaus",
+      "title": "Serif-Probe",
+      "short": "Serif-Probe",
+      "href": "schrift-serif-probe.html",
+      "desc": "Der Serif-Prototyp der Titillium-Familie als Goetheanum Serif Probe neben der Hausschrift: Titel, Sektionsseite, Zitat, Lede, Mengentext, Karte.",
+      "such": "Serif Antiqua Slab Titillium Pro Serif Probe Zitat Lede Mengentext Sektion Schöne Wissenschaften Treibhaus Labor"
+    },
+    {
       "slug": "lesetest",
       "cat": "treibhaus",
       "status": "intern",
@@ -91,6 +103,16 @@
       "href": "apps/lesetest/",
       "desc": "Vier Kafka-Texte in Goetheanum Klar und Source Sans 3 lesen, je drei Fragen. Misst, ab welcher Länge Fliesstext in Source laufen soll. Druckbogen und Auswertung im selben Ordner.",
       "such": "Lesetest Lesbarkeit Schrift Fliesstext Source Sans Goetheanum Klar Studie Lesezeit Verständnis Druckbogen Auswertung"
+    },
+    {
+      "slug": "schriftgrenze",
+      "cat": "treibhaus",
+      "status": "intern",
+      "tag": "Schrift",
+      "title": "Schriftgrenze",
+      "href": "apps/schriftgrenze/",
+      "desc": "Goetheanum Klar und Source Sans 3 nebeneinander, in fünf Längen und sechs Grössen. Zum Anschauen, wo die Grenze zwischen beiden liegt.",
+      "such": "Schriftgrenze Vergleich Schrift Fliesstext Source Sans Goetheanum Klar Ruhig Deutlich Grösse Lesemass Zeichen je Zeile Druck"
     },
     {
       "slug": "moodboard-lebendig",

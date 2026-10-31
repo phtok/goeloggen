@@ -1,6 +1,6 @@
 # Schriften für alle: Verteilung, Begleitschriften, Lesegrenze
 
-Stand 31. 10. 2026. Auftrag des Inhabers (30. 10.): die Installation der
+Stand 31. 10. 2026 (nachgeführt nach den Entscheiden des Tages). Auftrag des Inhabers (30. 10.): die Installation der
 Schriften für alle Nutzenden so einfach wie möglich machen. Gedächtnis der
 Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
 
@@ -35,13 +35,12 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
   OFL, kein Reserved Font Name bei Titillium und Cairo, fsType 0; Copyright und
   Lizenz bleiben, Herkunft im Namens-Eintrag vermerken.
 
-## Offen, wartet auf den Inhaber
+## Entschieden (Inhaber, 31. 10.)
 
-- **Name von Source Sans 3:** Vorschlag, den Namen **unverändert** zu lassen
-  (die Adobe-Dateien sind sauber; «Source» ist Reserved Font Name, eine
-  Umbenennung wäre nur bei Änderung nötig). Der fremde Name hält sie davon ab,
-  die Hausschrift zu ersetzen. Der Inhaber war bei «Goetheanum Info» unsicher.
-- **Office-Regel** zur Freigabe (nicht eigenmächtig ins Regelwerk):
+- **Source Sans 3 wird nicht umbenannt.** Sie bleibt unverändert (Adobe-Dateien
+  3.052R); der fremde Name hält sie davon ab, die Hausschrift zu ersetzen.
+- **Office-Regel** im Grundsatz ja, aber noch **nicht** ins Regelwerk: erst den
+  Noto-Vergleich (Vergleichsseite Schriftsysteme) abwarten. Entwurf:
   «In Office-Dokumenten trägt die Goetheanum Schrift alles, was als Sprache
   gelesen wird: Titel, Lede, Fliesstext. Source Sans 3 steht nur, wo Text zu
   Daten wird: Tabellen, Formularfelder, Legenden, Fussnoten. Die Vorlagen geben
@@ -138,6 +137,26 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
      Papiergruppe, nach 20–30 Durchgängen auswerten und dem Inhaber eine
      Regel «ab etwa N Wörtern Source Sans 3» vorschlagen (nicht ins
      Regelwerk ohne Freigabe).
+
+3. **Schriftgrenze** (Treibhaus, gebaut 31. 10.): Blick-Werkzeug ohne Test
+   und ohne Datenbank, Anschauungsmittel für das Lesbarkeits-Skillset:
+   https://werkzeuge.goetheanum.ch/apps/schriftgrenze/
+   Goetheanum (Ruhig/Klar/Deutlich) und Source Sans 3 nebeneinander, gleich
+   gesetzt wie im Lesetest. Pillen: Länge (Satz, Absatz, ≈250/500/1000
+   Wörter, Texte aus `apps/lesetest/texte.js`), Grösse (14–24 px, Haus =
+   `--t-body`), Mass (70 Zeichen oder `--measure`), Grund (hell/dunkel).
+   Je Spalte gemessen: Zeichen je Zeile (Median der vollen Zeilen). Zustand
+   steht in der Adresse (`?laenge=…&grad=…&mass=…&schnitt=…`), ein Blick ist
+   so teilbar. Druck: A4 quer, dasselbe Paar in 9/10/11/12 pt.
+   - **Gegenüber** wählbar (31. 10., Wunsch Inhaber): Source Sans 3, Noto
+     Sans oder Noto Serif (Regular, Latein-Subset, OFL, selbst gehostet in
+     `assets/fonts/vergleich/`, nur für diese Seite). x-Höhe auf Goetheanum
+     geglichen (536 → 500: `size-adjust` 93.3 %). Je Zeichen gemessen über
+     alle acht Texte: Klar 0.415 em, Source 0.451, Noto Sans 0.464, Noto
+     Serif 0.473; das 70-Zeichen-Mass rechnet damit.
+   - Auf 1280 px reicht die Breite bei Grösse Haus für das 70-Zeichen-Mass
+     gerade (Klar 70, Source 67); bei 24 px und beim Hausmass begrenzt die
+     Spalte, die Ablesezeile zeigt es ehrlich.
 
 ## Nächste Schritte hier (Installer-Strang)
 
