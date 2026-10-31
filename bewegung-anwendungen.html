@@ -25,11 +25,8 @@
     --dauer-hauch:120ms; --dauer-kurz:220ms; --dauer-mittel:280ms; --dauer-lang:400ms;
     --weg:1.5rem; --staffel:40ms;
   }
-  @media(prefers-reduced-motion:reduce){
-    :root{--dauer-hauch:0s;--dauer-kurz:0s;--dauer-mittel:0s;--dauer-lang:0s;--staffel:0s}
-  }
   /* Laborschalter ‹reduziert›: dasselbe wie prefers-reduced-motion – Dauern auf
-     0 s, Übergänge aus wie in base.css. */
+     0 s, Übergänge aus wie in base.css. Startwert aus der Systemeinstellung (Skript). */
   :root[data-bewegung="reduziert"]{--dauer-hauch:0s;--dauer-kurz:0s;--dauer-mittel:0s;--dauer-lang:0s;--staffel:0s}
   :root[data-bewegung="reduziert"] *{transition:none!important}
 
@@ -53,7 +50,7 @@
   .tok th,.tok td{padding:var(--s2) var(--s3) var(--s2) 0;vertical-align:baseline}
   .tok th:last-child,.tok td:last-child{padding-right:0}
   .tok thead th{color:var(--muted);font-weight:var(--w-text)}
-  .tok code{font-family:var(--font-mono);font-size:.9em;white-space:nowrap}
+  .tok code{font-family:var(--font-mono);font-size:1em;white-space:nowrap}
   .tok td.num{white-space:nowrap}
   @media(max-width:480px){.tok td.num{white-space:normal}}
 
@@ -106,14 +103,13 @@
   .wachsen .field{padding:var(--s1) var(--s1) var(--s2)}
   .wachsen.offen{grid-template-rows:1fr;opacity:1;transition-duration:var(--dauer-mittel);transition-timing-function:var(--kurve-ein)}
 
-  /* --- 6 · Meldung: die gute kommt und geht, der Fehler steht sofort ---------- */
+  /* --- 6 · Meldung: die Bestätigung kommt und geht beim Schliessen, der Fehler steht sofort */
   .meldeplatz{display:grid;gap:var(--s3);max-width:30rem;min-height:9rem;align-content:start}
   .toast{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;
     padding:var(--s3) var(--s3) var(--s3) var(--s5);border-radius:var(--r-card);background:var(--paper);
     border:1px solid var(--line-soft);box-shadow:var(--shadow-card);font-family:var(--font-text)}
   .fehler-meldung{padding:var(--s3) var(--s4);border-left:4px solid var(--bad);background:var(--paper);
     font-family:var(--font-text);color:var(--ink);transition:none}
-  .fehler-meldung b{color:var(--bad)}
 
   /* --- 7 · Liste mit Staffel --------------------------------------------------- */
   .karten{list-style:none;margin:0;padding:0;display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fill,minmax(min(100%,12rem),1fr))}
@@ -129,7 +125,8 @@
   .reiter-flaeche p{max-width:min(var(--measure),100%);text-wrap:pretty}
 
   /* --- 9 · Vollflächen-Menü ---------------------------------------------------- */
-  dialog.vollflaeche{position:fixed;inset:0;width:100vw;height:100%;max-width:none;max-height:none;margin:0;border:0;
+  body:has(dialog.vollflaeche[open]){overflow:hidden}
+  dialog.vollflaeche{position:fixed;inset:0;width:100vw;overscroll-behavior:contain;height:100%;max-width:none;max-height:none;margin:0;border:0;
     padding:var(--s6) clamp(var(--s5),5vw,var(--s8));background:var(--blue-solid);color:var(--on-accent);overflow:auto}
   dialog.vollflaeche::backdrop{background:transparent}
   .vf-kopf{display:flex;justify-content:space-between;align-items:center;gap:var(--s4);max-width:var(--maxw);margin-inline:auto}
@@ -265,7 +262,8 @@
     <div class="buehne">
       <div class="knopf-feld">
         <button class="btn primary" type="button" id="spenden-knopf">50&nbsp;CHF spenden</button>
-        <div class="dank" id="dank" role="status"></div>
+        <div class="dank" id="dank"></div>
+        <span class="sr-only" role="status" id="knopf-status"></span>
       </div>
     </div>
     <table class="tok">
@@ -371,7 +369,7 @@
         <div role="tabpanel" id="p-anreise" aria-labelledby="r-anreise" tabindex="0" hidden>
           <p>Mit dem Zug bis Dornach-Arlesheim, dann zu&nbsp;Fuss den Hügel hinauf.</p>
         </div>
-        <div role="tabpanel" id="p-anmeldung" aria-labelledby="r-anmeldung" tabindex="0" hidden>
+        <div role="tabpanel" id="p-anmeldung" aria-labelledby="r-anmeldung" hidden>
           <label class="field"><span class="lab">E-Mail</span><input type="email" autocomplete="email" /></label>
         </div>
       </div>
@@ -417,7 +415,7 @@
         <div class="s-hauch">
           <span class="kicker">Veranstaltungen</span>
           <h3>Was in den nächsten Wochen stattfindet</h3>
-          <div class="s-flaeche">Zum Kalender</div>
+          <div class="s-flaeche">Herbsttagung</div>
         </div>
       </div>
     </div>
@@ -438,12 +436,14 @@
     <span class="marke">Goetheanum</span>
     <button class="btn vf-zu" type="button" id="vf-zu">Schliessen</button>
   </div>
+  <nav aria-label="Tafeln">
   <ul class="vf-liste">
     <li><a href="#t-liste">Liste mit Staffel</a></li>
     <li><a href="#t-reiter">Reiter</a></li>
     <li><a href="#t-seite">Seitenwechsel</a></li>
     <li><a href="#t-klappmenue">Klappmenü</a></li>
   </ul>
+  </nav>
 </dialog>
 
 <footer class="ds-footer">
@@ -524,6 +524,7 @@
   knopf.addEventListener("click", function(){
     knopf.disabled = true;
     knopf.textContent = "Wird übermittelt …";
+    $("#knopf-status").textContent = "Wird übermittelt …";
     setTimeout(danken, 700);
   });
   function danken(){
@@ -531,7 +532,7 @@
     dank.innerHTML = '<div class="dank-innen"><h3 tabindex="-1">Danke.</h3>' +
       '<p>Ihre Spende von 50 CHF ist angekommen.</p>' +
       '<button class="btn" type="button" id="dank-neu">Noch einmal</button></div>';
-    knopf.hidden = true;
+    knopf.hidden = true; $("#knopf-status").textContent = "";
     var d = dauer("--dauer-lang"), k = kurve("--kurve-bloom"), innen = $(".dank-innen", dank);
     if (d && kann) {
       var hauch = getComputedStyle(innen).backgroundColor;
@@ -597,8 +598,12 @@
   var reiter = $$(".reiter [role=tab]"), flaeche = $(".reiter-flaeche"), laeufe = [];
   function zeigen(tab){
     var neu = $("#" + tab.getAttribute("aria-controls"));
-    var alt = $$("[role=tabpanel]", flaeche).filter(function(p){ return !p.hidden && p !== neu; })[0];
-    laeufe.forEach(function(a){ a.finish(); }); laeufe = [];
+    var vorher = reiter.filter(function(r){ return r.getAttribute("aria-selected") === "true"; })[0];
+    var alt = vorher && vorher !== tab ? $("#" + vorher.getAttribute("aria-controls")) : null;
+    if (!alt && !neu.hidden) return;
+    laeufe.forEach(function(a){ a.onfinish = null; a.cancel(); }); laeufe = [];
+    flaeche.style.overflow = "";
+    $$("[role=tabpanel]", flaeche).forEach(function(p){ p.inert = false; if (p !== neu && p !== alt) p.hidden = true; });
     reiter.forEach(function(r){
       var an = r === tab;
       r.setAttribute("aria-selected", an ? "true" : "false");
@@ -617,7 +622,11 @@
       neu.animate([{opacity:0},{opacity:1}], {duration:d, easing:k})
     ];
     flaeche.style.overflow = "hidden";
-    laeufe[0].onfinish = function(){ alt.hidden = true; alt.inert = false; laeufe[1].cancel(); flaeche.style.overflow = ""; };
+    var dieser = laeufe;
+    laeufe[0].onfinish = function(){
+      if (laeufe !== dieser) return;
+      alt.hidden = true; alt.inert = false; dieser[1].cancel(); flaeche.style.overflow = ""; laeufe = [];
+    };
   }
   reiter.forEach(function(r, i){
     r.addEventListener("click", function(){ zeigen(r); });
