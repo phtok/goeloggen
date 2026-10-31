@@ -63,11 +63,42 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
 
 ## In Arbeit (eigene Sessions, 31. 10.)
 
-1. **Vergleichsseite Schriftsysteme** (Treibhaus): Titel in der Hausschrift neben
-   3–4 Kandidaten je System — Griechisch, Hebräisch, Georgisch, Armenisch,
-   Chinesisch/Japanisch/Koreanisch. Der Inhaber wählt nach Augenmass.
-   Erste Kandidaten: Hebräisch Assistant (Source-Latein) u. a., Georgisch/
-   Armenisch Noto Sans, CJK Source Han Sans.
+1. **Vergleichsseite Schriftsysteme** (Treibhaus) — **steht**, wartet auf die
+   Wahl des Inhabers: https://werkzeuge.goetheanum.ch/begleitschriften.html
+   Je Kandidat Titel (Schnitt nächst Deutlich 580) und Absatz, neben
+   lateinischem Titel in der Hausschrift und Absatz in Source Sans 3.
+   Subsets selbst gehostet unter `assets/fonts/schriftsysteme/` (Bau:
+   `tools/schriftsysteme-probe.py`, nach Text-Änderung neu laufen lassen);
+   Lizenz und Reserved Font Name je Kandidat in
+   `assets/fonts/schriftsysteme/LIZENZEN.md`.
+
+   | System | Kandidaten | Empfehlung (Session, 31. 10.) |
+   |---|---|---|
+   | Griechisch | Source Sans 3, Fira Sans, Commissioner, IBM Plex Sans | Titel **Fira Sans** (schmal, technisch, trägt wie die Hausschrift), Lesetext Source Sans 3 |
+   | Hebräisch | Assistant, Heebo, IBM Plex Sans Hebrew, Noto Sans Hebrew | **Assistant** für Titel und Text (Latein = Source Sans); Heebo, falls der Titel kräftiger sein soll |
+   | Georgisch | Noto Sans Georgian, FiraGO, Google Sans | **FiraGO** (eine Familie mit Fira Sans; Georgisch von Akaki Razmadze) |
+   | Armenisch | Noto Sans Armenian, Mardoto, Google Sans | **Noto Sans Armenian** |
+   | Chinesisch | Source Han Sans SC, Source Han Serif SC, ZCOOL XiaoWei | **Source Han Sans SC** |
+   | Japanisch | Source Han Sans JP, Zen Kaku Gothic New, IBM Plex Sans JP, BIZ UDPGothic | **Source Han Sans JP**; BIZ UDPGothic, wenn proportionale Kana gewünscht |
+   | Koreanisch | Source Han Sans KR, IBM Plex Sans KR, Gothic A1 | **Source Han Sans KR** |
+
+   Begründungen und Vorbehalte:
+   - Source Han Sans deckt alle drei CJK-Sprachen in einer Familie (als
+     Super-OTC eine Datei) und ist die Schwester von Source Sans 3.
+   - Google Sans ist OFL, trägt aber sichtbar Googles Markenbild — für das
+     Goetheanum nur als Notlösung.
+   - Mardoto (Apache 2.0, Roboto-Latein) zeichnet das grosse Հ wie Յ; von
+     Armenisch-Lesenden prüfen lassen, bevor es infrage kommt.
+   - ZCOOL XiaoWei hat nur einen Schnitt und setzt westliche Satzzeichen —
+     Displayschrift, kein Lesetext.
+   - Reserved Font Names: «Source» (Source Sans 3, Assistant, Source Han Sans
+     SC/JP/KR), «Plex» (alle IBM Plex). Im Installer darum nur unveränderte
+     Originaldateien; die Probe-Subsets heissen intern «Probe …».
+   - **Mustertexte** (Übersetzung von ‹Goetheanum – Freie Hochschule für
+     Geisteswissenschaft› und einem Satz über Sitz und Veranstaltungen) sind
+     von der Session übersetzt, **nicht** von Muttersprachlern geprüft. Vor
+     jeder Verwendung ausserhalb der Probe gegenlesen lassen, besonders
+     Georgisch und Armenisch.
 2. **Lesetest Hausschrift vs. Source Sans 3** (Treibhaus): gleiche Texte in vier
    Längen (≈80, 250, 600, 1500 Wörter), Lesezeit, Verständnisfragen,
    Anstrengung; jede Person liest beide Schriften, Reihenfolge wechselnd;

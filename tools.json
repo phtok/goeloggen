@@ -61,6 +61,17 @@
   ],
   "tools": [
     {
+      "slug": "begleitschriften",
+      "cat": "treibhaus",
+      "beet": "schrift",
+      "status": "intern",
+      "tag": "Treibhaus",
+      "title": "Begleitschriften",
+      "href": "begleitschriften.html",
+      "desc": "Freie Schriften für Griechisch, Hebräisch, Georgisch, Armenisch, Chinesisch, Japanisch und Koreanisch neben der Hausschrift.",
+      "such": "Begleitschrift Schriftsystem Griechisch Hebräisch Georgisch Armenisch Chinesisch Japanisch Koreanisch CJK Source Han Sans Noto Assistant FiraGO Treibhaus Labor"
+    },
+    {
       "slug": "moodboard-lebendig",
       "cat": "treibhaus",
       "beet": "bewegung",
