@@ -2567,6 +2567,10 @@ function render() {
    stand()        – Zustand als JSON (wie im Browser-Speicher)
    anwenden(s)    – Zustand setzen und neu zeichnen (Teilangaben werden mit dem Standard ergänzt)
    szene(b)       – die Blattszene als SVG-Markup (mm, Blatt 297 × 210; b = Anschnitt in mm)
+   modell()       – dieselbe Szene als Formen (szeneModell, Blatt-mm)
+   idmlTeile(n)   – async: Modell, Geometrie, Grundkarte und Logo als PDF, Farbnamen
+                    (mit Präfix n), Textbreite und Schrift-Adressen für idml.js
+                    (kartenObjekte) – der Tagungs-Reader setzt damit die Karte ins IDML
    orte()         – alle Orte (id, Kategorie, Label, Marker)
    markenFarbe(id) – Füllfarbe der Marke eines Orts (Hex), wie in der Szene
    ueberlauf()    – true, wenn die Legende der letzten Szene nicht aufs Blatt passte
@@ -2575,6 +2579,8 @@ window.Kartentool = {
   stand: standAlsJson,
   anwenden(s) { standAnwenden({ ...standAlsJson(), ...s }); render(); },
   szene: szeneMarkup,
+  modell: szeneModell,
+  idmlTeile: (namen) => idmlTeile(namen),
   markenFarbe: (id) => { const ort = alleOrte().find((o) => o.id === id); return ort ? ortFarbeHex(ort) : ""; },
   ueberlauf: () => legendeUeberlauf,
   orte: () => ORTE.map((o) => ({ id: o.id, kategorie: o.kategorie, art: o.art, label: o.label, marker: o.marker })),

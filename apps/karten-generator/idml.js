@@ -9,7 +9,10 @@
      Links/           grundkarte.pdf, logo.pdf, ggf. titellogo.pdf
      Document fonts/  Hausschrift (Variable, OFL) — InDesign aktiviert sie
                       beim Öffnen selbst
-   Spezifikation: docs/specs/campus-karte-idml.md
+   Die Objekt-Erzeugung (kartenObjekte) ist eigenständig: der Tagungs-Reader
+   setzt mit ihr die Karte in seine eigene Vorlage (apps/lt-reader/
+   idml-export.js), mit Präfix für IDs, Formate, Farbfelder und Ebenen.
+   Spezifikation: docs/specs/campus-karte-idml.md, docs/specs/lt-reader-idml.md
    ------------------------------------------------------------------------- */
 
 import { zipSchreiben } from '../lt-programm/idml-export.js';
@@ -79,8 +82,15 @@ export function pfadLesen(d) {
   return pfade;
 }
 
-export async function baueIdml(e) {
-  const { modell, geometrie: g, dateiname, farbnamen = {}, textBreite, links = {}, schriften = [] } = e;
+/* Die Karte als IDML-Objekte, ohne Dokument drumherum. Nullpunkt ist die
+   Mitte des Blatts (so liegen Seite und Doppelseite im IDML um 0 0).
+   e: { modell, geometrie, farbnamen, textBreite, links, immerFarben,
+        praefix (vor jeder Self-ID), namen (vor Format- und Ebenennamen) }
+   Gibt { inhalt: [Spread-Objekte], stories: [[Self, XML]], absatzformate:
+   XML, farben: [[hex, Self]], ebenen: [{ self, name, gesperrt }],
+   aktiveEbene } zurück. */
+export function kartenObjekte(e) {
+  const { modell, geometrie: g, farbnamen = {}, textBreite, links = {}, praefix = '', namen = '' } = e;
   const k = g.skala;                                    // Blatt-mm → Endformat-mm
   const B = g.trimBreite * MM, H = g.trimHoehe * MM;
   const OX = -B / 2, OY = -H / 2;                       // Seite mittig auf dem Druckbogen
@@ -88,7 +98,7 @@ export async function baueIdml(e) {
   const pt = (mm) => mm * k * MM;
 
   let zaehler = 0;
-  const id = (p) => `${p}${(++zaehler).toString(36)}`;
+  const id = (p) => `${praefix}${p}${(++zaehler).toString(36)}`;
 
   /* ---------- Farbfelder ---------- */
   const felder = new Map();                            // hex → Self
@@ -97,7 +107,7 @@ export async function baueIdml(e) {
     const h = hex.toLowerCase();
     if (h === '#ffffff') return 'Color/Paper';
     if (!felder.has(h)) {
-      let name = farbnamen[h] || `Farbe ${h.slice(1)}`;
+      let name = farbnamen[h] || `${namen}Farbe ${h.slice(1)}`;
       while ([...felder.values()].includes(`Color/${name}`)) name += ' ·';
       felder.set(h, `Color/${name}`);
     }
@@ -168,7 +178,7 @@ export async function baueIdml(e) {
 <idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="16.0">
 <Story Self="${sid}" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
 <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
-<ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/${x(ROLLEN[rolle].name)}"${ausrichtung}>${absaetze}</ParagraphStyleRange></Story></idPkg:Story>`]);
+<ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/${x(namen + ROLLEN[rolle].name)}"${ausrichtung}>${absaetze}</ParagraphStyleRange></Story></idPkg:Story>`]);
     const referenz = mitte ? 'TopCenterPoint' : 'TopLeftPoint';
     return `<TextFrame Self="${id('t')}" ParentStory="${sid}" ContentType="TextType"${ebene} FillColor="Swatch/None" StrokeColor="Swatch/None" ItemTransform="${m.map(n).join(' ')}">${geometrie([rechteckPfad(n(l), n(oben), n(l + w), n(unten))])}
 <TextFramePreference TextColumnCount="1" FirstBaselineOffset="FixedHeight" MinimumFirstBaselineOffset="${n(grad)}" VerticalJustification="TopAlign" AutoSizingType="HeightAndWidth" AutoSizingReferencePoint="${referenz}" UseNoLineBreaksForAutoSizing="true"><Properties><InsetSpacing type="list"><ListItem type="unit">0</ListItem><ListItem type="unit">0</ListItem><ListItem type="unit">0</ListItem><ListItem type="unit">0</ListItem></InsetSpacing></Properties></TextFramePreference></TextFrame>`;
@@ -202,7 +212,7 @@ export async function baueIdml(e) {
   };
 
   /* ---------- Druckbogen ---------- */
-  const ly = Object.fromEntries(EBENEN.map(([schluessel]) => [schluessel, `ly_${schluessel}`]));
+  const ly = Object.fromEntries(EBENEN.map(([schluessel]) => [schluessel, `${praefix}ly_${schluessel}`]));
   const inhalt = [];
   if (links.grundkarte) {
     const b = g.beschnitt / k;                          // Beschnitt in Blatt-mm
@@ -220,6 +230,41 @@ export async function baueIdml(e) {
     inhalt.push(pdfRahmen(links.logo, o.x, o.y, o.breite, o.hoehe, ly.beschriftung));
   }
   modell.legende.forEach((el) => inhalt.push(element(el, ly.legende)));
+  /* ---------- Formate ---------- */
+  const schriftVon = (f) => (ROLLEN[f.rolle] && ROLLEN[f.rolle].schrift === 'zahl'
+    ? ['Goetheanum Variabel', 'Laut'] : ['Goetheanum Variabel', 'Deutlich']);
+  const absatzformate = [...formate.entries()].map(([rolle, f]) => {
+    const [familie, schnitt] = schriftVon(f);
+    const grad = pt(f.groesse);
+    const zab = f.zab ? pt(f.zab) : grad * 1.2;
+    const ausrichtung = ROLLEN[rolle].mitte ? ' Justification="CenterAlign"' : '';
+    const name = namen + ROLLEN[rolle].name;
+    return `<ParagraphStyle Self="ParagraphStyle/${x(name)}" Name="${x(name)}" FontStyle="${schnitt}" PointSize="${n(grad)}" FillColor="${feld(f.farbe)}" Hyphenation="false" AppliedLanguage="$ID/German: Swiss 2006 Reform"${ausrichtung}>
+<Properties><BasedOn type="string">$ID/[No paragraph style]</BasedOn><AppliedFont type="string">${familie}</AppliedFont><Leading type="unit">${n(zab)}</Leading></Properties></ParagraphStyle>`;
+  }).join('\n');
+
+  // Tinte und leise Tinte stehen immer im Dokument, auch ohne Text.
+  (e.immerFarben || []).forEach(feld);
+
+  return {
+    inhalt, stories, absatzformate,
+    farben: [...felder.entries()],
+    ebenen: EBENEN.map(([schluessel, name]) => ({ self: ly[schluessel], name: namen + name, gesperrt: schluessel === 'grundkarte' })),
+    aktiveEbene: ly.marken
+  };
+}
+
+/* Ein RGB-Farbfeld (Self = 'Color/<Name>'). */
+export const farbfeldXml = (hex, self) => `<Color Self="${x(self)}" Model="Process" Space="RGB" ColorValue="${rgb(hex)}" ColorOverride="Normal" AlternateSpace="NoAlternateColor" AlternateColorValue="" Name="${x(self.slice(6))}" ColorEditable="true" ColorRemovable="true" Visible="true" SwatchCreatorID="7937" SwatchColorGroupReference="n"/>`;
+
+/* Eine Ebene für designmap.xml. */
+export const ebeneXml = (eb) => `<Layer Self="${eb.self}" Name="${x(eb.name)}" Visible="true" Locked="${eb.gesperrt ? 'true' : 'false'}" IgnoreWrap="false" ShowGuides="true" LockGuides="false" UI="true" Expendable="true" Printable="true"/>`;
+
+export async function baueIdml(e) {
+  const { geometrie: g, dateiname, links = {}, schriften = [] } = e;
+  const B = g.trimBreite * MM, H = g.trimHoehe * MM;
+  const OX = -B / 2, OY = -H / 2;
+  const { inhalt, stories, absatzformate, farben, ebenen, aktiveEbene } = kartenObjekte(e);
 
   const marginalien = '<MarginPreference ColumnCount="1" ColumnGutter="12" Top="0" Bottom="0" Left="0" Right="0"/>';
   const spread = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -230,27 +275,12 @@ ${marginalien}</Page>
 ${inhalt.join('\n')}
 </Spread></idPkg:Spread>`;
 
-  /* ---------- Formate ---------- */
-  const schriftVon = (f) => (ROLLEN[f.rolle] && ROLLEN[f.rolle].schrift === 'zahl'
-    ? ['Goetheanum Variabel', 'Laut'] : ['Goetheanum Variabel', 'Deutlich']);
-  const absatzformate = [...formate.entries()].map(([rolle, f]) => {
-    const [familie, schnitt] = schriftVon(f);
-    const grad = pt(f.groesse);
-    const zab = f.zab ? pt(f.zab) : grad * 1.2;
-    const ausrichtung = ROLLEN[rolle].mitte ? ' Justification="CenterAlign"' : '';
-    const name = ROLLEN[rolle].name;
-    return `<ParagraphStyle Self="ParagraphStyle/${x(name)}" Name="${x(name)}" FontStyle="${schnitt}" PointSize="${n(grad)}" FillColor="${feld(f.farbe)}" Hyphenation="false" AppliedLanguage="$ID/German: Swiss 2006 Reform"${ausrichtung}>
-<Properties><BasedOn type="string">$ID/[No paragraph style]</BasedOn><AppliedFont type="string">${familie}</AppliedFont><Leading type="unit">${n(zab)}</Leading></Properties></ParagraphStyle>`;
-  }).join('\n');
-
-  // Tinte und leise Tinte stehen immer im Dokument, auch ohne Text.
-  (e.immerFarben || []).forEach(feld);
   const graphic = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <idPkg:Graphic xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="16.0">
 <Color Self="Color/Black" Model="Process" Space="CMYK" ColorValue="0 0 0 100" ColorOverride="Specialblack" AlternateSpace="NoAlternateColor" AlternateColorValue="" Name="Black" ColorEditable="false" ColorRemovable="false" Visible="true" SwatchCreatorID="7937" SwatchColorGroupReference="n"/>
 <Color Self="Color/Paper" Model="Process" Space="CMYK" ColorValue="0 0 0 0" ColorOverride="Specialpaper" AlternateSpace="NoAlternateColor" AlternateColorValue="" Name="Paper" ColorEditable="true" ColorRemovable="false" Visible="true" SwatchCreatorID="7937" SwatchColorGroupReference="n"/>
 <Color Self="Color/Registration" Model="Registration" Space="CMYK" ColorValue="100 100 100 100" ColorOverride="Specialregistration" AlternateSpace="NoAlternateColor" AlternateColorValue="" Name="Registration" ColorEditable="false" ColorRemovable="false" Visible="true" SwatchCreatorID="7937" SwatchColorGroupReference="n"/>
-${[...felder.entries()].map(([hex, self]) => `<Color Self="${x(self)}" Model="Process" Space="RGB" ColorValue="${rgb(hex)}" ColorOverride="Normal" AlternateSpace="NoAlternateColor" AlternateColorValue="" Name="${x(self.slice(6))}" ColorEditable="true" ColorRemovable="true" Visible="true" SwatchCreatorID="7937" SwatchColorGroupReference="n"/>`).join('\n')}
+${farben.map(([hex, self]) => farbfeldXml(hex, self)).join('\n')}
 <Swatch Self="Swatch/None" Name="None" ColorEditable="false" ColorRemovable="false" Visible="true" SwatchCreatorID="7937" SwatchColorGroupReference="n"/>
 <StrokeStyle Self="StrokeStyle/$ID/Solid" Name="$ID/Solid"/>
 </idPkg:Graphic>`;
@@ -284,12 +314,12 @@ ${marginalien}</Page>
 
   const designmap = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <?aid style="50" type="document" readerVersion="6.0" featureSet="257" product="16.0(0)" ?>
-<Document xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="16.0" Self="d" StoryList="${stories.map(([s]) => s).join(' ')}" ZeroPoint="0 0" ActiveLayer="${ly.marken}" CMYKProfile="Coated FOGRA39 (ISO 12647-2:2004)" RGBProfile="sRGB IEC61966-2.1" SolidColorIntent="UseColorSettings" AfterBlendingIntent="UseColorSettings" DefaultImageIntent="UseColorSettings" RGBPolicy="PreserveEmbeddedProfiles" CMYKPolicy="CombinationOfPreserveAndSafeCmyk" AccurateLABSpots="false">
+<Document xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="16.0" Self="d" StoryList="${stories.map(([s]) => s).join(' ')}" ZeroPoint="0 0" ActiveLayer="${aktiveEbene}" CMYKProfile="Coated FOGRA39 (ISO 12647-2:2004)" RGBProfile="sRGB IEC61966-2.1" SolidColorIntent="UseColorSettings" AfterBlendingIntent="UseColorSettings" DefaultImageIntent="UseColorSettings" RGBPolicy="PreserveEmbeddedProfiles" CMYKPolicy="CombinationOfPreserveAndSafeCmyk" AccurateLABSpots="false">
 <Language Self="Language/$ID/German%3a Swiss 2006 Reform" Name="$ID/German: Swiss 2006 Reform" SingleQuotes="‹›" DoubleQuotes="«»" PrimaryLanguageName="$ID/German" SublanguageName="$ID/Swiss 2006 Reform" Id="2310" HyphenationVendor="Duden" SpellingVendor="Duden"/>
 <idPkg:Graphic src="Resources/Graphic.xml"/>
 <idPkg:Styles src="Resources/Styles.xml"/>
 <idPkg:Preferences src="Resources/Preferences.xml"/>
-${EBENEN.map(([schluessel, name]) => `<Layer Self="${ly[schluessel]}" Name="${name}" Visible="true" Locked="${schluessel === 'grundkarte' ? 'true' : 'false'}" IgnoreWrap="false" ShowGuides="true" LockGuides="false" UI="true" Expendable="true" Printable="true"/>`).join('\n')}
+${ebenen.map(ebeneXml).join('\n')}
 <idPkg:MasterSpread src="MasterSpreads/MasterSpread_ms.xml"/>
 <idPkg:Spread src="Spreads/Spread_sp1.xml"/>
 <Section Self="sec1" Length="1" Name="" ContinueNumbering="false" IncludeSectionPrefix="false" PageNumberStart="1" Marker="" PageStart="pg1" SectionPrefix=""/>
