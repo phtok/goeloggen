@@ -27,7 +27,7 @@ Kommt die Seite nicht ans Backend (die Sandbox lässt es nicht immer), die
 RPC-Antworten mit `page.route('**/rest/v1/rpc/**', …)` unterlegen — mit **echten**
 Daten aus der Datenbank, sonst prüft man eine Attrappe.
 
-## § Schnitt-System (Stand v2.8, Paketstruktur Trio)
+## § Schnitt-System (Stand v2.9, Paketstruktur Trio)
 
 - Statische Schnitte: **Leise (265) · Ruhig (350) · Klar (440) ·
   Deutlich (580) · Laut (680)**. Ruhig = ruhiger Lese-/Buchschnitt (füllt den

@@ -118,3 +118,11 @@ Befund als `docs/befunde/…` und trägt Beschlüsse in
 
 - [ ] Titillium Pro beobachten (Serif-Fortschritt, Variable), halbjährlich.
 - [ ] Elbonium (Dribbble) nicht gesichtet; Bild vom Inhaber.
+- [x] **E2 Glyphen, Kerning, Metriken** – erledigt 31. 10. 2026: Hausschrift
+      v2.9, Befund `docs/befunde/schrift-v29-titillium-pro.md`, Vergleich
+      https://werkzeuge.goetheanum.ch/schrift-v29.html. Offen daraus:
+      Entscheid, ob die Pfeile der ‹Goetheanum Pfeile› in den Textfont kommen.
+- [x] **E5 Black-Probewort** – erledigt mit E2 (Bild und Befund dort, § 6):
+      die Achse trägt linear bis etwa Stamm 190; ein Extrablack bräuchte
+      eigene, breitere Master.
+- [ ] E1 Kursive, E3 Listenziffern (baut auf v2.9), E4 Serif.

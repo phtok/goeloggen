@@ -1,4 +1,4 @@
-# Goetheanum Schriften — `v2.8`
+# Goetheanum Schriften — `v2.9`
 
 Reparierte und optimierte Fassung des offiziellen Schriftpakets der Goetheanum
 Kommunikation (basierend auf der originalen v1.4.43, abgeleitet aus Titillium,
@@ -23,17 +23,42 @@ SIL OFL). Reparaturen und Begründung siehe
 ```css
 @font-face {
   font-family: "Goetheanum Schrift";
-  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.8-Klar.woff2") format("woff2");
+  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.9-Klar.woff2") format("woff2");
   font-weight: 440; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Goetheanum Schrift";
-  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.8-Laut.woff2") format("woff2");
+  src: url("Webfonts/woff2/Goetheanum-Schrift-v2.9-Laut.woff2") format("woff2");
   font-weight: 680; font-style: normal; font-display: swap;
 }
 ```
 
 Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
+
+## Neu in v2.9
+
+Abgleich mit Titillium Sans Pro (Chialab, OFL; Befund
+`docs/befunde/schrift-v29-titillium-pro.md`). Die Upright-Formen bleiben.
+
+- **158 Zeichen mehr** (411 → 569 Codepunkte). Umschrift des Sanskrit (IAST:
+  `ṛ ṝ ḷ ḹ ṃ ṇ ṅ ṣ ṭ ḍ ḥ`), Pinyin (`ǎ ǐ ǒ ǔ`), Aserbaidschanisch (`Ə ə`),
+  Afrikanisch (`Ɛ ɛ Ɨ ɨ Ʉ ʉ Ɲ ɲ`), Niederländisch `Ĳ ĳ`, Akzente unter und
+  über (`Ḍ Ṯ Ȯ Ǫ Ḑ` …), Brüche `⅓ ⅔ ⅛ …`, Währungen `₹ ₽ ₴ ฿`, `℮ ○ ● ◌`,
+  `ﬁ ﬂ` als Zeichen. Gesetzt aus den eigenen Buchstaben und Akzenten der
+  Hausschrift; nur Formen, die es im Haus nicht gab, aus der Pro, nach
+  Stammbreite gemischt und auf die Hausproportion gebracht.
+- **Kombinierende Akzente** (U+0300 …) mit `ccmp`: zerlegter Text (NFD, z. B.
+  aus macOS-Dateinamen) setzt sich zum fertigen Zeichen zusammen.
+- **Kerning der Pro** (iKern) für alle Paare formgleicher Zeichen –
+  Versalien, Ziffern, Satzzeichen, Gemeine ausser `a g y t l` –, auf die
+  schmalere Hausproportion skaliert. Paare mit `a g y t l` und den
+  Guillemets behalten das Hauskerning. Der Variable Font kernt je Gewicht.
+- Bewusst nicht übernommen: `№` (im deutschen Satz «Nr.»), Pfeile (Hausform
+  ist ‹Goetheanum Pfeile›), Kreisziffern (Etappe E3), Vietnamesisch gestapelt,
+  `Ŀ ŀ ŉ`, `₪` (in der Pro falsch geformt, Chialab-Issue #12). `¨` wächst
+  jetzt mit dem Gewicht (Vorschub schrumpfte bisher). Vertikalmetriken unverändert (750/−250).
+- Für schon versandte Mails bleibt `Goetheanum-Schrift-v2.8-Deutlich`
+  (woff/woff2) erreichbar, nicht im ZIP. Vergleichskopien der v2.8 in `Befund/`.
 
 ## Neu in v2.8
 
@@ -107,6 +132,7 @@ Zum Unterscheiden der Fassungen – welche Datei welchen Stand trägt:
 
 | Version | Kurz |
 |---------|------|
+| **v2.9** | Abgleich mit Titillium Sans Pro: 158 Zeichen mehr (IAST, Pinyin, Ə, Brüche, Währungen), kombinierende Akzente mit `ccmp`, Kerning der Pro für formgleiche Paare, variables Kerning. |
 | **v2.8** | Reparatur des Variable Font: kreuzende Konturen (`« » „ ‚ ÷ ◊ %`, `Ű`), starre Glyphen, `Û`, Bruchstrich-Vorschub; Kapitälchen/Kurzziffern ohne Gewichtsklemme, `Ø`-Strich, case-Striche und -Bindestrich; alle Lieferformen neu gebaut. |
 | **v2.7** | Siebter Schnitt **Ruhig** (wght 350), die Buch-Zwischenstimme zwischen Leise und Klar. Schlummernde Null (`zero`) in den Überschneidungen gesäubert. |
 | **v2.6** | **Versaleszett ẞ**; typografische Spatien + geschützter Bindestrich (U+2011); Ziffern **proportional** (`pnum`) und Kurzziffern (`onum`), volle Ziffern-Parität; **f-Ligaturen** und **Kapitälchen** (smcp/c2sc). Versionssprung 2.5 → 2.6. |

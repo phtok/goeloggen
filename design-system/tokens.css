@@ -19,8 +19,8 @@
 /* --- Hausschrift: Goetheanum Variable (Display) ---------------------------- */
 @font-face{
   font-family:"Goetheanum";
-  src:url("../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.8.woff2") format("woff2"),
-      url("../assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.8.woff") format("woff");
+  src:url("../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.9.woff2") format("woff2"),
+      url("../assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Variabel-v2.9.woff") format("woff");
   font-weight:190 725; font-style:normal; font-display:swap;
   /* B5: Zeilenbox auf die Typo-Metrik normieren (750/-250). Die Schrift trägt
      usWinAscent 1114 (hohe Streukontur) – ohne Override entstünde je Face ein

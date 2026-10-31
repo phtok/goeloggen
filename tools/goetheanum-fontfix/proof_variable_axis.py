@@ -34,6 +34,8 @@ FEATS = ("smcp", "case", "zero")
 LIGEN = ()
 MAXWEG = 40
 BEWUSST_STARR = {0x2022}                         # • (Entscheid des Inhabers 30. 10. 2026)
+BEWUSST_STARR |= {0x25CF, 0x212E}               # ● ℮ aus der Pro, dort in jedem Gewicht gleich (v2.9)
+WEG_WIE_PRO = {0x019D}                           # Ɲ: Haken wandert wie in den Pro-Mastern (v2.9)
 
 
 def reachable(ft, cps=None):
@@ -119,7 +121,7 @@ def main():
             za, zb = row[i]["zentren"], row[i + 1]["zentren"]
             if len(za) != len(zb): probleme.append("Konturzahl springt"); break
             weg = max([weg] + [abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(za, zb)])
-        if round(weg) > MAXWEG: probleme.append("Konturzentrum wandert %d" % round(weg))
+        if round(weg) > MAXWEG and not (g in names and names[g] in WEG_WIE_PRO): probleme.append("Konturzentrum wandert %d" % round(weg))
         if g == frac:
             v = [r["vorschub"] for r in row]
             if any(x < 0 or x > 100 for x in v) or any(v[i + 1] < v[i] for i in range(len(v) - 1)):
