@@ -81,6 +81,16 @@
       "such": "Moodboard Bewegung Animation Bloom Kurve Übergang Steigerung Reduktion Polarität Wiederholung lebendig Metamorphose Labor"
     },
     {
+      "slug": "bewegung-anwendungen",
+      "cat": "labor",
+      "status": "intern",
+      "tag": "Labor",
+      "title": "Bewegung in zehn Anwendungen",
+      "href": "bewegung-anwendungen.html",
+      "desc": "Die vorgeschlagenen Bewegungs-Tokens lebend in zehn Bausteinen: Klappmenü, Akkordeon, Wahl, Knopf und Dank, Feld, Meldung, Staffel, Reiter, Vollfläche, Seitenwechsel.",
+      "such": "Bewegung Animation Tokens Kurve Dauer Staffel Weg Bloom Übergang reduzierte Bewegung Labor"
+    },
+    {
       "slug": "schmiede",
       "cat": "labor",
       "status": "intern",
