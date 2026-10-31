@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+<title>Spendenformular · Labor · Goetheanum</title>
+<meta name="description" content="Prototyp eines neu gestalteten Spendenformulars für goetheanum.io, mit dem Akkordeon der Spendenseite im Kontext." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<link rel="stylesheet" href="design-system/akkordeon.css" />
+
+<style>
+  /* Bewegung – Vorschlag, noch nicht im Fundament
+     (docs/recherche_uebergaenge-lebendig.md § Vorschlag). Namen und Werte
+     genau wie dort; erst nach dem Entscheid des Auftraggebers in tokens.css. */
+  :root{
+    --kurve-bloom:cubic-bezier(.32,.08,.24,1);
+    --kurve-flaeche:cubic-bezier(.35,0,.5,1);
+    --kurve-ein:var(--kurve-bloom);
+    --kurve-aus:var(--kurve-bloom);
+    --dauer-hauch:120ms; --dauer-kurz:220ms; --dauer-mittel:280ms; --dauer-lang:400ms;
+    --weg:1.5rem; --staffel:40ms;
+  }
+  @media(prefers-reduced-motion:reduce){
+    :root{--dauer-hauch:0s;--dauer-kurz:0s;--dauer-mittel:0s;--dauer-lang:0s;--staffel:0s}
+  }
+  /* Die Wahl wächst vom Berührpunkt aus (Radius als animierbare Grösse). */
+  @property --wuchs{syntax:"<percentage>";inherits:false;initial-value:0%}
+
+  /* Laborschalter: gestrichelt, damit sie nie als Teil des Formulars lesen. */
+  .laborleiste{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s3) var(--s6);
+    padding:var(--s3) var(--s4);border:1px dashed var(--line-control);border-radius:var(--r-card)}
+  .laborleiste .schalter{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s3)}
+  .wrap>.laborleiste:first-child{margin-top:var(--s6)}
+
+  .hero h1{text-wrap:balance}
+  section.spende{border-top:0;padding-top:0}
+
+  /* Einspaltig schmal; nur das Eingabe-Raster darf breit werden. */
+  #spende{max-width:40rem;display:grid;gap:var(--s8)}
+  #spende fieldset{border:0;min-width:0;display:grid;gap:var(--s3)}
+  #spende legend{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);
+    line-height:var(--lh-tight);text-wrap:balance;padding:0;margin-bottom:var(--s3)}
+
+  /* Jede Wahl im Formular wächst gleich: dieselbe Kurve, dieselbe Uhr (Wiederholung).
+     Auf wächst mit --dauer-mittel, zu welkt mit --dauer-kurz. */
+  #spende .seg button{
+    background:radial-gradient(circle at var(--x,50%) var(--y,50%),var(--gold-deep) var(--wuchs),var(--field-bg) calc(var(--wuchs) + .5%));
+    transition:--wuchs var(--dauer-kurz) var(--kurve-aus),color var(--dauer-kurz) var(--kurve-aus),border-color var(--dauer-hauch)}
+  #spende .seg button[aria-pressed="true"]{--wuchs:100%;
+    background:radial-gradient(circle at var(--x,50%) var(--y,50%),var(--gold-deep) var(--wuchs),var(--field-bg) calc(var(--wuchs) + .5%));
+    transition-duration:var(--dauer-mittel);transition-timing-function:var(--kurve-ein)}
+
+  /* Betrag: sechs Stufen aufsteigend, Ziffern dicktengleich (G25). */
+  .betrag{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--s2)}
+  .betrag button{font-size:var(--t-body);font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum","lnum"}
+  @media(max-width:640px){.betrag{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  #spende .field input,#spende .field select{min-height:var(--tap)}   /* B04 auf allen Breiten */
+  .eigen{max-width:16rem;margin-top:var(--s2)}
+  .einheit{position:relative}
+  .einheit input{padding-right:3.6em;font-variant-numeric:tabular-nums lining-nums}
+  .einheit .unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;
+    font-family:var(--font-text);font-size:16px;color:var(--muted)}
+  /* Eigener Betrag gewählt: der Ring wächst auf derselben Uhr, auf der die Stufe welkt. */
+  .einheit input{transition:border-color var(--dauer-kurz) var(--kurve-aus),box-shadow var(--dauer-kurz) var(--kurve-aus)}
+  .einheit.gewaehlt input{border-color:var(--gold-ink);box-shadow:0 0 0 1px var(--gold-ink);
+    transition-duration:var(--dauer-mittel)}
+
+  /* Kästchen: die ganze Zeile ist das Fingerziel (B04). */
+  .kaestchen{display:flex;align-items:center;gap:var(--s3);min-height:var(--tap);cursor:pointer;
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);line-height:var(--lh-min)}
+  .kaestchen input{flex:none;width:24px;height:24px;margin:0;accent-color:var(--gold-deep);cursor:pointer}
+
+  /* Bedingtes Feld (GOV.UK, eine Ebene): der Raum wächst von 0fr auf 1fr. */
+  .wachsen{display:grid;grid-template-rows:0fr;opacity:0;
+    transition:grid-template-rows var(--dauer-kurz) var(--kurve-aus),opacity var(--dauer-kurz) var(--kurve-aus)}
+  .wachsen.offen{grid-template-rows:1fr;opacity:1;transition-duration:var(--dauer-mittel);transition-timing-function:var(--kurve-ein)}
+  .wachsen{margin-top:calc(-1 * var(--s3))}   /* geschlossen ohne Lücke */
+  .wachsen>.innen{min-height:0;overflow:hidden;padding:calc(var(--s3) + 4px) 4px 4px;margin:-4px}
+  .wachsen .formgrid{padding-top:var(--s2)}
+  /* Felder einer Rasterzeile bleiben auf einer Linie, auch wenn eine Meldung umbricht. */
+  #spende .formgrid .field{align-content:start}
+
+  /* Fehler stehen, sie treffen nicht ein: keine Bewegung. */
+  .fehler{display:block;font-family:var(--font-text);font-size:var(--t-small);line-height:var(--lh-min);color:var(--bad);transition:none}
+  #spende .field input[aria-invalid="true"],#spende .field select[aria-invalid="true"]{border:2px solid var(--bad);transition:none}
+  #spende .gruppe-fehler{border-left:4px solid var(--bad);padding-left:var(--s4);margin-left:calc(-1 * var(--s4) - 4px)}
+  .fehlerliste{border:2px solid var(--bad);border-radius:var(--r-control);padding:var(--s4) var(--s5);display:grid;gap:var(--s2)}
+  .fehlerliste:focus{outline:2px solid var(--blue);outline-offset:2px}
+  .fehlerliste h2{font-size:var(--t-body)}
+  .fehlerliste ul{list-style:none;display:grid;gap:var(--s1);font-family:var(--font-text);font-size:var(--t-small)}
+  .fehlerliste a{color:var(--bad);text-decoration:underline;text-underline-offset:.15em}
+
+  /* Abschluss: Knopf, Satz, Dank – der Dank wächst aus dem Knopf. */
+  .abschluss{display:grid;gap:var(--s3)}
+  .abschluss .btn.primary{width:100%;font-size:var(--t-body);min-height:calc(var(--tap) + var(--s2))}
+  .dank{border-radius:var(--r-control);overflow:hidden}
+  .dank:empty{display:none}
+  .dank-innen{background:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));padding:var(--s5) var(--s6) var(--s6);
+    display:grid;gap:var(--s3)}
+  .dank-innen h2{font-size:var(--t-h3);text-wrap:balance}
+  .dank-innen h2:focus{outline:none}
+  .dank-innen p{max-width:min(var(--measure),100%)}
+  .dank-innen .btn{justify-self:start}
+
+  /* Akkordeon im Kontext: die Grade der Empfehlung aus dem Befund
+     (docs/spenden-befund-2026-10-31.md § 4.1) lokal gesetzt, nur hier. */
+  .acc-kontext{font-size:var(--t-body)}
+  .acc-kontext[data-grade="empfohlen"]{--t-h3:1.3125rem;--t-body:1.125rem}   /* 21 px / 18 px */
+  .acc-kontext .laborleiste{margin-bottom:var(--s6)}
+  .acc .zeilen{white-space:pre-line}
+</style>
+</head>
+<body>
+
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <div class="laborleiste" role="group" aria-label="Laborschalter Formular">
+    <span class="badge">Prototyp ohne Zahlung</span>
+    <div class="schalter">
+      <span class="lab" id="l-vor">Vorbelegt</span>
+      <div class="seg" role="group" aria-labelledby="l-vor" id="vorbelegt">
+        <button type="button" data-wert="einmalig" aria-pressed="true">einmalig</button>
+        <button type="button" data-wert="monatlich" aria-pressed="false">monatlich</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="hero">
+    <span class="kicker">Spenden</span>
+    <h1>Das Goetheanum unterstützen</h1>
+    <p class="lede">Mit Ihrer Spende unterstützen Sie die Arbeit am Goetheanum und schaffen Freiräume für neue Projekte und Initiativen.</p>
+  </section>
+
+  <section class="spende" aria-label="Spendenformular">
+    <form id="spende" novalidate>
+
+      <div class="fehlerliste" id="fehlerliste" tabindex="-1" aria-labelledby="fl-titel" hidden>
+        <h2 id="fl-titel">Bitte prüfen Sie diese Angaben</h2>
+        <ul></ul>
+      </div>
+
+      <fieldset>
+        <legend>Wie oft möchten Sie spenden?</legend>
+        <div class="seg" role="group" aria-label="Häufigkeit" id="frequenz">
+          <button type="button" data-wert="einmalig" aria-pressed="true">Einmalig</button>
+          <button type="button" data-wert="monatlich" aria-pressed="false">Monatlich</button>
+        </div>
+      </fieldset>
+
+      <fieldset id="g-betrag">
+        <legend>Betrag in CHF</legend>
+        <div class="seg betrag" role="group" aria-label="Betrag wählen" id="stufen">
+          <button type="button" aria-pressed="false">20</button>
+          <button type="button" aria-pressed="true">50</button>
+          <button type="button" aria-pressed="false">100</button>
+          <button type="button" aria-pressed="false">200</button>
+          <button type="button" aria-pressed="false">500</button>
+          <button type="button" aria-pressed="false">1000</button>
+        </div>
+        <div class="field eigen">
+          <label class="lab" for="betrag">Anderer Betrag in CHF</label>
+          <div class="einheit">
+            <input id="betrag" name="betrag" type="text" inputmode="decimal" autocomplete="transaction-amount" aria-describedby="betrag-fehler" />
+            <span class="unit" aria-hidden="true">CHF</span>
+          </div>
+          <span class="fehler" id="betrag-fehler" hidden></span>
+        </div>
+      </fieldset>
+
+      <fieldset id="g-zahlart">
+        <legend id="l-zahlart">Zahlungsart</legend>
+        <div class="seg" role="group" aria-labelledby="l-zahlart" aria-describedby="zahlart-fehler zahlart-hinweis" id="zahlart">
+          <button type="button" data-wert="twint" aria-pressed="false">TWINT</button>
+          <button type="button" data-wert="karte" aria-pressed="false">Karte</button>
+          <button type="button" data-wert="paypal" aria-pressed="false">PayPal</button>
+          <button type="button" data-wert="rechnung" aria-pressed="false">QR&#8209;Rechnung</button>
+        </div>
+        <span class="fehler" id="zahlart-fehler" hidden></span>
+        <p class="hint" id="zahlart-hinweis" aria-live="polite"></p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Ihre Angaben</legend>
+        <div class="formgrid">
+          <div class="field">
+            <label class="lab" for="vorname">Vorname</label>
+            <input id="vorname" name="vorname" type="text" autocomplete="given-name" aria-describedby="vorname-fehler" />
+            <span class="fehler" id="vorname-fehler" hidden></span>
+          </div>
+          <div class="field">
+            <label class="lab" for="nachname">Name</label>
+            <input id="nachname" name="nachname" type="text" autocomplete="family-name" aria-describedby="nachname-fehler" />
+            <span class="fehler" id="nachname-fehler" hidden></span>
+          </div>
+          <div class="field">
+            <label class="lab" for="email">E-Mail</label>
+            <input id="email" name="email" type="email" autocomplete="email" spellcheck="false" aria-describedby="email-fehler" />
+            <span class="fehler" id="email-fehler" hidden></span>
+          </div>
+        </div>
+
+        <label class="kaestchen">
+          <input type="checkbox" id="bescheinigung" aria-controls="adresse" />
+          <span>Spendenbescheinigung gewünscht</span>
+        </label>
+        <div class="wachsen" id="adresse">
+          <div class="innen" inert>
+            <p class="hint">Für die Bescheinigung brauchen wir Ihre Postadresse.</p>
+            <div class="formgrid">
+              <div class="field span2">
+                <label class="lab" for="strasse">Strasse und Hausnummer</label>
+                <input id="strasse" name="strasse" type="text" autocomplete="address-line1" aria-describedby="strasse-fehler" />
+                <span class="fehler" id="strasse-fehler" hidden></span>
+              </div>
+              <div class="field">
+                <label class="lab" for="plz">Postleitzahl</label>
+                <input id="plz" name="plz" type="text" inputmode="numeric" autocomplete="postal-code" aria-describedby="plz-fehler" />
+                <span class="fehler" id="plz-fehler" hidden></span>
+              </div>
+              <div class="field span2">
+                <label class="lab" for="ort">Ort</label>
+                <input id="ort" name="ort" type="text" autocomplete="address-level2" aria-describedby="ort-fehler" />
+                <span class="fehler" id="ort-fehler" hidden></span>
+              </div>
+              <div class="field">
+                <label class="lab" for="land">Land</label>
+                <select id="land" name="land" autocomplete="country">
+                  <option value="CH">Schweiz</option>
+                  <option value="DE">Deutschland</option>
+                  <option value="AT">Österreich</option>
+                  <option value="LI">Liechtenstein</option>
+                  <option value="FR">Frankreich</option>
+                  <option value="IT">Italien</option>
+                  <option value="NL">Niederlande</option>
+                  <option value="GB">Vereinigtes Königreich</option>
+                  <option value="US">Vereinigte Staaten</option>
+                  <option value="XX">Anderes Land</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label class="lab" for="zweck">Spendenzweck</label>
+        <select id="zweck" name="zweck">
+          <option value="allgemein">Wo es am nötigsten ist</option>
+          <option value="weihnachten">Weihnachtsspende</option>
+        </select>
+      </div>
+
+      <div class="abschluss">
+        <div class="dank" id="dank" role="status"></div>
+        <button class="btn primary" type="submit" id="absenden"><span>Jetzt <span class="num">50&nbsp;CHF</span> spenden</span></button>
+        <p class="hint" id="kosten">Jede Zahlungsart kostet eine kleine Gebühr, die QR&#8209;Rechnung die kleinste. Die Spendenbescheinigung erhalten Sie, wenn Sie sie oben wählen.</p>
+      </div>
+
+    </form>
+  </section>
+
+  <section class="acc-kontext" data-grade="heute" aria-label="Weitere Wege zu spenden">
+    <div class="laborleiste" role="group" aria-label="Laborschalter Akkordeon">
+      <div class="schalter">
+        <span class="lab" id="l-grade">Grade</span>
+        <div class="seg" role="group" aria-labelledby="l-grade" id="grade">
+          <button type="button" data-wert="heute" aria-pressed="true">wie heute</button>
+          <button type="button" data-wert="empfohlen" aria-pressed="false">wie empfohlen</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-liste faden"><div class="acc-kopf"><span class="meta"><span class="num">5</span> Themen</span><button class="btn ghost alle" type="button" aria-pressed="false">Alle aufklappen</button></div>
+    <details class="acc" id="bankverbindungen">
+      <summary>
+        <span class="frage">Bankverbindungen</span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </summary>
+      <div class="acc-body"><div class="acc-inner">
+        <p><strong>CHF-Konto</strong></p>
+        <p class="zeilen">Allgemeine Anthroposophische Gesellschaft
+Postfach, 4143&nbsp;Dornach/Schweiz
+Raiffeisenbank Dornach, CH–4143&nbsp;Dornach
+BIC: RAIFCH22
+IBAN: <span class="num">CH54&nbsp;8080&nbsp;8001&nbsp;1975&nbsp;4658&nbsp;2</span></p>
+        <p><strong>EUR-Konto</strong></p>
+        <p class="zeilen">Allgemeine Anthroposophische Gesellschaft
+Postfach, 4143&nbsp;Dornach/Schweiz
+GLS Gemeinschaftsbank eG, DE-44708&nbsp;Bochum
+BIC: GENODEM1GLS
+IBAN: <span class="num">DE53&nbsp;4306&nbsp;0967&nbsp;0000&nbsp;9881&nbsp;00</span></p>
+        <p><strong>USD-Konto</strong></p>
+        <p class="zeilen">Allgemeine Anthroposophische Gesellschaft
+Postfach, 4143&nbsp;Dornach/Schweiz
+Raiffeisenbank Dornach, CH–4143&nbsp;Dornach
+BIC: RAIFCH22
+IBAN: <span class="num">CH23&nbsp;8080&nbsp;8001&nbsp;7896&nbsp;7636&nbsp;5</span></p>
+        <p><strong>GBP-Konto</strong></p>
+        <p class="zeilen">Allgemeine Anthroposophische Gesellschaft
+Postfach, 4143&nbsp;Dornach/Schweiz
+Raiffeisenbank Dornach, CH–4143&nbsp;Dornach
+BIC: RAIFCH22
+IBAN: <span class="num">CH57&nbsp;8080&nbsp;8002&nbsp;4407&nbsp;3179&nbsp;9</span></p>
+        <button class="btn ghost teilen" type="button">Link kopieren</button>
+      </div></div>
+    </details>
+    <details class="acc" id="schweiz">
+      <summary>
+        <span class="frage">Spenden in der Schweiz</span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </summary>
+      <div class="acc-body"><div class="acc-inner">
+        <p><strong>Für Privatpersonen mit Wohnsitz in der Schweiz</strong></p>
+        <p>Als gemeinnützige Einrichtung kann die Allgemeine Anthroposophische Gesellschaft Spendenbescheinigungen ausstellen. Die steuerliche Abzugsfähigkeit richtet sich nach den jeweiligen kantonalen Bestimmungen. Schenkungen an die Allgemeine Anthroposophische Gesellschaft sind schenkungssteuerfrei.</p>
+        <button class="btn ghost teilen" type="button">Link kopieren</button>
+      </div></div>
+    </details>
+    <details class="acc" id="deutschland">
+      <summary>
+        <span class="frage">Spenden in Deutschland</span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </summary>
+      <div class="acc-body"><div class="acc-inner">
+        <p><strong>Für Privatpersonen mit Wohnsitz in Deutschland</strong></p>
+        <p>Für Spenden an die Allgemeine Anthroposophische Gesellschaft kann über die Anthroposophische Gesellschaft in Deutschland e.V. eine steuerlich verwendbare Spendenbestätigung ausgestellt werden.</p>
+        <button class="btn ghost teilen" type="button">Link kopieren</button>
+      </div></div>
+    </details>
+    <details class="acc" id="andere-laender">
+      <summary>
+        <span class="frage">Spenden aus anderen Ländern</span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </summary>
+      <div class="acc-body"><div class="acc-inner">
+        <p><strong>Für Privatpersonen mit Wohnsitz in anderen Ländern</strong></p>
+        <p>Spenden können über die jeweilige Landesgesellschaft zur Weiterleitung an das Goetheanum erfolgen. Für die steuerliche Abzugsfähigkeit gelten die Bestimmungen des jeweiligen Landes.</p>
+        <button class="btn ghost teilen" type="button">Link kopieren</button>
+      </div></div>
+    </details>
+    <details class="acc" id="institutionen">
+      <summary>
+        <span class="frage">Spenden von Institutionen</span>
+        <span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </summary>
+      <div class="acc-body"><div class="acc-inner">
+        <p>Für Fragen zu Spenden von Institutionen wenden Sie sich bitte an:</p>
+        <p class="zeilen"><strong>Oliver Conradt</strong>
+E-Mail: <a href="mailto:oliver.conradt@goetheanum.ch">oliver.conradt@goetheanum.ch</a>
+Telefon: <a href="tel:+41617064420">+41&nbsp;61&nbsp;706&nbsp;44&nbsp;20</a></p>
+        <button class="btn ghost teilen" type="button">Link kopieren</button>
+      </div></div>
+    </details>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script src="design-system/akkordeon.js" defer></script>
+<script>
+(function(){
+  "use strict";
+  var STUFEN = {einmalig:[20,50,100,200,500,1000], monatlich:[10,20,30,50,100,200]};
+  var VORWAHL = {einmalig:50, monatlich:20};
+  var HINWEIS = {
+    twint:"Am Telefon öffnet sich die TWINT-App, am Rechner erscheint ein QR\u2011Code. Danach kommen Sie hierher zurück.",
+    karte:"Die Kartenangaben folgen im nächsten Schritt.",
+    paypal:"Sie melden sich bei PayPal an und kommen danach hierher zurück.",
+    rechnung:"Sie erhalten eine QR\u2011Rechnung per E-Mail und bezahlen im E-Banking."
+  };
+  var TWINT_MAX = 5000;
+  var NB = " ";
+
+  var $ = function(s, r){ return (r || document).querySelector(s); };
+  var $$ = function(s, r){ return [].slice.call((r || document).querySelectorAll(s)); };
+  var form = $("#spende"), feld = $("#betrag"), einheit = $(".einheit"), knopf = $("#absenden");
+  var stand = {frequenz:"einmalig", stufe:50, zahlart:null, versucht:false};
+
+  function dauer(name){
+    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return v.endsWith("ms") ? parseFloat(v) : parseFloat(v) * 1000 || 0;
+  }
+  function zahl(n){
+    var s = Number.isInteger(n) ? String(n) : n.toFixed(2);
+    return n >= 10000 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, " ") : s;
+  }
+  function eigenerBetrag(){
+    var v = feld.value.replace(/[\s'’ ]/g, "").replace(",", ".");
+    if (v === "") return null;
+    var n = Number(v);
+    return isFinite(n) ? n : NaN;
+  }
+  function betrag(){
+    var e = eigenerBetrag();
+    return e === null ? stand.stufe : e;
+  }
+
+  /* Ein Knopf, eine Gruppe: Wahl setzen, vom Berührpunkt aus wachsen lassen. */
+  function waehlen(gruppe, b){
+    $$("button", gruppe).forEach(function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+  }
+  function beruehrpunkt(e){
+    var b = e.target.closest("button"); if (!b) return;
+    var r = b.getBoundingClientRect();
+    b.style.setProperty("--x", (e.clientX - r.left) + "px");
+    b.style.setProperty("--y", (e.clientY - r.top) + "px");
+  }
+  $$("#spende .seg").forEach(function(g){
+    g.addEventListener("pointerdown", beruehrpunkt);
+    g.addEventListener("keydown", function(e){
+      var b = e.target.closest("button"); if (b && (e.key === "Enter" || e.key === " ")) { b.style.removeProperty("--x"); b.style.removeProperty("--y"); }
+    });
+  });
+
+  function knopfText(){
+    var n = betrag();
+    var mon = stand.frequenz === "monatlich" ? " monatlich" : "";
+    knopf.innerHTML = (n && n > 0)
+      ? '<span>Jetzt <span class="num">' + zahl(n) + NB + "CHF</span>" + mon + " spenden</span>"
+      : "<span>Jetzt spenden</span>";
+  }
+  function zahlHinweis(){
+    var t = stand.zahlart ? HINWEIS[stand.zahlart] : "";
+    var n = betrag();
+    if (stand.zahlart === "twint" && n > TWINT_MAX) t = "Mit TWINT gehen höchstens " + zahl(TWINT_MAX) + NB + "CHF; für mehr eignet sich die QR\u2011Rechnung.";
+    $("#zahlart-hinweis").textContent = t;
+  }
+
+  /* Häufigkeit: neue Stufen, die Ziffern kommen gestaffelt (Steigerung). */
+  function frequenzSetzen(f, sanft){
+    stand.frequenz = f;
+    waehlen($("#frequenz"), $('#frequenz [data-wert="' + f + '"]'));
+    stand.stufe = VORWAHL[f];
+    feld.value = ""; einheit.classList.remove("gewaehlt");
+    var st = dauer("--staffel"), d = dauer("--dauer-mittel");
+    $$("#stufen button").forEach(function(b, i){
+      b.textContent = STUFEN[f][i];
+      b.setAttribute("aria-pressed", STUFEN[f][i] === stand.stufe ? "true" : "false");
+      if (sanft && d && b.animate) b.animate([{opacity:0},{opacity:1}], {duration:d, delay:i * st, easing:"cubic-bezier(.32,.08,.24,1)", fill:"backwards"});
+    });
+    knopfText(); zahlHinweis();
+  }
+  $("#frequenz").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if (b && b.dataset.wert !== stand.frequenz) frequenzSetzen(b.dataset.wert, true);
+  });
+  $("#vorbelegt").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if (!b) return;
+    waehlen($("#vorbelegt"), b);
+    frequenzSetzen(b.dataset.wert, true);
+  });
+
+  /* Stufe → eigenes Feld: wer tippt, lässt die Stufe welken und den Ring wachsen;
+     wer das Feld leert, bekommt die zuletzt gewählte Stufe zurück. */
+  $("#stufen").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if (!b) return;
+    stand.stufe = Number(b.textContent);
+    waehlen($("#stufen"), b);
+    feld.value = ""; einheit.classList.remove("gewaehlt");
+    feldFehler("betrag", "");
+    knopfText(); zahlHinweis();
+  });
+  feld.addEventListener("input", function(){
+    var eigen = feld.value.trim() !== "";
+    einheit.classList.toggle("gewaehlt", eigen);
+    $$("#stufen button").forEach(function(b){
+      b.setAttribute("aria-pressed", !eigen && Number(b.textContent) === stand.stufe ? "true" : "false");
+    });
+    knopfText(); zahlHinweis();
+  });
+
+  $("#zahlart").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if (!b) return;
+    stand.zahlart = b.dataset.wert;
+    waehlen($("#zahlart"), b);
+    zahlHinweis();
+    if (stand.versucht) pruefen(["zahlart"]);
+  });
+
+  /* Bescheinigung: erst dann wächst die Adresse heran. */
+  var kaestchen = $("#bescheinigung"), raum = $("#adresse");
+  kaestchen.addEventListener("change", function(){
+    var an = kaestchen.checked;
+    raum.classList.toggle("offen", an);
+    $(".innen", raum).inert = !an;
+    if (!an) { ["strasse","plz","ort"].forEach(function(id){ feldFehler(id, ""); }); zusammenfassung(); }
+  });
+
+  $("#grade").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if (!b) return;
+    waehlen($("#grade"), b);
+    $(".acc-kontext").dataset.grade = b.dataset.wert;
+  });
+
+  /* --- Prüfen: beim Verlassen des Felds, Sätze statt Signalwörter ------------ */
+  var REGELN = {
+    betrag:function(){
+      var e = eigenerBetrag();
+      if (e === null) return stand.stufe ? "" : "Wählen Sie einen Betrag oder geben Sie einen eigenen ein.";
+      if (isNaN(e)) return "Geben Sie den Betrag als Zahl ein, zum Beispiel 80.";
+      if (e < 1) return "Der Betrag muss mindestens 1" + NB + "CHF sein.";
+      return "";
+    },
+    zahlart:function(){ return stand.zahlart ? "" : "Wählen Sie, wie Sie bezahlen möchten."; },
+    vorname:function(v){ return v ? "" : "Geben Sie Ihren Vornamen ein."; },
+    nachname:function(v){ return v ? "" : "Geben Sie Ihren Namen ein."; },
+    email:function(v){
+      if (!v) return "Geben Sie Ihre E\u2011Mail\u2011Adresse ein; dorthin geht die Bestätigung.";
+      return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? "" : "Geben Sie die E\u2011Mail\u2011Adresse vollständig ein, etwa name@beispiel.ch.";
+    },
+    strasse:function(v){ return v ? "" : "Geben Sie Strasse und Hausnummer ein."; },
+    plz:function(v){ return v ? "" : "Geben Sie die Postleitzahl ein."; },
+    ort:function(v){ return v ? "" : "Geben Sie den Ort ein."; }
+  };
+  var REIHE = ["betrag","zahlart","vorname","nachname","email","strasse","plz","ort"];
+  var meldungen = {};
+
+  function aktiv(id){ return ["strasse","plz","ort"].indexOf(id) < 0 || kaestchen.checked; }
+  function feldFehler(id, text){
+    meldungen[id] = text;
+    var s = $("#" + id + "-fehler");
+    s.hidden = !text;
+    s.innerHTML = text ? '<span class="sr-only">Fehler: </span>' + text : "";
+    if (id === "zahlart") $("#g-zahlart").classList.toggle("gruppe-fehler", !!text);
+    else { var f = $("#" + id); if (text) f.setAttribute("aria-invalid", "true"); else f.removeAttribute("aria-invalid"); }
+  }
+  function pruefen(ids){
+    ids.forEach(function(id){
+      var el = $("#" + id);
+      var v = el && el.value !== undefined ? el.value.trim() : "";
+      feldFehler(id, aktiv(id) ? REGELN[id](v) : "");
+    });
+    zusammenfassung();
+  }
+  function zusammenfassung(){
+    var box = $("#fehlerliste"), ul = $("ul", box);
+    var offen = REIHE.filter(function(id){ return meldungen[id]; });
+    ul.innerHTML = "";
+    offen.forEach(function(id){
+      var li = document.createElement("li"), a = document.createElement("a");
+      a.href = "#" + (id === "zahlart" ? "zahlart" : id);
+      a.textContent = meldungen[id];
+      a.addEventListener("click", function(e){
+        e.preventDefault();
+        var z = id === "zahlart" ? $("#zahlart button") : $("#" + id);
+        z.focus(); z.scrollIntoView({block:"center"});
+      });
+      li.appendChild(a); ul.appendChild(li);
+    });
+    box.hidden = !(stand.versucht && offen.length);
+  }
+  /* Wer ein Feld mit dem Zeiger verlässt, klickt gerade woanders hin. Erscheint
+     oder verschwindet eine Meldung zwischen Drücken und Loslassen, rutscht das
+     Ziel unter dem Zeiger weg – darum erst prüfen, wenn der Klick vorbei ist. */
+  var zeiger = false;
+  document.addEventListener("pointerdown", function(){ zeiger = true; }, true);
+  document.addEventListener("pointercancel", function(){ zeiger = false; }, true);
+  function nachDemKlick(fn){
+    if (!zeiger) return fn();
+    document.addEventListener("pointerup", function los(){
+      document.removeEventListener("pointerup", los, true);
+      zeiger = false; setTimeout(fn, 0);
+    }, true);
+  }
+  ["betrag","vorname","nachname","email","strasse","plz","ort"].forEach(function(id){
+    $("#" + id).addEventListener("blur", function(){
+      if (stand.versucht || $("#" + id).value.trim() || meldungen[id]) nachDemKlick(function(){ pruefen([id]); });
+    });
+  });
+
+  /* --- Absenden: der Knopf wartet, dann wächst der Dank aus ihm ------------- */
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    stand.versucht = true;
+    pruefen(REIHE);
+    if (REIHE.some(function(id){ return meldungen[id]; })) { $("#fehlerliste").focus(); return; }
+    knopf.disabled = true;
+    knopf.textContent = "Wird übermittelt …";
+    setTimeout(danken, 700);
+  });
+
+  function danken(){
+    var n = betrag(), mon = stand.frequenz === "monatlich";
+    var hoehe = knopf.offsetHeight;
+    var dank = $("#dank");
+    var vor = $("#vorname").value.trim(), mail = $("#email").value.trim();
+    dank.innerHTML =
+      '<div class="dank-innen">' +
+        '<h2 tabindex="-1">Danke, ' + escape(vor) + '.</h2>' +
+        "<p>" + (mon ? "Ihre monatliche Spende von " : "Ihre Spende von ") + '<span class="num">' + zahl(n) + NB + "CHF</span>" +
+          (mon ? " ist eingerichtet." : " ist angekommen.") +
+          " Die Bestätigung geht an " + escape(mail) + "." +
+          (kaestchen.checked ? " Die Spendenbescheinigung schicken wir an Ihre Postadresse." : "") + "</p>" +
+        '<button class="btn" type="button" id="neu">Neue Spende</button>' +
+      "</div>";
+    knopf.hidden = true; $("#kosten").hidden = true;
+    var ziel = dank.offsetHeight, d = dauer("--dauer-lang"), innen = $(".dank-innen", dank);
+    if (d && dank.animate) {
+      var blau = getComputedStyle(knopf).backgroundColor;
+      var hauch = getComputedStyle(innen).backgroundColor;
+      var k = "cubic-bezier(.32,.08,.24,1)";
+      dank.animate([{height:hoehe + "px"},{height:ziel + "px"}], {duration:d, easing:k});
+      innen.animate([{backgroundColor:blau},{backgroundColor:hauch}], {duration:d, easing:k});
+      $$(".dank-innen > *", dank).forEach(function(x, i){
+        x.animate([{opacity:0},{opacity:1}], {duration:dauer("--dauer-mittel"), delay:d * .5 + i * dauer("--staffel"), easing:k, fill:"backwards"});
+      });
+    }
+    $("h2", dank).focus({preventScroll:true});
+    $("#neu").addEventListener("click", neu);
+  }
+  function neu(){
+    form.reset();
+    $("#dank").innerHTML = "";
+    knopf.hidden = false; knopf.disabled = false; $("#kosten").hidden = false;
+    stand.zahlart = null; stand.versucht = false; meldungen = {};
+    $$("#zahlart button").forEach(function(b){ b.setAttribute("aria-pressed", "false"); });
+    kaestchen.dispatchEvent(new Event("change"));
+    REIHE.forEach(function(id){ feldFehler(id, ""); });
+    zusammenfassung();
+    frequenzSetzen($('#vorbelegt [aria-pressed="true"]').dataset.wert, false);
+    $("#frequenz button").focus();
+  }
+  function escape(s){ return s.replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  frequenzSetzen("einmalig", false);
+})();
+</script>
+</body>
+</html>
