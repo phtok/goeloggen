@@ -16,6 +16,42 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 31. Oktober 2026 — Formular-Baustein, Akkordeon zu Gast, Abstand schmal (1.30.0)
+
+**Was.** Neues Modul `formular.css` · `formular.js` neben `akkordeon.*`,
+herausgelöst aus dem Prototyp `spenden-formular.html` (Entscheide 1 und 3
+aus `docs/spenden-review-2026-10-31.md`): Frequenz, Betrag-Stufen mit freiem
+Feld (tnum, ohne «.00»), Zahlungsart, Personenfelder, Adresse wächst erst bei
+Bescheinigung (`grid-template-rows` 0fr→1fr, `--dauer-mittel`), Zweck,
+Fehlerzusammenfassung mit Sprunglinks, Fehlertexte am Feld ohne Bewegung,
+Knopf mit Betrag, Dank wächst aus dem Knopf (`role="status"`,
+`--dauer-lang`). Wahl-Pillen im Formular in Source Sans 3 und 16&nbsp;px
+(Werte, keine Stimme). Texte, Stufen, Zahlarten und Fehlertexte stehen im
+Markup (`data-*`), das Skript ist textfrei und übersetzbar; Backend über
+`GoetheanumFormular.init(form).absenden = fn` (Promise). Geprüft wird beim
+Verlassen eines Felds erst nach dem Loslassen des Zeigers (Befund Prototyp:
+sonst rutscht das Ziel unter dem Zeiger weg). Der Prototyp bindet das Modul
+ein und behält nur seine Laborschalter.
+**Akkordeon zu Gast** (Entscheid 4): `--acc-t-frage` (Standard `--t-h3`) und
+`--acc-t-antwort` (Standard `--t-body`) am `.acc-liste`; schmal tritt die
+Frage auf den Antwortgrad zurück. Für goetheanum.io 21/18&nbsp;px
+(Token-Auszug auf `akkordeon.html`).
+**Abstand schmal:** Kleid Faden stand bei 420&nbsp;px 12&nbsp;px vom Faden
+und 8&nbsp;px von der rechten Kante («die Schrift klebt am Rahmen»); jetzt
+`--s4` auf beiden Seiten, auf allen Breiten. Blüte (16/16) und Kapsel
+(16/16) hielten das schon. Gemessen: Faden 420&nbsp;px Text 18&nbsp;px ab
+Aussenkante (2&nbsp;px Faden + 16), rechts 17&nbsp;px.
+**Kopierbereich** `kopierbereich.js`: Code auf `akkordeon.html` und
+`spenden-formular.html` lädt aus den Quelldateien, der Token-Auszug wird aus
+`tokens.css` gerechnet (hell, weniger Bewegung, dunkel) – die alten
+Abschriften auf `akkordeon.html` waren seit 1.29.0 veraltet.
+**Warum.** Eine Verbesserung am Formular wird einmal gebaut und gilt überall
+(CLAUDE.md § Optimierungen fliessen zurück); ein Modul zu Gast nimmt den Grad
+des Hauses an.
+**Wirkung.** B01, B02, B03 (Felder 16&nbsp;px), B04 (alle Ziele ≥44&nbsp;px),
+G01, G05, G25, DS08 (axe grün in Ruhe, Fehler, Adresse, Dank; hell und
+dunkel). Übergabe an Craft: `docs/uebergabe-spenden-craft.md`.
+
 ## 31. Oktober 2026 — Bewegung im Fundament (1.29.0)
 
 **Was.** `tokens.css` trägt einen Block Bewegung: `--kurve-bloom`

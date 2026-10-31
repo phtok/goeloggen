@@ -18,6 +18,11 @@
    tabellarisch (G25); Fingerziel = ganze Zeile
    ≥44 px (B04); Anwahl = dunkle Fläche + Weiss (B01); Winkel als Zeichen (das
    gelernte der Webfamilie); keine Versalien, kein Unterstreichen (G05).
+   Zu Gast: --acc-t-frage (Standard --t-h3) und --acc-t-antwort (Standard
+   --t-body) am .acc-liste binden die Grade an den Lauftext der Gastseite;
+   schmal tritt die Frage auf den Grad der Antwort zurück.
+   Abstand: Antwort und Frage stehen auf allen Breiten mindestens --s4 vom
+   Rahmen bzw. Faden – auch rechts, damit die Schrift nicht an der Kante klebt.
    ============================================================================= */
 :root{--acc-kurve:var(--kurve-bloom);--acc-dauer:var(--dauer-mittel);--acc-dauer-zu:var(--dauer-kurz)}   /* weniger Bewegung: --dauer-mittel ist dann 0 s */
 
@@ -29,6 +34,7 @@
 .acc-liste{--ak:var(--ton,var(--gold));--ak-ink:var(--ton-ink,var(--gold-ink));
   --ak-dunkel:var(--ton-dunkel,var(--gold-deep));
   --ak-hell:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));
+  --acc-t-frage:var(--t-h3);--acc-t-antwort:var(--t-body);
   max-width:780px}
 
 /* --- Gemeinsame Anatomie ---------------------------------------------------- */
@@ -40,10 +46,10 @@
 .acc summary::-webkit-details-marker{display:none}
 .acc summary:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 /* Frage: Titelrolle, mehrzeilig in einer Liste – darum 1.25 statt 1.15 Durchschuss.
-   Schmal eine Stufe kleiner (--t-body, 18 px) und ohne Ausgleich. */
-.acc .frage{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);
+   Schmal auf den Grad der Antwort (Standard --t-body, 18 px) und ohne Ausgleich. */
+.acc .frage{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--acc-t-frage);
   line-height:1.25;letter-spacing:0;text-wrap:balance;hyphens:manual}
-@media(max-width:560px){.acc .frage{font-size:var(--t-body);text-wrap:pretty}}
+@media(max-width:560px){.acc .frage{font-size:var(--acc-t-antwort);text-wrap:pretty}}
 /* Die Nummer ist eine MARKE, kein Datum – darum die Hausschrift (wie .step-num in
    base.css), nicht die Lese-Grotesk. Kleine Hausschrift nie Leise: Klar ist das
    Minimum. Ziffern bleiben dicktengleich und untereinander (G25). */
@@ -59,7 +65,7 @@
 /* Antwort in der Hausschrift (erbt den Körper, folgt damit auch dem Lesemodus) –
    eine Stimme mit der Frage. Mass 48ch ≈ 63 Zeichen (G10); Durchschuss 1.6 breit,
    1.5 schmal, weil kurze Zeilen enger stehen (G11). */
-.acc .acc-inner{max-width:min(48ch,100%);line-height:1.6}
+.acc .acc-inner{max-width:min(48ch,100%);font-size:var(--acc-t-antwort);line-height:1.6}
 @media(max-width:560px){.acc .acc-inner{line-height:1.5}}
 .acc .acc-inner p{margin:0 0 .75em}
 .acc .acc-inner p:last-child{margin-bottom:0}
@@ -125,12 +131,9 @@
 .faden .knopf{grid-area:knopf;color:var(--muted)}
 .faden summary:hover .knopf,.faden .acc.is-open .knopf{color:var(--ak-ink)}
 .faden .acc.is-open .knopf{transform:rotate(180deg)}
-.faden .acc-inner{margin:0 0 var(--s6) var(--s4)}
-@media(max-width:560px){
-  .faden summary{padding-left:var(--s3)}
-  .faden .acc-kopf{padding-left:var(--s3)}
-  .faden .acc-inner{margin-left:var(--s3);padding-right:var(--s2)}
-}
+/* Schmal wie breit --s4 zum Faden und --s4 zur rechten Kante (vorher schmal
+   12 und 8 px – die Schrift klebte am Rand, Befund 31. 10. 2026). */
+.faden .acc-inner{margin:0 0 var(--s6) var(--s4);padding-right:var(--s4)}
 
 /* --- Kleid 3 · Kapsel: ruhige Felder auf dem Farbhauch; die offene trägt ein Band
    -----------------------------------------------------------------------------

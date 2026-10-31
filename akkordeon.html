@@ -227,16 +227,16 @@
       <p>Das Modul sind zwei Dateien im Design-System, <a href="design-system/akkordeon.css">akkordeon.css</a> und <a href="design-system/akkordeon.js">akkordeon.js</a>, dazu das Markup als Twig-Partial für einen Matrix-Block mit Frage und Antwort. Keine Bibliothek, keine Abhängigkeit. Wer keine <span class="code">tokens.css</span> auf der Seite hat, nimmt den Token-Auszug dazu.</p>
     </div>
     <div class="kopieren">
-      <div class="seg" id="codewahl" aria-label="Was kopieren">
+      <div class="seg" id="codewahl" aria-label="Was kopieren" data-kopier-wahl>
         <button type="button" data-code="code-twig" aria-pressed="true">Twig</button>
         <button type="button" data-code="code-css" aria-pressed="false">CSS</button>
         <button type="button" data-code="code-js" aria-pressed="false">JS</button>
         <button type="button" data-code="code-tokens" aria-pressed="false">Token-Auszug</button>
       </div>
-      <button class="btn primary" type="button" id="kopf-kopieren">Kopieren</button>
-      <span class="said" id="kopiert" aria-live="polite"></span>
+      <button class="btn primary" type="button" id="kopf-kopieren" data-kopier-knopf>Kopieren</button>
+      <span class="said" id="kopiert" aria-live="polite" data-kopier-meldung></span>
     </div>
-    <pre class="code" id="code-twig" tabindex="0">{# templates/_partials/akkordeon.twig – Matrix-Block «Akkordeon», Zeilen mit den Feldern frage und antwort.
+    <pre class="code" id="code-twig" tabindex="0" data-name="Twig-Partial">{# templates/_partials/akkordeon.twig – Matrix-Block «Akkordeon», Zeilen mit den Feldern frage und antwort.
    Kleid: faden · bluete · kapsel (Klasse an .acc-liste). data-sek: Schlüssel der Sektion (hpise, nws …) oder leer = Gold. #}
 &lt;div class=&quot;acc-liste faden&quot; data-sek=&quot;{{ entry.sektion.value ?? &#x27;&#x27; }}&quot;&gt;
   &lt;div class=&quot;acc-kopf&quot;&gt;
@@ -262,374 +262,15 @@
     &lt;/details&gt;
   {% endfor %}
 &lt;/div&gt;
+{# Zu Gast: Grade an den Lauftext der Seite binden – .acc-liste{--acc-t-frage:21px;--acc-t-antwort:18px} (goetheanum.io, siehe Token-Auszug). #}
 {# Einmal je Seite, im &lt;head&gt;: &lt;link rel=&quot;stylesheet&quot; href=&quot;/css/akkordeon.css&quot;&gt;  – am Ende des &lt;body&gt;: &lt;script src=&quot;/js/akkordeon.js&quot; defer&gt;&lt;/script&gt; #}</pre>
-    <pre class="code" id="code-css" tabindex="0" hidden>/* =============================================================================
-   Goetheanum CI – Akkordeon (Modul)
-   -----------------------------------------------------------------------------
-   Drei Kleider auf EINER Mechanik: .bluete · .faden · .kapsel (Klasse an .acc-liste).
-   Setzt design-system/tokens.css und base.css voraus (Rollen .btn, .meta).
-   Markup: &lt;div class=&quot;acc-liste faden&quot; data-sek=&quot;hpise&quot;&gt; mit .acc-kopf und
-   &lt;details class=&quot;acc&quot;&gt; je Frage; Skript: design-system/akkordeon.js.
-   Vorbild der Bewegung: das aufblühende Klappmenü von goetheanum.ch
-   (cubic-bezier(.32,.08,.24,1)) – die Bloom-Kurve.
-   Farbe: vier Rollen – --ak Linie/Marke · --ak-ink Text · --ak-dunkel Fläche
-   für Weiss · --ak-hell Hauch. Hausfall Gold; data-sek=&quot;&lt;sektion&gt;&quot; nimmt die
-   Sektionsfarben (Basis · -ink · -dunkel · -hell, Sektionsfarben 1.14.0).
-   Regeln: Frage = Titelrolle Deutlich, Antwort = Fliesstext Klar – beide in der
-   Hausschrift, eine Stimme. Die Nummer (.nr) ist OPTIONAL – ohne sie wird die
-   Zeile einreihig; sie steht nur, wo auf Fragen verwiesen wird (G03). Ziffern
-   tabellarisch (G25); Fingerziel = ganze Zeile
-   ≥44 px (B04); Anwahl = dunkle Fläche + Weiss (B01); Winkel als Zeichen (das
-   gelernte der Webfamilie); keine Versalien, kein Unterstreichen (G05).
-   ============================================================================= */
-:root{--acc-kurve:cubic-bezier(.32,.08,.24,1);--acc-dauer:.28s}
-@media(prefers-reduced-motion:reduce){:root{--acc-dauer:0s}}
-
-/* --- Farbrollen ------------------------------------------------------------
-   Kommen seit 1.20.0 aus dem Fundament: ein data-sek IRGENDWO darüber setzt
-   --ton (Linie/Marke), --ton-dunkel (Fläche für Weiss), --ton-hell (Hauch),
-   --ton-ink (die Farbe als Schrift). Ohne data-sek greift der Hausfall Gold.
-   Die kurzen Namen hier sind nur Lesehilfe für die Regeln darunter. */
-.acc-liste{--ak:var(--ton,var(--gold));--ak-ink:var(--ton-ink,var(--gold-ink));
-  --ak-dunkel:var(--ton-dunkel,var(--gold-deep));
-  --ak-hell:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));
-  max-width:780px}
-
-/* --- Gemeinsame Anatomie ---------------------------------------------------- */
-.acc-kopf{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
-  margin-bottom:var(--s3);min-height:var(--tap)}
-.acc-kopf .alle{color:var(--ak-ink);border-color:transparent;padding-inline:var(--s3)}
-.acc-kopf .alle:hover{border-color:var(--ak)}
-.acc summary{list-style:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.acc summary::-webkit-details-marker{display:none}
-.acc summary:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
-/* Frage: Titelrolle, mehrzeilig in einer Liste – darum 1.25 statt 1.15 Durchschuss.
-   Schmal eine Stufe kleiner (--t-body, 18 px) und ohne Ausgleich. */
-.acc .frage{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h3);
-  line-height:1.25;letter-spacing:0;text-wrap:balance;hyphens:manual}
-@media(max-width:560px){.acc .frage{font-size:var(--t-body);text-wrap:pretty}}
-/* Die Nummer ist eine MARKE, kein Datum – darum die Hausschrift (wie .step-num in
-   base.css), nicht die Lese-Grotesk. Kleine Hausschrift nie Leise: Klar ist das
-   Minimum. Ziffern bleiben dicktengleich und untereinander (G25). */
-.acc .nr{font-family:var(--font-display);font-weight:var(--w-text);
-  font-variant-numeric:tabular-nums lining-nums;font-feature-settings:&quot;tnum&quot;,&quot;lnum&quot;;
-  font-size:var(--t-small);color:var(--muted);line-height:1.2}
-/* Der Knopf ist nur das Zeichen (Winkel); das Fingerziel ist die ganze Zeile. */
-.acc .knopf{flex:0 0 auto;display:grid;place-items:center;width:24px;height:24px;
-  border-radius:var(--r-pill);color:var(--ak-ink);
-  transition:transform var(--acc-dauer) var(--acc-kurve),background var(--acc-dauer),color var(--acc-dauer),border-color var(--acc-dauer)}
-.acc .knopf .ic{width:20px;height:20px;display:block}
-.acc .acc-body{overflow:hidden}
-/* Antwort in der Hausschrift (erbt den Körper, folgt damit auch dem Lesemodus) –
-   eine Stimme mit der Frage. Mass 48ch ≈ 63 Zeichen (G10); Durchschuss 1.6 breit,
-   1.5 schmal, weil kurze Zeilen enger stehen (G11). */
-.acc .acc-inner{max-width:min(48ch,100%);line-height:1.6}
-@media(max-width:560px){.acc .acc-inner{line-height:1.5}}
-.acc .acc-inner p{margin:0 0 .75em}
-.acc .acc-inner p:last-child{margin-bottom:0}
-/* ‹Link kopieren› – die Adresse dieser einen Antwort. Leise am Fuss, damit sie
-   den Lesefluss nicht unterbricht; erscheint nur mit der geöffneten Antwort. */
-.acc .teilen{margin-top:var(--s4);color:var(--ak-ink);border-color:transparent;
-  padding-inline:0;font-size:var(--t-small)}
-.acc .teilen:hover{border-color:transparent;text-decoration:underline;text-underline-offset:.2em}
-/* Schmal: Karten nutzen fast das ganze Blatt (12 px Rand statt 22). */
-@media(max-width:560px){.bluete,.kapsel{margin-inline:-10px}}
-
-/* --- Kleid 1 · Blüte: runde Karten; die offene blüht auf ---------------------- */
-.bluete .acc{background:var(--paper);border:1px solid var(--line-soft);border-radius:var(--r-card);
-  transition:border-color var(--acc-dauer),box-shadow var(--acc-dauer)}
-.bluete .acc+.acc{margin-top:var(--s3)}
-.bluete .acc:hover{border-color:var(--ak)}
-.bluete .acc.is-open{border-color:var(--ak);box-shadow:var(--shadow-card)}
-/* Die Zahl folgt dem Rahmen: mit ihm grau, mit ihm farbig – aber in der TINTE
-   (--ak-ink, ≥4.5:1 auf Papier), nicht in der Basisfarbe: die trägt als Linie,
-   nicht als Schrift (B02). Ein Merkmal wechselt, die Farbe (G01). */
-.bluete .acc:hover .nr,.bluete .acc.is-open .nr{color:var(--ak-ink)}
-/* Nummer als eigene Zeile über der Frage (wie im Faden): Frage und Antwort laufen
-   bündig, die Zahl bleibt leise. Zeilenabstand nach der Zahl aus --s2, damit sie
-   atmet und nicht am Fragentext klebt. */
-.bluete summary{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:&quot;nr knopf&quot; &quot;frage knopf&quot;;
-  column-gap:var(--s4);row-gap:var(--s2);align-items:center;padding:var(--s4) var(--s4) var(--s4) var(--s6)}
-.bluete .nr{grid-area:nr}
-.bluete summary:not(:has(.nr)){grid-template-areas:&quot;frage knopf&quot;}
-.bluete .frage{grid-area:frage}
-.bluete .knopf{grid-area:knopf}
-.bluete .knopf{width:40px;height:40px;border:1px solid var(--line);background:var(--paper)}
-.bluete .acc:hover .knopf{border-color:var(--ak)}
-.bluete .acc.is-open .knopf{background:var(--ak-dunkel);border-color:var(--ak-dunkel);color:var(--on-accent);transform:rotate(180deg)}
-.bluete .acc-inner{position:relative;margin:0 var(--s4) 0 var(--s6);padding:var(--s5) 0 var(--s6);
-  border-top:1px solid var(--line-soft)}
-.bluete .acc-inner::before{content:&quot;&quot;;position:absolute;top:-6px;right:15px;width:10px;height:10px;
-  background:var(--paper);border-left:1px solid var(--line-soft);border-top:1px solid var(--line-soft);transform:rotate(45deg)}
-@media(max-width:560px){
-  .bluete summary{column-gap:var(--s3);padding:var(--s5) var(--s4)}
-  .bluete .knopf{width:32px;height:32px}
-  .bluete .acc-inner{margin:0 var(--s4);padding:var(--s5) 0 var(--s6)}
-  .bluete .acc-inner::before{right:11px}
-}
-
-/* --- Kleid 2 · Faden: ein durchgehender Faden links an der ganzen Liste ------- */
-/* Die Nummer steht als eigene Zeile über der Frage (leise, in der Sektionstinte);
-   Frage und Antwort laufen bündig in derselben Einrückung – keine Spalte, keine
-   Kluft zwischen Zahl und Text. */
-.faden{border-left:2px solid var(--line)}
-.faden .acc-kopf{padding-left:var(--s4);margin-bottom:0}
-.faden .acc{border-top:1px solid var(--line-soft);transition:box-shadow var(--acc-dauer)}
-.faden .acc:last-child{border-bottom:1px solid var(--line-soft)}
-.faden .acc.is-open{box-shadow:-2px 0 0 var(--ak)}   /* das gefärbte Stück des Fadens */
-.faden summary{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:&quot;nr knopf&quot; &quot;frage knopf&quot;;
-  column-gap:var(--s4);row-gap:var(--s2);align-items:center;padding:var(--s4) 0 var(--s4) var(--s4);min-height:var(--tap)}
-.faden .nr{grid-area:nr;color:var(--ak-ink)}
-.faden summary:not(:has(.nr)){grid-template-areas:&quot;frage knopf&quot;}
-.faden .frage{grid-area:frage;transition:color var(--acc-dauer)}
-/* Hover: ein Hauch Fläche zeigt, dass die ganze Zeile das Ziel ist – nicht nur
-   der Winkel. Sehr zurückhaltend (7 % Ton auf Papier), Fokus bleibt der Ring. */
-.faden summary:hover{background:color-mix(in srgb,var(--ak) 7%,var(--paper))}
-.faden summary:hover .frage,.faden .acc.is-open .frage{color:var(--ak-ink)}
-.faden .knopf{grid-area:knopf;color:var(--muted)}
-.faden summary:hover .knopf,.faden .acc.is-open .knopf{color:var(--ak-ink)}
-.faden .acc.is-open .knopf{transform:rotate(180deg)}
-.faden .acc-inner{margin:0 0 var(--s6) var(--s4)}
-@media(max-width:560px){
-  .faden summary{padding-left:var(--s3)}
-  .faden .acc-kopf{padding-left:var(--s3)}
-  .faden .acc-inner{margin-left:var(--s3);padding-right:var(--s2)}
-}
-
-/* --- Kleid 3 · Kapsel: ruhige Felder auf dem Farbhauch; die offene trägt ein Band
-   -----------------------------------------------------------------------------
-   Radius bewusst DEZENT (--r-card, 14 px): die frühere Kapselform lief auf halbe
-   Zeilenhöhe und drückte den Text in die Mitte – runde Ecken fressen Satzspiegel.
-   Nach dem Vorbild der Blüte wird die Fläche unter dem Text LEICHTER, statt zu
-   verschwinden: geschlossen liegt die Kapsel auf dem vollen Farbhauch, offen
-   wird die Frage zum Band (oben gerundet, unten bündig) und die Antwort steht
-   auf einem halben Hauch – eine gefüllte Fläche wiegt schwerer als eine
-   umrissene, und Mengentext braucht den ruhigeren Grund. Einzug wie in der
-   Blüte (--s6), Frage und Antwort auf derselben Kante. */
-.kapsel{display:grid;gap:var(--s4)}
-.kapsel .acc{background:var(--ak-hell);border-radius:var(--r-card);overflow:hidden;
-  transition:background var(--acc-dauer)}
-/* Offen liegt der Text auf einem HAUCH – nicht auf Papier und nicht auf der
-   vollen Fläche: 55 % des ohnehin sehr leisen --ton-hell über Papier. Genug,
-   dass die Antwort als eigenes Feld liest, wenig genug, dass der Satz nicht
-   trägt, was er nicht muss. Geschlossen bleibt die volle Fläche – so ist der
-   offene Grund immer der ruhigere von beiden. */
-.kapsel .acc.is-open{background:color-mix(in srgb,var(--ak-hell) 55%,var(--paper));
-  box-shadow:inset 0 0 0 1px var(--line-soft)}
-.kapsel summary{display:flex;align-items:center;gap:var(--s4);padding:var(--s4) var(--s5) var(--s4) var(--s6);
-  border-radius:var(--r-card);transition:background var(--acc-dauer),color var(--acc-dauer)}
-.kapsel summary:hover{background:color-mix(in srgb,var(--ak) 10%,var(--ak-hell))}
-.kapsel .acc.is-open summary{background:var(--ak-dunkel);color:var(--on-accent);
-  border-end-start-radius:0;border-end-end-radius:0}
-.kapsel .nr{flex:0 0 auto;display:grid;place-items:center;width:2.2em;height:2.2em;border-radius:var(--r-pill);
-  background:var(--paper);color:var(--ak-ink);font-weight:var(--w-deutlich);
-  transition:background var(--acc-dauer),color var(--acc-dauer)}
-/* 8% ist der am Goetheanum-Schnitt vermessene optische Sitz der Ziffer im Kreis
-   (base.css .step-num) – reine Zentrierung setzt die Tinte zu hoch. */
-.kapsel .nr&gt;span{display:block;line-height:1;transform:translateY(8%)}
-.kapsel .frage{flex:1 1 auto}
-.kapsel .knopf{color:var(--ak-ink)}
-.kapsel .acc.is-open .knopf{color:var(--on-accent);transform:rotate(180deg)}
-.kapsel .acc-inner{padding:var(--s5) var(--s5) var(--s6) var(--s6)}
-@media(max-width:560px){
-  .kapsel summary{gap:var(--s3);padding:var(--s4)}
-  .kapsel .acc-inner{padding:var(--s5) var(--s4) var(--s6)}
-}
-
-@media print{
-  .acc-kopf .alle{display:none}
-  .acc .acc-body{overflow:visible}
-}
-</pre>
-    <pre class="code" id="code-js" tabindex="0" hidden>/* =============================================================================
-   Goetheanum CI – Akkordeon (Modul-Skript)
-   -----------------------------------------------------------------------------
-   Macht &lt;details class=&quot;acc&quot;&gt; weich (Bloom-Kurve). Antworten öffnen UNABHÄNGIG
-   voneinander – beliebige Kombinationen bleiben offen (GOV.UK-Muster), weil
-   zusammengehörige Fragen sich vergleichen lassen müssen. «Alle aufklappen»
-   (.acc-kopf .alle) öffnet und schliesst die ganze Liste; beim Drucken ist alles
-   offen und danach steht der Stand wieder wie vorher. Wer eine Antwort öffnet,
-   bekommt ihre Adresse in die Adresszeile; «Link kopieren» legt sie in die
-   Zwischenablage. Ohne Skript bleibt alles nativ klappbar.
-   Einbinden am Ende des &lt;body&gt; oder mit defer.
-   ============================================================================= */
-(function(){
-  var KURVE = &quot;cubic-bezier(.32,.08,.24,1)&quot;;
-  var reduziert = window.matchMedia(&quot;(prefers-reduced-motion: reduce)&quot;);
-  function dauer(ms){ return reduziert.matches ? 0 : ms; }
-
-  function oeffnen(d, sofort){
-    var body = d.querySelector(&quot;.acc-body&quot;);
-    d.open = true; d.classList.add(&quot;is-open&quot;);
-    if (!sofort &amp;&amp; body.animate) {
-      var h = body.scrollHeight;
-      d.classList.add(&quot;anim&quot;);
-      var a = body.animate([{height:&quot;0px&quot;,opacity:0},{height:h+&quot;px&quot;,opacity:1}],{duration:dauer(280),easing:KURVE});
-      a.onfinish = a.oncancel = function(){ d.classList.remove(&quot;anim&quot;); };
-    }
-    adresse(d);
-    knopfStand(d);
-  }
-  function schliessen(d, sofort){
-    var body = d.querySelector(&quot;.acc-body&quot;);
-    d.classList.remove(&quot;is-open&quot;);
-    if (sofort || !body.animate) { d.open = false; d.classList.remove(&quot;anim&quot;); }
-    else {
-      var h = body.offsetHeight;
-      d.classList.add(&quot;anim&quot;);
-      var a = body.animate([{height:h+&quot;px&quot;,opacity:1},{height:&quot;0px&quot;,opacity:0}],{duration:dauer(220),easing:KURVE});
-      a.onfinish = a.oncancel = function(){ d.open = false; d.classList.remove(&quot;anim&quot;); };
-    }
-    // Schliesst sich die Antwort, auf die die Adresse zeigt, verliert die Adresse ihren Anker.
-    if (location.hash.slice(1) === d.id) adresse(null);
-    knopfStand(d);
-  }
-
-  /* Die Adresse zeigt auf die zuletzt geöffnete Antwort – ohne Sprung und ohne
-     einen Eintrag in der Zurück-Geschichte (replaceState löst kein hashchange). */
-  function adresse(d){
-    if (!history.replaceState) return;
-    var u = new URL(location.href);
-    u.hash = d ? d.id : &quot;&quot;;
-    history.replaceState(null, &quot;&quot;, u.toString().replace(/#$/, &quot;&quot;));
-  }
-
-  /* «Alle aufklappen» spiegelt den Stand der Liste, egal wie er zustande kam. */
-  function knopfStand(d){
-    var l = d.closest(&quot;.acc-liste&quot;); if (!l) return;
-    var b = l.querySelector(&quot;.alle&quot;); if (!b) return;
-    var alle = l.querySelectorAll(&quot;details.acc&quot;);
-    var offen = l.querySelectorAll(&quot;details.acc.is-open&quot;);
-    var ganz = alle.length &gt; 0 &amp;&amp; offen.length === alle.length;
-    b.setAttribute(&quot;aria-pressed&quot;, ganz ? &quot;true&quot; : &quot;false&quot;);
-    b.textContent = ganz ? &quot;Alle zuklappen&quot; : &quot;Alle aufklappen&quot;;
-  }
-  function alleSetzen(l, offen, sofort){
-    l.querySelectorAll(&quot;details.acc&quot;).forEach(function(d){
-      var ist = d.classList.contains(&quot;is-open&quot;);
-      if (offen &amp;&amp; !ist) { d.open = true; d.classList.add(&quot;is-open&quot;); }
-      if (!offen &amp;&amp; ist) { if (sofort) { d.open = false; d.classList.remove(&quot;is-open&quot;); } else schliessen(d); }
-    });
-    var b = l.querySelector(&quot;.alle&quot;);
-    if (b) { b.setAttribute(&quot;aria-pressed&quot;, offen ? &quot;true&quot; : &quot;false&quot;); b.textContent = offen ? &quot;Alle zuklappen&quot; : &quot;Alle aufklappen&quot;; }
-  }
-
-  function teilen(d, b){
-    var u = new URL(location.href); u.hash = d.id;
-    var wort = b.dataset.wort || b.textContent;
-    b.dataset.wort = wort;
-    function sagen(t){ b.textContent = t; setTimeout(function(){ b.textContent = wort; }, 2000); }
-    if (navigator.clipboard) navigator.clipboard.writeText(u.toString()).then(function(){ sagen(&quot;Link kopiert&quot;); }, function(){ sagen(&quot;Kopieren nicht erlaubt&quot;); });
-    else sagen(&quot;Kopieren nicht erlaubt&quot;);
-  }
-
-  function ausHash(){
-    var id = decodeURIComponent(location.hash.slice(1));
-    var d = id &amp;&amp; document.getElementById(id);
-    if (d &amp;&amp; d.matches(&quot;details.acc&quot;) &amp;&amp; !d.classList.contains(&quot;is-open&quot;)) {
-      d.open = true; d.classList.add(&quot;is-open&quot;); knopfStand(d);
-      d.scrollIntoView({block:&quot;start&quot;});
-    }
-  }
-
-  function init(){
-    document.querySelectorAll(&quot;details.acc&quot;).forEach(function(d){
-      if (d.dataset.accBereit) return; d.dataset.accBereit = &quot;1&quot;;
-      if (d.open) d.classList.add(&quot;is-open&quot;);
-      d.querySelector(&quot;summary&quot;).addEventListener(&quot;click&quot;, function(e){
-        e.preventDefault();
-        if (d.classList.contains(&quot;anim&quot;)) return;
-        if (d.classList.contains(&quot;is-open&quot;)) schliessen(d); else oeffnen(d);
-      });
-      var t = d.querySelector(&quot;.teilen&quot;);
-      if (t) t.addEventListener(&quot;click&quot;, function(){ teilen(d, t); });
-    });
-    document.querySelectorAll(&quot;.acc-kopf .alle&quot;).forEach(function(b){
-      if (b.dataset.accBereit) return; b.dataset.accBereit = &quot;1&quot;;
-      b.addEventListener(&quot;click&quot;, function(){
-        var l = b.closest(&quot;.acc-liste&quot;);
-        alleSetzen(l, b.getAttribute(&quot;aria-pressed&quot;) !== &quot;true&quot;, false);
-      });
-    });
-    ausHash();
-  }
-
-  // Drucken: alles öffnen, danach den vorherigen Stand wiederherstellen.
-  var vorDruck = null;
-  window.addEventListener(&quot;beforeprint&quot;, function(){
-    vorDruck = [];
-    document.querySelectorAll(&quot;.acc-liste&quot;).forEach(function(l){
-      vorDruck.push({l:l, offen:[].map.call(l.querySelectorAll(&quot;details.acc.is-open&quot;), function(d){return d.id;})});
-      alleSetzen(l, true, true);
-    });
-  });
-  window.addEventListener(&quot;afterprint&quot;, function(){
-    if (!vorDruck) return;
-    vorDruck.forEach(function(s){
-      alleSetzen(s.l, false, true);
-      s.offen.forEach(function(id){ var d = document.getElementById(id); if (d) { d.open = true; d.classList.add(&quot;is-open&quot;); } });
-      var erste = s.l.querySelector(&quot;details.acc&quot;); if (erste) knopfStand(erste);
-    });
-    vorDruck = null;
-  });
-  window.addEventListener(&quot;hashchange&quot;, ausHash);
-
-  if (document.readyState === &quot;loading&quot;) document.addEventListener(&quot;DOMContentLoaded&quot;, init); else init();
-  window.GoetheanumAkkordeon = {init:init, oeffnen:oeffnen, schliessen:schliessen, alle:alleSetzen};
-})();
-</pre>
-    <pre class="code" id="code-tokens" tabindex="0" hidden>/* Token-Auszug für Seiten OHNE design-system/tokens.css – nur, was das
-   Akkordeon braucht; Werte identisch mit tokens.css (Stand beim Bau).
-   Die Webfonts (Goetheanum, Source Sans 3) lädt die Seite selbst per @font-face. */
-:root{
-  --blue:#0061a9;
-  --gold:#d7ab68;
-  --gold-deep:#94702e;
-  --gold-ink:#8a6728;
-  --muted:#6b7177;
-  --paper:#fff;
-  --line:rgba(20,24,28,.10);
-  --line-soft:rgba(20,24,28,.055);
-  --on-accent:#fff;
-  --bereich-bauadmin:#b15359;
-  --font-display:&quot;Goetheanum&quot;,&quot;Helvetica Neue&quot;,Arial,sans-serif;
-  --w-klar:440;
-  --w-deutlich:580;
-  --w-text:var(--w-klar);
-  --t-small:clamp(0.9375rem, 0.9rem + 0.18vw, 1rem);
-  --t-body:clamp(1.125rem, 1.06rem + 0.3vw, 1.25rem);
-  --t-h3:clamp(1.25rem, 1.15rem + 0.45vw, 1.45rem);
-  --s2:8px;
-  --s3:12px;
-  --s4:16px;
-  --s5:20px;
-  --s6:24px;
-  --r-card:14px;
-  --r-pill:999px;
-  --tap:44px;
-  --shadow-card:0 10px 30px rgba(20,24,28,.06);
-  --bereich-bauadmin-dunkel:#80484b;
-  --bereich-bauadmin-hell:#ffefef;
-  --bereich-bauadmin-ink:#80484b;
-  color-scheme:light;
-}
-:root[data-theme=&quot;dark&quot;]{
-  --blue:#5aa6e0;
-  --gold:#dfb87a;
-  --gold-deep:#94702e;
-  --gold-ink:#c79a4f;
-  --muted:#9aa1a8;
-  --paper:#16191c;
-  --line:rgba(255,255,255,.14);
-  --line-soft:rgba(255,255,255,.07);
-  --w-deutlich:580;
-  --shadow-card:0 10px 30px rgba(0,0,0,.45);
-  --bereich-bauadmin-hell:#342021;
-  --bereich-bauadmin-ink:#f0b1b2;
-  color-scheme:dark;
-}
-/* nicht in tokens.css gefunden: --ton, --ton-dunkel, --ton-hell, --ton-ink */
-</pre>
+    <pre class="code" id="code-css" tabindex="0" hidden data-quelle="design-system/akkordeon.css" data-name="akkordeon.css">Lädt aus <a href="design-system/akkordeon.css">design-system/akkordeon.css</a> …</pre>
+    <pre class="code" id="code-js" tabindex="0" hidden data-quelle="design-system/akkordeon.js" data-name="akkordeon.js">Lädt aus <a href="design-system/akkordeon.js">design-system/akkordeon.js</a> …</pre>
+    <pre class="code" id="code-tokens" tabindex="0" hidden data-token-auszug="design-system/akkordeon.css" data-anhang="gast-goetheanum-io" data-name="Token-Auszug">Lädt aus <a href="design-system/tokens.css">design-system/tokens.css</a> …</pre>
+    <script type="text/plain" id="gast-goetheanum-io">
+/* Zu Gast auf goetheanum.io: Grade an den Lauftext des Hauses binden (18 px). */
+.acc-liste{--acc-t-frage:21px;--acc-t-antwort:18px}
+</script>
     <p class="note" style="margin-top:var(--s4)">Die Fragen tragen keine Nummern – wo auf sie verwiesen wird (<q>siehe Frage 7</q>) oder wo eine gedruckte Vorlage sie braucht, nimmt das Markup ein <span class="code">span.nr</span> vor der Frage auf; die Zeile wird dann zweireihig. Reihenfolge auf der Seite: Tokens (oder <span class="code">tokens.css</span> und <span class="code">base.css</span>), dann <span class="code">akkordeon.css</span>; das Skript am Ende des Dokuments oder mit <span class="code">defer</span>. Das CSS nutzt die Rollen <span class="code">.btn</span> und <span class="code">.meta</span> aus <span class="code">base.css</span>; ohne base.css bleiben sie schlicht – nichts bricht.</p>
   </section>
 
@@ -974,6 +615,7 @@
   (function(){function auf(){var id=decodeURIComponent(location.hash.slice(1)),z=id&&document.getElementById(id),a=document.getElementById("alternativen");if(z&&a&&a.contains(z)&&!a.open){a.open=true;if(z!==a)z.scrollIntoView({block:"start"});}}auf();window.addEventListener("hashchange",auf);})();
 </script>
 <script src="design-system/akkordeon.js"></script>
+<script src="design-system/kopierbereich.js"></script>
 <script>
 (function(){
   // Farbgebung (Schau-Hilfe): data-sek auf alle Listen, in der Adresse merken (?sek=hpise).
@@ -992,26 +634,6 @@
   var start = new URL(location.href).searchParams.get("sek");
   if (start && wahl && wahl.querySelector('button[data-sek="' + start + '"]')) farbe(start, true);
 
-  // Kopierbereich: einen Block zeigen, in die Zwischenablage legen.
-  var codewahl = document.getElementById("codewahl"), aktiv = "code-twig";
-  var said = document.getElementById("kopiert");
-  codewahl.addEventListener("click", function(e){
-    var b = e.target.closest("button[data-code]"); if (!b) return;
-    aktiv = b.dataset.code;
-    codewahl.querySelectorAll("button").forEach(function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
-    ["code-twig","code-css","code-js","code-tokens"].forEach(function(id){ document.getElementById(id).hidden = id !== aktiv; });
-    said.textContent = ""; said.className = "said";
-  });
-  document.getElementById("kopf-kopieren").addEventListener("click", function(){
-    var txt = document.getElementById(aktiv).textContent;
-    var name = {"code-twig":"Twig-Partial","code-css":"akkordeon.css","code-js":"akkordeon.js","code-tokens":"Token-Auszug"}[aktiv];
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(txt).then(function(){ said.textContent = name + " kopiert – " + txt.split("\n").length + " Zeilen."; said.className = "said gut"; },
-        function(){ said.textContent = "Kopieren nicht erlaubt – Block markieren und selbst kopieren."; said.className = "said schlecht"; });
-    } else {
-      said.textContent = "Kopieren nicht erlaubt – Block markieren und selbst kopieren."; said.className = "said schlecht";
-    }
-  });
 })();
 </script>
 
