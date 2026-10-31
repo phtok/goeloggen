@@ -16,6 +16,41 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 31. Oktober 2026 — Laborseite Spendenformular (Labor, Version des Systems unverändert)
+
+**Was.** https://werkzeuge.goetheanum.ch/spenden-formular.html – Prototyp
+eines neu gestalteten Spendenformulars für https://goetheanum.io/de/spenden,
+ohne Backend, mit lebender Logik: Häufigkeit (einmalig · monatlich, eigene
+Stufen je Häufigkeit), sechs Betragsstufen aufsteigend ohne «.00» in tnum
+(G25) plus eigener Betrag mit Einheit, Zahlungsart sichtbar (TWINT, Karte,
+PayPal, QR-Rechnung; nur Wortmarken), Vorname/Name/E-Mail mit
+`autocomplete` (WCAG 1.3.5), Adresse erst nach ‹Spendenbescheinigung
+gewünscht› (bedingtes Feld, eine Ebene), Zweck ohne Jahreszeit, Fehler als
+Sätze am Feld und als Zusammenfassung mit Sprunglinks, Knopf mit Betrag,
+Dank aus dem Knopf (`role="status"`). Darunter das Akkordeon (Faden) mit den
+fünf Themen der Live-Seite, Texte 1:1. Zwei Laborschalter: welche Häufigkeit
+vorbelegt ist, und die Akkordeon-Grade ‹wie heute› (Fluid-Tokens, 23.2 /
+20 px auf 1280) gegen ‹wie empfohlen› (21 / 18 px, Befund § 4.1).
+**Warum.** Befund `docs/spenden-befund-2026-10-31.md` (Schrift-Grenze, B03,
+B04, Radien, G25 verletzt) und Pflichtenheft
+`docs/recherche_spendenformular-ux.md`. **Wirkung.** Nur Rollen des
+Fundaments (`.seg`, `.field`, `.formgrid`, `.btn`, `.hint`, `.lab`):
+Felder Source Sans 3, 16 px, 44 px, `--r-control`. Bewegung über
+seitenlokale Variablen mit Namen und Werten des Vorschlags in
+`docs/recherche_uebergaenge-lebendig.md` (`--kurve-bloom`, `--dauer-*`,
+`--staffel`), **nicht** in `tokens.css` – Entscheid des Auftraggebers
+offen. Wahlen wachsen vom Berührpunkt (radialer Verlauf über
+`@property`), auf 280 ms, zu 220 ms; Adresse über `grid-template-rows`
+0fr → 1fr; Dank wächst in 400 ms aus der Knopfhöhe, Blau → Hauch; Fehler
+ohne Bewegung; `prefers-reduced-motion` setzt alle Dauern auf 0 s.
+Gefunden beim Anschauen: Eine Meldung, die beim Verlassen des Felds
+erscheint oder verschwindet, verschiebt das Blatt zwischen Drücken und
+Loslassen – der Klick aufs nächste Ziel geht daneben. Die Prüfung beim
+Verlassen läuft darum erst nach dem Klick. Kandidat fürs Fundament, sobald
+ein zweites Formular so prüft. Offen für den Auftraggeber: Bewegungs-Tokens
+ins Fundament, Vorbelegung monatlich, freigeschaltete Zahlungsarten und
+Gebühren, Zwecke, Termin der Bescheinigung.
+
 ## 30. Oktober 2026 — Campus-Karte als InDesign-Dokument (Werkzeug, Version des Systems unverändert)
 
 **Was.** Das Kartentool (https://werkzeuge.goetheanum.ch/apps/karten-generator/)
