@@ -77,7 +77,7 @@ ohne Verstoss (2 Messungen).
   82 Einheiten = Klar. Serif-Platte 45 Einheiten.
 - **Laufweite:** im Schnitt 0,458 em je Zeichen; Klar 0,409, Source 0,447
   (mit size-adjust 103 %). Die Serif läuft 12 % breiter als Klar.
-  In 62 ch passen 81 Zeichen (Source 71): für die Serif gilt **54 ch**
+  Weil `ch` an der Null der eigenen Schrift hängt und die Null der Serif breit ist (0,599 em, Source 0,512), passen in 62 ch 81 Zeichen (Source 71): für die Serif gilt **54 ch**
   als Lesemass, auf der Specimen-Seite so gesetzt.
 - **Kontrast:** Farben unverändert aus den Tokens; Tinte auf Papier 15,0:1,
   `--muted` 4,9:1, dunkel 14,4:1 und 6,8:1, Weiss auf
@@ -98,7 +98,8 @@ ohne Verstoss (2 Messungen).
 **Grade (B02, B03).** Lesetext in der Serif ab 18 px (`--t-body`),
 Lede ab 20, Zitat und Titel ab 24. Unter 16 px nie; Meta, Label,
 Legende, Karte-Kleintext bleiben Source Sans 3, wie das Fundament es
-schon verdrahtet. Auf farbigem Grund (B01) nur ab 24 px.
+schon verdrahtet. Auf farbigem Grund (B01) nur ab 24 px. Der Kurztext der Karte steht auf der
+Specimen-Seite bewusst in 15–16 px Serif, als Gegenprobe unter der Grenze.
 
 **Rollen.**
 - Ja: Zitat und Spruch, Lede, Titel und Kopf einer Sektionsseite, Plakat-
