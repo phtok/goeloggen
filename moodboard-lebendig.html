@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Gesten des Lebendigen · Goetheanum</title>
+<meta name="description" content="Bewegtes Moodboard: Wiederholung, Polarität, Steigerung, Reduktion, Übergang – und ein Baustein, der das Ganze enthält." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<link rel="stylesheet" href="design-system/akkordeon.css" />
+
+<style>
+  /* Bewegung: Bloom-Kurve und Dauer «auf» kommen aus akkordeon.css
+     (--acc-kurve, --acc-dauer); die übrigen Werte sind der Vorschlag der
+     letzten Tafel (docs/recherche_uebergaenge-lebendig.md), hier nur seitenweit. */
+  :root{--mb-zu:.22s;--mb-verzug:40ms;--mb-lang:.4s;--mb-kurve-flaeche:cubic-bezier(.35,0,.5,1)}
+  @media(prefers-reduced-motion:reduce){:root{--mb-zu:0s;--mb-verzug:0ms;--mb-lang:0s}}
+
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:var(--t-lede);line-height:1.55;max-width:46ch;text-wrap:balance}
+
+  /* --- Tafel: Deutung über der Bühne, daneben das Bild-Zitat ---------------- */
+  .tafel{border-top:1px solid var(--line);padding-block:var(--s8)}
+  .tafel>h2{font-size:var(--t-h2);text-wrap:balance}
+  .tafel>.satz{margin-top:var(--s3);max-width:46ch;font-size:var(--t-body);line-height:var(--lh-body);text-wrap:pretty;hyphens:manual}
+  .tafel-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:var(--s6);margin-top:var(--s6);align-items:start}
+  @media(max-width:820px){.tafel-grid{grid-template-columns:minmax(0,1fr)}}
+  .buehne{border:1px solid var(--line);border-radius:var(--r-card);background:var(--soft);
+    padding:var(--s6);display:grid;gap:var(--s5);min-height:15rem;align-content:space-between}
+  .steuer{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center}
+  .zitat{margin:0;display:grid;gap:var(--s3)}
+  .zitat figcaption{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:var(--lh-min)}
+  /* Die Logos stehen auf ihrem eigenen Papier: ein Zitat zeigt das Original,
+     keine Theme-Fläche. */
+  .platte{background:#fff;border:1px solid var(--line-soft);border-radius:var(--r-card);padding:var(--s6);display:grid;gap:var(--s5);justify-items:start}   /* # ds-ok Logo-Zitat auf Originalpapier */
+  .platte.nacht{background:#1a1a1a}   /* # ds-ok Logo-Zitat: Weiss auf dem Schwarz der Wortmarke */
+  .platte img{display:block;height:auto;max-width:100%}
+
+  /* --- 1 · Wiederholung ------------------------------------------------------ */
+  .marken{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:flex-end;color:var(--blue)}
+  .marken svg{width:clamp(28px,7vw,36px);height:auto;aspect-ratio:16/21.1;display:block}
+  .sprachen img{width:min(100%,300px)}
+
+  /* --- 2 · Polarität ---------------------------------------------------------- */
+  .kelch{overflow:hidden;border-radius:var(--r-card);background:var(--paper);border:1px solid var(--line-soft)}
+  .kelch-inner{padding:var(--s5)}
+  .kelch-inner p{max-width:34ch;line-height:var(--lh-body);hyphens:manual}
+  #das-ganze .acc-inner p{hyphens:manual;text-wrap:pretty}
+  .kelch[hidden]{display:none}
+  .paar-logo img{width:min(100%,260px)}
+
+  /* --- 3 · Steigerung --------------------------------------------------------- */
+  .stufen{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--s3);align-items:end;grid-template-rows:11rem}
+  .stufen span{display:block;border-radius:var(--r-control) var(--r-control) 0 0;transform-origin:bottom}
+  .stufen span:nth-child(1){height:20%;background:var(--ton-hell)}
+  .stufen span:nth-child(2){height:40%;background:color-mix(in srgb,var(--ton-dunkel) 25%,var(--ton-hell))}
+  .stufen span:nth-child(3){height:60%;background:color-mix(in srgb,var(--ton-dunkel) 50%,var(--ton-hell))}
+  .stufen span:nth-child(4){height:80%;background:color-mix(in srgb,var(--ton-dunkel) 75%,var(--ton-hell))}
+  .stufen span:nth-child(5){height:100%;background:var(--ton-dunkel)}
+  .schnitte{display:grid;gap:var(--s2)}
+  .schnitte div{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s4);
+    border-bottom:1px solid var(--line-soft);padding-bottom:var(--s2)}
+  .schnitte .wort{font-family:var(--font-display);font-size:var(--t-h3);line-height:var(--lh-tight)}
+  .schnitte .lab{white-space:nowrap}
+
+  /* --- 4 · Reduktion: Glieder verwelken, eines bleibt ------------------------ */
+  .welk{list-style:none;margin:0;padding:0;display:grid}
+  .welk li{display:grid;grid-template-rows:1fr;opacity:1;visibility:visible;
+    transition:grid-template-rows var(--acc-dauer) var(--acc-kurve) calc(var(--i) * var(--mb-verzug)),
+               opacity var(--acc-dauer) var(--acc-kurve) calc(var(--i) * var(--mb-verzug)),
+               visibility var(--acc-dauer) linear calc(var(--i) * var(--mb-verzug))}
+  .welk li>span{overflow:hidden;min-height:0}
+  .welk li>span>span{display:block;padding:var(--s2) 0;border-bottom:1px solid var(--line-soft);font-size:var(--t-body)}
+  .welk.welkt li:not(.bleibt){grid-template-rows:0fr;opacity:0;visibility:hidden;
+    transition-duration:var(--mb-zu);transition-delay:calc((5 - var(--i)) * var(--mb-verzug))}
+  .welk .bleibt>span>span{font-weight:var(--w-strong);border-bottom:0}
+  .reduktion .platte{grid-template-columns:auto auto;align-items:center;gap:var(--s8)}
+  .reduktion .wortmarke{width:min(100%,220px)}
+  .reduktion .marke{width:44px}
+
+  /* --- 5 · Übergang: Papier → Hauch → Band → Fläche ---------------------------- */
+  .feld{position:relative;overflow:hidden;border-radius:var(--r-card);min-height:11rem;
+    border:1px solid var(--line-soft);background:var(--paper);display:flex;align-items:flex-end;
+    transition:background var(--mb-lang) var(--mb-kurve-flaeche)}
+  .feld .schicht{position:absolute;inset:0 0 auto 0;height:0;background:var(--ton-dunkel);
+    transition:height var(--mb-lang) var(--mb-kurve-flaeche)}
+  .feld p{position:relative;padding:var(--s5);font-family:var(--font-display);font-weight:var(--w-deutlich);
+    font-size:var(--t-h3);color:var(--ink);transition:color var(--mb-lang) var(--mb-kurve-flaeche)}
+  .feld[data-stufe="hauch"],.feld[data-stufe="band"]{background:var(--ton-hell)}
+  .feld[data-stufe="band"] .schicht{height:34%}
+  .feld[data-stufe="flaeche"]{background:var(--ton-dunkel)}
+  .feld[data-stufe="flaeche"] .schicht{height:100%}
+  .feld[data-stufe="flaeche"] p{color:var(--on-accent)}
+  .rollen{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s3)}
+  .rollen div{display:grid;gap:var(--s2)}
+  .rollen i{display:block;height:4.5rem;border-radius:var(--r-control);border:1px solid var(--line-soft)}
+  .rollen .r-hell{background:var(--ton-hell)}
+  .rollen .r-ton{background:var(--ton)}
+  .rollen .r-dunkel{background:var(--ton-dunkel)}
+  .rollen .r-ink{display:grid;place-items:center;font-style:normal;font-family:var(--font-display);
+    font-weight:var(--w-deutlich);font-size:var(--t-h2);color:var(--ton-ink);background:var(--paper)}
+  @media(max-width:420px){.rollen{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+  /* --- 6 · Das Ganze im Teil ---------------------------------------------------- */
+  .kurve{width:min(100%,240px);height:auto;display:block;margin-top:var(--s3)}
+  .kurve .achse{stroke:var(--line);fill:none}
+  .kurve .bahn{stroke:var(--ak-ink);stroke-width:2.5;fill:none;stroke-linecap:round}
+  .stimme{display:flex;gap:var(--s5);flex-wrap:wrap;align-items:baseline;margin-top:var(--s3)}
+  .stimme span{font-family:var(--font-display);font-size:var(--t-h2);line-height:var(--lh-tight)}
+  .farbe{display:flex;gap:var(--s2);margin-top:var(--s3)}
+  .farbe i{width:3rem;height:3rem;border-radius:var(--r-pill);border:1px solid var(--line-soft)}
+
+  /* --- 7 · Vorschlag ------------------------------------------------------------ */
+  .vorschlag table{width:100%;max-width:780px;margin-top:var(--s6);font-size:var(--t-small)}
+  .vorschlag code{font-family:var(--font-mono);font-size:var(--t-small)}
+  .vorschlag td{vertical-align:top}
+  .vorschlag code{white-space:nowrap}
+  .vorschlag .wofuer{display:block;margin-top:var(--s1);color:var(--muted);hyphens:manual}
+</style>
+</head>
+<body>
+
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Labor · Moodboard</span>
+    <h1>Gesten des Lebendigen</h1>
+    <p class="lede">Weich, flüssig, eins ins andere übergehend.<br />Etwas wächst oder verwelkt.</p>
+  </section>
+
+  <!-- 1 · Wiederholung -->
+  <section class="tafel" id="wiederholung" aria-labelledby="h-wiederholung">
+    <h2 id="h-wiederholung">Wiederholung</h2>
+    <p class="satz">Dieselbe Marke, dieselbe Kurve, derselbe Abstand: der Rhythmus macht das Haus erkennbar, nicht die Abwechslung.</p>
+    <div class="tafel-grid">
+      <div class="buehne">
+        <div class="marken" data-reihe aria-hidden="true"></div>
+        <div class="steuer"><button class="btn" type="button" data-spiel="wiederholung">Noch einmal</button></div>
+      </div>
+      <figure class="zitat sprachen">
+        <div class="platte">
+          <img src="assets/logos/mein-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="Mein Goetheanum" width="300" height="40" />
+          <img src="assets/logos/my-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="My Goetheanum" width="300" height="40" />
+          <img src="assets/logos/mi-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="Mi Goetheanum" width="300" height="40" />
+          <img src="assets/logos/mon-goetheanum-kleinschreibung-kreis-deutlich.svg" alt="Mon Goetheanum" width="300" height="40" />
+        </div>
+        <figcaption>Eine Marke, vier Sprachen</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 2 · Polarität -->
+  <section class="tafel" id="polaritaet" aria-labelledby="h-polaritaet">
+    <h2 id="h-polaritaet">Polarität</h2>
+    <p class="satz">Auf und zu sind ein Paar: das Öffnen nimmt sich Zeit, das Schliessen geht leichter.</p>
+    <div class="tafel-grid">
+      <div class="buehne">
+        <div>
+          <div class="kelch" id="kelch" hidden>
+            <div class="kelch-inner"><p>Was sich öffnet, blüht auf; was sich schliesst, kehrt ein.</p></div>
+          </div>
+        </div>
+        <div class="steuer">
+          <button class="btn primary" type="button" aria-controls="kelch" data-kelch>Öffnen</button>
+        </div>
+      </div>
+      <figure class="zitat paar-logo">
+        <div class="platte"><img src="assets/logos/am-goetheanum-dark.svg" alt="Goetheanum Schriften und Icons, dunkel" width="260" height="62" /></div>
+        <div class="platte nacht"><img src="assets/logos/am-goetheanum-white.svg" alt="Goetheanum Schriften und Icons, weiss" width="260" height="62" /></div>
+        <figcaption>Dieselbe Wortmarke, hell und dunkel</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 3 · Steigerung -->
+  <section class="tafel" id="steigerung" aria-labelledby="h-steigerung">
+    <h2 id="h-steigerung">Steigerung</h2>
+    <p class="satz">Jede Stufe nimmt ein Merkmal hinzu, bis das Letzte trägt.</p>
+    <div class="tafel-grid">
+      <div class="buehne">
+        <div class="stufen" data-stufen data-sek aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="steuer"><button class="btn" type="button" data-spiel="steigerung">Noch einmal</button></div>
+      </div>
+      <figure class="zitat">
+        <div class="schnitte">
+          <div><span class="wort" style="font-weight:var(--w-leise)">Goetheanum</span><span class="lab num">Leise&nbsp;265</span></div>
+          <div><span class="wort" style="font-weight:var(--w-ruhig)">Goetheanum</span><span class="lab num">Ruhig&nbsp;350</span></div>
+          <div><span class="wort" style="font-weight:var(--w-klar)">Goetheanum</span><span class="lab num">Klar&nbsp;440</span></div>
+          <div><span class="wort" style="font-weight:var(--w-deutlich)">Goetheanum</span><span class="lab num">Deutlich&nbsp;580</span></div>
+          <div><span class="wort" style="font-weight:var(--w-laut)">Goetheanum</span><span class="lab num">Laut&nbsp;680</span></div>
+        </div>
+        <figcaption>Die fünf Schnitte der Hausschrift</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 4 · Reduktion -->
+  <section class="tafel reduktion" id="reduktion" aria-labelledby="h-reduktion">
+    <h2 id="h-reduktion">Reduktion</h2>
+    <p class="satz">Was entbehrlich ist, verwelkt: kürzer, leiser, dann weg. Es bleibt, was trägt.</p>
+    <div class="tafel-grid">
+      <div class="buehne">
+        <ul class="welk" data-welk>
+          <li style="--i:0"><span><span>Schmuck</span></span></li>
+          <li style="--i:1"><span><span>Rahmen</span></span></li>
+          <li style="--i:2"><span><span>Schatten</span></span></li>
+          <li style="--i:3"><span><span>Zweite Farbe</span></span></li>
+          <li style="--i:4"><span><span>Zweites Merkmal</span></span></li>
+          <li class="bleibt" style="--i:5"><span><span>Das Wort</span></span></li>
+        </ul>
+        <div class="steuer"><button class="btn" type="button" aria-pressed="false" data-welken>Weglassen</button></div>
+      </div>
+      <figure class="zitat">
+        <div class="platte">
+          <img class="wortmarke" src="assets/logos/goetheanum-logo.svg" alt="Goetheanum, Wortmarke mit Zeichen" width="220" height="37" />
+          <img class="marke" src="assets/logos/goetheanum-marke.svg" alt="Goetheanum, Zeichen allein" width="44" height="44" />
+        </div>
+        <figcaption>Wortmarke, dann das Zeichen allein</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 5 · Übergang -->
+  <section class="tafel" id="uebergang" aria-labelledby="h-uebergang" data-sek="nws">
+    <h2 id="h-uebergang">Übergang</h2>
+    <p class="satz">Nichts springt. Eine Fläche geht aus der anderen hervor: Papier, Hauch, Band, Fläche.</p>
+    <div class="tafel-grid">
+      <div class="buehne">
+        <div class="feld" data-feld data-stufe="papier"><span class="schicht"></span><p>Naturwissenschaften</p></div>
+        <div class="seg" role="group" aria-label="Stufe der Fläche" data-stufen-wahl>
+          <button type="button" aria-pressed="true" data-stufe="papier">Papier</button>
+          <button type="button" aria-pressed="false" data-stufe="hauch">Hauch</button>
+          <button type="button" aria-pressed="false" data-stufe="band">Band</button>
+          <button type="button" aria-pressed="false" data-stufe="flaeche">Fläche</button>
+        </div>
+      </div>
+      <figure class="zitat">
+        <div class="rollen">
+          <div><i class="r-hell"></i><span class="lab">Hauch</span></div>
+          <div><i class="r-ton"></i><span class="lab">Basis</span></div>
+          <div><i class="r-dunkel"></i><span class="lab">Dunkel</span></div>
+          <div><i class="r-ink">Aa</i><span class="lab">Tinte</span></div>
+        </div>
+        <figcaption>Sektionsfarbe Naturwissenschaften, vier Rollen</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 6 · Jedes Teil enthält das Ganze -->
+  <section class="tafel" id="das-ganze" aria-labelledby="h-ganze">
+    <h2 id="h-ganze">Jedes Teil enthält das Ganze</h2>
+    <p class="satz">Wer das Akkordeon sieht, sieht das Haus.</p>
+    <div class="acc-liste kapsel" data-sek="nws" style="margin-top:var(--s6)">
+      <div class="acc-kopf"><span class="lab">Ein Baustein</span><button class="btn alle" type="button" aria-pressed="false">Alle aufklappen</button></div>
+      <details class="acc" id="die-kurve">
+        <summary><span class="frage">Die Kurve</span><span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l5 5 5-5"/></svg></span></summary>
+        <div class="acc-body"><div class="acc-inner">
+          <p>Es öffnet sich wie das Menü von goetheanum.ch: schneller Anfang, langes Ausklingen.</p>
+          <svg class="kurve" viewBox="0 0 120 120" role="img" aria-label="Bloom-Kurve">
+            <path class="achse" d="M10 110H110M10 110V10"/>
+            <path class="bahn" d="M10 110C42 102 34 10 110 10"/>
+          </svg>
+        </div></div>
+      </details>
+      <details class="acc" id="die-stimme">
+        <summary><span class="frage">Die Stimme</span><span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l5 5 5-5"/></svg></span></summary>
+        <div class="acc-body"><div class="acc-inner">
+          <p>Frage und Antwort sprechen in der Hausschrift, eine Stimme in zwei Schnitten.</p>
+          <div class="stimme"><span style="font-weight:var(--w-deutlich)">Deutlich</span><span style="font-weight:var(--w-klar)">Klar</span></div>
+        </div></div>
+      </details>
+      <details class="acc" id="die-farbe">
+        <summary><span class="frage">Die Farbe</span><span class="knopf" aria-hidden="true"><svg class="ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l5 5 5-5"/></svg></span></summary>
+        <div class="acc-body"><div class="acc-inner">
+          <p>Hauch als Grund, Dunkel als Band, Tinte als Schrift: die Sektion färbt den ganzen Baustein.</p>
+          <div class="farbe" aria-hidden="true"><i style="background:var(--ton-hell)"></i><i style="background:var(--ton)"></i><i style="background:var(--ton-dunkel)"></i></div>
+        </div></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- 7 · Was wir daraus machen -->
+  <section class="tafel vorschlag" id="vorschlag" aria-labelledby="h-vorschlag">
+    <span class="kicker">Vorschlag, nicht eingebaut</span>
+    <h2 id="h-vorschlag">Was wir daraus machen</h2>
+    <p class="satz">Bewegungs-Tokens im Fundament, damit die nächste Seite keine eigene Bewegung erfindet.</p>
+    <div class="tabelle">
+      <table>
+        <thead><tr><th scope="col">Token</th><th scope="col" class="num">Wert</th></tr></thead>
+        <tbody>
+          <tr><td><code>--kurve-bloom</code><span class="wofuer">auf und zu kleiner Flächen</span></td><td class="num">cubic-bezier<wbr>(.32,&nbsp;.08,&nbsp;.24,&nbsp;1)</td></tr>
+          <tr><td><code>--kurve-flaeche</code><span class="wofuer">Vollflächen und Schiebewege</span></td><td class="num">cubic-bezier<wbr>(.35,&nbsp;0,&nbsp;.5,&nbsp;1)</td></tr>
+          <tr><td><code>--dauer-hauch</code><span class="wofuer">Berührung, Fokus, Farbwechsel</span></td><td class="num">120&nbsp;ms</td></tr>
+          <tr><td><code>--dauer-kurz</code><span class="wofuer">Austritt: schliessen, verwelken</span></td><td class="num">220&nbsp;ms</td></tr>
+          <tr><td><code>--dauer-mittel</code><span class="wofuer">Eintritt: öffnen, wachsen, erscheinen</span></td><td class="num">280&nbsp;ms</td></tr>
+          <tr><td><code>--dauer-lang</code><span class="wofuer">Dank, grosse Flächen; höchstens 500&nbsp;ms</span></td><td class="num">400&nbsp;ms</td></tr>
+          <tr><td><code>--weg</code><span class="wofuer">Lage-Weg beim Aufblühen</span></td><td class="num">1.5&nbsp;rem</td></tr>
+          <tr><td><code>--staffel</code><span class="wofuer">Versatz je Glied einer Reihe</span></td><td class="num">40&nbsp;ms</td></tr>
+          <tr><td>weniger Bewegung<span class="wofuer">alle Dauern und Versätze</span></td><td class="num">0&nbsp;s</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+<script src="design-system/akkordeon.js"></script>
+<script>
+(function(){
+  var KURVE = "cubic-bezier(.32,.08,.24,1)", AUF = 280, ZU = 220, VERZUG = 40;
+  var reduziert = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function dauer(ms){ return reduziert.matches ? 0 : ms; }
+
+  /* Die Marke (Pfade aus assets/logos/goetheanum-mark-blue.svg), siebenmal. */
+  var MARKE = '<svg viewBox="0 0 16 21.1"><g fill="currentColor">' +
+    '<path d="M5.7224,3.472L15.8254,0v21.07h-6.002l.007-7.74c.003-.501-.086-.969-.242-1.438-.475-1.43-3.866-8.42-3.866-8.42"/>' +
+    '<path d="M5.292,7.1965s3.062,4.895,3.062,6.039l.048,7.834h-3.538l-.022-2.693c-.035-1.633-3.74-6.24-3.74-6.24l4.19-4.94Z"/>' +
+    '<path d="M0,17.9464l2.355-1.673s1.103,1.842,1.201,2.488c.099.646.02,2.309.02,2.309H1.072s.005-.607.008-.876c.007-.476-.144-.883-.375-1.274-.108-.183-.609-.818-.705-.974"/>' +
+    '</g></svg>';
+  var reihe = document.querySelector("[data-reihe]");
+  reihe.innerHTML = new Array(8).join(MARKE);
+
+  /* Eine Reihe tritt ein: jedes Glied mit derselben Kurve, um VERZUG versetzt. */
+  function eintreten(glieder, von){
+    [].forEach.call(glieder, function(el, i){
+      if (!el.animate) return;
+      el.animate([von, {transform:"none", opacity:1}],
+        {duration:dauer(AUF), delay:dauer(i * VERZUG), easing:KURVE, fill:"backwards"});
+    });
+  }
+  var spiele = {
+    wiederholung: function(){ eintreten(reihe.children, {transform:"translateY(-1.5rem)", opacity:0}); },
+    steigerung: function(){ eintreten(document.querySelector("[data-stufen]").children, {transform:"scaleY(0)", opacity:0}); }
+  };
+  document.querySelectorAll("[data-spiel]").forEach(function(b){
+    b.addEventListener("click", function(){ spiele[b.dataset.spiel](); });
+  });
+  /* Einmal beim Hereinkommen, nie in Schleife (WCAG 2.2.2). */
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        spiele[e.target.id] && spiele[e.target.id]();
+      });
+    }, {threshold:.2});
+    io.observe(document.getElementById("wiederholung"));
+    io.observe(document.getElementById("steigerung"));
+  }
+
+  /* Polarität: auf 280 ms, zu 220 ms – dieselbe Kurve, zwei Dauern. */
+  var kelch = document.getElementById("kelch"), kb = document.querySelector("[data-kelch]"), laeuft = false;
+  kb.addEventListener("click", function(){
+    if (laeuft) return;
+    var auf = kelch.hidden;
+    kb.textContent = auf ? "Schliessen" : "Öffnen";
+    if (auf) kelch.hidden = false;
+    if (!kelch.animate) { kelch.hidden = !auf; return; }
+    var h = kelch.scrollHeight; laeuft = true;
+    var a = kelch.animate(auf
+      ? [{height:"0px", opacity:0, transform:"translateY(-1.5rem)"}, {height:h + "px", opacity:1, transform:"none"}]
+      : [{height:h + "px", opacity:1, transform:"none"}, {height:"0px", opacity:0, transform:"translateY(-1.5rem)"}],
+      {duration:dauer(auf ? AUF : ZU), easing:KURVE});
+    a.onfinish = a.oncancel = function(){ laeuft = false; if (!auf) kelch.hidden = true; };
+  });
+
+  /* Reduktion: Weglassen und Zurückholen. */
+  var welk = document.querySelector("[data-welk]"), wb = document.querySelector("[data-welken]");
+  wb.addEventListener("click", function(){
+    var an = !welk.classList.contains("welkt");
+    welk.classList.toggle("welkt", an);
+    wb.setAttribute("aria-pressed", an ? "true" : "false");
+  });
+
+  /* Übergang: vier Stufen einer Fläche. */
+  var feld = document.querySelector("[data-feld]");
+  document.querySelectorAll("[data-stufen-wahl] button").forEach(function(b){
+    b.addEventListener("click", function(){
+      feld.dataset.stufe = b.dataset.stufe;
+      [].forEach.call(b.parentNode.children, function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    });
+  });
+})();
+</script>
+</body>
+</html>
