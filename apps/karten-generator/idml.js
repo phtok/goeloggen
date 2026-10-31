@@ -85,12 +85,13 @@ export function pfadLesen(d) {
 /* Die Karte als IDML-Objekte, ohne Dokument drumherum. Nullpunkt ist die
    Mitte des Blatts (so liegen Seite und Doppelseite im IDML um 0 0).
    e: { modell, geometrie, farbnamen, textBreite, links, immerFarben,
-        praefix (vor jeder Self-ID), namen (vor Format- und Ebenennamen) }
+        praefix (vor jeder Self-ID), namen (vor Format- und Ebenennamen),
+        sprache (Sprache der Absatzformate, InDesign-Name) }
    Gibt { inhalt: [Spread-Objekte], stories: [[Self, XML]], absatzformate:
    XML, farben: [[hex, Self]], ebenen: [{ self, name, gesperrt }],
    aktiveEbene } zurück. */
 export function kartenObjekte(e) {
-  const { modell, geometrie: g, farbnamen = {}, textBreite, links = {}, praefix = '', namen = '' } = e;
+  const { modell, geometrie: g, farbnamen = {}, textBreite, links = {}, praefix = '', namen = '', sprache = 'German: Swiss 2006 Reform' } = e;
   const k = g.skala;                                    // Blatt-mm → Endformat-mm
   const B = g.trimBreite * MM, H = g.trimHoehe * MM;
   const OX = -B / 2, OY = -H / 2;                       // Seite mittig auf dem Druckbogen
@@ -239,7 +240,7 @@ export function kartenObjekte(e) {
     const zab = f.zab ? pt(f.zab) : grad * 1.2;
     const ausrichtung = ROLLEN[rolle].mitte ? ' Justification="CenterAlign"' : '';
     const name = namen + ROLLEN[rolle].name;
-    return `<ParagraphStyle Self="ParagraphStyle/${x(name)}" Name="${x(name)}" FontStyle="${schnitt}" PointSize="${n(grad)}" FillColor="${feld(f.farbe)}" Hyphenation="false" AppliedLanguage="$ID/German: Swiss 2006 Reform"${ausrichtung}>
+    return `<ParagraphStyle Self="ParagraphStyle/${x(name)}" Name="${x(name)}" FontStyle="${schnitt}" PointSize="${n(grad)}" FillColor="${feld(f.farbe)}" Hyphenation="false" AppliedLanguage="$ID/${x(sprache)}"${ausrichtung}>
 <Properties><BasedOn type="string">$ID/[No paragraph style]</BasedOn><AppliedFont type="string">${familie}</AppliedFont><Leading type="unit">${n(zab)}</Leading></Properties></ParagraphStyle>`;
   }).join('\n');
 
