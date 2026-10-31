@@ -13,7 +13,7 @@
 (function(){
   /* Kurve und Dauern kommen aus den Bewegungs-Tokens (tokens.css), gelesen am
      Element – so folgt das Skript der Systemeinstellung, einem Laborschalter
-     (data-bewegung) und einer seitenweiten Umstimmung von --acc-*. Fehlt das
+     (data-bewegung) und einer seitenweiten Umstimmung von --acc-* (auf --acc-dauer, zu --acc-dauer-zu). Fehlt das
      Fundament, gelten die alten Werte samt eigener Abfrage. */
   var reduziert = window.matchMedia("(prefers-reduced-motion: reduce)");
   function token(el, n){ return getComputedStyle(el).getPropertyValue(n).trim(); }
@@ -44,7 +44,7 @@
     else {
       var h = body.offsetHeight;
       d.classList.add("anim");
-      var a = body.animate([{height:h+"px",opacity:1},{height:"0px",opacity:0}],{duration:dauer(d, "--dauer-kurz", 220),easing:kurve(d)});
+      var a = body.animate([{height:h+"px",opacity:1},{height:"0px",opacity:0}],{duration:dauer(d, "--acc-dauer-zu", 220),easing:kurve(d)});
       a.onfinish = a.oncancel = function(){ d.open = false; d.classList.remove("anim"); };
     }
     // Schliesst sich die Antwort, auf die die Adresse zeigt, verliert die Adresse ihren Anker.

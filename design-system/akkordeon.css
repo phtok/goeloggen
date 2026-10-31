@@ -7,7 +7,7 @@
    <details class="acc"> je Frage; Skript: design-system/akkordeon.js.
    Vorbild der Bewegung: das aufblühende Klappmenü von goetheanum.ch –
    die Bloom-Kurve. Kurve und Dauer kommen aus den Bewegungs-Tokens
-   (tokens.css); --acc-kurve/--acc-dauer bleiben als Zweitnamen, damit eine
+   (tokens.css); --acc-kurve/--acc-dauer/--acc-dauer-zu bleiben als Zweitnamen, damit eine
    Seite das Akkordeon allein umstimmen kann.
    Farbe: vier Rollen – --ak Linie/Marke · --ak-ink Text · --ak-dunkel Fläche
    für Weiss · --ak-hell Hauch. Hausfall Gold; data-sek="<sektion>" nimmt die
@@ -19,7 +19,7 @@
    ≥44 px (B04); Anwahl = dunkle Fläche + Weiss (B01); Winkel als Zeichen (das
    gelernte der Webfamilie); keine Versalien, kein Unterstreichen (G05).
    ============================================================================= */
-:root{--acc-kurve:var(--kurve-bloom);--acc-dauer:var(--dauer-mittel)}   /* weniger Bewegung: --dauer-mittel ist dann 0 s */
+:root{--acc-kurve:var(--kurve-bloom);--acc-dauer:var(--dauer-mittel);--acc-dauer-zu:var(--dauer-kurz)}   /* weniger Bewegung: --dauer-mittel ist dann 0 s */
 
 /* --- Farbrollen ------------------------------------------------------------
    Kommen seit 1.20.0 aus dem Fundament: ein data-sek IRGENDWO darüber setzt

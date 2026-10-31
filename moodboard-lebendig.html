@@ -323,6 +323,7 @@
   function wert(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
   function dauer(n){ var v = wert(n), z = parseFloat(v) || 0; return /ms$/.test(v) ? z : z * 1000; }
   var KURVE = wert("--kurve-bloom") || "ease";
+  function hoch(){ return "translateY(calc(-1 * " + (wert("--weg") || "0px") + "))"; }
 
   /* Die Marke (Pfade aus assets/logos/goetheanum-mark-blue.svg), siebenmal. */
   var MARKE = '<svg viewBox="0 0 16 21.1"><g fill="currentColor">' +
@@ -342,7 +343,7 @@
     });
   }
   var spiele = {
-    wiederholung: function(){ eintreten(reihe.children, {transform:"translateY(-1.5rem)", opacity:0}); },
+    wiederholung: function(){ eintreten(reihe.children, {transform:hoch(), opacity:0}); },
     steigerung: function(){ eintreten(document.querySelector("[data-stufen]").children, {transform:"scaleY(0)", opacity:0}); }
   };
   document.querySelectorAll("[data-spiel]").forEach(function(b){
@@ -369,10 +370,10 @@
     kb.textContent = auf ? "Schliessen" : "Öffnen";
     if (auf) kelch.hidden = false;
     if (!kelch.animate) { kelch.hidden = !auf; return; }
-    var h = kelch.scrollHeight; laeuft = true;
+    var h = kelch.scrollHeight, weg = hoch(); laeuft = true;
     var a = kelch.animate(auf
-      ? [{height:"0px", opacity:0, transform:"translateY(-1.5rem)"}, {height:h + "px", opacity:1, transform:"none"}]
-      : [{height:h + "px", opacity:1, transform:"none"}, {height:"0px", opacity:0, transform:"translateY(-1.5rem)"}],
+      ? [{height:"0px", opacity:0, transform:weg}, {height:h + "px", opacity:1, transform:"none"}]
+      : [{height:h + "px", opacity:1, transform:"none"}, {height:"0px", opacity:0, transform:weg}],
       {duration:dauer(auf ? "--dauer-mittel" : "--dauer-kurz"), easing:KURVE});
     a.onfinish = a.oncancel = function(){ laeuft = false; if (!auf) kelch.hidden = true; };
   });

@@ -29,7 +29,7 @@ gespiegelt in `tokens.json` (`duration`, `cubicBezier`). Bestand gehoben:
 Meldung, Gruppenpfeil) von `.12s`–`.22s ease` auf Tokens, die Schublade auf
 `--kurve-flaeche` mit `--dauer-kurz` (Länge wie bisher); `akkordeon.css`
 führt `--acc-kurve`/`--acc-dauer` als Zweitnamen von `--kurve-bloom`/
-`--dauer-mittel`; `akkordeon.js` liest Kurve und Dauern am Element per
+`--dauer-mittel`, neu `--acc-dauer-zu` für `--dauer-kurz`; `akkordeon.js` liest Kurve und Dauern am Element per
 `getComputedStyle` statt fester 280/220&nbsp;ms (alte Werte als Rückfall).
 Die Kacheln im Hub (`index.html`) laufen auf `--dauer-hauch`. Die drei
 Laborseiten (moodboard-lebendig, spenden-formular, bewegung-anwendungen)
@@ -40,7 +40,7 @@ in `transition`/`animation` einer Seite; 0&nbsp;s bleibt erlaubt.
 **Weniger Bewegung.** `tokens.css` setzt unter `prefers-reduced-motion`
 alle `--dauer-*` und `--staffel` auf 0&nbsp;s und `--weg` auf 0. Das harte
 `*{transition:none!important}` in `base.css` kann die Nullung noch **nicht
-ganz** ersetzen: 33 Stellen in Seiten tragen feste Dauern (die neuen
+ganz** ersetzen: 33&nbsp;Stellen in Seiten tragen feste Dauern (die neuen
 DS04-Hinweise) und liefen sonst bei weniger Bewegung wieder. Darum bleibt
 das Netz, gilt aber nur noch für Seiten **ohne** `data-bewegung` am
 `<html>`. Eine Seite, die ganz über Tokens läuft, setzt das Attribut und
