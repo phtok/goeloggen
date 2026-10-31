@@ -1,0 +1,115 @@
+<!doctype html>
+<!-- Lesetest · Auswertung. Liest lesetest_ergebnisse() (anonym) und rechnet im
+     Browser. ?demo zeigt erfundene Beispieldaten, deutlich markiert.
+     Masse je Länge und Schrift, Mittelwert mit 95-%-Vertrauensbereich:
+     · Tempo relativ: Wörter/min geteilt durch das eigene Mittel der Person
+       (geometrisch, über ihre gewerteten Texte) → 100 = eigenes Tempo. Jede
+       Person liest zwei Texte je Schrift, darum hebt sich ihr Grundtempo auf.
+     · Verständnis: Anteil richtiger Antworten.
+     · Anstrengung, Weiterlesen: Mittel der Skala 1–7.
+     Ausgeschlossen werden Texte mit weniger als 40 oder mehr als 800 Wörtern
+     je Minute (überflogen oder unterbrochen) und solche, bei denen der Tab
+     mehr als ein Fünftel der Zeit verborgen war. -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Lesetest · Auswertung · Goetheanum</title>
+<meta name="description" content="Auswertung des Lesetests: Lesetempo, Verständnis und Einschätzungen je Textlänge, Goetheanum Schrift gegen Source Sans 3." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="../../design-system/nav.css" />
+<style>
+  :root{--serie-g:#0061a9;--serie-s:#9a6510}
+  :root[data-theme="dark"]{--serie-g:#4a96d2;--serie-s:#c0862a}
+  .hero{padding-block:clamp(32px,6vw,64px) var(--s6)}
+  .hero h1{font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,48px);line-height:var(--lh-tight);text-wrap:balance}
+  .hero .lede{margin-top:var(--s5);color:var(--muted);max-width:58ch;hyphens:manual;text-wrap:pretty}
+  .leiste{display:flex;flex-wrap:wrap;gap:var(--s4) var(--s6);align-items:end}
+  .leiste .grp{display:grid;gap:var(--s2)}
+  .stand{margin-top:var(--s4)}
+  .legende{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s6);margin-block:var(--s5) var(--s3);font-family:var(--font-text);font-size:var(--t-small)}
+  .legende span{display:inline-flex;align-items:center;gap:var(--s2)}
+  .legende svg{flex:none}
+  .bilder{display:grid;grid-template-columns:1fr;gap:var(--s6)}
+  @media(min-width:900px){.bilder{grid-template-columns:1fr 1fr}}
+  .bild{position:relative}
+  .bild h3{font-family:var(--font-text);font-size:var(--t-body);font-weight:600;line-height:var(--lh-min);text-wrap:balance}
+  .bild .meta{margin-bottom:var(--s2);hyphens:manual}
+  .bild svg{display:block;max-width:100%;height:auto;overflow:visible}
+  .bild .achse{font-family:var(--font-text);font-size:14px;fill:var(--muted)}
+  .bild .gitter{stroke:var(--line);stroke-width:1}
+  .bild .null{stroke:var(--line-control);stroke-width:1}
+  .bild .linie{fill:none;stroke-width:2}
+  .bild .ci{stroke-width:2;stroke-linecap:round}
+  .bild .pt{stroke:var(--paper);stroke-width:2;pointer-events:none}
+  .bild .ziel{fill:transparent;cursor:pointer}
+  .bild .ziel:focus{outline:none}
+  .bild .ziel:focus-visible+.pt,.bild .ziel:hover+.pt{stroke:var(--ink)}
+  .g{color:var(--serie-g);stroke:var(--serie-g);fill:var(--serie-g)}
+  .s{color:var(--serie-s);stroke:var(--serie-s);fill:var(--serie-s)}
+  .tipp{position:absolute;pointer-events:none;background:var(--paper);color:var(--ink);border:1px solid var(--line-control);border-radius:var(--r-control);padding:var(--s2) var(--s3);font-family:var(--font-text);font-size:var(--t-small);line-height:1.4;box-shadow:0 4px 16px rgba(0,0,0,.12);max-width:240px;z-index:2;font-variant-numeric:tabular-nums}
+  .tabelle{overflow-x:auto;margin-top:var(--s6)}
+  table{border-collapse:collapse;font-family:var(--font-text);font-size:var(--t-small);font-variant-numeric:tabular-nums lining-nums;min-width:640px;width:100%}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+  thead th{color:var(--muted);font-weight:600}
+  tbody th{font-weight:400}
+  .demo{margin-top:var(--s4)}
+</style>
+</head>
+<body>
+<script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug" data-active="lesetest"></script>
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Lesetest</span>
+    <h1>Auswertung</h1>
+    <p class="lede">Goetheanum Schrift Klar gegen Source Sans 3, je Textlänge. Punkte sind Mittelwerte, Striche zeigen den Vertrauensbereich (95&nbsp;%).</p>
+    <p class="chip ton demo" id="demo" hidden>Beispieldaten, keine Messung. Ohne <q>?demo</q> zeigt die Seite die echten Antworten.</p>
+  </section>
+
+  <section>
+    <div class="leiste">
+      <div class="grp"><span class="lab" id="l-medium">Medium</span>
+        <div class="seg" data-filter="medium" role="group" aria-labelledby="l-medium">
+          <button type="button" aria-pressed="true" data-wert="">Alle</button>
+          <button type="button" aria-pressed="false" data-wert="bildschirm">Bildschirm</button>
+          <button type="button" aria-pressed="false" data-wert="papier">Papier</button>
+        </div></div>
+      <div class="grp"><span class="lab" id="l-alter">Alter</span>
+        <div class="seg" data-filter="alter" role="group" aria-labelledby="l-alter">
+          <button type="button" aria-pressed="true" data-wert="">Alle</button>
+          <button type="button" aria-pressed="false" data-wert="jung">unter 45</button>
+          <button type="button" aria-pressed="false" data-wert="alt">45 und älter</button>
+        </div></div>
+      <div class="grp"><span class="lab" id="l-bekannt">Schon bekannte Texte</span>
+        <div class="seg" data-filter="bekannt" role="group" aria-labelledby="l-bekannt">
+          <button type="button" aria-pressed="true" data-wert="weg">weglassen</button>
+          <button type="button" aria-pressed="false" data-wert="mit">mitzählen</button>
+        </div></div>
+      <button type="button" class="btn" id="csv">CSV laden</button>
+    </div>
+    <p class="said stand" id="stand" role="status">Lädt …</p>
+
+    <div class="legende" aria-hidden="true">
+      <span><svg width="22" height="14"><line x1="1" y1="7" x2="21" y2="7" class="g" stroke-width="2"/><circle cx="11" cy="7" r="5" class="g"/></svg>Goetheanum Klar</span>
+      <span><svg width="22" height="14"><line x1="1" y1="7" x2="21" y2="7" class="s" stroke-width="2"/><rect x="6" y="2" width="10" height="10" class="s"/></svg>Source Sans 3</span>
+    </div>
+    <div class="bilder" id="bilder"></div>
+
+    <div class="tabelle" tabindex="0" role="region" aria-label="Tabelle der Mittelwerte">
+      <table>
+        <caption class="sr-only">Mittelwerte je Länge und Schrift</caption>
+        <thead><tr><th scope="col">Länge</th><th scope="col">Schrift</th><th scope="col">Texte</th><th scope="col">Wörter/min (Median)</th><th scope="col">Tempo relativ</th><th scope="col">Verständnis</th><th scope="col">Anstrengung</th><th scope="col">Weiterlesen</th></tr></thead>
+        <tbody id="tab"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<script src="texte.js"></script>
+<script src="plan.js"></script>
+<script src="auswertung.js"></script>
+</body>
+</html>

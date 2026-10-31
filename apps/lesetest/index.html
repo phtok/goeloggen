@@ -1,0 +1,149 @@
+<!doctype html>
+<!-- Lesetest Hausschrift / Source Sans 3 (Labor, Auftrag des Inhabers 31. 10. 2026).
+     Jede Person liest vier Texte (≈80, 250, 500, 1000 Wörter), zwei in
+     Goetheanum Klar, zwei in Source Sans 3; Zuteilung über acht Gruppen
+     (lesetest.js). Gemessen: Lesezeit, drei Fragen, zwei Einschätzungen.
+     Speichern: services/lesetest/schema.sql (RPC lesetest_beginnen/_abgeben).
+     Ohne globale Navigation: der Link geht per Mail an Teilnehmende. -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Lesetest · Goetheanum</title>
+<meta name="description" content="Vier kurze Texte lesen und je drei Fragen beantworten – ein Test, welche Schrift sich wie gut liest." />
+<link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
+<link rel="preload" href="../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.8.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="../../assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="stylesheet" href="../../design-system/tokens.css" />
+<link rel="stylesheet" href="../../design-system/base.css" />
+<link rel="stylesheet" href="lesetest.css" />
+<!-- Hell/Dunkel wie nav.js (goeTheme, sonst System). Ohne nav.js, weil dessen
+     Lesemodus die Schrift tauschen und den Test verfälschen würde. -->
+<script>try{var t=localStorage.getItem("goeTheme");document.documentElement.setAttribute("data-theme",t==="dark"||t==="light"?t:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"))}catch(e){}</script>
+</head>
+<body>
+<main class="wrap test">
+
+  <!-- Schritt: Anfang -->
+  <section id="anfang" class="schritt">
+    <span class="kicker">Lesetest</span>
+    <h1>Welche Schrift liest sich leichter?</h1>
+    <p class="lede">Du liest vier kurze Texte und beantwortest nach jedem drei Fragen. Das dauert etwa zehn Minuten. Es geht um die Schrift, nicht um dich.</p>
+
+    <form id="startform" class="formular" novalidate>
+      <fieldset class="frage">
+        <legend>Wie alt bist du?</legend>
+        <div class="seg" data-wahl="alter">
+          <button type="button" aria-pressed="false" data-wert="unter 30">unter 30</button>
+          <button type="button" aria-pressed="false" data-wert="30–44">30–44</button>
+          <button type="button" aria-pressed="false" data-wert="45–59">45–59</button>
+          <button type="button" aria-pressed="false" data-wert="60–74">60–74</button>
+          <button type="button" aria-pressed="false" data-wert="75 und älter">75 und älter</button>
+          <button type="button" aria-pressed="false" data-wert="">keine Angabe</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="frage">
+        <legend>Wo liest du die Texte?</legend>
+        <div class="seg" data-wahl="medium">
+          <button type="button" aria-pressed="true" data-wert="bildschirm">Hier am Bildschirm</button>
+          <button type="button" aria-pressed="false" data-wert="papier" aria-controls="bogenwahl" aria-expanded="false">Auf einem gedruckten Bogen</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="frage" id="bogenwahl" hidden>
+        <legend>Welche Nummer steht oben auf deinem Bogen?</legend>
+        <div class="seg" data-wahl="bogen">
+          <button type="button" aria-pressed="false" data-wert="1">1</button>
+          <button type="button" aria-pressed="false" data-wert="2">2</button>
+          <button type="button" aria-pressed="false" data-wert="3">3</button>
+          <button type="button" aria-pressed="false" data-wert="4">4</button>
+          <button type="button" aria-pressed="false" data-wert="5">5</button>
+          <button type="button" aria-pressed="false" data-wert="6">6</button>
+          <button type="button" aria-pressed="false" data-wert="7">7</button>
+          <button type="button" aria-pressed="false" data-wert="8">8</button>
+        </div>
+      </fieldset>
+
+      <p class="note">Anonym: gespeichert werden nur die Altersgruppe, die Lesezeiten und deine Antworten.</p>
+      <div class="knopfzeile">
+        <button type="submit" class="btn primary" id="beginnen">Beginnen</button>
+      </div>
+      <p class="said" id="startmeldung" role="status"></p>
+    </form>
+  </section>
+
+  <!-- Schritt: vor einem Text -->
+  <section id="vor" class="schritt" hidden>
+    <span class="kicker" id="vor-kicker">Text 1 von 4</span>
+    <h2 id="vor-titel">Lies in deinem gewohnten Tempo.</h2>
+    <p class="lede" id="vor-text">So, wie du sonst liest. Danach kommen drei Fragen; zurückblättern geht dann nicht mehr.</p>
+    <div class="knopfzeile">
+      <button type="button" class="btn primary" id="zeigen">Text zeigen</button>
+    </div>
+  </section>
+
+  <!-- Schritt: lesen -->
+  <section id="lesen" class="schritt" hidden>
+    <article id="probe" class="probe" aria-labelledby="probe-titel">
+      <h2 id="probe-titel" class="probe-titel"></h2>
+      <div id="probe-text"></div>
+    </article>
+    <div id="papier-lesen" class="papierhinweis" hidden>
+      <p class="lede" id="papier-text">Lies jetzt Text 1 auf deinem Bogen.</p>
+    </div>
+    <div class="knopfzeile">
+      <button type="button" class="btn primary" id="fertig">Fertig gelesen</button>
+    </div>
+  </section>
+
+  <!-- Schritt: Fragen -->
+  <section id="fragen" class="schritt" hidden>
+    <span class="kicker" id="fragen-kicker">Text 1 von 4</span>
+    <h2>Drei Fragen zum Text</h2>
+    <form id="fragenform" class="formular" novalidate>
+      <div id="fehler" class="fehlerliste" role="alert" tabindex="-1" hidden></div>
+      <div id="fragen-liste"></div>
+
+      <fieldset class="frage" id="f-anstrengung">
+        <legend>Wie anstrengend war das Lesen?</legend>
+        <div class="skala">
+          <div class="seg" data-wahl="anstrengung" aria-describedby="anstrengung-pole"></div>
+          <p class="pole meta" id="anstrengung-pole"><span>1 = gar nicht</span><span>7 = sehr</span></p>
+        </div>
+      </fieldset>
+
+      <fieldset class="frage" id="f-weiterlesen">
+        <legend>Wie gern würdest du weiterlesen?</legend>
+        <div class="skala">
+          <div class="seg" data-wahl="weiterlesen" aria-describedby="weiterlesen-pole"></div>
+          <p class="pole meta" id="weiterlesen-pole"><span>1 = gar nicht</span><span>7 = sehr gern</span></p>
+        </div>
+      </fieldset>
+
+      <label class="haken"><input type="checkbox" id="bekannt" /> <span>Diesen Text kannte ich schon.</span></label>
+
+      <div class="knopfzeile">
+        <button type="submit" class="btn primary" id="weiter">Weiter</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Schritt: Ende -->
+  <section id="ende" class="schritt" hidden>
+    <span class="kicker">Lesetest</span>
+    <h2 id="ende-titel">Einen Moment, deine Antworten werden gespeichert.</h2>
+    <p class="lede" id="ende-text" role="status"></p>
+    <div class="knopfzeile">
+      <button type="button" class="btn primary" id="nochmal" hidden>Noch einmal senden</button>
+    </div>
+    <p class="note">Texte: Franz Kafka (gemeinfrei). Vorlagen: Project Gutenberg (<q>Ein Landarzt</q>, <q>Betrachtung</q>) und Wikisource (<q>Kleine Fabel</q>).</p>
+  </section>
+
+</main>
+<script src="texte.js"></script>
+<script src="plan.js"></script>
+<script src="lesetest.js"></script>
+</body>
+</html>

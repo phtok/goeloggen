@@ -72,6 +72,16 @@
       "such": "Begleitschrift Schriftsystem Griechisch Hebräisch Georgisch Armenisch Chinesisch Japanisch Koreanisch CJK Source Han Sans Noto Assistant FiraGO Treibhaus Labor"
     },
     {
+      "slug": "lesetest",
+      "cat": "treibhaus",
+      "status": "intern",
+      "tag": "Mitmachen",
+      "title": "Lesetest",
+      "href": "apps/lesetest/",
+      "desc": "Vier Kafka-Texte in Goetheanum Klar und Source Sans 3 lesen, je drei Fragen. Misst, ab welcher Länge Fliesstext in Source laufen soll. Druckbogen und Auswertung im selben Ordner.",
+      "such": "Lesetest Lesbarkeit Schrift Fliesstext Source Sans Goetheanum Klar Studie Lesezeit Verständnis Druckbogen Auswertung"
+    },
+    {
       "slug": "moodboard-lebendig",
       "cat": "treibhaus",
       "beet": "bewegung",
