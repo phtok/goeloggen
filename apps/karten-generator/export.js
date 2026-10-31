@@ -290,7 +290,7 @@ ${grundkarteSzeneMarkup(g.beschnitt / g.skala)}
 
 // Stand der Export-Bausteine: bei jeder Änderung an idml.js erhöhen,
 // sonst mischt der Browser-Cache alt und neu.
-const IDML_BAU = "2026-10-30b";
+const IDML_BAU = "2026-10-31";
 
 // Die Hausschrift reist mit (SIL OFL, Lizenz liegt bei).
 const IDML_SCHRIFTEN = [
@@ -332,7 +332,11 @@ async function logoPdf(name, markup, viewBox, lage, skala) {
   return { name, bytes: await svgAlsPdfBytes(svgText, breite, hoehe), breite, hoehe };
 }
 
-async function exportIdml() {
+// Alles, was idml.js für die Karte braucht (Modell, Geometrie, verknüpfte
+// PDFs, Farbnamen, Textbreite) – für den eigenen Export und für einbettende
+// Werkzeuge (Tagungs-Reader, window.Kartentool.idmlTeile). namen steht vor
+// den Farbfeldnamen, damit sie in einer fremden Vorlage nicht kollidieren.
+async function idmlTeile(namen = "") {
   const g = exportGeometrie();
   const modell = szeneModell();
   const links = { grundkarte: await grundkartePdfBytes() };
@@ -345,15 +349,20 @@ async function exportIdml() {
     links.titellogo = await logoPdf("titellogo.pdf", l.markup,
       `${l.vbX || 0} ${l.vbY || 0} ${l.vbBreite} ${l.vbHoehe}`, modell.titelLogo, g.skala);
   }
-  const schriften = await Promise.all(IDML_SCHRIFTEN.map(async ([name, pfad]) => ({ name, bytes: await dateiBytes(pfad) })));
-  const { baueIdml } = await import(`./idml.js?v=${IDML_BAU}`);
-  const zip = await baueIdml({
-    modell, geometrie: g, links, schriften,
-    dateiname: dateiname("idml"),
-    farbnamen: idmlFarbnamen(),
+  const farbnamen = Object.fromEntries(Object.entries(idmlFarbnamen()).map(([hex, name]) => [hex, namen + name]));
+  return {
+    modell, geometrie: g, links, farbnamen,
     immerFarben: [TINTE, TINTE_LEISE],
-    textBreite: idmlTextBreite
-  });
+    textBreite: idmlTextBreite,
+    schriften: IDML_SCHRIFTEN.map(([name, pfad]) => ({ name, url: new URL(pfad, document.baseURI).href }))
+  };
+}
+
+async function exportIdml() {
+  const teile = await idmlTeile();
+  const schriften = await Promise.all(teile.schriften.map(async ({ name, url }) => ({ name, bytes: await dateiBytes(url) })));
+  const { baueIdml } = await import(`./idml.js?v=${IDML_BAU}`);
+  const zip = await baueIdml({ ...teile, schriften, dateiname: dateiname("idml") });
   herunterladen(dateiname("zip"), new Blob([zip], { type: "application/zip" }), "application/zip");
 }
 

@@ -9,7 +9,7 @@
    Geschrieben wird direkt im Blatt; jede Änderung landet im Verlauf.
    Konzept: docs/specs/lt-reader-konzept.md · Anleitung: ANLEITUNG.md
    ------------------------------------------------------------------------- */
-import { idmlLaden, seiteZeichnen, storyAbsaetze, uebersatzPruefen, farbe as swatchFarbe } from './idml-seite.js';
+import { idmlLaden, seiteZeichnen, storyAbsaetze, uebersatzPruefen, seitenStories, farbe as swatchFarbe } from './idml-seite.js';
 
 const SB = "https://dagcsnfrlbpxcmdimnrw.supabase.co";
 const SBK = "sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY";
@@ -288,8 +288,9 @@ function werkstatt() {
     h += `<div class="block"><p class="titel">Verlauf</p>${V.length ? `<ul class="verlauf">${V.slice(0, 80).map((v) => `<li><span class="wann">${new Date(v.am).toLocaleString("de-CH", { dateStyle: "short", timeStyle: "short" })}${v.von ? ` · ${esc(v.von)}` : ""} · Seite ${v.seite}</span><br><span class="vorher">${esc(kurz(v.vorher))}</span><br><span class="nachher">${esc(kurz(v.nachher))}</span></li>`).join("")}</ul>` : `<p class="hinweis">Noch keine Änderung.</p>`}</div>`;
   } else if (REITER === "export") {
     h += `<div class="block"><p class="titel">Ausgabe</p>
-      <div class="knoepfe"><button type="button" class="btn primary" id="pdf">Vorschau-PDF (Drucken → als PDF sichern)</button><button type="button" class="btn" id="idml" disabled>IDML für InDesign (Etappe 3)</button></div>
-      <p class="hinweis">A5 mit 3 mm Beschnitt, RGB, aus dem Browser. Im Druckdialog Hintergrundgrafiken einschalten und Ränder ‹Keine›. Das Druck-PDF entsteht aus dem IDML in InDesign.</p></div>
+      <div class="knoepfe"><button type="button" class="btn primary" id="pdf">Vorschau-PDF (Drucken → als PDF sichern)</button><button type="button" class="btn" id="idml">IDML für InDesign</button></div>
+      <p class="hinweis">A5 mit 3 mm Beschnitt, RGB, aus dem Browser. Im Druckdialog Hintergrundgrafiken einschalten und Ränder ‹Keine›. Das Druck-PDF entsteht aus dem IDML in InDesign.</p>
+      <p class="hinweis">Das IDML ist die Vorlage mit den Texten und Farben dieses Jahrgangs; auf den Seiten 2–3 steht die Karte als InDesign-Objekte. Das ZIP enthält die Grundkarte und die Hausschrift; die Bilder verknüpft InDesign aus den Originaldateien.</p></div>
       <div class="block"><p class="titel">Jahrgangsdatei</p>
       <div class="knoepfe"><button type="button" class="btn" id="json-ab">Herunterladen (JSON)</button><label class="btn" for="json-auf">Laden (JSON)</label><input type="file" id="json-auf" accept="application/json" style="display:none" /><button type="button" class="btn" id="karte-laden">Kartenstand aus dem Kartentool laden</button></div>
       <div class="knoepfe"><button type="button" class="btn" id="jahr-neu">Neues Jahr anlegen (${S.jahr + 1})</button></div>
@@ -356,6 +357,7 @@ W.addEventListener("click", async (e) => {
   if (pal) { try { await navigator.clipboard.writeText(pal.dataset.palette); melden(`${pal.dataset.palette} kopiert`, "ok"); } catch (err) { melden(pal.dataset.palette, "ok"); } return; }
   switch (e.target.id) {
     case "pdf": window.print(); sichern("export-pdf"); break;
+    case "idml": idmlExport(e.target); break;
     case "json-ab": { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 1)], { type: "application/json" })); a.download = `${S.jahr}.json`; a.click(); break; }
     case "jahr-neu": jahrNeu(); break;
     case "swatches-zurueck": if (S.farben) S.farben.swatches = {}; werkstatt(); bauen(); sichernBald(); break;
@@ -369,6 +371,53 @@ W.addEventListener("click", async (e) => {
   if (fa) fassungHerstellen(+fa.dataset.fassung);
 });
 $("von").addEventListener("input", (e) => { META.von = e.target.value.trim(); try { localStorage.setItem("lt-reader:von", META.von); } catch (err) { /* privat */ } });
+
+// ------------------------------------------------------------ IDML
+/* Die Vorlage mit Texten und Farben des Jahrgangs, Karte nativ auf 2–3
+   (apps/lt-reader/idml-export.js, docs/specs/lt-reader-idml.md). */
+const IDML_BAU = "2026-10-31";
+async function bytesHolen(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+  return new Uint8Array(await r.arrayBuffer());
+}
+async function idmlExport(knopf) {
+  const beschriftung = knopf.textContent;
+  knopf.disabled = true; knopf.textContent = "IDML wird gepackt …";
+  try {
+    // Seite je Rahmen, wie die Vorschau ersetzt (Ersetzungen gelten je Seite)
+    const seiteVon = new Map();
+    for (const def of SEITEN) if (def.quelle === "vorlage") for (const { story } of seitenStories(DOC, def.seite)) if (!seiteVon.has(story)) seiteVon.set(story, def.n);
+    const K = await karteStarten();
+    K.anwenden({ format: "a4", beschnitt: true, marken: false });
+    const teile = await K.idmlTeile("Karte ");
+    const [vorlage, schriften, modul] = await Promise.all([
+      bytesHolen(S.vorlage),
+      Promise.all(teile.schriften.map(async ({ name, url }) => ({ name, bytes: await bytesHolen(url) }))),
+      import(`./idml-export.js?v=${IDML_BAU}`),
+    ]);
+    const name = `Reader_${S.jahr}_A5`;
+    const { bytes, protokoll } = await modul.readerIdml({
+      vorlage, dateiname: `${name}.idml`,
+      ueberschrieben: S.texte || {},
+      ersetzen: (text, sid) => ersetzen(text, seiteVon.get(sid) || 0),
+      swatches: (S.farben && S.farben.swatches) || {},
+      karte: { seite: "2", teile, sprache: (S.karte || {}).sprache || "en", schriften },
+    });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([bytes], { type: "application/zip" }));
+    a.download = `${name}.zip`; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    console.info("IDML-Export", protokoll.join("\n"));
+    melden(`${esc(name)}.zip gepackt.`, "ok");
+    sichern("export-idml");
+  } catch (err) {
+    console.error(err);
+    melden(`IDML nicht gepackt (${esc(err.message)}).`, "bad");
+  } finally {
+    knopf.disabled = false; knopf.textContent = beschriftung;
+  }
+}
 
 function bildLesen(file, max, typ) {
   return new Promise((res, rej) => {

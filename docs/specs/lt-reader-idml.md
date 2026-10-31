@@ -1,6 +1,6 @@
 # Tagungs-Reader: IDML-Export – Spezifikation und Übergabe
 
-Stand: 31. Oktober 2026 · Status: **Spezifikation, Bau folgt in Etappen** ·
+Stand: 31. Oktober 2026 · Status: **gebaut, Öffnungstest in InDesign offen** ·
 Werkzeug: https://werkzeuge.goetheanum.ch/apps/lt-reader/
 
 Auftrag des Inhabers (31. 10. 2026): Der Tagungs-Reader soll ein IDML für
@@ -51,14 +51,16 @@ hoch (419.528 × 595.276 pt = 148 × 210 mm), Doppelseiten, Beschnitt
      Lauf anwendet (`storyText` in `reader.js`), auf denselben Seiten
      (Ersetzung ohne `seiten` → Textseiten 4–9, 12–19). Alles andere am
      Story-XML bleibt Byte für Byte.
-   - Rahmen mit Überschreibung (`S.texte[story]`): die Story wird aus dem
-     Absatzmodell neu geschrieben. Absatz- und Lauf-Tags werden aus der
-     Vorlage **geklont**, wo Format und Attribute übereinstimmen (so bleiben
-     Kerning, OpenType-Merkmale, Sprache, Tabulatoren); nur wo kein Vorbild
-     passt, entsteht der Tag aus den Attributen des Modells.
-     Zeilenumbruch (U+2028) und Tabulator bleiben Zeichen im `<Content>`.
-     Stimmt die Zahl der Absätze mit der Vorlage überein, behält jeder
-     Absatz seinen Umbruchtyp (Spalte, Rahmen).
+   - Rahmen mit Überschreibung (`S.texte[story]`): der Text des
+     Absatzmodells wird **zeichengenau mit dem Text der Vorlage verglichen**
+     (Myers-Diff); nur die Änderungen wandern in die `<Content>`-Knoten,
+     ein neuer Absatz wird `<Br />` im selben Lauf. Alles, was das Modell
+     nicht trägt, bleibt: verankerte Objekte (der Rahmen der
+     Arbeitsgruppen trägt 30 Gruppen und 26 Rahmen im Text), Hyperlinks,
+     Spalten- und Rahmenumbrüche, Kerning, Sonderzeichen. Gelesen wird wie
+     in der Vorschau: `<Content>` und `<Br/>` direkt im Lauf.
+     (Erster Entwurf: Story aus dem Modell neu bauen, Tags aus der Vorlage
+     klonen – verworfen, weil verankerte Objekte verloren gingen.)
 3. **Farben wie im Blatt.** Jahrgangsfarben (`S.farben.swatches`,
    Farbfeld → Hex) ändern den Wert des **Farbfelds selbst** (Raum RGB,
    Name bleibt), damit jedes Objekt, das es nutzt, folgt. Eine Tönung
@@ -85,7 +87,7 @@ hoch (419.528 × 595.276 pt = 148 × 210 mm), Doppelseiten, Beschnitt
 6. **Bilder:** Die Links der Vorlage bleiben, wie sie sind; der Druck
    nimmt die Originaldateien (wie bisher in der Anleitung). Die Vorschau-
    Bilder des Jahrgangs (Motiv, Logos) gehen nicht ins IDML.
-7. **Auslieferung als ZIP:** `Reader_<Jahr>.idml`, `Links/grundkarte.pdf`,
+7. **Auslieferung als ZIP:** `Reader_<Jahr>_A5.idml`, `Links/grundkarte.pdf`,
    ggf. `Links/logo.pdf`, `Document fonts/…`. ZIP-Name
    `Reader_<Jahr>_A5.zip` (sinngemäss zu `Campuskarte_<Titel>_A4`).
 
@@ -135,6 +137,34 @@ hoch (419.528 × 595.276 pt = 148 × 210 mm), Doppelseiten, Beschnitt
   Vorlage ausgenommen), Seiten 2–3 zeigen die Karte, Marken verschiebbar,
   Legende als Text mit Formaten «Karte …», Grundkarte verknüpft, Schrift
   aktiv. Der Befund kommt als Issue oder in den PR.
+
+## Wie gebaut (31. 10. 2026)
+
+- **Kartentool:** `kartenObjekte()` in
+  https://github.com/phtok/goeloggen/blob/main/apps/karten-generator/idml.js
+  baut die Karte als Objekte ohne Dokument (Optionen `praefix`, `namen`,
+  `sprache`); `baueIdml` nutzt sie selbst. `idmlTeile()` in `export.js`
+  liefert Modell, Geometrie, PDF-Links, Farbnamen und Textbreite;
+  `window.Kartentool` gibt `modell()` und `idmlTeile()` heraus.
+  Gegenprobe: Karten-IDML vor und nach dem Umbau Byte für Byte gleich.
+- **Reader:** https://github.com/phtok/goeloggen/blob/main/apps/lt-reader/idml-export.js
+  (`readerIdml`, `storyNeu`, `storyErsetzen`), Knopf im Reiter ‹Export›
+  (`idmlExport` in `reader.js`). Die Seite je Rahmen für die Ersetzungen
+  kommt aus `seitenStories`, wie in der Vorschau.
+- **Karte im Dokument:** IDs `k…`, Formate «Karte Titel» … «Karte Ziffer»,
+  Farbfelder «Karte Tinte», «Karte Marke Rot» …, Ebenen «Karte Grundkarte»
+  (gesperrt), «Karte Marken», «Karte Beschriftung», «Karte Legende» über
+  «Ebene 1». Sprache der Formate nach der Legende (English: UK oder
+  German: Swiss, beide in der Vorlage vorhanden).
+- **Geprüft (Jahrgang 2027 aus dem Archiv):** `xmllint` über alle Teile,
+  Self-IDs eindeutig, alle Verweise (Farbe, Format, Ebene, Story)
+  aufgelöst – die einzigen Auffälligkeiten (`u97` in der StoryList,
+  134 Stories verankerter Rahmen) stehen identisch in der Vorlage; alle
+  67 Rahmen der Vorschau wortgleich im IDML; Seiten 2–3 aus dem IDML
+  zurückgezeichnet und neben die Vorschau gelegt (deckungsgleich);
+  Bearbeitung im Blatt auf Seite 4 und 12: genau die zwei Stellen
+  geändert, verankerte Objekte vollständig; Farbfeld und Tönung des
+  Jahrgangs gesetzt; `barrierefreiheit.mjs` ohne Verstoss.
 
 ## Offen, entscheidet der Inhaber beim ersten Öffnen
 
