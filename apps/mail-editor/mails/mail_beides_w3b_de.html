@@ -85,14 +85,14 @@
   <style type="text/css">
     @font-face {
       font-family: 'Goetheanum';
-      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.8-Deutlich.woff2') format('woff2');
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.8-Deutlich.woff2') format('woff2'), url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Schrift-v2.8-Deutlich.woff') format('woff');
       font-weight: 700;
       font-style: normal;
     }
 
     @font-face {
       font-family: 'Source Sans 3';
-      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2') format('woff2');
+      src: url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2') format('woff2'), url('https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Fallback/SourceSans3-Regular.ttf') format('truetype');
       font-weight: 400;
       font-style: normal;
     }
@@ -104,6 +104,17 @@
       font-style: normal;
     }
   </style>
+  <!-- fontstack:v1 -->
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light only">
+  <style type="text/css">
+    :root { color-scheme: light only; supported-color-schemes: light only; }
+  </style>
+  <!--[if mso]>
+  <style type="text/css">
+    body, table, td, div, p, a, span, h1, h2, h3 { font-family: Arial, Helvetica, sans-serif !important; }
+  </style>
+  <![endif]-->
 </head>
 
 <body style="word-spacing:normal;background-color:#F6F4F2;">
