@@ -61,6 +61,17 @@
   ],
   "tools": [
     {
+      "slug": "lesetext-noto",
+      "cat": "treibhaus",
+      "beet": "schrift",
+      "status": "intern",
+      "tag": "Treibhaus",
+      "title": "Lesetext Noto",
+      "href": "lesetext-noto.html",
+      "desc": "Source Sans 3 und Noto als Lesetext unter Köpfen in der Hausschrift, in zehn Schriftsystemen.",
+      "such": "Noto Source Sans Lesetext Lese-Grotesk Schriftsystem Griechisch Kyrillisch Hebräisch Arabisch Georgisch Armenisch Chinesisch Japanisch Koreanisch Treibhaus"
+    },
+    {
       "slug": "begleitschriften",
       "cat": "treibhaus",
       "beet": "schrift",
