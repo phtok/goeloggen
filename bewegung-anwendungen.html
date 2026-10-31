@@ -14,21 +14,10 @@
 <link rel="stylesheet" href="design-system/akkordeon.css" />
 
 <style>
-  /* Bewegung – Vorschlag, noch nicht im Fundament
-     (docs/recherche_uebergaenge-lebendig.md § Vorschlag). Namen und Werte
-     wie auf moodboard-lebendig.html und spenden-formular.html. */
-  :root{
-    --kurve-bloom:cubic-bezier(.32,.08,.24,1);
-    --kurve-flaeche:cubic-bezier(.35,0,.5,1);
-    --kurve-ein:var(--kurve-bloom);
-    --kurve-aus:var(--kurve-bloom);
-    --dauer-hauch:120ms; --dauer-kurz:220ms; --dauer-mittel:280ms; --dauer-lang:400ms;
-    --weg:1.5rem; --staffel:40ms;
-  }
-  /* Laborschalter ‹reduziert›: dasselbe wie prefers-reduced-motion – Dauern auf
-     0 s, Übergänge aus wie in base.css. Startwert aus der Systemeinstellung (Skript). */
-  :root[data-bewegung="reduziert"]{--dauer-hauch:0s;--dauer-kurz:0s;--dauer-mittel:0s;--dauer-lang:0s;--staffel:0s}
-  :root[data-bewegung="reduziert"] *{transition:none!important}
+  /* Bewegung: alle Werte aus dem Fundament (tokens.css). Der Laborschalter
+     setzt data-bewegung am <html>; ‹reduziert› nullt die Tokens wie
+     prefers-reduced-motion, ‹normal› überstimmt die Systemeinstellung.
+     Startwert aus der Systemeinstellung (Skript). */
 
   .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
   .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
@@ -162,7 +151,7 @@
   <section class="hero">
     <span class="kicker">Labor · Bewegung</span>
     <h1>Bewegung in zehn Anwendungen</h1>
-    <p class="lede">Zwei Kurven, vier Dauern, ein Weg, eine Staffel – angewendet auf&nbsp;das, was täglich auf&nbsp;den Seiten steht.</p>
+    <p class="lede">Zwei Kurven, fünf Dauern, ein Weg, eine Staffel – angewendet auf&nbsp;das, was täglich auf&nbsp;den Seiten steht.</p>
   </section>
 
   <div class="laborleiste">
@@ -394,7 +383,7 @@
       <tbody>
         <tr><th scope="row">Kurve</th><td><code>--kurve-flaeche</code></td><td class="num">(.35,&nbsp;0,<wbr>&nbsp;.5,&nbsp;1)</td></tr>
         <tr><th scope="row">Auf</th><td><code>--dauer-lang</code></td><td class="num">400&nbsp;ms</td></tr>
-        <tr><th scope="row">Zu</th><td><code>--dauer-mittel</code></td><td class="num">280&nbsp;ms</td></tr>
+        <tr><th scope="row">Zu</th><td><code>--dauer-flaeche-zu</code></td><td class="num">280&nbsp;ms</td></tr>
         <tr><th scope="row">Staffel</th><td><code>--staffel</code></td><td class="num">40&nbsp;ms</td></tr>
       </tbody>
     </table>
@@ -655,7 +644,7 @@
   }
   function vfSchliessen(danach){
     var fertig = function(){ vfLauf = null; vf.close(); if (danach) danach(); else vfAuf.focus(); };
-    var z = dauer("--dauer-mittel");
+    var z = dauer("--dauer-flaeche-zu");
     if (!z || !kann) { fertig(); return; }
     if (vfLauf) vfLauf.cancel();
     vfLauf = vf.animate([{clipPath:OFFEN},{clipPath:ZU}], {duration:z, easing:kurve("--kurve-flaeche"), fill:"forwards"});

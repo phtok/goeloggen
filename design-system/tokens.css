@@ -209,7 +209,44 @@
   /* --- Schatten ---------------------------------------------------------- */
   --shadow-card:0 10px 30px rgba(20,24,28,.06);
 
+  /* --- Bewegung (Beschluss 31. Oktober 2026) -------------------------------
+     Zwei Kurven, fünf Dauern, ein Weg, eine Staffel – damit keine Seite ihre
+     eigene Bewegung erfindet. Quellen: das Klappmenü auf goetheanum.ch
+     (gemessen: Bloom-Kurve, ≈ 1,5 rem Weg, Vollbild-Menü), NN/g (100–500 ms;
+     Hauch ≈ 100, grosse Flächen höchstens 500). Regeln: eine Uhr für alle
+     Merkmale eines Vorgangs (Höhe, Deckkraft, Lage zusammen); Eintritt =
+     mittel, Austritt = kurz; kein Überschwingen. Herleitung:
+     docs/recherche_uebergaenge-lebendig.md, Anwendung: bewegung-anwendungen.html. */
+  --kurve-bloom:cubic-bezier(.32,.08,.24,1);   /* Standard: auf und zu kleiner Flächen (Akkordeon, Klappmenü, Feld) */
+  --kurve-flaeche:cubic-bezier(.35,0,.5,1);    /* Vollflächen und Schiebewege (Vollbild-Menü goetheanum.ch, Schublade) */
+  --kurve-ein:var(--kurve-bloom);              /* Eintritt – heute wie Bloom; eigene Kurve erst, wenn eine Prüfung sie braucht */
+  --kurve-aus:var(--kurve-bloom);              /* Austritt – heute wie Bloom (Carbon/M3 führen eine eigene, das Haus eine) */
+  --dauer-hauch:120ms;      /* Berührung, Fokus, Farbwechsel, Anwahl, Pfeil (NN/g ≈ 100) */
+  --dauer-kurz:220ms;       /* Austritt kleiner Flächen: zuklappen, verwelken, Meldung geht */
+  --dauer-mittel:280ms;     /* Eintritt kleiner Flächen: aufklappen, wachsen, erscheinen */
+  --dauer-lang:400ms;       /* Dank, Reiter, Vollfläche auf; Obergrenze 500 ms */
+  --dauer-flaeche-zu:280ms; /* Vollfläche zu – 220 wirkt bei einer ganzen Fläche abgerissen (Labor 31. 10. 2026) */
+  --weg:1.5rem;             /* Lage-Weg beim Aufblühen (≈ 24 px), wie das Klappmenü */
+  --staffel:40ms;           /* Versatz je Glied einer Reihe – Setzung, keine Quelle */
+
   color-scheme:light;
+}
+
+/* Weniger Bewegung (WCAG 2.3.3): alle Dauern und Versätze auf null, der Weg
+   entfällt – der Raum öffnet sich trotzdem, nur ohne Bewegung. Über Tokens statt
+   über !important: eine Seite mit Laborschalter setzt data-bewegung am <html>
+   (‹reduziert› nullt immer, ‹normal› ist die ausdrückliche Wahl des Lesers und
+   überstimmt die Systemeinstellung). Das Netz für noch nicht gehobene Literale
+   steht in base.css. */
+@media (prefers-reduced-motion:reduce){
+  :root:not([data-bewegung="normal"]){
+    --dauer-hauch:0s; --dauer-kurz:0s; --dauer-mittel:0s; --dauer-lang:0s;
+    --dauer-flaeche-zu:0s; --staffel:0s; --weg:0;
+  }
+}
+:root[data-bewegung="reduziert"]{
+  --dauer-hauch:0s; --dauer-kurz:0s; --dauer-mittel:0s; --dauer-lang:0s;
+  --dauer-flaeche-zu:0s; --staffel:0s; --weg:0;
 }
 
 /* =============================================================================

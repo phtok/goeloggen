@@ -1,6 +1,6 @@
 {
   "$schema": "https://goetheanum/design-system/contract.schema.json",
-  "version": "1.28.7",
+  "version": "1.29.0",
   "titel": "Goetheanum Design-System – Struktur-Vertrag",
   "zweck": "Maschinenlesbare Grundlage der GESTALT-Konformität (symmetrisch zum sprachlichen Kanon in assets/typografie/). ds-lint.py prüft jede Seite hiergegen, ds-fix.py korrigiert deterministisch, das Schaufenster bildet es ab. Eine Quelle der Wahrheit für Struktur; Werte/Farben/Schnitte bleiben in tokens.css/tokens.json.",
   "geltungsbereich": {
@@ -117,6 +117,14 @@
       "leer"
     ],
     "hinweis": "Treffer = Seite definiert .note/.hint/.lede/… selbst. ds-fix kann die lokale Regel entfernen, sobald base.css die Rolle trägt."
+  },
+  "bewegung": {
+    "ds_id": "DS04",
+    "regel": "Bewegung kommt aus den Tokens des Fundaments (tokens.css § Bewegung): Dauern über --dauer-hauch/-kurz/-mittel/-lang/-flaeche-zu, Kurven über --kurve-bloom/-flaeche/-ein/-aus, Versatz über --staffel, Weg über --weg. Feste ms-/s-Werte und cubic-bezier-Literale in transition/animation einer Seite sind eine Abweichung vom Fundament.",
+    "schwere": "hinweis",
+    "muster": "(?:transition|animation)(?:-duration|-delay|-timing-function)?\\s*:[^;}]*?(?:(?<![\\w.-])(?:0*[1-9]\\d*(?:\\.\\d+)?|0*\\.\\d*[1-9]\\d*)m?s\\b|cubic-bezier\\()",
+    "seit": "1.29.0",
+    "hinweis": "0s bleibt erlaubt (z. B. visibility 0s). Weniger Bewegung (WCAG 2.3.3) wirkt über die Tokens; was eine feste Dauer trägt, fängt nur das Netz in base.css. Skripte lesen die Tokens per getComputedStyle (Muster: design-system/akkordeon.js). Echte Ausnahme mit # ds-ok auf der Zeile ratifizieren."
   },
   "hervorhebung": {
     "ds_id": "DS05",

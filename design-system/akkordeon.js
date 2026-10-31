@@ -11,9 +11,19 @@
    Einbinden am Ende des <body> oder mit defer.
    ============================================================================= */
 (function(){
-  var KURVE = "cubic-bezier(.32,.08,.24,1)";
+  /* Kurve und Dauern kommen aus den Bewegungs-Tokens (tokens.css), gelesen am
+     Element – so folgt das Skript der Systemeinstellung, einem Laborschalter
+     (data-bewegung) und einer seitenweiten Umstimmung von --acc-* (auf --acc-dauer, zu --acc-dauer-zu). Fehlt das
+     Fundament, gelten die alten Werte samt eigener Abfrage. */
   var reduziert = window.matchMedia("(prefers-reduced-motion: reduce)");
-  function dauer(ms){ return reduziert.matches ? 0 : ms; }
+  function token(el, n){ return getComputedStyle(el).getPropertyValue(n).trim(); }
+  function dauer(el, n, ersatz){
+    var v = token(el, n);
+    if (!v) return reduziert.matches ? 0 : ersatz;
+    var z = parseFloat(v) || 0;
+    return /ms$/.test(v) ? z : z * 1000;
+  }
+  function kurve(el){ return token(el, "--acc-kurve") || "cubic-bezier(.32,.08,.24,1)"; }
 
   function oeffnen(d, sofort){
     var body = d.querySelector(".acc-body");
@@ -21,7 +31,7 @@
     if (!sofort && body.animate) {
       var h = body.scrollHeight;
       d.classList.add("anim");
-      var a = body.animate([{height:"0px",opacity:0},{height:h+"px",opacity:1}],{duration:dauer(280),easing:KURVE});
+      var a = body.animate([{height:"0px",opacity:0},{height:h+"px",opacity:1}],{duration:dauer(d, "--acc-dauer", 280),easing:kurve(d)});
       a.onfinish = a.oncancel = function(){ d.classList.remove("anim"); };
     }
     adresse(d);
@@ -34,7 +44,7 @@
     else {
       var h = body.offsetHeight;
       d.classList.add("anim");
-      var a = body.animate([{height:h+"px",opacity:1},{height:"0px",opacity:0}],{duration:dauer(220),easing:KURVE});
+      var a = body.animate([{height:h+"px",opacity:1},{height:"0px",opacity:0}],{duration:dauer(d, "--acc-dauer-zu", 220),easing:kurve(d)});
       a.onfinish = a.oncancel = function(){ d.open = false; d.classList.remove("anim"); };
     }
     // Schliesst sich die Antwort, auf die die Adresse zeigt, verliert die Adresse ihren Anker.

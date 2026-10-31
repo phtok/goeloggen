@@ -94,7 +94,7 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 .dsnav [data-tip]{position:relative}
 .dsnav [data-tip]::after{content:attr(data-tip);position:absolute;top:calc(100% + 7px);right:0;z-index:60;
   background:var(--ink);color:var(--paper);font-size:var(--t-micro);line-height:1;padding:5px 9px;border-radius:7px;
-  white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s ease .1s}
+  white-space:nowrap;opacity:0;pointer-events:none;transition:opacity var(--dauer-hauch) var(--kurve-bloom) .1s}
 .dsnav [data-tip]:hover::after,.dsnav [data-tip]:focus-visible::after{opacity:1}
 
 /* ☰ Burger – nur das Icon, keine Pille, kein Wort */
@@ -114,12 +114,12 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 
 /* --- Schublade ------------------------------------------------------------- */
 .dsnav-backdrop{position:fixed;inset:0;background:var(--scrim);opacity:0;visibility:hidden;
-  transition:opacity .18s,visibility .18s;z-index:45}
+  transition:opacity var(--dauer-kurz) var(--kurve-flaeche),visibility var(--dauer-kurz);z-index:45}
 .dsnav-backdrop.open{opacity:1;visibility:visible}
 
 .dsnav-drawer{position:fixed;top:0;right:0;z-index:46;width:min(420px,100%);height:100vh;
   background:var(--paper);border-left:1px solid var(--line);box-shadow:var(--shadow-card);
-  transform:translateX(100%);transition:transform .22s ease;display:flex;flex-direction:column}
+  transform:translateX(100%);transition:transform var(--dauer-kurz) var(--kurve-flaeche);display:flex;flex-direction:column}
 .dsnav-drawer.open{transform:none}
 
 .dsnav-drawer .dhead{display:flex;align-items:center;justify-content:space-between;
@@ -190,14 +190,14 @@ html.has-onpage{scroll-padding-top:calc(var(--header-h) + 46px)}
 /* Toast für den unsichtbaren Intern-Schalter */
 .dsnav-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);
   padding:8px 16px;border-radius:var(--r-pill);font-size:var(--t-micro);opacity:0;visibility:hidden;
-  transition:opacity .2s,visibility .2s;z-index:60}
+  transition:opacity var(--dauer-kurz) var(--kurve-bloom),visibility var(--dauer-kurz);z-index:60}
 .dsnav-toast.show{opacity:1;visibility:visible}
 
 .dsnav-group{border-bottom:1px solid var(--line-soft)}
 .dsnav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
   padding:var(--s4) 22px;font-weight:var(--w-deutlich);font-size:16px}
 .dsnav-group>summary::-webkit-details-marker{display:none}
-.dsnav-group>summary .arr{color:var(--muted);font-weight:var(--w-text);transition:transform .15s}
+.dsnav-group>summary .arr{color:var(--muted);font-weight:var(--w-text);transition:transform var(--dauer-hauch) var(--kurve-bloom)}
 .dsnav-group[open]>summary .arr{transform:rotate(90deg)}
 
 /* Unterwelten: eine Ebene tiefer verschachtelt (Labor → Ligaturen, Schriftpflege,

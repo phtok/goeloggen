@@ -188,7 +188,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
   font-weight:var(--w-deutlich);   /* B2: Goetheanum-Label <18px braucht Deutlich (Beier) */
   min-height:var(--tap);           /* B04: Fingerziel 44px auf ALLEN Breiten */
   padding:10px 16px;border-radius:var(--r-control);border:1px solid var(--line-control);color:var(--ink);   /* B02: Rand ≥3:1 */
-  background:var(--field-bg);text-align:center;cursor:pointer;transition:.15s}
+  background:var(--field-bg);text-align:center;cursor:pointer;transition:var(--dauer-hauch) var(--kurve-bloom)}
 .btn:hover{border-color:var(--blue)}
 .btn.primary{background:var(--blue-solid);border-color:var(--blue-solid);color:var(--on-accent);font-weight:var(--w-strong)}
 .btn.primary:hover{filter:brightness(1.08)}
@@ -218,7 +218,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
   font:inherit;font-size:var(--t-small);font-weight:var(--w-deutlich);line-height:var(--lh-tight);   /* B03: Label ≥15px */
   min-height:var(--tap);   /* B04: Fingerziel 44px auf ALLEN Breiten */
   padding:8px 15px;border:1px solid var(--line-control);border-radius:var(--r-pill);   /* B02: Rand ≥3:1 */
-  background:var(--field-bg);color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+  background:var(--field-bg);color:var(--ink);cursor:pointer;transition:border-color var(--dauer-hauch) var(--kurve-bloom),background var(--dauer-hauch) var(--kurve-bloom),color var(--dauer-hauch) var(--kurve-bloom)}
 .seg button:hover{border-color:var(--gold-ink)}
 .seg button[aria-pressed="true"]{background:var(--gold-deep);border-color:var(--gold-ink);color:var(--on-accent);font-weight:var(--w-strong)}
 
@@ -233,7 +233,7 @@ section{padding:var(--s8) 0;border-top:1px solid var(--line-soft)}
 .kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:var(--s3)}
 button.kachel{display:grid;gap:var(--s1);text-align:left;font:inherit;padding:var(--s4);min-height:var(--tap);
   border:1px solid var(--line-control);border-radius:var(--r-card);background:var(--field-bg);color:var(--ink);cursor:pointer;
-  transition:border-color .15s,background .15s,color .15s}
+  transition:border-color var(--dauer-hauch) var(--kurve-bloom),background var(--dauer-hauch) var(--kurve-bloom),color var(--dauer-hauch) var(--kurve-bloom)}
 button.kachel:hover{border-color:var(--gold-ink)}
 button.kachel .k-name{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);line-height:var(--lh-tight)}
 button.kachel .k-kurz{font-family:var(--font-text);font-size:var(--t-small);line-height:var(--lh-min);color:var(--muted)}
@@ -259,7 +259,7 @@ input,select,textarea,optgroup,option{font-family:var(--font-text)}
 .field input,.field textarea,.field select{
   width:100%;font-family:var(--font-text);font-size:16px;font-weight:400;line-height:1.3;color:var(--ink);
   background:var(--field-bg);border:1px solid var(--line-control);border-radius:var(--r-control);padding:11px 12px;outline:none;   /* B02 */
-  transition:border-color .15s,box-shadow .15s;
+  transition:border-color var(--dauer-hauch) var(--kurve-bloom),box-shadow var(--dauer-hauch) var(--kurve-bloom);
 }
 /* Eingaben in der Lese-Grotesk (Source Sans 3): lesbarer als die Display-Schrift. */
 .field select option{font-family:var(--font-text);font-size:16px}
@@ -435,10 +435,16 @@ img,svg,canvas,video{max-width:100%}
   .ds-footer .frow{gap:var(--s3)}
 }
 
-/* Bewegung reduzieren (WCAG 2.3.3): auf Wunsch Übergänge und weiches Scrollen
-   global aus. Seiten-eigene Bewegungen (Karussell, .tile-Hover) ziehen nach. */
+/* Bewegung reduzieren (WCAG 2.3.3). Der Hauptweg sind die Tokens: tokens.css
+   setzt unter prefers-reduced-motion alle --dauer-* und --staffel auf 0 s und
+   --weg auf 0 – was über die Tokens läuft, steht dann still. Dieses Netz fängt
+   die Seiten, die noch feste Dauern tragen (DS04-Hinweis ‹Bewegung›), und
+   schaltet dort Übergänge hart aus. Eine Seite mit Laborschalter
+   (data-bewegung am <html>) läuft ganz über Tokens; für sie gilt das Netz
+   nicht, damit ihr Schalter die Systemeinstellung überstimmen kann. */
 @media(prefers-reduced-motion:reduce){
-  *{transition:none!important;scroll-behavior:auto!important}
+  *{scroll-behavior:auto!important}
+  :root:not([data-bewegung]) *{transition:none!important}
 }
 
 /* Block C – Lesemodus (opt-in, Kopfzeilen-Schalter, Zustand data-read="easy"):

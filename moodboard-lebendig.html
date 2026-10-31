@@ -14,10 +14,8 @@
 
 <style>
   /* Bewegung: Bloom-Kurve und Dauer «auf» kommen aus akkordeon.css
-     (--acc-kurve, --acc-dauer); die übrigen Werte sind der Vorschlag der
-     letzten Tafel (docs/recherche_uebergaenge-lebendig.md), hier nur seitenweit. */
-  :root{--mb-zu:.22s;--mb-verzug:40ms;--mb-lang:.4s;--mb-kurve-flaeche:cubic-bezier(.35,0,.5,1)}
-  @media(prefers-reduced-motion:reduce){:root{--mb-zu:0s;--mb-verzug:0ms;--mb-lang:0s}}
+     (--acc-kurve, --acc-dauer), alles Übrige aus den Bewegungs-Tokens des
+     Fundaments (tokens.css), samt Nullung bei weniger Bewegung. */
 
   .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
   .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
@@ -70,13 +68,13 @@
   /* --- 4 · Reduktion: Glieder verwelken, eines bleibt ------------------------ */
   .welk{list-style:none;margin:0;padding:0;display:grid}
   .welk li{display:grid;grid-template-rows:1fr;opacity:1;visibility:visible;
-    transition:grid-template-rows var(--acc-dauer) var(--acc-kurve) calc(var(--i) * var(--mb-verzug)),
-               opacity var(--acc-dauer) var(--acc-kurve) calc(var(--i) * var(--mb-verzug)),
-               visibility var(--acc-dauer) linear calc(var(--i) * var(--mb-verzug))}
+    transition:grid-template-rows var(--acc-dauer) var(--acc-kurve) calc(var(--i) * var(--staffel)),
+               opacity var(--acc-dauer) var(--acc-kurve) calc(var(--i) * var(--staffel)),
+               visibility var(--acc-dauer) linear calc(var(--i) * var(--staffel))}
   .welk li>span{overflow:hidden;min-height:0}
   .welk li>span>span{display:block;padding:var(--s2) 0;border-bottom:1px solid var(--line-soft);font-size:var(--t-body)}
   .welk.welkt li:not(.bleibt){grid-template-rows:0fr;opacity:0;visibility:hidden;
-    transition-duration:var(--mb-zu);transition-delay:calc((5 - var(--i)) * var(--mb-verzug))}
+    transition-duration:var(--dauer-kurz);transition-delay:calc((5 - var(--i)) * var(--staffel))}
   .welk .bleibt>span>span{font-weight:var(--w-strong);border-bottom:0}
   .reduktion .platte{grid-template-columns:auto auto;align-items:center;gap:var(--s8)}
   .reduktion .wortmarke{width:min(100%,220px)}
@@ -85,11 +83,11 @@
   /* --- 5 · Übergang: Papier → Hauch → Band → Fläche ---------------------------- */
   .feld{position:relative;overflow:hidden;border-radius:var(--r-card);min-height:11rem;
     border:1px solid var(--line-soft);background:var(--paper);display:flex;align-items:flex-end;
-    transition:background var(--mb-lang) var(--mb-kurve-flaeche)}
+    transition:background var(--dauer-lang) var(--kurve-flaeche)}
   .feld .schicht{position:absolute;inset:0 0 auto 0;height:0;background:var(--ton-dunkel);
-    transition:height var(--mb-lang) var(--mb-kurve-flaeche)}
+    transition:height var(--dauer-lang) var(--kurve-flaeche)}
   .feld p{position:relative;padding:var(--s5);font-family:var(--font-display);font-weight:var(--w-deutlich);
-    font-size:var(--t-h3);color:var(--ink);transition:color var(--mb-lang) var(--mb-kurve-flaeche)}
+    font-size:var(--t-h3);color:var(--ink);transition:color var(--dauer-lang) var(--kurve-flaeche)}
   .feld[data-stufe="hauch"],.feld[data-stufe="band"]{background:var(--ton-hell)}
   .feld[data-stufe="band"] .schicht{height:34%}
   .feld[data-stufe="flaeche"]{background:var(--ton-dunkel)}
@@ -114,7 +112,7 @@
   .farbe{display:flex;gap:var(--s2);margin-top:var(--s3)}
   .farbe i{width:3rem;height:3rem;border-radius:var(--r-pill);border:1px solid var(--line-soft)}
 
-  /* --- 7 · Vorschlag ------------------------------------------------------------ */
+  /* --- 7 · Fundament ------------------------------------------------------------ */
   .vorschlag table{width:100%;max-width:780px;margin-top:var(--s6);font-size:var(--t-small)}
   .vorschlag code{font-family:var(--font-mono);font-size:var(--t-small)}
   .vorschlag td{vertical-align:top}
@@ -287,7 +285,7 @@
 
   <!-- 7 · Was wir daraus machen -->
   <section class="tafel vorschlag" id="vorschlag" aria-labelledby="h-vorschlag">
-    <span class="kicker">Vorschlag, nicht eingebaut</span>
+    <span class="kicker">Fundament</span>
     <h2 id="h-vorschlag">Was wir daraus machen</h2>
     <p class="satz">Bewegungs-Tokens im Fundament, damit die nächste Seite keine eigene Bewegung erfindet.</p>
     <div class="tabelle">
@@ -300,6 +298,7 @@
           <tr><td><code>--dauer-kurz</code><span class="wofuer">Austritt: schliessen, verwelken</span></td><td class="num">220&nbsp;ms</td></tr>
           <tr><td><code>--dauer-mittel</code><span class="wofuer">Eintritt: öffnen, wachsen, erscheinen</span></td><td class="num">280&nbsp;ms</td></tr>
           <tr><td><code>--dauer-lang</code><span class="wofuer">Dank, grosse Flächen; höchstens 500&nbsp;ms</span></td><td class="num">400&nbsp;ms</td></tr>
+          <tr><td><code>--dauer-flaeche-zu</code><span class="wofuer">Vollfläche schliessen</span></td><td class="num">280&nbsp;ms</td></tr>
           <tr><td><code>--weg</code><span class="wofuer">Lage-Weg beim Aufblühen</span></td><td class="num">1.5&nbsp;rem</td></tr>
           <tr><td><code>--staffel</code><span class="wofuer">Versatz je Glied einer Reihe</span></td><td class="num">40&nbsp;ms</td></tr>
           <tr><td>weniger Bewegung<span class="wofuer">alle Dauern und Versätze</span></td><td class="num">0&nbsp;s</td></tr>
@@ -320,9 +319,11 @@
 <script src="design-system/akkordeon.js"></script>
 <script>
 (function(){
-  var KURVE = "cubic-bezier(.32,.08,.24,1)", AUF = 280, ZU = 220, VERZUG = 40;
-  var reduziert = window.matchMedia("(prefers-reduced-motion: reduce)");
-  function dauer(ms){ return reduziert.matches ? 0 : ms; }
+  /* Kurve und Dauern aus den Bewegungs-Tokens des Fundaments (tokens.css). */
+  function wert(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+  function dauer(n){ var v = wert(n), z = parseFloat(v) || 0; return /ms$/.test(v) ? z : z * 1000; }
+  var KURVE = wert("--kurve-bloom") || "ease";
+  function hoch(){ return "translateY(calc(-1 * " + (wert("--weg") || "0px") + "))"; }
 
   /* Die Marke (Pfade aus assets/logos/goetheanum-mark-blue.svg), siebenmal. */
   var MARKE = '<svg viewBox="0 0 16 21.1"><g fill="currentColor">' +
@@ -333,16 +334,16 @@
   var reihe = document.querySelector("[data-reihe]");
   reihe.innerHTML = new Array(8).join(MARKE);
 
-  /* Eine Reihe tritt ein: jedes Glied mit derselben Kurve, um VERZUG versetzt. */
+  /* Eine Reihe tritt ein: jedes Glied mit derselben Kurve, um --staffel versetzt. */
   function eintreten(glieder, von){
     [].forEach.call(glieder, function(el, i){
       if (!el.animate) return;
       el.animate([von, {transform:"none", opacity:1}],
-        {duration:dauer(AUF), delay:dauer(i * VERZUG), easing:KURVE, fill:"backwards"});
+        {duration:dauer("--dauer-mittel"), delay:i * dauer("--staffel"), easing:KURVE, fill:"backwards"});
     });
   }
   var spiele = {
-    wiederholung: function(){ eintreten(reihe.children, {transform:"translateY(-1.5rem)", opacity:0}); },
+    wiederholung: function(){ eintreten(reihe.children, {transform:hoch(), opacity:0}); },
     steigerung: function(){ eintreten(document.querySelector("[data-stufen]").children, {transform:"scaleY(0)", opacity:0}); }
   };
   document.querySelectorAll("[data-spiel]").forEach(function(b){
@@ -369,11 +370,11 @@
     kb.textContent = auf ? "Schliessen" : "Öffnen";
     if (auf) kelch.hidden = false;
     if (!kelch.animate) { kelch.hidden = !auf; return; }
-    var h = kelch.scrollHeight; laeuft = true;
+    var h = kelch.scrollHeight, weg = hoch(); laeuft = true;
     var a = kelch.animate(auf
-      ? [{height:"0px", opacity:0, transform:"translateY(-1.5rem)"}, {height:h + "px", opacity:1, transform:"none"}]
-      : [{height:h + "px", opacity:1, transform:"none"}, {height:"0px", opacity:0, transform:"translateY(-1.5rem)"}],
-      {duration:dauer(auf ? AUF : ZU), easing:KURVE});
+      ? [{height:"0px", opacity:0, transform:weg}, {height:h + "px", opacity:1, transform:"none"}]
+      : [{height:h + "px", opacity:1, transform:"none"}, {height:"0px", opacity:0, transform:weg}],
+      {duration:dauer(auf ? "--dauer-mittel" : "--dauer-kurz"), easing:KURVE});
     a.onfinish = a.oncancel = function(){ laeuft = false; if (!auf) kelch.hidden = true; };
   });
 
