@@ -15,16 +15,17 @@
     "1000": { id: "landstrasse",  absaetze: function (t) { return t.absaetze; },      titel: true }
   };
   var SCHNITT = { ruhig: ["Ruhig", "var(--w-ruhig)"], klar: ["Klar", "var(--w-klar)"], deutlich: ["Deutlich", "var(--w-deutlich)"] };
-  var WAHL = { laenge: "absatz", grad: "haus", mass: "70", schnitt: "klar", grund: null };
+  var GEGEN = { source: "Source Sans 3", "noto-sans": "Noto Sans", "noto-serif": "Noto Serif" };
+  var WAHL = { gegen: "source", laenge: "absatz", grad: "haus", mass: "70", schnitt: "klar", grund: null };
   var GUELTIG = {
-    laenge: Object.keys(LAENGE), grad: ["14", "16", "18", "20", "24", "haus"],
+    gegen: Object.keys(GEGEN), laenge: Object.keys(LAENGE), grad: ["14", "16", "18", "20", "24", "haus"],
     mass: ["70", "haus"], schnitt: Object.keys(SCHNITT), grund: ["light", "dark"]
   };
 
   var html = document.documentElement;
   WAHL.grund = html.getAttribute("data-theme") === "dark" ? "dark" : "light";
   var q = new URLSearchParams(location.search);
-  ["laenge", "grad", "mass", "schnitt"].forEach(function (k) {
+  ["gegen", "laenge", "grad", "mass", "schnitt"].forEach(function (k) {
     var v = q.get(k); if (v && GUELTIG[k].indexOf(v) >= 0) WAHL[k] = v;
   });
 
@@ -45,6 +46,7 @@
   function setzen(spalten, grad) {
     var g = spalten.querySelector('[data-probe="g"]');
     g.style.fontWeight = SCHNITT[WAHL.schnitt][1];
+    spalten.querySelector('[data-probe="s"]').setAttribute("data-gegen", WAHL.gegen);
     spalten.querySelectorAll(".probe").forEach(function (el) { el.style.fontSize = grad; });
     spalten.setAttribute("data-mass", WAHL.mass);
   }
@@ -88,7 +90,7 @@
     [9, 10, 11, 12].forEach(function (pt) {
       var block = document.createElement("div"); block.className = "druck-block";
       var h = document.createElement("h2");
-      h.textContent = pt + " pt · Goetheanum " + SCHNITT[WAHL.schnitt][0] + " | Source Sans 3";
+      h.textContent = pt + " pt · Goetheanum " + SCHNITT[WAHL.schnitt][0] + " | " + GEGEN[WAHL.gegen];
       block.appendChild(h);
       var kopie = paar.cloneNode(true);
       kopie.removeAttribute("id");
@@ -106,6 +108,7 @@
     paar.querySelectorAll(".probe").forEach(function (el) { fuellen(el, text, L.titel); });
     setzen(paar, WAHL.grad === "haus" ? "var(--t-body)" : WAHL.grad + "px");
     document.querySelector("[data-schnitt-name]").textContent = SCHNITT[WAHL.schnitt][0];
+    document.querySelector("[data-gegen-name]").textContent = GEGEN[WAHL.gegen];
     document.getElementById("quelle").textContent = text.quelle;
     druckBauen(text, L.titel);
 
@@ -115,7 +118,7 @@
         b.setAttribute("aria-pressed", String(b.getAttribute("data-wert") === WAHL[k]));
       });
     });
-    var neu = new URLSearchParams({ laenge: WAHL.laenge, grad: WAHL.grad, mass: WAHL.mass, schnitt: WAHL.schnitt });
+    var neu = new URLSearchParams({ gegen: WAHL.gegen, laenge: WAHL.laenge, grad: WAHL.grad, mass: WAHL.mass, schnitt: WAHL.schnitt });
     try { history.replaceState(null, "", "?" + neu.toString()); } catch (e) {}
     requestAnimationFrame(ablesen);
   }

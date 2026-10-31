@@ -2,6 +2,15 @@
    Beide Spalten gleich gesetzt wie im Lesetest (apps/lesetest/lesetest.css):
    Zeilenhöhe --lh-body, Laufweite wie body, Klar 440 ↔ Source 400,
    x-Höhe gleich über size-adjust (tokens.css). */
+
+/* Vergleich Noto (OFL, assets/fonts/vergleich/): nur auf dieser Seite.
+   x-Höhe 536 → Goetheanum 500: size-adjust 93.3 %; Zeilenbox wie im Haus. */
+@font-face{font-family:"Noto Sans Vergleich";font-weight:400;font-style:normal;font-display:swap;
+  size-adjust:93.3%;ascent-override:75%;descent-override:25%;line-gap-override:0%;
+  src:url("../../assets/fonts/vergleich/NotoSans-Regular-latin.woff2") format("woff2")}
+@font-face{font-family:"Noto Serif Vergleich";font-weight:400;font-style:normal;font-display:swap;
+  size-adjust:93.3%;ascent-override:75%;descent-override:25%;line-gap-override:0%;
+  src:url("../../assets/fonts/vergleich/NotoSerif-Regular-latin.woff2") format("woff2")}
 .kopf{padding-block:clamp(32px,6vw,56px) var(--s6)}
 .kopf h1{font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,48px);line-height:var(--lh-tight);text-wrap:balance}
 
@@ -19,14 +28,17 @@
 
 .probe{line-height:var(--lh-body);text-wrap:pretty;hyphens:auto}
 .probe.schrift-g{font-family:var(--font-display);font-weight:var(--w-klar)}
-.probe.schrift-s{font-family:var(--font-text);font-weight:400}
+.probe.schrift-s{font-family:var(--font-text);font-weight:400;--je-zeichen:.451em}
+.probe.schrift-s[data-gegen="noto-sans"]{font-family:"Noto Sans Vergleich",var(--font-text);--je-zeichen:.464em}
+.probe.schrift-s[data-gegen="noto-serif"]{font-family:"Noto Serif Vergleich",var(--font-text);--je-zeichen:.473em}
 .probe .probe-titel{font:inherit;font-weight:inherit;font-size:1.3em;line-height:var(--lh-tight);letter-spacing:0;margin-bottom:var(--s4);text-wrap:balance}
 .probe p{margin-bottom:.8em}
 .probe p:last-child{margin-bottom:0}
 /* Mass: gleiche Zeichenzahl (70) – in em, weil ch die breite Null der
-   Hausschrift misst: Klar 0.415 em, Source 0.451 em je Zeichen (Lesetest). */
+   Hausschrift misst. Je Zeichen über alle acht Texte gemessen: Klar 0.415 em,
+   Source 0.451, Noto Sans 0.464, Noto Serif 0.473 em. */
 .paar[data-mass="70"] .schrift-g{max-width:min(29em,100%)}
-.paar[data-mass="70"] .schrift-s{max-width:min(31.5em,100%)}
+.paar[data-mass="70"] .schrift-s{max-width:min(calc(70 * var(--je-zeichen)),100%)}
 .paar[data-mass="haus"] .probe{max-width:min(var(--measure),100%)}
 
 .quelle{padding-bottom:var(--s8)}
