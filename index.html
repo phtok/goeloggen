@@ -40,6 +40,11 @@
   .gruppen .gk{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-h2);line-height:1.15;margin:0 0 var(--s5);color:var(--ink)}
   .gruppen .grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
   @media (max-width:420px){.gruppen .grid{grid-template-columns:1fr}}
+  /* Treibhaus (nur Backstage): was noch wächst, nach Beeten. Beet-Titel als
+     Kicker-Zeile (normal, nicht versal – G05), Karten darunter, kein Beiwerk (G03). */
+  .treibhaus .unter{margin:calc(-1 * var(--s3)) 0 var(--s6);font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .treibhaus .beet+.beet{margin-top:var(--s7)}
+  .treibhaus .beet-titel{display:block;margin:0 0 var(--s4);font-size:var(--t-small);text-wrap:balance}
   /* Feature (tools.json → gruppen.feature): ein Werkzeug gross vorn. Dieselbe
      Karte, nur in der Fläche – Bild und Text nebeneinander, Titel eine Stufe
      grösser, Satz als Lede (eigene Strukturebene, G01-Ausnahme). Kicker
@@ -289,7 +294,7 @@
     tools.sort(function(a,b){ return rank(a) - rank(b); });
     var grid = document.getElementById("cards");
     var G = man.gruppen && man.gruppen.startseite;
-    if (!G || !G.length) { tools.forEach(function(t){ grid.appendChild(tile(t)); }); return; }
+    if (!G || !G.length) { tools.forEach(function(t){ grid.appendChild(tile(t)); }); return treibhaus(man); }
     // Gruppen nach Anlass: Zugehörigkeit aus tools.json → gruppen, Folge innerhalb
     // der Gruppe aus der Reihenfolge oben. Nicht Zugeordnetes läuft in die letzte Gruppe.
     grid.className = "gruppen";
@@ -319,6 +324,35 @@
       g.tools.forEach(function(t){ box.appendChild(tile(t)); });
       sec.appendChild(box); grid.appendChild(sec);
     });
+    treibhaus(man);
+  }
+  // Treibhaus – nur in der Backstage-Ansicht (nav.js: goeIntern). Die Beete kommen
+  // aus tools.json → welten.intern (Unterwelten mit beet), eine Quelle mit der Schublade.
+  function treibhaus(man){
+    var alt = document.getElementById("treibhaus");
+    if (alt) alt.parentNode.removeChild(alt);
+    if (!(window.goeIntern && window.goeIntern())) return;
+    var cat = (man.categories || []).filter(function(c){ return c.id === "treibhaus"; })[0] || { title: "Treibhaus" };
+    var welt = ((man.welten && man.welten.intern) || []).filter(function(w){ return w.id === "treibhaus"; })[0] || {};
+    var alle = (man.tools || []).filter(function(t){ return t.cat === "treibhaus"; });
+    var beete = (welt.sub || []).filter(function(b){ return b.beet; })
+      .map(function(b){ return { titel: b.label, tools: alle.filter(function(t){ return t.beet === b.beet; }) }; });
+    var rest = alle.filter(function(t){ return !beete.some(function(b){ return b.tools.indexOf(t) >= 0; }); });
+    if (rest.length) beete.push({ titel: "Weiteres", tools: rest });
+    if (!alle.length) return;
+    var sec = document.createElement("section");
+    sec.id = "treibhaus"; sec.className = "treibhaus";
+    sec.innerHTML = '<h2 class="gk">' + esc(cat.title) + '</h2>' +
+      (cat.intro ? '<p class="unter">' + esc(cat.intro) + '</p>' : '');
+    beete.forEach(function(b){
+      if (!b.tools.length) return;
+      var d = document.createElement("div"); d.className = "beet";
+      d.innerHTML = '<h3 class="kicker beet-titel">' + esc(b.titel) + '</h3>';
+      var box = document.createElement("div"); box.className = "grid";
+      b.tools.forEach(function(t){ box.appendChild(tile(t)); });
+      d.appendChild(box); sec.appendChild(d);
+    });
+    document.getElementById("cards").appendChild(sec);
   }
   // Ordnen-Modus (?ordnen): dieselbe Seite, dazu die Sortier-Griffe (assets/ordnen.js).
   var ORDNEN = /[?&]ordnen\b/.test(location.search);
@@ -331,7 +365,11 @@
   }
   // no-cache: beim Server nachfragen (ETag), sonst zeigt der Browser bis zu zehn
   // Minuten den alten Stand – eine Sortierer-Speicherung schiene nicht zu greifen.
-  fetch("tools.json", { cache: "no-cache" }).then(function(r){ return r.json(); }).then(start).catch(function(){
+  fetch("tools.json", { cache: "no-cache" }).then(function(r){ return r.json(); }).then(function(man){
+    start(man);
+    // Backstage an/aus (nav.js) blendet das Treibhaus ohne Neuladen ein und aus.
+    if (!ORDNEN) window.addEventListener("goe:intern", function(){ treibhaus(man); });
+  }).catch(function(){
     document.getElementById("cards").innerHTML = '<p class="meta">Werkzeugliste konnte nicht geladen werden.</p>';
   });
 })();

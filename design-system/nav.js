@@ -145,22 +145,25 @@
       intro: "Fertige Vorlagen zum Übernehmen – Wallpaper, Präsentationen.", cats: ["anwendung"] }
   ];
   // Nur intern zusätzlich – die Backstage-Welten. Kuratierte Reihenfolge: erst die
-  // Redaktions- und Beobachtungs-Welten, dann das Labor als Sammelort für Erprobung
-  // und Abgelegtes. Das Labor trägt Unterwelten (verschachtelte Kisten) – die
-  // Etiketten je Werkzeug (Beta/Entwurf/intern/geparkt) sagen ohnehin, was
-  // öffentlich ist. Manifest-Kategorien, die hier fehlen, laufen beim Laden
-  // automatisch als eigene Welt nach (Sicherheitsnetz).
+  // Redaktions- und Beobachtungs-Welten, dann das Treibhaus (was noch wächst), dann
+  // Schau, Geparktes und Überreste. Das Treibhaus gliedert sich in Beete: Unterwelten
+  // mit demselben cat, die nur Werkzeuge mit passendem beet-Feld zeigen. Manifest-
+  // Kategorien, die hier fehlen, laufen beim Laden automatisch als eigene Welt nach
+  // (Sicherheitsnetz).
   var INTERN_EXTRA = [
     { id: "kistenpflege", label: "Kistenpflege", intro: "Die Werkzeuge selbst pflegen – Stats, Sortierer, Post.", cats: ["kistenpflege"] },
     { id: "kampagne", label: "Kampagne", intro: "Kampagnen planen, verlinken, mailen, zählen.", cats: ["kampagne"] },
+    { id: "treibhaus", label: "Treibhaus", intro: "Wächst noch – nicht fürs Freie.",
+      cats: ["treibhaus"], sub: [
+        { id: "schriftentwicklung", label: "Schriftentwicklung", cats: ["treibhaus"], beet: "schrift" },
+        { id: "farbe", label: "Farbe", cats: ["treibhaus"], beet: "farbe" },
+        { id: "bewegung", label: "Bewegung", cats: ["treibhaus"], beet: "bewegung" },
+        { id: "konzepte", label: "Konzepte", cats: ["treibhaus"], beet: "konzepte" },
+        { id: "experimente", label: "Experimente", cats: ["treibhaus"], beet: "experimente" }
+    ] },
     { id: "schau", label: "Schau & Mockups", intro: "Präsentations-Mockups und Studien.", cats: ["schau"] },
-    { id: "labor", label: "Labor", intro: "Erprobung und Abgelegtes – zum Ausprobieren, mit verschachtelten Kisten.",
-      cats: ["labor"], sub: [
-        { id: "ligaturen", label: "Ligaturen", intro: "Die Kiste nur für die Ligaturen.", cats: ["ligaturen"] },
-        { id: "schriftpflege", label: "Schriftpflege", intro: "Grotesk, Gewichte und Mischsatz prüfen.", cats: ["schriftpflege"] },
-        { id: "geparkt", label: "Geparktes", intro: "Konzepte, die später kommen.", cats: ["geparkt"] },
-        { id: "archiv", label: "Überreste", intro: "Frühere Stände, eingefroren.", cats: ["archiv"] }
-    ] }
+    { id: "geparkt", label: "Geparktes", intro: "Konzepte, die später kommen.", cats: ["geparkt"] },
+    { id: "archiv", label: "Überreste", intro: "Frühere Stände, eingefroren.", cats: ["archiv"] }
   ];
   var PUBLIC_IDS = WORLDS.map(function (w) { return w.id; });
 
@@ -458,8 +461,8 @@
   function bySlug(slug) { return ALL.filter(function (t) { return t.slug === slug; })[0]; }
 
   // Kategorie der aktiven Seite – so öffnet sich ihre Welt (und Unterwelt).
-  function currentCat() {
-    for (var i = 0; i < ALL.length; i++) { if (isActiveTool(ALL[i])) return ALL[i].cat; }
+  function currentTool() {
+    for (var i = 0; i < ALL.length; i++) { if (isActiveTool(ALL[i])) return ALL[i]; }
     return null;
   }
 
@@ -481,22 +484,28 @@
     return a;
   }
 
+  // Gehört ein Werkzeug in diese Welt? cat passt, und trägt die Welt ein beet
+  // (Beet im Treibhaus), muss auch das beet des Werkzeugs passen.
+  function inWorld(w, t) {
+    return (w.cats || []).indexOf(t.cat) !== -1 && (!w.beet || t.beet === w.beet);
+  }
   // Eine Welt als aufklappbarer Bereich. Unterwelten verschachteln sich als eigene
-  // Bereiche darunter (Labor → Ligaturen, Schriftpflege, Geparktes, Überreste).
-  // Leere Welten (kein Werkzeug, keine gefüllte Unterwelt) entfallen. curCat =
-  // Kategorie der aktiven Seite: ihre Welt und Unterwelt stehen offen.
-  function worldGroupEl(w, curCat) {
+  // Bereiche darunter (Treibhaus → Schriftentwicklung, Farbe, Bewegung …).
+  // Was eine Unterwelt aufnimmt, steht nur dort, nicht noch einmal in der Welt.
+  // Leere Welten (kein Werkzeug, keine gefüllte Unterwelt) entfallen. cur =
+  // Werkzeug der aktiven Seite: seine Welt und Unterwelt stehen offen.
+  function worldGroupEl(w, cur) {
     var tools = ALL.filter(function (t) {
-      return (w.cats || []).indexOf(t.cat) !== -1;
+      return inWorld(w, t) && !(w.sub || []).some(function (s) { return inWorld(s, t); });
     });
     // Auch intern in Sortierer-Reihenfolge (reihenfolge.schublade); Unbekannte ans Ende.
     tools.sort(function (a, b) { return flatRank(a) - flatRank(b); });
-    var subs = (w.sub || []).map(function (s) { return worldGroupEl(s, curCat); })
+    var subs = (w.sub || []).map(function (s) { return worldGroupEl(s, cur); })
                             .filter(function (n) { return n; });
     if (!tools.length && !subs.length) return null;
     var g = el("details", "dsnav-group");
     g.setAttribute("data-world", w.id);
-    g.open = catsOf(w).indexOf(curCat) !== -1;
+    g.open = !!cur && catsOf(w).indexOf(cur.cat) !== -1 && (!w.beet || cur.beet === w.beet);
     // Das Menü koordiniert, es erklärt nicht: nur Titel, kein Beiwerk-Text.
     g.appendChild(el("summary", null,
       '<span class="ttl">' + w.label + '</span><span class="arr">›</span>'));
@@ -540,10 +549,10 @@
       pub.forEach(function (t) { drawerBody.appendChild(linkEl(t)); });
     } else {
       // intern: nach Backstage-Welten gruppiert; Unterwelten verschachteln sich
-      // (Labor). Kistenpflege bündelt Stats · Sortierer · Post.
-      var curCat = currentCat();
+      // (Treibhaus). Kistenpflege bündelt Stats · Sortierer · Post.
+      var cur = currentTool();
       WORLDS.concat(INTERN_EXTRA).forEach(function (w) {
-        var node = worldGroupEl(w, curCat);
+        var node = worldGroupEl(w, cur);
         if (node) drawerBody.appendChild(node);
       });
     }

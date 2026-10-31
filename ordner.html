@@ -128,7 +128,8 @@
     var out = [];
     function walk(list, praefix){
       (list||[]).forEach(function(w){
-        out.push({ id:w.id, cat:(w.cats&&w.cats[0])||w.id, label:(praefix?praefix+" › ":"")+w.label });
+        // Beete (Unterwelten mit beet) teilen den cat ihrer Welt – als Ziel gilt die Welt.
+        if(!w.beet) out.push({ id:w.id, cat:(w.cats&&w.cats[0])||w.id, label:(praefix?praefix+" › ":"")+w.label });
         if(w.sub) walk(w.sub, w.label);
       });
     }
@@ -149,7 +150,7 @@
       rohText = txt; quelle = JSON.parse(txt);
       (quelle.tools||[]).forEach(function(t){
         if(!t.slug) return;
-        toolInfo[t.slug] = { title: t.title || t.short || t.slug, status: t.status || "" };
+        toolInfo[t.slug] = { title: t.title || t.short || t.slug, status: t.status || "", beet: t.beet || "" };
         toolCat[t.slug] = t.cat || "";
         catOriginal[t.slug] = t.cat || "";
       });
@@ -165,9 +166,15 @@
   }
   function clone(x){ return JSON.parse(JSON.stringify(x)); }
 
+  // cat passt; ein Beet nimmt nur Werkzeuge mit seinem beet, und was ein Beet
+  // aufnimmt, steht nicht noch einmal in der Welt darüber.
+  function passt(w, s){
+    return (w.cats||[]).indexOf(toolCat[s])>=0 && (!w.beet || toolInfo[s].beet===w.beet);
+  }
   function toolsInWelt(w){
-    var cats = w.cats || [];
-    return Object.keys(toolCat).filter(function(s){ return cats.indexOf(toolCat[s])>=0; })
+    return Object.keys(toolCat).filter(function(s){
+        return passt(w, s) && !(w.sub||[]).some(function(b){ return passt(b, s); });
+      })
       .sort(function(a,b){ return (toolInfo[a].title||a).localeCompare(toolInfo[b].title||b, "de"); });
   }
 

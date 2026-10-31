@@ -16,6 +16,34 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 31. Oktober 2026 — Treibhaus statt Labor (Version des Systems unverändert)
+
+**Beschluss des Auftraggebers.** Das Labor heisst ‹Treibhaus›: dort wächst,
+was noch nicht ins Freie darf; was trägt, wird ins Fundament ausgepflanzt.
+Fundament (`tokens.css`/`base.css`) unverändert, darum kein Versionssprung.
+
+**Was.** Kategorie `labor` → `treibhaus` (‹Wächst noch – nicht fürs Freie.›).
+Unterkategorien als Feld `beet` je Werkzeug; die Beete stehen in
+`tools.json` → `welten.intern` als Unterwelten mit `beet` (eine Quelle für
+Schublade, Startseite im Backstage, internen Hub `start/` und Ordner-Editor).
+Die Kategorien `ligaturen` und `schriftpflege` gehen im Beet
+Schriftentwicklung auf; Geparktes und Überreste stehen nicht mehr im
+Treibhaus, sondern als eigene Backstage-Welten danach.
+
+| Werkzeug | vorher | nachher |
+|---|---|---|
+| guillemets, schrift-vergleich, tester, werkzeug | schriftpflege | treibhaus · Schriftentwicklung |
+| ligvorschau, ineinander, kerning | ligaturen | treibhaus · Schriftentwicklung |
+| sektionsfarben-modell, -achsen, -goethe, -goethe-varianten | labor | treibhaus · Farbe |
+| stilprobe-warm | schau | treibhaus · Farbe |
+| moodboard-lebendig, bewegung-anwendungen, bewegte-schrift | labor | treibhaus · Bewegung |
+| prinzipien, marketing-maschine, navigations-architektur | labor | treibhaus · Konzepte |
+| spenden-formular, campusplan, seelenkalender | labor | treibhaus · Experimente |
+| schmiede, schmiede-eingang, folder-archiv | labor | kistenpflege |
+
+Belassen: Kampagne, Kistenpflege, Schau & Mockups (fertig, nur nicht
+öffentlich), Geparkt, Archiv; die öffentlichen Welten unberührt.
+
 ## 31. Oktober 2026 — Formular-Baustein, Akkordeon zu Gast, Abstand schmal (1.30.0)
 
 **Was.** Neues Modul `formular.css` · `formular.js` neben `akkordeon.*`,

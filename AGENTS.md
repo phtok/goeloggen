@@ -122,7 +122,7 @@ Skripte und Prüfer – das ist Dokumentation und gehört in den Ledger
 (`design-system/CHANGELOG.md`), den PR oder `CLAUDE-REF.md`. Wer beim Bauen
 etwas erklären will, schreibt es dorthin und lässt es auf der Seite weg
 (G03 gilt auch für Text). Ausnahme sind ausgewiesene Strategie- und
-Laborseiten (`tools.json`: `cat: labor`), die nur im Backstage erscheinen.
+Treibhaus-Seiten (`tools.json`: `cat: treibhaus`), die nur im Backstage erscheinen.
 Auslöser: Abschnitt «Vorschläge und Beschluss» auf der Sektionsfarben-Seite.
 
 ## Bauen neuer Seiten und Werkzeuge — vom Fundament aus, nicht freihändig
