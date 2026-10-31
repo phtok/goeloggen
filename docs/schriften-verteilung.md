@@ -63,12 +63,12 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
 
 ## In Arbeit (eigene Sessions, 31. 10.)
 
-1. **Vergleichsseite Schriftsysteme** (Labor): Titel in der Hausschrift neben
+1. **Vergleichsseite Schriftsysteme** (Treibhaus): Titel in der Hausschrift neben
    3–4 Kandidaten je System — Griechisch, Hebräisch, Georgisch, Armenisch,
    Chinesisch/Japanisch/Koreanisch. Der Inhaber wählt nach Augenmass.
    Erste Kandidaten: Hebräisch Assistant (Source-Latein) u. a., Georgisch/
    Armenisch Noto Sans, CJK Source Han Sans.
-2. **Lesetest Hausschrift vs. Source Sans 3** (Labor): gleiche Texte in vier
+2. **Lesetest Hausschrift vs. Source Sans 3** (Treibhaus): gleiche Texte in vier
    Längen (≈80, 250, 600, 1500 Wörter), Lesezeit, Verständnisfragen,
    Anstrengung; jede Person liest beide Schriften, Reihenfolge wechselnd;
    20–30 Personen, auch ältere, Bildschirm und Papier. Ergebnis: die Länge, ab
