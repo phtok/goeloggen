@@ -148,6 +148,12 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
    Je Spalte gemessen: Zeichen je Zeile (Median der vollen Zeilen). Zustand
    steht in der Adresse (`?laenge=…&grad=…&mass=…&schnitt=…`), ein Blick ist
    so teilbar. Druck: A4 quer, dasselbe Paar in 9/10/11/12 pt.
+   - **Gegenüber** wählbar (31. 10., Wunsch Inhaber): Source Sans 3, Noto
+     Sans oder Noto Serif (Regular, Latein-Subset, OFL, selbst gehostet in
+     `assets/fonts/vergleich/`, nur für diese Seite). x-Höhe auf Goetheanum
+     geglichen (536 → 500: `size-adjust` 93.3 %). Je Zeichen gemessen über
+     alle acht Texte: Klar 0.415 em, Source 0.451, Noto Sans 0.464, Noto
+     Serif 0.473; das 70-Zeichen-Mass rechnet damit.
    - Auf 1280 px reicht die Breite bei Grösse Haus für das 70-Zeichen-Mass
      gerade (Klar 70, Source 67); bei 24 px und beim Hausmass begrenzt die
      Spalte, die Ablesezeile zeigt es ehrlich.

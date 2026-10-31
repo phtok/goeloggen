@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
 <title>Schriftgrenze · Goetheanum</title>
-<meta name="description" content="Goetheanum Klar und Source Sans 3 nebeneinander, in verschiedenen Längen und Grössen." />
+<meta name="description" content="Goetheanum Klar neben Source Sans 3, Noto Sans oder Noto Serif, in verschiedenen Längen und Grössen." />
 <link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
 <link rel="preload" href="../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.8.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="../../assets/fonts/goetheanum/Fallback/SourceSans3-Regular.woff2" as="font" type="font/woff2" crossorigin />
@@ -33,6 +33,14 @@
           <button type="button" data-wert="250">≈&nbsp;250 Wörter</button>
           <button type="button" data-wert="500">≈&nbsp;500 Wörter</button>
           <button type="button" data-wert="1000">≈&nbsp;1000 Wörter</button>
+        </div>
+      </div>
+      <div class="regel">
+        <span class="lab" id="l-gegen">Gegenüber</span>
+        <div class="seg" role="group" aria-labelledby="l-gegen" data-wahl="gegen">
+          <button type="button" data-wert="source">Source Sans 3</button>
+          <button type="button" data-wert="noto-sans">Noto Sans</button>
+          <button type="button" data-wert="noto-serif">Noto Serif</button>
         </div>
       </div>
       <div class="regel">
@@ -78,7 +86,7 @@
       <div class="probe schrift-g" lang="de" data-probe="g"></div>
     </section>
     <section class="spalte" aria-labelledby="k-s">
-      <h2 id="k-s">Source Sans 3</h2>
+      <h2 id="k-s" data-gegen-name>Source Sans 3</h2>
       <p class="lab ablese" data-ablese="s"></p>
       <div class="probe schrift-s" lang="de" data-probe="s"></div>
     </section>
