@@ -97,7 +97,7 @@
 
   /* Abschluss: Knopf, Satz, Dank – der Dank wächst aus dem Knopf. */
   .abschluss{display:grid;gap:var(--s3)}
-  .abschluss .btn.primary{width:100%;font-size:var(--t-body);min-height:52px}
+  .abschluss .btn.primary{width:100%;font-size:var(--t-body);min-height:calc(var(--tap) + var(--s2))}
   .dank{border-radius:var(--r-control);overflow:hidden}
   .dank:empty{display:none}
   .dank-innen{background:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));padding:var(--s5) var(--s6) var(--s6);
@@ -180,7 +180,7 @@
           <button type="button" data-wert="twint" aria-pressed="false">TWINT</button>
           <button type="button" data-wert="karte" aria-pressed="false">Karte</button>
           <button type="button" data-wert="paypal" aria-pressed="false">PayPal</button>
-          <button type="button" data-wert="rechnung" aria-pressed="false">QR-Rechnung</button>
+          <button type="button" data-wert="rechnung" aria-pressed="false">QR&#8209;Rechnung</button>
         </div>
         <span class="fehler" id="zahlart-fehler" hidden></span>
         <p class="hint" id="zahlart-hinweis" aria-live="polite"></p>
@@ -207,7 +207,7 @@
         </div>
 
         <label class="kaestchen">
-          <input type="checkbox" id="bescheinigung" aria-controls="adresse" aria-expanded="false" />
+          <input type="checkbox" id="bescheinigung" aria-controls="adresse" />
           <span>Spendenbescheinigung gewünscht</span>
         </label>
         <div class="wachsen" id="adresse">
@@ -216,7 +216,7 @@
             <div class="formgrid">
               <div class="field span2">
                 <label class="lab" for="strasse">Strasse und Hausnummer</label>
-                <input id="strasse" name="strasse" type="text" autocomplete="street-address" aria-describedby="strasse-fehler" />
+                <input id="strasse" name="strasse" type="text" autocomplete="address-line1" aria-describedby="strasse-fehler" />
                 <span class="fehler" id="strasse-fehler" hidden></span>
               </div>
               <div class="field">
@@ -493,7 +493,6 @@ Telefon: <a href="tel:+41617064420">+41&nbsp;61&nbsp;706&nbsp;44&nbsp;20</a></p>
   var kaestchen = $("#bescheinigung"), raum = $("#adresse");
   kaestchen.addEventListener("change", function(){
     var an = kaestchen.checked;
-    kaestchen.setAttribute("aria-expanded", an ? "true" : "false");
     raum.classList.toggle("offen", an);
     $(".innen", raum).inert = !an;
     if (!an) { ["strasse","plz","ort"].forEach(function(id){ feldFehler(id, ""); }); zusammenfassung(); }
