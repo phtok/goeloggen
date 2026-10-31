@@ -72,6 +72,17 @@
       "such": "Begleitschrift Schriftsystem Griechisch Hebräisch Georgisch Armenisch Chinesisch Japanisch Koreanisch CJK Source Han Sans Noto Assistant FiraGO Treibhaus Labor"
     },
     {
+      "slug": "kursive-probe",
+      "cat": "treibhaus",
+      "beet": "schrift",
+      "status": "intern",
+      "tag": "Treibhaus",
+      "title": "Kursive, Probe",
+      "href": "kursive-probe.html",
+      "desc": "Probe-Schnitt Goetheanum Kursiv Klar aus Titillium Sans\u00a0Pro Italic, neben Klar in Werktitel, Zitat, Fremdwort und Lede.",
+      "such": "Kursive Kursiv Italic Titillium Pro Probe Schnitt Werktitel Zitat Fremdwort Lede Upright Treibhaus Labor"
+    },
+    {
       "slug": "serif-probe",
       "cat": "treibhaus",
       "beet": "schrift",

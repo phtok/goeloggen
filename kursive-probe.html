@@ -1,0 +1,164 @@
+<!doctype html>
+<!-- Treibhaus, Etappe E1: Probe einer Kursiven der Hausschrift aus Titillium Sans Pro
+     Italic. Schrift: assets/fonts/goetheanum/Probe/ (Probe, nicht im Paket), gebaut
+     von tools/goetheanum-fontfix/build_kursiv_probe.py. Befund und Entscheidvorlage:
+     docs/befunde/kursive-probe-e1-2026-10-31.md -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Kursive, Probe · Goetheanum</title>
+<meta name="description" content="Probe-Schnitt Goetheanum Kursiv Klar aus Titillium Sans Pro Italic, neben Klar in Werktitel, Zitat, Fremdwort und Lede." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  @font-face{font-family:"Goetheanum Kursiv Probe";font-weight:440;font-style:italic;font-display:swap;
+    src:url("assets/fonts/goetheanum/Probe/Goetheanum-Kursiv-Probe-Klar.woff2") format("woff2")}
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
+  .hero .lede{margin-top:var(--s6);font-size:clamp(17px,2vw,20px);line-height:1.55;max-width:58ch;text-wrap:pretty;hyphens:manual}
+  .block{padding-top:var(--s8)}
+  .block h2{text-wrap:balance}
+  .probe{padding-block:var(--s6);border-top:1px solid var(--line)}
+  .rolle{display:block;font-family:var(--font-text);font-size:var(--t-small);font-weight:600;color:var(--muted);margin:0 0 var(--s3)}
+  .paar{display:grid;grid-template-columns:1fr;gap:var(--s6) var(--s7)}
+  @media (min-width:900px){.paar{grid-template-columns:1fr 1fr}}
+  .txt{font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure);margin:0;text-wrap:pretty;hyphens:manual}
+  /* Die Probe: echte Kursive, Gewicht Klar. Synthese aus, damit nichts schräggestellt wird. */
+  .k{font-family:"Goetheanum Kursiv Probe",var(--font);font-style:italic;font-weight:var(--w-klar);font-synthesis:none}
+  .k.text{font-feature-settings:"ss01","ss02"}
+  .leise{font-weight:var(--w-leise)}
+  cite{font-style:normal}
+  blockquote{margin:0;padding-left:var(--s5);border-left:2px solid var(--line)}
+  .formen{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:var(--s6)}
+  .glyphen{font-size:clamp(56px,9vw,96px);line-height:1.25;margin:0;white-space:nowrap}
+  .wort{font-size:clamp(28px,4vw,40px);line-height:1.3;margin:var(--s2) 0 0;text-wrap:balance}
+  .klar{font-family:var(--font);font-weight:var(--w-klar)}
+  .stufen p{margin:0 0 var(--s3);line-height:1.3;text-wrap:balance}
+  .lede-probe{font-size:var(--t-lede);line-height:var(--lh-min);max-width:54ch;margin:0;text-wrap:balance;hyphens:manual}
+</style>
+</head>
+<body>
+
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Treibhaus · Schrift</span>
+    <h1>Kursive, Probe</h1>
+    <p class="lede">Goetheanum Kursiv Klar, gebaut aus Titillium Sans&nbsp;Pro Italic, neben Klar in&nbsp;den Rollen, für die eine Kursive in&nbsp;Frage kommt.</p>
+  </section>
+
+  <section class="block" aria-labelledby="h-formen">
+    <div class="shead"><h2 id="h-formen">Formen</h2></div>
+    <div class="formen">
+      <div>
+        <span class="rolle">Klar</span>
+        <p class="glyphen klar">agytl</p>
+        <p class="wort klar">Halle Glas Wege</p>
+      </div>
+      <div>
+        <span class="rolle">Kursiv, Upright-Formen</span>
+        <p class="glyphen k">agytl</p>
+        <p class="wort k">Halle Glas Wege</p>
+      </div>
+      <div>
+        <span class="rolle">Kursiv, Text-Formen</span>
+        <p class="glyphen k text">agytl</p>
+        <p class="wort k text">Halle Glas Wege</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="h-rollen">
+    <div class="shead"><h2 id="h-rollen">Rollen</h2></div>
+
+    <div class="probe">
+      <span class="rolle">Werktitel im Fliesstext</span>
+      <div class="paar">
+        <div>
+          <span class="rolle">Heute: Anführung</span>
+          <p class="txt">Im Sommer stehen beide Teile von ‹Faust› an&nbsp;einem Tag auf&nbsp;der Bühne; die Einführung liest aus ‹Die&nbsp;Philosophie der&nbsp;Freiheit›.</p>
+        </div>
+        <div>
+          <span class="rolle">Probe: Kursiv</span>
+          <p class="txt">Im Sommer stehen beide Teile von <cite class="k">Faust</cite> an&nbsp;einem Tag auf&nbsp;der Bühne; die Einführung liest aus <cite class="k">Die&nbsp;Philosophie der&nbsp;Freiheit</cite>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="probe">
+      <span class="rolle">Zitat (Goethe, Faust&nbsp;II)</span>
+      <div class="paar">
+        <div>
+          <span class="rolle">Heute: Leise</span>
+          <blockquote class="txt leise">‹Wer immer strebend sich bemüht, den können wir erlösen.›</blockquote>
+        </div>
+        <div>
+          <span class="rolle">Probe: Kursiv</span>
+          <blockquote class="txt k">‹Wer immer strebend sich bemüht, den können wir erlösen.›</blockquote>
+        </div>
+      </div>
+    </div>
+
+    <div class="probe">
+      <span class="rolle">Fremdwort</span>
+      <div class="paar">
+        <div>
+          <span class="rolle">Heute: ohne Auszeichnung</span>
+          <p class="txt">Die Eurythmie-Gruppe probt <span lang="la">in&nbsp;situ</span>, der Saal bleibt dafür bis zum <span lang="en">Soft&nbsp;Opening</span> geschlossen.</p>
+        </div>
+        <div>
+          <span class="rolle">Probe: Kursiv</span>
+          <p class="txt">Die Eurythmie-Gruppe probt <i class="k" lang="la">in&nbsp;situ</i>, der Saal bleibt dafür bis zum <i class="k" lang="en">Soft&nbsp;Opening</i> geschlossen.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="probe">
+      <span class="rolle">Lede</span>
+      <div class="paar">
+        <div>
+          <span class="rolle">Heute: Klar, getönt</span>
+          <p class="lede-probe klar" style="color:var(--muted)">Ein Haus für die Künste und die Frage nach dem&nbsp;Menschen.</p>
+        </div>
+        <div>
+          <span class="rolle">Probe: Kursiv</span>
+          <p class="lede-probe k">Ein Haus für die Künste und die Frage nach dem&nbsp;Menschen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="h-satz">
+    <div class="shead"><h2 id="h-satz">Im Satz</h2></div>
+    <p class="txt">Rudolf&nbsp;Steiner veröffentlichte <cite class="k">Wahrheit und Wissenschaft</cite>&nbsp;1892; ein Wort wie <i class="k" lang="grc-Latn">eurythmia</i> stammt aus dem Griechischen. Die Kursive steht auf derselben x-Höhe wie Klar und hält dieselbe Zeilenhöhe, darum bleibt das Zeilenbild ruhig, auch wenn sie mitten in&nbsp;einer Zeile wechselt.</p>
+  </section>
+
+  <section class="block" aria-labelledby="h-stufen">
+    <div class="shead"><h2 id="h-stufen">Grade</h2></div>
+    <div class="stufen">
+      <span class="rolle">20&nbsp;px</span>
+      <p class="k" style="font-size:20px">Die&nbsp;Philosophie der&nbsp;Freiheit</p>
+      <span class="rolle">32&nbsp;px</span>
+      <p class="k" style="font-size:32px">Die&nbsp;Philosophie der&nbsp;Freiheit</p>
+      <span class="rolle">56&nbsp;px</span>
+      <p class="k" style="font-size:56px">Philosophie der&nbsp;Freiheit</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="design-system/">Design-System</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
