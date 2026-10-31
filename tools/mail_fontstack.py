@@ -27,9 +27,9 @@ BASE = "https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum"
 MARKER = "<!-- fontstack:v1 -->"
 
 ERSATZ = [
-    (f"src: url('{BASE}/Webfonts/woff2/Goetheanum-Schrift-v2.8-Deutlich.woff2') format('woff2');",
-     f"src: url('{BASE}/Webfonts/woff2/Goetheanum-Schrift-v2.8-Deutlich.woff2') format('woff2'), "
-     f"url('{BASE}/Webfonts/woff/Goetheanum-Schrift-v2.8-Deutlich.woff') format('woff');"),
+    (f"src: url('{BASE}/Webfonts/woff2/Goetheanum-Schrift-v2.9-Deutlich.woff2') format('woff2');",
+     f"src: url('{BASE}/Webfonts/woff2/Goetheanum-Schrift-v2.9-Deutlich.woff2') format('woff2'), "
+     f"url('{BASE}/Webfonts/woff/Goetheanum-Schrift-v2.9-Deutlich.woff') format('woff');"),
     (f"src: url('{BASE}/Fallback/SourceSans3-Regular.woff2') format('woff2');",
      f"src: url('{BASE}/Fallback/SourceSans3-Regular.woff2') format('woff2'), "
      f"url('{BASE}/Fallback/SourceSans3-Regular.ttf') format('truetype');"),

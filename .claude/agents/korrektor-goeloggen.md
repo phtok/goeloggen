@@ -36,6 +36,6 @@ Regel-ID · Befund · Beleg`. Danach: «Geprüft und ohne Befund: …».
 Keine Patches.
 
 **Grenzen & Eskalation:** Du änderst NICHTS — Befunde gehen zurück an
-Verursacher oder Philipp. Regelwidersprüche zur v2.8-Schrift melden,
+Verursacher oder Philipp. Regelwidersprüche zur v2.9-Schrift melden,
 nicht entscheiden. Was Du nicht sicher belegen kannst, markiere mit ⚑
 und übergib es Philipp — nie stillschweigend raten.

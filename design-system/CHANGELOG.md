@@ -16,6 +16,24 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 31. Oktober 2026 — Hausschrift v2.9: Abgleich mit Titillium Sans Pro (Schrift, Version des Systems unverändert)
+
+**Was.** Hausschrift auf v2.9: 158 Zeichen mehr (411 → 569; Sanskrit-Umschrift
+IAST, Pinyin, `Ə ə`, Brüche, `₹ ₽ ₴ ฿`, kombinierende Akzente mit `ccmp`),
+Kerning der Titillium Sans Pro (iKern) für alle Paare formgleicher Zeichen,
+skaliert auf die schmalere Hausproportion; der Variable Font kernt je Gewicht.
+`¨` wächst mit dem Gewicht. Alle Einbindungen ziehen die Dateinamen v2.9.
+**Warum.** Etappe E2, Entscheid des Inhabers vom 31. Oktober
+(`docs/recherche_titillium-pro.md`). Neue Zeichen sind aus den eigenen
+Buchstaben und Akzenten gesetzt, damit die Upright-Formen bleiben; `№`
+(bewusst «Nr.»), Pfeile (Hausform ‹Goetheanum Pfeile›), `₪` (in der Pro
+fehlerhaft) und die Kreisziffern (E3) kommen nicht. Vertikalmetriken
+unverändert. **Wirkung.** Jede Seite mit der Hausschrift: Versalzeilen
+schliessen sich (AT −41 → −64, LT −80 → −104), woff2 +16 %. Befund:
+`docs/befunde/schrift-v29-titillium-pro.md`; Vergleich auf
+https://werkzeuge.goetheanum.ch/schrift-v29.html. `Goetheanum-Schrift-v2.8-Deutlich`
+bleibt für versandte Mails erreichbar.
+
 ## 31. Oktober 2026 — Serif-Probe im Treibhaus (Version des Systems unverändert)
 
 **Was.** «Goetheanum Serif Probe» aus Titillium Pro Serif version_00

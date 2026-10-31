@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Packt das Download-ZIP Goetheanum-Schriften-v2.8.zip reproduzierbar aus dem
+# Packt das Download-ZIP Goetheanum-Schriften-v2.9.zip reproduzierbar aus dem
 # aktuellen Stand auf der Platte (Office-TTF, Variable, Webfonts, Icons/Pfeile,
 # Fallback, Beipackzettel, Lizenzen). Deterministisch (fester Zeitstempel,
 # sortiert), damit das Binär-Diff minimal bleibt. Nach Font- oder Beipack-
@@ -11,7 +11,7 @@ import os, glob, zipfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
 ROOT = os.path.join(REPO, "assets/fonts/goetheanum")
-VERSION = "2.8"
+VERSION = "2.9"
 TOP = "Goetheanum-Schriften-v%s" % VERSION
 
 def members():

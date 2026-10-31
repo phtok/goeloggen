@@ -33,7 +33,7 @@ import pathops
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
 SRC = os.path.join(HERE, "sources", "titillium-pro-serif-beta")
-KLAR = os.path.join(REPO, "assets/fonts/goetheanum/Fonts/Goetheanum-Schrift-v2.8-Klar.otf")
+KLAR = os.path.join(REPO, "assets/fonts/goetheanum/Fonts/Goetheanum-Schrift-v2.9-Klar.otf")
 OUT = os.path.join(REPO, "assets/fonts/proben/goetheanum-serif-probe")
 VERSION = "0.1"
 STAMP = 0xE0A1B000  # fester head-Zeitstempel, damit der Build bytegleich bleibt

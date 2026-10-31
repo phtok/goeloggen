@@ -58,7 +58,7 @@ def stem_ufo(font):
 
 
 def house(name):
-    return os.path.join(HOUSE, "Goetheanum-Schrift-v2.8-%s.otf" % name)
+    return os.path.join(HOUSE, "Goetheanum-Schrift-v2.9-%s.otf" % name)
 
 
 def prepare(src, tmp):

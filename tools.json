@@ -21,7 +21,7 @@
     {
       "id": "schrift",
       "title": "Schrift & Typografie",
-      "intro": "Die Hausschrift v2.8 und die Regeln dazu – nachschlagen, vergleichen, einbinden."
+      "intro": "Die Hausschrift v2.9 und die Regeln dazu – nachschlagen, vergleichen, einbinden."
     },
     {
       "id": "anwendung",
@@ -547,6 +547,18 @@
       "such": "Guillemets Anführungszeichen Anführung Zitat Schnitte Befund Schriftpflege"
     },
     {
+      "slug": "schrift-v29",
+      "cat": "treibhaus",
+      "beet": "schrift",
+      "status": "entwurf",
+      "tag": "Befund",
+      "title": "Hausschrift v2.9",
+      "short": "v2.9",
+      "href": "schrift-v29.html",
+      "desc": "Hausschrift v2.8 und v2.9 nebeneinander: Kerning aus Titillium Sans Pro, neue Zeichen für Umschrift, Brüche und Währungen.",
+      "such": "Hausschrift Version Kerning Titillium Pro Sanskrit IAST Pinyin Brüche Währung Befund Schriftpflege"
+    },
+    {
       "slug": "schrift-vergleich",
       "cat": "treibhaus",
       "beet": "schrift",
@@ -939,10 +951,10 @@
       "desc": "Epics, User-Stories, Sprint-Vorschlag."
     },
     {
-      "title": "Hausschrift v2.8 – Dokumentation",
+      "title": "Hausschrift v2.9 – Dokumentation",
       "tag": "Schrift",
       "href": "https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/README.md",
-      "desc": "Schnitte, Variable Font, Neuerungen in v2.8."
+      "desc": "Schnitte, Variable Font, Neuerungen in v2.9."
     },
     {
       "title": "Hausschrift – Audit",

@@ -99,8 +99,8 @@ function svgFontCss() {
   if (!svgFontCssPromise) {
     svgFontCssPromise = (async () => {
       const [deutlich, laut, wert] = await Promise.all([
-        dateiAlsBase64("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.8-Deutlich.woff2"),
-        dateiAlsBase64("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.8-Laut.woff2"),
+        dateiAlsBase64("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.9-Deutlich.woff2"),
+        dateiAlsBase64("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.9-Laut.woff2"),
         dateiAlsBase64("../../assets/fonts/goetheanum/Fallback/SourceSans3-SemiBold.woff2")
       ]);
       return `<defs><style>
@@ -294,7 +294,7 @@ const IDML_BAU = "2026-10-31";
 
 // Die Hausschrift reist mit (SIL OFL, Lizenz liegt bei).
 const IDML_SCHRIFTEN = [
-  ["Goetheanum-Variabel-v2.8.otf", "../../assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.8.otf"],
+  ["Goetheanum-Variabel-v2.9.otf", "../../assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.9.otf"],
   ["OFL.txt", "../../assets/fonts/goetheanum/OFL.txt"]
 ];
 

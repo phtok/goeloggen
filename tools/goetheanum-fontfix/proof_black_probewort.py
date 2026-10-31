@@ -17,7 +17,7 @@ from fontTools.pens.boundsPen import BoundsPen
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
-VAR = os.path.join(REPO, "assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.8.otf")
+VAR = os.path.join(REPO, "assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.9.otf")
 WORT = "Goetheanum"
 
 

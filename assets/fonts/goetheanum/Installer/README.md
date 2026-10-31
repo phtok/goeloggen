@@ -54,7 +54,7 @@ sudo bash mac.sh --alle [--variabel] [--quelle <Ordner>]
   `C:\Windows\Fonts`, Mac: `/Library/Fonts`) und räumt Kopien pro Benutzer in
   allen Profilen weg.
 - `-Quelle`/`--quelle` nimmt die Dateien aus dem entpackten
-  `Goetheanum-Schriften-v2.8.zip` statt aus dem Netz.
+  `Goetheanum-Schriften-v2.9.zip` statt aus dem Netz.
 
 ## Ablauf und Exit-Codes
 

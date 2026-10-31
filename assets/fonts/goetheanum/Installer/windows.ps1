@@ -10,7 +10,7 @@
 #   & ([scriptblock]::Create((irm https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Installer/windows.ps1))) -Variabel
 #
 # Fuer die IT (als Administrator, fuer alle Benutzer des Geraets):
-#   .\windows.ps1 -AlleBenutzer [-Variabel] [-Quelle <entpackter Ordner Goetheanum-Schriften-v2.8>]
+#   .\windows.ps1 -AlleBenutzer [-Variabel] [-Quelle <entpackter Ordner Goetheanum-Schriften-v2.9>]
 #
 # Exit-Codes: 0 fertig - 1 Fehler (Download, Datei gesperrt) -
 #             2 alte Fassung fuer alle Benutzer gefunden, braucht Adminrechte
@@ -25,7 +25,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$Fassung = '2.8'
+$Fassung = '2.9'
 $Basis = 'https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum'
 
 # Datei -> Name im Schriftmenue (Registry-Eintrag)
