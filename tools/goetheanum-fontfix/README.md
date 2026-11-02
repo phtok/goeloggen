@@ -68,6 +68,19 @@ python3 build_office_ttf.py
 python3 pack_release_zip.py
 ```
 
+## Fassung 2.92: Pfeile in der Textschrift (2. 11. 2026)
+`← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙` in der Form der ‹Goetheanum Pfeile›, an jedem Master
+neu gezogen, mit ihrem Strichverlauf, Strich im Mittel = Minus; Befund
+`docs/befunde/pfeile-textschrift-2026-11-02.md`. Liest Fassung 2.91 aus git,
+schreibt dieselben Dateinamen (intern 2.92), zweiter Lauf bitgleich.
+```bash
+python3 build_v29_pfeile.py
+python3 proof_variable_axis.py --alle
+python3 build_beipackzettel.py             # aus der Repo-Wurzel, Seite 2
+python3 build_office_ttf.py
+python3 pack_release_zip.py
+```
+
 ## Verifikation
 ```bash
 pip install fontbakery

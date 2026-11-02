@@ -41,8 +41,9 @@ Wortverbinder, zwei Altlasten im Privatbereich).
 - `№` – im Beipackzettel bewusst weggelassen («im deutschen Satz gilt Nr.»).
 - `₪` – in der Pro falsch geformt (https://github.com/chialab/titillium_pro/issues/12).
 - Pfeile `← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙` – die Hausform ist ‹Goetheanum Pfeile›;
-  eine zweite Pfeilform im Textfont wäre ein Widerspruch. **Entscheid offen:**
-  Pfeile der Pfeile-Schrift in den Textfont spiegeln?
+  eine zweite Pfeilform im Textfont wäre ein Widerspruch. Entschieden
+  2. 11. 2026 («Pfeile ja»): die Form der Pfeil-Schrift kommt in den
+  Textfont, Fassung 2.92, Befund `docs/befunde/pfeile-textschrift-2026-11-02.md`.
 - Kreisziffern `① … ❾` – Etappe E3.
 - Vietnamesisch gestapelt (`Ẫ Ằ Ễ Ỗ`) – das übrige Vietnamesisch fehlt beiden.
 - `Ŀ ŀ ŉ` – von Unicode abgeraten (Katalanisch setzt `l·l`).
@@ -134,5 +135,6 @@ bräuchte eigene, rund 20 % breitere Master.
 
 ## Offen
 
-- Entscheid Inhaber: Pfeile der ‹Goetheanum Pfeile› in den Textfont spiegeln?
+- [x] Entscheid Inhaber: Pfeile der ‹Goetheanum Pfeile› in den Textfont
+  spiegeln? – ja (2. 11. 2026), `docs/befunde/pfeile-textschrift-2026-11-02.md`.
 - Kapitälchen für die neuen Buchstaben (nur bei Bedarf).

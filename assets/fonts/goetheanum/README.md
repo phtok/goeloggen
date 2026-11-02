@@ -35,6 +35,18 @@ SIL OFL). Reparaturen und Begründung siehe
 
 Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
 
+## Neu in Fassung 2.92 (2. 11. 2026)
+
+Gleiche Dateinamen v2.9, intern Version 2.92; vorhandene Zeichen und Masse
+unverändert (Befund `docs/befunde/pfeile-textschrift-2026-11-02.md`).
+
+- **Pfeile** `← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙` (U+2190–2199) in allen fünf Schnitten und
+  der Variable, in der Form der ‹Goetheanum Pfeile›; der Strich folgt dem
+  Schnitt. Mitte auf halber Versalhöhe, ↑ von der Grundlinie bis zur
+  Versalhöhe. 667 → 677 Codepunkte.
+- Die ‹Goetheanum Pfeile› bleibt daneben bestehen (Belegung auf normalen
+  Tasten, Beipackzettel S. 5).
+
 ## Neu in Fassung 2.91 (2. 11. 2026)
 
 Gleiche Dateinamen v2.9, intern Version 2.91; vorhandene Zeichen und Masse
