@@ -6,7 +6,7 @@ https://werkzeuge.goetheanum.ch/listenzeichen.html · Bau:
 `tools/goetheanum-fontfix/build_v29_listen.py` (liest v2.9 aus git, idempotent,
 zweiter Lauf bitgleich geprüft).
 
-![Listenzeichen: vier Formen, Flüstern bis Schreien](listenziffern-e3-2026-11-02.png) <!-- typo-ok -->
+![Oben Kartentool-Marken, darunter ss04 in Laut und ss03 in Klar, dann im Satz und A–Z](listenziffern-e3-2026-11-02.png) <!-- typo-ok -->
 
 ## Ergebnis
 
@@ -26,30 +26,35 @@ teils als Emoji gezeigt); sie bleiben Stilset.
 
 ## Formen
 
-- **Kreis bleibt Kreis** (Entscheid des Inhabers am 2. 11. während der Arbeit):
-  10–99 stehen im selben Kreis bzw. Quadrat wie ein Einzelzeichen. Eine
-  erste Fassung setzte zwei Ziffern in eine Pille (Kreis in die Breite
-  gezogen); verworfen. Die Paarziffern sind dafür gleichmässig kleiner
-  (0,495 statt 0,66), nie gestaucht.
-- **Grösse:** Kreis 860 Einheiten, Quadrat 800 (wirkt daneben gleich gross),
-  Mitte auf halber Versalhöhe (345). Im Fliesstext mit Zeilenhöhe 1,66 bleibt
-  der Kreis in der Zeile (−85 bis 775). Die Pro zeichnet ihre Stilset-Kreise
-  mit 1208 Einheiten weit über die Zeile hinaus; das Haus nicht.
-- **Inneres Zeichen:** das Hauszeichen selbst, auf 0,66 verkleinert, im
-  gleichen Gewicht. Formgleich mit der Pro sind Versalien und Ziffern ohnehin
-  (E2); die Upright-Formen betrifft es nicht. Ziffern lining.
-- **Strich der Kontur** = Strich des verkleinerten Zeichens (0,66 × Stamm des
-  I): 24 in Flüstern, 54 in Klar, 91 in Schreien. Er wächst mit dem Gewicht;
-  die Pro hält ihn fest.
-- **Gefüllt:** Fläche mit ausgespartem Zeichen. Die Tinte nimmt darum mit dem
-  Gewicht ab; das Prüfmass verlangt für diese Glyphen jetzt fallende Fläche.
-- **Luft:** mindestens 45 Einheiten zwischen Zeichen und Innenkante. Wo das
-  nicht reicht, wird das Zeichen schmaler, ein Faktor für alle Gewichte:
-  Kreis M × 0,87, Kreis W × 0,80 und 0,93 kleiner, Quadrat W × 0,96, Quadrat
-  Q 0,94 kleiner. J und Q (Unterlänge) sind nach der Tinte gemittelt.
-  Die Pro hat W, M, Q im Kreis neu gezeichnet und lässt sie den Rand berühren.
-- **Naht** der Bausteine liegt in der Mitte, beide Hälften überlappen um 16
-  Einheiten; bei 23 bis 200 px angesehen, keine Haarlinie.
+Vorbild ist die Kreiszahl des Kartentools (`apps/karten-generator/app.js`,
+`markenFormen`, Entscheid Auftraggeber 8. 7. 2026) und das Sonderelement
+`.step-num` in `design-system/base.css`. Erste Fassung (#751) verworfen:
+Ziffern zu gross im Kreis, nach der Tinte statt nach der Vorbreite
+zentriert, zweistellige Zahlen kleiner als einstellige.
+
+- **Kreis bleibt Kreis** (Inhaber, 2. 11.): 10–99 stehen im selben Kreis
+  bzw. Quadrat wie ein Einzelzeichen, keine Pille.
+- **Grösse wie im Kartentool:** Grad des inneren Zeichens = ½ Kreisdurchmesser,
+  für eine, zwei Ziffern und Buchstaben gleich. Kreis 1200 Einheiten (1,2
+  Geviert, wie die Pro), Zeichen auf 0,6. Quadrat 1116 (wirkt daneben gleich
+  gross). Mitte auf halber Versalhöhe (345); im Fliesstext mit Zeilenhöhe
+  1,66 bleibt der Kreis in der Zeile.
+- **Optische Mitte:** senkrecht die Tintenmitte der Ziffern bzw. Versalien
+  auf der Kreismitte (Kartentool: Grundlinie 0,33 Grad unter der Mitte);
+  waagrecht nach der Vorbreite, nicht nach der Tinte – die Seitenränder der
+  Schrift tragen die optische Mitte (eine 1 steht so, wie sie im Satz
+  steht). Ziffern tabellarisch wie `.step-num`: jedes Paar steht dadurch
+  genau auf der Mitte, obwohl jede Hälfte ihren Partner nicht kennt.
+  J und Q (Unterlänge) nach der Tinte gemittelt.
+- **Gewicht:** das innere Zeichen im Gewicht des Schnitts; in Laut gefüllt
+  deckt sich die Form mit der Marke des Kartentools (angeschaut neben-
+  einander, 1 bis 99).
+- **Strich der Kontur** = Strich des verkleinerten Zeichens (0,6 × Stamm des
+  I): 22 in Flüstern, 49 in Klar, 83 in Schreien; wächst mit dem Gewicht.
+- **Gefüllt:** Fläche mit ausgespartem Zeichen; die Tinte nimmt mit dem
+  Gewicht ab, das Prüfmass verlangt für diese Glyphen fallende Fläche.
+- **Naht** der Bausteine in der Mitte, Hälften überlappen 16 Einheiten;
+  in Browser und PDF ohne Haarlinie (Pixel geprüft).
 
 ## Technik
 
@@ -74,9 +79,7 @@ darum mit `?v=2.91`.
 
 ## Offen
 
-- Paarziffern (0,495) sind kleiner als Einzelziffern (0,66), wie bei
-  Unicode `⑨ ⑩`. Für eine Karte, auf der 1–99 gleich gross wirken sollen,
-  liesse sich ein fünftes Stilset mit allen Ziffern in Paargrösse bauen –
-  nur bei Bedarf.
+- Das Kartentool zeichnet seine Marken weiter selbst (Kreis + Text). Es
+  könnte künftig die Glyphen `ss04` setzen; Entscheid des Inhabers.
 - Office: Stilsets kann Word (Schriftart › Erweitert), PowerPoint nicht;
   dort helfen die Unicode-Zeichen `①–㊿`.

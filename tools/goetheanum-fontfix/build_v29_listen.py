@@ -19,11 +19,13 @@
 #  mehr Ziffern bleiben einzeln. Die Regel steht im Stilset selbst (nicht in calt), damit sie nur
 #  gilt, wenn das Stilset an ist.
 #
-#  Form: Kreis 860 Einheiten, Quadrat 800, Mitte auf halber Versalhöhe (345);
-#  innen das Hauszeichen auf 0,66 verkleinert, im gleichen Gewicht. Kontur =
-#  Strich des verkleinerten Zeichens (0,66 × Stamm des I), wächst mit dem
-#  Gewicht. Gefüllt = Fläche mit ausgespartem Zeichen. W und M werden schmaler
-#  gesetzt, bis sie Luft zum Rand haben (Q, J ebenso, falls nötig).
+#  Form nach der Kreiszahl des Kartentools (apps/karten-generator, .step-num):
+#  Grad des inneren Zeichens = ½ Kreisdurchmesser, Tintenmitte auf der
+#  Kreismitte, waagrecht nach der Vorbreite zentriert (Ziffern tabellarisch),
+#  ein- und zweistellige Zahlen gleich gross. Kreis 1200 Einheiten (wie die
+#  Pro), Quadrat 1116, Mitte auf halber Versalhöhe (345). Kontur = Strich des
+#  verkleinerten Zeichens (0,6 × Stamm des I), wächst mit dem Gewicht.
+#  Gefüllt = Fläche mit ausgespartem Zeichen.
 #  Gebaut wird einmal an den Mastern der Variable; die statischen Schnitte
 #  bekommen die Instanz der Variable an ihrem Gewicht (deckungsgleich).
 #
@@ -45,13 +47,12 @@ SOURCE_REV = "6eaeafc"                 # main mit Hausschrift v2.9 (E2, #750)
 VER_OLD, VER_NEW = "2.9", "2.91"
 CUTS = {"Leise": 265, "Ruhig": 350, "Klar": 440, "Deutlich": 580, "Laut": 680}
 
-S = 0.66            # Grösse des inneren Zeichens
-D = 860             # Kreisdurchmesser
-Q = 800             # Quadratseite (wirkt neben dem Kreis gleich gross)
+S = 0.60            # Grösse des inneren Zeichens: Grad = ½ Durchmesser (wie Kartentool)
+D = 1200            # Kreisdurchmesser (1,2 Geviert, wie Titillium Pro)
+Q = 1116            # Quadratseite (wirkt neben dem Kreis gleich gross)
 CY = 345            # Mitte: halbe Versalhöhe
 SB = 60             # Rand links und rechts
 LUFT = 45           # Mindestabstand Zeichen – Innenkante der Kontur
-LUECKE_PAAR = 36    # Abstand der beiden Ziffern im Kreis
 OV = 8              # Überlappung der Hälften an der Naht (keine Haarlinie)
 KAPPA = 0.5523
 SETS = (("ss03", "Kreis, Kontur", "kreis", False),
@@ -151,13 +152,21 @@ class Bau:
         s.top_d = [B.ink(src.out(src.cmap[ord("4")])[i])[3] for i in range(n)]
         s.fits = {}
 
+    def glyph(s, ch):
+        """Ziffern tabellarisch (tnum), wie die Kreiszahl .step-num."""
+        g = s.src.cmap[ord(ch)]
+        return R.gsub_single(s.src.ft, g, "tnum") if ch in DIGITS else g
+
     def inner(s, ch, i, sc=S):
-        """Hauszeichen verkleinert, Mitte des Versal- bzw. Ziffernbands auf CY."""
-        g = s.src.cmap[ord(ch)]; cs = s.src.out(g)[i]
+        """Hauszeichen verkleinert; senkrecht Mitte des Versal- bzw.
+        Ziffernbands auf CY (= Tintenmitte, ZIFFERN_SITZ des Kartentools),
+        waagrecht die Vorbreite von 0 bis adv – die Seitenränder der Schrift
+        tragen die optische Mitte. Gibt (Konturen, Vorbreite)."""
+        g = s.glyph(ch); cs = s.src.out(g)[i]; adv = s.src.adv(g)[i] * sc
         if ch in "JQ":                       # Unterlänge: nach der Tinte mitteln
-            _, y0, _, y1 = B.ink(cs); return tf(cs, sc, sc, 0, CY - sc * (y0 + y1) / 2)
+            _, y0, _, y1 = B.ink(cs); return tf(cs, sc, sc, 0, CY - sc * (y0 + y1) / 2), adv
         top = s.top_d[i] if ch in DIGITS else s.top_l[i]
-        return tf(cs, sc, sc, 0, CY - sc * top / 2)
+        return tf(cs, sc, sc, 0, CY - sc * top / 2), adv
 
     def single(s, form, filled, ch):
         """Fertiges Zeichen. Schmaler (kx) bzw. kleiner (ku) nur, wo das Zeichen
@@ -166,8 +175,8 @@ class Bau:
         adv = int(2 * h + 2 * SB); cx = adv / 2
         inner = []
         for i in range(s.src.n):
-            cs = s.inner(ch, i); x0, _, x1, _ = B.ink(cs)
-            inner.append(R.mapc(cs, lambda p: (p[0] - (x0 + x1) / 2, p[1] - CY)))
+            cs, a = s.inner(ch, i)
+            inner.append(R.mapc(cs, lambda p: (p[0] - a / 2, p[1] - CY)))
         def ok(kx, ku, axis=None):
             for i, cs in enumerate(inner):
                 lim = h - s.f[i] - LUFT; P = pts(tf(cs, kx * ku, ku, 0, 0))
@@ -189,42 +198,34 @@ class Bau:
         return ms, [adv] * s.src.n
 
     def pair_fit(s, form):
-        """Grösse der Ziffern im Paar: zwei Ziffern passen in DENSELBEN Kreis
-        bzw. dasselbe Quadrat wie ein Einzelzeichen (Kreis bleibt Kreis).
-        Gleichmässig verkleinert, nie gestaucht; ein Wert für alle Paare."""
+        """Zwei Ziffern in gleicher Grösse wie eine (wie im Kartentool), Vorbreite
+        an Vorbreite, das Paar auf der Mitte. Prüft nur, dass jedes Paar in
+        allen Gewichten LUFT zur Kontur hat."""
         h = D / 2 if form == "kreis" else Q / 2
-        sc = S
-        while sc > 0.3:
-            ok = True
-            for i in range(s.src.n):
-                L = h - s.f[i] - LUFT
-                for ch in DIGITS:
-                    cs = s.inner(ch, i, sc); x0, _, x1, _ = B.ink(cs)
-                    for first in (True, False):
-                        for (x, y) in pts(cs):
-                            dx = (x1 - x if first else x - x0) + LUECKE_PAAR / 2
-                            dy = y - CY
-                            if (math.hypot(dx, dy) if form == "kreis" else max(dx, abs(dy))) > L:
-                                ok = False; break
-                        if not ok: break
-                    if not ok: break
-                if not ok: break
-            if ok: return round(sc, 3)
-            sc -= 0.005
-        raise SystemExit("Paar passt nicht")
+        for i in range(s.src.n):
+            L = h - s.f[i] - LUFT
+            for ch in DIGITS:
+                cs, a = s.inner(ch, i)
+                for first in (True, False):
+                    for (x, y) in pts(cs):
+                        dx = a - x if first else x
+                        dy = y - CY
+                        if (math.hypot(dx, dy) if form == "kreis" else max(dx, abs(dy))) > L:
+                            raise SystemExit("Paar passt nicht: %s %s %s" % (form, ch, i))
+        return S
 
     def pair_half(s, form, filled, ch, first, sc):
-        """Hälfte des Kreises bzw. Quadrats mit einer Ziffer; Naht in der Mitte."""
+        """Hälfte des Kreises bzw. Quadrats mit einer Ziffer; Naht in der Mitte.
+        Erste Ziffer endet mit ihrer Vorbreite an der Naht, zweite beginnt dort."""
         h = D / 2 if form == "kreis" else Q / 2
         ms = []
         for i in range(s.src.n):
-            f = s.f[i]; cs = s.inner(ch, i, sc); x0, _, x1, _ = B.ink(cs)
+            f = s.f[i]; cs, a = s.inner(ch, i, sc)
             seam = SB + h
             if first:
-                cs = R.mapc(cs, lambda p: (p[0] - x1 + seam - LUECKE_PAAR / 2, p[1]))
+                cs = R.mapc(cs, lambda p: (p[0] + seam - a, p[1]))
                 frame = half_left(form, SB + h, seam, CY, h, f, filled)
             else:
-                cs = R.mapc(cs, lambda p: (p[0] - x0 + LUECKE_PAAR / 2, p[1]))
                 frame = mirror(half_left(form, SB + h, seam, CY, h, f, filled), seam)
                 frame = R.mapc(frame, lambda p: (p[0] - seam, p[1]))
             ms.append(frame + ([R.reverse(c) for c in cs] if filled else cs))
