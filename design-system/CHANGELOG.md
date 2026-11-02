@@ -26,6 +26,18 @@ Kartentool (`.step-num`, Entscheid 8. 7. 2026). **Wirkung.** Gefüllt in Laut
 deckungsgleich mit den Kartenmarken; Befund
 `docs/befunde/listenziffern-e3-2026-11-02.md` nachgeführt.
 
+## 2. November 2026 — Hausschrift Fassung 2.92: Pfeile in der Textschrift (Schrift, Version des Systems unverändert)
+
+**Was.** `← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙` (U+2190–2199) in allen fünf Schnitten und
+der Variable, in der Form der ‹Goetheanum Pfeile› (Arm 53°, stumpfe Spitze);
+Strich = Stärke des Minus, folgt dem Schnitt; Mitte auf halber Versalhöhe.
+667 → 677 Codepunkte, Dateinamen v2.9, intern 2.92. **Warum.** Entscheid
+des Inhabers 2. 11. («Pfeile ja»): «Ausgang →» fiel bisher auf eine
+Ersatzschrift oder ein Emoji. **Wirkung.** Vorhandene Zeichen und Masse
+unverändert; ‹Goetheanum Pfeile› bleibt daneben. Befund
+`docs/befunde/pfeile-textschrift-2026-11-02.md`, Anschauung
+https://werkzeuge.goetheanum.ch/schriften.html, Beipackzettel S. 2.
+
 ## 2. November 2026 — Hausschrift Fassung 2.91: Listenzeichen ss03–ss06 (Schrift, Version des Systems unverändert)
 
 **Was.** Buchstaben A–Z und Ziffern 1–99 in Kreis und Quadrat, je Kontur und

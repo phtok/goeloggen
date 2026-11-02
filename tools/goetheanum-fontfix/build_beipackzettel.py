@@ -102,7 +102,7 @@ txt(K,"Pfeile & Kompass: eigener Font ‹Goetheanum Pfeile›, Seite 5.",9.5,RX+
 
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
-txt(K,"Goetheanum Schriften Version 2.9 (Fassung 2.91) · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
+txt(K,"Goetheanum Schriften Version 2.9 (Fassung 2.92) · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
 txt(K,"Ausbau & Optimierung 2026 durch Philipp Tok. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p1.svg","w").write("".join(S))
@@ -136,25 +136,27 @@ txt(K,"OpenType › Ligaturen. Office setzt sie selbst.",9,LX+18,ly+278,"#737a80
 # --- right: Sonderzeichen (4 Reihen, luftig; Label weit über der Zeile) ---
 RX=M+LW+22; RW=360; ry=128; rh=300
 card(RX,ry,RW,rh)
-txt(K,"Sonderzeichen",12,RX+16,ry+26,"#23272b"); rtxt(K,"Maße · Ziffern",9.5,RX+RW-16,ry+26,"#a07a33")
+txt(K,"Sonderzeichen",12,RX+16,ry+26,"#23272b"); rtxt(K,"Maße · Ziffern · Pfeile",9.5,RX+RW-16,ry+26,"#a07a33")
 def row(yy,label,draw):
     txt(K,label,9,RX+18,yy-22,"#9aa1a7"); draw(yy)
 def eszline(y):
     cx=txt(K,"STRASSE",18,RX+18,y,"#23272b")
     cx=txt(K,"  →  ",13,cx,y,"#a07a33")
     txt(K,"STRAẞE",18,cx,y,"#23272b")
-row(ry+68,"Versaleszett ẞ (U+1E9E) — für den Versalsatz",eszline)
-row(ry+124,"Prime & Doppelprime — Fuß/Zoll, Bogenminute (kein Apostroph)",
+row(ry+70,"Versaleszett ẞ (U+1E9E) — für den Versalsatz",eszline)
+row(ry+113,"Prime & Doppelprime — Fuß/Zoll, Bogenminute (kein Apostroph)",
     lambda y: txt(K,"47° 32′ 18″  ·  5′ 11″  ·  f′(x)",19,RX+18,y,"#23272b"))
 def zline(y):
     cx=txt(K,"0,75 kg · 0761",18,RX+18,y,"#23272b")
     cx=txt(K,"  →  ",13,cx,y,"#a07a33")
     stxt(K,HB["Klar"],"0,75 kg · 0761",18,cx,y,{"zero":True},"#23272b")
-row(ry+180,"Schlummernde 0 (zero) — gegen Verwechslung mit O",zline)
-row(ry+236,"Kurzziffern (onum) — Mediävalziffern im Fließtext",
+row(ry+156,"Schlummernde 0 (zero) — gegen Verwechslung mit O",zline)
+row(ry+199,"Kurzziffern (onum) — Mediävalziffern im Fließtext",
     lambda y: stxt(K,HB["Klar"],"0123456789 · im Jahr 1923",18,RX+18,y,{"onum":True},"#23272b"))
-row(ry+292,"Kapitälchen (smcp / c2sc)",
+row(ry+242,"Kapitälchen (smcp / c2sc)",
     lambda y: stxt(K,HB["Klar"],"Goetheanum Dornach",18,RX+18,y,{"smcp":True},"#23272b"))
+row(ry+285,"Pfeile ← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙ — der Strich folgt dem Schnitt",
+    lambda y: txt(K,"Ausgang → Saal 12 ↑  ·  ← zurück",18,RX+18,y,"#23272b"))
 
 # --- bottom: Strichvergleich (volle Breite) ---
 sy=440; sh=90
