@@ -130,7 +130,11 @@ Befund als `docs/befunde/…` und trägt Beschlüsse in
 - [x] **E5 Black-Probewort** – auch mit E2 an der v2.9 gerechnet (Befund
       § 6): die Achse trägt linear bis etwa Stamm 190; ein Extrablack
       bräuchte eigene, breitere Master.
-- [ ] E3 Listenziffern (baut auf v2.9).
+- [x] **E3 Listenziffern** (2. 11. 2026): Stilsets ss03–ss06 in der
+      Hausschrift (Fassung 2.91, Dateinamen v2.9), 10–99 im selben Kreis
+      (Entscheid des Inhabers: «Kreis muss Kreis sein»). Befund
+      `docs/befunde/listenziffern-e3-2026-11-02.md`, Anschauung
+      https://werkzeuge.goetheanum.ch/listenzeichen.html, Beipackzettel S. 6.
 - [x] **E4 Serif** (31. 10. 2026): Probe-Font, Specimen
       https://werkzeuge.goetheanum.ch/schrift-serif-probe.html, Befund mit
       Einsatzgrenzen und Entscheidvorlage in
