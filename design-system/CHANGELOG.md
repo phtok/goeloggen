@@ -16,6 +16,16 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 2. November 2026 — Listenzeichen nach der Kreiszahl des Kartentools (Korrektur zu #751)
+
+**Was.** Kreis 1200 statt 860, Quadrat 1116; Zeichen auf ½ Durchmesser,
+ein- und zweistellig gleich gross, waagrecht nach der Vorbreite zentriert
+(Ziffern tabellarisch), senkrecht Tintenmitte auf Kreismitte. **Warum.**
+Inhaber: Kreiszahlen der ersten Fassung «nicht gelungen», Vorbild ist das
+Kartentool (`.step-num`, Entscheid 8. 7. 2026). **Wirkung.** Gefüllt in Laut
+deckungsgleich mit den Kartenmarken; Befund
+`docs/befunde/listenziffern-e3-2026-11-02.md` nachgeführt.
+
 ## 2. November 2026 — Hausschrift Fassung 2.91: Listenzeichen ss03–ss06 (Schrift, Version des Systems unverändert)
 
 **Was.** Buchstaben A–Z und Ziffern 1–99 in Kreis und Quadrat, je Kontur und
