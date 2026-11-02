@@ -41,13 +41,30 @@ Master der Variable wird der Pfeil neu gezogen, mit gleicher Punktzahl
 
 | Mass | Pfeil-Schrift (dünn / fett) | Textschrift |
 |---|---|---|
-| Arm zum Schaft | 53° / 53° | 53° |
-| Spitze | stumpf, eine Strichbreite | stumpf, eine Strichbreite |
+| Aussenkante des Arms zum Schaft | 49° / 50° | 50° |
+| Spitze | stumpf, 32/34 · 76/80 des Schafts | stumpf, 0,95 × Schaft |
 | Armenden | rechtwinklig | rechtwinklig |
-| Strich bei 820 Länge | 24 / 58 | Stärke des Minus `−`: 34 (190) · 74 (Klar) · 120 (725) |
+| Strich bei 820 Länge | 24 / 58 (am Schaftende) | im Mittel die Stärke des Minus `−`: 34 (190) · 74 (Klar) · 120 (725) |
+
+**Strichverlauf.** Die Pfeil-Schrift nimmt auf, was die Titillium-Striche
+tun: sie werden zum Ende leicht schlanker. Gemessen, je bezogen auf den
+Schaft an der Spitze, in dünn und fett gleich:
+
+| Stelle | dünn | fett | Textschrift |
+|---|---|---|---|
+| Schaft an der Spitze | 34 | 80 | 1 |
+| Schaftende | 24 (0,71) | 58 (0,73) | 0,71 |
+| Arm an der Wurzel | 29 (0,85) | 67 (0,84) | 0,85 |
+| Armende | 25 (0,74) | 58 (0,72) | 0,72 |
+
+Die Innenkante des Arms steht darum steiler als die Aussenkante. ↔ und ↕
+haben kein freies Schaftende und bleiben durchgehend voll; zur Mitte
+verjüngt wirkten sie eingeschnürt. Die erste Fassung dieses PR hatte den
+Verlauf nicht (gleichmässiger Strich); der Inhaber hat das bemerkt, nachgezogen
+am selben Tag.
 
 Der Strich folgt dem Gewicht wie der waagrechte Strich der Schrift (Minus),
-nicht dem Stamm des I: so ist → im Satz so schwer wie − und –. Die Armlänge
+nicht dem Stamm des I: so ist → im Mittel so schwer wie − und –. Die Armlänge
 der Pfeil-Schrift (7,6 × Strich) ergäbe im Laut eine Spitze breiter als der
 Pfeil lang; darum halbe Spitzenbreite = 0,27 × Länge + 0,9 × Strich (190:
 0,31 · Klar: 0,37 · 725: 0,43 der Länge; Titillium Pro: 0,34 · 0,36 · 0,38).

@@ -8,8 +8,10 @@
 # dieselben Dateien. Dateinamen bleiben v2.9, intern Version 2.92.
 #
 #  Form der ‹Goetheanum Pfeile› (build_pfeile.py, aus dem Icon-Font): Schaft
-#  und offene Spitze aus zwei Armen, 53° zum Schaft, Armenden rechtwinklig
-#  abgeschnitten, Spitze stumpf um eine Strichbreite. Die Pfeil-Schrift hat
+#  und offene Spitze aus zwei Armen, 50° zum Schaft, Armenden rechtwinklig
+#  abgeschnitten, Spitze stumpf. Mit ihrem Strichverlauf (VERLAUF): der
+#  Schaft wird zum Ende schlanker, die Arme zu ihren Enden – wie die
+#  Titillium-Striche zum Ende. Die Pfeil-Schrift hat
 #  sie dünn (Strich 24) und fett (58) bei 820 Einheiten Länge; die Armlänge
 #  ist in beiden das 7,6-Fache des Strichs. Hier wird die Form an jedem Master
 #  der Variable neu gezogen (gleiche Punktzahl, also kompatibel), der Strich
@@ -40,7 +42,14 @@ SOURCE_REV = "a79148a"                 # main mit Fassung 2.91 (#751, #752)
 VER_OLD, VER_NEW = "2.91", "2.92"
 CUTS = Lst.CUTS
 
-THETA = math.radians(53)    # Arm zum Schaft, wie ‹Goetheanum Pfeile›
+THETA = math.radians(50)    # Aussenkante des Arms zum Schaft (Pfeile dünn 49°, fett 50°)
+# Strichverlauf der ‹Goetheanum Pfeile›, gemessen an dünn und fett, je × Schaft
+# an der Spitze (J); beide Gewichte zeigen dieselben Verhältnisse:
+VERLAUF = {"ende": 0.71,     # Schaftende: dünn 24/34, fett 58/80
+           "wurzel": 0.85,   # Arm an der Wurzel: 29/34, 67/80
+           "arm": 0.72,      # Armende: 25/34, 58/80
+           "stumpf": 0.95}   # stumpfe Spitze: 32/34, 76/80
+J_ZU_S = 2 / (1 + VERLAUF["ende"])  # Schaft im Mittel = Minus
 HEAD = (0.27, 0.9)          # halbe Spitzenbreite = 0,27 × Länge + 0,9 × Strich
 DIAG = 1.00                 # Länge der schrägen Pfeile, × Versalhöhe
 DOPPEL = 1.20               # Länge ↔ ↕, × Versalhöhe
@@ -51,17 +60,21 @@ PFEILE = {0x2190: (180, False), 0x2191: (90, False), 0x2192: (0, False), 0x2193:
           0x2196: (135, False), 0x2197: (45, False), 0x2198: (315, False), 0x2199: (225, False)}
 
 
-def kopf(tip, s, A, sign):
-    """Eine Spitze bei x=tip, nach +x (sign=1) oder −x (sign=−1) zeigend:
-    Punkte von unten über die stumpfe Spitze nach oben, dann bis zur
-    Schaftkante (y = s/2). Gibt (Punkte oben, Punkte unten) je in Laufrichtung."""
+def kopf(tip, J, A, sign):
+    """Eine Spitze bei x=tip, nach +x (sign=1) oder −x (sign=−1) zeigend.
+    J = Schaft an der Spitze. Der Arm wird zum Ende schlanker (Innenkante
+    steiler als die Aussenkante), wie in der Pfeil-Schrift.
+    Gibt (Punkte oben, Punkte unten) je in Laufrichtung."""
     c, sn = math.cos(THETA), math.sin(THETA)
-    f = s                                         # Stumpf der Spitze = Strich
+    f = VERLAUF["stumpf"] * J
+    w_end, w_root = VERLAUF["arm"] * J, VERLAUF["wurzel"] * J
+    ti = THETA + math.atan((w_root - w_end) / A)
+    ci, si = math.cos(ti), math.sin(ti)
     T1 = (tip, f / 2)
     E1 = (tip - sign * A * c, f / 2 + A * sn)
-    E2 = (E1[0] - sign * s * sn, E1[1] - s * c)
-    t = (E2[1] - s / 2) / sn
-    J1 = (E2[0] + sign * t * c, s / 2)
+    E2 = (E1[0] - sign * w_end * sn, E1[1] - w_end * c)
+    t = (E2[1] - J / 2) / si
+    J1 = (E2[0] + sign * t * ci, J / 2)
     oben = [T1, E1, E2, J1]
     unten = [(x, -y) for (x, y) in oben]
     return oben, unten
@@ -69,16 +82,19 @@ def kopf(tip, s, A, sign):
 
 def pfeil(L, s, doppelt):
     """Waagrechter Pfeil nach rechts, Spitze bei x = L/2, Mitte (0, 0).
+    Schaft an der Spitze J, zum freien Ende schlanker; ↔ hat kein freies
+    Ende und bleibt durchgehend J (zur Mitte verjüngt wirkte er eingeschnürt).
     Eine Kontur gegen den Uhrzeigersinn (Aussenkontur der Hausschrift)."""
+    J = J_ZU_S * s; e = VERLAUF["ende"] * J
     hh = HEAD[0] * L + HEAD[1] * s
-    A = (hh - s / 2) / math.sin(THETA)
-    ob, un = kopf(L / 2, s, A, 1)
+    A = (hh - VERLAUF["stumpf"] * J / 2) / math.sin(THETA)
+    ob, un = kopf(L / 2, J, A, 1)
     pts = [un[0]] + ob                             # Spitze unten → oben → Schaftkante oben
     if doppelt:
-        ob2, un2 = kopf(-L / 2, s, A, -1)
-        pts += [ob2[3], ob2[2], ob2[1], ob2[0], un2[0], un2[1], un2[2], un2[3]]
+        ob2, un2 = kopf(-L / 2, J, A, -1)
+        pts += [(0, J / 2), ob2[3], ob2[2], ob2[1], ob2[0], un2[0], un2[1], un2[2], un2[3], (0, -J / 2)]
     else:
-        pts += [(-L / 2, s / 2), (-L / 2, -s / 2)]
+        pts += [(-L / 2, e / 2), (-L / 2, -e / 2)]
     pts += [un[3], un[2], un[1]]
     return pts
 

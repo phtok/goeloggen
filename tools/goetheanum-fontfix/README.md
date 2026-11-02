@@ -70,7 +70,7 @@ python3 pack_release_zip.py
 
 ## Fassung 2.92: Pfeile in der Textschrift (2. 11. 2026)
 `← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙` in der Form der ‹Goetheanum Pfeile›, an jedem Master
-neu gezogen, Strich = Minus; Befund
+neu gezogen, mit ihrem Strichverlauf, Strich im Mittel = Minus; Befund
 `docs/befunde/pfeile-textschrift-2026-11-02.md`. Liest Fassung 2.91 aus git,
 schreibt dieselben Dateinamen (intern 2.92), zweiter Lauf bitgleich.
 ```bash

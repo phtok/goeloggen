@@ -29,7 +29,7 @@ deckungsgleich mit den Kartenmarken; Befund
 ## 2. November 2026 — Hausschrift Fassung 2.92: Pfeile in der Textschrift (Schrift, Version des Systems unverändert)
 
 **Was.** `← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙` (U+2190–2199) in allen fünf Schnitten und
-der Variable, in der Form der ‹Goetheanum Pfeile› (Arm 53°, stumpfe Spitze);
+der Variable, in der Form der ‹Goetheanum Pfeile› (Arm 50°, stumpfe Spitze, Strich zum Ende schlanker wie dort);
 Strich = Stärke des Minus, folgt dem Schnitt; Mitte auf halber Versalhöhe.
 667 → 677 Codepunkte, Dateinamen v2.9, intern 2.92. **Warum.** Entscheid
 des Inhabers 2. 11. («Pfeile ja»): «Ausgang →» fiel bisher auf eine
