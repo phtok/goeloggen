@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+<title>Listenzeichen · Goetheanum</title>
+<meta name="description" content="Buchstaben und Ziffern 1 bis 99 in Kreis und Quadrat, als Stilsets ss03 bis ss06 der Hausschrift." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Variable mit den Stilsets; ?v= umgeht den Zwischenspeicher der Fassung ohne Listenzeichen. */
+  @font-face{font-family:"G Listen";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.9.woff2?v=2.91") format("woff2");font-weight:190 725;font-display:swap}
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch;text-wrap:pretty}
+  .wahl{display:grid;gap:var(--s4);margin-bottom:var(--s6)}
+  .wahl .lab{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .lz{font-family:"G Listen",var(--font);font-weight:var(--gew,440);font-feature-settings:var(--ss,"ss03")}
+  .reihe{font-size:clamp(26px,4.4vw,40px);line-height:1.5;overflow-wrap:anywhere}
+  .reihe span{display:inline-block;margin-inline-end:.18em}
+  .zahlen{display:grid;grid-template-columns:repeat(auto-fill,minmax(2.2em,1fr));gap:var(--s2);font-size:clamp(26px,4.4vw,40px);line-height:1.3}
+  .zahlen span{text-align:center}
+  .satz{font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure)}
+  .legende{list-style:none;padding:0;margin:0;display:grid;gap:var(--s3);font-size:var(--t-body)}
+  .legende li{display:flex;gap:var(--s3);align-items:baseline}
+  .gross{font-size:clamp(64px,12vw,120px);line-height:1.2;display:flex;flex-wrap:wrap;gap:.2em}
+  section + section{margin-top:var(--s8)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Hausschrift</span>
+    <h1>Listenzeichen</h1>
+    <p class="lede">Buchstaben und Ziffern 1&nbsp;bis&nbsp;99 in Kreis und Quadrat – für Karten, Leitsystem und Listen. Zwei Ziffern stehen im selben Kreis wie eine.</p>
+  </section>
+
+  <section>
+    <div class="wahl">
+      <span class="lab">Form</span>
+      <div class="seg" id="form" aria-label="Form">
+        <button type="button" data-ss="ss03" aria-pressed="true">Kreis, Kontur</button>
+        <button type="button" data-ss="ss04" aria-pressed="false">Kreis, gefüllt</button>
+        <button type="button" data-ss="ss05" aria-pressed="false">Quadrat, Kontur</button>
+        <button type="button" data-ss="ss06" aria-pressed="false">Quadrat, gefüllt</button>
+      </div>
+      <span class="lab">Schnitt</span>
+      <div class="seg" id="gewicht" aria-label="Schnitt">
+        <button type="button" data-w="265" aria-pressed="false">Leise</button>
+        <button type="button" data-w="350" aria-pressed="false">Ruhig</button>
+        <button type="button" data-w="440" aria-pressed="true">Klar</button>
+        <button type="button" data-w="580" aria-pressed="false">Deutlich</button>
+        <button type="button" data-w="680" aria-pressed="false">Laut</button>
+      </div>
+    </div>
+
+    <div class="shead"><h2>1 bis 99</h2></div>
+    <div class="lz zahlen" id="zahlen"></div>
+  </section>
+
+  <section>
+    <div class="shead"><h2>A bis Z, 0 bis 9</h2></div>
+    <p class="lz reihe" id="buchstaben"></p>
+    <p class="lz reihe" id="ziffern"></p>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Im Satz</h2></div>
+    <p class="satz">Treffpunkt ist der Haupteingang <span class="lz">12</span>, die Garderobe liegt bei <span class="lz">C</span>, der Saal bei <span class="lz">3</span>.</p>
+    <ul class="legende" style="margin-top:var(--s6)">
+      <li><span class="lz">1</span><span>Goetheanum, Haupteingang</span></li>
+      <li><span class="lz">7</span><span>Glashaus</span></li>
+      <li><span class="lz">24</span><span>Schreinerei</span></li>
+      <li><span class="lz">58</span><span>Haus Duldeck</span></li>
+    </ul>
+    <p class="lz gross" style="margin-top:var(--s6)"><span>A</span><span>7</span><span>12</span><span>99</span></p>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Einschalten</h2></div>
+    <ul class="legende">
+      <li><span>CSS: <code class="code">font-feature-settings: "ss03"</code> (Kreis, Kontur), <code class="code">"ss04"</code> (Kreis, gefüllt), <code class="code">"ss05"</code> (Quadrat, Kontur), <code class="code">"ss06"</code> (Quadrat, gefüllt).</span></li>
+      <li><span>InDesign: Zeichen-Bedienfeld › OpenType › Stilsets 3 bis 6.</span></li>
+      <li><span>Word: Schriftart › Erweitert › Stilsätze 3 bis 6.</span></li>
+      <li><span>Ohne Stilset: ① bis ㊿, ❶ bis ⓴ und Ⓐ bis Ⓩ zeigen dieselben Formen.</span></li>
+      <li><span>Drei und mehr Ziffern hintereinander bleiben einzelne Zeichen.</span></li>
+    </ul>
+  </section>
+
+</main>
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="design-system/">Design-System</a></span>
+  </div>
+</footer>
+<script>
+  const z = document.getElementById("zahlen");
+  for (let n = 1; n <= 99; n++) { const s = document.createElement("span"); s.textContent = n; z.append(s); }
+  const fill = (id, chars) => { const el = document.getElementById(id); for (const c of chars) { const s = document.createElement("span"); s.textContent = c; el.append(s); } };
+  fill("buchstaben", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+  fill("ziffern", "0123456789");
+  function wahl(id, apply) {
+    const g = document.getElementById(id);
+    g.addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      g.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+      apply(b);
+    });
+  }
+  const root = document.documentElement.style;
+  wahl("form", b => root.setProperty("--ss", '"' + b.dataset.ss + '"'));
+  wahl("gewicht", b => root.setProperty("--gew", b.dataset.w));
+</script>
+</body>
+</html>

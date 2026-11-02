@@ -56,6 +56,18 @@ python3 pack_release_zip.py
 `build_v29_pro.py` ist idempotent (zweiter Lauf bitgleich). `pro_quelle.py`
 liest die UFO-Master (Umrisse, Anker, Kerning), führt nichts aus.
 
+## Fassung 2.91: Listenzeichen ss03–ss06 (2. 11. 2026)
+Kreis und Quadrat, Kontur und gefüllt, A–Z und 1–99 (Etappe E3); Befund in
+`docs/befunde/listenziffern-e3-2026-11-02.md`. Liest v2.9 aus git, schreibt
+dieselben Dateinamen (intern 2.91), zweiter Lauf bitgleich.
+```bash
+python3 build_v29_listen.py
+python3 proof_variable_axis.py --alle      # gefüllte Formen: Fläche muss fallen
+python3 build_beipackzettel.py             # aus der Repo-Wurzel, Seite 6
+python3 build_office_ttf.py
+python3 pack_release_zip.py
+```
+
 ## Verifikation
 ```bash
 pip install fontbakery

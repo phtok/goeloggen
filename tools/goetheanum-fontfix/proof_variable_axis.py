@@ -36,6 +36,28 @@ MAXWEG = 40
 BEWUSST_STARR = {0x2022}                         # • (Entscheid des Inhabers 30. 10. 2026)
 BEWUSST_STARR |= {0x25CF, 0x212E}               # ● ℮ aus der Pro, dort in jedem Gewicht gleich (v2.9)
 WEG_WIE_PRO = {0x019D}                           # Ɲ: Haken wandert wie in den Pro-Mastern (v2.9)
+# Gefüllte Listenzeichen (ss04, ss06; E3, Fassung 2.91): ausgespartes Zeichen wird
+# mit dem Gewicht fetter, die Tinte also weniger – Fläche muss hier FALLEN.
+INVERS_FEATS = ("ss04", "ss06")
+INVERS_CPS = {0x24FF} | set(range(0x2776, 0x2780)) | set(range(0x24EB, 0x24F5))
+
+
+def feature_outputs(ft, tags):
+    """Ausgaben aller Einzelersetzungen, die die Features tags erreichen
+    (auch über Kontext-Lookups)."""
+    gsub = ft["GSUB"].table; seen = set(); todo = []
+    for fr in gsub.FeatureList.FeatureRecord:
+        if fr.FeatureTag in tags: todo += list(fr.Feature.LookupListIndex)
+    out = set()
+    while todo:
+        li = todo.pop()
+        if li in seen: continue
+        seen.add(li); L = gsub.LookupList.Lookup[li]
+        for st in L.SubTable:
+            if L.LookupType == 7: st = st.ExtSubTable
+            out.update(getattr(st, "mapping", {}).values())
+            todo += [r.LookupListIndex for r in getattr(st, "SubstLookupRecord", None) or []]
+    return out
 
 
 def reachable(ft, cps=None):
@@ -99,7 +121,9 @@ def main():
         if any(g not in m[w] for g in alle_g):
             ft = TTFont(path); instantiateVariableFont(ft, {"wght": w}, inplace=True)
             m[w].update(measure(ft, [g for g in alle_g if g not in m[w]]))
-    quoten = sorted(q for q in (oben(g) for g in alle_g if m[440][g]["zentren"]) if q is not None)
+    cm = base.getBestCmap()
+    invers = feature_outputs(base, INVERS_FEATS) | {cm[c] for c in INVERS_CPS if c in cm}
+    quoten = sorted(q for q in (oben(g) for g in alle_g if m[440][g]["zentren"] and g not in invers) if q is not None)
     median_oben = quoten[len(quoten) // 2]
     fehler = 0
     for g in glyphs:
@@ -109,12 +133,15 @@ def main():
         label = "%s %s" % (g, chr(names[g]) if g in names else "")
         f = [r["flaeche"] for r in row]; b = [r["breite"] for r in row]
         probleme = []
-        if any(f[i + 1] < f[i] * 1.005 for i in range(len(f) - 1)):
+        if g in invers:
+            if any(f[i + 1] > f[i] * 0.999 for i in range(len(f) - 1)):
+                probleme.append("Fläche (gefüllt, muss fallen) " + " · ".join("%d" % round(x) for x in f))
+        elif any(f[i + 1] < f[i] * 1.005 for i in range(len(f) - 1)):
             probleme.append("Fläche " + " · ".join("%d" % round(x) for x in f))
         if g in breite_pruefen and any(b[i + 1] < b[i] - 2 for i in range(len(b) - 1)):
             probleme.append("Breite " + " · ".join("%d" % round(x) for x in b))
         q = oben(g)
-        if q is not None and q < 0.5 * median_oben:
+        if q is not None and q < 0.5 * median_oben and g not in invers:
             probleme.append("Zuwachs oben %.2f (Median %.2f)" % (q, median_oben))
         weg = 0
         for i in range(len(row) - 1):

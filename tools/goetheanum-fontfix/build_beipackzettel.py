@@ -102,7 +102,7 @@ txt(K,"Pfeile & Kompass: eigener Font ‹Goetheanum Pfeile›, Seite 5.",9.5,RX+
 
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
-txt(K,"Goetheanum Schriften Version 2.9 · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
+txt(K,"Goetheanum Schriften Version 2.9 (Fassung 2.91) · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
 txt(K,"Ausbau & Optimierung 2026 durch Philipp Tok. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p1.svg","w").write("".join(S))
@@ -283,10 +283,34 @@ cairosvg.svg2pdf(url="/tmp/beipack_p5.svg",write_to="/tmp/beipack_p5.pdf")
 cairosvg.svg2png(url="/tmp/beipack_p5.svg",write_to="/tmp/beipack_p5.png",output_width=1100)
 print("page5 rendered")
 
-# splice: alle fünf Seiten frisch gerendert (voll reproduzierbar, keine Fremd-PDF mehr)
+# --- Seite 6: Listenzeichen in Kreis und Quadrat (Stilsets ss03–ss06, Fassung 2.91) ---
+def render6():
+    sets=[("ss03","Kreis, Kontur"),("ss04","Kreis, gefüllt"),("ss05","Quadrat, Kontur"),("ss06","Quadrat, gefüllt")]
+    cw=(W-2*M-22)/2; ch=176
+    for k,(tag,label) in enumerate(sets):
+        x=M+(k%2)*(cw+22); y=128+(k//2)*(ch+18)
+        card(x,y,cw,ch)
+        txt(K,label,12,x+16,y+26,"#23272b"); rtxt(K,tag,9.5,x+cw-16,y+26,"#a07a33")
+        f={tag:True}
+        stxt(K,HB["Klar"],"A B C D E F G H",19,x+18,y+62,f)
+        stxt(K,HB["Klar"],"0 1 2 3 4 5 6 7 8 9",19,x+18,y+96,f)
+        stxt(K,HB["Klar"],"10 11 12 47 99",19,x+18,y+130,f)
+        cx=txt(K,"Ausgang ",14,x+18,y+160,"#23272b")
+        cx=stxt(K,HB["Klar"],"12",14,cx,y+160,f)
+        cx=txt(K,", Haus ",14,cx,y+160,"#23272b")
+        stxt(K,HB["Klar"],"B",14,cx,y+160,f)
+kbpage("Listenzeichen","Buchstaben und Ziffern in Kreis und Quadrat – in allen fünf Schnitten und der Variable",render6,
+       "Einschalten: InDesign › OpenType › Stilsets 3–6 · Word › Schriftart › Erweitert › Stilsätze · CSS font-feature-settings: \"ss03\".",
+       "Zwei Ziffern allein stehen im selben Kreis bzw. Quadrat (10–99), drei und mehr bleiben einzeln. ① – ㊿, ❶ – ⓴, Ⓐ – Ⓩ zeigen dieselben Formen.")
+open("/tmp/beipack_p6.svg","w").write("".join(S))
+cairosvg.svg2pdf(url="/tmp/beipack_p6.svg",write_to="/tmp/beipack_p6.pdf")
+cairosvg.svg2png(url="/tmp/beipack_p6.svg",write_to="/tmp/beipack_p6.png",output_width=1100)
+print("page6 rendered")
+
+# splice: alle sechs Seiten frisch gerendert (voll reproduzierbar, keine Fremd-PDF mehr)
 from pypdf import PdfReader, PdfWriter
 w=PdfWriter()
-for n in (1,2,3,4,5):
+for n in (1,2,3,4,5,6):
     w.add_page(PdfReader(f"/tmp/beipack_p{n}.pdf").pages[0])
 out="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf"
 with open(out,"wb") as f: w.write(f)

@@ -35,6 +35,19 @@ SIL OFL). Reparaturen und Begründung siehe
 
 Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
 
+## Neu in Fassung 2.91 (2. 11. 2026)
+
+Gleiche Dateinamen v2.9, intern Version 2.91; vorhandene Zeichen und Masse
+unverändert (Befund `docs/befunde/listenziffern-e3-2026-11-02.md`).
+
+- **Listenzeichen in Kreis und Quadrat** als Stilsets: `ss03` Kreis, Kontur ·
+  `ss04` Kreis, gefüllt · `ss05` Quadrat, Kontur · `ss06` Quadrat, gefüllt.
+  A–Z und 0–9 einzeln; zwei Ziffern allein (10–99) stehen im **selben Kreis**
+  bzw. Quadrat, drei und mehr bleiben einzeln. Kontur wächst mit dem Gewicht.
+- **98 Codepunkte mehr** (569 → 667): `⓪ ①–⑳ ㉑–㊿ Ⓐ–Ⓩ` und `⓿ ❶–❿ ⓫–⓴`
+  zeigen dieselben Formen.
+- Anschauung: https://werkzeuge.goetheanum.ch/listenzeichen.html
+
 ## Neu in v2.9
 
 Abgleich mit Titillium Sans Pro (Chialab, OFL; Befund

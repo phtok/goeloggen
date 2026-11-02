@@ -16,6 +16,19 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 2. November 2026 — Hausschrift Fassung 2.91: Listenzeichen ss03–ss06 (Schrift, Version des Systems unverändert)
+
+**Was.** Buchstaben A–Z und Ziffern 1–99 in Kreis und Quadrat, je Kontur und
+gefüllt, als Stilsets `ss03`–`ss06` in allen fünf Schnitten und der Variable;
+`⓪ ①–㊿ Ⓐ–Ⓩ ⓿ ❶–⓴` zeigen dieselben Formen (569 → 667 Codepunkte).
+Dateinamen bleiben v2.9, intern Version 2.91. **Warum.** Etappe E3 (Entscheid
+des Inhabers 31. 10.), für Campus-Karte, Leitsystem und Beipackzettel; am
+2. 11. ergänzt: «Kreis muss Kreis sein» – 10–99 stehen im selben Kreis wie
+ein Einzelzeichen. **Wirkung.** Nur mit eingeschaltetem Stilset; vorhandene
+Zeichen und Masse unverändert. Prüfmass kennt gefüllte Formen (Fläche fällt).
+Befund `docs/befunde/listenziffern-e3-2026-11-02.md`, Anschauung
+https://werkzeuge.goetheanum.ch/listenzeichen.html, Beipackzettel S. 6.
+
 ## 31. Oktober 2026 — Hausschrift v2.9: Abgleich mit Titillium Sans Pro (Schrift, Version des Systems unverändert)
 
 **Was.** Hausschrift auf v2.9: 158 Zeichen mehr (411 → 569; Sanskrit-Umschrift

@@ -559,6 +559,18 @@
       "such": "Hausschrift Version Kerning Titillium Pro Sanskrit IAST Pinyin Brüche Währung Befund Schriftpflege"
     },
     {
+      "slug": "listenzeichen",
+      "cat": "treibhaus",
+      "beet": "schrift",
+      "status": "entwurf",
+      "tag": "Stilset",
+      "title": "Listenzeichen",
+      "short": "Listen",
+      "href": "listenzeichen.html",
+      "desc": "Buchstaben und Ziffern 1\u00a0bis\u00a099 in Kreis und Quadrat, als Stilsets ss03 bis ss06 der Hausschrift.",
+      "such": "Kreisziffern Listenziffern Kreis Quadrat Stilset ss03 ss04 ss05 ss06 Karte Kartierung Leitsystem Legende Nummer"
+    },
+    {
       "slug": "schrift-vergleich",
       "cat": "treibhaus",
       "beet": "schrift",
