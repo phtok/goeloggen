@@ -4,7 +4,7 @@
 Baut die woff2-Subsets für begleitschriften.html nach
 assets/fonts/schriftsysteme/. Je Kandidat zwei statische Schnitte:
 Text (400) und Titel (nächster Schnitt zu Deutlich 580; variable Schriften
-werden genau auf 580 instanziert). Der Zeichenvorrat kommt aus der Seite
+werden genau auf 580 instanziert). Der Zeichenvorrat kommt aus den Seiten
 selbst – wer einen Mustertext ändert, lässt das Skript neu laufen.
 
     pip install fonttools brotli
@@ -25,6 +25,9 @@ GF = RAW + "/google/fonts/main/ofl/"
 # slug: (Quelle, Text-Datei, Titel-Datei, Titel-Gewicht falls variabel)
 # Quelle "gf:<ordner>" → google/fonts; sonst volle URL-Basis.
 KANDIDATEN = {
+    # Noto als Lese-Grotesk für alle Systeme (lesetext-noto.html)
+    "notosans":        ("gf:notosans", "NotoSans[wdth,wght].ttf", None),
+    "notoarabic":      ("gf:notosansarabic", "NotoSansArabic[wdth,wght].ttf", None),
     # Griechisch (Source Sans 3 kommt aus dem Repo)
     "firasans":        ("gf:firasans", "FiraSans-Regular.ttf", "FiraSans-SemiBold.ttf"),
     "commissioner":    ("gf:commissioner", "Commissioner[FLAR,VOLM,slnt,wght].ttf", None),
@@ -68,8 +71,8 @@ def holen(quelle, datei, cache):
     return ziel
 
 
-def zeichen(seite: Path) -> str:
-    t = seite.read_text(encoding="utf-8")
+def zeichen(seiten) -> str:
+    t = " ".join(s.read_text(encoding="utf-8") for s in seiten if s.exists())
     t = re.sub(r"<(style|script)[^>]*>.*?</\1>", " ", t, flags=re.S)
     t = html.unescape(re.sub(r"<[^>]+>", " ", t))
     basis = "".join(chr(c) for c in range(0x20, 0x7F)) + "–—‹›«»„“”’…·  "
@@ -114,12 +117,12 @@ def instanz(pfad: Path, wght: float) -> TTFont:
 
 def main(root="."):
     root = Path(root)
-    seite = root / "begleitschriften.html"
+    seiten = [root / "begleitschriften.html", root / "lesetext-noto.html"]
     aus = root / "assets/fonts/schriftsysteme"
     aus.mkdir(parents=True, exist_ok=True)
     cache = Path.home() / ".cache/schriftsysteme-probe"
     cache.mkdir(parents=True, exist_ok=True)
-    text = zeichen(seite)
+    text = zeichen(seiten)
     # Source Sans 3 (Griechisch) aus dem Repo
     ss = root / "assets/fonts/goetheanum/Fallback/SourceSans3-Variable.ttf"
     jobs = {"sourcesans": (ss, None)}

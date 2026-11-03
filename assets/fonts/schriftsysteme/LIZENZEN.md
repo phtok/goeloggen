@@ -1,6 +1,6 @@
 # Begleitschriften-Probe: Herkunft und Lizenzen
 
-Subsets (woff2) nur für die Labor-Seite `begleitschriften.html`, gebaut mit
+Subsets (woff2) nur für die Treibhaus-Seiten `begleitschriften.html` und `lesetext-noto.html`, gebaut mit
 `tools/schriftsysteme-probe.py`. Copyright- und Lizenz-Einträge im
 `name`-Table bleiben erhalten; der Schriftname wird zu «Probe <Kürzel>»,
 weil ein Subset eine veränderte Fassung ist und keinen Reserved Font Name
@@ -12,6 +12,8 @@ Lizenztext SIL OFL 1.1: `../goetheanum/OFL.txt`.
 | Datei-Kürzel | Schrift | Quelle | Lizenz | Reserved Font Name |
 |---|---|---|---|---|
 | sourcesans | Source Sans 3 | Repo (`goetheanum/Fallback`) | OFL 1.1 | «Source» |
+| notosans | Noto Sans (Latein, Griechisch, Kyrillisch) | google/fonts | OFL 1.1 | keiner |
+| notoarabic | Noto Sans Arabic | google/fonts | OFL 1.1 | keiner |
 | firasans | Fira Sans | google/fonts | OFL 1.1 | keiner im google/fonts-OFL (Mozilla-Original: «Fira») |
 | commissioner | Commissioner | google/fonts | OFL 1.1 | keiner |
 | ibmplexsans | IBM Plex Sans | google/fonts | OFL 1.1 | «Plex» |
