@@ -249,7 +249,12 @@
   function el(id){ return document.getElementById(id); }
   function dmy(d){ return d.toLocaleDateString('de-CH',{day:'numeric',month:'long'}); }
 
+  // Diese Zahlen verlangen den Zähler-Schlüssel (design-system/schluessel.js);
+  // wer ihn nicht eingibt, sieht den Rest des Zählers ohne sie.
+  var MIT_SCHLUESSEL = /^sommer2026_(kosten_public|einnahmen|multi_protokoll)$/;
   function rpc(name){
+    if (MIT_SCHLUESSEL.test(name)) return GoeSchluessel.rpc('zaehler', name, {})
+      .catch(function(e){ if (e && e.abgebrochen) return []; throw e; });
     return fetch(SB + '/rest/v1/rpc/' + name, {
       method:'POST',
       headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
@@ -1186,11 +1191,7 @@
       p_notiz: notiz || null
     };
     if (istEdit) { params.p_id = mfEditId; } else { params.p_zielgruppe = null; }
-    fetch(SB + '/rest/v1/rpc/' + (istEdit ? 'sommer2026_massnahme_aendern' : 'sommer2026_massnahme_eintragen'), {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
-      body: JSON.stringify(params)
-    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    GoeSchluessel.rpc('zaehler', (istEdit ? 'sommer2026_massnahme_aendern' : 'sommer2026_massnahme_eintragen'), params)
       .then(function(ergebnis){
         mfFrei();
         if (ergebnis === 'ok'){
@@ -1291,9 +1292,9 @@
         if (el('muNamenBtn')) el('muNamenBtn').textContent = 'Namen ausblenden';
         if (!still) muSag('Namen eingeblendet – nur in diesem Browser.');
         return fetch(SB + '/rest/v1/rpc/sommer2026_multi_namen', {
-          method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
-          body: JSON.stringify({ p_passwort: pw })
-        }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
+      body: JSON.stringify({ p_passwort: pw })
+    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
           .then(function(rows){
             muNamen = {}; (rows || []).forEach(function(x){ muNamen[x.id] = x.name; });
             renderMultis();
@@ -1384,10 +1385,7 @@
         kBtn.addEventListener('click', function(){
           var wer = (iWer.value || '').trim();
           if (!iTag.value || !wer){ kSaid.textContent = 'Datum und Kürzel sind Pflicht.'; kSaid.style.color = 'var(--bad)'; return; }
-          fetch(SB + '/rest/v1/rpc/sommer2026_multi_kontakt_anlegen', {
-            method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
-            body: JSON.stringify({ p_multiplikator: m.id, p_tag: iTag.value, p_wer: wer, p_art: sArt.value, p_ergebnis: (iErg.value || '').trim() || null, p_status: sSt.value })
-          }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+          GoeSchluessel.rpc('zaehler', 'sommer2026_multi_kontakt_anlegen', { p_multiplikator: m.id, p_tag: iTag.value, p_wer: wer, p_art: sArt.value, p_ergebnis: (iErg.value || '').trim() || null, p_status: sSt.value })
             .then(function(ergebnis){
               if (ergebnis === 'ok'){ muNeuLaden(); }
               else { kSaid.textContent = 'Angaben prüfen.'; kSaid.style.color = 'var(--bad)'; }
@@ -1412,10 +1410,7 @@
     var name = (el('muName').value || '').trim();
     var wer = (el('muWer').value || '').trim();
     if (!name || !wer){ sag('Name und Kürzel sind Pflicht.', true); return; }
-    fetch(SB + '/rest/v1/rpc/sommer2026_multi_anlegen', {
-      method:'POST', headers:{ 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
-      body: JSON.stringify({ p_name: name, p_rolle: (el('muRolle').value || '').trim() || null, p_ersteller: wer })
-    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    GoeSchluessel.rpc('zaehler', 'sommer2026_multi_anlegen', { p_name: name, p_rolle: (el('muRolle').value || '').trim() || null, p_ersteller: wer })
       .then(function(ergebnis){
         if (ergebnis === 'ok'){
           sag('Angelegt – erscheint in der Liste als M-Nummer.');
@@ -1683,11 +1678,7 @@
     }
     var gewaehlt = sel.value;
     sel.disabled = true;
-    fetch(SB + '/rest/v1/rpc/sommer2026_kosten_produkt_setzen', {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
-      body: JSON.stringify({ p_id: k.id, p_produkt: gewaehlt || null, p_ersteller: wer })
-    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    GoeSchluessel.rpc('zaehler', 'sommer2026_kosten_produkt_setzen', { p_id: k.id, p_produkt: gewaehlt || null, p_ersteller: wer })
       .then(function(ergebnis){
         if (ergebnis === 'ok'){
           sagen('Zugeordnet: ' + (k.posten || '') + ' · ' +
@@ -1714,11 +1705,7 @@
     if (!wer){ sagen('Zuerst das eigene Kürzel oben eintragen – dann löschen.', true); if (el('kfWer')) el('kfWer').focus(); return; }
     if (!window.confirm('Posten «' + (k.posten || '') + '» über ' + geld(k.betrag) + ' wirklich löschen?')) return;
     btn.disabled = true;
-    fetch(SB + '/rest/v1/rpc/sommer2026_kosten_loeschen', {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
-      body: JSON.stringify({ p_id: k.id, p_ersteller: wer })
-    }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    GoeSchluessel.rpc('zaehler', 'sommer2026_kosten_loeschen', { p_id: k.id, p_ersteller: wer })
       .then(function(ergebnis){
         if (ergebnis === 'ok'){
           sagen('Gelöscht: ' + (k.posten || '') + ' · ' + geld(k.betrag) + '.');
@@ -1822,10 +1809,7 @@
       var frei = function(){ btn.disabled = false; btn.textContent = beschriftung; };
 
       try { localStorage.setItem(KF_KUERZEL, wer); } catch(e){}
-      fetch(SB + '/rest/v1/rpc/sommer2026_kosten_eintragen', {
-        method: 'POST',
-        headers: { 'Content-Type':'application/json', 'apikey':KEY, 'Authorization':'Bearer ' + KEY },
-        body: JSON.stringify({
+      GoeSchluessel.rpc('zaehler', 'sommer2026_kosten_eintragen', {
           p_tag: el('kfTag').value, p_posten: posten, p_kategorie: el('kfKategorie').value,
           p_betrag: betrag, p_ersteller: wer,
           p_stunden: kfStundenModus() ? Number(el('kfStunden').value) : null,
@@ -1833,7 +1817,6 @@
           // Leer = gemeinsamer Posten. Der Normalfall dieser Aktion.
           p_produkt: el('kfProdukt') ? (el('kfProdukt').value || null) : null
         })
-      }).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
         .then(function(ergebnis){
           frei();
           if (ergebnis === 'ok'){
