@@ -429,6 +429,7 @@ function bildLesen(file, max, typ) {
 
 // ------------------------------------------------------------ Speichern
 async function rpc(name, body) {
+  if (name.startsWith("reader_")) return window.GoeSchluessel.rpc("reader", name, body);
   const r = await fetch(`${SB}/rest/v1/rpc/${name}`, { method: "POST", headers: { "Content-Type": "application/json", apikey: SBK, Authorization: `Bearer ${SBK}` }, body: JSON.stringify(body) });
   if (!r.ok) throw new Error(`${name}: HTTP ${r.status}`);
   const t = await r.text(); return t ? JSON.parse(t) : null;
