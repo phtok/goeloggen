@@ -179,7 +179,6 @@
 <script src="../karten-generator/vendor/jspdf.umd.min.js"></script>
 <script src="../karten-generator/vendor/svg2pdf.umd.min.js"></script>
 <script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
-<script src="../../design-system/schluessel.js"></script>
 
 <main class="wrap">
 
@@ -561,8 +560,9 @@ let archivUhr;
 function archivieren(art=null){
   if(!S.id)S.id=crypto.randomUUID();
   const {id,...rest}=S;if(!art&&JSON.stringify(rest)===JSON.stringify(BEISPIEL))return;
-  clearTimeout(archivUhr);const los=()=>GoeSchluessel.rpc("folder","folder_sichern",{p_id:S.id,p_stand:S,p_export:art},
-    {keepalive:!art}).catch(()=>{});
+  clearTimeout(archivUhr);const los=()=>fetch(SB+"/rest/v1/rpc/folder_sichern",{method:"POST",keepalive:!art,
+    headers:{"Content-Type":"application/json",apikey:SBK,Authorization:"Bearer "+SBK},
+    body:JSON.stringify({p_id:S.id,p_stand:S,p_export:art})}).catch(()=>{});
   art?los():archivUhr=setTimeout(los,4000)}
 
 const B=$("blaetter");
@@ -748,7 +748,7 @@ const pdfBauen=async e=>{const k=e.currentTarget,alt=k.textContent,druck=k.datas
 $("pdf").onclick=pdfBauen;$("pdf-druck").onclick=pdfBauen;
 $("zuruecksetzen").onclick=()=>{S=structuredClone(BEISPIEL);bauen();archivZeigen()}; // neue id beim nächsten Sichern: ein neuer Folder
 // Alle Folder: öffentliche Liste aus dem Archiv (services/folder/), Klick lädt den Stand
-const sbRpc=(f,b)=>/^folder_/.test(f)?GoeSchluessel.rpc("folder",f,b):fetch(SB+"/rest/v1/rpc/"+f,{method:"POST",headers:{"Content-Type":"application/json",apikey:SBK,Authorization:"Bearer "+SBK},body:JSON.stringify(b)}).then(r=>{if(!r.ok)throw r.status;return r.json()});
+const sbRpc=(f,b)=>fetch(SB+"/rest/v1/rpc/"+f,{method:"POST",headers:{"Content-Type":"application/json",apikey:SBK,Authorization:"Bearer "+SBK},body:JSON.stringify(b)}).then(r=>{if(!r.ok)throw r.status;return r.json()});
 async function archivZeigen(){const L=$("archiv-liste");
   try{const rows=(await sbRpc("folder_liste",{})).filter(f=>(f.exporte||[]).at(-1)?.art!=="geloescht");
     L.innerHTML=rows.length?"":`<li class="leer">Noch keine Folder gesichert.</li>`;

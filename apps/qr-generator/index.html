@@ -349,7 +349,6 @@
 </footer>
 
 <script src="./vendor/qrcode.js"></script>
-<script src="../../design-system/schluessel.js"></script>
 <script>
   var SB  = 'https://dagcsnfrlbpxcmdimnrw.supabase.co';
   var KEY = 'sb_publishable_SXhY0mrhXjdTnjbJ5Uobtg_zAXW_xGY';
@@ -615,7 +614,6 @@
   });
 
   function rpc(name, body){
-    if(/^qr_link_(anlegen|loeschen)$/.test(name)) return GoeSchluessel.rpc('kurzlinks', name, body);
     return fetch(SB + '/rest/v1/rpc/' + name, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
@@ -639,7 +637,7 @@
         else if(ergebnis === 'ungueltig'){ say('Code oder Adresse ungültig – Code: 3–32 Zeichen (a–z, 0–9, Bindestrich), Adresse mit https://.', true); }
         else { say('Angaben unvollständig – Adresse und Code prüfen.', true); }
       })
-      .catch(function(e){ say(e && e.abgebrochen ? 'Ohne Schlüssel lässt sich kein Kurzlink anlegen.' : 'Kurzlink-Dienst nicht erreichbar.', true); });
+      .catch(function(){ say('Kurzlink-Dienst nicht erreichbar.', true); });
   });
 
   // --- Ausgabe: SVG direkt, PNG über Canvas ------------------------------------
@@ -752,7 +750,7 @@
         if(ergebnis === 'ok'){ statSay('Code „' + code + '“ gelöscht.'); el('statDetail').hidden = true; ladeRegister(); }
         else { statSay('Code „' + code + '“ nicht gefunden.', true); }
       })
-      .catch(function(e){ statSay(e && e.abgebrochen ? 'Ohne Schlüssel lässt sich nichts löschen.' : 'Löschen nicht erreichbar.', true); });
+      .catch(function(){ statSay('Löschen nicht erreichbar.', true); });
   }
 
   // Das offene Register: alle angelegten Kurzlinks mit Zählung (eine RPC-Runde).
