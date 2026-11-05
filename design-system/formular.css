@@ -1,0 +1,93 @@
+/* =============================================================================
+   Goetheanum CI – Formular (Modul)
+   -----------------------------------------------------------------------------
+   Spenden-, Abo- und Anmeldeformulare auf einer Mechanik. Setzt
+   design-system/tokens.css und base.css voraus (Rollen .field, .lab, .hint,
+   .seg, .formgrid, .btn, .num, .sr-only). Skript: design-system/formular.js.
+   Markup und Reihenfolge: ../spenden-formular.html (Kopierbereich), Regeln:
+   project-skills/formular-ux/SKILL.md.
+   Wurzel: <form class="formular" data-formular novalidate>.
+   Teile:  [data-rolle="frequenz"|"stufen"|"zahlart"] (.seg) · .betrag-Raster
+           · .eigen/.einheit (freier Betrag) · .kaestchen · .wachsen (bedingt)
+           · .fehler · .fehlerliste · .abschluss · .dank.
+   Regeln: Felder, Label, Werte und Fehler in der Lese-Grotesk (base.css,
+   § Schrift-Grenze); Felder 16 px (B03), jedes Ziel ≥44 px (B04), Felder und
+   Knopf --r-control, Wahl-Pillen --r-pill; Anwahl dunkles Gold + Weiss (B01);
+   Ziffern tabellarisch, Betrag ohne «.00» (G25). Bewegung nur aus den Tokens
+   (Bloom, --dauer-*); Fehler stehen ohne Bewegung.
+   ============================================================================= */
+
+/* Die Wahl wächst vom Berührpunkt aus: der Radius als animierbare Grösse. */
+@property --wuchs{syntax:"<percentage>";inherits:false;initial-value:0%}
+
+/* Einspaltig schmal; nur das Eingabe-Raster darf breit werden. */
+.formular{max-width:40rem;display:grid;gap:var(--s8)}
+.formular fieldset{border:0;margin:0;padding:0;min-width:0;display:grid;gap:var(--s3)}
+.formular legend{font-family:var(--font-display);font-weight:var(--w-deutlich);font-size:var(--t-body);
+  line-height:var(--lh-tight);text-wrap:balance;padding:0;margin-bottom:var(--s3)}
+.formular .field input,.formular .field select{min-height:var(--tap)}   /* B04 auf allen Breiten */
+/* Felder einer Rasterzeile bleiben auf einer Linie, auch wenn eine Meldung umbricht. */
+.formular .formgrid .field{align-content:start}
+
+/* --- Wahl: jede Wahl wächst gleich – eine Kurve, eine Uhr ------------------
+   Auf wächst mit --dauer-mittel, zu welkt mit --dauer-kurz. */
+/* Wahl-Pillen sind Werte, keine Stimme: Lese-Grotesk, 16 px wie die Felder (B03). */
+.formular .seg button{font-family:var(--font-text);font-size:16px;
+  background:radial-gradient(circle at var(--x,50%) var(--y,50%),var(--gold-deep) var(--wuchs),var(--field-bg) calc(var(--wuchs) + .5%));
+  transition:--wuchs var(--dauer-kurz) var(--kurve-aus),color var(--dauer-kurz) var(--kurve-aus),border-color var(--dauer-hauch)}
+.formular .seg button[aria-pressed="true"]{--wuchs:100%;
+  background:radial-gradient(circle at var(--x,50%) var(--y,50%),var(--gold-deep) var(--wuchs),var(--field-bg) calc(var(--wuchs) + .5%));
+  transition-duration:var(--dauer-mittel);transition-timing-function:var(--kurve-ein)}
+
+/* --- Betrag: Stufen aufsteigend, Ziffern dicktengleich (G25) ---------------- */
+.formular .betrag{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--s2)}
+.formular .betrag button{font-size:var(--t-body);font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum","lnum"}
+@media(max-width:640px){.formular .betrag{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.formular .eigen{max-width:16rem;margin-top:var(--s2)}
+.formular .einheit{position:relative}
+.formular .einheit input{width:100%;padding-right:3.6em;font-variant-numeric:tabular-nums lining-nums;
+  transition:border-color var(--dauer-kurz) var(--kurve-aus),box-shadow var(--dauer-kurz) var(--kurve-aus)}
+.formular .einheit .unit{position:absolute;right:var(--s3);top:50%;transform:translateY(-50%);pointer-events:none;
+  font-family:var(--font-text);font-size:16px;color:var(--muted)}
+/* Eigener Betrag gewählt: der Ring wächst auf derselben Uhr, auf der die Stufe welkt. */
+.formular .einheit.gewaehlt input{border-color:var(--gold-ink);box-shadow:0 0 0 1px var(--gold-ink);
+  transition-duration:var(--dauer-mittel)}
+
+/* --- Kästchen: die ganze Zeile ist das Fingerziel (B04) -------------------- */
+.formular .kaestchen{display:flex;align-items:center;gap:var(--s3);min-height:var(--tap);cursor:pointer;
+  font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);line-height:var(--lh-min)}
+.formular .kaestchen input{flex:none;width:24px;height:24px;margin:0;accent-color:var(--gold-deep);cursor:pointer}
+
+/* --- Bedingtes Feld (GOV.UK, eine Ebene): der Raum wächst von 0fr auf 1fr --- */
+.formular .wachsen{display:grid;grid-template-rows:0fr;opacity:0;margin-top:calc(-1 * var(--s3));   /* geschlossen ohne Lücke */
+  transition:grid-template-rows var(--dauer-kurz) var(--kurve-aus),opacity var(--dauer-kurz) var(--kurve-aus)}
+.formular .wachsen.offen{grid-template-rows:1fr;opacity:1;transition-duration:var(--dauer-mittel);transition-timing-function:var(--kurve-ein)}
+/* 4 px Luft rundum, damit der Fokusring im geschlossenen Überlauf nicht beschnitten wird. */
+.formular .wachsen>.innen{min-height:0;overflow:hidden;padding:calc(var(--s3) + 4px) 4px 4px;margin:-4px}
+.formular .wachsen .formgrid{padding-top:var(--s2)}
+
+/* --- Fehler stehen, sie treffen nicht ein: keine Bewegung ------------------ */
+.formular .fehler{display:block;font-family:var(--font-text);font-size:var(--t-small);line-height:var(--lh-min);color:var(--bad);transition:none}
+.formular .fehler[hidden]{display:none}
+.formular .field input[aria-invalid="true"],.formular .field select[aria-invalid="true"]{border:2px solid var(--bad);transition:none}
+.formular .gruppe-fehler{border-left:4px solid var(--bad);padding-left:var(--s4);margin-left:calc(-1 * var(--s4) - 4px)}
+.formular .fehlerliste{border:2px solid var(--bad);border-radius:var(--r-control);padding:var(--s4) var(--s5);display:grid;gap:var(--s2)}
+.formular .fehlerliste[hidden]{display:none}
+.formular .fehlerliste:focus{outline:2px solid var(--blue);outline-offset:2px}
+.formular .fehlerliste h2{font-size:var(--t-body);text-wrap:balance}
+.formular .fehlerliste ul{list-style:none;margin:0;padding:0;display:grid;gap:var(--s1);font-family:var(--font-text);font-size:var(--t-small)}
+.formular .fehlerliste a{color:var(--bad);text-decoration:underline;text-underline-offset:.15em}
+
+/* --- Abschluss: Knopf, Satz, Dank – der Dank wächst aus dem Knopf ---------- */
+.formular .abschluss{display:grid;gap:var(--s3)}
+.formular .abschluss .btn.primary{width:100%;font-size:var(--t-body);min-height:calc(var(--tap) + var(--s2));text-wrap:balance}
+.formular .dank{border-radius:var(--r-control);overflow:hidden}
+.formular .dank:empty{display:none}
+.formular .dank-innen{background:var(--ton-hell,color-mix(in srgb,var(--gold) 14%,var(--paper)));padding:var(--s5) var(--s6) var(--s6);
+  display:grid;gap:var(--s3)}
+.formular .dank-innen h2{font-size:var(--t-h3);text-wrap:balance}
+.formular .dank-innen h2:focus{outline:none}
+.formular .dank-innen p{max-width:min(var(--measure),100%)}
+.formular .dank-innen .btn{justify-self:start}
+
+@media print{.formular .abschluss .btn{display:none}}

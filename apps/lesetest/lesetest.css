@@ -1,0 +1,43 @@
+/* Lesetest – nur werkzeug-eigene Gestaltung; alles Gemeinsame aus base.css. */
+.test{padding-block:clamp(32px,6vw,64px) var(--s8)}
+.schritt{display:grid;gap:var(--s5);max-width:min(var(--measure),100%);border-top:0;padding-top:0}
+.schritt h1{font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,48px);line-height:var(--lh-tight);text-wrap:balance}
+.schritt h2{font-weight:var(--w-deutlich);font-size:clamp(24px,3.6vw,32px);line-height:var(--lh-tight);text-wrap:balance}
+.schritt .lede{color:var(--muted);text-wrap:pretty;hyphens:manual}
+.formular{display:grid;gap:var(--s6);margin-top:var(--s2)}
+.frage{border:0;display:grid;gap:var(--s3);min-width:0}
+.frage legend{font-family:var(--font-text);font-size:var(--t-body);font-weight:600;line-height:var(--lh-min);margin-bottom:var(--s3);text-wrap:balance}
+.frage .kacheln{grid-template-columns:1fr}
+#fragen-liste{display:grid;gap:var(--s6)}
+.frage legend,.fehlerliste{hyphens:manual}
+.frage button.kachel{border-radius:var(--r-control);padding:var(--s3) var(--s4)}
+.frage button.kachel .k-kurz{font-size:var(--t-body);color:inherit}
+.knopfzeile{display:flex;gap:var(--s3);flex-wrap:wrap}
+.knopfzeile .btn{font-size:var(--t-body);padding-inline:var(--s6)}
+
+/* Skala 1–7: sieben gleich breite Pillen, die Pole darunter. */
+.skala{display:grid;gap:var(--s2);max-width:30rem}
+.skala .seg{display:grid;grid-template-columns:repeat(7,minmax(var(--tap),1fr));gap:6px}
+.skala .seg button{padding-inline:0;font-variant-numeric:tabular-nums lining-nums}
+.pole{display:flex;justify-content:space-between;gap:var(--s3)}
+
+.haken{display:flex;align-items:center;gap:var(--s3);min-height:var(--tap);font-family:var(--font-text);font-size:var(--t-body);cursor:pointer}
+.haken input{width:22px;height:22px;accent-color:var(--gold-deep);flex:none}
+
+.fehlerliste{font-family:var(--font-text);font-size:var(--t-body);line-height:var(--lh-min);border-left:4px solid var(--bad);padding:var(--s2) var(--s4)}
+.fehlerliste ul{list-style:none;display:grid;gap:var(--s2)}
+
+/* Der Probetext. Beide Schriften: gleicher Grad (--t-body), gleiche Zeilenhöhe
+   (--lh-body), gleiche Laufweite (base.css). Gleich schwer: Klar 440 ↔ Source
+   Regular 400 (Stamm 33 ↔ 34 px bei 400 px Grad, gemessen). Die x-Höhe
+   gleicht tokens.css (size-adjust 103 %).
+   Gleiches Mass in ZEICHEN, nicht in ch: 62ch ergäben in der Hausschrift
+   89 Zeichen je Zeile (ihre Null ist breit), in Source 70. Gemessen über alle
+   acht Texte: Klar 0.415 em, Source 0.451 em je Zeichen → 70 Zeichen = 29 em
+   bzw. 31.5 em (Befund in docs/schriften-verteilung.md). */
+.probe{font-size:var(--t-body);line-height:var(--lh-body);text-wrap:pretty;hyphens:auto}
+.probe.schrift-g{font-family:var(--font-display);font-weight:var(--w-klar);max-width:min(29em,100%)}
+.probe.schrift-s{font-family:var(--font-text);font-weight:400;max-width:min(31.5em,100%)}
+.probe .probe-titel{font:inherit;font-weight:inherit;font-size:1.3em;line-height:var(--lh-tight);margin-bottom:var(--s5);text-wrap:balance}
+.probe p{margin-bottom:.8em}
+.papierhinweis .lede{color:var(--ink)}

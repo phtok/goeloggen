@@ -58,7 +58,7 @@ def repair(path):
     return goal
 
 def main():
-    for p in sorted(glob.glob(os.path.join(FONTS, "Goetheanum-Schrift-v2.8-*.otf"))):
+    for p in sorted(glob.glob(os.path.join(FONTS, "Goetheanum-Schrift-v2.9-*.otf"))):
         cut = os.path.basename(p).split("-")[-1].replace(".otf", "")
         g = repair(p)
         print("  small-cap Ǻ neu:", cut, "(%s)" % g if g else "— nicht vorhanden")

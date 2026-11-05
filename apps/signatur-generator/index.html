@@ -8,7 +8,7 @@
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="../../assets/logos/goetheanum-mark-blue.svg" />
 
-<!-- Fundament – eine Quelle der Wahrheit (Schriften v2.8, Tokens, Hell/Dunkel, Navigation).
+<!-- Fundament – eine Quelle der Wahrheit (Schriften v2.9, Tokens, Hell/Dunkel, Navigation).
      Relative Pfade: funktionieren auf der Custom-Domain (Root) UND unter phtok.github.io/goeloggen/. -->
 <link rel="stylesheet" href="../../design-system/tokens.css" />
 <link rel="stylesheet" href="../../design-system/base.css" />
@@ -52,6 +52,9 @@
   .fold>summary::after{content:"+";color:var(--muted);font-size:18px;line-height:1;width:1em;text-align:center}
   .fold[open]>summary::after{content:"–"}
   .fold-body{display:grid;gap:var(--s3);margin-top:var(--s3)}
+  /* Social Media: je Kanal ein Paar, Name schmal, Link breit; schmal untereinander. */
+  .soc-paar{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:var(--s2);align-items:end}
+  @media(max-width:380px){.soc-paar{grid-template-columns:1fr}}
 
   /* Schrittleiste wie in ‹Mein Campusplan›: jede Station anwählbar, die aktuelle in Tinte. */
   .schritte{list-style:none;margin:0 0 var(--s5);padding:0;display:flex;gap:var(--s1) var(--s3);flex-wrap:wrap}
@@ -273,6 +276,43 @@
             </label>
             <button type="button" class="btn ghost small" id="secWeb" hidden></button>
           </fieldset>
+          <details class="fold" id="socFold">
+            <summary>Social Media <span class="sub">optional, bis zu vier</span></summary>
+            <div class="fold-body">
+              <div class="soc-paar">
+                <label class="field"><span class="lab"><span>Name des Kanals</span></span>
+                  <input type="text" id="soc1Name" placeholder="Facebook" autocomplete="off" />
+                </label>
+                <label class="field"><span class="lab"><span>Link</span></span>
+                  <input type="url" id="soc1Url" placeholder="facebook.com/…" autocomplete="off" />
+                </label>
+              </div>
+              <div class="soc-paar">
+                <label class="field"><span class="sr-only">Name des Kanals 2</span>
+                  <input type="text" id="soc2Name" placeholder="Instagram" autocomplete="off" />
+                </label>
+                <label class="field"><span class="sr-only">Link 2</span>
+                  <input type="url" id="soc2Url" autocomplete="off" />
+                </label>
+              </div>
+              <div class="soc-paar">
+                <label class="field"><span class="sr-only">Name des Kanals 3</span>
+                  <input type="text" id="soc3Name" autocomplete="off" />
+                </label>
+                <label class="field"><span class="sr-only">Link 3</span>
+                  <input type="url" id="soc3Url" autocomplete="off" />
+                </label>
+              </div>
+              <div class="soc-paar">
+                <label class="field"><span class="sr-only">Name des Kanals 4</span>
+                  <input type="text" id="soc4Name" autocomplete="off" />
+                </label>
+                <label class="field"><span class="sr-only">Link 4</span>
+                  <input type="url" id="soc4Url" autocomplete="off" />
+                </label>
+              </div>
+            </div>
+          </details>
         </div>
 
         <div class="schritt" data-step="3" hidden>
@@ -558,7 +598,10 @@ function logoWanted() {
   return !!(box && box.checked);
 }
 
-const FIELDS = ["name","role","roleEn","unitCustom","phone","mobile","web","street","city","country","ps","pslink","psuntil"];
+// Social Media: feste vier Paare (Name des Kanals, Link); ältere v4-Stände ohne sie laden leer.
+const SOC = [1, 2, 3, 4];
+const FIELDS = ["name","role","roleEn","unitCustom","phone","mobile","web","street","city","country","ps","pslink","psuntil"]
+  .concat(...SOC.map(i => ["soc" + i + "Name", "soc" + i + "Url"]));
 const STORE_KEY = "goe-signatur-v4";
 const OLD_KEY = "goe-signatur-v3";
 // Leere Adressfelder fallen auf das Haus zurück; weg kommt eine Zeile über ihr Häkchen.
@@ -660,6 +703,15 @@ function collectLines() {
   add("web", "person", "Website", 2, linkLine(splitLines(val("web"))
     .filter(w => stripWww(w).toLowerCase() !== HAUS_WEB)
     .map(w => ({ href: webHref(w), text: stripWww(w) })), MAIL_BLUE));
+  // Social Media der Sektion/des Bereichs: Wörter als Links, kein Icon (Beschluss
+  // 5. 11. 2026, Signatur als ‹endorsed brand›). Klartext: Name mit Adresse.
+  // Ohne Link entfällt das Paar; ohne Namen steht die Adresse selbst.
+  const soc = SOC.map(i => ({ n: val("soc" + i + "Name"), u: val("soc" + i + "Url") })).filter(s => s.u)
+    .map(s => ({ href: webHref(s.u), text: s.n || stripWww(s.u), plain: s.n ? s.n + ": " + stripWww(s.u) : stripWww(s.u) }));
+  add("social", "person", "Social Media", 2, soc.length ? [{
+    html: soc.map(s => linkHtml(s.href, s.text, MAIL_BLUE)).join(" · "),
+    text: soc.map(s => s.plain).join("\n")
+  }] : []);
   // Telefonnummern auf einer Zeile, als tel:-Link in Mail-Blau wie die
   // Websites: Als reiner Text erkennt Mail (iOS) sie trotzdem und
   // unterstreicht jedes Wort einzeln (Befund 21. 10. 2026). Die Wort-spans
@@ -974,6 +1026,8 @@ function setFields(obj) {
   state.lang = ["de", "de-en", "en"].indexOf(obj.lang) !== -1 ? obj.lang : "de";
   state.on = (obj.on && typeof obj.on === "object") ? obj.on : {};
   state.px = GROESSEN.indexOf(+obj.px) !== -1 ? +obj.px : 12;
+  // Wer Kanäle eingetragen hat, sieht sie offen.
+  document.getElementById("socFold").open = SOC.some(i => obj["soc" + i + "Url"] || obj["soc" + i + "Name"]);
   syncUnitUi();
 }
 function loadStored() {

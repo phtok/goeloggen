@@ -35,6 +35,184 @@ Browser die Absatzbreite in Zeichen misst, für Seiten und Druckquellen.
 
 ---
 
+## 2. November 2026 — Listenzeichen nach der Kreiszahl des Kartentools (Korrektur zu #751)
+
+**Was.** Kreis 1200 statt 860, Quadrat 1116; Zeichen auf ½ Durchmesser,
+ein- und zweistellig gleich gross, waagrecht nach der Vorbreite zentriert
+(Ziffern tabellarisch), senkrecht Tintenmitte auf Kreismitte. **Warum.**
+Inhaber: Kreiszahlen der ersten Fassung «nicht gelungen», Vorbild ist das
+Kartentool (`.step-num`, Entscheid 8. 7. 2026). **Wirkung.** Gefüllt in Laut
+deckungsgleich mit den Kartenmarken; Befund
+`docs/befunde/listenziffern-e3-2026-11-02.md` nachgeführt.
+
+## 2. November 2026 — Hausschrift Fassung 2.92: Pfeile in der Textschrift (Schrift, Version des Systems unverändert)
+
+**Was.** `← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙` (U+2190–2199) in allen fünf Schnitten und
+der Variable, in der Form der ‹Goetheanum Pfeile› (Arm 50°, stumpfe Spitze, Strich zum Ende schlanker wie dort);
+Strich = Stärke des Minus, folgt dem Schnitt; Mitte auf halber Versalhöhe.
+667 → 677 Codepunkte, Dateinamen v2.9, intern 2.92. **Warum.** Entscheid
+des Inhabers 2. 11. («Pfeile ja»): «Ausgang →» fiel bisher auf eine
+Ersatzschrift oder ein Emoji. **Wirkung.** Vorhandene Zeichen und Masse
+unverändert; ‹Goetheanum Pfeile› bleibt daneben. Befund
+`docs/befunde/pfeile-textschrift-2026-11-02.md`, Anschauung
+https://werkzeuge.goetheanum.ch/schriften.html, Beipackzettel S. 2.
+
+## 2. November 2026 — Hausschrift Fassung 2.91: Listenzeichen ss03–ss06 (Schrift, Version des Systems unverändert)
+
+**Was.** Buchstaben A–Z und Ziffern 1–99 in Kreis und Quadrat, je Kontur und
+gefüllt, als Stilsets `ss03`–`ss06` in allen fünf Schnitten und der Variable;
+`⓪ ①–㊿ Ⓐ–Ⓩ ⓿ ❶–⓴` zeigen dieselben Formen (569 → 667 Codepunkte).
+Dateinamen bleiben v2.9, intern Version 2.91. **Warum.** Etappe E3 (Entscheid
+des Inhabers 31. 10.), für Campus-Karte, Leitsystem und Beipackzettel; am
+2. 11. ergänzt: «Kreis muss Kreis sein» – 10–99 stehen im selben Kreis wie
+ein Einzelzeichen. **Wirkung.** Nur mit eingeschaltetem Stilset; vorhandene
+Zeichen und Masse unverändert. Prüfmass kennt gefüllte Formen (Fläche fällt).
+Befund `docs/befunde/listenziffern-e3-2026-11-02.md`, Anschauung
+https://werkzeuge.goetheanum.ch/listenzeichen.html, Beipackzettel S. 6.
+
+## 31. Oktober 2026 — Hausschrift v2.9: Abgleich mit Titillium Sans Pro (Schrift, Version des Systems unverändert)
+
+**Was.** Hausschrift auf v2.9: 158 Zeichen mehr (411 → 569; Sanskrit-Umschrift
+IAST, Pinyin, `Ə ə`, Brüche, `₹ ₽ ₴ ฿`, kombinierende Akzente mit `ccmp`),
+Kerning der Titillium Sans Pro (iKern) für alle Paare formgleicher Zeichen,
+skaliert auf die schmalere Hausproportion; der Variable Font kernt je Gewicht.
+`¨` wächst mit dem Gewicht. Alle Einbindungen ziehen die Dateinamen v2.9.
+**Warum.** Etappe E2, Entscheid des Inhabers vom 31. Oktober
+(`docs/recherche_titillium-pro.md`). Neue Zeichen sind aus den eigenen
+Buchstaben und Akzenten gesetzt, damit die Upright-Formen bleiben; `№`
+(bewusst «Nr.»), Pfeile (Hausform ‹Goetheanum Pfeile›), `₪` (in der Pro
+fehlerhaft) und die Kreisziffern (E3) kommen nicht. Vertikalmetriken
+unverändert. **Wirkung.** Jede Seite mit der Hausschrift: Versalzeilen
+schliessen sich (AT −41 → −64, LT −80 → −104), woff2 +16 %. Befund:
+`docs/befunde/schrift-v29-titillium-pro.md`; Vergleich auf
+https://werkzeuge.goetheanum.ch/schrift-v29.html. `Goetheanum-Schrift-v2.8-Deutlich`
+bleibt für versandte Mails erreichbar.
+
+## 31. Oktober 2026 — Serif-Probe im Treibhaus (Version des Systems unverändert)
+
+**Was.** «Goetheanum Serif Probe» aus Titillium Pro Serif version_00
+(Chialab, OFL), gebaut mit `tools/goetheanum-fontfix/build_serif_probe.py`,
+abgelegt in `assets/fonts/proben/` (nicht im Paket), Specimen
+`schrift-serif-probe.html` (Treibhaus · Schriftentwicklung).
+**Warum.** Etappe E4, Auftrag des Inhabers: Serif testen, Grenzen klären.
+**Wirkung.** Keine auf das Fundament: kein Token, keine Rolle, Regelwerk
+unverändert. Vorschlag (Serif als Stimme für Zitat, Lede, Titel ab 24 px;
+Lesemass 54 ch) wartet auf den Entscheid, `docs/befunde/serif-probe-2026-10-31.md`.
+
+## 31. Oktober 2026 — Treibhaus statt Labor (Version des Systems unverändert)
+
+**Beschluss des Auftraggebers.** Das Labor heisst ‹Treibhaus›: dort wächst,
+was noch nicht ins Freie darf; was trägt, wird ins Fundament ausgepflanzt.
+Fundament (`tokens.css`/`base.css`) unverändert, darum kein Versionssprung.
+
+**Was.** Kategorie `labor` → `treibhaus` (‹Wächst noch – nicht fürs Freie.›).
+Unterkategorien als Feld `beet` je Werkzeug; die Beete stehen in
+`tools.json` → `welten.intern` als Unterwelten mit `beet` (eine Quelle für
+Schublade, Startseite im Backstage, internen Hub `start/` und Ordner-Editor).
+Die Kategorien `ligaturen` und `schriftpflege` gehen im Beet
+Schriftentwicklung auf; Geparktes und Überreste stehen nicht mehr im
+Treibhaus, sondern als eigene Backstage-Welten danach.
+
+| Werkzeug | vorher | nachher |
+|---|---|---|
+| guillemets, schrift-vergleich, tester, werkzeug | schriftpflege | treibhaus · Schriftentwicklung |
+| ligvorschau, ineinander, kerning | ligaturen | treibhaus · Schriftentwicklung |
+| sektionsfarben-modell, -achsen, -goethe, -goethe-varianten | labor | treibhaus · Farbe |
+| stilprobe-warm | schau | treibhaus · Farbe |
+| moodboard-lebendig, bewegung-anwendungen, bewegte-schrift | labor | treibhaus · Bewegung |
+| prinzipien, marketing-maschine, navigations-architektur | labor | treibhaus · Konzepte |
+| spenden-formular, campusplan, seelenkalender | labor | treibhaus · Experimente |
+| schmiede, schmiede-eingang, folder-archiv | labor | kistenpflege |
+
+Belassen: Kampagne, Kistenpflege, Schau & Mockups (fertig, nur nicht
+öffentlich), Geparkt, Archiv; die öffentlichen Welten unberührt.
+
+## 31. Oktober 2026 — Formular-Baustein, Akkordeon zu Gast, Abstand schmal (1.30.0)
+
+**Was.** Neues Modul `formular.css` · `formular.js` neben `akkordeon.*`,
+herausgelöst aus dem Prototyp `spenden-formular.html` (Entscheide 1 und 3
+aus `docs/spenden-review-2026-10-31.md`): Frequenz, Betrag-Stufen mit freiem
+Feld (tnum, ohne «.00»), Zahlungsart, Personenfelder, Adresse wächst erst bei
+Bescheinigung (`grid-template-rows` 0fr→1fr, `--dauer-mittel`), Zweck,
+Fehlerzusammenfassung mit Sprunglinks, Fehlertexte am Feld ohne Bewegung,
+Knopf mit Betrag, Dank wächst aus dem Knopf (`role="status"`,
+`--dauer-lang`). Wahl-Pillen im Formular in Source Sans 3 und 16&nbsp;px
+(Werte, keine Stimme). Texte, Stufen, Zahlarten und Fehlertexte stehen im
+Markup (`data-*`), das Skript ist textfrei und übersetzbar; Backend über
+`GoetheanumFormular.init(form).absenden = fn` (Promise). Geprüft wird beim
+Verlassen eines Felds erst nach dem Loslassen des Zeigers (Befund Prototyp:
+sonst rutscht das Ziel unter dem Zeiger weg). Der Prototyp bindet das Modul
+ein und behält nur seine Laborschalter.
+**Akkordeon zu Gast** (Entscheid 4): `--acc-t-frage` (Standard `--t-h3`) und
+`--acc-t-antwort` (Standard `--t-body`) am `.acc-liste`; schmal tritt die
+Frage auf den Antwortgrad zurück. Für goetheanum.io 21/18&nbsp;px
+(Token-Auszug auf `akkordeon.html`).
+**Abstand schmal:** Kleid Faden stand bei 420&nbsp;px 12&nbsp;px vom Faden
+und 8&nbsp;px von der rechten Kante («die Schrift klebt am Rahmen»); jetzt
+`--s4` auf beiden Seiten, auf allen Breiten. Blüte (16/16) und Kapsel
+(16/16) hielten das schon. Gemessen: Faden 420&nbsp;px Text 18&nbsp;px ab
+Aussenkante (2&nbsp;px Faden + 16), rechts 17&nbsp;px. Dazu der Befund vom
+Telefon (`docs/befunde/akkordeon-faden-schmal-2026-10-31.md`): der Hover-Hauch
+blieb nach dem Tippen als Band stehen (Sticky Hover). Alle Hover-Regeln des
+Akkordeons liegen jetzt hinter `@media (hover:hover)`; die offene Zeile im
+Faden ist ruhig – keine Fläche, nur Tinte und das farbige Fadenstück.
+Geprüft mit Touch-Emulation (iPhone 13), getippt in allen drei Kleidern.
+**Kopierbereich** `kopierbereich.js`: Code auf `akkordeon.html` und
+`spenden-formular.html` lädt aus den Quelldateien, der Token-Auszug wird aus
+`tokens.css` gerechnet (hell, weniger Bewegung, dunkel) – die alten
+Abschriften auf `akkordeon.html` waren seit 1.29.0 veraltet.
+**Entscheid 31. 10.:** der Schalter `data-bewegung="normal"` bleibt im
+Fundament; ohne Schalter gilt die Systemeinstellung.
+**Warum.** Eine Verbesserung am Formular wird einmal gebaut und gilt überall
+(CLAUDE.md § Optimierungen fliessen zurück); ein Modul zu Gast nimmt den Grad
+des Hauses an.
+**Wirkung.** B01, B02, B03 (Felder 16&nbsp;px), B04 (alle Ziele ≥44&nbsp;px),
+G01, G05, G25, DS08 (axe grün in Ruhe, Fehler, Adresse, Dank; hell und
+dunkel). Übergabe an Craft: `docs/uebergabe-spenden-craft.md`.
+
+## 31. Oktober 2026 — Bewegung im Fundament (1.29.0)
+
+**Was.** `tokens.css` trägt einen Block Bewegung: `--kurve-bloom`
+`cubic-bezier(.32,.08,.24,1)`, `--kurve-flaeche` `cubic-bezier(.35,0,.5,1)`,
+`--kurve-ein`/`--kurve-aus` (beide wie Bloom), `--dauer-hauch` 120,
+`--dauer-kurz` 220, `--dauer-mittel` 280, `--dauer-lang` 400,
+`--dauer-flaeche-zu` 280&nbsp;ms, `--weg` 1.5&nbsp;rem, `--staffel` 40&nbsp;ms;
+gespiegelt in `tokens.json` (`duration`, `cubicBezier`). Bestand gehoben:
+`.btn`, `.seg`, `button.kachel` und die Felder von `.15s` ohne Kurve auf
+`--dauer-hauch` + `--kurve-bloom`; `nav.css` (Hinweis, Schleier, Schublade,
+Meldung, Gruppenpfeil) von `.12s`–`.22s ease` auf Tokens, die Schublade auf
+`--kurve-flaeche` mit `--dauer-kurz` (Länge wie bisher); `akkordeon.css`
+führt `--acc-kurve`/`--acc-dauer` als Zweitnamen von `--kurve-bloom`/
+`--dauer-mittel`, neu `--acc-dauer-zu` für `--dauer-kurz`; `akkordeon.js` liest Kurve und Dauern am Element per
+`getComputedStyle` statt fester 280/220&nbsp;ms (alte Werte als Rückfall).
+Die Kacheln im Hub (`index.html`) laufen auf `--dauer-hauch`. Die drei
+Laborseiten (moodboard-lebendig, spenden-formular, bewegung-anwendungen)
+lesen das Fundament statt eigener Definitionen; die Vollfläche schliesst
+dort in `--dauer-flaeche-zu`. Neuer DS04-Hinweis ‹Bewegung›
+(`contract.json` → `bewegung`): feste ms-/s-Werte und `cubic-bezier`-Literale
+in `transition`/`animation` einer Seite; 0&nbsp;s bleibt erlaubt.
+**Weniger Bewegung.** `tokens.css` setzt unter `prefers-reduced-motion`
+alle `--dauer-*` und `--staffel` auf 0&nbsp;s und `--weg` auf 0. Das harte
+`*{transition:none!important}` in `base.css` kann die Nullung noch **nicht
+ganz** ersetzen: 33&nbsp;Stellen in Seiten tragen feste Dauern (die neuen
+DS04-Hinweise) und liefen sonst bei weniger Bewegung wieder. Darum bleibt
+das Netz, gilt aber nur noch für Seiten **ohne** `data-bewegung` am
+`<html>`. Eine Seite, die ganz über Tokens läuft, setzt das Attribut und
+wird überstimmbar: `reduziert` nullt immer, `normal` ist die ausdrückliche
+Wahl des Lesers und überstimmt die Systemeinstellung (WCAG 2.3.3 verlangt
+die Abschaltbarkeit, nicht das Verbot einer bewussten Wahl). Für Leser
+ohne Schalter ändert sich nichts. Sind die Hinweise abgetragen, kann das
+Netz fallen.
+**Warum.** Beschluss des Auftraggebers vom 31. Oktober 2026 («Sehr gut! Ins
+Design-System einpflegen!») zum Vorschlag in
+`docs/recherche_uebergaenge-lebendig.md`; Befunde (1)–(3) der Laborseite
+Bewegung. Leitbild `docs/memo-lebendige-gesten-2026-10-31.md`.
+**Wirkung.** Sichtbar anders nur: Berührungen laufen 120 statt 150&nbsp;ms
+mit Bloom-Kurve, Schleier und Meldung der Schublade 220 statt 180/200&nbsp;ms
+auf einer Uhr mit der Schublade. Version 1.28.7 → 1.29.0.
+
+---
+
 ## 31. Oktober 2026 — Laborseite Bewegung in zehn Anwendungen (Labor, Version des Systems unverändert)
 
 **Was.** https://werkzeuge.goetheanum.ch/bewegung-anwendungen.html – die

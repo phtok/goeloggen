@@ -11,7 +11,7 @@
 #   curl -fsSL https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Installer/mac.sh | bash -s -- --variabel
 #
 # Für die IT (als root, für alle Benutzer des Geräts):
-#   sudo bash mac.sh --alle [--variabel] [--quelle <entpackter Ordner Goetheanum-Schriften-v2.8>]
+#   sudo bash mac.sh --alle [--variabel] [--quelle <entpackter Ordner Goetheanum-Schriften-v2.9>]
 #
 # Exit-Codes: 0 fertig · 1 Fehler (Download, Datei gesperrt) ·
 #             2 alte Fassung für alle Benutzer gefunden, Löschen abgelehnt
@@ -22,7 +22,7 @@
 
 set -u
 
-FASSUNG=2.8
+FASSUNG=2.9
 BASIS=https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum
 SCHRIFTEN="Office/GoetheanumSchriftKlar.ttf
 Office/GoetheanumSchriftLaut.ttf

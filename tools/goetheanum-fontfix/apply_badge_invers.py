@@ -12,7 +12,7 @@ Betrifft:
   • Webfonts/woff/…-Icons-v2.8.woff     (CFF)
   • Webfonts/woff2/…-Icons-v2.8.woff2   (CFF)
   • Goetheanum-Office-TTF.zip           → GoetheanumIcons.ttf (glyf, cu2qu)
-  • Goetheanum-Schriften-v2.8.zip       → OTF · woff · woff2 · Office-TTF neu
+  • Goetheanum-Schriften-v2.9.zip       → OTF · woff · woff2 · Office-TTF neu
 
 Idempotent: erneutes Laufen ändert nichts. Aufruf aus dem Repo-Wurzelverzeichnis:
   python3 tools/goetheanum-fontfix/apply_badge_invers.py
@@ -27,11 +27,11 @@ from fontfix import add_badge_invers, add_badge_invers_ttf, BADGE_INVERS_UNI  # 
 
 FONTS = os.path.join(ROOT, "assets/fonts/goetheanum")
 SVG = os.path.join(FONTS, "Icons-Einzeldateien/svg/goetheanum-badge-invers.svg")
-OTF = os.path.join(FONTS, "Fonts/Goetheanum-Icons-v2.8.otf")
-WOFF = os.path.join(FONTS, "Webfonts/woff/Goetheanum-Icons-v2.8.woff")
-WOFF2 = os.path.join(FONTS, "Webfonts/woff2/Goetheanum-Icons-v2.8.woff2")
+OTF = os.path.join(FONTS, "Fonts/Goetheanum-Icons-v2.9.otf")
+WOFF = os.path.join(FONTS, "Webfonts/woff/Goetheanum-Icons-v2.9.woff")
+WOFF2 = os.path.join(FONTS, "Webfonts/woff2/Goetheanum-Icons-v2.9.woff2")
 OFFICE_ZIP = os.path.join(FONTS, "Goetheanum-Office-TTF.zip")
-BUNDLE_ZIP = os.path.join(FONTS, "Goetheanum-Schriften-v2.8.zip")
+BUNDLE_ZIP = os.path.join(FONTS, "Goetheanum-Schriften-v2.9.zip")
 
 
 def _fix_cff():
@@ -80,9 +80,9 @@ def main():
     fixed = {OTF: open(OTF, "rb").read(), WOFF: open(WOFF, "rb").read(), WOFF2: open(WOFF2, "rb").read()}
     def bundle_tf(name, data):
         want = None
-        if name.endswith("Goetheanum-Icons-v2.8.otf"): want = fixed[OTF]
-        elif name.endswith("Goetheanum-Icons-v2.8.woff"): want = fixed[WOFF]
-        elif name.endswith("Goetheanum-Icons-v2.8.woff2"): want = fixed[WOFF2]
+        if name.endswith("Goetheanum-Icons-v2.9.otf"): want = fixed[OTF]
+        elif name.endswith("Goetheanum-Icons-v2.9.woff"): want = fixed[WOFF]
+        elif name.endswith("Goetheanum-Icons-v2.9.woff2"): want = fixed[WOFF2]
         elif name.endswith("GoetheanumIcons.ttf"): return _fix_ttf_bytes(data)
         return want if (want is not None and want != data) else None
     print("✓ Schriften-v2.8.zip neu gepackt" if _repack(BUNDLE_ZIP, bundle_tf) else "• Schriften-v2.8.zip schon aktuell")

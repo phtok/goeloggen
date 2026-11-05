@@ -49,6 +49,8 @@
   .steps b{font-weight:var(--w-strong)}
   .steps .d{color:var(--muted);font-size:14px;line-height:1.5}
   .demo{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center}
+  /* Treibhaus: Beet-Titel als Kicker-Zeile (normal, nicht versal – G05) */
+  .beet{display:block;margin:var(--s6) 0 var(--s3);font-size:var(--t-small)}
 </style>
 </head>
 <body>
@@ -143,7 +145,20 @@ function render(manifest){
     sec.innerHTML = `<div class="shead"><h2>${cat.title}</h2><p>${cat.intro || ""}</p></div>`;
 
     // Werkstatt & geparkte Projekte als ruhige Liste, sonst Karten-Raster
-    if(cat.id === "werkstatt" || cat.id === "geparkt"){
+    // Treibhaus nach Beeten (tools.json → welten.intern, Unterwelten mit beet)
+    const welt = ((manifest.welten && manifest.welten.intern) || []).find(w => w.id === cat.id);
+    const beete = welt ? (welt.sub || []).filter(b => b.beet) : [];
+    if(beete.length){
+      const frei = tools.filter(t => !beete.some(b => b.beet === t.beet));
+      beete.concat(frei.length ? [{ label: "Weiteres", rest: frei }] : []).forEach(b => {
+        const drin = b.rest || tools.filter(t => t.beet === b.beet);
+        if(!drin.length) return;
+        sec.insertAdjacentHTML("beforeend", `<h3 class="kicker beet">${b.label}</h3>`);
+        const grid = document.createElement("div"); grid.className = "grid cols3";
+        drin.forEach(t => grid.appendChild(tile(t)));
+        sec.appendChild(grid);
+      });
+    } else if(cat.id === "werkstatt" || cat.id === "geparkt"){
       const list = document.createElement("div"); list.className = "list";
       tools.forEach(t => list.appendChild(row(t)));
       sec.appendChild(list);

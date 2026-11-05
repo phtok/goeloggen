@@ -38,7 +38,7 @@ def webfonts(src):
         f = TTFont(src); f.flavor = flv; f.save(os.path.join(WF, sub, "%s.%s" % (b, flv)))
 
 def main():
-    otfs = sorted(glob.glob(os.path.join(FONTS, "Goetheanum-Schrift-v2.8-*.otf")))
+    otfs = sorted(glob.glob(os.path.join(FONTS, "Goetheanum-Schrift-v2.9-*.otf")))
     for p in otfs:
         ft = TTFont(p)
         if "CFF " not in ft:      # nur statische CFF-Schnitte

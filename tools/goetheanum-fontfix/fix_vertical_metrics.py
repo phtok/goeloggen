@@ -17,8 +17,8 @@ WF = os.path.join(ROOT, "Webfonts")
 SANE_YMAX, SANE_YMIN = 1200, -350
 
 def font_paths():
-    return (sorted(glob.glob(os.path.join(ROOT, "Fonts", "Goetheanum-Schrift-v2.8-*.otf"))) +
-            [os.path.join(ROOT, "Variable", "Goetheanum-Variabel-v2.8.otf")])
+    return (sorted(glob.glob(os.path.join(ROOT, "Fonts", "Goetheanum-Schrift-v2.9-*.otf"))) +
+            [os.path.join(ROOT, "Variable", "Goetheanum-Variabel-v2.9.otf")])
 
 def healthy_bounds(path):
     f = TTFont(path); gs = f.getGlyphSet(); cmap = f.getBestCmap()

@@ -32,7 +32,7 @@ Kontraste rechnen, nicht schätzen (B02).
 Regel-IDs · Aufnahmen ins Fundament mit Changelog-Eintrag · ⚑-Punkte.
 
 **Grenzen & Eskalation:** Artefakt-Farben mit `# ds-ok` sind ratifizierte
-Ausnahmen — in Ruhe lassen. Widerspricht eine Regel der Schrift (v2.8),
+Ausnahmen — in Ruhe lassen. Widerspricht eine Regel der Schrift (v2.9),
 melden und den Auftraggeber entscheiden lassen — das Regelwerk nie
 eigenmächtig umschreiben. Was Du nicht sicher belegen kannst, markiere
 mit ⚑ und übergib es Philipp — nie stillschweigend raten.

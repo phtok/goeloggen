@@ -17,10 +17,37 @@ Schauseite (lebend, rendert aus den Tokens): [`index.html`](index.html).
 | `index.html` | Die Schauseite – Schaufenster und Werkbank zugleich. |
 | `starter.html` | Leeres Werkzeug mit allem Verdrahteten. Startpunkt für jede neue Seite. |
 | `akkordeon.css` · `akkordeon.js` | Modul Akkordeon: Kleid **Faden** ist gesetzt, Blüte und Kapsel bleiben als Alternativen auf derselben Mechanik, Sektionsfarben per `data-sek`. Schau und Code zum Kopieren: `../akkordeon.html`. |
+| `formular.css` · `formular.js` | Modul Formular: Frequenz, Betrag mit freiem Feld, Zahlungsart, Personenfelder, Adresse nur bei Bescheinigung, Fehlerzusammenfassung, Knopf mit Betrag, Dank. Texte, Stufen und Zahlarten im Markup (`data-*`), Backend über `GoetheanumFormular.init(form).absenden`. Schau und Code zum Kopieren: `../spenden-formular.html`. |
+| `kopierbereich.js` | Kopierbereich der Schauseiten: lädt Code aus den Quelldateien (`data-quelle`) und rechnet den Token-Auszug aus `tokens.css` (`data-token-auszug`). |
 
 Verwandte Quellen ausserhalb dieses Ordners: die Typo-Regeln liegen in
 `assets/typografie/goetheanum-typo-tokens.json` (`$regeln`) und ausführbar in
 `assets/typografie/typo-regeln.yaml`. Der Check dazu ist `tools/typo-check.py`.
+
+## Bewegung
+
+Zwei Kurven, fünf Dauern, ein Weg, eine Staffel – in `tokens.css`, lebend
+auf `../bewegung-anwendungen.html`:
+
+| Token | Wert | Wofür |
+|---|---|---|
+| `--kurve-bloom` | `cubic-bezier(.32,.08,.24,1)` | auf und zu kleiner Flächen |
+| `--kurve-flaeche` | `cubic-bezier(.35,0,.5,1)` | Vollflächen, Schiebewege |
+| `--kurve-ein` · `--kurve-aus` | wie Bloom | Eintritt · Austritt |
+| `--dauer-hauch` | 120&nbsp;ms | Berührung, Fokus, Anwahl |
+| `--dauer-kurz` | 220&nbsp;ms | Austritt: zuklappen, Meldung geht |
+| `--dauer-mittel` | 280&nbsp;ms | Eintritt: aufklappen, erscheinen |
+| `--dauer-lang` | 400&nbsp;ms | Dank, Reiter, Vollfläche auf |
+| `--dauer-flaeche-zu` | 280&nbsp;ms | Vollfläche zu |
+| `--weg` | 1.5&nbsp;rem | Lage-Weg beim Aufblühen |
+| `--staffel` | 40&nbsp;ms | Versatz je Glied einer Reihe |
+
+Eine Uhr für alle Merkmale eines Vorgangs; kein Überschwingen. Bei weniger
+Bewegung (`prefers-reduced-motion`) stehen alle Dauern, die Staffel und der Weg
+auf null. Ein Laborschalter setzt `data-bewegung="normal|reduziert"` am
+`<html>`. Skripte lesen die Tokens per `getComputedStyle` (Muster:
+`akkordeon.js`). Feste Dauern und Kurven in einer Seite meldet `ds-lint` als
+DS04-Hinweis.
 
 ## Bau-Workflow: ein neues Werkzeug in vier Schritten
 

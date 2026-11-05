@@ -31,9 +31,9 @@ from fontTools.pens.boundsPen import BoundsPen
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 FONTS = os.path.join(ROOT, "assets/fonts/goetheanum")
-OTF = os.path.join(FONTS, "Fonts/Goetheanum-Icons-v2.8.otf")
+OTF = os.path.join(FONTS, "Fonts/Goetheanum-Icons-v2.9.otf")
 D = os.path.join(FONTS, "Icons-Einzeldateien")
-ZIPP = os.path.join(FONTS, "Goetheanum-Icons-v2.8-Einzeldateien.zip")
+ZIPP = os.path.join(FONTS, "Goetheanum-Icons-v2.9-Einzeldateien.zip")
 BOX = "-2 -1002 1004 1004"            # einheitliche Em-Box (2 Einheiten Rand)
 WORTMARKE = "icon-0021"                # Ausnahme: proportionale Box
 

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+<title>Hausschrift v2.9 · Goetheanum</title>
+<meta name="description" content="Hausschrift v2.8 und v2.9 nebeneinander: Kerning aus Titillium Sans Pro, neue Zeichen für Umschrift, Brüche und Währungen." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+
+<style>
+  /* Nachher: die ausgelieferten Schnitte v2.9. Vorher: Kopien der v2.8 in Befund/. */
+  @font-face{font-family:"G Leise";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.9-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Klar";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.9-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Deutlich";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.9-Deutlich.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.9-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"V28 Leise";src:url("assets/fonts/goetheanum/Befund/v2.8-Leise.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"V28 Klar";src:url("assets/fonts/goetheanum/Befund/v2.8-Klar.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"V28 Deutlich";src:url("assets/fonts/goetheanum/Befund/v2.8-Deutlich.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"V28 Laut";src:url("assets/fonts/goetheanum/Befund/v2.8-Laut.woff2") format("woff2");font-weight:400;font-display:swap}
+
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch}
+  section{margin-top:var(--s8)}
+
+  .leise{font-family:"G Leise"} .klar{font-family:"G Klar"} .deutlich{font-family:"G Deutlich"} .laut{font-family:"G Laut"}
+  .a-leise{font-family:"V28 Leise"} .a-klar{font-family:"V28 Klar"} .a-deutlich{font-family:"V28 Deutlich"} .a-laut{font-family:"V28 Laut"}
+
+  /* Eine Zeile je Schnitt: Etikett, vorher, nachher. */
+  .reihe{display:grid;grid-template-columns:1fr;gap:var(--s3) var(--s6);padding-block:var(--s5);border-bottom:1px solid var(--line-soft);align-items:start}
+  @media(min-width:900px){.reihe{grid-template-columns:9rem 1fr 1fr}}
+  .reihe .tag{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:var(--lh-min)}
+  .reihe .tag b{display:block;font-family:var(--font);font-weight:var(--w-deutlich);color:var(--ink);font-size:var(--t-body)}
+  .ver{display:block;font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);line-height:var(--lh-min);margin-bottom:var(--s1)}
+  .reihe .gross{font-size:clamp(28px,4vw,44px);line-height:1.15;text-wrap:balance}
+  .reihe .lese{margin-top:var(--s2);font-size:var(--t-body);line-height:var(--lh-body);color:var(--ink)}
+
+  /* Neue Zeichen: Karte je Gruppe, oben vorher, unten nachher. */
+  .zeichen{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--s4)}
+  .zeichen .z{border:1px solid var(--line);border-radius:var(--r-card);background:var(--paper);padding:var(--s4)}
+  .zeichen .z .g{font-size:clamp(28px,3.4vw,36px);line-height:1.35;overflow-wrap:anywhere}
+  .zeichen .z .g + .ver{margin-top:var(--s3)}
+  .zeichen .z .t{font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);margin-top:var(--s3)}
+
+  figure{margin:0}
+  figure img{display:block;max-width:100%;height:auto;border:1px solid var(--line);border-radius:var(--r-card);background:#fff} /* # ds-ok – Bild ist ein weisses Blatt */
+  figcaption{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:var(--s3);max-width:62ch}
+</style>
+</head>
+<body>
+
+<script src="design-system/nav.js" data-root="./" data-section="schriftpflege" data-active="schrift-v29" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Schriftpflege · Befund</span>
+    <h1>Hausschrift v2.9 neben&nbsp;v2.8</h1>
+    <p class="lede">Abgleich mit Titillium Sans Pro: das Kerning der Pro für formgleiche Zeichen, 158&nbsp;neue Zeichen aus den eigenen Buchstaben und Akzenten. Die Upright-Formen bleiben.</p>
+  </section>
+
+  <section id="kerning">
+    <div class="shead">
+      <h2>Kerning</h2>
+      <p>Links v2.8, rechts v2.9. Versalpaare wie AV, LT, TY und Satzzeichen nach Versalien rücken enger; Paare mit a, g, y, t, l behalten das Hauskerning.</p>
+    </div>
+
+    <div class="reihe"><div class="tag"><b>Deutlich</b>580 · Titel</div>
+      <div><span class="ver">vorher · v2.8</span><p class="gross a-deutlich" data-typo-ignore>AVATAR · LTV · TYPO</p><p class="lese a-deutlich" data-typo-ignore>Tyrann, Vortrag, «Wort». P. F. T. – 17.&nbsp;4.&nbsp;1924</p></div>
+      <div><span class="ver">nachher · v2.9</span><p class="gross deutlich" data-typo-ignore>AVATAR · LTV · TYPO</p><p class="lese deutlich" data-typo-ignore>Tyrann, Vortrag, «Wort». P. F. T. – 17.&nbsp;4.&nbsp;1924</p></div></div>
+    <div class="reihe"><div class="tag"><b>Klar</b>440 · Standard</div>
+      <div><span class="ver">vorher · v2.8</span><p class="gross a-klar" data-typo-ignore>Tafel, Vogel, WAVE</p><p class="lese a-klar">Vom Wesen der Farben. Tag und Nacht, Vortrag und Wachheit: Tafel&nbsp;7, Faust&nbsp;1, Typoskript.</p></div>
+      <div><span class="ver">nachher · v2.9</span><p class="gross klar" data-typo-ignore>Tafel, Vogel, WAVE</p><p class="lese klar">Vom Wesen der Farben. Tag und Nacht, Vortrag und Wachheit: Tafel&nbsp;7, Faust&nbsp;1, Typoskript.</p></div></div>
+    <div class="reihe"><div class="tag"><b>Laut</b>680 · Fett</div>
+      <div><span class="ver">vorher · v2.8</span><p class="gross a-laut" data-typo-ignore>VERLAG · AUTOR · 7.</p></div>
+      <div><span class="ver">nachher · v2.9</span><p class="gross laut" data-typo-ignore>VERLAG · AUTOR · 7.</p></div></div>
+  </section>
+
+  <section id="zeichen">
+    <div class="shead">
+      <h2>Neue Zeichen</h2>
+      <p>Oben v2.8, unten v2.9. Was v2.8 nicht kennt, setzt der Browser in einer Ersatzschrift.</p>
+    </div>
+    <div class="zeichen" data-typo-ignore>
+      <div class="z"><span class="ver">v2.8</span><div class="g a-klar">Kṛṣṇa saṃsāra prāṇa ṛṣi ḍākinī</div><span class="ver">v2.9</span><div class="g klar">Kṛṣṇa saṃsāra prāṇa ṛṣi ḍākinī</div><div class="t">Sanskrit, Umschrift IAST</div></div>
+      <div class="z"><span class="ver">v2.8</span><div class="g a-klar">Azərbaycan · lǎoshī Běijīng</div><span class="ver">v2.9</span><div class="g klar">Azərbaycan · lǎoshī Běijīng</div><div class="t">Aserbaidschanisch, Pinyin</div></div>
+      <div class="z"><span class="ver">v2.8</span><div class="g a-klar">⅓ ⅔ ⅛ ⅜ ⅝ ⅞ ⅕</div><span class="ver">v2.9</span><div class="g klar">⅓ ⅔ ⅛ ⅜ ⅝ ⅞ ⅕</div><div class="t">Brüche</div></div>
+      <div class="z"><span class="ver">v2.8</span><div class="g a-klar">₹ ₽ ₴ ฿ ℮ ○ ●</div><span class="ver">v2.9</span><div class="g klar">₹ ₽ ₴ ฿ ℮ ○ ●</div><div class="t">Währungen und Zeichen</div></div>
+      <div class="z"><span class="ver">v2.8</span><div class="g a-laut">Ĳsselmeer Ḍḥ Ǫǫ Ḑḑ Ɛɛ</div><span class="ver">v2.9</span><div class="g laut">Ĳsselmeer Ḍḥ Ǫǫ Ḑḑ Ɛɛ</div><div class="t">Laut: Niederländisch, Akzente unten</div></div>
+      <div class="z"><span class="ver">v2.8</span><div class="g a-leise">Ḃḃ Ḋḋ Ṡṡ Ǩǩ Ȟȟ Ȳȳ</div><span class="ver">v2.9</span><div class="g leise">Ḃḃ Ḋḋ Ṡṡ Ǩǩ Ȟȟ Ȳȳ</div><div class="t">Leise: Akzente oben</div></div>
+    </div>
+  </section>
+
+  <section id="black">
+    <div class="shead">
+      <h2>Über Laut hinaus</h2>
+      <p>Probewort, aus Flüstern und Schreien linear weitergerechnet; darunter Titillio Extrablack. Kein Schnitt.</p>
+    </div>
+    <figure>
+      <img src="docs/befunde/schrift-v29-e5-black-probewort.png" width="793" height="702" alt="Das Wort Goetheanum fünfmal: Laut, Schreien, extrapoliert auf Stamm 190 und 238, dann Titillio Extrablack. Bei Stamm 238 laufen e, a und G zu, die Buchstaben verschmelzen." />
+      <figcaption>Bis etwa Stamm 190 trägt die Achse; darüber laufen die Innenräume zu, weil die Hausschrift ihre Breite nicht mitwachsen lässt. Ein Extrablack bräuchte eigene, breitere Master.</figcaption>
+    </figure>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="schriften.html">Schriften</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

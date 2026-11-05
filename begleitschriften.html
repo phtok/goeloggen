@@ -1,0 +1,473 @@
+<!doctype html>
+<!-- Treibhaus: Begleitschriften für Schriftsysteme, die die Hausschrift nicht trägt.
+     Schriften: assets/fonts/schriftsysteme/ (Subsets aus tools/schriftsysteme-probe.py –
+     nach jeder Text-Änderung neu laufen lassen). Lizenzen und Empfehlung:
+     docs/schriften-verteilung.md. -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Begleitschriften · Goetheanum</title>
+<meta name="description" content="Freie Schriften für Griechisch, Hebräisch, Georgisch, Armenisch, Chinesisch, Japanisch und Koreanisch neben der Hausschrift." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch;text-wrap:pretty;hyphens:manual}
+  .sprung{display:flex;flex-wrap:wrap;gap:var(--s2);list-style:none;margin:0;padding:0}
+  .sprung .chip{min-height:var(--tap);display:inline-flex;align-items:center;text-decoration:none}
+  .system{padding-top:var(--s8);scroll-margin-top:calc(var(--header-h) + var(--s4))}
+  .system h2{text-wrap:balance}
+  .probe{padding-block:var(--s6);border-top:1px solid var(--line)}
+  .probe h3{font-family:var(--font-text);font-size:var(--t-small);font-weight:600;color:var(--muted);margin:0 0 var(--s4)}
+  .paar{display:grid;grid-template-columns:1fr;gap:var(--s6) var(--s7)}
+  @media (min-width:900px){.paar{grid-template-columns:1fr 1fr}}
+  .titel{font-size:clamp(24px,3vw,32px);line-height:1.3;margin:0;text-wrap:balance}
+  .txt{font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure);margin:var(--s3) 0 0;text-wrap:pretty;hyphens:manual}
+  .lat .titel{font-family:var(--font-display);font-weight:var(--w-deutlich)}
+  .lat .txt{font-family:var(--font-text)}
+  .fremd .titel{font-weight:600}
+  .fremd .txt{font-weight:400}
+  .fremd:lang(zh),.fremd:lang(ja),.fremd:lang(ko){line-break:strict}
+  .fremd:lang(zh) .txt,.fremd:lang(ja) .txt,.fremd:lang(ko) .txt{line-height:1.8}
+  .fremd:lang(ko){word-break:keep-all}
+  .fremd:lang(ja){word-break:auto-phrase}
+  .titel .satz{display:inline-block}
+  @font-face{font-family:"P sourcesans";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcesans-text.woff2") format("woff2")}
+  @font-face{font-family:"P sourcesans";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcesans-titel.woff2") format("woff2")}
+  [data-f="sourcesans"]{font-family:"P sourcesans",var(--font-text)}
+  @font-face{font-family:"P firasans";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/firasans-text.woff2") format("woff2")}
+  @font-face{font-family:"P firasans";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/firasans-titel.woff2") format("woff2")}
+  [data-f="firasans"]{font-family:"P firasans",var(--font-text)}
+  @font-face{font-family:"P commissioner";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/commissioner-text.woff2") format("woff2")}
+  @font-face{font-family:"P commissioner";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/commissioner-titel.woff2") format("woff2")}
+  [data-f="commissioner"]{font-family:"P commissioner",var(--font-text)}
+  @font-face{font-family:"P ibmplexsans";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/ibmplexsans-text.woff2") format("woff2")}
+  @font-face{font-family:"P ibmplexsans";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/ibmplexsans-titel.woff2") format("woff2")}
+  [data-f="ibmplexsans"]{font-family:"P ibmplexsans",var(--font-text)}
+  @font-face{font-family:"P assistant";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/assistant-text.woff2") format("woff2")}
+  @font-face{font-family:"P assistant";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/assistant-titel.woff2") format("woff2")}
+  [data-f="assistant"]{font-family:"P assistant",var(--font-text)}
+  @font-face{font-family:"P heebo";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/heebo-text.woff2") format("woff2")}
+  @font-face{font-family:"P heebo";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/heebo-titel.woff2") format("woff2")}
+  [data-f="heebo"]{font-family:"P heebo",var(--font-text)}
+  @font-face{font-family:"P ibmplexhebrew";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/ibmplexhebrew-text.woff2") format("woff2")}
+  @font-face{font-family:"P ibmplexhebrew";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/ibmplexhebrew-titel.woff2") format("woff2")}
+  [data-f="ibmplexhebrew"]{font-family:"P ibmplexhebrew",var(--font-text)}
+  @font-face{font-family:"P notohebrew";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/notohebrew-text.woff2") format("woff2")}
+  @font-face{font-family:"P notohebrew";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/notohebrew-titel.woff2") format("woff2")}
+  [data-f="notohebrew"]{font-family:"P notohebrew",var(--font-text)}
+  @font-face{font-family:"P notogeorgian";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/notogeorgian-text.woff2") format("woff2")}
+  @font-face{font-family:"P notogeorgian";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/notogeorgian-titel.woff2") format("woff2")}
+  [data-f="notogeorgian"]{font-family:"P notogeorgian",var(--font-text)}
+  @font-face{font-family:"P firago";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/firago-text.woff2") format("woff2")}
+  @font-face{font-family:"P firago";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/firago-titel.woff2") format("woff2")}
+  [data-f="firago"]{font-family:"P firago",var(--font-text)}
+  @font-face{font-family:"P googlesans";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/googlesans-text.woff2") format("woff2")}
+  @font-face{font-family:"P googlesans";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/googlesans-titel.woff2") format("woff2")}
+  [data-f="googlesans"]{font-family:"P googlesans",var(--font-text)}
+  @font-face{font-family:"P notoarmenian";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/notoarmenian-text.woff2") format("woff2")}
+  @font-face{font-family:"P notoarmenian";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/notoarmenian-titel.woff2") format("woff2")}
+  [data-f="notoarmenian"]{font-family:"P notoarmenian",var(--font-text)}
+  @font-face{font-family:"P mardoto";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/mardoto-text.woff2") format("woff2")}
+  @font-face{font-family:"P mardoto";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/mardoto-titel.woff2") format("woff2")}
+  [data-f="mardoto"]{font-family:"P mardoto",var(--font-text)}
+  @font-face{font-family:"P sourcehansc";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcehansc-text.woff2") format("woff2")}
+  @font-face{font-family:"P sourcehansc";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcehansc-titel.woff2") format("woff2")}
+  [data-f="sourcehansc"]{font-family:"P sourcehansc",var(--font-text)}
+  @font-face{font-family:"P sourcehanserifsc";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcehanserifsc-text.woff2") format("woff2")}
+  @font-face{font-family:"P sourcehanserifsc";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcehanserifsc-titel.woff2") format("woff2")}
+  [data-f="sourcehanserifsc"]{font-family:"P sourcehanserifsc",var(--font-text)}
+  @font-face{font-family:"P zcoolxiaowei";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/zcoolxiaowei-text.woff2") format("woff2")}
+  @font-face{font-family:"P zcoolxiaowei";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/zcoolxiaowei-titel.woff2") format("woff2")}
+  [data-f="zcoolxiaowei"]{font-family:"P zcoolxiaowei",var(--font-text)}
+  @font-face{font-family:"P sourcehanjp";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcehanjp-text.woff2") format("woff2")}
+  @font-face{font-family:"P sourcehanjp";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcehanjp-titel.woff2") format("woff2")}
+  [data-f="sourcehanjp"]{font-family:"P sourcehanjp",var(--font-text)}
+  @font-face{font-family:"P zenkaku";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/zenkaku-text.woff2") format("woff2")}
+  @font-face{font-family:"P zenkaku";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/zenkaku-titel.woff2") format("woff2")}
+  [data-f="zenkaku"]{font-family:"P zenkaku",var(--font-text)}
+  @font-face{font-family:"P ibmplexjp";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/ibmplexjp-text.woff2") format("woff2")}
+  @font-face{font-family:"P ibmplexjp";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/ibmplexjp-titel.woff2") format("woff2")}
+  [data-f="ibmplexjp"]{font-family:"P ibmplexjp",var(--font-text)}
+  @font-face{font-family:"P bizudp";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/bizudp-text.woff2") format("woff2")}
+  @font-face{font-family:"P bizudp";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/bizudp-titel.woff2") format("woff2")}
+  [data-f="bizudp"]{font-family:"P bizudp",var(--font-text)}
+  @font-face{font-family:"P sourcehankr";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcehankr-text.woff2") format("woff2")}
+  @font-face{font-family:"P sourcehankr";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/sourcehankr-titel.woff2") format("woff2")}
+  [data-f="sourcehankr"]{font-family:"P sourcehankr",var(--font-text)}
+  @font-face{font-family:"P ibmplexkr";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/ibmplexkr-text.woff2") format("woff2")}
+  @font-face{font-family:"P ibmplexkr";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/ibmplexkr-titel.woff2") format("woff2")}
+  [data-f="ibmplexkr"]{font-family:"P ibmplexkr",var(--font-text)}
+  @font-face{font-family:"P gothica1";font-weight:400;font-display:swap;src:url("assets/fonts/schriftsysteme/gothica1-text.woff2") format("woff2")}
+  @font-face{font-family:"P gothica1";font-weight:600;font-display:swap;src:url("assets/fonts/schriftsysteme/gothica1-titel.woff2") format("woff2")}
+  [data-f="gothica1"]{font-family:"P gothica1",var(--font-text)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Treibhaus · Schriften</span>
+    <h1>Begleitschriften für andere Schriftsysteme</h1>
+    <p class="lede">Je Schriftsystem drei bis vier freie Schriften neben der Goetheanum Schrift und Source Sans&nbsp;3.</p>
+  </section>
+
+  <nav aria-label="Schriftsysteme">
+    <ul class="sprung"><li><a class="chip" href="#griechisch">Griechisch</a></li> <li><a class="chip" href="#hebraeisch">Hebräisch</a></li> <li><a class="chip" href="#georgisch">Georgisch</a></li> <li><a class="chip" href="#armenisch">Armenisch</a></li> <li><a class="chip" href="#chinesisch">Chinesisch</a></li> <li><a class="chip" href="#japanisch">Japanisch</a></li> <li><a class="chip" href="#koreanisch">Koreanisch</a></li></ul>
+  </nav>
+
+    <section class="system" id="griechisch" aria-labelledby="h-griechisch">
+      <h2 id="h-griechisch">Griechisch</h2>
+      <article class="probe">
+        <h3>Source Sans 3</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="el" dir="ltr" data-f="sourcesans">
+            <p class="titel">Γκαιτεάνουμ&nbsp;– Ελεύθερη Ανώτατη Σχολή Πνευματικής Επιστήμης</p>
+            <p class="txt">Το Γκαιτεάνουμ στο Ντόρναχ κοντά στη Βασιλεία είναι η έδρα της Γενικής Ανθρωποσοφικής Εταιρείας και της Ελεύθερης Ανώτατης Σχολής Πνευματικής Επιστήμης. Εδώ πραγματοποιούνται συνέδρια, θέατρο και ευρυθμία.</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>Fira Sans</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="el" dir="ltr" data-f="firasans">
+            <p class="titel">Γκαιτεάνουμ&nbsp;– Ελεύθερη Ανώτατη Σχολή Πνευματικής Επιστήμης</p>
+            <p class="txt">Το Γκαιτεάνουμ στο Ντόρναχ κοντά στη Βασιλεία είναι η έδρα της Γενικής Ανθρωποσοφικής Εταιρείας και της Ελεύθερης Ανώτατης Σχολής Πνευματικής Επιστήμης. Εδώ πραγματοποιούνται συνέδρια, θέατρο και ευρυθμία.</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>Commissioner</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="el" dir="ltr" data-f="commissioner">
+            <p class="titel">Γκαιτεάνουμ&nbsp;– Ελεύθερη Ανώτατη Σχολή Πνευματικής Επιστήμης</p>
+            <p class="txt">Το Γκαιτεάνουμ στο Ντόρναχ κοντά στη Βασιλεία είναι η έδρα της Γενικής Ανθρωποσοφικής Εταιρείας και της Ελεύθερης Ανώτατης Σχολής Πνευματικής Επιστήμης. Εδώ πραγματοποιούνται συνέδρια, θέατρο και ευρυθμία.</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>IBM Plex Sans</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="el" dir="ltr" data-f="ibmplexsans">
+            <p class="titel">Γκαιτεάνουμ&nbsp;– Ελεύθερη Ανώτατη Σχολή Πνευματικής Επιστήμης</p>
+            <p class="txt">Το Γκαιτεάνουμ στο Ντόρναχ κοντά στη Βασιλεία είναι η έδρα της Γενικής Ανθρωποσοφικής Εταιρείας και της Ελεύθερης Ανώτατης Σχολής Πνευματικής Επιστήμης. Εδώ πραγματοποιούνται συνέδρια, θέατρο και ευρυθμία.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="system" id="hebraeisch" aria-labelledby="h-hebraeisch">
+      <h2 id="h-hebraeisch">Hebräisch</h2>
+      <article class="probe">
+        <h3>Assistant</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="he" dir="rtl" data-f="assistant">
+            <p class="titel"><span class='satz'>גתאנום&nbsp;–</span> <span class='satz'>בית הספר הגבוה</span> <span class='satz'>החופשי למדע הרוח</span></p>
+            <p class="txt">הגתאנום בדורנאך שליד באזל הוא מושבם של החברה האנתרופוסופית הכללית ושל בית הספר הגבוה החופשי למדע הרוח. כאן מתקיימים כנסים, תיאטרון ואוריתמיה.</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>Heebo</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="he" dir="rtl" data-f="heebo">
+            <p class="titel"><span class='satz'>גתאנום&nbsp;–</span> <span class='satz'>בית הספר הגבוה</span> <span class='satz'>החופשי למדע הרוח</span></p>
+            <p class="txt">הגתאנום בדורנאך שליד באזל הוא מושבם של החברה האנתרופוסופית הכללית ושל בית הספר הגבוה החופשי למדע הרוח. כאן מתקיימים כנסים, תיאטרון ואוריתמיה.</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>IBM Plex Sans Hebrew</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="he" dir="rtl" data-f="ibmplexhebrew">
+            <p class="titel"><span class='satz'>גתאנום&nbsp;–</span> <span class='satz'>בית הספר הגבוה</span> <span class='satz'>החופשי למדע הרוח</span></p>
+            <p class="txt">הגתאנום בדורנאך שליד באזל הוא מושבם של החברה האנתרופוסופית הכללית ושל בית הספר הגבוה החופשי למדע הרוח. כאן מתקיימים כנסים, תיאטרון ואוריתמיה.</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>Noto Sans Hebrew</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="he" dir="rtl" data-f="notohebrew">
+            <p class="titel"><span class='satz'>גתאנום&nbsp;–</span> <span class='satz'>בית הספר הגבוה</span> <span class='satz'>החופשי למדע הרוח</span></p>
+            <p class="txt">הגתאנום בדורנאך שליד באזל הוא מושבם של החברה האנתרופוסופית הכללית ושל בית הספר הגבוה החופשי למדע הרוח. כאן מתקיימים כנסים, תיאטרון ואוריתמיה.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="system" id="georgisch" aria-labelledby="h-georgisch">
+      <h2 id="h-georgisch">Georgisch</h2>
+      <article class="probe">
+        <h3>Noto Sans Georgian</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="ka" dir="ltr" data-f="notogeorgian">
+            <p class="titel">გოეთეანუმი&nbsp;– სულიერი მეცნიერების თავისუფალი უმაღლესი სკოლა</p>
+            <p class="txt">გოეთეანუმი დორნახში, ბაზელთან ახლოს, ზოგადი ანთროპოსოფიული საზოგადოებისა და სულიერი მეცნიერების თავისუფალი უმაღლესი სკოლის ადგილსამყოფელია. აქ იმართება კონფერენციები, თეატრალური წარმოდგენები და ევრითმია.</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>FiraGO</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="ka" dir="ltr" data-f="firago">
+            <p class="titel">გოეთეანუმი&nbsp;– სულიერი მეცნიერების თავისუფალი უმაღლესი სკოლა</p>
+            <p class="txt">გოეთეანუმი დორნახში, ბაზელთან ახლოს, ზოგადი ანთროპოსოფიული საზოგადოებისა და სულიერი მეცნიერების თავისუფალი უმაღლესი სკოლის ადგილსამყოფელია. აქ იმართება კონფერენციები, თეატრალური წარმოდგენები და ევრითმია.</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>Google Sans</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="ka" dir="ltr" data-f="googlesans">
+            <p class="titel">გოეთეანუმი&nbsp;– სულიერი მეცნიერების თავისუფალი უმაღლესი სკოლა</p>
+            <p class="txt">გოეთეანუმი დორნახში, ბაზელთან ახლოს, ზოგადი ანთროპოსოფიული საზოგადოებისა და სულიერი მეცნიერების თავისუფალი უმაღლესი სკოლის ადგილსამყოფელია. აქ იმართება კონფერენციები, თეატრალური წარმოდგენები და ევრითმია.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="system" id="armenisch" aria-labelledby="h-armenisch">
+      <h2 id="h-armenisch">Armenisch</h2>
+      <article class="probe">
+        <h3>Noto Sans Armenian</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="hy" dir="ltr" data-f="notoarmenian">
+            <p class="titel">Գյոթեանում&nbsp;– Հոգևոր գիտության ազատ բարձրագույն դպրոց</p>
+            <p class="txt">Գյոթեանումը Դոռնախում՝ Բազելի մոտ, Համընդհանուր անթրոպոսոֆական ընկերության և Հոգևոր գիտության ազատ բարձրագույն դպրոցի նստավայրն է։ Այստեղ անցկացվում են համաժողովներ, թատերական ներկայացումներ և էվրիթմիա։</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>Mardoto</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="hy" dir="ltr" data-f="mardoto">
+            <p class="titel">Գյոթեանում&nbsp;– Հոգևոր գիտության ազատ բարձրագույն դպրոց</p>
+            <p class="txt">Գյոթեանումը Դոռնախում՝ Բազելի մոտ, Համընդհանուր անթրոպոսոֆական ընկերության և Հոգևոր գիտության ազատ բարձրագույն դպրոցի նստավայրն է։ Այստեղ անցկացվում են համաժողովներ, թատերական ներկայացումներ և էվրիթմիա։</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>Google Sans</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="hy" dir="ltr" data-f="googlesans">
+            <p class="titel">Գյոթեանում&nbsp;– Հոգևոր գիտության ազատ բարձրագույն դպրոց</p>
+            <p class="txt">Գյոթեանումը Դոռնախում՝ Բազելի մոտ, Համընդհանուր անթրոպոսոֆական ընկերության և Հոգևոր գիտության ազատ բարձրագույն դպրոցի նստավայրն է։ Այստեղ անցկացվում են համաժողովներ, թատերական ներկայացումներ և էվրիթմիա։</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="system" id="chinesisch" aria-labelledby="h-chinesisch">
+      <h2 id="h-chinesisch">Chinesisch</h2>
+      <article class="probe">
+        <h3>Source Han Sans SC</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="zh-Hans" dir="ltr" data-f="sourcehansc">
+            <p class="titel"><span class='satz'>歌德堂&nbsp;—</span> <span class='satz'>精神科学自由学院</span></p>
+            <p class="txt">歌德堂位于巴塞尔附近的多尔纳赫，是普通人智学协会和精神科学自由学院的所在地。这里举办会议、戏剧和优律思美演出。</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>Source Han Serif SC</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="zh-Hans" dir="ltr" data-f="sourcehanserifsc">
+            <p class="titel"><span class='satz'>歌德堂&nbsp;—</span> <span class='satz'>精神科学自由学院</span></p>
+            <p class="txt">歌德堂位于巴塞尔附近的多尔纳赫，是普通人智学协会和精神科学自由学院的所在地。这里举办会议、戏剧和优律思美演出。</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>ZCOOL XiaoWei</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="zh-Hans" dir="ltr" data-f="zcoolxiaowei">
+            <p class="titel"><span class='satz'>歌德堂&nbsp;—</span> <span class='satz'>精神科学自由学院</span></p>
+            <p class="txt">歌德堂位于巴塞尔附近的多尔纳赫，是普通人智学协会和精神科学自由学院的所在地。这里举办会议、戏剧和优律思美演出。</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="system" id="japanisch" aria-labelledby="h-japanisch">
+      <h2 id="h-japanisch">Japanisch</h2>
+      <article class="probe">
+        <h3>Source Han Sans JP</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="ja" dir="ltr" data-f="sourcehanjp">
+            <p class="titel"><span class='satz'>ゲーテアヌム&nbsp;—</span> <span class='satz'>精神科学自由大学</span></p>
+            <p class="txt">バーゼル近郊ドルナッハのゲーテアヌムは、普遍アントロポゾフィー協会と精神科学自由大学の本部です。ここでは会議、演劇、オイリュトミーが催されます。</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>Zen Kaku Gothic New</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="ja" dir="ltr" data-f="zenkaku">
+            <p class="titel"><span class='satz'>ゲーテアヌム&nbsp;—</span> <span class='satz'>精神科学自由大学</span></p>
+            <p class="txt">バーゼル近郊ドルナッハのゲーテアヌムは、普遍アントロポゾフィー協会と精神科学自由大学の本部です。ここでは会議、演劇、オイリュトミーが催されます。</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>IBM Plex Sans JP</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="ja" dir="ltr" data-f="ibmplexjp">
+            <p class="titel"><span class='satz'>ゲーテアヌム&nbsp;—</span> <span class='satz'>精神科学自由大学</span></p>
+            <p class="txt">バーゼル近郊ドルナッハのゲーテアヌムは、普遍アントロポゾフィー協会と精神科学自由大学の本部です。ここでは会議、演劇、オイリュトミーが催されます。</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>BIZ UDPGothic</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="ja" dir="ltr" data-f="bizudp">
+            <p class="titel"><span class='satz'>ゲーテアヌム&nbsp;—</span> <span class='satz'>精神科学自由大学</span></p>
+            <p class="txt">バーゼル近郊ドルナッハのゲーテアヌムは、普遍アントロポゾフィー協会と精神科学自由大学の本部です。ここでは会議、演劇、オイリュトミーが催されます。</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="system" id="koreanisch" aria-labelledby="h-koreanisch">
+      <h2 id="h-koreanisch">Koreanisch</h2>
+      <article class="probe">
+        <h3>Source Han Sans KR</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="ko" dir="ltr" data-f="sourcehankr">
+            <p class="titel">괴테아눔&nbsp;– 정신과학 자유대학</p>
+            <p class="txt">바젤 근교 도르나흐에 있는 괴테아눔은 일반 인지학협회와 정신과학 자유대학의 본부입니다. 이곳에서 학술대회, 연극, 오이리트미 공연이 열립니다.</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>IBM Plex Sans KR</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="ko" dir="ltr" data-f="ibmplexkr">
+            <p class="titel">괴테아눔&nbsp;– 정신과학 자유대학</p>
+            <p class="txt">바젤 근교 도르나흐에 있는 괴테아눔은 일반 인지학협회와 정신과학 자유대학의 본부입니다. 이곳에서 학술대회, 연극, 오이리트미 공연이 열립니다.</p>
+          </div>
+        </div>
+      </article>
+      <article class="probe">
+        <h3>Gothic A1</h3>
+        <div class="paar">
+          <div class="lat" lang="de">
+            <p class="titel">Goetheanum&nbsp;– Freie Hochschule für Geisteswissenschaft</p>
+            <p class="txt">Das Goetheanum in Dornach bei Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Hier finden Tagungen, Theater und Eurythmie statt.</p>
+          </div>
+          <div class="fremd" lang="ko" dir="ltr" data-f="gothica1">
+            <p class="titel">괴테아눔&nbsp;– 정신과학 자유대학</p>
+            <p class="txt">바젤 근교 도르나흐에 있는 괴테아눔은 일반 인지학협회와 정신과학 자유대학의 본부입니다. 이곳에서 학술대회, 연극, 오이리트미 공연이 열립니다.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="schriften.html">Schriften</a></span>
+  </div>
+</footer>
+</body>
+</html>

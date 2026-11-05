@@ -1,0 +1,248 @@
+<!doctype html>
+<!-- Treibhaus: Goetheanum Serif Probe (Etappe E4, docs/recherche_titillium-pro.md).
+     Font: assets/fonts/proben/goetheanum-serif-probe/ aus
+     tools/goetheanum-fontfix/build_serif_probe.py (Probe, nicht im Paket).
+     Befund und Entscheidvorlage: docs/befunde/serif-probe-2026-10-31.md -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Serif-Probe · Goetheanum</title>
+<meta name="description" content="Der Serif-Prototyp aus der Titillium-Familie als Goetheanum Serif Probe neben der Hausschrift: Titel, Sektionsseite, Zitat, Lede, Mengentext, Karte." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  @font-face{font-family:"Goetheanum Serif Probe";font-weight:400;font-style:normal;font-display:swap;
+    src:url("assets/fonts/proben/goetheanum-serif-probe/GoetheanumSerifProbe-Regular.woff2") format("woff2")}
+  @font-face{font-family:"Goetheanum Serif Probe";font-weight:400;font-style:italic;font-display:swap;
+    src:url("assets/fonts/proben/goetheanum-serif-probe/GoetheanumSerifProbe-Italic.woff2") format("woff2")}
+
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch;text-wrap:pretty}
+  .sprung{display:flex;flex-wrap:wrap;gap:var(--s2);list-style:none;margin:0;padding:0}
+  .sprung .chip{min-height:var(--tap);display:inline-flex;align-items:center;text-decoration:none}
+
+  .abschnitt{padding-top:var(--s8);scroll-margin-top:calc(var(--header-h) + var(--s4))}
+  .abschnitt h2{text-wrap:balance}
+  .abschnitt > p{max-width:var(--measure);text-wrap:pretty}
+  .paar{display:grid;grid-template-columns:1fr;gap:var(--s7);margin-top:var(--s6)}
+  @media (min-width:900px){.paar{grid-template-columns:1fr 1fr}.paar.voll{grid-template-columns:1fr}}
+  .paar > div{min-width:0;border-top:1px solid var(--line);padding-top:var(--s4)}
+  .wer{font-family:var(--font-text);font-size:var(--t-small);font-weight:600;color:var(--muted);margin:0 0 var(--s4)}
+
+  /* Die Probe: nur ein Gewicht. Kein synthetisches Fett, keine falsche Kursive. */
+  .s{font-family:"Goetheanum Serif Probe",var(--font-display);font-weight:400;font-synthesis:none}
+  .s1{font-feature-settings:"ss01"}
+  .h{font-family:var(--font-display)}
+  .src{font-family:var(--font-text)}
+
+  .gross{font-size:clamp(38px,7vw,72px);line-height:var(--lh-tight);margin:0;text-wrap:balance}
+  .h.gross{font-weight:var(--w-deutlich)}
+  .tit{font-size:var(--t-h1);line-height:1.2;margin:0;text-wrap:balance}
+  .h.tit{font-weight:var(--w-deutlich)}
+  .ld{font-size:var(--t-lede);line-height:1.5;margin:var(--s4) 0 0;max-width:var(--measure);text-wrap:pretty}
+  .h.ld{font-weight:var(--w-klar)}
+  .txt{font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure);margin:var(--s3) 0 0;text-wrap:pretty}
+  .h.txt{font-weight:var(--w-klar)}
+  .s.txt{max-width:54ch} /* Serif läuft 12 % breiter als Klar: 54ch ≈ 70 Zeichen wie Source in 62ch */
+
+  /* Sektionsseite: Kopf in der Sektionsfarbe (B01: Weiss auf --sek-*-dunkel). */
+  .sekkopf{background:var(--sek-ssw-dunkel);color:var(--on-accent);padding:var(--s6);border-radius:var(--r-card)}
+  .sekkopf .kicker{color:var(--on-accent)}
+  .sekkopf .tit{color:var(--on-accent)}
+
+  .zitat{margin:0;padding:0}
+  .zitat p{font-size:clamp(24px,3.2vw,32px);line-height:1.4;margin:0;text-wrap:balance}
+  .h.zitat p{font-weight:var(--w-ruhig)}
+  .zitat figcaption{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin-top:var(--s3)}
+
+  .karte{display:grid;gap:var(--s2)}
+  .karte .meta{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin:0}
+  .karte .kt{font-size:var(--t-h3);line-height:1.3;margin:0;text-wrap:balance}
+  .h.karte .kt{font-weight:var(--w-deutlich)}
+  .karte .kx{font-size:var(--t-small);line-height:1.55;margin:0;text-wrap:pretty}
+  .h.karte .kx{font-weight:var(--w-klar)}
+  .legende{font-size:var(--t-small);line-height:1.5;color:var(--muted);margin:var(--s4) 0 0;text-wrap:pretty}
+
+  .leiter{display:grid;gap:var(--s3);margin-top:var(--s6)}
+  .leiter div{display:grid;grid-template-columns:4.5em 1fr;gap:var(--s4);align-items:baseline;border-top:1px solid var(--line);padding-top:var(--s3)}
+  .leiter .px{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+  .leiter p{margin:0;line-height:1.5;text-wrap:pretty}
+
+  .zeichen{font-size:clamp(26px,4vw,40px);line-height:1.5;margin:var(--s4) 0 0;overflow-wrap:anywhere}
+  .fehlt{color:var(--muted)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="kicker">Treibhaus · Schriften</span>
+    <h1>Goetheanum Serif Probe</h1>
+    <p class="lede">Der Serif-Prototyp der Titillium-Familie neben der Hausschrift, in&nbsp;echten Anwendungen. Ein&nbsp;Gewicht, aufrecht und kursiv, ergänzt um Umlaute, ß und ein einstöckiges&nbsp;a.</p>
+  </section>
+
+  <nav aria-label="Abschnitte">
+    <ul class="sprung">
+      <li><a class="chip" href="#titel">Titel</a></li>
+      <li><a class="chip" href="#sektion">Sektionsseite</a></li>
+      <li><a class="chip" href="#zitat">Zitat</a></li>
+      <li><a class="chip" href="#menge">Mengentext</a></li>
+      <li><a class="chip" href="#karte">Karte und Legende</a></li>
+      <li><a class="chip" href="#grade">Grade</a></li>
+      <li><a class="chip" href="#a">Das a</a></li>
+      <li><a class="chip" href="#zeichen">Zeichen</a></li>
+    </ul>
+  </nav>
+
+  <section class="abschnitt" id="titel" aria-labelledby="h-titel">
+    <h2 id="h-titel">Titel gross</h2>
+    <div class="paar">
+      <div><p class="wer">Serif Probe, einstöckiges a</p><p class="s s1 gross">Faust in&nbsp;der Grossen Bühne</p></div>
+      <div><p class="wer">Hausschrift Deutlich</p><p class="h gross">Faust in&nbsp;der Grossen Bühne</p></div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="sektion" aria-labelledby="h-sektion">
+    <h2 id="h-sektion">Sektionsseite</h2>
+    <p>Sektion für Schöne Wissenschaften, Kopf in&nbsp;der Sektionsfarbe, darunter Lede und Lesetext.</p>
+    <div class="paar">
+      <div>
+        <p class="wer">Serif Probe</p>
+        <div class="sekkopf">
+          <span class="kicker">Sektion für Schöne Wissenschaften</span>
+          <p class="s s1 tit">Das Wort als Brücke</p>
+        </div>
+        <p class="s s1 ld">Eine Tagung über Sprache, Dichtung und das Übersetzen, mit&nbsp;Lesungen am Abend.</p>
+        <p class="s s1 txt">Wer übersetzt, hört zweimal hin: auf&nbsp;den Klang des Originals und auf das, was die eigene Sprache daraus machen kann. Die Tagung fragt, wie ein Gedicht seine Gestalt behält, wenn es das Land wechselt, und warum manche Wörter sich jedem Versuch entziehen.</p>
+      </div>
+      <div>
+        <p class="wer">Hausschrift Klar und Deutlich</p>
+        <div class="sekkopf">
+          <span class="kicker">Sektion für Schöne Wissenschaften</span>
+          <p class="h tit">Das Wort als Brücke</p>
+        </div>
+        <p class="h ld">Eine Tagung über Sprache, Dichtung und das Übersetzen, mit&nbsp;Lesungen am Abend.</p>
+        <p class="h txt">Wer übersetzt, hört zweimal hin: auf&nbsp;den Klang des Originals und auf das, was die eigene Sprache daraus machen kann. Die Tagung fragt, wie ein Gedicht seine Gestalt behält, wenn es das Land wechselt, und warum manche Wörter sich jedem Versuch entziehen.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="zitat" aria-labelledby="h-zitat">
+    <h2 id="h-zitat">Zitat</h2>
+    <div class="paar">
+      <div>
+        <p class="wer">Serif Probe aufrecht</p>
+        <figure class="s s1 zitat">
+          <p>Wer nicht von dreitausend Jahren sich weiss Rechenschaft zu&nbsp;geben, bleib im Dunkeln unerfahren, mag von Tag zu&nbsp;Tage&nbsp;leben.</p>
+          <figcaption>Johann Wolfgang von&nbsp;Goethe, West-östlicher Divan</figcaption>
+        </figure>
+      </div>
+      <div>
+        <p class="wer">Serif Probe kursiv</p>
+        <figure class="s zitat" style="font-style:italic">
+          <p>Wer nicht von dreitausend Jahren sich weiss Rechenschaft zu&nbsp;geben, bleib im Dunkeln unerfahren, mag von Tag zu&nbsp;Tage&nbsp;leben.</p>
+          <figcaption style="font-style:normal">Johann Wolfgang von&nbsp;Goethe, West-östlicher Divan</figcaption>
+        </figure>
+      </div>
+      <div>
+        <p class="wer">Hausschrift Ruhig</p>
+        <figure class="h zitat">
+          <p>Wer nicht von dreitausend Jahren sich weiss Rechenschaft zu&nbsp;geben, bleib im Dunkeln unerfahren, mag von Tag zu&nbsp;Tage&nbsp;leben.</p>
+          <figcaption>Johann Wolfgang von&nbsp;Goethe, West-östlicher Divan</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="menge" aria-labelledby="h-menge">
+    <h2 id="h-menge">Mengentext in 18 bis 20&nbsp;px</h2>
+    <p>Dieselben Absätze in&nbsp;der Lesegrösse des Fundaments, Zeilenhöhe 1,66, Lesemass rund 70&nbsp;Zeichen.</p>
+    <div class="paar voll">
+      <div>
+        <p class="wer">Serif Probe</p>
+        <p class="s s1 txt">Der Bau steht auf einem Hügel über Dornach, sichtbar vom Tal und von den Jurahöhen. Wer zum ersten Mal hinaufgeht, sieht zuerst den Beton und erst beim Näherkommen die Formen, die sich aus ihm lösen: Fenster, die sich wie Augen öffnen, Säulen, die nicht tragen wollen, sondern wachsen.</p>
+        <p class="s s1 txt">Im Inneren führen Treppen in&nbsp;Schwüngen nach oben. Der Grosse Saal fasst gegen tausend Menschen; an&nbsp;Festtagen ist er voll, an&nbsp;Werktagen probt die Bühne, und im&nbsp;Foyer warten Gäste aus vielen Ländern auf den Beginn.</p>
+      </div>
+      <div>
+        <p class="wer">Source Sans 3, wie heute in .prose</p>
+        <p class="src txt">Der Bau steht auf einem Hügel über Dornach, sichtbar vom Tal und von den Jurahöhen. Wer zum ersten Mal hinaufgeht, sieht zuerst den Beton und erst beim Näherkommen die Formen, die sich aus ihm lösen: Fenster, die sich wie Augen öffnen, Säulen, die nicht tragen wollen, sondern wachsen.</p>
+        <p class="src txt">Im Inneren führen Treppen in&nbsp;Schwüngen nach oben. Der Grosse Saal fasst gegen tausend Menschen; an&nbsp;Festtagen ist er voll, an&nbsp;Werktagen probt die Bühne, und im&nbsp;Foyer warten Gäste aus vielen Ländern auf den Beginn.</p>
+      </div>
+      <div>
+        <p class="wer">Hausschrift Klar</p>
+        <p class="h txt">Der Bau steht auf einem Hügel über Dornach, sichtbar vom Tal und von den Jurahöhen. Wer zum ersten Mal hinaufgeht, sieht zuerst den Beton und erst beim Näherkommen die Formen, die sich aus ihm lösen: Fenster, die sich wie Augen öffnen, Säulen, die nicht tragen wollen, sondern wachsen.</p>
+        <p class="h txt">Im Inneren führen Treppen in&nbsp;Schwüngen nach oben. Der Grosse Saal fasst gegen tausend Menschen; an&nbsp;Festtagen ist er voll, an&nbsp;Werktagen probt die Bühne, und im&nbsp;Foyer warten Gäste aus vielen Ländern auf den Beginn.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="karte" aria-labelledby="h-karte">
+    <h2 id="h-karte">Karte und Legende</h2>
+    <p>Meta in&nbsp;Source Sans&nbsp;3, wie im Fundament; geprüft wird Titel und Kurztext.</p>
+    <div class="paar">
+      <div>
+        <p class="wer">Serif Probe</p>
+        <article class="card karte s s1">
+          <p class="meta">Sa 14.&nbsp;November, 20&nbsp;Uhr · Grosser Saal</p>
+          <p class="kt">Gedichte im Übergang</p>
+          <p class="kx">Lesung in&nbsp;drei Sprachen, mit Eurythmie und&nbsp;Gespräch.</p>
+        </article>
+        <p class="legende src">Westtreppe im Goetheanum, Blick von unten nach oben, Morgenlicht.</p>
+      </div>
+      <div>
+        <p class="wer">Hausschrift</p>
+        <article class="card karte h">
+          <p class="meta">Sa 14.&nbsp;November, 20&nbsp;Uhr · Grosser Saal</p>
+          <p class="kt">Gedichte im Übergang</p>
+          <p class="kx">Lesung in&nbsp;drei Sprachen, mit Eurythmie und&nbsp;Gespräch.</p>
+        </article>
+        <p class="legende src">Westtreppe im Goetheanum, Blick von unten nach oben, Morgenlicht.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="grade" aria-labelledby="h-grade">
+    <h2 id="h-grade">Grade</h2>
+    <p>Ein Satz in&nbsp;der Serif Probe, vom Floor bis zum Titel.</p>
+    <div class="leiter s s1">
+      <div><span class="px">14&nbsp;px</span><p style="font-size:14px">Fünf Schnitte, ein Haus: Sprache, Bühne, Wissenschaft und Garten am&nbsp;selben Ort.</p></div>
+      <div><span class="px">15&nbsp;px</span><p style="font-size:15px">Fünf Schnitte, ein Haus: Sprache, Bühne, Wissenschaft und Garten am&nbsp;selben Ort.</p></div>
+      <div><span class="px">16&nbsp;px</span><p style="font-size:16px">Fünf Schnitte, ein Haus: Sprache, Bühne, Wissenschaft und Garten am&nbsp;selben Ort.</p></div>
+      <div><span class="px">18&nbsp;px</span><p style="font-size:18px">Fünf Schnitte, ein Haus: Sprache, Bühne, Wissenschaft und Garten am&nbsp;selben Ort.</p></div>
+      <div><span class="px">20&nbsp;px</span><p style="font-size:20px">Fünf Schnitte, ein Haus: Sprache, Bühne, Wissenschaft und Garten am&nbsp;selben Ort.</p></div>
+      <div><span class="px">24&nbsp;px</span><p style="font-size:24px">Fünf Schnitte, ein Haus: Sprache, Bühne, Wissenschaft und Garten am&nbsp;selben Ort.</p></div>
+      <div><span class="px">32&nbsp;px</span><p style="font-size:32px">Fünf Schnitte, ein Haus: Sprache, Bühne, Wissenschaft und Garten am&nbsp;selben Ort.</p></div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="a" aria-labelledby="h-a">
+    <h2 id="h-a">Das a</h2>
+    <p>Die Quelle setzt das zweistöckige a der Text-Form. Die Probe bringt das einstöckige a der Hausschrift als Stilset&nbsp;ss01: Bauch und Stamm des Serif-d, ohne Oberlänge.</p>
+    <div class="paar">
+      <div><p class="wer">Zweistöckig, wie die Quelle</p><p class="s tit">Haus, Garten, Saal, Kanzlei</p></div>
+      <div><p class="wer">Einstöckig, ss01</p><p class="s s1 tit">Haus, Garten, Saal, Kanzlei</p></div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="zeichen" aria-labelledby="h-zeichen">
+    <h2 id="h-zeichen">Zeichenvorrat</h2>
+    <p>Vorhanden, in&nbsp;der Probe ergänzt: Umlaute, ß, Trema, feste Leerzeichen. Grau gesetzt, was fehlt und hier aus&nbsp;der Hausschrift einspringt.</p>
+    <p class="s s1 zeichen">ABCDEFGHIJKLMNOPQRSTUVWXYZ ÄÖÜ abcdefghijklmnopqrstuvwxyz äöüß 0123456789 .,:;!?¡¿ «»‹›„“‚‘’ –—…()[]{}/\*#_</p>
+    <p class="s zeichen fehlt">Café, Molière, Città, Señora · ẞ &amp; % € § @ + = × ° © ½</p>
+  </section>
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="design-system/">Design-System</a></span>
+  </div>
+</footer>
+</body>
+</html>

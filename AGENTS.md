@@ -62,7 +62,7 @@ Hervorhebung, zwei Merkmale gleichzeitig im Fließtext, Schmuck. **Wer eine
 Auszeichnung weglassen kann, lässt sie weg.**
 
 ### Wenn eine Regel der Schrift widerspricht
-Die v2.8-Schrift hat Funktionen erhalten, die ältere Regeln (noch) anders
+Die v2.9-Schrift hat Funktionen erhalten, die ältere Regeln (noch) anders
 beschreiben. Solche Widersprüche **melden und vom Auftraggeber entscheiden
 lassen** — das Regelwerk **nicht** eigenmächtig umschreiben.
 
@@ -122,7 +122,7 @@ Skripte und Prüfer – das ist Dokumentation und gehört in den Ledger
 (`design-system/CHANGELOG.md`), den PR oder `CLAUDE-REF.md`. Wer beim Bauen
 etwas erklären will, schreibt es dorthin und lässt es auf der Seite weg
 (G03 gilt auch für Text). Ausnahme sind ausgewiesene Strategie- und
-Laborseiten (`tools.json`: `cat: labor`), die nur im Backstage erscheinen.
+Treibhaus-Seiten (`tools.json`: `cat: treibhaus`), die nur im Backstage erscheinen.
 Auslöser: Abschnitt «Vorschläge und Beschluss» auf der Sektionsfarben-Seite.
 
 ## Bauen neuer Seiten und Werkzeuge — vom Fundament aus, nicht freihändig
@@ -200,7 +200,7 @@ Aufgenommenes gilt ab dann überall. Der **Beschluss-Ledger**
 (`design-system/CHANGELOG.md`) ist das Gedächtnis; der Score (`ds-lint --score`)
 macht ‹wie weit weg› zu einer Zahl statt eines Gefühls.
 
-## Schnitt-System (Stand v2.8, Paketstruktur Trio)
+## Schnitt-System (Stand v2.9, Paketstruktur Trio)
 Fünf statische Schnitte **Leise (265) · Ruhig (350) · Klar (440) ·
 Deutlich (580) · Laut (680)**; Variable mit 7 Named Instances (Flüstern
 190 … Schreien 725). Vor jeder Font- oder Paket-Arbeit zuerst

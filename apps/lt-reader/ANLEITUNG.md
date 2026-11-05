@@ -13,7 +13,7 @@ im Archiv) trägt nur, was von der Vorlage abweicht.
 ```
 vorlage/LT27-Reader.idml ─▶ idml-seite.js ─┐
 Kartentool (apps/karten-generator, ?einbett) ┼─▶ 20 Seiten im Blatt ─▶ Vorschau-PDF (Drucken)
-jahrgaenge/2027.json (Texte, Ersetzungen,   │                        └▶ IDML (Etappe 3)
+jahrgaenge/2027.json (Texte, Ersetzungen,   │                        └▶ IDML für InDesign (ZIP)
   Bilder, Farben, Karte, Verlauf) ──────────┘
 ```
 
@@ -41,7 +41,14 @@ jahrgaenge/2027.json (Texte, Ersetzungen,   │                        └▶ ID
    (Modus `festeNummern`), damit ‹Speisehaus 45› im Text stimmt.
 7. **Export → Vorschau-PDF:** Druckdialog des Browsers, ‹als PDF sichern›,
    Ränder ‹Keine›, Hintergrundgrafiken ein. A5 mit 3 mm Beschnitt, RGB. Das
-   Druck-PDF entsteht aus dem IDML in InDesign (Etappe 3).
+   Druck-PDF entsteht aus dem IDML in InDesign.
+8. **Export → IDML für InDesign:** lädt `Reader_<Jahr>_A5.zip`. Darin die
+   Vorlage mit den Texten, Ersetzungen und Farben des Jahrgangs; auf den
+   Seiten 2–3 die Karte als InDesign-Objekte (Marken, Legende, Schriftzüge
+   als Textrahmen mit Formaten «Karte …», eigene Ebenen «Karte …»), die
+   Grundkarte und das Logo als verknüpfte PDF in `Links/`, die Hausschrift
+   in `Document fonts/`. ZIP entpacken, IDML öffnen; die Bilder der
+   Vorlage (Motiv, Logos) verknüpft InDesign aus den Originaldateien.
 
 Hat jemand anderes inzwischen gesichert, meldet es die Seite und sperrt das
 Überschreiben – **Neu laden**, dann weiterarbeiten.
@@ -73,10 +80,12 @@ schreiben), Motiv ersetzen, Farben zuweisen, Vorlage bei Bedarf tauschen.
 | `index.html` | Werkstatt, Blatt, Druck-CSS |
 | `reader.js` | Jahrgang, Seitenplan, Schreiben im Blatt, Verlauf, Karte, Archiv |
 | `idml-seite.js` | zeichnet eine IDML-Seite als SVG (Formen, Bilder, Textrahmen) |
+| `idml-export.js` | IDML für InDesign: Vorlage plus Jahrgang, Karte nativ auf 2–3 ([Spezifikation](https://github.com/phtok/goeloggen/blob/main/docs/specs/lt-reader-idml.md)) |
 | `vorlage/LT27-Reader.idml` | die InDesign-Vorlage (20 Seiten) |
 | `jahrgaenge/<jahr>.json` | der Jahrgang: Texte je Rahmen, Ersetzungen, Bilder, Farben, Karte, Verlauf |
 | `jahrgaenge/2027-motiv.jpg`, `2027-logos/` | Vorschau-Bilder (Motiv aus dem Plakat-PDF, Logos aus dem Reader-PDF) |
-| `../karten-generator/app.js` | Kartentool; `window.Kartentool` ist die Schnittstelle, `?einbett` lässt den eigenen Stand in Ruhe |
+| `../karten-generator/app.js` | Kartentool; `window.Kartentool` ist die Schnittstelle (`szene`, `modell`, `idmlTeile`), `?einbett` lässt den eigenen Stand in Ruhe |
+| `../karten-generator/idml.js` | `kartenObjekte()`: die Karte als IDML-Objekte, geteilt mit dem Karten-IDML |
 | `services/lt-reader/schema.sql` | Archiv: `reader_jahrgang`, `reader_fassung`, RPCs |
 
 ## Etappen
@@ -84,7 +93,9 @@ schreiben), Motiv ersetzen, Farben zuweisen, Vorlage bei Bedarf tauschen.
 1. Gerüst, Archiv, Vorschau – gebaut
 2. Vorlage als Blatt, Schreiben im Blatt, Verlauf, Karte aus dem Kartentool,
    Palette – **dieser Stand**
-3. Programm von der Webseite (Zeitplan, Arbeitsgruppen mit Überschreibungen
-   je Nummer, Abgleich mit Protokoll), IDML-Export
+3. IDML-Export mit Karte als InDesign-Objekten – **gebaut** (31. 10. 2026,
+   Öffnungstest in InDesign offen); Programm von der Webseite (Zeitplan,
+   Arbeitsgruppen mit Überschreibungen je Nummer, Abgleich mit Protokoll)
+   – offen
 4. Druckstrasse PDF/X-4 (später)
 5. Plakat und Folder aus derselben Datei
