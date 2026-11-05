@@ -25,7 +25,7 @@ Aus `docs/messung_lesbarkeit-schriften.md` (31. 10. 2026, Tausendstel em):
 | x-Höhe flach | 500 | 500 | 486 (×1,03 = 500) |
 | Strich/x-Höhe | 0,16 | 0,21 | 0,17 |
 | Breite o/x-Höhe | 0,79 | 0,82 | 0,93 |
-| Zeichen in 62ch | 87 | 85 | 71 |
+| Zeichen in 62ch (altes Mass) | 87 | 85 | 71 |
 | 0 und O | gleich | gleich | unterscheidbar |
 
 - Nach `size-adjust: 103%` sind Klar und Source **gleich gross und gleich
@@ -44,11 +44,11 @@ Aus `docs/messung_lesbarkeit-schriften.md` (31. 10. 2026, Tausendstel em):
   `design-system/base.css`).
 - Griechisch und Kyrillisch im Lesetext: Source Sans 3 (Hausschrift deckt sie
   nicht; `assets/fonts/goetheanum/Fallback/README.md`).
-- **Offen W1:** Ob Fliesstext grundsätzlich Hausschrift oder Source ist,
-  widerspricht sich im Bestand (CLAUDE.md und S01 gegen
-  `typo-tokens` Mass, `Fallback/README.md`, `type-scale.json`
-  ‹display-oder-source›). Bis zum Entscheid: CLAUDE.md folgen und den
-  Widerspruch nennen.
+- **Länge (W1 entschieden, 5. 11. 2026):** Hausschrift bis ein Absatz am
+  Stück (rund 100 Wörter); ab dem zweiten Absatz Fliesstext `.prose`
+  (Source Sans 3). Grund ist die Form (Klar eng, o/x 0,79), nicht Grad oder
+  Grauwert. Die Zahl ist ein Erfahrungswert (§ 9) (CLAUDE.md § Grenzen der
+  Hausschrift; S01).
 
 ## 3. Grad
 
@@ -74,8 +74,9 @@ Aus `docs/messung_lesbarkeit-schriften.md` (31. 10. 2026, Tausendstel em):
 - Auf dem Telefon fasst die Zeile bei 16–20 px 40–51 Zeichen; das ist unter
   G10 und unvermeidlich – nicht den Grad senken, um die Zahl zu erreichen
   (Messung § 4; B03 geht vor).
-- **Offen W2:** `--measure: 62ch` ergibt in der Hausschrift 87 Zeichen, in
-  Source 71. Dasselbe Token, zwei Masse. Nicht still ändern.
+- `--measure` (28em) = 66 Zeichen in der Hausschrift, `--measure-text`
+  (29.5em) = 66 Zeichen in Source, bei jedem Grad (W2 entschieden,
+  5. 11. 2026; `design-system/tokens.css`). Nie ein Mass in `ch` setzen.
 
 ## 5. Zeilenhöhe, Laufweite, Umbruch
 
@@ -140,7 +141,7 @@ Als **Erfahrungswert** führen, nie als Studie ausgeben:
 - 45–75 Zeichen und das Ziel 66 (G10): Hausnorm ohne Quelle (L7);
 - dass die Hausschrift bei langem Text ermüdet und Source nicht – kein
   Lesetest ausgewertet (L1, L3);
-- ab wie vielen Wörtern ‹echter Mengentext› beginnt (L3);
+- die Längengrenze ‹rund 100 Wörter›: Hausentscheid, kein Messwert (L3);
 - ‹Leichte und schwere Gewichte verschlechtern das Lesen›
   (`type-scale.json`, ohne Quelle);
 - dass Source bei gleichem Grad ‹optisch grösser› wirkt (CHANGELOG,

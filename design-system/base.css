@@ -23,7 +23,7 @@ body{
 /* Langtext (Fliesstext über mehrere Absätze) bekommt die Lese-Grotesk – dort,
    wo die Display-Schrift bei Menge und Kleingrad ermüdet. Bewusst opt-in, damit
    die Hausschrift überall sonst die Stimme bleibt. */
-.prose{font-family:var(--font-text);max-width:min(var(--measure),100%)}
+.prose{font-family:var(--font-text);max-width:min(var(--measure-text),100%)}
 .prose p{margin-bottom:.7em}
 a{color:inherit;text-decoration:none}
 /* Links IM Fliesstext (Absatz, Liste, Hinweis) brauchen eine eigene, sichtbare
@@ -381,8 +381,11 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
 /* --- Die Schrift-Grenze: Identität vs. Lesbarkeit ----------------------------
    Goetheanum ist DISPLAY – die STIMME. Sie trägt alles, was als Sprache gelesen
    wird: Titel, Kicker, Lede, FLIESSTEXT und die erklärenden Hinweise. Lesbarkeit
-   bei normalem Grad kommt dort aus den FAKTOREN (Zeilenhöhe ≥1.6, Mass ~62ch,
-   Schnitt Klar/Betonung Laut), nicht aus einem Schriftwechsel.
+   bei normalem Grad kommt dort aus den FAKTOREN (Zeilenhöhe ≥1.6, Mass 66
+   Zeichen = --measure, Schnitt Klar/Betonung Laut), nicht aus einem Schriftwechsel.
+   LÄNGE (Entscheid Inhaber 5. 11. 2026): Hausschrift bis ein Absatz am Stück
+   (rund 100 Wörter); ab dem zweiten Absatz Fliesstext läuft der Text in .prose
+   (Source Sans 3, --measure-text).
    Die Lese-Grotesk Source Sans 3 (--font-text) übernimmt FUNKTION & DATEN, wo
    klein & konventionell gelesen wird: Label, Wert, Meta/Legende, Badge/Chip,
    Formularfelder, Tabellen. Dort geht Lesbarkeit über Identität. */
@@ -409,7 +412,7 @@ td.num,th.num,.num{font-variant-numeric:tabular-nums lining-nums;text-align:righ
 .code .str,.code .s{color:var(--code-str)}
 .code .com,.code .c{color:var(--code-comment)}
 
-/* Lesemass: ~66 Zeichen je Zeile für linearen Mengentext (G10). */
+/* Lesemass: 66 Zeichen je Zeile in der Hausschrift (G10, --measure = 28em). */
 .lese{max-width:min(var(--measure),100%)}
 
 /* =============================================================================
@@ -478,7 +481,7 @@ img,svg,canvas,video{max-width:100%}
 /* --- Artikel-Anatomie (Vorbild Wochenschrift, mit unseren Faktoren) --------- */
 .lit{border-top:1px solid var(--line);margin-top:var(--s8);padding-top:var(--s4);
   font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);
-  max-width:min(var(--measure),100%)}
+  max-width:min(var(--measure-text),100%)}
 .lit p{margin:0 0 .5em}
 .bio{display:flex;gap:var(--s4);align-items:flex-start;border-top:1px solid var(--line);
   margin-top:var(--s6);padding-top:var(--s6)}

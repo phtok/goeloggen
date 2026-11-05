@@ -180,7 +180,7 @@
   .zug-h{font-family:var(--font-text);font-size:var(--t-small);font-weight:600;white-space:nowrap;
     font-variant-numeric:tabular-nums;color:var(--gold-ink)}
   .zug-tief{padding:0 0 var(--s4) var(--s4);border-left:2px solid var(--line-soft);margin-bottom:var(--s3);
-    font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);line-height:1.55;max-width:var(--measure)}
+    font-family:var(--font-text);font-size:var(--t-small);color:var(--ink);line-height:1.55;max-width:var(--measure-text)}
   .zug-tief p{margin:0 0 var(--s2)}
 
   /* Überschrift innerhalb einer Tafel (Belege). */

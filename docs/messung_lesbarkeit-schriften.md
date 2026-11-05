@@ -116,10 +116,11 @@ Folge für Daten (Codes, IBAN, Kennungen, Zahlen mit Buchstaben): die Grenze
 in `base.css` (Werte in Source) hat damit einen gemessenen Grund. Für I/l
 hilft keine der beiden Schriften; dort hilft nur der Zusammenhang.
 
-## Vorschlag an den Inhaber (nicht entschieden)
+## Vorschlag an den Inhaber
 
-Nicht im Regelwerk; der Inhaber entscheidet (CLAUDE.md § Wenn eine Regel
-der Schrift widerspricht).
+**Entschieden 5. 11. 2026:** die Längengrenze (Zeile ‹Länge›) und das Mass in
+Zeichen (`--measure` 28em, `--measure-text` 29.5em, je 66 Zeichen; gemessen
+bei 16, 18 und 20 px). Offen bleiben die Zeilen Grad und Medium.
 
 | | Hausschrift (Klar) | Source Sans 3 |
 |---|---|---|

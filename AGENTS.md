@@ -100,7 +100,7 @@ Für jede Web-Oberfläche gilt, geprüft (Kontraste rechnen, nicht schätzen):
 Goetheanum ist **Display** – die **Stimme**. Sie trägt alles, was als **Sprache**
 gelesen wird: Titel, Kicker, Lede, **Fliesstext** und erklärende Hinweise. Die
 Lesbarkeit bei normalem Grad kommt aus den **Faktoren**, nicht aus einem
-Schriftwechsel: Zeilenhöhe **≥1.6** (`--lh-body` 1.66), Lesemass **~62ch**
+Schriftwechsel: Zeilenhöhe **≥1.6** (`--lh-body` 1.66), Lesemass **66 Zeichen**
 (`--measure`), Schnitt **Klar**, Betonung **Laut** (nie Leise im Lesetext).
 
 **Die Schrift-Grenze – wo Lesbarkeit über Identität geht:** wo Text zu **Funktion
@@ -108,8 +108,14 @@ und Daten** wird und klein/konventionell gelesen wird, trägt die Lese-Grotesk
 **Source Sans 3** (`--font-text`): **Label, Wert/Readout, Meta/Legende,
 Badge/Chip, Formularfelder, Tabellen**. Das ist im Fundament (`base.css`) so
 verdrahtet – nicht je Seite entscheiden.
-- **Textmasse:** ein paar gut gesetzte Zeilen sind in der Hausschrift kein
-  Problem; **echter Mengentext** (lange Artikel) darf in `.prose` (Source) laufen.
+- **Textmasse (Entscheid 5. 11. 2026):** die Hausschrift trägt Text **bis ein
+  Absatz am Stück (rund 100 Wörter)**; ab dem **zweiten Absatz Fliesstext**
+  läuft er in `.prose` (Source Sans 3). Grund ist die Form, nicht der Grad:
+  Klar ist eng gezeichnet, gleich gross und gleich dunkel wie Source
+  (`docs/messung_lesbarkeit-schriften.md`). Die Zahl ist ein Erfahrungswert.
+- **Lesemass in Zeichen, nicht in `ch`:** `--measure` (28em) = 66 Zeichen in der
+  Hausschrift, `--measure-text` (29.5em) = 66 Zeichen in Source. `ch` misst die
+  breite Null der Hausschrift (62ch = 87 Zeichen).
 - **Kleine UI-Schrift:** **Leise** verschwimmt klein – Minimum **Klar**,
   Titel/Marken **Deutlich**. Kleine Labels nie in Leise.
 Das Menü **koordiniert, es erklärt nicht**: nur Titel, kein Beiwerk-Text.
