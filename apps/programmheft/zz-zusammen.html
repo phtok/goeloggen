@@ -143,7 +143,6 @@
 <script src="../karten-generator/vendor/jspdf.umd.min.js"></script>
 <script src="../karten-generator/vendor/svg2pdf.umd.min.js"></script>
 <script src="../../design-system/nav.js" data-root="../../" data-variant="werkzeug"></script>
-<script src="../../design-system/schluessel.js"></script>
 
 <main class="wrap">
   <section class="hero">
@@ -381,8 +380,9 @@ let archivUhr;
 function archivieren(art=null){
   if(!S.id)S.id=crypto.randomUUID();
   const {id,...rest}=S;if(!art&&JSON.stringify(rest)===JSON.stringify(BEISPIEL))return;
-  clearTimeout(archivUhr);const los=()=>GoeSchluessel.rpc("folder","folder_sichern",{p_id:S.id,p_stand:S,p_export:art},
-    {keepalive:!art}).catch(()=>{});
+  clearTimeout(archivUhr);const los=()=>fetch(SB+"/rest/v1/rpc/folder_sichern",{method:"POST",keepalive:!art,
+    headers:{"Content-Type":"application/json",apikey:SBK,Authorization:"Bearer "+SBK},
+    body:JSON.stringify({p_id:S.id,p_stand:S,p_export:art})}).catch(()=>{});
   art?los():archivUhr=setTimeout(los,4000)}
 
 const B=$("blaetter");

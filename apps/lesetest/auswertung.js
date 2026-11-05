@@ -37,7 +37,7 @@
   }
   async function laden() {
     if (DEMO) { $("demo").hidden = false; return demoDaten(); }
-    return (await GoeSchluessel.rpc("lesetest", "lesetest_ergebnisse", {})) || [];
+    return (await LESEBACKEND.rpc("lesetest_ergebnisse", {})) || [];
   }
 
   // ---- Rechnen -------------------------------------------------------------
