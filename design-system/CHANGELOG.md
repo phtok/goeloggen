@@ -16,6 +16,25 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 5. November 2026 — Merkblatt ‹Warum unsere Mails ohne Bilder auskommen› auf Lesemass (Version des Systems unverändert)
+
+**Was.** Am gerenderten PDF gemessen liefen drei Absätze weit über das
+Lesemass von ~62 Zeichen (G10, `--measure: 62ch`): die Lede (~100 Zeichen je
+Zeile), der Kasten ‹Auch die elegante Abkürzung trägt nicht› (~120) und
+‹Kurz gesagt› (~120). Jetzt: Lede auf 106 mm (~66), Kasten zweispaltig wie die
+Gründe (~57), Schluss auf Spaltenbreite (~64). Der Lesetext steigt von 9,4 auf
+10 pt; damit sind beide Seiten gleich gefüllt (71 und 73 %, vorher je 63 %).
+Quelle `assets/merkblaetter/src/warum-ohne-bilder.html`, PDF neu gerendert.
+
+**Warum der Linter es nicht sah.** `assets/` ist im Vertrag ausgenommen
+(`contract.json` → `geltungsbereich.ausgenommen_substr`), und keine Regel
+DS01–DS10 misst die Zeilenlänge.
+
+**Vorschlag für später (nicht gebaut).** Ein Lesemass-Prüfer, der wie DS08 im
+Browser die Absatzbreite in Zeichen misst, für Seiten und Druckquellen.
+
+---
+
 ## 2. November 2026 — Listenzeichen nach der Kreiszahl des Kartentools (Korrektur zu #751)
 
 **Was.** Kreis 1200 statt 860, Quadrat 1116; Zeichen auf ½ Durchmesser,
