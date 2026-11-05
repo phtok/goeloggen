@@ -16,6 +16,21 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 5. November 2026 — Lesemass in Zeichen, Längengrenze der Hausschrift (1.31.0)
+
+**Was.** `--measure` 62ch → **28em** (66 Zeichen in der Hausschrift Klar);
+neu **`--measure-text` 29.5em** (66 Zeichen in Source Sans 3) für `.prose`
+und `.lit`. Längengrenze: Hausschrift bis ein Absatz am Stück (rund 100
+Wörter), ab dem zweiten Absatz Fliesstext in `.prose`. **Warum.** `ch` misst
+die Null, und die ist in der Hausschrift breit: 62ch ergaben 87 Zeichen statt
+der 66 aus G10. Klar und Source sind nach `size-adjust` gleich gross und gleich
+dunkel; sie unterscheiden sich in der Form (Klar eng, o/x 0,79 gegen 0,93).
+Entscheid Inhaber 5. 11. 2026, Messung `docs/messung_lesbarkeit-schriften.md`.
+**Wirkung.** Jede Spalte auf `--measure` wird rund ein Viertel schmaler; G10
+im Kanon auf 28em; W1 und W2 im Skill `lesbarkeit` entschieden.
+
+---
+
 ## 5. November 2026 — Merkblatt ‹Warum unsere Mails ohne Bilder auskommen› auf Lesemass (Version des Systems unverändert)
 
 **Was.** Am gerenderten PDF gemessen liefen drei Absätze weit über das

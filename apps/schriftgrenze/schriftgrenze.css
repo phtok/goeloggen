@@ -39,7 +39,8 @@
    Source 0.451, Noto Sans 0.464, Noto Serif 0.473 em. */
 .paar[data-mass="70"] .schrift-g{max-width:min(29em,100%)}
 .paar[data-mass="70"] .schrift-s{max-width:min(calc(70 * var(--je-zeichen)),100%)}
-.paar[data-mass="haus"] .probe{max-width:min(var(--measure),100%)}
+.paar[data-mass="haus"] .schrift-g{max-width:min(var(--measure),100%)}
+.paar[data-mass="haus"] .schrift-s{max-width:min(var(--measure-text),100%)}
 
 .quelle{padding-bottom:var(--s8)}
 

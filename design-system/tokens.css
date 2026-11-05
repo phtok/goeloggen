@@ -178,7 +178,11 @@
                             Entscheid Auftraggeber 18. 10. 2026: B04 geht vor G11). Für
                             kompakte Rollen (Lede, Meta, Label), die nicht die 1.66 des
                             Fliesstexts brauchen, aber nie darunter fallen dürfen. */
-  --measure:62ch;        /* ~66 Zeichen in Source – lineares Lesemaß (G10) */
+  --measure:28em;        /* 66 Zeichen in der Hausschrift (Klar) – Lesemass (G10).
+                            In Zeichen gemessen, nicht in ch: ch misst die Null, und
+                            die ist in der Hausschrift breit (62ch = 87 Zeichen).
+                            Messung docs/messung_lesbarkeit-schriften.md, 5. 11. 2026. */
+  --measure-text:29.5em; /* 66 Zeichen in Source Sans 3 (.prose, .lit) – G10 */
 
   /* --- Abstände (4/8/12/16/20/24/28/32) -----------------------------------
      Die Skala ist LÜCKENLOS. Sie war es nicht: --s5 und --s7 fehlten, und weil
