@@ -73,18 +73,29 @@ wieder prüfen.
 
 ## Einordnung 5. 11. 2026: wer in der Signatur spricht
 
-Strategieentscheid des Auftraggebers (5. 11. 2026, Anlass: Rückfrage der
-Sektion für Landwirtschaft nach ihren Kanälen). Die Signatur ist eine
-Mischform, eine ‹endorsed brand›: Die **Sektion** spricht im ersten Block
-(Name, Funktion, Sektion, Websites, Kanäle), das **Haus** unterschreibt im
-zweiten (Goetheanum, Logo vom Server, Hochschule, Gesellschaft, Adresse).
-Farbe und Logo gehören dem Haus, Name und Kanäle der Sektion.
+Entschieden (5. 11. 2026, Anlass: Rückfrage der Sektion für Landwirtschaft
+nach ihren Kanälen): Die Signatur ist eine Mischform, eine ‹endorsed brand›.
+Die **Sektion** spricht im ersten Block (Name, Funktion, Sektion, Websites,
+Kanäle), das **Haus** unterschreibt im zweiten (Goetheanum, Hochschule,
+Gesellschaft, Adresse). Darum gibt es die Social-Media-Zeile für alle, ohne
+zentrale Verwaltung: Jede Sektion hat eigene Fachpublika und eigene Kanäle,
+nichts davon steht in `assets/goe-orgs.js`. Slogan und Social-Icons bleiben
+draussen (Beschlüsse 7. 10. 2026).
 
-Darum gibt es die Social-Media-Zeile für alle, ohne zentrale Verwaltung:
-Jede Sektion hat eigene Fachpublika und eigene Kanäle, nichts davon steht in
-`assets/goe-orgs.js`. Draussen bleiben Sektionslogo, Sektionsfarbe, Slogan
-und Social-Icons (Beschlüsse 7. 10. 2026; Argumentarium
-`assets/merkblaetter/warum-ohne-bilder.pdf`).
+**Offen: wessen Zeichen und wessen Farbe** (Stand 5. 11. 2026). Die Sektion
+will als Sektion auftreten, mit ihrem abgeleiteten Teil-Logo und ihrer Farbe.
+Die Leitung bevorzugt bisher eine Signatur ganz ohne Logo, auch ohne das des
+Hauses (Sorge: die Signatur als Plakatsäule); das Hauslogo vom Server ist
+nicht freigegeben und kommt nur in Apple Mail an. Zwei Fragen nicht
+vermischen: *Bild oder kein Bild* ist Technik (Argumentarium
+`assets/merkblaetter/warum-ohne-bilder.pdf`, gilt für jedes Logo); *wessen
+Zeichen* ist Identität, und dazu sagt das Argumentarium nichts.
+Vorschlag bei der Leitung, ‹ein Zeichen, nicht keines und nicht viele›:
+Grundform reine Text-Signatur; wahlweise genau ein Zeichen, das abgeleitete
+Sektionszeichen (es wiederholt die Hausform und nennt den Teil), vom Server,
+feste Grösse, nur über den Generator; Links in der Sektionsfarbe, wo sie auf
+hellem und dunklem Grund trägt. Bis zum Entscheid gilt der heutige Stand:
+Links in Mail-Blau, kein Sektionslogo.
 
 ## Logo (Backend-Versuch, nur Intern-Ansicht)
 
