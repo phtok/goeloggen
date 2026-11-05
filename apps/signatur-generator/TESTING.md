@@ -82,6 +82,14 @@ zentrale Verwaltung: Jede Sektion hat eigene Fachpublika und eigene Kanäle,
 nichts davon steht in `assets/goe-orgs.js`. Slogan und Social-Icons bleiben
 draussen (Beschlüsse 7. 10. 2026).
 
+**Grundsatz** (Auftraggeber, 5. 11. 2026): Das Haus gibt Empfehlungen und
+Regeln, die Signatur gestaltet der Absender. Pflicht sind nur der Name und
+das Haus (‹Goetheanum›), das reicht der Leitung. Alles Weitere wählt die
+Person selbst – Funktion, Telefon, Adresse, Websites, Kanäle, PS –, aber nur
+im Rahmen des Generators: was er anbietet, ist erlaubt, was er nicht
+anbietet, gehört nicht in die Signatur. Kommt je ein Zeichen oder eine
+Sektionsfarbe dazu, dann als Wahl im Generator, nicht als Pflicht.
+
 **Offen: wessen Zeichen und wessen Farbe** (Stand 5. 11. 2026). Die Sektion
 will als Sektion auftreten, mit ihrem abgeleiteten Teil-Logo und ihrer Farbe.
 Die Leitung bevorzugt bisher eine Signatur ganz ohne Logo, auch ohne das des
