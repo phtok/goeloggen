@@ -33,3 +33,15 @@ Selbst erzeugte Merkblätter haben ihre Druckquelle unter `src/` (HTML in
 den Hausschriften; PDF via Chromium, A4, printBackground). Hochgeladene
 Fremd-Merkblätter (z. B. das PLZ-Blatt) bleiben unverändert — übersetzte
 Autorität ist keine.
+
+Eine Druckquelle lädt `design-system/base.css` nicht (Literalfarben, eigene
+Masse), darum trägt sie die Hausregeln, die dort sonst verdrahtet sind,
+selbst – Vorbild `src/warum-ohne-bilder.html`:
+
+- **Umbrüche** (CLAUDE.md § Umbrüche): `p{text-wrap:pretty}`,
+  `h1,h2,h3{text-wrap:balance}`; Artikel und Präpositionen mit `&nbsp;` an
+  ihr Wort, ebenso Zahl und Wort (‹Seite&nbsp;2›).
+- **Lesemass** (G10): Absätze bei rund 62 Zeichen je Zeile, gemessen am
+  gerenderten Blatt, nicht geschätzt.
+- **Anschauen** vor dem Commit: beide Seiten als Bild, nicht nur das PDF
+  erzeugen. `assets/` ist im Vertrag ausgenommen, kein Prüfer sieht es.
