@@ -33,7 +33,7 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 - [ ] **Links** funktionieren: Website (`https`), PS-Link. Telefon als `tel:`-Link in Mail-Blau (am Handy antippbar), Adresse bewusst Text (kein Gmail-Autolink).
 - [ ] **‹Nur Text kopieren›** liefert saubere Klartext-Fassung (Zeilenumbrüche, keine HTML-Reste).
 - [ ] **PS-Modul:** 120-Zeichen-Zähler, Darstellung `PS: … — Link`, ‹Erinnerung in den Kalender› lädt eine `.ics`, die in Apple Kalender und Outlook korrekt öffnet; abgelaufenes PS zeigt beim Laden einen Hinweis.
-- [ ] **Social Media** (Schritt 2, bis zu vier Paare ‹Name des Kanals› + ‹Link›): eine Zeile im ersten Block unter den Websites, die Namen als Links in Mail-Blau, mit ‹ · › getrennt, kein Icon, kein Bild. Paar ohne Link entfällt, Link ohne Namen zeigt die Adresse. Im Klartext je Kanal eine Zeile ‹Facebook: facebook.com/…›. Abschaltbar per Häkchen.
+- [ ] **Social Media** (Schritt 2, bis zu vier Paare ‹Kanal› + ‹Link›, aufgeklappt): eine Zeile im ersten Block unter den Websites, die Namen als Links in Mail-Blau, mit ‹ · › getrennt, kein Icon, kein Bild. Paar ohne Link entfällt, Link ohne Namen zeigt die Adresse. Im Klartext je Kanal eine Zeile ‹Facebook: facebook.com/…›. Abschaltbar per Häkchen.
 - [ ] **Vorschau Hell/Dunkel** schaltet den Bühnen-Hintergrund; gerendert wird exakt das kopierte Markup.
 
 ## Funktion / Rollout
@@ -43,7 +43,7 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 - [ ] Jede Zeile lässt sich ausblenden; ‹Minimal› = Name · Goetheanum, ‹Vollständig› = alle (Hochschule nur bei Sektion).
 - [ ] Sprache Deutsch / Deutsch + English / English: Sektion, Hochschule, Gesellschaft und Funktion folgen.
 - [ ] Query-Prefill: `?name=Test&role=Probe&unit=ms&lang=de-en` füllt die Felder.
-- [ ] ‹Beispiel einfügen› (Schritt 1) / ‹Neu beginnen› (Schritt 3) funktionieren.
+- [ ] ‹Beispiel einfügen› (Schritt 1, füllt auch Instagram und Facebook des Hauses) / ‹Neu beginnen› (Schritt 3) funktionieren.
 - [ ] Mehrzeilige Felder (Funktion, Eigene Angabe, Website, PS) wachsen mit dem Inhalt; die Social-Media-Felder bleiben fest vier Paare.
 - [ ] Empfehlungen erscheinen als Textabschnitt unter dem Generator.
 

@@ -52,9 +52,8 @@
   .fold>summary::after{content:"+";color:var(--muted);font-size:18px;line-height:1;width:1em;text-align:center}
   .fold[open]>summary::after{content:"–"}
   .fold-body{display:grid;gap:var(--s3);margin-top:var(--s3)}
-  /* Social Media: je Kanal ein Paar, Name schmal, Link breit; schmal untereinander. */
+  /* Social Media: je Kanal ein Paar auf einer Zeile, Name schmal, Link breit. */
   .soc-paar{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:var(--s2);align-items:end}
-  @media(max-width:380px){.soc-paar{grid-template-columns:1fr}}
 
   /* Schrittleiste wie in ‹Mein Campusplan›: jede Station anwählbar, die aktuelle in Tinte. */
   .schritte{list-style:none;margin:0 0 var(--s5);padding:0;display:flex;gap:var(--s1) var(--s3);flex-wrap:wrap}
@@ -276,11 +275,11 @@
             </label>
             <button type="button" class="btn ghost small" id="secWeb" hidden></button>
           </fieldset>
-          <details class="fold" id="socFold">
+          <details class="fold" id="socFold" open>
             <summary>Social Media <span class="sub">optional, bis zu vier</span></summary>
             <div class="fold-body">
               <div class="soc-paar">
-                <label class="field"><span class="lab"><span>Name des Kanals</span></span>
+                <label class="field"><span class="lab"><span>Kanal</span></span>
                   <input type="text" id="soc1Name" placeholder="Facebook" autocomplete="off" />
                 </label>
                 <label class="field"><span class="lab"><span>Link</span></span>
@@ -288,7 +287,7 @@
                 </label>
               </div>
               <div class="soc-paar">
-                <label class="field"><span class="sr-only">Name des Kanals 2</span>
+                <label class="field"><span class="sr-only">Kanal 2</span>
                   <input type="text" id="soc2Name" placeholder="Instagram" autocomplete="off" />
                 </label>
                 <label class="field"><span class="sr-only">Link 2</span>
@@ -296,7 +295,7 @@
                 </label>
               </div>
               <div class="soc-paar">
-                <label class="field"><span class="sr-only">Name des Kanals 3</span>
+                <label class="field"><span class="sr-only">Kanal 3</span>
                   <input type="text" id="soc3Name" autocomplete="off" />
                 </label>
                 <label class="field"><span class="sr-only">Link 3</span>
@@ -304,7 +303,7 @@
                 </label>
               </div>
               <div class="soc-paar">
-                <label class="field"><span class="sr-only">Name des Kanals 4</span>
+                <label class="field"><span class="sr-only">Kanal 4</span>
                   <input type="text" id="soc4Name" autocomplete="off" />
                 </label>
                 <label class="field"><span class="sr-only">Link 4</span>
@@ -624,7 +623,10 @@ const EXAMPLE = {
   // Haus-PS: gehört allen Abteilungen, hält bis Ende Juli 2027.
   ps: "Faust 1+2 · Drei mal im Sommer 2027",
   pslink: "www.faust.jetzt",
-  psuntil: "2027-07-31"
+  psuntil: "2027-07-31",
+  // Kanäle des Hauses als Beispiel (wie auf goetheanum.ch/de verlinkt).
+  soc1Name: "Instagram", soc1Url: "instagram.com/goetheanum_de",
+  soc2Name: "Facebook", soc2Url: "facebook.com/goetheanum.deutsch"
 };
 
 const state = { mode: "light", plain: "", step: 1, unitKind: "", unit: "", lang: "de", on: {}, px: 12 };
@@ -710,7 +712,8 @@ function collectLines() {
     .map(s => ({ href: webHref(s.u), text: s.n || stripWww(s.u), plain: s.n ? s.n + ": " + stripWww(s.u) : stripWww(s.u) }));
   add("social", "person", "Social Media", 2, soc.length ? [{
     html: soc.map(s => linkHtml(s.href, s.text, MAIL_BLUE)).join(" · "),
-    text: soc.map(s => s.plain).join("\n")
+    text: soc.map(s => s.plain).join("\n"),
+    liste: soc.map(s => s.text).join(" · ")
   }] : []);
   // Telefonnummern auf einer Zeile, als tel:-Link in Mail-Blau wie die
   // Websites: Als reiner Text erkennt Mail (iOS) sie trotzdem und
@@ -866,7 +869,7 @@ function renderZeilen() {
     const on = isOn(l.id), id = "z-" + l.id;
     html += "<li class=\"" + (on ? "" : "aus") + "\"><label for=\"" + id + "\">" +
       "<input type=\"checkbox\" id=\"" + id + "\" data-zeile=\"" + l.id + "\"" + (on ? " checked" : "") + (l.id === "goetheanum" ? " disabled" : "") + " />" +
-      "<span class=\"z-text\">" + l.rows.map(r => esc(r.text)).join("<br>") +
+      "<span class=\"z-text\">" + l.rows.map(r => esc(r.liste || r.text)).join("<br>") +
       (l.rows[0].text === l.label ? "" : "<small>" + esc(l.label) + "</small>") + "</span></label>" +
       (l.step ? "<button type=\"button\" class=\"z-edit\" data-goto=\"" + l.step + "\" aria-label=\"" + esc(l.label) + " ändern\">ändern</button>" : "<span></span>") +
       "</li>";
@@ -1026,8 +1029,6 @@ function setFields(obj) {
   state.lang = ["de", "de-en", "en"].indexOf(obj.lang) !== -1 ? obj.lang : "de";
   state.on = (obj.on && typeof obj.on === "object") ? obj.on : {};
   state.px = GROESSEN.indexOf(+obj.px) !== -1 ? +obj.px : 12;
-  // Wer Kanäle eingetragen hat, sieht sie offen.
-  document.getElementById("socFold").open = SOC.some(i => obj["soc" + i + "Url"] || obj["soc" + i + "Name"]);
   syncUnitUi();
 }
 function loadStored() {
