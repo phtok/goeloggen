@@ -22,7 +22,7 @@
   .kicker{font-family:"G Deutlich";font-size:10.5pt;color:#8a6728;margin:0 0 2mm} /* ds-ok: Druck-Artefakt */
   h1{font-family:"G Deutlich";font-size:23pt;line-height:1.12;margin:0 0 5mm;font-weight:normal}
   /* Lesemass ~62 Zeichen (G10, --measure): die Lede schmaler als der Satzspiegel,
-     Kasten zweispaltig wie die Gründe, Schluss auf Spaltenbreite. */
+     Kasten zweispaltig wie die Gründe, Schluss wie die Lede. */
   .kern{font-family:"G Klar";font-size:12pt;line-height:1.5;margin:0 0 9mm;max-width:106mm;
     border-left:1mm solid #d7ab68;padding-left:5mm} /* ds-ok: Druck-Artefakt */
   .kern em{font-style:normal;font-family:"G Deutlich"}
@@ -41,7 +41,8 @@
   .einw{break-inside:avoid;margin:0 0 5mm}
   .einw h3{font-family:"G Deutlich";font-size:10.5pt;margin:0 0 1mm;font-weight:normal;color:#8a6728} /* ds-ok: Druck-Artefakt */
   .einw p{font-size:10pt;line-height:1.45;margin:0}
-  .schluss{font-size:10pt;line-height:1.45;margin:0;max-width:84mm}
+  /* Schluss wie die Lede gesetzt: klammert das Blatt, hängt nicht in den Einwänden. */
+  .schluss{margin:9mm 0 0}
 
   .foot{position:absolute;left:17mm;right:17mm;bottom:9mm;display:flex;
     justify-content:space-between;font-size:8pt;color:#6b7177} /* ds-ok: Druck-Artefakt */
@@ -144,13 +145,15 @@
         den Empfänger nicht. Er macht Mails nur länger – also entfällt er.</p></div>
   </div>
 
-  <h2 style="margin-top:6mm">Kurz gesagt</h2>
-  <p class="schluss">Die
+  <div class="schluss">
+  <h2>Kurz gesagt</h2>
+  <p class="kern">Die
     Bildlosigkeit ist kein Verzicht, sondern ein Service am Empfänger: Die
     Büroklammer bleibt ein verlässliches Zeichen, die Mail bleibt in jedem
     Client lesbar, und die Stimme des Goetheanum trägt der Text. Werkzeug und
     Begründung: werkzeuge.goetheanum.ch/signatur – elf Empfehlungen samt
     Fussnote ‹Was in der Schweiz gilt›, als Seite und A4-PDF.</p>
+  </div>
 
   <div class="foot"><span>Goetheanum Grafik · Stand 5. November 2026</span><span>Seite 2 von 2</span></div>
 </div>
