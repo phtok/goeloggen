@@ -21,7 +21,9 @@
 
   .kicker{font-family:"G Deutlich";font-size:10.5pt;color:#8a6728;margin:0 0 2mm} /* ds-ok: Druck-Artefakt */
   h1{font-family:"G Deutlich";font-size:23pt;line-height:1.12;margin:0 0 5mm;font-weight:normal}
-  .kern{font-family:"G Klar";font-size:12pt;line-height:1.5;margin:0 0 9mm;
+  /* Lesemass ~62 Zeichen (G10, --measure): die Lede schmaler als der Satzspiegel,
+     Kasten zweispaltig wie die Gründe, Schluss auf Spaltenbreite. */
+  .kern{font-family:"G Klar";font-size:12pt;line-height:1.5;margin:0 0 9mm;max-width:106mm;
     border-left:1mm solid #d7ab68;padding-left:5mm} /* ds-ok: Druck-Artefakt */
   .kern em{font-style:normal;font-family:"G Deutlich"}
 
@@ -30,15 +32,16 @@
   .arg{break-inside:avoid;margin:0 0 4.6mm;padding-left:7mm;position:relative}
   .arg .n{position:absolute;left:0;top:0;font-family:"G Deutlich";font-size:12.5pt;color:#8a6728} /* ds-ok: Druck-Artefakt */
   .arg h3{font-family:"G Deutlich";font-size:10.5pt;margin:0 0 1mm;font-weight:normal}
-  .arg p{font-size:9.4pt;line-height:1.42;margin:0}
+  .arg p{font-size:10pt;line-height:1.45;margin:0}
 
   .box{border:.35mm solid #d7ab68;border-radius:2.5mm;padding:4.5mm 5.5mm;margin:0 0 8mm} /* ds-ok: Druck-Artefakt */
   .box h3{font-family:"G Deutlich";font-size:10.5pt;margin:0 0 1.5mm;font-weight:normal}
-  .box p{font-size:9.4pt;line-height:1.42;margin:0}
+  .box p{font-size:10pt;line-height:1.45;margin:0;columns:2;column-gap:9mm}
 
   .einw{break-inside:avoid;margin:0 0 5mm}
   .einw h3{font-family:"G Deutlich";font-size:10.5pt;margin:0 0 1mm;font-weight:normal;color:#8a6728} /* ds-ok: Druck-Artefakt */
-  .einw p{font-size:9.4pt;line-height:1.42;margin:0}
+  .einw p{font-size:10pt;line-height:1.45;margin:0}
+  .schluss{font-size:10pt;line-height:1.45;margin:0;max-width:84mm}
 
   .foot{position:absolute;left:17mm;right:17mm;bottom:9mm;display:flex;
     justify-content:space-between;font-size:8pt;color:#6b7177} /* ds-ok: Druck-Artefakt */
@@ -142,14 +145,14 @@
   </div>
 
   <h2 style="margin-top:6mm">Kurz gesagt</h2>
-  <p style="font-size:9.4pt;line-height:1.42;margin:0;max-width:160mm">Die
+  <p class="schluss">Die
     Bildlosigkeit ist kein Verzicht, sondern ein Service am Empfänger: Die
     Büroklammer bleibt ein verlässliches Zeichen, die Mail bleibt in jedem
     Client lesbar, und die Stimme des Goetheanum trägt der Text. Werkzeug und
     Begründung: werkzeuge.goetheanum.ch/signatur – elf Empfehlungen samt
     Fussnote ‹Was in der Schweiz gilt›, als Seite und A4-PDF.</p>
 
-  <div class="foot"><span>Goetheanum Grafik · Stand 10. Juli 2026</span><span>Seite 2 von 2</span></div>
+  <div class="foot"><span>Goetheanum Grafik · Stand 5. November 2026</span><span>Seite 2 von 2</span></div>
 </div>
 
 </body>
