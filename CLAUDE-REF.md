@@ -48,46 +48,30 @@ Bei neuer Fassung oder geänderten Dateinamen auch die Installer nachführen
 (`assets/fonts/goetheanum/Installer/windows.ps1` und `mac.sh`: Dateiliste und
 Fassungsnummer).
 
-## § Werkzeug-Schlüssel (Supabase-RPCs, seit 3. 11. 2026)
+## § Werkzeug-Schutz (Supabase-RPCs, Stand 5. 11. 2026)
 
-Schreibende und heikle lesende RPCs der Werkzeuge verlangen einen Schlüssel
-je Werkzeug. Bauart und Migration: `services/werkzeug-schluessel/schema.sql`;
-Browser-Seite: `design-system/schluessel.js` (`GoeSchluessel.rpc(werkzeug,
-name, body)` – fragt einmal je Gerät, prüft sofort, merkt in localStorage).
+**Beschluss des Inhabers (5. 11. 2026): Die Werkzeuge bleiben ohne Schlüssel
+zugänglich.** Schlüssel wirken wie Passwörter und häufen sich, und ein zu
+kompliziertes Werkzeug wird nicht benutzt. Die RPCs sind darum für anon offen;
+geschützt wird durch **Umkehrbarkeit** (`services/werkzeug-schluessel/umkehrbar.sql`):
 
-| Werkzeug | RPCs | Aufrufer |
+| Werkzeug | Schutz | Zurückholen (SQL, als Service-Rolle) |
 |---|---|---|
-| `kurzlinks` | `qr_link_anlegen/loeschen`, `sommer2026_link_anlegen/loeschen` (Parameter heisst dort `p_schluessel`) | qr-generator, utm-generator |
-| `folder` | `folder_liste/holen/sichern` | folder, programmheft (live, zz-zusammen), folder-archiv |
-| `reader` | alle `reader_*` | lt-reader |
-| `zaehler` | `sommer2026_kosten_*`, `_massnahme_eintragen/aendern`, `_multi_anlegen`, `_multi_kontakt_anlegen`, `_multi_protokoll`, `_einnahmen` | sommer-zaehler |
-| `lesetest` | `lesetest_ergebnisse` (Teilnehmen bleibt offen) | lesetest/auswertung |
-| `succow26` | `succow26_list/upsert` (Token unverändert, nur noch als Hash) | ausserhalb dieses Repos |
+| Folder | Trigger hält vor jedem Überschreiben eine Fassung fest (höchstens alle 10 Min., bei Export immer; je Folder die letzten 60) in `folder_fassung` | `update folder_archiv set stand = (select stand from folder_fassung where id = …) where id = '…';` |
+| Kurzlinks (QR, UTM) | Gelöschtes samt Zählung in `kurzlink_geloescht`; ein Link auf eine noch nie verwendete Domain schickt eine Mail (Edge Function `kurzlink-melden`, Quelle `services/qr-generator/kurzlink-melden/`, Konfiguration in `kurzlink_config`) | Zeile aus `kurzlink_geloescht.zeile` zurück einfügen, `hits` nach `link_hits` |
+| Sommer-Zähler | Ändern und Löschen in `sommer2026_kosten`, `_massnahmen`, `_multiplikatoren`, `_multi_kontakte` landet in `sommer2026_protokoll` | alte Zeile aus `protokoll.alt` |
+| LT-Reader | hatte schon `reader_fassung` | – |
 
-- **Bauart:** Die alte Funktion liegt unverändert in `werkzeug_intern` (für
-  anon zu), in `public` steht eine Hülle mit `p_key text default null`, die
-  `werkzeug_tor()` fragt. Rümpfe ändern heisst: die Funktion in
-  `werkzeug_intern` ersetzen, nicht die Hülle.
-- **Phasen:** `werkzeug_schluessel.pflicht = false` lässt Aufrufe ohne
-  Schlüssel noch durch (ein falscher scheitert immer). Verbindlich machen:
-  `update public.werkzeug_schluessel set pflicht = true where werkzeug = '…';`
-  – ohne Deploy, sofort wirksam.
-- **Antwort bei falschem/fehlendem Schlüssel:** HTTP 403, Code `28000`,
-  Meldung `schluessel_falsch`. Prüfen ohne Wirkung: RPC `werkzeug_key_ok`.
-- **Schlüssel wechseln:** neuen erzeugen, Hash setzen (Formel im Kopf der
-  Schema-Datei; normalisiert = klein, nur a–z/0–9). Geräte mit dem alten
-  bekommen 403 und werden neu gefragt. Klartext nie in Datei, Commit, Log.
-- **Fallen:** Ein Werkzeug ohne Zeile in `werkzeug_schluessel` ist zu (auch
-  ohne Schlüssel). Interne Aufrufe ohne Anfrage-Rolle und `service_role`
-  gehen durch. Wer im Dialog abbricht, wird bis zum Neuladen nicht mehr
-  gefragt; der Zähler zeigt dann die geschützten Zahlen nicht.
-  Der Kurzlink-Schlüssel war am 6. 7. 2026 schon einmal ausgebaut worden
-  («zu kompliziert»); darum merkt sich das Gerät ihn jetzt.
-- **Bewusst offen gelassen:** `*_comment_erledigt` (Kommentare sind dort für
-  anon ohnehin les- und schreibbar), `sommer2026_multi_liste` und
-  `_massnahmen_public` (nur Aliasse bzw. Massnahmen ohne Personen),
-  öffentliche Zähler (`qr_stats_*`, `sommer2026_stats` …). Die
-  Kurzlink-Auflösung läuft über die Edge Function `go` (Service-Role).
-- **Offen:** `sommer2026_multi_pw_ok` ist für anon ein Ratespiel ohne Bremse
-  (Passwort klein geschrieben, ungesalzen) – bei Gelegenheit auf einen
-  Zufallsschlüssel umstellen.
+- Öffentlich lesbar bleiben auch Einnahmen-Summen und Stundensätze (für das
+  Dashboard entscheidend, Beschluss 5. 11. 2026). Eine Zugangsregelung für
+  das ganze Projekt («nur bestimmte Nutzende») kommt mit der nächsten
+  Überarbeitung.
+- **Geschichte:** Am 3. 11. 2026 kurz mit Schlüssel je Werkzeug gebaut (#754,
+  `schema.sql`), am 5. 11. zurückgebaut (#761, `rueckbau.sql`). Schon am
+  6. 7. 2026 war ein Kurzlink-Schlüssel als «zu kompliziert» entfernt worden.
+  **Nicht wieder einführen**, ohne den Inhaber zu fragen.
+- **Übrig vom Schlüssel-Bau:** nur `succow26_*`. Dessen Token steht nicht mehr
+  im Klartext im Funktionsrumpf, sondern als Hash in `werkzeug_schluessel`
+  (geprüft von `werkzeug_tor`). Der Token selbst ist gleich geblieben.
+- **Offen:** `sommer2026_multi_pw_ok` lässt sich für anon ohne Bremse
+  durchprobieren (Passwort klein geschrieben, ungesalzen).
