@@ -1,4 +1,5 @@
 -- =============================================================================
+-- ABGELÖST am 5. 11. 2026 durch rueckbau.sql + umkehrbar.sql (nur succow26 bleibt).
 -- Werkzeug-Schlüssel: schreibende und heikle lesende RPCs nur noch mit Schlüssel
 -- (Sicherheits-Review vom 3. 11. 2026, Migration «werkzeug_schluessel_a»)
 --
