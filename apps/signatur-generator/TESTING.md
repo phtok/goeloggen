@@ -33,6 +33,7 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 - [ ] **Links** funktionieren: Website (`https`), PS-Link. Telefon als `tel:`-Link in Mail-Blau (am Handy antippbar), Adresse bewusst Text (kein Gmail-Autolink).
 - [ ] **‹Nur Text kopieren›** liefert saubere Klartext-Fassung (Zeilenumbrüche, keine HTML-Reste).
 - [ ] **PS-Modul:** 120-Zeichen-Zähler, Darstellung `PS: … — Link`, ‹Erinnerung in den Kalender› lädt eine `.ics`, die in Apple Kalender und Outlook korrekt öffnet; abgelaufenes PS zeigt beim Laden einen Hinweis.
+- [ ] **Social Media** (Schritt 2, bis zu vier Paare ‹Name des Kanals› + ‹Link›): eine Zeile im ersten Block unter den Websites, die Namen als Links in Mail-Blau, mit ‹ · › getrennt, kein Icon, kein Bild. Paar ohne Link entfällt, Link ohne Namen zeigt die Adresse. Im Klartext je Kanal eine Zeile ‹Facebook: facebook.com/…›. Abschaltbar per Häkchen.
 - [ ] **Vorschau Hell/Dunkel** schaltet den Bühnen-Hintergrund; gerendert wird exakt das kopierte Markup.
 
 ## Funktion / Rollout
@@ -43,7 +44,7 @@ einfügen. Apple Mail: ggf. ‹Standardschriftart für E-Mails verwenden› deak
 - [ ] Sprache Deutsch / Deutsch + English / English: Sektion, Hochschule, Gesellschaft und Funktion folgen.
 - [ ] Query-Prefill: `?name=Test&role=Probe&unit=ms&lang=de-en` füllt die Felder.
 - [ ] ‹Beispiel einfügen› (Schritt 1) / ‹Neu beginnen› (Schritt 3) funktionieren.
-- [ ] Mehrzeilige Felder (Funktion, Eigene Angabe, Website, PS) wachsen mit dem Inhalt.
+- [ ] Mehrzeilige Felder (Funktion, Eigene Angabe, Website, PS) wachsen mit dem Inhalt; die Social-Media-Felder bleiben fest vier Paare.
 - [ ] Empfehlungen erscheinen als Textabschnitt unter dem Generator.
 
 ## Testpersonen (Aufbau prüfen)
@@ -66,9 +67,24 @@ wieder prüfen.
 |---|---|---|
 | Minimal | Name, ‹Minimal› | Name · Goetheanum |
 | Sektionsleitung | Leiterin/Head, Bildende Künste, DE+EN, ein Telefon, sbk.goetheanum.org | ‹Leiterin · Head›, ‹Sektion für Bildende Künste · Visual Arts Section›, Hochschule an |
-| Bereich, viel Kontakt | Kommunikation, DE+EN, Telefon + Mobil, zwei Websites | Telefone und Websites je auf einer Zeile, Websites im ersten Block |
+| Bereich, viel Kontakt | Kommunikation, DE+EN, Telefon + Mobil, zwei Websites, drei Kanäle (Facebook, Instagram, einer ohne Namen) | Telefone, Websites und Kanäle je auf einer Zeile, Websites und Kanäle im ersten Block; der Kanal ohne Namen zeigt seine Adresse |
 | Nur Englisch | Medical Section, Coordinator | nur englische Zeilen |
 | Lange Sektion | Heilpädagogik, DE+EN | Sektionsname auf zwei Zeilen |
+
+## Einordnung 5. 11. 2026: wer in der Signatur spricht
+
+Strategieentscheid des Auftraggebers (5. 11. 2026, Anlass: Rückfrage der
+Sektion für Landwirtschaft nach ihren Kanälen). Die Signatur ist eine
+Mischform, eine ‹endorsed brand›: Die **Sektion** spricht im ersten Block
+(Name, Funktion, Sektion, Websites, Kanäle), das **Haus** unterschreibt im
+zweiten (Goetheanum, Logo vom Server, Hochschule, Gesellschaft, Adresse).
+Farbe und Logo gehören dem Haus, Name und Kanäle der Sektion.
+
+Darum gibt es die Social-Media-Zeile für alle, ohne zentrale Verwaltung:
+Jede Sektion hat eigene Fachpublika und eigene Kanäle, nichts davon steht in
+`assets/goe-orgs.js`. Draussen bleiben Sektionslogo, Sektionsfarbe, Slogan
+und Social-Icons (Beschlüsse 7. 10. 2026; Argumentarium
+`assets/merkblaetter/warum-ohne-bilder.pdf`).
 
 ## Logo (Backend-Versuch, nur Intern-Ansicht)
 
