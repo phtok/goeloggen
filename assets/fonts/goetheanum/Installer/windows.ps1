@@ -17,6 +17,9 @@
 # Fuer die IT (als Administrator, fuer alle Benutzer des Geraets):
 #   .\windows.ps1 -AlleBenutzer [-Kyrillisch] [-Arabisch] [-Variabel] [-Quelle <entpackter Ordner Goetheanum-Schriften-v2.9>]
 #
+# Ohne Fenster (Setup-App, Intune): -OhneRueckfrage fragt nicht nach offenen
+# Programmen; gesperrte Dateien enden dann mit Code 1.
+#
 # Exit-Codes: 0 fertig - 1 Fehler (Download, Datei gesperrt) -
 #             2 alte Fassung fuer alle Benutzer gefunden, braucht Adminrechte
 #
@@ -29,6 +32,7 @@ param(
   [switch]$Kyrillisch,
   [switch]$Arabisch,
   [switch]$AlleBenutzer,
+  [switch]$OhneRueckfrage,
   [string]$Quelle = ''
 )
 
@@ -215,7 +219,7 @@ function Installiere {
   Melde 'Schriften geladen.'
 
   # 2. Offene Programme schliessen lassen
-  $interaktiv = [Environment]::UserInteractive -and -not [Console]::IsInputRedirected
+  $interaktiv = -not $OhneRueckfrage -and [Environment]::UserInteractive -and -not [Console]::IsInputRedirected
   $offen = Get-Process -Name $Programme -ErrorAction SilentlyContinue
   while ($offen -and $interaktiv) {
     Write-Host ''

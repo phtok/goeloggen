@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+  <title>Goetheanum-Schriften @FASSUNG@</title>
+  <options customize="always" require-scripts="false" rootVolumeOnly="true" hostArchitectures="x86_64,arm64"/>
+  <domains enable_localSystem="true" enable_anywhere="false" enable_currentUserHome="false"/>
+  <!-- Reihenfolge = Installationsreihenfolge: die Zusätze setzen ihre Marke,
+       erst «installieren» (unsichtbar, immer) ruft mac.sh auf. -->
+  <choices-outline>
+    <line choice="schriften"/>
+    <line choice="kyrillisch"/>
+    <line choice="arabisch"/>
+    <line choice="variabel"/>
+    <line choice="installieren"/>
+  </choices-outline>
+  <choice id="schriften" title="Goetheanum Schrift und Source Sans 3" description="Klar, Laut, Leise, Ruhig, Deutlich, Icons, Pfeile und Source Sans 3. Alte Fassungen werden zuerst entfernt." enabled="false" selected="true">
+    <pkg-ref id="ch.goetheanum.schriften.vorbereiten"/>
+  </choice>
+  <choice id="kyrillisch" title="Goetheanum Kyrillisch" start_selected="false">
+    <pkg-ref id="ch.goetheanum.schriften.kyrillisch"/>
+  </choice>
+  <choice id="arabisch" title="Goetheanum Arabisch" start_selected="false">
+    <pkg-ref id="ch.goetheanum.schriften.arabisch"/>
+  </choice>
+  <choice id="variabel" title="Goetheanum Variabel" description="Für die Gestaltung (InDesign und Co.), nicht für Office." start_selected="false">
+    <pkg-ref id="ch.goetheanum.schriften.variabel"/>
+  </choice>
+  <choice id="installieren" visible="false" enabled="false" selected="true">
+    <pkg-ref id="ch.goetheanum.schriften"/>
+  </choice>
+  <pkg-ref id="ch.goetheanum.schriften.vorbereiten" version="@FASSUNG@">vorbereiten.pkg</pkg-ref>
+  <pkg-ref id="ch.goetheanum.schriften.kyrillisch" version="@FASSUNG@">kyrillisch.pkg</pkg-ref>
+  <pkg-ref id="ch.goetheanum.schriften.arabisch" version="@FASSUNG@">arabisch.pkg</pkg-ref>
+  <pkg-ref id="ch.goetheanum.schriften.variabel" version="@FASSUNG@">variabel.pkg</pkg-ref>
+  <pkg-ref id="ch.goetheanum.schriften" version="@FASSUNG@">schriften.pkg</pkg-ref>
+</installer-gui-script>

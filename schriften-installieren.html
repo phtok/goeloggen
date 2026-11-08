@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Schriften installieren · Goetheanum</title>
+<meta name="description" content="Die Goetheanum-Schriften mit einer Setup-App installieren, für Windows und Mac." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch}
+  .systeme{display:grid;gap:var(--s6);grid-template-columns:repeat(auto-fit,minmax(min(100%,22em),1fr))}
+  .systeme .card{display:flex;flex-direction:column;gap:var(--s5)}
+  .systeme h2{font-size:var(--t-h2)}
+  .systeme .btn{align-self:flex-start}
+  .schritte{margin:0;padding-left:1.4em;hyphens:manual;display:grid;gap:var(--s2);line-height:var(--lh-body)}
+  .inhalt{margin-top:var(--s8);display:grid;gap:var(--s4);max-width:var(--measure-text)}
+  .inhalt dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:var(--s3) var(--s6)}
+  .inhalt dt{font-family:var(--font-text);color:var(--muted)}
+  .inhalt dd{margin:0;font-family:var(--font-text);hyphens:manual}
+  @media (max-width:520px){.inhalt dl{grid-template-columns:1fr;gap:var(--s1) 0}.inhalt dd{margin-bottom:var(--s3)}}
+</style>
+</head>
+<body>
+
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Schrift</span>
+    <h1>Schriften installieren</h1>
+  </section>
+
+  <section class="systeme" id="systeme">
+    <div class="card" id="windows">
+      <h2>Windows</h2>
+      <a class="btn primary" href="assets/fonts/goetheanum/Installer/Goetheanum-Schriften-2.9-Windows.exe" download>Für Windows laden</a>
+      <ol class="schritte">
+        <li>Datei öffnen. Fragt der Browser nach: <q>Behalten</q>.</li>
+        <li>Warnt Windows: <q>Weitere Informationen</q>, dann <q>Trotzdem ausführen</q>.</li>
+        <li>Zusätze wählen, <q>Installieren</q>.</li>
+      </ol>
+      <p class="meta">Windows&nbsp;10 und&nbsp;11, ohne Adminrechte.</p>
+    </div>
+    <div class="card" id="mac">
+      <h2>Mac</h2>
+      <a class="btn primary" href="assets/fonts/goetheanum/Installer/Goetheanum-Schriften-2.9-Mac.pkg" download>Für Mac laden</a>
+      <ol class="schritte">
+        <li>Datei öffnen.</li>
+        <li>Meldet der Mac, sie lasse sich nicht öffnen: Systemeinstellungen › Datenschutz &amp; Sicherheit › <q>Dennoch öffnen</q>.</li>
+        <li>Zusätze wählen, <q>Installieren</q>, Passwort des Macs eingeben.</li>
+      </ol>
+      <p class="meta">Für alle Benutzer des Macs, mit Adminrechten.</p>
+    </div>
+  </section>
+
+  <section class="inhalt">
+    <h2>Inhalt</h2>
+    <dl>
+      <dt>Immer</dt>
+      <dd>Goetheanum Schrift (Klar, Laut, Leise), Ruhig, Deutlich, Icons, Pfeile; Source&nbsp;Sans&nbsp;3</dd>
+      <dt>Zur Wahl</dt>
+      <dd>Goetheanum Kyrillisch, Goetheanum Arabisch, Goetheanum Variabel (Gestaltung)</dd>
+      <dt>Frühere Fassungen</dt>
+      <dd>werden zuerst entfernt</dd>
+      <dt>Danach</dt>
+      <dd>Word, PowerPoint und Co. neu starten</dd>
+    </dl>
+    <p class="meta">Für die IT: <a href="https://github.com/phtok/goeloggen/blob/main/assets/fonts/goetheanum/Installer/README.md">stille Installation und Skripte</a></p>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="schriften.html">Schriften</a></span>
+  </div>
+</footer>
+
+<script>
+  // Erkanntes System zuerst und als Hauptknopf
+  (function () {
+    var p = ((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '').toLowerCase();
+    var ua = navigator.userAgent.toLowerCase();
+    var mac = p.indexOf('mac') > -1 && !('ontouchend' in document);
+    var win = p.indexOf('win') > -1 || ua.indexOf('windows') > -1;
+    if (!mac && !win) return;
+    var eigen = document.getElementById(mac ? 'mac' : 'windows');
+    var anders = document.getElementById(mac ? 'windows' : 'mac');
+    eigen.parentNode.insertBefore(eigen, eigen.parentNode.firstChild);
+    anders.querySelector('.btn').classList.remove('primary');
+  })();
+</script>
+</body>
+</html>

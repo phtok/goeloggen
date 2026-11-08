@@ -1,0 +1,13 @@
+#!/bin/bash
+# Goetheanum-Schriften (Mac-Paket): installiert für alle Benutzer des Macs.
+# Läuft als root aus dem Paket; Schriften und mac.sh liegen neben diesem
+# Skript. Die gewählten Zusätze hinterlassen davor je eine Marke (siehe
+# build.sh). Ausgabe steht in /var/log/install.log.
+HIER="$(cd "$(dirname "$0")" && pwd)"
+MARKEN=/private/var/root/.goetheanum-schriften
+ANGABEN=(--alle --quelle "$HIER")
+for zusatz in kyrillisch arabisch variabel; do
+  [ -e "$MARKEN/$zusatz" ] && ANGABEN+=("--$zusatz")
+done
+rm -rf "$MARKEN"
+exec /bin/bash "$HIER/mac.sh" "${ANGABEN[@]}"

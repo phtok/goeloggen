@@ -1,6 +1,6 @@
 # Schriften für alle: Verteilung, Begleitschriften, Lesegrenze
 
-Stand 8. 11. 2026 (Begleitschriften im Installer). Auftrag des Inhabers (30. 10.): die Installation der
+Stand 8. 11. 2026 (Setup-Apps für Windows und Mac). Auftrag des Inhabers (30. 10.): die Installation der
 Schriften für alle Nutzenden so einfach wie möglich machen. Gedächtnis der
 Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
 
@@ -28,6 +28,29 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
     «ExtraLight»), Source Sans Pro nicht. Systemweite Source Sans 3 ohne
     Adminrechte bleibt stehen.
   - Simuliert wie oben, je vier Fälle; nicht auf echten Geräten.
+
+- **Setup-Apps** (8. 11.): Windows `.exe` (Inno Setup,
+  `tools/schrift-installer/windows.iss`) und Mac `.pkg` (pkgbuild/productbuild,
+  `tools/schrift-installer/mac/`), gebaut von
+  `.github/workflows/schrift-installer.yml`, Schriften aus dem Repo-Stand.
+  Beide rufen die Skripte auf (Windows `-OhneRueckfrage -Quelle`, Mac
+  `--alle --quelle`). Jeder Lauf installiert die frische App zweimal auf dem
+  Runner (mit Zusatz, dann ohne) und prüft Dateien, Registry, Entfernen der
+  alten Fassung und Behalten des Zusatzes. Auf `main` ins Release
+  `schrift-installer`; `deploy-pages.yml` legt sie nach
+  `assets/fonts/goetheanum/Installer/`. Seite:
+  https://werkzeuge.goetheanum.ch/schriften-installieren.html (erkanntes
+  System zuerst), verlinkt aus `schriften.html` § Download.
+  - Windows: pro Benutzer ohne Adminrechte; fragt vor dem Installieren nach
+    offenen Programmen (WMI); Code 2 (alte Fassung für alle Benutzer) und 1
+    erscheinen als Meldung.
+  - Mac: für alle Benutzer (`/Library/Fonts`), braucht das Passwort eines
+    Admins. Zusätze als Auswahl; je Zusatz ein leeres Paket, das eine Marke
+    in `/var/root` setzt, das unsichtbare letzte Paket liest sie und ruft
+    `mac.sh` auf.
+  - **Unsigniert:** SmartScreen bzw. Gatekeeper warnen; die Seite sagt, wo
+    man trotzdem öffnet. Nach der Signatur diese Schritte von der Seite
+    nehmen.
 
 ## Entschieden (Inhaber, 30./31. 10.)
 
@@ -177,6 +200,12 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
 ## Nächste Schritte hier (Installer-Strang)
 
 1. ~~Begleitschriften bauen und in die Skripte~~ (erledigt 8. 11.).
-2. Installer-Apps (Inno Setup / pkgbuild) über GitHub Actions, Signatur sobald
-   Konten geklärt (Secrets-Konfiguration → vor Merge fragen).
-3. Installationsseite mit einem Knopf je System.
+2. ~~Installer-Apps über GitHub Actions~~ (erledigt 8. 11., unsigniert).
+3. ~~Installationsseite mit einem Knopf je System~~ (erledigt 8. 11.).
+4. Auf echten Geräten von Mitarbeitenden ausprobieren lassen (ein Windows
+   ohne Adminrechte, ein Mac mit altem Stand).
+5. Signieren, sobald die Konten geklärt sind: Mac Developer ID Installer
+   (`productsign`) und Notarisierung, Windows Trusted Signing. Braucht
+   Secrets → vor dem Merge fragen. Danach die Warn-Schritte von der Seite.
+6. Offen, ob Mac-Benutzer ohne Adminrechte ein Paket pro Benutzer brauchen
+   (`enable_currentUserHome`); erst nach Antwort der EDV.
