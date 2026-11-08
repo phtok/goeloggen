@@ -1,15 +1,26 @@
 # Installer der Goetheanum-Schriften
 
-Zwei Skripte, die zuerst **jede frühere Goetheanum-Schrift entfernen** und dann
-die aktuelle Fassung installieren. Alt und Neu tragen dieselben Namen;
+Zwei Skripte, die zuerst **jede frühere Goetheanum-Schrift und jede Kopie von
+Source Sans 3 entfernen** und dann die aktuelle Fassung installieren. Alt und Neu tragen dieselben Namen;
 nebeneinander geraten sie in Konflikt (Office zeigt gesperrte oder künstlich
 verformte Schnitte).
 
-Installiert wird das Office-Set aus `../Office`: Goetheanum Schrift (Klar,
-Laut als Fett, Leise als Kursiv), Ruhig, Deutlich, Icons und Pfeile. Die
-variable Schrift aus `../Variable` kommt nur auf Wunsch dazu (`-Variabel` bzw.
-`--variabel`): Ihre Stufen Flüstern bis Schreien gehören der Gestaltung, und
-Office stellt die variable CFF2-Schrift nicht zuverlässig dar.
+| Was | Woher | Angabe |
+|---|---|---|
+| Goetheanum Schrift (Klar, Laut als Fett, Leise als Kursiv), Ruhig, Deutlich, Icons, Pfeile | `../Office` | Standard |
+| Source Sans 3, Source Sans 3 Semibold (je mit Kursiv) | `../Begleitschriften`, Adobe 3.052R unverändert | Standard |
+| Goetheanum Kyrillisch (Regular, Bold) | `../Begleitschriften` | `-Kyrillisch` / `--kyrillisch` |
+| Goetheanum Arabisch (Regular, Bold) | `../Begleitschriften` | `-Arabisch` / `--arabisch` |
+| Goetheanum Variabel | `../Variable` | `-Variabel` / `--variabel` |
+
+- Kyrillisch und Arabisch, die schon installiert sind, kommen auch ohne Angabe
+  wieder mit.
+- Die variable Schrift gehört der Gestaltung (Flüstern bis Schreien); Office
+  stellt die variable CFF2-Schrift nicht zuverlässig dar.
+- Das Aufräumen erfasst auch die variable `SourceSans3-*.ttf` und alte
+  OTF-Kopien, aber **nicht** Source Sans Pro.
+- Ist Source Sans 3 schon für alle Benutzer installiert (etwa von der IT) und
+  fehlen die Adminrechte, bleibt sie stehen und kommt nicht pro Benutzer dazu.
 
 ## Für alle (pro Benutzer, ohne Adminrechte)
 
@@ -25,14 +36,15 @@ Mac, im Terminal:
 curl -fsSL https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Installer/mac.sh | bash
 ```
 
-Mit variabler Schrift:
+Mit Zusätzen (hier Kyrillisch und Arabisch; `-Variabel` bzw. `--variabel`
+ebenso):
 
 ```powershell
-& ([scriptblock]::Create((irm https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Installer/windows.ps1))) -Variabel
+& ([scriptblock]::Create((irm https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Installer/windows.ps1))) -Kyrillisch -Arabisch
 ```
 
 ```bash
-curl -fsSL https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Installer/mac.sh | bash -s -- --variabel
+curl -fsSL https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Installer/mac.sh | bash -s -- --kyrillisch --arabisch
 ```
 
 Über den kopierten Befehl gibt es keine Warnung von SmartScreen oder
@@ -43,11 +55,11 @@ Gatekeeper; ein heruntergeladenes, unsigniertes Skript würde sie auslösen.
 Als Administrator bzw. root, auch über Intune oder Jamf:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File windows.ps1 -AlleBenutzer [-Variabel] [-Quelle <Ordner>]
+powershell -ExecutionPolicy Bypass -File windows.ps1 -AlleBenutzer [-Kyrillisch] [-Arabisch] [-Variabel] [-Quelle <Ordner>]
 ```
 
 ```bash
-sudo bash mac.sh --alle [--variabel] [--quelle <Ordner>]
+sudo bash mac.sh --alle [--kyrillisch] [--arabisch] [--variabel] [--quelle <Ordner>]
 ```
 
 - `-AlleBenutzer`/`--alle` installiert in den Systemordner (Windows:
@@ -61,8 +73,8 @@ sudo bash mac.sh --alle [--variabel] [--quelle <Ordner>]
 1. Alle Dateien laden; scheitert das, bleibt alles unverändert.
 2. Offene Programme (Word, PowerPoint, InDesign …) schliessen lassen, wenn
    jemand am Gerät sitzt.
-3. Alles mit «Goetheanum» im Namen aus den Schriftordnern entfernen,
-   unter Windows samt Registry-Eintrag.
+3. Alles mit «Goetheanum», «SourceSans3» oder «Source Sans 3» im Namen aus
+   den Schriftordnern entfernen, unter Windows samt Registry-Eintrag.
 4. Neu installieren; unter Windows ohne Abmelden sofort verfügbar.
 
 | Code | Bedeutung |

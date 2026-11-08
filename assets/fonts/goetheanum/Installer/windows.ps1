@@ -1,25 +1,33 @@
 # Goetheanum-Schriften installieren (Windows)
 #
 # Entfernt alle frueheren Goetheanum-Schriften und installiert die aktuelle
-# Fassung: das Office-Set (Goetheanum Schrift, Ruhig, Deutlich, Icons, Pfeile),
-# auf Wunsch dazu die variable Schrift fuer die Gestaltung.
+# Fassung: das Office-Set (Goetheanum Schrift, Ruhig, Deutlich, Icons, Pfeile)
+# und Source Sans 3 (Adobe 3.052R, unveraendert). Auf Wunsch dazu Goetheanum
+# Kyrillisch, Goetheanum Arabisch und die variable Schrift fuer die Gestaltung.
+# Alte Kopien von Source Sans 3 (auch die variable) werden ersetzt,
+# Source Sans Pro bleibt. War Kyrillisch oder Arabisch schon da, kommt es
+# auch ohne Angabe wieder mit.
 #
 # Fuer alle (pro Benutzer, ohne Adminrechte), in PowerShell:
 #   irm https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Installer/windows.ps1 | iex
 # Mit variabler Schrift:
 #   & ([scriptblock]::Create((irm https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Installer/windows.ps1))) -Variabel
+# Ebenso -Kyrillisch und -Arabisch (kombinierbar).
 #
 # Fuer die IT (als Administrator, fuer alle Benutzer des Geraets):
-#   .\windows.ps1 -AlleBenutzer [-Variabel] [-Quelle <entpackter Ordner Goetheanum-Schriften-v2.9>]
+#   .\windows.ps1 -AlleBenutzer [-Kyrillisch] [-Arabisch] [-Variabel] [-Quelle <entpackter Ordner Goetheanum-Schriften-v2.9>]
 #
 # Exit-Codes: 0 fertig - 1 Fehler (Download, Datei gesperrt) -
 #             2 alte Fassung fuer alle Benutzer gefunden, braucht Adminrechte
 #
-# Die Dateiliste folgt assets/fonts/goetheanum/Office und Variable - bei neuer
+# Die Dateiliste folgt assets/fonts/goetheanum/Office, Begleitschriften und
+# Variable - bei neuer
 # Fassung hier mitziehen (CLAUDE-REF.md Schnitt-System).
 
 param(
   [switch]$Variabel,
+  [switch]$Kyrillisch,
+  [switch]$Arabisch,
   [switch]$AlleBenutzer,
   [string]$Quelle = ''
 )
@@ -37,6 +45,40 @@ $Schriften = [ordered]@{
   'Office/GoetheanumSchriftDeutlich.ttf' = 'Goetheanum Schrift Deutlich (TrueType)'
   'Office/GoetheanumIcons.ttf'           = 'Goetheanum Icons (TrueType)'
   'Office/GoetheanumPfeile.ttf'          = 'Goetheanum Pfeile (TrueType)'
+  'Begleitschriften/SourceSans3-Regular.ttf'    = 'Source Sans 3 (TrueType)'
+  'Begleitschriften/SourceSans3-It.ttf'         = 'Source Sans 3 Italic (TrueType)'
+  'Begleitschriften/SourceSans3-Bold.ttf'       = 'Source Sans 3 Bold (TrueType)'
+  'Begleitschriften/SourceSans3-BoldIt.ttf'     = 'Source Sans 3 Bold Italic (TrueType)'
+  'Begleitschriften/SourceSans3-Semibold.ttf'   = 'Source Sans 3 Semibold (TrueType)'
+  'Begleitschriften/SourceSans3-SemiboldIt.ttf' = 'Source Sans 3 Semibold Italic (TrueType)'
+}
+
+# Was beim Aufraeumen ersetzt wird: jede Goetheanum-Schrift und jede Kopie von
+# Source Sans 3 (statisch oder variabel). Source Sans Pro passt nicht und bleibt.
+$Muster = 'Goetheanum|SourceSans3|Source Sans 3'
+
+$NutzerOrdner = Join-Path $env:LOCALAPPDATA 'Microsoft\Windows\Fonts'
+$SystemOrdner = Join-Path $env:WINDIR 'Fonts'
+$NutzerReg = 'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts'
+$SystemReg = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts'
+
+# Schon installierte Wahl bleiben: Kyrillisch/Arabisch kommen wieder mit
+function Schon-Da([string]$teil) {
+  foreach ($o in @($NutzerOrdner, $SystemOrdner)) {
+    if (Get-ChildItem -Path $o -File -Filter "*$teil*" -ErrorAction SilentlyContinue) { return $true }
+  }
+  $false
+}
+if (-not $Kyrillisch -and (Schon-Da 'GoetheanumKyrillisch')) { $Kyrillisch = [switch]$true }
+if (-not $Arabisch -and (Schon-Da 'GoetheanumArabisch')) { $Arabisch = [switch]$true }
+
+if ($Kyrillisch) {
+  $Schriften['Begleitschriften/GoetheanumKyrillisch-Regular.ttf'] = 'Goetheanum Kyrillisch (TrueType)'
+  $Schriften['Begleitschriften/GoetheanumKyrillisch-Bold.ttf']    = 'Goetheanum Kyrillisch Bold (TrueType)'
+}
+if ($Arabisch) {
+  $Schriften['Begleitschriften/GoetheanumArabisch-Regular.ttf'] = 'Goetheanum Arabisch (TrueType)'
+  $Schriften['Begleitschriften/GoetheanumArabisch-Bold.ttf']    = 'Goetheanum Arabisch Bold (TrueType)'
 }
 if ($Variabel) {
   $Schriften["Variable/Goetheanum-Variabel-v$Fassung.otf"] = 'Goetheanum Variabel (OpenType)'
@@ -46,11 +88,6 @@ if ($Variabel) {
 $Programme = 'WINWORD','POWERPNT','EXCEL','OUTLOOK','ONENOTE','MSPUB','VISIO',
              'InDesign','Illustrator','Photoshop','AfterFX','Acrobat',
              'Designer','Photo','Publisher','Figma'
-
-$NutzerOrdner = Join-Path $env:LOCALAPPDATA 'Microsoft\Windows\Fonts'
-$SystemOrdner = Join-Path $env:WINDIR 'Fonts'
-$NutzerReg = 'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts'
-$SystemReg = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts'
 
 function Melde([string]$text) { Write-Host "  $text" }
 function Halt([string]$text) {
@@ -83,14 +120,14 @@ function Melde-Schriftwechsel {
     [UIntPtr]::Zero, [IntPtr]::Zero, 2, 1000, [ref]$r)
 }
 
-# Alte Goetheanum-Schriften in einem Bereich (Registry + Ordner) finden
+# Alte Goetheanum-Schriften und Source-Sans-3-Kopien in einem Bereich (Registry + Ordner) finden
 function Finde-Alte([string]$reg, [string]$ordner) {
   $funde = @()
   if (Test-Path $reg) {
     $eintraege = Get-ItemProperty -Path $reg
     foreach ($p in $eintraege.PSObject.Properties) {
       if ($p.Name -like 'PS*') { continue }
-      if ($p.Name -match 'Goetheanum' -or "$($p.Value)" -match 'Goetheanum') {
+      if ($p.Name -match $Muster -or "$($p.Value)" -match $Muster) {
         $pfad = "$($p.Value)"
         if (-not [IO.Path]::IsPathRooted($pfad)) { $pfad = Join-Path $ordner $pfad }
         $funde += [pscustomobject]@{ Name = $p.Name; Pfad = $pfad; Reg = $reg }
@@ -98,7 +135,7 @@ function Finde-Alte([string]$reg, [string]$ordner) {
     }
   }
   if (Test-Path $ordner) {
-    Get-ChildItem -Path $ordner -File -Filter '*oetheanum*' | ForEach-Object {
+    Get-ChildItem -Path $ordner -File | Where-Object { $_.Name -match $Muster } | ForEach-Object {
       $f = $_.FullName
       if (-not ($funde | Where-Object { $_.Pfad -eq $f })) {
         $funde += [pscustomobject]@{ Name = $null; Pfad = $f; Reg = $reg }
@@ -121,7 +158,7 @@ function Finde-AlteProfile {
   Get-ChildItem -Path $benutzer -Directory -ErrorAction SilentlyContinue | ForEach-Object {
     $ordner = Join-Path $_.FullName 'AppData\Local\Microsoft\Windows\Fonts'
     if (Test-Path $ordner) {
-      Get-ChildItem -Path $ordner -File -Filter '*oetheanum*' | ForEach-Object {
+      Get-ChildItem -Path $ordner -File | Where-Object { $_.Name -match $Muster } | ForEach-Object {
         $f = $_.FullName
         if (-not ($funde | Where-Object { $_.Pfad -eq $f })) {
           $funde += [pscustomobject]@{ Name = $null; Pfad = $f; Reg = $null }
@@ -190,6 +227,16 @@ function Installiere {
 
   # 3. Alte Fassungen entfernen
   $altSystem = @(Finde-Alte $SystemReg $SystemOrdner)
+  if (-not (Ist-Admin)) {
+    # Source Sans 3 fuer alle Benutzer (etwa von der IT) bleibt stehen; dann
+    # kommt sie nicht noch einmal pro Benutzer dazu.
+    $ssSystem = @($altSystem | Where-Object { "$($_.Name) $($_.Pfad)" -notmatch 'Goetheanum' })
+    if ($ssSystem.Count -gt 0) {
+      Melde 'Source Sans 3 ist schon fuer alle Benutzer installiert und bleibt.'
+      foreach ($k in @($Schriften.Keys)) { if ($k -match 'SourceSans3') { $Schriften.Remove($k) } }
+      $altSystem = @($altSystem | Where-Object { "$($_.Name) $($_.Pfad)" -match 'Goetheanum' })
+    }
+  }
   if ($altSystem.Count -gt 0 -and -not (Ist-Admin)) {
     Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue
     Write-Host ''

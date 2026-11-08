@@ -1,6 +1,6 @@
 # Schriften für alle: Verteilung, Begleitschriften, Lesegrenze
 
-Stand 31. 10. 2026 (nachgeführt nach den Entscheiden des Tages). Auftrag des Inhabers (30. 10.): die Installation der
+Stand 8. 11. 2026 (Begleitschriften im Installer). Auftrag des Inhabers (30. 10.): die Installation der
 Schriften für alle Nutzenden so einfach wie möglich machen. Gedächtnis der
 Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
 
@@ -12,6 +12,22 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
   die variable Schrift auf Wunsch. IT-Variante `-AlleBenutzer`/`--alle`.
   Getestet nur simuliert (pwsh unter Linux mit nachgebauter Registry, bash mit
   umgebogenen Ordnern), **nicht auf echtem Windows/Mac**.
+- **Begleitschriften** (8. 11.): `assets/fonts/goetheanum/Begleitschriften/`,
+  Bau `tools/goetheanum-fontfix/build_begleitschriften.py` (zweiter Lauf
+  bitgleich), auch im Paket-ZIP.
+  - Source Sans 3 statisch, Adobe 3.052R unverändert: Regular, It, Bold,
+    BoldIt (Familie «Source Sans 3») und Semibold, SemiboldIt (bei Adobe schon
+    eigene Familie «Source Sans 3 Semibold»). Im Installer **Standard**.
+  - **Goetheanum Kyrillisch** (Regular, Bold) aus Titillium Web [RUS],
+    **Goetheanum Arabisch** (Regular, Bold) aus Cairo bei wght 400/700. Nur
+    Namen und Stilbits; die überlaufende alte `kern`-Tabelle von Titillium RUS
+    fällt weg (Paare stehen im GPOS). Im Installer `-Kyrillisch`/`-Arabisch`
+    bzw. `--kyrillisch`/`--arabisch`; schon installierte kommen von selbst mit.
+  - Aufräumen erfasst jede Kopie von Source Sans 3 (auch die variable und die
+    fehlerhaft benannte `Fallback/SourceSans3-Regular.ttf`, intern
+    «ExtraLight»), Source Sans Pro nicht. Systemweite Source Sans 3 ohne
+    Adminrechte bleibt stehen.
+  - Simuliert wie oben, je vier Fälle; nicht auf echten Geräten.
 
 ## Entschieden (Inhaber, 30./31. 10.)
 
@@ -160,9 +176,7 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
 
 ## Nächste Schritte hier (Installer-Strang)
 
-1. Source Sans 3 statisch, Goetheanum Kyrillisch, Goetheanum Arabisch bauen
-   (Skript in `tools/goetheanum-fontfix/`), in die Installer-Skripte als
-   Optionen.
+1. ~~Begleitschriften bauen und in die Skripte~~ (erledigt 8. 11.).
 2. Installer-Apps (Inno Setup / pkgbuild) über GitHub Actions, Signatur sobald
    Konten geklärt (Secrets-Konfiguration → vor Merge fragen).
 3. Installationsseite mit einem Knopf je System.
