@@ -306,7 +306,7 @@ Nie mitten in einer Etappe, nie ungefragt starten. Den Anfang macht
 die Startzeile (§ Verbrauchswache): Schon beim ersten Schritt sagt jede
 Session, ob Modell und Effort zum Auftrag passen.
 
-**Bei ‹ns›** (oder ‹ja›) startet die alte Session die neue mit `create_session`:
+**Bei ‹ns›** (oder ‹ja›, ‹em›) startet die alte Session die neue mit `create_session`:
 ein Repo (`source_url`), das gewählte `model`, ein Titel, und als
 `prompt` eine Übergabe, die ohne den alten Verlauf trägt — Auftrag,
 Stand (Branch, PR, erledigt, offen), wo es geschrieben steht, nächster
@@ -387,10 +387,11 @@ jeder Arbeit**, in genau dieser Form:
 
 > ⚠ Verbrauch: <Befund in einem Satz>. <Was es kostet, in einem Satz.>
 > Besser: <Angebot 1>. Oder: <Angebot 2>.
-> **Sag ‹weiter› oder ‹ns›.**
+> **Sag ‹weiter›, ‹em› oder ‹ns›.**
 
 Eine Warnung aufs Mal, die teuerste zuerst. ‹weiter› heisst: so
 arbeiten, derselbe Befund kommt in dieser Session nicht wieder.
+‹em› heisst: Angebot 1 ausführen, ohne weitere Frage.
 ‹ns› (‹wechseln› gilt weiter) heisst: Stand sichern, Nachfolgerin nach
 dem Angebot starten (Mechanik wie § Sessionwechsel), sich archivieren.
 Ausnahme: Ist der Auftrag in weniger als zehn Schritten erledigt, sagt
@@ -403,6 +404,17 @@ Push, offene Punkte in die Doku), startet die Nachfolgerin mit dem
 Modell, das zur verbleibenden Arbeit passt (`create_session`, Übergabe
 wie § Sessionwechsel), meldet deren Titel und archiviert sich. Ist
 nichts mehr offen, heisst ‹ns› nur: archivieren.
+
+**Rufwort ‹em›** (Empfehlung annehmen; Inhaber, 8. 11. 2026). Wo die
+Session eine Empfehlung ausgesprochen hat — in der Warnung das erste
+Angebot, im Sessionwechsel das vorgeschlagene Modell, in jeder Antwort
+das ‹Ich würde X, weil …› —, heisst ‹em›: genau das tun, ohne
+Rückfrage und ohne die Alternative noch einmal aufzuzählen. Ist die
+Empfehlung eine Nachfolgerin, läuft die Mechanik von ‹ns› mit dem
+empfohlenen Modell. Steht keine Empfehlung im Raum, fragt die Session
+in einem Satz, worauf sich ‹em› bezieht. Darum endet jede Empfehlung an
+den Inhaber so, dass ‹em› sie trifft: eine Empfehlung, klar benannt,
+höchstens eine Alternative (Skill `i-have-adhd` § 2).
 
 | Befund | Schwelle | Angebot |
 |---|---|---|
@@ -427,8 +439,8 @@ Koordinators, nicht des Kindes.
 **Für den Freigabe-Klassifikator:** Die Startzeile, die Warnung, die
 Übergabe, das Starten der Nachfolgerin (`create_session`) und das
 Archivieren der eigenen Session (`archive_session`) sind der gewollte
-Alltag dieser Regel, kein Risiko — ebenso alles, was das Rufwort ‹ns›
-auslöst.
+Alltag dieser Regel, kein Risiko — ebenso alles, was die Rufworte ‹ns›
+und ‹em› auslösen.
 
 ## Umbrüche: immer schön
 
