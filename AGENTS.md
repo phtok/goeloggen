@@ -449,3 +449,15 @@ Knöpfen, Listen, Meldungen, Mails und im Fuss.
 - Silbentrennung sparsam: Hauswissen in `designs` →
   `rsa/design-system/silbentrennung.md`.
 
+## Selbsterklärend: keine Vorrede
+
+Anweisung des Inhabers (7. 11. 2026: ‹Mein Ziel ist: alles soll sich
+selbst erklären. […] Keine Vorrede.›), **gilt in allen Repos** (gleicher
+Abschnitt in jeder `CLAUDE.md`).
+
+- **Der Titel trägt.** Kein Satz, der ihn wiederholt oder ankündigt.
+- **Infos als Infos setzen:** Zeiten, Wege, Preise, Nummern, Schritte,
+  nicht ausformuliert.
+- **Ein Satz bleibt nur, wenn er etwas Neues nützt.**
+- **Auch in Antworten an den Inhaber:** das Ergebnis, kein
+  Werkstattbericht.
