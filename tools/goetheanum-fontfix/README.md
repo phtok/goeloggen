@@ -90,3 +90,13 @@ Ziel: 0 FAIL bei den Textschnitten und Icons.
 
 ## QA-Tools (Build-Abhängigkeiten)
 `fonttools`, `brotli` (woff2); optional `fontbakery` (QA). Nicht ins Repo gepinnt.
+
+## Begleitschriften für den Installer (8. 11. 2026)
+Source Sans 3 statisch (Adobe 3.052R, unverändert, per SHA-256 geprüft),
+Goetheanum Kyrillisch (aus Titillium Web [RUS]) und Goetheanum Arabisch (aus
+Cairo, statisch bei wght 400/700). Nur Namen und Stilbits werden gesetzt;
+Herkunft in nameID 10. Zweiter Lauf bitgleich.
+```bash
+python3 build_begleitschriften.py   # lädt das Adobe-ZIP, oder --adobe-zip <Datei>
+python3 pack_release_zip.py
+```

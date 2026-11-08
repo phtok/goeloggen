@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Packt das Download-ZIP Goetheanum-Schriften-v2.9.zip reproduzierbar aus dem
 # aktuellen Stand auf der Platte (Office-TTF, Variable, Webfonts, Icons/Pfeile,
-# Fallback, Beipackzettel, Lizenzen). Deterministisch (fester Zeitstempel,
-# sortiert), damit das Binär-Diff minimal bleibt. Nach Font- oder Beipack-
+# Begleitschriften, Fallback, Beipackzettel, Lizenzen). Deterministisch (fester
+# Zeitstempel, sortiert), damit das Binär-Diff minimal bleibt. Nach Font- oder Beipack-
 # zettel-Änderungen ausführen.
 # Die statischen Schnitt-OTF (Fonts/Goetheanum-Schrift-*.otf) sind seit dem
 # Trio-Umbau reine BUILD-QUELLEN und werden nicht mehr ausgeliefert — sonst
@@ -18,6 +18,7 @@ def members():
     g = lambda *p: sorted(glob.glob(os.path.join(ROOT, *p)))
     out = []
     out += [os.path.join(ROOT, "Beipackzettel-Goetheanum-Schriften.pdf")]
+    out += g("Begleitschriften", "*")
     out += g("Fallback", "*")
     out += g("Fonts", "Goetheanum-Icons-*.otf")
     out += g("Fonts", "Goetheanum-Pfeile-*.otf")

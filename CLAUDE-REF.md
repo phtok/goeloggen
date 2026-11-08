@@ -47,6 +47,14 @@ Bei Änderungen an der Schnittzahl **alle** Beschreibungen mitziehen
 Bei neuer Fassung oder geänderten Dateinamen auch die Installer nachführen
 (`assets/fonts/goetheanum/Installer/windows.ps1` und `mac.sh`: Dateiliste und
 Fassungsnummer).
+- **Begleitschriften** (`assets/fonts/goetheanum/Begleitschriften/`, Bau
+  `tools/goetheanum-fontfix/build_begleitschriften.py`): Source Sans 3 statisch
+  aus Adobe 3.052R, **unverändert und nicht umbenannt** (Entscheid Inhaber
+  31. 10. 2026; Reserved Font Name «Source»), im Installer Standard.
+  **Goetheanum Kyrillisch** (aus Titillium Web [RUS]) und **Goetheanum
+  Arabisch** (aus Cairo, statisch 400/700) als Option; nur Namen und Stilbits
+  gesetzt, Copyright und OFL bleiben, Herkunft in nameID 10. Die Installer
+  räumen jede Kopie von Source Sans 3 mit ab, Source Sans Pro nicht.
 
 ## § Werkzeug-Schutz (Supabase-RPCs, Stand 5. 11. 2026)
 

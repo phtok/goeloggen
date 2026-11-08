@@ -2,21 +2,27 @@
 # Goetheanum-Schriften installieren (Mac)
 #
 # Entfernt alle früheren Goetheanum-Schriften und installiert die aktuelle
-# Fassung: das Office-Set (Goetheanum Schrift, Ruhig, Deutlich, Icons, Pfeile),
-# auf Wunsch dazu die variable Schrift für die Gestaltung.
+# Fassung: das Office-Set (Goetheanum Schrift, Ruhig, Deutlich, Icons, Pfeile)
+# und Source Sans 3 (Adobe 3.052R, unverändert). Auf Wunsch dazu Goetheanum
+# Kyrillisch, Goetheanum Arabisch und die variable Schrift für die Gestaltung.
+# Alte Kopien von Source Sans 3 (auch die variable) werden ersetzt,
+# Source Sans Pro bleibt. War Kyrillisch oder Arabisch schon da, kommt es
+# auch ohne Angabe wieder mit.
 #
 # Für alle (pro Benutzer, ohne Adminrechte), im Terminal:
 #   curl -fsSL https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Installer/mac.sh | bash
 # Mit variabler Schrift:
 #   curl -fsSL https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Installer/mac.sh | bash -s -- --variabel
+# Ebenso --kyrillisch und --arabisch (kombinierbar).
 #
 # Für die IT (als root, für alle Benutzer des Geräts):
-#   sudo bash mac.sh --alle [--variabel] [--quelle <entpackter Ordner Goetheanum-Schriften-v2.9>]
+#   sudo bash mac.sh --alle [--kyrillisch] [--arabisch] [--variabel] [--quelle <entpackter Ordner Goetheanum-Schriften-v2.9>]
 #
 # Exit-Codes: 0 fertig · 1 Fehler (Download, Datei gesperrt) ·
 #             2 alte Fassung für alle Benutzer gefunden, Löschen abgelehnt
 #
-# Die Dateiliste folgt assets/fonts/goetheanum/Office und Variable – bei neuer
+# Die Dateiliste folgt assets/fonts/goetheanum/Office, Begleitschriften und
+# Variable – bei neuer
 # Fassung hier mitziehen (CLAUDE-REF.md § Schnitt-System).
 # Läuft mit dem bash 3.2 von macOS: keine assoziativen Arrays, kein mapfile.
 
@@ -30,7 +36,13 @@ Office/GoetheanumSchriftLeise.ttf
 Office/GoetheanumSchriftRuhig.ttf
 Office/GoetheanumSchriftDeutlich.ttf
 Office/GoetheanumIcons.ttf
-Office/GoetheanumPfeile.ttf"
+Office/GoetheanumPfeile.ttf
+Begleitschriften/SourceSans3-Regular.ttf
+Begleitschriften/SourceSans3-It.ttf
+Begleitschriften/SourceSans3-Bold.ttf
+Begleitschriften/SourceSans3-BoldIt.ttf
+Begleitschriften/SourceSans3-Semibold.ttf
+Begleitschriften/SourceSans3-SemiboldIt.ttf"
 
 NUTZER_ORDNER="${GOETHEANUM_NUTZER_ORDNER:-$HOME/Library/Fonts}"
 SYSTEM_ORDNER="${GOETHEANUM_SYSTEM_ORDNER:-/Library/Fonts}"
@@ -39,16 +51,32 @@ PROFIL_WURZEL="${GOETHEANUM_PROFIL_WURZEL:-/Users}"
 # Programme, die Schriften festhalten
 PROGRAMME='/Contents/MacOS/(Microsoft (Word|PowerPoint|Excel|Outlook|OneNote)|Adobe (InDesign|Illustrator|Photoshop|Acrobat)|Affinity|Keynote|Pages|Numbers|Figma)'
 
-VARIABEL=0; ALLE=0; QUELLE=""
+VARIABEL=0; KYRILLISCH=0; ARABISCH=0; ALLE=0; QUELLE=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --variabel) VARIABEL=1 ;;
+    --kyrillisch) KYRILLISCH=1 ;;
+    --arabisch) ARABISCH=1 ;;
     --alle) ALLE=1 ;;
     --quelle) QUELLE="${2:-}"; shift ;;
     *) echo "Unbekannte Angabe: $1" >&2; exit 1 ;;
   esac
   shift
 done
+
+# Schon installierte Wahl bleibt: Kyrillisch/Arabisch kommen wieder mit
+schon_da() {
+  ls "$NUTZER_ORDNER" "$SYSTEM_ORDNER" 2>/dev/null | grep -qi "$1"
+}
+schon_da goetheanumkyrillisch && KYRILLISCH=1
+schon_da goetheanumarabisch && ARABISCH=1
+
+[ "$KYRILLISCH" = 1 ] && SCHRIFTEN="$SCHRIFTEN
+Begleitschriften/GoetheanumKyrillisch-Regular.ttf
+Begleitschriften/GoetheanumKyrillisch-Bold.ttf"
+[ "$ARABISCH" = 1 ] && SCHRIFTEN="$SCHRIFTEN
+Begleitschriften/GoetheanumArabisch-Regular.ttf
+Begleitschriften/GoetheanumArabisch-Bold.ttf"
 [ "$VARIABEL" = 1 ] && SCHRIFTEN="$SCHRIFTEN
 Variable/Goetheanum-Variabel-v$FASSUNG.otf"
 
@@ -63,10 +91,12 @@ else
 fi
 frage() { printf '  %s' "$1" > /dev/tty; read -r ANTWORT < /dev/tty; }
 
-# Alte Goetheanum-Schriften in einem Ordner (auch in Unterordnern)
+# Alte Goetheanum-Schriften und Source-Sans-3-Kopien (statisch oder variabel)
+# in einem Ordner, auch in Unterordnern. Source Sans Pro passt nicht und bleibt.
 finde_alte() {
   [ -d "$1" ] || return 0
-  find "$1" -maxdepth 3 -type f -iname '*goetheanum*' \
+  find "$1" -maxdepth 3 -type f \
+    \( -iname '*goetheanum*' -o -iname '*sourcesans3*' -o -iname '*source sans 3*' \) \
     \( -iname '*.ttf' -o -iname '*.otf' -o -iname '*.ttc' -o -iname '*.dfont' \) 2>/dev/null
 }
 
@@ -126,6 +156,14 @@ if [ "$ALLE" = 1 ]; then
     [ -n "$weitere" ] && ALT_NUTZER="$ALT_NUTZER
 $weitere"
   done
+fi
+
+# Source Sans 3 für alle Benutzer (etwa von der IT) bleibt stehen, wenn die
+# Rechte fehlen; dann kommt sie nicht noch einmal pro Benutzer dazu.
+if [ "$(id -u)" != 0 ] && printf '%s\n' "$ALT_SYSTEM" | grep -vi goetheanum | grep -q .; then
+  melde 'Source Sans 3 ist schon für alle Benutzer installiert und bleibt.'
+  SCHRIFTEN="$(printf '%s\n' "$SCHRIFTEN" | grep -v SourceSans3)"
+  ALT_SYSTEM="$(printf '%s\n' "$ALT_SYSTEM" | grep -i goetheanum)"
 fi
 
 if [ -z "$ALT_NUTZER$ALT_SYSTEM" ]; then
