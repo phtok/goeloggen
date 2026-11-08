@@ -513,6 +513,17 @@
       "such": "Schrift Font Hausschrift Variable Webfont Gewichte Icons"
     },
     {
+      "slug": "schriften-installieren",
+      "cat": "schrift",
+      "status": "live",
+      "tag": "Installieren",
+      "title": "Schriften installieren",
+      "short": "Installieren",
+      "href": "schriften-installieren.html",
+      "desc": "Setup-App für Windows und Mac: entfernt alte Fassungen, installiert Goetheanum Schrift und Source\u00a0Sans\u00a03, auf Wunsch Kyrillisch und Arabisch.",
+      "such": "Installieren Installer Setup App Windows Mac pkg exe Schrift Font Office Source Sans Kyrillisch Arabisch"
+    },
+    {
       "slug": "icons",
       "cat": "schrift",
       "status": "live",

@@ -22,6 +22,24 @@ verformte Schnitte).
 - Ist Source Sans 3 schon für alle Benutzer installiert (etwa von der IT) und
   fehlen die Adminrechte, bleibt sie stehen und kommt nicht pro Benutzer dazu.
 
+## Setup-Apps (für die Mitarbeitenden)
+
+https://werkzeuge.goetheanum.ch/schriften-installieren.html – ein Knopf je
+System. Beide Apps bringen die Schriften aus dem Repo-Stand mit und rufen
+diese Skripte auf; gebaut und auf echtem Windows und macOS getestet von
+`.github/workflows/schrift-installer.yml` (Quellen in `tools/schrift-installer/`),
+ausgeliefert über das Release `schrift-installer`. Noch **unsigniert**.
+
+| | Windows `.exe` (Inno Setup) | Mac `.pkg` (pkgbuild) |
+|---|---|---|
+| Installiert | pro Benutzer, ohne Adminrechte | für alle Benutzer, mit Passwort |
+| Ruft auf | `windows.ps1 -OhneRueckfrage -Quelle …` | `mac.sh --alle --quelle …` |
+| Zusätze | Häkchen Kyrillisch, Arabisch, Variabel | Auswahl unter ‹Installationstyp› |
+| Still | `/VERYSILENT /TASKS="kyrillisch,arabisch"` | `installer -pkg … -target /` (Auswahl über `-applyChoiceChangesXML`) |
+
+Offene Programme fragt die Windows-App vor dem Installieren ab; das Mac-Paket
+installiert ohne Rückfrage.
+
 ## Für alle (pro Benutzer, ohne Adminrechte)
 
 Windows, in PowerShell:
@@ -55,7 +73,7 @@ Gatekeeper; ein heruntergeladenes, unsigniertes Skript würde sie auslösen.
 Als Administrator bzw. root, auch über Intune oder Jamf:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File windows.ps1 -AlleBenutzer [-Kyrillisch] [-Arabisch] [-Variabel] [-Quelle <Ordner>]
+powershell -ExecutionPolicy Bypass -File windows.ps1 -AlleBenutzer [-Kyrillisch] [-Arabisch] [-Variabel] [-Quelle <Ordner>] [-OhneRueckfrage]
 ```
 
 ```bash
@@ -67,6 +85,8 @@ sudo bash mac.sh --alle [--kyrillisch] [--arabisch] [--variabel] [--quelle <Ordn
   allen Profilen weg.
 - `-Quelle`/`--quelle` nimmt die Dateien aus dem entpackten
   `Goetheanum-Schriften-v2.9.zip` statt aus dem Netz.
+- `-OhneRueckfrage` (Windows) fragt nicht nach offenen Programmen; gesperrte
+  Dateien enden mit Code 1. Ohne Fenster (Setup-App, Intune) nötig.
 
 ## Ablauf und Exit-Codes
 

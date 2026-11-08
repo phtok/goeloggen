@@ -1,0 +1,156 @@
+name: Schrift-Installer bauen
+
+# Baut die Setup-Apps der Goetheanum-Schriften aus dem Repo-Stand:
+# Windows .exe (Inno Setup, tools/schrift-installer/windows.iss) und
+# Mac .pkg (pkgbuild/productbuild, tools/schrift-installer/mac/build.sh).
+# Beide rufen die Skripte in assets/fonts/goetheanum/Installer/ auf.
+# Jeder Lauf installiert die frische App auf dem Runner und prüft das Ergebnis.
+# Auf main landen beide im Release «schrift-installer»; deploy-pages.yml holt
+# sie von dort nach werkzeuge.goetheanum.ch. Unsigniert, bis die Konten
+# geklärt sind (docs/schriften-verteilung.md).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/fonts/goetheanum/Office/**'
+      - 'assets/fonts/goetheanum/Begleitschriften/**'
+      - 'assets/fonts/goetheanum/Variable/**'
+      - 'assets/fonts/goetheanum/Installer/**'
+      - 'tools/schrift-installer/**'
+      - '.github/workflows/schrift-installer.yml'
+  pull_request:
+    paths:
+      - 'assets/fonts/goetheanum/Office/**'
+      - 'assets/fonts/goetheanum/Begleitschriften/**'
+      - 'assets/fonts/goetheanum/Variable/**'
+      - 'assets/fonts/goetheanum/Installer/**'
+      - 'tools/schrift-installer/**'
+      - '.github/workflows/schrift-installer.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: schrift-installer-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FASSUNG: '2.9'
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bauen (Inno Setup)
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup --no-progress -y | Out-Null }
+          & $iscc "/DFassung=$env:FASSUNG" "/O$env:GITHUB_WORKSPACE\dist" tools\schrift-installer\windows.iss
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+
+      - name: Testen (still, mit Kyrillisch, dann ohne Zusatz)
+        shell: pwsh
+        run: |
+          $exe = (Get-Item "dist\Goetheanum-Schriften-$env:FASSUNG-Windows.exe").FullName
+          $ordner = "$env:LOCALAPPDATA\Microsoft\Windows\Fonts"
+          $reg = 'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts'
+          function Lauf($aufgaben, $log) {
+            $p = Start-Process $exe -Wait -PassThru -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',"/TASKS=`"$aufgaben`"","/LOG=$log"
+            Get-Content $log | Select-String 'windows.ps1|installiert:|entfernt:|Fertig|Keine alte' | ForEach-Object { $_.Line }
+            if ($p.ExitCode) { throw "Setup endete mit $($p.ExitCode)" }
+          }
+          function Da($datei) { if (-not (Test-Path "$ordner\$datei")) { throw "fehlt: $datei" } }
+
+          Lauf 'kyrillisch' "$env:RUNNER_TEMP\lauf1.log"
+          'GoetheanumSchriftKlar.ttf','GoetheanumIcons.ttf','SourceSans3-Regular.ttf',
+          'SourceSans3-SemiboldIt.ttf','GoetheanumKyrillisch-Bold.ttf' | ForEach-Object { Da $_ }
+          if (Test-Path "$ordner\GoetheanumArabisch-Regular.ttf") { throw 'Arabisch ohne Wahl installiert' }
+          if (-not (Get-ItemProperty $reg).'Goetheanum Schrift (TrueType)') { throw 'Registry-Eintrag fehlt' }
+
+          # Zweiter Lauf ohne Zusatz: ersetzt die Fassung, Kyrillisch bleibt
+          Lauf '' "$env:RUNNER_TEMP\lauf2.log"
+          if (-not (Select-String -Path "$env:RUNNER_TEMP\lauf2.log" -Pattern 'entfernt: GoetheanumSchriftKlar.ttf' -Quiet)) { throw 'alte Fassung nicht entfernt' }
+          Da 'GoetheanumKyrillisch-Regular.ttf'
+          Da 'GoetheanumSchriftKlar.ttf'
+          'Windows: beide Läufe in Ordnung'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installer-windows
+          path: dist/*.exe
+          if-no-files-found: error
+
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bauen (pkgbuild, productbuild)
+        run: bash tools/schrift-installer/mac/build.sh "$FASSUNG" "$PWD/dist"
+
+      - name: Testen (mit Arabisch, dann ohne Zusatz)
+        run: |
+          set -euo pipefail
+          pkg="dist/Goetheanum-Schriften-$FASSUNG-Mac.pkg"
+          installer -showChoiceChangesXML -pkg "$pkg" -target / || echo 'Auswahl nicht lesbar'
+          cat > "$RUNNER_TEMP/wahl.xml" <<'XML'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><array>
+            <dict>
+              <key>choiceIdentifier</key><string>arabisch</string>
+              <key>choiceAttribute</key><string>selected</string>
+              <key>attributeSetting</key><integer>1</integer>
+            </dict>
+          </array></plist>
+          XML
+          da() { [ -f "/Library/Fonts/$1" ] || { echo "fehlt: $1"; sudo tail -60 /var/log/install.log; exit 1; }; }
+
+          sudo installer -pkg "$pkg" -target / -applyChoiceChangesXML "$RUNNER_TEMP/wahl.xml"
+          for f in GoetheanumSchriftKlar.ttf GoetheanumPfeile.ttf SourceSans3-Regular.ttf \
+                   SourceSans3-SemiboldIt.ttf GoetheanumArabisch-Bold.ttf; do da "$f"; done
+          if ls /Library/Fonts | grep -qi kyrillisch; then echo 'Kyrillisch ohne Wahl installiert'; exit 1; fi
+
+          # Zweiter Lauf ohne Zusatz: ersetzt die Fassung, Arabisch bleibt
+          sudo installer -pkg "$pkg" -target /
+          da GoetheanumArabisch-Regular.ttf
+          da GoetheanumSchriftKlar.ttf
+          sudo grep -E 'entfernt: GoetheanumSchriftKlar|Fertig: Goetheanum' /var/log/install.log | tail -4
+          echo 'Mac: beide Läufe in Ordnung'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installer-mac
+          path: dist/*.pkg
+          if-no-files-found: error
+
+  release:
+    needs: [windows, mac]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Release «schrift-installer» erneuern
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          ls -l dist
+          notiz="Setup-Apps der Goetheanum-Schriften $FASSUNG, unsigniert. Gebaut aus ${GITHUB_SHA}. Ausgeliefert über https://werkzeuge.goetheanum.ch/schriften-installieren.html"
+          gh release view schrift-installer >/dev/null 2>&1 || \
+            gh release create schrift-installer --target "$GITHUB_SHA" --latest=false \
+              --title 'Schrift-Installer' --notes "$notiz"
+          gh release upload schrift-installer dist/* --clobber
+          gh release edit schrift-installer --notes "$notiz"

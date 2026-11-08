@@ -14,6 +14,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+  # Neue Setup-Apps der Schriften (schrift-installer.yml) gleich ausliefern
+  workflow_run:
+    workflows: ['Schrift-Installer bauen']
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: read
@@ -26,6 +31,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -67,6 +73,15 @@ jobs:
           if [ -f tools/build_tool_aliases.py ]; then python3 tools/build_tool_aliases.py _site; fi
 
           touch _site/.nojekyll
+
+      - name: Setup-Apps der Schriften aus dem Release holen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download schrift-installer -R "${{ github.repository }}" \
+            -D _site/assets/fonts/goetheanum/Installer -p '*.exe' -p '*.pkg' --clobber \
+            || echo '::warning::Release schrift-installer fehlt noch'
+          ls -l _site/assets/fonts/goetheanum/Installer
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
