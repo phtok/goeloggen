@@ -13,7 +13,7 @@
 --     Config verglichen – ohne Schlüssel kommt nichts zurück (Muster wie
 --     qr_link_loeschen). Kein anon-Leseweg auf die Zeilen.
 --   · Info-Ping per Resend über die Edge Function schmiede-melden (net.http_post),
---     Absender/Key wie beim Lead-Agent in einer Config-Zeile – nie im Repo.
+--     Absender/Key in einer Config-Zeile (marketing_config) – nie im Repo.
 -- =============================================================================
 
 -- --- Eingang der Wünsche --------------------------------------------------------
@@ -60,7 +60,7 @@ revoke execute on function public.schmiede_key_ok(text) from public, anon, authe
 
 -- --- Schreiben (anon): 'ok' | 'unvollstaendig' -----------------------------------
 -- Honigtopf p_honeypot: ist es gefüllt, tun wir so als ob (kein Eintrag, 'ok'),
--- damit ein Bot keinen Unterschied merkt (Muster lead-fang «website»).
+-- damit ein Bot keinen Unterschied merkt (Honigtopf-Feld «website»).
 create or replace function public.schmiede_auftrag_anlegen(
   p_titel text, p_daten jsonb, p_md text default null, p_honeypot text default ''
 ) returns text language plpgsql security definer set search_path to 'public' as $$
