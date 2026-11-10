@@ -1,11 +1,11 @@
 // =============================================================================
 // schmiede-melden · Supabase Edge Function (Info-Ping der Werkzeug-Schmiede)
-// Vorbild: services/lead-agent/lead-fang/index.ts (Resend + Config-Tabelle).
+// Muster: Resend + Config-Tabelle (wie services/qr-generator/kurzlink-melden).
 //
 // Aufruf: POST { titel, key }  – ausgelöst von schmiede_auftrag_anlegen()
 // über net.http_post. Prüft key gegen schmiede_config.melde_key und schickt
 // EINE kurze Info-Mail an schmiede_config.empfaenger: „etwas Neues ist da".
-// Absender + Resend-Key liegen in marketing_config (wie beim Lead-Agent),
+// Absender + Resend-Key liegen in marketing_config (gemeinsame Resend-Zeilen),
 // nie im Repo. Der Inhalt des Wunsches steht NICHT in der Mail – der wohnt
 // im Cockpit hinter dem Schlüssel (Zweckbindung).
 // =============================================================================

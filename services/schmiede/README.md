@@ -3,7 +3,7 @@
 Der Eingang der Wünsche aus der [Werkzeug-Schmiede](../../apps/schmiede/): eine
 insert-only Tabelle, gelesen und getaggt nur im key-geschützten
 [Cockpit](../../apps/schmiede-eingang/). Muster wie `qr-generator` (Rohzeilen zu,
-security-definer-RPCs) und `lead-agent` (Resend + Config-Tabelle).
+security-definer-RPCs, Resend + Config-Tabelle).
 
 Warum kein GitHub-Issue: ein Auftrag trägt **Kontaktdaten**. Die sollen nicht
 öffentlich werden — deshalb private Tabelle statt Issue, und Lesen nur mit
@@ -41,7 +41,7 @@ Schlüssel.
    on conflict (key) do update set value = excluded.value;
    ```
 
-   Absender und Resend-Key liegen bereits in `marketing_config` (vom Lead-Agent) —
+   Absender und Resend-Key liegen in `marketing_config` (gemeinsame Resend-Zeilen, auch von `kurzlink-melden` genutzt) —
    die Info-Mail nutzt sie mit. Ohne `melde_url` unterbleibt der Ping still; der
    Wunsch wird trotzdem gespeichert.
 
