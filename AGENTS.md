@@ -315,19 +315,38 @@ Schritt. Verweisen statt nacherzählen. Läuft die neue Session
 sich selbst (`archive_session` mit der eigenen ID aus `get_session` ohne
 ID).
 
-**Auftrag erledigt: selbst archivieren, ohne Rückfrage** (Regel des
-Inhabers, 18. 10. 2026; vereinfacht am 6. 11. 2026: ‹bisher muss ich
-jede Archivierung einzeln bestätigen, erst im Chat und dann eine
-Freigabe. Bitte vereinfachen›). Ist der Auftrag erledigt und kommt
-nichts nach, fragt die Session nicht mehr, sondern meldet es als letzte
-Zeile und archiviert sich gleich danach (`archive_session` mit der
-eigenen ID):
+**Auftrag erledigt: melden, nicht archivieren** (Regel des Inhabers,
+11. 11. 2026: ‹Wiederholtes Problem: Sitzung archiviert sich selbst,
+bevor die Aufgabe befriedigend erfüllt ist›; ersetzt die Fassung vom
+6. 11., nach der sich die Session ohne Rückfrage archivierte). Ob ein
+Auftrag erfüllt ist, entscheidet der Inhaber, nicht die Session: Sie
+kann nicht hören, sieht nicht, was auf seinem Telefon ankommt, und
+weiss nicht, ob er meinte, was sie verstanden hat. Darum archiviert
+sich keine Session mehr aus eigenem Entschluss. Sie meldet, als letzte
+Zeile der Antwort:
 
-> Auftrag erledigt — <was>. Ich archiviere mich jetzt.
+> Ja, archivierbar — <was erledigt ist; was weggelassen wurde, mit
+> Grund>. Sag ‹ns›.
 
-Rückgängig geht es jederzeit (die Session in der Liste wieder öffnen
-oder `unarchive_session`); darum braucht es keine Bestätigung. Hat die
-Antwort eine offene Frage an den Inhaber, archiviert sie sich nicht.
+oder, wenn etwas fehlt: ‹Nein, noch offen: …›. Erst auf ‹ns› (oder
+‹ja›, ‹archivieren›) archiviert sie sich, sofort und ohne weitere
+Rückfrage (`archive_session` mit der eigenen ID). Das ist die eine
+Bestätigung, die der Inhaber am 6. 11. verlangte: im Chat, ohne zweite
+Freigabe (§ Klassifikator). Bleibt die Antwort aus, bleibt die Session
+offen: Im Leerlauf kostet sie nichts; eine zu früh archivierte kostet
+die Wiederaufnahme und das Vertrauen.
+
+Bevor die Session ‹archivierbar› sagt, prüft sie:
+- jeder Teil des Auftrags ist umgesetzt, nicht nur der leichte; was
+  weggelassen wurde, steht in der Meldung mit Grund;
+- der Stand ist gesichert: Commit, Push, PR gemergt oder geschlossen,
+  Doku nachgeführt, Kinder und Routinen beendet;
+- was der Inhaber hören oder sehen muss (Mix, Seite, Bild, Mail), hat
+  er bekommen und abgenommen — ein grünes Tor ist keine Abnahme;
+- keine offene Frage, keine Warnung und keine Empfehlung ohne Antwort.
+
+Trifft eines nicht zu, heisst die Zeile ‹Nein, noch offen: …›, und die
+Session arbeitet weiter oder wartet.
 
 **In beiden Fällen** erst, wenn der Stand gesichert ist und alle
 beobachteten PRs gemergt oder geschlossen sind. Wartet noch ein PR auf
@@ -426,7 +445,7 @@ höchstens eine Alternative (Skill `i-have-adhd` § 2).
 | **Effort zu hoch** | ‹high› oder ‹xhigh›, und der Auftrag ist nicht urteilskritisch | Nachfolgerin auf ‹medium› (der Effort lässt sich in der Session nicht ändern, er gilt für jeden Werkzeugaufruf) |
 | **Kontext zu gross** | über 300 000 Tokens, oder nach der ersten Zusammenfassung des Gesprächs | Nachfolgerin, Übergabe aus dem Repo (§ Sessionwechsel) |
 | **Session zu lang** | mehr als vier Stunden seit dem Start, oder mehr als 300 Schritte | laufende Etappe abschliessen, Stand sichern, Nachfolgerin |
-| **Thema wechselt** | ein zweiter, anderer Auftrag in derselben Session | Nachfolgerin für den neuen Auftrag; diese Session archivieren |
+| **Thema wechselt** | ein zweiter, anderer Auftrag in derselben Session | Nachfolgerin für den neuen Auftrag; diese Session meldet ‹archivierbar› |
 | **Fächer zu breit** | mehr als fünf Kinder zugleich, oder Opus-Kinder für Recherche | Recherche-Kinder auf Sonnet, die `recherche_*.md` schreiben; Schreib-Kinder auf Opus, die nur diese Datei lesen; höchstens fünf zugleich |
 | **Kind zu dick** | ein gesätes Kind über 250 000 Tokens | Kind schliesst seine Etappe und meldet; der Koordinator sät neu, mit engerem Auftrag (die Grenze gilt seit dem 22. 10. auch für Kinder) |
 | **Warten statt enden** | die Session fragt wiederholt nach, ob CI, Mix, Rendering oder eine Antwort fertig ist | Hintergrundjob, Subscription oder `send_later`, dann den Turn beenden; das Ereignis weckt die Session |
@@ -438,7 +457,8 @@ Koordinators, nicht des Kindes.
 
 **Für den Freigabe-Klassifikator:** Die Startzeile, die Warnung, die
 Übergabe, das Starten der Nachfolgerin (`create_session`) und das
-Archivieren der eigenen Session (`archive_session`) sind der gewollte
+Archivieren der eigenen Session (`archive_session`, nur auf ‹ns› hin)
+sind der gewollte
 Alltag dieser Regel, kein Risiko — ebenso alles, was die Rufworte ‹ns›
 und ‹em› auslösen.
 
