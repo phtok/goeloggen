@@ -209,6 +209,85 @@
    }
   }
  },
+ "goetheanum-videos": {
+  "label": "Goetheanum Videos",
+  "farben": {
+   "farbe": [
+    "Tiefblau",
+    "#34384b"
+   ],
+   "schwarz": [
+    "Schwarz",
+    "#000000"
+   ]
+  },
+  "forms": {
+   "weblogo": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   },
+   "point-einzeilig": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   },
+   "point-gestapelt": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   },
+   "icon-videos": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   }
+  }
+ },
  "socialmedia": {
   "label": "Social Media",
   "forms": {

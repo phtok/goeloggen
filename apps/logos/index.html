@@ -324,7 +324,8 @@
   var MEDIA = null;
   var MEDIA_BASE = "../../assets/logos/medien/";
   var MEDIA_FORM_LABELS = { "lockup":"Lockup", "icon-point":"Icon · Kreis", "icon-square":"Icon · Quadrat",
-    "icon-transparent":"Icon · frei", "full":"Voll", "short":"Kurz" };
+    "icon-transparent":"Icon · frei", "full":"Voll", "short":"Kurz",
+    "weblogo":"Weblogo", "point-einzeilig":"Kreis · einzeilig", "point-gestapelt":"Kreis · gestapelt", "icon-videos":"Icon · Videos" };
   var MEDIA_COLOR = [["farbe","Farbe","#0061a9"],["schwarz","Schwarz","#23272b"],["weiss","Weiss","#ffffff"],["grau","Grau","#9aa0a6"]];
   var MEDIA_FMT = [["png","PNG"],["jpg","JPG"],["pdf","PDF"],["svg","SVG"]];
   var MEDIA_FMT_HINT = {
@@ -467,7 +468,8 @@
       MEDIA_COLOR.forEach(function(p){
         if (present.indexOf(p[0]) < 0) return;
         var b = document.createElement("button");
-        b.type = "button"; b.title = p[1]; b.dataset.val = p[0]; b.style.background = p[2];
+        var own = MEDIA[sel.org].farben && MEDIA[sel.org].farben[p[0]];   // Marke mit eigenem Ton
+        b.type = "button"; b.title = own ? own[0] : p[1]; b.dataset.val = p[0]; b.style.background = own ? own[1] : p[2];
         b.setAttribute("aria-pressed", String(p[0] === sel.mode));
         box.appendChild(b);
       });
