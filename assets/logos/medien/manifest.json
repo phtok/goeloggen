@@ -209,6 +209,123 @@
    }
   }
  },
+ "goetheanum-videos": {
+  "label": "Goetheanum Videos",
+  "forms": {
+   "bildmarke-einzeilig": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   },
+   "bildmarke-seitlich": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   },
+   "bildmarke-gestapelt": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   },
+   "point-einzeilig": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   },
+   "point-videos": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   },
+   "point-seitlich": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   },
+   "point-gestapelt": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   }
+  }
+ },
  "socialmedia": {
   "label": "Social Media",
   "forms": {
