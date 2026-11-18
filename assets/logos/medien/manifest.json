@@ -211,40 +211,18 @@
  },
  "goetheanum-videos": {
   "label": "Goetheanum Videos",
+  "farben": {
+   "farbe": [
+    "Tiefblau",
+    "#34384b"
+   ],
+   "schwarz": [
+    "Schwarz",
+    "#000000"
+   ]
+  },
   "forms": {
-   "bildmarke-einzeilig": {
-    "farbe": [
-     "svg",
-     "png",
-     "jpg"
-    ],
-    "schwarz": [
-     "svg",
-     "png",
-     "jpg"
-    ],
-    "weiss": [
-     "svg",
-     "png"
-    ]
-   },
-   "bildmarke-seitlich": {
-    "farbe": [
-     "svg",
-     "png",
-     "jpg"
-    ],
-    "schwarz": [
-     "svg",
-     "png",
-     "jpg"
-    ],
-    "weiss": [
-     "svg",
-     "png"
-    ]
-   },
-   "bildmarke-gestapelt": {
+   "weblogo": {
     "farbe": [
      "svg",
      "png",
@@ -276,39 +254,23 @@
      "png"
     ]
    },
-   "point-videos": {
-    "farbe": [
-     "svg",
-     "png",
-     "jpg"
-    ],
-    "schwarz": [
-     "svg",
-     "png",
-     "jpg"
-    ],
-    "weiss": [
-     "svg",
-     "png"
-    ]
-   },
-   "point-seitlich": {
-    "farbe": [
-     "svg",
-     "png",
-     "jpg"
-    ],
-    "schwarz": [
-     "svg",
-     "png",
-     "jpg"
-    ],
-    "weiss": [
-     "svg",
-     "png"
-    ]
-   },
    "point-gestapelt": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   },
+   "icon-videos": {
     "farbe": [
      "svg",
      "png",
