@@ -16,6 +16,20 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 19. November 2026 — Favicon-Standard Kreis Blau, Quadrat minimal gerundet (Version des Systems unverändert)
+
+**Was.** Alle 126 Seiten binden `assets/favicons/kreis-blau/favicon.svg` ein
+statt der Kachel `goetheanum-mark-blue.svg` (die Datei bleibt für fremde
+Verweise liegen). Das Quadrat bekommt Ecken mit 8 % Rundung (1,3 px bei
+16 px), das Apple-Symbol bleibt volle Fläche. Die Startseiten-Karte ‹Favicon›
+zeigt einen Browser-Reiter mit dem Favicon, im Strich der Nachbarkarten.
+**Warum.** Entscheid Inhaber 19. 11. 2026: ‹kreis blau als standard›; das
+Quadrat ‹minimal abrunden›. **Wirkung.** DS08 im Vertrag nennt den neuen
+Standard; das Reiter-Abbild auf der Startseite ist die eine ratifizierte
+Stelle, an der das Favicon als `<img>` steht.
+
+---
+
 ## 19. November 2026 — Favicon als eigener Abschnitt (Version des Systems unverändert)
 
 **Was.** Neue Seite `favicon.html` (Welt ‹Elemente›, neben ‹Logos›): die

@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex" />
 <title>Goetheanum Werkzeuge</title>
 <meta name="description" content="Werkzeuge für das Goetheanum: Logos, Schriften, E-Mail-Signatur, Visitenkarten und das Design-System." />
-<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="icon" type="image/svg+xml" href="assets/favicons/kreis-blau/favicon.svg" />
 <link rel="stylesheet" href="design-system/tokens.css" />
 <link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
@@ -87,6 +87,13 @@
   .thumb .fam{width:58px;height:58px;display:block;color:var(--blue)}
   .thumb .fam .grund{fill:var(--paper);stroke:currentColor;stroke-width:1.35}
   .thumb .fam path{fill:currentColor}
+  /* Favicon: der Browser-Reiter, in dem es sitzt – Strich wie die Nachbarn
+     (vk/mail), das Favicon selbst ist der eine Farbakzent (G01/G03). */
+  .thumb .tab{position:relative;display:flex;align-items:center;gap:8px;width:92px;height:32px;padding:0 11px;
+    border:1.6px solid var(--muted);border-bottom:0;border-radius:8px 8px 0 0}
+  .thumb .tab::after{content:"";position:absolute;left:-18px;right:-18px;bottom:0;height:1.6px;background:var(--muted)}
+  .thumb .tab img{width:18px;height:18px;flex:none}
+  .thumb .tab i{flex:1;height:2.5px;background:var(--muted);border-radius:2px}
   /* Visitenkarte */
   .thumb .vk{width:58px;height:37px;border:1.6px solid var(--muted);border-radius:4px;display:grid;align-content:center;gap:5px;padding:8px}
   .thumb .vk i{display:block;height:2px;background:var(--muted);border-radius:2px}
@@ -259,6 +266,7 @@
     "kurzlink":        '<span class="adr" aria-hidden="true">…/s/<em>hoi</em></span>',              // die kurze Adresse selbst
     "abo":             '<span class="mail"><svg viewBox="0 0 66 44" aria-hidden="true"><path d="M2 3 L33 25 L64 3"/></svg><b></b></span>', // Brief + Gold-Punkt ‹Neues›
     "programmheft":    '<span class="heft"><span><u></u><b></b></span><span><i></i><i></i><i></i><i></i></span></span>', // offenes Heft: Titelbild | Zeitplan
+    "favicon":         '<span class="tab"><img src="assets/favicons/kreis-blau/favicon.svg" alt=""><i></i></span>', // ein Browser-Reiter mit dem Favicon
     "familie":         '<svg class="fam" viewBox="0 0 28.3465 28.3465" aria-hidden="true"><circle class="grund" cx="14.173" cy="14.173" r="13.5"/><path d="m11.3891,8.0134l8.1716-2.8083v17.0421h-4.8546l.0057-6.2604c.0024-.4052-.0696-.7838-.1957-1.1631-.3842-1.1566-3.1269-6.8104-3.1269-6.8104"/><path d="m11.041,11.0259s2.4766,3.9592,2.4766,4.8845l.0388,6.3364h-2.8617l-.0178-2.1782c-.0283-1.3208-3.025-5.0471-3.025-5.0471l3.389-3.9956Z"/><path d="m6.7607,19.7208l1.9048-1.3532s.8921,1.4899.9714,2.0124c.0801.5225.0162,1.8676.0162,1.8676h-2.0253s.004-.491.0065-.7085c.0057-.385-.1165-.7142-.3033-1.0304-.0874-.148-.4926-.6616-.5702-.7878"/></svg>' // der Schweber selbst: Marke im Kreis
   };
   function visual(t){
