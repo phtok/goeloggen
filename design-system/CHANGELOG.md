@@ -16,6 +16,26 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 19. November 2026 — Favicon als eigener Abschnitt (Version des Systems unverändert)
+
+**Was.** Neue Seite `favicon.html` (Welt ‹Elemente›, neben ‹Logos›): die
+Bildmarke weiss im **Kreis** oder **Quadrat**, in 16 Farben – Markenblau, Gold
+dunkel (`--gold-deep`), die zwölf Sektionen und zwei Bereiche in ihrer Stufe
+‹dunkel› (`--sek-*-dunkel`). Je Variante `favicon.svg`, `favicon.ico`
+(16/32/48), `apple-touch-icon.png` (180, immer volle Fläche), `icon-192.png`,
+`icon-512.png` und ein ZIP, erzeugt von `tools/build_favicons.py` aus
+`goetheanum-marke.svg` und `tokens.json` nach `assets/favicons/`.
+**Warum.** Inhaber 19. 11. 2026: ‹da wird alles mögliche gebastelt. Icon in
+Kreis oder Quadrat sollen der Standard sein, in allen Farben.› Eigene Seite
+statt Teil des Logo-Werkzeugs, weil DS08 das Favicon ausdrücklich vom Logo
+trennt. **Wirkung.** B01: Weiss auf jeder Fläche; B02: das Skript bricht ab,
+wenn eine Farbe unter 4.5:1 fällt (schwächste: Gold dunkel 4.55:1). Volle
+Sektionsfarben (z. B. Jugend `#ff675d`) tragen Weiss nicht und sind darum
+nicht dabei. Die Einbindung auf den Werkzeugseiten selbst bleibt vorerst
+`goetheanum-mark-blue.svg`.
+
+---
+
 ## 5. November 2026 — Lesemass in Zeichen, Längengrenze der Hausschrift (1.31.0)
 
 **Was.** `--measure` 62ch → **28em** (66 Zeichen in der Hausschrift Klar);
