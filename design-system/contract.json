@@ -167,7 +167,7 @@
   },
   "marke": {
     "ds_id": "DS08",
-    "regel": "Die Marke kommt aus dem Logo-Generator: Seitenköpfe tragen das erzeugte Logo/Lockup (assets/logos/goetheanum-logo.svg, goetheanum-werkzeuge.svg) oder die blanke Marke (goetheanum-marke.svg). Das Favicon (goetheanum-mark-blue.svg, Kachel mit Kasten) ist kein Logo und steht nie als <img>.",
+    "regel": "Die Marke kommt aus dem Logo-Generator: Seitenköpfe tragen das erzeugte Logo/Lockup (assets/logos/goetheanum-logo.svg, goetheanum-werkzeuge.svg) oder die blanke Marke (goetheanum-marke.svg). Das Favicon (Standard assets/favicons/kreis-blau/favicon.svg aus tools/build_favicons.py; früher goetheanum-mark-blue.svg, Kachel mit Kasten) ist kein Logo und steht nie als <img> – ausser als Abbild im Browser-Reiter (Startseiten-Karte ‹Favicon›).",
     "schwere": "hinweis",
     "verbotene_muster": [
       "<img[^>]*goetheanum-mark-blue"

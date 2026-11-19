@@ -4,6 +4,7 @@
 Aufruf (aus der Repo-Wurzel):  python3 tools/build_favicons.py .
 
 Quelle der Wahrheit:
+  · Standard der Werkzeugseiten: kreis-blau (Entscheid Inhaber 19. 11. 2026)
   · Marke:  assets/logos/goetheanum-marke.svg (Pfade und Lage im Kasten 28.3465)
   · Farben: design-system/tokens.json (Markenblau, Gold dunkel, Sektions- und
             Bereichsfarben in der Stufe ‹dunkel›: Weiss drauf, B01/B02)
@@ -61,9 +62,15 @@ def kontrast_weiss(hexv):
 PFADE = re.findall(r'<path d="([^"]+)"', (ROOT / "assets/logos/goetheanum-marke.svg").read_text())
 assert len(PFADE) == 3, "goetheanum-marke.svg: drei Pfade erwartet"
 
+RUNDUNG = BOX * 0.08   # Quadrat minimal gerundet (Entscheid Inhaber 19. 11. 2026): 1.3 px bei 16 px
+
 def svg(form, farbe, voll=False):
-    grund = (f'<rect width="{BOX}" height="{BOX}" fill="{farbe}"/>' if form == "quadrat" or voll
-             else f'<circle cx="{BOX/2:.4f}" cy="{BOX/2:.4f}" r="{BOX/2:.4f}" fill="{farbe}"/>')
+    if voll:      # apple-touch-icon: volle Fläche, iOS rundet selbst
+        grund = f'<rect width="{BOX}" height="{BOX}" fill="{farbe}"/>'
+    elif form == "quadrat":
+        grund = f'<rect width="{BOX}" height="{BOX}" rx="{RUNDUNG:.4f}" fill="{farbe}"/>'
+    else:
+        grund = f'<circle cx="{BOX/2:.4f}" cy="{BOX/2:.4f}" r="{BOX/2:.4f}" fill="{farbe}"/>'
     marke = "".join(f'<path d="{d}"/>' for d in PFADE)
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {BOX} {BOX}" width="64" height="64">'
             f'{grund}<g fill="#ffffff">{marke}</g></svg>\n')
@@ -112,7 +119,7 @@ def main():
             jobs.append({"svg": svg(form, farbe, voll=True), "size": 180, "out": str(d / "apple-touch-icon.png")})
             varianten.append({"id": f"{form}-{slug}", "form": form, "farbe": slug, "name": name,
                               "hex": farbe, "kontrast": round(k, 2)})
-    subprocess.run(["node", "-e", RASTER], input=json.dumps(jobs).encode(), check=True, cwd=ROOT / "tools")
+    subprocess.run(["node", "-e", RASTER], input=json.dumps(jobs).encode(), check=True, cwd=ROOT)
 
     for v in varianten:
         d = OUT / v["id"]
