@@ -1,0 +1,353 @@
+{
+ "$beschreibung": "Erzeugt von tools/build_favicons.py – nicht von Hand ändern.",
+ "formen": [
+  {
+   "id": "kreis",
+   "name": "Kreis"
+  },
+  {
+   "id": "quadrat",
+   "name": "Quadrat"
+  }
+ ],
+ "farben": [
+  {
+   "id": "blau",
+   "name": "Goetheanum",
+   "hex": "#0061a9"
+  },
+  {
+   "id": "gold",
+   "name": "Gold",
+   "hex": "#94702e"
+  },
+  {
+   "id": "aas",
+   "name": "Allgemeine Anthroposophie",
+   "hex": "#7c3d6a"
+  },
+  {
+   "id": "js",
+   "name": "Jugendsektion",
+   "hex": "#bd2525"
+  },
+  {
+   "id": "mas",
+   "name": "Mathematik und Astronomie",
+   "hex": "#2c4a88"
+  },
+  {
+   "id": "ms",
+   "name": "Medizin",
+   "hex": "#4f477c"
+  },
+  {
+   "id": "nws",
+   "name": "Naturwissenschaften",
+   "hex": "#1d6157"
+  },
+  {
+   "id": "ps",
+   "name": "Pädagogik",
+   "hex": "#394471"
+  },
+  {
+   "id": "sbk",
+   "name": "Bildende Künste",
+   "hex": "#914b6e"
+  },
+  {
+   "id": "hpise",
+   "name": "Inklusive soziale Entwicklung",
+   "hex": "#af5400"
+  },
+  {
+   "id": "lws",
+   "name": "Landwirtschaft",
+   "hex": "#3e7826"
+  },
+  {
+   "id": "srmk",
+   "name": "Redende und Musizierende Künste",
+   "hex": "#3b629e"
+  },
+  {
+   "id": "ssw",
+   "name": "Schöne Wissenschaften",
+   "hex": "#3f5194"
+  },
+  {
+   "id": "szw",
+   "name": "Sozialwissenschaften",
+   "hex": "#a32c46"
+  },
+  {
+   "id": "buehne",
+   "name": "Bühne",
+   "hex": "#6c5d37"
+  },
+  {
+   "id": "bauadmin",
+   "name": "Bau-Administration",
+   "hex": "#873f43"
+  }
+ ],
+ "varianten": [
+  {
+   "id": "kreis-blau",
+   "form": "kreis",
+   "farbe": "blau",
+   "name": "Goetheanum",
+   "hex": "#0061a9",
+   "kontrast": 6.4
+  },
+  {
+   "id": "quadrat-blau",
+   "form": "quadrat",
+   "farbe": "blau",
+   "name": "Goetheanum",
+   "hex": "#0061a9",
+   "kontrast": 6.4
+  },
+  {
+   "id": "kreis-gold",
+   "form": "kreis",
+   "farbe": "gold",
+   "name": "Gold",
+   "hex": "#94702e",
+   "kontrast": 4.55
+  },
+  {
+   "id": "quadrat-gold",
+   "form": "quadrat",
+   "farbe": "gold",
+   "name": "Gold",
+   "hex": "#94702e",
+   "kontrast": 4.55
+  },
+  {
+   "id": "kreis-aas",
+   "form": "kreis",
+   "farbe": "aas",
+   "name": "Allgemeine Anthroposophie",
+   "hex": "#7c3d6a",
+   "kontrast": 7.68
+  },
+  {
+   "id": "quadrat-aas",
+   "form": "quadrat",
+   "farbe": "aas",
+   "name": "Allgemeine Anthroposophie",
+   "hex": "#7c3d6a",
+   "kontrast": 7.68
+  },
+  {
+   "id": "kreis-js",
+   "form": "kreis",
+   "farbe": "js",
+   "name": "Jugendsektion",
+   "hex": "#bd2525",
+   "kontrast": 6.08
+  },
+  {
+   "id": "quadrat-js",
+   "form": "quadrat",
+   "farbe": "js",
+   "name": "Jugendsektion",
+   "hex": "#bd2525",
+   "kontrast": 6.08
+  },
+  {
+   "id": "kreis-mas",
+   "form": "kreis",
+   "farbe": "mas",
+   "name": "Mathematik und Astronomie",
+   "hex": "#2c4a88",
+   "kontrast": 8.6
+  },
+  {
+   "id": "quadrat-mas",
+   "form": "quadrat",
+   "farbe": "mas",
+   "name": "Mathematik und Astronomie",
+   "hex": "#2c4a88",
+   "kontrast": 8.6
+  },
+  {
+   "id": "kreis-ms",
+   "form": "kreis",
+   "farbe": "ms",
+   "name": "Medizin",
+   "hex": "#4f477c",
+   "kontrast": 8.32
+  },
+  {
+   "id": "quadrat-ms",
+   "form": "quadrat",
+   "farbe": "ms",
+   "name": "Medizin",
+   "hex": "#4f477c",
+   "kontrast": 8.32
+  },
+  {
+   "id": "kreis-nws",
+   "form": "kreis",
+   "farbe": "nws",
+   "name": "Naturwissenschaften",
+   "hex": "#1d6157",
+   "kontrast": 7.24
+  },
+  {
+   "id": "quadrat-nws",
+   "form": "quadrat",
+   "farbe": "nws",
+   "name": "Naturwissenschaften",
+   "hex": "#1d6157",
+   "kontrast": 7.24
+  },
+  {
+   "id": "kreis-ps",
+   "form": "kreis",
+   "farbe": "ps",
+   "name": "Pädagogik",
+   "hex": "#394471",
+   "kontrast": 9.38
+  },
+  {
+   "id": "quadrat-ps",
+   "form": "quadrat",
+   "farbe": "ps",
+   "name": "Pädagogik",
+   "hex": "#394471",
+   "kontrast": 9.38
+  },
+  {
+   "id": "kreis-sbk",
+   "form": "kreis",
+   "farbe": "sbk",
+   "name": "Bildende Künste",
+   "hex": "#914b6e",
+   "kontrast": 6.11
+  },
+  {
+   "id": "quadrat-sbk",
+   "form": "quadrat",
+   "farbe": "sbk",
+   "name": "Bildende Künste",
+   "hex": "#914b6e",
+   "kontrast": 6.11
+  },
+  {
+   "id": "kreis-hpise",
+   "form": "kreis",
+   "farbe": "hpise",
+   "name": "Inklusive soziale Entwicklung",
+   "hex": "#af5400",
+   "kontrast": 5.13
+  },
+  {
+   "id": "quadrat-hpise",
+   "form": "quadrat",
+   "farbe": "hpise",
+   "name": "Inklusive soziale Entwicklung",
+   "hex": "#af5400",
+   "kontrast": 5.13
+  },
+  {
+   "id": "kreis-lws",
+   "form": "kreis",
+   "farbe": "lws",
+   "name": "Landwirtschaft",
+   "hex": "#3e7826",
+   "kontrast": 5.36
+  },
+  {
+   "id": "quadrat-lws",
+   "form": "quadrat",
+   "farbe": "lws",
+   "name": "Landwirtschaft",
+   "hex": "#3e7826",
+   "kontrast": 5.36
+  },
+  {
+   "id": "kreis-srmk",
+   "form": "kreis",
+   "farbe": "srmk",
+   "name": "Redende und Musizierende Künste",
+   "hex": "#3b629e",
+   "kontrast": 6.13
+  },
+  {
+   "id": "quadrat-srmk",
+   "form": "quadrat",
+   "farbe": "srmk",
+   "name": "Redende und Musizierende Künste",
+   "hex": "#3b629e",
+   "kontrast": 6.13
+  },
+  {
+   "id": "kreis-ssw",
+   "form": "kreis",
+   "farbe": "ssw",
+   "name": "Schöne Wissenschaften",
+   "hex": "#3f5194",
+   "kontrast": 7.46
+  },
+  {
+   "id": "quadrat-ssw",
+   "form": "quadrat",
+   "farbe": "ssw",
+   "name": "Schöne Wissenschaften",
+   "hex": "#3f5194",
+   "kontrast": 7.46
+  },
+  {
+   "id": "kreis-szw",
+   "form": "kreis",
+   "farbe": "szw",
+   "name": "Sozialwissenschaften",
+   "hex": "#a32c46",
+   "kontrast": 6.99
+  },
+  {
+   "id": "quadrat-szw",
+   "form": "quadrat",
+   "farbe": "szw",
+   "name": "Sozialwissenschaften",
+   "hex": "#a32c46",
+   "kontrast": 6.99
+  },
+  {
+   "id": "kreis-buehne",
+   "form": "kreis",
+   "farbe": "buehne",
+   "name": "Bühne",
+   "hex": "#6c5d37",
+   "kontrast": 6.44
+  },
+  {
+   "id": "quadrat-buehne",
+   "form": "quadrat",
+   "farbe": "buehne",
+   "name": "Bühne",
+   "hex": "#6c5d37",
+   "kontrast": 6.44
+  },
+  {
+   "id": "kreis-bauadmin",
+   "form": "kreis",
+   "farbe": "bauadmin",
+   "name": "Bau-Administration",
+   "hex": "#873f43",
+   "kontrast": 7.44
+  },
+  {
+   "id": "quadrat-bauadmin",
+   "form": "quadrat",
+   "farbe": "bauadmin",
+   "name": "Bau-Administration",
+   "hex": "#873f43",
+   "kontrast": 7.44
+  }
+ ]
+}

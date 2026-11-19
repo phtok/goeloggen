@@ -272,6 +272,17 @@
       "such": "Logo Marke Sektionslogo Bereichslogo Medienlogo Zeichen"
     },
     {
+      "slug": "favicon",
+      "cat": "system",
+      "status": "live",
+      "tag": "Logo",
+      "title": "Favicon",
+      "short": "Favicon",
+      "href": "favicon.html",
+      "desc": "Die Bildmarke weiss im Kreis oder Quadrat, in jeder Haus-, Sektions- und Bereichsfarbe – SVG, ICO und PNG zum Einbinden.",
+      "such": "Favicon Icon Tab Browser apple-touch-icon Kachel Bildmarke"
+    },
+    {
       "slug": "visitenkarten",
       "cat": "generatoren",
       "status": "live",
@@ -995,8 +1006,8 @@
   ],
   "reihenfolge": {
     "$hinweis": "Vom Sortierer gepflegte Reihenfolgen (Slugs). Startseite und Schublade lesen sie; fehlt ein Eintrag, gilt die eingebaute Vorgabe. aus = je Fläche ausgeblendet (bleibt per Direktlink und in der Intern-Ansicht erreichbar). Verlauf = Git.",
-    "schublade": ["logo-generator", "signatur", "visitenkarten", "schriften", "icons", "qr-generator", "kurzlink", "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint", "wallpaper", "programmheft", "familie", "abo"],
-    "karten": ["logo-generator", "qr-generator", "powerpoint", "karten", "icons", "uebersetzungen", "sektionsfarben", "typografie", "schriften", "signatur", "visitenkarten", "wallpaper", "abo", "familie"],
+    "schublade": ["logo-generator", "favicon", "signatur", "visitenkarten", "schriften", "icons", "qr-generator", "kurzlink", "uebersetzungen", "sektionsfarben", "typografie", "karten", "powerpoint", "wallpaper", "programmheft", "familie", "abo"],
+    "karten": ["logo-generator", "favicon", "qr-generator", "powerpoint", "karten", "icons", "uebersetzungen", "sektionsfarben", "typografie", "schriften", "signatur", "visitenkarten", "wallpaper", "abo", "familie"],
     "aus": { "schublade": ["lt-programm", "lt-reader", "design-system"], "karten": ["design-system", "lt-programm", "lt-reader", "kurzlink", "programmheft"] }
   },
   "gruppen": {
@@ -1005,7 +1016,7 @@
     "startseite": [
       { "id": "jeden-tag", "titel": "Jeden Tag", "slugs": ["logo-generator", "qr-generator", "powerpoint", "karten", "programmheft", "icons"] },
       { "id": "von-zeit-zu-zeit", "titel": "Von Zeit zu Zeit", "slugs": ["uebersetzungen", "sektionsfarben", "typografie"] },
-      { "id": "einrichten", "titel": "Einmal einrichten", "slugs": ["schriften", "signatur", "visitenkarten", "wallpaper", "abo", "familie"] }
+      { "id": "einrichten", "titel": "Einmal einrichten", "slugs": ["schriften", "signatur", "visitenkarten", "favicon", "wallpaper", "abo", "familie"] }
     ]
   },
   "welten": {

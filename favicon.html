@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Favicon · Goetheanum</title>
+<meta name="description" content="Die Goetheanum-Bildmarke als Favicon: weiss im Kreis oder Quadrat, in jeder Haus-, Sektions- und Bereichsfarbe – zum Herunterladen und Einbinden." />
+<link rel="icon" type="image/svg+xml" href="assets/logos/goetheanum-mark-blue.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s8)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:min(var(--measure),100%);text-wrap:balance;hyphens:manual}
+  section+section{margin-top:var(--s8)}
+  .wahl{display:grid;gap:var(--s6)}
+  .wahl .lab{display:block;margin-bottom:var(--s2)}
+  .gruppe+.gruppe{margin-top:var(--s4)}
+  .seg button{gap:var(--s2);min-height:var(--tap)}
+  .punkt{inline-size:18px;block-size:18px;border-radius:50%;flex:none;box-shadow:0 0 0 1px var(--on-accent)}
+  .groessen{display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--s8)}
+  .groessen figure{margin:0;display:grid;justify-items:center;gap:var(--s2)}
+  .groessen img{display:block}
+  .groessen figcaption{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+  .dateien{list-style:none;padding:0;margin:var(--s4) 0 0;display:grid;gap:var(--s2);font-family:var(--font-text)}
+  .dateien a{display:inline-flex;align-items:center;min-height:var(--tap)}
+  .dateien span{color:var(--muted);font-size:var(--t-small);margin-inline-start:var(--s3)}
+  .kopieren{display:flex;align-items:center;gap:var(--s3);margin-top:var(--s4)}
+  .said{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted)}
+</style>
+</head>
+<body>
+
+<script src="design-system/nav.js" data-root="./" data-section="system" data-active="favicon"></script>
+
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Marke</span>
+    <h1>Favicon</h1>
+    <p class="lede">Die Bildmarke weiss im Kreis oder Quadrat, in jeder Haus-, Sektions- und Bereichsfarbe.</p>
+  </section>
+
+  <section aria-labelledby="h-wahl">
+    <div class="shead"><h2 id="h-wahl">Form und Farbe</h2></div>
+    <div class="wahl">
+      <div>
+        <span class="lab" id="lab-form">Form</span>
+        <div class="seg" role="group" aria-labelledby="lab-form" id="formen"></div>
+      </div>
+      <div id="farben" role="group" aria-label="Farbe"></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-vorschau">
+    <div class="shead"><h2 id="h-vorschau">Vorschau</h2></div>
+    <div class="groessen" id="groessen">
+      <figure><img data-g="16" width="16" height="16" alt="" src="assets/favicons/kreis-blau/favicon.svg" /><figcaption>16&nbsp;px</figcaption></figure>
+      <figure><img data-g="32" width="32" height="32" alt="" src="assets/favicons/kreis-blau/favicon.svg" /><figcaption>32&nbsp;px</figcaption></figure>
+      <figure><img data-g="64" width="64" height="64" alt="" src="assets/favicons/kreis-blau/favicon.svg" /><figcaption>64&nbsp;px</figcaption></figure>
+      <figure><img data-g="180" width="120" height="120" alt="Apple-Symbol, volle Fläche" src="assets/favicons/kreis-blau/apple-touch-icon.png" /><figcaption>Apple, 180&nbsp;px</figcaption></figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-laden">
+    <div class="shead"><h2 id="h-laden">Herunterladen</h2></div>
+    <a class="btn primary" id="zip" href="assets/favicons/kreis-blau.zip" download>Alle fünf Dateien (ZIP)</a>
+    <ul class="dateien" id="dateien"></ul>
+  </section>
+
+  <section aria-labelledby="h-einbinden">
+    <div class="shead">
+      <h2 id="h-einbinden">Einbinden</h2>
+      <p>Die Dateien in die Wurzel der Website legen, die Zeilen in den <code class="code">&lt;head&gt;</code>.</p>
+    </div>
+    <pre class="code" id="schnipsel" tabindex="0" aria-label="Einbinde-Zeilen">&lt;link rel="icon" href="/favicon.ico" sizes="48x48"&gt;
+&lt;link rel="icon" href="/favicon.svg" type="image/svg+xml"&gt;
+&lt;link rel="apple-touch-icon" href="/apple-touch-icon.png"&gt;</pre>
+    <div class="kopieren">
+      <button class="btn" type="button" id="kopieren">Kopieren</button>
+      <span class="said" aria-live="polite" id="meldung"></span>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds-footer">
+  <div class="wrap frow">
+    <span><strong>Goetheanum Grafik</strong></span>
+    <span><a href="apps/logos/">Logos</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var BASIS = "assets/favicons/";
+  var DATEIEN = [
+    ["favicon.svg", "Browser, skalierbar"],
+    ["favicon.ico", "16, 32 und 48 px"],
+    ["apple-touch-icon.png", "180 px, iPhone und iPad"],
+    ["icon-192.png", "192 px, Android"],
+    ["icon-512.png", "512 px, Web-App"]
+  ];
+  var GRUPPEN = [["Haus", ["blau", "gold"]], ["Sektionen", null], ["Bereiche", ["buehne", "bauadmin"]]];
+  var stand = {form: "kreis", farbe: "blau"};
+
+  fetch(BASIS + "favicons.json").then(function(r){ return r.json(); }).then(function(d){
+    var m = /(?:^|[?&])v=(kreis|quadrat)-([a-z]+)/.exec(location.search);
+    if (m && d.farben.some(function(f){ return f.id === m[2]; })) { stand.form = m[1]; stand.farbe = m[2]; }
+
+    var formen = document.getElementById("formen");
+    d.formen.forEach(function(f){
+      var b = document.createElement("button");
+      b.type = "button"; b.textContent = f.name; b.dataset.form = f.id;
+      b.addEventListener("click", function(){ stand.form = f.id; zeigen(); });
+      formen.appendChild(b);
+    });
+
+    var farben = document.getElementById("farben");
+    var vergeben = {};
+    GRUPPEN.forEach(function(g){ (g[1] || []).forEach(function(id){ vergeben[id] = 1; }); });
+    GRUPPEN.forEach(function(g){
+      var ids = g[1] || d.farben.map(function(f){ return f.id; }).filter(function(id){ return !vergeben[id]; });
+      var box = document.createElement("div"); box.className = "gruppe";
+      var lab = document.createElement("span"); lab.className = "lab"; lab.textContent = g[0];
+      var seg = document.createElement("div"); seg.className = "seg";
+      ids.forEach(function(id){
+        var f = d.farben.filter(function(x){ return x.id === id; })[0];
+        var b = document.createElement("button");
+        b.type = "button"; b.dataset.farbe = id;
+        var p = document.createElement("span"); p.className = "punkt"; p.style.background = f.hex;
+        b.appendChild(p); b.appendChild(document.createTextNode(f.name));
+        b.addEventListener("click", function(){ stand.farbe = id; zeigen(); });
+        seg.appendChild(b);
+      });
+      box.appendChild(lab); box.appendChild(seg); farben.appendChild(box);
+    });
+    zeigen();
+  });
+
+  function zeigen(){
+    var id = stand.form + "-" + stand.farbe, ord = BASIS + id + "/";
+    document.querySelectorAll("[data-form]").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.form === stand.form); });
+    document.querySelectorAll("[data-farbe]").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.farbe === stand.farbe); });
+    document.querySelectorAll("#groessen img").forEach(function(img){
+      img.src = ord + (img.dataset.g === "180" ? "apple-touch-icon.png" : "favicon.svg");
+    });
+    var zip = document.getElementById("zip");
+    zip.href = BASIS + id + ".zip";
+    zip.setAttribute("download", "favicon-" + id + ".zip");
+    var ul = document.getElementById("dateien"); ul.textContent = "";
+    DATEIEN.forEach(function(f){
+      var li = document.createElement("li"), a = document.createElement("a"), s = document.createElement("span");
+      a.href = ord + f[0]; a.setAttribute("download", f[0]); a.textContent = f[0]; s.textContent = f[1];
+      li.appendChild(a); li.appendChild(s); ul.appendChild(li);
+    });
+    history.replaceState(null, "", "?v=" + id);
+  }
+
+  document.getElementById("kopieren").addEventListener("click", function(){
+    var t = document.getElementById("schnipsel").textContent, m = document.getElementById("meldung");
+    navigator.clipboard.writeText(t).then(function(){ m.textContent = "Kopiert"; }, function(){ m.textContent = "Bitte von Hand markieren und kopieren"; });
+  });
+})();
+</script>
+</body>
+</html>
