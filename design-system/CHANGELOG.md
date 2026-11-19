@@ -16,6 +16,18 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 19. November 2026 — Favicon im Design-System-Schaufenster (Version des Systems unverändert)
+
+**Was.** Abschnitt ‹Favicon› in `design-system/index.html` nach ‹Sektionen
+& Bereiche›: Standard Kreis Blau bei 16/32/64 px, Quadrat daneben, die
+Einbinde-Zeile, Verweis auf `favicon.html`. Auf `favicon.html` bleibt die
+Vorschau am Telefon (≤640 px) unter der Kopfleiste stehen. **Warum.**
+Inhaber 19. 11. 2026: ‹Favicon fehlt im Design-System›; Vorschau-Festhalten
+auf Empfehlung, mit ‹em› angenommen. **Wirkung.** Wer im Schaufenster baut,
+findet den Favicon-Standard dort, wo die übrigen Grundlagen stehen.
+
+---
+
 ## 19. November 2026 — Favicon-Standard Kreis Blau, Quadrat minimal gerundet (Version des Systems unverändert)
 
 **Was.** Alle 126 Seiten binden `assets/favicons/kreis-blau/favicon.svg` ein
