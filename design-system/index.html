@@ -97,6 +97,7 @@
   .guard .detail{margin-top:var(--s2);color:var(--muted);font-size:var(--t-small);line-height:1.5}
   .guard table{margin-top:var(--s3);width:100%;font-size:var(--t-small)}
 
+  .favi-reihe{display:flex;align-items:flex-end;gap:var(--s6);margin-top:var(--s4)}
   /* .note kommt aus base.css (kanonische Hinweis-Rolle) – hier keine Eigenfassung. */
   .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--on-accent);padding:8px 16px;border-radius:var(--r-pill);font-size:var(--t-small);opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
   .toast.show{opacity:1}
@@ -175,6 +176,30 @@
     <span class="kicker">Die ganze Quelle · alle vier Sprachen</span>
     <div class="orglist" id="org-list"><p class="meta">lädt aus der Quelle …</p></div>
     <p class="note" style="margin-top:var(--s4)">Zum Nachschlagen und Kopieren gibt es dieselben Namen als Arbeitsseite: <a href="../uebersetzungen.html">Übersetzungen</a>. Korrigieren = die Quelle bearbeiten: <a href="https://github.com/phtok/goeloggen/blob/main/assets/goe-orgs.js">goe-orgs.js auf GitHub</a>. Werkzeuge sollen diese Datei <b>einbinden</b>, nicht kopieren – sonst driftet das Bild (eine eingebettete Kopie ist bereits abgewichen; Konsolidierung steht an).</p>
+  </section>
+
+  <!-- ================= Favicon ================= -->
+  <section id="favicon">
+    <div class="shead">
+      <h2>Favicon</h2>
+      <p>Die Bildmarke weiss im Kreis, Markenblau: Standard aller Werkzeugseiten. Quadrat (8&nbsp;% gerundet) und jede Haus-, Sektions- und Bereichsfarbe holen auf der <a href="../favicon.html">Favicon-Seite</a>.</p>
+    </div>
+    <div class="grid cols2">
+      <div class="card favi">
+        <span class="kicker">Standard · Kreis Blau</span>
+        <div class="favi-reihe">
+          <img src="../assets/favicons/kreis-blau/favicon.svg" width="16" height="16" alt="Favicon 16&nbsp;px" />
+          <img src="../assets/favicons/kreis-blau/favicon.svg" width="32" height="32" alt="Favicon 32&nbsp;px" />
+          <img src="../assets/favicons/kreis-blau/favicon.svg" width="64" height="64" alt="Favicon 64&nbsp;px" />
+          <img src="../assets/favicons/quadrat-blau/favicon.svg" width="64" height="64" alt="Variante Quadrat" />
+        </div>
+      </div>
+      <div class="card">
+        <span class="kicker">Einbinden · relativ zur Seite</span>
+        <pre class="code" tabindex="0" aria-label="Favicon einbinden">&lt;link rel="icon" type="image/svg+xml"
+      href="assets/favicons/kreis-blau/favicon.svg" /&gt;</pre>
+      </div>
+    </div>
   </section>
 
   <!-- ================= Begriffe & Übersetzungen ================= -->
