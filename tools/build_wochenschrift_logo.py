@@ -24,6 +24,7 @@ CAP = 0.7396 * H              # Versalhöhe der Website (17,75 von 24 px)
 FS = None                     # Schriftgrad: aus der Versalhöhe der Hausschrift abgeleitet
 TRACK = -0.0079               # Laufweite in em
 WGHT = 595
+WORT_ABSTAND = 1.0            # Faktor auf die Breite des Leerzeichens (1 = wie Website)
 BASE_Y = 0.9115 * H           # Grundlinie von oben
 D_INK_X = 27.125 * K          # Tinte-Beginn des ‹D›
 MARK_W = 17.88 * K
@@ -56,7 +57,8 @@ def wort():
             bp = BoundsPen(None); font.draw_glyph_with_pen(info.codepoint, bp); dx0 = bp.bounds[0] * s
         if d:
             teile.append((x + pos.x_offset * s, d))
-        x += pos.x_advance * s + TRACK * FS
+        f = WORT_ABSTAND if info.cluster is not None and TEXT[info.cluster] == " " else 1.0
+        x += pos.x_advance * s * f + TRACK * FS
     return teile, dx0, s
 
 def svg(farbe):

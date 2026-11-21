@@ -125,6 +125,14 @@
   .empf-item .vstrip .box{min-height:60px;padding:9px}
   .empf-item .vstrip svg{height:30px}
   .empf-item .vstrip figcaption{font-size:var(--t-micro)}
+  /* Schutzraum und Mindestgrösse: Höhe H des Logos steuert den Abstand (½ H rundum). */
+  .schutz{--h:min(68px,calc((100vw - 130px) / 7));display:inline-block;padding:calc(var(--h) / 2);border:2px dashed var(--gold-ink);background:color-mix(in srgb,var(--gold) 14%,var(--paper))}
+  .tier .vstrip .schutz svg{height:var(--h);width:auto;max-width:none}
+  .tier .vstrip .minlogo svg{width:var(--w);height:auto;max-width:none}
+  .tier .vstrip .minmark svg{height:var(--h);width:auto;max-width:none}
+  .tier .vstrip .box.frei{flex:0 1 auto;min-height:0}
+  .mass{margin-top:var(--s4);width:100%;max-width:80ch;font-size:var(--t-small)}
+  .mass th,.mass td{padding:var(--s2)}
   .pikto{width:50px;height:50px;display:block;margin-bottom:var(--s2);fill:none;stroke:var(--muted);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
   .pikto .acc{stroke:var(--gold-ink)}
   .pikto .slash{stroke:var(--bad);opacity:.75}
@@ -251,7 +259,7 @@
         <div class="empf-item">
           <svg class="pikto" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="7" width="34" height="34" rx="3" stroke-dasharray="4 5"/><rect x="18" y="18" width="12" height="12" rx="2" class="acc"/></svg>
           <h3>Luft ringsum</h3>
-          <p>Rundum Luft in Höhe des Zeichens – nichts dringt ein: kein Text, keine Grafik, kein zweites Logo. Richtwert ~25 mm oder ~120 px Breite. <span class="note" style="display:inline">Exakte Werte aus dem Logopaket.</span></p>
+          <p>Rundum eine halbe Logohöhe frei – nichts dringt ein: kein Text, keine Grafik, kein zweites Logo. Masse und Mindestgrössen stehen unten.</p>
         </div>
 
         <div class="empf-item">
@@ -259,6 +267,21 @@
           <h3>SVG oder PNG?</h3>
           <p>SVG für Web und Druck (Vektor), PNG für Pixel. Beides aus diesem Werkzeug. Ruhiger Grund mit genug Kontrast; auf Foto oder Dunkel die Weiss-Variante.</p>
         </div>
+      </div>
+
+      <div class="tier" id="massTier">
+        <h3>Schutzraum und Mindestgrösse</h3>
+        <div class="vstrip" id="vSchutz"></div>
+        <p>Schutzraum: <strong>eine halbe Logohöhe</strong> rundum, das ist ein Zwölftel der Logobreite. Bei Logos mit Zusatzzeile gilt die halbe Gesamthöhe.</p>
+        <div class="vstrip" id="vMin"></div>
+        <table class="mass">
+          <thead><tr><th>Anwendung</th><th class="num">Logo, Breite</th><th class="num">Bildmarke, Höhe</th></tr></thead>
+          <tbody>
+            <tr><td>Bildschirm</td><td class="num">120&nbsp;px</td><td class="num">24&nbsp;px</td></tr>
+            <tr><td>Druck</td><td class="num">25&nbsp;mm</td><td class="num">6&nbsp;mm</td></tr>
+            <tr><td>Druck, Ausnahme<br>Visitenkarte, Stempel</td><td class="num">20&nbsp;mm</td><td class="num">5&nbsp;mm</td></tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="empf-foot">
@@ -590,6 +613,25 @@
     if (t2){
       t2.appendChild(figure(E.svg({cat:"sektionen",org:"ps",layout:"mobile",mode:"original",lang:"de",scale:2.635}), "Pädagogik", false));
       t2.appendChild(figure(E.svg({cat:"sektionen",org:"sbk",layout:"mobile",mode:"original",lang:"de",scale:2.635}), "Bildende Künste", false));
+    }
+    var BILDMARKE = '<svg viewBox="0 0 15.8254 21.07" aria-hidden="true" fill="var(--blue)"><path d="M5.7224,3.472L15.8254,0v21.07h-6.002l.007-7.74c.003-.501-.086-.969-.242-1.438-.475-1.43-3.866-8.42-3.866-8.42"/><path d="M5.292,7.1965s3.062,4.895,3.062,6.039l.048,7.834h-3.538l-.022-2.693c-.035-1.633-3.74-6.24-3.74-6.24l4.19-4.94Z"/><path d="M0,17.9464l2.355-1.673s1.103,1.842,1.201,2.488c.099.646.02,2.309.02,2.309H1.072s.005-.607.008-.876c.007-.476-.144-.883-.375-1.274-.108-.183-.609-.818-.705-.974"/></svg>';
+    var vs = $("vSchutz"), vm = $("vMin");
+    if (vs){
+      var fs = document.createElement("figure");
+      fs.innerHTML = '<div class="box frei"><div class="schutz">' + E.svg({cat:"allgemein",org:"goetheanum",layout:"desktop",mode:"original",scale:2.635}) + '</div></div><figcaption>Schutzraum, halbe Logohöhe</figcaption>';
+      vs.appendChild(fs);
+    }
+    if (vm){
+      [["120px","120\u00a0px","Bildschirm"],["25mm","25\u00a0mm","Druck"],["20mm","20\u00a0mm","Druck, Ausnahme"]].forEach(function(p){
+        var f = document.createElement("figure");
+        f.innerHTML = '<div class="box frei"><div class="minlogo" style="--w:' + p[0] + '">' + E.svg({cat:"allgemein",org:"goetheanum",layout:"desktop",mode:"original",scale:2.635}) + '</div></div><figcaption>' + p[2] + ', ' + p[1] + '</figcaption>';
+        vm.appendChild(f);
+      });
+      [["24px","24\u00a0px","Bildschirm"],["6mm","6\u00a0mm","Druck"]].forEach(function(p){
+        var f = document.createElement("figure");
+        f.innerHTML = '<div class="box frei"><div class="minmark" style="--h:' + p[0] + '">' + BILDMARKE + '</div></div><figcaption>Bildmarke, ' + p[2] + ', ' + p[1] + '</figcaption>';
+        vm.appendChild(f);
+      });
     }
     if (t3){
       [["hochschulzeichen","Hochschule"],["gesellschaftszeichen","Gesellschaft"],["bau-administration","Bau-Administration"]].forEach(function(p){
