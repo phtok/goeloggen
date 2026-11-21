@@ -50,7 +50,7 @@ jobs:
           test -f _site/logo-generator.html
 
           # Ganze Ordner wholesale – so werden neue Tools automatisch mitveroeffentlicht.
-          for d in apps start design-system assets living-connections; do
+          for d in apps start design-system assets living-connections perspektiven; do
             if [ -d "$d" ]; then cp -R "$d" "_site/$d"; fi
           done
 

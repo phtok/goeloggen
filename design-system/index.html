@@ -160,7 +160,7 @@
       <p>Markenblau gliedert Zustand und Verweis, Gold ist der einzige Inhalts-Akzent – sparsam. Klick auf ein Feld kopiert den Hex-Wert.</p>
     </div>
     <div class="grid cols3" id="swatches"></div>
-    <p class="note" style="margin-top:var(--s4)">Kontrast-Hinweise stammen aus den Typo-Tokens (G28): tinte-leise 4.35:1 und Gold 3.94:1 tragen nur Meta, Akzent und grössere Grade – nie langen Lesetext im Kleingrad.</p>
+    <p class="note" style="margin-top:var(--s4)">Kontrast-Hinweise stammen aus den Typo-Tokens (G28): tinte-leise 4.9:1 auf Papier und Gold 3.94:1 tragen nur Meta, Akzent und grössere Grade – nie langen Lesetext im Kleingrad.</p>
   </section>
 
   <!-- ================= Sektionen & Bereiche (die Quelle) ================= -->
@@ -280,7 +280,7 @@
       </div>
     </div>
     <div class="card soft" style="margin-top:var(--s4)">
-      <p class="lese" style="line-height:1.5">Diese Spalte steht im Lesemass <code>min(39ch, 100%)</code>. Sie zeigt, wie lang eine Zeile im linearen Mengentext höchstens werden soll – rund neun Wörter, damit das Auge den Zeilenanfang sicher zurückfindet. Tabellen und Signaletik haben ihr eigenes Mass (G27).</p>
+      <p class="lese" style="line-height:1.5">Diese Spalte steht im Lesemass <code>min(28em, 100%)</code> (<code>--measure</code>). Sie zeigt, wie lang eine Zeile im linearen Mengentext höchstens werden soll – 66&nbsp;Zeichen, rund neun Wörter, damit das Auge den Zeilenanfang sicher zurückfindet. Tabellen und Signaletik haben ihr eigenes Mass (G27).</p>
     </div>
   </section>
 
@@ -505,7 +505,7 @@ function buildHero(tok){
 function buildSwatches(tok,typo){
   const wrap=$("#swatches");
   const order=["blue","gold","gold-deep","ink","muted","soft","paper","bad","ok"];
-  const kontrast={ "muted":"4.35:1 – nur Meta (G28)", "gold-deep":"3.94:1 – nur Akzent (G28)", "ink":"15:1 – trägt Lesetext" };
+  const kontrast={ "muted":"4.9:1 auf Papier – nur Meta (G28)", "gold-deep":"3.94:1 – nur Akzent (G28)", "ink":"15:1 – trägt Lesetext" };
   order.forEach(k=>{
     const c=tok.color[k]; if(!c) return;
     const hex=c.$value;
