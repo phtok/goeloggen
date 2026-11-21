@@ -16,6 +16,16 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 21. November 2026 — Logo-Generator: Schutzraum und Mindestgrösse bei den Hinweisen (Version des Systems unverändert)
+
+Entscheid Inhaber: Vorschlag angenommen und auf der Seite eingearbeitet
+(`apps/logos/`, Abschnitt «Schutzraum und Mindestgrösse», nach den Hinweisen).
+Schutzraum eine halbe Logohöhe (B ÷ 12); Mindestgrössen Logo 120 px, 25 mm
+(Ausnahme 20 mm), Bildmarke allein 24 px, 6 mm (Ausnahme 5 mm). Bilder aus der
+Engine und der Bildmarke, Farben und Grössen nur über Tokens (B02, B03, DS04).
+`build_wochenschrift_logo.py` kennt jetzt `WORT_ABSTAND` (Faktor auf das
+Leerzeichen); Standard 1,0 wie die Website, Stufen zur Auswahl vorgelegt.
+
 ## 21. November 2026 — Wochenschrift-Logo neu, Briefschaften in Hausschrift (Version des Systems unverändert)
 
 - **Token `--wochenschrift`** (`#373949`): Farbe des neuen Wochenschrift-Logos, gemessen an
