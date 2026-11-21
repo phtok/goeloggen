@@ -27,6 +27,11 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 - **Briefschaften-Generator** setzt die Hausschrift (Ruhig, Klar, Deutlich) statt Titillium, auch
   im Export; die Mail-Signatur nennt «Goetheanum Schrift» mit Arial als Ersatz. Der
   Cover-Generator setzt noch Titillium.
+- **404 auf `perspektiven/`:** Zwei Läufe veröffentlichen die Seite zugleich, der Actions-Lauf
+  (`deploy-pages.yml`) und der Branch-Lauf «pages build and deployment» (Jekyll). Der Branch-Lauf
+  las `_config.yml` und schloss `perspektiven/` aus; `.exe` und `.pkg` fehlen ihm, weil sie nur im
+  Release liegen. Wer zuletzt fertig wird, gewinnt. `perspektiven/` ist nicht mehr ausgeschlossen;
+  die Installer-Knöpfe zeigen auf das Release. Dauerhaft: Pages-Quelle auf ‹GitHub Actions› stellen.
 - Vorschlag Schutzraum und Mindestgrössen als Bild: `docs/vorschlag-logo-schutzraum-mindestgroesse.png`.
 
 ## 21. November 2026 — Folgearbeit zu «Joe»: Regelwerk, Druckfarben, Karte, Vorlage (Version des Systems unverändert)

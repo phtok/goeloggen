@@ -26,7 +26,6 @@ exclude:
   - collections/
   - docs/
   - kampagne/
-  - perspektiven/
   - reference/
   - services/
   - todo          # Datei, kein Ordner – darum ohne Schraegstrich
