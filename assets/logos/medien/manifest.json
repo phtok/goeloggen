@@ -395,7 +395,29 @@
  },
  "wochenschrift": {
   "label": "Wochenschrift",
+  "farben": {
+   "farbe": [
+    "Wochenschrift",
+    "#373949"
+   ]
+  },
   "forms": {
+   "weblogo": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   },
    "full": {
     "farbe": [
      "svg",

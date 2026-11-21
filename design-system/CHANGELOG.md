@@ -16,6 +16,24 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 21. November 2026 — Wochenschrift-Logo neu, Briefschaften in Hausschrift (Version des Systems unverändert)
+
+- **Token `--wochenschrift`** (`#373949`): Farbe des neuen Wochenschrift-Logos, gemessen an
+  wochenschrift.xdev.ai (`--logo`); in `tokens.css`, `tokens.json` und dem Drift-Wächter des Schaufensters.
+- **Logo-Generator:** Marke Wochenschrift um die Form «Weblogo» ergänzt (Farbe, Schwarz, Weiss;
+  SVG, PNG, JPG), Eigenfarbe im Farbmuster. Gebaut von `tools/build_wochenschrift_logo.py` aus
+  Bildmarke und Variable wght 595, Versalhöhe 0,7396 H; deckungsgleich mit der Website
+  (Abweichung unter 1 %). Die alten Formen «Voll» und «Kurz» bleiben, bis der Inhaber sie ablöst.
+- **Briefschaften-Generator** setzt die Hausschrift (Ruhig, Klar, Deutlich) statt Titillium, auch
+  im Export; die Mail-Signatur nennt «Goetheanum Schrift» mit Arial als Ersatz. Der
+  Cover-Generator setzt noch Titillium.
+- **404 auf `perspektiven/`:** Zwei Läufe veröffentlichen die Seite zugleich, der Actions-Lauf
+  (`deploy-pages.yml`) und der Branch-Lauf «pages build and deployment» (Jekyll). Der Branch-Lauf
+  las `_config.yml` und schloss `perspektiven/` aus; `.exe` und `.pkg` fehlen ihm, weil sie nur im
+  Release liegen. Wer zuletzt fertig wird, gewinnt. `perspektiven/` ist nicht mehr ausgeschlossen;
+  die Installer-Knöpfe zeigen auf das Release. Dauerhaft: Pages-Quelle auf ‹GitHub Actions› stellen.
+- Vorschlag Schutzraum und Mindestgrössen als Bild: `docs/vorschlag-logo-schutzraum-mindestgroesse.png`.
+
 ## 21. November 2026 — Folgearbeit zu «Joe»: Regelwerk, Druckfarben, Karte, Vorlage (Version des Systems unverändert)
 
 **Entscheid Inhaber (21. 11. 2026): Empfehlungen angenommen.**
