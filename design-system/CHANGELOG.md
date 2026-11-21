@@ -16,6 +16,20 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 21. November 2026 — Rückmeldung «Joe» (Louis Defèche): Anzeige-Reste nachgezogen (Version des Systems unverändert)
+
+**Was.** Sechs Meldungen geprüft. Bestätigt und behoben: `perspektiven/` fehlte im
+Pages-Bündel (`deploy-pages.yml` kopierte nur `apps start design-system assets
+living-connections`) → 404; Schriften-Seite nannte «2.8» in Beschreibung und Fuss
+(aktuell 2.9, Fassung 2.92); Schaufenster zeigte `min(39ch, 100%)` und 4.35:1 für
+`--muted`; Installer-Knöpfe zeigen auf das Release `schrift-installer`, weil die
+`.exe`/`.pkg` aus dem Artefakt live 404 lieferten (Ursache offen). «Leise · Kursiv»
+heisst jetzt «Office-Kursiv (⌘I)» (Style-Linking, keine echte Kursive).
+
+**Nicht geändert, dem Inhaber vorgelegt.** Regelwerk: G10 (`min(39ch,100%)`) und G28
+(tinte-leise 4.35:1, im selben Kanon `$description` 4.9:1) widersprechen CLAUDE.md
+und `tokens.css`; Visitenkarten-Generator setzt Titillium (Gestaltungsentscheid).
+
 ## 19. November 2026 — Favicon im Design-System-Schaufenster (Version des Systems unverändert)
 
 **Was.** Abschnitt ‹Favicon› in `design-system/index.html` nach ‹Sektionen
