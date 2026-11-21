@@ -37,16 +37,6 @@
   </section>
 
   <section class="systeme" id="systeme">
-    <div class="card" id="windows">
-      <h2>Windows</h2>
-      <a class="btn primary" href="https://github.com/phtok/goeloggen/releases/download/schrift-installer/Goetheanum-Schriften-2.9-Windows.exe" download>Für Windows laden</a>
-      <ol class="schritte">
-        <li>Datei öffnen. Fragt der Browser nach: <q>Behalten</q>.</li>
-        <li>Warnt Windows: <q>Weitere Informationen</q>, dann <q>Trotzdem ausführen</q>.</li>
-        <li>Zusätze wählen, <q>Installieren</q>.</li>
-      </ol>
-      <p class="meta">Windows&nbsp;10 und&nbsp;11, ohne Adminrechte.</p>
-    </div>
     <div class="card" id="mac">
       <h2>Mac</h2>
       <a class="btn primary" href="https://github.com/phtok/goeloggen/releases/download/schrift-installer/Goetheanum-Schriften-2.9-Mac.pkg" download>Für Mac laden</a>
@@ -56,6 +46,16 @@
         <li>Zusätze wählen, <q>Installieren</q>, Passwort des Macs eingeben.</li>
       </ol>
       <p class="meta">Für alle Benutzer des Macs, mit Adminrechten.</p>
+    </div>
+    <div class="card" id="windows">
+      <h2>Windows</h2>
+      <a class="btn" href="https://github.com/phtok/goeloggen/releases/download/schrift-installer/Goetheanum-Schriften-2.9-Windows.exe" download>Für Windows laden</a>
+      <ol class="schritte">
+        <li>Datei öffnen. Fragt der Browser nach: <q>Behalten</q>.</li>
+        <li>Warnt Windows: <q>Weitere Informationen</q>, dann <q>Trotzdem ausführen</q>.</li>
+        <li>Zusätze wählen, <q>Installieren</q>.</li>
+      </ol>
+      <p class="meta">Windows&nbsp;10 und&nbsp;11, ohne Adminrechte.</p>
     </div>
   </section>
 
@@ -84,16 +84,18 @@
 </footer>
 
 <script>
-  // Erkanntes System zuerst und als Hauptknopf
+  // Mac steht zuerst; wer Windows nutzt, bekommt Windows zuerst und als Hauptknopf
   (function () {
     var p = ((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '').toLowerCase();
     var ua = navigator.userAgent.toLowerCase();
     var mac = p.indexOf('mac') > -1 && !('ontouchend' in document);
     var win = p.indexOf('win') > -1 || ua.indexOf('windows') > -1;
     if (!mac && !win) return;
-    var eigen = document.getElementById(mac ? 'mac' : 'windows');
-    var anders = document.getElementById(mac ? 'windows' : 'mac');
+    if (mac) return;   // Mac steht ohnehin zuerst und als Hauptknopf
+    var eigen = document.getElementById('windows');
+    var anders = document.getElementById('mac');
     eigen.parentNode.insertBefore(eigen, eigen.parentNode.firstChild);
+    eigen.querySelector('.btn').classList.add('primary');
     anders.querySelector('.btn').classList.remove('primary');
   })();
 </script>

@@ -16,6 +16,18 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 21. November 2026 — Logos als feste Dateien, Mac zuerst, Cover-Generator geparkt (Version des Systems unverändert)
+
+- **`logos.json`:** `tools/build-logos-static.mjs` rendert im Deploy (Chromium) alle 38 Einheiten
+  in Form, Sprache und Farbe als SVG nach `assets/logos/alle/` (1254 Dateien, nicht im Repo) und
+  schreibt die Liste `assets/logos/logos.json`. Ein Fehler hält den Deploy nicht auf
+  (`continue-on-error`). Die Sperre für KI-Crawler in `robots.txt` bleibt. Hinweis für
+  Entwickler auf der Logo-Seite.
+- **Schriften installieren:** Mac steht zuerst und trägt den Hauptknopf; wer Windows nutzt,
+  bekommt Windows zuerst.
+- **Cover-Generator** auf «geparkt» (Redesign aller Video-Cover läuft; Entscheid Inhaber).
+- **my.goetheanum-Vergleichsseite:** Mitte-Fassung entfernt, Sprachtafel nur noch ‹Icon vorn›.
+
 ## 21. November 2026 — Medien im Logo-Generator: Wochenschrift (Wortabstand, Kreis), my.goetheanum; tote Verweise (Version des Systems unverändert)
 
 - **Wochenschrift:** Wortabstand auf 75 % des Leerzeichens (Lücke 0,33 Versalhöhen, Entscheid

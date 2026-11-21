@@ -74,6 +74,22 @@ jobs:
 
           touch _site/.nojekyll
 
+      # Alle Sektions-, Bereichs- und Allgemein-Logos als feste SVG-Dateien samt Liste
+      # (assets/logos/logos.json), damit Entwickler sie per URL holen können. Ein Fehler hier
+      # hält den Deploy nicht auf.
+      - name: Alle Logos als Dateien erzeugen
+        continue-on-error: true
+        working-directory: tools
+        run: |
+          npm ci --no-audit --no-fund
+          chrome="$(command -v google-chrome || true)"
+          if [ -z "$chrome" ]; then
+            npx playwright install --with-deps chromium
+          else
+            export CHROMIUM_PATH="$chrome"
+          fi
+          node build-logos-static.mjs "$GITHUB_WORKSPACE/_site/assets/logos/alle"
+
       - name: Setup-Apps der Schriften aus dem Release holen
         env:
           GH_TOKEN: ${{ github.token }}

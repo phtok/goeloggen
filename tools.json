@@ -414,13 +414,13 @@
     },
     {
       "slug": "cover",
-      "cat": "generatoren",
-      "status": "entwurf",
+      "cat": "geparkt",
+      "status": "geparkt",
       "tag": "Goetheanum TV",
       "title": "Cover-Generator",
       "short": "Cover",
       "href": "apps/cover-generator/",
-      "desc": "Einheitliche Cover-Bilder für Goetheanum-TV-Beiträge – Titel eintragen, Bild laden."
+      "desc": "Cover-Bilder für Goetheanum-TV-Beiträge. Nicht mehr aktuell: Ein Redesign aller Video-Cover ist im Gange; das Werkzeug kommt nur eventuell zurück in die Entwicklung (Entscheid Auftraggeber, 21. November 2026). Erreichbar zum Nachschlagen, nicht gepflegt."
     },
     {
       "slug": "briefschaften",
