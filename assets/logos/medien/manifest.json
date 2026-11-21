@@ -418,6 +418,22 @@
      "png"
     ]
    },
+   "point-einzeilig": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
+    ]
+   },
    "full": {
     "farbe": [
      "svg",
@@ -466,6 +482,27 @@
      "png",
      "jpg",
      "pdf"
+    ]
+   }
+  }
+ },
+ "my-goetheanum": {
+  "label": "my.goetheanum",
+  "forms": {
+   "kreis-vorn": {
+    "farbe": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "schwarz": [
+     "svg",
+     "png",
+     "jpg"
+    ],
+    "weiss": [
+     "svg",
+     "png"
     ]
    }
   }

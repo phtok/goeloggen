@@ -37,3 +37,7 @@ Weiss im Dunkel. Entscheid des Inhabers: Token `--wochenschrift` (`#373949`) in
 `design-system/tokens.css` und `tokens.json`; neue Form «Weblogo» im Logo-Generator
 (`assets/logos/medien/wochenschrift/weblogo/`, gebaut von `tools/build_wochenschrift_logo.py`).
 Die alten Formen «Voll» und «Kurz» tragen noch `#333548`.
+
+Nachtrag 2: Wortabstand 75 % (Lücke 0,33 Versalhöhen) und die Form «Kreis · einzeilig»
+sind entschieden und gebaut. Der Faktor steht in `tools/build_wochenschrift_logo.py`
+(`WORT_ABSTAND`). Für den Print bleiben die älteren Formen «Voll» und «Kurz».
