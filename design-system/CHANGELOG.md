@@ -21,8 +21,9 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 - **Wochenschrift:** Wortabstand auf 75 % des Leerzeichens (Lücke 0,33 Versalhöhen, Entscheid
   Inhaber); neue Form «Kreis · einzeilig» (Kreis 1,776 Versalhöhen, Abstand 0,467), Mass der
   Vorlage des Inhabers; `tools/build_wochenschrift_logo.py` baut beide Formen.
-- **my.goetheanum** neu unter «Medien»: «Kreis vorn» und «Kreis Mitte» in Farbe, Schwarz,
-  Weiss (SVG, PNG, JPG), aus den gewählten Fassungen in `assets/logos/`.
+- **my.goetheanum** neu unter «Medien»: «Kreis vorn» in Farbe, Schwarz, Weiss (SVG, PNG, JPG),
+  aus der gewählten Fassung in `assets/logos/`. Die Fassung mit dem Kreis zwischen den
+  Wörtern entfällt (Entscheid Inhaber 21. 11. 2026).
 - **Seitenquelle:** Pages läuft nur noch über den Actions-Lauf. Seitdem sind die
   Schrift-Installer und `perspektiven/` unter den Seitenpfaden erreichbar.
 - **Tote Verweise** auf nicht veröffentlichte Ordner: Links auf `docs/*.md` (Abo-Motive,

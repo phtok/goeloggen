@@ -504,22 +504,6 @@
      "svg",
      "png"
     ]
-   },
-   "kreis-mitte": {
-    "farbe": [
-     "svg",
-     "png",
-     "jpg"
-    ],
-    "schwarz": [
-     "svg",
-     "png",
-     "jpg"
-    ],
-    "weiss": [
-     "svg",
-     "png"
-    ]
    }
   }
  }
