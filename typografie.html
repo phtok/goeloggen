@@ -44,12 +44,12 @@
   }
   h2{margin:4px 0 14px;text-wrap:balance}
   h3{font-family:"G Laut";font-weight:400;font-size:17px;margin:22px 0 6px}
-  p{max-width:39ch;text-wrap:pretty;orphans:2;widows:2}
+  p{max-width:28em;text-wrap:pretty;orphans:2;widows:2}
   p.dim{color:var(--muted)}
   .leise{font-family:"G Leise"}.deutlich{font-family:"G Deutlich"}.laut{font-family:"G Laut"}
   /* Farbe/Grösse kommen aus der kanonischen .note-Rolle (base.css) – DS04 */
   .note{display:flex;gap:10px;align-items:baseline;border-left:2px solid var(--gold);background:var(--soft);
-        padding:10px 14px;border-radius:0 10px 10px 0;margin:14px 0;max-width:39ch}
+        padding:10px 14px;border-radius:0 10px 10px 0;margin:14px 0;max-width:28em}
   .note .rid{font-size:var(--t-small);color:var(--gold-ink);white-space:nowrap}
   .ex{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;max-width:640px}
   @media(max-width:560px){.ex{grid-template-columns:1fr}}
@@ -94,7 +94,7 @@
     <p>Der Fliesstext steht in Klar. Betont wird mit <span class="laut">Laut</span> – im Office einfach <span class="code">Cmd+B</span>. Der stille Kontrapunkt ist <span class="leise">Leise</span> – Bildlegenden, Zitate, Nebenstimmen, im Office <span class="code">Cmd+I</span>. Nie zwei Ämter auf einem Wort.</p>
     <div class="note"><span class="rid">S01</span>griff. Standardgriff: Lesetext in Klar – auch das Minimum für kleine Marginalien und Fussnoten. Titel in <span class="deutlich">Deutlich</span> (entschiedene Ausnahme für die Titelei), Betonung in Laut, Nebenstimmen in Leise – nie kleiner als der Lesetext. Eine Familie trägt alles – ausser dort, wo sie an ihre Grenze kommt.</div>
     <h3>Wo die Schrift endet</h3>
-    <p>Die Goetheanum Schrift ist eine Werk- und Auszeichnungs-Grotesk, kein Buchsatz. Drei Grenzen sind zu kennen: Sie führt <span class="laut">keine</span> echte Kursive – Leise ist ein aufrechter Gegenton, kein laufender Schreibduktus. Sie führt <span class="laut">mehrere</span> Ziffernsätze (proportional, tabellarisch, Kurzziffern) – aber keine echten Mediävalziffern mit Ranging für lange Zahlentexte; nicht durch Verkleinern vortäuschen. Und sie deckt <span class="laut">Latein</span> ab – kein Griechisch, kein Kyrillisch, kein Arabisch. Für langen, immersiven Mengensatz (Begleitschrift <span class="laut">Source Sans 3</span>), für fremde Schriftsysteme und für Festbreiten-Code (hier im <span class="code">Monospace</span>) greift man bewusst nach aussen.</p>
+    <p>Die Goetheanum Schrift ist eine Werk- und Auszeichnungs-Grotesk, kein Buchsatz. Drei Grenzen sind zu kennen: Sie führt <span class="laut">keine</span> echte Kursive – Leise ist ein aufrechter Gegenton, kein laufender Schreibduktus. Sie führt <span class="laut">mehrere</span> Ziffernsätze (proportional, tabellarisch, Kurzziffern) – aber keine echten Mediävalziffern mit Ranging für lange Zahlentexte; nicht durch Verkleinern vortäuschen. Und sie deckt <span class="laut">Latein</span> ab – kein Griechisch, kein Kyrillisch, kein Arabisch. Für langen, immersiven Mengensatz (Begleitschrift <span class="laut">Source Sans 3</span>), für fremde Schriftsysteme und für Festbreiten-Code (hier im <span class="code">Monospace</span>) greift man bewusst nach aussen – im Druck wie im Web: ab dem zweiten Absatz am Stück läuft der Mengentext in Source Sans 3.</p>
     <div class="ex">
       <div class="no"><div class="t">so nicht</div>Der Vortrag ist <u><b>WICHTIG</b></u> und beginnt pünktlich.</div>
       <div class="yes"><div class="t">so</div>Der Vortrag ist <span class="laut">wichtig</span> und beginnt pünktlich.</div>
@@ -114,8 +114,8 @@
     <p>Lesbarkeit ist ein Gleichgewicht aus vier Ecken: Schriftwahl, Zeilenlänge, Zeilenabstand und Umraum. Keine Ecke lässt sich allein optimieren – längere Zeilen verlangen mehr Durchschuss, eine offene Schrift wie die Goetheanum Klar verlangt mehr Umraum. Jede folgende Regel zieht an einer Ecke; gut ist der Satz erst, wenn alle vier in Balance stehen.</p>
     <div class="note"><span class="rid">G09</span>prinzip. Ändert sich eine Ecke, müssen die anderen nachgezogen werden. Lesekomfort ist die Summe, nicht ein Einzelwert.</div>
     <h3>Zeilenlänge</h3>
-    <p>Angenehm sind 45–75 Zeichen je Zeile, ideal etwa 67 – als Faustregel: neun deutsche Wörter. Diese Spalte misst 39ch – das sind in dieser schmalen Schrift rund 66 Zeichen, etwa neun Wörter (empirisch gezählt, nicht gerechnet). Der Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit; Fliesstext 1.5–1.6, nie unter 1.5 (B04).</p>
-    <div class="note"><span class="rid">G10</span>grenze. Das Mass ist hart: <span class="code">min(39ch, 100%)</span> – die Einheit ch misst die ‹0›, Prosa läuft schmaler: 39ch ergeben in dieser schmalen Schrift ≈ 66 echte Zeichen (gezählt: 46ch waren 78). Ohne Grenze laufen breite Fenster auf 100 Zeichen davon.</div>
+    <p>Angenehm sind 45–75 Zeichen je Zeile, ideal etwa 67 – als Faustregel: neun deutsche Wörter. Diese Spalte misst 28em – das sind in der Hausschrift rund 66 Zeichen, etwa neun Wörter (gezählt, nicht gerechnet). Der Zeilenabstand wächst mit der Zeilenlänge: schmal knapp, breit weit; Fliesstext 1.5–1.6, nie unter 1.5 (B04).</p>
+    <div class="note"><span class="rid">G10</span>grenze. Das Mass ist hart: <span class="code">min(28em, 100%)</span> in der Hausschrift, <span class="code">29.5em</span> in Source Sans 3 – em statt ch, denn ch misst die breite ‹0›: 62ch ergeben 87 Zeichen. Ohne Grenze laufen breite Fenster auf 100 Zeichen davon.</div>
     <h3>Drei Lesesituationen</h3>
     <p>Das Mass von 66 Zeichen gilt der <span class="laut">Lesetypografie</span> – dem ruhigen, linearen Lesen von Mengentext. Daneben stehen zwei eigene Situationen mit eigenem Mass: <span class="laut">Konsultation</span> (Tabelle, Formular, Verzeichnis – man springt und vergleicht, die Zeile darf breiter laufen) und <span class="laut">Schau</span> (Signaletik, Plakat – aus Distanz gelesen, in Laut oder im Variable Font). Die Tabellen dieser Seite sind Konsultation und überschreiten das Lese-Mass bewusst.</p>
     <div class="note"><span class="rid">G27</span>geltung. Das harte Mass bindet den Lesesatz. Konsultation und Schau haben ihr eigenes Gleichgewicht – das magische Viereck wird je Situation neu gestimmt.</div>

@@ -26,38 +26,26 @@
       font-display: swap;
     }
 
+    /* Hausschrift v2.9 für die Karte: Ruhig (300), Klar (400), Deutlich (600) */
     @font-face {
-      font-family: "Titillium-Upright";
-      src:
-        url("../../assets/fonts/Titillium-LightUpright.otf") format("opentype"),
-        local("Titillium Light Upright"),
-        local("Titillium-LightUpright"),
-        url("https://c.webfontfree.com/Code/WOFF2/6e/08/6e08826f6cea78dcf5936116cf1200f2.woff2") format("woff2");
+      font-family: "Goetheanum-Karte";
+      src: url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.9-Ruhig.woff2") format("woff2");
       font-weight: 300;
       font-style: normal;
       font-display: swap;
     }
 
     @font-face {
-      font-family: "Titillium-Upright";
-      src:
-        url("../../assets/fonts/Titillium-RegularUpright.otf") format("opentype"),
-        local("Titillium Upright"),
-        local("Titillium Regular Upright"),
-        local("Titillium-RegularUpright"),
-        url("https://c.webfontfree.com/Code/WOFF2/7d/c7/7dc76275936d0fce6ed97e00d21d0dfe.woff2") format("woff2");
+      font-family: "Goetheanum-Karte";
+      src: url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.9-Klar.woff2") format("woff2");
       font-weight: 400;
       font-style: normal;
       font-display: swap;
     }
 
     @font-face {
-      font-family: "Titillium-Upright";
-      src:
-        url("../../assets/fonts/Titillium-SemiboldUpright.otf") format("opentype"),
-        local("Titillium Semibold Upright"),
-        local("Titillium-SemiboldUpright"),
-        url("https://c.webfontfree.com/Code/WOFF2/26/16/26163f5a492c5d6c65f89d58ef7e495f.woff2") format("woff2");
+      font-family: "Goetheanum-Karte";
+      src: url("../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.9-Deutlich.woff2") format("woff2");
       font-weight: 600;
       font-style: normal;
       font-display: swap;
@@ -498,7 +486,7 @@
       box-shadow: 0 0.45px 2px rgba(23, 28, 33, 0.22);
       border-radius: 2px;
       color: var(--card-text);
-      font-family: "Titillium-Upright", sans-serif;
+      font-family: "Goetheanum-Karte", sans-serif;
       text-rendering: geometricPrecision;
       -webkit-font-smoothing: antialiased;
     }
@@ -747,7 +735,7 @@
         </div>
         <div class="preview-actions">
           <button type="button" class="btn" id="btnPdf" data-tip="Einzelkarte als Vektor-PDF ohne Schnittmarken. Für Marken den Druckbogen verwenden.">PDF</button>
-          <button type="button" class="btn" id="btnSvg" data-tip="Vektor-SVG. Falls verfügbar mit Textpfaden, sonst mit Titillium-Schriftdefinition.">SVG</button>
+          <button type="button" class="btn" id="btnSvg" data-tip="Vektor-SVG. Falls verfügbar mit Textpfaden, sonst mit Schriftdefinition der Goetheanum Schrift.">SVG</button>
           <button type="button" class="btn" id="btnPng" data-tip="Rasterbild als Notlösung, Export in 600 dpi für hohe Auflösung.">PNG</button>
           <span class="preview-actions-break" aria-hidden="true"></span>
           <button type="button" class="btn primary" id="btnSheetPdf" data-tip="A4-Druckbogen als Vektor-PDF mit maximaler Anzahl Karten; optional mit Schnittmarken.">Druckbogen</button>
@@ -792,7 +780,7 @@
     </div>
   </section>
 
-  <script src="../../assets/titillium-outline-glyphs.js"></script>
+  <script src="../../assets/goetheanum-outline-glyphs.js"></script>
   <script src="../../assets/gci-glyphs.js"></script>
   <script src="../../assets/vk-email-config.js"></script>
   <script src="../../assets/goe-orgs.js"></script>
@@ -1224,12 +1212,12 @@
 
       const GCI_GLYPHS = window.GCI_GLYPHS || {};
       const GCI_FONT_UPM = window.GCI_FONT_UPM || 1000;
-      const TITILLIUM_OUTLINE_PAYLOAD = window.TITILLIUM_OUTLINE_GLYPHS || {};
-      const TITILLIUM_OUTLINE_GLYPHS = TITILLIUM_OUTLINE_PAYLOAD.fonts || TITILLIUM_OUTLINE_PAYLOAD;
-      const TITILLIUM_OUTLINE_UPM = window.TITILLIUM_OUTLINE_UPM || TITILLIUM_OUTLINE_PAYLOAD.upm || 1000;
-      const TITILLIUM_OUTLINE_READY = Boolean(
-        TITILLIUM_OUTLINE_GLYPHS &&
-        Object.keys(TITILLIUM_OUTLINE_GLYPHS).length
+      const GOETHEANUM_OUTLINE_PAYLOAD = window.GOETHEANUM_OUTLINE_GLYPHS || {};
+      const GOETHEANUM_OUTLINE_GLYPHS = GOETHEANUM_OUTLINE_PAYLOAD.fonts || GOETHEANUM_OUTLINE_PAYLOAD;
+      const GOETHEANUM_OUTLINE_UPM = window.GOETHEANUM_OUTLINE_UPM || GOETHEANUM_OUTLINE_PAYLOAD.upm || 1000;
+      const GOETHEANUM_OUTLINE_READY = Boolean(
+        GOETHEANUM_OUTLINE_GLYPHS &&
+        Object.keys(GOETHEANUM_OUTLINE_GLYPHS).length
       );
 
       const UI_I18N = {
@@ -1254,7 +1242,7 @@
           btn_png: "PNG",
           btn_sheet: "Druckbogen",
           tip_pdf: "Einzelkarte als Vektor-PDF ohne Schnittmarken. Für Marken den Druckbogen verwenden.",
-          tip_svg: "Vektor-SVG. Falls verfügbar mit Textpfaden, sonst mit Titillium-Schriftdefinition.",
+          tip_svg: "Vektor-SVG. Falls verfügbar mit Textpfaden, sonst mit Schriftdefinition der Goetheanum Schrift.",
           tip_png: "Rasterbild als Notlösung, Export in 600 dpi für hohe Auflösung.",
           tip_sheet: "A4-Druckbogen als Vektor-PDF mit maximaler Anzahl Karten; optional mit Schnittmarken.",
           owner_mode_on: "Schnell-Download aktiv",
@@ -1298,7 +1286,7 @@
           btn_png: "PNG",
           btn_sheet: "Print Sheet",
           tip_pdf: "Single card as vector PDF without crop marks. Use Print Sheet for crop marks.",
-          tip_svg: "Vector SVG. If available with text paths, otherwise with Titillium font definition.",
+          tip_svg: "Vector SVG. If available with text paths, otherwise with Goetheanum Schrift font definition.",
           tip_png: "Raster fallback export at 600 dpi for high resolution.",
           tip_sheet: "A4 print sheet as vector PDF with maximum number of cards; crop marks optional.",
           owner_mode_on: "Quick download active",
@@ -1512,7 +1500,7 @@
       async function createSvgBlob(model) {
         let svg = "";
         try {
-          const outlineFonts = await ensureTitilliumOutlineFonts();
+          const outlineFonts = await ensureKartenOutlineFonts();
           svg = buildSvg(model, model.includeCrop, {
             textAsPaths: true,
             outlineFonts: outlineFonts
@@ -1702,7 +1690,7 @@
       function outlineGlyphAdvance(glyphSet, char, fontSize) {
         const glyph = glyphSet ? glyphSet[char] : null;
         if (glyph && typeof glyph.width === "number") {
-          return glyph.width * (fontSize / TITILLIUM_OUTLINE_UPM);
+          return glyph.width * (fontSize / GOETHEANUM_OUTLINE_UPM);
         }
         return fontSize * 0.36;
       }
@@ -1726,7 +1714,7 @@
           return "";
         }
 
-        const scale = fontSize / TITILLIUM_OUTLINE_UPM;
+        const scale = fontSize / GOETHEANUM_OUTLINE_UPM;
         const advance = measureOutlineTextWidth(raw, glyphSet, fontSize);
 
         let startX = x;
@@ -1779,26 +1767,27 @@
 
         const ls = letterSpacing !== null ? ' letter-spacing="' + letterSpacing + '"' : "";
         return (
-          '<text x="' + params.x + '" y="' + params.y + '" text-anchor="' + anchor + '" fill="' + fill + '" font-family="Titillium-Upright, sans-serif" font-size="' + params.fontSize + '" font-weight="' + (params.fontWeight || 400) + '"' + ls + ">" +
+          '<text x="' + params.x + '" y="' + params.y + '" text-anchor="' + anchor + '" fill="' + fill + '" font-family="Goetheanum-Karte, sans-serif" font-size="' + params.fontSize + '" font-weight="' + (params.fontWeight || 400) + '"' + ls + ">" +
             esc(line) +
           "</text>"
         );
       }
 
-      function titilliumSvgFontDefs() {
+      function kartenSvgFontDefs() {
+        const w = "../../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.9-";
         const style =
-          "@font-face{font-family:'Titillium-Upright';font-style:normal;font-weight:300;src:url('../../assets/fonts/Titillium-LightUpright.otf') format('opentype');}" +
-          "@font-face{font-family:'Titillium-Upright';font-style:normal;font-weight:400;src:url('../../assets/fonts/Titillium-RegularUpright.otf') format('opentype');}" +
-          "@font-face{font-family:'Titillium-Upright';font-style:normal;font-weight:600;src:url('../../assets/fonts/Titillium-SemiboldUpright.otf') format('opentype');}" +
-          "text{font-family:'Titillium-Upright',sans-serif;}";
+          "@font-face{font-family:'Goetheanum-Karte';font-style:normal;font-weight:300;src:url('" + w + "Ruhig.woff2') format('woff2');}" +
+          "@font-face{font-family:'Goetheanum-Karte';font-style:normal;font-weight:400;src:url('" + w + "Klar.woff2') format('woff2');}" +
+          "@font-face{font-family:'Goetheanum-Karte';font-style:normal;font-weight:600;src:url('" + w + "Deutlich.woff2') format('woff2');}" +
+          "text{font-family:'Goetheanum-Karte',sans-serif;}";
         return "<defs><style><![CDATA[" + style + "]]></style></defs>";
       }
 
-      async function ensureTitilliumOutlineFonts() {
-        if (!TITILLIUM_OUTLINE_READY) {
-          throw new Error("Titillium-Pfaddaten fehlen.");
+      async function ensureKartenOutlineFonts() {
+        if (!GOETHEANUM_OUTLINE_READY) {
+          throw new Error("Pfaddaten der Goetheanum Schrift fehlen.");
         }
-        return TITILLIUM_OUTLINE_GLYPHS;
+        return GOETHEANUM_OUTLINE_GLYPHS;
       }
 
       function glyphAdvance(char, fontSize) {
@@ -2533,7 +2522,7 @@
         return (
           '<?xml version="1.0" encoding="UTF-8"?>\n' +
           '<svg xmlns="http://www.w3.org/2000/svg" width="' + (totalW / unit) + 'mm" height="' + (totalH / unit) + 'mm" viewBox="0 0 ' + totalW + " " + totalH + '">' +
-            titilliumSvgFontDefs() +
+            kartenSvgFontDefs() +
             '<rect x="' + ox + '" y="' + oy + '" width="' + cardW + '" height="' + cardH + '" fill="' + esc(model.bgColor) + '" />' +
             motifSvg() +
             textParts +
@@ -2617,15 +2606,15 @@
         });
       }
 
-      async function ensureTitilliumReady() {
+      async function ensureKartenFontsReady() {
         if (!document.fonts || !document.fonts.load) {
           return;
         }
         try {
           await Promise.all([
-            document.fonts.load('300 16px "Titillium-Upright"'),
-            document.fonts.load('400 16px "Titillium-Upright"'),
-            document.fonts.load('600 16px "Titillium-Upright"')
+            document.fonts.load('300 16px "Goetheanum-Karte"'),
+            document.fonts.load('400 16px "Goetheanum-Karte"'),
+            document.fonts.load('600 16px "Goetheanum-Karte"')
           ]);
         } catch (err) {
           // no-op
@@ -2684,7 +2673,7 @@
         ctx.textAlign = "right";
         ctx.textBaseline = "alphabetic";
 
-        ctx.font = "600 " + (layout.nameSizeMm * pxPerMm).toFixed(3) + 'px "Titillium-Upright", sans-serif';
+        ctx.font = "600 " + (layout.nameSizeMm * pxPerMm).toFixed(3) + 'px "Goetheanum-Karte", sans-serif';
         ctx.fillText(name, nameRightX, oy + (layout.nameBaselineMm * pxPerMm));
 
         if (hasSplitRoleBlocks) {
@@ -2692,14 +2681,14 @@
           roleLinesDe.forEach(function (line) {
             const y = oy + ((layout.rolesBaselineMm + (roleIndex * layout.lineLeadMm)) * pxPerMm);
             const w = roleWeightForLine(layout.roleWeight, false);
-            ctx.font = w + " " + (layout.roleSizeMm * pxPerMm).toFixed(3) + 'px "Titillium-Upright", sans-serif';
+            ctx.font = w + " " + (layout.roleSizeMm * pxPerMm).toFixed(3) + 'px "Goetheanum-Karte", sans-serif';
             ctx.fillText(line, bodyRightX, y);
             roleIndex += 1;
           });
           roleLinesEn.forEach(function (line) {
             const y = oy + ((layout.rolesBaselineMm + (roleIndex * layout.lineLeadMm)) * pxPerMm);
             const w = roleWeightForLine(layout.roleWeight, true);
-            ctx.font = w + " " + (layout.roleSizeMm * pxPerMm).toFixed(3) + 'px "Titillium-Upright", sans-serif';
+            ctx.font = w + " " + (layout.roleSizeMm * pxPerMm).toFixed(3) + 'px "Goetheanum-Karte", sans-serif';
             ctx.fillText(line, bodyRightX, y);
             roleIndex += 1;
           });
@@ -2707,12 +2696,12 @@
           roleLines.forEach(function (line, index) {
             const y = oy + ((layout.rolesBaselineMm + (index * layout.lineLeadMm)) * pxPerMm);
             const w = roleWeightForLine(layout.roleWeight, false);
-            ctx.font = w + " " + (layout.roleSizeMm * pxPerMm).toFixed(3) + 'px "Titillium-Upright", sans-serif';
+            ctx.font = w + " " + (layout.roleSizeMm * pxPerMm).toFixed(3) + 'px "Goetheanum-Karte", sans-serif';
             ctx.fillText(line, bodyRightX, y);
           });
         }
 
-        ctx.font = "400 " + (layout.contactSizeMm * pxPerMm).toFixed(3) + 'px "Titillium-Upright", sans-serif';
+        ctx.font = "400 " + (layout.contactSizeMm * pxPerMm).toFixed(3) + 'px "Goetheanum-Karte", sans-serif';
         contactLines.forEach(function (line, index) {
           const y = oy + ((layout.contactBaselineMm + (index * layout.lineLeadMm)) * pxPerMm);
           ctx.fillText(line, bodyRightX, y);
@@ -2720,7 +2709,7 @@
 
         if (!roleLines.length && !contactLines.length) {
           const org = ORG_DEFS[model.schema];
-          ctx.font = layout.roleWeight + " " + (layout.roleSizeMm * pxPerMm).toFixed(3) + 'px "Titillium-Upright", sans-serif';
+          ctx.font = layout.roleWeight + " " + (layout.roleSizeMm * pxPerMm).toFixed(3) + 'px "Goetheanum-Karte", sans-serif';
           ctx.fillText(org ? org.name : "", bodyRightX, oy + (layout.rolesBaselineMm * pxPerMm));
         }
         ctx.restore();
@@ -2765,7 +2754,7 @@
         const cardWpx = dims.widthMm * pxPerMm;
         const cardHpx = dims.heightMm * pxPerMm;
 
-        await ensureTitilliumReady();
+        await ensureKartenFontsReady();
         const canvas = document.createElement("canvas");
         canvas.width = size.widthPx;
         canvas.height = size.heightPx;
@@ -3080,7 +3069,7 @@
         const dims = cardDimensionsMm(pdfModel);
         try {
           await ensureVectorPdfLibs();
-          const outlineFonts = await ensureTitilliumOutlineFonts();
+          const outlineFonts = await ensureKartenOutlineFonts();
           const JsPdf = window.jspdf.jsPDF;
           const doc = new JsPdf({
             orientation: dims.widthMm > dims.heightMm ? "landscape" : "portrait",
@@ -3267,7 +3256,7 @@
         const base = buildExportBaseName(tileModel);
         try {
           await ensureVectorPdfLibs();
-          const outlineFonts = await ensureTitilliumOutlineFonts();
+          const outlineFonts = await ensureKartenOutlineFonts();
           const JsPdf = window.jspdf.jsPDF;
           const doc = new JsPdf({
             orientation: "portrait",

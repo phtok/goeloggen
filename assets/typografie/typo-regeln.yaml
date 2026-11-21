@@ -98,7 +98,7 @@
 
 # ––– Urteils-Regeln (für Sprachmodelle; nicht regex-sicher) –––
 - id: S01-schriftwahl
-  regel: Lesetext in Klar (440), zugleich Minimum für kleine Marginalien und Fussnoten; Titel/Header in Deutlich (580, entschiedene Ausnahme für die Titelei); Inline-Betonung und Office-Fett in Laut (680); Nebenstimmen, Legenden, Zitate in Leise (265, nie kleiner als der Lesetext). Nach aussen nur bei Festbreiten-Code (Monospace), fremden Schriftsystemen (Griechisch, Kyrillisch, Arabisch) oder langem immersivem Mengensatz (Begleitschrift Source Sans 3). Keine echte Kursive; mehrere Ziffernsätze (proportional, tabellarisch, Kurzziffern), aber keine Mediävalziffern vortäuschen.
+  regel: Lesetext in Klar (440), zugleich Minimum für kleine Marginalien und Fussnoten; Titel/Header in Deutlich (580, entschiedene Ausnahme für die Titelei); Inline-Betonung und Office-Fett in Laut (680); Nebenstimmen, Legenden, Zitate in Leise (265, nie kleiner als der Lesetext). Nach aussen nur bei Festbreiten-Code (Monospace), fremden Schriftsystemen (Griechisch, Kyrillisch, Arabisch) oder langem immersivem Mengensatz (Begleitschrift Source Sans 3). Gilt auch im Druck (Wochenschrift, Broschüren, Beipackzettel) – Mengentext ab dem zweiten Absatz in Source Sans 3, Mass in Zeichen (Entscheid 21. 11. 2026). Keine echte Kursive; mehrere Ziffernsätze (proportional, tabellarisch, Kurzziffern), aber keine Mediävalziffern vortäuschen.
   pruefung: lm
   schwere: fehler
 - id: G01-einfachauszeichnung
@@ -122,7 +122,7 @@
   pruefung: lm
   schwere: empfehlung
 - id: G10-zeilenlaenge
-  regel: 45–75 Zeichen je Zeile, Ziel ~66 / neun Wörter. CSS min(39ch,100%); ch misst die 0, schmale Schrift läuft enger (46ch = 78 gezählt). Gilt der Lesetypografie; Tabellen/Signaletik haben eigenes Mass.
+  regel: 45–75 Zeichen je Zeile, Ziel ~66 / neun Wörter. CSS min(var(--measure),100%) – 28em in der Hausschrift, 29.5em in Source Sans 3; em statt ch, denn ch misst die breite Null (62ch = 87 Zeichen). Gilt der Lesetypografie; Tabellen/Signaletik haben eigenes Mass.
   pruefung: lm
   schwere: empfehlung
 - id: G11-zeilenabstand
@@ -138,6 +138,6 @@
   pruefung: lm
   schwere: empfehlung
 - id: G28-kontrast
-  regel: Lesetext mindestens WCAG AA (4.5:1). tinte-leise (4.35:1) und Gold (3.94:1) nur für Meta, Akzent, grössere Grade. Sprache auszeichnen, Silbentrennung aktiv, keine verwaisten Zeilen.
+  regel: Lesetext mindestens WCAG AA (4.5:1). tinte-leise (4.9:1 auf Papier) und Gold (3.94:1) nur für Meta, Akzent, grössere Grade. Sprache auszeichnen, Silbentrennung aktiv, keine verwaisten Zeilen.
   pruefung: lm
   schwere: empfehlung
