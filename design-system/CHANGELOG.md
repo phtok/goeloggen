@@ -16,6 +16,28 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 21. November 2026 — Folgearbeit zu «Joe»: Regelwerk, Druckfarben, Karte, Vorlage (Version des Systems unverändert)
+
+**Entscheid Inhaber (21. 11. 2026): Empfehlungen angenommen.**
+
+- **G10, G28** im Kanon, in `typo-regeln.yaml` und `typografie.html` auf `--measure`
+  (28em, 29.5em in Source Sans 3) und tinte-leise 4.9:1 gebracht; `typo-sync` grün.
+- **S01 gilt auch im Druck:** Mengentext ab dem zweiten Absatz in Source Sans 3
+  (Wochenschrift, Broschüren, Beipackzettel), Mass in Zeichen.
+- **Druckfarben:** `design-system/farben-druck.json` (CMYK, Pantone) und Abschnitt
+  «Druckfarben» im Schaufenster. Amtliche Werte aus dem früheren Auftritt
+  (https://grafik.goetheanum.ch/farben); Markenblau #0061a9, Gold und Gesellschaft
+  sind Näherungen ohne amtliches Gegenstück. Ersetzt den Vermerk vom Juni
+  «Pantone entfernt».
+- **Visitenkarten-Generator** setzt die Hausschrift (Ruhig, Klar, Deutlich statt
+  Titillium Light, Regular, Semibold); Pfaddaten für den Export aus
+  `tools/build_karten_outline.py`. Der Briefschaften-Generator setzt noch Titillium.
+- **PowerPoint-Vorlage:** Blau 005EB8 → 0061A9, Gold EBB565 → D7AB68, Grau 6B7480 → 6B7177.
+- **Fehler behoben:** `buildSwatches` im Schaufenster brach seit #690 ab
+  (`varianten is not defined`) und riss alle folgenden Abschnitte mit.
+- **Vorschläge, nicht beschlossen:** `docs/vorschlag-logo-schutzraum-mindestgroesse.md`;
+  Befund `docs/befunde/wochenschrift-farbe.md` (#333548 ist nicht belegt, #373949 ist es).
+
 ## 21. November 2026 — Rückmeldung «Joe» (Louis Defèche): Anzeige-Reste nachgezogen (Version des Systems unverändert)
 
 **Was.** Sechs Meldungen geprüft. Bestätigt und behoben: `perspektiven/` fehlte im

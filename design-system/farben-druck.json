@@ -1,0 +1,215 @@
+{
+ "$beschreibung": "Druckwerte der Hausfarben: CMYK und Pantone. 'amtlich' = Werte des früheren Markenauftritts (grafik.goetheanum.ch/farben, abgerufen 21. 11. 2026), Pantone-Angaben mit U = uncoated. 'naeherung' = nicht amtlich, aus Nachbarfarben abgeleitet, vor dem Druck am Muster oder Proof bestätigen.",
+ "quelle": "https://grafik.goetheanum.ch/farben",
+ "stand": "2026-11-21",
+ "farben": [
+  {
+   "name": "Goetheanum (Markenblau)",
+   "hex": "#0061a9",
+   "cmyk": {
+    "c": 93,
+    "m": 60,
+    "y": 5,
+    "k": 6
+   },
+   "pantone": "",
+   "status": "naeherung",
+   "hinweis": "Goetheanum: Das frühere Blau #005eb8 (Pantone 300 C, C91 M61 Y0 K0) ist sichtbar heller (ΔE 12). Pantone am Fächer wählen oder beim alten Druckwert bleiben."
+  },
+  {
+   "name": "Gold (Akzent)",
+   "hex": "#d7ab68",
+   "cmyk": {
+    "c": 12,
+    "m": 30,
+    "y": 62,
+    "k": 1
+   },
+   "pantone": "",
+   "status": "naeherung",
+   "hinweis": "Gold: kein früheres Gegenstück; Pantone am Fächer wählen."
+  },
+  {
+   "name": "Bühne",
+   "hex": "#968250",
+   "cmyk": {
+    "c": 30,
+    "m": 40,
+    "y": 70,
+    "k": 20
+   },
+   "pantone": "871 U",
+   "status": "amtlich"
+  },
+  {
+   "name": "Gesellschaft",
+   "hex": "#f07b76",
+   "cmyk": {
+    "c": 0,
+    "m": 62,
+    "y": 42,
+    "k": 0
+   },
+   "pantone": "",
+   "status": "naeherung",
+   "hinweis": "Gesellschaft: früher als ‹Social Media› #d57b76 geführt; Pantone offen."
+  },
+  {
+   "name": "Allgemeine Anthroposophische Sektion",
+   "hex": "#a24f8a",
+   "cmyk": {
+    "c": 42,
+    "m": 78,
+    "y": 12,
+    "k": 1
+   },
+   "pantone": "248 U",
+   "status": "amtlich"
+  },
+  {
+   "name": "Pädagogische Sektion",
+   "hex": "#3b4881",
+   "cmyk": {
+    "c": 88,
+    "m": 75,
+    "y": 21,
+    "k": 6
+   },
+   "pantone": "280 U",
+   "status": "amtlich"
+  },
+  {
+   "name": "Medizinische Sektion",
+   "hex": "#5f5599",
+   "cmyk": {
+    "c": 74,
+    "m": 70,
+    "y": 7,
+    "k": 0
+   },
+   "pantone": "2745 U",
+   "status": "amtlich"
+  },
+  {
+   "name": "Naturwissenschaftliche Sektion",
+   "hex": "#1e7b6e",
+   "cmyk": {
+    "c": 82,
+    "m": 29,
+    "y": 58,
+    "k": 15
+   },
+   "pantone": "335 U",
+   "status": "amtlich"
+  },
+  {
+   "name": "Sektion für Landwirtschaft",
+   "hex": "#63b145",
+   "cmyk": {
+    "c": 65,
+    "m": 2,
+    "y": 90,
+    "k": 0
+   },
+   "pantone": "368 U",
+   "status": "amtlich"
+  },
+  {
+   "name": "Sektion für Bildende Künste",
+   "hex": "#d072a0",
+   "cmyk": {
+    "c": 18,
+    "m": 67,
+    "y": 10,
+    "k": 0
+   },
+   "pantone": "674 U",
+   "status": "amtlich"
+  },
+  {
+   "name": "Sektion für Schöne Wissenschaften",
+   "hex": "#5168c0",
+   "cmyk": {
+    "c": 77,
+    "m": 60,
+    "y": 0,
+    "k": 0
+   },
+   "pantone": "2728 U",
+   "status": "amtlich"
+  },
+  {
+   "name": "Sektion für Sozialwissenschaften",
+   "hex": "#df4164",
+   "cmyk": {
+    "c": 5,
+    "m": 85,
+    "y": 43,
+    "k": 0
+   },
+   "pantone": "206 U",
+   "status": "amtlich"
+  },
+  {
+   "name": "Jugendsektion",
+   "hex": "#ff675d",
+   "cmyk": {
+    "c": 0,
+    "m": 72,
+    "y": 55,
+    "k": 0
+   },
+   "pantone": "Warm Red U",
+   "status": "amtlich"
+  },
+  {
+   "name": "Sektion für Redende und Musizierende Künste",
+   "hex": "#598ddc",
+   "cmyk": {
+    "c": 67,
+    "m": 39,
+    "y": 0,
+    "k": 0
+   },
+   "pantone": "279 U",
+   "status": "amtlich",
+   "hinweis": "Redende und Musizierende Künste: früher #588ddb."
+  },
+  {
+   "name": "Mathematisch-Astronomische Sektion",
+   "hex": "#2e54a4",
+   "cmyk": {
+    "c": 90,
+    "m": 67,
+    "y": 0,
+    "k": 0
+   },
+   "pantone": "286 U",
+   "status": "amtlich"
+  },
+  {
+   "name": "Sektion für Heilpädagogik und inklusive soziale Entwicklung",
+   "hex": "#f98a3c",
+   "cmyk": {
+    "c": 0,
+    "m": 55,
+    "y": 80,
+    "k": 0
+   },
+   "pantone": "144 U",
+   "status": "amtlich"
+  },
+  {
+   "name": "Bau-Administration",
+   "hex": "#b15359",
+   "cmyk": {
+    "c": 25,
+    "m": 75,
+    "y": 50,
+    "k": 15
+   },
+   "pantone": "187 U",
+   "status": "amtlich"
+  }
+ ]
+}
