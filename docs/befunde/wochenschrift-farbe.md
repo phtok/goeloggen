@@ -29,3 +29,11 @@ Quelle der Wahrheit wäre das Logopaket der Wochenschrift; es lag hier nicht vor
 Empfehlung: die zwei SVG auf `#373949` setzen (Pixelwert des veröffentlichten Logos)
 und als Token `wochenschrift` festhalten. Ein Eintrag im Logopaket der Redaktion
 bestätigt oder widerlegt das.
+
+## Nachtrag 21. 11. 2026: neues Logo
+Das Logo der Wochenschrift wird erneuert (Bildmarke und «Das Goetheanum» in der Hausschrift,
+Wochenschrift-Website, Klasse `.brand-mark`, Variable `--logo`). Gemessen: Farbe `#373949`,
+Weiss im Dunkel. Entscheid des Inhabers: Token `--wochenschrift` (`#373949`) in
+`design-system/tokens.css` und `tokens.json`; neue Form «Weblogo» im Logo-Generator
+(`assets/logos/medien/wochenschrift/weblogo/`, gebaut von `tools/build_wochenschrift_logo.py`).
+Die alten Formen «Voll» und «Kurz» tragen noch `#333548`.

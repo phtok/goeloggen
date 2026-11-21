@@ -4,6 +4,8 @@ Stand 21. 11. 2026. **Vorschlag, keine Regel** – bis der Inhaber entscheidet.
 Anlass: Frage von Joe (Design-Assistent von Louis Defèche); im Repo ist nichts
 festgehalten (`docs/g-logo-anwendung/` nennt den Schutzraum nur als Prüfpunkt).
 
+![Schutzraum und Mindestgrössen](vorschlag-logo-schutzraum-mindestgroesse.png)
+
 ## Mass der Hauptmarke
 
 Gemessen an `assets/logos/goetheanum-logo.svg` (viewBox 147,10 × 24,64):
