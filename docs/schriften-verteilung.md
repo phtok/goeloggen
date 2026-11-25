@@ -207,5 +207,10 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
 5. Signieren, sobald die Konten geklärt sind: Mac Developer ID Installer
    (`productsign`) und Notarisierung, Windows Trusted Signing. Braucht
    Secrets → vor dem Merge fragen. Danach die Warn-Schritte von der Seite.
-6. Offen, ob Mac-Benutzer ohne Adminrechte ein Paket pro Benutzer brauchen
-   (`enable_currentUserHome`); erst nach Antwort der EDV.
+6. ~~Mac-Paket auch «nur für mich»~~ (erledigt 25. 11., Entscheid des
+   Inhabers): `enable_currentUserHome` neben «für alle Benutzer». Der Weg
+   läuft als Benutzer, ruft `mac.sh --nur-ich` und installiert nach
+   `~/Library/Fonts`. Grenze: eine alte Fassung in `/Library/Fonts` kann er
+   nicht entfernen; `mac.sh` meldet sie und lässt sie stehen (auf
+   https://werkzeuge.goetheanum.ch/schriften-installieren.html gesagt). Im
+   CI geprüft als dritter Lauf (`installer -target CurrentUserHomeDirectory`).

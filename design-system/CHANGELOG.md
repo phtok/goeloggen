@@ -16,6 +16,20 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 25. November 2026 — Hausschrift Fassung 2.93: Konturrichtung, Kapitälchen, Adressen (Schrift, Version des Systems unverändert)
+
+**Was.** Verkehrt gedrehte Konturen umgekehrt (`‰` und 29 weitere je Schnitt,
+Icons, Pfeile); 65 Kapitälchen ergänzt (Umschrift, Pinyin, `ə ɛ ɨ ɲ ʉ`, `ĳ`,
+`π`, `ß` → `ss`); Webfonts zusätzlich ohne Fassungsnummer, alte Adressen v2.7/v2.8
+mit der neuesten Fassung; `Befund/` nicht mehr ausgeliefert; Mac-Installer
+auch «nur für mich». Dateinamen v2.9, intern 2.93. **Warum.** Entscheide des
+Inhabers 25. 11.: ein kaputtes `%` in einem Dashboard (alte Kopie v2.7) führte
+auf den falsch gedrehten Ring von `‰`, der bei synthetischem Fett zuläuft; in
+Umschrift-Texten fielen Kapitälchen auf Gemeine zurück. **Wirkung.**
+Schriftbild sonst unverändert; Befund
+`docs/befunde/konturrichtung-kapitaelchen-2026-11-25.md`, Adressen auf
+https://werkzeuge.goetheanum.ch/schrift-webfont.html.
+
 ## 21. November 2026 — Logos als feste Dateien, Mac zuerst, Cover-Generator geparkt (Version des Systems unverändert)
 
 - **`logos.json`:** `tools/build-logos-static.mjs` rendert im Deploy (Chromium) alle 38 Einheiten

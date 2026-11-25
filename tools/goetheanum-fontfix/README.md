@@ -81,6 +81,25 @@ python3 build_office_ttf.py
 python3 pack_release_zip.py
 ```
 
+## Fassung 2.93: Konturrichtung, Kapitälchen, Adressen (25. 11. 2026)
+Verkehrt gedrehte Konturen (‰ und 29 weitere je Schnitt, Icons, Pfeile)
+umgekehrt, 65 Kapitälchen ergänzt; Befund
+`docs/befunde/konturrichtung-kapitaelchen-2026-11-25.md`. Liest Fassung 2.92
+aus git, schreibt dieselben Dateinamen (intern 2.93), zweiter Lauf bitgleich.
+`konturrichtung.py DATEI.otf …` prüft jede Schrift (Variable je Master).
+```bash
+python3 build_v293.py
+python3 konturrichtung.py ../../assets/fonts/goetheanum/Fonts/*.otf ../../assets/fonts/goetheanum/Variable/*.otf
+python3 proof_variable_axis.py --alle
+python3 proof_v293.py                      # Vorher/Nachher-Bilder (Chromium)
+python3 build_beipackzettel.py             # aus der Repo-Wurzel
+python3 build_office_ttf.py
+python3 pack_release_zip.py
+python3 webfont_adressen.py                # nach JEDEM Schrift-Bau: alte und unversionierte Adressen
+```
+Vergleichsdateien früherer Fassungen liegen in `befund/` (nur im Repo, nicht
+ausgeliefert; vorher `assets/fonts/goetheanum/Befund/`).
+
 ## Verifikation
 ```bash
 pip install fontbakery

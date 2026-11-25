@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <installer-gui-script minSpecVersion="2">
   <title>Goetheanum-Schriften @FASSUNG@</title>
-  <options customize="always" require-scripts="false" rootVolumeOnly="true" hostArchitectures="x86_64,arm64"/>
-  <domains enable_localSystem="true" enable_anywhere="false" enable_currentUserHome="false"/>
+  <options customize="always" require-scripts="false" hostArchitectures="x86_64,arm64"/>
+  <!-- Zwei Wege: «für alle Benutzer» (Admin, /Library/Fonts) oder «nur für mich»
+       (ohne Admin, ~/Library/Fonts); die Skripte laufen dann als Benutzer. -->
+  <domains enable_localSystem="true" enable_anywhere="false" enable_currentUserHome="true"/>
   <!-- Reihenfolge = Installationsreihenfolge: die Zusätze setzen ihre Marke,
        erst «installieren» (unsichtbar, immer) ruft mac.sh auf. -->
   <choices-outline>

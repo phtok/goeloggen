@@ -4,7 +4,8 @@
 #   bash tools/schrift-installer/mac/build.sh [Fassung] [Ausgabeordner]
 #
 # Bringt die Schriften aus dem Repo-Stand mit; installiert wird über
-# assets/fonts/goetheanum/Installer/mac.sh (--alle --quelle). Unsigniert.
+# assets/fonts/goetheanum/Installer/mac.sh: «für alle Benutzer» als root
+# (--alle), «nur für mich» als Benutzer (--nur-ich). Unsigniert.
 # Gebaut von .github/workflows/schrift-installer.yml.
 set -euo pipefail
 
@@ -27,16 +28,19 @@ paket() { # $1 = Kennung (Endung), $2 = Skriptordner
 mkdir -p "$BAU/vorbereiten"
 cat > "$BAU/vorbereiten/postinstall" <<'SKRIPT'
 #!/bin/bash
-rm -rf /private/var/root/.goetheanum-schriften
+if [ "$(id -u)" = 0 ]; then rm -rf /private/var/root/.goetheanum-schriften
+else rm -rf "${HOME:-$3}/.goetheanum-schriften"; fi
 SKRIPT
 
-# Zusätze: je eine Marke im Ordner von root
+# Zusätze: je eine Marke im Ordner von root bzw. des Benutzers
 for zusatz in kyrillisch arabisch variabel; do
   mkdir -p "$BAU/$zusatz"
   cat > "$BAU/$zusatz/postinstall" <<SKRIPT
 #!/bin/bash
-install -d -m 700 /private/var/root/.goetheanum-schriften
-touch /private/var/root/.goetheanum-schriften/$zusatz
+if [ "\$(id -u)" = 0 ]; then m=/private/var/root/.goetheanum-schriften
+else m="\${HOME:-\$3}/.goetheanum-schriften"; fi
+install -d -m 700 "\$m"
+touch "\$m/$zusatz"
 SKRIPT
 done
 
