@@ -217,3 +217,37 @@ lesbar.›
   Deutlich und Laut bleiben Probe.
 - Offen: Einbau (Webfont, S01 neu fassen) und Form der Grundform (Upright-
   oder Text-Formen, siehe § 2).
+
+## Grundform und Textform, berichtigt (25. 11. 2026)
+
+Blatt: https://werkzeuge.goetheanum.ch/kursive-probe.html (Abschnitt
+‹Grundform und Textform›).
+
+**Fehler gefunden:** Im Sprachsystem latn/DEU der Quelle fehlten ss01/ss02
+(und liga, ccmp, case …). Auf Seiten mit `lang="de"` griffen die Textformen
+darum nie; die Spalte ‹Text-Formen› der Probe vom 31. 10. zeigte die
+Grundform. `build_kursiv_probe.py` gibt jetzt jedem Sprachsystem die
+Features von latn/dflt; alle vier Schnitte neu gebaut.
+
+**§ 2 berichtigt:** Beide a sind einstöckig. Am gerenderten Blatt:
+
+| | a | l |
+|---|---|---|
+| Klar aufrecht | einstöckig, kleiner Fuss rechts | gerade |
+| Kursiv, Grundform | einstöckig, mit Fuss (wie aufrecht) | gerade |
+| Kursiv, Textform (ss01, ss02) | einstöckig, ohne Fuss | mit Bogen am Fuss |
+
+Gemessen: l und I unterscheiden sich in Klar und in der Kursiv-Grundform
+nur in der Höhe (716 zu 691, Kursiv 730 zu 701), sonst gleich. Die
+Textform-l mit Bogen ist das einzige Zeichen, das l von I trennt.
+
+**Was die Sonderformen bringen:**
+- l mit Bogen: unterscheidet l von I (Illustration, Il1). Echter Gewinn.
+- a ohne Fuss: kein Gewinn; weniger Familie (die aufrechte a hat den Fuss),
+  kein Lesevorteil.
+- Für die Rolle Werktitel im Fliesstext kommt die Abhebung fast ganz aus der
+  Neigung; zwei Buchstaben ändern daran wenig.
+
+**Empfehlung:** keine Stilsets, eine feste Form: a mit Fuss (Grundform),
+l mit Bogen (Textform) als Grundform der Kursiven (G03 Weglassen: wer nur
+eine Rolle hat, braucht keine Wahl).

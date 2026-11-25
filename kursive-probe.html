@@ -47,6 +47,16 @@
   .w-ruhig{font-weight:var(--w-ruhig)} .w-klar{font-weight:var(--w-klar)}
   .w-deutlich{font-weight:var(--w-deutlich)} .w-laut{font-weight:var(--w-laut)}
   .leise{font-weight:var(--w-leise)}
+
+  /* Grundform und Textform: drei Spalten nebeneinander */
+  .drei{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s5) var(--s6)}
+  @media (min-width:900px){.drei{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  .k.nur-l{font-feature-settings:"ss02"}
+  .drei .ml{margin-bottom:var(--s3)}
+  .riesig{font-size:clamp(64px,10vw,130px);line-height:1.1;margin:0;white-space:nowrap}
+  .mittel{hyphens:manual;font-size:clamp(24px,3vw,36px);line-height:1.25;margin:0;text-wrap:balance}
+  .zwei{display:grid;grid-template-columns:1fr;gap:var(--s5) var(--s7)}
+  @media (min-width:1100px){.zwei{grid-template-columns:1fr 1fr 1fr}}
   cite{font-style:normal}
   blockquote{margin:0}
 
@@ -77,6 +87,57 @@
   <section class="hero">
     <span class="kicker">Treibhaus · Schrift</span>
     <h1>Kursive, Probe</h1>
+  </section>
+
+  <section class="block" aria-labelledby="h-textform">
+    <div class="shead"><h2 id="h-textform">Grundform und Textform</h2></div>
+
+    <div class="probe">
+      <div class="drei">
+        <div><span class="ml">Klar, aufrecht</span><p class="riesig w-klar">al</p></div>
+        <div><span class="ml">kursiv, Grundform</span><p class="riesig k w-klar">al</p></div>
+        <div><span class="ml">kursiv, Textform</span><p class="riesig k text w-klar">al</p></div>
+        <div><span class="ml">kursiv, a Grund, l Text</span><p class="riesig k nur-l w-klar">al</p></div>
+      </div>
+    </div>
+
+    <div class="probe">
+      <span class="ml gross">l, I und 1</span>
+      <div class="drei">
+        <p class="mittel w-klar">Il1 Illustration</p>
+        <p class="mittel k w-klar">Il1 Illustration</p>
+        <p class="mittel k text w-klar">Il1 Illustration</p>
+        <p class="mittel k nur-l w-klar">Il1 Illustration</p>
+      </div>
+    </div>
+
+    <div class="probe">
+      <span class="ml gross">Wörter</span>
+      <div class="drei">
+        <p class="mittel w-klar">Halle Ballade alle&nbsp;Fälle</p>
+        <p class="mittel k w-klar">Halle Ballade alle&nbsp;Fälle</p>
+        <p class="mittel k text w-klar">Halle Ballade alle&nbsp;Fälle</p>
+        <p class="mittel k nur-l w-klar">Halle Ballade alle&nbsp;Fälle</p>
+      </div>
+    </div>
+
+    <div class="probe">
+      <span class="ml gross">Werktitel im Fliesstext</span>
+      <div class="zwei">
+        <div>
+          <span class="ml">Grundform</span>
+          <p class="txt">Der Kurs liest <cite class="k w-klar">Allgemeine Menschenkunde</cite> neben <cite class="k w-klar">Die&nbsp;Philosophie der&nbsp;Freiheit</cite>; am Abend spielt das Ensemble <cite class="k w-klar">Faust&nbsp;I</cite> im Grossen&nbsp;Saal.</p>
+        </div>
+        <div>
+          <span class="ml">Textform</span>
+          <p class="txt">Der Kurs liest <cite class="k text w-klar">Allgemeine Menschenkunde</cite> neben <cite class="k text w-klar">Die&nbsp;Philosophie der&nbsp;Freiheit</cite>; am Abend spielt das Ensemble <cite class="k text w-klar">Faust&nbsp;I</cite> im Grossen&nbsp;Saal.</p>
+        </div>
+        <div>
+          <span class="ml">a Grund, l Text</span>
+          <p class="txt">Der Kurs liest <cite class="k nur-l w-klar">Allgemeine Menschenkunde</cite> neben <cite class="k nur-l w-klar">Die&nbsp;Philosophie der&nbsp;Freiheit</cite>; am Abend spielt das Ensemble <cite class="k nur-l w-klar">Faust&nbsp;I</cite> im Grossen&nbsp;Saal.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="block" aria-labelledby="h-formen">
