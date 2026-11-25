@@ -99,3 +99,33 @@ folgt (Leitsystem oder Text); dann ohne Verjüngung, Kopf mit langen Armen und
 Lichtfalle, gebogene Pfeile mit einer Geometrie für alle Gewichte (Radius für
 das schwerste), Ausfahrt rechtwinklig mit gerader Strecke vor dem Kopf, als
 Bézier-Master.
+
+## Entwurf 3: gebogene Pfeile neu (25. 11. 2026)
+
+Inhaber zu Entwurf 1 und 2: ‹crumpy, dumpf, stumpf. Finde bessere Lösungen!›
+
+![Gebogene Pfeile, Entwurf 3: Varianten A Winkel, B Schräg, C Schwung, D Heute, je in Klar und Laut, mit geraden Pfeilen derselben Konstruktion](pfeile-gebogen-entwurf3-2026-11-25.png) <!-- typo-ok -->
+
+Bau: `tools/goetheanum-fontfix/entwurf_pfeile_gebogen3.py` (nur Bild). Was
+sich gegen 1 und 2 ändert, je als Antwort auf die Kritik oben:
+
+- **Spitz statt stumpf:** Kopf als Winkel mit Gehrung, Arme 48° zur Achse,
+  lang und offen (250 Einheiten, wie die Arme heute).
+- **Hell statt dumpf:** gleichmässiger Strich ohne Verjüngung; der Schaft
+  endet im inneren Scheitel des Kopfs, so bleibt dort eine Lichtfalle statt
+  eines Knotens.
+- **Klar statt crumpy:** Der Kopf sitzt auf einer geraden Strecke, der Bogen
+  hat einen festen Radius (210) für alle Gewichte, also interpolierbar.
+  Saubere Vereinigung der Formen (shapely), keine überlappenden Polygone.
+- Die geraden Pfeile tragen denselben Kopf, damit die Familie eins ist.
+
+Varianten:
+
+| | Weg | Eindruck |
+|---|---|---|
+| A Winkel | senkrecht, Viertelkreis, waagrecht in die Ausfahrt | eindeutig ‹abbiegen›, Leitsystem-Sprache |
+| B Schräg | senkrecht, Achtelkreis, schräg weiter | ‹schräg halten›; in Laut wirkt der Kopf wie eine Fahne |
+| C Schwung | ein weiter Bogen, Kopf waagrecht | am lebendigsten, nimmt die weiche Geste von heute auf |
+| D Heute | heutige Mittellinie, neuer Strich und Kopf | bleibt eng; in Laut gedrängt, verworfen |
+
+Empfehlung: **C Schwung**, A als Alternative für ein strenges Leitsystem.
