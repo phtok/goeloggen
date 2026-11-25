@@ -63,7 +63,7 @@ Läufe bytegleich. Ausgabe nach `assets/fonts/proben/goetheanum-serif-probe/`,
   in der cmap lassen.
 - **Leerzeichen:** U+00A0, U+202F, U+2009 und weiches Trennzeichen, damit
   ` ` und Trennung nicht in die Fallback-Schrift springen.
-- Guillemets « » ‹ › und deutsche Anführung „ “ ‚ ‘ sind in der Quelle da
+- Guillemets « » ‹ › und deutsche Anführung „ “ ‚ ‘ sind in der Quelle da <!-- typo-ok -->
   und stimmen.
 
 ## Gemessen und angeschaut
@@ -141,3 +141,70 @@ S1 ist eine überschaubare Etappe (Glyphen aus vorhandenen Teilen, Kerning
       Regelwerk (`goetheanum-typo-tokens.json`, CLAUDE.md § Grenzen).
 - [ ] Chialab beobachten: zweite Serif und Gewichte (mit der halbjährlichen
       Beobachtung aus der Recherche).
+
+## Mischung und Lesbarkeit im Mengentext, gemessen (25. 11. 2026)
+
+Rückmeldung des Inhabers (25. 11.): ‹In der Probe fehlt die Mischung:
+grotesker Titel und Serifen im Mengentext sowie umgekehrt. Wie lesbar
+schätzt du diese Serif-Variante ein?› Neuer Abschnitt ‹Mischung› auf
+https://werkzeuge.goetheanum.ch/schrift-serif-probe.html#mischung: Sektionsseite,
+Artikel, Zitat im Text, je in drei Wegen (Titel Hausschrift + Text Serif ·
+Titel Serif + Text Hausschrift · Titel Serif + Text Source). Lesemass der
+Serif jetzt **30em** (66 Zeichen bei 0,458 em je Zeichen) statt 54ch – nie
+in `ch` (Skill `lesbarkeit` § 4).
+
+### Messung
+
+Metrik aus der Datei (`tools/lesbarkeit-metrik.py`, x-Höhe flach):
+
+| | Klar 440 | Serif Probe | Source Sans 3 |
+|---|--:|--:|--:|
+| x-Höhe flach | 500 | 500 | 486 (×1,03) |
+| Strich | 81 | 82 | 82 |
+| Strich/x-Höhe | 0,162 | 0,164 | 0,169 |
+| o/x (Offenheit) | 0,792 | 0,908 | 0,926 |
+| a–z im Mittel | 443 | 509 | 475 |
+| 0/O (1 = gleich) | 0,979 | 0,837 | 0,748 |
+| Kerning (`kern`) | ja | **nein** | ja |
+| Zeichen in der cmap | 677 | **118** | – |
+
+Am gerenderten Blatt (Chromium, deviceScaleFactor 1, Mengentext aus
+‹Mischung› und ‹Mengentext›; Zeichen je Zeile = Median, letzte Zeile mit):
+
+| | Grad | Zeilenhöhe | Zeichen/Zeile 375 px | 1280 px | Grauwert 1280 |
+|---|--:|--:|--:|--:|--:|
+| Serif Probe | 18,1 / 20 px | 1,66 | 35 | 60 | 0,081 · 0,076 |
+| Hausschrift Klar | 18,1 / 20 px | 1,66 | 40 | 63 | 0,081 · 0,077 |
+| Source Sans 3 | 18,1 / 20 px | 1,66 | 36 | 61 | 0,081 · 0,075 |
+
+Grauwert = Tintenanteil im Absatzrechteck (Bildschirmfoto, Graustufen),
+je Absatz. Barrierefreiheit (`barrierefreiheit.mjs --seite`): kein Verstoss.
+
+### Einschätzung (belegt, wo Zahl; Erfahrungswert, wo keine)
+
+1. **Die Buchstaben tragen Mengentext.** Gleiche x-Höhe, gleicher Strich,
+   gleicher Grauwert wie Klar und Source; offen gezeichnet wie Source
+   (o/x 0,91), viel offener als Klar (0,79). Klars Schwäche im langen Text
+   ist ihre Enge (Entscheid 5. 11.); diese Schwäche hat die Serif nicht.
+2. **Die Ausstattung trägt ihn nicht.** Kein Kerning, 118 Zeichen, keine
+   Akzente (é, à, ñ fallen aus der Schrift), kein Fett (Betonung nach G05
+   unmöglich). Das ist kein Lesbarkeits-, sondern ein Satzproblem, aber es
+   verhindert jeden echten Mengentext.
+3. **Breit.** 15 % breiter als Klar, 7 % breiter als Source: am Telefon 35
+   Zeichen je Zeile (Klar 40, Source 36) – unter G10, wie alle drei.
+4. **Platte unter einem Bildpunkt.** 45 Einheiten = 0,81 px bei 18 px,
+   0,90 px bei 20 px: bei 1× werden die Serifen als Graustufen gemalt; bei
+   2× (Telefon, Retina) 1,6–1,8 px und sauber (Medium, Skill § 7).
+5. **Mischung, angeschaut:** ‹Titel Serif + Text Source› ist der stimmigste
+   Weg – Gegensatz in der Form, beide offen, Source bringt mit, was der Serif
+   fehlt. ‹Titel Hausschrift + Text Serif› kehrt die Rollen um (die laute
+   Stimme klein, die warme gross) und wirkt wie zwei Häuser. ‹Text
+   Hausschrift + Zitat Serif› trägt: das Zitat bekommt eine zweite Stimme
+   ohne zweites Merkmal im Absatz (G01 betrifft nur Auszeichnung im
+   Fliesstext; das abgesetzte Zitat ist eigene Ebene).
+
+**Urteil:** Lesbar ja, setzbar nein. Für Mengentext auf dem Bildschirm
+schätze ich sie nach S1 (Kerning, Akzente) ab 20 px und auf 2×-Schirmen so
+lesbar wie Source; ungemessen bleibt die Lesegeschwindigkeit (kein Lesetest,
+Skill `lesbarkeit` § 9). Empfehlung unverändert **B (Stimme)**, mit dem
+Mischweg ‹Titel und Zitat Serif, Text Source›.

@@ -178,3 +178,30 @@ Black müsste dort gezeichnet, nicht gerechnet werden.
 Bei ja folgt: Kursiv-Variable aus den drei Mastern (sobald der Bold-Master
 vollständig ist), Kerning für ɑ/l, die 8 fehlenden Zeichen, Kapitälchen
 entscheiden, Paket und Beschreibungen.
+
+## E1b: Probe nur in der Hausschrift (25. 11. 2026)
+
+Rückmeldung des Inhabers (25. 11.): ‹In der Probe sind Source und Hausschrift
+vermischt. Es lässt sich nicht gut sehen, was die kursive Hausschrift leisten
+würde.› Neu gesetzt: https://werkzeuge.goetheanum.ch/kursive-probe.html
+
+- **Alles in der Hausschrift**, auch Beschriftungen (vorher Source in den
+  Rollen-Labels). Die Längenregel (Source ab dem zweiten Absatz) gilt auf
+  dieser Treibhaus-Seite bewusst nicht.
+- **Vier Kursiv-Schnitte** statt einem: Ruhig, Klar, Deutlich, Laut
+  (`build_kursiv_probe.py`, `BAUEN`). I-Stamm je Ziel: 68,0 (68,5) · 83,5
+  (83,8) · 112,0 (112,5) · 132,0 (131,9). Klar umrissgleich zum Stand vom
+  31. 10. (869 von 869 Glyphen), eingecheckte Datei unverändert. Deutlich und
+  Laut stützen sich bei 21 Glyphen auf den fortgeschriebenen Bold-Master
+  (§ 3); für die Probe unsichtbar, für ein Paket die echten Master nötig.
+- **Aufbau:** Formen · Schnitte (aufrecht neben kursiv, je 26–34 px und
+  Lesegrad) · Grade 16–48 px in Klar · Rollen: Werktitel im Fliesstext und
+  im Titel (Deutlich, ein Merkmal: G01), Fremdwort, Zitat im Fliesstext
+  (Leise neben Kursiv Klar) und abgesetzt (Leise neben Kursiv Ruhig) · Im
+  Satz, zwei Absätze.
+- Geprüft: typo-check, ds-lint 100 %, `barrierefreiheit.mjs` ohne Verstoss;
+  angesehen 1280 und 375 px, hell und dunkel.
+
+Beobachtet am Blatt: Laut kursiv läuft am breitesten (der Lesesatz bricht
+bei 1280 als einziger um); Zitat in Kursiv Klar läuft länger als in Leise
+(Kursive 2,7 % breiter, § 1). Die Entscheidvorlage oben bleibt offen.

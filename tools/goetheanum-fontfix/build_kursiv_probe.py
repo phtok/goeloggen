@@ -26,6 +26,9 @@
 # Idempotent: feste Zeitstempel, gleicher Eingang ergibt gleiche Dateien.
 #
 # Gewichtstabelle für alle fünf Schnitte: `--tabelle` (baut nichts).
+# Seit 25. 11. 2026 (E1b) vier Schnitte: Ruhig, Klar, Deutlich, Laut – für die
+# Probe in mehreren Schnitten (kursive-probe.html). Deutlich und Laut stützen
+# sich bei 21 Glyphen auf den fortgeschriebenen Bold-Master (siehe fill_bold).
 import math, os, shutil, sys, tempfile, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -35,7 +38,7 @@ OUT = os.path.join(REPO, "assets/fonts/goetheanum/Probe")
 COMMIT = "65ca1530fcc8ab4a864e4f3bc87672e5b8da821f"
 MASTERS = [("Thin", 100), ("Regular", 400), ("Bold", 700)]
 SCHNITTE = [("Leise", 265), ("Ruhig", 350), ("Klar", 440), ("Deutlich", 580), ("Laut", 680)]
-BAUEN = ["Klar"]
+BAUEN = ["Ruhig", "Klar", "Deutlich", "Laut"]  # Probe E1b (25. 11.): vier Schnitte
 FAMILY = "Goetheanum Kursiv Probe"
 VERSION = "0.100"
 EPOCH = 3_844_800_000  # 31. 10. 2025 in Mac-Epoche (Sekunden seit 1904), fest
