@@ -15,6 +15,10 @@
 #   curl -fsSL https://werkzeuge.goetheanum.ch/assets/fonts/goetheanum/Installer/mac.sh | bash -s -- --variabel
 # Ebenso --kyrillisch und --arabisch (kombinierbar).
 #
+# Nur für mich, ohne jede Rückfrage nach dem Passwort (so ruft es das
+# Mac-Paket im Weg «nur für mich»): --nur-ich. Eine alte Fassung für alle
+# Benutzer (/Library/Fonts) bleibt dann stehen und wird gemeldet.
+#
 # Für die IT (als root, für alle Benutzer des Geräts):
 #   sudo bash mac.sh --alle [--kyrillisch] [--arabisch] [--variabel] [--quelle <entpackter Ordner Goetheanum-Schriften-v2.9>]
 #
@@ -51,13 +55,14 @@ PROFIL_WURZEL="${GOETHEANUM_PROFIL_WURZEL:-/Users}"
 # Programme, die Schriften festhalten
 PROGRAMME='/Contents/MacOS/(Microsoft (Word|PowerPoint|Excel|Outlook|OneNote)|Adobe (InDesign|Illustrator|Photoshop|Acrobat)|Affinity|Keynote|Pages|Numbers|Figma)'
 
-VARIABEL=0; KYRILLISCH=0; ARABISCH=0; ALLE=0; QUELLE=""
+VARIABEL=0; KYRILLISCH=0; ARABISCH=0; ALLE=0; NUR_ICH=0; QUELLE=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --variabel) VARIABEL=1 ;;
     --kyrillisch) KYRILLISCH=1 ;;
     --arabisch) ARABISCH=1 ;;
     --alle) ALLE=1 ;;
+    --nur-ich) NUR_ICH=1 ;;
     --quelle) QUELLE="${2:-}"; shift ;;
     *) echo "Unbekannte Angabe: $1" >&2; exit 1 ;;
   esac
@@ -120,6 +125,7 @@ echo
 if [ "$ALLE" = 1 ] && [ "$(id -u)" != 0 ]; then
   halt 'Für alle Benutzer braucht es Adminrechte: mit sudo starten.' 1
 fi
+[ "$ALLE" = 1 ] && [ "$NUR_ICH" = 1 ] && halt '--alle und --nur-ich schliessen sich aus.' 1
 
 # 1. Laden, bevor irgendetwas gelöscht wird
 TMP="$(mktemp -d "${TMPDIR:-/tmp}/goetheanum.XXXXXX")" || halt 'Kein temporärer Ordner.' 1
@@ -174,6 +180,11 @@ entferne "" <<< "$ALT_NUTZER"
 if [ -n "$ALT_SYSTEM" ]; then
   if [ "$(id -u)" = 0 ]; then
     entferne "" <<< "$ALT_SYSTEM"
+  elif [ "$NUR_ICH" = 1 ]; then
+    echo
+    melde 'Eine alte Fassung ist für alle Benutzer installiert und bleibt:'
+    printf '%s\n' "$ALT_SYSTEM" | while IFS= read -r f; do melde "  – $(basename "$f")"; done
+    melde 'Entfernen kann sie nur, wer Adminrechte hat (Weg «für alle Benutzer»).'
   elif [ "$INTERAKTIV" = 1 ]; then
     echo
     melde 'Eine alte Fassung ist für alle Benutzer installiert:'

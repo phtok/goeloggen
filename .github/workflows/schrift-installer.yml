@@ -123,6 +123,14 @@ jobs:
           sudo grep -E 'entfernt: GoetheanumSchriftKlar|Fertig: Goetheanum' /var/log/install.log | tail -4
           echo 'Mac: beide Läufe in Ordnung'
 
+          # Dritter Lauf «nur für mich», ohne sudo: Ziel ~/Library/Fonts,
+          # die Fassung in /Library/Fonts bleibt stehen und wird gemeldet
+          installer -pkg "$pkg" -target CurrentUserHomeDirectory
+          [ -f "$HOME/Library/Fonts/GoetheanumSchriftKlar.ttf" ] || { echo 'nur für mich: fehlt'; tail -60 /var/log/install.log; exit 1; }
+          da GoetheanumSchriftKlar.ttf
+          grep -E 'bleibt:|Fertig: Goetheanum' /var/log/install.log | tail -3 || true
+          echo 'Mac: nur für mich in Ordnung'
+
       - uses: actions/upload-artifact@v4
         with:
           name: installer-mac

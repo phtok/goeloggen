@@ -35,6 +35,26 @@ SIL OFL). Reparaturen und Begründung siehe
 
 Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
 
+## Neu in Fassung 2.93 (25. 11. 2026)
+
+Gleiche Dateinamen v2.9, intern Version 2.93; Codepunkte unverändert (677).
+Befund `docs/befunde/konturrichtung-kapitaelchen-2026-11-25.md`.
+
+- **Konturrichtung.** Der obere Ring von `‰` lief verkehrt herum (geerbt aus
+  v1.4.43) und lief bei synthetischem Fett zu. Mit ihm 29 weitere Glyphen je
+  Schnitt (`Ď Ŕ Ř ñ ń ź ż ; ● Ģ Ķ Ļ Ņ Ș Ț ļ ŗ ș ț` und ihre Kapitälchen,
+  Kommaakzent), 46 Icons und 8 Pfeile. Das Schriftbild ist unverändert.
+- **65 Kapitälchen** (`smcp`, mit `c2sc` für die Versalien): Umschrift
+  (`ḍ ḥ ḷ ḹ ṃ ṇ ṅ ṛ ṝ ṣ ṭ` …), Pinyin `ǎ ǐ ǒ ǔ`, `ǧ ǩ ǫ ǹ ȟ ȯ ȳ`, Punkt
+  und Strich über und unter, `ẁ ẃ ẅ ỳ ỹ ẽ ṽ ẗ`, `ə ɛ ɨ ɲ ʉ`, `ĳ`, `π`,
+  `İ`, Kapitälchen-`ẞ`. `ß` wird zu `ss`, `ﬁ ﬂ` zu `fi fl`, `µ μ` zu `m`,
+  `ȷ` zu `j`. `ƒ` bleibt (Gulden-Zeichen, kein `Ƒ` in der Schrift).
+- **Adressen.** Ohne Fassungsnummer, immer die neueste Fassung:
+  `Webfonts/woff2/Goetheanum-Variabel.woff2`,
+  `Goetheanum-Schrift-Leise|Ruhig|Klar|Deutlich|Laut.woff2`,
+  `Goetheanum-Icons.woff2`, `Goetheanum-Pfeile.woff2` (ebenso `.woff`). Die
+  alten Adressen (v2.7, v2.8) liefern ebenfalls die neueste Fassung.
+
 ## Neu in Fassung 2.92 (2. 11. 2026)
 
 Gleiche Dateinamen v2.9, intern Version 2.92; vorhandene Zeichen und Masse
@@ -83,7 +103,8 @@ Abgleich mit Titillium Sans Pro (Chialab, OFL; Befund
   `Ŀ ŀ ŉ`, `₪` (in der Pro falsch geformt, Chialab-Issue #12). `¨` wächst
   jetzt mit dem Gewicht (Vorschub schrumpfte bisher). Vertikalmetriken unverändert (750/−250).
 - Für schon versandte Mails bleibt `Goetheanum-Schrift-v2.8-Deutlich`
-  (woff/woff2) erreichbar, nicht im ZIP. Vergleichskopien der v2.8 in `Befund/`.
+  (woff/woff2) erreichbar, nicht im ZIP. Vergleichskopien der v2.8 in
+  `tools/goetheanum-fontfix/befund/` (nur im Repo).
 
 ## Neu in v2.8
 

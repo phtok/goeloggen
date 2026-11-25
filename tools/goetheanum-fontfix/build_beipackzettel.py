@@ -102,7 +102,7 @@ txt(K,"Pfeile & Kompass: eigener Font ‹Goetheanum Pfeile›, Seite 5.",9.5,RX+
 
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
-txt(K,"Goetheanum Schriften Version 2.9 (Fassung 2.92) · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
+txt(K,"Goetheanum Schriften Version 2.9 (Fassung 2.93) · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
 txt(K,"Ausbau & Optimierung 2026 durch Philipp Tok. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p1.svg","w").write("".join(S))

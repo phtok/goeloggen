@@ -1,11 +1,22 @@
 #!/bin/bash
-# Goetheanum-Schriften (Mac-Paket): installiert für alle Benutzer des Macs.
-# Läuft als root aus dem Paket; Schriften und mac.sh liegen neben diesem
-# Skript. Die gewählten Zusätze hinterlassen davor je eine Marke (siehe
-# build.sh). Ausgabe steht in /var/log/install.log.
+# Goetheanum-Schriften (Mac-Paket). Zwei Wege, im Installer wählbar:
+#   für alle Benutzer – läuft als root, Ziel /Library/Fonts (mac.sh --alle);
+#   nur für mich      – läuft als Benutzer, Ziel ~/Library/Fonts (--nur-ich).
+#     Eine alte Fassung in /Library/Fonts kann dieser Weg nicht entfernen;
+#     mac.sh meldet sie und lässt sie stehen.
+# Schriften und mac.sh liegen neben diesem Skript. Die gewählten Zusätze
+# hinterlassen davor je eine Marke (siehe build.sh). Ausgabe steht in
+# /var/log/install.log.
 HIER="$(cd "$(dirname "$0")" && pwd)"
-MARKEN=/private/var/root/.goetheanum-schriften
-ANGABEN=(--alle --quelle "$HIER")
+if [ "$(id -u)" = 0 ]; then
+  MARKEN=/private/var/root/.goetheanum-schriften
+  ANGABEN=(--alle --quelle "$HIER")
+else
+  ICH="${HOME:-$3}"
+  MARKEN="$ICH/.goetheanum-schriften"
+  export GOETHEANUM_NUTZER_ORDNER="$ICH/Library/Fonts"
+  ANGABEN=(--nur-ich --quelle "$HIER")
+fi
 for zusatz in kyrillisch arabisch variabel; do
   [ -e "$MARKEN/$zusatz" ] && ANGABEN+=("--$zusatz")
 done
