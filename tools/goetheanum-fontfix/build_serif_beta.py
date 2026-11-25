@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# PROBE, nicht Paket. Baut die «Goetheanum Serif Probe» (Etappe E4,
+# Ergänzung, nicht Paket. Baut die «Goetheanum Serif Beta» (Etappe E4,
 # docs/recherche_titillium-pro.md) aus dem Serif-Prototyp von Chialab
 # (Titillium Pro Serif «version_00», Branch serif, Commit 65ca153, OFL).
 #
@@ -15,11 +15,16 @@
 #   - Leerzeichen-Formen U+00A0, U+202F, U+2009 und weiches Trennzeichen,
 #     damit gesetzte Texte nicht in die Fallback-Schrift springen;
 # Der Name «Titillium» ist in der Quelle als Reserved Font Name geführt
-# (OFL § 3, Original Titillium); die Probe heisst darum «Goetheanum Serif Probe».
+# (OFL § 3, Original Titillium); die Schrift heisst darum «Goetheanum Serif Beta».
+#
+# Entscheid des Inhabers 25. 11. 2026: ‹Die Serif überzeugt mich im Bild gar
+# nicht. Ich würde sie funktional nicht integrieren, nur als Ergänzung
+# anbieten. Goetheanum Serif Beta.› Darum: neuer Name, ein ZIP zum Download
+# (schriften.html § Download), keine Rolle im Regelwerk, nicht im Paket.
 #
 # Idempotent: liest nur sources/titillium-pro-serif-beta/ und die Klar-OTF,
 # schreibt immer dieselben Dateien neu (fester Zeitstempel).
-#   python3 tools/goetheanum-fontfix/build_serif_probe.py
+#   python3 tools/goetheanum-fontfix/build_serif_beta.py
 import os, unicodedata
 from fontTools.ttLib import TTFont
 from fontTools.fontBuilder import FontBuilder
@@ -34,7 +39,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
 SRC = os.path.join(HERE, "sources", "titillium-pro-serif-beta")
 KLAR = os.path.join(REPO, "assets/fonts/goetheanum/Fonts/Goetheanum-Schrift-v2.9-Klar.otf")
-OUT = os.path.join(REPO, "assets/fonts/proben/goetheanum-serif-probe")
+OUT = os.path.join(REPO, "assets/fonts/proben/goetheanum-serif-beta")
 VERSION = "0.1"
 STAMP = 0xE0A1B000  # fester head-Zeitstempel, damit der Build bytegleich bleibt
 
@@ -188,9 +193,9 @@ def build(style):
     topmarks = "[" + " ".join(g for g in topmarks.strip("[]").split() if g in neworder) + "]"
     feas.insert(0, f"feature ccmp {{ sub i' {topmarks} by dotlessi; sub j' {topmarks} by uni0237; }} ccmp;")
 
-    fam = "Goetheanum Serif Probe"
+    fam = "Goetheanum Serif Beta"
     sub = "Italic" if italic else "Regular"
-    ps = f"GoetheanumSerifProbe-{sub}"
+    ps = f"GoetheanumSerifBeta-{sub}"
     fb = FontBuilder(1000, isTTF=False)
     fb.setupGlyphOrder(neworder)
     fb.setupCharacterMap(cmap)
@@ -214,13 +219,13 @@ def build(style):
                 fsType=0)
     fb.setupNameTable({
         "copyright": "Copyright (c) 2024 The Titillium Pro Project Authors (https://github.com/chialab/titillium_pro). "
-                     "Probe-Erweiterung 2026 Goetheanum.",
+                     "Erweiterung 2026 Goetheanum.",
         "familyName": fam, "styleName": sub,
         "uniqueFontIdentifier": f"{VERSION};GOET;{ps}",
         "fullName": f"{fam} {sub}", "psName": ps,
-        "version": f"Version {VERSION} Probe",
-        "description": "PROBE, nicht für den Einsatz. Aus Titillium Pro Serif version_00 (Chialab, OFL), "
-                       "ergänzt um Trema, ß, einstöckiges a (ss01). Etappe E4.",
+        "version": f"Version {VERSION} Beta",
+        "description": "BETA, Ergänzung zur Goetheanum Schrift, nicht im Paket. Aus Titillium Pro Serif "
+                       "version_00 (Chialab, OFL), ergänzt um Trema, ß, einstöckiges a (ss01).",
         "licenseDescription": "This Font Software is licensed under the SIL Open Font License, Version 1.1.",
         "licenseInfoURL": "https://openfontlicense.org",
     })
@@ -240,6 +245,19 @@ def build(style):
     print(otf, len(neworder), "Glyphen", len(cmap), "Zeichen")
 
 
+def pack():
+    """ZIP zum Download, bytegleich (feste Zeitstempel, feste Reihenfolge)."""
+    import zipfile
+    zp = os.path.join(OUT, "Goetheanum-Serif-Beta.zip")
+    with zipfile.ZipFile(zp, "w", zipfile.ZIP_DEFLATED) as z:
+        for n in ("GoetheanumSerifBeta-Regular.otf", "GoetheanumSerifBeta-Italic.otf", "OFL.txt", "README.md"):
+            zi = zipfile.ZipInfo("Goetheanum-Serif-Beta/" + n, date_time=(2026, 11, 25, 0, 0, 0))
+            zi.compress_type = zipfile.ZIP_DEFLATED; zi.external_attr = 0o644 << 16
+            z.writestr(zi, open(os.path.join(OUT, n), "rb").read())
+    print(zp)
+
+
 if __name__ == "__main__":
     for s in ("Regular", "RegularItalic"):
         build(s)
+    pack()

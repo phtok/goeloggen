@@ -1,24 +1,25 @@
 <!doctype html>
-<!-- Treibhaus: Goetheanum Serif Probe (Etappe E4, docs/recherche_titillium-pro.md).
-     Font: assets/fonts/proben/goetheanum-serif-probe/ aus
-     tools/goetheanum-fontfix/build_serif_probe.py (Probe, nicht im Paket).
+<!-- Treibhaus: Goetheanum Serif Beta (Etappe E4, docs/recherche_titillium-pro.md).
+     Font: assets/fonts/proben/goetheanum-serif-beta/ aus
+     tools/goetheanum-fontfix/build_serif_beta.py (Ergänzung, nicht im Paket;
+     Entscheid des Inhabers 25. 11. 2026: keine Rolle im Haus, nur anbieten).
      Befund und Entscheidvorlage: docs/befunde/serif-probe-2026-10-31.md -->
 <html lang="de-CH">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
-<title>Serif-Probe · Goetheanum</title>
-<meta name="description" content="Der Serif-Prototyp aus der Titillium-Familie als Goetheanum Serif Probe neben der Hausschrift: Titel, Sektionsseite, Zitat, Lede, Mengentext, Karte." />
+<title>Serif Beta · Goetheanum</title>
+<meta name="description" content="Der Serif-Prototyp aus der Titillium-Familie als Goetheanum Serif Beta neben der Hausschrift: Titel, Sektionsseite, Zitat, Lede, Mengentext, Karte." />
 <link rel="icon" type="image/svg+xml" href="assets/favicons/kreis-blau/favicon.svg" />
 <link rel="stylesheet" href="design-system/tokens.css" />
 <link rel="stylesheet" href="design-system/base.css" />
 <link rel="stylesheet" href="design-system/nav.css" />
 <style>
-  @font-face{font-family:"Goetheanum Serif Probe";font-weight:400;font-style:normal;font-display:swap;
-    src:url("assets/fonts/proben/goetheanum-serif-probe/GoetheanumSerifProbe-Regular.woff2") format("woff2")}
-  @font-face{font-family:"Goetheanum Serif Probe";font-weight:400;font-style:italic;font-display:swap;
-    src:url("assets/fonts/proben/goetheanum-serif-probe/GoetheanumSerifProbe-Italic.woff2") format("woff2")}
+  @font-face{font-family:"Goetheanum Serif Beta";font-weight:400;font-style:normal;font-display:swap;
+    src:url("assets/fonts/proben/goetheanum-serif-beta/GoetheanumSerifBeta-Regular.woff2") format("woff2")}
+  @font-face{font-family:"Goetheanum Serif Beta";font-weight:400;font-style:italic;font-display:swap;
+    src:url("assets/fonts/proben/goetheanum-serif-beta/GoetheanumSerifBeta-Italic.woff2") format("woff2")}
 
   .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
   .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
@@ -34,8 +35,8 @@
   .paar > div{min-width:0;border-top:1px solid var(--line);padding-top:var(--s4)}
   .wer{font-family:var(--font-text);font-size:var(--t-small);font-weight:600;color:var(--muted);margin:0 0 var(--s4)}
 
-  /* Die Probe: nur ein Gewicht. Kein synthetisches Fett, keine falsche Kursive. */
-  .s{font-family:"Goetheanum Serif Probe",var(--font-display);font-weight:400;font-synthesis:none}
+  /* Die Beta: nur ein Gewicht. Kein synthetisches Fett, keine falsche Kursive. */
+  .s{font-family:"Goetheanum Serif Beta",var(--font-display);font-weight:400;font-synthesis:none}
   .s1{font-feature-settings:"ss01"}
   .h{font-family:var(--font-display)}
   .src{font-family:var(--font-text)}
@@ -96,8 +97,9 @@
 <main class="wrap">
   <section class="hero">
     <span class="kicker">Treibhaus · Schriften</span>
-    <h1>Goetheanum Serif Probe</h1>
+    <h1>Goetheanum Serif Beta</h1>
     <p class="lede">Der Serif-Prototyp der Titillium-Familie neben der Hausschrift, in&nbsp;echten Anwendungen. Ein&nbsp;Gewicht, aufrecht und kursiv, ergänzt um Umlaute, ß und ein einstöckiges&nbsp;a.</p>
+    <p><a class="btn" href="assets/fonts/proben/goetheanum-serif-beta/Goetheanum-Serif-Beta.zip" download>Serif Beta herunterladen</a></p>
   </section>
 
   <nav aria-label="Abschnitte">
@@ -117,7 +119,7 @@
   <section class="abschnitt" id="titel" aria-labelledby="h-titel">
     <h2 id="h-titel">Titel gross</h2>
     <div class="paar">
-      <div><p class="wer">Serif Probe, einstöckiges a</p><p class="s s1 gross">Faust in&nbsp;der Grossen Bühne</p></div>
+      <div><p class="wer">Serif Beta, einstöckiges a</p><p class="s s1 gross">Faust in&nbsp;der Grossen Bühne</p></div>
       <div><p class="wer">Hausschrift Deutlich</p><p class="h gross">Faust in&nbsp;der Grossen Bühne</p></div>
     </div>
   </section>
@@ -127,7 +129,7 @@
     <p>Sektion für Schöne Wissenschaften, Kopf in&nbsp;der Sektionsfarbe, darunter Lede und Lesetext.</p>
     <div class="paar">
       <div>
-        <p class="wer">Serif Probe</p>
+        <p class="wer">Serif Beta</p>
         <div class="sekkopf">
           <span class="kicker">Sektion für Schöne Wissenschaften</span>
           <p class="s s1 tit">Das Wort als Brücke</p>
@@ -242,14 +244,14 @@
     <h2 id="h-zitat">Zitat</h2>
     <div class="paar">
       <div>
-        <p class="wer">Serif Probe aufrecht</p>
+        <p class="wer">Serif Beta aufrecht</p>
         <figure class="s s1 zitat">
           <p>Wer nicht von dreitausend Jahren sich weiss Rechenschaft zu&nbsp;geben, bleib im Dunkeln unerfahren, mag von Tag zu&nbsp;Tage&nbsp;leben.</p>
           <figcaption>Johann Wolfgang von&nbsp;Goethe, West-östlicher Divan</figcaption>
         </figure>
       </div>
       <div>
-        <p class="wer">Serif Probe kursiv</p>
+        <p class="wer">Serif Beta kursiv</p>
         <figure class="s zitat" style="font-style:italic">
           <p>Wer nicht von dreitausend Jahren sich weiss Rechenschaft zu&nbsp;geben, bleib im Dunkeln unerfahren, mag von Tag zu&nbsp;Tage&nbsp;leben.</p>
           <figcaption style="font-style:normal">Johann Wolfgang von&nbsp;Goethe, West-östlicher Divan</figcaption>
@@ -270,7 +272,7 @@
     <p>Dieselben Absätze in&nbsp;der Lesegrösse des Fundaments, Zeilenhöhe 1,66, Lesemass rund 66Zeilenhöhe 1,66, Lesemass rund 70&nbsp;Zeichen.nbsp;Zeichen.</p>
     <div class="paar voll">
       <div>
-        <p class="wer">Serif Probe</p>
+        <p class="wer">Serif Beta</p>
         <p class="s s1 txt">Der Bau steht auf einem Hügel über Dornach, sichtbar vom Tal und von den Jurahöhen. Wer zum ersten Mal hinaufgeht, sieht zuerst den Beton und erst beim Näherkommen die Formen, die sich aus ihm lösen: Fenster, die sich wie Augen öffnen, Säulen, die nicht tragen wollen, sondern wachsen.</p>
         <p class="s s1 txt">Im Inneren führen Treppen in&nbsp;Schwüngen nach oben. Der Grosse Saal fasst gegen tausend Menschen; an&nbsp;Festtagen ist er voll, an&nbsp;Werktagen probt die Bühne, und im&nbsp;Foyer warten Gäste aus vielen Ländern auf den Beginn.</p>
       </div>
@@ -292,7 +294,7 @@
     <p>Meta in&nbsp;Source Sans&nbsp;3, wie im Fundament; geprüft wird Titel und Kurztext.</p>
     <div class="paar">
       <div>
-        <p class="wer">Serif Probe</p>
+        <p class="wer">Serif Beta</p>
         <article class="card karte s s1">
           <p class="meta">Sa 14.&nbsp;November, 20&nbsp;Uhr · Grosser Saal</p>
           <p class="kt">Gedichte im Übergang</p>
@@ -314,7 +316,7 @@
 
   <section class="abschnitt" id="grade" aria-labelledby="h-grade">
     <h2 id="h-grade">Grade</h2>
-    <p>Ein Satz in&nbsp;der Serif Probe, vom Floor bis zum Titel.</p>
+    <p>Ein Satz in&nbsp;der Serif Beta, vom Floor bis zum Titel.</p>
     <div class="leiter s s1">
       <div><span class="px">14&nbsp;px</span><p style="font-size:14px">Fünf Schnitte, ein Haus: Sprache, Bühne, Wissenschaft und Garten am&nbsp;selben Ort.</p></div>
       <div><span class="px">15&nbsp;px</span><p style="font-size:15px">Fünf Schnitte, ein Haus: Sprache, Bühne, Wissenschaft und Garten am&nbsp;selben Ort.</p></div>
@@ -328,7 +330,7 @@
 
   <section class="abschnitt" id="a" aria-labelledby="h-a">
     <h2 id="h-a">Das a</h2>
-    <p>Die Quelle setzt das zweistöckige a der Text-Form. Die Probe bringt das einstöckige a der Hausschrift als Stilset&nbsp;ss01: Bauch und Stamm des Serif-d, ohne Oberlänge.</p>
+    <p>Die Quelle setzt das zweistöckige a der Text-Form. Die Beta bringt das einstöckige a der Hausschrift als Stilset&nbsp;ss01: Bauch und Stamm des Serif-d, ohne Oberlänge.</p>
     <div class="paar">
       <div><p class="wer">Zweistöckig, wie die Quelle</p><p class="s tit">Haus, Garten, Saal, Kanzlei</p></div>
       <div><p class="wer">Einstöckig, ss01</p><p class="s s1 tit">Haus, Garten, Saal, Kanzlei</p></div>
@@ -337,7 +339,7 @@
 
   <section class="abschnitt" id="zeichen" aria-labelledby="h-zeichen">
     <h2 id="h-zeichen">Zeichenvorrat</h2>
-    <p>Vorhanden, in&nbsp;der Probe ergänzt: Umlaute, ß, Trema, feste Leerzeichen. Grau gesetzt, was fehlt und hier aus&nbsp;der Hausschrift einspringt.</p>
+    <p>Vorhanden, in&nbsp;der Beta ergänzt: Umlaute, ß, Trema, feste Leerzeichen. Grau gesetzt, was fehlt und hier aus&nbsp;der Hausschrift einspringt.</p>
     <p class="s s1 zeichen">ABCDEFGHIJKLMNOPQRSTUVWXYZ ÄÖÜ abcdefghijklmnopqrstuvwxyz äöüß 0123456789 .,:;!?¡¿ «»‹›„“‚‘’ –—…()[]{}/\*#_</p>
     <p class="s zeichen fehlt">Café, Molière, Città, Señora · ẞ &amp; % € § @ + = × ° © ½</p>
   </section>

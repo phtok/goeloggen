@@ -29,6 +29,7 @@ from fontTools.pens.svgPathPen import SVGPathPen
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
 FONTS = os.path.join(REPO, "assets/fonts/goetheanum/Fonts")
 OUT_SVG = os.path.join(REPO, "docs/befunde/pfeile-schrift-entwurf-2026-11-25.svg")
+OUT_SVG2 = os.path.join(REPO, "docs/befunde/pfeile-gebogen-entwurf2-2026-11-25.svg")
 L = 820          # Länge der geraden Pfeile in der Pfeil-Schrift (90 … 910)
 ZELLE = 1250     # Vorschub der Pfeil-Schrift
 L_BOGEN = 340    # Kopfgrösse der gebogenen Pfeile wie bei einem geraden Pfeil dieser Länge
@@ -101,8 +102,69 @@ def gebogen(s):
     return [schaft, K]
 
 
-def gebogen_alle(s):
-    g = gebogen(s)
+def mittellinie_heute():
+    """Mittellinie des heutigen gebogenen Pfeils 1 (Taste 2), aus seinen beiden
+    Schaftkanten: Kanten flach gerechnet, je nach Bogenlänge auf 80 Punkte
+    verteilt, gemittelt. Liefert Punkte von unten bis zur Kopfwurzel."""
+    from fontTools.pens.recordingPen import RecordingPen
+    pf = TTFont(os.path.join(FONTS, "Goetheanum-Pfeile-v2.9.otf"))
+    gs = pf.getGlyphSet(); r = RecordingPen(); gs[pf.getBestCmap()[ord("2")]].draw(r)
+    pts = []; cur = None
+    for op, a in r.value:
+        if op == "moveTo": cur = a[0]; pts.append([cur])
+        elif op == "lineTo": cur = a[0]; pts.append([cur])
+        elif op == "curveTo":
+            seg = [bezier(cur, a[0], a[1], a[2], t / 8) for t in range(1, 9)]
+            cur = a[2]; pts.append(seg)
+        else: pts.append([])
+    # Kanten finden: die beiden Punkte bei y=90 (Schaftende) und die
+    # Kopfwurzeln (Punkt vor dem Arm innen, Punkt nach dem Arm aussen)
+    flat = [(i, q) for i, seg in enumerate(pts) for q in seg]
+    def idx(x, y): return min(range(len(flat)), key=lambda k: math.dist(flat[k][1], (x, y)))
+    a0, a1 = idx(406, 90), idx(587, 822)          # innen: unten → Kopfwurzel
+    b0, b1 = idx(383, 90), idx(569, 850)          # aussen: unten → Kopfwurzel (rückwärts im Umlauf)
+    innen = [q for _, q in flat[a0:a1 + 1]]
+    aussen = [q for _, q in (flat[b1:] + flat[:b0 + 1])][::-1]
+    def verteilen(L, n=80):
+        d = [0.0]
+        for u, v in zip(L, L[1:]): d.append(d[-1] + math.dist(u, v))
+        out = []
+        for k in range(n + 1):
+            t = d[-1] * k / n; j = max(i for i in range(len(d)) if d[i] <= t)
+            j = min(j, len(L) - 2); f = (t - d[j]) / ((d[j + 1] - d[j]) or 1)
+            out.append((L[j][0] + f * (L[j + 1][0] - L[j][0]), L[j][1] + f * (L[j + 1][1] - L[j][1])))
+        return out
+    return [((p[0] + q[0]) / 2, (p[1] + q[1]) / 2) for p, q in zip(verteilen(innen), verteilen(aussen))]
+
+
+def gebogen_treu(s):
+    """Entwurf 2: Schaft genau auf der heutigen Mittellinie, nur Strich,
+    Verlauf und Kopf der Textschrift. Die Spitze sitzt in Verlängerung der
+    letzten Schaftrichtung (heute rund 38°)."""
+    J = J_ZU_S * s; e = VERLAUF["ende"] * J
+    M = mittellinie_heute()
+    (ax, ay), (bx, by) = M[-6], M[-1]
+    d = math.atan2(by - ay, bx - ax)
+    hh = HEAD[0] * L_BOGEN + HEAD[1] * s
+    A = (hh - VERLAUF["stumpf"] * J / 2) / math.sin(THETA)
+    ob, un = kopf(0.0, J, A, 1)
+    T = (bx - 0.5 * ob[3][0] * math.cos(d), by - 0.5 * ob[3][0] * math.sin(d))
+    lang = [0.0]
+    for u, v in zip(M, M[1:]): lang.append(lang[-1] + math.dist(u, v))
+    links, rechts = [], []
+    for i, (x, y) in enumerate(M):
+        u, v = M[max(i - 1, 0)], M[min(i + 1, len(M) - 1)]
+        tx, ty = v[0] - u[0], v[1] - u[1]; n = math.hypot(tx, ty); tx, ty = tx / n, ty / n
+        w = (e + (J - e) * lang[i] / lang[-1]) / 2
+        links.append((x - ty * w, y + tx * w)); rechts.append((x + ty * w, y - tx * w))
+    c, sn = math.cos(d), math.sin(d)
+    K = [un[0]] + ob + [(ob[3][0] - J, J / 2), (ob[3][0] - J, -J / 2)] + [un[3], un[2], un[1]]
+    K = [(T[0] + x * c - y * sn, T[1] + x * sn + y * c) for x, y in K]
+    return [links + rechts[::-1], K]
+
+
+def gebogen_alle(s, treu=False):
+    g = gebogen_treu(s) if treu else gebogen(s)
     return {k: [[SYM[k](x, y) for x, y in poly] for poly in g] for k in GEBOGEN}
 
 
@@ -154,7 +216,25 @@ def main():
     open(OUT_SVG, "w", encoding="utf-8").write(svg)
     print("geschrieben:", os.path.relpath(OUT_SVG, REPO), "– Strich je Schnitt:",
           ", ".join("%s %d" % (k, round(v)) for k, v in st.items()))
+    # Gebogene Pfeile: Entwurf 1 (Bogen weitet sich mit dem Gewicht) gegen
+    # Entwurf 2 (heutige Mittellinie, nur Strich und Kopf neu)
+    reihen2 = [("Heute dünn (24)", [alt[k] for k in GEBOGEN])]
+    for name in ("Klar", "Laut"):
+        for treu, lab in ((False, "1"), (True, "2")):
+            gb = gebogen_alle(st[name], treu)
+            reihen2.append(("Entwurf %s, %s" % (lab, name), [poly_d(gb[k]) for k in GEBOGEN]))
+    body2 = "\n".join(zeile(i * H, lab, gl) for i, (lab, gl) in enumerate(reihen2))
+    svg2 = svg.split("\n")[0] + "\n"
+    svg2 = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" role="img" '
+            'aria-label="Gebogene Pfeile: heute, Entwurf 1 und 2 in Klar und Laut">\n'
+            '<style>path{fill:#1a1a1a} .l{font:200px \'Goetheanum\',\'Helvetica Neue\',Arial,sans-serif;fill:#1a1a1a}</style>\n'  # ds-ok: Bild
+            '<rect width="100%%" height="100%%" fill="#ffffff"/>\n%s\n</svg>\n') % (2600 + 8 * ZELLE, len(reihen2) * H, body2)  # ds-ok
+    open(OUT_SVG2, "w", encoding="utf-8").write(svg2)
+    print("geschrieben:", os.path.relpath(OUT_SVG2, REPO))
     if scratch:
+        open(os.path.join(scratch, "pfeile-gebogen.html"), "w", encoding="utf-8").write(
+            '<!doctype html><meta charset="utf-8"><style>@font-face{font-family:G;src:url("file://%s/assets/fonts/goetheanum/Fonts/Goetheanum-Schrift-v2.9-Klar.otf")}'
+            'body{margin:40px;background:#fff}svg{width:100%%;height:auto}text{font-family:G!important}</style>%s' % (REPO, svg2))
         satz = []
         for lab, d in [("Textschrift Klar", None), ("Pfeil-Schrift heute", alt["u"]),
                        ("Entwurf Klar", poly_d(gerade(0, st["Klar"]))),
