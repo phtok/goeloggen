@@ -62,3 +62,40 @@ Fassung 2.92).
   (aus ihren beiden Kanten gemittelt), nur Strich, Verlauf und Kopf der
   Textschrift. Hält das heutige Bild, wird aber in Laut eng: der Kopf hat
   im schmalen Bogen (236 breit) kaum Platz.
+
+## Kritik an Entwurf 1 (25. 11. 2026, auf Bitte des Inhabers)
+
+Nachgemessen: Pfeil-Schrift → Vorschub 1250, Rand links 90 / rechts 340,
+Mitte bei 500, Länge 820; Textschrift → (Klar) Vorschub 823, Rand 66 / 66,
+Mitte 346, Länge 691.
+
+1. **Die Satzprobe ist geschönt.** Sie setzt den Pfeil mittig in seinen
+   Kasten und senkt ihn von Hand ab. Die echte Pfeil-Schrift steht
+   asymmetrisch (90 links, 340 rechts) und 154 Einheiten höher als → der
+   Textschrift. Im Satz wäre der Abstand hinter dem Pfeil fast viermal so gross
+   wie davor.
+2. **Der Strichverlauf gehört zur Schriftgrösse, nicht zum Piktogramm.** In
+   der Textschrift fällt die Verjüngung (Ende 0,71 des Schafts) kaum auf; im
+   grossen Pfeil wird sie zum Keil, ab Deutlich sichtbar wie ein Nagel.
+3. **Kopf: zwei Identitäten.** Die heutigen Pfeile haben lange, offene Arme
+   (7,6 × Strich); der Entwurf übernimmt den kompakten Textkopf. Ruhig (60)
+   ist so schwer wie heute fett (58), wirkt aber gedrungener. Es ist nicht
+   entschieden, ob die Pfeil-Schrift dem Text oder dem Leitsystem folgt.
+4. **Spitze ohne Lichtfalle.** Ab Deutlich laufen Arme und Schaft an der
+   Spitze zu einem dunklen Knoten zusammen.
+5. **Gebogene Pfeile, Entwurf 1:** Der Bogen ändert sich mit dem Gewicht.
+   Ruhig und Laut sind darum verschiedene Zeichnungen und nicht
+   interpolierbar. Vor dem Kopf fehlt eine gerade Strecke; der Kopf sitzt im
+   Bogen und wird ab Deutlich zum Klumpen. Die Spitze zeigt schräg (rund 40°)
+   statt in die Ausfahrt, das gibt es schon heute: liest sich als ‹schräg
+   rechts›, nicht als ‹rechts abbiegen›.
+6. **Technik:** Die Konturen sind Polygone (rund 130 Punkte), keine Kurven.
+   Gut für ein Bild, nicht baubar als Master.
+7. **Es fehlt:** Gebrauchsgrösse (16–24 px, 1×), dunkel, Kompass im
+   neuen Gewicht.
+
+Folgerung für einen dritten Anlauf: erst entscheiden, wem die Pfeil-Schrift
+folgt (Leitsystem oder Text); dann ohne Verjüngung, Kopf mit langen Armen und
+Lichtfalle, gebogene Pfeile mit einer Geometrie für alle Gewichte (Radius für
+das schwerste), Ausfahrt rechtwinklig mit gerader Strecke vor dem Kopf, als
+Bézier-Master.
