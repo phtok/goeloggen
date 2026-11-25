@@ -208,3 +208,18 @@ schätze ich sie nach S1 (Kerning, Akzente) ab 20 px und auf 2×-Schirmen so
 lesbar wie Source; ungemessen bleibt die Lesegeschwindigkeit (kein Lesetest,
 Skill `lesbarkeit` § 9). Empfehlung unverändert **B (Stimme)**, mit dem
 Mischweg ‹Titel und Zitat Serif, Text Source›.
+
+## Entscheid des Inhabers (25. 11. 2026)
+
+‹Die Serif überzeugt mich im Bild gar nicht. Ich würde sie funktional nicht
+integrieren, nur als Ergänzung anbieten. Goetheanum Serif Beta.›
+
+- Umbenannt in **Goetheanum Serif Beta** (Familie, Dateien, Ordner
+  `assets/fonts/proben/goetheanum-serif-beta/`, Skript
+  `build_serif_beta.py`), dazu ein ZIP (zwei OTF, OFL, README), bytegleich
+  gebaut.
+- Angeboten auf https://werkzeuge.goetheanum.ch/schriften.html#download als
+  Karte ‹Ergänzung› und auf der Treibhaus-Seite.
+- **Keine Rolle im Regelwerk** (Option B entfällt), nicht im Paket. Die
+  Fragen 1–3 der Entscheidvorlage oben sind damit erledigt; S1 nur, wenn die
+  Beta später gebraucht wird.

@@ -46,3 +46,19 @@ keine Schriftdatei geändert.
 2. Bei ja: als Fassung der Pfeil-Schrift bauen (Dateiname bleibt, Version
    höher), Beipackzettel S. 5 nachziehen. Das ist ein Paket-Schritt; die
    Schwester-Session ‹Hausschrift 2.93› berührt dieselben Pakete – nach ihr.
+
+## Rückmeldung und zweiter Anlauf (25. 11. 2026)
+
+Inhaber: ‹Die Ableitungen der gebogenen Pfeile überzeugen noch nicht.›
+Klargestellt: Der Entwurf betrifft nur die eigene Schrift ‹Goetheanum
+Pfeile›; in die Textschrift kommt nichts hinzu (dort stehen ← → ↑ ↓ seit
+Fassung 2.92).
+
+![Gebogene Pfeile: heute, Entwurf 1 und Entwurf 2, je in Klar und Laut](pfeile-gebogen-entwurf2-2026-11-25.png) <!-- typo-ok -->
+
+- **Entwurf 1** (oben beschrieben): eigene Mittellinie; der Bogen wird mit
+  dem Gewicht tiefer und breiter.
+- **Entwurf 2**: Schaft genau auf der Mittellinie der heutigen Glyphe
+  (aus ihren beiden Kanten gemittelt), nur Strich, Verlauf und Kopf der
+  Textschrift. Hält das heutige Bild, wird aber in Laut eng: der Kopf hat
+  im schmalen Bogen (236 breit) kaum Platz.

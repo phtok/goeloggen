@@ -205,3 +205,15 @@ würde.› Neu gesetzt: https://werkzeuge.goetheanum.ch/kursive-probe.html
 Beobachtet am Blatt: Laut kursiv läuft am breitesten (der Lesesatz bricht
 bei 1280 als einziger um); Zitat in Kursiv Klar läuft länger als in Leise
 (Kursive 2,7 % breiter, § 1). Die Entscheidvorlage oben bleibt offen.
+
+## Entscheid des Inhabers zur Rolle (25. 11. 2026)
+
+‹Als Rolle nur: Werktitel im Fliesstext. Da hilft es, sonst schlechter
+lesbar.›
+
+- Kursive nur für **Werktitel im Fliesstext**. Nicht für Werktitel im
+  Titel, Fremdwort, Zitat (bleibt Leise) oder Lede.
+- Damit braucht ein Einbau nur **Kursiv Klar** (Fliesstext-Schnitt); Ruhig,
+  Deutlich und Laut bleiben Probe.
+- Offen: Einbau (Webfont, S01 neu fassen) und Form der Grundform (Upright-
+  oder Text-Formen, siehe § 2).
