@@ -257,10 +257,29 @@ def set_info(font, name, weight, angle):
     i.openTypeOS2Type = []
 
 
+def stilsets_alle_sprachen(otf):
+    """Im Sprachsystem latn/DEU der Quelle fehlen ss01/ss02, liga, ccmp, case …:
+    auf Seiten mit lang="de" griffen die Text-Formen nie (gefunden
+    25. 11. 2026). Jedes Sprachsystem bekommt die Features von latn/dflt,
+    die ihm fehlen (eigene, etwa locl, bleiben)."""
+    g = otf["GSUB"].table; fr = g.FeatureList.FeatureRecord
+    for sr in g.ScriptList.ScriptRecord:
+        d = sr.Script.DefaultLangSys
+        if not d: continue
+        ss = list(d.FeatureIndex)
+        for lr in sr.Script.LangSysRecord:
+            have = {fr[i].FeatureTag for i in lr.LangSys.FeatureIndex}
+            for i in ss:
+                if fr[i].FeatureTag not in have:
+                    lr.LangSys.FeatureIndex.append(i)
+            lr.LangSys.FeatureIndex.sort(); lr.LangSys.FeatureCount = len(lr.LangSys.FeatureIndex)
+
+
 def compile_font(font, name):
     import ufo2ft
     otf = ufo2ft.compileOTF(font, removeOverlaps=True, optimizeCFF=0,
                             useProductionNames=True)
+    stilsets_alle_sprachen(otf)
     otf["head"].created = otf["head"].modified = EPOCH
     otf.recalcTimestamp = False
     os.makedirs(OUT, exist_ok=True)
