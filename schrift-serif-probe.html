@@ -47,8 +47,9 @@
   .ld{font-size:var(--t-lede);line-height:1.5;margin:var(--s4) 0 0;max-width:var(--measure);text-wrap:pretty}
   .h.ld{font-weight:var(--w-klar)}
   .txt{font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure);margin:var(--s3) 0 0;text-wrap:pretty}
-  .h.txt{font-weight:var(--w-klar)}
-  .s.txt{max-width:54ch} /* Serif läuft 12 % breiter als Klar: 54ch ≈ 70 Zeichen wie Source in 62ch */
+  .h.txt{font-weight:var(--w-klar);max-width:var(--measure)}
+  .src.txt{max-width:var(--measure-text)}
+  .s.txt{max-width:30em} /* 66 Zeichen in der Serif (0,458 em je Zeichen); Mass in em, nicht ch */
 
   /* Sektionsseite: Kopf in der Sektionsfarbe (B01: Weiss auf --sek-*-dunkel). */
   .sekkopf{background:var(--sek-ssw-dunkel);color:var(--on-accent);padding:var(--s6);border-radius:var(--r-card)}
@@ -73,6 +74,18 @@
   .leiter .px{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
   .leiter p{margin:0;line-height:1.5;text-wrap:pretty}
 
+
+  /* Mischung: Titel und Text in verschiedenen Schriften, je Anwendung drei Wege. */
+  .mxh{font-size:var(--t-h3);margin:var(--s8) 0 0;text-wrap:balance}
+  .mx{border-top:1px solid var(--line);padding-top:var(--s4);margin-top:var(--s6)}
+  .mx > .kicker{display:block;margin-bottom:var(--s2)}
+  .mx .src.txt{max-width:var(--measure-text)}
+  .mx .txt{hyphenate-limit-chars:10 4 4}
+  .nw{white-space:nowrap}
+  .zitat-mix{margin:var(--s6) 0}
+  .zitat-mix p{font-size:clamp(20px,2.6vw,28px);hyphens:none}
+  .zitat-mix p span{display:block;padding-left:1em;text-indent:-1em;text-wrap:balance}
+
   .zeichen{font-size:clamp(26px,4vw,40px);line-height:1.5;margin:var(--s4) 0 0;overflow-wrap:anywhere}
   .fehlt{color:var(--muted)}
 </style>
@@ -91,6 +104,7 @@
     <ul class="sprung">
       <li><a class="chip" href="#titel">Titel</a></li>
       <li><a class="chip" href="#sektion">Sektionsseite</a></li>
+      <li><a class="chip" href="#mischung">Mischung</a></li>
       <li><a class="chip" href="#zitat">Zitat</a></li>
       <li><a class="chip" href="#menge">Mengentext</a></li>
       <li><a class="chip" href="#karte">Karte und Legende</a></li>
@@ -133,6 +147,97 @@
     </div>
   </section>
 
+  <section class="abschnitt" id="mischung" aria-labelledby="h-mischung">
+    <h2 id="h-mischung">Mischung</h2>
+
+    <h3 class="mxh">Sektionsseite</h3>
+      <div class="mx">
+        <p class="wer">Titel Hausschrift Deutlich · Text Serif</p>
+        <div class="sekkopf">
+          <span class="kicker">Sektion für Schöne Wissenschaften</span>
+          <p class="h tit">Das Wort als Brücke</p>
+        </div>
+        <p class="s s1 ld">Eine Tagung über Sprache, Dichtung und das Übersetzen, mit&nbsp;Lesungen am Abend.</p>
+        <p class="s s1 txt" data-mess="s">Wer übersetzt, hört zweimal hin: auf&nbsp;den Klang des Originals und auf das, was die eigene Sprache daraus machen kann. Die Tagung fragt, wie ein Gedicht seine Gestalt behält, wenn es das Land wechselt, und warum manche Wörter sich jedem Versuch entziehen.</p>
+        <p class="s s1 txt" data-mess="s">Am Abend lesen Übersetzerinnen und Übersetzer aus ihrer Arbeit, im&nbsp;Original und in&nbsp;der neuen Sprache nebeneinander. Danach ist Zeit für Fragen, und der Saal bleibt offen, solange das Gespräch dauert.</p>
+      </div>
+      <div class="mx">
+        <p class="wer">Titel Serif · Text Hausschrift Klar</p>
+        <div class="sekkopf">
+          <span class="kicker">Sektion für Schöne Wissenschaften</span>
+          <p class="s s1 tit">Das Wort als Brücke</p>
+        </div>
+        <p class="h ld">Eine Tagung über Sprache, Dichtung und das Übersetzen, mit&nbsp;Lesungen am Abend.</p>
+        <p class="h txt" data-mess="h">Wer übersetzt, hört zweimal hin: auf&nbsp;den Klang des Originals und auf das, was die eigene Sprache daraus machen kann. Die Tagung fragt, wie ein Gedicht seine Gestalt behält, wenn es das Land wechselt, und warum manche Wörter sich jedem Versuch entziehen.</p>
+        <p class="h txt" data-mess="h">Am Abend lesen Übersetzerinnen und Übersetzer aus ihrer Arbeit, im&nbsp;Original und in&nbsp;der neuen Sprache nebeneinander. Danach ist Zeit für Fragen, und der Saal bleibt offen, solange das Gespräch dauert.</p>
+      </div>
+      <div class="mx">
+        <p class="wer">Titel Serif · Text Source Sans&nbsp;3</p>
+        <div class="sekkopf">
+          <span class="kicker">Sektion für Schöne Wissenschaften</span>
+          <p class="s s1 tit">Das Wort als Brücke</p>
+        </div>
+        <p class="src ld">Eine Tagung über Sprache, Dichtung und das Übersetzen, mit&nbsp;Lesungen am Abend.</p>
+        <p class="src txt" data-mess="src">Wer übersetzt, hört zweimal hin: auf&nbsp;den Klang des Originals und auf das, was die eigene Sprache daraus machen kann. Die Tagung fragt, wie ein Gedicht seine Gestalt behält, wenn es das Land wechselt, und warum manche Wörter sich jedem Versuch entziehen.</p>
+        <p class="src txt" data-mess="src">Am Abend lesen Übersetzerinnen und Übersetzer aus ihrer Arbeit, im&nbsp;Original und in&nbsp;der neuen Sprache nebeneinander. Danach ist Zeit für Fragen, und der Saal bleibt offen, solange das Gespräch dauert.</p>
+      </div>
+
+    <h3 class="mxh">Artikel</h3>
+      <div class="mx">
+        <p class="wer">Titel Hausschrift Deutlich · Text Serif</p>
+        <span class="kicker">Wochenschrift · Architektur</span>
+        <p class="h tit">Ein Haus, das wächst</p>
+        <p class="s s1 ld">Hundert Jahre nach der Grundsteinlegung: wie der Beton am Dornacher Hügel lesen gelernt hat.</p>
+        <p class="s s1 txt" data-mess="s">Der Bau steht auf einem Hügel über Dornach, sichtbar vom Tal und von den Jurahöhen. Wer zum ersten Mal hinaufgeht, sieht zuerst den Beton und erst beim Näherkommen die Formen, die sich aus ihm lösen: Fenster, die sich wie Augen öffnen, Säulen, die nicht tragen wollen, sondern wachsen.</p>
+        <p class="s s1 txt" data-mess="s">Im Inneren führen Treppen in&nbsp;Schwüngen nach oben. Der Grosse Saal fasst gegen tausend Menschen; an&nbsp;Festtagen ist er voll, an&nbsp;Werktagen probt die Bühne, und im&nbsp;Foyer warten Gäste aus vielen Ländern auf den Beginn. Abends, wenn die Besucher gegangen sind, hört man im Treppenhaus die eigenen Schritte.</p>
+      </div>
+      <div class="mx">
+        <p class="wer">Titel Serif · Text Hausschrift Klar</p>
+        <span class="kicker">Wochenschrift · Architektur</span>
+        <p class="s s1 tit">Ein Haus, das wächst</p>
+        <p class="h ld">Hundert Jahre nach der Grundsteinlegung: wie der Beton am Dornacher Hügel lesen gelernt hat.</p>
+        <p class="h txt" data-mess="h">Der Bau steht auf einem Hügel über Dornach, sichtbar vom Tal und von den Jurahöhen. Wer zum ersten Mal hinaufgeht, sieht zuerst den Beton und erst beim Näherkommen die Formen, die sich aus ihm lösen: Fenster, die sich wie Augen öffnen, Säulen, die nicht tragen wollen, sondern wachsen.</p>
+        <p class="h txt" data-mess="h">Im Inneren führen Treppen in&nbsp;Schwüngen nach oben. Der Grosse Saal fasst gegen tausend Menschen; an&nbsp;Festtagen ist er voll, an&nbsp;Werktagen probt die Bühne, und im&nbsp;Foyer warten Gäste aus vielen Ländern auf den Beginn. Abends, wenn die Besucher gegangen sind, hört man im Treppenhaus die eigenen Schritte.</p>
+      </div>
+      <div class="mx">
+        <p class="wer">Titel Serif · Text Source Sans&nbsp;3</p>
+        <span class="kicker">Wochenschrift · Architektur</span>
+        <p class="s s1 tit">Ein Haus, das wächst</p>
+        <p class="src ld">Hundert Jahre nach der Grundsteinlegung: wie der Beton am Dornacher Hügel lesen gelernt hat.</p>
+        <p class="src txt" data-mess="src">Der Bau steht auf einem Hügel über Dornach, sichtbar vom Tal und von den Jurahöhen. Wer zum ersten Mal hinaufgeht, sieht zuerst den Beton und erst beim Näherkommen die Formen, die sich aus ihm lösen: Fenster, die sich wie Augen öffnen, Säulen, die nicht tragen wollen, sondern wachsen.</p>
+        <p class="src txt" data-mess="src">Im Inneren führen Treppen in&nbsp;Schwüngen nach oben. Der Grosse Saal fasst gegen tausend Menschen; an&nbsp;Festtagen ist er voll, an&nbsp;Werktagen probt die Bühne, und im&nbsp;Foyer warten Gäste aus vielen Ländern auf den Beginn. Abends, wenn die Besucher gegangen sind, hört man im Treppenhaus die eigenen Schritte.</p>
+      </div>
+
+    <h3 class="mxh">Zitat im Text</h3>
+      <div class="mx">
+        <p class="wer">Text Hausschrift Klar · Zitat Serif</p>
+        <p class="h txt" data-mess="h">Im Divan sammelt Goethe, was er aus der persischen Dichtung gelernt hat. Ein Vers daraus sagt, wozu er die alten Texte&nbsp;liest:</p>
+        <figure class="s s1 zitat zitat-mix">
+          <p><span>Wer nicht von dreitausend Jahren</span> <span>sich weiss Rechenschaft zu&nbsp;geben,</span> <span>bleib im Dunkeln unerfahren,</span> <span>mag von Tag zu&nbsp;Tage&nbsp;leben.</span></p>
+          <figcaption>Johann Wolfgang von&nbsp;Goethe, <span class="nw">West-östlicher Divan</span></figcaption>
+        </figure>
+        <p class="h txt" data-mess="h">Vier Zeilen, und doch ein Programm: Wer liest, holt die Zeit herein, die vor ihm liegt, und steht im Heute nicht mehr allein.</p>
+      </div>
+      <div class="mx">
+        <p class="wer">Text Serif · Zitat Hausschrift Ruhig</p>
+        <p class="s s1 txt" data-mess="s">Im Divan sammelt Goethe, was er aus der persischen Dichtung gelernt hat. Ein Vers daraus sagt, wozu er die alten Texte&nbsp;liest:</p>
+        <figure class="h zitat zitat-mix">
+          <p><span>Wer nicht von dreitausend Jahren</span> <span>sich weiss Rechenschaft zu&nbsp;geben,</span> <span>bleib im Dunkeln unerfahren,</span> <span>mag von Tag zu&nbsp;Tage&nbsp;leben.</span></p>
+          <figcaption>Johann Wolfgang von&nbsp;Goethe, <span class="nw">West-östlicher Divan</span></figcaption>
+        </figure>
+        <p class="s s1 txt" data-mess="s">Vier Zeilen, und doch ein Programm: Wer liest, holt die Zeit herein, die vor ihm liegt, und steht im Heute nicht mehr allein.</p>
+      </div>
+      <div class="mx">
+        <p class="wer">Text Source Sans&nbsp;3 · Zitat Serif</p>
+        <p class="src txt" data-mess="src">Im Divan sammelt Goethe, was er aus der persischen Dichtung gelernt hat. Ein Vers daraus sagt, wozu er die alten Texte&nbsp;liest:</p>
+        <figure class="s s1 zitat zitat-mix">
+          <p><span>Wer nicht von dreitausend Jahren</span> <span>sich weiss Rechenschaft zu&nbsp;geben,</span> <span>bleib im Dunkeln unerfahren,</span> <span>mag von Tag zu&nbsp;Tage&nbsp;leben.</span></p>
+          <figcaption>Johann Wolfgang von&nbsp;Goethe, <span class="nw">West-östlicher Divan</span></figcaption>
+        </figure>
+        <p class="src txt" data-mess="src">Vier Zeilen, und doch ein Programm: Wer liest, holt die Zeit herein, die vor ihm liegt, und steht im Heute nicht mehr allein.</p>
+      </div>
+  </section>
+
   <section class="abschnitt" id="zitat" aria-labelledby="h-zitat">
     <h2 id="h-zitat">Zitat</h2>
     <div class="paar">
@@ -162,7 +267,7 @@
 
   <section class="abschnitt" id="menge" aria-labelledby="h-menge">
     <h2 id="h-menge">Mengentext in 18 bis 20&nbsp;px</h2>
-    <p>Dieselben Absätze in&nbsp;der Lesegrösse des Fundaments, Zeilenhöhe 1,66, Lesemass rund 70&nbsp;Zeichen.</p>
+    <p>Dieselben Absätze in&nbsp;der Lesegrösse des Fundaments, Zeilenhöhe 1,66, Lesemass rund 66Zeilenhöhe 1,66, Lesemass rund 70&nbsp;Zeichen.nbsp;Zeichen.</p>
     <div class="paar voll">
       <div>
         <p class="wer">Serif Probe</p>
