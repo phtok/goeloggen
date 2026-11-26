@@ -88,6 +88,10 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
 
 ## Befunde
 
+- **3.0 (26. 11.):** Entscheidvorlage Kyrillisch in die Hausschrift,
+  Arabisch als variable Schwesterdatei, Griechisch offen:
+  `docs/befunde/schriftsysteme-3.0-2026-11-26.md`.
+
 - Die Hausschrift deckt **kein** Griechisch (1/57), Kyrillisch, Hebräisch,
   Arabisch; Vietnamesisch nur 4/90. Source Sans 3 deckt Griechisch und
   Kyrillisch für den Lesetext.

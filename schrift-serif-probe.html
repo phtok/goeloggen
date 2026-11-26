@@ -2,7 +2,8 @@
 <!-- Treibhaus: Goetheanum Serif Beta (Etappe E4, docs/recherche_titillium-pro.md).
      Font: assets/fonts/proben/goetheanum-serif-beta/ aus
      tools/goetheanum-fontfix/build_serif_beta.py (Ergänzung, nicht im Paket;
-     Entscheid des Inhabers 25. 11. 2026: keine Rolle im Haus, nur anbieten).
+     Entscheid des Inhabers 25. 11. 2026: keine Rolle im Haus, nur anbieten;
+     26. 11.: als Möglichkeit im Display, Fassung 0.2 mit Akzenten und Kerning).
      Befund und Entscheidvorlage: docs/befunde/serif-probe-2026-10-31.md -->
 <html lang="de-CH">
 <head>
@@ -10,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
 <title>Serif Beta · Goetheanum</title>
-<meta name="description" content="Der Serif-Prototyp aus der Titillium-Familie als Goetheanum Serif Beta neben der Hausschrift: Titel, Sektionsseite, Zitat, Lede, Mengentext, Karte." />
+<meta name="description" content="Goetheanum Serif Beta: eine Serif aus der Titillium-Familie für Titel und grosse Grade, neben der Hausschrift." />
 <link rel="icon" type="image/svg+xml" href="assets/favicons/kreis-blau/favicon.svg" />
 <link rel="stylesheet" href="design-system/tokens.css" />
 <link rel="stylesheet" href="design-system/base.css" />
@@ -87,7 +88,7 @@
   .zitat-mix p{font-size:clamp(20px,2.6vw,28px);hyphens:none}
   .zitat-mix p span{display:block;padding-left:1em;text-indent:-1em;text-wrap:balance}
 
-  .zeichen{font-size:clamp(26px,4vw,40px);line-height:1.5;margin:var(--s4) 0 0;overflow-wrap:anywhere}
+  .zeichen{font-size:clamp(26px,4vw,40px);line-height:1.5;margin:var(--s4) 0 0;overflow-wrap:anywhere;hyphens:none}
   .fehlt{color:var(--muted)}
 </style>
 </head>
@@ -98,7 +99,7 @@
   <section class="hero">
     <span class="kicker">Treibhaus · Schriften</span>
     <h1>Goetheanum Serif Beta</h1>
-    <p class="lede">Der Serif-Prototyp der Titillium-Familie neben der Hausschrift, in&nbsp;echten Anwendungen. Ein&nbsp;Gewicht, aufrecht und kursiv, ergänzt um Umlaute, ß und ein einstöckiges&nbsp;a.</p>
+    <p class="lede">Eine Serif für Titel und grosse Grade, neben der Hausschrift. Ein&nbsp;Gewicht, aufrecht und kursiv, mit Akzenten, Kerning und einem einstöckigen&nbsp;a.</p>
     <p><a class="btn" href="assets/fonts/proben/goetheanum-serif-beta/Goetheanum-Serif-Beta.zip" download>Serif Beta herunterladen</a></p>
   </section>
 
@@ -121,6 +122,8 @@
     <div class="paar">
       <div><p class="wer">Serif Beta, einstöckiges a</p><p class="s s1 gross">Faust in&nbsp;der Grossen Bühne</p></div>
       <div><p class="wer">Hausschrift Deutlich</p><p class="h gross">Faust in&nbsp;der Grossen Bühne</p></div>
+      <div><p class="wer">Serif Beta, einstöckiges a</p><p class="s s1 gross">«Yerma» – Teatro, Poesía y&nbsp;Música</p></div>
+      <div><p class="wer">Serif Beta kursiv</p><p class="s gross" style="font-style:italic">Dvořák, Fauré, Janáček</p></div>
     </div>
   </section>
 
@@ -269,7 +272,7 @@
 
   <section class="abschnitt" id="menge" aria-labelledby="h-menge">
     <h2 id="h-menge">Mengentext in 18 bis 20&nbsp;px</h2>
-    <p>Dieselben Absätze in&nbsp;der Lesegrösse des Fundaments, Zeilenhöhe 1,66, Lesemass rund 66Zeilenhöhe 1,66, Lesemass rund 70&nbsp;Zeichen.nbsp;Zeichen.</p>
+    <p>Dieselben Absätze in&nbsp;der Lesegrösse des Fundaments, Zeilenhöhe 1,66, Zeilenhöhe 1,66, Lesemass rund 66&nbsp;Zeichen.</p>
     <div class="paar voll">
       <div>
         <p class="wer">Serif Beta</p>
@@ -339,9 +342,10 @@
 
   <section class="abschnitt" id="zeichen" aria-labelledby="h-zeichen">
     <h2 id="h-zeichen">Zeichenvorrat</h2>
-    <p>Vorhanden, in&nbsp;der Beta ergänzt: Umlaute, ß, Trema, feste Leerzeichen. Grau gesetzt, was fehlt und hier aus&nbsp;der Hausschrift einspringt.</p>
-    <p class="s s1 zeichen">ABCDEFGHIJKLMNOPQRSTUVWXYZ ÄÖÜ abcdefghijklmnopqrstuvwxyz äöüß 0123456789 .,:;!?¡¿ «»‹›„“‚‘’ –—…()[]{}/\*#_</p>
-    <p class="s zeichen fehlt">Café, Molière, Città, Señora · ẞ &amp; % € § @ + = × ° © ½</p>
+    <p>Grau gesetzt, was fehlt und hier aus&nbsp;der Hausschrift einspringt.</p>
+    <p class="s s1 zeichen">ABCDEFGHIJKLMNOPQRSTUVWXYZ ÄÖÜẞ abcdefghijklmnopqrstuvwxyz äöüß 0123456789 .,:;!?¡¿ «»‹›„“‚‘’ –—…()[]{}/\*#_ &amp;%‰€$£§¶@©®+=×÷±°·•†</p>
+    <p class="s s1 zeichen">ÀÁÂÃÅÇÈÉÊÌÍÎÑÒÓÔÕÙÚÛÝ àáâãåçèéêìíîñòóôõùúûý ĀĂĄĆČĎĒĖĘĚĞĮİŃŇŌŐŘŚŞŠŢŪŮŰŲŹŻŽȘȚ āăąćčēėęěğįńňōőřśşšūůűųźżžșț</p>
+    <p class="s zeichen fehlt">ŁłØøÆæŒœĐđďľť ½ Ελληνικά Кириллица</p>
   </section>
 </main>
 

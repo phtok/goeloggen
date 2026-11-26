@@ -122,6 +122,7 @@ Befund als `docs/befunde/…` und trägt Beschlüsse in
       E5 (Black-Probewort) im selben Befund, § 6.
 - [ ] Entscheid Inhaber zur Kursiven (Vorlage im Befund E1).
 - [ ] Titillium Pro beobachten (Serif-Fortschritt, Variable), halbjährlich.
+      Geprüft 26. 11. 2026: nichts Neues, `docs/recherche_chialab-zweite-serif.md`.
 - [ ] Elbonium (Dribbble) nicht gesichtet; Bild vom Inhaber.
 - [x] **E2 Glyphen, Kerning, Metriken** – erledigt 31. 10. 2026: Hausschrift
       v2.9, Befund `docs/befunde/schrift-v29-titillium-pro.md`, Vergleich

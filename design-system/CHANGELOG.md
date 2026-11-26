@@ -16,6 +16,17 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 26. November 2026 — Serif Beta 0.2 für Titel und grosse Grade (Ergänzung, Version des Systems unverändert)
+
+**Was.** Goetheanum Serif Beta 0.2: Akzente für die west- und
+mitteleuropäischen Sprachen, ẞ, Zeichen (& % ‰ € § @ © + = × …) und das
+Kerning der Titillium Sans Pro (nur schliessende Paare, Kollisionswache für die
+Serifen), 300 statt 118 Zeichen. **Warum.** Inhaber 26. 11.: ‹als Möglichkeit
+im Display anbieten. Entsprechend optimieren.› **Wirkung.** Kein Token, keine
+Rolle im Regelwerk, nicht im Paket; Angebot auf
+https://werkzeuge.goetheanum.ch/schriften.html#download, Seite
+https://werkzeuge.goetheanum.ch/schrift-serif-probe.html.
+
 ## 26. November 2026 — Hausschrift Fassung 2.94: ‰ neu, Kapitälchen-ẞ (Schrift, Version des Systems unverändert)
 
 **Was.** `‰` aus dem `%` der Schrift plus zweitem Ring, Abstand der unteren
