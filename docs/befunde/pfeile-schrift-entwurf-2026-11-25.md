@@ -129,3 +129,30 @@ Varianten:
 | D Heute | heutige Mittellinie, neuer Strich und Kopf | bleibt eng; in Laut gedrängt, verworfen |
 
 Empfehlung: **C Schwung**, A als Alternative für ein strenges Leitsystem.
+
+## Entwurf 4: schräg, mit Strichverlauf (26. 11. 2026)
+
+Inhaber zu Entwurf 3: ‹Schräg kommt dem Entwurf am nächsten. Doch das
+Gestaltungsprinzip scheint noch nicht voll erfasst zu sein: Die Balken
+verjüngen sich leicht am Ende. Schau die Pfeile und die Titillium-Elemente
+genauer an. Das gibt Dynamik und Eleganz.›
+
+![Pfeil-Schrift, Entwurf 4: Variante B mit Strichverlauf in Ruhig, Klar, Deutlich und Laut, darüber heute und Entwurf 3 B](pfeile-gebogen-entwurf4-2026-11-26.png) <!-- typo-ok -->
+
+Gemessen (senkrecht durch den Schaft von →):
+
+| | Schwanz | am Kopf | Verhältnis |
+|---|--:|--:|--:|
+| Pfeil-Schrift dünn | 24 | 32 | 0,75 |
+| Pfeil-Schrift fett | 58 | 72 | 0,81 |
+| Titillium Sans Pro → (Thin, Regular, Bold) | gleich | gleich | 1,00 |
+
+Die Hausschrift verjüngt Diagonalen leicht zum Knoten (v 80 → 76, y-Schwanz
+79 → 74, je rund 5 %); die Pro-Pfeile haben keinen Verlauf. Der Verlauf ist
+das eigene Merkmal der Pfeil-Schrift, die Titillium gibt ihr die Richtung
+(schlanker zum Ende hin).
+
+Entwurf 4 (`entwurf_pfeile_gebogen4.py`): Geometrie von 3 B, Schaft vom Kopf
+zum Schwanz auf 0,78, Arme von der Wurzel (0,88) zum Ende (0,74), Innenkante
+dadurch steiler, Spitze spitz, Lichtfalle im inneren Scheitel. Gerade und
+gebogene Pfeile in Ruhig, Klar, Deutlich, Laut.

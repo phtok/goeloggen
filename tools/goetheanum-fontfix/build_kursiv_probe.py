@@ -17,8 +17,9 @@
 #      drei Master). Zielwert = senkrechte Stammdicke des Hausschnitts
 #      (Klar: 82) geteilt durch cos(12°) – so ist der geneigte Stamm
 #      quer zur Strichrichtung so dick wie der aufrechte.
-#   2. Upright-Formen: ss01 (einstöckiges a) und ss02 (gerades l) der Pro
-#      werden zur Grundform; die Text-Formen bleiben über ss01/ss02 erreichbar.
+#   2. Mischform (Entscheid Inhaber 26. 11. 2026): a mit Fuss (ss01 der Pro,
+#      wie die aufrechte a) wird Grundform, l mit Bogen (Grundform der Pro)
+#      bleibt. ss01 = a ohne Fuss, ss02 = gerades l (nüchtern, für Gestalter).
 #      g, y, t der Pro-Kursiven entsprechen schon der Hausform.
 #   3. Vertikalmetriken wie die Hausschnitte (typo 750/−250, lineGap 0,
 #      USE_TYPO_METRICS, win/hhea gleich) – gleiche Zeilenhöhe im Satz.
@@ -191,9 +192,9 @@ def designspace(paths, stems, instances):
 
 
 def swap_upright(font):
-    """ss01/ss02-Formen (einstöckiges a, gerades l) werden Grundform."""
+    """ss01-Form (a mit Fuss) wird Grundform, die Pro-a geht auf ss01."""
     pairs = []
-    for tag in ("ss01", "ss02"):
+    for tag in ("ss01",):  # nur das a; l bleibt mit Bogen (Mischform, Inhaber 26. 11.)
         block = re.search(r"feature %s \{(.*?)\} %s;" % (tag, tag), font.features.text, re.S)
         for base, alt in re.findall(r"sub (\S+) by (\S+);", block.group(1)):
             if base in font and alt in font and (base, alt) not in pairs:
@@ -212,8 +213,8 @@ def swap_upright(font):
         a.width, b.width = wb, wa
         a.anchors, b.anchors = anb, ana
     fea = font.features.text
-    fea = fea.replace('name "One story a";', 'name "Titillium-a (Text-Form)";')
-    fea = fea.replace('name "Straight l";', 'name "l mit Bogen (Text-Form)";')
+    fea = fea.replace('name "One story a";', 'name "a ohne Fuss (Textform)";')
+    fea = fea.replace('name "Straight l";', 'name "gerades l (nüchtern)";')
     font.features.text = fea
     return [p[0] for p in pairs]
 

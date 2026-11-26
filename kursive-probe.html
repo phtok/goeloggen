@@ -43,15 +43,15 @@
 
   /* Die Probe: echte Kursive. Synthese aus, damit nichts schräggestellt wird. */
   .k{font-family:"Goetheanum Kursiv Probe",var(--font);font-style:italic;font-synthesis:none}
-  .k.text{font-feature-settings:"ss01","ss02"}
+  .k.text{font-feature-settings:"ss01"}
   .w-ruhig{font-weight:var(--w-ruhig)} .w-klar{font-weight:var(--w-klar)}
   .w-deutlich{font-weight:var(--w-deutlich)} .w-laut{font-weight:var(--w-laut)}
   .leise{font-weight:var(--w-leise)}
 
-  /* Grundform und Textform: drei Spalten nebeneinander */
+  /* Grundform und Varianten: vier Spalten nebeneinander */
   .drei{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s5) var(--s6)}
   @media (min-width:900px){.drei{grid-template-columns:repeat(4,minmax(0,1fr))}}
-  .k.nur-l{font-feature-settings:"ss02"}
+  .k.nuechtern{font-feature-settings:"ss02"}
   .drei .ml{margin-bottom:var(--s3)}
   .riesig{font-size:clamp(64px,10vw,130px);line-height:1.1;margin:0;white-space:nowrap}
   .mittel{hyphens:manual;font-size:clamp(24px,3vw,36px);line-height:1.25;margin:0;text-wrap:balance}
@@ -90,14 +90,14 @@
   </section>
 
   <section class="block" aria-labelledby="h-textform">
-    <div class="shead"><h2 id="h-textform">Grundform und Textform</h2></div>
+    <div class="shead"><h2 id="h-textform">Grundform und Varianten</h2></div>
 
     <div class="probe">
       <div class="drei">
         <div><span class="ml">Klar, aufrecht</span><p class="riesig w-klar">al</p></div>
         <div><span class="ml">kursiv, Grundform</span><p class="riesig k w-klar">al</p></div>
-        <div><span class="ml">kursiv, Textform</span><p class="riesig k text w-klar">al</p></div>
-        <div><span class="ml">kursiv, a Grund, l Text</span><p class="riesig k nur-l w-klar">al</p></div>
+        <div><span class="ml">kursiv, a ohne Fuss (ss01)</span><p class="riesig k text w-klar">al</p></div>
+        <div><span class="ml">kursiv, nüchtern (ss02)</span><p class="riesig k nuechtern w-klar">al</p></div>
       </div>
     </div>
 
@@ -107,7 +107,7 @@
         <p class="mittel w-klar">Il1 Illustration</p>
         <p class="mittel k w-klar">Il1 Illustration</p>
         <p class="mittel k text w-klar">Il1 Illustration</p>
-        <p class="mittel k nur-l w-klar">Il1 Illustration</p>
+        <p class="mittel k nuechtern w-klar">Il1 Illustration</p>
       </div>
     </div>
 
@@ -117,7 +117,7 @@
         <p class="mittel w-klar">Halle Ballade alle&nbsp;Fälle</p>
         <p class="mittel k w-klar">Halle Ballade alle&nbsp;Fälle</p>
         <p class="mittel k text w-klar">Halle Ballade alle&nbsp;Fälle</p>
-        <p class="mittel k nur-l w-klar">Halle Ballade alle&nbsp;Fälle</p>
+        <p class="mittel k nuechtern w-klar">Halle Ballade alle&nbsp;Fälle</p>
       </div>
     </div>
 
@@ -129,12 +129,12 @@
           <p class="txt">Der Kurs liest <cite class="k w-klar">Allgemeine Menschenkunde</cite> neben <cite class="k w-klar">Die&nbsp;Philosophie der&nbsp;Freiheit</cite>; am Abend spielt das Ensemble <cite class="k w-klar">Faust&nbsp;I</cite> im Grossen&nbsp;Saal.</p>
         </div>
         <div>
-          <span class="ml">Textform</span>
+          <span class="ml">a ohne Fuss (ss01)</span>
           <p class="txt">Der Kurs liest <cite class="k text w-klar">Allgemeine Menschenkunde</cite> neben <cite class="k text w-klar">Die&nbsp;Philosophie der&nbsp;Freiheit</cite>; am Abend spielt das Ensemble <cite class="k text w-klar">Faust&nbsp;I</cite> im Grossen&nbsp;Saal.</p>
         </div>
         <div>
-          <span class="ml">a Grund, l Text</span>
-          <p class="txt">Der Kurs liest <cite class="k nur-l w-klar">Allgemeine Menschenkunde</cite> neben <cite class="k nur-l w-klar">Die&nbsp;Philosophie der&nbsp;Freiheit</cite>; am Abend spielt das Ensemble <cite class="k nur-l w-klar">Faust&nbsp;I</cite> im Grossen&nbsp;Saal.</p>
+          <span class="ml">nüchtern (ss02)</span>
+          <p class="txt">Der Kurs liest <cite class="k nuechtern w-klar">Allgemeine Menschenkunde</cite> neben <cite class="k nuechtern w-klar">Die&nbsp;Philosophie der&nbsp;Freiheit</cite>; am Abend spielt das Ensemble <cite class="k nuechtern w-klar">Faust&nbsp;I</cite> im Grossen&nbsp;Saal.</p>
         </div>
       </div>
     </div>
@@ -154,7 +154,7 @@
         <p class="wort k w-klar">Halle Glas Wege</p>
       </div>
       <div>
-        <span class="ml">Klar, kursiv, Text-Formen</span>
+        <span class="ml">Klar, kursiv, a ohne Fuss (ss01)</span>
         <p class="glyphen k text w-klar">agytl</p>
         <p class="wort k text w-klar">Halle Glas Wege</p>
       </div>

@@ -251,3 +251,41 @@ Textform-l mit Bogen ist das einzige Zeichen, das l von I trennt.
 **Empfehlung:** keine Stilsets, eine feste Form: a mit Fuss (Grundform),
 l mit Bogen (Textform) als Grundform der Kursiven (G03 Weglassen: wer nur
 eine Rolle hat, braucht keine Wahl).
+
+## Entscheid Form und Frage Name, Datei, Achse (26. 11. 2026)
+
+Inhaber: ‹Ich bevorzuge die Textform, noch mehr deine Mischform, die
+nüchterne Form darf nur für Spezialisten/Designer zugänglich sein via
+alternativem Set.›
+
+- **Grundform jetzt Mischform:** a mit Fuss, l mit Bogen. `ss01` = a ohne
+  Fuss, `ss02` = gerades l (nüchtern). Alle vier Probe-Schnitte neu gebaut;
+  Blatt ‹Grundform und Varianten›.
+
+**Name.** ‹Goetheanum Kursiv› ist zulässig. Die Titillium Pro nennt keinen
+Reserved Font Name (`LICENSE.txt`, Copyright The Titillium Pro Project
+Authors); ‹Titillium› bleibt ohnehin draussen, wie in der Hausschrift. Pflicht
+nach OFL: Copyright-Zeile der Pro und Lizenz mitliefern, Schrift nicht allein
+verkaufen. ‹Kursiv› trifft es, nicht ‹Schräg›: eigene Formen (a, l, f mit
+Unterlänge), keine geneigte Aufrechte. Im Web heisst sie gar nicht eigens,
+sondern ist ‹Goetheanum› mit `font-style: italic`.
+
+**Alle Fetten.** Geht: Die drei Kursiv-Master (Thin, Regular, Bold) sind
+kompatibel. Gemessen: Flüstern (190) braucht geneigt Stamm 36,8, Thin hat 35
+(innerhalb); Schreien (725) braucht 141, Bold hat 137 (3 % Fortschreibung).
+Bedingung: der Bold-Master vollständig (heute 152 Glyphen fehlen, 21 sind
+fortgeschrieben, § 3).
+
+**Achse in der Variable oder eigene Datei.** Eigene Datei, aus drei Gründen:
+1. Aufrechte (Titillium Upright) und Kursive (Pro) haben verschiedene
+   Konturen; eine echte `ital`-Achse ginge nur als Umschalter per
+   FeatureVariations: doppelte Datei, uneinheitlich in Browsern und Office.
+2. **Sparsam:** Der Browser lädt eine `@font-face` erst, wenn Text sie
+   braucht. Eine eigene Kursiv-Datei kostet auf Seiten ohne Werktitel nichts;
+   als Achse wöge sie in jeder Seite mit.
+3. In Office stellt eine eigene Familie die Kursive nicht auf ⌘I – das hält
+   sie selten (⌘I bleibt Leise).
+
+**Empfehlung:** ‹Goetheanum Kursiv Variabel› (wght 190–725) für Gestalter,
+dazu statisch nur **Kursiv Klar** für Web und Office (die eine Rolle: Werktitel
+im Fliesstext). S01 neu fassen: ‹Kursiv nur für Werktitel im Fliesstext›.
