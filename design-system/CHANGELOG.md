@@ -16,6 +16,15 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 26. November 2026 — Hausschrift Fassung 2.94: ‰ neu, Kapitälchen-ẞ (Schrift, Version des Systems unverändert)
+
+**Was.** `‰` aus dem `%` der Schrift plus zweitem Ring, Abstand der unteren
+Ringe wie zwei `o` auf Ringhöhe (Flüstern 60, Klar 49, Schreien 34), Ringe
+folgen dem Gewicht zu 85 %; Kapitälchen `ß` → `ẞ`; Kerning von `ĳ ﬁ ﬂ` als
+Kapitälchen richtig herum. **Warum.** Inhaber 26. 11.: ‰ ab Deutlich zu fett,
+Ringe liefen ineinander; Wunsch ß-Kapitälchen. **Wirkung.** Bis Klar fast
+unverändert; https://werkzeuge.goetheanum.ch/schriften.html auf 2.94.
+
 ## 25. November 2026 — Hausschrift Fassung 2.93: Konturrichtung, Kapitälchen, Adressen (Schrift, Version des Systems unverändert)
 
 **Was.** Verkehrt gedrehte Konturen umgekehrt (`‰` und 29 weitere je Schnitt,

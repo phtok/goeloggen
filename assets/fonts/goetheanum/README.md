@@ -35,6 +35,16 @@ SIL OFL). Reparaturen und Begründung siehe
 
 Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
 
+## Neu in Fassung 2.94 (26. 11. 2026)
+
+Gleiche Dateinamen v2.9, intern Version 2.94.
+
+- **‰ neu gebaut:** genau das `%` der Schrift plus ein zweiter Ring. Die
+  unteren Ringe stehen so weit auseinander wie zwei `o` (auf Ringgrösse) und
+  werden im Fetten etwas leichter gehalten; bisher liefen sie ab Deutlich
+  ineinander.
+- **Kapitälchen ß → ẞ** (statt `ss`): Namen bleiben unterscheidbar (Weiß, Weiss).
+
 ## Neu in Fassung 2.93 (25. 11. 2026)
 
 Gleiche Dateinamen v2.9, intern Version 2.93; Codepunkte unverändert (677).

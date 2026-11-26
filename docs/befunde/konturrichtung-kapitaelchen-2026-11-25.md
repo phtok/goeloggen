@@ -62,9 +62,8 @@ gibt). Kerning: jede neue Glyphe erbt die Klassen ihres Grundbuchstabens.
 - **Gleiche Form**: `µ μ` → Kapitälchen m, `ȷ` → j.
 - **İ** (nur `c2sc`): Kapitälchen i mit Punkt (Türkisch).
 
-Entscheide in dieser Session, zur Bestätigung durch den Inhaber:
-- `ß` → `ss` (Duden: SS im Versalsatz). Wer ausdrücklich `ẞ` tippt, bekommt
-  mit `c2sc` das Kapitälchen-ẞ.
+Entscheide des Inhabers (26. 11.):
+- `ß` → Kapitälchen-`ẞ` (ab Fassung 2.94; in 2.93 noch `ss`).
 - `ƒ` bleibt ohne Kapitälchen: Gulden-Zeichen, die Schrift hat kein `Ƒ`.
 
 Prüfung: `proof_variable_axis.py --alle` – 1004 Glyphen an sieben Stufen,
@@ -79,3 +78,23 @@ v2.8) und neue Adressen ohne Fassungsnummer (`Goetheanum-Variabel.woff2`,
 `Befund/` liegen jetzt in `tools/goetheanum-fontfix/befund/` und werden nicht
 mehr ausgeliefert; die Treibhaus-Seiten guillemets.html und schrift-v29.html
 laden sie von raw.githubusercontent.com.
+
+## 4 Fassung 2.94 (26. 11. 2026)
+
+![‰ und Kapitälchen-ẞ, 2.93 und 2.94](konturrichtung-kapitaelchen-2026-11-26-promille.png) <!-- typo-ok -->
+
+Inhaber: ‰ ab Deutlich zu fett, die Ringe fliessen ineinander. Befund: Das
+Zeichen stammte aus v1.4.43, die Ringe standen an festen Stellen und wurden
+nur dicker; der Abstand der unteren schrumpfte von 52 auf 17 Einheiten. Ein
+erster Vorschlag (Abstand wachsend, 52 → 68) wirkte unnatürlich weit.
+
+Regel jetzt, gebaut in `build_v294.py`:
+- `‰` ist genau das `%` der Schrift plus ein zweiter, gleicher unterer Ring.
+- Die Ringe sind verkleinerte `o` (gleiche Proportion 0,81), also stehen sie
+  so weit auseinander wie zwei `o` der Schrift, auf Ringhöhe verkleinert:
+  Flüstern 60, Klar 49, Schreien 34 Einheiten.
+- Die drei Ringe folgen dem Gewicht zu 85 %, damit die Punzen offen bleiben;
+  der Schrägstrich folgt dem Schnitt (Entscheid «Ringe leichter»).
+
+Dazu Kapitälchen `ß` → `ẞ` und das Kerning der Kapitälchen `ĳ ﬁ ﬂ` richtig
+herum (in 2.93 vertauscht: rechts zählte der erste Teil).

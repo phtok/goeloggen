@@ -100,6 +100,21 @@ python3 webfont_adressen.py                # nach JEDEM Schrift-Bau: alte und un
 Vergleichsdateien früherer Fassungen liegen in `befund/` (nur im Repo, nicht
 ausgeliefert; vorher `assets/fonts/goetheanum/Befund/`).
 
+## Fassung 2.94: ‰ neu, Kapitälchen-ẞ (26. 11. 2026)
+‰ genau aus dem % der Schrift plus zweitem Ring, Abstand wie zwei o auf
+Ringhöhe, Ringe folgen dem Gewicht zu 85 %; Kapitälchen ß → ẞ. Befund
+`docs/befunde/konturrichtung-kapitaelchen-2026-11-25.md` § 4. Liest Fassung 2.93
+aus git, zweiter Lauf bitgleich.
+```bash
+python3 build_v294.py
+python3 proof_variable_axis.py --alle
+python3 proof_v294.py
+python3 build_beipackzettel.py             # aus der Repo-Wurzel
+python3 build_office_ttf.py
+python3 pack_release_zip.py
+python3 webfont_adressen.py
+```
+
 ## Verifikation
 ```bash
 pip install fontbakery
