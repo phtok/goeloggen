@@ -156,3 +156,27 @@ Entwurf 4 (`entwurf_pfeile_gebogen4.py`): Geometrie von 3 B, Schaft vom Kopf
 zum Schwanz auf 0,78, Arme von der Wurzel (0,88) zum Ende (0,74), Innenkante
 dadurch steiler, Spitze spitz, Lichtfalle im inneren Scheitel. Gerade und
 gebogene Pfeile in Ruhig, Klar, Deutlich, Laut.
+
+## Entwurf 5: flache Spitze, Verlauf mit der Fette (26. 11. 2026)
+
+Inhaber zu Entwurf 4: ‹Die Pfeilspitze gehören flach, keine zu breite
+Fläche! Die Verjüngung könnte mit der Fette deutlicher werden? Oder
+widerspricht das gemessenen Details an den Urentwürfen aus Urbino?›
+
+![Pfeil-Schrift, Entwurf 5: flache Spitze, Verlauf von Ruhig 0,82 bis Laut 0,72](pfeile-gebogen-entwurf5-2026-11-26.png) <!-- typo-ok -->
+
+Gemessen:
+
+- **Urbino-Titillium** (`sources/Titillium-*Upright.otf`) hat **keine
+  Pfeile**. Ihre Diagonalen verjüngen sich zum Knoten, **mit der Fette
+  stärker**: v Thin 0,97 · Light 0,95 · Regular 0,95 · Semibold 0,93 ·
+  Bold 0,91 (y-Schwanz 0,95–0,97).
+- **Pfeil-Schrift heute** (aus dem Icon-Font, nicht aus Urbino): Schaft
+  dünn 0,75, fett 0,81 – also umgekehrt. Nur zwei Gewichte, getrennt
+  gezeichnet; kein Gesetz, eher Zufall der Zeichnung.
+- **Spitze heute:** flach, 0,95 × Schaft.
+
+Also kein Widerspruch zu Urbino: Ein Verlauf, der mit der Fette deutlicher
+wird, folgt der Titillium. Entwurf 5 (`entwurf_pfeile_gebogen5.py`): Schaft
+Ruhig 0,82 · Klar 0,79 · Deutlich 0,75 · Laut 0,72, Arme im gleichen Mass;
+Spitze flach, 0,55 × Schaft breit (Vergleichsreihe mit 0,95 wie heute).
