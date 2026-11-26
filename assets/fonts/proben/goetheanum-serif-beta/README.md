@@ -1,4 +1,4 @@
-# Goetheanum Serif Beta (Version 0.2)
+# Goetheanum Serif Beta (Version 0.3)
 
 **Ergänzung, nicht Teil der Hausschrift.** Eine Serif zum freien Gebrauch
 neben der Goetheanum Schrift, gedacht für Titel und grosse Grade (Display),
@@ -10,7 +10,8 @@ nicht für Lesetext. Beta: ein Gewicht, aufrecht und kursiv.
   65ca153 (4. 2. 2026).
 - Lizenz: SIL Open Font License 1.1 (`OFL.txt`). Umbenannt, weil
   «Titillium» als Reserved Font Name der Familie gilt.
-- Ergänzt: ä ö ü ë ï ÿ Ä Ö Ü Ë Ï, ß, einstöckiges a als Stilset `ss01`,
+- Ergänzt: ä ö ü ë ï ÿ Ä Ö Ü Ë Ï, ß, einstöckiges a als Grundform (seit 0.3;
+  das zweistöckige der Quelle als Stilset `ss01`),
   feste und schmale Leerzeichen, weiches Trennzeichen.
 - Seit 0.2 (26. 11. 2026), aus Titillium Sans Pro (Chialab, OFL): Akzente
   für die west- und mitteleuropäischen Sprachen (é à ñ ç č ř ő ą ș …), ẞ,

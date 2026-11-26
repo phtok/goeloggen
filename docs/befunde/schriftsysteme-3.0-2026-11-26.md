@@ -80,6 +80,20 @@ Office-Paket.
    Empfehlung ja; das ist die kleine Etappe und kann zuerst laufen.
 3. **Griechisch offen lassen?** Empfehlung ja.
 
+## Entscheid des Inhabers (26. 11. 2026)
+
+‹Kyrillisch in die Hausschrift. Wie weit in die Variable integrierbar?
+Arabisch extra ist sehr gut. Griechisch in Source Sans reicht aus.›
+
+- **Kyrillisch:** ja, in die Hausschrift. In die Variable ganz: Jedes neue
+  Zeichen wird in allen sechs Mastern gezeichnet (wie die lateinischen), dann
+  läuft es stufenlos von Flüstern bis Schreien mit, und die fünf statischen
+  Schnitte und Office-TTF entstehen daraus wie heute. Grenze nur dort, wo
+  ein Zeichen nicht in allen Mastern gleich gebaut ist; das prüft
+  `proof_variable_axis.py --alle`.
+- **Arabisch:** als variable Schwesterdatei (Etappe A1).
+- **Griechisch:** Source Sans 3 reicht; keine eigene Zeichnung.
+
 ## Etappen nach Entscheid
 
 | Etappe | Inhalt | Ergebnis |
