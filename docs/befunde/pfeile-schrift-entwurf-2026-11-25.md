@@ -215,6 +215,10 @@ Laut 0,72). Bauplan wie empfohlen:
   der Bogen ist eine Kurve je Seite, der Verlauf läuft durch ihn hindurch.
   Die flache Spitze liegt genau am Ende der Länge (Entwurf 5 schnitt sie
   hinter der Gehrung ab, rund 0,25 × Schaft kürzer).
+- **Armlänge im Text** (Inhaber 26. 11.: ‹die alten kleinen Pfeile sind viel
+  deutlicher im Text›): in der Textschrift wieder wie 2.92 (halbe
+  Spitzenbreite 0,27 × Länge + 0,9 × Strich), länger als das Verhältnis der
+  Pfeil-Schrift.
 - **Zuordnung** Pfeil-Schrift → Unicode: 2 ↱ · 0 ⬎ · q ↲ · e ⬑ · o ↰ · ü ⬏
   · s ↳ · ö ⬐.
 - **Geprüft:** Konturrichtung Pfeil-Schrift 0 Glyphen (Schnitte unverändert

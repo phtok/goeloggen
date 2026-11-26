@@ -17,13 +17,13 @@
 #    An jedem Master neu gezogen (feste Punktfolge, also interpolierbar).
 #    Lage wie 2.92: Länge = Versalhöhe, Mitte auf halber Versalhöhe; schräge
 #    Pfeile so lang wie ↑, ↔ ↕ um 1/5 länger. Strich im Mittel = Minus,
-#    Seitenrand = linker Rand des Minus. Kopf im Verhältnis der Pfeil-Schrift
-#    (Arm 250/820 der Länge). Gebogene Pfeile so hoch wie ↑ (bzw. so lang
+#    Seitenrand = linker Rand des Minus. Armlänge wie 2.92 (arm_text: im Text
+#    deutlicher als das Verhältnis der Pfeil-Schrift, Arm 250/820). Gebogene Pfeile so hoch wie ↑ (bzw. so lang
 #    wie →, wenn sie waagrecht beginnen), Mitte auf halber Versalhöhe.
 #  Die Kursive (2.95) bleibt unberührt: ihre Pfeile stammen aus der Pro.
 #
 # Aufruf:  python3 build_v296.py
-import os, sys, subprocess, tempfile
+import math, os, sys, subprocess, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 from fontTools.ttLib import TTFont
 from fontTools.pens.boundsPen import BoundsPen
@@ -112,11 +112,21 @@ def pfeil_schrift(s_duenn, s_fett):
 
 
 # ---------- 2 Grundschrift ----------
+def arm_text(L, s):
+    """Armlänge im Text wie in Fassung 2.92 (Inhaber 26. 11.: ‹die alten kleinen
+    Pfeile sind viel deutlicher im Text, mit längeren Enden der Pfeilspitzen›):
+    halbe Spitzenbreite 0,27 × Länge + 0,9 × Strich, Arm 50° zum Schaft, abzüglich
+    der halben stumpfen Spitze (0,95 × Schaft, Verlauf 0,71)."""
+    J = 2 / 1.71 * s
+    return (0.27 * L + 0.9 * s - 0.95 * J / 2) / math.sin(math.radians(50))
+
+
 def gestalt(cp, cap, s, sb):
     """Kontur und Vorschub eines Pfeils an einem Master."""
-    arm = P.ARM * cap / P.KASTEN
+    arm = arm_text(cap, s)
     if cp in GERADE:
         grad, dop = GERADE[cp]
+        if dop: arm = arm_text(cap * DOPPEL, s)
         cs = P.doppelt(cap * DOPPEL, s, arm) if dop else P.gerade(cap, s, arm)
         cs = P.verschieben(P.drehen(cs, grad), 0, cap / 2)
     else:
