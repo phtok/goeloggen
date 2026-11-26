@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-# Goetheanum Kursiv, Fassung 2.94 (26. 11. 2026). Entscheid des Inhabers vom
+# Goetheanum Kursiv, Fassung 2.95 (26. 11. 2026). Entscheid des Inhabers vom
 # 26. 11.; Bauplan und Befund: docs/befunde/kursive-probe-e1-2026-10-31.md
-# (Abschnitte «Entscheid Form …», «Entscheid Bau», «Bau 2.94»).
+# (Abschnitte «Entscheid Form …», «Entscheid Bau», «Bau 2.95»).
 #
 # Baut aus den drei Kursiv-Mastern der Titillium Sans Pro (OFL):
 #   - Variable/Goetheanum-Kursiv-Variabel-v2.9.otf   ‹Goetheanum Kursiv Variabel›,
@@ -59,7 +59,7 @@ from fontTools.pens.areaPen import AreaPen
 
 REPO = P.REPO
 ROOT = os.path.join(REPO, "assets/fonts/goetheanum")
-VERSION, VMAJ, VMIN = "2.94", 2, 940
+VERSION, VMAJ, VMIN = "2.95", 2, 950
 EPOCH = 3_847_219_200  # 26. 11. 2025 in Mac-Epoche, fest
 FAMILY_VAR = "Goetheanum Kursiv Variabel"
 FAMILY_STAT = "Goetheanum Kursiv"

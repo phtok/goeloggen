@@ -3,7 +3,7 @@
 # versionierten Adresse in Webfonts/ (v2.7, v2.8 – in Mails und fremden
 # Seiten verlinkt) liegt die aktuelle Fassung, dazu unversionierte Adressen,
 # die immer die neueste Fassung liefern:
-#   Webfonts/woff2/Goetheanum-Schrift-Klar.woff2, …-Kursiv-Klar.woff2 (seit 2.94),
+#   Webfonts/woff2/Goetheanum-Schrift-Klar.woff2, …-Kursiv-Klar.woff2 (seit 2.95),
 #   …-Variabel.woff2, …-Icons, …-Pfeile
 # Quelle sind die Dateien mit AKTUELL im Namen. Nach jedem Schrift-Bau laufen
 # lassen; idempotent (reine Kopien).

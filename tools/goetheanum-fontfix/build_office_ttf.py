@@ -30,7 +30,7 @@ JOBS = [
     ("Goetheanum-Schrift-v2.9-Laut.otf",     "trio",  "GoetheanumSchriftLaut",           None),
     ("Goetheanum-Icons-v2.9.otf",            "flach", "GoetheanumIconsOffice",           "Goetheanum Icons"),
     ("Goetheanum-Pfeile-v2.9.otf",           "flach", "GoetheanumPfeileOffice",          "Goetheanum Pfeile"),
-    # Kursive (Fassung 2.94): eigene Familie, ⌘I bleibt Leise (build_kursiv.py)
+    # Kursive (Fassung 2.95): eigene Familie, ⌘I bleibt Leise (build_kursiv.py)
     ("Goetheanum-Kursiv-v2.9-Klar.otf",      "flach", "GoetheanumKursivOffice",          "Goetheanum Kursiv"),
 ]
 

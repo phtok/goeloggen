@@ -300,7 +300,7 @@ S01 neu fassen: ‹Kursiv nur für Werktitel im Fliesstext›. Vorher den
 Bold-Master vervollständigen (152 fehlende Glyphen) oder bei Chialab anfragen
 (Handlung nach aussen: Inhaber fragen).
 
-## Bau 2.94 (26. 11. 2026)
+## Bau 2.95 (26. 11. 2026)
 
 Gebaut nach dem Entscheid oben. Skript
 `tools/goetheanum-fontfix/build_kursiv.py` (idempotent, dreimal gebaut,

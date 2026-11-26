@@ -30,7 +30,7 @@
      ohne dieses CSS ebenfalls stimmt. */
   ascent-override:75%; descent-override:25%; line-gap-override:0%;
 }
-/* --- Kursive: Goetheanum Kursiv Klar (Fassung 2.94) ------------------------ */
+/* --- Kursive: Goetheanum Kursiv Klar (Fassung 2.95) ------------------------ */
 /* Nur für Werktitel im Fliesstext. Eigene Datei: der Browser lädt sie erst,
    wenn Text sie braucht – Seiten ohne Kursive kostet sie nichts. */
 @font-face{

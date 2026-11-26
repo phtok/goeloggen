@@ -16,7 +16,7 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
-## 26. November 2026 — Goetheanum Kursiv (Fassung 2.94; Schrift, Version des Systems unverändert)
+## 26. November 2026 — Goetheanum Kursiv (Fassung 2.95; Schrift, Version des Systems unverändert)
 
 **Was.** `tokens.css` trägt ein zweites `@font-face` ‹Goetheanum› mit
 `font-style: italic` (Kursiv Klar, 440). Dazu im Paket: Office-Familie
@@ -25,7 +25,16 @@ Entscheid des Inhabers 25./26. 11.: Kursive nur für Werktitel im Fliesstext.
 **Wirkung.** `<cite>` erscheint in der echten Kursive statt einer
 Schrägstellung; Seiten ohne kursiven Text laden die Datei nicht. S01 ist
 noch nicht neu gefasst (Vorschlag im Befund
-`docs/befunde/kursive-probe-e1-2026-10-31.md` § Bau 2.94).
+`docs/befunde/kursive-probe-e1-2026-10-31.md` § Bau 2.95).
+
+## 26. November 2026 — Hausschrift Fassung 2.94: ‰ neu, Kapitälchen-ẞ (Schrift, Version des Systems unverändert)
+
+**Was.** `‰` aus dem `%` der Schrift plus zweitem Ring, Abstand der unteren
+Ringe wie zwei `o` auf Ringhöhe (Flüstern 60, Klar 49, Schreien 34), Ringe
+folgen dem Gewicht zu 85 %; Kapitälchen `ß` → `ẞ`; Kerning von `ĳ ﬁ ﬂ` als
+Kapitälchen richtig herum. **Warum.** Inhaber 26. 11.: ‰ ab Deutlich zu fett,
+Ringe liefen ineinander; Wunsch ß-Kapitälchen. **Wirkung.** Bis Klar fast
+unverändert; https://werkzeuge.goetheanum.ch/schriften.html auf 2.94.
 
 ## 25. November 2026 — Hausschrift Fassung 2.93: Konturrichtung, Kapitälchen, Adressen (Schrift, Version des Systems unverändert)
 

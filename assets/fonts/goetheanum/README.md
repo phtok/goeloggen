@@ -36,7 +36,7 @@ SIL OFL). Reparaturen und Begründung siehe
 
 Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
 
-## Neu in Fassung 2.94 (26. 11. 2026)
+## Neu in Fassung 2.95 (26. 11. 2026)
 
 - **Goetheanum Kursiv.** Aus Titillium Sans Pro Italic (Chialab, SIL OFL),
   12° Neigung, Gewichte auf die Hausschnitte abgestimmt. a mit Fuss, l mit
@@ -50,9 +50,19 @@ Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
     src: url("Webfonts/woff2/Goetheanum-Kursiv-Klar.woff2") format("woff2");
     font-weight: 440; font-style: italic; font-display: swap; }
   ```
-- Aufrechte Schnitte unverändert (intern 2.93). Bau:
+- Aufrechte Schnitte unverändert (intern 2.94). Bau:
   `tools/goetheanum-fontfix/build_kursiv.py`, Befund
-  `docs/befunde/kursive-probe-e1-2026-10-31.md` § Bau 2.94.
+  `docs/befunde/kursive-probe-e1-2026-10-31.md` § Bau 2.95.
+
+## Neu in Fassung 2.94 (26. 11. 2026)
+
+Gleiche Dateinamen v2.9, intern Version 2.94.
+
+- **‰ neu gebaut:** genau das `%` der Schrift plus ein zweiter Ring. Die
+  unteren Ringe stehen so weit auseinander wie zwei `o` (auf Ringgrösse) und
+  werden im Fetten etwas leichter gehalten; bisher liefen sie ab Deutlich
+  ineinander.
+- **Kapitälchen ß → ẞ** (statt `ss`): Namen bleiben unterscheidbar (Weiß, Weiss).
 
 ## Neu in Fassung 2.93 (25. 11. 2026)
 
