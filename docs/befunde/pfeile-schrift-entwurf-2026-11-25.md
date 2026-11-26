@@ -180,3 +180,17 @@ Also kein Widerspruch zu Urbino: Ein Verlauf, der mit der Fette deutlicher
 wird, folgt der Titillium. Entwurf 5 (`entwurf_pfeile_gebogen5.py`): Schaft
 Ruhig 0,82 · Klar 0,79 · Deutlich 0,75 · Laut 0,72, Arme im gleichen Mass;
 Spitze flach, 0,55 × Schaft breit (Vergleichsreihe mit 0,95 wie heute).
+
+## Entscheid (26. 11. 2026, Inhaber: ‹ns em›)
+
+Entwurf 5 angenommen (Variante B, flache Spitze 0,55, Verlauf Ruhig 0,82 …
+Laut 0,72). Bauplan wie empfohlen:
+
+1. **Pfeil-Schrift bleibt eigene Schrift** (Tastenbelegung, Kompass),
+   neu gezeichnet nach Entwurf 5, als Kurven-Master, Gewichte dünn = Klar,
+   fett = Laut (Umschalt bleibt ‹fett›).
+2. **Grundschrift:** die zehn Pfeile ← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙ auf dieselbe Form
+   heben (Fassung 2.94), dazu die acht gebogenen auf ↰ ↱ ↲ ↳ ⬏ ⬎ ⬑ ⬐
+   (U+21B0–21B3, U+2B0E–2B11). Zuordnung: Pfeil-Schrift-Taste 2 (hoch, dann
+   rechts) = ↱ usw.; prüfen, dass die schräge Spitze die Bedeutung trägt.
+3. Kompass bleibt nur in der Pfeil-Schrift.
