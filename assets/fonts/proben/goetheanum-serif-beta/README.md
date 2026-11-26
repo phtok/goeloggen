@@ -1,8 +1,8 @@
-# Goetheanum Serif Beta (Version 0.1)
+# Goetheanum Serif Beta (Version 0.2)
 
 **Ergänzung, nicht Teil der Hausschrift.** Eine Serif zum freien Gebrauch
-neben der Goetheanum Schrift, ohne feste Rolle im Haus. Beta: ein Gewicht,
-kein Kerning, Akzente nur als Umlaut (é, à, ñ fehlen).
+neben der Goetheanum Schrift, gedacht für Titel und grosse Grade (Display),
+nicht für Lesetext. Beta: ein Gewicht, aufrecht und kursiv.
 
 - Ansehen: https://werkzeuge.goetheanum.ch/schrift-serif-probe.html
 - Quelle: Titillium Pro Serif «version_00» (Chialab, Lorenzo Volpe, ISIA
@@ -12,6 +12,12 @@ kein Kerning, Akzente nur als Umlaut (é, à, ñ fehlen).
   «Titillium» als Reserved Font Name der Familie gilt.
 - Ergänzt: ä ö ü ë ï ÿ Ä Ö Ü Ë Ï, ß, einstöckiges a als Stilset `ss01`,
   feste und schmale Leerzeichen, weiches Trennzeichen.
+- Seit 0.2 (26. 11. 2026), aus Titillium Sans Pro (Chialab, OFL): Akzente
+  für die west- und mitteleuropäischen Sprachen (é à ñ ç č ř ő ą ș …), ẞ,
+  Zeichen & % ‰ € $ £ § ¶ @ © ® + = × ÷ ± ° · • †, Kerning der Pro
+  (nur schliessende Paare, mit Kollisionswache für die Serifen).
+- Fehlt noch: Ł ł Ø ø Æ æ Œ œ Đ đ ď ľ ť, Brüche, tabellarische Ziffern,
+  Griechisch, Kyrillisch.
 - Schnitte: Regular und Italic.
 - Gebaut mit `tools/goetheanum-fontfix/build_serif_beta.py`; Befund:
   `docs/befunde/serif-probe-2026-10-31.md`.

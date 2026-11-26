@@ -223,3 +223,37 @@ integrieren, nur als Ergänzung anbieten. Goetheanum Serif Beta.›
 - **Keine Rolle im Regelwerk** (Option B entfällt), nicht im Paket. Die
   Fragen 1–3 der Entscheidvorlage oben sind damit erledigt; S1 nur, wenn die
   Beta später gebraucht wird.
+
+## Display-Ausbau, Fassung 0.2 (26. 11. 2026)
+
+Entscheid des Inhabers (26. 11.): ‹als Möglichkeit im Display anbieten.
+Entsprechend optimieren.› Display heisst Titel und grosse Grade, nicht
+Lesetext. Gebaut ist S1, auf Titel zugeschnitten
+(`build_serif_beta.py PFAD/titillium_pro`, zwei Läufe bytegleich):
+
+| | 0.1 | 0.2 |
+|---|--:|--:|
+| Zeichen | 118 | 300 |
+| Kerning-Paare aufrecht | 0 | 9 316 |
+| Kerning-Paare kursiv | 0 | 10 900 |
+
+- **Akzente:** Marken der Titillium Sans Pro, gesetzt über deren Anker,
+  umgerechnet auf die Mitte des Serif-Buchstabens im selben Höhenband
+  (Ogonek: rechte Kante). Punkt und Trema bleiben die der Serif. Lettische
+  Cedille als Komma unten. Ohne: ď ľ ť ģ (Hakenform), Ł Ø Æ Œ Đ.
+- **Zeichen:** & % ‰ € $ £ ¢ ¥ § ¶ @ © ® + = × ÷ ± ° · • † ‡ aus der Pro
+  (Strich 78 zu 82). In der Kursiven um die halbe x-Höhe geneigt, sonst
+  rutscht der Mittelpunkt aus der Mitte. ẞ: Pro-Form mit Fuss- und
+  Kopf-Serife des Serif-B.
+- **Kerning:** Die Breiten der Serif sind andere als in der Pro (Befund
+  oben, ‹Breiten gleich›, stimmt nicht: 0 von 117 gleich). Darum gelten die
+  Pro-Werte nur als Formkorrektur, und nur die schliessenden (≤ −10).
+  **Kollisionswache:** je Höhenband von 25 Einheiten bleiben mindestens 40
+  Einheiten Luft; 344 Paare aufrecht, 877 kursiv zurückgenommen. Gemessen
+  (HarfBuzz): Ta −91, LT −112, P. −107, AV −42, «Y −48.
+- **Angeschaut** bei 110 px: ‹Ta›, ‹P.›, ‹«Y›, ‹AVA› schliessen; ‹Tú› hält
+  105 Einheiten Luft zwischen Arm und Akzent (wie in der Pro).
+
+**Offen, zu entscheiden:** ein zweites Gewicht für Titel neben Deutlich (die
+Quelle hat nur eines; ein eigener Master wäre ein Schriftentwurf), und ob
+`ss01` (einstöckiges a) in der Beta Standard wird.
