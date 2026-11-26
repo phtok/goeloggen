@@ -63,7 +63,8 @@ Reihenfolge der Felder (nicht umstellen):
 
 1. Fehlerzusammenfassung (verborgen bis zum ersten Absenden)
 2. Häufigkeit: Einmalig · Monatlich, Einmalig vorgewählt
-3. Währung: CHF · EUR, CHF vorgewählt (TWINT nur in CHF)
+3. Währung: CHF · EUR · USD · GBP, CHF vorgewählt (TWINT nur in CHF,
+   QR-Rechnung nur in CHF und EUR)
 4. Betrag: Stufen, dazu «Anderer Betrag in CHF»
 5. Zahlungsart: TWINT · Karte · PayPal · QR-Rechnung, ohne Vorwahl
 6. Kästchen «Ich spende für eine Institution» → Name der Institution
@@ -109,9 +110,12 @@ Was das Backend liefern muss – **offen, bitte angeben:**
 - [ ] Zahlarten, die wirklich angeboten werden, je mit Hinweistext; TWINT-Höchstbetrag (heute 5&nbsp;000&nbsp;CHF angenommen)
 - [ ] Stufen je Häufigkeit und Vorwahl (heute einmalig 20–1000, Vorwahl 50; monatlich 10–200, Vorwahl 20)
 - [ ] Spendenzwecke (heute «Wo es am nötigsten ist», «Weihnachtsspende»,
-      «Anthroposophie weltweit», «Arbeit an den Mysteriendramen», «Eigener
-      Zweck …»; live steht dazu «Mitgliedsbeitrag EM Goetheanum»)
-- [ ] Währungen: live CHF und EUR; Konten gibt es auch in USD und GBP
+      «Anthroposophie weltweit», «Arbeit an den Mysteriendramen»,
+      «Mitgliedsbeitrag EM Goetheanum», «Eigener Zweck …»)
+- [ ] Währungen CHF, EUR, USD, GBP online annehmen (Entscheid 26. 11.;
+      live heute nur CHF und EUR); Zahlarten je Währung bestätigen
+- Zustimmung: kein Pflicht-Kästchen, ein Satz mit Link zur
+  Datenschutzerklärung unter dem Knopf (Entscheid 26. 11.)
 - [ ] Bescheinigung: ab welchem Betrag und wann sie kommt (Buchhaltung) – der Satz unter dem Knopf und der Dank richten sich danach
 - [ ] Gebühren je Zahlart, falls sie genannt werden sollen
 - [ ] Wortlaut der Bestätigungs-Mail
