@@ -289,3 +289,13 @@ fortgeschrieben, § 3).
 **Empfehlung:** ‹Goetheanum Kursiv Variabel› (wght 190–725) für Gestalter,
 dazu statisch nur **Kursiv Klar** für Web und Office (die eine Rolle: Werktitel
 im Fliesstext). S01 neu fassen: ‹Kursiv nur für Werktitel im Fliesstext›.
+
+## Entscheid Bau (26. 11. 2026, Inhaber: ‹em›)
+
+Bauen wie empfohlen: ‹Goetheanum Kursiv Variabel› (wght 190–725, eigene
+Datei, keine Achse in der Variable) für Gestalter; statisch nur **Kursiv
+Klar** für Web (`@font-face` ‹Goetheanum›, `font-style: italic`) und Office
+(eigene Familie, ⌘I bleibt Leise). Grundform Mischform, ss01/ss02 wie oben.
+S01 neu fassen: ‹Kursiv nur für Werktitel im Fliesstext›. Vorher den
+Bold-Master vervollständigen (152 fehlende Glyphen) oder bei Chialab anfragen
+(Handlung nach aussen: Inhaber fragen).
