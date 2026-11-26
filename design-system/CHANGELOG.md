@@ -16,6 +16,16 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 26. November 2026 — Serif Beta 0.3: einstöckiges a, Entscheide 3.0 (Ergänzung, Version des Systems unverändert)
+
+**Was.** Serif Beta: einstöckiges a als Grundform, zweistöckiges als `ss01`.
+Entscheide zu 3.0: Kyrillisch in die Hausschrift (ganz in die Variable),
+Arabisch als variable Schwesterdatei, Griechisch bleibt bei Source Sans 3.
+**Warum.** Inhaber 26. 11. **Wirkung.** Kein Token; Etappen S2 (Serif
+kräftig), A1 (Arabisch), K1/K2 (Kyrillisch) in
+`docs/befunde/schriftsysteme-3.0-2026-11-26.md` und
+`docs/befunde/serif-probe-2026-10-31.md`.
+
 ## 26. November 2026 — Formular: Währung, bedingte Felder allgemein (1.32.0)
 
 **Was.** `formular.js`: Währung wählbar über `[data-rolle="waehrung"]`
