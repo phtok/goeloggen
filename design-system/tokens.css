@@ -30,6 +30,16 @@
      ohne dieses CSS ebenfalls stimmt. */
   ascent-override:75%; descent-override:25%; line-gap-override:0%;
 }
+/* --- Kursive: Goetheanum Kursiv Klar (Fassung 2.94) ------------------------ */
+/* Nur für Werktitel im Fliesstext. Eigene Datei: der Browser lädt sie erst,
+   wenn Text sie braucht – Seiten ohne Kursive kostet sie nichts. */
+@font-face{
+  font-family:"Goetheanum";
+  src:url("../assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Kursiv-v2.9-Klar.woff2") format("woff2"),
+      url("../assets/fonts/goetheanum/Webfonts/woff/Goetheanum-Kursiv-v2.9-Klar.woff") format("woff");
+  font-weight:440; font-style:italic; font-display:swap;
+  ascent-override:75%; descent-override:25%; line-gap-override:0%;
+}
 /* --- Lesetext: Source Sans 3 (selbst gehostet, OFL) ------------------------ */
 /* B4: size-adjust:103% (500/486) gleicht die x-Höhe an Goetheanum an – gleiche px
    ergeben gleiche wahrgenommene Grösse, und der Fallback springt beim Laden nicht. */

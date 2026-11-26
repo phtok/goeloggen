@@ -16,6 +16,17 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 26. November 2026 — Goetheanum Kursiv (Fassung 2.94; Schrift, Version des Systems unverändert)
+
+**Was.** `tokens.css` trägt ein zweites `@font-face` ‹Goetheanum› mit
+`font-style: italic` (Kursiv Klar, 440). Dazu im Paket: Office-Familie
+‹Goetheanum Kursiv›, ‹Goetheanum Kursiv Variabel› 190–725. **Warum.**
+Entscheid des Inhabers 25./26. 11.: Kursive nur für Werktitel im Fliesstext.
+**Wirkung.** `<cite>` erscheint in der echten Kursive statt einer
+Schrägstellung; Seiten ohne kursiven Text laden die Datei nicht. S01 ist
+noch nicht neu gefasst (Vorschlag im Befund
+`docs/befunde/kursive-probe-e1-2026-10-31.md` § Bau 2.94).
+
 ## 25. November 2026 — Hausschrift Fassung 2.93: Konturrichtung, Kapitälchen, Adressen (Schrift, Version des Systems unverändert)
 
 **Was.** Verkehrt gedrehte Konturen umgekehrt (`‰` und 29 weitere je Schnitt,

@@ -7,11 +7,11 @@ verformte Schnitte).
 
 | Was | Woher | Angabe |
 |---|---|---|
-| Goetheanum Schrift (Klar, Laut als Fett, Leise als Kursiv), Ruhig, Deutlich, Icons, Pfeile | `../Office` | Standard |
+| Goetheanum Schrift (Klar, Laut als Fett, Leise als Kursiv), Ruhig, Deutlich, Kursiv, Icons, Pfeile | `../Office` | Standard |
 | Source Sans 3, Source Sans 3 Semibold (je mit Kursiv) | `../Begleitschriften`, Adobe 3.052R unverändert | Standard |
 | Goetheanum Kyrillisch (Regular, Bold) | `../Begleitschriften` | `-Kyrillisch` / `--kyrillisch` |
 | Goetheanum Arabisch (Regular, Bold) | `../Begleitschriften` | `-Arabisch` / `--arabisch` |
-| Goetheanum Variabel | `../Variable` | `-Variabel` / `--variabel` |
+| Goetheanum Variabel, Goetheanum Kursiv Variabel | `../Variable` | `-Variabel` / `--variabel` |
 
 - Kyrillisch und Arabisch, die schon installiert sind, kommen auch ohne Angabe
   wieder mit.

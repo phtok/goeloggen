@@ -5,7 +5,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Goetheanum Schriften</title>
-<meta name="description" content="Goetheanum Schriften 2.9 – Leise, Ruhig, Klar, Deutlich, Laut, Variabel und Icons. Repariert, vervollständigt und optimiert." />
+<meta name="description" content="Goetheanum Schriften 2.9 – Leise, Ruhig, Klar, Deutlich, Laut, Variabel, Kursiv und Icons. Repariert, vervollständigt und optimiert." />
 <meta name="robots" content="noindex" />
 <link rel="stylesheet" href="design-system/tokens.css" />
 <link rel="stylesheet" href="design-system/base.css" />
@@ -17,6 +17,7 @@
   @font-face{font-family:"G Deutlich";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.9-Deutlich.woff2?v=2.92") format("woff2");font-weight:400;font-display:swap}
   @font-face{font-family:"G Laut";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Schrift-v2.9-Laut.woff2?v=2.92") format("woff2");font-weight:400;font-display:swap}
   @font-face{font-family:"G Variabel";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Variabel-v2.9.woff2?v=2.92") format("woff2");font-weight:190 725;font-display:swap}
+  @font-face{font-family:"G Kursiv";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Kursiv-v2.9-Klar.woff2?v=2.94") format("woff2");font-weight:400;font-display:swap}
   @font-face{font-family:"G Icons";src:url("assets/fonts/goetheanum/Webfonts/woff2/Goetheanum-Icons-v2.9.woff2") format("woff2");font-display:block}
 
   /* Farben, Schrift, Maße, Hell-Dunkel kommen aus tokens.css/base.css. Hier nur
@@ -50,7 +51,7 @@
   .cut .tag{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
   .cut .tag b{font-weight:400}.cut .tag span{font-size:var(--t-micro);color:var(--muted)}
   .cut .big{font-size:clamp(30px,4.4vw,42px);line-height:1.05}
-  .leise{font-family:"G Leise"} .ruhig{font-family:"G Ruhig"} .klar{font-family:"G Klar"} .deutlich{font-family:"G Deutlich"} .laut{font-family:"G Laut"}
+  .leise{font-family:"G Leise"} .ruhig{font-family:"G Ruhig"} .klar{font-family:"G Klar"} .deutlich{font-family:"G Deutlich"} .laut{font-family:"G Laut"} .kursiv{font-family:"G Kursiv"}
   .fluestern{font-family:"G Variabel";font-variation-settings:"wght" 190} .schreien{font-family:"G Variabel";font-variation-settings:"wght" 725}
   .cut.var{background:linear-gradient(0deg,color-mix(in srgb,var(--gold) 8%,transparent),transparent)}
   .cut .vtag{font-size:var(--t-micro);color:var(--gold-ink);border:1px solid var(--gold);border-radius:6px;padding:2px 6px}
@@ -153,6 +154,10 @@
       <div class="cut"><div class="tag"><b>Laut</b><span>680 · Fett</span></div><div class="big laut">Handgesetzt</div></div>
     </div>
     <div class="office"><span>Im Office ohne Schriftwechsel: in Klar-Text holt <b>⌘B / Strg+B</b> das fette <b>Laut</b> und <b>⌘I / Strg+I</b> das leise <b>Leise</b>.</span></div>
+    <div class="cuts" style="margin-top:26px">
+      <div class="cut"><div class="tag"><b>Kursiv</b><span>440 · nur Werktitel im Fliesstext</span></div><div class="big kursiv">Handgesetzt</div></div>
+    </div>
+    <p style="margin-top:12px;font-size:var(--t-small);color:var(--muted);text-wrap:balance">Office: eigene Familie ‹Goetheanum&nbsp;Kursiv›, ⌘I bleibt Leise. Gestaltung: ‹Goetheanum Kursiv&nbsp;Variabel›, Flüstern bis&nbsp;Schreien.</p>
     <div class="glyph" style="margin-top:26px">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890 &amp; € @ %</div>
     <div class="new">
       <span>!</span><span>&quot;</span><span>$</span><span>§</span><span>Ä</span><span>Ö</span><span>Ü</span><span>ß</span><span>«&nbsp;»</span><span>‹&nbsp;›</span>
@@ -309,14 +314,15 @@ body{ font-family:"Goetheanum", system-ui, sans-serif; }
     <div class="dl-cards">
       <div class="card"><h3>Setup-App · Windows &amp; Mac</h3><p><b style="color:var(--ink);font-weight:400">Installieren.</b> Entfernt alte Fassungen und installiert das Office-Set mit Source&nbsp;Sans&nbsp;3, auf Wunsch Kyrillisch und Arabisch.</p>
         <a class="btn primary" href="schriften-installieren.html">Installieren</a></div>
-      <div class="card"><h3>Office · Word &amp; PowerPoint</h3><p><b style="color:var(--ink);font-weight:400">Installieren.</b> TrueType: die Familie ‹Goetheanum Schrift› (⌘B = Laut, ⌘I = Leise) plus Ruhig, Deutlich, Icons und Pfeile – in der Datei einbettbar. Mit Beipackzettel im Set.</p>
+      <div class="card"><h3>Office · Word &amp; PowerPoint</h3><p><b style="color:var(--ink);font-weight:400">Installieren.</b> TrueType: die Familie ‹Goetheanum Schrift› (⌘B = Laut, ⌘I = Leise) plus Ruhig, Deutlich, Kursiv, Icons und Pfeile – in der Datei einbettbar. Mit Beipackzettel im Set.</p>
         <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Office-TTF.zip" download>TTF-Set</a>
         <a class="btn" href="powerpoint.html">PowerPoint-Vorlagen →</a></div>
       <div class="card"><h3>Design · InDesign &amp; Co.</h3><p><b style="color:var(--ink);font-weight:400">Installieren.</b> Der Variable Font: alle Schnitte stufenlos auf der Gewichtsachse, Flüstern bis Schreien. Feste Schnitte fürs Office liegen im TTF-Set – die früheren statischen OTF sind darin aufgegangen.</p>
-        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.9.otf" download>Variable OTF</a></div>
+        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Variabel-v2.9.otf" download>Variable OTF</a>
+        <a class="btn" href="assets/fonts/goetheanum/Variable/Goetheanum-Kursiv-Variabel-v2.9.otf" download>Kursiv Variable OTF</a></div>
       <div class="card"><h3>Web · Entwickler</h3><p><b style="color:var(--ink);font-weight:400">Nicht installieren.</b> woff2 per <code>@font-face</code> einbinden – Anleitung mit Code-Schnipsel.</p>
         <a class="btn" href="schrift-webfont.html">Web-Anleitung</a></div>
-      <div class="card"><h3>Komplettpaket</h3><p>Alles in einem: TTF fürs Office, Variable Font, Webfonts, Icons und Pfeile, Beipackzettel.</p>
+      <div class="card"><h3>Komplettpaket</h3><p>Alles in einem: TTF fürs Office, Variable Fonts aufrecht und kursiv, Webfonts, Icons und Pfeile, Beipackzettel.</p>
         <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Schriften-v2.9.zip" download>ZIP</a></div>
       <div class="card"><h3>Icons als Set</h3><p>81 Icons als SVG, PNG und PDF in einem Archiv.</p>
         <a class="btn" href="assets/fonts/goetheanum/Goetheanum-Icons-v2.9-Einzeldateien.zip" download>Icon-ZIP</a></div>

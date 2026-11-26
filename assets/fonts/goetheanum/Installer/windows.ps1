@@ -1,7 +1,7 @@
 # Goetheanum-Schriften installieren (Windows)
 #
 # Entfernt alle frueheren Goetheanum-Schriften und installiert die aktuelle
-# Fassung: das Office-Set (Goetheanum Schrift, Ruhig, Deutlich, Icons, Pfeile)
+# Fassung: das Office-Set (Goetheanum Schrift, Ruhig, Deutlich, Kursiv, Icons, Pfeile)
 # und Source Sans 3 (Adobe 3.052R, unveraendert). Auf Wunsch dazu Goetheanum
 # Kyrillisch, Goetheanum Arabisch und die variable Schrift fuer die Gestaltung.
 # Alte Kopien von Source Sans 3 (auch die variable) werden ersetzt,
@@ -47,6 +47,7 @@ $Schriften = [ordered]@{
   'Office/GoetheanumSchriftLeise.ttf'    = 'Goetheanum Schrift Italic (TrueType)'
   'Office/GoetheanumSchriftRuhig.ttf'    = 'Goetheanum Schrift Ruhig (TrueType)'
   'Office/GoetheanumSchriftDeutlich.ttf' = 'Goetheanum Schrift Deutlich (TrueType)'
+  'Office/GoetheanumKursiv.ttf'          = 'Goetheanum Kursiv (TrueType)'
   'Office/GoetheanumIcons.ttf'           = 'Goetheanum Icons (TrueType)'
   'Office/GoetheanumPfeile.ttf'          = 'Goetheanum Pfeile (TrueType)'
   'Begleitschriften/SourceSans3-Regular.ttf'    = 'Source Sans 3 (TrueType)'
@@ -86,6 +87,7 @@ if ($Arabisch) {
 }
 if ($Variabel) {
   $Schriften["Variable/Goetheanum-Variabel-v$Fassung.otf"] = 'Goetheanum Variabel (OpenType)'
+  $Schriften["Variable/Goetheanum-Kursiv-Variabel-v$Fassung.otf"] = 'Goetheanum Kursiv Variabel (OpenType)'
 }
 
 # Programme, die Schriftdateien sperren
